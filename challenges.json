@@ -7,7 +7,7 @@
     },
     {
       "slug": "proximity-prize-reduction-upper",
-      "version": "irs-reduction-threshold-v1",
+      "version": "irs-reduction-threshold-v3",
       "submission_root": "ProximityPrize/SubmissionUpper"
     }
   ]

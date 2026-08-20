@@ -12,15 +12,16 @@ q(delta) = (1 - delta)^128
 b = B / 100
 ```
 
-The score is the spot-check quantity induced by a certified threshold radius.
-It is not `-log2(WSS)` and is not a full-protocol security claim.
+The lower score is a centibit lower bound on `-log2(q(delta))`; the upper score
+is a centibit upper bound at the attacked radius. Neither is `-log2(WSS)` or a
+full-protocol security claim.
 
 ## Challenges
 
 | Track | Certificate | Score |
 |:--|:--|:--|
 | `irs-reduction-threshold-lower` | At `delta = P/Q`, `certifiedGammaError(delta) <= epsilon*` and `q(delta) <= 2^-b` | maximize `B` |
-| `irs-reduction-threshold-upper` | For every admissible `delta >= delta* = i/2^18`, `winningSetDensity(delta) > epsilon*`, and `2^-b <= q(delta*)` | minimize `B` |
+| `irs-reduction-threshold-upper` | At `delta* = i/2^18`, `winningSetDensity(delta*) > epsilon*` and `2^-b <= q(delta*)` | minimize `B` |
 
 The lower certificate is
 `ProximityPrize.Benchmark.ProtocolClaim B P Q`. It uses ArkLib's certified
@@ -29,9 +30,13 @@ ArkLib proves `winningSetDensity <= certifiedGammaError`, this is a
 conservative safe point.
 
 The upper certificate is
-`ProximityPrize.Benchmark.Upper.ProtocolClaimUpper B i`. It certifies an entire
-unsafe suffix because no monotonicity theorem for `winningSetDensity` is
-assumed. The index is verified metadata; the leaderboard compares `B` only.
+`ProximityPrize.Benchmark.Upper.ProtocolClaimUpper B i`. It certifies one
+attacked radius and says nothing about any other radius; it need not be the first
+unsafe point and does not claim a global safe/unsafe frontier. The index is
+verified metadata; the leaderboard compares `B` only.
+
+Without a monotonicity theorem for `winningSetDensity`, the lower safe point and
+upper attacked point do not by themselves certify a threshold interval.
 
 The protected definitions are in
 [`TargetLower.lean`](ProximityPrize/Benchmark/TargetLower.lean) and
@@ -46,8 +51,7 @@ The protected definitions are in
 
 These are editable starting points, not authoritative leaderboard results. The
 lower baseline certifies the extractor-error target at radius `1/4`; the upper
-baseline certifies that winning-set soundness exceeds the target throughout
-the required half-radius suffix.
+baseline certifies that winning-set density exceeds the target at radius `1/2`.
 
 ## Candidate layout
 
@@ -126,8 +130,8 @@ radius or unsafe index. The repository-side identities are:
 
 ```text
 proximity-prize-reduction-lower @ irs-reduction-threshold-v1
-proximity-prize-reduction-upper @ irs-reduction-threshold-v1
+proximity-prize-reduction-upper @ irs-reduction-threshold-v3
 ```
 
-Those verifier profiles must be registered before either workflow can issue an
-authoritative leaderboard score.
+The upper v3 verifier profile must be registered before its workflow can issue
+an authoritative leaderboard score.

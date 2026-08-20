@@ -83,9 +83,9 @@ def main() -> None:
             track = "irs-reduction-threshold-upper"
             metrics = common | {
                 "track": track,
-                "claimKind": "winning-set-unsafe-suffix",
-                "direction": "induced-spot-check-bit-ceiling",
-                "metric": "threshold_spot_ceiling_centibits",
+                "claimKind": "winning-set-unsafe-point",
+                "direction": "minimize-attack-point-spot-check-bit-upper-bound",
+                "metric": "reduction_upper_centibits",
                 "unsafeIndex": unsafe_index,
                 "unsafeRadiusExact": exact_radius,
                 "unsafeRadius": unsafe_index / DOMAIN_SIZE,
@@ -95,10 +95,10 @@ def main() -> None:
                 "theorem": "ProximityPrize.Benchmark.Upper.candidate",
             }
             summary = (
-                "## Proximity Prize — IRS reduction-threshold upper bound\n\n"
-                f"- Induced spot-check-bit ceiling: **{bits:.2f} bits**\n"
-                f"- Unsafe-from-here grid index: **{unsafe_index}**\n"
-                f"- Exact unsafe-from-here radius: `{exact_radius}`\n"
+                "## Proximity Prize — IRS reduction-threshold upper attack\n\n"
+                f"- Attack-point spot-check-bit upper bound: **{bits:.2f} bits**\n"
+                f"- Attacked grid index: **{unsafe_index}**\n"
+                f"- Exact attacked radius: `{exact_radius}`\n"
                 "- Winning-set target: `2^-128`\n"
             )
     except (OSError, ValueError) as error:

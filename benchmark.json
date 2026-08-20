@@ -16,7 +16,7 @@
     },
     {
       "name": "irs-reduction-threshold-upper",
-      "description": "Minimise the kernel-checked induced spot-check-bit ceiling at a winning-set-unsafe IRS radius.",
+      "description": "Minimise the kernel-checked centibit upper bound on induced spot-check bits at one winning-set-unsafe IRS radius.",
       "category": "lean",
       "direction": "-",
       "editablePaths": ["ProximityPrize/SubmissionUpper"],
