@@ -10,6 +10,7 @@ import ProximityPrize.Benchmark.TargetUpper
 /-!
 # Proximity Prize — interleaved-RS reduction thresholds
 
-The public library exposes the fixed IRS profile together with lower and upper
-certificates for the ABF26 reduction threshold.
+The public library exposes the fixed IRS profile together with a safe-point
+certificate and an attack-point certificate for studying the ABF26 reduction
+threshold.
 -/

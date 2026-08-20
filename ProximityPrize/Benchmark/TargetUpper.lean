@@ -7,10 +7,10 @@ import Mathlib.Data.Nat.Choose.Central
 import Mathlib.Data.Set.PowersetCard
 
 /-!
-# Upper certificate for the ABF26 reduction threshold
+# Upper attack certificate for the ABF26 reduction threshold
 
 The fixed winning-set target is `epsilonStar = 2^(-128)`. The interface
-certifies an unsafe-from-here radius `δstar` for Definition 6.11's worst-case
+certifies an attacked radius `δstar` for Definition 6.11's worst-case
 winning-challenge density and is scored by the induced spot-check error
 `(1 - δstar)^t`, where `t = IRSProfile.repetitions = 128`.
 
@@ -18,9 +18,9 @@ ABF26 identifies Definition 6.11's worst-case winning-set density with the
 soundness error of the Construction 6.9 reduction. ArkLib formalizes that
 density and its game-level upper coupling, but not the converse equality to the
 minimal game error. The winning-set target and spot-check error remain separate
-round-by-round quantities. The whole admissible suffix is certified because no
-monotonicity theorem is assumed. This threshold certificate does not construct
-an end-to-end attacking prover.
+round-by-round quantities. This point certificate does not claim monotonicity,
+locate a global safe/unsafe frontier, or construct an end-to-end attacking
+prover.
 -/
 
 namespace ProximityPrize.Benchmark.Upper
@@ -36,17 +36,18 @@ noncomputable def epsilonStar : ℝ≥0 :=
 noncomputable def claimedUnsafeRadius (unsafeIndex : Nat) : ℝ≥0 :=
   ProximityGap.gridPt (ι := IRSProfile.Index) unsafeIndex
 
-/-- An upper certificate for the ABF26 reduction threshold.
+/-- An upper attack certificate for the ABF26 reduction threshold.
 
-`unsafeAbove` certifies that Definition 6.11's winning-set quantity is above the
-fixed target from `δstar` onward. `score` converts that radius to
-`(1 - δstar)^t`. Smaller `centiBits` and `unsafeIndex` are stronger. -/
+`unsafeAt` certifies that Definition 6.11's winning-set quantity is above the
+fixed target at `δstar`. `score` certifies a centibit upper bound on the induced
+spot-check bits from `(1 - δstar)^t`. Smaller `centiBits` and `unsafeIndex` are
+stronger. -/
 structure ProtocolClaimUpper (centiBits unsafeIndex : Nat) : Prop where
   admissible : claimedUnsafeRadius unsafeIndex ∈
     Set.Ioo (0 : ℝ≥0) IRSProfile.minRelativeDistance
-  unsafeAbove : ∀ δ ∈ Set.Ico (claimedUnsafeRadius unsafeIndex)
-      IRSProfile.minRelativeDistance,
-    epsilonStar < winningSetDensity IRSProfile.encoder δ
+  unsafeAt :
+    epsilonStar < winningSetDensity IRSProfile.encoder
+      (claimedUnsafeRadius unsafeIndex)
   score :
     (2 : ℝ≥0) ^ (-((centiBits : ℝ) / 100)) ≤
       (1 - claimedUnsafeRadius unsafeIndex) ^ IRSProfile.repetitions

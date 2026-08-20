@@ -33,18 +33,22 @@ theorem candidate_score :
     div_le_div_iff₀ (by positivity) (by positivity), one_mul]
   norm_num
 
-/-- The half-radius interpolation attack gives a `128.00`-bit upper seed. -/
+/-- The half-radius interpolation attack gives a `128.00`-bit attack-point seed. -/
 theorem candidate : ProtocolClaimUpper 12800 131072 where
   admissible := by
     rw [claimedUnsafeRadius_131072_eq_half]
     unfold IRSProfile.minRelativeDistance
     norm_num
-  unsafeAbove := by
-    intro δ hδ
-    have hband : δ ∈ Set.Ico (1 / 2 : ℝ≥0) IRSProfile.minRelativeDistance := by
-      simpa only [claimedUnsafeRadius_131072_eq_half] using hδ
+  unsafeAt := by
+    have hband : (1 / 2 : ℝ≥0) ∈
+        Set.Ico (1 / 2 : ℝ≥0) IRSProfile.minRelativeDistance := by
+      constructor
+      · rfl
+      · unfold IRSProfile.minRelativeDistance
+        norm_num
+    rw [claimedUnsafeRadius_131072_eq_half]
     rw [ProximityPrize.SubmissionUpper.IRSHalfRadius.IRSProfile.winningSetSoundness_eq_one
-      δ hband]
+      (1 / 2 : ℝ≥0) hband]
     unfold epsilonStar ProximityGap.prizeThreshold
     norm_num
   score := candidate_score
