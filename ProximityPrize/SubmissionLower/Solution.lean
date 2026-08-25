@@ -1,5 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BCHKSFinal6399
+import ProximityPrize.SubmissionLower.BCHKSList6400IntegerBall
 
 namespace ProximityPrize.Benchmark
 
