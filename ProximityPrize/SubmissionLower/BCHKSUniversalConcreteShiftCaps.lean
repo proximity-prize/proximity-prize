@@ -1,41 +1,28 @@
 import ProximityPrize.SubmissionLower.BCHKSUniversalNumerator
 import ProximityPrize.SubmissionLower.BCHKSYZFactorCap
 import ProximityPrize.SubmissionLower.BCHKSFactorPigeon
-
 open Polynomial Polynomial.Bivariate
-
 namespace ProximityPrize.SubmissionLower.UniversalNumerator
-
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 noncomputable section
-
 set_option maxHeartbeats 4000000
-
 variable {F : Type} [Field F]
-
 def zToUniversalU : F[X] →+* F[X][X][X] :=
   (Polynomial.C : F[X][X] →+* F[X][X][X]).comp
     (Polynomial.C : F[X] →+* F[X][X])
-
 def shiftXToUniversal (x₀ : F) : F[X][X] →+* F[X][X][X] :=
   Polynomial.eval₂RingHom zToUniversalU
     (Polynomial.C (Polynomial.C (Polynomial.C x₀)) + Polynomial.X)
-
 def universalShift (x₀ : F) (R : F[X][X][Y]) : F[X][X][X][X] :=
   (R.map (shiftXToUniversal x₀)).comp
     (Polynomial.C (Polynomial.C Polynomial.X) + Polynomial.X)
-
 def universalSlope (x₀ : F) (R : F[X][X][Y]) : F[X][Y] :=
   triSpecializeX R.derivative x₀
-
 def evalZY (z y : F) : F[X][Y] →+* F :=
   (Polynomial.evalRingHom y).comp
     (Polynomial.mapRingHom (Polynomial.evalRingHom z))
-
 theorem evalZY_apply (z y : F) (p : F[X][Y]) :
     evalZY z y p = biEval p y z := rfl
-
 theorem map_shiftXToUniversal_evalZY (x₀ z y : F) (A : F[X][X]) :
     (shiftXToUniversal x₀ A).map (evalZY z y) =
       ProximityPrize.SubmissionLower.FiniteHensel.shiftMap x₀
@@ -46,7 +33,6 @@ theorem map_shiftXToUniversal_evalZY (x₀ z y : F) (A : F[X][X]) :
       simp [shiftXToUniversal, zToUniversalU, evalZY,
         ProximityPrize.SubmissionLower.FiniteHensel.shiftMap,
         Polynomial.map_monomial, Polynomial.eval_monomial]
-
 theorem universalShift_map_evalZY (x₀ z y : F) (R : F[X][X][Y]) :
     (universalShift x₀ R).map (Polynomial.mapRingHom (evalZY z y)) =
       ((triSpecializeZ R z).map
@@ -69,7 +55,6 @@ theorem universalShift_map_evalZY (x₀ z y : F) (R : F[X][X][Y]) :
         simpa [evalZY] using map_shiftXToUniversal_evalZY x₀ z y A
       simp [universalShift, triSpecializeZ, Polynomial.map_monomial,
         evalZY, hcoeff]
-
 theorem universalSlope_eval (x₀ z y : F) (R : F[X][X][Y]) :
     evalZY z y (universalSlope x₀ R) =
       ProximityPrize.SubmissionLower.FiniteHensel.ySlope
@@ -87,7 +72,6 @@ theorem universalSlope_eval (x₀ z y : F) (R : F[X][X][Y]) :
   | monomial n A =>
       simp [Polynomial.map_monomial, Polynomial.eval_monomial,
         eval_map_eval_eq_eval_eval_C]
-
 private theorem degreeX_C_eq_natDegree (p : F[X]) :
     Bivariate.degreeX (Polynomial.C p : F[X][X]) = p.natDegree := by
   unfold Bivariate.degreeX
@@ -96,7 +80,6 @@ private theorem degreeX_C_eq_natDegree (p : F[X]) :
     simp
   · rw [Polynomial.support_C hp]
     simp
-
 theorem shiftXToUniversal_coeff_natDegree_le
     (x₀ : F) (A : F[X][X]) (a : ℕ) :
     ((shiftXToUniversal x₀ A).coeff a).natDegree ≤ 0 := by
@@ -124,7 +107,6 @@ theorem shiftXToUniversal_coeff_natDegree_le
         Polynomial.C (n.choose a : F)) by
           simp only [Polynomial.C_mul, Polynomial.C_pow, map_natCast, mul_assoc]]
   exact (Polynomial.natDegree_C _).le
-
 theorem shiftXToUniversal_coeff_degreeX_le
     (x₀ : F) (A : F[X][X]) (a : ℕ) :
     Bivariate.degreeX ((shiftXToUniversal x₀ A).coeff a) ≤
@@ -169,7 +151,6 @@ theorem shiftXToUniversal_coeff_degreeX_le
             Polynomial.C (x₀ ^ (n-a) * (n.choose a : F)) by simp]
         exact (Polynomial.natDegree_C _).le)
     _ = Bivariate.degreeX A := Nat.add_zero _
-
 theorem universalShift_coeff_natDegree_le
     (x₀ : F) (R : F[X][X][Y]) (d b a : ℕ)
     (hRdeg : R.natDegree ≤ d) :
@@ -237,7 +218,6 @@ theorem universalShift_coeff_natDegree_le
           simp))
     _ ≤ d := by
       simpa using (Polynomial.le_natDegree_of_mem_supp j hj).trans hRdeg
-
 private theorem degreeX_coeff_le_of_YZCap
     (R : F[X][X][Y]) (D j : ℕ) (hYZ : YZCap R D) :
     Bivariate.degreeX (R.coeff j) ≤ D := by
@@ -246,7 +226,6 @@ private theorem degreeX_coeff_le_of_YZCap
   intro r hr
   have hc : (R.coeff j).coeff r ≠ 0 := Polynomial.mem_support_iff.mp hr
   exact (Nat.le_add_right _ j).trans (hYZ j r hc)
-
 private theorem degreeX_X_pow_natCast_le_zero (n c : ℕ) :
     Bivariate.degreeX (Polynomial.X ^ n * (c : F[X][X])) ≤ 0 := by
   unfold Bivariate.degreeX
@@ -255,7 +234,6 @@ private theorem degreeX_X_pow_natCast_le_zero (n c : ℕ) :
   rw [show (c : F[X][X]) = Polynomial.C (Polynomial.C (c : F)) by simp,
     Polynomial.coeff_mul_C, Polynomial.coeff_X_pow]
   split <;> simp
-
 theorem universalShift_coeff_degreeX_le
     (x₀ : F) (R : F[X][X][Y]) (D b a : ℕ)
     (hYZ : YZCap R D) :
@@ -319,7 +297,6 @@ theorem universalShift_coeff_degreeX_le
       (shiftXToUniversal_coeff_degreeX_le x₀ (R.coeff j) a)
       (degreeX_X_pow_natCast_le_zero (F := F) (j-b) (j.choose b))
     _ ≤ D := by simpa using degreeX_coeff_le_of_YZCap R D j hYZ
-
 theorem universalShift_concrete_caps
     (x₀ : F) (R : F[X][X][Y]) (d D : ℕ)
     (hRdeg : R.natDegree ≤ d) (hYZ : YZCap R D) :
@@ -332,7 +309,6 @@ theorem universalShift_concrete_caps
     exact universalShift_coeff_natDegree_le x₀ R d b a hRdeg
   · intro n b a hb ha
     exact universalShift_coeff_degreeX_le x₀ R D b a hYZ
-
 theorem natDegree_eval_C_le_degreeX (p : F[X][X]) (x : F) :
     (Polynomial.eval (Polynomial.C x) p).natDegree ≤ Bivariate.degreeX p := by
   have heq : (Polynomial.Bivariate.swap p).map
@@ -344,7 +320,6 @@ theorem natDegree_eval_C_le_degreeX (p : F[X][X]) (x : F) :
     rw [show (Polynomial.Bivariate.swap p).natDegree =
       Polynomial.Bivariate.natDegreeY (Polynomial.Bivariate.swap p) from rfl,
       Polynomial.Bivariate.natDegreeY_swap])
-
 theorem universalSlope_degreeX_le_sub_one
     (x₀ : F) (R : F[X][X][Y]) (D : ℕ) (hD : 0 < D)
     (hYZ : YZCap R D) :
@@ -392,7 +367,6 @@ theorem universalSlope_degreeX_le_sub_one
   rw [heval]
   exact (natDegree_eval_C_le_degreeX _ _).trans
     (hderraw.trans (by omega))
-
 theorem universalSlope_natDegree_le_sub_one
     (x₀ : F) (R : F[X][X][Y]) (d : ℕ)
     (hRdeg : R.natDegree ≤ d) :
@@ -400,7 +374,6 @@ theorem universalSlope_natDegree_le_sub_one
   unfold universalSlope triSpecializeX
   exact Polynomial.natDegree_map_le.trans
     ((Polynomial.natDegree_derivative_le _).trans (Nat.sub_le_sub_right hRdeg 1))
-
 theorem affine_slope_degree_absorbed (E D : ℕ)
     (hE : 1 ≤ E) (hD : 1 ≤ D) :
     1 + E * (D - 1) ≤ E * D := by
@@ -410,7 +383,5 @@ theorem affine_slope_degree_absorbed (E D : ℕ)
     _ ≤ E * (D - 1) + E := Nat.add_le_add_left hE _
     _ = E * ((D - 1) + 1) := by rw [Nat.mul_add, Nat.mul_one]
     _ = E * D := by rw [← hsplit]
-
 end
-
 end ProximityPrize.SubmissionLower.UniversalNumerator

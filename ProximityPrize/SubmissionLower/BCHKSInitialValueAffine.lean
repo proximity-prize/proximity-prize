@@ -1,14 +1,9 @@
 import ProximityPrize.SubmissionLower.BCHKSHenselAlignmentCore
-
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F]
-
-/-- Corrected numerator for the actual finite-Hensel initial value `T/W`.
-It represents `W * (γ - (u₀ + (T/W)u₁))`, with the usual common denominator. -/
 noncomputable def explicitInitialValueGammaDifferenceRegular
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -19,8 +14,6 @@ noncomputable def explicitInitialValueGammaDifferenceRegular
       explicitGammaDifferenceRegular x₀ dx u₀ 0 R hHyp hzeta N k hkN -
     commonTRegular * commonConstRegular u₁ *
       concreteDenRegularBridge x₀ R hHyp k
-
-/-- Exact embedding identity, including the extra clearing `W`. -/
 theorem embedding_explicitInitialValueGammaDifferenceRegular
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -44,8 +37,6 @@ theorem embedding_explicitInitialValueGammaDifferenceRegular
   have hW := Wfield_ne_zero (H:=H)
   field_simp [hW]
   ring
-
-/-- Pure affine interpolation over an arbitrary extension field. -/
 theorem extension_polynomial_eq_affine_of_many_evals
     {K : Type} [Field K] [DecidableEq F]
     (φ : F →+* K) (y : K) (γ : K[X]) (k : ℕ)
@@ -82,21 +73,15 @@ theorem extension_polynomial_eq_affine_of_many_evals
   · rw [Fintype.card_coe,hcard]
     exact max_lt (hγdeg.trans_lt (Nat.lt_succ_self k))
       (hrhs.trans_lt (Nat.lt_succ_self k))
-
-/-- The canonical centered function-field lift. -/
 noncomputable def canonicalFunctionFieldGamma
     (H : F[X][Y]) [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y]) (N k : ℕ) : (𝕃 H)[X] :=
   (FiniteHensel.truncSeries (finiteAlpha (R:=R) (H:=H) x₀ N) k).comp
     (Polynomial.X - Polynomial.C (fieldTo𝕃 (H:=H) x₀))
-
 noncomputable def groundToFunctionField
     (H : F[X][Y]) [Fact (Irreducible H)] [Fact (0 < H.natDegree)] :
     F →+* 𝕃 H :=
   (liftToFunctionField (H:=H)).comp (Polynomial.C : F →+* F[X])
-
-/-- Generic interpolation instantiated in the actual function field, with the
-correct distinguished root `T/W`. -/
 theorem canonicalFunctionFieldGamma_affine
     [DecidableEq F] {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y]) (N k : ℕ)
@@ -116,9 +101,6 @@ theorem canonicalFunctionFieldGamma_affine
       change (canonicalFunctionFieldGamma H x₀ R N k).eval (fieldTo𝕃 (H:=H) x) =
         fieldTo𝕃 (H:=H) (U₀ x) + initialValue (H:=H) * fieldTo𝕃 (H:=H) (U₁ x)
       exact heval x hx)
-
-
-/-- Exact pair-evaluation formula for the corrected numerator. -/
 theorem piZ_explicitInitialValueGammaDifferenceRegular
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ z y : F) (root : rationalRoot (monicize H) z)
@@ -193,9 +175,6 @@ theorem piZ_explicitInitialValueGammaDifferenceRegular
   rw [map_sub,map_mul,map_mul,map_mul,hold]
   simp [commonWRegular,commonTRegular,commonConstRegular,piZ,piZLift,hy]
   ring
-
-/-- Pair agreement is equivalent to vanishing of the corrected numerator at a
-non-pole pair. -/
 theorem piZ_explicitInitialValueGammaDifferenceRegular_eq_zero_iff
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ z y : F) (root : rationalRoot (monicize H) z)
@@ -218,10 +197,6 @@ theorem piZ_explicitInitialValueGammaDifferenceRegular_eq_zero_iff
     exact sub_eq_zero.mp h₂
   · intro h
     simp [h]
-
-
-
-/-- Sharp regular-weight bound for the corrected numerator. -/
 theorem explicitInitialValueGammaDifferenceRegular_weight
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -293,11 +268,8 @@ theorem explicitInitialValueGammaDifferenceRegular_weight
     simp [M,B]
     have hd : 1 ≤ Bivariate.natDegreeY R := by omega
     nlinarith))
-
-/-- The one-extra-`W` budget is absorbed by the global `2*DX` budget. -/
 theorem initialValue_extraW_budget (k DX d D : ℕ) (hkDX : k < DX) :
     (2*k+2)*d*D ≤ 2*DX*d*D := by
   have : 2*k+2 ≤ 2*DX := by omega
   simpa [mul_assoc] using Nat.mul_le_mul_right (d*D) this
-
 end ProximityPrize.SubmissionLower

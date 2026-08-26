@@ -1,21 +1,12 @@
 import ProximityPrize.SubmissionLower.BCHKSFactorPigeon
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial
-
 set_option maxHeartbeats 20000000
 set_option maxRecDepth 1000000
-
 namespace WeightedFactorCaps
-
 variable {A : Type*} [CommSemiring A]
-
-/-- Maximum of `deg_X(coeff_Y j) + k*j`; the tie-breaker used in the
-multiplication proof is the largest outer index attaining this maximum. -/
 noncomputable def weightedSupportDegree (p : Polynomial (Polynomial A)) (k : Nat) : Nat :=
   p.support.sup fun j => (p.coeff j).natDegree + k * j
-
 theorem coeffWeight_le_of_ne (p : Polynomial (Polynomial A)) (k j : Nat)
     (hj : p.coeff j ≠ 0) :
     (p.coeff j).natDegree + k * j ≤ weightedSupportDegree p k := by
@@ -23,7 +14,6 @@ theorem coeffWeight_le_of_ne (p : Polynomial (Polynomial A)) (k j : Nat)
   unfold weightedSupportDegree
   exact Finset.le_sup (f := fun i => (p.coeff i).natDegree + k * i)
     (Polynomial.mem_support_iff.mpr hj)
-
 theorem weightedSupportDegree_mul_le [IsDomain A]
     (p q : Polynomial (Polynomial A)) (k : Nat) (hp : p ≠ 0) (hq : q ≠ 0) :
     weightedSupportDegree (p * q) k ≤
@@ -73,8 +63,6 @@ theorem weightedSupportDegree_mul_le [IsDomain A]
     omega
   have hdeg := hsum hterm
   omega
-
-/-- Largest outer index among the terms attaining maximum weight. -/
 theorem exists_max_index_weighted (p : Polynomial (Polynomial A)) (k : Nat)
     (hp : p ≠ 0) :
     ∃ m ∈ p.support,
@@ -104,7 +92,6 @@ theorem exists_max_index_weighted (p : Polynomial (Polynomial A)) (k : Nat)
   have hnS : n ∈ s := by simp [s, hnmem, heq]
   have hnlemax : n ≤ mm := Finset.le_max' s n hnS
   exact (Nat.not_le_of_lt hmn) hnlemax
-
 theorem weightedSupportDegree_mul_ge [IsDomain A]
     (p q : Polynomial (Polynomial A)) (k : Nat) (hp : p ≠ 0) (hq : q ≠ 0) :
     weightedSupportDegree p k + weightedSupportDegree q k ≤
@@ -187,21 +174,15 @@ theorem weightedSupportDegree_mul_ge [IsDomain A]
   have hle := coeffWeight_le_of_ne (p * q) k N hprodcoeff
   rw [hcoeff] at hle
   omega
-
 theorem weightedSupportDegree_mul [IsDomain A]
     (p q : Polynomial (Polynomial A)) (k : Nat) (hp : p ≠ 0) (hq : q ≠ 0) :
     weightedSupportDegree (p * q) k =
       weightedSupportDegree p k + weightedSupportDegree q k :=
   le_antisymm (weightedSupportDegree_mul_le p q k hp hq)
     (weightedSupportDegree_mul_ge p q k hp hq)
-
 end WeightedFactorCaps
-
-
 namespace WeightedFactorCaps
-
 variable {A : Type*} [CommSemiring A]
-
 theorem weightedSupportDegree_lt_of_coeff_cap
     (p : Polynomial (Polynomial A)) (k B : Nat) (hp : p ≠ 0)
     (hcap : ∀ j a, (p.coeff j).coeff a ≠ 0 → a + k * j < B) :
@@ -221,7 +202,6 @@ theorem weightedSupportDegree_lt_of_coeff_cap
     rw [Polynomial.coeff_natDegree]
     exact Polynomial.leadingCoeff_ne_zero.mpr hc
   exact hcap j _ hlc
-
 theorem coeff_cap_of_dvd
     [IsDomain A]
     (Q R : Polynomial (Polynomial A)) (k B : Nat)
@@ -240,14 +220,9 @@ theorem coeff_cap_of_dvd
   have hale : a ≤ (R.coeff j).natDegree := Polynomial.le_natDegree_of_ne_zero ha
   have hw := coeffWeight_le_of_ne R k j hc
   omega
-
-
 end WeightedFactorCaps
-
 namespace WeightedFactorCaps
 variable {F : Type*} [Field F]
-
-/-- Sharp `(X + kY)` support-cap inheritance by a trivariate normalized factor. -/
 theorem normalizedFactor_weightedX_cap
     [NormalizationMonoid F]
     (Q R : Polynomial (Polynomial (Polynomial F))) (k B : Nat)
@@ -257,6 +232,5 @@ theorem normalizedFactor_weightedX_cap
     ∀ j a, ((R.coeff j).coeff a) ≠ 0 → a + k * j < B :=
   coeff_cap_of_dvd Q R k B hQ
     (UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors hR) hcap
-
 end WeightedFactorCaps
 end ProximityPrize.SubmissionLower

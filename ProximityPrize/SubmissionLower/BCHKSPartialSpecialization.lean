@@ -1,30 +1,22 @@
 import ProximityPrize.SubmissionLower.BCHKSRegularDenSpecialization
-
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F]
 variable {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
-
-/-- A function-field value is good at a pair when it has a regular fraction
-presentation whose denominator does not vanish there. -/
 def GoodAt (z : F) (root : rationalRoot (monicize H) z) (a : 𝕃 H) (v : F) : Prop :=
   ∃ b d : 𝒪 H, embeddingOf𝒪Into𝕃 H b = a * embeddingOf𝒪Into𝕃 H d ∧
     piZ z root d ≠ 0 ∧ v = piZ z root b / piZ z root d
-
 lemma GoodAt.zero (z : F) (root : rationalRoot (monicize H) z) :
     GoodAt z root (0 : 𝕃 H) 0 := by
   refine ⟨0, 1, by simp, by simp, by simp⟩
-
 lemma GoodAt.neg {z : F} {root : rationalRoot (monicize H) z} {a : 𝕃 H} {v : F}
     (h : GoodAt z root a v) : GoodAt z root (-a) (-v) := by
   obtain ⟨b,d,he,hd,hv⟩ := h
   refine ⟨-b,d,?_,hd,?_⟩
   · rw [map_neg, he]; ring
   · rw [map_neg, hv]; ring
-
 lemma GoodAt.add {z : F} {root : rationalRoot (monicize H) z}
     {a c : 𝕃 H} {v w : F} (ha : GoodAt z root a v) (hc : GoodAt z root c w) :
     GoodAt z root (a+c) (v+w) := by
@@ -33,7 +25,6 @@ lemma GoodAt.add {z : F} {root : rationalRoot (monicize H) z}
   refine ⟨b*f+e*d,d*f,?_,(by simpa using mul_ne_zero hd hf),?_⟩
   · simp only [map_add,map_mul,hb,he]; ring
   · simp only [map_add,map_mul,hv,hw]; field_simp
-
 lemma GoodAt.mul {z : F} {root : rationalRoot (monicize H) z}
     {a c : 𝕃 H} {v w : F} (ha : GoodAt z root a v) (hc : GoodAt z root c w) :
     GoodAt z root (a*c) (v*w) := by
@@ -42,7 +33,6 @@ lemma GoodAt.mul {z : F} {root : rationalRoot (monicize H) z}
   refine ⟨b*e,d*f,?_,(by simpa using mul_ne_zero hd hf),?_⟩
   · simp only [map_mul,hb,he]; ring
   · simp only [map_mul,hv,hw]; field_simp
-
 lemma GoodAt.div {z : F} {root : rationalRoot (monicize H) z}
     {a c : 𝕃 H} {v w : F} (ha : GoodAt z root a v) (hc : GoodAt z root c w)
     (hw0 : w ≠ 0) : GoodAt z root (a/c) (v/w) := by
@@ -69,9 +59,6 @@ lemma GoodAt.div {z : F} {root : rationalRoot (monicize H) z}
     <;> ring
   · simp only [map_mul,hv,hw]
     field_simp
-
-/-- Two good presentations of the same function-field value have the same
-pair value. -/
 lemma GoodAt.value_unique {z : F} {root : rationalRoot (monicize H) z}
     {a : 𝕃 H} {v w : F} (hv : GoodAt z root a v) (hw : GoodAt z root a w) : v=w := by
   obtain ⟨b,d,hb,hd,rfl⟩ := hv
@@ -87,19 +74,15 @@ lemma GoodAt.value_unique {z : F} {root : rationalRoot (monicize H) z}
     _ = (piZ z root b) * (piZ z root f) := by ring
     _ = (piZ z root e) * (piZ z root d) := hp
     _ = _ := by ring
-
-/-- Coefficientwise good specialization of polynomials. -/
 def PolyGoodAt (z : F) (root : rationalRoot (monicize H) z)
     (p : (𝕃 H)[X]) (q : F[X]) : Prop :=
   ∀ i, GoodAt z root (p.coeff i) (q.coeff i)
-
 lemma PolyGoodAt.add {z : F} {root : rationalRoot (monicize H) z}
     {p r : (𝕃 H)[X]} {q s : F[X]}
     (hp : PolyGoodAt z root p q) (hr : PolyGoodAt z root r s) :
     PolyGoodAt z root (p+r) (q+s) := by
   intro i
   simpa [Polynomial.coeff_add] using GoodAt.add (hp i) (hr i)
-
 lemma PolyGoodAt.monomial {z : F} {root : rationalRoot (monicize H) z}
     {a : 𝕃 H} {v : F} (h : GoodAt z root a v) (n : ℕ) :
     PolyGoodAt z root (Polynomial.C a * (Polynomial.X : (𝕃 H)[X])^n)
@@ -108,11 +91,6 @@ lemma PolyGoodAt.monomial {z : F} {root : rationalRoot (monicize H) z}
   by_cases hi : i=n
   · subst i; simpa using h
   · simp [Polynomial.coeff_C_mul, Polynomial.coeff_X_pow, hi, GoodAt.zero]
-
-/-- Naturality of the finite lift algorithm under a good partial
-specialization. The only structural premise is specialization of each residual
-coefficient; it follows mechanically from coefficient specialization of `R`
-using closure of `GoodAt` under polynomial sums and products. -/
 theorem liftPoly_goodAt_induction
     (z : F) (root : rationalRoot (monicize H) z)
     (RL : (𝕃 H)[X][Y]) (RF : F[X][Y])
@@ -148,10 +126,6 @@ theorem liftPoly_goodAt_induction
       apply PolyGoodAt.add hold
       apply PolyGoodAt.monomial
       apply GoodAt.div (GoodAt.neg (hres m (by omega) hold)) hslope hsF
-
-/-- Consequently the concrete regular fraction is automatically the
-specialized finite-lift coefficient; no per-coefficient equality hypothesis is
-needed. -/
 theorem concreteSpecializedAlpha_eq_liftCoeff_of_residual_specializes
     (x₀ : F) (R₀ : F[X][X][Y])
     (hHyp : HenselNumerators.Hypotheses x₀ R₀ H)
@@ -202,5 +176,4 @@ theorem concreteSpecializedAlpha_eq_liftCoeff_of_residual_specializes
         piZ_xi_eq_evalEval x₀ R₀ hHyp z root]
       exact mul_ne_zero (pow_ne_zero _ hW) (pow_ne_zero _ hxi)
   exact GoodAt.value_unique hrep ha
-
 end ProximityPrize.SubmissionLower

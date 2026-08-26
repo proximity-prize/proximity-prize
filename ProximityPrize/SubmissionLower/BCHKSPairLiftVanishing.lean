@@ -3,16 +3,10 @@ import ProximityPrize.SubmissionLower.BCHKSLifts
 import ProximityPrize.SubmissionLower.BCHKSRationalRootVanishing
 import ProximityPrize.SubmissionLower.BCHKSParameters
 import ProximityPrize.SubmissionLower.BCHKSRationalRootBridge
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate
 open RationalFunctions
-
 variable {F : Type} [Field F] [Fintype F]
-
-/-- One coefficient of a denominator-cleared function-field lift is zero if it
-has more good pair specializations than its regular-weight root bound. -/
 theorem functionField_coefficient_eq_zero_of_many_pair_roots
     {H : F[X][Y]} [Fact (Irreducible H)] (hH : 0 < H.natDegree)
     (D d t : ℕ) (hD : Bivariate.totalDegree H ≤ D)
@@ -56,11 +50,6 @@ theorem functionField_coefficient_eq_zero_of_many_pair_roots
     embedding_eq_zero_of_many_rational_roots hH (β t) D hD hncard
   rw [hembed] at hβzero
   exact (mul_eq_zero.mp hβzero).resolve_right (liftToFunctionField_ne_zero hC)
-
-
-/-- General denominator version: the clearing denominator may itself be a
-regular element of `𝒪 H` (as happens for `W^(t+1) ξ^E`), rather than a lifted
-base polynomial.  Root counting concerns the numerator `β` directly. -/
 theorem functionField_coefficient_eq_zero_of_many_pair_roots_regular_den
     {H : F[X][Y]} [Fact (Irreducible H)] (hH : 0 < H.natDegree)
     (D d t : ℕ) (hD : Bivariate.totalDegree H ≤ D)
@@ -100,9 +89,6 @@ theorem functionField_coefficient_eq_zero_of_many_pair_roots_regular_den
   have hβzero := embedding_eq_zero_of_many_rational_roots hH (β t) D hD hncard
   rw [hembed] at hβzero
   exact (mul_eq_zero.mp hβzero).resolve_right hden
-
-
-/-- Simultaneous regular-denominator version. -/
 theorem functionField_middle_coefficients_eq_zero_of_many_pair_roots_regular_den
     {H : F[X][Y]} [Fact (Irreducible H)] (hH : 0 < H.natDegree)
     (D d k DX e : ℕ) (hD : Bivariate.totalDegree H ≤ D)
@@ -132,10 +118,6 @@ theorem functionField_middle_coefficients_eq_zero_of_many_pair_roots_regular_den
       _ ≤ 2 * DX * (d * D * H.natDegree) := hmul
       _ = 2 * DX * H.natDegree * d * D := by ring
   omega
-
-/-- Simultaneous form for every coefficient strictly between `k` and `DX`.
-The uniform pair-fiber bound dominates every coefficient's individual
-`(2t+1)dD dH` root bound. -/
 theorem functionField_middle_coefficients_eq_zero_of_many_pair_roots
     {H : F[X][Y]} [Fact (Irreducible H)] (hH : 0 < H.natDegree)
     (D d k DX e : ℕ) (hD : Bivariate.totalDegree H ≤ D)
@@ -166,9 +148,6 @@ theorem functionField_middle_coefficients_eq_zero_of_many_pair_roots
       _ ≤ 2 * DX * (d * D * H.natDegree) := hmul
       _ = 2 * DX * H.natDegree * d * D := by ring
   omega
-
-/-- Generic pole-removal count: deleting at most `B` bad points from a fiber of
-size greater than `A+B` leaves more than `A` good points. -/
 theorem card_sdiff_gt_of_card_gt_add
     {ι : Type} [DecidableEq ι] (S bad : Finset ι) (A B : ℕ)
     (hbad : bad.card ≤ B) (hlarge : A + B < S.card) :
@@ -177,8 +156,6 @@ theorem card_sdiff_gt_of_card_gt_add
     Finset.card_le_card (Finset.inter_subset_right)
   have hsplit := Finset.card_sdiff_add_card_inter S bad
   omega
-
-/-- Pole-removal arithmetic with the BCHKS uniform coefficient threshold. -/
 theorem pair_fiber_after_pole_removal_large
     {ι : Type} [DecidableEq ι] (S poles : Finset ι)
     (DX dH d D e : ℕ) (hpoles : poles.card ≤ e + 1)
@@ -186,5 +163,4 @@ theorem pair_fiber_after_pole_removal_large
     2 * DX * dH * d * D < (S \ poles).card := by
   exact card_sdiff_gt_of_card_gt_add S poles
     (2 * DX * dH * d * D) (e + 1) hpoles hfiber
-
 end ProximityPrize.SubmissionLower

@@ -1,25 +1,17 @@
 import ProximityPrize.SubmissionLower.BCHKSUniversalOuterSelection6399
 import ProximityPrize.SubmissionLower.BCHKSUniversalConcreteObstruction
 import ProximityPrize.SubmissionLower.BCHKSUniversalPairFiberBridge6399
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
 open Polynomial Polynomial.Bivariate
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 8000000
-
 namespace UniversalConcreteSelection6399
-
 open UniversalOuterCover6399
 open UniversalOuterSelection6399
 open UniversalPairFiberBridge6399
 open UniversalNumerator
-
-/-- The global universal-resultant selector, instantiated with the concrete
-rooted numerator obstruction attached to the interpolant. -/
 theorem exists_concrete_selected_pair6399
     (U : Fin 2 → IRSProfile.Index → IRSProfile.Field)
     (S : Finset IRSProfile.Field)
@@ -122,7 +114,5 @@ theorem exists_concrete_selected_pair6399
       hPEeval hcaps hrow hGcaps hGroot
   exact ⟨x₀, RH, T, Coord, hRH, hx, hTS, hTcard, hCoord,
     by simpa [PE] using hrel, by simpa [G] using hdiv⟩
-
 end UniversalConcreteSelection6399
-
 end ProximityPrize.SubmissionLower

@@ -1,37 +1,8 @@
 import ProximityPrize.SubmissionLower.BCHKSFunctionField
-/-
-Copyright (c) 2024-2025 ArkLib Contributors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Katerina Hristova, František Silváši, Julian Sutherland, Ilia Vlasov
--/
-
-
-/-!
-# Vanishing of Regular Elements
-
-Appendix A.3 of [BCIKS20], Lemma A.1: a regular `β ∈ 𝒪 H` that vanishes under more than
-`deg_Y H · Λ(β)` rational substitutions `π_z` is zero in `𝕃 H`. Proved along the paper's route,
-via the resultant `res_T(β, H̃)` and a Sylvester-matrix degree bound.
-
-## References
-
-[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf.
-  Proximity gaps for Reed-Solomon codes. In 2020 IEEE 61st Annual Symposium on Foundations of
-  Computer Science (FOCS), 2020. Full paper: https://eprint.iacr.org/2020/654,
-  version 20210703:203025.
-
--/
-
-
 open Polynomial Polynomial.Bivariate ToRatFunc Ideal
-
 namespace RationalFunctions
 section RationalRootVanishing
-
 variable {F : Type} [Field F]
-
-/-- Every monomial of `H̃` has `Λ`-weight at most `dH·(D + 1 - dH)`, in the unpacked form used by
-the Sylvester-matrix degree count below.  Restatement of `weight_monicize_le`. -/
 theorem natDegree_coeff_monicize_le_of_totalDegree_le {H : F[X][Y]} {D : ℕ}
     (hD : Bivariate.totalDegree H ≤ D)
     (hH : 0 < H.natDegree) {j : ℕ}
@@ -40,9 +11,6 @@ theorem natDegree_coeff_monicize_le_of_totalDegree_le {H : F[X][Y]} {D : ℕ}
     ((monicize H).coeff j).natDegree ≤
       H.natDegree * (D + 1 - Bivariate.natDegreeY H) := by
   exact (weight_le_iff.mp (weight_monicize_le hD hH)) j hj
-
-/-- A weight bound on `β` read off monomial-by-monomial on its canonical representative: each
-monomial `Tⁱ · (coeff i)` obeys `i·(D + 1 - dH) + deg_Z (coeff i) ≤ B`. -/
 theorem canonicalRep_coeff_natDegree_le_of_weight_bound {H : F[X][Y]} (hH : 0 < H.natDegree)
     {D B : ℕ} (β : 𝒪 H)
     (hβw : regularWeight hH β D ≤ (WithBot.some B : WithBot ℕ))
@@ -51,10 +19,6 @@ theorem canonicalRep_coeff_natDegree_le_of_weight_bound {H : F[X][Y]} (hH : 0 < 
     ((canonicalRepOf𝒪 hH β).coeff i).natDegree ≤ B := by
   unfold regularWeight at hβw
   exact (weight_le_iff.mp hβw) i hi
-
-/-- If the resultant `res_T(β, H̃)` vanishes then `β` is zero in `𝕃`.  A vanishing resultant makes
-the canonical representative and `H̃` non-coprime; irreducibility of `H̃` and the degree bound
-`deg_T β < deg_T H̃` then force `β = 0`.  This is the last step of the vanishing criterion. -/
 theorem embedding_eq_zero_of_resultant_zero {H : F[X][Y]} [Fact (Irreducible H)]
     (hH : 0 < H.natDegree) (β : 𝒪 H)
     (hres : Polynomial.resultant (canonicalRepOf𝒪 hH β) (monicize H) = 0) :
@@ -90,9 +54,6 @@ theorem embedding_eq_zero_of_resultant_zero {H : F[X][Y]} [Fact (Irreducible H)]
   change embeddingOf𝒪Into𝕃 H (Ideal.Quotient.mk (Ideal.span {monicize H}) p : 𝒪 H) = 0
   rw [hp_zero]
   simp
-
-/-- A determinant has degree at most `N` as soon as every permutation product does, since the
-Leibniz expansion is a sum of such products. -/
 theorem natDegree_det_le_of_perm_products_le {ι : Type} [Fintype ι] [DecidableEq ι]
     (M : Matrix ι ι F[X]) {N : ℕ}
     (h : ∀ σ : Equiv.Perm ι, (∏ i : ι, M (σ i) i).natDegree ≤ N) :
@@ -103,10 +64,6 @@ theorem natDegree_det_le_of_perm_products_le {ι : Type} [Fintype ι] [Decidable
   intro σ hσ
   exact le_trans (Polynomial.natDegree_C_mul_le ((Equiv.Perm.sign σ : ℤ) : F) (∏ i : ι, M (σ i) i))
       (h σ)
-
-/-- The degree count behind the vanishing criterion: `deg_Z res_T(β, H̃) ≤ Λ(β)·dH`.  Proved from
-the Sylvester matrix, bounding each permutation product by summing the weight budgets of the
-`β`-rows and the `H̃`-rows. -/
 theorem natDegree_resultant_le_weight_bound {H : F[X][Y]} (hH : 0 < H.natDegree) {D B : ℕ}
     (hD : Bivariate.totalDegree H ≤ D) (β : 𝒪 H)
     (hβw : regularWeight hH β D ≤ (WithBot.some B : WithBot ℕ)) :
@@ -287,8 +244,6 @@ theorem natDegree_resultant_le_weight_bound {H : F[X][Y]} (hH : 0 < H.natDegree)
                     (f := fun i : Fin (e + d) => M (σ i) i))
       _ = (∑ j : Fin e, ldeg j) + (∑ j : Fin d, rdeg j) := hsum_deg_split
       _ ≤ B * d := by simpa [Nat.mul_comm] using hdeg_parts
-
-/-- A univariate polynomial of degree at most `N` with more than `N` roots is zero. -/
 theorem poly_eq_zero_of_ncard_gt_bound_of_subset_roots {p : F[X]} {S : Set F} {N : ℕ}
     (hS : S ⊆ {z | p.eval z = 0})
     (hdeg : p.natDegree ≤ N)
@@ -303,17 +258,11 @@ theorem poly_eq_zero_of_ncard_gt_bound_of_subset_roots {p : F[X]} {S : Set F} {N
     exact Set.ncard_le_ncard hsubset
   have hrootcard : Set.ncard (p.rootSet F) ≤ p.natDegree := Polynomial.ncard_rootSet_le p F
   omega
-
-/-- Evaluating a resultant at `Z = z` is the fixed-degree resultant of the evaluated polynomials.
-The degrees must be fixed to the *original* ones, since evaluation can drop degree. -/
 theorem resultant_eval_eq_resultant_map_eval_fixed_degrees (p q : F[X][Y]) (z : F) :
     (Polynomial.resultant p q).eval z =
       Polynomial.resultant (p.map (Polynomial.evalRingHom z))
         (q.map (Polynomial.evalRingHom z)) p.natDegree q.natDegree := by
   exact (Polynomial.resultant_map_map p q p.natDegree q.natDegree (Polynomial.evalRingHom z)).symm
-
-/-- The fixed-degree resultant of two polynomials with a common root vanishes, when the right
-factor is monic of the declared degree. -/
 theorem resultant_fixed_degree_eq_zero_of_common_root_of_monic_right {p q : F[X]} {m n : ℕ} {t : F}
     (hm : p.natDegree ≤ m) (hqmonic : q.Monic) (hn : q.natDegree = n)
     (hp : p.eval t = 0) (hq : q.eval t = 0) :
@@ -332,9 +281,6 @@ theorem resultant_fixed_degree_eq_zero_of_common_root_of_monic_right {p q : F[X]
   rw [Polynomial.resultant_add_left_deg]
   · simp [hres0]
   · exact le_rfl
-
-/-- Every substitution killing `β` is a root of `res_T(β, H̃)`: at such a `z`, the pair `(t_z, z)`
-is a common root of `β` and `H̃`, so the specialized resultant vanishes. -/
 theorem rationalVanishingSet_subset_resultant_roots {H : F[X][Y]} (hH : 0 < H.natDegree)
     (β : 𝒪 H) :
     rationalVanishingSet β ⊆
@@ -362,9 +308,6 @@ theorem rationalVanishingSet_subset_resultant_roots {H : F[X][Y]} (hH : 0 < H.na
   change (Polynomial.resultant p q).eval z = 0
   rw [resultant_eval_eq_resultant_map_eval_fixed_degrees]
   exact hres
-
-/-- Weight `⊥` means the canonical representative is the zero polynomial, hence `β = 0` in `𝕃`.
-This is the degenerate branch of the vanishing criterion. -/
 theorem embedding_eq_zero_of_weight_eq_bot {H : F[X][Y]} (hH : 0 < H.natDegree) (β : 𝒪 H) (D : ℕ)
     (hw : regularWeight hH β D = ⊥) :
   embeddingOf𝒪Into𝕃 H β = 0 := by
@@ -390,15 +333,6 @@ theorem embedding_eq_zero_of_weight_eq_bot {H : F[X][Y]} (hH : 0 < H.natDegree) 
   change embeddingOf𝒪Into𝕃 H (Ideal.Quotient.mk (Ideal.span {monicize H}) p : 𝒪 H) = 0
   rw [hp]
   simp
-
-
-/-- **A regular element with too many vanishing substitutions is zero.**  If `β ∈ 𝒪 H` satisfies
-`π_z β = 0` for more than `Λ(β) · deg_Y H` values of `z`, then `β = 0` in `𝕃 H`.
-
-This is the analogue for `𝒪 H` of "a polynomial of degree `≤ n` with more than `n` roots is zero",
-and the reason `Λ` is worth tracking at all: every weight bound on a regular element converts into
-a bound on the number of substitutions that can kill it.  Proved via the resultant `res_T(β, H̃)`,
-whose `Z`-degree is at most `Λ(β) · deg_Y H` and which vanishes at every such `z`. -/
 lemma embedding_eq_zero_of_many_rational_roots {H : F[X][Y]}
     [hHirreducible : Fact (Irreducible H)]
     (hH : 0 < H.natDegree) (β : 𝒪 H) (D : ℕ)
@@ -430,7 +364,5 @@ lemma embedding_eq_zero_of_many_rational_roots {H : F[X][Y]}
       apply embedding_eq_zero_of_resultant_zero hH β
       dsimp [R] at hRzero
       exact hRzero
-
 end RationalRootVanishing
-
 end RationalFunctions

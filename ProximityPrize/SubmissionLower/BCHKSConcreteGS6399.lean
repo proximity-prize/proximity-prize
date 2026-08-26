@@ -1,48 +1,35 @@
 import ProximityPrize.Benchmark.TargetLower
-
 namespace ProximityPrize.SubmissionLower
-
 open scoped BigOperators
-
 namespace BCHKSConcreteGS6399
-
 set_option maxRecDepth 1000000
 set_option linter.constructorNameAsVariable false
 set_option maxHeartbeats 4000000
-
 def n : ℕ := 262144
 def k : ℕ := 131071
 def m : ℕ := 3733
 def DX : ℕ := 692001142
 def DY : ℕ := 5280
 def DZ : ℕ := 13141403
-
-/-- Coefficients of `X^a Y^j Z^h`. -/
 abbrev VarIndex := Σ j : Fin DY, Fin (DX - k * (j : ℕ)) × Fin (DZ - (j : ℕ))
-
-/-- The coefficient constraints, ordered as point, Y order, X order, Z order. -/
 abbrev ConIndex := Fin n × Σ t : Fin m, Fin (m - (t : ℕ)) × Fin (DZ - (t : ℕ))
-
 private noncomputable def evalConstraint {F : Type} [Field F]
     (x y : Polynomial F) (s t d : ℕ) :
     Polynomial (Polynomial (Polynomial F)) →ₗ[F] F where
   toFun Q := ((((Polynomial.Bivariate.shift Q x y).coeff t).coeff s).coeff d)
   map_add' Q R := by simp [Polynomial.Bivariate.shift]
   map_smul' a Q := by simp [Polynomial.Bivariate.shift]
-
 private theorem prod_heq {α α' β β' : Type} {a : α} {a' : α'} {b : β} {b' : β'}
     (ha : a ≍ a') (hb : b ≍ b') : (a, b) ≍ (a', b') := by
   cases ha
   cases hb
   rfl
-
 noncomputable def polyMap {F : Type} [Field F] :
     (VarIndex → F) →ₗ[F] Polynomial (Polynomial (Polynomial F)) :=
   Finsupp.linearCombination F (fun q : VarIndex =>
     Polynomial.monomial (q.1 : ℕ)
       (Polynomial.monomial (q.2.1 : ℕ) (Polynomial.monomial (q.2.2 : ℕ) 1))) ∘ₗ
     (Finsupp.linearEquivFunOnFinite F F VarIndex).symm.toLinearMap
-
 noncomputable def constraintMap {F : Type} [Field F]
     (ω : Fin n ↪ F) (u₀ u₁ : Fin n → F) :
     (VarIndex → F) →ₗ[F] (ConIndex → F) :=
@@ -51,7 +38,6 @@ noncomputable def constraintMap {F : Type} [Field F]
       (Polynomial.C (ω q.1))
       (Polynomial.C (u₀ q.1) + Polynomial.X * Polynomial.C (u₁ q.1))
       (q.2.2.1 : ℕ) (q.2.1 : ℕ) (q.2.2.2 : ℕ) ∘ₗ polyMap)
-
 open scoped BigOperators in
 theorem polyMap_eq_sum {F : Type} [Field F] (c : VarIndex → F) :
     polyMap c = ∑ q : VarIndex, c q •
@@ -60,7 +46,6 @@ theorem polyMap_eq_sum {F : Type} [Field F] (c : VarIndex → F) :
   unfold polyMap
   rw [Finsupp.linearCombination_eq_fintype_linearCombination,
     Fintype.linearCombination_apply]
-
 open scoped BigOperators in
 theorem polyMap_coeff_pair {F : Type} [Field F] (c : VarIndex → F) (a j : ℕ) :
     ((polyMap c).coeff j).coeff a =
@@ -75,7 +60,6 @@ theorem polyMap_coeff_pair {F : Type} [Field F] (c : VarIndex → F) (a j : ℕ)
     · simp [hj, ha, Polynomial.smul_monomial]
     · simp [hj, ha, Polynomial.coeff_smul, Polynomial.coeff_monomial]
   · simp [hj, Polynomial.coeff_smul, Polynomial.coeff_monomial]
-
 open scoped BigOperators in
 theorem polyMap_coeff_index {F : Type} [Field F] (c : VarIndex → F) (q : VarIndex) :
     ((((polyMap c).coeff (q.1 : ℕ)).coeff (q.2.1 : ℕ)).coeff (q.2.2 : ℕ)) = c q := by
@@ -103,7 +87,6 @@ theorem polyMap_coeff_index {F : Type} [Field F] (c : VarIndex → F) (q : VarIn
       simp only [Polynomial.coeff_monomial, if_neg hh]
     · simp [he]
   · simp
-
 theorem polyMap_ne_zero {F : Type} [Field F] (c : VarIndex → F) (hc : c ≠ 0) :
     polyMap c ≠ 0 := by
   intro hQ
@@ -112,9 +95,6 @@ theorem polyMap_ne_zero {F : Type} [Field F] (c : VarIndex → F) (hc : c ≠ 0)
   have h := polyMap_coeff_index c q
   rw [hQ] at h
   simpa using h.symm
-
-/-- Closed form for the quadratic summand occurring in both dimension
-counts.  Multiplying by six avoids division in the induction. -/
 private theorem six_mul_sum_affine_product
     (N : Nat) (A B C : Int) :
     6 * (∑ j ∈ Finset.range N, (A - C * (j : Int)) * (B - (j : Int))) =
@@ -127,7 +107,6 @@ private theorem six_mul_sum_affine_product
       rw [Finset.sum_range_succ, mul_add, ih]
       push_cast
       ring
-
 open scoped BigOperators in
 theorem card_var : Fintype.card VarIndex = 24007274054908893760 := by
   rw [Fintype.card_sigma]
@@ -160,7 +139,6 @@ theorem card_var : Fintype.card VarIndex = 24007274054908893760 := by
         24007274054908893760 := by
     nlinarith
   exact_mod_cast heq
-
 open scoped BigOperators in
 theorem card_con : Fintype.card ConIndex = 24007274054876921856 := by
   rw [Fintype.card_prod, Fintype.card_sigma]
@@ -208,17 +186,14 @@ theorem card_con : Fintype.card ConIndex = 24007274054876921856 := by
   rw [hif]
   rw [heqNat]
   norm_num [n]
-
 theorem card_con_lt_var : Fintype.card ConIndex < Fintype.card VarIndex := by
   rw [card_con, card_var]
   norm_num
-
 structure KernelWitness {F : Type} [Field F]
     (ω : Fin n ↪ F) (u₀ u₁ : Fin n → F) where
   c : VarIndex → F
   c_ne_zero : c ≠ 0
   constraints : constraintMap ω u₀ u₁ c = 0
-
 theorem exists_kernelWitness {F : Type} [Field F]
     (ω : Fin n ↪ F) (u₀ u₁ : Fin n → F) : Nonempty (KernelWitness ω u₀ u₁) := by
   have hfinrank : Module.finrank F (ConIndex → F) < Module.finrank F (VarIndex → F) := by
@@ -227,7 +202,6 @@ theorem exists_kernelWitness {F : Type} [Field F]
     LinearMap.ker_ne_bot_of_finrank_lt hfinrank
   obtain ⟨c, hc, hc0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hker
   exact ⟨{ c := c, c_ne_zero := hc0, constraints := hc }⟩
-
 private theorem innerMonomial_shift_coeff {F : Type} [Field F]
     (a h : ℕ) (x : F) (s : ℕ) :
     (((Polynomial.monomial a (Polynomial.monomial h 1) :
@@ -238,7 +212,6 @@ private theorem innerMonomial_shift_coeff {F : Type} [Field F]
     Polynomial.coeff_X_add_C_pow]
   rw [← Polynomial.C_eq_natCast]
   rw [← map_pow, ← map_mul, Polynomial.monomial_mul_C, one_mul]
-
 private theorem outerAffine_map {F : Type} [Field F]
     (x y₀ y₁ : F) :
     Polynomial.map
@@ -248,7 +221,6 @@ private theorem outerAffine_map {F : Type} [Field F]
       Polynomial.X + Polynomial.C
         (Polynomial.C (Polynomial.C y₀ + Polynomial.X * Polynomial.C y₁)) := by
   simp [Polynomial.coe_compRingHom_apply]
-
 private theorem basis_shift_coeff_formula {F : Type} [Field F] (q : VarIndex)
     (x y₀ y₁ : F) (s t : ℕ) :
     ((Polynomial.Bivariate.shift
@@ -279,7 +251,6 @@ private theorem basis_shift_coeff_formula {F : Type} [Field F] (q : VarIndex)
           Polynomial.C ((q.1 : ℕ).choose t : F)) *
         (Polynomial.C y₀ + Polynomial.X * Polynomial.C y₁) ^ ((q.1 : ℕ) - t) := by ring
     _ = _ := by rw [Polynomial.monomial_mul_C]
-
 private theorem basis_shift_coeff_natDegree_le {F : Type} [Field F] (q : VarIndex)
     (x y₀ y₁ : F) (s t : ℕ) :
     (((Polynomial.Bivariate.shift
@@ -305,7 +276,6 @@ private theorem basis_shift_coeff_natDegree_le {F : Type} [Field F] (q : VarInde
       Polynomial.natDegree_mul_le
     _ ≤ (q.2.2 : ℕ) + ((q.1 : ℕ) - t) := by
       exact add_le_add hmono (by simpa only [mul_one] using hpow)
-
 open scoped BigOperators in
 private theorem shift_coeff_eq_sum {F : Type} [Field F] (c : VarIndex → F)
     (x y : Polynomial F) (s t : ℕ) :
@@ -324,11 +294,9 @@ private theorem shift_coeff_eq_sum {F : Type} [Field F] (c : VarIndex → F)
         (Polynomial.monomial (q.2.1 : ℕ) (Polynomial.monomial (q.2.2 : ℕ) 1)))) = _
   rw [Polynomial.finsetSum_coeff]
   rfl
-
 private theorem index_yz_lt (q : VarIndex) : (q.2.2 : ℕ) + (q.1 : ℕ) < DZ := by
   have h := q.2.2.isLt
   omega
-
 private theorem shift_coeff_natDegree_lt {F : Type} [Field F] (c : VarIndex → F)
     (x y₀ y₁ : F) (s t : ℕ) (ht : t < m) :
     (((Polynomial.Bivariate.shift (polyMap c)
@@ -367,7 +335,6 @@ private theorem shift_coeff_natDegree_lt {F : Type} [Field F] (c : VarIndex → 
       rw [hchoose]
       simp
   · omega
-
 theorem constraintMap_apply {F : Type} [Field F]
     (ω : Fin n ↪ F) (u₀ u₁ : Fin n → F) (c : VarIndex → F) (q : ConIndex) :
     constraintMap ω u₀ u₁ c q =
@@ -376,7 +343,6 @@ theorem constraintMap_apply {F : Type} [Field F]
         (Polynomial.C (u₀ q.1) + Polynomial.X * Polynomial.C (u₁ q.1))).coeff
           (q.2.1 : ℕ)).coeff (q.2.2.1 : ℕ)).coeff (q.2.2.2 : ℕ)) := by
   rfl
-
 private theorem witness_shift_vanish {F : Type} [Field F]
     (ω : Fin n ↪ F) (u₀ u₁ : Fin n → F) (w : KernelWitness ω u₀ u₁) :
     ∀ i s t, s + t < m →
@@ -399,8 +365,6 @@ private theorem witness_shift_vanish {F : Type} [Field F]
     exact hzero
   · have hdeg := shift_coeff_natDegree_lt w.c (ω i) (u₀ i) (u₁ i) s t (by omega)
     exact Polynomial.coeff_eq_zero_of_natDegree_lt (lt_of_lt_of_le hdeg (by omega))
-
-
 private theorem finsetMaxGetD_le (s : Finset ℕ) (B : ℕ)
     (h : ∀ a ∈ s, a ≤ B) : Option.getD (Finset.max s) 0 ≤ B := by
   have hmax : Finset.max s ≤ (B : WithBot ℕ) := by
@@ -416,7 +380,6 @@ private theorem finsetMaxGetD_le (s : Finset ℕ) (B : ℕ)
     cases Finset.max s <;> rfl
   rw [← heq]
   exact hunbot
-
 private theorem weighted_lt_of_support {F : Type} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (hQ : Q ≠ 0)
     (hcaps : ∀ j a, (Q.coeff j).coeff a ≠ 0 →
@@ -432,7 +395,6 @@ private theorem weighted_lt_of_support {F : Type} [Field F]
   have hi : (Q.coeff j).natDegree ∈ (Q.coeff j).support :=
     Polynomial.natDegree_mem_support_of_nonzero hc
   exact (hcaps j (Q.coeff j).natDegree (Polynomial.mem_support_iff.mp hi)).2.1
-
 private theorem natDegreeY_lt_of_support {F : Type} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (hQ : Q ≠ 0)
     (hcaps : ∀ j a, (Q.coeff j).coeff a ≠ 0 →
@@ -443,7 +405,6 @@ private theorem natDegreeY_lt_of_support {F : Type} [Field F]
   have hc : Q.coeff Q.natDegree ≠ 0 := Polynomial.mem_support_iff.mp hj
   obtain ⟨a, ha⟩ := Polynomial.nonempty_support_iff.mpr hc
   exact (hcaps Q.natDegree a (Polynomial.mem_support_iff.mp ha)).1
-
 private theorem DYZ_lt_of_support {F : Type} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F)))
     (hcaps : ∀ j a, (Q.coeff j).coeff a ≠ 0 →
@@ -470,9 +431,6 @@ private theorem DYZ_lt_of_support {F : Type} [Field F]
     omega
   norm_num [DZ] at hle ⊢
   omega
-
-/-- The concrete BCHKS interpolation polynomial. Besides nonzeroness and all
-multiplicity equations, its support satisfies the three strict integer caps. -/
 theorem exists_interpolant {F : Type} [Field F]
     (ω : Fin n ↪ F) (u₀ u₁ : Fin n → F) :
     ∃ Q : Polynomial (Polynomial (Polynomial F)),
@@ -518,10 +476,6 @@ theorem exists_interpolant {F : Type} [Field F]
       simp only [Polynomial.natDegree_zero]
       omega
   omega
-
-
-/-- Standard degree formulations of the three support caps (and the resulting
-`X`-degree cap), packaged with the concrete interpolation equations. -/
 theorem exists_interpolant_with_degree_caps {F : Type} [Field F]
     (ω : Fin n ↪ F) (u₀ u₁ : Fin n → F) :
     ∃ Q : Polynomial (Polynomial (Polynomial F)),
@@ -540,6 +494,5 @@ theorem exists_interpolant_with_degree_caps {F : Type} [Field F]
     (Polynomial.Bivariate.degreeX_le_natWeightedDegree Q k).trans_lt hw
   exact ⟨Q, hQ, hvan, hw, hx, natDegreeY_lt_of_support Q hQ hcaps,
     DYZ_lt_of_support Q hcaps⟩
-
 end BCHKSConcreteGS6399
 end ProximityPrize.SubmissionLower

@@ -1,26 +1,16 @@
 import ProximityPrize.SubmissionLower.BCHKSFactorXDegree
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
 open Polynomial Polynomial.Bivariate
 open scoped BigOperators
-
 set_option maxHeartbeats 2000000
-
 namespace UniversalX0Avoidance6399
-
 local instance concreteUniversalChar :
     CharP IRSProfile.Field 2130706433 :=
   charP_of_injective_algebraMap' KoalaBear.Field 2130706433
-
 def DX : ℕ := 692001142
 def M : ℕ := 5279
 def xObstructionBudget : ℕ := 14612296114472
-
-/-- Generic first-factor aggregation. Positivity bounds the number of outer
-factors by their total `Y`-degree, so the `+2` in each obstruction costs only
-one additional copy of the same total-degree budget. -/
 theorem sum_factorXObstruction_natDegree_le_four_mul
     {F ρ : Type} [Field F] [DecidableEq ρ]
     (Rs : Finset ρ)
@@ -56,8 +46,6 @@ theorem sum_factorXObstruction_natDegree_le_four_mul
     _ ≤ 2 * DX * (M + M) := by
       exact Nat.mul_le_mul_left (2 * DX) (Nat.add_le_add hsum (hcard.trans hsum))
     _ = 4 * DX * M := by ring
-
-/-- The positive first factors of `Q` have total outer degree at most `M`. -/
 theorem positive_outer_factor_degree_sum_le
     {F : Type*} [Field F] [DecidableEq F] [NormalizationMonoid F]
     (Q : Polynomial (Polynomial (Polynomial F))) (hQ : Q ≠ 0) (M : ℕ)
@@ -68,10 +56,6 @@ theorem positive_outer_factor_degree_sum_le
   dsimp only
   exact (Finset.sum_le_sum_of_subset_of_nonneg (Finset.filter_subset _ _) (by simp)).trans
     ((normalizedFactors_toFinset_sum_natDegree_le Q hQ).trans hQdeg)
-
-/-- Exact 6399 aggregation for all positive first factors. The two exposed
-support hypotheses are the narrow interface needed from the new interpolation
-factor-cap module. -/
 theorem positive_outer_factorXObstruction_sum_le_6399
     (Q : Polynomial (Polynomial (Polynomial IRSProfile.Field)))
     (hQ : Q ≠ 0) (hQdeg : Q.natDegree ≤ M)
@@ -99,15 +83,11 @@ theorem positive_outer_factorXObstruction_sum_le_6399
   change (∑ R ∈ Rs, (factorXObstruction R).natDegree) ≤ xObstructionBudget
   norm_num [DX, M, xObstructionBudget] at h ⊢
   exact h
-
 theorem xObstructionBudget_lt_field :
     xObstructionBudget < Fintype.card IRSProfile.Field := by
   rw [CompPoly.Extension.Ext.card_ext]
   norm_num [xObstructionBudget, IRSProfile.Field, KoalaBear.Ext6,
     KoalaBear.fieldSize]
-
-/-- A nonzero rational-function obstruction at the embedded constant `x`
-forces the original `F[Z][X]` obstruction to remain nonzero after `X=x`. -/
 private theorem eval_C_ne_zero_of_ratfunc_map_eval_ne_zero
     {F : Type*} [Field F] (P : Polynomial (Polynomial F)) (x : F)
     (h : Polynomial.eval (algebraMap F (RatFunc F) x)
@@ -120,11 +100,6 @@ private theorem eval_C_ne_zero_of_ratfunc_map_eval_ne_zero
       algebraMap F (RatFunc F) x := by simp
   rw [← hx, Polynomial.eval₂_hom, hz]
   exact map_zero _
-
-/-- Concrete simultaneous Taylor-center selection for the 6399 parameters.
-No `<852` hypothesis and no `10^12` budget occur. The conclusion exposes
-the exact leading/slope facts consumed by factorization and the universal
-implicit-numerator specialization. -/
 theorem exists_x0_avoiding_positive_factor_obstructions_6399
     (Q : Polynomial (Polynomial (Polynomial IRSProfile.Field)))
     (hQ : Q ≠ 0) (hQdeg : Q.natDegree ≤ M)
@@ -201,7 +176,5 @@ theorem exists_x0_avoiding_positive_factor_obstructions_6399
     exact Polynomial.natDegree_map_of_leadingCoeff_ne_zero
       (Polynomial.evalRingHom (Polynomial.C x₀)) hxLead
   exact ⟨hxObs, hxR, hxdeg, hxRaw⟩
-
 end UniversalX0Avoidance6399
-
 end ProximityPrize.SubmissionLower

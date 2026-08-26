@@ -1,45 +1,23 @@
-/-
-Copyright (c) 2024-2025 ArkLib Contributors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ilia Vlasov, František Silváši
--/
-
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.JohnsonChoose2
-/-! # Johnson Bound Expectations -/
-
-
 namespace JohnsonBound
-
 open Finset Fintype
-
 variable {n : ℕ}
 variable {F : Type*} [DecidableEq F]
          {B : Finset (Fin n → F)} {v : Fin n → F}
-
 @[simp, grind]
 def e (B : Finset (Fin n → F)) (v : Fin n → F) : ℚ :=
   (1 : ℚ) / B.card * ∑ x ∈ B, Δ₀(v, x)
-
 @[simp, grind]
 def d (B : Finset (Fin n → F)) : ℚ :=
   (1 : ℚ) / (2 * choose_2 B.card) * ∑ x ∈ B ×ˢ B with x.1 ≠ x.2, Δ₀(x.1, x.2)
-
-/-! ### Recentering by subtraction, over a field
-
-The `lin_shift_*` lemmas recenter a code by the field subtraction `x ↦ x - v`. The
-alphabet-general form of the same transport is `card_image_piCongrRight`,
-`e_image_piCongrRight` and `d_image_piCongrRight` at the end of this file. -/
-
 @[simp]
 lemma lin_shift_card [Field F] [Fintype F] :
     B.card = ({ x - v | x ∈ B } : Finset _).card := by
   apply card_bij (i := fun x _ => x - v) <;> aesop
-
 @[simp]
 lemma lin_shift_hamming_distance [Field F] {x₁ x₂ v : Fin n → F} :
     Δ₀(x₁ - v, x₂ - v) = Δ₀(x₁, x₂) := by simp [hammingDist]
-
 @[simp]
 lemma lin_shift_e [Field F] [Fintype F] (h_B : B.card ≠ 0) :
     e B v = e ({ x - v | x ∈ B } : Finset _) 0 := by
@@ -48,7 +26,6 @@ lemma lin_shift_e [Field F] [Fintype F] (h_B : B.card ≠ 0) :
   field_simp
   apply sum_bij (i := fun x _ => x - v) <;>
     simp [hammingDist, hammingNorm, sub_eq_zero, eq_comm]
-
 @[simp]
 lemma lin_shift_d [Field F] [Fintype F] (h_B : 2 ≤ B.card) :
     d B = d ({ x - v | x ∈ B } : Finset _) := by
@@ -57,7 +34,6 @@ lemma lin_shift_d [Field F] [Fintype F] (h_B : 2 ≤ B.card) :
   have h : choose_2 B.card ≠ 0 := by aesop (add simp [choose_2, sub_eq_zero])
   field_simp
   apply sum_bij (fun x _ => (x.1 - v, x.2 - v)) <;> try aesop
-
 @[simp]
 lemma e_ball_le_radius [Fintype F] {B : Finset (Fin n → F)} (v : Fin n → F) (r : ℚ)
     (h_B : (B ∩ ({ x | Δ₀(x, v) ≤ r } : Finset _)).card > 0) :
@@ -81,7 +57,6 @@ lemma e_ball_le_radius [Fintype F] {B : Finset (Fin n → F)} (v : Fin n → F) 
   have h_B' : (0 : ℚ) < (B ∩ ({ x | Δ₀(x, v) ≤ r } : Finset _)).card :=
     by exact_mod_cast h_B
   exact_mod_cast h3
-
 lemma min_dist_le_d {B : Finset (Fin n → F)} (h_B : B.card > 1) :
     sInf { d | ∃ u ∈ B, ∃ v ∈ B, u ≠ v ∧ hammingDist u v = d } ≤ d B := by
   unfold d
@@ -133,20 +108,11 @@ lemma min_dist_le_d {B : Finset (Fin n → F)} (h_B : B.card > 1) :
   simp at h_bound
   gcongr
   grind only
-
-/-! ## Coordinatewise transport
-
-Recentering without field structure: transport a code through a per-coordinate family of
-equivalences `σ : Fin n → (F ≃ G)`, applied by `Equiv.piCongrRight σ`. Each `σ i` being
-injective, this preserves Hamming distance and hence `e`, `d` and cardinalities. Choosing
-`σ i` to send the centre's `i`-th coordinate to a fixed symbol recenters at that symbol. -/
-
 omit [DecidableEq F] in
 lemma card_image_piCongrRight {G : Type*} [DecidableEq G] (σ : Fin n → (F ≃ G))
     (B : Finset (Fin n → F)) :
     (B.image (Equiv.piCongrRight σ)).card = B.card :=
   Finset.card_image_of_injective B (Equiv.piCongrRight σ).injective
-
 lemma e_image_piCongrRight {G : Type*} [DecidableEq G] (σ : Fin n → (F ≃ G))
     (B : Finset (Fin n → F)) (v : Fin n → F) :
     e (B.image (Equiv.piCongrRight σ)) (Equiv.piCongrRight σ v) = e B v := by
@@ -156,7 +122,6 @@ lemma e_image_piCongrRight {G : Type*} [DecidableEq G] (σ : Fin n → (F ≃ G)
   norm_cast
   refine Finset.sum_congr rfl fun x _ => ?_
   exact hammingDist_comp (fun i => (σ i : F → G)) (fun i => (σ i).injective)
-
 lemma d_image_piCongrRight {G : Type*} [DecidableEq G] (σ : Fin n → (F ≃ G))
     (B : Finset (Fin n → F)) :
     d (B.image (Equiv.piCongrRight σ)) = d B := by
@@ -177,5 +142,4 @@ lemma d_image_piCongrRight {G : Type*} [DecidableEq G] (σ : Fin n → (F ≃ G)
   · rw [if_pos (show ¬ (Equiv.piCongrRight σ) x.1 = (Equiv.piCongrRight σ) x.2 from
         fun hc => h ((Equiv.piCongrRight σ).injective hc)), if_pos h]
     exact hammingDist_comp (fun i => (σ i : F → G)) (fun i => (σ i).injective)
-
 end JohnsonBound

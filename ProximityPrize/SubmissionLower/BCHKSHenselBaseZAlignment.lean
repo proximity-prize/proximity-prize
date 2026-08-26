@@ -1,15 +1,9 @@
 import ProximityPrize.SubmissionLower.BCHKSBaseZAffine
-
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F]
-
-/-- Evaluation of the canonical centered lift is the corresponding evaluated
-finite Hensel truncation.  This is the normalization used by the selected-data
-alignment argument. -/
 theorem canonicalFunctionFieldGamma_eval
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ x : F) (R : F[X][X][Y]) (N k : ℕ) :
@@ -21,8 +15,6 @@ theorem canonicalFunctionFieldGamma_eval
   simp only [Polynomial.eval_finset_sum, Polynomial.eval_mul, Polynomial.eval_C,
     Polynomial.eval_pow, Polynomial.eval_X]
   simp [fieldTo𝕃, map_sub]
-
-/-- The canonical centered lift has degree at most its truncation order. -/
 theorem canonicalFunctionFieldGamma_natDegree_le
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y]) (N k : ℕ) :
@@ -41,18 +33,12 @@ theorem canonicalFunctionFieldGamma_natDegree_le
         (Polynomial.X - Polynomial.C (fieldTo𝕃 (H:=H) x₀)).natDegree :=
       Polynomial.natDegree_comp_le
     _ ≤ k := by rw [Polynomial.natDegree_X_sub_C, Nat.mul_one]; exact ht
-
 end ProximityPrize.SubmissionLower
-
-
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F] [Fintype F] [DecidableEq F]
-
-/-- Final selected-data alignment theorem, using the canonical finite-Hensel lift. -/
 theorem hensel_baseZ_alignment_final
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -227,8 +213,6 @@ theorem hensel_baseZ_alignment_final
       exact (Polynomial.natDegree_add_le _ _).trans
         (max_le hp₀ ((Polynomial.natDegree_C_mul_le _ _).trans hp₁))
     exact max_lt ((hPdeg z).trans_lt hkF) (hq.trans_lt hkF)
-
-
 theorem hensel_baseZ_alignment_final_exact_yz
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -403,6 +387,4 @@ theorem hensel_baseZ_alignment_final_exact_yz
       exact (Polynomial.natDegree_add_le _ _).trans
         (max_le hp₀ ((Polynomial.natDegree_C_mul_le _ _).trans hp₁))
     exact max_lt ((hPdeg z).trans_lt hkF) (hq.trans_lt hkF)
-
-
 end ProximityPrize.SubmissionLower

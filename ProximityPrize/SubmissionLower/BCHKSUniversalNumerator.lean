@@ -2,16 +2,10 @@ import ProximityPrize.SubmissionLower.BCHKSHenselWeight
 import ProximityPrize.SubmissionLower.BCHKSConcreteNumerators
 import ProximityPrize.SubmissionLower.BCHKSYZFactorCap
 import ProximityPrize.SubmissionLower.BCHKSFiniteHensel
-
-
 open Polynomial
-
 namespace ProximityPrize.SubmissionLower.UniversalNumerator
-
 noncomputable section
-
 variable {A B : Type*} [CommRing A] [CommRing B]
-
 theorem coeff_finset_sum {ι : Type*} [DecidableEq ι]
     (S : Finset ι) (f : ι → A[X]) (n : ℕ) :
     (∑ i ∈ S, f i).coeff n = ∑ i ∈ S, (f i).coeff n := by
@@ -20,18 +14,12 @@ theorem coeff_finset_sum {ι : Type*} [DecidableEq ι]
   | empty => simp
   | @insert a S ha ih =>
       rw [Finset.sum_insert ha, Finset.sum_insert ha, coeff_add, ih]
-
-/-- The polynomial whose positive-degree coefficients are the already constructed
-universal numerators `N₁, …, Nₙ₋₁`.  The constant coefficient is deliberately
-zero: the symbolic root coordinate is handled by shifting the Y variable first. -/
 def positivePrefix (prior : ℕ → A) (n : ℕ) : A[X] :=
   ∑ i ∈ Finset.range n, if i = 0 then 0 else
     Polynomial.monomial i (prior i)
-
 @[simp] theorem positivePrefix_zero (prior : ℕ → A) :
     positivePrefix prior 0 = 0 := by
   simp [positivePrefix]
-
 theorem positivePrefix_coeff (prior : ℕ → A) (n i : ℕ) :
     (positivePrefix prior n).coeff i = if 0 < i ∧ i < n then prior i else 0 := by
   classical
@@ -68,45 +56,28 @@ theorem positivePrefix_coeff (prior : ℕ → A) (n i : ℕ) :
         exact himem hb
     rw [hsum]
     simp [hin]
-
 theorem positivePrefix_coeff_self (prior : ℕ → A) (n : ℕ) :
     (positivePrefix prior n).coeff n = 0 := by
   rw [positivePrefix_coeff]
   simp
-
-/-- One summand in the branch-independent numerator recurrence.  Here `Rshift`
-is `R(x₀+U,Y+V,Z)`, represented as a polynomial in `V` whose coefficients are
-polynomials in `U` over the coefficient ring `A = F[Z,Y]`.
-
-For a term `U^a V^b`, the denominator padding is exactly `2a+b-2`; this is
-independent of the composition of `n-a` among the `b` prior coefficients. -/
 def residualTerm (Rshift : A[X][X]) (s : A) (n a b : ℕ)
     (prior : ℕ → A) : A :=
   ((Rshift.coeff b).coeff a) * s ^ (2 * a + b - 2) *
     ((positivePrefix prior n) ^ b).coeff (n - a)
-
-/-- Cleared coefficient recurrence for the `n`-th implicit Taylor numerator.
-It is intended for `n ≥ 1`.  Terms outside the displayed finite ranges vanish. -/
 def numeratorStep (Rshift : A[X][X]) (s : A) (d n : ℕ)
     (prior : ℕ → A) : A :=
   -∑ a ∈ Finset.range (n + 1),
     ∑ b ∈ Finset.range (d + 1), residualTerm Rshift s n a b prior
-
-/-- The universal numerator sequence.  Index zero is unused and set to zero;
-successor indices are defined course-of-values through `betaSequenceFull`. -/
 def numerators (Rshift : A[X][X]) (s : A) (d : ℕ) : ℕ → A :=
   ProximityPrize.SubmissionLower.FiniteHenselWeight.betaSequenceFull 0
     (fun t prior => numeratorStep Rshift s d (t + 1) prior)
-
 @[simp] theorem numerators_zero (Rshift : A[X][X]) (s : A) (d : ℕ) :
     numerators Rshift s d 0 = 0 := by
   simp [numerators, ProximityPrize.SubmissionLower.FiniteHenselWeight.betaSequenceFull]
-
 @[simp] theorem numerators_succ (Rshift : A[X][X]) (s : A) (d t : ℕ) :
     numerators Rshift s d (t + 1) = numeratorStep Rshift s d (t + 1)
       (fun i => if i ≤ t then numerators Rshift s d i else 0) := by
   simp [numerators, ProximityPrize.SubmissionLower.FiniteHenselWeight.betaSequenceFull]
-
 theorem positivePrefix_map (f : A →+* B) (prior : ℕ → A) (n : ℕ) :
     (positivePrefix prior n).map f = positivePrefix (fun i => f (prior i)) n := by
   classical
@@ -116,7 +87,6 @@ theorem positivePrefix_map (f : A →+* B) (prior : ℕ → A) (n : ℕ) :
   split
   · simp
   · simp
-
 theorem residualTerm_map (f : A →+* B) (Rshift : A[X][X]) (s : A)
     (n a b : ℕ) (prior : ℕ → A) :
     f (residualTerm Rshift s n a b prior) =
@@ -128,14 +98,12 @@ theorem residualTerm_map (f : A →+* B) (Rshift : A[X][X]) (s : A)
       ((positivePrefix (fun i => f (prior i)) n) ^ b).coeff (n - a) := by
     rw [← coeff_map, Polynomial.map_pow, positivePrefix_map]
   simp only [residualTerm, map_mul, map_pow, hRcoeff, hPcoeff]
-
 theorem numeratorStep_map (f : A →+* B) (Rshift : A[X][X]) (s : A)
     (d n : ℕ) (prior : ℕ → A) :
     f (numeratorStep Rshift s d n prior) =
       numeratorStep (Rshift.map (mapRingHom f)) (f s) d n (fun i => f (prior i)) := by
   classical
   simp only [numeratorStep, map_neg, map_sum, residualTerm_map]
-
 theorem numerators_map (f : A →+* B) (Rshift : A[X][X]) (s : A) (d : ℕ) :
     ∀ n, f (numerators Rshift s d n) =
       numerators (Rshift.map (mapRingHom f)) (f s) d n := by
@@ -152,19 +120,12 @@ theorem numerators_map (f : A →+* B) (Rshift : A[X][X]) (s : A) (d : ℕ) :
           · simp only [hi, if_true]
             exact ih i (by omega)
           · simp [hi]
-
 end
-
 end ProximityPrize.SubmissionLower.UniversalNumerator
-
 open Polynomial
-
 namespace ProximityPrize.SubmissionLower.UniversalNumerator
-
 noncomputable section
-
 variable {F : Type*} [CommRing F]
-
 theorem natDegree_finset_prod_le {ι : Type*} [DecidableEq ι]
     (S : Finset ι) (f : ι → F[X]) :
     (∏ i ∈ S, f i).natDegree ≤ ∑ i ∈ S, (f i).natDegree := by
@@ -173,7 +134,6 @@ theorem natDegree_finset_prod_le {ι : Type*} [DecidableEq ι]
   | @insert a S ha ih =>
       rw [Finset.prod_insert ha, Finset.sum_insert ha]
       exact Polynomial.natDegree_mul_le.trans (Nat.add_le_add_left ih _)
-
 theorem degreeX_finset_prod_le {ι : Type*} [DecidableEq ι]
     (S : Finset ι) (f : ι → F[X][X]) :
     Bivariate.degreeX (∏ i ∈ S, f i) ≤ ∑ i ∈ S, Bivariate.degreeX (f i) := by
@@ -191,7 +151,6 @@ theorem degreeX_finset_prod_le {ι : Type*} [DecidableEq ι]
   | @insert a S ha ih =>
       rw [Finset.prod_insert ha, Finset.sum_insert ha]
       exact (Bivariate.degreeX_mul_le _ _).trans (Nat.add_le_add_left ih _)
-
 theorem degreeX_neg (p : F[X][X]) :
     Bivariate.degreeX (-p) = Bivariate.degreeX p := by
   classical
@@ -200,7 +159,6 @@ theorem degreeX_neg (p : F[X][X]) :
   apply Finset.sup_congr rfl
   intro i hi
   rw [Polynomial.coeff_neg, Polynomial.natDegree_neg]
-
 theorem degreeX_pow_le (p : F[X][X]) (m : ℕ) :
     Bivariate.degreeX (p ^ m) ≤ m * Bivariate.degreeX p := by
   induction m with
@@ -217,7 +175,6 @@ theorem degreeX_pow_le (p : F[X][X]) (m : ℕ) :
   | succ m ih =>
       rw [pow_succ, Nat.succ_mul]
       exact (Bivariate.degreeX_mul_le _ _).trans (Nat.add_le_add_right ih _)
-
 theorem positivePrefix_pow_coeff_eq_zero_of_lt {A : Type*} [CommRing A]
     (c : ℕ → A) (n b q : ℕ) (hq : q < b) :
     ((positivePrefix c n) ^ b).coeff q = 0 := by
@@ -227,7 +184,6 @@ theorem positivePrefix_pow_coeff_eq_zero_of_lt {A : Type*} [CommRing A]
   have hdvd : (Polynomial.X : A[X]) ^ b ∣ (positivePrefix c n) ^ b :=
     pow_dvd_pow_of_dvd hx b
   exact Polynomial.X_pow_dvd_iff.mp hdvd q hq
-
 private theorem denominator_mass_sum {b q : ℕ} (l : ℕ →₀ ℕ)
     (hl : l ∈ Finset.finsuppAntidiag (Finset.range b) q)
     (hpos : ∀ i ∈ Finset.range b, 0 < l i) :
@@ -250,7 +206,6 @@ private theorem denominator_mass_sum {b q : ℕ} (l : ℕ →₀ ℕ)
         have := hpos i hi
         omega
   omega
-
 theorem positivePrefix_pow_coeff_natDegree_le
     (prior : ℕ → F[X]) (n b q d : ℕ)
     (hprior : ∀ i, 0 < i → i < n →
@@ -304,7 +259,6 @@ theorem positivePrefix_pow_coeff_natDegree_le
         _ = (2 * q - b) * d := by
           rw [← Finset.sum_mul,
             denominator_mass_sum l hl (fun i hi => Nat.pos_of_ne_zero (hz i hi))]
-
 theorem positivePrefix_pow_coeff_degreeX_le
     (prior : ℕ → F[X][X]) (n b q D : ℕ)
     (hprior : ∀ i, 0 < i → i < n →
@@ -354,7 +308,6 @@ theorem positivePrefix_pow_coeff_degreeX_le
         _ = (2 * q - b) * D := by
           rw [← Finset.sum_mul,
             denominator_mass_sum l hl (fun i hi => Nat.pos_of_ne_zero (hz i hi))]
-
 theorem residualTerm_natDegree_le
     (Rshift : F[X][X][X]) (s : F[X]) (n a b d : ℕ)
     (hn : 0 < n) (ha : a ≤ n) (hd : 0 < d)
@@ -403,7 +356,6 @@ theorem residualTerm_natDegree_le
       rw [residualTerm, positivePrefix_pow_coeff_eq_zero_of_lt prior n b (n-a) hlt,
         mul_zero]
       simp
-
 theorem residualTerm_degreeX_le
     (Rshift : F[X][X][X][X]) (s : F[X][X]) (n a b D : ℕ)
     (hn : 0 < n) (ha : a ≤ n)
@@ -450,7 +402,6 @@ theorem residualTerm_degreeX_le
       rw [residualTerm, positivePrefix_pow_coeff_eq_zero_of_lt prior n b (n-a) hlt,
         mul_zero]
       simp [Bivariate.degreeX]
-
 theorem numeratorStep_natDegree_le
     (Rshift : F[X][X][X]) (s : F[X]) (dY n : ℕ)
     (hn : 0 < n) (hdY : 0 < dY)
@@ -470,7 +421,6 @@ theorem numeratorStep_natDegree_le
   exact residualTerm_natDegree_le Rshift s n a b dY hn
     (by simpa using ha) hdY (hcoeff b a (by simpa using hb) (by simpa using ha))
     hs prior hprior
-
 theorem numeratorStep_degreeX_le
     (Rshift : F[X][X][X][X]) (s : F[X][X]) (dCap n D : ℕ)
     (hn : 0 < n)
@@ -489,7 +439,6 @@ theorem numeratorStep_degreeX_le
   intro b hb
   exact residualTerm_degreeX_le Rshift s n a b D hn (by simpa using ha)
     (hcoeff b a (by simpa using hb) (by simpa using ha)) hs prior hprior
-
 theorem numerators_natDegree_le
     (Rshift : F[X][X][X]) (s : F[X]) (dY : ℕ) (hdY : 0 < dY)
     (hcoeff : ∀ n b a, b ≤ dY → a ≤ n →
@@ -509,7 +458,6 @@ theorem numerators_natDegree_le
           change (if i ≤ t then numerators Rshift s dY i else 0).natDegree ≤ _
           rw [if_pos (by omega)]
           exact ih i (by omega) hi
-
 theorem numerators_degreeX_le
     (Rshift : F[X][X][X][X]) (s : F[X][X]) (dCap D : ℕ)
     (hcoeff : ∀ n b a, b ≤ dCap → a ≤ n →
@@ -530,21 +478,12 @@ theorem numerators_degreeX_le
             (if i ≤ t then numerators Rshift s dCap i else 0) ≤ _
           rw [if_pos (by omega)]
           exact ih i (by omega) hi
-
 end
-
 end ProximityPrize.SubmissionLower.UniversalNumerator
-
 open Polynomial
-
 namespace ProximityPrize.SubmissionLower.UniversalNumerator
-
 noncomputable section
-
 variable {L : Type*} [Field L]
-
-/-- Coefficientwise odd-exponent scaling is ordinary variable scaling after
-multiplying the whole positive prefix by one copy of the slope. -/
 theorem positivePrefix_odd_scaled
     (s : L) (N c : ℕ → L) (n : ℕ)
     (hrel : ∀ i, 0 < i → i < n → N i = s ^ (2 * i - 1) * c i) :
@@ -563,10 +502,6 @@ theorem positivePrefix_odd_scaled
       _ = c i * (s ^ 2) ^ i := by rw [pow_mul]; ring
   · rw [if_neg hi, if_neg hi]
     simp
-
-/-- Power-coefficient form of `positivePrefix_odd_scaled`.  This avoids any
-explicit enumeration of positive compositions and is the useful cancellation
-identity in the universal numerator recurrence. -/
 theorem positivePrefix_pow_cross_scaled
     (s : L) (N c : ℕ → L) (n b u : ℕ)
     (hrel : ∀ i, 0 < i → i < n → N i = s ^ (2 * i - 1) * c i) :
@@ -594,9 +529,6 @@ theorem positivePrefix_pow_cross_scaled
   simp only [Polynomial.coeff_C_mul, q, Polynomial.comp_C_mul_X_coeff] at hc
   rw [pow_mul]
   simpa [mul_comm] using hc
-
-/-- A polynomial with zero constant coefficient has no term below the number
-of factors in any positive power. -/
 theorem coeff_pow_eq_zero_below_of_coeff_zero
     (p : L[X]) (hp0 : p.coeff 0 = 0) :
     ∀ b u : ℕ, u < b → (p ^ b).coeff u = 0 := by
@@ -614,7 +546,6 @@ theorem coeff_pow_eq_zero_below_of_coeff_zero
       · have hju : j = 0 := by omega
         subst j
         rw [hp0, mul_zero]
-
 theorem positivePrefix_pow_coeff_zero_of_lt
     (c : ℕ → L) (n b u : ℕ) (hu : u < b) :
     ((positivePrefix c n) ^ b).coeff u = 0 := by
@@ -622,8 +553,6 @@ theorem positivePrefix_pow_coeff_zero_of_lt
   · rw [positivePrefix_coeff]
     simp
   · exact hu
-
-/-- Cancelled form of the cross-scaling identity. -/
 theorem positivePrefix_pow_coeff_scaled
     (s : L) (hs : s ≠ 0) (N c : ℕ → L) (n b u : ℕ)
     (hrel : ∀ i, 0 < i → i < n → N i = s ^ (2 * i - 1) * c i) :
@@ -645,10 +574,6 @@ theorem positivePrefix_pow_coeff_scaled
           (s ^ (2 * u - b) * ((positivePrefix c n) ^ b).coeff u) := by
             rw [pow_add]
             ring
-
-/-- Each nonzero residual term acquires the common clearing factor
-`s^(2*n-2)`.  The two low-weight exceptional pairs `(0,0)` and `(0,1)` vanish
-because the positive prefix has no constant/current coefficient. -/
 theorem residualTerm_scaled
     (Rshift : L[X][X]) (s : L) (hs : s ≠ 0) (d n a b : ℕ)
     (N c : ℕ → L) (hn : 1 ≤ n) (ha : a ≤ n)
@@ -686,16 +611,11 @@ theorem residualTerm_scaled
   · have hz := positivePrefix_pow_coeff_zero_of_lt c n b (n-a) (by omega)
     rw [hz]
     simp
-
-/-- The residual coefficient with the current coefficient omitted. -/
 def prefixResidualCoeff (Rshift : L[X][X]) (d n : ℕ)
     (c : ℕ → L) : L :=
   ∑ a ∈ Finset.range (n + 1), ∑ b ∈ Finset.range (d + 1),
     ((Rshift.coeff b).coeff a) *
       ((positivePrefix c n) ^ b).coeff (n - a)
-
-/-- After specialization to a field, `numeratorStep` is exactly the omitted
-current residual coefficient cleared by `s^(2*n-2)`. -/
 theorem numeratorStep_scaled
     (Rshift : L[X][X]) (s : L) (hs : s ≠ 0) (d n : ℕ)
     (N c : ℕ → L) (hn : 1 ≤ n)
@@ -713,21 +633,12 @@ theorem numeratorStep_scaled
   intro b hb
   exact residualTerm_scaled Rshift s hs d n a b N c hn
     (by simpa using (Finset.mem_range.mp ha)) hrel
-
 end
-
 end ProximityPrize.SubmissionLower.UniversalNumerator
-
 open Polynomial
-
 namespace ProximityPrize.SubmissionLower.UniversalNumerator
-
 noncomputable section
-
 variable {L : Type*} [Field L]
-
-/-- Coefficient expansion of an outer evaluation, padded to any declared
-outer-degree cap. -/
 theorem coeff_eval_eq_prefixResidualCoeff
     (Rshift : L[X][X]) (d n : ℕ) (c : ℕ → L)
     (hdeg : Rshift.natDegree ≤ d) :
@@ -741,7 +652,6 @@ theorem coeff_eval_eq_prefixResidualCoeff
     Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
   unfold prefixResidualCoeff
   rw [Finset.sum_comm]
-
 theorem shiftMap_zero_eq :
     ProximityPrize.SubmissionLower.FiniteHensel.shiftMap (0 : L) =
       RingHom.id L[X] := by
@@ -749,9 +659,6 @@ theorem shiftMap_zero_eq :
   · intro a
     simp [ProximityPrize.SubmissionLower.FiniteHensel.shiftMap_apply]
   · simp [ProximityPrize.SubmissionLower.FiniteHensel.shiftMap_apply]
-
-/-- Evaluation coefficient `n` only depends on input coefficients through
-`n`; higher terms of an exact root polynomial are irrelevant. -/
 theorem coeff_eval_eq_of_coeff_eq_up_to
     (Rshift : L[X][X]) (P Q : L[X]) (n : ℕ)
     (hcoeff : ∀ i, i ≤ n → P.coeff i = Q.coeff i) :
@@ -771,9 +678,6 @@ theorem coeff_eval_eq_of_coeff_eq_up_to
     rw [hdiff]
     exact hmul
   simpa only [Polynomial.coeff_sub, sub_eq_zero] using hzero
-
-/-- Every diagonal coefficient of the truncated input of an exact polynomial
-root vanishes, with no degree bound on the root polynomial. -/
 theorem residual_diagonal_zero_of_exact
     (Rshift : L[X][X]) (V : L[X]) (n : ℕ)
     (hExact : Rshift.eval V = 0) :
@@ -792,9 +696,6 @@ theorem residual_diagonal_zero_of_exact
         exact ProximityPrize.SubmissionLower.FiniteHensel.coeff_truncSeries _ _ _ hi)
   rw [← heq, hExact]
   simp
-
-/-- Truncating a zero-constant sequence immediately before index `n` is the
-positive prefix used by the universal recurrence. -/
 theorem truncSeries_cut_eq_positivePrefix
     (c : ℕ → L) (n : ℕ) (hc0 : c 0 = 0) :
     ProximityPrize.SubmissionLower.FiniteHensel.truncSeries
@@ -814,9 +715,6 @@ theorem truncSeries_cut_eq_positivePrefix
     simp [hin, Polynomial.coeff_C_mul, Polynomial.coeff_X_pow]
     intro _ hlt
     exact (hin hlt.le).elim
-
-/-- The exact-root coefficient equation with the current coefficient omitted.
-This is the finite implicit-function recurrence in the target field. -/
 theorem slope_mul_coeff_eq_neg_prefixResidual
     (Rshift : L[X][X]) (s : L) (d n : ℕ) (c : ℕ → L)
     (hn : 1 ≤ n) (hc0 : c 0 = 0)
@@ -849,9 +747,6 @@ theorem slope_mul_coeff_eq_neg_prefixResidual
   have hcutn : cut n = 0 := by simp [cut]
   rw [hcutn, sub_zero] at hrec
   simpa only [zero_sub] using hrec.symm
-
-/-- One induction step: the universal numerator specializes to the exact
-Taylor coefficient times `s^(2*n-1)`. -/
 theorem numeratorStep_eq_slope_pow_mul_coeff
     (Rshift : L[X][X]) (s : L) (hs : s ≠ 0) (d n : ℕ)
     (N c : ℕ → L) (hn : 1 ≤ n) (hc0 : c 0 = 0)
@@ -872,9 +767,6 @@ theorem numeratorStep_eq_slope_pow_mul_coeff
         s ^ (2 * n - 2) * (-prefixResidualCoeff Rshift d n c) := by ring
     _ = s ^ (2 * n - 2) * (s * c n) := by rw [hcoeff]
     _ = s ^ (2 * n - 1) * c n := by rw [hexp, pow_add, pow_one]; ring
-
-/-- Full course-of-values representation in a target field.  The only input
-from an exact root is the diagonal residual vanishing at each truncation. -/
 theorem numerators_eq_slope_pow_mul_coeff
     (Rshift : L[X][X]) (s : L) (hs : s ≠ 0) (d : ℕ)
     (c : ℕ → L) (hc0 : c 0 = 0)
@@ -898,9 +790,6 @@ theorem numerators_eq_slope_pow_mul_coeff
       have hit' : i ≤ t := by omega
       rw [if_pos hit']
       exact ih i (by omega) hi0
-
-/-- Exact polynomial-root specialization of the full universal numerator
-sequence. -/
 theorem numerators_eq_slope_pow_mul_root_coeff
     (Rshift : L[X][X]) (V : L[X]) (s : L) (hs : s ≠ 0) (d : ℕ)
     (hV0 : V.coeff 0 = 0)
@@ -914,8 +803,5 @@ theorem numerators_eq_slope_pow_mul_root_coeff
     (fun i => V.coeff i) hV0 hdeg hslope
   intro n _
   exact residual_diagonal_zero_of_exact Rshift V n hExact
-
 end
-
 end ProximityPrize.SubmissionLower.UniversalNumerator
-

@@ -1,12 +1,9 @@
 import ProximityPrize.SubmissionLower.BCHKSSelectedHenselData
-
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F] [Fintype F] [DecidableEq F]
-
 lemma PolyGoodAt.derivative {H : F[X][Y]} [Fact (Irreducible H)]
     [Fact (0 < H.natDegree)] {z : F} {root : rationalRoot (monicize H) z}
     {p : (𝕃 H)[X]} {q : F[X]} (h : PolyGoodAt z root p q) :
@@ -15,8 +12,6 @@ lemma PolyGoodAt.derivative {H : F[X][Y]} [Fact (Irreducible H)]
   simpa [Polynomial.coeff_derivative] using
     (GoodAt.mul (h (i+1))
       (GoodAt.liftToFunctionField (H:=H) z root (Polynomial.C (i+1))))
-
-
 lemma BiPolyGoodAt.derivative {H : F[X][Y]} [Fact (Irreducible H)]
     [Fact (0 < H.natDegree)] {z : F} {root : rationalRoot (monicize H) z}
     {p : (𝕃 H)[X][Y]} {q : F[X][Y]} (h : BiPolyGoodAt z root p q) :
@@ -25,9 +20,6 @@ lemma BiPolyGoodAt.derivative {H : F[X][Y]} [Fact (Irreducible H)]
   simpa [Polynomial.coeff_derivative] using
     (PolyGoodAt.mul (h (j+1))
       (PolyGoodAt.C (GoodAt.liftToFunctionField (H:=H) z root (Polynomial.C (j+1)))))
-
-/-- The lifted `Y`-slope specializes to the finite `Y`-slope at any
-pair of good specialization values. -/
 lemma selectedSlopeGoodAt
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y]) (z : F)
@@ -60,9 +52,6 @@ lemma selectedSlopeGoodAt
     | monomial n a => simp
   rw [hcommL, hcomm]
   simpa using he 0
-
-/-- A nonzero finite specialized slope forces the generic slope scalar `zeta`
-to be nonzero. -/
 theorem zeta_ne_zero_of_selected_slope
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y]) (z : F)
@@ -77,8 +66,6 @@ theorem zeta_ne_zero_of_selected_slope
   have hzero := GoodAt.zero (H:=H) z root
   have := GoodAt.value_unique hslope hzero
   exact hsimple this
-
-/-- All non-pole facts attached to one selected ordinary simple root. -/
 structure SelectedNonpoleData
     (x₀ : F) (R : F[X][X][Y]) (H : F[X][Y])
     [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
@@ -92,9 +79,6 @@ structure SelectedNonpoleData
     (FiniteHensel.ySlope (triSpecializeZ R z) x y)
   hxi : Polynomial.evalEval z root.1 (xiPre x₀ R H) ≠ 0
   hden : ∀ t, piZ z root (concreteDenRegularBridge x₀ R hHyp t) ≠ 0
-
-/-- Simplicity and avoidance of the leading coefficient automatically imply
-all selected non-pole hypotheses. -/
 theorem selectedNonpoleData
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y]) (hHyp : Hypotheses x₀ R H)
@@ -138,5 +122,4 @@ theorem selectedNonpoleData
     simpa [HenselNumerators.xi, piZ, piZLift, Polynomial.evalEval] using hxi
   simp only [concreteDenRegularBridge, map_mul, map_pow]
   exact mul_ne_zero (pow_ne_zero _ hW') (pow_ne_zero _ hxi')
-
 end ProximityPrize.SubmissionLower

@@ -1,12 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
-
 namespace ProximityPrize.SubmissionLower
-
 open scoped NNReal ProbabilityTheory
 open CoreDefinitions
 open ProximityGap
-
-/-- The chosen-agreement-set conclusion needed by the affine-line MCA argument. -/
 def AffineLineGivenSetsBound
     {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
     [Field F] [Fintype F] [DecidableEq F]
@@ -19,8 +15,6 @@ def AffineLineGivenSetsBound
         LinearCode.projectedCodeSubmod C (T z)) →
     ∃ z ∈ S, ∀ j : Fin 2,
       LinearCode.projectedWord (U j) (T z) ∈ LinearCode.projectedCodeSubmod C (T z)
-
-/-- A chosen-agreement-set theorem with numerator `a` implies the corresponding MCA bound. -/
 theorem mcaError_affineLine_le_of_givenSetsBound
     {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
     [Field F] [Fintype F] [DecidableEq F]
@@ -64,15 +58,9 @@ theorem mcaError_affineLine_le_of_givenSetsBound
       obtain ⟨j, hj⟩ := (hTspec z hzS).2.2
       exact hj (hall j))
   · positivity
-
-
 open Finset
-
 variable {ι F : Type} [Fintype ι] [DecidableEq ι]
 variable [Field F] [DecidableEq F]
-
-/-- Elementary incidence finish: among sufficiently many affine challenges, one large
-agreement set consists entirely of coordinates where both affine rows agree. -/
 theorem exists_common_affine_set
     (U p : Fin 2 → ι → F) (T : Finset F) (A : F → Finset ι) (e : ℕ)
     (hT : e + 1 < T.card)
@@ -175,11 +163,6 @@ theorem exists_common_affine_set
   rw [Finset.card_biUnion hRpair] at hunionSub
   have hTB : T.card ≤ B.card := hTsum.trans hunionSub
   omega
-
-
-
-/-- The algebraic heart of BCHKS: a sufficiently large family of chosen close
-specializations contains a large subfamily whose proximate codewords form one affine line. -/
 def AffineLineAlignmentBound
     {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
     [Field F] [Fintype F] [DecidableEq F]
@@ -195,9 +178,6 @@ def AffineLineAlignmentBound
       ∃ T : Finset F, T ⊆ S ∧ e + 1 < T.card ∧
         ∀ z ∈ T, ∀ x ∈ A z,
           U 0 x + z * U 1 x = p 0 x + z * p 1 x
-
-/-- The BCHKS alignment extractor plus its elementary incidence finish gives the
-chosen-agreement-set statement used by MCA. -/
 theorem givenSetsBound_of_alignmentBound
     {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
     [Field F] [Fintype F] [DecidableEq F]
@@ -223,5 +203,4 @@ theorem givenSetsBound_of_alignmentBound
   fin_cases j
   · exact h0
   · exact h1
-
 end ProximityPrize.SubmissionLower

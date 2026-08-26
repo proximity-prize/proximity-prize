@@ -1,14 +1,9 @@
 import ProximityPrize.SubmissionLower.BCHKSConcreteGS6399
 import ProximityPrize.SubmissionLower.BCHKSSubstitutionVanish
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
 open BCHKSConcreteGS6399
 open BCHKSSubstitutionVanish
-
-/-- Concrete GS interpolation plus the multiplicity/root-counting step, starting
-from caller-chosen close RS codewords. -/
 theorem exists_bchks_interpolant_vanishing6399
     (U : Fin 2 → IRSProfile.Index → IRSProfile.Field)
     (S : Finset IRSProfile.Field) (A : IRSProfile.Field → Finset IRSProfile.Index)
@@ -78,5 +73,4 @@ theorem exists_bchks_interpolant_vanishing6399
     omega
   · have hc := hA z.1 z.2
     omega
-
 end ProximityPrize.SubmissionLower

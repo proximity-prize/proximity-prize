@@ -1,17 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
-
 namespace ProximityPrize.SubmissionLower
 namespace BCHKSSubstitutionVanish
-
 noncomputable def specializeZ {F : Type*} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (z : F) :
     Polynomial (Polynomial F) :=
   Polynomial.map (Polynomial.mapRingHom (Polynomial.evalRingHom z)) Q
-
 noncomputable def triEval {F : Type*} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (z : F) (P : Polynomial F) :
     Polynomial F := Polynomial.eval P (specializeZ Q z)
-
 lemma map_comp_X_add_C {F : Type*} [Field F]
     (A : Polynomial (Polynomial F)) (x : Polynomial F) (z : F) :
     Polynomial.map (Polynomial.evalRingHom z)
@@ -20,7 +16,6 @@ lemma map_comp_X_add_C {F : Type*} [Field F]
         (Polynomial.X + Polynomial.C (Polynomial.eval z x)) := by
   rw [Polynomial.map_comp]
   simp
-
 lemma specializeZ_shift {F : Type*} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (x y : Polynomial F) (z : F) :
     specializeZ (Polynomial.Bivariate.shift Q x y) z =
@@ -43,8 +38,6 @@ lemma specializeZ_shift {F : Type*} [Field F]
   | monomial n A =>
       simp [Polynomial.Bivariate.shift, specializeZ, Polynomial.monomial_comp,
         Polynomial.map_monomial, map_comp_X_add_C]
-
-
 lemma comp_eval_eq_shift_eval_tail {F : Type*} [Field F]
     (B : Polynomial (Polynomial F)) (P : Polynomial F) (ω y : F) :
     (Polynomial.eval P B).comp (Polynomial.X + Polynomial.C ω) =
@@ -67,14 +60,12 @@ lemma comp_eval_eq_shift_eval_tail {F : Type*} [Field F]
       simp [Polynomial.Bivariate.shift, Polynomial.monomial_comp,
         Polynomial.eval_monomial, Polynomial.map_mul, Polynomial.map_pow,
         Polynomial.map_C, Polynomial.coe_compRingHom_apply]
-
 lemma X_dvd_comp_sub_C_eval {F : Type*} [Field F]
     (P : Polynomial F) (ω y : F) (hmatch : Polynomial.eval ω P = y) :
     Polynomial.X ∣ P.comp (Polynomial.X + Polynomial.C ω) - Polynomial.C y := by
   rw [Polynomial.X_dvd_iff, Polynomial.coeff_zero_eq_eval_zero,
     Polynomial.eval_sub, Polynomial.eval_comp]
   simp [hmatch]
-
 lemma X_pow_dvd_mul_pow_of_total_coeff_zero {F : Type*} [Field F]
     {A U : Polynomial F} {m b : Nat}
     (hU : Polynomial.X ∣ U)
@@ -99,7 +90,6 @@ lemma X_pow_dvd_mul_pow_of_total_coeff_zero {F : Type*} [Field F]
       pow_dvd_pow Polynomial.X hbm
     have hUb : Polynomial.X ^ b ∣ U ^ b := pow_dvd_pow_of_dvd hU b
     exact dvd_mul_of_dvd_right (dvd_trans hXb hUb) A
-
 lemma X_pow_dvd_eval_of_total_coeff_zero {F : Type*} [Field F]
     {B : Polynomial (Polynomial F)} {U : Polynomial F} {m : Nat}
     (hU : Polynomial.X ∣ U)
@@ -110,10 +100,6 @@ lemma X_pow_dvd_eval_of_total_coeff_zero {F : Type*} [Field F]
   intro b hb
   exact X_pow_dvd_mul_pow_of_total_coeff_zero (m := m) (b := b) hU
     (fun a ha => hzero a b ha)
-
-
-/-- The trivariate shift constraints specialize to the usual bivariate total
-order constraints after fixing `Z=z`. -/
 lemma specialize_shift_total_coeff_zero {F : Type*} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (ω z : F) (yZ : Polynomial F)
     (m : Nat)
@@ -131,10 +117,6 @@ lemma specialize_shift_total_coeff_zero {F : Type*} [Field F]
   simp only [Polynomial.eval_C] at hshift
   rw [← hshift]
   simp [specializeZ, hpoly]
-
-/-- A matched substitution turns total Hasse multiplicity of the shifted
-trivariate polynomial into ordinary root multiplicity after fixing `Z=z` and
-substituting `Y=P(X)`. -/
 theorem rootMultiplicity_triEval_ge_of_shift_coeff_zero
     {F : Type*} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (ω z : F)
@@ -163,10 +145,6 @@ theorem rootMultiplicity_triEval_ge_of_shift_coeff_zero
     exact (Polynomial.comp_X_add_C_eq_zero_iff.not.mpr hne)
   rw [Polynomial.le_rootMultiplicity_iff hshiftne]
   simpa using hdvd
-
-
-/-- Distinct roots whose multiplicities are all at least `m` consume at least
-`m * A.card` degrees. -/
 theorem mul_card_le_natDegree_of_rootMultiplicity
     {F ι : Type*} [Field F] [DecidableEq F] [DecidableEq ι]
     (R : Polynomial F) (ω : ι ↪ F) (A : Finset ι) (m : Nat)
@@ -199,10 +177,6 @@ theorem mul_card_le_natDegree_of_rootMultiplicity
       exact (Polynomial.count_roots R).symm
     _ ≤ R.roots.card := hselected
     _ ≤ R.natDegree := Polynomial.card_roots' R
-
-/-- GS substitution step.  If every matched point supplies order `m`
-vanishing, while the common substituted polynomial has degree at most `DX`
-and `m * A.card > DX`, then that polynomial is identically zero. -/
 theorem triEval_eq_zero_of_many_shift_vanishing
     {F ι : Type*} [Field F] [DecidableEq F] [DecidableEq ι]
     (Q : Polynomial (Polynomial (Polynomial F))) (z : F)
@@ -222,10 +196,6 @@ theorem triEval_eq_zero_of_many_shift_vanishing
   have hrootdeg := mul_card_le_natDegree_of_rootMultiplicity
     (triEval Q z P) ω A m hmult
   omega
-
-
-/-- A weighted `X`-support cap survives fixing `Z` and substituting a
-polynomial of degree at most `k` for `Y`. -/
 theorem triEval_natDegree_le_of_weighted_X_cap
     {F : Type*} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (z : F) (P : Polynomial F)
@@ -261,11 +231,6 @@ theorem triEval_natDegree_le_of_weighted_X_cap
       exact Nat.add_le_add_left (Polynomial.natDegree_pow_le_of_le j hP) A.natDegree
     _ = A.natDegree + k * j := by rw [Nat.mul_comm j k]
     _ ≤ DX := hAdeg
-
-
-/-- Fully support-level version of GS Step 2: the weighted `X` cap on `Q`
-and the degree cap on `P` imply the degree hypothesis of
-`triEval_eq_zero_of_many_shift_vanishing`. -/
 theorem triEval_eq_zero_of_many_shift_vanishing_of_weighted_X_cap
     {F ι : Type*} [Field F] [DecidableEq F] [DecidableEq ι]
     (Q : Polynomial (Polynomial (Polynomial F))) (z : F)
@@ -280,6 +245,5 @@ theorem triEval_eq_zero_of_many_shift_vanishing_of_weighted_X_cap
     triEval Q z P = 0 := by
   apply triEval_eq_zero_of_many_shift_vanishing Q z P ω A yZ m DX
     hvan hmatch (triEval_natDegree_le_of_weighted_X_cap Q z P k DX hP hcap) hmany
-
 end BCHKSSubstitutionVanish
 end ProximityPrize.SubmissionLower

@@ -1,15 +1,9 @@
 import ProximityPrize.SubmissionLower.BCHKSResultantDegree
 import ProximityPrize.SubmissionLower.BCHKSConcreteNumerators
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F]
-
-/-- Monicity is unnecessary for resultant descent: irreducibility and positive
-`Y`-degree make the right polynomial primitive over `F[Z]`. -/
 theorem irreducible_dvd_of_resultant_eq_zero_nonmonic
     (B H : F[X][Y]) (hHirreducible : Irreducible H)
     (hHpos : 0 < H.natDegree)
@@ -38,9 +32,6 @@ theorem irreducible_dvd_of_resultant_eq_zero_nonmonic
     (Irreducible.dvd_iff_not_isCoprime hHirreducibleK).2 fun hc =>
       hnotCoprime hc.symm
   exact hprimitive.dvd_of_fraction_map_dvd_fraction_map hdvdK
-
-/-- Root-counting wrapper without a monicity assumption on the irreducible
-factor. Fixed-degree padding handles degree drops after specialization. -/
 theorem irreducible_dvd_of_many_bivariate_common_roots_nonmonic
     (B H : F[X][Y]) (n m : ℕ) (S : Finset F) (t : F → F)
     (hBY : B.natDegree = n) (hHY : H.natDegree = m)
@@ -67,8 +58,6 @@ theorem irreducible_dvd_of_many_bivariate_common_roots_nonmonic
       (hRdeg.trans_lt hmany)
   apply irreducible_dvd_of_resultant_eq_zero_nonmonic B H hHirreducible hHpos
   simpa only [R, hBY, hHY] using hRzero
-
-/-- The generic function-field coordinate `T/W` is a root of `H`. -/
 theorem eval₂_lift_initialValue_self_eq_zero
     (H : F[X][Y]) [Fact (Irreducible H)] [Fact (0 < H.natDegree)] :
     Polynomial.eval₂ (liftToFunctionField (H := H))
@@ -132,8 +121,6 @@ theorem eval₂_lift_initialValue_self_eq_zero
           liftToFunctionField (H := H) H.leadingCoeff) H = 0 := by
     rw [hscale, hrhs, hmono]
   exact (mul_eq_zero.mp hs).resolve_left (pow_ne_zero _ hW)
-
-/-- Any multiple of `H` vanishes at the generic function-field root. -/
 theorem eval₂_lift_initialValue_eq_zero_of_dvd
     (B H : F[X][Y]) [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (hdiv : H ∣ B) :
@@ -141,5 +128,4 @@ theorem eval₂_lift_initialValue_eq_zero_of_dvd
       (initialValue (H := H)) B = 0 := by
   obtain ⟨C, rfl⟩ := hdiv
   rw [Polynomial.eval₂_mul, eval₂_lift_initialValue_self_eq_zero H, zero_mul]
-
 end ProximityPrize.SubmissionLower

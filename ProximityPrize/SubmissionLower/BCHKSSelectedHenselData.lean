@@ -1,16 +1,10 @@
 import ProximityPrize.SubmissionLower.BCHKSResidualSpecialization
 import ProximityPrize.SubmissionLower.BCHKSRationalRootBridge
-
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F] [Fintype F] [DecidableEq F]
-
-/-- The data furnished by a selected BCHKS pair, in precisely the form used by
-`hensel_initial_value_alignment_final`.  Keeping this package separate makes
-clear that no choice of rational roots is left in the alignment argument. -/
 structure SelectedHenselData
     (x₀ : F) (R : F[X][X][Y]) (H : F[X][Y])
     [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
@@ -39,10 +33,6 @@ structure SelectedHenselData
     regularWeight (Fact.out : 0 < H.natDegree)
       (concreteBetaUpTo x₀ R hHyp hzeta DX t) D ≤
         (WithBot.some ((2*t+1)*d*D) : WithBot ℕ)
-
-/-- Build selected Hensel data from a factor vanishing and the genuinely
-non-pole hypotheses.  The rational root, both elementary good specializations,
-simplicity, and the concrete numerator weight are derived here. -/
 noncomputable def selectedHenselData_of_pair
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -115,5 +105,4 @@ noncomputable def selectedHenselData_of_pair
       (WithBot.coe_le_coe.mpr (by
         simpa [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using
           Nat.mul_le_mul_left ((2*t+1)*D) hRdeg_d))
-
 end ProximityPrize.SubmissionLower

@@ -1,20 +1,12 @@
 import ProximityPrize.SubmissionLower.BCHKSUniversalOuterCover6399
 import ProximityPrize.SubmissionLower.BCHKSSelectedNonpole
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
-
 set_option maxHeartbeats 2000000
-
 namespace UniversalPairFiberBridge6399
-
 open UniversalOuterCover6399
-
-/-- Split the one-time outer obstruction into its leading and separability
-components at a surviving seed. -/
 theorem obstruction_seed_parts
     (x₀ z : F) (R : TriPoly)
     (hobs : Polynomial.eval z
@@ -24,9 +16,6 @@ theorem obstruction_seed_parts
       Polynomial.eval z
         (Polynomial.eval (Polynomial.C x₀) (rawSepResultant R)) ≠ 0 := by
   simpa [factorXObstruction, Polynomial.eval_mul] using hobs
-
-/-- A positive normalized inner factor retains its leading coefficient at any
-seed where the outer leading coefficient survives. -/
 theorem inner_leadingCoeff_eval_ne_zero
     (x₀ z : F) (R : TriPoly) (H : BiPoly)
     (hBdeg : (triSpecializeX R x₀).natDegree = R.natDegree)
@@ -51,8 +40,6 @@ theorem inner_leadingCoeff_eval_ne_zero
   intro hHz
   apply hRlead
   rw [← hBlead, hmul, Polynomial.eval_mul, hHz, zero_mul]
-
-/-- Exact value of the finite `Y`-slope after the two specializations. -/
 theorem ySlope_eq_derivative_specialization
     (R : TriPoly) (z x y : F) :
     FiniteHensel.ySlope (triSpecializeZ R z) x y =
@@ -63,9 +50,6 @@ theorem ySlope_eq_derivative_specialization
   induction Polynomial.derivative R using Polynomial.induction_on' with
   | add p q hp hq => simp [hp, hq]
   | monomial n a => simp [eval_map_eval_eq_eval_eval_C]
-
-/-- The raw separability component of the outer obstruction makes every
-selected outer root simple at a surviving seed. -/
 theorem simple_slope_of_pairRel
     (Pz : F → Polynomial F) (x₀ z : F) (R : TriPoly) (H : BiPoly)
     (hrel : pairRel Pz x₀ z (R, H))
@@ -102,8 +86,6 @@ theorem simple_slope_of_pairRel
     B z ((Pz z).eval x₀) (by simpa [B, hBdeg] using hRpos) hresB hBroot
   rw [ySlope_eq_derivative_specialization]
   simpa [B, triSpecializeX, Polynomial.derivative_map] using hsimple
-
-/-- All elementary data carried by one selected pair at one fiber seed. -/
 structure FiberFacts
     (Pz : F → Polynomial F) (Q : TriPoly) (x₀ z : F) (RH : Pair) : Prop where
   hRmem : RH.1 ∈ UniqueFactorizationMonoid.normalizedFactors Q
@@ -120,9 +102,6 @@ structure FiberFacts
   hHroot : Polynomial.evalEval z ((Pz z).eval x₀) RH.2 = 0
   hsimple : FiniteHensel.IsSimpleRootAt (triSpecializeZ RH.1 z) x₀
     ((Pz z).eval x₀)
-
-/-- Deterministic bridge from the global cover relation and the chosen-x₀
-facts to all elementary selected-fiber facts. -/
 theorem fiberFacts_of_pairRel
     (Pz : F → Polynomial F) (Q : TriPoly) (x₀ z : F) (RH : Pair)
     (hRH : RH ∈ pairs Q x₀)
@@ -161,7 +140,5 @@ theorem fiberFacts_of_pairRel
         exact (Polynomial.hom_eval₂ (triSpecializeZ RH.1 z) (RingHom.id F[X])
           (Polynomial.evalRingHom x₀) (Pz z)).symm
       _ = 0 := by simpa using he
-
 end UniversalPairFiberBridge6399
-
 end ProximityPrize.SubmissionLower

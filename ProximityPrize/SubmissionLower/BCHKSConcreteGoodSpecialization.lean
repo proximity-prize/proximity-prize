@@ -2,43 +2,25 @@ import ProximityPrize.SubmissionLower.BCHKSFactorPigeon
 import ProximityPrize.SubmissionLower.BCHKSSeparableFactors
 import ProximityPrize.SubmissionLower.BCHKSParameters
 import ProximityPrize.SubmissionLower.BCHKSConcreteGS
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate
 open scoped BigOperators
-
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 2000000
 set_option linter.constructorNameAsVariable false
-
-/-- First invert the `Z`-polynomials, leaving `X` and `Y` polynomial. -/
 noncomputable def mapZToRatFunc {F : Type} [Field F]
     (R : Polynomial (Polynomial (Polynomial F))) :
     Polynomial (Polynomial (RatFunc F)) :=
   R.map (Polynomial.mapRingHom (algebraMap F[X] (RatFunc F)))
-
-/-- The `Y`-discriminant after passing from `F[Z]` to `F(Z)`, as a
-polynomial in `X`. -/
 noncomputable def ratDiscr {F : Type} [Field F]
     (R : Polynomial (Polynomial (Polynomial F))) : Polynomial (RatFunc F) :=
   (mapZToRatFunc R).discr
-
-
-/-- Map the raw `Y`-discriminant (a polynomial in `X` over `F[Z]`) into
-`F(Z)[X]`.  Unlike `ratDiscr`, this definition makes coefficient-map
-injectivity immediate. -/
 noncomputable def rawDiscrRat {F : Type} [Field F]
     (R : Polynomial (Polynomial (Polynomial F))) : Polynomial (RatFunc F) :=
   R.discr.map (algebraMap F[X] (RatFunc F))
-
 local instance concreteGoodSpecChar :
     CharP ProximityPrize.Benchmark.IRSProfile.Field 2130706433 :=
   charP_of_injective_algebraMap' KoalaBear.Field 2130706433
-
-/-- A monic irreducible positive-`Y` factor with `Y`-degree below 852 has
-nonzero raw discriminant.  The cap hypotheses are explicit so the factor-cap
-API can discharge them directly. -/
 theorem concrete_monic_factor_discr_ne_zero
     (R : Polynomial (Polynomial (Polynomial
       ProximityPrize.Benchmark.IRSProfile.Field)))
@@ -51,9 +33,6 @@ theorem concrete_monic_factor_discr_ne_zero
   apply monic_discr_ne_zero_of_fraction_irreducible
     (A := A) (K := K) 2130706433 R hmonic hirrK hpos
   omega
-
-/-- The rational-function image of the raw discriminant is nonzero and keeps
-exactly its `X`-degree. -/
 theorem rawDiscrRat_ne_zero_and_natDegree
     (R : Polynomial (Polynomial (Polynomial
       ProximityPrize.Benchmark.IRSProfile.Field)))
@@ -68,7 +47,6 @@ theorem rawDiscrRat_ne_zero_and_natDegree
   · exact (Polynomial.map_ne_zero_iff hf).mpr
       (concrete_monic_factor_discr_ne_zero R hmonic hirr hpos hdeg)
   · exact Polynomial.natDegree_map_eq_of_injective hf R.discr
-
 private theorem raw_discr_specialization_ne_zero_of_rat_eval
     {F : Type} [Field F] (P : Polynomial (Polynomial F)) (x : F)
     (h : Polynomial.eval (algebraMap F (RatFunc F) x)
@@ -81,9 +59,6 @@ private theorem raw_discr_specialization_ne_zero_of_rat_eval
       algebraMap F (RatFunc F) x := by simp
   rw [← hx, Polynomial.eval₂_hom, hz]
   exact map_zero _
-
-/-- Root counting restricted to the embedded constants `C x`, rather than all
-points of the rational-function field. -/
 theorem exists_base_point_avoiding_ratfunc_polynomials
     {F ρ : Type} [Field F] [Fintype F] [DecidableEq ρ]
     (T : Finset ρ) (p : ρ → Polynomial (RatFunc F))
@@ -109,10 +84,6 @@ theorem exists_base_point_avoiding_ratfunc_polynomials
   have hzero := Polynomial.eq_zero_of_natDegree_lt_card_of_eval_eq_zero
     P (FaithfulSMul.algebraMap_injective F (RatFunc F)) hPeval hPdeg
   exact hPne hzero
-
-
-/-- Full first-stage factor theorem with the factor cap assumptions exposed:
-one base point leaves every raw discriminant nonzero after specializing `X`. -/
 theorem exists_x0_raw_factor_discriminants
     {ρ : Type} [DecidableEq ρ]
     (T : Finset ρ)
@@ -145,9 +116,6 @@ theorem exists_x0_raw_factor_discriminants
   refine ⟨x₀, ?_⟩
   intro r hr
   exact raw_discr_specialization_ne_zero_of_rat_eval (R r).discr x₀ (hx₀ r hr)
-
-/-- Concrete wrapper using the reserved `6.8·10^13` bad-specialization
-budget and the proven cardinal lower bound for the sextic field. -/
 theorem exists_concrete_x0_avoiding_rat_discriminants
     {ρ : Type} [DecidableEq ρ]
     (T : Finset ρ)
@@ -161,14 +129,9 @@ theorem exists_concrete_x0_avoiding_rat_discriminants
           (RatFunc ProximityPrize.Benchmark.IRSProfile.Field) x₀) (ratDiscr (R r)) ≠ 0 := by
   apply exists_base_point_avoiding_ratfunc_polynomials T (fun r => ratDiscr (R r)) hne
   exact hdeg.trans_lt bchksBadBudget_lt_field
-
-/-- Union of the roots of a finite family of nonzero obstruction
-polynomials. -/
 noncomputable def badRootUnion {F ρ : Type} [Field F] [DecidableEq F]
     (T : Finset ρ) (p : ρ → F[X]) : Finset F :=
   T.biUnion fun r => (p r).roots.toFinset
-
-/-- The bad-root union costs at most the sum of the obstruction degrees. -/
 theorem badRootUnion_card_le_sum_natDegree
     {F ρ : Type} [Field F] [DecidableEq F] [DecidableEq ρ]
     (T : Finset ρ) (p : ρ → F[X]) (hne : ∀ r ∈ T, p r ≠ 0) :
@@ -186,8 +149,6 @@ theorem badRootUnion_card_le_sum_natDegree
       apply Finset.sum_le_sum
       intro r hr
       exact Polynomial.card_roots' (p r)
-
-/-- Outside the union, every obstruction evaluates nontrivially. -/
 theorem eval_ne_zero_of_not_mem_badRootUnion
     {F ρ : Type} [Field F] [DecidableEq F] [DecidableEq ρ]
     (T : Finset ρ) (p : ρ → F[X]) (hne : ∀ r ∈ T, p r ≠ 0)
@@ -200,9 +161,6 @@ theorem eval_ne_zero_of_not_mem_badRootUnion
   refine ⟨r, hr, ?_⟩
   rw [Multiset.mem_toFinset, Polynomial.mem_roots (hne r hr)]
   exact hzero
-
-/-- Intersecting an arbitrary challenge set with the global bad union cannot
-increase its cardinality. -/
 theorem inter_badRootUnion_card_le_budget
     {F ρ : Type} [Field F] [DecidableEq F] [DecidableEq ρ]
     (S : Finset F) (T : Finset ρ) (p : ρ → F[X])
@@ -211,16 +169,9 @@ theorem inter_badRootUnion_card_le_budget
     (S ∩ badRootUnion T p).card ≤ bchksBadBudget := by
   exact (Finset.card_le_card Finset.inter_subset_right).trans
     ((badRootUnion_card_le_sum_natDegree T p hne).trans hdeg)
-
-/-- The very coarse all-factor accounting is already far below the reserved
-budget.  It allows 852 factors, one degree-519143 survival obstruction and one
-`(2·852-1)·519143` resultant/discriminant obstruction per factor. -/
 theorem crude_concrete_bad_degree_budget :
     852 * (519143 + (2 * 852 - 1) * 519143) ≤ bchksBadBudget := by
   norm_num [bchksBadBudget]
-
-
-/-- Turning the per-factor coarse estimate into the explicit global budget. -/
 theorem rat_discriminants_sum_degree_le_badBudget
     {ρ : Type} [DecidableEq ρ]
     (T : Finset ρ)
@@ -238,9 +189,6 @@ theorem rat_discriminants_sum_degree_le_badBudget
     _ ≤ 852 * (519143 + (2 * 852 - 1) * 519143) := by
       exact Nat.mul_le_mul_right _ hcard
     _ ≤ bchksBadBudget := crude_concrete_bad_degree_budget
-
-/-- Concrete first-stage result requested by the specialization argument:
-all mapped discriminants survive at one base-field point. -/
 theorem exists_concrete_x0_of_factor_discriminant_bounds
     {ρ : Type} [DecidableEq ρ]
     (T : Finset ρ)
@@ -258,17 +206,9 @@ theorem exists_concrete_x0_of_factor_discriminant_bounds
           (ratDiscr (R r)) ≠ 0 := by
   apply exists_concrete_x0_avoiding_rat_discriminants T R hne
   exact rat_discriminants_sum_degree_le_badBudget T R hcard hdeg
-
-
-/-- The raw padded separability resultant of a positive-degree irreducible
-factor. -/
 noncomputable def rawSepResultant {A : Type} [CommRing A]
     (R : A[X]) : A :=
   Polynomial.resultant R R.derivative R.natDegree (R.natDegree - 1)
-
-/-- No monicity assumption is needed: pass a primitive irreducible to the full
-fraction field, use degree below the characteristic, and descend nonvanishing
-by injectivity. -/
 theorem rawSepResultant_ne_zero_of_irreducible
     {A : Type} [CommRing A] [IsDomain A] [IsGCDMonoid A]
     (p : ℕ) [CharP A p] (R : A[X])
@@ -312,9 +252,6 @@ theorem rawSepResultant_ne_zero_of_irreducible
   unfold rawSepResultant at hraw
   rw [hraw]
   exact map_zero _
-
-/-- Fixed-degree common-root vanishing.  This padded form remains valid when
-specialization lowers one of the degrees. -/
 theorem fixed_resultant_eq_zero_of_common_root
     {F : Type} [Field F] {P H : F[X]} {m n : ℕ} {y : F}
     (hPdeg : P.natDegree ≤ m) (hHdeg : H.natDegree ≤ n)
@@ -337,10 +274,6 @@ theorem fixed_resultant_eq_zero_of_common_root
   · push Not at hne
     rcases hne with ⟨rfl, rfl⟩
     rcases m with _ | m <;> rcases n with _ | n <;> simp_all
-
-/-- A nonzero specialized fixed resultant certifies that every rational root
-is simple.  This is the pointwise derivative conclusion used after removing
-`Bad`. -/
 theorem simple_root_of_fixed_resultant_eval_ne_zero
     {F : Type} [Field F] (B : F[X][Y]) (z y : F)
     (hpos : 0 < B.natDegree)
@@ -360,10 +293,6 @@ theorem simple_root_of_fixed_resultant_eval_ne_zero
   · omega
   · exact hy
   · exact hyder
-
-/-- Package the two finite-union conclusions.  Callers instantiate `p` with a
-survival coefficient for `Q` and every factor, plus each fixed
-resultant/discriminant. -/
 theorem exists_concrete_bad_union
     {ρ : Type} [DecidableEq ρ]
     (S : Finset ProximityPrize.Benchmark.IRSProfile.Field)
@@ -377,18 +306,10 @@ theorem exists_concrete_bad_union
   refine ⟨badRootUnion T p, inter_badRootUnion_card_le_budget S T p hne hdeg, ?_⟩
   intro z hz
   exact eval_ne_zero_of_not_mem_badRootUnion T p hne hz
-
-
-/-- The two raw `X`-obstructions attached to a factor are combined into one:
-its leading `Y`-coefficient and its separability resultant. -/
 noncomputable def factorXObstruction {F : Type} [Field F]
     (R : Polynomial (Polynomial (Polynomial F))) :
     Polynomial (Polynomial F) :=
   R.leadingCoeff * rawSepResultant R
-
-/-- Conditional-on-caps integration theorem.  This is deliberately stated
-with the two aggregate degree estimates exposed; the factor-cap theorem plugs
-into precisely `hxBudget` and `hzBudget`. -/
 theorem concrete_good_specialization_of_factor_caps
     {ρ : Type} [DecidableEq ρ]
     (Q : Polynomial (Polynomial (Polynomial
@@ -550,5 +471,4 @@ theorem concrete_good_specialization_of_factor_caps
       (triSpecializeX (R r) x₀) z y (by rw [hdegEq]; exact hpos r hr) hresB hy
     rw [← hder] at hsimple
     exact hsimple
-
 end ProximityPrize.SubmissionLower

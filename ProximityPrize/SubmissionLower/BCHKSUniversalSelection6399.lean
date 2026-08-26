@@ -2,18 +2,11 @@ import ProximityPrize.SubmissionLower.BCHKSUniversalGlobalCapacity
 import ProximityPrize.SubmissionLower.BCHKSUniversalFactorSums
 import ProximityPrize.SubmissionLower.BCHKSParameters6399
 import ProximityPrize.SubmissionLower.BCHKSDoubleCounting
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
 open Polynomial
 open scoped BigOperators
-
 set_option maxHeartbeats 2000000
-
-/-- Convert the exact selected-pair incidence inequality into `k+1` concrete
-RS coordinates whose selected-seed fibers are larger than the pair's actual
-resultant degree. -/
 theorem exists_large_universal_coordinates_6399
     (T : Finset IRSProfile.Field)
     (Arow : IRSProfile.Field → Finset IRSProfile.Index)
@@ -35,9 +28,6 @@ theorem exists_large_universal_coordinates_6399
   refine ⟨Coord, hcard, ?_⟩
   intro i hi
   exact (Finset.mem_filter.mp hi).2
-
-/-- Root counting on each large coordinate fiber forces its ordinary
-resultant obstruction to vanish identically in `Z`. -/
 theorem universal_coordinate_obstructions_eq_zero
     (T : Finset IRSProfile.Field)
     (Arow : IRSProfile.Field → Finset IRSProfile.Index)
@@ -56,19 +46,11 @@ theorem universal_coordinate_obstructions_eq_zero
     exact hroot i hi z (Finset.mem_filter.mp hz).1
       (Finset.mem_filter.mp hz).2
   · exact (hdegree i hi).trans_lt (hlarge i hi)
-
-/-- The exact aggregate capacity over the concrete nested-factor finset.  The
-inner sum uses the actual `Y`- and `Z`-degree masses of the distinct factors;
-the outer sum then uses only the total `Y`-degree mass of `Q`. -/
 noncomputable def universalPairResultantCapacity (E D : ℕ)
     (RH : Polynomial (Polynomial (Polynomial IRSProfile.Field)) ×
       Polynomial (Polynomial IRSProfile.Field)) : ℕ :=
   RH.2.natDegree * (E * D) +
     (E * RH.1.natDegree) * Bivariate.degreeX RH.2
-
-/-- Sharp coefficient-variable cap after specializing the middle variable of
-a normalized outer factor.  A strict `Z+Y < D+1` support cap gives `≤ D`,
-with no lost unit. -/
 theorem normalizedFactor_triSpecializeX_degreeX_le
     (Q R : Polynomial (Polynomial (Polynomial IRSProfile.Field)))
     (x₀ : IRSProfile.Field) (D : ℕ) (hQ : Q ≠ 0)
@@ -103,7 +85,6 @@ theorem normalizedFactor_triSpecializeX_degreeX_le
   intro j hj
   simp only [triSpecializeX, Polynomial.coeff_map]
   exact hevalCap (R.coeff j) (hcoeffCap j)
-
 theorem positiveNormalizedFactorPairs_universal_capacity_le
     (Q : Polynomial (Polynomial (Polynomial IRSProfile.Field)))
     (hQ : Q ≠ 0) (x₀ : IRSProfile.Field)
@@ -173,15 +154,6 @@ theorem positiveNormalizedFactorPairs_universal_capacity_le
     _ ≤ 2 * E * M * D := by
       gcongr
       exact (normalizedFactors_toFinset_sum_natDegree_le Q hQ).trans hQdeg
-
-/-- The numerical all-pair selection step for the universal-numerator route.
-
-The exceptional `Z`-specializations of the interpolant are charged once, and
-the outer-factor exceptional sets are charged once per outer factor.  The
-ordinary-resultant degree capacities are summed before the exact floor
-conversion.  The selected pair retains both the incidence inequality and the
-`errors+1` cardinality inequality.  Its coordinate-dependent resultants are
-handled only after the subsequent row-to-column double count. -/
 theorem exists_large_universal_pair_6399
     {A P : Type*} [DecidableEq A] [DecidableEq P]
     (S QBad : Finset IRSProfile.Field)
@@ -250,5 +222,4 @@ theorem exists_large_universal_pair_6399
   refine ⟨p, hp, ?_, ?_⟩
   · simpa [Fib, gap] using hbounds.1
   · simpa [Fib] using hbounds.2
-
 end ProximityPrize.SubmissionLower

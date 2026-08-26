@@ -1,18 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate
 open scoped BigOperators
-
 set_option linter.constructorNameAsVariable false
-
-/-- The characteristic inherited by the concrete sextic extension. -/
 local instance concreteFieldChar :
     CharP ProximityPrize.Benchmark.IRSProfile.Field 2130706433 :=
   charP_of_injective_algebraMap' KoalaBear.Field 2130706433
-
-/-- Below the characteristic, the formal derivative retains its leading term. -/
 theorem derivative_ne_zero_of_pos_natDegree_lt_char
     {K : Type} [Field K] (p : ℕ) [CharP K p] (R : K[X])
     (hpos : 0 < R.natDegree) (hlt : R.natDegree < p) : R.derivative ≠ 0 := by
@@ -33,8 +26,6 @@ theorem derivative_ne_zero_of_pos_natDegree_lt_char
     intro hz
     simp [hz] at hpos
   exact (mul_ne_zero (Polynomial.leadingCoeff_ne_zero.mpr hR) hcast) hc
-
-/-- A positive-degree irreducible below the characteristic is separable. -/
 theorem irreducible_isCoprime_derivative_of_natDegree_lt_char
     {K : Type} [Field K] (p : ℕ) [CharP K p] (R : K[X])
     (hirr : Irreducible R) (hpos : 0 < R.natDegree) (hlt : R.natDegree < p) :
@@ -48,8 +39,6 @@ theorem irreducible_isCoprime_derivative_of_natDegree_lt_char
     omega
   by_contra hnot
   exact hnotdvd ((hirr.dvd_iff_not_isCoprime).2 hnot)
-
-/-- Consequently its ordinary resultant with its derivative is nonzero. -/
 theorem irreducible_resultant_derivative_ne_zero_of_natDegree_lt_char
     {K : Type} [Field K] (p : ℕ) [CharP K p] (R : K[X])
     (hirr : Irreducible R) (hpos : 0 < R.natDegree) (hlt : R.natDegree < p) :
@@ -57,8 +46,6 @@ theorem irreducible_resultant_derivative_ne_zero_of_natDegree_lt_char
   intro hz
   have hc := (Polynomial.resultant_eq_zero_iff.mp hz).2
   exact hc (irreducible_isCoprime_derivative_of_natDegree_lt_char p R hirr hpos hlt)
-
-/-- The discriminant of a monic irreducible below the characteristic is nonzero. -/
 theorem monic_irreducible_discr_ne_zero_of_natDegree_lt_char
     {K : Type} [Field K] (p : ℕ) [CharP K p] (R : K[X])
     (hmonic : R.Monic) (hirr : Irreducible R)
@@ -88,9 +75,6 @@ theorem monic_irreducible_discr_ne_zero_of_natDegree_lt_char
   intro hz
   rw [hz, mul_zero] at hrel
   exact hres hrel
-
-/-- Raw-domain form. A monic factor that stays irreducible in the fraction
-field has a nonzero raw discriminant. -/
 theorem monic_discr_ne_zero_of_fraction_irreducible
     {A K : Type} [CommRing A] [IsDomain A] [Field K]
     [Algebra A K] [IsFractionRing A K]
@@ -136,8 +120,6 @@ theorem monic_discr_ne_zero_of_fraction_irreducible
   intro hzero
   rw [hzero, mul_zero] at hrel
   exact hresRaw hrel
-
-/-- Differentiation in `Y` cannot increase the other (`X`) degree. -/
 theorem degreeX_derivative_le {F : Type} [Field F] (R : F[X][Y]) :
     degreeX R.derivative ≤ degreeX R := by
   classical
@@ -154,9 +136,6 @@ theorem degreeX_derivative_le {F : Type} [Field F] (R : F[X][Y]) :
         rw [← Nat.cast_one, ← Nat.cast_add, Polynomial.natDegree_natCast]
       rw [hn, Nat.add_zero]
       exact Polynomial.Bivariate.coeff_natDegree_le_degreeX R (j + 1)
-
-/-- The outer-variable degree of a monic discriminant has the usual
-`(2d-1)` coarse bound. -/
 theorem discr_natDegree_le {F : Type} [Field F] (R : F[X][Y])
     (hmonic : R.Monic) (hpos : 0 < R.natDegree) :
     R.discr.natDegree ≤ (2 * R.natDegree - 1) * degreeX R := by
@@ -187,9 +166,6 @@ theorem discr_natDegree_le {F : Type} [Field F] (R : F[X][Y])
       simp
     rw [← heqdeg]
     exact hSdeg'
-
-/-- Summing the preceding bound over a family. This is the exact interface
-needed before the common-good-specialization root count. -/
 theorem sum_discr_natDegree_le {F ρ : Type} [Field F] [DecidableEq ρ]
     (S : Finset ρ) (R : ρ → F[X][Y])
     (hmonic : ∀ r ∈ S, (R r).Monic)
@@ -199,10 +175,6 @@ theorem sum_discr_natDegree_le {F ρ : Type} [Field F] [DecidableEq ρ]
   apply Finset.sum_le_sum
   intro r hr
   exact discr_natDegree_le (R r) (hmonic r hr) (hpos r hr)
-
-/-- A generic BCHKS-style good-specialization lemma: nonzero raw
- discriminants whose total outer degree is smaller than the field have a
- common nonvanishing specialization. -/
 theorem exists_good_x_of_discriminants
     {F ρ : Type} [Field F] [Fintype F] [DecidableEq ρ]
     (S : Finset ρ) (R : ρ → F[X][Y])
@@ -228,5 +200,4 @@ theorem exists_good_x_of_discriminants
   have hzero := Polynomial.eq_zero_of_natDegree_lt_card_of_eval_eq_zero
     P Function.injective_id hPeval hPdeg
   exact hPne hzero
-
 end ProximityPrize.SubmissionLower

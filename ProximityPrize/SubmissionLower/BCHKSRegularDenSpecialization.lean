@@ -1,18 +1,11 @@
 import ProximityPrize.SubmissionLower.BCHKSFiniteLiftExact
 import ProximityPrize.SubmissionLower.BCHKSPairLiftRegularDen
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate
 open RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F]
-
-
-/-- Actual regular denominator, repeated here so this bridge remains usable
-independently of the evolving exact-lift packaging module. -/
 noncomputable def concreteDenRegularBridge
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -20,7 +13,6 @@ noncomputable def concreteDenRegularBridge
   (Ideal.Quotient.mk (Ideal.span {monicize H})
       (Polynomial.C H.leadingCoeff) : 𝒪 H) ^ (t + 1) *
     (HenselNumerators.xi x₀ R H hHyp) ^ FiniteHenselWeight.denominatorExponent t
-
 lemma embedding_concreteDenRegularBridge
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -30,7 +22,6 @@ lemma embedding_concreteDenRegularBridge
         FiniteHenselWeight.denominatorExponent t := by
   simp [concreteDenRegularBridge, Wfield, etaField, embeddingOf𝒪Into𝕃_mk,
     liftBivariate_C]
-
 lemma embedding_betaRegular_eq_finiteAlpha_mul_denRegularBridge
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y]) (hHyp : HenselNumerators.Hypotheses x₀ R H)
@@ -40,7 +31,6 @@ lemma embedding_betaRegular_eq_finiteAlpha_mul_denRegularBridge
         embeddingOf𝒪Into𝕃 H (concreteDenRegularBridge x₀ R hHyp t) := by
   rw [embedding_betaRegular, embedding_concreteDenRegularBridge]
   rfl
-
 lemma embedding_concreteDenRegularBridge_ne_zero
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y]) (hHyp : HenselNumerators.Hypotheses x₀ R H)
@@ -52,19 +42,12 @@ lemma embedding_concreteDenRegularBridge_ne_zero
     rw [etaField_eq]
     exact mul_ne_zero (pow_ne_zero _ hW) hzeta
   exact mul_ne_zero (pow_ne_zero _ hW) (pow_ne_zero _ heta)
-
-
-/-- Canonical regular representatives used in the explicit common numerator. -/
 noncomputable def commonWRegular {H : F[X][Y]} [Fact (Irreducible H)] : 𝒪 H :=
   Ideal.Quotient.mk (Ideal.span {monicize H}) (Polynomial.C H.leadingCoeff)
-
 noncomputable def commonTRegular {H : F[X][Y]} [Fact (Irreducible H)] : 𝒪 H :=
   Ideal.Quotient.mk (Ideal.span {monicize H}) Polynomial.X
-
 noncomputable def commonConstRegular {H : F[X][Y]} [Fact (Irreducible H)] (a : F) : 𝒪 H :=
   Ideal.Quotient.mk (Ideal.span {monicize H}) (Polynomial.C (Polynomial.C a))
-
-/-- Explicit regular common numerator for the evaluated finite lift minus an affine value. -/
 noncomputable def explicitGammaDifferenceRegular
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -79,24 +62,18 @@ noncomputable def explicitGammaDifferenceRegular
             FiniteHenselWeight.denominatorExponent i)) -
     (commonConstRegular u₀ + commonTRegular * commonConstRegular u₁) *
       concreteDenRegularBridge x₀ R hHyp k
-
 lemma embedding_commonWRegular
     {H : F[X][Y]} [Fact (Irreducible H)] :
     embeddingOf𝒪Into𝕃 H (commonWRegular (H := H)) = Wfield (H := H) := by
   simp [commonWRegular, Wfield, embeddingOf𝒪Into𝕃_mk, liftBivariate_C]
-
 lemma embedding_commonTRegular
     {H : F[X][Y]} [Fact (Irreducible H)] :
     embeddingOf𝒪Into𝕃 H (commonTRegular (H := H)) = functionFieldT (H := H) := by
   simp [commonTRegular, embeddingOf𝒪Into𝕃_mk, liftBivariate_X]
-
 lemma embedding_commonConstRegular
     {H : F[X][Y]} [Fact (Irreducible H)] (a : F) :
     embeddingOf𝒪Into𝕃 H (commonConstRegular (H := H) a) = fieldTo𝕃 (H := H) a := by
   simp [commonConstRegular, fieldTo𝕃, embeddingOf𝒪Into𝕃_mk, liftBivariate_C]
-
-
-
 lemma concreteDenRegularBridge_mul_to_common
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -115,7 +92,6 @@ lemma concreteDenRegularBridge_mul_to_common
           FiniteHenselWeight.denominatorExponent i) := by omega
   rw [hw, he, pow_add, pow_add, Nat.add_sub_cancel_left]
   ring
-
 lemma embedding_explicitGammaDifferenceRegular
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -149,8 +125,6 @@ lemma embedding_explicitGammaDifferenceRegular
           FiniteHenselWeight.denominatorExponent i) := by omega
   rw [hw, he, pow_add, pow_add, Nat.add_sub_cancel_left]
   ring
-
-
 lemma explicitGammaDifferenceRegular_eq_chosen
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -165,7 +139,6 @@ lemma explicitGammaDifferenceRegular_eq_chosen
       gammaDifferenceRegular_yz x₀ dx u₀ u₁ R H hHyp hzeta hH hD_H hD_R hRdeg N k hkN := by
   apply embeddingOf𝒪Into𝕃_injective hH
   rw [embedding_explicitGammaDifferenceRegular, embedding_gammaDifferenceRegular_yz]
-
 lemma explicitGammaDifferenceRegular_weight
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -182,8 +155,6 @@ lemma explicitGammaDifferenceRegular_weight
     hD_H hD_R hRdeg N k hkN]
   exact gammaDifferenceRegular_weight_yz x₀ dx u₀ u₁ R H hHyp hzeta hH
     hD_H hD_R hRdeg N k hkN
-
-
 lemma explicitGammaDifferenceRegular_weight_yz
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -200,10 +171,6 @@ lemma explicitGammaDifferenceRegular_weight_yz
     hD_H hD_R hRdeg N k hkN]
   exact gammaDifferenceRegular_weight_yz x₀ dx u₀ u₁ R H hHyp hzeta hH
     hD_H hD_R hRdeg N k hkN
-
-
-/-- Partial specialization of a concrete finite function-field coefficient,
-using its actual regular numerator and denominator. -/
 noncomputable def concreteSpecializedAlpha
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -212,8 +179,6 @@ noncomputable def concreteSpecializedAlpha
     (N : ℕ) (z : F) (root : rationalRoot (monicize H) z) (n : ℕ) : F :=
   piZ z root (concreteBetaUpTo x₀ R hHyp hzeta N n) /
     piZ z root (concreteDenRegularBridge x₀ R hHyp n)
-
-/-- Pointwise vanishing of the explicit common numerator from Taylor specialization. -/
 theorem piZ_explicitGammaDifferenceRegular_eq_zero
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ z : F) (root : rationalRoot (monicize H) z)
@@ -290,10 +255,6 @@ theorem piZ_explicitGammaDifferenceRegular_eq_zero
     exact hterm i (by rw [Finset.mem_range] at hi; omega)
   rw [hsum, hTaylorSum, heval]
   ring
-
-/-- If the exact regular-fraction specializations agree with ordinary Taylor
-coefficients through `k`, they satisfy the specialized finite-Hensel residual
-through `k`.  This removes the previously free `hvanish` assumption. -/
 theorem concreteSpecializedAlpha_vanishesThrough
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R₀ : F[X][X][Y])
@@ -321,9 +282,6 @@ theorem concreteSpecializedAlpha_vanishesThrough
   unfold FiniteHensel.residual
   rw [htrunc]
   exact FiniteHensel.TaylorCoeff_vanishesThrough R P x k hPdeg hExact
-
-/-- Taylor coefficients above the degree of `P` vanish, even after expansion
-around an arbitrary point. -/
 theorem TaylorCoeff_eq_zero_of_natDegree_lt
     (P : F[X]) (x : F) {k n : ℕ} (hPdeg : P.natDegree ≤ k) (hkn : k < n) :
     FiniteHensel.TaylorCoeff P x n = 0 := by
@@ -338,9 +296,6 @@ theorem TaylorCoeff_eq_zero_of_natDegree_lt
       _ ≤ k * 1 := Nat.mul_le_mul hPdeg hshift
       _ = k := Nat.mul_one k
   omega
-
-/-- A zero specialized Taylor coefficient forces direct numerator vanishing,
-provided the actual regular denominator is nonzero at the pair. -/
 theorem piZ_betaRegular_eq_zero_of_TaylorCoeff_eq_zero
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R₀ : F[X][X][Y])
@@ -361,10 +316,6 @@ theorem piZ_betaRegular_eq_zero_of_TaylorCoeff_eq_zero
   have hnum : piZ z root (concreteBetaUpTo x₀ R₀ hHyp hzeta N n) = 0 :=
     ((div_eq_zero_iff).mp hfrac).resolve_right hden
   simpa [concreteBetaUpTo_eq_betaRegular x₀ R₀ hHyp hzeta N n hnN] using hnum
-
-/-- Concrete simultaneous middle-coefficient vanishing using the actual
-regular denominator.  Specialization-to-Taylor compatibility is the sole
-bridge hypothesis; residual vanishing and direct numerator zeros are derived. -/
 theorem concreteFiniteAlpha_middle_vanish_regularDen
     [Fintype F] {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R₀ : F[X][X][Y])
@@ -408,5 +359,4 @@ theorem concreteFiniteAlpha_middle_vanish_regularDen
     · exact TaylorCoeff_eq_zero_of_natDegree_lt (P z) (center z) (hPdeg z) hkt
     · exact hden t hkt htDX z
   · exact hcard
-
 end ProximityPrize.SubmissionLower

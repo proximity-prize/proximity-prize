@@ -1,12 +1,9 @@
 import ProximityPrize.SubmissionLower.BCHKSPrimitiveSpanLift
 import ProximityPrize.SubmissionLower.BCHKSPrimitiveEffective
 import ProximityPrize.SubmissionLower.BCHKSParameters6399
-
 namespace ProximityPrize.SubmissionLower
 open Polynomial
-
 private abbrev F := ProximityPrize.Benchmark.IRSProfile.Field
-
 private theorem span_caps
     {F J : Type*} [Field F]
     (c : J → Polynomial (Polynomial F)) (DZ DX : ℕ)
@@ -36,15 +33,12 @@ private theorem span_caps
         simpa [smul_eq_C_mul] using
           (Polynomial.natDegree_smul_le a (p.coeff i)).trans
             ((Polynomial.Bivariate.coeff_natDegree_le_degreeX p i).trans ih.2)
-
-
 private theorem map_swap_eval
     {F : Type*} [Field F] (q : Polynomial (Polynomial F)) (x : F) :
     (Polynomial.Bivariate.swap q).map (Polynomial.evalRingHom x) =
       Polynomial.eval (Polynomial.C x) q := by
   rw [← Polynomial.Bivariate.evalX_eq_map]
   exact (Polynomial.Bivariate.evalY_eq_evalX_swap x q).symm
-
 private theorem span_map_dvd
     {F J : Type*} [Field F] (c : J → Polynomial (Polynomial F))
     (x : F) (a : Polynomial F)
@@ -65,8 +59,6 @@ private theorem span_map_dvd
         simp
       rw [heq]
       exact dvd_mul_of_dvd_right ih _
-
-
 theorem effectivePrimitiveObstruction_of_irreducible6399
     (R : Polynomial (Polynomial (Polynomial
       ProximityPrize.Benchmark.IRSProfile.Field)))
@@ -271,5 +263,4 @@ theorem effectivePrimitiveObstruction_of_irreducible6399
   refine Polynomial.natDegree_mul_le.trans ?_
   refine (Nat.add_le_add Polynomial.natDegree_mul_le hrCap).trans ?_
   nlinarith
-
 end ProximityPrize.SubmissionLower

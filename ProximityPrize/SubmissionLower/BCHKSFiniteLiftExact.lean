@@ -1,25 +1,18 @@
 import ProximityPrize.SubmissionLower.BCHKSConcreteNumerators
 import ProximityPrize.SubmissionLower.BCHKSPairLiftVanishing
 import ProximityPrize.SubmissionLower.BCHKSRationalRootBridge
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate
 open RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F]
-
-/-- The concrete regular numerator, extended by zero outside the finite lift
-range so it can be supplied to the simultaneous root-vanishing theorem. -/
 noncomputable def concreteBetaUpTo
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
     (hHyp : HenselNumerators.Hypotheses x₀ R H)
     (hzeta : HenselNumerators.zeta R x₀ H ≠ 0) (N t : ℕ) : 𝒪 H :=
   if ht : t ≤ N then betaRegular x₀ R H hHyp hzeta N t ht else 0
-
 lemma concreteBetaUpTo_eq_betaRegular
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -28,11 +21,6 @@ lemma concreteBetaUpTo_eq_betaRegular
     concreteBetaUpTo x₀ R hHyp hzeta N t =
       betaRegular x₀ R H hHyp hzeta N t ht := by
   simp only [concreteBetaUpTo, dif_pos ht]
-
-/-- Exact middle-coefficient vanishing for the concrete finite Hensel lift at
-BCHKS's numerical cutoffs.  Numerator regularity is supplied by
-`betaRegular`; only the denominator presentation and its weight bound remain
-explicit inputs. -/
 theorem concreteFiniteAlpha_middle_vanish
     [Fintype F] {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -64,10 +52,6 @@ theorem concreteFiniteAlpha_middle_vanish
     (finiteAlpha (R := R) (H := H) x₀ 111624646)
     (concreteBetaUpTo x₀ R hHyp hzeta 111624646) C
     hembed hC hweight T root hden hspecialize hcard
-
-/-- A polynomial of degree `< DX` is zero if its coefficients agree below
-`DX` with a finite residual that vanishes through `DX`.  This is the final
-weighted-X-cap step after replacing the middle lift coefficients by zero. -/
 theorem eval_truncSeries_eq_zero_of_residual_match_and_cap
     {L : Type} [Field L] (Q : L[X]) (res : L[X]) (DX : ℕ)
     (hres : FiniteHensel.VanishesThrough res DX)
@@ -80,10 +64,6 @@ theorem eval_truncSeries_eq_zero_of_residual_match_and_cap
   · have hQ : Q.coeff n = 0 :=
       Polynomial.coeff_eq_zero_of_natDegree_lt (hcap.trans_le (Nat.le_of_not_gt hn))
     simp [hQ]
-
-/-- Form the truncated BCHKS lift `γ` and conclude that it is an exact root of
-the mapped relation.  `hmatch` is the support/weighted-X-cap interface: below
-`DX`, evaluation at `γ` has the same coefficients as the finite residual. -/
 theorem concreteFiniteLift_trunc_exact
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -102,10 +82,6 @@ theorem concreteFiniteLift_trunc_exact
       (FiniteHensel.truncSeries α 131071) = 0 := by
   exact eval_truncSeries_eq_zero_of_residual_match_and_cap _ _ 111624646
     hres hmatch hcap
-
-
-/-- Concrete specialization of `concreteFiniteLift_trunc_exact` to the
-coefficients produced by `FiniteHensel.liftCoeff`. -/
 theorem concreteFiniteAlpha_trunc_exact
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -128,10 +104,6 @@ theorem concreteFiniteAlpha_trunc_exact
         (finiteAlpha (R := R) (H := H) x₀ 111624646) 131071) = 0 := by
   exact concreteFiniteLift_trunc_exact x₀ R
     (finiteAlpha (R := R) (H := H) x₀ 111624646) hres hmatch hcap
-
-/-- On a good specialization, finite-Hensel uniqueness identifies the
-specialized cleared lift with ordinary Taylor coefficients; truncating through
-`k` therefore gives the shifted polynomial itself. -/
 theorem specialized_truncSeries_eq_shift
     {H : F[X][Y]} (z : F) (root : rationalRoot (monicize H) z)
     (β : ℕ → 𝒪 H) (C : ℕ → F[X])
@@ -152,5 +124,4 @@ theorem specialized_truncSeries_eq_shift
     exact piZOfDiv_finiteLift_eq_TaylorCoeff z root β C R P x₀ y₀ k
       hdeg hExact hsimple ha0 hP0 hvanish n hn
   · simp [FiniteHensel.truncSeries, hn]
-
 end ProximityPrize.SubmissionLower

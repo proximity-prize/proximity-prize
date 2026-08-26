@@ -1,16 +1,11 @@
 import ProximityPrize.SubmissionLower.BCHKSWeightedSelection
 import ProximityPrize.SubmissionLower.BCHKSHenselSetup
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial
 open RationalFunctions
 open RationalFunctions.HenselNumerators
-
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 8000000
-
-/-- The strict concrete interpolation `YZ` support cap survives specializing `X=x₀`. -/
 theorem totalDegree_triSpecializeX_lt
     {F : Type*} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (x₀ : F) (D : Nat)
@@ -56,8 +51,6 @@ theorem totalDegree_triSpecializeX_lt
     exact hterm.trans (by have := hcap j a hca; omega)
   rw [hcoeff]
   omega
-
-/-- Weak form retained for callers that only need a non-strict total-degree bound. -/
 theorem totalDegree_triSpecializeX_le
     {F : Type*} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (x₀ : F) (D : Nat)
@@ -77,11 +70,6 @@ theorem totalDegree_triSpecializeX_le
       omega
     subst D
     simp [hQz, triSpecializeX, Polynomial.Bivariate.totalDegree]
-
-/-- Package the algebraic and degree facts needed after weighted selection.
-The weighted-`X` factor cap is explicit here; it is the remaining inheritance
-lemma from divisibility of a trivariate factor.  Separability is likewise an
-explicit good-`x₀` input. -/
 theorem setup_selected_pair
     {F : Type} [Field F] [DecidableEq F] [NormalizationMonoid F]
     (Q R : Polynomial (Polynomial (Polynomial F)))
@@ -152,5 +140,4 @@ theorem setup_selected_pair
       exact (Polynomial.isPrimitive_iff_isUnit_of_C_dvd.mp hprim) q₀ hCdvd
   exact ⟨hRirr, hHirr, hHpos, hHd, hRdeg, hHdeg,
     hHtotal, hRXtotal, hRweightedX, hHyp⟩
-
 end ProximityPrize.SubmissionLower

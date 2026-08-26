@@ -1,13 +1,6 @@
 import ProximityPrize.SubmissionLower.BCHKSFactorPigeon
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial
-
-/-- The sharp nested positive-factor count does not require every outer
-specialization to be nonzero.  A vanished outer specialization contributes no
-normalized inner factors; otherwise the usual normalized-factor degree sum
-applies. -/
 theorem positiveNormalizedFactorPairs_card_le_unconditional
     {F : Type*} [Field F] [DecidableEq F] [NormalizationMonoid F]
     (Q : Polynomial (Polynomial (Polynomial F))) (hQ : Q ≠ 0) (x₀ : F) (M : ℕ)
@@ -44,5 +37,4 @@ theorem positiveNormalizedFactorPairs_card_le_unconditional
     _ ≤ ∑ R ∈ s, R.natDegree := Finset.sum_le_sum hinner
     _ ≤ Q.natDegree := normalizedFactors_toFinset_sum_natDegree_le Q hQ
     _ ≤ M := hQdeg
-
 end ProximityPrize.SubmissionLower

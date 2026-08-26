@@ -1,14 +1,11 @@
 import ProximityPrize.SubmissionLower.BCHKSPartialSpecializationFunctor
 import ProximityPrize.SubmissionLower.BCHKSFactorPigeon
-
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F]
 variable {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
-
 lemma PolyGoodAt.sum {z : F} {root : rationalRoot (monicize H) z}
     {ι : Type*} [DecidableEq ι] (s : Finset ι)
     (p : ι → (𝕃 H)[X]) (q : ι → F[X])
@@ -22,8 +19,6 @@ lemma PolyGoodAt.sum {z : F} {root : rationalRoot (monicize H) z}
       rw [Finset.sum_insert hi, Finset.sum_insert hi]
       exact PolyGoodAt.add (h i (Finset.mem_insert_self i s))
         (ih (fun j hj => h j (Finset.mem_insert_of_mem hj)))
-
-/-- Composition of synchronously specialized polynomials. -/
 theorem PolyGoodAt.comp {z : F} {root : rationalRoot (monicize H) z}
     {p u : (𝕃 H)[X]} {q v : F[X]}
     (hp : PolyGoodAt z root p q) (hu : PolyGoodAt z root u v) :
@@ -55,12 +50,9 @@ theorem PolyGoodAt.comp {z : F} {root : rationalRoot (monicize H) z}
   apply PolyGoodAt.sum
   intro i hi
   exact PolyGoodAt.mul (PolyGoodAt.C (hp i)) (PolyGoodAt.pow hu i)
-
-/-- Coefficientwise relation for bivariate polynomials. -/
 def BiPolyGoodAt (z : F) (root : rationalRoot (monicize H) z)
     (R : (𝕃 H)[X][Y]) (S : F[X][Y]) : Prop :=
   ∀ j, PolyGoodAt z root (R.coeff j) (S.coeff j)
-
 lemma BiPolyGoodAt.eval {z : F} {root : rationalRoot (monicize H) z}
     {R : (𝕃 H)[X][Y]} {S : F[X][Y]} {p : (𝕃 H)[X]} {q : F[X]}
     (hR : BiPolyGoodAt z root R S) (hp : PolyGoodAt z root p q) :
@@ -96,7 +88,6 @@ lemma BiPolyGoodAt.eval {z : F} {root : rationalRoot (monicize H) z}
   apply PolyGoodAt.sum
   intro i hi
   exact PolyGoodAt.mul (hR i) (PolyGoodAt.pow hp i)
-
 lemma PolyGoodAt.truncSeries {z : F} {root : rationalRoot (monicize H) z}
     (a : ℕ → 𝕃 H) (b : ℕ → F) (N : ℕ)
     (h : ∀ i, i ≤ N → GoodAt z root (a i) (b i)) :
@@ -107,16 +98,12 @@ lemma PolyGoodAt.truncSeries {z : F} {root : rationalRoot (monicize H) z}
   intro i hi
   rw [Finset.mem_range] at hi
   exact PolyGoodAt.monomial (h i (by omega)) i
-
-/-- The lifted trivariate polynomial specializes coefficientwise to fixing Z. -/
 theorem liftedR_goodAt_triSpecializeZ
     (R₀ : F[X][X][Y]) (z : F) (root : rationalRoot (monicize H) z) :
     BiPolyGoodAt z root (liftedR (R:=R₀) (H:=H)) (triSpecializeZ R₀ z) := by
   intro j i
   simp [liftedR, triSpecializeZ, Polynomial.coeff_map]
   exact GoodAt.liftToFunctionField (H:=H) z root ((R₀.coeff j).coeff i)
-
-/-- Shift maps preserve the synchronized coefficient specialization. -/
 theorem shifted_liftedR_goodAt
     (R₀ : F[X][X][Y]) (z : F) (root : rationalRoot (monicize H) z)
     (xL : 𝕃 H) (x : F) (hx : GoodAt z root xL x) :
@@ -128,8 +115,6 @@ theorem shifted_liftedR_goodAt
   simp only [FiniteHensel.shiftMap_apply]
   apply PolyGoodAt.comp (liftedR_goodAt_triSpecializeZ R₀ z root j)
   exact PolyGoodAt.add (PolyGoodAt.C hx) (PolyGoodAt.X (H:=H) z root)
-
-/-- Fully automatic residual coefficient specialization. -/
 theorem residual_goodAt
     (R₀ : F[X][X][Y]) (z : F) (root : rationalRoot (monicize H) z)
     (xL : 𝕃 H) (x : F) (hx : GoodAt z root xL x)
@@ -142,11 +127,6 @@ theorem residual_goodAt
   rw [Polynomial.eval₂_eq_eval_map, Polynomial.eval₂_eq_eval_map]
   exact BiPolyGoodAt.eval (shifted_liftedR_goodAt R₀ z root xL x hx)
     (PolyGoodAt.truncSeries a b N hab)
-
-
-/-- The concrete regular fraction specializes automatically to the ordinary
-Taylor coefficient of an exact simple-root polynomial.  No coefficientwise
-`hspecializes` hypothesis remains. -/
 theorem concreteSpecializedAlpha_eq_TaylorCoeff
     (x₀ : F) (R₀ : F[X][X][Y])
     (hHyp : HenselNumerators.Hypotheses x₀ R₀ H)
@@ -195,5 +175,4 @@ theorem concreteSpecializedAlpha_eq_TaylorCoeff
   · exact FiniteHensel.liftCoeff_vanishesThrough _ _ _ _ hsimple
   · exact FiniteHensel.TaylorCoeff_vanishesThrough _ _ _ _ hPdeg hPexact
   · exact hn
-
 end ProximityPrize.SubmissionLower

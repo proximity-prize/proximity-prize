@@ -1,24 +1,13 @@
 import ProximityPrize.SubmissionLower.BCHKSUniversalOuterCover6399
 import ProximityPrize.SubmissionLower.BCHKSUniversalSelection6399
 import ProximityPrize.SubmissionLower.BCHKSUniversalResultantSelection
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
 open Polynomial Polynomial.Bivariate
 open scoped BigOperators
-
 set_option maxHeartbeats 4000000
-
 namespace UniversalOuterSelection6399
-
 open UniversalOuterCover6399
-
-/-- Generic outer assembly for the universal-numerator route.  Once a caller
-supplies one branch-independent bivariate obstruction `G x₀ RH i` per nested
-factor pair and RS coordinate, together with its degree and common-root facts,
-the global ledger selects one pair and proves that its inner factor divides
-`G` at `k+1` coordinates. -/
 theorem exists_selected_pair_coordinate_divisibility
     (S : Finset F) (Pz : F → Polynomial F) (Q : TriPoly)
     (Arow : F → Finset IRSProfile.Index)
@@ -157,7 +146,5 @@ theorem exists_selected_pair_coordinate_divisibility
   exact ⟨x₀, RH, T, Coord, hRH, hxSelected, hTsub,
     by simpa [T] using hTcard,
     hCoord, hrel, hdiv⟩
-
 end UniversalOuterSelection6399
-
 end ProximityPrize.SubmissionLower

@@ -1,14 +1,8 @@
 import ProximityPrize.SubmissionLower.BCHKSInterpolation6399
 import ProximityPrize.SubmissionLower.BCHKSParameters6399
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
 open BCHKSSubstitutionVanish
-
-/-- Exact remaining algebraic statement after the concrete interpolation and
-root-multiplicity steps.  All analytic, MCA, Johnson, and score bookkeeping is
-outside this interface. -/
 def BCHKSPolynomialAlignment6399 : Prop :=
   ∀ (U : Fin 2 → IRSProfile.Index → IRSProfile.Field)
     (S : Finset IRSProfile.Field) (A : IRSProfile.Field → Finset IRSProfile.Index)
@@ -29,7 +23,6 @@ def BCHKSPolynomialAlignment6399 : Prop :=
       p₀.natDegree ≤ 131071 ∧ p₁.natDegree ≤ 131071 ∧
       ∀ z, ∀ hz : z ∈ T,
         P ⟨z, hTS hz⟩ = p₀ + Polynomial.C z * p₁
-
 private lemma degree_lt_baseDimension_of_natDegree_le
     {p : Polynomial IRSProfile.Field} (hp : p.natDegree ≤ 131071) :
     p.degree < (IRSProfile.baseDimension : WithBot ℕ) := by
@@ -38,11 +31,8 @@ private lemma degree_lt_baseDimension_of_natDegree_le
   · rw [← Polynomial.natDegree_lt_iff_degree_lt hzero]
     norm_num [IRSProfile.baseDimension]
     omega
-
 set_option maxRecDepth 1000000 in
 set_option maxHeartbeats 1000000 in
-/-- The sole algebraic interface above implies the exact alignment predicate
-consumed by the completed MCA/soundness pipeline. -/
 theorem alignmentBound6399_of_polynomialAlignment
     (halg : BCHKSPolynomialAlignment6399) :
     AffineLineAlignmentBound IRSProfile.baseCode bchksErrors6399 bchksNumerator6399 := by
@@ -73,6 +63,4 @@ theorem alignmentBound6399_of_polynomialAlignment
     simp [p, ReedSolomon.evalOnPoints] at hpoly
     rw [← hagree]
     simpa [p, ReedSolomon.evalOnPoints, mul_add, add_mul] using hpoly
-
 end ProximityPrize.SubmissionLower
-

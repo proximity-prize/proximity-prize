@@ -2,24 +2,15 @@ import ProximityPrize.SubmissionLower.BCHKSUniversalRootedNumerators
 import ProximityPrize.SubmissionLower.BCHKSUniversalConcreteShiftCaps
 import ProximityPrize.SubmissionLower.BCHKSUniversalAffineObstruction
 import ProximityPrize.SubmissionLower.BCHKSUniversalResultantSelection
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate
 open RationalFunctions RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 namespace UniversalNumerator
-
 noncomputable section
-
 variable {F : Type} [Field F]
-
-/-- Universal evaluation of the symbolic `(Z,Y)` coefficient ring into an
-arbitrary target field. -/
 def evalUniversal {L : Type} [Field L] (φ : F[X] →+* L) (y : L) :
     F[X][Y] →+* L := Polynomial.eval₂RingHom φ y
-
 theorem map_shiftXToUniversal_evalUniversal
     {L : Type} [Field L] (φ : F[X] →+* L) (x₀ : F) (y : L)
     (A : F[X][X]) :
@@ -31,7 +22,6 @@ theorem map_shiftXToUniversal_evalUniversal
       simp [shiftXToUniversal, zToUniversalU, evalUniversal,
         FiniteHensel.shiftMap, Polynomial.map_monomial,
         Polynomial.eval_monomial]
-
 theorem universalShift_map_evalUniversal
     {L : Type} [Field L] (φ : F[X] →+* L) (x₀ : F) (y : L)
     (R : F[X][X][Y]) :
@@ -52,7 +42,6 @@ theorem universalShift_map_evalUniversal
       have hyvar : evalUniversal φ y (Polynomial.X : F[X][Y]) = y := by
         simp [evalUniversal]
       simp [universalShift, Polynomial.map_monomial, hcoeff, hyvar]
-
 theorem universalSlope_evalUniversal
     {L : Type} [Field L] (φ : F[X] →+* L) (x₀ : F) (y : L)
     (R : F[X][X][Y]) :
@@ -70,10 +59,8 @@ theorem universalSlope_evalUniversal
   | monomial n A =>
       simp [Polynomial.map_monomial, Polynomial.eval_monomial,
         eval_map_eval_eq_eval_eval_C]
-
 def positiveCoeffs {L : Type} [Field L] (c : ℕ → L) : ℕ → L :=
   fun i => if i = 0 then 0 else c i
-
 theorem truncSeries_positive_add_C {L : Type} [Field L]
     (c : ℕ → L) (y : L) (N : ℕ) (hc0 : c 0 = y) :
     FiniteHensel.truncSeries (positiveCoeffs c) N + Polynomial.C y =
@@ -85,7 +72,6 @@ theorem truncSeries_positive_add_C {L : Type} [Field L]
   · by_cases hiN : i ≤ N
     · simp [positiveCoeffs, hi, hiN, Polynomial.coeff_C]
     · simp [positiveCoeffs, hi, hiN, Polynomial.coeff_C]
-
 theorem shiftedResidual_eq {L : Type} [Field L]
     (R : L[X][Y]) (x y : L) (c : ℕ → L) (N : ℕ)
     (hc0 : c 0 = y) :
@@ -107,7 +93,6 @@ theorem shiftedResidual_eq {L : Type} [Field L]
     rw [add_comm]
     exact truncSeries_positive_add_C c y N hc0
   rw [harg]
-
 theorem liftedR_eval_at_initial_eq_specialization
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y]) :
@@ -132,23 +117,14 @@ theorem liftedR_eval_at_initial_eq_specialization
   | monomial n A =>
       simp [Polynomial.map_monomial, Polynomial.eval_monomial,
         eval_map_eval_eq_eval_eval_C]
-
-/-- The complete branch-independent numerator sequence attached to an outer
-factor.  Index zero is the symbolic root `Y`; positive indices are the
-universal implicit numerators. -/
 def universalRootedNumerators (x₀ : F) (R : F[X][X][Y]) : ℕ → F[X][Y] :=
   rootedNumerators (A := F[X][Y]) (Polynomial.X : F[X][Y])
     (universalShift x₀ R)
     (universalSlope x₀ R) R.natDegree
-
-/-- The universal affine obstruction used for one RS coordinate. -/
 def concreteUniversalAffineObstruction
     (x₀ : F) (R : F[X][X][Y]) (E k : ℕ) (dx u₀ u₁ : F) : F[X][Y] :=
   universalAffineObstruction (F := F) (universalRootedNumerators x₀ R)
     (universalSlope x₀ R : F[X][Y]) E k dx u₀ u₁
-
-/-- After specializing `(Z,Y)=(z,y)`, the doubly shifted universal outer
-factor has the shifted exact root `P(x₀+U)-y`. -/
 theorem specialized_universalShift_exact
     (x₀ z y : F) (R : F[X][X][Y]) (P : F[X])
     (hExact : (triSpecializeZ R z).eval P = 0) :
@@ -164,9 +140,6 @@ theorem specialized_universalShift_exact
   rw [harg, ← FiniteHensel.shiftMap_apply]
   rw [Polynomial.eval_map]
   simp [hExact]
-
-/-- Concrete finite-seed representation of every rooted universal numerator
-as a Taylor coefficient with the exact odd denominator exponent. -/
 theorem biEval_universalRootedNumerators
     (x₀ z y : F) (R : F[X][X][Y]) (P : F[X])
     (hRdeg : 0 < R.natDegree)
@@ -244,8 +217,6 @@ theorem biEval_universalRootedNumerators
       simp [FiniteHensel.TaylorCoeff]
     rw [if_neg hn, hVcoeff]
     ring
-
-/-- Exact finite common-root identity for the coordinate obstruction. -/
 theorem biEval_concreteUniversalAffineObstruction_eq_zero
     (x₀ z y : F) (R : F[X][X][Y]) (P : F[X])
     (E k : ℕ) (dx u₀ u₁ : F)
@@ -279,9 +250,6 @@ theorem biEval_concreteUniversalAffineObstruction_eq_zero
       _ = (P.comp (Polynomial.C x₀ + Polynomial.X)).eval dx := by
         rw [FiniteHensel.truncSeries_TaylorCoeff_eq_shift P x₀ k hPdeg]
       _ = P.eval (x₀ + dx) := by simp [Polynomial.eval_comp]
-
-/-- Concrete bidegree endpoint consumed by the aggregate all-pair resultant
-ledger. -/
 theorem concreteUniversalAffineObstruction_degree_bounds
     (x₀ : F) (R : F[X][X][Y]) (E k d D : ℕ) (dx u₀ u₁ : F)
     (hE : E = FiniteHenselWeight.denominatorExponent k)
@@ -315,9 +283,6 @@ theorem concreteUniversalAffineObstruction_degree_bounds
     simpa [FiniteHenselWeight.denominatorExponent] using
       numerators_degreeX_le (universalShift x₀ R) (universalSlope x₀ R)
         R.natDegree D hc.2 (hsZ.trans (Nat.sub_le D 1)) i hi
-
 end
-
 end UniversalNumerator
-
 end ProximityPrize.SubmissionLower

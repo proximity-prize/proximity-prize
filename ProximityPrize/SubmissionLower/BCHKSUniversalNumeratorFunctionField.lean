@@ -1,22 +1,14 @@
 import ProximityPrize.SubmissionLower.BCHKSUniversalConcreteObstruction
 import ProximityPrize.SubmissionLower.BCHKSUniversalResultantSelection
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate
 open RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 namespace UniversalNumerator
-
 noncomputable section
-
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 4000000
-
-/-- Bounded form of `numerators_eq_slope_pow_mul_coeff`: only the diagonal
-residual equations actually used up to the requested cutoff are needed. -/
 theorem numerators_eq_slope_pow_mul_coeff_upto
     {L : Type*} [Field L]
     (Rshift : L[X][X]) (s : L) (hs : s ≠ 0) (d N : ℕ)
@@ -40,9 +32,6 @@ theorem numerators_eq_slope_pow_mul_coeff_upto
       have hit' : i ≤ t := by omega
       rw [if_pos hit']
       exact ih i (by omega) hi0 (by omega)
-
-/-- Shifting the root to zero turns the finite Hensel coefficients into the
-coefficient sequence consumed by the universal positive-index recurrence. -/
 theorem rootedNumerators_shifted_eq_liftCoeff_mul_slope_pow
     {L : Type*} [Field L]
     (R : L[X][X]) (x₀ y₀ : L) (d N n : ℕ)
@@ -131,10 +120,6 @@ theorem rootedNumerators_shifted_eq_liftCoeff_mul_slope_pow
     rw [show FiniteHenselWeight.denominatorExponent n = 2 * n - 1 by
       simp [FiniteHenselWeight.denominatorExponent]]
     ring
-
-/-- The branch-independent rooted universal numerators evaluate at the generic
-root of `H` to the canonical finite-Hensel coefficients, cleared by the exact
-odd power of the generic slope. -/
 theorem eval₂_universalRootedNumerators_eq_finiteAlpha_mul_zeta_pow
     {F : Type} [Field F]
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
@@ -189,9 +174,6 @@ theorem eval₂_universalRootedNumerators_eq_finiteAlpha_mul_zeta_pow
       HenselNumerators.zeta R x₀ H by
     simpa [RL, xL, yL, liftedR, fieldTo𝕃] using hslopeMap] at hgen
   simpa [evalUniversal, finiteAlpha, RL, xL, yL, liftedR, fieldTo𝕃] using hgen
-
 end
-
 end UniversalNumerator
-
 end ProximityPrize.SubmissionLower

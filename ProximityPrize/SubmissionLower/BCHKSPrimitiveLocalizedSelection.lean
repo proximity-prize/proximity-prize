@@ -1,12 +1,7 @@
 import ProximityPrize.SubmissionLower.BCHKSFactorPigeon
 import ProximityPrize.SubmissionLower.BCHKSLambdaAvoid
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial
-
-/-- A primitive coefficient family over a rational function field contains a
-linear combination coprime to any chosen nonzero coefficient. -/
 theorem exists_primitive_localized_selection
     {F J : Type*} [Field F] [Fintype F] [DecidableEq F] [DecidableEq J]
     (c : J → (RatFunc F)[X]) (j₀ : J) (DZ : ℕ)
@@ -70,5 +65,4 @@ theorem exists_primitive_localized_selection
   change IsCoprime f h
   rw [← hu]
   exact (isCoprime_mul_unit_right_left u.isUnit _ _).mpr hprod
-
 end ProximityPrize.SubmissionLower

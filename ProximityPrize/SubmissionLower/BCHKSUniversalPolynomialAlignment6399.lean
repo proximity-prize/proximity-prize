@@ -4,24 +4,17 @@ import ProximityPrize.SubmissionLower.BCHKSUniversalNumeratorFunctionField
 import ProximityPrize.SubmissionLower.BCHKSUniversalSelectedPairCore
 import ProximityPrize.SubmissionLower.BCHKSUniversalPairFiberBridge6399
 import ProximityPrize.SubmissionLower.BCHKSPairSetup6399
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 20000000
-
 open UniversalOuterCover6399
 open UniversalConcreteSelection6399
 open UniversalPairFiberBridge6399
 open UniversalNumerator
-
-/-- Unconditional polynomial alignment at the 63.99 parameters, obtained from
-the universal unreduced numerator and aggregate all-factor resultant ledger. -/
 theorem bchksPolynomialAlignment6399 : BCHKSPolynomialAlignment6399 := by
   classical
   intro U S A P Q hScard hQ hPdeg hAcard hagree hQeval hcaps
@@ -186,5 +179,4 @@ theorem bchksPolynomialAlignment6399 : BCHKSPolynomialAlignment6399 := by
   intro z hz
   have hzS := hTS hz
   simpa [PT, PE, hzS] using halign ⟨z, hz⟩
-
 end ProximityPrize.SubmissionLower

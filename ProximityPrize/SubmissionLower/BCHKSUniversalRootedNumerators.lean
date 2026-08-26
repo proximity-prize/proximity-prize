@@ -1,28 +1,18 @@
 import ProximityPrize.SubmissionLower.BCHKSUniversalNumerator
-
 namespace ProximityPrize.SubmissionLower.UniversalNumerator
-
 open Polynomial
-
 noncomputable section
-
-/-- Add the symbolic root as the zeroth coefficient to the positive-index
-universal numerator recurrence.  The raw recurrence intentionally stores zero
-at index zero; affine interpolation needs the actual constant Taylor term. -/
 def rootedNumerators {A : Type*} [CommRing A]
     (root : A) (Rshift : A[X][X]) (s : A) (d : ℕ) (n : ℕ) : A :=
   if n = 0 then root else numerators Rshift s d n
-
 @[simp] theorem rootedNumerators_zero {A : Type*} [CommRing A]
     (root : A) (Rshift : A[X][X]) (s : A) (d : ℕ) :
     rootedNumerators root Rshift s d 0 = root := by
   simp [rootedNumerators]
-
 theorem rootedNumerators_of_pos {A : Type*} [CommRing A]
     (root : A) (Rshift : A[X][X]) (s : A) (d n : ℕ) (hn : 0 < n) :
     rootedNumerators root Rshift s d n = numerators Rshift s d n := by
   simp [rootedNumerators, Nat.ne_of_gt hn]
-
 theorem rootedNumerators_map {A B : Type*} [CommRing A] [CommRing B]
     (f : A →+* B) (root : A) (Rshift : A[X][X]) (s : A) (d n : ℕ) :
     f (rootedNumerators root Rshift s d n) =
@@ -33,9 +23,6 @@ theorem rootedNumerators_map {A B : Type*} [CommRing A] [CommRing B]
     simp
   · simp only [rootedNumerators, hn, if_false]
     exact numerators_map f Rshift s d n
-
-/-- The rooted sequence specializes to the complete Taylor sequence,
-including the constant term. -/
 theorem rootedNumerators_eq_slope_pow_mul_root_coeff
     {L : Type*} [Field L]
     (root : L) (Rshift : L[X][X]) (V : L[X]) (s : L) (hs : s ≠ 0) (d : ℕ)
@@ -56,9 +43,6 @@ theorem rootedNumerators_eq_slope_pow_mul_root_coeff
     simpa [FiniteHenselWeight.denominatorExponent, hn] using
       numerators_eq_slope_pow_mul_root_coeff Rshift V s hs d
         hV0 hdeg hslope hExact n hnpos
-
-/-- Bounded form of the course-of-values representation.  Finite Hensel
-lifting only supplies residual vanishing through its requested order. -/
 theorem numerators_eq_slope_pow_mul_coeff_up_to
     {L : Type*} [Field L]
     (Rshift : L[X][X]) (s : L) (hs : s ≠ 0) (d N : ℕ)
@@ -84,8 +68,6 @@ theorem numerators_eq_slope_pow_mul_coeff_up_to
       have hit' : i ≤ t := by omega
       rw [if_pos hit']
       exact ih i (by omega) hi0 (by omega)
-
-/-- Outer-variable degree bound for the complete rooted sequence. -/
 theorem rootedNumerators_natDegree_le
     {F : Type*} [Field F]
     (root : F[X]) (Rshift : F[X][X][X]) (s : F[X]) (d : ℕ)
@@ -103,8 +85,6 @@ theorem rootedNumerators_natDegree_le
   · rw [rootedNumerators_of_pos _ _ _ _ _ (Nat.pos_of_ne_zero hn), if_neg hn]
     simpa [FiniteHenselWeight.denominatorExponent] using
       numerators_natDegree_le Rshift s d hd hcoeff hs n (Nat.pos_of_ne_zero hn)
-
-/-- Coefficient-variable degree bound for the complete rooted sequence. -/
 theorem rootedNumerators_degreeX_le
     {F : Type*} [Field F]
     (root : F[X][X]) (Rshift : F[X][X][X][X]) (s : F[X][X])
@@ -123,7 +103,5 @@ theorem rootedNumerators_degreeX_le
   · rw [rootedNumerators_of_pos _ _ _ _ _ (Nat.pos_of_ne_zero hn), if_neg hn]
     simpa [FiniteHenselWeight.denominatorExponent] using
       numerators_degreeX_le Rshift s d D hcoeff hs n (Nat.pos_of_ne_zero hn)
-
 end
-
 end ProximityPrize.SubmissionLower.UniversalNumerator

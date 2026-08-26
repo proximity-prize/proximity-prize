@@ -1,32 +1,23 @@
 import ProximityPrize.SubmissionLower.BCHKSPrimitiveEffective6399
 import ProximityPrize.SubmissionLower.BCHKSUniversalX0Avoidance6399
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
 open Polynomial Polynomial.Bivariate
 open scoped BigOperators
-
 set_option maxHeartbeats 100000
-
 namespace UniversalPrimitiveX0Avoidance6399
-
 local instance concreteUniversalChar :
     CharP IRSProfile.Field 2130706433 :=
   charP_of_injective_algebraMap' KoalaBear.Field 2130706433
-
 abbrev F := IRSProfile.Field
 abbrev TriPoly := Polynomial (Polynomial (Polynomial F))
-
 def primitiveObstructionBudget : ℕ := 96013043303953399344
 def totalX0ObstructionBudget : ℕ := 96013057916249513816
-
 theorem totalX0ObstructionBudget_lt_field :
     totalX0ObstructionBudget < Fintype.card F := by
   rw [CompPoly.Extension.Ext.card_ext]
   norm_num [totalX0ObstructionBudget, F, IRSProfile.Field, KoalaBear.Ext6,
     KoalaBear.fieldSize]
-
 private theorem eval_C_ne_zero_of_ratfunc_map_eval_ne_zero
     (P : Polynomial (Polynomial F)) (x : F)
     (h : Polynomial.eval (algebraMap F (RatFunc F) x)
@@ -39,7 +30,6 @@ private theorem eval_C_ne_zero_of_ratfunc_map_eval_ne_zero
       algebraMap F (RatFunc F) x := by simp
   rw [← hx, Polynomial.eval₂_hom, hz]
   exact map_zero _
-
 private theorem factorXObstruction_ne_zero_of_outer
     (Q R : TriPoly) (hQ : Q ≠ 0)
     (hRQ : R ∈ UniqueFactorizationMonoid.normalizedFactors Q)
@@ -58,10 +48,6 @@ private theorem factorXObstruction_ne_zero_of_outer
   · exact Polynomial.leadingCoeff_ne_zero.mpr hRirr.ne_zero
   · exact rawSepResultant_ne_zero_of_irreducible 2130706433 R
       hRirr hRpos hRlt
-
-/-- Simultaneously avoid the primitive-content obstruction and the
-leading/separability obstruction for every positive normalized outer factor.
-The entire cost is paid against the huge choice field, never the seed ledger. -/
 theorem exists_x0_primitive_and_factor_good
     (Q : TriPoly) (hQ : Q ≠ 0)
     (hQdeg : Q.natDegree ≤ UniversalX0Avoidance6399.M)
@@ -230,7 +216,5 @@ theorem exists_x0_primitive_and_factor_good
     Polynomial.natDegree_map_of_leadingCoeff_ne_zero
       (Polynomial.evalRingHom (Polynomial.C x₀)) hlead0
   exact ⟨(cert r).property x₀ hp, ho, hR0, hdeg, hraw⟩
-
 end UniversalPrimitiveX0Avoidance6399
-
 end ProximityPrize.SubmissionLower

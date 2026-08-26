@@ -1,16 +1,12 @@
 import ProximityPrize.SubmissionLower.BCHKSPairSetup
 import ProximityPrize.SubmissionLower.BCHKSWeightedFactorCaps
 import ProximityPrize.SubmissionLower.BCHKSYZFactorCap
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial
 open RationalFunctions
 open RationalFunctions.HenselNumerators
-
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 8000000
-
 theorem setup_selected_pair6399
     {F : Type} [Field F] [DecidableEq F] [NormalizationMonoid F]
     (Q R : Polynomial (Polynomial (Polynomial F)))
@@ -81,8 +77,6 @@ theorem setup_selected_pair6399
       exact (Polynomial.isPrimitive_iff_isUnit_of_C_dvd.mp hprim) q₀ hCdvd
   exact ⟨hRirr, hHirr, hHpos, hHd, hRdeg, hHdeg,
     hHtotal, hRXtotal, hRweightedX, hHyp⟩
-
-/-- Concrete inheritance wrapper from the 63.99 interpolant to a selected pair. -/
 theorem bchks_pair_setup6399_of_selected_factors
     {F : Type} [Field F] [DecidableEq F] [NormalizationMonoid F]
     (Q R : Polynomial (Polynomial (Polynomial F)))
@@ -114,5 +108,4 @@ theorem bchks_pair_setup6399_of_selected_factors
       Q R 131071 692001142 hQ hRQ hQweightedX
   exact setup_selected_pair6399 Q R H x₀ hQ hRQ hHR hHpos hQY hRYZ
     hRweightedX hprim
-
 end ProximityPrize.SubmissionLower

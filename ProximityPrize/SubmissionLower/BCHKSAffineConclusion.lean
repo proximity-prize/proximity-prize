@@ -1,18 +1,11 @@
 import ProximityPrize.SubmissionLower.BCHKSAdjoinLift
 import ProximityPrize.SubmissionLower.BCHKSFiniteLiftExact
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate
 open RationalFunctions
-
 variable {F : Type} [Field F]
-
-/-- The ground-field embedding into the adjoined algebraic function field. -/
 noncomputable def baseToAdjoined (H : F[X][Y]) : F →+* AdjoinedRootField H :=
   (AdjoinRoot.of (mapBivariateToRatFunc H)).comp (algebraMap F (RatFunc F))
-
-/-- Lagrange interpolation on exactly `k+1` nodes has degree at most `k`. -/
 theorem lagrange_natDegree_le_of_card_eq_succ
     [DecidableEq F] (E : Finset F) (U : F → F) (k : ℕ) (hcard : E.card = k + 1) :
     (Lagrange.interpolate E id U).natDegree ≤ k := by
@@ -27,12 +20,6 @@ theorem lagrange_natDegree_le_of_card_eq_succ
     have hnat : p.natDegree < E.card :=
       (Polynomial.natDegree_lt_iff_degree_lt hp).2 hdeg
     simpa [hcard] using hnat
-
-/-- Final interpolation identity in the algebraic function field.
-
-Choose `k+1` nodes from `D`, interpolate the two ground-field rows there, and
-use polynomial uniqueness over the extension field to identify `γ` with their
-affine combination in the distinguished algebraic parameter. -/
 theorem adjoinedRoot_polynomial_eq_affine_of_many_evals
     [DecidableEq F] (H : F[X][Y]) [Fact (Irreducible (mapBivariateToRatFunc H))]
     (γ : (AdjoinedRootField H)[X]) (k : ℕ)
@@ -82,10 +69,6 @@ theorem adjoinedRoot_polynomial_eq_affine_of_many_evals
   · rw [Fintype.card_coe, hEcard]
     exact max_lt (hγdeg.trans_lt (Nat.lt_succ_self k))
       (hrhsdeg.trans_lt (Nat.lt_succ_self k))
-
-/-- Specialization finish.  `specialized_truncSeries_eq_shift` supplies the
-left equality from finite-Hensel uniqueness; the remaining hypothesis is the
-explicit specialization of the algebraic affine identity. -/
 theorem specialized_polynomial_eq_affine_shift
     {H : F[X][Y]} (z : F) (root : rationalRoot (monicize H) z)
     (β : ℕ → 𝒪 H) (Cden : ℕ → F[X])
@@ -106,9 +89,6 @@ theorem specialized_polynomial_eq_affine_shift
   rw [← haffineSpecialization]
   exact (specialized_truncSeries_eq_shift z root β Cden R Pz x₀ y₀ k
     hdeg hExact hsimple ha0 hP0 hvanish).symm
-
-/-- At expansion point zero, the shifted conclusion is the ordinary affine
-identity `Pz = p₀ + z p₁`. -/
 theorem specialized_polynomial_eq_affine
     {H : F[X][Y]} (z : F) (root : rationalRoot (monicize H) z)
     (β : ℕ → 𝒪 H) (Cden : ℕ → F[X])
@@ -128,5 +108,4 @@ theorem specialized_polynomial_eq_affine
   have h := specialized_polynomial_eq_affine_shift z root β Cden R Pz p₀ p₁
     0 y₀ k hdeg hExact hsimple ha0 hP0 hvanish haffineSpecialization
   simpa using h
-
 end ProximityPrize.SubmissionLower

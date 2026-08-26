@@ -1,27 +1,18 @@
 import ProximityPrize.SubmissionLower.BCHKSUniversalNumerator
 import ProximityPrize.SubmissionLower.BCHKSBaseZAffine
 import ProximityPrize.SubmissionLower.BCHKSYZFactorCap
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 set_option maxHeartbeats 4000000
-
 variable {F : Type} [Field F]
-
-/-- The branch-independent cleared affine obstruction.  The coefficient
-`num i` represents the `i`th implicit coefficient with denominator
-`s^(denominatorExponent i)`. -/
 noncomputable def universalAffineObstruction
     (num : ℕ → F[X][Y]) (s : F[X][Y]) (E k : ℕ) (dx u₀ u₁ : F) : F[X][Y] :=
   (∑ i ∈ Finset.range (k + 1),
       Polynomial.C (Polynomial.C (dx ^ i)) * num i *
         s ^ (E - FiniteHenselWeight.denominatorExponent i)) -
     Polynomial.C (Polynomial.C u₀ + Polynomial.X * Polynomial.C u₁) * s ^ E
-
 lemma bivariate_degreeX_one :
     Polynomial.Bivariate.degreeX (1 : F[X][Y]) = 0 := by
   apply Nat.eq_zero_of_le_zero
@@ -33,7 +24,6 @@ lemma bivariate_degreeX_one :
     exact (Polynomial.mem_support_iff.mp hi) (by simp [Polynomial.coeff_one, hine])
   subst i
   simp
-
 lemma bivariate_degreeX_pow_le (p : F[X][Y]) (n : ℕ) :
     Polynomial.Bivariate.degreeX (p ^ n) ≤ n * Polynomial.Bivariate.degreeX p := by
   induction n with
@@ -48,7 +38,6 @@ lemma bivariate_degreeX_pow_le (p : F[X][Y]) (n : ℕ) :
         _ ≤ n * Polynomial.Bivariate.degreeX p +
               Polynomial.Bivariate.degreeX p := Nat.add_le_add_right ih _
         _ = (n + 1) * Polynomial.Bivariate.degreeX p := by ring
-
 lemma bivariate_degreeX_C (p : F[X]) :
     Polynomial.Bivariate.degreeX (Polynomial.C p : F[X][Y]) = p.natDegree := by
   unfold Polynomial.Bivariate.degreeX
@@ -57,12 +46,10 @@ lemma bivariate_degreeX_C (p : F[X]) :
     simp
   · rw [Polynomial.support_C hp]
     simp
-
 lemma bivariate_degreeX_scalar_C (a : F) :
     Polynomial.Bivariate.degreeX (Polynomial.C (Polynomial.C a) : F[X][Y]) = 0 := by
   rw [bivariate_degreeX_C]
   simp
-
 lemma bivariate_degreeX_affine_C_le (u₀ u₁ : F) :
     Polynomial.Bivariate.degreeX
       (Polynomial.C (Polynomial.C u₀ + Polynomial.X * Polynomial.C u₁) : F[X][Y]) ≤ 1 := by
@@ -79,7 +66,6 @@ lemma bivariate_degreeX_affine_C_le (u₀ u₁ : F) :
               Polynomial.X.natDegree + (Polynomial.C u₁).natDegree :=
             Polynomial.natDegree_mul_le
           _ ≤ 1 := by simp
-
 lemma natDegree_pow_le (p : F[X][Y]) (n : ℕ) :
     (p ^ n).natDegree ≤ n * p.natDegree := by
   induction n with
@@ -91,7 +77,6 @@ lemma natDegree_pow_le (p : F[X][Y]) (n : ℕ) :
           Polynomial.natDegree_mul_le
         _ ≤ n * p.natDegree + p.natDegree := Nat.add_le_add_right ih _
         _ = (n + 1) * p.natDegree := by ring
-
 lemma bivariate_degreeX_sub_le (p q : F[X][Y]) :
     Polynomial.Bivariate.degreeX (p - q) ≤
       max (Polynomial.Bivariate.degreeX p) (Polynomial.Bivariate.degreeX q) := by
@@ -107,11 +92,6 @@ lemma bivariate_degreeX_sub_le (p q : F[X][Y]) :
         (q.support.sup fun j ↦ (q.coeff j).natDegree) := by
       exact max_le_max (Polynomial.Bivariate.coeff_natDegree_le_degreeX p i)
         (Polynomial.Bivariate.coeff_natDegree_le_degreeX q i)
-
-/-- Degree contract for the universal affine obstruction.  The strict slope
-caps `degY s≤d-1`, `degZ s≤D-1` absorb the extra affine factor `Z`.
-The hypotheses on `num` are the exact output expected from the universal
-numerator recurrence. -/
 theorem universalAffineObstruction_degree_bounds
     (num : ℕ → F[X][Y]) (s : F[X][Y]) (E k d D : ℕ) (dx u₀ u₁ : F)
     (hE : E = FiniteHenselWeight.denominatorExponent k)
@@ -240,8 +220,6 @@ theorem universalAffineObstruction_degree_bounds
         ((∑ i ∈ Finset.range (k + 1), terms i) - affine * s ^ E) ≤ E * D
   exact ⟨(Polynomial.natDegree_sub_le _ _).trans (max_le hsumY haffY),
     (bivariate_degreeX_sub_le _ _).trans (max_le hsumZ haffZ)⟩
-
-/-- Common-root specialization of the universal obstruction. -/
 theorem biEval_universalAffineObstruction_eq_zero
     (num : ℕ → F[X][Y]) (s : F[X][Y]) (E k : ℕ) (dx u₀ u₁ z y : F)
     (c : ℕ → F)
@@ -292,14 +270,6 @@ theorem biEval_universalAffineObstruction_eq_zero
       _ = c i * dx ^ i * φ s ^ E := by rw [← pow_add, he]]
   rw [haffine]
   ring
-
-/-! ## Relation to the existing regular numerator -/
-
-/-- If the abstract universal numerators represent the existing finite-Hensel
-coefficients after evaluation at the generic root, the old explicit regular
-base-Z numerator is precisely a branch-dependent power of `W` times the image
-of the branch-independent obstruction.  This lets the existing final alignment
-consumer be reused after the new raw-resultant selection. -/
 theorem embedding_explicitBaseZGammaDifferenceRegular_eq_universalAffineObstruction
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -414,7 +384,4 @@ theorem embedding_explicitBaseZGammaDifferenceRegular_eq_universalAffineObstruct
       rw [hpow, mul_pow]
       ring
     _ = _ := by rfl
-
 end ProximityPrize.SubmissionLower
-
-

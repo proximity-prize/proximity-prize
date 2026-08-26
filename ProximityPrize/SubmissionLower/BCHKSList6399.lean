@@ -1,18 +1,14 @@
 import ProximityPrize.SubmissionLower.BCHKSParameters6399
 import ProximityPrize.SubmissionLower.JohnsonFamily
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
 open scoped NNReal
-
 noncomputable abbrev BCHKS6399SquaredCode :
     Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving →
       IRSProfile.Field) :=
   Code.interleavedCodeSet (κ := Fin 2)
     (IRSProfile.code : Set (IRSProfile.Index →
       Fin IRSProfile.interleaving → IRSProfile.Field))
-
 set_option maxRecDepth 20000 in
 theorem bchks6399_squaredCode_minDistance :
     Code.minDist BCHKS6399SquaredCode = 131073 := by
@@ -24,7 +20,6 @@ theorem bchks6399_squaredCode_minDistance :
         (IRSProfile.code : Set (IRSProfile.Index →
           Fin IRSProfile.interleaving → IRSProfile.Field))
     _ = 131073 := IRSProfile.minDistance
-
 private lemma bchks6399_eta_pos :
     0 < (1 - Real.sqrt (1 / 2 : ℝ) - (bchksRadius6399 : ℝ)) := by
   have hs : Real.sqrt (1 / 2 : ℝ) < 70710679 / 100000000 := by
@@ -32,7 +27,6 @@ private lemma bchks6399_eta_pos :
     norm_num
   norm_num [bchksRadius6399] at hs ⊢
   linarith
-
 set_option maxRecDepth 100000 in
 theorem bchks6399_lambda_le :
     Code.Lambda BCHKS6399SquaredCode (bchksRadius6399 : ℝ) ≤
@@ -67,5 +61,4 @@ theorem bchks6399_lambda_le :
         simpa only [ENNReal.ofReal_natCast] using
           ENNReal.ofReal_le_ofReal hreal)
   exact_mod_cast hE
-
 end ProximityPrize.SubmissionLower

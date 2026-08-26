@@ -1,13 +1,7 @@
 import ProximityPrize.SubmissionLower.BCHKSPairLiftVanishing
-
 namespace RationalFunctions.HenselNumerators
-
 open Polynomial Polynomial.Bivariate ProximityPrize.SubmissionLower
-
 variable {F : Type} [Field F] [Fintype F]
-
-/-- Root-counting with the actual BCHKS regular denominator, rather than the
-more restrictive special case where the denominator is lifted from `F[Z]`. -/
 theorem functionField_coefficient_eq_zero_of_many_pair_roots_regularDen
     {H : F[X][Y]} [Fact (Irreducible H)] (hH : 0 < H.natDegree)
     (D d t : ℕ) (hD : Bivariate.totalDegree H ≤ D)
@@ -47,9 +41,6 @@ theorem functionField_coefficient_eq_zero_of_many_pair_roots_regularDen
     embedding_eq_zero_of_many_rational_roots hH (β t) D hD hncard
   rw [hembed] at hβzero
   exact (mul_eq_zero.mp hβzero).resolve_right hden
-
-
-/-- Uniform middle-coefficient form for the actual regular denominator. -/
 theorem functionField_middle_coefficients_eq_zero_regularDen
     {H : F[X][Y]} [Fact (Irreducible H)] (hH : 0 < H.natDegree)
     (D d k DX e : ℕ) (hD : Bivariate.totalDegree H ≤ D)
@@ -79,5 +70,4 @@ theorem functionField_middle_coefficients_eq_zero_regularDen
       _ ≤ 2 * DX * (d * D * H.natDegree) := hmul
       _ = 2 * DX * H.natDegree * d * D := by ring
   omega
-
 end RationalFunctions.HenselNumerators

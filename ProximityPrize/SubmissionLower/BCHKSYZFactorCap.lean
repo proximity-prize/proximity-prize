@@ -1,16 +1,10 @@
 import ProximityPrize.SubmissionLower.BCHKSFactorPigeon
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial
-
 set_option maxHeartbeats 20000000
 set_option maxRecDepth 1000000
-
 namespace YZFactorCap
-
 variable {F : Type*} [CommSemiring F]
-
 lemma natDegree_sum_le_of_forall {α : Type*} (s : Finset α)
     (f : α → Polynomial F) (n : ℕ) (h : ∀ a ∈ s, (f a).natDegree ≤ n) :
     (∑ a ∈ s, f a).natDegree ≤ n := by
@@ -21,7 +15,6 @@ lemma natDegree_sum_le_of_forall {α : Type*} (s : Finset α)
       rw [Finset.sum_insert ha]
       exact (Polynomial.natDegree_add_le _ _).trans
         (max_le (h a (by simp)) (ih (fun b hb => h b (by simp [hb]))))
-
 theorem degreeX_sum_le_of_forall {α : Type*} (s : Finset α)
     (f : α → Polynomial (Polynomial F)) (n : ℕ) (h : ∀ a ∈ s, Polynomial.Bivariate.degreeX (f a) ≤ n) :
     Polynomial.Bivariate.degreeX (∑ a ∈ s, f a) ≤ n := by
@@ -33,7 +26,6 @@ theorem degreeX_sum_le_of_forall {α : Type*} (s : Finset α)
   rw [heq]
   exact natDegree_sum_le_of_forall _ _ _ (fun a ha =>
     (Polynomial.Bivariate.coeff_natDegree_le_degreeX (f a) i).trans (h a ha))
-
 theorem degreeX_sum_eq_of_unique {α : Type*} [DecidableEq α] {s : Finset α}
     {f : α → Polynomial (Polynomial F)} {deg : ℕ} (mx : α) (hmx : mx ∈ s)
     (hfmx : f mx ≠ 0) (hdeg : Polynomial.Bivariate.degreeX (f mx) = deg)
@@ -61,12 +53,8 @@ theorem degreeX_sum_eq_of_unique {α : Type*} [DecidableEq α] {s : Finset α}
       · right; simp [hz]
   apply le_antisymm hle
     ((by rw [← hcoeff]; exact Polynomial.Bivariate.coeff_natDegree_le_degreeX _ r))
-
-/-- Maximum of `deg_X(coeff_Y j) + k*j`; the tie-breaker used in the
-multiplication proof is the largest outer index attaining this maximum. -/
 noncomputable def yzSupportDegree (p : Polynomial (Polynomial (Polynomial F))) (k : Nat) : Nat :=
   p.support.sup fun j => Polynomial.Bivariate.degreeX (p.coeff j) + k * j
-
 theorem coeffWeight_le_of_ne (p : Polynomial (Polynomial (Polynomial F))) (k j : Nat)
     (hj : p.coeff j ≠ 0) :
     Polynomial.Bivariate.degreeX (p.coeff j) + k * j ≤ yzSupportDegree p k := by
@@ -74,7 +62,6 @@ theorem coeffWeight_le_of_ne (p : Polynomial (Polynomial (Polynomial F))) (k j :
   unfold yzSupportDegree
   exact Finset.le_sup (f := fun i => Polynomial.Bivariate.degreeX (p.coeff i) + k * i)
     (Polynomial.mem_support_iff.mpr hj)
-
 theorem yzSupportDegree_mul_le [IsDomain F]
     (p q : Polynomial (Polynomial (Polynomial F))) (k : Nat) (hp : p ≠ 0) (hq : q ≠ 0) :
     yzSupportDegree (p * q) k ≤
@@ -128,8 +115,6 @@ theorem yzSupportDegree_mul_le [IsDomain F]
     omega
   have hdeg := hsum hterm
   omega
-
-/-- Largest outer index among the terms attaining maximum weight. -/
 theorem exists_max_index_yz (p : Polynomial (Polynomial (Polynomial F))) (k : Nat)
     (hp : p ≠ 0) :
     ∃ m ∈ p.support,
@@ -159,7 +144,6 @@ theorem exists_max_index_yz (p : Polynomial (Polynomial (Polynomial F))) (k : Na
   have hnS : n ∈ s := by simp [s, hnmem, heq]
   have hnlemax : n ≤ mm := Finset.le_max' s n hnS
   exact (Nat.not_le_of_lt hmn) hnlemax
-
 theorem yzSupportDegree_mul_ge [IsDomain F]
     (p q : Polynomial (Polynomial (Polynomial F))) (k : Nat) (hp : p ≠ 0) (hq : q ≠ 0) :
     yzSupportDegree p k + yzSupportDegree q k ≤
@@ -243,17 +227,13 @@ theorem yzSupportDegree_mul_ge [IsDomain F]
   have hle := coeffWeight_le_of_ne (p * q) k N hprodcoeff
   rw [hcoeff] at hle
   omega
-
 theorem yzSupportDegree_mul [IsDomain F]
     (p q : Polynomial (Polynomial (Polynomial F))) (k : Nat) (hp : p ≠ 0) (hq : q ≠ 0) :
     yzSupportDegree (p * q) k =
       yzSupportDegree p k + yzSupportDegree q k :=
   le_antisymm (yzSupportDegree_mul_le p q k hp hq)
     (yzSupportDegree_mul_ge p q k hp hq)
-
 end YZFactorCap
-
-
 namespace YZFactorCap
 variable {F : Type*} [CommSemiring F]
 theorem coeffDegreeX_cap_of_dvd [IsDomain F]
@@ -274,7 +254,6 @@ theorem coeffDegreeX_cap_of_dvd [IsDomain F]
       exact Nat.zero_lt_of_lt (hcap i (Polynomial.mem_support_iff.mp hi))
   rw [hm] at hq
   omega
-
 theorem coefficient_cap_of_dvd [IsDomain F]
     (Q R : Polynomial (Polynomial (Polynomial F))) (k B : Nat)
     (hQ : Q ≠ 0) (hRQ : R ∣ Q)
@@ -285,8 +264,6 @@ theorem coefficient_cap_of_dvd [IsDomain F]
   have hc := coeffDegreeX_cap_of_dvd Q R k B hQ hRQ hcap j hj
   have hd := Polynomial.Bivariate.coeff_natDegree_le_degreeX (R.coeff j) a
   omega
-
-/-- Sharp `Z+Y` cap inheritance for a normalized factor. -/
 theorem normalizedFactor_YZ_cap
     {F : Type*} [Field F] [NormalizationMonoid F]
     (Q R : Polynomial (Polynomial (Polynomial F))) (B : Nat)
@@ -304,6 +281,5 @@ theorem normalizedFactor_YZ_cap
       have hca : (Q.coeff j).coeff a ≠ 0 := Polynomial.mem_support_iff.mp ha
       simpa [hadeg] using hcap j a hca)
   simpa using hraw
-
 end YZFactorCap
 end ProximityPrize.SubmissionLower

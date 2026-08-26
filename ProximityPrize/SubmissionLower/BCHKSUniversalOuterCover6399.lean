@@ -3,52 +3,35 @@ import ProximityPrize.SubmissionLower.BCHKSUniversalPositivePairCard
 import ProximityPrize.SubmissionLower.BCHKSWeightedFactorCaps
 import ProximityPrize.SubmissionLower.BCHKSYZFactorCap
 import ProximityPrize.SubmissionLower.BCHKSParameters6399
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
 open Polynomial Polynomial.Bivariate
 open scoped BigOperators
-
 set_option maxHeartbeats 2000000
-
 namespace UniversalOuterCover6399
-
 abbrev F := IRSProfile.Field
 abbrev TriPoly := Polynomial (Polynomial (Polynomial F))
 abbrev BiPoly := Polynomial (Polynomial F)
 abbrev Pair := TriPoly × BiPoly
-
 noncomputable def outerFactors (Q : TriPoly) : Finset TriPoly :=
   (UniqueFactorizationMonoid.normalizedFactors Q).toFinset.filter
     (fun R => 0 < R.natDegree)
-
 noncomputable def qBad (S : Finset F) (Q : TriPoly) : Finset F :=
   badZSpecializations Q S
-
 noncomputable def outerBad (x₀ : F) (R : TriPoly) : Finset F :=
   (Polynomial.eval (Polynomial.C x₀) (factorXObstruction R)).roots.toFinset
-
 noncomputable def pairs (Q : TriPoly) (x₀ : F) : Finset Pair :=
   positiveNormalizedFactorPairs Q x₀
-
-/-- The relation retained by global pigeonholing.  Besides the two root
-identities, it records the one-time outer obstruction and nonvanishing of the
-specialized outer polynomial at this seed. -/
 def pairRel (Pz : F → Polynomial F) (x₀ z : F) (RH : Pair) : Prop :=
   triEval RH.1 z (Pz z) = 0 ∧
   biEval RH.2 (Polynomial.eval x₀ (Pz z)) z = 0 ∧
   Polynomial.eval z
       (Polynomial.eval (Polynomial.C x₀) (factorXObstruction RH.1)) ≠ 0 ∧
   biSpecializeZ (triSpecializeX RH.1 x₀) z ≠ 0
-
-/-- The 6399 support contract, kept as a named predicate so the concrete cover
-has the same single hypothesis as the interpolation module. -/
 def SupportCaps (Q : TriPoly) : Prop :=
   ∀ j a, ((Q.coeff j).coeff a) ≠ 0 →
     j < 5280 ∧ a + 131071 * j < 692001142 ∧
       ((Q.coeff j).coeff a).natDegree + j < 13141403
-
 theorem natDegree_le_factorMass
     (Q : TriPoly) (hQ : Q ≠ 0) (hcaps : SupportCaps Q) :
     Q.natDegree ≤ bchksFactorMass6399 := by
@@ -59,9 +42,6 @@ theorem natDegree_le_factorMass
   have hj := (hcaps Q.natDegree a hcoeff).1
   norm_num [bchksFactorMass6399] at hj ⊢
   omega
-
-/-- Derive precisely the two X-degree hypotheses consumed by simultaneous
-`x₀` avoidance from the weighted interpolation support cap. -/
 theorem normalizedFactor_X_caps
     (Q : TriPoly) (hQ : Q ≠ 0) (hcaps : SupportCaps Q) :
     (∀ R ∈ UniqueFactorizationMonoid.normalizedFactors Q,
@@ -96,9 +76,6 @@ theorem normalizedFactor_X_caps
       have hw := hRW R.natDegree R.leadingCoeff.natDegree hne
       norm_num [UniversalX0Avoidance6399.DX] at hw ⊢
       omega
-
-/-- Coefficient caps in the swapped orientation required by the effective
-primitive-specialization obstruction. -/
 theorem normalizedFactor_swap_caps
     (Q : TriPoly) (hQ : Q ≠ 0) (hcaps : SupportCaps Q) :
     (∀ R ∈ UniqueFactorizationMonoid.normalizedFactors Q, ∀ j,
@@ -133,7 +110,6 @@ theorem normalizedFactor_swap_caps
         exact hl)
       norm_num [bchksXCap6399] at hw ⊢
       omega
-/-- A single surviving coefficient of `Q` controls the whole-Q bad set. -/
 theorem qBad_card_le
     (S : Finset F) (Q : TriPoly) (hQ : Q ≠ 0) (hcaps : SupportCaps Q) :
     (qBad S Q).card ≤ bchksZCap6399 := by
@@ -146,9 +122,6 @@ theorem qBad_card_le
     norm_num [bchksZCap6399] at h ⊢
     omega
   exact (badZSpecializations_card_lt Q S j a bchksZCap6399 ha0 hdeg).le
-
-/-- Evaluating the middle variable cannot increase the coefficient-variable
-degree inherited from the sharp `Z+Y` support cap. -/
 private theorem factor_eval_Z_caps
     (Q R : TriPoly) (x₀ : F) (hQ : Q ≠ 0)
     (hRQ : R ∈ UniqueFactorizationMonoid.normalizedFactors Q)
@@ -189,9 +162,6 @@ private theorem factor_eval_Z_caps
   · exact hevalCap R.leadingCoeff (by
       rw [← Polynomial.coeff_natDegree]
       exact hcoeffCap R.natDegree)
-
-/-- The sum of all one-time outer leading/slope bad sets is exactly charged by
-`2 * DZ * M`; it is not multiplied by the number of nested factors. -/
 theorem outerBad_sum_card_le
     (Q : TriPoly) (x₀ : F) (hQ : Q ≠ 0) (hcaps : SupportCaps Q) :
     (∑ R ∈ outerFactors Q, (outerBad x₀ R).card) ≤
@@ -230,9 +200,6 @@ theorem outerBad_sum_card_le
       ring
     _ ≤ 2 * bchksZCap6399 * bchksFactorMass6399 :=
       Nat.mul_le_mul_left _ hsum
-
-/-- Membership in the concrete pair finset exposes the exact normalized-factor
-and divisibility facts required by the fixed-pair consumer. -/
 theorem pair_mem_facts
     (Q : TriPoly) (x₀ : F) (RH : Pair) (hRH : RH ∈ pairs Q x₀) :
     RH.1 ∈ UniqueFactorizationMonoid.normalizedFactors Q ∧
@@ -260,8 +227,6 @@ theorem pair_mem_facts
     omega
   exact ⟨hRQ, hRpos, hHB, hHpos,
     UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors hHB⟩
-
-/-- Complete concrete global cover for the 6399 universal-numerator route. -/
 theorem exists_outer_pair_cover
     (S : Finset F) (Pz : F → Polynomial F) (Q : TriPoly)
     (hQ : Q ≠ 0)
@@ -354,7 +319,5 @@ theorem exists_outer_pair_cover
           (by simpa [outerFactors] using hRouter)).2.1]
       exact hzero
     · exact hsecond RH.1 hmem.1 hmem.2.1 hRroot
-
 end UniversalOuterCover6399
-
 end ProximityPrize.SubmissionLower

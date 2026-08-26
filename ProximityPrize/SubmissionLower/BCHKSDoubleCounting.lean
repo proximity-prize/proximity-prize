@@ -1,14 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
-
 namespace ProximityPrize.SubmissionLower
-
 open scoped BigOperators
 open Finset
-
 set_option maxRecDepth 100000
 set_option linter.constructorNameAsVariable false
-
-/-- Counting incidences by rows or by columns. -/
 theorem sum_card_eq_sum_fiber_card
     {ι ζ : Type} [Fintype ι] [DecidableEq ι] [DecidableEq ζ]
     (T : Finset ζ) (A : ζ → Finset ι) :
@@ -27,10 +22,6 @@ theorem sum_card_eq_sum_fiber_card
       apply Finset.sum_congr rfl
       intro x hx
       simp
-
-/-- If every row misses at most `e` of `n` coordinates and the displayed
-strict incidence inequality holds, more than `k` coordinates have fiber
-larger than `B`. -/
 theorem many_large_fibers
     {ι ζ : Type} [Fintype ι] [DecidableEq ι] [DecidableEq ζ]
     (T : Finset ζ) (A : ζ → Finset ι) (n e k B : ℕ)
@@ -115,18 +106,12 @@ theorem many_large_fibers
     omega
   have hsub := Nat.sub_add_cancel hcoef
   nlinarith
-
-/-- The numerical BCHKS parameters turn the stated pair-fiber lower bound
-into the strict inequality required by `many_large_fibers`. -/
 theorem concrete_incidence_inequality (dH d D tcard : ℕ)
     (ht : 2 * 111624646 * dH * d * D + 76721 + 1 ≤ tcard) :
     (262144 - 76721 - 131071) * tcard >
       (262144 - 131071) * ((2 * 131071 + 1) * dH * d * D) := by
   norm_num at ht ⊢
   nlinarith
-
-/-- Direct specialization: at least `131072` coordinates have fibers larger
-than the BCHKS collision budget. -/
 theorem concrete_many_large_fibers
     {ι ζ : Type} [Fintype ι] [DecidableEq ι] [DecidableEq ζ]
     (T : Finset ζ) (A : ζ → Finset ι) (dH d D : ℕ)
@@ -139,10 +124,6 @@ theorem concrete_many_large_fibers
   apply many_large_fibers T A 262144 76721 131071
     ((2 * 131071 + 1) * dH * d * D) hn hrow
   exact concrete_incidence_inequality dH d D T.card hT
-
-
-/-- Elementary incidence finish: among sufficiently many affine challenges, one large
-agreement set consists entirely of coordinates where both affine rows agree. -/
 theorem doubleCounting_exists_common_affine_set
     {ι F : Type} [Fintype ι] [DecidableEq ι]
     [Field F] [DecidableEq F]
@@ -247,17 +228,12 @@ theorem doubleCounting_exists_common_affine_set
   rw [Finset.card_biUnion hRpair] at hunionSub
   have hTB : T.card ≤ B.card := hTsum.trans hunionSub
   omega
-
-
-
-/-- The incidence arithmetic also absorbs the one-unit base-`Z` numerator overhead. -/
 theorem concrete_incidence_inequality_plus (dH d D tcard : ℕ)
     (ht : 2 * 111624646 * dH * d * D + 76721 + 1 ≤ tcard) :
     (262144 - 76721 - 131071) * tcard >
       (262144 - 131071) * ((2 * 131071 + 2) * dH * d * D) := by
   norm_num at ht ⊢
   nlinarith
-
 theorem concrete_many_large_fibers_plus
     {ι ζ : Type} [Fintype ι] [DecidableEq ι] [DecidableEq ζ]
     (T : Finset ζ) (A : ζ → Finset ι) (dH d D : ℕ)
@@ -270,17 +246,12 @@ theorem concrete_many_large_fibers_plus
   apply many_large_fibers T A 262144 76721 131071
     ((2 * 131071 + 2) * dH * d * D) hn hrow
   exact concrete_incidence_inequality_plus dH d D T.card hT
-
-/-- At the 63.94 error cell, `632176` is a sufficient row-to-fibre
-conversion coefficient.  This is the exact incidence calculation and has no
-dependence on the Hensel lifting horizon. -/
 theorem incidence_6394_arithmetic (r tcard : Nat)
     (ht : 632176 * r + 76721 + 1 ≤ tcard) :
     (262144 - 76721 - 131071) * tcard >
       (262144 - 131071) * ((2 * 131071 + 2) * r) := by
   norm_num at ht ⊢
   nlinarith
-
 theorem incidence_6394_arithmetic_mul (dH d D tcard : Nat)
     (ht : 632176 * dH * d * D + 76721 + 1 ≤ tcard) :
     (262144 - 76721 - 131071) * tcard >
@@ -288,8 +259,6 @@ theorem incidence_6394_arithmetic_mul (dH d D tcard : Nat)
   simpa [Nat.mul_assoc] using
     incidence_6394_arithmetic (dH * d * D) tcard (by
       simpa [Nat.mul_assoc] using ht)
-
-/-- Exact-incidence extraction used by the short-horizon nonlinear branch. -/
 theorem many_large_fibers_6394
     {ι ζ : Type} [Fintype ι] [DecidableEq ι] [DecidableEq ζ]
     (T : Finset ζ) (A : ζ → Finset ι) (dH d D : Nat)
@@ -303,5 +272,4 @@ theorem many_large_fibers_6394
     (many_large_fibers T A 262144 76721 131071
       ((2 * 131071 + 2) * dH * d * D) hn hrow
       (incidence_6394_arithmetic_mul dH d D T.card hT))
-
 end ProximityPrize.SubmissionLower

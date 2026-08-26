@@ -1,13 +1,10 @@
 import ProximityPrize.SubmissionLower.BCHKSAlignmentInterface6399
 import ProximityPrize.SubmissionLower.BCHKSList6399
 import ProximityPrize.SubmissionLower.BCHKSUniversalPolynomialAlignment6399
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
 open CoreDefinitions ProximityGap ToyProblem
 open scoped NNReal
-
 lemma bchks6399_nat_div_le_inv_pow {m q t : ℕ}
     (hm : 0 < m) (hq : m * 2 ^ t ≤ q) :
     (m : ENNReal) / (q : ENNReal) ≤ 1 / 2 ^ t := by
@@ -27,8 +24,6 @@ lemma bchks6399_nat_div_le_inv_pow {m q t : ℕ}
     _ = (m : ENNReal) / ((m : ENNReal) * 2 ^ t) := by rw [hcast]
     _ = (m : ENNReal) * 1 / ((m : ENNReal) * 2 ^ t) := by rw [mul_one]
     _ = 1 / 2 ^ t := ENNReal.mul_div_mul_left 1 (2 ^ t) hm0 hmtop
-
-/-- The 63.99 alignment certificate implies the MCA term at its exact radius. -/
 lemma mca_bchks6399_le_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode
       bchksErrors6399 bchksNumerator6399) :
@@ -54,9 +49,6 @@ lemma mca_bchks6399_le_of_alignment
           (Fintype.card IRSProfile.Field : ENNReal) := by
       rw [ENNReal.ofReal_div_of_pos (by positivity), ENNReal.ofReal_natCast,
         ENNReal.ofReal_natCast]
-
-/-- MCA, the Johnson list bound, and the exact field-capacity calculation close
-the certified gamma error at 63.99 bits. -/
 theorem certifiedGammaError_bchks6399_le_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode
       bchksErrors6399 bchksNumerator6399) :
@@ -101,25 +93,16 @@ theorem certifiedGammaError_bchks6399_le_of_alignment
       · norm_num [bchksNumerator6399, bchksListBound6399]
       · simpa [IRSProfile.Field, KoalaBear.Ext6, KoalaBear.fieldSize,
           Nat.mul_comm] using bchks6399_budget_nat
-
-/-- The isolated polynomial-alignment statement supplies the alignment premise
-of the completed analytic pipeline. -/
 theorem certifiedGammaError_bchks6399_le_of_polynomialAlignment
     (halg : BCHKSPolynomialAlignment6399) :
     certifiedGammaError IRSProfile.code bchksRadius6399 ≤
       (1 : ℝ≥0) / 2 ^ (128 : ℕ) :=
   certifiedGammaError_bchks6399_le_of_alignment
     (alignmentBound6399_of_polynomialAlignment halg)
-
 end ProximityPrize.SubmissionLower
-
 namespace ProximityPrize.Benchmark
-
 open ToyProblem
 open scoped NNReal
-
-/-- Conditional final claim.  Supplying the universal-resultant alignment
-extractor closes every obligation of the 63.99 certificate. -/
 theorem protocolClaim6399_of_polynomialAlignment
     (halg : ProximityPrize.SubmissionLower.BCHKSPolynomialAlignment6399) :
     ProtocolClaim 6399 307083 1048576 where
@@ -148,11 +131,7 @@ theorem protocolClaim6399_of_polynomialAlignment
       norm_num [claimedRadius, ProximityPrize.SubmissionLower.bchksRadius6399]
     rw [hr]
     exact ProximityPrize.SubmissionLower.bchksRadius6399_score
-
-/-- Unconditional public endpoint supplied by the universal-resultant
-alignment extractor. -/
 theorem protocolClaim6399 : ProtocolClaim 6399 307083 1048576 :=
   protocolClaim6399_of_polynomialAlignment
     ProximityPrize.SubmissionLower.bchksPolynomialAlignment6399
-
 end ProximityPrize.Benchmark

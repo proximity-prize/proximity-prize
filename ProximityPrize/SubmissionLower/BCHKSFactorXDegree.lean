@@ -1,15 +1,8 @@
 import ProximityPrize.SubmissionLower.BCHKSConcreteGoodSpecialization
 import ProximityPrize.SubmissionLower.BCHKSResultantDegree
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate
-
 set_option maxHeartbeats 2000000
-
-/-- The fixed separability resultant has the expected degree bound in the
-middle variable.  The coefficient variable is embedded in its fraction field,
-so that the standard bivariate bound can be used over a field. -/
 theorem rawSepResultant_natDegree_le
     {F : Type} [Field F]
     (R : Polynomial (Polynomial (Polynomial F))) (DX : ℕ)
@@ -44,9 +37,6 @@ theorem rawSepResultant_natDegree_le
       have hn : (R.natDegree - 1) + R.natDegree ≤ 2 * R.natDegree + 1 := by omega
       rw [← Nat.add_mul]
       exact Nat.mul_le_mul_right DX hn
-
-/-- Including the leading coefficient costs at most one further block of
-`DX`. -/
 theorem factorXObstruction_natDegree_le
     {F : Type} [Field F]
     (R : Polynomial (Polynomial (Polynomial F))) (DX : ℕ)
@@ -68,11 +58,6 @@ theorem factorXObstruction_natDegree_le
             1 * DX + (2 * R.natDegree + 1) * DX := by simp
         _ = (1 + (2 * R.natDegree + 1)) * DX := (Nat.add_mul ..).symm
         _ = (2 * R.natDegree + 2) * DX := by congr 1 <;> omega
-
-
-/-- After specializing `X`, the factor obstruction has `Z`-degree at most
-`2 * d * DZ`.  This uses the bivariate resultant bound directly; the older
-`(2*d-1)*DZ` estimate omitted the leading-coefficient contribution. -/
 theorem factorXObstruction_eval_natDegree_le
     {F : Type} [Field F]
     (R : Polynomial (Polynomial (Polynomial F))) (x : F) (d DZ : ℕ)
@@ -134,5 +119,4 @@ theorem factorXObstruction_eval_natDegree_le
             (1 + (2 * R.natDegree - 1)) * DZ := by simp [Nat.add_mul]
         _ = 2 * R.natDegree * DZ := by congr 1 <;> omega
     _ ≤ 2 * d * DZ := Nat.mul_le_mul_right DZ (Nat.mul_le_mul_left 2 hdR)
-
 end ProximityPrize.SubmissionLower

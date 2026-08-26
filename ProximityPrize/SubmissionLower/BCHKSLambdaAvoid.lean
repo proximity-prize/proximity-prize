@@ -1,7 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-
 open Polynomial
-
  theorem lambdaAvoid
     {F K J : Type*} [Field F] [Fintype F] [Field K] [Algebra F K]
     [DecidableEq J]

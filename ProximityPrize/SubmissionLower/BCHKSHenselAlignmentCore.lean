@@ -3,19 +3,11 @@ import ProximityPrize.SubmissionLower.BCHKSRegularDenSpecialization
 import ProximityPrize.SubmissionLower.BCHKSDoubleCounting
 import ProximityPrize.SubmissionLower.BCHKSAffineConclusion
 import ProximityPrize.SubmissionLower.BCHKSPairSetup
-
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F] [Fintype F] [DecidableEq F]
-
-/-- End-to-end Hensel/alignment core after factor and good-pair selection.
-All geometric selection assumptions are explicit.  In particular, coefficient
-specialization is *not* an assumption: it is derived from the synchronized
-residual specialization and finite-Hensel uniqueness.  `hfiber` is only the
-final quotient/adjoin-root specialization plumbing. -/
 theorem hensel_alignment_core
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     [Fact (Irreducible (mapBivariateToRatFunc H))]
@@ -81,5 +73,4 @@ theorem hensel_alignment_core
   let p₀ : F[X] := Lagrange.interpolate E id U₀
   let p₁ : F[X] := Lagrange.interpolate E id U₁
   exact ⟨p₀, p₁, hp₀deg, hp₁deg, hγ, hfiber p₀ p₁ hp₀deg hp₁deg hγ⟩
-
 end ProximityPrize.SubmissionLower

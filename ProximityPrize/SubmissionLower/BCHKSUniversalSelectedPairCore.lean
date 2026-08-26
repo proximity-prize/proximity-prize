@@ -2,17 +2,11 @@ import ProximityPrize.SubmissionLower.BCHKSUniversalAffineObstruction
 import ProximityPrize.SubmissionLower.BCHKSSelectedHenselData
 import ProximityPrize.SubmissionLower.BCHKSSelectedNonpole
 import ProximityPrize.SubmissionLower.BCHKSHenselBaseZAlignment
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F]
-
-/-- A zero branch-independent affine obstruction forces the canonical Hensel
-truncation to take the prescribed affine value at that coordinate. -/
 theorem gamma_eval_eq_affine_of_universalAffineObstruction_eq_zero
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ x u₀ u₁ : F) (R : F[X][X][Y])
@@ -55,22 +49,12 @@ theorem gamma_eval_eq_affine_of_universalAffineObstruction_eq_zero
   have hdiff := (mul_eq_zero.mp hb0).resolve_right hdenfield
   rw [canonicalFunctionFieldGamma_eval]
   exact sub_eq_zero.mp hdiff
-
-
-
 end ProximityPrize.SubmissionLower
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F] [Fintype F] [DecidableEq F]
-
-/-- The exact selected-pair fields consumed by universal alignment.  Unlike
-`SelectedHenselData`, this package omits the legacy middle-range weight and
-denominator ledgers, so it also supports an outer factor of Y-degree one. -/
 structure UniversalSelectedHenselData
     (x₀ : F) (R : F[X][X][Y]) (H : F[X][Y])
     [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
@@ -93,8 +77,6 @@ structure UniversalSelectedHenselData
   hW : ∀ z : T, H.leadingCoeff.eval (z : F) ≠ 0
   hxi : ∀ z : T, Polynomial.evalEval (z : F) (root z).1
     (HenselNumerators.xiPre x₀ R H) ≠ 0
-
-/-- Forget the legacy-only fields of the old selected data package. -/
 def SelectedHenselData.toUniversal
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     {x₀ : F} {R : F[X][X][Y]}
@@ -112,11 +94,6 @@ def SelectedHenselData.toUniversal
   hslope := S.hslope
   hW := S.hW
   hxi := S.hxi
-
-/-- Selected-pair universal alignment core. The all-factor shell only has to
-produce one selected Hensel pair and prove the branch-independent affine
-obstruction vanishes at k+1 coordinates. No regular-weight or per-factor
-root-counting hypothesis occurs in this consumer. -/
 theorem universal_selected_pair_alignment_core
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -235,7 +212,6 @@ theorem universal_selected_pair_alignment_core
       exact (Polynomial.natDegree_add_le _ _).trans
         (max_le hp₀ ((Polynomial.natDegree_C_mul_le _ _).trans hp₁))
     exact max_lt ((hPdeg z).trans_lt hkF) (hq.trans_lt hkF)
-
 theorem universal_selected_pair_alignment_core_light
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y])
@@ -354,5 +330,4 @@ theorem universal_selected_pair_alignment_core_light
       exact (Polynomial.natDegree_add_le _ _).trans
         (max_le hp₀ ((Polynomial.natDegree_C_mul_le _ _).trans hp₁))
     exact max_lt ((hPdeg z).trans_lt hkF) (hq.trans_lt hkF)
-
 end ProximityPrize.SubmissionLower

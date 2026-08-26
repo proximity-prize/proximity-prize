@@ -1,17 +1,9 @@
 import ProximityPrize.SubmissionLower.BCHKSYZFactorCap
 import ProximityPrize.SubmissionLower.BCHKSResultantDegree
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate
-
 set_option maxHeartbeats 2000000
-
 variable {F : Type} [Field F] [DecidableEq F] [NormalizationMonoid F]
-
-/-- The product of the distinct normalized factors divides the original
-polynomial.  This is the squarefree-support divisibility used by the universal
-resultant ledger. -/
 theorem normalizedFactors_toFinset_prod_dvd
     (B : F[X][Y]) (hB : B ≠ 0) :
     (UniqueFactorizationMonoid.normalizedFactors B).toFinset.prod id ∣ B := by
@@ -20,17 +12,12 @@ theorem normalizedFactors_toFinset_prod_dvd
   have hassoc := UniqueFactorizationMonoid.prod_normalizedFactors hB
   change M.toFinset.prod id ∣ B
   exact hset.trans hassoc.dvd
-
-/-- Every distinct normalized factor is nonzero. -/
 theorem normalizedFactor_toFinset_ne_zero
     (B H : F[X][Y])
     (hH : H ∈ (UniqueFactorizationMonoid.normalizedFactors B).toFinset) : H ≠ 0 := by
   have hm : H ∈ UniqueFactorizationMonoid.normalizedFactors B :=
     Multiset.mem_toFinset.mp hH
   exact (UniqueFactorizationMonoid.prime_of_normalized_factor H hm).ne_zero
-
-/-- `degreeX` is additive on a finite product of nonzero bivariate
-polynomials. -/
 theorem degreeX_finset_prod
     {S : Finset (F[X][Y])} (hS : ∀ H ∈ S, H ≠ 0) :
     Polynomial.Bivariate.degreeX (S.prod id) =
@@ -68,10 +55,6 @@ theorem degreeX_finset_prod
           congr 1
           simpa only [Finset.prod_apply, id_eq] using
             ih (fun J hJ ↦ hS J (by simp [hJ]))
-
-/-- The sum of actual `Y`-degrees and the sum of actual coefficient-variable
-(`Z`) degrees across all distinct normalized factors are separately bounded
-by the corresponding degrees of the original bivariate polynomial. -/
 theorem normalizedFactors_toFinset_sum_natDegree_degreeX_le
     (B : F[X][Y]) (hB : B ≠ 0) :
     (∑ H ∈ (UniqueFactorizationMonoid.normalizedFactors B).toFinset,
@@ -103,8 +86,6 @@ theorem normalizedFactors_toFinset_sum_natDegree_degreeX_le
     · intro H hH
       exact normalizedFactor_toFinset_ne_zero B H (by simpa [S] using hH)
   exact ⟨hy, hzsum⟩
-
-/-- Restricting to the positive-`Y` factors preserves both sum bounds. -/
 theorem positiveNormalizedFactors_sum_natDegree_degreeX_le
     (B : F[X][Y]) (hB : B ≠ 0) :
     let S := (UniqueFactorizationMonoid.normalizedFactors B).toFinset.filter
@@ -120,11 +101,6 @@ theorem positiveNormalizedFactors_sum_natDegree_degreeX_le
       (Finset.filter_subset _ _) (by simp)).trans hall.1
   · exact (Finset.sum_le_sum_of_subset_of_nonneg
       (Finset.filter_subset _ _) (by simp)).trans hall.2
-
-/-! ## Ordinary-resultant degree ledger -/
-
-/-- Sum the standard bivariate degree bound while retaining each factor's
-actual pre-specialization `Y`-degree. -/
 theorem sum_resultant_natDegree_le_actual
     (N : F[X][Y]) (S : Finset (F[X][Y])) :
     (∑ H ∈ S, (Polynomial.resultant N H).natDegree) ≤
@@ -141,11 +117,6 @@ theorem sum_resultant_natDegree_le_actual
     _ = (∑ H ∈ S, H.natDegree) * Polynomial.Bivariate.degreeX N +
         N.natDegree * (∑ H ∈ S, Polynomial.Bivariate.degreeX H) := by
       simp only [Finset.sum_add_distrib, Finset.sum_mul, Finset.mul_sum]
-
-/-- Across the distinct positive normalized factors of `B`, ordinary raw
-resultants against one branch-independent numerator cost at most `2*e*d*D`.
-The theorem uses actual resultants; `nY` and `zN` are only upper bounds and do
-not pad the Sylvester determinants. -/
 theorem positiveNormalizedFactors_sum_resultant_natDegree_le_two_mul
     (B N : F[X][Y]) (hB : B ≠ 0) (d D e : ℕ)
     (hBY : B.natDegree ≤ d)
@@ -172,10 +143,6 @@ theorem positiveNormalizedFactors_sum_resultant_natDegree_le_two_mul
       sum_resultant_natDegree_le_actual N S
     _ ≤ d * (e * D) + (e * d) * D := by gcongr
     _ = 2 * e * d * D := by ring
-
-/-- Affine-numerator variant.  The term `s^E * Z * u₁(x)` contributes one
-additional coefficient-variable degree, so `degreeX N ≤ e*D+1` yields the
-exact ledger `2*e*d*D+d`. -/
 theorem positiveNormalizedFactors_sum_resultant_natDegree_le_affine
     (B N : F[X][Y]) (hB : B ≠ 0) (d D e : ℕ)
     (hBY : B.natDegree ≤ d)
@@ -202,9 +169,6 @@ theorem positiveNormalizedFactors_sum_resultant_natDegree_le_affine
       sum_resultant_natDegree_le_actual N S
     _ ≤ d * (e * D + 1) + (e * d) * D := by gcongr
     _ = 2 * e * d * D + d := by ring
-
-/-- A version with explicit finite factors and explicit sum caps, convenient
-for summing one universal numerator ledger over several outer factors. -/
 theorem sum_resultant_natDegree_le_two_mul_of_sum_caps
     (N : F[X][Y]) (S : Finset (F[X][Y])) (d D e : ℕ)
     (hSY : (∑ H ∈ S, H.natDegree) ≤ d)
@@ -220,8 +184,6 @@ theorem sum_resultant_natDegree_le_two_mul_of_sum_caps
       sum_resultant_natDegree_le_actual N S
     _ ≤ d * (e * D) + (e * d) * D := by gcongr
     _ = 2 * e * d * D := by ring
-
-/-- Explicit-sum-cap affine variant of the universal resultant ledger. -/
 theorem sum_resultant_natDegree_le_affine_of_sum_caps
     (N : F[X][Y]) (S : Finset (F[X][Y])) (d D e : ℕ)
     (hSY : (∑ H ∈ S, H.natDegree) ≤ d)
@@ -237,9 +199,6 @@ theorem sum_resultant_natDegree_le_affine_of_sum_caps
       sum_resultant_natDegree_le_actual N S
     _ ≤ d * (e * D + 1) + (e * d) * D := by gcongr
     _ = 2 * e * d * D + d := by ring
-
-/-- Sum the per-outer-factor universal resultant ledgers using only the
-additive sum of actual outer `Y`-degrees. -/
 theorem sum_universal_inner_ledgers_le
     {ι : Type*} [DecidableEq ι]
     (Outer : Finset ι) (dR ledger : ι → ℕ) (e D M : ℕ)
@@ -252,8 +211,6 @@ theorem sum_universal_inner_ledgers_le
     _ = 2 * e * (∑ R ∈ Outer, dR R) * D := by
       simp only [Finset.mul_sum, Finset.sum_mul]
     _ ≤ 2 * e * M * D := by gcongr
-
-/-- Aggregate the corrected affine ledgers `2*e*dR*D+dR`. -/
 theorem sum_universal_inner_affine_ledgers_le
     {ι : Type*} [DecidableEq ι]
     (Outer : Finset ι) (dR ledger : ι → ℕ) (e D M : ℕ)
@@ -268,14 +225,6 @@ theorem sum_universal_inner_affine_ledgers_le
         (∑ R ∈ Outer, dR R) := by
       simp only [Finset.sum_add_distrib, Finset.mul_sum, Finset.sum_mul]
     _ ≤ 2 * e * M * D + M := by gcongr
-
-/-! ## Zero-obstruction-as-good relational capacity -/
-
-/-- A summed relational capacity selects a branch whose obstruction is
-identically zero.  Nonzero obstructions cannot be the selected branch because
-all points in its fiber are distinct roots and its capacity strictly dominates
-its actual degree.  The conclusion retains the large-fiber inequality needed
-by the subsequent aggregate-incidence step. -/
 theorem exists_zero_obstruction_with_large_fiber
     {π : Type*} [DecidableEq π]
     (S : Finset F) (P : Finset π) (Rel : F → π → Prop) [DecidableRel Rel]
@@ -316,10 +265,6 @@ theorem exists_zero_obstruction_with_large_fiber
         Nat.mul_le_mul_right (obstruction p).natDegree hincidence
     omega
   omega
-
-/-- Exact fused-floor companion: once the global capacity theorem has selected
-a branch above `(nminus * deg)/gap + errors+1`, root counting forces its
-obstruction to be identically zero whenever `gap ≤ nminus`. -/
 theorem obstruction_eq_zero_of_fused_floor_large_fiber
     {π : Type*}
     (S : Finset F) (Rel : F → π → Prop) [DecidableRel Rel]
@@ -347,7 +292,4 @@ theorem obstruction_eq_zero_of_fused_floor_large_fiber
     have hm := Nat.mul_le_mul_right (obstruction p).natDegree hgap_le
     simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using hm
   omega
-
 end ProximityPrize.SubmissionLower
-
-

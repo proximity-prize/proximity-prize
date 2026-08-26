@@ -1,14 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BCHKSFactorPigeon
 import ProximityPrize.SubmissionLower.BCHKSDoubleCounting
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial
-
 set_option maxRecDepth 1000000
-
-/-- Lagrange interpolation on exactly `k+1` nodes has degree at most `k`. -/
 theorem core_lagrange_natDegree_le
     {F : Type} [Field F] [DecidableEq F]
     (E : Finset F) (U : F → F) (k : ℕ) (hcard : E.card = k + 1) :
@@ -23,9 +18,6 @@ theorem core_lagrange_natDegree_le
     have hn : p.natDegree < E.card :=
       (Polynomial.natDegree_lt_iff_degree_lt hp).2 hd
     simpa [hcard] using hn
-
-/-- A polynomial of degree at most `DZ` with more than `DZ` distinct selected
-roots is zero. -/
 theorem selected_polynomial_eq_zero
     {F : Type} [Field F] [DecidableEq F] (DZ : ℕ)
     (Q : F[X]) (S : Finset F) (hdeg : Q.natDegree ≤ DZ)
@@ -36,8 +28,6 @@ theorem selected_polynomial_eq_zero
   · intro z
     exact hzero z z.property
   · simpa [Fintype.card_coe] using hdeg.trans_lt hcard
-
-/-- A nonzero linear polynomial over a field has at most one root. -/
 theorem core_linear_root_unique
     {F : Type} [Field F] (H : F[X]) (a b : F)
     (hdeg : H.natDegree = 1) (ha : H.eval a = 0) (hb : H.eval b = 0) : a = b := by
@@ -61,11 +51,6 @@ theorem core_linear_root_unique
     Polynomial.eval_X] at ha hb
   apply mul_left_cancel₀ hc
   linear_combination ha - hb
-
-/-- Elementary selected-root scheme: large fibers force every `Q x` to
-vanish; uniqueness of a linear root identifies the selected values with an
-affine function of `z`; interpolation and polynomial extensionality give a
-single affine line of polynomials. -/
 theorem bchksLinearSelectedCore
     {F : Type} [Field F] [Fintype F] [DecidableEq F]
     (k DZ : ℕ) (T A : Finset F)
@@ -114,5 +99,4 @@ theorem bchksLinearSelectedCore
     rw [Fintype.card_coe, hEcard]
     exact max_lt ((hPdeg z hz).trans_lt (Nat.lt_succ_self k))
       (hq.trans_lt (Nat.lt_succ_self k))
-
 end ProximityPrize.SubmissionLower

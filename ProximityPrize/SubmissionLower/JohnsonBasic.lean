@@ -1,76 +1,37 @@
-/-
-Copyright (c) 2024-2025 ArkLib Contributors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ilia Vlasov, František Silváši
--/
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.JohnsonLemmas
-
-/-! # Johnson Bound Basics -/
-
 namespace JohnsonBound
-
-/-!
-This module is based on the Johnson Bound section from [listdecoding].
-In what follows we reference theorems from [listdecoding] by default.
-
-## References
-
-* [Guruswami, V. and others, *Algorithmic results in list decoding*][listdecoding]
-* [Guruswami, V., Rudra, A., and Sudan, M., *Essential coding theory*][codingtheory]
-* [Arnon, G., Boneh, D., and Fenzi, G., *Open Problems in List Decoding and Correlated
-Agreement*][ABF26]
--/
-
 open Fintype Finset Real
-
 variable {n : ℕ}
          {F : Type*} [Fintype F] [DecidableEq F]
          {B : Finset (Fin n → F)} {v : Fin n → F}
-
-/-- The denominator of the bound from Theorem 3.1. -/
 def JohnsonDenominator (B : Finset (Fin n → F)) (v : Fin n → F) : ℚ :=
   let e := e B v
   let d := d B
   let q : ℚ := card F
   let frac := q / (q - 1)
   (1 - frac * e / n) ^ 2 - (1 - frac * d / n)
-
-/-- Unfolds `JohnsonDenominator` into an explicit rational expression. -/
 lemma johnson_denominator_def :
     JohnsonDenominator B v = ((1 - (card F) / (card F - 1) * (e B v / n)) ^ 2
       - (1 - (card F) / (card F - 1) * (d B / n))) := by
   simp [JohnsonDenominator]
   field_simp
-
-/-- The strong Johnson condition: the denominator of Theorem 3.1 is positive. -/
 def JohnsonConditionStrong (B : Finset (Fin n → F)) (v : Fin n → F) : Prop :=
   let e := e B v
   let d := d B
   let q : ℚ := card F
   let frac := q / (q - 1)
   (1 - frac * d / n) < (1 - frac * e / n) ^ 2
-
-/-- The asymptotic ("capacity") Johnson bound `1 - √(1 - δ)`, the `q → ∞` limit of the
-`q`-ary `JohnsonBound.J`.
-
-This is not the binary Johnson bound, which is `J 2 δ = (1 - √(1 - 2δ))/2`. -/
 noncomputable def Jcap (δ : ℝ) : ℝ := 1 - √(1 - δ)
-
 @[simp]
 lemma Jcap_zero : Jcap 0 = 0 := by simp [Jcap]
-
 @[simp]
 lemma Jcap_one : Jcap 1 = 1 := by simp [Jcap]
-
-/-- Rationalization of `a - √b` via conjugate multiplication. -/
 lemma division_by_conjugate {a b : ℝ} (hpos : 0 ≤ b) (hnonzero : a + √b ≠ 0) :
     a - √b = (a ^ 2 - b) / (a + √b) := by
   rw [eq_div_iff hnonzero]
   ring_nf
   simp_all
-
-/-- The asymptotic Johnson bound is at most the `q`-ary one: `Jcap δ ≤ J q δ`. -/
 lemma sqrt_le_J {q δ : ℚ} (hq : q > 1) (hx0 : 0 ≤ δ) (hx1 : δ ≤ 1)
     (hqx : q / (q - 1) * δ ≤ 1) :
     Jcap δ ≤ J q δ := by
@@ -100,14 +61,10 @@ lemma sqrt_le_J {q δ : ℚ} (hq : q > 1) (hx0 : 0 ≤ δ) (hx1 : δ ≤ 1)
       nlinarith [show (1 : ℝ) ≤ ↑frac from by exact_mod_cast hfrac_ge,
                  show (0 : ℝ) ≤ ↑δ from by exact_mod_cast hx0]
     exact div_le_div_of_nonneg_left (by positivity) (by positivity) (by linarith)
-
-/-- The `q`-ary Johnson bound condition (weak form via `J`). -/
 def JohnsonConditionWeak (B : Finset (Fin n → F)) (e : ℕ) : Prop :=
   let d := sInf { d | ∃ u ∈ B, ∃ v ∈ B, u ≠ v ∧ hammingDist u v = d }
   let q : ℚ := card F
   (e : ℚ) / n < J q (d / n)
-
-/-- The weak Johnson condition implies the strong one on the ball intersection. -/
 lemma johnson_condition_weak_implies_strong
     {B : Finset (Fin n → F)} {v : Fin n → F} {e : ℕ}
     (h_J_cond_weak : JohnsonConditionWeak B e)
@@ -231,22 +188,16 @@ lemma johnson_condition_weak_implies_strong
       exact this
     calc 1 - ↑frac * ↑d / ↑n < (0 : ℚ) := strict_neg
       _ ≤ (1 - ↑frac * ↑e_1 / ↑n) ^ 2 := by exact_mod_cast sq_nonneg (1 - frac * ↑e_1 / ↑n)
-
-/-- The strong Johnson condition forces the block length to be positive. -/
 lemma johnson_condition_strong_implies_n_pos
     (h_johnson : JohnsonConditionStrong B v) :
     0 < n := by
   cases n <;> try simp [JohnsonConditionStrong] at *
-
-/-- The strong Johnson condition forces the alphabet to have at least two elements. -/
 lemma johnson_condition_strong_implies_2_le_F_card
     (h_johnson : JohnsonConditionStrong B v) :
     2 ≤ card F := by
   revert h_johnson
   dsimp [JohnsonConditionStrong]
   rcases card F with _ | _ | _ <;> aesop
-
-/-- The strong Johnson condition forces the code to have at least two codewords. -/
 lemma johnson_condition_strong_implies_2_le_B_card
     (h_johnson : JohnsonConditionStrong B v) :
     2 ≤ B.card := by
@@ -263,13 +214,9 @@ lemma johnson_condition_strong_implies_2_le_B_card
     ring
   have h' := JohnsonBound.abs_one_sub_div_le_one (v := v) (a := a) (by omega)
   exact absurd (lt_of_lt_of_le (h ▸ h_johnson) h') (lt_irrefl _)
-
-/-- `JohnsonConditionStrong` is equivalent to `JohnsonDenominator` being positive. -/
 lemma johnson_condition_strong_iff_johnson_denom_pos {B : Finset (Fin n → F)} {v : Fin n → F} :
     JohnsonConditionStrong B v ↔ 0 < JohnsonDenominator B v := by
   simp [JohnsonDenominator, JohnsonConditionStrong]
-
-/-- Theorem 3.1: the Johnson bound on list size. -/
 theorem johnson_bound
     (h_condition : JohnsonConditionStrong B v) :
     let d := d B
@@ -285,8 +232,6 @@ theorem johnson_bound
     (johnson_condition_strong_implies_n_pos h_condition)
     (johnson_condition_strong_implies_2_le_B_card h_condition)
     (johnson_condition_strong_implies_2_le_F_card h_condition)
-
-/-- Alphabet-free Johnson bound from [codingtheory]. -/
 theorem johnson_bound_alphabet_free
     {B : Finset (Fin n → F)} {v : Fin n → F} {e : ℕ} (hB : 1 < B.card) :
     let d := sInf { d | ∃ u ∈ B, ∃ v ∈ B, u ≠ v ∧ hammingDist u v = d }
@@ -296,7 +241,6 @@ theorem johnson_bound_alphabet_free
     (B ∩ ({ x | Δ₀(x, v) ≤ e } : Finset _)).card ≤ q * d * n := by
   intro d q frac h
   let B' := B ∩ ({ x | Δ₀(x, v) ≤ e } : Finset _)
-  -- Parameter bounds.
   have hF2 : 2 ≤ card F := by
     obtain ⟨u, _, w, _, huw⟩ := one_lt_card.mp hB
     obtain ⟨i, hi⟩ := Function.ne_iff.mp huw
@@ -318,10 +262,8 @@ theorem johnson_bound_alphabet_free
   have qdn_not_small : (q * d * n) ≥ 2 := by
     simpa [mul_assoc] using johnson_qdn_ge_two q_not_small d_not_small n_not_small
   by_cases h_size : B'.card < 2
-  -- Trivial case: |B'| < 2.
   · exact le_trans (show (B'.card : ℚ) ≤ 1 from by exact_mod_cast Nat.le_of_lt_succ h_size)
       (le_trans (by norm_num : (1 : ℚ) ≤ 2) qdn_not_small)
-  -- Main case: |B'| ≥ 2.
   · have hd_le_dB' : (d : ℚ) ≤ JohnsonBound.d B' := by
       let S : Set ℕ := { d | ∃ u ∈ B, ∃ v ∈ B, u ≠ v ∧ hammingDist u v = d }
       let S' : Set ℕ := { d | ∃ u ∈ B', ∃ v ∈ B', u ≠ v ∧ hammingDist u v = d }
@@ -333,12 +275,10 @@ theorem johnson_bound_alphabet_free
       calc (d : ℚ)
           ≤ ↑(sInf S') := by exact_mod_cast Nat.sInf_le (hsubset (Nat.sInf_mem hS'nonempty))
         _ ≤ JohnsonBound.d B' := by exact_mod_cast min_dist_le_d (B := B') (by omega)
-    -- Positivity facts used in both subcases.
     have hn_pos_nat : 0 < n := Nat.succ_le_iff.1 n_not_small
     have hn_pos : (0 : ℚ) < n := by exact_mod_cast hn_pos_nat
     have hq1_pos : (0 : ℚ) < q - 1 := by linarith
     by_cases h_d_close_n : q / (q - 1) * (d / n) > 1
-    -- Subcase: frac·d/n > 1.
     · have h_strong : JohnsonConditionStrong B' v := by
         simpa [JohnsonConditionStrong, q, mul_div_assoc] using
           lt_of_lt_of_le (show (1 - (q / (q - 1)) * (JohnsonBound.d B' / n) : ℚ) < 0 from by
@@ -372,7 +312,6 @@ theorem johnson_bound_alphabet_free
             have hq_nn : (0 : ℚ) ≤ q := by linarith
             nlinarith [mul_le_mul_of_nonneg_left hd_le_n hq_nn,
               mul_le_mul_of_nonneg_left hd_ge1 (mul_nonneg hq_nn (le_of_lt hn_pos))]
-    -- Subcase: frac·d/n ≤ 1 (main case, via weak → strong).
     · have d_le_n : d ≤ n := by
         obtain ⟨u, hu, v, hv, huv⟩ := one_lt_card.mp hB
         exact le_trans (Nat.sInf_le ⟨u, hu, v, hv, huv, rfl⟩)
@@ -414,7 +353,6 @@ theorem johnson_bound_alphabet_free
             (Nat.succ_le_iff.1 d_not_small) (by linarith) h_muln h_J_bound
             (le_of_not_gt h_d_close_n)))
           (show 1 < B'.card by omega) hF2
-      -- Core inequality from the hypothesis.
       have h_div'_q : (1 - (d / n : ℚ)) ≤ (1 - (e / n : ℚ)) ^ 2 := by
         have : ((1 - (d / n : ℚ)) : ℝ) ≤ ((1 - (e / n : ℚ)) ^ 2 : ℝ) := by
           simpa using JohnsonBound.johnson_hyp_implies_div_ineq hn_pos_nat d_le_n h
@@ -431,7 +369,6 @@ theorem johnson_bound_alphabet_free
             have one_div_q_le : (1 : ℚ) / q ≤ frac - 1 := by
               simpa [frac_sub_one_eq] using
                 (one_div_le_one_div_of_le hq1_pos (by linarith : q - 1 ≤ q))
-            -- Expand and cancel frac from JohnsonDenominator.
             have denom_expansion : JohnsonDenominator B' v =
                 frac * (JohnsonBound.d B' / n - 2 * JohnsonBound.e B' v / n +
                 frac * (JohnsonBound.e B' v / n) ^ 2) := by
@@ -442,11 +379,9 @@ theorem johnson_bound_alphabet_free
                 (JohnsonBound.d B' / n - 2 * JohnsonBound.e B' v / n +
                 frac * (JohnsonBound.e B' v / n) ^ 2) := by
                   grind only [= johnson_condition_strong_iff_johnson_denom_pos]
-            -- Bound eB' by e.
             have e_ineq : JohnsonBound.e B' v ≤ e := by
               simpa [B'] using JohnsonBound.e_ball_le_radius (B := B) (v := v) (r := (e : ℚ))
                 (by simpa [B'] using show 0 < B'.card by omega)
-            -- Denominator positivity.
             have hden1_pos : (0 : ℚ) <
                 JohnsonBound.d B' / n - 2 * JohnsonBound.e B' v / n +
                 frac * (JohnsonBound.e B' v / n) ^ 2 := by
@@ -459,7 +394,6 @@ theorem johnson_bound_alphabet_free
               rcases mul_pos_iff.mp hdenJ' with hpos | hneg
               · exact hpos.2
               · exact absurd hneg.1 (not_lt.mpr hfrac_pos.le)
-            -- Monotone worst-case bound.
             have worst_case_bound :
                 (JohnsonBound.d B' / n) /
                 (JohnsonBound.d B' / n - 2 * JohnsonBound.e B' v / n +
@@ -467,7 +401,6 @@ theorem johnson_bound_alphabet_free
                 (d / n) / (d / n - 2 * e / n + frac * (e / n) ^ 2) :=
               johnson_worst_case_bound hn_pos (Nat.succ_le_iff.1 d_not_small) d_le_n h
                 (le_of_not_gt h_d_close_n) hfrac_gt1 e_ineq hd_le_dB' quad_nonneg hden1_pos
-            -- Final algebraic bound.
             have hden_lb : (1 : ℚ) / (q * (n : ℚ) ^ 2) ≤ Den := by
               by_cases he0 : e = 0
               · subst he0; simpa [D0, E0, Den] using
@@ -485,5 +418,4 @@ theorem johnson_bound_alphabet_free
                     (div_nonneg (by exact_mod_cast Nat.zero_le d) hn_nonneg)
                     (one_div_pos.mpr (mul_pos hq_pos hn2_pos)) hden_lb
               _ = q * d * n := by field_simp [ne_of_gt hq_pos, ne_of_gt hn_pos]
-
 end JohnsonBound

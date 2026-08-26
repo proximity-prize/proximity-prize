@@ -1,24 +1,18 @@
 import ProximityPrize.SubmissionLower.BCHKSInitialValueAffine
-
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate RationalFunctions
 open RationalFunctions.HenselNumerators
 open RationalFunctions.HenselNumerators.ConcreteFiniteNumerators
-
 variable {F : Type} [Field F]
-
 noncomputable def commonZRegular (H : F[X][Y]) : 𝒪 H :=
   Ideal.Quotient.mk (Ideal.span {monicize H}) (Polynomial.C Polynomial.X)
-
 @[simp] theorem embedding_commonZRegular
     (H : F[X][Y]) [Fact (Irreducible H)] :
     embeddingOf𝒪Into𝕃 H (commonZRegular H) = liftToFunctionField (H:=H) Polynomial.X := by
   simp [commonZRegular, embeddingOf𝒪Into𝕃_mk, liftBivariate_C]
-
 @[simp] theorem piZ_commonZRegular (H : F[X][Y]) (z : F)
     (root : rationalRoot (monicize H) z) : piZ z root (commonZRegular H) = z := by
   simp [commonZRegular, piZ_mk_C]
-
 noncomputable def explicitBaseZGammaDifferenceRegular
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -31,7 +25,6 @@ noncomputable def explicitBaseZGammaDifferenceRegular
           (FiniteHenselWeight.denominatorExponent k - FiniteHenselWeight.denominatorExponent i)) -
     (commonConstRegular u₀ + commonZRegular H * commonConstRegular u₁) *
       concreteDenRegularBridge x₀ R hHyp k
-
 theorem embedding_explicitBaseZGammaDifferenceRegular
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -58,8 +51,6 @@ theorem embedding_explicitBaseZGammaDifferenceRegular
   rw [hsum]
   unfold commonDenominator
   ring
-
-/-- Canonical gamma affine decomposition with the independent base coordinate. -/
 theorem canonicalFunctionFieldGamma_baseZ_affine
     [DecidableEq F] {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ : F) (R : F[X][X][Y]) (N k : ℕ)
@@ -73,7 +64,6 @@ theorem canonicalFunctionFieldGamma_baseZ_affine
   exact extension_polynomial_eq_affine_of_many_evals (groundToFunctionField H)
     (liftToFunctionField (H:=H) Polynomial.X) _ k D hD U₀ U₁ hdeg (by
       intro x hx; change _; exact heval x hx)
-
 theorem piZ_explicitBaseZGammaDifferenceRegular
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ z : F) (root : rationalRoot (monicize H) z)
@@ -150,9 +140,6 @@ theorem piZ_explicitBaseZGammaDifferenceRegular
   rw [map_sub, map_sum, map_mul, map_add, map_mul]
   simp [commonZRegular, commonConstRegular, piZ_mk_C]
   linear_combination hold'
-
-/-- Pair agreement is equivalent to vanishing of the corrected numerator at a
-non-pole pair. -/
 theorem piZ_explicitBaseZGammaDifferenceRegular_eq_zero_iff
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ z : F) (root : rationalRoot (monicize H) z)
@@ -172,11 +159,6 @@ theorem piZ_explicitBaseZGammaDifferenceRegular_eq_zero_iff
     exact sub_eq_zero.mp ((mul_eq_zero.mp h).resolve_right (hden k (le_refl k)))
   · intro h
     simp [h]
-
-
-
-
-/-- Regular-weight bound for the base-coordinate affine corrected numerator. -/
 theorem explicitBaseZGammaDifferenceRegular_weight_exact
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -247,9 +229,6 @@ theorem explicitBaseZGammaDifferenceRegular_weight_exact
       (max_le ((hold u₀ 0).trans (WithBot.coe_le_coe.mpr (by omega))) hneg)
     simpa only [sub_eq_add_neg] using hbound
   simpa [B, Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using hsub
-
-
-/-- Y/Z-cap version of the exact base-coordinate weight bound. -/
 theorem explicitBaseZGammaDifferenceRegular_weight_exact_yz
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -264,8 +243,6 @@ theorem explicitBaseZGammaDifferenceRegular_weight_exact_yz
       (WithBot.some (((2*k+1)*Bivariate.natDegreeY R*D)+1) : WithBot ℕ) := by
   exact explicitBaseZGammaDifferenceRegular_weight_exact x₀ dx u₀ u₁ R hHyp hzeta hH
     hD_H hYZ hRdeg N k hkN
-
-/-- Coarser convenient form of the sharp base-coordinate weight bound. -/
 theorem explicitBaseZGammaDifferenceRegular_weight
     {H : F[X][Y]} [Fact (Irreducible H)] [Fact (0 < H.natDegree)]
     (x₀ dx u₀ u₁ : F) (R : F[X][X][Y])
@@ -288,5 +265,4 @@ theorem explicitBaseZGammaDifferenceRegular_weight
   have hcoef := Bivariate.coeff_totalDegree_le H hHin
   have hDone : 1 ≤ D := by omega
   nlinarith
-
 end ProximityPrize.SubmissionLower

@@ -1,15 +1,10 @@
 import ProximityPrize.SubmissionLower.BCHKSFactorPigeon
 import ProximityPrize.SubmissionLower.BCHKSParameters
 import ProximityPrize.SubmissionLower.BCHKSInterpolation
-
 namespace ProximityPrize.SubmissionLower
-
 open ProximityPrize.Benchmark
-
 set_option maxHeartbeats 20000000
 set_option maxRecDepth 1000000
-
-/-- Optimized positive-factor selection on the good specialization set. -/
 theorem exists_bchks_weighted_factor_selection
     (S Bad : Finset IRSProfile.Field)
     (P : ↥S → Polynomial IRSProfile.Field)
@@ -141,5 +136,4 @@ theorem exists_bchks_weighted_factor_selection
     subst z
     have hrel := (Finset.mem_filter.mp hu).2
     simpa [Rel, emb, hReq, hHeq] using hrel
-
 end ProximityPrize.SubmissionLower
