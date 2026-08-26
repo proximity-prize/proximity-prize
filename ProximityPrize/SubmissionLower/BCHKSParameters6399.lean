@@ -11,7 +11,10 @@ noncomputable def bchksRadius6399 : ℝ≥0 := (307083 : ℝ≥0) / 1048576
 
 def bchksErrors6399 : ℕ := 76770
 
-def bchksNumerator6399 : ℕ := 100000000000000000
+/-- Sharp integral successor of the universal seed ledger.  The previous
+round value `10^17` left avoidable slack that obscured the score-6401
+actual-error mass calculation. -/
+def bchksNumerator6399 : ℕ := 87790728044651911
 
 def bchksListBound6399 : ℕ := 30000
 
