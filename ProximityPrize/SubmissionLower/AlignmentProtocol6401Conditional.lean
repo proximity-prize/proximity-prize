@@ -1,12 +1,12 @@
 import ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
 
 /-!
-# Conditional protocol certificate at 64.01 bits
+# Conditional protocol certificate at 64.02 bits
 
 Model label: gpt-5.
 
 The sole mathematical premise of the final theorem is the explicit strong
-alignment bound at 76790 errors with budget 10^17. The actual squared-eight
+alignment bound at 76800 errors with budget 10^17. The actual squared-eight
 Code.Lambda, scalar-to-interleaved MCA transfer, field capacity and score
 conversion are derived below. No old Contact parameter or 6400 list module
 is imported, and no Benchmark.candidate is declared.
@@ -24,8 +24,8 @@ open scoped NNReal
 
 noncomputable section ProtocolProofs
 
-def radius6401 : ℝ≥0 := claimedRadius 307163 1048576
-def errors6401 : ℕ := 76790
+def radius6401 : ℝ≥0 := claimedRadius 307203 1048576
+def errors6401 : ℕ := 76800
 def budget6401 : ℕ := 100000000000000000
 
 theorem radius6401_floor :
@@ -33,7 +33,7 @@ theorem radius6401_floor :
   norm_num [radius6401, claimedRadius, errors6401, IRSProfile.Index]
 
 theorem radius6401_cell_cross :
-    307163 * Fintype.card IRSProfile.Index < (errors6401 + 1) * 1048576 := by
+    307203 * Fintype.card IRSProfile.Index < (errors6401 + 1) * 1048576 := by
   norm_num [IRSProfile.Index, errors6401]
 
 theorem radius6401_gap : 131071 < Fintype.card IRSProfile.Index - errors6401 := by
@@ -75,12 +75,12 @@ theorem two_rpow_one_hundred_le :
 /-- This exact rational inequality involves only the actual 128 repetitions. -/
 theorem radius6401_power_rational_bound :
     (1 - radius6401) ^ IRSProfile.repetitions ≤
-      ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (5000 / 5035) := by
+      ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (5000 / 5035) ^ (2 : ℕ) := by
   rw [← NNReal.coe_le_coe]
   norm_num [radius6401, claimedRadius, IRSProfile.repetitions, div_le_iff₀]
 
 theorem radius6401_score :
-    (1 - radius6401) ^ IRSProfile.repetitions ≤ claimedError 6401 := by
+    (1 - radius6401) ^ IRSProfile.repetitions ≤ claimedError 6402 := by
   have hscale : (5000 : ℝ≥0) / 5035 ≤ (2 : ℝ≥0) ^ (-((1 : ℝ) / 100)) := by
     calc
       (5000 : ℝ≥0) / 5035 = 1 / ((5035 : ℝ≥0) / 5000) := by norm_num
@@ -90,17 +90,19 @@ theorem radius6401_score :
         rw [one_div, NNReal.rpow_neg]
   calc
     (1 - radius6401) ^ IRSProfile.repetitions ≤
-        ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (5000 / 5035) :=
+        ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (5000 / 5035) ^ (2 : ℕ) :=
       radius6401_power_rational_bound
     _ ≤ ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) *
-        (2 : ℝ≥0) ^ (-((1 : ℝ) / 100)) :=
-      mul_le_mul_of_nonneg_left hscale (by positivity)
-    _ = claimedError 6401 := by
+        ((2 : ℝ≥0) ^ (-((1 : ℝ) / 100))) ^ (2 : ℕ) := by
+      gcongr
+    _ = claimedError 6402 := by
       unfold claimedError
-      rw [show -((((6401 : ℕ) : ℝ) / 100)) =
-          -((64 : ℕ) : ℝ) + -((1 : ℝ) / 100) by norm_num,
+      rw [show -((((6402 : ℕ) : ℝ) / 100)) =
+          -((64 : ℕ) : ℝ) +
+            (-((1 : ℝ) / 100) + -((1 : ℝ) / 100)) by norm_num,
+        NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0),
         NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0)]
-      simp only [NNReal.rpow_neg, NNReal.rpow_natCast, one_div]
+      simp only [NNReal.rpow_neg, NNReal.rpow_natCast, one_div, pow_two]
 
 /-- An actual module-code identity, proved using the verified row interface. -/
 theorem irs_code_eq_base_interleaved :
@@ -160,7 +162,7 @@ theorem lambda6401_le_of_alignment
         Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
       (radius6401 : ℝ) ≤ (budget6401 : ℕ∞) :=
   AlignmentInterleavedLambda.irs_squared_claimedRadius_lambda_le
-    307163 1048576 errors6401 budget6401 (by norm_num) radius6401_cell_cross
+    307203 1048576 errors6401 budget6401 (by norm_num) radius6401_cell_cross
     radius6401_gap halign budget6401_lt_field sixteen_row_separation_gate
 
 /-- A local copy of the elementary generic ENNReal field-budget calculation;
@@ -212,8 +214,8 @@ theorem certifiedGammaError6401_le_of_alignment
 theorem. This module does not itself assert that alignment premise. -/
 theorem protocolClaim6401_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode
-      76790 100000000000000000) :
-    ProtocolClaim 6401 307163 1048576 where
+      76800 100000000000000000) :
+    ProtocolClaim 6402 307203 1048576 where
   admissible := by
     constructor <;> norm_num [claimedRadius, IRSProfile.minRelativeDistance]
   reduction := by

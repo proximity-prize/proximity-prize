@@ -154,7 +154,7 @@ every node and every block is divisible by the required contact power. -/
 theorem exists_frozen_translated_contact_interpolant
     (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
     ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,
-      Q ≠ 0 ∧ Q ∈ globalCoefficientBox IRSProfile.Field 2409602 131071 169 3 ∧
+      Q ≠ 0 ∧ Q ∈ globalCoefficientBox IRSProfile.Field 2409472 131071 171 3 ∧
       ∀ (i : IRSProfile.Index) (r : ℕ),
         slopeDifference IRSProfile.Field ^ (13 - r) ∣
           (homogenizedTranslation IRSProfile.Field
@@ -164,7 +164,7 @@ theorem exists_frozen_translated_contact_interpolant
   refine ⟨Q, hQ, hcaps, ?_⟩
   intro i r
   rw [hreconstruct, translation_reconstruct_coeff]
-  exact all_blocks_divisible_of_equations IRSProfile.Field 2409602 131071 169 3 13
+  exact all_blocks_divisible_of_equations IRSProfile.Field 2409472 131071 171 3 13
     (IRSProfile.domain i) (u₀ i) (u₁ i) θ (hequations i) r
 
 /-- Local Y is the candidate derivative plus T times a residual quotient. -/
@@ -367,10 +367,10 @@ large agreement support. This is not the remaining geometric seed count. -/
 theorem exists_frozen_universal_vanishing_interpolant
     (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
     ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,
-      Q ≠ 0 ∧ Q ∈ globalCoefficientBox IRSProfile.Field 2409602 131071 169 3 ∧
+      Q ≠ 0 ∧ Q ∈ globalCoefficientBox IRSProfile.Field 2409472 131071 171 3 ∧
       ∀ (γ : IRSProfile.Field) (P : Polynomial IRSProfile.Field)
         (support : Finset IRSProfile.Index),
-        P.natDegree ≤ 131071 → 185354 ≤ support.card →
+        P.natDegree ≤ 131071 → 185344 ≤ support.card →
         (∀ i ∈ support, P.eval (IRSProfile.domain i) = u₀ i + γ * u₁ i) →
         specialization IRSProfile.Field P γ Q = 0 := by
   classical
@@ -383,8 +383,8 @@ theorem exists_frozen_universal_vanishing_interpolant
     exact hcontact i r
   · exact hvalues
   · have hdegree := specialization_natDegree_lt IRSProfile.Field
-      2409602 131071 169 3 Q P γ (by decide) hcaps hP
-    have hbound : 2409602 ≤ 13 * support.card := by omega
+      2409472 131071 171 3 Q P γ (by decide) hcaps hP
+    have hbound : 2409472 ≤ 13 * support.card := by omega
     exact hdegree.trans_le hbound
 
 end
