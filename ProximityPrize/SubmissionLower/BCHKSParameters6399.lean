@@ -41,16 +41,16 @@ lemma bchks6399_budget_nat :
       (2130706433 : ℕ) ^ 6 := by
   norm_num [bchksNumerator6399, bchksListBound6399]
 
-/-- Rational lower approximation to `2^(1/100)`. -/
+/-- Tighter rational lower approximation to `2^(1/100)`. -/
 theorem two_rpow_one_hundred_ge :
-    (5033 : ℝ≥0) / 5000 ≤ (2 : ℝ≥0) ^ ((1 : ℝ) / 100) := by
+    (1006955 : ℝ≥0) / 1000000 ≤ (2 : ℝ≥0) ^ ((1 : ℝ) / 100) := by
   have hroot :
-      (5033 : ℝ≥0) / 5000 ≤
+      (1006955 : ℝ≥0) / 1000000 ≤
         ((2 : ℝ≥0) ^ (1 : ℕ)) ^ ((100 : ℝ)⁻¹) := by
     rw [NNReal.le_rpow_inv_iff (by norm_num : (0 : ℝ) < 100)]
     norm_num [div_pow, div_le_iff₀]
   calc
-    (5033 : ℝ≥0) / 5000 ≤
+    (1006955 : ℝ≥0) / 1000000 ≤
         ((2 : ℝ≥0) ^ (1 : ℕ)) ^ ((100 : ℝ)⁻¹) := hroot
     _ = (2 : ℝ≥0) ^ ((1 : ℝ) / 100) := by
       rw [← NNReal.rpow_natCast_mul]
@@ -62,7 +62,7 @@ lemma bchksRadius6399_score :
       ProximityPrize.Benchmark.claimedError 6399 := by
   calc
     (1 - bchksRadius6399) ^ IRSProfile.repetitions ≤
-        ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (5033 / 5000) := by
+        ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (1006955 / 1000000) := by
       rw [← NNReal.coe_le_coe]
       norm_num [bchksRadius6399, IRSProfile.repetitions, div_le_iff₀]
     _ ≤ ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) *
