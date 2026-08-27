@@ -208,4 +208,76 @@ theorem winningSetSoundness_eq_one
   · exact message_eq_zero_of_zero_on_many
 
 end IRSProfile
+
+/-! ## Symmetric-chain descent lemma (SCUIAD-KBST)
+
+The spot-check inequality at index `i` reads
+
+```
+2^218787 ≤ (262144 - i)^12800
+```
+
+where `218787 = 230400 - 11613`.  The RHS is antitone in `i`: as `i`
+decreases, `(262144 - i)` increases, and the inequality becomes strictly
+easier.  We capture the *index-agnostic* constant on the OrbitPencil side as
+
+```
+C = 139775^12800
+```
+
+(the value at the promoted index `122369`) and certify it with a single
+`decide` kernel call.  Monotonicity of `pow` then propagates the certificate
+to every smaller index in the descent window. -/
+
+/-- The index-agnostic OrbitPencil constant `C = 139775^12800`.  This is the
+RHS of the spot-check inequality at the promoted index `122369`; it lower-bounds
+the RHS at every index `i ≤ 122369` by monotonicity of `Nat.pow`. -/
+abbrev orbitPencilConstant : ℕ := 139775 ^ 12800
+
+/-- Single kernel call certifying `2^218787 ≤ 139775^12800 = C`.  This is the
+only `decide` invocation in the descent window; every smaller index inherits
+the certificate by monotonicity. -/
+theorem orbitPencilConstant_certified :
+    (2 : ℕ) ^ 218787 ≤ orbitPencilConstant := by
+  unfold orbitPencilConstant
+  decide
+
+/-- Monotonicity: for any `i ≤ 122369`, `(262144 - i) ≥ 139775`, so
+`(262144 - i)^12800 ≥ 139775^12800 = C`. -/
+theorem descent_bound (i : ℕ) (hi : i ≤ 122369) :
+    orbitPencilConstant ≤ (262144 - i : ℕ) ^ 12800 := by
+  unfold orbitPencilConstant
+  have hbase : 139775 ≤ 262144 - i := by omega
+  exact Nat.pow_le_pow_left hbase 12800
+
+/-- Descent step: the spot-check inequality at index `i ≤ 122369` follows from
+the single kernel call on `C`. -/
+theorem score_nat_descent (i : ℕ) (hi : i ≤ 122369) :
+    (2 : ℕ) ^ 218787 ≤ (262144 - i : ℕ) ^ 12800 :=
+  le_trans orbitPencilConstant_certified (descent_bound i hi)
+
+/-- Spot-check at the promoted index `122369`: identical to `Solution.score_nat`. -/
+theorem score_nat_122369 :
+    (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 :=
+  score_nat_descent 122369 (by norm_num)
+
+/-- Spot-check at the descent index `122368`. -/
+theorem score_nat_122368 :
+    (2 : ℕ) ^ 218787 ≤ 139776 ^ 12800 :=
+  score_nat_descent 122368 (by norm_num)
+
+/-- Spot-check at the new unsafe index `122367` (descent_step = 2). -/
+theorem score_nat_122367 :
+    (2 : ℕ) ^ 218787 ≤ 139777 ^ 12800 :=
+  score_nat_descent 122367 (by norm_num)
+
+/-- Symmetric-chain joint certification: the spot-check inequality holds at all
+three indices `122369`, `122368`, `122367`, proved by a single kernel call on
+the index-agnostic constant `C = 139775^12800` together with monotonicity. -/
+theorem spotCheck_symmetricChain :
+    (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 ∧
+      (2 : ℕ) ^ 218787 ≤ 139776 ^ 12800 ∧
+        (2 : ℕ) ^ 218787 ≤ 139777 ^ 12800 := by
+  exact ⟨score_nat_122369, ⟨score_nat_122368, score_nat_122367⟩⟩
+
 end ProximityPrize.SubmissionUpper.IRSHalfRadius
