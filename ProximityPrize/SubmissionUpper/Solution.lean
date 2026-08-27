@@ -3,6 +3,7 @@ Copyright (c) 2026 Proximity Prize Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ProximityPrize.SubmissionUpper.OrbitPencil
+import ProximityPrize.SubmissionUpper.TSCB_RAR
 
 open ToyProblem
 open scoped NNReal
@@ -17,6 +18,19 @@ set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 4000000 in
 set_option exponentiation.threshold 300000 in
 theorem score_nat : (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 := by decide
+
+/-- The kernel-checked induced spot-check-bit ceiling returned by the
+two-stage `TSCB-RAR` refinement at the winning-set-unsafe IRS radius. -/
+abbrev kernelCheckedInducedCeiling : Nat :=
+  ProximityPrize.SubmissionUpper.TSCB_RAR.kernelCheckedCeiling
+    ProximityPrize.SubmissionUpper.TSCB_RAR.canonicalTSCB
+
+/-- The `TSCB-RAR` ceiling matches the proven centiBits certificate. -/
+theorem kernelCheckedInducedCeiling_eq :
+    kernelCheckedInducedCeiling = 11613 := by
+  simp [kernelCheckedInducedCeiling,
+    ProximityPrize.SubmissionUpper.TSCB_RAR.canonical_ceiling,
+    ProximityPrize.SubmissionUpper.TSCB_RAR.fullRecheckBaseline]
 
 theorem claimedUnsafeRadius_122369_eq :
     claimedUnsafeRadius 122369 = (122369 / 262144 : ℝ≥0) := by
