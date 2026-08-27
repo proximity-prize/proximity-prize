@@ -19,16 +19,16 @@ open ContactAlignmentParameters
 def surfaceVector : DegreeVector := ⟨yCap, slopeCap, seedTotalCap⟩
 
 theorem first_cut_projection_values :
-    mixed surfaceVector firstTail unitY = 312868864 ∧
-    mixed surfaceVector firstTail unitR = 2047869145 ∧
-    mixed surfaceVector firstTail unitZ = 25952259 := by
+    mixed surfaceVector firstTail unitY = 307101696 ∧
+    mixed surfaceVector firstTail unitR = 2121793749 ∧
+    mixed surfaceVector firstTail unitZ = 27394051 := by
   norm_num [mixed, surfaceVector, firstTail, tailVector, unitY, unitR, unitZ,
     yCap, weightedCap, ContactAlignmentParameters.multiplicity, agreements, w, slopeCap, seedTotalCap]
 
 theorem agreement_cut_projection_values :
-    mixed surfaceVector agreementVector unitY = 312866480 ∧
-    mixed surfaceVector agreementVector unitR = 2047853539 ∧
-    mixed surfaceVector agreementVector unitZ = 25952061 := by
+    mixed surfaceVector agreementVector unitY = 307099356 ∧
+    mixed surfaceVector agreementVector unitR = 2121777580 ∧
+    mixed surfaceVector agreementVector unitZ = 27393842 := by
   norm_num [mixed, surfaceVector, agreementVector, unitY, unitR, unitZ,
     yCap, weightedCap, ContactAlignmentParameters.multiplicity, agreements, w, slopeCap, seedTotalCap]
 

@@ -361,19 +361,19 @@ theorem all_blocks_divisible_of_equations
   · have hm : m - r = 0 := by omega
     simp only [hm, pow_zero, one_dvd]
 
-abbrev FrozenCoefficientIndex := CoefficientIndex 2406664 131071 217 3
+abbrev FrozenCoefficientIndex := CoefficientIndex 2590882 131071 213 3
 
-/-- The actual frozen-domain array has 16,871,774,960 coefficient labels and
-at most 16,871,587,840 independent contact equations. This theorem evaluates
+/-- The actual frozen-domain array has 19,286,181,082 coefficient labels and
+   at most 19,285,934,080 independent contact equations. This theorem evaluates
 neither its columns nor the field-valued constraint matrix. -/
 theorem exists_frozen_nonzero_contact_array
     (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
     ∃ θ : FrozenCoefficientIndex → IRSProfile.Field, θ ≠ 0 ∧
-      ∀ (i : IRSProfile.Index) (r : Fin 13),
-        contactJet IRSProfile.Field (13 - r.val)
-          ((extractBlock IRSProfile.Field 2406664 131071 217 3
+      ∀ (i : IRSProfile.Index) (r : Fin 14),
+        contactJet IRSProfile.Field (14 - r.val)
+          ((extractBlock IRSProfile.Field 2590882 131071 213 3
             (IRSProfile.domain i) (u₀ i) (u₁ i) r.val θ) : Poly IRSProfile.Field) = 0 := by
-  apply exists_nonzero_block_equations IRSProfile.Field 2406664 131071 217 3 13
+  apply exists_nonzero_block_equations IRSProfile.Field 2590882 131071 213 3 14
     (fun i : IRSProfile.Index => IRSProfile.domain i) u₀ u₁
   rw [show Fintype.card IRSProfile.Index = 262144 by norm_num [IRSProfile.Index]]
   exact ContactAlignmentParameters.interpolation_gate
@@ -387,16 +387,16 @@ theorem exists_frozen_nonzero_polynomial_and_equations
     ∃ (Q : MvPolynomial (Fin 4) IRSProfile.Field)
       (θ : FrozenCoefficientIndex → IRSProfile.Field),
       Q ≠ 0 ∧
-      Q ∈ globalCoefficientBox IRSProfile.Field 2406664 131071 217 3 ∧
-      Q = reconstruct IRSProfile.Field 2406664 131071 217 3 θ ∧
-      ∀ (i : IRSProfile.Index) (r : Fin 13),
-        contactJet IRSProfile.Field (13 - r.val)
-          ((extractBlock IRSProfile.Field 2406664 131071 217 3
+      Q ∈ globalCoefficientBox IRSProfile.Field 2590882 131071 213 3 ∧
+      Q = reconstruct IRSProfile.Field 2590882 131071 213 3 θ ∧
+      ∀ (i : IRSProfile.Index) (r : Fin 14),
+        contactJet IRSProfile.Field (14 - r.val)
+          ((extractBlock IRSProfile.Field 2590882 131071 213 3
             (IRSProfile.domain i) (u₀ i) (u₁ i) r.val θ) : Poly IRSProfile.Field) = 0 := by
   obtain ⟨θ, hθ, hconstraints⟩ := exists_frozen_nonzero_contact_array u₀ u₁
-  exact ⟨reconstruct IRSProfile.Field 2406664 131071 217 3 θ, θ,
-    reconstruct_ne_zero IRSProfile.Field 2406664 131071 217 3 θ hθ,
-    reconstruct_mem_globalCoefficientBox IRSProfile.Field 2406664 131071 217 3 θ,
+  exact ⟨reconstruct IRSProfile.Field 2590882 131071 213 3 θ, θ,
+    reconstruct_ne_zero IRSProfile.Field 2590882 131071 213 3 θ hθ,
+    reconstruct_mem_globalCoefficientBox IRSProfile.Field 2590882 131071 213 3 θ,
     rfl, hconstraints⟩
 
 end

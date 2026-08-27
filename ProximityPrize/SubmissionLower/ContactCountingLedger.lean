@@ -188,18 +188,6 @@ theorem sum_regular_branch_bound {I : Type} [Fintype I]
   · exact h.trans (le_max_left _ _)
   · exact h.trans (le_max_right _ _)
 
-theorem sum_regular_numeric_caps {I : Type} [Fintype I]
-    (count : I → ℕ) (v : I → DegreeVector)
-    (hy : (∑ i, (v i).y) ≤ 18) (hr : (∑ i, (v i).r) ≤ 3)
-    (hz : (∑ i, (v i).z) ≤ 217)
-    (hcount : ∀ i, count i * gap ^ 2 ≤ cutNumerator (v i) ∨
-      count i * gap ^ 2 ≤ wholeNumerator (v i)) :
-    (∑ i, count i) * gap ^ 2 ≤ regularNumerator := by
-  exact sum_regular_branch_bound count v
-    (by simpa only [parameter_values.2.1] using hy)
-    (by simpa only [slopeCap] using hr)
-    (by simpa only [seedTotalCap] using hz) hcount
-
 def implicitAggregateCost : DegreeVector :=
   ⟨algebraicCap, 2 * implicitYCap * algebraicCap, implicitYCap⟩
 
@@ -290,8 +278,9 @@ cover hypotheses remain explicit and must come from the geometric proof. -/
 theorem final_family_ledger {I J : Type} [Fintype I] [Fintype J]
     (regularCount : I → ℕ) (v : I → DegreeVector)
     (implicitCount : J → ℕ) (cost : J → DegreeVector) (exceptions cardinality : ℕ)
-    (hregularY : (∑ i, (v i).y) ≤ 18) (hregularR : (∑ i, (v i).r) ≤ 3)
-    (hregularZ : (∑ i, (v i).z) ≤ 217)
+    (hregularY : (∑ i, (v i).y) ≤ yCap)
+    (hregularR : (∑ i, (v i).r) ≤ slopeCap)
+    (hregularZ : (∑ i, (v i).z) ≤ seedTotalCap)
     (hregular : ∀ i, regularCount i * gap ^ 2 ≤ cutNumerator (v i) ∨
       regularCount i * gap ^ 2 ≤ wholeNumerator (v i))
     (hcostY : (∑ i, (cost i).y) ≤ algebraicCap)
@@ -302,7 +291,7 @@ theorem final_family_ledger {I J : Type} [Fintype I] [Fintype J]
     (hexceptions : exceptions ≤ 2 * algebraicCap ^ 2)
     (hcover : cardinality ≤ (∑ i, regularCount i) + (∑ i, implicitCount i) + exceptions) :
     cardinality < alignmentBudget := by
-  have hreg := sum_regular_numeric_caps regularCount v hregularY hregularR hregularZ hregular
+  have hreg := sum_regular_branch_bound regularCount v hregularY hregularR hregularZ hregular
   have himp := implicit_with_exceptions_bound implicitCount cost exceptions
     hcostY hcostR hcostZ himplicit hexceptions
   have hscaled := combined_scaled_bound (∑ i, regularCount i) (∑ i, implicitCount i)
@@ -326,7 +315,6 @@ end ProximityPrize.SubmissionLower.ContactCountingLedger
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.whole_sum
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.max_branch_le_envelope
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.sum_regular_branch_bound
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.sum_regular_numeric_caps
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.implicit_aggregate_eq_core
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.sum_implicit_counts_bound
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.lifted_singular_padding
