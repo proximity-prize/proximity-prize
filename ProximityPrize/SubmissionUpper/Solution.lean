@@ -2,7 +2,7 @@
 Copyright (c) 2026 Proximity Prize Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import ProximityPrize.SubmissionUpper.OrbitPencil
+import ProximityPrize.SubmissionUpper.EnumerationProbe
 
 open ToyProblem
 open scoped NNReal
