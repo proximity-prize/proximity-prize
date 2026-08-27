@@ -61,6 +61,24 @@ theorem candidate_score :
   rw [show ((12800 : ℕ) : ℝ) * (1 / 100) = ((128 : ℕ) : ℝ) by push_cast; norm_num] at hmono
   rwa [NNReal.rpow_natCast] at hmono
 
+/-- Shared unsafe-IRS-radius skeleton: across every rung of the
+`[122369/262144, IRSProfile.minRelativeDistance)` ladder the kernel only
+needs to re-check that the rung is either strictly below `122641/262144` or
+non-strictly at or above it. The common subterm
+`epsilonStar < winningSetDensity IRSProfile.encoder δ` is factored out so
+the kernel reuses it once for the entire ladder rather than re-elaborating
+it inside each rung. -/
+theorem unsafe_above_skel (δ : ℝ≥0)
+    (hlo : (122369 / 262144 : ℝ≥0) ≤ δ)
+    (hhi : δ < IRSProfile.minRelativeDistance) :
+    ProximityPrize.Benchmark.Upper.epsilonStar <
+      winningSetDensity IRSProfile.encoder δ := by
+  by_cases hmid : δ < (122641 / 262144 : ℝ≥0)
+  · exact ProximityPrize.SubmissionUpper.OrbitPencil.winningSetDensity_gt_epsilon_window
+      δ hlo hmid
+  · exact ProximityPrize.SubmissionUpper.PrescribedTop.winningSetDensity_gt_epsilon
+      δ (le_of_not_gt hmid) hhi
+
 /-- The 512-fibre rational pencil certifies the new narrow window, then hands
 off to the prescribed-top attack, giving a `116.13`-bit upper certificate. -/
 theorem candidate : ProtocolClaimUpper 11613 122369 where
@@ -72,11 +90,7 @@ theorem candidate : ProtocolClaimUpper 11613 122369 where
     intro δ hδ
     have hband : δ ∈ Set.Ico (122369 / 262144 : ℝ≥0) IRSProfile.minRelativeDistance := by
       simpa only [claimedUnsafeRadius_122369_eq] using hδ
-    by_cases hmid : δ < (122641 / 262144 : ℝ≥0)
-    · exact ProximityPrize.SubmissionUpper.OrbitPencil.winningSetDensity_gt_epsilon_window
-        δ hband.1 hmid
-    · exact ProximityPrize.SubmissionUpper.PrescribedTop.winningSetDensity_gt_epsilon
-        δ (le_of_not_gt hmid) hband.2
+    exact unsafe_above_skel δ hband.1 hband.2
   score := candidate_score
 
 end ProximityPrize.Benchmark.Upper
