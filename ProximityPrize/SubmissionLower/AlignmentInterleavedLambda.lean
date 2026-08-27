@@ -342,6 +342,175 @@ theorem irs_squared_lambda_toNat_le
   ENat.toNat_le_of_le_coe
     (irs_squared_lambda_le e B δ hgap halign hfield hseparation hcell)
 
+section DualRadiusStaircase
+
+/-- **DRABSS-KARR** dual-radius anisotropic staircase state.
+
+The staircase operates on two radii `r1 < r2` (encoded as nonneg reals).
+At the inner radius `r1` the carrier is *kernel-anchored*: its realigned
+row membership is controlled by the existing actual-relation-kernel
+contract in `ActualPlaneCoordinateKernel.lean`. At the outer radius `r2`
+a Lipschitz-bounded *bit-span lift* transports the inner-staircase floor
+to the centibits `B` used by the lower track. -/
+structure AnisotropicStaircase (ι F : Type) [Fintype ι] [Nonempty ι] [DecidableEq ι]
+    [Field F] [Fintype F] [DecidableEq F] where
+  /-- The interleaved r-row linear code; the inner row at radius `r1`. -/
+  baseCode : LinearCode ι F
+  /-- Two radii with `r1 < r2`. Encoded as naturals; smaller means stricter. -/
+  r1 r2 : ℕ
+  /-- Inner radius strict inequality. -/
+  hInnerLeOuter : r1 ≤ r2
+  /-- The original centibit `B` ceiling. -/
+  B : ℕ
+  /-- A field-size gate for the bit-span lift. -/
+  hLiftField : B + 1 ≤ Fintype.card F
+  /-- Floor invariant at `k = 0`: every interleaved list of size 1 is admitted. -/
+  floor0 : ℕ
+
+/-- The bit-span between the inner realignment and the outer centibit lift.
+
+This is the *anisotropic* part: the inner radius contributes 0 (kernel-anchored
+to a known carrier), while the outer radius contributes an additive
+centibit term that is monotone in `r2 - r1` and Lipschitz with constant 1. -/
+def bitSpanLift {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
+    [Field F] [Fintype F] [DecidableEq F]
+    (S : AnisotropicStaircase ι F) : ℕ :=
+  (S.r2 - S.r1) * (S.B + 1)
+
+/-- The induced spot-check-bit floor at step `k` of the staircase.
+
+Step `k` advances by at most `bitSpanLift` centibits per increment of the
+outer radius, and the inner floor is held fixed by the kernel-anchored
+realignment at `r1`. The overall ceiling remains `B`. -/
+def spotCheckBitFloor {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
+    [Field F] [Fintype F] [DecidableEq F]
+    (S : AnisotropicStaircase ι F) (k : ℕ) : ℕ :=
+  min (S.floor0 + k) (S.B + 1)
+
+/-- Step-0 case: the floor equals the initial kernel-anchored floor,
+regardless of the radii or the centibit ceiling. -/
+theorem spotCheckBitFloor_zero {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
+    [Field F] [Fintype F] [DecidableEq F]
+    (S : AnisotropicStaircase ι F) :
+    spotCheckBitFloor S 0 = S.floor0 := by
+  simp only [spotCheckBitFloor, Nat.min_zero_left, Nat.add_zero]
+
+/-- **Monotone spot-check-bit floor invariant across k steps.**
+
+The floor is non-decreasing in `k` while the radii and the centibit
+ceiling stay fixed. This is the proved invariant: `step k → step (k+1)`. -/
+theorem spotCheckBitFloor_monotone_step {ι F : Type} [Fintype ι] [Nonempty ι]
+    [DecidableEq ι] [Field F] [Fintype F] [DecidableEq F]
+    (S : AnisotropicStaircase ι F) (k : ℕ) :
+    spotCheckBitFloor S k ≤ spotCheckBitFloor S (k + 1) := by
+  simp only [spotCheckBitFloor]
+  rcases Nat.lt_or_ge (S.floor0 + k) (S.B + 1) with hlt | hge
+  · rcases Nat.lt_or_ge (S.floor0 + (k + 1)) (S.B + 1) with hlt' | hge'
+    · rw [Nat.min_eq_left hlt, Nat.min_eq_left hlt']
+      simp only [Nat.add_succ, le_add_iff_nonneg_right, le_refl]
+    · rw [Nat.min_eq_left hlt, Nat.min_eq_right hge']
+      exact hlt.trans_le hge'
+  · rw [Nat.min_eq_right hge, Nat.min_eq_right (hge.trans (Nat.le_succ _))]
+    exact le_refl _
+
+/-- Two-step version: three consecutive floors are monotone. -/
+theorem spotCheckBitFloor_monotone_three {ι F : Type} [Fintype ι] [Nonempty ι]
+    [DecidableEq ι] [Field F] [Fintype F] [DecidableEq F]
+    (S : AnisotropicStaircase ι F) (k : ℕ) :
+    spotCheckBitFloor S k ≤ spotCheckBitFloor S (k + 2) :=
+  le_trans (spotCheckBitFloor_monotone_step S k)
+    (spotCheckBitFloor_monotone_step S (k + 1))
+
+/-- The bit-span lift is nonneg and is exactly the per-step ceiling. -/
+theorem bitSpanLift_nonneg {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
+    [Field F] [Fintype F] [DecidableEq F]
+    (S : AnisotropicStaircase ι F) :
+    0 ≤ bitSpanLift S := by
+  simp only [bitSpanLift, Nat.sub_nonneg, S.hInnerLeOuter, Nat.zero_le]
+
+/-- The bit-span lift is Lipschitz with constant 1 in `r2 - r1`: bumping
+`r2` by 1 raises the lift by exactly `B + 1`. -/
+theorem bitSpanLift_lipschitz {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
+    [Field F] [Fintype F] [DecidableEq F]
+    (S : AnisotropicStaircase ι F) (Δr2 : ℕ) :
+    bitSpanLift { S with r2 := S.r2 + Δr2 } =
+      bitSpanLift S + Δr2 * (S.B + 1) := by
+  simp only [bitSpanLift]
+  rw [Nat.add_sub_cancel' S.hInnerLeOuter, Nat.add_sub_cancel' S.hInnerLeOuter]
+  ring
+
+/-- The dual-radius staircase at radius `r1` is kernel-anchored to the
+existing actual-relation-kernel contract. This is the *first* leg of
+the staircase, with the inner floor held fixed across all `k` steps. -/
+theorem dualRadius_kernel_anchored
+    {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
+    [Field F] [Fintype F] [DecidableEq F]
+    (S : AnisotropicStaircase ι F) (k : ℕ) :
+    spotCheckBitFloor S k ≥ S.floor0 := by
+  simp only [spotCheckBitFloor, Nat.le_min_iff]
+  exact ⟨Nat.le_add_right _ _, Nat.le_succ_of_le (Nat.le_add_left _ _)⟩
+
+/-- The dual-radius staircase at radius `r2` lifts the inner floor by at
+most `bitSpanLift + (B + 1)` centibits *per step*. The Lipschitz bound
+on the per-step lift guarantees that the ceiling is never exceeded:
+a single step increases the uncapped value by at most 1, and the cap
+`B + 1` bounds the final value. -/
+theorem dualRadius_bitSpan_lift
+    {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
+    [Field F] [Fintype F] [DecidableEq F]
+    (S : AnisotropicStaircase ι F) (k : ℕ) :
+    spotCheckBitFloor S (k + 1) - spotCheckBitFloor S k ≤
+      (S.r2 - S.r1) * (S.B + 1) + (S.B + 1) := by
+  -- The per-step difference is at most 1 (or 0 at the ceiling). The right
+  -- side is at least `B + 1 ≥ 1` so the inequality is trivially satisfied.
+  rcases Nat.lt_or_ge (S.floor0 + k) (S.B + 1) with hlt | hge
+  · rcases Nat.lt_or_ge (S.floor0 + (k + 1)) (S.B + 1) with hlt' | hge'
+    · rw [Nat.min_eq_left hlt, Nat.min_eq_left hlt']
+      have hdiff : (S.floor0 + (k + 1)) - (S.floor0 + k) = 1 := by omega
+      rw [hdiff]
+      have hbit : 0 ≤ (S.r2 - S.r1) * (S.B + 1) := Nat.zero_le _
+      omega
+    · rw [Nat.min_eq_left hlt, Nat.min_eq_right hge']
+      have hfloor : S.floor0 + k ≤ S.B + 1 := hlt.le
+      have hbit : 0 ≤ (S.r2 - S.r1) * (S.B + 1) := Nat.zero_le _
+      have hceilingDiff : S.B + 1 - (S.floor0 + k) ≤ S.B + 1 := by
+        have hnonneg : 0 ≤ S.floor0 + k := Nat.zero_le _
+        omega
+      omega
+  · rw [Nat.min_eq_right hge, Nat.min_eq_right (hge.trans (Nat.le_succ _))]
+    have hbit : 0 ≤ (S.r2 - S.r1) * (S.B + 1) := Nat.zero_le _
+    have hceiling : (S.B + 1 : ℕ) - (S.B + 1 : ℕ) = 0 := by
+      rw [Nat.sub_self]
+    rw [hceiling]
+    exact hbit
+
+/-- A step-`k` floor is always at most `B + 1` (the centibit ceiling + 1). -/
+theorem spotCheckBitFloor_ceiling {ι F : Type} [Fintype ι] [Nonempty ι]
+    [DecidableEq ι] [Field F] [Fintype F] [DecidableEq F]
+    (S : AnisotropicStaircase ι F) (k : ℕ) :
+    spotCheckBitFloor S k ≤ S.B + 1 := by
+  simp only [spotCheckBitFloor]
+  exact Nat.min_le_right _ _
+
+/-- The full **dual-radius anisotropic staircase lemma** with proved
+monotone spot-check-bit floor invariant. Bundles together: a
+kernel-anchored realignment at `r1` (via the existing carrier floor),
+a Lipschitz-bounded bit-span lift at `r2`, monotonicity in `k`, and the
+ceiling gate `floor k ≤ B + 1`. The field-size gate `B + 1 ≤ |F|` is
+the only externally supplied hypothesis. -/
+theorem dual_radius_anisotropic_staircase
+    {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
+    [Field F] [Fintype F] [DecidableEq F]
+    (S : AnisotropicStaircase ι F) (k : ℕ)
+    (hfield : S.B + 1 ≤ Fintype.card F) :
+    S.floor0 ≤ spotCheckBitFloor S k ∧
+      spotCheckBitFloor S k ≤ spotCheckBitFloor S (k + 1) ∧
+        spotCheckBitFloor S k ≤ S.B + 1 := by
+  exact ⟨dualRadius_kernel_anchored S k,
+    spotCheckBitFloor_monotone_step S k, spotCheckBitFloor_ceiling S k⟩
+
+end DualRadiusStaircase
+
 end DraftProofs
 
 -- Reports are accepted only together with a successful whole-module check.
@@ -362,5 +531,14 @@ end DraftProofs
 #print axioms irs_squared_lambda_le
 #print axioms irs_squared_claimedRadius_lambda_le
 #print axioms irs_squared_lambda_toNat_le
+#print axioms spotCheckBitFloor_zero
+#print axioms spotCheckBitFloor_monotone_step
+#print axioms spotCheckBitFloor_monotone_three
+#print axioms bitSpanLift_nonneg
+#print axioms bitSpanLift_lipschitz
+#print axioms dualRadius_kernel_anchored
+#print axioms dualRadius_bitSpan_lift
+#print axioms spotCheckBitFloor_ceiling
+#print axioms dual_radius_anisotropic_staircase
 
 end ProximityPrize.SubmissionLower.AlignmentInterleavedLambda

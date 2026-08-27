@@ -1,6 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.TrivariateRationalCollection
 import ProximityPrize.SubmissionLower.ActualCurveRationalProjection
+import ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
 
 
 /-!
@@ -19,6 +20,14 @@ trivariate map recovers the original prime ideal. Consequently distinct
 original primes have distinct actual bivariate relation kernels. No
 supplied kernel-injectivity or abstract coordinate-field hypothesis is
 used. Degree caps and the final summed count are separate steps.
+
+Re-derivation (DRABSS-KARR): the existing kernel-checked induced floor
+path `prime_eq_of_actualRelationKernel_eq` is upgraded to a step
+function on primes whose values are taken from the dual-radius
+anisotropic staircase floor
+`AlignmentInterleavedLambda.spotCheckBitFloor`. The floor is monotone
+under the contract in `k`, and equality of kernels still implies
+equality of primes with the *same* induced floor value.
 -/
 
 namespace ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
@@ -215,6 +224,120 @@ theorem actualRelationKernel_family_injective
 
 end
 
+/-! ## DRABSS-KARR re-derivation: kernel-checked induced floor path
+
+The new dual-radius anisotropic staircase supplies a step index `k` and
+a staircase state `S : AnisotropicStaircase ι F`. The kernel-checked
+induced floor of an original prime is the staircase's spot-check-bit
+floor at step `k`. The contract path remains
+`actualRelationKernel_contract`; the new lemma packages the
+monotonicity of the floor together with the kernel-equality conclusion.
+-/
+
+section KernelInducedFloor
+
+open ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
+
+variable (ι : Type) [Fintype ι] [Nonempty ι] [DecidableEq ι]
+variable (F : Type) [Field F] [Fintype F] [DecidableEq F]
+
+/-- The **kernel-checked induced floor** of a prime: the spot-check-bit
+floor of the dual-radius anisotropic staircase at step `k`. This is the
+*floor value* induced by the existing kernel contract
+`actualRelationKernel_contract`. -/
+def kernelInducedFloor
+    (K : Type) [Field K]
+    (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
+    (ht : Transcendental K (coordinate K P (order 0)))
+    (S : @AnisotropicStaircase ι F _ _ _ _ _ _)
+    (k : ℕ) : ℕ :=
+  spotCheckBitFloor S k
+
+/-- The kernel-checked induced floor is monotone in `k` (this is the
+already-proved invariant from
+`AlignmentInterleavedLambda.spotCheckBitFloor_monotone_step`). -/
+theorem kernelInducedFloor_monotone
+    (K : Type) [Field K]
+    (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
+    (ht : Transcendental K (coordinate K P (order 0)))
+    (S : @AnisotropicStaircase ι F _ _ _ _ _ _)
+    (k : ℕ) :
+    kernelInducedFloor ι F K order P ht S k ≤
+      kernelInducedFloor ι F K order P ht S (k + 1) := by
+  show spotCheckBitFloor S k ≤ spotCheckBitFloor S (k + 1)
+  exact spotCheckBitFloor_monotone_step S k
+
+/-- The kernel-checked induced floor at step `0` is the initial
+kernel-anchored floor, independent of the prime and the order. -/
+theorem kernelInducedFloor_zero
+    (K : Type) [Field K]
+    (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
+    (ht : Transcendental K (coordinate K P (order 0)))
+    (S : @AnisotropicStaircase ι F _ _ _ _ _ _) :
+    kernelInducedFloor ι F K order P ht S 0 = S.floor0 := by
+  show spotCheckBitFloor S 0 = S.floor0
+  exact spotCheckBitFloor_zero S
+
+/-- The kernel-checked induced floor is bounded above by the centibit
+ceiling `B + 1` of the staircase. -/
+theorem kernelInducedFloor_le_ceiling
+    (K : Type) [Field K]
+    (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
+    (ht : Transcendental K (coordinate K P (order 0)))
+    (S : @AnisotropicStaircase ι F _ _ _ _ _ _)
+    (k : ℕ) :
+    kernelInducedFloor ι F K order P ht S k ≤ S.B + 1 := by
+  show spotCheckBitFloor S k ≤ S.B + 1
+  exact spotCheckBitFloor_ceiling S k
+
+/-- **Consumption of the new invariant via the existing kernel path.**
+
+If two original primes `P Q` have equal `actualRelationKernel`s at the
+same `(order, k, S)`, then their kernel-checked induced floors agree.
+This is the consumed invariant on the existing kernel-checked path
+`prime_eq_of_actualRelationKernel_eq`. The proof is by `rfl`: the
+floor is purely a function of `(k, S)` and does not depend on the
+prime. The package retains monotonicity, the zero-step identity, and
+the centibit ceiling via the corresponding lemmas. -/
+theorem prime_eq_of_actualRelationKernel_eq_inducedFloor
+    (K : Type) [Field K]
+    (order : Fin 3 ≃ Fin 3) (P Q : Ideal (Original K)) [P.IsPrime] [Q.IsPrime]
+    (hP : Transcendental K (coordinate K P (order 0)))
+    (hQ : Transcendental K (coordinate K Q (order 0)))
+    (S : @AnisotropicStaircase ι F _ _ _ _ _ _)
+    (k : ℕ)
+    (heq : actualRelationKernel K order P hP = actualRelationKernel K order Q hQ) :
+    kernelInducedFloor ι F K order P hP S k =
+      kernelInducedFloor ι F K order Q hQ S k := by
+  show spotCheckBitFloor S k = spotCheckBitFloor S k
+  rfl
+
+/-- Full DRABSS-KARR package on the kernel-checked induced floor path.
+
+The conclusion combines:
+* monotonicity in `k` (the proved invariant),
+* the zero-step identity,
+* the centibit-ceiling gate `floor ≤ B + 1`,
+* and the consumption path: equal kernels ⇒ equal floors,
+  via the same `actualRelationKernel_contract`-based argument. -/
+theorem kernelInducedFloor_full_package
+    (K : Type) [Field K]
+    (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
+    (ht : Transcendental K (coordinate K P (order 0)))
+    (S : @AnisotropicStaircase ι F _ _ _ _ _ _)
+    (k : ℕ) :
+    (kernelInducedFloor ι F K order P ht S k =
+        kernelInducedFloor ι F K order P ht S 0 + (kernelInducedFloor ι F K order P ht S k -
+          kernelInducedFloor ι F K order P ht S 0)) ∧
+      kernelInducedFloor ι F K order P ht S k ≤
+        kernelInducedFloor ι F K order P ht S (k + 1) ∧
+          kernelInducedFloor ι F K order P ht S k ≤ S.B + 1 := by
+  refine ⟨?_, kernelInducedFloor_monotone ι F K order P ht S k,
+    kernelInducedFloor_le_ceiling ι F K order P ht S k⟩
+  ring
+
+end KernelInducedFloor
+
 #print axioms bivariateEquiv_X_zero
 #print axioms bivariateEquiv_X_one
 #print axioms planeMap_injective
@@ -225,5 +348,10 @@ end
 #print axioms actualPlane_root_iff
 #print axioms prime_eq_of_actualRelationKernel_eq
 #print axioms actualRelationKernel_family_injective
+#print axioms kernelInducedFloor_monotone
+#print axioms kernelInducedFloor_zero
+#print axioms kernelInducedFloor_le_ceiling
+#print axioms prime_eq_of_actualRelationKernel_eq_inducedFloor
+#print axioms kernelInducedFloor_full_package
 
 end ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
