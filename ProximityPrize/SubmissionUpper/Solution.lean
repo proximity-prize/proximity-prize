@@ -3,6 +3,7 @@ Copyright (c) 2026 Proximity Prize Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ProximityPrize.SubmissionUpper.OrbitPencil
+import ProximityPrize.SubmissionUpper.TairDr
 
 open ToyProblem
 open scoped NNReal
@@ -13,10 +14,8 @@ namespace ProximityPrize.Benchmark.Upper
 -- `2 ^ 218787 <= 139775 ^ 12800` is
 -- `2 ^ (-11613/100) <= (139775/262144) ^ 128`
 -- after clearing denominators and raising to the hundredth power.
-set_option maxHeartbeats 1000000 in
-set_option maxRecDepth 4000000 in
-set_option exponentiation.threshold 300000 in
-theorem score_nat : (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 := by decide
+theorem score_nat : (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 :=
+  ProximityPrize.SubmissionUpper.TairDr.crown_exponent_holds
 
 theorem claimedUnsafeRadius_122369_eq :
     claimedUnsafeRadius 122369 = (122369 / 262144 : ℝ≥0) := by
@@ -78,5 +77,10 @@ theorem candidate : ProtocolClaimUpper 11613 122369 where
     · exact ProximityPrize.SubmissionUpper.PrescribedTop.winningSetDensity_gt_epsilon
         δ (le_of_not_gt hmid) hband.2
   score := candidate_score
+
+/-- The crown centibit budget is the kernel-checked minimum: 11613. -/
+theorem crown_tight_at_11613 :
+    ¬ (2 : ℕ) ^ 218788 ≤ 139775 ^ 12800 :=
+  ProximityPrize.SubmissionUpper.TairDr.crown_exponent_tight
 
 end ProximityPrize.Benchmark.Upper
