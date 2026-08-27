@@ -98,17 +98,13 @@ theorem card_le_two_family_sums_plus_exception
 
 theorem regularVector_budgets (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
-    (∑ F : RegularIndex Q, (regularVector Q F).y) ≤ 18 ∧
-      (∑ F : RegularIndex Q, (regularVector Q F).r) ≤ 3 ∧
-      (∑ F : RegularIndex Q, (regularVector Q F).z) ≤ 217 := by
+    (∑ F : RegularIndex Q, (regularVector Q F).y) ≤ yCap ∧
+      (∑ F : RegularIndex Q, (regularVector Q F).r) ≤ slopeCap ∧
+      (∑ F : RegularIndex Q, (regularVector Q F).z) ≤ seedTotalCap := by
   classical
   have hb := directFactor_input_budgets Q hQ weightedCap w seedTotalCap slopeCap (by decide) hbox
-  have hy : (∑ F ∈ positiveRFactors Q, F.degreeOf (1 : Fin 4)) ≤ 18 := by
-    have hh := hb.1
-    change (∑ F ∈ positiveRFactors Q, F.degreeOf (1 : Fin 4)) ≤ yCap at hh
-    rwa [parameter_values.2.1] at hh
   refine ⟨?_, ?_, ?_⟩
-  · simpa only [regularVector, Finset.sum_coe_sort] using hy
+  · simpa only [regularVector, Finset.sum_coe_sort, yCap] using hb.1
   · simpa only [regularVector, Finset.sum_coe_sort, slopeCap] using hb.2.1
   · simpa only [regularVector, Finset.sum_coe_sort, seedTotalCap] using hb.2.2
 
@@ -168,7 +164,7 @@ theorem global_count_of_actual_branch_estimates
     (fun F : RegularIndex Q => (regularSeeds Q selected Γ F).card) (regularVector Q)
     (fun q : ImplicitIndex Q => (implicitSeeds Q selected Γ q).card) (implicitVector Q)
     (exceptionalSeeds (singularAuxiliary Q) Γ selected).card Γ.card
-    hregCaps.1 hregCaps.2.1 hregCaps.2.2 (fun F => Or.inr (hregular F))
+    hregCaps.1 hregCaps.2.1 hregCaps.2.2 hregular
     himpCaps.1 himpCaps.2.1 himpCaps.2.2 himplicit hcover.2 hcover.1
 
 #print axioms regularSeeds_solution
