@@ -427,8 +427,8 @@ theorem winningSetDensity_ge_of_fixed_word_list
 theorem winningSetSoundness_eq_one_of_large_fixed_word_list
     {ι B : Type} [Fintype ι]
     [Fintype B] [DecidableEq B] [AddCommGroup B] [Module F B]
-    {k m : ℕ} (enc : (Fin k → F) →ₗ[F] (ι → B)) (δ : ℝ≥0)
-    (hlower : ((m - 1 : ℕ) : ℝ) <
+    {k m z : ℕ} (enc : (Fin k → F) →ₗ[F] (ι → B)) (δ : ℝ≥0)
+    (hlower : ((z - 1 : ℕ) : ℝ) <
       (1 - (δ : ℝ)) * Fintype.card ι)
     (hupper : (1 - (δ : ℝ)) * Fintype.card ι ≤ (m : ℝ))
     {J : Type} [Fintype J] [DecidableEq J]
@@ -437,7 +437,7 @@ theorem winningSetSoundness_eq_one_of_large_fixed_word_list
     (hlarge : (Fintype.card F - 1) ^ 2 < Fintype.card J)
     (hTcard : ∀ a, (T a).card = m)
     (hag : ∀ a i, i ∈ T a → f i = enc (p a) i)
-    (hzero : ∀ (u : Fin k → F) (S : Finset ι), m ≤ S.card →
+    (hzero : ∀ (u : Fin k → F) (S : Finset ι), z ≤ S.card →
       (∀ i ∈ S, enc u i = 0) → u = 0) :
     winningSetDensity enc δ = 1 := by
   classical
@@ -463,17 +463,17 @@ theorem winningSetSoundness_eq_one_of_large_fixed_word_list
       violates := by
         intro hrel
         rcases hrel with ⟨W, ⟨M, hW, hc⟩, S, hS, hA⟩
-        have hmS : m ≤ S.card := by
-          have hltR : ((m - 1 : ℕ) : ℝ) < (S.card : ℝ) :=
+        have hzS : z ≤ S.card := by
+          have hltR : ((z - 1 : ℕ) : ℝ) < (S.card : ℝ) :=
             lt_of_lt_of_le hlower hS
-          have hlt : m - 1 < S.card := by exact_mod_cast hltR
+          have hlt : z - 1 < S.card := by exact_mod_cast hltR
           omega
         have henczero : ∀ i ∈ S, enc (M 1) i = 0 := by
           intro i hi
           have h := hA 1 i hi
           rw [hW 1] at h
           simpa using h.symm
-        have hmzero : M 1 = 0 := hzero (M 1) S hmS henczero
+        have hmzero : M 1 = 0 := hzero (M 1) S hzS henczero
         have hc1 := hc 1
         rw [hmzero] at hc1
         simp at hc1 }
