@@ -156,7 +156,8 @@ theorem max_branch_le_envelope (v : DegreeVector) :
     max (cutNumerator v) (wholeNumerator v) ≤ dot v envelopeCoefficients :=
   max_le (cut_le_envelope v) (whole_le_envelope v)
 
-theorem regularNumerator_eq_dot : regularNumerator = dot regularSurface wholeCoefficients := rfl
+theorem regularNumerator_eq_dot : regularNumerator = dot regularSurface wholeCoefficients := by
+  simp only [regularNumerator, regularSurface, wholeCoefficients, dot]
 
 /-- Every branch inequality remains an explicit input. -/
 theorem sum_regular_max_bound {I : Type} [Fintype I]
@@ -170,11 +171,10 @@ theorem sum_regular_max_bound {I : Type} [Fintype I]
     _ ≤ ∑ i, dot (v i) wholeCoefficients := by
       apply Finset.sum_le_sum
       intro i _
-      rw [← whole_eq_dot]
-      exact hcount i
+      simpa only [whole_eq_dot] using hcount i
     _ = dot (sumVector v) wholeCoefficients := (dot_sum_left _ _).symm
     _ ≤ dot regularSurface wholeCoefficients := dot_mono_left _ ⟨hy, hr, hz⟩
-    _ = regularNumerator := rfl
+    _ = regularNumerator := regularNumerator_eq_dot.symm
 
 theorem sum_regular_branch_bound {I : Type} [Fintype I]
     (count : I → ℕ) (v : I → DegreeVector)
@@ -187,8 +187,8 @@ theorem sum_regular_branch_bound {I : Type} [Fintype I]
 
 theorem sum_regular_numeric_caps {I : Type} [Fintype I]
     (count : I → ℕ) (v : I → DegreeVector)
-    (hy : (∑ i, (v i).y) ≤ 18) (hr : (∑ i, (v i).r) ≤ 3)
-    (hz : (∑ i, (v i).z) ≤ 225)
+    (hy : (∑ i, (v i).y) ≤ 25) (hr : (∑ i, (v i).r) ≤ 5)
+    (hz : (∑ i, (v i).z) ≤ 162)
     (hcount : ∀ i, count i * gap ^ 2 ≤ wholeNumerator (v i)) :
     (∑ i, count i) * gap ^ 2 ≤ regularNumerator := by
   exact sum_regular_branch_bound count v
@@ -286,8 +286,8 @@ cover hypotheses remain explicit and must come from the geometric proof. -/
 theorem final_family_ledger {I J : Type} [Fintype I] [Fintype J]
     (regularCount : I → ℕ) (v : I → DegreeVector)
     (implicitCount : J → ℕ) (cost : J → DegreeVector) (exceptions cardinality : ℕ)
-    (hregularY : (∑ i, (v i).y) ≤ 18) (hregularR : (∑ i, (v i).r) ≤ 3)
-    (hregularZ : (∑ i, (v i).z) ≤ 225)
+    (hregularY : (∑ i, (v i).y) ≤ 25) (hregularR : (∑ i, (v i).r) ≤ 5)
+    (hregularZ : (∑ i, (v i).z) ≤ 162)
     (hregular : ∀ i, regularCount i * gap ^ 2 ≤ wholeNumerator (v i))
     (hcostY : (∑ i, (cost i).y) ≤ algebraicCap)
     (hcostR : (∑ i, (cost i).r) ≤ 2 * implicitYCap * algebraicCap)
