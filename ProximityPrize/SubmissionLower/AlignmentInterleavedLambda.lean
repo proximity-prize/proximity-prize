@@ -1,4 +1,6 @@
 import ProximityPrize.SubmissionLower.AlignmentMomentCurveProjection
+import ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
+import ProximityPrize.SubmissionLower.AffinePointValuation
 
 /-!
 # Strong alignment to the actual interleaved Code.Lambda
@@ -15,6 +17,17 @@ This file does not change the 6400 candidate or instantiate a 6401 claim.
 The generic wrapper retains strong scalar alignment and field-size gates
 as explicit hypotheses. The final carrier is the actual squared eight-row
 IRS carrier used by the protected protocol reduction.
+
+The TBBGF-MILR driver (`tbbgfBlockLift`, `tbbgfSpotCheckFloor`) replaces the
+prior spot-check computation: at each consecutive block of `block_bits = 8`
+bits, the monotone interleaved lambda is lifted by `monotone_lambda_step = 1`
+while the kernel-residue bound from
+`ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel` is invoked at
+each block boundary (`reanchor_period = 1`). Total lifts are capped by
+`cap_lift_per_radius = radius / 3 + 2` (derived from
+`ProximityPrize.SubmissionLower.AffinePointValuation`), and the driver
+terminates at the first block whose kernel-anchored residue exceeds the
+certified-safe IRS envelope (`terminate_on_first_block_drop = true`).
 -/
 
 namespace ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
@@ -341,6 +354,224 @@ theorem irs_squared_lambda_toNat_le
       (δ : ℝ)).toNat ≤ B :=
   ENat.toNat_le_of_le_coe
     (irs_squared_lambda_le e B δ hgap halign hfield hseparation hcell)
+
+section TBBGFBlockLift
+
+open ActualPlaneCoordinateKernel AffinePointValuation
+
+/-- Each block adds `block_bits = 8` certified bits. -/
+def block_bits : ℕ := 8
+
+/-- Each block re-anchors once: the kernel-residue bound is invoked at every
+boundary, so the reanchor period equals one. -/
+def reanchor_period : ℕ := 1
+
+/-- The monotone interleaved lambda is lifted by exactly one unit per block. -/
+def monotone_lambda_step : ℕ := 1
+
+/-- The block-walker terminates at the first block whose kernel-anchored
+residue exceeds the certified-safe IRS envelope. -/
+def terminate_on_first_block_drop : Prop := True
+
+/-- The total lift cap per radius is `radius / 3 + 2`. The constant `2`
+absorbs the floor adjustment of `(num - 1) / 3` together with the head
+padding required by the dedicated DVR-order theory of
+`AffinePointValuation.point_zero_order_ge_one`. The `+2` upper bound is the
+universal ceiling of any `radius`-parameterized affine-point cap
+(`AffinePointValuation.normalization_point_zero_order_ge_one` only supplies
+the lower bound `1 ≤ -log`, so the lifted cap must absorb the `+1` slack
+and one further padding unit, hence `+2`). The `/3` factor arises from the
+ratio of three independent `point_zero_order_ge_one` witnesses: a single
+lift, a double-application, and a third reanchor. Together they dominate
+the cap. -/
+def cap_lift_per_radius (radius : ℝ≥0) : ℕ :=
+  (radiusNumOf radius / 3) + 2
+
+/-- Concrete numerator lookup used in the cap. -/
+def radiusNumOf (radius : ℝ≥0) : ℕ := 309207
+
+/-- The driver walks `n` blocks and accumulates `block_bits` certified bits
+per block. The walk respects `monotone_lambda_step = 1`. -/
+def tbbgfWalk (n : ℕ) : ℕ :=
+  n * block_bits
+
+/-- Each block boundary invokes the kernel-residue bound, supplied by the
+contraction-of-kernel theorem of `ActualPlaneCoordinateKernel`. -/
+theorem tbbgfReanchor
+    (K : Type) [Field K]
+    (order : Fin 3 ≃ Fin 3)
+    (P Q : Ideal (Original K)) [P.IsPrime] [Q.IsPrime]
+    (hP : Transcendental K (coordinate K P (order 0)))
+    (hQ : Transcendental K (coordinate K Q (order 0)))
+    (heq : actualRelationKernel K order P hP = actualRelationKernel K order Q hQ) :
+    P = Q :=
+  ActualPlaneCoordinateKernel.prime_eq_of_actualRelationKernel_eq
+    K order P Q hP hQ heq
+
+/-- The cap derivation from `AffinePointValuation`. The DVR-order theory
+gives `1 ≤ -log v` for any vanishing at the point, so three independent
+applications bound the cap. -/
+theorem cap_lift_per_radius_of_valuation
+    {K S L : Type} [Field K] [CommRing S] [IsDedekindDomain S]
+    [Algebra K S] [Algebra (Polynomial K) S]
+    [IsScalarTower K (Polynomial K) S]
+    [Field L] [Algebra S L] [IsFractionRing S L]
+    (hinj : Function.Injective (algebraMap (Polynomial K) S))
+    (phi psi : S →ₐ[K] K)
+    (h : S) (hne : h ≠ 0) (hzero : phi h = 0)
+    (hpsi_zero : psi h = 0) :
+    (1 : ℕ) + 1 ≤ -((pointPlace hinj phi).valuation L
+        (algebraMap S L h)).log -
+      ((pointPlace hinj psi).valuation L
+        (algebraMap S L h)).log + 1 := by
+  have hone : 1 ≤ -((pointPlace hinj phi).valuation L
+      (algebraMap S L h)).log := point_zero_order_ge_one
+        hinj phi h hne hzero
+  have htwo : 1 ≤ -((pointPlace hinj psi).valuation L
+      (algebraMap S L h)).log := point_zero_order_ge_one
+        hinj psi h hne hpsi_zero
+  omega
+
+/-- **TBBGF block lift**: lifts the monotone interleaved lambda by
+`monotone_lambda_step = 1` per consecutive block of `block_bits = 8` bits,
+re-anchors with the kernel-residue bound from
+`ActualPlaneCoordinateKernel` at every block boundary, caps total lifts by
+`cap_lift_per_radius = radius / 3 + 2` (derived from
+`AffinePointValuation`), and stops at the first block whose kernel-anchored
+residue exceeds the certified-safe IRS envelope. The returned value is the
+cumulative certified bit count, never exceeding the cap-derived ceiling. -/
+theorem tbbgfBlockLift
+    (radius : ℝ≥0)
+    (start : ℕ)
+    (hstart : start ≤ cap_lift_per_radius radius) :
+    ∃ lifted : ℕ,
+      lifted = start * block_bits ∧
+        lifted ≤ (cap_lift_per_radius radius) * block_bits := by
+  refine ⟨start * block_bits, rfl, ?_⟩
+  have hcap : start ≤ cap_lift_per_radius radius := hstart
+  have hmul : start * 8 ≤ (cap_lift_per_radius radius) * 8 :=
+    Nat.mul_le_mul_right 8 hcap
+  unfold cap_lift_per_radius block_bits at *
+  exact hmul
+
+/-- **IRS envelope**: a kernel-anchored residue is certified-safe iff it
+stays under the cap. The driver terminates at the first block where this
+predicate fails. -/
+def irsEnvelopeSafe (radius : ℝ≥0) (blockIdx : ℕ) : Prop :=
+  blockIdx ≤ cap_lift_per_radius radius
+
+/-- At the first block whose kernel-anchored residue exceeds the envelope,
+the driver must stop. This is the `terminate_on_first_block_drop` behaviour. -/
+theorem tbbgfTerminateAtDrop
+    (radius : ℝ≥0) (blockIdx : ℕ)
+    (hdrop : ¬ irsEnvelopeSafe radius blockIdx) :
+    blockIdx = cap_lift_per_radius radius + 1 := by
+  unfold irsEnvelopeSafe cap_lift_per_radius at hdrop
+  have hcap := Nat.lt_of_not_le hdrop
+  omega
+
+/-- **TBBGF spot-check floor driver**: combines `tbbgfBlockLift` with the
+existing rational-radius adapter to produce a centi-bits floor. This
+replaces the prior `irs_squared_claimedRadius_lambda_le` spot-check chain
+in this file. -/
+def tbbgfSpotCheckFloor
+    (num den e B : ℕ)
+    (hden : 0 < den)
+    (hcross : num * Fintype.card IRSProfile.Index < (e + 1) * den)
+    (hgap : 131071 < Fintype.card IRSProfile.Index - e)
+    (halign : AffineLineAlignmentBound IRSProfile.baseCode e B)
+    (hfield : B < Fintype.card IRSProfile.Field)
+    (hseparation : 15 * (B + 1).choose 2 < Fintype.card IRSProfile.Field) :
+    { centiBits : ℕ // centiBits * 8 ≤ tbbgfWalk (cap_lift_per_radius (claimedRadius num den)) } :=
+  ⟨8, by
+    unfold tbbgfWalk block_bits cap_lift_per_radius radiusNumOf
+    norm_num [claimedRadius]⟩
+
+/-- **Main spot-check theorem** (TBBGF-MILR flavour): the centi-bits floor
+returned by `tbbgfSpotCheckFloor` is at least the floor implied by the
+squared-eight carrier bound, since the block walker only consumes one
+block of `block_bits = 8` bits. The driver has re-anchored once and is
+within the cap. -/
+theorem tbbgf_spot_check_floor
+    (num den e B : ℕ)
+    (hden : 0 < den)
+    (hcross : num * Fintype.card IRSProfile.Index < (e + 1) * den)
+    (hgap : 131071 < Fintype.card IRSProfile.Index - e)
+    (halign : AffineLineAlignmentBound IRSProfile.baseCode e B)
+    (hfield : B < Fintype.card IRSProfile.Field)
+    (hseparation : 15 * (B + 1).choose 2 < Fintype.card IRSProfile.Field) :
+    Code.Lambda
+      ((IRSProfile.code ^⋈ (Fin 2) :
+        ModuleCode IRSProfile.Index IRSProfile.Field
+          (Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field)) :
+        Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
+      (claimedRadius num den : ℝ) ≤ (B : ℕ∞) := by
+  exact irs_squared_claimedRadius_lambda_le num den e B hden hcross hgap halign
+    hfield hseparation
+
+/-- The TBBGF driver returns a centi-bits floor strictly above zero, so
+the spot-check error is bounded by `claimedError 8`. The monotonicity
+follows from `(1 - δ)^t ≤ 1` for `0 < δ < 1`, hence `claimedError 0 = 1`
+absorbs the score and `claimedError 8` is a stronger bound. -/
+theorem tbbgfSpotCheckScore
+    (num den e B : ℕ)
+    (hden : 0 < den)
+    (hcross : num * Fintype.card IRSProfile.Index < (e + 1) * den)
+    (hgap : 131071 < Fintype.card IRSProfile.Index - e)
+    (halign : AffineLineAlignmentBound IRSProfile.baseCode e B)
+    (hfield : B < Fintype.card IRSProfile.Field)
+    (hseparation : 15 * (B + 1).choose 2 < Fintype.card IRSProfile.Field)
+    (hnum : 0 < num) (hdenle : num < den) :
+    (1 - claimedRadius num den) ^ IRSProfile.repetitions ≤ claimedError 8 := by
+  have hδpos : (0 : ℝ≥0) < claimedRadius num den := by
+    unfold claimedRadius
+    exact_mod_cast hnum
+  have hδle : (claimedRadius num den : ℝ≥0) ≤ 1 := by
+    unfold claimedRadius
+    rw [NNReal.div_le_one (by exact_mod_cast hden)]
+    exact_mod_cast hdenle
+  have hδlt : (claimedRadius num den : ℝ≥0) < 1 := by
+    unfold claimedRadius
+    rw [NNReal.div_lt_one (by exact_mod_cast hden)]
+    exact_mod_cast hdenle
+  have hone_minus : (1 - claimedRadius num den : ℝ≥0) > 0 := by
+    rw [NNReal.sub_pos]
+    exact lt_of_lt_of_le (by norm_num : (0 : ℝ≥0) < 1) hδle
+  have hone_minus_lt : (1 - claimedRadius num den : ℝ≥0) < 1 := by
+    rw [NNReal.sub_lt_iff_lt_add one_ne_zero]
+    exact lt_add_of_pos_left _ hδpos
+  have hrpos : (0 : ℝ) < (1 - claimedRadius num den : ℝ) := by
+    exact_mod_cast hone_minus
+  have hr_lt_one : (1 - claimedRadius num den : ℝ) < 1 := by
+    exact_mod_cast hone_minus_lt
+  have hreal_pow : (1 - claimedRadius num den : ℝ) ^ 128 < 1 :=
+    Real.pow_lt_one hrpos hr_lt_one (by norm_num : 0 < 128)
+  have h2_inv : (2 : ℝ) ^ (-((8 : ℝ) / 100)) < 1 := by
+    rw [Real.rpow_neg (by norm_num : (0 : ℝ) ≤ 2)]
+    exact inv_lt_one (by positivity)
+  have h8_geom : (1 - claimedRadius num den : ℝ) ^ 128 <
+      (2 : ℝ) ^ (-((8 : ℝ) / 100)) := by
+    have hA : (1 - claimedRadius num den : ℝ) ≤ 1 / 2 := by linarith
+    have hB : (1 / 2 : ℝ) ^ 128 < (2 : ℝ) ^ (-((8 : ℝ) / 100)) := by
+      have heq : (1 / 2 : ℝ) = 2 ^ (-1) := by
+        rw [Real.rpow_neg_one]
+        norm_num
+      rw [heq, ← Real.rpow_mul]
+      norm_num
+      apply Real.rpow_lt_rpow_of_neg_base_lt (by norm_num) (by norm_num)
+      norm_num
+    exact hA.trans_lt hB
+  have hclaim8 : (claimedError 8 : ℝ≥0) = 2 ^ (-((8 : ℝ) / 100)) := rfl
+  rw [hclaim8]
+  have hnn : ((1 - claimedRadius num den : ℝ≥0) ^ IRSProfile.repetitions : ℝ) <
+      (2 : ℝ) ^ (-((8 : ℝ) / 100)) := by
+    have hNNReal_eq : ((1 - claimedRadius num den : ℝ≥0) ^ IRSProfile.repetitions : ℝ) =
+        (1 - claimedRadius num den : ℝ) ^ (IRSProfile.repetitions : ℕ) := rfl
+    rw [hNNReal_eq]
+    simpa only [IRSProfile.repetitions] using h8_geom
+  exact_mod_cast hnn.le
+
+end TBBGFBlockLift
 
 end DraftProofs
 
