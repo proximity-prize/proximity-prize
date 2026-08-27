@@ -61,6 +61,14 @@ theorem candidate_score :
   rw [show ((12800 : ℕ) : ℝ) * (1 / 100) = ((128 : ℕ) : ℝ) by push_cast; norm_num] at hmono
   rwa [NNReal.rpow_natCast] at hmono
 
+abbrev unsafeBoundary : ℕ := 122369
+
+abbrev pencilMidpoint : ℕ := 122641
+
+theorem tlap_urrc_residue_carry :
+    (139775 : ℕ) + (122641 - 122369 : ℕ) = 140047 := by
+  norm_num
+
 /-- The 512-fibre rational pencil certifies the new narrow window, then hands
 off to the prescribed-top attack, giving a `116.13`-bit upper certificate. -/
 theorem candidate : ProtocolClaimUpper 11613 122369 where
@@ -70,9 +78,9 @@ theorem candidate : ProtocolClaimUpper 11613 122369 where
     norm_num
   unsafeAbove := by
     intro δ hδ
-    have hband : δ ∈ Set.Ico (122369 / 262144 : ℝ≥0) IRSProfile.minRelativeDistance := by
-      simpa only [claimedUnsafeRadius_122369_eq] using hδ
-    by_cases hmid : δ < (122641 / 262144 : ℝ≥0)
+    have hband : δ ∈ Set.Ico (unsafeBoundary / 262144 : ℝ≥0) IRSProfile.minRelativeDistance := by
+      simpa only [claimedUnsafeRadius_122369_eq, unsafeBoundary] using hδ
+    by_cases hmid : δ < (pencilMidpoint / 262144 : ℝ≥0)
     · exact ProximityPrize.SubmissionUpper.OrbitPencil.winningSetDensity_gt_epsilon_window
         δ hband.1 hmid
     · exact ProximityPrize.SubmissionUpper.PrescribedTop.winningSetDensity_gt_epsilon
