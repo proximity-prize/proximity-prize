@@ -5,14 +5,14 @@ import ProximityPrize.SubmissionLower.ContactTranslation
 import ProximityPrize.SubmissionLower.ContactAlignmentParameters
 
 /-!
-# The whole-only 6426 interpolation front end and stock alignment interface
+# The conservative 6426 interpolation front end and stock alignment interface
 
 Model label: gpt-5.
 
 This new adapter applies the re-instantiated universal interpolant to each
 caller's ORIGINAL agreement support at e=77045. Its only counting input is
 the actual selected-polynomial bound in the new coefficient box. The
-companion ContactAlignment6401 module discharges that input by the actual
+companion ContactAlignment6426 module discharges that input by the actual
 global factor-counting theorem.
 
 No old ContactFrozenAlignment or ContactAlignment6400 module is imported.
@@ -21,7 +21,7 @@ not its old numerical 6400 wrapper. This file alone is still conditional
 on the explicit count; it is not a ProtocolClaim or submission.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactFrozenAlignment6401
+namespace ProximityPrize.SubmissionLower.ContactFrozenAlignment6426
 
 open ProximityPrize.Benchmark
 open ContactAlignmentParameters ContactAlignmentBridge ContactInterpolation
@@ -35,13 +35,13 @@ set_option maxRecDepth 10000
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 
 /-- The new selected-family bound uses the actual domain and the exact
-77045-error, 10^17-seed parameters. -/
-def SelectedNoLargePencilBound6401 : Prop :=
-  SelectedNoLargePencilBound IRSProfile.domain 131071 77045 100000000000000000
+77045-error, 110000000000000000-seed parameters. -/
+def SelectedNoLargePencilBound6426 : Prop :=
+  SelectedNoLargePencilBound IRSProfile.domain 131071 77045 110000000000000000
 
 /-- The precise actual-interpolant count supplied by the global counting
 module; it is an explicit input to this frontend, never a new axiom. -/
-def InterpolantSelectedCount6401 : Prop :=
+def InterpolantSelectedCount6426 : Prop :=
   ∀ (Q : MvPolynomial (Fin 4) IRSProfile.Field),
     Q ≠ 0 →
     Q ∈ globalCoefficientBox IRSProfile.Field weightedCap w seedTotalCap slopeCap →
@@ -72,8 +72,8 @@ theorem original_support_card
 /-- The SAME nonzero universal interpolant applies to every selected
 polynomial using exactly its supplied support A(γ). -/
 theorem selected_count_of_interpolant_count
-    (hcount : InterpolantSelectedCount6401) :
-    SelectedNoLargePencilBound6401 := by
+    (hcount : InterpolantSelectedCount6426) :
+    SelectedNoLargePencilBound6426 := by
   classical
   intro U seeds A selected hdegree hcard hvalues hno
   have hcard' := original_support_card A seeds hcard
@@ -107,12 +107,12 @@ theorem selected_count_of_interpolant_count
 
 /-- Use the generic stock-code bridge at the new error and seed budget. -/
 theorem alignment_of_interpolant_count
-    (hcount : InterpolantSelectedCount6401) :
-    AffineLineAlignmentBound IRSProfile.baseCode 77045 100000000000000000 := by
+    (hcount : InterpolantSelectedCount6426) :
+    AffineLineAlignmentBound IRSProfile.baseCode 77045 110000000000000000 := by
   change AffineLineAlignmentBound (ReedSolomon.code IRSProfile.domain (131071 + 1))
-    77045 100000000000000000
+    77045 110000000000000000
   exact alignmentBound_of_selected_count IRSProfile.domain 131071 77045
-    100000000000000000 (selected_count_of_interpolant_count hcount)
+    110000000000000000 (selected_count_of_interpolant_count hcount)
 
 #print axioms challenge_field_characteristic
 #print axioms original_support_card
@@ -120,4 +120,4 @@ theorem alignment_of_interpolant_count
 #print axioms alignment_of_interpolant_count
 
 end
-end ProximityPrize.SubmissionLower.ContactFrozenAlignment6401
+end ProximityPrize.SubmissionLower.ContactFrozenAlignment6426

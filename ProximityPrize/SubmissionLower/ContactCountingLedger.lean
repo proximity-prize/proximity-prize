@@ -156,40 +156,44 @@ theorem max_branch_le_envelope (v : DegreeVector) :
     max (cutNumerator v) (wholeNumerator v) ≤ dot v envelopeCoefficients :=
   max_le (cut_le_envelope v) (whole_le_envelope v)
 
-theorem regularNumerator_eq_dot : regularNumerator = dot regularSurface wholeCoefficients := rfl
+theorem regularNumerator_eq_dot : regularNumerator = dot regularSurface envelopeCoefficients := rfl
 
 /-- Every branch inequality remains an explicit input. -/
 theorem sum_regular_max_bound {I : Type} [Fintype I]
     (count : I → ℕ) (v : I → DegreeVector)
     (hy : (∑ i, (v i).y) ≤ yCap) (hr : (∑ i, (v i).r) ≤ slopeCap)
     (hz : (∑ i, (v i).z) ≤ seedTotalCap)
-    (hcount : ∀ i, count i * gap ^ 2 ≤ wholeNumerator (v i)) :
+    (hcount : ∀ i, count i * gap ^ 2 ≤ max (cutNumerator (v i)) (wholeNumerator (v i))) :
     (∑ i, count i) * gap ^ 2 ≤ regularNumerator := by
   calc
     _ = ∑ i, count i * gap ^ 2 := Finset.sum_mul _ _ _
-    _ ≤ ∑ i, dot (v i) wholeCoefficients := by
+    _ ≤ ∑ i, dot (v i) envelopeCoefficients := by
       apply Finset.sum_le_sum
       intro i _
-      rw [← whole_eq_dot]
-      exact hcount i
-    _ = dot (sumVector v) wholeCoefficients := (dot_sum_left _ _).symm
-    _ ≤ dot regularSurface wholeCoefficients := dot_mono_left _ ⟨hy, hr, hz⟩
+      exact (hcount i).trans (max_branch_le_envelope (v i))
+    _ = dot (sumVector v) envelopeCoefficients := (dot_sum_left _ _).symm
+    _ ≤ dot regularSurface envelopeCoefficients := dot_mono_left _ ⟨hy, hr, hz⟩
     _ = regularNumerator := rfl
 
 theorem sum_regular_branch_bound {I : Type} [Fintype I]
     (count : I → ℕ) (v : I → DegreeVector)
     (hy : (∑ i, (v i).y) ≤ yCap) (hr : (∑ i, (v i).r) ≤ slopeCap)
     (hz : (∑ i, (v i).z) ≤ seedTotalCap)
-    (hcount : ∀ i, count i * gap ^ 2 ≤ wholeNumerator (v i)) :
+    (hcount : ∀ i, count i * gap ^ 2 ≤ cutNumerator (v i) ∨
+      count i * gap ^ 2 ≤ wholeNumerator (v i)) :
     (∑ i, count i) * gap ^ 2 ≤ regularNumerator := by
   apply sum_regular_max_bound count v hy hr hz
-  exact hcount
+  intro i
+  rcases hcount i with h | h
+  · exact h.trans (le_max_left _ _)
+  · exact h.trans (le_max_right _ _)
 
 theorem sum_regular_numeric_caps {I : Type} [Fintype I]
     (count : I → ℕ) (v : I → DegreeVector)
     (hy : (∑ i, (v i).y) ≤ 18) (hr : (∑ i, (v i).r) ≤ 3)
     (hz : (∑ i, (v i).z) ≤ 225)
-    (hcount : ∀ i, count i * gap ^ 2 ≤ wholeNumerator (v i)) :
+    (hcount : ∀ i, count i * gap ^ 2 ≤ cutNumerator (v i) ∨
+      count i * gap ^ 2 ≤ wholeNumerator (v i)) :
     (∑ i, count i) * gap ^ 2 ≤ regularNumerator := by
   exact sum_regular_branch_bound count v
     (by simpa only [parameter_values.2.1] using hy)
@@ -288,7 +292,8 @@ theorem final_family_ledger {I J : Type} [Fintype I] [Fintype J]
     (implicitCount : J → ℕ) (cost : J → DegreeVector) (exceptions cardinality : ℕ)
     (hregularY : (∑ i, (v i).y) ≤ 18) (hregularR : (∑ i, (v i).r) ≤ 3)
     (hregularZ : (∑ i, (v i).z) ≤ 225)
-    (hregular : ∀ i, regularCount i * gap ^ 2 ≤ wholeNumerator (v i))
+    (hregular : ∀ i, regularCount i * gap ^ 2 ≤ cutNumerator (v i) ∨
+      regularCount i * gap ^ 2 ≤ wholeNumerator (v i))
     (hcostY : (∑ i, (cost i).y) ≤ algebraicCap)
     (hcostR : (∑ i, (cost i).r) ≤ 2 * implicitYCap * algebraicCap)
     (hcostZ : (∑ i, (cost i).z) ≤ implicitYCap)

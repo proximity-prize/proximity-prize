@@ -67,7 +67,7 @@ theorem lifted_singular_numerator_exact :
     errors, n, slopeCap, seedTotalCap]
 
 theorem lifted_total_numerator_exact :
-    liftedTotalNumerator = 153040403280675367435079464 := by
+    liftedTotalNumerator = 301729561217674892851322800 := by
   rw [liftedTotalNumerator, lifted_singular_numerator_exact]
   norm_num [regularNumerator, cutNumerator, wholeNumerator, mixed,
     firstTail, lastTail, tailVector, agreementVector, unitY, unitR, unitZ,
@@ -75,8 +75,8 @@ theorem lifted_total_numerator_exact :
     w, gap, errors, n, slopeCap, seedTotalCap]
 
 theorem lifted_division_certificate :
-    liftedTotalNumerator = 52428607019554297 * gap ^ 2 + 1858382616 ∧
-    1858382616 < gap ^ 2 := by
+    liftedTotalNumerator = 103366563679602828 * gap ^ 2 + 2642833648 ∧
+    2642833648 < gap ^ 2 := by
   rw [lifted_total_numerator_exact, denominator_exact]
   norm_num
 
