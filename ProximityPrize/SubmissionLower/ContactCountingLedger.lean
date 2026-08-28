@@ -185,8 +185,8 @@ theorem sum_regular_branch_bound {I : Type} [Fintype I]
 
 theorem sum_regular_numeric_caps {I : Type} [Fintype I]
     (count : I → ℕ) (v : I → DegreeVector)
-    (hy : (∑ i, (v i).y) ≤ 22) (hr : (∑ i, (v i).r) ≤ 4)
-    (hz : (∑ i, (v i).z) ≤ 184)
+    (hy : (∑ i, (v i).y) ≤ 25) (hr : (∑ i, (v i).r) ≤ 5)
+    (hz : (∑ i, (v i).z) ≤ 162)
     (hcount : ∀ i, count i * gap ^ 2 ≤ wholeNumerator (v i)) :
     (∑ i, count i) * gap ^ 2 ≤ regularNumerator := by
   exact sum_regular_branch_bound count v
@@ -284,8 +284,8 @@ cover hypotheses remain explicit and must come from the geometric proof. -/
 theorem final_family_ledger {I J : Type} [Fintype I] [Fintype J]
     (regularCount : I → ℕ) (v : I → DegreeVector)
     (implicitCount : J → ℕ) (cost : J → DegreeVector) (exceptions cardinality : ℕ)
-    (hregularY : (∑ i, (v i).y) ≤ 22) (hregularR : (∑ i, (v i).r) ≤ 4)
-    (hregularZ : (∑ i, (v i).z) ≤ 184)
+    (hregularY : (∑ i, (v i).y) ≤ 25) (hregularR : (∑ i, (v i).r) ≤ 5)
+    (hregularZ : (∑ i, (v i).z) ≤ 162)
     (hregular : ∀ i, regularCount i * gap ^ 2 ≤ wholeNumerator (v i))
     (hcostY : (∑ i, (cost i).y) ≤ algebraicCap)
     (hcostR : (∑ i, (cost i).r) ≤ 2 * implicitYCap * algebraicCap)

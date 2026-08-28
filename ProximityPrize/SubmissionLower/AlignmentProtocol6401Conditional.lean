@@ -6,7 +6,7 @@ import ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
 Model label: gpt-5.
 
 The sole mathematical premise of the final theorem is the explicit strong
-alignment bound at 77301 errors with budget 10^17. The actual squared-eight
+alignment bound at 77305 errors with budget 10^17. The actual squared-eight
 Code.Lambda, scalar-to-interleaved MCA transfer, field capacity and score
 conversion are derived below. No old Contact parameter or 6400 list module
 is imported, and no Benchmark.candidate is declared.
@@ -24,8 +24,8 @@ open scoped NNReal
 
 noncomputable section ProtocolProofs
 
-def radius6401 : ℝ≥0 := claimedRadius 309207 1048576
-def errors6401 : ℕ := 77301
+def radius6401 : ℝ≥0 := claimedRadius 309223 1048576
+def errors6401 : ℕ := 77305
 def budget6401 : ℕ := 100000000000000000
 
 theorem radius6401_floor :
@@ -33,7 +33,7 @@ theorem radius6401_floor :
   norm_num [radius6401, claimedRadius, errors6401, IRSProfile.Index]
 
 theorem radius6401_cell_cross :
-    309207 * Fintype.card IRSProfile.Index < (errors6401 + 1) * 1048576 := by
+    309223 * Fintype.card IRSProfile.Index < (errors6401 + 1) * 1048576 := by
   norm_num [IRSProfile.Index, errors6401]
 
 theorem radius6401_gap : 131071 < Fintype.card IRSProfile.Index - errors6401 := by
@@ -172,7 +172,7 @@ theorem lambda6401_le_of_alignment
         Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
       (radius6401 : ℝ) ≤ (budget6401 : ℕ∞) :=
   AlignmentInterleavedLambda.irs_squared_claimedRadius_lambda_le
-    309207 1048576 errors6401 budget6401 (by norm_num) radius6401_cell_cross
+    309223 1048576 errors6401 budget6401 (by norm_num) radius6401_cell_cross
     radius6401_gap halign budget6401_lt_field sixteen_row_separation_gate
 
 /-- A local copy of the elementary generic ENNReal field-budget calculation;
@@ -224,8 +224,8 @@ theorem certifiedGammaError6401_le_of_alignment
 theorem. This module does not itself assert that alignment premise. -/
 theorem protocolClaim6401_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode
-      77301 100000000000000000) :
-    ProtocolClaim 6452 309207 1048576 where
+      77305 100000000000000000) :
+    ProtocolClaim 6452 309223 1048576 where
   admissible := by
     constructor <;> norm_num [claimedRadius, IRSProfile.minRelativeDistance]
   reduction := by

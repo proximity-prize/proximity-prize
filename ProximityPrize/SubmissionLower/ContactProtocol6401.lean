@@ -16,7 +16,7 @@ namespace ProximityPrize.SubmissionLower.ContactProtocol6401
 
 open ProximityPrize.Benchmark
 
-theorem protocolClaim6401 : ProtocolClaim 6452 309207 1048576 :=
+theorem protocolClaim6401 : ProtocolClaim 6452 309223 1048576 :=
   AlignmentProtocol6401Conditional.protocolClaim6401_of_alignment
     ContactAlignment6401.alignment6401
 
