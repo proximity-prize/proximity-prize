@@ -2,16 +2,18 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamily6600Research
 
 /-!
-# Degree-zero-safe recursive component aggregation
+# YZ-safe recursive component aggregation
 
-At a many-identity terminal state, degree zero need not force the literal
-seed coordinate `Z` to be transcendental.  We therefore charge the tail to
-`zCost + allCost`.  The adaptive all-coordinate projection is nonconstant
-on every non-point regular component, so this charge is always positive;
-the extra global mixed-volume term fits inside the score-66 ledger.
+The degree-zero terminal branch needs only a positive charge, not the full
+all-coordinate projection.  When the shared Z and YZ projection costs are
+jointly positive, charge the branch to `zCost + yzCost`.  Their global sums
+are already bounded by the unit-Z and unit-YZ mixed volumes.
+
+This file is deliberately generic: the geometric producer proving joint
+positivity is separate from this finite incidence and aggregation theorem.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyAll6600Research
+namespace ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyYZ6630Research
 
 open scoped Classical BigOperators
 open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
@@ -40,9 +42,11 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Full component aggregation with an unconditional all-coordinate fallback
-for the degree-zero terminal branch. -/
-theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
+/-- Full component aggregation with a joint Z/YZ fallback for the
+degree-zero terminal branch.  The sole new premise is the weakest
+consumer-shaped positivity statement: the sum of the two charges is at
+least one on every retained regular component. -/
+theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
     (selected : K → Polynomial K) (Gamma : Finset K)
@@ -76,8 +80,8 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
     (hchar : d < p) (hda : d < a)
     (B : PrimeFlagBudgetFamily (G := G) (T := T)
       (H := regularitySurface phi F) surfaceFlag cutFlag)
-    (hallPositive : ∀ C : RegularComponent Omega G T
-      (regularitySurface phi F), 1 ≤ B.allCost C)
+    (hzyzPositive : ∀ C : RegularComponent Omega G T
+      (regularitySurface phi F), 1 ≤ B.zCost C + B.yzCost C)
     (hdegree : ∀ k ≤ d,
       (nodes.card - k) * (a - d) * (d - k) ≤ U * (a - k))
     (hunit : ∀ k ≤ d,
@@ -87,7 +91,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
         V * flagMixed surfaceFlag cutFlag unitYZFlag +
         (e + 1) * (a - d) *
           (flagMixed surfaceFlag cutFlag unitZFlag +
-            flagMixed surfaceFlag cutFlag unitAllFlag) := by
+            flagMixed surfaceFlag cutFlag unitYZFlag) := by
   classical
   let H := regularitySurface phi F
   have hHp : ∀ gamma ∈ Gamma,
@@ -102,7 +106,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
   let unitCost : RegularComponent Omega G T H → ℕ :=
     fun C ↦ B.weightedCost unitYZFlag C
   let largeCost : RegularComponent Omega G T H → ℕ :=
-    fun C ↦ B.zCost C + B.allCost C
+    fun C ↦ B.zCost C + B.yzCost C
   have hcomponent : ∀ C : RegularComponent Omega G T H,
       (componentSeeds Omega G T H Gamma
           (selectedPoint phi selected) C).card * (a - d) ≤
@@ -128,35 +132,34 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
     · intro D hmany
       have hcard : GammaC.card ≤ e + 1 :=
         D.stage.card_le_pencil_of_many_identities hmany
-      have hlargePositive : 1 ≤ largeCost C := by
-        exact (hallPositive C).trans (Nat.le_add_left _ _)
       have hscaled : GammaC.card * (a - d) ≤ (e + 1) * (a - d) :=
         Nat.mul_le_mul_right (a - d) hcard
       have hcharged : (e + 1) * (a - d) ≤
           (e + 1) * (a - d) * largeCost C := by
-        have hmul := Nat.mul_le_mul_left ((e + 1) * (a - d)) hlargePositive
-        simpa only [Nat.mul_one] using hmul
+        have hmul := Nat.mul_le_mul_left ((e + 1) * (a - d))
+          (hzyzPositive C)
+        simpa only [largeCost, Nat.mul_one] using hmul
       exact hscaled.trans hcharged
     · simpa only [S, regularComponentCurveStage] using hdegree
     · simpa only [S, regularComponentCurveStage] using hunit
   have hlargeSum :
       (∑ C : RegularComponent Omega G T H, largeCost C) ≤
         flagMixed surfaceFlag cutFlag unitZFlag +
-          flagMixed surfaceFlag cutFlag unitAllFlag := by
+          flagMixed surfaceFlag cutFlag unitYZFlag := by
     calc
       (∑ C : RegularComponent Omega G T H, largeCost C) =
           (∑ C : RegularComponent Omega G T H, B.zCost C) +
-            ∑ C : RegularComponent Omega G T H, B.allCost C := by
+            ∑ C : RegularComponent Omega G T H, B.yzCost C := by
         simp only [largeCost, Finset.sum_add_distrib]
       _ ≤ flagMixed surfaceFlag cutFlag unitZFlag +
-          flagMixed surfaceFlag cutFlag unitAllFlag :=
-        Nat.add_le_add B.sum_zCost_le B.sum_allCost_le
+          flagMixed surfaceFlag cutFlag unitYZFlag :=
+        Nat.add_le_add B.sum_zCost_le B.sum_yzCost_le
   exact aggregate_component_stratified_incidence G T H Gamma
     (selectedPoint phi selected) hGpoint hTpoint hHp (a - d) U V (e + 1)
     (flagMixed surfaceFlag cutFlag agreementDirection6600)
     (flagMixed surfaceFlag cutFlag unitYZFlag)
     (flagMixed surfaceFlag cutFlag unitZFlag +
-      flagMixed surfaceFlag cutFlag unitAllFlag)
+      flagMixed surfaceFlag cutFlag unitYZFlag)
     degreeCost unitCost largeCost hcomponent
     (by simpa only [degreeCost] using
       B.sum_weightedCost_le agreementDirection6600)
@@ -165,6 +168,6 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
 
 end
 
-end ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyAll6600Research
+end ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyYZ6630Research
 
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyAll6600Research.proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyYZ6630Research.proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz
