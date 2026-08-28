@@ -51,6 +51,7 @@ theorem exists_frozen_nonzero_polynomial_and_equations6600
       Q ≠ 0 ∧
       Q ∈ globalCoefficientBox IRSProfile.Field
         weightedCap w seedTotalCap slopeCap ∧
+      Q ∈ fullTriangleBox IRSProfile.Field seedTotalCap ∧
       Q = reconstruct IRSProfile.Field weightedCap w seedTotalCap slopeCap theta ∧
       ∀ (i : IRSProfile.Index) (r : Fin multiplicity),
         contactJet IRSProfile.Field (multiplicity - r.val)
@@ -64,6 +65,8 @@ theorem exists_frozen_nonzero_polynomial_and_equations6600
     reconstruct_ne_zero IRSProfile.Field weightedCap w seedTotalCap slopeCap
       theta htheta,
     reconstruct_mem_globalCoefficientBox IRSProfile.Field
+      weightedCap w seedTotalCap slopeCap theta,
+    reconstruct_mem_fullTriangleBox IRSProfile.Field
       weightedCap w seedTotalCap slopeCap theta,
     rfl, hconstraints⟩
 

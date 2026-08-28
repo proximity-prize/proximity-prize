@@ -63,10 +63,11 @@ theorem polynomialIn_geometricFlag {F : MvPolynomial (Fin 4) K}
 preserved by residualization. -/
 theorem residual_surface_weights_of_box
     (F : MvPolynomial (Fin 4) K)
-    (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
+    (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (htriangle : F ∈ fullTriangleBox K seedTotalCap) :
     wt residualSWeights F ≤ 8 ∧
-      wt residualYSWeights F ≤ 43 ∧
-      wt residualTotalWeights F ≤ 503 := by
+      wt residualYSWeights F ≤ 40 ∧
+      wt residualTotalWeights F ≤ 528 := by
   constructor
   · apply (weightedTotalDegree_le_iff residualSWeights F 8).mpr
     intro d hd
@@ -80,7 +81,7 @@ theorem residual_surface_weights_of_box
     simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add, Nat.add_zero]
     simpa only [slopeCap] using hb.2.1
   · constructor
-    · apply (weightedTotalDegree_le_iff residualYSWeights F 43).mpr
+    · apply (weightedTotalDegree_le_iff residualYSWeights F 40).mpr
       intro d hd
       have hb : d 1 + d 3 ≤ seedTotalCap ∧ d 2 ≤ slopeCap ∧
           d 0 + w * d 1 + (w - 1) * d 2 < weightedCap := hbox hd
@@ -93,18 +94,15 @@ theorem residual_surface_weights_of_box
       norm_num [weightedCap, ContactParameters6600Research.multiplicity,
         agreements, n, errors, w] at hb
       omega
-    · apply (weightedTotalDegree_le_iff residualTotalWeights F 503).mpr
+    · apply (weightedTotalDegree_le_iff residualTotalWeights F 528).mpr
       intro d hd
-      have hb : d 1 + d 3 ≤ seedTotalCap ∧ d 2 ≤ slopeCap ∧
-          d 0 + w * d 1 + (w - 1) * d 2 < weightedCap := hbox hd
       rw [weight_fin4]
       rw [show residualTotalWeights 0 = 0 by rfl,
         show residualTotalWeights 1 = 1 by rfl,
         show residualTotalWeights 2 = 1 by rfl,
         show residualTotalWeights 3 = 1 by rfl]
       simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add, Nat.add_zero]
-      norm_num [seedTotalCap, slopeCap] at hb
-      omega
+      exact htriangle hd
 
 variable {Iota : Type}
 local instance : DecidableEq Iota := Classical.decEq Iota
@@ -115,6 +113,7 @@ def geometricResidualStage
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
     (hRpos : 0 < F.degreeOf (2 : Fin 4))
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (htriangle : F ∈ fullTriangleBox K seedTotalCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes)
@@ -142,7 +141,7 @@ def geometricResidualStage
     hRpos hRsmall g.1 hgirred
     (by simpa only [canonical_geometricSurfaceMap] using hgdiv)
   have hsub := geometricSeeds_subset K F selected Gamma g
-  have hwts := residual_surface_weights_of_box K F hbox
+  have hwts := residual_surface_weights_of_box K F hbox htriangle
   exact {
     nodes := nodes
     u0 := u0

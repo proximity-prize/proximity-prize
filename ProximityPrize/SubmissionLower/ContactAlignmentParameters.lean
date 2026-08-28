@@ -40,7 +40,8 @@ def algebraicCap : ℕ := (2 * slopeCap - 1) * seedTotalCap
 def coefficientCount : ℕ :=
   ∑ i ∈ range (seedTotalCap + 1),
     ∑ j ∈ range (slopeCap + 1),
-      (seedTotalCap + 1 - i) * (weightedCap - w * i - (w - 1) * j)
+      (seedTotalCap + 1 - i - j) *
+        (weightedCap - w * i - (w - 1) * j)
 
 def contactExponent (r : ℕ) : ℕ := min (r + 1) (multiplicity - r)
 
@@ -48,11 +49,12 @@ def contactExponent (r : ℕ) : ℕ := min (r + 1) (multiplicity - r)
 available first-variable degree. The subtraction occurs after `+1`. -/
 def localContactRank : ℕ :=
   ∑ r ∈ range multiplicity,
-    (((slopeCap + 1) *
-        (∑ f ∈ range (min r seedTotalCap + 1), (seedTotalCap + 1 - f))) -
-      ((slopeCap + 1 - contactExponent r) *
-        (∑ f ∈ range (min r seedTotalCap + 1 - contactExponent r),
-          (seedTotalCap + 1 - contactExponent r - f))))
+    ((∑ f ∈ range (min r seedTotalCap + 1),
+        ∑ j ∈ range (slopeCap + 1),
+          (seedTotalCap + 1 - f - j)) -
+      (∑ f ∈ range (min r seedTotalCap + 1 - contactExponent r),
+        ∑ j ∈ range (slopeCap + 1 - contactExponent r),
+          (seedTotalCap + 1 - contactExponent r - f - j)))
 
 structure DegreeVector where
   y : ℕ
@@ -109,11 +111,11 @@ theorem parameter_values :
   norm_num [weightedCap, multiplicity, agreements, yCap, w, gap, errors,
     n, algebraicCap, slopeCap, seedTotalCap]
 
-theorem coefficient_count_exact : coefficientCount = 36613226930 := by
+theorem coefficient_count_exact : coefficientCount = 36127194215 := by
   norm_num [coefficientCount, seedTotalCap, slopeCap, weightedCap,
     multiplicity, agreements, w, Finset.sum_range_succ]
 
-theorem contact_rank_exact : localContactRank = 139668 := by
+theorem contact_rank_exact : localContactRank = 137413 := by
   norm_num [localContactRank, contactExponent, multiplicity, seedTotalCap,
     slopeCap, Finset.sum_range_succ]
 

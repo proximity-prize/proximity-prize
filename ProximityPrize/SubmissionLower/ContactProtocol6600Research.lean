@@ -41,15 +41,15 @@ local instance : CharP (GenericField IRSProfile.Field) prime :=
 geometric factor by the rectangular score-66 flag caps. -/
 theorem frozenTerminalAdaptiveProjectionFamilies6600 :
     FrozenTerminalAdaptiveProjectionFamilies6600 := by
-  intro Q hQ hbox selected seeds u0 u1 hdegree hnoPencil R g
+  intro Q hQ hbox htriangle selected seeds u0 u1 hdegree hnoPencil R g
   have hRdata := directFactor_data Q R.1 hQ weightedCap w seedTotalCap
     slopeCap hbox R.2
   have hRne : R.1 ≠ 0 := hRdata.1.ne_zero
   have hglobal := regularFlag_budgets Q hQ hbox
-  have hRZ : (regularFlag Q R).zOnly ≤ 495 :=
+  have hRZ : (regularFlag Q R).zOnly ≤ 528 :=
     (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
       (Finset.mem_univ R)).trans hglobal.1
-  have hRY : (regularFlag Q R).yz ≤ 43 :=
+  have hRY : (regularFlag Q R).yz ≤ 40 :=
     (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
       (Finset.mem_univ R)).trans hglobal.2.1
   have hRS : (regularFlag Q R).all ≤ 8 :=
@@ -71,13 +71,13 @@ theorem frozenTerminalAdaptiveProjectionFamilies6600 :
       show Fin.succ (1 : Fin 3) = (2 : Fin 4) by decide] using
       geometricFactor_degree_le IRSProfile.Field R.1 hRne g (1 : Fin 3)
   exact terminalAdaptiveProjectionFamilies_of_rectangular_caps
-    (regularGeometricResidualStage Q hQ hbox selected seeds
+    (regularGeometricResidualStage Q hQ hbox htriangle selected seeds
       (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain
       u0 u1 IRSProfile.domain.injective.injOn hdegree hnoPencil R g)
     (hgZ.trans hRZ) (hgY.trans hRY) (hgS.trans hRS)
 
 /-- Fully closed score-66 lower-track claim. -/
-theorem protocolClaim6600 : ProtocolClaim 6618 315835 1048576 :=
+theorem protocolClaim6600 : ProtocolClaim 6634 316459 1048576 :=
   ContactProtocol6600AdaptiveResearch.protocolClaim6600_of_terminal_projection_families
     frozenTerminalAdaptiveProjectionFamilies6600
 

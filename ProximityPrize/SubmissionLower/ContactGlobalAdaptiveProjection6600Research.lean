@@ -42,6 +42,7 @@ all of its canonical geometric stages have adaptive projection families. -/
 theorem regular_factor_seed_bound_of_adaptive_projection_families
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (htriangle : Q ∈ fullTriangleBox K seedTotalCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
@@ -53,14 +54,14 @@ theorem regular_factor_seed_bound_of_adaptive_projection_families
     (R : ContactRegularFactorFlag6600Research.RegularIndex Q)
     (hprojection : ∀ g : GeometricFactor K R.1,
       TerminalAdaptiveProjectionFamilies
-        (regularGeometricResidualStage Q hQ hbox selected Gamma nodes
+        (regularGeometricResidualStage Q hQ hbox htriangle selected Gamma nodes
           x u0 u1 hinj hdegree hnoPencil R g)) :
     (regularSeeds Q selected Gamma R).card * gap ^ 2 ≤
       factorRegularLedger (regularFlag Q R) := by
   apply regular_factor_seed_bound_of_geometric_counts Q hQ hbox
     selected Gamma R
   intro g
-  let S := regularGeometricResidualStage Q hQ hbox selected Gamma nodes
+  let S := regularGeometricResidualStage Q hQ hbox htriangle selected Gamma nodes
     x u0 u1 hinj hdegree hnoPencil R g
   have hgeomSub : geometricSeeds K R.1 selected
       (regularSeeds Q selected Gamma R) g ⊆ Gamma :=
@@ -85,6 +86,7 @@ strict score-66 arithmetic are all internal. -/
 theorem global_count_lt_alignment_of_adaptive_projection_families
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (htriangle : Q ∈ fullTriangleBox K seedTotalCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
@@ -99,14 +101,14 @@ theorem global_count_lt_alignment_of_adaptive_projection_families
       (R : ContactRegularFactorFlag6600Research.RegularIndex Q)
       (g : GeometricFactor K R.1),
       TerminalAdaptiveProjectionFamilies
-        (regularGeometricResidualStage Q hQ hbox selected Gamma nodes
+        (regularGeometricResidualStage Q hQ hbox htriangle selected Gamma nodes
           x u0 u1 hinj hdegree hnoPencil R g)) :
     Gamma.card < alignmentBudget := by
   apply global_count_lt_alignment_of_regular_factors Q hQ hbox selected
     Gamma nodes x u0 u1 hinj hnodes hdegree hsolution hagreement hnoPencil
   intro R
   exact regular_factor_seed_bound_of_adaptive_projection_families
-    Q hQ hbox selected Gamma nodes x u0 u1 hinj hnodes hdegree hagreement
+    Q hQ hbox htriangle selected Gamma nodes x u0 u1 hinj hnodes hdegree hagreement
       hnoPencil R (hprojection R)
 
 end

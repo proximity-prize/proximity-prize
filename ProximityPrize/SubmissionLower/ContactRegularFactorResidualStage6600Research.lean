@@ -1,6 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6600Research
 import ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research
+import ProximityPrize.SubmissionLower.ContactFullTriangleInheritance
 
 /-!
 # Actual regular-factor residual stages at score 66
@@ -16,11 +17,13 @@ namespace ProximityPrize.SubmissionLower.ContactRegularFactorResidualStage6600Re
 open scoped Classical
 open ContactParameters6600Research
 open ContactSelectedSeedDecomposition ContactInterpolation ContactTranslation
+open ContactImplicitContactLift
 open ContactGenericInitialPoint ContactPrimeSeedIncidence ContactProperCutSeedCount
 open ContactOriginalRegularSeedCount ContactOriginalRegularResidualStage6600Research
 open ContactRegularFactorFlag6600Research ContactGlobalSelectedFamilies6600Research
 open ContactIdentityResidualIterationResearch ContactFlagBezout6543Research
 open ContactNearPencil6600FactorLedgerResearch
+open ContactFullTriangleInheritance
 
 noncomputable section
 
@@ -38,6 +41,7 @@ regular factor. -/
 def regularGeometricResidualStage
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (htriangle : Q ∈ fullTriangleBox K seedTotalCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes)
@@ -56,8 +60,11 @@ def regularGeometricResidualStage
   have hRirred := hRdata.1
   have hRpos := hRdata.2.1
   have hRbox := hRdata.2.2
+  have hRdiv := (positiveRFactors_spec Q R.1 R.2).2.1
+  have hRtriangle := fullTriangleBox_of_dvd R.1 Q seedTotalCap
+    hQ hRdiv htriangle
   have hsub := regularSeeds_subset Q selected Gamma R
-  exact geometricResidualStage K R.1 hRirred hRpos hRbox selected
+  exact geometricResidualStage K R.1 hRirred hRpos hRbox hRtriangle selected
     (regularSeeds Q selected Gamma R) nodes x u0 u1 hinj
     (fun gamma hgamma ↦ hdegree gamma (hsub hgamma))
     (fun gamma hgamma ↦ (Finset.mem_filter.mp hgamma).2.1)
