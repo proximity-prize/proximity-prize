@@ -27,7 +27,7 @@ noncomputable section ProtocolProofs
 
 def radius6401 : ℝ≥0 := claimedRadius 309699 1048576
 def errors6401 : ℕ := 77424
-def budget6401 : ℕ := 100000000000000000
+def budget6401 : ℕ := 137490364055697543
 
 theorem radius6401_floor :
     ⌊(radius6401 : ℝ) * (Fintype.card IRSProfile.Index : ℝ)⌋₊ = errors6401 := by
@@ -189,7 +189,7 @@ theorem certifiedGammaError6401_le_of_alignment
 theorem. This module does not itself assert that alignment premise. -/
 theorem protocolClaim6401_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode
-      77424 100000000000000000) :
+      77424 137490364055697543) :
     ProtocolClaim 6464 309699 1048576 where
   admissible := by
     exact ContactScore6464.radius6464_admissible

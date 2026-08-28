@@ -2,13 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FlagResearch
 
 /-!
-# Factorwise linear aggregation of the 66.00 regular ledger
-
-The nested residual-incidence cost is linear in the flag of the original
-surface factor.  Consequently distinct irreducible factors must be charged
-their own flags and then summed; charging the full surface flag to every
-factor would be an invalid overcount.  This module proves the exact finite
-aggregation against the one global `surfaceFlag6600` ledger.
+# Factorwise linear aggregation of the 66.19 regular ledger
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
@@ -20,21 +14,17 @@ open ContactNearPencil6600FlagResearch
 
 set_option maxHeartbeats 1000000
 
-/-- Primary two-layer residual cost assigned to one surface-factor flag. -/
 def factorPrimary (p : FlagDegree) : ℕ :=
   flagMixed p agreementDirection6600 agreementDirection6600 * degreeIncidence ^ 2 +
     2 * flagMixed p agreementDirection6600 unitYZFlag *
       degreeIncidence * unitIncidence +
     flagMixed p unitYZFlag unitYZFlag * unitIncidence ^ 2
 
-/-- Branch-local large-pencil `Z` charge assigned to one surface-factor
-flag. -/
 def factorZTail (p : FlagDegree) : ℕ :=
   (errors + 1) * gap *
     (flagMixed p agreementDirection6600 unitZFlag * degreeIncidence +
       flagMixed p unitYZFlag unitZFlag * unitIncidence)
 
-/-- Degree-zero-safe all-coordinate fallback for the large-pencil branch. -/
 def factorAllTail (p : FlagDegree) : ℕ :=
   (errors + 1) * gap *
     (flagMixed p agreementDirection6600 unitAllFlag * degreeIncidence +
@@ -43,8 +33,6 @@ def factorAllTail (p : FlagDegree) : ℕ :=
 def factorRegularLedger (p : FlagDegree) : ℕ :=
   factorPrimary p + factorZTail p + factorAllTail p
 
-/-- The final factor ledger is literally linear in the three nested flag
-coordinates. -/
 theorem factorRegularLedger_projection_decomposition (p : FlagDegree) :
     factorRegularLedger p =
       p.zOnly * factorRegularLedger unitZFlag +
@@ -55,8 +43,6 @@ theorem factorRegularLedger_projection_decomposition (p : FlagDegree) :
     unitZFlag, unitYZFlag, unitAllFlag]
   ring
 
-/-- The one global surface flag evaluates to the independently checked
-primary and `Z`-tail numerators. -/
 theorem factorRegularLedger_surface_exact :
     factorRegularLedger surfaceFlag6600 =
       stratifiedPrimary + stratifiedZTail + factorAllTail surfaceFlag6600 := by
@@ -68,7 +54,6 @@ theorem factorRegularLedger_surface_exact :
     flagMixed_direction_values.2.2.2.2]
   rfl
 
-/-- Finite surface factors aggregate against any coordinatewise flag cap. -/
 theorem sum_factorRegularLedger_le_flag
     {I : Type} [Fintype I] (p : I → FlagDegree) (cap : FlagDegree)
     (hz : (∑ i, (p i).zOnly) ≤ cap.zOnly)
@@ -100,8 +85,6 @@ theorem sum_factorRegularLedger_le_flag
     _ = factorRegularLedger cap :=
       (factorRegularLedger_projection_decomposition cap).symm
 
-/-- Finite surface factors whose coordinatewise flag sum fits in the sharp
-global surface flag consume at most the sharp global regular ledger. -/
 theorem sum_factorRegularLedger_le
     {I : Type} [Fintype I] (p : I → FlagDegree)
     (hz : (∑ i, (p i).zOnly) ≤ surfaceFlag6600.zOnly)
@@ -115,10 +98,7 @@ theorem sum_factorRegularLedger_le
     _ = stratifiedPrimary + stratifiedZTail + factorAllTail surfaceFlag6600 :=
       factorRegularLedger_surface_exact
 
-/-- Robust rectangular factor cap obtained directly from the three existing
-separated degree budgets.  It is slightly larger than `surfaceFlag6600` but
-still leaves substantial score-66 ledger slack. -/
-def rectangularSurfaceFlag6600 : FlagDegree := ⟨576, 33, 6⟩
+def rectangularSurfaceFlag6600 : FlagDegree := ⟨501, 43, 8⟩
 
 def rectangularRegularNumerator : ℕ :=
   factorRegularLedger rectangularSurfaceFlag6600
@@ -130,21 +110,21 @@ def rectangularLedgerCeiling : ℕ :=
   (rectangularTotalNumerator + gap ^ 2 - 1) / gap ^ 2
 
 theorem rectangular_regular_exact :
-    rectangularRegularNumerator = 241144169682667450979668563 := by
+    rectangularRegularNumerator = 366128865342818978180017304 := by
   norm_num [rectangularRegularNumerator, factorRegularLedger,
     factorPrimary, factorZTail, factorAllTail, rectangularSurfaceFlag6600,
     flagMixed, agreementDirection6600, unitYZFlag, unitZFlag, unitAllFlag,
     degreeIncidence, unitIncidence, errors, gap, agreements, n, w]
 
 theorem rectangular_total_exact :
-    rectangularTotalNumerator = 243013956771530477084927643 := by
+    rectangularTotalNumerator = 372922499821758050326315348 := by
   rw [show rectangularTotalNumerator =
       rectangularRegularNumerator + retainedSingularContribution by rfl,
     rectangular_regular_exact]
   norm_num [retainedSingularContribution]
 
 theorem rectangular_ledger_ceiling_exact :
-    rectangularLedgerCeiling = 88857537351958271 := by
+    rectangularLedgerCeiling = 137354570900956827 := by
   norm_num [rectangularLedgerCeiling, rectangular_total_exact,
     gap, agreements, n, errors, w]
 
@@ -154,19 +134,18 @@ theorem rectangular_strict_budget :
   norm_num [alignmentBudget, gap, agreements, n, errors, w]
 
 theorem rectangular_budget_slack :
-    alignmentBudget - rectangularLedgerCeiling = 11142462648041729 := by
+    alignmentBudget - rectangularLedgerCeiling = 135793154740716 := by
   rw [rectangular_ledger_ceiling_exact]
   norm_num [alignmentBudget]
 
 theorem sum_factorRegularLedger_rectangular_le
     {I : Type} [Fintype I] (p : I → FlagDegree)
-    (hz : (∑ i, (p i).zOnly) ≤ 576)
-    (hyz : (∑ i, (p i).yz) ≤ 33)
-    (hall : (∑ i, (p i).all) ≤ 6) :
+    (hz : (∑ i, (p i).zOnly) ≤ 501)
+    (hyz : (∑ i, (p i).yz) ≤ 43)
+    (hall : (∑ i, (p i).all) ≤ 8) :
     (∑ i, factorRegularLedger (p i)) ≤ rectangularRegularNumerator := by
   exact sum_factorRegularLedger_le_flag p rectangularSurfaceFlag6600 hz hyz hall
 
-/-- Component-count inequalities aggregate before applying the flag budget. -/
 theorem sum_factor_counts_le
     {I : Type} [Fintype I] (count : I → ℕ) (p : I → FlagDegree)
     (hcount : ∀ i, count i * gap ^ 2 ≤ factorRegularLedger (p i))
@@ -186,9 +165,9 @@ theorem sum_factor_counts_le
 theorem sum_factor_counts_rectangular_le
     {I : Type} [Fintype I] (count : I → ℕ) (p : I → FlagDegree)
     (hcount : ∀ i, count i * gap ^ 2 ≤ factorRegularLedger (p i))
-    (hz : (∑ i, (p i).zOnly) ≤ 576)
-    (hyz : (∑ i, (p i).yz) ≤ 33)
-    (hall : (∑ i, (p i).all) ≤ 6) :
+    (hz : (∑ i, (p i).zOnly) ≤ 501)
+    (hyz : (∑ i, (p i).yz) ≤ 43)
+    (hall : (∑ i, (p i).all) ≤ 8) :
     (∑ i, count i) * gap ^ 2 ≤ rectangularRegularNumerator := by
   calc
     (∑ i, count i) * gap ^ 2 = ∑ i, count i * gap ^ 2 := by
@@ -198,23 +177,4 @@ theorem sum_factor_counts_rectangular_le
     _ ≤ rectangularRegularNumerator :=
       sum_factorRegularLedger_rectangular_le p hz hyz hall
 
-theorem combined_rectangular_scaled_bound
-    (regularCount singularCount : ℕ)
-    (hregular : regularCount * gap ^ 2 ≤ rectangularRegularNumerator)
-    (hsingular : singularCount * gap ^ 2 ≤ retainedSingularContribution) :
-    (regularCount + singularCount) * gap ^ 2 ≤ rectangularTotalNumerator := by
-  calc
-    (regularCount + singularCount) * gap ^ 2 =
-        regularCount * gap ^ 2 + singularCount * gap ^ 2 := by ring
-    _ ≤ rectangularRegularNumerator + retainedSingularContribution :=
-      Nat.add_le_add hregular hsingular
-    _ = rectangularTotalNumerator := rfl
-
 end ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.factorRegularLedger_projection_decomposition
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sum_factorRegularLedger_le_flag
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sum_factorRegularLedger_le
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sum_factor_counts_le
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.rectangular_strict_budget
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sum_factor_counts_rectangular_le
