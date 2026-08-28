@@ -815,4 +815,71 @@ theorem winningSetDensity_gt_epsilon_window (δ : ℝ≥0)
       exact div_le_div_of_nonneg_right (by exact_mod_cast hcard) (by positivity)
     _ ≤ winningSetDensity IRSProfile.encoder δ := winningSetRatio_le_winningSetDensity x
 
+/-! ## The kernel-bound on the unsafe-index co-occurrence hypergraph
+
+The unsafe-index co-occurrence hypergraph has vertex set `Idx` and one
+hyperedge `T U` for every `U ∈ Fam`.  Because the `corePairs` block `(a, 0)`
+with `a ∈ coreA` lies inside every `T U` independently of `U`, the
+intersection `⋂_{U ∈ Fam} T U` is non-empty — in fact it has size
+`coreA.card = 511`.  Any single member of this intersection already hits
+every hyperedge, so the hypergraph admits a vertex cover of size one, which
+is strictly less than the prescribed top-coefficient budget `U.card = 272`.
+This is the geometric-penalty exclusion that the Bonferroni-covariance
+refinement exploits. -/
+
+/-- The image of `coreA` under `idx · 0` is contained in every `T U` for
+`U ∈ Fam`.  Geometrically: the `corePairs` block is independent of `U`. -/
+theorem coreA_image_subset_T (U : Finset Small) (hU : U ∈ Fam) :
+    (coreA.image (fun a => idx a 0)) ⊆ T U := by
+  intro j hj
+  rw [Finset.mem_image] at hj
+  obtain ⟨a, ha, rfl⟩ := hj
+  rw [T, Finset.mem_image]
+  refine ⟨(a, (0 : Small)), ?_, rfl⟩
+  rw [pairSet, Finset.mem_union]
+  left
+  simpa [corePairs] using Finset.mem_product.mpr ⟨ha, Finset.mem_singleton.mpr rfl⟩
+
+/-- The intersection `⋂_{U ∈ Fam} T U` is non-empty: pick any `a ∈ coreA`,
+the point `idx a 0` lies in every `T U`.  This is the kernel of the
+co-occurrence hypergraph. -/
+theorem T_inter_nonempty :
+    ∃ j : Idx, ∀ U ∈ Fam, j ∈ T U := by
+  classical
+  have hcore : (coreA : Set Small).Nonempty := by
+    rw [Set.nonempty_iff_ne_empty]
+    intro h
+    simp [coreA] at h
+  obtain ⟨a, ha⟩ := hcore
+  refine ⟨idx a 0, ?_⟩
+  intro U hU
+  have hsub := coreA_image_subset_T U hU
+  exact hsub (Finset.mem_image.mpr ⟨a, ha, rfl⟩)
+
+/-- **Kernel bound on the unsafe-index co-occurrence hypergraph.**
+
+The cover `{idx a 0}` for any fixed `a ∈ coreA` is a vertex cover of the
+unsafe-index co-occurrence hypergraph `{T U}_{U ∈ Fam}`.  Its cardinality
+is `1`, which is strictly less than the top-coefficient budget `U.card = 272`
+for any `U ∈ Fam`.  In particular the size of the cover is bounded above
+by a constant independent of `U` and `Fam`, so the Bonferroni-covariance
+refinement of the joint spot-check error reduces to a single factor. -/
+theorem kernelBound :
+    ∃ (cover : Finset Idx), cover.card < (272 : ℕ) ∧
+      (∀ U ∈ Fam, (cover ∩ T U).Nonempty) := by
+  classical
+  have hcore : (coreA : Set Small).Nonempty := by
+    rw [Set.nonempty_iff_ne_empty]
+    intro h
+    simp [coreA] at h
+  obtain ⟨a, ha⟩ := hcore
+  have hkey : ∀ U ∈ Fam, idx a 0 ∈ T U := by
+    intro U hU
+    exact coreA_image_subset_T U hU (Finset.mem_image.mpr ⟨a, ha, rfl⟩)
+  refine ⟨{idx a 0}, ?_, ?_⟩
+  · simp
+  · intro U hU
+    rw [Finset.singleton_inter_of_mem (hkey U hU)]
+    exact Finset.singleton_nonempty _
+
 end ProximityPrize.SubmissionUpper.OrbitPencil
