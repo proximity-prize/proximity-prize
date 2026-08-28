@@ -551,4 +551,92 @@ theorem winningSetSoundness_eq_one_of_many_interpolation_sets
   · exact hp_spec
   · exact hzero
 
+/-- The half-radius density inequality `q * N² ≤ |support| * (q * N + N * (N - 1))`,
+re-derived with the Cauchy-Schwarz cross-term `q * O` retained (i.e., the
+off-diagonal collision count times the field size is kept explicit, not absorbed
+into the upper bound `N * (N - 1)`). The combined inequality then follows by
+re-applying the standard upper bound. -/
+theorem half_radius_combined_cross_term_retained
+    {k : ℕ} (A : Finset (Fin k → F)) :
+    ∃ v : Fin k → F,
+      A.card * Fintype.card F ≤
+        (A.image (fun x => dot x v)).card * (Fintype.card F + A.card - 1) := by
+  classical
+  by_cases hA : A.card = 0
+  · refine ⟨0, ?_⟩
+    simp [hA]
+  obtain ⟨v, hoff⟩ := exists_dot_offdiag_le A
+  let q : ℕ := Fintype.card F
+  let N : ℕ := A.card
+  let O : ℕ := ((A.product A).filter fun xy =>
+    xy.1 ≠ xy.2 ∧ dot xy.1 v = dot xy.2 v).card
+  let E : ℕ := ((A.product A).filter fun xy => dot xy.1 v = dot xy.2 v).card
+  let c : F → ℕ := fun y => (A.filter fun x => dot x v = y).card
+  let support : Finset F := Finset.univ.filter fun y => c y ≠ 0
+  have hYeq : support = A.image (fun x => dot x v) := by
+    ext y
+    simp only [support, Finset.mem_filter, Finset.mem_univ, true_and, c]
+    exact Finset.fiber_card_ne_zero_iff_mem_image A (fun x => dot x v) y
+  have hsumc : ∑ y ∈ support, c y = N := by
+    have hall : ∑ y : F, c y = A.card := by
+      symm
+      simpa only [c] using (Finset.card_eq_sum_card_fiberwise
+        (s := A) (t := (Finset.univ : Finset F)) (f := fun x => dot x v)
+        (fun _ _ => Finset.mem_univ _))
+    rw [← hall]
+    exact Finset.sum_subset (Finset.subset_univ _) (fun y _ hyY => by
+      simp only [support, Finset.mem_filter, Finset.mem_univ, true_and, not_not] at hyY
+      exact hyY)
+  have hsumsq : ∑ y ∈ support, c y ^ 2 = E := by
+    have hall : ∑ y : F, c y ^ 2 = E := by
+      simp only [c, E, Finset.card_filter, pow_two, Finset.mul_sum,
+        Finset.sum_mul]
+      rw [Finset.sum_comm]
+      simp
+      rw [Finset.card_filter, Finset.sum_product_right]
+      simp_rw [Finset.card_filter]
+    rw [← hall]
+    exact Finset.sum_subset (Finset.subset_univ _) (fun y _ hyY => by
+      simp only [support, Finset.mem_filter, Finset.mem_univ, true_and, not_not] at hyY
+      simp [hyY])
+  have hE : E = N + O := by
+    simp only [E, N, O]
+    rw [show ((A.product A).filter fun xy => dot xy.1 v = dot xy.2 v) =
+        A.diag ∪ ((A.product A).filter fun xy =>
+          xy.1 ≠ xy.2 ∧ dot xy.1 v = dot xy.2 v) by
+      ext xy
+      rcases xy with ⟨x, y⟩
+      by_cases hxy : x = y <;> simp [hxy]]
+    rw [Finset.card_union_of_disjoint]
+    · simp
+    · rw [Finset.disjoint_left]
+      rintro ⟨x, y⟩ hdiag hoffdiag
+      simp only [Finset.mem_diag] at hdiag
+      simp only [Finset.mem_filter] at hoffdiag
+      exact hoffdiag.2.1 hdiag.2
+  have hlower : N ^ 2 ≤ support.card * E := by
+    have hc := sq_sum_le_card_mul_sum_sq (s := support) (f := c)
+    rwa [hsumc, hsumsq] at hc
+  have hupper : q * O ≤ N * (N - 1) := by simpa only [q, N, O] using hoff
+  have hNpos : 0 < N := by simpa only [N] using Nat.pos_of_ne_zero hA
+  have hcross : q * N ^ 2 ≤ support.card * (q * N + q * O) := by
+    have h1 : q * N ^ 2 ≤ q * (support.card * E) := Nat.mul_le_mul_left q hlower
+    have h2 : q * (support.card * E) = support.card * (q * (N + O)) := by
+      rw [hE]; ring
+    have h3 : q * (N + O) = q * N + q * O := by ring
+    rw [← h3, ← h2]
+    exact h1
+  have hcombined : q * N ^ 2 ≤ support.card * (q * N + N * (N - 1)) := by
+    nlinarith [hcross, hupper]
+  have hleft : q * N ^ 2 = N * (N * q) := by ring
+  have hright : support.card * (q * N + N * (N - 1)) =
+      N * (support.card * (q + N - 1)) := by
+    have hN : 1 ≤ N := hNpos
+    rw [show q + N - 1 = q + (N - 1) by omega]
+    ring
+  rw [hleft, hright] at hcombined
+  refine ⟨v, ?_⟩
+  rw [← hYeq]
+  simpa only [q, N] using Nat.le_of_mul_le_mul_left hcombined hNpos
+
 end ProximityPrize.SubmissionUpper.HalfRadiusCollision
