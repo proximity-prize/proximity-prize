@@ -548,10 +548,23 @@ theorem pair_disjoint {U : Finset Small} (hU : U ∈ Sel) :
   rw [heq] at hb
   exact hb0 hb.2
 
+theorem corePairs_card : corePairs.card = 511 := by
+  rw [corePairs, Finset.card_product, coreA_card]
+  simp
+
+theorem blockPairs_card {U : Finset Small} (hU : U ∈ Sel) :
+    (blockPairs U).card = 139264 := by
+  rw [blockPairs, Finset.card_product, Finset.card_univ, (Fam_mem (Sel_mem hU)).2]
+  norm_num
+
+theorem pairSet_card {U : Finset Small} (hU : U ∈ Sel) :
+    (pairSet U).card = 139775 := by
+  rw [pairSet, Finset.card_disjUnion (pair_disjoint hU), corePairs_card,
+    blockPairs_card hU]
+  norm_num
+
 theorem T_card {U : Finset Small} (hU : U ∈ Sel) : (T U).card = 139775 := by
-  rw [T, Finset.card_image_of_injective _ idx_injective, pairSet,
-    Finset.card_union_of_disjoint (pair_disjoint hU)]
-  simp [corePairs, blockPairs, coreA_card, (Fam_mem (Sel_mem hU)).2]
+  rw [T, Finset.card_image_of_injective _ idx_injective, pairSet_card hU]
 
 noncomputable def zval (j : Idx) : FF := IRSProfile.domain j ^ 512
 

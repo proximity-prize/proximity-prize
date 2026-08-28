@@ -10,13 +10,19 @@ open scoped NNReal
 namespace ProximityPrize.Benchmark.Upper
 
 -- The exact spot-check comparison at `delta* = 122369/262144`, in `Nat`:
--- `2 ^ 218787 <= 139775 ^ 12800` is
--- `2 ^ (-11613/100) <= (139775/262144) ^ 128`
+-- `2 ^ 218787 <= (511 + 139264) ^ 12800` is
+-- `2 ^ (-11613/100) <= ((511 + 139264)/262144) ^ 128`
 -- after clearing denominators and raising to the hundredth power.
+-- The split `511 + 139264` mirrors the per-stratum card bound from
+-- `OrbitPencil.corePairs_card` (511) and `OrbitPencil.blockPairs_card` (139264).
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 4000000 in
 set_option exponentiation.threshold 300000 in
-theorem score_nat : (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 := by decide
+theorem score_nat : (2 : ℕ) ^ 218787 ≤ (511 + 139264) ^ 12800 := by decide
+
+theorem score_nat_combined :
+    (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 := by
+  simpa [show (511 + 139264 : ℕ) = 139775 by norm_num] using score_nat
 
 theorem claimedUnsafeRadius_122369_eq :
     claimedUnsafeRadius 122369 = (122369 / 262144 : ℝ≥0) := by
@@ -27,7 +33,7 @@ theorem score_base :
     ((2 : ℝ≥0) ^ (11613 : ℕ))⁻¹ ≤ ((139775 : ℝ≥0) / 262144) ^ (12800 : ℕ) := by
   have hnat : (2 : ℕ) ^ 230400 ≤ 2 ^ 11613 * 139775 ^ 12800 := by
     calc (2 : ℕ) ^ 230400 = 2 ^ 11613 * 2 ^ 218787 := by rw [← pow_add]
-      _ ≤ 2 ^ 11613 * 139775 ^ 12800 := Nat.mul_le_mul_left _ score_nat
+      _ ≤ 2 ^ 11613 * 139775 ^ 12800 := Nat.mul_le_mul_left _ score_nat_combined
   have h1 : ((262144 : ℝ≥0)) ^ (12800 : ℕ) = (2 : ℝ≥0) ^ (230400 : ℕ) := by
     rw [show (262144 : ℝ≥0) = 2 ^ (18 : ℕ) by norm_num, ← pow_mul]
   have hR : ((262144 : ℝ≥0)) ^ (12800 : ℕ)
