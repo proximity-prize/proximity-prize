@@ -62,16 +62,16 @@ flag directly from the interpolation coefficient box. -/
 theorem regularFlag_budgets
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
-    (∑ F : RegularIndex Q, (regularFlag Q F).zOnly) ≤ 576 ∧
-      (∑ F : RegularIndex Q, (regularFlag Q F).yz) ≤ 33 ∧
-      (∑ F : RegularIndex Q, (regularFlag Q F).all) ≤ 6 := by
+    (∑ F : RegularIndex Q, (regularFlag Q F).zOnly) ≤ 494 ∧
+      (∑ F : RegularIndex Q, (regularFlag Q F).yz) ≤ 43 ∧
+      (∑ F : RegularIndex Q, (regularFlag Q F).all) ≤ 8 := by
   classical
   have hb := directFactor_input_budgets Q hQ
     weightedCap w seedTotalCap slopeCap (by norm_num [w]) hbox
   simp only [regularFlag, Finset.sum_coe_sort]
   refine ⟨?_, ?_, ?_⟩
   · simpa [seedTotalCap] using hb.2.2
-  · have hy : (weightedCap - 1) / w = 33 := by
+  · have hy : (weightedCap - 1) / w = 43 := by
       norm_num [ContactParameters6600Research.weightedCap,
         ContactParameters6600Research.multiplicity,
         ContactParameters6600Research.agreements,

@@ -76,9 +76,9 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
     [CharP Omega prime]
     {flag : FlagDegree}
     (S : ResidualStage phi Gamma x prime errors flag w)
-    (hflagZ : flag.zOnly ≤ 576)
-    (hflagY : flag.yz ≤ 33)
-    (hflagS : flag.all ≤ 6) :
+    (hflagZ : flag.zOnly ≤ 494)
+    (hflagY : flag.yz ≤ 43)
+    (hflagS : flag.all ≤ 8) :
     TerminalAdaptiveProjectionFamilies S := by
   classical
   intro D i hi hproper
@@ -95,16 +95,16 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
   obtain ⟨hGY, hGS, hGZ⟩ := degree_bounds_of_polynomialInFlag hGflag
   obtain ⟨hTY, hTS, hTZ⟩ := degree_bounds_of_polynomialInFlag hTflag
   have hD : D.degree ≤ w := D.degree_le.trans (Nat.le_refl w)
-  have hGY' : D.stage.G.degreeOf 0 ≤ 39 := by omega
-  have hGS' : D.stage.G.degreeOf 1 ≤ 6 := by omega
-  have hGZ' : D.stage.G.degreeOf 2 ≤ 615 := by omega
-  have hTY' : T.degreeOf 0 ≤ 1 + 65 * w := by
+  have hGY' : D.stage.G.degreeOf 0 ≤ 51 := by omega
+  have hGS' : D.stage.G.degreeOf 1 ≤ 8 := by omega
+  have hGZ' : D.stage.G.degreeOf 2 ≤ 545 := by omega
+  have hTY' : T.degreeOf 0 ≤ 1 + 85 * w := by
     dsimp only [residualAgreementFlag] at hTY
     omega
-  have hTS' : T.degreeOf 1 ≤ 11 * w := by
+  have hTS' : T.degreeOf 1 ≤ 15 * w := by
     dsimp only [residualAgreementFlag] at hTS
     omega
-  have hTZ' : T.degreeOf 2 ≤ 1 + 1163 * w := by
+  have hTZ' : T.degreeOf 2 ≤ 1 + 1003 * w := by
     dsimp only [residualAgreementFlag] at hTZ
     omega
   have hGdegree : ∀ j : Fin 3, D.stage.G.degreeOf j < prime := by

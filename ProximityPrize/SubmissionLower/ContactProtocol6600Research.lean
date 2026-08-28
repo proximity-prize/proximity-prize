@@ -46,13 +46,13 @@ theorem frozenTerminalAdaptiveProjectionFamilies6600 :
     slopeCap hbox R.2
   have hRne : R.1 ≠ 0 := hRdata.1.ne_zero
   have hglobal := regularFlag_budgets Q hQ hbox
-  have hRZ : (regularFlag Q R).zOnly ≤ 576 :=
+  have hRZ : (regularFlag Q R).zOnly ≤ 494 :=
     (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
       (Finset.mem_univ R)).trans hglobal.1
-  have hRY : (regularFlag Q R).yz ≤ 33 :=
+  have hRY : (regularFlag Q R).yz ≤ 43 :=
     (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
       (Finset.mem_univ R)).trans hglobal.2.1
-  have hRS : (regularFlag Q R).all ≤ 6 :=
+  have hRS : (regularFlag Q R).all ≤ 8 :=
     (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
       (Finset.mem_univ R)).trans hglobal.2.2
   have hgZ : (geometricFlag IRSProfile.Field g).zOnly ≤
@@ -77,7 +77,7 @@ theorem frozenTerminalAdaptiveProjectionFamilies6600 :
     (hgZ.trans hRZ) (hgY.trans hRY) (hgS.trans hRS)
 
 /-- Fully closed score-66 lower-track claim. -/
-theorem protocolClaim6600 : ProtocolClaim 6600 315111 1048576 :=
+theorem protocolClaim6600 : ProtocolClaim 6618 315823 1048576 :=
   ContactProtocol6600AdaptiveResearch.protocolClaim6600_of_terminal_projection_families
     frozenTerminalAdaptiveProjectionFamilies6600
 
