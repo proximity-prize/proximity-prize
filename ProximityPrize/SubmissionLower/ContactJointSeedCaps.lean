@@ -1,235 +1,332 @@
-import ProximityPrize.SubmissionLower.ContactImplicitContactLift
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.ContactFactorCaps
+import ProximityPrize.SubmissionLower.ContactTaylorNumerators
+import ProximityPrize.SubmissionLower.ContactGenericSurface
+
+/-!
+# Joint Y+Z support caps for contact agreement cuts
+
+The contact interpolation space has the triangular seed support `Y + Z ≤ L`.
+This file keeps that joint support through the exact Taylor-numerator
+recurrence and the generic-surface map.  It is deliberately separate from
+the older coordinatewise degree box.
+-/
 
 namespace ProximityPrize.SubmissionLower.ContactJointSeedCaps
 
-open ContactFactorCaps ContactTaylorNumerators ContactSingularDegreeBounds
-open ContactImplicitContactLift
+open scoped BigOperators
+open ContactInterpolation ContactFactorCaps ContactTaylorNumerators
+  ContactGenericSurface
 
 noncomputable section
 
-variable {K : Type*} [Field K]
+variable {K Ω : Type} [Field K] [Field Ω]
 
-abbrev Poly4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
+abbrev Poly4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
 
-local notation:1000 "W " P:1000 => MvPolynomial.weightedTotalDegree seedWeights P
+def seedDegree (P : Poly4 K) : ℕ :=
+  MvPolynomial.weightedTotalDegree seedWeights P
 
-lemma wt_neg (P : Poly4 K) : W (-P) = W P := by
-  rw [← degree_weightedLift, ← degree_weightedLift, map_neg, MvPolynomial.degreeOf_neg]
+theorem seedDegree_mul_le (P Q : Poly4 K) :
+    seedDegree (P * Q) ≤ seedDegree P + seedDegree Q := by
+  unfold seedDegree
+  rw [← degree_weightedLift, map_mul]
+  simpa only [degree_weightedLift] using
+    MvPolynomial.degreeOf_mul_le (4 : Fin 5)
+      (weightedLift K seedWeights P) (weightedLift K seedWeights Q)
 
-lemma wt_sub_le (P Q : Poly4 K) : W (P - Q) ≤ max (W P) (W Q) := by
-  rw [sub_eq_add_neg]
-  simpa only [wt_neg] using weighted_add_le seedWeights P (-Q)
+theorem seedDegree_add_le (P Q : Poly4 K) :
+    seedDegree (P + Q) ≤ max (seedDegree P) (seedDegree Q) := by
+  unfold seedDegree
+  rw [← degree_weightedLift, map_add]
+  simpa only [degree_weightedLift] using
+    MvPolynomial.degreeOf_add_le (4 : Fin 5)
+      (weightedLift K seedWeights P) (weightedLift K seedWeights Q)
 
-lemma wt_pow_le (P : Poly4 K) (r : ℕ) : W (P ^ r) ≤ r * W P := by
-  induction r with
-  | zero =>
-      rw [pow_zero, ← degree_weightedLift]
-      simp
-  | succ r ih =>
-      rw [pow_succ]
-      calc
-        _ ≤ W (P ^ r) + W P := weighted_mul_le seedWeights (P ^ r) P
-        _ ≤ r * W P + W P := Nat.add_le_add_right ih _
-        _ = (r + 1) * W P := by ring
+theorem seedDegree_sub_le (P Q : Poly4 K) :
+    seedDegree (P - Q) ≤ max (seedDegree P) (seedDegree Q) := by
+  unfold seedDegree
+  rw [← degree_weightedLift, map_sub]
+  simpa only [degree_weightedLift] using
+    MvPolynomial.degreeOf_sub_le (4 : Fin 5)
+      (weightedLift K seedWeights P) (weightedLift K seedWeights Q)
 
-lemma wt_zero : W (0 : Poly4 K) = 0 := by
-  rw [← degree_weightedLift]
+@[simp] theorem seedDegree_neg (P : Poly4 K) :
+    seedDegree (-P) = seedDegree P := by
+  unfold seedDegree
+  rw [← degree_weightedLift, map_neg, MvPolynomial.degreeOf_neg,
+    degree_weightedLift]
+
+theorem seedDegree_pow_le (P : Poly4 K) (n : ℕ) :
+    seedDegree (P ^ n) ≤ n * seedDegree P := by
+  unfold seedDegree
+  rw [← degree_weightedLift, map_pow]
+  simpa only [degree_weightedLift] using
+    MvPolynomial.degreeOf_pow_le (4 : Fin 5) (weightedLift K seedWeights P) n
+
+theorem seedDegree_C (c : K) : seedDegree (MvPolynomial.C c : Poly4 K) = 0 := by
+  unfold seedDegree MvPolynomial.weightedTotalDegree
   simp
 
-lemma wt_sum_le {ι : Type*} [DecidableEq ι] (S : Finset ι) (f : ι → Poly4 K) (a : ℕ)
-    (hf : ∀ i ∈ S, W (f i) ≤ a) : W (∑ i ∈ S, f i) ≤ a := by
-  classical
-  induction S using Finset.induction_on with
-  | empty => simp [wt_zero]
-  | @insert i S hi ih =>
-      rw [Finset.sum_insert hi]
-      exact (weighted_add_le seedWeights _ _).trans
-        (max_le (hf i (Finset.mem_insert_self i S))
-          (ih (fun j hj => hf j (Finset.mem_insert_of_mem hj))))
+theorem seedDegree_X (i : Fin 4) :
+    seedDegree (MvPolynomial.X i : Poly4 K) = seedWeights i := by
+  unfold seedDegree MvPolynomial.weightedTotalDegree
+  simp [MvPolynomial.support_X, Finsupp.weight_single]
 
-lemma wt_C (a : K) : W (MvPolynomial.C a : Poly4 K) = 0 := by
-  simp [MvPolynomial.weightedTotalDegree]
+theorem seedDegree_natCast (n : ℕ) : seedDegree (n : Poly4 K) = 0 := by
+  rw [← map_natCast (MvPolynomial.C : K →+* Poly4 K), seedDegree_C]
 
-lemma wt_natCast (r : ℕ) : W (r : Poly4 K) = 0 := by
-  rw [← map_natCast (MvPolynomial.C : K →+* Poly4 K) r, wt_C]
+theorem seedDegree_pderiv_le (P : Poly4 K) (i : Fin 4) :
+    seedDegree (MvPolynomial.pderiv i P) ≤ seedDegree P := by
+  apply (weightedTotalDegree_le_iff seedWeights _ _).mpr
+  intro e he
+  have hd := support_before_pderiv i P e he
+  have hmono : Finsupp.weight seedWeights e ≤
+      Finsupp.weight seedWeights (e + Finsupp.single i 1) := by
+    rw [map_add]
+    exact Nat.le_add_right _ _
+  exact hmono.trans (MvPolynomial.le_weightedTotalDegree seedWeights hd)
 
-lemma wt_R : W (MvPolynomial.X (2 : Fin 4) : Poly4 K) = 0 := by
-  rw [weighted_X]
-  rfl
+theorem seedDegree_sum_le (I : Finset ℕ) (f : ℕ → Poly4 K) (a : ℕ)
+    (hf : ∀ i ∈ I, seedDegree (f i) ≤ a) :
+    seedDegree (∑ i ∈ I, f i) ≤ a := by
+  unfold seedDegree
+  rw [← degree_weightedLift, map_sum]
+  apply (MvPolynomial.degreeOf_sum_le (4 : Fin 5) I
+    (fun i => weightedLift K seedWeights (f i))).trans
+  apply Finset.sup_le
+  intro i hi
+  rw [degree_weightedLift]
+  exact hf i hi
 
-lemma polyH_wt_le (F : Poly4 K) : W (polyH K F) ≤ W F :=
-  pderiv_weight_le seedWeights F 2
+theorem seedDegree_polyH_le (F : Poly4 K) :
+    seedDegree (polyH K F) ≤ seedDegree F :=
+  seedDegree_pderiv_le F 2
 
-lemma polyG_wt_le (F : Poly4 K) : W (polyG K F) ≤ W F := by
+theorem seedDegree_polyG_le (F : Poly4 K) :
+    seedDegree (polyG K F) ≤ seedDegree F := by
   unfold polyG
-  rw [wt_neg]
-  refine (weighted_add_le seedWeights _ _).trans (max_le ?_ ?_)
-  · exact pderiv_weight_le seedWeights F 0
-  · have hm := weighted_mul_le seedWeights (MvPolynomial.X (2 : Fin 4))
-      (MvPolynomial.pderiv (1 : Fin 4) F)
-    rw [wt_R, zero_add] at hm
-    exact hm.trans (pderiv_weight_le seedWeights F 1)
+  have hX := seedDegree_pderiv_le F 0
+  have hY := seedDegree_pderiv_le F 1
+  have hR : seedDegree (MvPolynomial.X (2 : Fin 4) : Poly4 K) = 0 := by
+    simp [seedDegree_X, seedWeights]
+  have hm := seedDegree_mul_le
+    (MvPolynomial.X (2 : Fin 4) : Poly4 K) (MvPolynomial.pderiv 1 F)
+  rw [hR, zero_add] at hm
+  have hadd := (seedDegree_add_le (MvPolynomial.pderiv 0 F)
+    (MvPolynomial.X (2 : Fin 4) * MvPolynomial.pderiv 1 F)).trans
+      (max_le hX (hm.trans hY))
+  rw [seedDegree_neg]
+  exact hadd
 
-lemma numeratorStep_joint_wt_le
-    (F M : Poly4 K) (r A L : ℕ) (hF : W F ≤ L) (hM : W M ≤ A) :
-    W (numeratorStep K F r M) ≤ A + 2 * L := by
+/-- One exact numerator recurrence step adds at most two copies of the
+joint seed degree of the defining equation. -/
+theorem numeratorStep_seedDegree_le
+    (F M : Poly4 K) (b a L : ℕ)
+    (hF : seedDegree F ≤ L) (hM : seedDegree M ≤ a) :
+    seedDegree (numeratorStep K F b M) ≤ a + 2 * L := by
   let H := polyH K F
   let G := polyG K F
   let R : Poly4 K := MvPolynomial.X (2 : Fin 4)
-  have hH : W H ≤ L := (polyH_wt_le F).trans hF
-  have hG : W G ≤ L := (polyG_wt_le F).trans hF
-  have hR : W R = 0 := wt_R
-  have hH2 : W (H ^ 2) ≤ 2 * L := (wt_pow_le H 2).trans (Nat.mul_le_mul_left 2 hH)
-  have hMX : W (MvPolynomial.pderiv (0 : Fin 4) M) ≤ A :=
-    (pderiv_weight_le seedWeights M 0).trans hM
-  have hMY : W (MvPolynomial.pderiv (1 : Fin 4) M) ≤ A :=
-    (pderiv_weight_le seedWeights M 1).trans hM
-  have hMR : W (MvPolynomial.pderiv (2 : Fin 4) M) ≤ A :=
-    (pderiv_weight_le seedWeights M 2).trans hM
-  have hHX : W (MvPolynomial.pderiv (0 : Fin 4) H) ≤ L :=
-    (pderiv_weight_le seedWeights H 0).trans hH
-  have hHY : W (MvPolynomial.pderiv (1 : Fin 4) H) ≤ L :=
-    (pderiv_weight_le seedWeights H 1).trans hH
-  have hHR : W (MvPolynomial.pderiv (2 : Fin 4) H) ≤ L :=
-    (pderiv_weight_le seedWeights H 2).trans hH
-  have h1 : W (H ^ 2 * MvPolynomial.pderiv (0 : Fin 4) M) ≤ A + 2 * L := by
-    have hh := weighted_mul_le seedWeights (H ^ 2) (MvPolynomial.pderiv (0 : Fin 4) M)
+  have hR : seedDegree R ≤ 0 := by simp [R, seedDegree_X, seedWeights]
+  have hH : seedDegree H ≤ L := (seedDegree_polyH_le F).trans hF
+  have hG : seedDegree G ≤ L := (seedDegree_polyG_le F).trans hF
+  have hH2 := (seedDegree_pow_le H 2).trans (Nat.mul_le_mul_left 2 hH)
+  have hMX : seedDegree (MvPolynomial.pderiv 0 M) ≤ a :=
+    (seedDegree_pderiv_le M 0).trans hM
+  have hMY : seedDegree (MvPolynomial.pderiv 1 M) ≤ a :=
+    (seedDegree_pderiv_le M 1).trans hM
+  have hMR : seedDegree (MvPolynomial.pderiv 2 M) ≤ a :=
+    (seedDegree_pderiv_le M 2).trans hM
+  have hHX : seedDegree (MvPolynomial.pderiv 0 H) ≤ L :=
+    (seedDegree_pderiv_le H 0).trans hH
+  have hHY : seedDegree (MvPolynomial.pderiv 1 H) ≤ L :=
+    (seedDegree_pderiv_le H 1).trans hH
+  have hHR : seedDegree (MvPolynomial.pderiv 2 H) ≤ L :=
+    (seedDegree_pderiv_le H 2).trans hH
+  have h1 : seedDegree (H ^ 2 * MvPolynomial.pderiv 0 M) ≤ a + 2 * L := by
+    have hh := seedDegree_mul_le (H ^ 2) (MvPolynomial.pderiv 0 M)
     omega
-  have h2 : W (R * H ^ 2 * MvPolynomial.pderiv (1 : Fin 4) M) ≤ A + 2 * L := by
-    have hh1 := weighted_mul_le seedWeights R (H ^ 2)
-    have hh2 := weighted_mul_le seedWeights (R * H ^ 2) (MvPolynomial.pderiv (1 : Fin 4) M)
-    rw [hR, zero_add] at hh1
+  have h2 : seedDegree (R * H ^ 2 * MvPolynomial.pderiv 1 M) ≤ a + 2 * L := by
+    have hh1 := seedDegree_mul_le R (H ^ 2)
+    have hh2 := seedDegree_mul_le (R * H ^ 2) (MvPolynomial.pderiv 1 M)
     omega
-  have h3 : W (G * H * MvPolynomial.pderiv (2 : Fin 4) M) ≤ A + 2 * L := by
-    have hh1 := weighted_mul_le seedWeights G H
-    have hh2 := weighted_mul_le seedWeights (G * H) (MvPolynomial.pderiv (2 : Fin 4) M)
+  have h3 : seedDegree (G * H * MvPolynomial.pderiv 2 M) ≤ a + 2 * L := by
+    have hh1 := seedDegree_mul_le G H
+    have hh2 := seedDegree_mul_le (G * H) (MvPolynomial.pderiv 2 M)
     omega
-  have hbx : W (H * MvPolynomial.pderiv (0 : Fin 4) H) ≤ 2 * L := by
-    have hh := weighted_mul_le seedWeights H (MvPolynomial.pderiv (0 : Fin 4) H)
+  have hbx : seedDegree (H * MvPolynomial.pderiv 0 H) ≤ 2 * L := by
+    have hh := seedDegree_mul_le H (MvPolynomial.pderiv 0 H)
     omega
-  have hby : W (R * H * MvPolynomial.pderiv (1 : Fin 4) H) ≤ 2 * L := by
-    have hh1 := weighted_mul_le seedWeights R H
-    have hh2 := weighted_mul_le seedWeights (R * H) (MvPolynomial.pderiv (1 : Fin 4) H)
-    rw [hR, zero_add] at hh1
+  have hby : seedDegree (R * H * MvPolynomial.pderiv 1 H) ≤ 2 * L := by
+    have hh1 := seedDegree_mul_le R H
+    have hh2 := seedDegree_mul_le (R * H) (MvPolynomial.pderiv 1 H)
     omega
-  have hbr : W (G * MvPolynomial.pderiv (2 : Fin 4) H) ≤ 2 * L := by
-    have hh := weighted_mul_le seedWeights G (MvPolynomial.pderiv (2 : Fin 4) H)
+  have hbr : seedDegree (G * MvPolynomial.pderiv 2 H) ≤ 2 * L := by
+    have hh := seedDegree_mul_le G (MvPolynomial.pderiv 2 H)
     omega
-  have hbrace : W (H * MvPolynomial.pderiv (0 : Fin 4) H +
-      R * H * MvPolynomial.pderiv (1 : Fin 4) H +
-      G * MvPolynomial.pderiv (2 : Fin 4) H) ≤ 2 * L := by
-    exact (weighted_add_le seedWeights _ _).trans
-      (max_le ((weighted_add_le seedWeights _ _).trans (max_le hbx hby)) hbr)
-  have hn : W ((2 * r : ℕ) : Poly4 K) = 0 := wt_natCast (2 * r)
-  have hnM : W (((2 * r : ℕ) : Poly4 K) * M) ≤ A := by
-    have hh := weighted_mul_le seedWeights (((2 * r : ℕ) : Poly4 K)) M
-    rw [hn, zero_add] at hh
-    exact hh.trans hM
-  have h4 : W (((2 * r : ℕ) : Poly4 K) * M *
-      (H * MvPolynomial.pderiv (0 : Fin 4) H +
-        R * H * MvPolynomial.pderiv (1 : Fin 4) H +
-        G * MvPolynomial.pderiv (2 : Fin 4) H)) ≤ A + 2 * L := by
-    have hh := weighted_mul_le seedWeights (((2 * r : ℕ) : Poly4 K) * M)
-      (H * MvPolynomial.pderiv (0 : Fin 4) H +
-        R * H * MvPolynomial.pderiv (1 : Fin 4) H +
-        G * MvPolynomial.pderiv (2 : Fin 4) H)
+  have hbrace : seedDegree
+      (H * MvPolynomial.pderiv 0 H + R * H * MvPolynomial.pderiv 1 H +
+        G * MvPolynomial.pderiv 2 H) ≤ 2 * L := by
+    exact (seedDegree_add_le _ _).trans
+      (max_le ((seedDegree_add_le _ _).trans (max_le hbx hby)) hbr)
+  have hn : seedDegree (((2 * b : ℕ) : Poly4 K)) ≤ 0 := by
+    rw [seedDegree_natCast]
+  have hnM : seedDegree (((2 * b : ℕ) : Poly4 K) * M) ≤ a := by
+    have hh := seedDegree_mul_le (((2 * b : ℕ) : Poly4 K)) M
     omega
-  change W (H ^ 2 * MvPolynomial.pderiv (0 : Fin 4) M +
-      R * H ^ 2 * MvPolynomial.pderiv (1 : Fin 4) M +
-      G * H * MvPolynomial.pderiv (2 : Fin 4) M -
-      ((2 * r : ℕ) : Poly4 K) * M *
-        (H * MvPolynomial.pderiv (0 : Fin 4) H +
-          R * H * MvPolynomial.pderiv (1 : Fin 4) H +
-          G * MvPolynomial.pderiv (2 : Fin 4) H)) ≤ A + 2 * L
-  apply (wt_sub_le _ _).trans
-  exact max_le
-    ((weighted_add_le seedWeights _ _).trans
-      (max_le ((weighted_add_le seedWeights _ _).trans (max_le h1 h2)) h3)) h4
+  have h4 : seedDegree (((2 * b : ℕ) : Poly4 K) * M *
+      (H * MvPolynomial.pderiv 0 H + R * H * MvPolynomial.pderiv 1 H +
+        G * MvPolynomial.pderiv 2 H)) ≤ a + 2 * L := by
+    have hh := seedDegree_mul_le (((2 * b : ℕ) : Poly4 K) * M)
+      (H * MvPolynomial.pderiv 0 H + R * H * MvPolynomial.pderiv 1 H +
+        G * MvPolynomial.pderiv 2 H)
+    omega
+  change seedDegree
+      (H ^ 2 * MvPolynomial.pderiv 0 M +
+        R * H ^ 2 * MvPolynomial.pderiv 1 M +
+        G * H * MvPolynomial.pderiv 2 M -
+        ((2 * b : ℕ) : Poly4 K) * M *
+          (H * MvPolynomial.pderiv 0 H + R * H * MvPolynomial.pderiv 1 H +
+            G * MvPolynomial.pderiv 2 H)) ≤ a + 2 * L
+  exact (seedDegree_sub_le _ _).trans
+    (max_le ((seedDegree_add_le _ _).trans
+      (max_le ((seedDegree_add_le _ _).trans (max_le h1 h2)) h3)) h4)
 
-lemma numerator_joint_wt_le (F : Poly4 K) (L : ℕ) (hF : W F ≤ L) (r : ℕ) :
-    W (numerator K F r) ≤ 1 + 2 * r * L := by
-  induction r with
+theorem numerator_seedDegree_le
+    (F : Poly4 K) (L : ℕ) (hF : seedDegree F ≤ L) (b : ℕ) :
+    seedDegree (numerator K F b) ≤ 1 + 2 * b * L := by
+  induction b with
   | zero =>
-      simp only [numerator_zero, Nat.mul_zero, Nat.zero_mul, Nat.add_zero]
-      rw [weighted_X]
-      rfl
-  | succ r ih =>
+      simp [numerator_zero, seedDegree_X, seedWeights]
+  | succ b ih =>
       rw [numerator_succ]
-      have hh := numeratorStep_joint_wt_le F (numerator K F r) r
-        (1 + 2 * r * L) L hF ih
-      calc
-        _ ≤ (1 + 2 * r * L) + 2 * L := hh
-        _ = 1 + 2 * (r + 1) * L := by ring
+      have hh := numeratorStep_seedDegree_le F (numerator K F b) b
+        (1 + 2 * b * L) L hF ih
+      convert hh using 1 <;> ring
 
-lemma shiftedX_joint_wt_zero (x : K) :
-    W (MvPolynomial.C x - MvPolynomial.X (0 : Fin 4) : Poly4 K) = 0 := by
-  apply Nat.eq_zero_of_le_zero
-  apply (wt_sub_le _ _).trans
-  rw [wt_C, weighted_X]
-  rfl
+theorem numerator_joint_seed_cap
+    (F : Poly4 K) (L b : ℕ) (hF : seedDegree F ≤ L) :
+    ∀ d ∈ (numerator K F b).support,
+      d 1 + d 3 ≤ 1 + 2 * b * L := by
+  intro d hd
+  rw [← seed_weight]
+  exact (MvPolynomial.le_weightedTotalDegree seedWeights hd).trans
+    (numerator_seedDegree_le F L hF b)
 
-lemma commonNumeratorTerm_joint_wt_le
-    (F : Poly4 K) (L w j : ℕ) (hj : j ≤ w) (hF : W F ≤ L)
-    (c : ℕ → K) (x : K) :
-    W (commonNumeratorTerm F w c x j) ≤ 1 + 2 * w * L := by
-  have hM := numerator_joint_wt_le F L hF j
-  have hC : W (MvPolynomial.C (c j) * numerator K F j) ≤ 1 + 2 * j * L := by
-    have hh := weighted_mul_le seedWeights (MvPolynomial.C (c j)) (numerator K F j)
-    rw [wt_C, zero_add] at hh
-    exact hh.trans hM
-  have hH := (polyH_wt_le F).trans hF
-  have hHP := (wt_pow_le (polyH K F) (2 * (w - j))).trans
+/-- The generic three-variable Taylor numerator inherits the triangular
+support bound in its Y and Z coordinates. -/
+theorem surfaceMap_numerator_joint_seed_cap
+    (φ : Polynomial K →+* Ω) (F : Poly4 K) (L b : ℕ)
+    (hF : seedDegree F ≤ L) :
+    ∀ d ∈ (surfaceMap φ (numerator K F b)).support,
+      d 0 + d 2 ≤ 1 + 2 * b * L :=
+  surfaceMap_joint_seed_cap φ _ _ (numerator_joint_seed_cap F L b hF)
+
+theorem shiftedX_seedDegree_le (x : K) :
+    seedDegree (MvPolynomial.C x - MvPolynomial.X (0 : Fin 4) : Poly4 K) ≤ 0 := by
+  exact (seedDegree_sub_le _ _).trans (max_le (by simp [seedDegree_C])
+    (by simp [seedDegree_X, seedWeights]))
+
+theorem commonNumeratorTerm_seedDegree_le
+    (F : Poly4 K) (L w j : ℕ) (hj : j ≤ w)
+    (hF : seedDegree F ≤ L) (c : ℕ → K) (x : K) :
+    seedDegree (commonNumeratorTerm F w c x j) ≤ 1 + 2 * w * L := by
+  have hM := numerator_seedDegree_le F L hF j
+  have hC : seedDegree (MvPolynomial.C (c j) : Poly4 K) ≤ 0 := by
+    simp [seedDegree_C]
+  have hCM := seedDegree_mul_le (MvPolynomial.C (c j) : Poly4 K) (numerator K F j)
+  have hH := (seedDegree_polyH_le F).trans hF
+  have hHP := (seedDegree_pow_le (polyH K F) (2 * (w - j))).trans
     (Nat.mul_le_mul_left (2 * (w - j)) hH)
-  have hX := wt_pow_le (MvPolynomial.C x - MvPolynomial.X (0 : Fin 4) : Poly4 K) j
-  rw [shiftedX_joint_wt_zero x, Nat.mul_zero] at hX
-  have hh1 := weighted_mul_le seedWeights
-    (MvPolynomial.C (c j) * numerator K F j) (polyH K F ^ (2 * (w - j)))
-  have hh2 := weighted_mul_le seedWeights
+  have hXP := (seedDegree_pow_le
+    (MvPolynomial.C x - MvPolynomial.X (0 : Fin 4) : Poly4 K) j).trans
+      (Nat.mul_le_mul_left j (shiftedX_seedDegree_le x))
+  have h1 := seedDegree_mul_le
+    (MvPolynomial.C (c j) * numerator K F j)
+    (polyH K F ^ (2 * (w - j)))
+  have h2 := seedDegree_mul_le
     (MvPolynomial.C (c j) * numerator K F j * polyH K F ^ (2 * (w - j)))
     ((MvPolynomial.C x - MvPolynomial.X (0 : Fin 4)) ^ j)
-  have hwj : j + (w - j) = w := by omega
-  dsimp only [commonNumeratorTerm]
+  have hw : j + (w - j) = w := by omega
+  dsimp [commonNumeratorTerm]
+  have hCMcap : seedDegree
+      (MvPolynomial.C (c j) * numerator K F j) ≤ 1 + 2 * j * L := by
+    exact hCM.trans (Nat.add_le_add hC hM) |>.trans (by omega)
+  have h1cap : seedDegree
+      (MvPolynomial.C (c j) * numerator K F j * polyH K F ^ (2 * (w - j))) ≤
+      (1 + 2 * j * L) + 2 * (w - j) * L :=
+    h1.trans (Nat.add_le_add hCMcap hHP)
+  have hterm := h2.trans (Nat.add_le_add h1cap hXP)
   calc
-    _ ≤ W (MvPolynomial.C (c j) * numerator K F j * polyH K F ^ (2 * (w - j))) +
-        W ((MvPolynomial.C x - MvPolynomial.X (0 : Fin 4)) ^ j) := hh2
-    _ ≤ (1 + 2 * j * L + (2 * (w - j)) * L) + 0 := by omega
+    seedDegree
+        (MvPolynomial.C (c j) * numerator K F j * polyH K F ^ (2 * (w - j)) *
+          (MvPolynomial.C x - MvPolynomial.X 0) ^ j) ≤
+        ((1 + 2 * j * L) + 2 * (w - j) * L) + j * 0 := hterm
     _ = 1 + 2 * (j + (w - j)) * L := by ring
-    _ = 1 + 2 * w * L := by rw [hwj]
+    _ = 1 + 2 * w * L := by rw [hw]
 
-lemma clearedTaylorNumerator_joint_wt_le
-    (F : Poly4 K) (L w : ℕ) (hF : W F ≤ L) (c : ℕ → K) (x : K) :
-    W (clearedTaylorNumerator F w c x) ≤ 1 + 2 * w * L := by
+theorem clearedTaylorNumerator_seedDegree_le
+    (F : Poly4 K) (L w : ℕ) (hF : seedDegree F ≤ L)
+    (c : ℕ → K) (x : K) :
+    seedDegree (clearedTaylorNumerator F w c x) ≤ 1 + 2 * w * L := by
   unfold clearedTaylorNumerator
-  apply wt_sum_le
+  apply seedDegree_sum_le
   intro j hj
-  exact commonNumeratorTerm_joint_wt_le F L w j
+  exact commonNumeratorTerm_seedDegree_le F L w j
     (by have hh := Finset.mem_range.mp hj; omega) hF c x
 
-lemma affineSeedPolynomial_joint_wt_le (u₀ u₁ : K) :
-    W (affineSeedPolynomial u₀ u₁ : Poly4 K) ≤ 1 := by
+theorem affineSeedPolynomial_seedDegree_le (u₀ u₁ : K) :
+    seedDegree (affineSeedPolynomial u₀ u₁) ≤ 1 := by
   unfold affineSeedPolynomial
-  apply (weighted_add_le seedWeights _ _).trans
-  apply max_le
-  · rw [wt_C]; omega
-  · have hh := weighted_mul_le seedWeights (MvPolynomial.X (3 : Fin 4))
-      (MvPolynomial.C u₁)
-    rw [weighted_X, wt_C, Nat.add_zero] at hh
-    exact hh
+  have hC0 : seedDegree (MvPolynomial.C u₀ : Poly4 K) ≤ 0 := by simp [seedDegree_C]
+  have hZ : seedDegree (MvPolynomial.X (3 : Fin 4) : Poly4 K) ≤ 1 := by
+    simp [seedDegree_X, seedWeights]
+  have hC1 : seedDegree (MvPolynomial.C u₁ : Poly4 K) ≤ 0 := by simp [seedDegree_C]
+  have hm := seedDegree_mul_le (MvPolynomial.X (3 : Fin 4) : Poly4 K)
+    (MvPolynomial.C u₁)
+  exact (seedDegree_add_le _ _).trans (max_le (hC0.trans (by omega)) (by omega))
 
-lemma agreementNumerator_joint_wt_le
-    (F : Poly4 K) (L w : ℕ) (hF : W F ≤ L)
+/-- The concrete agreement numerator has triangular seed support
+`Y + Z ≤ 1 + 2*w*L`. -/
+theorem agreementNumerator_seedDegree_le
+    (F : Poly4 K) (L w : ℕ) (hF : seedDegree F ≤ L)
     (c : ℕ → K) (x u₀ u₁ : K) :
-    W (agreementNumerator F w c x u₀ u₁) ≤ 1 + 2 * w * L := by
+    seedDegree (agreementNumerator F w c x u₀ u₁) ≤ 1 + 2 * w * L := by
   unfold agreementNumerator
-  apply (wt_sub_le _ _).trans
-  apply max_le (clearedTaylorNumerator_joint_wt_le F L w hF c x)
-  have hH := (polyH_wt_le F).trans hF
-  have hHP := (wt_pow_le (polyH K F) (2 * w)).trans (Nat.mul_le_mul_left (2 * w) hH)
-  have hh := weighted_mul_le seedWeights (affineSeedPolynomial u₀ u₁) (polyH K F ^ (2 * w))
-  have ha := affineSeedPolynomial_joint_wt_le (K := K) u₀ u₁
-  omega
+  have ht := clearedTaylorNumerator_seedDegree_le F L w hF c x
+  have ha := affineSeedPolynomial_seedDegree_le u₀ u₁
+  have hH := (seedDegree_polyH_le F).trans hF
+  have hp := (seedDegree_pow_le (polyH K F) (2 * w)).trans
+    (Nat.mul_le_mul_left (2 * w) hH)
+  have hm := seedDegree_mul_le (affineSeedPolynomial u₀ u₁) (polyH K F ^ (2 * w))
+  exact (seedDegree_sub_le _ _).trans (max_le ht (by omega))
+
+theorem agreementNumerator_joint_seed_cap
+    (F : Poly4 K) (L w : ℕ) (hF : seedDegree F ≤ L)
+    (c : ℕ → K) (x u₀ u₁ : K) :
+    ∀ d ∈ (agreementNumerator F w c x u₀ u₁).support,
+      d 1 + d 3 ≤ 1 + 2 * w * L := by
+  intro d hd
+  rw [← seed_weight]
+  exact (MvPolynomial.le_weightedTotalDegree seedWeights hd).trans
+    (agreementNumerator_seedDegree_le F L w hF c x u₀ u₁)
+
+/-- The generic three-variable agreement cut inherits the same triangular
+support in its Y and Z coordinates. -/
+theorem surfaceMap_agreement_joint_seed_cap
+    (φ : Polynomial K →+* Ω) (F : Poly4 K) (L w : ℕ)
+    (hF : seedDegree F ≤ L) (c : ℕ → K) (x u₀ u₁ : K) :
+    ∀ d ∈ (surfaceMap φ (agreementNumerator F w c x u₀ u₁)).support,
+      d 0 + d 2 ≤ 1 + 2 * w * L :=
+  surfaceMap_joint_seed_cap φ _ _
+    (agreementNumerator_joint_seed_cap F L w hF c x u₀ u₁)
 
 end
 
-end ProximityPrize.SubmissionLower.ContactJointSeedCaps
+#print axioms numerator_seedDegree_le
+#print axioms surfaceMap_numerator_joint_seed_cap
+#print axioms agreementNumerator_seedDegree_le
+#print axioms surfaceMap_agreement_joint_seed_cap
 
+end ProximityPrize.SubmissionLower.ContactJointSeedCaps

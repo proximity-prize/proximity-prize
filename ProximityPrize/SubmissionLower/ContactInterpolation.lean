@@ -76,12 +76,12 @@ theorem seedAffine_pow_mem (u₀ u₁ : K) (t : ℕ) :
       simpa only [pow_succ, Nat.zero_add] using
         coefficientBox_mul K ih (seedAffine_mem K u₀ u₁)
 
-/-- Distinct weighted monomial labels in the combined `Y+R+Z` triangle.
-Empty X ranges implement a strict weighted cap without allocating any
-columns. The order is i,j,z,e. -/
+/-- Distinct weighted monomial labels. Empty X ranges implement a strict
+weighted cap without allocating any columns. The order is i,j,z,e. -/
 abbrev CoefficientIndex (D w L s : ℕ) :=
   (i : Fin (L + 1)) × (j : Fin (s + 1)) ×
-    (Fin (L + 1 - i.val - j.val) × Fin (D - w * i.val - (w - 1) * j.val))
+    (Fin (L + 1 - i.val - j.val) ×
+      Fin (D - w * i.val - (w - 1) * j.val))
 
 /-- Global variables 0,1,2,3 denote X,Y,R,Z. -/
 def columnExponent {D w L s : ℕ} (c : CoefficientIndex D w L s) : Fin 4 →₀ ℕ :=
@@ -127,6 +127,14 @@ def globalCoefficientBox (D w L s : ℕ) :
     Submodule K (MvPolynomial (Fin 4) K) :=
   MvPolynomial.restrictSupport K (globalExponents D w L s)
 
+/-- The actual reconstructed interpolation support retains the full
+`Y + R + Z` Newton triangle, not just its rectangular downstream shadow. -/
+def fullTriangleExponents (L : ℕ) : Set (Fin 4 →₀ ℕ) :=
+  {d | d 1 + d 2 + d 3 ≤ L}
+
+def fullTriangleBox (L : ℕ) : Submodule K (MvPolynomial (Fin 4) K) :=
+  MvPolynomial.restrictSupport K (fullTriangleExponents L)
+
 theorem columnMonomial_mem (D w L s : ℕ)
     (c : CoefficientIndex D w L s) (a : K) :
     MvPolynomial.monomial (columnExponent c) a ∈
@@ -139,6 +147,16 @@ theorem columnMonomial_mem (D w L s : ℕ)
   have he := c.2.2.2.isLt
   simp only [globalExponents, Set.mem_setOf_eq, columnExponent_x,
     columnExponent_y, columnExponent_r, columnExponent_z]
+  omega
+
+theorem columnMonomial_mem_fullTriangle (D w L s : ℕ)
+    (c : CoefficientIndex D w L s) (a : K) :
+    MvPolynomial.monomial (columnExponent c) a ∈ fullTriangleBox K L := by
+  apply (MvPolynomial.monomial_mem_restrictSupport (R := K)).mpr
+  left
+  have hz := c.2.2.1.isLt
+  simp only [fullTriangleExponents, Set.mem_setOf_eq, columnExponent_y,
+    columnExponent_r, columnExponent_z]
   omega
 
 def reconstruct (D w L s : ℕ) (θ : CoefficientIndex D w L s → K) :
@@ -181,6 +199,15 @@ theorem reconstruct_mem_globalCoefficientBox (D w L s : ℕ)
   intro c hc
   exact columnMonomial_mem K D w L s c (θ c)
 
+theorem reconstruct_mem_fullTriangleBox (D w L s : ℕ)
+    (θ : CoefficientIndex D w L s → K) :
+    reconstruct K D w L s θ ∈ fullTriangleBox K L := by
+  classical
+  unfold reconstruct
+  apply Submodule.sum_mem
+  intro c hc
+  exact columnMonomial_mem_fullTriangle K D w L s c (θ c)
+
 theorem reconstruct_support_caps (D w L s : ℕ)
     (θ : CoefficientIndex D w L s → K) :
     ∀ d ∈ (reconstruct K D w L s θ).support,
@@ -217,8 +244,9 @@ theorem blockEntry_mem (D w L s : ℕ) (x u₀ u₁ : K)
   unfold blockEntry
   apply Submodule.sum_mem
   intro f hf
-  split_ifs with hfr
-  · apply (coefficientBox K (min r L) L s).smul_mem
+  by_cases hfr : f.val ≤ r
+  · rw [if_pos hfr]
+    apply (coefficientBox K (min r L) L s).smul_mem
     have hi := c.1.isLt
     have hj := c.2.1.isLt
     have hz := c.2.2.1.isLt
@@ -230,7 +258,8 @@ theorem blockEntry_mem (D w L s : ℕ) (x u₀ u₁ : K)
       (show c.1.val - f.val + (f.val + c.2.1.val + c.2.2.1.val) ≤ L by omega)
       (show 0 + c.2.1.val ≤ s by omega)
     exact hmul
-  · exact (coefficientBox K (min r L) L s).zero_mem
+  · rw [if_neg hfr]
+    exact (coefficientBox K (min r L) L s).zero_mem
 
 def boundedBlockEntry (D w L s : ℕ) (x u₀ u₁ : K)
     (c : CoefficientIndex D w L s) (r : ℕ) :
@@ -362,44 +391,6 @@ theorem all_blocks_divisible_of_equations
   · have hm : m - r = 0 := by omega
     simp only [hm, pow_zero, one_dvd]
 
-abbrev FrozenCoefficientIndex := CoefficientIndex 4042676 131071 288 6
-
-/-- The actual frozen-domain array has 33,470,909,075 coefficient labels and
-at most 33,470,808,064 independent contact equations. This theorem evaluates
-neither its columns nor the field-valued constraint matrix. -/
-theorem exists_frozen_nonzero_contact_array
-    (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
-    ∃ θ : FrozenCoefficientIndex → IRSProfile.Field, θ ≠ 0 ∧
-      ∀ (i : IRSProfile.Index) (r : Fin 22),
-        contactJet IRSProfile.Field (22 - r.val)
-          ((extractBlock IRSProfile.Field 4042676 131071 288 6
-            (IRSProfile.domain i) (u₀ i) (u₁ i) r.val θ) : Poly IRSProfile.Field) = 0 := by
-  apply exists_nonzero_block_equations IRSProfile.Field 4042676 131071 288 6 22
-    (fun i : IRSProfile.Index => IRSProfile.domain i) u₀ u₁
-  rw [show Fintype.card IRSProfile.Index = 262144 by norm_num [IRSProfile.Index]]
-  exact ContactAlignmentParameters.interpolation_gate
-
-/-- A genuine nonzero polynomial with the required support caps, reconstructed
-from an array satisfying every explicit binomial/contact equation. Identifying
-those equations with its translated contact expansion is the remaining
-front-end interface; it is not assumed or hidden in this statement. -/
-theorem exists_frozen_nonzero_polynomial_and_equations
-    (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
-    ∃ (Q : MvPolynomial (Fin 4) IRSProfile.Field)
-      (θ : FrozenCoefficientIndex → IRSProfile.Field),
-      Q ≠ 0 ∧
-      Q ∈ globalCoefficientBox IRSProfile.Field 4042676 131071 288 6 ∧
-      Q = reconstruct IRSProfile.Field 4042676 131071 288 6 θ ∧
-      ∀ (i : IRSProfile.Index) (r : Fin 22),
-        contactJet IRSProfile.Field (22 - r.val)
-          ((extractBlock IRSProfile.Field 4042676 131071 288 6
-            (IRSProfile.domain i) (u₀ i) (u₁ i) r.val θ) : Poly IRSProfile.Field) = 0 := by
-  obtain ⟨θ, hθ, hconstraints⟩ := exists_frozen_nonzero_contact_array u₀ u₁
-  exact ⟨reconstruct IRSProfile.Field 4042676 131071 288 6 θ, θ,
-    reconstruct_ne_zero IRSProfile.Field 4042676 131071 288 6 θ hθ,
-    reconstruct_mem_globalCoefficientBox IRSProfile.Field 4042676 131071 288 6 θ,
-    rfl, hconstraints⟩
-
 end
 
 end ProximityPrize.SubmissionLower.ContactInterpolation
@@ -407,11 +398,10 @@ end ProximityPrize.SubmissionLower.ContactInterpolation
 #print axioms ProximityPrize.SubmissionLower.ContactInterpolation.blockEntry_mem
 #print axioms ProximityPrize.SubmissionLower.ContactInterpolation.columnExponent_injective
 #print axioms ProximityPrize.SubmissionLower.ContactInterpolation.reconstruct_ne_zero
+#print axioms ProximityPrize.SubmissionLower.ContactInterpolation.reconstruct_mem_fullTriangleBox
 #print axioms ProximityPrize.SubmissionLower.ContactInterpolation.reconstruct_support_caps
 #print axioms ProximityPrize.SubmissionLower.ContactInterpolation.coefficient_index_card
 #print axioms ProximityPrize.SubmissionLower.ContactInterpolation.full_contactRankBound_eq
 #print axioms ProximityPrize.SubmissionLower.ContactInterpolation.globalTarget_finrank_le
 #print axioms ProximityPrize.SubmissionLower.ContactInterpolation.exists_nonzero_kernel_array
-#print axioms ProximityPrize.SubmissionLower.ContactInterpolation.exists_frozen_nonzero_contact_array
 #print axioms ProximityPrize.SubmissionLower.ContactInterpolation.all_blocks_divisible_of_equations
-#print axioms ProximityPrize.SubmissionLower.ContactInterpolation.exists_frozen_nonzero_polynomial_and_equations

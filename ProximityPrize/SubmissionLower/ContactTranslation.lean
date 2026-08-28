@@ -149,24 +149,6 @@ theorem translation_reconstruct_coeff (D w L s : ℕ) (x u₀ u₁ : K)
           coefficientBox K (min r L) L s) : Poly K)
   simp [boundedBlockEntry]
 
-/-- A genuine nonzero interpolant whose actual translated coefficient at
-every node and every block is divisible by the required contact power. -/
-theorem exists_frozen_translated_contact_interpolant
-    (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
-    ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,
-      Q ≠ 0 ∧ Q ∈ globalCoefficientBox IRSProfile.Field 4042676 131071 288 6 ∧
-      ∀ (i : IRSProfile.Index) (r : ℕ),
-        slopeDifference IRSProfile.Field ^ (22 - r) ∣
-          (homogenizedTranslation IRSProfile.Field
-            (IRSProfile.domain i) (u₀ i) (u₁ i) Q).coeff r := by
-  obtain ⟨Q, θ, hQ, hcaps, hreconstruct, hequations⟩ :=
-    exists_frozen_nonzero_polynomial_and_equations u₀ u₁
-  refine ⟨Q, hQ, hcaps, ?_⟩
-  intro i r
-  rw [hreconstruct, translation_reconstruct_coeff]
-  exact all_blocks_divisible_of_equations IRSProfile.Field 4042676 131071 288 6 22
-    (IRSProfile.domain i) (u₀ i) (u₁ i) θ (hequations i) r
-
 /-- Local Y is the candidate derivative plus T times a residual quotient. -/
 def contactEvaluation (R B : Polynomial K) (γ : K) : Poly K →ₐ[K] Polynomial K :=
   MvPolynomial.aeval ![R + Polynomial.X * B, R, Polynomial.C γ]
@@ -361,32 +343,6 @@ theorem specialization_natDegree_lt
     (fun d => specialization K P γ (MvPolynomial.monomial d (MvPolynomial.coeff d Q))) hterms
   exact lt_of_le_of_lt hh (by omega)
 
-/-- The full interpolation/vanishing front end for the frozen challenge
-profile. The same nonzero Q works for every seed, polynomial, and sufficiently
-large agreement support. This is not the remaining geometric seed count. -/
-theorem exists_frozen_universal_vanishing_interpolant
-    (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
-    ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,
-      Q ≠ 0 ∧ Q ∈ globalCoefficientBox IRSProfile.Field 4042676 131071 288 6 ∧
-      ∀ (γ : IRSProfile.Field) (P : Polynomial IRSProfile.Field)
-        (support : Finset IRSProfile.Index),
-        P.natDegree ≤ 131071 → 183758 ≤ support.card →
-        (∀ i ∈ support, P.eval (IRSProfile.domain i) = u₀ i + γ * u₁ i) →
-        specialization IRSProfile.Field P γ Q = 0 := by
-  classical
-  obtain ⟨Q, hQ, hcaps, hcontact⟩ := exists_frozen_translated_contact_interpolant u₀ u₁
-  refine ⟨Q, hQ, hcaps, ?_⟩
-  intro γ P support hP hcard hvalues
-  apply specialization_eq_zero_of_contact_and_degree IRSProfile.Field Q P γ
-    IRSProfile.domain u₀ u₁ support 22
-  · intro i hi r
-    exact hcontact i r
-  · exact hvalues
-  · have hdegree := specialization_natDegree_lt IRSProfile.Field
-      4042676 131071 288 6 Q P γ (by decide) hcaps hP
-    have hbound : 4042676 ≤ 22 * support.card := by omega
-    exact hdegree.trans_le hbound
-
 end
 
 end ProximityPrize.SubmissionLower.ContactTranslation
@@ -394,9 +350,7 @@ end ProximityPrize.SubmissionLower.ContactTranslation
 #print axioms ProximityPrize.SubmissionLower.ContactTranslation.coeff_shifted_affine_product
 #print axioms ProximityPrize.SubmissionLower.ContactTranslation.translation_column_coeff
 #print axioms ProximityPrize.SubmissionLower.ContactTranslation.translation_reconstruct_coeff
-#print axioms ProximityPrize.SubmissionLower.ContactTranslation.exists_frozen_translated_contact_interpolant
 #print axioms ProximityPrize.SubmissionLower.ContactTranslation.outerEvaluation_contact_dvd
 #print axioms ProximityPrize.SubmissionLower.ContactTranslation.X_pow_dvd_taylor_specialization
 #print axioms ProximityPrize.SubmissionLower.ContactTranslation.specialization_eq_zero_of_contact_and_degree
 #print axioms ProximityPrize.SubmissionLower.ContactTranslation.specialization_natDegree_lt
-#print axioms ProximityPrize.SubmissionLower.ContactTranslation.exists_frozen_universal_vanishing_interpolant

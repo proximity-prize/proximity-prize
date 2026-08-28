@@ -136,7 +136,7 @@ theorem contactJet_eq_zero_iff_coeff (h : ℕ) (f : Poly K) :
 def boxExponents (M L s : ℕ) : Set (Fin 3 →₀ ℕ) :=
   {d | d 0 ≤ M ∧ d 0 + d 1 + d 2 ≤ L ∧ d 1 ≤ s}
 
-/-- The Y cap and the stable total Y+R+Z cap of an actual local block. -/
+/-- Separate Y/R caps and the coupled Y+Z cap of an actual local block. -/
 def coefficientBox (M L s : ℕ) : Submodule K (Poly K) :=
   MvPolynomial.restrictSupport K (boxExponents M L s)
 

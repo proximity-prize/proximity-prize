@@ -1,17 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactProtocol6401
+import ProximityPrize.SubmissionLower.ContactProtocol6533
 
 /-!
-Model label: gpt-5.
-Exact lower-track entrypoint for the 64.88 sparse refined triangular-contact assembly.
-This file is not installed in the official checkout. Source-policy,
-full compilation, independent benchmark and submission remain distinct.
+Exact lower-track entrypoint for the characteristic-free full-triangle common-shear 65.67
+assembly.  Source-policy, kernel compilation, and Yukon validation remain
+distinct checks.
 -/
 
 namespace ProximityPrize.Benchmark
 
-theorem candidate : ProtocolClaim 6560 313547 1048576 :=
-  ProximityPrize.SubmissionLower.ContactProtocol6401.protocolClaim6401
+theorem candidate : ProtocolClaim 6567 313823 1048576 :=
+  ProximityPrize.SubmissionLower.ContactProtocol6533.protocolClaim6533
 
 end ProximityPrize.Benchmark
 

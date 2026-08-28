@@ -1,6 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactSurfaceSeedCount
-import ProximityPrize.SubmissionLower.ContactSparseProperCutSmall
+import ProximityPrize.SubmissionLower.ContactJointSurfaceSeedCount
 import ProximityPrize.SubmissionLower.ContactRegularFactorGate
 import ProximityPrize.SubmissionLower.ContactCountingLedger
 
@@ -28,8 +27,8 @@ open ContactAlignmentParameters ContactCountingCaps ContactCountingLedger
 open ContactGenericInitialPoint ContactGenericSurface ContactGeometricFirstTail
 open ContactGeometricFactorCover ContactRegularFactorGate ContactFactorCaps
 open ContactSurfaceSeedCount ContactPrimeSeedIncidence ContactProperCutSeedCount
-open ContactSparseProperCutSmall
 open ContactPolynomialSolutions ContactInterpolation ContactTranslation
+open ContactJointSurfaceSeedCount ContactJointSeedCaps
 
 noncomputable section
 
@@ -157,12 +156,10 @@ theorem original_regular_seed_bound
   have hY : F.degreeOf 1 ≤ yCap := hc.1
   have hR : F.degreeOf 2 ≤ slopeCap := hc.2.1
   have hZ : F.degreeOf 3 ≤ seedTotalCap := hc.2.2
-  have hHY : (ContactTaylorNumerators.polyH K F).degreeOf (1 : Fin 4) ≤ yCap - 1 :=
-    ContactRefinedAgreementY.polyH_Y_degree_le_of_mem_box
-      F weightedCap w seedTotalCap slopeCap yCap
-      hbox (by norm_num [w]) (by
-        norm_num [weightedCap, ContactAlignmentParameters.multiplicity,
-          agreements, w, yCap])
+  have hFseed : seedDegree F ≤ seedTotalCap := by
+    exact ((mem_globalCoefficientBox_iff F weightedCap w seedTotalCap slopeCap
+      (by norm_num [weightedCap, ContactAlignmentParameters.multiplicity,
+        agreements])).mp hbox).1
   have hsmall : F.degreeOf 2 < prime := hR.trans_lt (by norm_num [slopeCap, prime])
   have hcount (g : GeometricFactor K F) :
       (geometricSeeds K F selected Γ g).card * gap ^ 2 ≤ wholeNumerator (degreeVector g.1) := by
@@ -178,11 +175,24 @@ theorem original_regular_seed_bound
       · exact (geometricFactor_degree_le K F hF.ne_zero g 0).trans hY
       · exact (geometricFactor_degree_le K F hF.ne_zero g 1).trans hR
       · exact (geometricFactor_degree_le K F hF.ne_zero g 2).trans hZ
-    have hsurface : surfaceMap (polynomialEmbedding K) F ≠ 0 :=
-      surfaceMap_ne_zero (polynomialEmbedding K) (polynomialEmbedding_injective K) F hF.ne_zero
+    have hsurfaceNe : surfaceMap (polynomialEmbedding K) F ≠ 0 :=
+      surfaceMap_ne_zero (polynomialEmbedding K) (polynomialEmbedding_injective K)
+        F hF.ne_zero
+    have hsurfaceJoint : ∀ d ∈ (surfaceMap (polynomialEmbedding K) F).support,
+        d 0 + d 2 ≤ seedTotalCap := by
+      apply surfaceMap_joint_seed_cap (polynomialEmbedding K) F seedTotalCap
+      intro d hd
+      rw [← seed_weight]
+      exact (MvPolynomial.le_weightedTotalDegree seedWeights hd).trans hFseed
+    have hgJoint : ∀ e ∈
+        (TrivariateRationalCollection.rationalMap (GenericField K)
+          (Equiv.swap 0 1) g.1).support,
+        e 0 + e 1 ≤ seedTotalCap :=
+      rationalMap_joint_support_of_dvd g.1
+        (surfaceMap (polynomialEmbedding K) F) seedTotalCap hgdiv hsurfaceNe hsurfaceJoint
     have hsub := geometricSeeds_subset K F selected Γ g
-    exact whole_surface_seed_bound_fixed_sparse_small (polynomialEmbedding K) F g.1 hgirred hgdiv
-      hgate.1 hHproper hbox hsurface hgcaps hY hR hZ hHY
+    exact whole_surface_seed_bound_fixed_joint_R (polynomialEmbedding K) F g.1 hgirred hgdiv
+      hgate.1 hHproper hbox hgcaps hgJoint hFseed hY hR hZ
       selected (geometricSeeds K F selected Γ g)
       nodes x u₀ u₁ hinj hnodes
       (fun γ hγ => hdegree γ (hsub hγ))

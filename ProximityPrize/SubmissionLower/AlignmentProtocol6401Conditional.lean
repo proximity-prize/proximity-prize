@@ -1,12 +1,13 @@
 import ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
+import ProximityPrize.SubmissionLower.ContactScore6464
 
 /-!
-# Conditional protocol certificate at 64.88 bits
+# Conditional protocol certificate at 64.64 bits
 
 Model label: gpt-5.
 
 The sole mathematical premise of the final theorem is the explicit strong
-alignment bound at 77665 errors with budget 10^17. The actual squared-eight
+alignment bound at 77424 errors with budget 10^17. The actual squared-eight
 Code.Lambda, scalar-to-interleaved MCA transfer, field capacity and score
 conversion are derived below. No old Contact parameter or 6400 list module
 is imported, and no Benchmark.candidate is declared.
@@ -24,20 +25,23 @@ open scoped NNReal
 
 noncomputable section ProtocolProofs
 
-def radius6401 : ℝ≥0 := claimedRadius 313547 1048576
-def errors6401 : ℕ := 78386
-def budget6401 : ℕ := 137490364055697543
+def radius6401 : ℝ≥0 := claimedRadius 309699 1048576
+def errors6401 : ℕ := 77424
+def budget6401 : ℕ := 100000000000000000
 
 theorem radius6401_floor :
     ⌊(radius6401 : ℝ) * (Fintype.card IRSProfile.Index : ℝ)⌋₊ = errors6401 := by
-  norm_num [radius6401, claimedRadius, errors6401, IRSProfile.Index]
+  simpa [radius6401, errors6401, ContactScore6464.radius6464,
+    ContactScore6464.errors6464] using ContactScore6464.radius6464_floor
 
 theorem radius6401_cell_cross :
-    313547 * Fintype.card IRSProfile.Index < (errors6401 + 1) * 1048576 := by
-  norm_num [IRSProfile.Index, errors6401]
+    309699 * Fintype.card IRSProfile.Index < (errors6401 + 1) * 1048576 := by
+  simpa [errors6401, ContactScore6464.errors6464] using
+    ContactScore6464.radius6464_cell_cross
 
 theorem radius6401_gap : 131071 < Fintype.card IRSProfile.Index - errors6401 := by
-  norm_num [IRSProfile.Index, errors6401]
+  simpa [errors6401, ContactScore6464.errors6464] using
+    ContactScore6464.radius6464_gap
 
 theorem field_cardinality :
     Fintype.card IRSProfile.Field = (2130706433 : ℕ) ^ 6 := by
@@ -58,61 +62,22 @@ theorem doubled_budget6401_nat :
   rw [field_cardinality]
   norm_num [budget6401]
 
-/-- Upper, not lower, rational approximation to the hundredth root of two. -/
+/-- Upper rational approximation to `2^(64/100)`. -/
 theorem two_rpow_one_hundred_le :
-    (2 : ℝ≥0) ^ ((1 : ℝ) / 100) ≤ (1006955551 : ℝ≥0) / 1000000000 := by
-  have hroot :
-      ((2 : ℝ≥0) ^ (1 : ℕ)) ^ ((100 : ℝ)⁻¹) ≤ (1006955551 : ℝ≥0) / 1000000000 := by
-    rw [NNReal.rpow_inv_le_iff (by norm_num : (0 : ℝ) < 100)]
-    norm_num [NNReal.rpow_natCast, div_pow, le_div_iff₀]
-  calc
-    (2 : ℝ≥0) ^ ((1 : ℝ) / 100) =
-        ((2 : ℝ≥0) ^ (1 : ℕ)) ^ ((100 : ℝ)⁻¹) := by
-      rw [← NNReal.rpow_natCast_mul]
-      norm_num [div_eq_mul_inv]
-    _ ≤ (1006955551 : ℝ≥0) / 1000000000 := hroot
+    (2 : ℝ≥0) ^ ((64 : ℝ) / 100) ≤ (1559 : ℝ≥0) / 1000 :=
+  ContactScore6464.two_rpow_sixty_four_hundred_le
 
 /-- This exact rational inequality involves only the actual 128 repetitions. -/
 theorem radius6401_power_rational_bound :
     (1 - radius6401) ^ IRSProfile.repetitions ≤
-      ((1 : ℝ≥0) / 2 ^ (65 : ℕ)) * ((1000000000 : ℝ≥0) / 1006955551) ^ (60 : ℕ) := by
-  rw [← NNReal.coe_le_coe]
-  norm_num [radius6401, claimedRadius, IRSProfile.repetitions, div_pow,
-    div_le_iff₀]
+      ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (1000 / 1559) := by
+  simpa [radius6401, ContactScore6464.radius6464] using
+    ContactScore6464.radius6464_power_rational_bound
 
 theorem radius6401_score :
-    (1 - radius6401) ^ IRSProfile.repetitions ≤ claimedError 6560 := by
-  have hbase : (1000000000 : ℝ≥0) / 1006955551 ≤ (2 : ℝ≥0) ^ (-((1 : ℝ) / 100)) := by
-    calc
-      (1000000000 : ℝ≥0) / 1006955551 = 1 / ((1006955551 : ℝ≥0) / 1000000000) := by norm_num
-      _ ≤ 1 / ((2 : ℝ≥0) ^ ((1 : ℝ) / 100)) :=
-        one_div_le_one_div_of_le (by positivity) two_rpow_one_hundred_le
-      _ = (2 : ℝ≥0) ^ (-((1 : ℝ) / 100)) := by
-        rw [one_div, NNReal.rpow_neg]
-  have hscale :
-      ((1000000000 : ℝ≥0) / 1006955551) ^ (60 : ℕ) ≤
-        (2 : ℝ≥0) ^ (-((60 : ℝ) / 100)) := by
-    calc
-      ((1000000000 : ℝ≥0) / 1006955551) ^ (60 : ℕ) ≤
-          ((2 : ℝ≥0) ^ (-((1 : ℝ) / 100))) ^ (60 : ℕ) :=
-        pow_le_pow_left₀ (by positivity) hbase 60
-      _ = (2 : ℝ≥0) ^ (-((60 : ℝ) / 100)) := by
-        rw [← NNReal.rpow_natCast (((2 : ℝ≥0) ^ (-((1 : ℝ) / 100)))) 60,
-          ← NNReal.rpow_mul]
-        norm_num
-  calc
-    (1 - radius6401) ^ IRSProfile.repetitions ≤
-        ((1 : ℝ≥0) / 2 ^ (65 : ℕ)) * ((1000000000 : ℝ≥0) / 1006955551) ^ (60 : ℕ) :=
-      radius6401_power_rational_bound
-    _ ≤ ((1 : ℝ≥0) / 2 ^ (65 : ℕ)) *
-        (2 : ℝ≥0) ^ (-((60 : ℝ) / 100)) :=
-      mul_le_mul_of_nonneg_left hscale (by positivity)
-    _ = claimedError 6560 := by
-      unfold claimedError
-      rw [show -((((6560 : ℕ) : ℝ) / 100)) =
-          -((65 : ℕ) : ℝ) + -((60 : ℝ) / 100) by norm_num,
-        NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0)]
-      simp only [NNReal.rpow_neg, NNReal.rpow_natCast, one_div]
+    (1 - radius6401) ^ IRSProfile.repetitions ≤ claimedError 6464 := by
+  simpa [radius6401, ContactScore6464.radius6464] using
+    ContactScore6464.radius6464_score
 
 /-- An actual module-code identity, proved using the verified row interface. -/
 theorem irs_code_eq_base_interleaved :
@@ -172,7 +137,7 @@ theorem lambda6401_le_of_alignment
         Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
       (radius6401 : ℝ) ≤ (budget6401 : ℕ∞) :=
   AlignmentInterleavedLambda.irs_squared_claimedRadius_lambda_le
-    313547 1048576 errors6401 budget6401 (by norm_num) radius6401_cell_cross
+    309699 1048576 errors6401 budget6401 (by norm_num) radius6401_cell_cross
     radius6401_gap halign budget6401_lt_field sixteen_row_separation_gate
 
 /-- A local copy of the elementary generic ENNReal field-budget calculation;
@@ -224,10 +189,10 @@ theorem certifiedGammaError6401_le_of_alignment
 theorem. This module does not itself assert that alignment premise. -/
 theorem protocolClaim6401_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode
-      78386 137490364055697543) :
-    ProtocolClaim 6560 313547 1048576 where
+      77424 100000000000000000) :
+    ProtocolClaim 6464 309699 1048576 where
   admissible := by
-    constructor <;> norm_num [claimedRadius, IRSProfile.minRelativeDistance]
+    exact ContactScore6464.radius6464_admissible
   reduction := by
     have h : certifiedGammaError IRSProfile.code radius6401 ≤ reductionTarget :=
       (certifiedGammaError6401_le_of_alignment halign).trans
