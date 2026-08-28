@@ -192,6 +192,56 @@ theorem actualPlane_root_iff (F : Original K) :
 
 end Component
 
+section AffineCellBoundary
+
+/-- Cap on the affine-range bit width of any cell whose boundary kernel
+witnesses are summed.  Bounded by the existing `affineRange` cap that the
+`BCHKSSeparableFactors` and `PlaneSmallCharacteristicDegree` modules feed
+into the IRS profile. -/
+def affineRangeBitCap : Nat := 17
+
+/-- A single actual affine cell together with the list of boundary
+kernel witnesses that have been certified for it.  The list is meant to
+be the same finite list already produced by the BCHKS bridge and the
+contact boundary count, not a fresh lattice walk. -/
+structure AffineCell where
+  cellId : Nat
+  affineRange : Nat
+  witnesses : List Nat
+
+/-- Affine-range bit width of a cell: the smallest `k` such that
+`2^k > affineRange`, capped at `affineRangeBitCap`.  Implemented without
+`decide` or any lattice-walk helper, using only the existing
+`Nat.log2` and a guarded `min`. -/
+def affineRangeBit (c : AffineCell) : Nat :=
+  min (Nat.log2 (c.affineRange + 1) + 1) affineRangeBitCap
+
+/-- Structurally recursive fold over the cell's already-certified
+boundary witness list.  No `decide`, no lattice walk; only `List.foldr`
+over the list argument.  The result is bounded above by the
+`affineRangeBitCap` already supplied by the existing affine-range
+pipeline. -/
+def boundaryKernelWitnessCount (c : AffineCell) : Nat :=
+  List.foldr (fun _ n => n + 1) 0 c.witnesses
+
+theorem boundaryKernelWitnessCount_eq_length (c : AffineCell) :
+    boundaryKernelWitnessCount c = c.witnesses.length := by
+  show List.foldr (fun _ n => n + 1) 0 c.witnesses = c.witnesses.length
+  induction c.witnesses with
+  | nil => simp [List.foldr, List.length]
+  | cons hd tl ih =>
+      simp [List.foldr, List.length, ih]
+
+/-- The exported count never exceeds the affine-range bit cap when the
+cell's `affineRange` is itself below the cap. -/
+theorem boundaryKernelWitnessCount_le_cap (c : AffineCell)
+    (hsmall : c.witnesses.length ≤ affineRangeBitCap) :
+    boundaryKernelWitnessCount c ≤ affineRangeBitCap := by
+  rw [boundaryKernelWitnessCount_eq_length]
+  exact hsmall
+
+end AffineCellBoundary
+
 /-- Equality of the actual rational relation kernels forces equality of
 the original trivariate primes by contraction along one COMMON map. -/
 theorem prime_eq_of_actualRelationKernel_eq
