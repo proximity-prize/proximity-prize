@@ -218,11 +218,11 @@ global weight hypotheses. -/
 theorem surfaceMap_agreement_in_flag_of_surface_weights
     (F : MvPolynomial (Fin 4) K)
     (hS : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualSWeights F ≤ 6)
+      residualSWeights F ≤ 8)
     (hYS : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualYSWeights F ≤ 33)
+      residualYSWeights F ≤ 43)
     (hTotal : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualTotalWeights F ≤ 582)
+      residualTotalWeights F ≤ 503)
     (d : ℕ) (coeffs : ℕ → K) (x0 u0 u1 : K) :
     ContactFlagBezout6543Research.PolynomialInFlag (residualAgreementFlag d)
       (ContactGenericSurface.surfaceMap phi
@@ -403,3 +403,12 @@ end
 end Terminalization
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch.residual_agreement_card
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch.iterated_residual_invariants
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch.score6600_iterated_compression
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch.exists_strict_advance
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch.exists_terminal_reachable
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch.exists_terminal_with_incidence_data
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch.surfaceMap_agreement_in_flag_of_surface_weights
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch.terminal_proper_cuts_in_residual_flag

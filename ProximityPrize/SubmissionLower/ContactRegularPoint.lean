@@ -203,3 +203,10 @@ theorem regularPointValue_coordinate
 end Coordinates
 
 end ProximityPrize.SubmissionLower.ContactRegularPoint
+
+#print axioms ProximityPrize.SubmissionLower.ContactRegularPoint.eval_liftFour
+#print axioms ProximityPrize.SubmissionLower.ContactRegularPoint.contactIdeal_le_ker_pointEvaluation
+#print axioms ProximityPrize.SubmissionLower.ContactRegularPoint.regularPointValue_mk
+#print axioms ProximityPrize.SubmissionLower.ContactRegularPoint.coordinate_relation
+#print axioms ProximityPrize.SubmissionLower.ContactRegularPoint.derivation_coordinate_Y
+#print axioms ProximityPrize.SubmissionLower.ContactRegularPoint.regularPointValue_coordinate

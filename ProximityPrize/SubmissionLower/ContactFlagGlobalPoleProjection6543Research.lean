@@ -230,3 +230,8 @@ end RegularComponents
 end
 
 end ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research.nested_u_pole
+#print axioms ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research.nested_v_pole
+#print axioms ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research.finiteAffineV
+#print axioms ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research.separableAffineV

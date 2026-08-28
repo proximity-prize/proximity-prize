@@ -243,5 +243,10 @@ theorem sharp_Y_bounds_of_mem_box
 
 end
 
+#print axioms polyH_Y_degree_pred_of_mem_box
+#print axioms numeratorStep_Y_degree_bound
+#print axioms numerator_Y_degree_bound
+#print axioms agreementNumerator_Y_degree_bound
+#print axioms sharp_Y_bounds_of_mem_box
 
 end ProximityPrize.SubmissionLower.ContactSharpYRecurrence
