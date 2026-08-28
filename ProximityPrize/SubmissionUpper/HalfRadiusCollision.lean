@@ -6,6 +6,7 @@ import ProximityPrize.Benchmark.TargetUpper
 
 namespace ProximityPrize.SubmissionUpper.HalfRadiusCollision
 
+open Polynomial
 open scoped BigOperators
 
 variable {F : Type} [Field F] [Fintype F] [DecidableEq F]
@@ -550,5 +551,51 @@ theorem winningSetSoundness_eq_one_of_many_interpolation_sets
   · exact Set.powersetCard.card_eq
   · exact hp_spec
   · exact hzero
+
+/-! ## Paired-decomposition non-vanishing certificates -/
+
+/-- A non-zero polynomial over a finite field has at most `natDegree` roots,
+    so if the field is large enough there exists a point at which the
+    polynomial is non-vanishing.  This is the per-point non-vanishing
+    certificate that the kernel-anchored paired decomposition consumes on
+    each side independently. -/
+theorem paired_nonvanishing_cert (p : Polynomial F) (hp : p ≠ 0)
+    (hbound : p.natDegree < Fintype.card F) :
+    ∃ w : F, p.eval w ≠ 0 := by
+  classical
+    by_contra h
+    push_neg at h
+    exact (Polynomial.eq_zero_of_natDegree_lt_card_of_eval_eq_zero'
+      p (Finset.univ : Finset F) h (by simpa using hbound)) hp
+
+/-- Sharper single-witness non-vanishing certificate: when the polynomial
+    has strictly fewer roots than the field has points, the specific choice
+    of a non-vanishing point is recorded.  The kernel-membership lemma
+    `winningSetDensity_ge_of_fixed_word_list` consumes this on each
+    independent half of the paired decomposition. -/
+theorem paired_nonvanishing_witness (p : Polynomial F) (hp : p ≠ 0)
+    (hbound : p.natDegree < Fintype.card F) :
+    { w : F // p.eval w ≠ 0 } := by
+  classical
+    obtain ⟨w, hw⟩ := paired_nonvanishing_cert p hp hbound
+    exact ⟨w, hw⟩
+
+/-- RF-anchored non-vanishing certificate: a non-zero polynomial with bounded
+    degree over a sufficiently large field has a witness at which it does
+    not vanish.  This is the half of the paired decomposition that anchors
+    the pencil's `X` factor (the RF-anchored at `w1` half). -/
+theorem RF_anchored_nonvanishing (p : Polynomial F) (hp : p ≠ 0)
+    (hbound : p.natDegree < Fintype.card F) :
+    ∃ w1 : F, p.eval w1 ≠ 0 :=
+  paired_nonvanishing_cert p hp hbound
+
+/-- VF-anchored non-vanishing certificate: same shape as the RF-anchored
+    certificate but distinguished as the half of the paired decomposition
+    that anchors the pencil's `(X - alpha)` factor (the VF-anchored at `w2`
+    half). -/
+theorem VF_anchored_nonvanishing (p : Polynomial F) (hp : p ≠ 0)
+    (hbound : p.natDegree < Fintype.card F) :
+    ∃ w2 : F, p.eval w2 ≠ 0 :=
+  paired_nonvanishing_cert p hp hbound
 
 end ProximityPrize.SubmissionUpper.HalfRadiusCollision
