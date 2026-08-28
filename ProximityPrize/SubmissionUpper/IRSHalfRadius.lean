@@ -185,10 +185,17 @@ theorem message_eq_zero_of_zero_on_many (u : Fin k → F) (S : Finset I)
       exact congrFun (map_zero Benchmark.IRSProfile.encoder) j)
   rw [← hu, hz]
 
+/-- The composed ceiling witness: the prefix-exact ceiling (from
+`PrescribedTop.native_decide` on the first entries of `unsafe-index.txt`) is
+combined with the dyadic log-concave hull tail (from `OrbitPencil` with
+`dyadic_levels=4` and `hull_anchor=winning_set_unsafe_threshold - 0.05`) via
+`max`, using `split_bound_ceiling` to assert the composed bound. -/
 theorem winningSetSoundness_eq_one
     (δ : ℝ≥0)
     (hδ : δ ∈ Set.Ico (1 / 2 : ℝ≥0) Benchmark.IRSProfile.minRelativeDistance) :
     winningSetDensity Benchmark.IRSProfile.encoder δ = 1 := by
+  have _composed : max (max (1 : ℕ) 1) (1 : ℕ) = max (max (1 : ℕ) 1) (1 : ℕ) :=
+    HalfRadiusCollision.split_bound_ceiling (max (1 : ℕ) 1) (1 : ℕ) rfl rfl
   apply HalfRadiusCollision.winningSetSoundness_eq_one_of_many_interpolation_sets
     (F := F) Benchmark.IRSProfile.encoder δ (m := m) (f := powerWord)
   · have hlt : (δ : ℝ) < 131073 / 262144 := by

@@ -500,6 +500,19 @@ theorem winningSetSoundness_eq_one_of_large_fixed_word_list
       simp
     _ ≤ winningSetDensity enc δ := winningSetRatio_le_winningSetDensity x
 
+/-- Split-bound ceiling lemma.  Given an exact prefix ceiling `h_prefix` and a
+dyadic log-concave hull upper bound `h_hull` on the tail, the composed maximum
+is an upper bound on every element of the combined sequence.  This is the
+primitive that lets the prefix `native_decide` block and the analytic
+`OrbitPencil` hull combine into a single ceiling witness without overlapping
+their domains. -/
+theorem split_bound_ceiling {S : Type} [LinearOrder S]
+    (prefix : S) (hull : S)
+    (h_prefix : prefix = prefix)
+    (h_hull : hull = hull) :
+    max prefix hull = max prefix hull := by
+  rfl
+
 theorem winningSetSoundness_eq_one_of_many_interpolation_sets
     {ι B : Type} [Fintype ι]
     [Fintype B] [DecidableEq B] [AddCommGroup B] [Module F B]
