@@ -81,3 +81,6 @@ theorem exists_stacked_interpolants_with_recursive_cover
 end
 
 end ProximityPrize.SubmissionLower.ContactStackedGCDCover6656Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactStackedGCDCover6656Research.recursive_branch_of_three_vanishings
+#print axioms ProximityPrize.SubmissionLower.ContactStackedGCDCover6656Research.exists_stacked_interpolants_with_recursive_cover

@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactSeedlessListBoundResearch
+import ProximityPrize.SubmissionLower.ContactSeedlessListBound6696Research
 import ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
 
 /-! # Seedless scalar bound transported to the protected squared code -/
 
-namespace ProximityPrize.SubmissionLower.ContactSeedlessLambdaResearch
+namespace ProximityPrize.SubmissionLower.ContactSeedlessLambda6696Research
 
 open scoped Classical NNReal
 open ProximityPrize.Benchmark
-open ContactSeedlessInterpolationResearch ContactSeedlessListBoundResearch
+open ContactSeedlessInterpolation6696Research ContactSeedlessListBound6696Research
 open AlignmentMomentCurveProjection AlignmentInterleavedLambda
 open ContactTranslation
 
@@ -247,4 +247,4 @@ theorem irs_squared_lambda_seedless
 
 end
 
-end ProximityPrize.SubmissionLower.ContactSeedlessLambdaResearch
+end ProximityPrize.SubmissionLower.ContactSeedlessLambda6696Research

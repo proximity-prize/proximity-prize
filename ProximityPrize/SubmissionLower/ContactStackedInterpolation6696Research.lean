@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactKernelMemberUniversality
-import ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
+import ProximityPrize.SubmissionLower.ContactStackedParameters6696Research
 
 /-!
-# Three universal contact interpolants at the 66.70 row
+# Three universal contact interpolants at the 66.96 row
 
 This is the target-specific instantiation of the generic contact-kernel
 universality theorem at `a = 182414`.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactStackedInterpolation6670Research
+namespace ProximityPrize.SubmissionLower.ContactStackedInterpolation6696Research
 
 open ProximityPrize.Benchmark
 open ContactInterpolation ContactRankKernel ContactTranslation
 open ContactKernelMemberUniversality
-open ContactStackedParameters6670Research
+open ContactStackedParameters6696Research
 
 noncomputable section
 
@@ -96,4 +96,6 @@ theorem exists_stacked_universal_vanishing_interpolants
 
 end
 
-end ProximityPrize.SubmissionLower.ContactStackedInterpolation6670Research
+end ProximityPrize.SubmissionLower.ContactStackedInterpolation6696Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactStackedInterpolation6696Research.exists_stacked_universal_vanishing_interpolants

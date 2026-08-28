@@ -149,5 +149,9 @@ end ThreeBranchCover
 
 end
 
+#print axioms gcdQuotients_isRelPrime
+#print axioms firstQuotients_isRelPrime
+#print axioms secondQuotients_isRelPrime
+#print axioms recursive_three_branch_cover
 
 end ProximityPrize.SubmissionLower.ContactRecursiveGCDResearch

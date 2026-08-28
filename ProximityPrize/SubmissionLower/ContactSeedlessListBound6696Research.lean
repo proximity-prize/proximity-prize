@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactSeedlessInterpolationResearch
+import ProximityPrize.SubmissionLower.ContactSeedlessInterpolation6696Research
 import ProximityPrize.SubmissionLower.ContactSeedlessProperCutResearch
 import ProximityPrize.SubmissionLower.ContactOriginalRegularSeedCount
 import ProximityPrize.SubmissionLower.ContactSingularDegreeBounds
@@ -18,7 +18,7 @@ univariate polynomial in `Y` over the generic coefficient field, so its
 distinct polynomial roots are counted directly.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactSeedlessListBoundResearch
+namespace ProximityPrize.SubmissionLower.ContactSeedlessListBound6696Research
 
 open scoped Classical BigOperators
 open ProximityPrize.Benchmark
@@ -30,7 +30,7 @@ open ContactPrimeSeedIncidence ContactProperCutSeedCount
 open ContactOriginalRegularSeedCount ContactSingularAuxiliary
 open ContactSingularDegreeBounds
 open ContactSelectedSeedDecomposition
-open ContactSeedlessInterpolationResearch
+open ContactSeedlessInterpolation6696Research
 open ContactSeedlessPrimeIncidenceResearch ContactSeedlessProperCutResearch
 open ActualCoordinateDegreeSum
 
@@ -49,7 +49,7 @@ def regularListNumerator : ℕ :=
   (n - w) * (capY * slopeCap + capR * yTotalCap)
 def singularListCap : ℕ := (2 * slopeCap - 1) * yTotalCap
 def listNumerator : ℕ := regularListNumerator + singularListCap * gap
-def listBudget : ℕ := 500000000
+def listBudget : ℕ := 487527154
 
 theorem numeric_values :
     gap = 51343 ∧ capY = 12320675 ∧ capR = 1966065 ∧
@@ -69,7 +69,7 @@ local instance : DecidableEq (GenericField K) := Classical.decEq (GenericField K
 
 theorem seedless_degree_caps
     (Q : MvPolynomial (Fin 4) K)
-    (hbox : Q ∈ ContactSeedlessInterpolationResearch.globalCoefficientBox K
+    (hbox : Q ∈ ContactSeedlessInterpolation6696Research.globalCoefficientBox K
       weightedCap w yTotalCap slopeCap) :
     Q.degreeOf 1 ≤ yTotalCap ∧ Q.degreeOf 2 ≤ slopeCap ∧
       Q.degreeOf 3 = 0 := by
@@ -377,7 +377,7 @@ theorem degreeZ_le_zWeight (Q : MvPolynomial (Fin 4) K) :
 theorem singular_seedless_card_le
     [CharP K prime]
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
-    (hbox : Q ∈ ContactSeedlessInterpolationResearch.globalCoefficientBox K
+    (hbox : Q ∈ ContactSeedlessInterpolation6696Research.globalCoefficientBox K
       weightedCap w yTotalCap slopeCap)
     (Gamma : Finset (Polynomial K))
     (hsolutions : ∀ S ∈ Gamma,
@@ -489,7 +489,7 @@ theorem seedless_solution_cover
 theorem seedless_list_card_le
     [CharP K prime]
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
-    (hbox : Q ∈ ContactSeedlessInterpolationResearch.globalCoefficientBox K
+    (hbox : Q ∈ ContactSeedlessInterpolation6696Research.globalCoefficientBox K
       weightedCap w yTotalCap slopeCap)
     (hlegacy : Q ∈ ContactInterpolation.globalCoefficientBox K
       weightedCap w yTotalCap slopeCap)
@@ -573,4 +573,4 @@ theorem seedless_list_card_le
 
 end
 
-end ProximityPrize.SubmissionLower.ContactSeedlessListBoundResearch
+end ProximityPrize.SubmissionLower.ContactSeedlessListBound6696Research

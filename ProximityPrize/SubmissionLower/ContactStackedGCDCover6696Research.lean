@@ -1,21 +1,21 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactRecursiveGCDResearch
-import ProximityPrize.SubmissionLower.ContactStackedInterpolation6670Research
+import ProximityPrize.SubmissionLower.ContactStackedInterpolation6696Research
 
 /-!
-# Recursive GCD cover for the three 66.70 interpolants
+# Recursive GCD cover for the three 66.96 interpolants
 
 Only the target boxes are new.  The branch alternative is the generic
 three-vanishing GCD cover.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactStackedGCDCover6670Research
+namespace ProximityPrize.SubmissionLower.ContactStackedGCDCover6696Research
 
 open ProximityPrize.Benchmark
 open ContactInterpolation ContactTranslation
 open ContactRecursiveGCDResearch
-open ContactStackedParameters6670Research
-open ContactStackedInterpolation6670Research
+open ContactStackedParameters6696Research
+open ContactStackedInterpolation6696Research
 
 noncomputable section
 
@@ -78,4 +78,7 @@ theorem exists_stacked_interpolants_with_recursive_cover
 
 end
 
-end ProximityPrize.SubmissionLower.ContactStackedGCDCover6670Research
+end ProximityPrize.SubmissionLower.ContactStackedGCDCover6696Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactStackedGCDCover6696Research.recursive_branch_of_three_vanishings
+#print axioms ProximityPrize.SubmissionLower.ContactStackedGCDCover6696Research.exists_stacked_interpolants_with_recursive_cover

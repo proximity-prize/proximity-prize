@@ -1,38 +1,40 @@
-import ProximityPrize.SubmissionLower.ContactStackedSelectedBound6670Research
-import ProximityPrize.SubmissionLower.ContactFixedSelectedCell6670Research
-import ProximityPrize.SubmissionLower.ContactSeedlessProtocolResearch
+import ProximityPrize.SubmissionLower.ContactStackedSelectedBound6696Research
+import ProximityPrize.SubmissionLower.ContactFixedSelectedCell6696Research
 
 /-!
-# Premise-free stacked 66.70 closure
+# Premise-free stacked 66.96 closure
 
 This module supplies the sole fixed-cell premise of the selected-family
 composition from the completed sharp-YZ fixed-meet theorem.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactStackedClosure6670Research
+namespace ProximityPrize.SubmissionLower.ContactStackedClosure6696Research
 
 open ProximityPrize.Benchmark
 open ContactAlignmentBridge
 open ContactInterpolation ContactPrimeSeedIncidence ContactProperCutSeedCount
-open ContactStackedParameters6670Research
-open ContactFixedMeetProfile6670Research
-open ContactFixedSelectedCell6670Research
-open ContactStackedSelectedBound6670Research
-open ContactStackedPromotedArithmetic6670Research
+open ContactStackedParameters6696Research
+open ContactFixedMeetProfile6696Research
+open ContactFixedSelectedCell6696Research
+open ContactStackedSelectedBound6696Research
+open ContactStackedPromotedArithmetic6696Research
 open ContactRobustFixedMeet6656Research
 
 noncomputable section
+
+set_option maxRecDepth 1000000
+set_option maxHeartbeats 6000000
 
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 
 /-- The completed fixed-meet theorem discharges the exact abstract fixed-cell
 provider used by the recursive-GCD composition. -/
-theorem fixedCellCountProvider6670 : FixedCellCountProvider6670 := by
+theorem fixedCellCountProvider6696 : FixedCellCountProvider6696 := by
   intro Q hQ hbox selected Delta u0 u1 hsolution hdegree hagreement hnoPencil
   letI : CharP IRSProfile.Field
-      ContactFixedMeetProfile6670Research.prime := by
-    simpa [ContactFixedMeetProfile6670Research.prime,
+      ContactFixedMeetProfile6696Research.prime := by
+    simpa [ContactFixedMeetProfile6696Research.prime,
       ContactParameters6600Research.prime] using
         ContactFrozenAlignment6600Research.challenge_field_characteristic6600
   have hbox' : Q ∈ globalCoefficientBox IRSProfile.Field
@@ -60,27 +62,20 @@ theorem fixedCellCountProvider6670 : FixedCellCountProvider6670 := by
   rw [fixed_count_ceiling_exact] at h
   simpa [fixedCost, fixedRegularCost, fixedSingularCost] using h
 
-theorem selectedNoLargePencilBound6670 :
+theorem selectedNoLargePencilBound6696 :
     SelectedNoLargePencilBound IRSProfile.domain
-      131071 79730 274980727611395087 :=
-  selectedNoLargePencilBound_of_fixedCellCountProvider6670
-    fixedCellCountProvider6670
+      131071 79730 274980727623867933 :=
+  selectedNoLargePencilBound_of_fixedCellCountProvider6696
+    fixedCellCountProvider6696
 
-/-- Final split-budget endpoint: the recursive-GCD construction supplies
-MCA, while the independent fixed-centre construction supplies Lambda. -/
-theorem protocolClaim6696 : ProtocolClaim 6696 318923 1048576 := by
-  have halign : AffineLineAlignmentBound IRSProfile.baseCode
-      ContactSeedlessProtocolResearch.errors
-      ContactSeedlessProtocolResearch.mcaBudget := by
-    have h := ContactAlignmentBridge.alignmentBound_of_selected_count
-      IRSProfile.domain 131071 79730 274980727611395087
-      selectedNoLargePencilBound6670
-    simpa [IRSProfile.baseCode, IRSProfile.baseDimension,
-      ContactSeedlessProtocolResearch.errors,
-      ContactSeedlessProtocolResearch.mcaBudget,
-      ContactScore6630Research.errors6630] using h
-  exact ContactSeedlessProtocolResearch.protocolClaim6696_of_alignment halign
+theorem alignmentBound6696 :
+    AffineLineAlignmentBound IRSProfile.baseCode 79730 274980727623867933 := by
+  change AffineLineAlignmentBound
+    (ReedSolomon.code IRSProfile.domain (131071 + 1))
+      79730 274980727623867933
+  exact alignmentBound_of_selected_count IRSProfile.domain
+    131071 79730 274980727623867933 selectedNoLargePencilBound6696
 
 end
 
-end ProximityPrize.SubmissionLower.ContactStackedClosure6670Research
+end ProximityPrize.SubmissionLower.ContactStackedClosure6696Research

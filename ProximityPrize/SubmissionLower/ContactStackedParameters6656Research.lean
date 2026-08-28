@@ -92,11 +92,12 @@ theorem profileA_coefficients_exact :
   change coefficientCount (25 * 182807) 131071 5263 7 = 2811431653128
   rw [coefficientCount_eq_sum_range_of_weighted_cutoff
     (25 * 182807) 131071 5263 7 35 (by norm_num) (by norm_num)]
-  decide
+  norm_num [Finset.sum_range_succ]
 
 theorem profileA_localRank_exact : profileA.localRank = 10724760 := by
   change localRankBound 25 5263 7 = 10724760
-  decide
+  norm_num [localRankBound, contactRankBound, blockInputCount,
+    blockKernelLowerBound, Finset.sum_range_succ]
 
 theorem profileA_values :
     profileA.weightedCap = 4570175 ∧ profileA.yCap = 34 ∧
@@ -115,11 +116,12 @@ theorem profileB_coefficients_exact :
   change coefficientCount (47 * 182807) 131071 598 14 = 1997482954410
   rw [coefficientCount_eq_sum_range_of_weighted_cutoff
     (47 * 182807) 131071 598 14 66 (by norm_num) (by norm_num)]
-  decide
+  norm_num [Finset.sum_range_succ]
 
 theorem profileB_localRank_exact : profileB.localRank = 7619680 := by
   change localRankBound 47 598 14 = 7619680
-  decide
+  norm_num [localRankBound, contactRankBound, blockInputCount,
+    blockKernelLowerBound, Finset.sum_range_succ]
 
 theorem profileB_values :
     profileB.weightedCap = 8591929 ∧ profileB.yCap = 65 ∧
@@ -138,11 +140,12 @@ theorem profileC_coefficients_exact :
   change coefficientCount (27 * 182807) 131071 579299 6 = 329531914715570
   rw [coefficientCount_eq_sum_range_of_weighted_cutoff
     (27 * 182807) 131071 579299 6 38 (by norm_num) (by norm_num)]
-  decide
+  norm_num [Finset.sum_range_succ]
 
 theorem profileC_localRank_exact : profileC.localRank = 1257064494 := by
   change localRankBound 27 579299 6 = 1257064494
-  decide
+  norm_num [localRankBound, contactRankBound, blockInputCount,
+    blockKernelLowerBound, Finset.sum_range_succ]
 
 theorem profileC_values :
     profileC.weightedCap = 4935789 ∧ profileC.yCap = 37 ∧
@@ -195,3 +198,9 @@ theorem meet_caps :
   norm_num [profileA, profileB, profileC]
 
 end ProximityPrize.SubmissionLower.ContactStackedParameters6656Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactStackedParameters6656Research.profileA_values
+#print axioms ProximityPrize.SubmissionLower.ContactStackedParameters6656Research.profileB_values
+#print axioms ProximityPrize.SubmissionLower.ContactStackedParameters6656Research.profileC_values
+#print axioms ProximityPrize.SubmissionLower.ContactStackedParameters6656Research.interpolation_gates
+#print axioms ProximityPrize.SubmissionLower.ContactStackedParameters6656Research.characteristic_gates

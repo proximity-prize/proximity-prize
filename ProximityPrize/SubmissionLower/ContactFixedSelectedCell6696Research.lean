@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactFixedMeetProfile6670Research
+import ProximityPrize.SubmissionLower.ContactFixedMeetProfile6696Research
 import ProximityPrize.SubmissionLower.ContactSharpTaylorYZFactorProviderResearch
 import ProximityPrize.SubmissionLower.ContactProfileFixedSelectedCombinerResearch
 import ProximityPrize.SubmissionLower.ContactRegularFactorResidualStage6600Research
@@ -9,10 +9,10 @@ import ProximityPrize.SubmissionLower.ContactRegularFactorResidualStage6600Resea
 
 This module instantiates the generic sharp-Taylor active-YZ factor provider
 and the profile-generic tight selected-family combiner at the fixed meet used
-by the score-66.70 arithmetic.
+by the score-66.96 arithmetic.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactFixedSelectedCell6670Research
+namespace ProximityPrize.SubmissionLower.ContactFixedSelectedCell6696Research
 
 open scoped Classical BigOperators
 open ContactInterpolation ContactTranslation ContactSelectedSeedDecomposition
@@ -34,7 +34,7 @@ open ContactSharpTaylorFixedMeet6656Research
 open ContactSharpTaylorYZFactorProviderResearch
 open ContactProfileYZFactorLedgerResearch
 open ContactProfileFixedSelectedCombinerResearch
-open ContactFixedMeetProfile6670Research
+open ContactFixedMeetProfile6696Research
 
 noncomputable section
 
@@ -368,4 +368,9 @@ theorem fixed_selected_count_le_fixedCountCeiling
 
 end
 
-end ProximityPrize.SubmissionLower.ContactFixedSelectedCell6670Research
+end ProximityPrize.SubmissionLower.ContactFixedSelectedCell6696Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactFixedSelectedCell6696Research.fixedRegularGeometricResidualStage
+#print axioms ProximityPrize.SubmissionLower.ContactFixedSelectedCell6696Research.regular_factor_seed_bound
+#print axioms ProximityPrize.SubmissionLower.ContactFixedSelectedCell6696Research.fixed_selected_count_le_exact_cap
+#print axioms ProximityPrize.SubmissionLower.ContactFixedSelectedCell6696Research.fixed_selected_count_le_fixedCountCeiling

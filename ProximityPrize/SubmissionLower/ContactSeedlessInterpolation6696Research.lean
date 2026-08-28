@@ -13,7 +13,7 @@ machinery can consume the result, but every reconstructed monomial has
 two-dimensional contact blocks proved in `ContactSeedlessRankResearch`.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactSeedlessInterpolationResearch
+namespace ProximityPrize.SubmissionLower.ContactSeedlessInterpolation6696Research
 
 open scoped BigOperators
 open ProximityPrize.Benchmark
@@ -377,11 +377,14 @@ theorem parameter_values :
 
 theorem coefficient_count_exact :
     coefficientCount weightedCap w yTotalCap slopeCap = 1136400792 := by
-  rfl
+  norm_num [coefficientCount, weightedCap, multiplicity, agreements, n,
+    errors, w, yTotalCap, slopeCap, Finset.sum_range_succ]
 
 theorem local_rank_exact :
     localRankBound multiplicity yTotalCap slopeCap = 4335 := by
-  rfl
+  norm_num [localRankBound, seedlessContactRankBound,
+    seedlessKernelLowerBound, seedlessInputCount, multiplicity, yTotalCap,
+    slopeCap, Finset.sum_range_succ]
 
 theorem interpolation_gate :
     n * localRankBound multiplicity yTotalCap slopeCap <
@@ -464,4 +467,4 @@ theorem exists_frozen_seedless_vanishing_interpolant
 
 end
 
-end ProximityPrize.SubmissionLower.ContactSeedlessInterpolationResearch
+end ProximityPrize.SubmissionLower.ContactSeedlessInterpolation6696Research

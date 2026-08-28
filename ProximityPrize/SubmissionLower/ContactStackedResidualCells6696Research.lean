@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.ContactStackedResidualCells6656Research
-import ProximityPrize.SubmissionLower.ContactStackedSeedPartition6670Research
-import ProximityPrize.SubmissionLower.ContactStackedBoxTransport6670Research
-import ProximityPrize.SubmissionLower.ContactRecursiveResidualStages6670Research
+import ProximityPrize.SubmissionLower.ContactStackedSeedPartition6696Research
+import ProximityPrize.SubmissionLower.ContactStackedBoxTransport6696Research
+import ProximityPrize.SubmissionLower.ContactRecursiveResidualStages6696Research
 
 /-!
 # Actual recursive-GCD residual cells at score 66.96
@@ -13,16 +13,16 @@ parameterized tight-singular providers close both cells; this module supplies
 only their target-specific boxes, seed equations, and arithmetic gates.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactStackedResidualCells6670Research
+namespace ProximityPrize.SubmissionLower.ContactStackedResidualCells6696Research
 
 open scoped Classical BigOperators
 open ProximityPrize.Benchmark
 open ContactInterpolation ContactTranslation ContactFactorCaps
 open ContactPrimeSeedIncidence ContactProperCutSeedCount ContactRecursiveGCDResearch
-open ContactStackedParameters6670Research
-open ContactStackedGCDCover6670Research
-open ContactStackedSeedPartition6670Research
-open ContactStackedBoxTransport6670Research
+open ContactStackedParameters6696Research
+open ContactStackedGCDCover6696Research
+open ContactStackedSeedPartition6696Research
+open ContactStackedBoxTransport6696Research
 open ContactTightSingularLedgerResearch
 open ContactSingularLedger6600Research
 open ContactSingularBranch6600Research
@@ -44,19 +44,19 @@ local instance : CharP IRSProfile.Field prime := by
     ContactFrozenAlignment6600Research.challenge_field_characteristic6600
 
 def stageOne : UnequalParameters :=
-  ContactRecursiveResidualStages6670Research.residualStageOne
+  ContactRecursiveResidualStages6696Research.residualStageOne
 def stageTwo : UnequalParameters :=
-  ContactRecursiveResidualStages6670Research.residualStageTwo
-def pivotB : TightParameters := ContactRecursiveResidualStages6670Research.pivotB
+  ContactRecursiveResidualStages6696Research.residualStageTwo
+def pivotB : TightParameters := ContactRecursiveResidualStages6696Research.pivotB
 def pivotGcd12 : TightParameters :=
-  ContactRecursiveResidualStages6670Research.pivotGcd12
+  ContactRecursiveResidualStages6696Research.pivotGcd12
 
 attribute [local simp] stageOne stageTwo pivotB pivotGcd12
 attribute [local simp]
-  ContactRecursiveResidualStages6670Research.residualStageOne
-  ContactRecursiveResidualStages6670Research.residualStageTwo
-  ContactRecursiveResidualStages6670Research.pivotB
-  ContactRecursiveResidualStages6670Research.pivotGcd12
+  ContactRecursiveResidualStages6696Research.residualStageOne
+  ContactRecursiveResidualStages6696Research.residualStageTwo
+  ContactRecursiveResidualStages6696Research.pivotB
+  ContactRecursiveResidualStages6696Research.pivotGcd12
 
 theorem firstResidualCell_count_lt
     (QA QB QC : StackedPoly) (hQA : QA ≠ 0) (hQB : QB ≠ 0)
@@ -172,8 +172,8 @@ theorem firstResidualCell_count_lt
   have hceil : stageOne.regularCountCap + pivotB.countCap + 1 =
       64331733997583 + 189926330250373 := by
     simpa only [stageOne, pivotB,
-      ContactRecursiveResidualStages6670Research.firstResidualSingularCeiling] using
-      ContactRecursiveResidualStages6670Research.residual_stage_ceilings.1
+      ContactRecursiveResidualStages6696Research.firstResidualSingularCeiling] using
+      ContactRecursiveResidualStages6696Research.residual_stage_ceilings.1
   rw [hceil] at hstage
   simpa [Delta] using hstage
 
@@ -293,12 +293,12 @@ theorem secondResidualCell_count_lt
   have hceil : stageTwo.regularCountCap + pivotGcd12.countCap + 1 =
       835044267066492 + 23141679224390 := by
     simpa only [stageTwo, pivotGcd12,
-      ContactRecursiveResidualStages6670Research.secondResidualSingularCeiling] using
-      ContactRecursiveResidualStages6670Research.residual_stage_ceilings.2
+      ContactRecursiveResidualStages6696Research.secondResidualSingularCeiling] using
+      ContactRecursiveResidualStages6696Research.residual_stage_ceilings.2
   rw [hceil] at hstage
   simpa [Delta] using hstage
 
 end
 
 
-end ProximityPrize.SubmissionLower.ContactStackedResidualCells6670Research
+end ProximityPrize.SubmissionLower.ContactStackedResidualCells6696Research

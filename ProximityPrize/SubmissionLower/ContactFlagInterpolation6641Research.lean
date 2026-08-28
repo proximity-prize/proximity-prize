@@ -1,5 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagRankKernel6641Research
+import ProximityPrize.SubmissionLower.ContactAlignmentParameters
 
 /-!
 # Symbolic coefficient-array existence for direct contact interpolation

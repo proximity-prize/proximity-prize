@@ -93,3 +93,5 @@ theorem exists_stacked_universal_vanishing_interpolants
 end
 
 end ProximityPrize.SubmissionLower.ContactStackedInterpolation6656Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactStackedInterpolation6656Research.exists_stacked_universal_vanishing_interpolants

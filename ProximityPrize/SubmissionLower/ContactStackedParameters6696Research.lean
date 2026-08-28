@@ -13,7 +13,7 @@ No GCD decomposition, residual ledger, or decoding claim is made in this
 arithmetic module.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
+namespace ProximityPrize.SubmissionLower.ContactStackedParameters6696Research
 
 open ContactInterpolation ContactRankKernel
 
@@ -65,11 +65,12 @@ theorem profileA_coefficients_exact :
   change coefficientCount (31 * 182414) 131071 21207 9 = 21395775287865
   rw [ContactStackedParameters6656Research.coefficientCount_eq_sum_range_of_weighted_cutoff
     (31 * 182414) 131071 21207 9 44 (by norm_num) (by norm_num)]
-  decide
+  norm_num [Finset.sum_range_succ]
 
 theorem profileA_localRank_exact : profileA.localRank = 81618405 := by
   change localRankBound 31 21207 9 = 81618405
-  decide
+  norm_num [localRankBound, contactRankBound, blockInputCount,
+    blockKernelLowerBound, Finset.sum_range_succ]
 
 theorem profileA_values :
     profileA.weightedCap = 5654834 ∧ profileA.yCap = 43 ∧
@@ -88,11 +89,12 @@ theorem profileB_coefficients_exact :
   change coefficientCount (60 * 182414) 131071 925 18 = 6346526578730
   rw [ContactStackedParameters6656Research.coefficientCount_eq_sum_range_of_weighted_cutoff
     (60 * 182414) 131071 925 18 84 (by norm_num) (by norm_num)]
-  decide
+  norm_num [Finset.sum_range_succ]
 
 theorem profileB_localRank_exact : profileB.localRank = 24209914 := by
   change localRankBound 60 925 18 = 24209914
-  decide
+  norm_num [localRankBound, contactRankBound, blockInputCount,
+    blockKernelLowerBound, Finset.sum_range_succ]
 
 theorem profileB_values :
     profileB.weightedCap = 10944840 ∧ profileB.yCap = 83 ∧
@@ -111,11 +113,12 @@ theorem profileC_coefficients_exact :
   change coefficientCount (34 * 182414) 131071 801717 8 = 911056821290568
   rw [ContactStackedParameters6656Research.coefficientCount_eq_sum_range_of_weighted_cutoff
     (34 * 182414) 131071 801717 8 48 (by norm_num) (by norm_num)]
-  decide
+  norm_num [Finset.sum_range_succ]
 
 theorem profileC_localRank_exact : profileC.localRank = 3475405965 := by
   change localRankBound 34 801717 8 = 3475405965
-  decide
+  norm_num [localRankBound, contactRankBound, blockInputCount,
+    blockKernelLowerBound, Finset.sum_range_succ]
 
 theorem profileC_values :
     profileC.weightedCap = 6202076 ∧ profileC.yCap = 47 ∧
@@ -167,4 +170,4 @@ theorem meet_caps :
           (31, 925, 8) := by
   norm_num [profileA, profileB, profileC]
 
-end ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
+end ProximityPrize.SubmissionLower.ContactStackedParameters6696Research

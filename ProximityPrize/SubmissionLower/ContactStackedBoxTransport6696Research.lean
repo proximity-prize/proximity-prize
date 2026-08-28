@@ -1,21 +1,21 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactStackedBoxTransport6656Research
-import ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
+import ProximityPrize.SubmissionLower.ContactStackedParameters6696Research
 
 /-!
-# Meet and quotient box transport for the stacked 66.70 construction
+# Meet and quotient box transport for the stacked 66.96 construction
 
 The generic divisor identities and divisor-monotonicity theorem are reused
 from the accepted stacked construction.  This file contains only the new
 coordinatewise target caps.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactStackedBoxTransport6670Research
+namespace ProximityPrize.SubmissionLower.ContactStackedBoxTransport6696Research
 
 open ProximityPrize.Benchmark
 open ContactInterpolation ContactFactorCaps
 open ContactRecursiveGCDResearch
-open ContactStackedParameters6670Research
+open ContactStackedParameters6696Research
 
 noncomputable section
 
@@ -41,8 +41,8 @@ theorem gcd12_mem_meet_box
   intro d hd
   exact ⟨(hfromB hd).1, (hfromA hd).2.1, (hfromA hd).2.2⟩
 
-/-- The final GCD retains the first meet's weighted/seed caps and takes the
-slope cap from C. -/
+/-- The final GCD retains the first meet's weighted/slope caps and takes the
+seed cap from C. -/
 theorem gcd123_mem_meet_box
     (A B C : GlobalPoly) (hA : A ≠ 0) (hC : C ≠ 0)
     (hbox12 : gcd12 A B ∈ globalCoefficientBox IRSProfile.Field
@@ -107,4 +107,4 @@ theorem quotientC_mem_parent_box
 
 end
 
-end ProximityPrize.SubmissionLower.ContactStackedBoxTransport6670Research
+end ProximityPrize.SubmissionLower.ContactStackedBoxTransport6696Research

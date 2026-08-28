@@ -132,3 +132,7 @@ theorem fixedSeeds_vanish
 end
 
 end ProximityPrize.SubmissionLower.ContactStackedSeedPartition6656Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactStackedSeedPartition6656Research.partition_card
+#print axioms ProximityPrize.SubmissionLower.ContactStackedSeedPartition6656Research.firstResidualSeeds_quotient_vanish
+#print axioms ProximityPrize.SubmissionLower.ContactStackedSeedPartition6656Research.secondResidualSeeds_quotient_vanish

@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactStackedGCDCover6670Research
+import ProximityPrize.SubmissionLower.ContactStackedGCDCover6696Research
 import ProximityPrize.SubmissionLower.ContactStackedSeedPartition6656Research
 
 /-!
-# Exact selected-seed partition for the 66.70 recursive GCD cover
+# Exact selected-seed partition for the 66.96 recursive GCD cover
 
 The predicates and Finset partition are algebraically independent of the
 target profile, so this module aliases the accepted partition construction
-and transports only the new 66.70 recursive-branch hypothesis.
+and transports only the new 66.96 recursive-branch hypothesis.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactStackedSeedPartition6670Research
+namespace ProximityPrize.SubmissionLower.ContactStackedSeedPartition6696Research
 
 open ProximityPrize.Benchmark
 open ContactTranslation ContactRecursiveGCDResearch
-open ContactStackedGCDCover6670Research
+open ContactStackedGCDCover6696Research
 
 noncomputable section
 
@@ -152,4 +152,8 @@ theorem fixedSeeds_vanish
 
 end
 
-end ProximityPrize.SubmissionLower.ContactStackedSeedPartition6670Research
+end ProximityPrize.SubmissionLower.ContactStackedSeedPartition6696Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactStackedSeedPartition6696Research.partition_card
+#print axioms ProximityPrize.SubmissionLower.ContactStackedSeedPartition6696Research.firstResidualSeeds_quotient_vanish
+#print axioms ProximityPrize.SubmissionLower.ContactStackedSeedPartition6696Research.secondResidualSeeds_quotient_vanish

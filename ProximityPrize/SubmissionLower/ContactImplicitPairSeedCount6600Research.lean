@@ -189,3 +189,6 @@ theorem implicit_pair_seed_bound_fixed
 
 end
 end ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount6600Research.implicit_pair_seed_bound_fixed
+

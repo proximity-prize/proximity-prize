@@ -173,3 +173,6 @@ theorem recursive_scaled_factor_6656
 end
 
 end ProximityPrize.SubmissionLower.ContactFixedMeetFactorIncidence6656Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactFixedMeetFactorIncidence6656Research.meet_degree_part_bound
+#print axioms ProximityPrize.SubmissionLower.ContactFixedMeetFactorIncidence6656Research.recursive_scaled_factor_6656

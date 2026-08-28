@@ -10,7 +10,7 @@ as pivot.  It proves only numerical caps and generic stage-composition
 wrappers.  No seed-cell geometry is asserted.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactRecursiveResidualStages6670Research
+namespace ProximityPrize.SubmissionLower.ContactRecursiveResidualStages6696Research
 
 open scoped BigOperators
 open ContactParameters6600Research
@@ -212,4 +212,4 @@ theorem residual_stage_two_count_lt
   rw [residual_stage_ceilings.2] at h
   exact h
 
-end ProximityPrize.SubmissionLower.ContactRecursiveResidualStages6670Research
+end ProximityPrize.SubmissionLower.ContactRecursiveResidualStages6696Research

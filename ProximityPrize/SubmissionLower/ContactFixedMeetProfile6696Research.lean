@@ -9,7 +9,7 @@ singular ledger, and characteristic/incidence gates for the recursive-GCD
 fixed cell at agreement `182414`.  It contains no new geometry.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactFixedMeetProfile6670Research
+namespace ProximityPrize.SubmissionLower.ContactFixedMeetProfile6696Research
 
 open ContactFlagBezout6543Research
 open ContactNearPencil6600ArithmeticResearch
@@ -162,7 +162,7 @@ theorem fixed_active_yz_caps :
 the active-YZ projection family at the target caps. -/
 theorem fixed_active_yz_characteristic_gates :
     fixedSupport.s < fixedSupport.ys ∧
-      44 < prime ∧ 7 < prime ∧ 734 < prime ∧
+      51 < prime ∧ 8 < prime ∧ 976 < prime ∧
       11009965 * 8 + 51 * 1966065 = 188349035 ∧
       11009965 * 8 + 51 * 1966065 < prime := by
   norm_num [fixedSupport, prime]
@@ -251,5 +251,4 @@ theorem fixed_unit_part_bound (k : ℕ) (hk : k ≤ fixedProfile.w) :
       fixedProfile.w k hk (by norm_num [fixedProfile])
         (by norm_num [fixedProfile])
 
-
-end ProximityPrize.SubmissionLower.ContactFixedMeetProfile6670Research
+end ProximityPrize.SubmissionLower.ContactFixedMeetProfile6696Research

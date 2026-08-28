@@ -222,3 +222,6 @@ theorem recursive_scaled_factorYZ
 end
 
 end ProximityPrize.SubmissionLower.ContactProfileYZFactorLedgerResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactProfileYZFactorLedgerResearch.factorRegularLedgerYZ_projection_decomposition
+#print axioms ProximityPrize.SubmissionLower.ContactProfileYZFactorLedgerResearch.recursive_scaled_factorYZ

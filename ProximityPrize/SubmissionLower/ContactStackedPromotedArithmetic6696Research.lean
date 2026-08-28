@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 
 /-!
-# Exact split-budget arithmetic for the stacked score-66.96 target
+# Exact promoted-budget arithmetic for the stacked score-66.96 target
 
 This file freezes only the six independently rounded components of the
 `a = 182414` recursive-GCD ledger.  The fixed regular component uses the
@@ -14,9 +14,9 @@ kept in separate modules.  This arithmetic consumer only joins an exact
 three-cell partition once those bounds have been supplied.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactStackedPromotedArithmetic6670Research
+namespace ProximityPrize.SubmissionLower.ContactStackedPromotedArithmetic6696Research
 
-def promotedBudget : ℕ := 274980727611395087
+def promotedBudget : ℕ := 274980727623867933
 
 def fixedRegularCost : ℕ := 247630321222852759
 def fixedSingularCost : ℕ := 18023438793552
@@ -35,7 +35,7 @@ def totalCost : ℕ := fixedCost + firstResidualCeiling + secondResidualCeiling
 
 theorem total_and_slack_exact :
     totalCost = 248760788672185149 ∧
-      promotedBudget - totalCost = 26219938939209938 := by
+      promotedBudget - totalCost = 26219938951682784 := by
   norm_num [totalCost, fixedCost, firstResidualCeiling,
     secondResidualCeiling, fixedRegularCost, fixedSingularCost,
     firstResidualRegularCost, firstResidualSingularCeiling,
@@ -59,4 +59,4 @@ theorem total_lt_promotedBudget
     rw [total_and_slack_exact.1]
     norm_num [promotedBudget])
 
-end ProximityPrize.SubmissionLower.ContactStackedPromotedArithmetic6670Research
+end ProximityPrize.SubmissionLower.ContactStackedPromotedArithmetic6696Research

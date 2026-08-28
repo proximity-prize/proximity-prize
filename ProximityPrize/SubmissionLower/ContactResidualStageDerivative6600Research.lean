@@ -39,3 +39,5 @@ theorem residualStage_pderiv_one_ne_zero
 end
 
 end ProximityPrize.SubmissionLower.ContactResidualStageDerivative6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactResidualStageDerivative6600Research.residualStage_pderiv_one_ne_zero

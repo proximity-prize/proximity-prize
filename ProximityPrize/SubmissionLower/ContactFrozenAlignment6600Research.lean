@@ -111,3 +111,6 @@ theorem alignment_of_global_count_lt_alignment6600
 end
 
 end ProximityPrize.SubmissionLower.ContactFrozenAlignment6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactFrozenAlignment6600Research.challenge_field_characteristic6600
+#print axioms ProximityPrize.SubmissionLower.ContactFrozenAlignment6600Research.alignment_of_global_count_lt_alignment6600

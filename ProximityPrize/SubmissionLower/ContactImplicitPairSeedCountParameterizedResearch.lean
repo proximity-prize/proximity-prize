@@ -215,3 +215,5 @@ theorem implicit_pair_seed_bound
 end
 
 end ProximityPrize.SubmissionLower.ContactImplicitPairSeedCountParameterizedResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactImplicitPairSeedCountParameterizedResearch.implicit_pair_seed_bound

@@ -161,3 +161,5 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
 end
 
 end ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Research.terminalAdaptiveProjectionFamilies_of_rectangular_caps

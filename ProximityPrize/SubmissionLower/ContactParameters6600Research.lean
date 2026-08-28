@@ -104,10 +104,12 @@ theorem parameter_values :
     implicitYCap]
 
 theorem coefficient_count_exact : coefficientCount = 453847251690 := by
-  rfl
+  norm_num [coefficientCount, seedTotalCap, slopeCap, weightedCap,
+    multiplicity, agreements, n, errors, w, Finset.sum_range_succ]
 
 theorem local_contact_rank_exact : localContactRank = 1731288 := by
-  rfl
+  norm_num [localContactRank, contactExponent, multiplicity, seedTotalCap,
+    slopeCap, Finset.sum_range_succ]
 
 theorem total_contact_rank_exact : totalContactRank = 453846761472 := by
   rw [show totalContactRank = n * localContactRank by rfl,
@@ -167,3 +169,9 @@ theorem strict_alignment_budget :
   norm_num [alignmentBudget, gap, agreements, n, errors, w]
 
 end ProximityPrize.SubmissionLower.ContactParameters6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactParameters6600Research.coefficient_count_exact
+#print axioms ProximityPrize.SubmissionLower.ContactParameters6600Research.local_contact_rank_exact
+#print axioms ProximityPrize.SubmissionLower.ContactParameters6600Research.interpolation_gate
+#print axioms ProximityPrize.SubmissionLower.ContactParameters6600Research.retained_singular_contribution_exact
+#print axioms ProximityPrize.SubmissionLower.ContactParameters6600Research.strict_alignment_budget

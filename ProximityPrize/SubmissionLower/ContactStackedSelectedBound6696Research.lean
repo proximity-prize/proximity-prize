@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAlignmentBridge
-import ProximityPrize.SubmissionLower.ContactStackedInterpolation6670Research
-import ProximityPrize.SubmissionLower.ContactStackedGCDCover6670Research
-import ProximityPrize.SubmissionLower.ContactStackedSeedPartition6670Research
-import ProximityPrize.SubmissionLower.ContactStackedBoxTransport6670Research
-import ProximityPrize.SubmissionLower.ContactStackedResidualCells6670Research
-import ProximityPrize.SubmissionLower.ContactStackedPromotedArithmetic6670Research
+import ProximityPrize.SubmissionLower.ContactStackedInterpolation6696Research
+import ProximityPrize.SubmissionLower.ContactStackedGCDCover6696Research
+import ProximityPrize.SubmissionLower.ContactStackedSeedPartition6696Research
+import ProximityPrize.SubmissionLower.ContactStackedBoxTransport6696Research
+import ProximityPrize.SubmissionLower.ContactStackedResidualCells6696Research
+import ProximityPrize.SubmissionLower.ContactStackedPromotedArithmetic6696Research
 
 /-!
 # Selected-family composition for the stacked 66.96 route
@@ -16,22 +16,22 @@ The sole remaining premise is a count bound for an arbitrary nonzero fixed
 meet polynomial in the target box, stated directly on its selected seed cell.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactStackedSelectedBound6670Research
+namespace ProximityPrize.SubmissionLower.ContactStackedSelectedBound6696Research
 
 open ProximityPrize.Benchmark
 open ContactAlignmentBridge ContactInterpolation ContactTranslation
 open ContactPrimeSeedIncidence ContactProperCutSeedCount
 open ContactRecursiveGCDResearch
-open ContactStackedParameters6670Research
-open ContactStackedGCDCover6670Research
-open ContactStackedSeedPartition6670Research
-open ContactStackedResidualCells6670Research
-open ContactStackedPromotedArithmetic6670Research
+open ContactStackedParameters6696Research
+open ContactStackedGCDCover6696Research
+open ContactStackedSeedPartition6696Research
+open ContactStackedResidualCells6696Research
+open ContactStackedPromotedArithmetic6696Research
 
 noncomputable section
 
 set_option maxHeartbeats 6000000
-set_option maxRecDepth 100000
+set_option maxRecDepth 1000000
 
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
@@ -41,7 +41,7 @@ local instance : GCDMonoid GlobalPoly :=
 /-- The narrow fixed-cell seam.  It speaks only about the final meet
 polynomial and the selected cell on which it specializes to zero; the three
 parent interpolants and recursive cover are deliberately absent. -/
-def FixedCellCountProvider6670 : Prop :=
+def FixedCellCountProvider6696 : Prop :=
   ∀ (Q : GlobalPoly), Q ≠ 0 →
     Q ∈ globalCoefficientBox IRSProfile.Field (31 * agreements) w 925 8 →
     ∀ (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
@@ -140,7 +140,7 @@ theorem selected_full_domain_agreement
 /-- Transport the actual final GCD cell into the abstract fixed-cell
 provider. -/
 theorem fixedSeeds_card_le_of_provider
-    (hfixedProvider : FixedCellCountProvider6670)
+    (hfixedProvider : FixedCellCountProvider6696)
     (QA QB QC : GlobalPoly) (hQA : QA ≠ 0) (hQB : QB ≠ 0) (hQC : QC ≠ 0)
     (hboxA : QA ∈ globalCoefficientBox IRSProfile.Field
       (31 * agreements) w 21207 9)
@@ -165,12 +165,12 @@ theorem fixedSeeds_card_le_of_provider
       ContactStackedBoxTransport6656Research.gcd123_ne_zero
         (B := QB) (C := QC) hQA
   have hbox12 :=
-    ContactStackedBoxTransport6670Research.gcd12_mem_meet_box
+    ContactStackedBoxTransport6696Research.gcd12_mem_meet_box
       QA QB hQA hQB hboxA hboxB
   have hQbox : Q ∈ globalCoefficientBox IRSProfile.Field
       (31 * agreements) w 925 8 := by
     simpa [Q] using
-      ContactStackedBoxTransport6670Research.gcd123_mem_meet_box
+      ContactStackedBoxTransport6696Research.gcd123_mem_meet_box
         QA QB QC hQA hQC hbox12 hboxC
   have hsub : Delta ⊆ Gamma := by
     simpa [Delta] using fixedSeeds_subset selected Gamma QA QB QC
@@ -194,10 +194,10 @@ theorem fixedSeeds_card_le_of_provider
 
 /-- Complete selected-family bound, conditional only on the fixed-cell
 provider. -/
-theorem selectedNoLargePencilBound_of_fixedCellCountProvider6670
-    (hfixedProvider : FixedCellCountProvider6670) :
+theorem selectedNoLargePencilBound_of_fixedCellCountProvider6696
+    (hfixedProvider : FixedCellCountProvider6696) :
     SelectedNoLargePencilBound IRSProfile.domain
-      131071 79730 274980727611395087 := by
+      131071 79730 274980727623867933 := by
   intro U seeds A selected hdegreeRaw hcardRaw hvalues hnoRaw
   have hdegree : ∀ gamma ∈ seeds,
       (selected gamma).natDegree ≤ w := by
@@ -242,4 +242,4 @@ theorem selectedNoLargePencilBound_of_fixedCellCountProvider6670
 
 end
 
-end ProximityPrize.SubmissionLower.ContactStackedSelectedBound6670Research
+end ProximityPrize.SubmissionLower.ContactStackedSelectedBound6696Research

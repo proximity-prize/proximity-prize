@@ -126,3 +126,7 @@ theorem quotientC_mem_parent_box
 end
 
 end ProximityPrize.SubmissionLower.ContactStackedBoxTransport6656Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactStackedBoxTransport6656Research.gcd12_mem_meet_box
+#print axioms ProximityPrize.SubmissionLower.ContactStackedBoxTransport6656Research.gcd123_mem_meet_box
+#print axioms ProximityPrize.SubmissionLower.ContactStackedBoxTransport6656Research.middleQuotient_mem_parent_box

@@ -193,3 +193,7 @@ theorem maximal_residual_total_below_budget :
   norm_num
 
 end ProximityPrize.SubmissionLower.ContactTightSingularLedgerResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactTightSingularLedgerResearch.implicit_with_exceptions_tight_bound
+#print axioms ProximityPrize.SubmissionLower.ContactTightSingularLedgerResearch.TightParameters.with_exceptions_bound
+#print axioms ProximityPrize.SubmissionLower.ContactTightSingularLedgerResearch.maximal_residual_total_below_budget
