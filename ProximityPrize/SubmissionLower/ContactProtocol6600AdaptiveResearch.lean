@@ -22,7 +22,7 @@ set_option maxRecDepth 35000
 adaptive projection-family constructor. -/
 theorem protocolClaim6600_of_terminal_projection_families
     (hprojection : FrozenTerminalAdaptiveProjectionFamilies6600) :
-    ProtocolClaim 6618 315835 1048576 := by
+    ProtocolClaim 6635 316515 1048576 := by
   apply ContactProtocol6600ConditionalResearch.protocolClaim6600_of_global_count_lt_alignment
   exact global_count_lt_alignment6600_of_terminal_projection_families hprojection
 

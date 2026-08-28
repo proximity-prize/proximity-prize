@@ -99,26 +99,26 @@ theorem stratified_incidence_linear
         (Nat.mul_le_mul_right unitCost hunit)
     _ = (U * degreeCost + V * unitCost) * (a - k) := by ring
 
-/-- Exact benchmark constants at the first 66.00 score cell. -/
+/-- Exact benchmark constants at the 66.35 tetrahedral score cell. -/
 def n : ℕ := 262144
-def errors : ℕ := 78958
+def errors : ℕ := 79128
 def agreements : ℕ := n - errors
 def w : ℕ := 131071
 def gap : ℕ := agreements - w
 
 /-- Ceiling of `n * gap * w / agreements`: the fixed coefficient for every
 degree-dependent incidence layer after identity stratification. -/
-def degreeIncidence : ℕ := 9775005205
+def degreeIncidence : ℕ := 9752169169
 
 /-- Fixed coefficient for an affine unit layer. -/
 def unitIncidence : ℕ := n - w
 
 theorem parameter_values :
-    agreements = 183186 ∧ gap = 52115 ∧ unitIncidence = 131073 := by
+    agreements = 183016 ∧ gap = 51945 ∧ unitIncidence = 131073 := by
   norm_num [agreements, gap, unitIncidence, n, errors, w]
 
 theorem degreeIncidence_is_ceiling :
-    degreeIncidence * agreements - n * gap * w = 69370 ∧
+    degreeIncidence * agreements - n * gap * w = 178024 ∧
       n * gap * w ≤ degreeIncidence * agreements := by
   norm_num [degreeIncidence, agreements, gap, n, errors, w]
 
@@ -187,13 +187,13 @@ theorem stratified_incidence_quadratic
 /-- The exact mixed-volume coefficients in
 `MV(P, d*D+U, d'*D+U) = A*d*d' + B*(d+d') + C`
 for the 66.00 flag row. -/
-def mixedQuadratic : ℕ := 3425875
-def mixedLinear : ℕ := 15465
-def mixedUnit : ℕ := 8
+def mixedQuadratic : ℕ := 3597556
+def mixedLinear : ℕ := 16078
+def mixedUnit : ℕ := 9
 
 /-- Exact coefficients in `MV(P, d*D+U, eZ) = zLinear*d+zUnit`. -/
-def zLinear : ℕ := 1205
-def zUnit : ℕ := 8
+def zLinear : ℕ := 1378
+def zUnit : ℕ := 9
 
 def stratifiedPrimary : ℕ :=
   mixedQuadratic * degreeIncidence ^ 2 +
@@ -205,7 +205,7 @@ def stratifiedZTail : ℕ :=
     (zLinear * degreeIncidence + zUnit * unitIncidence)
 
 /-- The old singular branch is deliberately retained verbatim. -/
-def retainedSingularContribution : ℕ := 6714916701272010710818955
+def retainedSingularContribution : ℕ := 9682236972838208199042990
 
 def stratifiedTotalNumerator : ℕ :=
   stratifiedPrimary + stratifiedZTail + retainedSingularContribution
@@ -216,33 +216,33 @@ def ledgerCeiling : ℕ :=
 def alignmentBudget : ℕ := 137490364055697543
 
 theorem stratified_primary_exact :
-    stratifiedPrimary = 327344885660029958859664957 := by
+    stratifiedPrimary = 342144897566383766203775449 := by
   norm_num [stratifiedPrimary, mixedQuadratic, mixedLinear, mixedUnit,
     degreeIncidence, unitIncidence, n, w]
 
 theorem stratified_z_tail_exact :
-    stratifiedZTail = 48469491604406824705565 := by
+    stratifiedZTail = 55236977936443567902795 := by
   norm_num [stratifiedZTail, zLinear, zUnit, degreeIncidence, unitIncidence,
     errors, gap, agreements, n, w]
 
 theorem stratified_total_exact :
-    stratifiedTotalNumerator = 334108271852906376395189477 := by
+    stratifiedTotalNumerator = 351882371517158417970721234 := by
   rw [show stratifiedTotalNumerator =
       stratifiedPrimary + stratifiedZTail + retainedSingularContribution by rfl,
     stratified_primary_exact, stratified_z_tail_exact]
   norm_num [retainedSingularContribution]
 
-theorem gap_squared_exact : gapSquared = 2715973225 := by
+theorem gap_squared_exact : gapSquared = 2698283025 := by
   norm_num [gapSquared, gap, agreements, n, errors, w]
 
-theorem ledger_ceiling_exact : ledgerCeiling = 123016040356180749 := by
+theorem ledger_ceiling_exact : ledgerCeiling = 130409733988953371 := by
   norm_num [ledgerCeiling, stratified_total_exact, gap_squared_exact]
 
 theorem strict_budget : stratifiedTotalNumerator < alignmentBudget * gapSquared := by
   rw [stratified_total_exact, gap_squared_exact]
   norm_num [alignmentBudget]
 
-theorem budget_slack : alignmentBudget - ledgerCeiling = 14474323699516794 := by
+theorem budget_slack : alignmentBudget - ledgerCeiling = 7080630066744172 := by
   rw [ledger_ceiling_exact]
   norm_num [alignmentBudget]
 

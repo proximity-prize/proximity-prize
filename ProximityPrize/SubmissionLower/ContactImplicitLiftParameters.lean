@@ -35,17 +35,17 @@ def liftedSingularNumerator : ℕ :=
 def liftedTotalNumerator : ℕ := regularNumerator + gap * liftedSingularNumerator
 
 theorem lifted_parameter_values :
-    implicitWeightedCap = 29924640 ∧ implicitYCap = 228 ∧
-    liftedLastTail = ⟨13645635841, 29924640, 94801259520⟩ ∧
-    liftedAgreement = ⟨59768377, 131071, 415232929⟩ := by
+    implicitWeightedCap = 99560704 ∧ implicitYCap = 759 ∧
+    liftedLastTail = ⟨151133148673, 99560704, 1570669666304⟩ ∧
+    liftedAgreement = ⟨198965779, 131071, 2067776097⟩ := by
   norm_num [implicitWeightedCap, implicitYCap, liftedLastTail, liftedAgreement,
     algebraicCap, weightedCap, ContactAlignmentParameters.multiplicity, agreements,
     w, slopeCap, seedTotalCap]
 
 theorem lifted_projection_values :
-    mixed liftedSurface implicitCut unitY = 1584 ∧
-    mixed liftedSurface implicitCut unitR = 722304 ∧
-    mixed liftedSurface implicitCut unitZ = 228 := by
+    mixed liftedSurface implicitCut unitY = 7888 ∧
+    mixed liftedSurface implicitCut unitR = 11973984 ∧
+    mixed liftedSurface implicitCut unitZ = 759 := by
   norm_num [mixed, liftedSurface, implicitCut, implicitYCap, implicitWeightedCap,
     unitY, unitR, unitZ, algebraicCap, weightedCap,
     ContactAlignmentParameters.multiplicity, agreements, w, slopeCap, seedTotalCap]
@@ -60,14 +60,14 @@ theorem lifted_projection_characteristic_gates :
   norm_num [prime]
 
 theorem lifted_singular_numerator_exact :
-    liftedSingularNumerator = 3516047537415780312 := by
+    liftedSingularNumerator = 186394012375362560382 := by
   norm_num [liftedSingularNumerator, mixed, liftedSurface, implicitCut, liftedLastTail,
     liftedAgreement, implicitYCap, implicitWeightedCap, unitZ, algebraicCap,
     weightedCap, ContactAlignmentParameters.multiplicity, agreements, w, gap,
     errors, n, slopeCap, seedTotalCap]
 
 theorem lifted_total_numerator_exact :
-    liftedTotalNumerator = 143697127886496891242366373 := by
+    liftedTotalNumerator = 1253557868534008993139369112 := by
   rw [liftedTotalNumerator, lifted_singular_numerator_exact]
   norm_num [regularNumerator, cutNumerator, wholeNumerator, mixed,
     firstTail, lastTail, tailVector, agreementVector, unitY, unitR, unitZ,
@@ -75,21 +75,15 @@ theorem lifted_total_numerator_exact :
     w, gap, errors, n, slopeCap, seedTotalCap]
 
 theorem lifted_division_certificate :
-    liftedTotalNumerator = 49925776167317549 * gap ^ 2 + 2316504024 ∧
-    2316504024 < gap ^ 2 := by
+    liftedTotalNumerator = 464576123749660765 * gap ^ 2 + 1431354987 ∧
+    1431354987 < gap ^ 2 := by
   rw [lifted_total_numerator_exact, denominator_exact]
   norm_num
 
 /-- The minimal integral selected-family ceiling carried by the sharp
 proper-node ledger. -/
-theorem lifted_ceiling_exact :
-    49925776167317549 * gap ^ 2 < liftedTotalNumerator ∧
-      liftedTotalNumerator ≤ 49925776167317550 * gap ^ 2 := by
-  rw [lifted_total_numerator_exact, denominator_exact]
-  norm_num
-
-theorem lifted_strict_budget :
-    liftedTotalNumerator < alignmentBudget * gap ^ 2 := by
+theorem lifted_strict_budget_failure :
+    alignmentBudget * gap ^ 2 < liftedTotalNumerator := by
   rw [lifted_total_numerator_exact, denominator_exact]
   norm_num [alignmentBudget]
 
@@ -101,5 +95,4 @@ end ProximityPrize.SubmissionLower.ContactImplicitLiftParameters
 #print axioms ProximityPrize.SubmissionLower.ContactImplicitLiftParameters.lifted_singular_numerator_exact
 #print axioms ProximityPrize.SubmissionLower.ContactImplicitLiftParameters.lifted_total_numerator_exact
 #print axioms ProximityPrize.SubmissionLower.ContactImplicitLiftParameters.lifted_division_certificate
-#print axioms ProximityPrize.SubmissionLower.ContactImplicitLiftParameters.lifted_ceiling_exact
-#print axioms ProximityPrize.SubmissionLower.ContactImplicitLiftParameters.lifted_strict_budget
+#print axioms ProximityPrize.SubmissionLower.ContactImplicitLiftParameters.lifted_strict_budget_failure

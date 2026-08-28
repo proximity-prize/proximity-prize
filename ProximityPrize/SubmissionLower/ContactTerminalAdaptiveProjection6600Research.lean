@@ -51,6 +51,11 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
+theorem terminal_mixedY_cap_exact :
+    17 * w * 464 + 9 * (1 + 927 * w) = 2127413410 ∧
+      2127413410 < prime := by
+  norm_num [w, prime]
+
 /-- Coordinatewise rectangular consequences of nested flag support. -/
 theorem degree_bounds_of_polynomialInFlag
     {p : FlagDegree} {F : MvPolynomial (Fin 3) Omega}
@@ -75,10 +80,11 @@ entire adaptive family at every proper terminal agreement cut. -/
 theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
     [CharP Omega prime]
     {flag : FlagDegree}
+    (hphi : Function.Injective phi)
     (S : ResidualStage phi Gamma x prime errors flag w)
-    (hflagZ : flag.zOnly ≤ 495)
-    (hflagY : flag.yz ≤ 43)
-    (hflagS : flag.all ≤ 8) :
+    (hflagZ : flag.zOnly ≤ 464)
+    (hflagY : flag.yz ≤ 44)
+    (hflagS : flag.all ≤ 9) :
     TerminalAdaptiveProjectionFamilies S := by
   classical
   intro D i hi hproper
@@ -95,16 +101,39 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
   obtain ⟨hGY, hGS, hGZ⟩ := degree_bounds_of_polynomialInFlag hGflag
   obtain ⟨hTY, hTS, hTZ⟩ := degree_bounds_of_polynomialInFlag hTflag
   have hD : D.degree ≤ w := D.degree_le.trans (Nat.le_refl w)
-  have hGY' : D.stage.G.degreeOf 0 ≤ 51 := by omega
-  have hGS' : D.stage.G.degreeOf 1 ≤ 8 := by omega
-  have hGZ' : D.stage.G.degreeOf 2 ≤ 546 := by omega
-  have hTY' : T.degreeOf 0 ≤ 1 + 85 * w := by
+  have hGY' : D.stage.G.degreeOf 0 ≤ 53 := by omega
+  have hGS' : D.stage.G.degreeOf 1 ≤ 9 := by omega
+  have hFne : D.stage.F ≠ 0 := by
+    intro hzero
+    apply D.stage.regular_proper
+    simpa [hzero] using (dvd_zero D.stage.G)
+  have hsurface : surfaceMap phi D.stage.F ≠ 0 :=
+    surfaceMap_ne_zero phi hphi D.stage.F hFne
+  have hGZsurface : D.stage.G.degreeOf 2 ≤
+      (surfaceMap phi D.stage.F).degreeOf 2 :=
+    ContactGeometricFactorCover.coordinate_degree_le_of_dvd 2 D.stage.G
+      (surfaceMap phi D.stage.F) D.stage.G_dvd_surface hsurface
+  have hsurfaceZ : (surfaceMap phi D.stage.F).degreeOf 2 ≤
+      D.stage.F.degreeOf 3 := by
+    simpa using surfaceMap_degreeOf_le phi D.stage.F 2
+  have hFZ : D.stage.F.degreeOf 3 ≤ 464 := by
+    apply MvPolynomial.degreeOf_le_iff.mpr
+    intro e he
+    have h := (MvPolynomial.le_weightedTotalDegree residualTotalWeights he).trans
+      D.stage.surface_total_weight
+    rw [ContactFactorCaps.weight_fin4] at h
+    change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 1 ≤ 464 at h
+    norm_num at h
+    omega
+  have hGZ' : D.stage.G.degreeOf 2 ≤ 464 :=
+    hGZsurface.trans (hsurfaceZ.trans hFZ)
+  have hTY' : T.degreeOf 0 ≤ 1 + 87 * w := by
     dsimp only [residualAgreementFlag] at hTY
     omega
-  have hTS' : T.degreeOf 1 ≤ 15 * w := by
+  have hTS' : T.degreeOf 1 ≤ 17 * w := by
     dsimp only [residualAgreementFlag] at hTS
     omega
-  have hTZ' : T.degreeOf 2 ≤ 1 + 1005 * w := by
+  have hTZ' : T.degreeOf 2 ≤ 1 + 927 * w := by
     dsimp only [residualAgreementFlag] at hTZ
     omega
   have hGdegree : ∀ j : Fin 3, D.stage.G.degreeOf j < prime := by
@@ -163,3 +192,4 @@ end
 end ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Research
 
 #print axioms ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Research.terminalAdaptiveProjectionFamilies_of_rectangular_caps
+#print axioms ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Research.terminal_mixedY_cap_exact
