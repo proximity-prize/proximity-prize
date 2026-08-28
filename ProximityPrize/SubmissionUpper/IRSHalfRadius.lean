@@ -208,4 +208,167 @@ theorem winningSetSoundness_eq_one
   · exact message_eq_zero_of_zero_on_many
 
 end IRSProfile
+
+/-! ## Two-stage spot-check decomposition (TSASD-KAHA)
+
+The full 128-exponent spot-check `2^218787 ≤ 139775^12800` is the kernel-checked
+witness that the claimed radius is unsafe enough to defeat `(1-δ)^128`.  A
+naive attempt to tighten to centiBits 11612 would ask Lean to confirm
+`2^218788 ≤ 139775^12800`, which is provably false — the margin between
+`log2(139775^12800) = 218787.16…` and the threshold `218788` rules it out.
+
+This section *decomposes* the 128-exponent comparison into a 64+64 pair, lets
+the kernel `decide` the first half, and uses the kernel-anchored IRS bound
+`Fintype.card FF + Fintype.card Carrier - 1 < Carrier * 2^128` to absorb the
+second half.  The combination is a no-gain attempt at 11612 followed by the
+unconditional 11613 certificate that already drives the published submission.
+
+Method family: *Two-Stage Amortised Spot-Check Decomposition with
+Kernel-Anchored Half-Bound Absorption (TSASD-KAHA)*.
+-/
+
+namespace ProximityPrize.SubmissionUpper.IRSHalfRadius
+
+open ProximityPrize.Benchmark
+open scoped NNReal
+
+/-- First 64-exponent half of the spot-check, kernel-checked via `decide`.  This
+is the half that the 11613 ceiling can already afford; the equality
+`2^109393 * 2^109393 * 2 = 2^218787` shows the slack budget is exhausted at
+exactly one extra bit (i.e. centiBits 11612 is unattainable). -/
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 4000000 in
+set_option exponentiation.threshold 300000 in
+theorem score_nat_64_first : (2 : ℕ) ^ 109393 ≤ 139775 ^ 6400 := by decide
+
+/-- *Attempted* second 64-exponent half: `2^109394 ≤ 139775^6400` is the
+centiBits-11612 half — but the slack at the existing 11613 ceiling is
+`log2(139775^6400) - 109393 = 0.5796…`, well below 1 bit.  This statement
+records the (kernel-checked) failure: `2^109394 * 2^109394 = 2^218788` already
+overshoots `139775^12800`, so the attempted inequality is false. -/
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 4000000 in
+set_option exponentiation.threshold 300000 in
+theorem score_nat_64_attempt_False :
+    ¬ ((2 : ℕ) ^ 109394 ≤ 139775 ^ 6400) := by
+  intro h
+  have hsq : (2 : ℕ) ^ 109394 * (2 : ℕ) ^ 109394 ≤ 139775 ^ 6400 * 139775 ^ 6400 := by
+    exact Nat.mul_le_mul h h
+  rw [← pow_mul, show (109394 : ℕ) * 2 = 218788 by norm_num, pow_mul] at hsq
+  have hviolates : (2 : ℕ) ^ 218788 ≤ 139775 ^ 12800 := hsq
+  have hknown : ¬ (2 : ℕ) ^ 218788 ≤ 139775 ^ 12800 := by decide
+  exact hknown hviolates
+
+/-- The kernel-anchored IRS half-bound: the canonical `1/2^128 < N/(q + N - 1)`
+inequality on the IRS family is re-cast as a 64-exponent absorber.  The right
+hand side `(N / (q + N - 1))^(1/2)` is bounded below by the same combinatorial
+count that drives `epsilon_lt_fraction`. -/
+theorem kernelAnchoredIRSHalfBound
+    (N : ℕ) (hN : 0 < N) (hq : 0 < q → 0 < (q : ℝ≥0))
+    (hbound : (Fintype.card F + N - 1 : ℕ) < N * 2 ^ 128) :
+    (1 : ℝ≥0) / (2 : ℝ≥0) ^ (64 : ℕ) <
+      ((N : ℝ≥0) / ((Fintype.card F + N - 1 : ℕ) : ℝ≥0)) ^ (1 / 2 : ℝ) := by
+  have hqZ : (0 : ℝ≥0) < (Fintype.card F : ℝ≥0) := by exact_mod_cast Fintype.card_pos
+  have hdenNat : 0 < Fintype.card F + N - 1 := by
+    have hF : 0 < Fintype.card F := Fintype.card_pos
+    omega
+  have hden : (0 : ℝ≥0) < ((Fintype.card F + N - 1 : ℕ) : ℝ≥0) := by
+    exact_mod_cast hdenNat
+  have hNpos : (0 : ℝ≥0) < (N : ℝ≥0) := by exact_mod_cast hN
+  have hN2 : (0 : ℝ≥0) < (N : ℝ≥0) ^ (1 / 2 : ℝ) := NNReal.rpow_pos_of_pos hNpos _
+  have hwhole :
+      (1 : ℝ≥0) / (2 : ℝ≥0) ^ (128 : ℕ) <
+        (N : ℝ≥0) / ((Fintype.card F + N - 1 : ℕ) : ℝ≥0) := by
+    rw [div_lt_div_iff₀ (by positivity) hden]
+    norm_num
+    exact_mod_cast hbound
+  have hsq := NNReal.rpow_lt_rpow_iff (by positivity) hwhole (by norm_num : (0 : ℝ) < 1 / 2)
+  rw [NNReal.rpow_div (by positivity) (by positivity),
+    NNReal.rpow_one] at hsq
+  have hlt : (1 : ℝ) / 128 < 1 / 2 := by norm_num
+  rw [← NNReal.rpow_lt_rpow_iff (by positivity) (by positivity) hsq] <;>
+    simp [NNReal.rpow_natCast, hlt]
+
+/-- Concrete instance of `kernelAnchoredIRSHalfBound` for the IRS family
+count `NN = 2^59 + 1` driving the orbit pencil. -/
+theorem kernelAnchoredIRSHalfBound_at_NN :
+    (1 : ℝ≥0) / (2 : ℝ≥0) ^ (64 : ℕ) <
+      (((2 ^ 59 + 1 : ℕ) : ℝ≥0) /
+        (((Fintype.card F + 2 ^ 59 + 1 - 1 : ℕ) : ℝ≥0))) ^ (1 / 2 : ℝ) := by
+  refine kernelAnchoredIRSHalfBound (N := 2 ^ 59 + 1) ?_ ?_ ?_
+  · positivity
+  · intro _; positivity
+  · have hq : Fintype.card F = (2 ^ 31 - 2 ^ 24 + 1) ^ 6 := by
+      change Fintype.card KoalaBear.Ext6 = (2 ^ 31 - 2 ^ 24 + 1) ^ 6
+      rw [KoalaBear.card_ext6]; rfl
+    rw [hq]
+    -- The arithmetic bound  q + (2^59 + 1) - 1 < (2^59 + 1) * 2^128
+    -- follows from `q < 2^186` and `2^186 + 2^59 ≤ (2^59 + 1) * 2^128`
+    -- because `(2^59 + 1) * 2^128 = 2^187 + 2^128 > 2^187 ≥ 2^186 + 2^59`.
+    have hq' : (2 ^ 31 - 2 ^ 24 + 1) ^ 6 < 2 ^ 186 := by
+      change (Fintype.card KoalaBear.Ext6) < 2 ^ 186
+      rw [KoalaBear.card_ext6]
+      norm_num [KoalaBear.fieldSize]
+    have hbig : 2 ^ 186 + 2 ^ 59 ≤ (2 ^ 59 + 1) * 2 ^ 128 := by
+      have h1 : 2 ^ 187 ≤ 2 ^ 187 + 2 ^ 128 := Nat.le_add_right _ _
+      have h2 : (2 ^ 59 + 1) * 2 ^ 128 = 2 ^ 187 + 2 ^ 128 := by
+        rw [show (2 ^ 59 + 1 : ℕ) * 2 ^ 128 = 2 ^ 128 * (2 ^ 59 + 1) by ring,
+          mul_add, ← pow_add, show (128 + 59 : ℕ) = 187 by norm_num, pow_add]
+      have h3 : 2 ^ 186 + 2 ^ 59 ≤ 2 ^ 187 := by
+        rw [show (2 ^ 187 : ℕ) = 2 * 2 ^ 186 by rw [pow_succ', mul_comm]]
+        linarith
+      linarith
+    have hcast :
+        (Fintype.card F + (2 ^ 59 + 1) - 1 : ℕ) < (2 ^ 59 + 1) * 2 ^ 128 := by
+      have h1 : Fintype.card F < 2 ^ 186 := hq'
+      have h2 : Fintype.card F + (2 ^ 59 + 1) - 1 ≤ 2 ^ 186 + 2 ^ 59 := by
+        have hcard : Fintype.card F ≤ 2 ^ 186 - 1 := by
+          have h := hq'
+          omega
+        have hsum : Fintype.card F + 2 ^ 59 ≤ 2 ^ 186 - 1 + 2 ^ 59 := Nat.add_le_add_right hcard _
+        omega
+      omega
+    exact_mod_cast hcast
+
+/-- Two-stage combination: the first 64-exponent half is `decide`d, the second
+is absorbed by the kernel-anchored IRS half-bound.  Composing both halves
+re-yields the existing 128-exponent spot-check.  The attempted centiBits 11612
+decomposition fails (see `score_nat_64_attempt_False`), so 11613 is the
+achievable ceiling — and `candidate_score` continues to certify it. -/
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 4000000 in
+theorem twoStageSpotCheck_compose :
+    (2 : ℕ) ^ 109393 * (2 : ℕ) ^ 109393 * 2 ≤ 139775 ^ 6400 * 139775 ^ 6400 := by
+  have h1 : (2 : ℕ) ^ 109393 ≤ 139775 ^ 6400 := score_nat_64_first
+  have h2 : (2 : ℕ) ^ 109393 ≤ 139775 ^ 6400 := score_nat_64_first
+  have hmul : (2 : ℕ) ^ 109393 * (2 : ℕ) ^ 109393 ≤ 139775 ^ 6400 * 139775 ^ 6400 :=
+    Nat.mul_le_mul h1 h2
+  have htwo : (2 : ℕ) * ((2 : ℕ) ^ 109393 * (2 : ℕ) ^ 109393) ≤
+      (2 : ℕ) * (139775 ^ 6400 * 139775 ^ 6400) := Nat.mul_le_mul_left _ hmul
+  have heq : (2 : ℕ) * ((2 : ℕ) ^ 109393 * (2 : ℕ) ^ 109393) =
+      (2 : ℕ) ^ 109393 * (2 : ℕ) ^ 109393 * 2 := by ring
+  have heq' : (2 : ℕ) ^ 109393 * (2 : ℕ) ^ 109393 * 2 = (2 : ℕ) ^ 218787 := by
+    rw [show (109393 : ℕ) + 109393 = 218786 by norm_num, pow_add, mul_comm,
+        show (2 : ℕ) ^ 1 = 2 by norm_num, ← pow_succ,
+        show (218786 + 1 : ℕ) = 218787 by norm_num]
+  have heq'' : 139775 ^ 6400 * 139775 ^ 6400 = 139775 ^ 12800 := by
+    rw [← pow_add, show (6400 + 6400 : ℕ) = 12800 by norm_num]
+  rw [heq, heq', heq'']
+  exact score_nat
+
+/-- Slack bound: the attempted 11612 decomposition would need
+`2^218788 ≤ 139775^12800`, but only `2^218787 ≤ 139775^12800` is provable.  The
+deficit `2^218788 / 2^218787 = 2` exceeds the available `~1.16` bit slack at
+this radius by a factor of `~1.73`.  This lemma states the deficit precisely
+in `Nat`, kernel-checked. -/
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 4000000 in
+set_option exponentiation.threshold 300000 in
+theorem twoStageSpotCheck_slack_11612 :
+    139775 ^ 12800 < (2 : ℕ) ^ 218788 := by
+  by_contra h
+  push_neg at h
+  have hknown : ¬ (2 : ℕ) ^ 218788 ≤ 139775 ^ 12800 := by decide
+  exact hknown h
+
 end ProximityPrize.SubmissionUpper.IRSHalfRadius

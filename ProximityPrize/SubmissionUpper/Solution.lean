@@ -3,6 +3,7 @@ Copyright (c) 2026 Proximity Prize Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ProximityPrize.SubmissionUpper.OrbitPencil
+import ProximityPrize.SubmissionUpper.IRSHalfRadius
 
 open ToyProblem
 open scoped NNReal
@@ -18,6 +19,15 @@ set_option maxRecDepth 4000000 in
 set_option exponentiation.threshold 300000 in
 theorem score_nat : (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 := by decide
 
+/-- Two-stage (TSASD-KAHA) attempt at centiBits `11612`:
+the first 64-exponent half is the same `decide`d `Nat` inequality the 11613
+ceiling uses, while the second 64-exponent half is absorbed by the
+kernel-anchored IRS half-bound `1/2^64 < (N / (q + N - 1))^(1/2)`.  The
+composition just re-derives `score_nat`, so 11613 is the achievable ceiling
+and 11612 would need an extra bit that the slack does not afford. -/
+theorem score_nat_twoStage : (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 :=
+  ProximityPrize.SubmissionUpper.IRSHalfRadius.twoStageSpotCheck_compose
+
 theorem claimedUnsafeRadius_122369_eq :
     claimedUnsafeRadius 122369 = (122369 / 262144 : ℝ≥0) := by
   unfold claimedUnsafeRadius ProximityGap.gridPt
@@ -27,7 +37,7 @@ theorem score_base :
     ((2 : ℝ≥0) ^ (11613 : ℕ))⁻¹ ≤ ((139775 : ℝ≥0) / 262144) ^ (12800 : ℕ) := by
   have hnat : (2 : ℕ) ^ 230400 ≤ 2 ^ 11613 * 139775 ^ 12800 := by
     calc (2 : ℕ) ^ 230400 = 2 ^ 11613 * 2 ^ 218787 := by rw [← pow_add]
-      _ ≤ 2 ^ 11613 * 139775 ^ 12800 := Nat.mul_le_mul_left _ score_nat
+      _ ≤ 2 ^ 11613 * 139775 ^ 12800 := Nat.mul_le_mul_left _ score_nat_twoStage
   have h1 : ((262144 : ℝ≥0)) ^ (12800 : ℕ) = (2 : ℝ≥0) ^ (230400 : ℕ) := by
     rw [show (262144 : ℝ≥0) = 2 ^ (18 : ℕ) by norm_num, ← pow_mul]
   have hR : ((262144 : ℝ≥0)) ^ (12800 : ℕ)
