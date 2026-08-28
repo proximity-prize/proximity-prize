@@ -1,15 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 
 /-!
-# Exact radius and score arithmetic for the 66.96 candidate
-
-The radius is the top grid point in the `79730`-error cell,
-`(4 * 79730 + 3) / 2^20`.  The fractional score comparison uses the exact
-rational sandwich
-
-`(1-r)^128 <= 2^-66 * (19/37) <= 2^(-66.96)`.
-
-No counting or geometric premise occurs in this module.
+# Exact radius and score arithmetic for the 66.98 candidate
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactScore6630Research
@@ -19,11 +11,11 @@ open scoped NNReal
 
 noncomputable section
 
-def radius6630 : ℝ≥0 := claimedRadius 318983 1048576
-def errors6630 : ℕ := 79745
-def score6630 : ℕ := 6697
+def radius6630 : ℝ≥0 := claimedRadius 318991 1048576
+def errors6630 : ℕ := 79747
+def score6630 : ℕ := 6698
 
-theorem radius_numerator_exact : 318983 = 4 * errors6630 + 3 := by
+theorem radius_numerator_exact : 318991 = 4 * errors6630 + 3 := by
   norm_num [errors6630]
 
 theorem radius6630_floor :
@@ -32,7 +24,7 @@ theorem radius6630_floor :
   norm_num [radius6630, claimedRadius, errors6630, IRSProfile.Index]
 
 theorem radius6630_cell_cross :
-    318983 * Fintype.card IRSProfile.Index <
+    318991 * Fintype.card IRSProfile.Index <
       (errors6630 + 1) * 1048576 := by
   norm_num [IRSProfile.Index, errors6630]
 
@@ -45,51 +37,50 @@ theorem radius6630_admissible :
   constructor <;>
     norm_num [radius6630, claimedRadius, IRSProfile.minRelativeDistance]
 
-/-- Exact rational upper approximation `2^(97/100) <= 100/51`. -/
-theorem two_rpow_97_hundredths_le :
-    (2 : ℝ≥0) ^ ((97 : ℝ) / 100) ≤ (100 : ℝ≥0) / 51 := by
-  have hroot :
-      ((2 : ℝ≥0) ^ (97 : ℕ)) ^ ((100 : ℝ)⁻¹) ≤
-        (100 : ℝ≥0) / 51 := by
-    rw [NNReal.rpow_inv_le_iff (by norm_num : (0 : ℝ) < 100)]
-    norm_num [NNReal.rpow_natCast, div_pow, le_div_iff₀]
+theorem two_rpow_ninety_eight_hundredths_le :
+    (2 : ℝ≥0) ^ ((98 : ℝ) / 100) ≤ (144 : ℝ≥0) / 73 := by
+  have hpow : (2 : ℝ≥0) ^ (98 : ℕ) * 73 ^ (100 : ℕ) ≤ ((144 : ℝ≥0) ^ (100 : ℕ)) := by
+    exact_mod_cast (show 2 ^ 98 * 73 ^ 100 ≤ (144 : ℕ) ^ 100 by decide)
+  have hdiv : (2 : ℝ≥0) ^ (98 : ℕ) ≤ ((144 : ℝ≥0) / 73) ^ (100 : ℕ) := by
+    rw [div_pow, le_div_iff₀ (by positivity)]
+    exact hpow
   calc
-    (2 : ℝ≥0) ^ ((97 : ℝ) / 100) =
-        ((2 : ℝ≥0) ^ (97 : ℕ)) ^ ((100 : ℝ)⁻¹) := by
-      rw [← NNReal.rpow_natCast_mul]
-      norm_num [div_eq_mul_inv]
-    _ ≤ (100 : ℝ≥0) / 51 := hroot
+    (2 : ℝ≥0) ^ ((98 : ℝ) / 100) = (((2 : ℝ≥0) ^ (98 : ℕ)) : ℝ≥0) ^ ((100 : ℝ)⁻¹) := by
+      rw [← NNReal.rpow_natCast, ← NNReal.rpow_mul]
+      norm_num
+    _ ≤ (((144 : ℝ≥0) / 73) ^ (100 : ℕ)) ^ ((100 : ℝ)⁻¹) := by
+      exact NNReal.rpow_le_rpow hdiv (by norm_num)
+    _ = (144 : ℝ≥0) / 73 := by
+      rw [← NNReal.rpow_natCast, ← NNReal.rpow_mul]
+      norm_num
 
-/-- Exact 128th-power rational comparison at the claimed radius. -/
 theorem radius6630_power_rational_bound :
     (1 - radius6630) ^ IRSProfile.repetitions ≤
-      ((1 : ℝ≥0) / 2 ^ (66 : ℕ)) * (51 / 100) := by
+      ((1 : ℝ≥0) / 2 ^ (66 : ℕ)) *
+        ((73 : ℝ≥0) / 144) := by
   rw [← NNReal.coe_le_coe]
   norm_num [radius6630, claimedRadius, IRSProfile.repetitions, div_le_iff₀]
 
 theorem radius6630_score :
     (1 - radius6630) ^ IRSProfile.repetitions ≤ claimedError score6630 := by
-  have hscale :
-      (51 : ℝ≥0) / 100 ≤ (2 : ℝ≥0) ^ (-((97 : ℝ) / 100)) := by
+  have hbase : (73 : ℝ≥0) / 144 ≤ (2 : ℝ≥0) ^ (-((98 : ℝ) / 100)) := by
     calc
-      (51 : ℝ≥0) / 100 = 1 / ((100 : ℝ≥0) / 51) := by norm_num
-      _ ≤ 1 / ((2 : ℝ≥0) ^ ((97 : ℝ) / 100)) :=
-        one_div_le_one_div_of_le (by positivity) two_rpow_97_hundredths_le
-      _ = (2 : ℝ≥0) ^ (-((97 : ℝ) / 100)) := by
+      (73 : ℝ≥0) / 144 = 1 / ((144 : ℝ≥0) / 73) := by norm_num
+      _ ≤ 1 / ((2 : ℝ≥0) ^ ((98 : ℝ) / 100)) :=
+        one_div_le_one_div_of_le (by positivity) two_rpow_ninety_eight_hundredths_le
+      _ = (2 : ℝ≥0) ^ (-((98 : ℝ) / 100)) := by
         rw [one_div, NNReal.rpow_neg]
   calc
-    (1 - radius6630) ^ IRSProfile.repetitions ≤
-        ((1 : ℝ≥0) / 2 ^ (66 : ℕ)) * (51 / 100) :=
+    _ ≤ ((1 : ℝ≥0) / 2 ^ (66 : ℕ)) * ((73 : ℝ≥0) / 144) :=
       radius6630_power_rational_bound
-    _ ≤ ((1 : ℝ≥0) / 2 ^ (66 : ℕ)) *
-        (2 : ℝ≥0) ^ (-((97 : ℝ) / 100)) :=
-      mul_le_mul_of_nonneg_left hscale (by positivity)
+    _ ≤ ((1 : ℝ≥0) / 2 ^ (66 : ℕ)) * (2 : ℝ≥0) ^ (-((98 : ℝ) / 100)) :=
+      mul_le_mul_of_nonneg_left hbase (by positivity)
     _ = claimedError score6630 := by
       unfold claimedError score6630
-      rw [show -((((6697 : ℕ) : ℝ) / 100)) =
-          -((66 : ℕ) : ℝ) + -((97 : ℝ) / 100) by norm_num,
-        NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0)]
-      simp only [NNReal.rpow_neg, NNReal.rpow_natCast, one_div]
+      rw [show -((((6698 : ℕ) : ℝ) / 100)) =
+          -((66 : ℕ) : ℝ) + -((98 : ℝ) / 100) by norm_num,
+        NNReal.rpow_add two_ne_zero, NNReal.rpow_neg,
+        NNReal.rpow_natCast, one_div]
 
 end
 

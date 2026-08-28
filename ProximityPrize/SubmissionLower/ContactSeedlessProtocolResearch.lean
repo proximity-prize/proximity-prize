@@ -167,9 +167,9 @@ theorem certifiedGammaError_le_of_alignment
       · norm_num [mcaBudget, ContactSeedlessListBoundResearch.listBudget]
       · simpa only [Nat.mul_comm] using field_capacity_split
 
-theorem protocolClaim6697_of_alignment
+theorem protocolClaim6698_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-    ProtocolClaim 6697 318983 1048576 where
+    ProtocolClaim 6698 318991 1048576 where
   admissible := ContactScore6630Research.radius6630_admissible
   reduction := by
     change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
