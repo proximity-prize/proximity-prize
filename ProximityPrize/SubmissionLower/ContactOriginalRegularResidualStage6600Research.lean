@@ -3,6 +3,7 @@ import ProximityPrize.SubmissionLower.ContactOriginalRegularSeedCount
 import ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
 import ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
+import ProximityPrize.SubmissionLower.ContactWeightedRegularFactor6600Research
 
 /-!
 # Initial residual stages for actual score-66 regular factors
@@ -29,6 +30,7 @@ open ContactIdentityResidualGlobalFlagResearch
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactFlagBezout6543Research
 open ContactNearPencil6600FactorLedgerResearch
+open ContactWeightedRegularFactor6600Research
 
 noncomputable section
 
@@ -40,24 +42,14 @@ variable (K : Type) [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq (GenericField K) := Classical.decEq (GenericField K)
 
-/-- Rectangular nested flag of one geometric factor, in the literal
-`(Z,Y,R)` degree order. -/
+/-- Exact Newton-support flag of one geometric factor. -/
 def geometricFlag {F : MvPolynomial (Fin 4) K}
     (g : GeometricFactor K F) : FlagDegree :=
-  ⟨g.1.degreeOf (2 : Fin 3), g.1.degreeOf (0 : Fin 3),
-    g.1.degreeOf (1 : Fin 3)⟩
+  weightedFlag g.1
 
 theorem polynomialIn_geometricFlag {F : MvPolynomial (Fin 4) K}
     (g : GeometricFactor K F) : PolynomialInFlag (geometricFlag K g) g.1 := by
-  intro d hd
-  have h0 := MvPolynomial.monomial_le_degreeOf (0 : Fin 3) hd
-  have h1 := MvPolynomial.monomial_le_degreeOf (1 : Fin 3) hd
-  have h2 := MvPolynomial.monomial_le_degreeOf (2 : Fin 3) hd
-  change d 1 ≤ g.1.degreeOf 1 ∧
-    d 0 + d 1 ≤ g.1.degreeOf 0 + g.1.degreeOf 1 ∧
-    d 0 + d 1 + d 2 ≤
-      g.1.degreeOf 2 + g.1.degreeOf 0 + g.1.degreeOf 1
-  omega
+  exact polynomialIn_weightedFlag g.1
 
 /-- The interpolation box supplies exactly the three global support values
 preserved by residualization. -/
@@ -66,7 +58,7 @@ theorem residual_surface_weights_of_box
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
     wt residualSWeights F ≤ 8 ∧
       wt residualYSWeights F ≤ 43 ∧
-      wt residualTotalWeights F ≤ 503 := by
+      wt residualTotalWeights F ≤ 528 := by
   constructor
   · apply (weightedTotalDegree_le_iff residualSWeights F 8).mpr
     intro d hd
@@ -89,11 +81,11 @@ theorem residual_surface_weights_of_box
         show residualYSWeights 1 = 1 by rfl,
         show residualYSWeights 2 = 1 by rfl,
         show residualYSWeights 3 = 0 by rfl]
-      simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add, Nat.add_zero]
+      simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add]
       norm_num [weightedCap, ContactParameters6600Research.multiplicity,
         agreements, n, errors, w] at hb
       omega
-    · apply (weightedTotalDegree_le_iff residualTotalWeights F 503).mpr
+    · apply (weightedTotalDegree_le_iff residualTotalWeights F 528).mpr
       intro d hd
       have hb : d 1 + d 3 ≤ seedTotalCap ∧ d 2 ≤ slopeCap ∧
           d 0 + w * d 1 + (w - 1) * d 2 < weightedCap := hbox hd
@@ -102,7 +94,7 @@ theorem residual_surface_weights_of_box
         show residualTotalWeights 1 = 1 by rfl,
         show residualTotalWeights 2 = 1 by rfl,
         show residualTotalWeights 3 = 1 by rfl]
-      simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add, Nat.add_zero]
+      simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add]
       norm_num [seedTotalCap, slopeCap] at hb
       omega
 
@@ -171,23 +163,8 @@ def geometricResidualStage
     characteristic_bound := by norm_num [w, prime]
   }
 
-/-- Geometric factor flags sum coordinatewise to the original factor's
-rectangular flag. -/
-theorem geometricFlag_budgets
-    (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0) :
-    (∑ g : GeometricFactor K F, (geometricFlag K g).zOnly) ≤
-        F.degreeOf (3 : Fin 4) ∧
-      (∑ g : GeometricFactor K F, (geometricFlag K g).yz) ≤
-        F.degreeOf (1 : Fin 4) ∧
-      (∑ g : GeometricFactor K F, (geometricFlag K g).all) ≤
-        F.degreeOf (2 : Fin 4) := by
-  exact ⟨geometricFactor_sum_degree_le K F hF 2,
-    geometricFactor_sum_degree_le K F hF 0,
-    geometricFactor_sum_degree_le K F hF 1⟩
-
 /-- Once every geometric factor has its recursive factor-ledger bound, the
-actual original regular family has exactly the bound expected by the global
-rectangular selected-family theorem. -/
+actual original factor is charged only by its three Newton support values. -/
 theorem original_regular_seed_bound_of_geometric_factor_counts
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
     (selected : K → Polynomial K) (Gamma : Finset K)
@@ -197,12 +174,12 @@ theorem original_regular_seed_bound_of_geometric_factor_counts
       (geometricSeeds K F selected Gamma g).card * gap ^ 2 ≤
         factorRegularLedger (geometricFlag K g)) :
     Gamma.card * gap ^ 2 ≤
-      factorRegularLedger
-        ⟨F.degreeOf (3 : Fin 4), F.degreeOf (1 : Fin 4),
-          F.degreeOf (2 : Fin 4)⟩ := by
+      weightedLedger
+        (MvPolynomial.weightedTotalDegree residualTotalWeights F)
+        (MvPolynomial.weightedTotalDegree residualYSWeights F)
+        (MvPolynomial.weightedTotalDegree residualSWeights F) := by
   have hcover := card_le_sum_geometricSeeds K F hF.ne_zero selected Gamma
     hsolutions
-  have hcaps := geometricFlag_budgets K F hF.ne_zero
   calc
     Gamma.card * gap ^ 2 ≤
         (∑ g : GeometricFactor K F,
@@ -214,12 +191,16 @@ theorem original_regular_seed_bound_of_geometric_factor_counts
     _ ≤ ∑ g : GeometricFactor K F,
         factorRegularLedger (geometricFlag K g) :=
       Finset.sum_le_sum (fun g _ ↦ hcount g)
-    _ ≤ factorRegularLedger
-        ⟨F.degreeOf (3 : Fin 4), F.degreeOf (1 : Fin 4),
-          F.degreeOf (2 : Fin 4)⟩ :=
-      sum_factorRegularLedger_le_flag (geometricFlag K)
-        ⟨F.degreeOf (3 : Fin 4), F.degreeOf (1 : Fin 4),
-          F.degreeOf (2 : Fin 4)⟩ hcaps.1 hcaps.2.1 hcaps.2.2
+    _ ≤ weightedLedger
+        (MvPolynomial.weightedTotalDegree residualTotalWeights F)
+        (MvPolynomial.weightedTotalDegree residualYSWeights F)
+        (MvPolynomial.weightedTotalDegree residualSWeights F) := by
+      change (∑ g : GeometricFactor K F,
+        factorRegularLedger (weightedFlag g.1)) ≤ _
+      have hsum := sum_surfaceFactor_ledgers_le (polynomialEmbedding K)
+        (polynomialEmbedding_injective K) F hF.ne_zero
+      rw [← Finset.sum_coe_sort] at hsum
+      exact hsum
 
 end
 

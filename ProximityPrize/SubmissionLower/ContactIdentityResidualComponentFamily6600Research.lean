@@ -57,7 +57,7 @@ def regularComponentCurveStage
     (hTflag : PolynomialInFlag cutFlag T)
     (hFs : wt residualSWeights F ≤ 8)
     (hFys : wt residualYSWeights F ≤ 43)
-    (hFtotal : wt residualTotalWeights F ≤ 503)
+    (hFtotal : wt residualTotalWeights F ≤ 528)
     (hinj : Set.InjOn x nodes)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d)
     (hsolution : ∀ gamma ∈ Gamma,
@@ -132,7 +132,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
     (hTflag : PolynomialInFlag cutFlag T)
     (hFs : wt residualSWeights F ≤ 8)
     (hFys : wt residualYSWeights F ≤ 43)
-    (hFtotal : wt residualTotalWeights F ≤ 503)
+    (hFtotal : wt residualTotalWeights F ≤ 528)
     (hinj : Set.InjOn x nodes)
     (hdegreeSelected : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ d)

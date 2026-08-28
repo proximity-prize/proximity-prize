@@ -21,6 +21,8 @@ open ContactOriginalRegularSeedCount ContactOriginalRegularResidualStage6600Rese
 open ContactRegularFactorFlag6600Research ContactGlobalSelectedFamilies6600Research
 open ContactIdentityResidualIterationResearch ContactFlagBezout6543Research
 open ContactNearPencil6600FactorLedgerResearch
+open ContactWeightedRegularFactor6600Research
+open ContactIdentityResidualGlobalFlagResearch
 
 noncomputable section
 
@@ -67,24 +69,26 @@ def regularGeometricResidualStage
 /-- Geometric recursive bounds aggregate to the exact original rectangular
 factor ledger expected by the global selected-family join. -/
 theorem regular_factor_seed_bound_of_geometric_counts
-    (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
-    (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (Q : MvPolynomial (Fin 4) K) (_ : Q ≠ 0)
+    (_ : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (R : ContactRegularFactorFlag6600Research.RegularIndex Q)
     (hcount : ∀ g : GeometricFactor K R.1,
       (geometricSeeds K R.1 selected (regularSeeds Q selected Gamma R) g).card *
           gap ^ 2 ≤ factorRegularLedger (geometricFlag K g)) :
     (regularSeeds Q selected Gamma R).card * gap ^ 2 ≤
-      factorRegularLedger (regularFlag Q R) := by
-  obtain ⟨hRirred, _, _⟩ :=
-    directFactor_data Q R.1 hQ weightedCap w seedTotalCap slopeCap hbox R.2
+      weightedLedger
+        (MvPolynomial.weightedTotalDegree residualTotalWeights R.1)
+        (MvPolynomial.weightedTotalDegree residualYSWeights R.1)
+        (MvPolynomial.weightedTotalDegree residualSWeights R.1) := by
+  have hRirred := (ContactImplicitContactLift.positiveRFactors_spec Q R.1 R.2).1
   have hsolutions : ∀ gamma ∈ regularSeeds Q selected Gamma R,
       specialization K (selected gamma) gamma R.1 = 0 := by
     intro gamma hgamma
     exact (Finset.mem_filter.mp hgamma).2.1
-  simpa only [geometricFlag, regularFlag] using
-    original_regular_seed_bound_of_geometric_factor_counts K R.1 hRirred
-      selected (regularSeeds Q selected Gamma R) hsolutions hcount
+  exact @ContactOriginalRegularResidualStage6600Research.original_regular_seed_bound_of_geometric_factor_counts
+    K inferInstance R.1 hRirred selected (regularSeeds Q selected Gamma R)
+      hsolutions hcount
 
 end
 
