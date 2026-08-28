@@ -46,7 +46,7 @@ theorem frozenTerminalAdaptiveProjectionFamilies6600 :
     slopeCap hbox R.2
   have hRne : R.1 ≠ 0 := hRdata.1.ne_zero
   have hglobal := regularFlag_budgets Q hQ hbox
-  have hRZ : (regularFlag Q R).zOnly ≤ 495 :=
+  have hRZ : (regularFlag Q R).zOnly ≤ 1493 :=
     (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
       (Finset.mem_univ R)).trans hglobal.1
   have hRY : (regularFlag Q R).yz ≤ 43 :=
@@ -77,7 +77,7 @@ theorem frozenTerminalAdaptiveProjectionFamilies6600 :
     (hgZ.trans hRZ) (hgY.trans hRY) (hgS.trans hRS)
 
 /-- Fully closed score-66 lower-track claim. -/
-theorem protocolClaim6600 : ProtocolClaim 6618 315835 1048576 :=
+theorem protocolClaim6600 : ProtocolClaim 6669 317844 1048576 :=
   ContactProtocol6600AdaptiveResearch.protocolClaim6600_of_terminal_projection_families
     frozenTerminalAdaptiveProjectionFamilies6600
 

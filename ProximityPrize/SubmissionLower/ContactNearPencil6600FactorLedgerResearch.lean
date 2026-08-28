@@ -118,7 +118,7 @@ theorem sum_factorRegularLedger_le
 /-- Robust rectangular factor cap obtained directly from the three existing
 separated degree budgets.  It is slightly larger than `surfaceFlag6600` but
 still leaves substantial score-66 ledger slack. -/
-def rectangularSurfaceFlag6600 : FlagDegree := ⟨576, 33, 6⟩
+def rectangularSurfaceFlag6600 : FlagDegree := ⟨495, 43, 8⟩
 
 def rectangularRegularNumerator : ℕ :=
   factorRegularLedger rectangularSurfaceFlag6600
@@ -130,21 +130,21 @@ def rectangularLedgerCeiling : ℕ :=
   (rectangularTotalNumerator + gap ^ 2 - 1) / gap ^ 2
 
 theorem rectangular_regular_exact :
-    rectangularRegularNumerator = 241144169682667450979668563 := by
+    rectangularRegularNumerator = 361802540717144456802514527 := by
   norm_num [rectangularRegularNumerator, factorRegularLedger,
     factorPrimary, factorZTail, factorAllTail, rectangularSurfaceFlag6600,
     flagMixed, agreementDirection6600, unitYZFlag, unitZFlag, unitAllFlag,
     degreeIncidence, unitIncidence, errors, gap, agreements, n, w]
 
 theorem rectangular_total_exact :
-    rectangularTotalNumerator = 243013956771530477084927643 := by
+    rectangularTotalNumerator = 368517457418416467513333482 := by
   rw [show rectangularTotalNumerator =
       rectangularRegularNumerator + retainedSingularContribution by rfl,
     rectangular_regular_exact]
   norm_num [retainedSingularContribution]
 
 theorem rectangular_ledger_ceiling_exact :
-    rectangularLedgerCeiling = 88857537351958271 := by
+    rectangularLedgerCeiling = 135685232102542715 := by
   norm_num [rectangularLedgerCeiling, rectangular_total_exact,
     gap, agreements, n, errors, w]
 
@@ -154,15 +154,15 @@ theorem rectangular_strict_budget :
   norm_num [alignmentBudget, gap, agreements, n, errors, w]
 
 theorem rectangular_budget_slack :
-    alignmentBudget - rectangularLedgerCeiling = 11142462648041729 := by
+    alignmentBudget - rectangularLedgerCeiling = 1805131953154828 := by
   rw [rectangular_ledger_ceiling_exact]
   norm_num [alignmentBudget]
 
 theorem sum_factorRegularLedger_rectangular_le
     {I : Type} [Fintype I] (p : I → FlagDegree)
-    (hz : (∑ i, (p i).zOnly) ≤ 576)
-    (hyz : (∑ i, (p i).yz) ≤ 33)
-    (hall : (∑ i, (p i).all) ≤ 6) :
+    (hz : (∑ i, (p i).zOnly) ≤ 495)
+    (hyz : (∑ i, (p i).yz) ≤ 43)
+    (hall : (∑ i, (p i).all) ≤ 8) :
     (∑ i, factorRegularLedger (p i)) ≤ rectangularRegularNumerator := by
   exact sum_factorRegularLedger_le_flag p rectangularSurfaceFlag6600 hz hyz hall
 
@@ -186,9 +186,9 @@ theorem sum_factor_counts_le
 theorem sum_factor_counts_rectangular_le
     {I : Type} [Fintype I] (count : I → ℕ) (p : I → FlagDegree)
     (hcount : ∀ i, count i * gap ^ 2 ≤ factorRegularLedger (p i))
-    (hz : (∑ i, (p i).zOnly) ≤ 576)
-    (hyz : (∑ i, (p i).yz) ≤ 33)
-    (hall : (∑ i, (p i).all) ≤ 6) :
+    (hz : (∑ i, (p i).zOnly) ≤ 495)
+    (hyz : (∑ i, (p i).yz) ≤ 43)
+    (hall : (∑ i, (p i).all) ≤ 8) :
     (∑ i, count i) * gap ^ 2 ≤ rectangularRegularNumerator := by
   calc
     (∑ i, count i) * gap ^ 2 = ∑ i, count i * gap ^ 2 := by
