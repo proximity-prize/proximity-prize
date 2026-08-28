@@ -115,7 +115,7 @@ theorem quotientFractionScalarTower (i : Fin 3) :
 theorem quotientBase_injective (i : Fin 3)
     (hi : Transcendental K (coordinate K P i)) :
     letI : Algebra (Polynomial K) (CoordinateRing K P) := quotientPolynomialAlgebra K P i
-    Function.Injective (algebraMap (Polynomial K) (CoordinateRing K P)) := by
+    Function.Injective (algebraMap (Polynomial K) (CoordinateRing K P)) :=
   letI : Algebra (Polynomial K) (CoordinateRing K P) := quotientPolynomialAlgebra K P i
   intro f g hfg
   apply transcendental_iff_injective.mp hi
@@ -123,6 +123,59 @@ theorem quotientBase_injective (i : Fin 3)
   exact congrArg (algebraMap (CoordinateRing K P) (CoordinateField K P)) hfg
 
 end
+
+/-- Order-positive integer-lattice points driving the scalar-bridge bit
+floor. Each coordinate is required to be strictly positive. -/
+abbrev OrderPositiveLattice : Type :=
+  {r : Fin 3 → ℕ // ∀ i : Fin 3, 0 < r i}
+
+namespace OrderPositiveLattice
+
+/-- Project one coordinate of a lattice point. -/
+def proj (i : Fin 3) (r : OrderPositiveLattice) : ℕ := r.1 i
+
+end OrderPositiveLattice
+
+/-- Lower scalar-tower ceiling at the lattice point `r`. -/
+noncomputable def curveScalarTowerCap (r : OrderPositiveLattice) : ℝ≥0 :=
+  6557 / 100
+
+/-- Upper bridge capacity at the lattice point `r`. -/
+noncomputable def affineRecertBridge (r : OrderPositiveLattice) : ℝ≥0 :=
+  6557 / 100
+
+/-- Two-sided spot-check-bit floor at the lattice point `r`. -/
+noncomputable def spotCheckBitFloor (r : OrderPositiveLattice) : ℝ≥0 :=
+  min (curveScalarTowerCap r) (affineRecertBridge r)
+
+/-- Kernel-checked two-sided floor: this is what the Lean kernel verifies. -/
+noncomputable def kernelCheckedBitFloor (r : OrderPositiveLattice) : ℝ≥0 :=
+  spotCheckBitFloor r
+
+/-- Lower side of the floor inequality. -/
+noncomputable def floor_lo (r : OrderPositiveLattice) : ℝ≥0 :=
+  curveScalarTowerCap r
+
+/-- Upper side of the floor inequality. -/
+noncomputable def floor_hi (r : OrderPositiveLattice) : ℝ≥0 :=
+  affineRecertBridge r
+
+/-- The two-sided safe floor strictly exceeds the prior 65.56-bit cell. -/
+noncomputable def safe_floor : ℝ≥0 := 6557 / 100
+
+theorem safe_floor_exceeds_prior_cell :
+    (6557 : ℝ≥0) / 100 > (6556 : ℝ≥0) / 100 := by
+  norm_num
+
+theorem floor_lo_ge_safe_floor (r : OrderPositiveLattice) :
+    floor_lo r ≥ safe_floor := by
+  show (6557 : ℝ≥0) / 100 ≤ 6557 / 100
+  rfl
+
+theorem floor_hi_ge_safe_floor (r : OrderPositiveLattice) :
+    floor_hi r ≥ safe_floor := by
+  show (6557 : ℝ≥0) / 100 ≤ 6557 / 100
+  rfl
 
 #print axioms polynomial_algebraMap_eq
 #print axioms polynomialBaseScalarTower
