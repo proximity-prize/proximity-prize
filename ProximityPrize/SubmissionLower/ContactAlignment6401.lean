@@ -3,7 +3,7 @@ import ProximityPrize.SubmissionLower.ContactGlobalSelectedCount
 import ProximityPrize.SubmissionLower.ContactFrozenAlignment6401
 
 /-!
-# Unconditional alignment at 77408 errors with seed budget 10^17
+# Unconditional alignment at 77424 errors with maximal doubled-field-safe seed budget
 
 Model label: gpt-5.
 
@@ -40,7 +40,7 @@ theorem selected_no_large_pencil_bound6401 : SelectedNoLargePencilBound6401 :=
 /-- The exact unmodified stock alignment predicate, with no remaining
 counting, interpolation, or geometric hypothesis. -/
 theorem alignment6401 :
-    AffineLineAlignmentBound IRSProfile.baseCode 77408 100000000000000000 :=
+    AffineLineAlignmentBound IRSProfile.baseCode 77424 137490364055697543 :=
   alignment_of_interpolant_count interpolant_selected_count6401
 
 #print axioms interpolant_selected_count6401

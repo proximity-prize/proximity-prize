@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies
-import ProximityPrize.SubmissionLower.ContactOriginalRegularSeedCount
+import ProximityPrize.SubmissionLower.ContactOriginalRegularSparseSeedCount
 import ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount
 
 /-!
@@ -28,7 +28,7 @@ open ContactGlobalSelectedFamilies ContactSelectedSeedDecomposition
 open ContactImplicitPairBudgets ContactImplicitContactLift ContactSingularAuxiliary
 open ContactSingularDegreeBounds ContactInterpolation ContactTranslation
 open ContactPrimeSeedIncidence ContactProperCutSeedCount
-open ContactOriginalRegularSeedCount ContactImplicitPairSeedCount
+open ContactOriginalRegularSparseSeedCount ContactImplicitPairSeedCount
 
 noncomputable section
 
@@ -55,7 +55,7 @@ theorem global_selected_count [CharP K prime]
     obtain ⟨hirred, hRpos, hFbox⟩ :=
       directFactor_data Q F.1 hQ weightedCap w seedTotalCap slopeCap hbox F.2
     have hsub := regularSeeds_subset Q selected Γ F
-    exact original_regular_seed_bound K F.1 hirred hRpos hFbox selected
+    exact original_regular_seed_bound_sparse K F.1 hirred hRpos hFbox selected
       (regularSeeds Q selected Γ F) nodes x u₀ u₁ hinj hnodes
       (fun γ hγ => hdegree γ (hsub hγ))
       (fun γ hγ => (regularSeeds_solution Q selected Γ F γ hγ).1)
