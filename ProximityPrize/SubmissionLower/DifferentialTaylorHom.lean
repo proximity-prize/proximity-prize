@@ -214,8 +214,3 @@ theorem polynomial_relation_of_taylor_substitution
 end PolynomialRelation
 
 end ProximityPrize.SubmissionLower.DifferentialTaylorHom
-
-#print axioms ProximityPrize.SubmissionLower.DifferentialTaylorHom.taylorHom
-#print axioms ProximityPrize.SubmissionLower.DifferentialTaylorHom.jetPolynomial_derivation_eq_derivative
-#print axioms ProximityPrize.SubmissionLower.DifferentialTaylorHom.jetPolynomial_derivation_eq_derivative_of_char
-#print axioms ProximityPrize.SubmissionLower.DifferentialTaylorHom.polynomial_relation_of_taylor_substitution

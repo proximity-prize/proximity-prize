@@ -443,11 +443,3 @@ lemma H1Cotangent.map_toInfinitesimal_bijective (P : Extension.{u} R S) :
 end Algebra.Extension
 
 -- Kernel dependency audit for this isolated ordinary proof-port repair.
-#print axioms derivationOfSectionOfKerSqZero
-#print axioms retractionKerToTensorEquivSection
-#print axioms derivationQuotKerSq
-#print axioms tensorKaehlerQuotKerSqEquiv
-#print axioms retractionKerCotangentToTensorEquivSection
-#print axioms Algebra.Extension.CotangentSpace.map_toInfinitesimal_bijective
-#print axioms Algebra.Extension.Cotangent.map_toInfinitesimal_bijective
-#print axioms Algebra.Extension.H1Cotangent.map_toInfinitesimal_bijective

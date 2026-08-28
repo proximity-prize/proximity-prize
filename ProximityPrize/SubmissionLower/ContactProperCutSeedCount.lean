@@ -194,9 +194,3 @@ theorem proper_cut_seed_bound
 end
 
 end ProximityPrize.SubmissionLower.ContactProperCutSeedCount
-
-#print axioms ProximityPrize.SubmissionLower.ContactProperCutSeedCount.selectedPoint_evaluation
-#print axioms ProximityPrize.SubmissionLower.ContactProperCutSeedCount.noLargeSelectedPencil_mono
-#print axioms ProximityPrize.SubmissionLower.ContactProperCutSeedCount.proper_cut_seed_bound_of_projection_sum
-#print axioms ProximityPrize.SubmissionLower.ContactProperCutSeedCount.regularComponents_degree_budget
-#print axioms ProximityPrize.SubmissionLower.ContactProperCutSeedCount.proper_cut_seed_bound

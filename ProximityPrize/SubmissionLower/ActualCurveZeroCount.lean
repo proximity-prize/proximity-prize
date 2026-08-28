@@ -202,13 +202,3 @@ theorem finite_zero_points_le_box
 end
 
 end ProximityPrize.SubmissionLower.ActualCurveZeroCount
-
-#print axioms ProximityPrize.SubmissionLower.ActualCurveZeroCount.pointHom
-#print axioms ProximityPrize.SubmissionLower.ActualCurveZeroCount.pointHom_injective
-#print axioms ProximityPrize.SubmissionLower.ActualCurveZeroCount.quotient_eval_ne_zero_of_not_mem
-#print axioms ProximityPrize.SubmissionLower.ActualCurveZeroCount.field_eval_ne_zero_iff
-#print axioms ProximityPrize.SubmissionLower.ActualCurveZeroCount.actualCoordinateDegree_of_transcendental
-#print axioms ProximityPrize.SubmissionLower.ActualCurveZeroCount.coordinateData_value
-#print axioms ProximityPrize.SubmissionLower.ActualCurveZeroCount.coordinateData_degree
-#print axioms ProximityPrize.SubmissionLower.ActualCurveZeroCount.finite_zero_points_le_box_of_separator
-#print axioms ProximityPrize.SubmissionLower.ActualCurveZeroCount.finite_zero_points_le_box

@@ -310,16 +310,3 @@ def chartEquiv : ChartPlace K L ≃ NormalizedValuation K L :=
 end
 
 end ProximityPrize.SubmissionLower.CoordinatePlaceClassification
-
-#print axioms ProximityPrize.SubmissionLower.CoordinatePlaceClassification.polynomial_le_one
-#print axioms ProximityPrize.SubmissionLower.CoordinatePlaceClassification.finiteNormalization_le_one
-#print axioms ProximityPrize.SubmissionLower.CoordinatePlaceClassification.infinityBase_le_one
-#print axioms ProximityPrize.SubmissionLower.CoordinatePlaceClassification.infiniteNormalization_le_one
-#print axioms ProximityPrize.SubmissionLower.CoordinatePlaceClassification.finite_or_infinite_place
-#print axioms ProximityPrize.SubmissionLower.CoordinatePlaceClassification.infinitePlace_liesOver
-#print axioms ProximityPrize.SubmissionLower.CoordinatePlaceClassification.infinitePlace_parameter_value
-#print axioms ProximityPrize.SubmissionLower.CoordinatePlaceClassification.finitePlace_trivial
-#print axioms ProximityPrize.SubmissionLower.CoordinatePlaceClassification.infinitePlace_trivial
-#print axioms ProximityPrize.SubmissionLower.CoordinatePlaceClassification.chartValuation_injective
-#print axioms ProximityPrize.SubmissionLower.CoordinatePlaceClassification.chartMap_bijective
-#print axioms ProximityPrize.SubmissionLower.CoordinatePlaceClassification.chartEquiv

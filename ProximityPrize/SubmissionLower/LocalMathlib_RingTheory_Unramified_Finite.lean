@@ -299,15 +299,3 @@ lemma projective_of_restrictScalars [Module.Projective R M] : Module.Projective 
   Module.Projective.of_split _ _ (comp_sec R S M)
 
 end Algebra.FormallyUnramified
-
-#print axioms Algebra.FormallyUnramified.iff_exists_tensorProduct
-#print axioms Algebra.FormallyUnramified.finite_of_free_aux
-#print axioms Algebra.FormallyUnramified.elem
-#print axioms Algebra.FormallyUnramified.one_tmul_sub_tmul_one_mul_elem
-#print axioms Algebra.FormallyUnramified.one_tmul_mul_elem
-#print axioms Algebra.FormallyUnramified.lmul_elem
-#print axioms Algebra.FormallyUnramified.finite_of_free
-#print axioms Algebra.FormallyUnramified.sec
-#print axioms Algebra.FormallyUnramified.comp_sec
-#print axioms Algebra.FormallyUnramified.flat_of_restrictScalars
-#print axioms Algebra.FormallyUnramified.projective_of_restrictScalars

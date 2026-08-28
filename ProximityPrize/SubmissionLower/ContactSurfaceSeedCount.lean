@@ -175,8 +175,3 @@ theorem whole_surface_seed_bound
 end
 
 end ProximityPrize.SubmissionLower.ContactSurfaceSeedCount
-
-#print axioms ProximityPrize.SubmissionLower.ContactSurfaceSeedCount.coordinateMixedDegree_le_caps
-#print axioms ProximityPrize.SubmissionLower.ContactSurfaceSeedCount.mixed_cap_sum
-#print axioms ProximityPrize.SubmissionLower.ContactSurfaceSeedCount.scaled_sharp_incidence_bound
-#print axioms ProximityPrize.SubmissionLower.ContactSurfaceSeedCount.whole_surface_seed_bound

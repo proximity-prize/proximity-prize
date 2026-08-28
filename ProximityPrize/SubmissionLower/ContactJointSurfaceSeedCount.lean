@@ -269,8 +269,5 @@ theorem whole_surface_seed_bound_fixed_joint_R
 end
 
 
-#print axioms rationalMap_joint_support_of_dvd
-#print axioms whole_surface_seed_bound_joint_R
-#print axioms whole_surface_seed_bound_fixed_joint_R
 
 end ProximityPrize.SubmissionLower.ContactJointSurfaceSeedCount

@@ -316,16 +316,6 @@ theorem singularAuxiliary_nonzero_mem_box
   rw [contact_weight] at hcontact
   exact ⟨hseed, hslope, hcontact⟩
 
-#print axioms collectR_rename_remaining
-#print axioms liftedCoefficient_support
-#print axioms liftedCoefficient_weight_le
-#print axioms pderiv_weight_le
-#print axioms degreeOf_det_le_uniform
-#print axioms eliminateR_weight_le
-#print axioms sum_weighted_degrees_le_of_prod_dvd
-#print axioms singularAuxiliary_weight_le
-#print axioms singularAuxiliary_input_caps
-#print axioms singularAuxiliary_nonzero_mem_box
 
 end
 end ProximityPrize.SubmissionLower.ContactSingularDegreeBounds

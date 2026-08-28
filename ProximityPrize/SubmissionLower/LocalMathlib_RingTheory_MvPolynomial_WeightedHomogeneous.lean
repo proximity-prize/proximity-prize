@@ -739,25 +739,3 @@ lemma weightedHomogeneousComponent_mem_of_mem [DecidableEq M] {I : Ideal (MvPoly
 end GradedAlgebra
 
 end MvPolynomial
-
-#print axioms MvPolynomial.weightedTotalDegree'
-#print axioms MvPolynomial.weightedTotalDegree
-#print axioms MvPolynomial.weightedHomogeneousSubmodule_mul
-#print axioms MvPolynomial.isWeightedHomogeneous_monomial
-#print axioms MvPolynomial.isWeightedHomogeneous_X
-#print axioms MvPolynomial.IsWeightedHomogeneous.prod
-#print axioms MvPolynomial.weightedHomogeneousComponent
-#print axioms MvPolynomial.coeff_weightedHomogeneousComponent
-#print axioms MvPolynomial.weightedHomogeneousComponent_isWeightedHomogeneous
-#print axioms MvPolynomial.weightedHomogeneousComponent_eq_zero'
-#print axioms MvPolynomial.weightedHomogeneousComponent_eq_zero
-#print axioms MvPolynomial.sum_weightedHomogeneousComponent
-#print axioms MvPolynomial.IsWeightedHomogeneous.weightedHomogeneousComponent_same
-#print axioms MvPolynomial.IsWeightedHomogeneous.weightedHomogeneousComponent_ne
-#print axioms MvPolynomial.weightedHomogeneousComponent_of_mem
-#print axioms MvPolynomial.weightedHomogeneousComponent_eq_self
-#print axioms MvPolynomial.weightedHomogeneousComponent_zero
-#print axioms MvPolynomial.weightedDecomposition
-#print axioms MvPolynomial.weightedGradedAlgebra
-#print axioms MvPolynomial.mem_iff_weightedHomogeneousComponent_mem
-#print axioms MvPolynomial.weightedHomogeneousComponent_mem_of_mem

@@ -241,11 +241,3 @@ theorem contactRing_inverse (F : Poly4 K) :
 end PolynomialVectorField
 
 end ProximityPrize.SubmissionLower.ContactDifferentialRing
-
-#print axioms ProximityPrize.SubmissionLower.ContactDifferentialRing.derivation_preserves_span
-#print axioms ProximityPrize.SubmissionLower.ContactDifferentialRing.quotientDerivation_mk
-#print axioms ProximityPrize.SubmissionLower.ContactDifferentialRing.partial_extra_liftFour
-#print axioms ProximityPrize.SubmissionLower.ContactDifferentialRing.contactVectorField_F
-#print axioms ProximityPrize.SubmissionLower.ContactDifferentialRing.contactIdeal_stable
-#print axioms ProximityPrize.SubmissionLower.ContactDifferentialRing.contactDerivation_mk
-#print axioms ProximityPrize.SubmissionLower.ContactDifferentialRing.contactRing_inverse

@@ -220,11 +220,3 @@ end FixedSeparator
 end
 
 end ProximityPrize.SubmissionLower.CoordinateBoxZeroCount
-
-#print axioms ProximityPrize.SubmissionLower.CoordinateBoxZeroCount.SeparableCoordinate.finite_sum_pole_le_degree
-#print axioms ProximityPrize.SubmissionLower.CoordinateBoxZeroCount.finite_sum_coordinate_pole_le_degree
-#print axioms ProximityPrize.SubmissionLower.CoordinateBoxZeroCount.finite_sum_polynomial_pole_le_box
-#print axioms ProximityPrize.SubmissionLower.CoordinateBoxZeroCount.finite_zero_places_le_box
-#print axioms ProximityPrize.SubmissionLower.CoordinateBoxZeroCount.modelPlace_injective
-#print axioms ProximityPrize.SubmissionLower.CoordinateBoxZeroCount.map_model_eval
-#print axioms ProximityPrize.SubmissionLower.CoordinateBoxZeroCount.finite_model_zero_points_le_box

@@ -143,9 +143,5 @@ theorem finite_separable_of_proper_plane_roots
 
 end
 
-#print axioms integral_and_separable_of_small_annihilator
-#print axioms resultant_aeval_eq_zero_of_common_root
-#print axioms finite_separable_of_two_generators
-#print axioms finite_separable_of_proper_plane_roots
 
 end ProximityPrize.SubmissionLower.PlaneRootSeparability

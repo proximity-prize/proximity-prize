@@ -195,21 +195,5 @@ end ConcreteNormalization
 
 end
 
-#print axioms point_surjective
-#print axioms pointKernel_isPrime
-#print axioms pointKernel_isMaximal
-#print axioms pointKernel_injective
-#print axioms parameterDifference_mem
-#print axioms parameterDifference_ne_zero
-#print axioms pointKernel_ne_bot
-#print axioms pointPlace_injective
-#print axioms point_valuation_lt_one_iff
-#print axioms point_zero_order_ge_one
-#print axioms actual_normalization_finite
-#print axioms actual_normalization_dedekind
-#print axioms actual_normalization_fractionField
-#print axioms actual_normalization_base_injective
-#print axioms normalizationPointPlace_injective
-#print axioms normalization_point_zero_order_ge_one
 
 end ProximityPrize.SubmissionLower.AffinePointValuation

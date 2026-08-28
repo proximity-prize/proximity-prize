@@ -57,13 +57,13 @@ theorem recursive_scaled_factor_6630_of_adaptive_projection_families_yz
     hphi S hnodes hagreement
   intro D i hi hproper
   obtain ⟨base, ⟨P⟩⟩ := hprojection D i hi hproper
-  refine ⟨P.family.toPrimeFlagBudgetFamily, ?_⟩
-  intro C
-  exact P.one_le_zCost_add_yzCost phi D.stage.F rfl
-    D.stage.G_dvd_surface C
+  refine ⟨P.family.toPrimeFlagBudgetFamily, ?_, ?_⟩
+  · intro C hZ
+    exact P.family.one_le_toPrimeFlagBudgetFamily_zCost C hZ
+  · intro C hZ
+    exact P.one_le_yzCost_of_not_z_transcendental phi D.stage.F rfl
+      D.stage.G_dvd_surface C hZ
 
 end
 
 end ProximityPrize.SubmissionLower.ContactAdaptiveProjectionFactorProvider6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactAdaptiveProjectionFactorProvider6630Research.recursive_scaled_factor_6630_of_adaptive_projection_families_yz

@@ -593,16 +593,3 @@ lemma _root_.Ideal.Fiber.lift_residueField_surjective [Algebra.FiniteType R S]
 end QuasiFiniteAt
 
 end Algebra
-
-#print axioms Algebra.quasiFinite_iff
-#print axioms Algebra.QuasiFinite.finite_comap_preimage_singleton
-#print axioms Module.Finite.of_quasiFinite
-#print axioms Algebra.QuasiFinite.iff_of_isArtinianRing
-#print axioms Algebra.QuasiFinite.trans
-#print axioms Algebra.QuasiFinite.of_surjective_algHom
-#print axioms Algebra.QuasiFinite.of_isLocalization
-#print axioms Algebra.QuasiFinite.iff_finite_comap_preimage_singleton
-#print axioms Algebra.QuasiFinite.iff_finite_primesOver
-#print axioms Algebra.QuasiFiniteAt.baseChange
-#print axioms Algebra.QuasiFiniteAt.eq_of_le_of_under_eq
-#print axioms Ideal.Fiber.lift_residueField_surjective

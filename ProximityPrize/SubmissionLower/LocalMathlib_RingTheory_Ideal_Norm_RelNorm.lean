@@ -509,16 +509,3 @@ end absNorm
 end Ideal
 
 end SpanNorm
-
-#print axioms Ideal.spanIntNorm_localization
-#print axioms Ideal.spanNorm_mul
-#print axioms Ideal.relNorm_singleton
-#print axioms Ideal.relNorm_map_algEquiv
-#print axioms Ideal.relNorm_relNorm
-#print axioms Ideal.relNorm_algebraMap
-#print axioms Ideal.exists_relNorm_eq_pow_of_isPrime
-#print axioms Ideal.relNorm_eq_pow_of_isPrime_isGalois
-#print axioms Ideal.relNorm_eq_pow_of_isMaximal
-#print axioms Ideal.absNorm_relNorm
-#print axioms Ideal.relNorm_int
-#print axioms Ideal.absNorm_algebraMap

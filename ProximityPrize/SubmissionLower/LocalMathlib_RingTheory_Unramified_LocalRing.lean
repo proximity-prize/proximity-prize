@@ -326,15 +326,3 @@ lemma exists_awayMap_bijective_of_residueField_surjective
 end Localization
 
 end UniquePrimeOver
-
-#print axioms Algebra.FormallyUnramified.isField_quotient_map_maximalIdeal
-#print axioms Algebra.FormallyUnramified.map_maximalIdeal
-#print axioms Algebra.FormallyUnramified.of_map_maximalIdeal
-#print axioms Algebra.FormallyUnramified.iff_map_maximalIdeal_eq
-#print axioms Algebra.isUnramifiedAt_iff_map_eq
-#print axioms Localization.localRingHom_injective_of_primesOver_eq_singleton
-#print axioms Localization.finite_of_primesOver_eq_singleton
-#print axioms Localization.localRingHom_surjective_of_primesOver_eq_singleton
-#print axioms Localization.exists_awayMap_injective_of_localRingHom_injective
-#print axioms Localization.exists_awayMap_bijective_of_localRingHom_bijective
-#print axioms Localization.exists_awayMap_bijective_of_residueField_surjective

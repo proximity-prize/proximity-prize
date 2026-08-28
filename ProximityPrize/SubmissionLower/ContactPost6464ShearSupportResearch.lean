@@ -109,5 +109,3 @@ theorem shearMap_wt_le_pulled (weights : Fin 4 → ℕ) (P : Poly4 K) :
 end
 
 end ProximityPrize.SubmissionLower.ContactPost6464ShearSupportResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactPost6464ShearSupportResearch.shearMap_wt_le_pulled

@@ -281,11 +281,3 @@ theorem finite_zero_places_le_poleMass (x : L) (hx : x ≠ 0)
 end
 
 end ProximityPrize.SubmissionLower.CommonPlaceBalance
-
-#print axioms ProximityPrize.SubmissionLower.CommonPlaceBalance.finitePlace_injective
-#print axioms ProximityPrize.SubmissionLower.CommonPlaceBalance.familyValuation_injective
-#print axioms ProximityPrize.SubmissionLower.CommonPlaceBalance.sum_family_order_eq_contributions
-#print axioms ProximityPrize.SubmissionLower.CommonPlaceBalance.sum_placesFor_order_zero
-#print axioms ProximityPrize.SubmissionLower.CommonPlaceBalance.placesFor_covers
-#print axioms ProximityPrize.SubmissionLower.CommonPlaceBalance.sum_placesFor_zero_eq_pole
-#print axioms ProximityPrize.SubmissionLower.CommonPlaceBalance.finite_zero_places_le_poleMass

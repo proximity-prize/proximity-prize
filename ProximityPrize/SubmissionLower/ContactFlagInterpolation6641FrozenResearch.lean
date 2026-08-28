@@ -1,18 +1,18 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactInterpolation
-import ProximityPrize.SubmissionLower.ContactParameters6600Research
+import ProximityPrize.SubmissionLower.ContactFlagInterpolation6641Research
+import ProximityPrize.SubmissionLower.ContactFlagParameters6641Research
 
 /-!
-# Frozen contact interpolation at the score-66 row
+# Frozen contact interpolation at the score-66.30 row
 
-This is the numeric `(m,L,s) = (24,576,6)` instantiation of the generic
-contact-rank kernel.  The only arithmetic input is the already checked
-strict dimension inequality in `ContactParameters6600Research`.
+This is the numeric `(m,L,s) = (29,601,8)` instantiation of the generic
+contact-rank kernel.  Its sole arithmetic input is the exact positive
+dimension margin in `ContactFlagParameters6641Research`.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactInterpolation6600Research
+namespace ProximityPrize.SubmissionLower.ContactFlagInterpolation6641FrozenResearch
 
-open ContactInterpolation ContactRankKernel ContactParameters6600Research
+open ContactFlagInterpolation6641Research ContactFlagRankKernel6641Research ContactFlagParameters6641Research
 open ProximityPrize.Benchmark
 
 noncomputable section
@@ -20,12 +20,12 @@ noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
 
-abbrev FrozenCoefficientIndex6600 :=
+abbrev FrozenCoefficientIndex6641 :=
   CoefficientIndex weightedCap w seedTotalCap slopeCap
 
-theorem exists_frozen_nonzero_contact_array6600
+theorem exists_frozen_nonzero_contact_array6641
     (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
-    ∃ theta : FrozenCoefficientIndex6600 → IRSProfile.Field, theta ≠ 0 ∧
+    ∃ theta : FrozenCoefficientIndex6641 → IRSProfile.Field, theta ≠ 0 ∧
       ∀ (i : IRSProfile.Index) (r : Fin multiplicity),
         contactJet IRSProfile.Field (multiplicity - r.val)
           ((extractBlock IRSProfile.Field weightedCap w seedTotalCap slopeCap
@@ -36,18 +36,18 @@ theorem exists_frozen_nonzero_contact_array6600
     (fun i : IRSProfile.Index ↦ IRSProfile.domain i) u0 u1
   rw [show Fintype.card IRSProfile.Index = n by
     norm_num [IRSProfile.Index, n]]
-  simpa only [totalContactRank, ContactParameters6600Research.localContactRank,
-    ContactRankKernel.localRankBound,
-    ContactParameters6600Research.contactExponent,
-    ContactParameters6600Research.coefficientCount,
-    ContactInterpolation.coefficientCount, ContactRankKernel.contactRankBound,
-    ContactRankKernel.blockInputCount,
-    ContactRankKernel.blockKernelLowerBound] using interpolation_gate
+  simpa only [totalContactRank, ContactFlagParameters6641Research.localContactRank,
+    ContactFlagRankKernel6641Research.localRankBound,
+    ContactFlagParameters6641Research.contactExponent,
+    ContactFlagParameters6641Research.coefficientCount,
+    ContactFlagInterpolation6641Research.coefficientCount, ContactFlagRankKernel6641Research.contactRankBound,
+    ContactFlagRankKernel6641Research.blockInputCount,
+    ContactFlagRankKernel6641Research.blockKernelLowerBound] using interpolation_gate
 
-theorem exists_frozen_nonzero_polynomial_and_equations6600
+theorem exists_frozen_nonzero_polynomial_and_equations6641
     (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
     ∃ (Q : MvPolynomial (Fin 4) IRSProfile.Field)
-      (theta : FrozenCoefficientIndex6600 → IRSProfile.Field),
+      (theta : FrozenCoefficientIndex6641 → IRSProfile.Field),
       Q ≠ 0 ∧
       Q ∈ globalCoefficientBox IRSProfile.Field
         weightedCap w seedTotalCap slopeCap ∧
@@ -58,7 +58,7 @@ theorem exists_frozen_nonzero_polynomial_and_equations6600
             (IRSProfile.domain i) (u0 i) (u1 i) r.val theta) :
               Poly IRSProfile.Field) = 0 := by
   obtain ⟨theta, htheta, hconstraints⟩ :=
-    exists_frozen_nonzero_contact_array6600 u0 u1
+    exists_frozen_nonzero_contact_array6641 u0 u1
   exact ⟨reconstruct IRSProfile.Field weightedCap w seedTotalCap slopeCap theta,
     theta,
     reconstruct_ne_zero IRSProfile.Field weightedCap w seedTotalCap slopeCap
@@ -69,7 +69,4 @@ theorem exists_frozen_nonzero_polynomial_and_equations6600
 
 end
 
-end ProximityPrize.SubmissionLower.ContactInterpolation6600Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactInterpolation6600Research.exists_frozen_nonzero_contact_array6600
-#print axioms ProximityPrize.SubmissionLower.ContactInterpolation6600Research.exists_frozen_nonzero_polynomial_and_equations6600
+end ProximityPrize.SubmissionLower.ContactFlagInterpolation6641FrozenResearch

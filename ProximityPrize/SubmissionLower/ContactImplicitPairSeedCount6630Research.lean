@@ -62,15 +62,14 @@ theorem implicit_pair_seed_bound_fixed
     Γ.filter (fun γ => MvPolynomial.eval (selectedPoint φ selected γ) g = 0)
   have hsub (g) : seedsFor g ⊆ Γ := Finset.filter_subset _ _
   have hAGcaps := degree_bounds_of_mem_box A implicitWeightedCap w algebraicCap 0
-    (by norm_num [w, ContactFlagParameters6642Research.w]) hAbox
+    (by norm_num [w]) hAbox
   have hGGcaps := degree_bounds_of_mem_box G implicitWeightedCap w algebraicCap 1
-    (by norm_num [w, ContactFlagParameters6642Research.w]) hGbox
+    (by norm_num [w]) hGbox
   have hAR : A.degreeOf 2 = 0 := Nat.eq_zero_of_le_zero hAGcaps.2.1
   have hAcaps : HasCaps (surfaceMap φ A) (legacyVector implicitCut) := by
     intro i
     fin_cases i
-    · simpa [legacyVector, ContactCountingCaps.capAt, implicitCut, implicitYCap,
-        implicitWeightedCap, w, ContactFlagParameters6642Research.implicitYCap] using
+    · simpa [legacyVector, ContactCountingCaps.capAt, implicitCut, implicitYCap] using
         (surfaceMap_degreeOf_le φ A 0).trans hAGcaps.1
     · simpa [legacyVector, ContactCountingCaps.capAt, implicitCut] using
         (surfaceMap_degreeOf_le φ A 1).trans hAGcaps.2.1
@@ -108,8 +107,7 @@ theorem implicit_pair_seed_bound_fixed
     have hgcaps : HasCaps g (legacyVector liftedSurface) := by
       intro i
       fin_cases i
-      · simpa [legacyVector, ContactCountingCaps.capAt, liftedSurface, implicitYCap,
-          implicitWeightedCap, w, ContactFlagParameters6642Research.implicitYCap] using
+      · simpa [legacyVector, ContactCountingCaps.capAt, liftedSurface, implicitYCap] using
           (hfacdegree 0).trans hGGcaps.1
       · simpa [legacyVector, ContactCountingCaps.capAt, liftedSurface] using
           (hfacdegree 1).trans hGGcaps.2.1
@@ -130,20 +128,9 @@ theorem implicit_pair_seed_bound_fixed
     have hcount := proper_cut_seed_bound φ G g (surfaceMap φ A) hgi hdiv
       (ContactImplicitPairSeedCount.geometric_factor_proper_cut A G hG hGR hproper g hg)
       selected (seedsFor g) nodes x u₀ u₁ hinj prime w agreements errors
-      (by norm_num [w, ContactFlagParameters6642Research.w])
-      (by norm_num [w, prime, ContactFlagParameters6642Research.w,
-        ContactFlagParameters6642Research.prime])
-      (by norm_num [w, agreements, n, errors,
-        ContactFlagParameters6642Research.w,
-        ContactFlagParameters6642Research.agreements,
-        ContactFlagParameters6642Research.n,
-        ContactFlagParameters6642Research.errors])
-      (by
-        rw [hnodes]
-        norm_num [agreements, n, errors,
-          ContactFlagParameters6642Research.agreements,
-          ContactFlagParameters6642Research.n,
-          ContactFlagParameters6642Research.errors]) hgates.1 hgates.2
+      (by norm_num [w]) (by norm_num [w, prime])
+      (by norm_num [w, agreements, n, errors])
+      (by rw [hnodes]; norm_num [agreements, n, errors]) hgates.1 hgates.2
       (fun γ hγ => hdegree γ (hsub g hγ))
       (fun γ hγ => hsolutionG γ (hsub g hγ)) hreg
       (fun γ hγ => (Finset.mem_filter.mp hγ).2)
@@ -208,5 +195,3 @@ theorem implicit_pair_seed_bound_fixed
 
 end
 end ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount6630Research.implicit_pair_seed_bound_fixed

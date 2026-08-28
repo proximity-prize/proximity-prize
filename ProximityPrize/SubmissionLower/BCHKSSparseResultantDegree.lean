@@ -855,10 +855,5 @@ theorem bivariate_resultant_natDegree_le_totalDegree
       _ = (∑ j : Fin n, ldeg j) + (∑ j : Fin m, rdeg j) := hsum_deg_split
       _ ≤ _ := hdeg_parts
 
-#print axioms bivariate_resultant_natDegree_le_totalDegree
-#print axioms CornerStaircase.potentialBudget
-#print axioms CornerStaircase.resultant_natDegree_le
-#print axioms CornerStaircase.resultant_natDegree_le_actual_tail
-#print axioms CornerStaircase.ordinary_resultant_natDegree_le
 
 end ProximityPrize.SubmissionLower

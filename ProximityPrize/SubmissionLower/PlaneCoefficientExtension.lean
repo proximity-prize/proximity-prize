@@ -114,13 +114,3 @@ theorem common_points_card_le_after_extension (f : K →+* L)
 end
 
 end ProximityPrize.SubmissionLower.PlaneCoefficientExtension
-
-#print axioms ProximityPrize.SubmissionLower.PlaneCoefficientExtension.bimap_primitive
-#print axioms ProximityPrize.SubmissionLower.PlaneCoefficientExtension.bimap_natDegree_le
-#print axioms ProximityPrize.SubmissionLower.PlaneCoefficientExtension.bimap_degreeX_le
-#print axioms ProximityPrize.SubmissionLower.PlaneCoefficientExtension.bimap_specialization
-#print axioms ProximityPrize.SubmissionLower.PlaneCoefficientExtension.bimap_eval_natural
-#print axioms ProximityPrize.SubmissionLower.PlaneCoefficientExtension.bimap_comp
-#print axioms ProximityPrize.SubmissionLower.PlaneCoefficientExtension.bimap_resultant_ne_zero
-#print axioms ProximityPrize.SubmissionLower.PlaneCoefficientExtension.bimap_specialization_ne_zero
-#print axioms ProximityPrize.SubmissionLower.PlaneCoefficientExtension.common_points_card_le_after_extension

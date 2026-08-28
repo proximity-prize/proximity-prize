@@ -983,11 +983,3 @@ end IsDedekindDomain.HeightOneSpectrum
 end multiplicity
 
 /- The following commands inspect the compiled declarations only. -/
-#print axioms FractionalIdeal.count_prod
-#print axioms FractionalIdeal.count_mul
-#print axioms FractionalIdeal.count_zpow
-#print axioms FractionalIdeal.count_finprod
-#print axioms FractionalIdeal.count_finsuppProd
-#print axioms FractionalIdeal.quotientEquiv
-#print axioms IsDedekindDomain.HeightOneSpectrum.multiplicity_sup
-#print axioms IsDedekindDomain.HeightOneSpectrum.multiplicity_iSup

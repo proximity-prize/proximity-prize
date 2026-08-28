@@ -119,11 +119,5 @@ theorem exists_global_polynomial_of_first_tail_dvd
 
 end PolynomialFamily
 
-#print axioms cleared_vector_field_annihilates
-#print axioms numeratorStep_mul_equation
-#print axioms equation_dvd_all_later_numerators
-#print axioms all_later_numerators_vanish
-#print axioms all_tail_jets_zero_of_first_tail_dvd
-#print axioms exists_global_polynomial_of_first_tail_dvd
 
 end ProximityPrize.SubmissionLower.ContactTailClosure

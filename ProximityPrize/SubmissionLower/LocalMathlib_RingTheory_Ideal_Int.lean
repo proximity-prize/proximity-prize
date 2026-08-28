@@ -144,14 +144,3 @@ theorem Nat.absNorm_under_prime (P : Ideal R) [P.IsPrime] [NeZero P] :
     exact eq_bot_of_comap_eq_bot this
 
 end CommRing
-
-#print axioms Int.card_ideal_quot
-#print axioms Int.ideal_span_isMaximal_of_prime
-#print axioms Int.ringChar_idealQuot
-#print axioms Int.liesOver_span_absNorm
-#print axioms Int.cast_mem_ideal_iff
-#print axioms Int.absNorm_under_mem
-#print axioms Int.absNorm_under_eq_sInf
-#print axioms Int.absNorm_under_dvd_absNorm
-#print axioms Ideal.ringChar_quot
-#print axioms Nat.absNorm_under_prime

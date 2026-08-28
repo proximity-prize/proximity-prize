@@ -69,8 +69,6 @@ structure AdaptiveNestedProjectionDataActive
           (elementEmbedding Omega (CoordinateField Omega C.1)
             (affineU Omega C.1 lam) htr).toRingHom.toAlgebra;
         Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega C.1))
-  uTranscendental : ∀ C : RegularComponent Omega G T H,
-    Transcendental Omega (affineU Omega C.1 lam)
   allAffineTranscendental : ∀ C : RegularComponent Omega G T H,
     Transcendental Omega (affineV Omega C.1 mu (mu * lam))
   allFinite : ∀ C : RegularComponent Omega G T H,
@@ -267,7 +265,6 @@ theorem exists_adaptiveNestedProjectionDataActive
     uProjection := uProjection
     allProjection := vProjection
     uGate := hUgate
-    uTranscendental := fun C => (hlam C).choose
     allAffineTranscendental := hVAff
     allFinite := ?_
     allSeparable := ?_
@@ -299,5 +296,3 @@ theorem exists_adaptiveNestedProjectionDataActive
 end
 
 end ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjectionActive6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjectionActive6630Research.exists_adaptiveNestedProjectionDataActive

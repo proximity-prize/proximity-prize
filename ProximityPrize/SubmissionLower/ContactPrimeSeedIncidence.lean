@@ -256,10 +256,3 @@ theorem prime_seed_incidence
 end
 
 end ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
-
-#print axioms ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence.selectedPoint_injective
-#print axioms ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence.selected_agreement_zero_iff
-#print axioms ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence.agreement_fiber_card_le
-#print axioms ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence.coordinateDegree_pos_of_transcendental
-#print axioms ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence.prime_seed_incidence_sharp
-#print axioms ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence.prime_seed_incidence

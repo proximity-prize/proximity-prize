@@ -46,8 +46,8 @@ ledger once all canonical geometric stages have adaptive YZ families. -/
 theorem regular_factor_seed_bound_of_adaptive_projection_families
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hsharp : Q ∈ ContactFlagInterpolation6642Research.globalCoefficientBox
-      K weightedCap w yCap seedTotalCap slopeCap)
+    (hsharp : Q ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
+      K weightedCap w seedTotalCap slopeCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
@@ -92,8 +92,8 @@ and strict score-66.30 arithmetic are internal. -/
 theorem global_count_lt_alignment_of_adaptive_projection_families
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hsharp : Q ∈ ContactFlagInterpolation6642Research.globalCoefficientBox
-      K weightedCap w yCap seedTotalCap slopeCap)
+    (hsharp : Q ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
+      K weightedCap w seedTotalCap slopeCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
@@ -119,6 +119,3 @@ theorem global_count_lt_alignment_of_adaptive_projection_families
 end
 
 end ProximityPrize.SubmissionLower.ContactGlobalAdaptiveProjection6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactGlobalAdaptiveProjection6630Research.regular_factor_seed_bound_of_adaptive_projection_families
-#print axioms ProximityPrize.SubmissionLower.ContactGlobalAdaptiveProjection6630Research.global_count_lt_alignment_of_adaptive_projection_families

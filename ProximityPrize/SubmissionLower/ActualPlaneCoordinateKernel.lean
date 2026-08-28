@@ -215,15 +215,5 @@ theorem actualRelationKernel_family_injective
 
 end
 
-#print axioms bivariateEquiv_X_zero
-#print axioms bivariateEquiv_X_one
-#print axioms planeMap_injective
-#print axioms planeMap_irreducible_of_component
-#print axioms planeMap_dvd_iff_of_component
-#print axioms actualPlaneEvaluation_comp_planeMap
-#print axioms actualRelationKernel_contract
-#print axioms actualPlane_root_iff
-#print axioms prime_eq_of_actualRelationKernel_eq
-#print axioms actualRelationKernel_family_injective
 
 end ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel

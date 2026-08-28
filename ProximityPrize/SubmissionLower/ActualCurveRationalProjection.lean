@@ -117,12 +117,5 @@ theorem exists_two_generators_over_ratFunc (i : Fin 3)
 
 end
 
-#print axioms rationalBaseEmbedding_injective
-#print axioms rationalBaseEmbedding_polynomial
-#print axioms rationalBaseScalarTower
-#print axioms rational_variable_image
-#print axioms adjoin_two_coordinates_over_ratFunc_eq_top
-#print axioms exists_complementary_coordinates
-#print axioms exists_two_generators_over_ratFunc
 
 end ProximityPrize.SubmissionLower.ActualCurveRationalProjection

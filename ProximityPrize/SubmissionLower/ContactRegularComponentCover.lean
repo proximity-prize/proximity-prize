@@ -150,12 +150,3 @@ theorem aggregate_component_incidence {Seed : Type*}
 end
 
 end ProximityPrize.SubmissionLower.ContactRegularComponentCover
-
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentCover.regularComponent_isPrime
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentCover.regularComponent_H_not_mem
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentCover.regularComponent_G_mem
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentCover.regularComponent_T_mem
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentCover.regularComponent_ne_point
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentCover.exists_regular_component
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentCover.card_le_sum_componentSeeds
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentCover.aggregate_component_incidence

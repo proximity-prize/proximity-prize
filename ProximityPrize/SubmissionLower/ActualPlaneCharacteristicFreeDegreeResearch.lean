@@ -227,9 +227,5 @@ end OriginalOrder
 
 end
 
-#print axioms rationalBaseAlgebra_congr
-#print axioms plane_budget_le_original
-#print axioms actual_finite_sum_finrank_bound_without_separability
-#print axioms original_finite_sum_finrank_bound_without_separability
 
 end ProximityPrize.SubmissionLower.ActualPlaneCharacteristicFreeDegreeResearch

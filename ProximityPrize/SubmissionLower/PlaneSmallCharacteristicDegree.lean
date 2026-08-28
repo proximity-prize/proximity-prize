@@ -104,8 +104,5 @@ end FiniteFamily
 
 end
 
-#print axioms planeEval_eq_eval₂
-#print axioms finite_separable_finrank_le_planar_bound
-#print axioms finite_separable_sum_finrank_le_planar_bound
 
 end ProximityPrize.SubmissionLower.PlaneSmallCharacteristicDegree

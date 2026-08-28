@@ -214,17 +214,5 @@ end ActualComponent
 
 end
 
-#print axioms collect_X_first
-#print axioms collect_X_other
-#print axioms rationalMap_injective
-#print axioms rationalMap_ne_zero
-#print axioms collected_principal_isPrime
-#print axioms collectedEvaluation_collect
-#print axioms collectedEvaluation_C
-#print axioms coefficientDenominators_disjoint_of_component
-#print axioms localized_principal_isPrime_of_component
-#print axioms rationalMap_irreducible_of_component
-#print axioms rationalMap_dvd_iff_of_component
-#print axioms rationalMap_proper_of_component
 
 end ProximityPrize.SubmissionLower.TrivariateRationalCollection

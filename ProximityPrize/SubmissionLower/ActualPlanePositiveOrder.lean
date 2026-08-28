@@ -197,11 +197,5 @@ theorem exists_positive_characteristic_order (order : Fin 3 ≃ Fin 3)
 
 end
 
-#print axioms rationalMap_swapOtherOrder
-#print axioms swapped_outer_degree
-#print axioms positive_degree_of_irreducible
-#print axioms exists_positive_outer_order
-#print axioms originalMixedDegree_swap
-#print axioms exists_positive_characteristic_order
 
 end ProximityPrize.SubmissionLower.ActualPlanePositiveOrder

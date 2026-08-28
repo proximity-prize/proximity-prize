@@ -233,15 +233,6 @@ theorem surface_zero_singular_or_regular
 
 end ActualCoverage
 
-#print axioms irreducible_resultant_nonzero
-#print axioms collectR_natDegree
-#print axioms eliminateR_nonzero
-#print axioms eliminateR_bezout
-#print axioms eliminateR_map_zero
-#print axioms singularAuxiliary_nonzero
-#print axioms singularAuxiliary_R_degree
-#print axioms singularAuxiliary_map_zero
-#print axioms surface_zero_singular_or_regular
 
 end
 end ProximityPrize.SubmissionLower.ContactSingularAuxiliary

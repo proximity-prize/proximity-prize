@@ -714,17 +714,3 @@ abbrev ProximityPrize.SubmissionLower.LocalGradedMonoid.defaultPowerConstruction
   one_mul := hOne
   mul_one := hMul
   mul_assoc := hAssoc
-
-#print axioms GradedMonoid.GMonoid.gnpowRec_zero
-#print axioms GradedMonoid.GMonoid.gnpowRec_succ
-#print axioms GradedMonoid.GMonoid.toMonoid
-#print axioms GradedMonoid.GCommMonoid.toCommMonoid
-#print axioms GradedMonoid.GradeZero.monoid
-#print axioms GradedMonoid.GradeZero.mulAction
-#print axioms GradedMonoid.mk_list_dProd
-#print axioms List.dProd_monoid
-#print axioms SetLike.gMonoid
-#print axioms SetLike.homogeneousSubmonoid
-#print axioms SetLike.prod_mem_graded
-#print axioms SetLike.prod_pow_mem_graded
-#print axioms ProximityPrize.SubmissionLower.LocalGradedMonoid.defaultPowerConstruction

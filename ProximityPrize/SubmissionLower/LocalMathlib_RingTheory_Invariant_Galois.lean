@@ -168,11 +168,3 @@ lemma Ideal.Quotient.finite_of_isInvariant [P.IsMaximal] [Q.IsMaximal]
   IsFractionRing.finite_of_isInvariant G P Q (A ⧸ P) (B ⧸ Q)
 
 end normal
-
-#print axioms IsIntegralClosure.MulSemiringAction
-#print axioms Algebra.isInvariant_of_isGalois
-#print axioms Algebra.isInvariant_of_isGalois'
-#print axioms Ideal.IsFractionRing.normal
-#print axioms Ideal.IsFractionRing.finite_of_isInvariant
-#print axioms Ideal.Quotient.normal
-#print axioms Ideal.Quotient.finite_of_isInvariant

@@ -1,10 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactProtocol6630AdaptiveResearch
+import ProximityPrize.SubmissionLower.ContactSeedlessProtocolResearch
+import ProximityPrize.SubmissionLower.ContactGlobalAdaptiveAlignment6630Research
 import ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6630Research
-import ProximityPrize.SubmissionLower.ContactFlagRegularFactorCaps6642Research
+import ProximityPrize.SubmissionLower.ContactFlagRegularFactorCaps6641Research
 
 /-!
-# Unconditional score-66.42 protocol endpoint
+# Unconditional score-66.30 protocol endpoint
 
 The terminal constructor is closed for every actual regular geometric factor
 using nested cumulative support bounds.  This is essential: factorization
@@ -27,15 +28,13 @@ open ContactRegularSeeds6630Research
 open ContactSelectedSeedDecomposition
 open ContactGlobalAdaptiveAlignment6630Research
 open ContactTerminalAdaptiveProjection6630Research
-open ContactFlagRegularFactorCaps6642Research
+open ContactFlagRegularFactorCaps6641Research
 
 noncomputable section
 
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 100000
 
-local instance : DecidableEq IRSProfile.Field := Classical.decEq _
-local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 local instance : DecidableEq (GenericField IRSProfile.Field) := Classical.decEq _
 local instance : CharP IRSProfile.Field prime :=
   ContactFrozenAlignment6630Research.challenge_field_characteristic6630
@@ -50,15 +49,15 @@ theorem frozenTerminalAdaptiveProjectionFamiliesYZ6630 :
   have hRdata := directFactor_data Q R.1 hQ weightedCap w seedTotalCap
     slopeCap hbox R.2
   have hRne : R.1 ≠ 0 := hRdata.1.ne_zero
-  have hregular := regularFlag6630_budgets_of_flag_box6642 Q hQ hsharp
-  have hRAll : (regularFlag6630 Q R).all ≤ 8 :=
+  have hregular := regularFlag6630_budgets_of_flagBox6641 Q hQ hsharp
+  have hRAll : (regularFlag6630 Q R).all ≤ 10 :=
     (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
       (Finset.mem_univ R)).trans hregular.1
-  have hRYS : (regularFlag6630 Q R).yz + (regularFlag6630 Q R).all ≤ 40 :=
+  have hRYS : (regularFlag6630 Q R).yz + (regularFlag6630 Q R).all ≤ 48 :=
     (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
       (Finset.mem_univ R)).trans hregular.2.1
   have hRTotal : (regularFlag6630 Q R).zOnly +
-      (regularFlag6630 Q R).yz + (regularFlag6630 Q R).all ≤ 617 :=
+      (regularFlag6630 Q R).yz + (regularFlag6630 Q R).all ≤ 814 :=
     (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
       (Finset.mem_univ R)).trans hregular.2.2
   have hgeometric := geometricFlag6630_budgets IRSProfile.Field R.1 hRne
@@ -85,15 +84,20 @@ theorem frozenTerminalAdaptiveProjectionFamiliesYZ6630 :
       u0 u1 IRSProfile.domain.injective.injOn hdegree hnoPencil R g)
     (hgAll.trans hRAll) (hgYS.trans hRYS) (hgTotal.trans hRTotal)
 
-/-- Fully closed score-66.42 lower-track claim. -/
-theorem protocolClaim6630 : ProtocolClaim 6642 316779 1048576 :=
-  ContactProtocol6630AdaptiveResearch.protocolClaim6630_of_terminal_projection_families
-    frozenTerminalAdaptiveProjectionFamiliesYZ6630
+/-- Fully closed score-66.74 lower-track claim. -/
+theorem protocolClaim6630 : ProtocolClaim 6674 318059 1048576 := by
+  have hcount : ContactFrozenAlignment6630Research.GlobalCountLtAlignment6630 :=
+    global_count_lt_alignment6630_of_terminal_projection_families
+      frozenTerminalAdaptiveProjectionFamiliesYZ6630
+  have halign : AffineLineAlignmentBound IRSProfile.baseCode errors alignmentBudget :=
+    ContactFrozenAlignment6630Research.alignment_of_global_count_lt_alignment6630
+      hcount
+  apply ContactSeedlessProtocolResearch.protocolClaim6674_of_alignment
+  simpa [ContactSeedlessProtocolResearch.errors,
+    ContactSeedlessProtocolResearch.mcaBudget, errors, alignmentBudget,
+    ContactScore6630Research.errors6630] using halign
 
 end
 
 
 end ProximityPrize.SubmissionLower.ContactProtocol6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactProtocol6630Research.frozenTerminalAdaptiveProjectionFamiliesYZ6630
-#print axioms ProximityPrize.SubmissionLower.ContactProtocol6630Research.protocolClaim6630

@@ -289,14 +289,3 @@ theorem projective_curve_order_sum (x : L) (hx : x ≠ 0) :
 end
 
 end ProximityPrize.SubmissionLower.FixedCurveNormSum
-
-#print axioms ProximityPrize.SubmissionLower.FixedCurveNormSum.infiniteNormalization_finite
-#print axioms ProximityPrize.SubmissionLower.FixedCurveNormSum.infiniteNormalization_isDedekindDomain
-#print axioms ProximityPrize.SubmissionLower.FixedCurveNormSum.infiniteNormalization_isFractionRing
-#print axioms ProximityPrize.SubmissionLower.FixedCurveNormSum.infinityContribution_eq_normOrder
-#print axioms ProximityPrize.SubmissionLower.FixedCurveNormSum.finitePrimeContribution_eq_normOrder
-#print axioms ProximityPrize.SubmissionLower.FixedCurveNormSum.balanced_fiber_sum
-#print axioms ProximityPrize.SubmissionLower.FixedCurveNormSum.finite_orders_support_finite
-#print axioms ProximityPrize.SubmissionLower.FixedCurveNormSum.basePrimesFor_primes
-#print axioms ProximityPrize.SubmissionLower.FixedCurveNormSum.basePrimesFor_covers
-#print axioms ProximityPrize.SubmissionLower.FixedCurveNormSum.projective_curve_order_sum

@@ -167,9 +167,5 @@ theorem proper_cut_seed_bound_joint_R
 
 end
 
-#print axioms proper_cut_seed_bound_of_projection_sum_joint_R
-#print axioms regularComponents_degree_budget_joint_R
-#print axioms proper_cut_seed_bound_joint_R
-#print axioms JointRProvider
 
 end ProximityPrize.SubmissionLower.ContactJointProperCutSeedCount

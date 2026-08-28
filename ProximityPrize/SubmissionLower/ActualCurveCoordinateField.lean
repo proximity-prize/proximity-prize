@@ -144,13 +144,5 @@ end AlgebraicallyClosed
 
 end
 
-#print axioms coordinateEvaluation_eq_aeval
-#print axioms aeval_coordinate_eq_quotient
-#print axioms coordinateEvaluation_ker
-#print axioms aeval_coordinate_ker
-#print axioms adjoin_coordinates_eq_top
-#print axioms coordinate_eq_scalar_of_isAlgebraic
-#print axioms eq_point_kernel_of_coordinates_algebraic
-#print axioms exists_transcendental_coordinate_of_ne_point_kernel
 
 end ProximityPrize.SubmissionLower.ActualCurveCoordinateField

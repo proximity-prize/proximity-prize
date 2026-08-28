@@ -206,12 +206,3 @@ end Center
 end
 
 end ProximityPrize.SubmissionLower.NormalizedPlaceClassification
-
-#print axioms ProximityPrize.SubmissionLower.NormalizedPlaceClassification.value_le_exp_neg_one
-#print axioms ProximityPrize.SubmissionLower.NormalizedPlaceClassification.eq_of_equiv_surjective
-#print axioms ProximityPrize.SubmissionLower.NormalizedPlaceClassification.integral_le_one
-#print axioms ProximityPrize.SubmissionLower.NormalizedPlaceClassification.centerIdeal_isPrime
-#print axioms ProximityPrize.SubmissionLower.NormalizedPlaceClassification.centerIdeal_ne_bot
-#print axioms ProximityPrize.SubmissionLower.NormalizedPlaceClassification.center_localization_le
-#print axioms ProximityPrize.SubmissionLower.NormalizedPlaceClassification.centerPlace_valuation
-#print axioms ProximityPrize.SubmissionLower.NormalizedPlaceClassification.exists_unique_place

@@ -67,5 +67,3 @@ def ResidualPoleComponentBudget.toResidualComponentBudget
 end
 
 end ProximityPrize.SubmissionLower.ContactResidualSparsePoleProviderResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactResidualSparsePoleProviderResearch.ResidualPoleComponentBudget.toResidualComponentBudget

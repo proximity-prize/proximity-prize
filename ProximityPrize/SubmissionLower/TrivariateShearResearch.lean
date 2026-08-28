@@ -318,7 +318,3 @@ end WeightedDegree
 end
 
 end ProximityPrize.SubmissionLower.TrivariateShearResearch
-
-#print axioms ProximityPrize.SubmissionLower.TrivariateShearResearch.shear_irreducible_iff
-#print axioms ProximityPrize.SubmissionLower.TrivariateShearResearch.aeval_shear_at_add
-#print axioms ProximityPrize.SubmissionLower.TrivariateShearResearch.shear_degreeOf_two_le

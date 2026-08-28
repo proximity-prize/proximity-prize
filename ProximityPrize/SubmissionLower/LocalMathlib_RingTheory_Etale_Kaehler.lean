@@ -415,13 +415,3 @@ instance H1Cotangent.isLocalizedModule (M : Submonoid S) [IsLocalization M T] :
 end Algebra
 
 -- Transitive kernel dependency audits for this ordinary flat proof-port repair.
-#print axioms KaehlerDifferential.tensorKaehlerEquivOfFormallyEtale
-#print axioms KaehlerDifferential.tensorKaehlerEquivOfFormallyEtale_symm_D_algebraMap
-#print axioms KaehlerDifferential.isBaseChange_of_formallyEtale
-#print axioms Algebra.Extension.tensorCotangentSpaceOfFormallyEtale
-#print axioms Algebra.Extension.tensorCotangentInvFun_smul_mk
-#print axioms Algebra.Extension.tensorCotangent
-#print axioms Algebra.Extension.tensorH1CotangentOfFormallyEtale
-#print axioms Algebra.tensorH1CotangentOfIsLocalization
-#print axioms Algebra.tensorH1CotangentOfIsLocalization_toLinearMap
-#print axioms Algebra.H1Cotangent.isLocalizedModule

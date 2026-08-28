@@ -366,5 +366,3 @@ theorem exists_residualComponentBudget6543_of_projectionPositivity
 end
 
 end ProximityPrize.SubmissionLower.ContactFlagPrincipalCycles6543Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactFlagPrincipalCycles6543Research.flagProjectionCycleBudget6543_of_nested

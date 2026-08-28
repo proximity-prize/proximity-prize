@@ -166,10 +166,3 @@ theorem below_budget_of_scaled_cardinality_bound
   exact Nat.lt_of_mul_lt_mul_right hstrict
 
 end ProximityPrize.SubmissionLower.ContactAlignmentParameters
-
-#print axioms ProximityPrize.SubmissionLower.ContactAlignmentParameters.coefficient_count_exact
-#print axioms ProximityPrize.SubmissionLower.ContactAlignmentParameters.contact_rank_exact
-#print axioms ProximityPrize.SubmissionLower.ContactAlignmentParameters.interpolation_gate
-#print axioms ProximityPrize.SubmissionLower.ContactAlignmentParameters.ledger_numerator_exact
-#print axioms ProximityPrize.SubmissionLower.ContactAlignmentParameters.strict_ledger_budget
-#print axioms ProximityPrize.SubmissionLower.ContactAlignmentParameters.below_budget_of_scaled_cardinality_bound

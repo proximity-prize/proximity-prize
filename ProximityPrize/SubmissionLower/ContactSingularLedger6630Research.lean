@@ -3,7 +3,7 @@ import ProximityPrize.SubmissionLower.ContactParameters6630Research
 import ProximityPrize.SubmissionLower.ContactTightSingularAggregationResearch
 
 /-!
-# Tight singular-family ledger for the score-66.30 row
+# Tight singular-family ledger for the score-66.74 row
 
 This is the row-specialized finite-family aggregation used by the actual
 implicit-pair branch.  It deliberately retains only the implicit-pair core
@@ -129,9 +129,9 @@ theorem implicit_with_exceptions_tight_scaled_bound {I : Type} [Fintype I]
       ring
 
 theorem exact_values :
-    implicitCoreNumerator = 579079363576304691 ∧
-      tightSingularNumerator = 579088250970388641 ∧
-      tightSingularContribution = 30042519372092792306439 := by
+    implicitCoreNumerator = 1476254426777054694 ∧
+      tightSingularNumerator = 1476279092309387102 ∧
+      tightSingularContribution = 76115473720379689592018 := by
   norm_num [implicitCoreNumerator, tightSingularNumerator,
     tightSingularContribution, ContactParameters6630Research.mixed,
     ContactParameters6630Research.liftedSurface,
@@ -148,21 +148,6 @@ theorem exact_values :
     ContactParameters6630Research.n, ContactParameters6630Research.w,
     ContactParameters6630Research.errors,
     ContactParameters6630Research.slopeCap,
-    ContactParameters6630Research.seedTotalCap,
-    ContactFlagParameters6642Research.n,
-    ContactFlagParameters6642Research.w,
-    ContactFlagParameters6642Research.errors,
-    ContactFlagParameters6642Research.agreements,
-    ContactFlagParameters6642Research.multiplicity,
-    ContactFlagParameters6642Research.totalCap,
-    ContactFlagParameters6642Research.slopeCap,
-    ContactFlagParameters6642Research.weightedCap,
-    ContactFlagParameters6642Research.gap,
-    ContactFlagParameters6642Research.algebraicCap,
-    ContactFlagParameters6642Research.implicitWeightedCap,
-    ContactFlagParameters6642Research.implicitYCap]
+    ContactParameters6630Research.seedTotalCap]
 
 end ProximityPrize.SubmissionLower.ContactSingularLedger6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactSingularLedger6630Research.implicit_with_exceptions_tight_scaled_bound
-#print axioms ProximityPrize.SubmissionLower.ContactSingularLedger6630Research.exact_values

@@ -310,26 +310,3 @@ theorem final_family_ledger {I J : Type} [Fintype I] [Fintype J]
     ((Nat.mul_le_mul_right (gap ^ 2) hcover).trans hscaled)
 
 end ProximityPrize.SubmissionLower.ContactCountingLedger
-
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.mixed_first_decomposition
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.mixed_add_left
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.mixed_scale_left
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.mixed_sum_left
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.cut_eq_dot
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.whole_eq_dot
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.cut_add
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.whole_add
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.cut_scale
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.whole_scale
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.cut_sum
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.whole_sum
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.max_branch_le_envelope
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.sum_regular_branch_bound
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.sum_regular_numeric_caps
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.implicit_aggregate_eq_core
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.sum_implicit_counts_bound
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.lifted_singular_padding
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.implicit_with_exceptions_bound
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.combined_scaled_bound
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.below_budget_of_lifted_scaled_bound
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.final_family_ledger

@@ -187,14 +187,3 @@ theorem component_ne_pointKernel
 end
 
 end ProximityPrize.SubmissionLower.ContactCurveComponents
-
-#print axioms ProximityPrize.SubmissionLower.ContactCurveComponents.freeze_comp
-#print axioms ProximityPrize.SubmissionLower.ContactCurveComponents.freezeKernel_mono
-#print axioms ProximityPrize.SubmissionLower.ContactCurveComponents.freezeKernel_lt_succ
-#print axioms ProximityPrize.SubmissionLower.ContactCurveComponents.pointKernel_height_ge_three
-#print axioms ProximityPrize.SubmissionLower.ContactCurveComponents.componentSet_finite
-#print axioms ProximityPrize.SubmissionLower.ContactCurveComponents.component_isPrime
-#print axioms ProximityPrize.SubmissionLower.ContactCurveComponents.cutIdeal_le_component
-#print axioms ProximityPrize.SubmissionLower.ContactCurveComponents.component_height_le_two
-#print axioms ProximityPrize.SubmissionLower.ContactCurveComponents.exists_component_of_common_point
-#print axioms ProximityPrize.SubmissionLower.ContactCurveComponents.component_ne_pointKernel

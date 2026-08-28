@@ -83,5 +83,3 @@ end
 
 
 end ProximityPrize.SubmissionLower.ContactAdaptiveNestedYZFamily6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactAdaptiveNestedYZFamily6630Research.exists_adaptiveUnitProjectionFamilyYZ_of_active_nested

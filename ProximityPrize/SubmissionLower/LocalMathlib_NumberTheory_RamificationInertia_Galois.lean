@@ -386,16 +386,3 @@ lemma exists_comap_galRestrict_eq [IsDedekindDomain R] [IsGalois K L] {p : Ideal
 end galRestrict
 
 end Ideal
-
-#print axioms Ideal.exists_smul_eq_of_isGaloisGroup
-#print axioms Ideal.ramificationIdx_eq_of_isGaloisGroup
-#print axioms Ideal.inertiaDeg_eq_of_isGaloisGroup
-#print axioms Ideal.ramificationIdxIn_eq_ramificationIdx
-#print axioms Ideal.inertiaDegIn_eq_inertiaDeg
-#print axioms Ideal.ncard_primesOver_mul_ramificationIdxIn_mul_inertiaDegIn
-#print axioms Ideal.ncard_primesOver_mul_ncard_primesOver
-#print axioms Ideal.card_stabilizer_eq_card_inertia_mul_finrank
-#print axioms Ideal.ncard_primesOver_mul_card_inertia_mul_finrank
-#print axioms Ideal.card_inertia_eq_ramificationIdxIn
-#print axioms Ideal.card_stabilizer_eq
-#print axioms Ideal.exists_comap_galRestrict_eq

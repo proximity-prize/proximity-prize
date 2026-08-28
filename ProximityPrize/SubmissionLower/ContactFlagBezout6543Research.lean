@@ -326,8 +326,3 @@ theorem flag_strict_budget :
   norm_num [alignmentBudget]
 
 end ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactFlagBezout6543Research.inFlag_add
-#print axioms ProximityPrize.SubmissionLower.ContactFlagBezout6543Research.flag_mixed_values
-#print axioms ProximityPrize.SubmissionLower.ContactFlagBezout6543Research.flag_projection_decomposition
-#print axioms ProximityPrize.SubmissionLower.ContactFlagBezout6543Research.flag_strict_budget

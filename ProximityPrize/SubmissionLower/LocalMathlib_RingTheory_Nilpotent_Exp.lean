@@ -268,16 +268,3 @@ theorem exp_mul_of_derivation (R B : Type*) [CommRing R] [NonUnitalNonAssocRing 
   simp [h₁, _root_.IsNilpotent.exp_add_of_commute h_comm h_nilL h_nilR, h₂, h₃, hm]
 
 end Module.End
-
-#print axioms IsNilpotent.exp_eq_sum
-#print axioms IsNilpotent.exp_smul_eq_sum
-#print axioms IsNilpotent.exp_add_of_commute
-#print axioms IsNilpotent.exp_zero
-#print axioms IsNilpotent.exp_mul_exp_neg_self
-#print axioms IsNilpotent.exp_neg_mul_exp_self
-#print axioms IsNilpotent.isUnit_exp
-#print axioms IsNilpotent.map_exp
-#print axioms IsNilpotent.exp_smul
-#print axioms IsNilpotent.isNilpotent_exp_sub_one
-#print axioms Module.End.commute_exp_left_of_commute
-#print axioms Module.End.exp_mul_of_derivation

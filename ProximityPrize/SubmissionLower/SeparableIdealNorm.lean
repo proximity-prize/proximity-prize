@@ -202,12 +202,3 @@ end Domains
 end
 
 end ProximityPrize.SubmissionLower.SeparableIdealNorm
-
-#print axioms ProximityPrize.SubmissionLower.SeparableIdealNorm.normalClosure_isSeparable
-#print axioms ProximityPrize.SubmissionLower.SeparableIdealNorm.normalClosure_fractionRing_isGalois
-#print axioms ProximityPrize.SubmissionLower.SeparableIdealNorm.normalClosure_finite
-#print axioms ProximityPrize.SubmissionLower.SeparableIdealNorm.normalClosure_isDedekindDomain
-#print axioms ProximityPrize.SubmissionLower.SeparableIdealNorm.relNorm_prime_eq_pow
-#print axioms ProximityPrize.SubmissionLower.SeparableIdealNorm.relNorm_eq_prod_prime_powers
-#print axioms ProximityPrize.SubmissionLower.SeparableIdealNorm.span_intNorm_eq_prod_prime_powers
-#print axioms ProximityPrize.SubmissionLower.SeparableIdealNorm.intNorm_maps_to_fieldNorm

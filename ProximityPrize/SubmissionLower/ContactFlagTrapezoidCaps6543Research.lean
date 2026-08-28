@@ -109,6 +109,3 @@ theorem z_trapezoid_budget6543 (m : ℕ) (hm : m ≤ 1179639) :
 end
 
 end ProximityPrize.SubmissionLower.ContactFlagTrapezoidCaps6543Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactFlagTrapezoidCaps6543Research.flagTrapezoidCaps_flagAlgHom
-#print axioms ProximityPrize.SubmissionLower.ContactFlagTrapezoidCaps6543Research.u_trapezoid_budget6543

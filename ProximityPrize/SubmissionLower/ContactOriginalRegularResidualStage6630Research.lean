@@ -231,9 +231,9 @@ def geometricResidualStage6630
     (hRpos : 0 < F.degreeOf (2 : Fin 4))
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
     (hsurface :
-      MvPolynomial.weightedTotalDegree residualSWeights F ≤ 8 ∧
-      MvPolynomial.weightedTotalDegree residualYSWeights F ≤ 40 ∧
-      MvPolynomial.weightedTotalDegree residualTotalWeights F ≤ 617)
+      MvPolynomial.weightedTotalDegree residualSWeights F ≤ 10 ∧
+      MvPolynomial.weightedTotalDegree residualYSWeights F ≤ 48 ∧
+      MvPolynomial.weightedTotalDegree residualTotalWeights F ≤ 814)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes)
@@ -256,7 +256,7 @@ def geometricResidualStage6630
   have hgdiv := hgspec.2
   have hRsmall : F.degreeOf (2 : Fin 4) < prime :=
     (degreeOf_R_le_of_mem_box F weightedCap w seedTotalCap slopeCap hbox).trans_lt
-      characteristic_gates.2.2.2
+      (by norm_num [slopeCap, prime])
   have hgate := geometric_factor_regular_gate K (GenericField K) F hF prime
     hRpos hRsmall g.1 hgirred
     (by simpa only [canonical_geometricSurfaceMap] using hgdiv)
@@ -286,9 +286,7 @@ def geometricResidualStage6630
     on_component := fun gamma hgamma ↦ (Finset.mem_filter.mp hgamma).2
     no_large_pencil := noLargeSelectedPencil_mono selected Gamma _ w errors
       hsub hnoPencil
-    characteristic_bound := by
-      norm_num [w, prime, ContactFlagParameters6642Research.w,
-        ContactFlagParameters6642Research.prime]
+    characteristic_bound := by norm_num [w, prime]
   }
 
 /-- Geometric recursive bounds aggregate sharply to the original factor's
@@ -325,6 +323,3 @@ end
 
 
 end ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6630Research.geometricResidualStage6630
-#print axioms ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6630Research.original_regular_seed_bound_of_geometric_counts6630

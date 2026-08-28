@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactFlagInterpolation6642Research
+import ProximityPrize.SubmissionLower.ContactFlagInterpolation6641Research
 import ProximityPrize.SubmissionLower.ContactLocalDivisibility
 
 
@@ -20,9 +20,9 @@ polynomial vanishing on sufficiently large agreement supports for the frozen
 profile. The geometric alignment bound is not asserted in this module.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactFlagTranslation6642Research
+namespace ProximityPrize.SubmissionLower.ContactFlagTranslation6641Research
 
-open ContactFlagRankKernel6642Research ContactFlagInterpolation6642Research
+open ContactFlagRankKernel6641Research ContactFlagInterpolation6641Research
 open ProximityPrize.Benchmark
 open scoped BigOperators
 
@@ -44,8 +44,8 @@ def homogenizedTranslation (x u₀ u₁ : K) :
     MvPolynomial (Fin 4) K →ₐ[K] LocalPolynomial K :=
   MvPolynomial.aeval (translationVariables K x u₀ u₁)
 
-theorem columnMonomial_eq (D w M L s : ℕ)
-    (c : CoefficientIndex D w M L s) (a : K) :
+theorem columnMonomial_eq (D w L s : ℕ)
+    (c : CoefficientIndex D w L s) (a : K) :
     MvPolynomial.monomial (columnExponent c) a =
       MvPolynomial.C a * MvPolynomial.X 0 ^ c.2.2.2.val *
         MvPolynomial.X 1 ^ c.1.val * MvPolynomial.X 2 ^ c.2.1.val *
@@ -91,8 +91,8 @@ theorem coeff_shifted_affine_product
   · rw [Polynomial.coeff_mul_C, Polynomial.coeff_X_add_C_pow]
   · rfl
 
-theorem translation_column (D w M L s : ℕ) (x u₀ u₁ : K)
-    (c : CoefficientIndex D w M L s) (a : K) :
+theorem translation_column (D w L s : ℕ) (x u₀ u₁ : K)
+    (c : CoefficientIndex D w L s) (a : K) :
     homogenizedTranslation K x u₀ u₁ (MvPolynomial.monomial (columnExponent c) a) =
       Polynomial.C (MvPolynomial.C a) *
         (Polynomial.X + Polynomial.C (MvPolynomial.C x)) ^ c.2.2.2.val *
@@ -100,17 +100,17 @@ theorem translation_column (D w M L s : ℕ) (x u₀ u₁ : K)
           Polynomial.C (seedAffine K u₀ u₁)) ^ c.1.val *
         Polynomial.C (MvPolynomial.X 1) ^ c.2.1.val *
         Polynomial.C (MvPolynomial.X 2) ^ c.2.2.1.val := by
-  rw [columnMonomial_eq K D w M L s c a]
+  rw [columnMonomial_eq K D w L s c a]
   simp [homogenizedTranslation, translationVariables,
     Polynomial.algebraMap_apply, MvPolynomial.algebraMap_eq]
 
 /-- The explicit binomial entry is the actual coefficient of a translated
 column, including its arbitrary field coefficient. -/
-theorem translation_column_coeff (D w M L s : ℕ) (x u₀ u₁ : K)
-    (c : CoefficientIndex D w M L s) (a : K) (r : ℕ) :
+theorem translation_column_coeff (D w L s : ℕ) (x u₀ u₁ : K)
+    (c : CoefficientIndex D w L s) (a : K) (r : ℕ) :
     (homogenizedTranslation K x u₀ u₁
       (MvPolynomial.monomial (columnExponent c) a)).coeff r =
-        a • blockEntry K D w M L s x u₀ u₁ c r := by
+        a • blockEntry K D w L s x u₀ u₁ c r := by
   have hfactor :
       homogenizedTranslation K x u₀ u₁
         (MvPolynomial.monomial (columnExponent c) a) =
@@ -120,7 +120,7 @@ theorem translation_column_coeff (D w M L s : ℕ) (x u₀ u₁ : K)
             Polynomial.C (seedAffine K u₀ u₁)) ^ c.1.val *
           Polynomial.C (MvPolynomial.X 1 ^ c.2.1.val *
             MvPolynomial.X 2 ^ c.2.2.1.val)) := by
-    rw [translation_column K D w M L s x u₀ u₁ c a]
+    rw [translation_column K D w L s x u₀ u₁ c a]
     simp only [map_mul, map_pow]
     ring
   rw [hfactor, Polynomial.coeff_C_mul, coeff_shifted_affine_product]
@@ -136,17 +136,17 @@ theorem translation_column_coeff (D w M L s : ℕ) (x u₀ u₁ : K)
 
 /-- The array map is now identified with an actual polynomial translation,
 not just a matrix carrying the expected labels. -/
-theorem translation_reconstruct_coeff (D w M L s : ℕ) (x u₀ u₁ : K)
-    (θ : CoefficientIndex D w M L s → K) (r : ℕ) :
-    (homogenizedTranslation K x u₀ u₁ (reconstruct K D w M L s θ)).coeff r =
-      ((extractBlock K D w M L s x u₀ u₁ r θ) : Poly K) := by
+theorem translation_reconstruct_coeff (D w L s : ℕ) (x u₀ u₁ : K)
+    (θ : CoefficientIndex D w L s → K) (r : ℕ) :
+    (homogenizedTranslation K x u₀ u₁ (reconstruct K D w L s θ)).coeff r =
+      ((extractBlock K D w L s x u₀ u₁ r θ) : Poly K) := by
   rw [reconstruct, map_sum, Polynomial.finsetSum_coeff]
   simp only [translation_column_coeff]
-  change (∑ c : CoefficientIndex D w M L s,
-    θ c • blockEntry K D w M L s x u₀ u₁ c r) =
-      (((∑ c : CoefficientIndex D w M L s,
-        θ c • boundedBlockEntry K D w M L s x u₀ u₁ c r) :
-          coefficientBox K (min r M) L s) : Poly K)
+  change (∑ c : CoefficientIndex D w L s,
+    θ c • blockEntry K D w L s x u₀ u₁ c r) =
+      (((∑ c : CoefficientIndex D w L s,
+        θ c • boundedBlockEntry K D w L s x u₀ u₁ c r) :
+          coefficientBox K (min r L) L s) : Poly K)
   simp [boundedBlockEntry]
 
 /-- Local Y is the candidate derivative plus T times a residual quotient. -/
@@ -324,19 +324,19 @@ theorem specialization_monomial_natDegree_le
 /-- The actual support inequalities imply the actual specialized degree cap;
 the assertion remains true when specialization produces the zero polynomial. -/
 theorem specialization_natDegree_lt
-    (D w M L s : ℕ) (Q : MvPolynomial (Fin 4) K) (P : Polynomial K) (γ : K)
-    (hD : 0 < D) (hcaps : Q ∈ globalCoefficientBox K D w M L s)
+    (D w L s : ℕ) (Q : MvPolynomial (Fin 4) K) (P : Polynomial K) (γ : K)
+    (hD : 0 < D) (hcaps : Q ∈ globalCoefficientBox K D w L s)
     (hP : P.natDegree ≤ w) :
     (specialization K P γ Q).natDegree < D := by
   classical
   have hsupport : ∀ d ∈ Q.support,
-      d 1 + d 2 ≤ M ∧ d 1 + d 2 + d 3 ≤ L ∧ d 2 ≤ s ∧
+      d 1 + d 2 + d 3 ≤ L ∧ d 2 ≤ s ∧
         d 0 + w * d 1 + (w - 1) * d 2 < D := hcaps
   have hterms : ∀ d ∈ Q.support,
       (specialization K P γ (MvPolynomial.monomial d (MvPolynomial.coeff d Q))).natDegree ≤
         D - 1 := by
     intro d hd
-    have hweight := (hsupport d hd).2.2.2
+    have hweight := (hsupport d hd).2.2
     have hh := specialization_monomial_natDegree_le K P γ w hP d (MvPolynomial.coeff d Q)
     omega
   rw [MvPolynomial.as_sum Q, map_sum]
@@ -346,8 +346,4 @@ theorem specialization_natDegree_lt
 
 end
 
-end ProximityPrize.SubmissionLower.ContactFlagTranslation6642Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactFlagTranslation6642Research.translation_reconstruct_coeff
-#print axioms ProximityPrize.SubmissionLower.ContactFlagTranslation6642Research.specialization_eq_zero_of_contact_and_degree
-#print axioms ProximityPrize.SubmissionLower.ContactFlagTranslation6642Research.specialization_natDegree_lt
+end ProximityPrize.SubmissionLower.ContactFlagTranslation6641Research

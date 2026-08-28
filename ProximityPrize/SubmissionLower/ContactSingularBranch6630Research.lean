@@ -83,13 +83,10 @@ theorem implicitVector_budgets
   classical
   obtain ⟨hJ, hJbox⟩ := singularAuxiliary_nonzero_mem_box Q
     weightedCap w seedTotalCap slopeCap prime hQ
-    (by norm_num [slopeCap, ContactFlagParameters6642Research.slopeCap])
-    characteristic_gates.2.2.2 hbox
+    (by norm_num [slopeCap]) characteristic_gates.2.2.2 hbox
   have hb := implicitPair_input_budgets (singularAuxiliary Q) hJ
-    implicitWeightedCap w algebraicCap
-      (by norm_num [w, ContactFlagParameters6642Research.w]) hJbox
-  simpa only [implicitVector, Finset.sum_coe_sort, implicitYCap,
-    implicitWeightedCap, w, ContactFlagParameters6642Research.implicitYCap] using hb
+    implicitWeightedCap w algebraicCap (by norm_num [w]) hJbox
+  simpa only [implicitVector, Finset.sum_coe_sort, implicitYCap] using hb
 
 theorem exceptionalSeeds_bound
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
@@ -101,35 +98,19 @@ theorem exceptionalSeeds_bound
   classical
   obtain ⟨hJ, hJbox⟩ := singularAuxiliary_nonzero_mem_box Q
     weightedCap w seedTotalCap slopeCap prime hQ
-    (by norm_num [slopeCap, ContactFlagParameters6642Research.slopeCap])
-    characteristic_gates.2.2.2 hbox
+    (by norm_num [slopeCap]) characteristic_gates.2.2.2 hbox
   have hcaps := degree_bounds_of_mem_box (singularAuxiliary Q)
-    implicitWeightedCap w algebraicCap 0
-      (by norm_num [w, ContactFlagParameters6642Research.w]) hJbox
+    implicitWeightedCap w algebraicCap 0 (by norm_num [w]) hJbox
   have hJR : (singularAuxiliary Q).degreeOf 2 = 0 :=
     Nat.eq_zero_of_le_zero hcaps.2.1
   apply exceptionalSeeds_card_le (singularAuxiliary Q) hJ hJR
     algebraicCap prime
-  · norm_num [algebraicCap, slopeCap, seedTotalCap,
-      ContactFlagParameters6642Research.algebraicCap,
-      ContactFlagParameters6642Research.slopeCap,
-      ContactFlagParameters6642Research.totalCap]
+  · norm_num [algebraicCap, slopeCap, seedTotalCap]
   · exact characteristic_gates.2.2.1
   · exact hcaps.1.trans (by
       norm_num [implicitYCap, implicitWeightedCap, weightedCap,
         ContactParameters6630Research.multiplicity, agreements, n, errors,
-        w, algebraicCap, slopeCap, seedTotalCap,
-        ContactFlagParameters6642Research.implicitYCap,
-        ContactFlagParameters6642Research.implicitWeightedCap,
-        ContactFlagParameters6642Research.weightedCap,
-        ContactFlagParameters6642Research.multiplicity,
-        ContactFlagParameters6642Research.agreements,
-        ContactFlagParameters6642Research.n,
-        ContactFlagParameters6642Research.errors,
-        ContactFlagParameters6642Research.w,
-        ContactFlagParameters6642Research.algebraicCap,
-        ContactFlagParameters6642Research.slopeCap,
-        ContactFlagParameters6642Research.totalCap])
+        w, algebraicCap, slopeCap, seedTotalCap])
   · exact hcaps.2.2
 
 variable {Iota : Type}
@@ -154,21 +135,13 @@ theorem implicitSeeds_pair_bound
   classical
   obtain ⟨hJ, hJbox⟩ := singularAuxiliary_nonzero_mem_box Q
     weightedCap w seedTotalCap slopeCap prime hQ
-    (by norm_num [slopeCap, ContactFlagParameters6642Research.slopeCap])
-    characteristic_gates.2.2.2 hbox
+    (by norm_num [slopeCap]) characteristic_gates.2.2.2 hbox
   obtain ⟨_hA, hG, hGR, hAbox, hGbox, hproper⟩ :=
     implicitPair_data (singularAuxiliary Q) hJ implicitWeightedCap w
-      algebraicCap (by norm_num [w, ContactFlagParameters6642Research.w])
+      algebraicCap (by norm_num [w])
       (by norm_num [w, implicitWeightedCap, weightedCap,
         ContactParameters6630Research.multiplicity, agreements, n, errors,
-        slopeCap, ContactFlagParameters6642Research.w,
-        ContactFlagParameters6642Research.implicitWeightedCap,
-        ContactFlagParameters6642Research.weightedCap,
-        ContactFlagParameters6642Research.multiplicity,
-        ContactFlagParameters6642Research.agreements,
-        ContactFlagParameters6642Research.n,
-        ContactFlagParameters6642Research.errors,
-        ContactFlagParameters6642Research.slopeCap]) hJbox q.1 q.2
+        slopeCap]) hJbox q.1 q.2
   have hsub := implicitSeeds_subset Q selected Gamma q
   have hpair :=
     ContactImplicitPairSeedCount6630Research.implicit_pair_seed_bound_fixed
@@ -248,9 +221,3 @@ theorem singularSeeds_scaled_bound
 
 end
 end ProximityPrize.SubmissionLower.ContactSingularBranch6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactSingularBranch6630Research.implicitVector_budgets
-#print axioms ProximityPrize.SubmissionLower.ContactSingularBranch6630Research.exceptionalSeeds_bound
-#print axioms ProximityPrize.SubmissionLower.ContactSingularBranch6630Research.implicitSeeds_pair_bound
-#print axioms ProximityPrize.SubmissionLower.ContactSingularBranch6630Research.singularSeeds_gap_bound
-#print axioms ProximityPrize.SubmissionLower.ContactSingularBranch6630Research.singularSeeds_scaled_bound

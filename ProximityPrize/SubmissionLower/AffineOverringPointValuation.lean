@@ -172,9 +172,3 @@ end Overring
 end
 
 end ProximityPrize.SubmissionLower.AffineOverringPointValuation
-
-#print axioms ProximityPrize.SubmissionLower.AffineOverringPointValuation.fraction_of_value_le_one
-#print axioms ProximityPrize.SubmissionLower.AffineOverringPointValuation.inverse_fraction
-#print axioms ProximityPrize.SubmissionLower.AffineOverringPointValuation.overring_value_le_one
-#print axioms ProximityPrize.SubmissionLower.AffineOverringPointValuation.overring_value_lt_one_iff
-#print axioms ProximityPrize.SubmissionLower.AffineOverringPointValuation.overring_zero_order_ge_one

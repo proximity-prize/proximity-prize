@@ -77,6 +77,3 @@ end
 
 
 end ProximityPrize.SubmissionLower.ContactIdentityZeroSafePencilResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityZeroSafePencilResearch.coordinate_y_affine_of_basefield_pencil
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityZeroSafePencilResearch.identityNodes_card_le_of_r_dependent_principal_zero_safe

@@ -88,8 +88,3 @@ theorem inertiaDeg'_eq_one_of_point_fiber (phi : R →ₐ[K] K) (P : Ideal S)
 end
 
 end ProximityPrize.SubmissionLower.UnitResidueWeights
-
-#print axioms ProximityPrize.SubmissionLower.UnitResidueWeights.pointFiber_quotient_integral
-#print axioms ProximityPrize.SubmissionLower.UnitResidueWeights.pointFiber_constants_surjective
-#print axioms ProximityPrize.SubmissionLower.UnitResidueWeights.inertiaDeg_eq_one_of_point_fiber
-#print axioms ProximityPrize.SubmissionLower.UnitResidueWeights.inertiaDeg'_eq_one_of_point_fiber

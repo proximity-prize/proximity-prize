@@ -345,22 +345,5 @@ theorem irs_squared_lambda_toNat_le
 end DraftProofs
 
 -- Reports are accepted only together with a successful whole-module check.
-#print axioms agreement_card_ge_of_closeCodewordsRel
-#print axioms radius_cell_of_floor_le
-#print axioms rational_radius_cell
-#print axioms interleaved_lambda_le
-#print axioms unflatten_flattenSymbol
-#print axioms flatten_unflattenSymbol
-#print axioms flattenWord_injective
-#print axioms flattenWord_agreement_card
-#print axioms squared_eight_rows
-#print axioms squared_eight_lambda_le
-#print axioms squared_eight_lambda_le_of_floor
-#print axioms irs_zeroCoordinateBound
-#print axioms irs_code_mem_iff_rows
-#print axioms irs_squared_carrier_eq
-#print axioms irs_squared_lambda_le
-#print axioms irs_squared_claimedRadius_lambda_le
-#print axioms irs_squared_lambda_toNat_le
 
 end ProximityPrize.SubmissionLower.AlignmentInterleavedLambda

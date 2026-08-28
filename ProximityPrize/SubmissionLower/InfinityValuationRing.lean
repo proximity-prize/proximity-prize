@@ -119,13 +119,3 @@ theorem infinity_valuation_eq (x : RatFunc K) :
 end
 
 end ProximityPrize.SubmissionLower.InfinityValuationRing
-
-#print axioms ProximityPrize.SubmissionLower.InfinityValuationRing.infinity_isRankOneDiscrete
-#print axioms ProximityPrize.SubmissionLower.InfinityValuationRing.infinityRing_isDiscreteValuationRing
-#print axioms ProximityPrize.SubmissionLower.InfinityValuationRing.infinityRing_isFractionRing
-#print axioms ProximityPrize.SubmissionLower.InfinityValuationRing.infinityUniformizer_value
-#print axioms ProximityPrize.SubmissionLower.InfinityValuationRing.infinityUniformizer_isUniformizer
-#print axioms ProximityPrize.SubmissionLower.InfinityValuationRing.infinity_maximalIdeal_eq_span
-#print axioms ProximityPrize.SubmissionLower.InfinityValuationRing.infinityUniformizer_irreducible
-#print axioms ProximityPrize.SubmissionLower.InfinityValuationRing.infinity_intValuation_eq
-#print axioms ProximityPrize.SubmissionLower.InfinityValuationRing.infinity_valuation_eq

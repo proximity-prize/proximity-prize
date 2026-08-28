@@ -551,17 +551,3 @@ lemma Generators.fg_ker_of_finitePresentation [Algebra.FinitePresentation R S] {
   exact Algebra.FinitePresentation.ker_fG_of_surjective _ P.aeval_val_surjective
 
 end Algebra
-
-#print axioms Algebra.Generators.ker_localizationAway
-#print axioms Algebra.Presentation.localizationAway
-#print axioms Algebra.Generators.C_mul_X_sub_one_mem_ker
-#print axioms Algebra.Presentation.span_range_relation_eq_ker_baseChange
-#print axioms Algebra.Presentation.baseChange
-#print axioms Algebra.Presentation.compRelationAux
-#print axioms Algebra.Presentation.span_range_relation_eq_ker_comp
-#print axioms Algebra.Presentation.comp
-#print axioms Algebra.Presentation.comp_aeval_relation_inl
-#print axioms Algebra.Presentation.relation_comp_localizationAway_inl
-#print axioms Algebra.Presentation.reindex
-#print axioms Algebra.Presentation.naive
-#print axioms Algebra.Generators.fg_ker_of_finitePresentation
