@@ -2,6 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies
 import ProximityPrize.SubmissionLower.ContactOriginalRegularSeedCount
 import ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount
+import ProximityPrize.SubmissionLower.ContactFullTriangleAgreement
 
 /-!
 # The actual global selected-polynomial count for the fixed witness
@@ -29,6 +30,7 @@ open ContactImplicitPairBudgets ContactImplicitContactLift ContactSingularAuxili
 open ContactSingularDegreeBounds ContactInterpolation ContactTranslation
 open ContactPrimeSeedIncidence ContactProperCutSeedCount
 open ContactOriginalRegularSeedCount ContactImplicitPairSeedCount
+open ContactFullTriangleAgreement
 
 noncomputable section
 
@@ -41,6 +43,7 @@ local instance : DecidableEq ι := Classical.decEq ι
 theorem global_selected_count [CharP K prime]
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (htriangle : Q ∈ fullTriangleBox K seedTotalCap)
     (selected : K → Polynomial K) (Γ : Finset K)
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (hnodes : nodes.card = n)
@@ -54,8 +57,11 @@ theorem global_selected_count [CharP K prime]
   · intro F
     obtain ⟨hirred, hRpos, hFbox⟩ :=
       directFactor_data Q F.1 hQ weightedCap w seedTotalCap slopeCap hbox F.2
+    obtain ⟨_, hFdiv, _⟩ := positiveRFactors_spec Q F.1 F.2
+    have hFfull : MvPolynomial.weightedTotalDegree fullSurfaceWeights F.1 ≤ seedTotalCap :=
+      full_wt_le_of_dvd F.1 Q seedTotalCap hQ hFdiv htriangle
     have hsub := regularSeeds_subset Q selected Γ F
-    exact original_regular_seed_bound K F.1 hirred hRpos hFbox selected
+    exact original_regular_seed_bound K F.1 hirred hRpos hFbox hFfull selected
       (regularSeeds Q selected Γ F) nodes x u₀ u₁ hinj hnodes
       (fun γ hγ => hdegree γ (hsub hγ))
       (fun γ hγ => (regularSeeds_solution Q selected Γ F γ hγ).1)

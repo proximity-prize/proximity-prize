@@ -2,6 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSurfaceSeedCount
 import ProximityPrize.SubmissionLower.ContactSparseProjectionBridge
 import ProximityPrize.SubmissionLower.ContactSparseSurfaceCaps
+import ProximityPrize.SubmissionLower.ContactFullTriangleAgreement
 
 /-!
 # Sparse base-R proper-cut counting
@@ -23,6 +24,8 @@ open ActualCoordinateDegreeSum ActualPlanePositiveOrder
 open ContactAlignmentParameters ContactCountingCaps ContactGenericSurface
 open ContactPolynomialSolutions ContactTranslation ContactPrimeSeedIncidence
 open ContactRegularComponentCover ContactProperCutSeedCount ContactSurfaceSeedCount
+open ContactFullTriangleAgreement
+open ContactTaylorNumerators
 open ContactSparseResultant ContactSparseProjectionBridge ContactSparseSurfaceCaps
 open ContactInterpolation ContactComponentPencils TrivariateRationalCollection
 
@@ -205,6 +208,7 @@ theorem whole_surface_seed_bound_fixed_sparse
     (hr : 0 < G.degreeOf 1)
     (hHproper : ¬ G ∣ surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F))
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (hfull : MvPolynomial.weightedTotalDegree fullSurfaceWeights F ≤ seedTotalCap)
     (hsurface : surfaceMap φ F ≠ 0)
     (hGcaps : HasCaps G ContactProjectionParameters.surfaceVector)
     (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
@@ -275,15 +279,19 @@ theorem whole_surface_seed_bound_fixed_sparse
   have hGjoint : MvPolynomial.weightedTotalDegree seedPairWeights G ≤ seedTotalCap :=
     fixed_surface_factor_joint_seed_cap φ F G hbox hdiv hsurface
   have hTjoint : MvPolynomial.weightedTotalDegree seedPairWeights T ≤
-      1 + 2 * w * seedTotalCap := by
-    simpa [T, agreementPolynomial] using
-      fixed_factorialAgreementSurface_joint_seed_cap φ F hbox (x i) (u₀ i) (u₁ i)
+      1 + 2 * w * (seedTotalCap - 1) := by
+    change MvPolynomial.weightedTotalDegree seedPairWeights
+      (surfaceMap φ (agreementNumerator F w
+        (fun j => (j.factorial : K)⁻¹) (x i) (u₀ i) (u₁ i))) ≤ _
+    exact surface_agreement_seedPair_le_full_triangle φ F seedTotalCap w
+      (by norm_num [seedTotalCap]) hfull (fun j => (j.factorial : K)⁻¹)
+      (x i) (u₀ i) (u₁ i)
   have hGtotalY : (rationalMap Ω rBaseYOuterOrder G).totalDegree ≤ seedTotalCap :=
     (rationalMap_totalDegree_le_seedPair_yOuter Ω G).trans hGjoint
   have hGtotalZ : (rationalMap Ω rBaseZOuterOrder G).totalDegree ≤ seedTotalCap :=
     (rationalMap_totalDegree_le_seedPair_zOuter Ω G).trans hGjoint
   have hTtotalY : (rationalMap Ω rBaseYOuterOrder T).totalDegree ≤
-      1 + 2 * w * seedTotalCap :=
+      1 + 2 * w * (seedTotalCap - 1) :=
     (rationalMap_totalDegree_le_seedPair_yOuter Ω T).trans hTjoint
   have hδ (j : Fin 3) : coordinateMixedDegree Ω G T j ≤
       mixed (degreeVector G) agreementVector (unitAt j) :=
@@ -300,7 +308,7 @@ theorem whole_surface_seed_bound_fixed_sparse
   have hmixed2 : coordinateMixedDegree Ω G T 2 < prime :=
     (hδfixed 2).trans_lt hrect2
   have hsparse' :
-      yCap * (1 + 2 * w * seedTotalCap) + agreementVector.y * seedTotalCap -
+      yCap * (1 + 2 * w * (seedTotalCap - 1)) + agreementVector.y * seedTotalCap -
           yCap * agreementVector.y < prime := by
     simpa [ContactProjectionParameters.agreementSparseRCap,
       ContactProjectionParameters.sparseRCap, agreementVector] using hsparse
@@ -310,7 +318,7 @@ theorem whole_surface_seed_bound_fixed_sparse
     (by norm_num [w, agreements]) (by rw [hnodes]; norm_num [agreements, n])
     (fun j => (hGcaps j).trans_lt (fixed_surface_caps_below_characteristic j))
     hmixed0 hmixed2 yCap agreementVector.y seedTotalCap
-      (1 + 2 * w * seedTotalCap)
+      (1 + 2 * w * (seedTotalCap - 1))
     (hGcaps 0) (hTcaps 0) hGtotalY hTtotalY hGtotalZ
     (by norm_num [yCap, weightedCap, ContactAlignmentParameters.multiplicity,
       agreements, w, seedTotalCap])

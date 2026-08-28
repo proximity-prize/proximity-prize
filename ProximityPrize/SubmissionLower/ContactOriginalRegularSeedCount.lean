@@ -140,6 +140,8 @@ theorem original_regular_seed_bound
     [CharP K prime]
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F) (hRpos : 0 < F.degreeOf 2)
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (hfull : MvPolynomial.weightedTotalDegree
+      ContactFullTriangleAgreement.fullSurfaceWeights F ≤ seedTotalCap)
     (selected : K → Polynomial K) (Γ : Finset K)
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
     (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
@@ -182,7 +184,7 @@ theorem original_regular_seed_bound
       surfaceMap_ne_zero (polynomialEmbedding K) (polynomialEmbedding_injective K) F hF.ne_zero
     have hsub := geometricSeeds_subset K F selected Γ g
     exact whole_surface_seed_bound_fixed_sparse (polynomialEmbedding K) F g.1 hgirred hgdiv
-      hgate.1 hHproper hbox hsurface hgcaps hY hR hZ hHY
+      hgate.1 hHproper hbox hfull hsurface hgcaps hY hR hZ hHY
       selected (geometricSeeds K F selected Γ g)
       nodes x u₀ u₁ hinj hnodes
       (fun γ hγ => hdegree γ (hsub hγ))

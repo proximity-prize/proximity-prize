@@ -127,6 +127,15 @@ def globalCoefficientBox (D w L s : ℕ) :
     Submodule K (MvPolynomial (Fin 4) K) :=
   MvPolynomial.restrictSupport K (globalExponents D w L s)
 
+/-- The actual interpolation array uses the stronger three-coordinate
+triangle `Y+R+Z ≤ L`.  The older global box intentionally forgets this
+coupling because many downstream factor lemmas need only separated caps. -/
+def fullTriangleExponents (L : ℕ) : Set (Fin 4 →₀ ℕ) :=
+  {d | d 1 + d 2 + d 3 ≤ L}
+
+def fullTriangleBox (L : ℕ) : Submodule K (MvPolynomial (Fin 4) K) :=
+  MvPolynomial.restrictSupport K (fullTriangleExponents L)
+
 theorem columnMonomial_mem (D w L s : ℕ)
     (c : CoefficientIndex D w L s) (a : K) :
     MvPolynomial.monomial (columnExponent c) a ∈
@@ -139,6 +148,18 @@ theorem columnMonomial_mem (D w L s : ℕ)
   have he := c.2.2.2.isLt
   simp only [globalExponents, Set.mem_setOf_eq, columnExponent_x,
     columnExponent_y, columnExponent_r, columnExponent_z]
+  omega
+
+theorem columnMonomial_mem_fullTriangle (D w L s : ℕ)
+    (c : CoefficientIndex D w L s) (a : K) :
+    MvPolynomial.monomial (columnExponent c) a ∈ fullTriangleBox K L := by
+  apply (MvPolynomial.monomial_mem_restrictSupport (R := K)).mpr
+  left
+  have hi := c.1.isLt
+  have hj := c.2.1.isLt
+  have hz := c.2.2.1.isLt
+  simp only [fullTriangleExponents, Set.mem_setOf_eq, columnExponent_y,
+    columnExponent_r, columnExponent_z]
   omega
 
 def reconstruct (D w L s : ℕ) (θ : CoefficientIndex D w L s → K) :
@@ -180,6 +201,15 @@ theorem reconstruct_mem_globalCoefficientBox (D w L s : ℕ)
   apply Submodule.sum_mem
   intro c hc
   exact columnMonomial_mem K D w L s c (θ c)
+
+theorem reconstruct_mem_fullTriangleBox (D w L s : ℕ)
+    (θ : CoefficientIndex D w L s → K) :
+    reconstruct K D w L s θ ∈ fullTriangleBox K L := by
+  classical
+  unfold reconstruct
+  apply Submodule.sum_mem
+  intro c hc
+  exact columnMonomial_mem_fullTriangle K D w L s c (θ c)
 
 theorem reconstruct_support_caps (D w L s : ℕ)
     (θ : CoefficientIndex D w L s → K) :
@@ -362,7 +392,7 @@ theorem all_blocks_divisible_of_equations
   · have hm : m - r = 0 := by omega
     simp only [hm, pow_zero, one_dvd]
 
-abbrev FrozenCoefficientIndex := CoefficientIndex 3504835 131071 170 6
+abbrev FrozenCoefficientIndex := CoefficientIndex 3873723 131071 156 6
 
 /-- The actual frozen-domain array has 33,470,909,075 coefficient labels and
 at most 33,470,808,064 independent contact equations. This theorem evaluates
@@ -370,11 +400,11 @@ neither its columns nor the field-valued constraint matrix. -/
 theorem exists_frozen_nonzero_contact_array
     (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
     ∃ θ : FrozenCoefficientIndex → IRSProfile.Field, θ ≠ 0 ∧
-      ∀ (i : IRSProfile.Index) (r : Fin 19),
-        contactJet IRSProfile.Field (19 - r.val)
-          ((extractBlock IRSProfile.Field 3504835 131071 170 6
+      ∀ (i : IRSProfile.Index) (r : Fin 21),
+        contactJet IRSProfile.Field (21 - r.val)
+          ((extractBlock IRSProfile.Field 3873723 131071 156 6
             (IRSProfile.domain i) (u₀ i) (u₁ i) r.val θ) : Poly IRSProfile.Field) = 0 := by
-  apply exists_nonzero_block_equations IRSProfile.Field 3504835 131071 170 6 19
+  apply exists_nonzero_block_equations IRSProfile.Field 3873723 131071 156 6 21
     (fun i : IRSProfile.Index => IRSProfile.domain i) u₀ u₁
   rw [show Fintype.card IRSProfile.Index = 262144 by norm_num [IRSProfile.Index]]
   exact ContactAlignmentParameters.interpolation_gate
@@ -388,16 +418,18 @@ theorem exists_frozen_nonzero_polynomial_and_equations
     ∃ (Q : MvPolynomial (Fin 4) IRSProfile.Field)
       (θ : FrozenCoefficientIndex → IRSProfile.Field),
       Q ≠ 0 ∧
-      Q ∈ globalCoefficientBox IRSProfile.Field 3504835 131071 170 6 ∧
-      Q = reconstruct IRSProfile.Field 3504835 131071 170 6 θ ∧
-      ∀ (i : IRSProfile.Index) (r : Fin 19),
-        contactJet IRSProfile.Field (19 - r.val)
-          ((extractBlock IRSProfile.Field 3504835 131071 170 6
+      Q ∈ globalCoefficientBox IRSProfile.Field 3873723 131071 156 6 ∧
+      Q ∈ fullTriangleBox IRSProfile.Field 156 ∧
+      Q = reconstruct IRSProfile.Field 3873723 131071 156 6 θ ∧
+      ∀ (i : IRSProfile.Index) (r : Fin 21),
+        contactJet IRSProfile.Field (21 - r.val)
+          ((extractBlock IRSProfile.Field 3873723 131071 156 6
             (IRSProfile.domain i) (u₀ i) (u₁ i) r.val θ) : Poly IRSProfile.Field) = 0 := by
   obtain ⟨θ, hθ, hconstraints⟩ := exists_frozen_nonzero_contact_array u₀ u₁
-  exact ⟨reconstruct IRSProfile.Field 3504835 131071 170 6 θ, θ,
-    reconstruct_ne_zero IRSProfile.Field 3504835 131071 170 6 θ hθ,
-    reconstruct_mem_globalCoefficientBox IRSProfile.Field 3504835 131071 170 6 θ,
+  exact ⟨reconstruct IRSProfile.Field 3873723 131071 156 6 θ, θ,
+    reconstruct_ne_zero IRSProfile.Field 3873723 131071 156 6 θ hθ,
+    reconstruct_mem_globalCoefficientBox IRSProfile.Field 3873723 131071 156 6 θ,
+    reconstruct_mem_fullTriangleBox IRSProfile.Field 3873723 131071 156 6 θ,
     rfl, hconstraints⟩
 
 end

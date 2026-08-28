@@ -37,7 +37,7 @@ local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 /-- The new selected-family bound uses the actual domain and the exact
 77679-error, 10^17-seed parameters. -/
 def SelectedNoLargePencilBound6401 : Prop :=
-  SelectedNoLargePencilBound IRSProfile.domain 131071 77679 100000000000000000
+  SelectedNoLargePencilBound IRSProfile.domain 131071 77681 100000000000000000
 
 /-- The precise actual-interpolant count supplied by the global counting
 module; it is an explicit input to this frontend, never a new axiom. -/
@@ -45,6 +45,7 @@ def InterpolantSelectedCount6401 : Prop :=
   ∀ (Q : MvPolynomial (Fin 4) IRSProfile.Field),
     Q ≠ 0 →
     Q ∈ globalCoefficientBox IRSProfile.Field weightedCap w seedTotalCap slopeCap →
+    Q ∈ fullTriangleBox IRSProfile.Field seedTotalCap →
     ∀ (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
       (seeds : Finset IRSProfile.Field) (u₀ u₁ : IRSProfile.Index → IRSProfile.Field),
       (∀ γ ∈ seeds, (selected γ).natDegree ≤ w) →
@@ -63,7 +64,7 @@ theorem challenge_field_characteristic :
 theorem original_support_card
     (A : IRSProfile.Field → Finset IRSProfile.Index)
     (seeds : Finset IRSProfile.Field)
-    (hcard : ∀ γ ∈ seeds, Fintype.card IRSProfile.Index - 77679 ≤ (A γ).card) :
+    (hcard : ∀ γ ∈ seeds, Fintype.card IRSProfile.Index - 77681 ≤ (A γ).card) :
     ∀ γ ∈ seeds, agreements ≤ (A γ).card := by
   intro γ hγ
   have hh := hcard γ hγ
@@ -77,7 +78,7 @@ theorem selected_count_of_interpolant_count
   classical
   intro U seeds A selected hdegree hcard hvalues hno
   have hcard' := original_support_card A seeds hcard
-  obtain ⟨Q, hQ, hbox, hvanish⟩ :=
+  obtain ⟨Q, hQ, hbox, htriangle, hvanish⟩ :=
     exists_frozen_universal_vanishing_interpolant (U 0) (U 1)
   have hbox' : Q ∈
       globalCoefficientBox IRSProfile.Field weightedCap w seedTotalCap slopeCap := hbox
@@ -102,16 +103,16 @@ theorem selected_count_of_interpolant_count
     apply Finset.card_le_card
     intro γ hγ
     simpa only [pencilSeeds, Finset.mem_filter] using (Finset.mem_filter.mp hγ)
-  exact Nat.le_of_lt (hcount Q hQ hbox' selected seeds (U 0) (U 1)
+  exact Nat.le_of_lt (hcount Q hQ hbox' htriangle selected seeds (U 0) (U 1)
     hdegree hsolution hagreement hno')
 
 /-- Use the generic stock-code bridge at the new error and seed budget. -/
 theorem alignment_of_interpolant_count
     (hcount : InterpolantSelectedCount6401) :
-    AffineLineAlignmentBound IRSProfile.baseCode 77679 100000000000000000 := by
+    AffineLineAlignmentBound IRSProfile.baseCode 77681 100000000000000000 := by
   change AffineLineAlignmentBound (ReedSolomon.code IRSProfile.domain (131071 + 1))
-    77679 100000000000000000
-  exact alignmentBound_of_selected_count IRSProfile.domain 131071 77679
+    77681 100000000000000000
+  exact alignmentBound_of_selected_count IRSProfile.domain 131071 77681
     100000000000000000 (selected_count_of_interpolant_count hcount)
 
 #print axioms challenge_field_characteristic

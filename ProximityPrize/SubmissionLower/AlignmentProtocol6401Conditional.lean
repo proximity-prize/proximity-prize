@@ -24,8 +24,8 @@ open scoped NNReal
 
 noncomputable section ProtocolProofs
 
-def radius6401 : ℝ≥0 := claimedRadius 310719 1048576
-def errors6401 : ℕ := 77679
+def radius6401 : ℝ≥0 := claimedRadius 310727 1048576
+def errors6401 : ℕ := 77681
 def budget6401 : ℕ := 100000000000000000
 
 theorem radius6401_floor :
@@ -33,7 +33,7 @@ theorem radius6401_floor :
   norm_num [radius6401, claimedRadius, errors6401, IRSProfile.Index]
 
 theorem radius6401_cell_cross :
-    310719 * Fintype.card IRSProfile.Index < (errors6401 + 1) * 1048576 := by
+    310727 * Fintype.card IRSProfile.Index < (errors6401 + 1) * 1048576 := by
   norm_num [IRSProfile.Index, errors6401]
 
 theorem radius6401_gap : 131071 < Fintype.card IRSProfile.Index - errors6401 := by
@@ -75,13 +75,13 @@ theorem two_rpow_one_hundred_le :
 /-- This exact rational inequality involves only the actual 128 repetitions. -/
 theorem radius6401_power_rational_bound :
     (1 - radius6401) ^ IRSProfile.repetitions ≤
-      ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * ((1000000000 : ℝ≥0) / 1006955551) ^ (89 : ℕ) := by
+      ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * ((1000000000 : ℝ≥0) / 1006955551) ^ (90 : ℕ) := by
   rw [← NNReal.coe_le_coe]
   norm_num [radius6401, claimedRadius, IRSProfile.repetitions, div_pow,
     div_le_iff₀]
 
 theorem radius6401_score :
-    (1 - radius6401) ^ IRSProfile.repetitions ≤ claimedError 6489 := by
+    (1 - radius6401) ^ IRSProfile.repetitions ≤ claimedError 6490 := by
   have hbase : (1000000000 : ℝ≥0) / 1006955551 ≤ (2 : ℝ≥0) ^ (-((1 : ℝ) / 100)) := by
     calc
       (1000000000 : ℝ≥0) / 1006955551 = 1 / ((1006955551 : ℝ≥0) / 1000000000) := by norm_num
@@ -90,27 +90,27 @@ theorem radius6401_score :
       _ = (2 : ℝ≥0) ^ (-((1 : ℝ) / 100)) := by
         rw [one_div, NNReal.rpow_neg]
   have hscale :
-      ((1000000000 : ℝ≥0) / 1006955551) ^ (89 : ℕ) ≤
-        (2 : ℝ≥0) ^ (-((89 : ℝ) / 100)) := by
+      ((1000000000 : ℝ≥0) / 1006955551) ^ (90 : ℕ) ≤
+        (2 : ℝ≥0) ^ (-((90 : ℝ) / 100)) := by
     calc
-      ((1000000000 : ℝ≥0) / 1006955551) ^ (89 : ℕ) ≤
-          ((2 : ℝ≥0) ^ (-((1 : ℝ) / 100))) ^ (89 : ℕ) :=
-        pow_le_pow_left₀ (by positivity) hbase 89
-      _ = (2 : ℝ≥0) ^ (-((89 : ℝ) / 100)) := by
-        rw [← NNReal.rpow_natCast (((2 : ℝ≥0) ^ (-((1 : ℝ) / 100)))) 89,
+      ((1000000000 : ℝ≥0) / 1006955551) ^ (90 : ℕ) ≤
+          ((2 : ℝ≥0) ^ (-((1 : ℝ) / 100))) ^ (90 : ℕ) :=
+        pow_le_pow_left₀ (by positivity) hbase 90
+      _ = (2 : ℝ≥0) ^ (-((90 : ℝ) / 100)) := by
+        rw [← NNReal.rpow_natCast (((2 : ℝ≥0) ^ (-((1 : ℝ) / 100)))) 90,
           ← NNReal.rpow_mul]
         norm_num
   calc
     (1 - radius6401) ^ IRSProfile.repetitions ≤
-        ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * ((1000000000 : ℝ≥0) / 1006955551) ^ (89 : ℕ) :=
+        ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * ((1000000000 : ℝ≥0) / 1006955551) ^ (90 : ℕ) :=
       radius6401_power_rational_bound
     _ ≤ ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) *
-        (2 : ℝ≥0) ^ (-((89 : ℝ) / 100)) :=
+        (2 : ℝ≥0) ^ (-((90 : ℝ) / 100)) :=
       mul_le_mul_of_nonneg_left hscale (by positivity)
-    _ = claimedError 6489 := by
+    _ = claimedError 6490 := by
       unfold claimedError
-      rw [show -((((6489 : ℕ) : ℝ) / 100)) =
-          -((64 : ℕ) : ℝ) + -((89 : ℝ) / 100) by norm_num,
+      rw [show -((((6490 : ℕ) : ℝ) / 100)) =
+          -((64 : ℕ) : ℝ) + -((90 : ℝ) / 100) by norm_num,
         NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0)]
       simp only [NNReal.rpow_neg, NNReal.rpow_natCast, one_div]
 
@@ -172,7 +172,7 @@ theorem lambda6401_le_of_alignment
         Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
       (radius6401 : ℝ) ≤ (budget6401 : ℕ∞) :=
   AlignmentInterleavedLambda.irs_squared_claimedRadius_lambda_le
-    310719 1048576 errors6401 budget6401 (by norm_num) radius6401_cell_cross
+    310727 1048576 errors6401 budget6401 (by norm_num) radius6401_cell_cross
     radius6401_gap halign budget6401_lt_field sixteen_row_separation_gate
 
 /-- A local copy of the elementary generic ENNReal field-budget calculation;
@@ -224,8 +224,8 @@ theorem certifiedGammaError6401_le_of_alignment
 theorem. This module does not itself assert that alignment premise. -/
 theorem protocolClaim6401_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode
-      77679 100000000000000000) :
-    ProtocolClaim 6489 310719 1048576 where
+      77681 100000000000000000) :
+    ProtocolClaim 6490 310727 1048576 where
   admissible := by
     constructor <;> norm_num [claimedRadius, IRSProfile.minRelativeDistance]
   reduction := by
