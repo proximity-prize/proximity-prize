@@ -19,33 +19,34 @@ open ContactAlignmentParameters
 def surfaceVector : DegreeVector := ⟨yCap, slopeCap, seedTotalCap⟩
 
 theorem first_cut_projection_values :
-    mixed surfaceVector firstTail unitY = 361758720 ∧
-    mixed surfaceVector firstTail unitR = 2122318008 ∧
-    mixed surfaceVector firstTail unitZ = 43253764 := by
+    mixed surfaceVector firstTail unitY = 435814400 ∧
+    mixed surfaceVector firstTail unitR = 2293760175 ∧
+    mixed surfaceVector firstTail unitZ = 62259205 := by
   norm_num [mixed, surfaceVector, firstTail, tailVector, unitY, unitR, unitZ,
     yCap, weightedCap, ContactAlignmentParameters.multiplicity, agreements, w, slopeCap, seedTotalCap]
 
 theorem agreement_cut_projection_values :
-    mixed surfaceVector agreementVector unitY = 361755964 ∧
-    mixed surfaceVector agreementVector unitR = 2122301838 ∧
-    mixed surfaceVector agreementVector unitZ = 43253434 := by
+    mixed surfaceVector agreementVector unitY = 435811080 ∧
+    mixed surfaceVector agreementVector unitR = 2293742700 ∧
+    mixed surfaceVector agreementVector unitZ = 62258730 := by
   norm_num [mixed, surfaceVector, agreementVector, unitY, unitR, unitZ,
     yCap, weightedCap, ContactAlignmentParameters.multiplicity, agreements, w, slopeCap, seedTotalCap]
 
-theorem all_projection_caps_below_characteristic :
+/-! The rectangular R bounds above exceed the characteristic.  The production
+proof replaces only that coordinate with the joint trapezoid resultant bound;
+these are the four remaining rectangular gates. -/
+theorem non_R_projection_caps_below_characteristic :
     mixed surfaceVector firstTail unitY < prime ∧
-    mixed surfaceVector firstTail unitR < prime ∧
     mixed surfaceVector firstTail unitZ < prime ∧
     mixed surfaceVector agreementVector unitY < prime ∧
-    mixed surfaceVector agreementVector unitR < prime ∧
     mixed surfaceVector agreementVector unitZ < prime := by
   rcases first_cut_projection_values with ⟨h1, h2, h3⟩
   rcases agreement_cut_projection_values with ⟨h4, h5, h6⟩
-  rw [h1, h2, h3, h4, h5, h6]
+  rw [h1, h3, h4, h6]
   norm_num [prime]
 
 end ProximityPrize.SubmissionLower.ContactProjectionParameters
 
 #print axioms ProximityPrize.SubmissionLower.ContactProjectionParameters.first_cut_projection_values
 #print axioms ProximityPrize.SubmissionLower.ContactProjectionParameters.agreement_cut_projection_values
-#print axioms ProximityPrize.SubmissionLower.ContactProjectionParameters.all_projection_caps_below_characteristic
+#print axioms ProximityPrize.SubmissionLower.ContactProjectionParameters.non_R_projection_caps_below_characteristic

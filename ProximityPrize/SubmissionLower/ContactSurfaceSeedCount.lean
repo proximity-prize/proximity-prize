@@ -59,7 +59,7 @@ theorem mixed_cap_sum (g t e : DegreeVector) :
   ring
 
 def fiberNumerator (n w a e : ℕ) (g E : DegreeVector) : ℕ :=
-  n * mixed g E E + (e + 1) * (a - w) * mixed g E unitZ
+  (n - w) * mixed g E E + (e + 1) * (a - w) * mixed g E unitZ
 
 /-- The integer floor in a scaled fiber bound introduces no loss in the
 cross-multiplied sharp-incidence conclusion. -/
@@ -172,48 +172,6 @@ theorem whole_surface_seed_bound
   exact hcount.trans (Nat.add_le_add (Nat.mul_le_mul_left _ hsum)
     (Nat.mul_le_mul_left _ (hδ 2)))
 
-/-- Exact fixed-witness interface for factor summation: the right side
-is linear in this geometric factor's own Y/R/Z degrees. The full surface
-cap is used only to justify the strict characteristic gates. -/
-theorem whole_surface_seed_bound_fixed
-    (F : MvPolynomial (Fin 4) K) (G : MvPolynomial (Fin 3) Ω)
-    (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F)
-    (hr : 0 < G.degreeOf 1)
-    (hHproper : ¬ G ∣ surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F))
-    (hGcaps : HasCaps G ContactProjectionParameters.surfaceVector)
-    (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
-    (hZ : F.degreeOf 3 ≤ seedTotalCap)
-    (selected : K → Polynomial K) (Γ : Finset K)
-    (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
-    (hnodes : nodes.card = n) [CharP Ω prime]
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
-    (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
-    (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
-      (polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X))
-      (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hGpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
-    (hagreement : ∀ γ ∈ Γ,
-      agreements ≤ (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
-    (hnoPencil : NoLargeSelectedPencil selected Γ w errors) :
-    Γ.card * gap ^ 2 ≤ wholeNumerator (degreeVector G) := by
-  have hcap (i : ι) : HasCaps (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i))
-      agreementVector := fixed_agreement_caps φ F hY hR hZ (x i) (u₀ i) (u₁ i)
-  have hcount := whole_surface_seed_bound φ F G hG hdiv hr hHproper selected Γ
-    nodes x u₀ u₁ hinj prime w agreements errors
-    (by norm_num [w]) (by norm_num [w, prime]) (by norm_num [w, agreements])
-    (by rw [hnodes]; norm_num [agreements, n])
-    (fun j => (hGcaps j).trans_lt (fixed_surface_caps_below_characteristic j))
-    (fun i _ => (fixed_agreement_characteristic_gates G _ hGcaps (hcap i)).2)
-    hdegree hsolution hregular hGpoint hagreement hnoPencil agreementVector (fun i _ => hcap i)
-  calc
-    Γ.card * gap ^ 2 = Γ.card * (agreements - w) ^ 2 := rfl
-    _ ≤ (nodes.card - w) * fiberNumerator nodes.card w agreements errors
-        (degreeVector G) agreementVector := hcount
-    _ = wholeNumerator (degreeVector G) := by
-      rw [hnodes]
-      unfold fiberNumerator wholeNumerator gap
-      ring
-
 end
 
 end ProximityPrize.SubmissionLower.ContactSurfaceSeedCount
@@ -222,4 +180,3 @@ end ProximityPrize.SubmissionLower.ContactSurfaceSeedCount
 #print axioms ProximityPrize.SubmissionLower.ContactSurfaceSeedCount.mixed_cap_sum
 #print axioms ProximityPrize.SubmissionLower.ContactSurfaceSeedCount.scaled_sharp_incidence_bound
 #print axioms ProximityPrize.SubmissionLower.ContactSurfaceSeedCount.whole_surface_seed_bound
-#print axioms ProximityPrize.SubmissionLower.ContactSurfaceSeedCount.whole_surface_seed_bound_fixed

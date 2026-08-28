@@ -167,25 +167,31 @@ theorem fixed_surface_caps_below_characteristic :
     norm_num [capAt, ContactProjectionParameters.surfaceVector, yCap, weightedCap,
       ContactAlignmentParameters.multiplicity, agreements, w, slopeCap, seedTotalCap, prime]
 
-theorem fixed_firstTail_characteristic_gates (G T : MvPolynomial (Fin 3) Ω)
+theorem fixed_firstTail_nonR_characteristic_gates (G T : MvPolynomial (Fin 3) Ω)
     (hG : HasCaps G ContactProjectionParameters.surfaceVector) (hT : HasCaps T firstTail) :
     (∀ j, G.degreeOf j < prime) ∧
-      ∀ j k : Fin 3, j ≠ k →
-        T.degreeOf j * G.degreeOf k + G.degreeOf j * T.degreeOf k < prime := by
-  rcases ContactProjectionParameters.all_projection_caps_below_characteristic with
-    ⟨hY, hR, hZ, _, _, _⟩
-  exact actual_characteristic_gates G T _ _ prime hG hT
-    fixed_surface_caps_below_characteristic hY hR hZ
+      T.degreeOf 1 * G.degreeOf 2 + G.degreeOf 1 * T.degreeOf 2 < prime ∧
+      T.degreeOf 0 * G.degreeOf 1 + G.degreeOf 0 * T.degreeOf 1 < prime := by
+  rcases ContactProjectionParameters.non_R_projection_caps_below_characteristic with
+    ⟨hY, hZ, _, _⟩
+  refine ⟨fun j => (hG j).trans_lt (fixed_surface_caps_below_characteristic j),
+    (actual_pair_degree_le G T _ _ hG hT 1 2).trans_lt ?_,
+    (actual_pair_degree_le G T _ _ hG hT 0 1).trans_lt ?_⟩
+  · simpa [capAt, mixed, unitY, Nat.mul_comm, Nat.add_comm] using hY
+  · simpa [capAt, mixed, unitZ, Nat.mul_comm, Nat.add_comm] using hZ
 
-theorem fixed_agreement_characteristic_gates (G T : MvPolynomial (Fin 3) Ω)
+theorem fixed_agreement_nonR_characteristic_gates (G T : MvPolynomial (Fin 3) Ω)
     (hG : HasCaps G ContactProjectionParameters.surfaceVector) (hT : HasCaps T agreementVector) :
     (∀ j, G.degreeOf j < prime) ∧
-      ∀ j k : Fin 3, j ≠ k →
-        T.degreeOf j * G.degreeOf k + G.degreeOf j * T.degreeOf k < prime := by
-  rcases ContactProjectionParameters.all_projection_caps_below_characteristic with
-    ⟨_, _, _, hY, hR, hZ⟩
-  exact actual_characteristic_gates G T _ _ prime hG hT
-    fixed_surface_caps_below_characteristic hY hR hZ
+      T.degreeOf 1 * G.degreeOf 2 + G.degreeOf 1 * T.degreeOf 2 < prime ∧
+      T.degreeOf 0 * G.degreeOf 1 + G.degreeOf 0 * T.degreeOf 1 < prime := by
+  rcases ContactProjectionParameters.non_R_projection_caps_below_characteristic with
+    ⟨_, _, hY, hZ⟩
+  refine ⟨fun j => (hG j).trans_lt (fixed_surface_caps_below_characteristic j),
+    (actual_pair_degree_le G T _ _ hG hT 1 2).trans_lt ?_,
+    (actual_pair_degree_le G T _ _ hG hT 0 1).trans_lt ?_⟩
+  · simpa [capAt, mixed, unitY, Nat.mul_comm, Nat.add_comm] using hY
+  · simpa [capAt, mixed, unitZ, Nat.mul_comm, Nat.add_comm] using hZ
 
 theorem fixed_implicit_surface_caps_below_characteristic :
     ∀ j, capAt ContactImplicitLiftParameters.liftedSurface j < prime := by
@@ -222,6 +228,6 @@ end ProximityPrize.SubmissionLower.ContactCountingCaps
 #print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.actual_pair_degree_le
 #print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.pair_caps_below_of_mixed
 #print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.actual_characteristic_gates
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_firstTail_characteristic_gates
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_agreement_characteristic_gates
+#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_firstTail_nonR_characteristic_gates
+#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_agreement_nonR_characteristic_gates
 #print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_implicit_characteristic_gates

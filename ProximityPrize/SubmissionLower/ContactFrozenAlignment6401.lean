@@ -5,12 +5,12 @@ import ProximityPrize.SubmissionLower.ContactTranslation
 import ProximityPrize.SubmissionLower.ContactAlignmentParameters
 
 /-!
-# The conservative 6401 interpolation front end and stock alignment interface
+# The 6463 interpolation front end and stock alignment interface
 
 Model label: gpt-5.
 
 This new adapter applies the re-instantiated universal interpolant to each
-caller's ORIGINAL agreement support at e=77301. Its only counting input is
+caller's ORIGINAL agreement support at e=77416. Its only counting input is
 the actual selected-polynomial bound in the new coefficient box. The
 companion ContactAlignment6401 module discharges that input by the actual
 global factor-counting theorem.
@@ -35,9 +35,9 @@ set_option maxRecDepth 10000
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 
 /-- The new selected-family bound uses the actual domain and the exact
-77301-error, 10^17-seed parameters. -/
+77416-error, 10^17-seed parameters. -/
 def SelectedNoLargePencilBound6401 : Prop :=
-  SelectedNoLargePencilBound IRSProfile.domain 131071 77301 100000000000000000
+  SelectedNoLargePencilBound IRSProfile.domain 131071 77416 100000000000000000
 
 /-- The precise actual-interpolant count supplied by the global counting
 module; it is an explicit input to this frontend, never a new axiom. -/
@@ -63,7 +63,7 @@ theorem challenge_field_characteristic :
 theorem original_support_card
     (A : IRSProfile.Field → Finset IRSProfile.Index)
     (seeds : Finset IRSProfile.Field)
-    (hcard : ∀ γ ∈ seeds, Fintype.card IRSProfile.Index - 77301 ≤ (A γ).card) :
+    (hcard : ∀ γ ∈ seeds, Fintype.card IRSProfile.Index - 77416 ≤ (A γ).card) :
     ∀ γ ∈ seeds, agreements ≤ (A γ).card := by
   intro γ hγ
   have hh := hcard γ hγ
@@ -108,10 +108,10 @@ theorem selected_count_of_interpolant_count
 /-- Use the generic stock-code bridge at the new error and seed budget. -/
 theorem alignment_of_interpolant_count
     (hcount : InterpolantSelectedCount6401) :
-    AffineLineAlignmentBound IRSProfile.baseCode 77301 100000000000000000 := by
+    AffineLineAlignmentBound IRSProfile.baseCode 77416 100000000000000000 := by
   change AffineLineAlignmentBound (ReedSolomon.code IRSProfile.domain (131071 + 1))
-    77301 100000000000000000
-  exact alignmentBound_of_selected_count IRSProfile.domain 131071 77301
+    77416 100000000000000000
+  exact alignmentBound_of_selected_count IRSProfile.domain 131071 77416
     100000000000000000 (selected_count_of_interpolant_count hcount)
 
 #print axioms challenge_field_characteristic
