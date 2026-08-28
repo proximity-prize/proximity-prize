@@ -1,23 +1,25 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactFlagParameters6641Research
 
-/-! # Shared score-66.74 row for the downstream geometry
+/-!
+# Exact flag-complete interpolation parameters for the 66.74 row
 
-The local definitions remain transparent for downstream arithmetic.  Exact
-finite-sum certificates are shared with the identical flag-parameter row
-instead of being expanded a second time.
+This module freezes `(errors,m,s,L) = (79514,35,10,814)` and checks the
+coefficient count and translated contact rank from their defining finite
+sums.  It contains no geometric or decoding premise.
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactParameters6630Research
 
 open Finset
 
-set_option maxRecDepth 100000
+set_option maxRecDepth 20000
+set_option maxHeartbeats 5000000
 
 def n : ℕ := 262144
 def w : ℕ := 131071
 def prime : ℕ := 2130706433
 def alignmentBudget : ℕ := 274980727761395087
+
 def errors : ℕ := 79514
 def agreements : ℕ := n - errors
 def multiplicity : ℕ := 35
@@ -30,6 +32,7 @@ def algebraicCap : ℕ := (2 * slopeCap - 1) * seedTotalCap
 def implicitWeightedCap : ℕ := (2 * slopeCap - 1) * weightedCap
 def implicitYCap : ℕ := (implicitWeightedCap - 1) / w
 
+/-- Number of monomials in the strict weighted interpolation box. -/
 def coefficientCount : ℕ :=
   ∑ i ∈ range (seedTotalCap + 1),
     ∑ j ∈ range (slopeCap + 1),
@@ -38,6 +41,7 @@ def coefficientCount : ℕ :=
 
 def contactExponent (r : ℕ) : ℕ := min (r + 1) (multiplicity - r)
 
+/-- Exact rank bound of one translated order-`multiplicity` contact block. -/
 def localContactRank : ℕ :=
   ∑ r ∈ range multiplicity,
     ((∑ f ∈ range (min r seedTotalCap + 1),
@@ -76,27 +80,42 @@ def liftedAgreement : DegreeVector :=
 theorem parameter_values :
     agreements = 182630 ∧ weightedCap = 6392050 ∧ yCap = 48 ∧
     gap = 51559 ∧ algebraicCap = 15466 ∧
-    implicitWeightedCap = 121448950 ∧ implicitYCap = 926 :=
-  ContactFlagParameters6641Research.parameter_values
+    implicitWeightedCap = 121448950 ∧ implicitYCap = 926 := by
+  norm_num [agreements, n, errors, weightedCap, multiplicity, yCap, w,
+    gap, algebraicCap, slopeCap, seedTotalCap, implicitWeightedCap,
+    implicitYCap]
 
-theorem coefficient_count_exact : coefficientCount = 1130256329994 :=
-  ContactFlagParameters6641Research.coefficient_count_exact
+theorem coefficient_count_exact : coefficientCount = 1130256329994 := by
+  norm_num [coefficientCount, seedTotalCap, slopeCap, weightedCap,
+    multiplicity, agreements, n, errors, w, Finset.sum_range_succ]
 
-theorem local_contact_rank_exact : localContactRank = 4311560 :=
-  ContactFlagParameters6641Research.local_contact_rank_exact
+theorem local_contact_rank_exact : localContactRank = 4311560 := by
+  norm_num [localContactRank, contactExponent, multiplicity, seedTotalCap,
+    slopeCap, Finset.sum_range_succ]
 
-theorem total_contact_rank_exact : totalContactRank = 1130249584640 :=
-  ContactFlagParameters6641Research.total_contact_rank_exact
+theorem total_contact_rank_exact : totalContactRank = 1130249584640 := by
+  rw [show totalContactRank = n * localContactRank by rfl,
+    local_contact_rank_exact]
+  norm_num [n]
 
-theorem rank_margin_exact : rankMargin = 6745354 :=
-  ContactFlagParameters6641Research.rank_margin_exact
+theorem rank_margin_exact : rankMargin = 6745354 := by
+  rw [show rankMargin = coefficientCount - totalContactRank by rfl,
+    coefficient_count_exact, total_contact_rank_exact]
 
-theorem interpolation_gate : totalContactRank < coefficientCount :=
-  ContactFlagParameters6641Research.interpolation_gate
+theorem interpolation_gate : totalContactRank < coefficientCount := by
+  rw [coefficient_count_exact, total_contact_rank_exact]
+  norm_num
 
 theorem characteristic_gates :
     weightedCap < prime ∧ implicitWeightedCap < prime ∧
-      algebraicCap < prime ∧ slopeCap < prime :=
-  ContactFlagParameters6641Research.characteristic_gates
+      algebraicCap < prime ∧ slopeCap < prime := by
+  norm_num [weightedCap, multiplicity, agreements, n, errors,
+    implicitWeightedCap, algebraicCap, slopeCap, seedTotalCap, prime]
 
 end ProximityPrize.SubmissionLower.ContactParameters6630Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactParameters6630Research.coefficient_count_exact
+#print axioms ProximityPrize.SubmissionLower.ContactParameters6630Research.local_contact_rank_exact
+#print axioms ProximityPrize.SubmissionLower.ContactParameters6630Research.rank_margin_exact
+#print axioms ProximityPrize.SubmissionLower.ContactParameters6630Research.interpolation_gate
+#print axioms ProximityPrize.SubmissionLower.ContactParameters6630Research.characteristic_gates

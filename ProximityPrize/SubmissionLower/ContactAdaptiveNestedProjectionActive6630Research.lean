@@ -296,3 +296,5 @@ theorem exists_adaptiveNestedProjectionDataActive
 end
 
 end ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjectionActive6630Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjectionActive6630Research.exists_adaptiveNestedProjectionDataActive

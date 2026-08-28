@@ -151,3 +151,6 @@ theorem exact_values :
     ContactParameters6630Research.seedTotalCap]
 
 end ProximityPrize.SubmissionLower.ContactSingularLedger6630Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactSingularLedger6630Research.implicit_with_exceptions_tight_scaled_bound
+#print axioms ProximityPrize.SubmissionLower.ContactSingularLedger6630Research.exact_values

@@ -212,3 +212,8 @@ theorem combined_scaled_bound6630
     _ = totalNumerator6630 := rfl
 
 end ProximityPrize.SubmissionLower.ContactNearPencil6630FactorLedgerResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630FactorLedgerResearch.factorRegularLedgerYZ_projection_decomposition
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630FactorLedgerResearch.sum_factorRegularLedgerYZ_cumulative_le
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630FactorLedgerResearch.ledger_ceiling6630_exact
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630FactorLedgerResearch.strict_field_budget6630

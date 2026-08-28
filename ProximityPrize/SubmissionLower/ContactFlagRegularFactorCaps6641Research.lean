@@ -103,3 +103,5 @@ theorem regularFlag6630_budgets_of_flagBox6641
 end
 
 end ProximityPrize.SubmissionLower.ContactFlagRegularFactorCaps6641Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactFlagRegularFactorCaps6641Research.regularFlag6630_budgets_of_flagBox6641

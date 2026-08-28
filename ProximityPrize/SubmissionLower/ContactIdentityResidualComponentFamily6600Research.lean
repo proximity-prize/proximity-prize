@@ -223,3 +223,5 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamily6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamily6600Research.proper_cut_seed_bound_of_recursive_prime_flag_budget

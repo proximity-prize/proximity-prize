@@ -1,5 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSeedlessLambdaResearch
+import ProximityPrize.SubmissionLower.AlignmentProtocol6401Conditional
 import ProximityPrize.SubmissionLower.ContactScore6630Research
 
 /-! # Split-budget protocol bridge
@@ -26,36 +27,8 @@ def errors : ℕ := ContactScore6630Research.errors6630
 def mcaBudget : ℕ := 274980727761395087
 
 theorem field_cardinality :
-    Fintype.card IRSProfile.Field = (2130706433 : ℕ) ^ 6 := by
-  norm_num [IRSProfile.Field, KoalaBear.Ext6, KoalaBear.fieldSize]
-
-theorem irs_code_eq_base_interleaved :
-    IRSProfile.code =
-      (IRSProfile.baseCode ^⋈ (Fin IRSProfile.interleaving) :
-        ModuleCode IRSProfile.Index IRSProfile.Field
-          (Fin IRSProfile.interleaving → IRSProfile.Field)) := by
-  ext v
-  change v ∈ IRSProfile.code ↔
-    ∀ b : Fin IRSProfile.interleaving, (fun i => v i b) ∈ IRSProfile.baseCode
-  exact AlignmentInterleavedLambda.irs_code_mem_iff_rows v
-
-theorem nat_div_le_inv_pow {m q t : ℕ} (hm : 0 < m)
-    (hq : m * 2 ^ t ≤ q) :
-    (m : ENNReal) / (q : ENNReal) ≤ 1 / 2 ^ t := by
-  have hm0 : (m : ENNReal) ≠ 0 := by exact_mod_cast hm.ne'
-  have hmtop : (m : ENNReal) ≠ ⊤ := ENNReal.natCast_ne_top m
-  have hqE : ((m * 2 ^ t : ℕ) : ENNReal) ≤ (q : ENNReal) := by
-    exact_mod_cast hq
-  have hcast : ((m * 2 ^ t : ℕ) : ENNReal) = (m : ENNReal) * 2 ^ t := by
-    push_cast
-    ring
-  calc
-    (m : ENNReal) / (q : ENNReal) ≤
-        (m : ENNReal) / ((m * 2 ^ t : ℕ) : ENNReal) :=
-      ENNReal.div_le_div_left hqE _
-    _ = (m : ENNReal) / ((m : ENNReal) * 2 ^ t) := by rw [hcast]
-    _ = (m : ENNReal) * 1 / ((m : ENNReal) * 2 ^ t) := by rw [mul_one]
-    _ = 1 / 2 ^ t := ENNReal.mul_div_mul_left 1 (2 ^ t) hm0 hmtop
+    Fintype.card IRSProfile.Field = (2130706433 : ℕ) ^ 6 :=
+  AlignmentProtocol6401Conditional.field_cardinality
 
 /-- Increasing the threshold only weakens the alignment premise. -/
 theorem affineLineAlignmentBound_mono_budget
@@ -105,7 +78,7 @@ theorem mca_le_of_alignment
   calc
     _ ≤ mcaError (AffineLineGenerator IRSProfile.Field) IRSProfile.baseCode
         (radius : ℝ) := by
-      rw [irs_code_eq_base_interleaved]
+      rw [AlignmentProtocol6401Conditional.irs_code_eq_base_interleaved]
       exact ProximityGap.mcaError_interleaved_le IRSProfile.baseCode
         IRSProfile.interleaving radius
         (by norm_num [IRSProfile.interleaving])
@@ -163,7 +136,7 @@ theorem certifiedGammaError_le_of_alignment
         (Fintype.card IRSProfile.Field : ENNReal) := by
       rw [← ENNReal.add_div, Nat.cast_add]
     _ ≤ (1 : ENNReal) / 2 ^ (128 : ℕ) := by
-      apply nat_div_le_inv_pow
+      apply AlignmentProtocol6401Conditional.nat_div_le_inv_pow
       · norm_num [mcaBudget, ContactSeedlessListBoundResearch.listBudget]
       · simpa only [Nat.mul_comm] using field_capacity_split
 
@@ -180,3 +153,5 @@ theorem protocolClaim6674_of_alignment
 end
 
 end ProximityPrize.SubmissionLower.ContactSeedlessProtocolResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactSeedlessProtocolResearch.protocolClaim6674_of_alignment

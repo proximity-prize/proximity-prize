@@ -323,3 +323,6 @@ end
 
 
 end ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6630Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6630Research.geometricResidualStage6630
+#print axioms ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6630Research.original_regular_seed_bound_of_geometric_counts6630

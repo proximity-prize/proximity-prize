@@ -94,3 +94,9 @@ theorem radius6630_score :
 end
 
 end ProximityPrize.SubmissionLower.ContactScore6630Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactScore6630Research.radius6630_floor
+#print axioms ProximityPrize.SubmissionLower.ContactScore6630Research.radius6630_admissible
+#print axioms ProximityPrize.SubmissionLower.ContactScore6630Research.two_rpow_37_fiftieths_le
+#print axioms ProximityPrize.SubmissionLower.ContactScore6630Research.radius6630_power_rational_bound
+#print axioms ProximityPrize.SubmissionLower.ContactScore6630Research.radius6630_score
