@@ -2,12 +2,12 @@
   "challenges": [
     {
       "slug": "proximity-prize-reduction-lower",
-      "version": "irs-reduction-threshold-v3",
+      "version": "irs-reduction-threshold-v4",
       "submission_root": "ProximityPrize/SubmissionLower"
     },
     {
       "slug": "proximity-prize-reduction-upper",
-      "version": "irs-reduction-threshold-v3",
+      "version": "irs-reduction-threshold-v4",
       "submission_root": "ProximityPrize/SubmissionUpper"
     }
   ]

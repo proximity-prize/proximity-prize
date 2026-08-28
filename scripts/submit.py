@@ -35,8 +35,17 @@ import urllib.request
 
 POLL_SECONDS = 10
 SUBMIT_RETRY_SECONDS = 60
-SUBMIT_RETRY_DEADLINE = 1800
-DEADLINE_SECONDS = 2400          # beyond the 1200s challenge timeout, plus fetch and queue
+# There is deliberately no deadline here. The job's `timeout-minutes` is the one
+# bound, so how long a submission may take is configured where every other limit
+# on this workflow is, and cannot silently disagree with it -- which it did:
+# a 2400s poll budget sized for v3's 1200s challenge sat inside a 50-minute job
+# cap, and would have begun abandoning verdicts the moment v4 raised the
+# challenge timeout to 1500s.
+#
+# The cost is that a submission which outlives the job ends as a cancelled run
+# rather than a failed one, losing the "gave up waiting for <id>" line. That was
+# the only thing the inner deadline bought: it raised `SystemExit` without
+# writing the result, so the summary step had nothing to explain either way.
 TOKEN_REFRESH_SECONDS = 240      # well inside the service's 600s ceiling
 
 # Every state the service can stop in. `rejected` is a verdict about the proof;
@@ -134,7 +143,6 @@ def main() -> None:
         print("replaying an earlier submission of these bytes", file=sys.stderr)
     print(f"submission {submission_id} for {commit[:12]}", file=sys.stderr)
 
-    deadline = time.monotonic() + DEADLINE_SECONDS
     seen = ""
     while True:
         status = _call(f"{base}/v1/submissions/{submission_id}", tokens)
@@ -143,8 +151,6 @@ def main() -> None:
             print(f"  {seen}", file=sys.stderr)
         if seen in TERMINAL:
             break
-        if time.monotonic() > deadline:
-            raise SystemExit(f"gave up waiting for submission {submission_id} in {seen}")
         time.sleep(POLL_SECONDS)
 
     json.dump(status, sys.stdout, indent=2, sort_keys=True)
@@ -180,7 +186,6 @@ def _submit_when_there_is_room(
         # incomplete_challenge_selection`); versions are unique only within one.
         request["challenge_version"] = challenge_version
 
-    give_up = time.monotonic() + SUBMIT_RETRY_DEADLINE
     while True:
         try:
             return _call(
@@ -189,9 +194,12 @@ def _submit_when_there_is_room(
                 request,
                 idempotency_key=idempotency_key,
             )
-        except Busy as exc:
-            if time.monotonic() > give_up:
-                raise SystemExit(f"service still at capacity after waiting: {exc}") from exc
+        except Busy:
+            # No deadline, for the same reason as the poll loop: the job's
+            # `timeout-minutes` decides how long this may take. A capacity
+            # refusal says the service is busy, not that the proof is wrong,
+            # and a submission that fails for it is failed permanently --
+            # Yukon records one verdict and never revisits.
             print(f"  at capacity, retrying in {SUBMIT_RETRY_SECONDS}s", file=sys.stderr)
             time.sleep(SUBMIT_RETRY_SECONDS)
 

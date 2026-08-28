@@ -27,6 +27,19 @@ jobs:
   benchmark:
     name: benchmark (IRS reduction threshold — ${{ inputs.profile }})
     runs-on: ubuntu-24.04
+    # The only bound on how long a submission may take. `submit.py` keeps no
+    # deadline of its own: it waits for a verifier slot and then polls until the
+    # service reaches a terminal state, so this number alone decides when to
+    # stop. Two budgets in two files disagreed once already -- a 2400s poll
+    # sized for v3's 1200s challenge, inside a 50-minute cap -- which is the
+    # reason there is now one.
+    #
+    # It has to cover the worst honest case: waiting for a slot while the fleet
+    # is full, then a full-length verification. At v4's 1500s that is about 50
+    # minutes; the rest is headroom for a queue deeper than the fleet.
+    #
+    # 180 rather than a fresh number, because production already runs 180 and a
+    # sync should not quietly reduce a live limit to match a value chosen here.
     timeout-minutes: 180
     env:
       BASE: https://proximity-prize.zksecurity.xyz
@@ -67,6 +80,17 @@ jobs:
 
       - name: Write Yukon score
         run: python3 scripts/write-verifier-score.py "$PROFILE" verifier-result.json
+
+      - name: Explain the rejection
+        # The reason exists but nobody reads it. Yukon's PR comment on failure is
+        # `benchmark_failed: workflow run concluded failure at step ...` plus a
+        # link, while a success gets a table of score and verification flags. So
+        # the one person who needs the detail -- whoever's proof was refused --
+        # is the one who has to go digging for it in a log.
+        #
+        # The job summary is what that link opens onto, so put it there.
+        if: failure() && hashFiles('verifier-result.json')
+        run: python3 scripts/explain-rejection.py verifier-result.json >> "$GITHUB_STEP_SUMMARY"
 
       - name: Show the verifier's own answer
         # Only on failure, and only the service's response -- which already
