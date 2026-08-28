@@ -100,7 +100,7 @@ theorem regularVector_budgets (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
     (∑ F : RegularIndex Q, (regularVector Q F).y) ≤ 25 ∧
       (∑ F : RegularIndex Q, (regularVector Q F).r) ≤ 5 ∧
-      (∑ F : RegularIndex Q, (regularVector Q F).z) ≤ 174 := by
+      (∑ F : RegularIndex Q, (regularVector Q F).z) ≤ 175 := by
   classical
   have hb := directFactor_input_budgets Q hQ weightedCap w seedTotalCap slopeCap (by decide) hbox
   have hy : (∑ F ∈ positiveRFactors Q, F.degreeOf (1 : Fin 4)) ≤ 25 := by
