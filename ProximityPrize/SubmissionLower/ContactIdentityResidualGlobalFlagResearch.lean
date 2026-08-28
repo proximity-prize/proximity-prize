@@ -191,12 +191,12 @@ theorem residualPullWeights_total :
 nodal transform without any charge depending on the identity count. -/
 theorem globalResidualHom_surface_flag_weights
     (P0 P1 V : Polynomial K) (F : Poly4 K)
-    (hS : wt residualSWeights F ≤ 6)
-    (hYS : wt residualYSWeights F ≤ 33)
-    (hTotal : wt residualTotalWeights F ≤ 582) :
-    wt residualSWeights (globalResidualHom P0 P1 V F) ≤ 6 ∧
-      wt residualYSWeights (globalResidualHom P0 P1 V F) ≤ 33 ∧
-      wt residualTotalWeights (globalResidualHom P0 P1 V F) ≤ 582 := by
+    (hS : wt residualSWeights F ≤ 7)
+    (hYS : wt residualYSWeights F ≤ 36)
+    (hTotal : wt residualTotalWeights F ≤ 511) :
+    wt residualSWeights (globalResidualHom P0 P1 V F) ≤ 7 ∧
+      wt residualYSWeights (globalResidualHom P0 P1 V F) ≤ 36 ∧
+      wt residualTotalWeights (globalResidualHom P0 P1 V F) ≤ 511 := by
   refine ⟨?_, ?_, ?_⟩
   · exact (globalResidualHom_wt_le_pulled residualSWeights rfl
       P0 P1 V F).trans (by simpa [residualPullWeights_s] using hS)
@@ -210,83 +210,83 @@ coordinate uses the exact coordinate-degree recurrence; the other two
 facets use the Minkowski recurrence. -/
 theorem globalResidual_agreement_weight_bounds
     (P0 P1 V : Polynomial K) (F : Poly4 K)
-    (hS : wt residualSWeights F ≤ 6)
-    (hYS : wt residualYSWeights F ≤ 33)
-    (hTotal : wt residualTotalWeights F ≤ 582)
+    (hS : wt residualSWeights F ≤ 7)
+    (hYS : wt residualYSWeights F ≤ 36)
+    (hTotal : wt residualTotalWeights F ≤ 511)
     (d : ℕ) (coeffs : ℕ → K) (x u0 u1 : K) :
     (agreementNumerator (globalResidualHom P0 P1 V F)
-        d coeffs x u0 u1).degreeOf (2 : Fin 4) ≤ 11 * d ∧
+        d coeffs x u0 u1).degreeOf (2 : Fin 4) ≤ 13 * d ∧
       wt residualYSWeights
         (agreementNumerator (globalResidualHom P0 P1 V F)
-          d coeffs x u0 u1) ≤ 1 + 65 * d ∧
+          d coeffs x u0 u1) ≤ 1 + 71 * d ∧
       wt residualTotalWeights
         (agreementNumerator (globalResidualHom P0 P1 V F)
-          d coeffs x u0 u1) ≤ 1 + 1163 * d := by
+          d coeffs x u0 u1) ≤ 1 + 1021 * d := by
   let Fres := globalResidualHom P0 P1 V F
   obtain ⟨hFs, hFys, hFtot⟩ :=
     globalResidualHom_surface_flag_weights P0 P1 V F hS hYS hTotal
-  have hR : Fres.degreeOf (2 : Fin 4) ≤ 6 := by
+  have hR : Fres.degreeOf (2 : Fin 4) ≤ 7 := by
     have hw : residualSWeights = Pi.single (2 : Fin 4) 1 := by
       funext i
       fin_cases i <;> rfl
     rw [hw, wt, MvPolynomial.weightedTotalDegree_piSingle] at hFs
     exact hFs
-  have hY : Fres.degreeOf (1 : Fin 4) ≤ 33 := by
+  have hY : Fres.degreeOf (1 : Fin 4) ≤ 36 := by
     apply MvPolynomial.degreeOf_le_iff.mpr
     intro e he
     have hw := (MvPolynomial.le_weightedTotalDegree residualYSWeights he).trans hFys
     rw [ContactFactorCaps.weight_fin4] at hw
-    change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 0 ≤ 33 at hw
+    change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 0 ≤ 36 at hw
     norm_num at hw
     omega
-  have hZ : Fres.degreeOf (3 : Fin 4) ≤ 582 := by
+  have hZ : Fres.degreeOf (3 : Fin 4) ≤ 511 := by
     apply MvPolynomial.degreeOf_le_iff.mpr
     intro e he
     have hw := (MvPolynomial.le_weightedTotalDegree residualTotalWeights he).trans hFtot
     rw [ContactFactorCaps.weight_fin4] at hw
-    change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 1 ≤ 582 at hw
+    change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 1 ≤ 511 at hw
     norm_num at hw
     omega
   refine ⟨?_, ?_, ?_⟩
-  · have hr := (agreementNumerator_degree_bounds Fres 33 6 582
+  · have hr := (agreementNumerator_degree_bounds Fres 36 7 511
       (by norm_num) hY hR hZ d coeffs x u0 u1).2.1
     convert hr using 1 <;> ring
   · have h := agreementNumerator_wt_le_minkowski residualYSWeights rfl
-      Fres 33 (by change 1 ≤ 33; norm_num)
-      (by change 2 * 1 ≤ 33; norm_num)
+      Fres 36 (by change 1 ≤ 36; norm_num)
+      (by change 2 * 1 ≤ 36; norm_num)
       (by change 1 ≤ 1; norm_num) hFys d coeffs x u0 u1
     calc
       wt residualYSWeights (agreementNumerator Fres d coeffs x u0 u1) ≤
           max (residualYSWeights 1) (residualYSWeights 3) +
-            d * (33 + (33 - residualYSWeights 2)) := h
-      _ = 1 + 65 * d := by
-        change max 1 0 + d * (33 + (33 - 1)) = 1 + 65 * d
+            d * (36 + (36 - residualYSWeights 2)) := h
+      _ = 1 + 71 * d := by
+        change max 1 0 + d * (36 + (36 - 1)) = 1 + 71 * d
         norm_num
         ring
   · have h := agreementNumerator_wt_le_minkowski residualTotalWeights rfl
-      Fres 582 (by change 1 ≤ 582; norm_num)
-      (by change 2 * 1 ≤ 582; norm_num)
+      Fres 511 (by change 1 ≤ 511; norm_num)
+      (by change 2 * 1 ≤ 511; norm_num)
       (by change 1 ≤ 1; norm_num) hFtot d coeffs x u0 u1
     calc
       wt residualTotalWeights (agreementNumerator Fres d coeffs x u0 u1) ≤
           max (residualTotalWeights 1) (residualTotalWeights 3) +
-            d * (582 + (582 - residualTotalWeights 2)) := h
-      _ = 1 + 1163 * d := by
-        change max 1 1 + d * (582 + (582 - 1)) = 1 + 1163 * d
+            d * (511 + (511 - residualTotalWeights 2)) := h
+      _ = 1 + 1021 * d := by
+        change max 1 1 + d * (511 + (511 - 1)) = 1 + 1021 * d
         norm_num
         ring
 
 def residualAgreementFlag (d : ℕ) : FlagDegree :=
-  ⟨1098 * d, 1 + 54 * d, 11 * d⟩
+  ⟨950 * d, 1 + 58 * d, 13 * d⟩
 
 /-- The mapped agreement cut lies in the exact affine flag family used by
 the stratified mixed-volume expansion. -/
 theorem surfaceMap_globalResidual_agreement_in_flag
     (phi : Polynomial K →+* Omega)
     (P0 P1 V : Polynomial K) (F : Poly4 K)
-    (hS : wt residualSWeights F ≤ 6)
-    (hYS : wt residualYSWeights F ≤ 33)
-    (hTotal : wt residualTotalWeights F ≤ 582)
+    (hS : wt residualSWeights F ≤ 7)
+    (hYS : wt residualYSWeights F ≤ 36)
+    (hTotal : wt residualTotalWeights F ≤ 511)
     (d : ℕ) (coeffs : ℕ → K) (x u0 u1 : K) :
     PolynomialInFlag (residualAgreementFlag d)
       (surfaceMap phi
@@ -303,12 +303,12 @@ theorem surfaceMap_globalResidual_agreement_in_flag
   have hqYS := (MvPolynomial.le_weightedTotalDegree residualYSWeights hq).trans hYS'
   have hqTot := (MvPolynomial.le_weightedTotalDegree residualTotalWeights hq).trans hTot
   rw [ContactFactorCaps.weight_fin4] at hqYS hqTot
-  change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 0 ≤ 1 + 65 * d at hqYS
-  change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 1 ≤ 1 + 1163 * d at hqTot
+  change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 0 ≤ 1 + 71 * d at hqYS
+  change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 1 ≤ 1 + 1021 * d at hqTot
   norm_num at hqYS hqTot
-  change q 2 ≤ 11 * d ∧
-    q 1 + q 2 ≤ (1 + 54 * d) + 11 * d ∧
-    q 1 + q 2 + q 3 ≤ 1098 * d + (1 + 54 * d) + 11 * d
+  change q 2 ≤ 13 * d ∧
+    q 1 + q 2 ≤ (1 + 58 * d) + 13 * d ∧
+    q 1 + q 2 + q 3 ≤ 950 * d + (1 + 58 * d) + 13 * d
   omega
 
 end

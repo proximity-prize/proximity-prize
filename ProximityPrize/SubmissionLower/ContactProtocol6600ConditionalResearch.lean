@@ -22,7 +22,7 @@ remaining global selected-family count. -/
 theorem protocolClaim6600_of_global_count_lt_alignment
     (global_count_lt_alignment :
       ContactFrozenAlignment6600Research.GlobalCountLtAlignment6600) :
-    ProtocolClaim 6600 315111 1048576 := by
+    ProtocolClaim 6606 315371 1048576 := by
   have halign : AffineLineAlignmentBound IRSProfile.baseCode
       ContactParameters6600Research.errors
       ContactParameters6600Research.alignmentBudget :=
