@@ -62,24 +62,24 @@ theorem fixedCellCountProvider6670 : FixedCellCountProvider6670 := by
 
 theorem selectedNoLargePencilBound6670 :
     SelectedNoLargePencilBound IRSProfile.domain
-      131071 79866 274980727511395087 :=
+      131071 79946 274980727511395087 :=
   selectedNoLargePencilBound_of_fixedCellCountProvider6670
     fixedCellCountProvider6670
 
 /-- Final split-budget endpoint: the recursive-GCD construction supplies
 MCA, while the independent fixed-centre construction supplies Lambda. -/
-theorem protocolClaim6710 : ProtocolClaim 6710 319467 1048576 := by
+theorem protocolClaim6718 : ProtocolClaim 6718 319787 1048576 := by
   have halign : AffineLineAlignmentBound IRSProfile.baseCode
       ContactSeedlessProtocolResearch.errors
       ContactSeedlessProtocolResearch.mcaBudget := by
     have h := ContactAlignmentBridge.alignmentBound_of_selected_count
-      IRSProfile.domain 131071 79866 274980727511395087
+      IRSProfile.domain 131071 79946 274980727511395087
       selectedNoLargePencilBound6670
     simpa [IRSProfile.baseCode, IRSProfile.baseDimension,
       ContactSeedlessProtocolResearch.errors,
       ContactSeedlessProtocolResearch.mcaBudget,
       ContactScore6630Research.errors6630] using h
-  exact ContactSeedlessProtocolResearch.protocolClaim6710_of_alignment halign
+  exact ContactSeedlessProtocolResearch.protocolClaim6718_of_alignment halign
 
 end
 
