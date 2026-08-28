@@ -70,13 +70,35 @@ theorem degree_bounds_of_polynomialInFlag
     exact (Nat.le_add_left (e 2) (e 0 + e 1)).trans (by
       simpa only [Nat.add_assoc] using (hF e he).2.2)
 
+/-- Removing the coefficient-polynomial coordinate cannot increase the
+ordinary total degree beyond the residual total weight. -/
+theorem surfaceMap_totalDegree_le_surfaceTotalWeight
+    (F : MvPolynomial (Fin 4) K) :
+    (surfaceMap phi F).totalDegree ≤
+      MvPolynomial.weightedTotalDegree residualTotalWeights F := by
+  classical
+  unfold MvPolynomial.totalDegree MvPolynomial.weightedTotalDegree
+  apply Finset.sup_le
+  intro e he
+  obtain ⟨d, hd, rfl⟩ := Finset.mem_image.mp
+    (support_surfaceMap_subset phi F he)
+  calc
+    d.tail.sum (fun _ exponent ↦ exponent) =
+        Finsupp.weight residualTotalWeights d := by
+      rw [ContactFactorCaps.weight_fin4]
+      simp [residualTotalWeights, Finsupp.sum_fintype, Fin.sum_univ_succ,
+        Finsupp.tail_apply, Nat.add_assoc]
+    _ ≤ F.support.sup (Finsupp.weight residualTotalWeights) :=
+      Finset.le_sup hd
+
 /-- The robust rectangular surface caps are already enough to construct the
 entire adaptive family at every proper terminal agreement cut. -/
 theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
     [CharP Omega prime]
     {flag : FlagDegree}
     (S : ResidualStage phi Gamma x prime errors flag w)
-    (hflagZ : flag.zOnly ≤ 495)
+    (hphi : Function.Injective phi)
+    (_hflagZ : flag.zOnly ≤ 522)
     (hflagY : flag.yz ≤ 43)
     (hflagS : flag.all ≤ 8) :
     TerminalAdaptiveProjectionFamilies S := by
@@ -97,14 +119,26 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
   have hD : D.degree ≤ w := D.degree_le.trans (Nat.le_refl w)
   have hGY' : D.stage.G.degreeOf 0 ≤ 51 := by omega
   have hGS' : D.stage.G.degreeOf 1 ≤ 8 := by omega
-  have hGZ' : D.stage.G.degreeOf 2 ≤ 546 := by omega
+  have hFne : D.stage.F ≠ 0 := by
+    intro hzero
+    apply D.stage.regular_proper
+    simp [hzero]
+  have hsurfaceNe : surfaceMap phi D.stage.F ≠ 0 :=
+    surfaceMap_ne_zero phi hphi D.stage.F hFne
+  have hGTotal : D.stage.G.totalDegree ≤ 522 := by
+    exact (MvPolynomial.totalDegree_le_of_dvd_of_isDomain
+      D.stage.G_dvd_surface hsurfaceNe).trans
+        ((surfaceMap_totalDegree_le_surfaceTotalWeight D.stage.F).trans
+          D.stage.surface_total_weight)
+  have hGZ' : D.stage.G.degreeOf 2 ≤ 522 :=
+    (MvPolynomial.degreeOf_le_totalDegree D.stage.G 2).trans hGTotal
   have hTY' : T.degreeOf 0 ≤ 1 + 85 * w := by
     dsimp only [residualAgreementFlag] at hTY
     omega
   have hTS' : T.degreeOf 1 ≤ 15 * w := by
     dsimp only [residualAgreementFlag] at hTS
     omega
-  have hTZ' : T.degreeOf 2 ≤ 1 + 1005 * w := by
+  have hTZ' : T.degreeOf 2 ≤ 1 + 1043 * w := by
     dsimp only [residualAgreementFlag] at hTZ
     omega
   have hGdegree : ∀ j : Fin 3, D.stage.G.degreeOf j < prime := by

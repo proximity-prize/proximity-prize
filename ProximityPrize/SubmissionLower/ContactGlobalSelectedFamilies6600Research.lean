@@ -2,6 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
 import ProximityPrize.SubmissionLower.ContactSingularBranch6600Research
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
+import ProximityPrize.SubmissionLower.ContactWeightedRegularFactor6600Research
 
 /-!
 # Actual global selected-family ledger at score 66
@@ -21,6 +22,8 @@ open ContactInterpolation ContactTranslation ContactFactorCaps
 open ContactRegularFactorFlag6600Research
 open ContactSingularBranch6600Research
 open ContactNearPencil6600FactorLedgerResearch
+open ContactWeightedRegularFactor6600Research
+open ContactIdentityResidualGlobalFlagResearch
 open ContactPrimeSeedIncidence
 
 noncomputable section
@@ -98,28 +101,54 @@ theorem card_le_regular_sum_add_singular
         (singularSeeds Q selected Gamma).card :=
       Nat.add_le_add_right Finset.card_biUnion_le _
 
-/-- The actual regular factor family consumes at most the rectangular
+/-- The actual regular factor family consumes the sharp Newton-weighted
 regular numerator. -/
-theorem regularSeeds_scaled_rectangular_bound
+theorem regularSeeds_scaled_weighted_bound
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hregular : ∀ F : ContactRegularFactorFlag6600Research.RegularIndex Q,
       (regularSeeds Q selected Gamma F).card * gap ^ 2 ≤
-        factorRegularLedger (regularFlag Q F)) :
+        weightedLedger
+          (MvPolynomial.weightedTotalDegree residualTotalWeights F.1)
+          (MvPolynomial.weightedTotalDegree residualYSWeights F.1)
+          (MvPolynomial.weightedTotalDegree residualSWeights F.1)) :
     (∑ F : ContactRegularFactorFlag6600Research.RegularIndex Q,
       (regularSeeds Q selected Gamma F).card) * gap ^ 2 ≤
-        rectangularRegularNumerator := by
-  have hcaps := regularFlag_budgets Q hQ hbox
-  exact sum_factor_counts_rectangular_le
-    (fun F : ContactRegularFactorFlag6600Research.RegularIndex Q ↦
-      (regularSeeds Q selected Gamma F).card)
-    (regularFlag Q) hregular hcaps.1 hcaps.2.1 hcaps.2.2
+        weightedRegularNumerator := by
+  have hbudget := positiveRFactors_weightedLedger_budget Q hQ hbox
+  have hbudget' :
+      (∑ F : ContactRegularFactorFlag6600Research.RegularIndex Q,
+        weightedLedger
+          (MvPolynomial.weightedTotalDegree residualTotalWeights F.1)
+          (MvPolynomial.weightedTotalDegree residualYSWeights F.1)
+          (MvPolynomial.weightedTotalDegree residualSWeights F.1)) ≤
+        weightedRegularNumerator := by
+    change (∑ F : ContactRegularFactorFlag6600Research.RegularIndex Q,
+      weightedLedger
+        (MvPolynomial.weightedTotalDegree residualTotalWeights F.1)
+        (MvPolynomial.weightedTotalDegree residualYSWeights F.1)
+        (MvPolynomial.weightedTotalDegree residualSWeights F.1)) ≤
+      weightedLedger 522 43 8
+    have hb := hbudget
+    rw [← Finset.sum_coe_sort] at hb
+    exact hb
+  calc
+    (∑ F : ContactRegularFactorFlag6600Research.RegularIndex Q,
+      (regularSeeds Q selected Gamma F).card) * gap ^ 2 =
+        ∑ F : ContactRegularFactorFlag6600Research.RegularIndex Q,
+          (regularSeeds Q selected Gamma F).card * gap ^ 2 := by
+      rw [Finset.sum_mul]
+    _ ≤ ∑ F : ContactRegularFactorFlag6600Research.RegularIndex Q,
+        weightedLedger
+          (MvPolynomial.weightedTotalDegree residualTotalWeights F.1)
+          (MvPolynomial.weightedTotalDegree residualYSWeights F.1)
+          (MvPolynomial.weightedTotalDegree residualSWeights F.1) :=
+      Finset.sum_le_sum (fun F _ ↦ hregular F)
+    _ ≤ weightedRegularNumerator := hbudget'
 
-/-- Full selected-family scaled count.  The singular branch, cover, and
-rectangular aggregation are all discharged; only per-regular-factor counts
-remain as input. -/
-theorem global_scaled_bound_of_regular_factors
+/-- Full selected-family count using sharp Newton support aggregation. -/
+theorem global_scaled_weighted_bound_of_regular_factors
     {Iota : Type} [DecidableEq Iota]
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
@@ -135,11 +164,14 @@ theorem global_scaled_bound_of_regular_factors
     (hnoPencil : NoLargeSelectedPencil selected Gamma w errors)
     (hregular : ∀ F : ContactRegularFactorFlag6600Research.RegularIndex Q,
       (regularSeeds Q selected Gamma F).card * gap ^ 2 ≤
-        factorRegularLedger (regularFlag Q F)) :
-    Gamma.card * gap ^ 2 ≤ rectangularTotalNumerator := by
+        weightedLedger
+          (MvPolynomial.weightedTotalDegree residualTotalWeights F.1)
+          (MvPolynomial.weightedTotalDegree residualYSWeights F.1)
+          (MvPolynomial.weightedTotalDegree residualSWeights F.1)) :
+    Gamma.card * gap ^ 2 ≤ weightedTotalNumerator := by
   have hcover := card_le_regular_sum_add_singular Q hQ hbox selected Gamma
     hsolution
-  have hreg := regularSeeds_scaled_rectangular_bound Q hQ hbox selected Gamma
+  have hreg := regularSeeds_scaled_weighted_bound Q hQ hbox selected Gamma
     hregular
   have hsing := singularSeeds_scaled_bound Q hQ hbox selected Gamma nodes
     x u0 u1 hinj hnodes hdegree hagreement hnoPencil
@@ -152,11 +184,13 @@ theorem global_scaled_bound_of_regular_factors
     _ = (∑ F : ContactRegularFactorFlag6600Research.RegularIndex Q,
           (regularSeeds Q selected Gamma F).card) * gap ^ 2 +
         (singularSeeds Q selected Gamma).card * gap ^ 2 := by ring
-    _ ≤ rectangularRegularNumerator + retainedSingularContribution :=
+    _ ≤ weightedRegularNumerator +
+        ContactParameters6600Research.retainedSingularContribution :=
       Nat.add_le_add hreg hsing
-    _ = rectangularTotalNumerator := rfl
+    _ = weightedTotalNumerator := rfl
 
-theorem global_count_lt_alignment_of_regular_factors
+/-- Sharp weighted global count is strictly below the alignment budget. -/
+theorem global_count_lt_alignment_weighted_of_regular_factors
     {Iota : Type} [DecidableEq Iota]
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
@@ -172,18 +206,19 @@ theorem global_count_lt_alignment_of_regular_factors
     (hnoPencil : NoLargeSelectedPencil selected Gamma w errors)
     (hregular : ∀ F : ContactRegularFactorFlag6600Research.RegularIndex Q,
       (regularSeeds Q selected Gamma F).card * gap ^ 2 ≤
-        factorRegularLedger (regularFlag Q F)) :
+        weightedLedger
+          (MvPolynomial.weightedTotalDegree residualTotalWeights F.1)
+          (MvPolynomial.weightedTotalDegree residualYSWeights F.1)
+          (MvPolynomial.weightedTotalDegree residualSWeights F.1)) :
     Gamma.card < alignmentBudget := by
-  have hscaled := global_scaled_bound_of_regular_factors Q hQ hbox selected
-    Gamma nodes x u0 u1 hinj hnodes hdegree hsolution hagreement hnoPencil
-    hregular
+  have hscaled := global_scaled_weighted_bound_of_regular_factors Q hQ hbox
+    selected Gamma nodes x u0 u1 hinj hnodes hdegree hsolution hagreement
+    hnoPencil hregular
   have hlt : Gamma.card * gap ^ 2 < alignmentBudget * gap ^ 2 :=
-    hscaled.trans_lt rectangular_strict_budget
+    hscaled.trans_lt weighted_strict_budget
   exact Nat.lt_of_mul_lt_mul_right hlt
+
 
 end
 
 end ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6600Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6600Research.global_scaled_bound_of_regular_factors
-#print axioms ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6600Research.global_count_lt_alignment_of_regular_factors

@@ -60,7 +60,7 @@ structure ResidualStage
   flag_support : ContactFlagBezout6543Research.PolynomialInFlag flag G
   surface_s_weight : wt residualSWeights F ≤ 8
   surface_ys_weight : wt residualYSWeights F ≤ 43
-  surface_total_weight : wt residualTotalWeights F ≤ 503
+  surface_total_weight : wt residualTotalWeights F ≤ 522
   x_injective : Set.InjOn x nodes
   degree_le : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d
   solution : ∀ gamma ∈ Gamma,
