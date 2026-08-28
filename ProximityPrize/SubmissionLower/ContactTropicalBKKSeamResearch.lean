@@ -222,3 +222,6 @@ def GenericSparseBKKWitness.toResidualPoleComponentBudget
 end
 
 end ProximityPrize.SubmissionLower.ContactTropicalBKKSeamResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactTropicalBKKSeamResearch.support_sum_le_principal_poleMass_of_exact
+#print axioms ProximityPrize.SubmissionLower.ContactTropicalBKKSeamResearch.GenericSparseBKKWitness.toResidualPoleComponentBudget

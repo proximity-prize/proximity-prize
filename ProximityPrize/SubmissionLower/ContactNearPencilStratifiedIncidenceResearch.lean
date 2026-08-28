@@ -98,3 +98,6 @@ theorem scaled_stratified_incidence_bound
     _ ≤ U * degreeCost + V * unitCost := hcompressed
 
 end ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch.stratified_incidence_bound
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch.scaled_stratified_incidence_bound

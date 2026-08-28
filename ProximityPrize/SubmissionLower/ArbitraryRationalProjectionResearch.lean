@@ -85,3 +85,6 @@ theorem finiteDimensional_elementEmbedding
 end
 
 end ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch
+
+#print axioms ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch.elementEmbedding_variable
+#print axioms ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch.finiteDimensional_elementEmbedding

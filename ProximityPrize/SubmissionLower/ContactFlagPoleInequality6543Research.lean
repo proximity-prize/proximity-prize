@@ -189,3 +189,5 @@ theorem exponentSetPoleWeight_flagSupport_le_three
 end
 
 end ProximityPrize.SubmissionLower.ContactFlagPoleInequality6543Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactFlagPoleInequality6543Research.exponentSetPoleWeight_flagSupport_le_three

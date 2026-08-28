@@ -122,3 +122,8 @@ theorem card_le_sharp_incidence_quotient
 end FiniteIncidence
 
 end ProximityPrize.SubmissionLower.ContactIncidence
+
+#print axioms ProximityPrize.SubmissionLower.ContactIncidence.enlarge_exempt_card_bound
+#print axioms ProximityPrize.SubmissionLower.ContactIncidence.incidence_after_exempt_nodes
+#print axioms ProximityPrize.SubmissionLower.ContactIncidence.sharp_incidence_bound
+#print axioms ProximityPrize.SubmissionLower.ContactIncidence.card_le_sharp_incidence_quotient

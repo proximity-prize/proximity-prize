@@ -1,17 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactProtocol6630Research
-
-/-!
-Exact lower-track entrypoint for the unconditional cumulative-flag,
-adaptive-YZ-projection score-66.74 assembly with seedless fixed-centre Lambda.
-Source-policy, kernel compilation,
-and Yukon validation remain distinct checks.
--/
+import ProximityPrize.SubmissionLower.ContactProtocol6600Research
 
 namespace ProximityPrize.Benchmark
 
-theorem candidate : ProtocolClaim 6674 318059 1048576 :=
-  ProximityPrize.SubmissionLower.ContactProtocol6630Research.protocolClaim6630
+theorem candidate : ProtocolClaim 6625 316131 1048576 :=
+  ProximityPrize.SubmissionLower.ContactProtocol6600Research.protocolClaim6600
 
 end ProximityPrize.Benchmark
 
