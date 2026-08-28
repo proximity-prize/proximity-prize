@@ -3,7 +3,6 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalFlagResearch
 import ProximityPrize.SubmissionLower.ContactNearPencil6630FlagResearch
 import ProximityPrize.SubmissionLower.ContactSharpTotalAgreement
 import ProximityPrize.SubmissionLower.ContactJointTaylorMiddleCap6631Research
-import ProximityPrize.SubmissionLower.ContactReducedAgreement6643Research
 
 /-!
 # Score-66.42 global residual flag
@@ -47,10 +46,10 @@ theorem globalResidualHom_surface_flag_weights6630
     (P0 P1 V : Polynomial K) (F : Poly4 K)
     (hS : wt residualSWeights F ≤ 10)
     (hYS : wt residualYSWeights F ≤ 48)
-    (hTotal : wt residualTotalWeights F ≤ 825) :
+    (hTotal : wt residualTotalWeights F ≤ 814) :
     wt residualSWeights (globalResidualHom P0 P1 V F) ≤ 10 ∧
       wt residualYSWeights (globalResidualHom P0 P1 V F) ≤ 48 ∧
-      wt residualTotalWeights (globalResidualHom P0 P1 V F) ≤ 825 := by
+      wt residualTotalWeights (globalResidualHom P0 P1 V F) ≤ 814 := by
   refine ⟨?_, ?_, ?_⟩
   · exact (globalResidualHom_wt_le_pulled residualSWeights rfl
       P0 P1 V F).trans (by simpa [residualPullWeights_s] using hS)
@@ -64,7 +63,7 @@ theorem globalResidual_agreement_weight_bounds6630
     (P0 P1 V : Polynomial K) (F : Poly4 K)
     (hS : wt residualSWeights F ≤ 10)
     (hYS : wt residualYSWeights F ≤ 48)
-    (hTotal : wt residualTotalWeights F ≤ 825)
+    (hTotal : wt residualTotalWeights F ≤ 814)
     (d : ℕ) (coeffs : ℕ → K) (x u0 u1 : K) :
     (agreementNumerator (globalResidualHom P0 P1 V F)
         d coeffs x u0 u1).degreeOf (2 : Fin 4) ≤ 19 * d ∧
@@ -73,7 +72,7 @@ theorem globalResidual_agreement_weight_bounds6630
           d coeffs x u0 u1) ≤ 1 + 94 * d ∧
       wt residualTotalWeights
         (agreementNumerator (globalResidualHom P0 P1 V F)
-          d coeffs x u0 u1) ≤ 1 + 1648 * d := by
+          d coeffs x u0 u1) ≤ 1 + 1626 * d := by
   let Fres := globalResidualHom P0 P1 V F
   obtain ⟨hFs, hFys, hFtot⟩ :=
     globalResidualHom_surface_flag_weights6630 P0 P1 V F hS hYS hTotal
@@ -91,17 +90,17 @@ theorem globalResidual_agreement_weight_bounds6630
     change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 0 ≤ 48 at hw
     norm_num at hw
     omega
-  have hZ : Fres.degreeOf (3 : Fin 4) ≤ 825 := by
+  have hZ : Fres.degreeOf (3 : Fin 4) ≤ 814 := by
     apply MvPolynomial.degreeOf_le_iff.mpr
     intro e he
     have hw :=
       (MvPolynomial.le_weightedTotalDegree residualTotalWeights he).trans hFtot
     rw [ContactFactorCaps.weight_fin4] at hw
-    change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 1 ≤ 825 at hw
+    change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 1 ≤ 814 at hw
     norm_num at hw
     omega
   refine ⟨?_, ?_, ?_⟩
-  · have hr := (agreementNumerator_degree_bounds Fres 48 10 825
+  · have hr := (agreementNumerator_degree_bounds Fres 48 10 814
       (by norm_num) hY hR hZ d coeffs x u0 u1).2.1
     convert hr using 1 <;> ring
   · have hweights : totalYRWeights = residualYSWeights := by
@@ -120,35 +119,53 @@ theorem globalResidual_agreement_weight_bounds6630
         norm_num
         ring
   · have h := agreementNumerator_wt_le_equal_weight residualTotalWeights rfl
-      Fres 825 (by change 1 ≤ 1; norm_num)
-      (by change 1 ≤ 825; norm_num)
-      (by change 2 * 1 ≤ 825; norm_num)
+      Fres 814 (by change 1 ≤ 1; norm_num)
+      (by change 1 ≤ 814; norm_num)
+      (by change 2 * 1 ≤ 814; norm_num)
       (by change 1 ≤ 1; norm_num) hFtot d coeffs x u0 u1
     calc
       wt residualTotalWeights (agreementNumerator Fres d coeffs x u0 u1) ≤
           max (residualTotalWeights 1) (residualTotalWeights 3) +
-            d * (2 * (825 - residualTotalWeights 2)) := h
-      _ = 1 + 1648 * d := by
-        change max 1 1 + d * (2 * (825 - 1)) = 1 + 1648 * d
+            d * (2 * (814 - residualTotalWeights 2)) := h
+      _ = 1 + 1626 * d := by
+        change max 1 1 + d * (2 * (814 - 1)) = 1 + 1626 * d
         norm_num
         ring
 
-/-- The reduced representative, not the original numerator, has the smaller flag. -/
-theorem surfaceMap_globalResidual_reducedAgreement_in_flag6630
+/-- The mapped score-66.74 agreement cut lies in the exact nested flag used
+by the sharp mixed-volume ledger. -/
+theorem surfaceMap_globalResidual_agreement_in_flag6630
     (phi : Polynomial K →+* Omega)
     (P0 P1 V : Polynomial K) (F : Poly4 K)
     (hS : wt residualSWeights F ≤ 10)
     (hYS : wt residualYSWeights F ≤ 48)
-    (hTotal : wt residualTotalWeights F ≤ 825)
+    (hTotal : wt residualTotalWeights F ≤ 814)
     (d : ℕ) (coeffs : ℕ → K) (x u0 u1 : K) :
     PolynomialInFlag (residualAgreementFlag6630 d)
       (surfaceMap phi
-        (ContactReducedTaylorNumerators6643Research.reducedAgreementNumerator
-          (globalResidualHom P0 P1 V F) 10 d coeffs x u0 u1)) := by
-  obtain ⟨hs, hm, ht⟩ :=
-    globalResidualHom_surface_flag_weights6630 P0 P1 V F hS hYS hTotal
-  exact ContactReducedAgreement6643Research.surfaceMap_reducedAgreement_in_flag
-    phi _ hs hm ht d coeffs x u0 u1
+        (agreementNumerator (globalResidualHom P0 P1 V F)
+          d coeffs x u0 u1)) := by
+  intro e he
+  obtain ⟨q, hq, rfl⟩ := Finset.mem_image.mp
+    (support_surfaceMap_subset phi
+      (agreementNumerator (globalResidualHom P0 P1 V F)
+        d coeffs x u0 u1) he)
+  obtain ⟨hR, hYS', hTot⟩ := globalResidual_agreement_weight_bounds6630
+    P0 P1 V F hS hYS hTotal d coeffs x u0 u1
+  have hqR := (MvPolynomial.monomial_le_degreeOf (2 : Fin 4) hq).trans hR
+  have hqYS :=
+    (MvPolynomial.le_weightedTotalDegree residualYSWeights hq).trans hYS'
+  have hqTot :=
+    (MvPolynomial.le_weightedTotalDegree residualTotalWeights hq).trans hTot
+  rw [ContactFactorCaps.weight_fin4] at hqYS hqTot
+  change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 0 ≤ 1 + 94 * d at hqYS
+  change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 1 ≤ 1 + 1626 * d at hqTot
+  norm_num at hqYS hqTot
+  rw [residualAgreementFlag6630_value]
+  change q 2 ≤ 19 * d ∧
+    q 1 + q 2 ≤ (1 + 75 * d) + 19 * d ∧
+    q 1 + q 2 + q 3 ≤ 1532 * d + (1 + 75 * d) + 19 * d
+  omega
 
 end
 

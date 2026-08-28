@@ -5,7 +5,6 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualIteration6630Resear
 import ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidence6630Research
 import ProximityPrize.SubmissionLower.ContactNearPencil6630ArithmeticResearch
 import ProximityPrize.SubmissionLower.ContactParameters6630Research
-import ProximityPrize.SubmissionLower.ContactCongruentCuts6643Research
 
 /-!
 # Terminal adaptive projection families at score 66.30
@@ -41,8 +40,6 @@ open ContactNearPencil6630ArithmeticResearch
 open ContactNearPencil6630FlagResearch
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactRegularFactorGate
-open ContactReducedAgreement6643Research
-open ContactCongruentCuts6643Research ContactPrimeFlagBudgetFamilyResearch
 
 noncomputable section
 
@@ -98,22 +95,13 @@ def TerminalAdaptiveProjectionFamiliesYZ6630
     i ∈ D.stage.nodes →
     ¬ D.stage.G ∣ agreementPolynomial phi D.stage.F D.degree
         (x i) (D.stage.u0 i) (D.stage.u1 i) →
-    ∃ B : PrimeFlagBudgetFamily
-        (G := D.stage.G)
-        (T := agreementPolynomial phi D.stage.F D.degree
-          (x i) (D.stage.u0 i) (D.stage.u1 i))
-        (H := regularitySurface phi D.stage.F)
-        flag (residualAgreementFlag6630 D.degree),
-      (∀ C : RegularComponent Omega D.stage.G
+    ∃ base : ∀ C : RegularComponent Omega D.stage.G
         (agreementPolynomial phi D.stage.F D.degree
           (x i) (D.stage.u0 i) (D.stage.u1 i))
         (regularitySurface phi D.stage.F),
-        Transcendental Omega (coordinate Omega C.1 2) → 1 ≤ B.zCost C) ∧
-      (∀ C : RegularComponent Omega D.stage.G
-        (agreementPolynomial phi D.stage.F D.degree
-          (x i) (D.stage.u0 i) (D.stage.u1 i))
-        (regularitySurface phi D.stage.F),
-        ¬ Transcendental Omega (coordinate Omega C.1 2) → 1 ≤ B.yzCost C)
+        SeparableLiteralCoordinate C.1,
+      Nonempty (AdaptiveUnitProjectionFamilyYZ base flag
+        (residualAgreementFlag6630 D.degree))
 
 /-- Exact score-66.30 terminal construction.  Only the Z/agreement
 characteristic gate is used; the failed Y/agreement gate has been replaced
@@ -125,28 +113,17 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
       errors flag w)
     (hflagS : flag.all ≤ 10)
     (hflagYS : flag.yz + flag.all ≤ 48)
-    (hflagTotal : flag.zOnly + flag.yz + flag.all ≤ 825) :
+    (hflagTotal : flag.zOnly + flag.yz + flag.all ≤ 814) :
     TerminalAdaptiveProjectionFamiliesYZ6630 S := by
   classical
   intro D i hi hproper
-  let T0 := agreementPolynomial phi D.stage.F D.degree
+  let T := agreementPolynomial phi D.stage.F D.degree
     (x i) (D.stage.u0 i) (D.stage.u1 i)
-  let T := reducedAgreementPolynomial phi D.stage.F D.degree
-    (x i) (D.stage.u0 i) (D.stage.u1 i)
-  have hcongr : D.stage.G ∣ T0 - T :=
-    D.stage.G_dvd_surface.trans
-      (agreementPolynomial_sub_reduced_dvd phi D.stage.F D.degree
-        (x i) (D.stage.u0 i) (D.stage.u1 i))
-  have hproperT : ¬ D.stage.G ∣ T := by
-    intro hT
-    apply hproper
-    have hsum := dvd_add hcongr hT
-    simpa only [sub_add_cancel, T0] using hsum
   let H := regularitySurface phi D.stage.F
   have hGflag : PolynomialInFlag flag D.stage.G := D.stage.flag_support
   have hTflag : PolynomialInFlag (residualAgreementFlag6630 D.degree) T := by
-    exact surfaceMap_reducedAgreement_in_flag
-      phi D.stage.F D.stage.surface_s_weight D.stage.surface_ys_weight
+    exact surfaceMap_agreement_in_flag_of_surface_weights6630
+      D.stage.F D.stage.surface_s_weight D.stage.surface_ys_weight
       D.stage.surface_total_weight D.degree
       (fun j ↦ (j.factorial : K)⁻¹)
       (x i) (D.stage.u0 i) (D.stage.u1 i)
@@ -155,16 +132,16 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
   have hD : D.degree ≤ w := D.degree_le.trans (Nat.le_refl w)
   have hGY' : D.stage.G.degreeOf 0 ≤ 48 := hGY.trans hflagYS
   have hGS' : D.stage.G.degreeOf 1 ≤ 10 := hGS.trans hflagS
-  have hGZ' : D.stage.G.degreeOf 2 ≤ 825 := hGZ.trans hflagTotal
+  have hGZ' : D.stage.G.degreeOf 2 ≤ 814 := hGZ.trans hflagTotal
   have hTY' : T.degreeOf 0 ≤ 1 + 94 * w := by
     simp only [residualAgreementFlag6630, unitYZFlag,
       agreementDirection6630, add_yz, add_all, nsmul_yz, nsmul_all] at hTY
     omega
-  have hTS' : T.degreeOf 1 ≤ 18 * w := by
+  have hTS' : T.degreeOf 1 ≤ 19 * w := by
     simp only [residualAgreementFlag6630, unitYZFlag,
       agreementDirection6630, add_all, nsmul_all] at hTS
     omega
-  have hTZ' : T.degreeOf 2 ≤ 1 + 1648 * w := by
+  have hTZ' : T.degreeOf 2 ≤ 1 + 1626 * w := by
     simp only [residualAgreementFlag6630, unitYZFlag,
       agreementDirection6630, add_zOnly, add_yz, add_all,
       nsmul_zOnly, nsmul_yz, nsmul_all] at hTZ
@@ -197,7 +174,7 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
     fun C => regularComponent_exists_separableLiteralCoordinate6630
       phi D.stage.F D.stage.G T ContactParameters6630Research.prime
       D.stage.G_dvd_surface
-      D.stage.irreducible_G hproperT hGdep hGdegree hmixedZ C
+      D.stage.irreducible_G hproper hGdep hGdegree hmixedZ C
   let base : ∀ C : RegularComponent Omega D.stage.G T H,
       SeparableLiteralCoordinate C.1 := fun C => (choiceData C).choose
   have hbaseIndex : ∀ C : RegularComponent Omega D.stage.G T H,
@@ -223,24 +200,13 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
       ContactParameters6630Research.prime D.stage.G T D.stage.irreducible_G
       (regularComponent_G_mem Omega D.stage.G T H C)
       (regularComponent_T_mem Omega D.stage.G T H C)
-      hproperT hGdegree hmixedZ
-  obtain ⟨P⟩ := exists_adaptiveUnitProjectionFamilyYZ_of_active_nested flag
+      hproper hGdegree hmixedZ
+  refine ⟨base, ?_⟩
+  exact exists_adaptiveUnitProjectionFamilyYZ_of_active_nested flag
     (residualAgreementFlag6630 D.degree) base hactive hZ hSderiv
-    D.stage.irreducible_G hproperT
+    D.stage.irreducible_G hproper
     ((support_subset_flagSupport_iff flag D.stage.G).2 hGflag)
     ((support_subset_flagSupport_iff (residualAgreementFlag6630 D.degree) T).2 hTflag)
-  let B := P.family.toPrimeFlagBudgetFamily
-  refine ⟨ContactCongruentCuts6643Research.PrimeFlagBudgetFamily.ofCongruentCut
-    hcongr B, ?_, ?_⟩
-  · apply ContactCongruentCuts6643Research.PrimeFlagBudgetFamily.ofCongruentCut_z_positive
-      hcongr B 2
-    intro C htr
-    exact P.family.one_le_toPrimeFlagBudgetFamily_zCost C htr
-  · apply ContactCongruentCuts6643Research.PrimeFlagBudgetFamily.ofCongruentCut_yz_positive
-      hcongr B 2
-    intro C htr
-    exact P.one_le_yzCost_of_not_z_transcendental phi D.stage.F rfl
-      D.stage.G_dvd_surface C htr
 
 /-- Convenient increment-cap wrapper for the full score-66.74 surface flag.
 The cumulative theorem above is the one used for individual factors. -/
@@ -249,7 +215,7 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_rectangular_caps
     {flag : FlagDegree}
     (S : ResidualStage6630 phi Gamma x ContactParameters6630Research.prime
       errors flag w)
-    (hflagZ : flag.zOnly ≤ 777)
+    (hflagZ : flag.zOnly ≤ 766)
     (hflagY : flag.yz ≤ 38)
     (hflagS : flag.all ≤ 10) :
     TerminalAdaptiveProjectionFamiliesYZ6630 S := by

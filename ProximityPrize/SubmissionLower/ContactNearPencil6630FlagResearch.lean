@@ -3,10 +3,10 @@ import ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
 import ProximityPrize.SubmissionLower.ContactNearPencil6630ArithmeticResearch
 
 /-!
-# Exact variable-degree flag identities for score 66.75
+# Exact variable-degree flag identities for score 66.74
 
 The sharp surface flag is obtained from the cumulative nested caps
-`all <= 10`, `yz+all <= 48`, and `z+yz+all <= 825`.
+`all <= 10`, `yz+all <= 48`, and `z+yz+all <= 814`.
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactNearPencil6630FlagResearch
@@ -14,22 +14,22 @@ namespace ProximityPrize.SubmissionLower.ContactNearPencil6630FlagResearch
 open ContactFlagBezout6543Research
 open ContactNearPencil6630ArithmeticResearch
 
-def surfaceFlag6630 : FlagDegree := ⟨777, 38, 10⟩
-def derivativeFlag6630 : FlagDegree := ⟨777, 38, 9⟩
+def surfaceFlag6630 : FlagDegree := ⟨766, 38, 10⟩
+def derivativeFlag6630 : FlagDegree := ⟨766, 38, 9⟩
 
-/-- The reduced Taylor agreement numerator saves one slope degree while
-preserving the sharp middle and total cumulative caps. Its nested direction
-is `(2*(L-M), 2*(M-s), 2*s-2)`. -/
-def agreementDirection6630 : FlagDegree := ⟨1554, 76, 18⟩
+/-- The total-YR agreement recurrence saves one middle raw degree.  Its
+nested-increment direction is therefore sharper than the coordinatewise sum
+of the surface and derivative flags. -/
+def agreementDirection6630 : FlagDegree := ⟨1532, 75, 19⟩
 
 /-- The affine agreement flag associated to residual degree `d`. -/
 def residualAgreementFlag6630 (d : ℕ) : FlagDegree :=
   unitYZFlag + d • agreementDirection6630
 
 theorem residualAgreementFlag6630_value (d : ℕ) :
-    residualAgreementFlag6630 d = ⟨1554 * d, 1 + 76 * d, 18 * d⟩ := by
-  change (⟨0 + d * 1554, 1 + d * 76, 0 + d * 18⟩ : FlagDegree) =
-    ⟨1554 * d, 1 + 76 * d, 18 * d⟩
+    residualAgreementFlag6630 d = ⟨1532 * d, 1 + 75 * d, 19 * d⟩ := by
+  change (⟨0 + d * 1532, 1 + d * 75, 0 + d * 19⟩ : FlagDegree) =
+    ⟨1532 * d, 1 + 75 * d, 19 * d⟩
   congr 1 <;> omega
 
 theorem flagMixed_residualAgreementFlag6630 (d e : ℕ) :

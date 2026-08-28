@@ -70,7 +70,7 @@ def regularGeometricResidualStage6630
   have hRweights :
       MvPolynomial.weightedTotalDegree residualSWeights R.1 ≤ 10 ∧
       MvPolynomial.weightedTotalDegree residualYSWeights R.1 ≤ 48 ∧
-      MvPolynomial.weightedTotalDegree residualTotalWeights R.1 ≤ 825 :=
+      MvPolynomial.weightedTotalDegree residualTotalWeights R.1 ≤ 814 :=
     ⟨(weightedTotalDegree_le_of_dvd residualSWeights R.1 Q hRdiv hQ).trans
         hQweights.1,
       (weightedTotalDegree_le_of_dvd residualYSWeights R.1 Q hRdiv hQ).trans

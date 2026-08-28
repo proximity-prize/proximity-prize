@@ -1,11 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 
 /-!
-# Exact flag-complete interpolation parameters for the 66.75 row
-
-This module freezes `(errors,m,s,L) = (79520,35,10,825)` and checks the
-coefficient count and translated contact rank from their defining finite
-sums.  It contains no geometric or decoding premise.
+# Exact flag-complete interpolation parameters for the 66.81 row
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagParameters6641Research
@@ -18,12 +14,12 @@ set_option maxHeartbeats 5000000
 def n : ℕ := 262144
 def w : ℕ := 131071
 def prime : ℕ := 2130706433
-def alignmentBudget : ℕ := 274980727751395087
+def alignmentBudget : ℕ := 274980727761395087
 
-def errors : ℕ := 79520
+def errors : ℕ := 79581
 def agreements : ℕ := n - errors
 def multiplicity : ℕ := 35
-def seedTotalCap : ℕ := 825
+def seedTotalCap : ℕ := 970
 def slopeCap : ℕ := 10
 def weightedCap : ℕ := multiplicity * agreements
 def yCap : ℕ := (weightedCap - 1) / w
@@ -32,7 +28,6 @@ def algebraicCap : ℕ := (2 * slopeCap - 1) * seedTotalCap
 def implicitWeightedCap : ℕ := (2 * slopeCap - 1) * weightedCap
 def implicitYCap : ℕ := (implicitWeightedCap - 1) / w
 
-/-- Number of monomials in the strict weighted interpolation box. -/
 def coefficientCount : ℕ :=
   ∑ i ∈ range (seedTotalCap + 1),
     ∑ j ∈ range (slopeCap + 1),
@@ -41,7 +36,6 @@ def coefficientCount : ℕ :=
 
 def contactExponent (r : ℕ) : ℕ := min (r + 1) (multiplicity - r)
 
-/-- Exact rank bound of one translated order-`multiplicity` contact block. -/
 def localContactRank : ℕ :=
   ∑ r ∈ range multiplicity,
     ((∑ f ∈ range (min r seedTotalCap + 1),
@@ -78,25 +72,25 @@ def liftedAgreement : DegreeVector :=
     2 * w * algebraicCap + 1⟩
 
 theorem parameter_values :
-    agreements = 182624 ∧ weightedCap = 6391840 ∧ yCap = 48 ∧
-    gap = 51553 ∧ algebraicCap = 15675 ∧
-    implicitWeightedCap = 121444960 ∧ implicitYCap = 926 := by
+    agreements = 182563 ∧ weightedCap = 6389705 ∧ yCap = 48 ∧
+    gap = 51492 ∧ algebraicCap = 18430 ∧
+    implicitWeightedCap = 121404395 ∧ implicitYCap = 926 := by
   norm_num [agreements, n, errors, weightedCap, multiplicity, yCap, w,
     gap, algebraicCap, slopeCap, seedTotalCap, implicitWeightedCap,
     implicitYCap]
 
-theorem coefficient_count_exact : coefficientCount = 1145793371723 := by
+theorem coefficient_count_exact : coefficientCount = 1350680308373 := by
   decide
 
-theorem local_contact_rank_exact : localContactRank = 4370850 := by
+theorem local_contact_rank_exact : localContactRank = 5152400 := by
   decide
 
-theorem total_contact_rank_exact : totalContactRank = 1145792102400 := by
+theorem total_contact_rank_exact : totalContactRank = 1350670745600 := by
   rw [show totalContactRank = n * localContactRank by rfl,
     local_contact_rank_exact]
   norm_num [n]
 
-theorem rank_margin_exact : rankMargin = 1269323 := by
+theorem rank_margin_exact : rankMargin = 9562773 := by
   rw [show rankMargin = coefficientCount - totalContactRank by rfl,
     coefficient_count_exact, total_contact_rank_exact]
 

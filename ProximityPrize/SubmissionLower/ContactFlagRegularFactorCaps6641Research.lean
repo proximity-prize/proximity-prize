@@ -6,8 +6,8 @@ import ProximityPrize.SubmissionLower.ContactFlagParameters6641Research
 /-!
 # Cumulative regular-factor caps from the flag-complete interpolant
 
-The new interpolation box caps `Y+R+Z` directly at 825.  This gives the
-`(777,38,10)` surface flag used by the score-66.75 recursive
+The new interpolation box caps `Y+R+Z` directly at 814.  This gives the
+`(766,38,10)` surface flag used by the score-66.74 recursive
 geometry, despite adding the previously omitted interpolation wedge.
 -/
 
@@ -33,7 +33,7 @@ theorem residual_surface_weights_of_flagBox6641
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
     MvPolynomial.weightedTotalDegree residualSWeights F ≤ 10 ∧
       MvPolynomial.weightedTotalDegree residualYSWeights F ≤ 48 ∧
-      MvPolynomial.weightedTotalDegree residualTotalWeights F ≤ 825 := by
+      MvPolynomial.weightedTotalDegree residualTotalWeights F ≤ 814 := by
   constructor
   · apply (weightedTotalDegree_le_iff residualSWeights F 10).mpr
     intro d hd
@@ -52,7 +52,7 @@ theorem residual_surface_weights_of_flagBox6641
       change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 0 ≤ 48
       have hs : d 2 ≤ 10 := by
         simpa only [slopeCap] using hb.2.1
-      have hw : d 0 + 131071 * d 1 + 131070 * d 2 < 6391840 := by
+      have hw : d 0 + 131071 * d 1 + 131070 * d 2 < 6392050 := by
         simpa only [ContactFlagParameters6641Research.w,
           ContactFlagParameters6641Research.weightedCap,
           ContactFlagParameters6641Research.multiplicity,
@@ -62,12 +62,12 @@ theorem residual_surface_weights_of_flagBox6641
           Nat.reduceSub, Nat.reduceMul] using hb.2.2
       norm_num
       omega
-    · apply (weightedTotalDegree_le_iff residualTotalWeights F 825).mpr
+    · apply (weightedTotalDegree_le_iff residualTotalWeights F 814).mpr
       intro d hd
       have hb : d 1 + d 2 + d 3 ≤ seedTotalCap ∧ d 2 ≤ slopeCap ∧
           d 0 + w * d 1 + (w - 1) * d 2 < weightedCap := hbox hd
       rw [weight_fin4]
-      change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 1 ≤ 825
+      change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 1 ≤ 814
       norm_num [seedTotalCap] at hb ⊢
       exact hb.1
 
@@ -79,7 +79,7 @@ theorem regularFlag6630_budgets_of_flagBox6641
         ((regularFlag6630 Q F).yz + (regularFlag6630 Q F).all)) ≤ 48 ∧
       (∑ F : RegularIndex Q,
         ((regularFlag6630 Q F).zOnly + (regularFlag6630 Q F).yz +
-          (regularFlag6630 Q F).all)) ≤ 825 := by
+          (regularFlag6630 Q F).all)) ≤ 814 := by
   classical
   have hprod := positiveRFactors_product_dvd Q hQ
   have hs := sum_weightedTotalDegree_le_of_prod_dvd residualSWeights

@@ -34,7 +34,6 @@ open ContactNearPencil6630ArithmeticResearch
 open ContactNearPencil6630FlagResearch
 open ContactNearPencil6630FactorLedgerResearch
 open ContactPost6464MinkowskiRecurrenceResearch
-open ContactCongruentCuts6643Research ContactReducedAgreement6643Research
 
 noncomputable section
 
@@ -77,8 +76,8 @@ def TerminalLargeZYZCharge6630
       D.stage.selected GammaI D.stage.nodes x D.stage.u0 D.stage.u1
       pchar errors D.degree flag (ContactNearPencil6630FlagResearch.residualAgreementFlag6630 D.degree)
       D.stage.G_dvd_surface D.stage.flag_support
-      (agreement_in_flag_mod_factor phi D.stage.F D.stage.G D.stage.G_dvd_surface
-        D.stage.surface_s_weight D.stage.surface_ys_weight
+      (ContactIdentityResidualCurveTerminalIncidence6630Research.surfaceMap_agreement_in_flag_of_surface_weights6630
+        D.stage.F D.stage.surface_s_weight D.stage.surface_ys_weight
         D.stage.surface_total_weight D.degree
         (fun j ↦ (j.factorial : K)⁻¹)
         (x i) (D.stage.u0 i) (D.stage.u1 i))
@@ -147,10 +146,9 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_6630_z_yz
   let T := agreementPolynomial phi D.stage.F D.degree
     (x i) (D.stage.u0 i) (D.stage.u1 i)
   let aD := agreements - (w - D.degree)
-  have hTflag : PolynomialInFlagMod (Ideal.span {D.stage.G})
-      (ContactNearPencil6630FlagResearch.residualAgreementFlag6630 D.degree) T := by
-    exact agreement_in_flag_mod_factor phi D.stage.F D.stage.G D.stage.G_dvd_surface
-      D.stage.surface_s_weight D.stage.surface_ys_weight
+  have hTflag : PolynomialInFlag (ContactNearPencil6630FlagResearch.residualAgreementFlag6630 D.degree) T := by
+    exact ContactIdentityResidualCurveTerminalIncidence6630Research.surfaceMap_agreement_in_flag_of_surface_weights6630
+      D.stage.F D.stage.surface_s_weight D.stage.surface_ys_weight
       D.stage.surface_total_weight D.degree
       (fun j ↦ (j.factorial : K)⁻¹)
       (x i) (D.stage.u0 i) (D.stage.u1 i)

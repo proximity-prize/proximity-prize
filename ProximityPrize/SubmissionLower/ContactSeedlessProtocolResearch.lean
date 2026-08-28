@@ -23,7 +23,7 @@ set_option maxHeartbeats 5000000
 
 def radius : ℝ≥0 := ContactScore6630Research.radius6630
 def errors : ℕ := ContactScore6630Research.errors6630
-def mcaBudget : ℕ := 274980727751395087
+def mcaBudget : ℕ := 274980727761395087
 
 theorem field_cardinality :
     Fintype.card IRSProfile.Field = (2130706433 : ℕ) ^ 6 := by
@@ -167,9 +167,9 @@ theorem certifiedGammaError_le_of_alignment
       · norm_num [mcaBudget, ContactSeedlessListBoundResearch.listBudget]
       · simpa only [Nat.mul_comm] using field_capacity_split
 
-theorem protocolClaim6675_of_alignment
+theorem protocolClaim6674_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-    ProtocolClaim 6675 318083 1048576 where
+    ProtocolClaim 6681 318327 1048576 where
   admissible := ContactScore6630Research.radius6630_admissible
   reduction := by
     change certifiedGammaError IRSProfile.code radius ≤ reductionTarget

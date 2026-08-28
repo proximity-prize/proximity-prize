@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagParameters6641Research
 
-/-! # Shared score-66.75 row for the downstream geometry
+/-! # Shared score-66.74 row for the downstream geometry
 
 The local definitions remain transparent for downstream arithmetic.  Exact
 finite-sum certificates are shared with the identical flag-parameter row
@@ -17,11 +17,11 @@ set_option maxRecDepth 100000
 def n : ℕ := 262144
 def w : ℕ := 131071
 def prime : ℕ := 2130706433
-def alignmentBudget : ℕ := 274980727751395087
-def errors : ℕ := 79520
+def alignmentBudget : ℕ := 274980727761395087
+def errors : ℕ := 79581
 def agreements : ℕ := n - errors
 def multiplicity : ℕ := 35
-def seedTotalCap : ℕ := 825
+def seedTotalCap : ℕ := 970
 def slopeCap : ℕ := 10
 def weightedCap : ℕ := multiplicity * agreements
 def yCap : ℕ := (weightedCap - 1) / w
@@ -74,21 +74,21 @@ def liftedAgreement : DegreeVector :=
     2 * w * algebraicCap + 1⟩
 
 theorem parameter_values :
-    agreements = 182624 ∧ weightedCap = 6391840 ∧ yCap = 48 ∧
-    gap = 51553 ∧ algebraicCap = 15675 ∧
-    implicitWeightedCap = 121444960 ∧ implicitYCap = 926 :=
+    agreements = 182630 ∧ weightedCap = 6392050 ∧ yCap = 48 ∧
+    gap = 51559 ∧ algebraicCap = 15466 ∧
+    implicitWeightedCap = 121448950 ∧ implicitYCap = 926 :=
   ContactFlagParameters6641Research.parameter_values
 
-theorem coefficient_count_exact : coefficientCount = 1145793371723 :=
+theorem coefficient_count_exact : coefficientCount = 1350680308373 :=
   ContactFlagParameters6641Research.coefficient_count_exact
 
-theorem local_contact_rank_exact : localContactRank = 4370850 :=
+theorem local_contact_rank_exact : localContactRank = 5152400 :=
   ContactFlagParameters6641Research.local_contact_rank_exact
 
-theorem total_contact_rank_exact : totalContactRank = 1145792102400 :=
+theorem total_contact_rank_exact : totalContactRank = 1350670745600 :=
   ContactFlagParameters6641Research.total_contact_rank_exact
 
-theorem rank_margin_exact : rankMargin = 1269323 :=
+theorem rank_margin_exact : rankMargin = 9562773 :=
   ContactFlagParameters6641Research.rank_margin_exact
 
 theorem interpolation_gate : totalContactRank < coefficientCount :=

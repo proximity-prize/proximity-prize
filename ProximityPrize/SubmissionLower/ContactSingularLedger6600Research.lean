@@ -1,31 +1,27 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactParameters6630Research
-import ProximityPrize.SubmissionLower.ContactTightSingularAggregationResearch
+import ProximityPrize.SubmissionLower.ContactParameters6600Research
 
 /-!
-# Tight singular-family ledger for the score-66.74 row
+# Singular/implicit finite-family ledger for score 66
 
-This is the row-specialized finite-family aggregation used by the actual
-implicit-pair branch.  It deliberately retains only the implicit-pair core
-and the proved exceptional-root contribution; the historical `liftedLast`
-padding is absent.
+This isolates the unchanged implicit-pair and exceptional-seed arithmetic
+from the new residual regular branch.  It aggregates component costs at
+`(m,s,L,e) = (24,6,576,78777)` and exposes both the natural one-`gap` bound
+and the exact `gap^2` contribution used by the final ledger.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactSingularLedger6630Research
+namespace ProximityPrize.SubmissionLower.ContactSingularLedger6600Research
 
 open scoped BigOperators
-open ContactParameters6630Research
-open ContactTightSingularAggregationResearch
+open ContactParameters6600Research
 
-set_option autoImplicit false
-
-def sumVector {I : Type} [Fintype I] (v : I → DegreeVector) : DegreeVector :=
+def sumVector {I : Type} [Fintype I] (v : I -> DegreeVector) : DegreeVector :=
   ⟨∑ i, (v i).y, ∑ i, (v i).r, ∑ i, (v i).z⟩
 
 def vectorLE (a b : DegreeVector) : Prop :=
   a.y ≤ b.y ∧ a.r ≤ b.r ∧ a.z ≤ b.z
 
-def dot (a b : DegreeVector) : ℕ :=
+def dot (a b : DegreeVector) : Nat :=
   a.y * b.y + a.r * b.r + a.z * b.z
 
 theorem dot_mono_left {a b : DegreeVector} (c : DegreeVector)
@@ -36,7 +32,7 @@ theorem dot_mono_left {a b : DegreeVector} (c : DegreeVector)
     (Nat.mul_le_mul_right c.z h.2.2)
 
 theorem dot_sum_left {I : Type} [Fintype I]
-    (v : I → DegreeVector) (a : DegreeVector) :
+    (v : I -> DegreeVector) (a : DegreeVector) :
     dot (sumVector v) a = ∑ i, dot (v i) a := by
   simp only [dot, sumVector, Finset.sum_add_distrib, Finset.sum_mul]
 
@@ -48,15 +44,9 @@ def implicitCoefficients : DegreeVector :=
     (n - w) * liftedAgreement.r,
     (n - w) * liftedAgreement.z + (errors + 1) * gap⟩
 
-def implicitCoreNumerator : ℕ :=
+def implicitCoreNumerator : Nat :=
   (n - w) * mixed liftedSurface implicitCut liftedAgreement +
     (errors + 1) * gap * mixed liftedSurface implicitCut unitZ
-
-def tightSingularNumerator : ℕ :=
-  implicitCoreNumerator + 2 * algebraicCap ^ 2 * gap
-
-def tightSingularContribution : ℕ :=
-  gap * tightSingularNumerator
 
 theorem implicit_bound_eq_dot (v : DegreeVector) :
     (n - w) * dot liftedAgreement v + (errors + 1) * gap * v.z =
@@ -71,11 +61,11 @@ theorem implicit_aggregate_eq_core :
   ring
 
 theorem sum_implicit_counts_bound {I : Type} [Fintype I]
-    (count : I → ℕ) (cost : I → DegreeVector)
+    (count : I -> Nat) (cost : I -> DegreeVector)
     (hy : (∑ i, (cost i).y) ≤ algebraicCap)
     (hr : (∑ i, (cost i).r) ≤ 2 * implicitYCap * algebraicCap)
     (hz : (∑ i, (cost i).z) ≤ implicitYCap)
-    (hcount : ∀ i, count i * gap ≤
+    (hcount : forall i, count i * gap ≤
       (n - w) * dot liftedAgreement (cost i) +
         (errors + 1) * gap * (cost i).z) :
     (∑ i, count i) * gap ≤ implicitCoreNumerator := by
@@ -92,62 +82,62 @@ theorem sum_implicit_counts_bound {I : Type} [Fintype I]
       dot_mono_left implicitCoefficients ⟨hy, hr, hz⟩
     _ = implicitCoreNumerator := implicit_aggregate_eq_core
 
-theorem implicit_with_exceptions_tight_bound {I : Type} [Fintype I]
-    (count : I → ℕ) (cost : I → DegreeVector) (exceptions : ℕ)
+theorem retained_singular_padding :
+    retainedSingularNumerator =
+      implicitCoreNumerator +
+        gap * (algebraicCap + 2 * algebraicCap ^ 2 +
+          mixed liftedSurface implicitCut liftedLast) := by
+  simp only [retainedSingularNumerator, implicitCoreNumerator]
+  ring
+
+theorem implicit_with_exceptions_bound {I : Type} [Fintype I]
+    (count : I -> Nat) (cost : I -> DegreeVector) (exceptions : Nat)
     (hy : (∑ i, (cost i).y) ≤ algebraicCap)
     (hr : (∑ i, (cost i).r) ≤ 2 * implicitYCap * algebraicCap)
     (hz : (∑ i, (cost i).z) ≤ implicitYCap)
-    (hcount : ∀ i, count i * gap ≤
+    (hcount : forall i, count i * gap ≤
       (n - w) * dot liftedAgreement (cost i) +
         (errors + 1) * gap * (cost i).z)
     (hexceptions : exceptions ≤ 2 * algebraicCap ^ 2) :
-    ((∑ i, count i) + exceptions) * gap ≤ tightSingularNumerator := by
-  have hcore := sum_implicit_counts_bound count cost hy hr hz hcount
-  simpa only [tightSingularNumerator] using
-    tight_exception_bound count exceptions gap implicitCoreNumerator
-      (2 * algebraicCap ^ 2) hcore hexceptions
+    ((∑ i, count i) + exceptions) * gap ≤ retainedSingularNumerator := by
+  have hmain := sum_implicit_counts_bound count cost hy hr hz hcount
+  calc
+    _ = (∑ i, count i) * gap + exceptions * gap := Nat.add_mul _ _ _
+    _ ≤ implicitCoreNumerator + 2 * algebraicCap ^ 2 * gap :=
+      Nat.add_le_add hmain (Nat.mul_le_mul_right gap hexceptions)
+    _ ≤ retainedSingularNumerator := by
+      rw [retained_singular_padding]
+      apply Nat.add_le_add_left
+      calc
+        2 * algebraicCap ^ 2 * gap = gap * (2 * algebraicCap ^ 2) := by ring
+        _ ≤ gap * (algebraicCap + 2 * algebraicCap ^ 2 +
+            mixed liftedSurface implicitCut liftedLast) :=
+          Nat.mul_le_mul_left gap (by omega)
 
-theorem implicit_with_exceptions_tight_scaled_bound {I : Type} [Fintype I]
-    (count : I → ℕ) (cost : I → DegreeVector) (exceptions : ℕ)
+/-- Exact bridge from the natural one-`gap` singular estimate to the common
+`gap^2` denominator used by the final score-66 ledger. -/
+theorem implicit_with_exceptions_scaled_bound {I : Type} [Fintype I]
+    (count : I -> Nat) (cost : I -> DegreeVector) (exceptions : Nat)
     (hy : (∑ i, (cost i).y) ≤ algebraicCap)
     (hr : (∑ i, (cost i).r) ≤ 2 * implicitYCap * algebraicCap)
     (hz : (∑ i, (cost i).z) ≤ implicitYCap)
-    (hcount : ∀ i, count i * gap ≤
+    (hcount : forall i, count i * gap ≤
       (n - w) * dot liftedAgreement (cost i) +
         (errors + 1) * gap * (cost i).z)
     (hexceptions : exceptions ≤ 2 * algebraicCap ^ 2) :
     ((∑ i, count i) + exceptions) * gap ^ 2 ≤
-      tightSingularContribution := by
-  have h := implicit_with_exceptions_tight_bound count cost exceptions
+      retainedSingularContribution := by
+  have h := implicit_with_exceptions_bound count cost exceptions
     hy hr hz hcount hexceptions
   calc
     ((∑ i, count i) + exceptions) * gap ^ 2 =
         (((∑ i, count i) + exceptions) * gap) * gap := by ring
-    _ ≤ tightSingularNumerator * gap := Nat.mul_le_mul_right gap h
-    _ = tightSingularContribution := by
-      simp only [tightSingularContribution]
+    _ ≤ retainedSingularNumerator * gap := Nat.mul_le_mul_right gap h
+    _ = retainedSingularContribution := by
+      simp only [retainedSingularContribution]
       ring
 
-theorem exact_values :
-    implicitCoreNumerator = 1476254426777054694 ∧
-      tightSingularNumerator = 1476279092309387102 ∧
-      tightSingularContribution = 76115473720379689592018 := by
-  norm_num [implicitCoreNumerator, tightSingularNumerator,
-    tightSingularContribution, ContactParameters6630Research.mixed,
-    ContactParameters6630Research.liftedSurface,
-    ContactParameters6630Research.implicitCut,
-    ContactParameters6630Research.liftedAgreement,
-    ContactParameters6630Research.unitZ,
-    ContactParameters6630Research.implicitYCap,
-    ContactParameters6630Research.implicitWeightedCap,
-    ContactParameters6630Research.algebraicCap,
-    ContactParameters6630Research.weightedCap,
-    ContactParameters6630Research.multiplicity,
-    ContactParameters6630Research.agreements,
-    ContactParameters6630Research.gap,
-    ContactParameters6630Research.n, ContactParameters6630Research.w,
-    ContactParameters6630Research.errors,
-    ContactParameters6630Research.slopeCap,
-    ContactParameters6630Research.seedTotalCap]
+end ProximityPrize.SubmissionLower.ContactSingularLedger6600Research
 
-end ProximityPrize.SubmissionLower.ContactSingularLedger6630Research
+#print axioms ProximityPrize.SubmissionLower.ContactSingularLedger6600Research.implicit_with_exceptions_bound
+#print axioms ProximityPrize.SubmissionLower.ContactSingularLedger6600Research.implicit_with_exceptions_scaled_bound
