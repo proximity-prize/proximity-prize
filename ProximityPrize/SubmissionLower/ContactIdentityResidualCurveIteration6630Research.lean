@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
-import ProximityPrize.SubmissionLower.ContactIdentityResidualPrimeTransportResearch
+import ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIterationResearch
+import ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalFlag6630Research
 
 /-!
 # Inner actual-identity residualization on an arbitrary regular curve prime
@@ -18,7 +18,7 @@ stated only for the complementary mathematical range `0 < identities.card`
 and `identities.card ≤ d`.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIterationResearch
+namespace ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIteration6630Research
 
 open scoped Classical
 open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
@@ -27,6 +27,7 @@ open ContactIdentityResidualPencilResearch
 open ContactIdentityResidualGlobalTransformResearch
 open ContactIdentityResidualSurfaceResearch
 open ContactIdentityResidualGlobalFlagResearch
+open ContactIdentityResidualGlobalFlag6630Research
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactFlagAffineResidualAutomorphismResearch
 open ContactFlagBezout6543Research
@@ -37,6 +38,7 @@ noncomputable section
 
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
+set_option autoImplicit false
 
 variable {K Omega Iota : Type} [Field K] [Field Omega]
 
@@ -49,7 +51,7 @@ abbrev Poly4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
 
 /-- Complete state for recursive proper-cut incidence on one arbitrary
 regular curve prime.  Both ambient flag supports are fixed across steps. -/
-structure CurveResidualStage
+structure CurveResidualStage6630
     (phi : Polynomial K →+* Omega) (Gamma : Finset K) (x : Iota → K)
     (p e : ℕ) [CharP Omega p]
     (surfaceFlag cutFlag : FlagDegree) (d : ℕ) where
@@ -65,9 +67,9 @@ structure CurveResidualStage
   G_dvd_surface : G ∣ surfaceMap phi F
   G_flag_support : ContactFlagBezout6543Research.PolynomialInFlag surfaceFlag G
   T_flag_support : ContactFlagBezout6543Research.PolynomialInFlag cutFlag T
-  surface_s_weight : wt residualSWeights F ≤ 6
-  surface_ys_weight : wt residualYSWeights F ≤ 33
-  surface_total_weight : wt residualTotalWeights F ≤ 582
+  surface_s_weight : wt residualSWeights F ≤ 8
+  surface_ys_weight : wt residualYSWeights F ≤ 40
+  surface_total_weight : wt residualTotalWeights F ≤ 617
   x_injective : Set.InjOn x nodes
   degree_le : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d
   solution : ∀ gamma ∈ Gamma,
@@ -82,49 +84,49 @@ structure CurveResidualStage
   no_large_pencil : NoLargeSelectedPencil selected Gamma d e
   characteristic_bound : d < p
 
-namespace CurveResidualStage
+namespace CurveResidualStage6630
 
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K}
 variable {x : Iota → K} {p e : ℕ} [CharP Omega p]
 variable {surfaceFlag cutFlag : FlagDegree} {d : ℕ}
 
 def primeIdeal
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d) :
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d) :
     Ideal (Poly3 Omega) := S.primeData.ideal
 
 def identities
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d) :
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d) :
     Finset Iota :=
   identityNodes phi S.primeIdeal S.F S.nodes x S.u0 S.u1 d
 
 def Agrees
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d)
     (gamma : K) (i : Iota) : Prop :=
   (S.selected gamma).eval (x i) = S.u0 i + gamma * S.u1 i
 
 local instance
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d) :
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d) :
     ∀ gamma i, Decidable (S.Agrees gamma i) :=
   fun _ _ ↦ Classical.propDecidable _
 
 def agreementFiber
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d)
     (gamma : K) : Finset Iota :=
   S.nodes.filter (S.Agrees gamma)
 
 theorem primeIdeal_isPrime
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d) :
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d) :
     S.primeIdeal.IsPrime := S.primeData.isPrime
 
 theorem surface_mem_primeIdeal
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d) :
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d) :
     surfaceMap phi S.F ∈ S.primeIdeal := by
   obtain ⟨Q, hQ⟩ := S.G_dvd_surface
   rw [hQ]
   exact S.primeData.ideal.mul_mem_right Q S.primeData.G_mem
 
 theorem regularity_not_mem_primeIdeal
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d) :
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d) :
     surfaceMap phi (MvPolynomial.pderiv (2 : Fin 4) S.F) ∉
       S.primeIdeal :=
   S.primeData.H_not_mem
@@ -132,7 +134,7 @@ theorem regularity_not_mem_primeIdeal
 /-- Identity cuts on the arbitrary curve prime are still actual agreements
 for every selected solution. -/
 theorem agrees_on_identities
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d) :
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d) :
     ∀ gamma ∈ Gamma, ∀ i ∈ S.identities, S.Agrees gamma i := by
   let P := S.primeIdeal
   letI : P.IsPrime := S.primeIdeal_isPrime
@@ -148,8 +150,8 @@ advance.  Exposing it lets callers transport component-specific geometric
 providers without rerunning a whole transformed component budget. -/
 def ResidualTransition
     {dnext : ℕ}
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
-    (Snext : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag dnext) : Prop :=
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d)
+    (Snext : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag dnext) : Prop :=
   ∃ (aY v bY aS bS cS : Omega) (hv : v ≠ 0),
     Snext.G = residualAlgHom aY v bY aS bS cS S.G ∧
     Snext.T = residualAlgHom aY v bY aS bS cS S.T ∧
@@ -162,11 +164,11 @@ def ResidualTransition
 non-point, and contains every transformed selected point. -/
 theorem advance_certified
     (hphi : Function.Injective phi)
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d)
     (hne : S.identities ≠ ∅)
     (hcard : S.identities.card ≤ d) :
     0 < S.identities.card ∧
-      ∃ Snext : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag
+      ∃ Snext : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag
           (d - S.identities.card),
         ResidualTransition S Snext ∧
         Snext.nodes = S.nodes \ S.identities ∧
@@ -257,11 +259,11 @@ theorem advance_certified
       (phi P0.derivative) (phi V.derivative) (phi P1.derivative)
       S.T_flag_support
   obtain ⟨hFs, hFys, hFtotal⟩ :=
-    globalResidualHom_surface_flag_weights P0 P1 V S.F
+    globalResidualHom_surface_flag_weights6630 P0 P1 V S.F
       S.surface_s_weight S.surface_ys_weight S.surface_total_weight
   let u0res : Iota → K := fun i ↦ residualReceived J x S.u0 P0 i
   let u1res : Iota → K := fun i ↦ residualReceived J x S.u1 P1 i
-  let Snext : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag
+  let Snext : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag
       (d - J.card) := {
     nodes := S.nodes \ J
     u0 := u0res
@@ -324,11 +326,11 @@ theorem advance_certified
 callers do not need to mention the affine certificate. -/
 theorem advance
     (hphi : Function.Injective phi)
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d)
     (hne : S.identities ≠ ∅)
     (hcard : S.identities.card ≤ d) :
     0 < S.identities.card ∧
-      ∃ Snext : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag
+      ∃ Snext : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag
           (d - S.identities.card),
         Snext.nodes = S.nodes \ S.identities ∧
         (∀ gamma ∈ Gamma, ∀ i ∈ S.identities,
@@ -343,7 +345,7 @@ theorem advance
 base-field affine pencil, hence the no-large-pencil hypothesis immediately
 charges the branch. -/
 theorem card_le_pencil_of_many_identities
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d)
     (hmany : d < S.identities.card) :
     Gamma.card ≤ e + 1 := by
   classical
@@ -372,10 +374,10 @@ theorem card_le_pencil_of_many_identities
 /-- Cardinal form of an inner advance. -/
 theorem advance_card
     (hphi : Function.Injective phi)
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d)
     (hne : S.identities ≠ ∅)
     (hcard : S.identities.card ≤ d) :
-    ∃ Snext : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag
+    ∃ Snext : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag
         (d - S.identities.card),
       Snext.nodes.card = S.nodes.card - S.identities.card ∧
       ∀ gamma ∈ Gamma,
@@ -416,10 +418,10 @@ theorem advance_card
 /-- Cardinal advance retaining the exact affine transition certificate. -/
 theorem advance_card_certified
     (hphi : Function.Injective phi)
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d)
     (hne : S.identities ≠ ∅)
     (hcard : S.identities.card ≤ d) :
-    ∃ Snext : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag
+    ∃ Snext : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag
         (d - S.identities.card),
       ResidualTransition S Snext ∧
       Snext.nodes.card = S.nodes.card - S.identities.card ∧
@@ -462,10 +464,10 @@ theorem advance_card_certified
 remaining agreement is a proper cut of the terminal prime, or the selected
 family has already paid the no-large-pencil charge. -/
 structure TerminalDescendant
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d) where
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d) where
   degree : ℕ
   degree_le : degree ≤ d
-  stage : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag degree
+  stage : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag degree
   terminal : stage.identities = ∅ ∨
     (degree < stage.identities.card ∧ Gamma.card ≤ e + 1)
   nodes_card : stage.nodes.card = S.nodes.card - (d - degree)
@@ -476,7 +478,7 @@ structure TerminalDescendant
 /-- At a proper terminal stage, every remaining agreement polynomial is
 outside the transformed arbitrary prime. -/
 theorem proper_agreement_of_terminal
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d)
     (hterminal : S.identities = ∅) {i : Iota} (hi : i ∈ S.nodes) :
     agreementPolynomial phi S.F d (x i) (S.u0 i) (S.u1 i) ∉
       S.primeIdeal := by
@@ -491,7 +493,7 @@ dichotomy, preserving the total degree loss and losing no more agreements
 than the number of removed identities. -/
 theorem exists_terminal_descendant
     (hphi : Function.Injective phi)
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d) :
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d) :
     Nonempty S.TerminalDescendant := by
   induction d using Nat.strong_induction_on with
   | h d ih =>
@@ -563,12 +565,12 @@ theorem composes it along the entire residual path while retaining the exact
 terminal and agreement accounting. -/
 theorem exists_terminal_descendant_with_invariant
     (hphi : Function.Injective phi)
-    (Inv : ∀ n, CurveResidualStage phi Gamma x p e surfaceFlag cutFlag n → Prop)
+    (Inv : ∀ n, CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag n → Prop)
     (htransport : ∀ {n m}
-      {A : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag n}
-      {B : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag m},
+      {A : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag n}
+      {B : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag m},
       ResidualTransition A B → Inv n A → Inv m B)
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
+    (S : CurveResidualStage6630 phi Gamma x p e surfaceFlag cutFlag d)
     (hInv : Inv d S) :
     ∃ D : S.TerminalDescendant, Inv D.degree D.stage := by
   induction d using Nat.strong_induction_on with
@@ -638,12 +640,12 @@ theorem exists_terminal_descendant_with_invariant
             agreement_card := by simp
           }, hInv⟩
 
-end CurveResidualStage
+end CurveResidualStage6630
 
 end
 
-end ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIterationResearch
+end ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIteration6630Research
 
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIterationResearch.CurveResidualStage.advance
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIterationResearch.CurveResidualStage.exists_terminal_descendant
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIterationResearch.CurveResidualStage.exists_terminal_descendant_with_invariant
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIteration6630Research.CurveResidualStage6630.advance
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIteration6630Research.CurveResidualStage6630.exists_terminal_descendant
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIteration6630Research.CurveResidualStage6630.exists_terminal_descendant_with_invariant
