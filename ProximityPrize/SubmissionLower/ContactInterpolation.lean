@@ -43,7 +43,7 @@ def localMonomial (f j z : ℕ) : Poly K :=
     (Finsupp.single 0 f + Finsupp.single 1 j + Finsupp.single 2 z) 1
 
 theorem localMonomial_mem (f j z : ℕ) :
-    localMonomial K f j z ∈ coefficientBox K f (f + z) j := by
+    localMonomial K f j z ∈ coefficientBox K f (f + j + z) j := by
   apply (MvPolynomial.monomial_mem_restrictSupport (R := K)).mpr
   left
   simp [boxExponents]
@@ -76,11 +76,12 @@ theorem seedAffine_pow_mem (u₀ u₁ : K) (t : ℕ) :
       simpa only [pow_succ, Nat.zero_add] using
         coefficientBox_mul K ih (seedAffine_mem K u₀ u₁)
 
-/-- Distinct weighted monomial labels. Empty X ranges implement a strict
-weighted cap without allocating any columns. The order is i,j,z,e. -/
+/-- Distinct weighted monomial labels in the combined `Y+R+Z` triangle.
+Empty X ranges implement a strict weighted cap without allocating any
+columns. The order is i,j,z,e. -/
 abbrev CoefficientIndex (D w L s : ℕ) :=
   (i : Fin (L + 1)) × (j : Fin (s + 1)) ×
-    (Fin (L + 1 - i.val) × Fin (D - w * i.val - (w - 1) * j.val))
+    (Fin (L + 1 - i.val - j.val) × Fin (D - w * i.val - (w - 1) * j.val))
 
 /-- Global variables 0,1,2,3 denote X,Y,R,Z. -/
 def columnExponent {D w L s : ℕ} (c : CoefficientIndex D w L s) : Fin 4 →₀ ℕ :=
@@ -126,6 +127,14 @@ def globalCoefficientBox (D w L s : ℕ) :
     Submodule K (MvPolynomial (Fin 4) K) :=
   MvPolynomial.restrictSupport K (globalExponents D w L s)
 
+/-- The reconstructed support has the stronger joint Newton simplex
+`Y + R + Z ≤ L`; the older global box records only its downstream shadows. -/
+def fullTriangleExponents (L : ℕ) : Set (Fin 4 →₀ ℕ) :=
+  {d | d 1 + d 2 + d 3 ≤ L}
+
+def fullTriangleBox (L : ℕ) : Submodule K (MvPolynomial (Fin 4) K) :=
+  MvPolynomial.restrictSupport K (fullTriangleExponents L)
+
 theorem columnMonomial_mem (D w L s : ℕ)
     (c : CoefficientIndex D w L s) (a : K) :
     MvPolynomial.monomial (columnExponent c) a ∈
@@ -138,6 +147,16 @@ theorem columnMonomial_mem (D w L s : ℕ)
   have he := c.2.2.2.isLt
   simp only [globalExponents, Set.mem_setOf_eq, columnExponent_x,
     columnExponent_y, columnExponent_r, columnExponent_z]
+  omega
+
+theorem columnMonomial_mem_fullTriangle (D w L s : ℕ)
+    (c : CoefficientIndex D w L s) (a : K) :
+    MvPolynomial.monomial (columnExponent c) a ∈ fullTriangleBox K L := by
+  apply (MvPolynomial.monomial_mem_restrictSupport (R := K)).mpr
+  left
+  have hz := c.2.2.1.isLt
+  simp only [fullTriangleExponents, Set.mem_setOf_eq, columnExponent_y,
+    columnExponent_r, columnExponent_z]
   omega
 
 def reconstruct (D w L s : ℕ) (θ : CoefficientIndex D w L s → K) :
@@ -180,6 +199,15 @@ theorem reconstruct_mem_globalCoefficientBox (D w L s : ℕ)
   intro c hc
   exact columnMonomial_mem K D w L s c (θ c)
 
+theorem reconstruct_mem_fullTriangleBox (D w L s : ℕ)
+    (θ : CoefficientIndex D w L s → K) :
+    reconstruct K D w L s θ ∈ fullTriangleBox K L := by
+  classical
+  unfold reconstruct
+  apply Submodule.sum_mem
+  intro c hc
+  exact columnMonomial_mem_fullTriangle K D w L s c (θ c)
+
 theorem reconstruct_support_caps (D w L s : ℕ)
     (θ : CoefficientIndex D w L s → K) :
     ∀ d ∈ (reconstruct K D w L s θ).support,
@@ -189,7 +217,7 @@ theorem reconstruct_support_caps (D w L s : ℕ)
 def coefficientCount (D w L s : ℕ) : ℕ :=
   ∑ i ∈ Finset.range (L + 1),
     ∑ j ∈ Finset.range (s + 1),
-      (L + 1 - i) * (D - w * i - (w - 1) * j)
+      (L + 1 - i - j) * (D - w * i - (w - 1) * j)
 
 theorem coefficient_index_card (D w L s : ℕ) :
     Fintype.card (CoefficientIndex D w L s) = coefficientCount D w L s := by
@@ -226,7 +254,7 @@ theorem blockEntry_mem (D w L s : ℕ) (x u₀ u₁ : K)
       (seedAffine_pow_mem K u₀ u₁ (c.1.val - f.val))
       (localMonomial_mem K f.val c.2.1.val c.2.2.1.val)
     apply coefficientBox_mono K (show 0 + f.val ≤ min r L by omega)
-      (show c.1.val - f.val + (f.val + c.2.2.1.val) ≤ L by omega)
+      (show c.1.val - f.val + (f.val + c.2.1.val + c.2.2.1.val) ≤ L by omega)
       (show 0 + c.2.1.val ≤ s by omega)
     exact hmul
   · exact (coefficientBox K (min r L) L s).zero_mem

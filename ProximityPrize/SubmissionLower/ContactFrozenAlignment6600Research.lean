@@ -35,6 +35,7 @@ def GlobalCountLtAlignment6600 : Prop :=
     Q ≠ 0 →
     Q ∈ globalCoefficientBox IRSProfile.Field
       weightedCap w seedTotalCap slopeCap →
+    Q ∈ fullTriangleBox IRSProfile.Field seedTotalCap →
     ∀ (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
       (seeds : Finset IRSProfile.Field)
       (u0 u1 : IRSProfile.Index → IRSProfile.Field),
@@ -71,7 +72,7 @@ theorem selected_count_of_global_count_lt_alignment6600
   classical
   intro U seeds A selected hdegree hcard hvalues hno
   have hcard' := original_support_card6600 A seeds hcard
-  obtain ⟨Q, hQ, hbox, hvanish⟩ :=
+  obtain ⟨Q, hQ, hbox, htriangle, hvanish⟩ :=
     exists_frozen_universal_vanishing_interpolant6600 (U 0) (U 1)
   have hsolution : ∀ gamma ∈ seeds,
       specialization IRSProfile.Field (selected gamma) gamma Q = 0 := by
@@ -97,7 +98,7 @@ theorem selected_count_of_global_count_lt_alignment6600
     simpa only [pencilSeeds, Finset.mem_filter] using
       (Finset.mem_filter.mp hgamma)
   exact Nat.le_of_lt
-    (hcount Q hQ hbox selected seeds (U 0) (U 1)
+    (hcount Q hQ hbox htriangle selected seeds (U 0) (U 1)
       hdegree hsolution hagreement hno')
 
 theorem alignment_of_global_count_lt_alignment6600

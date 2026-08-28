@@ -1,6 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6600Research
 import ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research
+import ProximityPrize.SubmissionLower.ContactFullTriangleInheritance
+import ProximityPrize.SubmissionLower.ContactSharpFactorAggregationPost6600Research
 
 /-!
 # Actual regular-factor residual stages at score 66
@@ -16,11 +18,14 @@ namespace ProximityPrize.SubmissionLower.ContactRegularFactorResidualStage6600Re
 open scoped Classical
 open ContactParameters6600Research
 open ContactSelectedSeedDecomposition ContactInterpolation ContactTranslation
+open ContactImplicitContactLift
 open ContactGenericInitialPoint ContactPrimeSeedIncidence ContactProperCutSeedCount
 open ContactOriginalRegularSeedCount ContactOriginalRegularResidualStage6600Research
 open ContactRegularFactorFlag6600Research ContactGlobalSelectedFamilies6600Research
 open ContactIdentityResidualIterationResearch ContactFlagBezout6543Research
 open ContactNearPencil6600FactorLedgerResearch
+open ContactFullTriangleInheritance
+open ContactSharpFactorAggregationPost6600Research
 
 noncomputable section
 
@@ -38,6 +43,7 @@ regular factor. -/
 def regularGeometricResidualStage
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (htriangle : Q ∈ fullTriangleBox K seedTotalCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes)
@@ -48,7 +54,7 @@ def regularGeometricResidualStage
     letI : CharP (GenericField K) prime := genericField_charP K prime
     ResidualStage (polynomialEmbedding K)
       (geometricSeeds K R.1 selected (regularSeeds Q selected Gamma R) g)
-      x prime errors (geometricFlag K g) w := by
+      x prime errors (sharpGeometricFlag K g) w := by
   classical
   letI : CharP (GenericField K) prime := genericField_charP K prime
   have hRdata :=
@@ -56,8 +62,11 @@ def regularGeometricResidualStage
   have hRirred := hRdata.1
   have hRpos := hRdata.2.1
   have hRbox := hRdata.2.2
+  have hRdiv := (positiveRFactors_spec Q R.1 R.2).2.1
+  have hRtriangle := fullTriangleBox_of_dvd R.1 Q seedTotalCap
+    hQ hRdiv htriangle
   have hsub := regularSeeds_subset Q selected Gamma R
-  exact geometricResidualStage K R.1 hRirred hRpos hRbox selected
+  exact geometricResidualStage K R.1 hRirred hRpos hRbox hRtriangle selected
     (regularSeeds Q selected Gamma R) nodes x u0 u1 hinj
     (fun gamma hgamma ↦ hdegree gamma (hsub hgamma))
     (fun gamma hgamma ↦ (Finset.mem_filter.mp hgamma).2.1)
@@ -73,18 +82,15 @@ theorem regular_factor_seed_bound_of_geometric_counts
     (R : ContactRegularFactorFlag6600Research.RegularIndex Q)
     (hcount : ∀ g : GeometricFactor K R.1,
       (geometricSeeds K R.1 selected (regularSeeds Q selected Gamma R) g).card *
-          gap ^ 2 ≤ factorRegularLedger (geometricFlag K g)) :
+          gap ^ 2 ≤ factorRegularLedger (sharpGeometricFlag K g)) :
     (regularSeeds Q selected Gamma R).card * gap ^ 2 ≤
-      factorRegularLedger (regularFlag Q R) := by
-  obtain ⟨hRirred, _, _⟩ :=
-    directFactor_data Q R.1 hQ weightedCap w seedTotalCap slopeCap hbox R.2
+      factorRegularLedger (sharpRegularFlag Q R) := by
   have hsolutions : ∀ gamma ∈ regularSeeds Q selected Gamma R,
       specialization K (selected gamma) gamma R.1 = 0 := by
     intro gamma hgamma
     exact (Finset.mem_filter.mp hgamma).2.1
-  simpa only [geometricFlag, regularFlag] using
-    original_regular_seed_bound_of_geometric_factor_counts K R.1 hRirred
-      selected (regularSeeds Q selected Gamma R) hsolutions hcount
+  exact original_regular_seed_bound_of_sharp_geometric_factor_counts
+    Q R selected (regularSeeds Q selected Gamma R) hsolutions hcount
 
 end
 

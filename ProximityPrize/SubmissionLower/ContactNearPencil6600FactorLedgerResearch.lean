@@ -115,57 +115,6 @@ theorem sum_factorRegularLedger_le
     _ = stratifiedPrimary + stratifiedZTail + factorAllTail surfaceFlag6600 :=
       factorRegularLedger_surface_exact
 
-/-- Robust rectangular factor cap obtained directly from the three existing
-separated degree budgets.  It is slightly larger than `surfaceFlag6600` but
-still leaves substantial score-66 ledger slack. -/
-def rectangularSurfaceFlag6600 : FlagDegree := ⟨495, 43, 8⟩
-
-def rectangularRegularNumerator : ℕ :=
-  factorRegularLedger rectangularSurfaceFlag6600
-
-def rectangularTotalNumerator : ℕ :=
-  rectangularRegularNumerator + retainedSingularContribution
-
-def rectangularLedgerCeiling : ℕ :=
-  (rectangularTotalNumerator + gap ^ 2 - 1) / gap ^ 2
-
-theorem rectangular_regular_exact :
-    rectangularRegularNumerator = 361802540717144456802514527 := by
-  norm_num [rectangularRegularNumerator, factorRegularLedger,
-    factorPrimary, factorZTail, factorAllTail, rectangularSurfaceFlag6600,
-    flagMixed, agreementDirection6600, unitYZFlag, unitZFlag, unitAllFlag,
-    degreeIncidence, unitIncidence, errors, gap, agreements, n, w]
-
-theorem rectangular_total_exact :
-    rectangularTotalNumerator = 368517457418416467513333482 := by
-  rw [show rectangularTotalNumerator =
-      rectangularRegularNumerator + retainedSingularContribution by rfl,
-    rectangular_regular_exact]
-  norm_num [retainedSingularContribution]
-
-theorem rectangular_ledger_ceiling_exact :
-    rectangularLedgerCeiling = 135685232102542715 := by
-  norm_num [rectangularLedgerCeiling, rectangular_total_exact,
-    gap, agreements, n, errors, w]
-
-theorem rectangular_strict_budget :
-    rectangularTotalNumerator < alignmentBudget * gap ^ 2 := by
-  rw [rectangular_total_exact]
-  norm_num [alignmentBudget, gap, agreements, n, errors, w]
-
-theorem rectangular_budget_slack :
-    alignmentBudget - rectangularLedgerCeiling = 1805131953154828 := by
-  rw [rectangular_ledger_ceiling_exact]
-  norm_num [alignmentBudget]
-
-theorem sum_factorRegularLedger_rectangular_le
-    {I : Type} [Fintype I] (p : I → FlagDegree)
-    (hz : (∑ i, (p i).zOnly) ≤ 495)
-    (hyz : (∑ i, (p i).yz) ≤ 43)
-    (hall : (∑ i, (p i).all) ≤ 8) :
-    (∑ i, factorRegularLedger (p i)) ≤ rectangularRegularNumerator := by
-  exact sum_factorRegularLedger_le_flag p rectangularSurfaceFlag6600 hz hyz hall
-
 /-- Component-count inequalities aggregate before applying the flag budget. -/
 theorem sum_factor_counts_le
     {I : Type} [Fintype I] (count : I → ℕ) (p : I → FlagDegree)
@@ -183,32 +132,55 @@ theorem sum_factor_counts_le
     _ ≤ stratifiedPrimary + stratifiedZTail + factorAllTail surfaceFlag6600 :=
       sum_factorRegularLedger_le p hz hyz hall
 
-theorem sum_factor_counts_rectangular_le
-    {I : Type} [Fintype I] (count : I → ℕ) (p : I → FlagDegree)
-    (hcount : ∀ i, count i * gap ^ 2 ≤ factorRegularLedger (p i))
-    (hz : (∑ i, (p i).zOnly) ≤ 495)
-    (hyz : (∑ i, (p i).yz) ≤ 43)
-    (hall : (∑ i, (p i).all) ≤ 8) :
-    (∑ i, count i) * gap ^ 2 ≤ rectangularRegularNumerator := by
-  calc
-    (∑ i, count i) * gap ^ 2 = ∑ i, count i * gap ^ 2 := by
-      rw [Finset.sum_mul]
-    _ ≤ ∑ i, factorRegularLedger (p i) :=
-      Finset.sum_le_sum (fun i _ ↦ hcount i)
-    _ ≤ rectangularRegularNumerator :=
-      sum_factorRegularLedger_rectangular_le p hz hyz hall
+/-- The raw-facet aggregation recovers the literal sharp surface flag. -/
+def sharpRegularNumerator : ℕ := factorRegularLedger surfaceFlag6600
 
-theorem combined_rectangular_scaled_bound
+def sharpTotalNumerator : ℕ :=
+  sharpRegularNumerator + retainedSingularContribution
+
+def sharpLedgerCeiling : ℕ :=
+  (sharpTotalNumerator + gap ^ 2 - 1) / gap ^ 2
+
+theorem sharp_regular_exact :
+    sharpRegularNumerator = 349157909025795652711024489 := by
+  norm_num [sharpRegularNumerator, factorRegularLedger, factorPrimary,
+    factorZTail, factorAllTail, surfaceFlag6600, flagMixed,
+    agreementDirection6600, unitYZFlag, unitZFlag, unitAllFlag,
+    degreeIncidence, unitIncidence, errors, gap, agreements, n, w]
+
+theorem sharp_total_exact :
+    sharpTotalNumerator = 358941474381256833564320365 := by
+  rw [show sharpTotalNumerator =
+      sharpRegularNumerator + retainedSingularContribution by rfl,
+    sharp_regular_exact]
+  norm_num [retainedSingularContribution]
+
+theorem sharp_ledger_ceiling_exact :
+    sharpLedgerCeiling = 133061740011658063 := by
+  norm_num [sharpLedgerCeiling, sharp_total_exact,
+    gap, agreements, n, errors, w]
+
+theorem sharp_strict_budget :
+    sharpTotalNumerator < alignmentBudget * gap ^ 2 := by
+  rw [sharp_total_exact]
+  norm_num [alignmentBudget, gap, agreements, n, errors, w]
+
+theorem sharp_budget_slack :
+    alignmentBudget - sharpLedgerCeiling = 4428624044039480 := by
+  rw [sharp_ledger_ceiling_exact]
+  norm_num [alignmentBudget]
+
+theorem combined_sharp_scaled_bound
     (regularCount singularCount : ℕ)
-    (hregular : regularCount * gap ^ 2 ≤ rectangularRegularNumerator)
+    (hregular : regularCount * gap ^ 2 ≤ sharpRegularNumerator)
     (hsingular : singularCount * gap ^ 2 ≤ retainedSingularContribution) :
-    (regularCount + singularCount) * gap ^ 2 ≤ rectangularTotalNumerator := by
+    (regularCount + singularCount) * gap ^ 2 ≤ sharpTotalNumerator := by
   calc
     (regularCount + singularCount) * gap ^ 2 =
         regularCount * gap ^ 2 + singularCount * gap ^ 2 := by ring
-    _ ≤ rectangularRegularNumerator + retainedSingularContribution :=
+    _ ≤ sharpRegularNumerator + retainedSingularContribution :=
       Nat.add_le_add hregular hsingular
-    _ = rectangularTotalNumerator := rfl
+    _ = sharpTotalNumerator := rfl
 
 end ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
 
@@ -216,5 +188,4 @@ end ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
 #print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sum_factorRegularLedger_le_flag
 #print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sum_factorRegularLedger_le
 #print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sum_factor_counts_le
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.rectangular_strict_budget
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sum_factor_counts_rectangular_le
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sharp_strict_budget

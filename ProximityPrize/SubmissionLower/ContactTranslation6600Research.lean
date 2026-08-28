@@ -27,13 +27,14 @@ theorem exists_frozen_translated_contact_interpolant6600
       Q ≠ 0 ∧
       Q ∈ globalCoefficientBox IRSProfile.Field
         weightedCap w seedTotalCap slopeCap ∧
+      Q ∈ fullTriangleBox IRSProfile.Field seedTotalCap ∧
       ∀ (i : IRSProfile.Index) (r : ℕ),
         slopeDifference IRSProfile.Field ^ (multiplicity - r) ∣
           (homogenizedTranslation IRSProfile.Field
             (IRSProfile.domain i) (u0 i) (u1 i) Q).coeff r := by
-  obtain ⟨Q, theta, hQ, hcaps, hreconstruct, hequations⟩ :=
+  obtain ⟨Q, theta, hQ, hcaps, htriangle, hreconstruct, hequations⟩ :=
     exists_frozen_nonzero_polynomial_and_equations6600 u0 u1
-  refine ⟨Q, hQ, hcaps, ?_⟩
+  refine ⟨Q, hQ, hcaps, htriangle, ?_⟩
   intro i r
   rw [hreconstruct,
     translation_reconstruct_coeff IRSProfile.Field
@@ -48,6 +49,7 @@ theorem exists_frozen_universal_vanishing_interpolant6600
       Q ≠ 0 ∧
       Q ∈ globalCoefficientBox IRSProfile.Field
         weightedCap w seedTotalCap slopeCap ∧
+      Q ∈ fullTriangleBox IRSProfile.Field seedTotalCap ∧
       ∀ (gamma : IRSProfile.Field) (P : Polynomial IRSProfile.Field)
         (support : Finset IRSProfile.Index),
         P.natDegree ≤ w → agreements ≤ support.card →
@@ -55,9 +57,9 @@ theorem exists_frozen_universal_vanishing_interpolant6600
           P.eval (IRSProfile.domain i) = u0 i + gamma * u1 i) →
         specialization IRSProfile.Field P gamma Q = 0 := by
   classical
-  obtain ⟨Q, hQ, hcaps, hcontact⟩ :=
+  obtain ⟨Q, hQ, hcaps, htriangle, hcontact⟩ :=
     exists_frozen_translated_contact_interpolant6600 u0 u1
-  refine ⟨Q, hQ, hcaps, ?_⟩
+  refine ⟨Q, hQ, hcaps, htriangle, ?_⟩
   intro gamma P support hP hcard hvalues
   apply specialization_eq_zero_of_contact_and_degree IRSProfile.Field Q P gamma
     IRSProfile.domain u0 u1 support multiplicity

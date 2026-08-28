@@ -9,7 +9,7 @@ import ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
 Each positive-`R` irreducible factor is enclosed by the flag
 `Flag(deg_Z, deg_Y, deg_R)`.  This deliberately uses the robust rectangular
 outer flag: the existing factor theorem immediately bounds the three sums by
-`(495,43,8)`, and the resulting ledger still proves score 66.
+`(469,44,9)`.  The active global ledger uses the sharper additive raw facets.
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
@@ -62,16 +62,16 @@ flag directly from the interpolation coefficient box. -/
 theorem regularFlag_budgets
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
-    (∑ F : RegularIndex Q, (regularFlag Q F).zOnly) ≤ 495 ∧
-      (∑ F : RegularIndex Q, (regularFlag Q F).yz) ≤ 43 ∧
-      (∑ F : RegularIndex Q, (regularFlag Q F).all) ≤ 8 := by
+    (∑ F : RegularIndex Q, (regularFlag Q F).zOnly) ≤ 469 ∧
+      (∑ F : RegularIndex Q, (regularFlag Q F).yz) ≤ 44 ∧
+      (∑ F : RegularIndex Q, (regularFlag Q F).all) ≤ 9 := by
   classical
   have hb := directFactor_input_budgets Q hQ
     weightedCap w seedTotalCap slopeCap (by norm_num [w]) hbox
   simp only [regularFlag, Finset.sum_coe_sort]
   refine ⟨?_, ?_, ?_⟩
   · simpa [seedTotalCap] using hb.2.2
-  · have hy : (weightedCap - 1) / w = 43 := by
+  · have hy : (weightedCap - 1) / w = 44 := by
       norm_num [ContactParameters6600Research.weightedCap,
         ContactParameters6600Research.multiplicity,
         ContactParameters6600Research.agreements,
