@@ -166,7 +166,6 @@ open scoped Classical
 open ContactIdentityResidualIterationResearch
 open ContactIdentityResidualGlobalTransformResearch
 open ContactIdentityResidualGlobalFlagResearch
-open ContactResidualSupportParametersResearch
 
 noncomputable section
 
@@ -174,18 +173,17 @@ variable {K Omega Iota : Type} [Field K] [Field Omega]
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
 variable {p e : ℕ} [CharP Omega p]
 variable {flag : ContactFlagBezout6543Research.FlagDegree}
-variable {support : ResidualSupportParameters}
 
 /-- A terminal residual stage has no component-identity cut left. -/
 def IsTerminalStage {d : ℕ}
-    (S : ResidualStage phi Gamma x p e flag d support) : Prop :=
+    (S : ResidualStage phi Gamma x p e flag d) : Prop :=
   S.identities = ∅
 
 /-- At a terminal stage every agreement cut on a remaining node is proper on
 the current principal component.  This is the precise condition needed by
 the flag/Bézout zero-count caller. -/
 theorem terminal_iff_all_cuts_proper {d : ℕ}
-    (S : ResidualStage phi Gamma x p e flag d support) :
+    (S : ResidualStage phi Gamma x p e flag d) :
     IsTerminalStage S ↔
       ∀ i ∈ S.nodes,
         ContactPrimeSeedIncidence.agreementPolynomial
@@ -215,61 +213,41 @@ into a theorem for an arbitrary current residual surface. -/
   | mul_X F i hF =>
       fin_cases i <;> simp [globalResidualImage, hF]
 
-/-- Agreement support for an arbitrary surface carrying a supplied residual
-support profile. -/
-theorem surfaceMap_agreement_in_flag_of_support
-    (support : ResidualSupportParameters)
-    (F : MvPolynomial (Fin 4) K)
-    (hS : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualSWeights F ≤ support.s)
-    (hYS : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualYSWeights F ≤ support.ys)
-    (hTotal : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualTotalWeights F ≤ support.total)
-    (d : ℕ) (coeffs : ℕ → K) (x0 u0 u1 : K) :
-    ContactFlagBezout6543Research.PolynomialInFlag
-      (support.residualAgreementFlag d)
-      (ContactGenericSurface.surfaceMap phi
-        (ContactTaylorNumerators.agreementNumerator F d coeffs x0 u0 u1)) := by
-  let hsupport : ResidualSupportData support F := ⟨hS, hYS, hTotal⟩
-  exact hsupport.surfaceMap_agreement_in_flag phi d coeffs x0 u0 u1
-
-/-- Accepted `(8,43,503)` compatibility alias for the original score-66
-agreement-flag API. -/
+/-- Agreement support for an arbitrary surface carrying the three score-66
+global weight hypotheses. -/
 theorem surfaceMap_agreement_in_flag_of_surface_weights
     (F : MvPolynomial (Fin 4) K)
     (hS : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualSWeights F ≤ 8)
+      residualSWeights F ≤ 6)
     (hYS : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualYSWeights F ≤ 43)
+      residualYSWeights F ≤ 33)
     (hTotal : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualTotalWeights F ≤ 503)
+      residualTotalWeights F ≤ 582)
     (d : ℕ) (coeffs : ℕ → K) (x0 u0 u1 : K) :
     ContactFlagBezout6543Research.PolynomialInFlag (residualAgreementFlag d)
       (ContactGenericSurface.surfaceMap phi
         (ContactTaylorNumerators.agreementNumerator F d coeffs x0 u0 u1)) := by
-  simpa only [ResidualSupportParameters.accepted_agreement_flag] using
-    surfaceMap_agreement_in_flag_of_support
-      (phi := phi) ResidualSupportParameters.acceptedSupport F
-        hS hYS hTotal d coeffs x0 u0 u1
+  have h := surfaceMap_globalResidual_agreement_in_flag
+    phi (0 : Polynomial K) 0 1 F hS hYS hTotal d coeffs x0 u0 u1
+  simpa using h
 
 /-- At a terminal recursive stage, every remaining cut is simultaneously
 proper on the current component and contained in the exact residual-degree
 flag.  This is the complete local input expected by the terminal geometric
 zero-count/Bézout caller. -/
 theorem terminal_proper_cuts_in_residual_flag {d : ℕ}
-    (S : ResidualStage phi Gamma x p e flag d support)
+    (S : ResidualStage phi Gamma x p e flag d)
     (hterminal : IsTerminalStage S) :
     ∀ i ∈ S.nodes,
       ContactPrimeSeedIncidence.agreementPolynomial
           phi S.F d (x i) (S.u0 i) (S.u1 i) ∉ S.componentIdeal ∧
         ContactFlagBezout6543Research.PolynomialInFlag
-          (support.residualAgreementFlag d)
+          (residualAgreementFlag d)
           (ContactPrimeSeedIncidence.agreementPolynomial
             phi S.F d (x i) (S.u0 i) (S.u1 i)) := by
   intro i hi
   refine ⟨(terminal_iff_all_cuts_proper S).mp hterminal i hi, ?_⟩
-  exact surfaceMap_agreement_in_flag_of_support support
+  exact surfaceMap_agreement_in_flag_of_surface_weights
     S.F S.surface_s_weight S.surface_ys_weight S.surface_total_weight
     d (fun j ↦ (j.factorial : K)⁻¹) (x i) (S.u0 i) (S.u1 i)
 
@@ -277,12 +255,12 @@ theorem terminal_proper_cuts_in_residual_flag {d : ℕ}
 `ResidualStage` types; the relation records the exact deleted nodes and
 agreement transport needed to compose incidence counts. -/
 inductive ResidualAdvance :
-    (Σ d, ResidualStage phi Gamma x p e flag d support) →
-      (Σ d, ResidualStage phi Gamma x p e flag d support) → Prop
-  | step {d : ℕ} (S : ResidualStage phi Gamma x p e flag d support)
+    (Σ d, ResidualStage phi Gamma x p e flag d) →
+      (Σ d, ResidualStage phi Gamma x p e flag d) → Prop
+  | step {d : ℕ} (S : ResidualStage phi Gamma x p e flag d)
       (hne : S.identities ≠ ∅)
       (Snext : ResidualStage phi Gamma x p e flag
-        (d - S.identities.card) support)
+        (d - S.identities.card))
       (hnodes : Snext.nodes = S.nodes \ S.identities)
       (hold : ∀ gamma ∈ Gamma, ∀ i ∈ S.identities,
         S.Agrees gamma i)
@@ -295,9 +273,9 @@ This is a direct composition of `ResidualStage.advance`; no one-step
 algebra is duplicated here. -/
 theorem exists_strict_advance
     (hphi : Function.Injective phi) {d : ℕ}
-    (S : ResidualStage phi Gamma x p e flag d support)
+    (S : ResidualStage phi Gamma x p e flag d)
     (hnot : ¬ IsTerminalStage S) :
-    ∃ T : Σ d', ResidualStage phi Gamma x p e flag d' support,
+    ∃ T : Σ d', ResidualStage phi Gamma x p e flag d',
       ResidualAdvance ⟨d, S⟩ T ∧ T.1 < d := by
   have hne : S.identities ≠ ∅ := hnot
   obtain ⟨hpos, Snext, hnodes, hold, hdescend⟩ :=
@@ -312,7 +290,7 @@ theorem exists_strict_advance
 steps. -/
 abbrev ResidualReachable := Relation.ReflTransGen
   (ResidualAdvance (phi := phi) (Gamma := Gamma) (x := x)
-    (p := p) (e := e) (flag := flag) (support := support))
+    (p := p) (e := e) (flag := flag))
 
 /-- Repeated actual-identity residualization always reaches a terminal
 stage.  Termination is by strict descent of the residual degree; the theorem
@@ -320,8 +298,8 @@ returns the full final state and the composed advance chain, not merely a
 numeric bound. -/
 theorem exists_terminal_reachable
     (hphi : Function.Injective phi) {d : ℕ}
-    (S : ResidualStage phi Gamma x p e flag d support) :
-    ∃ T : Σ d', ResidualStage phi Gamma x p e flag d' support,
+    (S : ResidualStage phi Gamma x p e flag d) :
+    ∃ T : Σ d', ResidualStage phi Gamma x p e flag d',
       ResidualReachable ⟨d, S⟩ T ∧ IsTerminalStage T.2 := by
   induction d using Nat.strong_induction_on with
   | h d ih =>
@@ -341,11 +319,11 @@ gap and the sharp node coefficient survive an arbitrary number of residual
 identity extractions. -/
 theorem exists_terminal_with_incidence_data
     (hphi : Function.Injective phi) {d a : ℕ}
-    (S : ResidualStage phi Gamma x p e flag d support)
+    (S : ResidualStage phi Gamma x p e flag d)
     (hda : d ≤ a)
     (hagreement : ∀ gamma ∈ Gamma,
       a ≤ (S.agreementFiber gamma).card) :
-    ∃ T : Σ d', ResidualStage phi Gamma x p e flag d' support,
+    ∃ T : Σ d', ResidualStage phi Gamma x p e flag d',
       ResidualReachable ⟨d, S⟩ T ∧
       IsTerminalStage T.2 ∧
       T.1 ≤ d ∧

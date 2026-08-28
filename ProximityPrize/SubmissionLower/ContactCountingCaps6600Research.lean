@@ -71,3 +71,6 @@ theorem fixed_implicit_characteristic_gates
 
 end
 end ProximityPrize.SubmissionLower.ContactCountingCaps6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps6600Research.fixed_implicit_agreement_caps
+#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps6600Research.fixed_implicit_characteristic_gates

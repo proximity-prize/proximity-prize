@@ -2,7 +2,6 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualZeroBudgetTransportResearch
 import ProximityPrize.SubmissionLower.ContactFlagSymbolicTrapezoidResearch
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FlagResearch
-import ProximityPrize.SubmissionLower.ContactResidualSupportParametersResearch
 
 /-!
 # Shared per-prime unit flag budgets
@@ -24,7 +23,6 @@ open ContactIdentityResidualZeroBudgetTransportResearch
 open ContactIdentityResidualGlobalFlagResearch
 open ContactNearPencil6600ArithmeticResearch
 open ContactNearPencil6600FlagResearch
-open ContactResidualSupportParametersResearch
 
 noncomputable section
 
@@ -90,59 +88,6 @@ theorem PrimeFlagBudgetFamily.weightedCost_residualAgreementFlag
   rw [residualAgreementFlag_eq_affine]
   simp only [PrimeFlagBudgetFamily.weightedCost, add_zOnly, add_yz, add_all,
     nsmul_zOnly, nsmul_yz, nsmul_all]
-  ring
-
-/-- Parameter-generic affine residual-agreement cost identity. -/
-theorem PrimeFlagBudgetFamily.weightedCost_supportResidualAgreementFlag
-    {p q : FlagDegree} (B : PrimeFlagBudgetFamily (G := G) (T := T) (H := H) p q)
-    (support : ResidualSupportParameters)
-    (C : RegularComponent Omega G T H) (d : ℕ) :
-    B.weightedCost (support.residualAgreementFlag d) C =
-      d * B.weightedCost support.agreementDirection C +
-        B.weightedCost unitYZFlag C := by
-  simp only [ResidualSupportParameters.residualAgreementFlag,
-    ResidualSupportParameters.agreementDirection,
-    PrimeFlagBudgetFamily.weightedCost, unitYZFlag]
-  ring
-
-/-- Generic affine expansion against the residual agreement direction. -/
-theorem flagMixed_supportResidualAgreement_direction
-    (p : FlagDegree) (support : ResidualSupportParameters) (d : ℕ) :
-    flagMixed p (support.residualAgreementFlag d) support.agreementDirection =
-      d * flagMixed p support.agreementDirection support.agreementDirection +
-        flagMixed p support.agreementDirection unitYZFlag := by
-  simp [flagMixed, ResidualSupportParameters.residualAgreementFlag,
-    ResidualSupportParameters.agreementDirection, unitYZFlag]
-  ring
-
-/-- Generic affine expansion against the unit `YZ` direction. -/
-theorem flagMixed_supportResidualAgreement_unit
-    (p : FlagDegree) (support : ResidualSupportParameters) (d : ℕ) :
-    flagMixed p (support.residualAgreementFlag d) unitYZFlag =
-      d * flagMixed p support.agreementDirection unitYZFlag +
-        flagMixed p unitYZFlag unitYZFlag := by
-  simp [flagMixed, ResidualSupportParameters.residualAgreementFlag,
-    ResidualSupportParameters.agreementDirection, unitYZFlag]
-  ring
-
-/-- Generic affine expansion of the large-pencil `Z` charge. -/
-theorem flagMixed_supportResidualAgreement_z
-    (p : FlagDegree) (support : ResidualSupportParameters) (d : ℕ) :
-    flagMixed p (support.residualAgreementFlag d) unitZFlag =
-      d * flagMixed p support.agreementDirection unitZFlag +
-        flagMixed p unitYZFlag unitZFlag := by
-  simp [flagMixed, ResidualSupportParameters.residualAgreementFlag,
-    ResidualSupportParameters.agreementDirection, unitYZFlag, unitZFlag]
-  ring
-
-/-- Generic affine expansion of the all-coordinate tail. -/
-theorem flagMixed_supportResidualAgreement_all
-    (p : FlagDegree) (support : ResidualSupportParameters) (d : ℕ) :
-    flagMixed p (support.residualAgreementFlag d) unitAllFlag =
-      d * flagMixed p support.agreementDirection unitAllFlag +
-        flagMixed p unitYZFlag unitAllFlag := by
-  simp [flagMixed, ResidualSupportParameters.residualAgreementFlag,
-    ResidualSupportParameters.agreementDirection, unitYZFlag, unitAllFlag]
   ring
 
 /-- Exact factorwise affine coefficient of the residual-degree part. -/

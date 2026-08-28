@@ -9,7 +9,7 @@ import ProximityPrize.SubmissionLower.ContactExceptionalSeedCount
 import ProximityPrize.SubmissionLower.ContactSelectedSeedDecomposition
 
 /-!
-# Fixed-centre scalar list bound at the 66.96 radius
+# Fixed-centre scalar list bound at the 66.75 radius
 
 The seedless interpolant is factored exactly as in the affine alignment
 argument.  Positive-`R` factors are counted on the plane curve `Z=0` using
@@ -49,12 +49,12 @@ def regularListNumerator : ℕ :=
   (n - w) * (capY * slopeCap + capR * yTotalCap)
 def singularListCap : ℕ := (2 * slopeCap - 1) * yTotalCap
 def listNumerator : ℕ := regularListNumerator + singularListCap * gap
-def listBudget : ℕ := 500000000
+def listBudget : ℕ := 360000000
 
 theorem numeric_values :
-    gap = 51343 ∧ capY = 12320675 ∧ capR = 1966065 ∧
-      regularListNumerator = 25031070448215 ∧
-      singularListCap = 705 ∧ listNumerator = 25031106645030 := by
+    gap = 51553 ∧ capY = 10485681 ∧ capR = 1703923 ∧
+      regularListNumerator = 18554259635151 ∧
+      singularListCap = 520 ∧ listNumerator = 18554286442711 := by
   norm_num [gap, capY, capR, regularListNumerator, singularListCap,
     listNumerator, agreements, n, errors, w, yTotalCap, slopeCap]
 

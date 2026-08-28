@@ -76,7 +76,7 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
     [CharP Omega prime]
     {flag : FlagDegree}
     (S : ResidualStage phi Gamma x prime errors flag w)
-    (hflagZ : flag.zOnly ≤ 495)
+    (hflagZ : flag.zOnly ≤ 501)
     (hflagY : flag.yz ≤ 43)
     (hflagS : flag.all ≤ 8) :
     TerminalAdaptiveProjectionFamilies S := by
@@ -97,14 +97,14 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
   have hD : D.degree ≤ w := D.degree_le.trans (Nat.le_refl w)
   have hGY' : D.stage.G.degreeOf 0 ≤ 51 := by omega
   have hGS' : D.stage.G.degreeOf 1 ≤ 8 := by omega
-  have hGZ' : D.stage.G.degreeOf 2 ≤ 546 := by omega
+  have hGZ' : D.stage.G.degreeOf 2 ≤ 556 := by omega
   have hTY' : T.degreeOf 0 ≤ 1 + 85 * w := by
     dsimp only [residualAgreementFlag] at hTY
     omega
   have hTS' : T.degreeOf 1 ≤ 15 * w := by
     dsimp only [residualAgreementFlag] at hTS
     omega
-  have hTZ' : T.degreeOf 2 ≤ 1 + 1005 * w := by
+  have hTZ' : T.degreeOf 2 ≤ 1 + 1111 * w := by
     dsimp only [residualAgreementFlag] at hTZ
     omega
   have hGdegree : ∀ j : Fin 3, D.stage.G.degreeOf j < prime := by
@@ -161,3 +161,5 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
 end
 
 end ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Research.terminalAdaptiveProjectionFamilies_of_rectangular_caps

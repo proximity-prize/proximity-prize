@@ -138,3 +138,6 @@ theorem implicit_with_exceptions_scaled_bound {I : Type} [Fintype I]
       ring
 
 end ProximityPrize.SubmissionLower.ContactSingularLedger6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactSingularLedger6600Research.implicit_with_exceptions_bound
+#print axioms ProximityPrize.SubmissionLower.ContactSingularLedger6600Research.implicit_with_exceptions_scaled_bound

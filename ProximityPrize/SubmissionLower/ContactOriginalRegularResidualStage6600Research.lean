@@ -26,7 +26,6 @@ open ContactOriginalRegularSeedCount
 open ContactRegularFactorFlag6600Research
 open ContactIdentityResidualIterationResearch
 open ContactIdentityResidualGlobalFlagResearch
-open ContactResidualSupportParametersResearch
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactFlagBezout6543Research
 open ContactNearPencil6600FactorLedgerResearch
@@ -67,7 +66,7 @@ theorem residual_surface_weights_of_box
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
     wt residualSWeights F ≤ 8 ∧
       wt residualYSWeights F ≤ 43 ∧
-      wt residualTotalWeights F ≤ 503 := by
+      wt residualTotalWeights F ≤ 556 := by
   constructor
   · apply (weightedTotalDegree_le_iff residualSWeights F 8).mpr
     intro d hd
@@ -94,7 +93,7 @@ theorem residual_surface_weights_of_box
       norm_num [weightedCap, ContactParameters6600Research.multiplicity,
         agreements, n, errors, w] at hb
       omega
-    · apply (weightedTotalDegree_le_iff residualTotalWeights F 503).mpr
+    · apply (weightedTotalDegree_le_iff residualTotalWeights F 556).mpr
       intro d hd
       have hb : d 1 + d 3 ≤ seedTotalCap ∧ d 2 ≤ slopeCap ∧
           d 0 + w * d 1 + (w - 1) * d 2 < weightedCap := hbox hd
@@ -110,72 +109,7 @@ theorem residual_surface_weights_of_box
 variable {Iota : Type}
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Parameter-generic initial outer residual state on one actual geometric
-factor.  The caller supplies precisely the support state preserved by
-residualization and the two characteristic gates used by the geometric
-regularity argument and recursive degree descent. -/
-def geometricResidualStageOfSupport
-    (support : ResidualSupportParameters)
-    {pchar errorCap degree : ℕ} [CharP K pchar]
-    (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
-    (hRpos : 0 < F.degreeOf (2 : Fin 4))
-    (hRsmall : F.degreeOf (2 : Fin 4) < pchar)
-    (hsupport : ResidualSupportData support F)
-    (selected : K → Polynomial K) (Gamma : Finset K)
-    (nodes : Finset Iota) (x u0 u1 : Iota → K)
-    (hinj : Set.InjOn x nodes)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ degree)
-    (hsolutions : ∀ gamma ∈ Gamma,
-      specialization K (selected gamma) gamma F = 0)
-    (hregular : ∀ gamma ∈ Gamma,
-      specialization K (selected gamma) gamma
-        (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hnoPencil : NoLargeSelectedPencil selected Gamma degree errorCap)
-    (hdegreeChar : degree < pchar)
-    (g : GeometricFactor K F) :
-    letI : CharP (GenericField K) pchar := genericField_charP K pchar
-    ResidualStage (polynomialEmbedding K)
-      (geometricSeeds K F selected Gamma g) x pchar errorCap
-      (geometricFlag K g) degree support := by
-  classical
-  letI : CharP (GenericField K) pchar := genericField_charP K pchar
-  have hgspec := surfaceFactors_spec (polynomialEmbedding K) F g.1 g.2
-  have hgirred := hgspec.1
-  have hgdiv := hgspec.2
-  have hgate := geometric_factor_regular_gate K (GenericField K) F hF pchar
-    hRpos hRsmall g.1 hgirred
-    (by simpa only [canonical_geometricSurfaceMap] using hgdiv)
-  have hsub := geometricSeeds_subset K F selected Gamma g
-  exact {
-    nodes := nodes
-    u0 := u0
-    u1 := u1
-    selected := selected
-    F := F
-    G := g.1
-    irreducible_G := hgirred
-    G_dvd_surface := hgdiv
-    y_dependent := hgate.1
-    regular_proper := by
-      simpa only [canonical_geometricSurfaceMap] using hgate.2.2.2.2
-    flag_support := polynomialIn_geometricFlag K g
-    surface_s_weight := hsupport.s_weight
-    surface_ys_weight := hsupport.ys_weight
-    surface_total_weight := hsupport.total_weight
-    x_injective := hinj
-    degree_le := fun gamma hgamma ↦ hdegree gamma (hsub hgamma)
-    solution := fun gamma hgamma ↦ hsolutions gamma (hsub hgamma)
-    regular := fun gamma hgamma ↦
-      selectedPoint_regular_of_specialization K F selected gamma
-        (hregular gamma (hsub hgamma))
-    on_component := fun gamma hgamma ↦ (Finset.mem_filter.mp hgamma).2
-    no_large_pencil := noLargeSelectedPencil_mono selected Gamma _ degree errorCap
-      hsub hnoPencil
-    characteristic_bound := hdegreeChar
-  }
-
-/-- Canonical accepted-profile initial outer residual state on one actual
-geometric factor.  This retains the original API exactly. -/
+/-- Canonical initial outer residual state on one actual geometric factor. -/
 def geometricResidualStage
     [CharP K prime]
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
@@ -196,15 +130,46 @@ def geometricResidualStage
     ResidualStage (polynomialEmbedding K)
       (geometricSeeds K F selected Gamma g) x prime errors
       (geometricFlag K g) w := by
+  classical
+  letI : CharP (GenericField K) prime := genericField_charP K prime
+  have hgspec := surfaceFactors_spec (polynomialEmbedding K) F g.1 g.2
+  have hgirred := hgspec.1
+  have hgdiv := hgspec.2
   have hRsmall : F.degreeOf (2 : Fin 4) < prime :=
     (degreeOf_R_le_of_mem_box F weightedCap w seedTotalCap slopeCap hbox).trans_lt
       (by norm_num [slopeCap, prime])
-  have hsupport := residual_surface_weights_of_box K F hbox
-  exact geometricResidualStageOfSupport K
-    ResidualSupportParameters.acceptedSupport F hF hRpos hRsmall
-    ⟨hsupport.1, hsupport.2.1, hsupport.2.2⟩ selected Gamma nodes x u0 u1
-    hinj hdegree hsolutions hregular hnoPencil
-    (by norm_num [w, prime]) g
+  have hgate := geometric_factor_regular_gate K (GenericField K) F hF prime
+    hRpos hRsmall g.1 hgirred
+    (by simpa only [canonical_geometricSurfaceMap] using hgdiv)
+  have hsub := geometricSeeds_subset K F selected Gamma g
+  have hwts := residual_surface_weights_of_box K F hbox
+  exact {
+    nodes := nodes
+    u0 := u0
+    u1 := u1
+    selected := selected
+    F := F
+    G := g.1
+    irreducible_G := hgirred
+    G_dvd_surface := hgdiv
+    y_dependent := hgate.1
+    regular_proper := by
+      simpa only [canonical_geometricSurfaceMap] using hgate.2.2.2.2
+    flag_support := polynomialIn_geometricFlag K g
+    surface_s_weight := hwts.1
+    surface_ys_weight := hwts.2.1
+    surface_total_weight := hwts.2.2
+    x_injective := hinj
+    degree_le := fun gamma hgamma ↦ hdegree gamma (hsub hgamma)
+    solution := fun gamma hgamma ↦ hsolutions gamma (hsub hgamma)
+    regular := fun gamma hgamma ↦
+      selectedPoint_regular_of_specialization K F selected gamma
+        (hregular gamma (hsub hgamma))
+    on_component := fun gamma hgamma ↦ (Finset.mem_filter.mp hgamma).2
+    no_large_pencil := noLargeSelectedPencil_mono selected Gamma _ w errors
+      hsub hnoPencil
+    characteristic_bound := by norm_num [w, prime]
+  }
 
 /-- Geometric factor flags sum coordinatewise to the original factor's
 rectangular flag. -/
@@ -260,3 +225,6 @@ end
 
 
 end ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research.geometricResidualStage
+#print axioms ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research.original_regular_seed_bound_of_geometric_factor_counts
