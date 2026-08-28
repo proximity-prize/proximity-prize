@@ -134,15 +134,15 @@ theorem contactJet_eq_zero_iff_coeff (h : ℕ) (f : Poly K) :
       simp [contactJet_apply, MvPolynomial.coeff_modMonomial_of_not_le _ hle, hf d hd]
 
 def boxExponents (M L s : ℕ) : Set (Fin 3 →₀ ℕ) :=
-  {d | d 0 ≤ M ∧ d 0 + d 2 ≤ L ∧ d 1 ≤ s}
+  {d | d 0 ≤ M ∧ d 0 + d 1 + d 2 ≤ L ∧ d 1 ≤ s}
 
-/-- Separate Y/R caps and the coupled Y+Z cap of an actual local block. -/
+/-- The Y cap and the stable total Y+R+Z cap of an actual local block. -/
 def coefficientBox (M L s : ℕ) : Submodule K (Poly K) :=
   MvPolynomial.restrictSupport K (boxExponents M L s)
 
 theorem mem_coefficientBox_iff (M L s : ℕ) (f : Poly K) :
     f ∈ coefficientBox K M L s ↔
-      ∀ d ∈ f.support, d 0 ≤ M ∧ d 0 + d 2 ≤ L ∧ d 1 ≤ s := by
+      ∀ d ∈ f.support, d 0 ≤ M ∧ d 0 + d 1 + d 2 ≤ L ∧ d 1 ≤ s := by
   rfl
 
 theorem coefficientBox_mul
@@ -211,17 +211,20 @@ private theorem exponentTriple_eta (d : Fin 3 →₀ ℕ) :
 
 /-- The monomial basis is a genuine dependent triangle, not a rectangle. -/
 abbrev BoxIndex (M L s : ℕ) :=
-  (i : Fin (min M L + 1)) × (Fin (s + 1) × Fin (L - i.val + 1))
+  (i : Fin (min M L + 1)) × (j : Fin (s + 1)) × Fin (L - i.val + 1 - j.val)
 
-private theorem finPair_heq_of_val_eq
-    {n a b : ℕ} {i j : Fin n} {u : Fin a} {v : Fin b}
-    (hab : a = b) (hij : i.val = j.val) (huv : u.val = v.val) :
-    HEq (i, u) (j, v) := by
-  subst b
-  have hi : i = j := Fin.ext hij
-  have hu : u = v := Fin.ext huv
-  cases hi
-  cases hu
+private theorem boxIndex_ext {M L s : ℕ} {q q' : BoxIndex M L s}
+    (hi : q.1.val = q'.1.val)
+    (hj : q.2.1.val = q'.2.1.val)
+    (hz : q.2.2.val = q'.2.2.val) : q = q' := by
+  rcases q with ⟨⟨i, hiB⟩, ⟨⟨j, hjB⟩, ⟨z, hzB⟩⟩⟩
+  rcases q' with ⟨⟨i', hiB'⟩, ⟨⟨j', hjB'⟩, ⟨z', hzB'⟩⟩⟩
+  change i = i' at hi
+  subst i'
+  change j = j' at hj
+  subst j'
+  change z = z' at hz
+  subst z'
   rfl
 
 def boxExponentsEquivIndex (M L s : ℕ) :
@@ -234,7 +237,7 @@ def boxExponentsEquivIndex (M L s : ℕ) :
           rcases d.property with ⟨hM, hL, hs⟩
           omega⟩,
         ⟨d.val 2, by
-          change d.val 2 < L - d.val 0 + 1
+          change d.val 2 < L - d.val 0 + 1 - d.val 1
           rcases d.property with ⟨hM, hL, hs⟩
           omega⟩⟩⟩
   invFun q :=
@@ -247,12 +250,10 @@ def boxExponentsEquivIndex (M L s : ℕ) :
       omega⟩
   left_inv d := Subtype.ext (exponentTriple_eta d.val)
   right_inv q := by
-    rcases q with ⟨⟨i, hi⟩, ⟨⟨j, hj⟩, ⟨z, hz⟩⟩⟩
-    simp
-    apply finPair_heq_of_val_eq
-    · simp [exponentTriple]
-    · rfl
-    · rfl
+    apply boxIndex_ext
+    · exact exponentTriple_zero _ _ _
+    · exact exponentTriple_one _ _ _
+    · exact exponentTriple_two _ _ _
 
 instance boxExponentsFintype (M L s : ℕ) : Fintype (boxExponents M L s) :=
   Fintype.ofEquiv (BoxIndex M L s) (boxExponentsEquivIndex M L s).symm
@@ -263,16 +264,18 @@ instance coefficientBoxFinite (M L s : ℕ) :
 
 theorem coefficientBox_finrank (M L s : ℕ) :
     Module.finrank K (coefficientBox K M L s) =
-      (s + 1) * ∑ i : Fin (min M L + 1), (L - i.val + 1) := by
+      ∑ i : Fin (min M L + 1),
+        ∑ j : Fin (s + 1), (L - i.val + 1 - j.val) := by
   change Module.finrank K (MvPolynomial.restrictSupport K (boxExponents M L s)) = _
   rw [Module.finrank_eq_card_basis
     (MvPolynomial.basisRestrictSupport K (boxExponents M L s))]
   rw [Fintype.card_congr (boxExponentsEquivIndex M L s)]
-  simp [BoxIndex, Fintype.card_sigma, Finset.mul_sum]
+  simp [BoxIndex, Fintype.card_sigma]
 
 theorem coefficientBox_finrank_of_le (M L s : ℕ) (hML : M ≤ L) :
     Module.finrank K (coefficientBox K M L s) =
-      (s + 1) * ∑ i : Fin (M + 1), (L - i.val + 1) := by
+      ∑ i : Fin (M + 1),
+        ∑ j : Fin (s + 1), (L - i.val + 1 - j.val) := by
   have hmin : min M L = M := Nat.min_eq_left hML
   have hh := coefficientBox_finrank K M L s
   rw [hmin] at hh
@@ -336,8 +339,10 @@ gate, for a block where a nonzero smaller box can occur. -/
 theorem blockJet_rank_le_triangle_difference {M L s h : ℕ}
     (hML : M ≤ L) (hM : h ≤ M) (hs : h ≤ s) :
     Module.finrank K (LinearMap.range (blockJet K M L s h)) ≤
-      (s + 1) * (∑ i : Fin (M + 1), (L - i.val + 1)) -
-        (s - h + 1) * (∑ i : Fin (M - h + 1), (L - h - i.val + 1)) := by
+      (∑ i : Fin (M + 1),
+        ∑ j : Fin (s + 1), (L - i.val + 1 - j.val)) -
+      (∑ i : Fin (M - h + 1),
+        ∑ j : Fin (s - h + 1), (L - h - i.val + 1 - j.val)) := by
   have hineq := blockJet_rank_add_quotient_finrank_le K hM (hM.trans hML) hs
   rw [coefficientBox_finrank_of_le K M L s hML,
     coefficientBox_finrank_of_le K (M - h) (L - h) (s - h)
@@ -348,30 +353,34 @@ theorem blockJet_rank_le_triangle_difference {M L s h : ℕ}
 by the full input coefficient dimension. -/
 theorem blockJet_rank_le_input (M L s h : ℕ) (hML : M ≤ L) :
     Module.finrank K (LinearMap.range (blockJet K M L s h)) ≤
-      (s + 1) * ∑ i : Fin (M + 1), (L - i.val + 1) := by
+      ∑ i : Fin (M + 1),
+        ∑ j : Fin (s + 1), (L - i.val + 1 - j.val) := by
   have hsum := (blockJet K M L s h).finrank_range_add_finrank_ker
   rw [coefficientBox_finrank_of_le K M L s hML] at hsum
   omega
 
 theorem coefficientBox_finrank_range (M L s : ℕ) (hML : M ≤ L) :
     Module.finrank K (coefficientBox K M L s) =
-      (s + 1) * ∑ i ∈ Finset.range (M + 1), (L + 1 - i) := by
+      ∑ i ∈ Finset.range (M + 1),
+        ∑ j ∈ Finset.range (s + 1), (L + 1 - i - j) := by
   rw [coefficientBox_finrank_of_le K M L s hML]
-  congr 1
   rw [Finset.sum_range]
   apply Finset.sum_congr rfl
   intro i hi
-  have hiM := i.isLt
+  rw [Finset.sum_range]
+  apply Finset.sum_congr rfl
+  intro j hj
   omega
 
 def blockInputCount (M L s : ℕ) : ℕ :=
-  (s + 1) * ∑ i ∈ Finset.range (M + 1), (L + 1 - i)
+  ∑ i ∈ Finset.range (M + 1),
+    ∑ j ∈ Finset.range (s + 1), (L + 1 - i - j)
 
 /-- The subtraction occurs after adding one, so an overlarge contact
 exponent correctly makes the proposed kernel basis empty. -/
 def blockKernelLowerBound (M L s h : ℕ) : ℕ :=
-  (s + 1 - h) *
-    ∑ i ∈ Finset.range (M + 1 - h), (L + 1 - h - i)
+  ∑ i ∈ Finset.range (M + 1 - h),
+    ∑ j ∈ Finset.range (s + 1 - h), (L + 1 - h - i - j)
 
 def contactRankBound (M L s h : ℕ) : ℕ :=
   blockInputCount M L s - blockKernelLowerBound M L s h
@@ -397,14 +406,12 @@ theorem blockJet_rank_le_contactRankBound (M L s h : ℕ) (hML : M ≤ L) :
     · have hzero : s + 1 - h = 0 := by omega
       have hsum := (blockJet K M L s h).finrank_range_add_finrank_ker
       rw [coefficientBox_finrank_range K M L s hML] at hsum
-      simp only [contactRankBound, blockKernelLowerBound, hzero, zero_mul, Nat.sub_zero,
-        blockInputCount]
+      simp [contactRankBound, blockKernelLowerBound, hzero, blockInputCount]
       omega
   · have hzero : M + 1 - h = 0 := by omega
     have hsum := (blockJet K M L s h).finrank_range_add_finrank_ker
     rw [coefficientBox_finrank_range K M L s hML] at hsum
-    simp only [contactRankBound, blockKernelLowerBound, hzero, Finset.range_zero,
-      Finset.sum_empty, mul_zero, Nat.sub_zero, blockInputCount]
+    simp [contactRankBound, blockKernelLowerBound, hzero, blockInputCount]
     omega
 
 def localRankBound (m L s : ℕ) : ℕ :=

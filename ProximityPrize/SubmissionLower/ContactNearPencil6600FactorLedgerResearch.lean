@@ -2,7 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FlagResearch
 
 /-!
-# Factorwise linear aggregation of the 66.00 regular ledger
+# Factorwise linear aggregation of the 66.11 regular ledger
 
 The nested residual-incidence cost is linear in the flag of the original
 surface factor.  Consequently distinct irreducible factors must be charged
@@ -116,9 +116,9 @@ theorem sum_factorRegularLedger_le
       factorRegularLedger_surface_exact
 
 /-- Robust rectangular factor cap obtained directly from the three existing
-separated degree budgets.  It is slightly larger than `surfaceFlag6600` but
-still leaves substantial score-66 ledger slack. -/
-def rectangularSurfaceFlag6600 : FlagDegree := ⟨495, 43, 8⟩
+separated degree budgets.  At 66.35 it is used only for pointwise projection
+gates; the global count uses the sharper additive raw-facet aggregation. -/
+def rectangularSurfaceFlag6600 : FlagDegree := ⟨464, 44, 9⟩
 
 def rectangularRegularNumerator : ℕ :=
   factorRegularLedger rectangularSurfaceFlag6600
@@ -130,39 +130,73 @@ def rectangularLedgerCeiling : ℕ :=
   (rectangularTotalNumerator + gap ^ 2 - 1) / gap ^ 2
 
 theorem rectangular_regular_exact :
-    rectangularRegularNumerator = 361802540717144456802514527 := by
+    rectangularRegularNumerator = 383692806218271660674619080 := by
   norm_num [rectangularRegularNumerator, factorRegularLedger,
     factorPrimary, factorZTail, factorAllTail, rectangularSurfaceFlag6600,
     flagMixed, agreementDirection6600, unitYZFlag, unitZFlag, unitAllFlag,
     degreeIncidence, unitIncidence, errors, gap, agreements, n, w]
 
 theorem rectangular_total_exact :
-    rectangularTotalNumerator = 368517457418416467513333482 := by
+    rectangularTotalNumerator = 393375043191109868873662070 := by
   rw [show rectangularTotalNumerator =
       rectangularRegularNumerator + retainedSingularContribution by rfl,
     rectangular_regular_exact]
   norm_num [retainedSingularContribution]
 
 theorem rectangular_ledger_ceiling_exact :
-    rectangularLedgerCeiling = 135685232102542715 := by
+    rectangularLedgerCeiling = 145787168931661596 := by
   norm_num [rectangularLedgerCeiling, rectangular_total_exact,
     gap, agreements, n, errors, w]
 
-theorem rectangular_strict_budget :
-    rectangularTotalNumerator < alignmentBudget * gap ^ 2 := by
-  rw [rectangular_total_exact]
+theorem rectangular_budget_slack :
+    alignmentBudget - rectangularLedgerCeiling = 0 := by
+  rw [rectangular_ledger_ceiling_exact]
+  norm_num [alignmentBudget]
+
+/-- Sharp numerator obtained after aggregating the additive raw facets
+`R`, `Y+R`, and `Y+R+Z` before converting to nested flag coordinates. -/
+def sharpRegularNumerator : ℕ := factorRegularLedger surfaceFlag6600
+
+def sharpTotalNumerator : ℕ :=
+  sharpRegularNumerator + retainedSingularContribution
+
+def sharpLedgerCeiling : ℕ :=
+  (sharpTotalNumerator + gap ^ 2 - 1) / gap ^ 2
+
+theorem sharp_regular_exact :
+    sharpRegularNumerator = 345299818868991639687663364 := by
+  norm_num [sharpRegularNumerator, factorRegularLedger, factorPrimary,
+    factorZTail, factorAllTail, surfaceFlag6600, flagMixed,
+    agreementDirection6600, unitYZFlag, unitZFlag, unitAllFlag,
+    degreeIncidence, unitIncidence, errors, gap, agreements, n, w]
+
+theorem sharp_total_exact :
+    sharpTotalNumerator = 354982055841829847886706354 := by
+  rw [show sharpTotalNumerator =
+      sharpRegularNumerator + retainedSingularContribution by rfl,
+    sharp_regular_exact]
+  norm_num [retainedSingularContribution]
+
+theorem sharp_ledger_ceiling_exact :
+    sharpLedgerCeiling = 131558495737054807 := by
+  norm_num [sharpLedgerCeiling, sharp_total_exact,
+    gap, agreements, n, errors, w]
+
+theorem sharp_strict_budget :
+    sharpTotalNumerator < alignmentBudget * gap ^ 2 := by
+  rw [sharp_total_exact]
   norm_num [alignmentBudget, gap, agreements, n, errors, w]
 
-theorem rectangular_budget_slack :
-    alignmentBudget - rectangularLedgerCeiling = 1805131953154828 := by
-  rw [rectangular_ledger_ceiling_exact]
+theorem sharp_budget_slack :
+    alignmentBudget - sharpLedgerCeiling = 5931868318642736 := by
+  rw [sharp_ledger_ceiling_exact]
   norm_num [alignmentBudget]
 
 theorem sum_factorRegularLedger_rectangular_le
     {I : Type} [Fintype I] (p : I → FlagDegree)
-    (hz : (∑ i, (p i).zOnly) ≤ 495)
-    (hyz : (∑ i, (p i).yz) ≤ 43)
-    (hall : (∑ i, (p i).all) ≤ 8) :
+    (hz : (∑ i, (p i).zOnly) ≤ 464)
+    (hyz : (∑ i, (p i).yz) ≤ 44)
+    (hall : (∑ i, (p i).all) ≤ 9) :
     (∑ i, factorRegularLedger (p i)) ≤ rectangularRegularNumerator := by
   exact sum_factorRegularLedger_le_flag p rectangularSurfaceFlag6600 hz hyz hall
 
@@ -186,9 +220,9 @@ theorem sum_factor_counts_le
 theorem sum_factor_counts_rectangular_le
     {I : Type} [Fintype I] (count : I → ℕ) (p : I → FlagDegree)
     (hcount : ∀ i, count i * gap ^ 2 ≤ factorRegularLedger (p i))
-    (hz : (∑ i, (p i).zOnly) ≤ 495)
-    (hyz : (∑ i, (p i).yz) ≤ 43)
-    (hall : (∑ i, (p i).all) ≤ 8) :
+    (hz : (∑ i, (p i).zOnly) ≤ 464)
+    (hyz : (∑ i, (p i).yz) ≤ 44)
+    (hall : (∑ i, (p i).all) ≤ 9) :
     (∑ i, count i) * gap ^ 2 ≤ rectangularRegularNumerator := by
   calc
     (∑ i, count i) * gap ^ 2 = ∑ i, count i * gap ^ 2 := by
@@ -216,5 +250,5 @@ end ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
 #print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sum_factorRegularLedger_le_flag
 #print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sum_factorRegularLedger_le
 #print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sum_factor_counts_le
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.rectangular_strict_budget
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sharp_strict_budget
 #print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch.sum_factor_counts_rectangular_le

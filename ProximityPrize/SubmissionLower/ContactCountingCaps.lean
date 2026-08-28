@@ -93,7 +93,12 @@ theorem fixed_firstTail_caps (F : MvPolynomial (Fin 4) K)
   intro i
   fin_cases i
   · have hy := (surfaceMap_degreeOf_le φ _ 0).trans hsharp.1
-    simpa [firstTailSurface, firstTail, tailVector, capAt] using hy
+    have htail : 1 + (w + 1) * (2 * yCap - 1) ≤
+        1 + 2 * (w + 1) * yCap := by
+      norm_num [yCap, weightedCap, ContactAlignmentParameters.multiplicity,
+        agreements, w]
+    have hy' := hy.trans htail
+    simpa [firstTailSurface, firstTail, tailVector, capAt] using hy'
   · simpa [firstTailSurface, firstTail, tailVector, numeratorCaps, capAt] using hold 1
   · simpa [firstTailSurface, firstTail, tailVector, numeratorCaps, capAt] using hold 2
 

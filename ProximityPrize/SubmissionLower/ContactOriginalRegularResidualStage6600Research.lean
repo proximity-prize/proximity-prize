@@ -1,11 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactOriginalRegularSeedCount
+import ProximityPrize.SubmissionLower.ContactTetraGeometricSeedCover6622Research
 import ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
 import ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
+import ProximityPrize.SubmissionLower.ContactSharpFactorAggregationPost6600Research
 
 /-!
-# Initial residual stages for actual score-66 regular factors
+# Initial residual stages for actual score-66.11 regular factors
 
 An original positive-`R` factor is covered by its actual geometric surface
 factors over the constructed algebraic closure of `K(X)`.  This module turns
@@ -22,13 +23,14 @@ open ContactGenericInitialPoint ContactGenericSurface ContactGeometricFirstTail
 open ContactGeometricFactorCover ContactRegularFactorGate ContactFactorCaps
 open ContactPrimeSeedIncidence ContactPolynomialSolutions ContactInterpolation
 open ContactTranslation ContactProperCutSeedCount
-open ContactOriginalRegularSeedCount
+open ContactTetraGeometricSeedCover6622Research
 open ContactRegularFactorFlag6600Research
 open ContactIdentityResidualIterationResearch
 open ContactIdentityResidualGlobalFlagResearch
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactFlagBezout6543Research
 open ContactNearPencil6600FactorLedgerResearch
+open ContactSharpFactorAggregationPost6600Research
 
 noncomputable section
 
@@ -63,12 +65,13 @@ theorem polynomialIn_geometricFlag {F : MvPolynomial (Fin 4) K}
 preserved by residualization. -/
 theorem residual_surface_weights_of_box
     (F : MvPolynomial (Fin 4) K)
-    (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
-    wt residualSWeights F ≤ 8 ∧
-      wt residualYSWeights F ≤ 43 ∧
-      wt residualTotalWeights F ≤ 503 := by
+    (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (htetra : ∀ d ∈ F.support, d 1 + d 2 + d 3 ≤ seedTotalCap) :
+    wt residualSWeights F ≤ 9 ∧
+      wt residualYSWeights F ≤ 44 ∧
+      wt residualTotalWeights F ≤ 464 := by
   constructor
-  · apply (weightedTotalDegree_le_iff residualSWeights F 8).mpr
+  · apply (weightedTotalDegree_le_iff residualSWeights F 9).mpr
     intro d hd
     have hb : d 1 + d 3 ≤ seedTotalCap ∧ d 2 ≤ slopeCap ∧
         d 0 + w * d 1 + (w - 1) * d 2 < weightedCap := hbox hd
@@ -80,7 +83,7 @@ theorem residual_surface_weights_of_box
     simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add, Nat.add_zero]
     simpa only [slopeCap] using hb.2.1
   · constructor
-    · apply (weightedTotalDegree_le_iff residualYSWeights F 43).mpr
+    · apply (weightedTotalDegree_le_iff residualYSWeights F 44).mpr
       intro d hd
       have hb : d 1 + d 3 ≤ seedTotalCap ∧ d 2 ≤ slopeCap ∧
           d 0 + w * d 1 + (w - 1) * d 2 < weightedCap := hbox hd
@@ -93,18 +96,15 @@ theorem residual_surface_weights_of_box
       norm_num [weightedCap, ContactParameters6600Research.multiplicity,
         agreements, n, errors, w] at hb
       omega
-    · apply (weightedTotalDegree_le_iff residualTotalWeights F 503).mpr
+    · apply (weightedTotalDegree_le_iff residualTotalWeights F 464).mpr
       intro d hd
-      have hb : d 1 + d 3 ≤ seedTotalCap ∧ d 2 ≤ slopeCap ∧
-          d 0 + w * d 1 + (w - 1) * d 2 < weightedCap := hbox hd
       rw [weight_fin4]
       rw [show residualTotalWeights 0 = 0 by rfl,
         show residualTotalWeights 1 = 1 by rfl,
         show residualTotalWeights 2 = 1 by rfl,
         show residualTotalWeights 3 = 1 by rfl]
       simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add, Nat.add_zero]
-      norm_num [seedTotalCap, slopeCap] at hb
-      omega
+      simpa only [seedTotalCap] using htetra d hd
 
 variable {Iota : Type}
 local instance : DecidableEq Iota := Classical.decEq Iota
@@ -115,6 +115,7 @@ def geometricResidualStage
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
     (hRpos : 0 < F.degreeOf (2 : Fin 4))
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (htetra : ∀ d ∈ F.support, d 1 + d 2 + d 3 ≤ seedTotalCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes)
@@ -129,7 +130,7 @@ def geometricResidualStage
     letI : CharP (GenericField K) prime := genericField_charP K prime
     ResidualStage (polynomialEmbedding K)
       (geometricSeeds K F selected Gamma g) x prime errors
-      (geometricFlag K g) w := by
+      (sharpGeometricFlag K g) w := by
   classical
   letI : CharP (GenericField K) prime := genericField_charP K prime
   have hgspec := surfaceFactors_spec (polynomialEmbedding K) F g.1 g.2
@@ -142,7 +143,7 @@ def geometricResidualStage
     hRpos hRsmall g.1 hgirred
     (by simpa only [canonical_geometricSurfaceMap] using hgdiv)
   have hsub := geometricSeeds_subset K F selected Gamma g
-  have hwts := residual_surface_weights_of_box K F hbox
+  have hwts := residual_surface_weights_of_box K F hbox htetra
   exact {
     nodes := nodes
     u0 := u0
@@ -155,7 +156,7 @@ def geometricResidualStage
     y_dependent := hgate.1
     regular_proper := by
       simpa only [canonical_geometricSurfaceMap] using hgate.2.2.2.2
-    flag_support := polynomialIn_geometricFlag K g
+    flag_support := polynomialIn_sharpGeometricFlag F g
     surface_s_weight := hwts.1
     surface_ys_weight := hwts.2.1
     surface_total_weight := hwts.2.2
@@ -171,60 +172,9 @@ def geometricResidualStage
     characteristic_bound := by norm_num [w, prime]
   }
 
-/-- Geometric factor flags sum coordinatewise to the original factor's
-rectangular flag. -/
-theorem geometricFlag_budgets
-    (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0) :
-    (∑ g : GeometricFactor K F, (geometricFlag K g).zOnly) ≤
-        F.degreeOf (3 : Fin 4) ∧
-      (∑ g : GeometricFactor K F, (geometricFlag K g).yz) ≤
-        F.degreeOf (1 : Fin 4) ∧
-      (∑ g : GeometricFactor K F, (geometricFlag K g).all) ≤
-        F.degreeOf (2 : Fin 4) := by
-  exact ⟨geometricFactor_sum_degree_le K F hF 2,
-    geometricFactor_sum_degree_le K F hF 0,
-    geometricFactor_sum_degree_le K F hF 1⟩
-
-/-- Once every geometric factor has its recursive factor-ledger bound, the
-actual original regular family has exactly the bound expected by the global
-rectangular selected-family theorem. -/
-theorem original_regular_seed_bound_of_geometric_factor_counts
-    (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
-    (selected : K → Polynomial K) (Gamma : Finset K)
-    (hsolutions : ∀ gamma ∈ Gamma,
-      specialization K (selected gamma) gamma F = 0)
-    (hcount : ∀ g : GeometricFactor K F,
-      (geometricSeeds K F selected Gamma g).card * gap ^ 2 ≤
-        factorRegularLedger (geometricFlag K g)) :
-    Gamma.card * gap ^ 2 ≤
-      factorRegularLedger
-        ⟨F.degreeOf (3 : Fin 4), F.degreeOf (1 : Fin 4),
-          F.degreeOf (2 : Fin 4)⟩ := by
-  have hcover := card_le_sum_geometricSeeds K F hF.ne_zero selected Gamma
-    hsolutions
-  have hcaps := geometricFlag_budgets K F hF.ne_zero
-  calc
-    Gamma.card * gap ^ 2 ≤
-        (∑ g : GeometricFactor K F,
-          (geometricSeeds K F selected Gamma g).card) * gap ^ 2 :=
-      Nat.mul_le_mul_right _ hcover
-    _ = ∑ g : GeometricFactor K F,
-        (geometricSeeds K F selected Gamma g).card * gap ^ 2 := by
-      rw [Finset.sum_mul]
-    _ ≤ ∑ g : GeometricFactor K F,
-        factorRegularLedger (geometricFlag K g) :=
-      Finset.sum_le_sum (fun g _ ↦ hcount g)
-    _ ≤ factorRegularLedger
-        ⟨F.degreeOf (3 : Fin 4), F.degreeOf (1 : Fin 4),
-          F.degreeOf (2 : Fin 4)⟩ :=
-      sum_factorRegularLedger_le_flag (geometricFlag K)
-        ⟨F.degreeOf (3 : Fin 4), F.degreeOf (1 : Fin 4),
-          F.degreeOf (2 : Fin 4)⟩ hcaps.1 hcaps.2.1 hcaps.2.2
-
 end
 
 
 end ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research
 
 #print axioms ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research.geometricResidualStage
-#print axioms ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research.original_regular_seed_bound_of_geometric_factor_counts
