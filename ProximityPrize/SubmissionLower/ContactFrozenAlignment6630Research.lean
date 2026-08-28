@@ -2,9 +2,10 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAlignmentBridge
 import ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
 import ProximityPrize.SubmissionLower.ContactTranslation6630Research
+import ProximityPrize.SubmissionLower.ContactParameters6630Research
 
 /-!
-# Score-66.42 interpolation frontend and stock alignment interface
+# Score-66.30 interpolation frontend and stock alignment interface
 
 All interpolation and translation work is closed here.  The single exposed
 premise is the global selected-family count for the score-66.30 coefficient
@@ -35,8 +36,8 @@ def GlobalCountLtAlignment6630 : Prop :=
     Q ≠ 0 →
     Q ∈ globalCoefficientBox IRSProfile.Field
       weightedCap w seedTotalCap slopeCap →
-    Q ∈ ContactFlagInterpolation6642Research.globalCoefficientBox
-      IRSProfile.Field weightedCap w yCap seedTotalCap slopeCap →
+    Q ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
+      IRSProfile.Field weightedCap w seedTotalCap slopeCap →
     ∀ (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
       (seeds : Finset IRSProfile.Field)
       (u0 u1 : IRSProfile.Index → IRSProfile.Field),
@@ -65,10 +66,7 @@ theorem original_support_card6630
     ∀ gamma ∈ seeds, agreements ≤ (A gamma).card := by
   intro gamma hgamma
   have h := hcard gamma hgamma
-  simpa [IRSProfile.Index, agreements, n, errors,
-    ContactFlagParameters6642Research.agreements,
-    ContactFlagParameters6642Research.n,
-    ContactFlagParameters6642Research.errors] using h
+  simpa [IRSProfile.Index, agreements, n, errors] using h
 
 theorem selected_count_of_global_count_lt_alignment6630
     (hcount : GlobalCountLtAlignment6630) :

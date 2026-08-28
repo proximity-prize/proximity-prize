@@ -3,7 +3,8 @@ import ProximityPrize.SubmissionLower.ContactProtocol6630Research
 
 /-!
 Exact lower-track entrypoint for the unconditional cumulative-flag,
-adaptive-YZ-projection score-66.42 assembly. Source-policy, kernel compilation,
+adaptive-YZ-projection score-66.41 assembly with flag-complete interpolation.
+Source-policy, kernel compilation,
 and Yukon validation remain distinct checks.
 -/
 

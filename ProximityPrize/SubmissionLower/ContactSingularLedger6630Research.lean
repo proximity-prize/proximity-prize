@@ -3,7 +3,7 @@ import ProximityPrize.SubmissionLower.ContactParameters6630Research
 import ProximityPrize.SubmissionLower.ContactTightSingularAggregationResearch
 
 /-!
-# Tight singular-family ledger for the score-66.30 row
+# Tight singular-family ledger for the score-66.42 row
 
 This is the row-specialized finite-family aggregation used by the actual
 implicit-pair branch.  It deliberately retains only the implicit-pair core
@@ -148,19 +148,7 @@ theorem exact_values :
     ContactParameters6630Research.n, ContactParameters6630Research.w,
     ContactParameters6630Research.errors,
     ContactParameters6630Research.slopeCap,
-    ContactParameters6630Research.seedTotalCap,
-    ContactFlagParameters6642Research.n,
-    ContactFlagParameters6642Research.w,
-    ContactFlagParameters6642Research.errors,
-    ContactFlagParameters6642Research.agreements,
-    ContactFlagParameters6642Research.multiplicity,
-    ContactFlagParameters6642Research.totalCap,
-    ContactFlagParameters6642Research.slopeCap,
-    ContactFlagParameters6642Research.weightedCap,
-    ContactFlagParameters6642Research.gap,
-    ContactFlagParameters6642Research.algebraicCap,
-    ContactFlagParameters6642Research.implicitWeightedCap,
-    ContactFlagParameters6642Research.implicitYCap]
+    ContactParameters6630Research.seedTotalCap]
 
 end ProximityPrize.SubmissionLower.ContactSingularLedger6630Research
 

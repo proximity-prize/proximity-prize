@@ -36,10 +36,8 @@ theorem protocolClaim6630_of_terminal_projection_families
   simpa only [AlignmentProtocol6630ConditionalResearch.errors6630,
     ContactScore6630Research.errors6630,
     ContactParameters6630Research.errors,
-    ContactFlagParameters6642Research.errors,
     AlignmentProtocol6630ConditionalResearch.budget6630,
-    ContactParameters6630Research.alignmentBudget,
-    ContactFlagParameters6642Research.alignmentBudget] using halign
+    ContactParameters6630Research.alignmentBudget] using halign
 
 end ProximityPrize.SubmissionLower.ContactProtocol6630AdaptiveResearch
 

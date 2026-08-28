@@ -256,7 +256,7 @@ def geometricResidualStage6630
   have hgdiv := hgspec.2
   have hRsmall : F.degreeOf (2 : Fin 4) < prime :=
     (degreeOf_R_le_of_mem_box F weightedCap w seedTotalCap slopeCap hbox).trans_lt
-      characteristic_gates.2.2.2
+      (by norm_num [slopeCap, prime])
   have hgate := geometric_factor_regular_gate K (GenericField K) F hF prime
     hRpos hRsmall g.1 hgirred
     (by simpa only [canonical_geometricSurfaceMap] using hgdiv)
@@ -286,9 +286,7 @@ def geometricResidualStage6630
     on_component := fun gamma hgamma ↦ (Finset.mem_filter.mp hgamma).2
     no_large_pencil := noLargeSelectedPencil_mono selected Gamma _ w errors
       hsub hnoPencil
-    characteristic_bound := by
-      norm_num [w, prime, ContactFlagParameters6642Research.w,
-        ContactFlagParameters6642Research.prime]
+    characteristic_bound := by norm_num [w, prime]
   }
 
 /-- Geometric recursive bounds aggregate sharply to the original factor's

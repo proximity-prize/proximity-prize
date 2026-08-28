@@ -1,10 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactProtocol6630AdaptiveResearch
 import ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6630Research
-import ProximityPrize.SubmissionLower.ContactFlagRegularFactorCaps6642Research
+import ProximityPrize.SubmissionLower.ContactFlagRegularFactorCaps6641Research
 
 /-!
-# Unconditional score-66.42 protocol endpoint
+# Unconditional score-66.30 protocol endpoint
 
 The terminal constructor is closed for every actual regular geometric factor
 using nested cumulative support bounds.  This is essential: factorization
@@ -27,7 +27,7 @@ open ContactRegularSeeds6630Research
 open ContactSelectedSeedDecomposition
 open ContactGlobalAdaptiveAlignment6630Research
 open ContactTerminalAdaptiveProjection6630Research
-open ContactFlagRegularFactorCaps6642Research
+open ContactFlagRegularFactorCaps6641Research
 
 noncomputable section
 
@@ -50,7 +50,7 @@ theorem frozenTerminalAdaptiveProjectionFamiliesYZ6630 :
   have hRdata := directFactor_data Q R.1 hQ weightedCap w seedTotalCap
     slopeCap hbox R.2
   have hRne : R.1 ≠ 0 := hRdata.1.ne_zero
-  have hregular := regularFlag6630_budgets_of_flag_box6642 Q hQ hsharp
+  have hregular := regularFlag6630_budgets_of_flagBox6641 Q hQ hsharp
   have hRAll : (regularFlag6630 Q R).all ≤ 8 :=
     (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
       (Finset.mem_univ R)).trans hregular.1
@@ -85,7 +85,7 @@ theorem frozenTerminalAdaptiveProjectionFamiliesYZ6630 :
       u0 u1 IRSProfile.domain.injective.injOn hdegree hnoPencil R g)
     (hgAll.trans hRAll) (hgYS.trans hRYS) (hgTotal.trans hRTotal)
 
-/-- Fully closed score-66.42 lower-track claim. -/
+/-- Fully closed score-66.30 lower-track claim. -/
 theorem protocolClaim6630 : ProtocolClaim 6642 316779 1048576 :=
   ContactProtocol6630AdaptiveResearch.protocolClaim6630_of_terminal_projection_families
     frozenTerminalAdaptiveProjectionFamiliesYZ6630

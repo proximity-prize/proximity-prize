@@ -11,7 +11,7 @@ into specialization vanishing for every degree-`w` polynomial agreeing on
 at least `agreements = 183070` coordinates.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactTranslation6630Research
+namespace ProximityPrize.SubmissionLower.ContactFlagTranslation6641FrozenResearch
 
 open ProximityPrize.Benchmark
 open ContactFlagInterpolation6641Research ContactFlagInterpolation6641FrozenResearch ContactFlagRankKernel6641Research
@@ -37,7 +37,7 @@ theorem flagCoefficientBox_le_rectangular (K : Type*) [Field K]
     d 0 + w * d 1 + (w - 1) * d 2 < D
   exact ⟨by omega, hd.2.1, hd.2.2⟩
 
-theorem exists_frozen_translated_contact_interpolant6630
+theorem exists_frozen_translated_contact_interpolant6641
     (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
     ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,
       Q ≠ 0 ∧
@@ -58,7 +58,7 @@ theorem exists_frozen_translated_contact_interpolant6630
     weightedCap w seedTotalCap slopeCap multiplicity
     (IRSProfile.domain i) (u0 i) (u1 i) theta (hequations i) r
 
-theorem exists_frozen_universal_vanishing_interpolant6630
+theorem exists_frozen_universal_vanishing_interpolant6641
     (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
     ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,
       Q ≠ 0 ∧
@@ -74,7 +74,7 @@ theorem exists_frozen_universal_vanishing_interpolant6630
         ContactTranslation.specialization IRSProfile.Field P gamma Q = 0 := by
   classical
   obtain ⟨Q, hQ, hcaps, hcontact⟩ :=
-    exists_frozen_translated_contact_interpolant6630 u0 u1
+    exists_frozen_translated_contact_interpolant6641 u0 u1
   have hrect := flagCoefficientBox_le_rectangular IRSProfile.Field
     weightedCap w seedTotalCap slopeCap hcaps
   refine ⟨Q, hQ, hrect, hcaps, ?_⟩
@@ -108,7 +108,7 @@ theorem exists_frozen_universal_vanishing_interpolant6630
 
 end
 
-end ProximityPrize.SubmissionLower.ContactTranslation6630Research
+end ProximityPrize.SubmissionLower.ContactFlagTranslation6641FrozenResearch
 
-#print axioms ProximityPrize.SubmissionLower.ContactTranslation6630Research.exists_frozen_translated_contact_interpolant6630
-#print axioms ProximityPrize.SubmissionLower.ContactTranslation6630Research.exists_frozen_universal_vanishing_interpolant6630
+#print axioms ProximityPrize.SubmissionLower.ContactFlagTranslation6641FrozenResearch.exists_frozen_translated_contact_interpolant6641
+#print axioms ProximityPrize.SubmissionLower.ContactFlagTranslation6641FrozenResearch.exists_frozen_universal_vanishing_interpolant6641

@@ -103,7 +103,7 @@ def TerminalAdaptiveProjectionFamiliesYZ6630
       Nonempty (AdaptiveUnitProjectionFamilyYZ base flag
         (residualAgreementFlag6630 D.degree))
 
-/-- Exact score-66.42 terminal construction. Only the Z/agreement
+/-- Exact score-66.30 terminal construction.  Only the Z/agreement
 characteristic gate is used; the failed Y/agreement gate has been replaced
 by the scalar-coordinate theorem. -/
 theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
@@ -141,7 +141,7 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
     simp only [residualAgreementFlag6630, unitYZFlag,
       agreementDirection6630, add_all, nsmul_all] at hTS
     omega
-  have hTZ' : T.degreeOf 2 ≤ 1 + 1232 * w := by
+  have hTZ' : T.degreeOf 2 ≤ 1 + 1233 * w := by
     simp only [residualAgreementFlag6630, unitYZFlag,
       agreementDirection6630, add_zOnly, add_yz, add_all,
       nsmul_zOnly, nsmul_yz, nsmul_all] at hTZ
@@ -150,12 +150,9 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
       D.stage.G.degreeOf j < ContactParameters6630Research.prime := by
     intro j
     fin_cases j
-    · exact hGY'.trans_lt (by norm_num [ContactParameters6630Research.prime,
-        ContactFlagParameters6642Research.prime])
-    · exact hGS'.trans_lt (by norm_num [ContactParameters6630Research.prime,
-        ContactFlagParameters6642Research.prime])
-    · exact hGZ'.trans_lt (by norm_num [ContactParameters6630Research.prime,
-        ContactFlagParameters6642Research.prime])
+    · exact hGY'.trans_lt (by norm_num [ContactParameters6630Research.prime])
+    · exact hGS'.trans_lt (by norm_num [ContactParameters6630Research.prime])
+    · exact hGZ'.trans_lt (by norm_num [ContactParameters6630Research.prime])
   have hmixedZ :
       coordinateMixedDegree Omega D.stage.G T 2 <
         ContactParameters6630Research.prime := by
@@ -163,9 +160,7 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
     apply (Nat.add_le_add
       (Nat.mul_le_mul hTY' hGS')
       (Nat.mul_le_mul hGY' hTS')).trans_lt
-    norm_num [w, ContactParameters6630Research.prime,
-      ContactFlagParameters6642Research.w,
-      ContactFlagParameters6642Research.prime]
+    norm_num [w, ContactParameters6630Research.prime]
   have hSderiv : MvPolynomial.pderiv (1 : Fin 3) D.stage.G ≠ 0 :=
     residualStage6630_pderiv_one_ne_zero D.stage
   have hGdep : 0 < D.stage.G.degreeOf (1 : Fin 3) := by
@@ -213,7 +208,7 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
     ((support_subset_flagSupport_iff flag D.stage.G).2 hGflag)
     ((support_subset_flagSupport_iff (residualAgreementFlag6630 D.degree) T).2 hTflag)
 
-/-- Convenient increment-cap wrapper for the full score-66.30 surface flag.
+/-- Convenient increment-cap wrapper for the full score-66.42 surface flag.
 The cumulative theorem above is the one used for individual factors. -/
 theorem terminalAdaptiveProjectionFamiliesYZ6630_of_rectangular_caps
     [CharP Omega ContactParameters6630Research.prime]

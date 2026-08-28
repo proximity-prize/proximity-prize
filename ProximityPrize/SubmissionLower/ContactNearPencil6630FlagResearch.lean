@@ -15,21 +15,21 @@ open ContactFlagBezout6543Research
 open ContactNearPencil6630ArithmeticResearch
 
 def surfaceFlag6630 : FlagDegree := ⟨577, 32, 8⟩
-def derivativeFlag6630 : FlagDegree := ⟨577, 31, 7⟩
-def agreementDirection6630 : FlagDegree := ⟨1154, 63, 15⟩
+def derivativeFlag6630 : FlagDegree := ⟨577, 32, 7⟩
 
-theorem agreementDirection6630_eq :
-    agreementDirection6630 = surfaceFlag6630 + derivativeFlag6630 := by
-  rfl
+/-- The total-YR agreement recurrence saves one middle raw degree.  Its
+nested-increment direction is therefore sharper than the coordinatewise sum
+of the surface and derivative flags. -/
+def agreementDirection6630 : FlagDegree := ⟨1155, 63, 15⟩
 
 /-- The affine agreement flag associated to residual degree `d`. -/
 def residualAgreementFlag6630 (d : ℕ) : FlagDegree :=
   unitYZFlag + d • agreementDirection6630
 
 theorem residualAgreementFlag6630_value (d : ℕ) :
-    residualAgreementFlag6630 d = ⟨1154 * d, 1 + 63 * d, 15 * d⟩ := by
-  change (⟨0 + d * 1154, 1 + d * 63, 0 + d * 15⟩ : FlagDegree) =
-    ⟨1154 * d, 1 + 63 * d, 15 * d⟩
+    residualAgreementFlag6630 d = ⟨1155 * d, 1 + 63 * d, 15 * d⟩ := by
+  change (⟨0 + d * 1155, 1 + d * 63, 0 + d * 15⟩ : FlagDegree) =
+    ⟨1155 * d, 1 + 63 * d, 15 * d⟩
   congr 1 <;> omega
 
 theorem flagMixed_residualAgreementFlag6630 (d e : ℕ) :

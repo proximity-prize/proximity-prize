@@ -5,7 +5,7 @@ import ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
 # Exact residual-incidence arithmetic for score 66.42
 
 This is the numerical specialization at
-`(errors,m,s,L,J) = (79194,29,8,617,40)`. It reuses the parameter-free
+`(errors,m,s,L,J) = (79194,29,8,617,40)`.  It reuses the parameter-free
 stratified-incidence inequalities and records every numerator before any
 ceiling is taken.
 -/
@@ -61,8 +61,8 @@ theorem unit_part_bound (k : ℕ) (hk : k ≤ w) :
       (by norm_num [agreements, n, errors])
 
 /-- Sharp flag mixed coefficients at `surfaceFlag6630 = (577,32,8)`. -/
-def mixedQuadratic : ℕ := 3884739
-def mixedLinear : ℕ := 18991
+def mixedQuadratic : ℕ := 3886947
+def mixedLinear : ℕ := 18999
 def mixedUnit : ℕ := 8
 def zLinear : ℕ := 1104
 def zUnit : ℕ := 8
@@ -88,7 +88,7 @@ def regularNumerator : ℕ :=
 def gapSquared : ℕ := gap ^ 2
 
 theorem stratified_primary_exact :
-    stratifiedPrimary = 368785075585533626518603785 := by
+    stratifiedPrimary = 368994684884683298898736953 := by
   norm_num [stratifiedPrimary, mixedQuadratic, mixedLinear, mixedUnit,
     degreeIncidence, unitIncidence, n, w]
 
@@ -98,12 +98,12 @@ theorem stratified_z_tail_exact :
     unitIncidence, errors, gap, agreements, n, w]
 
 theorem stratified_yz_tail_exact :
-    stratifiedYZTail = 760226340060985288022355 := by
+    stratifiedYZTail = 760546587056194731539835 := by
   norm_num [stratifiedYZTail, mixedLinear, mixedUnit, degreeIncidence,
     unitIncidence, errors, gap, agreements, n, w]
 
 theorem regular_numerator_exact :
-    regularNumerator = 369589496015241682570002900 := by
+    regularNumerator = 369799425561386564393653548 := by
   rw [show regularNumerator =
       stratifiedPrimary + stratifiedZTail + stratifiedYZTail by rfl,
     stratified_primary_exact, stratified_z_tail_exact,

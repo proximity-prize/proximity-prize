@@ -4,7 +4,7 @@ import ProximityPrize.SubmissionLower.ContactCumulativeWeightedDegreeResearch
 import ProximityPrize.SubmissionLower.ContactSingularLedger6630Research
 
 /-!
-# Sharp cumulative factor ledger for score 66.30
+# Sharp cumulative factor ledger for score 66.42
 
 The factorwise regular cost is linear in the three flag increments.  Its
 unit coefficients are monotone from Z to YZ to All, so the actual cumulative
@@ -56,8 +56,8 @@ theorem factorRegularLedgerYZ_projection_decomposition (p : FlagDegree) :
 
 theorem unit_ledger_values :
     factorRegularLedgerYZ unitZFlag = 201381128459781468073740 ∧
-      factorRegularLedgerYZ unitYZFlag = 3488518380144691497142995 ∧
-      factorRegularLedgerYZ unitAllFlag = 17719999591164705947859885 := by
+      factorRegularLedgerYZ unitYZFlag = 3491366332301163674198865 ∧
+      factorRegularLedgerYZ unitAllFlag = 17734848975806927467592736 := by
   norm_num [factorRegularLedgerYZ, factorPrimary6630, factorZTail6630,
     factorYZTail6630, flagMixed, agreementDirection6630, unitZFlag,
     unitYZFlag, unitAllFlag, degreeIncidence, unitIncidence, errors, gap,
@@ -179,18 +179,18 @@ theorem tight_singular_contribution6630_exact :
   exact ContactSingularLedger6630Research.exact_values.2.2
 
 theorem total_numerator6630_exact :
-    totalNumerator6630 = 369619538534613775362309339 := by
+    totalNumerator6630 = 369829468080758657185959987 := by
   rw [show totalNumerator6630 =
       regularNumerator + tightSingularContribution6630 by rfl,
     regular_numerator_exact, tight_singular_contribution6630_exact]
 
 theorem ledger_ceiling6630_exact :
-    ledgerCeiling6630 = 137331994703486686 := by
+    ledgerCeiling6630 = 137409993944093861 := by
   norm_num [ledgerCeiling6630, total_numerator6630_exact, gap,
     agreements, n, errors, w]
 
 theorem field_slack6630_exact :
-    fieldBudget6630 - ledgerCeiling6630 = 158369352210857 := by
+    fieldBudget6630 - ledgerCeiling6630 = 80370111603682 := by
   rw [ledger_ceiling6630_exact]
   norm_num [fieldBudget6630]
 

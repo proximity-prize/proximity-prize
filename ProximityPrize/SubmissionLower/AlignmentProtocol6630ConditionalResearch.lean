@@ -2,7 +2,7 @@ import ProximityPrize.SubmissionLower.AlignmentProtocol6401Conditional
 import ProximityPrize.SubmissionLower.ContactScore6630Research
 
 /-!
-# Conditional protocol certificate at 66.42 bits
+# Conditional protocol certificate at 66.41 bits
 
 The sole mathematical premise is an affine-line alignment bound at `79194`
 errors with the exact field-compatible budget `137490364055697543`.  This
