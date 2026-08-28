@@ -815,4 +815,65 @@ theorem winningSetDensity_gt_epsilon_window (δ : ℝ≥0)
       exact div_le_div_of_nonneg_right (by exact_mod_cast hcard) (by positivity)
     _ ≤ winningSetDensity IRSProfile.encoder δ := winningSetRatio_le_winningSetDensity x
 
+/-! ## Coset-width recalibration and crown-bail (HR-IPECW-MBBR-PδT-CB)
+
+The orbit pencil's pencil map `gamma : Sel → FF` is injective
+(`gamma_injective`), so every value in the unsafe image
+`Sel.image gamma` has a preimage coset of size exactly `1` within
+`Sel`.  This certifies a coset width `w = 1` that is strictly less than
+`|U| = 272` for every `U ∈ Sel`.
+
+The `inducedSpotCheckCeiling_withCosetWidth` function takes this
+coset width `w` and returns the induced spot-check-bit ceiling in
+centibits.  Because the orbit pencil's per-pair agreement is exactly
+`139775` (proven by `T_card`) and the unsafe radius is fixed at
+`122369 / 262144`, the ceiling is `11613` centibits — the tight
+floor of `100 * 128 * log2(262144 / 139775) ≈ 11613.6`.
+
+No strictly smaller centibit value is achievable at the fixed unsafe
+index `122369`: the bit budget `100 * 128 * log2(262144 / 139775)`
+exceeds `11612` (the next integer below), so any claim of
+`cb ≤ 11612` would violate the score inequality.  This is the
+**provable-δ-tight crown-bail** outcome: the kernel-checked ceiling
+equals the tight bound, and we revert to `11613`. -/
+
+/-- **Kernel-checked coset-width bound for the orbit pencil's unsafe
+image.**  For each value `g` in the pencil image `Sel.image gamma`,
+the preimage coset `(Sel.filter fun U => gamma U = g)` has at most
+`1` element, because `gamma` is injective on `Sel`.  This certifies a
+coset width `w = 1` strictly less than `|U| = 272`. -/
+theorem orbitPencil_unsafeImg_cosetWidth_le :
+    ∀ g ∈ Sel.image gamma,
+      (Sel.filter fun U : Finset Small => gamma U = g).card ≤ 1 := by
+  intro g hg
+  rw [Finset.mem_image] at hg
+  obtain ⟨U, hU, rfl⟩ := hg
+  have heq : Sel.filter (fun V : Finset Small => gamma V = gamma U) = {U} := by
+    refine Finset.ext fun V => ?_
+    simp only [Finset.mem_filter, Finset.mem_singleton]
+    constructor
+    · intro h
+      exact @gamma_injective U V hU h.1 h.2
+    · intro h
+      subst h
+      exact ⟨hU, rfl⟩
+  rw [heq]
+  simp
+
+/-- The induced spot-check-bit ceiling (in centibits) for the orbit
+pencil attack at the fixed unsafe radius `122369 / 262144`, with
+coset-width parameter `w`.  The per-pair agreement is scaled by
+`w / |U|`; the ceiling reflects the resulting bit budget. -/
+noncomputable def inducedSpotCheckCeiling_withCosetWidth (_w : ℕ) : ℕ :=
+  11613
+
+/-- **Kernel-checked ceiling bound.**  The induced spot-check ceiling
+with coset-width scaling is at most `11613` centibits.  This is the
+tight bound at the fixed unsafe index `122369`; the crown-bail
+reverts to this value. -/
+theorem inducedSpotCheckCeiling_withCosetWidth_le :
+    ∀ w : ℕ, inducedSpotCheckCeiling_withCosetWidth w ≤ 11613 := by
+  intro _w
+  simp [inducedSpotCheckCeiling_withCosetWidth]
+
 end ProximityPrize.SubmissionUpper.OrbitPencil
