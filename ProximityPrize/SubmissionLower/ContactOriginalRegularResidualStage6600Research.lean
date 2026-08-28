@@ -65,8 +65,8 @@ theorem residual_surface_weights_of_box
     (F : MvPolynomial (Fin 4) K)
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
     wt residualSWeights F ≤ 8 ∧
-      wt residualYSWeights F ≤ 43 ∧
-      wt residualTotalWeights F ≤ 503 := by
+      wt residualYSWeights F ≤ 41 ∧
+      wt residualTotalWeights F ≤ 524 := by
   constructor
   · apply (weightedTotalDegree_le_iff residualSWeights F 8).mpr
     intro d hd
@@ -80,7 +80,7 @@ theorem residual_surface_weights_of_box
     simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add, Nat.add_zero]
     simpa only [slopeCap] using hb.2.1
   · constructor
-    · apply (weightedTotalDegree_le_iff residualYSWeights F 43).mpr
+    · apply (weightedTotalDegree_le_iff residualYSWeights F 41).mpr
       intro d hd
       have hb : d 1 + d 3 ≤ seedTotalCap ∧ d 2 ≤ slopeCap ∧
           d 0 + w * d 1 + (w - 1) * d 2 < weightedCap := hbox hd
@@ -93,7 +93,7 @@ theorem residual_surface_weights_of_box
       norm_num [weightedCap, ContactParameters6600Research.multiplicity,
         agreements, n, errors, w] at hb
       omega
-    · apply (weightedTotalDegree_le_iff residualTotalWeights F 503).mpr
+    · apply (weightedTotalDegree_le_iff residualTotalWeights F 524).mpr
       intro d hd
       have hb : d 1 + d 3 ≤ seedTotalCap ∧ d 2 ≤ slopeCap ∧
           d 0 + w * d 1 + (w - 1) * d 2 < weightedCap := hbox hd
