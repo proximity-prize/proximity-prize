@@ -16,7 +16,7 @@ functionals, including the `X` derivatives appearing in the contact
 recurrence.  Combining this with the exact Minkowski recurrence gives the
 residual-degree agreement flag
 
-`Flag(920*d, 1 + 70*d, 15*d)`
+`Flag(930*d, 1 + 70*d, 15*d)`
 
 for the score-66.00 surface flag `Flag(549,27,8)`.
 -/
@@ -193,10 +193,10 @@ theorem globalResidualHom_surface_flag_weights
     (P0 P1 V : Polynomial K) (F : Poly4 K)
     (hS : wt residualSWeights F ≤ 8)
     (hYS : wt residualYSWeights F ≤ 43)
-    (hTotal : wt residualTotalWeights F ≤ 503) :
+    (hTotal : wt residualTotalWeights F ≤ 508) :
     wt residualSWeights (globalResidualHom P0 P1 V F) ≤ 8 ∧
       wt residualYSWeights (globalResidualHom P0 P1 V F) ≤ 43 ∧
-      wt residualTotalWeights (globalResidualHom P0 P1 V F) ≤ 503 := by
+      wt residualTotalWeights (globalResidualHom P0 P1 V F) ≤ 508 := by
   refine ⟨?_, ?_, ?_⟩
   · exact (globalResidualHom_wt_le_pulled residualSWeights rfl
       P0 P1 V F).trans (by simpa [residualPullWeights_s] using hS)
@@ -212,7 +212,7 @@ theorem globalResidual_agreement_weight_bounds
     (P0 P1 V : Polynomial K) (F : Poly4 K)
     (hS : wt residualSWeights F ≤ 8)
     (hYS : wt residualYSWeights F ≤ 43)
-    (hTotal : wt residualTotalWeights F ≤ 503)
+    (hTotal : wt residualTotalWeights F ≤ 508)
     (d : ℕ) (coeffs : ℕ → K) (x u0 u1 : K) :
     (agreementNumerator (globalResidualHom P0 P1 V F)
         d coeffs x u0 u1).degreeOf (2 : Fin 4) ≤ 15 * d ∧
@@ -221,7 +221,7 @@ theorem globalResidual_agreement_weight_bounds
           d coeffs x u0 u1) ≤ 1 + 85 * d ∧
       wt residualTotalWeights
         (agreementNumerator (globalResidualHom P0 P1 V F)
-          d coeffs x u0 u1) ≤ 1 + 1005 * d := by
+          d coeffs x u0 u1) ≤ 1 + 1015 * d := by
   let Fres := globalResidualHom P0 P1 V F
   obtain ⟨hFs, hFys, hFtot⟩ :=
     globalResidualHom_surface_flag_weights P0 P1 V F hS hYS hTotal
@@ -239,16 +239,16 @@ theorem globalResidual_agreement_weight_bounds
     change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 0 ≤ 43 at hw
     norm_num at hw
     omega
-  have hZ : Fres.degreeOf (3 : Fin 4) ≤ 503 := by
+  have hZ : Fres.degreeOf (3 : Fin 4) ≤ 508 := by
     apply MvPolynomial.degreeOf_le_iff.mpr
     intro e he
     have hw := (MvPolynomial.le_weightedTotalDegree residualTotalWeights he).trans hFtot
     rw [ContactFactorCaps.weight_fin4] at hw
-    change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 1 ≤ 503 at hw
+    change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 1 ≤ 508 at hw
     norm_num at hw
     omega
   refine ⟨?_, ?_, ?_⟩
-  · have hr := (agreementNumerator_degree_bounds Fres 43 8 503
+  · have hr := (agreementNumerator_degree_bounds Fres 43 8 508
       (by norm_num) hY hR hZ d coeffs x u0 u1).2.1
     convert hr using 1 <;> ring
   · have h := agreementNumerator_wt_le_minkowski residualYSWeights rfl
@@ -264,20 +264,20 @@ theorem globalResidual_agreement_weight_bounds
         norm_num
         ring
   · have h := agreementNumerator_wt_le_minkowski residualTotalWeights rfl
-      Fres 503 (by change 1 ≤ 503; norm_num)
-      (by change 2 * 1 ≤ 503; norm_num)
+      Fres 508 (by change 1 ≤ 508; norm_num)
+      (by change 2 * 1 ≤ 508; norm_num)
       (by change 1 ≤ 1; norm_num) hFtot d coeffs x u0 u1
     calc
       wt residualTotalWeights (agreementNumerator Fres d coeffs x u0 u1) ≤
           max (residualTotalWeights 1) (residualTotalWeights 3) +
-            d * (503 + (503 - residualTotalWeights 2)) := h
-      _ = 1 + 1005 * d := by
-        change max 1 1 + d * (503 + (503 - 1)) = 1 + 1005 * d
+            d * (508 + (508 - residualTotalWeights 2)) := h
+      _ = 1 + 1015 * d := by
+        change max 1 1 + d * (508 + (508 - 1)) = 1 + 1015 * d
         norm_num
         ring
 
 def residualAgreementFlag (d : ℕ) : FlagDegree :=
-  ⟨920 * d, 1 + 70 * d, 15 * d⟩
+  ⟨930 * d, 1 + 70 * d, 15 * d⟩
 
 /-- The mapped agreement cut lies in the exact affine flag family used by
 the stratified mixed-volume expansion. -/
@@ -286,7 +286,7 @@ theorem surfaceMap_globalResidual_agreement_in_flag
     (P0 P1 V : Polynomial K) (F : Poly4 K)
     (hS : wt residualSWeights F ≤ 8)
     (hYS : wt residualYSWeights F ≤ 43)
-    (hTotal : wt residualTotalWeights F ≤ 503)
+    (hTotal : wt residualTotalWeights F ≤ 508)
     (d : ℕ) (coeffs : ℕ → K) (x u0 u1 : K) :
     PolynomialInFlag (residualAgreementFlag d)
       (surfaceMap phi
@@ -304,11 +304,11 @@ theorem surfaceMap_globalResidual_agreement_in_flag
   have hqTot := (MvPolynomial.le_weightedTotalDegree residualTotalWeights hq).trans hTot
   rw [ContactFactorCaps.weight_fin4] at hqYS hqTot
   change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 0 ≤ 1 + 85 * d at hqYS
-  change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 1 ≤ 1 + 1005 * d at hqTot
+  change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 1 ≤ 1 + 1015 * d at hqTot
   norm_num at hqYS hqTot
   change q 2 ≤ 15 * d ∧
     q 1 + q 2 ≤ (1 + 70 * d) + 15 * d ∧
-    q 1 + q 2 + q 3 ≤ 920 * d + (1 + 70 * d) + 15 * d
+    q 1 + q 2 + q 3 ≤ 930 * d + (1 + 70 * d) + 15 * d
   omega
 
 end

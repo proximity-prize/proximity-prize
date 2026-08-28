@@ -222,7 +222,7 @@ theorem surfaceMap_agreement_in_flag_of_surface_weights
     (hYS : ContactPost6464MinkowskiRecurrenceResearch.wt
       residualYSWeights F ≤ 43)
     (hTotal : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualTotalWeights F ≤ 503)
+      residualTotalWeights F ≤ 508)
     (d : ℕ) (coeffs : ℕ → K) (x0 u0 u1 : K) :
     ContactFlagBezout6543Research.PolynomialInFlag (residualAgreementFlag d)
       (ContactGenericSurface.surfaceMap phi

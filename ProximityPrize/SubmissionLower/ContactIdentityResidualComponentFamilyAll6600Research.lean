@@ -54,7 +54,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
     (hTflag : PolynomialInFlag cutFlag T)
     (hFs : wt residualSWeights F ≤ 8)
     (hFys : wt residualYSWeights F ≤ 43)
-    (hFtotal : wt residualTotalWeights F ≤ 503)
+    (hFtotal : wt residualTotalWeights F ≤ 508)
     (hinj : Set.InjOn x nodes)
     (hdegreeSelected : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ d)
