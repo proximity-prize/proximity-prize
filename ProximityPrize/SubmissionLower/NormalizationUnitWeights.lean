@@ -87,7 +87,7 @@ variable (L : Type*) [Field L]
 variable [Algebra K L] [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
 variable [IsScalarTower K (Polynomial K) L] [IsScalarTower K (RatFunc K) L]
 variable [IsScalarTower (Polynomial K) (RatFunc K) L]
-variable [FiniteDimensional (RatFunc K) L] [PerfectField K]
+variable [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 
 abbrev FiniteNormalization := FixedCurveNormSum.FiniteNormalization K L
 

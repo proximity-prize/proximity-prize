@@ -71,6 +71,9 @@ theorem proper_cut_seed_bound_of_projection_sum
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (p w a e : ℕ) [CharP Ω p] (hw : 1 ≤ w) (hchar : w < p)
     (hwa : w < a) (han : a ≤ nodes.card)
+    (hGdegree : ∀ j : Fin 3, G.degreeOf j < p)
+    (hcutDegree : ∀ j k : Fin 3, j ≠ k →
+      T.degreeOf j * G.degreeOf k + G.degreeOf j * T.degreeOf k < p)
     (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
     (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
     (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
@@ -87,7 +90,7 @@ theorem proper_cut_seed_bound_of_projection_sum
     (hbudget : ∀ i,
       (∑ C : RegularComponent Ω G T (regularitySurface φ F),
         actualCoordinateDegree Ω C.1 i) ≤ budget i) :
-    Γ.card * (a - w) ≤ (nodes.card - w) * (∑ i, cap i * budget i) +
+    Γ.card * (a - w) ≤ nodes.card * (∑ i, cap i * budget i) +
       (e + 1) * (a - w) * budget 2 := by
   classical
   let H := regularitySurface φ F
@@ -101,8 +104,7 @@ theorem proper_cut_seed_bound_of_projection_sum
     fun C i => actualCoordinateDegree Ω C.1 i
   have hcomponent : ∀ C : RegularComponent Ω G T H,
       (componentSeeds Ω G T H Γ (selectedPoint φ selected) C).card * (a - w) ≤
-        (nodes.card - w) * (∑ i, cap i * degree C i) +
-          (e + 1) * (a - w) * degree C 2 := by
+        nodes.card * (∑ i, cap i * degree C i) + (e + 1) * (a - w) * degree C 2 := by
     intro C
     have hsub := componentSeeds_subset Ω G T H Γ (selectedPoint φ selected) C
     have hgmem := regularComponent_G_mem Ω G T H C
@@ -111,8 +113,9 @@ theorem proper_cut_seed_bound_of_projection_sum
       ((Ideal.span_singleton_le_iff_mem (I := C.1)).mpr hgmem)
         (Ideal.mem_span_singleton.mpr hdiv)
     have hproj : ProjectionsFiniteSeparable Ω C.1 :=
-      all_transcendental_coordinates_finite Ω C.1 G T hG hgmem htmem hproper
-    have hcount := prime_seed_incidence_sharp φ C.1 hproj
+      all_transcendental_coordinates_finite_separable Ω C.1 p G T hG hgmem htmem
+        hproper hGdegree hcutDegree
+    have hcount := prime_seed_incidence φ C.1 hproj
       (regularComponent_ne_point Ω G T H C) F hFmem
       (regularComponent_H_not_mem Ω G T H C) selected
       (componentSeeds Ω G T H Γ (selectedPoint φ selected) C)
@@ -125,25 +128,31 @@ theorem proper_cut_seed_bound_of_projection_sum
       (noLargeSelectedPencil_mono selected Γ _ w e hsub hnoPencil) cap hcap
     exact hcount
   exact aggregate_component_incidence Ω G T H Γ (selectedPoint φ selected)
-    hGpoint hTpoint hHp (a - w) (nodes.card - w) (e + 1)
-    cap budget degree hcomponent hbudget
+    hGpoint hTpoint hHp (a - w) nodes.card (e + 1) cap budget degree hcomponent hbudget
 
 /-- The actual regular component family consumes one original mixed
 projection budget per coordinate, including its constant-coordinate members. -/
 theorem regularComponents_degree_budget
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
-    (hG : Irreducible G) (hproper : ¬ G ∣ T) :
+    (p : ℕ) [CharP Ω p] (hG : Irreducible G) (hproper : ¬ G ∣ T)
+    (hGdegree : ∀ j : Fin 3, G.degreeOf j < p)
+    (hcutDegree : ∀ j k : Fin 3, j ≠ k →
+      T.degreeOf j * G.degreeOf k + G.degreeOf j * T.degreeOf k < p) :
     ∀ i, (∑ C : RegularComponent Ω G T (regularitySurface φ F),
       actualCoordinateDegree Ω C.1 i) ≤ coordinateMixedDegree Ω G T i := by
   intro i
   letI : ∀ C : RegularComponent Ω G T (regularitySurface φ F), C.1.IsPrime :=
     fun C => regularComponent_isPrime Ω G T (regularitySurface φ F) C
+  have hneq : (Equiv.swap (0 : Fin 3) i) 1 ≠ (Equiv.swap (0 : Fin 3) i) 2 :=
+    (Equiv.swap (0 : Fin 3) i).injective.ne (by decide)
+  have hmixed : coordinateMixedDegree Ω G T i < p :=
+    hcutDegree ((Equiv.swap (0 : Fin 3) i) 1) ((Equiv.swap (0 : Fin 3) i) 2) hneq
   exact sum_actualCoordinateDegree_at_le Ω
     (fun C : RegularComponent Ω G T (regularitySurface φ F) => C.1)
-    Subtype.val_injective i G T hG
+    Subtype.val_injective i p G T hG
     (regularComponent_G_mem Ω G T (regularitySurface φ F))
     (regularComponent_T_mem Ω G T (regularitySurface φ F))
-    hproper
+    hproper hGdegree hmixed
 
 /-- Complete proper-cut seed count from original equations and their
 separated degree gates. No projection, zero-count, component-count, or
@@ -155,6 +164,9 @@ theorem proper_cut_seed_bound
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (p w a e : ℕ) [CharP Ω p] (hw : 1 ≤ w) (hchar : w < p)
     (hwa : w < a) (han : a ≤ nodes.card)
+    (hGdegree : ∀ j : Fin 3, G.degreeOf j < p)
+    (hcutDegree : ∀ j k : Fin 3, j ≠ k →
+      T.degreeOf j * G.degreeOf k + G.degreeOf j * T.degreeOf k < p)
     (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
     (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
     (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
@@ -168,14 +180,13 @@ theorem proper_cut_seed_bound
     (cap : Fin 3 → ℕ)
     (hcap : ∀ i ∈ nodes, ∀ j,
       (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j ≤ cap j) :
-    Γ.card * (a - w) ≤
-      (nodes.card - w) * (∑ i, cap i * coordinateMixedDegree Ω G T i) +
+    Γ.card * (a - w) ≤ nodes.card * (∑ i, cap i * coordinateMixedDegree Ω G T i) +
       (e + 1) * (a - w) * coordinateMixedDegree Ω G T 2 :=
   proper_cut_seed_bound_of_projection_sum φ F G T hG hdiv hproper selected Γ
-    nodes x u₀ u₁ hinj p w a e hw hchar hwa han
+    nodes x u₀ u₁ hinj p w a e hw hchar hwa han hGdegree hcutDegree
     hdegree hsolution hregular hGpoint hTpoint hagreement hnoPencil cap
     (coordinateMixedDegree Ω G T) hcap
-    (regularComponents_degree_budget φ F G T hG hproper)
+    (regularComponents_degree_budget φ F G T p hG hproper hGdegree hcutDegree)
 
 end
 

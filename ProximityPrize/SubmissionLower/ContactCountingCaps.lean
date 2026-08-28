@@ -178,6 +178,17 @@ theorem fixed_surface_caps_below_characteristic :
     norm_num [capAt, ContactProjectionParameters.surfaceVector, yCap, weightedCap,
       ContactAlignmentParameters.multiplicity, agreements, w, slopeCap, seedTotalCap, prime]
 
+theorem fixed_agreement_characteristic_gates (G T : MvPolynomial (Fin 3) Ω)
+    (hG : HasCaps G ContactProjectionParameters.surfaceVector) (hT : HasCaps T agreementVector)
+    (hRgate : mixed ContactProjectionParameters.surfaceVector agreementVector unitR < prime) :
+    (∀ j, G.degreeOf j < prime) ∧
+      ∀ j k : Fin 3, j ≠ k →
+        T.degreeOf j * G.degreeOf k + G.degreeOf j * T.degreeOf k < prime := by
+  rcases ContactProjectionParameters.projection_caps_below_characteristic with
+    ⟨_, _, hY, hZ, _⟩
+  exact actual_characteristic_gates G T _ _ prime hG hT
+    fixed_surface_caps_below_characteristic hY hRgate hZ
+
 theorem fixed_implicit_surface_caps_below_characteristic :
     ∀ j, capAt ContactImplicitLiftParameters.liftedSurface j < prime := by
   intro j
@@ -213,4 +224,5 @@ end ProximityPrize.SubmissionLower.ContactCountingCaps
 #print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.actual_pair_degree_le
 #print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.pair_caps_below_of_mixed
 #print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.actual_characteristic_gates
+#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_agreement_characteristic_gates
 #print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_implicit_characteristic_gates

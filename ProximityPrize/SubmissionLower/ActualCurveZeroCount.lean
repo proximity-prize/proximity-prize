@@ -82,7 +82,8 @@ does not contain a field-degree, height, or point-count inequality. -/
 def ProjectionsFiniteSeparable : Prop :=
   ∀ (i : Fin 3) (hi : Transcendental K (coordinate K P i)),
     letI : Algebra (RatFunc K) (CoordinateField K P) := rationalBaseAlgebra K P i hi
-    FiniteDimensional (RatFunc K) (CoordinateField K P)
+    FiniteDimensional (RatFunc K) (CoordinateField K P) ∧
+      Algebra.IsSeparable (RatFunc K) (CoordinateField K P)
 
 /-- Degree of the actual coordinate projection; constant coordinates
 have degree zero. Finrank is taken for the canonical rational embedding. -/
@@ -112,7 +113,8 @@ def coordinateData (hproj : ProjectionsFiniteSeparable K P) (i : Fin 3) :
   if hi : Transcendental K (coordinate K P i) then
     Sum.inr {
       embedding := rationalBaseEmbedding K P i hi
-      finite := hproj i hi }
+      finite := (hproj i hi).1
+      separable := (hproj i hi).2 }
   else
     Sum.inl ((coordinate_eq_scalar_of_isAlgebraic K P i (not_not.mp hi)).choose)
 
@@ -151,7 +153,8 @@ theorem finite_zero_points_le_box_of_separator
   letI := quotientFractionScalarTower K P i₀
   letI := polynomialRationalScalarTower K P i₀ hi₀
   letI := rationalBaseScalarTower K P i₀ hi₀
-  letI : FiniteDimensional (RatFunc K) (CoordinateField K P) := hproj i₀ hi₀
+  letI : FiniteDimensional (RatFunc K) (CoordinateField K P) := (hproj i₀ hi₀).1
+  letI : Algebra.IsSeparable (RatFunc K) (CoordinateField K P) := (hproj i₀ hi₀).2
   let c := coordinateData K P hproj
   have hc : ∀ i, CoordinateBoxZeroCount.coordinateValue K (CoordinateField K P) (c i) =
       algebraMap (CoordinateRing K P) (CoordinateField K P) (quotientCoordinate K P i) := by

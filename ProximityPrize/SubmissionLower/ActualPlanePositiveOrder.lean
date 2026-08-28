@@ -165,24 +165,6 @@ def originalMixedDegree (order : Fin 3 ≃ Fin 3) (G H : Original K) : ℕ :=
   simp only [originalMixedDegree, swapOtherOrder_one, swapOtherOrder_two]
   ring
 
-/-- A positive outer ordering with an unchanged mixed budget.  This is the
-characteristic-free half of `exists_positive_characteristic_order`: the
-resultant-multiplicity degree bound needs only positivity of the outer
-degree, never a comparison with the characteristic. -/
-theorem exists_positive_order (order : Fin 3 ≃ Fin 3)
-    (P : Ideal (Original K)) [P.IsPrime] (G H : Original K)
-    (hG : Irreducible G) (hmem : G ∈ P)
-    (ht : Transcendental K (coordinate K P (order 0))) :
-    ∃ order' : Fin 3 ≃ Fin 3,
-      order' 0 = order 0 ∧
-      originalMixedDegree K order' G H = originalMixedDegree K order G H ∧
-      0 < (planeMap K order' G).natDegree := by
-  obtain ⟨order', hor, hbase, hpos⟩ := exists_positive_outer_order K order P G hG hmem ht
-  refine ⟨order', hbase, ?_, hpos⟩
-  rcases hor with rfl | rfl
-  · rfl
-  · exact originalMixedDegree_swap K order G H
-
 /-- Original separated characteristic caps produce a positive outer
 ordering and both actual characteristic gates, with no change of budget. -/
 theorem exists_positive_characteristic_order (order : Fin 3 ≃ Fin 3)

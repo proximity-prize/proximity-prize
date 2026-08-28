@@ -1,6 +1,4 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_PerfectBaseFinite
-import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_DedekindDomain_NoSeparable
 import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_FunctionField
 
 
@@ -146,7 +144,7 @@ section ConcreteNormalization
 variable (K L : Type*) [Field K] [Field L]
   [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
   [IsScalarTower (Polynomial K) (RatFunc K) L]
-  [FiniteDimensional (RatFunc K) L] [PerfectField K]
+  [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 
 /-- This is the actual integral closure of K[T] in L. -/
 abbrev ActualNormalization := FunctionField.ringOfIntegers K L
@@ -160,16 +158,12 @@ local instance normalizationScalarTower :
     IsScalarTower K (Polynomial K) (ActualNormalization K L) :=
   IsScalarTower.of_algebraMap_eq (fun _ => rfl)
 
-instance actual_normalization_finite :
+theorem actual_normalization_finite :
     Module.Finite (Polynomial K) (ActualNormalization K L) :=
-  LocalMathlibPerfectBaseFinite.polynomial_finite_of_perfect K L
-
-instance actual_normalization_dedekind' : IsDedekindDomain (ActualNormalization K L) :=
-  LocalMathlibDedekindNoSeparable.isDedekindDomain_of_moduleFinite
-    (Polynomial K) (RatFunc K) L (ActualNormalization K L)
+  IsIntegralClosure.finite (Polynomial K) (RatFunc K) L (ActualNormalization K L)
 
 theorem actual_normalization_dedekind : IsDedekindDomain (ActualNormalization K L) :=
-  actual_normalization_dedekind' K L
+  inferInstance
 
 theorem actual_normalization_fractionField : IsFractionRing (ActualNormalization K L) L :=
   inferInstance

@@ -133,7 +133,7 @@ theorem coordinateDegree_pos_of_transcendental
     (hj : Transcendental Ω (coordinate Ω P j)) :
     1 ≤ actualCoordinateDegree Ω P j := by
   letI : Algebra (RatFunc Ω) (CoordinateField Ω P) := rationalBaseAlgebra Ω P j hj
-  letI : FiniteDimensional (RatFunc Ω) (CoordinateField Ω P) := hproj j hj
+  letI : FiniteDimensional (RatFunc Ω) (CoordinateField Ω P) := (hproj j hj).1
   rw [actualCoordinateDegree_of_transcendental Ω P j hj]
   exact Module.finrank_pos
 

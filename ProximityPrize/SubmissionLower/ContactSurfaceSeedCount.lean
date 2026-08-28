@@ -102,6 +102,10 @@ theorem whole_surface_seed_bound
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (p w a e : ℕ) [CharP Ω p] (hw : 1 ≤ w) (hchar : w < p)
     (hwa : w < a) (han : a ≤ nodes.card)
+    (hGdegree : ∀ j : Fin 3, G.degreeOf j < p)
+    (hcutDegree : ∀ i ∈ nodes, ∀ j k : Fin 3, j ≠ k →
+      (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j * G.degreeOf k +
+        G.degreeOf j * (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf k < p)
     (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
     (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
     (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
@@ -114,8 +118,7 @@ theorem whole_surface_seed_bound
     (E : DegreeVector)
     (hcap : ∀ i ∈ nodes, HasCaps (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)) E) :
     Γ.card * (a - w) ^ 2 ≤
-      (nodes.card - w) *
-        fiberNumerator (nodes.card - w) w a e (degreeVector G) E := by
+      (nodes.card - w) * fiberNumerator nodes.card w a e (degreeVector G) E := by
   classical
   let P : Ideal (MvPolynomial (Fin 3) Ω) := Ideal.span {G}
   letI : P.IsPrime := Ideal.isPrime_span_singleton_of_prime hG.prime
@@ -130,8 +133,7 @@ theorem whole_surface_seed_bound
       nodes x u₀ u₁ w hw hinj G rfl hr
   apply scaled_sharp_incidence_bound
     (fun γ i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)
-    Γ nodes identities a w
-      (fiberNumerator (nodes.card - w) w a e (degreeVector G) E)
+    Γ nodes identities a w (fiberNumerator nodes.card w a e (degreeVector G) E)
     hidentities hicard hwa han hagreement
   intro i hi
   obtain ⟨hinode, hnotid⟩ := Finset.mem_sdiff.mp hi
@@ -149,7 +151,7 @@ theorem whole_surface_seed_bound
       (hdegree γ hΓ) (hsolution γ hΓ) (hregular γ hΓ) (x i) (u₀ i) (u₁ i)).mpr
         (Finset.mem_filter.mp hγ).2
   have hcount := proper_cut_seed_bound φ F G T hG hdiv hproper selected fiber
-    nodes x u₀ u₁ hinj p w a e hw hchar hwa han
+    nodes x u₀ u₁ hinj p w a e hw hchar hwa han hGdegree (hcutDegree i hinode)
     (fun γ hγ => hdegree γ (hsub hγ))
     (fun γ hγ => hsolution γ (hsub hγ))
     (fun γ hγ => hregular γ (hsub hγ))
@@ -179,6 +181,7 @@ theorem whole_surface_seed_bound_fixed
     (hr : 0 < G.degreeOf 1)
     (hHproper : ¬ G ∣ surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F))
     (hGcaps : HasCaps G ContactProjectionParameters.surfaceVector)
+    (hRgate : mixed ContactProjectionParameters.surfaceVector agreementVector unitR < prime)
     (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
     (hZ : F.degreeOf 3 ≤ seedTotalCap)
     (hHY : (ContactTaylorNumerators.polyH K F).degreeOf (1 : Fin 4) ≤ yCap - 1)
@@ -194,21 +197,28 @@ theorem whole_surface_seed_bound_fixed
     (hagreement : ∀ γ ∈ Γ,
       agreements ≤ (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Γ w errors) :
-    Γ.card * gap ^ 2 ≤ wholeNumerator (degreeVector G) := by
+    Γ.card * gap ^ 2 ≤
+      (n - w) * n * mixed (degreeVector G) agreementVector agreementVector +
+        (errors + 1) * (n - w) * gap *
+          mixed (degreeVector G) agreementVector unitZ := by
   have hcap (i : ι) : HasCaps (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i))
       agreementVector := fixed_agreement_caps φ F hY hR hZ hHY (x i) (u₀ i) (u₁ i)
   have hcount := whole_surface_seed_bound φ F G hG hdiv hr hHproper selected Γ
     nodes x u₀ u₁ hinj prime w agreements errors
     (by norm_num [w]) (by norm_num [w, prime]) (by norm_num [w, agreements])
     (by rw [hnodes]; norm_num [agreements, n])
+    (fun j => (hGcaps j).trans_lt (fixed_surface_caps_below_characteristic j))
+    (fun i _ => (fixed_agreement_characteristic_gates G _ hGcaps (hcap i) hRgate).2)
     hdegree hsolution hregular hGpoint hagreement hnoPencil agreementVector (fun i _ => hcap i)
   calc
     Γ.card * gap ^ 2 = Γ.card * (agreements - w) ^ 2 := rfl
-    _ ≤ (nodes.card - w) * fiberNumerator (nodes.card - w) w agreements errors
+    _ ≤ (nodes.card - w) * fiberNumerator nodes.card w agreements errors
         (degreeVector G) agreementVector := hcount
-    _ = wholeNumerator (degreeVector G) := by
+    _ = (n - w) * n * mixed (degreeVector G) agreementVector agreementVector +
+        (errors + 1) * (n - w) * gap *
+          mixed (degreeVector G) agreementVector unitZ := by
       rw [hnodes]
-      unfold fiberNumerator wholeNumerator gap
+      unfold fiberNumerator gap
       ring
 
 end

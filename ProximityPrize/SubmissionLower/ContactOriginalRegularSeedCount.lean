@@ -1,5 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSurfaceSeedCount
+import ProximityPrize.SubmissionLower.ContactSparseProperCutSmall
 import ProximityPrize.SubmissionLower.ContactRegularFactorGate
 import ProximityPrize.SubmissionLower.ContactCountingLedger
 
@@ -27,6 +28,7 @@ open ContactAlignmentParameters ContactCountingCaps ContactCountingLedger
 open ContactGenericInitialPoint ContactGenericSurface ContactGeometricFirstTail
 open ContactGeometricFactorCover ContactRegularFactorGate ContactFactorCaps
 open ContactSurfaceSeedCount ContactPrimeSeedIncidence ContactProperCutSeedCount
+open ContactSparseProperCutSmall
 open ContactPolynomialSolutions ContactInterpolation ContactTranslation
 
 noncomputable section
@@ -176,9 +178,11 @@ theorem original_regular_seed_bound
       · exact (geometricFactor_degree_le K F hF.ne_zero g 0).trans hY
       · exact (geometricFactor_degree_le K F hF.ne_zero g 1).trans hR
       · exact (geometricFactor_degree_le K F hF.ne_zero g 2).trans hZ
+    have hsurface : surfaceMap (polynomialEmbedding K) F ≠ 0 :=
+      surfaceMap_ne_zero (polynomialEmbedding K) (polynomialEmbedding_injective K) F hF.ne_zero
     have hsub := geometricSeeds_subset K F selected Γ g
-    exact whole_surface_seed_bound_fixed (polynomialEmbedding K) F g.1 hgirred hgdiv
-      hgate.1 hHproper hgcaps hY hR hZ hHY
+    exact whole_surface_seed_bound_fixed_sparse_small (polynomialEmbedding K) F g.1 hgirred hgdiv
+      hgate.1 hHproper hbox hsurface hgcaps hY hR hZ hHY
       selected (geometricSeeds K F selected Γ g)
       nodes x u₀ u₁ hinj hnodes
       (fun γ hγ => hdegree γ (hsub hγ))

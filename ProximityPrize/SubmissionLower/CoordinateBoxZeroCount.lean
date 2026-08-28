@@ -35,6 +35,8 @@ structure SeparableCoordinate where
   embedding : RatFunc K →ₐ[K] L
   finite : letI : Algebra (RatFunc K) L := embedding.toRingHom.toAlgebra
     FiniteDimensional (RatFunc K) L
+  separable : letI : Algebra (RatFunc K) L := embedding.toRingHom.toAlgebra
+    Algebra.IsSeparable (RatFunc K) L
 
 namespace SeparableCoordinate
 
@@ -67,6 +69,7 @@ theorem finite_sum_pole_le_degree (c : SeparableCoordinate K L)
       rw [← IsScalarTower.algebraMap_apply K (Polynomial K) (RatFunc K)]
       exact (c.embedding.commutes a).symm
   letI : FiniteDimensional (RatFunc K) L := c.finite
+  letI : Algebra.IsSeparable (RatFunc K) L := c.separable
   exact CoordinatePoleMass.finite_sum_pole_le_finrank K L W
 
 end SeparableCoordinate
@@ -130,7 +133,7 @@ section FixedSeparator
 variable [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
 variable [IsScalarTower K (Polynomial K) L] [IsScalarTower K (RatFunc K) L]
 variable [IsScalarTower (Polynomial K) (RatFunc K) L]
-variable [FiniteDimensional (RatFunc K) L] [PerfectField K]
+variable [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq (Place K L) := Classical.decEq _

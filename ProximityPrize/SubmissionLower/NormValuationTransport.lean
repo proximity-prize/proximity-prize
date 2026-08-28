@@ -84,8 +84,18 @@ theorem norm_transport (x : L) :
         ((FractionRing.algEquiv S L).symm x))) at h
   simpa only [AlgEquiv.apply_symm_apply] using h
 
-variable [FaithfulSMul R S] [NoZeroSMulDivisors R S]
-variable [FiniteDimensional (FractionRing R) (FractionRing S)]
+variable [Algebra.IsSeparable F L]
+
+include F L in
+theorem canonical_separable :
+    Algebra.IsSeparable (FractionRing R) (FractionRing S) := by
+  apply Algebra.IsSeparable.of_equiv_equiv
+    (A₁ := F) (B₁ := L) (A₂ := FractionRing R) (B₂ := FractionRing S)
+    (FractionRing.algEquiv R F).symm.toRingEquiv
+    (FractionRing.algEquiv S L).symm.toRingEquiv
+  ext y
+  exact IsFractionRing.algEquiv_commutes
+    (FractionRing.algEquiv R F).symm (FractionRing.algEquiv S L).symm y
 
 /-- The actual norm-valuation formula in the specified common field L,
 with explicit compatible scalar towers and no coordinate twist of L. -/
@@ -93,6 +103,8 @@ theorem fieldOrder_norm (v : HeightOneSpectrum R) (x : L) (hx : x ≠ 0) :
     fieldOrder R F v (Algebra.norm F x) =
       ∑ P ∈ (IsDedekindDomain.primesOverFinset v.asIdeal S).attach,
         (P.1.inertiaDeg R : ℤ) * fieldOrder S L (placeAbove R S v P) x := by
+  letI : Algebra.IsSeparable (FractionRing R) (FractionRing S) :=
+    canonical_separable R S F L
   have h := NormValuation.orderAt_fieldNorm R S v
     ((FractionRing.algEquiv S L).symm x) (by simpa using hx)
   calc
@@ -121,4 +133,5 @@ end ProximityPrize.SubmissionLower.NormValuationTransport
 #print axioms ProximityPrize.SubmissionLower.NormValuationTransport.fieldOrder_transport
 #print axioms ProximityPrize.SubmissionLower.NormValuationTransport.placeAbove
 #print axioms ProximityPrize.SubmissionLower.NormValuationTransport.norm_transport
+#print axioms ProximityPrize.SubmissionLower.NormValuationTransport.canonical_separable
 #print axioms ProximityPrize.SubmissionLower.NormValuationTransport.fieldOrder_norm

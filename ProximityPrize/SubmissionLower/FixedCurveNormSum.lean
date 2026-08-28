@@ -1,6 +1,4 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_PerfectBaseFinite
-import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_DedekindDomain_NoSeparable
 import ProximityPrize.SubmissionLower.NormValuationTransport
 import ProximityPrize.SubmissionLower.RatFuncProductFormula
 import ProximityPrize.SubmissionLower.InfinityValuationRing
@@ -36,7 +34,7 @@ noncomputable section
 variable (K L : Type*) [Field K] [Field L]
 variable [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
 variable [IsScalarTower (Polynomial K) (RatFunc K) L]
-variable [FiniteDimensional (RatFunc K) L] [PerfectField K]
+variable [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 
 local instance : DecidableEq K := Classical.decEq K
 
@@ -44,23 +42,7 @@ abbrev FiniteNormalization := FunctionField.ringOfIntegers K L
 
 instance finiteNormalization_finite :
     Module.Finite (Polynomial K) (FiniteNormalization K L) :=
-  LocalMathlibPerfectBaseFinite.polynomial_finite_of_perfect K L
-
-instance finiteNormalization_noZeroSMul :
-    NoZeroSMulDivisors (Polynomial K) (FiniteNormalization K L) := by
-  constructor
-  intro c x h
-  rw [Algebra.smul_def] at h
-  rcases mul_eq_zero.mp h with hc | hx
-  · left
-    have hL : algebraMap (Polynomial K) L c = 0 := by
-      rw [IsScalarTower.algebraMap_apply (Polynomial K) (FiniteNormalization K L) L, hc,
-        map_zero]
-    rw [IsScalarTower.algebraMap_apply (Polynomial K) (RatFunc K) L] at hL
-    exact IsFractionRing.injective (Polynomial K) (RatFunc K)
-      ((algebraMap (RatFunc K) L).injective (by simpa using hL))
-  · right
-    exact hx
+  IsIntegralClosure.finite (Polynomial K) (RatFunc K) L (FiniteNormalization K L)
 
 instance finiteNormalization_torsionFree :
     Module.IsTorsionFree (Polynomial K) (FiniteNormalization K L) := by
@@ -86,23 +68,7 @@ abbrev InfiniteNormalization := integralClosure (InfinityBase K) L
 
 instance infiniteNormalization_finite :
     Module.Finite (InfinityBase K) (InfiniteNormalization K L) :=
-  LocalMathlibPerfectBaseFinite.infinity_finite_of_perfect K L
-
-instance infiniteNormalization_noZeroSMul :
-    NoZeroSMulDivisors (InfinityBase K) (InfiniteNormalization K L) := by
-  constructor
-  intro c x h
-  rw [Algebra.smul_def] at h
-  rcases mul_eq_zero.mp h with hc | hx
-  · left
-    have hL : algebraMap (InfinityBase K) L c = 0 := by
-      rw [IsScalarTower.algebraMap_apply (InfinityBase K) (InfiniteNormalization K L) L, hc,
-        map_zero]
-    rw [IsScalarTower.algebraMap_apply (InfinityBase K) (RatFunc K) L] at hL
-    exact IsFractionRing.injective (InfinityBase K) (RatFunc K)
-      ((algebraMap (RatFunc K) L).injective (by simpa using hL))
-  · right
-    exact hx
+  IsIntegralClosure.finite (InfinityBase K) (RatFunc K) L (InfiniteNormalization K L)
 
 instance infiniteNormalization_torsionFree :
     Module.IsTorsionFree (InfinityBase K) (InfiniteNormalization K L) := by
@@ -112,13 +78,7 @@ instance infiniteNormalization_torsionFree :
 
 instance infiniteNormalization_isDedekindDomain :
     IsDedekindDomain (InfiniteNormalization K L) :=
-  LocalMathlibDedekindNoSeparable.isDedekindDomain_of_moduleFinite
-    (InfinityBase K) (RatFunc K) L (InfiniteNormalization K L)
-
-instance finiteNormalization_isDedekindDomain :
-    IsDedekindDomain (FiniteNormalization K L) :=
-  LocalMathlibDedekindNoSeparable.isDedekindDomain_of_moduleFinite
-    (Polynomial K) (RatFunc K) L (FiniteNormalization K L)
+  integralClosure.isDedekindDomain (InfinityBase K) (RatFunc K) L
 
 instance infiniteNormalization_isFractionRing :
     IsFractionRing (InfiniteNormalization K L) L :=

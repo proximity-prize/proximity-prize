@@ -1,5 +1,4 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_NoSeparableIdealNorm
 import ProximityPrize.SubmissionLower.SeparableIdealNorm
 
 
@@ -61,11 +60,7 @@ variable [Algebra R S] [Module.Finite R S] [Module.IsTorsionFree R S]
 local instance : Algebra (FractionRing R) (FractionRing S) :=
   FractionRing.liftAlgebra _ _
 
-local instance : IsScalarTower R (FractionRing R) (FractionRing S) :=
-  FractionRing.isScalarTower_liftAlgebra _ _
-
-variable [FaithfulSMul R S] [NoZeroSMulDivisors R S]
-variable [FiniteDimensional (FractionRing R) (FractionRing S)]
+variable [Algebra.IsSeparable (FractionRing R) (FractionRing S)]
 
 /-- The actual finite prime fiber, defined by factorization of the
 extended base-prime ideal, rather than by a supplied set of places. -/
@@ -96,11 +91,7 @@ theorem factorCount_relNorm_prime (v : HeightOneSpectrum R)
   have hUnderPrime : (P.under R).IsPrime := inferInstance
   have hUnderIrred : Irreducible (P.under R) :=
     (Ideal.prime_of_isPrime hUnderZero hUnderPrime).irreducible
-  haveI : P.LiesOver (P.under R) := ⟨rfl⟩
-  haveI : Algebra.IsIntegral R S := Algebra.IsIntegral.of_finite R S
-  haveI : (P.under R).IsMaximal := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal P
-  rw [LocalMathlibNoSeparableIdealNorm.relNorm_prime_eq_pow_general R S
-      (FractionRing R) (FractionRing S) (P.under R) hUnderZero P,
+  rw [SeparableIdealNorm.relNorm_prime_eq_pow R S P (P.under R),
     hUnderIrred.normalizedFactors_pow, normalize_eq, Multiset.count_replicate]
 
 /-- Exact weighted exponent formula for the norm of any nonzero ideal.

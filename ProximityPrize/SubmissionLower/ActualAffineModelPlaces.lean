@@ -25,7 +25,7 @@ variable (K A L : Type*) [Field K] [IsAlgClosed K]
   [IsScalarTower K (Polynomial K) A] [IsScalarTower K (Polynomial K) L]
   [IsScalarTower K A L] [IsScalarTower (Polynomial K) A L]
   [IsScalarTower (Polynomial K) (RatFunc K) L]
-  [FiniteDimensional (RatFunc K) L] [PerfectField K]
+  [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 
 abbrev Normalization := FunctionField.ringOfIntegers K L
 

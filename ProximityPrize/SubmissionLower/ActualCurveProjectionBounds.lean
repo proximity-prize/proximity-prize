@@ -57,24 +57,6 @@ private def familySummary {I : Type} [Fintype I] (P : I → Ideal (Original K))
     Algebra.IsSeparable (RatFunc K) (CoordinateField K (P i))) ∧
     (∑ i, Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤ B
 
-private def singleSummaryNS (P : Ideal (Original K)) [P.IsPrime]
-    (A : Algebra (RatFunc K) (CoordinateField K P)) (B : ℕ) : Prop :=
-  letI := A
-  FiniteDimensional (RatFunc K) (CoordinateField K P) ∧
-    Module.finrank (RatFunc K) (CoordinateField K P) ≤ B
-
-private def fieldsSummaryNS (P : Ideal (Original K)) [P.IsPrime]
-    (A : Algebra (RatFunc K) (CoordinateField K P)) : Prop :=
-  letI := A
-  FiniteDimensional (RatFunc K) (CoordinateField K P)
-
-private def familySummaryNS {I : Type} [Fintype I] (P : I → Ideal (Original K))
-    [∀ i, (P i).IsPrime]
-    (A : ∀ i, Algebra (RatFunc K) (CoordinateField K (P i))) (B : ℕ) : Prop :=
-  letI := A
-  (∀ i, FiniteDimensional (RatFunc K) (CoordinateField K (P i))) ∧
-    (∑ i, Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤ B
-
 theorem plane_budget_le_original (order : Fin 3 ≃ Fin 3) (G H : Original K) :
     (planeMap K order H).natDegree * Polynomial.Bivariate.degreeX (planeMap K order G) +
       (planeMap K order G).natDegree * Polynomial.Bivariate.degreeX (planeMap K order H) ≤
@@ -111,30 +93,6 @@ theorem original_finite_separable_finrank_bound
       K order' P ht' p G H hG hGmem hHmem hproper hpos houter hres
     exact ⟨hfd, hsep, hbound.trans (plane_budget_le_original K order' G H)⟩
   change singleSummary K P (rationalBaseAlgebra K P (order' 0) ht')
-    (originalMixedDegree K order' G H) at hresult
-  rw [rationalBaseAlgebra_congr K P (order' 0) (order 0) hbase ht' ht, hbudget] at hresult
-  exact hresult
-
-/-- The original mixed budget with NO characteristic gate. -/
-theorem original_finite_finrank_bound
-    (G H : Original K)
-    (hG : Irreducible G) (hGmem : G ∈ P) (hHmem : H ∈ P) (hproper : ¬ G ∣ H) :
-    letI : Algebra (RatFunc K) (CoordinateField K P) := rationalBaseAlgebra K P (order 0) ht
-    FiniteDimensional (RatFunc K) (CoordinateField K P) ∧
-      Module.finrank (RatFunc K) (CoordinateField K P) ≤ originalMixedDegree K order G H := by
-  obtain ⟨order', hbase, hbudget, hpos⟩ :=
-    exists_positive_order K order P G H hG hGmem ht
-  have ht' : Transcendental K (coordinate K P (order' 0)) := by
-    simpa only [hbase] using ht
-  have hresult :
-      letI : Algebra (RatFunc K) (CoordinateField K P) := rationalBaseAlgebra K P (order' 0) ht'
-      FiniteDimensional (RatFunc K) (CoordinateField K P) ∧
-        Module.finrank (RatFunc K) (CoordinateField K P) ≤ originalMixedDegree K order' G H := by
-    letI : Algebra (RatFunc K) (CoordinateField K P) := rationalBaseAlgebra K P (order' 0) ht'
-    obtain ⟨hfd, hbound⟩ := actual_finite_finrank_bound
-      K order' P ht' G H hG hGmem hHmem hproper hpos
-    exact ⟨hfd, hbound.trans (plane_budget_le_original K order' G H)⟩
-  change singleSummaryNS K P (rationalBaseAlgebra K P (order' 0) ht')
     (originalMixedDegree K order' G H) at hresult
   rw [rationalBaseAlgebra_congr K P (order' 0) (order 0) hbase ht' ht, hbudget] at hresult
   exact hresult
@@ -196,48 +154,6 @@ theorem original_finite_separable_sum_finrank_bound
       exact isEmptyElim i
     · simp
 
-/-- Distinct actual primes consume one ORIGINAL mixed budget, with NO
-characteristic gate. -/
-theorem original_finite_sum_finrank_bound_no_gate
-    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
-    (hinj : Function.Injective P) (G H : Original K)
-    (hG : Irreducible G) (hGmem : ∀ i, G ∈ P i) (hHmem : ∀ i, H ∈ P i)
-    (hproper : ¬ G ∣ H) :
-    letI : ∀ i, Algebra (RatFunc K) (CoordinateField K (P i)) :=
-      fun i => rationalBaseAlgebra K (P i) (order 0) (ht i)
-    (∀ i, FiniteDimensional (RatFunc K) (CoordinateField K (P i))) ∧
-      (∑ i, Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤
-        originalMixedDegree K order G H := by
-  classical
-  by_cases hI : Nonempty I
-  · let i₀ : I := Classical.choice hI
-    obtain ⟨order', hbase, hbudget, hpos⟩ :=
-      exists_positive_order K order (P i₀) G H hG (hGmem i₀) (ht i₀)
-    have ht' : ∀ i, Transcendental K (coordinate K (P i) (order' 0)) := by
-      intro i
-      simpa only [hbase] using ht i
-    have hresult :
-        letI : ∀ i, Algebra (RatFunc K) (CoordinateField K (P i)) :=
-          fun i => rationalBaseAlgebra K (P i) (order' 0) (ht' i)
-        (∀ i, FiniteDimensional (RatFunc K) (CoordinateField K (P i))) ∧
-          (∑ i, Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤
-            originalMixedDegree K order' G H := by
-      letI : ∀ i, Algebra (RatFunc K) (CoordinateField K (P i)) :=
-        fun i => rationalBaseAlgebra K (P i) (order' 0) (ht' i)
-      obtain ⟨hfields, hbound⟩ := actual_finite_sum_finrank_bound_no_gate
-        K order' P ht' hinj G H hG hGmem hHmem hproper hpos
-      exact ⟨hfields, hbound.trans (plane_budget_le_original K order' G H)⟩
-    have halg : (fun i => rationalBaseAlgebra K (P i) (order' 0) (ht' i)) =
-        (fun i => rationalBaseAlgebra K (P i) (order 0) (ht i)) := by
-      funext i
-      exact rationalBaseAlgebra_congr K (P i) (order' 0) (order 0) hbase (ht' i) (ht i)
-    change familySummaryNS K P (fun i => rationalBaseAlgebra K (P i) (order' 0) (ht' i))
-      (originalMixedDegree K order' G H) at hresult
-    rw [halg, hbudget] at hresult
-    exact hresult
-  · letI : IsEmpty I := ⟨fun i => hI ⟨i⟩⟩
-    exact ⟨fun i => isEmptyElim i, by simp⟩
-
 end Family
 
 /-- Uniform ORIGINAL separated gates prove finite-dimensionality and
@@ -276,28 +192,6 @@ theorem all_transcendental_coordinates_finite_separable
   rw [rationalBaseAlgebra_congr K P (order 0) i hbase ht hi] at hresult
   exact hresult
 
-/-- The projection property consumed by the actual zero bound, derived from
-the original equations alone: no characteristic gate, no separability. -/
-theorem all_transcendental_coordinates_finite
-    (P : Ideal (Original K)) [P.IsPrime] (G H : Original K)
-    (hG : Irreducible G) (hGmem : G ∈ P) (hHmem : H ∈ P) (hproper : ¬ G ∣ H) :
-    ∀ (i : Fin 3) (hi : Transcendental K (coordinate K P i)),
-      letI : Algebra (RatFunc K) (CoordinateField K P) := rationalBaseAlgebra K P i hi
-      FiniteDimensional (RatFunc K) (CoordinateField K P) := by
-  intro i hi
-  let order : Fin 3 ≃ Fin 3 := Equiv.swap 0 i
-  have hbase : order 0 = i := Equiv.swap_apply_left _ _
-  have ht : Transcendental K (coordinate K P (order 0)) := by
-    simpa only [hbase] using hi
-  have hresult :
-      letI : Algebra (RatFunc K) (CoordinateField K P) := rationalBaseAlgebra K P (order 0) ht
-      FiniteDimensional (RatFunc K) (CoordinateField K P) := by
-    letI : Algebra (RatFunc K) (CoordinateField K P) := rationalBaseAlgebra K P (order 0) ht
-    exact (original_finite_finrank_bound K order P ht G H hG hGmem hHmem hproper).1
-  change fieldsSummaryNS K P (rationalBaseAlgebra K P (order 0) ht) at hresult
-  rw [rationalBaseAlgebra_congr K P (order 0) i hbase ht hi] at hresult
-  exact hresult
-
 end
 
 #print axioms plane_budget_le_original
@@ -305,8 +199,5 @@ end
 #print axioms original_finite_separable_finrank_bound
 #print axioms original_finite_separable_sum_finrank_bound
 #print axioms all_transcendental_coordinates_finite_separable
-#print axioms original_finite_finrank_bound
-#print axioms original_finite_sum_finrank_bound_no_gate
-#print axioms all_transcendental_coordinates_finite
 
 end ProximityPrize.SubmissionLower.ActualCurveProjectionBounds

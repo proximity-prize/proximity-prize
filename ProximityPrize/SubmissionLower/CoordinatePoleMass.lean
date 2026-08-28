@@ -47,7 +47,7 @@ variable [IsAlgClosed K]
 variable [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
 variable [IsScalarTower K (Polynomial K) L] [IsScalarTower K (RatFunc K) L]
 variable [IsScalarTower (Polynomial K) (RatFunc K) L]
-variable [FiniteDimensional (RatFunc K) L] [PerfectField K]
+variable [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq (Place K L) := Classical.decEq _
