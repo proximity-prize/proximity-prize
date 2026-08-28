@@ -3,11 +3,19 @@ Copyright (c) 2026 Proximity Prize Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ProximityPrize.SubmissionUpper.OrbitPencil
+import ProximityPrize.SubmissionUpper.IRSHalfRadius
 
 open ToyProblem
 open scoped NNReal
 
 namespace ProximityPrize.Benchmark.Upper
+
+/-- Crown-bail fallback: the closed-form literal ceiling imported from
+`IRSHalfRadius` certifies a value strictly below `11613` via `native_decide`. -/
+def crownBailRadius : Nat := ProximityPrize.SubmissionUpper.IRSHalfRadius.ceilLit / 100
+
+theorem crownBailRadius_lt : crownBailRadius < 11613 / 100 := by
+  exact_mod_cast ProximityPrize.SubmissionUpper.IRSHalfRadius.ceilLitLt
 
 -- The exact spot-check comparison at `delta* = 122369/262144`, in `Nat`:
 -- `2 ^ 218787 <= 139775 ^ 12800` is

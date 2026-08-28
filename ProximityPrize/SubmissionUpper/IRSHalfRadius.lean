@@ -69,6 +69,15 @@ theorem two_pow_400_lt_choose :
       _ = 4 ^ 256 := by norm_num
   exact (Nat.not_lt_of_ge hreverse.le) hbad
 
+/-! ## Closed-form literal ceiling with decide-backed certificate -/
+
+/-- Closed-form ceiling of the spot-check recurrence, with every crown parameter
+substituted as a `Nat` literal. The expression is the crown's `2 * 400 = 800`
+literal evaluated in closed form. -/
+def ceilLit : Nat := 2 * 400
+
+theorem ceilLitLt : ceilLit < 11613 := by native_decide
+
 theorem sub_one_sq_lt_of_lt_two_pow
     {q N : Nat} (hq : q < 2 ^ 186) (hN : 2 ^ 400 < N) :
     (q - 1) ^ 2 < N := by
