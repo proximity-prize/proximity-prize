@@ -1,12 +1,12 @@
 import ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
 
 /-!
-# Conditional protocol certificate at 64.62 bits
+# Conditional protocol certificate at 64.52 bits
 
 Model label: gpt-5.
 
 The sole mathematical premise of the final theorem is the explicit strong
-alignment bound at 77408 errors with budget 10^17. The actual squared-eight
+alignment bound at 77411 errors with budget 10^17. The actual squared-eight
 Code.Lambda, scalar-to-interleaved MCA transfer, field capacity and score
 conversion are derived below. No old Contact parameter or 6400 list module
 is imported, and no Benchmark.candidate is declared.
@@ -24,8 +24,8 @@ open scoped NNReal
 
 noncomputable section ProtocolProofs
 
-def radius6401 : ℝ≥0 := claimedRadius 309635 1048576
-def errors6401 : ℕ := 77408
+def radius6401 : ℝ≥0 := claimedRadius 309647 1048576
+def errors6401 : ℕ := 77411
 def budget6401 : ℕ := 100000000000000000
 
 theorem radius6401_floor :
@@ -33,7 +33,7 @@ theorem radius6401_floor :
   norm_num [radius6401, claimedRadius, errors6401, IRSProfile.Index]
 
 theorem radius6401_cell_cross :
-    309635 * Fintype.card IRSProfile.Index < (errors6401 + 1) * 1048576 := by
+    309647 * Fintype.card IRSProfile.Index < (errors6401 + 1) * 1048576 := by
   norm_num [IRSProfile.Index, errors6401]
 
 theorem radius6401_gap : 131071 < Fintype.card IRSProfile.Index - errors6401 := by
@@ -58,47 +58,47 @@ theorem doubled_budget6401_nat :
   rw [field_cardinality]
   norm_num [budget6401]
 
-/-- Upper, not lower, rational approximation to the hundredth root of two. -/
-theorem two_rpow_sixty_two_hundred_le :
-    (2 : ℝ≥0) ^ ((62 : ℝ) / 100) ≤ (20 : ℝ≥0) / 13 := by
-  have hroot : ((2 : ℝ≥0) ^ (62 : ℕ)) ^ ((100 : ℝ)⁻¹) ≤
-      (20 : ℝ≥0) / 13 := by
+/-- Upper, not lower, rational approximation to `2^(63/100)`. -/
+theorem two_rpow_sixty_three_hundred_le :
+    (2 : ℝ≥0) ^ ((63 : ℝ) / 100) ≤ (65 : ℝ≥0) / 42 := by
+  have hroot :
+      ((2 : ℝ≥0) ^ (63 : ℕ)) ^ ((100 : ℝ)⁻¹) ≤ (65 : ℝ≥0) / 42 := by
     rw [NNReal.rpow_inv_le_iff (by norm_num : (0 : ℝ) < 100)]
     norm_num [NNReal.rpow_natCast, div_pow, le_div_iff₀]
   calc
-    (2 : ℝ≥0) ^ ((62 : ℝ) / 100) =
-        ((2 : ℝ≥0) ^ (62 : ℕ)) ^ ((100 : ℝ)⁻¹) := by
+    (2 : ℝ≥0) ^ ((63 : ℝ) / 100) =
+        ((2 : ℝ≥0) ^ (63 : ℕ)) ^ ((100 : ℝ)⁻¹) := by
       rw [← NNReal.rpow_natCast_mul]
       norm_num [div_eq_mul_inv]
-    _ ≤ (20 : ℝ≥0) / 13 := hroot
+    _ ≤ (65 : ℝ≥0) / 42 := hroot
 
 /-- This exact rational inequality involves only the actual 128 repetitions. -/
 theorem radius6401_power_rational_bound :
     (1 - radius6401) ^ IRSProfile.repetitions ≤
-      ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (13 / 20) := by
+      ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (42 / 65) := by
   rw [← NNReal.coe_le_coe]
-  norm_num [radius6401, claimedRadius, IRSProfile.repetitions, div_pow,
-    div_le_iff₀]
+  norm_num [radius6401, claimedRadius, IRSProfile.repetitions, div_le_iff₀]
 
 theorem radius6401_score :
-    (1 - radius6401) ^ IRSProfile.repetitions ≤ claimedError 6462 := by
-  have hscale : (13 : ℝ≥0) / 20 ≤ (2 : ℝ≥0) ^ (-((62 : ℝ) / 100)) := by
+    (1 - radius6401) ^ IRSProfile.repetitions ≤ claimedError 6463 := by
+  have hscale : (42 : ℝ≥0) / 65 ≤ (2 : ℝ≥0) ^ (-((63 : ℝ) / 100)) := by
     calc
-      (13 : ℝ≥0) / 20 = 1 / ((20 : ℝ≥0) / 13) := by norm_num
-      _ ≤ 1 / ((2 : ℝ≥0) ^ ((62 : ℝ) / 100)) :=
-        one_div_le_one_div_of_le (by positivity) two_rpow_sixty_two_hundred_le
-      _ = _ := by rw [one_div, NNReal.rpow_neg]
+      (42 : ℝ≥0) / 65 = 1 / ((65 : ℝ≥0) / 42) := by norm_num
+      _ ≤ 1 / ((2 : ℝ≥0) ^ ((63 : ℝ) / 100)) :=
+        one_div_le_one_div_of_le (by positivity) two_rpow_sixty_three_hundred_le
+      _ = (2 : ℝ≥0) ^ (-((63 : ℝ) / 100)) := by
+        rw [one_div, NNReal.rpow_neg]
   calc
     (1 - radius6401) ^ IRSProfile.repetitions ≤
-        ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (13 / 20) :=
+        ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (42 / 65) :=
       radius6401_power_rational_bound
     _ ≤ ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) *
-        (2 : ℝ≥0) ^ (-((62 : ℝ) / 100)) :=
+        (2 : ℝ≥0) ^ (-((63 : ℝ) / 100)) :=
       mul_le_mul_of_nonneg_left hscale (by positivity)
-    _ = claimedError 6462 := by
+    _ = claimedError 6463 := by
       unfold claimedError
-      rw [show -((((6462 : ℕ) : ℝ) / 100)) =
-          -((64 : ℕ) : ℝ) + -((62 : ℝ) / 100) by norm_num,
+      rw [show -((((6463 : ℕ) : ℝ) / 100)) =
+          -((64 : ℕ) : ℝ) + -((63 : ℝ) / 100) by norm_num,
         NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0)]
       simp only [NNReal.rpow_neg, NNReal.rpow_natCast, one_div]
 
@@ -160,7 +160,7 @@ theorem lambda6401_le_of_alignment
         Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
       (radius6401 : ℝ) ≤ (budget6401 : ℕ∞) :=
   AlignmentInterleavedLambda.irs_squared_claimedRadius_lambda_le
-    309635 1048576 errors6401 budget6401 (by norm_num) radius6401_cell_cross
+    309647 1048576 errors6401 budget6401 (by norm_num) radius6401_cell_cross
     radius6401_gap halign budget6401_lt_field sixteen_row_separation_gate
 
 /-- A local copy of the elementary generic ENNReal field-budget calculation;
@@ -212,8 +212,8 @@ theorem certifiedGammaError6401_le_of_alignment
 theorem. This module does not itself assert that alignment premise. -/
 theorem protocolClaim6401_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode
-      77408 100000000000000000) :
-    ProtocolClaim 6462 309635 1048576 where
+      77411 100000000000000000) :
+    ProtocolClaim 6463 309647 1048576 where
   admissible := by
     constructor <;> norm_num [claimedRadius, IRSProfile.minRelativeDistance]
   reduction := by
@@ -235,7 +235,7 @@ end ProtocolProofs
 #print axioms budget6401_lt_field
 #print axioms sixteen_row_separation_gate
 #print axioms doubled_budget6401_nat
-#print axioms two_rpow_sixty_two_hundred_le
+#print axioms two_rpow_sixty_three_hundred_le
 #print axioms radius6401_power_rational_bound
 #print axioms radius6401_score
 #print axioms irs_code_eq_base_interleaved

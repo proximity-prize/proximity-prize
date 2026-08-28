@@ -134,10 +134,11 @@ local instance : DecidableEq ι := Classical.decEq ι
 /-- One original positive-R irreducible factor, with all geometric data
 constructed internally. The right side retains the ORIGINAL factor degrees.
 The regularity input is a nonzero polynomial specialization over K. -/
-theorem original_regular_seed_bound
+theorem original_regular_seed_bound_of_caps
     [CharP K prime]
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F) (hRpos : 0 < F.degreeOf 2)
-    (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
+    (hZ : F.degreeOf 3 ≤ seedTotalCap)
     (selected : K → Polynomial K) (Γ : Finset K)
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
     (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
@@ -150,11 +151,6 @@ theorem original_regular_seed_bound
     Γ.card * gap ^ 2 ≤ wholeNumerator (originalDegreeVector K F) := by
   classical
   letI : CharP (GenericField K) prime := genericField_charP K prime
-  have hc := degree_bounds_of_mem_box F weightedCap w seedTotalCap slopeCap
-    (by norm_num [w]) hbox
-  have hY : F.degreeOf 1 ≤ yCap := hc.1
-  have hR : F.degreeOf 2 ≤ slopeCap := hc.2.1
-  have hZ : F.degreeOf 3 ≤ seedTotalCap := hc.2.2
   have hsmall : F.degreeOf 2 < prime := hR.trans_lt (by norm_num [slopeCap, prime])
   have hcount (g : GeometricFactor K F) :
       (geometricSeeds K F selected Γ g).card * gap ^ 2 ≤ wholeNumerator (degreeVector g.1) := by
@@ -170,11 +166,9 @@ theorem original_regular_seed_bound
       · exact (geometricFactor_degree_le K F hF.ne_zero g 0).trans hY
       · exact (geometricFactor_degree_le K F hF.ne_zero g 1).trans hR
       · exact (geometricFactor_degree_le K F hF.ne_zero g 2).trans hZ
-    have hsurface : surfaceMap (polynomialEmbedding K) F ≠ 0 :=
-      surfaceMap_ne_zero (polynomialEmbedding K) (polynomialEmbedding_injective K) F hF.ne_zero
     have hsub := geometricSeeds_subset K F selected Γ g
-    exact whole_surface_seed_bound_fixed_sparseR (polynomialEmbedding K) F g.1 hgirred hgdiv
-      hgate.1 hHproper hgcaps hbox hsurface hY hR hZ selected (geometricSeeds K F selected Γ g)
+    exact whole_surface_seed_bound_fixed (polynomialEmbedding K) F g.1 hgirred hgdiv
+      hgate.1 hHproper hgcaps hY hR hZ selected (geometricSeeds K F selected Γ g)
       nodes x u₀ u₁ hinj hnodes
       (fun γ hγ => hdegree γ (hsub hγ))
       (fun γ hγ => hsolutions γ (hsub hγ))
@@ -192,6 +186,28 @@ theorem original_regular_seed_bound
     _ ≤ ∑ g : GeometricFactor K F, wholeNumerator (degreeVector g.1) :=
       Finset.sum_le_sum (fun g _ => hcount g)
     _ ≤ wholeNumerator (originalDegreeVector K F) := sum_wholeNumerator_geometricFactors_le K F hF.ne_zero
+
+/-- Backward-compatible wrapper deriving all three coordinate caps from the
+ordinary contact box. The staircase caller uses the explicit-cap theorem. -/
+theorem original_regular_seed_bound
+    [CharP K prime]
+    (F : MvPolynomial (Fin 4) K) (hF : Irreducible F) (hRpos : 0 < F.degreeOf 2)
+    (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (selected : K → Polynomial K) (Γ : Finset K)
+    (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
+    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
+    (hsolutions : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
+    (hregular : ∀ γ ∈ Γ,
+      specialization K (selected γ) γ (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
+    (hagreement : ∀ γ ∈ Γ,
+      agreements ≤ (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
+    (hnoPencil : NoLargeSelectedPencil selected Γ w errors) :
+    Γ.card * gap ^ 2 ≤ wholeNumerator (originalDegreeVector K F) := by
+  have hc := degree_bounds_of_mem_box F weightedCap w seedTotalCap slopeCap
+    (by norm_num [w]) hbox
+  exact original_regular_seed_bound_of_caps K F hF hRpos hc.1 hc.2.1 hc.2.2
+    selected Γ nodes x u₀ u₁ hinj hnodes hdegree hsolutions hregular
+    hagreement hnoPencil
 
 end
 

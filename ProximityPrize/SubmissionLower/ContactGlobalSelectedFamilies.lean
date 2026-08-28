@@ -1,6 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSelectedSeedDecomposition
 import ProximityPrize.SubmissionLower.ContactCountingLedger
+import ProximityPrize.SubmissionLower.ContactSplitFactorCaps
 
 /-!
 # Constructed selected-seed families and the global finite-cover ledger
@@ -23,6 +24,7 @@ open ContactAlignmentParameters ContactImplicitLiftParameters ContactCountingLed
 open ContactSelectedSeedDecomposition ContactImplicitPairBudgets ContactImplicitContactLift
 open ContactExceptionalSeedAuxiliary ContactSingularAuxiliary ContactSingularDegreeBounds
 open ContactInterpolation ContactTranslation ContactFactorCaps
+open ContactSplitFactorCaps
 open scoped BigOperators
 
 noncomputable section
@@ -98,28 +100,40 @@ theorem card_le_two_family_sums_plus_exception
 
 theorem regularVector_budgets (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
-    (∑ F : RegularIndex Q, (regularVector Q F).y) ≤ 25 ∧
-      (∑ F : RegularIndex Q, (regularVector Q F).r) ≤ 5 ∧
-      (∑ F : RegularIndex Q, (regularVector Q F).z) ≤ 174 := by
+    (∑ F : RegularIndex Q, (regularVector Q F).y) ≤ yCap ∧
+      (∑ F : RegularIndex Q, (regularVector Q F).r) ≤ slopeCap ∧
+      (∑ F : RegularIndex Q, (regularVector Q F).z) ≤ seedTotalCap := by
   classical
   have hb := directFactor_input_budgets Q hQ weightedCap w seedTotalCap slopeCap (by decide) hbox
-  have hy : (∑ F ∈ positiveRFactors Q, F.degreeOf (1 : Fin 4)) ≤ 25 := by
-    have hh := hb.1
-    change (∑ F ∈ positiveRFactors Q, F.degreeOf (1 : Fin 4)) ≤ yCap at hh
-    rwa [parameter_values.2.1] at hh
   refine ⟨?_, ?_, ?_⟩
-  · simpa only [regularVector, Finset.sum_coe_sort] using hy
+  · simpa only [regularVector, Finset.sum_coe_sort, yCap] using hb.1
   · simpa only [regularVector, Finset.sum_coe_sort, slopeCap] using hb.2.1
   · simpa only [regularVector, Finset.sum_coe_sort, seedTotalCap] using hb.2.2
 
+/-- Split-cap regular budgets: the joint seed hull is irrelevant here; only
+the actual coordinate degrees of the interpolant are consumed. -/
+theorem regularVector_budgets_split_z (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
+    (hbox : Q ∈ globalCoefficientBox K weightedCap w jointSeedCap slopeCap)
+    (hZ : Q.degreeOf (3 : Fin 4) ≤ seedTotalCap) :
+    (∑ F : RegularIndex Q, (regularVector Q F).y) ≤ yCap ∧
+      (∑ F : RegularIndex Q, (regularVector Q F).r) ≤ slopeCap ∧
+      (∑ F : RegularIndex Q, (regularVector Q F).z) ≤ seedTotalCap := by
+  classical
+  have hb := directFactor_input_budgets_split_z Q hQ weightedCap w jointSeedCap
+    slopeCap seedTotalCap (by norm_num [w]) hbox hZ
+  refine ⟨?_, ?_, ?_⟩
+  · simpa only [regularVector, Finset.sum_coe_sort, yCap] using hb.1
+  · simpa only [regularVector, Finset.sum_coe_sort] using hb.2.1
+  · simpa only [regularVector, Finset.sum_coe_sort] using hb.2.2
+
 theorem implicitVector_budgets (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime]
-    (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
+    (hbox : Q ∈ globalCoefficientBox K weightedCap w jointSeedCap slopeCap) :
     (∑ q : ImplicitIndex Q, (implicitVector Q q).y) ≤ algebraicCap ∧
       (∑ q : ImplicitIndex Q, (implicitVector Q q).r) ≤ 2 * implicitYCap * algebraicCap ∧
       (∑ q : ImplicitIndex Q, (implicitVector Q q).z) ≤ implicitYCap := by
   classical
-  obtain ⟨hJ, hJbox⟩ := singularAuxiliary_nonzero_mem_box Q weightedCap w seedTotalCap
+  obtain ⟨hJ, hJbox⟩ := singularAuxiliary_nonzero_mem_box Q weightedCap w jointSeedCap
     slopeCap prime hQ (by decide) characteristic_gates.2.2.2 hbox
   have hb := implicitPair_input_budgets (singularAuxiliary Q) hJ implicitWeightedCap w
     algebraicCap (by decide) hJbox
@@ -127,7 +141,7 @@ theorem implicitVector_budgets (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
 
 theorem constructed_family_cover (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime]
-    (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (hbox : Q ∈ globalCoefficientBox K weightedCap w jointSeedCap slopeCap)
     (selected : K → Polynomial K) (Γ : Finset K)
     (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ Q = 0) :
     Γ.card ≤ (∑ F : RegularIndex Q, (regularSeeds Q selected Γ F).card) +
@@ -135,7 +149,7 @@ theorem constructed_family_cover (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
         (exceptionalSeeds (singularAuxiliary Q) Γ selected).card ∧
       (exceptionalSeeds (singularAuxiliary Q) Γ selected).card ≤ 2 * algebraicCap ^ 2 := by
   classical
-  have hd := selected_seed_decomposition Q hQ weightedCap w seedTotalCap slopeCap prime
+  have hd := selected_seed_decomposition Q hQ weightedCap w jointSeedCap slopeCap prime
     (by decide) characteristic_gates.2.2.2 (by decide)
     (by norm_num [w, slopeCap, weightedCap, ContactAlignmentParameters.multiplicity, agreements])
     (by decide) characteristic_gates.2.2.1 hbox Γ selected hsolution
@@ -152,7 +166,8 @@ theorem constructed_family_cover (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
 discharged by the final ContactGlobalSelectedCount module. -/
 theorem global_count_of_actual_branch_estimates
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
-    (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (hbox : Q ∈ globalCoefficientBox K weightedCap w jointSeedCap slopeCap)
+    (hZ : Q.degreeOf (3 : Fin 4) ≤ seedTotalCap)
     (selected : K → Polynomial K) (Γ : Finset K)
     (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ Q = 0)
     (hregular : ∀ F : RegularIndex Q,
@@ -161,7 +176,7 @@ theorem global_count_of_actual_branch_estimates
       (implicitSeeds Q selected Γ q).card * gap ≤
         n * dot liftedAgreement (implicitVector Q q) +
           (errors + 1) * gap * (implicitVector Q q).z) : Γ.card < alignmentBudget := by
-  have hregCaps := regularVector_budgets Q hQ hbox
+  have hregCaps := regularVector_budgets_split_z Q hQ hbox hZ
   have himpCaps := implicitVector_budgets Q hQ hbox
   have hcover := constructed_family_cover Q hQ hbox selected Γ hsolution
   exact final_family_ledger

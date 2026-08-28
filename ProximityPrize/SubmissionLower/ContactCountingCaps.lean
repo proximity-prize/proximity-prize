@@ -168,26 +168,24 @@ theorem fixed_surface_caps_below_characteristic :
       ContactAlignmentParameters.multiplicity, agreements, w, slopeCap, seedTotalCap, prime]
 
 theorem fixed_firstTail_characteristic_gates (G T : MvPolynomial (Fin 3) Ω)
-    (hG : HasCaps G ContactProjectionParameters.surfaceVector) (hT : HasCaps T firstTail)
-    (hRgate : mixed ContactProjectionParameters.surfaceVector firstTail unitR < prime) :
+    (hG : HasCaps G ContactProjectionParameters.surfaceVector) (hT : HasCaps T firstTail) :
     (∀ j, G.degreeOf j < prime) ∧
       ∀ j k : Fin 3, j ≠ k →
         T.degreeOf j * G.degreeOf k + G.degreeOf j * T.degreeOf k < prime := by
-  rcases ContactProjectionParameters.projection_caps_below_characteristic with
-    ⟨hY, hZ, _, _, _, _⟩
+  rcases ContactProjectionParameters.all_projection_caps_below_characteristic with
+    ⟨hY, hR, hZ, _, _, _⟩
   exact actual_characteristic_gates G T _ _ prime hG hT
-    fixed_surface_caps_below_characteristic hY hRgate hZ
+    fixed_surface_caps_below_characteristic hY hR hZ
 
 theorem fixed_agreement_characteristic_gates (G T : MvPolynomial (Fin 3) Ω)
-    (hG : HasCaps G ContactProjectionParameters.surfaceVector) (hT : HasCaps T agreementVector)
-    (hRgate : mixed ContactProjectionParameters.surfaceVector agreementVector unitR < prime) :
+    (hG : HasCaps G ContactProjectionParameters.surfaceVector) (hT : HasCaps T agreementVector) :
     (∀ j, G.degreeOf j < prime) ∧
       ∀ j k : Fin 3, j ≠ k →
         T.degreeOf j * G.degreeOf k + G.degreeOf j * T.degreeOf k < prime := by
-  rcases ContactProjectionParameters.projection_caps_below_characteristic with
-    ⟨_, _, hY, hZ, _, _⟩
+  rcases ContactProjectionParameters.all_projection_caps_below_characteristic with
+    ⟨_, _, _, hY, hR, hZ⟩
   exact actual_characteristic_gates G T _ _ prime hG hT
-    fixed_surface_caps_below_characteristic hY hRgate hZ
+    fixed_surface_caps_below_characteristic hY hR hZ
 
 theorem fixed_implicit_surface_caps_below_characteristic :
     ∀ j, capAt ContactImplicitLiftParameters.liftedSurface j < prime := by
@@ -196,7 +194,7 @@ theorem fixed_implicit_surface_caps_below_characteristic :
     norm_num [capAt, ContactImplicitLiftParameters.liftedSurface,
       ContactImplicitLiftParameters.implicitYCap, ContactImplicitLiftParameters.implicitWeightedCap,
       algebraicCap, weightedCap, ContactAlignmentParameters.multiplicity, agreements,
-      w, slopeCap, seedTotalCap, prime]
+      w, slopeCap, seedTotalCap, jointSeedCap, prime]
 
 /-- The implicit-equation lift uses its original fixed implicit cut,
 not a presumed separability of an arbitrary test-function map. -/

@@ -2,6 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies
 import ProximityPrize.SubmissionLower.ContactOriginalRegularSeedCount
 import ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount
+import ProximityPrize.SubmissionLower.ContactSplitFactorCaps
 
 /-!
 # The actual global selected-polynomial count for the fixed witness
@@ -29,6 +30,7 @@ open ContactImplicitPairBudgets ContactImplicitContactLift ContactSingularAuxili
 open ContactSingularDegreeBounds ContactInterpolation ContactTranslation
 open ContactPrimeSeedIncidence ContactProperCutSeedCount
 open ContactOriginalRegularSeedCount ContactImplicitPairSeedCount
+open ContactSplitFactorCaps ContactFactorCaps
 
 noncomputable section
 
@@ -40,7 +42,8 @@ local instance : DecidableEq ι := Classical.decEq ι
 
 theorem global_selected_count [CharP K prime]
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
-    (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (hbox : Q ∈ globalCoefficientBox K weightedCap w jointSeedCap slopeCap)
+    (hQZ : Q.degreeOf (3 : Fin 4) ≤ seedTotalCap)
     (selected : K → Polynomial K) (Γ : Finset K)
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (hnodes : nodes.card = n)
@@ -50,12 +53,15 @@ theorem global_selected_count [CharP K prime]
       agreements ≤ (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Γ w errors) : Γ.card < alignmentBudget := by
   classical
-  apply global_count_of_actual_branch_estimates Q hQ hbox selected Γ hsolution
+  apply global_count_of_actual_branch_estimates Q hQ hbox hQZ selected Γ hsolution
   · intro F
-    obtain ⟨hirred, hRpos, hFbox⟩ :=
-      directFactor_data Q F.1 hQ weightedCap w seedTotalCap slopeCap hbox F.2
+    obtain ⟨hirred, hRpos, hFbox, hFZ⟩ :=
+      directFactor_data_split_z Q F.1 hQ weightedCap w jointSeedCap slopeCap
+        seedTotalCap hbox hQZ F.2
+    have hFc := degree_bounds_of_mem_box F.1 weightedCap w jointSeedCap slopeCap
+      (by norm_num [w]) hFbox
     have hsub := regularSeeds_subset Q selected Γ F
-    exact original_regular_seed_bound K F.1 hirred hRpos hFbox selected
+    exact original_regular_seed_bound_of_caps K F.1 hirred hRpos hFc.1 hFc.2.1 hFZ selected
       (regularSeeds Q selected Γ F) nodes x u₀ u₁ hinj hnodes
       (fun γ hγ => hdegree γ (hsub hγ))
       (fun γ hγ => (regularSeeds_solution Q selected Γ F γ hγ).1)
@@ -63,7 +69,7 @@ theorem global_selected_count [CharP K prime]
       (fun γ hγ => hagreement γ (hsub hγ))
       (noLargeSelectedPencil_mono selected Γ _ w errors hsub hnoPencil)
   · intro q
-    obtain ⟨hJ, hJbox⟩ := singularAuxiliary_nonzero_mem_box Q weightedCap w seedTotalCap
+    obtain ⟨hJ, hJbox⟩ := singularAuxiliary_nonzero_mem_box Q weightedCap w jointSeedCap
       slopeCap prime hQ (by decide) characteristic_gates.2.2.2 hbox
     obtain ⟨_hA, hG, hGR, hAbox, hGbox, hproper⟩ :=
       implicitPair_data (singularAuxiliary Q) hJ implicitWeightedCap w algebraicCap
