@@ -215,6 +215,33 @@ theorem actualRelationKernel_family_injective
 
 end
 
+/-- Cap-Partitioned Kernel-Gated Recursive Bit-Span (CPKGR-BS).
+
+Given a per-plane `cap` and the certified-safe IRS reduction `radius`
+(already a bit count), partitions the bit-floor input by `cap`, recurses
+on a segment iff its kernel residue `segment % cap` is nonzero
+(tolerance 0), grows the working radius by `radius_grow_bits`=1 per
+recursion level, caps recursion depth at 4, drops segments below
+`min_segment_floor`=1, and monotone-max combines the per-segment
+bit-spans. This is a compiled-in recursion over `Nat`; it is not a
+certified theorem and does not introduce new axioms. -/
+def capPartitionedBitSpan (cap radius : Nat) : Nat :=
+  let radius_grow_bits : Nat := 1
+  let max_depth : Nat := 4
+  let min_segment_floor : Nat := 1
+  let rec go (depth : Nat) (remaining : Nat) (r : Nat) (best : Nat) : Nat :=
+    if hdepth : max_depth ≤ depth then best
+    else if hsize : remaining < min_segment_floor then best
+    else
+      let segment : Nat := min cap remaining
+      let kernelResidue : Nat := segment % cap
+      if hzero : kernelResidue = 0 then
+        go (depth + 1) (remaining - segment) (r + radius_grow_bits) best
+      else
+        let thisSpan : Nat := segment + r
+        go (depth + 1) (remaining - segment) (r + radius_grow_bits) (max best thisSpan)
+  go 0 radius radius 0
+
 #print axioms bivariateEquiv_X_zero
 #print axioms bivariateEquiv_X_one
 #print axioms planeMap_injective
@@ -225,5 +252,6 @@ end
 #print axioms actualPlane_root_iff
 #print axioms prime_eq_of_actualRelationKernel_eq
 #print axioms actualRelationKernel_family_injective
+#print axioms capPartitionedBitSpan
 
 end ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel

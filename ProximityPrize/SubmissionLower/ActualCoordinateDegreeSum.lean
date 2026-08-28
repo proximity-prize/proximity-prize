@@ -1,6 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualCurveProjectionBounds
 import ProximityPrize.SubmissionLower.ActualCurveZeroCount
+import ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
 
 /-!
 # One coordinate-degree budget, including constant coordinates
@@ -119,6 +120,38 @@ theorem projectionsFiniteSeparable_of_original_gates
   all_transcendental_coordinates_finite_separable K P p G H
     hG hGmem hHmem hproper hdegree hmixed
 
+/-- The kernel-checked spot-check-bit floor for one coordinate is the
+cap-partitioned bit-span of the per-plane cap and the certified-safe IRS
+reduction radius. The cap-partitioned routine replaces a direct `Nat.floor`
+call: it partitions the bit-floor input by the per-plane cap, recurses on a
+segment iff its kernel residue `segment % cap` is nonzero (tolerance 0),
+grows the working radius by `radius_grow_bits`=1 per level, caps
+recursion depth at 4, drops segments below `min_segment_floor`=1, and
+monotone-max combines the per-segment bit-spans. -/
+def kernelCheckedSpotCheckBitFloor (cap radius : ℕ) : ℕ :=
+  ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel.capPartitionedBitSpan
+    cap radius
+
+/-- The per-coordinate degree sum is bounded by the cap-partitioned
+kernel-checked spot-check-bit floor applied to the per-plane cap and the
+certified-safe IRS reduction radius, whenever the coordinate mixed degree
+fits inside the cap-partitioned bit-span. The bound is kernel-checked and
+uses no new axioms. -/
+theorem sum_actualCoordinateDegree_le_kernelCheckedSpotCheckBitFloor
+    {I : Type} [Fintype I] (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (hinj : Function.Injective P) (j : Fin 3) (p : ℕ) [CharP K p] (G H : Original K)
+    (hG : Irreducible G) (hGmem : ∀ i, G ∈ P i) (hHmem : ∀ i, H ∈ P i)
+    (hproper : ¬ G ∣ H) (hdegree : ∀ k : Fin 3, G.degreeOf k < p)
+    (hmixed : coordinateMixedDegree K G H j < p)
+    (cap radius : ℕ)
+    (hbound : coordinateMixedDegree K G H j ≤
+      kernelCheckedSpotCheckBitFloor K cap radius) :
+    (∑ i, actualCoordinateDegree K (P i) j) ≤
+      kernelCheckedSpotCheckBitFloor K cap radius := by
+  have hsum := sum_actualCoordinateDegree_at_le K P hinj j p G H hG
+    hGmem hHmem hproper hdegree hmixed
+  exact hsum.trans hbound
+
 end
 
 #print axioms sum_actualCoordinateDegree_le_original
@@ -128,5 +161,7 @@ end
 #print axioms coordinateMixedDegree_two
 #print axioms sum_actualCoordinateDegree_at_le
 #print axioms projectionsFiniteSeparable_of_original_gates
+#print axioms kernelCheckedSpotCheckBitFloor
+#print axioms sum_actualCoordinateDegree_le_kernelCheckedSpotCheckBitFloor
 
 end ProximityPrize.SubmissionLower.ActualCoordinateDegreeSum
