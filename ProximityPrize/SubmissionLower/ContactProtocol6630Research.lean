@@ -101,3 +101,6 @@ end
 
 
 end ProximityPrize.SubmissionLower.ContactProtocol6630Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactProtocol6630Research.frozenTerminalAdaptiveProjectionFamiliesYZ6630
+#print axioms ProximityPrize.SubmissionLower.ContactProtocol6630Research.protocolClaim6630

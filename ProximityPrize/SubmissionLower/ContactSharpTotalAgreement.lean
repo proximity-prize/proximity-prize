@@ -333,3 +333,7 @@ theorem surface_agreement_Y_degree_cap_totalYR
 end
 
 end ProximityPrize.SubmissionLower.ContactSharpTotalAgreement
+
+#print axioms ProximityPrize.SubmissionLower.ContactSharpTotalAgreement.totalYR_wt_le_of_mem_box
+#print axioms ProximityPrize.SubmissionLower.ContactSharpTotalAgreement.agreementNumerator_totalYR_wt_le
+#print axioms ProximityPrize.SubmissionLower.ContactSharpTotalAgreement.surface_agreement_Y_degree_cap_totalYR

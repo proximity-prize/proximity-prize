@@ -102,3 +102,5 @@ theorem coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant
 end
 
 end ProximityPrize.SubmissionLower.ContactAdaptiveRelevantPlacesResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactAdaptiveRelevantPlacesResearch.coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant

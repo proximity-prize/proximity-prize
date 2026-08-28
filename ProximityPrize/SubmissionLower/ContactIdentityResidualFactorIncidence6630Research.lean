@@ -111,3 +111,5 @@ theorem recursive_scaled_factor_6630_z_yz
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualFactorIncidence6630Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualFactorIncidence6630Research.recursive_scaled_factor_6630_z_yz

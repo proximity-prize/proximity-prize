@@ -113,3 +113,7 @@ theorem gap_squared_exact : gapSquared = 2658330481 := by
   norm_num [gapSquared, gap, agreements, n, errors, w]
 
 end ProximityPrize.SubmissionLower.ContactNearPencil6630ArithmeticResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630ArithmeticResearch.degree_part_bound
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630ArithmeticResearch.unit_part_bound
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630ArithmeticResearch.regular_numerator_exact

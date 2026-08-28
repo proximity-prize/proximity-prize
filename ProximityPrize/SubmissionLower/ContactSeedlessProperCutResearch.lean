@@ -114,3 +114,5 @@ theorem seedless_proper_cut_bound
 end
 
 end ProximityPrize.SubmissionLower.ContactSeedlessProperCutResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactSeedlessProperCutResearch.seedless_proper_cut_bound

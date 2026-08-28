@@ -206,3 +206,7 @@ theorem seedless_prime_incidence
 end
 
 end ProximityPrize.SubmissionLower.ContactSeedlessPrimeIncidenceResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactSeedlessPrimeIncidenceResearch.seedlessPoint_injective
+#print axioms ProximityPrize.SubmissionLower.ContactSeedlessPrimeIncidenceResearch.identityNodes_card_le_of_seedless_cut
+#print axioms ProximityPrize.SubmissionLower.ContactSeedlessPrimeIncidenceResearch.seedless_prime_incidence

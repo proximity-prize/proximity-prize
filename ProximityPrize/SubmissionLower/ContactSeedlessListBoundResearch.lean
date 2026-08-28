@@ -574,3 +574,7 @@ theorem seedless_list_card_le
 end
 
 end ProximityPrize.SubmissionLower.ContactSeedlessListBoundResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactSeedlessListBoundResearch.original_regular_seedless_bound
+#print axioms ProximityPrize.SubmissionLower.ContactSeedlessListBoundResearch.singular_seedless_card_le
+#print axioms ProximityPrize.SubmissionLower.ContactSeedlessListBoundResearch.seedless_list_card_le

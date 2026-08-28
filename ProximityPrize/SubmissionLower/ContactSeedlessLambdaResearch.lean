@@ -248,3 +248,6 @@ theorem irs_squared_lambda_seedless
 end
 
 end ProximityPrize.SubmissionLower.ContactSeedlessLambdaResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactSeedlessLambdaResearch.irs_scalar_finite_list_card_le
+#print axioms ProximityPrize.SubmissionLower.ContactSeedlessLambdaResearch.irs_squared_lambda_seedless

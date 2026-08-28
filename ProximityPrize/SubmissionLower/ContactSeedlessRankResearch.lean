@@ -237,3 +237,6 @@ theorem seedlessBlockJet_rank_le_contactRankBound
 end
 
 end ProximityPrize.SubmissionLower.ContactSeedlessRankResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactSeedlessRankResearch.seedlessBox_finrank
+#print axioms ProximityPrize.SubmissionLower.ContactSeedlessRankResearch.seedlessBlockJet_rank_le_contactRankBound

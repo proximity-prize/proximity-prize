@@ -76,3 +76,5 @@ theorem global_count_lt_alignment6630_of_terminal_projection_families
 end
 
 end ProximityPrize.SubmissionLower.ContactGlobalAdaptiveAlignment6630Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactGlobalAdaptiveAlignment6630Research.global_count_lt_alignment6630_of_terminal_projection_families

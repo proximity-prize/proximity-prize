@@ -189,3 +189,5 @@ end Characteristic
 end
 
 end ProximityPrize.SubmissionLower.ContactFlagProjectionPositivity6543Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactFlagProjectionPositivity6543Research.flagProjectionPositivity_of_degree_directional

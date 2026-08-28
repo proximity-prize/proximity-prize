@@ -373,5 +373,8 @@ theorem agreementNumerator_wt_le_minkowski
 
 end
 
+#print axioms numeratorStep_wt_le_minkowski
+#print axioms numerator_wt_le_minkowski
+#print axioms agreementNumerator_wt_le_minkowski
 
 end ProximityPrize.SubmissionLower.ContactPost6464MinkowskiRecurrenceResearch

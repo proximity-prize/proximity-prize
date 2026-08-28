@@ -68,3 +68,7 @@ theorem flagMixed_direction_values6630 :
     zLinear, zUnit]
 
 end ProximityPrize.SubmissionLower.ContactNearPencil6630FlagResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630FlagResearch.flagMixed_residualAgreementFlag6630
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630FlagResearch.flagMixed_residualAgreementFlag6630_unitZ
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630FlagResearch.flagMixed_residualAgreementFlag6630_unitYZ
