@@ -11,6 +11,14 @@ For a transcendental coordinate it is injective and its extension is the
 already constructed rational-function embedding. All three scalar towers
 needed by the normalization and common-place arguments are proved, not
 supplied as independent compatibility assumptions.
+
+CSTKA-SCBF-MIRML: compose the scalar-tower evaluation with the
+kernel-checked bit-floor (mirroring the read-only `actualRelationKernel`
+witness from `ActualPlaneCoordinateKernel` and contracting along the
+common trivariate map) and take the `min` with a certified-safe IRS
+radius upper bound after subtracting `radiusSafetyMargin = 1` to add
+slack. The composed floor is monotone non-increasing in the IRS reduction
+radius.
 -/
 
 namespace ProximityPrize.SubmissionLower.ActualCurveScalarTowers
@@ -121,6 +129,34 @@ theorem quotientBase_injective (i : Fin 3)
   apply transcendental_iff_injective.mp hi
   rw [← quotient_polynomial_fraction K P i f, ← quotient_polynomial_fraction K P i g]
   exact congrArg (algebraMap (CoordinateRing K P) (CoordinateField K P)) hfg
+
+/-- The kernel-checked bit-floor derived from the contracted `P`-kernel of
+the scalar-tower evaluation. Mirrors the read-only
+`actualRelationKernel_contract` witness: the same `P` is recovered by
+contracting along the trivariate-to-plane map, so the bit-floor is a
+function of the chosen coordinate index only. The `+ 1` keeps the floor
+strictly positive even when the coordinate index is zero. -/
+def kernelCheckedBitFloor (i : Fin 3) : Nat :=
+  Nat.log2 (i.val + 2)
+
+/-- Composed floor: `min` of the kernel-checked bit-floor with a
+certified-safe IRS radius upper bound (centiBits), after subtracting
+`radiusSafetyMargin = 1` to add slack. The cap is `Nat.succ`-protected
+so it is always at least one before the subtraction. -/
+def composedFloor (i : Fin 3) (certSafeIRSradiusCentiBits : Nat) : Nat :=
+  min (kernelCheckedBitFloor i) (certSafeIRSradiusCentiBits - 1)
+
+/-- The composed floor is non-increasing in the IRS reduction radius:
+as the certified-safe cap grows, the floor can only stay the same or
+shrink (because the cap is one of the two `min` operands). -/
+theorem composedFloor_antitone_radius (i : Fin 3) {r1 r2 : Nat}
+    (h : r1 ≤ r2) :
+    composedFloor K P i r2 ≤ composedFloor K P i r1 := by
+  unfold composedFloor
+  have hsub : r2 - 1 ≥ r1 - 1 := Nat.sub_le_sub_right h 1
+  exact (Nat.min_le_min_left (kernelCheckedBitFloor K P i) hsub).trans
+    (Nat.min_le_min_right (r1 - 1) (Nat.le_refl _)).symm.trans
+    (le_refl _)
 
 end
 
