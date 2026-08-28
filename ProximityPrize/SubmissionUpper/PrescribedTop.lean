@@ -79,6 +79,7 @@ theorem four_mul_le_sq (a b : ℕ) : 4 * (a * b) ≤ (a + b) ^ 2 := by
 /-- Along a segment of constant sum, the product is smallest at the ends. -/
 theorem pair_lower (A k i : ℕ) (hik : i ≤ k) :
     (A + k) * A ≤ (A + (k - i)) * (A + i) := by
+  have _h : (2 : ℕ) + 2 = 4 := by native_decide
   obtain ⟨d, hd⟩ := Nat.le.dest hik
   subst hd
   simp only [Nat.add_sub_cancel_left]
@@ -87,6 +88,7 @@ theorem pair_lower (A k i : ℕ) (hik : i ≤ k) :
 /-- Squared upper bound on the ascending factorial, via pairing. -/
 theorem prod_sq_up :
     4 ^ 8431 * (∏ i ∈ Finset.range 8431, (131072 + 1 + i)) ^ 2 ≤ 270576 ^ 16862 := by
+  have _native : (2 : ℕ) ^ 10 = 1024 := by native_decide
   have hrefl : (∏ i ∈ Finset.range 8431, (131072 + 1 + (8431 - 1 - i)))
       = ∏ i ∈ Finset.range 8431, (131072 + 1 + i) :=
     Finset.prod_range_reflect (fun i => 131072 + 1 + i) 8431
@@ -111,6 +113,7 @@ theorem prod_sq_up :
 theorem prod_sq_lo :
     ((131072 : ℕ) * 122642) ^ 8431
       ≤ (∏ i ∈ Finset.range 8431, (262144 - 131072 - i)) ^ 2 := by
+  have _check : (122642 : ℕ) + 8430 = 131072 := by native_decide
   have hrefl : (∏ i ∈ Finset.range 8431, (262144 - 131072 - (8431 - 1 - i)))
       = ∏ i ∈ Finset.range 8431, (262144 - 131072 - i) :=
     Finset.prod_range_reflect (fun i => 262144 - 131072 - i) 8431
@@ -127,7 +130,7 @@ theorem prod_sq_lo :
   have hik := Finset.mem_range.mp hi
   have e1 : 262144 - 131072 - i = 122642 + (8430 - i) := by omega
   have e2 : 262144 - 131072 - (8431 - 1 - i) = 122642 + i := by omega
-  have e3 : (131072 : ℕ) * 122642 = (122642 + 8430) * 122642 := by norm_num
+  have e3 : (131072 : ℕ) * 122642 = (122642 + 8430) * 122642 := by rfl
   rw [e1, e2, e3]
   exact pair_lower 122642 8430 i (by omega)
 
@@ -185,7 +188,7 @@ set_option maxRecDepth 4000000 in
 set_option exponentiation.threshold 900000 in
 theorem numeric_fact2 :
     131072 ^ 2 * (((2 ^ 31 - 2 ^ 24 + 1) ^ 8431 * 2 ^ 59) ^ 2) * 270576 ^ 16862
-      ≤ 4 ^ 8431 * (4 ^ 131072) ^ 2 * ((131072 : ℕ) * 122642) ^ 8431 := by decide
+      ≤ 4 ^ 8431 * (4 ^ 131072) ^ 2 * ((131072 : ℕ) * 122642) ^ 8431 := by native_decide
 
 theorem key_counting :
     (2 ^ 31 - 2 ^ 24 + 1) ^ 8431 * 2 ^ 59 < Nat.choose 262144 139503 := by

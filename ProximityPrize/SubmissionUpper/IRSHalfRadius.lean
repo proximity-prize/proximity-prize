@@ -76,11 +76,12 @@ theorem sub_one_sq_lt_of_lt_two_pow
     lt_of_le_of_lt (Nat.sub_le _ _) hq
   have hfieldSq : (q - 1) ^ 2 < (2 ^ 186) ^ 2 :=
     Nat.pow_lt_pow_left hfield (by norm_num)
+  have h372 : (2 : ℕ) ^ 372 < 2 ^ 400 := by native_decide
   calc
     (q - 1) ^ 2 < (2 ^ 186) ^ 2 := hfieldSq
     _ = 2 ^ (186 * 2) := (pow_mul 2 186 2).symm
-    _ = 2 ^ 372 := by norm_num
-    _ < 2 ^ 400 := Nat.pow_lt_pow_right (by norm_num) (by norm_num)
+    _ = 2 ^ 372 := by rfl
+    _ < 2 ^ 400 := h372
     _ < N := hN
 
 theorem field_card_sub_one_sq_lt_card_halfColumns :
