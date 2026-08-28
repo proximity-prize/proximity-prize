@@ -2,7 +2,7 @@ import ProximityPrize.SubmissionLower.ContactAlignment6401
 import ProximityPrize.SubmissionLower.AlignmentProtocol6401Conditional
 
 /-!
-# The complete 65.69-bit protocol theorem
+# The complete 65.04-bit protocol theorem
 
 Model label: gpt-5.
 
@@ -16,7 +16,7 @@ namespace ProximityPrize.SubmissionLower.ContactProtocol6401
 
 open ProximityPrize.Benchmark
 
-theorem protocolClaim6401 : ProtocolClaim 6569 313895 1048576 :=
+theorem protocolClaim6401 : ProtocolClaim 6568 313851 1048576 :=
   AlignmentProtocol6401Conditional.protocolClaim6401_of_alignment
     ContactAlignment6401.alignment6401
 

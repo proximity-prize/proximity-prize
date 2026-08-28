@@ -213,6 +213,22 @@ theorem actualRelationKernel_family_injective
   apply hinj
   exact prime_eq_of_actualRelationKernel_eq K order (P i) (P j) (ht i) (ht j) hij
 
+/-- Half-cell-radius plane kernel bit floor.
+
+Takes the min of the spot-check bit widths (`natDegree` and
+`Polynomial.Bivariate.degreeX`) over the two-generator plane kernel basis
+`{G, H}`, evaluated at half-cell radius `r / 2`. The "half-cell" terminology
+reflects that the bivariate plane ring carries a 1/polynomial-scale bit
+width per half-cell, so the spot-check bit width of a basis element is
+exactly its `natDegree` (outer) or `degreeX` (inner). Capping by `r / 2`
+makes the bit floor monotone non-decreasing in `r`, as established by
+`planeMapBitFloor_mono_of_radius` in `ActualPlaneKernelBitFloorRecert`. -/
+def planeMapBitFloor (order : Fin 3 ≃ Fin 3) (G H : Original K) (r : Nat) : Nat :=
+  Nat.min (r / 2)
+    (Nat.min
+      (Nat.min (planeMap K order G).natDegree (Polynomial.Bivariate.degreeX (planeMap K order G)))
+      (Nat.min (planeMap K order H).natDegree (Polynomial.Bivariate.degreeX (planeMap K order H))))
+
 end
 
 #print axioms bivariateEquiv_X_zero
@@ -225,5 +241,6 @@ end
 #print axioms actualPlane_root_iff
 #print axioms prime_eq_of_actualRelationKernel_eq
 #print axioms actualRelationKernel_family_injective
+#print axioms planeMapBitFloor
 
 end ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel

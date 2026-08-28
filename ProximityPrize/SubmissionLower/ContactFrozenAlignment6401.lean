@@ -5,12 +5,12 @@ import ProximityPrize.SubmissionLower.ContactTranslation
 import ProximityPrize.SubmissionLower.ContactAlignmentParameters
 
 /-!
-# The full-triangle 6569 interpolation front end and stock alignment interface
+# The whole-only 6426 interpolation front end and stock alignment interface
 
 Model label: gpt-5.
 
 This new adapter applies the re-instantiated universal interpolant to each
-caller's ORIGINAL agreement support at e=78473. Its only counting input is
+caller's ORIGINAL agreement support at e=77829. Its only counting input is
 the actual selected-polynomial bound in the new coefficient box. The
 companion ContactAlignment6401 module discharges that input by the actual
 global factor-counting theorem.
@@ -35,9 +35,9 @@ set_option maxRecDepth 10000
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 
 /-- The new selected-family bound uses the actual domain and the exact
-78473-error, full-triangle parameters. -/
+77829-error, maximal-seed parameters. -/
 def SelectedNoLargePencilBound6401 : Prop :=
-  SelectedNoLargePencilBound IRSProfile.domain 131071 78473 137490364055697543
+  SelectedNoLargePencilBound IRSProfile.domain 131071 78462 137490364055697543
 
 /-- The precise actual-interpolant count supplied by the global counting
 module; it is an explicit input to this frontend, never a new axiom. -/
@@ -45,7 +45,6 @@ def InterpolantSelectedCount6401 : Prop :=
   ∀ (Q : MvPolynomial (Fin 4) IRSProfile.Field),
     Q ≠ 0 →
     Q ∈ globalCoefficientBox IRSProfile.Field weightedCap w seedTotalCap slopeCap →
-    Q ∈ fullTriangleBox IRSProfile.Field seedTotalCap →
     ∀ (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
       (seeds : Finset IRSProfile.Field) (u₀ u₁ : IRSProfile.Index → IRSProfile.Field),
       (∀ γ ∈ seeds, (selected γ).natDegree ≤ w) →
@@ -64,7 +63,7 @@ theorem challenge_field_characteristic :
 theorem original_support_card
     (A : IRSProfile.Field → Finset IRSProfile.Index)
     (seeds : Finset IRSProfile.Field)
-    (hcard : ∀ γ ∈ seeds, Fintype.card IRSProfile.Index - 78473 ≤ (A γ).card) :
+    (hcard : ∀ γ ∈ seeds, Fintype.card IRSProfile.Index - 78462 ≤ (A γ).card) :
     ∀ γ ∈ seeds, agreements ≤ (A γ).card := by
   intro γ hγ
   have hh := hcard γ hγ
@@ -78,7 +77,7 @@ theorem selected_count_of_interpolant_count
   classical
   intro U seeds A selected hdegree hcard hvalues hno
   have hcard' := original_support_card A seeds hcard
-  obtain ⟨Q, hQ, hbox, hfull, hvanish⟩ :=
+  obtain ⟨Q, hQ, hbox, hvanish⟩ :=
     exists_frozen_universal_vanishing_interpolant (U 0) (U 1)
   have hbox' : Q ∈
       globalCoefficientBox IRSProfile.Field weightedCap w seedTotalCap slopeCap := hbox
@@ -103,16 +102,16 @@ theorem selected_count_of_interpolant_count
     apply Finset.card_le_card
     intro γ hγ
     simpa only [pencilSeeds, Finset.mem_filter] using (Finset.mem_filter.mp hγ)
-  exact Nat.le_of_lt (hcount Q hQ hbox' hfull selected seeds (U 0) (U 1)
+  exact Nat.le_of_lt (hcount Q hQ hbox' selected seeds (U 0) (U 1)
     hdegree hsolution hagreement hno')
 
 /-- Use the generic stock-code bridge at the new error and seed budget. -/
 theorem alignment_of_interpolant_count
     (hcount : InterpolantSelectedCount6401) :
-    AffineLineAlignmentBound IRSProfile.baseCode 78473 137490364055697543 := by
+    AffineLineAlignmentBound IRSProfile.baseCode 78462 137490364055697543 := by
   change AffineLineAlignmentBound (ReedSolomon.code IRSProfile.domain (131071 + 1))
-    78473 137490364055697543
-  exact alignmentBound_of_selected_count IRSProfile.domain 131071 78473
+    78462 137490364055697543
+  exact alignmentBound_of_selected_count IRSProfile.domain 131071 78462
     137490364055697543 (selected_count_of_interpolant_count hcount)
 
 #print axioms challenge_field_characteristic

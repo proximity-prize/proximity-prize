@@ -138,7 +138,6 @@ theorem original_regular_seed_bound
     [CharP K prime]
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F) (hRpos : 0 < F.degreeOf 2)
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hfull : F ∈ fullTriangleBox K seedTotalCap)
     (selected : K → Polynomial K) (Γ : Finset K)
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
     (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
@@ -156,6 +155,12 @@ theorem original_regular_seed_bound
   have hY : F.degreeOf 1 ≤ yCap := hc.1
   have hR : F.degreeOf 2 ≤ slopeCap := hc.2.1
   have hZ : F.degreeOf 3 ≤ seedTotalCap := hc.2.2
+  have hHY : (ContactTaylorNumerators.polyH K F).degreeOf (1 : Fin 4) ≤ yCap - 1 :=
+    ContactRefinedAgreementY.polyH_Y_degree_le_of_mem_box
+      F weightedCap w seedTotalCap slopeCap yCap
+      hbox (by norm_num [w]) (by
+        norm_num [weightedCap, ContactAlignmentParameters.multiplicity,
+          agreements, w, yCap])
   have hsmall : F.degreeOf 2 < prime := hR.trans_lt (by norm_num [slopeCap, prime])
   have hcount (g : GeometricFactor K F) :
       (geometricSeeds K F selected Γ g).card * gap ^ 2 ≤ wholeNumerator (degreeVector g.1) := by
@@ -173,7 +178,7 @@ theorem original_regular_seed_bound
       · exact (geometricFactor_degree_le K F hF.ne_zero g 2).trans hZ
     have hsub := geometricSeeds_subset K F selected Γ g
     exact whole_surface_seed_bound_fixed (polynomialEmbedding K) F g.1 hgirred hgdiv
-      hgate.1 hHproper hgcaps hY hR hZ hbox hfull
+      hgate.1 hHproper hgcaps hY hR hZ hHY
       selected (geometricSeeds K F selected Γ g)
       nodes x u₀ u₁ hinj hnodes
       (fun γ hγ => hdegree γ (hsub hγ))

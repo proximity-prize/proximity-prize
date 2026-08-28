@@ -29,7 +29,6 @@ open ContactImplicitPairBudgets ContactImplicitContactLift ContactSingularAuxili
 open ContactSingularDegreeBounds ContactInterpolation ContactTranslation
 open ContactPrimeSeedIncidence ContactProperCutSeedCount
 open ContactOriginalRegularSeedCount ContactImplicitPairSeedCount
-open ContactFullTriangleAgreement
 
 noncomputable section
 
@@ -42,7 +41,6 @@ local instance : DecidableEq ι := Classical.decEq ι
 theorem global_selected_count [CharP K prime]
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hfull : Q ∈ fullTriangleBox K seedTotalCap)
     (selected : K → Polynomial K) (Γ : Finset K)
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (hnodes : nodes.card = n)
@@ -56,12 +54,8 @@ theorem global_selected_count [CharP K prime]
   · intro F
     obtain ⟨hirred, hRpos, hFbox⟩ :=
       directFactor_data Q F.1 hQ weightedCap w seedTotalCap slopeCap hbox F.2
-    have hdiv := (positiveRFactors_spec Q F.1 F.2).2.1
-    have hFfull : F.1 ∈ fullTriangleBox K seedTotalCap :=
-      fullTriangleBox_of_wt_le F.1 seedTotalCap
-        (full_wt_le_of_dvd F.1 Q seedTotalCap hQ hdiv hfull)
     have hsub := regularSeeds_subset Q selected Γ F
-    exact original_regular_seed_bound K F.1 hirred hRpos hFbox hFfull selected
+    exact original_regular_seed_bound K F.1 hirred hRpos hFbox selected
       (regularSeeds Q selected Γ F) nodes x u₀ u₁ hinj hnodes
       (fun γ hγ => hdegree γ (hsub hγ))
       (fun γ hγ => (regularSeeds_solution Q selected Γ F γ hγ).1)

@@ -3,8 +3,6 @@ import ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
 import ProximityPrize.SubmissionLower.ContactProjectionParameters
 import ProximityPrize.SubmissionLower.ContactImplicitLiftParameters
 import ProximityPrize.SubmissionLower.ContactRefinedAgreementY
-import ProximityPrize.SubmissionLower.ContactFullTriangleAgreement
-import ProximityPrize.SubmissionLower.ContactSharpTotalAgreement
 
 /-!
 # Actual first-tail and agreement caps for the fixed counting witness
@@ -28,8 +26,6 @@ open scoped Classical
 open ContactAlignmentParameters ContactTaylorNumerators ContactGenericSurface
 open ContactPolynomialSolutions ContactPrimeSeedIncidence
 open ContactRefinedAgreementY
-open ContactFullTriangleAgreement ContactSharpTotalAgreement
-open ContactInterpolation
 
 noncomputable section
 
@@ -96,36 +92,16 @@ theorem fixed_agreement_caps (F : MvPolynomial (Fin 4) K)
     (hZ : F.degreeOf 3 ≤ seedTotalCap)
     (hHY : (polyH K F).degreeOf (1 : Fin 4) ≤ yCap - 1)
     (x u₀ u₁ : K) :
-    HasCaps (agreementPolynomial φ F w x u₀ u₁)
-      (agreementCaps yCap slopeCap seedTotalCap w) := by
-  exact surface_agreement_caps φ F yCap slopeCap seedTotalCap (by decide)
-    hY hR hZ w (fun j ↦ (j.factorial : K)⁻¹) x u₀ u₁
-
-/-- The reconstructed full triangle and joint `Y+R` contact cap save one
-degree in both the Y and seed directions of every agreement numerator. -/
-theorem fixed_agreement_caps_sharp (F : MvPolynomial (Fin 4) K)
-    (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hfull : F ∈ fullTriangleBox K seedTotalCap)
-    (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
-    (hZ : F.degreeOf 3 ≤ seedTotalCap)
-    (x u₀ u₁ : K) :
     HasCaps (agreementPolynomial φ F w x u₀ u₁) agreementVector := by
   have hold := surface_agreement_caps φ F yCap slopeCap seedTotalCap (by decide)
     hY hR hZ w (fun j ↦ (j.factorial : K)⁻¹) x u₀ u₁
-  have hyr := totalYR_wt_le_of_mem_box F weightedCap w seedTotalCap slopeCap yCap
-    (by norm_num [w])
-    (by norm_num [weightedCap, ContactAlignmentParameters.multiplicity,
-      agreements, w, yCap]) hbox
-  have hfullwt := fullTriangleBox_wt_le F seedTotalCap hfull
   intro i
   fin_cases i
-  · simpa [agreementPolynomial, agreementVector, capAt] using
-      (surface_agreement_Y_degree_cap_totalYR φ F yCap w (by decide) hyr
-        (fun j ↦ (j.factorial : K)⁻¹) x u₀ u₁)
-  · simpa [agreementPolynomial, agreementVector, capAt, agreementCaps] using hold 1
-  · simpa [agreementPolynomial, agreementVector, capAt] using
-      (surface_agreement_seed_degree_cap_full_triangle φ F seedTotalCap w
-        (by decide) hfullwt (fun j ↦ (j.factorial : K)⁻¹) x u₀ u₁)
+  · exact (surfaceMap_degreeOf_le φ _ 0).trans
+      (agreementNumerator_Y_degree_bound_of_polyH F yCap (yCap - 1) w
+        hY hHY (by omega) (fun j ↦ (j.factorial : K)⁻¹) x u₀ u₁)
+  · exact hold 1
+  · exact hold 2
 
 /-- A genuine degree-w selected solution vanishes on the actual first
 tail. This needs neither regularity nor a characteristic bound. -/

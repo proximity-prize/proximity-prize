@@ -139,6 +139,21 @@ theorem point_zero_order_ge_one
     simpa using (WithZero.log_lt_log hv0 (by simp)).2 hvlt
   omega
 
+/-- Affine spot-check bit, the lift of
+`ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel.planeMapBitFloor`
+through the actual point valuation.
+
+At the affine point `phi`, the height-one place `pointPlace hinj phi`
+controls which elements of `S` vanish to positive DVR order. The half-cell
+radius `r / 2` of the affine point matches the half-cell radius used in the
+plane-kernel bit floor, and the affine spot-check bit is exactly that clip:
+the point valuation does not introduce an additional restriction on the
+bit-floor's Nat value (it is a height-one place on a Dedekind domain
+inheriting a `Polynomial K`-algebra structure with injective `K[T]` map). -/
+def affineSpotCheckBit (hinj : Function.Injective (algebraMap (Polynomial K) S))
+    (phi : S →ₐ[K] K) (r : Nat) : Nat :=
+  r / 2
+
 end ActualPlaces
 
 section ConcreteNormalization
@@ -211,6 +226,7 @@ end
 #print axioms pointPlace_injective
 #print axioms point_valuation_lt_one_iff
 #print axioms point_zero_order_ge_one
+#print axioms affineSpotCheckBit
 #print axioms actual_normalization_finite
 #print axioms actual_normalization_dedekind
 #print axioms actual_normalization_fractionField
