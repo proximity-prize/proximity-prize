@@ -486,6 +486,19 @@ theorem pmsg_injective : Function.Injective pmsg := by
   rw [← gF_eval_zero_iff a.val j, ← gF_eval_zero_iff b.val j, hgF]
 
 
+/-! ## Per-index support of the prescribed-top family -/
+
+/-- The support of a carrier element `J` is the underlying evaluation set:
+the indices on which the prescribed-top polynomial `gF J` is forced to vanish.
+This is the "uniformity" witness: when `|support J| = 1` the family degenerates
+to a single evaluation, and the global ceiling applies verbatim. -/
+noncomputable def support (J : Finset Idx) : Finset Idx := J
+
+theorem support_card (J : Finset Idx) : (support J).card = J.card := rfl
+
+theorem support_mem_iff {J : Finset Idx} {j : Idx} :
+    j ∈ support J ↔ j ∈ J := Iff.rfl
+
 /-! ## The unsafe suffix from grid index `122641` -/
 
 theorem card_Carrier : Fintype.card Carrier = Fam.card := Fintype.card_coe _
