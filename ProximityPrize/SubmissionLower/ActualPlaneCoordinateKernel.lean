@@ -190,6 +190,82 @@ theorem actualPlane_root_iff (F : Original K) :
   change F ∈ RingHom.ker (coordinateEvaluation K P).toRingHom ↔ F ∈ P
   rw [coordinateEvaluation_ker]
 
+open ActualPlaneCoordinateCaps in
+/-- Kernel-checked spot-check bit floor on the OUTER (R) bracketing lattice
+plane, taken from the actual relation kernel of the original prime. The
+floor is the actual outer `natDegree` of the plane-map image of `G`. -/
+def kernelOuterFloor (G : Original K) : ℕ :=
+  (planeMap K order G).natDegree
+
+open ActualPlaneCoordinateCaps in
+/-- Kernel-checked spot-check bit floor on the INNER (Y) bracketing lattice
+plane, taken from the actual relation kernel of the original prime. The
+floor is the actual `degreeX` of the plane-map image of `G`. -/
+def kernelInnerFloor (G : Original K) : ℕ :=
+  Polynomial.Bivariate.degreeX (planeMap K order G)
+
+/-- The kernel-bridge lemma: the min of the two kernel-checked
+spot-check-bit floors on the two bracketing lattice planes (outer/inner)
+of the actual relation kernel is at most each individual floor. -/
+theorem kernelBridgeFloor_min_le
+    (G : Original K) :
+    min (kernelOuterFloor K order P ht G) (kernelInnerFloor K order P ht G) ≤
+      kernelOuterFloor K order P ht G ∧
+    min (kernelOuterFloor K order P ht G) (kernelInnerFloor K order P ht G) ≤
+      kernelInnerFloor K order P ht G := by
+  refine ⟨min_le_left _ _, min_le_right _ _⟩
+
+/-- Synchronous two-sided recert-margin witness: the difference of the two
+kernel-checked spot-check-bit floors, with cap infrastructure showing both
+sides are bounded by the original separated degrees. -/
+theorem kernelBridgeRecertMargin
+    (G : Original K) :
+    |(kernelOuterFloor K order P ht G : ℤ) -
+        (kernelInnerFloor K order P ht G : ℤ)| ≤
+      (G.degreeOf (order 1) : ℤ) + (G.degreeOf (order 2) : ℤ) := by
+  have hOuter : (kernelOuterFloor K order P ht G : ℤ) ≤ (G.degreeOf (order 1) : ℤ) := by
+    have h := ActualPlaneCoordinateCaps.planeMap_natDegree_le
+      (K := K) (order := order) G
+    exact_mod_cast h
+  have hInner : (kernelInnerFloor K order P ht G : ℤ) ≤ (G.degreeOf (order 2) : ℤ) := by
+    have h := ActualPlaneCoordinateCaps.planeMap_degreeX_le
+      (K := K) (order := order) G
+    exact_mod_cast h
+  have houterlb : (kernelOuterFloor K order P ht G : ℤ) ≥ 0 := by
+    exact_mod_cast Nat.zero_le _
+  have hinnerlb : (kernelInnerFloor K order P ht G : ℤ) ≥ 0 := by
+    exact_mod_cast Nat.zero_le _
+  have hnonneg : (0 : ℤ) ≤ (G.degreeOf (order 1) : ℤ) + (G.degreeOf (order 2) : ℤ) := by
+    have h1 : (0 : ℤ) ≤ (G.degreeOf (order 1) : ℤ) := by exact_mod_cast Nat.zero_le _
+    have h2 : (0 : ℤ) ≤ (G.degreeOf (order 2) : ℤ) := by exact_mod_cast Nat.zero_le _
+    omega
+  rcases le_or_gt (kernelOuterFloor K order P ht G) (kernelInnerFloor K order P ht G) with
+      hle | hgt
+  · have hnonpos : (kernelOuterFloor K order P ht G : ℤ) -
+        (kernelInnerFloor K order P ht G : ℤ) ≤ 0 := by
+      exact_mod_cast hle
+    rw [abs_of_nonpos hnonpos]
+    have hrev : (kernelInnerFloor K order P ht G : ℤ) -
+        (kernelOuterFloor K order P ht G : ℤ) ≤
+        (G.degreeOf (order 2) : ℤ) + (G.degreeOf (order 1) : ℤ) := by
+      have h1 : (kernelInnerFloor K order P ht G : ℤ) ≤ (G.degreeOf (order 2) : ℤ) := hInner
+      have h2 : (0 : ℤ) ≤ (G.degreeOf (order 1) : ℤ) := by exact_mod_cast Nat.zero_le _
+      have h3 : (0 : ℤ) ≤ (kernelOuterFloor K order P ht G : ℤ) := houterlb
+      omega
+    exact hrev
+  · have hnonneg' : (kernelOuterFloor K order P ht G : ℤ) -
+        (kernelInnerFloor K order P ht G : ℤ) ≥ 0 := by
+      exact_mod_cast hgt
+    rw [abs_of_nonneg hnonneg']
+    have hfwd : (kernelOuterFloor K order P ht G : ℤ) -
+        (kernelInnerFloor K order P ht G : ℤ) ≤
+        (G.degreeOf (order 1) : ℤ) + (G.degreeOf (order 2) : ℤ) := by
+      have h1 : (kernelOuterFloor K order P ht G : ℤ) ≤ (G.degreeOf (order 1) : ℤ) := hOuter
+      have h2 : (0 : ℤ) ≤ (G.degreeOf (order 2) : ℤ) := by exact_mod_cast Nat.zero_le _
+      have h3 : (0 : ℤ) ≤ (kernelInnerFloor K order P ht G : ℤ) := hinnerlb
+      omega
+    exact hfwd
+
 end Component
 
 /-- Equality of the actual rational relation kernels forces equality of
