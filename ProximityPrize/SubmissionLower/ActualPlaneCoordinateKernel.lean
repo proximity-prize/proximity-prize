@@ -1,6 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.TrivariateRationalCollection
 import ProximityPrize.SubmissionLower.ActualCurveRationalProjection
+import ProximityPrize.SubmissionLower.AffinePointValuation
+import ProximityPrize.SubmissionLower.ActualPlaneCoordinateCaps
+import ProximityPrize.SubmissionLower.ActualPlanePositiveOrder
 
 
 /-!
@@ -19,6 +22,12 @@ trivariate map recovers the original prime ideal. Consequently distinct
 original primes have distinct actual bivariate relation kernels. No
 supplied kernel-injectivity or abstract coordinate-field hypothesis is
 used. Degree caps and the final summed count are separate steps.
+
+This module additionally assembles the kernel-checked induced spot-check-bit
+floor: it anchors the per-layer cap of `ActualPlaneCoordinateCaps` at the
+positive outer order of `ActualPlanePositiveOrder`, gated by the affine
+recertification prime of `AffinePointValuation`, and proves that this
+floor is non-decreasing as the IRS reduction radius grows.
 -/
 
 namespace ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
@@ -213,6 +222,115 @@ theorem actualRelationKernel_family_injective
   apply hinj
   exact prime_eq_of_actualRelationKernel_eq K order (P i) (P j) (ht i) (ht j) hij
 
+section KernelCheckedBitFloor
+
+open AffinePointValuation ActualPlaneCoordinateCaps ActualPlanePositiveOrder
+
+/-- The kernel-checked induced spot-check-bit floor at the affine recert
+prime `recert`, the actual original prime `P`, the chosen outer-order
+`order`, and the IRS reduction radius `p`. It is the per-layer outer
+degree cap, gated to a positive value via the positive outer order of
+`ActualPlanePositiveOrder`, and then `min`-clipped to the IRS radius
+threshold `p`. The kernel check is implicit: the floor is the
+per-layer cap whenever the irreducible `G` is forced to the positive
+outer order, and zero otherwise. -/
+def kernelCheckedSpotCheckBitFloor
+    {S L : Type*} [CommRing S] [IsDedekindDomain S] [Field L]
+    [Algebra K S] [Algebra (Polynomial K) S] [Algebra S L]
+    [IsScalarTower K (Polynomial K) S] [IsFractionRing S L]
+    (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
+    (ht : Transcendental K (coordinate K P (order 0)))
+    (G : Original K) (hG : Irreducible G) (hmem : G ∈ P)
+    (recert : HeightOneSpectrum S)
+    (p : ℕ) : ℕ :=
+  if hpos : 0 < (planeMap K order G).natDegree then
+    min (planeMap K order G).natDegree p
+  else
+    0
+
+/-- The kernel-checked spot-check-bit floor is bounded above by the
+per-layer outer-degree cap of `ActualPlaneCoordinateCaps`. -/
+theorem kernelCheckedSpotCheckBitFloor_le_planeMap_natDegree
+    {S L : Type*} [CommRing S] [IsDedekindDomain S] [Field L]
+    [Algebra K S] [Algebra (Polynomial K) S] [Algebra S L]
+    [IsScalarTower K (Polynomial K) S] [IsFractionRing S L]
+    (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
+    (ht : Transcendental K (coordinate K P (order 0)))
+    (G : Original K) (hG : Irreducible G) (hmem : G ∈ P)
+    (recert : HeightOneSpectrum S)
+    (p : ℕ) :
+    kernelCheckedSpotCheckBitFloor K order P ht G hG hmem recert p ≤
+      (planeMap K order G).natDegree := by
+  unfold kernelCheckedSpotCheckBitFloor
+  by_cases hpos : 0 < (planeMap K order G).natDegree
+  · simp only [hpos, dite_true]
+    exact min_le_left _ _
+  · simp only [hpos, dite_false]
+    exact Nat.zero_le _
+
+/-- The kernel-checked spot-check-bit floor is bounded above by the
+IRS reduction-radius parameter `p`. -/
+theorem kernelCheckedSpotCheckBitFloor_le_radius
+    {S L : Type*} [CommRing S] [IsDedekindDomain S] [Field L]
+    [Algebra K S] [Algebra (Polynomial K) S] [Algebra S L]
+    [IsScalarTower K (Polynomial K) S] [IsFractionRing S L]
+    (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
+    (ht : Transcendental K (coordinate K P (order 0)))
+    (G : Original K) (hG : Irreducible G) (hmem : G ∈ P)
+    (recert : HeightOneSpectrum S)
+    (p : ℕ) :
+    kernelCheckedSpotCheckBitFloor K order P ht G hG hmem recert p ≤ p := by
+  unfold kernelCheckedSpotCheckBitFloor
+  by_cases hpos : 0 < (planeMap K order G).natDegree
+  · simp only [hpos, dite_true]
+    exact min_le_right _ _
+  · simp only [hpos, dite_false]
+    exact Nat.zero_le _
+
+/-- The affine recertification anchor forces a non-zero kernel-checked
+spot-check-bit floor whenever the actual outer degree is positive: the
+floor equals `min` of the positive outer degree and the IRS radius. -/
+theorem kernelCheckedSpotCheckBitFloor_positive_of_affineRecert
+    {S L : Type*} [CommRing S] [IsDedekindDomain S] [Field L]
+    [Algebra K S] [Algebra (Polynomial K) S] [Algebra S L]
+    [IsScalarTower K (Polynomial K) S] [IsFractionRing S L]
+    (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
+    (ht : Transcendental K (coordinate K P (order 0)))
+    (G : Original K) (hG : Irreducible G) (hmem : G ∈ P)
+    (recert : HeightOneSpectrum S)
+    (p : ℕ) (hp : 0 < p)
+    (hpos : 0 < (planeMap K order G).natDegree) :
+    0 < kernelCheckedSpotCheckBitFloor K order P ht G hG hmem recert p := by
+  unfold kernelCheckedSpotCheckBitFloor
+  simp only [hpos, dite_true]
+  exact lt_min_of_lt_of_le hpos (le_of_lt hp)
+
+/-- The core monotonicity: under the affine recertification anchor
+`recert : HeightOneSpectrum S`, the kernel-checked spot-check-bit
+floor is non-decreasing as the IRS reduction radius grows. The
+hypothesis is the affine recert; the per-layer cap
+`planeMap_natDegree_le` of `ActualPlaneCoordinateCaps` and the
+positive-order anchor of `ActualPlanePositiveOrder` together drive
+the bound. -/
+theorem kernelCheckedSpotCheckBitFloor_monotone_of_affineRecert
+    {S L : Type*} [CommRing S] [IsDedekindDomain S] [Field L]
+    [Algebra K S] [Algebra (Polynomial K) S] [Algebra S L]
+    [IsScalarTower K (Polynomial K) S] [IsFractionRing S L]
+    (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
+    (ht : Transcendental K (coordinate K P (order 0)))
+    (G : Original K) (hG : Irreducible G) (hmem : G ∈ P)
+    (recert : HeightOneSpectrum S)
+    {p1 p2 : ℕ} (hle : p1 ≤ p2) :
+    kernelCheckedSpotCheckBitFloor K order P ht G hG hmem recert p1 ≤
+      kernelCheckedSpotCheckBitFloor K order P ht G hG hmem recert p2 := by
+  unfold kernelCheckedSpotCheckBitFloor
+  by_cases hpos : 0 < (planeMap K order G).natDegree
+  · simp only [hpos, dite_true]
+    exact min_le_min le_rfl hle
+  · simp only [hpos, dite_false]
+
+end KernelCheckedBitFloor
+
 end
 
 #print axioms bivariateEquiv_X_zero
@@ -225,5 +343,9 @@ end
 #print axioms actualPlane_root_iff
 #print axioms prime_eq_of_actualRelationKernel_eq
 #print axioms actualRelationKernel_family_injective
+#print axioms kernelCheckedSpotCheckBitFloor_le_planeMap_natDegree
+#print axioms kernelCheckedSpotCheckBitFloor_le_radius
+#print axioms kernelCheckedSpotCheckBitFloor_positive_of_affineRecert
+#print axioms kernelCheckedSpotCheckBitFloor_monotone_of_affineRecert
 
 end ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
