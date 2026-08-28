@@ -363,29 +363,29 @@ theorem translation_reconstruct_coeff (D w L s : ℕ) (x u : K)
 /-! ## Frozen 67.10 fixed-centre row -/
 
 def n : ℕ := 262144
-def errors : ℕ := 79866
+def errors : ℕ := 79876
 def agreements : ℕ := n - errors
 def w : ℕ := 131071
 def multiplicity : ℕ := 37
 def yTotalCap : ℕ := 51
-def slopeCap : ℕ := 9
+def slopeCap : ℕ := 10
 def weightedCap : ℕ := multiplicity * agreements
 
 theorem parameter_values :
-    agreements = 182278 ∧ weightedCap = 6744286 := by
+    agreements = 182268 ∧ weightedCap = 6743916 := by
   norm_num [agreements, weightedCap, multiplicity, n, errors]
 
 theorem coefficient_count_exact :
-    coefficientCount weightedCap w yTotalCap slopeCap = 1481264965 := by
+    coefficientCount weightedCap w yTotalCap slopeCap = 1596432156 := by
   decide
 
 theorem local_rank_exact :
-    localRankBound multiplicity yTotalCap slopeCap = 5650 := by
+    localRankBound multiplicity yTotalCap slopeCap = 6083 := by
   decide
 
 theorem nullity_exact :
     coefficientCount weightedCap w yTotalCap slopeCap -
-      n * localRankBound multiplicity yTotalCap slopeCap = 151365 := by
+      n * localRankBound multiplicity yTotalCap slopeCap = 1810204 := by
   rw [coefficient_count_exact, local_rank_exact]
   norm_num [n]
 

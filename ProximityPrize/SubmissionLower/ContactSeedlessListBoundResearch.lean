@@ -49,12 +49,12 @@ def regularListNumerator : ℕ :=
   (n - w) * (capY * slopeCap + capR * yTotalCap)
 def singularListCap : ℕ := (2 * slopeCap - 1) * yTotalCap
 def listNumerator : ℕ := regularListNumerator + singularListCap * gap
-def listBudget : ℕ := 600000000
+def listBudget : ℕ := 700000000
 
 theorem numeric_values :
-    gap = 51207 ∧ capY = 13369243 ∧ capR = 2228207 ∧
-      regularListNumerator = 30666067671312 ∧
-      singularListCap = 867 ∧ listNumerator = 30666112067781 := by
+    gap = 51197 ∧ capY = 13369243 ∧ capR = 2490349 ∧
+      regularListNumerator = 34170761115717 ∧
+      singularListCap = 969 ∧ listNumerator = 34170810725610 := by
   norm_num [gap, capY, capR, regularListNumerator, singularListCap,
     listNumerator, agreements, n, errors, w, yTotalCap, slopeCap]
 
@@ -64,9 +64,9 @@ theorem list_numerator_fits : listNumerator < listBudget * gap := by
 
 /-- Exact strict integer ceiling before rounding the protocol reserve up. -/
 theorem list_strict_ceiling_exact :
-    listNumerator / gap + 1 = 598865626 ∧
-      listNumerator < 598865626 * gap ∧
-      598865626 < listBudget := by
+    listNumerator / gap + 1 = 667437755 ∧
+      listNumerator < 667437755 * gap ∧
+      667437755 < listBudget := by
   norm_num [listNumerator, regularListNumerator, singularListCap, listBudget,
     gap, capY, capR, agreements, n, errors, w, yTotalCap, slopeCap]
 

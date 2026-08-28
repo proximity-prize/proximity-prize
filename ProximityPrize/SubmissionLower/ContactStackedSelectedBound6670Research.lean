@@ -141,15 +141,17 @@ theorem selected_full_domain_agreement
 
 /-- Transport the actual final GCD cell into the abstract fixed-cell
 provider. -/
+/-- Transport the actual final GCD cell into the abstract fixed-cell
+provider. -/
 theorem fixedSeeds_card_le_of_provider
     (hfixedProvider : FixedCellCountProvider6670)
     (QA QB QC : GlobalPoly) (hQA : QA ≠ 0) (hQB : QB ≠ 0) (hQC : QC ≠ 0)
     (hboxA : QA ∈ globalCoefficientBox IRSProfile.Field
-      (34 * agreements) w 20000 10)
+      (35 * agreements) w 20000 10)
     (hboxB : QB ∈ globalCoefficientBox IRSProfile.Field
       (68 * agreements) w 900 21)
     (hboxC : QC ∈ globalCoefficientBox IRSProfile.Field
-      (37 * agreements) w 42000 9)
+      (38 * agreements) w 42000 10)
     (hflagB : QB ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
       IRSProfile.Field (68 * agreements) w 900 21)
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
@@ -203,7 +205,7 @@ provider. -/
 theorem selectedNoLargePencilBound_of_fixedCellCountProvider6670
     (hfixedProvider : FixedCellCountProvider6670) :
     SelectedNoLargePencilBound IRSProfile.domain
-      131071 79866 274980727511395087 := by
+      131071 79876 274980727411395087 := by
   intro U seeds A selected hdegreeRaw hcardRaw hvalues hnoRaw
   have hdegree : ∀ gamma ∈ seeds,
       (selected gamma).natDegree ≤ w := by
