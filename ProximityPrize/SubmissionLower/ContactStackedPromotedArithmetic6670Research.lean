@@ -1,10 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
 
 /-!
-# Exact split-budget arithmetic for the stacked score-67.10 target
+# Exact split-budget arithmetic for the stacked score-67.80 target
 
 This file freezes only the six independently rounded components of the
-`a = 182278` recursive-GCD ledger.  The fixed regular component uses the
+`a = 181589` recursive-GCD ledger.  The fixed regular component uses the
 cumulative fixed-cell surface, active-YZ tail, and sharp Taylor direction;
 the fixed singular
 component and both residual singular components use the tight
@@ -17,14 +17,14 @@ three-cell partition once those bounds have been supplied.
 
 namespace ProximityPrize.SubmissionLower.ContactStackedPromotedArithmetic6670Research
 
-def promotedBudget : ℕ := 274980727511395087
+def promotedBudget : ℕ := 274980727501395087
 
-def fixedRegularCost : ℕ := 271784225129196331
-def fixedSingularCost : ℕ := 24731934873070
-def firstResidualRegularCost : ℕ := 79361072258730
-def firstResidualSingularCeiling : ℕ := 287984100301317
-def secondResidualRegularCost : ℕ := 53819495787524
-def secondResidualSingularCeiling : ℕ := 30911739274586
+def fixedRegularCost : ℕ := 273852986174307542
+def fixedSingularCost : ℕ := 24975583001098
+def firstResidualRegularCost : ℕ := 80443453584584
+def firstResidualSingularCeiling : ℕ := 290782403555776
+def secondResidualRegularCost : ℕ := 54553523534683
+def secondResidualSingularCeiling : ℕ := 31193760191269
 
 def fixedCost : ℕ := fixedRegularCost + fixedSingularCost
 def firstResidualCeiling : ℕ :=
@@ -35,8 +35,8 @@ def secondResidualCeiling : ℕ :=
 def totalCost : ℕ := fixedCost + firstResidualCeiling + secondResidualCeiling
 
 theorem total_and_slack_exact :
-    totalCost = 272261033471691558 ∧
-      promotedBudget - totalCost = 2719694039703529 := by
+    totalCost = 274334934898174952 ∧
+      promotedBudget - totalCost = 645792603220135 := by
   norm_num [totalCost, fixedCost, firstResidualCeiling,
     secondResidualCeiling, fixedRegularCost, fixedSingularCost,
     firstResidualRegularCost, firstResidualSingularCeiling,

@@ -3,10 +3,10 @@ import ProximityPrize.SubmissionLower.ContactFlagKernelUniversalityResearch
 import ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
 
 /-!
-# Three universal contact interpolants at the 66.70 row
+# Three universal contact interpolants at the 67.80 row
 
 This is the target-specific instantiation of the generic contact-kernel
-universality theorem at `a = 182278`.
+universality theorem at `a = 181589`.
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedInterpolation6670Research

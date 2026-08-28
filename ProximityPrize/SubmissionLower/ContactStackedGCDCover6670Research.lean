@@ -3,7 +3,7 @@ import ProximityPrize.SubmissionLower.ContactRecursiveGCDResearch
 import ProximityPrize.SubmissionLower.ContactStackedInterpolation6670Research
 
 /-!
-# Recursive GCD cover for the three 66.70 interpolants
+# Recursive GCD cover for the three 67.80 interpolants
 
 Only the target boxes are new.  The branch alternative is the generic
 three-vanishing GCD cover.

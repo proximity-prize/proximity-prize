@@ -31,12 +31,12 @@ set_option maxRecDepth 50000
 /-- The challenge characteristic. -/
 def prime : ℕ := 2130706433
 
-/-- The final fixed-meet profile at agreement `182278`. -/
+/-- The final fixed-meet profile at agreement `181589`. -/
 def fixedProfile : Profile where
   n := 262144
   w := 131071
-  agreements := 182278
-  weightedCap := 6197452
+  agreements := 181589
+  weightedCap := 6174026
   seedTotalCap := 900
   slopeCap := 9
 
@@ -54,8 +54,8 @@ def fixedSupport : ResidualSupportParameters where
 def fixedTightProfile : TightParameters where
   n := 262144
   w := 131071
-  a := 182278
-  D := 6197452
+  a := 181589
+  D := 6174026
   L := 900
   s := 9
 
@@ -79,10 +79,10 @@ def fixedCountCeiling : ℕ :=
   fixedSharpYZRegularCeiling + fixedTightSingularCeiling
 
 theorem fixed_profile_values :
-    fixedProfile.errors = 79866 ∧
-      fixedProfile.gap = 51207 ∧
+    fixedProfile.errors = 80555 ∧
+      fixedProfile.gap = 50518 ∧
       fixedProfile.yCap = 47 ∧
-      fixedProfile.degreeIncidence = 9652540071 ∧
+      fixedProfile.degreeIncidence = 9558794971 ∧
       fixedProfile.unitIncidence = 131073 ∧
       fixedProfile.surfaceFlag = ⟨862, 38, 9⟩ ∧
       fixedProfile.agreementDirection = ⟨1724, 76, 17⟩ ∧
@@ -104,7 +104,7 @@ theorem fixed_cumulative_surface_flag_exact :
   norm_num [supportCumulativeFlag, flagFromCaps, fixedSupport]
 
 theorem fixed_sharp_yz_regular_numerator_exact :
-    fixedSharpYZRegularNumerator = 712660867372680069161825271 := by
+    fixedSharpYZRegularNumerator = 698891531448260218566039124 := by
   norm_num [fixedSharpYZRegularNumerator, fixedSharpDirection,
     factorRegularLedgerYZForDirection, factorPrimaryForDirection,
     factorZTailForDirection, factorYZTailForDirection, fixedProfile,
@@ -113,19 +113,19 @@ theorem fixed_sharp_yz_regular_numerator_exact :
     Profile.errors, Profile.gap, flagMixed, unitZFlag, unitYZFlag]
 
 theorem fixed_sharp_yz_regular_ceiling_exact :
-    fixedSharpYZRegularCeiling = 271784225129196331 := by
+    fixedSharpYZRegularCeiling = 273852986174307542 := by
   rw [fixedSharpYZRegularCeiling, fixed_sharp_yz_regular_numerator_exact]
   norm_num [fixedProfile, Profile.gap]
 
 theorem fixed_tight_values :
     fixedTightProfile.kappa = 17 ∧
-      fixedTightProfile.implicitYCap = 803 ∧
+      fixedTightProfile.implicitYCap = 800 ∧
       fixedTightProfile.algebraicCap = 15300 ∧
-      fixedTightProfile.agreement = ⟨210500027, 131071, 4010772601⟩ ∧
-      fixedTightProfile.aggregateCost = ⟨15300, 24571800, 803⟩ ∧
-      fixedTightProfile.coreNumerator = 1266424214952010326 ∧
-      fixedTightProfile.tightNumerator = 1266448189045270326 ∧
-      fixedTightProfile.countCap = 24731934873069 := by
+      fixedTightProfile.agreement = ⟨209713601, 131071, 4010772601⟩ ∧
+      fixedTightProfile.aggregateCost = ⟨15300, 24480000, 800⟩ ∧
+      fixedTightProfile.coreNumerator = 1261692850532201700 ∧
+      fixedTightProfile.tightNumerator = 1261716502049441700 ∧
+      fixedTightProfile.countCap = 24975583001097 := by
   norm_num [fixedTightProfile, TightParameters.kappa,
     TightParameters.implicitYCap, TightParameters.algebraicCap,
     TightParameters.agreement, TightParameters.aggregateCost,
@@ -134,7 +134,7 @@ theorem fixed_tight_values :
     dot]
 
 theorem fixed_tight_singular_ceiling_exact :
-    fixedTightSingularCeiling = 24731934873070 := by
+    fixedTightSingularCeiling = 24975583001098 := by
   norm_num [fixedTightSingularCeiling, fixedTightProfile,
     TightParameters.countCap, TightParameters.tightNumerator,
     TightParameters.coreNumerator, TightParameters.aggregateCost,
@@ -143,10 +143,10 @@ theorem fixed_tight_singular_ceiling_exact :
     TightParameters.errors, TightParameters.gap, dot]
 
 theorem fixed_tight_singular_count_cap_exact :
-    fixedTightProfile.countCap = 24731934873069 := fixed_tight_values.2.2.2.2.2.2.2
+    fixedTightProfile.countCap = 24975583001097 := fixed_tight_values.2.2.2.2.2.2.2
 
 theorem fixed_count_ceiling_exact :
-    fixedCountCeiling = 271808957064069401 := by
+    fixedCountCeiling = 273877961757308640 := by
   rw [fixedCountCeiling, fixed_sharp_yz_regular_ceiling_exact,
     fixed_tight_singular_ceiling_exact]
 

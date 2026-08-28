@@ -76,7 +76,7 @@ theorem firstResidualCell_count_lt
           u0 i + gamma * u1 i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Gamma w errors) :
     (firstResidualSeeds selected Gamma QA QB).card <
-      79361072258730 + 287984100301317 := by
+      80443453584584 + 290782403555776 := by
   let Delta := firstResidualSeeds selected Gamma QA QB
   let Q := quotientB QA QB
   let T := quotientA QA QB
@@ -170,7 +170,7 @@ theorem firstResidualCell_count_lt
         (by simpa [stageOne, pivotB, UnequalParameters.errors,
           TightParameters.errors] using hnoPencilDelta))
   have hceil : stageOne.regularCountCap + pivotB.countCap + 1 =
-      79361072258730 + 287984100301317 := by
+      80443453584584 + 290782403555776 := by
     simpa only [stageOne, pivotB,
       ContactRecursiveResidualStages6670Research.firstResidualSingularCeiling] using
       ContactRecursiveResidualStages6670Research.residual_stage_ceilings.1
@@ -197,7 +197,7 @@ theorem secondResidualCell_count_lt
           u0 i + gamma * u1 i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Gamma w errors) :
     (secondResidualSeeds selected Gamma QA QB QC).card <
-      53819495787524 + 30911739274586 := by
+      54553523534683 + 31193760191269 := by
   let Delta := secondResidualSeeds selected Gamma QA QB QC
   let Q := middleQuotient QA QB QC
   let T := quotientC QA QB QC
@@ -291,7 +291,7 @@ theorem secondResidualCell_count_lt
         (by simpa [stageTwo, pivotGcd12, UnequalParameters.errors,
           TightParameters.errors] using hnoPencilDelta))
   have hceil : stageTwo.regularCountCap + pivotGcd12.countCap + 1 =
-      53819495787524 + 30911739274586 := by
+      54553523534683 + 31193760191269 := by
     simpa only [stageTwo, pivotGcd12,
       ContactRecursiveResidualStages6670Research.secondResidualSingularCeiling] using
       ContactRecursiveResidualStages6670Research.residual_stage_ceilings.2

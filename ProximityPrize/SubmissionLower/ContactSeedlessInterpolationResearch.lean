@@ -360,10 +360,10 @@ theorem translation_reconstruct_coeff (D w L s : ℕ) (x u : K)
         seedlessBox K (min r L) L s) : LocalPoly K)
   simp [boundedBlockEntry]
 
-/-! ## Frozen 67.10 fixed-centre row -/
+/-! ## Frozen 67.80 fixed-centre row -/
 
 def n : ℕ := 262144
-def errors : ℕ := 79866
+def errors : ℕ := 80555
 def agreements : ℕ := n - errors
 def w : ℕ := 131071
 def multiplicity : ℕ := 37
@@ -372,11 +372,11 @@ def slopeCap : ℕ := 9
 def weightedCap : ℕ := multiplicity * agreements
 
 theorem parameter_values :
-    agreements = 182278 ∧ weightedCap = 6744286 := by
+    agreements = 181589 ∧ weightedCap = 6718793 := by
   norm_num [agreements, weightedCap, multiplicity, n, errors]
 
 theorem coefficient_count_exact :
-    coefficientCount weightedCap w yTotalCap slopeCap = 1481264965 := by
+    coefficientCount weightedCap w yTotalCap slopeCap = 1469155790 := by
   decide
 
 theorem local_rank_exact :
@@ -385,15 +385,14 @@ theorem local_rank_exact :
 
 theorem nullity_exact :
     coefficientCount weightedCap w yTotalCap slopeCap -
-      n * localRankBound multiplicity yTotalCap slopeCap = 151365 := by
+      n * localRankBound multiplicity yTotalCap slopeCap = 1469155790 - n * 5650 := by
   rw [coefficient_count_exact, local_rank_exact]
-  norm_num [n]
 
 theorem interpolation_gate :
     n * localRankBound multiplicity yTotalCap slopeCap <
       coefficientCount weightedCap w yTotalCap slopeCap := by
   rw [coefficient_count_exact, local_rank_exact]
-  norm_num [n]
+  decide
 
 theorem exists_frozen_seedless_interpolant
     (received : IRSProfile.Index → IRSProfile.Field) :

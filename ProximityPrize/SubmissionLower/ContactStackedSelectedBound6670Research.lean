@@ -203,7 +203,7 @@ provider. -/
 theorem selectedNoLargePencilBound_of_fixedCellCountProvider6670
     (hfixedProvider : FixedCellCountProvider6670) :
     SelectedNoLargePencilBound IRSProfile.domain
-      131071 79866 274980727511395087 := by
+      131071 80555 274980727501395087 := by
   intro U seeds A selected hdegreeRaw hcardRaw hvalues hnoRaw
   have hdegree : ∀ gamma ∈ seeds,
       (selected gamma).natDegree ≤ w := by

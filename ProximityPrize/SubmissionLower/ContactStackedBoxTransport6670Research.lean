@@ -135,7 +135,7 @@ theorem gcd123_support_of_flagB
   · apply (weightedTotalDegree_le_iff residualYSWeights (gcd123 A B C) 47).mpr
     intro d hd
     have hb : d 1 + d 3 ≤ 900 ∧ d 2 ≤ 9 ∧
-        d 0 + 131071 * d 1 + 131070 * d 2 < 6197452 := hbox hd
+        d 0 + 131071 * d 1 + 131070 * d 2 < 6174026 := hbox hd
     rw [ContactFactorCaps.weight_fin4]
     change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 0 ≤ 47
     norm_num [agreements, w] at hb ⊢
