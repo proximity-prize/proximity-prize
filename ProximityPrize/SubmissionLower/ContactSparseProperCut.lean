@@ -293,7 +293,7 @@ theorem whole_surface_seed_bound_fixed_sparse
     coordinateMixedDegree_le_caps G T ContactProjectionParameters.surfaceVector
       agreementVector hGcaps hTcaps j
   rcases ContactProjectionParameters.projection_caps_below_characteristic with
-    ⟨_, _, hrect0, hrect2, _, hsparse⟩
+    ⟨_, _, hrect0, hrect2, hsparse⟩
   have hmixed0 : coordinateMixedDegree Ω G T 0 < prime :=
     (hδfixed 0).trans_lt hrect0
   have hmixed2 : coordinateMixedDegree Ω G T 2 < prime :=

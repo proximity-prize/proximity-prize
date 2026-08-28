@@ -201,8 +201,8 @@ theorem fixed_factorialAgreementSurface_joint_seed_cap
     (fixed_original_joint_seed_cap F hbox) x u₀ u₁
 
 theorem fixed_joint_seed_cap_values :
-    1 + 2 * (w + 1) * seedTotalCap = 45613057 ∧
-      1 + 2 * w * seedTotalCap = 45612709 := by
+    1 + 2 * (w + 1) * seedTotalCap = 44564481 ∧
+      1 + 2 * w * seedTotalCap = 44564141 := by
   norm_num [w, seedTotalCap]
 
 end
@@ -216,4 +216,3 @@ end ProximityPrize.SubmissionLower.ContactSparseSurfaceCaps
 #print axioms ProximityPrize.SubmissionLower.ContactSparseSurfaceCaps.fixed_surface_factor_joint_seed_cap
 #print axioms ProximityPrize.SubmissionLower.ContactSparseSurfaceCaps.fixed_firstTailSurface_joint_seed_cap
 #print axioms ProximityPrize.SubmissionLower.ContactSparseSurfaceCaps.fixed_factorialAgreementSurface_joint_seed_cap
-

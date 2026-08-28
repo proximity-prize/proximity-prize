@@ -98,12 +98,12 @@ theorem card_le_two_family_sums_plus_exception
 
 theorem regularVector_budgets (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
-    (∑ F : RegularIndex Q, (regularVector Q F).y) ≤ 25 ∧
-      (∑ F : RegularIndex Q, (regularVector Q F).r) ≤ 5 ∧
-      (∑ F : RegularIndex Q, (regularVector Q F).z) ≤ 174 := by
+    (∑ F : RegularIndex Q, (regularVector Q F).y) ≤ 26 ∧
+      (∑ F : RegularIndex Q, (regularVector Q F).r) ≤ 6 ∧
+      (∑ F : RegularIndex Q, (regularVector Q F).z) ≤ 170 := by
   classical
   have hb := directFactor_input_budgets Q hQ weightedCap w seedTotalCap slopeCap (by decide) hbox
-  have hy : (∑ F ∈ positiveRFactors Q, F.degreeOf (1 : Fin 4)) ≤ 25 := by
+  have hy : (∑ F ∈ positiveRFactors Q, F.degreeOf (1 : Fin 4)) ≤ 26 := by
     have hh := hb.1
     change (∑ F ∈ positiveRFactors Q, F.degreeOf (1 : Fin 4)) ≤ yCap at hh
     rwa [parameter_values.2.1] at hh

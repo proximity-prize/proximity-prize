@@ -19,16 +19,16 @@ open ContactAlignmentParameters
 def surfaceVector : DegreeVector := ⟨yCap, slopeCap, seedTotalCap⟩
 
 theorem first_cut_projection_values :
-    mixed surfaceVector firstTail unitY = 433324032 ∧
-    mixed surfaceVector firstTail unitR = 2280652974 ∧
-    mixed surfaceVector firstTail unitZ = 62259205 := by
+    mixed surfaceVector firstTail unitY = 512491520 ∧
+    mixed surfaceVector firstTail unitR = 2317353130 ∧
+    mixed surfaceVector firstTail unitZ = 78381062 := by
   norm_num [mixed, surfaceVector, firstTail, tailVector, unitY, unitR, unitZ,
     yCap, weightedCap, ContactAlignmentParameters.multiplicity, agreements, w, slopeCap, seedTotalCap]
 
 theorem agreement_cut_projection_values :
-    mixed surfaceVector agreementVector unitY = 433320731 ∧
-    mixed surfaceVector agreementVector unitR = 2257829245 ∧
-    mixed surfaceVector agreementVector unitZ = 61603375 := by
+    mixed surfaceVector agreementVector unitY = 512487616 ∧
+    mixed surfaceVector agreementVector unitR = 2295053406 ∧
+    mixed surfaceVector agreementVector unitZ = 77594038 := by
   norm_num [mixed, surfaceVector, agreementVector, unitY, unitR, unitZ,
     yCap, weightedCap, ContactAlignmentParameters.multiplicity, agreements, w, slopeCap, seedTotalCap]
 
@@ -42,23 +42,24 @@ def agreementSparseRCap : ℕ :=
   sparseRCap yCap seedTotalCap agreementVector.y (1 + 2 * w * seedTotalCap)
 
 theorem sparse_projection_values :
-    firstSparseRCap = 2116812974 ∧ agreementSparseRCap = 2097267245 := by
+    firstSparseRCap = 2140143786 ∧ agreementSparseRCap = 2121253234 := by
   norm_num [firstSparseRCap, agreementSparseRCap, sparseRCap, firstTail, tailVector,
     agreementVector, yCap, weightedCap, ContactAlignmentParameters.multiplicity,
     agreements, w, seedTotalCap]
 
-/-- The four unaffected rectangle gates and the two replacement sparse
-base-R gates are all strictly below characteristic. -/
+/-- The rectangle gates used by the whole-surface proof and its replacement
+sparse base-R gate are all strictly below characteristic.  The legacy
+first-cut sparse gate is deliberately absent: no theorem in the current
+whole-surface counting path consumes it. -/
 theorem projection_caps_below_characteristic :
     mixed surfaceVector firstTail unitY < prime ∧
     mixed surfaceVector firstTail unitZ < prime ∧
     mixed surfaceVector agreementVector unitY < prime ∧
     mixed surfaceVector agreementVector unitZ < prime ∧
-    firstSparseRCap < prime ∧ agreementSparseRCap < prime := by
+    agreementSparseRCap < prime := by
   rcases first_cut_projection_values with ⟨h1, _, h3⟩
   rcases agreement_cut_projection_values with ⟨h4, _, h6⟩
-  rcases sparse_projection_values with ⟨h7, h8⟩
-  rw [h1, h3, h4, h6, h7, h8]
+  rw [h1, h3, h4, h6, sparse_projection_values.2]
   norm_num [prime]
 
 end ProximityPrize.SubmissionLower.ContactProjectionParameters

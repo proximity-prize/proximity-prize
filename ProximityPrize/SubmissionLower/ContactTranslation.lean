@@ -154,9 +154,9 @@ every node and every block is divisible by the required contact power. -/
 theorem exists_frozen_translated_contact_interpolant
     (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
     ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,
-      Q ≠ 0 ∧ Q ∈ globalCoefficientBox IRSProfile.Field 3320622 131071 174 5 ∧
+      Q ≠ 0 ∧ Q ∈ globalCoefficientBox IRSProfile.Field 3504835 131071 170 6 ∧
       ∀ (i : IRSProfile.Index) (r : ℕ),
-        slopeDifference IRSProfile.Field ^ (18 - r) ∣
+        slopeDifference IRSProfile.Field ^ (19 - r) ∣
           (homogenizedTranslation IRSProfile.Field
             (IRSProfile.domain i) (u₀ i) (u₁ i) Q).coeff r := by
   obtain ⟨Q, θ, hQ, hcaps, hreconstruct, hequations⟩ :=
@@ -164,7 +164,7 @@ theorem exists_frozen_translated_contact_interpolant
   refine ⟨Q, hQ, hcaps, ?_⟩
   intro i r
   rw [hreconstruct, translation_reconstruct_coeff]
-  exact all_blocks_divisible_of_equations IRSProfile.Field 3320622 131071 174 5 18
+  exact all_blocks_divisible_of_equations IRSProfile.Field 3504835 131071 170 6 19
     (IRSProfile.domain i) (u₀ i) (u₁ i) θ (hequations i) r
 
 /-- Local Y is the candidate derivative plus T times a residual quotient. -/
@@ -367,10 +367,10 @@ large agreement support. This is not the remaining geometric seed count. -/
 theorem exists_frozen_universal_vanishing_interpolant
     (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
     ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,
-      Q ≠ 0 ∧ Q ∈ globalCoefficientBox IRSProfile.Field 3320622 131071 174 5 ∧
+      Q ≠ 0 ∧ Q ∈ globalCoefficientBox IRSProfile.Field 3504835 131071 170 6 ∧
       ∀ (γ : IRSProfile.Field) (P : Polynomial IRSProfile.Field)
         (support : Finset IRSProfile.Index),
-        P.natDegree ≤ 131071 → 184479 ≤ support.card →
+        P.natDegree ≤ 131071 → 184465 ≤ support.card →
         (∀ i ∈ support, P.eval (IRSProfile.domain i) = u₀ i + γ * u₁ i) →
         specialization IRSProfile.Field P γ Q = 0 := by
   classical
@@ -378,13 +378,13 @@ theorem exists_frozen_universal_vanishing_interpolant
   refine ⟨Q, hQ, hcaps, ?_⟩
   intro γ P support hP hcard hvalues
   apply specialization_eq_zero_of_contact_and_degree IRSProfile.Field Q P γ
-    IRSProfile.domain u₀ u₁ support 18
+    IRSProfile.domain u₀ u₁ support 19
   · intro i hi r
     exact hcontact i r
   · exact hvalues
   · have hdegree := specialization_natDegree_lt IRSProfile.Field
-      3320622 131071 174 5 Q P γ (by decide) hcaps hP
-    have hbound : 3320622 ≤ 18 * support.card := by omega
+      3504835 131071 170 6 Q P γ (by decide) hcaps hP
+    have hbound : 3504835 ≤ 19 * support.card := by omega
     exact hdegree.trans_le hbound
 
 end

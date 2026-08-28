@@ -35,17 +35,17 @@ def liftedSingularNumerator : ℕ :=
 def liftedTotalNumerator : ℕ := regularNumerator + gap * liftedSingularNumerator
 
 theorem lifted_parameter_values :
-    implicitWeightedCap = 29885598 ∧ implicitYCap = 228 ∧
-    liftedLastTail = ⟨13627832689, 29885598, 93601692936⟩ ∧
-    liftedAgreement = ⟨59768377, 131071, 410514373⟩ := by
+    implicitWeightedCap = 38553185 ∧ implicitYCap = 294 ∧
+    liftedLastTail = ⟨22669272781, 38553185, 144188911900⟩ ∧
+    liftedAgreement = ⟨77069749, 131071, 490205541⟩ := by
   norm_num [implicitWeightedCap, implicitYCap, liftedLastTail, liftedAgreement,
     algebraicCap, weightedCap, ContactAlignmentParameters.multiplicity, agreements,
     w, slopeCap, seedTotalCap]
 
 theorem lifted_projection_values :
-    mixed liftedSurface implicitCut unitY = 1566 ∧
-    mixed liftedSurface implicitCut unitR = 714096 ∧
-    mixed liftedSurface implicitCut unitZ = 228 := by
+    mixed liftedSurface implicitCut unitY = 1870 ∧
+    mixed liftedSurface implicitCut unitR = 1099560 ∧
+    mixed liftedSurface implicitCut unitZ = 294 := by
   norm_num [mixed, liftedSurface, implicitCut, implicitYCap, implicitWeightedCap,
     unitY, unitR, unitZ, algebraicCap, weightedCap,
     ContactAlignmentParameters.multiplicity, agreements, w, slopeCap, seedTotalCap]
@@ -60,14 +60,14 @@ theorem lifted_projection_characteristic_gates :
   norm_num [prime]
 
 theorem lifted_singular_numerator_exact :
-    liftedSingularNumerator = 3492979285897032576 := by
+    liftedSingularNumerator = 6903704186706360376 := by
   norm_num [liftedSingularNumerator, mixed, liftedSurface, implicitCut, liftedLastTail,
     liftedAgreement, implicitYCap, implicitWeightedCap, unitZ, algebraicCap,
     weightedCap, ContactAlignmentParameters.multiplicity, agreements, w, gap,
     errors, n, slopeCap, seedTotalCap]
 
 theorem lifted_total_numerator_exact :
-    liftedTotalNumerator = 283906998638348117737729728 := by
+    liftedTotalNumerator = 350630672775273205753859376 := by
   rw [liftedTotalNumerator, lifted_singular_numerator_exact]
   norm_num [regularNumerator, cutNumerator, wholeNumerator, mixed,
     firstTail, lastTail, tailVector, agreementVector, unitY, unitR, unitZ,
@@ -75,8 +75,8 @@ theorem lifted_total_numerator_exact :
     w, gap, errors, n, slopeCap, seedTotalCap]
 
 theorem lifted_division_certificate :
-    liftedTotalNumerator = 99532169052396208 * gap ^ 2 + 179777216 ∧
-    179777216 < gap ^ 2 := by
+    liftedTotalNumerator = 122988637611224566 * gap ^ 2 + 1028707800 ∧
+    1028707800 < gap ^ 2 := by
   rw [lifted_total_numerator_exact, denominator_exact]
   norm_num
 
