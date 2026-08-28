@@ -18,14 +18,14 @@ open ContactIdentityResidualGlobalFlagResearch
 open ContactNearPencil6600ArithmeticResearch
 
 /-- Surface flag for `(errors,m,s,L)=(78777,24,8,576)`. -/
-def surfaceFlag6600 : FlagDegree := ⟨460, 35, 8⟩
+def surfaceFlag6600 : FlagDegree := ⟨485, 35, 8⟩
 
 /-- Derivative flag after one derivative in the residual `R` coordinate. -/
-def derivativeFlag6600 : FlagDegree := ⟨460, 35, 7⟩
+def derivativeFlag6600 : FlagDegree := ⟨485, 35, 7⟩
 
 /-- One contact-recurrence order contributes the surface plus derivative
 flags. -/
-def agreementDirection6600 : FlagDegree := ⟨920, 70, 15⟩
+def agreementDirection6600 : FlagDegree := ⟨970, 70, 15⟩
 
 theorem agreementDirection6600_eq :
     agreementDirection6600 = surfaceFlag6600 + derivativeFlag6600 := by
@@ -34,8 +34,8 @@ theorem agreementDirection6600_eq :
 theorem residualAgreementFlag_eq_affine (d : ℕ) :
     residualAgreementFlag d =
       unitYZFlag + d • agreementDirection6600 := by
-  change (⟨920 * d, 1 + 70 * d, 15 * d⟩ : FlagDegree) =
-    (⟨0 + d * 920, 1 + d * 70, 0 + d * 15⟩ : FlagDegree)
+  change (⟨970 * d, 1 + 70 * d, 15 * d⟩ : FlagDegree) =
+    (⟨0 + d * 970, 1 + d * 70, 0 + d * 15⟩ : FlagDegree)
   congr 1 <;> omega
 
 /-- Exact bilinear expansion of the whole proper-intersection cost. -/

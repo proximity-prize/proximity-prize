@@ -23,6 +23,7 @@ open ContactGlobalSelectedFamilies6600Research
 open ContactSelectedSeedDecomposition
 open ContactGlobalAdaptiveAlignment6600Research
 open ContactTerminalAdaptiveProjection6600Research
+open ContactWeightedRegularFactor6600Research
 
 noncomputable section
 
@@ -45,39 +46,27 @@ theorem frozenTerminalAdaptiveProjectionFamilies6600 :
   have hRdata := directFactor_data Q R.1 hQ weightedCap w seedTotalCap
     slopeCap hbox R.2
   have hRne : R.1 ≠ 0 := hRdata.1.ne_zero
-  have hglobal := regularFlag_budgets Q hQ hbox
-  have hRZ : (regularFlag Q R).zOnly ≤ 495 :=
-    (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
-      (Finset.mem_univ R)).trans hglobal.1
-  have hRY : (regularFlag Q R).yz ≤ 43 :=
-    (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
-      (Finset.mem_univ R)).trans hglobal.2.1
-  have hRS : (regularFlag Q R).all ≤ 8 :=
-    (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
-      (Finset.mem_univ R)).trans hglobal.2.2
-  have hgZ : (geometricFlag IRSProfile.Field g).zOnly ≤
-      (regularFlag Q R).zOnly := by
-    simpa only [geometricFlag, regularFlag,
-      show Fin.succ (2 : Fin 3) = (3 : Fin 4) by decide] using
-      geometricFactor_degree_le IRSProfile.Field R.1 hRne g (2 : Fin 3)
-  have hgY : (geometricFlag IRSProfile.Field g).yz ≤
-      (regularFlag Q R).yz := by
-    simpa only [geometricFlag, regularFlag,
-      show Fin.succ (0 : Fin 3) = (1 : Fin 4) by decide] using
-      geometricFactor_degree_le IRSProfile.Field R.1 hRne g (0 : Fin 3)
-  have hgS : (geometricFlag IRSProfile.Field g).all ≤
-      (regularFlag Q R).all := by
-    simpa only [geometricFlag, regularFlag,
-      show Fin.succ (1 : Fin 3) = (2 : Fin 4) by decide] using
-      geometricFactor_degree_le IRSProfile.Field R.1 hRne g (1 : Fin 3)
+  have hsource := global_surface_weight_budgets R.1 hRdata.2.2
+  have hg := weightedFlag_cumulative_bounds_of_surfaceFactor
+    (polynomialEmbedding IRSProfile.Field)
+    (polynomialEmbedding_injective IRSProfile.Field) R.1 hRne g.1 g.2
+  have hgTotal : (geometricFlag IRSProfile.Field g).zOnly +
+      (geometricFlag IRSProfile.Field g).yz +
+      (geometricFlag IRSProfile.Field g).all ≤ 528 := by
+    exact hg.1.trans hsource.2.2
+  have hgYS : (geometricFlag IRSProfile.Field g).yz +
+      (geometricFlag IRSProfile.Field g).all ≤ 43 := by
+    exact hg.2.1.trans hsource.2.1
+  have hgS : (geometricFlag IRSProfile.Field g).all ≤ 8 := by
+    exact hg.2.2.trans hsource.1
   exact terminalAdaptiveProjectionFamilies_of_rectangular_caps
     (regularGeometricResidualStage Q hQ hbox selected seeds
       (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain
       u0 u1 IRSProfile.domain.injective.injOn hdegree hnoPencil R g)
-    (hgZ.trans hRZ) (hgY.trans hRY) (hgS.trans hRS)
+    (polynomialEmbedding_injective IRSProfile.Field) hgTotal hgYS hgS
 
 /-- Fully closed score-66 lower-track claim. -/
-theorem protocolClaim6600 : ProtocolClaim 6618 315835 1048576 :=
+theorem protocolClaim6600 : ProtocolClaim 6622 315983 1048576 :=
   ContactProtocol6600AdaptiveResearch.protocolClaim6600_of_terminal_projection_families
     frozenTerminalAdaptiveProjectionFamilies6600
 

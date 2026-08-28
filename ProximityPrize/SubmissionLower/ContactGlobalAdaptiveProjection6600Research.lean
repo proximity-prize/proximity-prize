@@ -23,6 +23,8 @@ open ContactRegularFactorResidualStage6600Research
 open ContactAdaptiveProjectionFactorProvider6600Research
 open ContactIdentityResidualIterationResearch
 open ContactNearPencil6600FactorLedgerResearch
+open ContactWeightedRegularFactor6600Research
+open ContactIdentityResidualGlobalFlagResearch
 open ContactInterpolation ContactTranslation
 
 noncomputable section
@@ -56,7 +58,10 @@ theorem regular_factor_seed_bound_of_adaptive_projection_families
         (regularGeometricResidualStage Q hQ hbox selected Gamma nodes
           x u0 u1 hinj hdegree hnoPencil R g)) :
     (regularSeeds Q selected Gamma R).card * gap ^ 2 ≤
-      factorRegularLedger (regularFlag Q R) := by
+      weightedLedger
+        (MvPolynomial.weightedTotalDegree residualTotalWeights R.1)
+        (MvPolynomial.weightedTotalDegree residualYSWeights R.1)
+        (MvPolynomial.weightedTotalDegree residualSWeights R.1) := by
   apply regular_factor_seed_bound_of_geometric_counts Q hQ hbox
     selected Gamma R
   intro g
@@ -102,7 +107,7 @@ theorem global_count_lt_alignment_of_adaptive_projection_families
         (regularGeometricResidualStage Q hQ hbox selected Gamma nodes
           x u0 u1 hinj hdegree hnoPencil R g)) :
     Gamma.card < alignmentBudget := by
-  apply global_count_lt_alignment_of_regular_factors Q hQ hbox selected
+  apply global_count_lt_alignment_weighted_of_regular_factors Q hQ hbox selected
     Gamma nodes x u0 u1 hinj hnodes hdegree hsolution hagreement hnoPencil
   intro R
   exact regular_factor_seed_bound_of_adaptive_projection_families
