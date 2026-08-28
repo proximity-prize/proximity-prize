@@ -213,6 +213,31 @@ theorem actualRelationKernel_family_injective
   apply hinj
   exact prime_eq_of_actualRelationKernel_eq K order (P i) (P j) (ht i) (ht j) hij
 
+/-- Successor corollary: a family injective on the original order is also
+injective after passing to the successor (swapped) order, since the two
+orderings share the same rational-coefficient coordinate at index zero. -/
+theorem actualRelationKernel_family_injective_swap
+    (order : Fin 3 ≃ Fin 3) {I : Type} (P : I → Ideal (Original K))
+    [∀ i, (P i).IsPrime]
+    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
+    (hinj : Function.Injective P) :
+    Function.Injective
+      (fun i => actualRelationKernel K (swapOtherOrder order) (P i) (ht i)) :=
+  actualRelationKernel_family_injective K (swapOtherOrder order) P
+    (fun i => ht i) hinj
+
+/-- Two primes whose actual relation kernels agree on the original order
+must also agree on the successor (swapped) order, because the contraction
+identifies the same prime in either case. -/
+theorem prime_eq_of_actualRelationKernel_eq_swap
+    (order : Fin 3 ≃ Fin 3) (P Q : Ideal (Original K)) [P.IsPrime] [Q.IsPrime]
+    (hP : Transcendental K (coordinate K P (order 0)))
+    (hQ : Transcendental K (coordinate K Q (order 0)))
+    (heq : actualRelationKernel K (swapOtherOrder order) P hP =
+      actualRelationKernel K (swapOtherOrder order) Q hQ) :
+    P = Q :=
+  prime_eq_of_actualRelationKernel_eq K (swapOtherOrder order) P Q hP hQ heq
+
 end
 
 #print axioms bivariateEquiv_X_zero

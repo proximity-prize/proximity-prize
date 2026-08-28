@@ -76,8 +76,8 @@ theorem frozenTerminalAdaptiveProjectionFamilies6600 :
       u0 u1 IRSProfile.domain.injective.injOn hdegree hnoPencil R g)
     (hgZ.trans hRZ) (hgY.trans hRY) (hgS.trans hRS)
 
-/-- Fully closed score-66 lower-track claim. -/
-theorem protocolClaim6600 : ProtocolClaim 6618 315835 1048576 :=
+/-- Fully closed score-66.19 lower-track claim. -/
+theorem protocolClaim6600 : ProtocolClaim 6619 315863 1048576 :=
   ContactProtocol6600AdaptiveResearch.protocolClaim6600_of_terminal_projection_families
     frozenTerminalAdaptiveProjectionFamilies6600
 
