@@ -1,7 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactProperCutSeedCount
 import ProximityPrize.SubmissionLower.ContactCountingCaps
-import ProximityPrize.SubmissionLower.ContactSparseSurfaceCaps
 
 /-!
 # Every regular positive-R surface is counted by agreement-first cuts
@@ -24,12 +23,8 @@ open scoped Classical BigOperators
 open ContactAlignmentParameters ContactCountingCaps ContactGenericSurface
 open ContactPrimeSeedIncidence ContactProperCutSeedCount ContactComponentPencils
 open ContactPolynomialSolutions ContactTranslation ActualCoordinateDegreeSum
-open ContactSparseResultant ContactSparseSurfaceCaps
-open TrivariateRationalCollection
 
 noncomputable section
-
-set_option maxRecDepth 10000
 
 variable {K Ω : Type} [Field K] [Field Ω]
 
@@ -186,9 +181,9 @@ theorem whole_surface_seed_bound_fixed
     (hr : 0 < G.degreeOf 1)
     (hHproper : ¬ G ∣ surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F))
     (hGcaps : HasCaps G ContactProjectionParameters.surfaceVector)
-    (hRgate : mixed ContactProjectionParameters.surfaceVector agreementVector unitR < prime)
     (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
     (hZ : F.degreeOf 3 ≤ seedTotalCap)
+    (hHY : (ContactTaylorNumerators.polyH K F).degreeOf (1 : Fin 4) ≤ yCap - 1)
     (selected : K → Polynomial K) (Γ : Finset K)
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (hnodes : nodes.card = n) [CharP Ω prime]
@@ -203,189 +198,14 @@ theorem whole_surface_seed_bound_fixed
     (hnoPencil : NoLargeSelectedPencil selected Γ w errors) :
     Γ.card * gap ^ 2 ≤ wholeNumerator (degreeVector G) := by
   have hcap (i : ι) : HasCaps (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i))
-      agreementVector := fixed_agreement_caps φ F hY hR hZ (x i) (u₀ i) (u₁ i)
+      agreementVector := fixed_agreement_caps φ F hY hR hZ hHY (x i) (u₀ i) (u₁ i)
   have hcount := whole_surface_seed_bound φ F G hG hdiv hr hHproper selected Γ
     nodes x u₀ u₁ hinj prime w agreements errors
     (by norm_num [w]) (by norm_num [w, prime]) (by norm_num [w, agreements])
     (by rw [hnodes]; norm_num [agreements, n])
     (fun j => (hGcaps j).trans_lt (fixed_surface_caps_below_characteristic j))
-    (fun i _ => (fixed_agreement_characteristic_gates G _ hGcaps (hcap i) hRgate).2)
+    (fun i _ => (fixed_agreement_characteristic_gates G _ hGcaps (hcap i)).2)
     hdegree hsolution hregular hGpoint hagreement hnoPencil agreementVector (fun i _ => hcap i)
-  calc
-    Γ.card * gap ^ 2 = Γ.card * (agreements - w) ^ 2 := rfl
-    _ ≤ (nodes.card - w) * fiberNumerator nodes.card w agreements errors
-        (degreeVector G) agreementVector := hcount
-    _ = wholeNumerator (degreeVector G) := by
-      rw [hnodes]
-      unfold fiberNumerator wholeNumerator gap
-      ring
-
-/-- Sparse-projection fixed wrapper.  It changes only the characteristic
-certificate for the inner proper cut; incidence and the final rectangular
-whole numerator are identical to `whole_surface_seed_bound_fixed`. -/
-theorem whole_surface_seed_bound_fixed_sparseR_raw
-    (F : MvPolynomial (Fin 4) K) (G : MvPolynomial (Fin 3) Ω)
-    (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F)
-    (hr : 0 < G.degreeOf 1)
-    (hHproper : ¬ G ∣ surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F))
-    (hGcaps : HasCaps G ContactProjectionParameters.surfaceVector)
-    (hbox : F ∈ ContactInterpolation.globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hsurface : surfaceMap φ F ≠ 0)
-    (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
-    (hZ : F.degreeOf 3 ≤ seedTotalCap)
-    (selected : K → Polynomial K) (Γ : Finset K)
-    (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
-    (hnodes : nodes.card = n) [CharP Ω prime]
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
-    (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
-    (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
-      (polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X))
-      (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hGpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
-    (hagreement : ∀ γ ∈ Γ,
-      agreements ≤ (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
-    (hnoPencil : NoLargeSelectedPencil selected Γ w errors) :
-    Γ.card * (agreements - w) ^ 2 ≤
-      (nodes.card - w) * fiberNumerator nodes.card w agreements errors
-        (degreeVector G) agreementVector := by
-  classical
-  have hcap (i : ι) : HasCaps (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i))
-      agreementVector := fixed_agreement_caps φ F hY hR hZ (x i) (u₀ i) (u₁ i)
-  have hGjoint : MvPolynomial.weightedTotalDegree seedPairWeights G ≤ seedTotalCap :=
-    fixed_surface_factor_joint_seed_cap φ F G hbox hdiv hsurface
-  have hTjoint (i : ι) : MvPolynomial.weightedTotalDegree seedPairWeights
-      (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)) ≤
-        1 + 2 * w * seedTotalCap := by
-    exact fixed_factorialAgreementSurface_joint_seed_cap φ F hbox (x i) (u₀ i) (u₁ i)
-  have hGtotalY : (rationalMap Ω rBaseYOuterOrder G).totalDegree ≤ seedTotalCap :=
-    (rationalMap_totalDegree_le_seedPair_yOuter Ω G).trans hGjoint
-  have hGtotalZ : (rationalMap Ω rBaseZOuterOrder G).totalDegree ≤ seedTotalCap :=
-    (rationalMap_totalDegree_le_seedPair_zOuter Ω G).trans hGjoint
-  have hGdegree : ∀ j : Fin 3, G.degreeOf j < prime :=
-    fun j => (hGcaps j).trans_lt (fixed_surface_caps_below_characteristic j)
-  let P : Ideal (MvPolynomial (Fin 3) Ω) := Ideal.span {G}
-  letI : P.IsPrime := Ideal.isPrime_span_singleton_of_prime hG.prime
-  have hFmem : surfaceMap φ F ∈ P := Ideal.mem_span_singleton.mpr hdiv
-  have hHmem : surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F) ∉ P := by
-    intro h
-    exact hHproper (Ideal.mem_span_singleton.mp h)
-  let identities := identityNodes φ P F nodes x u₀ u₁ w
-  have hidentities : identities ⊆ nodes := identityNodes_subset φ P F nodes x u₀ u₁ w
-  have hicard : identities.card ≤ w :=
-    identityNodes_card_le_of_r_dependent_principal φ P F hFmem hHmem
-      nodes x u₀ u₁ w (by norm_num [w]) hinj G rfl hr
-  apply scaled_sharp_incidence_bound
-    (fun γ i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)
-    Γ nodes identities agreements w
-    (fiberNumerator nodes.card w agreements errors (degreeVector G) agreementVector)
-    hidentities hicard (by norm_num [w, agreements])
-    (by rw [hnodes]; norm_num [agreements, n]) hagreement
-  intro i hi
-  obtain ⟨hinode, hnotid⟩ := Finset.mem_sdiff.mp hi
-  let T := agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)
-  have hTcaps : HasCaps T agreementVector := by
-    simpa [T] using hcap i
-  have hproper : ¬ G ∣ T := by
-    intro hd
-    apply hnotid
-    exact Finset.mem_filter.mpr ⟨hinode, Ideal.mem_span_singleton.mpr hd⟩
-  let fiber := Γ.filter (fun γ => (selected γ).eval (x i) = u₀ i + γ * u₁ i)
-  have hsub : fiber ⊆ Γ := Finset.filter_subset _ _
-  have hTpoint : ∀ γ ∈ fiber, MvPolynomial.eval (selectedPoint φ selected γ) T = 0 := by
-    intro γ hγ
-    have hΓ := hsub hγ
-    exact (selected_agreement_zero_iff φ F selected prime w (by norm_num [w, prime]) γ
-      (hdegree γ hΓ) (hsolution γ hΓ) (hregular γ hΓ)
-      (x i) (u₀ i) (u₁ i)).mpr (Finset.mem_filter.mp hγ).2
-  have hTtotalY : (rationalMap Ω rBaseYOuterOrder T).totalDegree ≤
-      1 + 2 * w * seedTotalCap :=
-    (rationalMap_totalDegree_le_seedPair_yOuter Ω T).trans (hTjoint i)
-  have hmixed0 : coordinateMixedDegree Ω G T 0 < prime :=
-    (coordinateMixedDegree_le_caps G T ContactProjectionParameters.surfaceVector agreementVector
-      hGcaps hTcaps 0).trans_lt (by
-        rcases ContactProjectionParameters.projection_caps_below_characteristic with
-          ⟨_, _, h0, _, _, _⟩
-        simpa [unitAt] using h0)
-  have hmixed2 : coordinateMixedDegree Ω G T 2 < prime :=
-    (coordinateMixedDegree_le_caps G T ContactProjectionParameters.surfaceVector agreementVector
-      hGcaps hTcaps 2).trans_lt (by
-        rcases ContactProjectionParameters.projection_caps_below_characteristic with
-          ⟨_, _, _, h2, _, _⟩
-        simpa [unitAt] using h2)
-  have hcount := proper_cut_seed_bound_sparseR φ F G T hG hdiv hproper selected fiber
-    nodes x u₀ u₁ hinj prime w agreements errors
-    (by norm_num [w]) (by norm_num [w, prime])
-    (by norm_num [w, agreements]) (by rw [hnodes]; norm_num [agreements, n])
-    hGdegree hmixed0 hmixed2 yCap agreementVector.y seedTotalCap
-      (1 + 2 * w * seedTotalCap)
-    (hGcaps 0) (hTcaps 0) hGtotalY hTtotalY hGtotalZ
-    (by norm_num [yCap, weightedCap, ContactAlignmentParameters.multiplicity,
-      agreements, w, seedTotalCap])
-    (by norm_num [agreementVector, yCap, weightedCap,
-      ContactAlignmentParameters.multiplicity, agreements, w, seedTotalCap])
-    (by norm_num [yCap, weightedCap, ContactAlignmentParameters.multiplicity,
-      agreements, w, prime])
-    (by norm_num [seedTotalCap, prime])
-    (by norm_num [agreementVector, seedTotalCap, w, yCap, weightedCap,
-      ContactAlignmentParameters.multiplicity, agreements, prime])
-    (by simpa [ContactProjectionParameters.agreementSparseRCap,
-      ContactProjectionParameters.sparseRCap, agreementVector] using
-        ContactProjectionParameters.projection_caps_below_characteristic.2.2.2.2.2)
-    (fun γ hγ => hdegree γ (hsub hγ))
-    (fun γ hγ => hsolution γ (hsub hγ))
-    (fun γ hγ => hregular γ (hsub hγ))
-    (fun γ hγ => hGpoint γ (hsub hγ)) hTpoint
-    (fun γ hγ => hagreement γ (hsub hγ))
-    (noLargeSelectedPencil_mono selected Γ fiber w errors hsub hnoPencil)
-    (capAt agreementVector) (by
-      intro j _ k
-      exact hcap j k)
-  have hδ (j : Fin 3) : coordinateMixedDegree Ω G T j ≤
-      mixed (degreeVector G) agreementVector (unitAt j) :=
-    coordinateMixedDegree_le_caps G T (degreeVector G) agreementVector
-      (degreeVector_hasCaps G) hTcaps j
-  have hsum : (∑ j, capAt agreementVector j * coordinateMixedDegree Ω G T j) ≤
-      mixed (degreeVector G) agreementVector agreementVector := by
-    calc
-      _ ≤ ∑ j, capAt agreementVector j *
-          mixed (degreeVector G) agreementVector (unitAt j) := by
-        apply Finset.sum_le_sum
-        intro j _
-        exact Nat.mul_le_mul_left _ (hδ j)
-      _ = _ := mixed_cap_sum (degreeVector G) agreementVector agreementVector
-  have hscaled := hcount.trans (Nat.add_le_add (Nat.mul_le_mul_left _ hsum)
-    (Nat.mul_le_mul_left ((errors + 1) * gap) (hδ 2)))
-  rw [hnodes]
-  rw [hnodes] at hscaled
-  rw [show unitAt 2 = unitZ by rfl] at hscaled
-  simpa only [fiberNumerator, gap, fiber] using hscaled
-
-theorem whole_surface_seed_bound_fixed_sparseR
-    (F : MvPolynomial (Fin 4) K) (G : MvPolynomial (Fin 3) Ω)
-    (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F)
-    (hr : 0 < G.degreeOf 1)
-    (hHproper : ¬ G ∣ surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F))
-    (hGcaps : HasCaps G ContactProjectionParameters.surfaceVector)
-    (hbox : F ∈ ContactInterpolation.globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hsurface : surfaceMap φ F ≠ 0)
-    (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
-    (hZ : F.degreeOf 3 ≤ seedTotalCap)
-    (selected : K → Polynomial K) (Γ : Finset K)
-    (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
-    (hnodes : nodes.card = n) [CharP Ω prime]
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
-    (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
-    (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
-      (polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X))
-      (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hGpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
-    (hagreement : ∀ γ ∈ Γ,
-      agreements ≤ (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
-    (hnoPencil : NoLargeSelectedPencil selected Γ w errors) :
-    Γ.card * gap ^ 2 ≤ wholeNumerator (degreeVector G) := by
-  have hcount := whole_surface_seed_bound_fixed_sparseR_raw φ F G hG hdiv hr hHproper
-    hGcaps hbox hsurface hY hR hZ selected Γ nodes x u₀ u₁ hinj hnodes
-    hdegree hsolution hregular hGpoint hagreement hnoPencil
   calc
     Γ.card * gap ^ 2 = Γ.card * (agreements - w) ^ 2 := rfl
     _ ≤ (nodes.card - w) * fiberNumerator nodes.card w agreements errors

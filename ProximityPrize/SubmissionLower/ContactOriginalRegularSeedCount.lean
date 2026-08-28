@@ -28,6 +28,7 @@ open ContactGenericInitialPoint ContactGenericSurface ContactGeometricFirstTail
 open ContactGeometricFactorCover ContactRegularFactorGate ContactFactorCaps
 open ContactSurfaceSeedCount ContactPrimeSeedIncidence ContactProperCutSeedCount
 open ContactPolynomialSolutions ContactInterpolation ContactTranslation
+open ContactRefinedAgreementY
 
 noncomputable section
 
@@ -155,6 +156,11 @@ theorem original_regular_seed_bound
   have hY : F.degreeOf 1 ≤ yCap := hc.1
   have hR : F.degreeOf 2 ≤ slopeCap := hc.2.1
   have hZ : F.degreeOf 3 ≤ seedTotalCap := hc.2.2
+  have hHY : (ContactTaylorNumerators.polyH K F).degreeOf (1 : Fin 4) ≤ yCap - 1 :=
+    polyH_Y_degree_le_of_mem_box F weightedCap w seedTotalCap slopeCap yCap
+      hbox (by norm_num [w]) (by
+        norm_num [weightedCap, ContactAlignmentParameters.multiplicity,
+          agreements, w, yCap])
   have hsmall : F.degreeOf 2 < prime := hR.trans_lt (by norm_num [slopeCap, prime])
   have hcount (g : GeometricFactor K F) :
       (geometricSeeds K F selected Γ g).card * gap ^ 2 ≤ wholeNumerator (degreeVector g.1) := by
@@ -170,11 +176,9 @@ theorem original_regular_seed_bound
       · exact (geometricFactor_degree_le K F hF.ne_zero g 0).trans hY
       · exact (geometricFactor_degree_le K F hF.ne_zero g 1).trans hR
       · exact (geometricFactor_degree_le K F hF.ne_zero g 2).trans hZ
-    have hsurface : surfaceMap (polynomialEmbedding K) F ≠ 0 :=
-      surfaceMap_ne_zero (polynomialEmbedding K) (polynomialEmbedding_injective K) F hF.ne_zero
     have hsub := geometricSeeds_subset K F selected Γ g
-    exact whole_surface_seed_bound_fixed_sparseR (polynomialEmbedding K) F g.1 hgirred hgdiv
-      hgate.1 hHproper hgcaps hbox hsurface hY hR hZ selected (geometricSeeds K F selected Γ g)
+    exact whole_surface_seed_bound_fixed (polynomialEmbedding K) F g.1 hgirred hgdiv
+      hgate.1 hHproper hgcaps hY hR hZ hHY selected (geometricSeeds K F selected Γ g)
       nodes x u₀ u₁ hinj hnodes
       (fun γ hγ => hdegree γ (hsub hγ))
       (fun γ hγ => hsolutions γ (hsub hγ))

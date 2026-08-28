@@ -5,14 +5,14 @@ import ProximityPrize.SubmissionLower.ContactTranslation
 import ProximityPrize.SubmissionLower.ContactAlignmentParameters
 
 /-!
-# The conservative 6401 interpolation front end and stock alignment interface
+# The conservative 6452 interpolation front end and stock alignment interface
 
 Model label: gpt-5.
 
 This new adapter applies the re-instantiated universal interpolant to each
-caller's ORIGINAL agreement support at e=77408. Its only counting input is
+caller's ORIGINAL agreement support at e=77305. Its only counting input is
 the actual selected-polynomial bound in the new coefficient box. The
-companion ContactAlignment6401 module discharges that input by the actual
+companion ContactAlignment6452 module discharges that input by the actual
 global factor-counting theorem.
 
 No old ContactFrozenAlignment or ContactAlignment6400 module is imported.
@@ -21,7 +21,7 @@ not its old numerical 6400 wrapper. This file alone is still conditional
 on the explicit count; it is not a ProtocolClaim or submission.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactFrozenAlignment6401
+namespace ProximityPrize.SubmissionLower.ContactFrozenAlignment6452
 
 open ProximityPrize.Benchmark
 open ContactAlignmentParameters ContactAlignmentBridge ContactInterpolation
@@ -35,13 +35,13 @@ set_option maxRecDepth 10000
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 
 /-- The new selected-family bound uses the actual domain and the exact
-77408-error, 10^17-seed parameters. -/
-def SelectedNoLargePencilBound6401 : Prop :=
-  SelectedNoLargePencilBound IRSProfile.domain 131071 77408 100000000000000000
+77305-error, 10^17-seed parameters. -/
+def SelectedNoLargePencilBound6452 : Prop :=
+  SelectedNoLargePencilBound IRSProfile.domain 131071 77305 100000000000000000
 
 /-- The precise actual-interpolant count supplied by the global counting
 module; it is an explicit input to this frontend, never a new axiom. -/
-def InterpolantSelectedCount6401 : Prop :=
+def InterpolantSelectedCount6452 : Prop :=
   ∀ (Q : MvPolynomial (Fin 4) IRSProfile.Field),
     Q ≠ 0 →
     Q ∈ globalCoefficientBox IRSProfile.Field weightedCap w seedTotalCap slopeCap →
@@ -63,7 +63,7 @@ theorem challenge_field_characteristic :
 theorem original_support_card
     (A : IRSProfile.Field → Finset IRSProfile.Index)
     (seeds : Finset IRSProfile.Field)
-    (hcard : ∀ γ ∈ seeds, Fintype.card IRSProfile.Index - 77408 ≤ (A γ).card) :
+    (hcard : ∀ γ ∈ seeds, Fintype.card IRSProfile.Index - 77305 ≤ (A γ).card) :
     ∀ γ ∈ seeds, agreements ≤ (A γ).card := by
   intro γ hγ
   have hh := hcard γ hγ
@@ -72,8 +72,8 @@ theorem original_support_card
 /-- The SAME nonzero universal interpolant applies to every selected
 polynomial using exactly its supplied support A(γ). -/
 theorem selected_count_of_interpolant_count
-    (hcount : InterpolantSelectedCount6401) :
-    SelectedNoLargePencilBound6401 := by
+    (hcount : InterpolantSelectedCount6452) :
+    SelectedNoLargePencilBound6452 := by
   classical
   intro U seeds A selected hdegree hcard hvalues hno
   have hcard' := original_support_card A seeds hcard
@@ -107,11 +107,11 @@ theorem selected_count_of_interpolant_count
 
 /-- Use the generic stock-code bridge at the new error and seed budget. -/
 theorem alignment_of_interpolant_count
-    (hcount : InterpolantSelectedCount6401) :
-    AffineLineAlignmentBound IRSProfile.baseCode 77408 100000000000000000 := by
+    (hcount : InterpolantSelectedCount6452) :
+    AffineLineAlignmentBound IRSProfile.baseCode 77305 100000000000000000 := by
   change AffineLineAlignmentBound (ReedSolomon.code IRSProfile.domain (131071 + 1))
-    77408 100000000000000000
-  exact alignmentBound_of_selected_count IRSProfile.domain 131071 77408
+    77305 100000000000000000
+  exact alignmentBound_of_selected_count IRSProfile.domain 131071 77305
     100000000000000000 (selected_count_of_interpolant_count hcount)
 
 #print axioms challenge_field_characteristic
@@ -120,4 +120,4 @@ theorem alignment_of_interpolant_count
 #print axioms alignment_of_interpolant_count
 
 end
-end ProximityPrize.SubmissionLower.ContactFrozenAlignment6401
+end ProximityPrize.SubmissionLower.ContactFrozenAlignment6452

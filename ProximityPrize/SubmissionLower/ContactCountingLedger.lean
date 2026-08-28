@@ -158,38 +158,46 @@ theorem max_branch_le_envelope (v : DegreeVector) :
 
 theorem regularNumerator_eq_dot : regularNumerator = dot regularSurface wholeCoefficients := rfl
 
-/-- Every branch inequality remains an explicit input. -/
-theorem sum_regular_max_bound {I : Type} [Fintype I]
+/-! The completed regular-factor route always supplies `wholeNumerator`.
+The older envelope remains available for mixed cut/whole callers, but the
+final contact assembly does not need to pay for the unused cut branch. -/
+
+def wholeRegularNumerator : ℕ := dot regularSurface wholeCoefficients
+
+theorem wholeRegularNumerator_eq :
+    wholeRegularNumerator =
+      yCap * wholeNumerator unitY + slopeCap * wholeNumerator unitR +
+        seedTotalCap * wholeNumerator unitZ := by
+  simp only [wholeRegularNumerator, regularSurface, wholeCoefficients, dot]
+
+theorem wholeRegularNumerator_le_regularNumerator :
+    wholeRegularNumerator ≤ regularNumerator := by rfl
+
+/-- Sharp aggregation for the branch used by the completed proof: every
+regular component is bounded by `wholeNumerator`, so no coordinatewise
+cut/whole maximum is charged. -/
+theorem sum_regular_whole_bound {I : Type} [Fintype I]
     (count : I → ℕ) (v : I → DegreeVector)
     (hy : (∑ i, (v i).y) ≤ yCap) (hr : (∑ i, (v i).r) ≤ slopeCap)
     (hz : (∑ i, (v i).z) ≤ seedTotalCap)
     (hcount : ∀ i, count i * gap ^ 2 ≤ wholeNumerator (v i)) :
-    (∑ i, count i) * gap ^ 2 ≤ regularNumerator := by
+    (∑ i, count i) * gap ^ 2 ≤ wholeRegularNumerator := by
   calc
     _ = ∑ i, count i * gap ^ 2 := Finset.sum_mul _ _ _
-    _ ≤ ∑ i, dot (v i) wholeCoefficients := by
-      apply Finset.sum_le_sum
-      intro i _
-      exact (hcount i).trans (le_of_eq (whole_eq_dot (v i)))
-    _ = dot (sumVector v) wholeCoefficients := (dot_sum_left _ _).symm
-    _ ≤ dot regularSurface wholeCoefficients := dot_mono_left _ ⟨hy, hr, hz⟩
-    _ = regularNumerator := rfl
+    _ ≤ ∑ i, wholeNumerator (v i) := Finset.sum_le_sum fun i _ => hcount i
+    _ = wholeNumerator (sumVector v) := (whole_sum v).symm
+    _ = dot (sumVector v) wholeCoefficients := whole_eq_dot _
+    _ ≤ dot regularSurface wholeCoefficients :=
+      dot_mono_left wholeCoefficients ⟨hy, hr, hz⟩
+    _ = wholeRegularNumerator := rfl
 
-theorem sum_regular_branch_bound {I : Type} [Fintype I]
-    (count : I → ℕ) (v : I → DegreeVector)
-    (hy : (∑ i, (v i).y) ≤ yCap) (hr : (∑ i, (v i).r) ≤ slopeCap)
-    (hz : (∑ i, (v i).z) ≤ seedTotalCap)
-    (hcount : ∀ i, count i * gap ^ 2 ≤ wholeNumerator (v i)) :
-    (∑ i, count i) * gap ^ 2 ≤ regularNumerator := by
-  exact sum_regular_max_bound count v hy hr hz hcount
-
-theorem sum_regular_numeric_caps {I : Type} [Fintype I]
+theorem sum_regular_whole_numeric_caps {I : Type} [Fintype I]
     (count : I → ℕ) (v : I → DegreeVector)
     (hy : (∑ i, (v i).y) ≤ 25) (hr : (∑ i, (v i).r) ≤ 5)
-    (hz : (∑ i, (v i).z) ≤ 174)
+    (hz : (∑ i, (v i).z) ≤ 164)
     (hcount : ∀ i, count i * gap ^ 2 ≤ wholeNumerator (v i)) :
-    (∑ i, count i) * gap ^ 2 ≤ regularNumerator := by
-  exact sum_regular_branch_bound count v
+    (∑ i, count i) * gap ^ 2 ≤ wholeRegularNumerator := by
+  exact sum_regular_whole_bound count v
     (by simpa only [parameter_values.2.1] using hy)
     (by simpa only [slopeCap] using hr)
     (by simpa only [seedTotalCap] using hz) hcount
@@ -275,17 +283,50 @@ theorem combined_scaled_bound (regularCount implicitCount exceptions : ℕ)
       simp only [liftedTotalNumerator]
       ring
 
+def tightenedLiftedTotalNumerator : ℕ :=
+  wholeRegularNumerator + gap * liftedSingularNumerator
+
+theorem tightenedLiftedTotalNumerator_le :
+    tightenedLiftedTotalNumerator ≤ liftedTotalNumerator := by
+  unfold tightenedLiftedTotalNumerator liftedTotalNumerator
+  exact Nat.add_le_add_right wholeRegularNumerator_le_regularNumerator _
+
+theorem tightened_lifted_strict_budget :
+    tightenedLiftedTotalNumerator < alignmentBudget * gap ^ 2 :=
+  tightenedLiftedTotalNumerator_le.trans_lt lifted_strict_budget
+
+theorem combined_tightened_scaled_bound
+    (regularCount implicitCount exceptions : ℕ)
+    (hregular : regularCount * gap ^ 2 ≤ wholeRegularNumerator)
+    (himplicit : (implicitCount + exceptions) * gap ≤ liftedSingularNumerator) :
+    (regularCount + implicitCount + exceptions) * gap ^ 2 ≤
+      tightenedLiftedTotalNumerator := by
+  calc
+    _ = regularCount * gap ^ 2 + ((implicitCount + exceptions) * gap) * gap := by ring
+    _ ≤ wholeRegularNumerator + liftedSingularNumerator * gap :=
+      Nat.add_le_add hregular (Nat.mul_le_mul_right gap himplicit)
+    _ = tightenedLiftedTotalNumerator := by
+      simp only [tightenedLiftedTotalNumerator]
+      ring
+
+theorem below_budget_of_tightened_scaled_bound (cardinality : ℕ)
+    (h : cardinality * gap ^ 2 ≤ tightenedLiftedTotalNumerator) :
+    cardinality < alignmentBudget :=
+  Nat.lt_of_mul_lt_mul_right (h.trans_lt tightened_lifted_strict_budget)
+
 theorem below_budget_of_lifted_scaled_bound (cardinality : ℕ)
     (h : cardinality * gap ^ 2 ≤ liftedTotalNumerator) : cardinality < alignmentBudget := by
   exact Nat.lt_of_mul_lt_mul_right (h.trans_lt lifted_strict_budget)
 
-/-- Conditional finite-family arithmetic finish; all branch-count and
-cover hypotheses remain explicit and must come from the geometric proof. -/
-theorem final_family_ledger {I J : Type} [Fintype I] [Fintype J]
+/-- Final ledger specialized to the branch actually supplied by
+`ContactGlobalSelectedCount`. -/
+theorem final_whole_family_ledger {I J : Type} [Fintype I] [Fintype J]
     (regularCount : I → ℕ) (v : I → DegreeVector)
-    (implicitCount : J → ℕ) (cost : J → DegreeVector) (exceptions cardinality : ℕ)
-    (hregularY : (∑ i, (v i).y) ≤ 25) (hregularR : (∑ i, (v i).r) ≤ 5)
-    (hregularZ : (∑ i, (v i).z) ≤ 174)
+    (implicitCount : J → ℕ) (cost : J → DegreeVector)
+    (exceptions cardinality : ℕ)
+    (hregularY : (∑ i, (v i).y) ≤ 25)
+    (hregularR : (∑ i, (v i).r) ≤ 5)
+    (hregularZ : (∑ i, (v i).z) ≤ 164)
     (hregular : ∀ i, regularCount i * gap ^ 2 ≤ wholeNumerator (v i))
     (hcostY : (∑ i, (cost i).y) ≤ algebraicCap)
     (hcostR : (∑ i, (cost i).r) ≤ 2 * implicitYCap * algebraicCap)
@@ -293,14 +334,16 @@ theorem final_family_ledger {I J : Type} [Fintype I] [Fintype J]
     (himplicit : ∀ i, implicitCount i * gap ≤
       n * dot liftedAgreement (cost i) + (errors + 1) * gap * (cost i).z)
     (hexceptions : exceptions ≤ 2 * algebraicCap ^ 2)
-    (hcover : cardinality ≤ (∑ i, regularCount i) + (∑ i, implicitCount i) + exceptions) :
+    (hcover : cardinality ≤
+      (∑ i, regularCount i) + (∑ i, implicitCount i) + exceptions) :
     cardinality < alignmentBudget := by
-  have hreg := sum_regular_numeric_caps regularCount v hregularY hregularR hregularZ hregular
+  have hreg := sum_regular_whole_numeric_caps regularCount v
+    hregularY hregularR hregularZ hregular
   have himp := implicit_with_exceptions_bound implicitCount cost exceptions
     hcostY hcostR hcostZ himplicit hexceptions
-  have hscaled := combined_scaled_bound (∑ i, regularCount i) (∑ i, implicitCount i)
-    exceptions hreg himp
-  exact below_budget_of_lifted_scaled_bound cardinality
+  have hscaled := combined_tightened_scaled_bound
+    (∑ i, regularCount i) (∑ i, implicitCount i) exceptions hreg himp
+  exact below_budget_of_tightened_scaled_bound cardinality
     ((Nat.mul_le_mul_right (gap ^ 2) hcover).trans hscaled)
 
 end ProximityPrize.SubmissionLower.ContactCountingLedger
@@ -318,12 +361,12 @@ end ProximityPrize.SubmissionLower.ContactCountingLedger
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.cut_sum
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.whole_sum
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.max_branch_le_envelope
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.sum_regular_branch_bound
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.sum_regular_numeric_caps
+#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.sum_regular_whole_bound
+#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.sum_regular_whole_numeric_caps
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.implicit_aggregate_eq_core
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.sum_implicit_counts_bound
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.lifted_singular_padding
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.implicit_with_exceptions_bound
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.combined_scaled_bound
 #print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.below_budget_of_lifted_scaled_bound
-#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.final_family_ledger
+#print axioms ProximityPrize.SubmissionLower.ContactCountingLedger.final_whole_family_ledger

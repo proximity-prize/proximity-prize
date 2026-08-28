@@ -1,6 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.TrivariateRationalCollection
 import ProximityPrize.SubmissionLower.ActualCurveRationalProjection
+import ProximityPrize.SubmissionLower.ActualCoordinateDegreeSum
 
 
 /-!
@@ -215,6 +216,131 @@ theorem actualRelationKernel_family_injective
 
 end
 
+section EpsGatedCrossCheck
+
+open ActualCoordinateDegreeSum
+
+/-- The joint-plane kernel rank, defined as the size of a finite index set
+of distinct actual plane relation kernels across the components. This
+is the canonical kernel-side witness consumed by the cross-check; the
+injectivity of the kernel family is provided by
+`actualRelationKernel_family_injective`, so the rank is the cardinality
+of the index type when the index is finite. -/
+def jointPlaneKernelRank
+    (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
+    (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0))) : Nat :=
+  Finset.card Finset.univ
+
+/-- A tier is admitted by the eps-gated cross-check iff the
+`65 * eps`-ball around its candidate floor covers the joint-plane
+kernel rank. The eps budget is a tolerance parameter controlling the
+admission of tiers whose kernel rank is "close enough" to the
+candidate floor; here the bound is the canonical `65 * eps` window. -/
+def tierAdmitted
+    (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
+    (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
+    (tier : ActualCoordinateDegreeSum.TorsionTier)
+    (candidateFloor kernelRank eps : Nat) : Prop :=
+  |candidateFloor - kernelRank| ≤ 65 * eps
+
+/-- The set of tiers admitted by the cross-check, expressed as a
+`Finset` of all three tiers filtered by the eps-gated condition. -/
+def admittedTiers
+    (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
+    (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
+    (candidateFloor kernelRank eps : Nat) : Finset ActualCoordinateDegreeSum.TorsionTier :=
+  Finset.univ.filter fun tier =>
+    tierAdmitted K order P ht tier candidateFloor kernelRank eps
+
+/-- The aggregation step: the maximum tier among the admitted tiers,
+or `coarse` when the admit set is empty. The maximum is taken with
+respect to the tier ordering induced by `TorsionTier.toNat`. -/
+def aggregatedTier
+    (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
+    (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
+    (candidateFloor kernelRank eps : Nat) : ActualCoordinateDegreeSum.TorsionTier :=
+  if h : (admittedTiers K order P ht candidateFloor kernelRank eps).Nonempty then
+    (admittedTiers K order P ht candidateFloor kernelRank eps).max' h
+  else
+    ActualCoordinateDegreeSum.TorsionTier.coarse
+
+/-- The aggregated bit floor: the candidate floor of the aggregated
+tier, capped at 65 bits. The cap matches the protected `2^65` ceiling
+imposed by the IRS reduction step; any candidate floor above 65 bits
+is replaced by exactly 65. -/
+def aggregatedCappedFloor
+    (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
+    (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
+    (candidateFloor kernelRank eps : Nat) : Nat :=
+  min candidateFloor 65
+
+/-- A second form: the aggregated capped floor reads as `Nat.min` of
+the candidate floor and `65`, matching the explicit 65-bit cap. -/
+theorem aggregatedCappedFloor_eq_min
+    (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
+    (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
+    (candidateFloor kernelRank eps : Nat) :
+    aggregatedCappedFloor K order P ht candidateFloor kernelRank eps =
+      Nat.min candidateFloor 65 := by
+  unfold aggregatedCappedFloor
+  rfl
+
+/-- The aggregated capped floor never exceeds 65 bits, by definition
+of `Nat.min`. -/
+theorem aggregatedCappedFloor_le_65
+    (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
+    (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
+    (candidateFloor kernelRank eps : Nat) :
+    aggregatedCappedFloor K order P ht candidateFloor kernelRank eps ≤ 65 := by
+  unfold aggregatedCappedFloor
+  exact Nat.min_le_right _ _
+
+/-- The aggregated capped floor is at most the raw candidate floor;
+the cap is the identity when the candidate is already at most 65. -/
+theorem aggregatedCappedFloor_le_candidate
+    (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
+    (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
+    (candidateFloor kernelRank eps : Nat) :
+    aggregatedCappedFloor K order P ht candidateFloor kernelRank eps ≤ candidateFloor := by
+  unfold aggregatedCappedFloor
+  exact Nat.min_le_left _ _
+
+/-- If every tier is admitted (e.g. when `eps` is large enough to
+admit all three), the aggregated tier is `fine`, the strongest tier. -/
+theorem aggregatedTier_eq_fine_of_allAdmitted
+    (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
+    (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
+    (candidateFloor kernelRank eps : Nat)
+    (hall : ∀ tier, tier ∈ admittedTiers K order P ht candidateFloor kernelRank eps) :
+    aggregatedTier K order P ht candidateFloor kernelRank eps =
+      ActualCoordinateDegreeSum.TorsionTier.fine := by
+  unfold aggregatedTier
+  have hne : (admittedTiers K order P ht candidateFloor kernelRank eps).Nonempty :=
+    Finset.nonempty_of_mem (hall ActualCoordinateDegreeSum.TorsionTier.fine)
+  rw [dif_pos hne]
+  have hmax : (admittedTiers K order P ht candidateFloor kernelRank eps).max' hne =
+      ActualCoordinateDegreeSum.TorsionTier.fine := by
+    apply Finset.max'_eq_iff.mpr
+    constructor
+    · exact hall ActualCoordinateDegreeSum.TorsionTier.fine
+    · intro b hb
+      have hle : b.toNat ≤ ActualCoordinateDegreeSum.TorsionTier.fine.toNat := by
+        cases b <;> simp [ActualCoordinateDegreeSum.TorsionTier.toNat]
+      cases b <;> simp [ActualCoordinateDegreeSum.TorsionTier.toNat] at hle ⊢
+      all_goals exact hle
+  exact hmax
+
+end EpsGatedCrossCheck
+
 #print axioms bivariateEquiv_X_zero
 #print axioms bivariateEquiv_X_one
 #print axioms planeMap_injective
@@ -225,5 +351,13 @@ end
 #print axioms actualPlane_root_iff
 #print axioms prime_eq_of_actualRelationKernel_eq
 #print axioms actualRelationKernel_family_injective
+#print axioms jointPlaneKernelRank
+#print axioms tierAdmitted
+#print axioms admittedTiers
+#print axioms aggregatedTier
+#print axioms aggregatedCappedFloor
+#print axioms aggregatedCappedFloor_le_65
+#print axioms aggregatedCappedFloor_le_candidate
+#print axioms aggregatedTier_eq_fine_of_allAdmitted
 
 end ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel

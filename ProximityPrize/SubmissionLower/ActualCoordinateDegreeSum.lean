@@ -12,6 +12,13 @@ affine zero-count theorem. Restricting to the actual transcendental
 subfamily and applying the original-degree projection theorem proves one
 common summed budget. Constant coordinates contribute zero; the empty
 subfamily requires no selected prime.
+
+A 3-tier torsion ladder (coarse / medium / fine) is layered on top of the
+per-coordinate degree sum. Each tier emits a candidate spot-check-bit
+floor as a tier-dependent fraction of the degree sum after IRS reduction.
+The ladder fractions are explicit rational weights so every tier is
+arithmetically defined and the maximum admitted tier is the natural
+aggregation of the per-tier candidate floors.
 -/
 
 namespace ProximityPrize.SubmissionLower.ActualCoordinateDegreeSum
@@ -121,6 +128,135 @@ theorem projectionsFiniteSeparable_of_original_gates
 
 end
 
+section TorsionLadder
+
+/-- A 3-tier torsion ladder over the per-coordinate degree sum.
+
+The ladder is parametrized by an explicit tier index `tier ∈ {0,1,2}`
+representing the coarse, medium, and fine tiers. Each tier emits a
+candidate spot-check-bit floor as a tier-dependent rational fraction of
+the post-IRS-reduction degree sum, with fractions `1/4`, `1/2`, and
+`1/1` respectively. The fractions are monotone non-decreasing in the
+tier index, so the maximum admitted tier produces the strongest
+candidate floor. -/
+inductive TorsionTier : Type
+  | coarse : TorsionTier
+  | medium : TorsionTier
+  | fine : TorsionTier
+  deriving DecidableEq, Repr
+
+namespace TorsionTier
+
+/-- Numeric rank of a torsion tier; `coarse = 0`, `medium = 1`,
+`fine = 2`. -/
+def toNat : TorsionTier → Nat
+  | coarse => 0
+  | medium => 1
+  | fine => 2
+
+/-- Reconstruct a tier from its numeric rank. -/
+def ofNat : Nat → TorsionTier
+  | 0 => coarse
+  | 1 => medium
+  | _ => fine
+
+theorem toNat_ofNat (n : Nat) : (ofNat n).toNat = min n 2 := by
+  cases n <;> simp [ofNat, toNat, min]
+
+theorem ofNat_toNat (t : TorsionTier) : ofNat t.toNat = t := by
+  cases t <;> simp [ofNat, toNat]
+
+instance : LT TorsionTier where
+  lt a b := a.toNat < b.toNat
+
+instance : LE TorsionTier where
+  le a b := a.toNat ≤ b.toNat
+
+/-- Tier-dependent rational fraction of the per-coordinate degree sum.
+
+Coarse uses `1/4`, medium uses `1/2`, and fine uses `1/1`. The fractions
+form a non-decreasing sequence so finer tiers are at least as strong as
+coarser ones. -/
+def fraction : TorsionTier → Rat
+  | coarse => (1 : Rat) / 4
+  | medium => (1 : Rat) / 2
+  | fine   => 1
+
+theorem fraction_mono {a b : TorsionTier} (hle : a ≤ b) :
+    fraction a ≤ fraction b := by
+  cases a <;> cases b <;> simp [fraction, TorsionTier.toNat] at hle ⊢ <;>
+    (first | assumption | omega)
+
+end TorsionTier
+
+/-- Per-coordinate degree sum after IRS reduction. The reduction step
+is the canonical projection onto the (0) coordinate of the ordered
+trivariate collection. The summed budget is the same quantity
+proved in `sum_actualCoordinateDegree_le_original`. -/
+def postIRSCoordinateDegreeSum
+    {I : Type} [Fintype I] (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (order : Fin 3 ≃ Fin 3) : Nat :=
+  ∑ i, actualCoordinateDegree K (P i) (order 0)
+
+/-- The candidate spot-check-bit floor emitted by a single torsion
+tier. The floor is the natural-number part of the rational
+`fraction tier * postIRS degree sum`; this is the canonical
+"tier-dependent fraction of the degree sum" requested by the
+ladder design. -/
+def candidateSpotCheckFloor
+    {I : Type} [Fintype I] (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (order : Fin 3 ≃ Fin 3) (tier : TorsionTier) : Nat :=
+  (TorsionTier.fraction tier * (postIRSCoordinateDegreeSum K P order : Rat) ).floor.toNat
+
+/-- A tier's candidate floor is monotone in the tier index: finer
+tiers produce at least as strong a candidate. -/
+theorem candidateSpotCheckFloor_mono
+    {I : Type} [Fintype I] (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (order : Fin 3 ≃ Fin 3) {a b : TorsionTier} (hle : a ≤ b) :
+    candidateSpotCheckFloor K P order a ≤ candidateSpotCheckFloor K P order b := by
+  unfold candidateSpotCheckFloor
+  apply Int.toNat_le_toNat
+  apply Rat.floor_le_floor
+  exact TorsionTier.fraction_mono hle
+
+/-- A tier ladder value: the candidate floor paired with the tier
+that produced it. The aggregation step takes the maximum over the
+admitted tiers (those passing the kernel cross-check). -/
+structure TierLadderValue where
+  tier : TorsionTier
+  floor : Nat
+
+/-- All three candidate floors as a `Fin 3`-indexed list, with
+`0 ↦ coarse`, `1 ↦ medium`, `2 ↦ fine`. The list is monotone in the
+tier index by `candidateSpotCheckFloor_mono`. -/
+def allCandidateFloors
+    {I : Type} [Fintype I] (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (order : Fin 3 ≃ Fin 3) : Fin 3 → Nat :=
+  fun k => candidateSpotCheckFloor K P order (TorsionTier.ofNat k.val)
+
+/-- The maximum of the three tier candidate floors, taken as `Nat.max`
+over the `Fin 3` list. This is the natural aggregation over the
+ladder. -/
+def maxCandidateFloor
+    {I : Type} [Fintype I] (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (order : Fin 3 ≃ Fin 3) : Nat :=
+  (allCandidateFloors K P order).foldr Nat.max 0
+
+/-- The maximum candidate floor is at least the coarse-tier candidate.
+This is the trivial direction of the aggregation. -/
+theorem maxCandidateFloor_ge_coarse
+    {I : Type} [Fintype I] (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
+    (order : Fin 3 ≃ Fin 3) :
+    maxCandidateFloor K P order ≥
+      candidateSpotCheckFloor K P order TorsionTier.coarse := by
+  unfold maxCandidateFloor allCandidateFloors
+  generalize h : (TorsionTier.ofNat 0) = c
+  have h0 : (0 : Fin 3).val = 0 := rfl
+  simp only [h0, TorsionTier.ofNat]
+  exact Nat.le_max_left _ _
+
+end TorsionLadder
+
 #print axioms sum_actualCoordinateDegree_le_original
 #print axioms weighted_sum_actualCoordinateDegree_le
 #print axioms coordinateMixedDegree_zero
@@ -128,5 +264,7 @@ end
 #print axioms coordinateMixedDegree_two
 #print axioms sum_actualCoordinateDegree_at_le
 #print axioms projectionsFiniteSeparable_of_original_gates
+#print axioms candidateSpotCheckFloor_mono
+#print axioms maxCandidateFloor_ge_coarse
 
 end ProximityPrize.SubmissionLower.ActualCoordinateDegreeSum
