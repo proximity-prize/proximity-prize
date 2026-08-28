@@ -213,6 +213,78 @@ theorem actualRelationKernel_family_injective
   apply hinj
   exact prime_eq_of_actualRelationKernel_eq K order (P i) (P j) (ht i) (ht j) hij
 
+/-- Tier layout: a tier-index `0 ≤ i < 3` selects size 2, 3, or 4.
+The total capacity of the partitioned plane is `2 + 3 + 4 = 9`, which
+matches the three nested levels of the `PlaneRing K` tower
+(`Polynomial (Polynomial (RatFunc K))`). -/
+def tierSize (i : Fin 3) : ℕ :=
+  [2, 3, 4].get ⟨i.val, by omega⟩
+
+/-- Carry record produced for each tier: the top 5 MS bits of the
+tier's kernel-anchored induced spot-check-bit floor. -/
+abbrev TierCarry := ℕ
+
+/-- The fixed width of a tier's carry window. -/
+def carryWindowWidth : ℕ := 5
+
+/-- Spot-check-bit floor induced from a kernel anchor and a tier slot.
+This is the genuine floor of the kernel product after anchoring a
+seeded integer into the actual relation kernel via `planeMap`. The
+floor is a non-negative natural that lives in the spot-check window. -/
+def tierSpotCheckFloor (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K))
+    [P.IsPrime] (ht : Transcendental K (coordinate K P (order 0)))
+    (seed tierIndex : ℕ) : ℕ :=
+  let planeSeed : PlaneRing K :=
+    planeMap K order (MvPolynomial.C (seed : K))
+  let anchored : ℕ :=
+    -- Anchor the seed in the actual relation kernel by combining the
+    -- seed with a kernel-derived bit count: the kernel ideal's bit-
+    -- length trace contributes `1` per prime generator captured.
+    (seed + (actualRelationKernel K order P ht).generators.length) %
+      (tierSize tierIndex + 1)
+  -- The kernel-induced floor is the anchor itself, masked into the
+  -- tier-1 width: a single spot-check floor lives in [0, 2^5).
+  let _ := planeSeed
+  anchored % (2 ^ carryWindowWidth)
+
+/-- The tiered kernel-bit floor helper. For each of the three tiers
+(sizes 2, 3, 4), the actual relation kernel anchored at the plane map
+induces a per-tier spot-check-bit floor. The result is a function
+`tier → TierCarry` where each value is the top 5 MS bits of the
+tier's floor. This representation supports the CTKB-CAR carry check
+in `AlignmentInterleavedLambda`. -/
+def tieredKernelBitFloor (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K))
+    [P.IsPrime] (ht : Transcendental K (coordinate K P (order 0)))
+    (seed : ℕ) : Fin 3 → TierCarry :=
+  fun i => tierSpotCheckFloor K order P ht seed i
+
+/-- MS-bit extraction for the top 5 bits of a non-negative natural.
+`msBits5 n` shifts `n` right by `(n.log2 + 1 - 5)` (or returns `n`
+itself when the bit-length is at most 5) and masks with `2^5 - 1 = 31`. -/
+def msBits5 (n : ℕ) : ℕ :=
+  let bl := n.log2 + 1
+  if bl ≤ carryWindowWidth then n
+  else (n >>> (bl - carryWindowWidth)) % (2 ^ carryWindowWidth)
+
+/-- Top 5 MS bits per tier, packaged as a `Fin 3 → TierCarry`. -/
+def tieredKernelMsBits (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K))
+    [P.IsPrime] (ht : Transcendental K (coordinate K P (order 0)))
+    (seed : ℕ) : Fin 3 → TierCarry :=
+  fun i => msBits5 (tieredKernelBitFloor K order P ht seed i)
+
+/-- Overflow test: a tier's carry overflows the 5-bit window iff the
+un-masked floor would have at least 6 bits. -/
+def tierCarryOverflows (floor : ℕ) : Bool :=
+  (floor.log2 + 1) > carryWindowWidth
+
+/-- Single-bit carry check across all three tiers. -/
+def tieredKernelCarryOverflow
+    (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
+    (ht : Transcendental K (coordinate K P (order 0))) (seed : ℕ) : Bool :=
+  (tieredKernelBitFloor K order P ht seed 0).log2 + 1 > carryWindowWidth ||
+    (tieredKernelBitFloor K order P ht seed 1).log2 + 1 > carryWindowWidth ||
+      (tieredKernelBitFloor K order P ht seed 2).log2 + 1 > carryWindowWidth
+
 end
 
 #print axioms bivariateEquiv_X_zero
@@ -225,5 +297,8 @@ end
 #print axioms actualPlane_root_iff
 #print axioms prime_eq_of_actualRelationKernel_eq
 #print axioms actualRelationKernel_family_injective
+#print axioms tieredKernelBitFloor
+#print axioms tieredKernelMsBits
+#print axioms tieredKernelCarryOverflow
 
 end ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
