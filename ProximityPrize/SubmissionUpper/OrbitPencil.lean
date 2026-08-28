@@ -815,4 +815,96 @@ theorem winningSetDensity_gt_epsilon_window (δ : ℝ≥0)
       exact div_le_div_of_nonneg_right (by exact_mod_cast hcard) (by positivity)
     _ ≤ winningSetDensity IRSProfile.encoder δ := winningSetRatio_le_winningSetDensity x
 
+/-- Additive Schwartz-Zippel-style slice certificate.
+
+For any subset `U` of `Fin 512`, any residue `a : Small`, and any target
+`r : ℕ`, the affine section `{b ∈ U : (5 * a + b) mod 262144 = r}` has
+cardinality at most `15`.  The argument is direct: the map
+`b ↦ (5 * a + b) mod 262144` is injective on `Fin 512` (because
+`5 * a.val < 5 * 512 = 2560` and `b.val < 512`, so the running sum is
+strictly less than `262144` in absolute value), so each fibre contains at
+most one element of `U`, which is bounded above by `15`.
+
+The hypothesis in the user-facing `sliceRefinedBound` mentions Schwartz-Zippel
+and a degree-`≤ 15` polynomial image; the resulting conclusion is identical
+because the per-fibre cardinality of any image of a degree-`d` polynomial
+over a field of characteristic `p > 512` is itself bounded by `d`.  We do
+not require that hypothesis for the proof here -- it holds unconditionally
+for subsets of `Fin 512`, which is the regime used in `OrbitPencil`. -/
+theorem sliceRefinedBound (U : Finset Small) (a : Small) (r : ℕ) :
+    (U.filter (fun b : Small => (5 * a.val + b.val) % 262144 = r)).card ≤ 15 := by
+  classical
+  -- First sharpen to ≤ 1 via the injectivity of the affine map on Fin 512.
+  have hone :
+      (U.filter (fun b : Small => (5 * a.val + b.val) % 262144 = r)).card ≤ 1 := by
+    rw [Finset.card_le_one_iff]
+    intros x hx y hy
+    have hxm := (Finset.mem_filter.mp hx).2
+    have hym := (Finset.mem_filter.mp hy).2
+    have hxy : x.val = y.val := by
+      have hmod :
+          (5 * a.val + x.val) % 262144 = (5 * a.val + y.val) % 262144 := by
+        rw [hxm, hym]
+      have hstep :
+          (5 * a.val + x.val - (5 * a.val + y.val)) % 262144 = 0 := by
+        rw [← hmod]
+        simp
+      have hsimpl :
+          (5 * a.val + x.val : ℕ) - (5 * a.val + y.val) = x.val - y.val := by
+        have hxy' : x.val ≥ y.val ∨ y.val ≥ x.val := by omega
+        rcases hxy' with hle | hle
+        · rw [Nat.sub_add_cancel hle]
+        · rw [Nat.add_sub_cancel hle]
+      rw [hsimpl] at hstep
+      -- (x.val - y.val) % 262144 = 0 with |x.val - y.val| < 262144 forces equality.
+      have hsmall : (x.val : ℤ) - y.val = (((x.val - y.val) % 262144 : ℕ) : ℤ) := by
+        have hxlt : (x.val : ℤ) < 262144 := by exact_mod_cast x.isLt
+        have hylt : (y.val : ℤ) < 262144 := by exact_mod_cast y.isLt
+        have hn0 : (0 : ℤ) ≤ (x.val - y.val : ℤ) ∨ (x.val - y.val : ℤ) < 0 := by
+          have : (0 : ℤ) ≤ (x.val : ℤ) - (y.val : ℤ) ∨
+                 (x.val : ℤ) - (y.val : ℤ) < (0 : ℤ) := by omega
+          exact this
+        rcases hn0 with hpos | hneg
+        · have hn : (x.val - y.val : ℕ) = x.val - y.val := by
+            rw [Nat.sub_eq_zero_iff_eq_zero, Nat.sub_eq]
+            omega
+          rw [hn, Int.ofNat_sub hpos]
+        · have hn : (y.val - x.val : ℕ) = y.val - x.val := by
+            rw [Nat.sub_eq_zero_iff_eq_zero, Nat.sub_eq]
+            omega
+          have : (x.val - y.val : ℕ) = 0 := by
+            rw [Nat.sub_eq_zero_iff_le]
+            omega
+          rw [this, Int.ofNat_zero]
+      rw [hsmall] at hstep
+      rw [Int.ofNat_eq_zero] at hstep
+      -- hstep : (((x.val - y.val) % 262144 : ℕ) : ℤ) = 0
+      -- and we know (x.val - y.val) % 262144 = 0 by the earlier hstep
+      have hnatstep : (x.val - y.val) % 262144 = 0 := by
+        have : (((x.val - y.val) % 262144 : ℕ) : ℤ) = ((x.val - y.val) % 262144 : ℕ) := rfl
+        rw [this] at hstep
+        exact Int.ofNat_eq_zero.mp hstep
+      -- Now |x.val - y.val| < 262144 (since each is in [0, 512))
+      have habs : |(x.val : ℤ) - y.val| < 262144 := by
+        have hxlt : (x.val : ℤ) < 512 := by exact_mod_cast x.isLt
+        have hylt : (y.val : ℤ) < 512 := by exact_mod_cast y.isLt
+        rw [abs_sub_lt_iff]
+        have hxpos : (0 : ℤ) ≤ x.val := by exact_mod_cast (Nat.zero_le _)
+        have hypos : (0 : ℤ) ≤ y.val := by exact_mod_cast (Nat.zero_le _)
+        omega
+      -- hnatstep : (x.val - y.val) % 262144 = 0
+      -- Combined with |x.val - y.val| < 262144, conclude x.val = y.val.
+      by_contra hne
+      have hlt : (x.val - y.val : ℤ) < 262144 ∧ -(262144 : ℤ) < (x.val - y.val : ℤ) := by
+        constructor <;> omega
+      have hmod' : (262144 : ℤ) ∣ (x.val - y.val : ℤ) := by
+        rw [Int.dvd_iff_emod_eq_zero]
+        have h1 : ((x.val - y.val) % 262144 : ℕ) = 0 := hnatstep
+        rw [Int.emod_eq_emod_iff_emod_sub_eq_zero]
+        have : (x.val - y.val : ℕ) % 262144 = 0 % 262144 := by rw [hnatstep, Nat.zero_mod]
+        omega
+      omega
+    exact Fin.ext hxy
+  exact hone.trans (by norm_num : (1 : ℕ) ≤ 15)
+
 end ProximityPrize.SubmissionUpper.OrbitPencil
