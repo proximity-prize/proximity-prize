@@ -324,5 +324,9 @@ theorem surfaceMap_agreement_joint_seed_cap
 
 end
 
+#print axioms numerator_seedDegree_le
+#print axioms surfaceMap_numerator_joint_seed_cap
+#print axioms agreementNumerator_seedDegree_le
+#print axioms surfaceMap_agreement_joint_seed_cap
 
 end ProximityPrize.SubmissionLower.ContactJointSeedCaps

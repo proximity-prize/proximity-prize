@@ -46,3 +46,7 @@ theorem non_R_projection_caps_below_characteristic :
   norm_num [prime]
 
 end ProximityPrize.SubmissionLower.ContactProjectionParameters
+
+#print axioms ProximityPrize.SubmissionLower.ContactProjectionParameters.first_cut_projection_values
+#print axioms ProximityPrize.SubmissionLower.ContactProjectionParameters.agreement_cut_projection_values
+#print axioms ProximityPrize.SubmissionLower.ContactProjectionParameters.non_R_projection_caps_below_characteristic

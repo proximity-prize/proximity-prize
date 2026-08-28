@@ -106,3 +106,6 @@ theorem noLargeSelectedPencil_residual
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualPencilResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualPencilResearch.residual_agreement_of_original
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualPencilResearch.noLargeSelectedPencil_residual

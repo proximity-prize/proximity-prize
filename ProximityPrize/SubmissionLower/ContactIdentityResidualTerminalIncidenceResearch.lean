@@ -22,12 +22,14 @@ open ContactNearPencil6600ArithmeticResearch
 open ContactIncidence
 open ContactPrimeSeedIncidence
 open ContactFlagBezout6543Research
+open ContactResidualSupportParametersResearch
 
 noncomputable section
 
 variable {K Omega Iota : Type} [Field K] [Field Omega]
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
 variable {p e : ℕ} [CharP Omega p] {flag : FlagDegree}
+variable {support : ResidualSupportParameters}
 
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
@@ -38,7 +40,7 @@ bound fibers at terminal states; properness is supplied automatically from
 the empty identity set. -/
 theorem recursive_stratified_incidence_bound
     (hphi : Function.Injective phi) {w a : ℕ}
-    (S : ResidualStage phi Gamma x p e flag w)
+    (S : ResidualStage phi Gamma x p e flag w support)
     (degreeCost unitCost U V : ℕ)
     (hwa : w < a)
     (hagreement : ∀ gamma ∈ Gamma,
@@ -92,7 +94,7 @@ theorem recursive_stratified_incidence_bound
 already multiplied by the invariant gap `a-w`. -/
 theorem recursive_scaled_stratified_incidence_bound
     (hphi : Function.Injective phi) {w a : ℕ}
-    (S : ResidualStage phi Gamma x p e flag w)
+    (S : ResidualStage phi Gamma x p e flag w support)
     (degreeCost unitCost U V : ℕ)
     (hwa : w < a)
     (hagreement : ∀ gamma ∈ Gamma,
@@ -163,3 +165,6 @@ theorem recursive_scaled_stratified_incidence_bound
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualTerminalIncidenceResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualTerminalIncidenceResearch.recursive_stratified_incidence_bound
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualTerminalIncidenceResearch.recursive_scaled_stratified_incidence_bound

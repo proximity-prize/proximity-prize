@@ -232,3 +232,7 @@ theorem radius6543_score :
 end
 
 end ProximityPrize.SubmissionLower.ContactPost6464ExactShear6543Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactPost6464ExactShear6543Research.interpolation_gate
+#print axioms ProximityPrize.SubmissionLower.ContactPost6464ExactShear6543Research.strict_budget
+#print axioms ProximityPrize.SubmissionLower.ContactPost6464ExactShear6543Research.radius6543_score
