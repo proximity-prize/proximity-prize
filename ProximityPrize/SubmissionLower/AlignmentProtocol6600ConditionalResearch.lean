@@ -1,14 +1,6 @@
 import ProximityPrize.SubmissionLower.AlignmentProtocol6401Conditional
 import ProximityPrize.SubmissionLower.ContactScore6600Research
 
-/-!
-# Conditional protocol certificate at 66.00 bits
-
-The sole premise is the stock affine-line alignment bound at `78777`
-errors and list budget `10^17`.  The interleaving, MCA transfer, list
-transfer, and field-capacity arguments are unchanged.
--/
-
 namespace ProximityPrize.SubmissionLower.AlignmentProtocol6600ConditionalResearch
 
 open ProximityPrize.Benchmark
@@ -30,7 +22,7 @@ theorem radius6600_floor :
     ContactScore6600Research.radius6600_floor
 
 theorem radius6600_cell_cross :
-    315835 * Fintype.card IRSProfile.Index <
+    315871 * Fintype.card IRSProfile.Index <
       (errors6600 + 1) * 1048576 := by
   simpa [errors6600] using
     ContactScore6600Research.radius6600_cell_cross
@@ -93,7 +85,7 @@ theorem lambda6600_le_of_alignment
           IRSProfile.Field))
       (radius6600 : ℝ) ≤ (budget6600 : ℕ∞) := by
   exact AlignmentInterleavedLambda.irs_squared_claimedRadius_lambda_le
-    315835 1048576 errors6600 budget6600 (by norm_num)
+    315871 1048576 errors6600 budget6600 (by norm_num)
     radius6600_cell_cross radius6600_gap halign
     (by
       rw [budget6600_eq_budget6401]
@@ -140,7 +132,7 @@ theorem certifiedGammaError6600_le_of_alignment
 theorem protocolClaim6600_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode
       errors6600 budget6600) :
-    ProtocolClaim 6618 315835 1048576 where
+    ProtocolClaim 6619 315871 1048576 where
   admissible := ContactScore6600Research.radius6600_admissible
   reduction := by
     change certifiedGammaError IRSProfile.code radius6600 ≤ reductionTarget
@@ -151,5 +143,3 @@ theorem protocolClaim6600_of_alignment
 end
 
 end ProximityPrize.SubmissionLower.AlignmentProtocol6600ConditionalResearch
-
-#print axioms ProximityPrize.SubmissionLower.AlignmentProtocol6600ConditionalResearch.protocolClaim6600_of_alignment
