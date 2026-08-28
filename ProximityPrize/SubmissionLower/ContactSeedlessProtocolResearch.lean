@@ -169,7 +169,7 @@ theorem certifiedGammaError_le_of_alignment
 
 theorem protocolClaim6674_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-    ProtocolClaim 6674 318059 1048576 where
+    ProtocolClaim 6681 318327 1048576 where
   admissible := ContactScore6630Research.radius6630_admissible
   reduction := by
     change certifiedGammaError IRSProfile.code radius ≤ reductionTarget

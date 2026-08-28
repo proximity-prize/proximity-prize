@@ -57,7 +57,7 @@ theorem frozenTerminalAdaptiveProjectionFamiliesYZ6630 :
     (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
       (Finset.mem_univ R)).trans hregular.2.1
   have hRTotal : (regularFlag6630 Q R).zOnly +
-      (regularFlag6630 Q R).yz + (regularFlag6630 Q R).all ≤ 814 :=
+      (regularFlag6630 Q R).yz + (regularFlag6630 Q R).all ≤ 970 :=
     (Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _)
       (Finset.mem_univ R)).trans hregular.2.2
   have hgeometric := geometricFlag6630_budgets IRSProfile.Field R.1 hRne
@@ -85,7 +85,7 @@ theorem frozenTerminalAdaptiveProjectionFamiliesYZ6630 :
     (hgAll.trans hRAll) (hgYS.trans hRYS) (hgTotal.trans hRTotal)
 
 /-- Fully closed score-66.74 lower-track claim. -/
-theorem protocolClaim6630 : ProtocolClaim 6674 318059 1048576 := by
+theorem protocolClaim6630 : ProtocolClaim 6681 318327 1048576 := by
   have hcount : ContactFrozenAlignment6630Research.GlobalCountLtAlignment6630 :=
     global_count_lt_alignment6630_of_terminal_projection_families
       frozenTerminalAdaptiveProjectionFamiliesYZ6630

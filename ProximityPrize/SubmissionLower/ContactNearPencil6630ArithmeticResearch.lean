@@ -2,12 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
 
 /-!
-# Exact residual-incidence arithmetic for score 66.74
-
-This is the numerical specialization at
-`(errors,m,s,L,J) = (79514,35,10,814,48)`.  It reuses the parameter-free
-stratified-incidence inequalities and records every numerator before any
-ceiling is taken.
+# Exact residual-incidence arithmetic for score 66.81
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactNearPencil6630ArithmeticResearch
@@ -15,21 +10,20 @@ namespace ProximityPrize.SubmissionLower.ContactNearPencil6630ArithmeticResearch
 open ContactNearPencil6600ArithmeticResearch
 
 def n : ℕ := 262144
-def errors : ℕ := 79514
+def errors : ℕ := 79581
 def agreements : ℕ := n - errors
 def w : ℕ := 131071
 def gap : ℕ := agreements - w
 
-/-- `ceil(n * gap * w / agreements)`. -/
-def degreeIncidence : ℕ := 9700160076
+def degreeIncidence : ℕ := 9691110191
 def unitIncidence : ℕ := n - w
 
 theorem parameter_values :
-    agreements = 182630 ∧ gap = 51559 ∧ unitIncidence = 131073 := by
+    agreements = 182563 ∧ gap = 51492 ∧ unitIncidence = 131073 := by
   norm_num [agreements, gap, unitIncidence, n, errors, w]
 
 theorem degreeIncidence_is_ceiling :
-    degreeIncidence * agreements - n * gap * w = 46664 ∧
+    degreeIncidence * agreements - n * gap * w = 73325 ∧
       n * gap * w ≤ degreeIncidence * agreements := by
   norm_num [degreeIncidence, agreements, gap, n, errors, w]
 
@@ -60,11 +54,10 @@ theorem unit_part_bound (k : ℕ) (hk : k ≤ w) :
       (by norm_num [agreements, n, errors, w])
       (by norm_num [agreements, n, errors])
 
-/-- Sharp flag mixed coefficients at `surfaceFlag6630 = (766,38,10)`. -/
-def mixedQuadratic : ℕ := 7762372
-def mixedLinear : ℕ := 31536
+def mixedQuadratic : ℕ := 7755839
+def mixedLinear : ℕ := 32003
 def mixedUnit : ℕ := 10
-def zLinear : ℕ := 1662
+def zLinear : ℕ := 1642
 def zUnit : ℕ := 10
 
 def stratifiedPrimary : ℕ :=
@@ -76,8 +69,6 @@ def stratifiedZTail : ℕ :=
   (errors + 1) * gap *
     (zLinear * degreeIncidence + zUnit * unitIncidence)
 
-/-- The new degree-zero fallback uses the same mixed coefficients as the
-affine unit-YZ layer. -/
 def stratifiedYZTail : ℕ :=
   gap *
     (mixedLinear * degreeIncidence + mixedUnit * unitIncidence)
@@ -88,28 +79,28 @@ def regularNumerator : ℕ :=
 def gapSquared : ℕ := gap ^ 2
 
 theorem stratified_primary_exact :
-    stratifiedPrimary = 730385767718010034819529418 := by
+    stratifiedPrimary = 728409995956583208587597507 := by
   norm_num [stratifiedPrimary, mixedQuadratic, mixedLinear, mixedUnit,
     degreeIncidence, unitIncidence, n, w]
 
 theorem stratified_z_tail_exact :
-    stratifiedZTail = 66094223513016339928170 := by
+    stratifiedZTail = 65208067567463082329088 := by
   norm_num [stratifiedZTail, zLinear, zUnit, degreeIncidence,
     unitIncidence, errors, gap, agreements, n, w]
 
 theorem stratified_yz_tail_exact :
-    stratifiedYZTail = 15772117198293079494 := by
+    stratifiedYZTail = 15969965781989078076 := by
   norm_num [stratifiedYZTail, mixedLinear, mixedUnit, degreeIncidence,
     unitIncidence, errors, gap, agreements, n, w]
 
 theorem regular_numerator_exact :
-    regularNumerator = 730451877713640249452537082 := by
+    regularNumerator = 728475219994116453659004671 := by
   rw [show regularNumerator =
       stratifiedPrimary + stratifiedZTail + stratifiedYZTail by rfl,
     stratified_primary_exact, stratified_z_tail_exact,
     stratified_yz_tail_exact]
 
-theorem gap_squared_exact : gapSquared = 2658330481 := by
+theorem gap_squared_exact : gapSquared = 2651426064 := by
   norm_num [gapSquared, gap, agreements, n, errors, w]
 
 end ProximityPrize.SubmissionLower.ContactNearPencil6630ArithmeticResearch
