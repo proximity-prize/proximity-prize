@@ -62,7 +62,15 @@ theorem candidate_score :
   rwa [NNReal.rpow_natCast] at hmono
 
 /-- The 512-fibre rational pencil certifies the new narrow window, then hands
-off to the prescribed-top attack, giving a `116.13`-bit upper certificate. -/
+off to the prescribed-top attack, giving a `116.13`-bit upper certificate.
+
+The half-radius attack in `IRSHalfRadius.lean` is intrinsically limited to
+`δ ≥ 1/2` (it requires `(1 - δ) * n ≤ m = 131072`), so it cannot be extended
+to cover the next two grid points `i = 122367, 122368`; the corresponding
+agreement sets have size `139777, 139776 > m`, which exceed the row-degree
+budget of the code.  The `122369` ceiling is the joint output of the orbit
+pencil (covering `[122369, 122641)`) and the prescribed-top attack
+(covering `[122641, minDistance)`). -/
 theorem candidate : ProtocolClaimUpper 11613 122369 where
   admissible := by
     rw [claimedUnsafeRadius_122369_eq]
