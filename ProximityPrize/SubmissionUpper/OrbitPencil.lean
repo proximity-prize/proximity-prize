@@ -135,7 +135,6 @@ set_option maxRecDepth 1000000 in
 set_option exponentiation.threshold 100000 in
 theorem orbit_count :
     ((2 ^ 31 - 2 ^ 24 + 1)^14 * 512) * 2^59 < Nat.choose 511 272 := by
-  rw [Nat.choose_eq_fast_choose]
   decide
 
 theorem exists_big_fiber :
