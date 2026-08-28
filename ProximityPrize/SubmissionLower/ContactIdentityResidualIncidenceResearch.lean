@@ -218,11 +218,11 @@ global weight hypotheses. -/
 theorem surfaceMap_agreement_in_flag_of_surface_weights
     (F : MvPolynomial (Fin 4) K)
     (hS : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualSWeights F ≤ 8)
+      residualSWeights F ≤ 6)
     (hYS : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualYSWeights F ≤ 43)
+      residualYSWeights F ≤ 33)
     (hTotal : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualTotalWeights F ≤ 503)
+      residualTotalWeights F ≤ 582)
     (d : ℕ) (coeffs : ℕ → K) (x0 u0 u1 : K) :
     ContactFlagBezout6543Research.PolynomialInFlag (residualAgreementFlag d)
       (ContactGenericSurface.surfaceMap phi
