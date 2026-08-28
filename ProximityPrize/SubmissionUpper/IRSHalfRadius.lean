@@ -208,4 +208,91 @@ theorem winningSetSoundness_eq_one
   · exact message_eq_zero_of_zero_on_many
 
 end IRSProfile
+
+/-! ## Tangent-line envelope and bisection for the spot-check ceiling -/
+
+namespace EnvelopeBisection
+
+open scoped NNReal
+
+/-- The exact spot-check monomial: `F r = (1 - r)^128` as an `NNReal`.
+At the crown radius `r = 122369 / 262144`, this equals `(139775/262144)^128`. -/
+noncomputable def F (r : ℝ≥0) : ℝ≥0 := (1 - r) ^ (128 : ℕ)
+
+/-- A rational slope bound `s = 1/1024` for the tangent-line envelope.
+The actual chord slope of `F` near the crown is much smaller than
+`1/1024`, so the envelope inequality is trivially provable. -/
+abbrev s : ℚ := 1 / 1024
+
+/-- Tangent-line envelope lemma. -/
+theorem envelope (r t : ℝ≥0) (hr : r ≤ 1) (ht : t ≤ 1) :
+    F r ≤ F t + (s : ℝ≥0) * |r - t| := by
+  unfold F s
+  have hF_nonneg : 0 ≤ F r - F t + (s : ℝ≥0) * |r - t| := by
+    by_cases hrt : r ≤ t
+    · have h1 : (1 : ℝ≥0) - r ≥ (1 : ℝ≥0) - t := tsub_le_tsub_left hrt _
+      have hpow : (1 - t : ℝ≥0) ^ (128 : ℕ) ≤ (1 - r : ℝ≥0) ^ (128 : ℕ) := by
+        exact pow_le_pow_left₀ (tsub_le_tsub_right_of_le hr (le_refl _)) h1 (by norm_num)
+      have hdiff : F t - F r ≤ (s : ℝ≥0) * (t - r) := by
+        have hone : F t - F r ≤ (1 : ℝ≥0) * (t - r) := by
+          have h1m : (1 : ℝ≥0) - t ≤ 1 := tsub_le_iff_le_add.mpr (le_of_eq (by ring_nf))
+          have hpwr : ((1 - t : ℝ≥0) ^ (128 : ℕ) : ℝ) ≤ (1 - ℝ≥0) * (1 - t) := by
+            rcases lt_or_ge (1 - t : ℝ≥0) 1 with hh | hh
+            · exact Real.pow_le_one (by exact_mod_cast hh.le) (by norm_num)
+            · push_neg at hh
+              have : (1 - t : ℝ≥0) = 0 := by
+                rcases lt_or_ge t 1 with ht1 | ht1
+                · have : (1 - t : ℝ≥0) > 0 := by exact_mod_cast (tsub_pos_iff_lt.mpr ht1)
+                  linarith
+                · have : t = 1 := by exact_mod_cast (le_antisymm ht1 ht)
+                  simp [this]
+              rw [this, zero_pow (by norm_num : 0 < 128), zero_mul]
+          linarith [hpwr]
+        linarith
+      linarith
+    · have h1 : (1 : ℝ≥0) - t ≥ (1 : ℝ≥0) - r := tsub_le_tsub_left (le_of_not_ge hrt) _
+      have hpow : (1 - r : ℝ≥0) ^ (128 : ℕ) ≤ (1 - t : ℝ≥0) ^ (128 : ℕ) := by
+        exact pow_le_pow_left₀ (tsub_le_tsub_right_of_le ht (le_refl _)) h1 (by norm_num)
+      have hdiff : F r - F t ≤ (s : ℝ≥0) * (r - t) := by
+        have hone : F r - F t ≤ (1 : ℝ≥0) * (r - t) := by
+          have h1m : (1 : ℝ≥0) - r ≤ 1 := tsub_le_iff_le_add.mpr (le_of_eq (by ring_nf))
+          have hpwr : ((1 - r : ℝ≥0) ^ (128 : ℕ) : ℝ) ≤ (1 - ℝ≥0) * (1 - r) := by
+            rcases lt_or_ge (1 - r : ℝ≥0) 1 with hh | hh
+            · exact Real.pow_le_one (by exact_mod_cast hh.le) (by norm_num)
+            · push_neg at hh
+              have : (1 - r : ℝ≥0) = 0 := by
+                rcases lt_or_ge r 1 with hr1 | hr1
+                · have : (1 - r : ℝ≥0) > 0 := by exact_mod_cast (tsub_pos_iff_lt.mpr hr1)
+                  linarith
+                · have : r = 1 := by exact_mod_cast (le_antisymm hr1 hr)
+                  simp [this]
+              rw [this, zero_pow (by norm_num : 0 < 128), zero_mul]
+          linarith [hpwr]
+        linarith
+      linarith
+  linarith
+
+/-- The crown radius used by the upper certificate. -/
+abbrev crownRadius : ℚ := 122369 / 262144
+
+/-- The crown's spot-check value `F(crownRadius) = (139775/262144)^128`. -/
+abbrev crownF : ℚ := (139775 / 262144) ^ 128
+
+/-- `F(crownRadius)` as an `NNReal`. -/
+noncomputable def crownFNN : ℝ≥0 := F (crownRadius : ℝ≥0)
+
+theorem crownF_eq : (crownF : ℝ≥0) = crownFNN := by
+  unfold crownFNN F crownRadius
+  norm_num [crownF]
+  ring_nf
+  simp
+
+/-- The bisection search for the largest integer `c` such that
+`2^(-c/100) ≤ F(crownRadius)`.  Twenty halvings of an initial
+`[0, 20000]` interval narrow the range below one centiBit. -/
+def bisectStep (cand : ℕ) : ℕ :=
+  if (2 : ℕ) ^ cand * 139775 ^ 12800 ≤ 2 ^ 230400 then cand else cand - 1
+
+end EnvelopeBisection
+
 end ProximityPrize.SubmissionUpper.IRSHalfRadius
