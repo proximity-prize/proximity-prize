@@ -2,15 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
 
 /-!
-# Exact parameter certificate for the 66.00 residual-incidence candidate
-
-This module records the first integer score-66 cell.  It checks the sparse
-interpolation inequality, reconstructs the retained singular contribution
-from its geometric formula, and identifies the resulting stratified ledger
-with the independently proved residual-incidence arithmetic.
-
-There is no decoding claim in this file: it is the closed arithmetic front
-end consumed by the eventual geometric integration.
+# Exact parameter certificate for the 66.25 residual-incidence candidate
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactParameters6600Research
@@ -25,10 +17,10 @@ def w : ℕ := 131071
 def prime : ℕ := 2130706433
 def alignmentBudget : ℕ := 137490364055697543
 
-def errors : ℕ := 78958
+def errors : ℕ := 79032
 def agreements : ℕ := n - errors
 def multiplicity : ℕ := 31
-def seedTotalCap : ℕ := 495
+def seedTotalCap : ℕ := 548
 def slopeCap : ℕ := 8
 def weightedCap : ℕ := multiplicity * agreements
 def yCap : ℕ := (weightedCap - 1) / w
@@ -37,9 +29,6 @@ def algebraicCap : ℕ := (2 * slopeCap - 1) * seedTotalCap
 def implicitWeightedCap : ℕ := (2 * slopeCap - 1) * weightedCap
 def implicitYCap : ℕ := (implicitWeightedCap - 1) / w
 
-/-- Number of monomials in the strict weighted interpolation box.  All
-subtractions are natural-number positive parts, exactly as in the production
-interpolation construction. -/
 def coefficientCount : ℕ :=
   ∑ i ∈ range (seedTotalCap + 1),
     ∑ j ∈ range (slopeCap + 1),
@@ -48,7 +37,6 @@ def coefficientCount : ℕ :=
 
 def contactExponent (r : ℕ) : ℕ := min (r + 1) (multiplicity - r)
 
-/-- Exact rank of one translated order-`multiplicity` contact block. -/
 def localContactRank : ℕ :=
   ∑ r ∈ range multiplicity,
     (((slopeCap + 1) *
@@ -84,37 +72,36 @@ def liftedAgreement : DegreeVector :=
     w,
     2 * w * algebraicCap + 1⟩
 
-/-- Singular-branch numerator over one factor of `gap`, retained unchanged
-by the nested residual-incidence improvement to the regular branch. -/
 def retainedSingularNumerator : ℕ :=
   gap * (algebraicCap + 2 * algebraicCap ^ 2 +
       mixed liftedSurface implicitCut liftedLast +
       (errors + 1) * mixed liftedSurface implicitCut unitZ) +
     (n - w) * mixed liftedSurface implicitCut liftedAgreement
 
-/-- The singular contribution uses the common `gap^2` denominator. -/
 def retainedSingularContribution : ℕ := gap * retainedSingularNumerator
 
 theorem parameter_values :
-    agreements = 183186 ∧ weightedCap = 5678766 ∧ yCap = 43 ∧
-    gap = 52115 ∧ algebraicCap = 7425 ∧
-    implicitWeightedCap = 85181490 ∧ implicitYCap = 649 := by
+    agreements = 183112 ∧ weightedCap = 5676472 ∧ yCap = 43 ∧
+    gap = 52041 ∧ algebraicCap = 8220 ∧
+    implicitWeightedCap = 85147080 ∧ implicitYCap = 649 := by
   norm_num [agreements, n, errors, weightedCap, multiplicity, yCap, w,
     gap, algebraicCap, slopeCap, seedTotalCap, implicitWeightedCap,
     implicitYCap]
 
-theorem coefficient_count_exact : coefficientCount = 453847251690 := by
-  rfl
+theorem coefficient_count_exact : coefficientCount = 503199754560 := by
+  norm_num [coefficientCount, seedTotalCap, slopeCap, weightedCap,
+    multiplicity, agreements, n, errors, w, Finset.sum_range_succ]
 
-theorem local_contact_rank_exact : localContactRank = 1731288 := by
-  rfl
+theorem local_contact_rank_exact : localContactRank = 1919544 := by
+  norm_num [localContactRank, contactExponent, multiplicity, seedTotalCap,
+    slopeCap, Finset.sum_range_succ]
 
-theorem total_contact_rank_exact : totalContactRank = 453846761472 := by
+theorem total_contact_rank_exact : totalContactRank = 503196942336 := by
   rw [show totalContactRank = n * localContactRank by rfl,
     local_contact_rank_exact]
   norm_num [n]
 
-theorem rank_margin_exact : rankMargin = 490218 := by
+theorem rank_margin_exact : rankMargin = 2812224 := by
   rw [show rankMargin = coefficientCount - totalContactRank by rfl,
     coefficient_count_exact, total_contact_rank_exact]
 
@@ -129,14 +116,14 @@ theorem characteristic_gates :
     implicitWeightedCap, algebraicCap, slopeCap, seedTotalCap, prime]
 
 theorem retained_singular_numerator_exact :
-    retainedSingularNumerator = 128848061043308274217 := by
+    retainedSingularNumerator = 142384831016233061214 := by
   norm_num [retainedSingularNumerator, liftedSurface, implicitCut,
     liftedLast, liftedAgreement, unitZ, mixed, implicitYCap,
     implicitWeightedCap, algebraicCap, yCap, weightedCap, multiplicity,
     agreements, n, errors, w, gap, slopeCap, seedTotalCap]
 
 theorem retained_singular_contribution_exact :
-    retainedSingularContribution = 6714916701272010710818955 := by
+    retainedSingularContribution = 7409848990915784738637774 := by
   rw [show retainedSingularContribution =
       gap * retainedSingularNumerator by rfl,
     retained_singular_numerator_exact]
@@ -150,12 +137,12 @@ theorem retained_singular_matches_residual_ledger :
 
 theorem exact_stratified_ledger :
     ContactNearPencil6600ArithmeticResearch.stratifiedTotalNumerator =
-        334108271852906376395189477 ∧
+        370248167416143587134258310 ∧
       ContactNearPencil6600ArithmeticResearch.ledgerCeiling =
-        123016040356180749 ∧
+        136710430595359152 ∧
       ContactNearPencil6600ArithmeticResearch.alignmentBudget -
           ContactNearPencil6600ArithmeticResearch.ledgerCeiling =
-        14474323699516794 := by
+        779933460338391 := by
   exact ⟨ContactNearPencil6600ArithmeticResearch.stratified_total_exact,
     ContactNearPencil6600ArithmeticResearch.ledger_ceiling_exact,
     ContactNearPencil6600ArithmeticResearch.budget_slack⟩

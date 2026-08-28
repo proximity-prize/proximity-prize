@@ -32,7 +32,6 @@ open ContactPrimeFlagBudgetFamilyResearch
 open ContactStratifiedResidualComponentAdapter6600Research
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactNearPencil6600FlagResearch
-open ContactResidualSupportParametersResearch
 
 noncomputable section
 
@@ -48,8 +47,7 @@ local instance : DecidableEq Iota := Classical.decEq Iota
 
 /-- The canonical initial inner-recursion state attached to one regular
 component of a proper outer cut. -/
-def regularComponentCurveStageOfSupport
-    (support : ResidualSupportParameters)
+def regularComponentCurveStage
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
@@ -57,9 +55,9 @@ def regularComponentCurveStageOfSupport
     (hdiv : G ∣ surfaceMap phi F)
     (hGflag : PolynomialInFlag surfaceFlag G)
     (hTflag : PolynomialInFlag cutFlag T)
-    (hFs : wt residualSWeights F ≤ support.s)
-    (hFys : wt residualYSWeights F ≤ support.ys)
-    (hFtotal : wt residualTotalWeights F ≤ support.total)
+    (hFs : wt residualSWeights F ≤ 6)
+    (hFys : wt residualYSWeights F ≤ 33)
+    (hFtotal : wt residualTotalWeights F ≤ 582)
     (hinj : Set.InjOn x nodes)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d)
     (hsolution : ∀ gamma ∈ Gamma,
@@ -75,7 +73,7 @@ def regularComponentCurveStageOfSupport
     CurveResidualStage phi
       (componentSeeds Omega G T (regularitySurface phi F) Gamma
         (selectedPoint phi selected) C)
-      x p e surfaceFlag cutFlag d support := by
+      x p e surfaceFlag cutFlag d := by
   classical
   let GammaC := componentSeeds Omega G T (regularitySurface phi F) Gamma
     (selectedPoint phi selected) C
@@ -115,83 +113,6 @@ def regularComponentCurveStageOfSupport
       hsub hnoPencil
     characteristic_bound := hchar
   }
-
-/-- The active-differential `(6,33,582)` support introduced by the 66.42
-retuning.  It is kept separate from `acceptedSupport`, so callers of the
-earlier `(8,43,503)` compatibility constructor remain source-compatible. -/
-def activeDifferentialSupport : ResidualSupportParameters where
-  s := 6
-  ys := 33
-  total := 582
-  one_le_s := by norm_num
-  s_le_ys := by norm_num
-  ys_le_total := by norm_num
-  two_le_ys := by norm_num
-
-/-- Active-differential `(6,33,582)` constructor used by the 66.42 recursive
-component estimate. -/
-def regularComponentCurveStageActive
-    (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
-    (selected : K → Polynomial K) (Gamma : Finset K)
-    (nodes : Finset Iota) (x u0 u1 : Iota → K)
-    (p e d : ℕ) [CharP Omega p] (surfaceFlag cutFlag : FlagDegree)
-    (hdiv : G ∣ surfaceMap phi F)
-    (hGflag : PolynomialInFlag surfaceFlag G)
-    (hTflag : PolynomialInFlag cutFlag T)
-    (hFs : wt residualSWeights F ≤ 6)
-    (hFys : wt residualYSWeights F ≤ 33)
-    (hFtotal : wt residualTotalWeights F ≤ 582)
-    (hinj : Set.InjOn x nodes)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d)
-    (hsolution : ∀ gamma ∈ Gamma,
-      specialization K (selected gamma) gamma F = 0)
-    (hregular : ∀ gamma ∈ Gamma,
-      MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
-        (polynomialPoint (phi.comp Polynomial.C) (selected gamma) gamma
-          (phi Polynomial.X))
-        (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hnoPencil : NoLargeSelectedPencil selected Gamma d e)
-    (hchar : d < p)
-    (C : RegularComponent Omega G T (regularitySurface phi F)) :
-    CurveResidualStage phi
-      (componentSeeds Omega G T (regularitySurface phi F) Gamma
-        (selectedPoint phi selected) C)
-      x p e surfaceFlag cutFlag d activeDifferentialSupport :=
-  regularComponentCurveStageOfSupport activeDifferentialSupport
-    F G T selected Gamma nodes x u0 u1 p e d surfaceFlag cutFlag hdiv hGflag
-    hTflag hFs hFys hFtotal hinj hdegree hsolution hregular hnoPencil hchar C
-
-/-- Accepted `(8,43,503)` compatibility constructor. -/
-def regularComponentCurveStage
-    (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
-    (selected : K → Polynomial K) (Gamma : Finset K)
-    (nodes : Finset Iota) (x u0 u1 : Iota → K)
-    (p e d : ℕ) [CharP Omega p] (surfaceFlag cutFlag : FlagDegree)
-    (hdiv : G ∣ surfaceMap phi F)
-    (hGflag : PolynomialInFlag surfaceFlag G)
-    (hTflag : PolynomialInFlag cutFlag T)
-    (hFs : wt residualSWeights F ≤ 8)
-    (hFys : wt residualYSWeights F ≤ 43)
-    (hFtotal : wt residualTotalWeights F ≤ 503)
-    (hinj : Set.InjOn x nodes)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d)
-    (hsolution : ∀ gamma ∈ Gamma,
-      specialization K (selected gamma) gamma F = 0)
-    (hregular : ∀ gamma ∈ Gamma,
-      MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
-        (polynomialPoint (phi.comp Polynomial.C) (selected gamma) gamma
-          (phi Polynomial.X))
-        (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hnoPencil : NoLargeSelectedPencil selected Gamma d e)
-    (hchar : d < p)
-    (C : RegularComponent Omega G T (regularitySurface phi F)) :
-    CurveResidualStage phi
-      (componentSeeds Omega G T (regularitySurface phi F) Gamma
-        (selectedPoint phi selected) C)
-      x p e surfaceFlag cutFlag d :=
-  regularComponentCurveStageOfSupport ResidualSupportParameters.acceptedSupport
-    F G T selected Gamma nodes x u0 u1 p e d surfaceFlag cutFlag hdiv hGflag
-    hTflag hFs hFys hFtotal hinj hdegree hsolution hregular hnoPencil hchar C
 
 /-- Full regular-component aggregation after recursive identity removal.
 
@@ -236,7 +157,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
     (hlarge : ∀ C : RegularComponent Omega G T (regularitySurface phi F),
       let GammaC := componentSeeds Omega G T (regularitySurface phi F) Gamma
         (selectedPoint phi selected) C
-      let S := regularComponentCurveStageActive F G T selected Gamma nodes x u0 u1
+      let S := regularComponentCurveStage F G T selected Gamma nodes x u0 u1
         p e d surfaceFlag cutFlag hdiv hGflag hTflag hFs hFys hFtotal hinj
         hdegreeSelected hsolution hregular hnoPencil hchar C
       ∀ D : S.TerminalDescendant,
@@ -247,7 +168,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
     (hunit : ∀ k ≤ d,
       (nodes.card - k) * (a - d) ≤ V * (a - k)) :
     Gamma.card * (a - d) ≤
-      U * flagMixed surfaceFlag cutFlag activeDifferentialSupport.agreementDirection +
+      U * flagMixed surfaceFlag cutFlag agreementDirection6600 +
         V * flagMixed surfaceFlag cutFlag unitYZFlag +
         (e + 1) * (a - d) * flagMixed surfaceFlag cutFlag unitZFlag := by
   classical
@@ -260,7 +181,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
     rw [selectedPoint_evaluation]
     exact hregular gamma hgamma
   let degreeCost : RegularComponent Omega G T H → ℕ :=
-    fun C ↦ B.weightedCost activeDifferentialSupport.agreementDirection C
+    fun C ↦ B.weightedCost agreementDirection6600 C
   let unitCost : RegularComponent Omega G T H → ℕ :=
     fun C ↦ B.weightedCost unitYZFlag C
   have hcomponent : ∀ C : RegularComponent Omega G T H,
@@ -271,7 +192,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
     intro C
     let GammaC := componentSeeds Omega G T H Gamma
       (selectedPoint phi selected) C
-    let S := regularComponentCurveStageActive F G T selected Gamma nodes x u0 u1
+    let S := regularComponentCurveStage F G T selected Gamma nodes x u0 u1
       p e d surfaceFlag cutFlag hdiv hGflag hTflag hFs hFys hFtotal hinj
       hdegreeSelected hsolution hregular hnoPencil hchar C
     have hsub : GammaC ⊆ Gamma := componentSeeds_subset Omega G T H Gamma
@@ -280,26 +201,22 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
       hphi S (fun r ↦ B.weightedCost r C) (B.primeBudget C)
       (degreeCost C) (unitCost C) U V (B.zCost C)
     · intro t
-      simpa [degreeCost, unitCost, activeDifferentialSupport,
-        ResidualSupportParameters.agreementDirection] using
-        B.weightedCost_supportResidualAgreementFlag
-          activeDifferentialSupport C t
+      simpa only [degreeCost, unitCost] using
+        B.weightedCost_residualAgreementFlag C t
     · exact hda
     · intro gamma hgamma
       exact hagreement gamma (hsub hgamma)
     · simpa only [GammaC, S, H] using hlarge C
-    · simpa only [S, regularComponentCurveStageActive,
-        regularComponentCurveStageOfSupport] using hdegree
-    · simpa only [S, regularComponentCurveStageActive,
-        regularComponentCurveStageOfSupport] using hunit
+    · simpa only [S, regularComponentCurveStage] using hdegree
+    · simpa only [S, regularComponentCurveStage] using hunit
   exact aggregate_component_stratified_incidence G T H Gamma
     (selectedPoint phi selected) hGpoint hTpoint hHp (a - d) U V (e + 1)
-    (flagMixed surfaceFlag cutFlag activeDifferentialSupport.agreementDirection)
+    (flagMixed surfaceFlag cutFlag agreementDirection6600)
     (flagMixed surfaceFlag cutFlag unitYZFlag)
     (flagMixed surfaceFlag cutFlag unitZFlag)
     degreeCost unitCost B.zCost hcomponent
     (by simpa only [degreeCost] using
-      B.sum_weightedCost_le activeDifferentialSupport.agreementDirection)
+      B.sum_weightedCost_le agreementDirection6600)
     (by simpa only [unitCost] using B.sum_weightedCost_le unitYZFlag)
     B.sum_zCost_le
 

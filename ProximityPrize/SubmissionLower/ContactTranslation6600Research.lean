@@ -82,3 +82,6 @@ theorem exists_frozen_universal_vanishing_interpolant6600
 end
 
 end ProximityPrize.SubmissionLower.ContactTranslation6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactTranslation6600Research.exists_frozen_translated_contact_interpolant6600
+#print axioms ProximityPrize.SubmissionLower.ContactTranslation6600Research.exists_frozen_universal_vanishing_interpolant6600

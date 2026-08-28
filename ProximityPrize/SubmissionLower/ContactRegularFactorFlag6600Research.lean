@@ -9,7 +9,7 @@ import ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
 Each positive-`R` irreducible factor is enclosed by the flag
 `Flag(deg_Z, deg_Y, deg_R)`.  This deliberately uses the robust rectangular
 outer flag: the existing factor theorem immediately bounds the three sums by
-`(495,43,8)`, and the resulting ledger still proves score 66.
+`(548,43,8)`, and the resulting ledger still proves score 66.
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
@@ -62,7 +62,7 @@ flag directly from the interpolation coefficient box. -/
 theorem regularFlag_budgets
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
-    (∑ F : RegularIndex Q, (regularFlag Q F).zOnly) ≤ 495 ∧
+    (∑ F : RegularIndex Q, (regularFlag Q F).zOnly) ≤ 501 ∧
       (∑ F : RegularIndex Q, (regularFlag Q F).yz) ≤ 43 ∧
       (∑ F : RegularIndex Q, (regularFlag Q F).all) ≤ 8 := by
   classical
@@ -84,3 +84,6 @@ theorem regularFlag_budgets
 end
 
 end ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research.surfaceMap_in_regularFlag
+#print axioms ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research.regularFlag_budgets

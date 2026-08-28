@@ -1,4 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.ContactPost6464ExactShear6543Research
 import ProximityPrize.SubmissionLower.ContactSparsePoleSupportResearch
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_MvPolynomial_WeightedHomogeneous
 
@@ -32,6 +33,7 @@ than a full arbitrary-polytope BKK theorem.
 namespace ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
 
 open scoped BigOperators
+open ProximityPrize.SubmissionLower.ContactPost6464ExactShear6543Research
 open ProximityPrize.SubmissionLower.ContactSparsePoleSupportResearch
 
 set_option maxRecDepth 20000
@@ -219,21 +221,6 @@ def unitYZFlag : FlagDegree := ⟨0, 1, 0⟩
 def unitAllFlag : FlagDegree := ⟨0, 0, 1⟩
 def seedFlag : FlagDegree := unitYZFlag
 
-/-! The generic flag API below used to import the entire historical 65.43
-arithmetic module for these seven frozen constants.  Keeping the old
-certificate literals local avoids replaying that large, otherwise unrelated
-proof object in every later flag-complete submission. -/
-
-private def legacyN : ℕ := 262144
-private def legacyW : ℕ := 131071
-private def legacyErrors : ℕ := 78210
-private def legacyAgreements : ℕ := legacyN - legacyErrors
-private def legacyGap : ℕ := legacyAgreements - legacyW
-private def legacyAlignmentBudget : ℕ := 100000000000000000
-private def legacyShearedWholeMixedCap : ℕ := 16230040480658160
-private def legacySingularNumerator : ℕ := 8043405963321174171
-private def legacyGapSquared : ℕ := legacyGap ^ 2
-
 /-- Tight flag outer bound for the sheared surface support. -/
 def shearedSurfaceFlag : FlagDegree := ⟨350, 21, 5⟩
 
@@ -242,7 +229,7 @@ def shearedDerivativeFlag : FlagDegree := ⟨350, 21, 4⟩
 
 /-- The agreement support is `seed + w*(surface+derivative)`. -/
 def shearedAgreementFlag : FlagDegree :=
-  seedFlag + legacyW • (shearedSurfaceFlag + shearedDerivativeFlag)
+  seedFlag + w • (shearedSurfaceFlag + shearedDerivativeFlag)
 
 theorem shearedAgreementFlag_value :
     shearedAgreementFlag = ⟨91749700, 5504983, 1179639⟩ := by
@@ -275,7 +262,7 @@ theorem flag_mixed_values :
   norm_num [flagWholeMixedCap, flagZMixedCap, flagMixed,
     flagYZMixedCap, flagAllMixedCap,
     shearedSurfaceFlag, shearedAgreementFlag, shearedDerivativeFlag,
-    seedFlag, unitZFlag, unitYZFlag, unitAllFlag, legacyW]
+    seedFlag, unitZFlag, unitYZFlag, unitAllFlag, w]
 
 /-- The whole flag mixed cost is exactly the weighted sum of the three
 projection costs.  This is the algebraic reason the flag route can use
@@ -289,57 +276,53 @@ theorem flag_projection_decomposition :
   norm_num [flagWholeMixedCap, flagZMixedCap, flagYZMixedCap,
     flagAllMixedCap, flagMixed, shearedSurfaceFlag,
     shearedAgreementFlag, shearedDerivativeFlag, seedFlag,
-    unitZFlag, unitYZFlag, unitAllFlag, legacyW]
+    unitZFlag, unitYZFlag, unitAllFlag, w]
 
 /-- The flag outer approximation costs only this much beyond the exact
 mixed-volume computation. -/
 theorem flag_excess_exact :
-    flagWholeMixedCap - legacyShearedWholeMixedCap = 6957740851605 := by
+    flagWholeMixedCap - shearedWholeMixedCap = 6957740851605 := by
   rw [flag_mixed_values.1]
-  norm_num [legacyShearedWholeMixedCap]
+  norm_num [shearedWholeMixedCap]
 
 /-- Regular whole-surface numerator with the flag-Bezout cost. -/
 def flagWholeNumerator : ℕ :=
-  (legacyN - legacyW) ^ 2 * flagWholeMixedCap +
-    (legacyErrors + 1) * (legacyN - legacyW) * legacyGap * flagZMixedCap
+  (n - w) ^ 2 * flagWholeMixedCap +
+    (errors + 1) * (n - w) * gap * flagZMixedCap
 
 /-- The implicit/singular branch is unchanged. -/
 def flagTotalNumerator : ℕ :=
-  flagWholeNumerator + legacyGap * legacySingularNumerator
+  flagWholeNumerator + gap * singularNumerator
 
 def flagLedgerCeiling : ℕ :=
-  (flagTotalNumerator + legacyGapSquared - 1) / legacyGapSquared
+  (flagTotalNumerator + gapSquared - 1) / gapSquared
 
 theorem flag_whole_numerator_exact :
     flagWholeNumerator = 278985298988701469237937066 := by
   norm_num [flagWholeNumerator, flag_mixed_values.1, flag_mixed_values.2.1,
-    legacyN, legacyW, legacyErrors, legacyGap, legacyAgreements]
+    n, w, errors, gap, agreements]
 
 theorem flag_total_numerator_exact :
     flagTotalNumerator = 279410497558140516468138639 := by
   rw [show flagTotalNumerator =
-      flagWholeNumerator + legacyGap * legacySingularNumerator by rfl,
-    flag_whole_numerator_exact]
-  norm_num [legacySingularNumerator, legacyGap, legacyAgreements,
-    legacyN, legacyErrors, legacyW]
+      flagWholeNumerator + gap * singularNumerator by rfl,
+    flag_whole_numerator_exact, singular_numerator_exact]
+  norm_num [gap, agreements, n, errors, w]
 
 theorem flag_ledger_ceiling_exact :
     flagLedgerCeiling = 99985979822093871 := by
-  norm_num [flagLedgerCeiling, flag_total_numerator_exact,
-    legacyGapSquared, legacyGap, legacyAgreements, legacyN, legacyErrors,
-    legacyW]
+  norm_num [flagLedgerCeiling, flag_total_numerator_exact, gap_squared_exact]
 
 theorem flag_budget_slack :
-    legacyAlignmentBudget - flagLedgerCeiling = 14020177906129 := by
+    alignmentBudget - flagLedgerCeiling = 14020177906129 := by
   rw [flag_ledger_ceiling_exact]
-  norm_num [legacyAlignmentBudget]
+  norm_num [alignmentBudget]
 
 /-- The simpler flag outer polytope, not the exact BKK polytope, still gives
 the strict ledger inequality required by the 65.43 protocol row. -/
 theorem flag_strict_budget :
-    flagTotalNumerator < legacyAlignmentBudget * legacyGapSquared := by
-  rw [flag_total_numerator_exact]
-  norm_num [legacyAlignmentBudget, legacyGapSquared, legacyGap,
-    legacyAgreements, legacyN, legacyErrors, legacyW]
+    flagTotalNumerator < alignmentBudget * gapSquared := by
+  rw [flag_total_numerator_exact, gap_squared_exact]
+  norm_num [alignmentBudget]
 
 end ProximityPrize.SubmissionLower.ContactFlagBezout6543Research

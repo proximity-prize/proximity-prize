@@ -1,17 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactStackedClosure6670Research
-
-/-!
-Exact lower-track entrypoint for the unconditional three-interpolant,
-recursive-GCD score-66.96 assembly with an independent seedless Lambda
-bound. Source-policy, kernel compilation, and Yukon validation remain
-distinct checks.
--/
+import ProximityPrize.SubmissionLower.ContactProtocol6630Research
 
 namespace ProximityPrize.Benchmark
 
-theorem candidate : ProtocolClaim 6696 318923 1048576 :=
-  ProximityPrize.SubmissionLower.ContactStackedClosure6670Research.protocolClaim6696
+theorem candidate : ProtocolClaim 6700 319075 1048576 :=
+  ProximityPrize.SubmissionLower.ContactProtocol6630Research.protocolClaim6630
 
 end ProximityPrize.Benchmark
 

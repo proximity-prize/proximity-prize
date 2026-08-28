@@ -70,3 +70,6 @@ theorem exists_frozen_nonzero_polynomial_and_equations6600
 end
 
 end ProximityPrize.SubmissionLower.ContactInterpolation6600Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactInterpolation6600Research.exists_frozen_nonzero_contact_array6600
+#print axioms ProximityPrize.SubmissionLower.ContactInterpolation6600Research.exists_frozen_nonzero_polynomial_and_equations6600

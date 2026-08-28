@@ -2,7 +2,6 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualSurfaceResearch
 import ProximityPrize.SubmissionLower.ContactIdentityZeroSafePencilResearch
 import ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalFlagResearch
-import ProximityPrize.SubmissionLower.ContactResidualSupportParametersResearch
 
 /-!
 # Iterated actual-identity residualization state
@@ -24,7 +23,6 @@ open ContactIdentityResidualGlobalTransformResearch
 open ContactIdentityResidualSurfaceResearch
 open ContactIdentityZeroSafePencilResearch
 open ContactIdentityResidualGlobalFlagResearch
-open ContactResidualSupportParametersResearch
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactFlagAffineResidualAutomorphismResearch
 open ContactFlagBezout6543Research
@@ -48,9 +46,7 @@ abbrev Poly4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
 the nodes not removed at earlier identity stages. -/
 structure ResidualStage
     (phi : Polynomial K →+* Omega) (Gamma : Finset K) (x : Iota → K)
-    (p e : ℕ) [CharP Omega p] (flag : FlagDegree) (d : ℕ)
-    (support : ResidualSupportParameters :=
-      ResidualSupportParameters.acceptedSupport) where
+    (p e : ℕ) [CharP Omega p] (flag : FlagDegree) (d : ℕ) where
   nodes : Finset Iota
   u0 : Iota → K
   u1 : Iota → K
@@ -62,9 +58,9 @@ structure ResidualStage
   y_dependent : 0 < G.degreeOf 1
   regular_proper : ¬ G ∣ surfaceMap phi (MvPolynomial.pderiv (2 : Fin 4) F)
   flag_support : ContactFlagBezout6543Research.PolynomialInFlag flag G
-  surface_s_weight : wt residualSWeights F ≤ support.s
-  surface_ys_weight : wt residualYSWeights F ≤ support.ys
-  surface_total_weight : wt residualTotalWeights F ≤ support.total
+  surface_s_weight : wt residualSWeights F ≤ 6
+  surface_ys_weight : wt residualYSWeights F ≤ 33
+  surface_total_weight : wt residualTotalWeights F ≤ 582
   x_injective : Set.InjOn x nodes
   degree_le : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d
   solution : ∀ gamma ∈ Gamma,
@@ -83,47 +79,46 @@ namespace ResidualStage
 
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
 variable {p e : ℕ} [CharP Omega p] {flag : FlagDegree} {d : ℕ}
-variable {support : ResidualSupportParameters}
 
 /-- The principal prime belonging to the current component. -/
-def componentIdeal (S : ResidualStage phi Gamma x p e flag d support) :
+def componentIdeal (S : ResidualStage phi Gamma x p e flag d) :
     Ideal (Poly3 Omega) := Ideal.span {S.G}
 
 /-- All current agreement cuts that vanish identically on the current
 component. -/
-def identities (S : ResidualStage phi Gamma x p e flag d support) : Finset Iota :=
+def identities (S : ResidualStage phi Gamma x p e flag d) : Finset Iota :=
   identityNodes phi S.componentIdeal S.F S.nodes x S.u0 S.u1 d
 
 /-- The actual received-word agreement relation at this stage. -/
-def Agrees (S : ResidualStage phi Gamma x p e flag d support)
+def Agrees (S : ResidualStage phi Gamma x p e flag d)
     (gamma : K) (i : Iota) : Prop :=
   (S.selected gamma).eval (x i) = S.u0 i + gamma * S.u1 i
 
-local instance (S : ResidualStage phi Gamma x p e flag d support) :
+local instance (S : ResidualStage phi Gamma x p e flag d) :
     ∀ gamma i, Decidable (S.Agrees gamma i) := fun _ _ ↦ Classical.propDecidable _
 
-def agreementFiber (S : ResidualStage phi Gamma x p e flag d support)
+def agreementFiber (S : ResidualStage phi Gamma x p e flag d)
     (gamma : K) : Finset Iota :=
   S.nodes.filter (S.Agrees gamma)
 
 theorem componentIdeal_isPrime
-    (S : ResidualStage phi Gamma x p e flag d support) : S.componentIdeal.IsPrime := by
+    (S : ResidualStage phi Gamma x p e flag d) : S.componentIdeal.IsPrime := by
   exact Ideal.isPrime_span_singleton_of_prime S.irreducible_G.prime
 
 theorem surface_mem_componentIdeal
-    (S : ResidualStage phi Gamma x p e flag d support) :
+    (S : ResidualStage phi Gamma x p e flag d) :
     surfaceMap phi S.F ∈ S.componentIdeal := by
   exact Ideal.mem_span_singleton.mpr S.G_dvd_surface
 
 theorem regularity_not_mem_componentIdeal
-    (S : ResidualStage phi Gamma x p e flag d support) :
+    (S : ResidualStage phi Gamma x p e flag d) :
     surfaceMap phi (MvPolynomial.pderiv (2 : Fin 4) S.F) ∉
       S.componentIdeal := by
   intro h
   exact S.regular_proper (Ideal.mem_span_singleton.mp h)
 
 theorem selected_point_ideal
-    (S : ResidualStage phi Gamma x p e flag d support)
+    (S : ResidualStage phi Gamma x p e flag d)
     {gamma : K} (hgamma : gamma ∈ Gamma) :
     S.componentIdeal ≤ RingHom.ker
       (MvPolynomial.aeval (selectedPoint phi S.selected gamma)).toRingHom := by
@@ -139,7 +134,7 @@ theorem selected_point_ideal
 /-- Every current identity node is an actual agreement for every selected
 seed, including at residual degree zero. -/
 theorem agrees_on_identities
-    (S : ResidualStage phi Gamma x p e flag d support) :
+    (S : ResidualStage phi Gamma x p e flag d) :
     ∀ gamma ∈ Gamma, ∀ i ∈ S.identities, S.Agrees gamma i := by
   let P := S.componentIdeal
   letI : P.IsPrime := S.componentIdeal_isPrime
@@ -153,7 +148,7 @@ theorem agrees_on_identities
 /-- The zero-safe component reconstruction bounds every identity set by the
 current residual degree. -/
 theorem identities_card_le
-    (S : ResidualStage phi Gamma x p e flag d support) : S.identities.card ≤ d := by
+    (S : ResidualStage phi Gamma x p e flag d) : S.identities.card ≤ d := by
   let P := S.componentIdeal
   letI : P.IsPrime := S.componentIdeal_isPrime
   exact identityNodes_card_le_of_r_dependent_principal_zero_safe
@@ -166,11 +161,11 @@ incidence: removed identities are full agreements, and every remaining old
 agreement descends to the new received word. -/
 theorem advance
     (hphi : Function.Injective phi)
-    (S : ResidualStage phi Gamma x p e flag d support)
+    (S : ResidualStage phi Gamma x p e flag d)
     (hne : S.identities ≠ ∅) :
     0 < S.identities.card ∧
       ∃ Snext : ResidualStage phi Gamma x p e flag
-          (d - S.identities.card) support,
+          (d - S.identities.card),
         Snext.nodes = S.nodes \ S.identities ∧
         (∀ gamma ∈ Gamma, ∀ i ∈ S.identities,
           S.Agrees gamma i) ∧
@@ -205,12 +200,12 @@ theorem advance
     residual_component_transport phi hphi P0 P1 V hV S.F S.G
       S.irreducible_G S.G_dvd_surface S.y_dependent S.regular_proper
       flag S.flag_support
-  let hsupport : ResidualSupportData support S.F :=
-    ⟨S.surface_s_weight, S.surface_ys_weight, S.surface_total_weight⟩
-  have hsupportRes := hsupport.globalResidual P0 P1 V
+  obtain ⟨hFs, hFys, hFtotal⟩ :=
+    globalResidualHom_surface_flag_weights P0 P1 V S.F
+      S.surface_s_weight S.surface_ys_weight S.surface_total_weight
   let u0res : Iota → K := fun i ↦ residualReceived J x S.u0 P0 i
   let u1res : Iota → K := fun i ↦ residualReceived J x S.u1 P1 i
-  let Snext : ResidualStage phi Gamma x p e flag (d - J.card) support := {
+  let Snext : ResidualStage phi Gamma x p e flag (d - J.card) := {
     nodes := S.nodes \ J
     u0 := u0res
     u1 := u1res
@@ -222,9 +217,9 @@ theorem advance
     y_dependent := hGy
     regular_proper := hGproper
     flag_support := hGflag
-    surface_s_weight := hsupportRes.s_weight
-    surface_ys_weight := hsupportRes.ys_weight
-    surface_total_weight := hsupportRes.total_weight
+    surface_s_weight := hFs
+    surface_ys_weight := hFys
+    surface_total_weight := hFtotal
     x_injective := S.x_injective.mono (Finset.sdiff_subset)
     degree_le := hresdeg
     solution := hsolution
@@ -252,10 +247,10 @@ theorem advance
 exactly that many nodes and at most that many agreements for each seed. -/
 theorem advance_card
     (hphi : Function.Injective phi)
-    (S : ResidualStage phi Gamma x p e flag d support)
+    (S : ResidualStage phi Gamma x p e flag d)
     (hne : S.identities ≠ ∅) :
     ∃ Snext : ResidualStage phi Gamma x p e flag
-        (d - S.identities.card) support,
+        (d - S.identities.card),
       Snext.nodes.card = S.nodes.card - S.identities.card ∧
       ∀ gamma ∈ Gamma,
         (S.agreementFiber gamma).card - S.identities.card ≤
@@ -297,10 +292,10 @@ theorem advance_card
 degree records the total number of removed nodes exactly, and its agreement
 count loses at most the same total for every seed. -/
 structure TerminalDescendant
-    (S : ResidualStage phi Gamma x p e flag d support) where
+    (S : ResidualStage phi Gamma x p e flag d) where
   degree : ℕ
   degree_le : degree ≤ d
-  stage : ResidualStage phi Gamma x p e flag degree support
+  stage : ResidualStage phi Gamma x p e flag degree
   terminal : stage.identities = ∅
   nodes_card : stage.nodes.card = S.nodes.card - (d - degree)
   agreement_card : ∀ gamma ∈ Gamma,
@@ -310,7 +305,7 @@ structure TerminalDescendant
 /-- At a terminal stage every remaining agreement polynomial is a proper cut
 of the current principal component. -/
 theorem proper_agreement_of_terminal
-    (S : ResidualStage phi Gamma x p e flag d support)
+    (S : ResidualStage phi Gamma x p e flag d)
     (hterminal : S.identities = ∅) {i : Iota} (hi : i ∈ S.nodes) :
     ¬ S.G ∣ agreementPolynomial phi S.F d (x i) (S.u0 i) (S.u1 i) := by
   intro hdvd
@@ -325,7 +320,7 @@ well-founded on the current residual degree; the zero-safe identity cap makes
 the endpoint `d = 0` part of the same proof. -/
 theorem exists_terminal_descendant
     (hphi : Function.Injective phi)
-    (S : ResidualStage phi Gamma x p e flag d support) :
+    (S : ResidualStage phi Gamma x p e flag d) :
     Nonempty S.TerminalDescendant := by
   induction d using Nat.strong_induction_on with
   | h d ih =>

@@ -37,7 +37,6 @@ open ContactFlagBezout6543Research
 open ContactIdentityResidualGlobalFlagResearch
 open ContactIdentityResidualIncidenceResearch
 open ContactIdentityResidualZeroBudgetTransportResearch
-open ContactResidualSupportParametersResearch
 
 noncomputable section
 
@@ -48,7 +47,6 @@ variable {K Omega Iota : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
 variable {p e : ℕ} [CharP Omega p]
 variable {surfaceFlag cutFlag : FlagDegree}
-variable {support : ResidualSupportParameters}
 
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
@@ -64,7 +62,7 @@ regular component is `Z`-transcendental.
 -/
 theorem recursive_curve_stratified_incidence_bound
     (hphi : Function.Injective phi) {d a : ℕ}
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
+    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
     (degreeCost unitCost U V zCharge : ℕ)
     (hda : d < a)
     (hagreement : ∀ gamma ∈ Gamma,
@@ -128,7 +126,7 @@ All selected-point injectivity and evaluation facts are discharged here.
 -/
 theorem recursive_curve_stratified_incidence_of_zero_bounds
     (hphi : Function.Injective phi) {d a : ℕ}
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
+    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
     (degreeCost unitCost U V zCharge : ℕ)
     (hda : d < a)
     (hagreement : ∀ gamma ∈ Gamma,
@@ -170,12 +168,12 @@ the original regular components valid.
 -/
 theorem recursive_curve_stratified_incidence_of_prime_flag_budget
     (hphi : Function.Injective phi) {d a : ℕ}
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
+    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
     (cost : FlagDegree → ℕ)
     (B : PrimeFlagZeroBudget S.primeIdeal cost)
     (degreeCost unitCost U V zCharge : ℕ)
     (hcost : ∀ t : ℕ,
-      cost (support.residualAgreementFlag t) = t * degreeCost + unitCost)
+      cost (residualAgreementFlag t) = t * degreeCost + unitCost)
     (hda : d < a)
     (hagreement : ∀ gamma ∈ Gamma,
       a ≤ (S.agreementFiber gamma).card)
@@ -190,11 +188,11 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
       U * degreeCost + V * unitCost + (e + 1) * (a - d) * zCharge := by
   classical
   let Inv : ∀ n, CurveResidualStage phi Gamma x p e
-      surfaceFlag cutFlag n support → Prop :=
+      surfaceFlag cutFlag n → Prop :=
     fun _ A ↦ PrimeFlagZeroBudget A.primeIdeal cost
   have htransport : ∀ {n m}
-      {A : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag n support}
-      {Anext : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag m support},
+      {A : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag n}
+      {Anext : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag m},
       A.ResidualTransition Anext → Inv n A → Inv m Anext := by
     intro n m A Anext htransition hbudget
     obtain ⟨aY, v, bY, aS, bS, cS, hv, _, _, hprime⟩ := htransition
@@ -221,15 +219,15 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
         (Gamma.filter (fun gamma ↦ D.stage.Agrees gamma i)).card ≤
           D.degree * degreeCost + unitCost := by
       intro i hi
-      have hflag : PolynomialInFlag (support.residualAgreementFlag D.degree)
+      have hflag : PolynomialInFlag (residualAgreementFlag D.degree)
           (agreementPolynomial phi D.stage.F D.degree
             (x i) (D.stage.u0 i) (D.stage.u1 i)) :=
-        surfaceMap_agreement_in_flag_of_support support
+        surfaceMap_agreement_in_flag_of_surface_weights
           D.stage.F D.stage.surface_s_weight D.stage.surface_ys_weight
           D.stage.surface_total_weight D.degree
           (fun j ↦ (j.factorial : K)⁻¹)
           (x i) (D.stage.u0 i) (D.stage.u1 i)
-      have hzero := hDBudget.zero_le (support.residualAgreementFlag D.degree)
+      have hzero := hDBudget.zero_le (residualAgreementFlag D.degree)
         (agreementPolynomial phi D.stage.F D.degree
           (x i) (D.stage.u0 i) (D.stage.u1 i))
         hflag (D.stage.proper_agreement_of_terminal hproper hi)
