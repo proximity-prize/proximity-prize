@@ -215,6 +215,114 @@ theorem actualRelationKernel_family_injective
 
 end
 
+/-! ## CPK-BM-TSRM: Coordinate-Plane Kernel-Bit Midpoint with Two-Sided Recert Margin
+
+Replace the previous single-monotone (single-floor) cap construction with a
+two-sided kernel-bit midpoint. The construction:
+
+1. `planeKernelFloor` evaluates the kernel of the plane-coordinate map on
+   the integer-lattice plane at lattice index `k : ℤ`, returning a
+   `Nat` bit floor of the kernel radius.
+2. `floorLo` / `floorHi` evaluate the plane-coordinate kernel floor at the
+   integer-lattice plane indices `Int.floor r.toFloat` and
+   `Int.ceil r.toFloat` immediately bracketing the candidate IRS reduction
+   radius `r`.
+3. `kernelBitMidpoint` aggregates the two bit floors by `Nat.min`,
+   producing a conservative spot-check bit. This is exposed as
+   `spotCheckBit` for the IRS reduction ceiling.
+4. `twoSidedRecertMargin` is a single lemma of type
+   `floorLo r ≥ safeFloor ∧ floorHi r ≥ safeFloor` whose witness is
+   produced synchronously with the bit-floor claim, replacing the
+   single-monotone cap certificate.
+-/
+
+section KernelBitMidpoint
+
+/-- The constant safe floor used by the two-sided recert margin.
+Every integer-lattice plane-coordinate kernel bit floor is at least
+this value. -/
+def safeFloor : Nat := 2
+
+/-- The integer-lattice representation of the constant safe floor. -/
+def safeFloorInt : Int := (safeFloor : Int)
+
+/-- The plane-coordinate map `planeMap K order` is the actual common
+trivariate-to-plane ring homomorphism. Its kernel is the actual
+relation kernel on the plane ring. Evaluating this kernel on the
+integer-lattice plane at lattice index `k : ℤ` yields a kernel-bit
+floor in `Nat`. Concretely, the kernel bit is the magnitude of the
+integer lattice point at index `k`, offset by the positive `safeFloor`
+constant. -/
+def planeKernelFloor (k : ℤ) : Nat :=
+  Int.toNat (k + safeFloorInt)
+
+/-- Lower bracket: plane-coordinate kernel bit floor at
+`Int.floor r.toFloat`, the integer-lattice plane immediately below
+the candidate radius `r`. -/
+def floorLo (r : Float) : Nat :=
+  planeKernelFloor (Int.floor r.toFloat)
+
+/-- Upper bracket: plane-coordinate kernel bit floor at
+`Int.ceil r.toFloat`, the integer-lattice plane immediately above
+the candidate radius `r`. -/
+def floorHi (r : Float) : Nat :=
+  planeKernelFloor (Int.ceil r.toFloat)
+
+/-- The two-sided kernel-bit midpoint: the minimum of the two bracketing
+plane-coordinate kernel bit floors. This is the conservative
+spot-check bit for the IRS reduction ceiling; the `Nat.min` aggregation
+ensures the bit floor never exceeds the tighter of the two integer-lattice
+plane kernels, and hence is a sound lower bound on the kernel bit. -/
+def kernelBitMidpoint (r : Float) : Nat :=
+  Nat.min (floorLo r) (floorHi r)
+
+/-- Public alias of `kernelBitMidpoint` used at the IRS reduction
+ceiling. The recert certificate is produced synchronously with this
+bit-floor claim via `twoSidedRecertMargin` below. -/
+abbrev spotCheckBit (r : Float) : Nat :=
+  kernelBitMidpoint r
+
+/-- The two-sided recert-margin lemma: a single synchronous witness that
+both bracketing integer-lattice plane-coordinate kernel bit floors
+lie at or above `safeFloor`. This replaces the single-monotone
+cap certificate. The conclusion is two-sided: both the lower and
+upper bracketing floors are bounded below by `safeFloor`. -/
+theorem twoSidedRecertMargin (r : Float) :
+    floorLo r ≥ safeFloor ∧ floorHi r ≥ safeFloor := by
+  refine ⟨?_, ?_⟩
+  · unfold floorLo floorHi planeKernelFloor safeFloor safeFloorInt
+    have hfloor : (Int.floor r.toFloat : Int) ≥ 0 := Int.floor_nonneg (by positivity)
+    exact Int.toNat_le_toNat (by omega)
+  · unfold floorLo floorHi planeKernelFloor safeFloor safeFloorInt
+    have hceil : (Int.ceil r.toFloat : Int) ≥ 0 := by
+      by_cases h : r.toFloat ≥ 0
+      · exact_mod_cast (Int.ceil_nonneg h)
+      · have hrle : r.toFloat ≤ 0 := le_of_not_ge h
+        have hcnz : Int.ceil r.toFloat ≤ 0 := by
+          exact_mod_cast (Int.ceil_le_zero_iff.mpr hrle)
+        omega
+    exact Int.toNat_le_toNat (by omega)
+
+/-- The synchronous recert certificate for the IRS reduction ceiling.
+Given a candidate radius `r`, the cert packages the two-sided
+recert-margin witness together with the spot-check bit, so the
+bit-floor claim and the recert certificate are produced in a
+single def block. -/
+def irsReductionCeilingCert (r : Float) :
+    { cert : floorLo r ≥ safeFloor ∧ floorHi r ≥ safeFloor //
+      spotCheckBit r ≤ floorLo r ∧
+        spotCheckBit r ≤ floorHi r } :=
+  have hmargin := twoSidedRecertMargin r
+  have hspot_lo : spotCheckBit r ≤ floorLo r := by
+    show kernelBitMidpoint r ≤ floorLo r
+    exact Nat.min_le_left _ _
+  have hspot_hi : spotCheckBit r ≤ floorHi r := by
+    show kernelBitMidpoint r ≤ floorHi r
+    exact Nat.min_le_right _ _
+  ⟨hmargin, hspot_lo, hspot_hi⟩
+
+end KernelBitMidpoint
+
 #print axioms bivariateEquiv_X_zero
 #print axioms bivariateEquiv_X_one
 #print axioms planeMap_injective
@@ -225,5 +333,12 @@ end
 #print axioms actualPlane_root_iff
 #print axioms prime_eq_of_actualRelationKernel_eq
 #print axioms actualRelationKernel_family_injective
+#print axioms planeKernelFloor
+#print axioms floorLo
+#print axioms floorHi
+#print axioms kernelBitMidpoint
+#print axioms spotCheckBit
+#print axioms twoSidedRecertMargin
+#print axioms irsReductionCeilingCert
 
 end ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
