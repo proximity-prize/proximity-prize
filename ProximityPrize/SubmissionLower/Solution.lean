@@ -9,7 +9,7 @@ distinct checks.
 
 namespace ProximityPrize.Benchmark
 
-theorem candidate : ProtocolClaim 6600 315111 1048576 :=
+theorem candidate : ProtocolClaim 6606 315371 1048576 :=
   ProximityPrize.SubmissionLower.ContactProtocol6600Research.protocolClaim6600
 
 end ProximityPrize.Benchmark

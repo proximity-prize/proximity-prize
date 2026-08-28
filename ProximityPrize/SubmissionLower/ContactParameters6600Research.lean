@@ -25,11 +25,11 @@ def w : ℕ := 131071
 def prime : ℕ := 2130706433
 def alignmentBudget : ℕ := 100000000000000000
 
-def errors : ℕ := 78777
+def errors : ℕ := 78842
 def agreements : ℕ := n - errors
-def multiplicity : ℕ := 24
-def seedTotalCap : ℕ := 576
-def slopeCap : ℕ := 6
+def multiplicity : ℕ := 26
+def seedTotalCap : ℕ := 504
+def slopeCap : ℕ := 7
 def weightedCap : ℕ := multiplicity * agreements
 def yCap : ℕ := (weightedCap - 1) / w
 def gap : ℕ := agreements - w
@@ -96,27 +96,27 @@ def retainedSingularNumerator : ℕ :=
 def retainedSingularContribution : ℕ := gap * retainedSingularNumerator
 
 theorem parameter_values :
-    agreements = 183367 ∧ weightedCap = 4400808 ∧ yCap = 33 ∧
-    gap = 52296 ∧ algebraicCap = 6336 ∧
-    implicitWeightedCap = 48408888 ∧ implicitYCap = 369 := by
+    agreements = 183302 ∧ weightedCap = 4765852 ∧ yCap = 36 ∧
+    gap = 52231 ∧ algebraicCap = 6552 ∧
+    implicitWeightedCap = 61956076 ∧ implicitYCap = 472 := by
   norm_num [agreements, n, errors, weightedCap, multiplicity, yCap, w,
     gap, algebraicCap, slopeCap, seedTotalCap, implicitWeightedCap,
     implicitYCap]
 
-theorem coefficient_count_exact : coefficientCount = 252251177906 := by
+theorem coefficient_count_exact : coefficientCount = 289762688264 := by
   norm_num [coefficientCount, seedTotalCap, slopeCap, weightedCap,
     multiplicity, agreements, n, errors, w, Finset.sum_range_succ]
 
-theorem local_contact_rank_exact : localContactRank = 962255 := by
+theorem local_contact_rank_exact : localContactRank = 1105344 := by
   norm_num [localContactRank, contactExponent, multiplicity, seedTotalCap,
     slopeCap, Finset.sum_range_succ]
 
-theorem total_contact_rank_exact : totalContactRank = 252249374720 := by
+theorem total_contact_rank_exact : totalContactRank = 289759297536 := by
   rw [show totalContactRank = n * localContactRank by rfl,
     local_contact_rank_exact]
   norm_num [n]
 
-theorem rank_margin_exact : rankMargin = 1803186 := by
+theorem rank_margin_exact : rankMargin = 3390728 := by
   rw [show rankMargin = coefficientCount - totalContactRank by rfl,
     coefficient_count_exact, total_contact_rank_exact]
 
@@ -131,14 +131,14 @@ theorem characteristic_gates :
     implicitWeightedCap, algebraicCap, slopeCap, seedTotalCap, prime]
 
 theorem retained_singular_numerator_exact :
-    retainedSingularNumerator = 35753921693112783105 := by
+    retainedSingularNumerator = 60364133681350647096 := by
   norm_num [retainedSingularNumerator, liftedSurface, implicitCut,
     liftedLast, liftedAgreement, unitZ, mixed, implicitYCap,
     implicitWeightedCap, algebraicCap, yCap, weightedCap, multiplicity,
     agreements, n, errors, w, gap, slopeCap, seedTotalCap]
 
 theorem retained_singular_contribution_exact :
-    retainedSingularContribution = 1869787088863026105259080 := by
+    retainedSingularContribution = 3152879066310625648471176 := by
   rw [show retainedSingularContribution =
       gap * retainedSingularNumerator by rfl,
     retained_singular_numerator_exact]
@@ -152,12 +152,12 @@ theorem retained_singular_matches_residual_ledger :
 
 theorem exact_stratified_ledger :
     ContactNearPencil6600ArithmeticResearch.stratifiedTotalNumerator =
-        221603100527518823670874092 ∧
+        246765134551456838376053721 ∧
       ContactNearPencil6600ArithmeticResearch.ledgerCeiling =
-        81028703223602736 ∧
+        90453862518401229 ∧
       ContactNearPencil6600ArithmeticResearch.alignmentBudget -
           ContactNearPencil6600ArithmeticResearch.ledgerCeiling =
-        18971296776397264 := by
+        9546137481598771 := by
   exact ⟨ContactNearPencil6600ArithmeticResearch.stratified_total_exact,
     ContactNearPencil6600ArithmeticResearch.ledger_ceiling_exact,
     ContactNearPencil6600ArithmeticResearch.budget_slack⟩
