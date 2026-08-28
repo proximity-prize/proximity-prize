@@ -8,7 +8,7 @@ coefficient count and translated contact rank from their defining finite
 sums.  It contains no geometric or decoding premise.
 -/
 
-namespace ProximityPrize.SubmissionLower.ContactParameters6630Research
+namespace ProximityPrize.SubmissionLower.ContactFlagParameters6641Research
 
 open Finset
 
@@ -112,10 +112,10 @@ theorem characteristic_gates :
   norm_num [weightedCap, multiplicity, agreements, n, errors,
     implicitWeightedCap, algebraicCap, slopeCap, seedTotalCap, prime]
 
-end ProximityPrize.SubmissionLower.ContactParameters6630Research
+end ProximityPrize.SubmissionLower.ContactFlagParameters6641Research
 
-#print axioms ProximityPrize.SubmissionLower.ContactParameters6630Research.coefficient_count_exact
-#print axioms ProximityPrize.SubmissionLower.ContactParameters6630Research.local_contact_rank_exact
-#print axioms ProximityPrize.SubmissionLower.ContactParameters6630Research.rank_margin_exact
-#print axioms ProximityPrize.SubmissionLower.ContactParameters6630Research.interpolation_gate
-#print axioms ProximityPrize.SubmissionLower.ContactParameters6630Research.characteristic_gates
+#print axioms ProximityPrize.SubmissionLower.ContactFlagParameters6641Research.coefficient_count_exact
+#print axioms ProximityPrize.SubmissionLower.ContactFlagParameters6641Research.local_contact_rank_exact
+#print axioms ProximityPrize.SubmissionLower.ContactFlagParameters6641Research.rank_margin_exact
+#print axioms ProximityPrize.SubmissionLower.ContactFlagParameters6641Research.interpolation_gate
+#print axioms ProximityPrize.SubmissionLower.ContactFlagParameters6641Research.characteristic_gates
