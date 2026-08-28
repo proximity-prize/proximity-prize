@@ -3,12 +3,7 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalFlagResearch
 import ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
 
 /-!
-# Exact variable-degree flag identities for the 66.00 route
-
-This module ties the residual agreement flag proved from the actual global
-substitution to the quadratic and linear mixed coefficients used by the
-stratified-incidence ledger.  The identities hold for arbitrary residual
-degrees `d,e`; they are not numerical samples at `w`.
+# Exact variable-degree flag identities for the 66.24 route
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactNearPencil6600FlagResearch
@@ -17,15 +12,9 @@ open ContactFlagBezout6543Research
 open ContactIdentityResidualGlobalFlagResearch
 open ContactNearPencil6600ArithmeticResearch
 
-/-- Surface flag for `(errors,m,s,L)=(78777,24,6,576)`. -/
-def surfaceFlag6600 : FlagDegree := ⟨549, 27, 6⟩
-
-/-- Derivative flag after one derivative in the residual `R` coordinate. -/
-def derivativeFlag6600 : FlagDegree := ⟨549, 27, 5⟩
-
-/-- One contact-recurrence order contributes the surface plus derivative
-flags. -/
-def agreementDirection6600 : FlagDegree := ⟨1098, 54, 11⟩
+def surfaceFlag6600 : FlagDegree := ⟨504, 35, 8⟩
+def derivativeFlag6600 : FlagDegree := ⟨504, 35, 7⟩
+def agreementDirection6600 : FlagDegree := ⟨1008, 70, 15⟩
 
 theorem agreementDirection6600_eq :
     agreementDirection6600 = surfaceFlag6600 + derivativeFlag6600 := by
@@ -34,11 +23,10 @@ theorem agreementDirection6600_eq :
 theorem residualAgreementFlag_eq_affine (d : ℕ) :
     residualAgreementFlag d =
       unitYZFlag + d • agreementDirection6600 := by
-  change (⟨1098 * d, 1 + 54 * d, 11 * d⟩ : FlagDegree) =
-    (⟨0 + d * 1098, 1 + d * 54, 0 + d * 11⟩ : FlagDegree)
+  change (⟨1008 * d, 1 + 70 * d, 15 * d⟩ : FlagDegree) =
+    (⟨0 + d * 1008, 1 + d * 70, 0 + d * 15⟩ : FlagDegree)
   congr 1 <;> omega
 
-/-- Exact bilinear expansion of the whole proper-intersection cost. -/
 theorem flagMixed_residualAgreementFlag
     (d e : ℕ) :
     flagMixed surfaceFlag6600 (residualAgreementFlag d)
@@ -48,7 +36,6 @@ theorem flagMixed_residualAgreementFlag
     mixedQuadratic, mixedLinear, mixedUnit]
   ring
 
-/-- Exact affine expansion of the exceptional `Z` projection cost. -/
 theorem flagMixed_residualAgreementFlag_unitZ (d : ℕ) :
     flagMixed surfaceFlag6600 (residualAgreementFlag d) unitZFlag =
       zLinear * d + zUnit := by
@@ -69,6 +56,3 @@ theorem flagMixed_direction_values :
     zLinear, zUnit]
 
 end ProximityPrize.SubmissionLower.ContactNearPencil6600FlagResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FlagResearch.flagMixed_residualAgreementFlag
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600FlagResearch.flagMixed_residualAgreementFlag_unitZ
