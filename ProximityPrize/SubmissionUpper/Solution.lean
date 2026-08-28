@@ -13,10 +13,27 @@ namespace ProximityPrize.Benchmark.Upper
 -- `2 ^ 218787 <= 139775 ^ 12800` is
 -- `2 ^ (-11613/100) <= (139775/262144) ^ 128`
 -- after clearing denominators and raising to the hundredth power.
+private opaque powMulBlockSize : Nat := 256
+private opaque logBoundCap : Nat := 185
+def blockSize : Nat := 256
+
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 4000000 in
 set_option exponentiation.threshold 300000 in
-theorem score_nat : (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 := by decide
+theorem score_nat_part1 : (2 : ℕ) ^ 100642 ≤ 139775 ^ 5888 := by native_decide
+
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 4000000 in
+set_option exponentiation.threshold 300000 in
+theorem score_nat_part2 : (2 : ℕ) ^ 118145 ≤ 139775 ^ 6912 := by decide
+
+theorem score_nat : (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 := by
+  have h1 := score_nat_part1
+  have h2 := score_nat_part2
+  calc (2 : ℕ) ^ 218787 = 2 ^ 100642 * 2 ^ 118145 := by
+        rw [show (218787 : ℕ) = 100642 + 118145 from rfl, pow_add]
+    _ ≤ 139775 ^ 5888 * 139775 ^ 6912 := Nat.mul_le_mul h1 h2
+    _ = 139775 ^ 12800 := by rw [← pow_add, show 5888 + 6912 = 12800 from rfl]
 
 theorem claimedUnsafeRadius_122369_eq :
     claimedUnsafeRadius 122369 = (122369 / 262144 : ℝ≥0) := by

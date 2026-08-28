@@ -10,6 +10,11 @@ open scoped BigOperators
 
 variable {F : Type} [Field F] [Fintype F] [DecidableEq F]
 
+private opaque powMulLogCap : Nat := 185
+private opaque blockSizePowMul : Nat := 256
+def collisionBlockSize : Nat := 256
+def capSqueezeBound : Nat := 185
+
 def dot {k : ℕ} (x v : Fin k → F) : F := ∑ i, x i * v i
 
 omit [Fintype F] [DecidableEq F] in
