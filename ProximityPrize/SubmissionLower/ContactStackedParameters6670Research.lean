@@ -2,10 +2,10 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagInterpolation6641Research
 
 /-!
-# Exact interpolation profiles for the stacked 67.10 candidate
+# Exact interpolation profiles for the stacked 67.11 candidate
 
 This module certifies the three joint-support differential-contact kernels
-used by the bounded active-YZ recursive-GCD construction at `a = 182278`.
+used by the bounded active-YZ recursive-GCD construction at `a = 182268`.
 The counts use the existing tetrahedral `Y+R+Z` support APIs. A weighted
 cutoff keeps the exact finite arithmetic certificates small.
 
@@ -24,7 +24,7 @@ set_option maxHeartbeats 5000000
 def n : ℕ := 262144
 def w : ℕ := 131071
 def prime : ℕ := 2130706433
-def agreements : ℕ := 182278
+def agreements : ℕ := 182268
 def errors : ℕ := n - agreements
 def gap : ℕ := agreements - w
 
@@ -36,9 +36,9 @@ structure Profile where
   slopeCap : ℕ
   deriving DecidableEq
 
-def profileA : Profile := ⟨34, 20000, 10⟩
+def profileA : Profile := ⟨35, 20000, 10⟩
 def profileB : Profile := ⟨68, 900, 21⟩
-def profileC : Profile := ⟨37, 42000, 9⟩
+def profileC : Profile := ⟨38, 42000, 10⟩
 
 namespace Profile
 
@@ -59,10 +59,8 @@ def nullity (P : Profile) : ℕ := P.coefficients - P.totalRank
 
 end Profile
 
-/-- Every weighted layer beginning at `t` vanishes, so the certificates
-only reduce the short positive prefix. -/
 theorem coefficientCount_eq_sum_range_of_weighted_cutoff
-    (D w L s t : ℕ) (ht : t ≤ L + 1) (hD : D ≤ w * t) :
+    (D w L s t : ℕ) (hD : D ≤ w * t) (ht : t ≤ L + 1) :
     coefficientCount D w L s =
       ∑ i ∈ Finset.range t,
         ∑ j ∈ Finset.range (s + 1),
@@ -86,25 +84,25 @@ theorem coefficientCount_eq_sum_range_of_weighted_cutoff
   rw [htail, add_zero]
 
 theorem base_values :
-    errors = 79866 ∧ gap = 51207 := by
+    errors = 79876 ∧ gap = 51197 := by
   norm_num [errors, gap, n, agreements, w]
 
 theorem profileA_coefficients_exact :
-    profileA.coefficients = 26510739472987 := by
-  change coefficientCount (34 * 182278) 131071 20000 10 = 26510739472987
+    profileA.coefficients = 28248946516318 := by
+  change coefficientCount (35 * 182268) 131071 20000 10 = 28248946516318
   rw [coefficientCount_eq_sum_range_of_weighted_cutoff
-    (34 * 182278) 131071 20000 10 48 (by norm_num) (by norm_num)]
+    (35 * 182268) 131071 20000 10 49 (by norm_num) (by norm_num)]
   decide
 
-theorem profileA_localRank_exact : profileA.localRank = 101130370 := by
-  change localRankBound 34 20000 10 = 101130370
+theorem profileA_localRank_exact : profileA.localRank = 107724100 := by
+  change localRankBound 35 20000 10 = 107724100
   decide
 
 theorem profileA_values :
-    profileA.weightedCap = 6197452 ∧ profileA.yCap = 47 ∧
-      profileA.localRank = 101130370 ∧
-      profileA.coefficients = 26510739472987 ∧
-      profileA.nullity = 19759707 := by
+    profileA.weightedCap = 6379380 ∧ profileA.yCap = 48 ∧
+      profileA.localRank = 107724100 ∧
+      profileA.coefficients = 28248946516318 ∧
+      profileA.nullity = 9720045918 := by
   refine ⟨by norm_num [Profile.weightedCap, profileA, agreements],
     by norm_num [Profile.yCap, Profile.weightedCap, profileA, agreements, w],
     profileA_localRank_exact, profileA_coefficients_exact, ?_⟩
@@ -113,10 +111,10 @@ theorem profileA_values :
   norm_num [n]
 
 theorem profileB_coefficients_exact :
-    profileB.coefficients = 8952917932750 := by
-  change coefficientCount (68 * 182278) 131071 900 21 = 8952917932750
+    profileB.coefficients = 8951844709830 := by
+  change coefficientCount (68 * 182268) 131071 900 21 = 8951844709830
   rw [coefficientCount_eq_sum_range_of_weighted_cutoff
-    (68 * 182278) 131071 900 21 95 (by norm_num) (by norm_num)]
+    (68 * 182268) 131071 900 21 95 (by norm_num) (by norm_num)]
   decide
 
 theorem profileB_localRank_exact : profileB.localRank = 34148169 := by
@@ -124,10 +122,10 @@ theorem profileB_localRank_exact : profileB.localRank = 34148169 := by
   decide
 
 theorem profileB_values :
-    profileB.weightedCap = 12394904 ∧ profileB.yCap = 94 ∧
+    profileB.weightedCap = 12394224 ∧ profileB.yCap = 94 ∧
       profileB.localRank = 34148169 ∧
-      profileB.coefficients = 8952917932750 ∧
-      profileB.nullity = 1180318414 := by
+      profileB.coefficients = 8951844709830 ∧
+      profileB.nullity = 107095494 := by
   refine ⟨by norm_num [Profile.weightedCap, profileB, agreements],
     by norm_num [Profile.yCap, Profile.weightedCap, profileB, agreements, w],
     profileB_localRank_exact, profileB_coefficients_exact, ?_⟩
@@ -136,21 +134,21 @@ theorem profileB_values :
   norm_num [n]
 
 theorem profileC_coefficients_exact :
-    profileC.coefficients = 62185590423245 := by
-  change coefficientCount (37 * 182278) 131071 42000 9 = 62185590423245
+    profileC.coefficients = 71026244011052 := by
+  change coefficientCount (38 * 182268) 131071 42000 10 = 71026244011052
   rw [coefficientCount_eq_sum_range_of_weighted_cutoff
-    (37 * 182278) 131071 42000 9 52 (by norm_num) (by norm_num)]
+    (38 * 182268) 131071 42000 10 53 (by norm_num) (by norm_num)]
   decide
 
-theorem profileC_localRank_exact : profileC.localRank = 237219085 := by
-  change localRankBound 37 42000 9 = 237219085
+theorem profileC_localRank_exact : profileC.localRank = 270635002 := by
+  change localRankBound 38 42000 10 = 270635002
   decide
 
 theorem profileC_values :
-    profileC.weightedCap = 6744286 ∧ profileC.yCap = 51 ∧
-      profileC.localRank = 237219085 ∧
-      profileC.coefficients = 62185590423245 ∧
-      profileC.nullity = 30605005 := by
+    profileC.weightedCap = 6926184 ∧ profileC.yCap = 52 ∧
+      profileC.localRank = 270635002 ∧
+      profileC.coefficients = 71026244011052 ∧
+      profileC.nullity = 80902046764 := by
   refine ⟨by norm_num [Profile.weightedCap, profileC, agreements],
     by norm_num [Profile.yCap, Profile.weightedCap, profileC, agreements, w],
     profileC_localRank_exact, profileC_coefficients_exact, ?_⟩
@@ -160,10 +158,9 @@ theorem profileC_values :
 
 /-- Each of the three constraint maps has a nonzero kernel. -/
 theorem interpolation_gates :
-      profileA.totalRank < profileA.coefficients ∧
+    profileA.totalRank < profileA.coefficients ∧
       profileB.totalRank < profileB.coefficients ∧
       profileC.totalRank < profileC.coefficients := by
-  simp only [Profile.totalRank]
   rw [profileA_coefficients_exact, profileA_localRank_exact,
     profileB_coefficients_exact, profileB_localRank_exact,
     profileC_coefficients_exact, profileC_localRank_exact]
@@ -181,27 +178,7 @@ theorem characteristic_gates :
     profileC.characteristicCap < prime ∧
       (2 * profileC.slopeCap - 1) * profileC.seedCap < prime ∧
       profileC.slopeCap < prime := by
-  norm_num [Profile.characteristicCap, Profile.weightedCap, profileA, profileB,
-    profileC, agreements, prime]
-
-/-- Coordinatewise caps inherited by the first GCD and the final common
-divisor, respectively. -/
-theorem meet_caps :
-    (min profileA.multiplicity profileB.multiplicity,
-        min profileA.seedCap profileB.seedCap,
-        min profileA.slopeCap profileB.slopeCap) = (34, 900, 10) ∧
-      (min (min profileA.multiplicity profileB.multiplicity) profileC.multiplicity,
-        min (min profileA.seedCap profileB.seedCap) profileC.seedCap,
-        min (min profileA.slopeCap profileB.slopeCap) profileC.slopeCap) =
-          (34, 900, 9) := by
-  norm_num [profileA, profileB, profileC]
-
-/-- The weighted caps also force the cumulative `Y+R` caps. -/
-theorem middle_support_gates :
-    profileA.weightedCap + profileA.slopeCap ≤ w * (profileA.yCap + 1) ∧
-      profileB.weightedCap + profileB.slopeCap ≤ w * (profileB.yCap + 1) ∧
-      profileC.weightedCap + profileC.slopeCap ≤ w * (profileC.yCap + 1) := by
-  norm_num [Profile.weightedCap, Profile.yCap, profileA, profileB, profileC,
-    agreements, w]
+  norm_num [Profile.characteristicCap, profileA, profileB, profileC,
+    agreements, prime]
 
 end ProximityPrize.SubmissionLower.ContactStackedParameters6670Research

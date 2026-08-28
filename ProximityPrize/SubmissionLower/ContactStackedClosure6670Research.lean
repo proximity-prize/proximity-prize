@@ -3,7 +3,7 @@ import ProximityPrize.SubmissionLower.ContactFixedSelectedCell6670Research
 import ProximityPrize.SubmissionLower.ContactSeedlessProtocolResearch
 
 /-!
-# Premise-free stacked 66.70 closure
+# Premise-free stacked 67.11 closure
 
 This module supplies the sole fixed-cell premise of the selected-family
 composition from the completed sharp-YZ fixed-meet theorem.
@@ -30,11 +30,6 @@ local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 provider used by the recursive-GCD composition. -/
 theorem fixedCellCountProvider6670 : FixedCellCountProvider6670 := by
   intro Q hQ hbox Hsupport selected Delta u0 u1 hsolution hdegree hagreement hnoPencil
-  letI : CharP IRSProfile.Field
-      ContactFixedMeetProfile6670Research.prime := by
-    simpa [ContactFixedMeetProfile6670Research.prime,
-      ContactParameters6600Research.prime] using
-        ContactFrozenAlignment6600Research.challenge_field_characteristic6600
   have hbox' : Q ∈ globalCoefficientBox IRSProfile.Field
       fixedProfile.weightedCap fixedProfile.w fixedProfile.seedTotalCap
         fixedProfile.slopeCap := by
@@ -62,24 +57,28 @@ theorem fixedCellCountProvider6670 : FixedCellCountProvider6670 := by
 
 theorem selectedNoLargePencilBound6670 :
     SelectedNoLargePencilBound IRSProfile.domain
-      131071 79866 274980727511395087 :=
+      131071 79876 274980727411395087 :=
   selectedNoLargePencilBound_of_fixedCellCountProvider6670
     fixedCellCountProvider6670
 
 /-- Final split-budget endpoint: the recursive-GCD construction supplies
 MCA, while the independent fixed-centre construction supplies Lambda. -/
-theorem protocolClaim6710 : ProtocolClaim 6710 319467 1048576 := by
+theorem protocolClaim6711 : ProtocolClaim 6711 319507 1048576 := by
   have halign : AffineLineAlignmentBound IRSProfile.baseCode
       ContactSeedlessProtocolResearch.errors
       ContactSeedlessProtocolResearch.mcaBudget := by
     have h := ContactAlignmentBridge.alignmentBound_of_selected_count
-      IRSProfile.domain 131071 79866 274980727511395087
+      IRSProfile.domain 131071 79876 274980727411395087
       selectedNoLargePencilBound6670
     simpa [IRSProfile.baseCode, IRSProfile.baseDimension,
       ContactSeedlessProtocolResearch.errors,
       ContactSeedlessProtocolResearch.mcaBudget,
       ContactScore6630Research.errors6630] using h
-  exact ContactSeedlessProtocolResearch.protocolClaim6710_of_alignment halign
+  exact ContactSeedlessProtocolResearch.protocolClaim6711_of_alignment halign
+
+/-- Legacy alias. -/
+theorem protocolClaim6710 : ProtocolClaim 6711 319507 1048576 :=
+  protocolClaim6711
 
 end
 

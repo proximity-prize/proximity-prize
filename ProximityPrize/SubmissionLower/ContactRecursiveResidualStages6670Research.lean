@@ -1,10 +1,10 @@
 import ProximityPrize.SubmissionLower.ContactRecursiveResidualStages6656Research
 
 /-!
-# Numerical residual stages for the stacked 67.10 profile
+# Numerical residual stages for the stacked 67.11 profile
 
 This module specializes the accepted unequal-regular and tight-singular
-arithmetic APIs to the two residual pairs at `a = 182278`.  The first stage is
+arithmetic APIs to the two residual pairs at `a = 182268`.  The first stage is
 oriented with profile B as its singular pivot; the second uses the A/B GCD box
 as pivot.  It proves only numerical caps and generic stage-composition
 wrappers.  No seed-cell geometry is asserted.
@@ -26,33 +26,33 @@ def prime : ℕ := 2130706433
 /-- First residual pair, oriented with profile B as the singular pivot and
 profile A as the external proper cut. -/
 def residualStageOne : UnequalParameters :=
-  ⟨262144, 131071, 182278, 94, 21, 900, 47, 10, 20000⟩
+  ⟨262144, 131071, 182268, 94, 21, 900, 48, 10, 20000⟩
 
 /-- Second residual pair, oriented with the A/B GCD box as singular pivot and
 profile C as the external proper cut. -/
 def residualStageTwo : UnequalParameters :=
-  ⟨262144, 131071, 182278, 47, 10, 900, 51, 9, 42000⟩
+  ⟨262144, 131071, 182268, 48, 10, 900, 52, 10, 42000⟩
 
 /-- Tight singular ledger for the profile-B pivot. -/
 def pivotB : TightParameters :=
-  ⟨262144, 131071, 182278, 12394904, 900, 21⟩
+  ⟨262144, 131071, 182268, 12394224, 900, 21⟩
 
 /-- Tight singular ledger for the A/B GCD pivot. -/
 def pivotGcd12 : TightParameters :=
-  ⟨262144, 131071, 182278, 6197452, 900, 10⟩
+  ⟨262144, 131071, 182268, 6379380, 900, 10⟩
 
-def firstResidualSingularCeiling : ℕ := 287984100301317
-def secondResidualSingularCeiling : ℕ := 30911739274586
+def firstResidualSingularCeiling : ℕ := 288040349938195
+def secondResidualSingularCeiling : ℕ := 31812929513254
 
 theorem residual_stage_values :
-    residualStageOne.agreement = ⟨24641349, 5373911, 5242840001⟩ ∧
-      residualStageOne.mixedCost = ⟨429000, 1922300, 1927⟩ ∧
-      residualStageOne.regularNumerator = 4063842427152794334 ∧
-      residualStageOne.regularCountCap = 79361072258730 ∧
-      residualStageTwo.agreement = ⟨13369243, 2490349, 11009964001⟩ ∧
-      residualStageTwo.mixedCost = ⟨428100, 2019900, 933⟩ ∧
-      residualStageTwo.regularNumerator = 2755934920791779886 ∧
-      residualStageTwo.regularCountCap = 53819495787524 := by
+    residualStageOne.agreement = ⟨37224166, 262142, 5478767802⟩ ∧
+      residualStageOne.mixedCost = ⟨429000, 3846400, 1948⟩ ∧
+      residualStageOne.regularNumerator = 3643035512872370020 ∧
+      residualStageOne.regularCountCap = 71157206728370 ∧
+      residualStageTwo.agreement = ⟨26214202, 262142, 11245891802⟩ ∧
+      residualStageTwo.mixedCost = ⟨429000, 4125600, 1000⟩ ∧
+      residualStageTwo.regularNumerator = 3108668984745118600 ∧
+      residualStageTwo.regularCountCap = 60719748906090 := by
   norm_num [residualStageOne, residualStageTwo,
     UnequalParameters.agreement, UnequalParameters.leftAgreement,
     UnequalParameters.rightAgreement, UnequalParameters.mixedCost,
@@ -63,13 +63,13 @@ theorem pivot_implicit_values :
     pivotB.kappa = 41 ∧
       pivotB.implicitYCap = 3877 ∧
       pivotB.algebraicCap = 36900 ∧
-      pivotB.tightNumerator = 14746801824129502434 ∧
-      pivotB.countCap = 287984100301316 ∧
+      pivotB.tightNumerator = 14746801795785766534 ∧
+      pivotB.countCap = 288040349938194 ∧
       pivotGcd12.kappa = 19 ∧
-      pivotGcd12.implicitYCap = 898 ∧
+      pivotGcd12.implicitYCap = 924 ∧
       pivotGcd12.algebraicCap = 17100 ∧
-      pivotGcd12.tightNumerator = 1582897433033683416 ∧
-      pivotGcd12.countCap = 30911739274585 := by
+      pivotGcd12.tightNumerator = 1628726746816029908 ∧
+      pivotGcd12.countCap = 31812929513253 := by
   norm_num [pivotB, pivotGcd12, TightParameters.countCap,
     TightParameters.tightNumerator, TightParameters.coreNumerator,
     TightParameters.aggregateCost, TightParameters.agreement,
@@ -118,98 +118,5 @@ theorem pivot_implicit_characteristic_gates :
       pivotGcd12.w < pivotGcd12.a ∧ pivotGcd12.a ≤ pivotGcd12.n := by
   norm_num [pivotB, pivotGcd12, prime, TightParameters.kappa,
     TightParameters.implicitYCap, TightParameters.algebraicCap]
-
-/-- Characteristic gates used by the unequal rectangular projection bounds. -/
-theorem residual_projection_characteristic_gates :
-    1 ≤ residualStageOne.leftR ∧
-      residualStageOne.leftY < prime ∧
-      residualStageOne.leftR < prime ∧
-      residualStageOne.leftZ < prime ∧
-      residualStageOne.rightY < prime ∧
-      residualStageOne.rightR < prime ∧
-      residualStageOne.rightZ < prime ∧
-      residualStageOne.mixedCost.y < prime ∧
-      residualStageOne.mixedCost.r < prime ∧
-      residualStageOne.mixedCost.z < prime ∧
-      1 ≤ residualStageOne.w ∧ residualStageOne.w < prime ∧
-      residualStageOne.w < residualStageOne.a ∧
-      residualStageOne.a ≤ residualStageOne.n ∧
-    1 ≤ residualStageTwo.leftR ∧
-      residualStageTwo.leftY < prime ∧
-      residualStageTwo.leftR < prime ∧
-      residualStageTwo.leftZ < prime ∧
-      residualStageTwo.rightY < prime ∧
-      residualStageTwo.rightR < prime ∧
-      residualStageTwo.rightZ < prime ∧
-      residualStageTwo.mixedCost.y < prime ∧
-      residualStageTwo.mixedCost.r < prime ∧
-      residualStageTwo.mixedCost.z < prime ∧
-      1 ≤ residualStageTwo.w ∧ residualStageTwo.w < prime ∧
-      residualStageTwo.w < residualStageTwo.a ∧
-      residualStageTwo.a ≤ residualStageTwo.n := by
-  norm_num [residualStageOne, residualStageTwo, prime,
-    UnequalParameters.mixedCost]
-
-theorem residual_stage_ceilings :
-    residualStageOne.regularCountCap + pivotB.countCap + 1 =
-        79361072258730 + firstResidualSingularCeiling ∧
-      residualStageTwo.regularCountCap + pivotGcd12.countCap + 1 =
-        53819495787524 + secondResidualSingularCeiling := by
-  rw [residual_stage_values.2.2.2.1,
-    residual_stage_values.2.2.2.2.2.2.2,
-    pivot_implicit_values.2.2.2.2.1,
-    pivot_implicit_values.2.2.2.2.2.2.2.2.2]
-  norm_num [firstResidualSingularCeiling, secondResidualSingularCeiling]
-
-/-! ## Generic target-specific stage composition -/
-
-theorem residual_stage_one_count_lt
-    {I : Type} [Fintype I]
-    (total regular exceptions : ℕ) (count : I → ℕ)
-    (cost : I → ContactParameters6600Research.DegreeVector)
-    (hcover : total ≤ regular + ((∑ i, count i) + exceptions))
-    (hregular : regular * residualStageOne.gap ≤ residualStageOne.regularNumerator)
-    (hy : (∑ i, (cost i).y) ≤ pivotB.algebraicCap)
-    (hr : (∑ i, (cost i).r) ≤
-      2 * pivotB.implicitYCap * pivotB.algebraicCap)
-    (hz : (∑ i, (cost i).z) ≤ pivotB.implicitYCap)
-    (hcount : ∀ i, count i * pivotB.gap ≤
-      (pivotB.n - pivotB.w) * dot pivotB.agreement (cost i) +
-        (pivotB.errors + 1) * pivotB.gap * (cost i).z)
-    (hexceptions : exceptions ≤ 2 * pivotB.algebraicCap ^ 2) :
-    total < 79361072258730 + firstResidualSingularCeiling := by
-  have h :=
-    ContactRecursiveResidualStages6656Research.complete_stage_count_lt
-      residualStageOne pivotB
-      pivot_projection_gates.1 pivot_projection_gates.2.1
-      total regular exceptions count cost hcover hregular hy hr hz hcount
-      hexceptions
-  rw [residual_stage_ceilings.1] at h
-  exact h
-
-theorem residual_stage_two_count_lt
-    {I : Type} [Fintype I]
-    (total regular exceptions : ℕ) (count : I → ℕ)
-    (cost : I → ContactParameters6600Research.DegreeVector)
-    (hcover : total ≤ regular + ((∑ i, count i) + exceptions))
-    (hregular : regular * residualStageTwo.gap ≤ residualStageTwo.regularNumerator)
-    (hy : (∑ i, (cost i).y) ≤ pivotGcd12.algebraicCap)
-    (hr : (∑ i, (cost i).r) ≤
-      2 * pivotGcd12.implicitYCap * pivotGcd12.algebraicCap)
-    (hz : (∑ i, (cost i).z) ≤ pivotGcd12.implicitYCap)
-    (hcount : ∀ i, count i * pivotGcd12.gap ≤
-      (pivotGcd12.n - pivotGcd12.w) * dot pivotGcd12.agreement (cost i) +
-        (pivotGcd12.errors + 1) * pivotGcd12.gap * (cost i).z)
-    (hexceptions : exceptions ≤ 2 * pivotGcd12.algebraicCap ^ 2) :
-    total < 53819495787524 + secondResidualSingularCeiling := by
-  have h :=
-    ContactRecursiveResidualStages6656Research.complete_stage_count_lt
-      residualStageTwo pivotGcd12
-      pivot_projection_gates.2.2.2.2.2.1
-      pivot_projection_gates.2.2.2.2.2.2.1
-      total regular exceptions count cost hcover hregular hy hr hz hcount
-      hexceptions
-  rw [residual_stage_ceilings.2] at h
-  exact h
 
 end ProximityPrize.SubmissionLower.ContactRecursiveResidualStages6670Research

@@ -8,7 +8,7 @@ import ProximityPrize.SubmissionLower.ContactStackedResidualCells6670Research
 import ProximityPrize.SubmissionLower.ContactStackedPromotedArithmetic6670Research
 
 /-!
-# Selected-family composition for the stacked 66.96 route
+# Selected-family composition for the stacked 67.11 route
 
 The three contact interpolants, recursive GCD cover, exact seed partition,
 both residual-cell bounds, and promoted-budget arithmetic are all concrete.
@@ -44,7 +44,7 @@ polynomial and the selected cell on which it specializes to zero; the three
 parent interpolants and recursive cover are deliberately absent. -/
 def FixedCellCountProvider6670 : Prop :=
   ∀ (Q : GlobalPoly), Q ≠ 0 →
-    Q ∈ globalCoefficientBox IRSProfile.Field (34 * agreements) w 900 9 →
+    Q ∈ globalCoefficientBox IRSProfile.Field (35 * agreements) w 900 10 →
     ResidualSupportData ContactFixedMeetProfile6670Research.fixedSupport Q →
     ∀ (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
       (Delta : Finset IRSProfile.Field)
@@ -128,123 +128,86 @@ theorem selected_full_domain_agreement
         (selected gamma).eval (IRSProfile.domain i) =
           U 0 i + gamma * U 1 i)).card := by
   intro gamma hgamma
-  have hA : A gamma ⊆
+  have hsub : A gamma ⊆
       (Finset.univ : Finset IRSProfile.Index).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           U 0 i + gamma * U 1 i) := by
     intro i hi
-    exact Finset.mem_filter.mpr
-      ⟨Finset.mem_univ _, hvalues gamma hgamma i hi⟩
-  have hsize := (hcard gamma hgamma).trans (Finset.card_le_card hA)
-  norm_num [IRSProfile.Index, errors, n, agreements] at hsize ⊢
-  exact hsize
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+    exact hvalues gamma hgamma i hi
+  have hh := (hcard gamma hgamma).trans (Finset.card_le_card hsub)
+  norm_num [IRSProfile.Index, errors, n, agreements] at hh ⊢
+  exact hh
 
-/-- Transport the actual final GCD cell into the abstract fixed-cell
-provider. -/
-theorem fixedSeeds_card_le_of_provider
-    (hfixedProvider : FixedCellCountProvider6670)
-    (QA QB QC : GlobalPoly) (hQA : QA ≠ 0) (hQB : QB ≠ 0) (hQC : QC ≠ 0)
-    (hboxA : QA ∈ globalCoefficientBox IRSProfile.Field
-      (34 * agreements) w 20000 10)
-    (hboxB : QB ∈ globalCoefficientBox IRSProfile.Field
-      (68 * agreements) w 900 21)
-    (hboxC : QC ∈ globalCoefficientBox IRSProfile.Field
-      (37 * agreements) w 42000 9)
-    (hflagB : QB ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
-      IRSProfile.Field (68 * agreements) w 900 21)
-    (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
-    (Gamma : Finset IRSProfile.Field)
-    (u0 u1 : IRSProfile.Index → IRSProfile.Field)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset IRSProfile.Index).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) =
-          u0 i + gamma * u1 i)).card)
-    (hnoPencil : NoLargeSelectedPencil selected Gamma w errors) :
-    (fixedSeeds selected Gamma QA QB QC).card ≤ fixedCost := by
-  let Q := gcd123 QA QB QC
-  let Delta := fixedSeeds selected Gamma QA QB QC
-  have hQ : Q ≠ 0 := by
-    simpa [Q] using
-      ContactStackedBoxTransport6656Research.gcd123_ne_zero
-        (B := QB) (C := QC) hQA
-  have hbox12 :=
-    ContactStackedBoxTransport6670Research.gcd12_mem_meet_box
-      QA QB hQA hQB hboxA hboxB
-  have hQbox : Q ∈ globalCoefficientBox IRSProfile.Field
-      (34 * agreements) w 900 9 := by
-    simpa [Q] using
-      ContactStackedBoxTransport6670Research.gcd123_mem_meet_box
-        QA QB QC hQA hQC hbox12 hboxC
-  have hQsupport := ContactStackedBoxTransport6670Research.gcd123_support_of_flagB
-    QA QB QC hQA hQB hQC hboxA hboxB hboxC hflagB
-  have hsub : Delta ⊆ Gamma := by
-    simpa [Delta] using fixedSeeds_subset selected Gamma QA QB QC
-  have hsolution : ∀ gamma ∈ Delta,
-      specialization IRSProfile.Field (selected gamma) gamma Q = 0 := by
-    simpa [Q, Delta] using fixedSeeds_vanish selected Gamma QA QB QC
-  have hdegreeDelta : ∀ gamma ∈ Delta,
-      (selected gamma).natDegree ≤ w := by
-    intro gamma hgamma
-    exact hdegree gamma (hsub hgamma)
-  have hagreementDelta : ∀ gamma ∈ Delta, agreements ≤
-      ((Finset.univ : Finset IRSProfile.Index).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) =
-          u0 i + gamma * u1 i)).card := by
-    intro gamma hgamma
-    exact hagreement gamma (hsub hgamma)
-  have hnoPencilDelta : NoLargeSelectedPencil selected Delta w errors :=
-    noLargeSelectedPencil_mono selected Gamma Delta w errors hsub hnoPencil
-  simpa [Delta] using hfixedProvider Q hQ hQbox hQsupport selected Delta u0 u1
-    hsolution hdegreeDelta hagreementDelta hnoPencilDelta
-
-/-- Complete selected-family bound, conditional only on the fixed-cell
+/-- Concrete selected-family bound for any supplied fixed-cell count
 provider. -/
 theorem selectedNoLargePencilBound_of_fixedCellCountProvider6670
     (hfixedProvider : FixedCellCountProvider6670) :
     SelectedNoLargePencilBound IRSProfile.domain
-      131071 79866 274980727511395087 := by
+      131071 79876 274980727411395087 := by
   intro U seeds A selected hdegreeRaw hcardRaw hvalues hnoRaw
   have hdegree : ∀ gamma ∈ seeds,
       (selected gamma).natDegree ≤ w := by
-    simpa [w] using hdegreeRaw
+    intro gamma hg
+    have hd := hdegreeRaw gamma hg
+    norm_num [w] at hd ⊢
+    exact hd
   have hcard : ∀ gamma ∈ seeds,
       Fintype.card IRSProfile.Index - errors ≤ (A gamma).card := by
-    simpa [errors, n, agreements] using hcardRaw
+    intro gamma hg
+    have hc := hcardRaw gamma hg
+    norm_num [IRSProfile.Index, errors] at hc ⊢
+    exact hc
+  have hnoPencil : NoLargeSelectedPencil selected seeds w errors := by
+    intro u c hu hc
+    have hn := hnoRaw u c (by norm_num [w] at hu ⊢; exact hu) hc
+    norm_num [errors] at hn ⊢
+    exact hn
+  obtain ⟨QA, QB, QC, hQA, hboxA, hQB, hboxB, hQC, hboxC, hflagB, huniversal⟩ :=
+    exists_stacked_interpolants_with_recursive_cover (U 0) (U 1)
+  have hbranch := selected_recursive_cover U seeds A selected QA QB QC
+    huniversal hdegree hcard hvalues
   have hagreement := selected_full_domain_agreement U seeds A selected
     hcard hvalues
-  have hno : NoLargeSelectedPencil selected seeds w errors := by
-    intro P0 P1 hP0 hP1
-    have hh := hnoRaw P0 P1 (by simpa [w] using hP0)
-      (by simpa [w] using hP1)
-    convert hh using 1
-    · apply congrArg Finset.card
-      ext gamma
-      simp [pencilSeeds]
-    · norm_num [errors, n, agreements]
-  obtain ⟨QA, QB, QC, hQA, hboxA, hQB, hboxB, hQC, hboxC, hflagB,
-      huniversal⟩ :=
-    exists_stacked_interpolants_with_recursive_cover (U 0) (U 1)
-  have hcover := selected_recursive_cover U seeds A selected QA QB QC
-    huniversal hdegree hcard hvalues
-  have hfirstRaw := firstResidualCell_count_lt QA QB QC hQA hQB hboxA hboxB
-    selected seeds (U 0) (U 1) hcover hdegree hagreement hno
-  have hsecondRaw := secondResidualCell_count_lt QA QB QC hQA hQB hQC
-    hboxA hboxB hboxC selected seeds (U 0) (U 1) hcover hdegree hagreement hno
-  have hfirst : (firstResidualSeeds selected seeds QA QB).card <
-      firstResidualCeiling := by
-    simpa [firstResidualCeiling, firstResidualRegularCost,
-      firstResidualSingularCeiling] using hfirstRaw
-  have hsecond : (secondResidualSeeds selected seeds QA QB QC).card <
-      secondResidualCeiling := by
-    simpa [secondResidualCeiling, secondResidualRegularCost,
-      secondResidualSingularCeiling] using hsecondRaw
-  have hfixed := fixedSeeds_card_le_of_provider hfixedProvider
-    QA QB QC hQA hQB hQC hboxA hboxB hboxC hflagB selected seeds
-    (U 0) (U 1) hdegree hagreement hno
-  simpa [promotedBudget] using
-    selected_card_le_promotedBudget_of_cell_bounds selected seeds QA QB QC
-      hfirst hsecond hfixed
+  have hfirst := firstResidualCell_count_lt selected seeds QA QB
+    hQA hQB hboxA hboxB (U 0) (U 1) hdegree hagreement hnoPencil
+  have hsecond := secondResidualCell_count_lt selected seeds QA QB QC
+    hQA hQC hboxA hboxB hboxC (U 0) (U 1) hdegree hagreement hnoPencil
+  have hfixed : (fixedSeeds selected seeds QA QB QC).card ≤ fixedCost := by
+    let Delta := fixedSeeds selected seeds QA QB QC
+    let G := gcd123 QA QB QC
+    have hGne : G ≠ 0 :=
+      ContactStackedBoxTransport6656Research.gcd123_ne_zero (C := QC)
+        (ContactStackedBoxTransport6656Research.gcd12_ne_zero (B := QB) hQA)
+    have hboxG := gcd123_mem_meet_box QA QB QC hQA hQC
+      (gcd12_mem_meet_box QA QB hQA (by
+        intro hBzero
+        subst hBzero
+        exact hQA (by simp [gcd12])) hboxA hboxB) hboxC
+    have hsupportG := gcd123_support_of_flagB QA QB QC hQA hQB hQC
+      hboxA hboxB hboxC hflagB
+    have hdegDelta : ∀ gamma ∈ Delta, (selected gamma).natDegree ≤ w :=
+      fun gamma hg ↦ hdegree gamma (fixedSeeds_subset selected seeds QA QB QC hg)
+    have hagrDelta : ∀ gamma ∈ Delta, agreements ≤
+        ((Finset.univ : Finset IRSProfile.Index).filter (fun i ↦
+          (selected gamma).eval (IRSProfile.domain i) =
+            U 0 i + gamma * U 1 i)).card :=
+      fun gamma hg ↦ hagreement gamma (fixedSeeds_subset selected seeds QA QB QC hg)
+    have hspecDelta : ∀ gamma ∈ Delta,
+        specialization IRSProfile.Field (selected gamma) gamma G = 0 :=
+      fun gamma hg ↦ (fixedSeeds_spec selected seeds QA QB QC hg).2.1
+    have hnoPencilDelta : NoLargeSelectedPencil selected Delta w errors := by
+      intro u c hu hc
+      have hsub := fixedSeeds_subset selected seeds QA QB QC
+      have hle := hnoPencil u c hu (by
+        intro gamma hg
+        exact hsub (hc gamma hg))
+      exact hle
+    exact hfixedProvider G hGne hboxG hsupportG selected Delta (U 0) (U 1)
+      hspecDelta hdegDelta hagrDelta hnoPencilDelta
+  have hbound := selected_card_le_promotedBudget_of_cell_bounds
+    selected seeds QA QB QC hfirst hsecond hfixed
+  exact hbound
 
 end
 

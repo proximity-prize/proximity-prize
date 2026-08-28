@@ -1,6 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSeedlessLambdaResearch
 import ProximityPrize.SubmissionLower.ContactScore6630Research
+import ProximityPrize.SubmissionLower.ContactSeedlessListBoundResearch
 
 /-! # Split-budget protocol bridge
 
@@ -23,7 +24,7 @@ set_option maxHeartbeats 5000000
 
 def radius : ℝ≥0 := ContactScore6630Research.radius6630
 def errors : ℕ := ContactScore6630Research.errors6630
-def mcaBudget : ℕ := 274980727511395087
+def mcaBudget : ℕ := 274980727411395087
 
 theorem field_cardinality :
     Fintype.card IRSProfile.Field = (2130706433 : ℕ) ^ 6 := by
@@ -118,8 +119,8 @@ theorem mca_le_of_alignment
       base_mca_le_of_alignment halign
     _ = (mcaBudget : ENNReal) /
         (Fintype.card IRSProfile.Field : ENNReal) := by
-      rw [ENNReal.ofReal_div_of_pos (by positivity), ENNReal.ofReal_natCast,
-        ENNReal.ofReal_natCast]
+      rw [ENNReal.ofReal_div_of_pos (by positivity),
+        ENNReal.ofReal_natCast, ENNReal.ofReal_natCast]
 
 theorem lambda_le :
     Code.Lambda
@@ -167,9 +168,9 @@ theorem certifiedGammaError_le_of_alignment
       · norm_num [mcaBudget, ContactSeedlessListBoundResearch.listBudget]
       · simpa only [Nat.mul_comm] using field_capacity_split
 
-theorem protocolClaim6710_of_alignment
+theorem protocolClaim6711_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-    ProtocolClaim 6710 319467 1048576 where
+    ProtocolClaim 6711 319507 1048576 where
   admissible := ContactScore6630Research.radius6630_admissible
   reduction := by
     change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
@@ -177,11 +178,11 @@ theorem protocolClaim6710_of_alignment
       (by norm_num [reductionTarget, ProximityGap.prizeThreshold, div_le_iff₀])
   score := ContactScore6630Research.radius6630_score
 
-/-- Legacy entry-point name for callers transitioning to the 67.10 row. -/
-theorem protocolClaim6696_of_alignment
+/-- Legacy alias. -/
+theorem protocolClaim6710_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-    ProtocolClaim 6710 319467 1048576 :=
-  protocolClaim6710_of_alignment halign
+    ProtocolClaim 6711 319507 1048576 :=
+  protocolClaim6711_of_alignment halign
 
 end
 
