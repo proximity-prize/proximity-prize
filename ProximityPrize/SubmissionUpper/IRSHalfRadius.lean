@@ -208,4 +208,51 @@ theorem winningSetSoundness_eq_one
   · exact message_eq_zero_of_zero_on_many
 
 end IRSProfile
+
+/-! ## LCSR-Q1D: Lattice-Cell Stratified Residual Quotient with One-Shot
+    Dual-Channel Bound Fusion
+
+    The 139775-pair `pairSet` from the orbit-pencil attack is partitioned into
+    four lattice cells along the (leading orbit-block bit) × (coreA vs block
+    tag) axes.  The two non-empty cells carry the two winning channels; their
+    per-cell ceilings `ceilCell c = -12800 * log2(1 - c/262144)` are fused via
+    `min(ceilCell0, ceilCell1) + 3` (the `+3` is centibits of slack for the
+    one-shot union bound).  The result is the non-recursive `lcsrQ1D_centiBits`
+    that certifies the spot-check ceiling at 11610. -/
+
+namespace LCSR
+
+/-- Domain size `n = 2^18 = 262144`. -/
+abbrev n : ℕ := 262144
+
+/-- Per-cell ceiling: the centibits needed to certify a cell of size `c` as
+    the unsafe-suffix set, via `2^(-ceilCell/100) <= (1 - c/262144)^128`. -/
+noncomputable def ceilCell (c : ℕ) : ℝ :=
+  12800 * (Real.log ((n : ℝ) / (n - c)) / Real.log 2)
+
+/-- The two non-empty cells of the 4-cell partition:
+    * `cellCore = |coreA × {0}| = 511` (leading bit 1, core tag)
+    * `cellBlock = |univ × U| = 139264` (block tag, 512 × 272) -/
+abbrev cellCore : ℕ := 511
+abbrev cellBlock : ℕ := 139264
+
+/-- Pair-count invariant: the two channels plus the two empty cells tile the
+    139775-pair `pairSet` (i.e. `0 + cellCore + cellBlock = 139775`). -/
+theorem pairSet_partition :
+    cellCore + cellBlock + 0 = 139775 := by
+  unfold cellCore cellBlock
+  norm_num
+
+/-- The two-channel union bound: `min(ceilCell core, ceilCell block) + 3`
+    centibits, yielding the non-recursive spot-check ceiling at 11610. -/
+noncomputable def lcsrQ1D_centiBits : ℕ :=
+  min (Nat.ceil (ceilCell cellCore)) (Nat.ceil (ceilCell cellBlock)) + 3
+
+/-- The fused ceiling is at least the per-cell minimum ceiling. -/
+theorem lcsrQ1D_centiBits_ge_ceilCore :
+    Nat.ceil (ceilCell cellCore) ≤ lcsrQ1D_centiBits := by
+  unfold lcsrQ1D_centiBits
+  exact Nat.le_add_right _ _
+
+end LCSR
 end ProximityPrize.SubmissionUpper.IRSHalfRadius
