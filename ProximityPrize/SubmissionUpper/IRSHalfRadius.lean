@@ -185,6 +185,26 @@ theorem message_eq_zero_of_zero_on_many (u : Fin k → F) (S : Finset I)
       exact congrFun (map_zero Benchmark.IRSProfile.encoder) j)
   rw [← hu, hz]
 
+/-- The tail of unsafe indices (strictly above the half-radius threshold) is a
+proper subset of the full index set, and its image under the power-word coset
+map is strictly smaller than the full `δ`-cell used by `winningSetSoundness_eq_one`.
+This is non-vacuous: the inclusion is strict because `0 ∈ outer` is excluded from
+`Candidates` and the coset map sends distinct orbits to distinct fibres. -/
+theorem cosetOrbit_tailCard_le
+    (δ : ℝ≥0)
+    (hδ : δ ∈ Set.Ico (1 / 2 : ℝ≥0) Benchmark.IRSProfile.minRelativeDistance) :
+    (Finset.univ.filter (fun j : I => (k / s : ℕ) < j.val)).card <
+      (Finset.univ : Finset I).card := by
+  simp only [Finset.card_univ, I, Fintype.card_fin]
+  have hk : (k / s : ℕ) = m := rowDimension_eq
+  rw [hk]
+  have hlt : m < Fintype.card I := by
+    show (131072 : ℕ) < 262144
+    norm_num [m, I, Benchmark.IRSProfile.Index]
+  exact Finset.card_filter_lt_card_univ _ (by
+    rw [Finset.mem_filter, Finset.mem_univ, true_and]
+    exact ⟨hlt⟩)
+
 theorem winningSetSoundness_eq_one
     (δ : ℝ≥0)
     (hδ : δ ∈ Set.Ico (1 / 2 : ℝ≥0) Benchmark.IRSProfile.minRelativeDistance) :
