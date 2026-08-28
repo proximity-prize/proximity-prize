@@ -38,7 +38,6 @@ open ContactIdentityResidualGlobalFlag6630Research
 open ContactNearPencil6630FlagResearch
 open ContactIdentityResidualIncidenceResearch
 open ContactIdentityResidualZeroBudgetTransportResearch
-open ContactCongruentCuts6643Research ContactReducedAgreement6643Research
 
 noncomputable section
 
@@ -58,19 +57,22 @@ local instance : DecidableEq Iota := Classical.decEq Iota
 
 /-- Agreement support for a current residual surface at the 66.30 caps.
 The zero/zero/one global residual transform is the identity. -/
-theorem surfaceMap_agreement_in_flag_mod_surface_weights6630
+theorem surfaceMap_agreement_in_flag_of_surface_weights6630
     (F : MvPolynomial (Fin 4) K)
     (hS : ContactPost6464MinkowskiRecurrenceResearch.wt
       residualSWeights F ≤ 10)
     (hYS : ContactPost6464MinkowskiRecurrenceResearch.wt
       residualYSWeights F ≤ 48)
     (hTotal : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualTotalWeights F ≤ 825)
+      residualTotalWeights F ≤ 814)
     (d : ℕ) (coeffs : ℕ → K) (x0 u0 u1 : K) :
-    PolynomialInFlagMod (Ideal.span {surfaceMap phi F})
-      (residualAgreementFlag6630 d)
-      (surfaceMap phi (agreementNumerator F d coeffs x0 u0 u1)) :=
-  agreement_in_flag_mod_surface phi F hS hYS hTotal d coeffs x0 u0 u1
+    PolynomialInFlag (residualAgreementFlag6630 d)
+      (surfaceMap phi (agreementNumerator F d coeffs x0 u0 u1)) := by
+  have h := surfaceMap_globalResidual_agreement_in_flag6630
+    phi (0 : Polynomial K) 0 1 F hS hYS hTotal d coeffs x0 u0 u1
+  simpa only [
+    ContactIdentityResidualIncidenceResearch.globalResidualHom_zero_zero_one]
+    using h
 
 /-- Inner recursive incidence with an abstract proper-terminal fiber bound.
 
@@ -239,18 +241,15 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
         (Gamma.filter (fun gamma ↦ D.stage.Agrees gamma i)).card ≤
           D.degree * degreeCost + unitCost := by
       intro i hi
-      have hflag : PolynomialInFlagMod D.stage.primeIdeal
-          (residualAgreementFlag6630 D.degree)
+      have hflag : PolynomialInFlag (residualAgreementFlag6630 D.degree)
           (agreementPolynomial phi D.stage.F D.degree
             (x i) (D.stage.u0 i) (D.stage.u1 i)) :=
-        PolynomialInFlagMod.of_surface_mem D.stage.surface_mem_primeIdeal
-          (surfaceMap_agreement_in_flag_mod_surface_weights6630
-            D.stage.F D.stage.surface_s_weight D.stage.surface_ys_weight
-            D.stage.surface_total_weight D.degree
-            (fun j ↦ (j.factorial : K)⁻¹)
-            (x i) (D.stage.u0 i) (D.stage.u1 i))
-      have hzero := ContactCongruentCuts6643Research.PrimeFlagZeroBudget.zero_le_congr
-        hDBudget (residualAgreementFlag6630 D.degree)
+        surfaceMap_agreement_in_flag_of_surface_weights6630
+          D.stage.F D.stage.surface_s_weight D.stage.surface_ys_weight
+          D.stage.surface_total_weight D.degree
+          (fun j ↦ (j.factorial : K)⁻¹)
+          (x i) (D.stage.u0 i) (D.stage.u1 i)
+      have hzero := hDBudget.zero_le (residualAgreementFlag6630 D.degree)
         (agreementPolynomial phi D.stage.F D.degree
           (x i) (D.stage.u0 i) (D.stage.u1 i))
         hflag (D.stage.proper_agreement_of_terminal hproper hi)
@@ -283,3 +282,7 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidence6630Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidence6630Research.recursive_curve_stratified_incidence_bound
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidence6630Research.recursive_curve_stratified_incidence_of_zero_bounds
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidence6630Research.recursive_curve_stratified_incidence_of_prime_flag_budget

@@ -69,7 +69,7 @@ structure CurveResidualStage6630
   T_flag_support : ContactFlagBezout6543Research.PolynomialInFlag cutFlag T
   surface_s_weight : wt residualSWeights F ≤ 10
   surface_ys_weight : wt residualYSWeights F ≤ 48
-  surface_total_weight : wt residualTotalWeights F ≤ 825
+  surface_total_weight : wt residualTotalWeights F ≤ 814
   x_injective : Set.InjOn x nodes
   degree_le : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d
   solution : ∀ gamma ∈ Gamma,
@@ -645,3 +645,7 @@ end CurveResidualStage6630
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIteration6630Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIteration6630Research.CurveResidualStage6630.advance
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIteration6630Research.CurveResidualStage6630.exists_terminal_descendant
+#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIteration6630Research.CurveResidualStage6630.exists_terminal_descendant_with_invariant

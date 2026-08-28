@@ -324,3 +324,5 @@ end FixedFamily
 end
 
 end ProximityPrize.SubmissionLower.ArbitraryPlaneEvaluationFamilyResearch
+
+#print axioms ProximityPrize.SubmissionLower.ArbitraryPlaneEvaluationFamilyResearch.finite_sum_finrank_bound

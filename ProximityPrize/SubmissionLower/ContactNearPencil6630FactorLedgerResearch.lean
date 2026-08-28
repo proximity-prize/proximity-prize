@@ -4,12 +4,12 @@ import ProximityPrize.SubmissionLower.ContactCumulativeWeightedDegreeResearch
 import ProximityPrize.SubmissionLower.ContactSingularLedger6630Research
 
 /-!
-# Sharp cumulative factor ledger for score 66.75
+# Sharp cumulative factor ledger for score 66.74
 
 The factorwise regular cost is linear in the three flag increments.  Its
 unit coefficients are monotone from Z to YZ to All, so the actual cumulative
-factor caps `(total, YS, S) <= (825,48,10)` recover the sharp global flag
-`(777,38,10)` without a rectangular overcount.
+factor caps `(total, YS, S) <= (814,48,10)` recover the sharp global flag
+`(766,38,10)` without a rectangular overcount.
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactNearPencil6630FactorLedgerResearch
@@ -55,9 +55,9 @@ theorem factorRegularLedgerYZ_projection_decomposition (p : FlagDegree) :
   ring
 
 theorem unit_ledger_values :
-    factorRegularLedgerYZ unitZFlag = 287876864059262631200898 ∧
-      factorRegularLedgerYZ unitYZFlag = 5551658027878608891040068 ∧
-      factorRegularLedgerYZ unitAllFlag = 28319907787655339282526341 := by
+    factorRegularLedgerYZ unitZFlag = 302133019577363726256756 ∧
+      factorRegularLedgerYZ unitYZFlag = 5780612839104835572882312 ∧
+      factorRegularLedgerYZ unitAllFlag = 27935469683139588337033413 := by
   norm_num [factorRegularLedgerYZ, factorPrimary6630, factorZTail6630,
     factorYZTail6630, flagMixed, agreementDirection6630, unitZFlag,
     unitYZFlag, unitAllFlag, degreeIncidence, unitIncidence, errors, gap,
@@ -139,7 +139,7 @@ theorem sum_factorRegularLedgerYZ_cumulative_le
     {I : Type*} [Fintype I] (p : I → FlagDegree)
     (hall : (∑ i, (p i).all) ≤ 10)
     (hyzAll : (∑ i, ((p i).yz + (p i).all)) ≤ 48)
-    (htotal : (∑ i, ((p i).zOnly + (p i).yz + (p i).all)) ≤ 825) :
+    (htotal : (∑ i, ((p i).zOnly + (p i).yz + (p i).all)) ≤ 814) :
     (∑ i, factorRegularLedgerYZ (p i)) ≤
       factorRegularLedgerYZ surfaceFlag6630 := by
   exact sum_factorRegularLedgerYZ_le_flag p surfaceFlag6630
@@ -152,7 +152,7 @@ theorem sum_factor_counts6630_le
     (hcount : ∀ i, count i * gap ^ 2 ≤ factorRegularLedgerYZ (p i))
     (hall : (∑ i, (p i).all) ≤ 10)
     (hyzAll : (∑ i, ((p i).yz + (p i).all)) ≤ 48)
-    (htotal : (∑ i, ((p i).zOnly + (p i).yz + (p i).all)) ≤ 825) :
+    (htotal : (∑ i, ((p i).zOnly + (p i).yz + (p i).all)) ≤ 814) :
     (∑ i, count i) * gap ^ 2 ≤ regularNumerator := by
   calc
     (∑ i, count i) * gap ^ 2 = ∑ i, count i * gap ^ 2 := by
@@ -169,28 +169,28 @@ def tightSingularContribution6630 : ℕ :=
 def totalNumerator6630 : ℕ :=
   regularNumerator + tightSingularContribution6630
 
-def fieldBudget6630 : ℕ := 274980727751395087
+def fieldBudget6630 : ℕ := 274980727761395087
 
 def ledgerCeiling6630 : ℕ :=
   (totalNumerator6630 + gap ^ 2 - 1) / gap ^ 2
 
 theorem tight_singular_contribution6630_exact :
-    tightSingularContribution6630 = 77135098441123008643533 := by
+    tightSingularContribution6630 = 76115473720379689592018 := by
   exact ContactSingularLedger6630Research.exact_values.2.2
 
 theorem total_numerator6630_exact :
-    totalNumerator6630 = 717919541408428718136527273 := by
+    totalNumerator6630 = 730527993187360629142129100 := by
   rw [show totalNumerator6630 =
       regularNumerator + tightSingularContribution6630 by rfl,
     regular_numerator_exact, tight_singular_contribution6630_exact]
 
 theorem ledger_ceiling6630_exact :
-    ledgerCeiling6630 = 270126933619095312 := by
+    ledgerCeiling6630 = 274807063459075099 := by
   norm_num [ledgerCeiling6630, total_numerator6630_exact, gap,
     agreements, n, errors, w]
 
 theorem field_slack6630_exact :
-    fieldBudget6630 - ledgerCeiling6630 = 4853794132299775 := by
+    fieldBudget6630 - ledgerCeiling6630 = 173664302319988 := by
   rw [ledger_ceiling6630_exact]
   norm_num [fieldBudget6630]
 
@@ -212,3 +212,8 @@ theorem combined_scaled_bound6630
     _ = totalNumerator6630 := rfl
 
 end ProximityPrize.SubmissionLower.ContactNearPencil6630FactorLedgerResearch
+
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630FactorLedgerResearch.factorRegularLedgerYZ_projection_decomposition
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630FactorLedgerResearch.sum_factorRegularLedgerYZ_cumulative_le
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630FactorLedgerResearch.ledger_ceiling6630_exact
+#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6630FactorLedgerResearch.strict_field_budget6630

@@ -128,3 +128,10 @@ end TwoRings
 end
 
 end ProximityPrize.SubmissionLower.NormValuationTransport
+
+#print axioms ProximityPrize.SubmissionLower.NormValuationTransport.valuation_transport
+#print axioms ProximityPrize.SubmissionLower.NormValuationTransport.fieldOrder_transport
+#print axioms ProximityPrize.SubmissionLower.NormValuationTransport.placeAbove
+#print axioms ProximityPrize.SubmissionLower.NormValuationTransport.norm_transport
+#print axioms ProximityPrize.SubmissionLower.NormValuationTransport.canonical_separable
+#print axioms ProximityPrize.SubmissionLower.NormValuationTransport.fieldOrder_norm

@@ -3,7 +3,7 @@ import ProximityPrize.SubmissionLower.ContactParameters6630Research
 import ProximityPrize.SubmissionLower.ContactTightSingularAggregationResearch
 
 /-!
-# Tight singular-family ledger for the score-66.75 row
+# Tight singular-family ledger for the score-66.74 row
 
 This is the row-specialized finite-family aggregation used by the actual
 implicit-pair branch.  It deliberately retains only the implicit-pair core
@@ -129,9 +129,9 @@ theorem implicit_with_exceptions_tight_scaled_bound {I : Type} [Fintype I]
       ring
 
 theorem exact_values :
-    implicitCoreNumerator = 1496203759463868411 ∧
-      tightSingularNumerator = 1496229093188039661 ∧
-      tightSingularContribution = 77135098441123008643533 := by
+    implicitCoreNumerator = 1476254426777054694 ∧
+      tightSingularNumerator = 1476279092309387102 ∧
+      tightSingularContribution = 76115473720379689592018 := by
   norm_num [implicitCoreNumerator, tightSingularNumerator,
     tightSingularContribution, ContactParameters6630Research.mixed,
     ContactParameters6630Research.liftedSurface,
@@ -151,3 +151,6 @@ theorem exact_values :
     ContactParameters6630Research.seedTotalCap]
 
 end ProximityPrize.SubmissionLower.ContactSingularLedger6630Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactSingularLedger6630Research.implicit_with_exceptions_tight_scaled_bound
+#print axioms ProximityPrize.SubmissionLower.ContactSingularLedger6630Research.exact_values

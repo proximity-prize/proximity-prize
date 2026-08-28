@@ -233,7 +233,7 @@ def geometricResidualStage6630
     (hsurface :
       MvPolynomial.weightedTotalDegree residualSWeights F ≤ 10 ∧
       MvPolynomial.weightedTotalDegree residualYSWeights F ≤ 48 ∧
-      MvPolynomial.weightedTotalDegree residualTotalWeights F ≤ 825)
+      MvPolynomial.weightedTotalDegree residualTotalWeights F ≤ 814)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes)
@@ -323,3 +323,6 @@ end
 
 
 end ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6630Research
+
+#print axioms ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6630Research.geometricResidualStage6630
+#print axioms ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6630Research.original_regular_seed_bound_of_geometric_counts6630
