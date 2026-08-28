@@ -1,17 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.ContactProtocol6600Research
-
-/-!
-Exact lower-track entrypoint for the unconditional adaptive-projection score-66
-assembly. Source-policy, kernel compilation, and Yukon validation remain
-distinct checks.
--/
+import ProximityPrize.SubmissionLower.BCHKSFinal6399
 
 namespace ProximityPrize.Benchmark
 
-theorem candidate : ProtocolClaim 6618 315835 1048576 :=
-  ProximityPrize.SubmissionLower.ContactProtocol6600Research.protocolClaim6600
+/-- Unconditional universal-resultant BCHKS lower-track certificate. -/
+theorem candidate : ProtocolClaim 6399 307083 1048576 :=
+  protocolClaim6399
 
 end ProximityPrize.Benchmark
-
-#print axioms ProximityPrize.Benchmark.candidate
