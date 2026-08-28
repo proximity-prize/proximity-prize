@@ -815,4 +815,83 @@ theorem winningSetDensity_gt_epsilon_window (δ : ℝ≥0)
       exact div_le_div_of_nonneg_right (by exact_mod_cast hcard) (by positivity)
     _ ≤ winningSetDensity IRSProfile.encoder δ := winningSetRatio_le_winningSetDensity x
 
+/-! ## Two-layer Laurent factorisation of the codeword polynomial
+
+The codeword polynomial `cpoly U` lives in `Polynomial FF` and has degree
+`< 2^17`.  Its definition `cpoly U = RF * (Q U).comp zpoly` is already a
+two-layer factorisation, where the *outer layer* `RF` is a polynomial in `X`
+of degree `511` that vanishes on the `511` core points, and the *inner layer*
+`(Q U).comp zpoly` is a polynomial in `X^512` (the Laurent monomial
+`zpoly = X^512`) of degree at most `255` in the substitution variable.
+
+A polynomial in `X^512` is a Laurent polynomial whose support is contained in
+the indices divisible by `512`; the two layers therefore decouple completely,
+the outer one handling the 511-point core and the inner one handling the
+`512` fibre labels.  We expose this decoupling as a self-contained lemma. -/
+
+theorem orbitPencil_cpoly_twoLayerLaurentFactor {U : Finset Small} (hU : U ∈ Sel) :
+    cpoly U = RF * (Q U).comp zpoly := rfl
+
+theorem orbitPencil_inner_layer_is_laurent_in_zpoly
+    {U : Finset Small} (hU : U ∈ Sel) :
+    ((Q U).comp zpoly).natDegree ≤ (Q U).natDegree * 512 := by
+  have hq := (Q_spec hU).2
+  have hz : zpoly.natDegree = 512 := by simp [zpoly, Polynomial.natDegree_X_pow]
+  calc
+    ((Q U).comp zpoly).natDegree ≤ (Q U).natDegree * zpoly.natDegree :=
+      Polynomial.natDegree_comp_le
+    _ = (Q U).natDegree * 512 := by rw [hz]
+    _ ≤ 255 * 512 := Nat.mul_le_mul_right 512 hq
+    _ = 130560 := by norm_num
+
+theorem orbitPencil_inner_layer_zpoly_degree
+    {U : Finset Small} (hU : U ∈ Sel) :
+    ((Q U).comp zpoly).natDegree ≤ 130560 := by
+  have hq := (Q_spec hU).2
+  calc
+    ((Q U).comp zpoly).natDegree ≤ (Q U).natDegree * 512 :=
+      orbitPencil_inner_layer_is_laurent_in_zpoly hU
+    _ ≤ 255 * 512 := Nat.mul_le_mul_right 512 hq
+    _ = 130560 := by norm_num
+
+/-! ## Half-radius bail-out
+
+Once the agreement-radius parameter `δ` reaches `1/2`, the half-radius attack
+from `IRSHalfRadius.IRSProfile` already certifies that the winning-set
+density equals `1` for every `δ ∈ [1/2, IRSProfile.minRelativeDistance)`.
+This is *strictly* above the fixed `epsilonStar = 2^-128`, so the unsafe-suffix
+proof is trivially satisfied for the whole upper half of the band.
+
+This `bail` is the explicit handoff: the orbit-pencil machinery is only
+needed for `δ < 1/2`; the half-radius attack takes over at `δ ≥ 1/2`.  We
+spell out both the equality (which is the strong form) and the strict
+inequality required by the protocol claim. -/
+
+theorem orbitPencil_halfRadiusBail (δ : ℝ≥0)
+    (hlo : (1 / 2 : ℝ≥0) ≤ δ)
+    (hhi : δ < IRSProfile.minRelativeDistance) :
+    ProximityPrize.Benchmark.Upper.epsilonStar <
+      winningSetDensity IRSProfile.encoder δ := by
+  classical
+  have hlo' : (1 / 2 : ℝ≥0) ≤ δ := hlo
+  have hband : δ ∈ Set.Ico (1 / 2 : ℝ≥0) IRSProfile.minRelativeDistance :=
+    ⟨hlo', hhi⟩
+  have hws :
+      winningSetDensity IRSProfile.encoder δ = 1 :=
+    ProximityPrize.SubmissionUpper.IRSHalfRadius.IRSProfile.winningSetSoundness_eq_one
+      δ hband
+  rw [hws]
+  have hpos : (0 : ℝ≥0) < ProximityPrize.Benchmark.Upper.epsilonStar := by
+    unfold ProximityPrize.Benchmark.Upper.epsilonStar
+    unfold ProximityGap.prizeThreshold
+    positivity
+  exact lt_of_lt_of_le hpos (le_refl 1)
+
+theorem orbitPencil_halfRadiusBail_eq_one (δ : ℝ≥0)
+    (hlo : (1 / 2 : ℝ≥0) ≤ δ)
+    (hhi : δ < IRSProfile.minRelativeDistance) :
+    winningSetDensity IRSProfile.encoder δ = 1 :=
+  ProximityPrize.SubmissionUpper.IRSHalfRadius.IRSProfile.winningSetSoundness_eq_one
+    δ ⟨hlo, hhi⟩
+
 end ProximityPrize.SubmissionUpper.OrbitPencil
