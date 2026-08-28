@@ -4,10 +4,6 @@ import ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Resea
 
 /-!
 # Unconditional score-66 protocol endpoint
-
-The terminal constructor applies to each actual geometric factor because its
-coordinate degrees are bounded by the containing regular factor, while every
-regular factor is pointwise bounded by the global rectangular flag sums.
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactProtocol6600Research
@@ -83,8 +79,4 @@ theorem protocolClaim6600 : ProtocolClaim 6618 315835 1048576 :=
 
 end
 
-
 end ProximityPrize.SubmissionLower.ContactProtocol6600Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactProtocol6600Research.frozenTerminalAdaptiveProjectionFamilies6600
-#print axioms ProximityPrize.SubmissionLower.ContactProtocol6600Research.protocolClaim6600

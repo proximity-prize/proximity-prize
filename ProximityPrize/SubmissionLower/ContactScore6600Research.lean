@@ -2,11 +2,6 @@ import ProximityPrize.Benchmark.TargetLower
 
 /-!
 # Exact radius and score arithmetic for the 66.00 candidate
-
-The radius is the top grid point in the `78777`-error cell,
-`(4 * 78777 + 3) / 2^20`.  Since the claimed score is an integer number of
-bits, the final comparison is directly against `2^-66` and needs no
-fractional-power enclosure.
 -/
 
 namespace ProximityPrize.SubmissionLower.ContactScore6600Research
@@ -98,14 +93,9 @@ theorem radius6600_score :
       unfold claimedError score6600
       rw [show -((((6618 : ℕ) : ℝ) / 100)) =
           -((66 : ℕ) : ℝ) + -((18 : ℝ) / 100) by norm_num,
-        NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0)]
-      simp only [NNReal.rpow_neg, NNReal.rpow_natCast, one_div]
+        NNReal.rpow_add two_ne_zero, NNReal.rpow_neg,
+        NNReal.rpow_natCast, one_div]
 
 end
 
 end ProximityPrize.SubmissionLower.ContactScore6600Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactScore6600Research.radius6600_floor
-#print axioms ProximityPrize.SubmissionLower.ContactScore6600Research.radius6600_admissible
-#print axioms ProximityPrize.SubmissionLower.ContactScore6600Research.radius6600_power_rational_bound
-#print axioms ProximityPrize.SubmissionLower.ContactScore6600Research.radius6600_score

@@ -52,9 +52,9 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
     (hdiv : G ∣ surfaceMap phi F)
     (hGflag : PolynomialInFlag surfaceFlag G)
     (hTflag : PolynomialInFlag cutFlag T)
-    (hFs : wt residualSWeights F ≤ 6)
-    (hFys : wt residualYSWeights F ≤ 33)
-    (hFtotal : wt residualTotalWeights F ≤ 582)
+    (hFs : wt residualSWeights F ≤ 8)
+    (hFys : wt residualYSWeights F ≤ 43)
+    (hFtotal : wt residualTotalWeights F ≤ 503)
     (hinj : Set.InjOn x nodes)
     (hdegreeSelected : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ d)

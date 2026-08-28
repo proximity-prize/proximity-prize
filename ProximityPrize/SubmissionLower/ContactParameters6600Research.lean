@@ -169,9 +169,3 @@ theorem strict_alignment_budget :
   norm_num [alignmentBudget, gap, agreements, n, errors, w]
 
 end ProximityPrize.SubmissionLower.ContactParameters6600Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactParameters6600Research.coefficient_count_exact
-#print axioms ProximityPrize.SubmissionLower.ContactParameters6600Research.local_contact_rank_exact
-#print axioms ProximityPrize.SubmissionLower.ContactParameters6600Research.interpolation_gate
-#print axioms ProximityPrize.SubmissionLower.ContactParameters6600Research.retained_singular_contribution_exact
-#print axioms ProximityPrize.SubmissionLower.ContactParameters6600Research.strict_alignment_budget
