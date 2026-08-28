@@ -334,7 +334,3 @@ theorem polynomialInFlag_residualAlgHom
 end
 
 end ProximityPrize.SubmissionLower.ContactFlagAffineResidualAutomorphismResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactFlagAffineResidualAutomorphismResearch.residual_irreducible_iff
-#print axioms ProximityPrize.SubmissionLower.ContactFlagAffineResidualAutomorphismResearch.eval₂Hom_residual
-#print axioms ProximityPrize.SubmissionLower.ContactFlagAffineResidualAutomorphismResearch.pderiv_residual

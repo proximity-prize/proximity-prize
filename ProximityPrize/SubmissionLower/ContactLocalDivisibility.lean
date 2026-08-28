@@ -134,8 +134,3 @@ theorem eq_zero_of_contact_representations
 end GlobalVanishing
 
 end ProximityPrize.SubmissionLower.ContactLocalDivisibility
-
-#print axioms ProximityPrize.SubmissionLower.ContactLocalDivisibility.shifted_power_dvd_iff_taylor_coeff_zero
-#print axioms ProximityPrize.SubmissionLower.ContactLocalDivisibility.X_sq_dvd_contactResidual
-#print axioms ProximityPrize.SubmissionLower.ContactLocalDivisibility.contact_sum_dvd
-#print axioms ProximityPrize.SubmissionLower.ContactLocalDivisibility.eq_zero_of_contact_representations

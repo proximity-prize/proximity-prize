@@ -124,16 +124,5 @@ theorem quotientBase_injective (i : Fin 3)
 
 end
 
-#print axioms polynomial_algebraMap_eq
-#print axioms polynomialBaseScalarTower
-#print axioms polynomialBase_injective
-#print axioms polynomial_variable_image
-#print axioms polynomialRationalScalarTower
-#print axioms actual_scalar_towers
-#print axioms quotientBaseScalarTower
-#print axioms quotientCoordinate_fraction
-#print axioms quotient_polynomial_fraction
-#print axioms quotientFractionScalarTower
-#print axioms quotientBase_injective
 
 end ProximityPrize.SubmissionLower.ActualCurveScalarTowers

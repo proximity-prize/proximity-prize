@@ -151,11 +151,3 @@ end Construction
 end
 
 end ProximityPrize.SubmissionLower.AffineModelPointLift
-
-#print axioms ProximityPrize.SubmissionLower.AffineModelPointLift.inclusionToModelClosure
-#print axioms ProximityPrize.SubmissionLower.AffineModelPointLift.modelClosurePoint_restrict
-#print axioms ProximityPrize.SubmissionLower.AffineModelPointLift.modelPointPlace_kernel
-#print axioms ProximityPrize.SubmissionLower.AffineModelPointLift.model_value_le_one
-#print axioms ProximityPrize.SubmissionLower.AffineModelPointLift.model_value_lt_one_iff
-#print axioms ProximityPrize.SubmissionLower.AffineModelPointLift.modelPointPlace_injective
-#print axioms ProximityPrize.SubmissionLower.AffineModelPointLift.model_zero_order_ge_one

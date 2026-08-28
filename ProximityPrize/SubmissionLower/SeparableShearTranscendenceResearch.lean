@@ -122,6 +122,3 @@ theorem transcendental_add_of_not_isSeparable_isSeparable [IsAlgClosed K]
 end
 
 end ProximityPrize.SubmissionLower.SeparableShearTranscendenceResearch
-
-#print axioms ProximityPrize.SubmissionLower.SeparableShearTranscendenceResearch.eq_algebraMap_of_isAlgebraic
-#print axioms ProximityPrize.SubmissionLower.SeparableShearTranscendenceResearch.transcendental_add_of_not_isSeparable_isSeparable

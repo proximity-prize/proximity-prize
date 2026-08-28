@@ -202,14 +202,6 @@ theorem selected_seed_decomposition
   · exact Or.inr himplicit
   · exact False.elim (hnot (Finset.mem_filter.mpr ⟨hγ, hexceptional⟩))
 
-#print axioms solution_regular_or_auxiliary
-#print axioms directFactor_data
-#print axioms directFactor_input_budgets
-#print axioms implicitPair_data
-#print axioms solution_implicit_pair_or_exceptional
-#print axioms exceptionalSeeds_card_le
-#print axioms solution_three_way
-#print axioms selected_seed_decomposition
 
 end
 end ProximityPrize.SubmissionLower.ContactSelectedSeedDecomposition

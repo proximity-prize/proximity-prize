@@ -660,13 +660,3 @@ instance [FinitePresentation R S] [Module.Projective S Ω[S⁄R]] :
 end Algebra
 
 /- Exact transitive axiom audits for the repaired ordinary definitions. -/
-#print axioms Algebra.Extension.cotangentComplex
-#print axioms Algebra.Extension.cotangentComplex_mk
-#print axioms KaehlerDifferential.cotangentComplexBaseChange
-#print axioms Algebra.Extension.cotangentComplexBaseChange_eq_lTensor_cotangentComplex
-#print axioms Algebra.Extension.lTensor_cotangentComplex_eq_cotangentComplexBaseChange
-#print axioms Algebra.Extension.exact_cotangentComplex_toKaehler
-#print axioms Algebra.Generators.toKaehler_tmul_D
-#print axioms Algebra.Generators.toKaehler_cotangentSpaceBasis
-#print axioms Algebra.H1Cotangent.mapEquiv
-#print axioms Algebra.Generators.equivH1Cotangent

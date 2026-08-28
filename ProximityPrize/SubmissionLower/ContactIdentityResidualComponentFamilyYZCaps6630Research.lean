@@ -3,6 +3,7 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyYZ66
 import ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidence6630Research
 import ProximityPrize.SubmissionLower.ContactNearPencil6630FlagResearch
 import ProximityPrize.SubmissionLower.ContactPrimeFlagBudgetFamily6630Research
+import ProximityPrize.SubmissionLower.ContactConstantSeedCoordinateResearch
 
 /-!
 # YZ-safe recursive component aggregation
@@ -34,6 +35,8 @@ open ContactStratifiedResidualComponentAdapter6600Research
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactNearPencil6630FlagResearch
 open ContactIdentityResidualComponentFamily6600Research
+open ContactConstantSeedCoordinateResearch
+open ActualCurveCoordinateField
 
 noncomputable section
 
@@ -59,9 +62,9 @@ def regularComponentCurveStage6630
     (hdiv : G ∣ surfaceMap phi F)
     (hGflag : PolynomialInFlag surfaceFlag G)
     (hTflag : PolynomialInFlag cutFlag T)
-    (hFs : wt residualSWeights F ≤ 8)
-    (hFys : wt residualYSWeights F ≤ 40)
-    (hFtotal : wt residualTotalWeights F ≤ 617)
+    (hFs : wt residualSWeights F ≤ 10)
+    (hFys : wt residualYSWeights F ≤ 48)
+    (hFtotal : wt residualTotalWeights F ≤ 814)
     (hinj : Set.InjOn x nodes)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d)
     (hsolution : ∀ gamma ∈ Gamma,
@@ -132,9 +135,9 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz
     (hdiv : G ∣ surfaceMap phi F)
     (hGflag : PolynomialInFlag surfaceFlag G)
     (hTflag : PolynomialInFlag cutFlag T)
-    (hFs : wt residualSWeights F ≤ 8)
-    (hFys : wt residualYSWeights F ≤ 40)
-    (hFtotal : wt residualTotalWeights F ≤ 617)
+    (hFs : wt residualSWeights F ≤ 10)
+    (hFys : wt residualYSWeights F ≤ 48)
+    (hFtotal : wt residualTotalWeights F ≤ 814)
     (hinj : Set.InjOn x nodes)
     (hdegreeSelected : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ d)
@@ -156,8 +159,12 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz
     (hchar : d < p) (hda : d < a)
     (B : PrimeFlagBudgetFamily (G := G) (T := T)
       (H := regularitySurface phi F) surfaceFlag cutFlag)
-    (hzyzPositive : ∀ C : RegularComponent Omega G T
-      (regularitySurface phi F), 1 ≤ B.zCost C + B.yzCost C)
+    (hzPositive : ∀ C : RegularComponent Omega G T
+      (regularitySurface phi F),
+      Transcendental Omega (coordinate Omega C.1 2) → 1 ≤ B.zCost C)
+    (hyzPositive : ∀ C : RegularComponent Omega G T
+      (regularitySurface phi F),
+      ¬ Transcendental Omega (coordinate Omega C.1 2) → 1 ≤ B.yzCost C)
     (hdegree : ∀ k ≤ d,
       (nodes.card - k) * (a - d) * (d - k) ≤ U * (a - k))
     (hunit : ∀ k ≤ d,
@@ -165,9 +172,8 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz
     Gamma.card * (a - d) ≤
       U * flagMixed surfaceFlag cutFlag agreementDirection6630 +
         V * flagMixed surfaceFlag cutFlag unitYZFlag +
-        (e + 1) * (a - d) *
-          (flagMixed surfaceFlag cutFlag unitZFlag +
-            flagMixed surfaceFlag cutFlag unitYZFlag) := by
+        (a - d) * ((e + 1) * flagMixed surfaceFlag cutFlag unitZFlag +
+          flagMixed surfaceFlag cutFlag unitYZFlag) := by
   classical
   let H := regularitySurface phi F
   have hHp : ∀ gamma ∈ Gamma,
@@ -182,12 +188,12 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz
   let unitCost : RegularComponent Omega G T H → ℕ :=
     fun C ↦ B.weightedCost unitYZFlag C
   let largeCost : RegularComponent Omega G T H → ℕ :=
-    fun C ↦ B.zCost C + B.yzCost C
+    fun C ↦ (e + 1) * B.zCost C + B.yzCost C
   have hcomponent : ∀ C : RegularComponent Omega G T H,
       (componentSeeds Omega G T H Gamma
           (selectedPoint phi selected) C).card * (a - d) ≤
         U * degreeCost C + V * unitCost C +
-          (e + 1) * (a - d) * largeCost C := by
+          (a - d) * largeCost C := by
     intro C
     let GammaC := componentSeeds Omega G T H Gamma
       (selectedPoint phi selected) C
@@ -196,48 +202,73 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz
       hdegreeSelected hsolution hregular hnoPencil hchar C
     have hsub : GammaC ⊆ Gamma := componentSeeds_subset Omega G T H Gamma
       (selectedPoint phi selected) C
-    apply recursive_curve_stratified_incidence_of_prime_flag_budget
-      hphi S (fun r ↦ B.weightedCost r C) (B.primeBudget C)
-      (degreeCost C) (unitCost C) U V (largeCost C)
-    · intro t
-      simpa only [degreeCost, unitCost] using
-        ContactPrimeFlagBudgetFamily6630Research.PrimeFlagBudgetFamily.weightedCost_residualAgreementFlag6630
-          B C t
-    · exact hda
-    · intro gamma hgamma
-      exact hagreement gamma (hsub hgamma)
-    · intro D hmany
-      have hcard : GammaC.card ≤ e + 1 :=
-        D.stage.card_le_pencil_of_many_identities hmany
-      have hscaled : GammaC.card * (a - d) ≤ (e + 1) * (a - d) :=
-        Nat.mul_le_mul_right (a - d) hcard
-      have hcharged : (e + 1) * (a - d) ≤
-          (e + 1) * (a - d) * largeCost C := by
-        have hmul := Nat.mul_le_mul_left ((e + 1) * (a - d))
-          (hzyzPositive C)
-        simpa only [largeCost, Nat.mul_one] using hmul
-      exact hscaled.trans hcharged
-    · simpa only [S, regularComponentCurveStage6630] using hdegree
-    · simpa only [S, regularComponentCurveStage6630] using hunit
+    change GammaC.card * (a - d) ≤
+      U * degreeCost C + V * unitCost C + (a - d) * largeCost C
+    by_cases hZ : Transcendental Omega (coordinate Omega C.1 2)
+    · have hrec := recursive_curve_stratified_incidence_of_prime_flag_budget
+        hphi S (fun r ↦ B.weightedCost r C) (B.primeBudget C)
+        (degreeCost C) (unitCost C) U V (B.zCost C)
+        (fun t => by
+          simpa only [degreeCost, unitCost] using
+            ContactPrimeFlagBudgetFamily6630Research.PrimeFlagBudgetFamily.weightedCost_residualAgreementFlag6630
+              B C t)
+        hda
+        (fun gamma hgamma => hagreement gamma (hsub hgamma))
+        (fun D hmany => by
+          have hcard : GammaC.card ≤ e + 1 :=
+            D.stage.card_le_pencil_of_many_identities hmany
+          have hscaled : GammaC.card * (a - d) ≤ (e + 1) * (a - d) :=
+            Nat.mul_le_mul_right (a - d) hcard
+          have hmul := Nat.mul_le_mul_left ((e + 1) * (a - d))
+            (hzPositive C hZ)
+          exact hscaled.trans (by simpa only [Nat.mul_one] using hmul))
+        (by simpa only [S, regularComponentCurveStage6630] using hdegree)
+        (by simpa only [S, regularComponentCurveStage6630] using hunit)
+      calc
+        GammaC.card * (a - d) ≤
+            U * degreeCost C + V * unitCost C +
+              (e + 1) * (a - d) * B.zCost C := hrec
+        _ ≤ (U * degreeCost C + V * unitCost C +
+              (e + 1) * (a - d) * B.zCost C) +
+              (a - d) * B.yzCost C := Nat.le_add_right _ _
+        _ = U * degreeCost C + V * unitCost C +
+              (a - d) * largeCost C := by
+          dsimp only [largeCost]
+          ring
+    · have hZalg : IsAlgebraic Omega (coordinate Omega C.1 2) := not_not.mp hZ
+      have hcard : GammaC.card ≤ 1 :=
+        selected_seed_set_card_le_one_of_seedCoordinate_isAlgebraic
+          phi C.1 selected GammaC (fun gamma hgamma => S.on_prime gamma hgamma) hZalg
+      have hscaled : GammaC.card * (a - d) ≤ a - d := by
+        simpa only [one_mul] using Nat.mul_le_mul_right (a - d) hcard
+      have hyz := hyzPositive C hZ
+      have hcharged : a - d ≤ (a - d) * B.yzCost C := by
+        simpa only [Nat.mul_one] using Nat.mul_le_mul_left (a - d) hyz
+      have htail : (a - d) * B.yzCost C ≤ (a - d) * largeCost C := by
+        apply Nat.mul_le_mul_left
+        dsimp only [largeCost]
+        omega
+      exact hscaled.trans (hcharged.trans (htail.trans (Nat.le_add_left _ _)))
   have hlargeSum :
       (∑ C : RegularComponent Omega G T H, largeCost C) ≤
-        flagMixed surfaceFlag cutFlag unitZFlag +
+        (e + 1) * flagMixed surfaceFlag cutFlag unitZFlag +
           flagMixed surfaceFlag cutFlag unitYZFlag := by
     calc
       (∑ C : RegularComponent Omega G T H, largeCost C) =
-          (∑ C : RegularComponent Omega G T H, B.zCost C) +
+          (e + 1) * (∑ C : RegularComponent Omega G T H, B.zCost C) +
             ∑ C : RegularComponent Omega G T H, B.yzCost C := by
-        simp only [largeCost, Finset.sum_add_distrib]
-      _ ≤ flagMixed surfaceFlag cutFlag unitZFlag +
+        simp only [largeCost, Finset.sum_add_distrib, Finset.mul_sum]
+      _ ≤ (e + 1) * flagMixed surfaceFlag cutFlag unitZFlag +
           flagMixed surfaceFlag cutFlag unitYZFlag :=
-        Nat.add_le_add B.sum_zCost_le B.sum_yzCost_le
-  exact aggregate_component_stratified_incidence G T H Gamma
-    (selectedPoint phi selected) hGpoint hTpoint hHp (a - d) U V (e + 1)
+        Nat.add_le_add (Nat.mul_le_mul_left (e + 1) B.sum_zCost_le)
+          B.sum_yzCost_le
+  simpa only [one_mul] using aggregate_component_stratified_incidence G T H Gamma
+    (selectedPoint phi selected) hGpoint hTpoint hHp (a - d) U V 1
     (flagMixed surfaceFlag cutFlag agreementDirection6630)
     (flagMixed surfaceFlag cutFlag unitYZFlag)
-    (flagMixed surfaceFlag cutFlag unitZFlag +
+    ((e + 1) * flagMixed surfaceFlag cutFlag unitZFlag +
       flagMixed surfaceFlag cutFlag unitYZFlag)
-    degreeCost unitCost largeCost hcomponent
+    degreeCost unitCost largeCost (by simpa only [one_mul] using hcomponent)
     (by simpa only [degreeCost] using
       B.sum_weightedCost_le agreementDirection6630)
     (by simpa only [unitCost] using B.sum_weightedCost_le unitYZFlag)
@@ -246,5 +277,3 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyYZCaps6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyYZCaps6630Research.proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz

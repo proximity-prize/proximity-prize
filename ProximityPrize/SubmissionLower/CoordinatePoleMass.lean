@@ -204,11 +204,3 @@ theorem finite_indexed_sum_pole_le_finrank
 end
 
 end ProximityPrize.SubmissionLower.CoordinatePoleMass
-
-#print axioms ProximityPrize.SubmissionLower.CoordinatePoleMass.infinityValuation_injective
-#print axioms ProximityPrize.SubmissionLower.CoordinatePoleMass.infinity_pole_eq_ramification
-#print axioms ProximityPrize.SubmissionLower.CoordinatePoleMass.sum_infinity_ramification_eq_finrank
-#print axioms ProximityPrize.SubmissionLower.CoordinatePoleMass.sum_infinity_poles_eq_finrank
-#print axioms ProximityPrize.SubmissionLower.CoordinatePoleMass.poleOrder_eq_zero_of_not_mem_infinity
-#print axioms ProximityPrize.SubmissionLower.CoordinatePoleMass.finite_sum_pole_le_finrank
-#print axioms ProximityPrize.SubmissionLower.CoordinatePoleMass.finite_indexed_sum_pole_le_finrank

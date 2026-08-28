@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactRegularSeeds6630Research
 import ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6630Research
-import ProximityPrize.SubmissionLower.ContactFlagRegularFactorCaps6642Research
+import ProximityPrize.SubmissionLower.ContactFlagRegularFactorCaps6641Research
 
 /-!
 # Actual regular-factor residual stages at score 66.30
@@ -26,7 +26,7 @@ open ContactOriginalRegularResidualStage6630Research
 open ContactRegularFactorFlag6630Research ContactRegularSeeds6630Research
 open ContactIdentityResidualIteration6630Research ContactFlagBezout6543Research
 open ContactNearPencil6630FactorLedgerResearch
-open ContactFlagRegularFactorCaps6642Research
+open ContactFlagRegularFactorCaps6641Research
 open ContactCumulativeWeightedDegreeResearch
 open ContactIdentityResidualGlobalFlagResearch ContactFactorCaps
 
@@ -46,8 +46,8 @@ regular factor. -/
 def regularGeometricResidualStage6630
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hsharp : Q ∈ ContactFlagInterpolation6642Research.globalCoefficientBox
-      K weightedCap w yCap seedTotalCap slopeCap)
+    (hsharp : Q ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
+      K weightedCap w seedTotalCap slopeCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes)
@@ -66,25 +66,17 @@ def regularGeometricResidualStage6630
   have hRpos := hRdata.2.1
   have hRbox := hRdata.2.2
   have hRdiv := (positiveRFactors_spec Q R.1 R.2).2.1
-  have hQweights := residual_surface_weights_of_flag_box6642 Q hsharp
-  have hQmiddle := hQweights.2.1
-  rw [ContactFlagParameters6642Research.parameter_values.2.2.1] at hQmiddle
+  have hQweights := residual_surface_weights_of_flagBox6641 Q hsharp
   have hRweights :
-      MvPolynomial.weightedTotalDegree residualSWeights R.1 ≤ 8 ∧
-      MvPolynomial.weightedTotalDegree residualYSWeights R.1 ≤ 40 ∧
-      MvPolynomial.weightedTotalDegree residualTotalWeights R.1 ≤ 617 :=
-    ⟨by
-        simpa [slopeCap, ContactFlagParameters6642Research.slopeCap] using
-          (weightedTotalDegree_le_of_dvd residualSWeights R.1 Q hRdiv hQ).trans
-            hQweights.1,
-      by
-        exact
-          (weightedTotalDegree_le_of_dvd residualYSWeights R.1 Q hRdiv hQ).trans
-            hQmiddle,
-      by
-        simpa [seedTotalCap, ContactFlagParameters6642Research.totalCap] using
-          (weightedTotalDegree_le_of_dvd residualTotalWeights R.1 Q hRdiv hQ).trans
-            hQweights.2.2⟩
+      MvPolynomial.weightedTotalDegree residualSWeights R.1 ≤ 10 ∧
+      MvPolynomial.weightedTotalDegree residualYSWeights R.1 ≤ 48 ∧
+      MvPolynomial.weightedTotalDegree residualTotalWeights R.1 ≤ 814 :=
+    ⟨(weightedTotalDegree_le_of_dvd residualSWeights R.1 Q hRdiv hQ).trans
+        hQweights.1,
+      (weightedTotalDegree_le_of_dvd residualYSWeights R.1 Q hRdiv hQ).trans
+        hQweights.2.1,
+      (weightedTotalDegree_le_of_dvd residualTotalWeights R.1 Q hRdiv hQ).trans
+        hQweights.2.2⟩
   have hsub := regularSeeds6630_subset Q selected Gamma R
   exact geometricResidualStage6630 K R.1 hRirred hRpos hRbox hRweights selected
     (regularSeeds6630 Q selected Gamma R) nodes x u0 u1 hinj
@@ -119,6 +111,3 @@ theorem regular_factor_seed_bound_of_geometric_counts6630
 end
 
 end ProximityPrize.SubmissionLower.ContactRegularFactorResidualStage6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactRegularFactorResidualStage6630Research.regularGeometricResidualStage6630
-#print axioms ProximityPrize.SubmissionLower.ContactRegularFactorResidualStage6630Research.regular_factor_seed_bound_of_geometric_counts6630

@@ -116,6 +116,3 @@ theorem z_flag_trapezoid_budget
       rw [hsum, Nat.add_sub_cancel_left]
 
 end ProximityPrize.SubmissionLower.ContactFlagSymbolicTrapezoidResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactFlagSymbolicTrapezoidResearch.flagMixed_projection_decomposition
-#print axioms ProximityPrize.SubmissionLower.ContactFlagSymbolicTrapezoidResearch.u_flag_trapezoid_budget

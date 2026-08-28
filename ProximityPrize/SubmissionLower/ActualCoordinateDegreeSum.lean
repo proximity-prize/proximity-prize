@@ -121,12 +121,5 @@ theorem projectionsFiniteSeparable_of_original_gates
 
 end
 
-#print axioms sum_actualCoordinateDegree_le_original
-#print axioms weighted_sum_actualCoordinateDegree_le
-#print axioms coordinateMixedDegree_zero
-#print axioms coordinateMixedDegree_one
-#print axioms coordinateMixedDegree_two
-#print axioms sum_actualCoordinateDegree_at_le
-#print axioms projectionsFiniteSeparable_of_original_gates
 
 end ProximityPrize.SubmissionLower.ActualCoordinateDegreeSum

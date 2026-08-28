@@ -190,6 +190,3 @@ theorem regularFlag6630_budgets
 end
 
 end ProximityPrize.SubmissionLower.ContactRegularFactorFlag6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactRegularFactorFlag6630Research.surfaceMap_in_regularFlag6630
-#print axioms ProximityPrize.SubmissionLower.ContactRegularFactorFlag6630Research.regularFlag6630_budgets

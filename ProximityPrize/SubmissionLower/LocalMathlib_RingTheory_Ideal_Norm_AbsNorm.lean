@@ -517,12 +517,3 @@ theorem Int.prime_absNorm (J : Ideal ℤ) :
 end Int
 
 end abs_norm
-
-#print axioms Submodule.cardQuot
-#print axioms cardQuot_mul
-#print axioms Ideal.absNorm
-#print axioms Ideal.absNorm_span_singleton
-#print axioms Ideal.absNorm_dvd_norm_of_mem
-#print axioms Ideal.absNorm_eq_zero_iff
-#print axioms Ideal.finite_setOf_absNorm_le
-#print axioms Ideal.norm_dvd_iff

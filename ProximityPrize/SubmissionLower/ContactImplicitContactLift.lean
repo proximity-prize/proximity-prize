@@ -310,15 +310,6 @@ theorem exists_regular_lift_factor_of_solution
     simpa only [ContactGeometricFirstTail.canonical_geometricSurfaceMap] using hh
   exact ⟨G, hG, hi, hdeg, hGbox, hGsol, hGregular, hproper⟩
 
-#print axioms implicitLift_R_derivative
-#print axioms implicitLift_solution
-#print axioms implicitLift_contact_weight_le
-#print axioms implicitLift_mem_box
-#print axioms factor_derivative_regular_at_zero
-#print axioms lift_positive_factor_budgets
-#print axioms lift_positive_factor_card_le_one
-#print axioms exists_regular_lift_factor_at_surface
-#print axioms exists_regular_lift_factor_of_solution
 
 end
 end ProximityPrize.SubmissionLower.ContactImplicitContactLift

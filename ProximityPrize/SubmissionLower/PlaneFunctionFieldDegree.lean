@@ -199,10 +199,3 @@ end FiniteFamily
 end
 
 end ProximityPrize.SubmissionLower.PlaneFunctionFieldDegree
-
-#print axioms ProximityPrize.SubmissionLower.PlaneFunctionFieldDegree.algHom_planeEval
-#print axioms ProximityPrize.SubmissionLower.PlaneFunctionFieldDegree.algHom_eq_of_generating_pair
-#print axioms ProximityPrize.SubmissionLower.PlaneFunctionFieldDegree.embedding_pair_injective
-#print axioms ProximityPrize.SubmissionLower.PlaneFunctionFieldDegree.relationIdeal_eq_of_embedding_pairs_eq
-#print axioms ProximityPrize.SubmissionLower.PlaneFunctionFieldDegree.finrank_le_planar_bound
-#print axioms ProximityPrize.SubmissionLower.PlaneFunctionFieldDegree.sum_finrank_le_planar_bound

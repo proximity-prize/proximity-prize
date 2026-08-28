@@ -590,15 +590,3 @@ lemma H1Cotangent.exact_liftBaseChange_map_of_flat [Module.Flat S T] :
 end Algebra
 
 -- Kernel dependency audit for this isolated ordinary proof-port repair.
-#print axioms Algebra.Generators.Cotangent.exact
-#print axioms Algebra.Generators.CotangentSpace.compEquiv_symm_inr
-#print axioms Algebra.Generators.CotangentSpace.fst_compEquiv
-#print axioms Algebra.Generators.CotangentSpace.exact
-#print axioms Algebra.Generators.H1Cotangent.δAux_X
-#print axioms Algebra.Generators.H1Cotangent.exact_δ_map
-#print axioms Algebra.Generators.H1Cotangent.exact_map_δ
-#print axioms Algebra.Generators.H1Cotangent.exact_liftBaseChange_map_of_flat
-#print axioms Algebra.Generators.H1Cotangent.exact_liftBaseChange_map_of_flat'
-#print axioms Algebra.H1Cotangent.exact_map_δ
-#print axioms Algebra.H1Cotangent.exact_δ_mapBaseChange
-#print axioms Algebra.H1Cotangent.exact_liftBaseChange_map_of_flat

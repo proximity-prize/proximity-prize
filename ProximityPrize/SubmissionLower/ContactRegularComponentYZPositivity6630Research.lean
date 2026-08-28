@@ -208,6 +208,7 @@ theorem AdaptiveUnitProjectionFamilyYZ.one_le_zCost_add_yzCost
   · have hzpos : 1 ≤ P.family.toPrimeFlagBudgetFamily.zCost C :=
       P.family.one_le_toPrimeFlagBudgetFamily_zCost C hZ
     omega
+
   · have hZalg : IsAlgebraic Omega (coordinate Omega C.1 2) :=
       not_not.mp hZ
     have hY : Transcendental Omega (coordinate Omega C.1 0) := by
@@ -223,6 +224,36 @@ theorem AdaptiveUnitProjectionFamilyYZ.one_le_zCost_add_yzCost
       rw [P.yzValue C]
       exact hU
     omega
+
+/-- On the algebraic-`Z` branch, regularity forces `Y` and hence the chosen
+`Y + lam * Z` coordinate to be transcendental.  This is the separate
+positivity fact used when constant seed coordinates are counted directly. -/
+theorem AdaptiveUnitProjectionFamilyYZ.one_le_yzCost_of_not_z_transcendental
+    {base : ∀ C : RegularComponent Omega G T H,
+      SeparableLiteralCoordinate C.1}
+    {p q : FlagDegree}
+    (P : AdaptiveUnitProjectionFamilyYZ base p q)
+    (phi : Polynomial K →+* Omega)
+    (F : MvPolynomial (Fin 4) K)
+    (hH : H = regularitySurface phi F)
+    (hdiv : G ∣ surfaceMap phi F)
+    (C : RegularComponent Omega G T H)
+    (hZ : ¬ Transcendental Omega (coordinate Omega C.1 2)) :
+    1 ≤ P.family.toPrimeFlagBudgetFamily.yzCost C := by
+  subst H
+  have hYZ := regularComponent_y_or_z_transcendental phi F G T hdiv C
+  have hZalg : IsAlgebraic Omega (coordinate Omega C.1 2) := not_not.mp hZ
+  have hY : Transcendental Omega (coordinate Omega C.1 0) := by
+    rcases hYZ with hY | hZ'
+    · exact hY
+    · exact (hZ hZ').elim
+  have hU : Transcendental Omega (affineU Omega C.1 P.lam) :=
+    transcendental_add_smul_of_transcendental_isAlgebraic
+      Omega C.1 (coordinate Omega C.1 0) (coordinate Omega C.1 2)
+        P.lam hY hZalg
+  apply one_le_coordinateDegree_of_transcendental_value
+  rw [P.yzValue C]
+  exact hU
 
 /-- Existential constructor in the consumer-ready shape. -/
 theorem exists_adaptiveUnitProjectionFamilyYZ_of_nested
@@ -247,10 +278,3 @@ end RefinedAdaptiveFamily
 end
 
 end ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research.verticalPolynomial_derivative
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research.y_or_z_transcendental_of_regular_polynomial
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research.regularComponent_y_or_z_transcendental
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research.adaptiveUnitProjectionFamilyYZ_of_nested
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research.AdaptiveUnitProjectionFamilyYZ.one_le_zCost_add_yzCost
-#print axioms ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research.exists_adaptiveUnitProjectionFamilyYZ_of_nested

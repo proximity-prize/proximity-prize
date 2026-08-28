@@ -183,5 +183,3 @@ def AdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily
 end
 
 end ProximityPrize.SubmissionLower.ContactWeakPrimeFlagBudgetResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactWeakPrimeFlagBudgetResearch.AdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily

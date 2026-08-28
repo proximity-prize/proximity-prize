@@ -244,16 +244,3 @@ theorem fixed_implicit_characteristic_gates (G T : MvPolynomial (Fin 3) Ω)
 end
 
 end ProximityPrize.SubmissionLower.ContactCountingCaps
-
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.surface_numerator_caps
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.surface_agreement_caps
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_firstTail_caps
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_agreement_caps
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.selected_firstTail_zero
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_implicit_agreement_caps
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.actual_pair_degree_le
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.pair_caps_below_of_mixed
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.actual_characteristic_gates
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_firstTail_nonR_characteristic_gates
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_agreement_nonR_characteristic_gates
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps.fixed_implicit_characteristic_gates

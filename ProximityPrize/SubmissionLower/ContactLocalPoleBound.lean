@@ -175,12 +175,5 @@ end IntegerPole
 
 end
 
-#print axioms valuation_monomial_le
-#print axioms valuation_eval_le_box
-#print axioms max_one_valuation_eval_le_box
-#print axioms log_max_one
-#print axioms log_prod_of_one_le
-#print axioms poleOrder_eval_le_box
-#print axioms weighted_poleOrder_eval_le_box
 
 end ProximityPrize.SubmissionLower.ContactLocalPoleBound

@@ -56,14 +56,13 @@ theorem recursive_scaled_factor_6630_z_yz
                 degreeIncidence +
               flagMixed p agreementDirection6630 unitYZFlag *
                 unitIncidence) +
-              (errors + 1) * gap *
-                (flagMixed p agreementDirection6630 unitZFlag +
+              gap * ((errors + 1) *
+                flagMixed p agreementDirection6630 unitZFlag +
                   flagMixed p agreementDirection6630 unitYZFlag)) +
           ((flagMixed p agreementDirection6630 unitYZFlag *
                 degreeIncidence +
               flagMixed p unitYZFlag unitYZFlag * unitIncidence) +
-            (errors + 1) * gap *
-              (flagMixed p unitYZFlag unitZFlag +
+            gap * ((errors + 1) * flagMixed p unitYZFlag unitZFlag +
                 flagMixed p unitYZFlag unitYZFlag))) :
     Gamma.card * gap ^ 2 ≤ factorRegularLedgerYZ p := by
   have h := recursive_scaled_stratified_incidence_bound
@@ -71,13 +70,11 @@ theorem recursive_scaled_factor_6630_z_yz
     ((flagMixed p agreementDirection6630 agreementDirection6630 *
           degreeIncidence +
         flagMixed p agreementDirection6630 unitYZFlag * unitIncidence) +
-      (errors + 1) * gap *
-        (flagMixed p agreementDirection6630 unitZFlag +
+      gap * ((errors + 1) * flagMixed p agreementDirection6630 unitZFlag +
           flagMixed p agreementDirection6630 unitYZFlag))
     ((flagMixed p agreementDirection6630 unitYZFlag * degreeIncidence +
         flagMixed p unitYZFlag unitYZFlag * unitIncidence) +
-      (errors + 1) * gap *
-        (flagMixed p unitYZFlag unitZFlag +
+      gap * ((errors + 1) * flagMixed p unitYZFlag unitZFlag +
           flagMixed p unitYZFlag unitYZFlag))
     degreeIncidence unitIncidence
     (by norm_num [agreements, n, errors, w])
@@ -97,15 +94,14 @@ theorem recursive_scaled_factor_6630_z_yz
                   degreeIncidence +
                 flagMixed p agreementDirection6630 unitYZFlag *
                   unitIncidence) +
-              (errors + 1) * gap *
-                (flagMixed p agreementDirection6630 unitZFlag +
+              gap * ((errors + 1) *
+                flagMixed p agreementDirection6630 unitZFlag +
                   flagMixed p agreementDirection6630 unitYZFlag)) +
           unitIncidence *
             ((flagMixed p agreementDirection6630 unitYZFlag *
                   degreeIncidence +
                 flagMixed p unitYZFlag unitYZFlag * unitIncidence) +
-              (errors + 1) * gap *
-                (flagMixed p unitYZFlag unitZFlag +
+              gap * ((errors + 1) * flagMixed p unitYZFlag unitZFlag +
                   flagMixed p unitYZFlag unitYZFlag)) := by
       simpa only [gap] using h
     _ = factorRegularLedgerYZ p := by
@@ -115,5 +111,3 @@ theorem recursive_scaled_factor_6630_z_yz
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualFactorIncidence6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualFactorIncidence6630Research.recursive_scaled_factor_6630_z_yz

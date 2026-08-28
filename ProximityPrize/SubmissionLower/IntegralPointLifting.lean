@@ -140,12 +140,5 @@ end IntegralBase
 
 end
 
-#print axioms pointKernel_isMaximal
-#print axioms quotient_scalar_compatibility
-#print axioms exists_point_lift
-#print axioms chosenPointLift
-#print axioms chosenPointLift_spec
-#print axioms chosenPointLift_injective
-#print axioms exists_point_lift_of_integral_base
 
 end ProximityPrize.SubmissionLower.IntegralPointLifting

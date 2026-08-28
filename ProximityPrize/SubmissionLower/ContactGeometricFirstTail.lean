@@ -185,17 +185,6 @@ theorem canonical_first_tail_dichotomy
 
 end CanonicalGenericField
 
-#print axioms geometricSurfaceMap_eq_surfaceMap
-#print axioms geometricSurfaceMap_separated_caps
-#print axioms geometricSurfaceMap_joint_seed_cap
-#print axioms geometric_factor_dvd_iff
-#print axioms all_later_tails_of_geometric_first_tail
-#print axioms first_tail_dichotomy
-#print axioms polynomiality_of_geometric_first_tail
-#print axioms canonical_geometricSurfaceMap
-#print axioms eval_at_actual_generic_initial_point
-#print axioms actual_generic_initial_zero_iff
-#print axioms canonical_first_tail_dichotomy
 
 end
 end ProximityPrize.SubmissionLower.ContactGeometricFirstTail

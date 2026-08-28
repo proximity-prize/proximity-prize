@@ -63,9 +63,3 @@ theorem actual_model_zero_order_ge_one
 end
 
 end ProximityPrize.SubmissionLower.ActualAffineModelPlaces
-
-#print axioms ProximityPrize.SubmissionLower.ActualAffineModelPlaces.actualPointPlace
-#print axioms ProximityPrize.SubmissionLower.ActualAffineModelPlaces.actualPointPlace_injective
-#print axioms ProximityPrize.SubmissionLower.ActualAffineModelPlaces.actual_model_value_le_one
-#print axioms ProximityPrize.SubmissionLower.ActualAffineModelPlaces.actual_model_value_lt_one_iff
-#print axioms ProximityPrize.SubmissionLower.ActualAffineModelPlaces.actual_model_zero_order_ge_one

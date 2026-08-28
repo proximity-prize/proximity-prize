@@ -601,14 +601,3 @@ end Smooth
 end Algebra
 
 -- Transitive kernel dependency audits for this ordinary proof-port repair.
-#print axioms Algebra.FormallySmooth.comp_surjective
-#print axioms Algebra.FormallySmooth.exists_lift
-#print axioms Algebra.Extension.equivH1CotangentOfFormallySmooth
-#print axioms Algebra.FormallySmooth.iff_split_injection
-#print axioms Algebra.Extension.formallySmooth_iff_split_injection
-#print axioms Algebra.FormallySmooth.iff_split_surjection
-#print axioms Algebra.FormallySmooth.iff_comp_surjective
-#print axioms Algebra.FormallySmooth.comp
-#print axioms Algebra.FormallySmooth.of_isLocalization
-#print axioms Algebra.Smooth.comp
-#print axioms Algebra.Smooth.of_isLocalization_Away

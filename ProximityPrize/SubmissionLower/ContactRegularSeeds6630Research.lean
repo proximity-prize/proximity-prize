@@ -35,5 +35,3 @@ theorem regularSeeds6630_subset (Q : MvPolynomial (Fin 4) K)
 end
 
 end ProximityPrize.SubmissionLower.ContactRegularSeeds6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactRegularSeeds6630Research.regularSeeds6630_subset

@@ -173,5 +173,3 @@ end ActualCurve
 end
 
 end ProximityPrize.SubmissionLower.ContactSparsePoleZeroCountResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactSparsePoleZeroCountResearch.finite_model_zero_points_le_exponentSet

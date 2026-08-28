@@ -103,7 +103,7 @@ def TerminalAdaptiveProjectionFamiliesYZ6630
       Nonempty (AdaptiveUnitProjectionFamilyYZ base flag
         (residualAgreementFlag6630 D.degree))
 
-/-- Exact score-66.42 terminal construction. Only the Z/agreement
+/-- Exact score-66.30 terminal construction.  Only the Z/agreement
 characteristic gate is used; the failed Y/agreement gate has been replaced
 by the scalar-coordinate theorem. -/
 theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
@@ -111,9 +111,9 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
     {flag : FlagDegree}
     (S : ResidualStage6630 phi Gamma x ContactParameters6630Research.prime
       errors flag w)
-    (hflagS : flag.all ≤ 8)
-    (hflagYS : flag.yz + flag.all ≤ 40)
-    (hflagTotal : flag.zOnly + flag.yz + flag.all ≤ 617) :
+    (hflagS : flag.all ≤ 10)
+    (hflagYS : flag.yz + flag.all ≤ 48)
+    (hflagTotal : flag.zOnly + flag.yz + flag.all ≤ 814) :
     TerminalAdaptiveProjectionFamiliesYZ6630 S := by
   classical
   intro D i hi hproper
@@ -130,18 +130,18 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
   obtain ⟨hGY, hGS, hGZ⟩ := degree_bounds_of_polynomialInFlag6630 hGflag
   obtain ⟨hTY, hTS, hTZ⟩ := degree_bounds_of_polynomialInFlag6630 hTflag
   have hD : D.degree ≤ w := D.degree_le.trans (Nat.le_refl w)
-  have hGY' : D.stage.G.degreeOf 0 ≤ 40 := hGY.trans hflagYS
-  have hGS' : D.stage.G.degreeOf 1 ≤ 8 := hGS.trans hflagS
-  have hGZ' : D.stage.G.degreeOf 2 ≤ 617 := hGZ.trans hflagTotal
-  have hTY' : T.degreeOf 0 ≤ 1 + 78 * w := by
+  have hGY' : D.stage.G.degreeOf 0 ≤ 48 := hGY.trans hflagYS
+  have hGS' : D.stage.G.degreeOf 1 ≤ 10 := hGS.trans hflagS
+  have hGZ' : D.stage.G.degreeOf 2 ≤ 814 := hGZ.trans hflagTotal
+  have hTY' : T.degreeOf 0 ≤ 1 + 94 * w := by
     simp only [residualAgreementFlag6630, unitYZFlag,
       agreementDirection6630, add_yz, add_all, nsmul_yz, nsmul_all] at hTY
     omega
-  have hTS' : T.degreeOf 1 ≤ 15 * w := by
+  have hTS' : T.degreeOf 1 ≤ 19 * w := by
     simp only [residualAgreementFlag6630, unitYZFlag,
       agreementDirection6630, add_all, nsmul_all] at hTS
     omega
-  have hTZ' : T.degreeOf 2 ≤ 1 + 1232 * w := by
+  have hTZ' : T.degreeOf 2 ≤ 1 + 1626 * w := by
     simp only [residualAgreementFlag6630, unitYZFlag,
       agreementDirection6630, add_zOnly, add_yz, add_all,
       nsmul_zOnly, nsmul_yz, nsmul_all] at hTZ
@@ -150,12 +150,9 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
       D.stage.G.degreeOf j < ContactParameters6630Research.prime := by
     intro j
     fin_cases j
-    · exact hGY'.trans_lt (by norm_num [ContactParameters6630Research.prime,
-        ContactFlagParameters6642Research.prime])
-    · exact hGS'.trans_lt (by norm_num [ContactParameters6630Research.prime,
-        ContactFlagParameters6642Research.prime])
-    · exact hGZ'.trans_lt (by norm_num [ContactParameters6630Research.prime,
-        ContactFlagParameters6642Research.prime])
+    · exact hGY'.trans_lt (by norm_num [ContactParameters6630Research.prime])
+    · exact hGS'.trans_lt (by norm_num [ContactParameters6630Research.prime])
+    · exact hGZ'.trans_lt (by norm_num [ContactParameters6630Research.prime])
   have hmixedZ :
       coordinateMixedDegree Omega D.stage.G T 2 <
         ContactParameters6630Research.prime := by
@@ -163,9 +160,7 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
     apply (Nat.add_le_add
       (Nat.mul_le_mul hTY' hGS')
       (Nat.mul_le_mul hGY' hTS')).trans_lt
-    norm_num [w, ContactParameters6630Research.prime,
-      ContactFlagParameters6642Research.w,
-      ContactFlagParameters6642Research.prime]
+    norm_num [w, ContactParameters6630Research.prime]
   have hSderiv : MvPolynomial.pderiv (1 : Fin 3) D.stage.G ≠ 0 :=
     residualStage6630_pderiv_one_ne_zero D.stage
   have hGdep : 0 < D.stage.G.degreeOf (1 : Fin 3) := by
@@ -213,16 +208,16 @@ theorem terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps
     ((support_subset_flagSupport_iff flag D.stage.G).2 hGflag)
     ((support_subset_flagSupport_iff (residualAgreementFlag6630 D.degree) T).2 hTflag)
 
-/-- Convenient increment-cap wrapper for the full score-66.30 surface flag.
+/-- Convenient increment-cap wrapper for the full score-66.74 surface flag.
 The cumulative theorem above is the one used for individual factors. -/
 theorem terminalAdaptiveProjectionFamiliesYZ6630_of_rectangular_caps
     [CharP Omega ContactParameters6630Research.prime]
     {flag : FlagDegree}
     (S : ResidualStage6630 phi Gamma x ContactParameters6630Research.prime
       errors flag w)
-    (hflagZ : flag.zOnly ≤ 577)
-    (hflagY : flag.yz ≤ 32)
-    (hflagS : flag.all ≤ 8) :
+    (hflagZ : flag.zOnly ≤ 766)
+    (hflagY : flag.yz ≤ 38)
+    (hflagS : flag.all ≤ 10) :
     TerminalAdaptiveProjectionFamiliesYZ6630 S := by
   apply terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps S hflagS
   · omega
@@ -232,6 +227,3 @@ end
 
 
 end ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6630Research.terminalAdaptiveProjectionFamiliesYZ6630_of_rectangular_caps
-#print axioms ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6630Research.terminalAdaptiveProjectionFamiliesYZ6630_of_cumulative_caps

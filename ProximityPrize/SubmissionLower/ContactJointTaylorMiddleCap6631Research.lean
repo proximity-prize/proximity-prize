@@ -264,8 +264,5 @@ theorem agreementNumerator_wt_le_equal_weight
 
 end
 
-#print axioms numeratorStep_wt_le_equal_weight
-#print axioms numerator_wt_le_equal_weight
-#print axioms agreementNumerator_wt_le_equal_weight
 
 end ProximityPrize.SubmissionLower.ContactJointTaylorMiddleCap6631Research

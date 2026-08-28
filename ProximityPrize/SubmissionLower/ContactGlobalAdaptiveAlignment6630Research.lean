@@ -44,8 +44,8 @@ def FrozenTerminalAdaptiveProjectionFamiliesYZ6630 : Prop :=
   ∀ (Q : MvPolynomial (Fin 4) IRSProfile.Field) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox IRSProfile.Field
       weightedCap w seedTotalCap slopeCap)
-    (hsharp : Q ∈ ContactFlagInterpolation6642Research.globalCoefficientBox
-      IRSProfile.Field weightedCap w yCap seedTotalCap slopeCap)
+    (hsharp : Q ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
+      IRSProfile.Field weightedCap w seedTotalCap slopeCap)
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
     (seeds : Finset IRSProfile.Field)
     (u0 u1 : IRSProfile.Index → IRSProfile.Field)
@@ -68,8 +68,7 @@ theorem global_count_lt_alignment6630_of_terminal_projection_families
     Q hQ hbox hsharp selected seeds
       (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain u0 u1
       IRSProfile.domain.injective.injOn
-      (by norm_num [IRSProfile.Index, n,
-        ContactFlagParameters6642Research.n])
+      (by norm_num [IRSProfile.Index, n])
       hdegree hsolution hagreement hnoPencil
   intro R g
   exact hprojection Q hQ hbox hsharp selected seeds u0 u1 hdegree hnoPencil R g
@@ -77,5 +76,3 @@ theorem global_count_lt_alignment6630_of_terminal_projection_families
 end
 
 end ProximityPrize.SubmissionLower.ContactGlobalAdaptiveAlignment6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactGlobalAdaptiveAlignment6630Research.global_count_lt_alignment6630_of_terminal_projection_families

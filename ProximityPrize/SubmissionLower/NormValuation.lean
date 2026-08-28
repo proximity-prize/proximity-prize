@@ -211,12 +211,3 @@ end FixedExtension
 end
 
 end ProximityPrize.SubmissionLower.NormValuation
-
-#print axioms ProximityPrize.SubmissionLower.NormValuation.orderAt_algebraMap
-#print axioms ProximityPrize.SubmissionLower.NormValuation.orderAt_div
-#print axioms ProximityPrize.SubmissionLower.NormValuation.mem_primeFiber_iff
-#print axioms ProximityPrize.SubmissionLower.NormValuation.fiberPlace
-#print axioms ProximityPrize.SubmissionLower.NormValuation.factorCount_relNorm_prime
-#print axioms ProximityPrize.SubmissionLower.NormValuation.factorCount_relNorm
-#print axioms ProximityPrize.SubmissionLower.NormValuation.orderAt_intNorm
-#print axioms ProximityPrize.SubmissionLower.NormValuation.orderAt_fieldNorm

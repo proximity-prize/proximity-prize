@@ -427,12 +427,3 @@ theorem sum_blockJet_ranks_le_localRankBound (m L s : ℕ) :
 end
 
 end ProximityPrize.SubmissionLower.ContactRankKernel
-
-#print axioms ProximityPrize.SubmissionLower.ContactRankKernel.contactJet_eq_zero_iff
-#print axioms ProximityPrize.SubmissionLower.ContactRankKernel.contactJet_eq_zero_iff_coeff
-#print axioms ProximityPrize.SubmissionLower.ContactRankKernel.slopeDifference_mul_mem_coefficientBox
-#print axioms ProximityPrize.SubmissionLower.ContactRankKernel.coefficientBox_finrank
-#print axioms ProximityPrize.SubmissionLower.ContactRankKernel.kernelEmbedding_injective
-#print axioms ProximityPrize.SubmissionLower.ContactRankKernel.blockJet_rank_le_triangle_difference
-#print axioms ProximityPrize.SubmissionLower.ContactRankKernel.blockJet_rank_le_contactRankBound
-#print axioms ProximityPrize.SubmissionLower.ContactRankKernel.sum_blockJet_ranks_le_localRankBound

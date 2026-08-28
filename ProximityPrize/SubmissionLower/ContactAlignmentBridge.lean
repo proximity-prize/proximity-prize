@@ -183,11 +183,6 @@ theorem alignmentBound6400_of_selected_count
   exact alignmentBound_of_selected_count IRSProfile.domain 131071 76780
     274980728111352763 hcount
 
-#print axioms exists_selected_polynomials
-#print axioms exists_large_pencil_of_selected_count
-#print axioms alignmentBound_of_selected_count
-#print axioms exists_original_support_of_selected_count
-#print axioms alignmentBound6400_of_selected_count
 
 end
 end ProximityPrize.SubmissionLower.ContactAlignmentBridge

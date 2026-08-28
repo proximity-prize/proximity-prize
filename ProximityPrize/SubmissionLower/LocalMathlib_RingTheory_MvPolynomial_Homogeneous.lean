@@ -700,18 +700,3 @@ lemma Ideal.mem_span_iff_exists_isHomogeneous {ι R : Type*} [CommSemiring R] (x
     y ∈ Ideal.span (.range x) ↔
       ∃ (p : MvPolynomial ι R), p.IsHomogeneous 1 ∧ p.eval x = y := by
   simp [Ideal.span_eq_map_homogeneousSubmodule]
-
-#print axioms MvPolynomial.weightedTotalDegree_rename_of_injective
-#print axioms MvPolynomial.homogeneousSubmodule_one_eq_span_X
-#print axioms MvPolynomial.isHomogeneous_C
-#print axioms MvPolynomial.isHomogeneous_X
-#print axioms MvPolynomial.IsHomogeneous.prod
-#print axioms MvPolynomial.isHomogeneous_C_mul_X
-#print axioms MvPolynomial.isHomogeneous_X_pow
-#print axioms MvPolynomial.isHomogeneous_C_mul_X_pow
-#print axioms MvPolynomial.IsHomogeneous.map
-#print axioms MvPolynomial.homogeneousComponent
-#print axioms MvPolynomial.sum_homogeneousComponent
-#print axioms MvPolynomial.decomposition
-#print axioms Ideal.span_eq_map_homogeneousSubmodule
-#print axioms Ideal.mem_span_iff_exists_isHomogeneous

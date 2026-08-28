@@ -271,13 +271,3 @@ theorem Algebra.IsUnramifiedAt.not_minpoly_sq_dvd
     (H.trans hm')
   rw [minpoly.dvd_iff, aeval_algebraMap_apply, Q.algebraMap_residueField_eq_zero] at this
   exact hm this
-
-#print axioms Algebra.FormallyUnramified.of_isSeparable
-#print axioms Algebra.FormallyUnramified.bijective_of_isAlgClosed_of_isLocalRing
-#print axioms Algebra.FormallyUnramified.isField_of_isAlgClosed_of_isLocalRing
-#print axioms Algebra.FormallyUnramified.isReduced_of_field
-#print axioms Algebra.FormallyUnramified.isRadical_map_isMaximal
-#print axioms Algebra.FormallyUnramified.range_eq_top_of_isPurelyInseparable
-#print axioms Algebra.FormallyUnramified.isSeparable
-#print axioms Algebra.FormallyUnramified.iff_isSeparable
-#print axioms Algebra.IsUnramifiedAt.not_minpoly_sq_dvd

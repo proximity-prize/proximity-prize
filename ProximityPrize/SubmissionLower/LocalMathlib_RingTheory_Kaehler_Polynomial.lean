@@ -157,17 +157,3 @@ lemma KaehlerDifferential.polynomialEquiv_symm (P) :
     (polynomialEquiv R).symm P = P • D R R[X] _root_.Polynomial.X := rfl
 
 end Polynomial
-
-#print axioms KaehlerDifferential.mvPolynomialEquiv
-#print axioms KaehlerDifferential.mvPolynomialBasis
-#print axioms KaehlerDifferential.mvPolynomialBasis_repr_comp_D
-#print axioms KaehlerDifferential.mvPolynomialBasis_repr_D
-#print axioms KaehlerDifferential.mvPolynomialBasis_repr_D_X
-#print axioms KaehlerDifferential.mvPolynomialBasis_repr_apply
-#print axioms KaehlerDifferential.mvPolynomialBasis_repr_symm_single
-#print axioms KaehlerDifferential.mvPolynomialBasis_apply
-#print axioms KaehlerDifferential.polynomial_D_apply
-#print axioms KaehlerDifferential.polynomialEquiv
-#print axioms KaehlerDifferential.polynomialEquiv_comp_D
-#print axioms KaehlerDifferential.polynomialEquiv_D
-#print axioms KaehlerDifferential.polynomialEquiv_symm

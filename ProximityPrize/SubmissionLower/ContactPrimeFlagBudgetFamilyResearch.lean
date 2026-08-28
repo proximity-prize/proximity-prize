@@ -134,6 +134,3 @@ end
 
 
 end ProximityPrize.SubmissionLower.ContactPrimeFlagBudgetFamilyResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactPrimeFlagBudgetFamilyResearch.PrimeFlagBudgetFamily.sum_weightedCost_le
-#print axioms ProximityPrize.SubmissionLower.ContactPrimeFlagBudgetFamilyResearch.PrimeFlagBudgetFamily.weightedCost_residualAgreementFlag

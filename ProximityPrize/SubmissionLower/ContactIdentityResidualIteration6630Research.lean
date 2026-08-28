@@ -59,9 +59,9 @@ structure ResidualStage6630
   y_dependent : 0 < G.degreeOf 1
   regular_proper : ¬ G ∣ surfaceMap phi (MvPolynomial.pderiv (2 : Fin 4) F)
   flag_support : ContactFlagBezout6543Research.PolynomialInFlag flag G
-  surface_s_weight : wt residualSWeights F ≤ 8
-  surface_ys_weight : wt residualYSWeights F ≤ 40
-  surface_total_weight : wt residualTotalWeights F ≤ 617
+  surface_s_weight : wt residualSWeights F ≤ 10
+  surface_ys_weight : wt residualYSWeights F ≤ 48
+  surface_total_weight : wt residualTotalWeights F ≤ 814
   x_injective : Set.InjOn x nodes
   degree_le : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d
   solution : ∀ gamma ∈ Gamma,
@@ -382,6 +382,3 @@ end ResidualStage6630
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualIteration6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualIteration6630Research.ResidualStage6630.advance
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualIteration6630Research.ResidualStage6630.exists_terminal_descendant

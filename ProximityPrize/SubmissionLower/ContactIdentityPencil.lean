@@ -97,8 +97,3 @@ theorem exists_affine_pencil_of_identity_nodes {ι τ : Type*}
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityPencil
-
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityPencil.degree_lt_card_of_natDegree_le
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityPencil.mapped_affine_pencil_natDegree_le
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityPencil.exists_basefield_affine_pencil_of_identity_nodes
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityPencil.exists_affine_pencil_of_identity_nodes

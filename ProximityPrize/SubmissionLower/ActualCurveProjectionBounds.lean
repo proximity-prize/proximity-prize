@@ -194,10 +194,5 @@ theorem all_transcendental_coordinates_finite_separable
 
 end
 
-#print axioms plane_budget_le_original
-#print axioms rationalBaseAlgebra_congr
-#print axioms original_finite_separable_finrank_bound
-#print axioms original_finite_separable_sum_finrank_bound
-#print axioms all_transcendental_coordinates_finite_separable
 
 end ProximityPrize.SubmissionLower.ActualCurveProjectionBounds

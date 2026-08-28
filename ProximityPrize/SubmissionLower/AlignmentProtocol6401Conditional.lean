@@ -205,22 +205,5 @@ theorem protocolClaim6401_of_alignment
 
 end ProtocolProofs
 
-#print axioms radius6401_floor
-#print axioms radius6401_cell_cross
-#print axioms radius6401_gap
-#print axioms field_cardinality
-#print axioms budget6401_lt_field
-#print axioms sixteen_row_separation_gate
-#print axioms doubled_budget6401_nat
-#print axioms two_rpow_one_hundred_le
-#print axioms radius6401_power_rational_bound
-#print axioms radius6401_score
-#print axioms irs_code_eq_base_interleaved
-#print axioms base_mca6401_le_of_alignment
-#print axioms mca6401_le_of_alignment
-#print axioms lambda6401_le_of_alignment
-#print axioms nat_div_le_inv_pow
-#print axioms certifiedGammaError6401_le_of_alignment
-#print axioms protocolClaim6401_of_alignment
 
 end ProximityPrize.SubmissionLower.AlignmentProtocol6401Conditional

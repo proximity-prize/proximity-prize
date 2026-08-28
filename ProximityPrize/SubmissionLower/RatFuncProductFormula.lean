@@ -252,14 +252,3 @@ theorem projective_line_order_sum (x : RatFunc K) (hx : x ≠ 0) :
 end
 
 end ProximityPrize.SubmissionLower.RatFuncProductFormula
-
-#print axioms ProximityPrize.SubmissionLower.RatFuncProductFormula.finiteOrder_eq_factorCounts
-#print axioms ProximityPrize.SubmissionLower.RatFuncProductFormula.infinityOrder_eq_neg_intDegree
-#print axioms ProximityPrize.SubmissionLower.RatFuncProductFormula.exists_monic_primePlace
-#print axioms ProximityPrize.SubmissionLower.RatFuncProductFormula.primePlace_injective
-#print axioms ProximityPrize.SubmissionLower.RatFuncProductFormula.sum_factorCounts_mul_degree
-#print axioms ProximityPrize.SubmissionLower.RatFuncProductFormula.factorSupport_primes
-#print axioms ProximityPrize.SubmissionLower.RatFuncProductFormula.nonzero_order_has_supported_representative
-#print axioms ProximityPrize.SubmissionLower.RatFuncProductFormula.finite_support_actual_orders
-#print axioms ProximityPrize.SubmissionLower.RatFuncProductFormula.weighted_finite_order_sum
-#print axioms ProximityPrize.SubmissionLower.RatFuncProductFormula.projective_line_order_sum

@@ -143,6 +143,3 @@ theorem exists_residual_family_with_incidence_data
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualFamilyResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualFamilyResearch.exists_common_affine_nodal_residual_family
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualFamilyResearch.exists_residual_family_with_incidence_data

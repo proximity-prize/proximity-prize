@@ -42,19 +42,7 @@ theorem fixed_implicit_surface_caps_below_characteristic :
     norm_num [capAt, legacyVector, liftedSurface, implicitYCap,
       implicitWeightedCap, algebraicCap, weightedCap,
       ContactParameters6630Research.multiplicity, agreements, n, errors,
-      w, slopeCap, seedTotalCap, prime,
-      ContactFlagParameters6642Research.implicitYCap,
-      ContactFlagParameters6642Research.implicitWeightedCap,
-      ContactFlagParameters6642Research.algebraicCap,
-      ContactFlagParameters6642Research.weightedCap,
-      ContactFlagParameters6642Research.multiplicity,
-      ContactFlagParameters6642Research.agreements,
-      ContactFlagParameters6642Research.n,
-      ContactFlagParameters6642Research.errors,
-      ContactFlagParameters6642Research.w,
-      ContactFlagParameters6642Research.slopeCap,
-      ContactFlagParameters6642Research.totalCap,
-      ContactFlagParameters6642Research.prime]
+      w, slopeCap, seedTotalCap, prime]
 
 theorem fixed_implicit_characteristic_gates
     (G T : MvPolynomial (Fin 3) Omega)
@@ -69,56 +57,17 @@ theorem fixed_implicit_characteristic_gates
       implicitCut, ContactAlignmentParameters.unitY, implicitYCap,
       implicitWeightedCap, algebraicCap, weightedCap,
       ContactParameters6630Research.multiplicity, agreements, n, errors,
-      w, slopeCap, seedTotalCap, prime,
-      ContactFlagParameters6642Research.implicitYCap,
-      ContactFlagParameters6642Research.implicitWeightedCap,
-      ContactFlagParameters6642Research.algebraicCap,
-      ContactFlagParameters6642Research.weightedCap,
-      ContactFlagParameters6642Research.multiplicity,
-      ContactFlagParameters6642Research.agreements,
-      ContactFlagParameters6642Research.n,
-      ContactFlagParameters6642Research.errors,
-      ContactFlagParameters6642Research.w,
-      ContactFlagParameters6642Research.slopeCap,
-      ContactFlagParameters6642Research.totalCap,
-      ContactFlagParameters6642Research.prime]
+      w, slopeCap, seedTotalCap, prime]
   · norm_num [ContactAlignmentParameters.mixed, legacyVector, liftedSurface,
       implicitCut, ContactAlignmentParameters.unitR, implicitYCap,
       implicitWeightedCap, algebraicCap, weightedCap,
       ContactParameters6630Research.multiplicity, agreements, n, errors,
-      w, slopeCap, seedTotalCap, prime,
-      ContactFlagParameters6642Research.implicitYCap,
-      ContactFlagParameters6642Research.implicitWeightedCap,
-      ContactFlagParameters6642Research.algebraicCap,
-      ContactFlagParameters6642Research.weightedCap,
-      ContactFlagParameters6642Research.multiplicity,
-      ContactFlagParameters6642Research.agreements,
-      ContactFlagParameters6642Research.n,
-      ContactFlagParameters6642Research.errors,
-      ContactFlagParameters6642Research.w,
-      ContactFlagParameters6642Research.slopeCap,
-      ContactFlagParameters6642Research.totalCap,
-      ContactFlagParameters6642Research.prime]
+      w, slopeCap, seedTotalCap, prime]
   · norm_num [ContactAlignmentParameters.mixed, legacyVector, liftedSurface,
       implicitCut, ContactAlignmentParameters.unitZ, implicitYCap,
       implicitWeightedCap, algebraicCap, weightedCap,
       ContactParameters6630Research.multiplicity, agreements, n, errors,
-      w, slopeCap, seedTotalCap, prime,
-      ContactFlagParameters6642Research.implicitYCap,
-      ContactFlagParameters6642Research.implicitWeightedCap,
-      ContactFlagParameters6642Research.algebraicCap,
-      ContactFlagParameters6642Research.weightedCap,
-      ContactFlagParameters6642Research.multiplicity,
-      ContactFlagParameters6642Research.agreements,
-      ContactFlagParameters6642Research.n,
-      ContactFlagParameters6642Research.errors,
-      ContactFlagParameters6642Research.w,
-      ContactFlagParameters6642Research.slopeCap,
-      ContactFlagParameters6642Research.totalCap,
-      ContactFlagParameters6642Research.prime]
+      w, slopeCap, seedTotalCap, prime]
 
 end
 end ProximityPrize.SubmissionLower.ContactCountingCaps6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps6630Research.fixed_implicit_agreement_caps
-#print axioms ProximityPrize.SubmissionLower.ContactCountingCaps6630Research.fixed_implicit_characteristic_gates

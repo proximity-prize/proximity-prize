@@ -184,15 +184,6 @@ theorem activeFactor_rational_dvd_iff
   have hs := activeFactors_spec Q F hF
   exact rationalSurfaceMap_dvd_iff K F M hs.1 hs.2.2
 
-#print axioms xLift_degreeOf_succ
-#print axioms not_dvd_xLift_of_positive_degree
-#print axioms collected_principal_isPrime
-#print axioms coefficientDenominators_disjoint
-#print axioms localized_principal_isPrime
-#print axioms rationalSurfaceMap_irreducible
-#print axioms rationalSurfaceMap_dvd_iff
-#print axioms activeFactor_rational_irreducible
-#print axioms activeFactor_rational_dvd_iff
 
 end
 end ProximityPrize.SubmissionLower.ContactGaussLocalization

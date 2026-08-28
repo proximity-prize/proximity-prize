@@ -577,12 +577,3 @@ theorem Algebra.dvd_algebraMap_intNorm_self (x : B) : x ∣ algebraMap A B (intN
   · simp only [mem_roots', ne_eq, Polynomial.map_eq_zero, IsRoot.def, eval_map_algebraMap]
     refine ⟨minpoly.ne_zero (IsIntegral.isIntegral _), ?_⟩
     simp [algebraMap_apply B L E, aeval_algebraMap_apply]
-
-#print axioms galRestrict
-#print axioms Algebra.intTrace
-#print axioms Algebra.algebraMap_intTrace
-#print axioms Algebra.intNorm
-#print axioms Algebra.intNorm_intNorm
-#print axioms Algebra.intNorm_eq_norm
-#print axioms Algebra.algebraMap_intNorm_of_isGalois
-#print axioms Algebra.dvd_algebraMap_intNorm_self

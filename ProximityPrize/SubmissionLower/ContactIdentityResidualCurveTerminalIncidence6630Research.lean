@@ -60,11 +60,11 @@ The zero/zero/one global residual transform is the identity. -/
 theorem surfaceMap_agreement_in_flag_of_surface_weights6630
     (F : MvPolynomial (Fin 4) K)
     (hS : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualSWeights F ≤ 8)
+      residualSWeights F ≤ 10)
     (hYS : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualYSWeights F ≤ 40)
+      residualYSWeights F ≤ 48)
     (hTotal : ContactPost6464MinkowskiRecurrenceResearch.wt
-      residualTotalWeights F ≤ 617)
+      residualTotalWeights F ≤ 814)
     (d : ℕ) (coeffs : ℕ → K) (x0 u0 u1 : K) :
     PolynomialInFlag (residualAgreementFlag6630 d)
       (surfaceMap phi (agreementNumerator F d coeffs x0 u0 u1)) := by
@@ -282,7 +282,3 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidence6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidence6630Research.recursive_curve_stratified_incidence_bound
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidence6630Research.recursive_curve_stratified_incidence_of_zero_bounds
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidence6630Research.recursive_curve_stratified_incidence_of_prime_flag_budget

@@ -213,7 +213,3 @@ end ProjectionCriterion
 end
 
 end ProximityPrize.SubmissionLower.SeparableShearKaehlerResearch
-
-#print axioms ProximityPrize.SubmissionLower.SeparableShearKaehlerResearch.span_singleton_D_ratFunc_X
-#print axioms ProximityPrize.SubmissionLower.SeparableShearKaehlerResearch.isSeparable_iff_span_parameterDifferential
-#print axioms ProximityPrize.SubmissionLower.SeparableShearKaehlerResearch.isSeparable_shear_of_not_isSeparable

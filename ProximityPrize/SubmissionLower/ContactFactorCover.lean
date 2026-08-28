@@ -183,17 +183,6 @@ theorem exists_active_irreducible_box_factor
   have hs := activeFactors_spec Q F hF
   exact ⟨F, hF, hs.1, hs.2.1, activeFactors_mem_box Q F D w zcap s hQ hbox hF, hz⟩
 
-#print axioms activeFactors_spec
-#print axioms exists_normalized_factor_of_map_zero
-#print axioms pureX_nonvanishing
-#print axioms positive_seed_degree_of_surface_zero
-#print axioms exists_active_factor_of_surface_zero
-#print axioms activeFactors_product_dvd
-#print axioms activeFactors_mem_box
-#print axioms activeFactors_degree_budgets
-#print axioms activeFactors_input_budgets
-#print axioms activeFactors_card_le
-#print axioms exists_active_irreducible_box_factor
 
 end
 end ProximityPrize.SubmissionLower.ContactFactorCover

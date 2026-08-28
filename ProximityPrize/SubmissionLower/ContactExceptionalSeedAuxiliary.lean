@@ -265,14 +265,6 @@ theorem solution_exceptional_or_implicit_regular
   · exact Or.inl ((heval _).mp haux)
   · exact Or.inr ⟨A, hA, hi, hd, hAR, hAY, (heval _).mp hz, (heval _).not.mp hreg⟩
 
-#print axioms swapYR_twice
-#print axioms swapYR_pderiv_Y
-#print axioms exceptionalAuxiliary_data
-#print axioms originalImplicitFactors_product_dvd
-#print axioms originalImplicitFactors_degree_budgets
-#print axioms eval_surface_swap
-#print axioms surface_zero_exceptional_or_implicit_regular
-#print axioms solution_exceptional_or_implicit_regular
 
 end
 end ProximityPrize.SubmissionLower.ContactExceptionalSeedAuxiliary

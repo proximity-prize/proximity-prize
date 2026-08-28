@@ -259,16 +259,5 @@ theorem interleaved_finite_list_card_le
 
 end Proofs
 
-#print axioms rowPolynomial_coeff
-#print axioms rowPolynomial_injective
-#print axioms rowPolynomial_natDegree_le
-#print axioms momentProjection_apply
-#print axioms exists_nonzero_coordinate_difference
-#print axioms pairCollisionSeeds_card_le
-#print axioms allCollisionSeeds_card_le
-#print axioms exists_separating_moment_parameter
-#print axioms momentProjection_mem_code
-#print axioms momentProjection_preserves_agreements
-#print axioms interleaved_finite_list_card_le
 
 end ProximityPrize.SubmissionLower.AlignmentMomentCurveProjection

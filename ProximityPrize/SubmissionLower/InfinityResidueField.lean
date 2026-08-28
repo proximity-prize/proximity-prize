@@ -164,11 +164,3 @@ theorem residueEquiv_apply (c : K) : residueEquiv K c = residueConstant K c := r
 end
 
 end ProximityPrize.SubmissionLower.InfinityResidueField
-
-#print axioms ProximityPrize.SubmissionLower.InfinityResidueField.constantMap
-#print axioms ProximityPrize.SubmissionLower.InfinityResidueField.polynomial_quotient_value_lt_one
-#print axioms ProximityPrize.SubmissionLower.InfinityResidueField.exists_constant_difference_lt_one
-#print axioms ProximityPrize.SubmissionLower.InfinityResidueField.exists_constant_difference_mem_maximalIdeal
-#print axioms ProximityPrize.SubmissionLower.InfinityResidueField.residueConstant_injective
-#print axioms ProximityPrize.SubmissionLower.InfinityResidueField.residueConstant_surjective
-#print axioms ProximityPrize.SubmissionLower.InfinityResidueField.residueEquiv

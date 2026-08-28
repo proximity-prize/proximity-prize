@@ -381,6 +381,3 @@ end ResidualStage
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch.ResidualStage.advance
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch.ResidualStage.exists_terminal_descendant

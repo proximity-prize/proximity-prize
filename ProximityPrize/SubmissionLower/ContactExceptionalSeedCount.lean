@@ -207,14 +207,6 @@ theorem exceptional_solution_seed_card_le
   exact (card_actual_solution_seeds_le (exceptionalAuxiliary J) hd.1 hd.2.1 hd.2.2.1
     seeds hsolutions).trans hd.2.2.2.2
 
-#print axioms seedProjection_reconstruct
-#print axioms seedProjection_nonzero
-#print axioms seedProjection_natDegree_le
-#print axioms seedProjection_eval
-#print axioms auxiliarySeedPolynomial_nonzero
-#print axioms card_surface_seeds_le
-#print axioms card_actual_solution_seeds_le
-#print axioms exceptional_solution_seed_card_le
 
 end ActualSolutions
 

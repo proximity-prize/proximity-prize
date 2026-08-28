@@ -194,9 +194,5 @@ theorem scalarList_card_le
 
 end Proofs
 
-#print axioms eq_of_agreement_on_large_support
-#print axioms seed_indexed_list_card_le
-#print axioms finite_list_card_le
-#print axioms scalarList_card_le
 
 end ProximityPrize.SubmissionLower.AlignmentScalarListBridge

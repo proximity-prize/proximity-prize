@@ -314,5 +314,3 @@ theorem weighted_poleOrder_eval_le_exponentSet
 end
 
 end ProximityPrize.SubmissionLower.ContactSparsePoleSupportResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactSparsePoleSupportResearch.poleOrder_eval_le_support

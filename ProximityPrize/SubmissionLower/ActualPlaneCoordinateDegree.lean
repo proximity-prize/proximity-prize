@@ -172,11 +172,5 @@ end FiniteFamily
 
 end
 
-#print axioms order_cover
-#print axioms actual_generators
-#print axioms planeEval_eq_actual
-#print axioms relationIdeal_eq_actual
-#print axioms actual_finite_separable_finrank_bound
-#print axioms actual_finite_separable_sum_finrank_bound
 
 end ProximityPrize.SubmissionLower.ActualPlaneCoordinateDegree

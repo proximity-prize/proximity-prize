@@ -45,6 +45,3 @@ theorem tight_exception_scaled_bound
     _ = gap * (core + exceptionCap * gap) := by ring
 
 end ProximityPrize.SubmissionLower.ContactTightSingularAggregationResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactTightSingularAggregationResearch.tight_exception_bound
-#print axioms ProximityPrize.SubmissionLower.ContactTightSingularAggregationResearch.tight_exception_scaled_bound

@@ -208,16 +208,6 @@ theorem geometric_factor_regular_gate
 
 end GeometricRegularity
 
-#print axioms pderiv_zero_iff_degree_zero_below_char
-#print axioms surfaceMap_pderiv
-#print axioms surfaceMap_pderiv_R
-#print axioms R_derivative_nonzero
-#print axioms R_derivative_degree_lt
-#print axioms equation_not_dvd_R_derivative
-#print axioms H_proper_on_every_geometric_factor
-#print axioms geometric_factor_R_derivative_nonzero
-#print axioms geometric_factor_R_degree_le
-#print axioms geometric_factor_regular_gate
 
 end
 end ProximityPrize.SubmissionLower.ContactRegularFactorGate

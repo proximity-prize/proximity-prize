@@ -247,7 +247,3 @@ theorem budget_slack : alignmentBudget - ledgerCeiling = 18971296776397264 := by
   norm_num [alignmentBudget]
 
 end ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch.identity_degree_weight_cross_le
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch.stratified_incidence_linear
-#print axioms ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch.strict_budget

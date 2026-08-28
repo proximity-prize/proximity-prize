@@ -88,9 +88,3 @@ theorem radius6464_score :
 end
 
 end ProximityPrize.SubmissionLower.ContactScore6464
-
-#print axioms ProximityPrize.SubmissionLower.ContactScore6464.radius6464_floor
-#print axioms ProximityPrize.SubmissionLower.ContactScore6464.radius6464_cell_cross
-#print axioms ProximityPrize.SubmissionLower.ContactScore6464.radius6464_gap
-#print axioms ProximityPrize.SubmissionLower.ContactScore6464.radius6464_admissible
-#print axioms ProximityPrize.SubmissionLower.ContactScore6464.radius6464_score

@@ -233,16 +233,6 @@ theorem exists_component_at_actual_initial_point
 
 end CanonicalPoints
 
-#print axioms normalizedFactorSet_spec
-#print axioms normalizedFactorSet_product_dvd
-#print axioms sum_coordinate_degrees_le_of_prod_dvd
-#print axioms exists_normalizedFactorSet_zero
-#print axioms exists_geometric_component_of_surface_zero
-#print axioms surfaceFactors_degree_budget
-#print axioms surfaceFactor_family_degree_budget
-#print axioms surfaceFactor_family_input_budgets
-#print axioms surfaceFactor_family_card_budget
-#print axioms exists_component_at_actual_initial_point
 
 end
 end ProximityPrize.SubmissionLower.ContactGeometricFactorCover

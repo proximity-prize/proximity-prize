@@ -115,24 +115,31 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_6630_z_yz
         (x i) (D.stage.u0 i) (D.stage.u1 i))
       (H := regularitySurface phi D.stage.F)
       flag (ContactNearPencil6630FlagResearch.residualAgreementFlag6630 D.degree))
-    (hzyzPositive : ∀ C : RegularComponent Omega D.stage.G
+    (hzPositive : ∀ C : RegularComponent Omega D.stage.G
       (agreementPolynomial phi D.stage.F D.degree
         (x i) (D.stage.u0 i) (D.stage.u1 i))
-      (regularitySurface phi D.stage.F), 1 ≤ B.zCost C + B.yzCost C) :
+      (regularitySurface phi D.stage.F),
+      Transcendental Omega (ActualCurveCoordinateField.coordinate Omega C.1 2) →
+        1 ≤ B.zCost C)
+    (hyzPositive : ∀ C : RegularComponent Omega D.stage.G
+      (agreementPolynomial phi D.stage.F D.degree
+        (x i) (D.stage.u0 i) (D.stage.u1 i))
+      (regularitySurface phi D.stage.F),
+      ¬ Transcendental Omega (ActualCurveCoordinateField.coordinate Omega C.1 2) →
+        1 ≤ B.yzCost C) :
     (Gamma.filter (fun gamma ↦ D.stage.Agrees gamma i)).card * gap ≤
       D.degree *
           ((flagMixed flag agreementDirection6630 agreementDirection6630 *
               degreeIncidence +
             flagMixed flag agreementDirection6630 unitYZFlag *
               unitIncidence) +
-            (errors + 1) * gap *
-              (flagMixed flag agreementDirection6630 unitZFlag +
+            gap * ((errors + 1) *
+              flagMixed flag agreementDirection6630 unitZFlag +
                 flagMixed flag agreementDirection6630 unitYZFlag)) +
         ((flagMixed flag agreementDirection6630 unitYZFlag *
               degreeIncidence +
             flagMixed flag unitYZFlag unitYZFlag * unitIncidence) +
-          (errors + 1) * gap *
-            (flagMixed flag unitYZFlag unitZFlag +
+          gap * ((errors + 1) * flagMixed flag unitYZFlag unitZFlag +
               flagMixed flag unitYZFlag unitYZFlag)) := by
   classical
   let GammaI := Gamma.filter (fun gamma ↦ D.stage.Agrees gamma i)
@@ -243,8 +250,9 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_6630_z_yz
     hTpoint hinnerAgreement
     (noLargeSelectedPencil_mono D.stage.selected Gamma GammaI
       D.degree errors hsub D.stage.no_large_pencil)
-    D.stage.characteristic_bound hda B (by
-      simpa only [T] using hzyzPositive)
+    D.stage.characteristic_bound hda B
+    (by simpa only [T] using hzPositive)
+    (by simpa only [T] using hyzPositive)
     hdegree hunit
   have hgapEq : aD - D.degree = gap := by
     have hres := residual_gap_eq agreements w (w - D.degree)
@@ -283,20 +291,27 @@ theorem recursive_scaled_factor_6630_of_prime_flag_budgets_z_yz
           (x i) (D.stage.u0 i) (D.stage.u1 i))
         (H := regularitySurface phi D.stage.F)
         flag (ContactNearPencil6630FlagResearch.residualAgreementFlag6630 D.degree),
-        ∀ C : RegularComponent Omega D.stage.G
+        (∀ C : RegularComponent Omega D.stage.G
           (agreementPolynomial phi D.stage.F D.degree
             (x i) (D.stage.u0 i) (D.stage.u1 i))
-          (regularitySurface phi D.stage.F), 1 ≤ B.zCost C + B.yzCost C) :
+          (regularitySurface phi D.stage.F),
+          Transcendental Omega
+            (ActualCurveCoordinateField.coordinate Omega C.1 2) →
+              1 ≤ B.zCost C) ∧
+        (∀ C : RegularComponent Omega D.stage.G
+          (agreementPolynomial phi D.stage.F D.degree
+            (x i) (D.stage.u0 i) (D.stage.u1 i))
+          (regularitySurface phi D.stage.F),
+          ¬ Transcendental Omega
+            (ActualCurveCoordinateField.coordinate Omega C.1 2) →
+              1 ≤ B.yzCost C)) :
     Gamma.card * gap ^ 2 ≤ factorRegularLedgerYZ flag := by
   apply recursive_scaled_factor_6630_z_yz hphi S flag hnodes hagreement
   intro D i hi hproper
-  obtain ⟨B, hzyzPositive⟩ := hbudget D i hi hproper
+  obtain ⟨B, hzPositive, hyzPositive⟩ := hbudget D i hi hproper
   exact terminal_outer_fiber_bound_of_prime_flag_budget_6630_z_yz
-    hphi S hnodes hagreement D i hi B hzyzPositive
+    hphi S hnodes hagreement D i hi B hzPositive hyzPositive
 
 end
 
 end ProximityPrize.SubmissionLower.ContactIdentityResidualFactorProvider6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualFactorProvider6630Research.terminal_outer_fiber_bound_of_prime_flag_budget_6630_z_yz
-#print axioms ProximityPrize.SubmissionLower.ContactIdentityResidualFactorProvider6630Research.recursive_scaled_factor_6630_of_prime_flag_budgets_z_yz

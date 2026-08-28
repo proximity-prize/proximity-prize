@@ -181,13 +181,6 @@ theorem implicitPair_input_budgets
   exact ⟨hb.1.trans hz,
     hb.2.1.trans (Nat.mul_le_mul (Nat.mul_le_mul_left 2 hy) hz), hb.2.2.trans hy⟩
 
-#print axioms implicitBaseFactors_spec
-#print axioms implicitBaseFactors_degree_budgets
-#print axioms implicitPair_spec
-#print axioms sum_products_le_product_sums
-#print axioms implicitBaseFactors_product_degree_budget
-#print axioms implicitPair_degree_budgets
-#print axioms implicitPair_input_budgets
 
 end
 end ProximityPrize.SubmissionLower.ContactImplicitPairBudgets

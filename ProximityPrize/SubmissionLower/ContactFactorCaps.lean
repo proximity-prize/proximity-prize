@@ -310,12 +310,3 @@ theorem separated_factor_caps_of_prod_dvd {ι : Type*}
 end
 
 end ProximityPrize.SubmissionLower.ContactFactorCaps
-
-#print axioms ProximityPrize.SubmissionLower.ContactFactorCaps.weightedLift_injective
-#print axioms ProximityPrize.SubmissionLower.ContactFactorCaps.degree_weightedLift
-#print axioms ProximityPrize.SubmissionLower.ContactFactorCaps.weightedTotalDegree_mul
-#print axioms ProximityPrize.SubmissionLower.ContactFactorCaps.mem_globalCoefficientBox_of_dvd
-#print axioms ProximityPrize.SubmissionLower.ContactFactorCaps.separated_degree_budgets_of_prod_dvd
-#print axioms ProximityPrize.SubmissionLower.ContactFactorCaps.degreeOf_eq_sum_of_scalar_factorization
-#print axioms ProximityPrize.SubmissionLower.ContactFactorCaps.degree_bounds_of_mem_box
-#print axioms ProximityPrize.SubmissionLower.ContactFactorCaps.separated_factor_caps_of_prod_dvd

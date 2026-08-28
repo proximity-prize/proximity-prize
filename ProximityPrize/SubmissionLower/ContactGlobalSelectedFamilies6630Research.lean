@@ -2,7 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactRegularSeeds6630Research
 import ProximityPrize.SubmissionLower.ContactSingularBranch6630Research
 import ProximityPrize.SubmissionLower.ContactNearPencil6630FactorLedgerResearch
-import ProximityPrize.SubmissionLower.ContactFlagRegularFactorCaps6642Research
+import ProximityPrize.SubmissionLower.ContactFlagRegularFactorCaps6641Research
 
 /-!
 # Actual global selected-family ledger at score 66.30
@@ -22,7 +22,7 @@ open ContactInterpolation ContactTranslation ContactFactorCaps
 open ContactRegularFactorFlag6630Research ContactRegularSeeds6630Research
 open ContactSingularBranch6630Research ContactSingularLedger6630Research
 open ContactNearPencil6630FactorLedgerResearch
-open ContactFlagRegularFactorCaps6642Research
+open ContactFlagRegularFactorCaps6641Research
 open ContactPrimeSeedIncidence
 
 noncomputable section
@@ -53,23 +53,15 @@ theorem card_le_regular_sum_add_singular6630
     intro gamma hgamma
     obtain ⟨F, hF, hreg⟩ | ⟨q, hq, himp⟩ | hexc :=
       solution_three_way Q hQ weightedCap w seedTotalCap slopeCap prime
-        (by norm_num [slopeCap, ContactFlagParameters6642Research.slopeCap])
-        characteristic_gates.2.2.2
-        (by norm_num [w, ContactFlagParameters6642Research.w])
+        (by norm_num [slopeCap]) characteristic_gates.2.2.2
+        (by norm_num [w])
         (by norm_num [ContactParameters6630Research.w,
           ContactParameters6630Research.weightedCap,
           ContactParameters6630Research.multiplicity,
           ContactParameters6630Research.agreements,
           ContactParameters6630Research.n,
           ContactParameters6630Research.errors,
-          ContactParameters6630Research.slopeCap,
-          ContactFlagParameters6642Research.w,
-          ContactFlagParameters6642Research.weightedCap,
-          ContactFlagParameters6642Research.multiplicity,
-          ContactFlagParameters6642Research.agreements,
-          ContactFlagParameters6642Research.n,
-          ContactFlagParameters6642Research.errors,
-          ContactFlagParameters6642Research.slopeCap])
+          ContactParameters6630Research.slopeCap])
         hbox (selected gamma) gamma (hsolution gamma hgamma)
     · apply Finset.mem_union.mpr
       left
@@ -103,8 +95,8 @@ the sharp score-66.30 regular numerator. -/
 theorem regularSeeds_scaled_cumulative_bound6630
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hsharp : Q ∈ ContactFlagInterpolation6642Research.globalCoefficientBox
-      K weightedCap w yCap seedTotalCap slopeCap)
+    (hsharp : Q ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
+      K weightedCap w seedTotalCap slopeCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hregular : ∀ F : RegularIndex Q,
       (regularSeeds6630 Q selected Gamma F).card * gap ^ 2 ≤
@@ -112,7 +104,7 @@ theorem regularSeeds_scaled_cumulative_bound6630
     (∑ F : RegularIndex Q,
       (regularSeeds6630 Q selected Gamma F).card) * gap ^ 2 ≤
         ContactNearPencil6630ArithmeticResearch.regularNumerator := by
-  have hcaps := regularFlag6630_budgets_of_flag_box6642 Q hQ hsharp
+  have hcaps := regularFlag6630_budgets_of_flagBox6641 Q hQ hsharp
   exact sum_factor_counts6630_le
     (fun F : RegularIndex Q ↦
       (regularSeeds6630 Q selected Gamma F).card)
@@ -131,8 +123,8 @@ theorem global_scaled_bound_of_regular_factors
     {Iota : Type} [DecidableEq Iota]
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hsharp : Q ∈ ContactFlagInterpolation6642Research.globalCoefficientBox
-      K weightedCap w yCap seedTotalCap slopeCap)
+    (hsharp : Q ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
+      K weightedCap w seedTotalCap slopeCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
@@ -170,8 +162,8 @@ theorem global_count_lt_alignment_of_regular_factors
     {Iota : Type} [DecidableEq Iota]
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hsharp : Q ∈ ContactFlagInterpolation6642Research.globalCoefficientBox
-      K weightedCap w yCap seedTotalCap slopeCap)
+    (hsharp : Q ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
+      K weightedCap w seedTotalCap slopeCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
@@ -202,19 +194,10 @@ theorem global_count_lt_alignment_of_regular_factors
         ContactParameters6630Research.agreements,
         ContactParameters6630Research.n,
         ContactParameters6630Research.w,
-        ContactParameters6630Research.errors,
-        ContactFlagParameters6642Research.gap,
-        ContactFlagParameters6642Research.agreements,
-        ContactFlagParameters6642Research.n,
-        ContactFlagParameters6642Research.w,
-        ContactFlagParameters6642Research.errors]] at hbudget0
-    simpa only [fieldBudget6630, alignmentBudget,
-      ContactFlagParameters6642Research.alignmentBudget] using hbudget0
+        ContactParameters6630Research.errors]] at hbudget0
+    simpa only [fieldBudget6630, alignmentBudget] using hbudget0
   exact Nat.lt_of_mul_lt_mul_right (hscaled.trans_lt hbudget)
 
 end
 
 end ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6630Research
-
-#print axioms ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6630Research.global_scaled_bound_of_regular_factors
-#print axioms ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6630Research.global_count_lt_alignment_of_regular_factors

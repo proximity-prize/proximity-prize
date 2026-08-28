@@ -177,16 +177,5 @@ theorem original_characteristic_gates (order : Fin 3 ≃ Fin 3) (G H : Original 
 
 end
 
-#print axioms firstMap_monomial
-#print axioms support_firstMap_subset
-#print axioms firstMap_degreeOf_le
-#print axioms rationalMap_degreeOf_le
-#print axioms bivariateEquiv_natDegree
-#print axioms uniqueAlgEquiv_natDegree_le
-#print axioms bivariateEquiv_degreeX_le
-#print axioms planeMap_natDegree_le
-#print axioms planeMap_degreeX_le
-#print axioms planeMap_resultant_natDegree_le
-#print axioms original_characteristic_gates
 
 end ProximityPrize.SubmissionLower.ActualPlaneCoordinateCaps

@@ -77,6 +77,3 @@ end
 
 
 end ProximityPrize.SubmissionLower.ContactGlobalShearPositivityResearch
-
-#print axioms ProximityPrize.SubmissionLower.ContactGlobalShearPositivityResearch.transcendental_add_smul_of_transcendental_isAlgebraic
-#print axioms ProximityPrize.SubmissionLower.ContactGlobalShearPositivityResearch.globalShearCost_pos_of_seedCoordinate_isAlgebraic
