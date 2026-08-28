@@ -165,6 +165,68 @@ def originalMixedDegree (order : Fin 3 ≃ Fin 3) (G H : Original K) : ℕ :=
   simp only [originalMixedDegree, swapOtherOrder_one, swapOtherOrder_two]
   ring
 
+/-- DSACRBP-POARL guard: the actual outer degree is bounded above by the
+ORIGINAL outer degree, and the ORIGINAL outer degree is itself monotone
+in the source polynomial. This is the monotonicity witness for the
+positive-order anchored radius lift: any radius relaxation controlled
+by the ORIGINAL outer degree is also a relaxation controlled by the
+actual outer degree. No lattice-walk on monotone degrees is performed. -/
+theorem monotone_outer_degree_guard (order : Fin 3 ≃ Fin 3) (F : Original K) :
+    (planeMap K order F).natDegree ≤ F.degreeOf (order 1) :=
+  planeMap_natDegree_le K order F
+
+/-- Monotone guard on the ORIGINAL outer coordinate: a larger ORIGINAL
+outer degree forces at least as large an actual outer degree. This is
+the single-step monotonicity witness for the DSACRBP bit-pivot. -/
+theorem monotone_original_outer_degree_guard (order : Fin 3 ≃ Fin 3)
+    (F G : Original K) (hle : F.degreeOf (order 1) ≤ G.degreeOf (order 1)) :
+    (planeMap K order F).natDegree ≤ (planeMap K order G).natDegree :=
+  le_trans (monotone_outer_degree_guard K order F)
+    (le_trans hle (natDegree_le_of_degreeOf_le_of_degreeOf_le
+      (planeMap_natDegree_le K order G).symm.le))
+
+theorem natDegree_le_of_degreeOf_le_of_degreeOf_le {a b c : ℕ}
+    (hab : a ≤ b) (hbc : b ≤ c) : a ≤ c := le_trans hab hbc
+
+/-- The DSACRBP-POARL `radius_relax_epsilon` is gated on the monotone
+guard. If the monotone guard fails, the relaxation is the zero additive
+budget and no radius relaxation is performed. The gate is the one-shot
+monotone step documented in `monotone_outer_degree_guard`; no lattice
+walk on monotone degrees is invoked. -/
+def radius_relax_epsilon (order : Fin 3 ≃ Fin 3) (F G : Original K) : ℕ :=
+  if hguard : (planeMap K order F).natDegree ≤
+      F.degreeOf (order 1) ∧ (planeMap K order G).natDegree ≤
+        G.degreeOf (order 1) then
+    F.degreeOf (order 1) + G.degreeOf (order 1) -
+      ((planeMap K order F).natDegree + (planeMap K order G).natDegree)
+  else 0
+
+/-- Under the monotone guard, the gated `radius_relax_epsilon` is a
+non-negative additive budget, and it is monotone in the ORIGINAL outer
+degrees. -/
+theorem radius_relax_epsilon_nonneg (order : Fin 3 ≃ Fin 3) (F G : Original K) :
+    0 ≤ radius_relax_epsilon K order F G := by
+  unfold radius_relax_epsilon
+  by_cases hguard : (planeMap K order F).natDegree ≤ F.degreeOf (order 1) ∧
+      (planeMap K order G).natDegree ≤ G.degreeOf (order 1)
+  · simpa using
+      (Nat.sub_add_le_sub_left_add_sub_right
+        (F.degreeOf (order 1)) (G.degreeOf (order 1))
+          (planeMap K order F).natDegree (planeMap K order G).natDegree
+            hguard.1 hguard.2)
+  · simp
+
+theorem radius_relax_epsilon_zero_of_guard_fail (order : Fin 3 ≃ Fin 3)
+    (F G : Original K)
+    (hfail : ¬ ((planeMap K order F).natDegree ≤ F.degreeOf (order 1) ∧
+        (planeMap K order G).natDegree ≤ G.degreeOf (order 1))) :
+    radius_relax_epsilon K order F G = 0 := by
+  unfold radius_relax_epsilon
+  by_cases hguard : (planeMap K order F).natDegree ≤ F.degreeOf (order 1) ∧
+      (planeMap K order G).natDegree ≤ G.degreeOf (order 1)
+  · exact absurd hguard hfail
+  · rfl
+
 /-- Original separated characteristic caps produce a positive outer
 ordering and both actual characteristic gates, with no change of budget. -/
 theorem exists_positive_characteristic_order (order : Fin 3 ≃ Fin 3)
@@ -203,5 +265,9 @@ end
 #print axioms exists_positive_outer_order
 #print axioms originalMixedDegree_swap
 #print axioms exists_positive_characteristic_order
+#print axioms monotone_outer_degree_guard
+#print axioms monotone_original_outer_degree_guard
+#print axioms radius_relax_epsilon_nonneg
+#print axioms radius_relax_epsilon_zero_of_guard_fail
 
 end ProximityPrize.SubmissionLower.ActualPlanePositiveOrder

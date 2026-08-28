@@ -184,6 +184,7 @@ theorem whole_surface_seed_bound_fixed
     (hRgate : mixed ContactProjectionParameters.surfaceVector agreementVector unitR < prime)
     (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
     (hZ : F.degreeOf 3 ≤ seedTotalCap)
+    (hHY : (ContactTaylorNumerators.polyH K F).degreeOf (1 : Fin 4) ≤ yCap - 1)
     (selected : K → Polynomial K) (Γ : Finset K)
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (hnodes : nodes.card = n) [CharP Ω prime]
@@ -198,7 +199,7 @@ theorem whole_surface_seed_bound_fixed
     (hnoPencil : NoLargeSelectedPencil selected Γ w errors) :
     Γ.card * gap ^ 2 ≤ wholeNumerator (degreeVector G) := by
   have hcap (i : ι) : HasCaps (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i))
-      agreementVector := fixed_agreement_caps φ F hY hR hZ (x i) (u₀ i) (u₁ i)
+      agreementVector := fixed_agreement_caps φ F hY hR hZ hHY (x i) (u₀ i) (u₁ i)
   have hcount := whole_surface_seed_bound φ F G hG hdiv hr hHproper selected Γ
     nodes x u₀ u₁ hinj prime w agreements errors
     (by norm_num [w]) (by norm_num [w, prime]) (by norm_num [w, agreements])

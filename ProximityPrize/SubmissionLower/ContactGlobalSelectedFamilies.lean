@@ -23,7 +23,6 @@ open ContactAlignmentParameters ContactImplicitLiftParameters ContactCountingLed
 open ContactSelectedSeedDecomposition ContactImplicitPairBudgets ContactImplicitContactLift
 open ContactExceptionalSeedAuxiliary ContactSingularAuxiliary ContactSingularDegreeBounds
 open ContactInterpolation ContactTranslation ContactFactorCaps
-open ContactFactorCover
 open scoped BigOperators
 
 noncomputable section
@@ -98,17 +97,16 @@ theorem card_le_two_family_sums_plus_exception
       (Nat.add_le_add Finset.card_biUnion_le Finset.card_biUnion_le) _
 
 theorem regularVector_budgets (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
-    (hY : Q.degreeOf (1 : Fin 4) ≤ yCap)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
-    (∑ F : RegularIndex Q, (regularVector Q F).y) ≤ 27 ∧
+    (∑ F : RegularIndex Q, (regularVector Q F).y) ≤ 26 ∧
       (∑ F : RegularIndex Q, (regularVector Q F).r) ≤ 6 ∧
-      (∑ F : RegularIndex Q, (regularVector Q F).z) ≤ 164 := by
+      (∑ F : RegularIndex Q, (regularVector Q F).z) ≤ 170 := by
   classical
   have hb := directFactor_input_budgets Q hQ weightedCap w seedTotalCap slopeCap (by decide) hbox
-  have hy : (∑ F ∈ positiveRFactors Q, F.degreeOf (1 : Fin 4)) ≤ 27 := by
-    have hh := sum_degreeOf_le_of_prod_dvd (positiveRFactors Q) id Q hQ
-      (positiveRFactors_product_dvd Q hQ) (1 : Fin 4)
-    exact hh.trans (hY.trans_eq (by norm_num [yCap]))
+  have hy : (∑ F ∈ positiveRFactors Q, F.degreeOf (1 : Fin 4)) ≤ 26 := by
+    have hh := hb.1
+    change (∑ F ∈ positiveRFactors Q, F.degreeOf (1 : Fin 4)) ≤ yCap at hh
+    rwa [parameter_values.2.1] at hh
   refine ⟨?_, ?_, ?_⟩
   · simpa only [regularVector, Finset.sum_coe_sort] using hy
   · simpa only [regularVector, Finset.sum_coe_sort, slopeCap] using hb.2.1
@@ -155,7 +153,6 @@ discharged by the final ContactGlobalSelectedCount module. -/
 theorem global_count_of_actual_branch_estimates
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hY : Q.degreeOf (1 : Fin 4) ≤ yCap)
     (selected : K → Polynomial K) (Γ : Finset K)
     (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ Q = 0)
     (hregular : ∀ F : RegularIndex Q,
@@ -164,7 +161,7 @@ theorem global_count_of_actual_branch_estimates
       (implicitSeeds Q selected Γ q).card * gap ≤
         (n - w) * dot liftedAgreement (implicitVector Q q) +
           (errors + 1) * gap * (implicitVector Q q).z) : Γ.card < alignmentBudget := by
-  have hregCaps := regularVector_budgets Q hQ hY hbox
+  have hregCaps := regularVector_budgets Q hQ hbox
   have himpCaps := implicitVector_budgets Q hQ hbox
   have hcover := constructed_family_cover Q hQ hbox selected Γ hsolution
   exact final_family_ledger

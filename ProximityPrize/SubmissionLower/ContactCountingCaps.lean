@@ -90,11 +90,18 @@ the scalars may vary arbitrarily and need no nonvanishing assumption. -/
 theorem fixed_agreement_caps (F : MvPolynomial (Fin 4) K)
     (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
     (hZ : F.degreeOf 3 ≤ seedTotalCap)
+    (hHY : (polyH K F).degreeOf (1 : Fin 4) ≤ yCap - 1)
     (x u₀ u₁ : K) :
     HasCaps (agreementPolynomial φ F w x u₀ u₁) agreementVector := by
   have hold := surface_agreement_caps φ F yCap slopeCap seedTotalCap (by decide)
     hY hR hZ w (fun j ↦ (j.factorial : K)⁻¹) x u₀ u₁
-  simpa [agreementPolynomial, agreementCaps, agreementVector] using hold
+  intro i
+  fin_cases i
+  · exact (surfaceMap_degreeOf_le φ _ 0).trans
+      (agreementNumerator_Y_degree_bound_of_polyH F yCap (yCap - 1) w
+        hY hHY (by omega) (fun j ↦ (j.factorial : K)⁻¹) x u₀ u₁)
+  · exact hold 1
+  · exact hold 2
 
 /-- A genuine degree-w selected solution vanishes on the actual first
 tail. This needs neither regularity nor a characteristic bound. -/

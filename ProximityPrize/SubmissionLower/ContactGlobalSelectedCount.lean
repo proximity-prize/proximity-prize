@@ -27,7 +27,6 @@ open ContactAlignmentParameters ContactImplicitLiftParameters ContactCountingLed
 open ContactGlobalSelectedFamilies ContactSelectedSeedDecomposition
 open ContactImplicitPairBudgets ContactImplicitContactLift ContactSingularAuxiliary
 open ContactSingularDegreeBounds ContactInterpolation ContactTranslation
-open ContactFactorCaps ContactFactorCover
 open ContactPrimeSeedIncidence ContactProperCutSeedCount
 open ContactOriginalRegularSeedCount ContactImplicitPairSeedCount
 
@@ -42,7 +41,6 @@ local instance : DecidableEq ι := Classical.decEq ι
 theorem global_selected_count [CharP K prime]
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-    (hY : Q.degreeOf (1 : Fin 4) ≤ yCap)
     (selected : K → Polynomial K) (Γ : Finset K)
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (hnodes : nodes.card = n)
@@ -52,15 +50,12 @@ theorem global_selected_count [CharP K prime]
       agreements ≤ (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Γ w errors) : Γ.card < alignmentBudget := by
   classical
-  apply global_count_of_actual_branch_estimates Q hQ hbox hY selected Γ hsolution
+  apply global_count_of_actual_branch_estimates Q hQ hbox selected Γ hsolution
   · intro F
     obtain ⟨hirred, hRpos, hFbox⟩ :=
       directFactor_data Q F.1 hQ weightedCap w seedTotalCap slopeCap hbox F.2
-    have hFY : F.1.degreeOf (1 : Fin 4) ≤ yCap :=
-      (degreeOf_le_of_dvd (1 : Fin 4) F.1 Q
-        (positiveRFactors_spec Q F.1 F.2).2.1 hQ).trans hY
     have hsub := regularSeeds_subset Q selected Γ F
-    exact original_regular_seed_bound K F.1 hirred hRpos hFbox hFY selected
+    exact original_regular_seed_bound K F.1 hirred hRpos hFbox selected
       (regularSeeds Q selected Γ F) nodes x u₀ u₁ hinj hnodes
       (fun γ hγ => hdegree γ (hsub hγ))
       (fun γ hγ => (regularSeeds_solution Q selected Γ F γ hγ).1)

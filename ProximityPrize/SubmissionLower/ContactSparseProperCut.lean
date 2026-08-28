@@ -209,6 +209,7 @@ theorem whole_surface_seed_bound_fixed_sparse
     (hGcaps : HasCaps G ContactProjectionParameters.surfaceVector)
     (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
     (hZ : F.degreeOf 3 ≤ seedTotalCap)
+    (hHY : (ContactTaylorNumerators.polyH K F).degreeOf (1 : Fin 4) ≤ yCap - 1)
     (selected : K → Polynomial K) (Γ : Finset K)
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (hnodes : nodes.card = n) [CharP Ω prime]
@@ -226,7 +227,7 @@ theorem whole_surface_seed_bound_fixed_sparse
   classical
   have hcap (j : ι) : HasCaps
       (agreementPolynomial φ F w (x j) (u₀ j) (u₁ j)) agreementVector :=
-    fixed_agreement_caps φ F hY hR hZ (x j) (u₀ j) (u₁ j)
+    fixed_agreement_caps φ F hY hR hZ hHY (x j) (u₀ j) (u₁ j)
   let P : Ideal (MvPolynomial (Fin 3) Ω) := Ideal.span {G}
   letI : P.IsPrime := Ideal.isPrime_span_singleton_of_prime hG.prime
   have hFmem : surfaceMap φ F ∈ P := Ideal.mem_span_singleton.mpr hdiv
