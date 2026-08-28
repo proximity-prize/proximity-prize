@@ -17,7 +17,7 @@ open scoped Classical
 open ProximityPrize.Benchmark
 open ContactParameters6600Research
 open ContactInterpolation ContactTranslation ContactPrimeSeedIncidence
-open ContactGenericInitialPoint ContactOriginalRegularSeedCount
+open ContactGenericInitialPoint ContactTetraGeometricSeedCover6622Research
 open ContactGlobalSelectedFamilies6600Research
 open ContactRegularFactorResidualStage6600Research
 open ContactAdaptiveProjectionFactorProvider6600Research
@@ -42,6 +42,7 @@ def FrozenTerminalAdaptiveProjectionFamilies6600 : Prop :=
   ∀ (Q : MvPolynomial (Fin 4) IRSProfile.Field) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox IRSProfile.Field
       weightedCap w seedTotalCap slopeCap)
+    (htetra : ∀ d ∈ Q.support, d 1 + d 2 + d 3 ≤ seedTotalCap)
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
     (seeds : Finset IRSProfile.Field)
     (u0 u1 : IRSProfile.Index → IRSProfile.Field)
@@ -50,7 +51,7 @@ def FrozenTerminalAdaptiveProjectionFamilies6600 : Prop :=
     (R : ContactRegularFactorFlag6600Research.RegularIndex Q)
     (g : GeometricFactor IRSProfile.Field R.1),
     TerminalAdaptiveProjectionFamilies
-      (regularGeometricResidualStage Q hQ hbox selected seeds
+      (regularGeometricResidualStage Q hQ hbox htetra selected seeds
         (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain
         u0 u1 IRSProfile.domain.injective.injOn hdegree hnoPencil R g)
 
@@ -59,15 +60,15 @@ selected-family count consumed by the stock alignment bridge. -/
 theorem global_count_lt_alignment6600_of_terminal_projection_families
     (hprojection : FrozenTerminalAdaptiveProjectionFamilies6600) :
     ContactFrozenAlignment6600Research.GlobalCountLtAlignment6600 := by
-  intro Q hQ hbox selected seeds u0 u1 hdegree hsolution hagreement hnoPencil
+  intro Q hQ hbox htetra selected seeds u0 u1 hdegree hsolution hagreement hnoPencil
   apply global_count_lt_alignment_of_adaptive_projection_families
-    Q hQ hbox selected seeds
+    Q hQ hbox htetra selected seeds
       (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain u0 u1
       IRSProfile.domain.injective.injOn
       (by norm_num [IRSProfile.Index, n])
       hdegree hsolution hagreement hnoPencil
   intro R g
-  exact hprojection Q hQ hbox selected seeds u0 u1 hdegree hnoPencil R g
+  exact hprojection Q hQ hbox htetra selected seeds u0 u1 hdegree hnoPencil R g
 
 end
 

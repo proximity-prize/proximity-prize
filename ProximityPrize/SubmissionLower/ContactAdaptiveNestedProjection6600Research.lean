@@ -87,7 +87,6 @@ theorem poleOrder_eq_zero_of_isAlgebraic
 structure AdaptiveNestedProjectionData
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
-    (hY : ∀ C : RegularComponent Omega G T H, LiteralProjectionGate C 0)
     (hZ : ∀ C : RegularComponent Omega G T H, LiteralProjectionGate C 2)
     (hSderiv : MvPolynomial.pderiv (1 : Fin 3) G ≠ 0) where
   lam : Omega
@@ -148,14 +147,19 @@ structure AdaptiveNestedProjectionData
     MvPolynomial.C mu * MvPolynomial.pderiv (1 : Fin 3) G ≠ 0
 
 /-- Component-adaptive finite avoidance constructs both nested projections
-and avoids the sole directional-derivative bad coefficient. -/
+from a literal `Z` gate and the exact differential/algebraic alternative for
+the first `Y + λ Z` projection. -/
 theorem exists_adaptiveNestedProjectionData
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
-    (hY : ∀ C : RegularComponent Omega G T H, LiteralProjectionGate C 0)
     (hZ : ∀ C : RegularComponent Omega G T H, LiteralProjectionGate C 2)
+    (hYZ : ∀ C : RegularComponent Omega G T H,
+      (D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 0) ≠ 0 ∨
+        D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 2) ≠ 0) ∨
+      (IsAlgebraic Omega (coordinate Omega C.1 0) ∧
+        IsAlgebraic Omega (coordinate Omega C.1 2)))
     (hSderiv : MvPolynomial.pderiv (1 : Fin 3) G ≠ 0) :
-    Nonempty (AdaptiveNestedProjectionData base hY hZ hSderiv) := by
+    Nonempty (AdaptiveNestedProjectionData base hZ hSderiv) := by
   classical
   let ActiveU := {C : RegularComponent Omega G T H //
     D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 0) ≠ 0 ∨
@@ -192,17 +196,7 @@ theorem exists_adaptiveNestedProjectionData
       have hp : htr = hs := Subsingleton.elim _ _
       cases hp
       exact ⟨hfinite, hsep⟩
-    · have hzero := not_or.mp hactive
-      have hYalg : IsAlgebraic Omega (coordinate Omega C.1 0) := by
-        apply not_not.mp
-        intro hy
-        exact (differential_ne_zero_of_gate _ hy (hY C hy))
-          (not_ne_iff.mp hzero.1)
-      have hZalg : IsAlgebraic Omega (coordinate Omega C.1 2) := by
-        apply not_not.mp
-        intro hz
-        exact (differential_ne_zero_of_gate _ hz (hZ C hz))
-          (not_ne_iff.mp hzero.2)
+    · obtain ⟨hYalg, hZalg⟩ := (hYZ C).resolve_left hactive
       exact (htr (hYalg.add (hZalg.smul lam))).elim
   let uProjection : ∀ C : RegularComponent Omega G T H,
       Coordinate Omega (CoordinateField Omega C.1) :=
@@ -243,17 +237,7 @@ theorem exists_adaptiveNestedProjectionData
             (CoordinateField Omega C.1) v _ hUle
         rw [hU0, h0, h2]
         simp
-    · have hzero := not_or.mp hactive
-      have hYalg : IsAlgebraic Omega (coordinate Omega C.1 0) := by
-        apply not_not.mp
-        intro hy
-        exact (differential_ne_zero_of_gate _ hy (hY C hy))
-          (not_ne_iff.mp hzero.1)
-      have hZalg : IsAlgebraic Omega (coordinate Omega C.1 2) := by
-        apply not_not.mp
-        intro hz
-        exact (differential_ne_zero_of_gate _ hz (hZ C hz))
-          (not_ne_iff.mp hzero.2)
+    · obtain ⟨hYalg, hZalg⟩ := (hYZ C).resolve_left hactive
       have hUalg : IsAlgebraic Omega (U C) := hYalg.add (hZalg.smul lam)
       rw [poleOrder_eq_zero_of_isAlgebraic v _ hUalg,
         poleOrder_eq_zero_of_isAlgebraic v _ hYalg,

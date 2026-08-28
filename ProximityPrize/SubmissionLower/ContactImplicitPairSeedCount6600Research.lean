@@ -110,7 +110,8 @@ theorem implicit_pair_seed_bound_fixed
           (hfacdegree 1).trans hGGcaps.2.1
       · simpa [legacyVector, ContactCountingCaps.capAt, liftedSurface] using
           (hfacdegree 2).trans hGGcaps.2.2
-    have hgates := fixed_implicit_characteristic_gates g (surfaceMap φ A) hgcaps hAcaps
+    have hgates := ContactCountingCaps6600Research.fixed_implicit_characteristic_gates
+      g (surfaceMap φ A) hgcaps hAcaps
     have hreg : ∀ γ ∈ seedsFor g, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
         (ContactPolynomialSolutions.polynomialPoint (φ.comp Polynomial.C)
           (selected γ) γ (φ Polynomial.X)) (MvPolynomial.pderiv (2 : Fin 4) G) ≠ 0 := by
@@ -191,4 +192,3 @@ end
 end ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount6600Research
 
 #print axioms ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount6600Research.implicit_pair_seed_bound_fixed
-

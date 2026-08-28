@@ -30,7 +30,7 @@ theorem radius6600_floor :
     ContactScore6600Research.radius6600_floor
 
 theorem radius6600_cell_cross :
-    315835 * Fintype.card IRSProfile.Index <
+    316619 * Fintype.card IRSProfile.Index <
       (errors6600 + 1) * 1048576 := by
   simpa [errors6600] using
     ContactScore6600Research.radius6600_cell_cross
@@ -93,7 +93,7 @@ theorem lambda6600_le_of_alignment
           IRSProfile.Field))
       (radius6600 : ℝ) ≤ (budget6600 : ℕ∞) := by
   exact AlignmentInterleavedLambda.irs_squared_claimedRadius_lambda_le
-    315835 1048576 errors6600 budget6600 (by norm_num)
+    316619 1048576 errors6600 budget6600 (by norm_num)
     radius6600_cell_cross radius6600_gap halign
     (by
       rw [budget6600_eq_budget6401]
@@ -140,7 +140,7 @@ theorem certifiedGammaError6600_le_of_alignment
 theorem protocolClaim6600_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode
       errors6600 budget6600) :
-    ProtocolClaim 6618 315835 1048576 where
+    ProtocolClaim 6638 316619 1048576 where
   admissible := ContactScore6600Research.radius6600_admissible
   reduction := by
     change certifiedGammaError IRSProfile.code radius6600 ≤ reductionTarget

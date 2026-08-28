@@ -187,8 +187,8 @@ theorem sum_regular_branch_bound {I : Type} [Fintype I]
 
 theorem sum_regular_numeric_caps {I : Type} [Fintype I]
     (count : I → ℕ) (v : I → DegreeVector)
-    (hy : (∑ i, (v i).y) ≤ 25) (hr : (∑ i, (v i).r) ≤ 5)
-    (hz : (∑ i, (v i).z) ≤ 176)
+    (hy : (∑ i, (v i).y) ≤ 44) (hr : (∑ i, (v i).r) ≤ 9)
+    (hz : (∑ i, (v i).z) ≤ 464)
     (hcount : ∀ i, count i * gap ^ 2 ≤ wholeNumerator (v i)) :
     (∑ i, count i) * gap ^ 2 ≤ regularNumerator := by
   exact sum_regular_branch_bound count v
@@ -281,16 +281,18 @@ theorem combined_scaled_bound (regularCount implicitCount exceptions : ℕ)
       ring
 
 theorem below_budget_of_lifted_scaled_bound (cardinality : ℕ)
-    (h : cardinality * gap ^ 2 ≤ liftedTotalNumerator) : cardinality < alignmentBudget := by
-  exact Nat.lt_of_mul_lt_mul_right (h.trans_lt lifted_strict_budget)
+    (h : cardinality * gap ^ 2 ≤ liftedTotalNumerator)
+    (hbudget : liftedTotalNumerator < alignmentBudget * gap ^ 2) :
+    cardinality < alignmentBudget := by
+  exact Nat.lt_of_mul_lt_mul_right (h.trans_lt hbudget)
 
 /-- Conditional finite-family arithmetic finish; all branch-count and
 cover hypotheses remain explicit and must come from the geometric proof. -/
 theorem final_family_ledger {I J : Type} [Fintype I] [Fintype J]
     (regularCount : I → ℕ) (v : I → DegreeVector)
     (implicitCount : J → ℕ) (cost : J → DegreeVector) (exceptions cardinality : ℕ)
-    (hregularY : (∑ i, (v i).y) ≤ 25) (hregularR : (∑ i, (v i).r) ≤ 5)
-    (hregularZ : (∑ i, (v i).z) ≤ 176)
+    (hregularY : (∑ i, (v i).y) ≤ 44) (hregularR : (∑ i, (v i).r) ≤ 9)
+    (hregularZ : (∑ i, (v i).z) ≤ 464)
     (hregular : ∀ i, regularCount i * gap ^ 2 ≤ wholeNumerator (v i))
     (hcostY : (∑ i, (cost i).y) ≤ algebraicCap)
     (hcostR : (∑ i, (cost i).r) ≤ 2 * implicitYCap * algebraicCap)
@@ -299,6 +301,7 @@ theorem final_family_ledger {I J : Type} [Fintype I] [Fintype J]
       (n - w) * dot liftedAgreement (cost i) +
         (errors + 1) * gap * (cost i).z)
     (hexceptions : exceptions ≤ 2 * algebraicCap ^ 2)
+    (hliftedBudget : liftedTotalNumerator < alignmentBudget * gap ^ 2)
     (hcover : cardinality ≤ (∑ i, regularCount i) + (∑ i, implicitCount i) + exceptions) :
     cardinality < alignmentBudget := by
   have hreg := sum_regular_numeric_caps regularCount v hregularY hregularR hregularZ hregular
@@ -307,7 +310,7 @@ theorem final_family_ledger {I J : Type} [Fintype I] [Fintype J]
   have hscaled := combined_scaled_bound (∑ i, regularCount i) (∑ i, implicitCount i)
     exceptions hreg himp
   exact below_budget_of_lifted_scaled_bound cardinality
-    ((Nat.mul_le_mul_right (gap ^ 2) hcover).trans hscaled)
+    ((Nat.mul_le_mul_right (gap ^ 2) hcover).trans hscaled) hliftedBudget
 
 end ProximityPrize.SubmissionLower.ContactCountingLedger
 

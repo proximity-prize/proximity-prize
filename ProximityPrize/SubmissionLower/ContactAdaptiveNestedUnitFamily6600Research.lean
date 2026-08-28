@@ -46,12 +46,10 @@ def adaptiveUnitProjectionFamily_of_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
-    (hY : ∀ C : RegularComponent Omega G T H,
-      LiteralProjectionGate C 0)
     (hZ : ∀ C : RegularComponent Omega G T H,
       LiteralProjectionGate C 2)
     (hSderiv : MvPolynomial.pderiv (1 : Fin 3) G ≠ 0)
-    (D : AdaptiveNestedProjectionData base hY hZ hSderiv)
+    (D : AdaptiveNestedProjectionData base hZ hSderiv)
     (hG : Irreducible G) (hproper : ¬ G ∣ T)
     (hGsupport : G.support ⊆ flagSupport p)
     (hTsupport : T.support ⊆ flagSupport q) :
@@ -361,17 +359,22 @@ theorem exists_adaptiveUnitProjectionFamily_of_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
-    (hY : ∀ C : RegularComponent Omega G T H,
-      LiteralProjectionGate C 0)
     (hZ : ∀ C : RegularComponent Omega G T H,
       LiteralProjectionGate C 2)
+    (hYZ : ∀ C : RegularComponent Omega G T H,
+      (KaehlerDifferential.D Omega (CoordinateField Omega C.1)
+          (coordinate Omega C.1 0) ≠ 0 ∨
+        KaehlerDifferential.D Omega (CoordinateField Omega C.1)
+          (coordinate Omega C.1 2) ≠ 0) ∨
+      (IsAlgebraic Omega (coordinate Omega C.1 0) ∧
+        IsAlgebraic Omega (coordinate Omega C.1 2)))
     (hSderiv : MvPolynomial.pderiv (1 : Fin 3) G ≠ 0)
     (hG : Irreducible G) (hproper : ¬ G ∣ T)
     (hGsupport : G.support ⊆ flagSupport p)
     (hTsupport : T.support ⊆ flagSupport q) :
     Nonempty (AdaptiveUnitProjectionFamily base p q) := by
-  obtain ⟨D⟩ := exists_adaptiveNestedProjectionData base hY hZ hSderiv
-  exact ⟨adaptiveUnitProjectionFamily_of_nested p q base hY hZ hSderiv D
+  obtain ⟨D⟩ := exists_adaptiveNestedProjectionData base hZ hYZ hSderiv
+  exact ⟨adaptiveUnitProjectionFamily_of_nested p q base hZ hSderiv D
     hG hproper hGsupport hTsupport⟩
 
 end

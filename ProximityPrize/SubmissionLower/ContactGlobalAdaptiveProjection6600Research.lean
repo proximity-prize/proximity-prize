@@ -1,6 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAdaptiveProjectionFactorProvider6600Research
 import ProximityPrize.SubmissionLower.ContactRegularFactorResidualStage6600Research
+import ProximityPrize.SubmissionLower.ContactSharpFactorAggregationPost6600Research
 
 /-!
 # End-to-end score-66 selected count from adaptive projection families
@@ -17,12 +18,13 @@ namespace ProximityPrize.SubmissionLower.ContactGlobalAdaptiveProjection6600Rese
 open scoped Classical
 open ContactParameters6600Research
 open ContactGenericInitialPoint ContactPrimeSeedIncidence
-open ContactOriginalRegularSeedCount ContactOriginalRegularResidualStage6600Research
+open ContactTetraGeometricSeedCover6622Research ContactOriginalRegularResidualStage6600Research
 open ContactRegularFactorFlag6600Research ContactGlobalSelectedFamilies6600Research
 open ContactRegularFactorResidualStage6600Research
 open ContactAdaptiveProjectionFactorProvider6600Research
 open ContactIdentityResidualIterationResearch
 open ContactNearPencil6600FactorLedgerResearch
+open ContactSharpFactorAggregationPost6600Research
 open ContactInterpolation ContactTranslation
 
 noncomputable section
@@ -42,6 +44,7 @@ all of its canonical geometric stages have adaptive projection families. -/
 theorem regular_factor_seed_bound_of_adaptive_projection_families
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (hQtetra : ∀ d ∈ Q.support, d 1 + d 2 + d 3 ≤ seedTotalCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
@@ -53,14 +56,14 @@ theorem regular_factor_seed_bound_of_adaptive_projection_families
     (R : ContactRegularFactorFlag6600Research.RegularIndex Q)
     (hprojection : ∀ g : GeometricFactor K R.1,
       TerminalAdaptiveProjectionFamilies
-        (regularGeometricResidualStage Q hQ hbox selected Gamma nodes
+        (regularGeometricResidualStage Q hQ hbox hQtetra selected Gamma nodes
           x u0 u1 hinj hdegree hnoPencil R g)) :
     (regularSeeds Q selected Gamma R).card * gap ^ 2 ≤
-      factorRegularLedger (regularFlag Q R) := by
+      factorRegularLedger (sharpRegularFlag Q R) := by
   apply regular_factor_seed_bound_of_geometric_counts Q hQ hbox
     selected Gamma R
   intro g
-  let S := regularGeometricResidualStage Q hQ hbox selected Gamma nodes
+  let S := regularGeometricResidualStage Q hQ hbox hQtetra selected Gamma nodes
     x u0 u1 hinj hdegree hnoPencil R g
   have hgeomSub : geometricSeeds K R.1 selected
       (regularSeeds Q selected Gamma R) g ⊆ Gamma :=
@@ -85,6 +88,7 @@ strict score-66 arithmetic are all internal. -/
 theorem global_count_lt_alignment_of_adaptive_projection_families
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+    (hQtetra : ∀ d ∈ Q.support, d 1 + d 2 + d 3 ≤ seedTotalCap)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
@@ -99,14 +103,14 @@ theorem global_count_lt_alignment_of_adaptive_projection_families
       (R : ContactRegularFactorFlag6600Research.RegularIndex Q)
       (g : GeometricFactor K R.1),
       TerminalAdaptiveProjectionFamilies
-        (regularGeometricResidualStage Q hQ hbox selected Gamma nodes
+        (regularGeometricResidualStage Q hQ hbox hQtetra selected Gamma nodes
           x u0 u1 hinj hdegree hnoPencil R g)) :
     Gamma.card < alignmentBudget := by
-  apply global_count_lt_alignment_of_regular_factors Q hQ hbox selected
+  apply global_count_lt_alignment_of_regular_factors Q hQ hbox hQtetra selected
     Gamma nodes x u0 u1 hinj hnodes hdegree hsolution hagreement hnoPencil
   intro R
   exact regular_factor_seed_bound_of_adaptive_projection_families
-    Q hQ hbox selected Gamma nodes x u0 u1 hinj hnodes hdegree hagreement
+    Q hQ hbox hQtetra selected Gamma nodes x u0 u1 hinj hnodes hdegree hagreement
       hnoPencil R (hprojection R)
 
 end

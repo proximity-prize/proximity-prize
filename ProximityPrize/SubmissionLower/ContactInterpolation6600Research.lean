@@ -67,6 +67,29 @@ theorem exists_frozen_nonzero_polynomial_and_equations6600
       weightedCap w seedTotalCap slopeCap theta,
     rfl, hconstraints⟩
 
+/-- The score-66.22 coefficient index also carries the load-bearing
+tetrahedral support `Y+R+Z ≤ seedTotalCap`. -/
+theorem exists_frozen_nonzero_polynomial_and_equations6600_tetra
+    (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
+    ∃ (Q : MvPolynomial (Fin 4) IRSProfile.Field)
+      (theta : FrozenCoefficientIndex6600 → IRSProfile.Field),
+      Q ≠ 0 ∧
+      Q ∈ globalCoefficientBox IRSProfile.Field
+        weightedCap w seedTotalCap slopeCap ∧
+      Q ∈ tetraCoefficientBox IRSProfile.Field seedTotalCap ∧
+      Q = reconstruct IRSProfile.Field weightedCap w seedTotalCap slopeCap theta ∧
+      ∀ (i : IRSProfile.Index) (r : Fin multiplicity),
+        contactJet IRSProfile.Field (multiplicity - r.val)
+          ((extractBlock IRSProfile.Field weightedCap w seedTotalCap slopeCap
+            (IRSProfile.domain i) (u0 i) (u1 i) r.val theta) :
+              Poly IRSProfile.Field) = 0 := by
+  obtain ⟨Q, theta, hQ, hbox, hEq, hconstraints⟩ :=
+    exists_frozen_nonzero_polynomial_and_equations6600 u0 u1
+  refine ⟨Q, theta, hQ, hbox, ?_, hEq, hconstraints⟩
+  rw [hEq]
+  exact reconstruct_mem_tetraCoefficientBox IRSProfile.Field
+    weightedCap w seedTotalCap slopeCap theta
+
 end
 
 end ProximityPrize.SubmissionLower.ContactInterpolation6600Research
