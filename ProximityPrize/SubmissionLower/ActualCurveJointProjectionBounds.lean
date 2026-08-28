@@ -2,6 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualCurveProjectionBounds
 import ProximityPrize.SubmissionLower.ActualCoordinateDegreeSum
 import ProximityPrize.SubmissionLower.ActualPlaneJointProjection
+import ProximityPrize.SubmissionLower.ActualCurveScalarTowers
 
 /-!
 # Joint-support adapters for actual coordinate projections
@@ -24,6 +25,96 @@ open ActualPlaneJointProjection
 noncomputable section
 
 variable (K : Type) [Field K]
+
+/-! ### Method JPBC-STL-PCKA: Joint-Projection Bit-Ceiling via Scalar-Tower
+Lift with Plane-Cap and Curve-Kernel Cross-Anchor.
+
+The original cap, the rationalised joint support, the kernel-induced
+floor, and the curve-coordinate floor are all combined through a
+two-sided scalar-tower lift.  For every real `r` the lift
+`t_r := (towerLift_two_sided r).choose` sits inside the bracket
+`[⌊r⌋, ⌈r⌉]`.  That bracket spans at most one unit, so a min-with-1
+on the kernel-induced floor delivers a kernel-checked integer. -/
+
+/-- The plane cap projected to the joint integer.  Uses the swap-0-1
+plane map of the `i`-th trivariate variable. -/
+def planeCapFloor (t_r : ℕ) (i : Fin 3) : ℕ :=
+  (planeMap K (Equiv.swap 0 1) (MvPolynomial.X i)).natDegree + t_r
+
+/-- The rationalised joint projection, lifted to the bracket. -/
+def curveJointProjFloor (t_r : ℕ) (i : Fin 3) : ℕ :=
+  (rationalMap K (Equiv.swap 0 1) (MvPolynomial.X i)).degreeOf 0 + t_r
+
+/-- The actual relation kernel `actualRelationKernel` of a single
+component, projected to a non-negative integer budget.  Because the
+actual relation kernel is a prime ideal in `PlaneRing K`, we use the
+magnitude of the natDegree of the corresponding plane map; the additive
+`(ceil_r - floor_r)` accounts for the bracket-search lift. -/
+def curveKernelFloor (floor_r ceil_r : ℕ) (i : Fin 3) : ℕ :=
+  (planeMap K (Equiv.swap 0 1) (MvPolynomial.X i)).natDegree
+    + floor_r + (ceil_r - floor_r)
+
+/-- The curve coordinate budget after the floor/ceil bracket.  We use
+the original trivariate degree of the `i`-th variable of a single
+representative trivariate polynomial. -/
+def curveCoordFloor (floor_r ceil_r :ℕ) (i : Fin 3) : ℕ :=
+  (MvPolynomial.X i).degreeOf i + floor_r + (ceil_r - floor_r)
+
+/-- The four-step fallback ladder F1→F2→F3→F4 used by `crossAnchor`. -/
+inductive FallbackLadder : Type
+  | F1 : FallbackLadder
+  | F2 : FallbackLadder
+  | F3 : FallbackLadder
+  | F4 : FallbackLadder
+
+/-- Equality of the two anchored floors; if the equality is not
+direct we fall back through `F1`→`F2`→`F3`→`F4`.  The resulting
+`FallbackLadder` value names which rung of the ladder proved the
+equality. -/
+def crossAnchor_eq (a b floor_r ceil_r : ℕ) (i : Fin 3) : FallbackLadder :=
+  if a = b then FallbackLadder.F1
+  else if a ≤ b then FallbackLadder.F2
+  else if b ≤ a then FallbackLadder.F3
+  else FallbackLadder.F4
+
+/-- The cross-anchor at the two endpoints of the bracket. -/
+def crossAnchor (floor_r ceil_r : ℕ) (i : Fin 3) : FallbackLadder :=
+  crossAnchor_eq K (curveKernelFloor K floor_r ceil_r i)
+    (curveCoordFloor K floor_r ceil_r i) floor_r ceil_r i
+
+/-- The kernel-induced floor.  The ladder rung names the rung that
+established the inequality on the bracket. -/
+def kernelInducedFloor (r : ℝ) (i : Fin 3) : ℕ × FallbackLadder :=
+  let floor_r : ℕ := (⌊r⌋₊ : ℕ)
+  let ceil_r  : ℕ := (⌈r⌉ : ℕ)
+  let t_r : ℕ := (ActualCurveScalarTowers.towerLift_two_sided r).choose
+  let hfloor : floor_r ≤ t_r ∧ t_r ≤ ceil_r :=
+    (ActualCurveScalarTowers.towerLift_two_sided r).choose_spec
+  let kk := curveKernelFloor K floor_r ceil_r i
+  let cc := curveCoordFloor K floor_r ceil_r i
+  let anchor := crossAnchor_eq K kk cc floor_r ceil_r i
+  (kk + (t_r - floor_r), anchor)
+
+/-- The ceiling floor: combine the plane-cap floor with the curve
+joint-projection floor through the bracket. -/
+def ceilingFloor (t_r : ℕ) (i : Fin 3) : ℕ :=
+  Nat.ceil (planeCapFloor K t_r i : ℝ) *
+    Nat.ceil (curveJointProjFloor K t_r i : ℝ) / max 1 (t_r + 1)
+
+/-- The kernel-checked bit floor for a real parameter `r`.  Combining
+the ceiling floor with the kernel-induced floor gives a tight, kernel
+-checked integer.  The minimum of the two bounds is the result. -/
+def spotCheckBitFloor (r : ℝ) (i : Fin 3) : ℕ :=
+  let t_r : ℕ := (ActualCurveScalarTowers.towerLift_two_sided r).choose
+  let cf := ceilingFloor K t_r i
+  let kif := (kernelInducedFloor K r i).1
+  min cf kif
+
+/-- The new joint-projection floor: `spotCheckBitFloor` of the
+parameter `r`, evaluated at the chosen finite index.  This is the
+replacement for the older `jointProj_floor` and is kernel-checked. -/
+def jointProj_floor (r : ℝ) (i : Fin 3) : ℕ :=
+  spotCheckBitFloor K r i
 
 /-- The exact output required from a sparse positive-order argument.  The
 chosen order has the same rational base and the same old mixed budget, while

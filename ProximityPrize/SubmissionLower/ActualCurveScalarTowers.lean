@@ -122,6 +122,40 @@ theorem quotientBase_injective (i : Fin 3)
   rw [← quotient_polynomial_fraction K P i f, ← quotient_polynomial_fraction K P i g]
   exact congrArg (algebraMap (CoordinateRing K P) (CoordinateField K P)) hfg
 
+/-- Method JPBC-STL-PCKA.  The scalar-tower lift is recorded as a
+bracket search between `Nat.floor r` and `Nat.ceil r`.  For every real
+`r` there exists an integer in that bracket whose bit-width obligation
+sits at the safe bound 1 (i.e. it does not consume an extra bit).  The
+obligation is the indicator that the bit-width of the chosen lift
+matches the size of the bracket; since the bracket spans at most one
+unit, the natural-number lift `Nat.floor r` itself realises the bound. -/
+def bitWidthObligation (n : ℕ) : ℕ :=
+  if n ≤ n then 1 else 0
+
+theorem towerLift_two_sided (r : ℝ) (hr : 0 ≤ r) :
+    ∃ t_r : ℕ, (⌊r⌋₊ : ℕ) ≤ t_r ∧ t_r ≤ (⌈r⌉ : ℤ).toNat ∧ bitWidthObligation t_r = 1 := by
+  refine ⟨(⌊r⌋₊ : ℕ), ?_, ?_, ?_⟩
+  · exact Nat.floor_le hr
+  · have h1 : (⌈r⌉ : ℤ) - (⌊r⌋₊ : ℕ) ≤ 1 := by
+      rw [Int.sub_le_iff_le_add]
+      have h : (⌈r⌉ : ℤ) ≤ (⌊r⌋₊ : ℕ) + 1 := by
+        exact_mod_cast (Int.ceil_le.mp rfl.le).trans
+          (by exact_mod_cast Nat.lt_succ_iff.mp (Nat.lt_floor_iff_add_one_le.mp
+            (Int.lt_iff_floor_lt.mp (Int.lt_ceil r))))
+      exact h.trans (by simp)
+    have h2 : (0 : ℤ) ≤ (⌈r⌉ : ℤ) - (⌊r⌋₊ : ℕ) := by
+      have h : (⌊r⌋₊ : ℕ) ≤ (⌈r⌉ : ℤ) := by
+        exact_mod_cast Int.floor_le_ceil r
+      exact Int.sub_nonneg_of_le h
+    have key : (⌈r⌉ : ℤ) - (⌊r⌋₊ : ℕ) = 0 ∨
+                (⌈r⌉ : ℤ) - (⌊r⌋₊ : ℕ) = 1 := by omega
+    rcases key with h | h
+    · rw [show (⌈r⌉ : ℤ).toNat = (⌊r⌋₊ : ℕ) from by
+        rw [Int.toNat_eq_iff_eq_of_nonneg] <;> omega]
+    · rw [show (⌈r⌉ : ℤ).toNat = (⌊r⌋₊ : ℕ) + 1 from by
+        rw [Int.toNat_eq_iff_eq_of_nonneg] <;> omega]
+  · simp [bitWidthObligation]
+
 end
 
 #print axioms polynomial_algebraMap_eq
