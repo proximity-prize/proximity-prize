@@ -67,9 +67,9 @@ structure CurveResidualStage6630
   G_dvd_surface : G ∣ surfaceMap phi F
   G_flag_support : ContactFlagBezout6543Research.PolynomialInFlag surfaceFlag G
   T_flag_support : ContactFlagBezout6543Research.PolynomialInFlag cutFlag T
-  surface_s_weight : wt residualSWeights F ≤ 8
-  surface_ys_weight : wt residualYSWeights F ≤ 40
-  surface_total_weight : wt residualTotalWeights F ≤ 617
+  surface_s_weight : wt residualSWeights F ≤ 10
+  surface_ys_weight : wt residualYSWeights F ≤ 48
+  surface_total_weight : wt residualTotalWeights F ≤ 814
   x_injective : Set.InjOn x nodes
   degree_le : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d
   solution : ∀ gamma ∈ Gamma,
