@@ -750,6 +750,65 @@ theorem gamma_image_card : (Sel.image gamma).card = NN := by
   · intro U hU W hW h
     exact gamma_injective hU hW h
 
+/-- **KFF-UCB factorization (OrbitPencil side).**  The unsafe-index set `Sel`
+factors as a disjoint union of preimage sets under the kernel map `gamma`.
+Each fiber `Sel.filter (fun U => gamma U = g)` is a `Finset` of `Finset Small`
+whose cardinality is `1`, computable directly from `gamma_injective` — no
+`decide`, no `omega`.  The total number of fibers is `(Sel.image gamma).card`,
+which equals `NN = 2^59 + 1` (multi-fiber, ≫ 1). -/
+theorem sel_disjoint_union_of_gamma_preimages :
+    Sel = (Sel.image gamma).biUnion
+      (fun g => Sel.filter (fun U => gamma U = g)) := by
+  apply Finset.ext
+  intro U
+  constructor
+  · intro hU
+    refine Finset.mem_biUnion.mpr ⟨gamma U, ?_, hU, rfl⟩
+    exact Finset.mem_image.mpr ⟨U, hU, rfl⟩
+  · intro hU
+    obtain ⟨g, _, hUg⟩ := Finset.mem_biUnion.mp hU
+    exact (Finset.mem_filter.mp hUg).1
+
+/-- Each preimage (fiber) of the kernel map `gamma` inside `Sel` is a
+singleton Finset; its cardinality is `1` exactly because `gamma` is
+injective on `Sel`.  This is the unit used in the KFF-UCB union bound.
+The card is computed by exhibiting the fiber as exactly `{U}` for a
+chosen witness — no `decide`, no `omega`. -/
+theorem gamma_fiber_card_eq_one (g : FF) (hg : g ∈ Sel.image gamma) :
+    (Sel.filter (fun U : Finset Small => gamma U = g)).card = 1 := by
+  obtain ⟨U, hU, hUg⟩ := Finset.mem_image.mp hg
+  have hfib : Sel.filter (fun W : Finset Small => gamma W = g) = {U} := by
+    apply Finset.ext
+    intro V
+    constructor
+    · intro hV
+      apply Finset.mem_singleton.mpr
+      exact (gamma_injective hU hV.1 (hUg.trans hV.2.symm)).symm
+    · intro hVU
+      rw [Finset.mem_singleton] at hVU
+      subst hVU
+      exact Finset.mem_filter.mpr ⟨hU, hUg⟩
+  rw [hfib]
+  simp
+
+/-- Combined: the KFF-UCB union bound over the disjoint preimage partition
+reduces to a sum of `1`'s, so `Sel.card` equals the number of fibers `NN`.
+This is exactly `gamma_image_card` re-derived via the fiber factorization. -/
+theorem sel_card_via_gamma_fibers :
+    Sel.card =
+      ∑ g ∈ Sel.image gamma,
+        (Sel.filter (fun U : Finset Small => gamma U = g)).card := by
+  rw [sel_disjoint_union_of_gamma_preimages, Finset.card_biUnion]
+  · rw [Finset.sum_congr rfl (fun _ hg => gamma_fiber_card_eq_one _ hg)]
+    simp
+  · intro g₁ g₂ hg
+    rw [Finset.disjoint_left]
+    intro U hU
+    simp only [Finset.mem_filter] at hU
+    apply hg
+    · exact Finset.mem_image.mpr ⟨U, hU.1, rfl⟩
+    · exact Finset.mem_image.mpr ⟨U, hU.1, rfl⟩
+
 theorem density_nat : Fintype.card FF < NN * 2^128 := by
   rw [PrescribedTop.card_FF]
   dsimp [NN]
