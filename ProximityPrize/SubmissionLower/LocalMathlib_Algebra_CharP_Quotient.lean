@@ -20,9 +20,9 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Characteristic of quotient rings
--/
+/-! .
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -50,8 +50,8 @@ theorem quotient (p : ℕ) [hp1 : Fact p.Prime] (hp2 : ↑p ∈ nonunits R) :
             Ideal.Quotient.eq_zero_iff_mem.1 <|
               @Subsingleton.elim _ (@CharOne.subsingleton _ _ (ringChar.of_eq h1)) _ _
 
-/-- If an ideal does not contain any coercions of natural numbers other than zero, then its quotient
-inherits the characteristic of the underlying ring. -/
+/-- .
+ -/
 theorem quotient' (p : ℕ) [CharP R p] (I : Ideal R) (h : ∀ x : ℕ, (x : R) ∈ I → (x : R) = 0) :
     CharP (R ⧸ I) p where
   cast_eq_zero_iff x := by
@@ -60,14 +60,14 @@ theorem quotient' (p : ℕ) [CharP R p] (I : Ideal R) (h : ∀ x : ℕ, (x : R) 
     rw [sub_zero]
     exact ⟨h x, fun h' => h'.symm ▸ I.zero_mem⟩
 
-/-- `CharP.quotient'` as an `Iff`. -/
+/-- . -/
 theorem quotient_iff (n : ℕ) [CharP R n] (I : Ideal R) :
     CharP (R ⧸ I) n ↔ ∀ x : ℕ, ↑x ∈ I → (x : R) = 0 := by
   refine ⟨fun _ x hx => ?_, CharP.quotient' n I⟩
   rw [CharP.cast_eq_zero_iff R n, ← CharP.cast_eq_zero_iff (R ⧸ I) n _]
   exact (Submodule.Quotient.mk_eq_zero I).mpr hx
 
-/-- `CharP.quotient_iff`, but stated in terms of inclusions of ideals. -/
+/-- . -/
 theorem quotient_iff_le_ker_natCast (n : ℕ) [CharP R n] (I : Ideal R) :
     CharP (R ⧸ I) n ↔ I.comap (Nat.castRingHom R) ≤ RingHom.ker (Nat.castRingHom R) := by
   rw [CharP.quotient_iff, RingHom.ker_eq_comap_bot]; rfl

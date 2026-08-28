@@ -5,23 +5,23 @@ import ProximityPrize.SubmissionLower.PlaneCoefficientExtension
 
 
 
-/-!
-# Small actual plane annihilators give a finite separable extension
+/-! .
 
-Model label: gpt-5.
 
-The degree/field conclusions are obtained from actual annihilating
-polynomials and minimal polynomials. No finite-dimensionality or
-separability premise is assumed, and no bound on embeddings is used to
-deduce finite-dimensionality.
 
-For a proper cut P=Q=0 of an irreducible positive-R-degree plane polynomial,
-the actual resultant annihilates the Y-coordinate. Primitivity supplies a
-nonzero specialization of P over K(Y), whose small R-degree annihilates the
-second coordinate. Below the characteristic, the resulting minimal
-polynomials are separable. The actual two-generator condition then gives
-a finite separable extension.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.PlaneRootSeparability
 
@@ -32,8 +32,8 @@ variable {K L : Type} [Field K] [Field L] [Algebra K L]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq L := Classical.decEq L
 
-/-- A nonzero actual annihilator below the characteristic gives integrality
-and separability through its irreducible minimal polynomial. -/
+/-- .
+ -/
 theorem integral_and_separable_of_small_annihilator
     (p : ℕ) [CharP K p] (f : Polynomial K) (x : L)
     (hf : f ≠ 0) (hx : Polynomial.aeval x f = 0) (hdegree : f.natDegree < p) :
@@ -47,8 +47,8 @@ theorem integral_and_separable_of_small_annihilator
   exact irreducible_isCoprime_derivative_of_natDegree_lt_char p (minpoly K x)
     (minpoly.irreducible hint) (minpoly.natDegree_pos hint) (hmin.trans_lt hdegree)
 
-/-- The fixed-cap Sylvester adjugate supplies an actual polynomial identity;
-evaluating it at a common root annihilates the actual base resultant. -/
+/-- .
+ -/
 theorem resultant_aeval_eq_zero_of_common_root
     (P Q : Polynomial (Polynomial K)) (m n : ℕ)
     (hPdegree : P.natDegree ≤ m) (hQdegree : Q.natDegree ≤ n)
@@ -65,8 +65,8 @@ theorem resultant_aeval_eq_zero_of_common_root
     hP, hQ, zero_mul, zero_add] at heval
   exact heval.symm
 
-/-- Two actual integral, separable generators give a finite separable field
-extension. This step uses the adjoin construction, not an embedding count. -/
+/-- .
+ -/
 theorem finite_separable_of_two_generators (y r : L)
     (hy : IsSeparable K y) (hr : IsSeparable K r)
     (hgenerate : IntermediateField.adjoin K ({y, r} : Set L) = ⊤) :
@@ -86,8 +86,8 @@ theorem finite_separable_of_two_generators (y r : L)
     (IntermediateField.topEquiv (F := K) (E := L)).surjective
   exact ⟨hfinite, (IntermediateField.isSeparable_top (F := K) (E := L)).mp hsepTop⟩
 
-/-- Actual proper plane roots below the two characteristic gates generate a
-finite separable extension, with neither property assumed beforehand. -/
+/-- .
+ -/
 theorem finite_separable_of_proper_plane_roots
     (p : ℕ) [CharP K p] (P Q : Polynomial (Polynomial K))
     (hirreducible : Irreducible P) (hpositive : 0 < P.natDegree)

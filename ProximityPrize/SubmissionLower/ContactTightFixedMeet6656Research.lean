@@ -1,17 +1,17 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFixedMeetSingular6656Research
 
-/-!
-# Tight fixed-meet arithmetic at score 66.56
+/-! .
 
-The fixed singular geometry already proves an unpadded one-`gap` bound.
-Historically that result was enlarged to `retainedSingularContribution`
-before it met the regular-factor ledger.  This module combines the regular
-and tight singular bounds directly at their natural quotient scales.
 
-The arithmetic combiner is profile-generic.  The final theorem merely
-instantiates it for the current recursive-GCD meet.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactTightFixedMeet6656Research
 
@@ -36,16 +36,16 @@ variable {K Iota : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Quotient-level regular count cap for an arbitrary fixed profile. -/
+/-- . -/
 def tightRegularCountCap (p : Profile) : ℕ :=
   p.regularNumerator / p.gap ^ 2
 
-/-- The sum of the exact quotient-level regular and tight singular caps. -/
+/-- . -/
 def tightFixedCountCap (p : Profile) (t : TightParameters) : ℕ :=
   tightRegularCountCap p + t.countCap
 
-/-- Generic arithmetic join which does not pad the tight singular ledger to
-the historical retained-singular contribution. -/
+/-- .
+ -/
 theorem combined_tight_count_bound
     (p : Profile) (t : TightParameters) (regularCount singularCount : ℕ)
     (hpgap : 0 < p.gap) (htgap : 0 < t.gap)
@@ -56,11 +56,11 @@ theorem combined_tight_count_bound
   · exact (Nat.le_div_iff_mul_le (pow_pos hpgap 2)).2 hregular
   · exact t.count_le_countCap singularCount htgap hsingular
 
-/-- Tight fixed-meet cap, inclusive. -/
+/-- . -/
 def meetTightFixedCountCap : ℕ :=
   tightFixedCountCap meetProfile meetTightProfile
 
-/-- The corresponding strict ceiling, convenient for APIs stated with `<`. -/
+/-- . -/
 def meetTightFixedCost : ℕ := meetTightFixedCountCap + 1
 
 theorem meet_tight_regular_count_cap_exact :
@@ -91,9 +91,9 @@ theorem meet_tight_fixed_strict_saving_exact :
     meetProfile.fixedCost - meetTightFixedCost = 759922684662857 := by
   rw [meet_fixed_cost_exact, meet_tight_fixed_costs_exact.2]
 
-/-- Fixed-meet selected-family count with the same sole regular-factor input
-as the historical theorem, but consuming the already-proved tight singular
-ledger directly. -/
+/-- .
+
+ -/
 theorem meet_global_count_le_tightFixedCountCap_of_regular_factors
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime6656]

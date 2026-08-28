@@ -1,18 +1,18 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_MvPolynomial_Homogeneous
 
-/-!
-# A common triangular shear of the three curve coordinates
+/-! .
 
-This file implements the characteristic-free coordinate change
 
-`(Y,R,Z) = (Y,S - λ Z,Z)`.
 
-It is an actual polynomial algebra automorphism.  Evaluation at
-`(Y,R+λZ,Z)` recovers evaluation of the original polynomial, and the
-rectangular degree caps change from `(aY,aR,aZ)` to
-`(aY,aR,aZ+aR)`.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.TrivariateShearResearch
 
@@ -62,8 +62,8 @@ theorem shear_comp_unshear (a : K) :
   intro i
   fin_cases i <;> simp [shearImage, unshearImage, shearAlgHom, unshearAlgHom] <;> ring
 
-/-- The triangular substitution is a polynomial algebra automorphism in
-every characteristic and for every scalar λ. -/
+/-- .
+ -/
 def shearEquiv (a : K) : Poly3 K ≃ₐ[K] Poly3 K :=
   AlgEquiv.ofAlgHom (shearAlgHom a) (unshearAlgHom a)
     (shear_comp_unshear a) (unshear_comp_shear a)
@@ -80,8 +80,8 @@ theorem shear_dvd_iff (a : K) (F G : Poly3 K) :
     shearAlgHom a F ∣ shearAlgHom a G ↔ F ∣ G := by
   simpa only [shearEquiv_apply] using (map_dvd_iff (shearEquiv a))
 
-/-- Evaluation after the polynomial shear is evaluation of the original
-polynomial at `R = S - λ Z`. -/
+/-- .
+ -/
 theorem aeval_shear (F : Poly3 K) (y s z : K) (a : K) :
     MvPolynomial.aeval ![y, s, z] (shearAlgHom a F) =
       MvPolynomial.aeval ![y, s - a * z, z] F := by
@@ -93,8 +93,8 @@ theorem aeval_shear (F : Poly3 K) (y s z : K) (a : K) :
     fin_cases i <;> simp [shearImage, shearAlgHom] <;> ring
   exact DFunLike.congr_fun hhom F
 
-/-- In particular, shearing and evaluating at `S=R+λZ` leaves the
-original value unchanged. -/
+/-- .
+ -/
 theorem aeval_shear_at_add (F : Poly3 K) (y r z : K) (a : K) :
     MvPolynomial.aeval ![y, r + a * z, z] (shearAlgHom a F) =
       MvPolynomial.aeval ![y, r, z] F := by
@@ -105,7 +105,7 @@ theorem aeval_shear_at_add (F : Poly3 K) (y r z : K) (a : K) :
 
 section WeightedDegree
 
-/-- Preserve three exponents and append their weighted sum. -/
+/-- . -/
 def weightEmbed (weights : Fin 3 → ℕ) : (Fin 3 →₀ ℕ) →+ (Fin 4 →₀ ℕ) where
   toFun d := Finsupp.single 0 (d 0) + Finsupp.single 1 (d 1) +
     Finsupp.single 2 (d 2) + Finsupp.single 3 (Finsupp.weight weights d)
@@ -246,7 +246,7 @@ theorem shear_monomial_product_wt_le
       simp only [Finsupp.sum, nsmul_eq_mul]
       simp
 
-/-- Support-function transport under `R ↦ S-λZ`. -/
+/-- . -/
 theorem shear_wt_le_pulled (weights : Fin 3 → ℕ) (a : K) (F : Poly3 K) :
     wt weights (shearAlgHom a F) ≤ wt (pullWeights weights) F := by
   change wt weights (MvPolynomial.eval₂ MvPolynomial.C (shearImage a) F) ≤ _

@@ -4,21 +4,21 @@ import ProximityPrize.SubmissionLower.ContactProjectionParameters
 import ProximityPrize.SubmissionLower.ContactImplicitLiftParameters
 import ProximityPrize.SubmissionLower.ContactSharpYRecurrence
 
-/-!
-# Actual first-tail and agreement caps for the fixed counting witness
+/-! .
 
-Model label: gpt-5.
 
-The concrete recurrence and agreement-polynomial degree theorems are
-transported through the actual generic-surface map. Generic monotonicity
-then turns coordinate caps into the original pairwise mixed-degree gates
-needed by the actual projection pipeline. The already checked normal and
-implicit fixed-witness certificates supply the strict characteristic gates.
 
-The selected first-tail vanishing theorem uses the actual polynomial
-solution identity and its degree bound only. No all-tail or generic
-polynomiality hypothesis is assumed.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactCountingCaps
 
@@ -50,8 +50,8 @@ variable (φ : Polynomial K →+* Ω)
 def firstTailSurface (F : MvPolynomial (Fin 4) K) (w : ℕ) : MvPolynomial (Fin 3) Ω :=
   surfaceMap φ (numerator K F (w + 1))
 
-/-- Separated bounds for the actual surface image of every recurrence
-numerator, including zero and derivative-zero boundary cases. -/
+/-- .
+ -/
 theorem surface_numerator_caps
     (F : MvPolynomial (Fin 4) K) (ell s L : ℕ) (hs : 1 ≤ s)
     (hY : F.degreeOf 1 ≤ ell) (hR : F.degreeOf 2 ≤ s) (hZ : F.degreeOf 3 ≤ L)
@@ -76,8 +76,8 @@ theorem surface_agreement_caps
   · exact (surfaceMap_degreeOf_le φ _ 1).trans hr
   · exact (surfaceMap_degreeOf_le φ _ 2).trans hz
 
-/-- The exact first-tail vector in the frozen arithmetic ledger bounds
-the actual first-tail surface polynomial. -/
+/-- .
+ -/
 theorem fixed_firstTail_caps (F : MvPolynomial (Fin 4) K)
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
     (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
@@ -97,8 +97,8 @@ theorem fixed_firstTail_caps (F : MvPolynomial (Fin 4) K)
   · simpa [firstTailSurface, firstTail, tailVector, numeratorCaps, capAt] using hold 1
   · simpa [firstTailSurface, firstTail, tailVector, numeratorCaps, capAt] using hold 2
 
-/-- Uniform actual agreement caps at every original evaluation node;
-the scalars may vary arbitrarily and need no nonvanishing assumption. -/
+/-- .
+ -/
 theorem fixed_agreement_caps (F : MvPolynomial (Fin 4) K)
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
     (hY : F.degreeOf 1 ≤ yCap) (hR : F.degreeOf 2 ≤ slopeCap)
@@ -118,8 +118,8 @@ theorem fixed_agreement_caps (F : MvPolynomial (Fin 4) K)
   · simpa [agreementPolynomial, agreementVector, agreementCaps, capAt] using hold 1
   · simpa [agreementPolynomial, agreementVector, agreementCaps, capAt] using hold 2
 
-/-- A genuine degree-w selected solution vanishes on the actual first
-tail. This needs neither regularity nor a characteristic bound. -/
+/-- .
+ -/
 theorem selected_firstTail_zero
     (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K)
     (γ : K) (w : ℕ) (hdegree : (selected γ).natDegree ≤ w)
@@ -150,8 +150,8 @@ section MixedGates
 
 variable (G T : MvPolynomial (Fin 3) Ω) (g t : DegreeVector)
 
-/-- Monotonicity applies to the actual original polynomial degrees,
-before any rational projection or resultant is introduced. -/
+/-- .
+ -/
 theorem actual_pair_degree_le (hG : HasCaps G g) (hT : HasCaps T t) (j k : Fin 3) :
     T.degreeOf j * G.degreeOf k + G.degreeOf j * T.degreeOf k ≤
       capAt t j * capAt g k + capAt g j * capAt t k :=
@@ -169,7 +169,7 @@ theorem pair_caps_below_of_mixed (p : ℕ)
     | simpa [capAt, mixed, unitR, Nat.mul_comm, Nat.add_comm] using hR
     | simpa [capAt, mixed, unitZ, Nat.mul_comm, Nat.add_comm] using hZ
 
-/-- Generic original-degree characteristic gates from proved box caps. -/
+/-- . -/
 theorem actual_characteristic_gates (p : ℕ)
     (hG : HasCaps G g) (hT : HasCaps T t)
     (hg : ∀ j, capAt g j < p)
@@ -184,8 +184,8 @@ theorem actual_characteristic_gates (p : ℕ)
 
 end MixedGates
 
-/-- Each coordinate cap of the frozen normal surface is strictly below
-the actual characteristic; this is exact closed arithmetic. -/
+/-- .
+ -/
 theorem fixed_surface_caps_below_characteristic :
     ∀ j, capAt ContactProjectionParameters.surfaceVector j < prime := by
   intro j
@@ -228,8 +228,8 @@ theorem fixed_implicit_surface_caps_below_characteristic :
       algebraicCap, weightedCap, ContactAlignmentParameters.multiplicity, agreements,
       w, slopeCap, seedTotalCap, prime]
 
-/-- The implicit-equation lift uses its original fixed implicit cut,
-not a presumed separability of an arbitrary test-function map. -/
+/-- .
+ -/
 theorem fixed_implicit_characteristic_gates (G T : MvPolynomial (Fin 3) Ω)
     (hG : HasCaps G ContactImplicitLiftParameters.liftedSurface)
     (hT : HasCaps T ContactImplicitLiftParameters.implicitCut) :

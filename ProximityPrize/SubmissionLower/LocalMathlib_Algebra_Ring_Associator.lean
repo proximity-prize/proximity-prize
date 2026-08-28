@@ -20,18 +20,18 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Associator in a ring
+/-! .
 
-If `R` is a non-associative ring, then  `(x * y) * z - x * (y * z)` is called the `associator` of
-ring elements `x y z : R`.
 
-The associator vanishes exactly when `R` is associative.
 
-We prove variants of this statement also for the `AddMonoidHom` bundled version of the associator,
-as well as the bundled version of `mulLeft₃` and `mulRight₃`, the multiplications `(x * y) * z` and
-`x * (y * z)`.
--/
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -40,7 +40,7 @@ variable {R : Type*}
 section NonUnitalNonAssocRing
 variable [NonUnitalNonAssocRing R]
 
-/-- The associator `(x * y) * z - x * (y * z)` -/
+/-- . -/
 def associator (x y z : R) : R := (x * y) * z - x * (y * z)
 
 theorem associator_apply (x y z : R) : associator x y z = (x * y) * z - x * (y * z) := rfl
@@ -78,9 +78,9 @@ namespace AddMonoidHom
 section NonUnitalNonAssocSemiring
 variable [NonUnitalNonAssocSemiring R]
 
-/-- The multiplication `(x * y) * z` of three elements of a (non-associative)
-(semi)-ring is an `AddMonoidHom` in each argument. See also `LinearMap.mulLeftRight` for a
-related functions realized as a linear map. -/
+/-- .
+
+ -/
 def mulLeft₃ : R →+ R →+ R →+ R where
   toFun x := comp mul (mulLeft x)
   map_zero' := by ext; simp
@@ -89,8 +89,8 @@ def mulLeft₃ : R →+ R →+ R →+ R where
 @[simp]
 theorem mulLeft₃_apply (x y z : R) : mulLeft₃ x y z = (x * y) * z := rfl
 
-/-- The multiplication `x * (y * z)` of three elements of a (non-associative)
-(semi)-ring is an `AddMonoidHom` in each argument. -/
+/-- .
+ -/
 def mulRight₃ : R →+ R →+ R →+ R where
   toFun x := compr₂ mul (mulLeft x)
   map_zero' := by ext; simp
@@ -99,8 +99,8 @@ def mulRight₃ : R →+ R →+ R →+ R where
 @[simp]
 theorem mulRight₃_apply (x y z : R) : mulRight₃ x y z = x * (y * z) := rfl
 
-/-- An a priori non-associative semiring is associative if the `AddMonoidHom` versions of
-the multiplications `(x * y) * z` and `x * (y * z)` agree. -/
+/-- .
+ -/
 theorem mulLeft₃_eq_mulRight₃_iff_associative :
     mulLeft₃ (R := R) = mulRight₃ ↔ Std.Associative (fun (x y : R) ↦ x * y) where
   mp h := ⟨fun x y z ↦ by rw [← mulLeft₃_apply, ← mulRight₃_apply, h]⟩
@@ -119,15 +119,15 @@ end NonUnitalSemiring
 section NonUnitalNonAssocRing
 variable [NonUnitalNonAssocRing R] (a b c : R)
 
-/-- The associator for a non-associative ring is `(x * y) * z - x * (y * z)`. It is an
-`AddMonoidHom` in each argument. -/
+/-- .
+ -/
 def associator : R →+ R →+ R →+ R := mulLeft₃ - mulRight₃
 
 @[simp]
 theorem associator_apply : associator a b c = _root_.associator a b c := rfl
 
-/-- An a priori non-associative ring is associative iff the `AddMonoidHom` version of the
-associator vanishes. -/
+/-- .
+ -/
 theorem associator_eq_zero_iff_associative :
     associator (R := R) = 0 ↔ Std.Associative (fun (x y : R) ↦ x * y) := by
   simp [mulLeft₃_eq_mulRight₃_iff_associative, associator, sub_eq_zero]

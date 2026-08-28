@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagTriangularProjectionResearch
 import ProximityPrize.SubmissionLower.ActualPlaneJointProjection
 
-/-!
-# Exact trapezoid caps from nested flag support
+/-! .
 
-The three common flag projections use the literal orders `U`, `V`, and `Z`.
-This file derives every outer-degree and retained-two-variable support cap
-needed by `finite_sum_flag_finrank_trapezoid` directly from membership in a
-flag polytope.  It contains no field, component, or genericity argument.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagTrapezoidCaps6543Research
 
@@ -25,7 +25,7 @@ variable {K : Type} [Field K]
 
 abbrev Poly3 (K : Type) [Field K] := MvPolynomial (Fin 3) K
 
-/-- All six exact degree/support caps for one polynomial in `Flag(p)`. -/
+/-- . -/
 structure FlagTrapezoidCaps (p : FlagDegree) (F : Poly3 K) : Prop where
   uOuter : (planeMap K uOrder F).natDegree ≤ p.all
   uTotal : ∀ d ∈ (rationalMap K uOrder F).support,
@@ -79,7 +79,7 @@ theorem flagTrapezoidCaps_of_inFlag
     have h := (hF d hd).2.1
     simpa [zOrder, Equiv.swap_apply_def, Nat.add_comm] using h
 
-/-- The triangular flag automorphism preserves the same six caps. -/
+/-- . -/
 theorem flagTrapezoidCaps_flagAlgHom
     (p : FlagDegree) (F : Poly3 K) (lam mu nu : K)
     (hF : F.support ⊆ flagSupport p) :
@@ -89,7 +89,7 @@ theorem flagTrapezoidCaps_flagAlgHom
   intro d hd
   exact (mem_flagSupport_iff p d).mp (hF hd)
 
-/-! ## Exact 65.43 trapezoid arithmetic -/
+/-! . -/
 
 theorem u_trapezoid_budget6543 (m : ℕ) (hm : m ≤ 1179639) :
     m * 376 + 5 * 98434322 - m * 5 ≤ flagYZMixedCap := by

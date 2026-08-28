@@ -2,15 +2,15 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSelectedSeedDecomposition
 import ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount6600Research
 
-/-!
-# Actual score-66 singular branch
+/-! .
 
-This module constructs the finite union of all actual implicit-pair seed
-families and the actual exceptional seed set at
-`(m,s,L,e) = (24,6,576,78777)`.  The implicit pair geometry, summed pair
-budgets, exceptional root count, union cardinality, and the final scaling to
-the retained `gap^2` singular contribution are all discharged here.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSingularBranch6600Research
 
@@ -158,7 +158,7 @@ theorem implicitSeeds_pair_bound
   simpa [implicitVector,
     ContactImplicitPairSeedCount6600Research.pairCost] using hpair
 
-/-- Complete actual singular union at the natural one-`gap` scale. -/
+/-- . -/
 theorem singularSeeds_gap_bound
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime]
@@ -186,9 +186,9 @@ theorem singularSeeds_gap_bound
   exact (Nat.mul_le_mul_right gap
     (singularSeeds_card_le_sum Q selected Gamma)).trans hsum
 
-/-- Complete actual singular union with the common score-66 `gap^2`
-denominator.  This is the direct input expected by the regular/singular
-factor ledger. -/
+/-- .
+
+ -/
 theorem singularSeeds_scaled_bound
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime]

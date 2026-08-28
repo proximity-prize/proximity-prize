@@ -23,21 +23,21 @@ Port elaboration adjustment: explicitly bind classical decidable equality
 in the original finite-product and direct-sum proofs.
 -/
 
-/-!
-# Base change properties
+/-! .
 
-This file proves that several constructions in linear algebra
-commute with base change, as expressed by `IsBaseChange`.
 
-* `IsBaseChange.prodMap`, `IsBaseChange.pi`: binary and finite products.
 
-In particular, localization of modules commutes with binary and finite products.
 
-* `IsBaseChange.directSum`: base change for direct sums
 
-* Homomorphism modules
 
--/
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -47,7 +47,7 @@ namespace IsBaseChange
 
 open TensorProduct
 
-/-- Base change commutes with binary products. -/
+/-- . -/
 lemma prodMap {M N M' N' : Type*}
     [AddCommMonoid M] [AddCommMonoid N] [Module R M] [Module R N]
     [AddCommMonoid M'] [AddCommMonoid N'] [Module R M'] [Module R N']
@@ -58,7 +58,7 @@ lemma prodMap {M N M' N' : Type*}
   intro p
   simp [equiv_tmul]
 
-/-- Base change commutes with finite products. -/
+/-- . -/
 lemma pi {ι : Type*} [Finite ι]
     {M M' : ι → Type*} [∀ i, AddCommMonoid (M i)] [∀ i, AddCommMonoid (M' i)]
     [∀ i, Module R (M i)] [∀ i, Module R (M' i)] [∀ i, Module S (M' i)]
@@ -88,7 +88,7 @@ variable (S : Submonoid R)
 
 attribute [local instance] IsLocalizedModule.isScalarTower_module
 
-/-- Localization of modules commutes with binary products. -/
+/-- . -/
 instance prodMap {M N M' N' : Type*}
     [AddCommMonoid M] [AddCommMonoid N] [Module R M] [Module R N]
     [AddCommMonoid M'] [AddCommMonoid N'] [Module R M'] [Module R N']
@@ -104,7 +104,7 @@ instance prodMap {M N M' N' : Type*}
   · rw [← isLocalizedModule_iff_isBaseChange S]
     infer_instance
 
-/-- Localization of modules commutes with finite products. -/
+/-- . -/
 instance pi {ι : Type*} [Finite ι]
     {M M' : ι → Type*} [∀ i, AddCommMonoid (M i)] [∀ i, AddCommMonoid (M' i)]
     [∀ i, Module R (M i)] [∀ i, Module R (M' i)]
@@ -131,7 +131,7 @@ variable {ι : Type*}
     [∀ i, Module S (P i)] [∀ i, IsScalarTower R S (P i)]
     {ε : (i : ι) → N i →ₗ[R] P i}
 
-/-- Base change for direct sums. -/
+/-- . -/
 theorem directSum (ibc : ∀ i, IsBaseChange S (ε i)) :
     IsBaseChange S (lmap ε) := by
   classical
@@ -145,7 +145,7 @@ variable (ι)
     [Module R M] [Module R M'] [Module S M'] [IsScalarTower R S M']
     {ε : M →ₗ[R] M'}
 
-/-- Base change for direct sums of a constant module. -/
+/-- . -/
 theorem directSumPow (ibc : IsBaseChange S ε) :
     IsBaseChange S (lmap fun _ : ι ↦ ε) :=
   directSum (fun _ : ι ↦ ibc)

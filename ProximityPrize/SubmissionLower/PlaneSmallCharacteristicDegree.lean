@@ -2,20 +2,20 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.PlaneRootSeparability
 import ProximityPrize.SubmissionLower.PlaneFunctionFieldDegree
 
-/-!
-# One actual planar budget after deriving finite separability
+/-! .
 
-Model label: gpt-5.
 
-This integration derives finite-dimensionality and separability from actual
-common-root equations and strict characteristic-degree gates before using
-the verified embedding count. For a family, distinct actual relation
-kernels give one common planar budget for the sum of all field degrees.
 
-The fields and their actual two-generator presentations are still explicit
-inputs. Construction from prime coordinate rings is not assumed proved by
-this file.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.PlaneSmallCharacteristicDegree
 
@@ -27,16 +27,16 @@ section SingleField
 
 variable (K E : Type) [Field K] [Field E] [Algebra K E]
 
-/-- The relation-kernel evaluation is the actual iterated polynomial
-evaluation used by the minimal-polynomial separability argument. -/
+/-- .
+ -/
 theorem planeEval_eq_eval₂ (y r : E) (P : Polynomial (Polynomial K)) :
     planeEval K E y r P =
       Polynomial.eval₂ (Polynomial.eval₂RingHom (algebraMap K E) y) r P := by
   change (P.map (Polynomial.eval₂RingHom (algebraMap K E) y)).eval r = _
   rw [Polynomial.eval_map]
 
-/-- The actual proper plane-root equations derive both field hypotheses,
-then yield the actual planar degree bound without circularity. -/
+/-- .
+ -/
 theorem finite_separable_finrank_le_planar_bound
     (p : ℕ) [CharP K p] (P Q : Polynomial (Polynomial K))
     (hirreducible : Irreducible P) (hpositive : 0 < P.natDegree)
@@ -72,8 +72,8 @@ variable (K : Type) [Field K]
 variable {I : Type} [Fintype I] (E : I → Type)
   [∀ i, Field (E i)] [∀ i, Algebra K (E i)]
 
-/-- Every component is proved finite and separable first. Distinct actual
-relation kernels then put the sum of all degrees in one planar budget. -/
+/-- .
+ -/
 theorem finite_separable_sum_finrank_le_planar_bound
     (p : ℕ) [CharP K p] (P Q : Polynomial (Polynomial K))
     (hirreducible : Irreducible P) (hpositive : 0 < P.natDegree)

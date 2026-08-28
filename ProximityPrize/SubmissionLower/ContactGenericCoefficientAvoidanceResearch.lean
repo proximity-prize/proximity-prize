@@ -1,18 +1,18 @@
 import ProximityPrize.Benchmark.TargetLower
 
-/-!
-# Generic coefficients avoid finitely many cancellation loci
+/-! .
 
-The tropical residual route needs one coefficient vector avoiding every
-leading-face cancellation kernel on every retained curve component.  This
-module supplies the finite-dimensional linear-algebra step without importing
-anything outside the lower submission root.
 
-The finite-union argument is a policy-compliant local specialization of the
-Apache-licensed proof in `Mathlib.Algebra.Module.Submodule.Union`.  The
-geometric caller still has to construct each leading-residue map and prove
-that its kernel is proper.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactGenericCoefficientAvoidanceResearch
 
@@ -26,8 +26,8 @@ set_option synthInstance.maxHeartbeats 200000
 
 variable {ι K M : Type*} [Field K] [AddCommGroup M] [Module K M]
 
-/-- A sufficiently small finite union of proper submodules cannot cover a
-vector space over a field. -/
+/-- .
+ -/
 private theorem finite_iUnion_ssubset
     (s : Finset ι) (p : ι → Submodule K M)
     (h₁ : ∀ i, p i ≠ ⊤) (h₂ : s.card < ENat.card K) :
@@ -84,8 +84,8 @@ private theorem finite_iUnion_ssubset
     replace ht : x ∈ p k := by convert sub_mem ht₁ ((p k).smul_mem t₁ ht); simp
     simpa using! ⟨k, hk, ht⟩
 
-/-- Over an infinite field, one vector simultaneously avoids any finite
-family of proper linear cancellation loci. -/
+/-- .
+ -/
 theorem exists_avoiding_finite_proper_submodules
     [Finite ι] [Infinite K]
     (p : ι → Submodule K M) (hproper : ∀ i, p i ≠ ⊤) :
@@ -97,8 +97,8 @@ theorem exists_avoiding_finite_proper_submodules
 
 variable {N : Type*} [AddCommGroup N] [Module K N]
 
-/-- A finite family of nonzero linear leading-coefficient maps admits one
-coefficient vector on which all of them are nonzero. -/
+/-- .
+ -/
 theorem exists_simultaneous_noncancellation
     [Finite ι] [Infinite K]
     (lead : ι → M →ₗ[K] N) (hlead : ∀ i, lead i ≠ 0) :
@@ -116,8 +116,8 @@ theorem exists_simultaneous_noncancellation
 
 variable {σ : Type*} [DecidableEq σ]
 
-/-- Turn a coefficient vector indexed by a finite exponent set into the
-corresponding multivariate polynomial. -/
+/-- .
+ -/
 def polynomialOfSupport (E : Finset (σ →₀ ℕ)) (c : E → K) :
     MvPolynomial σ K :=
   ∑ d : E, MvPolynomial.monomial d.1 (c d)
@@ -153,8 +153,8 @@ def polynomialOfSupport (E : Finset (σ →₀ ℕ)) (c : E → K) :
       exact e.2
     rw [if_neg hval]
 
-/-- The polynomial constructed from an `E`-indexed coefficient vector has
-no exponents outside `E`. -/
+/-- .
+ -/
 theorem support_polynomialOfSupport_subset
     (E : Finset (σ →₀ ℕ)) (c : E → K) :
     (polynomialOfSupport E c).support ⊆ E := by
@@ -164,8 +164,8 @@ theorem support_polynomialOfSupport_subset
   rw [coeff_polynomialOfSupport, dif_neg hnot] at hcoeff
   exact hcoeff rfl
 
-/-- Once the geometric leading-residue maps are supplied, one actual
-polynomial supported on `E` avoids all of their cancellation kernels. -/
+/-- .
+ -/
 theorem exists_supportedPolynomial_simultaneous_noncancellation
     {τ : Type*} [Finite τ] [Infinite K]
     (E : Finset (σ →₀ ℕ))

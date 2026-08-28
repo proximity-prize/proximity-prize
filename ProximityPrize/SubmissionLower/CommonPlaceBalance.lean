@@ -2,18 +2,18 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CoordinatePoleMass
 
 
-/-!
-# A constructed common-place zero--pole balance
+/-! .
 
-Model label: gpt-5.
 
-The finite family consists of actual normalization prime fibers above
-the constructed base support, together with the actual infinity fiber.
-It is proved injective in the coordinate-independent normalized places.
-The actual norm/product formula and proved unit residue weights give
-the unweighted balance. The support retains fibers whose orders cancel
-in the norm. No separability of the test-function map is required.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.CommonPlaceBalance
 
@@ -79,8 +79,8 @@ def finitePlace (i : FiniteIndex K L s hs) :
   NormValuationTransport.placeAbove (Polynomial K) (FiniteNormalization K L)
     (RatFuncProductFormula.primePlace K i.1.1 (hs i.1.1 i.1.2).1) i.2
 
-/-- Monicity makes the base-prime indexing unique; contraction of the
-actual upstairs prime proves that different fibers cannot overlap. -/
+/-- .
+ -/
 theorem finitePlace_injective : Function.Injective (finitePlace K L s hs) := by
   rintro ⟨p, P⟩ ⟨q, Q⟩ h
   have hI : P.1 = Q.1 := congrArg HeightOneSpectrum.asIdeal h
@@ -167,8 +167,8 @@ theorem infinityContribution_eq_sum (x : L) :
   rw [NormalizationUnitWeights.infiniteFiber_weight_one K L Q, one_mul]
   rfl
 
-/-- The actual fiber norm sum, transported to one common normalized
-valuation set with no residual or base-prime weights remaining. -/
+/-- .
+ -/
 theorem sum_family_order_eq_contributions (x : L) :
     (∑ i : FamilyIndex K L s hs, order K L (familyValuation K L s hs i) x) =
       FixedCurveNormSum.finiteContribution K L s hs x +
@@ -196,8 +196,8 @@ theorem sum_familyValues_order_eq_contributions (x : L) :
 
 variable {s hs}
 
-/-- Constructed from the actual nonzero orders, including fibers that
-cancel in the field norm, plus the actual infinity prime fiber. -/
+/-- .
+ -/
 def placesFor (x : L) (hx : x ≠ 0) : Finset (Place K L) :=
   familyValues K L (FixedCurveNormSum.basePrimesFor K L x hx)
     (FixedCurveNormSum.basePrimesFor_primes K L x hx)
@@ -207,8 +207,8 @@ theorem sum_placesFor_order_zero (x : L) (hx : x ≠ 0) :
   rw [placesFor, sum_familyValues_order_eq_contributions]
   exact FixedCurveNormSum.projective_curve_order_sum K L x hx
 
-/-- This is support coverage for actual common valuations, not merely
-coverage of the field norm's possibly smaller support. -/
+/-- .
+ -/
 theorem placesFor_covers (x : L) (hx : x ≠ 0) (v : Place K L)
     (hv : order K L v x ≠ 0) : v ∈ placesFor K L x hx := by
   obtain ⟨c, rfl⟩ := (CoordinatePlaceClassification.chartMap_bijective K L).2 v
@@ -255,8 +255,8 @@ theorem sum_placesFor_zero_eq_pole (x : L) (hx : x ≠ 0) :
   simp_rw [zeroOrder_sub_poleOrder]
   exact sum_placesFor_order_zero K L x hx
 
-/-- Distinct actual normalized zero places cost at least one each in
-the proved global pole total. The finite support and balance are derived. -/
+/-- .
+ -/
 theorem finite_zero_places_le_poleMass (x : L) (hx : x ≠ 0)
     (U : Finset (Place K L)) (hU : ∀ v ∈ U, 1 ≤ order K L v x) :
     (U.card : ℤ) ≤

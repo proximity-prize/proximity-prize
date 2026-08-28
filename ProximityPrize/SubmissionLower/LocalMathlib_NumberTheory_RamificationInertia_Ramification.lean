@@ -21,29 +21,29 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Ramification index
+/-! .
 
-Given `P : Ideal S` lying over `p : Ideal R` for the ring extension `f : R →+* S`
-(assuming `P` and `p` are prime or maximal where needed),
-the **ramification index** `Ideal.ramificationIdx' p P` is the multiplicity of `P` in `map f p`.
 
-## Implementation notes
 
-Often the above theory is set up in the case where:
-* `R` is the ring of integers of a number field `K`,
-* `L` is a finite separable extension of `K`,
-* `S` is the integral closure of `R` in `L`,
-* `p` and `P` are maximal ideals,
-* `P` is an ideal lying over `p`.
 
-We will try to relax the above hypotheses as much as possible.
 
-## Notation
 
-In this file, `e` stands for the ramification index of `P` over `p`, leaving `p` and `P` implicit.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -66,16 +66,16 @@ attribute [local instance] Ideal.Quotient.field
 
 section DecEq
 
-/-- The ramification index of `P` over `p` is the largest exponent `n` such that
-`p` is contained in `P^n`.
+/-- .
 
-In particular, if `p` is not contained in `P^n`, then the ramification index is 0.
 
-If there is no largest such `n` (e.g. because `p = ⊥`), then `ramificationIdx'` is
-defined to be 0.
 
-Note: This definition of ramification index will eventually be replaced by `Ideal.ramificationIdx`.
--/
+
+
+
+
+
+ -/
 noncomputable def ramificationIdx' : ℕ := sSup {n | map f p ≤ P ^ n}
 
 variable {p P}
@@ -217,8 +217,8 @@ lemma ramificationIdx'_ne_one_iff (hp : map f p ≤ P) :
   ramificationIdx'_ne_one_iff
 
 open IsLocalRing in
-/-- The converse is true when `S` is a Dedekind domain.
-See `Ideal.ramificationIdx'_eq_one_iff_of_isDedekindDomain`. -/
+/-- .
+ -/
 lemma ramificationIdx'_eq_one_of_map_localization
     {p : Ideal R} {P : Ideal S} [P.IsPrime] [IsNoetherianRing S]
     (hpP : map (algebraMap R S) p ≤ P) (hp : P ≠ ⊥) (hp' : P.primeCompl ≤ nonZeroDivisors S)
@@ -355,8 +355,8 @@ theorem emultiplicity_map_eq_zero_of_ne [IsDedekindDomain R] {v : Ideal R}
   rw [Ideal.dvd_iff_le, Ideal.map_le_iff_le_comap, ← under_def, ← Ideal.over_def w v] at h
   exact ((isPrime_of_prime hp).isMaximal hp.ne_zero).eq_of_le (isPrime_of_prime hv.prime).ne_top h
 
-/-- Use the more general result `emultiplicity_map_eq_ramificationIdx'_mul`.
-This is a helper lemma. -/
+/-- .
+ -/
 private theorem emultiplicity_map_eq_ramificationIdx'_mul_of_prime [IsDedekindDomain R]
     [FaithfulSMul R S] {v : Ideal R} {w : Ideal S} {p : Ideal R}
     (hv : Irreducible v) (hp : Prime p) (hw : Irreducible w) (hw_bot : w ≠ ⊥)
@@ -370,9 +370,9 @@ private theorem emultiplicity_map_eq_ramificationIdx'_mul_of_prime [IsDedekindDo
   · rw [emultiplicity_eq_zero_of_irreducible_ne hv hp.irreducible hvp, mul_zero,
       emultiplicity_map_eq_zero_of_ne hv hp hvp]
 
-/-- If `v` is an irreducible ideal of `R`, `w` is an irreducible ideal of `S` lying over `v`, and
-`I` is an ideal of `R`, then the multiplicity of `w` in `I.map (algebraMap R S)` is given by
-the multiplicity of `v` in `I` multiplied by the ramification index of `w` over `v`. -/
+/-- .
+
+ -/
 theorem emultiplicity_map_eq_ramificationIdx'_mul [IsDedekindDomain R]
     [FaithfulSMul R S] {v : Ideal R} {w : Ideal S} {I : Ideal R} (h : I ≠ ⊥)
     (hv : Irreducible v) (hw : Irreducible w) (hw_bot : w ≠ ⊥) [w.LiesOver v] :
@@ -401,8 +401,8 @@ section tower
 variable {R S T : Type*} [CommRing R] [CommRing S] [CommRing T]
 variable [Algebra R S] [Algebra S T] [Algebra R T] [IsScalarTower R S T]
 
-/-- Let `T / S / R` be a tower of algebras, `p, P, Q` be ideals in `R, S, T` respectively,
-  and `P` and `Q` are prime. If `P = Q ∩ S`, then `e (Q | p) = e (P | p) * e (Q | P)`. -/
+/-- .
+ -/
 theorem ramificationIdx'_algebra_tower [IsDedekindDomain S] [IsDedekindDomain T]
     {p : Ideal R} {P : Ideal S} {Q : Ideal T} [hpm : P.IsPrime] [hqm : Q.IsPrime]
     (hg0 : map (algebraMap S T) P ≠ ⊥)

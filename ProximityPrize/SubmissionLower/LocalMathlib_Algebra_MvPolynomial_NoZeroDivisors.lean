@@ -34,13 +34,13 @@ copyright, license, imports, and protected checks are unchanged.
 No heartbeat limit or kernel setting is changed.
 -/
 
-/-!
-# Multivariate polynomials over integral domains
+/-! .
 
-This file proves results about multivariate polynomials
-that hold when the coefficient (semi)ring has no zero divisors.
 
--/
+
+
+
+ -/
 
 section ProximityFlatProofPort
 

@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualCurveRationalProjection
 import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_FunctionField
 
-/-!
-# Finite rational projection at an arbitrary parameter
+/-! .
 
-Research adapter: once a one-variable function field is finite over one
-rational parameter, it is finite over every other transcendental element.
-The target algebra structure below is the literal rational-function
-evaluation at the new element.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch
 
@@ -19,7 +19,7 @@ noncomputable section
 
 variable (K L : Type*) [Field K] [Field L] [Algebra K L]
 
-/-- Rational-function evaluation at an arbitrary transcendental element. -/
+/-- . -/
 def elementEmbedding (s : L) (hs : Transcendental K s) : RatFunc K →ₐ[K] L :=
   RatFunc.liftAlgHom (Polynomial.aeval s)
     (nonZeroDivisors_le_comap_nonZeroDivisors_of_injective
@@ -35,8 +35,8 @@ theorem elementEmbedding_variable (s : L) (hs : Transcendental K s) :
       RatFunc.liftRingHom_algebraMap _ _ Polynomial.X
     _ = s := Polynomial.aeval_X s
 
-/-- Evaluation at `s` is the inclusion of `K⟨s⟩` after the canonical
-isomorphism `K(T) ≃ K⟨s⟩`. -/
+/-- .
+ -/
 theorem elementEmbedding_eq_adjoin_comp (s : L) (hs : Transcendental K s) :
     elementEmbedding K L s hs =
       (IntermediateField.adjoin K ({s} : Set L)).val.comp
@@ -51,8 +51,8 @@ theorem elementEmbedding_eq_adjoin_comp (s : L) (hs : Transcendental K s) :
   rw [elementEmbedding_variable]
   simp
 
-/-- A finite function field remains finite over the rational embedding at
-every transcendental element. -/
+/-- .
+ -/
 theorem finiteDimensional_elementEmbedding
     (base : RatFunc K →ₐ[K] L)
     (hfinite :

@@ -20,14 +20,14 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-! # Descend finiteness along quotients by nilpotent ideals -/
+/-! . -/
 
 section ProximityFlatProofPort
 
 open TensorProduct
 
-/-- If `I` is a finitely generated nilpotent ideal of an `R`-algebra `S`, and `T = S / I` is
-`R`-finite, then `S` is also `R`-finite. -/
+/-- .
+ -/
 lemma Module.finite_of_surjective_of_ker_le_nilradical
     {R S T : Type*} [CommRing R] [CommRing S] [CommRing T]
     [Algebra R S] [Algebra R T]

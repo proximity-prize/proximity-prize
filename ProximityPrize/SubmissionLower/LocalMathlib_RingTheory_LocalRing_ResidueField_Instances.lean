@@ -22,7 +22,7 @@ The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
 
-/-! # Instances on residue fields -/
+/-! . -/
 
 section ProximityFlatProofPort
 

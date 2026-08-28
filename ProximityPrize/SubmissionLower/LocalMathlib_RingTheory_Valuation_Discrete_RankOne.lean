@@ -21,17 +21,17 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Discrete valuations have rank one
+/-! .
 
-## Main Definitions and Results
-* `Valuation.IsRankOneDiscrete.valueGroup₀_equiv_withZeroMulInt` : the order-preserving isomorphism
-  between the `ValueGroup₀` of a discrete valuation and `ℤᵐ⁰`.
-* `Valuation.IsRankOneDiscrete.rankOne` : a discrete valuation has rank one.
 
-## Tags
-valuation, discrete, rank one
--/
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -49,8 +49,8 @@ section LinearOrderedCommGroupWithZero
 
 variable (v : Valuation R Γ) [hv : v.IsRankOneDiscrete]
 
-/-- An order-preserving isomorphism between the `ValueGroup₀` of a discrete valuation and `ℤᵐ⁰`.
-TODO: rename this into lowerCamelCase. -/
+/-- .
+ -/
 @[simps!]
 noncomputable def valueGroup₀_equiv_withZeroMulInt : ValueGroup₀ (.ofClass v) ≃*o ℤᵐ⁰ where
   __ := MulEquiv.withZero (intEquivOfZPowersEqTop _
@@ -78,7 +78,7 @@ lemma valueGroup₀_equiv_withZeroMulInt_strictMono :
     (Subgroup.zpowers_inv (g := hv.generator') ▸ hv.generator'_zpowers_eq_top)
     (Left.one_lt_inv_iff.mpr hv.generator'_lt_one)))).lt_iff_lt]
 
-/-- A discrete valuation has rank one. -/
+/-- . -/
 @[implicit_reducible]
 noncomputable def rankOne {e : ℝ≥0} (he : 1 < e) : v.RankOne where
   hom' := (toNNReal (ne_of_gt (lt_trans zero_lt_one he))).comp

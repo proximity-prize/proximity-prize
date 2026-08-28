@@ -2,22 +2,22 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CommonPlaceBalance
 import ProximityPrize.SubmissionLower.ActualAffineModelPlaces
 
-/-!
-# Actual coordinate-box zero counts from the common-place product formula
+/-! .
 
-Model label: gpt-5.
 
-A coordinate is either a constant or an actual rational-function
-embedding with a finite separable extension. Its degree is the actual
-module finrank. No height, pole, zero-count, or curve-degree inequality
-is a field of the coordinate data.
 
-The proved coordinate pole bound and actual local box inequality give
-the global shared-pole bound on every finite collection of common
-places. The constructed support/product formula then bounds zero
-places. Finally the actual affine-model point lift gives a point count,
-without a supplied normalization or point-to-place map.
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.CoordinateBoxZeroCount
 
@@ -30,7 +30,7 @@ variable (K L : Type*) [Field K] [Field L] [Algebra K L]
 
 abbrev Place := CoordinatePlaceClassification.NormalizedValuation K L
 
-/-- Only actual algebraic data, not a geometric inequality. -/
+/-- . -/
 structure SeparableCoordinate where
   embedding : RatFunc K →ₐ[K] L
   finite : letI : Algebra (RatFunc K) L := embedding.toRingHom.toAlgebra
@@ -49,8 +49,8 @@ def degree (c : SeparableCoordinate K L) : ℕ :=
 
 variable [IsAlgClosed K]
 
-/-- The actual embedding induces all polynomial/rational scalar towers
-needed by the previously proved coordinate pole theorem. -/
+/-- .
+ -/
 theorem finite_sum_pole_le_degree (c : SeparableCoordinate K L)
     (W : Finset (Place K L)) :
     (∑ v ∈ W, CoordinatePoleMass.poleOrder K L v (value K L c)) ≤
@@ -74,8 +74,8 @@ theorem finite_sum_pole_le_degree (c : SeparableCoordinate K L)
 
 end SeparableCoordinate
 
-/-- Constants have degree zero; nonconstants are represented by actual
-finite separable rational embeddings, not supplied height bounds. -/
+/-- .
+ -/
 abbrev Coordinate := K ⊕ SeparableCoordinate K L
 
 def coordinateValue : Coordinate K L → L :=
@@ -106,8 +106,8 @@ theorem finite_sum_coordinate_pole_le_degree (c : Coordinate K L)
 
 variable {σ : Type*} [Fintype σ]
 
-/-- Actual sharp common-box pole inequality; coefficients are proved to
-have valuation at most one from the definition of the common places. -/
+/-- .
+ -/
 theorem finite_sum_polynomial_pole_le_box (W : Finset (Place K L))
     (c : σ → Coordinate K L) (cap : σ → ℕ) (F : MvPolynomial σ K)
     (hcap : ∀ i, F.degreeOf i ≤ cap i) :
@@ -138,8 +138,8 @@ variable [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq (Place K L) := Classical.decEq _
 
-/-- The actual global product formula, not a supplied height, bounds
-distinct common zero places of a nonzero box polynomial. -/
+/-- .
+ -/
 theorem finite_zero_places_le_box (c : σ → Coordinate K L)
     (cap : σ → ℕ) (F : MvPolynomial σ K) (hcap : ∀ i, F.degreeOf i ≤ cap i)
     (hF : MvPolynomial.eval₂Hom (algebraMap K L) (fun i ↦ coordinateValue K L (c i)) F ≠ 0)
@@ -178,10 +178,10 @@ theorem map_model_eval (x : σ → A) (F : MvPolynomial σ K) :
     · simp only [RingHom.comp_apply, MvPolynomial.eval₂Hom_X']
   exact DFunLike.congr_fun hhom F
 
-/-- Actual affine-model K-points satisfy the sharp box count. The
-normalization, point lift, distinct-place map, and order-one charge are
-all constructed by verified theorems. The model need not be finite over
-the chosen polynomial-coordinate base. -/
+/-- .
+
+
+ -/
 theorem finite_model_zero_points_le_box
     (x : σ → A) (c : σ → Coordinate K L)
     (hc : ∀ i, coordinateValue K L (c i) = algebraMap A L (x i))

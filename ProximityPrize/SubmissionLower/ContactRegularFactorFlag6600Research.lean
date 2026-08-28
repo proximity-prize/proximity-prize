@@ -3,14 +3,14 @@ import ProximityPrize.SubmissionLower.ContactParameters6600Research
 import ProximityPrize.SubmissionLower.ContactSelectedSeedDecomposition
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
 
-/-!
-# Rectangular flag adapter for the actual score-66 surface factors
+/-! .
 
-Each positive-`R` irreducible factor is enclosed by the flag
-`Flag(deg_Z, deg_Y, deg_R)`.  This deliberately uses the robust rectangular
-outer flag: the existing factor theorem immediately bounds the three sums by
-`(495,43,8)`, and the resulting ledger still proves score 66.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
 
@@ -27,15 +27,15 @@ variable {K Omega : Type} [Field K] [Field Omega]
 abbrev RegularIndex (Q : MvPolynomial (Fin 4) K) :=
   ↥(positiveRFactors Q)
 
-/-- Rectangular flag of one actual irreducible factor, in nested
-`(Z-only,YZ,all)` coordinates. -/
+/-- .
+ -/
 def regularFlag (Q : MvPolynomial (Fin 4) K) (F : RegularIndex Q) :
     FlagDegree :=
   ⟨F.1.degreeOf (3 : Fin 4), F.1.degreeOf (1 : Fin 4),
     F.1.degreeOf (2 : Fin 4)⟩
 
-/-- Mapping the coefficient field removes `X` and cannot exceed the three
-separated degrees, so the actual surface equation lies in its factor flag. -/
+/-- .
+ -/
 theorem surfaceMap_in_regularFlag
     (phi : Polynomial K →+* Omega)
     (Q : MvPolynomial (Fin 4) K) (F : RegularIndex Q) :
@@ -57,8 +57,8 @@ theorem surfaceMap_in_regularFlag
         F.1.degreeOf (2 : Fin 4)
   omega
 
-/-- The actual finite factor family fits the robust rectangular score-66
-flag directly from the interpolation coefficient box. -/
+/-- .
+ -/
 theorem regularFlag_budgets
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :

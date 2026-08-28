@@ -20,16 +20,16 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
+/-! .
 
-# Lemmas regarding the prime spectrum of tensor products
 
-## Main result
-- `PrimeSpectrum.isEmbedding_tensorProductTo_of_surjectiveOnStalks`:
-  If `R →+* T` is surjective on stalks (see `Mathlib/RingTheory/SurjectiveOnStalks.lean`),
-  then `Spec(S ⊗[R] T) → Spec S × Spec T` is a topological embedding
-  (where `Spec S × Spec T` is the Cartesian product with the product topology).
--/
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -38,7 +38,7 @@ variable [CommRing T] [Algebra R T]
 
 open TensorProduct Topology
 
-/-- The canonical map from `Spec(S ⊗[R] T)` to the Cartesian product `Spec S × Spec T`. -/
+/-- . -/
 noncomputable
 def PrimeSpectrum.tensorProductTo (x : PrimeSpectrum (S ⊗[R] T)) :
     PrimeSpectrum S × PrimeSpectrum T :=

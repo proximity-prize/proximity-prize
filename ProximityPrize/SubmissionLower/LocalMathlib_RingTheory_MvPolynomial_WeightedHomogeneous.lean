@@ -29,37 +29,37 @@ changes. The original one-line classical simp proof is expanded only to insert
 its equality instance. Final commands report selected declaration axioms.
 -/
 
-/-!
-# Weighted homogeneous polynomials
+/-! .
 
-It is possible to assign weights (in a commutative additive monoid `M`) to the variables of a
-multivariate polynomial ring, so that monomials of the ring then have a weighted degree with
-respect to the weights of the variables. The weights are represented by a function `w : σ → M`,
-where `σ` are the indeterminates.
 
-A multivariate polynomial `φ` is weighted homogeneous of weighted degree `m : M` if all monomials
-occurring in `φ` have the same weighted degree `m`.
 
-## Main definitions/lemmas
 
-* `weightedTotalDegree' w φ` : the weighted total degree of a multivariate polynomial with respect
-  to the weights `w`, taking values in `WithBot M`.
 
-* `weightedTotalDegree w φ` : When `M` has a `⊥` element, we can define the weighted total degree
-  of a multivariate polynomial as a function taking values in `M`.
 
-* `IsWeightedHomogeneous w φ m`: a predicate that asserts that `φ` is weighted homogeneous
-  of weighted degree `m` with respect to the weights `w`.
 
-* `weightedHomogeneousSubmodule R w m`: the submodule of homogeneous polynomials
-  of weighted degree `m`.
 
-* `weightedHomogeneousComponent w m`: the additive morphism that projects polynomials
-  onto their summand that is weighted homogeneous of degree `n` with respect to `w`.
 
-* `sum_weightedHomogeneousComponent`: every polynomial is the sum of its weighted homogeneous
-  components.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -78,25 +78,25 @@ section AddCommMonoid
 
 variable [AddCommMonoid M]
 
-/-! ### `weight` -/
+/-! . -/
 
 
 section SemilatticeSup
 
 variable [SemilatticeSup M]
 
-/-- The weighted total degree of a multivariate polynomial, taking values in `WithBot M`. -/
+/-- . -/
 def weightedTotalDegree' (w : σ → M) (p : MvPolynomial σ R) : WithBot M :=
   p.support.sup fun s => weight w s
 
-/-- The `weightedTotalDegree'` of a polynomial `p` is `⊥` if and only if `p = 0`. -/
+/-- . -/
 theorem weightedTotalDegree'_eq_bot_iff (w : σ → M) (p : MvPolynomial σ R) :
     weightedTotalDegree' w p = ⊥ ↔ p = 0 := by
   simp only [weightedTotalDegree', Finset.sup_eq_bot_iff, mem_support_iff, WithBot.coe_ne_bot,
     MvPolynomial.eq_zero_iff]
   exact forall_congr' fun _ => Classical.not_not
 
-/-- The `weightedTotalDegree'` of the zero polynomial is `⊥`. -/
+/-- . -/
 theorem weightedTotalDegree'_zero (w : σ → M) :
     weightedTotalDegree' w (0 : MvPolynomial σ R) = ⊥ := by
   simp only [weightedTotalDegree', support_zero, Finset.sup_empty]
@@ -105,12 +105,12 @@ section OrderBot
 
 variable [OrderBot M]
 
-/-- When `M` has a `⊥` element, we can define the weighted total degree of a multivariate
-  polynomial as a function taking values in `M`. -/
+/-- .
+ -/
 def weightedTotalDegree (w : σ → M) (p : MvPolynomial σ R) : M :=
   p.support.sup fun s => weight w s
 
-/-- This lemma relates `weightedTotalDegree` and `weightedTotalDegree'`. -/
+/-- . -/
 theorem weightedTotalDegree_coe (w : σ → M) (p : MvPolynomial σ R) (hp : p ≠ 0) :
     weightedTotalDegree' w p = ↑(weightedTotalDegree w p) := by
   rw [Ne, ← weightedTotalDegree'_eq_bot_iff w p, ← Ne, WithBot.ne_bot_iff_exists] at hp
@@ -124,7 +124,7 @@ theorem weightedTotalDegree_coe (w : σ → M) (p : MvPolynomial σ R) (hp : p �
     rw [← hm]
     simpa [weightedTotalDegree'] using hm'
 
-/-- The `weightedTotalDegree` of the zero polynomial is `⊥`. -/
+/-- . -/
 theorem weightedTotalDegree_zero (w : σ → M) :
     weightedTotalDegree w (0 : MvPolynomial σ R) = ⊥ := by
   simp only [weightedTotalDegree, support_zero, Finset.sup_empty]
@@ -137,15 +137,15 @@ end OrderBot
 
 end SemilatticeSup
 
-/-- A multivariate polynomial `φ` is weighted homogeneous of weighted degree `m` if all monomials
-  occurring in `φ` have weighted degree `m`. -/
+/-- .
+ -/
 def IsWeightedHomogeneous (w : σ → M) (φ : MvPolynomial σ R) (m : M) : Prop :=
   ∀ ⦃d⦄, coeff d φ ≠ 0 → weight w d = m
 
 variable (R)
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The submodule of homogeneous `MvPolynomial`s of degree `n`. -/
+/-- . -/
 def weightedHomogeneousSubmodule (w : σ → M) (m : M) : Submodule R (MvPolynomial σ R) where
   carrier := { x | x.IsWeightedHomogeneous w m }
   smul_mem' r a ha c hc := by
@@ -166,10 +166,10 @@ theorem mem_weightedHomogeneousSubmodule (w : σ → M) (m : M) (p : MvPolynomia
   Iff.rfl
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The submodule `weightedHomogeneousSubmodule R w m` of homogeneous `MvPolynomial`s of
-  degree `n` is equal to the `R`-submodule of all `p : (σ →₀ ℕ) →₀ R` such that
-  `p.support ⊆ {d | weight w d = m}`. While equal, the former has a
-  convenient definitional reduction. -/
+/-- .
+
+
+ -/
 theorem weightedHomogeneousSubmodule_eq_finsupp_supported (w : σ → M) (m : M) :
     weightedHomogeneousSubmodule R w m = AddMonoidAlgebra.supported R R {d | weight w d = m} := by
   ext x
@@ -185,8 +185,8 @@ lemma weightedHomogeneousSubmodule_fg [Finite σ] (w : σ → ℕ) (hw : ∀ (x 
 variable {R}
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The submodule generated by products `Pm * Pn` of weighted homogeneous polynomials of degrees `m`
-  and `n` is contained in the submodule of weighted homogeneous polynomials of degree `m + n`. -/
+/-- .
+ -/
 theorem weightedHomogeneousSubmodule_mul (w : σ → M) (m n : M) :
     weightedHomogeneousSubmodule R w m * weightedHomogeneousSubmodule R w n ≤
       weightedHomogeneousSubmodule R w (m + n) := by
@@ -203,7 +203,7 @@ theorem weightedHomogeneousSubmodule_mul (w : σ → M) (m n : M) :
       simp_all only [Ne, not_false_iff, zero_mul, mul_zero]
   rw [← mem_antidiagonal.mp hde, ← hφ aux.1, ← hψ aux.2, map_add]
 
-/-- Monomials are weighted homogeneous. -/
+/-- . -/
 theorem isWeightedHomogeneous_monomial (w : σ → M) (d : σ →₀ ℕ) (r : R) {m : M}
     (hm : weight w d = m) : IsWeightedHomogeneous w (monomial d r) m := by
   classical
@@ -215,7 +215,7 @@ theorem isWeightedHomogeneous_monomial (w : σ → M) (d : σ →₀ ℕ) (r : R
     exact hm
   · contradiction
 
-/-- A polynomial of weightedTotalDegree `⊥` is weighted homogeneous of degree `⊥`. -/
+/-- . -/
 theorem isWeightedHomogeneous_of_total_degree_zero [SemilatticeSup M] [OrderBot M] (w : σ → M)
     {p : MvPolynomial σ R} (hp : weightedTotalDegree w p = (⊥ : M)) :
     IsWeightedHomogeneous w p (⊥ : M) := by
@@ -225,19 +225,19 @@ theorem isWeightedHomogeneous_of_total_degree_zero [SemilatticeSup M] [OrderBot 
   rw [eq_bot_iff, ← WithBot.coe_le_coe, ← h]
   apply Finset.le_sup (mem_support_iff.mpr hd)
 
-/-- Constant polynomials are weighted homogeneous of degree 0. -/
+/-- . -/
 theorem isWeightedHomogeneous_C (w : σ → M) (r : R) :
     IsWeightedHomogeneous w (C r : MvPolynomial σ R) 0 :=
   isWeightedHomogeneous_monomial _ _ _ (map_zero _)
 
 variable (R)
 
-/-- 0 is weighted homogeneous of any degree. -/
+/-- . -/
 theorem isWeightedHomogeneous_zero (w : σ → M) (m : M) :
     IsWeightedHomogeneous w (0 : MvPolynomial σ R) m :=
   (weightedHomogeneousSubmodule R w m).zero_mem
 
-/-- 1 is weighted homogeneous of degree 0. -/
+/-- . -/
 theorem isWeightedHomogeneous_one (w : σ → M) : IsWeightedHomogeneous w (1 : MvPolynomial σ R) 0 :=
   isWeightedHomogeneous_C _ _
 
@@ -246,7 +246,7 @@ lemma isWeightedHomogeneous_of_isEmpty [IsEmpty σ] (w : σ → M) (f : MvPolyno
   rw [eq_C_of_isEmpty f]
   exact isWeightedHomogeneous_C _ _
 
-/-- An indeterminate `i : σ` is weighted homogeneous of degree `w i`. -/
+/-- . -/
 theorem isWeightedHomogeneous_X (w : σ → M) (i : σ) :
     IsWeightedHomogeneous w (_root_.MvPolynomial.X i : MvPolynomial σ R) (w i) := by
   apply isWeightedHomogeneous_monomial
@@ -257,33 +257,33 @@ namespace IsWeightedHomogeneous
 variable {R}
 variable {φ ψ : MvPolynomial σ R} {m n : M}
 
-/-- The weighted degree of a weighted homogeneous polynomial controls its support. -/
+/-- . -/
 theorem coeff_eq_zero {w : σ → M} (hφ : IsWeightedHomogeneous w φ n) (d : σ →₀ ℕ)
     (hd : weight w d ≠ n) : coeff d φ = 0 := by
   have aux := mt (@hφ d) hd
   rwa [Classical.not_not] at aux
 
-/-- The weighted degree of a nonzero weighted homogeneous polynomial is well-defined. -/
+/-- . -/
 theorem inj_right {w : σ → M} (hφ : φ ≠ 0) (hm : IsWeightedHomogeneous w φ m)
     (hn : IsWeightedHomogeneous w φ n) : m = n := by
   obtain ⟨d, hd⟩ : ∃ d, coeff d φ ≠ 0 := exists_coeff_ne_zero hφ
   rw [← hm hd, ← hn hd]
 
-/-- The sum of two weighted homogeneous polynomials of degree `n` is weighted homogeneous of
-  weighted degree `n`. -/
+/-- .
+ -/
 theorem add {w : σ → M} (hφ : IsWeightedHomogeneous w φ n) (hψ : IsWeightedHomogeneous w ψ n) :
     IsWeightedHomogeneous w (φ + ψ) n :=
   (weightedHomogeneousSubmodule R w n).add_mem hφ hψ
 
-/-- The sum of weighted homogeneous polynomials of degree `n` is weighted homogeneous of
-  weighted degree `n`. -/
+/-- .
+ -/
 theorem sum {ι : Type*} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : M) {w : σ → M}
     (h : ∀ i ∈ s, IsWeightedHomogeneous w (φ i) n) : IsWeightedHomogeneous w (∑ i ∈ s, φ i) n :=
   (weightedHomogeneousSubmodule R w n).sum_mem h
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The product of weighted homogeneous polynomials of weighted degrees `m` and `n` is weighted
-  homogeneous of weighted degree `m + n`. -/
+/-- .
+ -/
 theorem mul {w : σ → M} (hφ : IsWeightedHomogeneous w φ m) (hψ : IsWeightedHomogeneous w ψ n) :
     IsWeightedHomogeneous w (φ * ψ) (m + n) :=
   weightedHomogeneousSubmodule_mul w m n <| Submodule.mul_mem_mul hφ hψ
@@ -299,8 +299,8 @@ theorem pow {w : σ → M} (hφ : IsWeightedHomogeneous w φ m) (n : ℕ) :
   | zero => rw [pow_zero, zero_smul]; exact isWeightedHomogeneous_one R w
   | succ n ih => rw [pow_succ, succ_nsmul]; exact ih.mul hφ
 
-/-- A product of weighted homogeneous polynomials is weighted homogeneous, with weighted degree
-  equal to the sum of the weighted degrees. -/
+/-- .
+ -/
 theorem prod {ι : Type*} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ι → M) {w : σ → M} :
     (∀ i ∈ s, IsWeightedHomogeneous w (φ i) (n i)) →
       IsWeightedHomogeneous w (∏ i ∈ s, φ i) (∑ i ∈ s, n i) := by
@@ -315,8 +315,8 @@ theorem prod {ι : Type*} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : �
     intro j hjs
     exact h j (Finset.mem_insert_of_mem hjs)
 
-/-- A nonzero weighted-homogeneous polynomial of weighted degree `n` has weighted total degree
-  `n`. -/
+/-- .
+ -/
 theorem weighted_total_degree [SemilatticeSup M] {w : σ → M} (hφ : IsWeightedHomogeneous w φ n)
     (h : φ ≠ 0) : weightedTotalDegree' w φ = n := by
   simp only [weightedTotalDegree']
@@ -329,7 +329,7 @@ theorem weighted_total_degree [SemilatticeSup M] {w : σ → M} (hφ : IsWeighte
     apply Finset.le_sup hd
 
 set_option backward.isDefEq.respectTransparency false in
-/-- Induction principle for weighted homogeneous polynomials. -/
+/-- . -/
 lemma induction_on {w : σ → M} {m : M}
     {motive : (p : MvPolynomial σ R) → p.IsWeightedHomogeneous w m → Prop}
     (zero : motive 0 (isWeightedHomogeneous_zero R w m))
@@ -361,16 +361,16 @@ end IsWeightedHomogeneous
 
 variable {R}
 
-/-- The weighted homogeneous submodules form a graded monoid. -/
+/-- . -/
 lemma WeightedHomogeneousSubmodule.gradedMonoid {w : σ → M} :
     SetLike.GradedMonoid (weightedHomogeneousSubmodule R w) where
   one_mem := isWeightedHomogeneous_one R w
   mul_mem _ _ _ _ := IsWeightedHomogeneous.mul
 
-/-- `weightedHomogeneousComponent w n φ` is the part of `φ` that is weighted homogeneous of
-  weighted degree `n`, with respect to the weights `w`.
-  See `sum_weightedHomogeneousComponent` for the statement that `φ` is equal to the sum
-  of all its weighted homogeneous components. -/
+/-- .
+
+
+ -/
 def weightedHomogeneousComponent (w : σ → M) (n : M) : MvPolynomial σ R →ₗ[R] MvPolynomial σ R :=
   letI := Classical.decEq M
   (coeffLinearEquiv _).symm.toLinearMap ∘ₗ Submodule.subtype _ ∘ₗ
@@ -393,8 +393,8 @@ theorem weightedHomogeneousComponent_apply [DecidableEq M] :
   simp [weightedHomogeneousComponent, MvPolynomial, coeff, Finsupp.filter_eq_sum, support, monomial]
   congr
 
-/-- The `n` weighted homogeneous component of a polynomial is weighted homogeneous of
-weighted degree `n`. -/
+/-- .
+ -/
 theorem weightedHomogeneousComponent_isWeightedHomogeneous :
     (weightedHomogeneousComponent w n φ).IsWeightedHomogeneous w n := by
   classical
@@ -444,7 +444,7 @@ theorem weightedHomogeneousComponent_finsupp :
 
 variable (w)
 
-/-- Every polynomial is the sum of its weighted homogeneous components. -/
+/-- . -/
 theorem sum_weightedHomogeneousComponent :
     (finsum fun m => weightedHomogeneousComponent w m φ) = φ := by
   classical
@@ -498,7 +498,7 @@ theorem IsWeightedHomogeneous.weightedHomogeneousComponent_ne {m : M} (n : M)
     · rw [coeff_zero]
     · rw [hp zero_coeff]; exact Ne.symm hn
 
-/-- The weighted homogeneous components of a weighted homogeneous polynomial. -/
+/-- . -/
 theorem weightedHomogeneousComponent_of_mem [DecidableEq M] {m n : M}
     {p : MvPolynomial σ R} (h : p ∈ weightedHomogeneousSubmodule R w n) :
     weightedHomogeneousComponent w m p = if m = n then p else 0 := by
@@ -572,8 +572,8 @@ section OrderedAddCommMonoid
 variable [AddCommMonoid M] [PartialOrder M]
   {w : σ → M} (φ : MvPolynomial σ R)
 
-/-- If `M` is canonically ordered, then the `weightedHomogeneousComponent` of weighted degree `0`
-of a polynomial is its constant coefficient. -/
+/-- .
+ -/
 @[simp]
 theorem weightedHomogeneousComponent_zero [CanonicallyOrderedAdd M] [IsAddTorsionFree M]
     (hw : ∀ i : σ, w i ≠ 0) :
@@ -592,7 +592,7 @@ theorem weightedHomogeneousComponent_zero [CanonicallyOrderedAdd M] [IsAddTorsio
     obtain ⟨i, hi⟩ := hd
     exact ⟨i, hi, hw i⟩
 
-/-- A weight function is nontorsion if its values are not torsion. -/
+/-- . -/
 def NonTorsionWeight (w : σ → M) :=
   ∀ n x, n • w x = (0 : M) → n = 0
 
@@ -601,8 +601,8 @@ theorem nonTorsionWeight_of [IsAddTorsionFree M] (hw : ∀ i : σ, w i ≠ 0) :
     NonTorsionWeight w :=
   fun _ x hnx => (smul_eq_zero_iff_left (hw x)).mp hnx
 
-/-- If `w` is a nontorsion weight function, then the finitely supported function `m : σ →₀ ℕ`
-  has weighted degree zero if and only if `∀ x : σ, m x = 0`. -/
+/-- .
+ -/
 theorem weightedDegree_eq_zero_iff [CanonicallyOrderedAdd M]
     (hw : NonTorsionWeight w) {m : σ →₀ ℕ} :
     weight w m = 0 ↔ ∀ x : σ, m x = 0 := by
@@ -625,8 +625,8 @@ section LinearOrderedAddCommMonoid
 variable [AddCommMonoid M] [LinearOrder M] [OrderBot M] [CanonicallyOrderedAdd M]
   {w : σ → M} (φ : MvPolynomial σ R)
 
-/-- A multivariate polynomial is weighted homogeneous of weighted degree zero if and only if
-  its weighted total degree is equal to zero. -/
+/-- .
+ -/
 theorem isWeightedHomogeneous_zero_iff_weightedTotalDegree_eq_zero {p : MvPolynomial σ R} :
     IsWeightedHomogeneous w p 0 ↔ p.weightedTotalDegree w = 0 := by
   rw [weightedTotalDegree, ← bot_eq_zero, Finset.sup_eq_bot_iff, bot_eq_zero, IsWeightedHomogeneous]
@@ -634,8 +634,8 @@ theorem isWeightedHomogeneous_zero_iff_weightedTotalDegree_eq_zero {p : MvPolyno
   intro m
   rw [mem_support_iff]
 
-/-- If `w` is a nontorsion weight function, then a multivariate polynomial has weighted total
-  degree zero if and only if for every `m ∈ p.support` and `x : σ`, `m x = 0`. -/
+/-- .
+ -/
 theorem weightedTotalDegree_eq_zero_iff (hw : NonTorsionWeight w) (p : MvPolynomial σ R) :
     p.weightedTotalDegree w = 0 ↔ ∀ (m : σ →₀ ℕ) (_ : m ∈ p.support) (x : σ), m x = 0 := by
   rw [← isWeightedHomogeneous_zero_iff_weightedTotalDegree_eq_zero, IsWeightedHomogeneous]
@@ -650,8 +650,8 @@ end LinearOrderedAddCommMonoid
 
 section GradedAlgebra
 
-/- Here, given a weight `w : σ → M`, where `M` is an additive and commutative monoid, we endow the
-  ring of multivariate polynomials `MvPolynomial σ R` with the structure of a graded algebra -/
+/- 
+-/
 variable (w : σ → M) [AddCommMonoid M]
 
 theorem weightedHomogeneousComponent_eq_zero_of_notMem [DecidableEq M]
@@ -663,7 +663,7 @@ theorem weightedHomogeneousComponent_eq_zero_of_notMem [DecidableEq M]
 
 variable (R)
 
-/-- The `decompose'` argument of `weightedDecomposition`. -/
+/-- . -/
 def decompose' [DecidableEq M] := fun φ : MvPolynomial σ R =>
   DirectSum.mk (fun i : M => ↥(weightedHomogeneousSubmodule R w i))
     (Finset.image (weight w) φ.support) fun m =>
@@ -677,8 +677,8 @@ theorem decompose'_apply [DecidableEq M] (φ : MvPolynomial σ R) (m : M) :
   · rw [DirectSum.mk_apply_of_notMem hm, Submodule.coe_zero,
       weightedHomogeneousComponent_eq_zero_of_notMem w φ m hm]
 
-/-- Given a weight `w`, the decomposition of `MvPolynomial σ R` into weighted homogeneous
-submodules -/
+/-- .
+ -/
 @[implicit_reducible]
 def weightedDecomposition [DecidableEq M] :
     DirectSum.Decomposition (weightedHomogeneousSubmodule R w) where
@@ -703,8 +703,8 @@ def weightedDecomposition [DecidableEq M] :
     exact weightedHomogeneousComponent_directSum R w x m
 
 
-set_option linter.style.whitespace false in -- manual alignment is not recognised
-/-- Given a weight, `MvPolynomial` as a graded algebra -/
+set_option linter.style.whitespace false in --
+/-- . -/
 @[implicit_reducible]
 def weightedGradedAlgebra [DecidableEq M] :
     GradedAlgebra (weightedHomogeneousSubmodule R w) where

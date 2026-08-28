@@ -1,18 +1,18 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualCurveZeroCount
 
-/-!
-# Characteristic-free zero counts by an inseparability dichotomy
+/-! .
 
-Research module, deliberately kept off the green submission chain.
 
-For a finite extension in positive characteristic, failure of separability
-forces the inseparable degree, hence the total degree, to be at least the
-characteristic.  Consequently a point set of cardinality at most the
-characteristic is already paid for by any positive coordinate cap on a
-nonseparable projection.  If no projection is nonseparable, the existing
-separable curve zero-count theorem applies unchanged.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.CharacteristicFreeInseparableDichotomyResearch
 
@@ -21,8 +21,8 @@ open Field ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveZ
 
 noncomputable section
 
-/-- A finite nonseparable field extension in characteristic `p > 0` has
-degree at least `p`. -/
+/-- .
+ -/
 theorem char_le_finrank_of_not_isSeparable
     (F E : Type) [Field F] [Field E] [Algebra F E] [FiniteDimensional F E]
     (p : ℕ) [CharP F p] (hp : p ≠ 0)
@@ -50,10 +50,10 @@ theorem char_le_finrank_of_not_isSeparable
     exact Nat.le_mul_of_pos_left _ (Nat.pos_of_ne_zero (NeZero.ne _))
   exact hp_le_insep.trans hinsep_le_finrank
 
-/-- A nonseparable finite extension of prime total degree is not merely
-partly inseparable: its separable degree is one, hence it is purely
-inseparable.  This is the structural conclusion available in the exceptional
-`degree = p` block of the refined projection ledger. -/
+/-- .
+
+
+ -/
 theorem isPurelyInseparable_of_finrank_eq_prime_of_not_isSeparable
     (F E : Type) [Field F] [Field E] [Algebra F E] [FiniteDimensional F E]
     (p : ℕ) (hp : p.Prime)
@@ -77,7 +77,7 @@ theorem isPurelyInseparable_of_finrank_eq_prime_of_not_isSeparable
 variable (K : Type) [Field K]
 variable (P : Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
 
-/-- The genuinely characteristic-free part of the projection hypothesis. -/
+/-- . -/
 def ProjectionsFinite : Prop :=
   ∀ (i : Fin 3) (hi : Transcendental K (coordinate K P i)),
     letI : Algebra (RatFunc K) (CoordinateField K P) := rationalBaseAlgebra K P i hi
@@ -89,8 +89,8 @@ theorem projectionsFinite_of_finiteSeparable
 
 variable [IsAlgClosed K]
 
-/-- If one finite coordinate projection is nonseparable, its actual
-coordinate degree is at least the positive characteristic. -/
+/-- .
+ -/
 theorem char_le_actualCoordinateDegree_of_not_isSeparable
     (hfinite : ProjectionsFinite K P) (p : ℕ) [CharP K p] (hp : p ≠ 0)
     (i : Fin 3) (hi : Transcendental K (coordinate K P i))
@@ -105,9 +105,9 @@ theorem char_le_actualCoordinateDegree_of_not_isSeparable
   · exact hp
   · exact hsep
 
-/-- If the full degree of one finite projection is strictly below the
-characteristic, that projection is automatically separable.  This is the
-contrapositive form used by the global-shear construction. -/
+/-- .
+
+ -/
 theorem isSeparable_of_actualCoordinateDegree_lt_char
     (hfinite : ProjectionsFinite K P) (p : ℕ) [CharP K p] (hp : p ≠ 0)
     (i : Fin 3) (hi : Transcendental K (coordinate K P i))
@@ -122,9 +122,9 @@ theorem isSeparable_of_actualCoordinateDegree_lt_char
     (char_le_actualCoordinateDegree_of_not_isSeparable
       K P hfinite p hp i hi hsep)) hdegree
 
-/-- A strict *family* degree budget certifies separability on every
-transcendental member of that family.  No componentwise resultant gate is
-needed: each nonnegative summand is bounded by the common sum. -/
+/-- .
+
+ -/
 theorem family_coordinate_isSeparable_of_sum_degree_lt_char
     {I : Type} [Fintype I]
     (Q : I → Ideal (MvPolynomial (Fin 3) K)) [∀ i, (Q i).IsPrime]
@@ -142,13 +142,13 @@ theorem family_coordinate_isSeparable_of_sum_degree_lt_char
     (f := fun k : I ↦ actualCoordinateDegree K (Q k) j)
     (fun _ _ ↦ Nat.zero_le _) (Finset.mem_univ i)).trans_lt hsum
 
-/-- Characteristic-free replacement for `finite_zero_points_le_box` under
-the extra hypotheses that the finite point set has at most `p` elements
-and every coordinate cap is positive.
+/-- .
 
-The properness and vanishing hypotheses are used only in the all-separable
-branch.  In the nonseparable branch, one positive summand of the box cost
-is already at least `p`. -/
+
+
+
+
+ -/
 theorem finite_zero_points_le_box_of_finite_or_inseparable
     (hfinite : ProjectionsFinite K P)
     (p : ℕ) [CharP K p] (hp : p ≠ 0)

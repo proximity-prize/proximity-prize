@@ -2,12 +2,12 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagKernelUniversalityResearch
 import ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
 
-/-!
-# Three universal contact interpolants at the 66.70 row
+/-! .
 
-This is the target-specific instantiation of the generic contact-kernel
-universality theorem at `a = 182278`.
--/
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedInterpolation6670Research
 
@@ -25,8 +25,8 @@ set_option maxHeartbeats 2000000
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 
-/-- Three nonzero boxed kernel members with their shared universal
-specialization property. -/
+/-- .
+ -/
 theorem exists_stacked_universal_vanishing_interpolants
     (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
     ∃ QA QB QC : MvPolynomial (Fin 4) IRSProfile.Field,

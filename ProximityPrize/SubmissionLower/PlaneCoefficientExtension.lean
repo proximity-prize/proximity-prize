@@ -2,17 +2,17 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.PlaneResultantIrreducible
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Polynomial_ContentIdeal
 
-/-!
-# Actual planar proper-cut bounds after coefficient field extension
+/-! .
 
-Model label: gpt-5.
 
-Primitivity over K[Y] is transported through its actual unit content ideal.
-Thus extension to any field L creates no identically zero scalar fiber.
-The actual-degree resultant is mapped and remains nonzero, and both degree
-caps are preserved. The resulting bound counts actual L-valued points;
-geometric irreducibility of the mapped first polynomial is not assumed.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.PlaneCoefficientExtension
 
@@ -88,8 +88,8 @@ theorem bimap_specialization_ne_zero (f : K →+* L)
   exact PlaneResultantIrreducible.primitive_specialization_ne_zero
     (bimap f P) (bimap_primitive f P hP) x
 
-/-- The original irreducibility/properness gates give an actual point count
-over every coefficient field extension, even if the mapped curve splits. -/
+/-- .
+ -/
 theorem common_points_card_le_after_extension (f : K →+* L)
     (P Q : Polynomial (Polynomial K)) (points : Finset (L × L))
     (hP : Irreducible P) (hdeg : 0 < P.natDegree) (hproper : ¬ P ∣ Q)

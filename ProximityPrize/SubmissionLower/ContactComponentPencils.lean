@@ -4,22 +4,22 @@ import ProximityPrize.SubmissionLower.ContactIdentityPencil
 import ProximityPrize.SubmissionLower.ContactGenericSurface
 import ProximityPrize.SubmissionLower.ContactPolynomialRecovery
 
-/-!
-# Truncated contact reconstruction on an actual prime component
+/-! .
 
-Model label: gpt-5.
 
-The actual prime-quotient field supplies the regular initial point. The
-degree-w truncated contact polynomial already recovers Y and R, without
-assuming that any later Taylor numerator vanishes generically. Agreement
-numerator membership is exactly an identity evaluation of this polynomial.
-More than w identity nodes give a common base-field pencil, including all
-selected genuine solutions on the component. Thus a whole R-dependent
-surface has at most w identities; a pencil curve is nonvertical.
 
-This avoids an all-tail polynomiality hypothesis in the counting interface.
-It is not a global component-count or competition theorem.
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactComponentPencils
 
@@ -118,8 +118,8 @@ theorem identityNodes_subset {ι : Type*}
   classical
   exact Finset.filter_subset _ _
 
-/-- One generic truncated polynomial and all specified genuine selected
-polynomials share the SAME original-field pencil. No later-tail premise. -/
+/-- .
+ -/
 theorem exists_common_pencil_of_many_identities {ι τ : Type*}
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (w : ℕ)
     (hinj : Set.InjOn x nodes)
@@ -186,8 +186,8 @@ theorem coordinates_affine_of_basefield_pencil (w : ℕ) (hw : 1 ≤ w)
   · exact truncatedPolynomial_initial_slope φ P F hF hH w hw
 
 include hF hH in
-/-- Whole R-dependent hypersurfaces have at most w identity agreement
-nodes, whether or not any later Taylor tail vanishes. -/
+/-- .
+ -/
 theorem identityNodes_card_le_of_r_dependent_principal {ι : Type*}
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (w : ℕ) (hw : 1 ≤ w)
     (hinj : Set.InjOn x nodes)
@@ -203,8 +203,8 @@ theorem identityNodes_card_le_of_r_dependent_principal {ι : Type*}
   exact not_y_affine_of_r_dependent_principal Ω P g hP hr _ _ hy
 
 include hF hH in
-/-- Non-point primes with many identity nodes project nontrivially to the
-actual seed coordinate. No polynomiality-locus assumption is present. -/
+/-- .
+ -/
 theorem seed_transcendental_of_many_identities {ι : Type*} [IsAlgClosed Ω]
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (w : ℕ) (hw : 1 ≤ w)
     (hinj : Set.InjOn x nodes)
@@ -218,9 +218,9 @@ theorem seed_transcendental_of_many_identities {ι : Type*} [IsAlgClosed Ω]
   obtain ⟨hy, hr⟩ := coordinates_affine_of_basefield_pencil φ P F hF hH w hw P₀ P₁ hp
   exact seed_transcendental_of_affine_coordinates Ω P hnonpoint _ _ _ _ hy hr
 
-/-- Original selected solutions on the ACTUAL prime satisfy each of its
-identity nodes. The input is ideal containment in their point kernel, not
-an assumed interpolation identity. -/
+/-- .
+
+ -/
 theorem selected_agrees_on_identity_nodes {ι : Type*}
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (p w : ℕ) [CharP Ω p]
     (hw : w < p) (S : Polynomial K) (γ : K) (hdegree : S.natDegree ≤ w)

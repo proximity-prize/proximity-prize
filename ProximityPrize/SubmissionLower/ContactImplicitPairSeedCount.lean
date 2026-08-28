@@ -4,21 +4,21 @@ import ProximityPrize.SubmissionLower.ContactCountingCaps
 import ProximityPrize.SubmissionLower.ContactImplicitPairBudgets
 import ProximityPrize.SubmissionLower.ContactCountingLedger
 
-/-!
-# Actual selected-seed count for one original implicit pair
+/-! .
 
-Model label: gpt-5.
 
-An original irreducible R-linear factor G and a proper R-independent cut A
-are transported to the constructed generic coefficient field. The actual
-geometric factors of G cover every selected initial point. The proved
-proper-cut seed theorem applies to each factor, and their true coordinate
-degree sums give exactly the three original implicit-pair costs.
 
-The fixed interpolation caps are used only for characteristic gates and
-agreement-polynomial caps. No geometric point-count inequality, first-tail
-equation, all-tail condition, or complete competition claim is assumed.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount
 
@@ -49,8 +49,8 @@ theorem capAt_dot (a b : DegreeVector) :
     (∑ i : Fin 3, capAt a i * capAt b i) = dot a b := by
   simp [Fin.sum_univ_three, capAt, dot]
 
-/-- The actual mixed projection degrees are bounded by the actual
-original cut degrees, not by the full interpolation cap. -/
+/-- .
+ -/
 theorem coordinateMixedDegree_le_geometricPairCost
     (φ : Polynomial K →+* Ω) (A : MvPolynomial (Fin 4) K)
     (hAR : A.degreeOf 2 = 0) (g : MvPolynomial (Fin 3) Ω) (i : Fin 3) :
@@ -75,8 +75,8 @@ theorem coordinateMixedDegree_le_geometricPairCost
   · simpa [coordinateMixedDegree_two, hTR, capAt, geometricPairCost, Nat.mul_comm] using
       Nat.mul_le_mul_right (g.degreeOf 1) hTY
 
-/-- Summing genuine geometric-factor costs recovers the original pair
-ledger. Geometric factors need not be disjoint at the selected points. -/
+/-- .
+ -/
 theorem sum_geometricPairCost_le
     (φ : Polynomial K →+* Ω) (hφ : Function.Injective φ)
     (A G : MvPolynomial (Fin 4) K) (hG : G ≠ 0) (i : Fin 3) :
@@ -102,8 +102,8 @@ theorem canonical_selectedPoint_surface_evaluation
   rw [selectedPoint_evaluation]
   exact evaluation_at_initialPoint K (selected γ) γ F
 
-/-- Properness over the original field survives every actual geometric
-factor, by the verified geometric contraction theorem. -/
+/-- .
+ -/
 theorem geometric_factor_proper_cut
     (A G : MvPolynomial (Fin 4) K) (hG : Irreducible G)
     (hGR : G.degreeOf 2 = 1) (hproper : ¬ G ∣ A)
@@ -122,9 +122,9 @@ theorem geometric_factor_proper_cut
 variable {ι : Type*}
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- One actual original implicit pair, with original polynomial
-regularity and no supplied geometric bound. This is the exact interface
-consumed by the finite implicit-pair aggregation. -/
+/-- .
+
+ -/
 theorem implicit_pair_seed_bound_fixed
     (A G : MvPolynomial (Fin 4) K) (hG : Irreducible G)
     (hGR : G.degreeOf 2 = 1) (hproper : ¬ G ∣ A)

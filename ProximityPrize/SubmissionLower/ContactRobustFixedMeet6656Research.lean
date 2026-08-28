@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
 
-/-!
-# Parameterized robust fixed-factor ledger and the score-66.56 meet
+/-! .
 
-The robust rectangular fixed-factor arithmetic is independent of the frozen
-score-66 profile once its six numerical inputs are supplied.  This module
-packages that arithmetic, proves its flag-linearity and finite aggregation,
-and connects an arbitrary `globalCoefficientBox D w L s` to the rectangular
-factor flag `(L,(D-1)/w,s)` using the existing factor-degree theorem.
 
-The final section certifies the exact fixed cost for the recursive-GCD meet
-`(D,L,s)=(4570175,598,6)` at `a=182807`.  It does not claim a selected-family
-bound: the terminal regular-factor incidence provider and singular-union
-consumer are still exposed only with the older score-66 constants.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactRobustFixedMeet6656Research
 
@@ -26,7 +26,7 @@ open ContactRegularFactorFlag6600Research
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 30000
 
-/-- Numerical data consumed by the robust rectangular fixed-factor ledger. -/
+/-- . -/
 structure Profile where
   n : ℕ
   w : ℕ
@@ -47,7 +47,7 @@ def degreeIncidence (p : Profile) : ℕ :=
 
 def unitIncidence (p : Profile) : ℕ := p.n - p.w
 
-/-- Sharp flag used by the two agreement directions. -/
+/-- . -/
 def surfaceFlag (p : Profile) : FlagDegree :=
   ⟨p.seedTotalCap + p.slopeCap - p.yCap,
     p.yCap - p.slopeCap, p.slopeCap⟩
@@ -58,8 +58,8 @@ def derivativeFlag (p : Profile) : FlagDegree :=
 def agreementDirection (p : Profile) : FlagDegree :=
   p.surfaceFlag + p.derivativeFlag
 
-/-- Robust outer flag supplied directly by the three separated factor-degree
-budgets. -/
+/-- .
+ -/
 def rectangularSurfaceFlag (p : Profile) : FlagDegree :=
   ⟨p.seedTotalCap, p.yCap, p.slopeCap⟩
 
@@ -122,8 +122,8 @@ def liftedAgreement (p : Profile) : DegreeVector :=
 
 def unitZ : DegreeVector := ⟨0, 0, 1⟩
 
-/-- Existing robust implicit-pair plus exceptional-root charge, normalized to
-the same `gap^2` denominator as the regular ledger. -/
+/-- .
+ -/
 def retainedSingularContribution (p : Profile) : ℕ :=
   p.gap *
     (p.gap *
@@ -141,7 +141,7 @@ def fixedCost (p : Profile) : ℕ :=
 
 end Profile
 
-/-- The robust regular functional is linear in the three flag coordinates. -/
+/-- . -/
 theorem factorRegularLedger_projection_decomposition
     (p : Profile) (flag : FlagDegree) :
     p.factorRegularLedger flag =
@@ -154,8 +154,8 @@ theorem factorRegularLedger_projection_decomposition
     unitZFlag, unitYZFlag, unitAllFlag]
   ring
 
-/-- Coordinatewise flag budgets aggregate before the robust ledger is
-evaluated. -/
+/-- .
+ -/
 theorem sum_factorRegularLedger_le_flag
     {I : Type} [Fintype I] (p : Profile)
     (flag : I → FlagDegree) (cap : FlagDegree)
@@ -191,8 +191,8 @@ noncomputable section
 
 variable {K : Type} [Field K]
 
-/-- The existing separated factor-degree theorem supplies the generic
-rectangular flag cap for every nonzero polynomial in the supplied box. -/
+/-- .
+ -/
 theorem regularFlag_budgets
     (p : Profile) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hw : 0 < p.w)
@@ -207,9 +207,9 @@ theorem regularFlag_budgets
   simp only [regularFlag, Finset.sum_coe_sort]
   exact ⟨hb.2.2, hb.1, hb.2.1⟩
 
-/-- Actual regular factors aggregate to the supplied profile's rectangular
-regular numerator once their already-proved factorwise incidence bounds are
-available. -/
+/-- .
+
+ -/
 theorem sum_factor_counts_rectangular_le
     (p : Profile) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hw : 0 < p.w)
@@ -232,7 +232,7 @@ theorem sum_factor_counts_rectangular_le
 
 end
 
-/-- Generic regular/singular arithmetic join at the common `gap^2` scale. -/
+/-- . -/
 theorem combined_fixed_scaled_bound
     (p : Profile) (regularCount singularCount : ℕ)
     (hregular : regularCount * p.gap ^ 2 ≤ p.regularNumerator)
@@ -246,8 +246,8 @@ theorem combined_fixed_scaled_bound
       Nat.add_le_add hregular hsingular
     _ = p.totalNumerator := rfl
 
-/-- Final recursive-GCD meet profile.  The multiplicity is recorded only
-through its weighted cap `D = 25 * 182807`. -/
+/-- .
+ -/
 def meetProfile : Profile where
   n := 262144
   w := 131071

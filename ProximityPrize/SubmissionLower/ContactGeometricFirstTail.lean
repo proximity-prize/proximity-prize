@@ -4,21 +4,21 @@ import ProximityPrize.SubmissionLower.GeometricFactorContraction
 import ProximityPrize.SubmissionLower.ContactTailClosure
 import ProximityPrize.SubmissionLower.ContactGenericInitialPoint
 
-/-!
-# Actual geometric first-tail dichotomy
+/-! .
 
-Model label: gpt-5.
 
-The coefficient map through K(X) is identified with the actual generic
-surface map. Gauss localization and flat geometric-factor contraction
-then reflect divisibility to the ORIGINAL four-variable polynomial ring.
-The exact numerator recurrence propagates that divisibility to all tails.
-Otherwise the first cut is proper on every geometric irreducible factor.
 
-The whole-surface branch invokes the already checked actual polynomial
-reconstruction with its explicit characteristic and support gates.
-No geometric point-count or competition claim is introduced.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactGeometricFirstTail
 
@@ -37,7 +37,7 @@ def geometricPolynomialEmbedding : Polynomial K →+* L :=
 def geometricSurfaceMap : MvPolynomial (Fin 4) K →+* MvPolynomial (Fin 3) L :=
   (MvPolynomial.map (algebraMap (RationalCoefficients K) L)).comp (rationalSurfaceMap K)
 
-/-- The two-stage coefficient map is the actual generic-coordinate map. -/
+/-- . -/
 theorem geometricSurfaceMap_eq_surfaceMap :
     geometricSurfaceMap K L = surfaceMap (geometricPolynomialEmbedding K L) := by
   apply RingHom.ext
@@ -64,8 +64,8 @@ theorem geometricSurfaceMap_joint_seed_cap
   rw [geometricSurfaceMap_eq_surfaceMap]
   exact surfaceMap_joint_seed_cap _ F cap hcap
 
-/-- Divisibility on one genuine geometric factor is equivalent to original
-base-polynomial divisibility. Neither implication is supplied as a premise. -/
+/-- .
+ -/
 theorem geometric_factor_dvd_iff
     (F M : MvPolynomial (Fin 4) K) (hF : Irreducible F)
     (hpos : 0 < F.degreeOf 1 + F.degreeOf 2 + F.degreeOf 3)
@@ -94,7 +94,7 @@ theorem all_later_tails_of_geometric_first_tail
   intro j hj
   exact equation_dvd_all_later_numerators K F (w + 1) hbase j (by omega)
 
-/-- A single actual algebraic dichotomy governs every geometric component. -/
+/-- . -/
 theorem first_tail_dichotomy
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
     (hpos : 0 < F.degreeOf 1 + F.degreeOf 2 + F.degreeOf 3) (w : ℕ) :
@@ -112,8 +112,8 @@ theorem first_tail_dichotomy
     exact h ((geometric_factor_dvd_iff K L F (numerator K F (w + 1))
       hF hpos g hg hdivF).mp hdivM)
 
-/-- The first tail on one geometric component forces actual polynomiality
-at every regular point once the checked degree/characteristic gates hold. -/
+/-- .
+ -/
 theorem polynomiality_of_geometric_first_tail
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
     (hpos : 0 < F.degreeOf 1 + F.degreeOf 2 + F.degreeOf 3)
@@ -141,8 +141,8 @@ theorem polynomiality_of_geometric_first_tail
 
 section CanonicalGenericField
 
-/-- The actual algebraic-closure embedding from GenericInitialPoint agrees
-definitionally with the composed fraction-field coefficient map. -/
+/-- .
+ -/
 theorem canonical_geometricPolynomialEmbedding :
     geometricPolynomialEmbedding K (GenericField K) = polynomialEmbedding K := rfl
 
@@ -150,8 +150,8 @@ theorem canonical_geometricSurfaceMap :
     geometricSurfaceMap K (GenericField K) = surfaceMap (polynomialEmbedding K) := by
   rw [geometricSurfaceMap_eq_surfaceMap, canonical_geometricPolynomialEmbedding]
 
-/-- At the constructed initial point of a selected polynomial, the surface
-equation is exactly the embedding of its actual polynomial specialization. -/
+/-- .
+ -/
 theorem eval_at_actual_generic_initial_point
     (P : Polynomial K) (γ : K) (F : MvPolynomial (Fin 4) K) :
     MvPolynomial.eval (fun i : Fin 3 => initialPoint K P γ i.succ)

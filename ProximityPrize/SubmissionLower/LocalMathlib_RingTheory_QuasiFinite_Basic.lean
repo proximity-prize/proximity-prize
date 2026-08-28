@@ -35,32 +35,32 @@ hypothesis or a protected checker. All mathematical APIs and proof steps are
 retained without resource-limit changes.
 -/
 
-/-!
-# Quasi-finite algebras
+/-! .
 
-In this file, we define the notion of quasi-finite algebras and prove basic properties about them
 
-## Main definition and results
-- `Algebra.QuasiFinite`: The class of quasi-finite algebras.
-  We say that an `R`-algebra `S` is quasi-finite
-  if `κ(p) ⊗[R] S` is finite-dimensional over `κ(p)` for all primes `p` of `R`.
-- `Algebra.QuasiFinite.finite_comap_preimage_singleton`:
-  Quasi-finite algebras have finite fibers.
-- `Algebra.QuasiFinite.iff_of_isArtinianRing`:
-  Over an artinian ring, an algebra is quasi-finite iff it is module-finite.
-- `Algebra.QuasiFinite.iff_finite_comap_preimage_singleton`: For a finite-type `R`-algebra `S`,
-  `S` is quasi-finite if and only if `Spec S → Spec R` has finite fibers.
-- `Algebra.QuasiFiniteAt`: If `S` is an `R`-algebra and `p` a prime of `S`,
-  we say that `S` is `R`-quasi-finite at `p` if `Sₚ` is `R`-quasi-finite.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
 variable {R S T : Type*} [CommRing R] [CommRing S] [CommRing T]
   [Algebra R S] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
 
--- See `Mathlib/RingTheory/QuasiFinite/Polynomial.lean`
+--
 /-
 Upstream import-hygiene assertion retained for attribution:
   assert_not_exists RatFunc
@@ -71,23 +71,23 @@ source-policy check, is removed by documenting this dependency-layer check.
 
 open TensorProduct
 
--- for performance reasons
+--
 attribute [-instance] Module.Free.instFaithfulSMulOfNontrivial Algebra.IsIntegral.isLocalHom
 
 namespace Algebra
 
 variable (R S) in
-/--
-We say that an `R`-algebra `S` is quasi-finite
-if `κ(p) ⊗[R] S` is finite-dimensional over `κ(p)` for all primes `p` of `R`.
+/-- .
 
-This is slightly different from the
-[stacks projects definition](https://stacks.math.columbia.edu/tag/00PL),
-which requires `S` to be of finite type over `R`.
 
-Also see `Algebra.QuasiFinite.iff_finite_comap_preimage_singleton` that
-this is equivalent to having finite fibers for finite-type algebras.
--/
+
+
+
+
+
+
+
+ -/
 @[mk_iff, stacks 00PL]
 class QuasiFinite : Prop where
   finite_fiber (P : Ideal R) [P.IsPrime] :
@@ -143,7 +143,7 @@ instance baseChange [QuasiFinite R S] {A : Type*} [CommRing A] [Algebra R A] :
   exact .of_surjective e.symm.toLinearMap e.symm.surjective
 
 open IsLocalRing in
--- See `Module.Finite.of_quasiFinite` instead
+--
 private lemma finite_of_isArtinianRing_of_isLocalRing
     [QuasiFinite R S] [IsArtinianRing R] [IsLocalRing R] : Module.Finite R S := by
   let e : (maximalIdeal R).Fiber S ≃ₐ[R] S ⧸ (maximalIdeal R).map (algebraMap R S) :=
@@ -331,8 +331,8 @@ lemma iff_finite_primesOver [FiniteType R S] :
   simp [(PrimeSpectrum.equivSubtype S).exists_congr_left, PrimeSpectrum.ext_iff, eq_comm,
     PrimeSpectrum.equivSubtype, Ideal.primesOver, and_comm, Ideal.liesOver_iff, Ideal.under]
 
-/-- If `T` is both a finite type `R`-algebra, and the localization of an integral `R`-algebra
-(away from an element), then `T` is quasi-finite over `R` -/
+/-- .
+ -/
 lemma of_isIntegral_of_finiteType [Algebra.IsIntegral R S] [Algebra.FiniteType R T]
     (s : S) [IsLocalization.Away s T] : Algebra.QuasiFinite R T := by
   let A := Algebra.adjoin R {s}
@@ -375,10 +375,10 @@ end QuasiFinite
 section QuasiFiniteAt
 
 variable (R) in
-/-- If `S` is an `R`-algebra and `p` a prime of `S`, we say that `S` is `R`-quasi-finite at `p`
-if `Sₚ` is `R`-quasi-finite. In the case where `S` is (essentially) of finite type over `R`,
-this is equivalent to the usual definition that `p` is isolated in its fiber.
-See `Ideal.exists_notMem_forall_mem_of_ne_of_liesOver`. -/
+/-- .
+
+
+ -/
 abbrev QuasiFiniteAt (p : Ideal S) [p.IsPrime] : Prop :=
   QuasiFinite R (Localization.AtPrime p)
 
@@ -484,15 +484,15 @@ lemma QuasiFiniteAt.exists_basicOpen_eq_singleton
   refine ⟨r, hrp, subset_antisymm (fun q hrq ↦ ?_) (Set.singleton_subset_iff.mpr hrp)⟩
   obtain ⟨q, rfl⟩ := (PrimeSpectrum.localization_away_comap_range (Localization.Away r) r).ge hrq
   obtain ⟨q, rfl⟩ := (PrimeSpectrum.comapEquiv φ.toRingEquiv).symm.surjective q
-  -- As Sₚ is an artinian local ring, its prime spectrum is a singleton.
+  --
   obtain rfl : q = IsLocalRing.closedPoint _ := Subsingleton.elim _ _
   ext1
   dsimp [-RingEquiv.symm_mk]
   rw [Ideal.comap_comap, ← AlgEquiv.toAlgHom_toRingHom, AlgHom.comp_algebraMap]
   exact IsLocalization.AtPrime.under_maximalIdeal _ _
 
-/-- If `R` is an artinian ring, and `S` is a finite type `R`-algebra `R`-quasi-finite at `p`,
-then `{p}` is clopen in `Spec S`. -/
+/-- .
+ -/
 lemma QuasiFiniteAt.isClopen_singleton
     (p : PrimeSpectrum S) [IsArtinianRing R] [Algebra.FiniteType R S]
     [Algebra.QuasiFiniteAt R p.asIdeal] : IsClopen {p} := by

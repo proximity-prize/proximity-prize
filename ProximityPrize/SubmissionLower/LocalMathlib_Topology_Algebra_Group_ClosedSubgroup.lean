@@ -20,22 +20,22 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Closed subgroups of a topological group
+/-! .
 
-This file builds the frame of closed subgroups in a topological group `G`,
-and its additive version `ClosedAddSubgroup`.
 
-## Main definitions and results
 
-* `normalCore_isClosed`: The `normalCore` of a closed subgroup is closed.
 
-* `finindex_closedSubgroup_isOpen`: A closed subgroup with finite index is open.
 
-## TODO
 
-Actually provide the `Order.Frame (ClosedSubgroup G)` instance.
--/
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -43,12 +43,12 @@ section
 
 universe u v
 
-/-- The type of closed subgroups of a topological group. -/
+/-- . -/
 @[ext]
 structure ClosedSubgroup (G : Type u) [Group G] [TopologicalSpace G] extends Subgroup G where
   isClosed' : IsClosed carrier
 
-/-- The type of closed subgroups of an additive topological group. -/
+/-- . -/
 @[ext]
 structure ClosedAddSubgroup (G : Type u) [AddGroup G] [TopologicalSpace G] extends
     AddSubgroup G where

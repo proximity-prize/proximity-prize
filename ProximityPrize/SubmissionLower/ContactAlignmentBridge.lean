@@ -1,24 +1,24 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BCHKSBridge
 
-/-!
-# From the selected-polynomial counting theorem to the stock alignment target
+/-! .
 
-Model label: gpt-5.
 
-The sole counting input says that a selected family with no base-field
-polynomial pencil containing more than e+1 selections has at most B seeds.
-It quantifies over actual degree-bounded polynomials agreeing on the caller's
-original supports. It does not assume affine-line alignment, an interpolant,
-a geometric component cover, or a replacement support.
 
-Projected RS membership constructs the selected polynomials. Contraposition
-produces an actual large polynomial pencil and thus the stock alignment
-predicate. The elementary stock incidence theorem then gives both received
-rows on one ORIGINAL supplied support. The score-64 alignment theorem remains
-conditional on this explicit, still-to-be-assembled counting input. No final
-protocol claim is proved here.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAlignmentBridge
 
@@ -34,8 +34,8 @@ def pencilSeeds (seeds : Finset K) (selected : K → Polynomial K)
   classical
   exact seeds.filter (fun γ => selected γ = P₀ + Polynomial.C γ * P₁)
 
-/-- Exact uniform selected-family theorem to be supplied by the counting
-pipeline. The no-large-pencil premise concerns actual polynomial equality. -/
+/-- .
+ -/
 def SelectedNoLargePencilBound (domain : ι ↪ K) (w e B : ℕ) : Prop :=
   ∀ (U : Fin 2 → ι → K) (seeds : Finset K) (A : K → Finset ι)
     (selected : K → Polynomial K),
@@ -54,8 +54,8 @@ theorem degree_lt_succ_of_natDegree_le (P : Polynomial K) (w : ℕ)
   · rw [← Polynomial.natDegree_lt_iff_degree_lt hnonzero]
     omega
 
-/-- The codeword and polynomial are chosen from projected-code membership;
-the original support A(γ) is never enlarged, shrunk, or replaced. -/
+/-- .
+ -/
 theorem exists_selected_polynomials
     (domain : ι ↪ K) (w : ℕ) (U : Fin 2 → ι → K)
     (seeds : Finset K) (A : K → Finset ι)
@@ -113,8 +113,8 @@ theorem exists_large_pencil_of_selected_count
   have hh := hcount U seeds A selected hdegree hcard hagreement hsmall
   omega
 
-/-- Actual selected-polynomial counting implies the unmodified stock
-affine-line alignment predicate for the RS code. -/
+/-- .
+ -/
 theorem alignmentBound_of_selected_count
     (domain : ι ↪ K) (w e B : ℕ)
     (hcount : SelectedNoLargePencilBound domain w e B) :
@@ -143,8 +143,8 @@ theorem alignmentBound_of_selected_count
     have hword := hagreement γ (hTsub hγ) i hi
     simpa [rows, ReedSolomon.evalOnPoints] using hword.symm.trans heval
 
-/-- Explicit stock incidence finish on one of the caller's ORIGINAL
-agreement supports, with both original received rows explained there. -/
+/-- .
+ -/
 theorem exists_original_support_of_selected_count
     (domain : ι ↪ K) (w e B : ℕ)
     (hcount : SelectedNoLargePencilBound domain w e B)

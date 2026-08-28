@@ -4,25 +4,25 @@ import ProximityPrize.SubmissionLower.RatFuncProductFormula
 import ProximityPrize.SubmissionLower.InfinityValuationRing
 import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_FunctionField
 
-/-!
-# Actual finite and infinity norm sums in one fixed function field
+/-! .
 
-Model label: gpt-5.
 
-Both normalization rings are constructed inside the same finite
-separable extension L/K(T): the integral closure of K[T], and the
-integral closure of the actual infinity valuation ring. All orders use
-actual adic valuations on this same L.
 
-The finite base-prime collection includes contractions of every nonzero
-finite-normalization order, not just the support of the norm. This
-retains possible cancellation between zeros and poles above one base
-prime. A proved finite-support lemma constructs that collection.
 
-The final balance is a genuine norm/product-formula component, not an
-assumed common-pole or curve-degree bound. Coordinate pole-mass bounds
-and the mixed component-degree ledger remain separate.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.FixedCurveNormSum
 
@@ -55,8 +55,8 @@ abbrev InfinityBase := InfinityValuationRing.InfinityRing K
 local instance : IsFractionRing (InfinityBase K) (RatFunc K) :=
   InfinityValuationRing.infinityRing_isFractionRing K
 
-/-- Keep the canonical subtype algebra on K(T) higher priority: this
-extension action must not replace it when the target specializes to K(T). -/
+/-- .
+ -/
 local instance (priority := 100) : Algebra (InfinityBase K) L :=
   ((algebraMap (RatFunc K) L).comp
     (algebraMap (InfinityBase K) (RatFunc K))).toAlgebra
@@ -87,8 +87,8 @@ instance infiniteNormalization_isFractionRing :
 def infinityPlace : HeightOneSpectrum (InfinityBase K) :=
   IsDiscreteValuationRing.maximalIdeal (InfinityBase K)
 
-/-- The sum over actual normalization primes above the actual infinity
-maximal ideal; all valuations are on the same field L. -/
+/-- .
+ -/
 def infinityContribution (x : L) : ℤ :=
   ∑ P ∈ (IsDedekindDomain.primesOverFinset
       (infinityPlace K).asIdeal (InfiniteNormalization K L)).attach,
@@ -162,10 +162,10 @@ theorem finiteContribution_eq_normOrders
   intro p _
   rw [finitePrimeContribution_eq_normOrder K L p.1 (hs p.1 p.2).1 x hx]
 
-/-- Norm balance on any sufficiently large finite collection of base
-primes. A separate construction below guarantees that it also captures
-every nonzero order in the finite normalization, including cancellations
-which disappear from the norm itself. -/
+/-- .
+
+
+ -/
 theorem balanced_fiber_sum
     (s : Finset (Polynomial K)) (hs : ∀ p ∈ s, Irreducible p ∧ p.Monic)
     (x : L) (hx : x ≠ 0)
@@ -181,8 +181,8 @@ theorem balanced_fiber_sum
     RatFuncProductFormula.infinityOrder_eq_neg_intDegree K _ hnorm,
     add_neg_cancel]
 
-/-- Actual finite support on the finite normalization, obtained from a
-numerator and denominator in that ring, not from support of their norm. -/
+/-- .
+ -/
 theorem finite_orders_support_finite (x : L) (hx : x ≠ 0) :
     Function.HasFiniteSupport
       (fun w : HeightOneSpectrum (FiniteNormalization K L) ↦
@@ -238,8 +238,8 @@ theorem baseRepresentative_spec (w : HeightOneSpectrum (FiniteNormalization K L)
   (RatFuncProductFormula.exists_monic_primePlace K
     (HeightOneSpectrum.under (Polynomial K) w)).choose_spec
 
-/-- Enlarge norm support by contractions of all nonzero actual finite
-orders, retaining fibers in which zero and pole contributions cancel. -/
+/-- .
+ -/
 def basePrimesFor (x : L) (hx : x ≠ 0) : Finset (Polynomial K) :=
   (finiteOrderSupport K L x hx).image (baseRepresentative K L) ∪
     RatFuncProductFormula.factorSupport K (Algebra.norm (RatFunc K) x)
@@ -253,8 +253,8 @@ theorem basePrimesFor_primes (x : L) (hx : x ≠ 0)
   · exact RatFuncProductFormula.factorSupport_primes K _
       (Algebra.norm_ne_zero_iff.mpr hx) p hright
 
-/-- Every nonzero finite-normalization order occurs in one of the actual
-prime fibers included in the final balance. -/
+/-- .
+ -/
 theorem basePrimesFor_covers (x : L) (hx : x ≠ 0)
     (w : HeightOneSpectrum (FiniteNormalization K L))
     (hw : fieldOrder (FiniteNormalization K L) L w x ≠ 0) :
@@ -273,9 +273,9 @@ theorem basePrimesFor_covers (x : L) (hx : x ≠ 0)
     (HeightOneSpectrum.under (Polynomial K) w).ne_bot (FiniteNormalization K L)).mpr
       ⟨w.isPrime, inferInstance⟩
 
-/-- The fixed-curve norm/product-formula balance, with a constructed
-finite family covering every nonzero finite order and the actual
-infinity prime fiber. No separability of L/K(x) is required. -/
+/-- .
+
+ -/
 theorem projective_curve_order_sum (x : L) (hx : x ≠ 0) :
     finiteContribution K L (basePrimesFor K L x hx)
       (basePrimesFor_primes K L x hx) x + infinityContribution K L x = 0 := by

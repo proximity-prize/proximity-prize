@@ -22,34 +22,34 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Unramified algebras over fields
+/-! .
 
-## Main results
 
-Let `K` be a field, `A` be a `K`-algebra and `L` be a field extension of `K`.
 
-- `Algebra.FormallyUnramified.bijective_of_isAlgClosed_of_isLocalRing`:
-    If `A` is `K`-unramified and `K` is alg-closed, then `K = A`.
-- `Algebra.FormallyUnramified.isReduced_of_field`:
-    If `A` is `K`-unramified then `A` is reduced.
-- `Algebra.FormallyUnramified.iff_isSeparable`:
-    `L` is unramified over `K` iff `L` is separable over `K`.
 
-## References
 
-- [B. Iversen, *Generic Local Structure of the Morphisms in Commutative Algebra*][iversen]
 
--/
 
-/-!
-Ordinary elaboration repair after full legal candidate job 229481:
-the target environment also exposes a lens-composition notation named `∘ₗ`.
-The affected linear-map composition is written explicitly as `LinearMap.comp`
-with its existing source and quotient codomain. No mathematical statement,
-hypothesis, declaration name, or argument changes. Original notices remain.
-The trailing `#print axioms` commands inspect existing proofs only.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
+
+/-! .
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -243,8 +243,8 @@ theorem iff_isSeparable (L : Type u) [Field L] [Algebra K L] [EssFiniteType K L]
 end Algebra.FormallyUnramified
 
 variable {K A} in
-/-- If `A = K[X]/⟨p⟩` is unramified at some prime `Q`, then the minpoly of `X` in `κ(Q)`
-only divides `p` once. -/
+/-- .
+ -/
 theorem Algebra.IsUnramifiedAt.not_minpoly_sq_dvd
     (Q : Ideal A) [Q.IsPrime] [Algebra.IsUnramifiedAt K Q] (x : A) (p : K[X])
     (hp₁ : Ideal.span {p} = RingHom.ker (aeval x).toRingHom)

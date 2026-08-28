@@ -22,30 +22,30 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Ramification index and inertia degree
+/-! .
 
-Given `P : Ideal S` lying over `p : Ideal R` for the ring extension `f : R →+* S`
-(assuming `P` and `p` are prime or maximal where needed),
-the **inertia degree** `Ideal.inertiaDeg' p P` is the degree of the field extension
-`(S / P) : (R / p)`.
 
-## Implementation notes
 
-Often the above theory is set up in the case where:
-* `R` is the ring of integers of a number field `K`,
-* `L` is a finite separable extension of `K`,
-* `S` is the integral closure of `R` in `L`,
-* `p` and `P` are maximal ideals,
-* `P` is an ideal lying over `p`
 
-We will try to relax the above hypotheses as much as possible.
 
-## Notation
 
-In this file, `f` stands for the inertia degree of `P` over `p`, leaving `p` and `P` implicit.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -70,23 +70,23 @@ section DecEq
 
 variable {S₁ : Type*} [CommRing S₁] [Algebra R S₁]
 
-/-- The inertia degree of `P : Ideal S` lying over `p : Ideal R` is the degree of the
-extension `(S / P) : (R / p)`.
+/-- .
 
-We do not assume `P` lies over `p` in the definition; we return `0` instead.
 
-See `inertiaDeg'_algebraMap` for the common case where `f = algebraMap R S`
-and there is an algebra structure `R / p → S / P`.
 
-Note: This definition of inertia degree will eventually be replaced by `Ideal.inertiaDeg`.
--/
+
+
+
+
+
+ -/
 noncomputable def inertiaDeg' : ℕ :=
   if hPp : comap f P = p then
     letI : Algebra (R ⧸ p) (S ⧸ P) := Quotient.algebraQuotientOfLEComap hPp.ge
     finrank (R ⧸ p) (S ⧸ P)
   else 0
 
--- Useful for the `nontriviality` tactic using `comap_eq_of_scalar_tower_quotient`.
+--
 @[simp]
 theorem inertiaDeg'_of_subsingleton [hp : p.IsMaximal] [hQ : Subsingleton (S ⧸ P)] :
     inertiaDeg' p P = 0 := by
@@ -108,7 +108,7 @@ theorem inertiaDeg'_pos [p.IsMaximal] [Module.Finite R S] [P.LiesOver p] : 0 < i
   have : Nontrivial (S ⧸ P) := Quotient.nontrivial_of_liesOver_of_isPrime P p
   finrank_pos.trans_eq (inertiaDeg'_algebraMap p P).symm
 
-/-- Variant with a weaker constraint, but on the prime upstairs instead. -/
+/-- . -/
 theorem inertiaDeg'_pos' [P.IsPrime] [Module.Finite R S] [P.LiesOver p] : 0 < inertiaDeg' p P :=
   have : p.IsPrime := Ideal.over_def P p ▸ inferInstance
   Module.finrank_pos.trans_eq (inertiaDeg'_algebraMap p P).symm
@@ -179,18 +179,18 @@ lemma absNorm_eq_pow_inertiaDeg'_of_liesOver {S : Type*} [CommRing S] [IsDedekin
 @[deprecated (since := "2026-07-03")] alias absNorm_eq_pow_inertiaDeg_of_liesOver :=
   absNorm_eq_pow_inertiaDeg'_of_liesOver
 
-/-- The absolute norm of an ideal `P` above a rational prime `p` is
-`|p| ^ ((span {p}).inertiaDeg' P)`.
-See `absNorm_eq_pow_inertiaDeg'` for a version with `p` of type `ℕ`. -/
+/-- .
+
+ -/
 lemma absNorm_eq_pow_inertiaDeg [IsDedekindDomain R] [Module.Free ℤ R] [Module.Finite ℤ R] {p : ℤ}
     (P : Ideal R) [P.LiesOver (span {p})] (hp : Prime p) :
     absNorm P = p.natAbs ^ ((span {p}).inertiaDeg' P) := by
   simpa using absNorm_eq_pow_inertiaDeg'_of_liesOver P (span {p})
     (by rwa [span_singleton_prime hp.ne_zero]) (by simpa using hp.ne_zero)
 
-/-- The absolute norm of an ideal `P` above a rational (positive) prime `p` is
-`p ^ ((span {p}).inertiaDeg' P)`.
-See `absNorm_eq_pow_inertiaDeg` for a version with `p` of type `ℤ`. -/
+/-- .
+
+ -/
 lemma absNorm_eq_pow_inertiaDeg' [IsDedekindDomain R] [Module.Free ℤ R] [Module.Finite ℤ R] {p : ℕ}
     (P : Ideal R) [P.LiesOver (span {(p : ℤ)})] (hp : p.Prime) :
     absNorm P = p ^ ((span {(p : ℤ)}).inertiaDeg' P) :=
@@ -203,9 +203,9 @@ section tower
 variable {R S T : Type*} [CommRing R] [CommRing S] [CommRing T]
 variable [Algebra R S] [Algebra S T] [Algebra R T] [IsScalarTower R S T]
 
-/-- Let `T / S / R` be a tower of algebras, `p, P, I` be ideals in `R, S, T`, respectively,
-  and `p` and `P` are maximal. If `p = P ∩ S` and `P = I ∩ S`,
-  then `f (I | p) = f (P | p) * f (I | P)`. -/
+/-- .
+
+ -/
 theorem inertiaDeg'_algebra_tower (p : Ideal R) (P : Ideal S) (I : Ideal T) [p.IsMaximal]
     [P.IsMaximal] [P.LiesOver p] [I.LiesOver P] : inertiaDeg' p I =
     inertiaDeg' p P * inertiaDeg' P I := by

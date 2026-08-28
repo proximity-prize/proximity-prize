@@ -2,24 +2,24 @@ import ProximityPrize.Benchmark.TargetLower
 
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Ideal_Norm_RelNorm
 
-/-!
-# Ideal norms over an explicitly separable, possibly imperfect base
+/-! .
 
-Model label: gpt-5.
 
-The pinned maximal-prime norm wrapper assumes that the base fraction field
-is perfect. That hypothesis does not apply to K(T) in positive
-characteristic. Here the normal closure is actually constructed from the
-finite separable extension Frac(S)/Frac(R). Its embedding images, and hence
-their compositum, are separable even though the ambient algebraic closure
-of Frac(S) need not be separable over Frac(R).
 
-The resulting prime and principal-ideal norm identities apply to arbitrary
-elements of one fixed separable extension. They do not assume that an
-individual test function defines a separable field extension. They do not
-identify finite and infinite charts of a curve or prove a common-pole or
-mixed-component-degree bound.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.SeparableIdealNorm
 
@@ -30,8 +30,8 @@ section Fields
 variable (F E Ω : Type*) [Field F] [Field E] [Field Ω]
 variable [Algebra F E] [Algebra F Ω] [Algebra.IsSeparable F E]
 
-/-- Separability of the actual compositum of embedding images. No
-separability hypothesis is imposed on the ambient field Ω/F. -/
+/-- .
+ -/
 theorem normalClosure_isSeparable :
     Algebra.IsSeparable F (IntermediateField.normalClosure F E Ω) := by
   letI : ∀ σ : E →ₐ[F] Ω, Algebra.IsSeparable F σ.fieldRange :=
@@ -56,8 +56,8 @@ local notation3 "E" => IntermediateField.normalClosure (FractionRing R)
   (FractionRing S) (AlgebraicClosure (FractionRing S))
 local notation3 "T" => Ring.NormalClosure R S
 
-/- These are the actual structures used in Ring.NormalClosure. The
-underlying type and all maps remain the pinned integral-closure objects. -/
+/- 
+-/
 local instance : Algebra S E :=
   ((algebraMap L E).comp (algebraMap S L)).toAlgebra
 
@@ -98,8 +98,8 @@ local instance : IsGalois K E where
 local instance : Algebra.IsSeparable L E :=
   Algebra.isSeparable_tower_top_of_isSeparable K L E
 
-/-- The fraction field of the constructed normal-closure ring is Galois
-over Frac(R), using separability of Frac(S)/Frac(R), not perfectness. -/
+/-- .
+ -/
 theorem normalClosure_fractionRing_isGalois :
     IsGalois K (FractionRing T) := by
   refine IsGalois.of_equiv_equiv (F := K) («E» := E)
@@ -111,8 +111,8 @@ theorem normalClosure_fractionRing_isGalois :
 
 variable [IsDedekindDomain S]
 
-/-- Finiteness is proved for the actual integral closure in the finite
-separable normal closure; it is not supplied as a geometric assumption. -/
+/-- .
+ -/
 theorem normalClosure_finite : Module.Finite S T :=
   IsIntegralClosure.finite S L E T
 
@@ -120,7 +120,7 @@ local instance : Module.Finite S T := normalClosure_finite R S
 
 local instance : Module.Finite R T := Module.Finite.trans S T
 
-/-- The actual normal-closure ring is Dedekind under the stated hypotheses. -/
+/-- . -/
 theorem normalClosure_isDedekindDomain : IsDedekindDomain T :=
   integralClosure.isDedekindDomain S L E
 
@@ -133,9 +133,9 @@ variable [IsDedekindDomain R]
 
 attribute [local instance] FractionRing.liftAlgebra
 
-/-- The relative norm of an actual maximal prime is the contraction to
-the power of its actual residue-field degree, over any explicitly
-separable fraction-field extension. -/
+/-- .
+
+ -/
 theorem relNorm_prime_eq_pow
     (P : Ideal S) (p : Ideal R) [P.LiesOver p]
     [P.IsMaximal] [p.IsMaximal] :
@@ -153,8 +153,8 @@ theorem relNorm_prime_eq_pow
     Ideal.inertiaDeg_tower (R := R) P Q, pow_mul,
     pow_left_inj (Ideal.inertiaDeg_pos Q S).ne'] at h
 
-/-- Full factorization of the norm of any nonzero ideal. Repeated prime
-factors on the right retain their true ideal multiplicities. -/
+/-- .
+ -/
 theorem relNorm_eq_prod_prime_powers
     (I : Ideal S) (hI : I ≠ ⊥) :
     Ideal.relNorm R I =
@@ -177,9 +177,9 @@ theorem relNorm_eq_prod_prime_powers
       letI : P.IsMaximal := Ring.DimensionLEOne.maximalOfPrime hPzero hPprime
       exact relNorm_prime_eq_pow R S P (P.under R)
 
-/-- Principal norm factorization for an arbitrary nonzero integral element
-of the fixed extension. No separability condition is imposed on that
-element viewed as a new function-field parameter. -/
+/-- .
+
+ -/
 theorem span_intNorm_eq_prod_prime_powers
     (x : S) (hx : x ≠ 0) :
     Ideal.span {Algebra.intNorm R S x} =
@@ -189,8 +189,8 @@ theorem span_intNorm_eq_prod_prime_powers
   exact relNorm_eq_prod_prime_powers R S (Ideal.span {x})
     (by simpa using hx)
 
-/-- The scalar appearing in the preceding actual principal-ideal identity
-is the field norm, after the canonical embedding in Frac(R). -/
+/-- .
+ -/
 theorem intNorm_maps_to_fieldNorm (x : S) :
     algebraMap R (FractionRing R) (Algebra.intNorm R S x) =
       Algebra.norm (FractionRing R)

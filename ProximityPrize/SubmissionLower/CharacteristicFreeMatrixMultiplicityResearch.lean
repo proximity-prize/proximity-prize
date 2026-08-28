@@ -5,19 +5,19 @@ import ProximityPrize.SubmissionLower.PlaneFunctionFieldDegree
 import ProximityPrize.SubmissionLower.PlaneRootSeparability
 
 
-/-!
-# Characteristic-free irreducible determinant multiplicity (research helper)
+/-! .
 
-This module isolates the algebra-length replacement for scalar root counting.
-Reduction of a polynomial matrix modulo an arbitrary irreducible polynomial
-may lose rank even when that irreducible has no root in the ground field.
-The lost rank forces the corresponding power of the irreducible to divide the
-determinant.  Unlike the scalar-specialization theorem, this retains purely
-inseparable multiplicity.
 
-This is deliberately a new helper module.  It does not alter the production
-counting chain or any score parameters.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.CharacteristicFreeMatrixMultiplicityResearch
 
@@ -28,8 +28,8 @@ noncomputable section
 variable {K : Type*} [Field K] [DecidableEq K]
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
-/-- If every entry in each selected column is divisible by `a`, then the
-determinant is divisible by one copy of `a` per selected column. -/
+/-- .
+ -/
 theorem pow_card_dvd_det_of_dvd_columns
     (M : Matrix ι ι (Polynomial K)) (a : Polynomial K) (columns : Finset ι)
     (hdiv : ∀ j ∈ columns, ∀ i, a ∣ M i j) :
@@ -52,12 +52,12 @@ theorem pow_card_dvd_det_of_dvd_columns
     simpa using hpart.trans hfull
   exact dvd_mul_of_dvd_right hproduct _
 
-/-- Rank loss after reduction modulo an arbitrary irreducible polynomial
-forces the same power of that irreducible to divide the determinant.
+/-- .
 
-This is the non-split analogue of `MatrixRootMultiplicity.pow_corank_dvd_det`.
-The proof lifts rank-normal-form changes of basis from `K[X]/(mu)` and then
-cancels their determinants, which are nonzero modulo `mu`. -/
+
+
+
+ -/
 theorem irreducible_pow_corank_dvd_det
     (M : Matrix ι ι (Polynomial K)) (mu : Polynomial K)
     (hmu : Irreducible mu) :
@@ -134,7 +134,7 @@ section SylvesterCorank
 
 variable {F : Type*} [Field F] [DecidableEq F]
 
-/-- Remainder modulo a monic polynomial, restricted to fixed degree caps. -/
+/-- . -/
 def remainderOn (D : Polynomial F) (N : ℕ) (hD : D.Monic) :
     Polynomial.degreeLT F N →ₗ[F] Polynomial.degreeLT F D.natDegree where
   toFun p := ⟨(p : Polynomial F) %ₘ D,
@@ -144,8 +144,8 @@ def remainderOn (D : Polynomial F) (N : ℕ) (hD : D.Monic) :
   map_add' p q := Subtype.ext (Polynomial.add_modByMonic _ _)
   map_smul' c p := Subtype.ext (Polynomial.smul_modByMonic c (p : Polynomial F))
 
-/-- Every residue class of degree below `D` is represented in any larger
-fixed degree cap. -/
+/-- .
+ -/
 theorem remainderOn_surjective (D : Polynomial F) (N : ℕ) (hD : D.Monic)
     (hdegree : D.natDegree ≤ N) : Function.Surjective (remainderOn D N hD) := by
   intro q
@@ -157,7 +157,7 @@ theorem remainderOn_surjective (D : Polynomial F) (N : ℕ) (hD : D.Monic)
     rw [Polynomial.degree_eq_natDegree hD.ne_zero]
     exact Polynomial.mem_degreeLT.mp q.property)
 
-/-- Universe-polymorphic form of the fixed-cap Sylvester rank identity. -/
+/-- . -/
 theorem sylvester_rank_eq_finrank_range
     (p q : Polynomial F) (m n : ℕ)
     (hp : p.natDegree ≤ m) (hq : q.natDegree ≤ n) :
@@ -172,9 +172,9 @@ theorem sylvester_rank_eq_finrank_range
     (Polynomial.degreeLT.basis F (m + n)) (Polynomial.degreeLT.basisProd F m n)]
   rw [← hmatrix, Matrix.toLin_toMatrix]
 
-/-- A common monic divisor contributes its full degree to the corank of
-the fixed-cap Sylvester matrix.  This counts algebra length, not distinct
-roots. -/
+/-- .
+
+ -/
 theorem common_divisor_natDegree_le_sylvester_corank
     (p q D : Polynomial F) (m n : ℕ)
     (hp : p.natDegree ≤ m) (hq : q.natDegree ≤ n)
@@ -209,8 +209,8 @@ theorem common_divisor_natDegree_le_sylvester_corank
     Module.finrank F (LinearMap.range L) at hmatrix
   omega
 
-/-- Pairwise-coprime monic common factors over one residue field contribute
-the sum of their degrees to a single specialized Sylvester corank. -/
+/-- .
+ -/
 theorem sum_common_divisor_natDegrees_le_sylvester_corank
     {I : Type*} [Fintype I]
     (p q : Polynomial F) (D : I → Polynomial F) (m n : ℕ)
@@ -247,9 +247,9 @@ end SylvesterCorank
 
 section IrreducibleAggregation
 
-/-- Distinct irreducible residue factors aggregate without losing their
-inseparable exponents.  This is the outer (different `mu`) half of the
-family ledger. -/
+/-- .
+
+ -/
 theorem sum_irreducible_coranks_le_det_natDegree
     {I : Type*} [Fintype I]
     (M : Matrix ι ι (Polynomial K)) (mu : I → Polynomial K) (c : I → ℕ)
@@ -291,9 +291,9 @@ section RelationKernel
 variable {K₀ E₁ E₂ : Type} [Field K₀] [DecidableEq K₀]
   [Field E₁] [Field E₂] [Algebra K₀ E₁] [Algebra K₀ E₂]
 
-/-- Evaluating a plane polynomial at the quotient-root first coordinate is
-the same as first reducing its coefficient polynomials modulo `mu` and then
-evaluating in the second coordinate. -/
+/-- .
+
+ -/
 theorem planeEval_quotientRoot_eq_aeval_map
     (mu : Polynomial K₀) [Fact (Irreducible mu)]
     [Algebra (AdjoinRoot mu) E₁] [IsScalarTower K₀ (AdjoinRoot mu) E₁]
@@ -330,8 +330,8 @@ theorem planeEval_quotientRoot_eq_aeval_map
         rhs, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom]
   exact DFunLike.congr_fun heq P
 
-/-- The whole plane relation kernel is determined by `mu` and the relative
-minimal polynomial of the second coordinate. -/
+/-- .
+ -/
 theorem mem_relationIdeal_quotientRoot_iff_minpoly_dvd_map
     (mu : Polynomial K₀) [Fact (Irreducible mu)]
     [Algebra (AdjoinRoot mu) E₁] [IsScalarTower K₀ (AdjoinRoot mu) E₁]
@@ -344,8 +344,8 @@ theorem mem_relationIdeal_quotientRoot_iff_minpoly_dvd_map
   rw [planeEval_quotientRoot_eq_aeval_map]
   exact minpoly.dvd_iff.symm
 
-/-- Equal relative minimal polynomials over the same residue field give
-equal original plane relation kernels. -/
+/-- .
+ -/
 theorem relationIdeal_eq_of_adjoinRoot_minpoly_eq
     (mu : Polynomial K₀) [Fact (Irreducible mu)]
     [Algebra (AdjoinRoot mu) E₁] [IsScalarTower K₀ (AdjoinRoot mu) E₁]
@@ -361,8 +361,8 @@ theorem relationIdeal_eq_of_adjoinRoot_minpoly_eq
   rw [mem_relationIdeal_quotientRoot_iff_minpoly_dvd_map,
     mem_relationIdeal_quotientRoot_iff_minpoly_dvd_map, hmin]
 
-/-- Injectivity of the actual relation ideals supplies exactly the
-pairwise-coprimality needed by the fixed-`mu` aggregation theorem. -/
+/-- .
+ -/
 theorem relative_minpolys_pairwise_coprime_of_relationIdeal_injective
     {I : Type*} [Fintype I]
     (mu : Polynomial K₀) [Fact (Irreducible mu)]
@@ -401,14 +401,14 @@ section SingleComponent
 
 variable {E : Type*} [Field E] [Algebra K E]
 
-/-- A single zero-dimensional plane component over the residue field
-`K[X]/(mu)` consumes its full (possibly inseparable) `K`-dimension in the
-base resultant.
+/-- .
 
-The algebra structure from `AdjoinRoot mu` to `E` is explicit.  In the
-geometric application it is induced by sending the quotient root to the
-first coordinate.  The second coordinate is required to generate `E` over
-that residue field. -/
+
+
+
+
+
+ -/
 theorem finrank_le_resultant_natDegree_of_adjoinRoot_component
     (P Q : Polynomial (Polynomial K)) (m n : ℕ) (mu : Polynomial K)
     [Fact (Irreducible mu)]
@@ -474,7 +474,7 @@ section SingleComponentBidegree
 variable {K₀ E₀ : Type} [Field K₀] [DecidableEq K₀]
   [Field E₀] [Algebra K₀ E₀]
 
-/-- The same single-component theorem with the standard bidegree envelope. -/
+/-- . -/
 theorem finrank_le_bidegree_of_adjoinRoot_component
     (P Q : Polynomial (Polynomial K₀)) (m n : ℕ) (mu : Polynomial K₀)
     [Fact (Irreducible mu)]
@@ -500,9 +500,9 @@ section ExistingGeneratingPair
 variable {K₀ E₀ : Type} [Field K₀] [DecidableEq K₀]
   [Field E₀] [Algebra K₀ E₀] [FiniteDimensional K₀ E₀]
 
-/-- Characteristic-free replacement for the old separable embedding count,
-stated directly for an existing finite field generated by a plane-root pair.
-The first-coordinate minimal polynomial creates the residue field internally. -/
+/-- .
+
+ -/
 theorem finrank_le_planar_bound_without_separability
     (P Q : Polynomial (Polynomial K₀))
     (hP : Irreducible P) (hpositive : 0 < P.natDegree) (hproper : ¬P ∣ Q)
@@ -589,8 +589,8 @@ section FiniteWithoutSeparability
 variable {K₀ E₀ : Type} [Field K₀] [DecidableEq K₀]
   [Field E₀] [Algebra K₀ E₀]
 
-/-- Two integral generators give a finite extension; no separability is
-needed for this half of the old small-characteristic theorem. -/
+/-- .
+ -/
 theorem finiteDimensional_of_integral_generating_pair
     (y r : E₀) (hy : IsIntegral K₀ y) (hr : IsIntegral K₀ r)
     (hgen : IntermediateField.adjoin K₀ ({y, r} : Set E₀) = ⊤) :
@@ -605,9 +605,9 @@ theorem finiteDimensional_of_integral_generating_pair
     (IntermediateField.topEquiv (F := K₀) (E := E₀)).toLinearMap
     (IntermediateField.topEquiv (F := K₀) (E := E₀)).surjective
 
-/-- Proper plane roots generate a finite extension in every characteristic.
-The characteristic gates in `finite_separable_of_proper_plane_roots` are
-needed only for separability, not finiteness. -/
+/-- .
+
+ -/
 theorem finite_of_proper_plane_roots
     (P Q : Polynomial (Polynomial K₀))
     (hirreducible : Irreducible P) (hpositive : 0 < P.natDegree)
@@ -661,8 +661,8 @@ theorem finite_of_proper_plane_roots
   have hrIntegral : IsIntegral K₀ r := isIntegral_trans r hrIntegralS
   exact finiteDimensional_of_integral_generating_pair y r hyIntegral hrIntegral hgen
 
-/-- End-to-end characteristic-free single-component planar degree bound,
-starting from proper common-root equations and generation only. -/
+/-- .
+ -/
 theorem finrank_le_planar_bound_from_proper_roots
     (P Q : Polynomial (Polynomial K₀))
     (hirreducible : Irreducible P) (hpositive : 0 < P.natDegree)

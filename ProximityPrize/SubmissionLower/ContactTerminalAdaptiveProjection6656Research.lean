@@ -7,15 +7,15 @@ import ProximityPrize.SubmissionLower.ActualCurveJointProjectionBounds
 import ProximityPrize.SubmissionLower.ContactParameters6600Research
 import ProximityPrize.SubmissionLower.ContactRobustFixedMeet6656Research
 
-/-!
-# Fixed-meet terminal adaptive projection families
+/-! .
 
-This module leaves the accepted score-66.18 terminal-family interface frozen
-and exposes the recursive-GCD meet as a separate support-indexed interface.
-The construction reuses the accepted component, literal-projection, and
-adaptive nested-family constructors.  Only the rectangular degree ledger is
-new: surface caps `(598,34,6)` and preserved support `(6,34,604)`.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6656Research
 
@@ -49,9 +49,9 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Support-parameterized form of the accepted residual-stage derivative
-gate.  The promoted theorem is frozen to its default support, while this
-proof uses only support-independent divisibility fields. -/
+/-- .
+
+ -/
 theorem residualStage_pderiv_one_ne_zero_of_support
     {p e d : ℕ} [CharP Omega p] {flag : FlagDegree}
     {support : ResidualSupportParameters}
@@ -64,7 +64,7 @@ theorem residualStage_pderiv_one_ne_zero_of_support
   refine ⟨MvPolynomial.pderiv (1 : Fin 3) Q, ?_⟩
   rw [hQ, MvPolynomial.pderiv_mul, hzero, zero_mul, zero_add]
 
-/-- Fixed-support counterpart of the accepted terminal-family proposition. -/
+/-- . -/
 def FixedMeetTerminalAdaptiveProjectionFamilies
     [CharP Omega prime]
     {flag : FlagDegree}
@@ -97,16 +97,16 @@ theorem fixedMeet_cut_coordinate_caps {d : ℕ} (hd : d ≤ 131071) :
       _ ≤ 1 + 1207 * 131071 := Nat.add_le_add_left
         (Nat.mul_le_mul_left 1207 hd) 1
 
-/-- The exact fixed-meet terminal mixed-degree gates. -/
+/-- . -/
 theorem fixedMeet_terminal_mixed_gates :
     (11 * 131071) * 638 + 6 * (1 + 1207 * 131071) = 1869072466 ∧
       (1 + 67 * 131071) * 6 + 40 * (11 * 131071) = 110361788 ∧
       1869072466 < prime := by
   norm_num [prime]
 
-/-- Literal projection gates from the concrete fixed-meet rectangular caps.
-Keeping this arithmetic independent of a residual stage prevents dependent
-record projections from dominating elaboration. -/
+/-- .
+
+ -/
 theorem literalProjectionGates_of_fixedMeet_caps
     [CharP Omega prime]
     {G T H : MvPolynomial (Fin 3) Omega}
@@ -152,9 +152,9 @@ theorem literalProjectionGates_of_fixedMeet_caps
       (regularComponent_T_mem Omega G T H C)
       hproper hGdegree hmixedZ
 
-/-- Package two literal gates into the accepted common adaptive family.
-This is support-agnostic; the fixed support appears only in the cut flag
-supplied by the caller. -/
+/-- .
+
+ -/
 theorem exists_adaptiveUnitProjectionFamily_of_literal_gates
     {G T H : MvPolynomial (Fin 3) Omega} {p q : FlagDegree}
     (hY : ∀ C : RegularComponent Omega G T H, LiteralProjectionGate C 0)
@@ -178,9 +178,9 @@ theorem exists_adaptiveUnitProjectionFamily_of_literal_gates
     ((support_subset_flagSupport_iff p G).2 hGflag)
     ((support_subset_flagSupport_iff q T).2 hTflag)
 
-/-- Convert the two fixed support flags into the concrete literal gates.
-All profile arithmetic is discharged before entering a dependent residual
-stage. -/
+/-- .
+
+ -/
 theorem literalProjectionGates_of_fixedMeet_flags
     [CharP Omega prime]
     {G T H : MvPolynomial (Fin 3) Omega} {flag : FlagDegree} {d : ℕ}
@@ -218,9 +218,9 @@ theorem literalProjectionGates_of_fixedMeet_flags
   exact literalProjectionGates_of_fixedMeet_caps hGirreducible hproper
     hGY' hGS' hGZ' hTY' hTS' hTZ'
 
-/-- The final adaptive-family step after both literal gates have been
-constructed.  It is separated from the stage arithmetic so its dependent
-goal is normalized only once. -/
+/-- .
+
+ -/
 theorem fixedMeetTerminalAdaptiveProjection_at_cut_of_gates
     [CharP Omega prime]
     {flag : FlagDegree}
@@ -263,8 +263,8 @@ theorem fixedMeetTerminalAdaptiveProjection_at_cut_of_gates
     D.stage.irreducible_G hproper
     hGflag hTflag
 
-/-- The fixed recursive-GCD meet has an adaptive terminal projection family
-at every proper terminal agreement cut. -/
+/-- .
+ -/
 theorem fixedMeetTerminalAdaptiveProjection_at_cut
     [CharP Omega prime]
     {flag : FlagDegree}
@@ -307,8 +307,8 @@ theorem fixedMeetTerminalAdaptiveProjection_at_cut
   exact fixedMeetTerminalAdaptiveProjection_at_cut_of_gates S D i hproper
     hGflag hTflag hY hZ
 
-/-- The fixed recursive-GCD meet has an adaptive terminal projection family
-at every proper terminal agreement cut. -/
+/-- .
+ -/
 theorem fixedMeetTerminalAdaptiveProjectionFamilies_of_rectangular_caps
     [CharP Omega prime]
     {flag : FlagDegree}

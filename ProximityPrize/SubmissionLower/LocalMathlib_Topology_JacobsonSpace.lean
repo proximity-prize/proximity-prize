@@ -23,22 +23,22 @@ so the target's polynomial notation cannot capture them. All names, statements,
 and mathematical proof bodies are otherwise unchanged.
 -/
 
-/-!
+/-! .
 
-# Jacobson spaces
 
-## Main results
-- `JacobsonSpace`: The class of Jacobson spaces, i.e.
-  spaces such that the set of closed points are dense in every closed subspace.
-- `jacobsonSpace_iff_locallyClosed`:
-  `X` is a Jacobson space iff every locally closed subset contains a closed point of `X`.
-- `JacobsonSpace.discreteTopology`:
-  If `X` only has finitely many closed points, then the topology on `X` is discrete.
 
-## References
-- https://stacks.math.columbia.edu/tag/005T
 
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -48,7 +48,7 @@ variable («X») {«Y»} [TopologicalSpace «X»] [TopologicalSpace «Y»] {f : 
 
 section closedPoints
 
-/-- The set of closed points. -/
+/-- . -/
 def closedPoints : Set «X» := setOf (IsClosed {·})
 
 variable {«X»}
@@ -80,8 +80,8 @@ lemma Set.Finite.isDiscrete_of_subset_closedPoints
 
 end closedPoints
 
-/-- The class of Jacobson spaces, i.e.
-spaces such that the set of closed points are dense in every closed subspace. -/
+/-- .
+ -/
 @[mk_iff, stacks 005U]
 class JacobsonSpace : Prop where
   closure_inter_closedPoints : ∀ {«Z»}, IsClosed «Z» → closure («Z» ∩ closedPoints «X») = «Z»

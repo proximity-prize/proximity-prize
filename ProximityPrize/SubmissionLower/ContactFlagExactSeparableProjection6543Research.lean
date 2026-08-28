@@ -4,21 +4,21 @@ import ProximityPrize.SubmissionLower.ContactDependentGenericity6543Research
 import ProximityPrize.SubmissionLower.ContactFlagAffineFamilyDegree6543Research
 import ProximityPrize.SubmissionLower.ContactFlagProjectionProvider6543Research
 
-/-!
-# Common nested affine projections with exact poles and separability
+/-! .
 
-For a finite family of component fields, one scalar can simultaneously avoid
-both kinds of cancellation for `r + a z`:
 
-* cancellation of the absolute differential, which would destroy
-  separability of the rational projection;
-* leading-term cancellation at every member of a prescribed finite family
-  of normalized places.
 
-The bad set for each condition has at most one scalar.  This module packages
-the resulting common exact finite-separable shear, the remaining coefficient
-choice in the three-projection flag route.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagExactSeparableProjection6543Research
 
@@ -36,8 +36,8 @@ noncomputable section
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
 
-/-- A finite collection of predicates with subsingleton fibers can be avoided
-simultaneously over an infinite field.  Zero is avoided as well. -/
+/-- .
+ -/
 theorem exists_nonzero_avoiding_finite_subsingleton
     {K ι : Type*} [Field K] [Infinite K] [Finite ι]
     (Bad : ι → K → Prop)
@@ -64,8 +64,8 @@ theorem exists_nonzero_avoiding_finite_subsingleton
       exact Finset.mem_image.mpr ⟨i, Finset.mem_univ i, rfl⟩
     exact ha (Finset.mem_insert_of_mem (hab ▸ hmem))
 
-/-- At one normalized place, at most one scalar can cause strict leading-term
-cancellation in `r + a z`. -/
+/-- .
+ -/
 theorem valuation_shear_bad_coefficient_subsingleton
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     (v : CoordinatePlaceClassification.NormalizedValuation K L)
@@ -109,8 +109,8 @@ variable (r z : ∀ i, E i)
 variable (W : ∀ i,
   Finset (CoordinatePlaceClassification.NormalizedValuation K (E i)))
 
-/-- One common shear is simultaneously a finite separable parameter on every
-component and realizes `max(pole(r),pole(z))` at every prescribed place. -/
+/-- .
+ -/
 theorem exists_common_exact_finite_separable_shear
     (embeddingZ : ∀ i, RatFunc K →ₐ[K] E i)
     (hvalueZ : ∀ i, embeddingZ i
@@ -177,8 +177,8 @@ section RegularComponents
 variable {Ω : Type} [Field Ω] [IsAlgClosed Ω]
 variable {G T H : MvPolynomial (Fin 3) Ω}
 
-/-- The concrete output of applying exact finite-separable shear avoidance
-twice to the nested flag `Z ⊂ (Y,Z) ⊂ (S,Y,Z)`. -/
+/-- .
+ -/
 structure NestedFlagProjectionData
     (hseparator : ∀ C : RegularComponent Ω G T H,
       Transcendental Ω (coordinate Ω C.1 2))
@@ -238,9 +238,9 @@ theorem nestedV_eq_affineV
   simp only [affineU, affineV]
   simp only [smul_add, smul_smul, add_assoc]
 
-/-- One pair of global scalars simultaneously realizes both nested pole
-maxima and both finite-separable rational projections on every retained
-component. -/
+/-- .
+
+ -/
 theorem exists_nestedFlagProjectionData
     (hseparator : ∀ C : RegularComponent Ω G T H,
       Transcendental Ω (coordinate Ω C.1 2))

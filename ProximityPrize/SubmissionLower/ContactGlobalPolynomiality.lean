@@ -2,16 +2,16 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactPolynomiality
 import ProximityPrize.SubmissionLower.ContactTranslation
 
-/-!
-# Global polynomial reconstruction from a weighted contact equation
+/-! .
 
-Model label: gpt-5.
 
-This module discharges the substituted-degree premise in ContactPolynomiality
-using the actual weighted support box. Translation back from the initial
-point gives a genuine polynomial in the original X coordinate, with the
-prescribed value and derivative. Geometric counting is a separate obligation.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactGlobalPolynomiality
 
@@ -29,8 +29,8 @@ theorem derivative_taylor (r : L) (P : Polynomial L) :
     (Polynomial.taylor r P).derivative = Polynomial.taylor r P.derivative := by
   simp [Polynomial.taylor_apply, Polynomial.derivative_comp]
 
-/-- Translating the actual reconstructed equation restores the original
-independent variable and commutes with the actual polynomial derivative. -/
+/-- .
+ -/
 theorem taylor_reconstruction_eq_specialization
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L) (P : Polynomial L) :
     Polynomial.taylor (-(v 0))
@@ -105,8 +105,8 @@ theorem globalPolynomial_initial_slope
   rw [← Polynomial.taylor_coeff_one (0 : L), Polynomial.taylor_zero]
   exact reconstructedPolynomial_coeff_one coefficients F v hF hregular w hw
 
-/-- The actual support inequalities supply the previously explicit degree
-premise. No vanishing or geometric assertion is needed for this lemma. -/
+/-- .
+ -/
 theorem reconstructedEquation_natDegree_lt
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
@@ -127,8 +127,8 @@ theorem reconstructedEquation_natDegree_lt
   rw [← heq, Polynomial.natDegree_taylor] at hdeg
   exact hdeg
 
-/-- Actual all-tail equations imply a genuine polynomial solution in the
-original X coordinate; the weighted degree cap is discharged internally. -/
+/-- .
+ -/
 theorem global_polynomiality_of_all_tails
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)

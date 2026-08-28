@@ -3,18 +3,18 @@ import ProximityPrize.SubmissionLower.ContactSparsePoleSupportResearch
 import ProximityPrize.SubmissionLower.CoordinateBoxZeroCount
 import ProximityPrize.SubmissionLower.ActualCurveZeroCount
 
-/-!
-# From a Newton support pole budget to actual affine zero counts
+/-! .
 
-This module proves the analytic half of the residual sparse-intersection
-provider.  Once the pole support functions of a curve component have a
-finite global budget, every proper polynomial with support in the prescribed
-exponent set has at most that many distinct affine zeros.
 
-The remaining geometric theorem is now only the global tropical budget:
-assign one pole-support cost to each retained component and prove that their
-sum is bounded by the mixed volume of the three Newton polytopes.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSparsePoleZeroCountResearch
 
@@ -45,9 +45,9 @@ variable [Algebra (Polynomial K) A]
 variable [IsScalarTower K (Polynomial K) A] [IsScalarTower K A L]
 variable [IsScalarTower (Polynomial K) A L]
 
-/-- A global support-function pole budget implies the exact finite affine
-zero count.  All normalization places, the point-to-place injection, and the
-product formula are the already verified actual constructions. -/
+/-- .
+
+ -/
 theorem finite_model_zero_points_le_exponentSet
     (x : σ → A) (E : Finset (σ →₀ ℕ))
     (F : MvPolynomial σ K) (hFE : F.support ⊆ E)
@@ -105,9 +105,9 @@ section ActualCurve
 
 variable (P : Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
 
-/-- Actual prime-component form.  This converts a support-function pole
-budget on the literal component field into the finite-zero-set bound consumed
-by the residual incidence adapter. -/
+/-- .
+
+ -/
 theorem finite_zero_points_le_exponentSet_of_separator
     (hproj : ProjectionsFiniteSeparable K P)
     (i₀ : Fin 3) (hi₀ : Transcendental K (coordinate K P i₀))

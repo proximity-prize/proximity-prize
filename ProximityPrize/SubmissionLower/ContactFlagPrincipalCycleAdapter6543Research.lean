@@ -2,23 +2,23 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagProjectionProvider6543Research
 import ProximityPrize.SubmissionLower.ContactFlagAffineFamilyDegree6543Research
 
-/-!
-# Separable-coordinate adapter for the 65.43 flag principal cycles
+/-! .
 
-The three flag projections are ordinary rational parameters on every retained
-curve component.  This module isolates the exact interface between those
-parameters and `PrincipalCycleBudget`:
 
-* locally, the pole divisor of the generic unit-support polynomial agrees
-  with the pole divisor of the chosen separable parameter on the finite
-  common-place support;
-* globally, the sum of the actual parameter degrees is at most the relevant
-  trapezoid-resultant cap.
 
-The first item is supplied by common leading-term avoidance and the second by
-`finite_sum_flag_finrank_trapezoid`.  No intersection inequality is assumed
-in this adapter.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagPrincipalCycleAdapter6543Research
 
@@ -40,9 +40,9 @@ noncomputable section
 
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 
-/-- One actual separable rational parameter on each retained component,
-whose poles agree with the chosen generic unit-support polynomial wherever
-that polynomial has nonzero order. -/
+/-- .
+
+ -/
 structure SeparablePrincipalProjection
     {G T H : MvPolynomial (Fin 3) Omega}
     (E : Finset (Fin 3 →₀ ℕ)) (separator : Fin 3)
@@ -63,8 +63,8 @@ structure SeparablePrincipalProjection
         (SeparableCoordinate.value Omega (CoordinateField Omega C.1)
           (parameter C))
 
-/-- The cost attached to a component is its actual function-field degree in
-the selected affine parameter. -/
+/-- .
+ -/
 def SeparablePrincipalProjection.cost
     {G T H : MvPolynomial (Fin 3) Omega}
     {E : Finset (Fin 3 →₀ ℕ)} {separator : Fin 3}
@@ -77,9 +77,9 @@ def SeparablePrincipalProjection.cost
     (C : RegularComponent Omega G T H) : ℕ :=
   SeparableCoordinate.degree Omega (CoordinateField Omega C.1) (P.parameter C)
 
-/-- Exact pole agreement plus the proved coordinate pole theorem converts a
-summed affine-family degree cap into the principal-cycle budget used by the
-three-projection flag provider. -/
+/-- .
+
+ -/
 def SeparablePrincipalProjection.toPrincipalCycleBudget
     {G T H : MvPolynomial (Fin 3) Omega}
     {E : Finset (Fin 3 →₀ ℕ)} {separator : Fin 3}
@@ -136,8 +136,8 @@ def SeparablePrincipalProjection.toPrincipalCycleBudget
       _ = (P.cost C : ℤ) := rfl
   sum_cost_le := hsum
 
-/-- The separable coordinate represented by one literal flag coordinate in
-the transformed evaluation family. -/
+/-- .
+ -/
 def flagSeparableCoordinate
     {G T H : MvPolynomial (Fin 3) Omega}
     (lam mu nu : Omega) (order : Fin 3 ≃ Fin 3)
@@ -188,10 +188,10 @@ def flagSeparableCoordinate
   exact elementEmbedding_variable Omega (CoordinateField Omega C.1)
     (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (order 0))) (ht C)
 
-/-- Literal wiring of the exact trapezoid family-degree theorem into a
-principal-cycle budget.  The only hypotheses not discharged by the
-resultant calculation are separability of the common affine parameter and
-the local pole equality supplied by common coefficient avoidance. -/
+/-- .
+
+
+ -/
 def principalCycleBudget_of_flag_trapezoid
     {G T H : MvPolynomial (Fin 3) Omega}
     {E : Finset (Fin 3 →₀ ℕ)} {separator : Fin 3}

@@ -3,23 +3,23 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalTransformRese
 import ProximityPrize.SubmissionLower.ContactPost6464ShearSupportResearch
 import ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
 
-/-!
-# Global flag support under actual-identity residualization
+/-! .
 
-The component-field affine automorphism preserves the three-variable flag,
-but agreement numerators are constructed before mapping `X` into the
-coefficient field.  This module closes that separate global obligation.
 
-All polynomials in `X` have weight zero for the three flag functionals.  The
-global nodal substitution is therefore support-nonincreasing for those
-functionals, including the `X` derivatives appearing in the contact
-recurrence.  Combining this with the exact Minkowski recurrence gives the
-residual-degree agreement flag
 
-`Flag(920*d, 1 + 70*d, 15*d)`
 
-for the score-66.00 surface flag `Flag(549,27,8)`.
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalFlagResearch
 
@@ -39,8 +39,8 @@ variable {K Omega : Type} [Field K] [Field Omega]
 
 abbrev Poly4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
 
-/-- Pull a weight through the global affine-triangular residual
-substitution.  This formula is valid when the `X` weight is zero. -/
+/-- .
+ -/
 def residualPullWeights (weights : Fin 4 → ℕ) : Fin 4 → ℕ :=
   ![weights 0,
     max (weights 1) (weights 3),
@@ -142,9 +142,9 @@ theorem globalResidual_monomial_product_wt_le
       simp only [Finsupp.sum, nsmul_eq_mul]
       simp
 
-/-- Global support-functional transport.  Unlike the component-field
-automorphism theorem, this statement sees all `X` derivatives used by the
-agreement recurrence. -/
+/-- .
+
+ -/
 theorem globalResidualHom_wt_le_pulled
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (P0 P1 V : Polynomial K) (F : Poly4 K) :
@@ -187,8 +187,8 @@ theorem residualPullWeights_total :
   funext i
   fin_cases i <;> rfl
 
-/-- The three support values of a score-66.00 surface survive the global
-nodal transform without any charge depending on the identity count. -/
+/-- .
+ -/
 theorem globalResidualHom_surface_flag_weights
     (P0 P1 V : Polynomial K) (F : Poly4 K)
     (hS : wt residualSWeights F ≤ 8)
@@ -205,9 +205,9 @@ theorem globalResidualHom_surface_flag_weights
   · exact (globalResidualHom_wt_le_pulled residualTotalWeights rfl
       P0 P1 V F).trans (by simpa [residualPullWeights_total] using hTotal)
 
-/-- Agreement weight bounds at residual degree `d`.  The pure derivative
-coordinate uses the exact coordinate-degree recurrence; the other two
-facets use the Minkowski recurrence. -/
+/-- .
+
+ -/
 theorem globalResidual_agreement_weight_bounds
     (P0 P1 V : Polynomial K) (F : Poly4 K)
     (hS : wt residualSWeights F ≤ 8)
@@ -279,8 +279,8 @@ theorem globalResidual_agreement_weight_bounds
 def residualAgreementFlag (d : ℕ) : FlagDegree :=
   ⟨920 * d, 1 + 70 * d, 15 * d⟩
 
-/-- The mapped agreement cut lies in the exact affine flag family used by
-the stratified mixed-volume expansion. -/
+/-- .
+ -/
 theorem surfaceMap_globalResidual_agreement_in_flag
     (phi : Polynomial K →+* Omega)
     (P0 P1 V : Polynomial K) (F : Poly4 K)

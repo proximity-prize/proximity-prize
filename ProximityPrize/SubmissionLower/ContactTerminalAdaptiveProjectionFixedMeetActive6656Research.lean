@@ -3,19 +3,19 @@ import ProximityPrize.SubmissionLower.ContactAdaptiveNestedYZFamily6630Research
 import ProximityPrize.SubmissionLower.ContactScalarCoordinateSeparator6630Research
 import ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6656Research
 
-/-!
-# Support-generic active-differential terminal adapter
+/-! .
 
-This is the narrow bridge from the accepted score-66.42 terminal geometry to
-support-parameterized recursive-GCD meets.  A support and five rectangular
-coordinate caps discharge the stage-specific arithmetic.  The separator and
-common projection family are the accepted scalar-coordinate and active nested
-YZ constructors.
 
-The refined YZ family is projected to its underlying
-`AdaptiveUnitProjectionFamily`, exactly the interface consumed by the existing
-fixed-regular closure.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjectionFixedMeetActive6656Research
 
@@ -54,8 +54,8 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Support-indexed version of the terminal-family interface consumed by the
-recursive factor provider. -/
+/-- .
+ -/
 def TerminalAdaptiveProjectionFamiliesOfSupport
     {pchar e w : ℕ} [CharP Omega pchar]
     {flag : FlagDegree}
@@ -73,8 +73,8 @@ def TerminalAdaptiveProjectionFamiliesOfSupport
       Nonempty (AdaptiveUnitProjectionFamily base flag
         (support.residualAgreementFlag D.degree))
 
-/-- Refined support-indexed terminal interface retaining the accepted 66.42
-`Y + lambda Z` value certificate. -/
+/-- .
+ -/
 def TerminalAdaptiveProjectionFamiliesYZOfSupport
     {pchar e w : ℕ} [CharP Omega pchar]
     {flag : FlagDegree}
@@ -92,9 +92,9 @@ def TerminalAdaptiveProjectionFamiliesYZOfSupport
       Nonempty (AdaptiveUnitProjectionFamilyYZ base flag
         (support.residualAgreementFlag D.degree))
 
-/-- Geometry-only active-YZ adapter at one terminal cut.  The caller supplies
-the three coordinate characteristic gates; all separator and common-family
-geometry is reused from the accepted 66.42 route. -/
+/-- .
+
+ -/
 theorem terminalAdaptiveProjectionAtCutYZ_of_active_yz_gates
     {pchar e w : ℕ} [CharP Omega pchar]
     {support : ResidualSupportParameters} {flag : FlagDegree}
@@ -161,8 +161,8 @@ theorem terminalAdaptiveProjectionAtCutYZ_of_active_yz_gates
       T).2 hTflag)
   exact ⟨base, ⟨P⟩⟩
 
-/-- Compatibility projection from the refined YZ family to the historical
-terminal interface. -/
+/-- .
+ -/
 theorem terminalAdaptiveProjectionAtCut_of_active_yz_gates
     {pchar e w : ℕ} [CharP Omega pchar]
     {support : ResidualSupportParameters} {flag : FlagDegree}
@@ -189,9 +189,9 @@ theorem terminalAdaptiveProjectionAtCut_of_active_yz_gates
     S D i hproper hGdegree hmixedZ hGflag hTflag
   exact ⟨base, ⟨P.family⟩⟩
 
-/-- Support-generic terminal constructor from rectangular coordinate caps.
-Only the retained mixed-`Z` gate is required; there is no literal-`Y`
-resultant hypothesis. -/
+/-- .
+
+ -/
 theorem terminalAdaptiveProjectionFamiliesYZOfSupport_of_active_yz_caps
     {pchar e w : ℕ} [CharP Omega pchar]
     {flag : FlagDegree}
@@ -257,7 +257,7 @@ theorem terminalAdaptiveProjectionFamiliesYZOfSupport_of_active_yz_caps
   exact terminalAdaptiveProjectionAtCutYZ_of_active_yz_gates S D i hproper
     hGdegree hmixedZ' hGflag hTflag
 
-/-- Compatibility projection of the cap-generic refined family. -/
+/-- . -/
 theorem terminalAdaptiveProjectionFamiliesOfSupport_of_active_yz_caps
     {pchar e w : ℕ} [CharP Omega pchar]
     {flag : FlagDegree}
@@ -280,7 +280,7 @@ theorem terminalAdaptiveProjectionFamiliesOfSupport_of_active_yz_caps
       hcutY hcutS hsurfaceChar hmixedZ D i hi hproper
   exact ⟨base, ⟨P.family⟩⟩
 
-/-- Historical fixed-meet instantiation used by the score-66.56 closure. -/
+/-- . -/
 theorem fixedMeetTerminalAdaptiveProjectionFamilies_of_active_yz
     [CharP Omega prime]
     {flag : FlagDegree}
@@ -299,8 +299,8 @@ theorem fixedMeetTerminalAdaptiveProjectionFamilies_of_active_yz
     (by norm_num [meetProfile, ResidualSupportParameters.fixedMeetSupport])
     (by norm_num [prime]) (by norm_num [prime])) D i hi hproper
 
-/-- Terminal support induced by the bounded `a = 182688` three-profile meet
-`(m,L,s) = (26,676,7)`. -/
+/-- .
+ -/
 def frontierMeetSupport182688 : ResidualSupportParameters where
   s := 7
   ys := 36
@@ -316,8 +316,8 @@ theorem frontierMeet182688_parameters :
   norm_num [frontierMeetSupport182688,
     ResidualSupportParameters.agreementDirection]
 
-/-- Concrete witness that the improved `(26,676,7)` meet passes the generic
-active-YZ adapter.  The discarded literal-`Y` gate is not an input. -/
+/-- .
+ -/
 theorem frontierMeet182688TerminalAdaptiveProjectionFamilies_of_active_yz
     [CharP Omega prime]
     {e : ℕ} {flag : FlagDegree}
@@ -338,7 +338,7 @@ theorem frontierMeet182688TerminalAdaptiveProjectionFamilies_of_active_yz
   · norm_num [prime]
   · norm_num [prime]
 
-/-- Refined YZ-valued frontier theorem consumed by the YZ-tail provider. -/
+/-- . -/
 theorem frontierMeet182688TerminalAdaptiveProjectionFamiliesYZ_of_active_yz
     [CharP Omega prime]
     {e : ℕ} {flag : FlagDegree}

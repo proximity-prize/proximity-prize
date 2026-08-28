@@ -21,22 +21,22 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Submonoid of inverses
+/-! .
 
-## Main definitions
 
-* `IsLocalization.invSubmonoid M S` is the submonoid of `S = M⁻¹R` consisting of inverses of
-  each element `x ∈ M`
 
-## Implementation notes
 
-See `Mathlib/RingTheory/Localization/Basic.lean` for a design overview.
 
-## Tags
-localization, ring localization, commutative ring localization, characteristic predicate,
-commutative ring, field of fractions
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -50,7 +50,7 @@ namespace IsLocalization
 
 section InvSubmonoid
 
-/-- The submonoid of `S = M⁻¹R` consisting of `{ 1 / x | x ∈ M }`. -/
+/-- . -/
 def invSubmonoid : Submonoid S :=
   (M.map (algebraMap R S)).leftInv
 
@@ -60,11 +60,11 @@ theorem submonoid_map_le_is_unit : M.map (algebraMap R S) ≤ IsUnit.submonoid S
   rintro _ ⟨a, ha, rfl⟩
   exact IsLocalization.map_units S ⟨_, ha⟩
 
-/-- There is an equivalence of monoids between the image of `M` and `invSubmonoid`. -/
+/-- . -/
 noncomputable abbrev equivInvSubmonoid : M.map (algebraMap R S) ≃* invSubmonoid M S :=
   ((M.map (algebraMap R S)).leftInvEquiv (submonoid_map_le_is_unit M S)).symm
 
-/-- There is a canonical map from `M` to `invSubmonoid` sending `x` to `1 / x`. -/
+/-- . -/
 noncomputable def toInvSubmonoid : M →* invSubmonoid M S :=
   (equivInvSubmonoid M S).toMonoidHom.comp ((algebraMap R S : R →* S).submonoidMap M)
 
@@ -89,8 +89,8 @@ theorem smul_toInvSubmonoid (m : M) : m • (toInvSubmonoid M S m : S) = 1 := by
 
 variable {S}
 
--- `surj'` was taken, so use `surj''` instead
--- TODO: this can be fixed after the deprecations of 2025-09-04 are removed.
+--
+--
 theorem surj'' (z : S) : ∃ (r : R) (m : M), z = r • (toInvSubmonoid M S m : S) := by
   rcases IsLocalization.surj M z with ⟨⟨r, m⟩, e : z * _ = algebraMap R S r⟩
   refine ⟨r, m, ?_⟩

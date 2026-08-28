@@ -4,22 +4,22 @@ import ProximityPrize.SubmissionLower.ContactRegularFactorGate
 import ProximityPrize.SubmissionLower.ContactAdaptiveNestedUnitFamily6600Research
 import ProximityPrize.SubmissionLower.ContactGlobalShearPositivityResearch
 
-/-!
-# Regular contact curves cannot be vertical in the residual coordinate
+/-! .
 
-This research seam rules out the only branch that forced the expensive
-all-coordinate terminal fallback.  If both surviving `Y` and `Z`
-coordinates are algebraic on a non-point prime over an algebraically closed
-field, they are scalars and the remaining `R` coordinate is transcendental.
-Specializing a polynomial in the two scalar coordinates therefore produces
-a univariate polynomial in `R`.  Membership of the original polynomial in
-the prime makes that univariate polynomial vanish at a transcendental
-element, hence vanish identically; its derivative vanishes as well.
 
-For a regular contact component this contradicts nonmembership of the
-`R`-derivative of the original surface.  Consequently at least one of `Y`
-or `Z` is transcendental on every retained regular component.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research
 
@@ -76,8 +76,8 @@ theorem aeval_verticalPolynomial_eq_coordinateEvaluation
       simp [lhs, verticalPolynomial, verticalPoint, coordinate, hy, hz]
   exact AlgHom.congr_fun hlhs F
 
-/-- A non-point prime containing `F` but not its `R` derivative must have a
-transcendental `Y` or `Z` coordinate. -/
+/-- .
+ -/
 theorem y_or_z_transcendental_of_regular_polynomial
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
     (F : MvPolynomial (Fin 3) Omega)
@@ -121,8 +121,8 @@ theorem y_or_z_transcendental_of_regular_polynomial
 
 variable {K : Type} [Field K]
 
-/-- Every regular component of a divisor of the original contact surface
-has a transcendental `Y` or `Z` coordinate. -/
+/-- .
+ -/
 theorem regularComponent_y_or_z_transcendental
     (phi : Polynomial K →+* Omega)
     (F : MvPolynomial (Fin 4) K)
@@ -147,11 +147,11 @@ section RefinedAdaptiveFamily
 
 variable {G T H : MvPolynomial (Fin 3) Omega}
 
-/-- The existing adaptive family plus the value identity for its nested
-`Y + lam * Z` projection.  The score-66 family did not retain this identity,
-because its old consumer only needed the always-transcendental all-coordinate
-projection.  Keeping the refinement separate leaves that submitted closure
-untouched. -/
+/-- .
+
+
+
+ -/
 structure AdaptiveUnitProjectionFamilyYZ
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
@@ -162,8 +162,8 @@ structure AdaptiveUnitProjectionFamilyYZ
     coordinateValue Omega (CoordinateField Omega C.1)
         (family.yzProjection C) = affineU Omega C.1 lam
 
-/-- The actual nested constructor canonically produces the refined family;
-this is just the missing value equation, not a new genericity argument. -/
+/-- .
+ -/
 def adaptiveUnitProjectionFamilyYZ_of_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,
@@ -185,11 +185,11 @@ def adaptiveUnitProjectionFamilyYZ_of_nested
     intro C
     exact coordinateOfGate_value (affineU Omega C.1 D.lam) (D.uGate C)
 
-/-- Regularity replaces the expensive all-coordinate positivity certificate.
-On every retained component, either `Z` itself is transcendental, or `Z` is
-algebraic and regularity forces `Y` to be transcendental; in the latter case
-`Y + lam * Z` is transcendental.  Thus the shared `Z + YZ` cost is at least
-one on every component. -/
+/-- .
+
+
+
+ -/
 theorem AdaptiveUnitProjectionFamilyYZ.one_le_zCost_add_yzCost
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -224,7 +224,7 @@ theorem AdaptiveUnitProjectionFamilyYZ.one_le_zCost_add_yzCost
       exact hU
     omega
 
-/-- Existential constructor in the consumer-ready shape. -/
+/-- . -/
 theorem exists_adaptiveUnitProjectionFamilyYZ_of_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,

@@ -6,20 +6,20 @@ import ProximityPrize.Benchmark.TargetLower
 
 
 
-/-!
-# The actual field of a prime three-coordinate quotient
+/-! .
 
-Model label: gpt-5.
 
-The domain and field in this file are the actual quotient by a prime ideal
-and its actual fraction ring. Their coordinate evaluation kernel is proved
-to be exactly the original prime, and the three coordinate images generate
-the field. Over an algebraically closed base, if every coordinate is
-algebraic, the original prime is an actual point-evaluation kernel.
 
-No supplied coordinate-field presentation, field-generation conclusion,
-finite-dimensionality, or separability premise is used here.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualCurveCoordinateField
 
@@ -33,7 +33,7 @@ abbrev CoordinateField (K : Type) [Field K]
 
 variable (K : Type) [Field K] (P : Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
 
-/-- The actual quotient map followed by the actual fraction-ring map. -/
+/-- . -/
 def coordinateEvaluation : MvPolynomial (Fin 3) K →ₐ[K] CoordinateField K P :=
   (IsScalarTower.toAlgHom K (CoordinateRing K P) (CoordinateField K P)).comp
     (Ideal.Quotient.mkₐ K P)
@@ -51,8 +51,8 @@ theorem aeval_coordinate_eq_quotient (f : MvPolynomial (Fin 3) K) :
   rw [← coordinateEvaluation_eq_aeval]
   rfl
 
-/-- Injectivity of the actual fraction-ring map identifies the evaluation
-kernel with the original prime, not merely an abstract isomorphic ideal. -/
+/-- .
+ -/
 theorem coordinateEvaluation_ker :
     RingHom.ker (coordinateEvaluation K P).toRingHom = P := by
   change RingHom.ker ((algebraMap (CoordinateRing K P) (CoordinateField K P)).comp
@@ -65,8 +65,8 @@ theorem aeval_coordinate_ker :
   rw [← coordinateEvaluation_eq_aeval]
   exact coordinateEvaluation_ker K P
 
-/-- Actual quotient representatives of a numerator and denominator prove
-generation by the three coordinate images. -/
+/-- .
+ -/
 theorem adjoin_coordinates_eq_top :
     IntermediateField.adjoin K (Set.range (coordinate K P)) = ⊤ := by
   apply top_unique
@@ -84,8 +84,8 @@ section AlgebraicallyClosed
 
 variable [IsAlgClosed K]
 
-/-- Each actual algebraic coordinate lies in the image of the closed base
-field, using its actual simple intermediate field. -/
+/-- .
+ -/
 theorem coordinate_eq_scalar_of_isAlgebraic (i : Fin 3)
     (h : IsAlgebraic K (coordinate K P i)) :
     ∃ c : K, algebraMap K (CoordinateField K P) c = coordinate K P i := by
@@ -101,8 +101,8 @@ theorem coordinate_eq_scalar_of_isAlgebraic (i : Fin 3)
   simpa only [IntermediateField.algebraMap_apply,
     IntermediateField.coe_algebraMap_apply] using hcast
 
-/-- Algebraicity of all actual coordinates forces the ORIGINAL prime ideal
-to be the actual kernel of evaluation at a base-field point. -/
+/-- .
+ -/
 theorem eq_point_kernel_of_coordinates_algebraic
     (h : ∀ i, IsAlgebraic K (coordinate K P i)) :
     ∃ v : Fin 3 → K, P = RingHom.ker (MvPolynomial.aeval v).toRingHom := by
@@ -124,9 +124,9 @@ theorem eq_point_kernel_of_coordinates_algebraic
     _ = RingHom.ker (MvPolynomial.aeval v).toRingHom :=
       RingHom.ker_comp_of_injective _ (algebraMap K (CoordinateField K P)).injective
 
-/-- An actual non-point prime has an actual transcendental coordinate. The
-non-point premise can be supplied by the separately proved component-height
-argument; it is not replaced by an abstract coordinate-field assumption. -/
+/-- .
+
+ -/
 theorem exists_transcendental_coordinate_of_ne_point_kernel
     (hnonpoint : ∀ v : Fin 3 → K,
       P ≠ RingHom.ker (MvPolynomial.aeval v).toRingHom) :

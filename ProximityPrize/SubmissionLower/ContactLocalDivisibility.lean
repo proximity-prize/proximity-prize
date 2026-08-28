@@ -2,20 +2,20 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BCHKSSubstitutionVanish
 
 
-/-!
-# Actual contact multiplicities with an unknown derivative
+/-! .
 
-Model label: gpt-5.
 
-The slope is the derivative of the candidate polynomial, not received data.
-The first theorem gives the precise Taylor-coefficient/divisibility interface
-used by each local contact block. The remaining theorems show that contact
-weight gives genuine polynomial root multiplicity and a vanishing bridge.
 
-This module does not claim the bounded coefficient-space rank or the mixed
-Bezout alignment theorem. Its finite contact representations are explicit
-hypotheses to be supplied by the interpolation assembly.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactLocalDivisibility
 
@@ -25,9 +25,9 @@ section LocalRing
 
 variable {F : Type*} [CommRing F]
 
-/-- A translated power divides a polynomial exactly when its first Taylor
-coefficients vanish. In a contact block the coefficient ring itself contains
-the formal slope and seed variables. -/
+/-- .
+
+ -/
 theorem shifted_power_dvd_iff_taylor_coeff_zero
     (P : F[X]) (x : F) (h : ℕ) :
     (Polynomial.X - Polynomial.C x) ^ h ∣ P ↔
@@ -42,14 +42,14 @@ theorem shifted_power_dvd_iff_taylor_coeff_zero
   rw [hshift] at hdiv
   exact hdiv.symm.trans (Polynomial.X_pow_dvd_iff (f := taylor x P) (n := h))
 
-/-- The polynomial in the local variable `T` obtained from
-`q(X)-q(x)-(X-x)q'(X)`. -/
+/-- .
+ -/
 noncomputable def contactResidual (P : F[X]) (x : F) : F[X] :=
   taylor x P - Polynomial.C (P.eval x) -
     Polynomial.X * taylor x P.derivative
 
-/-- Value agreement supplies second-order contact even though the received
-word contains no derivative symbols. No characteristic assumption is needed. -/
+/-- .
+ -/
 theorem X_sq_dvd_contactResidual (P : F[X]) (x : F) :
     (Polynomial.X : F[X]) ^ 2 ∣ contactResidual P x := by
   rw [X_pow_dvd_iff]
@@ -59,8 +59,8 @@ theorem X_sq_dvd_contactResidual (P : F[X]) (x : F) :
   · simp [contactResidual]
   · simp [contactResidual, coeff_X_mul]
 
-/-- A monomial of contact weight at least `m` has true order at least `m`
-after substituting any second-order contact residual. -/
+/-- .
+ -/
 theorem contact_monomial_dvd
     (A S R : F[X]) (m i j k : ℕ)
     (hS : (Polynomial.X : F[X]) ^ 2 ∣ S) (hweight : m ≤ i + 2 * j) :
@@ -100,8 +100,8 @@ section GlobalVanishing
 
 variable {F I J : Type*} [Field F] [DecidableEq F] [DecidableEq I]
 
-/-- The actual root-count finish, reusable after assembling the shifted
-interpolant into its finite contact expansion at each chosen agreement node. -/
+/-- .
+ -/
 theorem eq_zero_of_contact_representations
     (P H : F[X]) (nodes : I ↪ F) (support : Finset I) (m : ℕ)
     (terms : I → Finset J) (coefficient : I → J → F[X])

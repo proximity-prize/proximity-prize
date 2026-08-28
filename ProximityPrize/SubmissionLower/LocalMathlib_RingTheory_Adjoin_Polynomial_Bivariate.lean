@@ -20,15 +20,15 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Bivariate polynomials and adjoining transcendental elements
+/-! .
 
-## Main results
 
-* `IsAlgebraic.adjoin_singleton`:
-  Given two transcendental elements `a`, `b` over `R`, if one of them, say `a`, is algebraic over
-  `R[b]` then `b` is algebraic over `R[a]`.
--/
+
+
+
+
+
+ -/
 
 noncomputable section
 
@@ -42,7 +42,7 @@ section Ring
 
 variable [Ring A] [Algebra R A] {x : A}
 
-/-- The `AlgEquiv` between `R[X][Y]` and `R[a][Y]` for some transcendental `a`. -/
+/-- . -/
 def Transcendental.algEquivAdjoin (hx : Transcendental R x) :
     R[X][Y] ≃ₐ[R] (Algebra.adjoin R {x})[X] :=
   mapAlgEquiv (algEquivOfTranscendental _ x hx)

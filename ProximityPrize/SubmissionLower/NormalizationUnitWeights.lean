@@ -4,17 +4,17 @@ import ProximityPrize.SubmissionLower.InfinityResidueField
 import ProximityPrize.SubmissionLower.CoordinatePlaceClassification
 
 
-/-!
-# Actual finite and infinity normalization weights are one
+/-! .
 
-Model label: gpt-5.
 
-For algebraically closed K, construct the actual K-points of every
-finite base prime and of the actual infinity valuation ring. Apply the
-proved integral point-fiber inertia theorem to the actual normalization
-rings. No unit weight, residual isomorphism upstairs, or pole bound is
-assumed.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.NormalizationUnitWeights
 
@@ -32,7 +32,7 @@ abbrev InfinityBase := FixedCurveNormSum.InfinityBase K
 local instance : Algebra K (InfinityBase K) :=
   (InfinityResidueField.constantMap K).toAlgebra
 
-/-- The actual residue at infinity, valued in the constant field. -/
+/-- . -/
 def infinityBasePoint : InfinityBase K →ₐ[K] K where
   toRingHom := (InfinityResidueField.residueEquiv K).symm.toRingHom.comp
     (Ideal.Quotient.mk (IsLocalRing.maximalIdeal (InfinityBase K)))
@@ -63,8 +63,8 @@ theorem finiteBase_natDegree_eq_one (f : Polynomial K) (hf : Irreducible f) :
   Polynomial.natDegree_eq_of_degree_eq_some
     (IsAlgClosed.degree_eq_one_of_irreducible K hf)
 
-/-- Every actual finite base prime is the kernel of an actual K-point.
-The point is obtained from a root of its monic irreducible generator. -/
+/-- .
+ -/
 theorem finiteBase_exists_point (p : HeightOneSpectrum (Polynomial K)) :
     ∃ phi : Polynomial K →ₐ[K] K, RingHom.ker phi.toRingHom = p.asIdeal := by
   obtain ⟨f, hf, hm, hplace⟩ := RatFuncProductFormula.exists_monic_primePlace K p
@@ -103,7 +103,7 @@ local instance : IsScalarTower (InfinityBase K) (RatFunc K) L :=
 
 abbrev InfiniteNormalization := FixedCurveNormSum.InfiniteNormalization K L
 
-/-- The actual inertia degree of every finite normalization prime is one. -/
+/-- . -/
 theorem finitePlace_inertia_one
     (q : HeightOneSpectrum (FiniteNormalization K L)) :
     q.asIdeal.inertiaDeg (Polynomial K) = 1 := by
@@ -117,7 +117,7 @@ theorem finitePlace_inertia_one
   apply UnitResidueWeights.inertiaDeg_eq_one_of_point_fiber phi q.asIdeal
   exact hphi.symm
 
-/-- The actual inertia degree of every infinity normalization prime is one. -/
+/-- . -/
 theorem infinitePlace_inertia_one
     (q : HeightOneSpectrum (InfiniteNormalization K L)) :
     q.asIdeal.inertiaDeg (InfinityBase K) = 1 := by
@@ -141,8 +141,8 @@ theorem infinitePlace_inertia'_one
   rw [Ideal.inertiaDeg'_eq_inertiaDeg]
   exact infinitePlace_inertia_one K L q
 
-/-- The actual finite weight appearing in FixedCurveNormSum is one,
-including its base-prime degree factor. -/
+/-- .
+ -/
 theorem finiteFiber_weight_one (f : Polynomial K) (hf : Irreducible f)
     (Q : {Q : Ideal (FiniteNormalization K L) //
       Q ∈ IsDedekindDomain.primesOverFinset

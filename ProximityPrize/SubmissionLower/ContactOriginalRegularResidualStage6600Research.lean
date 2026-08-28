@@ -4,15 +4,15 @@ import ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
 import ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
 
-/-!
-# Initial residual stages for actual score-66 regular factors
+/-! .
 
-An original positive-`R` factor is covered by its actual geometric surface
-factors over the constructed algebraic closure of `K(X)`.  This module turns
-each such geometric factor into the exact initial `ResidualStage` consumed by
-the nested actual-identity theorem, and aggregates its factorwise ledger back
-to the original rectangular flag.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research
 
@@ -41,8 +41,8 @@ variable (K : Type) [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq (GenericField K) := Classical.decEq (GenericField K)
 
-/-- Rectangular nested flag of one geometric factor, in the literal
-`(Z,Y,R)` degree order. -/
+/-- .
+ -/
 def geometricFlag {F : MvPolynomial (Fin 4) K}
     (g : GeometricFactor K F) : FlagDegree :=
   ⟨g.1.degreeOf (2 : Fin 3), g.1.degreeOf (0 : Fin 3),
@@ -60,8 +60,8 @@ theorem polynomialIn_geometricFlag {F : MvPolynomial (Fin 4) K}
       g.1.degreeOf 2 + g.1.degreeOf 0 + g.1.degreeOf 1
   omega
 
-/-- The interpolation box supplies exactly the three global support values
-preserved by residualization. -/
+/-- .
+ -/
 theorem residual_surface_weights_of_box
     (F : MvPolynomial (Fin 4) K)
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
@@ -110,10 +110,10 @@ theorem residual_surface_weights_of_box
 variable {Iota : Type}
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Parameter-generic initial outer residual state on one actual geometric
-factor.  The caller supplies precisely the support state preserved by
-residualization and the two characteristic gates used by the geometric
-regularity argument and recursive degree descent. -/
+/-- .
+
+
+ -/
 def geometricResidualStageOfSupport
     (support : ResidualSupportParameters)
     {pchar errorCap degree : ℕ} [CharP K pchar]
@@ -174,8 +174,8 @@ def geometricResidualStageOfSupport
     characteristic_bound := hdegreeChar
   }
 
-/-- Canonical accepted-profile initial outer residual state on one actual
-geometric factor.  This retains the original API exactly. -/
+/-- .
+ -/
 def geometricResidualStage
     [CharP K prime]
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
@@ -206,8 +206,8 @@ def geometricResidualStage
     hinj hdegree hsolutions hregular hnoPencil
     (by norm_num [w, prime]) g
 
-/-- Geometric factor flags sum coordinatewise to the original factor's
-rectangular flag. -/
+/-- .
+ -/
 theorem geometricFlag_budgets
     (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0) :
     (∑ g : GeometricFactor K F, (geometricFlag K g).zOnly) ≤
@@ -220,9 +220,9 @@ theorem geometricFlag_budgets
     geometricFactor_sum_degree_le K F hF 0,
     geometricFactor_sum_degree_le K F hF 1⟩
 
-/-- Once every geometric factor has its recursive factor-ledger bound, the
-actual original regular family has exactly the bound expected by the global
-rectangular selected-family theorem. -/
+/-- .
+
+ -/
 theorem original_regular_seed_bound_of_geometric_factor_counts
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
     (selected : K → Polynomial K) (Gamma : Finset K)

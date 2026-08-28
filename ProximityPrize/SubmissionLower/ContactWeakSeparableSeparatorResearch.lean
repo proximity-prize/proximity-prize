@@ -2,16 +2,16 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAdaptiveComponentSeparatorResearch
 import ProximityPrize.SubmissionLower.ActualCurveJointProjectionBounds
 
-/-!
-# A single finite-separable coordinate per regular component
+/-! .
 
-The sparse place argument needs one normalization parameter per component,
-not finite separability of all three coordinate projections.  Two cheap
-coordinate gates cover `Y` and `Z`.  If neither is transcendental, the
-non-point theorem forces `S` to be transcendental; the other two coordinates
-are then base-field scalars, so the coordinate field is literally rational
-over `S` and the induced extension has degree one.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactWeakSeparableSeparatorResearch
 
@@ -28,7 +28,7 @@ set_option synthInstance.maxHeartbeats 300000
 
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 
-/-- Exactly one literal finite-separable rational parameter. -/
+/-- . -/
 structure SeparableLiteralCoordinate
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime] where
   index : Fin 3
@@ -42,8 +42,8 @@ structure SeparableLiteralCoordinate
       rationalBaseAlgebra Omega P index transcendental
     Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega P)
 
-/-- If `S` is the only possibly nonconstant literal coordinate, its
-rational-function embedding is onto. -/
+/-- .
+ -/
 theorem rationalBaseEmbedding_surjective_of_other_coordinates_algebraic
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
     (hS : Transcendental Omega (coordinate Omega P 1))
@@ -93,8 +93,8 @@ theorem rationalBaseEmbedding_surjective_of_other_coordinates_algebraic
   refine ⟨a, ?_⟩
   exact ha
 
-/-- The `S`-only case is finite separable of degree one, with no
-characteristic or resultant gate. -/
+/-- .
+ -/
 theorem finite_separable_at_S_of_other_coordinates_algebraic
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
     (hS : Transcendental Omega (coordinate Omega P 1))
@@ -122,10 +122,10 @@ theorem finite_separable_at_S_of_other_coordinates_algebraic
     exact isSeparable_algebraMap a
   exact ⟨inferInstance, hsep⟩
 
-/-- Sparse affine zero counting needs finite separability only at the one
-literal coordinate selected by `D`.  This is the weak-coordinate version of
-`finite_zero_points_le_exponentSet_of_separator`; no facts about the other
-two rational projections are used. -/
+/-- .
+
+
+ -/
 theorem finite_zero_points_le_exponentSet_of_literalCoordinate
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
     (D : SeparableLiteralCoordinate P)
@@ -190,8 +190,8 @@ theorem finite_zero_points_le_exponentSet_of_literalCoordinate
     rw [Finset.card_image_of_injective _ hinj, Finset.card_attach]
   rwa [hcard] at hcount
 
-/-- Two easy coordinate gates plus the non-point property always provide
-one finite-separable literal separator. -/
+/-- .
+ -/
 theorem exists_separableLiteralCoordinate_of_YZ_gates
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
     (hnonpoint : ∀ v : Fin 3 → Omega,

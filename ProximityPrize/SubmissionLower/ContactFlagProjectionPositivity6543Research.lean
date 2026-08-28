@@ -2,20 +2,20 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagPrincipalCycles6543Research
 import ProximityPrize.SubmissionLower.ContactRegularFactorGate
 
-/-!
-# Positivity of the three 65.43 flag projection equations
+/-! .
 
-The ordinary resultant adapter asks that the transformed irreducible surface
-equation have positive degree in the selected outer variable.  This file
-reduces that premise to small-characteristic partial derivatives.
 
-For the U- and Z-base presentations the outer variable is V.  The triangular
-change preserves the S derivative exactly, so the already-known positive
-S-degree below the characteristic proves both cases.  For the V-base
-presentation the outer variable is U; its derivative is the transformed
-directional derivative `G_Y - mu G_S`.  Thus only one explicit exceptional
-coefficient condition remains.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagProjectionPositivity6543Research
 
@@ -35,8 +35,8 @@ variable {K : Type} [Field K]
 
 abbrev Poly3 (K : Type) [Field K] := MvPolynomial (Fin 3) K
 
-/-- Differentiating the nested plane polynomial in its outer variable is
-the same as mapping the corresponding multivariate partial derivative. -/
+/-- .
+ -/
 theorem derivative_planeMap (order : Equiv (Fin 3) (Fin 3)) (F : Poly3 K) :
     Polynomial.derivative (planeMap K order F) =
       planeMap K order (MvPolynomial.pderiv (order 1) F) := by
@@ -50,8 +50,8 @@ theorem derivative_planeMap (order : Equiv (Fin 3) (Fin 3)) (F : Poly3 K) :
           planeMap_X_first, planeMap_X_outer, planeMap_X_inner,
           Pi.single_apply] <;> ring
 
-/-- A nonzero outer partial derivative forces positive outer polynomial
-degree after collection and coefficient localization. -/
+/-- .
+ -/
 theorem planeMap_natDegree_pos_of_pderiv_ne_zero
     (order : Equiv (Fin 3) (Fin 3)) (F : Poly3 K)
     (hderiv : MvPolynomial.pderiv (order 1) F ≠ 0) :
@@ -65,7 +65,7 @@ theorem planeMap_natDegree_pos_of_pderiv_ne_zero
   apply planeMap_injective K order
   simpa only [map_zero] using hplanezero
 
-/-- The flag inverse substitution preserves the S partial derivative. -/
+/-- . -/
 theorem pderiv_one_flagAlgHom (lam mu nu : K) (F : Poly3 K) :
     MvPolynomial.pderiv (1 : Fin 3) (flagAlgHom lam mu nu F) =
       flagAlgHom lam mu nu (MvPolynomial.pderiv (1 : Fin 3) F) := by
@@ -77,8 +77,8 @@ theorem pderiv_one_flagAlgHom (lam mu nu : K) (F : Poly3 K) :
         simp [flagImage, hP, MvPolynomial.pderiv_mul,
           Derivation.leibniz] <;> ring
 
-/-- With `nu = mu*lam`, the U partial derivative is the transformed
-directional derivative `G_Y - mu G_S`. -/
+/-- .
+ -/
 theorem pderiv_zero_flagAlgHom_nested (lam mu : K) (F : Poly3 K) :
     MvPolynomial.pderiv (0 : Fin 3)
         (flagAlgHom lam mu (mu * lam) F) =
@@ -94,9 +94,9 @@ theorem pderiv_zero_flagAlgHom_nested (lam mu : K) (F : Poly3 K) :
         simp [flagImage, hP, MvPolynomial.pderiv_mul,
           Derivation.leibniz] <;> ring
 
-/-- A nonzero `S` partial derivative directly gives the two presentations
-whose outer literal variable is `V`.  This derivative-level formulation is
-the one supplied by the geometric-factor regularity gate. -/
+/-- .
+
+ -/
 theorem flag_u_z_outer_positive_of_pderiv
     (lam mu : K) (G : Poly3 K)
     (hderiv : MvPolynomial.pderiv (1 : Fin 3) G ≠ 0) :
@@ -118,8 +118,8 @@ section Characteristic
 
 variable (p : ℕ) [CharP K p]
 
-/-- Positive S-degree below the characteristic gives both presentations
-whose outer literal variable is V. -/
+/-- .
+ -/
 theorem flag_u_z_outer_positive
     (lam mu : K) (G : Poly3 K)
     (hSpos : 0 < G.degreeOf 1) (hSchar : G.degreeOf 1 < p) :
@@ -134,8 +134,8 @@ theorem flag_u_z_outer_positive
     omega
   exact flag_u_z_outer_positive_of_pderiv lam mu G hderiv
 
-/-- The V-base/U-outer positivity is exactly the nonvanishing of one
-directional derivative. -/
+/-- .
+ -/
 theorem flag_v_outer_positive_of_directional
     (lam mu : K) (G : Poly3 K)
     (hdirectional : MvPolynomial.pderiv (0 : Fin 3) G -
@@ -158,8 +158,8 @@ variable
         Omega G T H,
       ActualCurveZeroCount.ProjectionsFiniteSeparable Omega C.1}
 
-/-- Complete positivity package, conditional only on avoiding the one
-global directional-derivative cancellation scalar. -/
+/-- .
+ -/
 theorem flagProjectionPositivity_of_degree_directional
     (D : NestedFlagProjectionData hseparator hproj)
     (hSpos : 0 < G.degreeOf 1) (hSchar : G.degreeOf 1 < p)
@@ -171,8 +171,8 @@ theorem flagProjectionPositivity_of_degree_directional
     flag_v_outer_positive_of_directional D.lam D.mu G hdirectional,
     huz.2⟩
 
-/-- Derivative-level positivity package, matching the conclusion of the
-geometric regular-factor gate without converting through degrees. -/
+/-- .
+ -/
 theorem flagProjectionPositivity_of_derivatives
     (D : NestedFlagProjectionData hseparator hproj)
     (hSderiv : MvPolynomial.pderiv (1 : Fin 3) G ≠ 0)

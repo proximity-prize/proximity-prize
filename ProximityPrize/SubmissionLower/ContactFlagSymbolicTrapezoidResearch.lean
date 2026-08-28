@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagTrapezoidCaps6543Research
 
-/-!
-# Symbolic flag projection decomposition and trapezoid budgets
+/-! .
 
-These identities replace the numerical 65.43 cap checks by formulas valid
-for arbitrary surface and cut flags.  They are the arithmetic core needed
-when the two agreement flags depend on separate residual degrees.
--/
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagSymbolicTrapezoidResearch
 
 open ContactFlagBezout6543Research
 
-/-- The normalized flag mixed volume is linear in its third argument, with
-the three unit flags as the nested-support basis. -/
+/-- .
+ -/
 theorem flagMixed_projection_decomposition
     (p q r : FlagDegree) :
     flagMixed p q r =
@@ -27,8 +27,8 @@ theorem flagMixed_projection_decomposition
   simp [flagMixed, unitZFlag, unitYZFlag, unitAllFlag]
   ring
 
-/-- A trapezoid resultant expression is monotone in the actual outer degree
-whenever the outer cap is at most the retained total-degree cap. -/
+/-- .
+ -/
 theorem trapezoid_budget_mono
     (n mCap totalG totalT m : ℕ)
     (hn : n ≤ totalG) (hm : m ≤ mCap) :
@@ -46,7 +46,7 @@ theorem trapezoid_budget_mono
   rw [hdecomp m, hdecomp mCap]
   omega
 
-/-- `U`-base symbolic cap: outer `V` degree and full retained total. -/
+/-- . -/
 theorem u_flag_trapezoid_budget
     (p q : FlagDegree) (m : ℕ) (hm : m ≤ q.all) :
     m * (p.zOnly + p.yz + p.all) +
@@ -69,7 +69,7 @@ theorem u_flag_trapezoid_budget
         ring
       rw [hsum, Nat.add_sub_cancel_left]
 
-/-- `V`-base symbolic cap: outer `U` degree and full retained total. -/
+/-- . -/
 theorem v_flag_trapezoid_budget
     (p q : FlagDegree) (m : ℕ) (hm : m ≤ q.yz + q.all) :
     m * (p.zOnly + p.yz + p.all) +
@@ -96,7 +96,7 @@ theorem v_flag_trapezoid_budget
         ring
       rw [hsum, Nat.add_sub_cancel_left]
 
-/-- Literal `Z`-base symbolic cap: outer `V` degree and `(U,V)` total. -/
+/-- . -/
 theorem z_flag_trapezoid_budget
     (p q : FlagDegree) (m : ℕ) (hm : m ≤ q.all) :
     m * (p.yz + p.all) + p.all * (q.yz + q.all) - m * p.all ≤

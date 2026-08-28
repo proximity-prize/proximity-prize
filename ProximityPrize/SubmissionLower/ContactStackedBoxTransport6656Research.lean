@@ -3,14 +3,14 @@ import ProximityPrize.SubmissionLower.ContactFactorCaps
 import ProximityPrize.SubmissionLower.ContactRecursiveGCDResearch
 import ProximityPrize.SubmissionLower.ContactStackedParameters6656Research
 
-/-!
-# Meet and quotient box transport for the stacked 66.56 construction
+/-! .
 
-Divisor monotonicity transports each coordinate cap independently.  Taking
-the appropriate coordinate from each parent gives the first GCD box
-`(25*a,598,7)` and the final common box `(25*a,598,6)`.  The four residual
-quotients retain the boxes of their respective parent equations.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedBoxTransport6656Research
 
@@ -51,8 +51,8 @@ theorem quotientC_dvd_right (A B C : GlobalPoly) : quotientC A B C ∣ C := by
   refine ⟨gcd123 A B C, ?_⟩
   simpa only [mul_comm] using c_eq_gcd123_mul_quotientC A B C
 
-/-- The first GCD takes its contact and slope caps from profile A and its
-seed cap from profile B. -/
+/-- .
+ -/
 theorem gcd12_mem_meet_box
     (A B : GlobalPoly) (hA : A ≠ 0) (hB : B ≠ 0)
     (hboxA : A ∈ globalCoefficientBox IRSProfile.Field
@@ -68,8 +68,8 @@ theorem gcd12_mem_meet_box
   intro d hd
   exact ⟨(hfromB hd).1, (hfromA hd).2.1, (hfromA hd).2.2⟩
 
-/-- The final GCD retains the first meet's contact/seed caps and takes the
-slope-six cap from profile C. -/
+/-- .
+ -/
 theorem gcd123_mem_meet_box
     (A B C : GlobalPoly) (hA : A ≠ 0) (hC : C ≠ 0)
     (hbox12 : gcd12 A B ∈ globalCoefficientBox IRSProfile.Field

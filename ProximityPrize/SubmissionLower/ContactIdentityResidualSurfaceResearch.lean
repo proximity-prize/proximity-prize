@@ -3,20 +3,20 @@ import ProximityPrize.SubmissionLower.ContactFlagAffineResidualAutomorphismResea
 import ProximityPrize.SubmissionLower.ContactIdentityResidualFamilyResearch
 import ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalTransformResearch
 
-/-!
-# Componentwise surface transport for actual-identity residualization
+/-! .
 
-The global nodal substitution has determinant `V`, so it is not an
-automorphism over `K[X]`.  After mapping `X` into a field on an actual
-component, `V` is nonzero and the substitution is precisely the
-affine-triangular automorphism from
-`ContactFlagAffineResidualAutomorphismResearch`.
 
-This file records the consumer-facing consequences, including the exact
-preservation of `degreeOf 1`.  That equality is stronger than derivative
-transport in positive characteristic and is the gate needed to reapply the
-identity-node cap after residualization.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualSurfaceResearch
 
@@ -41,10 +41,10 @@ local instance : DecidableEq Omega := Classical.decEq Omega
 abbrev Poly3 (Omega : Type) [Field Omega] := MvPolynomial (Fin 3) Omega
 abbrev Poly4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
 
-/-! ## Exact preservation of the residual variable degree -/
+/-! . -/
 
-/-- The explicit inverse substitution is another substitution of the same
-affine-triangular form. -/
+/-- .
+ -/
 theorem originalAlgHom_eq_residualAlgHom_inverse
     (aY v bY aS bS cS : Omega) :
     originalAlgHom aY v bY aS bS cS =
@@ -58,8 +58,8 @@ theorem originalAlgHom_eq_residualAlgHom_inverse
     simp [originalAlgHom, originalImage, residualAlgHom, residualImage] <;>
     ring
 
-/-- An affine-triangular residual substitution cannot increase the degree in
-the residual derivative coordinate. -/
+/-- .
+ -/
 theorem residual_degreeOf_one_le
     (aY v bY aS bS cS : Omega) (F : Poly3 Omega) :
     (residualAlgHom aY v bY aS bS cS F).degreeOf 1 ≤ F.degreeOf 1 := by
@@ -72,16 +72,16 @@ theorem residual_degreeOf_one_le
   rw [hp] at h
   simpa [wt] using h
 
-/-- The explicit inverse also cannot increase the degree in coordinate `1`. -/
+/-- . -/
 theorem original_degreeOf_one_le
     (aY v bY aS bS cS : Omega) (F : Poly3 Omega) :
     (originalAlgHom aY v bY aS bS cS F).degreeOf 1 ≤ F.degreeOf 1 := by
   rw [originalAlgHom_eq_residualAlgHom_inverse]
   exact residual_degreeOf_one_le _ _ _ _ _ _ F
 
-/-- Exact `S`/`R`-degree preservation.  This argument uses both directions
-of the algebra equivalence, rather than differentiation, so it remains valid
-in positive characteristic even for `p`-power monomials. -/
+/-- .
+
+ -/
 theorem residual_degreeOf_one_eq
     (aY v bY aS bS cS : Omega) (hv : v ≠ 0) (F : Poly3 Omega) :
     (residualAlgHom aY v bY aS bS cS F).degreeOf 1 = F.degreeOf 1 := by
@@ -103,10 +103,10 @@ theorem residual_degreeOf_one_pos_iff
       0 < F.degreeOf 1 := by
   rw [residual_degreeOf_one_eq aY v bY aS bS cS hv F]
 
-/-! ## Identification with the global nodal substitution -/
+/-! . -/
 
-/-- The independently defined component map of the global transform is
-definitionally the same affine-triangular residual substitution. -/
+/-- .
+ -/
 theorem componentResidualHom_eq_residualAlgHom
     (aY v bY aS bS cS : Omega) :
     componentResidualHom aY v bY aS bS cS =
@@ -117,8 +117,8 @@ theorem componentResidualHom_eq_residualAlgHom
     simp [componentResidualHom, componentResidualImage,
       residualAlgHom, residualImage]
 
-/-- Mapping the global residual equation to a coefficient field gives the
-genuine componentwise residual automorphism. -/
+/-- .
+ -/
 theorem surfaceMap_globalResidualHom_eq_residualAlgHom
     (phi : Polynomial K →+* Omega) (P0 P1 V : Polynomial K) (F : Poly4 K) :
     ContactGenericSurface.surfaceMap phi
@@ -129,8 +129,8 @@ theorem surfaceMap_globalResidualHom_eq_residualAlgHom
   rw [surfaceMap_globalResidualHom]
   rw [componentResidualHom_eq_residualAlgHom]
 
-/-- Exact preservation of the component's derivative-coordinate degree
-under the global nodal residual transform. -/
+/-- .
+ -/
 theorem surfaceMap_globalResidualHom_degreeOf_one
     (phi : Polynomial K →+* Omega) (hphi : Function.Injective phi)
     (P0 P1 V : Polynomial K) (hV : V ≠ 0) (F : Poly4 K) :
@@ -141,8 +141,8 @@ theorem surfaceMap_globalResidualHom_degreeOf_one
   exact residual_degreeOf_one_eq _ _ _ _ _ _
     ((map_ne_zero_iff phi hphi).mpr hV) _
 
-/-- Irreducibility of the mapped surface is unchanged by actual-identity
-residualization. -/
+/-- .
+ -/
 theorem surfaceMap_globalResidualHom_irreducible_iff
     (phi : Polynomial K →+* Omega) (hphi : Function.Injective phi)
     (P0 P1 V : Polynomial K) (hV : V ≠ 0) (F : Poly4 K) :
@@ -153,8 +153,8 @@ theorem surfaceMap_globalResidualHom_irreducible_iff
   exact residual_irreducible_iff _ _ _ _ _ _
     ((map_ne_zero_iff phi hphi).mpr hV) _
 
-/-- Divisibility between mapped surfaces is unchanged by actual-identity
-residualization. -/
+/-- .
+ -/
 theorem surfaceMap_globalResidualHom_dvd_iff
     (phi : Polynomial K →+* Omega) (hphi : Function.Injective phi)
     (P0 P1 V : Polynomial K) (hV : V ≠ 0) (F G : Poly4 K) :
@@ -167,8 +167,8 @@ theorem surfaceMap_globalResidualHom_dvd_iff
   exact residual_dvd_iff _ _ _ _ _ _
     ((map_ne_zero_iff phi hphi).mpr hV) _ _
 
-/-- Every original nested-flag support bound survives the nodal residual
-transform on the coefficient-field surface. -/
+/-- .
+ -/
 theorem surfaceMap_globalResidualHom_polynomialInFlag
     (phi : Polynomial K →+* Omega) (P0 P1 V : Polynomial K)
     (F : Poly4 K) (p : ContactFlagBezout6543Research.FlagDegree)
@@ -178,10 +178,10 @@ theorem surfaceMap_globalResidualHom_polynomialInFlag
   rw [surfaceMap_globalResidualHom_eq_residualAlgHom]
   exact polynomialInFlag_residualAlgHom p _ _ _ _ _ _ _ hflag
 
-/-! ## Regularity and complete prime-component transport -/
+/-! . -/
 
-/-- Differentiating the global residual equation in `C'` multiplies the
-transported original `R` derivative by the nodal factor. -/
+/-- .
+ -/
 theorem pderiv_globalResidualHom
     (P0 P1 V : Polynomial K) (F : Poly4 K) :
     MvPolynomial.pderiv (2 : Fin 4) (globalResidualHom P0 P1 V F) =
@@ -189,8 +189,8 @@ theorem pderiv_globalResidualHom
         (MvPolynomial.pderiv (2 : Fin 4) F) :=
   pderiv_globalResidualHom_R P0 P1 V F
 
-/-- At a residual polynomial `C`, regularity is exactly the original
-regularity multiplied by `V`. -/
+/-- .
+ -/
 theorem specialization_pderiv_globalResidualHom
     (P0 P1 V C : Polynomial K) (gamma : K) (F : Poly4 K) :
     ContactTranslation.specialization K C gamma
@@ -214,8 +214,8 @@ theorem residual_specialization_regular
   rw [specialization_pderiv_globalResidualHom]
   exact mul_ne_zero hV hregular
 
-/-- The coefficient-field regularity polynomial has the corresponding
-unit-times-automorphic normal form. -/
+/-- .
+ -/
 theorem surfaceMap_pderiv_globalResidualHom
     (phi : Polynomial K →+* Omega) (P0 P1 V : Polynomial K) (F : Poly4 K) :
     ContactGenericSurface.surfaceMap phi
@@ -229,8 +229,8 @@ theorem surfaceMap_pderiv_globalResidualHom
   rw [pderiv_globalResidualHom, map_mul, surfaceMap_embedX,
     surfaceMap_globalResidualHom_eq_residualAlgHom]
 
-/-- A component divides the transformed surface exactly when its inverse
-image divides the original surface. -/
+/-- .
+ -/
 theorem residual_dvd_surfaceMap_globalResidualHom_iff
     (phi : Polynomial K →+* Omega) (hphi : Function.Injective phi)
     (P0 P1 V : Polynomial K) (hV : V ≠ 0)
@@ -244,7 +244,7 @@ theorem residual_dvd_surfaceMap_globalResidualHom_iff
   exact residual_dvd_iff _ _ _ _ _ _
     ((map_ne_zero_iff phi hphi).mpr hV) _ _
 
-/-- Properness against the regularity derivative is exactly preserved. -/
+/-- . -/
 theorem residual_dvd_pderiv_globalResidualHom_iff
     (phi : Polynomial K →+* Omega) (hphi : Function.Injective phi)
     (P0 P1 V : Polynomial K) (hV : V ≠ 0)
@@ -263,8 +263,8 @@ theorem residual_dvd_pderiv_globalResidualHom_iff
   rw [hu.dvd_mul_left]
   exact residual_dvd_iff _ _ _ _ _ _ hv _ _
 
-/-- The transformed equation/component pair carries every hypothesis used
-by the regular whole-surface incidence caller. -/
+/-- .
+ -/
 theorem residual_component_transport
     (phi : Polynomial K →+* Omega) (hphi : Function.Injective phi)
     (P0 P1 V : Polynomial K) (hV : V ≠ 0)
@@ -296,10 +296,10 @@ theorem residual_component_transport
       phi hphi P0 P1 V hV G F).not.mpr hproper
   · exact polynomialInFlag_residualAlgHom p G _ _ _ _ _ _ hflag
 
-/-! ## Family-level end-to-end adapter -/
+/-! . -/
 
-/-- Evaluation at the image of `X` under a polynomial-ring homomorphism is
-the homomorphism itself. -/
+/-- .
+ -/
 @[simp] theorem polynomial_eval₂_comp_C_X
     (phi : Polynomial K →+* Omega) (P : Polynomial K) :
     P.eval₂ (phi.comp Polynomial.C) (phi Polynomial.X) = phi P := by
@@ -311,10 +311,10 @@ the homomorphism itself. -/
     simp [RingHom.comp_apply]
   · simp
 
-/-- Evaluation of a transformed component at a residual selected point is
-exactly evaluation of the original component at the reconstructed selected
-point.  This is stronger than saying that the residual point lies on the
-transformed whole surface: it preserves the actual component assignment. -/
+/-- .
+
+
+ -/
 theorem eval_residualComponent_selectedPoint
     (phi : Polynomial K →+* Omega)
     (P0 P1 V C S : Polynomial K) (gamma : K) (G : Poly3 Omega)
@@ -357,10 +357,10 @@ theorem eval_residualComponent_selectedPoint
     (fun q : Fin 3 → Omega ↦
       MvPolynomial.eval₂Hom (algebraMap Omega Omega) q G) hcoords
 
-/-- One theorem packages the common residual family together with the
-solution and regularity data for its globally transformed equation.  Its
-last agreement clause is exactly the relation consumed by the stratified
-incidence theorem. -/
+/-- .
+
+
+ -/
 theorem exists_residual_family_with_surface_data
     {iota : Type} [DecidableEq iota]
     (phi : Polynomial K →+* Omega) (hphi : Function.Injective phi)

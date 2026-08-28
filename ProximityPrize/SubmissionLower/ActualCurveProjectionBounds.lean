@@ -2,21 +2,21 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualPlaneCoordinateDegree
 import ProximityPrize.SubmissionLower.ActualPlanePositiveOrder
 
-/-!
-# Actual coordinate projection degrees from original separated caps
+/-! .
 
-Model label: gpt-5.
 
-Proper original equations and strict original separated-degree gates now
-give finite-dimensionality, separability, and a SINGLE common mixed
-degree budget for actual prime-quotient fraction fields. A positive
-outer ordering is constructed while keeping the selected rational base.
 
-Uniform original coordinate gates also supply every transcendental
-coordinate's finite/separable extension, as required by the separately
-proved affine zero-count theorem. No abstract projection-field or
-finite/separable hypothesis is retained.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualCurveProjectionBounds
 
@@ -104,8 +104,8 @@ section Family
 variable (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
 variable (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
 
-/-- Distinct actual primes consume one ORIGINAL mixed budget, not one
-budget for each component. The empty family is handled without a choice. -/
+/-- .
+ -/
 theorem original_finite_separable_sum_finrank_bound
     (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
     (hinj : Function.Injective P) (p : ℕ) [CharP K p] (G H : Original K)
@@ -156,9 +156,9 @@ theorem original_finite_separable_sum_finrank_bound
 
 end Family
 
-/-- Uniform ORIGINAL separated gates prove finite-dimensionality and
-separability for every actual transcendental coordinate embedding. This
-has exactly the projection property consumed by the actual zero bound. -/
+/-- .
+
+ -/
 theorem all_transcendental_coordinates_finite_separable
     (P : Ideal (Original K)) [P.IsPrime] (p : ℕ) [CharP K p] (G H : Original K)
     (hG : Irreducible G) (hGmem : G ∈ P) (hHmem : H ∈ P) (hproper : ¬ G ∣ H)

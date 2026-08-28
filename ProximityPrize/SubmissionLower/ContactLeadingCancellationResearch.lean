@@ -2,17 +2,17 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactGenericCoefficientAvoidanceResearch
 import ProximityPrize.SubmissionLower.ContactSparsePoleSupportResearch
 
-/-!
-# Leading-face cancellation as a proper linear subspace
+/-! .
 
-This module avoids residue-field infrastructure.  At one valuation, the
-coefficient vectors whose evaluated polynomial has valuation strictly below
-the Newton support threshold form a linear subspace: the ultrametric
-inequality handles addition, and triviality on the coefficient field handles
-scalar multiplication.  If one supported monomial realizes the threshold,
-that subspace is proper.  Finite-subspace avoidance then produces one
-polynomial realizing every support threshold simultaneously.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactLeadingCancellationResearch
 
@@ -26,8 +26,8 @@ noncomputable section
 variable {K L σ : Type*} [Field K] [Field L] [Fintype σ]
   [DecidableEq σ] [Algebra K L]
 
-/-- Evaluation at `x`, viewed as a linear map from an `E`-indexed
-coefficient vector. -/
+/-- .
+ -/
 def coefficientEvaluation (x : σ → L) (E : Finset (σ →₀ ℕ)) :
     (E → K) →ₗ[K] L where
   toFun c := MvPolynomial.eval₂Hom (algebraMap K L) x
@@ -50,19 +50,19 @@ def coefficientEvaluation (x : σ → L) (E : Finset (σ →₀ ℕ)) :
       MvPolynomial.eval₂Hom_smul (algebraMap K L) x a
         (polynomialOfSupport E c)
 
-/-! ## One exact monomial at every valuation
+/-! .
 
-The ordinary pole truncation keeps coordinates with logarithmic weight zero.
-That is harmless for support functions but not for exact evaluation: a
-coordinate function can itself be zero, in which case any positive power of
-it kills the monomial even though `WithZero.log 0 = 0`.  The live truncation
-below therefore deletes zero coordinates *and* negative-log coordinates.
-Downward closure keeps the resulting exponent in `E`.
--/
 
-/-- Delete every coordinate that is either zero in the function field or has
-negative valuation weight.  This is the exact-evaluation refinement of
-`poleTruncation`. -/
+
+
+
+
+
+ -/
+
+/-- .
+
+ -/
 def livePoleTruncation
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : σ → L) (d : σ →₀ ℕ) : σ →₀ ℕ :=
@@ -78,10 +78,10 @@ theorem livePoleTruncation_le
   · exact le_rfl
   · exact Nat.zero_le _
 
-/-- The signed valuation weight of the live truncation is exactly the pole
-weight of the original exponent.  Deleted negative coordinates contribute
-zero to the pole weight, and deleted zero-valued coordinates also contribute
-zero because of the `WithZero.log 0` convention. -/
+/-- .
+
+
+ -/
 theorem exponentValuationWeight_livePoleTruncation
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : σ → L) (d : σ →₀ ℕ) :
@@ -117,8 +117,8 @@ private theorem exp_sum (s : Finset σ) (z : σ → ℤ) :
   | empty => simp
   | @insert i s hi ih => simp [hi, ih, WithZero.exp_add]
 
-/-- A monomial supported only on nonzero coordinate functions has valuation
-exactly the exponential of its signed tropical weight. -/
+/-- .
+ -/
 theorem valuation_eval_monomial_one_eq_exp
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : σ → L) (d : σ →₀ ℕ)
@@ -145,8 +145,8 @@ theorem valuation_eval_monomial_one_eq_exp
         d i • (v (x i)).log by simp,
       WithZero.exp_nsmul, WithZero.exp_log hvx]
 
-/-- Because the zero exponent is explicitly available, the normalized pole
-support maximum is attained by an exponent in `E`. -/
+/-- .
+ -/
 theorem exists_mem_exponentPoleWeight_eq
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : σ → L) (E : Finset (σ →₀ ℕ)) (hzero : 0 ∈ E) :
@@ -169,7 +169,7 @@ theorem exists_mem_exponentPoleWeight_eq
     change exponentPoleWeight v x d = S.max' hS
     exact heq
 
-/-- The coefficient vector selecting one exponent of `E`. -/
+/-- . -/
 def deltaCoefficient (E : Finset (σ →₀ ℕ)) (e : E) : E → K :=
   fun d ↦ if d = e then 1 else 0
 
@@ -185,10 +185,10 @@ theorem polynomialOfSupport_deltaCoefficient
     simp [hd]
   · simp
 
-/-- The missing individual genericity witness: for a downward-closed support
-containing zero, a single live monomial realizes the exact pole support
-threshold at an arbitrary valuation.  No residue-field or initial-form API
-is required. -/
+/-- .
+
+
+ -/
 theorem exists_exact_support_evaluation_of_downwardClosed
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : σ → L) (E : Finset (σ →₀ ℕ))
@@ -214,8 +214,8 @@ theorem exponentSetPoleWeight_nonneg
   unfold exponentSetPoleWeight
   exact Finset.le_max' _ _ (Finset.mem_insert_self (0 : ℤ) _)
 
-/-- Convert exact multiplicative valuation attainment into the signed
-`poleOrder` equality consumed by the residual-component provider. -/
+/-- .
+ -/
 theorem poleOrder_eq_of_valuation_eq_exp
     (v : Valuation L (WithZero (Multiplicative ℤ))) (b : L) (q : ℤ)
     (hq : 0 ≤ q) (hexact : v b = WithZero.exp q) :
@@ -223,7 +223,7 @@ theorem poleOrder_eq_of_valuation_eq_exp
   unfold poleOrder
   rw [hexact, WithZero.log_exp, max_eq_right hq]
 
-/-- The strict cancellation locus below the Newton support threshold. -/
+/-- . -/
 def cancellationSubmodule
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (hcoeff : ∀ a : K, v (algebraMap K L a) ≤ 1)
@@ -260,8 +260,8 @@ def cancellationSubmodule
       _ < WithZero.exp (exponentSetPoleWeight v x E) := by
         simpa using hc
 
-/-- One coefficient vector attaining the support threshold proves that the
-strict cancellation locus is a proper submodule. -/
+/-- .
+ -/
 theorem cancellationSubmodule_ne_top_of_exact
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (hcoeff : ∀ a : K, v (algebraMap K L a) ≤ 1)
@@ -279,9 +279,9 @@ theorem cancellationSubmodule_ne_top_of_exact
   rw [hc] at hmem
   exact (lt_irrefl _ hmem)
 
-/-- If each valuation threshold can be attained individually, one supported
-polynomial attains all thresholds simultaneously.  No residue fields or
-generic schemes are needed for this finite genericity step. -/
+/-- .
+
+ -/
 theorem exists_simultaneous_exact_support_evaluation
     {τ : Type*} [Finite τ] [Infinite K]
     (v : τ → Valuation L (WithZero (Multiplicative ℤ)))
@@ -318,10 +318,10 @@ theorem exists_simultaneous_exact_support_evaluation
       (support_polynomialOfSupport_subset E c)
   exact le_antisymm hupper hlower
 
-/-- Downward closure and the zero exponent discharge every individual
-attainment premise in `exists_simultaneous_exact_support_evaluation`.
-Consequently one polynomial realizes all exact pole thresholds for an
-arbitrary finite family of valuations. -/
+/-- .
+
+
+ -/
 theorem exists_simultaneous_exact_support_evaluation_of_downwardClosed
     {τ : Type*} [Finite τ] [Infinite K]
     (v : τ → Valuation L (WithZero (Multiplicative ℤ)))
@@ -337,8 +337,8 @@ theorem exists_simultaneous_exact_support_evaluation_of_downwardClosed
     (fun t ↦ exists_exact_support_evaluation_of_downwardClosed
       (v t) x E hdown hzero)
 
-/-- Pole-order form of the simultaneous theorem, matching the exact field of
-`GenericSparseBKKWitness`. -/
+/-- .
+ -/
 theorem exists_simultaneous_exact_poleOrder_of_downwardClosed
     {τ : Type*} [Finite τ] [Infinite K]
     (v : τ → Valuation L (WithZero (Multiplicative ℤ)))

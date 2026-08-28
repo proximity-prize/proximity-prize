@@ -3,15 +3,15 @@ import ProximityPrize.SubmissionLower.ContactRobustFixedMeet6656Research
 import ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6600Research
 import ProximityPrize.SubmissionLower.ContactSingularBranchParameterizedResearch
 
-/-!
-# Profile-generic fixed selected-family combiner
+/-! .
 
-This module separates the actual selected-solution cover and tight singular
-provider from any particular regular-factor ledger. A caller supplies the
-flags of the actual regular factors, a factorwise regular bound, and its
-finite aggregation theorem; rectangular and cumulative sharp-YZ ledgers
-therefore share the same final join.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactProfileFixedSelectedCombinerResearch
 
@@ -32,8 +32,8 @@ noncomputable section
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 40000
 
-/-- Exact identification of a robust fixed profile with the tight singular
-parameter package used for the same interpolation box and selected family. -/
+/-- .
+ -/
 structure FixedParameterAlignment (p : Profile)
     (t : ContactTightSingularLedgerResearch.TightParameters) : Prop where
   n : t.n = p.n
@@ -64,8 +64,8 @@ variable {K Iota : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- The actual selected solutions for an arbitrary valid profile are covered
-by the positive-`R` regular factors and the actual singular union. -/
+/-- .
+ -/
 theorem card_le_regular_sum_add_singular
     (p : Profile) {prime : ℕ}
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
@@ -120,9 +120,9 @@ theorem card_le_regular_sum_add_singular
         (singularSeeds Q selected Gamma).card :=
       Nat.add_le_add_right Finset.card_biUnion_le _
 
-/-- Complete profile-generic fixed selected-family join.  The regular geometry
-is abstracted by `hregularAggregate`; the singular geometry is the actual
-parameterized implicit-core-plus-exceptions theorem. -/
+/-- .
+
+ -/
 theorem global_count_le_regular_div_add_tight_countCap
     (p : Profile)
     (t : ContactTightSingularLedgerResearch.TightParameters)

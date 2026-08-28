@@ -2,16 +2,16 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualPrimeTransportResearch
 import ProximityPrize.SubmissionLower.ContactResidualSparseComponentAdapterResearch
 
-/-!
-# Per-prime flag zero-budget transport through residual coordinates
+/-! .
 
-Residualizing each regular curve prime separately changes the ambient pair
-of equations, so rebuilding a whole-component budget after every change
-would destroy the global component sum.  The correct invariant is the cost
-already assigned to the original prime.  This module proves that a
-support-uniform finite-zero budget on one prime transports with exactly the
-same cost through the affine-triangular residual equivalence.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualZeroBudgetTransportResearch
 
@@ -32,8 +32,8 @@ local instance : DecidableEq K := Classical.decEq K
 
 abbrev Poly3 (K : Type) [Field K] := MvPolynomial (Fin 3) K
 
-/-- The explicit inverse substitution is itself an affine-triangular
-residual substitution. -/
+/-- .
+ -/
 theorem originalAlgHom_eq_residualAlgHom
     (aY v bY aS bS cS : K) :
     originalAlgHom aY v bY aS bS cS =
@@ -48,8 +48,8 @@ theorem originalAlgHom_eq_residualAlgHom
     simp [originalAlgHom, residualAlgHom, originalImage, residualImage] <;>
     ring
 
-/-- Both directions of the residual equivalence preserve every nested flag
-support. -/
+/-- .
+ -/
 theorem polynomialInFlag_originalAlgHom
     (r : FlagDegree) (A : Poly3 K) (aY v bY aS bS cS : K)
     (hA : PolynomialInFlag r A) :
@@ -66,8 +66,8 @@ theorem polynomialInFlag_originalAlgHom
     (residual_comp_original aY v bY aS bS cS hv) A
   simpa only [AlgHom.comp_apply, AlgHom.id_apply] using h
 
-/-- The forward residual point map is injective whenever the nodal factor
-is nonzero. -/
+/-- .
+ -/
 theorem forwardResidualPoint_injective
     (aY v bY aS bS cS : K) (hv : v ≠ 0) :
     Function.Injective (forwardResidualPoint aY v bY aS bS cS) := by
@@ -92,8 +92,8 @@ theorem forwardResidualPoint_injective
   · exact hs
   · exact h2
 
-/-- A finite zero-set bound transports forward through the residual
-equivalence with no change in cost. -/
+/-- .
+ -/
 theorem finiteZeroSetBound_map_residual
     (aY v bY aS bS cS : K) (hv : v ≠ 0)
     (P : Ideal (Poly3 K)) (A : Poly3 K) (cost : ℕ)
@@ -125,8 +125,8 @@ theorem finiteZeroSetBound_map_residual
       (residualEquiv aY v bY aS bS cS hv A) = 0 at hz
     rwa [eval_residualEquiv] at hz
 
-/-- Arbitrary polynomials on the mapped prime can be pulled back first;
-this is the form used by recursive residualization. -/
+/-- .
+ -/
 theorem finiteZeroSetBound_map_residual_of_inverse
     (aY v bY aS bS cS : K) (hv : v ≠ 0)
     (P : Ideal (Poly3 K)) (A : Poly3 K) (cost : ℕ)
@@ -144,16 +144,16 @@ theorem finiteZeroSetBound_map_residual_of_inverse
   rw [residual_original_apply aY v bY aS bS cS hv] at h
   exact h
 
-/-- A support-uniform budget attached to one prime.  Its cost may be any
-function of the flag; the score-66 application uses the linear combination
-of three fixed unit-projection costs. -/
+/-- .
+
+ -/
 structure PrimeFlagZeroBudget
     (P : Ideal (Poly3 K)) (cost : FlagDegree → ℕ) where
   zero_le : ∀ (r : FlagDegree) (A : Poly3 K),
     PolynomialInFlag r A → A ∉ P → FiniteZeroSetBound P A (cost r)
 
-/-- Prime flag budgets are invariant under one residual step, retaining the
-literal same cost function. -/
+/-- .
+ -/
 def PrimeFlagZeroBudget.mapResidual
     {P : Ideal (Poly3 K)} {cost : FlagDegree → ℕ}
     (B : PrimeFlagZeroBudget P cost)

@@ -23,21 +23,21 @@ Port elaboration adjustment: explicitly bind classical decidable equality
 for the original finitely supported accessibility proof.
 -/
 
-/-!
-# Well-foundedness of the lexicographic and product orders on `Finsupp`
+/-! .
 
-`Finsupp.Lex.wellFounded` and the two variants that follow it essentially say that if `(· > ·)` is
-a well order on `α`, `(· < ·)` is well-founded on `N`, and `0` is a bottom element in `N`, then the
-lexicographic `(· < ·)` is well-founded on `α →₀ N`.
 
-`Finsupp.Lex.wellFoundedLT_of_finite` says that if `α` is finite and equipped with a linear order
-and `(· < ·)` is well-founded on `N`, then the lexicographic `(· < ·)` is well-founded on `α →₀ N`.
 
-`Finsupp.wellFoundedLT` and `wellFoundedLT_of_finite` state the same results for the product
-order `(· < ·)`, but without the ordering conditions on `α`.
 
-All results are transferred from `DFinsupp` via `Finsupp.toDFinsupp`.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -48,8 +48,8 @@ namespace Finsupp
 
 variable [Zero N] {r : α → α → Prop} {s : N → N → Prop}
 
-/-- Transferred from `DFinsupp.Lex.acc`. See the top of that file for an explanation for the
-  appearance of the relation `rᶜ ⊓ (≠)`. -/
+/-- .
+ -/
 theorem Lex.acc (hbot : ∀ ⦃n⦄, ¬s n 0) (hs : WellFounded s) (x : α →₀ N)
     (h : ∀ a ∈ x.support, Acc (rᶜ ⊓ (· ≠ ·)) a) :
     Acc (Finsupp.Lex r s) x := by

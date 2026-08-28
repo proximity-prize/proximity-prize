@@ -22,7 +22,7 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-! # Some lemmas about the degree lexicographic monomial order on multivariate polynomials -/
+/-! . -/
 
 section ProximityFlatProofPort
 

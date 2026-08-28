@@ -5,16 +5,16 @@ import ProximityPrize.SubmissionLower.ContactStackedBoxTransport6656Research
 import ProximityPrize.SubmissionLower.ContactAsymmetricResidualStageResearch
 import ProximityPrize.SubmissionLower.ContactSingularBranchParameterizedResearch
 
-/-!
-# Actual recursive-GCD residual cells at score 66.56
+/-! .
 
-The first cell uses `quotientB` as its singular pivot and `quotientA` as the
-external proper cut.  The second uses `middleQuotient` as its pivot and
-`quotientC` as its cut.  The seed equations and boxes come from the accepted
-recursive-GCD partition and divisor transport; regular families use the
-asymmetric proper-cut provider and singular families use the parameterized
-actual-family provider.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedResidualCells6656Research
 
@@ -47,9 +47,9 @@ local instance : CharP IRSProfile.Field prime := by
   simpa [prime, ContactParameters6600Research.prime] using
     ContactFrozenAlignment6600Research.challenge_field_characteristic6600
 
-/-- First residual profile, oriented so the optimized profile-B quotient is
-the singular carrier.  Its regular arithmetic is symmetric to the historical
-profile-A-first presentation. -/
+/-- .
+
+ -/
 def firstResidualQ2Stage : UnequalParameters :=
   ⟨262144, 131071, 182807, 65, 14, 598, 34, 7, 5263⟩
 
@@ -80,9 +80,9 @@ variable {K Iota : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Generic join used by both concrete cells.  The regular factorwise bound
-is the sole local counting premise; the actual singular union is closed by
-the parameterized accepted proper-cut theorem. -/
+/-- .
+
+ -/
 theorem asymmetric_stage_count_lt_of_regular_factors
     (P : UnequalParameters)
     (S : ContactTightSingularLedgerResearch.TightParameters)
@@ -141,7 +141,7 @@ theorem asymmetric_stage_count_lt_of_regular_factors
   omega
 
 
-/-! ## Concrete challenge-field cells -/
+/-! . -/
 
 theorem quotientB_ne_zero
     (QA QB : StackedPoly) (hQB : QB ≠ 0) : quotientB QA QB ≠ 0 := by

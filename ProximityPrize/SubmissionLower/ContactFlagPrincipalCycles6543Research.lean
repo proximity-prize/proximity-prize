@@ -3,14 +3,14 @@ import ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Researc
 import ProximityPrize.SubmissionLower.ContactFlagPrincipalCycleAdapter6543Research
 import ProximityPrize.SubmissionLower.ContactFlagTrapezoidCaps6543Research
 
-/-!
-# Complete three ordinary principal cycles for the 65.43 flag route
+/-! .
 
-This module combines common nested projection coefficients, exact unit-flag
-pole polynomials, and exact trapezoid family resultants.  The only remaining
-premise is positivity of the selected outer variable in each of the three
-plane presentations; all support and numeric cap obligations are proved.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagPrincipalCycles6543Research
 
@@ -46,8 +46,8 @@ variable {hseparator : ∀ C : RegularComponent Omega G T H,
 variable {hproj : ∀ C : RegularComponent Omega G T H,
   ProjectionsFiniteSeparable Omega C.1}
 
-/-- Opaque literal alias used to prevent elaboration from unfolding the
-large computed agreement flag while constructing its generic polynomial. -/
+/-- .
+ -/
 def exactAgreementFlag6543 : FlagDegree := ⟨91749700, 5504983, 1179639⟩
 
 theorem exactAgreementFlag6543_eq :
@@ -55,9 +55,9 @@ theorem exactAgreementFlag6543_eq :
   rw [shearedAgreementFlag_value]
   rfl
 
-/-- Generic exact-pole existence specialized abstractly to a flag support;
-keeping the flag parameter opaque avoids reducing its potentially huge
-finite lattice support during elaboration. -/
+/-- .
+
+ -/
 theorem exists_genericExactPolePolynomial_flagSupport
     (hseparator : ∀ C : RegularComponent Omega G T H,
       Transcendental Omega (coordinate Omega C.1 2))
@@ -69,8 +69,8 @@ theorem exists_genericExactPolePolynomial_flagSupport
   exists_genericExactPolePolynomial hseparator hproj (flagSupport p)
     (flagSupport_downwardClosed p) (zero_mem_flagSupport p)
 
-/-- Rational-function evaluation depends only on the chosen field element;
-the transcendence proof is propositionally irrelevant. -/
+/-- .
+ -/
 theorem elementEmbedding_congr
     {L : Type} [Field L] [Algebra Omega L]
     {s t : L} (hs : Transcendental Omega s)
@@ -79,8 +79,8 @@ theorem elementEmbedding_congr
   subst t
   rfl
 
-/-- The arbitrary-element embedding specializes definitionally to the
-existing coordinate rational-base embedding. -/
+/-- .
+ -/
 theorem elementEmbedding_coordinate_eq_rationalBaseEmbedding
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
     (i : Fin 3) (hs ht : Transcendental Omega (coordinate Omega P i)) :
@@ -89,9 +89,9 @@ theorem elementEmbedding_coordinate_eq_rationalBaseEmbedding
       rationalBaseEmbedding Omega P i ht := by
   rfl
 
-/-- The sole residual premise after common avoidance and trapezoid support
-arithmetic: the chosen outer variable really occurs in the transformed
-irreducible surface relation. -/
+/-- .
+
+ -/
 structure FlagProjectionPositivity
     (D : NestedFlagProjectionData hseparator hproj)
     (G : MvPolynomial (Fin 3) Omega) : Prop where
@@ -173,8 +173,8 @@ theorem unitAll_polynomial_pole
           (affineV Omega C.1 D.mu (D.mu * D.lam)) :=
       (nested_v_pole D C v).symm
 
-/-- The three exact unit-support principal-cycle budgets, with their numeric
-65.43 caps, assembled from ordinary trapezoid resultants. -/
+/-- .
+ -/
 def flagProjectionCycleBudget6543_of_nested
     (D : NestedFlagProjectionData hseparator hproj)
     (hG : Irreducible G) (hproper : ¬ G ∣ T)
@@ -313,10 +313,10 @@ def flagProjectionCycleBudget6543_of_nested
   exact FlagProjectionCycleBudget.ofNestedProjectionBudgets B BZ BYZ BAll
     zBudget yzBudget allBudget
 
-/-- End-to-end geometric provider consumed by the already-green 65.43
-whole-surface and protocol chain.  All support, pole, separability, and
-resultant arithmetic is internal; only transformed outer-degree positivity
-remains explicit. -/
+/-- .
+
+
+ -/
 def residualComponentBudget6543_of_nested
     (D : NestedFlagProjectionData hseparator hproj)
     (hG : Irreducible G) (hproper : ¬ G ∣ T)
@@ -337,10 +337,10 @@ def residualComponentBudget6543_of_nested
   (flagProjectionCycleBudget6543_of_nested D hG hproper hGsupport hTsupport
     hpositive B BZ BYZ BAll).toResidualComponentBudget6543
 
-/-- The shortest exact 65.43 geometric seam: it is enough to exhibit one
-common nested projection with positive outer degree in the three ordinary
-resultant presentations.  All four exact-pole polynomials are then obtained
-by dependent genericity inside this theorem. -/
+/-- .
+
+
+ -/
 theorem exists_residualComponentBudget6543_of_projectionPositivity
     (hG : Irreducible G) (hproper : ¬ G ∣ T)
     (hGsupport : G.support ⊆ flagSupport shearedSurfaceFlag)

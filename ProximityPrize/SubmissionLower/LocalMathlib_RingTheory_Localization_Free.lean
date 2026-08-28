@@ -20,19 +20,19 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Free modules and localization
+/-! .
 
-## Main result
 
-- `Module.FinitePresentation.exists_free_localizedModule_powers`:
-  If `M` is a finitely presented `R`-module
-  such that `Mₛ` is free over `Rₛ` for some `S : Submonoid R`,
-  then `Mᵣ` is already free over `Rᵣ` for some `r ∈ S`.
 
-In the file `Mathlib.RingTheory.Spectrum.Prime.FreeLocus`, we deduce that the free
-locus of a finitely presented module is open and its rank is locally constant.
--/
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -43,11 +43,11 @@ variable {M' : Type*} [AddCommGroup M'] [Module R M'] (f : M →ₗ[R] M') [IsLo
 variable {N' : Type*} [AddCommGroup N'] [Module R N'] (g : N →ₗ[R] N') [IsLocalizedModule S g]
 
 include f in
-/--
-If `M` is a finitely presented `R`-module,
-then any `Rₛ`-basis of `Mₛ` for some `S : Submonoid R` can be lifted to
-a `Rᵣ`-basis of `Mᵣ` for some `r ∈ S`.
--/
+/-- .
+
+
+
+ -/
 lemma Module.FinitePresentation.exists_basis_localizedModule_powers
     (Rₛ) [CommRing Rₛ] [Algebra R Rₛ] [Module Rₛ M'] [IsScalarTower R Rₛ M']
     [IsLocalization S Rₛ] [Module.FinitePresentation R M]
@@ -80,11 +80,11 @@ lemma Module.FinitePresentation.exists_basis_localizedModule_powers
     simp
 
 include f in
-/--
-If `M` is a finitely presented `R`-module
-such that `Mₛ` is free over `Rₛ` for some `S : Submonoid R`,
-then `Mᵣ` is already free over `Rᵣ` for some `r ∈ S`.
--/
+/-- .
+
+
+
+ -/
 lemma Module.FinitePresentation.exists_free_localizedModule_powers
     (Rₛ) [CommRing Rₛ] [Algebra R Rₛ] [Module Rₛ M'] [IsScalarTower R Rₛ M'] [Nontrivial Rₛ]
     [IsLocalization S Rₛ] [Module.FinitePresentation R M] [Module.Free Rₛ M'] :

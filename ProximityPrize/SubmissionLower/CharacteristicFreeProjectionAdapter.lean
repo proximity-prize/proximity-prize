@@ -2,20 +2,20 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CharacteristicFreeMatrixMultiplicityResearch
 import ProximityPrize.SubmissionLower.ActualPlaneCoordinateDegree
 
-/-!
-# Characteristic-free projection-family adapter
+/-! .
 
-This research adapter separates the two algebra-length bookkeeping steps
-needed to replace the separable-embedding count:
 
-* components with one fixed first-coordinate minimal polynomial consume one
-  specialized Sylvester corank; and
-* distinct first-coordinate minimal polynomials consume disjoint powers of
-  the base resultant.
 
-The statements use full module finrank.  No separability or characteristic
-gate occurs here.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.CharacteristicFreeProjectionAdapter
 
@@ -29,9 +29,9 @@ section ScalarBridge
 variable {K B E : Type} [Field K] [Field B] [Field E]
   [Algebra K B] [Algebra K E] [Algebra B E] [IsScalarTower K B E]
 
-/-- Once the first generator already lies in the scalar field, generation
-by a pair over the original field reduces to generation by the second
-element over the scalar field. -/
+/-- .
+
+ -/
 theorem adjoin_singleton_eq_top_of_pair_eq_top
     (y r : E)
     (hgen : IntermediateField.adjoin K ({y, r} : Set E) = ⊤)
@@ -59,8 +59,8 @@ section MinpolyTower
 variable {K E : Type} [Field K] [DecidableEq K] [Field E] [Algebra K E]
   [FiniteDimensional K E]
 
-/-- The first-coordinate minimal-polynomial degree divides the full field
-degree even for inseparable extensions. -/
+/-- .
+ -/
 theorem minpoly_natDegree_dvd_finrank (y : E) :
     (minpoly K y).natDegree ∣ Module.finrank K E := by
   classical
@@ -92,9 +92,9 @@ section FixedResiduePolynomial
 variable {K : Type} [Field K] [DecidableEq K]
 variable {I : Type*} [Fintype I]
 
-/-- Components over one residue polynomial consume a single specialized
-Sylvester corank.  Injectivity of the actual plane relation kernels is the
-only component-separation input. -/
+/-- .
+
+ -/
 theorem sum_relative_finrank_le_sylvester_corank
     (mu : Polynomial K) [Fact (Irreducible mu)]
     (E : I → Type) [∀ i, Field (E i)] [∀ i, Algebra K (E i)]
@@ -146,10 +146,10 @@ variable {K : Type} [Field K] [DecidableEq K]
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 variable {I : Type*} [Fintype I]
 
-/-- A finite family grouped by its residue polynomials feeds the outer
-determinant-multiplicity theorem.  The input `fiberCorank` is deliberately
-numeric: the preceding fixed-residue theorem is what proves it for actual
-components. -/
+/-- .
+
+
+ -/
 theorem sum_grouped_weights_le_det_natDegree
     (M : Matrix ι ι (Polynomial K))
     (mu : I → Polynomial K) (relativeDegree : I → ℕ)
@@ -230,10 +230,10 @@ variable {I : Type*} [Fintype I]
 variable (E : I → Type) [∀ i, Field (E i)] [∀ i, Algebra K (E i)]
   [∀ i, FiniteDimensional K (E i)]
 
-/-- Characteristic-free finite-family replacement for the separable
-embedding count.  Components are grouped by the minimal polynomial of
-their first generator; equal-minpoly components consume one specialized
-corank, and distinct minpolys consume disjoint resultant multiplicities. -/
+/-- .
+
+
+ -/
 theorem sum_finrank_le_resultant_of_relationIdeal_injective
     (P Q : Polynomial (Polynomial K)) (m n : ℕ)
     (hPcap : P.natDegree ≤ m) (hQcap : Q.natDegree ≤ n)
@@ -361,9 +361,9 @@ theorem sum_finrank_le_resultant_of_relationIdeal_injective
     mu relativeDegree hmuMonic hmuIrreducible hfiber' hdet
   simpa only [Polynomial.resultant, htotal] using houter
 
-/-- Standard bidegree envelope for the preceding characteristic-free
-family theorem.  This has the same mathematical conclusion as the old
-separable family theorem, but assumes only finite-dimensional fields. -/
+/-- .
+
+ -/
 theorem sum_finrank_le_planar_bound_without_separability
     (P Q : Polynomial (Polynomial K))
     (hP : Irreducible P) (hpositive : 0 < P.natDegree)

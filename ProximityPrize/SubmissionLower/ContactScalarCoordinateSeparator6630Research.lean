@@ -6,20 +6,20 @@ import ProximityPrize.SubmissionLower.ContactCurveComponents
 import ProximityPrize.SubmissionLower.ContactWeakSeparableSeparatorResearch
 import ProximityPrize.SubmissionLower.ContactProperCutSeedCount
 
-/-!
-# Scalar-coordinate repair of the score-66.30 terminal projection gate
+/-! .
 
-The literal-`Y` resultant against the full agreement cut exceeds the fixed
-characteristic at the score-66.30 flag.  It is unnecessary on precisely the
-components where it would be used.
 
-If `Z` is algebraic on a component over the algebraically closed coefficient
-field, then `Z` is a scalar `c`.  The linear polynomial `Z - c` belongs to
-the component prime.  Pairing the irreducible surface factor `G` with this
-linear relation makes the `Y`-projection mixed degree at most `deg_R G`,
-rather than the large `G`/agreement-cut resultant.  If `Z` is
-transcendental, the already-small literal-`Z` gate is used directly.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactScalarCoordinateSeparator6630Research
 
@@ -42,8 +42,8 @@ variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 
 abbrev Poly3 := MvPolynomial (Fin 3) Omega
 
-/-- An algebraic coordinate of an actual prime quotient supplies a literal
-linear relation in the original prime ideal. -/
+/-- .
+ -/
 theorem exists_coordinate_difference_mem_of_isAlgebraic
     (P : Ideal (Poly3 (Omega := Omega))) [P.IsPrime] (i : Fin 3)
     (hi : IsAlgebraic Omega (coordinate Omega P i)) :
@@ -56,8 +56,8 @@ theorem exists_coordinate_difference_mem_of_isAlgebraic
   simp only [map_sub, MvPolynomial.aeval_X, MvPolynomial.aeval_C]
   rw [← hc, sub_self]
 
-/-- The scalar-`Z` relation is proper against any surface equation with
-positive residual-`R` degree. -/
+/-- .
+ -/
 theorem not_dvd_coordinate_two_sub_C_of_degreeOf_one_pos
     (G : Poly3 (Omega := Omega)) (hG : G ≠ 0)
     (hdep : 0 < G.degreeOf (1 : Fin 3)) (c : Omega) :
@@ -93,8 +93,8 @@ theorem not_dvd_coordinate_two_sub_C_of_degreeOf_one_pos
       _ = H.degreeOf (1 : Fin 3) := by rw [hHA]
   omega
 
-/-- With `Z` scalar, the `Y` projection has a characteristic-safe
-finite-separable presentation using the linear relation `Z-c`. -/
+/-- .
+ -/
 theorem finite_separable_at_y_of_z_algebraic
     (P : Ideal (Poly3 (Omega := Omega))) [P.IsPrime]
     (p : ℕ) [CharP Omega p]
@@ -145,9 +145,9 @@ theorem finite_separable_at_y_of_z_algebraic
   exact finite_separable_at_of_original_coordinate_gate Omega P 0 hY p G H
     hG hGmem hHmem hproper hdegree hmixed
 
-/-- Consumer-ready separator: regularity says `Y` or `Z` is
-transcendental.  The `Z` branch uses the ordinary green `G/T` gate; the
-complementary branch uses the scalar-coordinate repair above. -/
+/-- .
+
+ -/
 theorem exists_separableLiteralCoordinate_y_or_z
     (P : Ideal (Poly3 (Omega := Omega))) [P.IsPrime]
     (p : ℕ) [CharP Omega p]
@@ -172,7 +172,7 @@ theorem exists_separableLiteralCoordinate_y_or_z
       hdegree hY hZalg
     exact ⟨⟨0, hY, hy.1, hy.2⟩, Or.inl rfl⟩
 
-/-- Component-shaped wrapper used by the terminal family constructor. -/
+/-- . -/
 theorem regularComponent_exists_separableLiteralCoordinate6630
     {K : Type} [Field K]
     (phi : Polynomial K →+* Omega)

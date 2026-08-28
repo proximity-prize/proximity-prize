@@ -21,22 +21,22 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-! # Additively-graded algebra structures on `⨁ i, A i`
+/-! .
 
-This file provides `R`-algebra structures on external direct sums of `R`-modules.
 
-Recall that if `A i` are a family of `AddCommMonoid`s indexed by an `AddMonoid`, then an instance
-of `DirectSum.GMonoid A` is a multiplication `A i → A j → A (i + j)` giving `⨁ i, A i` the
-structure of a semiring. In this file, we introduce the `DirectSum.GAlgebra R A` class for the case
-where all `A i` are `R`-modules. This is the extra structure needed to promote `⨁ i, A i` to an
-`R`-algebra.
 
-## Main definitions
 
-* `DirectSum.GAlgebra R A`, the typeclass.
-* `DirectSum.toAlgebra` extends `DirectSum.toSemiring` to produce an `AlgHom`.
 
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -55,8 +55,8 @@ variable [AddMonoid ι] [GSemiring A]
 
 section
 
-/-- A graded version of `Algebra`. An instance of `DirectSum.GAlgebra R A` endows `(⨁ i, A i)`
-with an `R`-algebra structure. -/
+/-- .
+ -/
 class GAlgebra where
   toFun : R →+ A 0
   map_one : toFun 1 = GradedMonoid.GOne.one
@@ -118,13 +118,13 @@ theorem algebraMap_toAddMonoid_hom :
     ↑(algebraMap R (⨁ i, A i)) = (DirectSum.of A 0).comp (GAlgebra.toFun : R →+ A 0) :=
   rfl
 
-/-- A family of `LinearMap`s preserving `DirectSum.GOne.one` and `DirectSum.GMul.mul`
-describes an `AlgHom` on `⨁ i, A i`. This is a stronger version of `DirectSum.toSemiring`.
+/-- .
 
-Of particular interest is the case when `A i` are bundled subobjects, `f` is the family of
-coercions such as `Submodule.subtype (A i)`, and the `[GMonoid A]` structure originates from
-`DirectSum.GMonoid.ofAddSubmodules`, in which case the proofs about `GOne` and `GMul`
-can be discharged by `rfl`. -/
+
+
+
+
+ -/
 @[simps]
 def toAlgebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GOne.one = 1)
     (hmul : ∀ {i j} (ai : A i) (aj : A j), f _ (GradedMonoid.GMul.mul ai aj) = f _ ai * f _ aj) :
@@ -136,9 +136,9 @@ def toAlgebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GOne.one = 1
       rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one, map_smul, one_def,
         ← lof_eq_of R, toModule_lof, hone] }
 
-/-- Two `AlgHom`s out of a direct sum are equal if they agree on the generators.
+/-- .
 
-See note [partially-applied ext lemmas]. -/
+ -/
 @[ext]
 theorem algHom_ext' ⦃f g : (⨁ i, A i) →ₐ[R] B⦄
     (h : ∀ i, f.toLinearMap.comp (lof _ _ A i) = g.toLinearMap.comp (lof _ _ A i)) : f = g :=
@@ -147,9 +147,9 @@ theorem algHom_ext' ⦃f g : (⨁ i, A i) →ₐ[R] B⦄
 theorem algHom_ext ⦃f g : (⨁ i, A i) →ₐ[R] B⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=
   algHom_ext' R A fun i => LinearMap.ext <| h i
 
-/-- The piecewise multiplication from the `Mul` instance, as a bundled linear map.
+/-- .
 
-This is the graded version of `LinearMap.mul`, and the linear version of `DirectSum.gMulHom` -/
+ -/
 @[simps]
 def gMulLHom {i j} : A i →ₗ[R] A j →ₗ[R] A (i + j) where
   toFun a :=
@@ -163,10 +163,10 @@ def gMulLHom {i j} : A i →ₗ[R] A j →ₗ[R] A (i + j) where
 
 end DirectSum
 
-/-! ### Concrete instances -/
+/-! . -/
 
 
-/-- A direct sum of copies of an `Algebra` inherits the algebra structure. -/
+/-- . -/
 @[simps]
 instance Algebra.directSumGAlgebra {R A : Type*} [AddMonoid ι] [CommSemiring R]
     [Semiring A] [Algebra R A] : DirectSum.GAlgebra R fun _ : ι => A where

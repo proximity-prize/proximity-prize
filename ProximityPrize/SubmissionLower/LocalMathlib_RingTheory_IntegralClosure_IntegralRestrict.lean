@@ -28,21 +28,21 @@ mathematical declarations, hypotheses, and remaining proof steps are retained;
 no resource limits are changed.
 -/
 
-/-!
-# Restriction of various maps between fields to integrally closed subrings.
+/-! .
 
-In this file, we assume `A` is an integrally closed domain; `K` is the fraction ring of `A`;
-`L` is a finite extension of `K`; `B` is the integral closure of `A` in `L`.
-We call this the AKLB setup.
 
-## Main definitions
-- `galRestrict`: The restriction `Aut(L/K) → Aut(B/A)` as an `MulEquiv` in an AKLB setup.
-- `Algebra.intTrace`: The trace map of a finite extension of integrally closed domains `B/A` is
-  defined to be the restriction of the trace map of `Frac(B)/Frac(A)`.
-- `Algebra.intNorm`: The norm map of a finite extension of integrally closed domains `B/A` is
-  defined to be the restriction of the norm map of `Frac(B)/Frac(A)`.
 
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -66,7 +66,7 @@ section galRestrict'
 variable {K L L₂ L₃}
 omit [IsFractionRing A K]
 
-/-- A generalization of `galRestrictHom` beyond endomorphisms. -/
+/-- . -/
 noncomputable
 def galRestrict' (f : L →ₐ[K] L₂) : (B →ₐ[A] B₂) :=
   (IsIntegralClosure.equiv A (integralClosure A L₂) L₂ B₂).toAlgHom.comp
@@ -98,8 +98,8 @@ variable [Algebra.IsAlgebraic K L]
 section galLift
 variable {A B B₂ B₃}
 
-/-- A generalization of the lift `End(B/A) → End(L/K)` in an ALKB setup.
-This is inverse to the restriction. See `galRestrictHom`. -/
+/-- .
+ -/
 noncomputable
 def galLift (σ : B →ₐ[A] B₂) : L →ₐ[K] L₂ :=
   haveI := (IsFractionRing.injective A K).isDomain
@@ -154,9 +154,9 @@ theorem galRestrict'_galLift (σ : B →ₐ[A] B₂) :
   AlgHom.ext fun x ↦ IsIntegralClosure.algebraMap_injective B₂ A L₂
     (by simp)
 
-/--
-A version of `galLift` for `AlgEquiv`.
--/
+/-- .
+
+ -/
 @[simps! -fullyApplied apply symm_apply]
 noncomputable
 def galLiftEquiv [Algebra.IsAlgebraic K L₂] (σ : B ≃ₐ[A] B₂) : L ≃ₐ[K] L₂ :=
@@ -169,8 +169,8 @@ theorem galLiftEquiv_algebraMap_apply [Algebra.IsAlgebraic K L₂] (σ : B ≃�
 
 end galLift
 
-/-- The restriction `End(L/K) → End(B/A)` in an AKLB setup.
-Also see `galRestrict` for the `AlgEquiv` version. -/
+/-- .
+ -/
 @[simps -isSimp]
 noncomputable
 def galRestrictHom : (L →ₐ[K] L) ≃* (B →ₐ[A] B) where
@@ -185,12 +185,12 @@ lemma algebraMap_galRestrictHom_apply (σ : L →ₐ[K] L) (x : B) :
     algebraMap B L (galRestrictHom A K L B σ x) = σ (algebraMap B L x) :=
   algebraMap_galRestrict'_apply _ _ _ _ _
 
-@[simp, nolint unusedHavesSuffices] -- false positive from unfolding galRestrictHom
+@[simp, nolint unusedHavesSuffices] --
 lemma galRestrictHom_symm_algebraMap_apply (σ : B →ₐ[A] B) (x : B) :
     (galRestrictHom A K L B).symm σ (algebraMap B L x) = algebraMap B L (σ x) :=
   galLift_algebraMap_apply _ _ _ _ _
 
-/-- The restriction `Aut(L/K) → Aut(B/A)` in an AKLB setup. -/
+/-- . -/
 noncomputable
 def galRestrict : Gal(L/K) ≃* (B ≃ₐ[A] B) :=
   (AlgEquiv.algHomUnitsEquiv K L).symm.trans
@@ -235,7 +235,7 @@ instance (priority := 900) [IsDomain A] [IsDomain B] [IsIntegrallyClosed B]
     [Module.Finite A B] [IsTorsionFree A B] : Fintype (B ≃ₐ[A] B) :=
   haveI : IsIntegralClosure B A (FractionRing B) :=
     IsIntegralClosure.of_isIntegrallyClosed _ _ _
-  -- TODO: How is this even supposed to fire? `R` and `S` cannot be inferred.
+  --
   haveI : Algebra.IsAlgebraic (FractionRing A) (FractionRing B) :=
     isAlgebraic_of_isFractionRing A B ..
   haveI : IsLocalization (Algebra.algebraMapSubmonoid B A⁰) (FractionRing B) :=
@@ -250,8 +250,8 @@ variable [IsLocalization (Algebra.algebraMapSubmonoid B M) Bₘ]
 
 section trace
 
-/-- The restriction of the trace on `L/K` restricted onto `B/A` in an AKLB setup.
-See `Algebra.intTrace` instead. -/
+/-- .
+ -/
 noncomputable
 def Algebra.intTraceAux [IsIntegrallyClosed A] :
     B →ₗ[A] A :=
@@ -271,13 +271,13 @@ variable (A B)
 variable [IsDomain A] [IsIntegrallyClosed A] [IsDomain B] [IsIntegrallyClosed B]
 variable [Module.Finite A B] [IsTorsionFree A B]
 
-/-- The trace of a finite extension of integrally closed domains `B/A` is the restriction of
-the trace on `Frac(B)/Frac(A)` onto `B/A`. See `Algebra.algebraMap_intTrace`. -/
+/-- .
+ -/
 noncomputable
 def Algebra.intTrace : B →ₗ[A] A :=
   haveI : IsIntegralClosure B A (FractionRing B) :=
     IsIntegralClosure.of_isIntegrallyClosed _ _ _
-  -- TODO: How is this even supposed to fire? `R` and `S` cannot be inferred.
+  --
   haveI : Algebra.IsAlgebraic (FractionRing A) (FractionRing B) :=
     isAlgebraic_of_isFractionRing A B ..
   haveI : IsLocalization (algebraMapSubmonoid B A⁰) (FractionRing B) :=
@@ -291,7 +291,7 @@ lemma Algebra.algebraMap_intTrace (x : B) :
     algebraMap A K (Algebra.intTrace A B x) = Algebra.trace K L (algebraMap B L x) := by
   haveI : IsIntegralClosure B A (FractionRing B) :=
     IsIntegralClosure.of_isIntegrallyClosed _ _ _
-  -- TODO: How is this even supposed to fire? `R` and `S` cannot be inferred.
+  --
   haveI : Algebra.IsAlgebraic (FractionRing A) (FractionRing B) :=
     isAlgebraic_of_isFractionRing A B ..
   haveI : IsLocalization (algebraMapSubmonoid B A⁰) (FractionRing B) :=
@@ -311,7 +311,7 @@ lemma Algebra.algebraMap_intTrace_fractionRing (x : B) :
       Algebra.trace (FractionRing A) (FractionRing B) (algebraMap B _ x) := by
   haveI : IsIntegralClosure B A (FractionRing B) :=
     IsIntegralClosure.of_isIntegrallyClosed _ _ _
-  -- TODO: How is this even supposed to fire? `R` and `S` cannot be inferred.
+  --
   haveI : Algebra.IsAlgebraic (FractionRing A) (FractionRing B) :=
     isAlgebraic_of_isFractionRing A B ..
   haveI : IsLocalization (algebraMapSubmonoid B A⁰) (FractionRing B) :=
@@ -325,7 +325,7 @@ lemma Algebra.intTrace_eq_trace [Module.Free A B] : Algebra.intTrace A B = Algeb
   ext x
   haveI : IsIntegralClosure B A (FractionRing B) :=
     IsIntegralClosure.of_isIntegrallyClosed _ _ _
-  -- TODO: How is this even supposed to fire? `R` and `S` cannot be inferred.
+  --
   haveI : Algebra.IsAlgebraic (FractionRing A) (FractionRing B) :=
     isAlgebraic_of_isFractionRing A B ..
   haveI : IsLocalization (algebraMapSubmonoid B A⁰) (FractionRing B) :=
@@ -349,7 +349,7 @@ lemma Algebra.intTrace_eq_of_isLocalization
   let L := FractionRing B
   have : IsIntegralClosure B A L :=
     IsIntegralClosure.of_isIntegrallyClosed _ _ _
-  -- TODO: How is this even supposed to fire? `R` and `S` cannot be inferred.
+  --
   haveI : Algebra.IsAlgebraic (FractionRing A) (FractionRing B) :=
     isAlgebraic_of_isFractionRing A B ..
   have : IsLocalization (algebraMapSubmonoid B A⁰) L :=
@@ -389,8 +389,8 @@ section norm
 
 variable [IsIntegrallyClosed A]
 
-/-- The restriction of the norm on `L/K` restricted onto `B/A` in an AKLB setup.
-See `Algebra.intNorm` instead. -/
+/-- .
+ -/
 noncomputable
 def Algebra.intNormAux :
     B →* A where
@@ -412,8 +412,8 @@ variable (A B)
 variable [IsDomain A] [IsDomain B] [IsIntegrallyClosed B] [Algebra.IsIntegral A B]
   [IsTorsionFree A B]
 
-/-- The norm of a finite extension of integrally closed domains `B/A` is the restriction of
-the norm on `Frac(B)/Frac(A)` onto `B/A`. See `Algebra.algebraMap_intNorm`. -/
+/-- .
+ -/
 noncomputable
 def Algebra.intNorm : B →* A := Algebra.intNormAux A (FractionRing A) (FractionRing B) B
 

@@ -28,26 +28,26 @@ These changes do not add mathematical hypotheses or change the original
 mathematical declarations, conclusions, or proof arguments.
 -/
 
-/-!
-# Division of `MvPolynomial` by monomials
+/-! .
 
-## Main definitions
 
-* `MvPolynomial.divMonomial x s`: divides `x` by the monomial `MvPolynomial.monomial 1 s`
-* `MvPolynomial.modMonomial x s`: the remainder upon dividing `x` by the monomial
-  `MvPolynomial.monomial 1 s`.
 
-## Main results
 
-* `MvPolynomial.divMonomial_add_modMonomial`, `MvPolynomial.modMonomial_add_divMonomial`:
-  `divMonomial` and `modMonomial` are well-behaved as quotient and remainder operators.
 
-## Implementation notes
 
-Where possible, the results in this file should be first proved in the generality of
-`AddMonoidAlgebra`, and then the versions specialized to `MvPolynomial` proved in terms of these.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -58,11 +58,11 @@ namespace MvPolynomial
 
 section CopiedDeclarations
 
-/-! Please ensure the declarations in this section are direct translations of `AddMonoidAlgebra`
-results. -/
+/-! .
+ -/
 
 
-/-- Divide by `monomial 1 s`, discarding terms not divisible by this. -/
+/-- . -/
 noncomputable def divMonomial (p : MvPolynomial σ R) (s : σ →₀ ℕ) : MvPolynomial σ R :=
   AddMonoidAlgebra.divOf p s
 
@@ -108,7 +108,7 @@ theorem divMonomial_mul_monomial (a : σ →₀ ℕ) (x : MvPolynomial σ R) :
 theorem divMonomial_monomial (a : σ →₀ ℕ) : monomial a 1 /ᵐᵒⁿᵒᵐⁱᵃˡ a = (1 : MvPolynomial σ R) :=
   AddMonoidAlgebra.of'_divOf _
 
-/-- The remainder upon division by `monomial 1 s`. -/
+/-- . -/
 noncomputable def modMonomial (x : MvPolynomial σ R) (s : σ →₀ ℕ) : MvPolynomial σ R :=
   x.modOf s
 
@@ -200,7 +200,7 @@ theorem X_dvd_iff_modMonomial_eq_zero {i : σ} {x : MvPolynomial σ R} :
 
 end XLemmas
 
-/-! ### Some results about dvd (`∣`) on `monomial` and `X` -/
+/-! . -/
 
 
 theorem monomial_dvd_monomial {r s : R} {i j : σ →₀ ℕ} :

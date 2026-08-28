@@ -2,16 +2,16 @@ import ProximityPrize.Benchmark.TargetLower
 
 import ProximityPrize.SubmissionLower.LocalMathlib_Algebra_MvPolynomial_NoZeroDivisors
 
-/-!
-# Actual local contact kernels and bounded coefficient spaces
+/-! .
 
-Model label: gpt-5.
 
-Variables 0, 1, 2 denote Y, R, Z. The contact map retains precisely the
-coefficients of Y-degree below h after substituting Y + R for Y.
-This file concerns the genuine polynomial map, not a sampled matrix.
-No direct alignment theorem or competition claim is asserted here.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagRankKernel6641Research
 
@@ -66,7 +66,7 @@ theorem slopeDifference_ne_zero : slopeDifference K ≠ 0 := by
   have hh := congrArg (shiftPlus K) h
   simpa using hh
 
-/-- Monomial remainder as a genuine linear coefficient projection. -/
+/-- . -/
 def monomialRemainder (d : Fin 3 →₀ ℕ) : Poly K →ₗ[K] Poly K where
   toFun f := f.modMonomial d
   map_add' f g := by
@@ -80,14 +80,14 @@ def monomialRemainder (d : Fin 3 →₀ ℕ) : Poly K →ₗ[K] Poly K where
     · simp [MvPolynomial.coeff_modMonomial_of_le _ he]
     · simp [MvPolynomial.coeff_modMonomial_of_not_le _ he]
 
-/-- The first h Y coefficients at Y=R, with R and Z still formal. -/
+/-- . -/
 def contactJet (h : ℕ) : Poly K →ₗ[K] Poly K :=
   (monomialRemainder K (Finsupp.single 0 h)).comp (shiftPlus K).toLinearMap
 
 theorem contactJet_apply (h : ℕ) (f : Poly K) :
     contactJet K h f = (shiftPlus K f).modMonomial (Finsupp.single 0 h) := rfl
 
-/-- This is the actual contact-kernel criterion, in all characteristics. -/
+/-- . -/
 theorem contactJet_eq_zero_iff (h : ℕ) (f : Poly K) :
     contactJet K h f = 0 ↔ slopeDifference K ^ h ∣ f := by
   rw [contactJet_apply,
@@ -105,7 +105,7 @@ theorem contactJet_mul_slopeDifference (h : ℕ) (q : Poly K) :
     contactJet K h (slopeDifference K ^ h * q) = 0 :=
   (contactJet_eq_zero_iff K h _).2 ⟨q, rfl⟩
 
-/-- A coefficient condition equivalent to vanishing of the contact jet. -/
+/-- . -/
 theorem contactJet_eq_zero_iff_coeff (h : ℕ) (f : Poly K) :
     contactJet K h f = 0 ↔
       ∀ d : Fin 3 →₀ ℕ, d 0 < h → MvPolynomial.coeff d (shiftPlus K f) = 0 := by
@@ -136,7 +136,7 @@ theorem contactJet_eq_zero_iff_coeff (h : ℕ) (f : Poly K) :
 def boxExponents (M L s : ℕ) : Set (Fin 3 →₀ ℕ) :=
   {d | d 0 ≤ M ∧ d 0 + d 1 + d 2 ≤ L ∧ d 1 ≤ s}
 
-/-- Separate Y/R caps and the coupled Y+Z cap of an actual local block. -/
+/-- . -/
 def coefficientBox (M L s : ℕ) : Submodule K (Poly K) :=
   MvPolynomial.restrictSupport K (boxExponents M L s)
 
@@ -209,8 +209,8 @@ private theorem exponentTriple_eta (d : Fin 3 →₀ ℕ) :
   ext i
   fin_cases i <;> simp
 
-/-- The monomial basis is the full nested flag simplex: the `Y+R+Z`
-degree is capped directly, while `Y` and `R` retain their separate caps. -/
+/-- .
+ -/
 private theorem finPair_heq_of_val_eq
     {n a b : ℕ} {i j : Fin n} {u : Fin a} {v : Fin b}
     (hab : a = b) (hij : i.val = j.val) (huv : u.val = v.val) :
@@ -298,7 +298,7 @@ theorem coefficientBox_finrank_of_le (M L s : ℕ) (hML : M ≤ L) :
         ∑ j : Fin (s + 1), (L + 1 - i.val - j.val) := by
   exact coefficientBox_finrank K M L s
 
-/-- Multiplication by (Y-R)^h embeds the smaller actual coefficient box. -/
+/-- . -/
 def multiplyIntoBox {M L s h : ℕ} (hM : h ≤ M) (hL : h ≤ L) (hs : h ≤ s) :
     coefficientBox K (M - h) (L - h) (s - h) →ₗ[K]
       coefficientBox K M L s where
@@ -320,7 +320,7 @@ theorem multiplyIntoBox_injective
     congrArg Subtype.val heq
   exact mul_left_cancel₀ (pow_ne_zero h (slopeDifference_ne_zero K)) hh
 
-/-- The actual contact map restricted to one bounded homogeneous block. -/
+/-- . -/
 def blockJet (M L s h : ℕ) : coefficientBox K M L s →ₗ[K] Poly K :=
   (contactJet K h).comp (coefficientBox K M L s).subtype
 
@@ -340,7 +340,7 @@ theorem kernelEmbedding_injective {M L s h : ℕ}
   apply multiplyIntoBox_injective K hM hL hs
   exact congrArg Subtype.val heq
 
-/-- An actual polynomial-kernel dimension bound, not an assumed rank count. -/
+/-- . -/
 theorem blockJet_rank_add_quotient_finrank_le {M L s h : ℕ}
     (hM : h ≤ M) (hL : h ≤ L) (hs : h ≤ s) :
     Module.finrank K (LinearMap.range (blockJet K M L s h)) +
@@ -351,8 +351,8 @@ theorem blockJet_rank_add_quotient_finrank_le {M L s h : ℕ}
   have hsum := (blockJet K M L s h).finrank_range_add_finrank_ker
   omega
 
-/-- The coupled triangular contact-rank upper bound used by the interpolation
-gate, for a block where a nonzero smaller box can occur. -/
+/-- .
+ -/
 theorem blockJet_rank_le_triangle_difference {M L s h : ℕ}
     (hML : M ≤ L) (hM : h ≤ M) (hs : h ≤ s) :
     Module.finrank K (LinearMap.range (blockJet K M L s h)) ≤
@@ -366,8 +366,8 @@ theorem blockJet_rank_le_triangle_difference {M L s h : ℕ}
       (Nat.sub_le_sub_right hML h)] at hineq
   omega
 
-/-- If the smaller box is empty, rank-nullity still bounds the contact rank
-by the full input coefficient dimension. -/
+/-- .
+ -/
 theorem blockJet_rank_le_input (M L s h : ℕ) (hML : M ≤ L) :
     Module.finrank K (LinearMap.range (blockJet K M L s h)) ≤
       ∑ i : Fin (M + 1),
@@ -390,8 +390,8 @@ def blockInputCount (M L s : ℕ) : ℕ :=
   ∑ i ∈ Finset.range (M + 1),
     ∑ j ∈ Finset.range (s + 1), (L + 1 - i - j)
 
-/-- The subtraction occurs after adding one, so an overlarge contact
-exponent correctly makes the proposed kernel basis empty. -/
+/-- .
+ -/
 def blockKernelLowerBound (M L s h : ℕ) : ℕ :=
   ∑ i ∈ Finset.range (M + 1 - h),
     ∑ j ∈ Finset.range (s + 1 - h), (L + 1 - h - i - j)
@@ -399,8 +399,8 @@ def blockKernelLowerBound (M L s h : ℕ) : ℕ :=
 def contactRankBound (M L s h : ℕ) : ℕ :=
   blockInputCount M L s - blockKernelLowerBound M L s h
 
-/-- Uniform all-boundary-cases rank bound matching the certified Nat formula.
-The proof embeds a real polynomial box into the real contact kernel. -/
+/-- .
+ -/
 theorem blockJet_rank_le_contactRankBound (M L s h : ℕ) (hML : M ≤ L) :
     Module.finrank K (LinearMap.range (blockJet K M L s h)) ≤
       contactRankBound M L s h := by
@@ -430,9 +430,9 @@ def localRankBound (m L s : ℕ) : ℕ :=
   ∑ r ∈ Finset.range m,
     contactRankBound (min r L) L s (min (r + 1) (m - r))
 
-/-- Sum of genuine local block-image dimensions, with precisely the rank
-upper bound used in the coefficient budget. Global node translation and
-homogeneous-block extraction remain separate explicit interfaces. -/
+/-- .
+
+ -/
 theorem sum_blockJet_ranks_le_localRankBound (m L s : ℕ) :
     (∑ r ∈ Finset.range m,
       Module.finrank K (LinearMap.range

@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamily6600Research
 
-/-!
-# Degree-zero-safe recursive component aggregation
+/-! .
 
-At a many-identity terminal state, degree zero need not force the literal
-seed coordinate `Z` to be transcendental.  We therefore charge the tail to
-`zCost + allCost`.  The adaptive all-coordinate projection is nonconstant
-on every non-point regular component, so this charge is always positive;
-the extra global mixed-volume term fits inside the score-66 ledger.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyAll6600Research
 
@@ -41,8 +41,8 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Full component aggregation with an unconditional all-coordinate fallback
-for the degree-zero terminal branch. -/
+/-- .
+ -/
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
@@ -166,7 +166,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
     (by simpa only [unitCost] using B.sum_weightedCost_le unitYZFlag)
     hlargeSum
 
-/-- Accepted `(8,43,503)` compatibility wrapper. -/
+/-- . -/
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)

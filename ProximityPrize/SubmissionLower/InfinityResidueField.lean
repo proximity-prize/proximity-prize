@@ -3,20 +3,20 @@ import ProximityPrize.SubmissionLower.InfinityValuationRing
 
 
 
-/-!
-# The actual infinity residue field is the constant field
+/-! .
 
-Model label: gpt-5.
 
-The valuation ring is the actual unit ball of RatFunc.inftyValuation.
-Every element has a constant residue: subtract 0 when numerator degree
-is smaller than denominator degree, or subtract the numerator leading
-coefficient when the degrees agree (the denominator is monic).
-Leading-term cancellation proves that the difference has value < 1.
 
-The resulting constant-to-residue map is proved bijective. This is an
-actual residue-field identification, not an assumed unit-weight lemma.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.InfinityResidueField
 
@@ -30,7 +30,7 @@ local instance : DecidableEq K := Classical.decEq K
 
 abbrev InfinityRing := InfinityValuationRing.InfinityRing K
 
-/-- The actual inclusion of constants into the infinity valuation ring. -/
+/-- . -/
 def constantMap : K →+* InfinityRing K where
   toFun c := ⟨RatFunc.C c, by
     change RatFunc.inftyValuation K (RatFunc.C c) ≤ 1
@@ -45,8 +45,8 @@ def constantMap : K →+* InfinityRing K where
 theorem constantMap_value (c : K) :
     (constantMap K c).val = RatFunc.C c := rfl
 
-/-- Strict polynomial degree inequality gives positive order at infinity
-for the actual quotient, including a zero numerator. -/
+/-- .
+ -/
 theorem polynomial_quotient_value_lt_one
     (f g : Polynomial K) (hg : g ≠ 0) (hdeg : f.degree < g.degree) :
     RatFunc.inftyValuation K
@@ -69,8 +69,8 @@ theorem polynomial_quotient_value_lt_one
     ← WithZero.exp_zero, WithZero.exp_lt_exp]
   exact sub_neg.mpr (Int.ofNat_lt.mpr hnat)
 
-/-- Every actual infinity-integral rational function differs from a
-constant by an element of the actual maximal ideal. -/
+/-- .
+ -/
 theorem exists_constant_difference_lt_one (r : InfinityRing K) :
     ∃ c : K, RatFunc.inftyValuation K (r.val - RatFunc.C c) < 1 := by
   by_cases hr : r.val = 0
@@ -153,8 +153,8 @@ theorem residueConstant_surjective : Function.Surjective (residueConstant K) := 
     simpa only [map_sub, residueConstant, RingHom.comp_apply] using hz
   exact heq.symm
 
-/-- The actual infinity residue field is the constant field, over every
-field K; no algebraic-closure assumption is needed for this base fact. -/
+/-- .
+ -/
 def residueEquiv : K ≃+* ResidueField K :=
   RingEquiv.ofBijective (residueConstant K)
     ⟨residueConstant_injective K, residueConstant_surjective K⟩

@@ -26,15 +26,15 @@ variable as RatFunc.X because the trusted target opens a conflicting
 bivariate-polynomial X notation. The original theorem and proof are unchanged.
 -/
 
-/-!
-# The degree of rational functions
+/-! .
 
-## Main definitions
-We define the degree of a rational function, with values in `ℤ`:
-- `intDegree` is the degree of a rational function, defined as the difference between the
-  `natDegree` of its numerator and the `natDegree` of its denominator. In particular,
-  `intDegree 0 = 0`.
--/
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -53,9 +53,9 @@ open Polynomial
 
 variable [Field K]
 
-/-- `intDegree x` is the degree of the rational function `x`, defined as the difference between
-the `natDegree` of its numerator and the `natDegree` of its denominator. In particular,
-`intDegree 0 = 0`. -/
+/-- .
+
+ -/
 def intDegree (x : K⟮X⟯) : ℤ :=
   natDegree x.num - natDegree x.denom
 

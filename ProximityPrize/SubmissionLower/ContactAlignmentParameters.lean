@@ -1,19 +1,19 @@
 import ProximityPrize.Benchmark.TargetLower
 
-/-!
-# Exact arithmetic for the direct-contact alignment candidate
+/-! .
 
-Model label: gpt-5.
 
-The definitions below evaluate the actual coefficient and local-contact-rank
-formulas, followed by the conservative mixed-degree ledger. They do not assert
-the interpolation rank theorem, the polynomiality-locus theorem, or mixed
-Bezout. Those mathematical obligations remain separate. In particular this
-module is not itself a ProtocolClaim or a complete competition submission.
 
-Only ordinary kernel-checked tactics are used; no native evaluation axiom is
-introduced. Compile on the authorized remote backend, never locally.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAlignmentParameters
 
@@ -36,7 +36,7 @@ def yCap : ℕ := (weightedCap - 1) / w
 def gap : ℕ := agreements - w
 def algebraicCap : ℕ := (2 * slopeCap - 1) * seedTotalCap
 
-/-- Nat subtraction is the positive part of each strict coefficient cap. -/
+/-- . -/
 def coefficientCount : ℕ :=
   ∑ i ∈ range (seedTotalCap + 1),
     ∑ j ∈ range (slopeCap + 1),
@@ -44,8 +44,8 @@ def coefficientCount : ℕ :=
 
 def contactExponent (r : ℕ) : ℕ := min (r + 1) (multiplicity - r)
 
-/-- The quotient basis is empty when the contact exponent exceeds the
-available first-variable degree. The subtraction occurs after `+1`. -/
+/-- .
+ -/
 def localContactRank : ℕ :=
   ∑ r ∈ range multiplicity,
     (((slopeCap + 1) *
@@ -60,7 +60,7 @@ structure DegreeVector where
   z : ℕ
   deriving DecidableEq
 
-/-- The coefficient of the product of three distinct hyperplane classes. -/
+/-- . -/
 def mixed (a b c : DegreeVector) : ℕ :=
   a.y * b.r * c.z + a.y * b.z * c.r +
   a.r * b.y * c.z + a.r * b.z * c.y +
@@ -78,13 +78,13 @@ def lastTail : DegreeVector := tailVector weightedCap
 def agreementVector : DegreeVector :=
   ⟨1 + w * (2 * yCap - 1), w * (2 * slopeCap - 1), 2 * w * seedTotalCap + 1⟩
 
-/-- Numerator of the early-cut branch over the common denominator `gap^2`. -/
+/-- . -/
 def cutNumerator (v : DegreeVector) : ℕ :=
   gap ^ 2 * mixed v firstTail lastTail +
   n * gap * mixed v firstTail agreementVector +
   (errors + 1) * gap ^ 2 * mixed v firstTail unitZ
 
-/-- Numerator of the whole-polynomial-surface branch over `gap^2`. -/
+/-- . -/
 def wholeNumerator (v : DegreeVector) : ℕ :=
   (n - w) ^ 2 * mixed v agreementVector agreementVector +
   (errors + 1) * (n - w) * gap * mixed v agreementVector unitZ
@@ -94,7 +94,7 @@ def regularNumerator : ℕ :=
   slopeCap * wholeNumerator unitR +
   seedTotalCap * wholeNumerator unitZ
 
-/-- Numerator of the algebraic/singular branch over `gap`. -/
+/-- . -/
 def singularNumerator : ℕ :=
   gap * (algebraicCap + 2 * algebraicCap ^ 2 +
       algebraicCap * (1 + 2 * (w + 1) * (algebraicCap - 1)) +
@@ -156,8 +156,8 @@ theorem strict_ledger_budget : totalNumerator < alignmentBudget * gap ^ 2 := by
   rw [ledger_numerator_exact, denominator_exact]
   norm_num [alignmentBudget]
 
-/-- This arithmetic finish retains the missing geometric cardinal estimate
-as an explicit hypothesis. It is not a proof of that estimate. -/
+/-- .
+ -/
 theorem below_budget_of_scaled_cardinality_bound
     (cardinality : ℕ) (h : cardinality * gap ^ 2 ≤ totalNumerator) :
     cardinality < alignmentBudget := by

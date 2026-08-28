@@ -4,21 +4,21 @@ import ProximityPrize.SubmissionLower.ContactLocalDivisibility
 
 
 
-/-!
-# Actual binomial translation of the contact interpolant
+/-! .
 
-Model label: gpt-5.
 
-The new variable T is the outer univariate polynomial variable. Inner
-variables 0,1,2 are Y,R,Z. This file identifies the explicit coefficient-array
-equations with the coefficients of an actual algebra-homomorphic translation
-of the reconstructed polynomial. No received derivative is assumed.
 
-The coefficient divisibilities specialize to genuine contact multiplicities.
-The weighted support caps give the required degree inequality, hence universal
-polynomial vanishing on sufficiently large agreement supports for the frozen
-profile. The geometric alignment bound is not asserted in this module.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactTranslation
 
@@ -39,7 +39,7 @@ def translationVariables (x u₀ u₁ : K) : Fin 4 → LocalPolynomial K :=
     Polynomial.C (MvPolynomial.X 1),
     Polynomial.C (MvPolynomial.X 2)]
 
-/-- X maps to x+T and Y maps to u0+Z*u1+T*Y. -/
+/-- . -/
 def homogenizedTranslation (x u₀ u₁ : K) :
     MvPolynomial (Fin 4) K →ₐ[K] LocalPolynomial K :=
   MvPolynomial.aeval (translationVariables K x u₀ u₁)
@@ -60,8 +60,8 @@ theorem localMonomial_eq (f j z : ℕ) :
   rw [localMonomial, MvPolynomial.monomial_add_single,
     MvPolynomial.monomial_add_single, ← MvPolynomial.X_pow_eq_monomial]
 
-/-- A coefficient identity over an arbitrary commutative ring. Expanding
-only the second affine power avoids a convolution reindexing argument. -/
+/-- .
+ -/
 theorem coeff_shifted_affine_product
     {A : Type*} [CommRing A] (x a y b : A) (e i r : ℕ) :
     (((Polynomial.X + Polynomial.C x) ^ e *
@@ -104,8 +104,8 @@ theorem translation_column (D w L s : ℕ) (x u₀ u₁ : K)
   simp [homogenizedTranslation, translationVariables,
     Polynomial.algebraMap_apply, MvPolynomial.algebraMap_eq]
 
-/-- The explicit binomial entry is the actual coefficient of a translated
-column, including its arbitrary field coefficient. -/
+/-- .
+ -/
 theorem translation_column_coeff (D w L s : ℕ) (x u₀ u₁ : K)
     (c : CoefficientIndex D w L s) (a : K) (r : ℕ) :
     (homogenizedTranslation K x u₀ u₁
@@ -134,8 +134,8 @@ theorem translation_column_coeff (D w L s : ℕ) (x u₀ u₁ : K)
     ring
   · simp
 
-/-- The array map is now identified with an actual polynomial translation,
-not just a matrix carrying the expected labels. -/
+/-- .
+ -/
 theorem translation_reconstruct_coeff (D w L s : ℕ) (x u₀ u₁ : K)
     (θ : CoefficientIndex D w L s → K) (r : ℕ) :
     (homogenizedTranslation K x u₀ u₁ (reconstruct K D w L s θ)).coeff r =
@@ -149,8 +149,8 @@ theorem translation_reconstruct_coeff (D w L s : ℕ) (x u₀ u₁ : K)
           coefficientBox K (min r L) L s) : Poly K)
   simp [boundedBlockEntry]
 
-/-- A genuine nonzero interpolant whose actual translated coefficient at
-every node and every block is divisible by the required contact power. -/
+/-- .
+ -/
 theorem exists_frozen_translated_contact_interpolant
     (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
     ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,
@@ -167,7 +167,7 @@ theorem exists_frozen_translated_contact_interpolant
   exact all_blocks_divisible_of_equations IRSProfile.Field 3324960 131071 176 5 18
     (IRSProfile.domain i) (u₀ i) (u₁ i) θ (hequations i) r
 
-/-- Local Y is the candidate derivative plus T times a residual quotient. -/
+/-- . -/
 def contactEvaluation (R B : Polynomial K) (γ : K) : Poly K →ₐ[K] Polynomial K :=
   MvPolynomial.aeval ![R + Polynomial.X * B, R, Polynomial.C γ]
 
@@ -185,8 +185,8 @@ theorem contactEvaluation_seedAffine (R B : Polynomial K) (γ u₀ u₁ : K) :
   rw [seedAffine, ← MvPolynomial.C_mul_X_eq_monomial]
   simp [contactEvaluation, Polynomial.algebraMap_eq, mul_comm]
 
-/-- Coefficient contact divisibility supplies true order after substitution.
-The full exponent m-r makes this valid uniformly, also for r≥m. -/
+/-- .
+ -/
 theorem outerEvaluation_contact_dvd
     (H : LocalPolynomial K) (m : ℕ) (R B : Polynomial K) (γ : K)
     (hcoeff : ∀ r : ℕ, slopeDifference K ^ (m - r) ∣ H.coeff r) :
@@ -216,8 +216,8 @@ def specialization (P : Polynomial K) (γ : K) :
     MvPolynomial (Fin 4) K →ₐ[K] Polynomial K :=
   MvPolynomial.aeval ![Polynomial.X, P, P.derivative, Polynomial.C γ]
 
-/-- The two actual substitution maps agree whenever the second-order
-contact residual has been written as T²B. -/
+/-- .
+ -/
 theorem outerEvaluation_translation
     (Q : MvPolynomial (Fin 4) K) (P : Polynomial K)
     (x u₀ u₁ γ : K) (B : Polynomial K)
@@ -245,8 +245,8 @@ theorem outerEvaluation_translation
           MvPolynomial.algebraMap_eq, hP] <;> ring
   exact DFunLike.congr_fun hhom Q
 
-/-- Agreement of values alone, not derivative data, gives order m in the
-specialized interpolant at the chosen node. -/
+/-- .
+ -/
 theorem X_pow_dvd_taylor_specialization
     (Q : MvPolynomial (Fin 4) K) (P : Polynomial K)
     (x u₀ u₁ γ : K) (m : ℕ)
@@ -268,8 +268,8 @@ theorem X_pow_dvd_taylor_specialization
   rw [outerEvaluation_translation K Q P x u₀ u₁ γ B hP] at hh
   exact hh
 
-/-- The generic many-root finish. Its explicit degree input is discharged
-from the weighted support caps in the lemmas below. -/
+/-- .
+ -/
 theorem specialization_eq_zero_of_contact_and_degree
     [DecidableEq K] {I : Type*} [DecidableEq I]
     (Q : MvPolynomial (Fin 4) K) (P : Polynomial K) (γ : K)
@@ -314,8 +314,8 @@ theorem specialization_monomial
   rw [monomial_eq K d a]
   simp [specialization, Polynomial.algebraMap_eq]
 
-/-- Derivatives cost at most w-1 in degree, including constants and zero.
-No characteristic or separability assumption is needed for this estimate. -/
+/-- .
+ -/
 theorem specialization_monomial_natDegree_le
     (P : Polynomial K) (γ : K) (w : ℕ) (hP : P.natDegree ≤ w)
     (d : Fin 4 →₀ ℕ) (a : K) :
@@ -339,8 +339,8 @@ theorem specialization_monomial_natDegree_le
         (Polynomial.natDegree_mul_le_of_le hc hx) hy) hr) hz
   simpa only [Nat.zero_add, Nat.add_zero, Nat.mul_comm] using hh
 
-/-- The actual support inequalities imply the actual specialized degree cap;
-the assertion remains true when specialization produces the zero polynomial. -/
+/-- .
+ -/
 theorem specialization_natDegree_lt
     (D w L s : ℕ) (Q : MvPolynomial (Fin 4) K) (P : Polynomial K) (γ : K)
     (hD : 0 < D) (hcaps : Q ∈ globalCoefficientBox K D w L s)
@@ -361,9 +361,9 @@ theorem specialization_natDegree_lt
     (fun d => specialization K P γ (MvPolynomial.monomial d (MvPolynomial.coeff d Q))) hterms
   exact lt_of_le_of_lt hh (by omega)
 
-/-- The full interpolation/vanishing front end for the frozen challenge
-profile. The same nonzero Q works for every seed, polynomial, and sufficiently
-large agreement support. This is not the remaining geometric seed count. -/
+/-- .
+
+ -/
 theorem exists_frozen_universal_vanishing_interpolant
     (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
     ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,

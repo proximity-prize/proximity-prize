@@ -2,15 +2,15 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualPolynomialResearch
 import ProximityPrize.SubmissionLower.ContactIdentityResidualPencilResearch
 
-/-!
-# One common residual family on an actual identity set
+/-! .
 
-The pointwise residual theorem chooses the same Lagrange pencil in its proof,
-but its existential interface does not expose that uniformity.  Nested
-incidence needs one common `P0`, `P1`, and nodal factor for the complete seed
-family.  This module packages precisely that family-level normal form and its
-agreement/no-large-pencil consequences.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualFamilyResearch
 
@@ -25,8 +25,8 @@ variable {K ι : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- A single base-field Lagrange pencil and a single residual-polynomial
-function work simultaneously for every seed in `Gamma`. -/
+/-- .
+ -/
 theorem exists_common_affine_nodal_residual_family
     (I : Finset ι) (x u0 u1 : ι → K)
     (w : ℕ) (hIw : I.card ≤ w) (hinj : Set.InjOn x I)
@@ -104,8 +104,8 @@ theorem exists_common_affine_nodal_residual_family
     V * residual gamma at hf
   linear_combination hf
 
-/-- Consumer package: the common residual family simultaneously preserves
-all nonidentity agreements and inherits the original no-large-pencil bound. -/
+/-- .
+ -/
 theorem exists_residual_family_with_incidence_data
     (I nodes : Finset ι) (x u0 u1 : ι → K)
     (w e : ℕ) (hsub : I ⊆ nodes) (hIw : I.card ≤ w)

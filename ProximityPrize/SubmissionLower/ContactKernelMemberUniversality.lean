@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactTranslation
 
-/-!
-# Universal specialization for every contact-kernel member
+/-! .
 
-This module packages the parameter-generic front end needed when several
-contact interpolants are selected from the same kernel.  It does not choose a
-kernel member or instantiate any target arithmetic: every supplied array in
-the kernel gives the translated contact divisibilities, and hence universal
-specialization zero under the usual agreement and degree hypotheses.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactKernelMemberUniversality
 
@@ -20,7 +20,7 @@ noncomputable section
 
 variable (K : Type*) [Field K]
 
-/-- Kernel membership is exactly the family of explicit contact equations. -/
+/-- . -/
 theorem block_equations_of_mem_ker
     {I : Type*} [Fintype I]
     (D w L s m : ℕ) (nodes u0 u1 : I → K)
@@ -41,8 +41,8 @@ theorem block_equations_of_mem_ker
       Poly K) = 0 at happ
   exact happ
 
-/-- Every kernel member has the full translated contact divisibility at every
-node.  No nonzero or dimension hypothesis is needed for this statement. -/
+/-- .
+ -/
 theorem translated_contact_of_mem_ker
     {I : Type*} [Fintype I]
     (D w L s m : ℕ) (nodes u0 u1 : I → K)
@@ -59,8 +59,8 @@ theorem translated_contact_of_mem_ker
     (nodes i) (u0 i) (u1 i) theta
     (block_equations_of_mem_ker K D w L s m nodes u0 u1 theta htheta i) r
 
-/-- The flexible many-root conclusion.  The numerical interface is only the
-natural capacity inequality `D ≤ m * support.card`. -/
+/-- .
+ -/
 theorem specialization_eq_zero_of_mem_ker
     [DecidableEq K] {I : Type*} [Fintype I] [DecidableEq I]
     (D w L s m : ℕ) (nodes : I ↪ K) (u0 u1 : I → K)
@@ -84,7 +84,7 @@ theorem specialization_eq_zero_of_mem_ker
       (reconstruct_mem_globalCoefficientBox K D w L s theta) hP
     exact hdegree.trans_le hcapacity
 
-/-- Standard agreement-count form for profiles with weighted cap `D = m*a`. -/
+/-- . -/
 theorem specialization_eq_zero_of_agreements
     [DecidableEq K] {I : Type*} [Fintype I] [DecidableEq I]
     (D w L s m a : ℕ) (nodes : I ↪ K) (u0 u1 : I → K)
@@ -103,8 +103,8 @@ theorem specialization_eq_zero_of_agreements
     exact Nat.mul_le_mul_left m hcard
   · exact hvalues
 
-/-- A nonzero kernel array reconstructs to a nonzero boxed polynomial, and
-that same polynomial vanishes after every admissible specialization. -/
+/-- .
+ -/
 theorem nonzero_kernel_member_universal
     [DecidableEq K] {I : Type*} [Fintype I] [DecidableEq I]
     (D w L s m a : ℕ) (nodes : I ↪ K) (u0 u1 : I → K)

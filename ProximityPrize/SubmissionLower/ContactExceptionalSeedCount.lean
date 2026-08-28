@@ -2,20 +2,20 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactExceptionalSeedAuxiliary
 
 
-/-!
-# Actual finite exceptional-seed count
+/-! .
 
-Model label: gpt-5.
 
-A seed-only generic surface is projected to a genuine univariate polynomial.
-Variable-support congruence proves reconstruction, hence nonzero status;
-the actual monomial expansion proves its degree cap. Distinct embedded seeds
-are then actual roots, so the standard polynomial root count applies.
 
-The final theorem bounds the real exceptional solutions of the constructed
-auxiliary by 2*j^2. No free injective projection, coefficient selection,
-genericity premise, geometric point count, or new axiom is supplied.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactExceptionalSeedCount
 
@@ -41,7 +41,7 @@ theorem seed_only_vars (S : MvPolynomial (Fin 3) T)
   · exact False.elim ((MvPolynomial.mem_vars_iff_degreeOf_ne_zero.mp hi) hR)
   · rfl
 
-/-- This is an actual left inverse on the seed-only support subspace. -/
+/-- . -/
 theorem seedProjection_reconstruct (S : MvPolynomial (Fin 3) T)
     (hY : S.degreeOf 0 = 0) (hR : S.degreeOf 1 = 0) :
     seedEmbedding T (seedProjection T S) = S := by
@@ -147,8 +147,8 @@ theorem auxiliarySeedPolynomial_eval
   have hs := surface_seed_only φ H hY hR
   exact seedProjection_eval (surfaceMap φ H) hs.1 hs.2 v
 
-/-- The seeds, not unverified geometric points, are mapped injectively
-to roots of the actual nonzero univariate polynomial. -/
+/-- .
+ -/
 theorem card_surface_seeds_le
     (φ : Polynomial K →+* T) (hφ : Function.Injective φ)
     (H : MvPolynomial (Fin 4) K) (hH : H ≠ 0)
@@ -195,8 +195,8 @@ theorem card_actual_solution_seeds_le
   · have hh := (ContactGeometricFirstTail.actual_generic_initial_zero_iff K P γ H).mpr hP
     simpa only [ContactGeometricFirstTail.canonical_geometricSurfaceMap] using hh
 
-/-- The previously constructed exceptional branch has at most 2*j^2
-actual seeds, including both seed-only factors and Y-singular solutions. -/
+/-- .
+ -/
 theorem exceptional_solution_seed_card_le
     (J : MvPolynomial (Fin 4) K) (hJ : J ≠ 0) (hR : J.degreeOf 2 = 0)
     (j p : ℕ) [CharP K p] (hj : 1 ≤ j) (hsmall : j < p)

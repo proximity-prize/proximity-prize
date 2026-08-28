@@ -1,20 +1,20 @@
 import ProximityPrize.SubmissionLower.AlignmentScalarListBridge
 
-/-!
-# Actual moment-curve separation and finite interleaved lists
+/-! .
 
-Model label: gpt-5.
 
-A nonzero coordinate-difference polynomial is constructed for each unequal
-pair of r-row words. Its root set has at most r-1 elements. A union over
-the actual two-element subsets gives the binomial pair bound, and hence
-an actual moment-curve parameter separating the finite family.
 
-The finite interleaved-list corollary uses the verified scalar bridge.
-No separator, root-count estimate, or intermediate list bound is assumed.
-No Code.Lambda or new ProtocolClaim is asserted; the 6400 candidate is
-untouched.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.AlignmentMomentCurveProjection
 
@@ -26,7 +26,7 @@ variable {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
 variable [Field F] [Fintype F] [DecidableEq F]
 variable {r : ℕ}
 
-/-- The coefficients of an r-row value, in increasing moment-curve order. -/
+/-- . -/
 def rowPolynomial (v : Fin r → F) : Polynomial F :=
   ∑ j : Fin r, Polynomial.monomial j.val (v j)
 
@@ -60,7 +60,7 @@ theorem rowPolynomial_natDegree_le (v : Fin r → F) :
   have hj := j.isLt
   exact hterm.trans (by omega)
 
-/-- The actual projection, not an existentially assumed linear functional. -/
+/-- . -/
 def momentProjection (t : F) (v : ι → Fin r → F) : ι → F :=
   fun i => (rowPolynomial (v i)).eval t
 
@@ -74,8 +74,8 @@ theorem momentProjection_apply (t : F) (v : ι → Fin r → F) (i : ι) :
   change (Polynomial.monomial j.val (v i j)).eval t = t ^ j.val * v i j
   rw [Polynomial.eval_monomial, mul_comm]
 
-/-- One explicit coordinate-difference polynomial controls every collision
-of two unequal words under the actual moment projection. -/
+/-- .
+ -/
 theorem exists_nonzero_coordinate_difference
     (v u : ι → Fin r → F) (hne : v ≠ u) :
     ∃ P : Polynomial F, P ≠ 0 ∧ P.natDegree ≤ r - 1 ∧
@@ -95,7 +95,7 @@ theorem exists_nonzero_coordinate_difference
     rw [Polynomial.eval_sub]
     exact sub_eq_zero.mpr (congrFun ht i)
 
-/-- All parameters at which some unequal members of this finite pair collide. -/
+/-- . -/
 def pairCollisionSeeds (pair : Finset (ι → Fin r → F)) : Finset F := by
   classical
   exact Finset.univ.filter (fun t => ∃ v ∈ pair, ∃ u ∈ pair,
@@ -151,8 +151,8 @@ theorem allCollisionSeeds_card_le (L : Finset (ι → Fin r → F)) :
     _ = (r - 1) * L.card.choose 2 := by
       rw [Finset.card_powersetCard, Nat.mul_comm]
 
-/-- A single actual field parameter separates every member of L.
-The union bound counts unordered pairs exactly once. -/
+/-- .
+ -/
 theorem exists_separating_moment_parameter
     (L : Finset (ι → Fin r → F))
     (hfield : (r - 1) * L.card.choose 2 < Fintype.card F) :
@@ -214,9 +214,9 @@ theorem momentProjection_preserves_agreements
   change (rowPolynomial (v i)).eval t = (rowPolynomial (u i)).eval t
   rw [hv]
 
-/-- Actual finite interleaved-list bound, from strong scalar alignment.
-Both field-size inequalities are explicit; no strong interleaved
-alignment premise or assumed separating map is used. -/
+/-- .
+
+ -/
 theorem interleaved_finite_list_card_le
     (C : LinearCode ι F) (e w B : ℕ)
     (hzero : AlignmentScalarListBridge.ZeroCoordinateBound C w)

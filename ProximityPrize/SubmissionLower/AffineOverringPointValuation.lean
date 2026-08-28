@@ -2,20 +2,20 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AffinePointValuation
 
 
-/-!
-# Actual point valuations on an arbitrary embedded overring
+/-! .
 
-Model label: gpt-5.
 
-Let S be a Dedekind domain with fraction field L, and let S -> B -> L
-be a compatible embedding. A field-valued point of B restricting to a
-nonzero prime p of S forces ALL of B into the actual p-adic unit ball.
-Moreover, its zeros are exactly the elements with valuation below one.
 
-The proof uses actual fractions in S localized at p. It requires neither
-B to be Dedekind nor B to be integral over S. This is the bridge needed
-when an affine coordinate projection is not globally finite.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.AffineOverringPointValuation
 
@@ -45,8 +45,8 @@ theorem denominator_ne_zero (p : HeightOneSpectrum S) (b : S)
   have hb0 : b ≠ 0 := fun h => hb (h ▸ p.asIdeal.zero_mem)
   simpa only [map_zero] using (IsFractionRing.injective S L).ne hb0
 
-/-- Unit-ball membership gives an actual denominator outside the center,
-using equality with the actual prime localization. -/
+/-- .
+ -/
 theorem fraction_of_value_le_one (p : HeightOneSpectrum S) (x : L)
     (hx : p.valuation L x ≤ 1) :
     ∃ a b : S, b ∉ p.asIdeal ∧ x * algebraMap S L b = algebraMap S L a := by
@@ -84,8 +84,8 @@ theorem lift_multiplication (x : B) (a b : S)
   apply hinj
   simpa only [map_mul, ← IsScalarTower.algebraMap_apply S B L] using h
 
-/-- The reciprocal of an overring element with value at least one has an
-actual prime-local fraction; clearing it gives x*a=b in the overring. -/
+/-- .
+ -/
 theorem inverse_fraction (x : B)
     (hx : 1 ≤ p.valuation L (algebraMap B L x)) :
     ∃ a b : S, b ∉ p.asIdeal ∧
@@ -107,8 +107,8 @@ theorem inverse_fraction (x : B)
   exact ⟨a, b, hb, lift_multiplication hinj x a b hmul, hval⟩
 
 include hker in
-/-- The actual point forces every element of B into this valuation ring;
-no integrality of B over S is assumed. -/
+/-- .
+ -/
 theorem overring_value_le_one (x : B) :
     p.valuation L (algebraMap B L x) ≤ 1 := by
   by_contra h

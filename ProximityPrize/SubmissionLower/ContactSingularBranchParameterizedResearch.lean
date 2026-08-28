@@ -3,15 +3,15 @@ import ProximityPrize.SubmissionLower.ContactTightSingularLedgerResearch
 import ProximityPrize.SubmissionLower.ContactSingularBranch6600Research
 import ProximityPrize.SubmissionLower.ContactImplicitPairSeedCountParameterizedResearch
 
-/-!
-# Actual singular branch at arbitrary contact parameters
+/-! .
 
-This module retargets the accepted score-66 singular-family construction to an
-arbitrary `TightParameters` package.  The finite families are the existing
-`implicitSeeds` and `singularSeeds`; the only incidence input is the
-parameterized implicit-pair theorem, which in turn uses the accepted proper-cut
-bound.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSingularBranchParameterizedResearch
 
@@ -34,8 +34,8 @@ abbrev TightParameters := ContactTightSingularLedgerResearch.TightParameters
 
 namespace TightParameters
 
-/-- The actual implicit-pair family has the three aggregate costs required by
-the tight parameterized ledger. -/
+/-- .
+ -/
 theorem implicitVector_budgets_of_profile
     (P : TightParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     {p : ℕ} [CharP K p]
@@ -57,8 +57,8 @@ theorem implicitVector_budgets_of_profile
   simpa only [implicitVector, Finset.sum_coe_sort,
     ContactTightSingularLedgerResearch.TightParameters.implicitYCap] using hb
 
-/-- The actual exceptional family is controlled by the same algebraic cap as
-the implicit-pair budgets. -/
+/-- .
+ -/
 theorem exceptionalSeeds_bound_of_profile
     (P : TightParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     {p : ℕ} [CharP K p]
@@ -92,8 +92,8 @@ theorem exceptionalSeeds_bound_of_profile
 variable {Iota : Type}
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- The accepted proper-cut estimate applied to one actual implicit-pair
-family at arbitrary contact parameters. -/
+/-- .
+ -/
 theorem implicitSeeds_pair_bound_of_profile
     (P : TightParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     {p : ℕ} [CharP K p]
@@ -147,8 +147,8 @@ theorem implicitSeeds_pair_bound_of_profile
     ContactTightSingularLedgerResearch.TightParameters.errors,
     ContactTightSingularLedgerResearch.TightParameters.gap, dot] using hpair
 
-/-- Complete actual singular union at the natural one-`gap` scale for an
-arbitrary valid profile. -/
+/-- .
+ -/
 theorem singularSeeds_tight_gap_bound
     (P : TightParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     {p : ℕ} [CharP K p]
@@ -185,7 +185,7 @@ theorem singularSeeds_tight_gap_bound
   exact (Nat.mul_le_mul_right P.gap
     (singularSeeds_card_le_sum Q selected Gamma)).trans hsum
 
-/-- Quotient form of `singularSeeds_tight_gap_bound`. -/
+/-- . -/
 theorem singularSeeds_count_le_countCap
     (P : TightParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     {p : ℕ} [CharP K p]
@@ -216,7 +216,7 @@ theorem singularSeeds_count_le_countCap
 
 end TightParameters
 
-/-! ## Frozen optimized pivots -/
+/-! . -/
 
 def firstResidualQ2 : TightParameters :=
   ⟨262144, 131071, 182807, 8591929, 598, 14⟩

@@ -2,16 +2,16 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualPlanePositiveOrder
 import ProximityPrize.SubmissionLower.BCHKSSparseResultantDegree
 
-/-!
-# Newton-sensitive actual plane projection
+/-! .
 
-This module transports coefficient-height bounds on an actual rationalized
-surface to the nested plane polynomial used by the characteristic-safe
-projection argument.  It also handles the only orientation obstruction: if
-the preferred outer degree is zero, swapping the two plane coordinates makes
-the surface inner degree zero, so the ordinary rectangular resultant bound
-loses one of its two terms.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualPlaneJointProjection
 
@@ -24,8 +24,8 @@ noncomputable section
 
 variable {A : Type} [Field A]
 
-/-- A support staircase on a genuine bivariate polynomial bounds every
-inner degree of its nested outer coefficient. -/
+/-- .
+ -/
 theorem bivariateEquiv_coeff_natDegree_le_of_support
     (f : MvPolynomial (Fin 2) A) (height : ℕ → ℕ)
     (hsupport : ∀ d ∈ f.support, d 1 ≤ height (d 0)) (i : ℕ) :
@@ -42,8 +42,8 @@ theorem bivariateEquiv_coeff_natDegree_le_of_support
   simpa only [show (1 : Fin 2) = (0 : Fin 1).succ by decide,
     Finsupp.cons_succ, Finsupp.cons_zero] using hs
 
-/-- A joint support cap on the two genuine variables is exactly a total-degree
-cap after nesting the first variable as the outer polynomial variable. -/
+/-- .
+ -/
 theorem bivariateEquiv_totalDegree_le_of_support
     (f : MvPolynomial (Fin 2) A) (cap : ℕ)
     (hsupport : ∀ d ∈ f.support, d 0 + d 1 ≤ cap) :
@@ -68,7 +68,7 @@ theorem bivariateEquiv_totalDegree_le_of_support
 
 variable (K : Type) [Field K]
 
-/-- The previous support lemma on the actual common plane map. -/
+/-- . -/
 theorem planeMap_coeff_natDegree_le_of_rational_support
     (order : Fin 3 ≃ Fin 3) (F : Original K) (height : ℕ → ℕ)
     (hsupport : ∀ d ∈ (rationalMap K order F).support,
@@ -77,8 +77,8 @@ theorem planeMap_coeff_natDegree_le_of_rational_support
   exact bivariateEquiv_coeff_natDegree_le_of_support
     (rationalMap K order F) height hsupport i
 
-/-- Joint support of the actual rational map bounds the nested plane total
-degree.  This is the bridge used by the trapezoidal resultant theorem. -/
+/-- .
+ -/
 theorem planeMap_totalDegree_le_of_rational_support
     (order : Fin 3 ≃ Fin 3) (F : Original K) (cap : ℕ)
     (hsupport : ∀ d ∈ (rationalMap K order F).support,
@@ -87,8 +87,8 @@ theorem planeMap_totalDegree_le_of_rational_support
   exact bivariateEquiv_totalDegree_le_of_support
     (rationalMap K order F) cap hsupport
 
-/-- Collection into the rational coefficient field preserves every joint
-support cap on the two coordinates not selected as coefficients. -/
+/-- .
+ -/
 theorem rationalMap_joint_support_of_original
     (order : Fin 3 ≃ Fin 3) (F : Original K) (cap : ℕ)
     (hsupport : ∀ d ∈ F.support,
@@ -108,8 +108,8 @@ theorem rationalMap_joint_support_of_original
     show (0 : Fin 2).succ = (1 : Fin 3) by decide,
     show (1 : Fin 2).succ = (2 : Fin 3) by decide] using hsupport u hu
 
-/-- The concrete score-6463 ordering takes R (coordinate 1) as the
-rational coefficient and retains the original Y+Z cap (coordinates 0,2). -/
+/-- .
+ -/
 theorem original_joint_support_to_rationalMap
     (F : Original K) (cap : ℕ)
     (hsupport : ∀ d ∈ F.support, d 0 + d 2 ≤ cap) :
@@ -119,10 +119,10 @@ theorem original_joint_support_to_rationalMap
   intro d hd
   simpa [Equiv.swap_apply_def] using hsupport d hd
 
-/-- Ordinary-resultant wrapper around the fixed-degree trapezoidal theorem.
-Only the first polynomial is padded; the second is kept at its actual outer
-degree, so the padded determinant is a nonzero multiple of the ordinary
-resultant whenever that resultant is nonzero. -/
+/-- .
+
+
+ -/
 theorem ordinary_resultant_natDegree_le_totalDegree
     (B H : A[X][Y]) (n mCap totalB totalH cap : ℕ)
     (hHne : H ≠ 0) (hBouter : B.natDegree ≤ n)
@@ -171,7 +171,7 @@ theorem ordinary_resultant_natDegree_le_totalDegree
       _ = (Polynomial.resultant B H n H.natDegree).natDegree := by rw [hpad]
       _ ≤ cap := hfixedCap
 
-/-- Actual-plane form of the generic trapezoidal ordinary-resultant bound. -/
+/-- . -/
 theorem planeMap_trapezoid_resultant_natDegree_le
     (order : Fin 3 ≃ Fin 3) (G T : Original K)
     (n mCap totalG totalT cap : ℕ) (hTne : T ≠ 0)
@@ -200,9 +200,9 @@ theorem planeMap_trapezoid_resultant_natDegree_le
       K order T totalT hTsupport
   · exact hbudget
 
-/-- Actual ordinary resultant bound for the preferred corner orientation.
-The hypotheses refer to the actual rationalized supports, so no abstract
-projection polynomial is introduced. -/
+/-- .
+
+ -/
 theorem planeMap_corner_resultant_natDegree_le
     (order : Fin 3 ≃ Fin 3) (G T : Original K) (k : ℕ) (hk : 1 ≤ k)
     (hTne : T ≠ 0)
@@ -227,9 +227,9 @@ theorem planeMap_corner_resultant_natDegree_le
   · exact planeMap_coeff_natDegree_le_of_rational_support
       K order T (CornerStaircase.tailHeight k) hTsupport
 
-/-- Swapping the two non-rational coordinates exchanges outer degree and
-inner degree at the level needed here.  We only need the inequality direction
-for the inner degree. -/
+/-- .
+
+ -/
 theorem swapped_planeMap_degreeX_le_outer_natDegree
     (order : Fin 3 ≃ Fin 3) (F : Original K) :
     degreeX (planeMap K (swapOtherOrder order) F) ≤
@@ -251,8 +251,8 @@ theorem swapped_planeMap_degreeX_le_outer_natDegree
       exact (bivariateEquiv_natDegree (RatFunc K)
         (rationalMap K order F)).symm
 
-/-- If the preferred outer degree vanishes, the swapped surface has inner
-degree zero.  Therefore only one rectangular resultant term survives. -/
+/-- .
+ -/
 theorem swapped_resultant_natDegree_le_of_outer_zero
     (order : Fin 3 ≃ Fin 3) (G T : Original K) (gOuter tInner : ℕ)
     (hzero : (planeMap K order G).natDegree = 0)
@@ -271,10 +271,10 @@ theorem swapped_resultant_natDegree_le_of_outer_zero
   rw [hGinner, mul_zero, zero_add] at hres
   exact hres.trans (Nat.mul_le_mul hGouter hTinner)
 
-/-- Select one of the two orderings while using a joint-support resultant
-budget in the preferred orientation and the one-term rectangular budget in
-the degenerate swapped orientation.  The original mixed ledger is unchanged,
-exactly as in `exists_positive_characteristic_order`. -/
+/-- .
+
+
+ -/
 theorem exists_positive_joint_characteristic_order
     (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
     (G T : Original K) (p n mCap totalG totalT cap gOuter tInner : ℕ)
@@ -323,12 +323,12 @@ theorem exists_positive_joint_characteristic_order
     exact (swapped_resultant_natDegree_le_of_outer_zero K order G T
       gOuter tInner hzero hGswapOuter hTswapInner).trans_lt hswapP
 
-/-- Closed trapezoid arithmetic for the score-6463 first Taylor tail. -/
+/-- . -/
 theorem first_6463_trapezoid_budget (m : ℕ) (hm : m ≤ 6553601) :
     m * 175 + 25 * 45875201 - m * 25 ≤ 2129920175 := by
   omega
 
-/-- Closed trapezoid arithmetic for the score-6463 agreement cut. -/
+/-- . -/
 theorem agreement_6463_trapezoid_budget (m : ℕ) (hm : m ≤ 6553551) :
     m * 175 + 25 * 45874851 - m * 25 ≤ 2129903925 := by
   omega
@@ -342,8 +342,8 @@ theorem agreement_6463_trapezoid_cap_below_characteristic :
 theorem swapped_6463_cap_below_characteristic :
     175 * 6553601 < 2130706433 := by norm_num
 
-/-! The score-6464 contact row keeps the same whole-surface trapezoid, but
-uses the sharp `2*yCap-1` recurrence increment and seed cap 176. -/
+/-! .
+ -/
 theorem first_6464_sharpY_trapezoid_budget (m : ℕ) (hm : m ≤ 6422529) :
     m * 176 + 25 * 46137345 - m * 25 ≤ 2123235504 := by
   omega
@@ -361,17 +361,17 @@ theorem agreement_6464_sharpY_trapezoid_cap_below_characteristic :
 theorem swapped_6464_sharpY_cap_below_characteristic :
     176 * 6422529 < 2130706433 := by norm_num
 
-/-- Exact numerical characteristic gate for the degenerate swapped branch
-of the score-6464 candidate. -/
+/-- .
+ -/
 theorem swapped_6464_cap_below_characteristic :
     178 * (25 * 262144 + 1) < 2130706433 := by
   norm_num
 
-/-- Sparse analogue of `exists_positive_characteristic_order`.  It has the
-same positive-outer and two strict characteristic gates consumed by the
-actual coordinate-field theorem.  The preferred order uses the corner
-resultant; if its outer degree is zero, the swapped order uses the one-term
-rectangular fallback. -/
+/-- .
+
+
+
+ -/
 theorem exists_positive_sparse_characteristic_order
     (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
     (G T : Original K) (p k gOuter tInner : ℕ)

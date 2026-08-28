@@ -1,24 +1,24 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactResidualSparsePoleProviderResearch
 
-/-!
-# Exact formal seam for the residual tropical BKK theorem
+/-! .
 
-This module separates the two genuinely geometric operations still needed
-by the sparse post-6464 route.
 
-1. A single polynomial `B` supported on `E` must have no leading-face
-   cancellation at any component pole.  This turns its actual pole order
-   into the support function `h_E`.
-2. The sum of the resulting principal-divisor degrees over the curve
-   components must be bounded by the mixed volume of `G`, `T`, and `E`.
 
-Everything after those operations is proved below.  In particular, an exact
-leading-pole identity only has to be checked on the finite product-formula
-support of `B`; it then bounds the support function on *every* finite set of
-places.  The last theorem packages a generic `B` plus a global BKK cycle
-budget into the production-facing residual pole provider.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactTropicalBKKSeamResearch
 
@@ -52,12 +52,12 @@ theorem exponentSetPoleWeight_nonneg
   unfold exponentSetPoleWeight
   exact Finset.le_max' _ _ (Finset.mem_insert_self (0 : ℤ) _)
 
-/-- If a test polynomial realizes the support function at every normalized
-place, the support-function sum on an arbitrary finite family is bounded by
-the actual principal-divisor pole mass of that one polynomial.
+/-- .
 
-This is the precise reduction from tropical leading terms to the already
-proved common-place product formula. -/
+
+
+
+ -/
 theorem support_sum_le_principal_poleMass_of_exact
     (x : σ → L) (E : Finset (σ →₀ ℕ)) (b : L) (hb : b ≠ 0)
     (hexact : ∀ v : Place K L,
@@ -109,11 +109,11 @@ theorem coordinate_eval_ne_zero_of_not_mem
   rw [← aeval_coordinate_ker Ω P]
   exact hz
 
-/-- The weakest single-polynomial geometric witness that remains after the
-local valuation and product-formula layers.
+/-- .
 
-`exact_pole` is supplied by generic leading-face avoidance.  `cycle_le`
-and `sum_cost_le` are the residual affine/toric BKK zero-cycle theorem. -/
+
+
+ -/
 structure GenericSparseBKKWitness
     (G T H : MvPolynomial (Fin 3) Ω)
     (E : Finset (Fin 3 →₀ ℕ)) (separator : Fin 3) (wholeCost : ℕ)
@@ -174,8 +174,8 @@ structure GenericSparseBKKWitness
         (cost C : ℤ)
   sum_cost_le : (∑ C : RegularComponent Ω G T H, cost C) ≤ wholeCost
 
-/-- A generic leading-term witness plus the residual BKK cycle inequality
-constructs the exact provider consumed by the sharp incidence theorem. -/
+/-- .
+ -/
 def GenericSparseBKKWitness.toResidualPoleComponentBudget
     {G T H : MvPolynomial (Fin 3) Ω}
     {E : Finset (Fin 3 →₀ ℕ)} {separator : Fin 3} {wholeCost : ℕ}

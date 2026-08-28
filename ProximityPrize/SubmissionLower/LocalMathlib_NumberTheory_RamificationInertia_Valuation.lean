@@ -23,18 +23,18 @@ The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
 
-/-!
-# Ramification theory for valuations
+/-! .
 
-- `A` is a Dedekind domain with field of fractions `K`.
-- `B` is a Dedekind domain with field of fractions `L`.
-- `L` is a field extension of `K`.
-- `v` is a height one prime ideal of `A`.
-- `w` is a height one prime ideal of `B` lying over `v`.
 
-This file establishes the relationship between the adic valuation on `K` associated to `v` and the
-adic valuation on `L` associated to `w`, in terms of the ramification index.
--/
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -80,26 +80,26 @@ theorem uniformContinuous_algebraMap_liesOver :
   rw [ContinuousAt, map_zero, (IsValuativeTopology.hasBasis_nhds_zero _).tendsto_iff
     (IsValuativeTopology.hasBasis_nhds_zero _)]
   intro γL _
-  /-
-  `ValueGroup₀ (w.valuation L)` <-------->  `ℤᵐ⁰` <--------> `ValueGroup₀ (v.valuation K)`
-            ^                                                         ^
-            |                                                         |
-            |                                                         |
-            v                                                         v
-  `ValueGroup₀ (WithVal.valuation _)`             `ValueGroup₀ (WithVal.valuation _)`
-            ^                                                         ^
-            |                                                         |
-            |                                                         |
-            v                                                         v
-  `γL : ValuativeRel.ValueGroupWithZero Lʷ`       `γK: ValuativeRel.ValueGroupWithZero Kᵛ`
-  -/
+  /- 
+
+
+
+
+
+
+
+
+
+
+
+-/
   let e := v.asIdeal.ramificationIdx' w.asIdeal
-  -- push `γL` to `ℤᵐ⁰`
+  --
   let σL := WithVal.valueGroupOrderIso₀ (w.valuation L)
   let σw := valueGroup₀_equiv_withZeroMulInt (w.valuation L)
   let σwV := ValuativeRel.ValueGroupWithZero.orderMonoidIso (WithVal.valuation (w.valuation L))
   let m : ℤᵐ⁰ := σw (σL (σwV γL))
-  -- `ℤᵐ⁰` values in `K` exponentiate by `e` in `L` so take the `e`th root and pull back to `γK`
+  --
   let σvV := ValuativeRel.ValueGroupWithZero.orderMonoidIso (WithVal.valuation (v.valuation K))
   let σv := valueGroup₀_equiv_withZeroMulInt (v.valuation K)
   let σK := WithVal.valueGroupOrderIso₀ (v.valuation K)

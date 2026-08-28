@@ -2,12 +2,12 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactRecursiveGCDResearch
 import ProximityPrize.SubmissionLower.ContactStackedInterpolation6670Research
 
-/-!
-# Recursive GCD cover for the three 66.70 interpolants
+/-! .
 
-Only the target boxes are new.  The branch alternative is the generic
-three-vanishing GCD cover.
--/
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedGCDCover6670Research
 
@@ -26,8 +26,8 @@ local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 local instance : GCDMonoid GlobalPoly :=
   UniqueFactorizationMonoid.toGCDMonoid GlobalPoly
 
-/-- The disjoint recursive branch alternative after one selected
-specialization. -/
+/-- .
+ -/
 def RecursiveSpecializationBranch
     (P : Polynomial IRSProfile.Field) (gamma : IRSProfile.Field)
     (QA QB QC : GlobalPoly) : Prop :=
@@ -49,8 +49,8 @@ theorem recursive_branch_of_three_vanishings
   exact recursive_three_branch_cover
     (specialization IRSProfile.Field P gamma).toRingHom QA QB QC hA hB hC
 
-/-- Three nonzero boxed interpolants together with their exact recursive
-specialization cover. -/
+/-- .
+ -/
 theorem exists_stacked_interpolants_with_recursive_cover
     (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
     ∃ QA QB QC : GlobalPoly,

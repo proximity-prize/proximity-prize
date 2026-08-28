@@ -19,15 +19,15 @@ All mathematical declarations and proof bodies are retained, except
 any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
-/-!
-# Associated elements and the integers
+/-! .
 
-This file contains some results on equality up to units in the integers.
 
-## Main results
 
-* `Int.natAbs_eq_iff_associated`: the absolute value is equal iff integers are associated
--/
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 

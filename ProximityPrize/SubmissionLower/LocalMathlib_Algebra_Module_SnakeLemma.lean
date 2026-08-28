@@ -22,46 +22,46 @@ Port elaboration adjustment: qualify LinearMap.zero_apply to resolve the
 additional notation environment inherited from the trusted target.
 -/
 
-/-!
+/-! .
 
-# The snake lemma in terms of modules
 
-The snake lemma is proven in `Mathlib/Algebra/Homology/ShortComplex/SnakeLemma.lean` for all abelian
-categories, but for definitional equality and universe issues we reprove them here for modules.
 
-## Main results
-- `SnakeLemma.δ`: The connecting homomorphism guaranteed by the snake lemma.
-- `SnakeLemma.exact_δ_left`: The connecting homomorphism is exact on the right.
-- `SnakeLemma.exact_δ_right`: The connecting homomorphism is exact on the left.
 
--/
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
 open LinearMap hiding id
 open Function
 
-/-!
-Suppose we have an exact commutative diagram
-```
-        K₂ -F-→ K₃
-        |       |
-        ι₂      ι₃
-        ↓       ↓
-M₁ -f₁→ M₂ -f₂→ M₃
-|       |       |
-i₁      i₂      i₃
-↓       ↓       ↓
-N₁ -g₁→ N₂ -g₂→ N₃
-|       |
-π₁      π₂
-↓       ↓
-C₁ -G-→ C₂
+/-! .
 
-```
-such that `f₂` is surjective with a (set-theoretic) section `σ`, `g₁` is injective with a
-(set-theoretic) retraction `ρ`, and that `ι₃` is injective and `π₁` is surjective.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 variable {R : Type*} [CommRing R] {M₁ M₂ M₃ N₁ N₂ N₃ : Type*}
   [AddCommGroup M₁] [Module R M₁] [AddCommGroup M₂] [Module R M₂] [AddCommGroup M₃] [Module R M₃]
@@ -97,32 +97,32 @@ lemma SnakeLemma.eq_of_eq (x : K₃)
   rw [← sub_eq_zero, ← map_sub, hz₁, hπ₁]
   exact ⟨_, rfl⟩
 
-/--
-**Snake Lemma**
-Suppose we have an exact commutative diagram
-```
-                K₃
-                |
-                ι₃
-                ↓
-M₁ -f₁→ M₂ -f₂→ M₃
-|       |       |
-i₁      i₂      i₃
-↓       ↓       ↓
-N₁ -g₁→ N₂ -g₂→ N₃
-|
-π₁
-↓
-C₁
+/-- .
 
-```
-such that `f₂` is surjective with a (set-theoretic) section `σ`, `g₁` is injective with a
-(set-theoretic) retraction `ρ`,
-then the map `π₁ ∘ ρ ∘ i₂ ∘ σ ∘ ι₃` is a linear map from `K₃` to `C₁`.
 
-Also see `SnakeLemma.δ'` for a noncomputable version
-that does not require an explicit section and retraction.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 def SnakeLemma.δ : K₃ →ₗ[R] C₁ :=
   haveI H₁ : ∀ x, f₂ (σ x) = x := congr_fun hσ
   haveI H₂ := δ_aux i₂ i₃ f₂ g₁ g₂ hg h₂ σ hσ ρ hρ ι₃ hι₃
@@ -142,27 +142,27 @@ lemma SnakeLemma.δ_eq (x : K₃) (y) (hy : f₂ y = ι₃ x) (z) (hz : g₁ z =
     (δ_aux i₂ i₃ f₂ g₁ g₂ hg h₂ σ hσ ρ hρ ι₃ hι₃ _) y hy z hz
 
 include hι₂ in
-/--
-Suppose we have an exact commutative diagram
-```
-        K₂ -F-→ K₃
-        |       |
-        ι₂      ι₃
-        ↓       ↓
-M₁ -f₁→ M₂ -f₂→ M₃
-|       |       |
-i₁      i₂      i₃
-↓       ↓       ↓
-N₁ -g₁→ N₂ -g₂→ N₃
-|
-π₁
-↓
-C₁
+/-- .
 
-```
-such that `f₂` is surjective with a (set-theoretic) section `σ`, `g₁` is injective with a
-(set-theoretic) retraction `ρ`, and `ι₃` is injective, then `K₂ -F→ K₃ -δ→ C₁` is exact.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 lemma SnakeLemma.exact_δ_right (F : K₂ →ₗ[R] K₃) (hF : f₂.comp ι₂ = ι₃.comp F)
     (h : Injective ι₃) :
     Exact F (δ i₁ i₂ i₃ f₁ f₂ hf g₁ g₂ hg h₁ h₂ σ hσ ρ hρ ι₃ hι₃ π₁ hπ₁) := by
@@ -181,27 +181,27 @@ lemma SnakeLemma.exact_δ_right (F : K₂ →ₗ[R] K₃) (hF : f₂.comp ι₂ 
       _ (by rw [map_zero, hι₂.apply_apply_eq_zero])).trans π₁.map_zero
 
 include hπ₂ in
-/--
-Suppose we have an exact commutative diagram
-```
-                K₃
-                |
-                ι₃
-                ↓
-M₁ -f₁→ M₂ -f₂→ M₃
-|       |       |
-i₁      i₂      i₃
-↓       ↓       ↓
-N₁ -g₁→ N₂ -g₂→ N₃
-|       |
-π₁      π₂
-↓       ↓
-C₁ -G-→ C₂
+/-- .
 
-```
-such that `f₂` is surjective with a (set-theoretic) section `σ`, `g₁` is injective with a
-(set-theoretic) retraction `ρ`, and `π₁` is surjective, then `K₃ -δ→ C₁ -G→ C₂` is exact.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 lemma SnakeLemma.exact_δ_left (G : C₁ →ₗ[R] C₂) (hF : G.comp π₁ = π₂.comp g₁) (h : Surjective π₁) :
     Exact (δ i₁ i₂ i₃ f₁ f₂ hf g₁ g₂ hg h₁ h₂ σ hσ ρ hρ ι₃ hι₃ π₁ hπ₁) G := by
   haveI H₂ := δ_aux i₂ i₃ f₂ g₁ g₂ hg h₂ σ hσ ρ hρ ι₃ hι₃
@@ -217,29 +217,29 @@ lemma SnakeLemma.exact_δ_left (G : C₁ →ₗ[R] C₂) (hF : G.comp π₁ = π
     simp only [δ, coe_mk, AddHom.coe_mk]
     rw [← G.comp_apply, hF, π₂.comp_apply, H₂, hπ₂.apply_apply_eq_zero]
 
-/--
-Suppose we have an exact commutative diagram
-```
-                K₃
-                |
-                ι₃
-                ↓
-M₁ -f₁→ M₂ -f₂→ M₃
-|       |       |
-i₁      i₂      i₃
-↓       ↓       ↓
-N₁ -g₁→ N₂ -g₂→ N₃
-|
-π₁
-↓
-C₁
+/-- .
 
-```
-such that `f₂` is surjective and `g₁` is injective,
-then this is the linear map `K₃ → C₁` given by the snake lemma.
 
-Also see `SnakeLemma.δ` for a computable version.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 noncomputable def SnakeLemma.δ' (hf₂ : Surjective f₂) (hg₁ : Injective g₁) : K₃ →ₗ[R] C₁ :=
   δ i₁ i₂ i₃ f₁ f₂ hf g₁ g₂ hg h₁ h₂ _ (funext (surjInv_eq hf₂)) _ (invFun_comp hg₁) ι₃ hι₃ π₁ hπ₁
 
@@ -249,54 +249,54 @@ lemma SnakeLemma.δ'_eq (hf₂ : Surjective f₂) (hg₁ : Injective g₁)
   SnakeLemma.δ_eq _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ‹_› ‹_› _ ‹_›
 
 include hι₂ in
-/--
-Suppose we have an exact commutative diagram
-```
-        K₂ -F-→ K₃
-        |       |
-        ι₂      ι₃
-        ↓       ↓
-M₁ -f₁→ M₂ -f₂→ M₃
-|       |       |
-i₁      i₂      i₃
-↓       ↓       ↓
-N₁ -g₁→ N₂ -g₂→ N₃
-|
-π₁
-↓
-C₁
+/-- .
 
-```
-such that `f₂` is surjective, `g₁` is injective, and `ι₃` is injective,
-then `K₂ -F→ K₃ -δ→ C₁` is exact.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 lemma SnakeLemma.exact_δ'_right (hf₂ : Surjective f₂) (hg₁ : Injective g₁)
     (F : K₂ →ₗ[R] K₃) (hF : f₂.comp ι₂ = ι₃.comp F) (h : Injective ι₃) :
     Exact F (δ' i₁ i₂ i₃ f₁ f₂ hf g₁ g₂ hg h₁ h₂ ι₃ hι₃ π₁ hπ₁ hf₂ hg₁) :=
   SnakeLemma.exact_δ_right _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ‹_› _ _ _ _ _ ‹_› ‹_›
 
 include hπ₂ in
-/--
-Suppose we have an exact commutative diagram
-```
-                K₃
-                |
-                ι₃
-                ↓
-M₁ -f₁→ M₂ -f₂→ M₃
-|       |       |
-i₁      i₂      i₃
-↓       ↓       ↓
-N₁ -g₁→ N₂ -g₂→ N₃
-|       |
-π₁      π₂
-↓       ↓
-C₁ -G-→ C₂
+/-- .
 
-```
-such that `f₂` is surjective, `g₁` is injective, and `π₁` is surjective,
-then `K₃ -δ→ C₁ -G→ C₂` is exact.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 lemma SnakeLemma.exact_δ'_left (hf₂ : Surjective f₂) (hg₁ : Injective g₁)
     (G : C₁ →ₗ[R] C₂) (hF : G.comp π₁ = π₂.comp g₁) (h : Surjective π₁) :
     Exact (δ' i₁ i₂ i₃ f₁ f₂ hf g₁ g₂ hg h₁ h₂ ι₃ hι₃ π₁ hπ₁ hf₂ hg₁) G :=

@@ -20,23 +20,23 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
+/-! .
 
-# Main definitions and results
 
-In a field extension `K/k`
 
-* `FiniteGaloisIntermediateField` : The type of intermediate fields of `K/k`
-  that are finite and Galois over `k`
 
-* `adjoin` : The finite Galois intermediate field obtained from the normal closure of adjoining a
-  finite `s : Set K` to `k`.
 
-## TODO
 
-* `FiniteGaloisIntermediateField` should be a `ConditionallyCompleteLattice` but isn't proved yet.
 
--/
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -44,7 +44,7 @@ open IntermediateField
 
 variable (k K : Type*) [Field k] [Field K] [Algebra k K]
 
-/-- The type of intermediate fields of `K/k` that are finite and Galois over `k` -/
+/-- . -/
 structure FiniteGaloisIntermediateField extends IntermediateField k K where
   [finiteDimensional : FiniteDimensional k toIntermediateField]
   [isGalois : IsGalois k toIntermediateField]
@@ -68,7 +68,7 @@ lemma val_injective : Function.Injective (toIntermediateField (k := k) (K := K))
   rintro ⟨⟩ ⟨⟩ eq
   simpa only [mk.injEq] using eq
 
-/-- Turns the collection of finite Galois IntermediateFields of `K/k` into a lattice. -/
+/-- . -/
 instance (L₁ L₂ : IntermediateField k K) [IsGalois k L₁] [IsGalois k L₂] :
     IsGalois k ↑(L₁ ⊔ L₂) where
 
@@ -115,9 +115,9 @@ lemma le_iff (L₁ L₂ : FiniteGaloisIntermediateField k K) :
   Iff.rfl
 
 variable (k) in
-/-- The minimal (finite) Galois intermediate field containing a finite set `s : Set K` in a
-Galois extension `K/k` defined as the normal closure of the field obtained by adjoining
-the set `s : Set K` to `k`. -/
+/-- .
+
+ -/
 noncomputable def adjoin [IsGalois k K] (s : Set K) [Finite s] :
     FiniteGaloisIntermediateField k K := {
   normalClosure k (IntermediateField.adjoin k (s : Set K)) K with

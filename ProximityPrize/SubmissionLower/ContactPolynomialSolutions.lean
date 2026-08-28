@@ -2,16 +2,16 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAgreementEvaluation
 import ProximityPrize.SubmissionLower.ContactGlobalPolynomiality
 
-/-!
-# Genuine polynomial solutions satisfy the actual Taylor-tail equations
+/-! .
 
-Model label: gpt-5.
 
-The converse is proved by a polynomial chain rule and denominator-cleared
-identities, without postulating a derivation on a rational-function field.
-Regularity is needed only when evaluating the actual quotient jets, not
-for the polynomial numerator identity itself.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactPolynomialSolutions
 
@@ -28,7 +28,7 @@ section PolynomialIdentities
 
 variable (K : Type*) [Field K]
 
-/-- The actual chain rule for substitution $(X,P,P',\gamma)$. -/
+/-- . -/
 theorem derivative_specialization (P : Polynomial K) (γ : K) (Q : Poly4 K) :
     (specialization K P γ Q).derivative =
       specialization K P γ (MvPolynomial.pderiv (0 : Fin 4) Q) +
@@ -79,8 +79,8 @@ theorem specialization_numeratorStep
   push_cast
   ring
 
-/-- This cancellation uses polynomial identities only, including the
-zero-exponent case; no inverse or nonzero hypothesis is needed. -/
+/-- .
+ -/
 theorem derivative_power_cancellation (H A : Polynomial K) (n : ℕ) :
     H ^ 2 * (H ^ n * A).derivative -
       (n : Polynomial K) * (H ^ n * A) * H * H.derivative =
@@ -93,8 +93,8 @@ theorem derivative_power_cancellation (H A : Polynomial K) (n : ℕ) :
         Nat.cast_add, Nat.cast_one, pow_succ]
       ring
 
-/-- A genuine solution forces the actual numerator to equal the denominator
-power times the ordinary iterated derivative, as an identity in K[X]. -/
+/-- .
+ -/
 theorem specialization_numerator_eq
     (F : Poly4 K) (P : Polynomial K) (γ : K)
     (hsolution : specialization K P γ F = 0) (b : ℕ) :
@@ -158,9 +158,9 @@ theorem polynomialPoint_numerator_zero
     specialization_numerator_zero_of_degree K F P γ hsolution b hb]
   simp
 
-/-- Every degree-bounded genuine solution satisfies every later actual jet
-equation at every regular initial point. No characteristic assumption is
-needed for this direction, since the numerator is already zero. -/
+/-- .
+
+ -/
 theorem polynomialPoint_all_tail_jets_zero
     (coefficients : K →+* L) (F : Poly4 K) (P : Polynomial K) (γ : K) (ξ : L)
     (hsolution : specialization K P γ F = 0)

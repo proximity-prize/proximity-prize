@@ -3,23 +3,23 @@ import ProximityPrize.SubmissionLower.ActualCurveZeroCount
 import ProximityPrize.SubmissionLower.ContactComponentPencils
 import ProximityPrize.SubmissionLower.ContactIncidence
 
-/-!
-# Actual selected-seed incidence on one regular prime component
+/-! .
 
-Model label: gpt-5.
 
-One original polynomial is selected for each seed. The actual initial
-point map is injective because its Z coordinate is the embedded seed.
-Proper agreement fibers are bounded by the proved actual curve zero
-count. If there are more than w identity nodes, the verified component
-reconstruction puts every selected polynomial in one original-field
-pencil, and the actual seed coordinate is transcendental.
 
-The no-large-selected-pencil condition is the explicit contrapositive
-alignment input. No fiber-count premise or all-Taylor-tail condition is
-assumed. Actual finite/separable projection proofs remain algebraic
-inputs to the independently verified zero-count theorem.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
 
@@ -42,8 +42,8 @@ def selectedPoint (selected : K → Polynomial K) (γ : K) : Fin 3 → Ω :=
 theorem selectedPoint_seed (selected : K → Polynomial K) (γ : K) :
     selectedPoint φ selected γ (2 : Fin 3) = (φ.comp Polynomial.C) γ := rfl
 
-/-- Only injectivity on the original coefficient field is needed. The
-polynomial evaluation map φ itself need not be injective. -/
+/-- .
+ -/
 theorem selectedPoint_injective (selected : K → Polynomial K) :
     Function.Injective (selectedPoint φ selected) := by
   intro γ η h
@@ -54,8 +54,8 @@ def agreementPolynomial (F : MvPolynomial (Fin 4) K) (w : ℕ) (x u₀ u₁ : K)
     MvPolynomial (Fin 3) Ω :=
   surfaceMap φ (agreementNumerator F w (fun j ↦ (j.factorial : K)⁻¹) x u₀ u₁)
 
-/-- At a selected genuine regular solution, the actual three-coordinate
-agreement polynomial vanishes exactly when the original symbols agree. -/
+/-- .
+ -/
 theorem selected_agreement_zero_iff
     (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K)
     (p w : ℕ) [CharP Ω p] (hchar : w < p)
@@ -85,8 +85,8 @@ variable (P : Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
 def componentCost (cap : Fin 3 → ℕ) : ℕ :=
   ∑ j, cap j * actualCoordinateDegree Ω P j
 
-/-- The proper-node fiber count is derived from the actual prime-component
-zero theorem and the injective original-seed point map. -/
+/-- .
+ -/
 theorem agreement_fiber_card_le
     (hproj : ProjectionsFiniteSeparable Ω P)
     (hnonpoint : ∀ v : Fin 3 → Ω,
@@ -126,8 +126,8 @@ theorem agreement_fiber_card_le
   unfold componentCost
   exact_mod_cast hcount
 
-/-- Actual algebraic nonverticality gives a positive coordinate degree,
-not a separately supplied degree lower bound. -/
+/-- .
+ -/
 theorem coordinateDegree_pos_of_transcendental
     (hproj : ProjectionsFiniteSeparable Ω P) (j : Fin 3)
     (hj : Transcendental Ω (coordinate Ω P j)) :
@@ -137,8 +137,8 @@ theorem coordinateDegree_pos_of_transcendental
   rw [actualCoordinateDegree_of_transcendental Ω P j hj]
   exact Module.finrank_pos
 
-/-- The usual contrapositive common-pencil input, stated on the actual
-selected original-field polynomials. -/
+/-- .
+ -/
 def NoLargeSelectedPencil (selected : K → Polynomial K) (Γ : Finset K) (w e : ℕ) : Prop :=
   ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ w → P₁.natDegree ≤ w →
     (Γ.filter (fun γ ↦ selected γ = P₀ + Polynomial.C γ * P₁)).card ≤ e + 1
@@ -147,8 +147,8 @@ variable {ι : Type*}
 
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- Per-prime seed incidence with the sharp proper-node coefficient.
-No all-tail or generic polynomiality condition occurs among the inputs. -/
+/-- .
+ -/
 theorem prime_seed_incidence_sharp
     (hproj : ProjectionsFiniteSeparable Ω P)
     (hnonpoint : ∀ v : Fin 3 → Ω,
@@ -219,7 +219,7 @@ theorem prime_seed_incidence_sharp
           simpa only [Nat.mul_one] using Nat.mul_le_mul_left ((e + 1) * (a - w)) hδ
     omega
 
-/-- Conservative form used by the original exact mixed-degree budget. -/
+/-- . -/
 theorem prime_seed_incidence
     (hproj : ProjectionsFiniteSeparable Ω P)
     (hnonpoint : ∀ v : Fin 3 → Ω,

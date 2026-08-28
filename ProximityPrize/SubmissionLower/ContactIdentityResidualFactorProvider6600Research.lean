@@ -3,14 +3,14 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyAll6
 import ProximityPrize.SubmissionLower.ContactIdentityResidualFactorIncidence6600Research
 import ProximityPrize.SubmissionLower.ContactFixedMeetFactorIncidence6656Research
 
-/-!
-# Factorwise score-66 provider from shared adaptive prime budgets
+/-! .
 
-At a terminal node of the outer factor recursion, the proper agreement cut
-is decomposed into its regular curve components.  The inner recursion and
-shared prime budget then give exactly the affine fiber bound consumed by
-`recursive_scaled_factor_6600`.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualFactorProvider6600Research
 
@@ -49,10 +49,10 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- The exact unresolved large-pencil leaf for one outer terminal cut.
-Keeping it as a named proposition makes the final factor theorem readable:
-all recursive and component bookkeeping has already been discharged.
--/
+/-- .
+
+
+ -/
 def TerminalLargeZChargeOfSupport
     {support : ResidualSupportParameters} {flag : FlagDegree}
     (S : ResidualStage phi Gamma x pchar errors flag w support)
@@ -97,7 +97,7 @@ def TerminalLargeZChargeOfSupport
         GammaC.card * (aD - D.degree) ≤
           (errors + 1) * (aD - D.degree) * B.zCost C
 
-/-- Accepted-support compatibility alias. -/
+/-- . -/
 abbrev TerminalLargeZCharge
     {flag : FlagDegree}
     (S : ResidualStage phi Gamma x pchar errors flag w)
@@ -110,10 +110,10 @@ abbrev TerminalLargeZCharge
       flag (residualAgreementFlag D.degree)) : Prop :=
   TerminalLargeZChargeOfSupport S D i B
 
-/-- One terminal outer proper cut receives the exact factor-affine bound.
-The shared component budget and all two-level actual-identity arithmetic are
-fully internal; `TerminalLargeZCharge` is the only remaining leaf.
--/
+/-- .
+
+
+ -/
 theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
     (hphi : Function.Injective phi)
     (n a w e U V : ℕ)
@@ -278,7 +278,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
     _ ≤ _ := hbound
     _ = _ := by ring
 
-/-- Accepted score-66.18 arithmetic with a symbolic residual-support profile. -/
+/-- . -/
 theorem terminal_outer_fiber_bound_of_prime_flag_budget_of_support
     (hphi : Function.Injective phi)
     {support : ResidualSupportParameters} {flag : FlagDegree}
@@ -320,7 +320,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_of_support
     (fun k hk => by simpa only [gap] using unit_part_bound k hk)
     D i hi B hallPositive
 
-/-- Accepted-support compatibility wrapper. -/
+/-- . -/
 theorem terminal_outer_fiber_bound_of_prime_flag_budget
     (hphi : Function.Injective phi)
     {flag : FlagDegree}
@@ -359,10 +359,10 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget
     terminal_outer_fiber_bound_of_prime_flag_budget_of_support
       hphi S hnodes hagreement D i hi B hallPositive
 
-/-- Complete factorwise regular count, conditional only on producing one
-shared adaptive budget whose all-coordinate cost is positive at every
-terminal outer cut.
--/
+/-- .
+
+
+ -/
 theorem recursive_scaled_factor_6600_of_prime_flag_budgets_of_support
     (hphi : Function.Injective phi)
     {support : ResidualSupportParameters} {flag : FlagDegree}
@@ -393,10 +393,10 @@ theorem recursive_scaled_factor_6600_of_prime_flag_budgets_of_support
   exact terminal_outer_fiber_bound_of_prime_flag_budget_of_support
     hphi S hnodes hagreement D i hi B hallPositive
 
-/-- Fixed-meet factorwise regular count from shared terminal prime budgets.
-The outer recursive incidence and its arithmetic ledger are supplied by
-`recursive_scaled_factor_6656`; the generic terminal provider above supplies
-its sole geometric fiber premise. -/
+/-- .
+
+
+ -/
 theorem recursive_scaled_factor_6656_of_prime_flag_budgets
     (hphi : Function.Injective phi)
     {flag : FlagDegree}
@@ -432,7 +432,7 @@ theorem recursive_scaled_factor_6656_of_prime_flag_budgets
     meet_degree_part_bound meet_unit_part_bound D i hi B hallPositive
   simpa only [Profile.gap, meetFactorDegreeCost, meetFactorUnitCost] using h
 
-/-- Accepted-support compatibility wrapper. -/
+/-- . -/
 theorem recursive_scaled_factor_6600_of_prime_flag_budgets
     (hphi : Function.Injective phi)
     {flag : FlagDegree}

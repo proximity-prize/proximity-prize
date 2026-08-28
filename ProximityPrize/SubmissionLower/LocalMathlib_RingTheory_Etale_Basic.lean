@@ -22,23 +22,23 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
+/-! .
 
-# Étale morphisms
 
-An `R`-algebra `A` is formally etale if `Ω[A⁄R]` and `H¹(L_{A/R})` both vanish.
-This is equivalent to the standard definition that "for every `R`-algebra `B`,
-every square-zero ideal `I : Ideal B` and `f : A →ₐ[R] B ⧸ I`, there exists
-exactly one lift `A →ₐ[R] B`".
-An `R`-algebra `A` is étale if it is formally étale and of finite presentation.
 
-We show that the property extends onto nilpotent ideals, and that these properties are stable
-under `R`-algebra homomorphisms and compositions.
 
-We show that étale is stable under algebra isomorphisms, composition and
-localization at an element.
 
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -54,8 +54,8 @@ variable {R : Type u} {A : Type v} {B : Type*} [CommRing R] [CommRing A] [Algebr
 section
 
 variable (R A) in
-/-- An `R`-algebra `A` is formally etale if both `Ω[A⁄R]` and `H¹(L_{A/R})` are zero.
-For the infinitesimal lifting definition, see `FormallyEtale.iff_comp_bijective`. -/
+/-- .
+ -/
 @[mk_iff, stacks 00UQ]
 class FormallyEtale : Prop where
   subsingleton_kaehlerDifferential : Subsingleton Ω[A⁄R]
@@ -91,11 +91,11 @@ lemma comp_bijective [FormallyEtale R A] (I : Ideal B) (hI : I ^ 2 = ⊥) :
     Function.Bijective ((Ideal.Quotient.mkₐ R I).comp : (A →ₐ[R] B) → A →ₐ[R] B ⧸ I) :=
   ⟨FormallyUnramified.comp_injective I hI, FormallySmooth.comp_surjective R A I hI⟩
 
-/--
-An `R`-algebra `A` is formally etale iff "for every `R`-algebra `B`,
-every square-zero ideal `I : Ideal B` and `f : A →ₐ[R] B ⧸ I`, there exists
-a unique lift `A →ₐ[R] B`".
--/
+/-- .
+
+
+
+ -/
 theorem iff_comp_bijective :
    FormallyEtale R A ↔ ∀ ⦃B : Type max u v⦄ [CommRing B] [Algebra R B] (I : Ideal B), I ^ 2 = ⊥ →
       Function.Bijective ((Ideal.Quotient.mkₐ R I).comp : (A →ₐ[R] B) → A →ₐ[R] B ⧸ I) :=
@@ -171,30 +171,30 @@ end BaseChange
 
 section Localization
 
-/-!
+/-! .
 
-We now consider a commutative square of commutative rings
 
-```
-R -----> S
-|        |
-|        |
-v        v
-Rₘ ----> Sₘ
-```
 
-where `Rₘ` and `Sₘ` are the localisations of `R` and `S` at a multiplicatively closed
-subset `M` of `R`.
--/
 
-/-! Let R, S, Rₘ, Sₘ be commutative rings -/
+
+
+
+
+
+
+
+
+
+ -/
+
+/-! . -/
 variable {R S Rₘ Sₘ : Type*} [CommRing R] [CommRing S] [CommRing Rₘ] [CommRing Sₘ]
-/-! Let M be a multiplicatively closed subset of `R` -/
+/-! . -/
 variable (M : Submonoid R)
-/-! Assume that the rings are in a commutative diagram as above. -/
+/-! . -/
 variable [Algebra R S] [Algebra R Sₘ] [Algebra S Sₘ] [Algebra R Rₘ] [Algebra Rₘ Sₘ]
 variable [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
-/-! and that Rₘ and Sₘ are localizations of R and S at M. -/
+/-! . -/
 variable [IsLocalization M Rₘ] [IsLocalization (M.map (algebraMap R S)) Sₘ]
 include M
 
@@ -209,7 +209,7 @@ theorem localization_base [FormallyEtale R Sₘ] : FormallyEtale Rₘ Sₘ :=
   FormallyEtale.iff_formallyUnramified_and_formallySmooth.mpr
     ⟨FormallyUnramified.localization_base M, FormallySmooth.localization_base M⟩
 
-/-- The localization of a formally étale map is formally étale. -/
+/-- . -/
 theorem localization_map [FormallyEtale R S] : FormallyEtale Rₘ Sₘ := by
   haveI : FormallyEtale S Sₘ := FormallyEtale.of_isLocalization (M.map (algebraMap R S))
   haveI : FormallyEtale R Sₘ := FormallyEtale.comp R S Sₘ
@@ -222,7 +222,7 @@ end FormallyEtale
 section
 
 variable (R A) in
-/-- An `R`-algebra `A` is étale if it is formally étale and of finite presentation. -/
+/-- . -/
 @[mk_iff, stacks 00U1 "Note that this is a different definition from this Stacks entry, but
 <https://stacks.math.columbia.edu/tag/00UR> shows that it is equivalent to the definition here."]
 class Etale : Prop where
@@ -246,7 +246,7 @@ instance [Etale R A] : Smooth R A where
 
 instance (priority := low) [Etale R A] : Unramified R A where
 
-/-- Being étale is transported via algebra isomorphisms. -/
+/-- . -/
 theorem of_equiv [Etale R A] (e : A ≃ₐ[R] B) : Etale R B where
   formallyEtale := FormallyEtale.of_equiv e
   finitePresentation := FinitePresentation.equiv e
@@ -255,12 +255,12 @@ section Comp
 
 variable (R A B)
 
-/-- Étale is stable under composition. -/
+/-- . -/
 theorem comp [Algebra A B] [IsScalarTower R A B] [Etale R A] [Etale A B] : Etale R B where
   formallyEtale := FormallyEtale.comp R A B
   finitePresentation := FinitePresentation.trans R A B
 
-/-- Étale is stable under base change. -/
+/-- . -/
 instance baseChange [Etale R A] : Etale B (B ⊗[R] A) where
 
 lemma of_restrictScalars [Algebra A B] [IsScalarTower R A B] [Etale R A] [Etale R B] :
@@ -270,7 +270,7 @@ lemma of_restrictScalars [Algebra A B] [IsScalarTower R A B] [Etale R A] [Etale 
 
 end Comp
 
-/-- Localization at an element is étale. -/
+/-- . -/
 theorem of_isLocalizationAway (r : R) [IsLocalization.Away r A] : Etale R A where
   formallyEtale := Algebra.FormallyEtale.of_isLocalization (Submonoid.powers r)
   finitePresentation := IsLocalization.Away.finitePresentation r
@@ -303,10 +303,10 @@ namespace RingHom
 
 variable {R S : Type*} [CommRing R] [CommRing S]
 
-/--
-A ring homomorphism `R →+* A` is formally étale if it is formally unramified and formally smooth.
-See `Algebra.FormallyEtale`.
--/
+/-- .
+
+
+ -/
 @[algebraize Algebra.FormallyEtale]
 def FormallyEtale (f : R →+* S) : Prop :=
   letI := f.toAlgebra

@@ -3,15 +3,15 @@ import ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjectionActive6630R
 import ProximityPrize.SubmissionLower.ContactFlagGeneralPrincipalCyclesResearch
 import ProximityPrize.SubmissionLower.ContactFlagProjectionPositivity6543Research
 
-/-!
-# Active-differential nested projections as the score-66.30 unit family
+/-! .
 
-This file packages the component-adaptive literal/affine coordinates selected
-by `exists_adaptiveNestedProjectionData` into the exact three shared unit
-projection budgets.  Algebraic literal or first-affine branches contribute
-degree zero; the trapezoid resultant is applied only to their transcendental
-subfamilies.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveNestedUnitFamilyActive6630Research
 
@@ -43,8 +43,8 @@ set_option autoImplicit false
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
 
-/-- The common adaptive nested projection gives the three exact unit-support
-coordinate families and their sharp symbolic trapezoid degree sums. -/
+/-- .
+ -/
 def adaptiveUnitProjectionFamily_of_active_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,
@@ -359,8 +359,8 @@ def adaptiveUnitProjectionFamily_of_active_nested
     rw [hvValue C, ← D.allValue C]
     exact (D.allPole C v).symm
 
-/-- Fully existential consumer seam: the common finite-avoidance theorem and
-the three exact trapezoid calculations together produce the shared budget. -/
+/-- .
+ -/
 theorem exists_adaptiveUnitProjectionFamily_of_active_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,

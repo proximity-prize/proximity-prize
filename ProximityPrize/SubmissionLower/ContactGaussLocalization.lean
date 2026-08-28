@@ -4,20 +4,20 @@ import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_MvPolynomial_Local
 
 
 
-/-!
-# Actual Gauss localization and divisibility reflection for active factors
+/-! .
 
-Model label: gpt-5.
 
-An irreducible four-variable factor with positive Y/R/Z degree cannot
-divide a nonzero pure-X polynomial. Its collected principal prime is
-therefore disjoint from the coefficient denominators. Mathlib's actual
-multivariable localization proves irreducibility over K(X) and contracts
-the localized principal ideal back to the original one.
 
-This is a localization bridge, not a claim about geometric irreducibility
-after algebraic closure or an intersection/seed-count theorem.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactGaussLocalization
 
@@ -47,7 +47,7 @@ theorem rationalSurfaceMap_eq (F : MvPolynomial (Fin 4) K) :
     rationalSurfaceMap K F =
       algebraMap (Collected K) (RationalPolynomials K) (collectX K F) := rfl
 
-/-- The inverse of collecting X, restricted to coefficient polynomials. -/
+/-- . -/
 def xLift (P : Polynomial K) : MvPolynomial (Fin 4) K :=
   (collectX K).symm (MvPolynomial.C P)
 
@@ -111,7 +111,7 @@ theorem collected_principal_isPrime (F : MvPolynomial (Fin 4) K) (hF : Irreducib
   have hi : Irreducible (collectX K F) := (MulEquiv.irreducible_iff (collectX K)).mpr hF
   exact Ideal.isPrime_span_singleton_of_prime hi.prime
 
-/-- The denominator-disjointness is proved from the actual original degrees. -/
+/-- . -/
 theorem coefficientDenominators_disjoint (F : MvPolynomial (Fin 4) K)
     (hpos : 0 < F.degreeOf 1 + F.degreeOf 2 + F.degreeOf 3) :
     Disjoint (coefficientDenominators K : Set (Collected K))
@@ -136,7 +136,7 @@ theorem localized_principal_isPrime (F : MvPolynomial (Fin 4) K)
     (collected_principal_isPrime K F hF) (coefficientDenominators_disjoint K F hpos)
   simpa only [Ideal.map_span, Set.image_singleton, ← rationalSurfaceMap_eq] using hp
 
-/-- Actual Gauss localization: no primitive-content hypothesis is assumed. -/
+/-- . -/
 theorem rationalSurfaceMap_irreducible (F : MvPolynomial (Fin 4) K)
     (hF : Irreducible F) (hpos : 0 < F.degreeOf 1 + F.degreeOf 2 + F.degreeOf 3) :
     Irreducible (rationalSurfaceMap K F) := by
@@ -146,8 +146,8 @@ theorem rationalSurfaceMap_irreducible (F : MvPolynomial (Fin 4) K)
   exact ((Ideal.span_singleton_prime hne).mp
     (localized_principal_isPrime K F hF hpos)).irreducible
 
-/-- Divisibility by an active irreducible factor is reflected from K(X).
-This is actual contraction of the localized principal prime, not a premise. -/
+/-- .
+ -/
 theorem rationalSurfaceMap_dvd_iff
     (F M : MvPolynomial (Fin 4) K) (hF : Irreducible F)
     (hpos : 0 < F.degreeOf 1 + F.degreeOf 2 + F.degreeOf 3) :

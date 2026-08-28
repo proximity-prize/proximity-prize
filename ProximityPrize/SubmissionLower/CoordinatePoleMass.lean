@@ -3,23 +3,23 @@ import ProximityPrize.SubmissionLower.NormalizationUnitWeights
 import ProximityPrize.SubmissionLower.ContactLocalPoleBound
 import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_RamificationInertia_Basic
 
-/-!
-# Actual coordinate pole totals on any finite set of common places
+/-! .
 
-Model label: gpt-5.
 
-The places are the coordinate-independent normalized valuations on L
-trivial on K. For a finite separable coordinate extension L/K(T) over
-algebraically closed K, this file derives
-  sum_{v in W} pole_v(T) <= [L : K(T)]
-for every actual finite set W of those places.
 
-Finite-chart poles vanish. Every nonzero coordinate pole is proved to
-belong to the actual finite infinity-prime fiber. Its pole order is the
-actual ramification index, and the fundamental ramification sum, with
-the proved unit inertia weights, gives the degree. No pole bound is a
-premise and no separability of an arbitrary test function is required.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.CoordinatePoleMass
 
@@ -98,8 +98,8 @@ theorem infinity_pole_eq_ramification
     WithZero.log_exp, max_eq_right (Int.natCast_nonneg _)]
   rfl
 
-/-- The actual infinity prime fiber has total ramification equal to the
-actual extension degree; unit inertia was proved in a separate module. -/
+/-- .
+ -/
 theorem sum_infinity_ramification_eq_finrank :
     (∑ Q ∈ (infinityFiber K L).attach,
       (FixedCurveNormSum.infinityPlace K).asIdeal.ramificationIdx' Q.1) =
@@ -140,8 +140,8 @@ theorem sum_poles_infinityValues_eq_finrank :
   rw [infinityValues, Finset.sum_image (fun _ _ _ _ h ↦ infinityValuation_injective K L h)]
   exact sum_infinity_poles_eq_finrank K L
 
-/-- A pole of the coordinate must lie in the actual infinity fiber,
-proved using the actual normalized-place classification. -/
+/-- .
+ -/
 theorem poleOrder_eq_zero_of_not_mem_infinity (v : Place K L)
     (hv : v ∉ infinityValues K L) :
     poleOrder K L v (CoordinatePlaceClassification.parameter K L) = 0 := by
@@ -168,8 +168,8 @@ theorem poleOrder_eq_zero_of_not_mem_infinity (v : Place K L)
   rw [← hvmap]
   exact Finset.mem_image.mpr ⟨Q, Finset.mem_attach _ Q, rfl⟩
 
-/-- Actual global coordinate pole bound on an arbitrary finite
-collection of the coordinate-independent common normalized places. -/
+/-- .
+ -/
 theorem finite_sum_pole_le_finrank (W : Finset (Place K L)) :
     (∑ v ∈ W, poleOrder K L v (CoordinatePlaceClassification.parameter K L)) ≤
       (Module.finrank (RatFunc K) L : ℤ) := by

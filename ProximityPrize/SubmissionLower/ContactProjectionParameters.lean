@@ -1,16 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAlignmentParameters
 
-/-!
-# Characteristic-safe coordinate-projection budgets
+/-! .
 
-Model label: gpt-5.
 
-These are exact inequalities for the frozen contact witness, not a proof of
-the geometric degree bounds. Once actual projection degrees are bounded by
-the corresponding mixed expressions, every one is below characteristic.
-This does not assert separability of arbitrary test functions.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactProjectionParameters
 
@@ -32,9 +32,9 @@ theorem agreement_cut_projection_values :
   norm_num [mixed, surfaceVector, agreementVector, unitY, unitR, unitZ,
     yCap, weightedCap, ContactAlignmentParameters.multiplicity, agreements, w, slopeCap, seedTotalCap]
 
-/-! The rectangular R bounds above exceed the characteristic.  The production
-proof replaces only that coordinate with the joint trapezoid resultant bound;
-these are the four remaining rectangular gates. -/
+/-! .
+
+ -/
 theorem non_R_projection_caps_below_characteristic :
     mixed surfaceVector firstTail unitY < prime ∧
     mixed surfaceVector firstTail unitZ < prime ∧

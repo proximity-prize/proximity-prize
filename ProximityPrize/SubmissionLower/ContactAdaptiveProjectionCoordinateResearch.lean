@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAdaptiveAffineProjectionResearch
 
-/-!
-# Constant-or-separable data for an arbitrary function-field element
--/
+/-! .
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveProjectionCoordinateResearch
 
@@ -19,8 +19,8 @@ noncomputable section
 
 variable {K : Type} {L : Type*} [Field K] [Field L] [Algebra K L] [IsAlgClosed K]
 
-/-- Package an element as a zero-degree scalar when algebraic and as its
-actual finite-separable rational parameter when transcendental. -/
+/-- .
+ -/
 def coordinateOfGate (x : L)
     (hgate : ∀ hx : Transcendental K x,
       (letI : Algebra (RatFunc K) L :=
@@ -82,8 +82,8 @@ def coordinateOfGate (x : L)
   rw [dif_neg (fun htr => htr hx)]
   rfl
 
-/-- A coordinate whose represented value is transcendental cannot be the
-constant branch, so its actual rational-function degree is positive. -/
+/-- .
+ -/
 theorem one_le_coordinateDegree_of_transcendental_value
     (c : Coordinate K L)
     (hc : Transcendental K (coordinateValue K L c)) :
@@ -99,8 +99,8 @@ section FiniteFamily
 variable {I : Type*} [Fintype I]
 variable (E : I → Type) [∀ i, Field (E i)] [∀ i, Algebra K (E i)]
 
-/-- Split a finite family of gated coordinates into its transcendental
-subfamily.  Algebraic branches contribute definitionally zero. -/
+/-- .
+ -/
 theorem sum_coordinateOfGate_degree_eq
     (x : ∀ i, E i)
     (hgate : ∀ i, ∀ hx : Transcendental K (x i),
@@ -130,7 +130,7 @@ theorem sum_coordinateOfGate_degree_eq
 
 end FiniteFamily
 
-/-- A selected literal separator as a generic separable coordinate. -/
+/-- . -/
 def literalToSeparableCoordinate
     {P : Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
     (D : SeparableLiteralCoordinate P) :
@@ -149,8 +149,8 @@ def literalToSeparableCoordinate
   exact ActualCurveRationalProjection.rational_variable_image
     K P D.index D.transcendental
 
-/-- A finite-separable gate makes every transcendental branch visibly have
-nonzero absolute differential. -/
+/-- .
+ -/
 theorem differential_ne_zero_of_gate (x : L)
     (hx : Transcendental K x)
     (hgate :

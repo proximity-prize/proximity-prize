@@ -2,12 +2,12 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSeedlessLambdaResearch
 import ProximityPrize.SubmissionLower.ContactScore6630Research
 
-/-! # Split-budget protocol bridge
+/-! .
 
-The affine-line count controls only MCA.  The seedless fixed-centre theorem
-controls Lambda independently, so the two terms no longer have to share the
-same allowance.
--/
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSeedlessProtocolResearch
 
@@ -57,7 +57,7 @@ theorem nat_div_le_inv_pow {m q t : ℕ} (hm : 0 < m)
     _ = (m : ENNReal) * 1 / ((m : ENNReal) * 2 ^ t) := by rw [mul_one]
     _ = 1 / 2 ^ t := ENNReal.mul_div_mul_left 1 (2 ^ t) hm0 hmtop
 
-/-- Increasing the threshold only weakens the alignment premise. -/
+/-- . -/
 theorem affineLineAlignmentBound_mono_budget
     {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
     [Field F] [Fintype F] [DecidableEq F]
@@ -177,7 +177,7 @@ theorem protocolClaim6710_of_alignment
       (by norm_num [reductionTarget, ProximityGap.prizeThreshold, div_le_iff₀])
   score := ContactScore6630Research.radius6630_score
 
-/-- Legacy entry-point name for callers transitioning to the 67.10 row. -/
+/-- . -/
 theorem protocolClaim6696_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
     ProtocolClaim 6710 319467 1048576 :=

@@ -20,21 +20,21 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
+/-! .
 
-# Being projective is a local property
 
-## Main results
-- `LinearMap.split_surjective_of_localization_maximal`
-  If `N` is finitely presented, then `f : M →ₗ[R] N`
-  being split injective can be checked on stalks (of maximal ideals).
-- `Module.projective_of_localization_maximal` If `M` is finitely presented,
-  then `M` being projective can be checked on stalks (of maximal ideals).
 
-## TODO
-- Show that being projective is Zariski-local (very hard)
 
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -50,10 +50,10 @@ theorem Module.free_of_isLocalizedModule {Rₛ Mₛ} [AddCommGroup Mₛ] [Module
   Free.of_equiv (IsLocalizedModule.isBaseChange S Rₛ f).equiv
 
 universe uR' uM' in
-/--
-Also see `IsLocalizedModule.lift_rank_eq` for a version for non-free modules,
-but requires `S` to not contain any zero-divisors.
--/
+/-- .
+
+
+ -/
 theorem Module.lift_rank_of_isLocalizedModule_of_free
     (Rₛ : Type uR') {Mₛ : Type uM'} [AddCommGroup Mₛ] [Module R Mₛ]
     [CommRing Rₛ] [Algebra R Rₛ] [Module Rₛ Mₛ] [IsScalarTower R Rₛ Mₛ] (S : Submonoid R)
@@ -170,9 +170,9 @@ variable
 set_option backward.defeqAttrib.useBackward true in
 attribute [local instance] RingHomInvPair.of_ringEquiv RingHomInvPair.of_ringEquiv_symm in
 include f in
-/--
-A variant of `Module.projective_of_localization_maximal` that accepts `IsLocalizedModule`.
--/
+/-- .
+
+ -/
 theorem Module.projective_of_localization_maximal'
     (H : ∀ (I : Ideal R) (_ : I.IsMaximal), Module.Projective (Rₚ I) (Mₚ I))
     [Module.FinitePresentation R M] : Module.Projective R M := by

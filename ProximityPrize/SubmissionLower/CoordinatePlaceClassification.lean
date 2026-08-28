@@ -5,22 +5,22 @@ import ProximityPrize.SubmissionLower.FixedCurveNormSum
 import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_RamificationInertia_Valuation
 
 
-/-!
-# Actual coordinate charts describe the same normalized places
+/-! .
 
-Model label: gpt-5.
 
-For one fixed finite separable coordinate extension L/K(T), this file
-derives the unit-ball hypotheses of NormalizedPlaceClassification from
-v(T)<=1 or v(T)>1. Both rings are the actual normalizations already used
-by FixedCurveNormSum. No chart inclusion or place correspondence is an
-input.
 
-The resulting equivalence is with normalized valuations on L trivial on
-K, a coordinate-independent target. It therefore supplies an actual
-common-place comparison. This does not yet identify coordinate pole
-masses with field degrees or prove the mixed component ledger.
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.CoordinatePlaceClassification
 
@@ -79,8 +79,8 @@ theorem coefficient_le_one (c : K) : v (algebraMap K L c) ≤ 1 := by
   · simp [hc]
   · rw [htriv.eq_one c hc]
 
-/-- If the parameter lies in the unit ball, every actual polynomial
-image does too. -/
+/-- .
+ -/
 theorem polynomial_le_one (ht : v (parameter K L) ≤ 1) (f : Polynomial K) :
     v (algebraMap (Polynomial K) L f) ≤ 1 := by
   induction f using Polynomial.induction_on' with
@@ -93,8 +93,8 @@ theorem polynomial_le_one (ht : v (parameter K L) ≤ 1) (f : Polynomial K) :
       exact mul_le_one₀ (coefficient_le_one K L v c) zero_le
         (pow_le_one₀ zero_le ht)
 
-/-- Actual normalization elements satisfy the unit-ball condition by
-integrality, not by an assumed chart map. -/
+/-- .
+ -/
 theorem finiteNormalization_le_one (ht : v (parameter K L) ≤ 1)
     (s : FiniteNormalization K L) :
     v (algebraMap (FiniteNormalization K L) L s) ≤ 1 := by
@@ -108,9 +108,9 @@ theorem polynomial_value_of_parameter_gt_one (ht : 1 < v (parameter K L))
   exact Polynomial.valuation_aeval_eq_valuation_X_pow_natDegree_of_one_lt_valuation_X
     (v := v) (parameter K L) ht hf
 
-/-- A rational function in the actual infinity valuation ring has
-numerator degree at most denominator degree; the leading-term valuation
-formula then gives the required unit-ball inclusion in L. -/
+/-- .
+
+ -/
 theorem infinityBase_le_one (ht : 1 < v (parameter K L)) (r : InfinityBase K) :
     v (algebraMap (InfinityBase K) L r) ≤ 1 := by
   change v (algebraMap (RatFunc K) L r.val) ≤ 1
@@ -151,8 +151,8 @@ theorem exists_unique_infinite_place (hv : Function.Surjective v)
   NormalizedPlaceClassification.exists_unique_place (InfiniteNormalization K L) L v
     (infiniteNormalization_le_one K L v ht) hv
 
-/-- Every normalized valuation trivial on K has an actual finite or
-infinite center in the two constructed normalizations. -/
+/-- .
+ -/
 theorem finite_or_infinite_place (hv : Function.Surjective v) :
     (∃ p : HeightOneSpectrum (FiniteNormalization K L), v = p.valuation L) ∨
     (∃ q : HeightOneSpectrum (InfiniteNormalization K L), v = q.valuation L) := by
@@ -162,8 +162,8 @@ theorem finite_or_infinite_place (hv : Function.Surjective v) :
 
 end GivenValuation
 
-/-- Every actual infinite-normalization height-one prime lies over the
-actual infinity maximal ideal; no extra fiber condition is assumed. -/
+/-- .
+ -/
 theorem infinitePlace_liesOver
     (q : HeightOneSpectrum (InfiniteNormalization K L)) :
     q.asIdeal.LiesOver (FixedCurveNormSum.infinityPlace K).asIdeal := by
@@ -185,7 +185,7 @@ theorem finitePlace_parameter_le_one
   rw [parameter, IsScalarTower.algebraMap_apply (Polynomial K) (FiniteNormalization K L) L]
   exact p.valuation_le_one _
 
-/-- Infinity orders are normalized by the actual ramification index. -/
+/-- . -/
 theorem infinitePlace_parameter_value
     (q : HeightOneSpectrum (InfiniteNormalization K L)) :
     q.valuation L (parameter K L) =
@@ -279,8 +279,8 @@ theorem chartValuation_injective : Function.Injective (chartValuation K L) := by
     exact HeightOneSpectrum.eq_of_valuation_isEquiv_valuation
       (K := L) (Valuation.IsEquiv.of_eq h)
 
-/-- This target mentions only the common K-algebra L, not a coordinate
-or an integral closure. -/
+/-- .
+ -/
 def NormalizedValuation :=
   {v : Valuation L ℤᵐ⁰ // Function.Surjective v ∧ v.IsTrivialOn K}
 
@@ -301,9 +301,9 @@ theorem chartMap_bijective : Function.Bijective (chartMap K L) := by
       apply Subtype.ext
       exact hq.symm
 
-/-- Actual coordinate-independent common-place equivalence. Its
-bijection is proved from the constructed finite/infinity normalizations,
-not included as a structure field or geometric assumption. -/
+/-- .
+
+ -/
 def chartEquiv : ChartPlace K L ≃ NormalizedValuation K L :=
   Equiv.ofBijective (chartMap K L) (chartMap_bijective K L)
 

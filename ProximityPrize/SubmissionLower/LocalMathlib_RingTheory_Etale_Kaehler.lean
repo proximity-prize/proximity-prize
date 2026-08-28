@@ -33,15 +33,15 @@ hypotheses, proof arguments, imports, copyrights and license are preserved.
 No kernel setting, protected source or dependency pin is changed.
 -/
 
-/-!
-# The differential module and étale algebras
+/-! .
 
-## Main results
-- `KaehlerDifferential.tensorKaehlerEquivOfFormallyEtale`:
-  The canonical isomorphism `T ⊗[S] Ω[S⁄R] ≃ₗ[T] Ω[T⁄R]` for `T` a formally étale `S`-algebra.
-- `Algebra.tensorH1CotangentOfIsLocalization`:
-  The canonical isomorphism `T ⊗[S] H¹(L_{S⁄R}) ≃ₗ[T] H¹(L_{T⁄R})` for `T` a localization of `S`.
--/
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -52,10 +52,10 @@ variable [Algebra R S] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
 
 open TensorProduct
 
-/--
-The canonical isomorphism `T ⊗[S] Ω[S⁄R] ≃ₗ[T] Ω[T⁄R]` for `T` a formally étale `S`-algebra.
-Also see `S ⊗[R] Ω[A⁄R] ≃ₗ[S] Ω[S ⊗[R] A⁄S]` at `KaehlerDifferential.tensorKaehlerEquiv`.
--/
+/-- .
+
+
+ -/
 @[simps! apply] noncomputable
 def KaehlerDifferential.tensorKaehlerEquivOfFormallyEtale [Algebra.FormallyEtale S T] :
     T ⊗[S] Ω[S⁄R] ≃ₗ[T] Ω[T⁄R] := by
@@ -103,18 +103,18 @@ attribute [local instance] SMulCommClass.of_commMonoid
 
 variable {R S T}
 
-/-!
-Suppose we have a morphism of extensions of `R`-algebras
-```
-0 → J → Q → T → 0
-    ↑   ↑   ↑
-0 → I → P → S → 0
-```
--/
+/-! .
+
+
+
+
+
+
+ -/
 variable {P : Extension.{u} R S} {Q : Extension.{u} R T} (f : P.Hom Q)
 
 set_option backward.defeqAttrib.useBackward true in
-/-- If `P → Q` is formally étale, then `T ⊗ₛ (S ⊗ₚ Ω[P/R]) ≃ T ⊗_Q Ω[Q/R]`. -/
+/-- . -/
 noncomputable
 def tensorCotangentSpaceOfFormallyEtale
     (H : f.toRingHom.FormallyEtale) :
@@ -162,9 +162,9 @@ def tensorCotangentSpaceOfFormallyEtale
       ext a
       simp; rfl }
 
-/-- (Implementation)
-If `J ≃ Q ⊗ₚ I` (e.g. when `T = Q ⊗ₚ S` and `P → Q` is flat), then `T ⊗ₛ I/I² ≃ J/J²`.
-This is the inverse. -/
+/-- .
+
+ -/
 noncomputable
 def tensorCotangentInvFun
     [alg : Algebra P.Ring Q.Ring] (halg : algebraMap P.Ring Q.Ring = f.toRingHom)
@@ -224,7 +224,7 @@ lemma tensorCotangentInvFun_smul_mk
   rw [e.symm_apply_apply]
   simp
 
-/-- If `J ≃ Q ⊗ₚ I` (e.g. when `T = Q ⊗ₚ S` and `P → Q` is flat), then `T ⊗ₛ I/I² ≃ J/J²`. -/
+/-- . -/
 noncomputable
 def tensorCotangent [alg : Algebra P.Ring Q.Ring] (halg : algebraMap P.Ring Q.Ring = f.toRingHom)
     (H : Function.Bijective ((f.mapKer halg).liftBaseChange Q.Ring)) :
@@ -255,7 +255,7 @@ def tensorCotangent [alg : Algebra P.Ring Q.Ring] (halg : algebraMap P.Ring Q.Ri
         simp [Hom.mapKer, tensorCotangentInvFun_smul_mk] }
 
 set_option backward.defeqAttrib.useBackward true in
-/-- If `J ≃ Q ⊗ₚ I`, `S → T` is flat and `P → Q` is formally étale, then `T ⊗ H¹(L_P) ≃ H¹(L_Q)`. -/
+/-- . -/
 noncomputable
 def tensorH1CotangentOfFormallyEtale [alg : Algebra P.Ring Q.Ring]
     (halg : algebraMap P.Ring Q.Ring = f.toRingHom) [Module.Flat S T]
@@ -299,7 +299,7 @@ end Extension
 variable {S}
 
 set_option backward.isDefEq.respectTransparency false in
-/-- let `p` be a submonoid of an `R`-algebra `S`. Then `Sₚ ⊗ H¹(L_{S/R}) ≃ H¹(L_{Sₚ/R})`. -/
+/-- . -/
 noncomputable
 def tensorH1CotangentOfIsLocalization (M : Submonoid S) [IsLocalization M T] :
     T ⊗[S] H1Cotangent R S ≃ₗ[T] H1Cotangent R T := by

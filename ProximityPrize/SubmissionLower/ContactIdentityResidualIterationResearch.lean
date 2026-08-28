@@ -4,15 +4,15 @@ import ProximityPrize.SubmissionLower.ContactIdentityZeroSafePencilResearch
 import ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalFlagResearch
 import ProximityPrize.SubmissionLower.ContactResidualSupportParametersResearch
 
-/-!
-# Iterated actual-identity residualization state
+/-! .
 
-Raw agreement-polynomial covariance under nodal residualization is false.
-This module therefore packages every invariant needed to remove a newly
-created identity set and repeat.  A nonempty step strictly lowers the selected
-polynomial degree, while preserving the surface flag, regularity, component
-assignment, and the no-large-pencil condition.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
 
@@ -44,8 +44,8 @@ local instance : DecidableEq Iota := Classical.decEq Iota
 abbrev Poly3 (Omega : Type) [Field Omega] := MvPolynomial (Fin 3) Omega
 abbrev Poly4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
 
-/-- Complete algebraic state at one residual degree.  `nodes` contains only
-the nodes not removed at earlier identity stages. -/
+/-- .
+ -/
 structure ResidualStage
     (phi : Polynomial K →+* Omega) (Gamma : Finset K) (x : Iota → K)
     (p e : ℕ) [CharP Omega p] (flag : FlagDegree) (d : ℕ)
@@ -85,16 +85,16 @@ variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
 variable {p e : ℕ} [CharP Omega p] {flag : FlagDegree} {d : ℕ}
 variable {support : ResidualSupportParameters}
 
-/-- The principal prime belonging to the current component. -/
+/-- . -/
 def componentIdeal (S : ResidualStage phi Gamma x p e flag d support) :
     Ideal (Poly3 Omega) := Ideal.span {S.G}
 
-/-- All current agreement cuts that vanish identically on the current
-component. -/
+/-- .
+ -/
 def identities (S : ResidualStage phi Gamma x p e flag d support) : Finset Iota :=
   identityNodes phi S.componentIdeal S.F S.nodes x S.u0 S.u1 d
 
-/-- The actual received-word agreement relation at this stage. -/
+/-- . -/
 def Agrees (S : ResidualStage phi Gamma x p e flag d support)
     (gamma : K) (i : Iota) : Prop :=
   (S.selected gamma).eval (x i) = S.u0 i + gamma * S.u1 i
@@ -136,8 +136,8 @@ theorem selected_point_ideal
   subst Q
   exact S.on_component gamma hgamma
 
-/-- Every current identity node is an actual agreement for every selected
-seed, including at residual degree zero. -/
+/-- .
+ -/
 theorem agrees_on_identities
     (S : ResidualStage phi Gamma x p e flag d support) :
     ∀ gamma ∈ Gamma, ∀ i ∈ S.identities, S.Agrees gamma i := by
@@ -150,8 +150,8 @@ theorem agrees_on_identities
     (S.solution gamma hgamma) (S.regular gamma hgamma)
     (S.selected_point_ideal hgamma) i hi
 
-/-- The zero-safe component reconstruction bounds every identity set by the
-current residual degree. -/
+/-- .
+ -/
 theorem identities_card_le
     (S : ResidualStage phi Gamma x p e flag d support) : S.identities.card ≤ d := by
   let P := S.componentIdeal
@@ -160,10 +160,10 @@ theorem identities_card_le
     phi P S.F S.surface_mem_componentIdeal S.regularity_not_mem_componentIdeal
     S.nodes x S.u0 S.u1 d S.x_injective S.G rfl S.y_dependent
 
-/-- One nonempty identity extraction produces a complete next stage.  The
-last two clauses expose exactly the agreement transport needed by recursive
-incidence: removed identities are full agreements, and every remaining old
-agreement descends to the new received word. -/
+/-- .
+
+
+ -/
 theorem advance
     (hphi : Function.Injective phi)
     (S : ResidualStage phi Gamma x p e flag d support)
@@ -248,8 +248,8 @@ theorem advance
   · intro gamma hgamma i hi hold
     exact hagree gamma hgamma i (by simpa [Snext, J] using hi) hold
 
-/-- Cardinal form of one advance step.  Removing the current identities loses
-exactly that many nodes and at most that many agreements for each seed. -/
+/-- .
+ -/
 theorem advance_card
     (hphi : Function.Injective phi)
     (S : ResidualStage phi Gamma x p e flag d support)
@@ -293,9 +293,9 @@ theorem advance_card
       _ ≤ (Snext.agreementFiber gamma).card :=
         Finset.card_le_card hRemainingSubset
 
-/-- A terminal descendant has no remaining identity agreement cuts.  Its
-degree records the total number of removed nodes exactly, and its agreement
-count loses at most the same total for every seed. -/
+/-- .
+
+ -/
 structure TerminalDescendant
     (S : ResidualStage phi Gamma x p e flag d support) where
   degree : ℕ
@@ -307,8 +307,8 @@ structure TerminalDescendant
     (S.agreementFiber gamma).card - (d - degree) ≤
       (stage.agreementFiber gamma).card
 
-/-- At a terminal stage every remaining agreement polynomial is a proper cut
-of the current principal component. -/
+/-- .
+ -/
 theorem proper_agreement_of_terminal
     (S : ResidualStage phi Gamma x p e flag d support)
     (hterminal : S.identities = ∅) {i : Iota} (hi : i ∈ S.nodes) :
@@ -320,9 +320,9 @@ theorem proper_agreement_of_terminal
   rw [hterminal] at hmem
   simpa using hmem
 
-/-- Repeated actual-identity extraction always terminates.  This theorem is
-well-founded on the current residual degree; the zero-safe identity cap makes
-the endpoint `d = 0` part of the same proof. -/
+/-- .
+
+ -/
 theorem exists_terminal_descendant
     (hphi : Function.Injective phi)
     (S : ResidualStage phi Gamma x p e flag d support) :

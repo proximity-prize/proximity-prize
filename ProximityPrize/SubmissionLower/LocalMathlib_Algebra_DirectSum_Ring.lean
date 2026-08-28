@@ -22,74 +22,74 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Additively-graded multiplicative structures on `⨁ i, A i`
+/-! .
 
-This module provides a set of heterogeneous typeclasses for defining a multiplicative structure
-over `⨁ i, A i` such that `(*) : A i → A j → A (i + j)`; that is to say, `A` forms an
-additively-graded ring. The five typeclasses are:
 
-* `DirectSum.GNonUnitalNonAssocSemiring A`
-* `DirectSum.GSemiring A`
-* `DirectSum.GRing A`
-* `DirectSum.GCommSemiring A`
-* `DirectSum.GCommRing A`
 
-Respectively, these five typeclasses imbue the external direct sum `⨁ i, A i` with:
 
-* `DirectSum.nonUnitalNonAssocSemiring`, `DirectSum.nonUnitalNonAssocRing`
-* `DirectSum.semiring`
-* `DirectSum.ring`
-* `DirectSum.commSemiring`
-* `DirectSum.commRing`
 
-the base ring `A 0` with instances of these types:
 
-* `NonUnitalNonAssocSemiring (A 0)`, `NonUnitalNonAssocRing (A 0)`
-* `Semiring (A 0)`
-* `Ring (A 0)`
-* `CommSemiring (A 0)`
-* `CommRing (A 0)`
 
-and the `i`th grade `A i` with `A 0`-actions (`•`) of these types:
 
-* `SMulWithZero (A 0) (A i)`
-* `Module (A 0) (A i)`
-* (nothing)
-* (nothing)
-* (nothing)
 
-Note that in the presence of these instances, `⨁ i, A i` itself inherits an `A 0`-action.
 
-`DirectSum.ofZeroRingHom : A 0 →+* ⨁ i, A i` provides `DirectSum.of A 0` as a ring
-homomorphism.
 
-`DirectSum.toSemiring` extends `DirectSum.toAddMonoid` to produce a `RingHom`.
 
-## Direct sums of subobjects
 
-Additionally, this module provides helper functions to construct `GSemiring` and `GCommSemiring`
-instances for:
 
-* `A : ι → Submonoid S`:
-  `DirectSum.GSemiring.ofAddSubmonoids`, `DirectSum.GCommSemiring.ofAddSubmonoids`.
-* `A : ι → Subgroup S`:
-  `DirectSum.GSemiring.ofAddSubgroups`, `DirectSum.GCommSemiring.ofAddSubgroups`.
-* `A : ι → Submodule S`:
-  `DirectSum.GSemiring.ofSubmodules`, `DirectSum.GCommSemiring.ofSubmodules`.
 
-If `sSupIndep A`, these provide a gradation of `⨆ i, A i`, and the mapping `⨁ i, A i →+ ⨆ i, A i`
-can be obtained as `DirectSum.toMonoid (fun i ↦ AddSubmonoid.inclusion <| le_iSup A i)`.
 
-## Implementation details
 
-The instances on `A 0` are scoped to the `DirectSum` namespace, because they have
-very general discriminantion tree keys.
 
-## Tags
 
-graded ring, filtered ring, direct sum, additive submonoid
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -100,25 +100,25 @@ namespace DirectSum
 
 open DirectSum
 
-/-! ### Typeclasses -/
+/-! . -/
 
 
 section Defs
 
 variable (A : ι → Type*)
 
-/-- A graded version of `NonUnitalNonAssocSemiring`. -/
+/-- . -/
 class GNonUnitalNonAssocSemiring [Add ι] [∀ i, AddCommMonoid (A i)] extends
   GradedMonoid.GMul A where
-  /-- Multiplication from the right with any graded component's zero vanishes. -/
+  /-- . -/
   mul_zero : ∀ {i j} (a : A i), mul a (0 : A j) = 0
-  /-- Multiplication from the left with any graded component's zero vanishes. -/
+  /-- . -/
   zero_mul : ∀ {i j} (b : A j), mul (0 : A i) b = 0
-  /-- Multiplication from the right between graded components distributes with respect to
-  addition. -/
+  /-- .
+ -/
   mul_add : ∀ {i j} (a : A i) (b c : A j), mul a (b + c) = mul a b + mul a c
-  /-- Multiplication from the left between graded components distributes with respect to
-  addition. -/
+  /-- .
+ -/
   add_mul : ∀ {i j} (a b : A i) (c : A j), mul (a + b) c = mul a c + mul b c
 
 end Defs
@@ -127,33 +127,33 @@ section Defs
 
 variable (A : ι → Type*)
 
-/-- A graded version of `Semiring`. -/
+/-- . -/
 class GSemiring [AddMonoid ι] [∀ i, AddCommMonoid (A i)] extends GNonUnitalNonAssocSemiring A,
   GradedMonoid.GMonoid A where
-  /-- The canonical map from ℕ to the zeroth component of a graded semiring. -/
+  /-- . -/
   natCast : ℕ → A 0
-  /-- The canonical map from ℕ to a graded semiring respects zero. -/
+  /-- . -/
   natCast_zero : natCast 0 = 0
-  /-- The canonical map from ℕ to a graded semiring respects successors. -/
+  /-- . -/
   natCast_succ : ∀ n : ℕ, natCast (n + 1) = natCast n + GradedMonoid.GOne.one
 
-/-- A graded version of `CommSemiring`. -/
+/-- . -/
 class GCommSemiring [AddCommMonoid ι] [∀ i, AddCommMonoid (A i)] extends GSemiring A,
   GradedMonoid.GCommMonoid A
 
-/-- A graded version of `Ring`. -/
+/-- . -/
 class GRing [AddMonoid ι] [∀ i, AddCommGroup (A i)] extends GSemiring A where
-  /-- The canonical map from ℤ to the zeroth component of a graded ring. -/
+  /-- . -/
   intCast : ℤ → A 0
-  /-- The canonical map from ℤ to a graded ring extends the canonical map from ℕ to the underlying
-  graded semiring. -/
+  /-- .
+ -/
   intCast_ofNat : ∀ n : ℕ, intCast n = natCast n
-  /-- On negative integers, the canonical map from ℤ to a graded ring is the negative extension of
-  the canonical map from ℕ to the underlying graded semiring. -/
+  /-- .
+ -/
   -- Porting note: -(n + 1) -> Int.negSucc
   intCast_negSucc_ofNat : ∀ n : ℕ, intCast (Int.negSucc n) = -natCast (n + 1 : ℕ)
 
-/-- A graded version of `CommRing`. -/
+/-- . -/
 class GCommRing [AddCommMonoid ι] [∀ i, AddCommGroup (A i)] extends GRing A, GCommSemiring A
 
 end Defs
@@ -165,7 +165,7 @@ theorem of_eq_of_gradedMonoid_eq {A : ι → Type*} [∀ i : ι, AddCommMonoid (
 
 variable (A : ι → Type*)
 
-/-! ### Instances for `⨁ i, A i` -/
+/-! . -/
 
 
 section One
@@ -184,7 +184,7 @@ variable [Add ι] [∀ i, AddCommMonoid (A i)] [GNonUnitalNonAssocSemiring A]
 
 open AddMonoidHom (flip_apply coe_comp compHom)
 
-/-- The piecewise multiplication from the `Mul` instance, as a bundled homomorphism. -/
+/-- . -/
 @[simps]
 def gMulHom {i j} : A i →+ A j →+ A (i + j) where
   toFun a :=
@@ -194,8 +194,8 @@ def gMulHom {i j} : A i →+ A j →+ A (i + j) where
   map_zero' := AddMonoidHom.ext fun a => GNonUnitalNonAssocSemiring.zero_mul a
   map_add' _ _ := AddMonoidHom.ext fun _ => GNonUnitalNonAssocSemiring.add_mul _ _ _
 
-/-- The multiplication from the `Mul` instance, as a bundled homomorphism. -/
--- See note [non-reducible instance]
+/-- . -/
+--
 @[reducible]
 def mulHom : (⨁ i, A i) →+ (⨁ i, A i) →+ ⨁ i, A i :=
   DirectSum.toAddMonoid fun _ =>
@@ -249,7 +249,7 @@ private nonrec theorem mul_one (x : ⨁ i, A i) : x * 1 = x := by
 
 set_option backward.defeqAttrib.useBackward true in
 private theorem mul_assoc (a b c : ⨁ i, A i) : a * b * c = a * (b * c) := by
-  -- (`fun a b c => a * b * c` as a bundled hom) = (`fun a b c => a * (b * c)` as a bundled hom)
+  --
   suffices AddMonoidHom.mulLeft₃ = AddMonoidHom.mulRight₃ by
       simpa only [AddMonoidHom.mulLeft₃_apply, AddMonoidHom.mulRight₃_apply] using
         DFunLike.congr_fun (DFunLike.congr_fun (DFunLike.congr_fun this a) b) c
@@ -262,7 +262,7 @@ private theorem mul_assoc (a b c : ⨁ i, A i) : a * b * c = a * (b * c) := by
 instance instNatCast : NatCast (⨁ i, A i) where
   natCast := fun n => of _ _ (GSemiring.natCast n)
 
-/-- The `Semiring` structure derived from `GSemiring A`. -/
+/-- . -/
 instance semiring : Semiring (⨁ i, A i) where
   one_mul := private one_mul A
   mul_one := private mul_one A
@@ -302,8 +302,8 @@ theorem mul_eq_dfinsuppSum [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' :
       = a.sum fun _ ai => a'.sum fun _ aj => DirectSum.of _ _ <| GradedMonoid.GMul.mul ai aj := by
   change mulHom _ a a' = _
   -- Porting note: I have no idea how the proof from ml3 worked it used to be
-  -- simpa only [mul_hom, to_add_monoid, dfinsupp.lift_add_hom_apply, dfinsupp.sum_add_hom_apply,
-  -- add_monoid_hom.dfinsupp_sum_apply, flip_apply, add_monoid_hom.dfinsupp_sum_add_hom_apply],
+  --
+  --
   rw [mulHom, toAddMonoid, DFinsupp.liftAddHom_apply]
   dsimp only [DirectSum]
   rw [DFinsupp.sumAddHom_apply, AddMonoidHom.dfinsuppSum_apply]
@@ -311,7 +311,7 @@ theorem mul_eq_dfinsuppSum [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' :
   funext x
   simp [AddMonoidHom.dfinsuppSum_apply, DFinsupp.sumAddHom_apply, DirectSum.toAddMonoid]
 
-/-- A heavily unfolded version of the definition of multiplication -/
+/-- . -/
 theorem mul_eq_sum_support_ghas_mul [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' : ⨁ i, A i) :
     a * a' =
       ∑ ij ∈ DFinsupp.support a ×ˢ DFinsupp.support a',
@@ -331,7 +331,7 @@ private theorem mul_comm (a b : ⨁ i, A i) : a * b = b * a := by
   rw [AddMonoidHom.flip_apply, mulHom_of_of, mulHom_of_of]
   exact of_eq_of_gradedMonoid_eq (GCommSemiring.mul_comm ⟨ai, ax⟩ ⟨bi, bx⟩)
 
-/-- The `CommSemiring` structure derived from `GCommSemiring A`. -/
+/-- . -/
 instance commSemiring : CommSemiring (⨁ i, A i) where
   mul_comm := private mul_comm A
 
@@ -341,7 +341,7 @@ section NonUnitalNonAssocRing
 
 variable [∀ i, AddCommGroup (A i)] [Add ι] [GNonUnitalNonAssocSemiring A]
 
-/-- The `Ring` derived from `GSemiring A`. -/
+/-- . -/
 instance nonAssocRing : NonUnitalNonAssocRing (⨁ i, A i) where
 
 end NonUnitalNonAssocRing
@@ -351,7 +351,7 @@ section Ring
 variable [∀ i, AddCommGroup (A i)] [AddMonoid ι] [GRing A]
 
 -- Porting note: overspecified fields in ml4
-/-- The `Ring` derived from `GSemiring A`. -/
+/-- . -/
 instance ring : Ring (⨁ i, A i) where
   toIntCast.intCast z := of A 0 <| (GRing.intCast z)
   intCast_ofNat _ := congrArg (of A 0) <| GRing.intCast_ofNat _
@@ -364,22 +364,22 @@ section CommRing
 
 variable [∀ i, AddCommGroup (A i)] [AddCommMonoid ι] [GCommRing A]
 
-/-- The `CommRing` derived from `GCommSemiring A`. -/
+/-- . -/
 instance commRing : CommRing (⨁ i, A i) where
 
 end CommRing
 
-/-! ### Instances for `A 0`
+/-! .
 
-The various `G*` instances are enough to promote the `AddCommMonoid (A 0)` structure to various
-types of multiplicative structure.
 
-Implementation detail: Note that these instances on `A 0` have very general discrimination
-tree keys (e.g. `DirectSum.instRingOfNat` has discrimination tree key `Ring _` and often
-sends typeclass inference on a wild goose chase with any goal of the form `Ring (F X)`),
-so we scope these instances to the `DirectSum` namespace.
 
--/
+
+
+
+
+
+
+ -/
 
 
 section GradeZero
@@ -406,15 +406,15 @@ theorem of_zero_smul {i} (a : A 0) (b : A i) : of _ _ (a • b) = of _ _ a * of 
 theorem of_zero_mul (a b : A 0) : of _ 0 (a * b) = of _ 0 a * of _ 0 b :=
   of_zero_smul A a b
 
-/-- The `NonUnitalNonAssocSemiring` structure on the grade zero part
-of a `GNonUnitalNonAssocSemiring`. -/
+/-- .
+ -/
 scoped instance (priority := 900) :
     NonUnitalNonAssocSemiring (A 0) :=
   Function.Injective.nonUnitalNonAssocSemiring (of A 0) DFinsupp.single_injective (of A 0).map_zero
     (of A 0).map_add (of_zero_mul A) (map_nsmul _)
 
-/-- The `SMulWithZero` structure on the grade zero part
-of a `GNonUnitalNonAssocSemiring`. -/
+/-- .
+ -/
 scoped instance (i : ι) : SMulWithZero (A 0) (A i) := by
   letI := SMulWithZero.compHom (⨁ i, A i) (of A 0).toZeroHom
   exact Function.Injective.smulWithZero (of A i).toZeroHom DFinsupp.single_injective
@@ -432,13 +432,13 @@ theorem of_zero_pow (a : A 0) : ∀ n : ℕ, of A 0 (a ^ n) = of A 0 a ^ n
   -- Porting note: Lean doesn't think this terminates if we only use `of_zero_pow` alone
   | n + 1 => by rw [pow_succ, pow_succ, of_zero_mul, of_zero_pow _ n]
 
-/-- The `NatCast` instance on `A 0`, given `GSemiring A`. -/
+/-- . -/
 scoped instance (priority := 900) : NatCast (A 0) :=
   ⟨GSemiring.natCast⟩
 
 
--- TODO: These could be replaced by the general lemmas for `AddMonoidHomClass` (`map_natCast'` and
--- `map_ofNat'`) if those were marked `@[simp low]`.
+--
+--
 @[simp]
 theorem of_natCast (n : ℕ) : of A 0 n = n :=
   rfl
@@ -447,21 +447,21 @@ theorem of_natCast (n : ℕ) : of A 0 n = n :=
 theorem of_zero_ofNat (n : ℕ) [n.AtLeastTwo] : of A 0 ofNat(n) = ofNat(n) :=
   of_natCast A n
 
-/-- The `Semiring` structure derived from `GSemiring A`. -/
+/-- . -/
 scoped instance (priority := 900) : Semiring (A 0) :=
   Function.Injective.semiring (of A 0) DFinsupp.single_injective (of A 0).map_zero (of_zero_one A)
     (of A 0).map_add (of_zero_mul A) (fun _ _ ↦ (of A 0).map_nsmul _ _)
     (fun _ _ => of_zero_pow _ _ _) (of_natCast A)
 
-/-- `of A 0` is a `RingHom`, using the `DirectSum.GradeZero.semiring` structure. -/
+/-- . -/
 def ofZeroRingHom : A 0 →+* ⨁ i, A i :=
   { of _ 0 with
     map_one' := of_zero_one A
     map_mul' := of_zero_mul A }
 
-/-- Each grade `A i` derives an `A 0`-module structure from `GSemiring A`. Note that this results
-in an overall `Module (A 0) (⨁ i, A i)` structure via `DirectSum.module`.
--/
+/-- .
+
+ -/
 scoped instance {i} : Module (A 0) (A i) :=
   letI := Module.compHom (⨁ i, A i) (ofZeroRingHom A)
   DFinsupp.single_injective.module (A 0) (of A i) fun a => of_zero_smul A a
@@ -472,7 +472,7 @@ section CommSemiring
 
 variable [∀ i, AddCommMonoid (A i)] [AddCommMonoid ι] [GCommSemiring A]
 
-/-- The `CommSemiring` structure derived from `GCommSemiring A`. -/
+/-- . -/
 scoped instance (priority := 900) : CommSemiring (A 0) :=
   Function.Injective.commSemiring (of A 0) DFinsupp.single_injective (of A 0).map_zero
     (of_zero_one A) (of A 0).map_add (of_zero_mul A) (fun _ _ ↦ map_nsmul _ _ _)
@@ -484,7 +484,7 @@ section Ring
 
 variable [∀ i, AddCommGroup (A i)] [AddZeroClass ι] [GNonUnitalNonAssocSemiring A]
 
-/-- The `NonUnitalNonAssocRing` derived from `GNonUnitalNonAssocSemiring A`. -/
+/-- . -/
 scoped instance (priority := 900) : NonUnitalNonAssocRing (A 0) :=
   Function.Injective.nonUnitalNonAssocRing (of A 0) DFinsupp.single_injective (of A 0).map_zero
     (of A 0).map_add (of_zero_mul A) (of A 0).map_neg (of A 0).map_sub (fun _ _ ↦ map_nsmul _ _ _)
@@ -496,7 +496,7 @@ section Ring
 
 variable [∀ i, AddCommGroup (A i)] [AddMonoid ι] [GRing A]
 
-/-- The `IntCast` instance on `A 0`, given `GRing A`. -/
+/-- . -/
 scoped instance (priority := 900) : IntCast (A 0) :=
   ⟨GRing.intCast⟩
 
@@ -504,7 +504,7 @@ scoped instance (priority := 900) : IntCast (A 0) :=
 theorem of_intCast (n : ℤ) : of A 0 n = n := by
   rfl
 
-/-- The `Ring` derived from `GSemiring A`. -/
+/-- . -/
 scoped instance (priority := 900) : Ring (A 0) :=
   Function.Injective.ring (of A 0) DFinsupp.single_injective (of A 0).map_zero (of_zero_one A)
     (of A 0).map_add (of_zero_mul A) (of A 0).map_neg (of A 0).map_sub (fun _ _ ↦ map_nsmul _ _ _)
@@ -516,7 +516,7 @@ section CommRing
 
 variable [∀ i, AddCommGroup (A i)] [AddCommMonoid ι] [GCommRing A]
 
-/-- The `CommRing` derived from `GCommSemiring A`. -/
+/-- . -/
 scoped instance (priority := 900) : CommRing (A 0) :=
   Function.Injective.commRing (of A 0) DFinsupp.single_injective (of A 0).map_zero (of_zero_one A)
     (of A 0).map_add (of_zero_mul A) (of A 0).map_neg (of A 0).map_sub (fun _ _ ↦ map_nsmul _ _ _)
@@ -531,26 +531,26 @@ section ToSemiring
 variable {R : Type*} [∀ i, AddCommMonoid (A i)] [AddMonoid ι] [GSemiring A] [Semiring R]
 variable {A}
 
-/-- If two ring homomorphisms from `⨁ i, A i` are equal on each `of A i y`,
-then they are equal.
+/-- .
 
-See note [partially-applied ext lemmas]. -/
+
+ -/
 @[ext]
 theorem ringHom_ext' ⦃F G : (⨁ i, A i) →+* R⦄
     (h : ∀ i, (↑F : _ →+ R).comp (of A i) = (↑G : _ →+ R).comp (of A i)) : F = G :=
   RingHom.coe_addMonoidHom_injective <| DirectSum.addHom_ext' h
 
-/-- Two `RingHom`s out of a direct sum are equal if they agree on the generators. -/
+/-- . -/
 theorem ringHom_ext ⦃f g : (⨁ i, A i) →+* R⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=
   ringHom_ext' fun i => AddMonoidHom.ext <| h i
 
-/-- A family of `AddMonoidHom`s preserving `DirectSum.One.one` and `DirectSum.Mul.mul`
-describes a `RingHom`s on `⨁ i, A i`. This is a stronger version of `DirectSum.toMonoid`.
+/-- .
 
-Of particular interest is the case when `A i` are bundled subobjects, `f` is the family of
-coercions such as `AddSubmonoid.subtype (A i)`, and the `[GSemiring A]` structure originates from
-`DirectSum.gsemiring.ofAddSubmonoids`, in which case the proofs about `GOne` and `GMul`
-can be discharged by `rfl`. -/
+
+
+
+
+ -/
 @[simps]
 def toSemiring (f : ∀ i, A i →+ R) (hone : f _ GradedMonoid.GOne.one = 1)
     (hmul : ∀ {i j} (ai : A i) (aj : A j), f _ (GradedMonoid.GMul.mul ai aj) = f _ ai * f _ aj) :
@@ -580,9 +580,9 @@ theorem toSemiring_coe_addMonoidHom (f : ∀ i, A i →+ R) (hone hmul) :
     (toSemiring f hone hmul : (⨁ i, A i) →+ R) = toAddMonoid f :=
   rfl
 
-/-- Families of `AddMonoidHom`s preserving `DirectSum.One.one` and `DirectSum.Mul.mul`
-are isomorphic to `RingHom`s on `⨁ i, A i`. This is a stronger version of `DFinsupp.liftAddHom`.
--/
+/-- .
+
+ -/
 @[simps]
 def liftRingHom :
     { f : ∀ {i}, A i →+ R //
@@ -612,15 +612,15 @@ end ToSemiring
 
 end DirectSum
 
-/-! ### Concrete instances -/
+/-! . -/
 
 
 section Uniform
 
 variable (ι)
 
-/-- A direct sum of copies of a `NonUnitalNonAssocSemiring` inherits the multiplication structure.
--/
+/-- .
+ -/
 instance NonUnitalNonAssocSemiring.directSumGNonUnitalNonAssocSemiring {R : Type*} [AddMonoid ι]
     [NonUnitalNonAssocSemiring R] : DirectSum.GNonUnitalNonAssocSemiring fun _ : ι => R where
   mul_zero := mul_zero
@@ -628,14 +628,14 @@ instance NonUnitalNonAssocSemiring.directSumGNonUnitalNonAssocSemiring {R : Type
   mul_add := mul_add
   add_mul := add_mul
 
-/-- A direct sum of copies of a `Semiring` inherits the multiplication structure. -/
+/-- . -/
 instance Semiring.directSumGSemiring {R : Type*} [AddMonoid ι] [Semiring R] :
     DirectSum.GSemiring fun _ : ι => R where
   natCast n := n
   natCast_zero := Nat.cast_zero
   natCast_succ := Nat.cast_succ
 
-/-- A direct sum of copies of a `Ring` inherits the multiplication structure. -/
+/-- . -/
 instance Ring.directSumGRing {R : Type*} [AddMonoid ι] [Ring R] :
     DirectSum.GRing fun _ : ι => R where
   intCast z := z
@@ -644,16 +644,16 @@ instance Ring.directSumGRing {R : Type*} [AddMonoid ι] [Ring R] :
 
 open DirectSum
 
--- To check `Mul.gmul_mul` matches
+--
 example {R : Type*} [AddMonoid ι] [Semiring R] (i j : ι) (a b : R) :
     (DirectSum.of _ i a * DirectSum.of _ j b : ⨁ _, R) = DirectSum.of _ (i + j) (a * b) := by
   rw [DirectSum.of_mul_of, Mul.gMul_mul]
 
-/-- A direct sum of copies of a `CommSemiring` inherits the commutative multiplication structure. -/
+/-- . -/
 instance CommSemiring.directSumGCommSemiring {R : Type*} [AddCommMonoid ι] [CommSemiring R] :
     DirectSum.GCommSemiring fun _ : ι => R where
 
-/-- A direct sum of copies of a `CommRing` inherits the commutative multiplication structure. -/
+/-- . -/
 instance CommRing.directSumGCommRing {R : Type*} [AddCommMonoid ι] [CommRing R] :
     DirectSum.GCommRing fun _ : ι => R where
 

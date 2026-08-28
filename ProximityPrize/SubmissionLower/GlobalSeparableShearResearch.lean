@@ -2,19 +2,19 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch
 import ProximityPrize.SubmissionLower.SeparableShearTranscendenceResearch
 
-/-!
-# One separating shear coefficient for a finite component family
+/-! .
 
-For every component on which `Z` is a finite separable parameter, at most
-one base-field scalar `lambda` can make `d(R + lambda * Z)` vanish.  Over an
-algebraically closed (hence infinite) base, one nonzero `lambda` therefore
-works simultaneously for any finite family.
 
-This file also proves the nonvanishing fact hidden by a mere
-`span {dZ} = top` statement.  A finite separable field extension is formally
-etale; base change then carries the visibly nonzero `dX` of the rational
-function field to `dZ`.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.GlobalSeparableShearResearch
 
@@ -29,10 +29,10 @@ noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 200000
 
-/- This is the finite-dimensional specialization of Iversen II.5.3.  The
-proof is the standard simple-extension lifting argument used by Mathlib's
-`RingTheory.Etale.Field`; keeping the finite hypothesis avoids importing the
-unavailable infinite separable-extension gluing layer. -/
+/- 
+
+
+-/
 theorem formallyEtale_of_finite_isSeparable
     (F E : Type*) [Field F] [Field E] [Algebra F E]
     [FiniteDimensional F E] [Algebra.IsSeparable F E] :
@@ -75,7 +75,7 @@ theorem formallyEtale_of_finite_isSeparable
     apply Ideal.pow_mem_pow
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul, hx', mul_zero]
 
-/-- The rational variable has a genuinely nonzero absolute differential. -/
+/-- . -/
 theorem ratFunc_variableDifferential_ne_zero (K : Type*) [Field K] :
     D K (RatFunc K)
       (algebraMap (Polynomial K) (RatFunc K) Polynomial.X) ≠ 0 := by
@@ -102,9 +102,9 @@ theorem ratFunc_variableDifferential_ne_zero (K : Type*) [Field K] :
 
 variable (K L : Type*) [Field K] [Field L] [Algebra K L]
 
-/-- A finite separable rational projection has nonzero parameter
-differential.  This is stronger than, and complements, the earlier span
-criterion. -/
+/-- .
+
+ -/
 theorem parameterDifferential_ne_zero_of_isSeparable
     (embedding : RatFunc K →ₐ[K] L)
     (hfinite :
@@ -138,8 +138,8 @@ theorem parameterDifferential_ne_zero_of_isSeparable
     exact htensor'
   exact ratFunc_variableDifferential_ne_zero K hsource
 
-/-- For a nonzero direction vector, the affine differential equation has
-at most one solution in the base-field coefficient. -/
+/-- .
+ -/
 theorem shear_bad_coefficient_subsingleton
     (r z : L) (hdz : D K L z ≠ 0) :
     ∀ {a b : K},
@@ -150,8 +150,8 @@ theorem shear_bad_coefficient_subsingleton
   exact (eq_neg_of_add_eq_zero_right ha).trans
     (eq_neg_of_add_eq_zero_right hb).symm
 
-/-- Once a scalar avoids differential cancellation, the corresponding
-shear is a legitimate finite separable rational parameter. -/
+/-- .
+ -/
 theorem shear_transcendental_finite_separable_of_differential_ne_zero
     [IsAlgClosed K]
     (embeddingZ : RatFunc K →ₐ[K] L) (r z : L) (a : K)
@@ -225,8 +225,8 @@ variable {I : Type*} [Fintype I]
 variable (E : I → Type*) [∀ i, Field (E i)] [∀ i, Algebra K (E i)]
 variable (r z : ∀ i, E i)
 
-/-- A single nonzero base-field coefficient avoids differential
-cancellation on every member of a finite family. -/
+/-- .
+ -/
 theorem exists_common_nonzero_shear_coefficient
     [Infinite K] (hdz : ∀ i, D K (E i) (z i) ≠ 0) :
     ∃ a : K, a ≠ 0 ∧ ∀ i,
@@ -259,9 +259,9 @@ theorem exists_common_nonzero_shear_coefficient
       simpa only [dif_pos hex, Finset.mem_singleton, b]
     exact ha (Finset.mem_insert_of_mem (heq ▸ hbmem))
 
-/-- Fully packaged finite-family theorem: from finite separable `Z`
-projections, choose one nonzero scalar such that every `R + a·Z` projection
-is transcendental, finite, and separable. -/
+/-- .
+
+ -/
 theorem exists_common_finite_separable_shear
     [IsAlgClosed K]
     (embeddingZ : ∀ i, RatFunc K →ₐ[K] E i)

@@ -22,15 +22,15 @@ Port elaboration adjustment: explicitly choose classical decidability in
 the existing case-split proof; its statement and argument are unchanged.
 -/
 
-/-!
-# Torsion-free monoids with zero
+/-! .
 
-We prove that if `M` is an `UniqueFactorizationMonoid` that can be equipped with a
-`NormalizationMonoid` structure and such that `Mˣ` is torsion-free, then `M` is torsion-free.
 
-Note. You need to import this file to get that the monoid of ideals of a Dedekind domain is
-torsion-free.
--/
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 

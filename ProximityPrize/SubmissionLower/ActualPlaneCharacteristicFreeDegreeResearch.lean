@@ -2,18 +2,18 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CharacteristicFreeProjectionAdapter
 import ProximityPrize.SubmissionLower.ActualPlanePositiveOrder
 
-/-!
-# Actual characteristic-free finite-family degree adapter
+/-! .
 
-This research module connects the characteristic-free Sylvester-corank
-ledger to the actual fraction fields of original trivariate prime
-components.  It deliberately does not alter the production counting chain.
 
-Proper common plane equations imply finite-dimensionality without a
-characteristic assumption.  Distinct actual relation kernels then make the
-sum of the full (possibly inseparable) field degrees consume one original
-mixed-degree budget.  No `CharP` or `Algebra.IsSeparable` hypothesis occurs.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualPlaneCharacteristicFreeDegreeResearch
 
@@ -61,9 +61,9 @@ section FixedOrder
 variable (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
 variable (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
 
-/-- The actual fixed-order family bound with no separability or
-characteristic gate.  Finite-dimensionality is derived componentwise from
-the same two proper equations; it is not an abstract input. -/
+/-- .
+
+ -/
 theorem actual_finite_sum_finrank_bound_without_separability
     (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
     (hinj : Function.Injective P) (G H : Original K)
@@ -167,9 +167,9 @@ section OriginalOrder
 variable (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
 variable (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
 
-/-- Characteristic-free actual-family theorem in the original coordinate
-order.  The only order change swaps the two non-base coordinates, so the
-original mixed budget is exactly preserved. -/
+/-- .
+
+ -/
 theorem original_finite_sum_finrank_bound_without_separability
     (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
     (hinj : Function.Injective P) (G H : Original K)

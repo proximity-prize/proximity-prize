@@ -2,17 +2,17 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualCurveProjectionBounds
 import ProximityPrize.SubmissionLower.ActualCurveZeroCount
 
-/-!
-# One coordinate-degree budget, including constant coordinates
+/-! .
 
-Model label: gpt-5.
 
-This module uses the EXACT actualCoordinateDegree consumed by the proved
-affine zero-count theorem. Restricting to the actual transcendental
-subfamily and applying the original-degree projection theorem proves one
-common summed budget. Constant coordinates contribute zero; the empty
-subfamily requires no selected prime.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualCoordinateDegreeSum
 
@@ -61,9 +61,9 @@ theorem sum_actualCoordinateDegree_le_original
         exact dif_neg hi
     _ ≤ _ := hbound
 
-/-- Coordinatewise summed degrees can be paired with any nonnegative box
-weights. This is only finite-sum arithmetic; the preceding theorem supplies
-the actual geometric degree sums. -/
+/-- .
+
+ -/
 theorem weighted_sum_actualCoordinateDegree_le (weight bound : Fin 3 → ℕ)
     (hbound : ∀ j, (∑ i, actualCoordinateDegree K (P i) j) ≤ bound j) :
     (∑ i, ∑ j, weight j * actualCoordinateDegree K (P i) j) ≤
@@ -94,7 +94,7 @@ def coordinateMixedDegree (G H : Original K) (i : Fin 3) : ℕ :=
       H.degreeOf 0 * G.degreeOf 1 + G.degreeOf 0 * H.degreeOf 1 := by
   simp [coordinateMixedDegree, originalMixedDegree, Equiv.swap_apply_def] <;> ring
 
-/-- A canonical version indexed directly by an original coordinate. -/
+/-- . -/
 theorem sum_actualCoordinateDegree_at_le
     {I : Type} [Fintype I] (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
     (hinj : Function.Injective P) (j : Fin 3) (p : ℕ) [CharP K p] (G H : Original K)
@@ -107,8 +107,8 @@ theorem sum_actualCoordinateDegree_at_le
       (hdegree ((Equiv.swap 0 j) 2)) hmixed
   simpa only [coordinateMixedDegree, Equiv.swap_apply_left] using h
 
-/-- The actual projection property used by the zero-count theorem is
-derived from original equations and the strict original mixed gates. -/
+/-- .
+ -/
 theorem projectionsFiniteSeparable_of_original_gates
     (P : Ideal (Original K)) [P.IsPrime] (p : ℕ) [CharP K p] (G H : Original K)
     (hG : Irreducible G) (hGmem : G ∈ P) (hHmem : H ∈ P) (hproper : ¬ G ∣ H)

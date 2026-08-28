@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualPolynomialResearch
 import ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
 
-/-!
-# Agreement and pencil transport for actual-identity residuals
+/-! .
 
-This file supplies the two incidence-facing consequences of the exact nodal
-normal form: agreements outside the identity set descend to the residual
-polynomial, and a large residual affine pencil would lift to a forbidden
-large affine pencil of the original degree-`w` selected family.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualPencilResearch
 
@@ -36,8 +36,8 @@ def residualReceived
     (I : Finset ι) (x u : ι → K) (P : Polynomial K) (j : ι) : K :=
   (u j - P.eval (x j)) / (Lagrange.nodal I x).eval (x j)
 
-/-- Outside the actual identity set, dividing the original agreement by the
-nonzero nodal value gives an exact residual agreement. -/
+/-- .
+ -/
 theorem residual_agreement_of_original
     (I nodes : Finset ι) (x u0 u1 : ι → K)
     (hsub : I ⊆ nodes) (hinj : Set.InjOn x nodes)
@@ -54,8 +54,8 @@ theorem residual_agreement_of_original
   field_simp [hV]
   linear_combination hagree - heval
 
-/-- A residual affine pencil lifts through the nodal normal form to an
-original affine pencil of degree at most `w`. -/
+/-- .
+ -/
 theorem noLargeSelectedPencil_residual
     (I : Finset ι) (x : ι → K) (w e : ℕ) (hIw : I.card ≤ w)
     (selected residual : K → Polynomial K) (Gamma : Finset K)

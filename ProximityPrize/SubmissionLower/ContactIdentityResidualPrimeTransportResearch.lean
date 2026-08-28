@@ -1,18 +1,18 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagAffineResidualAutomorphismResearch
 
-/-!
-# Arbitrary regular-prime transport under the residual automorphism
+/-! .
 
-The outer residualization state transports a principal surface component by
-mapping its generator.  The inner incidence layer instead lives on an
-arbitrary prime curve ideal.  This module packages the corresponding ideal
-transport under the already constructed affine-triangular `residualEquiv`.
 
-No component-family enumeration is used: the original regular component can
-remain the indexing object while its prime ideal is mapped through the
-equivalence.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualPrimeTransportResearch
 
@@ -30,16 +30,16 @@ local instance : DecidableEq K := Classical.decEq K
 
 abbrev Poly3 (K : Type) [Field K] := MvPolynomial (Fin 3) K
 
-/-- The point in original coordinates represented by a residual-coordinate
-point. -/
+/-- .
+ -/
 def forwardResidualPoint
     (aY v bY aS bS cS : K) (q : Fin 3 → K) : Fin 3 → K :=
   ![aY + v * q 0 + bY * q 2,
     aS + v * q 1 + bS * q 0 + cS * q 2,
     q 2]
 
-/-- Evaluation commutes with the residual equivalence and the explicit
-forward point map. -/
+/-- .
+ -/
 theorem eval_residualEquiv
     (aY v bY aS bS cS : K) (hv : v ≠ 0)
     (q : Fin 3 → K) (F : Poly3 K) :
@@ -71,8 +71,8 @@ theorem eval_residualEquiv
         (eval₂Hom_residual F (q 0) (q 1) (q 2) aY v bY aS bS cS)
     _ = _ := by rw [hforward]
 
-/-- Pulling a residual point kernel back through the equivalence gives the
-kernel of evaluation at the corresponding original point. -/
+/-- .
+ -/
 theorem comap_pointKernel_residualEquiv
     (aY v bY aS bS cS : K) (hv : v ≠ 0)
     (q : Fin 3 → K) :
@@ -88,8 +88,8 @@ theorem comap_pointKernel_residualEquiv
     MvPolynomial.eval (forwardResidualPoint aY v bY aS bS cS q) F = 0
   rw [eval_residualEquiv]
 
-/-- Exact covariance of point-kernel containment.  This is the ideal-level
-form used to transport every selected point on an arbitrary curve prime. -/
+/-- .
+ -/
 theorem map_le_pointKernel_iff
     (aY v bY aS bS cS : K) (hv : v ≠ 0)
     (P : Ideal (Poly3 K)) (q : Fin 3 → K) :
@@ -101,8 +101,8 @@ theorem map_le_pointKernel_iff
   rw [Ideal.map_le_iff_le_comap,
     comap_pointKernel_residualEquiv aY v bY aS bS cS hv q]
 
-/-- A convenient two-point version: once the explicit forward residual point
-is identified with an old selected point, containment transports directly. -/
+/-- .
+ -/
 theorem map_le_pointKernel_of_forward_eq
     (aY v bY aS bS cS : K) (hv : v ≠ 0)
     (P : Ideal (Poly3 K)) (q qOld : Fin 3 → K)
@@ -113,8 +113,8 @@ theorem map_le_pointKernel_of_forward_eq
   rw [map_le_pointKernel_iff, hforward]
   exact hold
 
-/-- Minimal invariant package needed from one arbitrary regular curve prime.
-It is deliberately independent of `RegularComponent` enumeration. -/
+/-- .
+ -/
 structure RegularPrimeData (G T H : Poly3 K) where
   ideal : Ideal (Poly3 K)
   isPrime : ideal.IsPrime
@@ -124,8 +124,8 @@ structure RegularPrimeData (G T H : Poly3 K) where
   ne_point : ∀ q : Fin 3 → K,
     ideal ≠ RingHom.ker (MvPolynomial.aeval q).toRingHom
 
-/-- Multiplying the regularity test by a nonzero scalar does not change the
-regular locus represented by the prime package. -/
+/-- .
+ -/
 def RegularPrimeData.mulRegularityUnit
     {G T H : Poly3 K} (D : RegularPrimeData G T H)
     (c : K) (hc : c ≠ 0) :
@@ -148,7 +148,7 @@ def RegularPrimeData.mulRegularityUnit
     (c : K) (hc : c ≠ 0) :
     (D.mulRegularityUnit c hc).ideal = D.ideal := rfl
 
-/-- Map the underlying ideal through the affine-triangular equivalence. -/
+/-- . -/
 def RegularPrimeData.mapResidual
     {G T H : Poly3 K} (D : RegularPrimeData G T H)
     (aY v bY aS bS cS : K) (hv : v ≠ 0) :
@@ -190,7 +190,7 @@ def RegularPrimeData.mapResidual
       D.ideal.map
         (residualEquiv aY v bY aS bS cS hv).toRingEquiv.toRingHom := rfl
 
-/-- Membership is transported exactly, not merely in one direction. -/
+/-- . -/
 theorem mem_mapResidual_iff
     {G T H : Poly3 K} (D : RegularPrimeData G T H)
     (aY v bY aS bS cS : K) (hv : v ≠ 0) (F : Poly3 K) :

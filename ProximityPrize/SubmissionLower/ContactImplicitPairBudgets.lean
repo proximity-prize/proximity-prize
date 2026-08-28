@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactExceptionalSeedCount
 
-/-!
-# Actual implicit factor pairs and their summed coordinate budgets
+/-! .
 
-Model label: gpt-5.
 
-The base factors are the actual swapped-normalization factor family,
-filtered only by nonzero Y derivative. Each base factor is paired with the
-actual positive-R factors of its contact lift. The finite sigma family is
-constructed here, not supplied as a component-list hypothesis.
 
-Its three elementary elimination costs sum to at most J_Z, 2*J_Y*J_Z,
-and J_Y respectively. These are algebraic degree ledgers, not yet a theorem
-about geometric component degrees or numbers of selected seeds.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactImplicitPairBudgets
 
@@ -101,8 +101,8 @@ theorem implicitBaseFactors_product_degree_budget
   exact (sum_products_le_product_sums (implicitBaseFactors J)
     (fun A => A.degreeOf 1) (fun A => A.degreeOf 3)).trans (Nat.mul_le_mul hb.1 hb.2)
 
-/-- Coordinate order is the original Y,R,Z. These are the actual elementary
-pair costs used by the subsequent plane/resultant projection adapters. -/
+/-- .
+ -/
 def pairYCost (q : (A : MvPolynomial (Fin 4) K) × MvPolynomial (Fin 4) K) : ℕ :=
   q.2.degreeOf 2 * q.1.degreeOf 3
 

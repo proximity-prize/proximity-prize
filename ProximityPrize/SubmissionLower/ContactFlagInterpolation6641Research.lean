@@ -1,24 +1,24 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagRankKernel6641Research
 
-/-!
-# Symbolic coefficient-array existence for direct contact interpolation
+/-! .
 
-Model label: gpt-5.
 
-Every column is a distinct weighted monomial label (e,i,j,z). The node/block
-entry is its explicit binomial coefficient formula after X=x+T and
-Y=u0+Z*u1+T*Y. The target is the product of actual contact-map images, whose
-dimension is bounded by ContactFlagRankKernel6641Research; no dense matrix is allocated.
-The maps use the full contact exponent m-r. Its rank-count equality to the
-certified min(r+1,m-r) formula is proved explicitly below.
 
-The existence theorem proves nonzero arrays satisfying these explicit
-equations and reconstructs a nonzero global polynomial with the exact
-weighted support caps. The formal binomial-translation identity and the
-homogeneous contact expansion remain separate interfaces. No alignment
-theorem or ProtocolClaim is asserted.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagInterpolation6641Research
 
@@ -47,7 +47,7 @@ theorem localMonomial_mem (f j z : ℕ) :
   left
   simp [boxExponents]
 
-/-- The received affine value, with the seed still a formal variable. -/
+/-- . -/
 def seedAffine (u₀ u₁ : K) : Poly K :=
   MvPolynomial.C u₀ + MvPolynomial.monomial (Finsupp.single 2 1) u₁
 
@@ -75,14 +75,14 @@ theorem seedAffine_pow_mem (u₀ u₁ : K) (t : ℕ) :
       simpa only [pow_succ, Nat.zero_add] using
         coefficientBox_mul K ih (seedAffine_mem K u₀ u₁)
 
-/-- Distinct weighted monomial labels. Empty X ranges implement a strict
-weighted cap without allocating any columns. The order is i,j,z,e. -/
+/-- .
+ -/
 abbrev CoefficientIndex (D w L s : ℕ) :=
   (i : Fin (L + 1)) × (j : Fin (s + 1)) ×
     (Fin (L + 1 - i.val - j.val) ×
       Fin (D - w * i.val - (w - 1) * j.val))
 
-/-- Global variables 0,1,2,3 denote X,Y,R,Z. -/
+/-- . -/
 def columnExponent {D w L s : ℕ} (c : CoefficientIndex D w L s) : Fin 4 →₀ ℕ :=
   Finsupp.single 0 c.2.2.2.val + Finsupp.single 1 c.1.val +
     Finsupp.single 2 c.2.1.val + Finsupp.single 3 c.2.2.1.val
@@ -196,8 +196,8 @@ theorem coefficient_index_card (D w L s : ℕ) :
     Fintype.card (CoefficientIndex D w L s) = coefficientCount D w L s := by
   simp [CoefficientIndex, coefficientCount, Fintype.card_sigma, Finset.sum_range]
 
-/-- Explicit coefficient of T^r in a single column after the node shift and
-ordinary (T,Y) homogenization. The slope R and seed Z remain formal. -/
+/-- .
+ -/
 def blockEntry (D w L s : ℕ) (x u₀ u₁ : K)
     (c : CoefficientIndex D w L s) (r : ℕ) : Poly K :=
   ∑ f : Fin (c.1.val + 1),
@@ -239,7 +239,7 @@ def boundedBlockEntry (D w L s : ℕ) (x u₀ u₁ : K)
   ⟨blockEntry K D w L s x u₀ u₁ c r,
     blockEntry_mem K D w L s x u₀ u₁ c r⟩
 
-/-- The actual finite linear combination of the explicit column entries. -/
+/-- . -/
 def extractBlock (D w L s : ℕ) (x u₀ u₁ : K) (r : ℕ) :
     (CoefficientIndex D w L s → K) →ₗ[K]
       coefficientBox K (min r L) L s where
@@ -250,8 +250,8 @@ def extractBlock (D w L s : ℕ) (x u₀ u₁ : K) (r : ℕ) :
   map_smul' a θ := by
     simp only [Pi.smul_apply, Finset.smul_sum, smul_smul, smul_eq_mul, RingHom.id_apply]
 
-/-- The full contact exponent has exactly the same certified count. Once
-the exponent exceeds the Y cap, both proposed quotient boxes are empty. -/
+/-- .
+ -/
 theorem full_contactRankBound_eq (r m L s : ℕ) :
     contactRankBound (min r L) L s (m - r) =
       contactRankBound (min r L) L s (min (r + 1) (m - r)) := by
@@ -264,8 +264,8 @@ theorem full_contactRankBound_eq (r m L s : ℕ) :
   · have h' : m - r ≤ r + 1 := by omega
     rw [Nat.min_eq_right h']
 
-/-- A finite product of actual local polynomial images, not an assumed
-constraint vector space of the desired size. -/
+/-- .
+ -/
 abbrev LocalTarget (m L s : ℕ) :=
   (r : Fin m) → LinearMap.range
     (blockJet K (min r.val L) L s (m - r.val))
@@ -313,8 +313,8 @@ theorem constraintMap_apply {I : Type*} [Fintype I]
       contactJet K (m - r.val)
         ((extractBlock K D w L s (nodes i) (u₀ i) (u₁ i) r.val θ) : Poly K) := rfl
 
-/-- Dimension existence for the explicit equations. The codomain bound is
-proved from actual polynomial contact kernels, rather than postulated. -/
+/-- .
+ -/
 theorem exists_nonzero_kernel_array {I : Type*} [Fintype I]
     (D w L s m : ℕ) (nodes u₀ u₁ : I → K)
     (hgate : Fintype.card I * localRankBound m L s < coefficientCount D w L s) :
@@ -348,8 +348,8 @@ theorem exists_nonzero_block_equations {I : Type*} [Fintype I]
     ((extractBlock K D w L s (nodes i) (u₀ i) (u₁ i) r.val θ) : Poly K) = 0 at hh
   exact hh
 
-/-- The finitely many nontrivial equations imply polynomial divisibility
-for every block index, including the automatic zero-exponent tail. -/
+/-- .
+ -/
 theorem all_blocks_divisible_of_equations
     (D w L s m : ℕ) (x u₀ u₁ : K)
     (θ : CoefficientIndex D w L s → K)

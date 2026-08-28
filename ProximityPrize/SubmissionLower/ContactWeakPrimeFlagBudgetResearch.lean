@@ -3,14 +3,14 @@ import ProximityPrize.SubmissionLower.ContactWeakSeparableSeparatorResearch
 import ProximityPrize.SubmissionLower.ContactFlagPoleInequality6543Research
 import ProximityPrize.SubmissionLower.ContactPrimeFlagBudgetFamilyResearch
 
-/-!
-# Adaptive literal normalization to shared prime flag budgets
+/-! .
 
-The normalization coordinate may vary with the curve component.  The three
-unit flag pole costs do not: they remain literal functions on the original
-component family and can be reweighted by every later residual flag.  This
-module converts that exact unit-pole interface to `PrimeFlagBudgetFamily`.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactWeakPrimeFlagBudgetResearch
 
@@ -34,9 +34,9 @@ set_option maxRecDepth 20000
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
 
-/-- A support-function pole bound using only the selected literal rational
-parameter.  The support itself is always expressed in the original three
-coordinates. -/
+/-- .
+
+ -/
 def LiteralSupportPoleBound
     {P : Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime]
     (D : SeparableLiteralCoordinate P)
@@ -62,9 +62,9 @@ def LiteralSupportPoleBound
     (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega P) E) ≤
       (cost : ℤ)
 
-/-- Three shared literal unit-support costs on the original regular
-component family.  A component-dependent coordinate is used only to
-normalize its function field. -/
+/-- .
+
+ -/
 structure AdaptiveUnitPoleBudget
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
@@ -85,8 +85,8 @@ structure AdaptiveUnitPoleBudget
   sum_allCost_le : (∑ C : RegularComponent Omega G T H, allCost C) ≤
     flagMixed p q unitAllFlag
 
-/-- The three unit support-function bounds reweight to every flag support,
-while the weak literal separator supplies the actual affine zero theorem. -/
+/-- .
+ -/
 def AdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}

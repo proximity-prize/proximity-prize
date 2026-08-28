@@ -1,17 +1,17 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagInterpolation6641Research
 
-/-!
-# Exact interpolation profiles for the stacked 67.10 candidate
+/-! .
 
-This module certifies the three joint-support differential-contact kernels
-used by the bounded active-YZ recursive-GCD construction at `a = 182278`.
-The counts use the existing tetrahedral `Y+R+Z` support APIs. A weighted
-cutoff keeps the exact finite arithmetic certificates small.
 
-No GCD decomposition, residual ledger, or decoding claim is made in this
-arithmetic module.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
 
@@ -28,8 +28,8 @@ def agreements : ℕ := 182278
 def errors : ℕ := n - agreements
 def gap : ℕ := agreements - w
 
-/-- The profiles are `(multiplicity, total Y+R+Z cap, slope cap)`.
-`seedCap` retains its legacy name and bounds the full joint degree. -/
+/-- .
+ -/
 structure Profile where
   multiplicity : ℕ
   seedCap : ℕ
@@ -59,8 +59,8 @@ def nullity (P : Profile) : ℕ := P.coefficients - P.totalRank
 
 end Profile
 
-/-- Every weighted layer beginning at `t` vanishes, so the certificates
-only reduce the short positive prefix. -/
+/-- .
+ -/
 theorem coefficientCount_eq_sum_range_of_weighted_cutoff
     (D w L s t : ℕ) (ht : t ≤ L + 1) (hD : D ≤ w * t) :
     coefficientCount D w L s =
@@ -158,7 +158,7 @@ theorem profileC_values :
     profileC_localRank_exact]
   norm_num [n]
 
-/-- Each of the three constraint maps has a nonzero kernel. -/
+/-- . -/
 theorem interpolation_gates :
       profileA.totalRank < profileA.coefficients ∧
       profileB.totalRank < profileB.coefficients ∧
@@ -169,8 +169,8 @@ theorem interpolation_gates :
     profileC_coefficients_exact, profileC_localRank_exact]
   norm_num [n]
 
-/-- The ordinary derivative and coefficient arithmetic stays below the
-challenge-field characteristic. -/
+/-- .
+ -/
 theorem characteristic_gates :
     profileA.characteristicCap < prime ∧
       (2 * profileA.slopeCap - 1) * profileA.seedCap < prime ∧
@@ -184,8 +184,8 @@ theorem characteristic_gates :
   norm_num [Profile.characteristicCap, Profile.weightedCap, profileA, profileB,
     profileC, agreements, prime]
 
-/-- Coordinatewise caps inherited by the first GCD and the final common
-divisor, respectively. -/
+/-- .
+ -/
 theorem meet_caps :
     (min profileA.multiplicity profileB.multiplicity,
         min profileA.seedCap profileB.seedCap,
@@ -196,7 +196,7 @@ theorem meet_caps :
           (34, 900, 9) := by
   norm_num [profileA, profileB, profileC]
 
-/-- The weighted caps also force the cumulative `Y+R` caps. -/
+/-- . -/
 theorem middle_support_gates :
     profileA.weightedCap + profileA.slopeCap ≤ w * (profileA.yCap + 1) ∧
       profileB.weightedCap + profileB.slopeCap ≤ w * (profileB.yCap + 1) ∧

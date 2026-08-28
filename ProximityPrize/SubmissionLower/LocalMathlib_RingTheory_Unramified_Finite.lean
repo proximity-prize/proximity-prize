@@ -27,28 +27,28 @@ mathematical APIs, hypotheses, and remaining proof body are retained, with
 no resource-limit changes. Final commands report the kernel axioms.
 -/
 
-/-!
-# Various results about unramified algebras
+/-! .
 
-We prove various theorems about unramified algebras. In fact we work in the more general setting
-of formally unramified algebras which are essentially of finite type.
 
-## Main results
 
-- `Algebra.FormallyUnramified.iff_exists_tensorProduct`:
-  A finite-type `R`-algebra `S` is (formally) unramified iff
-  there exists a `t : S ⊗[R] S` satisfying
-  1. `t` annihilates every `1 ⊗ s - s ⊗ 1`.
-  2. the image of `t` is `1` under the map `S ⊗[R] S → S`.
-- `Algebra.FormallyUnramified.finite_of_free`: An unramified free algebra is finitely generated.
-- `Algebra.FormallyUnramified.flat_of_restrictScalars`:
-  If `S` is an unramified `R`-algebra, then `R`-flat implies `S`-flat.
 
-## References
 
-- [B. Iversen, *Generic Local Structure of the Morphisms in Commutative Algebra*][iversen]
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -60,12 +60,12 @@ variable (M : Type*) [AddCommGroup M] [Module R M] [Module S M] [IsScalarTower R
 
 namespace Algebra.FormallyUnramified
 
-/--
-Proposition I.2.3 + I.2.6 of [iversen]
-A finite-type `R`-algebra `S` is (formally) unramified iff there exists a `t : S ⊗[R] S` satisfying
-1. `t` annihilates every `1 ⊗ s - s ⊗ 1`.
-2. the image of `t` is `1` under the map `S ⊗[R] S → S`.
--/
+/-- .
+
+
+
+
+ -/
 theorem iff_exists_tensorProduct [EssFiniteType R S] :
     FormallyUnramified R S ↔ ∃ t : S ⊗[R] S,
       (∀ s, ((1 : S) ⊗ₜ[R] s - s ⊗ₜ[R] (1 : S)) * t = 0) ∧ TensorProduct.lmul' R t = 1 := by
@@ -145,14 +145,14 @@ lemma finite_of_free_aux (I) [DecidableEq I] (b : Basis I R S)
 variable [FormallyUnramified R S] [EssFiniteType R S]
 
 variable (R S) in
-/--
-A finite-type `R`-algebra `S` is (formally) unramified iff there exists a `t : S ⊗[R] S` satisfying
-1. `t` annihilates every `1 ⊗ s - s ⊗ 1`.
-2. the image of `t` is `1` under the map `S ⊗[R] S → S`.
+/-- .
 
-See `Algebra.FormallyUnramified.iff_exists_tensorProduct`.
-This is the choice of such a `t`.
--/
+
+
+
+
+
+ -/
 noncomputable
 def elem : S ⊗[R] S :=
   (iff_exists_tensorProduct.mp inferInstance).choose
@@ -172,15 +172,15 @@ lemma lmul_elem :
 
 variable (R S)
 
-/-- An unramified free algebra is finitely generated. Iversen I.2.8 -/
+/-- . -/
 lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
   classical
   letI : DecidableEq S := Classical.decEq S
   let I := Module.Free.ChooseBasisIndex R S
-  -- Let `bᵢ` be an `R`-basis of `S`.
+  --
   let b : Basis I R S := Module.Free.chooseBasis R S
-  -- Let `∑ₛ fᵢ ⊗ bᵢ : S ⊗[R] S` (summing over some finite `s`) be an element such that
-  -- `∑ₛ fᵢbᵢ = 1` and `∀ x : S, xfᵢ ⊗ bᵢ = aᵢ ⊗ xfᵢ` which exists since `S` is unramified over `R`.
+  --
+  --
   have ⟨f, hf⟩ : ∃ (a : I →₀ S), elem R S = a.sum (fun i x ↦ x ⊗ₜ b i) := by
     let b' := ((Basis.singleton PUnit.{1} S).tensorProduct b).reindex (Equiv.punitProd I)
     use b'.repr (elem R S)
@@ -188,13 +188,13 @@ lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
     congr! with _ i x
     simp [b', Basis.tensorProduct, TensorProduct.smul_tmul']
   constructor
-  -- I claim that `{ fᵢbⱼ | i, j ∈ s }` spans `S` over `R`.
+  --
   use Finset.image₂ (fun i j ↦ f i * b j) f.support f.support
   rw [← top_le_iff]
-  -- For all `x : S`, let `bᵢx = ∑ aᵢⱼbⱼ`.
+  --
   rintro x -
   let a : I → I →₀ R := fun i ↦ b.repr (b i * x)
-  -- Consider `F` such that `fⱼx = ∑ Fᵢⱼbⱼ`.
+  --
   let F : I →₀ I →₀ R := Finsupp.onFinset f.support (fun j ↦ b.repr (x * f j))
     (fun j ↦ not_imp_comm.mp fun hj ↦ by simp [Finsupp.notMem_support_iff.mp hj])
   have hG : ∀ j ∉ (Finset.biUnion f.support fun i ↦ (a i).support),
@@ -209,12 +209,12 @@ lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
       intro i hi
       rw [hj i hi, zero_smul]
     · simp only [Finset.sum_const_zero, map_zero]
-  -- And `G` such that `∑ₛ aᵢⱼfᵢ = ∑ Gᵢⱼbⱼ`, where `aᵢⱼ` are the coefficients `bᵢx = ∑ aᵢⱼbⱼ`.
+  --
   let G : I →₀ I →₀ R := Finsupp.onFinset (Finset.biUnion f.support (fun i ↦ (a i).support))
     (fun j ↦ b.repr (f.sum (fun i y ↦ a i j • y)))
     (fun j ↦ not_imp_comm.mp (hG j))
-  -- Then `∑ Fᵢⱼ(bⱼ ⊗ bᵢ) = ∑ fⱼx ⊗ bᵢ = ∑ fⱼ ⊗ xbᵢ = ∑ aᵢⱼ(fⱼ ⊗ bᵢ) = ∑ Gᵢⱼ(bⱼ ⊗ bᵢ)`.
-  -- Since `bⱼ ⊗ bᵢ` forms an `R`-basis of `S ⊗ S`, we conclude that `F = G`.
+  --
+  --
   have : F = G := by
     apply Finsupp.curryEquiv.symm.injective
     apply (Finsupp.equivCongrLeft (Equiv.prodComm I I)).injective
@@ -234,12 +234,12 @@ lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
         rfl
     · intro; simp
     · intro; simp
-  -- In particular, `fⱼx = ∑ Fᵢⱼbⱼ = ∑ Gᵢⱼbⱼ = ∑ₛ aᵢⱼfᵢ` for all `j`.
+  --
   have : ∀ j, x * f j = f.sum fun i y ↦ a i j • y := by
     intro j
     apply b.repr.injective
     exact DFunLike.congr_fun this j
-  -- Since `∑ₛ fⱼbⱼ = 1`, `x = ∑ₛ aᵢⱼfᵢbⱼ` is indeed in the span of `{ fᵢbⱼ | i, j ∈ s }`.
+  --
   rw [← mul_one x, ← @lmul_elem R, hf, map_finsuppSum, Finsupp.sum, Finset.mul_sum]
   simp only [TensorProduct.lmul'_apply_tmul, Finset.coe_image₂, ← mul_assoc, this,
     Finsupp.sum, Finset.sum_mul, smul_mul_assoc]
@@ -249,10 +249,10 @@ lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
   apply Submodule.subset_span
   use j, hj, i, hi
 
-/--
-Proposition I.2.3 of [iversen]
-If `S` is an unramified `R`-algebra, and `M` is an `S`-module, then the map
-`S ⊗[R] M →ₗ[S] M` taking `(b, m) ↦ b • m` admits an `S`-linear section. -/
+/-- .
+
+
+ -/
 noncomputable
 def sec :
     M →ₗ[S] S ⊗[R] M where
@@ -290,11 +290,11 @@ lemma comp_sec :
     | add y z hy hz => simp [hy, hz, add_smul]
   · rw [lmul_elem, one_smul]
 
-/-- If `S` is an unramified `R`-algebra, then `R`-flat implies `S`-flat. Iversen I.2.7 -/
+/-- . -/
 lemma flat_of_restrictScalars [Module.Flat R M] : Module.Flat S M :=
   Module.Flat.of_retract _ _ (comp_sec R S M)
 
-/-- If `S` is an unramified `R`-algebra, then `R`-projective implies `S`-projective. -/
+/-- . -/
 lemma projective_of_restrictScalars [Module.Projective R M] : Module.Projective S M :=
   Module.Projective.of_split _ _ (comp_sec R S M)
 

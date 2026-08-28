@@ -1,19 +1,19 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSingularAuxiliary
 
-/-!
-# Weighted degree control for the actual singular eliminant
+/-! .
 
-Model label: gpt-5.
 
-The coefficient extraction is connected to the actual collectR equivalence.
-Its support comes from original monomials with only their R exponent
-removed, so every natural weighted degree weakly decreases. The determinant
-bound uses the actual Sylvester matrix rather than an assumed eliminant cap.
 
-This source is a new proof layer; previously verified construction files
-remain frozen. No geometric point count or competition claim is asserted.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSingularDegreeBounds
 
@@ -55,8 +55,8 @@ theorem liftedCoefficient_R_degree (F : MvPolynomial (Fin 4) K) (n : ℕ) :
   change ((collectR K) ((collectR K).symm (Polynomial.C ((collectR K F).coeff n)))).natDegree = 0
   rw [AlgEquiv.apply_symm_apply, Polynomial.natDegree_C]
 
-/-- Every surviving support exponent is coordinatewise bounded by an
-actual original support exponent; the R exponent is zero. -/
+/-- .
+ -/
 theorem liftedCoefficient_support
     (F : MvPolynomial (Fin 4) K) (n : ℕ) (e : Fin 4 →₀ ℕ)
     (he : e ∈ (liftedCoefficient F n).support) :
@@ -121,7 +121,7 @@ theorem pderiv_weight_le (weights : Fin 4 → ℕ)
     exact Nat.le_add_right _ _
   exact hle.trans (MvPolynomial.le_weightedTotalDegree weights hd)
 
-/-- An actual Leibniz determinant bound, uniform in matrix size. -/
+/-- . -/
 theorem degreeOf_det_le_uniform (N a : ℕ)
     (M : Matrix (Fin N) (Fin N) (MvPolynomial (Fin 5) K))
     (hM : ∀ i j, (M i j).degreeOf 4 ≤ a) : M.det.degreeOf 4 ≤ N * a := by
@@ -142,8 +142,8 @@ theorem degreeOf_det_le_uniform (N a : ℕ)
   exact (MvPolynomial.degreeOf_mul_le (4 : Fin 5) _ _).trans
     ((Nat.add_le_add hsign hprod).trans_eq (zero_add _))
 
-/-- The coefficient ring is embedded back, then passed through the
-already verified injective weighted exponent lift. -/
+/-- .
+ -/
 def weightedCoefficientEmbedding (K : Type*) [Field K] (weights : Fin 4 → ℕ) :
     CoefficientRing K →+* MvPolynomial (Fin 5) K :=
   (weightedLift K weights).comp (embedCoefficients K)
@@ -156,7 +156,7 @@ theorem degree_weightedCoefficient (weights : Fin 4 → ℕ)
   rw [degree_weightedLift]
   exact liftedCoefficient_weight_le weights F n
 
-/-- No nonzero or characteristic assumption is needed for this upper bound. -/
+/-- . -/
 theorem eliminateR_weight_le (weights : Fin 4 → ℕ)
     (F G : MvPolynomial (Fin 4) K) (a : ℕ)
     (hF : MvPolynomial.weightedTotalDegree weights F ≤ a)
@@ -196,7 +196,7 @@ theorem weightedTotalDegree_prod_le {ι : Type*} (weights : Fin 4 → ℕ)
   simpa only [degree_weightedLift] using
     (MvPolynomial.degreeOf_prod_le (4 : Fin 5) I (fun i => weightedLift K weights (f i)))
 
-/-- The weighted budget is additive over genuine nonzero divisor products. -/
+/-- . -/
 theorem sum_weighted_degrees_le_of_prod_dvd {ι : Type*} (weights : Fin 4 → ℕ)
     (I : Finset ι) (f : ι → MvPolynomial (Fin 4) K) (Q : MvPolynomial (Fin 4) K)
     (hQ : Q ≠ 0) (hdiv : (∏ i ∈ I, f i) ∣ Q) :
@@ -241,8 +241,8 @@ theorem singularContribution_weight_le (weights : Fin 4 → ℕ)
       (MvPolynomial.weightedTotalDegree weights F) le_rfl (pderiv_weight_le weights F 2)).trans
       (Nat.mul_le_mul_right _ hfactor)
 
-/-- A uniform weighted bound for the actual fixed auxiliary. This is valid
-even before imposing the characteristic condition needed for nonvanishing. -/
+/-- .
+ -/
 theorem singularAuxiliary_weight_le (weights : Fin 4 → ℕ)
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (s : ℕ) (hs : 1 ≤ s) (hR : Q.degreeOf 2 ≤ s) :
@@ -266,8 +266,8 @@ theorem singularAuxiliary_weight_le (weights : Fin 4 → ℕ)
       Nat.mul_le_mul_left _ (sum_weighted_degrees_le_of_prod_dvd weights
         (activeFactors Q) id Q hQ (activeFactors_product_dvd Q hQ))
 
-/-- The exact joint Y+Z and strict contact-weight caps required by the
-singular branch follow from the actual input support box. -/
+/-- .
+ -/
 theorem singularAuxiliary_input_caps
     (Q : MvPolynomial (Fin 4) K) (D w L s : ℕ)
     (hQ : Q ≠ 0) (hs : 1 ≤ s)
@@ -291,8 +291,8 @@ theorem singularAuxiliary_input_caps
     (Nat.mul_le_mul_left _ hcaps.2.2)
   exact hle.trans_lt (Nat.mul_lt_mul_of_pos_left (by omega : D - 1 < D) hpositive)
 
-/-- The singular auxiliary is an actual nonzero, R-independent member of
-the expanded contact box, not a polynomial postulated with these caps. -/
+/-- .
+ -/
 theorem singularAuxiliary_nonzero_mem_box
     (Q : MvPolynomial (Fin 4) K) (D w L s p : ℕ) [CharP K p]
     (hQ : Q ≠ 0) (hs : 1 ≤ s) (hsmall : s < p)

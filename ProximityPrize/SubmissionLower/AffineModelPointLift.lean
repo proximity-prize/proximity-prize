@@ -3,19 +3,19 @@ import ProximityPrize.SubmissionLower.AffineOverringPointValuation
 import ProximityPrize.SubmissionLower.IntegralPointLifting
 
 
-/-!
-# Constructed point-to-place maps for actual affine models
+/-! .
 
-Model label: gpt-5.
 
-The affine model A need not be integral over the coordinate ring K[T].
-We construct B = integralClosure A L, lift each actual K-valued point to B,
-and restrict it to the actual Dedekind normalization S of K[T] in L.
-The overring fraction argument gives an injective point-to-place map,
-unit-ball bounds on all model functions, and positive orders at zeros.
 
-No point lift, place assignment, or zero-count inequality is assumed.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.AffineModelPointLift
 
@@ -38,8 +38,8 @@ variable {K S A L : Type*} [Field K] [IsAlgClosed K]
   [IsScalarTower (Polynomial K) S L] [IsScalarTower (Polynomial K) A L]
   [IsFractionRing S L] [Algebra.IsIntegral (Polynomial K) S]
 
-/-- The actual normalization S maps into the integral closure of A:
-its monic K[T]-relations remain monic relations over A. -/
+/-- .
+ -/
 def inclusionToModelClosure : S →ₐ[K] ModelClosure A L where
   toFun s := ⟨algebraMap S L s, by
     have hs : IsIntegral (Polynomial K) (algebraMap S L s) :=
@@ -66,8 +66,8 @@ theorem modelClosure_embedding_injective :
     Function.Injective (algebraMap (ModelClosure A L) L) :=
   Subtype.val_injective
 
-/-- The actual integral-closure point is constructed by lying over and
-algebraic closedness, using the previously verified lifting theorem. -/
+/-- .
+ -/
 def modelClosurePoint (hinj : Function.Injective (algebraMap A L))
     (φ : A →ₐ[K] K) : ModelClosure A L →ₐ[K] K :=
   IntegralPointLifting.chosenPointLift (modelClosure_base_injective hinj) φ
@@ -78,8 +78,8 @@ theorem modelClosurePoint_restrict
   AlgHom.congr_fun
     (IntegralPointLifting.chosenPointLift_spec (modelClosure_base_injective hinj) φ) a
 
-/-- Restriction of the constructed point to S gives an actual nonzero
-height-one prime, with nonzeroness witnessed by T-φ(T). -/
+/-- .
+ -/
 def modelPointPlace
     (hS : Function.Injective (algebraMap (Polynomial K) S))
     (hA : Function.Injective (algebraMap A L)) (φ : A →ₐ[K] K) :
@@ -121,8 +121,8 @@ theorem model_value_lt_one_iff
   simpa only [← IsScalarTower.algebraMap_apply A (ModelClosure A L) L,
     AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom, modelClosurePoint_restrict] using h
 
-/-- Different original affine points cannot collapse to the same
-normalization prime, even though the lifted points were chosen. -/
+/-- .
+ -/
 theorem modelPointPlace_injective
     (hS : Function.Injective (algebraMap (Polynomial K) S))
     (hA : Function.Injective (algebraMap A L)) :

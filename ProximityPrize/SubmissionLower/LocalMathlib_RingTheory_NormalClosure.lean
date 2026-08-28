@@ -20,26 +20,26 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Normal closure of an extension of domains
+/-! .
 
-We define the normal closure of an extension of domains `R ⊆ S` as a domain `T` such that
-`R ⊆ S ⊆ T` and the extension `Frac T / Frac R` is Galois, and prove several instances about it.
 
-Under the hood, `T` is defined as the `integralClosure` of `S` inside the
-`IntermediateField.normalClosure` of the extension `Frac S / Frac R` inside the `AlgebraicClosure`
-of `Frac S`. In particular, if `S` is a Dedekind domain, then `T` is also a Dedekind domain.
 
-## Technical notes
 
-* Many instances are proved about the `IntermediateField.normalClosure` of the extension
-  `Frac S / Frac R` inside the `AlgebraicClosure` of `Frac S`. However these are only needed for the
-  construction of `T` and to prove some results about it. Therefore, these instances are local.
-* `Ring.NormalClosure` is defined as a type rather than a `Subalgebra` for performance reasons
-  (and thus we need to provide explicit instances for it). Although defining it as a `Subalgebra`
-  does not cause timeouts in this file, it does slow down considerably its compilation and
-  does trigger timeouts in applications.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -50,11 +50,11 @@ noncomputable section NormalClosure
 variable (R S : Type*) [CommRing R] [CommRing S] [IsDomain R] [IsDomain S]
   [Algebra R S] [Module.IsTorsionFree R S]
 
-/--
-We register this specific instance as a local instance rather than making
-`FractionRing.liftAlgebra` a local instance because the latter causes timeouts since
-it is too general.
--/
+/-- .
+
+
+
+ -/
 local instance : Algebra (FractionRing R) (FractionRing S) := FractionRing.liftAlgebra _ _
 
 local notation3 "K" => FractionRing R
@@ -63,16 +63,16 @@ local notation3 "E" => IntermediateField.normalClosure (FractionRing R) (Fractio
     (AlgebraicClosure (FractionRing S))
 
 
-/--
-This is a local instance since it is only used in this file to construct `Ring.NormalClosure`.
--/
+/-- .
+
+ -/
 local instance : Algebra S E := ((algebraMap L E).comp (algebraMap S L)).toAlgebra
 
 local instance : IsScalarTower S L E := IsScalarTower.of_algebraMap_eq' rfl
 
-/--
-The normal closure of an extension of domains `R ⊆ S`. It is defined as a domain `T` such that
-`R ⊆ S ⊆ T` and `Frac T / Frac R` is Galois. -/
+/-- .
+
+ -/
 def NormalClosure : Type _ := integralClosure S E
 
 local notation3 "T" => NormalClosure R S
@@ -85,9 +85,9 @@ instance : Nontrivial T := inferInstanceAs (Nontrivial (integralClosure S E))
 
 instance : Algebra S T := inferInstanceAs (Algebra S (integralClosure S E))
 
-/--
-This is a local instance since it is only used in this file to construct `Ring.NormalClosure`.
--/
+/-- .
+
+ -/
 local instance : Algebra T E := inferInstanceAs (Algebra (integralClosure S E) E)
 
 instance : Algebra R T := ((algebraMap S T).comp (algebraMap R S)).toAlgebra

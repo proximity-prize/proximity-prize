@@ -3,19 +3,19 @@ import ProximityPrize.Benchmark.TargetLower
 
 
 
-/-!
-# Actual minimal-prime components of a two-equation affine cut
+/-! .
 
-Model label: gpt-5.
 
-The component family is the finite set of actual minimal prime ideals of
-(F,T), not a supplied list with desired properties. Every actual common
-point lies on one of them. Krull's height theorem bounds each component's
-height by two. A separate explicit chain of three prime kernels proves
-that no such component is a single K-valued point of affine three-space.
 
-No mixed intersection bound, field-degree bound, or submission is claimed.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactCurveComponents
 
@@ -25,7 +25,7 @@ variable (K : Type) [Field K]
 
 abbrev Poly3 := MvPolynomial (Fin 3) K
 
-/-- Freeze the first n coordinates at the given actual point. -/
+/-- . -/
 def freezeCoordinates (v : Fin 3 → K) (n : ℕ) : Poly3 K →ₐ[K] Poly3 K :=
   MvPolynomial.aeval (fun i => if i.val < n then MvPolynomial.C (v i) else MvPolynomial.X i)
 
@@ -76,7 +76,7 @@ theorem freezeKernel_lt_succ (v : Fin 3 → K) (n : ℕ) (hn : n < 3) :
   intro heq
   exact hnot (heq.symm ▸ hmem)
 
-/-- The actual affine point kernel. -/
+/-- . -/
 def pointKernel (v : Fin 3 → K) : Ideal (Poly3 K) :=
   RingHom.ker (MvPolynomial.aeval v).toRingHom
 
@@ -96,8 +96,8 @@ theorem freezeKernel_three (v : Fin 3 → K) :
   change MvPolynomial.C (MvPolynomial.aeval v F) = 0 ↔ _
   simp
 
-/-- Three explicit strict inclusions of prime kernels force height at
-least three at every K-valued point. -/
+/-- .
+ -/
 theorem pointKernel_height_ge_three (v : Fin 3 → K) :
     (3 : ℕ∞) ≤ (pointKernel K v).height := by
   have h01 := Ideal.height_add_one_le_of_lt_of_isPrime
@@ -156,7 +156,7 @@ theorem component_height_le_two (F T : Poly3 K) (P : Ideal (Poly3 K))
     (Finset.card_insert_le F {T}).trans (by simp)
   exact hh.trans (by exact_mod_cast hc)
 
-/-- Actual common roots are covered by actual minimal primes. -/
+/-- . -/
 theorem exists_component_of_common_point
     (F T : Poly3 K) (v : Fin 3 → K)
     (hF : MvPolynomial.eval v F = 0) (hT : MvPolynomial.eval v T = 0) :
@@ -171,9 +171,9 @@ theorem exists_component_of_common_point
   obtain ⟨P, hP, hle⟩ := Ideal.exists_minimalPrimes_le hcut
   exact ⟨P, (mem_componentFamily K F T P).mpr hP, hle⟩
 
-/-- None of the actual two-equation components can collapse to a single
-affine K-valued point: its height is at most two, while that point has
-height at least three. -/
+/-- .
+
+ -/
 theorem component_ne_pointKernel
     (F T : Poly3 K) (P : Ideal (Poly3 K))
     (hP : P ∈ componentFamily K F T) (v : Fin 3 → K) :

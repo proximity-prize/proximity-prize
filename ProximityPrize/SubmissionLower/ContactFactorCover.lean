@@ -4,21 +4,21 @@ import ProximityPrize.SubmissionLower.ContactGenericSurface
 
 
 
-/-!
-# An actual finite irreducible factor cover of the contact zero set
+/-! .
 
-Model label: gpt-5.
 
-The factors are constructed from Mathlib's normalizedFactors, not supplied
-as a factorization hypothesis. Pure-X factors are removed: an injective
-K[X] -> L maps every nonzero pure-X polynomial to a nonzero scalar.
-Every generic-surface zero is therefore covered by an active irreducible
-factor. Divisibility inherits the actual contact support box, and the
-product of the distinct active factors consumes additive degree budgets.
 
-No irreducibility under field extension, geometric intersection count,
-or competition claim is asserted by this module.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFactorCover
 
@@ -31,7 +31,7 @@ variable {K L : Type*} [Field K] [Field L]
 local instance : StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
   UniqueFactorizationMonoid.strongNormalizationMonoid
 
-/-- Distinct normalized irreducible factors with positive Y/R/Z degree. -/
+/-- . -/
 def activeFactors (Q : MvPolynomial (Fin 4) K) : Finset (MvPolynomial (Fin 4) K) := by
   classical
   exact (normalizedFactors Q).toFinset.filter
@@ -46,7 +46,7 @@ theorem activeFactors_spec (Q F : MvPolynomial (Fin 4) K)
   exact ⟨irreducible_of_normalized_factor F hmem,
     dvd_of_mem_normalizedFactors hmem, hp⟩
 
-/-- Select an actual normalized factor after any specialization into a domain. -/
+/-- . -/
 theorem exists_normalized_factor_of_map_zero
     {A : Type*} [CommRing A] [IsDomain A]
     (ψ : MvPolynomial (Fin 4) K →+* A)
@@ -73,7 +73,7 @@ theorem eq_C_of_all_degreeOf_zero (P : MvPolynomial (Fin 3) L)
     exact Nat.eq_zero_of_le_zero hi
   simp [hd0]
 
-/-- No nonzero pure-X polynomial can vanish after an injective generic embedding. -/
+/-- . -/
 theorem pureX_nonvanishing (φ : Polynomial K →+* L) (hφ : Function.Injective φ)
     (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0)
     (v : Fin 3 → L) (P : Polynomial K)
@@ -115,7 +115,7 @@ theorem positive_seed_degree_of_surface_zero
   apply surfaceMap_ne_zero φ hφ F hF
   rw [hconst, hvalue, map_zero]
 
-/-- The fixed finite factor set covers every zero at every generic surface point. -/
+/-- . -/
 theorem exists_active_factor_of_surface_zero
     (φ : Polynomial K →+* L) (hφ : Function.Injective φ)
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) (v : Fin 3 → L)
@@ -158,7 +158,7 @@ theorem activeFactors_input_budgets (Q : MvPolynomial (Fin 4) K)
   ContactFactorCaps.separated_factor_caps_of_prod_dvd (activeFactors Q) id Q
     D w zcap s hw hQ hbox (activeFactors_product_dvd Q hQ)
 
-/-- Factor count is bounded by the additive active coordinate degrees. -/
+/-- . -/
 theorem activeFactors_card_le (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) :
     (activeFactors Q).card ≤ Q.degreeOf 1 + Q.degreeOf 2 + Q.degreeOf 3 := by
   classical

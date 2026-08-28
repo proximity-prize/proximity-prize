@@ -3,15 +3,15 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
 import ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
 import ProximityPrize.SubmissionLower.ContactIncidence
 
-/-!
-# Incidence consumers after terminal identity residualization
+/-! .
 
-These theorems hide the entire finite residualization recursion behind one
-geometric terminal-fiber provider.  The terminal stage has no identity cuts,
-and its degree is exactly the original degree minus the total number of
-removed nodes, so the existing linear incidence compression applies with no
-ledger loss.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualTerminalIncidenceResearch
 
@@ -35,9 +35,9 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- One recursively stabilized incidence layer.  The provider only has to
-bound fibers at terminal states; properness is supplied automatically from
-the empty identity set. -/
+/-- .
+
+ -/
 theorem recursive_stratified_incidence_bound
     (hphi : Function.Injective phi) {w a : ℕ}
     (S : ResidualStage phi Gamma x p e flag w support)
@@ -90,8 +90,8 @@ theorem recursive_stratified_incidence_bound
   exact stratified_incidence_linear Gamma.card S.nodes.card a w k
     degreeCost unitCost U V hk hwa hraw (hdegree k hk) (hunit k hk)
 
-/-- Scaled recursive layer used when the terminal geometric fiber theorem is
-already multiplied by the invariant gap `a-w`. -/
+/-- .
+ -/
 theorem recursive_scaled_stratified_incidence_bound
     (hphi : Function.Injective phi) {w a : ℕ}
     (S : ResidualStage phi Gamma x p e flag w support)

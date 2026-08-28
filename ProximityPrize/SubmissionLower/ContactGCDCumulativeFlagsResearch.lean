@@ -3,8 +3,8 @@ import ProximityPrize.SubmissionLower.ContactCumulativeWeightedDegreeResearch
 import ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research
 import ProximityPrize.SubmissionLower.ContactFlagTriangularProjectionResearch
 
-/-! Canonical cumulative flags for the actual original and geometric factors.
-The underlying factors, selected points, and residual regularity gates are unchanged. -/
+/-! .
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactGCDCumulativeFlagsResearch
 
@@ -162,7 +162,7 @@ theorem surfaceMap_in_originalCumulativeFlag (phi : Polynomial K →+* L)
   · rw [hc.2.1]; exact hm.2.1
   · rw [hc.2.2]; exact hm.2.2
 
-/-- Actual positive-R factor products transfer all three cumulative caps. -/
+/-- . -/
 theorem regularCumulativeFlag_budgets
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     {P : ResidualSupportParameters} (H : ResidualSupportData P Q) :
@@ -189,7 +189,7 @@ theorem regularCumulativeFlag_budgets
       Finset.sum_coe_sort]
     exact ht.trans H.total_weight
 
-/-- Geometric normalized factor products transfer to their original factor. -/
+/-- . -/
 theorem geometricCumulativeFlag_budgets (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0) :
     (∑ g : GeometricFactor K F, (geometricCumulativeFlag K g).all) ≤
         (originalCumulativeFlag F).all ∧
@@ -263,8 +263,8 @@ theorem surfaceCumulativeFlag_all (G : MvPolynomial (Fin 3) L) :
     fin_cases i <;> simp [sWeight]
   rw [hw, MvPolynomial.weightedTotalDegree_piSingle]
 
-/-- Reflagging changes only the enclosing support proof, preserving both
-the positive-R and proper-derivative gates and every selected-point field. -/
+/-- .
+ -/
 def reflagResidualStage {Iota : Type} {phi : Polynomial K →+* L}
     {Gamma : Finset K} {x : Iota → K} {p e d : ℕ} [CharP L p]
     {oldFlag newFlag : FlagDegree} {support : ResidualSupportParameters}

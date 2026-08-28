@@ -4,14 +4,14 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyYZSu
 import ProximityPrize.SubmissionLower.ContactProfileYZFactorLedgerResearch
 import ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjectionFixedMeetActive6656Research
 
-/-!
-# Profile-generic factor provider with the accepted Z/YZ tail
+/-! .
 
-This module composes the support-generic residual recursion with the refined
-active-YZ terminal family.  It changes only the large-pencil charge from the
-historical `Z + All` tail to `Z + YZ`; all contact, component, and projection
-geometry is imported unchanged.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactProfileYZFactorProviderResearch
 
@@ -49,10 +49,10 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- One proper terminal cut receives the profile-generic affine bound with a
-joint Z/YZ large-pencil charge.  The cut direction here is exactly the affine
-direction stored in `support`; the component theorem below it is already
-direction-generic. -/
+/-- .
+
+
+ -/
 theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
     (hphi : Function.Injective phi)
     (p : Profile) (support : ResidualSupportParameters)
@@ -205,8 +205,8 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
     _ ≤ _ := hbound
     _ = _ := by ring
 
-/-- Refined terminal active-YZ families discharge the complete
-profile/support-generic factor recursion. -/
+/-- .
+ -/
 theorem recursive_scaled_factorYZ_of_adaptive_projection_families
     (hphi : Function.Injective phi)
     (p : Profile) (support : ResidualSupportParameters)

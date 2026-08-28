@@ -1,51 +1,45 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAlignmentBridge
-import ProximityPrize.SubmissionLower.ContactStackedInterpolation6670Research
+import ProximityPrize.SubmissionLower.ContactMovingStackedInterpolation6719Research
+import ProximityPrize.SubmissionLower.ContactMovingProtocol6719Research
 import ProximityPrize.SubmissionLower.ContactStackedGCDCover6670Research
 import ProximityPrize.SubmissionLower.ContactStackedSeedPartition6670Research
-import ProximityPrize.SubmissionLower.ContactStackedBoxTransport6670Research
-import ProximityPrize.SubmissionLower.ContactStackedResidualCells6670Research
-import ProximityPrize.SubmissionLower.ContactStackedPromotedArithmetic6670Research
+import ProximityPrize.SubmissionLower.ContactMovingStackedBoxTransport6719Research
+import ProximityPrize.SubmissionLower.ContactMovingStackedResidualCells6719Research
+import ProximityPrize.SubmissionLower.ContactMovingParameters6719Research
+/-! .
 
-/-!
-# Selected-family composition for the stacked 66.96 route
 
-The three contact interpolants, recursive GCD cover, exact seed partition,
-both residual-cell bounds, and promoted-budget arithmetic are all concrete.
-The sole remaining premise is a count bound for an arbitrary nonzero fixed
-meet polynomial in the target box, stated directly on its selected seed cell.
--/
 
-namespace ProximityPrize.SubmissionLower.ContactStackedSelectedBound6670Research
 
+
+ -/
+namespace ProximityPrize.SubmissionLower.ContactMovingStackedSelectedBound6719Research
 open ProximityPrize.Benchmark
 open ContactAlignmentBridge ContactInterpolation ContactTranslation
 open ContactPrimeSeedIncidence ContactProperCutSeedCount
 open ContactRecursiveGCDResearch
-open ContactStackedParameters6670Research
+open ContactMovingParameters6719Research
+attribute [local simp] n errors agreements
 open ContactStackedGCDCover6670Research
 open ContactStackedSeedPartition6670Research
-open ContactStackedResidualCells6670Research
-open ContactStackedPromotedArithmetic6670Research
+open ContactMovingStackedResidualCells6719Research
+open ContactMovingParameters6719Research
 open ContactResidualSupportParametersResearch
-
 noncomputable section
-
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 100000
-
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 local instance : GCDMonoid GlobalPoly :=
   UniqueFactorizationMonoid.toGCDMonoid GlobalPoly
+/-- .
 
-/-- The narrow fixed-cell seam.  It speaks only about the final meet
-polynomial and the selected cell on which it specializes to zero; the three
-parent interpolants and recursive cover are deliberately absent. -/
-def FixedCellCountProvider6670 : Prop :=
+ -/
+def FixedCellCountProvider6719 : Prop :=
   ∀ (Q : GlobalPoly), Q ≠ 0 →
-    Q ∈ globalCoefficientBox IRSProfile.Field (34 * agreements) w 900 9 →
-    ResidualSupportData ContactFixedMeetProfile6670Research.fixedSupport Q →
+    Q ∈ globalCoefficientBox IRSProfile.Field (37 * agreements) w 1006 10 →
+    ResidualSupportData ContactMovingStackedBoxTransport6719Research.fixedSupport Q →
     ∀ (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
       (Delta : Finset IRSProfile.Field)
       (u0 u1 : IRSProfile.Index → IRSProfile.Field),
@@ -58,9 +52,8 @@ def FixedCellCountProvider6670 : Prop :=
             u0 i + gamma * u1 i)).card) →
       NoLargeSelectedPencil selected Delta w errors →
       Delta.card ≤ fixedCost
-
-/-- Pure final addition after the exact disjoint partition. -/
-theorem selected_card_le_promotedBudget_of_cell_bounds
+/-- . -/
+theorem selected_card_le_mcaBudget_of_cell_bounds
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
     (Gamma : Finset IRSProfile.Field) (QA QB QC : GlobalPoly)
     (hfirst : (firstResidualSeeds selected Gamma QA QB).card <
@@ -68,21 +61,20 @@ theorem selected_card_le_promotedBudget_of_cell_bounds
     (hsecond : (secondResidualSeeds selected Gamma QA QB QC).card <
       secondResidualCeiling)
     (hfixed : (fixedSeeds selected Gamma QA QB QC).card ≤ fixedCost) :
-    Gamma.card ≤ promotedBudget := by
+    Gamma.card ≤ mcaBudget := by
   have hpartition : Gamma.card =
       (firstResidualSeeds selected Gamma QA QB).card +
         (secondResidualSeeds selected Gamma QA QB QC).card +
         (fixedSeeds selected Gamma QA QB QC).card :=
     (partition_card selected Gamma QA QB QC).symm
-  have hlt := total_lt_promotedBudget Gamma.card
+  have hlt := total_lt_mcaBudget Gamma.card
     (firstResidualSeeds selected Gamma QA QB).card
     (secondResidualSeeds selected Gamma QA QB QC).card
     (fixedSeeds selected Gamma QA QB QC).card
     hpartition hfirst hsecond hfixed
   omega
-
-/-- Restrict the universal interpolation cover to the supplied selected
-family and its original agreement supports. -/
+/-- .
+ -/
 theorem selected_recursive_cover
     (U : Fin 2 → IRSProfile.Index → IRSProfile.Field)
     (seeds : Finset IRSProfile.Field)
@@ -110,9 +102,8 @@ theorem selected_recursive_cover
     norm_num [IRSProfile.Index, errors, n, agreements] at hh ⊢
     exact hh
   · exact hvalues gamma hgamma
-
-/-- The caller's support embeds in the full-domain agreement filter used by
-all three cell providers. -/
+/-- .
+ -/
 theorem selected_full_domain_agreement
     (U : Fin 2 → IRSProfile.Index → IRSProfile.Field)
     (seeds : Finset IRSProfile.Field)
@@ -138,20 +129,19 @@ theorem selected_full_domain_agreement
   have hsize := (hcard gamma hgamma).trans (Finset.card_le_card hA)
   norm_num [IRSProfile.Index, errors, n, agreements] at hsize ⊢
   exact hsize
-
-/-- Transport the actual final GCD cell into the abstract fixed-cell
-provider. -/
+/-- .
+ -/
 theorem fixedSeeds_card_le_of_provider
-    (hfixedProvider : FixedCellCountProvider6670)
+    (hfixedProvider : FixedCellCountProvider6719)
     (QA QB QC : GlobalPoly) (hQA : QA ≠ 0) (hQB : QB ≠ 0) (hQC : QC ≠ 0)
     (hboxA : QA ∈ globalCoefficientBox IRSProfile.Field
-      (34 * agreements) w 20000 10)
+      (37 * agreements) w 22092 10)
     (hboxB : QB ∈ globalCoefficientBox IRSProfile.Field
-      (68 * agreements) w 900 21)
+      (71 * agreements) w 1006 22)
     (hboxC : QC ∈ globalCoefficientBox IRSProfile.Field
-      (37 * agreements) w 42000 9)
+      (71 * agreements) w 1006 22)
     (hflagB : QB ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
-      IRSProfile.Field (68 * agreements) w 900 21)
+      IRSProfile.Field (71 * agreements) w 1006 22)
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
     (Gamma : Finset IRSProfile.Field)
     (u0 u1 : IRSProfile.Index → IRSProfile.Field)
@@ -169,14 +159,14 @@ theorem fixedSeeds_card_le_of_provider
       ContactStackedBoxTransport6656Research.gcd123_ne_zero
         (B := QB) (C := QC) hQA
   have hbox12 :=
-    ContactStackedBoxTransport6670Research.gcd12_mem_meet_box
+    ContactMovingStackedBoxTransport6719Research.gcd12_mem_meet_box
       QA QB hQA hQB hboxA hboxB
   have hQbox : Q ∈ globalCoefficientBox IRSProfile.Field
-      (34 * agreements) w 900 9 := by
+      (37 * agreements) w 1006 10 := by
     simpa [Q] using
-      ContactStackedBoxTransport6670Research.gcd123_mem_meet_box
+      ContactMovingStackedBoxTransport6719Research.gcd123_mem_meet_box
         QA QB QC hQA hQC hbox12 hboxC
-  have hQsupport := ContactStackedBoxTransport6670Research.gcd123_support_of_flagB
+  have hQsupport := ContactMovingStackedBoxTransport6719Research.gcd123_support_of_flagB
     QA QB QC hQA hQB hQC hboxA hboxB hboxC hflagB
   have hsub : Delta ⊆ Gamma := by
     simpa [Delta] using fixedSeeds_subset selected Gamma QA QB QC
@@ -197,13 +187,12 @@ theorem fixedSeeds_card_le_of_provider
     noLargeSelectedPencil_mono selected Gamma Delta w errors hsub hnoPencil
   simpa [Delta] using hfixedProvider Q hQ hQbox hQsupport selected Delta u0 u1
     hsolution hdegreeDelta hagreementDelta hnoPencilDelta
-
-/-- Complete selected-family bound, conditional only on the fixed-cell
-provider. -/
-theorem selectedNoLargePencilBound_of_fixedCellCountProvider6670
-    (hfixedProvider : FixedCellCountProvider6670) :
+/-- .
+ -/
+theorem selectedNoLargePencilBound6719_of_fixedProvider
+    (hfixedProvider : FixedCellCountProvider6719) :
     SelectedNoLargePencilBound IRSProfile.domain
-      131071 79866 274980727511395087 := by
+      131071 79955 274980727411395087 := by
   intro U seeds A selected hdegreeRaw hcardRaw hvalues hnoRaw
   have hdegree : ∀ gamma ∈ seeds,
       (selected gamma).natDegree ≤ w := by
@@ -224,7 +213,7 @@ theorem selectedNoLargePencilBound_of_fixedCellCountProvider6670
     · norm_num [errors, n, agreements]
   obtain ⟨QA, QB, QC, hQA, hboxA, hQB, hboxB, hQC, hboxC, hflagB,
       huniversal⟩ :=
-    exists_stacked_interpolants_with_recursive_cover (U 0) (U 1)
+    ContactMovingStackedInterpolation6719Research.exists_stacked_interpolants_with_recursive_cover (U 0) (U 1)
   have hcover := selected_recursive_cover U seeds A selected QA QB QC
     huniversal hdegree hcard hvalues
   have hfirstRaw := firstResidualCell_count_lt QA QB QC hQA hQB hboxA hboxB
@@ -233,19 +222,31 @@ theorem selectedNoLargePencilBound_of_fixedCellCountProvider6670
     hboxA hboxB hboxC selected seeds (U 0) (U 1) hcover hdegree hagreement hno
   have hfirst : (firstResidualSeeds selected seeds QA QB).card <
       firstResidualCeiling := by
-    simpa [firstResidualCeiling, firstResidualRegularCost,
-      firstResidualSingularCeiling] using hfirstRaw
+    simpa only [firstResidualCeiling, six_cells_exact.2.2.1,
+      six_cells_exact.2.2.2.1] using hfirstRaw
   have hsecond : (secondResidualSeeds selected seeds QA QB QC).card <
       secondResidualCeiling := by
-    simpa [secondResidualCeiling, secondResidualRegularCost,
-      secondResidualSingularCeiling] using hsecondRaw
+    simpa only [secondResidualCeiling, six_cells_exact.2.2.2.2.1,
+      six_cells_exact.2.2.2.2.2] using hsecondRaw
   have hfixed := fixedSeeds_card_le_of_provider hfixedProvider
     QA QB QC hQA hQB hQC hboxA hboxB hboxC hflagB selected seeds
     (U 0) (U 1) hdegree hagreement hno
-  simpa [promotedBudget] using
-    selected_card_le_promotedBudget_of_cell_bounds selected seeds QA QB QC
+  simpa only [base_values.2.2.2.1] using
+    selected_card_le_mcaBudget_of_cell_bounds selected seeds QA QB QC
       hfirst hsecond hfixed
+theorem alignmentBound6719_of_fixedProvider
+    (hfixedProvider : FixedCellCountProvider6719) :
+    AffineLineAlignmentBound IRSProfile.baseCode 79955 274980727411395087 := by
+  have h := ContactAlignmentBridge.alignmentBound_of_selected_count
+    IRSProfile.domain 131071 79955 274980727411395087
+    (selectedNoLargePencilBound6719_of_fixedProvider hfixedProvider)
+  simpa [IRSProfile.baseCode, IRSProfile.baseDimension] using h
+
+theorem protocolClaim6719_of_fixedProvider
+    (hfixedProvider : FixedCellCountProvider6719) :
+    ProtocolClaim 6719 319823 1048576 :=
+  ContactMovingProtocol6719Research.protocolClaim6719_of_alignment
+    (alignmentBound6719_of_fixedProvider hfixedProvider)
 
 end
-
-end ProximityPrize.SubmissionLower.ContactStackedSelectedBound6670Research
+end ProximityPrize.SubmissionLower.ContactMovingStackedSelectedBound6719Research

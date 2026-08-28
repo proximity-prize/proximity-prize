@@ -3,14 +3,14 @@ import ProximityPrize.SubmissionLower.ContactFactorCaps
 import ProximityPrize.SubmissionLower.ContactTaylorNumerators
 import ProximityPrize.SubmissionLower.ContactGenericSurface
 
-/-!
-# Joint Y+Z support caps for contact agreement cuts
+/-! .
 
-The contact interpolation space has the triangular seed support `Y + Z ≤ L`.
-This file keeps that joint support through the exact Taylor-numerator
-recurrence and the generic-surface map.  It is deliberately separate from
-the older coordinatewise degree box.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactJointSeedCaps
 
@@ -119,8 +119,8 @@ theorem seedDegree_polyG_le (F : Poly4 K) :
   rw [seedDegree_neg]
   exact hadd
 
-/-- One exact numerator recurrence step adds at most two copies of the
-joint seed degree of the defining equation. -/
+/-- .
+ -/
 theorem numeratorStep_seedDegree_le
     (F M : Poly4 K) (b a L : ℕ)
     (hF : seedDegree F ≤ L) (hM : seedDegree M ≤ a) :
@@ -214,8 +214,8 @@ theorem numerator_joint_seed_cap
   exact (MvPolynomial.le_weightedTotalDegree seedWeights hd).trans
     (numerator_seedDegree_le F L hF b)
 
-/-- The generic three-variable Taylor numerator inherits the triangular
-support bound in its Y and Z coordinates. -/
+/-- .
+ -/
 theorem surfaceMap_numerator_joint_seed_cap
     (φ : Polynomial K →+* Ω) (F : Poly4 K) (L b : ℕ)
     (hF : seedDegree F ≤ L) :
@@ -287,8 +287,8 @@ theorem affineSeedPolynomial_seedDegree_le (u₀ u₁ : K) :
     (MvPolynomial.C u₁)
   exact (seedDegree_add_le _ _).trans (max_le (hC0.trans (by omega)) (by omega))
 
-/-- The concrete agreement numerator has triangular seed support
-`Y + Z ≤ 1 + 2*w*L`. -/
+/-- .
+ -/
 theorem agreementNumerator_seedDegree_le
     (F : Poly4 K) (L w : ℕ) (hF : seedDegree F ≤ L)
     (c : ℕ → K) (x u₀ u₁ : K) :
@@ -312,8 +312,8 @@ theorem agreementNumerator_joint_seed_cap
   exact (MvPolynomial.le_weightedTotalDegree seedWeights hd).trans
     (agreementNumerator_seedDegree_le F L w hF c x u₀ u₁)
 
-/-- The generic three-variable agreement cut inherits the same triangular
-support in its Y and Z coordinates. -/
+/-- .
+ -/
 theorem surfaceMap_agreement_joint_seed_cap
     (φ : Polynomial K →+* Ω) (F : Poly4 K) (L w : ℕ)
     (hF : seedDegree F ≤ L) (c : ℕ → K) (x u₀ u₁ : K) :

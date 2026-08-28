@@ -3,23 +3,23 @@ import ProximityPrize.SubmissionLower.TrivariateRationalCollection
 import ProximityPrize.SubmissionLower.ActualCurveRationalProjection
 
 
-/-!
-# Actual nested plane equations and contraction of component relation kernels
+/-! .
 
-Model label: gpt-5.
 
-The ordered coordinates are (t,R,Y): the first is the rational coefficient
-variable, the second is the outer polynomial variable, and the third the
-inner polynomial variable. Collection is common to every component using
-that ordering, while evaluation uses each actual quotient fraction field
-and its actual rational-base embedding.
 
-Contracting the actual bivariate evaluation kernel along this common
-trivariate map recovers the original prime ideal. Consequently distinct
-original primes have distinct actual bivariate relation kernels. No
-supplied kernel-injectivity or abstract coordinate-field hypothesis is
-used. Degree caps and the final summed count are separate steps.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
 
@@ -27,8 +27,8 @@ open ActualCurveCoordinateField ActualCurveRationalProjection TrivariateRational
 
 noncomputable section
 
-/-- Variable zero becomes the outer variable; variable one becomes the
-inner variable. This is an actual algebra equivalence. -/
+/-- .
+ -/
 def bivariateEquiv (A : Type) [Field A] :
     MvPolynomial (Fin 2) A ≃ₐ[A] Polynomial (Polynomial A) :=
   (MvPolynomial.finSuccEquiv A 1).trans
@@ -54,8 +54,8 @@ variable (K : Type) [Field K]
 
 abbrev PlaneRing := Polynomial (Polynomial (RatFunc K))
 
-/-- This ring homomorphism depends only on the common ordering and K,
-not on the component prime or its rational-coordinate embedding. -/
+/-- .
+ -/
 def planeMap (order : Fin 3 ≃ Fin 3) : Original K →+* PlaneRing K :=
   (bivariateEquiv (RatFunc K)).toRingHom.comp (rationalMap K order)
 
@@ -115,9 +115,9 @@ theorem planeMap_dvd_iff_of_component
   · intro hdiv
     exact map_dvd (planeMap K order) hdiv
 
-/-- Actual nested evaluation with the previously constructed rational-base
-embedding. Under its induced algebra structure this is literally the
-planeEval used by the verified finite/summed degree theorem. -/
+/-- .
+
+ -/
 def actualPlaneEvaluation : PlaneRing K →+* CoordinateField K P :=
   (Polynomial.evalRingHom (coordinate K P (order 1))).comp
     (Polynomial.mapRingHom
@@ -138,8 +138,8 @@ def actualPlaneEvaluation : PlaneRing K →+* CoordinateField K P :=
       coordinate K P (order 2) := by
   simp [actualPlaneEvaluation]
 
-/-- The common trivariate-to-plane map evaluates to the ORIGINAL actual
-coordinate evaluation in every component field. -/
+/-- .
+ -/
 theorem actualPlaneEvaluation_comp_planeMap :
     (actualPlaneEvaluation K order P ht).comp (planeMap K order) =
       (coordinateEvaluation K P).toRingHom := by
@@ -176,8 +176,8 @@ theorem actualPlaneEvaluation_comp_planeMap :
 def actualRelationKernel : Ideal (PlaneRing K) :=
   RingHom.ker (actualPlaneEvaluation K order P ht)
 
-/-- The ORIGINAL prime is the actual contraction of the actual plane
-relation kernel; no localization-prime correspondence is supplied. -/
+/-- .
+ -/
 theorem actualRelationKernel_contract :
     (actualRelationKernel K order P ht).comap (planeMap K order) = P := by
   rw [actualRelationKernel, RingHom.comap_ker, actualPlaneEvaluation_comp_planeMap]
@@ -192,8 +192,8 @@ theorem actualPlane_root_iff (F : Original K) :
 
 end Component
 
-/-- Equality of the actual rational relation kernels forces equality of
-the original trivariate primes by contraction along one COMMON map. -/
+/-- .
+ -/
 theorem prime_eq_of_actualRelationKernel_eq
     (order : Fin 3 ≃ Fin 3) (P Q : Ideal (Original K)) [P.IsPrime] [Q.IsPrime]
     (hP : Transcendental K (coordinate K P (order 0)))

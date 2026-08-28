@@ -3,20 +3,20 @@ import ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
 import ProximityPrize.SubmissionLower.BCHKSResultantDegree
 
 
-/-!
-# Original separated caps for the actual coordinate projection
+/-! .
 
-Model label: gpt-5.
 
-The common ordering is (t,R,Y). This file bounds the actual outer degree,
-inner degree, and resultant degree after collection and rational
-localization by the ORIGINAL trivariate separated degrees. Support
-projection and the actual nested-polynomial equivalence provide the
-bounds; no degree-preservation or projection-budget hypothesis is used.
 
-Positive outer degree, choice of an ordering, and the geometric field
-degree application are separate steps.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualPlaneCoordinateCaps
 
@@ -154,8 +154,8 @@ theorem planeMap_degreeX_le (order : Fin 3 ≃ Fin 3) (F : Original K) :
   exact (bivariateEquiv_degreeX_le (RatFunc K) (rationalMap K order F)).trans
     (rationalMap_degreeOf_le K order F (1 : Fin 2))
 
-/-- The ORIGINAL two-coordinate mixed budget bounds the actual ordinary
-resultant over the selected rational-function coefficient field. -/
+/-- .
+ -/
 theorem planeMap_resultant_natDegree_le (order : Fin 3 ≃ Fin 3) (G H : Original K) :
     (Polynomial.resultant (planeMap K order G) (planeMap K order H)).natDegree ≤
       H.degreeOf (order 1) * G.degreeOf (order 2) +

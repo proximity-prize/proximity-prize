@@ -21,26 +21,26 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Valuations on F(t)
+/-! .
 
-This file defines the valuation at infinity on the field of rational functions `F(t)`.
 
-## Main definitions
 
-- `RatFunc.inftyValuation` : The place at infinity on `F(t)` is the nonarchimedean
-  valuation on `F(t)` with uniformizer `1/t`.
-- `RatFunc.CompletionAtInfty` : The completion `F((t⁻¹))` of `F(t)` with respect to the
-  valuation at infinity.
 
-## References
-* [D. Marcus, *Number Fields*][marcus1977number]
-* [J.W.S. Cassels, A. Fröhlich, *Algebraic Number Theory*][cassels1967algebraic]
-* [P. Samuel, *Algebraic Theory of Numbers*][samuel1967]
 
-## Tags
-function field, ring of integers
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -51,7 +51,7 @@ namespace RatFunc
 
 variable (F K : Type*) [Field F] [Field K]
 
-/-! ### The place at infinity on F(t) -/
+/-! . -/
 
 section InftyValuation
 
@@ -59,9 +59,9 @@ open Multiplicative WithZero Polynomial
 
 variable [DecidableEq (RatFunc F)]
 
-/-- The valuation at infinity is the nonarchimedean valuation on `F(t)` with uniformizer `1/t`.
-Explicitly, if `f/g ∈ F(t)` is a nonzero quotient of polynomials, its valuation at infinity is
-`exp (degree(f) - degree(g))`. -/
+/-- .
+
+ -/
 def inftyValuationDef (r : RatFunc F) : ℤᵐ⁰ :=
   if r = 0 then 0 else exp r.intDegree
 
@@ -91,7 +91,7 @@ theorem inftyValuation_of_nonzero {x : RatFunc F} (hx : x ≠ 0) :
     inftyValuationDef F x = exp x.intDegree := by
   rw [inftyValuationDef, if_neg hx]
 
-/-- The valuation at infinity on `F(t)`. -/
+/-- . -/
 def inftyValuation : Valuation (RatFunc F) ℤᵐ⁰ where
   toFun := inftyValuationDef F
   map_zero' := InftyValuation.map_zero' F
@@ -116,8 +116,8 @@ lemma inftyValuation.X_zpow (m : ℤ) : inftyValuation F (RatFunc.X ^ m) = exp m
 theorem inftyValuation.X_inv : inftyValuation F (1 / RatFunc.X) = exp (-1) := by
   rw [one_div, ← zpow_neg_one, inftyValuation.X_zpow]
 
--- Dropped attribute `@[simp]` due to issue described here:
--- https://leanprover.zulipchat.com/#narrow/channel/287929-mathlib4/topic/.60synthInstance.2EmaxHeartbeats.60.20error.20but.20only.20in.20.60simpNF.60
+--
+--
 theorem inftyValuation.polynomial {p : F[X]} (hp : p ≠ 0) :
     inftyValuationDef F (algebraMap F[X] (RatFunc F) p) = exp (p.natDegree : ℤ) := by
   rw [inftyValuationDef, if_neg (by simpa), RatFunc.intDegree_polynomial]
@@ -127,7 +127,7 @@ instance : Valuation.IsNontrivial (inftyValuation F) := ⟨RatFunc.X, by simp⟩
 instance : Valuation.IsTrivialOn F (inftyValuation F) :=
   ⟨fun _ hx ↦ by simp [inftyValuation.C _ hx]⟩
 
-/-- The valued field `F(t)` with the valuation at infinity. -/
+/-- . -/
 @[implicit_reducible]
 def inftyValued : Valued (RatFunc F) ℤᵐ⁰ :=
   Valued.mk' <| inftyValuation F
@@ -138,20 +138,20 @@ theorem inftyValued.def {x : RatFunc F} :
 
 namespace CompletionAtInfty
 
-/- We temporarily disable the existing valued instance coming from the ideal `X` to avoid diamonds
-with the uniform space structure coming from the valuation at infinity. -/
+/- 
+-/
 attribute [-instance] RatFunc.valuedRatFunc
 
-/- Locally add the uniform space structure coming from the valuation at infinity. This instance
-is scoped in the `CompletionAtInfty` namescape in case it is needed in the future. -/
-/-- The uniform space structure on `RatFunc F` coming from the valuation at infinity. -/
+/- 
+-/
+/-- . -/
 scoped instance : UniformSpace (RatFunc F) := (inftyValued F).toUniformSpace
 
-/-- The completion `F((t⁻¹))` of `F(t)` with respect to the valuation at infinity. -/
+/-- . -/
 def _root_.RatFunc.CompletionAtInfty := UniformSpace.Completion (RatFunc F)
 deriving Field, Algebra (RatFunc F), Coe (RatFunc F), Inhabited
 
-/-- The valuation at infinity on `k(t)` extends to a valuation on `CompletionAtInfty`. -/
+/-- . -/
 instance : Valued (CompletionAtInfty F) ℤᵐ⁰ :=
   inferInstanceAs <| Valued (UniformSpace.Completion (RatFunc F)) ℤᵐ⁰
 

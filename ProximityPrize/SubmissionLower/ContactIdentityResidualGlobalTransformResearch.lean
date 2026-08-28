@@ -3,27 +3,27 @@ import ProximityPrize.SubmissionLower.ContactGenericSurface
 import ProximityPrize.SubmissionLower.ContactTranslation
 import ProximityPrize.SubmissionLower.ContactPolynomialSolutions
 
-/-!
-# Global polynomial transform for actual-identity residualization
+/-! .
 
-The nodal decomposition
 
-`S = P0 + gamma * P1 + V * C`
 
-has a polynomial change of ambient coordinates before passing to a geometric
-component.  This file constructs that four-variable substitution and proves
-the two commutation statements needed by the post-65.33 route:
 
-* specialization at `(X,C,C',gamma)` is specialization of the original
-  equation at `(X,S,S',gamma)`;
-* after collecting `X` into a coefficient field, the global substitution is
-  exactly the componentwise affine-triangular automorphism.
 
-The global substitution is only injective in general (its determinant
-contains `V`), so no global irreducibility claim is made.  Once `V` maps to a
-nonzero field element, the componentwise map is the genuine algebra
-equivalence proved in `ContactFlagAffineResidualAutomorphismResearch`.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalTransformResearch
 
@@ -38,7 +38,7 @@ variable {K Omega : Type} [Field K] [Field Omega]
 
 abbrev Poly4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
 
-/-- Embed a univariate polynomial as a four-variable polynomial in `X`. -/
+/-- . -/
 def embedX (K : Type) [Field K] : Polynomial K →+* Poly4 K :=
   Polynomial.eval₂RingHom MvPolynomial.C (MvPolynomial.X (0 : Fin 4))
 
@@ -100,8 +100,8 @@ def embedX (K : Type) [Field K] : Polynomial K →+* Poly4 K :=
       MvPolynomial.X (2 : Fin 3) := by
   simpa using surfaceMap_X_succ phi (2 : Fin 3)
 
-/-- Original `(X,Y,R,Z)` coordinates as polynomials in the residual
-`(X,C,C',Z)` coordinates. -/
+/-- .
+ -/
 def globalResidualImage (P0 P1 V : Polynomial K) (i : Fin 4) : Poly4 K :=
   ![MvPolynomial.X 0,
     embedX K P0 + MvPolynomial.X 3 * embedX K P1 +
@@ -119,8 +119,8 @@ def globalResidualHom (P0 P1 V : Polynomial K) : Poly4 K →ₐ[K] Poly4 K :=
       globalResidualImage P0 P1 V i := by
   simp [globalResidualHom]
 
-/-- The global residual equation has exactly the intended polynomial
-solutions. -/
+/-- .
+ -/
 theorem specialization_globalResidualHom
     (P0 P1 V C : Polynomial K) (gamma : K) (F : Poly4 K) :
     specialization K C gamma (globalResidualHom P0 P1 V F) =
@@ -150,9 +150,9 @@ theorem globalResidual_solution
   rw [specialization_globalResidualHom]
   exact hsolution
 
-/-- The residual derivative coordinate enters the old equation only through
-`Rold = ... + V * R`.  Hence the regularity derivative picks up exactly one
-factor of the nodal polynomial. -/
+/-- .
+
+ -/
 theorem pderiv_globalResidualHom_R
     (P0 P1 V : Polynomial K) (F : Poly4 K) :
     MvPolynomial.pderiv (2 : Fin 4) (globalResidualHom P0 P1 V F) =
@@ -165,8 +165,8 @@ theorem pderiv_globalResidualHom_R
       fin_cases i <;>
         simp [globalResidualImage, hF, Derivation.leibniz] <;> ring
 
-/-- Evaluation at a residual polynomial point is exactly evaluation of the
-original equation at the reconstructed polynomial point. -/
+/-- .
+ -/
 theorem eval_globalResidualHom_polynomialPoint
     (coefficients : K →+* Omega) (P0 P1 V C : Polynomial K)
     (gamma : K) (xi : Omega) (F : Poly4 K) :
@@ -180,8 +180,8 @@ theorem eval_globalResidualHom_polynomialPoint
     ContactPolynomialSolutions.eval_polynomialPoint_eq_specialization,
     specialization_globalResidualHom]
 
-/-- Regularity at a reconstructed solution transports provided the nodal
-factor is nonzero at the coefficient-field `X` point. -/
+/-- .
+ -/
 theorem globalResidual_regular_at_polynomialPoint
     (coefficients : K →+* Omega) (P0 P1 V C : Polynomial K)
     (gamma : K) (xi : Omega) (F : Poly4 K)
@@ -214,9 +214,9 @@ theorem globalResidual_regular_at_polynomialPoint
 
 abbrev Poly3 (Omega : Type) [Field Omega] := MvPolynomial (Fin 3) Omega
 
-/-- The component-field version of `globalResidualImage`.  It is kept as a
-plain algebra homomorphism here so this global commutation layer is
-independent of the separate automorphism/support implementation. -/
+/-- .
+
+ -/
 def componentResidualImage
     (aY v bY aR bR cR : Omega) (i : Fin 3) : Poly3 Omega :=
   ![MvPolynomial.C aY + MvPolynomial.C v * MvPolynomial.X 0 +
@@ -236,8 +236,8 @@ def componentResidualHom
       componentResidualImage aY v bY aR bR cR i := by
   simp [componentResidualHom]
 
-/-- Mapping the `X` coefficients to a field turns the global substitution
-into the componentwise affine-triangular substitution. -/
+/-- .
+ -/
 theorem surfaceMap_globalResidualHom
     (phi : Polynomial K →+* Omega) (P0 P1 V : Polynomial K) (F : Poly4 K) :
     surfaceMap phi (globalResidualHom P0 P1 V F) =

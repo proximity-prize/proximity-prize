@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactLocalPoleBound
 import ProximityPrize.SubmissionLower.ContactFactorCaps
 
-/-!
-# Support-sensitive local pole bound (research)
+/-! .
 
-The coordinate-box theorem first replaces every monomial by the coordinatewise
-maximum exponent.  This module keeps the actual support through the local
-valuation step.  The remaining global theorem is then a tropical/intersection
-budget for the resulting support functions across all component places.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSparsePoleSupportResearch
 
@@ -22,42 +22,42 @@ variable {K L σ : Type*} [Field K] [Field L] [Fintype σ]
 
 local instance : DecidableEq K := Classical.decEq K
 
-/-- The pole weight of one exponent vector at a valuation. -/
+/-- . -/
 def exponentPoleWeight
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : σ → L) (d : σ →₀ ℕ) : ℤ :=
   ∑ i, (d i : ℤ) * poleOrder v (x i)
 
-/-- The signed tropical weight of one exponent vector. -/
+/-- . -/
 def exponentValuationWeight
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : σ → L) (d : σ →₀ ℕ) : ℤ :=
   ∑ i, (d i : ℤ) * (v (x i)).log
 
-/-- The usual tropical support function, normalized by an explicit zero
-term. -/
+/-- .
+ -/
 def exponentSetValuationWeight
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : σ → L) (E : Finset (σ →₀ ℕ)) : ℤ :=
   (insert (0 : ℤ) (E.image (exponentValuationWeight v x))).max'
     ⟨0, Finset.mem_insert_self (0 : ℤ) _⟩
 
-/-- An anti-blocking lattice support: every coordinatewise smaller exponent
-is retained.  The target interpolation and agreement polytopes have this
-property. -/
+/-- .
+
+ -/
 def ExponentSetDownwardClosed (E : Finset (σ →₀ ℕ)) : Prop :=
   ∀ d ∈ E, ∀ e : σ →₀ ℕ, e ≤ d → e ∈ E
 
-/-- The pole support function of a finite exponent set, with an explicit zero
-term.  The zero term makes it total for the empty set and records
-nonnegativity. -/
+/-- .
+
+ -/
 def exponentSetPoleWeight
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : σ → L) (E : Finset (σ →₀ ℕ)) : ℤ :=
   (insert (0 : ℤ) (E.image (exponentPoleWeight v x))).max'
     ⟨0, Finset.mem_insert_self (0 : ℤ) _⟩
 
-/-- The exact support function of a polynomial. -/
+/-- . -/
 def supportPoleWeight
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : σ → L) (F : MvPolynomial σ K) : ℤ :=
@@ -109,8 +109,8 @@ theorem exponentValuationWeight_le_exponentPoleWeight
   exact mul_le_mul_of_nonneg_left (le_max_right _ _)
     (Int.natCast_nonneg _)
 
-/-- Delete precisely the coordinates whose values have negative valuation
-weight. -/
+/-- .
+ -/
 def poleTruncation
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : σ → L) (d : σ →₀ ℕ) : σ →₀ ℕ := by
@@ -142,8 +142,8 @@ theorem exponentValuationWeight_poleTruncation
     rw [if_neg h, max_eq_left hle]
     simp
 
-/-- On a downward-closed exponent set, using coordinate pole parts loses
-nothing: it is exactly the ordinary signed tropical support function. -/
+/-- .
+ -/
 theorem exponentSetPoleWeight_eq_valuationWeight_of_downwardClosed
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : σ → L) (E : Finset (σ →₀ ℕ))
@@ -172,7 +172,7 @@ theorem exponentSetPoleWeight_eq_valuationWeight_of_downwardClosed
         (Finset.le_max' _ _ (Finset.mem_insert_of_mem
           (Finset.mem_image.mpr ⟨d, hd, rfl⟩)))
 
-/-- Natural weights obtained from the nonnegative coordinate pole orders. -/
+/-- . -/
 def naturalPoleWeights
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : σ → L) : σ → ℕ :=
   fun i ↦ (poleOrder v (x i)).toNat
@@ -215,8 +215,8 @@ theorem supportPoleWeight_le_weightedTotalDegree_naturalPole
     rw [exponentPoleWeight_eq_naturalWeight]
     exact_mod_cast MvPolynomial.le_weightedTotalDegree (naturalPoleWeights v x) hd
 
-/-- One actual supported monomial is bounded by the exponential of the
-support function. -/
+/-- .
+ -/
 theorem valuation_monomial_le_exp_support
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (coeff : K →+* L) (hcoeff : ∀ c : K, v (coeff c) ≤ 1)
@@ -244,7 +244,7 @@ theorem valuation_monomial_le_exp_support
     _ ≤ supportPoleWeight v x F :=
       exponentPoleWeight_le_supportPoleWeight v x F d hd
 
-/-- Multiplicative form of the exact Newton-support evaluation bound. -/
+/-- . -/
 theorem valuation_eval_le_exp_support
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (coeff : K →+* L) (hcoeff : ∀ c : K, v (coeff c) ≤ 1)
@@ -258,8 +258,8 @@ theorem valuation_eval_le_exp_support
   exact valuation_monomial_le_exp_support v coeff hcoeff x F d hd
     (F.coeff d)
 
-/-- Multiplicative support bound after enlarging the actual polynomial
-support to a prescribed finite exponent set. -/
+/-- .
+ -/
 theorem valuation_eval_le_exp_exponentSet
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (coeff : K →+* L) (hcoeff : ∀ c : K, v (coeff c) ≤ 1)
@@ -271,8 +271,8 @@ theorem valuation_eval_le_exp_exponentSet
     ((WithZero.exp_le_exp).2
       (supportPoleWeight_le_exponentSetPoleWeight v x F E hFE))
 
-/-- Exact local Newton-support pole bound.  Unlike the box theorem, this
-retains the maximum of the actual exponent weights. -/
+/-- .
+ -/
 theorem poleOrder_eval_le_support
     (v : Valuation L (WithZero (Multiplicative ℤ)))
     (coeff : K →+* L) (hcoeff : ∀ c : K, v (coeff c) ≤ 1)
@@ -293,7 +293,7 @@ theorem poleOrder_eval_le_support
   rw [log_max_one, WithZero.log_exp] at hlog
   simpa only [poleOrder] using hlog
 
-/-- Finite weighted form of the exact local support bound. -/
+/-- . -/
 theorem weighted_poleOrder_eval_le_exponentSet
     {τ : Type*} (S : Finset τ) (weight : τ → ℕ)
     (v : τ → Valuation L (WithZero (Multiplicative ℤ)))

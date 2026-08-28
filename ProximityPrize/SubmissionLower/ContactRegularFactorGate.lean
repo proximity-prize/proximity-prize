@@ -2,21 +2,21 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactGeometricFactorCover
 
 
-/-!
-# Actual small-characteristic regularity gate on every geometric factor
+/-! .
 
-Model label: gpt-5.
 
-Partial derivatives in the surviving coordinates commute with the actual
-surface map. Below the characteristic, zero partial derivative is equivalent
-to zero degree in that coordinate. Thus a positive small R-degree gives
-F_R nonzero and F not dividing F_R. Actual geometric contraction makes
-F_R proper on EVERY geometric factor; no regular-open-density premise is
-supplied. Such geometric factors have positive R-degree and nonzero R
-derivative, with their degree bounded by the original R-degree.
 
-No intersection count, seed bound, or competition claim is introduced.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactRegularFactorGate
 
@@ -35,8 +35,8 @@ theorem pderiv_zero_of_degree_zero (i : σ) (F : MvPolynomial σ K)
   intro hmem
   exact (MvPolynomial.mem_vars_iff_degreeOf_ne_zero.mp hmem) hdegree
 
-/-- The characteristic gate is proved from actual coefficients, including
-the subtraction needed to expose a nonzero derivative coefficient. -/
+/-- .
+ -/
 theorem pderiv_zero_iff_degree_zero_below_char
     (i : σ) (F : MvPolynomial σ K) (p : ℕ) [CharP K p]
     (hdegree : F.degreeOf i < p) :
@@ -139,7 +139,7 @@ theorem geometricSurfaceMap_pderiv_R (F : MvPolynomial (Fin 4) K) :
   rw [geometricSurfaceMap_eq_surfaceMap]
   exact surfaceMap_pderiv_R _ F
 
-/-- H is proper on every actual geometric irreducible factor of F. -/
+/-- . -/
 theorem H_proper_on_every_geometric_factor
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F) (p : ℕ) [CharP K p]
     (hpos : 0 < F.degreeOf 2) (hsmall : F.degreeOf 2 < p)
@@ -191,7 +191,7 @@ theorem geometric_factor_R_degree_le
     exact surfaceMap_degreeOf_le _ F 1
   exact (coordinate_degree_le_of_dvd (1 : Fin 3) g _ hdivF hne).trans hc
 
-/-- The degree, separability, and proper-H gates are all actual conclusions. -/
+/-- . -/
 theorem geometric_factor_regular_gate
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F) (p : ℕ) [CharP K p]
     (hpos : 0 < F.degreeOf 2) (hsmall : F.degreeOf 2 < p)

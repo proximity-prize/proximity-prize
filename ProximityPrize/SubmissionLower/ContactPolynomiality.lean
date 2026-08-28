@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactRegularPoint
 
-/-!
-# Polynomial reconstruction from every finite Taylor tail
+/-! .
 
-Model label: gpt-5.
 
-The derivation and the evaluation at a regular point are the concrete
-constructions in ContactDifferentialRing and ContactRegularPoint. This
-module identifies their finite Taylor images with a polynomial and its
-derivative, retaining the last coefficient at the truncation boundary.
 
-The substituted-degree premise is explicit. Numerator degree caps and the
-mixed geometric count are separate obligations, not assumed conclusions of
-an alignment theorem.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactPolynomiality
 
@@ -121,8 +121,8 @@ theorem reconstructedPolynomial_coeff_one
   simp [reconstructedPolynomial, jetPolynomial_coeff, jetCoefficient, hb,
     derivation_coordinate_Y, regularPointValue_coordinate]
 
-/-- All four Taylor images are proved from the actual quotient derivation
-and actual point evaluation; they are not supplied as an assumed diagram. -/
+/-- .
+ -/
 theorem coordinate_taylor_eq_reconstruction
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
@@ -173,9 +173,9 @@ theorem coordinate_taylor_eq_reconstruction
   · exact hdr
   · exact hz
 
-/-- At a regular initial point, all tails through the exact degree cap imply
-a genuine polynomial identity, provided the substituted degree is below it.
-The last tail is used in the slope coordinate, not silently dropped. -/
+/-- .
+
+ -/
 theorem polynomiality_of_all_tails
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)

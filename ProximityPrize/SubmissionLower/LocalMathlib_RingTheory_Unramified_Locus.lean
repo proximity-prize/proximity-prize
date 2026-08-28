@@ -24,18 +24,18 @@ The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
 
-/-!
-# Unramified locus of an algebra
+/-! .
 
-## Main results
-- `Algebra.unramifiedLocus` : The set of primes that is unramified over the base.
-- `Algebra.basicOpen_subset_unramifiedLocus_iff` :
-  `D(f)` is contained in the unramified locus if and only if `A_f` is unramified over `R`.
-- `Algebra.unramifiedLocus_eq_univ_iff` :
-  The unramified locus is the whole spectrum if and only if `A` is unramified over `R`.
-- `Algebra.isOpen_unramifiedLocus` :
-  If `A` is (essentially) of finite type over `R`, then the unramified locus is open.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -49,17 +49,17 @@ variable {R A B : Type*} [CommRing R] [CommRing A] [CommRing B] [Algebra R A] [A
     [Algebra R B] [IsScalarTower R A B]
 
 variable (R) in
-/-- We say that an `R`-algebra `A` is unramified at a prime `q` of `A`
-if `A_q` is formally unramified over `R`.
+/-- .
 
-If `A` is of finite type over `R` and `q` is lying over `p`, then this is equivalent to
-`κ(q)/κ(p)` being separable and `pA_q = qA_q`.
-See `Algebra.isUnramifiedAt_iff_map_eq` in `RingTheory.Unramified.LocalRing` -/
+
+
+
+ -/
 abbrev IsUnramifiedAt (q : Ideal A) [q.IsPrime] : Prop :=
   FormallyUnramified R (Localization.AtPrime q)
 
 variable (R A) in
-/-- `Algebra.unramifiedLocus R A` is the set of primes `p` of `A` that are unramified. -/
+/-- . -/
 def unramifiedLocus : Set (PrimeSpectrum A) :=
   { p | IsUnramifiedAt R p.asIdeal }
 
@@ -83,8 +83,8 @@ instance (p : Ideal R) [p.IsPrime] (q : Ideal A) [q.IsPrime] [q.LiesOver p] [IsU
   .of_restrictScalars R _ _
 
 open _root_.TensorProduct in
-/-- If `A` is an `R`-algebra unramified at `Q`, `P` is the prime of `R` lying under `Q`,
-then `κ(P) ⊗ A` is unramified at `Q'` (the prime corresponding to `Q`) over `κ(P)`. -/
+/-- .
+ -/
 theorem IsUnramifiedAt.residueField
     (P : Ideal R) [P.IsPrime] (Q : Ideal A) [Q.IsPrime]
     [Q.LiesOver P] [Algebra.IsUnramifiedAt R Q]
@@ -106,8 +106,8 @@ section IsUnramifiedIn
 
 variable {R : Type*} [CommRing R]
 
-/-- A prime `𝔭` of `R` is unramified in `A` if every prime ideal `𝔓` of `A` lying over `𝔭` is
-unramified . -/
+/-- .
+ -/
 def IsUnramifiedIn (A : Type*) [CommRing A] [Algebra R A] (𝔭 : Ideal R) : Prop :=
   ∀ (𝔓 : Ideal A) (_ : 𝔓.IsPrime), 𝔓.LiesOver 𝔭 → Algebra.IsUnramifiedAt R 𝔓
 

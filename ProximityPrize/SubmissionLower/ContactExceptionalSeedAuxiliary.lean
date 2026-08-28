@@ -1,23 +1,23 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactImplicitContactLift
 
-/-!
-# An actual X/Z-only auxiliary covering the implicit exceptional branch
+/-! .
 
-Model label: gpt-5.
 
-Swapping Y and R lets the verified singular-resultant construction eliminate
-Y from an R-independent input J. Arbitrary natural weighted bounds prove
-that the result remains independent of the other absent coordinate. After
-swapping back, the actual nonzero auxiliary depends only on X and Z.
 
-Coverage uses swapped arbitrary surface points, not a false interpretation
-of P' as a new polynomial solution. The original-factor family is the actual
-finite image of activeFactors(swap(J)); normalization equivariance is not
-assumed. Its product genuinely divides J.
 
-This module does not yet turn X/Z-only dependence into a finite seed count.
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactExceptionalSeedAuxiliary
 
@@ -130,8 +130,8 @@ theorem exceptionalAuxiliary_data
     _ ≤ (2 * j) * j := Nat.mul_le_mul_right j (Nat.sub_le _ _)
     _ = 2 * j ^ 2 := by ring
 
-/-- Do not identify this image with activeFactors(J): normalization need
-not commute with the variable automorphism. -/
+/-- .
+ -/
 def originalImplicitFactors (J : MvPolynomial (Fin 4) K) : Finset (MvPolynomial (Fin 4) K) := by
   classical
   exact (activeFactors (swapYR K J)).image (swapYR K)
@@ -209,8 +209,8 @@ theorem eval_surface_swap (φ : Polynomial K →+* T) (v : Fin 3 → T)
           hfix0, hfix3, hs1, hs2, hs3, swapSurfacePoint]
   exact RingHom.congr_fun hh F
 
-/-- This dichotomy is unconditional on characteristic; the separate data
-theorem certifies that its fixed exceptional polynomial is nonzero. -/
+/-- .
+ -/
 theorem surface_zero_exceptional_or_implicit_regular
     (φ : Polynomial K →+* T) (hφ : Function.Injective φ)
     (J : MvPolynomial (Fin 4) K) (hJ : J ≠ 0) (hR : J.degreeOf 2 = 0)

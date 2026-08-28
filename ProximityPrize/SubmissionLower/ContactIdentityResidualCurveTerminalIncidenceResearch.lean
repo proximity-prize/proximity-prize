@@ -5,23 +5,23 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualZeroBudgetTransport
 import ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch
 import ProximityPrize.SubmissionLower.ContactResidualSparseComponentAdapterResearch
 
-/-!
-# Recursive incidence on an arbitrary regular curve prime
+/-! .
 
-The outer surface incidence decomposes a proper agreement cut into regular
-curve primes.  Actual identity nodes can then appear again on one such
-prime after residualization.  `CurveResidualStage` transports the arbitrary
-prime through every residual coordinate change and terminates in the exact
-dichotomy needed here:
 
-* every remaining agreement cut is proper on the terminal prime; or
-* more identities remain than the residual degree, so the selected family
-  has already entered the no-large-pencil tail.
 
-This module performs all finite incidence bookkeeping across that recursive
-inner process.  The only geometric input in the proper branch is a terminal
-fiber bound affine in the terminal residual degree.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidenceResearch
 
@@ -54,14 +54,14 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Inner recursive incidence with an abstract proper-terminal fiber bound.
+/-- .
 
-`hlarge` is deliberately branch-local.  In the intended application its
-charge is the original component's `Z` degree: a many-identity terminal
-stage forces `Z` to be transcendental, while the residual automorphism fixes
-`Z`.  Keeping exactly that implication explicit avoids assuming that every
-regular component is `Z`-transcendental.
--/
+
+
+
+
+
+ -/
 theorem recursive_curve_stratified_incidence_bound
     (hphi : Function.Injective phi) {d a : ℕ}
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
@@ -122,10 +122,10 @@ theorem recursive_curve_stratified_incidence_bound
   · have htail := hlarge D hpencil.1
     exact htail.trans (Nat.le_add_left _ _)
 
-/-- Concrete terminal wrapper: a finite-zero-set theorem on every proper
-terminal agreement polynomial supplies the affine terminal fiber premise.
-All selected-point injectivity and evaluation facts are discharged here.
--/
+/-- .
+
+
+ -/
 theorem recursive_curve_stratified_incidence_of_zero_bounds
     (hphi : Function.Injective phi) {d a : ℕ}
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
@@ -162,12 +162,12 @@ theorem recursive_curve_stratified_incidence_of_zero_bounds
   · exact hdegree
   · exact hunit
 
-/-- End-to-end recursive inner incidence from one original per-prime flag
-budget.  The invariant theorem carries that *same* cost through every
-component-specific residual path; no whole-component budget is rebuilt at
-the transformed stages.  This is what keeps the eventual global sum over
-the original regular components valid.
--/
+/-- .
+
+
+
+
+ -/
 theorem recursive_curve_stratified_incidence_of_prime_flag_budget
     (hphi : Function.Injective phi) {d a : ℕ}
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)

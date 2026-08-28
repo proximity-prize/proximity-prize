@@ -2,18 +2,18 @@ import ProximityPrize.Benchmark.TargetLower
 
 
 
-/-!
-# Actual passage from four-variable contact polynomials to a generic surface
+/-! .
 
-Model label: gpt-5.
 
-The X coordinate is collected into the coefficient ring K[X], then mapped
-through a specified injective ring homomorphism K[X] -> L. Injectivity of
-the resulting surface map is proved, not assumed. Evaluation commutation
-and support projection supply the separated Y/R/Z and joint Y+Z caps.
 
-No geometric point-count, proper-intersection, or protocol claim is made.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactGenericSurface
 
@@ -21,7 +21,7 @@ noncomputable section
 
 variable {K L : Type*} [Field K] [Field L]
 
-/-- The genuine algebra equivalence which moves X into the coefficients. -/
+/-- . -/
 def collectX (K : Type*) [Field K] :
     MvPolynomial (Fin 4) K ≃ₐ[K] MvPolynomial (Fin 3) (Polynomial K) :=
   (MvPolynomial.renameEquiv K (_root_.finSuccEquiv 3)).trans
@@ -39,7 +39,7 @@ def collectX (K : Type*) [Field K] :
     collectX K (MvPolynomial.X i.succ) = MvPolynomial.X i := by
   simp [collectX, MvPolynomial.renameEquiv_apply]
 
-/-- The actual surface map, rather than an abstract injective replacement. -/
+/-- . -/
 def surfaceMap (φ : Polynomial K →+* L) :
     MvPolynomial (Fin 4) K →+* MvPolynomial (Fin 3) L :=
   (MvPolynomial.map φ).comp (collectX K).toRingHom
@@ -77,7 +77,7 @@ theorem surfaceMap_eq_eval₂Hom (φ : Polynomial K →+* L) :
   · intro i
     refine Fin.cases ?_ (fun j => ?_) i <;> simp
 
-/-- Evaluation at (Y,R,Z) is exactly the original evaluation at (phi X,Y,R,Z). -/
+/-- . -/
 theorem eval_surfaceMap (φ : Polynomial K →+* L)
     (v : Fin 3 → L) (Q : MvPolynomial (Fin 4) K) :
     MvPolynomial.eval v (surfaceMap φ Q) =
@@ -91,7 +91,7 @@ theorem eval_surfaceMap (φ : Polynomial K →+* L)
       refine Fin.cases ?_ (fun j => ?_) i <;> simp
   exact RingHom.congr_fun hhom Q
 
-/-- A monomial drops only its X exponent, absorbing its power into the scalar. -/
+/-- . -/
 theorem surfaceMap_monomial (φ : Polynomial K →+* L)
     (d : Fin 4 →₀ ℕ) (a : K) :
     surfaceMap φ (MvPolynomial.monomial d a) =
@@ -102,7 +102,7 @@ theorem surfaceMap_monomial (φ : Polynomial K →+* L)
     map_mul, map_pow]
   ring
 
-/-- This support bound does not itself require injectivity of phi. -/
+/-- . -/
 theorem support_surfaceMap_subset (φ : Polynomial K →+* L)
     (Q : MvPolynomial (Fin 4) K) :
     (surfaceMap φ Q).support ⊆ Q.support.image Finsupp.tail := by

@@ -2,21 +2,21 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
 import ProximityPrize.SubmissionLower.ContactIdentityResidualPrimeTransportResearch
 
-/-!
-# Inner actual-identity residualization on an arbitrary regular curve prime
+/-! .
 
-The outer residual stage follows a principal surface component.  A regular
-curve component is instead an arbitrary prime ideal containing the surface
-component `G` and the proper cut `T`, but not the regularity polynomial.
-This module transports that exact ideal through the same triangular residual
-automorphism.
 
-Unlike a principal R-dependent component, an arbitrary curve prime may have
-more identity nodes than the current degree.  Such a state is already the
-large-pencil terminal branch.  Consequently `advance` is deliberately
-stated only for the complementary mathematical range `0 < identities.card`
-and `identities.card ≤ d`.
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIterationResearch
 
@@ -48,8 +48,8 @@ local instance : DecidableEq Iota := Classical.decEq Iota
 abbrev Poly3 (Omega : Type) [Field Omega] := MvPolynomial (Fin 3) Omega
 abbrev Poly4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
 
-/-- Complete state for recursive proper-cut incidence on one arbitrary
-regular curve prime.  Both ambient flag supports are fixed across steps. -/
+/-- .
+ -/
 structure CurveResidualStage
     (phi : Polynomial K →+* Omega) (Gamma : Finset K) (x : Iota → K)
     (p e : ℕ) [CharP Omega p]
@@ -133,8 +133,8 @@ theorem regularity_not_mem_primeIdeal
       S.primeIdeal :=
   S.primeData.H_not_mem
 
-/-- Identity cuts on the arbitrary curve prime are still actual agreements
-for every selected solution. -/
+/-- .
+ -/
 theorem agrees_on_identities
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support) :
     ∀ gamma ∈ Gamma, ∀ i ∈ S.identities, S.Agrees gamma i := by
@@ -147,9 +147,9 @@ theorem agrees_on_identities
     (S.solution gamma hgamma) (S.regular gamma hgamma)
     (S.on_prime gamma hgamma) i hi
 
-/-- The exact affine-equivalence certificate hidden inside one residual
-advance.  Exposing it lets callers transport component-specific geometric
-providers without rerunning a whole transformed component budget. -/
+/-- .
+
+ -/
 def ResidualTransition
     {dnext : ℕ}
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
@@ -161,9 +161,9 @@ def ResidualTransition
       S.primeIdeal.map
         (residualEquiv aY v bY aS bS cS hv).toRingEquiv.toRingHom
 
-/-- One inner residualization step.  The mapped ideal remains prime, keeps
-`G` and `T`, excludes the transformed regularity polynomial, remains
-non-point, and contains every transformed selected point. -/
+/-- .
+
+ -/
 theorem advance_certified
     (hphi : Function.Injective phi)
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
@@ -324,8 +324,8 @@ theorem advance_certified
   · intro gamma hgamma i hi hold
     exact hagree gamma hgamma i (by simpa [Snext, J] using hi) hold
 
-/-- Backward-compatible projection of `advance_certified`; existing incidence
-callers do not need to mention the affine certificate. -/
+/-- .
+ -/
 theorem advance
     (hphi : Function.Injective phi)
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
@@ -343,9 +343,9 @@ theorem advance
     S.advance_certified hphi hne hcard
   exact ⟨hpos, Snext, hnodes, hid, hremaining⟩
 
-/-- More than `d` curve identities force the entire selected family into one
-base-field affine pencil, hence the no-large-pencil hypothesis immediately
-charges the branch. -/
+/-- .
+
+ -/
 theorem card_le_pencil_of_many_identities
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
     (hmany : d < S.identities.card) :
@@ -373,7 +373,7 @@ theorem card_le_pencil_of_many_identities
   have hbound := S.no_large_pencil P0 P1 hP0 hP1
   rwa [hfilter] at hbound
 
-/-- Cardinal form of an inner advance. -/
+/-- . -/
 theorem advance_card
     (hphi : Function.Injective phi)
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
@@ -417,7 +417,7 @@ theorem advance_card
       _ ≤ (Snext.agreementFiber gamma).card :=
         Finset.card_le_card hRemainingSubset
 
-/-- Cardinal advance retaining the exact affine transition certificate. -/
+/-- . -/
 theorem advance_card_certified
     (hphi : Function.Injective phi)
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
@@ -462,9 +462,9 @@ theorem advance_card_certified
       _ ≤ (Snext.agreementFiber gamma).card :=
         Finset.card_le_card hRemainingSubset
 
-/-- The exact terminal dichotomy for inner recursion.  Either every
-remaining agreement is a proper cut of the terminal prime, or the selected
-family has already paid the no-large-pencil charge. -/
+/-- .
+
+ -/
 structure TerminalDescendant
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support) where
   degree : ℕ
@@ -477,8 +477,8 @@ structure TerminalDescendant
     (S.agreementFiber gamma).card - (d - degree) ≤
       (stage.agreementFiber gamma).card
 
-/-- At a proper terminal stage, every remaining agreement polynomial is
-outside the transformed arbitrary prime. -/
+/-- .
+ -/
 theorem proper_agreement_of_terminal
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
     (hterminal : S.identities = ∅) {i : Iota} (hi : i ∈ S.nodes) :
@@ -490,9 +490,9 @@ theorem proper_agreement_of_terminal
   rw [hterminal] at hid
   simpa using hid
 
-/-- Recursive inner residualization terminates in the exact proper/pencil
-dichotomy, preserving the total degree loss and losing no more agreements
-than the number of removed identities. -/
+/-- .
+
+ -/
 theorem exists_terminal_descendant
     (hphi : Function.Injective phi)
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support) :
@@ -561,10 +561,10 @@ theorem exists_terminal_descendant
             agreement_card := by simp
           }⟩
 
-/-- Generic invariant-carrying terminalization.  A caller only proves how its
-component-specific provider crosses one certified affine transition; this
-theorem composes it along the entire residual path while retaining the exact
-terminal and agreement accounting. -/
+/-- .
+
+
+ -/
 theorem exists_terminal_descendant_with_invariant
     (hphi : Function.Injective phi)
     (Inv : ∀ n, CurveResidualStage phi Gamma x p e surfaceFlag cutFlag n support → Prop)

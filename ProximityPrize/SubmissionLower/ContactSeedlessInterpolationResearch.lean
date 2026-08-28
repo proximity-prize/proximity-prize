@@ -3,15 +3,15 @@ import ProximityPrize.SubmissionLower.ContactSeedlessRankResearch
 import ProximityPrize.SubmissionLower.ContactFlagTranslation6641Research
 import ProximityPrize.SubmissionLower.ContactTranslation
 
-/-!
-# Contact interpolation for one fixed received word
+/-! .
 
-This is the seed-free analogue of the affine-line interpolant.  Global
-variables are still `(X,Y,R,Z)` so the existing factor and specialization
-machinery can consume the result, but every reconstructed monomial has
-`Z`-degree zero.  Locally the constraint map therefore lands in the
-two-dimensional contact blocks proved in `ContactSeedlessRankResearch`.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSeedlessInterpolationResearch
 
@@ -30,8 +30,8 @@ variable (K : Type*) [Field K]
 abbrev LocalPoly := MvPolynomial (Fin 3) K
 abbrev Poly4 := MvPolynomial (Fin 4) K
 
-/-- The dummy `Fin (min 1 ...)` records the triangular `Y+R` support
-without adding a seed exponent. -/
+/-- .
+ -/
 abbrev CoefficientIndex (D w L s : ℕ) :=
   (i : Fin (L + 1)) × (j : Fin (s + 1)) ×
     (Fin (min 1 (L + 1 - i.val - j.val)) ×
@@ -295,7 +295,7 @@ theorem all_blocks_divisible_of_kernel {I : Type*} [Fintype I]
   · have hm : m - r = 0 := by omega
     simp only [hm, pow_zero, one_dvd]
 
-/-! ## Translation identity -/
+/-! . -/
 
 def homogenizedTranslation (x u : K) :
     Poly4 K →ₐ[K] Polynomial (LocalPoly K) :=
@@ -360,7 +360,7 @@ theorem translation_reconstruct_coeff (D w L s : ℕ) (x u : K)
         seedlessBox K (min r L) L s) : LocalPoly K)
   simp [boundedBlockEntry]
 
-/-! ## Frozen 67.10 fixed-centre row -/
+/-! . -/
 
 def n : ℕ := 262144
 def errors : ℕ := 79866
@@ -431,8 +431,8 @@ theorem seedlessBox_le_legacy :
   rcases hd with ⟨hYR, hR, hZ, hweighted⟩
   exact ⟨by omega, hR, hweighted⟩
 
-/-- Every degree-`w` polynomial agreeing with the fixed received word on
-`agreements` coordinates is a genuine root of the seedless interpolant. -/
+/-- .
+ -/
 theorem exists_frozen_seedless_vanishing_interpolant
     (received : IRSProfile.Index → IRSProfile.Field) :
     ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,

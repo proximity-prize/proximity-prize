@@ -23,15 +23,15 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-! # Cardinal of quotient of free finite `ℤ`-modules by submodules of full rank
+/-! .
 
-## Main results
 
-* `Submodule.natAbs_det_basis_change`: let `b` be a `ℤ`-basis for a module `M` over `ℤ` and
-  let `bN` be a basis for a submodule `N` of the same dimension. Then the cardinal of `M ⧸ N`
-  is given by taking the determinant of `bN` over `b`.
 
--/
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -41,10 +41,10 @@ section Submodule
 
 variable {M : Type*} [AddCommGroup M] [Module.Free ℤ M] [Module.Finite ℤ M]
 
-/-- Let `e : M ≃ N` be an additive isomorphism (therefore a `ℤ`-linear equiv).
-Then an alternative way to compute the cardinality of the quotient `M ⧸ N` is given by taking
-the determinant of `e`.
-See `natAbs_det_basis_change` for a more familiar formulation of this result. -/
+/-- .
+
+
+ -/
 theorem Submodule.natAbs_det_equiv (N : Submodule ℤ M) {E : Type*} [EquivLike E M N]
     [AddEquivClass E M N] (e : E) :
     Int.natAbs
@@ -52,10 +52,10 @@ theorem Submodule.natAbs_det_equiv (N : Submodule ℤ M) {E : Type*} [EquivLike 
         (N.subtype ∘ₗ AddMonoidHom.toIntLinearMap (e : M →+ N))) =
       Nat.card (M ⧸ N) := by
   let b := Module.Free.chooseBasis ℤ M
-  -- Since `e : M ≃ₗ[ℤ] N`, the submodule `N` has full rank.
+  --
   have h : Module.finrank ℤ N = Module.finrank ℤ M :=
     (AddEquiv.toIntLinearEquiv e : M ≃ₗ[ℤ] N).symm.finrank_eq
-  -- Use the Smith normal form to choose a nice basis for `N`.
+  --
   let a := smithNormalFormCoeffs b h
   let b' := smithNormalFormTopBasis b h
   let ab := smithNormalFormBotBasis b h
@@ -81,20 +81,20 @@ theorem Submodule.natAbs_det_equiv (N : Submodule ℤ M) {E : Type*} [EquivLike 
     _ = Int.natAbs (∏ i, a i) := by rw [Matrix.det_diagonal]
     _ = ∏ i, Int.natAbs (a i) := map_prod Int.natAbsHom a Finset.univ
     _ = Nat.card (M ⧸ N) := ?_
-  -- since `LinearMap.toMatrix b' b' f` is the diagonal matrix with `a` along the diagonal.
+  --
   · congr 2; ext i j
     rw [LinearMap.toMatrix_apply, ha, map_smul, Basis.repr_self, Finsupp.smul_single,
       smul_eq_mul, mul_one]
     by_cases h : i = j
     · rw [h, Matrix.diagonal_apply_eq, Finsupp.single_eq_same]
     · rw [Matrix.diagonal_apply_ne _ h, Finsupp.single_eq_of_ne h]
-  -- Now we map everything through the linear equiv `M ≃ₗ (ι → ℤ)`,
-  -- which maps `(M ⧸ N)` to `Π i, ZMod (a i).nat_abs`.
+  --
+  --
   simp_rw [Nat.card_congr (quotientEquivPiZMod N b h).toEquiv, Nat.card_pi, Nat.card_zmod, a]
 
-/-- Let `b` be a basis for `M` over `ℤ` and `bN` a basis for `N` over `ℤ` of the same dimension.
-Then an alternative way to compute the cardinality of `M ⧸ N` is given by taking the determinant
-of `bN` over `b`. -/
+/-- .
+
+ -/
 theorem Submodule.natAbs_det_basis_change {ι : Type*} [Fintype ι] [DecidableEq ι] (b : Basis ι ℤ M)
     (N : Submodule ℤ M) (bN : Basis ι ℤ N) :
     (b.det ((↑) ∘ bN)).natAbs = Nat.card (M ⧸ N) := by

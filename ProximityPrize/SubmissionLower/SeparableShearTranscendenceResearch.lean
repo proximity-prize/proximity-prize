@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.SeparableShearKaehlerResearch
 
-/-!
-# Transcendence of a separating additive shear
+/-! .
 
-This research module closes the logical gap which occurs before one may
-construct the rational-function embedding at `R + Z`.  If the finite
-projection at `R` is nonseparable and the finite projection at `Z` is
-separable, then `R + Z` is transcendental over an algebraically closed base.
 
-The proof is deliberately differential rather than circular: it uses only
-the already-existing embeddings at `R` and `Z`.  Nonseparability forces
-`dR = 0`, separability makes `dZ` span the one-dimensional differential
-module, and an algebraic element over the algebraically closed base would be
-a scalar and hence have zero differential.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.SeparableShearTranscendenceResearch
 
@@ -28,8 +28,8 @@ set_option maxHeartbeats 2000000
 
 variable (K L : Type*) [Field K] [Field L] [Algebra K L]
 
-/-- An element algebraic over an algebraically closed base field is a base
-scalar.  This generic form avoids depending on an actual-coordinate model. -/
+/-- .
+ -/
 theorem eq_algebraMap_of_isAlgebraic [IsAlgClosed K]
     (s : L) (hs : IsAlgebraic K s) :
     ∃ c : K, algebraMap K L c = s := by
@@ -44,9 +44,9 @@ theorem eq_algebraMap_of_isAlgebraic [IsAlgClosed K]
   simpa only [IntermediateField.algebraMap_apply,
     IntermediateField.coe_algebraMap_apply] using hcast
 
-/-- Before constructing an embedding at the shear, `R + Z` is already known
-to be transcendental.  The hypotheses mention only the independently valid
-embeddings at `R` and `Z`, so the statement is not circular. -/
+/-- .
+
+ -/
 theorem transcendental_add_of_not_isSeparable_isSeparable [IsAlgClosed K]
     (embeddingR embeddingZ : RatFunc K →ₐ[K] L)
     (hfiniteR :

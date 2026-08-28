@@ -2,13 +2,13 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactInterpolation
 import ProximityPrize.SubmissionLower.ContactParameters6600Research
 
-/-!
-# Frozen contact interpolation at the score-66 row
+/-! .
 
-This is the numeric `(m,L,s) = (24,576,6)` instantiation of the generic
-contact-rank kernel.  The only arithmetic input is the already checked
-strict dimension inequality in `ContactParameters6600Research`.
--/
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactInterpolation6600Research
 

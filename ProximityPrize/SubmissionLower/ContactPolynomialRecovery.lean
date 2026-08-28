@@ -1,17 +1,17 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactPolynomialSolutions
 
-/-!
-# Exact recovery of the selected polynomial
+/-! .
 
-Model label: gpt-5.
 
-The ordinary derivative identity identifies every actual normalized jet
-with the corresponding Taylor coefficient of the selected polynomial.
-Below the characteristic the reconstructed polynomial is therefore exactly
-the original polynomial after coefficient extension, not merely another
-solution with the same initial data.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactPolynomialRecovery
 
@@ -114,8 +114,8 @@ theorem reconstructedPolynomial_eq_taylor_of_solution
     rw [Polynomial.natDegree_taylor]
     omega
 
-/-- The actual global reconstruction recovers the original selected
-polynomial after coefficient extension. -/
+/-- .
+ -/
 theorem globalPolynomial_eq_map_of_solution
     (coefficients : K →+* L) (F : Poly4 K) (P : Polynomial K) (γ : K) (ξ : L)
     (hsolution : specialization K P γ F = 0)
@@ -132,8 +132,8 @@ theorem globalPolynomial_eq_map_of_solution
     hregular p w hchar hdegree, Polynomial.taylor_taylor, neg_add_cancel,
     Polynomial.taylor_zero]
 
-/-- On a selected genuine solution, the actual agreement cut is equivalent
-to the original received-symbol agreement over the base field. -/
+/-- .
+ -/
 theorem factorial_agreement_zero_iff_original_agreement
     (coefficients : K →+* L) (F : Poly4 K) (P : Polynomial K) (γ : K) (ξ : L)
     (hsolution : specialization K P γ F = 0)

@@ -1,17 +1,17 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualCurveRationalProjection
 
-/-!
-# Compatible polynomial and rational scalars on the actual coordinate field
+/-! .
 
-Model label: gpt-5.
 
-The polynomial scalar map is actual evaluation at a selected coordinate.
-For a transcendental coordinate it is injective and its extension is the
-already constructed rational-function embedding. All three scalar towers
-needed by the normalization and common-place arguments are proved, not
-supplied as independent compatibility assumptions.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualCurveScalarTowers
 
@@ -58,8 +58,8 @@ theorem polynomialRationalScalarTower (i : Fin 3)
   exact IsScalarTower.of_algebraMap_eq fun f =>
     (rationalBaseEmbedding_polynomial K P i hi f).symm
 
-/-- One concrete, compatible package on the literal fraction field of
-the original prime quotient. No alternate scalar maps are chosen. -/
+/-- .
+ -/
 theorem actual_scalar_towers (i : Fin 3)
     (hi : Transcendental K (coordinate K P i)) :
     letI : Algebra (Polynomial K) (CoordinateField K P) := polynomialBaseAlgebra K P i
@@ -70,7 +70,7 @@ theorem actual_scalar_towers (i : Fin 3)
   exact ⟨polynomialBaseScalarTower K P i,
     polynomialRationalScalarTower K P i hi, rationalBaseScalarTower K P i hi⟩
 
-/-- The same selected variable inside the actual affine coordinate ring. -/
+/-- . -/
 def quotientCoordinate (i : Fin 3) : CoordinateRing K P :=
   Ideal.Quotient.mk P (MvPolynomial.X i)
 

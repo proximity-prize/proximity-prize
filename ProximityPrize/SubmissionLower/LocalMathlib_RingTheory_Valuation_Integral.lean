@@ -20,11 +20,11 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Integral elements over the ring of integers of a valuation
+/-! .
 
-The ring of integers is integrally closed inside the original ring.
--/
+
+
+ -/
 
 section ProximityFlatProofPort
 

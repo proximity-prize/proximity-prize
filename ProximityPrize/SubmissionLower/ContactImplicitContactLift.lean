@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSingularDegreeBounds
 
-/-!
-# Actual implicit equations lifted into the verified contact engine
+/-! .
 
-Model label: gpt-5.
 
-For an R-independent equation A, the actual polynomial A_X + R*A_Y has
-R-derivative A_Y and is solved by every genuine polynomial solution of A.
-At an A_Y-regular selected point, an actual irreducible factor of this lift
-is R-positive, regular, and a proper carrier for the original A-cut.
 
-The finite factor family is constructed from activeFactors, not supplied.
-Its summed R-degree is at most one; its summed Y/Z degrees consume those
-of A. No unique-factor choice or geometric point-count premise is needed.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactImplicitContactLift
 
@@ -122,8 +122,8 @@ theorem implicitLift_seed_weight_le (A : MvPolynomial (Fin 4) K) :
   rw [hvar, zero_add] at hm
   exact (weighted_add_le seedWeights _ _).trans (max_le hX (hm.trans hY))
 
-/-- The actual lift saves one contact-weight degree. The numeric gate
-w<D is also required by the downstream Taylor truncation interface. -/
+/-- .
+ -/
 theorem implicitLift_contact_weight_le
     (A : MvPolynomial (Fin 4) K) (D w : ℕ) (hw : 1 ≤ w) (hDw : w < D)
     (hA : MvPolynomial.weightedTotalDegree (contactWeights w) A ≤ D - 1) :
@@ -263,8 +263,8 @@ theorem exists_regular_lift_factor_at_surface
 
 end SurfacePoints
 
-/-- An actual selected polynomial solution is assigned to the fixed
-positive-R factor family, with its real equation, caps, and regularity. -/
+/-- .
+ -/
 theorem exists_regular_lift_factor_of_solution
     (A : MvPolynomial (Fin 4) K) (hA : A ≠ 0) (P : Polynomial K) (γ : K)
     (D w L : ℕ) (hw : 1 ≤ w) (hDw : w < D)

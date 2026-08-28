@@ -112,8 +112,8 @@ lemma X_pow_dvd_eval_of_total_coeff_zero {F : Type*} [Field F]
     (fun a ha => hzero a b ha)
 
 
-/-- The trivariate shift constraints specialize to the usual bivariate total
-order constraints after fixing `Z=z`. -/
+/-- .
+ -/
 lemma specialize_shift_total_coeff_zero {F : Type*} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (ω z : F) (yZ : Polynomial F)
     (m : Nat)
@@ -132,9 +132,9 @@ lemma specialize_shift_total_coeff_zero {F : Type*} [Field F]
   rw [← hshift]
   simp [specializeZ, hpoly]
 
-/-- A matched substitution turns total Hasse multiplicity of the shifted
-trivariate polynomial into ordinary root multiplicity after fixing `Z=z` and
-substituting `Y=P(X)`. -/
+/-- .
+
+ -/
 theorem rootMultiplicity_triEval_ge_of_shift_coeff_zero
     {F : Type*} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (ω z : F)
@@ -165,8 +165,8 @@ theorem rootMultiplicity_triEval_ge_of_shift_coeff_zero
   simpa using hdvd
 
 
-/-- Distinct roots whose multiplicities are all at least `m` consume at least
-`m * A.card` degrees. -/
+/-- .
+ -/
 theorem mul_card_le_natDegree_of_rootMultiplicity
     {F ι : Type*} [Field F] [DecidableEq F] [DecidableEq ι]
     (R : Polynomial F) (ω : ι ↪ F) (A : Finset ι) (m : Nat)
@@ -200,9 +200,9 @@ theorem mul_card_le_natDegree_of_rootMultiplicity
     _ ≤ R.roots.card := hselected
     _ ≤ R.natDegree := Polynomial.card_roots' R
 
-/-- GS substitution step.  If every matched point supplies order `m`
-vanishing, while the common substituted polynomial has degree at most `DX`
-and `m * A.card > DX`, then that polynomial is identically zero. -/
+/-- .
+
+ -/
 theorem triEval_eq_zero_of_many_shift_vanishing
     {F ι : Type*} [Field F] [DecidableEq F] [DecidableEq ι]
     (Q : Polynomial (Polynomial (Polynomial F))) (z : F)
@@ -224,8 +224,8 @@ theorem triEval_eq_zero_of_many_shift_vanishing
   omega
 
 
-/-- A weighted `X`-support cap survives fixing `Z` and substituting a
-polynomial of degree at most `k` for `Y`. -/
+/-- .
+ -/
 theorem triEval_natDegree_le_of_weighted_X_cap
     {F : Type*} [Field F]
     (Q : Polynomial (Polynomial (Polynomial F))) (z : F) (P : Polynomial F)
@@ -263,9 +263,9 @@ theorem triEval_natDegree_le_of_weighted_X_cap
     _ ≤ DX := hAdeg
 
 
-/-- Fully support-level version of GS Step 2: the weighted `X` cap on `Q`
-and the degree cap on `P` imply the degree hypothesis of
-`triEval_eq_zero_of_many_shift_vanishing`. -/
+/-- .
+
+ -/
 theorem triEval_eq_zero_of_many_shift_vanishing_of_weighted_X_cap
     {F ι : Type*} [Field F] [DecidableEq F] [DecidableEq ι]
     (Q : Polynomial (Polynomial (Polynomial F))) (z : F)

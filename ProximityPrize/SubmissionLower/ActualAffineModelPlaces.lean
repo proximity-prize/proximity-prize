@@ -1,16 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AffineModelPointLift
 
-/-!
-# Actual affine-model places in the constructed function-field normalization
+/-! .
 
-Model label: gpt-5.
 
-This specializes the actual model-point construction to the integral
-closure of K[T] in the given finite separable function-field extension.
-All normalization properties and both injectivity conditions are derived.
-The model A is not assumed integral over K[T].
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualAffineModelPlaces
 
@@ -29,7 +29,7 @@ variable (K A L : Type*) [Field K] [IsAlgClosed K]
 
 abbrev Normalization := FunctionField.ringOfIntegers K L
 
-/-- The codomain is the actual constructed normalization, not an input. -/
+/-- . -/
 def actualPointPlace (φ : A →ₐ[K] K) : HeightOneSpectrum (Normalization K L) :=
   AffineModelPointLift.modelPointPlace
     (FunctionField.ringOfIntegers.algebraMap_injective K L)

@@ -2,13 +2,13 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactTranslation
 import ProximityPrize.SubmissionLower.ContactInterpolation6600Research
 
-/-!
-# Universal vanishing interpolant at score 66
+/-! .
 
-The generic translation theorem turns the frozen order-24 contact equations
-into specialization vanishing for every degree-`w` polynomial agreeing on
-at least `agreements = 183367` coordinates.
--/
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactTranslation6600Research
 

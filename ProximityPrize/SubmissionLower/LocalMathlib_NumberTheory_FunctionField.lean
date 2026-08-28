@@ -31,33 +31,33 @@ trusted target's conflicting bivariate-polynomial notation. All original
 definitions, theorem statements, hypotheses and proof arguments are retained.
 -/
 
-/-!
-# Function fields
+/-! .
 
-This file defines a function field and the ring of integers corresponding to it.
 
-## Main definitions
 
-- `FunctionField F K` states that `K` is a function field over the field `F`,
-  i.e. it is a finite extension of the field of rational functions in one variable over `F`.
-- `FunctionField.ringOfIntegers` defines the ring of integers corresponding to a function field
-  as the integral closure of `F[X]` in the function field.
 
-## Implementation notes
-The definitions that involve a field of fractions choose a canonical field of fractions,
-but are independent of that choice. We also omit assumptions like
-`IsScalarTower F[X] (FractionRing F[X]) K` in definitions,
-adding them back in lemmas when they are needed.
 
-## References
-* [D. Marcus, *Number Fields*][marcus1977number]
-* [J.W.S. Cassels, A. Fröhlich, *Algebraic Number Theory*][cassels1967algebraic]
-* [P. Samuel, *Algebraic Theory of Numbers*][samuel1967]
-* [M. Rosen, *Number Theory in Function Fields*][rosen2002]
 
-## Tags
-function field, ring of integers
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -68,15 +68,15 @@ open scoped nonZeroDivisors Polynomial WithZero RatFunc
 
 variable (F K : Type*) [Field F] [Field K]
 
-/-- `K` is a function field over the field `F` if it is a finite
-extension of the field of rational functions in one variable over `F`.
+/-- .
 
-Note that `K` can be a function field over multiple, non-isomorphic, `F`.
--/
+
+
+ -/
 abbrev FunctionField [Algebra F⟮X⟯ K] : Prop :=
   FiniteDimensional F⟮X⟯ K
 
-/-- `K` is a function field over `F` iff it is a finite extension of `F(t)`. -/
+/-- . -/
 theorem functionField_iff (Ft : Type*) [Field Ft] [Algebra F[X] Ft]
     [IsFractionRing F[X] Ft] [Algebra F⟮X⟯ K] [Algebra Ft K] [Algebra F[X] K]
     [IsScalarTower F[X] Ft K] [IsScalarTower F[X] F⟮X⟯ K] :
@@ -103,12 +103,12 @@ theorem algebraMap_injective [Algebra F[X] K] [Algebra F⟮X⟯ K]
   rw [IsScalarTower.algebraMap_eq F[X] F⟮X⟯ K]
   exact (algebraMap F⟮X⟯ K).injective.comp (IsFractionRing.injective F[X] F⟮X⟯)
 
-/-- The function field analogue of `NumberField.ringOfIntegers`:
-`FunctionField.ringOfIntegers F K` is the integral closure of `F[X]` in `K`.
+/-- .
 
-We don't actually assume `K` is a function field over `F` in the definition,
-only when proving its properties.
--/
+
+
+
+ -/
 def ringOfIntegers [Algebra F[X] K] :=
   integralClosure F[X] K
 
@@ -246,11 +246,11 @@ theorem isAlgebraic_X_over_adjoin_transcendental (hy : Transcendental F y) :
 
 lemma finiteDimensional_of_adjoin_transcendental (hy : Transcendental F y) :
     FiniteDimensional F⟮y⟯ K :=
-  -- Local definitions for convenience
+  --
   let x := algebraMap _ K (RatFunc.X : F⟮X⟯)
   let Fyx := restrictScalars F F⟮y⟯⟮x⟯
   let Fxy := restrictScalars F F⟮x⟯⟮y⟯
-  -- Recalling instance to speed up search
+  --
   let : Algebra F⟮y⟯ Fyx := F⟮y⟯⟮x⟯.algebra
   let : Module F⟮y⟯ Fyx := Algebra.toModule
   let : SMul F⟮y⟯ Fyx := Algebra.toSMul
@@ -290,8 +290,8 @@ theorem finiteDimensional_ratFunc_of_constantExtension [IsScalarTower F[X] E[X] 
     FiniteDimensional F⟮X⟯ E⟮X⟯ :=
   .equiv (AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F⟮X⟯ E⟮X⟯ K)).toLinearEquiv.symm
 
-/-- Let `K` be a function field over `F`. If `E` is an algebraic extension of `F` which is
-contained in `K` then it is finite over `F`. -/
+/-- .
+ -/
 theorem finiteDimensional_of_constantExtension [IsScalarTower F[X] E[X] K]
     [Algebra.IsAlgebraic F E] : FiniteDimensional F E :=
   have := finiteDimensional_ratFunc_of_constantExtension (F := F) (E := E) K
@@ -307,8 +307,8 @@ variable [Algebra F K] (E : IntermediateField F K) [Algebra E[X] K] [FaithfulSMu
 instance : FiniteDimensional F⟮X⟯ E⟮X⟯ :=
   finiteDimensional_ratFunc_of_constantExtension K
 
-/-- Let `K` be a function field over `F`. If `E` is an algebraic extension of `F` which is
-contained in `K` then it is finite over `F`. -/
+/-- .
+ -/
 instance [Algebra.IsAlgebraic F E] : FiniteDimensional F E :=
   finiteDimensional_of_constantExtension K
 

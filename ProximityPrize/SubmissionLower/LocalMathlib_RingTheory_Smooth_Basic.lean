@@ -32,40 +32,40 @@ unchanged. Copyright and Apache license are retained. No kernel setting or
 protected source is changed.
 -/
 
-/-!
+/-! .
 
-# Smooth morphisms
 
-An `R`-algebra `A` is formally smooth if `Ω[A⁄R]` is `A`-projective and `H¹(L_{A/R}) = 0`.
-This is equivalent to the standard definition that "for every `R`-algebra `B`,
-every square-zero ideal `I : Ideal B` and `f : A →ₐ[R] B ⧸ I`, there exists
-at least one lift `A →ₐ[R] B`".
-An `R`-algebra `A` is smooth if it is formally smooth and of finite presentation.
 
-We show that the property of being formally smooth extends onto nilpotent ideals,
-and that it is stable under `R`-algebra homomorphisms and compositions.
 
-We show that smooth is stable under algebra isomorphisms, composition and
-localization at an element.
 
-## Main results
-- `Algebra.FormallySmooth`: The class of formally smooth algebras.
-- `Algebra.formallySmooth_iff` :
-  Formally smooth iff `Ω[A⁄R]` is `A`-projective and `H¹(L_{A/R}) = 0`.
-- `Algebra.FormallySmooth.lift`: If `A` is formally smooth and `I` is nilpotent,
-  any map `A →ₐ[R] B ⧸ I` lifts to `A →ₐ[R] B`.
-- `Algebra.FormallySmooth.iff_comp_surjective`: `A` is formally smooth iff
-  any map `A →ₐ[R] B ⧸ I` lifts to `A →ₐ[R] B` for any square zero `I`.
 
-Suppose `P` is a formally smooth `R` algebra that surjects onto `A` with kernel `I`, then
-- `Algebra.FormallySmooth.iff_split_surjection`: `A` is formally smooth iff
-  the algebra map `P ⧸ I² →ₐ[R] A` has an `R`-algebra section.
-- `Algebra.Extension.equivH1CotangentOfFormallySmooth`:
-  `H¹(L_{A/R})` is isomorphic to `ker(I/I² → A ⊗[P] Ω[P⁄R])`.
-- `Algebra.FormallySmooth.iff_split_injection`: `A` is formally smooth iff
-  the `P`-linear map `I/I² → A ⊗[P] Ω[P⁄R]` is split injective.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -82,11 +82,11 @@ namespace Algebra
 section
 
 variable (R A) in
-/--
-An `R`-algebra `A` is formally smooth if `Ω[A⁄R]` is `A`-projective and `H¹(L_{A/R}) = 0`.
-For the infinitesimal lifting definition,
-see `FormallySmooth.lift` and `FormallySmooth.iff_comp_surjective`.
--/
+/-- .
+
+
+
+ -/
 @[stacks 00TI "Also see 031J (6) for the equivalence with the definition given here.", mk_iff]
 class FormallySmooth : Prop where
   projective_kaehlerDifferential : Module.Projective A Ω[A⁄R]
@@ -167,8 +167,8 @@ theorem exists_lift
       rw [← AlgHom.comp_assoc, AlgEquiv.comp_symm, AlgHom.id_comp]
     exact ⟨g', e⟩
 
-/-- For a formally smooth `R`-algebra `A` and a map `f : A →ₐ[R] B ⧸ I` with `I` square-zero,
-this is an arbitrary lift `A →ₐ[R] B`. -/
+/-- .
+ -/
 noncomputable def lift [FormallySmooth R A] (I : Ideal B) (hI : IsNilpotent I)
     (g : A →ₐ[R] B ⧸ I) : A →ₐ[R] B :=
   (FormallySmooth.exists_lift I hI g).choose
@@ -185,8 +185,8 @@ theorem mk_lift [FormallySmooth R A] (I : Ideal B) (hI : IsNilpotent I)
 
 variable {C : Type*} [CommRing C] [Algebra R C]
 
-/-- For a formally smooth `R`-algebra `A` and a map `f : A →ₐ[R] B ⧸ I` with `I` nilpotent,
-this is an arbitrary lift `A →ₐ[R] B`. -/
+/-- .
+ -/
 noncomputable def liftOfSurjective [FormallySmooth R A] (f : A →ₐ[R] C)
     (g : B →ₐ[R] C) (hg : Function.Surjective g) (hg' : IsNilpotent <| RingHom.ker (g : B →+* C)) :
     A →ₐ[R] B :=
@@ -218,10 +218,10 @@ end FormallySmooth
 namespace Extension
 
 set_option backward.isDefEq.respectTransparency false in
-/--
-Given extensions `0 → I₁ → P₁ → A → 0` and `0 → I₂ → P₂ → A → 0` with `P₁` formally smooth,
-this is an arbitrarily chosen map `P₁/I₁² → P₂/I₂²` of extensions.
--/
+/-- .
+
+
+ -/
 noncomputable
 def homInfinitesimal (P₁ P₂ : Extension R A) [FormallySmooth R P₁.Ring] :
     P₁.infinitesimal.Hom P₂.infinitesimal :=
@@ -247,7 +247,7 @@ def homInfinitesimal (P₁ P₂ : Extension R A) [FormallySmooth R P₁.Ring] :
       exact FormallySmooth.liftOfSurjective_apply _
             (IsScalarTower.toAlgHom R P₂.infinitesimal.Ring A) _ _ x }
 
-/-- Formally smooth extensions have isomorphic `H¹(L_P)`. -/
+/-- . -/
 noncomputable
 def H1Cotangent.equivOfFormallySmooth (P₁ P₂ : Extension R A)
     [FormallySmooth R P₁.Ring] [FormallySmooth R P₂.Ring] :
@@ -275,7 +275,7 @@ lemma H1Cotangent.equivOfFormallySmooth_symm (P₁ P₂ : Extension R A)
     (equivOfFormallySmooth P₁ P₂).symm = equivOfFormallySmooth P₂ P₁ := rfl
 
 set_option backward.isDefEq.respectTransparency false in
-/-- Any formally smooth extension can be used to calculate `H¹(L_{A/R})`. -/
+/-- . -/
 noncomputable
 def equivH1CotangentOfFormallySmooth (P : Extension R A) [FormallySmooth R P.Ring] :
     P.H1Cotangent ≃ₗ[A] H1Cotangent R A :=
@@ -304,13 +304,13 @@ lemma kerCotangentToTensor_injective_iff
   have : Algebra.FormallySmooth R P'.Ring := ‹_›
   P'.cotangentComplex_injective_iff
 
-/--
-Given a formally smooth `R`-algebra `P` and a surjective algebra homomorphism `f : P →ₐ[R] A`
-with kernel `I` (typically a presentation `R[X] → A`),
-`A` is formally smooth iff the `P`-linear map `I/I² → A ⊗[P] Ω[P⁄R]` is split injective.
-Also see `Algebra.Extension.formallySmooth_iff_split_injection`
-for the version in terms of `Extension`.
--/
+/-- .
+
+
+
+
+
+ -/
 @[stacks 031I]
 theorem iff_split_injection
     [Algebra P A] [IsScalarTower R P A] (hf : Function.Surjective (algebraMap P A)) :
@@ -326,11 +326,11 @@ theorem iff_split_injection
     simp [LinearMap.ext_iff]
   · rw [and_iff_right (by exact mapBaseChange_surjective R P A hf)]
 
-/--
-Given a formally smooth `R`-algebra `P` and a surjective algebra homomorphism `f : P →ₐ[R] S`
-with kernel `I` (typically a presentation `R[X] → S`),
-`S` is formally smooth iff the `P`-linear map `I/I² → S ⊗[P] Ω[P⁄R]` is split injective.
--/
+/-- .
+
+
+
+ -/
 @[stacks 031I]
 theorem _root_.Algebra.Extension.formallySmooth_iff_split_injection
     (P : Algebra.Extension.{w} R A) [FormallySmooth R P.Ring] :
@@ -346,11 +346,11 @@ theorem _root_.Algebra.Extension.formallySmooth_iff_split_injection
     exact ⟨e.symm.toLinearMap ∘ₗ l.restrictScalars P.Ring,
       LinearMap.ext (DFunLike.congr_fun hl : _)⟩
 
-/-- Let `P →ₐ[R] A` be a surjection with kernel `J`, and `P` a formally smooth `R`-algebra,
-then `A` is formally smooth over `R` iff the surjection `P ⧸ J ^ 2 →ₐ[R] A` has a section.
+/-- .
 
-Geometric intuition: we require that a first-order thickening of `Spec A` inside `Spec P` admits
-a retraction. -/
+
+
+ -/
 theorem iff_split_surjection (f : P →ₐ[R] A) (hf : Function.Surjective f) :
     FormallySmooth R A ↔ ∃ g, f.kerSquareLift.comp g = AlgHom.id R A := by
   letI := f.toAlgebra
@@ -386,11 +386,11 @@ theorem of_comp_surjective
     AlgHom.coe_id, id_eq]
   simp only [Ideal.quotientKerAlgEquivOfSurjective_apply]
 
-/--
-An `R`-algebra `A` is formally smooth iff "for every `R`-algebra `B`,
-every square-zero ideal `I : Ideal B` and `f : A →ₐ[R] B ⧸ I`, there exists
-at least one lift `A →ₐ[R] B`".
--/
+/-- .
+
+
+
+ -/
 theorem iff_comp_surjective :
    FormallySmooth R A ↔ ∀ ⦃B : Type max u v⦄ [CommRing B] [Algebra R B] (I : Ideal B), I ^ 2 = ⊥ →
       Function.Surjective ((Ideal.Quotient.mkₐ R I).comp : (A →ₐ[R] B) → A →ₐ[R] B ⧸ I) :=
@@ -555,7 +555,7 @@ section
 variable (R : Type*) [CommRing R]
 variable (A : Type*) [CommRing A] [Algebra R A]
 
-/-- An `R` algebra `A` is smooth if it is formally smooth and of finite presentation. -/
+/-- . -/
 @[stacks 00T2 "In the stacks project, the definition of smooth is completely different, and tag
 <https://stacks.math.columbia.edu/tag/00TN> proves that their definition is equivalent to this.",
 mk_iff]
@@ -572,12 +572,12 @@ attribute [instance] formallySmooth finitePresentation
 variable {R : Type*} [CommRing R]
 variable {A B : Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
 
-/-- Being smooth is transported via algebra isomorphisms. -/
+/-- . -/
 theorem of_equiv [Smooth R A] (e : A ≃ₐ[R] B) : Smooth R B where
   formallySmooth := FormallySmooth.of_equiv e
   finitePresentation := FinitePresentation.equiv e
 
-/-- Localization at an element is smooth. -/
+/-- . -/
 theorem of_isLocalization_Away (r : R) [IsLocalization.Away r A] : Smooth R A where
   formallySmooth := Algebra.FormallySmooth.of_isLocalization (Submonoid.powers r)
   finitePresentation := IsLocalization.Away.finitePresentation r
@@ -586,12 +586,12 @@ section Comp
 
 variable (R A B)
 
-/-- Smooth is stable under composition. -/
+/-- . -/
 theorem comp [Algebra A B] [IsScalarTower R A B] [Smooth R A] [Smooth A B] : Smooth R B where
   formallySmooth := FormallySmooth.comp R A B
   finitePresentation := FinitePresentation.trans R A B
 
-/-- Smooth is stable under base change. -/
+/-- . -/
 instance baseChange [Smooth R A] : Smooth B (B ⊗[R] A) where
 
 end Comp

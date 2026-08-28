@@ -2,19 +2,19 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSparsePoleZeroCountResearch
 import ProximityPrize.SubmissionLower.ContactResidualSparseComponentAdapterResearch
 
-/-!
-# Tropical pole budget to residual sparse component provider
+/-! .
 
-This is the final formal bridge before the global mixed-volume theorem.  A
-single common separating coordinate is used on every retained component.  A
-component cost is its Newton-support pole degree, and the costs are required
-to sum to the target mixed volume.
 
-The generic-shear argument supplies the common separator in the intended
-application.  The still-missing geometric theorem is precisely `pole_le` plus
-`sum_cost_le`; no affine zero-count, identity-component removal, or incidence
-argument remains after this module.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactResidualSparsePoleProviderResearch
 
@@ -29,9 +29,9 @@ noncomputable section
 
 variable {Ω : Type} [Field Ω] [IsAlgClosed Ω]
 
-/-- Componentwise tropical data for one fixed exponent set and one common
-separating coordinate.  In the target application `wholeCost` is the exact
-mixed volume `MV(Newt(G), Newt(T), E)`. -/
+/-- .
+
+ -/
 structure ResidualPoleComponentBudget
     (G T H : MvPolynomial (Fin 3) Ω)
     (E : Finset (Fin 3 →₀ ℕ)) (separator : Fin 3) (wholeCost : ℕ) where
@@ -47,8 +47,8 @@ structure ResidualPoleComponentBudget
         (cost C : ℤ)
   sum_cost_le : (∑ C : RegularComponent Ω G T H, cost C) ≤ wholeCost
 
-/-- The tropical component data constructs exactly the residual provider used
-by the sharp incidence adapter. -/
+/-- .
+ -/
 def ResidualPoleComponentBudget.toResidualComponentBudget
     {G T H : MvPolynomial (Fin 3) Ω}
     {E : Finset (Fin 3 →₀ ℕ)} {separator : Fin 3} {wholeCost : ℕ}

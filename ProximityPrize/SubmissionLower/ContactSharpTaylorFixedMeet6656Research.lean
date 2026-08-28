@@ -4,22 +4,22 @@ import ProximityPrize.SubmissionLower.ContactResidualSupportParametersResearch
 import ProximityPrize.SubmissionLower.ContactFixedMeetFactorIncidence6656Research
 import ProximityPrize.SubmissionLower.ContactTightFixedMeet6656Research
 
-/-!
-# Equal-weight Taylor saving for a generic residual support profile
+/-! .
 
-The joint `Y+R` and total support functionals give equal weight to `Y` and
-`R`.  The accepted equal-weight Taylor theorem therefore saves one unit in
-both cumulative agreement directions.  In nested flag coordinates only the
-middle coordinate changes:
 
-`(2(total-ys), 2(ys-s), 2s-1)` becomes
-`(2(total-ys), 2(ys-s)-1, 2s-1)`.
 
-This module packages the generic sharp support theorem, the direction-generic
-regular ledger, and the fixed-meet arithmetic.  It deliberately stops before
-the active terminal projection/component provider, whose public API still
-indexes its cut budget by the older support-induced flag.
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSharpTaylorFixedMeet6656Research
 
@@ -46,8 +46,8 @@ noncomputable section
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 35000
 
-/-- Equal-weight Taylor agreement direction.  The strict middle separation
-ensures that the saved cumulative middle cap remains above the pure-`R` cap. -/
+/-- .
+ -/
 def sharpAgreementDirection (P : ResidualSupportParameters) : FlagDegree :=
   ⟨2 * (P.total - P.ys), 2 * (P.ys - P.s) - 1, 2 * P.s - 1⟩
 
@@ -135,8 +135,8 @@ theorem fixedMeet_sharp_agreement_flag (d : ℕ) :
 
 variable {K Omega : Type} [Field K] [Field Omega]
 
-/-- Generic equal-weight agreement bounds for a stored residual support
-profile. -/
+/-- .
+ -/
 theorem sharp_agreement_weight_bounds
     {P : ResidualSupportParameters} {F : MvPolynomial (Fin 4) K}
     (H : ResidualSupportData P F)
@@ -176,8 +176,8 @@ theorem sharp_agreement_weight_bounds
     rw [hcoeff]
     norm_num
 
-/-- A current residual surface lies in the sharp equal-weight cut flag.
-No residual-step or projection geometry is used. -/
+/-- .
+ -/
 theorem surfaceMap_agreement_in_sharp_flag
     {P : ResidualSupportParameters} (hsy : P.s < P.ys)
     (phi : Polynomial K →+* Omega) {F : MvPolynomial (Fin 4) K}
@@ -217,7 +217,7 @@ theorem surfaceMap_agreement_in_sharp_flag
   · rw [sharpResidualAgreementFlag_total P hsy]
     exact hqTotal
 
-/-- Direction-generic robust factor ledger. -/
+/-- . -/
 def factorRegularLedgerForDirection
     (p : Profile) (direction flag : FlagDegree) : ℕ :=
   (flagMixed flag direction direction * p.degreeIncidence ^ 2 +
@@ -293,7 +293,7 @@ variable {pchar : ℕ} [CharP Omega pchar]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Rectangular factor aggregation with the sharp direction. -/
+/-- . -/
 theorem sum_factor_counts_rectangular_sharp_le
     (p : Profile) (support : ResidualSupportParameters)
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) (hw : 0 < p.w)
@@ -318,7 +318,7 @@ theorem sum_factor_counts_rectangular_sharp_le
         p.rectangularSurfaceFlag hcaps.1 hcaps.2.1 hcaps.2.2
     _ = sharpRegularNumerator p support := rfl
 
-/-- Fixed-meet sharp degree coefficient. -/
+/-- . -/
 def meetSharpFactorDegreeCost (flag : FlagDegree) : ℕ :=
   (flagMixed flag (sharpAgreementDirection fixedMeetSupport)
         (sharpAgreementDirection fixedMeetSupport) *
@@ -346,8 +346,8 @@ theorem meet_sharp_incidence_cost_eq_ledger (flag : FlagDegree) :
     factorRegularLedgerForDirection]
   ring
 
-/-- The outer recursive incidence theorem is already direction-agnostic.
-Only the displayed sharp terminal-fiber premise remains to be supplied. -/
+/-- .
+ -/
 theorem recursive_scaled_factor_sharp_6656
     {flag : FlagDegree}
     (hphi : Function.Injective phi)

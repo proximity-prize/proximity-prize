@@ -22,49 +22,49 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Ramification theory in Galois extensions of Dedekind domains
+/-! .
 
-In this file, we discuss the ramification theory in Galois extensions of Dedekind domains, which is
-  also called Hilbert's Ramification Theory.
 
-Assume `B / A` is a finite extension of Dedekind domains, `K` is the fraction ring of `A`,
-  `L` is the fraction ring of `K`, `L / K` is a Galois extension.
 
-## Main definitions
 
-* `Ideal.ramificationIdxIn`: It can be seen from
-  the theorem `Ideal.ramificationIdx_eq_of_isGaloisGroup` that all `Ideal.ramificationIdx` over a
-  fixed maximal ideal `p` of `A` are the same, which we define as `Ideal.ramificationIdxIn`.
 
-* `Ideal.inertiaDegIn`: It can be seen from
-  the theorem `Ideal.inertiaDeg_eq_of_isGaloisGroup` that all `Ideal.inertiaDeg` over a fixed
-  maximal ideal `p` of `A` are the same, which we define as `Ideal.inertiaDegIn`.
 
-## Main results
 
-* `Ideal.ncard_primesOver_mul_ramificationIdxIn_mul_inertiaDegIn`: Let `p` be a prime of `A`,
-  `r` be the number of prime ideals lying over `p`, `e` be the ramification index of `p` in `B`,
-  and `f` be the inertia degree of `p` in `B`. Then `r * (e * f) = [L : K]`. It is the form of the
-  `Ideal.sum_ramification_inertia` in the case of Galois extension.
 
-* `Ideal.card_inertia_eq_ramificationIdxIn`:
-  The cardinality of the inertia group is equal to the ramification index.
 
-## References
 
-* [J Neukirch, *Algebraic Number Theory*][Neukirch1992]
 
--/
 
-/-!
-Ordinary elaboration repair after full legal candidate job 229491:
-the target environment reserves the bare token `under`. Qualifying the one
-affected existing ideal-contraction operation as `Ideal.under` selects exactly
-the original declaration. No mathematical statement, hypothesis, argument,
-or elaboration limit changes. Original notices remain. The trailing commands
-only inspect the existing proof axioms.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
+
+/-! .
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -76,18 +76,18 @@ attribute [local instance] FractionRing.liftAlgebra
 namespace Ideal
 
 open scoped Classical in
-/-- If `L / K` is a Galois extension, it can be seen from the theorem
-  `Ideal.ramificationIdx_eq_of_isGaloisGroup` that all `Ideal.ramificationIdx` over a fixed
-  maximal ideal `p` of `A` are the same, which we define as `Ideal.ramificationIdxIn`. -/
+/-- .
+
+ -/
 noncomputable def ramificationIdxIn {A : Type*} [CommRing A] (p : Ideal A)
     (B : Type*) [CommRing B] [Algebra A B] : ℕ :=
   if h : ∃ P : Ideal B, P.IsPrime ∧ P.LiesOver p then h.choose.ramificationIdx A
   else 0
 
 open scoped Classical in
-/-- If `L / K` is a Galois extension, it can be seen from
-  the theorem `Ideal.inertiaDeg_eq_of_isGaloisGroup` that all `Ideal.inertiaDeg` over a fixed
-  maximal ideal `p` of `A` are the same, which we define as `Ideal.inertiaDegIn`. -/
+/-- .
+
+ -/
 noncomputable def inertiaDegIn {A : Type*} [CommRing A] (p : Ideal A)
     (B : Type*) [CommRing B] [Algebra A B] : ℕ :=
   if h : ∃ P : Ideal B, P.IsPrime ∧ P.LiesOver p then h.choose.inertiaDeg A else 0
@@ -144,9 +144,9 @@ variable {A B : Type*} [CommRing A] [CommRing B] [Algebra A B] (p : Ideal A) (P 
   (G : Type*) [Group G] [Finite G] [MulSemiringAction G B] [IsGaloisGroup G A B]
 
 include p in
-/-- If `p` is a maximal ideal of `A`, `P` and `Q` are prime ideals
-  lying over `p`, then there exists `σ ∈ Aut (B / A)` such that `σ P = Q`. In other words,
-  the Galois group `Gal(L / K)` acts transitively on the set of all prime ideals lying over `p`. -/
+/-- .
+
+ -/
 theorem exists_smul_eq_of_isGaloisGroup : ∃ σ : G, σ • P = Q := by
   rcases IsInvariant.exists_smul_of_under_eq A B G P Q <|
     (over_def P p).symm.trans (over_def Q p) with ⟨σ, hs⟩
@@ -159,21 +159,21 @@ instance isPretransitive_of_isGaloisGroup : MulAction.IsPretransitive G (primesO
     exact ⟨σ, Subtype.val_inj.mp hs⟩
 
 include p G in
-/-- All the `Ideal.ramificationIdx` over a fixed maximal ideal are the same. -/
+/-- . -/
 theorem ramificationIdx_eq_of_isGaloisGroup :
     P.ramificationIdx A = Q.ramificationIdx A := by
   rcases exists_smul_eq_of_isGaloisGroup p P Q G with ⟨σ, rfl⟩
   rw [ramificationIdx_smul]
 
 include p G in
-/-- All the `Ideal.inertiaDeg` over a fixed maximal ideal are the same. -/
+/-- . -/
 theorem inertiaDeg_eq_of_isGaloisGroup :
     P.inertiaDeg A = Q.inertiaDeg A := by
   rcases exists_smul_eq_of_isGaloisGroup p P Q G with ⟨σ, rfl⟩
   rw [inertiaDeg_smul]
 
 include p G in
-/-- The `ramificationIdxIn` is equal to any ramification index over the same ideal. -/
+/-- . -/
 theorem ramificationIdxIn_eq_ramificationIdx :
     ramificationIdxIn p B = P.ramificationIdx A := by
   have h : ∃ P : Ideal B, P.IsPrime ∧ P.LiesOver p := ⟨P, hPp, hp⟩
@@ -189,7 +189,7 @@ theorem ramificationIdxIn_ne_zero [Module.Finite A B] [FaithfulSMul A B] {p : Id
   exact (P.1.ramificationIdx_pos A).ne'
 
 include G in
-/-- The `inertiaDegIn` is equal to any ramification index over the same ideal. -/
+/-- . -/
 theorem inertiaDegIn_eq_inertiaDeg :
     inertiaDegIn p B = P.inertiaDeg A := by
   have h : ∃ P : Ideal B, P.IsPrime ∧ P.LiesOver p := ⟨P, hPp, hp⟩
@@ -241,7 +241,7 @@ variable {A : Type*} [CommRing A] [IsDomain A] (p : Ideal A) [p.IsPrime]
   (B : Type*) [CommRing B] [IsDomain B] [Algebra A B] [Module.Finite A B] [Flat A B]
   (G : Type*) [Group G] [Finite G] [MulSemiringAction G B] [IsGaloisGroup G A B]
 
-/-- The form of the **fundamental identity** in the case of Galois extension. -/
+/-- . -/
 theorem ncard_primesOver_mul_ramificationIdxIn_mul_inertiaDegIn :
     (primesOver p B).ncard * (ramificationIdxIn p B * inertiaDegIn p B) = Nat.card G := by
   have : Fintype (primesOver p B) := (QuasiFinite.finite_primesOver p).fintype
@@ -336,7 +336,7 @@ lemma ncard_primesOver_mul_card_inertia_mul_finrank (p : Ideal R) [p.IsPrime]
     ← IsInvariant.orbit_eq_primesOver R S G p P]
   simpa using Nat.card_congr (MulAction.orbitProdStabilizerEquivGroup G P)
 
-/-- The cardinality of the inertia group is equal to the ramification index. -/
+/-- . -/
 lemma card_inertia_eq_ramificationIdxIn [IsDomain R] [IsDomain S] [Module.Finite R S] [Flat R S]
     (p : Ideal R) (P : Ideal S) [P.LiesOver p] [p.IsPrime] [P.IsPrime]
     [PerfectField p.ResidueField] :
@@ -348,8 +348,8 @@ lemma card_inertia_eq_ramificationIdxIn [IsDomain R] [IsDomain S] [Module.Finite
   rwa [← ncard_primesOver_mul_ramificationIdxIn_mul_inertiaDegIn p S G,
     mul_assoc, mul_right_inj' h1, mul_left_inj' h2] at H
 
-/-- The cardinality of the decomposition group is equal to the ramification index times the
-inertia degree. -/
+/-- .
+ -/
 lemma card_stabilizer_eq [IsDomain R] [IsDomain S] [Module.Finite R S] [Flat R S]
     (p : Ideal R) (P : Ideal S) [P.LiesOver p] [p.IsPrime] [P.IsPrime]
     [PerfectField p.ResidueField] :

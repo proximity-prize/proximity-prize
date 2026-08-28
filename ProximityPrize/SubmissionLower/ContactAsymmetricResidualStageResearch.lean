@@ -5,20 +5,20 @@ import ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount
 import ProximityPrize.SubmissionLower.ContactImplicitPairSeedCountParameterizedResearch
 import ProximityPrize.SubmissionLower.ContactOriginalRegularSeedCount
 
-/-!
-# Asymmetric residual-stage decomposition
+/-! .
 
-For a proper residual pair `(Q,T)`, only `Q` is split into its regular and
-singular branches.  Thus no symmetric "both singular" case is needed:
-regular positive-`R` factors of `Q` retain the equation `T = 0`, while the
-whole singular branch is covered by the implicit-pair family and exceptional
-set constructed from `Q` alone.
 
-The final theorem below constructs that cover and both finite-family degree
-budgets.  Its only count inputs are factorwise proper-cut inequalities and
-implicit-pair inequalities.  These are deliberately factorwise rather than
-one stage-wide geometric premise.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAsymmetricResidualStageResearch
 
@@ -48,7 +48,7 @@ abbrev RegularIndex (Q : MvPolynomial (Fin 4) K) :=
 abbrev ImplicitIndex (Q : MvPolynomial (Fin 4) K) :=
   ↥(implicitPairSet (singularAuxiliary Q))
 
-/-- The regular family keeps both equations of the residual pair. -/
+/-- . -/
 def regularPairSeeds (Q T : MvPolynomial (Fin 4) K)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (F : RegularIndex Q) : Finset K :=
@@ -61,7 +61,7 @@ def implicitSeeds (Q : MvPolynomial (Fin 4) K)
     (q : ImplicitIndex Q) : Finset K :=
   Gamma.filter fun gamma ↦ LiftedSolutionPair q.1 (selected gamma) gamma
 
-/-- The singular union depends only on the first equation `Q`. -/
+/-- . -/
 def singularSeeds (Q : MvPolynomial (Fin 4) K)
     (selected : K → Polynomial K) (Gamma : Finset K) : Finset K :=
   Finset.univ.biUnion (implicitSeeds Q selected Gamma) ∪
@@ -99,10 +99,10 @@ theorem singularSeeds_card_le_sum
   exact (Finset.card_union_le _ _).trans
     (Nat.add_le_add_right Finset.card_biUnion_le _)
 
-/-! ## Actual asymmetric cover -/
+/-! . -/
 
-/-- Apply the constructed three-way decomposition to `Q` only.  The second
-equation is inserted only in the regular filters. -/
+/-- .
+ -/
 theorem card_le_regular_sum_add_singular
     (Q T : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (D w L s p : ℕ) [CharP K p]
@@ -144,10 +144,10 @@ theorem card_le_regular_sum_add_singular
         (singularSeeds Q selected Gamma).card :=
       Nat.add_le_add_right Finset.card_biUnion_le _
 
-/-! ## Properness of every regular carrier -/
+/-! . -/
 
-/-- Recursive-GCD relative primality rules out divisibility of a positive-R
-factor of `Q` into the second residual equation. -/
+/-- .
+ -/
 theorem regularFactor_not_dvd_second
     (Q T : MvPolynomial (Fin 4) K) (hrel : IsRelPrime Q T)
     (F : RegularIndex Q) : ¬ F.1 ∣ T := by
@@ -155,8 +155,8 @@ theorem regularFactor_not_dvd_second
   intro hFT
   exact hirr.not_isUnit (hrel hdiv hFT)
 
-/-- Properness survives passage to every geometric factor over `K(X)^alg`.
-This is the exact proper-cut premise required by `proper_cut_seed_bound`. -/
+/-- .
+ -/
 theorem geometricFactor_not_dvd_second
     (Q T : MvPolynomial (Fin 4) K) (hrel : IsRelPrime Q T)
     (F : RegularIndex Q)
@@ -176,7 +176,7 @@ theorem geometricFactor_not_dvd_second
     g hgirred hgeo).mp
   simpa only [canonical_geometricSurfaceMap] using hgT
 
-/-! ## Linear factor and implicit-pair aggregation -/
+/-! . -/
 
 def regularVector (P : UnequalParameters)
     (F : MvPolynomial (Fin 4) K) : ContactParameters6600Research.DegreeVector :=
@@ -187,8 +187,8 @@ def regularVector (P : UnequalParameters)
 def regularCapAt (v : ContactParameters6600Research.DegreeVector) : Fin 3 → ℕ :=
   ![v.y, v.r, v.z]
 
-/-- Summed geometric mixed degrees are controlled by the original factor
-degrees and the box of the unequal second equation. -/
+/-- .
+ -/
 theorem sum_coordinateMixedDegree_geometricFactors_le
     (P : UnequalParameters) (F T : MvPolynomial (Fin 4) K) (hF : F ≠ 0)
     (hTY : T.degreeOf 1 ≤ P.rightY) (hTR : T.degreeOf 2 ≤ P.rightR)
@@ -247,9 +247,9 @@ theorem sum_coordinateMixedDegree_geometricFactors_le
 variable {ι : Type*}
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- The missing unequal-profile regular provider.  It refines one original
-positive-`R` factor into the canonical geometric factors and obtains every
-factorwise count directly from `proper_cut_seed_bound`. -/
+/-- .
+
+ -/
 theorem regularPairSeeds_bound
     (P : UnequalParameters) (Q T : MvPolynomial (Fin 4) K)
     (hrel : IsRelPrime Q T) (F : RegularIndex Q)
@@ -430,8 +430,8 @@ theorem regularPairSeeds_bound
         (P.errors + 1) * P.gap * (regularVector P F.1).z := by
       simp [Fin.sum_univ_three, regularCapAt, dot]
 
-/-- Box-level wrapper producing exactly the `hregular` family consumed by
-`asymmetric_stage_count_lt`. -/
+/-- .
+ -/
 theorem all_regularPairSeeds_bound
     (P : UnequalParameters) (Q T : MvPolynomial (Fin 4) K)
     (hQ : Q ≠ 0) (hrel : IsRelPrime Q T)
@@ -569,9 +569,9 @@ theorem sum_regular_counts_bound
       · exact Nat.mul_le_mul_left _ hcost.2.2
     _ = P.regularNumerator := rfl
 
-/-- Complete asymmetric stage composition.  The cover, regular factor
-budgets, implicit-pair budgets, and exceptional count are all constructed.
-Only the two already-local count interfaces remain factorwise inputs. -/
+/-- .
+
+ -/
 theorem asymmetric_stage_count_lt
     (P : UnequalParameters) (S : TightParameters)
     (Q T : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)

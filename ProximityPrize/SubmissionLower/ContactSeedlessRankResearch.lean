@@ -1,16 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagRankKernel6641Research
 
-/-!
-# Seedless contact blocks
+/-! .
 
-For a fixed received word the interpolation polynomial needs no seed
-coordinate.  This file restricts the existing local contact jet to the
-`Z = 0` coefficient plane and proves the corresponding two-dimensional
-rank bound.  The kernel is still multiplication by `(Y - R)^h`; removing
-the unused seed direction is what makes a separate fixed-centre list bound
-substantially cheaper than affine-line alignment.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSeedlessRankResearch
 

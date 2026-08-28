@@ -2,22 +2,22 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFactorCaps
 import ProximityPrize.SubmissionLower.ContactTaylorNumerators
 
-/-!
-# A sharp Y-degree increment for the contact recurrence
+/-! .
 
-The contact interpolation box couples `Y` and `R` through
 
-`X + w Y + (w-1) R < D`.
 
-Consequently, whenever the top `Y` slice cannot also carry one `R`, the
-denominator polynomial `H = ∂_R F` has one less unit of `Y` degree than
-`F`.  Keeping this fact through the exact numerator recurrence replaces the
-usual per-step `2*c` increment by `2*c-1`.
 
-The theorem is parameter-generic.  The arithmetic hypothesis
-`D ≤ w*c + (w-1)` is explicit; omitting it is false at the boundary
-`D = w*(c+1)`.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSharpYRecurrence
 
@@ -30,8 +30,8 @@ variable {K : Type*} [Field K]
 
 abbrev Poly4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
 
-/-- The coupled interpolation box forces `∂_R F` below the top `Y` slice.
-This is the exact structural seam; a separated `Y` cap alone is insufficient. -/
+/-- .
+ -/
 theorem polyH_Y_degree_pred_of_mem_box
     (F : Poly4 K) (D w L s c : ℕ) (hw : 0 < w)
     (hD : D ≤ w * c + (w - 1))
@@ -62,8 +62,8 @@ theorem polyH_Y_degree_pred_of_mem_box
   have hlt : d 1 < c := (Nat.mul_lt_mul_left hw).mp hmul
   omega
 
-/-- One recurrence step with a denominator whose `Y` degree is one below
-the seed surface has the sharp increment `2*c-1`. -/
+/-- .
+ -/
 theorem numeratorStep_Y_degree_bound
     (F M : Poly4 K) (b a c : ℕ) (hc : 1 ≤ c)
     (hF : F.degreeOf (1 : Fin 4) ≤ c)
@@ -132,7 +132,7 @@ theorem numeratorStep_Y_degree_bound
   exact degree_sub_bound (1 : Fin 4)
     (degree_add_bound (1 : Fin 4) (degree_add_bound (1 : Fin 4) h1 h2) h3) h4
 
-/-- Closed sharp `Y` bound for every actual recurrence numerator. -/
+/-- . -/
 theorem numerator_Y_degree_bound
     (F : Poly4 K) (c : ℕ) (hc : 1 ≤ c)
     (hF : F.degreeOf (1 : Fin 4) ≤ c)
@@ -147,8 +147,8 @@ theorem numerator_Y_degree_bound
         (1 + b * (2 * c - 1)) c hc hF hH ih
       simpa only [Nat.add_mul, Nat.one_mul, add_assoc] using hh
 
-/-- A common-denominator Taylor term inherits the sharp `Y` increment.
-The denominator powers use `deg_Y H ≤ c-1`; the worst term is `j=w`. -/
+/-- .
+ -/
 theorem commonNumeratorTerm_Y_degree_bound
     (F : Poly4 K) (c : ℕ) (hc : 1 ≤ c)
     (hF : F.degreeOf (1 : Fin 4) ≤ c)
@@ -193,9 +193,9 @@ theorem clearedTaylorNumerator_Y_degree_bound
   exact commonNumeratorTerm_Y_degree_bound F c hc hF hH w j
     (by have := Finset.mem_range.mp hj; omega) coeffs x
 
-/-- The actual agreement numerator has the same sharp `Y` cap.  Its affine
-received-symbol term has `Y` degree zero and therefore does not consume the
-saved unit. -/
+/-- .
+
+ -/
 theorem agreementNumerator_Y_degree_bound
     (F : Poly4 K) (c : ℕ) (hc : 1 ≤ c)
     (hF : F.degreeOf (1 : Fin 4) ≤ c)
@@ -217,7 +217,7 @@ theorem agreementNumerator_Y_degree_bound
       0 + 2 * w * (c - 1) ≤ 1 + 2 * w * (c - 1) + w := by omega
       _ = 1 + w * (2 * (c - 1) + 1) := by ring
 
-/-- Box-level interface used by parameterized contact constructions. -/
+/-- . -/
 theorem sharp_Y_bounds_of_mem_box
     (F : Poly4 K) (D w L s c : ℕ) (hw : 0 < w) (hc : 1 ≤ c)
     (hD : D ≤ w * c + (w - 1))

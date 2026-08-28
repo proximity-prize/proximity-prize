@@ -3,19 +3,19 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncide
 import ProximityPrize.SubmissionLower.ContactPrimeFlagBudgetFamilyResearch
 import ProximityPrize.SubmissionLower.ContactStratifiedResidualComponentAdapter6600Research
 
-/-!
-# Recursive score-66 incidence over a regular component family
+/-! .
 
-This module is the exact join between the componentwise adaptive pole budget
-and the actual-identity recursion on an arbitrary curve prime.  One shared
-`PrimeFlagBudgetFamily` is assigned on the original regular components.  Its
-prime budget is transported through each component's private residual path,
-and only then are the three unit costs summed.
 
-The large-pencil implication is kept explicit.  It is the narrow remaining
-leaf saying that a terminal many-identity branch, whose current `Z`
-coordinate is transcendental, has positive original `Z` pole cost.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamily6600Research
 
@@ -46,8 +46,8 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- The canonical initial inner-recursion state attached to one regular
-component of a proper outer cut. -/
+/-- .
+ -/
 def regularComponentCurveStageOfSupport
     (support : ResidualSupportParameters)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
@@ -116,9 +116,9 @@ def regularComponentCurveStageOfSupport
     characteristic_bound := hchar
   }
 
-/-- The active-differential `(6,33,582)` support introduced by the 66.42
-retuning.  It is kept separate from `acceptedSupport`, so callers of the
-earlier `(8,43,503)` compatibility constructor remain source-compatible. -/
+/-- .
+
+ -/
 def activeDifferentialSupport : ResidualSupportParameters where
   s := 6
   ys := 33
@@ -128,8 +128,8 @@ def activeDifferentialSupport : ResidualSupportParameters where
   ys_le_total := by norm_num
   two_le_ys := by norm_num
 
-/-- Active-differential `(6,33,582)` constructor used by the 66.42 recursive
-component estimate. -/
+/-- .
+ -/
 def regularComponentCurveStageActive
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
     (selected : K → Polynomial K) (Gamma : Finset K)
@@ -161,7 +161,7 @@ def regularComponentCurveStageActive
     F G T selected Gamma nodes x u0 u1 p e d surfaceFlag cutFlag hdiv hGflag
     hTflag hFs hFys hFtotal hinj hdegree hsolution hregular hnoPencil hchar C
 
-/-- Accepted `(8,43,503)` compatibility constructor. -/
+/-- . -/
 def regularComponentCurveStage
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
     (selected : K → Polynomial K) (Gamma : Finset K)
@@ -193,12 +193,12 @@ def regularComponentCurveStage
     F G T selected Gamma nodes x u0 u1 p e d surfaceFlag cutFlag hdiv hGflag
     hTflag hFs hFys hFtotal hinj hdegree hsolution hregular hnoPencil hchar C
 
-/-- Full regular-component aggregation after recursive identity removal.
+/-- .
 
-The conclusion is the literal mixed-flag expression needed at one outer
-proper cut.  `hlarge` is the sole branch-local premise not supplied by the
-shared prime flag budget itself.
--/
+
+
+
+ -/
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)

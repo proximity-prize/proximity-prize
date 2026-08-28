@@ -2,12 +2,12 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAdaptiveNestedUnitFamilyActive6630Research
 import ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research
 
-/-!
-# Refined YZ family from the active-differential constructor
+/-! .
 
-This is the small bridge from the repaired nested projection constructor to
-the regularity-based `Z + YZ` positivity theorem.
--/
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveNestedYZFamily6630Research
 
@@ -36,8 +36,8 @@ set_option autoImplicit false
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
 
-/-- The active nested constructor retains the value of its common `Y+lam Z`
-projection, exactly as required by the regularity positivity argument. -/
+/-- .
+ -/
 def adaptiveUnitProjectionFamilyYZ_of_active_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,
@@ -60,7 +60,7 @@ def adaptiveUnitProjectionFamilyYZ_of_active_nested
     intro C
     exact coordinateOfGate_value (affineU Omega C.1 D.lam) (D.uGate C)
 
-/-- Existential consumer seam for the repaired active-differential route. -/
+/-- . -/
 theorem exists_adaptiveUnitProjectionFamilyYZ_of_active_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,

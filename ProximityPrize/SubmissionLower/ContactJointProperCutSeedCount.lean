@@ -2,13 +2,13 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactProperCutSeedCount
 import ProximityPrize.SubmissionLower.ActualCurveJointProjectionBounds
 
-/-!
-# Proper-cut selected-seed counting with a joint R-projection gate
+/-! .
 
-Only the coordinate-`1` (R-base) characteristic proof is replaced.  The
-incidence argument and all three original mixed-degree ledger budgets are
-identical to `ContactProperCutSeedCount`.
--/
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactJointProperCutSeedCount
 
@@ -29,15 +29,15 @@ local instance : DecidableEq Ω := Classical.decEq Ω
 variable {ι : Type*}
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- A joint order certificate is needed only on a component where the R
-coordinate is transcendental. -/
+/-- .
+ -/
 def JointRProvider (G T : MvPolynomial (Fin 3) Ω) (p : ℕ) : Prop :=
   ∀ (P : Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime], G ∈ P →
     Transcendental Ω (coordinate Ω P 1) →
       JointOrderCertificate Ω (Equiv.swap 0 1) G T p
 
-/-- The existing component incidence proof with the hybrid projection
-property substituted at its sole geometric dependency. -/
+/-- .
+ -/
 theorem proper_cut_seed_bound_of_projection_sum_joint_R
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F) (hproper : ¬ G ∣ T)
@@ -107,8 +107,8 @@ theorem proper_cut_seed_bound_of_projection_sum_joint_R
     hGpoint hTpoint hHp (a - w) (nodes.card - w) (e + 1)
     cap budget degree hcomponent hbudget
 
-/-- The regular component family consumes the unchanged original mixed
-budgets under the hybrid characteristic certificate. -/
+/-- .
+ -/
 theorem regularComponents_degree_budget_joint_R
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (p : ℕ) [CharP Ω p] (hG : Irreducible G) (hproper : ¬ G ∣ T)
@@ -129,8 +129,8 @@ theorem regularComponents_degree_budget_joint_R
     (fun C htr => hjoint C.1
       (regularComponent_G_mem Ω G T (regularitySurface φ F) C) htr)
 
-/-- Complete proper-cut seed count with a joint characteristic gate only at
-the tight R base. -/
+/-- .
+ -/
 theorem proper_cut_seed_bound_joint_R
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F) (hproper : ¬ G ∣ T)

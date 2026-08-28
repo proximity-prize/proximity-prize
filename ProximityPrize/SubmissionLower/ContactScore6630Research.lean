@@ -1,16 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 
-/-!
-# Exact radius and score arithmetic for the 67.10 candidate
+/-! .
 
-The radius is the top grid point in the `79866`-error cell,
-`(4 * 79866 + 3) / 2^20`.  The fractional score comparison uses the exact
-rational sandwich
 
-`(1-r)^128 <= 2^-67 * (125/134) <= 2^(-67.10)`.
 
-No counting or geometric premise occurs in this module.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactScore6630Research
 
@@ -45,7 +45,7 @@ theorem radius6630_admissible :
   constructor <;>
     norm_num [radius6630, claimedRadius, IRSProfile.minRelativeDistance]
 
-/-- Exact rational upper approximation `2^(1/10) <= 134/125`. -/
+/-- . -/
 theorem two_rpow_one_tenth_le :
     (2 : ℝ≥0) ^ ((1 : ℝ) / 10) ≤ (134 : ℝ≥0) / 125 := by
   have hroot :
@@ -60,7 +60,7 @@ theorem two_rpow_one_tenth_le :
       norm_num [div_eq_mul_inv]
     _ ≤ (134 : ℝ≥0) / 125 := hroot
 
-/-- Exact 128th-power rational comparison at the claimed radius. -/
+/-- . -/
 theorem radius6630_power_rational_bound :
     (1 - radius6630) ^ IRSProfile.repetitions ≤
       ((1 : ℝ≥0) / 2 ^ (67 : ℕ)) * (125 / 134) := by

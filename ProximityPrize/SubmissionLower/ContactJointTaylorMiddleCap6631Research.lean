@@ -1,21 +1,21 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactPost6464MinkowskiRecurrenceResearch
 
-/-!
-# Equal-weight Taylor support saving
+/-! .
 
-Research module for the score-66.31 route.  The generic support-functional
-recurrence charges `F + ∂R F`.  When the support functional gives at least
-as much weight to `Y` as to `R`, every occurrence of the contact-vector term
-`R * ∂Y` pays for its new `R` by the `Y` derivative.  Consequently a Taylor
-step costs two copies of the `∂R F` cap:
 
-`2 * (C - weight(R))`.
 
-For the joint `Y+R` functional this changes the agreement direction from
-`2*M-1` to `2*M-2`.  The proof below is purely support-theoretic and does not
-use a geometric or decoding premise.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactJointTaylorMiddleCap6631Research
 
@@ -29,8 +29,8 @@ variable {K : Type*} [Field K]
 
 abbrev Poly4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
 
-/-- Under `weight(R) ≤ weight(Y)`, the numerator of the contact vector field
-has the same support-functional cap as `F`. -/
+/-- .
+ -/
 theorem wt_polyG_le_of_R_le_Y
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F : Poly4 K) (C : ℕ) (hRY : weights 2 ≤ weights 1)
@@ -48,8 +48,8 @@ theorem wt_polyG_le_of_R_le_Y
   rw [wt_neg]
   exact hsum.trans (max_le (by omega) (by omega))
 
-/-- One Taylor recurrence step costs exactly twice the `∂R F` cap for
-support functionals satisfying `weight(R) ≤ weight(Y)`. -/
+/-- .
+ -/
 theorem numeratorStep_wt_le_equal_weight
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F M : Poly4 K) (b A C : ℕ)
@@ -143,7 +143,7 @@ theorem numeratorStep_wt_le_equal_weight
     (max_le ((wt_add_le weights _ _).trans
       (max_le ((wt_add_le weights _ _).trans (max_le htermX htermY)) htermR)) hlast)
 
-/-- Closed equal-weight bound for every Taylor numerator. -/
+/-- . -/
 theorem numerator_wt_le_equal_weight
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F : Poly4 K) (C : ℕ) (hRY : weights 2 ≤ weights 1)
@@ -165,7 +165,7 @@ theorem numerator_wt_le_equal_weight
         (hbase.trans (Nat.le_add_right _ _)) hF ih
       convert h using 1 <;> ring
 
-/-- The common-denominator Taylor polynomial inherits the same sharp cap. -/
+/-- . -/
 theorem clearedTaylorNumerator_wt_le_equal_weight
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F : Poly4 K) (C : ℕ) (hRY : weights 2 ≤ weights 1)
@@ -224,8 +224,8 @@ theorem clearedTaylorNumerator_wt_le_equal_weight
             weights 1 + (j + (w - j)) * (2 * (C - weights 2)) := by ring
         _ = weights 1 + w * (2 * (C - weights 2)) := by rw [hjw']
 
-/-- Sharp agreement cap.  In particular, for `weights=(0,1,1,0)` and a
-surface cap `M`, the direction coefficient is `2*M-2`. -/
+/-- .
+ -/
 theorem agreementNumerator_wt_le_equal_weight
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F : Poly4 K) (C : ℕ) (hRY : weights 2 ≤ weights 1)

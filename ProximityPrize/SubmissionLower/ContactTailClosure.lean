@@ -2,17 +2,17 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAgreementEvaluation
 import ProximityPrize.SubmissionLower.ContactGlobalPolynomiality
 
-/-!
-# Actual divisibility closure of the first contact tail
+/-! .
 
-Model label: gpt-5.
 
-Divisibility by the original equation F is propagated by the exact polynomial
-numerator recurrence. This is stronger than a localized quotient identity
-and requires no characteristic bound. It does NOT infer divisibility from
-vanishing on a fixed-coordinate geometric component; that descent remains
-a separate algebraic obligation.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactTailClosure
 
@@ -25,8 +25,8 @@ noncomputable section
 
 variable (K : Type*) [CommRing K]
 
-/-- The denominator-cleared vector field annihilates its defining equation
-as a polynomial, before passing to a quotient. -/
+/-- .
+ -/
 theorem cleared_vector_field_annihilates (F : Poly4 K) :
     (polyH K F) ^ 2 * MvPolynomial.pderiv (0 : Fin 4) F +
       MvPolynomial.X (2 : Fin 4) * (polyH K F) ^ 2 *
@@ -35,7 +35,7 @@ theorem cleared_vector_field_annihilates (F : Poly4 K) :
   unfold polyG polyH
   ring
 
-/-- The exact numerator step preserves multiplication by F. -/
+/-- . -/
 theorem numeratorStep_mul_equation (F A : Poly4 K) (b : ℕ) :
     numeratorStep K F b (F * A) = F * numeratorStep K F b A := by
   unfold numeratorStep clearedStep
@@ -49,8 +49,8 @@ theorem equation_dvd_numeratorStep (F M : Poly4 K) (b : ℕ) (h : F ∣ M) :
   rw [numeratorStep_mul_equation]
   exact dvd_mul_right F _
 
-/-- Once a genuine base-polynomial divisibility holds, every later tail
-is divisible by the same defining equation. -/
+/-- .
+ -/
 theorem equation_dvd_all_later_numerators (F : Poly4 K) (b : ℕ)
     (h : F ∣ numerator K F b) :
     ∀ j, b ≤ j → F ∣ numerator K F j := by
@@ -65,8 +65,8 @@ theorem equation_dvd_all_later_numerators (F : Poly4 K) (b : ℕ)
 
 variable {L : Type*} [CommRing L]
 
-/-- At every actual zero of F, the propagated tails vanish after any
-coefficient map. No regularity assumption is needed for this statement. -/
+/-- .
+ -/
 theorem all_later_numerators_vanish (coefficients : K →+* L)
     (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
@@ -83,8 +83,8 @@ section PolynomialFamily
 
 variable {K L : Type*} [Field K] [Field L]
 
-/-- First-tail divisibility over the ORIGINAL polynomial ring supplies all
-actual normalized tail equations at every regular point. -/
+/-- .
+ -/
 theorem all_tail_jets_zero_of_first_tail_dvd
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
@@ -99,8 +99,8 @@ theorem all_tail_jets_zero_of_first_tail_dvd
   rw [all_later_numerators_vanish K coefficients F v hF (w + 1) hdiv j (by omega)]
   simp
 
-/-- The whole regular surface is an actual polynomial family once the
-original first numerator is divisible by F and the characteristic gates hold. -/
+/-- .
+ -/
 theorem exists_global_polynomial_of_first_tail_dvd
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)

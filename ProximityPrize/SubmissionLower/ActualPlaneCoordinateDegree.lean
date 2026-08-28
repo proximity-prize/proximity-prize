@@ -2,21 +2,21 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
 import ProximityPrize.SubmissionLower.PlaneSmallCharacteristicDegree
 
-/-!
-# Actual coordinate-field degrees from proper cuts and characteristic gates
+/-! .
 
-Model label: gpt-5.
 
-This module applies the verified plane-root degree theorem to the actual
-fraction fields of original trivariate prime quotients. Their rational
-scalar structures, two generators, equations, and distinct relation
-kernels are constructed by the preceding modules, not supplied as abstract
-field-presentation hypotheses.
 
-The positive outer degree and strict actual outer/resultant degree gates
-remain explicit inputs. This file does not yet replace those gates by
-original separated degree caps or assert the final geometric seed bound.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualPlaneCoordinateDegree
 
@@ -47,8 +47,8 @@ theorem actual_generators :
   adjoin_two_coordinates_over_ratFunc_eq_top K P (order 0) (order 2) (order 1) ht
     (order_cover order)
 
-/-- Under the actual induced rational scalar structure, the previous
-explicit evaluation is literally the plane theorem's evaluation. -/
+/-- .
+ -/
 theorem planeEval_eq_actual :
     letI : Algebra (RatFunc K) (CoordinateField K P) := rationalBaseAlgebra K P (order 0) ht
     PlaneFunctionFieldDegree.planeEval (RatFunc K) (CoordinateField K P)
@@ -61,8 +61,8 @@ theorem relationIdeal_eq_actual :
       (coordinate K P (order 2)) (coordinate K P (order 1)) =
         actualRelationKernel K order P ht := rfl
 
-/-- Finite-dimensionality, separability, and the degree bound are all
-conclusions for the actual original-prime coordinate field. -/
+/-- .
+ -/
 theorem actual_finite_separable_finrank_bound
     (p : ℕ) [CharP K p] (G H : Original K)
     (hG : Irreducible G) (hGmem : G ∈ P) (hHmem : H ∈ P) (hproper : ¬ G ∣ H)
@@ -106,8 +106,8 @@ section FiniteFamily
 variable (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
 variable (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
 
-/-- Distinct ACTUAL original primes consume one common planar budget.
-The empty family is included; no component is chosen in that case. -/
+/-- .
+ -/
 theorem actual_finite_separable_sum_finrank_bound
     (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
     (hinj : Function.Injective P) (p : ℕ) [CharP K p] (G H : Original K)

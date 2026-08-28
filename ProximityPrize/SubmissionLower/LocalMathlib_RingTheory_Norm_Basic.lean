@@ -27,32 +27,32 @@ norm_inv. These resolve name ambiguity and instance search in TargetLower's
 larger environment; no statement or mathematical argument is weakened.
 -/
 
-/-!
-# Norm for (finite) ring extensions
+/-! .
 
-Suppose we have an `R`-algebra `S` with a finite basis. For each `s : S`,
-the determinant of the linear map given by multiplying by `s` gives information
-about the roots of the minimal polynomial of `s` over `R`.
 
-## Implementation notes
 
-Typically, the norm is defined specifically for finite field extensions.
-The current definition is as general as possible and the assumption that we have
-fields or that the extension is finite is added to the lemmas as needed.
 
-We only define the norm for left multiplication (`Algebra.leftMulMatrix`,
-i.e. `LinearMap.mulLeft`).
-For now, the definitions assume `S` is commutative, so the choice doesn't
-matter anyway.
 
-See also `Algebra.trace`, which is defined similarly as the trace of
-`Algebra.leftMulMatrix`.
 
-## References
 
-* https://en.wikipedia.org/wiki/Field_norm
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -77,15 +77,15 @@ namespace Algebra
 
 section EqProdRoots
 
-/-- Given `pb : PowerBasis K S`, then the norm of `pb.gen` is
-`(-1) ^ pb.dim * coeff (minpoly K pb.gen) 0`. -/
+/-- .
+ -/
 theorem PowerBasis.norm_gen_eq_coeff_zero_minpoly (pb : PowerBasis R S) :
     norm R pb.gen = (-1) ^ pb.dim * coeff (minpoly R pb.gen) 0 := by
   rw [norm_eq_matrix_det pb.basis, Matrix.det_eq_sign_charpoly_coeff, charpoly_leftMulMatrix,
     Fintype.card_fin]
 
-/-- Given `pb : PowerBasis R S`, then the norm of `pb.gen` is
-`((minpoly R pb.gen).aroots F).prod`. -/
+/-- .
+ -/
 theorem PowerBasis.norm_gen_eq_prod_roots [Algebra R F] (pb : PowerBasis R S)
     (hf : ((minpoly R pb.gen).map (algebraMap R F)).Splits) :
     algebraMap R F (norm R pb.gen) = ((minpoly R pb.gen).aroots F).prod := by
@@ -129,7 +129,7 @@ theorem norm_eq_zero_iff [IsDomain R] [IsDomain S] [Module.Free R S] [Module.Fin
 theorem norm_ne_zero_iff [IsDomain R] [IsDomain S] [Module.Free R S] [Module.Finite R S] {x : S} :
     norm R x ≠ 0 ↔ x ≠ 0 := not_iff_not.mpr norm_eq_zero_iff
 
-/-- This is `Algebra.norm_eq_zero_iff` composed with `Algebra.norm_apply`. -/
+/-- . -/
 @[simp]
 theorem norm_eq_zero_iff' [IsDomain R] [IsDomain S] [Module.Free R S] [Module.Finite R S] {x : S} :
     LinearMap.det (LinearMap.mul R S x) = 0 ↔ x = 0 := norm_eq_zero_iff

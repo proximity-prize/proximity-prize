@@ -5,24 +5,24 @@ import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_MvPolynomial_Local
 
 
 
-/-!
-# Ordered trivariate collection and actual-component Gauss localization
+/-! .
 
-Model label: gpt-5.
 
-Any ordering of the three original coordinates collects its first variable
-into K[T] and leaves the other two as polynomial variables. Coefficients
-are then localized into the actual RatFunc K.
 
-For an irreducible g in an actual prime component, transcendence of the
-selected coordinate proves denominator disjointness by evaluation in the
-actual quotient fraction field. Hence irreducibility and proper
-divisibility survive localization. No separate positive-other-degree or
-generic-projection hypothesis is assumed.
 
-Conversion to nested bivariate polynomials, numerical degree caps, and the
-final summed geometric budget are separate later steps.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.TrivariateRationalCollection
 
@@ -40,7 +40,7 @@ def collectFirst : Original K ≃ₐ[K] Collected K :=
   (MvPolynomial.renameEquiv K (_root_.finSuccEquiv 2)).trans
     (MvPolynomial.optionEquivRight K (Fin 2))
 
-/-- The ordering maps the new ordered coordinates to their original labels. -/
+/-- . -/
 def collect (order : Fin 3 ≃ Fin 3) : Original K ≃ₐ[K] Collected K :=
   (MvPolynomial.renameEquiv K order.symm).trans (collectFirst K)
 
@@ -115,8 +115,8 @@ def collectedEvaluation : Collected K →+* CoordinateField K P :=
     collectedEvaluation K order P (collect K order F) = coordinateEvaluation K P F := by
   simp [collectedEvaluation]
 
-/-- The actual coefficient map is polynomial evaluation at the selected
-original coordinate, proved on C and X. -/
+/-- .
+ -/
 @[simp] theorem collectedEvaluation_C (H : Polynomial K) :
     collectedEvaluation K order P (MvPolynomial.C H) =
       Polynomial.aeval (coordinate K P (order 0)) H := by
@@ -134,9 +134,9 @@ original coordinate, proved on C and X. -/
       rfl
   exact RingHom.congr_fun hhom H
 
-/-- A nonzero coefficient denominator cannot lie in the principal ideal
-of an actual component equation: that would annihilate the actual
-transcendental coordinate by a nonzero polynomial. -/
+/-- .
+
+ -/
 theorem coefficientDenominators_disjoint_of_component
     (G : Original K) (hmem : G ∈ P)
     (ht : Transcendental K (coordinate K P (order 0))) :
@@ -168,8 +168,8 @@ theorem localized_principal_isPrime_of_component
     (coefficientDenominators_disjoint_of_component K order P G hmem ht)
   simpa only [Ideal.map_span, Set.image_singleton, ← rationalMap_eq] using hp
 
-/-- Actual Gauss irreducibility, with denominator disjointness DERIVED
-from the actual prime and transcendental coordinate. -/
+/-- .
+ -/
 theorem rationalMap_irreducible_of_component
     (G : Original K) (hG : Irreducible G) (hmem : G ∈ P)
     (ht : Transcendental K (coordinate K P (order 0))) :
@@ -177,8 +177,8 @@ theorem rationalMap_irreducible_of_component
   exact ((Ideal.span_singleton_prime (rationalMap_ne_zero K order G hG.ne_zero)).mp
     (localized_principal_isPrime_of_component K order P G hG hmem ht)).irreducible
 
-/-- The actual localized principal prime contracts to the original one,
-so a proper cut remains proper over the selected rational-function base. -/
+/-- .
+ -/
 theorem rationalMap_dvd_iff_of_component
     (G H : Original K) (hG : Irreducible G) (hmem : G ∈ P)
     (ht : Transcendental K (coordinate K P (order 0))) :

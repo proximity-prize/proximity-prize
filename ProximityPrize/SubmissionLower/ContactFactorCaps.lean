@@ -4,20 +4,20 @@ import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_MvPolynomial_Weigh
 import ProximityPrize.SubmissionLower.LocalMathlib_Algebra_MvPolynomial_NoZeroDivisors
 
 
-/-!
-# Actual factor inheritance of the contact support caps
+/-! .
 
-Model label: gpt-5.
 
-Weighted degree is represented by the degree in a new variable under an
-injective exponent-map ring homomorphism. Its product additivity follows
-from Mathlib's actual nonzero-product degree theorem, including zero
-weights. No factor-degree inequality is assumed.
 
-The final results inherit the actual globalCoefficientBox along divisibility
-and give additive separated-degree budgets for finite factorizations.
-Factor existence and geometric counting remain separate obligations.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFactorCaps
 
@@ -25,7 +25,7 @@ open ContactInterpolation
 
 noncomputable section
 
-/-- Preserve every original exponent and append its weighted sum. -/
+/-- . -/
 def weightEmbed (weights : Fin 4 → ℕ) : (Fin 4 →₀ ℕ) →+ (Fin 5 →₀ ℕ) where
   toFun d := Finsupp.single 0 (d 0) + Finsupp.single 1 (d 1) +
     Finsupp.single 2 (d 2) + Finsupp.single 3 (d 3) +
@@ -52,7 +52,7 @@ theorem weightEmbed_injective (weights : Fin 4 → ℕ) :
 
 variable {K : Type*} [Field K]
 
-/-- The exponent embedding induces an actual polynomial ring homomorphism. -/
+/-- . -/
 def weightedLift (K : Type*) [Field K] (weights : Fin 4 → ℕ) :
     MvPolynomial (Fin 4) K →+* MvPolynomial (Fin 5) K :=
   AddMonoidAlgebra.mapDomainRingHom K (weightEmbed weights)
@@ -92,7 +92,7 @@ theorem degree_weightedLift (weights : Fin 4 → ℕ) (P : MvPolynomial (Fin 4) 
   funext d
   exact weightEmbed_last weights d
 
-/-- This equality permits arbitrary natural weights, including zero. -/
+/-- . -/
 theorem weightedTotalDegree_mul (weights : Fin 4 → ℕ)
     (P Q : MvPolynomial (Fin 4) K) (hP : P ≠ 0) (hQ : Q ≠ 0) :
     MvPolynomial.weightedTotalDegree weights (P * Q) =
@@ -157,8 +157,8 @@ theorem contact_weight (w : ℕ) (d : Fin 4 →₀ ℕ) :
   rw [weight_fin4]
   simp [contactWeights, Nat.mul_comm]
 
-/-- A positive strict cap converts the concrete support box into three
-actual weighted-degree bounds, including the joint Y+Z bound. -/
+/-- .
+ -/
 theorem mem_globalCoefficientBox_iff (P : MvPolynomial (Fin 4) K)
     (D w L s : ℕ) (hD : 0 < D) :
     P ∈ globalCoefficientBox K D w L s ↔
@@ -190,8 +190,8 @@ theorem mem_globalCoefficientBox_iff (P : MvPolynomial (Fin 4) K)
     rw [contact_weight] at hc
     exact ⟨hs, hr, by omega⟩
 
-/-- Every divisor of a nonzero member inherits the actual contact box.
-No positivity of the individual weights is required. -/
+/-- .
+ -/
 theorem mem_globalCoefficientBox_of_dvd
     (F Q : MvPolynomial (Fin 4) K) (D w L s : ℕ)
     (hQ : Q ≠ 0) (hdiv : F ∣ Q)
@@ -214,8 +214,8 @@ theorem degreeOf_le_of_dvd (i : Fin 4) (F Q : MvPolynomial (Fin 4) K)
   rw [MvPolynomial.degreeOf_mul_eq hF hG]
   exact Nat.le_add_right _ _
 
-/-- Finite selected factors, including repetitions encoded by the index,
-consume additive coordinate-degree budgets. -/
+/-- .
+ -/
 theorem sum_degreeOf_le_of_prod_dvd {ι : Type*}
     (I : Finset ι) (f : ι → MvPolynomial (Fin 4) K) (Q : MvPolynomial (Fin 4) K)
     (hQ : Q ≠ 0) (hdiv : (∏ j ∈ I, f j) ∣ Q) (i : Fin 4) :
@@ -242,8 +242,8 @@ theorem separated_degree_budgets_of_prod_dvd {ι : Type*}
     sum_degreeOf_le_of_prod_dvd I f Q hQ hdiv 2,
     sum_degreeOf_le_of_prod_dvd I f Q hQ hdiv 3⟩
 
-/-- For an actual scalar-times-product factorization, the budgets are
-equalities, not merely separately assumed upper bounds. -/
+/-- .
+ -/
 theorem degreeOf_eq_sum_of_scalar_factorization {ι : Type*}
     (I : Finset ι) (f : ι → MvPolynomial (Fin 4) K) (Q : MvPolynomial (Fin 4) K)
     (c : K) (hQ : Q ≠ 0) (hfactor : Q = MvPolynomial.C c * ∏ j ∈ I, f j) (i : Fin 4) :
@@ -257,8 +257,8 @@ theorem degreeOf_eq_sum_of_scalar_factorization {ι : Type*}
   rw [hfactor, MvPolynomial.degreeOf_mul_eq hc hprod, MvPolynomial.degreeOf_C,
     Nat.zero_add, MvPolynomial.degreeOf_prod_eq I f hf]
 
-/-- The strict weighted X,Y,R cap gives the actual Y-degree quotient bound.
-The zero polynomial needs no separate positive-D assumption. -/
+/-- .
+ -/
 theorem degreeOf_Y_le_of_mem_box (Q : MvPolynomial (Fin 4) K)
     (D w L s : ℕ) (hw : 0 < w)
     (hbox : Q ∈ globalCoefficientBox K D w L s) :
@@ -294,8 +294,8 @@ theorem degree_bounds_of_mem_box (Q : MvPolynomial (Fin 4) K)
     degreeOf_R_le_of_mem_box Q D w L s hbox,
     degreeOf_Z_le_of_mem_box Q D w L s hbox⟩
 
-/-- The separated budgets are bounded by the actual interpolation inputs,
-not by additional assumed degree labels. -/
+/-- .
+ -/
 theorem separated_factor_caps_of_prod_dvd {ι : Type*}
     (I : Finset ι) (f : ι → MvPolynomial (Fin 4) K) (Q : MvPolynomial (Fin 4) K)
     (D w L s : ℕ) (hw : 0 < w) (hQ : Q ≠ 0)

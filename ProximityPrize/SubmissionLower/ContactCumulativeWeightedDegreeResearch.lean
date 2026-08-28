@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFactorCaps
 
-/-! Weighted degrees of actual finite factor products, retained from the
-trusted cumulative development; no profile or ledger constants. -/
+/-! .
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactCumulativeWeightedDegreeResearch
 
@@ -32,7 +32,7 @@ theorem weightedTotalDegree_prod_eq
         weightedTotalDegree_mul weights (f a) (∏ i ∈ s, f i) hfa hprod,
         ih hfs]
 
-/-- Consumer-shaped product/divisibility theorem. -/
+/-- . -/
 theorem sum_weightedTotalDegree_le_of_prod_dvd
     {I : Type*} [DecidableEq I] (weights : Fin 4 → ℕ) (s : Finset I)
     (f : I → MvPolynomial (Fin 4) K) (Q : MvPolynomial (Fin 4) K)
@@ -49,9 +49,9 @@ theorem sum_weightedTotalDegree_le_of_prod_dvd
   rw [← weightedTotalDegree_prod_eq weights s f hf]
   exact weightedTotalDegree_le_of_dvd weights _ Q hdiv hQ
 
-/-! ## Three-variable geometric-factor specialization -/
+/-! . -/
 
-/-- Preserve three exponents and append their weighted sum. -/
+/-- . -/
 def weightEmbed3 (weights : Fin 3 → ℕ) :
     (Fin 3 →₀ ℕ) →+ (Fin 4 →₀ ℕ) where
   toFun d := Finsupp.single 0 (d 0) + Finsupp.single 1 (d 1) +

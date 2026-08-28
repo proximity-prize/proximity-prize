@@ -2,13 +2,13 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactStackedGCDCover6670Research
 import ProximityPrize.SubmissionLower.ContactStackedSeedPartition6656Research
 
-/-!
-# Exact selected-seed partition for the 67.10 recursive GCD cover
+/-! .
 
-The predicates and Finset partition are algebraically independent of the
-target profile, so this module aliases the accepted partition construction
-and transports only the new 67.10 recursive-branch hypothesis.
--/
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedSeedPartition6670Research
 
@@ -56,7 +56,7 @@ def fixedSeeds
   ContactStackedSeedPartition6656Research.fixedSeeds
     selected Gamma QA QB QC
 
-/-- Exact disjoint-cell cardinality identity consumed by final composition. -/
+/-- . -/
 theorem partition_card
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
     (Gamma : Finset IRSProfile.Field) (QA QB QC : GlobalPoly) :

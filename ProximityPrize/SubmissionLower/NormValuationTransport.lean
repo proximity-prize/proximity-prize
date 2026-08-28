@@ -1,17 +1,17 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.NormValuation
 
-/-!
-# Norm valuations in one specified common extension field
+/-! .
 
-Model label: gpt-5.
 
-Transport the canonical fraction-ring theorem to specified fraction
-fields F and L with the actual compatible scalar towers. Both the finite
-normalization chart and the infinity valuation-ring normalization can
-therefore use the same L. The commuting squares, separability transport,
-and valuation transport are proved, not assumed as final identities.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.NormValuationTransport
 
@@ -52,8 +52,8 @@ variable [Algebra R S] [Module.Finite R S] [Module.IsTorsionFree R S]
 local instance : Algebra (FractionRing R) (FractionRing S) :=
   FractionRing.liftAlgebra _ _
 
-/-- A place from the actual prime fiber, without imposing any unnecessary
-separability hypothesis on this purely ideal-theoretic construction. -/
+/-- .
+ -/
 def placeAbove (v : HeightOneSpectrum R)
     (P : {P : Ideal S // P ∈ IsDedekindDomain.primesOverFinset v.asIdeal S}) :
     HeightOneSpectrum S :=
@@ -97,8 +97,8 @@ theorem canonical_separable :
   exact IsFractionRing.algEquiv_commutes
     (FractionRing.algEquiv R F).symm (FractionRing.algEquiv S L).symm y
 
-/-- The actual norm-valuation formula in the specified common field L,
-with explicit compatible scalar towers and no coordinate twist of L. -/
+/-- .
+ -/
 theorem fieldOrder_norm (v : HeightOneSpectrum R) (x : L) (hx : x ≠ 0) :
     fieldOrder R F v (Algebra.norm F x) =
       ∑ P ∈ (IsDedekindDomain.primesOverFinset v.asIdeal S).attach,

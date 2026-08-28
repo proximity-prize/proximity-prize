@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualFactorProvider6600Research
 import ProximityPrize.SubmissionLower.ContactAdaptiveUnitPoleFamilyResearch
 
-/-!
-# Factor ledger from adaptive projection families
+/-! .
 
-This is the narrow geometric seam for score 66.  At each proper terminal
-outer cut, one shared adaptive `Z/YZ/All` projection family is converted to
-the recursive prime budget.  Positivity of the all-coordinate fallback is
-then automatic.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveProjectionFactorProvider6600Research
 
@@ -40,8 +40,8 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- At every proper terminal outer cut, the actual regular components admit
-one common adaptive unit projection family. -/
+/-- .
+ -/
 def TerminalAdaptiveProjectionFamilies
     {flag : FlagDegree}
     (S : ResidualStage phi Gamma x pchar errors flag w) : Prop :=
@@ -57,9 +57,9 @@ def TerminalAdaptiveProjectionFamilies
       Nonempty (AdaptiveUnitProjectionFamily base flag
         (residualAgreementFlag D.degree))
 
-/-- The adaptive family discharges both the shared prime-budget hypothesis
-and the degree-zero-safe all-cost positivity required by the complete
-factor recursion. -/
+/-- .
+
+ -/
 theorem recursive_scaled_factor_6600_of_adaptive_projection_families
     (hphi : Function.Injective phi)
     {flag : FlagDegree}

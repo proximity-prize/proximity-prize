@@ -1,19 +1,19 @@
 import ProximityPrize.Benchmark.TargetLower
 
 
-/-!
-# More than w identity nodes force a base-field polynomial pencil
+/-! .
 
-Model label: gpt-5.
 
-The two base-field polynomials are actual Lagrange interpolants on a chosen
-w+1-element subset of the identity nodes. The family polynomials and their
-seeds may lie in an extension field. No pair of distinct seeds, nonempty
-family, or geometric assumption is added. The inputs are actual
-degree-bounded polynomials; no generic polynomiality is inferred from samples.
 
-This is a polynomial-family interface, not a seed-count or protocol claim.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityPencil
 
@@ -35,8 +35,8 @@ theorem mapped_affine_pencil_natDegree_le
   exact max_le (Polynomial.natDegree_map_le.trans h₀)
     ((Polynomial.natDegree_C_mul_le γ _).trans (Polynomial.natDegree_map_le.trans h₁))
 
-/-- Even when the selected family is defined over L, the two pencil
-polynomials can be chosen over the received data's field K. -/
+/-- .
+ -/
 theorem exists_basefield_affine_pencil_of_identity_nodes {ι τ : Type*}
     (coefficients : K →+* L) (I : Finset ι) (x u₀ u₁ : ι → K)
     (w : ℕ) (hw : w < I.card) (hinj : Set.InjOn x I)

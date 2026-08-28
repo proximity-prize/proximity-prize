@@ -1,18 +1,18 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityPencil
 
-/-!
-# Residual polynomial after an actual identity set
+/-! .
 
-If a degree-`w` polynomial family agrees with an affine received pencil on
-an actual set `I` of at most `w` nodes, subtract the degree-`< |I|`
-Lagrange pencil and divide by the nodal polynomial of `I`.  The quotient has
-degree at most `w - |I|`.
 
-This is the elementary polynomial layer of the post-65.33 actual-identity
-residualization route.  No incidence, geometry, or protocol claim is made
-here.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualPolynomialResearch
 
@@ -25,8 +25,8 @@ set_option synthInstance.maxHeartbeats 1000000
 
 variable {K : Type*} [Field K]
 
-/-- The nodal polynomial of an injective finite node set divides every
-polynomial vanishing on that set. -/
+/-- .
+ -/
 theorem nodal_dvd_of_eval_eq_zero
     {ι : Type*} (I : Finset ι) (x : ι → K)
     (hinj : Set.InjOn x I) (P : Polynomial K)
@@ -42,8 +42,8 @@ theorem nodal_dvd_of_eval_eq_zero
     rw [Polynomial.dvd_iff_isRoot, Polynomial.IsRoot]
     exact hzero i hi
 
-/-- Subtracting the Lagrange affine pencil leaves the nodal polynomial times
-a residual polynomial of degree at most `w - |I|`. -/
+/-- .
+ -/
 theorem exists_affine_nodal_residual
     {ι : Type*} (I : Finset ι) (x u0 u1 : ι → K)
     (w : ℕ) (hIw : I.card ≤ w) (hinj : Set.InjOn x I)
@@ -99,8 +99,8 @@ theorem exists_affine_nodal_residual
 
 variable {L : Type*} [Field L]
 
-/-- Mapping coefficients commutes with formation of the finite nodal
-polynomial. -/
+/-- .
+ -/
 theorem map_nodal (coefficients : K →+* L)
     {ι : Type*} (I : Finset ι) (x : ι → K) :
     (Lagrange.nodal I x).map coefficients =
@@ -109,9 +109,9 @@ theorem map_nodal (coefficients : K →+* L)
   simp only [Lagrange.nodal_eq, Polynomial.map_prod, Polynomial.map_sub,
     Polynomial.map_X, Polynomial.map_C]
 
-/-- Extension-field version used on one geometric component.  The affine
-pencil is still chosen over the base field, while the residual quotient may
-live in the component field. -/
+/-- .
+
+ -/
 theorem exists_basefield_affine_nodal_residual
     (coefficients : K →+* L)
     {ι : Type*} (I : Finset ι) (x u0 u1 : ι → K)

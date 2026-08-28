@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSeedlessPrimeIncidenceResearch
 
-/-! # Aggregated fixed-centre count on `G = 0, Z = 0` -/
+/-! . -/
 
 namespace ProximityPrize.SubmissionLower.ContactSeedlessProperCutResearch
 
@@ -28,8 +28,8 @@ local instance : DecidableEq Iota := Classical.decEq Iota
 
 def seedlessCut : MvPolynomial (Fin 3) Omega := MvPolynomial.X 2
 
-/-- The actual regular-component cover and characteristic-free projection
-degree sum, specialized to the seed plane. -/
+/-- .
+ -/
 theorem seedless_proper_cut_bound
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G : MvPolynomial (Fin 3) Omega)

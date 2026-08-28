@@ -2,13 +2,13 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualTerminalIncidenceResearch
 import ProximityPrize.SubmissionLower.ContactRobustFixedMeet6656Research
 
-/-!
-# Profile-generic fixed-factor ledger with a YZ tail
+/-! .
 
-This replaces only the historical all-coordinate large-pencil charge by the
-accepted `Z + YZ` charge.  The primary term, Z tail, outer incidence, and
-rectangular factor aggregation remain unchanged and profile-generic.
--/
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactProfileYZFactorLedgerResearch
 
@@ -24,7 +24,7 @@ open ContactPrimeSeedIncidence ContactFlagBezout6543Research
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 50000
 
-/-- Direction-generic primary outer-incidence term. -/
+/-- . -/
 def factorPrimaryForDirection
     (p : Profile) (direction flag : FlagDegree) : ℕ :=
   flagMixed flag direction direction * p.degreeIncidence ^ 2 +
@@ -32,14 +32,14 @@ def factorPrimaryForDirection
       p.degreeIncidence * p.unitIncidence +
     flagMixed flag unitYZFlag unitYZFlag * p.unitIncidence ^ 2
 
-/-- Direction-generic Z large-pencil tail. -/
+/-- . -/
 def factorZTailForDirection
     (p : Profile) (direction flag : FlagDegree) : ℕ :=
   (p.errors + 1) * p.gap *
     (flagMixed flag direction unitZFlag * p.degreeIncidence +
       flagMixed flag unitYZFlag unitZFlag * p.unitIncidence)
 
-/-- Joint-YZ replacement for the historical all-coordinate tail. -/
+/-- . -/
 def factorYZTailForDirection
     (p : Profile) (direction flag : FlagDegree) : ℕ :=
   (p.errors + 1) * p.gap *
@@ -181,7 +181,7 @@ theorem incidence_cost_eq_factorRegularLedgerYZ
     factorZTailForDirection, factorYZTailForDirection]
   ring
 
-/-- Profile-generic outer factor incidence with the accepted Z/YZ tail. -/
+/-- . -/
 theorem recursive_scaled_factorYZ
     (hphi : Function.Injective phi)
     (p : Profile) (support : ResidualSupportParameters)

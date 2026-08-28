@@ -3,17 +3,17 @@ import ProximityPrize.SubmissionLower.ContactPolynomialRecovery
 
 
 
-/-!
-# One actual generic initial coordinate for every selected solution
+/-! .
 
-Model label: gpt-5.
 
-The point is constructed in the algebraic closure of the fraction field
-of K[X]. Evaluation at it is the actual injective polynomial embedding.
-Thus every nonzero regularity polynomial stays nonzero simultaneously,
-and retaining only value and seed still identifies the original polynomial
-and seed. No generic-point existence or injectivity premise is assumed.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactGenericInitialPoint
 
@@ -76,8 +76,8 @@ theorem generic_eval_eq_zero_iff (P : Polynomial K) :
     P.eval₂ (coefficientEmbedding K) (initialCoordinate K) = 0 ↔ P = 0 := by
   rw [generic_eval_eq, polynomialEmbedding_eq_zero_iff]
 
-/-- A single constructed coordinate avoids all nonzero base-field
-polynomials, not merely a prescribed finite collection. -/
+/-- .
+ -/
 theorem generic_eval_ne_zero (P : Polynomial K) (hP : P ≠ 0) :
     P.eval₂ (coefficientEmbedding K) (initialCoordinate K) ≠ 0 :=
   (generic_eval_eq_zero_iff K P).not.mpr hP
@@ -120,8 +120,8 @@ theorem initialPoint_regular_iff (F : Poly4 K) (P : Polynomial K) (γ : K) :
 def valueSeedProjection (pair : Polynomial K × K) : GenericField K × GenericField K :=
   (initialPoint K pair.1 pair.2 1, initialPoint K pair.1 pair.2 3)
 
-/-- The slope coordinate can be discarded without identifying two
-base-field polynomial/seed pairs at the actual generic initial point. -/
+/-- .
+ -/
 theorem valueSeedProjection_injective : Function.Injective (valueSeedProjection K) := by
   intro a b hab
   have hy := congrArg Prod.fst hab

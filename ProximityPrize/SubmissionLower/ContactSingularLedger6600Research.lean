@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactParameters6600Research
 
-/-!
-# Singular/implicit finite-family ledger for score 66
+/-! .
 
-This isolates the unchanged implicit-pair and exceptional-seed arithmetic
-from the new residual regular branch.  It aggregates component costs at
-`(m,s,L,e) = (24,6,576,78777)` and exposes both the natural one-`gap` bound
-and the exact `gap^2` contribution used by the final ledger.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSingularLedger6600Research
 
@@ -114,8 +114,8 @@ theorem implicit_with_exceptions_bound {I : Type} [Fintype I]
             mixed liftedSurface implicitCut liftedLast) :=
           Nat.mul_le_mul_left gap (by omega)
 
-/-- Exact bridge from the natural one-`gap` singular estimate to the common
-`gap^2` denominator used by the final score-66 ledger. -/
+/-- .
+ -/
 theorem implicit_with_exceptions_scaled_bound {I : Type} [Fintype I]
     (count : I -> Nat) (cost : I -> DegreeVector) (exceptions : Nat)
     (hy : (∑ i, (cost i).y) ≤ algebraicCap)

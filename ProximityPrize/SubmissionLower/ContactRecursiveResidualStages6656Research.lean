@@ -3,20 +3,20 @@ import ProximityPrize.SubmissionLower.ContactProperCutSeedCount
 import ProximityPrize.SubmissionLower.ContactStackedParameters6656Research
 import ProximityPrize.SubmissionLower.ContactTightSingularLedgerResearch
 
-/-!
-# Numerical residual stages for the stacked 66.56 profile
+/-! .
 
-This module combines the unequal rectangular proper-cut ledger with the
-unpadded implicit-pair ledger.  The tight singular contribution is consumed
-through its proved finite-family interface.  The regular contribution is
-left as one explicit inequality: the current proper-cut API proves it for an
-`R`-regular carrier, but the symmetric all-residual partition is not yet a
-repository theorem.
 
-Consequently the two final theorems below are honest integration boundaries,
-not end-to-end selected-seed theorems.  No geometric component-count premise
-is hidden in the arithmetic.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactRecursiveResidualStages6656Research
 
@@ -28,7 +28,7 @@ open ContactSingularLedger6600Research
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
 
-/-- Coordinate boxes of the two equations in one residual stage. -/
+/-- . -/
 structure UnequalParameters where
   n : ℕ
   w : ℕ
@@ -61,8 +61,8 @@ def agreement (P : UnequalParameters) : ContactParameters6600Research.DegreeVect
     max P.leftAgreement.r P.rightAgreement.r,
     max P.leftAgreement.z P.rightAgreement.z⟩
 
-/-- The unequal rectangular mixed projection-degree budget, in `(Y,R,Z)`
-coordinate order. -/
+/-- .
+ -/
 def mixedCost (P : UnequalParameters) : ContactParameters6600Research.DegreeVector :=
   ⟨P.leftR * P.rightZ + P.leftZ * P.rightR,
     P.leftY * P.rightZ + P.leftZ * P.rightY,
@@ -81,11 +81,11 @@ theorem regular_count_le (P : UnequalParameters) (count : ℕ)
 
 end UnequalParameters
 
-/-! ## Generic tight-stage composition -/
+/-! . -/
 
-/-- Combine one stage-wide regular inequality with the proved tight
-implicit-pair family aggregation.  The cover may overlap: only the cardinal
-upper bound `total <= regular + singular` is used. -/
+/-- .
+
+ -/
 theorem complete_stage_count_lt
     (R : UnequalParameters) (S : TightParameters)
     (hgap : 0 < R.gap) (hgapEq : S.gap = R.gap)
@@ -113,13 +113,13 @@ theorem complete_stage_count_lt
     exact S.count_le_countCap _ hsingularGap hsingularScaled
   omega
 
-/-! ## Frozen `a=182807` stages -/
+/-! . -/
 
-/-- First residual pair: profile A against profile B. -/
+/-- . -/
 def residualStageOne : UnequalParameters :=
   ⟨262144, 131071, 182807, 34, 7, 5263, 65, 14, 598⟩
 
-/-- Second residual pair: the A/B GCD box against profile C. -/
+/-- . -/
 def residualStageTwo : UnequalParameters :=
   ⟨262144, 131071, 182807, 34, 7, 598, 37, 6, 579299⟩
 

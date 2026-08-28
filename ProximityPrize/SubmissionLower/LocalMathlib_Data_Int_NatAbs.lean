@@ -20,22 +20,22 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Lemmas about `Int.natAbs`
+/-! .
 
-This file contains some results on `Int.natAbs`, the absolute value of an integer as a
-natural number.
 
-## Main results
 
-* `Int.natAbsHom`: `Int.natAbs` bundled as a `MonoidWithZeroHom`.
--/
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
 namespace Int
 
-/-- `Int.natAbs` as a bundled `MonoidWithZeroHom`. -/
+/-- . -/
 @[simps]
 def natAbsHom : ℤ →*₀ ℕ where
   toFun := Int.natAbs

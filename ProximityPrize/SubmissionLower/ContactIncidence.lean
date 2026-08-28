@@ -1,29 +1,29 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlib_Combinatorics_Enumerative_DoubleCounting
 
-/-!
-# Sharp finite incidence with exempt identity coordinates
+/-! .
 
-Model label: gpt-5.
 
-Every selected seed has at least `a` agreement coordinates. Coordinates in
-`identities` are exempt from the fiber bound, and every other coordinate is
-incident to at most `M` selected seeds. We first count the actual incidence
-relation, then replace the actual number of exempt coordinates by an upper
-bound `w`, retaining the sharp factor `(n-w)/(a-w)`.
 
-The relation on exempt coordinates need not be universally true; allowing
-arbitrary exempt coordinates makes the result slightly more general.
-This module does not provide the geometric bound `M`, construct a contact
-interpolant, or assert an alignment/competition theorem. The existing
-`BCHKSBridge.exists_common_affine_set` remains the selected-pencil finish.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIncidence
 
-/-- Increasing the allowed number of exempt coordinates preserves the
-sharp gap bound. This proof uses only natural-number inequalities, including
-the case where the number of selected seeds is at most the fiber cap. -/
+/-- .
+
+ -/
 theorem enlarge_exempt_card_bound
     {q n a i w M : ℕ}
     (hiw : i ≤ w) (hwa : w ≤ a) (han : a ≤ n)
@@ -54,8 +54,8 @@ variable {Seed Node : Type*} [DecidableEq Seed] [DecidableEq Node]
 variable (relation : Seed → Node → Prop)
 variable [∀ seed node, Decidable (relation seed node)]
 
-/-- Actual double counting after deleting the designated identity nodes.
-No positivity assumptions on `a` or `M` are needed for this raw bound. -/
+/-- .
+ -/
 theorem incidence_after_exempt_nodes
     (seeds : Finset Seed) (nodes identities : Finset Node) (a M : ℕ)
     (hidentities : identities ⊆ nodes)
@@ -88,9 +88,9 @@ theorem incidence_after_exempt_nodes
       (s := seeds) (t := nodes \ identities) hremaining hfiber
   simpa [nsmul_eq_mul, Finset.card_sdiff_of_subset hidentities] using hdouble
 
-/-- Sharp finite incidence: each seed has at least `a` agreements, at most
-`w` coordinates are exempt, and every remaining coordinate has at most `M`
-incident seeds. The coefficient is `nodes.card-w`, not `nodes.card`. -/
+/-- .
+
+ -/
 theorem sharp_incidence_bound
     (seeds : Finset Seed) (nodes identities : Finset Node) (a w M : ℕ)
     (hidentities : identities ⊆ nodes) (hcard : identities.card ≤ w)
@@ -104,8 +104,8 @@ theorem sharp_incidence_bound
     (incidence_after_exempt_nodes relation seeds nodes identities a M
       hidentities hagreement hfiber)
 
-/-- Integer-floor form of the sharp incidence bound; no real-number
-approximation or division convention is hidden in the conclusion. -/
+/-- .
+ -/
 theorem card_le_sharp_incidence_quotient
     (seeds : Finset Seed) (nodes identities : Finset Node) (a w M : ℕ)
     (hidentities : identities ⊆ nodes) (hcard : identities.card ≤ w)

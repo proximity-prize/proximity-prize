@@ -2,26 +2,26 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactLeadingCancellationResearch
 import ProximityPrize.SubmissionLower.ContactTropicalBKKSeamResearch
 
-/-!
-# Dependent genericity adapter for the post-65.33 sparse route
+/-! .
 
-The retained curve components have different coordinate fields, while the
-generic coefficient vector lives in one common base-field space.  Moreover,
-`GenericSparseBKKWitness.exact_pole` quantifies over every normalized place,
-whereas finite-submodule avoidance can only use a finite index family.
 
-This module closes both interface gaps.  For each component it forms the
-finite union of the `placesFor` supports of its three nonzero coordinate
-functions.  Outside this union every coordinate pole order is zero, hence the
-whole exponent-set pole weight is zero and the general support upper bound
-forces exact pole order zero.  Inside the union, cancellation submodules are
-avoided in one dependent finite family.  Evaluation kernels are included in
-the same avoidance family, so the resulting polynomial is proper on every
-component even if a component has no relevant pole place.
 
-The only remaining input after `exists_genericExactPolePolynomial` is the
-summed principal-cycle/flag-Bézout inequality.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactDependentGenericity6543Research
 
@@ -42,9 +42,9 @@ noncomputable section
 
 variable {Ω : Type} [Field Ω] [IsAlgClosed Ω]
 
-/-- All places at which at least one nonzero coordinate function can have a
-nonzero order.  The rational-function structure is installed from the common
-separating coordinate exactly as in `GenericSparseBKKWitness`. -/
+/-- .
+
+ -/
 def componentRelevantPlaces
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -76,7 +76,7 @@ def componentRelevantPlaces
         (coordinate Ω C.1 i) hi
     else ∅)
 
-/-- Off the finite coordinate support, one coordinate has pole order zero. -/
+/-- . -/
 theorem coordinate_poleOrder_eq_zero_of_not_mem_relevant
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -124,8 +124,8 @@ theorem coordinate_poleOrder_eq_zero_of_not_mem_relevant
     rw [hlog]
     simp
 
-/-- Therefore the entire prescribed Newton support has pole weight zero away
-from the finite relevant-place union. -/
+/-- .
+ -/
 theorem exponentSetPoleWeight_eq_zero_of_not_mem_relevant
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -152,7 +152,7 @@ theorem exponentSetPoleWeight_eq_zero_of_not_mem_relevant
       simp [hcoord]
   · exact Finset.le_max' _ _ (Finset.mem_insert_self (0 : ℤ) _)
 
-/-- Dependent finite index of component/place pairs. -/
+/-- . -/
 abbrev RelevantPlaceIndex
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -163,8 +163,8 @@ abbrev RelevantPlaceIndex
     {v : Place Ω (CoordinateField Ω C.1) //
       v ∈ componentRelevantPlaces hseparator hproj C}
 
-/-- The left summand enforces componentwise properness.  The right summand
-enforces leading-pole exactness at every finite relevant place. -/
+/-- .
+ -/
 abbrev DependentGenericityIndex
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -221,8 +221,8 @@ theorem dependentBadSubmodule_ne_top
       (fun a ↦ constant_value_le_one Ω (CoordinateField Ω C.1) v.1 a)
       (coordinate Ω C.1) E c hc
 
-/-- One common polynomial, despite the dependent component fields, with
-proper evaluation and exact pole support at every normalized place. -/
+/-- .
+ -/
 structure GenericExactPolePolynomial
     (G T H : MvPolynomial (Fin 3) Ω)
     (E : Finset (Fin 3 →₀ ℕ)) (separator : Fin 3)
@@ -343,8 +343,8 @@ theorem exists_genericExactPolePolynomial
     rw [hweight] at hle ⊢
     exact le_antisymm hle (by unfold poleOrder; exact le_max_left _ _)
 
-/-- Add exactly the remaining principal-cycle data to obtain the existing
-`GenericSparseBKKWitness` interface. -/
+/-- .
+ -/
 def GenericExactPolePolynomial.toGenericSparseBKKWitness
     {G T H : MvPolynomial (Fin 3) Ω}
     {E : Finset (Fin 3 →₀ ℕ)} {separator : Fin 3} {wholeCost : ℕ}

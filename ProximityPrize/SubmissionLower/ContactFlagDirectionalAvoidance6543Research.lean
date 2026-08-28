@@ -1,16 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagExactSeparableProjection6543Research
 
-/-!
-# Avoiding the final directional cancellation in the 65.43 flag projection
+/-! .
 
-The common coefficient used by the nested `V = S + mu * U` projection must
-already avoid finitely many differential and leading-pole cancellations.
-Positive `S` derivative implies that at most one additional value of `mu`
-can kill the transformed `U` derivative `G_Y - mu G_S`.  This file folds
-that value into the same finite avoidance argument and removes the final
-positivity exception from the three-projection construction.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagDirectionalAvoidance6543Research
 
@@ -29,8 +29,8 @@ noncomputable section
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
 
-/-- If the `S` partial derivative is nonzero, at most one scalar kills the
-directional derivative `G_Y - mu G_S`. -/
+/-- .
+ -/
 theorem directional_bad_coefficient_subsingleton
     {K : Type*} [Field K] (G : MvPolynomial (Fin 3) K)
     (hS : MvPolynomial.pderiv (1 : Fin 3) G ≠ 0) :
@@ -67,8 +67,8 @@ variable (r z : ∀ i, E i)
 variable (W : ∀ i,
   Finset (CoordinatePlaceClassification.NormalizedValuation K (E i)))
 
-/-- The common exact finite-separable shear can additionally avoid any
-finite family of bad predicates whose fibers contain at most one scalar. -/
+/-- .
+ -/
 theorem exists_common_exact_finite_separable_shear_avoiding
     {J : Type*} [Finite J]
     (Extra : J → K → Prop)
@@ -144,9 +144,9 @@ section RegularComponents
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
 
-/-- One nested flag projection simultaneously has exact pole maxima,
-finite-separable projection fields, and a nonzero transformed `U` derivative.
-This is the coefficient-choice theorem needed by the 65.43 positivity seam. -/
+/-- .
+
+ -/
 theorem exists_nestedFlagProjectionData_directional
     (hseparator : ∀ C : RegularComponent Omega G T H,
       Transcendental Omega (coordinate Omega C.1 2))

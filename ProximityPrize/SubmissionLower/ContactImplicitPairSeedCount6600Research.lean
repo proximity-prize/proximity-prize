@@ -3,13 +3,13 @@ import ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount
 import ProximityPrize.SubmissionLower.ContactCountingCaps6600Research
 import ProximityPrize.SubmissionLower.ContactSingularLedger6600Research
 
-/-!
-# Actual implicit-pair seed count for the score-66 row
+/-! .
 
-The geometric factor cover and proper-cut argument are unchanged.  This file
-only instantiates them with the larger score-66 implicit box and its separately
-verified characteristic gates.
--/
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount6600Research
 

@@ -3,28 +3,28 @@ import ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
 import ProximityPrize.SubmissionLower.TrivariateShearResearch
 import ProximityPrize.SubmissionLower.ActualCurveJointProjectionBounds
 
-/-!
-# Two-stage triangular coordinates for flag projections
+/-! .
 
-The flag support function uses the nested linear spans
 
-`Z ⊂ span(Y,Z) ⊂ span(S,Y,Z)`.
 
-This module implements the simultaneous characteristic-free change
 
-`U = Y + λ Z`, `V = S + μ Y + ν Z`, `Z = Z`.
 
-Its inverse substitution on polynomials is
 
-`Y = U - λ Z`,
-`S = V - μ U + (μλ-ν) Z`.
 
-The substitution is an algebra automorphism, preserves every `InFlag`
-support bound, and turns the three desired affine projections into literal
-coordinates.  The last theorem is the narrow bridge from explicit
-joint-support degree data of the transformed equations to the existing
-`JointOrderCertificate` API.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagTriangularProjectionResearch
 
@@ -47,8 +47,8 @@ local instance : DecidableEq K := Classical.decEq K
 
 abbrev Poly3 (K : Type) [Field K] := MvPolynomial (Fin 3) K
 
-/-- Inverse coordinate substitution, from `(Y,S,Z)` polynomials to
-literal `(U,V,Z)` polynomials. -/
+/-- .
+ -/
 def flagImage (lam μ ν : K) (i : Fin 3) : Poly3 K :=
   ![MvPolynomial.X 0 - MvPolynomial.C lam * MvPolynomial.X 2,
     MvPolynomial.X 1 -
@@ -56,7 +56,7 @@ def flagImage (lam μ ν : K) (i : Fin 3) : Poly3 K :=
         MvPolynomial.C (μ * lam - ν) * MvPolynomial.X 2),
     MvPolynomial.X 2] i
 
-/-- Forward coordinate substitution `U=Y+λZ`, `V=S+μY+νZ`. -/
+/-- . -/
 def unflagImage (lam μ ν : K) (i : Fin 3) : Poly3 K :=
   ![MvPolynomial.X 0 + MvPolynomial.C lam * MvPolynomial.X 2,
     MvPolynomial.X 1 + MvPolynomial.C μ * MvPolynomial.X 0 +
@@ -114,7 +114,7 @@ theorem flag_ne_zero (lam μ ν : K) {F : Poly3 K} (hF : F ≠ 0) :
     flagAlgHom lam μ ν F ≠ 0 :=
   (flagEquiv lam μ ν).injective.ne hF
 
-/-- Evaluation of the transformed polynomial at literal `(U,V,Z)`. -/
+/-- . -/
 theorem eval₂Hom_flag
     {A : Type} [CommRing A] [Algebra K A]
     (F : Poly3 K) (u v z : A) (lam μ ν : K) :
@@ -141,7 +141,7 @@ theorem eval₂Hom_flag
         simp [RingHom.comp_apply, flagAlgHom, flagImage] <;> ring
   exact RingHom.congr_fun hhom F
 
-/-- Substituting the actual affine forms recovers the original evaluation. -/
+/-- . -/
 theorem eval₂Hom_flag_at_affine
     {A : Type} [CommRing A] [Algebra K A]
     (F : Poly3 K) (y s z : A) (lam μ ν : K) :
@@ -155,7 +155,7 @@ theorem eval₂Hom_flag_at_affine
   funext i
   fin_cases i <;> simp <;> ring
 
-/-! ## Exact flag-support transport -/
+/-! . -/
 
 def flagPullWeights (weights : Fin 3 → ℕ) : Fin 3 → ℕ :=
   ![max (weights 0) (weights 2),
@@ -269,9 +269,9 @@ theorem wt_total_le_of_inFlag {p : FlagDegree} {F : Poly3 K}
   simpa [totalWeight, weight_fin3, Nat.add_comm, Nat.add_left_comm,
     Nat.add_assoc] using h
 
-/-- The nested flag polytope is invariant under the two-stage triangular
-change.  This is the support fact that makes the flag projection route lose
-no additional degree. -/
+/-- .
+
+ -/
 theorem polynomialInFlag_flagAlgHom
     (p : FlagDegree) (F : Poly3 K) (lam μ ν : K)
     (hF : PolynomialInFlag p F) :
@@ -295,16 +295,16 @@ theorem polynomialInFlag_flagAlgHom
     simpa [totalWeight, weight_fin3, Nat.add_comm, Nat.add_left_comm,
       Nat.add_assoc] using this
 
-/-! ## Literal-coordinate joint-certificate interface -/
+/-! . -/
 
 def uOrder : Fin 3 ≃ Fin 3 := Equiv.refl _
 def vOrder : Fin 3 ≃ Fin 3 := Equiv.swap 0 1
 def zOrder : Fin 3 ≃ Fin 3 := Equiv.swap 0 2
 
-/-- The three transformed literal-coordinate certificates needed for the
-nested flag projections.  Constructing these certificates is finite
-joint-support/resultant arithmetic; no valuation or BKK premise remains in
-this interface. -/
+/-- .
+
+
+ -/
 structure FlagJointCertificateProvider
     (lam μ ν : K) (G H : Poly3 K) (p : ℕ) : Prop where
   u : JointOrderCertificate K uOrder
@@ -314,10 +314,10 @@ structure FlagJointCertificateProvider
   z : JointOrderCertificate K zOrder
     (flagAlgHom lam μ ν G) (flagAlgHom lam μ ν H) p
 
-/-- Explicit joint-support projection data for the transformed equations
-produces the existing literal-coordinate certificate.  This theorem is the
-formal handoff from flag support arithmetic to the already verified plane
-resultant/separability machinery. -/
+/-- .
+
+
+ -/
 theorem flag_jointOrderCertificate_of_projection_data
     (lam μ ν : K) (order : Fin 3 ≃ Fin 3)
     (P : Ideal (Poly3 K)) [P.IsPrime]

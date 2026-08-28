@@ -22,47 +22,47 @@ All mathematical declarations and proof bodies are retained, except
 any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
-/-!
+/-! .
 
-# The Fundamental Theorem of Infinite Galois Theory
 
-In this file, we prove the fundamental theorem of infinite Galois theory and the special case for
-open subgroups and normal subgroups. We first verify that `IntermediateField.fixingSubgroup` and
-`IntermediateField.fixedField` are inverses of each other between intermediate fields and
-closed subgroups of the Galois group.
 
-## Main definitions and results
 
-In `K/k`, for any intermediate field `L` :
 
-* `fixingSubgroup_isClosed` : the subgroup fixing `L` (`Gal(K/L)`) is closed.
 
-* `fixedField_fixingSubgroup` : the field fixed by the
-  subgroup fixing `L` is equal to `L` itself.
 
-For any subgroup `H` of `Gal(K/k)` :
 
-* `restrict_fixedField` : For a Galois intermediate field `M`, the fixed field of the image of `H`
-  restricted to `M` is equal to the fixed field of `H` intersected with `M`.
-* `fixingSubgroup_fixedField` : If `H` is closed, the fixing subgroup of the fixed field of `H`
-  is equal to `H` itself.
 
-The fundamental theorem of infinite Galois theory :
 
-* `IntermediateFieldEquivClosedSubgroup` : The order equivalence is given by mapping any
-  intermediate field `L` to the subgroup fixing `L`, and the inverse maps any
-  closed subgroup of `Gal(K/k)` `H` to the fixed field of `H`. The composition is equal to
-  the identity as described in the lemmas above, and compatibility with the order follows easily.
 
-Special cases :
 
-* `isOpen_iff_finite` : The fixing subgroup of an intermediate field `L` is open if and only if
-  `L` is finite-dimensional.
 
-* `normal_iff_isGalois` : The fixing subgroup of an intermediate field `L` is normal if and only if
-  `L` is Galois.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -72,7 +72,7 @@ namespace InfiniteGalois
 
 open scoped Pointwise
 open FiniteGaloisIntermediateField AlgEquiv
---Note: The `adjoin`s below are `FiniteGaloisIntermediateField.adjoin`
+--
 
 lemma fixingSubgroup_isClosed (L : IntermediateField k K) [IsGalois k K] :
     IsClosed (L.fixingSubgroup : Set Gal(K/k)) where
@@ -129,8 +129,8 @@ theorem mem_range_algebraMap_iff_fixed [IsGalois k K] (x : K) :
   mem_bot_iff_fixed x
 
 open IntermediateField in
-/-- For a subgroup `H` of `Gal(K/k)`, the fixed field of the image of `H` under the restriction to
-a normal intermediate field `E` is equal to the fixed field of `H` in `K` intersecting with `E`. -/
+/-- .
+ -/
 lemma restrict_fixedField (H : Subgroup Gal(K/k)) (L : IntermediateField k K) [Normal k L] :
     fixedField H ⊓ L = lift (fixedField (Subgroup.map (restrictNormalHom L) H)) := by
   apply SetLike.ext'
@@ -205,7 +205,7 @@ lemma fixingSubgroup_fixedField (H : ClosedSubgroup Gal(K/k)) [IsGalois k K] :
   simpa only [this, Set.mem_compl_iff, Subsemigroup.mem_carrier, Submonoid.mem_toSubsemigroup,
     Subgroup.mem_toSubmonoid, not_not, true_and] using! mem
 
-/-- The Galois correspondence from intermediate fields to closed subgroups. -/
+/-- . -/
 def IntermediateFieldEquivClosedSubgroup [IsGalois k K] :
     IntermediateField k K ≃o (ClosedSubgroup Gal(K/k))ᵒᵈ where
   toFun L := ⟨L.fixingSubgroup, fixingSubgroup_isClosed L⟩
@@ -218,7 +218,7 @@ def IntermediateFieldEquivClosedSubgroup [IsGalois k K] :
     rw [← fixedField_fixingSubgroup L, IntermediateField.le_iff_le, fixedField_fixingSubgroup L]
     rfl
 
-/-- The Galois correspondence as a `GaloisInsertion` -/
+/-- . -/
 def GaloisInsertionIntermediateFieldClosedSubgroup [IsGalois k K] :
     GaloisInsertion (OrderDual.toDual ∘ fun (E : IntermediateField k K) ↦
       (⟨E.fixingSubgroup, fixingSubgroup_isClosed E⟩ : ClosedSubgroup Gal(K/k)))
@@ -226,7 +226,7 @@ def GaloisInsertionIntermediateFieldClosedSubgroup [IsGalois k K] :
         OrderDual.toDual) :=
   OrderIso.toGaloisInsertion IntermediateFieldEquivClosedSubgroup
 
-/-- The Galois correspondence as a `GaloisCoinsertion` -/
+/-- . -/
 def GaloisCoinsertionIntermediateFieldSubgroup [IsGalois k K] :
     GaloisCoinsertion (OrderDual.toDual ∘ fun (E : IntermediateField k K) ↦ E.fixingSubgroup)
       ((fun (H : Subgroup Gal(K/k)) ↦ IntermediateField.fixedField H) ∘ OrderDual.toDual) where
@@ -236,8 +236,8 @@ def GaloisCoinsertionIntermediateFieldSubgroup [IsGalois k K] :
   choice_eq _ _ := rfl
 
 open IntermediateField in
-/-- If `H` is a closed normal subgroup of `Gal(K / k)`,
-then `Gal(fixedField H / k)` is isomorphic to `Gal(K / k) ⧸ H`. -/
+/-- .
+ -/
 noncomputable def normalAutEquivQuotient [IsGalois k K]
     (H : ClosedSubgroup Gal(K/k)) [H.Normal] :
     Gal(K/k) ⧸ H.1 ≃* Gal(fixedField H.1/k) :=

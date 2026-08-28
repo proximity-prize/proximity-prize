@@ -4,19 +4,19 @@ import ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
 import ProximityPrize.SubmissionLower.ActualCurveProjectionBounds
 import ProximityPrize.SubmissionLower.ActualCoordinateDegreeSum
 
-/-!
-# Selected-seed counting on an actual proper two-equation cut
+/-! .
 
-Model label: gpt-5.
 
-The actual regular minimal-prime cover, actual finite/separable projection
-proofs, actual proper-function zero counts and selected-pencil incidence
-are composed here. Original prime equations, characteristic gates and
-point membership replace abstract component lists or per-prime count inputs.
-The first intermediate theorem retains only a summed coordinate budget;
-the following original-degree wrapper supplies it from actual field degrees.
-No all-tail polynomiality hypothesis is used.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactProperCutSeedCount
 
@@ -61,9 +61,9 @@ theorem noLargeSelectedPencil_mono
 variable {ι : Type*}
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- Compose the ACTUAL geometric per-prime incidence theorem, deriving its
-finite/separable hypotheses from original proper equations and degree gates.
-Only the summed projection budget is retained at this intermediate stage. -/
+/-- .
+
+ -/
 theorem proper_cut_seed_bound_of_projection_sum
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F) (hproper : ¬ G ∣ T)
@@ -132,8 +132,8 @@ theorem proper_cut_seed_bound_of_projection_sum
     hGpoint hTpoint hHp (a - w) (nodes.card - w) (e + 1)
     cap budget degree hcomponent hbudget
 
-/-- The actual regular component family consumes one original mixed
-projection budget per coordinate, including its constant-coordinate members. -/
+/-- .
+ -/
 theorem regularComponents_degree_budget
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (p : ℕ) [CharP Ω p] (hG : Irreducible G) (hproper : ¬ G ∣ T)
@@ -156,9 +156,9 @@ theorem regularComponents_degree_budget
     (regularComponent_T_mem Ω G T (regularitySurface φ F))
     hproper hGdegree hmixed
 
-/-- Complete proper-cut seed count from original equations and their
-separated degree gates. No projection, zero-count, component-count, or
-per-prime incidence inequality remains an input. -/
+/-- .
+
+ -/
 theorem proper_cut_seed_bound
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F) (hproper : ¬ G ∣ T)

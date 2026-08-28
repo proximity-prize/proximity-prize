@@ -5,12 +5,12 @@ import ProximityPrize.SubmissionLower.ContactFlagDirectionalAvoidance6543Researc
 import ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research
 import ProximityPrize.SubmissionLower.ContactFlagPrincipalCycles6543Research
 
-/-!
-# Adaptive nested flag projections for score 66
+/-! .
 
-This is the geometric coefficient-choice core.  The normalization coordinate
-may vary with the component; the two affine coefficients remain common.
--/
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjection6600Research
 
@@ -41,8 +41,8 @@ set_option maxRecDepth 30000
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
 
-/-- Finite-separable gate for one literal coordinate, phrased through the
-arbitrary-element embedding used by the adaptive affine theorem. -/
+/-- .
+ -/
 def LiteralProjectionGate
     (C : RegularComponent Omega G T H) (j : Fin 3) : Prop :=
   ∀ hj : Transcendental Omega (coordinate Omega C.1 j),
@@ -55,7 +55,7 @@ def LiteralProjectionGate
           (coordinate Omega C.1 j) hj).toRingHom.toAlgebra;
       Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega C.1))
 
-/-- The selected literal normalization has nonzero absolute differential. -/
+/-- . -/
 theorem base_differential_ne_zero
     {P : Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime]
     (B : SeparableLiteralCoordinate P) :
@@ -72,8 +72,8 @@ theorem base_differential_ne_zero
       Polynomial.X).trans (Polynomial.aeval_X _)
   rwa [hvalue] at h
 
-/-- Algebraic functions on a curve over the algebraically closed base have
-zero normalized pole order. -/
+/-- .
+ -/
 theorem poleOrder_eq_zero_of_isAlgebraic
     {L : Type*} [Field L] [Algebra Omega L]
     (v : CoordinatePoleMass.Place Omega L) (x : L)
@@ -83,7 +83,7 @@ theorem poleOrder_eq_zero_of_isAlgebraic
   exact CoordinatePoleMass.poleOrder_eq_zero_of_le_one Omega L v _
     (constant_value_le_one Omega L v a)
 
-/-- Common nested projections with exact all-place pole maxima. -/
+/-- . -/
 structure AdaptiveNestedProjectionData
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
@@ -147,8 +147,8 @@ structure AdaptiveNestedProjectionData
   directional : MvPolynomial.pderiv (0 : Fin 3) G -
     MvPolynomial.C mu * MvPolynomial.pderiv (1 : Fin 3) G ≠ 0
 
-/-- Component-adaptive finite avoidance constructs both nested projections
-and avoids the sole directional-derivative bad coefficient. -/
+/-- .
+ -/
 theorem exists_adaptiveNestedProjectionData
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)

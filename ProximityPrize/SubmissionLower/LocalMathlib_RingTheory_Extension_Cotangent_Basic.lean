@@ -29,33 +29,33 @@ No mathematical hypotheses, definitions, conclusions, or proof arguments
 are changed; these are the ordinary linear maps of the original formulas.
 -/
 
-/-!
+/-! .
 
-# Naive cotangent complex associated to a presentation.
 
-Given a presentation `0 → I → R[x₁,...,xₙ] → S → 0` (or equivalently a closed embedding `S ↪ Aⁿ`
-defined by `I`), we may define the (naive) cotangent complex `I/I² → ⨁ᵢ S dxᵢ → Ω[S/R] → 0`.
 
-## Main results
-- `Algebra.Extension.Cotangent`: The conormal space `I/I²`. (Defined in `Generators/Basic`)
-- `Algebra.Extension.CotangentSpace`: The cotangent space `⨁ᵢ S dxᵢ`.
-- `Algebra.Generators.cotangentSpaceBasis`: The canonical basis on `⨁ᵢ S dxᵢ`.
-- `Algebra.Extension.CotangentComplex`: The map `I/I² → ⨁ᵢ S dxᵢ`.
-- `Algebra.Extension.toKaehler`: The projection `⨁ᵢ S dxᵢ → Ω[S/R]`.
-- `Algebra.Extension.toKaehler_surjective`: The map `⨁ᵢ S dxᵢ → Ω[S/R]` is surjective.
-- `Algebra.Extension.exact_cotangentComplex_toKaehler`: `I/I² → ⨁ᵢ S dxᵢ → Ω[S/R]` is exact.
-- `Algebra.Extension.Hom.Sub`: If `f` and `g` are two maps between presentations, `f - g` induces
-  a map `⨁ᵢ S dxᵢ → I/I²` that makes `f` and `g` homotopic.
-- `Algebra.Extension.H1Cotangent`: The first homology of the (naive) cotangent complex
-  of `S` over `R`, induced by a given presentation.
-- `Algebra.H1Cotangent`: `H¹(L_{S/R})`,
-  the first homology of the (naive) cotangent complex of `S` over `R`.
 
-## Implementation detail
-We actually develop these material for general extensions (i.e. surjection `P → S`) so that we can
-apply them to infinitesimal smooth (or versal) extensions later.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -71,13 +71,13 @@ namespace Extension
 
 variable (P : Extension.{w} R S)
 
-/--
-The cotangent space on `P = R[X]`.
-This is isomorphic to `Sⁿ` with `n` being the number of variables of `P`.
--/
+/-- .
+
+
+ -/
 abbrev CotangentSpace : Type _ := S ⊗[P.Ring] Ω[P.Ring⁄R]
 
-/-- The cotangent complex given by a presentation `R[X] → S` (i.e. a closed embedding `S ↪ Aⁿ`). -/
+/-- . -/
 noncomputable
 def cotangentComplex : P.Cotangent →ₗ[S] P.CotangentSpace :=
   letI f : P.Cotangent ≃ₗ[P.Ring] P.ker.Cotangent :=
@@ -100,8 +100,8 @@ section baseChange
 variable {A : Type*} [CommRing A] [Algebra S A] [Algebra P.Ring A] [IsScalarTower P.Ring S A]
 
 variable (R S) in
-/-- This is (isomorphic to) the base change of the cotangent complex to `A`, but
-the domain and codomains of this are more manageable. -/
+/-- .
+ -/
 noncomputable
 def _root_.KaehlerDifferential.cotangentComplexBaseChange
     (P A : Type*) [CommRing P] [CommRing A] [Algebra P S] [Algebra P A]
@@ -163,10 +163,10 @@ variable [IsScalarTower R R' R''] [IsScalarTower S S' S'']
 
 namespace CotangentSpace
 
-/--
-This is the map on the cotangent space associated to a map of presentation.
-The matrix associated to this map is the Jacobian matrix. See `CotangentSpace.repr_map`.
--/
+/-- .
+
+
+ -/
 protected noncomputable
 def map (f : Hom P P') : P.CotangentSpace →ₗ[S] P'.CotangentSpace := by
   letI := ((algebraMap S S').comp (algebraMap P.Ring S)).toAlgebra
@@ -254,10 +254,10 @@ lemma Hom.sub_aux (f g : Hom P P') (x y) :
   simp only [map_mul]
   ring
 
-/--
-If `f` and `g` are two maps `P → P'` between presentations,
-then the image of `f - g` is in the kernel of `P' → S`.
--/
+/-- .
+
+
+ -/
 @[simps! apply_coe]
 noncomputable
 def Hom.subToKer (f g : Hom P P') : P.Ring →ₗ[R] P'.ker := by
@@ -269,11 +269,11 @@ def Hom.subToKer (f g : Hom P P') : P.Ring →ₗ[R] P'.ker := by
     sub_self, toAlgHom_apply]
 
 variable [IsScalarTower R S S'] in
-/--
-If `f` and `g` are two maps `P → P'` between presentations,
-their difference induces a map `P.CotangentSpace →ₗ[S] P'.Cotangent` that makes two maps
-between the cotangent complexes homotopic.
--/
+/-- .
+
+
+
+ -/
 noncomputable
 def Hom.sub (f g : Hom P P') : P.CotangentSpace →ₗ[S] P'.Cotangent := by
   letI := ((algebraMap S S').comp (algebraMap P.Ring S)).toAlgebra
@@ -347,7 +347,7 @@ lemma Cotangent.map_sub_map (f g : Hom P P') :
     Hom.subToKer_apply_coe, Hom.toAlgHom_apply]
 
 variable (P) in
-/-- The projection map from the relative cotangent space to the module of differentials. -/
+/-- . -/
 noncomputable
 abbrev toKaehler : P.CotangentSpace →ₗ[S] Ω[S⁄R] := mapBaseChange _ _ _
 
@@ -358,11 +358,11 @@ lemma exact_cotangentComplex_toKaehler : Function.Exact P.cotangentComplex P.toK
   exact_kerCotangentToTensor_mapBaseChange _ _ _ P.algebraMap_surjective
 
 variable (P) in
-/--
-The first homology of the (naive) cotangent complex of `S` over `R`,
-induced by a given presentation `0 → I → P → R → 0`,
-defined as the kernel of `I/I² → S ⊗[P] Ω[P⁄R]`.
--/
+/-- .
+
+
+
+ -/
 protected noncomputable
 def H1Cotangent : Type _ := LinearMap.ker P.cotangentComplex
 
@@ -398,21 +398,21 @@ lemma subsingleton_h1Cotangent (P : Extension R S) :
   rw [← LinearMap.ker_eq_bot, Submodule.eq_bot_iff, subsingleton_iff_forall_eq 0, Subtype.forall']
   simp only [Subtype.ext_iff, Submodule.coe_zero]
 
-/-- The inclusion of `H¹(L_{S/R})` into the conormal space of a presentation. -/
+/-- . -/
 @[simps!] noncomputable def h1Cotangentι : P.H1Cotangent →ₗ[S] P.Cotangent := Submodule.subtype _
 
 lemma h1Cotangentι_injective : Function.Injective P.h1Cotangentι := Subtype.val_injective
 
 @[ext] lemma h1Cotangentι_ext (x y : P.H1Cotangent) (e : x.1 = y.1) : x = y := Subtype.ext e
 
-/-- The sequence `H¹(L_{S/R}) → P.Cotangent → P.CotangentSpace` is exact. -/
+/-- . -/
 lemma exact_hCotangentι_cotangentComplex : Function.Exact h1Cotangentι P.cotangentComplex := by
   rw [LinearMap.exact_iff]
   exact (Submodule.range_subtype _).symm
 
-/--
-The induced map on the first homology of the (naive) cotangent complex.
--/
+/-- .
+
+ -/
 @[simps!]
 noncomputable
 def H1Cotangent.map (f : Hom P P') : P.H1Cotangent →ₗ[S] P'.H1Cotangent := by
@@ -445,8 +445,8 @@ lemma H1Cotangent.map_comp_apply (f : Hom P P') (g : Hom P' P'') (x : P.H1Cotang
     map (g.comp f) x = map g (map f x) :=
   congr($(H1Cotangent.map_comp f g) x)
 
-/-- Maps `P₁ → P₂` and `P₂ → P₁` between extensions
-induce an isomorphism between `H¹(L_P₁)` and `H¹(L_P₂)`. -/
+/-- .
+ -/
 @[simps! apply]
 noncomputable
 def H1Cotangent.equiv {P₁ P₂ : Extension R S} (f₁ : P₁.Hom P₂) (f₂ : P₂.Hom P₁) :
@@ -473,7 +473,7 @@ namespace Generators
 
 variable {ι : Type w} (P : Generators R S ι)
 
-/-- The canonical basis on the `CotangentSpace`. -/
+/-- . -/
 noncomputable
 def cotangentSpaceBasis : Basis ι S P.toExtension.CotangentSpace :=
   (mvPolynomialBasis _ _).baseChange (R := P.Ring) _
@@ -501,8 +501,8 @@ lemma cotangentSpaceBasis_apply (i) :
 instance (P : Generators R S ι) : Module.Free S P.toExtension.CotangentSpace :=
   .of_basis P.cotangentSpaceBasis
 
-/-- Given generators `R[xᵢ] → S` and an injective map `σ → ι`, this is the
-composition `I/I² → ⊕ S dxᵢ → ⊕ S dxᵢ` where the second `i` only runs over `σ`. -/
+/-- .
+ -/
 noncomputable
 def cotangentRestrict {σ : Type*} {u : σ → ι} (hu : Function.Injective u) :
     P.toExtension.Cotangent →ₗ[S] (σ →₀ S) :=
@@ -567,9 +567,9 @@ end Generators
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
--- TODO: should infer_instance be considered normalising?
+--
 set_option linter.flexible false in
--- TODO: generalize to essentially of finite presentation algebras
+--
 open KaehlerDifferential in
 attribute [local instance] Module.finitePresentation_of_projective in
 instance [Algebra.FinitePresentation R S] : Module.FinitePresentation S Ω[S⁄R] := by
@@ -582,7 +582,7 @@ instance [Algebra.FinitePresentation R S] : Module.FinitePresentation S Ω[S⁄R
 variable {ι : Type w} {ι' : Type*} {P : Generators R S ι}
 
 open Extension.H1Cotangent in
-/-- `H¹(L_{S/R})` is independent of the presentation chosen. -/
+/-- . -/
 @[simps! apply]
 noncomputable
 def Generators.H1Cotangent.equiv (P : Generators R S ι) (P' : Generators R S ι') :
@@ -596,19 +596,19 @@ variable [Algebra S' T] [IsScalarTower R S' T]
 
 variable (R S S' T)
 
-/-- `H¹(L_{S/R})`, the first homology of the (naive) cotangent complex of `S` over `R`. -/
+/-- . -/
 abbrev H1Cotangent : Type _ := (Generators.self R S).toExtension.H1Cotangent
 
-/-- The induced map on the first homology of the (naive) cotangent complex of `S` over `R`. -/
+/-- . -/
 noncomputable
 def H1Cotangent.map : H1Cotangent R S' →ₗ[S'] H1Cotangent S T :=
   Extension.H1Cotangent.map (Generators.defaultHom _ _).toExtensionHom
 
-/-- Isomorphic algebras induce isomorphic `H¹(L_{S/R})`. -/
+/-- . -/
 noncomputable
 def H1Cotangent.mapEquiv (e : S ≃ₐ[R] S') :
     H1Cotangent R S ≃ₗ[R] H1Cotangent R S' :=
-  -- we are constructing data, so we do not use `algebraize`
+  --
   letI := e.toRingHom.toAlgebra
   letI := e.symm.toRingHom.toAlgebra
   have : IsScalarTower R S S' := .of_algebraMap_eq' e.toAlgHom.comp_algebraMap.symm
@@ -630,7 +630,7 @@ def H1Cotangent.mapEquiv (e : S ≃ₐ[R] S') :
 
 variable {R S S' T}
 
-/-- `H¹(L_{S/R})` is independent of the presentation chosen. -/
+/-- . -/
 noncomputable
 abbrev Generators.equivH1Cotangent (P : Generators R S ι) :
     P.toExtension.H1Cotangent ≃ₗ[S] H1Cotangent R S :=
@@ -638,7 +638,7 @@ abbrev Generators.equivH1Cotangent (P : Generators R S ι) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
--- TODO: should infer_instance be considered normalising?
+--
 set_option linter.flexible false in
 attribute [local instance] Module.finitePresentation_of_projective in
 instance [FinitePresentation R S] [Module.Projective S Ω[S⁄R]] :
@@ -659,4 +659,4 @@ instance [FinitePresentation R S] [Module.Projective S Ω[S⁄R]] :
 
 end Algebra
 
-/- Exact transitive axiom audits for the repaired ordinary definitions. -/
+/- -/

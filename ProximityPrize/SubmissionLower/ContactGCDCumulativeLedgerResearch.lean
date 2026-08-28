@@ -2,7 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactGCDCumulativeFlagsResearch
 import ProximityPrize.SubmissionLower.ContactProfileYZFactorLedgerResearch
 
-/-! Cumulative aggregation for the actual sharp-YZ regular-factor ledger. -/
+/-! . -/
 
 namespace ProximityPrize.SubmissionLower.ContactGCDCumulativeLedgerResearch
 
@@ -16,7 +16,7 @@ noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 30000
 
-/-- Nested unit polytopes have increasing mixed-volume coefficients. -/
+/-- . -/
 theorem flagMixed_unit_mono (q r : FlagDegree) :
     flagMixed unitZFlag q r ≤ flagMixed unitYZFlag q r ∧
       flagMixed unitYZFlag q r ≤ flagMixed unitAllFlag q r := by
@@ -62,8 +62,8 @@ theorem linear_cost_cumulative (cz cy ca : ℕ) (f : FlagDegree)
           f.all * (cz + (cy - cz) + (ca - cy)) := by rw [ha, hy]
     _ = _ := by ring
 
-/-- Any flag-linear functional with increasing unit coefficients is
-monotone under cumulative, not necessarily coordinatewise, sum bounds. -/
+/-- .
+ -/
 theorem sum_linear_cost_cumulative_le
     {I : Type} [Fintype I] (cost : FlagDegree → ℕ)
     (hlinear : ∀ f, cost f = f.zOnly * cost unitZFlag +
@@ -104,7 +104,7 @@ theorem sum_ledger_cumulative_le
 
 variable {K : Type} [Field K]
 
-/-- The actual original factor counts consume the sharp support flag. -/
+/-- . -/
 theorem sum_regular_counts_cumulative_le
     (p : Profile) (direction : FlagDegree)
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
@@ -127,8 +127,8 @@ theorem sum_regular_counts_cumulative_le
         (by simpa only [supportCumulativeFlag, hp.2.1] using hc.2.1)
         (by simpa only [supportCumulativeFlag, hp.2.2] using hc.2.2)
 
-/-- The existing geometric selected-point cover and actual product budgets
-aggregate without changing either the factors or the selected solutions. -/
+/-- .
+ -/
 theorem geometric_seed_counts_cumulative_le
     (p : Profile) (direction : FlagDegree)
     (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0)

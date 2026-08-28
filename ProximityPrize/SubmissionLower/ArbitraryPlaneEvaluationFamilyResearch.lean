@@ -2,16 +2,16 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualPlaneCharacteristicFreeDegreeResearch
 import ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch
 
-/-!
-# Characteristic-free plane-family degree from arbitrary evaluations
+/-! .
 
-This research adapter removes the special assumption that the rational base
-is one of the three literal quotient coordinates.  An arbitrary K-algebra
-evaluation of the trivariate ring is enough: a transcendental image of the
-base variable proves denominator disjointness, its kernel is recovered by
-contracting the bivariate relation kernel, and the existing
-Sylvester-corank theorem then counts full field degrees without separability.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ArbitraryPlaneEvaluationFamilyResearch
 
@@ -39,7 +39,7 @@ section OneEvaluation
 variable (L : Type) [Field L] [Algebra K L]
 variable (order : Fin 3 ≃ Fin 3) (e : Original K →ₐ[K] L)
 
-/-- Collection followed by an arbitrary actual evaluation. -/
+/-- . -/
 def collectedEvaluation : Collected K →+* L :=
   e.toRingHom.comp (collect K order).symm.toRingHom
 
@@ -63,8 +63,8 @@ def collectedEvaluation : Collected K →+* L :=
       rw [coefficientLift_X, Polynomial.aeval_X]
   exact RingHom.congr_fun hhom H
 
-/-- A nonzero coefficient denominator cannot vanish at a transcendental
-base image.  This is the only geometric input localization needs. -/
+/-- .
+ -/
 theorem coefficientDenominators_disjoint_of_evaluation
     (G : Original K) (hroot : e G = 0)
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
@@ -141,8 +141,8 @@ theorem planeMap_dvd_iff_of_evaluation
     exact (rationalMap_dvd_iff_of_evaluation K L order e G H hG hroot ht).mp hrat
   · exact fun hdiv ↦ map_dvd (planeMap K order) hdiv
 
-/-- Plane evaluation over the rational embedding at the arbitrary base
-image. -/
+/-- .
+ -/
 def planeEvaluation
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
     PlaneRing K →+* L :=
@@ -176,8 +176,8 @@ theorem elementEmbedding_polynomial (s : L) (hs : Transcendental K s)
       Polynomial.aeval s f :=
   RatFunc.liftRingHom_algebraMap _ _ f
 
-/-- The common plane map evaluates exactly as the supplied trivariate
-evaluation. -/
+/-- .
+ -/
 theorem planeEvaluation_comp_planeMap
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
     (planeEvaluation K L order e ht).comp (planeMap K order) = e.toRingHom := by
@@ -230,7 +230,7 @@ variable (E : I → Type)
 variable [∀ i, Field (E i)] [∀ i, Algebra K (E i)]
 variable (e : ∀ i, Original K →ₐ[K] E i)
 
-/-- Fixed-order characteristic-free family bound for arbitrary evaluations. -/
+/-- . -/
 theorem finite_sum_finrank_bound
     (ht : ∀ i, Transcendental K (e i (MvPolynomial.X (order 0))))
     (hgen : ∀ i,

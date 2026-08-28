@@ -2,22 +2,22 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactResidualSparseComponentAdapterResearch
 import ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch
 
-/-!
-# Actual-identity stratification on regular curve components
+/-! .
 
-The existing residual sparse adapter enlarges every component identity count
-to the ambient degree.  That is optimal for a constant proper-fiber cost but
-loses the score-66 gain when residualization makes that cost linear in the
-remaining degree.
 
-This module keeps the actual identity count on each regular component.  Its
-only new geometric premise is a proper-fiber bound of the form
 
-`(w - identities.card) * degreeCost + unitCost`.
 
-All finite incidence, the large-pencil fallback, component aggregation, and
-the separate global degree/unit sums are proved here.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactStratifiedResidualComponentAdapter6600Research
 
@@ -42,9 +42,9 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- One prime component with its actual identity count retained.  The
-`hfiber` premise is precisely what polynomial residualization plus a
-degree-affine zero theorem must supply. -/
+/-- .
+
+ -/
 theorem prime_seed_incidence_of_stratified_residual_cost
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
     (hproj : ProjectionsFiniteSeparable Omega P)
@@ -134,7 +134,7 @@ theorem prime_seed_incidence_of_stratified_residual_cost
             Nat.mul_le_mul_left ((e + 1) * (a - w)) hdelta
     exact htail.trans (Nat.le_add_left _ _)
 
-/-- Componentwise degree/unit costs aggregate independently. -/
+/-- . -/
 theorem aggregate_component_stratified_incidence
     (G T H : MvPolynomial (Fin 3) Omega)
     {Seed : Type*} (S : Finset Seed) (v : Seed → Fin 3 → Omega)
@@ -176,10 +176,10 @@ theorem aggregate_component_stratified_incidence
           (Nat.mul_le_mul_left V hunit))
         (Nat.mul_le_mul_left (pencil * gap) hz)
 
-/-- Full regular-component adapter.  Compared with
-`proper_cut_seed_bound_of_residual_component_budget`, the new input is only
-the residual-degree-affine component fiber bound and two separate global
-cost sums. -/
+/-- .
+
+
+ -/
 theorem proper_cut_seed_bound_of_stratified_component_budgets
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
     (hdiv : G ∣ surfaceMap phi F)

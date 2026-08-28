@@ -21,13 +21,13 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Tensor product and products of algebras
+/-! .
 
-In this file we examine the behaviour of the tensor product with (finite) products. This
-is a direct application of `Mathlib/LinearAlgebra/TensorProduct/Pi.lean` to the algebra case.
 
--/
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -55,14 +55,14 @@ lemma piRightHom_mul (x y : A ⊗[R] ∀ i, B i) :
     · simp_all [mul_add]
   · simp_all [add_mul]
 
-/-- The canonical map `A ⊗[R] (∀ i, B i) →ₐ[S] ∀ i, A ⊗[R] B i`. This is an isomorphism
-if `ι` is finite (see `Algebra.TensorProduct.piRight`). -/
+/-- .
+ -/
 def piRightHom : A ⊗[R] (∀ i, B i) →ₐ[S] ∀ i, A ⊗[R] B i :=
   AlgHom.ofLinearMap (_root_.TensorProduct.piRightHom R S A B) (by simp) (by simp)
 
 variable [Fintype ι] [DecidableEq ι]
 
-/-- Tensor product of rings commutes with finite products on the right. -/
+/-- . -/
 def piRight : A ⊗[R] (∀ i, B i) ≃ₐ[S] ∀ i, A ⊗[R] B i :=
   AlgEquiv.ofLinearEquiv (_root_.TensorProduct.piRight R S A B) (by simp) (by simp)
 
@@ -71,7 +71,7 @@ lemma piRight_tmul (x : A) (f : ∀ i, B i) :
     piRight R S A B (x ⊗ₜ f) = (fun j ↦ x ⊗ₜ f j) := rfl
 
 variable (ι) in
-/-- Variant of `Algebra.TensorProduct.piRight` with constant factors. -/
+/-- . -/
 def piScalarRight : A ⊗[R] (ι → R) ≃ₐ[S] ι → A :=
   (piRight R S A (fun _ : ι ↦ R)).trans <|
     AlgEquiv.piCongrRight (fun _ ↦ Algebra.TensorProduct.rid R S A)
@@ -89,7 +89,7 @@ section
 
 variable (B C : Type*) [Semiring B] [Semiring C] [Algebra R B] [Algebra R C]
 
-/-- Tensor product of rings commutes with binary products on the right. -/
+/-- . -/
 nonrec def prodRight : A ⊗[R] (B × C) ≃ₐ[S] A ⊗[R] B × A ⊗[R] C :=
   AlgEquiv.ofLinearEquiv (TensorProduct.prodRight R S A B C)
     (by simp [Algebra.TensorProduct.one_def])

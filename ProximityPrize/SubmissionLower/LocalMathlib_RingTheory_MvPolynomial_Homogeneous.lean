@@ -30,28 +30,28 @@ restricts its original simplification to one_mul, avoiding unrelated ambient
 Monad normal forms and implicit coercion unfolding.
 -/
 
-/-!
-# Homogeneous polynomials
+/-! .
 
-A multivariate polynomial `φ` is homogeneous of degree `n`
-if all monomials occurring in `φ` have degree `n`.
 
-## Main definitions/lemmas
 
-* `IsHomogeneous φ n`: a predicate that asserts that `φ` is homogeneous of degree `n`.
-* `homogeneousSubmodule σ R n`: the submodule of homogeneous polynomials of degree `n`.
-* `homogeneousComponent n`: the additive morphism that projects polynomials onto
-  their summand that is homogeneous of degree `n`.
-* `sum_homogeneousComponent`: every polynomial is the sum of its homogeneous components.
 
-## Library notes
 
-* The `MvPolynomial.weightedGradedAlgebra` instance provides a `GradedAlgebra` structure, yielding
-  the isomorphism `MvPolynomial σ R ≃ₐ[R] ⨁ m, weightedHomogeneousSubmodule R w m` for a weight
-  function `w`.
-* The special case with `w = 1` of the above yields the algebra isomorphism
-  `MvPolynomial σ R ≃ₐ[R] ⨁ i, homogeneousSubmodule σ R i`.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -62,30 +62,30 @@ variable {σ : Type*} {τ : Type*} {R : Type*} {S : Type*}
 
 open Finsupp
 
-/-- A multivariate polynomial `φ` is homogeneous of degree `n`
-if all monomials occurring in `φ` have degree `n`. -/
+/-- .
+ -/
 def IsHomogeneous [CommSemiring R] (φ : MvPolynomial σ R) (n : ℕ) :=
   IsWeightedHomogeneous 1 φ n
 
 variable [CommSemiring R]
 
-/-- The `degrees` of a polynomial `p` is a special case of the `weightedTotalDegree` of `p` where
-  the weights are singletons containing each variable. -/
+/-- .
+ -/
 @[simp]
 theorem weightedTotalDegree_singleton [DecidableEq σ] (p : MvPolynomial σ R) :
     weightedTotalDegree (fun i => {i}) p = degrees p := by
   rw [degrees_def]; rfl
 
-/-- The `totalDegree` of a polynomial `p` is a special case of the `weightedTotalDegree` of `p`
-  where all of the weights are `1`. -/
+/-- .
+ -/
 theorem weightedTotalDegree_one (φ : MvPolynomial σ R) :
     weightedTotalDegree (1 : σ → ℕ) φ = φ.totalDegree := by
   simp only [totalDegree, weightedTotalDegree, weight, LinearMap.toAddMonoidHom_coe,
     linearCombination, Pi.one_apply, Finsupp.coe_lsum, LinearMap.coe_smulRight, LinearMap.id_coe,
     id, smul_eq_mul, mul_one]
 
-/-- The `degreeOf` a variable `i` for a polynomial `p` is a special case of the
-  `weightedTotalDegree` of `p` where `i` has the only nonzero weight and that weight is `1`. -/
+/-- .
+ -/
 @[simp]
 theorem weightedTotalDegree_piSingle [DecidableEq σ] (i : σ) (p : MvPolynomial σ R) :
     weightedTotalDegree (Pi.single i 1) p = degreeOf i p := by
@@ -105,7 +105,7 @@ theorem weightedTotalDegree_rename_of_injective {σ τ : Type*} {e : σ → τ}
 
 variable (σ R)
 
-/-- The submodule of homogeneous `MvPolynomial`s of degree `n`. -/
+/-- . -/
 def homogeneousSubmodule (n : ℕ) : Submodule R (MvPolynomial σ R) where
   carrier := { x | x.IsHomogeneous n }
   __ := weightedHomogeneousSubmodule R 1 n
@@ -122,7 +122,7 @@ theorem mem_homogeneousSubmodule (n : ℕ) (p : MvPolynomial σ R) :
 
 variable (σ R)
 
-/-- While equal, the former has a convenient definitional reduction. -/
+/-- . -/
 theorem homogeneousSubmodule_eq_finsupp_supported (n : ℕ) :
     homogeneousSubmodule σ R n = AddMonoidAlgebra.supported _ R {d | d.degree = n} := by
   simp_rw [degree_eq_weight_one]
@@ -315,7 +315,7 @@ lemma aeval [Algebra R S] (hφ : φ.IsHomogeneous m)
 
 section CommRing
 
--- In this section we shadow the semiring `R` with a ring `R`.
+--
 variable {R σ : Type*} [CommRing R] {φ ψ : MvPolynomial σ R} {n : ℕ}
 
 theorem neg (hφ : IsHomogeneous φ n) : IsHomogeneous (-φ) n :=
@@ -326,9 +326,9 @@ theorem sub (hφ : IsHomogeneous φ n) (hψ : IsHomogeneous ψ n) : IsHomogeneou
 
 end CommRing
 
-/-- The homogeneous degree bounds the total degree.
+/-- .
 
-See also `MvPolynomial.IsHomogeneous.totalDegree` when `φ` is non-zero. -/
+ -/
 lemma totalDegree_le (hφ : IsHomogeneous φ n) : φ.totalDegree ≤ n := by
   apply Finset.sup_le
   intro d hd
@@ -379,7 +379,7 @@ lemma finSuccEquiv_coeff_isHomogeneous {N : ℕ} {φ : MvPolynomial (Fin (N + 1)
   exact h'
 
 set_option backward.defeqAttrib.useBackward true in
--- TODO: develop API for `optionEquivLeft` and get rid of the `[Fintype σ]` assumption
+--
 lemma coeff_isHomogeneous_of_optionEquivLeft_symm
     [hσ : Finite σ] {p : Polynomial (MvPolynomial σ R)}
     (hp : ((optionEquivLeft R σ).symm p).IsHomogeneous n) (i j : ℕ) (h : i + j = n) :
@@ -433,7 +433,7 @@ lemma exists_eval_ne_zero_of_coeff_finSuccEquiv_ne_zero_aux
 
 section IsDomain
 
--- In this section we shadow the semiring `R` with a domain `R`.
+--
 variable {R σ : Type*} [CommRing R] [IsDomain R] {F G : MvPolynomial σ R} {n : ℕ}
 
 open Cardinal Polynomial
@@ -479,13 +479,13 @@ lemma exists_eval_ne_zero_of_totalDegree_le_card_aux {N : ℕ} {F : MvPolynomial
     use Fin.cons r₀ r
     rwa [eval_eq_eval_mv_eval']
 
-/-- See `MvPolynomial.IsHomogeneous.eq_zero_of_forall_eval_eq_zero`
-for a version that assumes `Infinite R`. -/
+/-- .
+ -/
 lemma eq_zero_of_forall_eval_eq_zero_of_le_card
     (hF : F.IsHomogeneous n) (h : ∀ r : σ → R, eval r F = 0) (hnR : n ≤ #R) :
     F = 0 := by
   contrapose! h
-  -- reduce to the case where σ is finite
+  --
   obtain ⟨k, f, hf, F, rfl⟩ := exists_fin_rename F
   have hF₀ : F ≠ 0 := by rintro rfl; simp at h
   have hF : F.IsHomogeneous n := by rwa [rename_isHomogeneous_iff hf] at hF
@@ -494,8 +494,8 @@ lemma eq_zero_of_forall_eval_eq_zero_of_le_card
   use r
   rwa [eval_rename]
 
-/-- See `MvPolynomial.IsHomogeneous.funext`
-for a version that assumes `Infinite R`. -/
+/-- .
+ -/
 lemma funext_of_le_card (hF : F.IsHomogeneous n) (hG : G.IsHomogeneous n)
     (h : ∀ r : σ → R, eval r F = eval r G) (hnR : n ≤ #R) :
     F = G := by
@@ -503,15 +503,15 @@ lemma funext_of_le_card (hF : F.IsHomogeneous n) (hG : G.IsHomogeneous n)
   apply eq_zero_of_forall_eval_eq_zero_of_le_card (hF.sub hG) _ hnR
   simpa [sub_eq_zero] using h
 
-/-- See `MvPolynomial.IsHomogeneous.eq_zero_of_forall_eval_eq_zero_of_le_card`
-for a version that assumes `n ≤ #R`. -/
+/-- .
+ -/
 lemma eq_zero_of_forall_eval_eq_zero [Infinite R] {F : MvPolynomial σ R} {n : ℕ}
     (hF : F.IsHomogeneous n) (h : ∀ r : σ → R, eval r F = 0) : F = 0 := by
   apply eq_zero_of_forall_eval_eq_zero_of_le_card hF h
   exact Cardinal.natCast_le_aleph0.trans <| Cardinal.infinite_iff.mp ‹Infinite R›
 
-/-- See `MvPolynomial.IsHomogeneous.funext_of_le_card`
-for a version that assumes `n ≤ #R`. -/
+/-- .
+ -/
 lemma funext [Infinite R] {F G : MvPolynomial σ R} {n : ℕ}
     (hF : F.IsHomogeneous n) (hG : G.IsHomogeneous n)
     (h : ∀ r : σ → R, eval r F = eval r G) : F = G := by
@@ -520,8 +520,8 @@ lemma funext [Infinite R] {F G : MvPolynomial σ R} {n : ℕ}
 
 end IsDomain
 
-/-- The homogeneous submodules form a graded ring. This instance is used by `DirectSum.commSemiring`
-and `DirectSum.algebra`. -/
+/-- .
+ -/
 instance HomogeneousSubmodule.gcommSemiring : SetLike.GradedMonoid (homogeneousSubmodule σ R) where
   one_mem := isHomogeneous_one σ R
   mul_mem _ _ _ _ := IsHomogeneous.mul
@@ -532,9 +532,9 @@ noncomputable section
 
 open Finset
 
-/-- `homogeneousComponent n φ` is the part of `φ` that is homogeneous of degree `n`.
-See `sum_homogeneousComponent` for the statement that `φ` is equal to the sum
-of all its homogeneous components. -/
+/-- .
+
+ -/
 def homogeneousComponent (n : ℕ) : MvPolynomial σ R →ₗ[R] MvPolynomial σ R :=
   weightedHomogeneousComponent 1 n
 
@@ -619,23 +619,23 @@ end
 
 noncomputable section GradedAlgebra
 
-/-- The homogeneous submodules form a graded ring.
-This instance is used by `DirectSum.commSemiring` and `DirectSum.algebra`. -/
+/-- .
+ -/
 lemma HomogeneousSubmodule.gradedMonoid :
     SetLike.GradedMonoid (homogeneousSubmodule σ R) :=
   WeightedHomogeneousSubmodule.gradedMonoid
 
-/-- The decomposition of `MvPolynomial σ R` into homogeneous submodules. -/
+/-- . -/
 abbrev decomposition :
     DirectSum.Decomposition (homogeneousSubmodule σ R) :=
   fast_instance% weightedDecomposition R (1 : σ → ℕ)
 
-/-- `MvPolynomial σ R` as a graded algebra, graded by the degree.
-We do not make this a global instance because one may want to consider a different
-graded algebra structure on `MvPolynomial σ R`, induced by another weight function.
-To make it a local instance, you may use
-`attribute [local instance] MvPolynomial.gradedAlgebra`.
--/
+/-- .
+
+
+
+
+ -/
 abbrev gradedAlgebra : GradedAlgebra (homogeneousSubmodule σ R) :=
   fast_instance% weightedGradedAlgebra R (1 : σ → ℕ)
 
@@ -666,8 +666,8 @@ end GradedAlgebra
 
 end MvPolynomial
 
-/-- Try to use the universal property of the span (e.g., `Submodule.span_induction`) instead of
-this. -/
+/-- .
+ -/
 lemma Ideal.span_eq_map_homogeneousSubmodule {ι R : Type*} [CommSemiring R]
     (x : ι → R) :
     Ideal.span (Set.range x) =
@@ -676,8 +676,8 @@ lemma Ideal.span_eq_map_homogeneousSubmodule {ι R : Type*} [CommSemiring R]
   simp [MvPolynomial.homogeneousSubmodule_one_eq_span_X, Submodule.map_span, ← Set.range_comp,
     Function.comp_def]
 
-/-- Try to use the universal property of the span (e.g., `Submodule.span_induction`) instead of
-this. -/
+/-- .
+ -/
 lemma Ideal.span_pow_eq_map_homogeneousSubmodule {ι R : Type*} [CommSemiring R]
     (x : ι → R) (n : ℕ) :
     Ideal.span (Set.range x) ^ n =
@@ -686,16 +686,16 @@ lemma Ideal.span_pow_eq_map_homogeneousSubmodule {ι R : Type*} [CommSemiring R]
   rw [← MvPolynomial.homogeneousSubmodule_one_pow, Submodule.map_pow,
     Ideal.span_eq_map_homogeneousSubmodule]
 
-/-- Try to use the universal property of the span (e.g., `Submodule.span_induction`) instead of
-this. -/
+/-- .
+ -/
 lemma Ideal.mem_span_pow_iff_exists_isHomogeneous {ι R : Type*} [CommSemiring R] {n : ℕ} (x : ι → R)
     (y : R) :
     y ∈ (Ideal.span <| Set.range x) ^ n ↔
       ∃ (p : MvPolynomial ι R), p.IsHomogeneous n ∧ p.eval x = y := by
   simp [Ideal.span_pow_eq_map_homogeneousSubmodule]
 
-/-- Try to use the universal property of the span (e.g., `Submodule.span_induction`) instead of
-this. -/
+/-- .
+ -/
 lemma Ideal.mem_span_iff_exists_isHomogeneous {ι R : Type*} [CommSemiring R] (x : ι → R) (y : R) :
     y ∈ Ideal.span (.range x) ↔
       ∃ (p : MvPolynomial ι R), p.IsHomogeneous 1 ∧ p.eval x = y := by

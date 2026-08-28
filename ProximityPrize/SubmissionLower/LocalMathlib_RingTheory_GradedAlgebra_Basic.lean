@@ -30,36 +30,36 @@ These changes do not add mathematical hypotheses or change the original
 mathematical declarations, conclusions, or proof arguments.
 -/
 
-/-!
-# Internally-graded rings and algebras
+/-! .
 
-This file defines the typeclass `GradedAlgebra 𝒜`, for working with an algebra `A` that is
-internally graded by a collection of submodules `𝒜 : ι → Submodule R A`.
-See the docstring of that typeclass for more information.
 
-## Main definitions
 
-* `GradedRing 𝒜`: the typeclass, which is a combination of `SetLike.GradedMonoid`, and
-  `DirectSum.Decomposition 𝒜`.
-* `GradedAlgebra 𝒜`: A convenience alias for `GradedRing` when `𝒜` is a family of submodules.
-* `DirectSum.decomposeRingEquiv 𝒜 : A ≃ₐ[R] ⨁ i, 𝒜 i`, a more bundled version of
-  `DirectSum.decompose 𝒜`.
-* `DirectSum.decomposeAlgEquiv 𝒜 : A ≃ₐ[R] ⨁ i, 𝒜 i`, a more bundled version of
-  `DirectSum.decompose 𝒜`.
-* `GradedAlgebra.proj 𝒜 i` is the linear map from `A` to its degree `i : ι` component, such that
-  `proj 𝒜 i x = decompose 𝒜 x i`.
 
-## Implementation notes
 
-For now, we do not have internally-graded semirings and internally-graded rings; these can be
-represented with `𝒜 : ι → Submodule ℕ A` and `𝒜 : ι → Submodule ℤ A` respectively, since all
-`Semiring`s are ℕ-algebras via `Semiring.toNatAlgebra`, and all `Ring`s are `ℤ`-algebras via
-`Ring.toIntAlgebra`.
 
-## Tags
 
-graded algebra, graded ring, graded semiring, decomposition
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -75,23 +75,23 @@ variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ)
 
 open DirectSum
 
-/-- An internally-graded `R`-algebra `A` is one that can be decomposed into a collection
-of `Submodule R A`s indexed by `ι` such that the canonical map `A → ⨁ i, 𝒜 i` is bijective and
-respects multiplication, i.e. the product of an element of degree `i` and an element of degree `j`
-is an element of degree `i + j`.
+/-- .
 
-Note that the fact that `A` is internally-graded, `GradedAlgebra 𝒜`, implies an externally-graded
-algebra structure `DirectSum.GAlgebra R (fun i ↦ ↥(𝒜 i))`, which in turn makes available an
-`Algebra R (⨁ i, 𝒜 i)` instance.
--/
+
+
+
+
+
+
+ -/
 class GradedRing (𝒜 : ι → σ) extends SetLike.GradedMonoid 𝒜, DirectSum.Decomposition 𝒜
 
 variable [GradedRing 𝒜]
 
 namespace DirectSum
 
-/-- If `A` is graded by `ι` with degree `i` component `𝒜 i`, then it is isomorphic as
-a ring to a direct sum of components. -/
+/-- .
+ -/
 def decomposeRingEquiv : A ≃+* ⨁ i, 𝒜 i :=
   RingEquiv.symm
     { (decomposeAddEquiv 𝒜).symm with
@@ -116,7 +116,7 @@ theorem decompose_symm_mul (x y : ⨁ i, 𝒜 i) :
 
 end DirectSum
 
-/-- The projection maps of a graded ring -/
+/-- . -/
 def GradedRing.proj (i : ι) : A →+ A :=
   (AddSubmonoidClass.subtype (𝒜 i)).comp <|
     (DFinsupp.evalAddMonoidHom i).comp <|
@@ -185,16 +185,16 @@ section GradedAlgebra
 variable [DecidableEq ι] [AddMonoid ι] [CommSemiring R] [Semiring A] [Algebra R A]
 variable (𝒜 : ι → Submodule R A)
 
-/-- A special case of `GradedRing` with `σ = Submodule R A`. This is useful both because it
-can avoid typeclass search, and because it provides a more concise name. -/
+/-- .
+ -/
 abbrev GradedAlgebra :=
   GradedRing 𝒜
 
-/-- A helper to construct a `GradedAlgebra` when the `SetLike.GradedMonoid` structure is already
-available. This makes the `left_inv` condition easier to prove, and phrases the `right_inv`
-condition in a way that allows custom `@[ext]` lemmas to apply.
+/-- .
 
-See note [reducible non-instances]. -/
+
+
+ -/
 abbrev GradedAlgebra.ofAlgHom [SetLike.GradedMonoid 𝒜] (decompose : A →ₐ[R] ⨁ i, 𝒜 i)
     (right_inv : (DirectSum.coeAlgHom 𝒜).comp decompose = AlgHom.id R A)
     (left_inv : ∀ i (x : 𝒜 i), decompose (x : A) = DirectSum.of (fun i => ↥(𝒜 i)) i x) :
@@ -213,10 +213,10 @@ variable [GradedAlgebra 𝒜]
 
 namespace DirectSum
 
-/-- If `A` is graded by `ι` with degree `i` component `𝒜 i`, then it is isomorphic as
-an algebra to a direct sum of components. -/
--- We have to write the `@[simps]` lemmas by hand to see through the
--- `AlgEquiv.symm (decomposeAddEquiv 𝒜).symm`.
+/-- .
+ -/
+--
+--
 def decomposeAlgEquiv : A ≃ₐ[R] ⨁ i, 𝒜 i :=
   AlgEquiv.symm
     { (decomposeAddEquiv 𝒜).symm with
@@ -245,7 +245,7 @@ end DirectSum
 
 open DirectSum
 
-/-- The projection maps of graded algebra -/
+/-- . -/
 def GradedAlgebra.proj (𝒜 : ι → Submodule R A) [GradedAlgebra 𝒜] (i : ι) : A →ₗ[R] A :=
   (𝒜 i).subtype.comp <| (DFinsupp.lapply i).comp <| (decomposeAlgEquiv 𝒜).toAlgHom.toLinearMap
 
@@ -272,9 +272,9 @@ variable [Semiring A] [DecidableEq ι]
 variable [AddCommMonoid ι] [PartialOrder ι] [CanonicallyOrderedAdd ι]
 variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜]
 
-/-- If `A` is graded by a canonically ordered additive monoid, then the projection map `x ↦ x₀`
-is a ring homomorphism.
--/
+/-- .
+
+ -/
 @[simps]
 def GradedRing.projZeroRingHom : A →+* A where
   toFun a := decompose 𝒜 a 0
@@ -305,7 +305,7 @@ def GradedRing.projZeroRingHom : A →+* A where
 
 section GradeZero
 
-/-- The ring homomorphism from `A` to `𝒜 0` sending every `a : A` to `a₀`. -/
+/-- . -/
 def GradedRing.projZeroRingHom' : A →+* 𝒜 0 :=
   ((GradedRing.projZeroRingHom 𝒜).codRestrict _ fun _x => SetLike.coe_mem _ :
   A →+* SetLike.GradeZero.subsemiring 𝒜)
@@ -317,7 +317,7 @@ def GradedRing.projZeroRingHom' : A →+* 𝒜 0 :=
     GradedRing.projZeroRingHom' 𝒜 a = a := by
   ext; simp only [coe_projZeroRingHom'_apply, projZeroRingHom_apply, decompose_coe, of_eq_same]
 
-/-- The ring homomorphism `GradedRing.projZeroRingHom' 𝒜` is surjective. -/
+/-- . -/
 lemma GradedRing.projZeroRingHom'_surjective :
     Function.Surjective (GradedRing.projZeroRingHom' 𝒜) :=
   Function.RightInverse.surjective (GradedRing.projZeroRingHom'_apply_coe 𝒜)
@@ -370,18 +370,18 @@ variable {R : Type*} [CommSemiring R] {A : Type*} [Semiring A] [Algebra R A]
 variable {ι : Type*} [DecidableEq ι] [AddMonoid ι]
 variable {M : ι → Submodule R A} [SetLike.GradedMonoid M]
 
--- The following lines were given on Zulip by Adam Topaz
-/-- The canonical isomorphism of an internal direct sum with the ambient algebra -/
+--
+/-- . -/
 noncomputable def coeAlgEquiv (hM : DirectSum.IsInternal M) :
     (DirectSum ι fun i => ↥(M i)) ≃ₐ[R] A :=
   { RingEquiv.ofBijective (DirectSum.coeAlgHom M) hM with commutes' := fun r => by simp }
 
-/-- Given an `R`-algebra `A` and a family `ι → Submodule R A` of submodules
-parameterized by an additive monoid `ι`
-and satisfying `SetLike.GradedMonoid M` (essentially, is multiplicative)
-such that `DirectSum.IsInternal M` (`A` is the direct sum of the `M i`),
-we endow `A` with the structure of a graded algebra.
-The submodules are the *homogeneous* parts. -/
+/-- .
+
+
+
+
+ -/
 @[implicit_reducible]
 noncomputable def gradedAlgebra (hM : DirectSum.IsInternal M) : GradedAlgebra M :=
   { (inferInstance : SetLike.GradedMonoid M) with

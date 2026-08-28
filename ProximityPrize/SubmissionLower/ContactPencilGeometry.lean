@@ -3,20 +3,20 @@ import ProximityPrize.SubmissionLower.ActualCurveCoordinateField
 
 import ProximityPrize.SubmissionLower.LocalMathlib_Algebra_MvPolynomial_NoZeroDivisors
 
-/-!
-# Actual pencil geometry inside prime-quotient coordinate fields
+/-! .
 
-Model label: gpt-5.
 
-An R-dependent principal prime cannot make Y affine in Z. On a genuine
-non-point prime curve over an algebraically closed field, if Y and R are
-both affine in Z, then Z is transcendental. These are proved on the actual
-prime quotient and its fraction field, not assumed dimension properties.
 
-Polynomial value/slope recovery transports an actual polynomial pencil
-identity to these two coordinate relations. The contact Taylor and
-identity-node theorems supply those inputs in the later counting assembly.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactPencilGeometry
 
@@ -59,8 +59,8 @@ theorem graphEquation_mem_of_affine_coordinate (a b : K)
     coordinate K P 2 * algebraMap K (CoordinateField K P) b) = 0
   exact sub_eq_zero.mpr hy
 
-/-- An actual R-dependent hypersurface cannot be contained in a pencil
-graph, already using only its Y-coordinate equation. -/
+/-- .
+ -/
 theorem not_y_affine_of_r_dependent_principal
     (g : MvPolynomial (Fin 3) K) (hP : P = Ideal.span {g})
     (hr : 0 < g.degreeOf (1 : Fin 3)) (a b : K) :
@@ -86,8 +86,8 @@ theorem coordinate_algebraic_of_scalar (i : Fin 3) (c : K)
   refine ⟨Polynomial.X - Polynomial.C c, Polynomial.X_sub_C_ne_zero c, ?_⟩
   simp [hc]
 
-/-- Vertical polynomial-pencil curves would be points, contradicting the
-actual component's already established non-point prime. -/
+/-- .
+ -/
 theorem seed_transcendental_of_affine_coordinates [IsAlgClosed K]
     (hnonpoint : ∀ v : Fin 3 → K,
       P ≠ RingHom.ker (MvPolynomial.aeval v).toRingHom)
@@ -112,8 +112,8 @@ theorem seed_transcendental_of_affine_coordinates [IsAlgClosed K]
   obtain ⟨v, hv⟩ := eq_point_kernel_of_coordinates_algebraic K P hall
   exact hnonpoint v hv
 
-/-- Actual value and slope recovery turn a polynomial pencil identity into
-both affine coordinate identities in the original quotient field. -/
+/-- .
+ -/
 theorem affine_coordinates_of_polynomial_pencil
     (ξ : K) (Q : Polynomial (CoordinateField K P)) (Q₀ Q₁ : Polynomial K)
     (hQ : Q = Q₀.map (algebraMap K (CoordinateField K P)) +

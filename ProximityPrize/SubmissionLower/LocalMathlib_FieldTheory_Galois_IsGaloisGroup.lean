@@ -22,32 +22,32 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Galois Groups of Fields
+/-! .
 
-Given an action of a group `G` on an extension of fields `L/K`, the predicate `IsGaloisGroup G K L`
-states that `G` acts faithfully on `L` with fixed field `K`. In particular, we do not assume that
-`L` is an algebraic extension of `K`.
 
-## Implementation notes
 
-We actually define `IsGaloisGroup G A B` for extensions of rings `B/A`, with the same definition
-(faithful action on `B` with fixed ring `A`). This definition turns out to axiomatize a common
-setup in algebraic number theory where a Galois group `Gal(L/K)` acts on an extension of subrings
-`B/A` (e.g., rings of integers). In particular, there are theorems in algebraic number theory that
-naturally assume `[IsGaloisGroup G A B]` and whose statements would otherwise require assuming
-`(K L : Type*) [Field K] [Field L] [Algebra K L] [IsGalois K L]` (along with predicates relating
-`K` and `L` to the rings `A` and `B`) despite `K` and `L` not appearing in the conclusion.
 
-Unfortunately, this definition of `IsGaloisGroup G A B` for extensions of rings `B/A` is
-nonstandard and clashes with other notions such as the étale fundamental group. In particular, if
-`G` is finite and `A` is integrally closed, then  `IsGaloisGroup G A B` is equivalent to `B/A`
-being integral and the fields of fractions `Frac(B)/Frac(A)` being Galois with Galois group `G`
-(see `IsGaloisGroup.iff_isFractionRing`), rather than `B/A` being étale for instance.
 
-But in the absence of a more suitable name, the utility of the predicate `IsGaloisGroup G A B` for
-extensions of rings `B/A` seems to outweigh these terminological issues.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -81,20 +81,20 @@ theorem fixedPoints_eq_bot [IsGaloisGroup G K L] :
   rw [eq_bot_iff]
   exact Algebra.IsInvariant.isInvariant
 
-/-- If `G` is a finite Galois group for `L/K`, then `L/K` is a Galois extension. -/
+/-- . -/
 theorem isGalois [Finite G] [IsGaloisGroup G K L] : IsGalois K L := by
   rw [← isGalois_iff_isGalois_bot, ← fixedPoints_eq_bot G]
   exact IsGalois.of_fixed_field L G
 
-/-- If `L/K` is a Galois extension, then `Gal(L/K)` is a Galois group for `L/K`. -/
+/-- . -/
 instance of_isGalois [IsGalois K L] : IsGaloisGroup Gal(L/K) K L where
   faithful := inferInstance
   commutes := inferInstance
   isInvariant := ⟨fun x ↦ (InfiniteGalois.mem_bot_iff_fixed x).mpr⟩
 
-/-- The cardinality of a Galois group equals the degree of the field extension.
+/-- .
 
-See `IsGaloisGroup.card_eq_finrank'` for a ring-theoretic generalization assuming finiteness. -/
+ -/
 theorem card_eq_finrank [IsGaloisGroup G K L] : Nat.card G = Module.finrank K L := by
   rcases fintypeOrInfinite G with _ | hG
   · have : FaithfulSMul G L := faithful K
@@ -128,9 +128,9 @@ variable (A B : Type*) [CommRing A] [CommRing B] [IsDomain B] [Algebra A B] [Fai
   [MulSemiringAction G B] [MulSemiringAction G' B] [IsGaloisGroup G A B] [IsGaloisGroup G' A B]
   [Finite G] [Finite G']
 
-/-- The cardinality of a Galois group of `B/A` equals the rank of `B` as an `A`-module.
+/-- .
 
-See `IsGaloisGroup.card_eq_finrank`, a field-theoretic version that does not assume finiteness. -/
+ -/
 theorem card_eq_finrank' : Nat.card G = Module.finrank A B := by
   have := IsDomain.of_faithfulSMul A B
   let := FractionRing.liftAlgebra A (FractionRing B)
@@ -146,7 +146,7 @@ theorem map_mulEquivAlgEquiv_fixingSubgroup [IsGaloisGroup G K L] (F : Intermedi
   obtain ⟨g, rfl⟩ := (mulEquivAlgEquiv G K L).surjective g
   simp [mem_fixingSubgroup_iff]
 
-/-- If `G` and `G'` are finite Galois groups for `B/A`, then `G` is isomorphic to `G'`. -/
+/-- . -/
 noncomputable def mulEquivCongr : G ≃* G' :=
   (mulEquivAlgEquiv G A B).trans (mulEquivAlgEquiv G' A B).symm
 
@@ -217,8 +217,8 @@ instance intermediateField [Finite G] [hGKL : IsGaloisGroup G K L] :
   .of_mulEquiv_algEquiv e fun _ _ ↦ rfl
 
 include K in
-/-- If `G` is a Galois group on `L/K` and `L/E/K` is a tower of field extensions,
-then the fixing subgroup of the image of `E` in `L` is a Galois group on `L/E`. -/
+/-- .
+ -/
 theorem of_isScalarTower [Finite G] [IsGaloisGroup G K L] (E : Type*) [Field E] [Algebra K E]
     [Algebra E L] [IsScalarTower K E L] :
     IsGaloisGroup (fixingSubgroup G (Set.range (algebraMap E L))) E L := by
@@ -265,8 +265,8 @@ section IsGaloisGroup
 
 variable [hGKL : IsGaloisGroup G K L]
 
--- this can't be a simp-lemma since the left-hand side is not in simp normal form
--- and if the theorem was `fixingSubgroup G Set.univ = ⊥` then `K` couldn't be inferred
+--
+--
 theorem fixingSubgroup_top : fixingSubgroup G ((⊤ : IntermediateField K L) : Set L) = ⊥ := by
   have := hGKL.faithful
   ext; simpa [mem_fixingSubgroup_iff, Set.ext_iff] using MulAction.fixedBy_eq_univ_iff_eq_one
@@ -277,7 +277,7 @@ theorem fixedPoints_top :
   convert! IsGaloisGroup.fixedPoints_eq_bot G K L
   ext; simp
 
-/-- The Galois correspondence from intermediate fields to subgroups. -/
+/-- . -/
 noncomputable def intermediateFieldEquivSubgroup [Finite G] :
     IntermediateField K L ≃o (Subgroup G)ᵒᵈ :=
   have := isGalois G K L
@@ -313,8 +313,8 @@ theorem fixedPoints_fixingSubgroup [Finite G] :
   rw [← ofDual_intermediateFieldEquivSubgroup_apply, ← intermediateFieldEquivSubgroup_symm_apply,
     OrderIso.symm_apply_apply]
 
-/-- If `G` acts as a Galois group on `L/K` and the subgroup `H` acts as a Galois group on `L/B`,
-then the fixed points of `H` equals the range of `algebraMap B L`. -/
+/-- .
+ -/
 theorem fixedPoints_eq_range_algebraMap (B : Type*)
     [CommSemiring B] [Algebra B L] [IsGaloisGroup H B L] :
     (FixedPoints.intermediateField H : IntermediateField K L) = Set.range (algebraMap B L) := by
@@ -325,17 +325,17 @@ theorem fixedPoints_eq_range_algebraMap (B : Type*)
   exact smul_algebraMap h x
 
 include K in
-/-- If `G` acts as a Galois group on `L/K` and the subgroup `H` acts as a Galois group on `L/B`,
-then the fixing subgroup of `algebraMap B L` inside `G` equals `H`.
-See `fixingSubgroup_range_algebraMap` for a more general version. -/
+/-- .
+
+ -/
 theorem fixingSubgroup_range_algebraMap' [Finite G] (B : Type*) [CommSemiring B] [Algebra B L]
     [IsGaloisGroup H B L] :
     fixingSubgroup G (Set.range (algebraMap B L)) = H := by
   rw [← fixedPoints_eq_range_algebraMap G K L H, fixingSubgroup_fixedPoints]
 
 attribute [local instance] FractionRing.liftAlgebra in
-/-- If `G` acts on a domain `C` with `IsGaloisGroup G A C`, and a subgroup `H` acts on `C` with
-`IsGaloisGroup H B C`, then the fixing subgroup of `algebraMap B C` equals `H`. -/
+/-- .
+ -/
 theorem fixingSubgroup_range_algebraMap [Finite G] (A B C : Type*) (H : Subgroup G)
     [CommRing A] [CommRing B] [CommRing C] [IsDomain C]
     [Algebra A C] [FaithfulSMul A C] [MulSemiringAction G C] [hGAC : IsGaloisGroup G A C]
@@ -364,8 +364,8 @@ theorem fixingSubgroup_range_algebraMap [Finite G] (A B C : Type*) (H : Subgroup
     rw [← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply]
 
 open Pointwise in
-/-- If `G` is a finite Galois group for `L/K`, `H` is a Galois group for `L/E`, and `E/K` is
-Galois, then `H` is a normal subgroup of `G`. -/
+/-- .
+ -/
 theorem normal_of_isGalois (E : Type*) [Field E] [Algebra K E] [Algebra E L] [IsScalarTower K E L]
     [Finite G] [IsGaloisGroup H E L] [IsGalois K E] : H.Normal := by
   let F := (IsScalarTower.toAlgHom K E L).fieldRange
@@ -388,8 +388,8 @@ section Domain
 variable (A B C : Type*) [CommRing A] [CommRing B] [CommRing C] [IsDomain C] [Algebra A B]
     [Algebra A C] [Algebra B C] [FaithfulSMul A B] [FaithfulSMul B C] [IsScalarTower A B C]
 
-/-- If `G` is a Galois group for `C/A`, and the normal subgroup `N ≤ G` is a Galois group for
-`C/B`, then the quotient `G ⧸ N` is a Galois group for `B/A`. -/
+/-- .
+ -/
 theorem quotient [Finite G] (N : Subgroup G) [N.Normal] [MulSemiringAction G C]
     [hG : IsGaloisGroup G A C] [MulSemiringAction G B] [MulSemiringAction (G ⧸ N) B]
     [SMulCommClass (G ⧸ N) A B] [SMulDistribClass G B C] [IsScalarTower G (G ⧸ N) B]
@@ -413,8 +413,8 @@ theorem quotient [Finite G] (N : Subgroup G) [N.Normal] [MulSemiringAction G C]
     have := (FaithfulSMul.algebraMap_injective B C).eq_iff.mpr <| h g
     rwa [MulAction.coe_quotient_smul, algebraMap.smul'] at this
 
-/-- If `G` is a Galois group for `C/A`, the normal subgroup `N ≤ G` is a Galois group for `C/B`,
-and `G'` is a Galois group for `B/A`, then `G ⧸ N ≃* G'`. -/
+/-- .
+ -/
 noncomputable def quotientMulEquiv [Finite G] [Finite G'] (N : Subgroup G) [N.Normal]
     [MulSemiringAction G C] [IsGaloisGroup G A C] [IsGaloisGroup N B C] [MulSemiringAction G' B]
     [IsGaloisGroup G' A B] :
@@ -441,8 +441,8 @@ theorem algebraMap_quotientMulEquiv_smul [Finite G] [Finite G'] (N : Subgroup G)
   apply mulEquivCongr_apply_smul
 
 attribute [local instance] FractionRing.liftAlgebra in
-/-- The restriction homomorphism from the Galois group of `C/A` to the Galois group of `B/A` where
-`C/B/A` is a tower of domains with `C/A` and `B/A` Galois. -/
+/-- .
+ -/
 noncomputable def restrictHom [Finite G] [Finite G'] [MulSemiringAction G C] [IsGaloisGroup G A C]
     [MulSemiringAction G' B] [IsGaloisGroup G' A B] :
     G →* G' :=
@@ -499,8 +499,8 @@ noncomputable section IntermediateField
 
 variable (N : Subgroup G) [N.Normal] [IsGaloisGroup N F L]
 
-/-- If `G` is a finite Galois group for `L/K` and `N` is a normal subgroup of `G` that is a
-Galois group for `L/F`, then the quotient group `G ⧸ N` is a Galois group for `F/K`. -/
+/-- .
+ -/
 instance [Finite G] [IsGaloisGroup G K L] : IsGaloisGroup (G ⧸ N) K F :=
   letI := smulOfNormal G F L N
   haveI := smulDistribClass_smulOfNormal G F L N
@@ -509,9 +509,9 @@ instance [Finite G] [IsGaloisGroup G K L] : IsGaloisGroup (G ⧸ N) K F :=
 
 variable (E : IntermediateField K L) [hE : IsGaloisGroup H E L]
 
-/-- If `G` is a finite Galois group for `L/K`, `N` is a normal subgroup that is a Galois group for
-`L/F`, and `H` is a subgroup that is a Galois group for `L/E` with `E ≤ F`, then the image of `H`
-under the canonical quotient map `G → G ⧸ N` is a Galois group for `F/E`. -/
+/-- .
+
+ -/
 theorem map_quotientMk' [Finite G] [IsGaloisGroup G K L] (h : E ≤ F) :
     letI : Algebra E F := (IntermediateField.inclusion h).toAlgebra
     IsGaloisGroup (H.map (QuotientGroup.mk' N)) E F :=

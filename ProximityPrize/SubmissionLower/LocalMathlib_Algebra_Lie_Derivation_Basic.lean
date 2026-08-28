@@ -22,43 +22,43 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Lie derivations
+/-! .
 
-This file defines *Lie derivations* and establishes some basic properties.
 
-## Main definitions
 
-- `LieDerivation`: A Lie derivation `D` from the Lie `R`-algebra `L` to the `L`-module `M` is an
-  `R`-linear map that satisfies the Leibniz rule `D [a, b] = [a, D b] - [b, D a]`.
-- `LieDerivation.inner`: The natural map from a Lie module to the derivations taking values in it.
 
-## Main statements
 
-- `LieDerivation.eqOn_lieSpan`: two Lie derivations equal on a set are equal on its Lie span.
-- `LieDerivation.instLieAlgebra`: the set of Lie derivations from a Lie algebra to itself is a Lie
-  algebra.
 
-## Implementation notes
 
-- Mathematically, a Lie derivation is just a derivation on a Lie algebra. However, the current
-  implementation of `RingTheory.Derivation` requires a commutative associative algebra, so is
-  incompatible with the setting of Lie algebras. Initially, this file is a copy-pasted adaptation of
-  the `RingTheory.Derivation.Basic.lean` file.
-- Since we don't have right actions of Lie algebras, the second term in the Leibniz rule is written
-  as `- [b, D a]`. Within Lie algebras, skew symmetry restores the expected definition `[D a, b]`.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
-/-- A Lie derivation `D` from the Lie `R`-algebra `L` to the `L`-module `M` is an `R`-linear map
-that satisfies the Leibniz rule `D [a, b] = [a, D b] - [b, D a]`. -/
+/-- .
+ -/
 structure LieDerivation (R L M : Type*) [CommRing R] [LieRing L] [LieAlgebra R L]
     [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
     extends L →ₗ[R] M where
   protected leibniz' (a b : L) : toLinearMap ⁅a, b⁆ = ⁅a, toLinearMap b⁆ - ⁅b, toLinearMap a⁆
 
-/-- The `LinearMap` underlying a `LieDerivation`. -/
+/-- . -/
 add_decl_doc LieDerivation.toLinearMap
 
 namespace LieDerivation
@@ -80,7 +80,7 @@ instance instLinearMapClass : LinearMapClass (LieDerivation R L M) R L M where
 
 theorem toFun_eq_coe : D.toFun = ⇑D := rfl
 
-/-- See Note [custom simps projection] -/
+/-- . -/
 def Simps.apply (D : LieDerivation R L M) : L → M := D
 
 initialize_simps_projections LieDerivation (toFun → apply)
@@ -113,12 +113,12 @@ lemma apply_lie_eq_sub (D : LieDerivation R L M) (a b : L) :
     D ⁅a, b⁆ = ⁅a, D b⁆ - ⁅b, D a⁆ :=
   D.leibniz' a b
 
-/-- For a Lie derivation from a Lie algebra to itself, the usual Leibniz rule holds. -/
+/-- . -/
 lemma apply_lie_eq_add (D : LieDerivation R L L) (a b : L) :
     D ⁅a, b⁆ = ⁅a, D b⁆ + ⁅D a, b⁆ := by
   rw [LieDerivation.apply_lie_eq_sub, sub_eq_add_neg, lie_skew]
 
-/-- Two Lie derivations equal on a set are equal on its Lie span. -/
+/-- . -/
 theorem eqOn_lieSpan {s : Set L} (h : Set.EqOn D1 D2 s) :
     Set.EqOn D1 D2 (LieSubalgebra.lieSpan R L s) := by
   intro _ hx
@@ -129,8 +129,8 @@ theorem eqOn_lieSpan {s : Set L} (h : Set.EqOn D1 D2 s) :
   | smul t x _ hx => simp [hx]
   | lie x y _ _ hx hy => simp [hx, hy]
 
-/-- If the Lie span of a set is the whole Lie algebra, then two Lie derivations equal on this set
-are equal on the whole Lie algebra. -/
+/-- .
+ -/
 theorem ext_of_lieSpan_eq_top (s : Set L) (hs : LieSubalgebra.lieSpan R L s = ⊤)
     (h : Set.EqOn D1 D2 s) : D1 = D2 :=
   ext fun _ => eqOn_lieSpan h <| hs.symm ▸ trivial
@@ -139,7 +139,7 @@ section
 
 open Finset Nat
 
-/-- The general Leibniz rule for Lie derivatives. -/
+/-- . -/
 theorem iterate_apply_lie (D : LieDerivation R L L) (n : ℕ) (a b : L) :
     D^[n] ⁅a, b⁆ = ∑ ij ∈ antidiagonal n, choose n ij.1 • ⁅D^[ij.1] a, D^[ij.2] b⁆ := by
   induction n with
@@ -151,7 +151,7 @@ theorem iterate_apply_lie (D : LieDerivation R L L) (n : ℕ) (a b : L) :
     refine sum_congr rfl fun ⟨i, j⟩ hij ↦ ?_
     rw [n.choose_symm_of_eq_add (mem_antidiagonal.1 hij).symm]
 
-/-- Alternate version of the general Leibniz rule for Lie derivatives. -/
+/-- . -/
 theorem iterate_apply_lie' (D : LieDerivation R L L) (n : ℕ) (a b : L) :
     D^[n] ⁅a, b⁆ = ∑ i ∈ range (n + 1), n.choose i • ⁅D^[i] a, D^[n - i] b⁆ := by
   rw [iterate_apply_lie D n a b]
@@ -236,10 +236,10 @@ theorem sub_apply {D1 D2 : LieDerivation R L M} : (D1 - D2) a = D1 a - D2 a :=
 
 section Scalar
 
-/-- A typeclass mixin saying that scalar multiplication and Lie bracket are left commutative. -/
+/-- . -/
 class SMulBracketCommClass (S L α : Type*) [SMul S α] [LieRing L] [AddCommGroup α]
     [LieRingModule L α] : Prop where
-  /-- `•` and `⁅⬝, ⬝⁆`  are left commutative -/
+  /-- . -/
   smul_bracket_comm : ∀ (s : S) (l : L) (a : α), s • ⁅l, a⁆ = ⁅l, s • a⁆
 
 variable {S T : Type*}
@@ -272,7 +272,7 @@ instance instSMulInt : SMulBracketCommClass ℤ L M := ⟨fun s l a => (lie_zsmu
 instance instAddCommGroup : AddCommGroup (LieDerivation R L M) :=
   coe_injective.addCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
-/-- `coe_fn` as an `AddMonoidHom`. -/
+/-- . -/
 def coeFnAddMonoidHom : LieDerivation R L M →+ L → M where
   toFun := (↑)
   map_zero' := coe_zero
@@ -302,7 +302,7 @@ section
 
 variable {R L : Type*} [CommRing R] [LieRing L] [LieAlgebra R L]
 
-/-- The commutator of two Lie derivations on a Lie algebra is a Lie derivation. -/
+/-- . -/
 instance instBracket : Bracket (LieDerivation R L L) (LieDerivation R L L) where
   bracket D1 D2 := LieDerivation.mk ⁅(D1 : Module.End R L), (D2 : Module.End R L)⁆ (fun a b => by
     simp only [Ring.lie_def, apply_lie_eq_add, coeFn_coe,
@@ -328,7 +328,7 @@ instance : LieRing (LieDerivation R L L) where
   leibniz_lie d e f := by
     ext a; simp only [commutator_apply, add_apply, map_sub]; abel
 
-/-- The set of Lie derivations from a Lie algebra `L` to itself is a Lie algebra. -/
+/-- . -/
 instance instLieAlgebra : LieAlgebra R (LieDerivation R L L) where
   lie_smul := fun r d e => by ext a; simp only [commutator_apply, map_smul, smul_sub, smul_apply]
 
@@ -344,18 +344,18 @@ variable (R L : Type*) [CommRing R] [LieRing L] [LieAlgebra R L]
 
 attribute [local instance 100] LieRing.ofAssociativeRing
 
-/-- The Lie algebra morphism from Lie derivations into linear endomorphisms. -/
+/-- . -/
 def toLinearMapLieHom : LieDerivation R L L →ₗ⁅R⁆ L →ₗ[R] L where
   toFun := toLinearMap
   map_add' := by intro D1 D2; dsimp
   map_smul' := by intro D1 D2; dsimp
   map_lie' := by intro D1 D2; dsimp
 
-/-- The map from Lie derivations to linear endomorphisms is injective. -/
+/-- . -/
 lemma toLinearMapLieHom_injective : Function.Injective (toLinearMapLieHom R L) :=
   fun _ _ h ↦ ext fun a ↦ congrFun (congrArg DFunLike.coe h) a
 
-/-- Lie derivations over a Noetherian Lie algebra form a Noetherian module. -/
+/-- . -/
 instance instNoetherian [IsNoetherian R L] : IsNoetherian R (LieDerivation R L L) :=
   isNoetherian_of_linearEquiv (LinearEquiv.ofInjective _ (toLinearMapLieHom_injective R L)).symm
 
@@ -366,7 +366,7 @@ section Inner
 variable (R L M : Type*) [CommRing R] [LieRing L] [LieAlgebra R L]
     [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
-/-- The natural map from a Lie module to the derivations taking values in it. -/
+/-- . -/
 @[simps!]
 def inner : M →ₗ[R] LieDerivation R L M where
   toFun m :=
@@ -405,8 +405,8 @@ section ExpNilpotent
 variable {R L : Type*} [CommRing R] [LieRing L] [LieAlgebra R L] [LieAlgebra ℚ L]
   (D : LieDerivation R L L)
 
-/-- In characteristic zero, the exponential of a nilpotent derivation is a Lie algebra
-automorphism. -/
+/-- .
+ -/
 noncomputable def exp (h : IsNilpotent D.toLinearMap) :
     L ≃ₗ⁅R⁆ L :=
   { toLinearMap := IsNilpotent.exp D.toLinearMap

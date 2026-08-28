@@ -27,11 +27,11 @@ bivariate swap identity with its public map/swap lemmas instead of unfolding
 the evaluation implementation. All original statements and definitions remain.
 -/
 
-/-!
-# Intermediate Fields of Rational Function Fields
+/-! .
 
-Results relating `IntermediateField` and `RatFunc`.
--/
+
+
+ -/
 
 variable {K : Type*} [Field K]
 
@@ -52,13 +52,13 @@ theorem IntermediateField.adjoin_X (E : IntermediateField K K⟮X⟯) :
     _root_.eq_top_iff]
   exact le_trans (le_of_eq RatFunc.adjoin_X.symm) (adjoin.mono _ _ _ (by simp))
 
-/-- The equivalence between `E⟮X⟯` and `K⟮X⟯` as `E`-algebras. -/
+/-- . -/
 noncomputable def IntermediateField.adjoinXEquiv (E : IntermediateField K K⟮X⟯) :
     E⟮(RatFunc.X : K⟮X⟯)⟯ ≃ₐ[E] K⟮X⟯ :=
   (equivOfEq (adjoin_X E)).trans topEquiv
 
-/-- The minimal polynomial of `X` over `K⟮f⟯`. It is defined as `f.num - f * f.denom`, viewed
-as a polynomial with coefficients in `A`, where `A` is a `K[f]`-algebra. -/
+/-- .
+ -/
 noncomputable abbrev minpolyX (A : Type*) [CommRing A] [Algebra K A] [Algebra K[f] A] : A[X] :=
   f.num.map (algebraMap K A) -
   Polynomial.C (algebraMap K[f] A (⟨f, self_mem_adjoin_singleton K f⟩ : K[f])) *

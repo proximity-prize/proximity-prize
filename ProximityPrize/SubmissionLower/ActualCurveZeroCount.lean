@@ -2,23 +2,23 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CoordinateBoxZeroCount
 import ProximityPrize.SubmissionLower.ActualCurveScalarTowers
 
-/-!
-# Box zero counts on the actual prime-component coordinate ring
+/-! .
 
-Model label: gpt-5.
 
-The ring is the literal quotient of K[Y,R,Z] by the actual prime, and
-the field is its literal fraction ring. Original affine points descend
-to actual quotient algebra homomorphisms, injectively. A proper test
-polynomial is proved nonzero in this quotient and its coordinate field.
 
-Algebraic coordinates are proved constant over algebraically closed K;
-each transcendental coordinate uses its canonical actual RatFunc
-embedding. The only projection inputs are finite-dimensionality and
-separability for these actual induced extensions, supplied by the
-separate proper-cut degree pipeline. No field presentation, point map,
-height, pole, or zero-count inequality is assumed.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualCurveZeroCount
 
@@ -33,7 +33,7 @@ variable (P : Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
 abbrev PointOn :=
   {v : Fin 3 → K // P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom}
 
-/-- Actual descent of the original point evaluation through the quotient. -/
+/-- . -/
 def pointHom (v : PointOn K P) : CoordinateRing K P →ₐ[K] K :=
   Ideal.Quotient.liftₐ P (MvPolynomial.aeval v.1) (fun F hF ↦ v.2 hF)
 
@@ -44,8 +44,8 @@ theorem pointHom_coordinate (v : PointOn K P) (i : Fin 3) :
     pointHom K P v (quotientCoordinate K P i) = v.1 i := by
   rw [quotientCoordinate, pointHom_mk, MvPolynomial.aeval_X]
 
-/-- Different original coordinate triples give different actual quotient
-K-points; this is proved on the three coordinate functions. -/
+/-- .
+ -/
 theorem pointHom_injective : Function.Injective (pointHom K P) := by
   intro v w h
   apply Subtype.ext
@@ -70,23 +70,23 @@ theorem quotient_eval_ne_zero_of_not_mem (F : MvPolynomial (Fin 3) K) (hF : F �
   intro hzero
   exact hF (Ideal.Quotient.eq_zero_iff_mem.mp hzero)
 
-/-- The previously proved literal evaluation kernel also gives the
-proper-test nonvanishing in the actual component field. -/
+/-- .
+ -/
 theorem field_eval_ne_zero_iff (F : MvPolynomial (Fin 3) K) :
     MvPolynomial.aeval (coordinate K P) F ≠ 0 ↔ F ∉ P := by
   change ¬ F ∈ RingHom.ker (MvPolynomial.aeval (coordinate K P)).toRingHom ↔ F ∉ P
   rw [aeval_coordinate_ker]
 
-/-- These are the actual canonical projection extensions. This property
-does not contain a field-degree, height, or point-count inequality. -/
+/-- .
+ -/
 def ProjectionsFiniteSeparable : Prop :=
   ∀ (i : Fin 3) (hi : Transcendental K (coordinate K P i)),
     letI : Algebra (RatFunc K) (CoordinateField K P) := rationalBaseAlgebra K P i hi
     FiniteDimensional (RatFunc K) (CoordinateField K P) ∧
       Algebra.IsSeparable (RatFunc K) (CoordinateField K P)
 
-/-- Degree of the actual coordinate projection; constant coordinates
-have degree zero. Finrank is taken for the canonical rational embedding. -/
+/-- .
+ -/
 def actualCoordinateDegree (i : Fin 3) : ℕ :=
   if hi : Transcendental K (coordinate K P i) then
     letI : Algebra (RatFunc K) (CoordinateField K P) := rationalBaseAlgebra K P i hi
@@ -106,8 +106,8 @@ theorem actualCoordinateDegree_of_isAlgebraic (i : Fin 3)
 
 variable [IsAlgClosed K]
 
-/-- Construct the coordinate data required by the proved global bound
-from the actual coordinates, with no arbitrary embedding choice. -/
+/-- .
+ -/
 def coordinateData (hproj : ProjectionsFiniteSeparable K P) (i : Fin 3) :
     CoordinateBoxZeroCount.Coordinate K (CoordinateField K P) :=
   if hi : Transcendental K (coordinate K P i) then
@@ -132,9 +132,9 @@ theorem coordinateData_degree (hproj : ProjectionsFiniteSeparable K P) (i : Fin 
   unfold coordinateData actualCoordinateDegree
   split_ifs <;> rfl
 
-/-- The actual original affine point count after choosing one actual
-transcendental coordinate as the separator. Every scalar tower, point
-homomorphism, and proper-test nonvanishing is derived. -/
+/-- .
+
+ -/
 theorem finite_zero_points_le_box_of_separator
     (hproj : ProjectionsFiniteSeparable K P)
     (i₀ : Fin 3) (hi₀ : Transcendental K (coordinate K P i₀))
@@ -184,8 +184,8 @@ theorem finite_zero_points_le_box_of_separator
   rw [hcard] at hcount
   simpa only [c, coordinateData_degree] using hcount
 
-/-- An actual non-point prime supplies its own separating coordinate
-via the proved quotient-field theorem; no coordinate is supplied here. -/
+/-- .
+ -/
 theorem finite_zero_points_le_box
     (hproj : ProjectionsFiniteSeparable K P)
     (hnonpoint : ∀ v : Fin 3 → K,

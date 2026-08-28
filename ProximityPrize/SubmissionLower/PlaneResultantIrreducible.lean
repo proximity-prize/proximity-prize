@@ -2,25 +2,25 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.PlaneResultantPointCount
 
 
-/-!
-# Proper cuts of irreducible positive-outer-degree plane curves
+/-! .
 
-Model label: gpt-5.
 
-The previous point-count theorem requires a nonzero resultant and excludes
-whole zero fibers explicitly. Here both conditions are proved for an
-irreducible first polynomial of positive outer degree and a second
-polynomial not divisible by it. No monicity assumption is used.
 
-The intermediate specialization theorem holds for every primitive
-polynomial over K[X]. Gauss's lemma transfers irreducibility to K(X),
-where vanishing resultant forces divisibility; primitivity descends that
-divisibility. Resultants use the actual original outer degrees: padding
-both caps arbitrarily is not asserted to preserve nonvanishing.
 
-This proves a finite planar distinct-point bound. It does not supply the
-remaining mixed three-factor curve-degree ledger or an alignment theorem.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.PlaneResultantIrreducible
 
@@ -28,9 +28,9 @@ noncomputable section
 
 variable {K : Type} [Field K] [DecidableEq K]
 
-/-- If every outer coefficient vanishes at alpha, the inner linear factor
-divides every coefficient and hence divides the whole polynomial as an
-outer constant. -/
+/-- .
+
+ -/
 theorem inner_linear_C_dvd_of_specialization_eq_zero
     (P : Polynomial (Polynomial K)) (alpha : K)
     (hzero : P.map (Polynomial.evalRingHom alpha) = 0) :
@@ -41,8 +41,8 @@ theorem inner_linear_C_dvd_of_specialization_eq_zero
   have hcoeff := congrArg (fun Q : Polynomial K => Q.coeff i) hzero
   simpa using hcoeff
 
-/-- A primitive polynomial over K[X] has no identically zero scalar fiber.
-This is stronger than only excluding zero fibers of irreducible curves. -/
+/-- .
+ -/
 theorem primitive_specialization_ne_zero
     (P : Polynomial (Polynomial K)) (hprimitive : P.IsPrimitive) (alpha : K) :
     P.map (Polynomial.evalRingHom alpha) ≠ 0 := by
@@ -50,8 +50,8 @@ theorem primitive_specialization_ne_zero
   exact Polynomial.not_isUnit_X_sub_C alpha
     (hprimitive _ (inner_linear_C_dvd_of_specialization_eq_zero P alpha hzero))
 
-/-- Positive outer degree makes an irreducible bivariate polynomial
-primitive, so none of its scalar fibers is the whole zero polynomial. -/
+/-- .
+ -/
 theorem irreducible_specialization_ne_zero
     (P : Polynomial (Polynomial K)) (hirreducible : Irreducible P)
     (hdegree : 0 < P.natDegree) (alpha : K) :
@@ -59,9 +59,9 @@ theorem irreducible_specialization_ne_zero
   exact primitive_specialization_ne_zero P
     (hirreducible.isPrimitive (Nat.ne_of_gt hdegree)) alpha
 
-/-- Non-monic primitive version of the stock fraction-field resultant
-argument. Vanishing of the actual-degree resultant forces an irreducible
-primitive first polynomial to divide the second. -/
+/-- .
+
+ -/
 theorem primitive_irreducible_dvd_of_resultant_eq_zero
     (P Q : Polynomial (Polynomial K))
     (hprimitive : P.IsPrimitive) (hirreducible : Irreducible P)
@@ -87,8 +87,8 @@ theorem primitive_irreducible_dvd_of_resultant_eq_zero
     (Irreducible.dvd_iff_not_isCoprime hirreducibleF).mpr hnotCoprime
   exact hprimitive.dvd_of_fraction_map_dvd_fraction_map hdivF
 
-/-- A proper cut of an irreducible positive-outer-degree plane curve has
-a nonzero resultant at the actual original degrees, without monicity. -/
+/-- .
+ -/
 theorem irreducible_resultant_ne_zero_of_not_dvd
     (P Q : Polynomial (Polynomial K)) (hirreducible : Irreducible P)
     (hdegree : 0 < P.natDegree) (hproper : ¬ P ∣ Q) :
@@ -97,9 +97,9 @@ theorem irreducible_resultant_ne_zero_of_not_dvd
   exact hproper (primitive_irreducible_dvd_of_resultant_eq_zero P Q
     (hirreducible.isPrimitive (Nat.ne_of_gt hdegree)) hirreducible hresultant)
 
-/-- Actual finite planar Bezout bound for a proper cut of an irreducible
-positive-outer-degree curve. Nonzero resultant and absence of whole vertical
-fibers are conclusions of the preceding algebra, not extra assumptions. -/
+/-- .
+
+ -/
 theorem irreducible_common_points_card_le_bidegree_bound
     (P Q : Polynomial (Polynomial K)) (points : Finset (K × K))
     (hirreducible : Irreducible P) (hdegree : 0 < P.natDegree)

@@ -6,20 +6,20 @@ import ProximityPrize.Benchmark.TargetLower
 
 
 
-/-!
-# Actual local valuation bounds for a coordinate box
+/-! .
 
-Model label: gpt-5.
 
-The multiplicative bound below is derived from the actual monomial expansion
-of a multivariate polynomial and the ultrametric finite-sum inequality for an
-actual valuation. No polynomial height bound is supplied as a hypothesis.
 
-The integer specialization uses the nonnegative pole order max(0, log(v(x))).
-Its finite weighted-sum corollary applies to any already chosen finite family
-of actual valuations. It does not construct curve places, a product formula,
-a global pole divisor, or a geometric point-count bound.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactLocalPoleBound
 
@@ -32,7 +32,7 @@ section Multiplicative
 variable {K L σ Γ₀ : Type*} [Field K] [Field L] [Fintype σ]
   [LinearOrderedCommGroupWithZero Γ₀]
 
-/-- Actual evaluation of one monomial is bounded by its coordinate box. -/
+/-- . -/
 theorem valuation_monomial_le (v : Valuation L Γ₀) (coeff : K →+* L)
     (hcoeff : ∀ c : K, v (coeff c) ≤ 1) (x : σ → L)
     (cap : σ → ℕ) (d : σ →₀ ℕ) (c : K) (hd : ∀ i, d i ≤ cap i) :
@@ -52,7 +52,7 @@ theorem valuation_monomial_le (v : Valuation L Γ₀) (coeff : K →+* L)
         (pow_le_pow_right₀ (le_max_left _ _) (hd i))
     _ = _ := one_mul _
 
-/-- The coordinate-box majorant follows from the polynomial itself. -/
+/-- . -/
 theorem valuation_eval_le_box (v : Valuation L Γ₀) (coeff : K →+* L)
     (hcoeff : ∀ c : K, v (coeff c) ≤ 1) (x : σ → L)
     (cap : σ → ℕ) (F : MvPolynomial σ K)
@@ -67,8 +67,8 @@ theorem valuation_eval_le_box (v : Valuation L Γ₀) (coeff : K →+* L)
   intro i
   exact (MvPolynomial.monomial_le_degreeOf i hd).trans (hcap i)
 
-/-- Including one on the left handles zero evaluations without logarithm
-exceptions and retains the same actual coordinate majorant. -/
+/-- .
+ -/
 theorem max_one_valuation_eval_le_box (v : Valuation L Γ₀) (coeff : K →+* L)
     (hcoeff : ∀ c : K, v (coeff c) ≤ 1) (x : σ → L)
     (cap : σ → ℕ) (F : MvPolynomial σ K)
@@ -86,11 +86,11 @@ section IntegerPole
 
 variable {K L σ : Type*} [Field K] [Field L] [Fintype σ]
 
-/-- Nonnegative integer pole order, including the zero-value convention. -/
+/-- . -/
 def poleOrder (v : Valuation L (WithZero (Multiplicative ℤ))) (x : L) : ℤ :=
   max 0 (v x).log
 
-/-- The zero convention for WithZero.log causes no issue after taking max 1. -/
+/-- . -/
 theorem log_max_one (z : WithZero (Multiplicative ℤ)) :
     (max 1 z).log = max 0 z.log := by
   by_cases hz : z = 0
@@ -103,7 +103,7 @@ theorem log_max_one (z : WithZero (Multiplicative ℤ)) :
       simpa using (WithZero.log_le_log hz (by simp)).2 h
     simp only [max_eq_left h, WithZero.log_one, max_eq_left hlog]
 
-/-- Logarithm of an actual finite product whose factors are at least one. -/
+/-- . -/
 theorem log_prod_of_one_le {ι : Type*} (s : Finset ι)
     (f : ι → WithZero (Multiplicative ℤ)) :
     (∀ i ∈ s, 1 ≤ f i) →
@@ -123,7 +123,7 @@ theorem log_prod_of_one_le {ι : Type*} (s : Finset ι)
       rw [Finset.prod_insert hi, WithZero.log_mul hfi0 hprod0,
         Finset.sum_insert hi, ih hfs]
 
-/-- Actual discrete-valuation pole order of a box-bounded polynomial. -/
+/-- . -/
 theorem poleOrder_eval_le_box
     (v : Valuation L (WithZero (Multiplicative ℤ))) (coeff : K →+* L)
     (hcoeff : ∀ c : K, v (coeff c) ≤ 1) (x : σ → L)
@@ -144,8 +144,8 @@ theorem poleOrder_eval_le_box
   rw [log_prod_of_one_le Finset.univ _ hfactor] at hlog
   simpa only [WithZero.log_pow, log_max_one, nsmul_eq_mul, poleOrder] using hlog
 
-/-- A finite weighted local-pole ledger, using actual valuations at every
-summand. This is not a global product-formula or place-existence statement. -/
+/-- .
+ -/
 theorem weighted_poleOrder_eval_le_box {τ : Type*} (S : Finset τ)
     (weight : τ → ℕ) (v : τ → Valuation L (WithZero (Multiplicative ℤ)))
     (coeff : K →+* L) (hcoeff : ∀ t ∈ S, ∀ c : K, v t (coeff c) ≤ 1)

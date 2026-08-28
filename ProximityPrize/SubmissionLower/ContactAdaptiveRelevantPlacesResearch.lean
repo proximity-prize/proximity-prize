@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactWeakSeparableSeparatorResearch
 
-/-!
-# Relevant places with a component-dependent literal normalization
+/-! .
 
-The old flag construction normalized every component at literal `Z`.  This
-version uses the one `SeparableLiteralCoordinate` selected independently on
-each prime component.  The resulting finite place set still covers every
-nonzero order of every original coordinate.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveRelevantPlacesResearch
 
@@ -27,8 +27,8 @@ set_option synthInstance.maxHeartbeats 300000
 
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 
-/-- Finite union of all nonzero literal-coordinate order supports, normalized
-through an arbitrary selected literal separator. -/
+/-- .
+ -/
 def literalRelevantPlaces
     {P : Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime]
     (D : SeparableLiteralCoordinate P) :
@@ -55,8 +55,8 @@ def literalRelevantPlaces
         (coordinate Omega P i) hi
     else ∅)
 
-/-- Outside `literalRelevantPlaces`, every original coordinate has pole order
-zero. -/
+/-- .
+ -/
 theorem coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant
     {P : Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime]
     (D : SeparableLiteralCoordinate P)

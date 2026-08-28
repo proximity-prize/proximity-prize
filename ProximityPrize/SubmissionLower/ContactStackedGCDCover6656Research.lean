@@ -2,13 +2,13 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactRecursiveGCDResearch
 import ProximityPrize.SubmissionLower.ContactStackedInterpolation6656Research
 
-/-!
-# Recursive GCD cover for the three 66.56 interpolants
+/-! .
 
-This module installs the canonical GCD structure supplied by unique
-factorization of the multivariate polynomial ring, then applies the abstract
-three-branch algebra theorem to every selected specialization.
--/
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedGCDCover6656Research
 
@@ -27,8 +27,8 @@ local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 local instance : GCDMonoid GlobalPoly :=
   UniqueFactorizationMonoid.toGCDMonoid GlobalPoly
 
-/-- The disjoint recursive branch alternative after one selected
-specialization. -/
+/-- .
+ -/
 def RecursiveSpecializationBranch
     (P : Polynomial IRSProfile.Field) (gamma : IRSProfile.Field)
     (QA QB QC : GlobalPoly) : Prop :=
@@ -50,9 +50,9 @@ theorem recursive_branch_of_three_vanishings
   exact recursive_three_branch_cover
     (specialization IRSProfile.Field P gamma).toRingHom QA QB QC hA hB hC
 
-/-- End-to-end algebraic front end: three nonzero boxed contact interpolants,
-and the exact recursive branch cover for every degree-bounded candidate with
-the required agreement support. -/
+/-- .
+
+ -/
 theorem exists_stacked_interpolants_with_recursive_cover
     (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
     ∃ QA QB QC : GlobalPoly,

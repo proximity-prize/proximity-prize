@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6600Research
 import ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research
 
-/-!
-# Actual regular-factor residual stages at score 66
+/-! .
 
-This adapter specializes the canonical geometric residual stage to one of
-the real positive-`R` factors in the global selected-family decomposition.
-All solution, regularity, degree, agreement, and no-pencil fields are
-inherited from the filtered original family.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactRegularFactorResidualStage6600Research
 
@@ -35,10 +35,10 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Iota := Classical.decEq Iota
 local instance : DecidableEq (GenericField K) := Classical.decEq (GenericField K)
 
-/-- Parameter-generic initial stage for one geometric factor of one supplied
-regular factor.  Factor extraction and box-to-support arithmetic are kept
-outside this constructor, so different global profiles can reuse the same
-filtered-family geometry. -/
+/-- .
+
+
+ -/
 def regularGeometricResidualStageOfSupport
     (support : ResidualSupportParameters)
     {pchar errorCap degree : ℕ} [CharP K pchar]
@@ -69,8 +69,8 @@ def regularGeometricResidualStageOfSupport
     (noLargeSelectedPencil_mono selected Gamma _ degree errorCap hsub hnoPencil)
     hdegreeChar g
 
-/-- The exact accepted-profile initial stage for one geometric factor of one
-actual global regular factor.  This retains the original API exactly. -/
+/-- .
+ -/
 def regularGeometricResidualStage
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
@@ -97,8 +97,8 @@ def regularGeometricResidualStage
     ⟨hsupport.1, hsupport.2.1, hsupport.2.2⟩
     (by norm_num [w, prime]) g
 
-/-- Geometric recursive bounds aggregate to the exact original rectangular
-factor ledger expected by the global selected-family join. -/
+/-- .
+ -/
 theorem regular_factor_seed_bound_of_geometric_counts
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)

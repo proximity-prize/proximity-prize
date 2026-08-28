@@ -26,27 +26,27 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
+/-! .
 
-# Unramified morphisms
 
-An `R`-algebra `A` is formally unramified if `Ω[A⁄R]` is trivial.
-This is equivalent to the standard definition "for every `R`-algebra,
-every square-zero ideal `I : Ideal B` and `f : A →ₐ[R] B ⧸ I`, there exists
-at most one lift `A →ₐ[R] B`".
-It is unramified if it is formally unramified and of finite type.
 
-Note that there are multiple definitions in the literature. The definition we give is equivalent to
-the one in the Stacks Project https://stacks.math.columbia.edu/tag/00US. Note that in EGA unramified
-is defined as formally unramified and of finite presentation.
 
-We show that the property extends onto nilpotent ideals, and that it is stable
-under `R`-algebra homomorphisms and compositions.
 
-We show that unramified is stable under algebra isomorphisms, composition and
-localization at an element.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -60,12 +60,12 @@ section
 
 variable (R : Type v) (A : Type u) [CommRing R] [CommRing A] [Algebra R A]
 
-/--
-An `R`-algebra `A` is formally unramified if `Ω[A⁄R]` is trivial.
+/-- .
 
-This is equivalent to "for every `R`-algebra, every square-zero ideal
-`I : Ideal B` and `f : A →ₐ[R] B ⧸ I`, there exists at most one lift `A →ₐ[R] B`".
-See `Algebra.FormallyUnramified.iff_comp_injective`. -/
+
+
+
+ -/
 @[mk_iff, stacks 00UM]
 class FormallyUnramified : Prop where
   subsingleton_kaehlerDifferential : Subsingleton Ω[A⁄R]
@@ -124,7 +124,7 @@ theorem iff_comp_injective_of_small [Small.{w} A] :
       apply RingHom.kerLift_injective (TensorProduct.lmul' R (S := A)).kerSquareLift.toRingHom
       simpa using DFunLike.congr_fun (f₁.2.trans f₂.2.symm) x
 
-/-- A version without stray universes that is more easy to rewrite with. -/
+/-- . -/
 theorem iff_comp_injective :
     FormallyUnramified R A ↔
       ∀ ⦃B : Type u⦄ [CommRing B],
@@ -257,7 +257,7 @@ section of_surjective
 variable {R : Type*} [CommRing R]
 variable {A B : Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
 
-/-- This holds in general for epimorphisms. -/
+/-- . -/
 theorem of_surjective [FormallyUnramified R A] (f : A →ₐ[R] B) (H : Function.Surjective f) :
     FormallyUnramified R B := by
   rw [iff_comp_injective]
@@ -310,7 +310,7 @@ variable [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
 variable [IsLocalization (M.map (algebraMap R S)) Sₘ]
 include M
 
-/-- This holds in general for epimorphisms. -/
+/-- . -/
 theorem of_isLocalization [IsLocalization M Rₘ] : FormallyUnramified R Rₘ := by
   rw [iff_comp_injective]
   intro Q _ _ I _ f₁ f₂ _
@@ -324,11 +324,11 @@ instance [FormallyUnramified R S] (M : Submonoid S) : FormallyUnramified R (Loca
   .comp _ S _
 
 set_option linter.unusedSectionVars false in
-/-- This actually does not need the localization instance, and is stated here again for
-consistency. See `Algebra.FormallyUnramified.of_comp` instead.
+/-- .
 
-The intended use is for copying proofs between `Formally{Unramified, Smooth, Etale}`
-without the need to change anything (including removing redundant arguments). -/
+
+
+ -/
 @[nolint unusedArguments]
 theorem localization_base [FormallyUnramified R Sₘ] : FormallyUnramified Rₘ Sₘ :=
   FormallyUnramified.of_restrictScalars R Rₘ Sₘ
@@ -342,8 +342,8 @@ theorem localization_map [FormallyUnramified R S] :
 
 end Localization
 
-/-- If `S` is an unramified `R`-algebra, `S ⊗[R] S` splits as `S × T` for some `R`-algebra `T`.
-In particular, the diagonal is an open and closed immersion. -/
+/-- .
+ -/
 lemma exists_algEquiv_prod (R S : Type u) [CommRing R] [CommRing S]
     [Algebra R S] [Algebra.EssFiniteType R S] [Algebra.FormallyUnramified R S] :
     ∃ (T : Type u) (_ : CommRing T) (_ : Algebra S T), Nonempty (S ⊗[R] S ≃ₐ[S] S × T) := by
@@ -365,7 +365,7 @@ section
 variable (R : Type*) [CommRing R]
 variable (A : Type*) [CommRing A] [Algebra R A]
 
-/-- An `R`-algebra `A` is unramified if it is formally unramified and of finite type. -/
+/-- . -/
 @[stacks 00UT "Note that the Stacks project has a different definition of unramified, and tag
 <https://stacks.math.columbia.edu/tag/00UU> shows that their definition is the same as this one."]
 class Unramified : Prop where
@@ -381,12 +381,12 @@ attribute [instance] formallyUnramified finiteType
 variable {R : Type*} [CommRing R]
 variable {A B : Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
 
-/-- Being unramified is transported via algebra isomorphisms. -/
+/-- . -/
 theorem of_equiv [Unramified R A] (e : A ≃ₐ[R] B) : Unramified R B where
   formallyUnramified := FormallyUnramified.of_equiv e
   finiteType := FiniteType.equiv Unramified.finiteType e
 
-/-- Localization at an element is unramified. -/
+/-- . -/
 theorem of_isLocalization_Away (r : R) [IsLocalization.Away r A] : Unramified R A where
   formallyUnramified := Algebra.FormallyUnramified.of_isLocalization (Submonoid.powers r)
   finiteType :=
@@ -397,14 +397,14 @@ section Comp
 
 variable (R A B)
 
-/-- Unramified is stable under composition. -/
+/-- . -/
 theorem comp [Algebra A B] [IsScalarTower R A B] [Unramified R A] [Unramified A B] :
     Unramified R B where
   formallyUnramified := FormallyUnramified.comp R A B
   finiteType := FiniteType.trans (S := A) Unramified.finiteType
     Unramified.finiteType
 
-/-- Unramified is stable under base change. -/
+/-- . -/
 instance baseChange [Unramified R A] : Unramified B (B ⊗[R] A) where
 
 end Comp

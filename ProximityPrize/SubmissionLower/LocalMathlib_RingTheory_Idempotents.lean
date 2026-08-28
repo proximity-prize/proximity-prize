@@ -22,35 +22,35 @@ Port elaboration adjustment: explicitly bind classical decidable equality
 for the original finite-index proofs, preserving all mathematical statements.
 -/
 
-/-!
+/-! .
 
-# Idempotents in rings
 
-The predicate `IsIdempotentElem` is defined for general monoids in
-`Mathlib/Algebra/Group/Idempotent.lean`; ring-specific lemmas are in
-`Mathlib/Algebra/Ring/Idempotent.lean`.
-In this file we provide various results regarding idempotent elements in rings.
 
-## Main definitions
 
-- `OrthogonalIdempotents`:
-  A family `{ eᵢ }` of idempotent elements is orthogonal if `eᵢ * eⱼ = 0` for all `i ≠ j`.
-- `CompleteOrthogonalIdempotents`:
-  A family `{ eᵢ }` of orthogonal idempotent elements is complete if `∑ eᵢ = 1`.
 
-## Main results
 
-- `CompleteOrthogonalIdempotents.lift_of_isNilpotent_ker`:
-  If the kernel of `f : R →+* S` consists of nilpotent elements, and `{ eᵢ }` is a family of
-  complete orthogonal idempotents in the range of `f`, then `{ eᵢ }` is the image of some
-  complete orthogonal idempotents in `R`.
-- `existsUnique_isIdempotentElem_eq_of_ker_isNilpotent`:
-  If `R` is commutative and the kernel of `f : R →+* S` consists of nilpotent elements,
-  then every idempotent in the range of `f` lifts to a unique idempotent in `R`.
-- `CompleteOrthogonalIdempotents.bijective_pi`:
-  If `R` is commutative, then a family `{ eᵢ }` of complete orthogonal idempotent elements induces
-  a ring isomorphism `R ≃ ∏ R ⧸ ⟨1 - eᵢ⟩`.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -59,7 +59,7 @@ section Semiring
 variable {R S : Type*} [Semiring R] [Semiring S] (f : R →+* S)
 variable {I : Type*} (e : I → R)
 
-/-- A family `{ eᵢ }` of idempotent elements is orthogonal if `eᵢ * eⱼ = 0` for all `i ≠ j`. -/
+/-- . -/
 @[mk_iff]
 structure OrthogonalIdempotents : Prop where
   idem : ∀ i, IsIdempotentElem (e i)
@@ -142,16 +142,16 @@ lemma OrthogonalIdempotents.option (he : OrthogonalIdempotents e) [Fintype I] (x
 
 variable [Fintype I]
 
-/--
-A family `{ eᵢ }` of idempotent elements is complete orthogonal if
-1. (orthogonal) `eᵢ * eⱼ = 0` for all `i ≠ j`.
-2. (complete) `∑ eᵢ = 1`
--/
+/-- .
+
+
+
+ -/
 @[mk_iff]
 structure CompleteOrthogonalIdempotents (e : I → R) : Prop extends OrthogonalIdempotents e where
   complete : ∑ i, e i = 1
 
-/-- If a family is complete orthogonal, it consists of idempotents. -/
+/-- . -/
 lemma CompleteOrthogonalIdempotents.iff_ortho_complete :
     CompleteOrthogonalIdempotents e ↔ Pairwise (e · * e · = 0) ∧ ∑ i, e i = 1 := by
   rw [completeOrthogonalIdempotents_iff, orthogonalIdempotents_iff, and_assoc, and_iff_right_of_imp]
@@ -253,7 +253,7 @@ theorem exists_isIdempotentElem_mul_eq_zero_of_ker_isNilpotent_aux
     · simp at hn
     rw [pow_succ, mul_assoc, ha', mul_zero, mul_zero]
 
-/-- Orthogonal idempotents lift along nil ideals. -/
+/-- . -/
 theorem exists_isIdempotentElem_mul_eq_zero_of_ker_isNilpotent
     (h : ∀ x ∈ RingHom.ker f, IsNilpotent x)
     (e₁ : S) (he : e₁ ∈ f.range) (he₁ : IsIdempotentElem e₁)
@@ -267,7 +267,7 @@ theorem exists_isIdempotentElem_mul_eq_zero_of_ker_isNilpotent
   · rw [mul_assoc, h₂, mul_zero]
   · rw [← mul_assoc, mul_sub, mul_one, he₂.eq, sub_self, zero_mul]
 
-/-- Idempotents lift along nil ideals. -/
+/-- . -/
 theorem exists_isIdempotentElem_eq_of_ker_isNilpotent (h : ∀ x ∈ RingHom.ker f, IsNilpotent x)
     (e : S) (he : e ∈ f.range) (he' : IsIdempotentElem e) :
     ∃ e' : R, IsIdempotentElem e' ∧ f e' = e := by
@@ -292,7 +292,7 @@ lemma OrthogonalIdempotents.lift_of_isNilpotent_ker_aux
 
 variable {I : Type*} {e : I → R}
 
-/-- A family of orthogonal idempotents lift along nil ideals. -/
+/-- . -/
 lemma OrthogonalIdempotents.lift_of_isNilpotent_ker [Finite I]
     (h : ∀ x ∈ RingHom.ker f, IsNilpotent x)
     {e : I → S} (he : OrthogonalIdempotents e) (he' : ∀ i, e i ∈ f.range) :
@@ -343,7 +343,7 @@ lemma CompleteOrthogonalIdempotents.lift_of_isNilpotent_ker_aux
   | zero => simp [this, Fin.sum_univ_succ, ← he.complete]
   | succ i => simp [this]
 
-/-- A system of complete orthogonal idempotents lift along nil ideals. -/
+/-- . -/
 lemma CompleteOrthogonalIdempotents.lift_of_isNilpotent_ker
     (h : ∀ x ∈ RingHom.ker f, IsNilpotent x)
     {e : I → S} (he : CompleteOrthogonalIdempotents e) (he' : ∀ i, e i ∈ f.range) :
@@ -401,7 +401,7 @@ theorem existsUnique_isIdempotentElem_eq_of_ker_isNilpotent (h : ∀ x ∈ RingH
     eq_of_isNilpotent_sub_of_isIdempotentElem hx he₂
       (h _ (by rw [RingHom.mem_ker, map_sub, hx', sub_self]))⟩
 
-/-- A family of orthogonal idempotents induces a surjection `R ≃+* ∏ R ⧸ ⟨1 - eᵢ⟩` -/
+/-- . -/
 lemma OrthogonalIdempotents.surjective_pi {I : Type*} [Finite I] {e : I → R}
     (he : OrthogonalIdempotents e) :
     Function.Surjective (RingHom.pi fun i ↦ Ideal.Quotient.mk (Ideal.span {1 - e i})) := by
@@ -442,7 +442,7 @@ lemma CompleteOrthogonalIdempotents.of_prod_one_sub
   __ := he
   complete := by rwa [he.prod_one_sub, sub_eq_zero, eq_comm] at he'
 
-/-- A family of complete orthogonal idempotents induces an isomorphism `R ≃+* ∏ R ⧸ ⟨1 - eᵢ⟩` -/
+/-- . -/
 lemma CompleteOrthogonalIdempotents.bijective_pi (he : CompleteOrthogonalIdempotents e) :
     Function.Bijective (RingHom.pi fun i ↦ Ideal.Quotient.mk (Ideal.span {1 - e i})) := by
   classical
@@ -492,8 +492,8 @@ lemma RingHom.prod_bijective_of_isIdempotentElem {e f : R} (he : IsIdempotentEle
   · simpa
 
 variable (R) in
-/-- If `e` and `f` are idempotent elements such that `e + f = 1` and `e * f = 0`,
-`S` is isomorphic as an `R`-algebra to `S ⧸ (e) × S ⧸ (f)`. -/
+/-- .
+ -/
 @[simps! -isSimp apply, simps! apply_fst apply_snd]
 noncomputable def AlgEquiv.prodQuotientOfIsIdempotentElem
     {S : Type*} [CommRing S] [Algebra R S] {e f : S} (he : IsIdempotentElem e)
@@ -502,10 +502,10 @@ noncomputable def AlgEquiv.prodQuotientOfIsIdempotentElem
   AlgEquiv.ofBijective ((Ideal.Quotient.mkₐ _ _).prod (Ideal.Quotient.mkₐ _ _)) <|
     RingHom.prod_bijective_of_isIdempotentElem he hf hef₁ hef₂
 
-/-- One can lift a family of complete orthogonal idempotents of `R/e₀` to get one on `R`.
+/-- .
 
-Note that the lemma itself is stated in terms of surjections (where `T = S / I`)
-instead for syntactic generality. -/
+
+ -/
 lemma CompleteOrthogonalIdempotents.exists_eq_comp_of_ker_eq_span
     (f : R →+* S) (e₀ : R) (he₀ : IsIdempotentElem e₀) (hfe₀ : RingHom.ker f = .span {e₀})
     (e : I → S) (he : CompleteOrthogonalIdempotents e) (hef : ∀ i, e i ∈ f.range) :
@@ -542,8 +542,8 @@ namespace Subsemigroup
 
 variable [Semigroup R]
 
-/-- The corner associated to an element `e` in a semigroup
-is the subsemigroup of all elements of the form `e * r * e`. -/
+/-- .
+ -/
 def corner : Subsemigroup R where
   carrier := Set.range (e * · * e)
   mul_mem' := by rintro _ _ ⟨a, rfl⟩ ⟨b, rfl⟩; exact ⟨a * e * e * b, by simp_rw [mul_assoc]⟩
@@ -569,22 +569,22 @@ lemma mem_corner_iff_mem_range_mul_right (hc : IsMulCentral e) {r : R} :
     r ∈ corner e ↔ r ∈ Set.range (· * e) := by
   simp_rw [mem_corner_iff_mem_range_mul_left idem hc, (hc.comm _).eq]
 
-/-- The corner associated to an idempotent `e` in a semiring without 1
-is the semiring with `e` as 1 consisting of all element of the form `e * r * e`. -/
+/-- .
+ -/
 @[nolint unusedArguments]
 def _root_.IsIdempotentElem.Corner (_ : IsIdempotentElem e) : Type _ := Subsemigroup.corner e
 
 end Subsemigroup
 
-/-- The corner associated to an element `e` in a semiring without 1
-is the subsemiring without 1 of all elements of the form `e * r * e`. -/
+/-- .
+ -/
 def NonUnitalSubsemiring.corner [NonUnitalSemiring R] : NonUnitalSubsemiring R where
   __ := Subsemigroup.corner e
   add_mem' := by rintro _ _ ⟨a, rfl⟩ ⟨b, rfl⟩; exact ⟨a + b, by simp_rw [mul_add, add_mul]⟩
   zero_mem' := ⟨0, by simp_rw [mul_zero, zero_mul]⟩
 
-/-- The corner associated to an element `e` in a ring without 1
-is the subring without 1 of all elements of the form `e * r * e`. -/
+/-- .
+ -/
 def NonUnitalRing.corner [NonUnitalRing R] : NonUnitalSubring R where
   __ := NonUnitalSubsemiring.corner e
   neg_mem' := by rintro _ ⟨a, rfl⟩; exact ⟨-a, by simp_rw [mul_neg, neg_mul]⟩
@@ -612,8 +612,8 @@ instance [NonUnitalCommRing R] (idem : IsIdempotentElem e) : CommRing idem.Corne
 
 variable {I : Type*} [Fintype I] {e : I → R}
 
-/-- A complete orthogonal family of central idempotents in a semiring
-give rise to a direct product decomposition. -/
+/-- .
+ -/
 def CompleteOrthogonalIdempotents.ringEquivOfIsMulCentral [Semiring R]
     (he : CompleteOrthogonalIdempotents e) (hc : ∀ i, IsMulCentral (e i)) :
     R ≃+* Π i, (he.idem i).Corner where
@@ -637,8 +637,8 @@ def CompleteOrthogonalIdempotents.ringEquivOfIsMulCentral [Semiring R]
       simp_rw [mul_assoc]
   map_add' r₁ r₂ := funext fun i ↦ Subtype.ext <| by simpa [mul_add] using! add_mul ..
 
-/-- A complete orthogonal family of idempotents in a commutative semiring
-give rise to a direct product decomposition. -/
+/-- .
+ -/
 def CompleteOrthogonalIdempotents.ringEquivOfComm [CommSemiring R]
     (he : CompleteOrthogonalIdempotents e) : R ≃+* Π i, (he.idem i).Corner :=
   he.ringEquivOfIsMulCentral fun _ ↦ Semigroup.mem_center_iff.mpr fun _ ↦ mul_comm ..

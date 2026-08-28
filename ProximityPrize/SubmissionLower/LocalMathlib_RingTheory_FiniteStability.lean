@@ -20,14 +20,14 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
+/-! .
 
-# Stability of finiteness conditions in commutative algebra
 
-In this file we show that `Algebra.FiniteType` and `Algebra.FinitePresentation` are
-stable under base change.
 
--/
+
+
+
+ -/
 
 section ProximityFlatProofPort
 

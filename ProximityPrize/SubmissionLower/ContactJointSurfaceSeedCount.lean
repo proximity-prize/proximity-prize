@@ -5,12 +5,12 @@ import ProximityPrize.SubmissionLower.ContactJointSeedCaps
 import ProximityPrize.SubmissionLower.ActualPlaneJointProjection
 import ProximityPrize.SubmissionLower.LocalMathlib_Algebra_MvPolynomial_NoZeroDivisors
 
-/-!
-# Whole-surface counting with the score-6463 joint projection
+/-! .
 
-This is the agreement-first surface proof with only the R-base
-characteristic gate replaced by the joint Y+Z resultant certificate.
--/
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactJointSurfaceSeedCount
 
@@ -31,9 +31,9 @@ variable {K Ω : Type} [Field K] [Field Ω]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Ω := Classical.decEq Ω
 
-/-- A divisor retains a joint cap after the R-coordinate is collected into
-the rational coefficient field.  This is the exact factor-inheritance seam
-needed for geometric factors of the interpolating surface. -/
+/-- .
+
+ -/
 theorem rationalMap_joint_support_of_dvd
     (G Q : MvPolynomial (Fin 3) Ω) (cap : ℕ)
     (hdiv : G ∣ Q) (hQne : Q ≠ 0)
@@ -63,7 +63,7 @@ variable (φ : Polynomial K →+* Ω)
 variable {ι : Type*}
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- Agreement-first incidence with a conditional joint R-certificate. -/
+/-- . -/
 theorem whole_surface_seed_bound_joint_R
     (F : MvPolynomial (Fin 4) K) (G : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F)
@@ -153,9 +153,9 @@ theorem whole_surface_seed_bound_joint_R
   exact hcount.trans (Nat.add_le_add (Nat.mul_le_mul_left _ hsum)
     (Nat.mul_le_mul_left _ (hδ 2)))
 
-/-- Exact score-6464 wrapper.  The separated characteristic gates are used
-only at the Y and Z bases; the tight R base is certified from the triangular
-Y+Z support of the surface factor and the agreement numerator. -/
+/-- .
+
+ -/
 theorem whole_surface_seed_bound_fixed_joint_R
     (F : MvPolynomial (Fin 4) K) (G : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F)

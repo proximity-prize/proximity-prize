@@ -20,15 +20,15 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Derivations into Square-Zero Ideals
+/-! .
 
-## Main statements
 
-- `derivationToSquareZeroOfLift`: The `R`-derivations from `A` into a square-zero ideal `I`
-  of `B` corresponds to the lifts `A →ₐ[R] B` of the map `A →ₐ[R] B ⧸ I`.
 
--/
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -40,8 +40,8 @@ universe u v w
 variable {R : Type u} {A : Type v} {B : Type w} [CommSemiring R] [CommSemiring A] [CommRing B]
 variable [Algebra R A] [Algebra R B] (I : Ideal B)
 
-/-- If `f₁ f₂ : A →ₐ[R] B` are two lifts of the same `A →ₐ[R] B ⧸ I`,
-  we may define a map `f₁ - f₂ : A →ₗ[R] I`. -/
+/-- .
+ -/
 def diffToIdealOfQuotientCompEq (f₁ f₂ : A →ₐ[R] B)
     (e : (Ideal.Quotient.mkₐ R I).comp f₁ = (Ideal.Quotient.mkₐ R I).comp f₂) : A →ₗ[R] I :=
   LinearMap.codRestrict (I.restrictScalars _) (f₁.toLinearMap - f₂.toLinearMap)
@@ -55,8 +55,8 @@ theorem diffToIdealOfQuotientCompEq_apply (f₁ f₂ : A →ₐ[R] B)
 
 variable [Algebra A B]
 
-/-- Given a tower of algebras `R → A → B`, and a square-zero `I : Ideal B`, each lift `A →ₐ[R] B`
-of the canonical map `A →ₐ[R] B ⧸ I` corresponds to an `R`-derivation from `A` to `I`. -/
+/-- .
+ -/
 def derivationToSquareZeroOfLift [IsScalarTower R A B] (hI : I ^ 2 = ⊥) (f : A →ₐ[R] B)
     (e : (Ideal.Quotient.mkₐ R I).comp f = IsScalarTower.toAlgHom R A (B ⧸ I)) :
     Derivation R A I := by
@@ -87,8 +87,8 @@ theorem derivationToSquareZeroOfLift_apply [IsScalarTower R A B] (f : A →ₐ[R
     (derivationToSquareZeroOfLift I hI f e x : B) = f x - algebraMap A B x :=
   rfl
 
-/-- Given a tower of algebras `R → A → B`, and a square-zero `I : Ideal B`, each `R`-derivation
-from `A` to `I` corresponds to a lift `A →ₐ[R] B` of the canonical map `A →ₐ[R] B ⧸ I`. -/
+/-- .
+ -/
 @[simps -isSimp]
 def liftOfDerivationToSquareZero [IsScalarTower R A B] (hI : I ^ 2 = ⊥) (f : Derivation R A I) :
     A →ₐ[R] B :=
@@ -110,7 +110,7 @@ def liftOfDerivationToSquareZero [IsScalarTower R A B] (hI : I ^ 2 = ⊥) (f : D
     map_zero' := ((I.restrictScalars R).subtype.comp f.toLinearMap +
       (IsScalarTower.toAlgHom R A B).toLinearMap).map_zero }
 
--- simp normal form is `liftOfDerivationToSquareZero_mk_apply'`
+--
 theorem liftOfDerivationToSquareZero_mk_apply [IsScalarTower R A B] (d : Derivation R A I) (x : A) :
     Ideal.Quotient.mk I (liftOfDerivationToSquareZero I hI d x) = algebraMap A (B ⧸ I) x := by
   rw [liftOfDerivationToSquareZero_apply, map_add, Ideal.Quotient.eq_zero_iff_mem.mpr (d x).prop,
@@ -121,9 +121,9 @@ theorem liftOfDerivationToSquareZero_mk_apply' (d : Derivation R A I) (x : A) :
     (Ideal.Quotient.mk I) (d x) + (algebraMap A (B ⧸ I)) x = algebraMap A (B ⧸ I) x := by
   simp only [Ideal.Quotient.eq_zero_iff_mem.mpr (d x).prop, zero_add]
 
-/-- Given a tower of algebras `R → A → B`, and a square-zero `I : Ideal B`,
-there is a 1-1 correspondence between `R`-derivations from `A` to `I` and
-lifts `A →ₐ[R] B` of the canonical map `A →ₐ[R] B ⧸ I`. -/
+/-- .
+
+ -/
 @[simps!]
 def derivationToSquareZeroEquivLift [IsScalarTower R A B] : Derivation R A I ≃
     { f : A →ₐ[R] B // (Ideal.Quotient.mkₐ R I).comp f = IsScalarTower.toAlgHom R A (B ⧸ I) } := by

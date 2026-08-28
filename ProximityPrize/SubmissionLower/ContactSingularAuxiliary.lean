@@ -3,25 +3,25 @@ import ProximityPrize.SubmissionLower.ContactRegularFactorGate
 
 
 
-/-!
-# An actual nonzero auxiliary polynomial for the singular contact branch
+/-! .
 
-Model label: gpt-5.
 
-R is collected as a univariate variable over the other three coordinates.
-The eliminant is the actual-degree resultant, lifted back to the original
-four-variable ring. Its Bezout identity proves coverage before any
-specialization, so no monicity or nonzero-fiber premise is needed.
 
-The singular auxiliary is a fixed product over the actual active factor
-set: R-independent factors contribute themselves; positive-R factors
-contribute their resultant with their R-derivative. Below the R-degree
-characteristic gate every factor of this product is genuinely nonzero.
 
-This module establishes construction, nonzero status, R-independence, and
-actual singular-or-regular coverage. The joint and weighted degree budgets,
-geometric point counts, and competition theorem are separate obligations.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSingularAuxiliary
 
@@ -33,7 +33,7 @@ section GenericResultant
 
 variable {A : Type*} [CommRing A] [IsDomain A] [IsGCDMonoid A]
 
-/-- Gauss descent is carried out in the actual coefficient fraction field. -/
+/-- . -/
 theorem primitive_irreducible_dvd_of_resultant_zero
     (P Q : Polynomial A) (hprimitive : P.IsPrimitive) (hP : Irreducible P)
     (hzero : Polynomial.resultant P Q P.natDegree Q.natDegree = 0) : P ∣ Q := by
@@ -71,13 +71,13 @@ section Construction
 
 variable {K : Type*} [Field K]
 
-/-- The surviving coordinate subtype retains the original X/Y/Z labels. -/
+/-- . -/
 abbrev RemainingCoordinates := {i : Fin 4 // i ≠ 2}
 
 abbrev CoefficientRing (K : Type*) [Field K] :=
   MvPolynomial RemainingCoordinates K
 
-/-- An actual algebra equivalence, with R as the outer univariate variable. -/
+/-- . -/
 def collectR (K : Type*) [Field K] :
     MvPolynomial (Fin 4) K ≃ₐ[K] Polynomial (CoefficientRing K) :=
   (MvPolynomial.renameEquiv K (Equiv.optionSubtypeNe (2 : Fin 4)).symm).trans
@@ -87,7 +87,7 @@ theorem collectR_natDegree (F : MvPolynomial (Fin 4) K) :
     (collectR K F).natDegree = F.degreeOf 2 := by
   exact (MvPolynomial.degreeOf_eq_natDegree (2 : Fin 4) F).symm
 
-/-- The resultant is not padded beyond the actual original degrees. -/
+/-- . -/
 def eliminateR (F G : MvPolynomial (Fin 4) K) : MvPolynomial (Fin 4) K :=
   (collectR K).symm (Polynomial.C
     (Polynomial.resultant (collectR K F) (collectR K G)))
@@ -119,7 +119,7 @@ theorem eliminateR_nonzero
     simpa only [eliminateR, AlgEquiv.apply_symm_apply, map_zero] using hh
   exact hres (Polynomial.C_eq_zero.mp hc)
 
-/-- The actual eliminant belongs to the original ideal (F,G). -/
+/-- . -/
 theorem eliminateR_bezout (F G : MvPolynomial (Fin 4) K)
     (hpos : 0 < F.degreeOf 2) :
     ∃ A B : MvPolynomial (Fin 4) K, F * A + G * B = eliminateR F G := by
@@ -130,7 +130,7 @@ theorem eliminateR_bezout (F G : MvPolynomial (Fin 4) K)
   apply (collectR K).injective
   simpa only [map_add, map_mul, AlgEquiv.apply_symm_apply, eliminateR] using hab
 
-/-- No field, monicity, or nonzero-specialized-fiber premise is needed. -/
+/-- . -/
 theorem eliminateR_map_zero {A : Type*} [CommRing A]
     (ψ : MvPolynomial (Fin 4) K →+* A)
     (F G : MvPolynomial (Fin 4) K) (hpos : 0 < F.degreeOf 2)
@@ -141,7 +141,7 @@ theorem eliminateR_map_zero {A : Type*} [CommRing A]
 def singularContribution (F : MvPolynomial (Fin 4) K) : MvPolynomial (Fin 4) K :=
   if F.degreeOf 2 = 0 then F else eliminateR F (MvPolynomial.pderiv (2 : Fin 4) F)
 
-/-- A fixed, actual product, with R-independent original factors included. -/
+/-- . -/
 def singularAuxiliary (Q : MvPolynomial (Fin 4) K) : MvPolynomial (Fin 4) K :=
   ∏ F ∈ activeFactors Q, singularContribution F
 
@@ -211,8 +211,8 @@ section ActualCoverage
 
 variable {K L : Type*} [Field K] [Field L]
 
-/-- Every actual zero is either on the fixed singular auxiliary or on an
-actual positive-R original factor at an H-regular point. -/
+/-- .
+ -/
 theorem surface_zero_singular_or_regular
     (φ : Polynomial K →+* L) (hφ : Function.Injective φ)
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)

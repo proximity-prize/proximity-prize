@@ -5,17 +5,17 @@ import ProximityPrize.SubmissionLower.ContactResidualStageDerivative6600Research
 import ProximityPrize.SubmissionLower.ActualCurveJointProjectionBounds
 import ProximityPrize.SubmissionLower.ContactParameters6600Research
 
-/-!
-# Terminal adaptive projection families from the score-66 flag caps
+/-! .
 
-This is the last local geometry adapter for the score-66 route.  A terminal
-outer residual stage already carries the surface flag and its proper
-agreement cut has the canonical residual flag.  The rectangular factor caps
-put the literal `Y` and `Z` projection resultants below the fixed
-characteristic.  Those two gates select a finite-separable literal base on
-every regular curve component, after which the common adaptive nested-family
-constructor applies directly.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Research
 
@@ -51,7 +51,7 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Coordinatewise rectangular consequences of nested flag support. -/
+/-- . -/
 theorem degree_bounds_of_polynomialInFlag
     {p : FlagDegree} {F : MvPolynomial (Fin 3) Omega}
     (hF : PolynomialInFlag p F) :
@@ -70,8 +70,8 @@ theorem degree_bounds_of_polynomialInFlag
     exact (Nat.le_add_left (e 2) (e 0 + e 1)).trans (by
       simpa only [Nat.add_assoc] using (hF e he).2.2)
 
-/-- The robust rectangular surface caps are already enough to construct the
-entire adaptive family at every proper terminal agreement cut. -/
+/-- .
+ -/
 theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
     [CharP Omega prime]
     {flag : FlagDegree}

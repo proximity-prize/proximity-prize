@@ -28,19 +28,19 @@ No mathematical declaration or proof is removed or changed; no protected
 challenge check is changed.
 -/
 
-/-!
-# Galois Groups of Rings
+/-! .
 
-Given an action of a group `G` on an extension of rings `B/A`, the predicate `IsGaloisGroup G A B`
-states that `G` acts faithfully on `B` with fixed ring `A`. This file develops some of the theory
-of this predicate without assuming Galois theory for fields.
--/
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
--- this file should not import any field theory beyond the contents of `FieldTheory/Fixed.lean`
--- material involving Galois theory should be placed in `FieldTheory/IsGaloisGroup.lean`
--- The original development-only import-layering assertion is documented above.
+--
+--
+--
 
 open Module
 
@@ -84,7 +84,7 @@ instance [IsGaloisGroup G A B] : IsGaloisGroup G (algebraMap A B).range B where
     obtain ⟨a, ha⟩ := Algebra.IsInvariant.isInvariant (A := A) b hb
     exact ⟨⟨algebraMap A B a, ⟨a, rfl⟩⟩, ha⟩⟩
 
-/-- `IsGaloisGroup` for rings implies `IsGaloisGroup` for their fraction fields. -/
+/-- . -/
 theorem IsGaloisGroup.to_isFractionRing_of_isIntegral
     [Algebra.IsIntegral A B] [hGAB : IsGaloisGroup G A B] :
     IsGaloisGroup G K L where
@@ -94,14 +94,14 @@ theorem IsGaloisGroup.to_isFractionRing_of_isIntegral
   commutes := IsFractionRing.smulCommClass G A B K L
   isInvariant := IsFractionRing.isInvariant_of_isIntegral G A B K L
 
-/-- `IsGaloisGroup` for rings implies `IsGaloisGroup` for their fraction fields. -/
+/-- . -/
 theorem IsGaloisGroup.to_isFractionRing [Finite G] [hGAB : IsGaloisGroup G A B] :
     IsGaloisGroup G K L :=
   have := hGAB.isInvariant.isIntegral
   IsGaloisGroup.to_isFractionRing_of_isIntegral G A B K L
 
-/-- If `B` is an integral extension of an integrally closed domain `A`, then `IsGaloisGroup` for
-their fraction fields implies `IsGaloisGroup` for these rings. -/
+/-- .
+ -/
 theorem IsGaloisGroup.of_isFractionRing [hGKL : IsGaloisGroup G K L]
     [IsIntegrallyClosed A] [Algebra.IsIntegral A B] : IsGaloisGroup G A B := by
   have hc (a : A) : (algebraMap K L) (algebraMap A K a) = (algebraMap B L) (algebraMap A B a) := by
@@ -120,8 +120,8 @@ theorem IsGaloisGroup.of_isFractionRing [hGKL : IsGaloisGroup G K L]
     obtain ⟨a, rfl⟩ := hx
     exact ⟨a, by rwa [hc, IsFractionRing.coe_inj] at hb⟩
 
-/-- If `G` is finite and `A` is integrally closed then `IsGaloisGroup G A B` is equivalent to `B/A`
-being integral and the fields of fractions `Frac(B)/Frac(A)` being Galois with Galois group `G`. -/
+/-- .
+ -/
 theorem IsGaloisGroup.iff_isFractionRing [Finite G] [IsIntegrallyClosed A] :
     IsGaloisGroup G A B ↔ Algebra.IsIntegral A B ∧ IsGaloisGroup G K L :=
   ⟨fun h ↦ ⟨h.isInvariant.isIntegral, h.to_isFractionRing G A B K L⟩,
@@ -130,11 +130,11 @@ theorem IsGaloisGroup.iff_isFractionRing [Finite G] [IsIntegrallyClosed A] :
 @[deprecated (since := "2026-04-20")] alias FractionRing.mulSemiringAction_of_isGaloisGroup :=
   IsFractionRing.mulSemiringAction
 
-/--
-If `G` is finite and `IsGaloisGroup G A B` with `A` and `B` domains, then `G` is also
-a Galois group for `FractionRing B / FractionRing A` for the action defined by
-`IsFractionRing.mulSemiringAction`.
--/
+/-- .
+
+
+
+ -/
 instance IsGaloisGroup.toFractionRing [IsDomain A] [IsDomain B] [Finite G]
     [IsGaloisGroup G A B] [Algebra (FractionRing A) (FractionRing B)]
     [IsScalarTower A (FractionRing A) (FractionRing B)] :
@@ -155,7 +155,7 @@ variable (A B : Type*) [CommRing A] [CommRing B] [IsDomain B] [Algebra A B] [Fai
   [MulSemiringAction G B] [IsGaloisGroup G A B] [Finite G]
 
 attribute [local instance] FractionRing.liftAlgebra in
-/-- If `G` is a finite Galois group for `B/A`, then `G` is isomorphic to `Gal(B/A)`. -/
+/-- . -/
 @[simps!] noncomputable def mulEquivAlgEquiv : G ≃* Gal(B/A) :=
   MulEquiv.ofBijective (MulSemiringAction.toAlgAut G A B) (by
     have := IsDomain.of_faithfulSMul A B
@@ -185,9 +185,9 @@ section Semiring
 variable (A B C : Type*) [CommSemiring A] [Semiring C] [Algebra A C] [MulSemiringAction G C]
 variable (N : Subgroup G) [CommSemiring B] [Algebra B C]
 
-/-- If `N` is a normal subgroup of `G` and `IsGaloisGroup N B C`, then `G` acts on `B`.
-For `g : G` and `x : B`, `g • x` is the unique element of `B` whose image in `C` is
-`g • algebraMap B C x`, see `algebraMap_smulOfNormal`. -/
+/-- .
+
+ -/
 @[implicit_reducible]
 noncomputable def smulOfNormal [N.Normal] [IsGaloisGroup N B C] : SMul G B where
   smul g x := (smul_mem_of_normal G C N g x).choose
@@ -198,8 +198,8 @@ theorem algebraMap_smulOfNormal [N.Normal] [IsGaloisGroup N B C] (g : G) (x : B)
     algebraMap B C (g • x) = g • algebraMap B C x :=
   (smul_mem_of_normal G C N g x).choose_spec
 
-/-- If `N` is normal and `IsGaloisGroup N B C`, the action `smulOfNormal G B C` satisfies
-`SMulDistribClass G B C`. -/
+/-- .
+ -/
 instance smulDistribClass_smulOfNormal [N.Normal] [IsGaloisGroup N B C] :
     letI := smulOfNormal G B C
     SMulDistribClass G B C :=
@@ -208,8 +208,8 @@ instance smulDistribClass_smulOfNormal [N.Normal] [IsGaloisGroup N B C] :
 
 variable [FaithfulSMul B C]
 
-/-- If `N` is a normal subgroup of `G` and `IsGaloisGroup N B C`, then `G` acts on `B` as a
-`MulSemiringAction`, via the action defined in `smulOfNormal`. -/
+/-- .
+ -/
 @[implicit_reducible]
 noncomputable def mulSemiringActionOfNormal [IsGaloisGroup N B C] [N.Normal] :
     MulSemiringAction G B := by
@@ -217,8 +217,8 @@ noncomputable def mulSemiringActionOfNormal [IsGaloisGroup N B C] [N.Normal] :
   have : SMulDistribClass G B C := smulDistribClass_smulOfNormal G B C N
   exact mulSemiringActionOfSmulDistribClass B C G
 
-/-- If `N` is a normal subgroup of `G` and `IsGaloisGroup N B C`, then the quotient group `G ⧸ N`
-acts on `B` by `(g : G ⧸ N) • x = g • x`. -/
+/-- .
+ -/
 @[implicit_reducible]
 noncomputable def mulSemiringActionQuotient [IsGaloisGroup N B C] [N.Normal] :
     MulSemiringAction (G ⧸ N) B :=
@@ -252,7 +252,7 @@ instance isScalarTower_mulSemiringActionQuotient [MulSemiringAction G B] [SMulDi
     simp [mul_smul, mulSemiringActionQuotient_smul_def]⟩
 
 set_option linter.defProp false in
-/-- If `G` acts on `C` commuting with `A`, then the action of `G ⧸ N` on `B` commutes with `A`. -/
+/-- . -/
 @[implicit_reducible]
 def smulCommClassQuotient [N.Normal] [Algebra A B] [IsScalarTower A B C] [SMulCommClass G A C]
     [MulSemiringAction G B] [MulAction (G ⧸ N) B] [SMulDistribClass G B C]

@@ -3,20 +3,20 @@ import ProximityPrize.SubmissionLower.DifferentialTaylorHom
 
 
 
-/-!
-# A concrete differential ring for the regular contact equation
+/-! .
 
-Model label: gpt-5.
 
-Adjoin a fifth polynomial variable U and impose F=0 and H*U=1, where
-H=partial_R F. The polynomial vector field preserves this actual ideal.
-It therefore descends to a derivation on the quotient, to which the already
-proved finite Taylor homomorphism applies. No localization API, integrality
-assertion, or assumed differential-ring structure is used.
 
-This module does not supply the mixed curve count or the rational numerator
-degree bounds and is not a complete alignment or submission theorem.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactDifferentialRing
 

@@ -4,21 +4,21 @@ import ProximityPrize.SubmissionLower.DifferentialTaylorCoefficients
 
 
 
-/-!
-# Finite algebraic Taylor homomorphism and the final-tail boundary
+/-! .
 
-Model label: gpt-5.
 
-The target is the actual quotient by `(X^bound)`. Multiplicativity comes
-from the finite iterated Leibniz rule, not from an assumed homomorphism.
-The derivative identity explicitly uses the coefficient at `bound`, which
-is outside the displayed truncated polynomial. This is why the polynomiality
-locus must impose its last tail as well as all earlier tails.
 
-The low-degree identity finish below is purely algebraic. Rational numerator
-degree bounds, localization, and the mixed geometric counting theorem are
-separate obligations; this module does not claim an improving submission.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.DifferentialTaylorHom
 
@@ -102,8 +102,8 @@ theorem jetCoefficient_derivation
     Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one]
   field_simp
 
-/-- The coefficient at `bound`, not merely those below it, is necessary
-to identify the truncated derivative with the derivative of the truncation. -/
+/-- .
+ -/
 theorem jetPolynomial_derivation_eq_derivative
     (D : Derivation K A A) (value : A →+* L) (bound : ℕ) (a : A)
     (hfactorial : ∀ j ≤ bound, (j.factorial : L) ≠ 0)
@@ -122,8 +122,8 @@ theorem jetPolynomial_derivation_eq_derivative
   · have hnext : ¬j + 1 < bound := by omega
     rw [if_neg hj, if_neg hnext, zero_mul]
 
-/-- The last-tail derivative identity in the safe positive-characteristic
-range. In particular, no factorial of size `bound+1` is required. -/
+/-- .
+ -/
 theorem jetPolynomial_derivation_eq_derivative_of_char
     (D : Derivation K A A) (value : A →+* L) (p bound : ℕ) [CharP L p]
     (hbound : bound < p) (a : A)
@@ -135,8 +135,8 @@ theorem jetPolynomial_derivation_eq_derivative_of_char
     exact factorial_cast_ne_zero_below_characteristic p j (lt_of_le_of_lt hj hbound)
   · exact hlast
 
-/-- The earlier tails really shorten the Taylor polynomial. The final tail
-at `bound` is a separate condition, used in the derivative theorem above. -/
+/-- .
+ -/
 theorem jetPolynomial_eq_shorter_of_tails_zero
     (D : Derivation K A A) (value : A →+* L) (small bound : ℕ) (a : A)
     (hsmall : small ≤ bound)
@@ -151,8 +151,8 @@ theorem jetPolynomial_eq_shorter_of_tails_zero
     · rw [if_pos hb, htails j (by omega) hb]
     · rw [if_neg hb]
 
-/-- A polynomial of degree strictly below the truncation order is already
-zero if its quotient class is zero. There is no formal-series assumption. -/
+/-- .
+ -/
 theorem eq_zero_of_quotient_eq_zero_of_natDegree_lt
     (bound : ℕ) (Q : Polynomial L) (hdegree : Q.natDegree < bound)
     (hzero : Ideal.Quotient.mk (truncationIdeal L bound) Q = 0) : Q = 0 := by
@@ -172,9 +172,9 @@ section PolynomialRelation
 
 variable {K A L σ : Type*} [CommRing K] [CommRing A] [Algebra K A] [Field L]
 
-/-- A concrete substitution diagram transports a genuine algebraic
-relation through the constructed Taylor homomorphism. The degree condition
-then upgrades the truncated identity to an exact polynomial identity. -/
+/-- .
+
+ -/
 theorem polynomial_relation_of_taylor_substitution
     (D : Derivation K A A) (value : A →+* L) (bound : ℕ)
     (hbound : 0 < bound)

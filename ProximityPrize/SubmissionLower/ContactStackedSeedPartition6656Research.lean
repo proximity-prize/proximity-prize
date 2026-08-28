@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactStackedGCDCover6656Research
 
-/-!
-# Exact seed partition for the recursive GCD cover
+/-! .
 
-The selected seeds are partitioned by the two nested common-divisor tests.
-The first two cells inherit the corresponding residual quotient equations;
-the final cell is carried by the full three-way GCD.  The partition is
-definitionally disjoint and its cardinalities add exactly.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedSeedPartition6656Research
 

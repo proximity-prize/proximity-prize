@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyAll6600Research
 
-/-!
-# Support-generic Z/YZ component aggregation
+/-! .
 
-This is the support-indexed form of the accepted 66.42 tail replacement.
-The inner recursive incidence is unchanged; only the positive large-pencil
-charge and its global sum use `zCost + yzCost` instead of
-`zCost + allCost`.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyYZSupportResearch
 
@@ -39,8 +39,8 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Full regular-component aggregation with the accepted joint Z/YZ
-large-pencil charge, for an arbitrary preserved residual support. -/
+/-- .
+ -/
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz_of_direction
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)

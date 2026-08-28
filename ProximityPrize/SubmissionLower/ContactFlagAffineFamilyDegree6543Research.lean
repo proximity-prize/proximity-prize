@@ -2,19 +2,19 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagTriangularProjectionResearch
 import ProximityPrize.SubmissionLower.ContactFlagTrapezoidFamilyDegree6543Research
 
-/-!
-# Exact family degrees in nested affine flag coordinates
+/-! .
 
-This module evaluates the flag-transformed equations at
 
-`U = Y + λ Z`, `V = S + μ Y + ν Z`, `Z = Z`
 
-inside every original component field.  It proves that contraction of the
-new evaluation kernel recovers the original component prime and that any two
-non-base flag coordinates generate the field over the remaining rational
-base.  The final theorem combines these facts with the characteristic-free
-exact trapezoid family theorem.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagAffineFamilyDegree6543Research
 
@@ -39,7 +39,7 @@ def affineU (lam : K) : CoordinateField K P :=
 def affineV (μ ν : K) : CoordinateField K P :=
   coordinate K P 1 + μ • coordinate K P 0 + ν • coordinate K P 2
 
-/-- Evaluation in the literal flag coordinates `(U,V,Z)`. -/
+/-- . -/
 def flagEvaluation (lam μ ν : K) :
     MvPolynomial (Fin 3) K →ₐ[K] CoordinateField K P :=
   MvPolynomial.aeval ![affineU K P lam, affineV K P μ ν,
@@ -57,8 +57,8 @@ def flagEvaluation (lam μ ν : K) :
     flagEvaluation K P lam μ ν (MvPolynomial.X 2) = coordinate K P 2 := by
   simp [flagEvaluation]
 
-/-- Evaluation after the inverse flag substitution is the original
-coordinate evaluation. -/
+/-- .
+ -/
 theorem flagEvaluation_flag (lam μ ν : K)
     (F : MvPolynomial (Fin 3) K) :
     flagEvaluation K P lam μ ν (flagAlgHom lam μ ν F) =
@@ -85,8 +85,8 @@ theorem flagEvaluation_flag (lam μ ν : K)
   rw [hx]
   exact (MvPolynomial.aeval_eq_eval₂Hom (coordinate K P) F).symm
 
-/-- Contracting the transformed evaluation kernel along the flag
-automorphism recovers the original prime. -/
+/-- .
+ -/
 theorem flagEvaluation_kernel_contract (lam μ ν : K) :
     (RingHom.ker (flagEvaluation K P lam μ ν).toRingHom).comap
         (flagAlgHom lam μ ν).toRingHom = P := by
@@ -148,7 +148,7 @@ private theorem top_of_affine_flag_mem
     exact IntermediateField.adjoin_le_iff.mpr hcoords
   exact (IntermediateField.restrictScalars_eq_top_iff (K := K)).mp htop
 
-/-- With `U` as rational base, `(Z,V)` generate the component field. -/
+/-- . -/
 theorem flag_generators_u (lam μ ν : K)
     (hU : Transcendental K (affineU K P lam)) :
     letI : Algebra (RatFunc K) (CoordinateField K P) :=
@@ -179,7 +179,7 @@ theorem flag_generators_u (lam μ ν : K)
     rwa [elementEmbedding_variable] at hbase
   exact top_of_affine_flag_mem K P lam μ ν L hUmem hV hZ
 
-/-- With `V` as rational base, `(Z,U)` generate the component field. -/
+/-- . -/
 theorem flag_generators_v (lam μ ν : K)
     (hV : Transcendental K (affineV K P μ ν)) :
     letI : Algebra (RatFunc K) (CoordinateField K P) :=
@@ -210,7 +210,7 @@ theorem flag_generators_v (lam μ ν : K)
     rwa [elementEmbedding_variable] at hbase
   exact top_of_affine_flag_mem K P lam μ ν L hU hVmem hZ
 
-/-- With `Z` as rational base, `(U,V)` generate the component field. -/
+/-- . -/
 theorem flag_generators_z (lam μ ν : K)
     (hZ : Transcendental K (coordinate K P 2)) :
     letI : Algebra (RatFunc K) (CoordinateField K P) :=
@@ -255,9 +255,9 @@ theorem flagEvaluation_kernel_family_injective
   have hc := congrArg (Ideal.comap (flagAlgHom lam μ ν).toRingHom) hij
   simpa only [flagEvaluation_kernel_contract] using hc
 
-/-- Exact trapezoid family-degree theorem for any one of the literal flag
-coordinates used as rational base.  All support arithmetic remains explicit
-in the hypotheses, so there is no rectangular fallback. -/
+/-- .
+
+ -/
 theorem finite_sum_flag_finrank_trapezoid
     (hinj : Function.Injective Q) (lam μ ν : K)
     (order : Fin 3 ≃ Fin 3)

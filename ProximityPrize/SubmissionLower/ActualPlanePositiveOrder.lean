@@ -1,19 +1,19 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualPlaneCoordinateCaps
 
-/-!
-# A positive outer coordinate without changing the actual rational base
+/-! .
 
-Model label: gpt-5.
 
-An actual irreducible localized equation is not a scalar unit, so one of
-its two remaining variable degrees is positive. A fixed swap of the two
-remaining coordinates makes that variable outer. The selected coefficient
-coordinate is unchanged, and the ORIGINAL mixed planar budget is exactly
-invariant under this swap.
 
-No generic-coordinate choice or additional projection assumption is used.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualPlanePositiveOrder
 
@@ -139,8 +139,8 @@ theorem positive_degree_of_irreducible {A : Type} [Field A]
   rw [hconst]
   exact (isUnit_iff_ne_zero.mpr ha).map MvPolynomial.C
 
-/-- One of just two orderings works, and both have exactly the same
-actual rational coefficient coordinate. -/
+/-- .
+ -/
 theorem exists_positive_outer_order (order : Fin 3 ≃ Fin 3)
     (P : Ideal (Original K)) [P.IsPrime] (G : Original K)
     (hG : Irreducible G) (hmem : G ∈ P)
@@ -165,8 +165,8 @@ def originalMixedDegree (order : Fin 3 ≃ Fin 3) (G H : Original K) : ℕ :=
   simp only [originalMixedDegree, swapOtherOrder_one, swapOtherOrder_two]
   ring
 
-/-- Original separated characteristic caps produce a positive outer
-ordering and both actual characteristic gates, with no change of budget. -/
+/-- .
+ -/
 theorem exists_positive_characteristic_order (order : Fin 3 ≃ Fin 3)
     (P : Ideal (Original K)) [P.IsPrime] (G H : Original K) (p : ℕ)
     (hG : Irreducible G) (hmem : G ∈ P)

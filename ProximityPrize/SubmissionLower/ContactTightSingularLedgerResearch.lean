@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSingularLedger6600Research
 
-/-!
-# Unpadded implicit-pair singular ledger
+/-! .
 
-This module exposes the exact implicit-core-plus-exceptions inequality which
-is already proved internally by the score-66 singular ledger before its
-legacy positive padding is added.  It also packages the same finite-family
-arithmetic with explicit parameters.  No geometric statement is added here.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactTightSingularLedgerResearch
 
@@ -16,8 +16,8 @@ open scoped BigOperators
 open ContactParameters6600Research
 open ContactSingularLedger6600Research
 
-/-- The frozen score-66 implicit ledger before the unused retained-singular
-padding. -/
+/-- .
+ -/
 theorem implicit_with_exceptions_tight_bound {I : Type} [Fintype I]
     (count : I → ℕ) (cost : I → DegreeVector) (exceptions : ℕ)
     (hy : (∑ i, (cost i).y) ≤ algebraicCap)
@@ -35,7 +35,7 @@ theorem implicit_with_exceptions_tight_bound {I : Type} [Fintype I]
     _ ≤ implicitCoreNumerator + 2 * algebraicCap ^ 2 * gap :=
       Nat.add_le_add hmain (Nat.mul_le_mul_right gap hexceptions)
 
-/-- Common-`gap^2` scaling of the exact frozen singular estimate. -/
+/-- . -/
 theorem implicit_with_exceptions_tight_scaled_bound {I : Type} [Fintype I]
     (count : I → ℕ) (cost : I → DegreeVector) (exceptions : ℕ)
     (hy : (∑ i, (cost i).y) ≤ algebraicCap)
@@ -55,10 +55,10 @@ theorem implicit_with_exceptions_tight_scaled_bound {I : Type} [Fintype I]
     _ ≤ (implicitCoreNumerator + 2 * algebraicCap ^ 2 * gap) * gap :=
       Nat.mul_le_mul_right gap h
 
-/-! ## Parameterized arithmetic wrapper -/
+/-! . -/
 
-/-- Numerical parameters needed by the unpadded singular ledger.  `D` is the
-weighted interpolation cap, normally `m*a`. -/
+/-- .
+ -/
 structure TightParameters where
   n : ℕ
   w : ℕ
@@ -112,8 +112,8 @@ theorem aggregate_eq_core (P : TightParameters) :
   simp only [aggregateCost, coefficients, coreNumerator, dot]
   ring
 
-/-- Parameterized finite aggregation.  Geometry supplies only the three
-coordinate sums and the per-pair incidence estimate. -/
+/-- .
+ -/
 theorem sum_counts_bound (P : TightParameters) {I : Type} [Fintype I]
     (count : I → ℕ) (cost : I → DegreeVector)
     (hy : (∑ i, (cost i).y) ≤ P.algebraicCap)
@@ -136,7 +136,7 @@ theorem sum_counts_bound (P : TightParameters) {I : Type} [Fintype I]
       dot_mono_left P.coefficients ⟨hy, hr, hz⟩
     _ = P.coreNumerator := P.aggregate_eq_core
 
-/-- Exact parameterized core-plus-`2*jZ^2` exception ledger. -/
+/-- . -/
 theorem with_exceptions_bound (P : TightParameters) {I : Type} [Fintype I]
     (count : I → ℕ) (cost : I → DegreeVector) (exceptions : ℕ)
     (hy : (∑ i, (cost i).y) ≤ P.algebraicCap)
@@ -161,7 +161,7 @@ theorem count_le_countCap (P : TightParameters) (count : ℕ)
 
 end TightParameters
 
-/-! ## Maximal stacked-row arithmetic certificates -/
+/-! . -/
 
 def maximalResidualQA : TightParameters :=
   ⟨262144, 131071, 182807, 4570175, 5263, 7⟩

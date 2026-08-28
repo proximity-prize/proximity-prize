@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactCountingCaps
 import ProximityPrize.SubmissionLower.ContactParameters6600Research
 
-/-!
-# Implicit-branch cap adapter for the score-66 row
+/-! .
 
-This is the isolated retarget of the generic agreement-cap and characteristic
-gate proofs to `(m,s,L,e) = (24,6,576,78777)`.  The legacy vector is only a
-representation adapter; every numeric value comes from
-`ContactParameters6600Research`.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactCountingCaps6600Research
 

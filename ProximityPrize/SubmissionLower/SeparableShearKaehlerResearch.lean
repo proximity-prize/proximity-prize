@@ -3,20 +3,20 @@ import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Kaehler_Polynomial
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Etale_Kaehler
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Unramified_Field
 
-/-!
-# Separating parameters and additive shears via Kähler differentials
+/-! .
 
-This research module proves the field-theoretic core of the adaptive
-`R → R + Z` projection.  For an injective rational-function embedding
-`K(T) → L` with finite-dimensional target, the induced extension is
-separable exactly when the image of `dT` spans `Ω[L/K]`.  Therefore a
-nonseparating parameter has zero differential whenever one separating
-parameter exists, and adding it to a separating parameter preserves
-separation.
 
-No perfectness, characteristic bound, or inseparable-degree classification
-is needed for this step.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.SeparableShearKaehlerResearch
 
@@ -31,8 +31,8 @@ section RatFuncDifferential
 
 variable (K : Type*) [Field K]
 
-/-- The differential of the rational variable generates the differentials
-of `K(T)` over `K`. -/
+/-- .
+ -/
 theorem span_singleton_D_ratFunc_X :
     Submodule.span (RatFunc K)
         ({D K (RatFunc K)
@@ -55,12 +55,12 @@ section ProjectionCriterion
 
 variable (K L : Type*) [Field K] [Field L] [Algebra K L]
 
-/-- The common `K`-differential of the image of the rational variable. -/
+/-- . -/
 def parameterDifferential (embedding : RatFunc K →ₐ[K] L) : Ω[L⁄K] :=
   D K L (embedding (algebraMap (Polynomial K) (RatFunc K) Polynomial.X))
 
-/-- A finite rational projection is separable exactly when its parameter
-differential spans the absolute one-variable differential module. -/
+/-- .
+ -/
 theorem isSeparable_iff_span_parameterDifferential
     (embedding : RatFunc K →ₐ[K] L) :
     letI : Algebra (RatFunc K) L := embedding.toRingHom.toAlgebra
@@ -140,10 +140,10 @@ theorem isSeparable_iff_span_parameterDifferential
     letI : Algebra.FormallyUnramified (RatFunc K) L := ⟨inferInstance⟩
     exact Algebra.FormallyUnramified.isSeparable (RatFunc K) L
 
-/-- If `R` is a nonseparating finite parameter and `Z` is a separating
-finite parameter, then the finite parameter `S = R + Z` is separating.
-All three rational-function algebra structures are the canonical ones
-induced by the displayed embeddings. -/
+/-- .
+
+
+ -/
 theorem isSeparable_shear_of_not_isSeparable
     (embeddingR embeddingZ embeddingS : RatFunc K →ₐ[K] L)
     (hfiniteR :

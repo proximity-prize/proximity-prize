@@ -2,16 +2,16 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactWeakSeparableSeparatorResearch
 import ProximityPrize.SubmissionLower.ContactFlagExactSeparableProjection6543Research
 
-/-!
-# Common affine projections with an adaptive normalization parameter
+/-! .
 
-The affine form `r + a z` need not use the same summand as its function-field
-normalization.  A component may normalize at any finite-separable literal
-coordinate.  If the affine form has nonzero absolute differential, that one
-existing normalization proves that the affine form is itself a finite
-separable rational parameter.  This removes the old requirement that `z`
-be transcendental on every component.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveAffineProjectionResearch
 
@@ -28,9 +28,9 @@ noncomputable section
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 300000
 
-/-- In a one-variable function field already possessing one finite-separable
-parameter, every element with nonzero absolute differential is another
-finite-separable parameter. -/
+/-- .
+
+ -/
 theorem element_transcendental_finite_separable_of_differential_ne_zero
     (K L : Type*) [Field K] [Field L] [Algebra K L] [IsAlgClosed K]
     (base : SeparableCoordinate K L) (t : L)
@@ -95,10 +95,10 @@ variable (r z : ∀ i, E i)
 variable (W : ∀ i,
   Finset (CoordinatePlaceClassification.NormalizedValuation K (E i)))
 
-/-- One common nonzero coefficient realizes the valuation maximum and a
-finite-separable affine parameter on every active component.  The active
-condition is symmetric: either summand may carry the nonzero differential,
-and normalization may use a third already separating element. -/
+/-- .
+
+
+ -/
 theorem exists_common_exact_finite_separable_affine_adaptive
     (base : ∀ i, SeparableCoordinate K (E i))
     (hactive : ∀ i, D K (E i) (r i) ≠ 0 ∨ D K (E i) (z i) ≠ 0) :
@@ -152,9 +152,9 @@ theorem exists_common_exact_finite_separable_affine_adaptive
   rw [haz] at hupper
   exact le_antisymm hupper (le_of_not_gt hnotlt)
 
-/-- The adaptive common affine choice may simultaneously avoid one additional
-bad scalar.  This is used for the single transformed directional derivative
-in the score-66 `V` projection. -/
+/-- .
+
+ -/
 theorem exists_common_exact_finite_separable_affine_adaptive_avoiding_one
     (Extra : K → Prop)
     (hextra : ∀ {a b}, Extra a → Extra b → a = b)

@@ -1,16 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactComponentPencils
 
-/-!
-# Identity-node cap including residual degree zero
+/-! .
 
-The production identity cap assumes `1 ≤ w` only because its shared
-coordinate-recovery theorem proves both the value and slope coordinates.
-The R-dependent-principal contradiction uses only the value/Y coordinate.
-This module isolates that half, removing the artificial obstruction at the
-endpoint `w = 0` created when an actual identity set has cardinality equal to
-the original degree.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityZeroSafePencilResearch
 
@@ -28,8 +28,8 @@ variable (F : MvPolynomial (Fin 4) K)
 variable (hF : surfaceMap phi F ∈ P)
 variable (hH : surfaceMap phi (MvPolynomial.pderiv (2 : Fin 4) F) ∉ P)
 
-/-- Value-coordinate recovery from a base-field pencil needs no positive
-degree premise. -/
+/-- .
+ -/
 theorem coordinate_y_affine_of_basefield_pencil
     (w : ℕ) (P0 P1 : Polynomial K)
     (hp : truncatedPolynomial phi P F hF hH w =
@@ -52,8 +52,8 @@ theorem coordinate_y_affine_of_basefield_pencil
     Polynomial.eval_map_apply]
 
 include hF hH in
-/-- Whole R-dependent hypersurfaces have at most `w` identity nodes for
-every natural `w`, including `w = 0`. -/
+/-- .
+ -/
 theorem identityNodes_card_le_of_r_dependent_principal_zero_safe
     {iota : Type} [DecidableEq iota]
     (nodes : Finset iota) (x u0 u1 : iota → K) (w : ℕ)

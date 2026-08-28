@@ -1,20 +1,20 @@
 import ProximityPrize.SubmissionLower.BCHKSBridge
 
-/-!
-# Strong prescribed-support alignment gives a scalar list bound
+/-! .
 
-Model label: gpt-5.
 
-This separate generic lemma does not change the frozen 6400 candidate.
-The only code-distance input is an explicit zero-coordinate bound for
-nonzero codewords. The alignment premise is the existing strong stock
-predicate, not merely an MCA-error bound. The proof uses its original
-supports and the existing common-affine-support finish.
 
-The finite-list theorem performs the actual B+1 subset selection and
-injection into field seeds. No interleaved-list projection, new parameter
-certificate, Code.Lambda conclusion, or submission claim is included.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.AlignmentScalarListBridge
 
@@ -23,7 +23,7 @@ noncomputable section Proofs
 variable {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
 variable [Field F] [Fintype F] [DecidableEq F]
 
-/-- The ordinary distance hypothesis, stated without an MDS assumption. -/
+/-- . -/
 def ZeroCoordinateBound (C : LinearCode ι F) (w : ℕ) : Prop :=
   ∀ c : ι → F, c ∈ C → c ≠ 0 →
     (Finset.univ.filter (fun i => c i = 0)).card ≤ w
@@ -44,9 +44,9 @@ theorem eq_of_agreement_on_large_support
   have hcard := Finset.card_le_card hsub
   omega
 
-/-- An injectively seed-indexed family of distinct nearby codewords has
-at most B members. This theorem does not require q>B: the actual seed
-indexing is part of its input. -/
+/-- .
+
+ -/
 theorem seed_indexed_list_card_le
     (C : LinearCode ι F) (e w B : ℕ)
     (hzero : ZeroCoordinateBound C w)
@@ -101,8 +101,8 @@ theorem seed_indexed_list_card_le
     exact hinj (hTS hz) (hTS ht) ((hselected z hz).trans (hselected t ht).symm)
   omega
 
-/-- Actual finite-list cardinality bound. Distinctness is supplied by the
-Finset, and q>B permits choosing enough distinct field seeds. -/
+/-- .
+ -/
 theorem finite_list_card_le
     (C : LinearCode ι F) (e w B : ℕ)
     (hzero : ZeroCoordinateBound C w)
@@ -170,8 +170,8 @@ theorem finite_list_card_le
   rw [hScard, hDcard] at hbounded
   omega
 
-/-- The actual finite scalar list in an integer error cell, expressed by
-its agreement count. No evaluation of this large Finset is performed. -/
+/-- .
+ -/
 def scalarList (C : LinearCode ι F) (u : ι → F) (e : ℕ) :
     Finset (ι → F) := by
   classical

@@ -20,11 +20,11 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# The basis of ideals
+/-! .
 
-Some results involving `Ideal` and `Basis`.
--/
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -34,7 +34,7 @@ namespace Ideal
 
 variable {ι R S : Type*} [CommSemiring R] [CommRing S] [IsDomain S] [Algebra R S]
 
-/-- A basis on `S` gives a basis on `Ideal.span {x}`, by multiplying everything by `x`. -/
+/-- . -/
 noncomputable def basisSpanSingleton (b : Basis ι R S) {x : S} (hx : x ≠ 0) :
     Basis ι R (span ({x} : Set S)) :=
   b.map <|
@@ -60,15 +60,15 @@ theorem constr_basisSpanSingleton {N : Type*} [Semiring N] [Module N S] [SMulCom
 
 end Ideal
 
-/-- If `I : Ideal S` has a basis over `R`,
-`x ∈ I` iff it is a linear combination of basis vectors. -/
+/-- .
+ -/
 theorem Basis.mem_ideal_iff {ι R S : Type*} [CommSemiring R] [Semiring S] [Algebra R S]
     {I : Ideal S} (b : Basis ι R I) {x : S} :
     x ∈ I ↔ ∃ c : ι →₀ R, x = Finsupp.sum c fun i x => x • (b i : S) :=
   (b.map ((I.restrictScalarsEquiv R _ _).restrictScalars R).symm).mem_submodule_iff
 
-/-- If `I : Ideal S` has a finite basis over `R`,
-`x ∈ I` iff it is a linear combination of basis vectors. -/
+/-- .
+ -/
 theorem Basis.mem_ideal_iff' {ι R S : Type*} [Fintype ι] [CommSemiring R] [Semiring S] [Algebra R S]
     {I : Ideal S} (b : Basis ι R I) {x : S} : x ∈ I ↔ ∃ c : ι → R, x = ∑ i, c i • (b i : S) :=
   (b.map ((I.restrictScalarsEquiv R _ _).restrictScalars R).symm).mem_submodule_iff'

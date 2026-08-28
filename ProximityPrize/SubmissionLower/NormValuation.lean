@@ -2,22 +2,22 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.SeparableIdealNorm
 
 
-/-!
-# The actual norm valuation formula for every nonzero fraction
+/-! .
 
-Model label: gpt-5.
 
-Over a fixed finite separable fraction-field extension of Dedekind
-domains, the order of the field norm at a base prime equals the sum of
-the actual extension-prime orders, weighted by their residue degrees.
-The sum runs over the actual finite set of primes above the base prime.
-It is independent of any separability property of the chosen fraction
-viewed as a new function-field parameter.
 
-The formula is derived from actual ideal factorization. Finite/infinite
-chart identification and the global curve product formula are not assumed
-or proved in this file.
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.NormValuation
 
@@ -30,8 +30,8 @@ section Orders
 
 variable {A : Type*} [CommRing A] [IsDedekindDomain A]
 
-/-- Signed order from the actual discrete valuation. Zero is not used in
-the fraction norm theorem, so the auxiliary value at zero is irrelevant. -/
+/-- .
+ -/
 def orderAt (v : HeightOneSpectrum A) (x : FractionRing A) : ℤ :=
   -(v.valuation (FractionRing A) x).log
 
@@ -62,8 +62,8 @@ local instance : Algebra (FractionRing R) (FractionRing S) :=
 
 variable [Algebra.IsSeparable (FractionRing R) (FractionRing S)]
 
-/-- The actual finite prime fiber, defined by factorization of the
-extended base-prime ideal, rather than by a supplied set of places. -/
+/-- .
+ -/
 def primeFiber (v : HeightOneSpectrum R) : Finset (Ideal S) :=
   IsDedekindDomain.primesOverFinset v.asIdeal S
 
@@ -71,15 +71,15 @@ theorem mem_primeFiber_iff (v : HeightOneSpectrum R) (P : Ideal S) :
     P ∈ primeFiber R S v ↔ P.IsPrime ∧ P.LiesOver v.asIdeal :=
   IsDedekindDomain.mem_primesOverFinset_iff v.ne_bot S
 
-/-- The canonical height-one place attached to a member of the actual
-prime fiber. Primality and nonzeroness are proved from fiber membership. -/
+/-- .
+ -/
 def fiberPlace (v : HeightOneSpectrum R)
     (P : {P : Ideal S // P ∈ primeFiber R S v}) : HeightOneSpectrum S :=
   ⟨P.1, ((mem_primeFiber_iff R S v P.1).mp P.2).1,
     Ideal.ne_bot_of_mem_primesOver v.ne_bot
       ((mem_primeFiber_iff R S v P.1).mp P.2)⟩
 
-/-- The base-prime exponent of the norm of a single actual prime. -/
+/-- . -/
 theorem factorCount_relNorm_prime (v : HeightOneSpectrum R)
     (P : Ideal S) (hPzero : P ≠ ⊥) (hPprime : P.IsPrime) :
     (normalizedFactors (Ideal.relNorm R P)).count v.asIdeal =
@@ -94,9 +94,9 @@ theorem factorCount_relNorm_prime (v : HeightOneSpectrum R)
   rw [SeparableIdealNorm.relNorm_prime_eq_pow R S P (P.under R),
     hUnderIrred.normalizedFactors_pow, normalize_eq, Multiset.count_replicate]
 
-/-- Exact weighted exponent formula for the norm of any nonzero ideal.
-Both multiplicities and the finite summation set come from the actual
-Dedekind ideal factorizations. -/
+/-- .
+
+ -/
 theorem factorCount_relNorm (v : HeightOneSpectrum R)
     (I : Ideal S) (hI : I ≠ ⊥) :
     (normalizedFactors (Ideal.relNorm R I)).count v.asIdeal =
@@ -146,8 +146,8 @@ theorem factorCount_relNorm (v : HeightOneSpectrum R)
     rwa [Ideal.prod_normalizedFactors_eq_self hI] at hC
   exact hCI.2
 
-/-- The actual local norm formula for every nonzero integral element,
-expressed in signed valuation orders. -/
+/-- .
+ -/
 theorem orderAt_intNorm (v : HeightOneSpectrum R) (x : S) (hx : x ≠ 0) :
     orderAt v (algebraMap R (FractionRing R) (Algebra.intNorm R S x)) =
       ∑ P ∈ (primeFiber R S v).attach,
@@ -178,9 +178,9 @@ theorem orderAt_intNorm (v : HeightOneSpectrum R) (x : S) (hx : x ≠ 0) :
   rw [hTerms, orderAt_algebraMap v (Algebra.intNorm R S x) (by simpa using hx)]
   exact_mod_cast hCount
 
-/-- The weighted valuation formula for every nonzero fraction of the
-fixed extension. The hypothesis is separability of Frac(S)/Frac(R),
-not separability of the fraction as a new parameter. -/
+/-- .
+
+ -/
 theorem orderAt_fieldNorm (v : HeightOneSpectrum R)
     (x : FractionRing S) (hx : x ≠ 0) :
     orderAt v (Algebra.norm (FractionRing R) x) =

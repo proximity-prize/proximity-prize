@@ -20,17 +20,17 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Embedding of archimedean groups into reals
+/-! .
 
-This file provides embedding of any archimedean groups into reals.
 
-## Main declarations
-* `Archimedean.embedReal` defines an injective `M →+o ℝ` for archimedean group `M` with a positive
-  `1` element. `1` is preserved by the map.
-* `Archimedean.exists_orderAddMonoidHom_real_injective` states there exists an injective `M →+o ℝ`
-  for any archimedean group `M` without specifying the `1` element in `M`.
--/
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -44,8 +44,8 @@ theorem mul_smul_one_lt_iff {num : ℤ} {n den : ℕ} (hn : 0 < n) {x : M} :
   exact ⟨fun h ↦ lt_of_smul_lt_smul_left h (Int.natCast_nonneg n),
     fun h ↦ zsmul_lt_zsmul_right (Int.natCast_pos.mpr hn) h⟩
 
-/-- For `u v : ℚ` and `x y : M`, one can informally write
-`u < x → v < y → u + v < x + y`. We formalize this using smul. -/
+/-- .
+ -/
 theorem num_smul_one_lt_den_smul_add {u v : ℚ} {x y : M}
     (hu : u.num • 1 < u.den • x) (hv : v.num • 1 < v.den • y) :
     (u + v).num • 1 < (u + v).den • (x + y) := by
@@ -61,10 +61,10 @@ theorem num_smul_one_lt_den_smul_add {u v : ℚ} {x y : M}
   rw [add_smul, smul_add]
   exact add_lt_add hu' ((mul_smul_one_lt_iff u.den_pos).mpr hv)
 
-/-- Given `x` from `M`, one can informally write that, by transitivity,
-`num / den ≤ x → x ≤ n → num / den ≤ n` for `den : ℕ` and `num n : ℕ`.
-To avoid writing division for integer `num` and `den`, we express this in terms of
-multiplication. -/
+/-- .
+
+
+ -/
 theorem num_le_nat_mul_den [ZeroLEOneClass M] [NeZero (1 : M)]
     {num : ℤ} {den : ℕ} {x : M} (h : num • 1 ≤ den • x)
     {n : ℤ} (hn : x ≤ n • 1) : num ≤ n * den := by
@@ -74,8 +74,8 @@ theorem num_le_nat_mul_den [ZeroLEOneClass M] [NeZero (1 : M)]
 
 namespace Archimedean
 
-/-- Set of rational numbers that are less than the "number" `x / 1`.
-Formally, these are numbers `p / q` such that `p • 1 < q • x`. -/
+/-- .
+ -/
 abbrev ratLt (x : M) : Set ℚ := {r | r.num • 1 < r.den • x}
 
 theorem mkRat_mem_ratLt {num : ℤ} {den : ℕ} (hden : den ≠ 0) {x : M} :
@@ -86,10 +86,10 @@ theorem mkRat_mem_ratLt {num : ℤ} {den : ℕ} (hden : den ≠ 0) {x : M} :
   conv in den • x => rw [hden, mul_comm, ← smul_smul]
   exact (smul_lt_smul_iff_of_pos_left (Nat.zero_lt_of_ne_zero hm0)).symm
 
-/-- `ratLt` as a set of real numbers. -/
+/-- . -/
 abbrev ratLt' (x : M) : Set ℝ := (Rat.castHom ℝ) '' (ratLt x)
 
-/-- Mapping `M` to `ℝ`, defined as the supremum of `ratLt' x`. -/
+/-- . -/
 noncomputable
 abbrev embedRealFun (x : M) := sSup (ratLt' x)
 
@@ -121,13 +121,13 @@ theorem ratLt_add (x y : M) : ratLt (x + y) = ratLt x + ratLt y := by
   ext a
   rw [Set.mem_add]
   constructor
-  · /- Given `a ∈ ratLt 1 (x + y)`, find `u ∈ ratLt 1 x`, `v ∈ ratLt 1 y`
-      such that `u + v = a`.
-      In a naive attempt, one can take the denominator `d` of `a`,
-      and find the largest `u = p / d < x / 1`.
-      However, `d` could be too "coarse", and `v = a - u` could be 1/d too large than `y / 1`.
-      To ensure a large enough denominator, we take `d * k`, where
-      `1 + 1 ≤ k • (d • (x + y) - a.num • 1)`. -/
+  · /- 
+
+
+
+
+
+-/
     intro h
     rw [Set.mem_setOf_eq] at h
     obtain ⟨k, hk⟩ := Archimedean.arch (1 + 1) <| sub_pos.mpr h
@@ -150,7 +150,7 @@ theorem ratLt_add (x y : M) : ratLt (x + y) = ratLt x + ratLt y := by
       exact this
     · rw [Rat.mkRat_add_mkRat_of_den _ _ hka0]
       rw [add_sub_cancel, Rat.mkRat_mul_left hk0, Rat.mkRat_num_den']
-  · -- `u ∈ ratLt 1 x`, `v ∈ ratLt 1 y` → `u + v ∈ ratLt 1 (x + y)`
+  · --
     intro ⟨u, hu, v, hv, huv⟩
     rw [← huv]
     rw [Set.mem_setOf_eq] at hu hv ⊢
@@ -203,7 +203,7 @@ theorem embedRealFun_strictMono : StrictMono (embedRealFun (M := M)) := by
   exact lt_csSup_of_lt (ratLt'_bddAbove (y - x)) this (by simp [← Rat.num_pos])
 
 variable (M) in
-/-- The bundled `M →+o ℝ` for archimedean `M` that preserves `1`. -/
+/-- . -/
 noncomputable
 def embedReal : M →+o ℝ where
   toFun := embedRealFun

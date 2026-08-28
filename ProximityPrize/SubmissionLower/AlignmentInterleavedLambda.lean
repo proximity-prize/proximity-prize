@@ -1,21 +1,21 @@
 import ProximityPrize.SubmissionLower.AlignmentMomentCurveProjection
 
-/-!
-# Strong alignment to the actual interleaved Code.Lambda
+/-! .
 
-Model label: gpt-5.
 
-The scalar and moment-curve inputs were separately verified by WMI jobs
-229490 and 229497. Their finite-list theorem, rather than an assumed
-separator or list estimate, is the mathematical input used here. The first
-two wrapper attempts failed and are preserved separately; only a successful
-whole-module receipt can establish this wrapper's verification status.
 
-This file does not change the 6400 candidate or instantiate a 6401 claim.
-The generic wrapper retains strong scalar alignment and field-size gates
-as explicit hypotheses. The final carrier is the actual squared eight-row
-IRS carrier used by the protected protocol reduction.
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
 
@@ -29,8 +29,8 @@ section RadiusCell
 variable {ι A : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
 variable [DecidableEq A]
 
-/-- Strict containment below the next integer error cell suffices.
-No equality of floors, or nonnegativity of the real radius, is assumed. -/
+/-- .
+ -/
 theorem agreement_card_ge_of_closeCodewordsRel
     (C : Set (ι → A)) (y c : ι → A) (δ : ℝ) (e : ℕ)
     (hcell : δ * (Fintype.card ι : ℝ) < ((e + 1 : ℕ) : ℝ))
@@ -55,7 +55,7 @@ theorem agreement_card_ge_of_closeCodewordsRel
 
 end RadiusCell
 
-/-- A floor upper bound implies the strict next-cell inequality used above. -/
+/-- . -/
 theorem radius_cell_of_floor_le (δ : ℝ) (n e : ℕ)
     (hfloor : ⌊δ * (n : ℝ)⌋₊ ≤ e) :
     δ * (n : ℝ) < ((e + 1 : ℕ) : ℝ) := by
@@ -65,8 +65,8 @@ theorem radius_cell_of_floor_le (δ : ℝ) (n e : ℕ)
     _ ≤ (e : ℝ) + 1 := by linarith
     _ = ((e + 1 : ℕ) : ℝ) := by simp only [Nat.cast_add, Nat.cast_one]
 
-/-- Exact natural cross multiplication, with a positive denominator.
-This is a sufficient cell test and does not hide a floating-point estimate. -/
+/-- .
+ -/
 theorem rational_radius_cell (num den n e : ℕ) (hden : 0 < den)
     (hcross : num * n < (e + 1) * den) :
     ((num : ℝ) / (den : ℝ)) * (n : ℝ) < ((e + 1 : ℕ) : ℝ) := by
@@ -81,8 +81,8 @@ section GenericCode
 variable {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
 variable [Field F] [Fintype F] [DecidableEq F]
 
-/-- The actual r-row Code.Lambda follows from the previously proved finite
-interleaved-list theorem. The two field-size inequalities remain explicit. -/
+/-- .
+ -/
 theorem interleaved_lambda_le
     (C : LinearCode ι F) (r e w B : ℕ)
     (hzero : AlignmentScalarListBridge.ZeroCoordinateBound C w)
@@ -106,8 +106,8 @@ theorem interleaved_lambda_le
   · intro c hc
     exact agreement_card_ge_of_closeCodewordsRel _ y c δ e hcell (hT c hc)
 
-/-- The concrete index order is (outer row, inner row), with 8 consecutive
-inner rows for each of the 2 outer rows. -/
+/-- .
+ -/
 def sixteenIndexEquiv : Fin 2 × Fin 8 ≃ Fin 16 := finProdFinEquiv
 
 def flattenSymbol (v : Fin 2 → Fin 8 → F) (j : Fin 16) : F :=
@@ -127,7 +127,7 @@ theorem flatten_unflattenSymbol (v : Fin 16 → F) :
   change v (sixteenIndexEquiv (sixteenIndexEquiv.symm j)) = v j
   rw [Equiv.apply_symm_apply]
 
-/-- A genuine alphabet equivalence, not an assumed identification of row counts. -/
+/-- . -/
 def squaredEightSymbolEquiv : (Fin 2 → Fin 8 → F) ≃ (Fin 16 → F) where
   toFun := flattenSymbol
   invFun := unflattenSymbol
@@ -164,7 +164,7 @@ theorem flattenWord_agreement_card (v u : ι → Fin 2 → Fin 8 → F) :
   ext i
   simp only [Finset.mem_filter, flattenWord_agreement_iff]
 
-/-- Actual membership in the nested module code supplies every scalar row. -/
+/-- . -/
 theorem squared_eight_rows
     (C : LinearCode ι F) (v : ι → Fin 2 → Fin 8 → F)
     (hv : v ∈ ((C ^⋈ (Fin 8)) ^⋈ (Fin 2) :
@@ -176,8 +176,8 @@ theorem squared_eight_rows
       (C ^⋈ (Fin 8)) v).mp hv a
   exact (Code.mem_moduleInterleavedCode_iff F F (Fin 8) ι C _).mp houter b
 
-/-- Code.Lambda for the genuine Fin 2 -> Fin 8 alphabet. The finite set is
-mapped injectively into sixteen scalar rows; exact agreement is preserved. -/
+/-- .
+ -/
 theorem squared_eight_lambda_le
     (C : LinearCode ι F) (e w B : ℕ)
     (hzero : AlignmentScalarListBridge.ZeroCoordinateBound C w)
@@ -234,8 +234,8 @@ theorem squared_eight_lambda_le_of_floor
 
 end GenericCode
 
-/-- The protected minimum-distance theorem supplies the scalar zero bound;
-this does not introduce another Reed-Solomon root-counting assumption. -/
+/-- .
+ -/
 theorem irs_zeroCoordinateBound :
     AlignmentScalarListBridge.ZeroCoordinateBound IRSProfile.baseCode 131071 := by
   classical
@@ -254,8 +254,8 @@ theorem irs_zeroCoordinateBound :
     omega
   exact hz
 
-/-- Row membership is proved before transporting Code.Lambda. This avoids
-asking simplification to identify different interleaving-instance paths. -/
+/-- .
+ -/
 theorem irs_code_mem_iff_rows
     (v : IRSProfile.Index → Fin IRSProfile.interleaving → IRSProfile.Field) :
     v ∈ IRSProfile.code ↔
@@ -266,8 +266,8 @@ theorem irs_code_mem_iff_rows
   rw [IRSProfile.totalDimension_div_interleaving]
   rfl
 
-/-- Extensional equality of the actual protected squared carrier and the
-generic squared-eight carrier, using their genuine row membership. -/
+/-- .
+ -/
 theorem irs_squared_carrier_eq :
     (((IRSProfile.code ^⋈ (Fin 2) :
       ModuleCode IRSProfile.Index IRSProfile.Field
@@ -285,8 +285,8 @@ theorem irs_squared_carrier_eq :
   · intro hv a
     exact (irs_code_mem_iff_rows _).mpr (hv a)
 
-/-- The exact carrier occurring in the protected certifiedGammaError list term.
-No numeric alignment or field-size inequality is instantiated here. -/
+/-- .
+ -/
 theorem irs_squared_lambda_le
     (e B : ℕ) (δ : ℝ≥0)
     (hgap : 131071 < Fintype.card IRSProfile.Index - e)
@@ -305,8 +305,8 @@ theorem irs_squared_lambda_le
   exact squared_eight_lambda_le IRSProfile.baseCode e 131071 B
     irs_zeroCoordinateBound hgap halign hfield hseparation (δ : ℝ) hcell
 
-/-- Rational-radius adapter using only an exact natural inequality for its
-error cell. This is still conditional on the explicit alignment theorem. -/
+/-- .
+ -/
 theorem irs_squared_claimedRadius_lambda_le
     (num den e B : ℕ) (hden : 0 < den)
     (hcross : num * Fintype.card IRSProfile.Index < (e + 1) * den)
@@ -324,8 +324,8 @@ theorem irs_squared_claimedRadius_lambda_le
   simpa only [claimedRadius, NNReal.coe_div, NNReal.coe_natCast] using
     rational_radius_cell num den (Fintype.card IRSProfile.Index) e hden hcross
 
-/-- The finite ENat result safely controls the actual toNat used in the
-reduction; no unrestricted toNat monotonicity at infinity is invoked. -/
+/-- .
+ -/
 theorem irs_squared_lambda_toNat_le
     (e B : ℕ) (δ : ℝ≥0)
     (hgap : 131071 < Fintype.card IRSProfile.Index - e)
@@ -344,6 +344,6 @@ theorem irs_squared_lambda_toNat_le
 
 end DraftProofs
 
--- Reports are accepted only together with a successful whole-module check.
+--
 
 end ProximityPrize.SubmissionLower.AlignmentInterleavedLambda

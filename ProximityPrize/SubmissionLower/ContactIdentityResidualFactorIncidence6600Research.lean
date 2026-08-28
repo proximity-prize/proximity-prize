@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualTerminalIncidenceResearch
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
 
-/-!
-# Factorwise outer residual incidence for score 66
+/-! .
 
-The surface can have several irreducible factors.  The recursive incidence
-bound must therefore retain each factor's own flag and only aggregate after
-the factorwise bound is proved.  This is the factor-symbolic counterpart of
-`recursive_scaled_primary_z_6600`.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualFactorIncidence6600Research
 
@@ -35,8 +35,8 @@ variable {pchar : ℕ} [CharP Omega pchar] {flag : FlagDegree}
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- The accepted factor ledger with its residual agreement direction left
-symbolic. -/
+/-- .
+ -/
 def factorRegularLedgerFor (p direction : FlagDegree) : ℕ :=
   degreeIncidence *
       ((flagMixed p direction direction * degreeIncidence +
@@ -51,10 +51,10 @@ def factorRegularLedgerFor (p direction : FlagDegree) : ℕ :=
           (flagMixed p unitYZFlag unitZFlag +
             flagMixed p unitYZFlag unitAllFlag))
 
-/-- Exact factorwise outer compression, including the branch-local `Z` and
-all-coordinate tails.  All coefficients remain symbolic in the factor flag `p`; the
-conclusion is exactly `factorRegularLedger p`.
--/
+/-- .
+
+
+ -/
 theorem recursive_scaled_factor_with_support_6600
     (hphi : Function.Injective phi)
     (support : ResidualSupportParameters)
@@ -127,7 +127,7 @@ theorem recursive_scaled_factor_with_support_6600
       simpa only [gap] using h
     _ = factorRegularLedgerFor p support.agreementDirection := rfl
 
-/-- Accepted residual-direction compatibility wrapper. -/
+/-- . -/
 theorem recursive_scaled_factor_6600
     (hphi : Function.Injective phi)
     (S : ResidualStage phi Gamma x pchar errors flag w)

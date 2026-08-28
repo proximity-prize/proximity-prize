@@ -3,20 +3,20 @@ import ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
 import ProximityPrize.SubmissionLower.ContactFlagTriangularProjectionResearch
 import ProximityPrize.SubmissionLower.TrivariateShearResearch
 
-/-!
-# Affine-triangular automorphism for actual-identity residualization
+/-! .
 
-After mapping the base `X`-polynomials into a coefficient field, the nodal
-normal form and its derivative make the coordinate substitution
 
-`Yold = aY + v*Y + bY*Z`,
-`Sold = aS + v*S + bS*Y + cS*Z`,
-`Zold = Z`.
 
-For `v != 0` this is an algebra automorphism.  It preserves the nested flag
-`Z ⊂ span(Y,Z) ⊂ span(Y,S,Z)`, and differentiation in the new `S`
-coordinate is exactly multiplication by `v` after transport.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagAffineResidualAutomorphismResearch
 
@@ -35,8 +35,8 @@ local instance : DecidableEq K := Classical.decEq K
 
 abbrev Poly3 (K : Type) [Field K] := MvPolynomial (Fin 3) K
 
-/-- Original `(Y,S,Z)` coordinates as affine-triangular forms in residual
-coordinates. -/
+/-- .
+ -/
 def residualImage (aY v bY aS bS cS : K) (i : Fin 3) : Poly3 K :=
   ![MvPolynomial.C aY + MvPolynomial.C v * MvPolynomial.X 0 +
       MvPolynomial.C bY * MvPolynomial.X 2,
@@ -45,7 +45,7 @@ def residualImage (aY v bY aS bS cS : K) (i : Fin 3) : Poly3 K :=
       MvPolynomial.C cS * MvPolynomial.X 2,
     MvPolynomial.X 2] i
 
-/-- Residual coordinates as forms in the original coordinates. -/
+/-- . -/
 def originalImage (aY v bY aS bS cS : K) (i : Fin 3) : Poly3 K :=
   let y := MvPolynomial.C v⁻¹ *
     (MvPolynomial.X 0 - MvPolynomial.C aY -
@@ -147,8 +147,8 @@ theorem residual_ne_zero
     (hF : F ≠ 0) : residualAlgHom aY v bY aS bS cS F ≠ 0 :=
   (residualEquiv aY v bY aS bS cS hv).injective.ne hF
 
-/-- Evaluation at residual coordinates is evaluation of the original
-polynomial at the forward affine-triangular coordinates. -/
+/-- .
+ -/
 theorem eval₂Hom_residual
     {A : Type} [CommRing A] [Algebra K A]
     (F : Poly3 K) (y s z : A) (aY v bY aS bS cS : K) :
@@ -177,7 +177,7 @@ theorem eval₂Hom_residual
         simp [RingHom.comp_apply, residualAlgHom, residualImage] <;> ring
   exact RingHom.congr_fun hhom F
 
-/-- The regularity derivative transports with the invertible scalar `v`. -/
+/-- . -/
 theorem pderiv_residual
     (aY v bY aS bS cS : K) (F : Poly3 K) :
     MvPolynomial.pderiv (1 : Fin 3)
@@ -192,7 +192,7 @@ theorem pderiv_residual
       fin_cases i <;>
         simp [residualImage, hP, Derivation.leibniz] <;> ring
 
-/-! ## Exact nested-flag support preservation -/
+/-! . -/
 
 theorem wt_add_le_residual
     (weights : Fin 3 → ℕ) (F G : Poly3 K) :
@@ -291,9 +291,9 @@ theorem residualAlgHom_wt_le_pulled
     (MvPolynomial.le_weightedTotalDegree
       (ContactFlagTriangularProjectionResearch.flagPullWeights weights) hd))
 
-/-- The actual-identity affine substitution preserves every nested flag
-support exactly; its coefficients and nodal degree do not enlarge the
-three-variable Newton flag after passage to the coefficient field. -/
+/-- .
+
+ -/
 theorem polynomialInFlag_residualAlgHom
     (p : FlagDegree) (F : Poly3 K) (aY v bY aS bS cS : K)
     (hF : ContactFlagTriangularProjectionResearch.PolynomialInFlag p F) :

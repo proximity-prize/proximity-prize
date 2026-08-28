@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagPrincipalCycles6543Research
 import ProximityPrize.SubmissionLower.ContactFlagSymbolicTrapezoidResearch
 
-/-!
-# Principal-cycle flag provider for arbitrary flag triples
+/-! .
 
-This is the degree-symbolic version of the 65.43 three-projection theorem.
-For a surface in `Flag(p)`, a proper first cut in `Flag(q)`, and admissible
-second cuts in `Flag(r)`, it constructs the exact residual component budget
-with whole cost `flagMixed p q r`.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagGeneralPrincipalCyclesResearch
 
@@ -46,8 +46,8 @@ variable {hseparator : ∀ C : RegularComponent Omega G T H,
 variable {hproj : ∀ C : RegularComponent Omega G T H,
   ProjectionsFiniteSeparable Omega C.1}
 
-/-- Three exact unit-support principal-cycle budgets for arbitrary surface
-and first-cut flags. -/
+/-- .
+ -/
 def flagProjectionCycleBudget_of_nested_general
     (p q r : FlagDegree)
     (D : NestedFlagProjectionData hseparator hproj)
@@ -194,8 +194,8 @@ def flagProjectionCycleBudget_of_nested_general
   exact FlagProjectionCycleBudget.ofNestedProjectionBudgets
     B BZ BYZ BAll zBudget yzBudget allBudget
 
-/-- The three symbolic projection caps recombine to the literal mixed flag
-cost requested by the residual zero-count adapter. -/
+/-- .
+ -/
 def residualComponentBudget_flagMixed_of_nested
     (p q r : FlagDegree)
     (D : NestedFlagProjectionData hseparator hproj)
@@ -217,7 +217,7 @@ def residualComponentBudget_flagMixed_of_nested
   exact (flagProjectionCycleBudget_of_nested_general p q r D hG hproper
     hGsupport hTsupport hpositive B BZ BYZ BAll).toResidualComponentBudget
 
-/-- Shortest generic seam before selecting a positive common projection. -/
+/-- . -/
 theorem exists_residualComponentBudget_flagMixed_of_projectionPositivity
     (p q r : FlagDegree)
     (hG : Irreducible G) (hproper : ¬ G ∣ T)

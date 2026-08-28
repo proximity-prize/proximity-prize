@@ -20,17 +20,17 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Determinants in free (finite) modules
+/-! .
 
-Quite a lot of our results on determinants (that you might know in vector spaces) will work for all
-free (finite) modules over any commutative ring.
 
-## Main results
 
-* `LinearMap.det_zero''`: The determinant of the constant zero map is zero, in a finite free
-  nontrivial module.
--/
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 

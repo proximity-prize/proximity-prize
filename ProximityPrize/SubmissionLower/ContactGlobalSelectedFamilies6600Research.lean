@@ -3,14 +3,14 @@ import ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
 import ProximityPrize.SubmissionLower.ContactSingularBranch6600Research
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
 
-/-!
-# Actual global selected-family ledger at score 66
+/-! .
 
-The singular union is already bounded unconditionally.  This module joins it
-to the factorwise recursive regular bounds, using the robust rectangular
-factor flag.  The sole remaining input is one proved count inequality for
-each actual positive-`R` factor.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6600Research
 
@@ -43,8 +43,8 @@ theorem regularSeeds_subset (Q : MvPolynomial (Fin 4) K)
     regularSeeds Q selected Gamma F ⊆ Gamma :=
   Finset.filter_subset _ _
 
-/-- The score-66 selected solutions are covered by the actual regular factor
-families and the already constructed singular union. -/
+/-- .
+ -/
 theorem card_le_regular_sum_add_singular
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
@@ -98,8 +98,8 @@ theorem card_le_regular_sum_add_singular
         (singularSeeds Q selected Gamma).card :=
       Nat.add_le_add_right Finset.card_biUnion_le _
 
-/-- The actual regular factor family consumes at most the rectangular
-regular numerator. -/
+/-- .
+ -/
 theorem regularSeeds_scaled_rectangular_bound
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
@@ -116,9 +116,9 @@ theorem regularSeeds_scaled_rectangular_bound
       (regularSeeds Q selected Gamma F).card)
     (regularFlag Q) hregular hcaps.1 hcaps.2.1 hcaps.2.2
 
-/-- Full selected-family scaled count.  The singular branch, cover, and
-rectangular aggregation are all discharged; only per-regular-factor counts
-remain as input. -/
+/-- .
+
+ -/
 theorem global_scaled_bound_of_regular_factors
     {Iota : Type} [DecidableEq Iota]
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]

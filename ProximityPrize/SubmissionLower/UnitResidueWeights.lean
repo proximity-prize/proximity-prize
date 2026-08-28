@@ -4,20 +4,20 @@ import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_RamificationInerti
 import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_RamificationInertia_Inertia
 
 
-/-!
-# Unit inertia weights above actual constant-field points
+/-! .
 
-Model label: gpt-5.
 
-For an actual K-point phi of R, an integral R-algebra S, and a maximal
-ideal P lying over ker(phi), the quotient S/P is proved integral over K.
-If K is algebraically closed, constants already surject onto S/P.
-Consequently the actual inertia degree over R equals one.
 
-No residue-field isomorphism upstairs, finrank, or unit-weight statement
-is assumed. These generic facts will be instantiated at the actual
-finite and infinity base points.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.UnitResidueWeights
 
@@ -29,8 +29,8 @@ variable {K R S : Type*} [Field K] [CommRing R] [CommRing S]
 variable [Algebra K R] [Algebra K S] [Algebra R S] [IsScalarTower K R S]
 variable [Algebra.IsIntegral R S]
 
-/-- The actual quotient above the point is integral over its constant
-field, by mapping the monic relations and using the proved scalar square. -/
+/-- .
+ -/
 theorem pointFiber_quotient_integral (phi : R →ₐ[K] K) (P : Ideal S)
     (hP : P.comap (algebraMap R S) = RingHom.ker phi.toRingHom) :
     Algebra.IsIntegral K (S ⧸ P) := by
@@ -53,8 +53,8 @@ theorem pointFiber_constants_surjective (phi : R →ₐ[K] K) (P : Ideal S)
   letI : Algebra.IsIntegral K (S ⧸ P) := pointFiber_quotient_integral phi P hP
   exact (IsAlgClosed.algebraMap_bijective_of_isIntegral (k := K) (K := S ⧸ P)).2
 
-/-- The actual inertia degree is one, proved through the actual
-quotient algebra map rather than postulated as a residue weight. -/
+/-- .
+ -/
 theorem inertiaDeg_eq_one_of_point_fiber (phi : R →ₐ[K] K) (P : Ideal S)
     [P.IsMaximal]
     (hP : P.comap (algebraMap R S) = RingHom.ker phi.toRingHom) :
@@ -73,8 +73,8 @@ theorem inertiaDeg_eq_one_of_point_fiber (phi : R →ₐ[K] K) (P : Ideal S)
   exact Algebra.finrank_eq_one_iff_bijective_algebraMap.mpr
     ⟨(algebraMap (R ⧸ p) (S ⧸ P)).injective, hsurj⟩
 
-/-- The older ramification-sum API uses inertiaDeg'; its weight is
-identified with the same proved unit value. -/
+/-- .
+ -/
 theorem inertiaDeg'_eq_one_of_point_fiber (phi : R →ₐ[K] K) (P : Ideal S)
     [P.IsMaximal]
     (hP : P.comap (algebraMap R S) = RingHom.ker phi.toRingHom) :

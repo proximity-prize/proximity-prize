@@ -2,23 +2,23 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.MatrixRootMultiplicity
 
 
-/-!
-# Distinct common fiber roots consume resultant degree
+/-! .
 
-Model label: gpt-5.
 
-Evaluation at a finite set of distinct scalars is surjective on polynomials
-with a sufficiently large degree cap, by actual Lagrange interpolation.
-Common-root evaluation annihilates the Sylvester image, so rank-nullity
-turns this surjectivity into a corank lower bound. The verified polynomial
-matrix multiplicity module then gives a concrete bidegree point bound.
 
-The fixed degree caps are hypotheses, not degrees recomputed after
-specialization. Every counted fiber must have at least one nonzero
-specialized polynomial. A nonzero resultant alone does not exclude a
-whole vertical common fiber, and this file does not silently assume that
-missing hypothesis. No mixed curve-degree or alignment theorem is assumed.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.PlaneResultantPointCount
 
@@ -28,15 +28,15 @@ noncomputable section
 
 variable {K : Type} [Field K] [DecidableEq K]
 
-/-- Evaluation on a chosen finite set, with the source degree cap retained. -/
+/-- . -/
 def evaluationOn (N : ℕ) (roots : Finset K) :
     Polynomial.degreeLT K N →ₗ[K] (roots → K) where
   toFun P x := (P : Polynomial K).eval (x : K)
   map_add' _ _ := funext fun _ => Polynomial.eval_add
   map_smul' _ _ := funext <| by simp
 
-/-- Actual Lagrange interpolation proves independence of the distinct
-evaluation functionals, including the empty finite set. -/
+/-- .
+ -/
 theorem evaluationOn_surjective (N : ℕ) (roots : Finset K)
     (hcard : roots.card ≤ N) : Function.Surjective (evaluationOn N roots) := by
   let E := Lagrange.funEquivDegreeLT (s := roots) (v := fun x : K => x)
@@ -51,13 +51,13 @@ theorem evaluationOn_surjective (N : ℕ) (roots : Finset K)
   change E small = values
   exact E.apply_symm_apply values
 
-/-- The finite-dimensional degree-cap space has its advertised dimension. -/
+/-- . -/
 theorem finrank_degreeLT (N : ℕ) :
     Module.finrank K (Polynomial.degreeLT K N) = N := by
   simpa using Module.finrank_eq_card_basis (Polynomial.degreeLT.basis K N)
 
-/-- The rank of the fixed-cap Sylvester matrix is the rank of its actual
-multiplication map on the bounded polynomial spaces. -/
+/-- .
+ -/
 theorem sylvester_rank_eq_finrank_range
     (p q : Polynomial K) (m n : ℕ)
     (hp : p.natDegree ≤ m) (hq : q.natDegree ≤ n) :
@@ -72,9 +72,9 @@ theorem sylvester_rank_eq_finrank_range
     (Polynomial.degreeLT.basis K (m + n)) (Polynomial.degreeLT.basisProd K m n)]
   rw [← hmatrix, Matrix.toLin_toMatrix]
 
-/-- A distinct common-root set fits in the degree cap whenever at least
-one specialized polynomial is nonzero. This is the explicit vertical-fiber
-exclusion needed by the planar theorem. -/
+/-- .
+
+ -/
 theorem common_roots_card_le_cap
     (p q : Polynomial K) (m n : ℕ) (roots : Finset K)
     (hp : p.natDegree ≤ m) (hq : q.natDegree ≤ n)
@@ -93,8 +93,8 @@ theorem common_roots_card_le_cap
       exact (Polynomial.mem_roots hq0).mpr (hroots x hx).2
     omega
 
-/-- Independent common-root evaluations annihilate the Sylvester image.
-Consequently the number of distinct common roots is at most its corank. -/
+/-- .
+ -/
 theorem common_roots_card_le_sylvester_corank
     (p q : Polynomial K) (m n : ℕ) (roots : Finset K)
     (hp : p.natDegree ≤ m) (hq : q.natDegree ≤ n)
@@ -125,7 +125,7 @@ theorem common_roots_card_le_sylvester_corank
     Module.finrank K (LinearMap.range L) at hmatrix
   omega
 
-/-- The original outer degree caps remain valid on every scalar fiber. -/
+/-- . -/
 theorem common_fiber_card_le_sylvester_corank
     (P Q : Polynomial (Polynomial K)) (m n : ℕ) (alpha : K) (roots : Finset K)
     (hP : P.natDegree ≤ m) (hQ : Q.natDegree ≤ n)
@@ -143,8 +143,8 @@ theorem common_fiber_card_le_sylvester_corank
   · exact hnonzero
   · exact hroots
 
-/-- Distinct common points in finitely many nonzero fibers consume degree
-of the actual nonzero resultant. No splitting or algebraic closure is used. -/
+/-- .
+ -/
 theorem sum_common_fiber_cards_le_resultant_natDegree
     (P Q : Polynomial (Polynomial K)) (m n : ℕ)
     (points : Finset K) (fibers : K → Finset K)
@@ -169,9 +169,9 @@ theorem sum_common_fiber_cards_le_resultant_natDegree
     _ ≤ _ := MatrixRootMultiplicity.sum_sylvester_coranks_le_resultant_natDegree
       P Q m n points hresultant
 
-/-- A concrete planar bidegree bound, under stated fixed-cap, resultant,
-and nonzero-fiber hypotheses. The left side counts actual distinct ordered
-pairs, grouped by their first coordinates; different fibers are disjoint. -/
+/-- .
+
+ -/
 theorem sum_common_fiber_cards_le_bidegree_bound
     (P Q : Polynomial (Polynomial K)) (m n : ℕ)
     (points : Finset K) (fibers : K → Finset K)
@@ -190,12 +190,12 @@ theorem sum_common_fiber_cards_le_bidegree_bound
       hP hQ hresultant hnonzero hroots)
     (bivariate_resultant_natDegree_le (F := K) P Q m n)
 
-/-- The distinct second coordinates above a fixed first coordinate. -/
+/-- . -/
 def pointFiber (points : Finset (K × K)) (alpha : K) : Finset K :=
   (points.filter (fun point => point.1 = alpha)).image Prod.snd
 
-/-- Grouping distinct ordered pairs into their distinct coordinate fibers
-does not lose or duplicate points. -/
+/-- .
+ -/
 theorem card_eq_sum_pointFiber (points : Finset (K × K)) :
     points.card = ∑ alpha ∈ points.image Prod.fst, (pointFiber points alpha).card := by
   rw [Finset.card_eq_sum_card_image Prod.fst points]
@@ -210,10 +210,10 @@ theorem card_eq_sum_pointFiber (points : Finset (K × K)) :
   · exact (Finset.mem_filter.mp hu).2.trans (Finset.mem_filter.mp hv).2.symm
   · exact huv
 
-/-- An actual finite planar distinct-point bound, with all geometric
-conditions replaced by explicit algebraic hypotheses. Nonzero resultant
-and nonzero counted fibers are both required; neither is inferred from
-the other. The caps may be larger than the original outer degrees. -/
+/-- .
+
+
+ -/
 theorem common_points_card_le_bidegree_bound
     (P Q : Polynomial (Polynomial K)) (m n : ℕ) (points : Finset (K × K))
     (hP : P.natDegree ≤ m) (hQ : Q.natDegree ≤ n)

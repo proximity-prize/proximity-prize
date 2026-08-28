@@ -25,23 +25,23 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
+/-! .
 
-# The free locus of a module
 
-## Main definitions and results
 
-Let `M` be a finitely presented `R`-module.
-- `Module.freeLocus`: The set of points `x` in `Spec R` such that `Mₓ` is free over `Rₓ`.
-- `Module.freeLocus_eq_univ_iff`:
-  The free locus is the whole `Spec R` if and only if `M` is projective.
-- `Module.basicOpen_subset_freeLocus_iff`: `D(f)` is contained in the free locus if and only if
-  `M_f` is projective over `R_f`.
-- `Module.rankAtStalk`: The function `Spec R → ℕ` sending `x` to `rank_{Rₓ} Mₓ`.
-- `Module.isLocallyConstant_rankAtStalk`:
-  If `M` is flat over `R`, then `rankAtStalk` is locally constant.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -53,7 +53,7 @@ namespace Module
 
 open PrimeSpectrum TensorProduct
 
-/-- The free locus of a module, i.e. the set of primes `p` such that `Mₚ` is free over `Rₚ`. -/
+/-- . -/
 def freeLocus : Set (PrimeSpectrum R) :=
   { p | Module.Free (Localization.AtPrime p.asIdeal) (LocalizedModule p.asIdeal.primeCompl M) }
 
@@ -186,7 +186,7 @@ lemma isOpen_freeLocus [Module.FinitePresentation R M] :
   exact ⟨basicOpen r, basicOpen_subset_freeLocus_iff.mpr inferInstance, (basicOpen r).2, hr⟩
 
 variable (M) in
-/-- The rank of `M` at the stalk of `p` is the rank of `Mₚ` as a `Rₚ`-module. -/
+/-- . -/
 noncomputable
 def rankAtStalk (p : PrimeSpectrum R) : ℕ :=
   Module.finrank (Localization.AtPrime p.asIdeal) (LocalizedModule p.asIdeal.primeCompl M)
@@ -253,7 +253,7 @@ lemma rankAtStalk_eq_of_equiv {N : Type*} [AddCommGroup N] [Module R N] (e : M �
     (LocalizedModule.mkLinearMap p.asIdeal.primeCompl M)
     (LocalizedModule.mkLinearMap p.asIdeal.primeCompl N) _ e |>.finrank_eq
 
-/-- If `M` is `R`-free, its rank at stalks is constant and agrees with the `R`-rank of `M`. -/
+/-- . -/
 @[simp]
 lemma rankAtStalk_eq_finrank_of_free [Module.Free R M] :
     rankAtStalk (R := R) M = Module.finrank R M := by
@@ -266,7 +266,7 @@ lemma rankAtStalk_self [Nontrivial R] : rankAtStalk (R := R) R = 1 := by
 
 open LocalizedModule Localization
 
-/-- The rank of `Π i, M i` at a prime `p` is the sum of the ranks of `M i` at `p`. -/
+/-- . -/
 lemma rankAtStalk_pi {ι : Type*} [Finite ι] (M : ι → Type*)
     [∀ i, AddCommGroup (M i)] [∀ i, Module R (M i)] [∀ i, Module.Flat R (M i)]
     [∀ i, Module.Finite R (M i)] (p : PrimeSpectrum R) :
@@ -315,7 +315,7 @@ lemma rankAtStalk_eq_zero_iff_subsingleton :
   rw [← rankAtStalk_eq_zero_iff_notMem_support, h, Pi.zero_apply]
 
 variable (M) in
-/-- The rank of `M × N` at `p` is equal to the sum of the ranks. -/
+/-- . -/
 lemma rankAtStalk_prod (N : Type*) [AddCommGroup N] [Module R N]
     [Module.Flat R N] [Module.Finite R N] :
     rankAtStalk (R := R) (M × N) = rankAtStalk M + rankAtStalk N := by
@@ -363,7 +363,7 @@ lemma rankAtStalk_eq_of_le_of_finite_of_flat' {p q : Ideal R} [hp : p.IsPrime] [
     (hpq : p ≤ q) : rankAtStalk M ⟨p, hp⟩ = rankAtStalk M ⟨q, hq⟩ :=
   rankAtStalk_eq_of_le_of_finite_of_flat M hpq
 
-/-- See `rankAtStalk_tensorProduct_of_isScalarTower` for a hetero-basic version. -/
+/-- . -/
 lemma rankAtStalk_tensorProduct (N : Type*) [AddCommGroup N] [Module R N] [Module.Finite R N]
     [Module.Flat R N] : rankAtStalk (M ⊗[R] N) = rankAtStalk M * rankAtStalk (R := R) N := by
   ext p
@@ -382,8 +382,8 @@ lemma rankAtStalk_tensorProduct_of_isScalarTower {S : Type*} [CommRing S] [Algeb
   simp [rankAtStalk_eq_of_equiv (AlgebraTensorModule.cancelBaseChange R S S N M).symm,
     rankAtStalk_tensorProduct, rankAtStalk_baseChange]
 
-/-- The rank of a module `M` at a prime `p` is equal to the dimension
-of `κ(p) ⊗[R] M` as a `κ(p)`-module. -/
+/-- .
+ -/
 lemma rankAtStalk_eq (p : PrimeSpectrum R) :
     rankAtStalk M p = finrank p.asIdeal.ResidueField (p.asIdeal.Fiber M) := by
   let k := p.asIdeal.ResidueField
@@ -392,7 +392,7 @@ lemma rankAtStalk_eq (p : PrimeSpectrum R) :
     AlgebraTensorModule.cancelBaseChange _ _ _ _ _
   rw [← e.finrank_eq, finrank_baseChange, rankAtStalk_eq_finrank_tensorProduct]
 
-/-- Variant of `Module.rankAtStalk_eq` for better rewriting. -/
+/-- . -/
 lemma _root_.Ideal.finrank_fiber_eq_rankAtStalk (p : Ideal R) [hp : p.IsPrime] :
     finrank p.ResidueField (p.Fiber M) = rankAtStalk M ⟨p, hp⟩ :=
   (rankAtStalk_eq ⟨p, hp⟩).symm

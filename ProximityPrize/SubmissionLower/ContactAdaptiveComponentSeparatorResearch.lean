@@ -2,19 +2,19 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactDependentGenericity6543Research
 import ProximityPrize.SubmissionLower.ContactSparsePoleZeroCountResearch
 
-/-!
-# Component-dependent separators for sparse residual cycles
+/-! .
 
-A fixed literal separator need not be transcendental on every curve
-component.  This module removes that artificial restriction.  Each regular
-non-point component chooses one of its three transcendental coordinates only
-as a normalization atlas.  The Newton support and all pole weights remain in
-the original three coordinates.
 
-The construction still accepts `ProjectionsFiniteSeparable`, which is also
-required by the outer incidence theorem.  It uses that hypothesis only at
-the one coordinate selected on each component.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveComponentSeparatorResearch
 
@@ -37,9 +37,9 @@ set_option maxRecDepth 20000
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
 
-/-- A literal coordinate which is transcendental on a given regular
-component.  Existence follows from the proved non-point property of regular
-components, not from a common-coordinate assumption. -/
+/-- .
+
+ -/
 noncomputable def componentSeparator
     (C : RegularComponent Omega G T H) : Fin 3 :=
   Classical.choose
@@ -54,8 +54,8 @@ theorem componentSeparator_transcendental
     (exists_transcendental_coordinate_of_ne_point_kernel Omega C.1
       (regularComponent_ne_point Omega G T H C))
 
-/-- Finite union of the pole supports of the three actual coordinates, with
-the normalization algebra chosen independently on each component. -/
+/-- .
+ -/
 def componentRelevantPlacesAdaptive
     (hproj : forall C : RegularComponent Omega G T H,
       ProjectionsFiniteSeparable Omega C.1)
@@ -206,8 +206,8 @@ theorem adaptiveBadSubmodule_ne_top
       (fun a => constant_value_le_one Omega (CoordinateField Omega C.1) v.1 a)
       (coordinate Omega C.1) E c hc
 
-/-- One common coefficient polynomial, normalized using a potentially
-different literal coordinate on each component. -/
+/-- .
+ -/
 structure AdaptiveGenericExactPolePolynomial
     (G T H : MvPolynomial (Fin 3) Omega)
     (E : Finset (Fin 3 →₀ ℕ))
@@ -319,8 +319,8 @@ theorem exists_adaptiveGenericExactPolePolynomial
     rw [hweight] at hle ⊢
     exact le_antisymm hle (by unfold poleOrder; exact le_max_left _ _)
 
-/-- Direct adaptive-separator conversion to the production-facing residual
-zero budget.  This bypasses every fixed-coordinate intermediate structure. -/
+/-- .
+ -/
 def AdaptiveGenericExactPolePolynomial.toResidualComponentBudget
     {E : Finset (Fin 3 →₀ ℕ)} {wholeCost : ℕ}
     {hproj : forall C : RegularComponent Omega G T H,

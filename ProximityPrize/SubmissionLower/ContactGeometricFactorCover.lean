@@ -1,19 +1,19 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactGeometricFirstTail
 
-/-!
-# Actual finite geometric factor families and their degree budgets
+/-! .
 
-Model label: gpt-5.
 
-Both the original factors and the geometric factors are constructed from
-actual normalized factorization. Point coverage and summed degree budgets
-are proved from the products, not given as a component-list hypothesis.
-The family retains its original-factor index, so no unjustified global
-deduplication or separability assumption is needed.
 
-No intersection-point bound or competition claim is made.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactGeometricFactorCover
 
@@ -52,7 +52,7 @@ theorem coordinate_degree_le_of_dvd (i : σ) (F Q : MvPolynomial σ A)
   rw [MvPolynomial.degreeOf_mul_eq hF hG]
   exact Nat.le_add_right _ _
 
-/-- This degree-product bound is proved for arbitrary variable types. -/
+/-- . -/
 theorem sum_coordinate_degrees_le_of_prod_dvd {ι : Type*}
     (I : Finset ι) (f : ι → MvPolynomial σ A) (Q : MvPolynomial σ A)
     (hQ : Q ≠ 0) (hdiv : (∏ j ∈ I, f j) ∣ Q) (i : σ) :
@@ -117,7 +117,7 @@ theorem surfaceFactors_degree_budget
   (normalizedFactorSet_degree_budget (surfaceMap φ F)
     (surfaceMap_ne_zero φ hφ F hF) i).trans (surfaceMap_degreeOf_le φ F i)
 
-/-- Actual coverage by a base irreducible factor AND a geometric one. -/
+/-- . -/
 theorem exists_geometric_component_of_surface_zero
     (φ : Polynomial K →+* L) (hφ : Function.Injective φ)
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) (v : Fin 3 → L)
@@ -131,8 +131,8 @@ theorem exists_geometric_component_of_surface_zero
   have hsg := surfaceFactors_spec φ F g hg
   exact ⟨F, hF, g, hg, hsF.1, hsg.1, hsF.2.1, hsg.2, hzg⟩
 
-/-- A nested sum is the genuine indexed family: it need not be globally
-deduplicated or assumed to contain a prescribed number of components. -/
+/-- .
+ -/
 theorem surfaceFactor_family_degree_budget
     (φ : Polynomial K →+* L) (hφ : Function.Injective φ)
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) (i : Fin 3) :
@@ -216,8 +216,8 @@ section CanonicalPoints
 
 variable (K : Type*) [Field K]
 
-/-- The finite constructed family covers the ACTUAL generic initial point
-of every selected polynomial solution, not an abstract point assumption. -/
+/-- .
+ -/
 theorem exists_component_at_actual_initial_point
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (P : Polynomial K) (γ : K) (hsolution : specialization K P γ Q = 0) :

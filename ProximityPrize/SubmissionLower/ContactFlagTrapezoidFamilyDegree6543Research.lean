@@ -2,16 +2,16 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ArbitraryPlaneEvaluationFamilyResearch
 import ProximityPrize.SubmissionLower.ActualPlaneJointProjection
 
-/-!
-# Characteristic-free family degree with an exact trapezoid resultant cap
+/-! .
 
-The existing arbitrary-evaluation family theorem ends by replacing the
-ordinary resultant degree with a rectangular bidegree bound.  For the flag
-route that last relaxation is too large.  This module exposes the stronger
-intermediate conclusion—sum of component field degrees bounded by the actual
-ordinary resultant degree—and composes it with the already proved
-trapezoidal resultant estimate.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagTrapezoidFamilyDegree6543Research
 
@@ -25,9 +25,9 @@ open TrivariateRationalCollection ActualPlaneCoordinateKernel
 
 noncomputable section
 
-/-- The exact resultant-degree form hidden immediately before the final
-rectangular relaxation in
-`sum_finrank_le_planar_bound_without_separability`. -/
+/-- .
+
+ -/
 theorem sum_finrank_le_ordinary_resultant_without_separability
     {F : Type} [Field F] {I : Type*} [Fintype I]
     (E : I → Type) [∀ i, Field (E i)] [∀ i, Algebra F (E i)]
@@ -81,8 +81,8 @@ theorem sum_finrank_le_ordinary_resultant_without_separability
 
 variable (K : Type) [Field K]
 
-/-- Arbitrary actual evaluations, with the exact trapezoid cap rather than
-the old rectangular plane budget. -/
+/-- .
+ -/
 theorem finite_sum_finrank_bound_trapezoid
     (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
     (E : I → Type)

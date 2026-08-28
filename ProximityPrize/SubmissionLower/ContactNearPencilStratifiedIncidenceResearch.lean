@@ -2,22 +2,22 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIncidence
 import ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
 
-/-!
-# Finite-incidence consumers for actual identity stratification
+/-! .
 
-This module connects the abstract `U,V` compression to the real finite
-incidence relation.  Unlike `sharp_incidence_bound`, it does not immediately
-enlarge the actual identity count to `w`.  Instead, the per-node geometric
-cost is split into a residual-degree part and an affine-unit part.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch
 
 open ContactIncidence
 open ContactNearPencil6600ArithmeticResearch
 
-/-- Actual finite incidence with a cost linear in the residual degree
-`w - identities.card`. -/
+/-- .
+ -/
 theorem stratified_incidence_bound
     {Seed Node : Type*} [DecidableEq Seed] [DecidableEq Node]
     (relation : Seed → Node → Prop) [∀ seed node, Decidable (relation seed node)]
@@ -43,9 +43,9 @@ theorem stratified_incidence_bound
   exact stratified_incidence_linear seeds.card nodes.card a w identities.card
     degreeCost unitCost U V hcard hwa hraw hdegree hunit
 
-/-- Scaled form used by nested contact incidence.  Each proper node supplies
-an already-scaled fiber inequality; integer division is eliminated exactly as
-in the existing sharp wrapper before applying the `U,V` compression. -/
+/-- .
+
+ -/
 theorem scaled_stratified_incidence_bound
     {Seed Node : Type*} [DecidableEq Seed] [DecidableEq Node]
     (relation : Seed → Node → Prop) [∀ seed node, Decidable (relation seed node)]

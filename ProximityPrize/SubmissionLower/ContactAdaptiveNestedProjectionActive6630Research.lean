@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjection6600Research
 
-/-!
-# Active-differential nested projections for score 66.30
+/-! .
 
-The score-66 constructor asked for finite-separable gates for both literal
-coordinates `Y` and `Z`, even though those gates were used only to prove that
-at least one of `dY,dZ` is nonzero.  At the 66.30 parameters the global `Y`
-resultant gate is false numerically.  This module records and uses the exact
-weaker hypothesis needed by the geometric avoidance argument.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjectionActive6630Research
 
@@ -42,8 +42,8 @@ set_option autoImplicit false
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
 
-/-- Common nested projections whose first avoidance step is driven directly
-by the mathematically necessary active-differential condition. -/
+/-- .
+ -/
 structure AdaptiveNestedProjectionDataActive
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
@@ -110,9 +110,9 @@ structure AdaptiveNestedProjectionDataActive
   directional : MvPolynomial.pderiv (0 : Fin 3) G -
     MvPolynomial.C mu * MvPolynomial.pderiv (1 : Fin 3) G ≠ 0
 
-/-- Direct active-differential version of the common two-stage affine
-avoidance theorem.  Unlike the old theorem, there is no inactive branch and
-hence no need for a global `Y` projection gate. -/
+/-- .
+
+ -/
 theorem exists_adaptiveNestedProjectionDataActive
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)

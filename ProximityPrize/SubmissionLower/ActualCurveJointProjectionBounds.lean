@@ -3,15 +3,15 @@ import ProximityPrize.SubmissionLower.ActualCurveProjectionBounds
 import ProximityPrize.SubmissionLower.ActualCoordinateDegreeSum
 import ProximityPrize.SubmissionLower.ActualPlaneJointProjection
 
-/-!
-# Joint-support adapters for actual coordinate projections
+/-! .
 
-The Newton-sensitive resultant argument changes only the characteristic
-certificate for one rational base.  The geometric degree budget remains the
-old symmetric mixed degree.  This module isolates that interface, so a sparse
-order selector can be used by both one component and a finite family without
-changing the downstream counting ledger.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ActualCurveJointProjectionBounds
 
@@ -25,9 +25,9 @@ noncomputable section
 
 variable (K : Type) [Field K]
 
-/-- The exact output required from a sparse positive-order argument.  The
-chosen order has the same rational base and the same old mixed budget, while
-its actual outer and resultant degrees are characteristic-safe. -/
+/-- .
+
+ -/
 def JointOrderCertificate (order : Fin 3 ≃ Fin 3)
     (G H : Original K) (p : ℕ) : Prop :=
   ∃ order' : Fin 3 ≃ Fin 3,
@@ -38,8 +38,8 @@ def JointOrderCertificate (order : Fin 3 ≃ Fin 3)
     (Polynomial.resultant (planeMap K order' G)
       (planeMap K order' H)).natDegree < p
 
-/-- Package the stable joint-order theorem into the smaller certificate
-interface consumed by the projection and degree-sum adapters. -/
+/-- .
+ -/
 theorem jointOrderCertificate_of_projection_data
     (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
     (G T : Original K) (p n mCap totalG totalT cap gOuter tInner : ℕ)
@@ -88,8 +88,8 @@ private def familySummary {I : Type} [Fintype I]
     Algebra.IsSeparable (RatFunc K) (CoordinateField K (P i))) ∧
     (∑ i, Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤ B
 
-/-- A sparse order certificate gives the same single-component conclusion as
-the old rectangular characteristic gate. -/
+/-- .
+ -/
 theorem finite_separable_finrank_bound_of_joint_certificate
     (order : Fin 3 ≃ Fin 3) (P : Ideal (Original K)) [P.IsPrime]
     (ht : Transcendental K (coordinate K P (order 0)))
@@ -124,8 +124,8 @@ theorem finite_separable_finrank_bound_of_joint_certificate
     hbudget] at hresult
   exact hresult
 
-/-- One common sparse order certificate gives the summed degree bound for a
-finite family of distinct components. -/
+/-- .
+ -/
 theorem finite_separable_sum_finrank_bound_of_joint_certificate
     (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
     (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
@@ -170,8 +170,8 @@ theorem finite_separable_sum_finrank_bound_of_joint_certificate
   rw [halg, hbudget] at hresult
   exact hresult
 
-/-- The same joint certificate bounds the exact coordinate degree used by
-the affine zero-count theorem, including algebraic-coordinate members. -/
+/-- .
+ -/
 theorem sum_actualCoordinateDegree_le_of_joint_certificate
     {I : Type} [Fintype I] (P : I → Ideal (Original K))
     [∀ i, (P i).IsPrime] (order : Fin 3 ≃ Fin 3)
@@ -208,9 +208,9 @@ theorem sum_actualCoordinateDegree_le_of_joint_certificate
         exact dif_neg hi
     _ ≤ _ := hbound
 
-/-- One rectangular coordinate gate suffices at a specified base.  This is
-the old proof factored so the two easy bases can be combined with a joint
-certificate at the remaining base. -/
+/-- .
+
+ -/
 theorem finite_separable_at_of_original_coordinate_gate
     (P : Ideal (Original K)) [P.IsPrime] (i : Fin 3)
     (hi : Transcendental K (coordinate K P i))
@@ -241,8 +241,8 @@ theorem finite_separable_at_of_original_coordinate_gate
   rw [rationalBaseAlgebra_congr K P (order 0) i hbase ht hi] at hresult
   exact hresult
 
-/-- Hybrid projection property: the `R` base (coordinate `1`) uses joint
-support; the `Y` and `Z` bases keep their smaller rectangular gates. -/
+/-- .
+ -/
 theorem projectionsFiniteSeparable_of_joint_R
     (P : Ideal (Original K)) [P.IsPrime] (p : ℕ) [CharP K p]
     (G H : Original K) (hG : Irreducible G)
@@ -271,9 +271,9 @@ theorem projectionsFiniteSeparable_of_joint_R
     · exact finite_separable_at_of_original_coordinate_gate K P 2 hi p G H
         hG hGmem hHmem hproper hdegree hmixedZ
 
-/-- Conditional-provider form of the hybrid projection property.  A joint
-certificate is requested only when the R coordinate is actually
-transcendental on this component. -/
+/-- .
+
+ -/
 theorem projectionsFiniteSeparable_of_joint_R_provider
     (P : Ideal (Original K)) [P.IsPrime] (p : ℕ) [CharP K p]
     (G H : Original K) (hG : Irreducible G)
@@ -297,7 +297,7 @@ theorem projectionsFiniteSeparable_of_joint_R_provider
     · exact finite_separable_at_of_original_coordinate_gate K P 2 hi p G H
         hG hGmem hHmem hproper hdegree hmixedZ
 
-/-- Canonical summed degree budget at the tight `R` base. -/
+/-- . -/
 theorem sum_actualCoordinateDegree_at_R_le_of_joint_certificate
     {I : Type} [Fintype I] (P : I → Ideal (Original K))
     [∀ i, (P i).IsPrime] (hinj : Function.Injective P)
@@ -311,9 +311,9 @@ theorem sum_actualCoordinateDegree_at_R_le_of_joint_certificate
     (sum_actualCoordinateDegree_le_of_joint_certificate K P
       (Equiv.swap (0 : Fin 3) 1) hinj p G H hG hGmem hHmem hproper hjoint)
 
-/-- Provider form of the R-coordinate family budget.  If the
-R-transcendental subfamily is empty, the sum is zero and no joint order
-certificate is demanded. -/
+/-- .
+
+ -/
 theorem sum_actualCoordinateDegree_at_R_le_of_joint_provider
     {I : Type} [Fintype I] (P : I → Ideal (Original K))
     [∀ i, (P i).IsPrime] (hinj : Function.Injective P)
@@ -361,7 +361,7 @@ theorem sum_actualCoordinateDegree_at_R_le_of_joint_provider
   · letI : IsEmpty s := ⟨fun i => hs ⟨i⟩⟩
     simp
 
-/-- Hybrid summed-degree budget for all three bases. -/
+/-- . -/
 theorem sum_actualCoordinateDegree_at_le_of_joint_R
     {I : Type} [Fintype I] (P : I → Ideal (Original K))
     [∀ i, (P i).IsPrime] (hinj : Function.Injective P)
@@ -382,7 +382,7 @@ theorem sum_actualCoordinateDegree_at_le_of_joint_R
   · exact sum_actualCoordinateDegree_at_le K P hinj 2 p G H hG hGmem hHmem
       hproper hdegree hmixedZ
 
-/-- Provider form of the hybrid all-coordinate family budget. -/
+/-- . -/
 theorem sum_actualCoordinateDegree_at_le_of_joint_R_provider
     {I : Type} [Fintype I] (P : I → Ideal (Original K))
     [∀ i, (P i).IsPrime] (hinj : Function.Injective P)

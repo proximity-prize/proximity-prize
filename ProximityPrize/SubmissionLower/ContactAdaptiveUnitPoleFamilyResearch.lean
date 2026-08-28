@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactWeakPrimeFlagBudgetResearch
 import ProximityPrize.SubmissionLower.ContactAdaptiveProjectionCoordinateResearch
 
-/-!
-# Shared unit pole sums from adaptive projection coordinates
+/-! .
 
-Constants and finite-separable rational parameters are represented uniformly
-by `Coordinate`.  Once three such componentwise projections have the literal
-`Z`, `max(Y,Z)`, and `max(S,Y,Z)` pole orders, their degrees give the shared
-unit costs required by the recursive score-66 prime budget.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveUnitPoleFamilyResearch
 
@@ -28,9 +28,9 @@ noncomputable section
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
 
-/-- Three actual projection coordinates on every component.  Algebraic
-branches are stored as constants (degree zero); transcendental branches are
-stored as finite-separable rational parameters. -/
+/-- .
+
+ -/
 structure AdaptiveUnitProjectionFamily
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
@@ -78,8 +78,8 @@ structure AdaptiveUnitProjectionFamily
       coordinateDegree Omega (CoordinateField Omega C.1) (allProjection C)) ≤
       flagMixed p q unitAllFlag
 
-/-- The projection family gives the exact three shared unit support-function
-pole bounds. -/
+/-- .
+ -/
 def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -152,9 +152,9 @@ def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
         finite_sum_coordinate_pole_le_degree Omega
           (CoordinateField Omega C.1) (P.allProjection C) W
 
-/-- Final one-step consumer theorem: adaptive projection coordinates with
-the three mixed degree sums produce the shared per-prime flag budget used by
-recursive residualization. -/
+/-- .
+
+ -/
 def AdaptiveUnitProjectionFamily.toPrimeFlagBudgetFamily
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -162,8 +162,8 @@ def AdaptiveUnitProjectionFamily.toPrimeFlagBudgetFamily
     PrimeFlagBudgetFamily (G := G) (T := T) (H := H) p q :=
   P.toAdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily
 
-/-- The terminal many-identity branch charges at least one unit of the shared
-Z-cost whenever Z is genuinely nonconstant on the component. -/
+/-- .
+ -/
 theorem AdaptiveUnitProjectionFamily.one_le_zDegree_of_transcendental
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -175,9 +175,9 @@ theorem AdaptiveUnitProjectionFamily.one_le_zDegree_of_transcendental
   apply one_le_coordinateDegree_of_transcendental_value
   rwa [P.zValue C]
 
-/-- Consumer-shaped form of `one_le_zDegree_of_transcendental`: the cost field
-of the exported shared prime budget is positive on every Z-transcendental
-component. -/
+/-- .
+
+ -/
 theorem AdaptiveUnitProjectionFamily.one_le_toPrimeFlagBudgetFamily_zCost
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -187,8 +187,8 @@ theorem AdaptiveUnitProjectionFamily.one_le_toPrimeFlagBudgetFamily_zCost
     1 ≤ P.toPrimeFlagBudgetFamily.zCost C :=
   P.one_le_zDegree_of_transcendental C hZ
 
-/-- The full affine projection is nonconstant on every regular component,
-so its shared unit-All cost is always at least one. -/
+/-- .
+ -/
 theorem AdaptiveUnitProjectionFamily.one_le_allDegree
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -199,7 +199,7 @@ theorem AdaptiveUnitProjectionFamily.one_le_allDegree
   one_le_coordinateDegree_of_transcendental_value
     (P.allProjection C) (P.allTranscendental C)
 
-/-- Consumer-shaped unconditional positivity of the exported All-cost. -/
+/-- . -/
 theorem AdaptiveUnitProjectionFamily.one_le_toPrimeFlagBudgetFamily_allCost
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}

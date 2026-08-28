@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FlagResearch
 
-/-!
-# Factorwise linear aggregation of the 66.00 regular ledger
+/-! .
 
-The nested residual-incidence cost is linear in the flag of the original
-surface factor.  Consequently distinct irreducible factors must be charged
-their own flags and then summed; charging the full surface flag to every
-factor would be an invalid overcount.  This module proves the exact finite
-aggregation against the one global `surfaceFlag6600` ledger.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
 
@@ -20,21 +20,21 @@ open ContactNearPencil6600FlagResearch
 
 set_option maxHeartbeats 1000000
 
-/-- Primary two-layer residual cost assigned to one surface-factor flag. -/
+/-- . -/
 def factorPrimary (p : FlagDegree) : ℕ :=
   flagMixed p agreementDirection6600 agreementDirection6600 * degreeIncidence ^ 2 +
     2 * flagMixed p agreementDirection6600 unitYZFlag *
       degreeIncidence * unitIncidence +
     flagMixed p unitYZFlag unitYZFlag * unitIncidence ^ 2
 
-/-- Branch-local large-pencil `Z` charge assigned to one surface-factor
-flag. -/
+/-- .
+ -/
 def factorZTail (p : FlagDegree) : ℕ :=
   (errors + 1) * gap *
     (flagMixed p agreementDirection6600 unitZFlag * degreeIncidence +
       flagMixed p unitYZFlag unitZFlag * unitIncidence)
 
-/-- Degree-zero-safe all-coordinate fallback for the large-pencil branch. -/
+/-- . -/
 def factorAllTail (p : FlagDegree) : ℕ :=
   (errors + 1) * gap *
     (flagMixed p agreementDirection6600 unitAllFlag * degreeIncidence +
@@ -43,8 +43,8 @@ def factorAllTail (p : FlagDegree) : ℕ :=
 def factorRegularLedger (p : FlagDegree) : ℕ :=
   factorPrimary p + factorZTail p + factorAllTail p
 
-/-- The final factor ledger is literally linear in the three nested flag
-coordinates. -/
+/-- .
+ -/
 theorem factorRegularLedger_projection_decomposition (p : FlagDegree) :
     factorRegularLedger p =
       p.zOnly * factorRegularLedger unitZFlag +
@@ -55,8 +55,8 @@ theorem factorRegularLedger_projection_decomposition (p : FlagDegree) :
     unitZFlag, unitYZFlag, unitAllFlag]
   ring
 
-/-- The one global surface flag evaluates to the independently checked
-primary and `Z`-tail numerators. -/
+/-- .
+ -/
 theorem factorRegularLedger_surface_exact :
     factorRegularLedger surfaceFlag6600 =
       stratifiedPrimary + stratifiedZTail + factorAllTail surfaceFlag6600 := by
@@ -68,7 +68,7 @@ theorem factorRegularLedger_surface_exact :
     flagMixed_direction_values.2.2.2.2]
   rfl
 
-/-- Finite surface factors aggregate against any coordinatewise flag cap. -/
+/-- . -/
 theorem sum_factorRegularLedger_le_flag
     {I : Type} [Fintype I] (p : I → FlagDegree) (cap : FlagDegree)
     (hz : (∑ i, (p i).zOnly) ≤ cap.zOnly)
@@ -100,8 +100,8 @@ theorem sum_factorRegularLedger_le_flag
     _ = factorRegularLedger cap :=
       (factorRegularLedger_projection_decomposition cap).symm
 
-/-- Finite surface factors whose coordinatewise flag sum fits in the sharp
-global surface flag consume at most the sharp global regular ledger. -/
+/-- .
+ -/
 theorem sum_factorRegularLedger_le
     {I : Type} [Fintype I] (p : I → FlagDegree)
     (hz : (∑ i, (p i).zOnly) ≤ surfaceFlag6600.zOnly)
@@ -115,9 +115,9 @@ theorem sum_factorRegularLedger_le
     _ = stratifiedPrimary + stratifiedZTail + factorAllTail surfaceFlag6600 :=
       factorRegularLedger_surface_exact
 
-/-- Robust rectangular factor cap obtained directly from the three existing
-separated degree budgets.  It is slightly larger than `surfaceFlag6600` but
-still leaves substantial score-66 ledger slack. -/
+/-- .
+
+ -/
 def rectangularSurfaceFlag6600 : FlagDegree := ⟨495, 43, 8⟩
 
 def rectangularRegularNumerator : ℕ :=
@@ -166,7 +166,7 @@ theorem sum_factorRegularLedger_rectangular_le
     (∑ i, factorRegularLedger (p i)) ≤ rectangularRegularNumerator := by
   exact sum_factorRegularLedger_le_flag p rectangularSurfaceFlag6600 hz hyz hall
 
-/-- Component-count inequalities aggregate before applying the flag budget. -/
+/-- . -/
 theorem sum_factor_counts_le
     {I : Type} [Fintype I] (count : I → ℕ) (p : I → FlagDegree)
     (hcount : ∀ i, count i * gap ^ 2 ≤ factorRegularLedger (p i))

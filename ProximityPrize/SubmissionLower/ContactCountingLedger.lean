@@ -1,19 +1,19 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactImplicitLiftParameters
 
-/-!
-# Finite-family arithmetic for the frozen conservative counting ledger
+/-! .
 
-Model label: gpt-5.
 
-All geometric branch estimates are EXPLICIT inputs in this module. The
-proofs establish linearity, the coordinatewise maximum envelope, finite
-aggregation, and the finish into the already verified conservative
-ContactAlignmentParameters / ContactImplicitLiftParameters numerators.
 
-The implicit bound permits the older nonnegative algebraic/isolated
-padding. No new geometric estimate or complete alignment claim is made.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactCountingLedger
 
@@ -158,7 +158,7 @@ theorem max_branch_le_envelope (v : DegreeVector) :
 
 theorem regularNumerator_eq_dot : regularNumerator = dot regularSurface wholeCoefficients := rfl
 
-/-- Every branch inequality remains an explicit input. -/
+/-- . -/
 theorem sum_regular_max_bound {I : Type} [Fintype I]
     (count : I → ℕ) (v : I → DegreeVector)
     (hy : (∑ i, (v i).y) ≤ yCap) (hr : (∑ i, (v i).r) ≤ slopeCap)
@@ -219,8 +219,8 @@ theorem implicit_aggregate_eq_core :
     dot, mixed, liftedSurface, implicitCut, unitZ]
   ring
 
-/-- The geometric per-pair bound and actual pair-degree sums are inputs;
-this theorem performs only their exact finite aggregation. -/
+/-- .
+ -/
 theorem sum_implicit_counts_bound {I : Type} [Fintype I]
     (count : I → ℕ) (cost : I → DegreeVector)
     (hy : (∑ i, (cost i).y) ≤ algebraicCap)
@@ -241,7 +241,7 @@ theorem sum_implicit_counts_bound {I : Type} [Fintype I]
     _ ≤ dot implicitAggregateCost implicitCoefficients := dot_mono_left _ ⟨hy, hr, hz⟩
     _ = implicitCoreNumerator := implicit_aggregate_eq_core
 
-/-- Exact identity exposing the unused nonnegative legacy padding. -/
+/-- . -/
 theorem lifted_singular_padding :
     liftedSingularNumerator =
       (implicitCoreNumerator + 2 * algebraicCap ^ 2 * gap) +
@@ -284,8 +284,8 @@ theorem below_budget_of_lifted_scaled_bound (cardinality : ℕ)
     (h : cardinality * gap ^ 2 ≤ liftedTotalNumerator) : cardinality < alignmentBudget := by
   exact Nat.lt_of_mul_lt_mul_right (h.trans_lt lifted_strict_budget)
 
-/-- Conditional finite-family arithmetic finish; all branch-count and
-cover hypotheses remain explicit and must come from the geometric proof. -/
+/-- .
+ -/
 theorem final_family_ledger {I J : Type} [Fintype I] [Fintype J]
     (regularCount : I → ℕ) (v : I → DegreeVector)
     (implicitCount : J → ℕ) (cost : J → DegreeVector) (exceptions cardinality : ℕ)

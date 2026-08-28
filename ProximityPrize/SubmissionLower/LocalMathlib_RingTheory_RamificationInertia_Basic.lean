@@ -25,26 +25,26 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Ramification index and inertia degree
+/-! .
 
-This file proves that the sum of ramification times inertia equals the degree of the extension.
 
-Typically this is only stated for extensions of Dedekind domains, but we prove it for any finite
-flat extension of an integral domain.
 
-## Main results
 
-* `Ideal.sum_ramification_inertia_eq_finrank`: Let `R` be an integral domain, let `S` be a finite
-  flat `R`-algebra, and let `p` be a prime ideal of `R`. Then the sum over all prime ideals `q` of
-  `S` lying over `p` of the ramification index of `q` times the inertia degree of `q` equals the
-  rank of `S` as an `R`-module.
-* `Ideal.sum_ramification_inertia_eq_card`: Let `S/R` be a finite flat extension of domains,
-  and let `p` be prime ideal of `R`. Assume that `R` is the invariant subring of a finite group `G`
-  acting on `S`. Then the sum over all prime ideals `q` of `S` lying over `p` of the ramification
-  index of `q` times the inertia degree of `q` equals the cardinality of `G`.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -80,18 +80,18 @@ theorem sum_ramification_inertia_eq_finrank_fiber
     _ = length κp Sq := length_eq_of_surjective residue_surjective
     _ = finrank κp Sq := length_eq_finrank κp Sq
 
-/-- Let `R` be an integral domain, let `S` be a finite flat `R`-algebra, and let `p` be a prime
-ideal of `R`. Then the sum over all prime ideals `q` of `S` lying over `p` of the ramification
-index of `q` times the inertia degree of `q` equals the rank of `S` as an `R`-module. -/
+/-- .
+
+ -/
 theorem sum_ramification_inertia_eq_finrank
     [IsDomain R] [Module.Finite R S] [Module.Flat R S] [Fintype (p.primesOver S)] :
     ∑ q : p.primesOver S, q.1.ramificationIdx R * q.1.inertiaDeg R = Module.finrank R S := by
   rw [sum_ramification_inertia_eq_finrank_fiber, finrank_fiber_eq_finrank]
 
-/-- Let `S/R` be a finite flat extension of integral domains, and let `p` be prime ideal of `R`.
-Assume that `R` is the invariant subring of a finite group `G` acting on `S`. Then the sum over
-all prime ideals `q` of `S` lying over `p` of the ramification index of `q` times the inertia
-degree of `q` equals the cardinality of `G`. -/
+/-- .
+
+
+ -/
 theorem sum_ramification_inertia_eq_card
     [IsDomain R] [IsDomain S] [Module.Finite R S] [Module.Flat R S] [Fintype (p.primesOver S)]
     {G : Type*} [Group G] [MulSemiringAction G S] [IsGaloisGroup G R S] :

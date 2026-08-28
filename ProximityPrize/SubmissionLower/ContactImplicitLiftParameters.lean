@@ -1,16 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAlignmentParameters
 
-/-!
-# Exact arithmetic for the implicit-equation contact lift
+/-! .
 
-Model label: gpt-5.
 
-This verifies the coarser numerical ledger obtained by lifting an implicit
-equation J to J_X+R*J_Y and reusing the contact-curve counting machinery.
-The reduction and geometric bounds are separate formal obligations.
-No complete alignment theorem or competition submission is asserted.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactImplicitLiftParameters
 
@@ -80,8 +80,8 @@ theorem lifted_division_certificate :
   rw [lifted_total_numerator_exact, denominator_exact]
   norm_num
 
-/-- The minimal integral selected-family ceiling carried by the sharp
-proper-node ledger. -/
+/-- .
+ -/
 theorem lifted_ceiling_exact :
     49925776167317549 * gap ^ 2 < liftedTotalNumerator ∧
       liftedTotalNumerator ≤ 49925776167317550 * gap ^ 2 := by

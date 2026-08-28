@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BCHKSResultantDegree
 
-/-!
-# A joint-support degree bound for bivariate resultants
+/-! .
 
-For a polynomial whose outer-variable degree is `a` and whose total degree
-is `A`, the coefficient of outer degree `i` has inner degree at most
-`A - i`.  Applying this fact coefficient-by-coefficient in the Sylvester
-determinant saves exactly the product of the two declared outer degrees over
-the usual rectangular resultant bound.
 
-The proof handles degree drops directly.  A determinant monomial containing
-a zero (including a vanished leading coefficient) is zero.  In every
-nonzero determinant monomial, the selected coefficient indices sum to the
-product of the two declared outer degrees.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower
 
@@ -23,7 +23,7 @@ open scoped BigOperators
 
 variable {F : Type} [Field F]
 
-/-- A determinant has bounded degree when every Leibniz product does. -/
+/-- . -/
 private theorem natDegree_det_le_of_perm_products_le
     {ι : Type} [Fintype ι] [DecidableEq ι]
     (M : Matrix ι ι F[X]) {N : ℕ}
@@ -36,13 +36,13 @@ private theorem natDegree_det_le_of_perm_products_le
   exact (Polynomial.natDegree_C_mul_le
     ((Equiv.Perm.sign σ : ℤ) : F) (∏ i : ι, M (σ i) i)).trans (h σ)
 
-/-- A coefficient-height / Sylvester-assignment resultant bound.
+/-- .
 
-`heightB i` and `heightH i` may be arbitrary staircases.  The last
-hypothesis is purely finite combinatorics: every permutation whose selected
-Sylvester entries lie in their legal bands has total selected height at most
-`C`.  This form is useful when a Newton polygon is not a single trapezoid.
-No nonvanishing or exact-degree hypothesis is needed. -/
+
+
+
+
+ -/
 theorem bivariate_resultant_natDegree_le_of_coefficient_heights
     (B H : F[X][Y]) (n m : ℕ)
     (heightB heightH : ℕ → ℕ) (C : ℕ)
@@ -152,12 +152,12 @@ theorem bivariate_resultant_natDegree_le_of_coefficient_heights
           (Finset.sum_le_sum (fun j _ => hright j))
       _ ≤ C := hassignment σ hleft_Icc hright_Icc
 
-/-- Assignment-LP dual certificate for an arbitrary Sylvester staircase.
+/-- .
 
-The potentials are integer-valued, so sharp certificates may use negative
-column prices.  Each legal matrix entry must be dominated by its row price
-plus its column price.  Since a determinant monomial uses every row and
-every column exactly once, the sum of all prices bounds its degree. -/
+
+
+
+ -/
 theorem bivariate_resultant_natDegree_le_of_sylvester_dual
     (B H : F[X][Y]) (n m : ℕ)
     (heightB heightH : ℕ → ℕ) (C : ℕ)
@@ -233,51 +233,51 @@ theorem bivariate_resultant_natDegree_le_of_sylvester_dual
 
 namespace CornerStaircase
 
-/-! The sharp corner polygon used by the `6464` contact candidate.  Its
-outer coefficient heights are
+/-! .
 
-`178, 177, ..., 154, 5`,
 
-and the `K`-fold Minkowski multiple has the two affine pieces below. -/
 
-/-- Coefficient heights of the primitive corner polygon. -/
+
+ -/
+
+/-- . -/
 def surfaceHeight (i : ℕ) : ℕ :=
   if i ≤ 24 then 178 - i else if i = 25 then 5 else 0
 
-/-- Coefficient heights of `[0,eY] + K P`.  The constant coefficient comes
-from the unshifted copy of `K P`; every positive coefficient comes from the
-copy shifted once in the outer variable. -/
+/-- .
+
+ -/
 def tailHeight (K j : ℕ) : ℕ :=
   if j = 0 then 178 * K
   else if j ≤ 24 * K + 1 then 178 * K + 1 - j
   else if j ≤ 25 * K + 1 then 3730 * K + 149 - 149 * j
   else 0
 
-/-- Row-price formula, stated on natural labels so it can also be restricted
-to an actual (possibly smaller) outer degree. -/
+/-- .
+ -/
 def rowPrice (K r : ℕ) : ℤ :=
   178 - ((r - 1 : ℕ) : ℤ) -
     148 * ((r - (24 * K + 25) : ℕ) : ℤ)
 
-/-- Row prices for the maximal sharp Toeplitz assignment dual. -/
+/-- . -/
 def rowPotential (K : ℕ) (r : Fin (25 + (25 * K + 1))) : ℤ :=
   rowPrice K r
 
-/-- Prices of the 25 columns shifting the scaled polynomial. -/
+/-- . -/
 def scaledColumnPotential (K : ℕ) (b : Fin 25) : ℤ :=
   178 * (K : ℤ) - 178 + (b : ℕ)
 
-/-- Surface-column price formula on natural labels. -/
+/-- . -/
 def surfaceColumnPrice (K a : ℕ) : ℤ :=
   ((a - 1 : ℕ) : ℤ) +
     148 * ((a - (24 * K + 1) : ℕ) : ℤ)
 
-/-- Prices of the `25K+1` columns shifting the surface polynomial. -/
+/-- . -/
 def surfaceColumnPotential (K : ℕ) (a : Fin (25 * K + 1)) : ℤ :=
   surfaceColumnPrice K a
 
-/-- Every legal first-tail entry is dominated by its row and column prices.
-This is the long-edge half of the exact assignment dual. -/
+/-- .
+ -/
 theorem tailHeight_le_potentials (K : ℕ) (hK : 1 ≤ K)
     (row : Fin (25 + (25 * K + 1))) (b : Fin 25)
     (hrow : (row : ℕ) ∈ Set.Icc (b : ℕ) ((b : ℕ) + (25 * K + 1))) :
@@ -295,9 +295,9 @@ theorem tailHeight_le_potentials (K : ℕ) (hK : 1 ≤ K)
     omega
   · omega
 
-/-- Every legal surface-polynomial entry is dominated by its row and column
-prices.  The isolated final coefficient of height five is exactly where the
-factor `148` in the certificate is saturated. -/
+/-- .
+
+ -/
 theorem surfaceHeight_le_potentials (K : ℕ) (hK : 1 ≤ K)
     (row : Fin (25 + (25 * K + 1))) (a : Fin (25 * K + 1))
     (hrow : (row : ℕ) ∈ Set.Icc (a : ℕ) ((a : ℕ) + 25)) :
@@ -312,8 +312,8 @@ theorem surfaceHeight_le_potentials (K : ℕ) (hK : 1 ≤ K)
     omega
   · omega
 
-/-- A shifted positive part over a finite initial interval is an ordinary
-triangular prefix after the zero segment is removed. -/
+/-- .
+ -/
 private theorem sum_fin_natSub_cast (A L : ℕ) :
     (∑ i : Fin (A + L + 1), (((i : ℕ) - A : ℕ) : ℤ)) =
       ∑ i ∈ Finset.range (L + 1), (i : ℤ) := by
@@ -335,8 +335,8 @@ private theorem sum_fin_natSub_cast (A L : ℕ) :
       rw [hp]
       simp
 
-/-- The sum of the explicit Toeplitz dual prices is exactly the normalized
-mixed area `8127*K`, plus the width contribution `178`. -/
+/-- .
+ -/
 theorem potentialBudget (K : ℕ) (hK : 1 ≤ K) :
     (∑ row, rowPotential K row) +
         (∑ b, scaledColumnPotential K b) +
@@ -391,9 +391,9 @@ theorem potentialBudget (K : ℕ) (hK : 1 ≤ K) :
   norm_num [Fin.sum_univ_succ]
   ring
 
-/-- The same prices restricted to a tail polynomial of actual outer degree
-`m`.  This avoids the invalid operation of padding both inputs of a
-resultant past their actual degrees. -/
+/-- .
+
+ -/
 def partialBudget (K m : ℕ) : ℤ :=
   (∑ row : Fin (25 + m), rowPrice K row) +
     (∑ b : Fin 25, scaledColumnPotential K b) +
@@ -444,9 +444,9 @@ theorem pairPotential_nonnegative (K a : ℕ)
   push_cast
   omega
 
-/-- Removing high tail coefficients removes only nonnegative row/column
-pairs from the dual.  Hence every actual degree below the declared cap has
-no larger assignment budget. -/
+/-- .
+
+ -/
 theorem partialBudget_le (K m : ℕ) (hm : m ≤ 25 * K + 1) (hK : 1 ≤ K) :
     partialBudget K m ≤ (8127 * K + 178 : ℕ) := by
   rw [partialBudget_eq_base_add_pairs]
@@ -462,8 +462,8 @@ theorem partialBudget_le (K m : ℕ) (hm : m ≤ 25 * K + 1) (hK : 1 ≤ K) :
       simpa [partialBudget, rowPotential, surfaceColumnPotential] using
         potentialBudget K hK
 
-/-- Tail-entry domination for any actual tail degree below the maximal
-corner support. -/
+/-- .
+ -/
 theorem tailHeight_le_potentials_upTo (K m : ℕ) (hK : 1 ≤ K)
     (hm : m ≤ 25 * K + 1) (row : Fin (25 + m)) (b : Fin 25)
     (hrow : (row : ℕ) ∈ Set.Icc (b : ℕ) ((b : ℕ) + m)) :
@@ -481,7 +481,7 @@ theorem tailHeight_le_potentials_upTo (K m : ℕ) (hK : 1 ≤ K)
     omega
   · omega
 
-/-- Surface-entry domination for any actual tail degree. -/
+/-- . -/
 theorem surfaceHeight_le_potentials_upTo (K m : ℕ) (hK : 1 ≤ K)
     (hm : m ≤ 25 * K + 1) (row : Fin (25 + m)) (a : Fin m)
     (hrow : (row : ℕ) ∈ Set.Icc (a : ℕ) ((a : ℕ) + 25)) :
@@ -497,9 +497,9 @@ theorem surfaceHeight_le_potentials_upTo (K m : ℕ) (hK : 1 ≤ K)
     omega
   · omega
 
-/-- Fixed resultant with only the surface degree padded.  The tail degree
-is its actual degree `m`, so this fixed resultant remains a nonzero multiple
-of the ordinary resultant whenever the latter is nonzero. -/
+/-- .
+
+ -/
 theorem resultant_natDegree_le_actual_tail
     (B H : F[X][Y]) (K m : ℕ) (hK : 1 ≤ K)
     (hm : m ≤ 25 * K + 1)
@@ -514,9 +514,9 @@ theorem resultant_natDegree_le_actual_tail
   · exact surfaceHeight_le_potentials_upTo K m hK hm
   · exact partialBudget_le K m hm hK
 
-/-- Ordinary-resultant form.  Only the surface side is padded to degree 25;
-`resultant_add_left_deg` identifies that fixed resultant with a nonzero
-leading-coefficient multiple of the ordinary resultant. -/
+/-- .
+
+ -/
 theorem ordinary_resultant_natDegree_le
     (B H : F[X][Y]) (K : ℕ) (hK : 1 ≤ K) (hHne : H ≠ 0)
     (hBouter : B.natDegree ≤ 25)
@@ -555,9 +555,9 @@ theorem ordinary_resultant_natDegree_le
         rw [hpad]
       _ ≤ 8127 * K + 178 := hfixed
 
-/-- The exact corner-staircase resultant bound, reduced to the single closed
-sum of the explicit dual prices.  The local inequalities have no remaining
-combinatorial or algebraic hypotheses. -/
+/-- .
+
+ -/
 theorem resultant_natDegree_le_of_budget
     (B H : F[X][Y]) (K : ℕ) (hK : 1 ≤ K)
     (hB : ∀ i, (B.coeff i).natDegree ≤ surfaceHeight i)
@@ -575,7 +575,7 @@ theorem resultant_natDegree_le_of_budget
   · exact surfaceHeight_le_potentials K hK
   · exact hbudget
 
-/-- Closed form of the sharp corner-staircase resultant theorem. -/
+/-- . -/
 theorem resultant_natDegree_le
     (B H : F[X][Y]) (K : ℕ) (hK : 1 ≤ K)
     (hB : ∀ i, (B.coeff i).natDegree ≤ surfaceHeight i)
@@ -587,13 +587,13 @@ theorem resultant_natDegree_le
 
 end CornerStaircase
 
-/-- A permutation-free interface to the coefficient-height theorem.
+/-- .
 
-Every nonzero Sylvester monomial selects `n` indices in `[0,m]` and `m`
-indices in `[0,n]`, and the sum of all selected indices is exactly `m*n`.
-Thus an arbitrary staircase estimate can be proved as a finite integer
-transport inequality without mentioning a permutation of the enormous
-Sylvester matrix. -/
+
+
+
+
+ -/
 theorem bivariate_resultant_natDegree_le_of_index_sum_height_bound
     (B H : F[X][Y]) (n m : ℕ)
     (heightB heightH : ℕ → ℕ) (C : ℕ)
@@ -673,14 +673,14 @@ theorem bivariate_resultant_natDegree_le_of_index_sum_height_bound
     omega
   exact htransport lidx ridx hleft_le hright_le hidxsum
 
-/-- Trapezoidal (joint-Newton-support) resultant bound.
+/-- .
 
-Compared with the rectangular bound
-`m * degreeX B + n * degreeX H`, this uses the total degrees of the two
-bivariate polynomials and subtracts the exact overlap `m * n`.  The fixed
-degrees `n,m` need not be the actual degrees: over-padding simply makes the
-corresponding determinant products zero, so the theorem includes all
-zero-leading-coefficient cases. -/
+
+
+
+
+
+ -/
 theorem bivariate_resultant_natDegree_le_totalDegree
     (B H : F[X][Y]) (n m : ℕ) :
     (Polynomial.resultant B H n m).natDegree ≤

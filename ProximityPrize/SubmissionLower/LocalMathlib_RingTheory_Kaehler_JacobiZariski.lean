@@ -23,54 +23,54 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-Ordinary elaboration repair after the frozen WMI 229463 failure, model gpt-5:
-qualify the diagnosed multivariate X terms and two LinearMap compositions;
-provide explicit classical equality decisions in the two basis calculations.
-All mathematical declarations, hypotheses, and proof arguments are retained.
-No kernel setting, external import, or protected source is changed.
--/
+/-! .
 
-/-!
 
-# The Jacobi-Zariski exact sequence
 
-Given algebras $R \to S \to T$, the Jacobi-Zariski exact sequence is a long exact sequence
-relating the first homology of the naive cotangent complexes and the Kähler differentials of
-the respective algebras. It takes the form:
-$$
-H_1(L_{T/R}) \to H_1(L_{T/S}) \to T \otimes_S \Omega_{S/R} \to \Omega_{T/R} \to \Omega_{T/S} \to 0
-$$
-The maps in the sequence are
-- `Algebra.H1Cotangent.map`
-- `Algebra.H1Cotangent.δ`
-- `KaehlerDifferential.mapBaseChange`
-- `KaehlerDifferential.map`
 
-The exactness lemmas are
-- `Algebra.H1Cotangent.exact_map_δ`
-- `Algebra.H1Cotangent.exact_δ_mapBaseChange`
-- `KaehlerDifferential.exact_mapBaseChange_map`
-- `KaehlerDifferential.map_surjective`
 
-When $T$ is flat over $S$, the left bottom part of the snake lemma diagram used in
-the construction of the connecting homomorphism `Algebra.Generators.H1Cotangent.δ`
-naturally extends via a base change map. The exactness lemma is
-`Algebra.Generators.H1Cotangent.exact_liftBaseChange_map_of_flat`. Globally, this extends
-the Jacobi-Zariski exact sequence to the left via a natural base change map, taking the form
-$$
-T \otimes_S H_1(L_{S/R}) \to H_1(L_{T/R}) \to H_1(L_{T/S})
-$$
-The exactness lemma is `Algebra.H1Cotangent.exact_liftBaseChange_map_of_flat`.
+ -/
 
-# TODO
+/-! .
 
-The flatness assumption in `Algebra.H1Cotangent.exact_liftBaseChange_map_of_flat`
-is stronger than the `Tor`-vanishing conditions required in the full statement of
-[Stacks Project, 00S2], this should be refactored and generalized once more API
-for `Tor` modules is available.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -78,12 +78,12 @@ open KaehlerDifferential Module MvPolynomial TensorProduct
 
 namespace Algebra
 
--- `Generators.{w, u₁, u₂}` depends on three universe variables and
--- to improve performance of universe unification, it should hold that
--- `w > u₁` and `w > u₂` in the lexicographic order. For more details
--- see https://github.com/leanprover-community/mathlib4/issues/26018
--- TODO: this remains an unsolved problem, ideally the lexicographic
--- order does not affect performance
+--
+--
+--
+--
+--
+--
 universe w₁ w₂ w₃ w₄ w₅ u₁ u₂ u₃
 
 variable {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] [Algebra R S]
@@ -110,11 +110,11 @@ lemma Cotangent.surjective_map_ofComp :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 open Extension.Cotangent in
-/--
-Given representations `0 → I → R[X] → S → 0` and `0 → K → S[Y] → T → 0`,
-we may consider the induced representation `0 → J → R[X, Y] → T → 0`, and the sequence
-`T ⊗[S] (I/I²) → J/J² → K/K²` is exact.
--/
+/-- .
+
+
+
+ -/
 lemma Cotangent.exact :
     Function.Exact
       ((Extension.Cotangent.map (Q.toComp P).toExtensionHom).liftBaseChange T)
@@ -163,8 +163,8 @@ lemma Cotangent.exact :
     · rw [map_mk]
       rfl
 
-/-- Given `R[X] → S` and `S[Y] → T`, the cotangent space of `R[X][Y] → T` is isomorphic
-to the direct product of the cotangent space of `S[Y] → T` and `R[X] → S` (base changed to `T`). -/
+/-- .
+ -/
 noncomputable
 def CotangentSpace.compEquiv :
     (Q.comp P).toExtension.CotangentSpace ≃ₗ[T]
@@ -234,11 +234,11 @@ lemma CotangentSpace.map_ofComp_surjective :
   rw [← fst_compEquiv]
   exact (Prod.fst_surjective).comp (compEquiv Q P).surjective
 
-/-!
-Given representations `R[X] → S` and `S[Y] → T`, the sequence
-`T ⊗[S] (⨁ₓ S dx) → (⨁ₓ T dx) ⊕ (⨁ᵧ T dy) → ⨁ᵧ T dy`
-is exact.
--/
+/-! .
+
+
+
+ -/
 lemma CotangentSpace.exact :
     Function.Exact ((Extension.CotangentSpace.map (Q.toComp P).toExtensionHom).liftBaseChange T)
       (Extension.CotangentSpace.map (Q.ofComp P).toExtensionHom) := by
@@ -250,10 +250,10 @@ lemma CotangentSpace.exact :
 namespace H1Cotangent
 
 variable (R) in
-/--
-Given `0 → I → S[Y] → T → 0`, this is an auxiliary map from `S[Y]` to `T ⊗[S] Ω[S⁄R]` whose
-restriction to `ker(I/I² → ⊕ S dyᵢ)` is the connecting homomorphism in the Jacobi-Zariski sequence.
--/
+/-- .
+
+
+ -/
 noncomputable
 def δAux :
     Q.Ring →ₗ[R] T ⊗[S] Ω[S⁄R] :=
@@ -349,23 +349,23 @@ lemma map_comp_cotangentComplex_baseChange :
   ext x; simp [Extension.CotangentSpace.map_cotangentComplex]
 
 open Generators in
-/--
-The connecting homomorphism in the Jacobi-Zariski sequence for given presentations.
-Given representations `0 → I → R[X] → S → 0` and `0 → K → S[Y] → T → 0`,
-we may consider the induced representation `0 → J → R[X, Y] → T → 0`,
-and this map is obtained by applying snake lemma to the following diagram
-```
-    T ⊗[S] Ω[S/R]    →          Ω[T/R]        →   Ω[T/S]  → 0
-        ↑                         ↑                 ↑
-0 → T ⊗[S] (⨁ₓ S dx) → (⨁ₓ T dx) ⊕ (⨁ᵧ T dy) →  ⨁ᵧ T dy → 0
-        ↑                         ↑                 ↑
-    T ⊗[S] (I/I²)    →           J/J²         →    K/K²   → 0
-                                  ↑                 ↑
-                             H¹(L_{T/R})      → H¹(L_{T/S})
+/-- .
 
-```
-This is independent from the presentations chosen. See `H1Cotangent.δ_comp_equiv`.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 noncomputable
 def δ :
     Q.toExtension.H1Cotangent →ₗ[T] T ⊗[S] Ω[S⁄R] :=
@@ -477,7 +477,7 @@ lemma δ_comp_equiv :
   ext x
   exact δ_map Q P Q' P' _ _
 
-/-- A variant of `exact_map_δ` that takes in an arbitrary map between generators. -/
+/-- . -/
 lemma exact_map_δ' (f : Hom W Q) :
     Function.Exact (Extension.H1Cotangent.map f.toExtensionHom) (δ Q P) := by
   refine (H1Cotangent.equiv (Q.comp P) W).surjective.comp_exact_iff_exact.mp ?_
@@ -510,9 +510,9 @@ private lemma auxMemKer (z : T ⊗[S] P.toExtension.H1Cotangent) :
   | add x y hx hy => simpa using Submodule.add_mem _ hx hy
 
 open LinearMap in
-/-- When $T$ is flat over $S$, the left bottom part of the snake lemma diagram used in
-the construction of the connecting homomorphism `Algebra.Generators.H1Cotangent.δ`
-naturally extends via a base change map. -/
+/-- .
+
+ -/
 theorem exact_liftBaseChange_map_of_flat [Module.Flat S T] :
     Function.Exact ((Extension.H1Cotangent.map (toComp Q P).toExtensionHom).liftBaseChange T)
       (Extension.H1Cotangent.map (ofComp Q P).toExtensionHom) := by
@@ -533,8 +533,8 @@ theorem exact_liftBaseChange_map_of_flat [Module.Flat S T] :
   | tmul x y => ext; simp
   | add x y hx hy => ext; simp [hx (auxMemKer Q P x), hy (auxMemKer Q P y)]
 
-/-- A variant of `exact_liftBaseChange_map_of_flat` that takes in
-arbitrary maps between generators. -/
+/-- .
+ -/
 theorem exact_liftBaseChange_map_of_flat' [Module.Flat S T] (f : Hom W Q) (g : Hom P W) :
     Function.Exact ((Extension.H1Cotangent.map g.toExtensionHom).liftBaseChange T)
       (Extension.H1Cotangent.map f.toExtensionHom) := by
@@ -557,29 +557,29 @@ variable {T : Type u₃} [CommRing T] [Algebra R T] [Algebra S T] [IsScalarTower
 
 variable (R S T)
 
-/-- The connecting homomorphism in the Jacobi-Zariski sequence. -/
+/-- . -/
 noncomputable
 def H1Cotangent.δ : H1Cotangent S T →ₗ[T] T ⊗[S] Ω[S⁄R] :=
   Generators.H1Cotangent.δ (Generators.self S T) (Generators.self R S)
 
-/-- Given algebras $R \to S \to T$, the sequence
-$H_1(L_{T/R}) \to H_1(L_{T/S}) \to T \otimes_S \Omega_{S/R}$
-is exact. -/
+/-- .
+
+ -/
 @[stacks 00S2]
 lemma H1Cotangent.exact_map_δ : Function.Exact (map R S T T) (δ R S T) :=
   Generators.H1Cotangent.exact_map_δ' (Generators.self S T)
     (Generators.self R S) (Generators.self R T) (Generators.defaultHom _ _)
 
-/-- Given algebras $R \to S \to T$, the sequence
-$H_1(L_{T/S}) \to T \otimes_S \Omega_{S/R} \to \Omega_{T/R}$
-is exact. -/
+/-- .
+
+ -/
 @[stacks 00S2]
 lemma H1Cotangent.exact_δ_mapBaseChange : Function.Exact (δ R S T) (mapBaseChange R S T) :=
   Generators.H1Cotangent.exact_δ_map (Generators.self S T) (Generators.self R S)
 
-/-- Given algebras $R \to S \to T$ and $T$ flat over $S$, the sequence
-$T \otimes_S H_1(L_{S/R}) \to H_1(L_{T/R}) \to H_1(L_{T/S})$
-is exact. -/
+/-- .
+
+ -/
 @[stacks 00S2]
 lemma H1Cotangent.exact_liftBaseChange_map_of_flat [Module.Flat S T] :
     Function.Exact ((map R R S T).liftBaseChange T) (map R S T T) :=

@@ -3,30 +3,30 @@ import ProximityPrize.SubmissionLower.ContactRobustFixedMeet6656Research
 import ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6600Research
 import ProximityPrize.SubmissionLower.ContactTightSingularLedgerResearch
 
-/-!
-# Selected-family integration at the score-66.56 fixed meet
+/-! .
 
-This module retargets the parameter-generic selected-solution decomposition
-and the finite regular/singular aggregations to the recursive-GCD meet box
-`(D,L,s) = (4570175,598,6)` at `a = 182807`.
 
-The resulting theorem exposes exactly two factorwise geometric inputs:
 
-* the regular positive-`R` factor count, at the robust rectangular ledger;
-* the implicit-pair count, at the existing unpadded proper-cut ledger.
 
-Everything after those local inputs is internal: the actual three-way cover,
-the actual finite factor and implicit-pair families, coordinatewise degree
-budgets, the exceptional-root family, regular and singular aggregation, and
-the strict fixed-cost arithmetic.
 
-The local inputs cannot yet be supplied by the frozen score-66 residual
-modules.  In particular, `ContactIdentityResidualIterationResearch.ResidualStage`
-stores literal support fields bounded by `8`, `43`, and `503`; the present
-meet needs `6`, `34`, and `604`.  Thus reusing that type would silently assume
-false support bounds.  The theorem below is the largest adapter before that
-core residual-stage API is parameterized.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6656Research
 
@@ -49,7 +49,7 @@ set_option maxRecDepth 35000
 
 def prime6656 : ℕ := 2130706433
 
-/-- The unpadded singular ledger at the final fixed meet. -/
+/-- . -/
 def meetTightProfile : TightParameters where
   n := meetProfile.n
   w := meetProfile.w
@@ -81,8 +81,8 @@ variable {K Iota : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Actual selected solutions in the meet box are covered by the actual
-positive-`R` factors and the actual singular union. -/
+/-- .
+ -/
 theorem meet_card_le_regular_sum_add_singular
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime6656]
     (hbox : Q ∈ globalCoefficientBox K meetProfile.weightedCap meetProfile.w
@@ -136,15 +136,15 @@ theorem meet_card_le_regular_sum_add_singular
         (singularSeeds Q selected Gamma).card :=
       Nat.add_le_add_right Finset.card_biUnion_le _
 
-/-- Pair costs in the vector type consumed by the parameterized unpadded
-singular arithmetic. -/
+/-- .
+ -/
 def meetImplicitCost (Q : MvPolynomial (Fin 4) K)
     (q : ImplicitIndex Q) : ContactParameters6600Research.DegreeVector :=
   ⟨pairYCost q.1, pairRCost q.1, pairZCost q.1⟩
 
-/-- The actual finite singular union is bounded by the meet profile once
-each actual implicit pair has its standard proper-cut incidence estimate.
-All family construction, budgets, exceptions, and aggregation are internal. -/
+/-- .
+
+ -/
 theorem meet_singularSeeds_scaled_bound_of_implicit_pairs
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime6656]
     (hbox : Q ∈ globalCoefficientBox K meetProfile.weightedCap meetProfile.w
@@ -241,8 +241,8 @@ theorem meet_singularSeeds_scaled_bound_of_implicit_pairs
       exact Nat.mul_le_mul_right meetTightProfile.gap hsum
     _ ≤ meetProfile.retainedSingularContribution := htight
 
-/-- Full meet selected-family count after the two local geometric providers.
-No cover, aggregation, or arithmetic premise remains. -/
+/-- .
+ -/
 theorem meet_global_count_lt_fixed_cost_of_local_counts
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime6656]
     (hbox : Q ∈ globalCoefficientBox K meetProfile.weightedCap meetProfile.w

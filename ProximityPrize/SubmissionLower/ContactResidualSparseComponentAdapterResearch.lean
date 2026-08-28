@@ -1,24 +1,24 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactProperCutSeedCount
 
-/-!
-# Residual sparse component budget: exact incidence adapter
+/-! .
 
-This research module isolates the weakest geometric statement needed to
-replace the coordinate-box cost in the proper-cut count by one Newton-polytope
-mixed-volume cost.
 
-The cost must be assigned componentwise, must bound every admissible proper
-agreement cut on that component, and must have a global sum bounded by the
-desired mixed volume.  This uniform component cost is what preserves the
-sharp `(nodes - w)` coefficient.  A bound only on the sum of zero counts for
-each node is not sufficient for that coefficient when the identity-node sets
-vary between components.
 
-No residual sparse-intersection theorem is asserted here.  It is represented
-by `ResidualComponentBudget`, an explicit provider consumed by the fully
-proved adapter below.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactResidualSparseComponentAdapterResearch
 
@@ -36,9 +36,9 @@ variable (φ : Polynomial K →+* Ω)
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Ω := Classical.decEq Ω
 
-/-- A finite-set version of the residual intersection bound on one prime
-component.  It deliberately counts actual affine points and therefore makes
-the boundary/saturation obligation visible to the geometric provider. -/
+/-- .
+
+ -/
 def FiniteZeroSetBound
     (P : Ideal (MvPolynomial (Fin 3) Ω))
     (A : MvPolynomial (Fin 3) Ω) (cost : ℕ) : Prop :=
@@ -47,12 +47,12 @@ def FiniteZeroSetBound
     (∀ v ∈ points, MvPolynomial.aeval v A = 0) →
     points.card ≤ cost
 
-/-- The exact residual sparse-intersection interface needed by incidence.
+/-- .
 
-`Admissible` should mean that the Newton support of the polynomial lies in
-the agreement polytope.  The intended `wholeCost` is
-`MV(Newt(G), Newt(T), agreementPolytope)`.  Components on which `A` vanishes
-identically are excluded by the explicit `A ∉ C.1` premise. -/
+
+
+
+ -/
 structure ResidualComponentBudget
     (G T H : MvPolynomial (Fin 3) Ω)
     (Admissible : MvPolynomial (Fin 3) Ω → Prop) (wholeCost : ℕ) where
@@ -62,8 +62,8 @@ structure ResidualComponentBudget
     Admissible A → A ∉ C.1 → FiniteZeroSetBound C.1 A (cost C)
   sum_cost_le : (∑ C : RegularComponent Ω G T H, cost C) ≤ wholeCost
 
-/-- Injectivity of the selected-point map transports a componentwise finite
-zero-set theorem to the actual selected-seed agreement fiber. -/
+/-- .
+ -/
 theorem agreement_fiber_card_le_of_zero_bound
     (P : Ideal (MvPolynomial (Fin 3) Ω))
     (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K) (Γ : Finset K)
@@ -102,9 +102,9 @@ theorem agreement_fiber_card_le_of_zero_bound
 variable {ι : Type*}
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- Prime-component incidence with an abstract residual sparse cost.  The
-large-identity branch is unchanged and still uses the actual Z projection
-degree; only the proper-fiber box count is replaced. -/
+/-- .
+
+ -/
 theorem prime_seed_incidence_sharp_of_residual_cost
     (P : Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
     (hproj : ProjectionsFiniteSeparable Ω P)
@@ -184,7 +184,7 @@ theorem prime_seed_incidence_sharp_of_residual_cost
             Nat.mul_le_mul_left ((e + 1) * (a - w)) hδ
     omega
 
-/-- Scalar-cost analogue of `aggregate_component_incidence`. -/
+/-- . -/
 theorem aggregate_component_residual_incidence
     (G T H : MvPolynomial (Fin 3) Ω)
     {Seed : Type*} (S : Finset Seed) (v : Seed → Fin 3 → Ω)
@@ -218,11 +218,11 @@ theorem aggregate_component_residual_incidence
       Nat.add_le_add (Nat.mul_le_mul_left nodes hcost)
         (Nat.mul_le_mul_left (pencil * gap) hz)
 
-/-- Full proper-cut adapter for a residual sparse component budget.
+/-- .
 
-The only missing theorem-scale input is `hsparse`.  Projection hypotheses and
-the Z-degree budget are kept separate because they are already available in
-the characteristic-free joint/shear production route. -/
+
+
+ -/
 theorem proper_cut_seed_bound_of_residual_component_budget
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hdiv : G ∣ surfaceMap φ F)

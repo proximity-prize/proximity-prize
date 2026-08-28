@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAdaptiveShearConditional
 
-/-!
-# Positivity of the global-shear cost on constant-Z components
+/-! .
 
-Algebraic-Z components contain at most one selected seed.  To pay that seed
-with the downstream singleton certificate, it remains to know that the
-assigned global-shear box cost is positive.  This file isolates exactly the
-minimal positivity property required of the family S-degree assignment.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactGlobalShearPositivityResearch
 
@@ -21,8 +21,8 @@ noncomputable section
 variable (K : Type) [Field K] [IsAlgClosed K]
 variable (P : Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
 
-/-- Adding a scalar multiple of an algebraic element cannot destroy
-transcendence of the left summand. -/
+/-- .
+ -/
 theorem transcendental_add_smul_of_transcendental_isAlgebraic
     (r z : CoordinateField K P) (a : K)
     (hr : Transcendental K r) (hz : IsAlgebraic K z) :
@@ -33,12 +33,12 @@ theorem transcendental_add_smul_of_transcendental_isAlgebraic
   have hsub : IsAlgebraic K ((r + a • z) - a • z) := hs.sub hscaled
   simpa using hsub
 
-/-- On a non-point curve with algebraic Z, either Y itself gives a positive
-box term or R is transcendental and therefore the sheared S term is
-positive.  No separability is used here.
+/-- .
 
-`hSdegree` is the sole interface to the family S-degree construction: it
-says only that a genuinely transcendental S is assigned positive degree. -/
+
+
+
+ -/
 theorem globalShearCost_pos_of_seedCoordinate_isAlgebraic
     (hfinite : ProjectionsFinite K P)
     (hnonpoint : ∀ v : Fin 3 → K,

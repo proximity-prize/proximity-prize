@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactPost6464MinkowskiRecurrenceResearch
 
-/-!
-# Exact support transport for the separability shear
+/-! .
 
-The substitution `R ↦ R-Z` sends an exponent `(x,y,r,z)` into the segment
-between `(x,y,r,z)` and `(x,y,0,z+r)`.  On support functions this pulls a
-target weight `(aX,aY,aR,aZ)` back to
 
-`(aX,aY,max aR aZ,aZ)`.
 
-This module proves that statement directly for actual multivariate
-polynomials, without assuming binomial coefficients are nonzero.  Thus it
-is valid in every characteristic and is safe for the post-6464 sparse
-eliminant route.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactPost6464ShearSupportResearch
 
@@ -89,7 +89,7 @@ theorem shear_monomial_product_wt_le
       simp only [Finsupp.sum, nsmul_eq_mul]
       simp
 
-/-- Characteristic-free support-function transport under `R ↦ R-Z`. -/
+/-- . -/
 theorem shearMap_wt_le_pulled (weights : Fin 4 → ℕ) (P : Poly4 K) :
     wt weights (shearMap P) ≤ wt (pullShearWeights weights) P := by
   change wt weights

@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactImplicitPairBudgets
 
-/-!
-# Actual finite three-branch decomposition of selected polynomial solutions
+/-! .
 
-Model label: gpt-5.
 
-The direct factors, implicit equation/lift-factor pairs, and exceptional
-seed set are all constructed from the given nonzero interpolant. The
-exceptional seed count is an actual univariate root bound. The two remaining
-families carry their true equations, regularity, inherited interpolation
-caps, and summed algebraic degree budgets.
 
-No geometric component list, curve point count, agreement hypothesis, or
-competition conclusion is assumed or proved here.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSelectedSeedDecomposition
 
@@ -114,8 +114,8 @@ theorem solution_implicit_pair_or_exceptional
     exact Or.inr ⟨⟨A, G⟩, (mem_implicitPairSet J A G).mpr ⟨hAmem, hG⟩,
       hsolA, hregA, hsolG, hregG⟩
 
-/-- This is a constructed subset of the supplied seeds, with the supplied
-selected polynomial, not a freely assumed exceptional set. -/
+/-- .
+ -/
 def exceptionalSeeds (J : MvPolynomial (Fin 4) K) (seeds : Finset K)
     (selected : K → Polynomial K) : Finset K := by
   classical
@@ -155,9 +155,9 @@ theorem solution_three_way
     · exact Or.inr (Or.inl himplicit)
   · exact Or.inl hregular
 
-/-- The actual finite cover together with both actual family ledgers.
-An arbitrary selected solution is covered; no global counting conclusion
-for the two regular families is hidden in the statement. -/
+/-- .
+
+ -/
 theorem selected_seed_decomposition
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (D w L s p : ℕ) [CharP K p] (hs : 1 ≤ s) (hsmall : s < p)

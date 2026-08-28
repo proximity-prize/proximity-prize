@@ -20,9 +20,9 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Transfer module and algebra structures from `α` to `Shrink α`
--/
+/-! .
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -36,7 +36,7 @@ namespace Shrink
 instance [Semiring α] [Algebra R α] : Algebra R (Shrink.{v} α) := (equivShrink α).symm.algebra _
 
 variable (R α) in
-/-- Shrinking `α` to a smaller universe preserves algebra structure. -/
+/-- . -/
 @[simps!]
 def algEquiv [Semiring α] [Algebra R α] : Shrink.{v} α ≃ₐ[R] α :=
   (equivShrink α).symm.algEquiv _

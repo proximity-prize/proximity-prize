@@ -2,20 +2,20 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactProperCutSeedCount
 import ProximityPrize.SubmissionLower.ContactCountingCaps
 
-/-!
-# Every regular positive-R surface is counted by agreement-first cuts
+/-! .
 
-Model label: gpt-5.
 
-An irreducible regular positive-R surface has at most w identity agreement
-nodes, without any first-tail or all-tail assumption. Each nonidentity
-agreement equation is a genuine proper cut. The actual proper-cut theorem
-bounds its selected-seed fiber; sharp finite incidence then counts the
-entire surface. The cost is linear in the ACTUAL surface-factor degrees.
 
-The fixed-witness wrapper concludes exactly wholeNumerator of those
-degrees. It does not replace every factor by the entire interpolant's cap.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSurfaceSeedCount
 
@@ -61,8 +61,8 @@ theorem mixed_cap_sum (g t e : DegreeVector) :
 def fiberNumerator (n w a e : ℕ) (g E : DegreeVector) : ℕ :=
   (n - w) * mixed g E E + (e + 1) * (a - w) * mixed g E unitZ
 
-/-- The integer floor in a scaled fiber bound introduces no loss in the
-cross-multiplied sharp-incidence conclusion. -/
+/-- .
+ -/
 theorem scaled_sharp_incidence_bound
     {Seed Node : Type*} [DecidableEq Seed] [DecidableEq Node]
     (relation : Seed → Node → Prop) [∀ seed node, Decidable (relation seed node)]
@@ -90,9 +90,9 @@ variable (φ : Polynomial K →+* Ω)
 variable {ι : Type*}
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- Agreement-first incidence counts ANY regular positive-R geometric
-factor. No Taylor-tail equation or assumed curve-count inequality occurs
-among the inputs. All cut costs use the actual degrees of G. -/
+/-- .
+
+ -/
 theorem whole_surface_seed_bound
     (F : MvPolynomial (Fin 4) K) (G : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F)

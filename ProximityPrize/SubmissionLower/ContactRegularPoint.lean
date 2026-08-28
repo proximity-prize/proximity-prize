@@ -1,18 +1,18 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactDifferentialRing
 
-/-!
-# Every regular contact point evaluates the concrete differential ring
+/-! .
 
-Model label: gpt-5.
 
-For an actual four-coordinate point with F=0 and F_R nonzero, this module
-adjoins the inverse coordinate and constructs a ring homomorphism from the
-concrete contact quotient to the point's field. It also proves the original
-four-variable relation and coordinate differential identities inside that
-quotient. No global existence or integrality assertion is made, and no
-geometric count is assumed.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactRegularPoint
 

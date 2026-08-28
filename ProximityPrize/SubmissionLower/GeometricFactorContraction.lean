@@ -4,20 +4,20 @@ import ProximityPrize.Benchmark.TargetLower
 
 
 
-/-!
-# Actual contraction of a geometric factor
+/-! .
 
-Model label: gpt-5.
 
-A height-one prime factor after flat coefficient extension contracts to the
-original principal prime. Going down and the actual principal ideal theorem
-prove this; the desired contraction is not a supplied interface.
 
-The polynomial application constructs flatness from the canonical tensor
-product equivalence. No algebraic-closure or separability assumption is
-needed for this contraction statement. Passage from K[X]-polynomials to
-K(X)-polynomials is a separate localization bridge.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.GeometricFactorContraction
 
@@ -29,7 +29,7 @@ variable {A B : Type*} [CommRing A] [IsDomain A]
   [CommRing B] [IsDomain B] [IsNoetherianRing B] [Algebra A B]
   [Module.Flat A B]
 
-/-- A nonzero prime below a height-one principal prime is that same prime. -/
+/-- . -/
 theorem prime_eq_span_of_le (g : B) (hg : Prime g)
     (Q : Ideal B) [Q.IsPrime] (hQ : Q ≠ ⊥)
     (hle : Q ≤ Ideal.span {g}) : Q = Ideal.span {g} := by
@@ -43,8 +43,8 @@ theorem prime_eq_span_of_le (g : B) (hg : Prime g)
   have hzero : Q.height = 0 := Order.lt_one_iff.mp hsmall
   exact hQ (Ideal.height_eq_zero_iff_eq_bot.mp hzero)
 
-/-- The actual contraction of a prime factor contains no additional
-base elements beyond the original defining principal prime. -/
+/-- .
+ -/
 theorem under_prime_factor_eq
     (hinjective : Function.Injective (algebraMap A B))
     (F : A) (hF : Prime F) (g : B) (hg : Prime g)
@@ -75,8 +75,8 @@ theorem under_prime_factor_eq
   have hover : Q.under A = p := (Q.over_def p).symm
   simpa only [heq] using hover
 
-/-- Membership in a common geometric factor descends to actual
-divisibility by the original equation. -/
+/-- .
+ -/
 theorem dvd_of_prime_factor_dvd
     (hinjective : Function.Injective (algebraMap A B))
     (F M : A) (hF : Prime F) (g : B) (hg : Prime g)
@@ -95,8 +95,8 @@ variable {K L σ : Type*} [Field K] [Field L] [Algebra K L]
 
 attribute [local instance] MvPolynomial.algebraMvPolynomial
 
-/-- Flatness of the ACTUAL coefficient-extension algebra follows from
-its canonical polynomial tensor-product equivalence. -/
+/-- .
+ -/
 theorem coefficient_extension_flat :
     Module.Flat (MvPolynomial σ K) (MvPolynomial σ L) := by
   exact Module.Flat.of_linearEquiv
@@ -117,8 +117,8 @@ theorem geometric_factor_contraction
     MvPolynomial.map_injective _ (algebraMap K L).injective
   exact under_prime_factor_eq hinj F hF.prime g hg.prime hdiv
 
-/-- A base polynomial vanishing along one geometric irreducible factor
-is divisible by the original irreducible polynomial. -/
+/-- .
+ -/
 theorem original_dvd_of_geometric_factor_dvd
     (F M : MvPolynomial σ K) (hF : Irreducible F)
     (g : MvPolynomial σ L) (hg : Irreducible g)
@@ -130,7 +130,7 @@ theorem original_dvd_of_geometric_factor_dvd
   rw [geometric_factor_contraction F hF g hg hdivF] at hm
   exact Ideal.mem_span_singleton.mp hm
 
-/-- A proper first cut remains proper on every geometric factor. -/
+/-- . -/
 theorem geometric_factor_not_dvd_of_original_not_dvd
     (F M : MvPolynomial σ K) (hF : Irreducible F) (hnot : ¬ F ∣ M)
     (g : MvPolynomial σ L) (hg : Irreducible g)

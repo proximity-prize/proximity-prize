@@ -26,37 +26,37 @@ TargetLower. Its name, proof, mathematical API, imports and license remain
 unchanged; no field is omitted or replaced by a hypothesis.
 -/
 
-/-! # Homogeneous lexicographic monomial ordering
+/-! .
 
-* `MonomialOrder.degLex`: a variant of the lexicographic ordering that first compares degrees.
-  For this, `σ` needs to be embedded with an ordering relation which satisfies `WellFoundedGT σ`.
-  (This last property is automatic when `σ` is finite).
 
-The type synonym is `DegLex (σ →₀ ℕ)` and the two lemmas `MonomialOrder.degLex_le_iff`
-and `MonomialOrder.degLex_lt_iff` rewrite the ordering as comparisons in the type `Lex (σ →₀ ℕ)`.
 
-## References
 
-* [Cox, Little and O'Shea, *Ideals, varieties, and algorithms*][coxlittleoshea1997]
-* [Becker and Weispfenning, *Gröbner bases*][Becker-Weispfenning1993]
 
--/
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
-/-- A type synonym to equip a type with its lexicographic order sorted by degrees. -/
+/-- . -/
 def DegLex (α : Type*) := α
 
 variable {α : Type*}
 
-/-- `toDegLex` is the identity function to the `DegLex` of a type. -/
+/-- . -/
 @[match_pattern] def toDegLex : α ≃ DegLex α := Equiv.refl _
 
 theorem toDegLex_injective : Function.Injective (toDegLex (α := α)) := fun _ _ ↦ _root_.id
 
 theorem toDegLex_inj {a b : α} : toDegLex a = toDegLex b ↔ a = b := Iff.rfl
 
-/-- `ofDegLex` is the identity function from the `DegLex` of a type. -/
+/-- . -/
 @[match_pattern] def ofDegLex : DegLex α ≃ α := Equiv.refl _
 
 theorem ofDegLex_injective : Function.Injective (ofDegLex (α := α)) := fun _ _ ↦ _root_.id
@@ -71,7 +71,7 @@ theorem ofDegLex_inj {a b : DegLex α} : ofDegLex a = ofDegLex b ↔ a = b := If
 
 @[simp] theorem toDegLex_ofDegLex (a : DegLex α) : toDegLex (ofDegLex a) = a := rfl
 
-/-- A recursor for `DegLex`. Use as `induction x`. -/
+/-- . -/
 @[elab_as_elim, induction_eliminator, cases_eliminator]
 protected def DegLex.rec {β : DegLex α → Sort*} (h : ∀ a, β (toDegLex a)) :
     ∀ a, β a := fun a => h (ofDegLex a)
@@ -90,10 +90,10 @@ theorem ofDegLex_add [AddCommMonoid α] (a b : DegLex α) :
 
 namespace Finsupp
 
-open scoped Function in -- required for scoped `on` notation
-/-- `Finsupp.DegLex r s` is the homogeneous lexicographic order on `α →₀ M`,
-where `α` is ordered by `r` and `M` is ordered by `s`.
-The type synonym `DegLex (α →₀ M)` has an order given by `Finsupp.DegLex (· < ·) (· < ·)`. -/
+open scoped Function in --
+/-- .
+
+ -/
 protected def DegLex (r : α → α → Prop) (s : ℕ → ℕ → Prop) :
     (α →₀ ℕ) → (α →₀ ℕ) → Prop :=
   (Prod.Lex s (Finsupp.Lex r s)) on (fun x ↦ (x.degree, x))
@@ -142,7 +142,7 @@ instance isStrictOrder : IsStrictOrder (DegLex (α →₀ ℕ)) (· < ·) where
       · left; exact lt_of_eq_of_lt hab.1 hbc
       · right; exact ⟨Eq.trans hab.1 hbc.1, lt_trans hab.2 hbc.2⟩
 
-/-- The linear order on `Finsupp`s obtained by the homogeneous lexicographic ordering. -/
+/-- . -/
 noncomputable instance : LinearOrder (DegLex (α →₀ ℕ)) :=
   fast_instance% LinearOrder.lift'
     (fun (f : DegLex (α →₀ ℕ)) ↦ toLex ((ofDegLex f).degree, toLex (ofDegLex f)))
@@ -213,7 +213,7 @@ open Finsupp
 
 variable {σ : Type*} [LinearOrder σ] [WellFoundedGT σ]
 
-/-- The deg-lexicographic order on `σ →₀ ℕ`, as a `MonomialOrder` -/
+/-- . -/
 noncomputable def degLex :
     MonomialOrder σ where
   syn := DegLex (σ →₀ ℕ)
@@ -248,12 +248,12 @@ section Examples
 
 open Finsupp MonomialOrder DegLex
 
-/-- for the deg-lexicographic ordering, X 1 < X 0 -/
+/-- . -/
 example : single (1 : Fin 2) 1 ≺[degLex] single 0 1 := by
   rw [degLex_lt_iff, single_lt_iff]
   exact Nat.one_pos
 
-/-- for the deg-lexicographic ordering, X 0 * X 1 < X 0  ^ 2 -/
+/-- . -/
 example : (single 0 1 + single 1 1) ≺[degLex] single (0 : Fin 2) 2 := by
   rw [degLex_lt_iff, lt_iff, ofDegLex_toDegLex]
   simp only [Fin.isValue, map_add, degree_single, Nat.reduceAdd, ofDegLex_toDegLex,
@@ -261,7 +261,7 @@ example : (single 0 1 + single 1 1) ≺[degLex] single (0 : Fin 2) 2 := by
   use 0
   simp
 
-/-- for the deg-lexicographic ordering, X 0 < X 1 ^ 2 -/
+/-- . -/
 example : single (0 : Fin 2) 1 ≺[degLex] single 1 2 := by
   simp [degLex_lt_iff, lt_iff]
 

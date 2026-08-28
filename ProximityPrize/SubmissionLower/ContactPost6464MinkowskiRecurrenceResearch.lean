@@ -2,24 +2,24 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactImplicitContactLift
 import ProximityPrize.SubmissionLower.ContactTaylorNumerators
 
-/-!
-# Exact support-function recurrence after the R derivative
+/-! .
 
-Research-only module.  For an arbitrary nonnegative support functional
-`weights`, write `C` for the support value of the defining polynomial and
-`Hcap = C - weights 2` for the value after `∂/∂R`.  One contact-numerator
-step costs only `C + Hcap`, not `2*C`.
 
-Geometrically this is the support function of the Minkowski sum
 
-`Newt(F) + Newt(∂R F)`.
 
-The proof audits all three summands of the contact vector field.  In the
-`R * ∂Y` summand the new `R` cancels the degree removed by `∂R F`; in the
-`G * ∂R` summand it cancels the degree removed from the differentiated
-running numerator.  The hypotheses `weights 0 = 0` and `weights 2 ≤ C`
-are load-bearing.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactPost6464MinkowskiRecurrenceResearch
 
@@ -100,9 +100,9 @@ theorem wt_polyH_le (weights : Fin 4 → ℕ) (F : Poly4 K)
     wt weights (polyH K F) ≤ C - weights 2 :=
   wt_pderiv_le weights F 2 C hF
 
-/-- The numerator of the contact vector field has support at most `C+wR`.
-The possible extra `R` in `R*∂Y F` is recorded explicitly and is cancelled
-later by the differentiated running numerator. -/
+/-- .
+
+ -/
 theorem wt_polyG_le (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F : Poly4 K) (C : ℕ) (hF : wt weights F ≤ C) :
     wt weights (polyG K F) ≤ C + weights 2 := by
@@ -118,9 +118,9 @@ theorem wt_polyG_le (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
   rw [wt_neg]
   exact hsum.trans (max_le (by omega) (by omega))
 
-/-- One recurrence step adds the support functions of `F` and `∂R F`.
-This is the scalar support-functional form of the exact Minkowski inclusion.
--/
+/-- .
+
+ -/
 theorem numeratorStep_wt_le_minkowski
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F M : Poly4 K) (b A C : ℕ) (hR : weights 2 ≤ C)
@@ -212,7 +212,7 @@ theorem numeratorStep_wt_le_minkowski
     (max_le ((wt_add_le weights _ _).trans
       (max_le ((wt_add_le weights _ _).trans (max_le htermX htermY)) htermR)) hlast)
 
-/-- Closed support-functional bound for every Taylor numerator. -/
+/-- . -/
 theorem numerator_wt_le_minkowski
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F : Poly4 K) (C : ℕ) (hR : weights 2 ≤ C)
@@ -253,9 +253,9 @@ theorem affineSeedPolynomial_wt_le (weights : Fin 4 → ℕ) (u₀ u₁ : K) :
     rw [wt_X, wt_C, Nat.add_zero] at hm
     exact hm
 
-/-- Every common-denominator Taylor summand lies in the support-function cap
-`weight(Y) + w * (C + (C-weight(R)))`.  This is the scalar form of
-`{Y} + w * (Newt(F) + Newt(∂R F))`. -/
+/-- .
+
+ -/
 theorem commonNumeratorTerm_wt_le_minkowski
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F : Poly4 K) (C : ℕ) (hR : weights 2 ≤ C)
@@ -326,9 +326,9 @@ theorem clearedTaylorNumerator_wt_le_minkowski
   have := Finset.mem_range.mp hj
   omega
 
-/-- Exact sloped-facet cap for the actual agreement polynomial.  The initial
-segment `conv(0,Y,Z)` contributes `max(weight(Y),weight(Z))`; every contact
-order contributes `Newt(F)+Newt(∂R F)`. -/
+/-- .
+
+ -/
 theorem agreementNumerator_wt_le_minkowski
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F : Poly4 K) (C : ℕ) (hR : weights 2 ≤ C)

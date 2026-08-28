@@ -2,48 +2,48 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalFlagResearch
 import ProximityPrize.SubmissionLower.ContactFactorCaps
 
-/-!
-# Parameterized residual support and agreement flags
+/-! .
 
-This module isolates the smallest parameter-generic core needed to retarget
-the accepted residual-stage development.  A residual surface stores three
-preserved weights:
 
-* pure `R` weight;
-* joint `Y+R` weight;
-* total `Y+R+Z` weight.
 
-The accepted stage freezes these caps to `(8,43,503)`.  The recursive-GCD
-fixed meet needs `(6,34,604)`.  The affine residual transform and the
-Minkowski agreement recurrence are already generic, so the definitions and
-proofs below merely package those low-level theorems with explicit caps.
 
-The resulting `ResidualSupportData` is intended to replace the three literal
-support fields of both `ResidualStage` and `CurveResidualStage`.  Its
-`globalResidual` theorem supplies the fields of a residual successor, while
-`surfaceMap_globalResidual_agreement_in_flag` supplies every induced cut flag
-used by the terminal and factor providers.
 
-## Deliberate boundary
 
-This module does not introduce a parallel residual-stage hierarchy.  The
-existing `ResidualStage`, `CurveResidualStage`, their step relations,
-reachability closures, terminal descendants, component families, and factor
-providers are indexed by the frozen structures.  Retargeting them in a new
-file would copy broad proof bodies.  The non-duplicating migration is:
 
-1. add a support-parameter index to the two accepted stage structures and
-   replace their three support fields by `ResidualSupportData`;
-2. thread the same index through steps, reachability, and descendants, using
-   `ResidualSupportData.globalResidual` in both successor constructors;
-3. replace `residualAgreementFlag d` by
-   `support.residualAgreementFlag d` in incidence and terminal APIs;
-4. retain the accepted profile through `acceptedSupport`, and instantiate the
-   fixed meet through `fixedMeetSupport`.
 
-No identity, incidence, component, or projection geometry changes at that
-seam.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactResidualSupportParametersResearch
 
@@ -59,10 +59,10 @@ noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 20000
 
-/-- The three support caps preserved by global actual-identity
-residualization.  The order assumptions make the nested flag differences
-literal natural numbers; `two_le_ys` is the exact Minkowski recurrence gate.
--/
+/-- .
+
+
+ -/
 structure ResidualSupportParameters where
   s : ℕ
   ys : ℕ
@@ -75,13 +75,13 @@ structure ResidualSupportParameters where
 
 namespace ResidualSupportParameters
 
-/-- The degree direction of an agreement cut, in nested
-`(Z-only,YZ,all)` coordinates. -/
+/-- .
+ -/
 def agreementDirection (P : ResidualSupportParameters) : FlagDegree :=
   ⟨2 * (P.total - P.ys), 2 * (P.ys - P.s), 2 * P.s - 1⟩
 
-/-- The exact affine agreement flag at residual degree `d`.  The unit is in
-the `YZ` coordinate, matching the accepted score-66 flag. -/
+/-- .
+ -/
 def residualAgreementFlag (P : ResidualSupportParameters) (d : ℕ) : FlagDegree :=
   ⟨P.agreementDirection.zOnly * d,
     1 + P.agreementDirection.yz * d,
@@ -119,7 +119,7 @@ theorem residualAgreementFlag_total (P : ResidualSupportParameters) (d : ℕ) :
   rw [← hcoeff]
   ring
 
-/-- The accepted promoted score-66.18 support profile. -/
+/-- . -/
 def acceptedSupport : ResidualSupportParameters where
   s := 8
   ys := 43
@@ -129,7 +129,7 @@ def acceptedSupport : ResidualSupportParameters where
   ys_le_total := by norm_num
   two_le_ys := by norm_num
 
-/-- The recursive-GCD fixed meet support profile. -/
+/-- . -/
 def fixedMeetSupport : ResidualSupportParameters where
   s := 6
   ys := 34
@@ -159,8 +159,8 @@ variable {K Omega : Type} [Field K] [Field Omega]
 
 abbrev Poly4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
 
-/-- The parameterized replacement for the three frozen support proof fields
-of a residual stage. -/
+/-- .
+ -/
 structure ResidualSupportData (P : ResidualSupportParameters) (F : Poly4 K) : Prop where
   s_weight : wt residualSWeights F ≤ P.s
   ys_weight : wt residualYSWeights F ≤ P.ys
@@ -168,8 +168,8 @@ structure ResidualSupportData (P : ResidualSupportParameters) (F : Poly4 K) : Pr
 
 namespace ResidualSupportData
 
-/-- The final recursive-GCD meet box supplies its initial parameterized
-support state directly. -/
+/-- .
+ -/
 theorem fixedMeet_of_mem_box
     (F : Poly4 K)
     (hbox : F ∈ globalCoefficientBox K 4570175 131071 598 6) :
@@ -202,8 +202,8 @@ theorem fixedMeet_of_mem_box
     norm_num at hb
     omega
 
-/-- Global actual-identity residualization preserves an arbitrary supplied
-support triple. -/
+/-- .
+ -/
 theorem globalResidual
     {P : ResidualSupportParameters} {F : Poly4 K}
     (H : ResidualSupportData P F)
@@ -218,8 +218,8 @@ theorem globalResidual
       P0 P1 V F).trans (by
         simpa [residualPullWeights_total] using H.total_weight)
 
-/-- Coordinate degree consequences used by the generic agreement recurrence.
--/
+/-- .
+ -/
 theorem coordinate_bounds
     {P : ResidualSupportParameters} {F : Poly4 K}
     (H : ResidualSupportData P F) :
@@ -253,7 +253,7 @@ theorem coordinate_bounds
     omega
   exact ⟨hY, hR, hZ⟩
 
-/-- Agreement weight bounds at arbitrary stored residual support caps. -/
+/-- . -/
 theorem agreement_weight_bounds
     {P : ResidualSupportParameters} {F : Poly4 K}
     (H : ResidualSupportData P F)
@@ -291,9 +291,9 @@ theorem agreement_weight_bounds
     rw [hcoeff]
     norm_num
 
-/-- The mapped agreement cut belongs to the parameter-induced nested flag.
-This is the direct replacement for the frozen
-`surfaceMap_globalResidual_agreement_in_flag`. -/
+/-- .
+
+ -/
 theorem surfaceMap_agreement_in_flag
     {P : ResidualSupportParameters}
     (phi : Polynomial K →+* Omega) {F : Poly4 K}
@@ -331,9 +331,9 @@ theorem surfaceMap_agreement_in_flag
   · rw [P.residualAgreementFlag_total]
     exact hqTotal
 
-/-- Combined successor API: the support data is preserved and its agreement
-cut receives the induced flag.  A parameterized residual-step constructor
-can consume this pair directly without reproving support arithmetic. -/
+/-- .
+
+ -/
 theorem globalResidual_and_agreement_in_flag
     {P : ResidualSupportParameters} {F : Poly4 K}
     (H : ResidualSupportData P F)

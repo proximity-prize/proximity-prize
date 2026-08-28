@@ -3,22 +3,22 @@ import ProximityPrize.SubmissionLower.ContactJointSurfaceSeedCount
 import ProximityPrize.SubmissionLower.ContactRegularFactorGate
 import ProximityPrize.SubmissionLower.ContactCountingLedger
 
-/-!
-# The actual regular selected-seed count for one original factor
+/-! .
 
-Model label: gpt-5.
 
-The coefficient field is the constructed algebraic closure of K(X).
-Actual original polynomial specializations give its selected points and
-regularity. The actual normalized geometric factor family covers those
-points, every factor satisfies the proved positive-R/proper-derivative
-gate, and its real summed degrees are bounded by the original degrees.
 
-The agreement-first surface count is then summed with the linear frozen
-ledger. No first-tail condition, supplied geometric cover, degree-sum
-inequality, point-count inequality, or generic regularity assumption is
-an input to the final original-factor theorem.
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactOriginalRegularSeedCount
 
@@ -40,8 +40,8 @@ local instance : DecidableEq (GenericField K) := Classical.decEq (GenericField K
 def originalDegreeVector (F : MvPolynomial (Fin 4) K) : DegreeVector :=
   ⟨F.degreeOf 1, F.degreeOf 2, F.degreeOf 3⟩
 
-/-- The point used by the counting theorem IS the original constructed
-generic initial point, not a separately assumed geometric representative. -/
+/-- .
+ -/
 theorem selectedPoint_eq_initialPoint (selected : K → Polynomial K) (γ : K) :
     selectedPoint (polynomialEmbedding K) selected γ =
       fun i : Fin 3 => initialPoint K (selected γ) γ i.succ := rfl
@@ -79,8 +79,8 @@ theorem geometricSeeds_subset
   classical
   exact Finset.filter_subset _ _
 
-/-- Actual selected solutions are covered by the constructed finite
-geometric family. Overlaps are allowed and counted only in the safe direction. -/
+/-- .
+ -/
 theorem card_le_sum_geometricSeeds
     (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0)
     (selected : K → Polynomial K) (Γ : Finset K)
@@ -117,8 +117,8 @@ theorem geometricFactor_sum_degree_le
     (fun g => g.degreeOf i)] at hb
   simpa only [Finset.attach_eq_univ] using hb
 
-/-- This is the actual linear factor-budget sum, not a separate count
-assumption for the chosen factor family. -/
+/-- .
+ -/
 theorem sum_wholeNumerator_geometricFactors_le
     (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0) :
     (∑ g : GeometricFactor K F, wholeNumerator (degreeVector g.1)) ≤
@@ -132,9 +132,9 @@ theorem sum_wholeNumerator_geometricFactors_le
 variable {ι : Type*}
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- One original positive-R irreducible factor, with all geometric data
-constructed internally. The right side retains the ORIGINAL factor degrees.
-The regularity input is a nonzero polynomial specialization over K. -/
+/-- .
+
+ -/
 theorem original_regular_seed_bound
     [CharP K prime]
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F) (hRpos : 0 < F.degreeOf 2)

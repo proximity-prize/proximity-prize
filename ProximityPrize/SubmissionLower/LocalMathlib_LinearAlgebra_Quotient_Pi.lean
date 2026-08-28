@@ -22,19 +22,19 @@ Port elaboration adjustment: qualify LinearMap.sum_apply to avoid an ambient
 namespace ambiguity; the original statements and proof steps are retained.
 -/
 
-/-!
-# Submodule quotients and direct sums
+/-! .
 
-This file contains some results on the quotient of a module by a direct sum of submodules,
-and the direct sum of quotients of modules by submodules.
 
-## Main definitions
 
-* `Submodule.piQuotientLift`: create a map out of the direct sum of quotients
-* `Submodule.quotientPiLift`: create a map out of the quotient of a direct sum
-* `Submodule.quotientPi`: the quotient of a direct sum is the direct sum of quotients.
 
--/
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -48,7 +48,7 @@ variable {Ms : ι → Type*} [∀ i, AddCommGroup (Ms i)] [∀ i, Module R (Ms i
 variable {N : Type*} [AddCommGroup N] [Module R N]
 variable {Ns : ι → Type*} [∀ i, AddCommGroup (Ns i)] [∀ i, Module R (Ns i)]
 
-/-- Lift a family of maps to the direct sum of quotients. -/
+/-- . -/
 def piQuotientLift [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i)) (q : Submodule R N)
     (f : ∀ i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) : (∀ i, Ms i ⧸ p i) →ₗ[R] N ⧸ q :=
   lsum R (fun i => Ms i ⧸ p i) R fun i => (p i).mapQ q (f i) (hf i)
@@ -73,7 +73,7 @@ theorem piQuotientLift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodul
     have := Finset.mem_univ i
     contradiction
 
-/-- Lift a family of maps to a quotient of direct sums. -/
+/-- . -/
 def quotientPiLift (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →ₗ[R] Ns i)
     (hf : ∀ i, p i ≤ ker (f i)) : (∀ i, Ms i) ⧸ pi Set.univ p →ₗ[R] ∀ i, Ns i :=
   (pi Set.univ p).liftQ (LinearMap.pi fun i => (f i).comp (proj i)) fun x hx =>
@@ -132,7 +132,7 @@ theorem right_inv : Function.RightInverse (invFun p) (toFun p) := by
 end quotientPi_aux
 
 open quotientPi_aux in
-/-- The quotient of a direct sum is the direct sum of quotients. -/
+/-- . -/
 @[simps!]
 def quotientPi [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i)) :
     ((∀ i, Ms i) ⧸ pi Set.univ p) ≃ₗ[R] ∀ i, Ms i ⧸ p i where

@@ -2,22 +2,22 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BCHKSResultantDegree
 
 
-/-!
-# Polynomial matrix corank and determinant root multiplicity
+/-! .
 
-Model label: gpt-5.
 
-A rank loss of r at a scalar specialization forces the determinant to be
-divisible by the corresponding linear factor to power r. The proof uses
-the pinned matrix rank normal form, lifted by constant polynomial matrices.
-The Sylvester corollaries count actual specialized matrix coranks and bound
-their sum by the existing resultant degree bound.
 
-No geometric Bezout theorem is assumed. To count common bivariate roots,
-a separate argument must relate their distinct evaluation functionals to
-Sylvester corank. This file does not assert the mixed curve-degree ledger
-or a competition alignment theorem.
--/
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.MatrixRootMultiplicity
 
@@ -28,8 +28,8 @@ noncomputable section
 variable {K : Type*} [Field K] [DecidableEq K]
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
-/-- Vanishing of a chosen collection of entire columns at a scalar gives
-one factor per column in every determinant permutation product. -/
+/-- .
+ -/
 theorem pow_card_dvd_det_of_eval_columns_eq_zero
     (M : Matrix ι ι (Polynomial K)) (alpha : K) (columns : Finset ι)
     (hzero : ∀ j ∈ columns, ∀ i, (M i j).eval alpha = 0) :
@@ -55,9 +55,9 @@ theorem pow_card_dvd_det_of_eval_columns_eq_zero
     simpa using hpart.trans hfull
   exact dvd_mul_of_dvd_right hproduct _
 
-/-- General rank-loss divisibility, including a zero determinant. The
-constant changes of basis are constructed by the actual rank-normal-form
-theorem; they are not supplied as an extra hypothesis. -/
+/-- .
+
+ -/
 theorem pow_corank_dvd_det
     (M : Matrix ι ι (Polynomial K)) (alpha : K) :
     (Polynomial.X - Polynomial.C alpha) ^
@@ -108,8 +108,8 @@ theorem pow_corank_dvd_det
   rw [Matrix.det_mul, Matrix.det_mul] at hdiv
   exact hVdet.dvd_mul_left.mp (hUdet.dvd_mul_right.mp hdiv)
 
-/-- A nonzero determinant has root multiplicity at least the actual
-corank of the matrix evaluated at that root. -/
+/-- .
+ -/
 theorem corank_le_rootMultiplicity_det
     (M : Matrix ι ι (Polynomial K)) (alpha : K) (hdet : M.det ≠ 0) :
     Fintype.card ι - ((Polynomial.evalRingHom alpha).mapMatrix M).rank ≤
@@ -117,8 +117,8 @@ theorem corank_le_rootMultiplicity_det
   exact (Polynomial.le_rootMultiplicity_iff hdet).mpr
     (pow_corank_dvd_det M alpha)
 
-/-- The total multiplicity on any finite set is bounded by polynomial
-degree. This uses the actual root multiset, without a splitting hypothesis. -/
+/-- .
+ -/
 theorem sum_rootMultiplicity_le_natDegree
     (P : Polynomial K) (points : Finset K) :
     (∑ alpha ∈ points, P.rootMultiplicity alpha) ≤ P.natDegree := by
@@ -145,7 +145,7 @@ theorem sum_rootMultiplicity_le_natDegree
     _ ≤ P.roots.card := hselected
     _ ≤ P.natDegree := Polynomial.card_roots' P
 
-/-- Summed actual coranks consume determinant degree. -/
+/-- . -/
 theorem sum_coranks_le_natDegree_det
     (M : Matrix ι ι (Polynomial K)) (points : Finset K) (hdet : M.det ≠ 0) :
     (∑ alpha ∈ points,
@@ -156,8 +156,8 @@ theorem sum_coranks_le_natDegree_det
       Finset.sum_le_sum fun alpha _ => corank_le_rootMultiplicity_det M alpha hdet
     _ ≤ M.det.natDegree := sum_rootMultiplicity_le_natDegree M.det points
 
-/-- Specialized Sylvester corank is a genuine lower bound on resultant
-root multiplicity. Fixed original degrees are retained under specialization. -/
+/-- .
+ -/
 theorem sylvester_corank_le_rootMultiplicity_resultant
     (P Q : Polynomial (Polynomial K)) (m n : ℕ) (alpha : K)
     (hresultant : Polynomial.resultant P Q m n ≠ 0) :
@@ -169,8 +169,8 @@ theorem sylvester_corank_le_rootMultiplicity_resultant
     ← Polynomial.sylvester_map_map] using
     corank_le_rootMultiplicity_det (Polynomial.sylvester P Q m n) alpha hresultant
 
-/-- The summed coranks of specialized Sylvester matrices are bounded by
-the actual degree of the nonzero resultant. -/
+/-- .
+ -/
 theorem sum_sylvester_coranks_le_resultant_natDegree
     (P Q : Polynomial (Polynomial K)) (m n : ℕ) (points : Finset K)
     (hresultant : Polynomial.resultant P Q m n ≠ 0) :
@@ -185,11 +185,11 @@ theorem sum_sylvester_coranks_le_resultant_natDegree
     _ ≤ (Polynomial.resultant P Q m n).natDegree :=
       sum_rootMultiplicity_le_natDegree (Polynomial.resultant P Q m n) points
 
-/-- A concrete bidegree envelope for summed Sylvester coranks. The remaining
-plane-root bridge must still prove common-root evaluations are independent
-and annihilate the specialized Sylvester image. This last wrapper uses the
-stock lower-track bidegree theorem's `Type` universe; the preceding matrix
-and resultant-multiplicity lemmas remain universe-polymorphic. -/
+/-- .
+
+
+
+ -/
 theorem sum_sylvester_coranks_le_bidegree_bound
     {F : Type} [Field F] [DecidableEq F]
     (P Q : Polynomial (Polynomial F)) (m n : ℕ) (points : Finset F)

@@ -26,25 +26,25 @@ name so its original diamond test refers to this exact definition despite the
 broader target environment. Its type, construction, and test are unchanged.
 -/
 
-/-!
-# Instances for Dedekind domains
+/-! .
 
-This file contains various instances to work with localization of a ring extension.
 
-A very common situation in number theory is to have an extension of (say) Dedekind domains `R` and
-`S`, and to prove a property of this extension it is useful to consider the localization `Rₚ` of `R`
-at `P`, a prime ideal of `R`. One also works with the corresponding localization `Sₚ` of `S` and the
-fraction fields `K` and `L` of `R` and `S`. In this situation there are many compatible algebra
-structures and various properties of the rings involved. Another situation is when we have a
-tower extension `R ⊆ S ⊆ T` and thus we work with `Rₚ ⊆ Sₚ ⊆ Tₚ` where
-`Tₚ` is the localization of `T` at `P`. This file contains a collection of such instances.
 
-## Implementation details
-In general one wants all the results below for any algebra satisfying `IsLocalization`, but those
-cannot be instances (since Lean has no way of guessing the submonoid). Having the instances in the
-special case of *the* localization at a prime ideal is useful in working with Dedekind domains.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -119,9 +119,9 @@ instance : IsTorsionFree R Sₚ := by
   have := IsLocalization.AtPrime.faithfulSMul Rₚ R P
   exact IsTorsionFree.trans_faithfulSMul R Rₚ _
 
-/--
-This is not an instance because it creates a diamond with `OreLocalization.instAlgebra`.
--/
+/-- .
+
+ -/
 noncomputable abbrev Localization.AtPrime.liftAlgebra : Algebra Sₚ L :=
   (map _ (T := S⁰) (RingHom.id S)
     (algebraMapSubmonoid_le_nonZeroDivisors_of_faithfulSMul _
@@ -144,7 +144,7 @@ noncomputable instance proximityPortAlgebraAtPrimeFractionRing : Algebra Rₚ L 
   (lift (M := P.primeCompl) (g := algebraMap R L) <|
     fun ⟨x, hx⟩ ↦ by simpa using fun h ↦ hx <| by simp [h]).toAlgebra
 
--- Make sure there are no diamonds in the case `R = S`.
+--
 example : instAlgebraLocalizationAtPrime P = proximityPortAlgebraAtPrimeFractionRing (S := R) := by
   with_reducible_and_instances rfl
 
@@ -173,7 +173,7 @@ instance [IsDedekindDomain R] [IsDedekindDomain S] [Module.Finite R S] [hP : NeZ
   IsDedekindDomain.isPrincipalIdealRing_localization_over_prime S P (fun h ↦ hP.1 h)
 
 instance [Algebra.IsSeparable K L] :
-    -- Without the following line there is a timeout
+    --
     letI : Algebra Rₚ (FractionRing Sₚ) := OreLocalization.instAlgebra
     Algebra.IsSeparable (FractionRing Rₚ) (FractionRing Sₚ) :=
   let _ : Algebra Rₚ (FractionRing Sₚ) := OreLocalization.instAlgebra
@@ -188,11 +188,11 @@ instance : IsLocalization (algebraMapSubmonoid T P') Tₚ := by
   rw [show algebraMapSubmonoid T P' = P'' by simp]
   exact Localization.isLocalization
 
-/--
-Let `R ⊆ S ⊆ T` be a tower of rings. Let `Sₚ` and `Tₚ` denote the localizations of `S` and `T` at
-the prime ideal `P` of `R`. Then `Tₚ` is a `Sₚ`-algebra.
-This cannot be an instance since it creates a diamond when `S = T`.
--/
+/-- .
+
+
+
+ -/
 noncomputable abbrev Localization.AtPrime.algebra_localization_localization :
     Algebra Sₚ Tₚ := localizationAlgebra P' T
 

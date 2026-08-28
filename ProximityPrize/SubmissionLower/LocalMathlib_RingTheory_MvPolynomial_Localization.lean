@@ -23,19 +23,19 @@ constant. This prevents target notation capture;
 all statements and mathematical arguments are retained.
 -/
 
-/-!
+/-! .
 
-# Localization and multivariate polynomial rings
 
-In this file we show some results connecting multivariate polynomial rings and localization.
 
-## Main results
 
-- `MvPolynomial.isLocalization`: If `S` is the localization of `R` at a submonoid `M`, then
-  `MvPolynomial σ S` is the localization of `MvPolynomial σ R` at the image of `M` in
-  `MvPolynomial σ R`.
 
--/
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -48,11 +48,11 @@ variable [IsLocalization M S]
 
 attribute [local instance] algebraMvPolynomial
 
-/--
-If `S` is the localization of `R` at a submonoid `M`, then `MvPolynomial σ S`
-is the localization of `MvPolynomial σ R` at `M.map MvPolynomial.C`.
+/-- .
 
-See also `Polynomial.isLocalization` for the univariate case. -/
+
+
+ -/
 instance isLocalization : IsLocalization (M.map <| C (σ := σ)) (MvPolynomial σ S) :=
   isLocalizedModule_iff_isLocalization.mp <| (isLocalizedModule_iff_isBaseChange M S _).mpr <|
     .of_equiv (algebraTensorAlgEquiv _ _).toLinearEquiv fun _ ↦ by simp
@@ -72,8 +72,8 @@ open MvPolynomial
 variable (r : R) [IsLocalization.Away r S]
 
 set_option backward.privateInPublic true in
-/-- The canonical algebra map from `MvPolynomial Unit R` quotiented by
-`C r * X () - 1` to the localization of `R` away from `r`. -/
+/-- .
+ -/
 private noncomputable
 def auxHom : (MvPolynomial Unit R) ⧸ (Ideal.span { C r * MvPolynomial.X () - 1 }) →ₐ[R] S :=
   Ideal.Quotient.liftₐ (Ideal.span { C r * MvPolynomial.X () - 1}) (aeval (fun _ ↦ invSelf r)) <| by
@@ -123,8 +123,8 @@ private lemma auxInv_auxHom : (auxInv S r).comp (auxHom (S := S) r).toRingHom = 
 
 set_option backward.privateInPublic true in
 set_option backward.privateInPublic.warn false in
-/-- The canonical algebra isomorphism from `MvPolynomial Unit R` quotiented by
-`C r * X () - 1` to the localization of `R` away from `r`. -/
+/-- .
+ -/
 noncomputable def mvPolynomialQuotientEquiv :
     ((MvPolynomial Unit R) ⧸ Ideal.span { C r * MvPolynomial.X () - 1 }) ≃ₐ[R] S where
   toFun := auxHom S r

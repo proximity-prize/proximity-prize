@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactKernelMemberUniversality
 import ProximityPrize.SubmissionLower.ContactStackedParameters6656Research
 
-/-!
-# Three universal contact interpolants at the 66.56 row
+/-! .
 
-The three independently nonzero kernel members are constructed against the
-same received affine line.  Every selected degree-`w` polynomial agreeing on
-at least `182807` coordinates annihilates all three specializations.  The
-subsequent recursive-GCD partition is deliberately kept in its algebra module.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedInterpolation6656Research
 
@@ -26,8 +26,8 @@ set_option maxHeartbeats 2000000
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 
-/-- Three polynomials with their individual boxes and their shared universal
-specialization property. -/
+/-- .
+ -/
 theorem exists_stacked_universal_vanishing_interpolants
     (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
     ∃ QA QB QC : MvPolynomial (Fin 4) IRSProfile.Field,

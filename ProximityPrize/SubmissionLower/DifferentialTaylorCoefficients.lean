@@ -2,21 +2,21 @@ import ProximityPrize.Benchmark.TargetLower
 
 import ProximityPrize.SubmissionLower.LocalMathlib_Algebra_Lie_Derivation_Basic
 
-/-!
-# Finite Taylor coefficients of an arbitrary algebraic derivation
+/-! .
 
-Model label: gpt-5.
 
-This module proves the algebraic product rule behind the truncated Taylor
-homomorphism. Factorial nonvanishing is an explicit finite hypothesis, not an
-assumption of characteristic zero. It is intended for the range below the
-prime characteristic. It does not yet assert the rational degree estimates,
-the polynomiality-locus geometry, or a competition claim.
 
-The antidiagonal induction follows the proof pattern of Mathlib's general
-Leibniz rule for Lie derivations, using the same existing finite-sum identity.
-All compilation is remote and kernel checked.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.DifferentialTaylorCoefficients
 
@@ -55,7 +55,7 @@ theorem iterate_one_of_ne_zero (D : Derivation K A A) (n : ℕ) (hn : n ≠ 0) :
     rw [Function.iterate_succ_apply, D.map_one_eq_zero]
     exact iterate_zero D n
 
-/-- The full iterated Leibniz rule, before any factorial division. -/
+/-- . -/
 theorem iterate_product (D : Derivation K A A) (n : ℕ) (a b : A) :
     D^[n] (a * b) =
       ∑ ij ∈ antidiagonal n,
@@ -131,8 +131,8 @@ theorem jetCoefficient_add
       jetCoefficient D value a n + jetCoefficient D value b n := by
   simp only [jetCoefficient, iterate_add, map_add, add_div]
 
-/-- The normalized coefficients obey the usual Cauchy product below the
-characteristic boundary. -/
+/-- .
+ -/
 theorem jetCoefficient_product
     (D : Derivation K A A) (value : A →+* L) (a b : A) (n : ℕ)
     (hfactorial : ∀ i ≤ n, (i.factorial : L) ≠ 0) :
@@ -185,8 +185,8 @@ theorem jetPolynomial_add
   by_cases hj : j < bound <;>
     simp [jetPolynomial_coeff, jetCoefficient_add, hj]
 
-/-- Multiplicativity modulo the exact truncation ideal. This is the main
-nontrivial ring-homomorphism obligation for the finite Taylor map. -/
+/-- .
+ -/
 theorem X_pow_dvd_jetPolynomial_product_error
     (D : Derivation K A A) (value : A →+* L) (bound : ℕ) (a b : A)
     (hfactorial : ∀ j < bound, (j.factorial : L) ≠ 0) :
@@ -207,8 +207,8 @@ theorem X_pow_dvd_jetPolynomial_product_error
   have hk : ij.2 < bound := by omega
   rw [jetPolynomial_coeff, if_pos hi, jetPolynomial_coeff, if_pos hk]
 
-/-- The finite characteristic condition supplies all coefficient denominators;
-no factorial of size at least the characteristic is inverted. -/
+/-- .
+ -/
 theorem X_pow_dvd_jetPolynomial_product_error_of_char
     (D : Derivation K A A) (value : A →+* L) (p bound : ℕ) [CharP L p]
     (hbound : bound ≤ p) (a b : A) :

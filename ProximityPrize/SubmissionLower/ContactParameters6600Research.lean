@@ -1,17 +1,17 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
 
-/-!
-# Exact parameter certificate for the 66.00 residual-incidence candidate
+/-! .
 
-This module records the first integer score-66 cell.  It checks the sparse
-interpolation inequality, reconstructs the retained singular contribution
-from its geometric formula, and identifies the resulting stratified ledger
-with the independently proved residual-incidence arithmetic.
 
-There is no decoding claim in this file: it is the closed arithmetic front
-end consumed by the eventual geometric integration.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactParameters6600Research
 
@@ -37,9 +37,9 @@ def algebraicCap : ℕ := (2 * slopeCap - 1) * seedTotalCap
 def implicitWeightedCap : ℕ := (2 * slopeCap - 1) * weightedCap
 def implicitYCap : ℕ := (implicitWeightedCap - 1) / w
 
-/-- Number of monomials in the strict weighted interpolation box.  All
-subtractions are natural-number positive parts, exactly as in the production
-interpolation construction. -/
+/-- .
+
+ -/
 def coefficientCount : ℕ :=
   ∑ i ∈ range (seedTotalCap + 1),
     ∑ j ∈ range (slopeCap + 1),
@@ -48,7 +48,7 @@ def coefficientCount : ℕ :=
 
 def contactExponent (r : ℕ) : ℕ := min (r + 1) (multiplicity - r)
 
-/-- Exact rank of one translated order-`multiplicity` contact block. -/
+/-- . -/
 def localContactRank : ℕ :=
   ∑ r ∈ range multiplicity,
     (((slopeCap + 1) *
@@ -84,15 +84,15 @@ def liftedAgreement : DegreeVector :=
     w,
     2 * w * algebraicCap + 1⟩
 
-/-- Singular-branch numerator over one factor of `gap`, retained unchanged
-by the nested residual-incidence improvement to the regular branch. -/
+/-- .
+ -/
 def retainedSingularNumerator : ℕ :=
   gap * (algebraicCap + 2 * algebraicCap ^ 2 +
       mixed liftedSurface implicitCut liftedLast +
       (errors + 1) * mixed liftedSurface implicitCut unitZ) +
     (n - w) * mixed liftedSurface implicitCut liftedAgreement
 
-/-- The singular contribution uses the common `gap^2` denominator. -/
+/-- . -/
 def retainedSingularContribution : ℕ := gap * retainedSingularNumerator
 
 theorem parameter_values :

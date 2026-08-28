@@ -21,17 +21,17 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# The fiber of a ring homomorphism at a prime ideal
+/-! .
 
-## Main results
 
-* `Ideal.Fiber`: `p.Fiber S` is the fiber of a prime `p` of `R` in an `R`-algebra `S`,
-  defined to be `κ(p) ⊗ S`.
-* `PrimeSpectrum.preimageHomeomorphFiber` : We show that there is a homeomorphism between the
-  fiber of the induced map `PrimeSpectrum S → PrimeSpectrum R` at a prime ideal `p` and
-  the prime spectrum of `p.Fiber S`.
--/
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -70,19 +70,19 @@ lemma ResidueField.exists_smul_eq_tmul_one
     ← IsLocalRing.ResidueField.algebraMap_eq, ← algebraMap.coe_smul,
     ← IsScalarTower.algebraMap_apply] using congr(t • $e)
 
-/-- The fiber of a prime `p` of `R` in an `R`-algebra `S`, defined to be `κ(p) ⊗ S`.
+/-- .
 
-See `PrimeSpectrum.preimageHomeomorphFiber` for the homeomorphism between the spectrum of it
-and the actual set-theoretic fiber of `PrimeSpectrum S → PrimeSpectrum R` at `p`. -/
+
+ -/
 abbrev Fiber (p : Ideal R) [p.IsPrime] (S : Type*) [AddCommGroup S] [Module R S] : Type _ :=
   p.ResidueField ⊗[R] S
 
 instance (q : Ideal (p.Fiber S)) [q.IsPrime] : q.LiesOver p :=
   .trans _ (⊥ : Ideal p.ResidueField) _
 
-/-- If `q` is a prime ideal of `p.Fiber S`,  then the localization `(p.Fiber S)_q` is an algebra
-over the localization `R_p` since `p.Fiber S` is already an `R_p`-algebra. This `R_p`-algebra
-structure on `(p.Fiber S)_q` agrees with the one coming from the fact that `q` lies over `p`. -/
+/-- .
+
+ -/
 instance (q : Ideal (p.Fiber S)) [q.IsPrime] : Localization.AtPrime.IsLiesOverAlgebra p q where
   algebraMap_eq := (Localization.localRingHom_unique p q _ (Ideal.over_def q p) fun _ ↦ rfl).symm
 
@@ -92,7 +92,7 @@ lemma Fiber.exists_smul_eq_one_tmul (x : p.Fiber S) : ∃ r ∉ p, ∃ s, r • 
   refine ⟨r, hr, s, by simpa using congr((Algebra.TensorProduct.comm _ _ _).symm $e)⟩
 
 attribute [local instance] Algebra.TensorProduct.rightAlgebra in
-/-- `p.Fiber S` is isomorphic to the quotient `Sₚ ⧸ pSₚ`. -/
+/-- . -/
 noncomputable def Fiber.algEquivQuotient :
     letI Rp := Localization p.primeCompl
     letI pRp := IsLocalRing.maximalIdeal Rp
@@ -107,7 +107,7 @@ noncomputable def Fiber.algEquivQuotient :
         simp [Localization.tensorLeftAlgEquiv_apply_one_tmul p.primeCompl])
       commutes' := by simp }
 
-/-- `p.Fiber S` is isomorphic to the quotient `Sₚ ⧸ pSₚ`. -/
+/-- . -/
 noncomputable def Fiber.algEquivAux₁ :
     letI Sp := Localization (algebraMapSubmonoid S p.primeCompl)
     letI pS := p.map (algebraMap R S)
@@ -118,7 +118,7 @@ noncomputable def Fiber.algEquivAux₁ :
     rw [← Localization.AtPrime.map_eq_maximalIdeal, map_map, ← IsScalarTower.algebraMap_eq,
       IsScalarTower.algebraMap_eq R S, ← map_map]
 
-/-- The localization of the fiber `p.Fiber S` is isomorphic to a quotient of a localization. -/
+/-- . -/
 noncomputable def Fiber.algEquivAux₂ (q : Ideal (p.Fiber S)) [q.IsPrime] :
     letI r := q.comap includeRight
     letI Sr := Localization.AtPrime r
@@ -144,7 +144,7 @@ noncomputable def Fiber.algEquivAux₂ (q : Ideal (p.Fiber S)) [q.IsPrime] :
     ((IsLocalization.algEquiv (algebraMapSubmonoid SpS r.primeCompl) (Localization.AtPrime q')
       (Sr ⧸ pS.map (algebraMap S Sr))).restrictScalars R)
 
-/-- The localization of the fiber `p.Fiber S` is isomorphic to a quotient of a localization. -/
+/-- . -/
 noncomputable def Fiber.localizationAlgEquivQuotient (q : Ideal (p.Fiber S)) [q.IsPrime]
     [Algebra (Localization.AtPrime p) (Localization.AtPrime (q.comap includeRight))]
     [Localization.AtPrime.IsLiesOverAlgebra p (q.comap includeRight)] :
@@ -160,8 +160,8 @@ end Ideal
 
 set_option backward.isDefEq.respectTransparency false in
 variable (R S) in
-/-- The fiber `PrimeSpectrum S → PrimeSpectrum R` at a prime ideal
-`p : PrimeSpectrum R` is in bijection with the prime spectrum of `κ(p) ⊗[R] S`. -/
+/-- .
+ -/
 @[simps]
 noncomputable def PrimeSpectrum.preimageEquivFiber (p : PrimeSpectrum R) :
     comap (algebraMap R S) ⁻¹' {p} ≃ PrimeSpectrum (p.asIdeal.Fiber S) where
@@ -176,7 +176,7 @@ noncomputable def PrimeSpectrum.preimageEquivFiber (p : PrimeSpectrum R) :
   right_inv q := by
     ext x
     obtain ⟨r, hr, s, e⟩ := Ideal.Fiber.exists_smul_eq_one_tmul _ x
-    have := @PrimeSpectrum.isPrime -- times out if removed
+    have := @PrimeSpectrum.isPrime --
     rw [← Ideal.IsPrime.mul_mem_left_iff (x := algebraMap _ _ r), iff_comm,
       ← Ideal.IsPrime.mul_mem_left_iff (x := algebraMap _ _ r), ← Algebra.smul_def, e]
     · simp
@@ -187,8 +187,8 @@ noncomputable def PrimeSpectrum.preimageEquivFiber (p : PrimeSpectrum R) :
         -Ideal.ResidueField.map_algebraMap]
 
 variable (R S) in
-/-- The `OrderIso` between the fiber of `PrimeSpectrum S → PrimeSpectrum R` at a prime
-ideal `p : PrimeSpectrum R` and the prime spectrum of `κ(p) ⊗[R] S`. -/
+/-- .
+ -/
 @[simps!]
 noncomputable def PrimeSpectrum.preimageOrderIsoFiber (p : PrimeSpectrum R) :
     comap (algebraMap R S) ⁻¹' {p} ≃o PrimeSpectrum (p.asIdeal.Fiber S) where
@@ -210,8 +210,8 @@ noncomputable def PrimeSpectrum.preimageOrderIsoFiber (p : PrimeSpectrum R) :
 alias PrimeSpectrum.preimageOrderIsoTensorResidueField := PrimeSpectrum.preimageOrderIsoFiber
 
 variable (R S) in
-/-- The `OrderIso` between the set of primes lying over a prime ideal `p : Ideal R`,
-and the prime spectrum of `κ(p) ⊗[R] S`. -/
+/-- .
+ -/
 @[simps!]
 noncomputable def PrimeSpectrum.primesOverOrderIsoFiber (R S : Type*) [CommRing R]
     [CommRing S] [Algebra R S] (p : Ideal R) [p.IsPrime] :
@@ -220,8 +220,8 @@ noncomputable def PrimeSpectrum.primesOverOrderIsoFiber (R S : Type*) [CommRing 
     fun q ↦ ⟨q.1.asIdeal, ⟨q.1.2, ⟨congr($(q.2).1).symm⟩⟩⟩, fun _ ↦ rfl, fun _ ↦ rfl⟩, .rfl⟩
     (PrimeSpectrum.preimageOrderIsoFiber R S ⟨p, ‹_›⟩)
 
-/-- The `Homeomorph` between the fiber of `PrimeSpectrum S → PrimeSpectrum R`
-at a prime ideal `p : PrimeSpectrum R` and the prime spectrum of `κ(p) ⊗[R] S`. -/
+/-- .
+ -/
 @[simps!]
 noncomputable def PrimeSpectrum.preimageHomeomorphFiber (R S : Type*) [CommRing R]
     [CommRing S] [Algebra R S] (p : PrimeSpectrum R) :

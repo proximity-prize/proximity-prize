@@ -2,20 +2,20 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactDifferentialRing
 
 
-/-!
-# Actual unnormalized contact-Taylor numerators
+/-! .
 
-Model label: gpt-5.
 
-This module defines polynomial numerators before any factorial normalization.
-Their images in the actual contact quotient represent iterated derivatives
-of Y with denominator H^(2b), implemented by its actual inverse coordinate U.
-The recurrence does not assume a field of fractions or a nonzero quotient.
 
-The separated Y,R,Z degree bounds include the derivative-zero boundary
-cases. Geometric counting is a distinct obligation; no alignment or
-competition claim is made here.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactTaylorNumerators
 
@@ -48,8 +48,8 @@ theorem derivation_inverse_power
       simp only [Nat.cast_succ, pow_succ]
       ring
 
-/-- Denominator clearing in a genuine commutative differential ring.
-Only h*u=1 is used; this does not cancel a possibly zero divisor. -/
+/-- .
+ -/
 theorem differentiated_fraction_step
     (D : Derivation K A A) (n : ℕ) (m mx my mr r g h hx hy hr u : A)
     (hHU : h * u = 1)
@@ -155,7 +155,7 @@ theorem contactDerivation_inverseCoordinate (F : Poly4 K) :
   simp only [map_neg, map_mul, map_pow, map_add, polyImage_apply,
     inverseCoordinate, liftFour, MvPolynomial.rename_X, castSucc_two]
 
-/-- The exact polynomial recurrence, before normalization by b!. -/
+/-- . -/
 def numeratorStep (F : Poly4 K) (b : ℕ) (M : Poly4 K) : Poly4 K :=
   clearedStep (2 * b) M
     (MvPolynomial.pderiv (0 : Fin 4) M)
@@ -176,8 +176,8 @@ def numerator (F : Poly4 K) : ℕ → Poly4 K
 @[simp] theorem numerator_succ (F : Poly4 K) (b : ℕ) :
     numerator K F (b + 1) = numeratorStep K F b (numerator K F b) := rfl
 
-/-- Actual iterated derivatives in the actual contact quotient. The inverse
-coordinate is supplied by the relation H*U=1, not by an assumed fraction field. -/
+/-- .
+ -/
 theorem iterate_Y_eq_numerator (F : Poly4 K) (b : ℕ) :
     (contactDerivation K F)^[b] (polyImage K F (MvPolynomial.X (1 : Fin 4))) =
       polyImage K F (numerator K F b) * inverseCoordinate K F ^ (2 * b) := by
@@ -226,7 +226,7 @@ theorem pderiv_same_degree_bound (i : Fin 4) (P : Poly4 K) (a : ℕ)
   simp only [Finsupp.add_apply, Finsupp.single_eq_same] at hh
   omega
 
-/-- This zero case is essential when natural degree subtraction truncates. -/
+/-- . -/
 theorem pderiv_eq_zero_of_degree_bound_zero (i : Fin 4) (P : Poly4 K)
     (hP : P.degreeOf i ≤ 0) : MvPolynomial.pderiv i P = 0 := by
   ext d
@@ -274,8 +274,8 @@ theorem polyG_degree_bound (i : Fin 4) (F : Poly4 K) (a r : ℕ)
   · have hh := degree_mul_bound i hR (pderiv_degree_bound (1 : Fin 4) i F a hF)
     simpa only [Nat.add_comm] using hh
 
-/-- Coordinates other than R acquire at most two copies of the seed degree
-of F at each recurrence step. -/
+/-- .
+ -/
 theorem numeratorStep_nonR_degree_bound
     (i : Fin 4) (hi : i ≠ 2) (F M : Poly4 K) (b a c : ℕ)
     (hF : F.degreeOf i ≤ c) (hM : M.degreeOf i ≤ a) :
@@ -328,8 +328,8 @@ theorem numeratorStep_nonR_degree_bound
           G * MvPolynomial.pderiv (2 : Fin 4) H)).degreeOf i ≤ a + 2 * c
   exact degree_sub_bound i (degree_add_bound i (degree_add_bound i h1 h2) h3) h4
 
-/-- The sharp R increment is 2s-1, including s=1 and a=0. Those cases
-require actual derivative vanishing, not clipped degree arithmetic. -/
+/-- .
+ -/
 theorem numeratorStep_R_degree_bound
     (F M : Poly4 K) (b a s : ℕ) (hs : 1 ≤ s)
     (hF : F.degreeOf (2 : Fin 4) ≤ s) (hM : M.degreeOf (2 : Fin 4) ≤ a) :
@@ -422,9 +422,9 @@ theorem numerator_R_degree_bound
         (b * (2 * s - 1)) s hs hF ih
       simpa only [Nat.add_mul, Nat.one_mul] using hh
 
-/-- The exact separated tridegree bounds used by the mixed-intersection
-ledger. They are bounds for actual recurrence polynomials, not declarations
-of formal degree labels. -/
+/-- .
+
+ -/
 theorem numerator_degree_bounds
     (F : Poly4 K) (ell s L : ℕ) (hs : 1 ≤ s)
     (hY : F.degreeOf (1 : Fin 4) ≤ ell)
@@ -445,9 +445,9 @@ section AgreementNumerators
 
 variable {K : Type*} [Field K]
 
-/-- One Taylor term put over the common denominator H^(2w).
-The scalar c_j is arbitrary here; choosing c_j=(j!)⁻¹ is a separate
-normalization step. -/
+/-- .
+
+ -/
 def commonNumeratorTerm (F : Poly4 K) (w : ℕ) (c : ℕ → K) (x : K) (j : ℕ) :
     Poly4 K :=
   MvPolynomial.C (c j) * numerator K F j *
@@ -460,7 +460,7 @@ def clearedTaylorNumerator (F : Poly4 K) (w : ℕ) (c : ℕ → K) (x : K) : Pol
 def affineSeedPolynomial (u₀ u₁ : K) : Poly4 K :=
   MvPolynomial.C u₀ + MvPolynomial.X (3 : Fin 4) * MvPolynomial.C u₁
 
-/-- The actual common-denominator agreement polynomial at one domain node. -/
+/-- . -/
 def agreementNumerator (F : Poly4 K) (w : ℕ) (c : ℕ → K) (x u₀ u₁ : K) :
     Poly4 K :=
   clearedTaylorNumerator F w c x - affineSeedPolynomial u₀ u₁ * polyH K F ^ (2 * w)
@@ -559,8 +559,8 @@ theorem affineSeedPolynomial_degree_bound (i : Fin 4) (cap : ℕ)
       simp only [MvPolynomial.degreeOf_C, le_refl]
     simpa only [Nat.add_zero] using degree_mul_bound i hZ hC
 
-/-- Exact bounds for the concrete common-denominator agreement polynomial.
-These hold for arbitrary scalar Taylor weights, not only inverse factorials. -/
+/-- .
+ -/
 theorem agreementNumerator_degree_bounds
     (F : Poly4 K) (ell s L : ℕ) (hs : 1 ≤ s)
     (hY : F.degreeOf (1 : Fin 4) ≤ ell)

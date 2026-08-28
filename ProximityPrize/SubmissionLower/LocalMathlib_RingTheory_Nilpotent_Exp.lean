@@ -25,30 +25,30 @@ under the broader trusted-target import. No mathematical declaration,
 hypothesis, or proof step is removed. The final commands report kernel axioms.
 -/
 
-/-!
-# Exponential map on algebras
+/-! .
 
-This file defines the exponential map `IsNilpotent.exp` on `ℚ`-algebras. The definition of
-`IsNilpotent.exp a` applies to any element `a` in an algebra over `ℚ`, though it yields meaningful
-(non-junk) values only when `a` is nilpotent.
 
-The main result is `IsNilpotent.exp_add_of_commute`, which establishes the expected connection
-between the additive and multiplicative structures of `A` for commuting nilpotent elements.
 
-Additionally, `IsNilpotent.isUnit_exp` shows that if `a` is nilpotent in `A`, then
-`IsNilpotent.exp a` is a unit in `A`.
 
-Note: Although the definition works with `ℚ`-algebras, the results can be applied to any algebra
-over a characteristic zero field.
 
-## Main definitions
 
-  * `IsNilpotent.exp`
 
-## Tags
 
-algebra, exponential map, nilpotent
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -59,8 +59,8 @@ variable {A : Type*} [Ring A] [Module ℚ A]
 open Finset
 open scoped Nat
 
-/-- The exponential map on algebras, defined in analogy with the usual exponential series.
-It provides meaningful (non-junk) values for nilpotent elements. -/
+/-- .
+ -/
 noncomputable def exp (a : A) : A :=
   ∑ i ∈ range (nilpotencyClass a), (i.factorial : ℚ)⁻¹ • (a ^ i)
 
@@ -208,7 +208,7 @@ theorem exp_smul {G : Type*} [Monoid G] [MulSemiringAction G A]
     exp (g • a) = g • exp a :=
   (map_exp ha (MulSemiringAction.toRingHom G A g)).symm
 
-set_option linter.flexible false in -- TODO: fix non-terminal simp
+set_option linter.flexible false in --
 theorem isNilpotent_exp_sub_one {a : A} (ha : IsNilpotent a) : IsNilpotent (exp a - 1) := by
   nontriviality A
   rw [exp, ← Nat.sub_add_cancel (pos_nilpotencyClass_iff.2 ha), Finset.sum_range_succ']

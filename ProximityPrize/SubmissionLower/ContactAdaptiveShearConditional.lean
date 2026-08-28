@@ -8,23 +8,23 @@ import ProximityPrize.SubmissionLower.SeparableShearFieldResearch
 import ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch
 import ProximityPrize.SubmissionLower.ContactConstantSeedCoordinateResearch
 
-/-!
-# Conditional downstream adapter for the adaptive R/Z shear
+/-! .
 
-Research module, deliberately kept off the green submission chain.
 
-On a component whose R projection is separable, the old coordinate box is
-used.  On a component whose R projection is inseparable, the intended field
-lemma replaces R by S = R + Z.  Charging both the new S degree and the extra
-Z support against the original degrees costs at most
-`2 * capR * degreeZ`.  The definitions below encode that charge exactly and
-thread a single, sharply typed fibre certificate through the existing
-per-prime and proper-cut incidence arguments.
 
-No separability assumption remains downstream of the certificate.  The only
-geometric inputs retained are finite-dimensionality of transcendental
-coordinate projections and the usual summed full-degree budgets.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveShearConditional
 
@@ -63,32 +63,32 @@ private def adaptiveFamilyFiniteSummary {I : Type} [Fintype I]
   (∀ i, FiniteDimensional (RatFunc Ω) (CoordinateField Ω (Q i))) ∧
     (∑ i, Module.finrank (RatFunc Ω) (CoordinateField Ω (Q i))) ≤ B
 
-/-- Effective original-coordinate box after the conservative adaptive-shear
-charge.  Only the Z weight changes, by twice the original R weight. -/
+/-- .
+ -/
 def adaptiveShearCap (cap : Fin 3 → ℕ) : Fin 3 → ℕ :=
   ![cap 0, cap 1, cap 2 + 2 * cap 1]
 
-/-- Literal support cap after substituting `R = S - Z`.  The second copy of
-the R/Z penalty enters only when `degree(S)` is bounded by `degree(R)+degree(Z)`. -/
+/-- .
+ -/
 def shearedPolynomialCap (cap : Fin 3 → ℕ) : Fin 3 → ℕ :=
   ![cap 0, cap 1, cap 2 + cap 1]
 
-/-- Component cost paid by the adaptive shear. -/
+/-- . -/
 def adaptiveShearCost (cap : Fin 3 → ℕ) : ℕ :=
   componentCost P (adaptiveShearCap cap)
 
-/-- The effective-box definition is exactly the old cost plus
-`2 * capR * degreeZ`; there is no further hidden component penalty. -/
+/-- .
+ -/
 theorem adaptiveShearCost_eq (cap : Fin 3 → ℕ) :
     adaptiveShearCost P cap = componentCost P cap +
       2 * cap 1 * actualCoordinateDegree Ω P 2 := by
   simp [adaptiveShearCost, adaptiveShearCap, componentCost, Fin.sum_univ_three]
   ring
 
-/-- The sole point-counting seam needed by the downstream adapter.  A proof
-may use the old zero count on R-separable components and the sheared
-coordinate zero count on R-inseparable components, but callers see only the
-resulting exact cardinality bound. -/
+/-- .
+
+
+ -/
 def AdaptiveShearFiberCertificate
     (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K)
     (Γ : Finset K) (w : ℕ) (cap : Fin 3 → ℕ) : Prop :=
@@ -97,16 +97,16 @@ def AdaptiveShearFiberCertificate
       (Γ.filter (fun γ ↦ (selected γ).eval x = u₀ + γ * u₁)).card ≤
         adaptiveShearCost P cap
 
-/-- Component degree vector for one *global* triangular shear.  The middle
-entry is the actual degree of `S = R + λ Z`; Y and Z retain their original
-degrees.  Unlike `adaptiveShearCost`, this definition does not impose a
-componentwise triangle inequality. -/
+/-- .
+
+
+ -/
 def globalShearDegree (dS : ℕ) : Fin 3 → ℕ :=
   ![actualCoordinateDegree Ω P 0, dS, actualCoordinateDegree Ω P 2]
 
-/-- Exact sheared-box cost on one component.  Its family sum can be bounded
-from a single summed S-degree estimate, which is the accounting advantage of
-choosing one common shear parameter for the whole component family. -/
+/-- .
+
+ -/
 def globalShearCost (dS : ℕ) (cap : Fin 3 → ℕ) : ℕ :=
   ∑ i, shearedPolynomialCap cap i * globalShearDegree P dS i
 
@@ -117,10 +117,10 @@ theorem globalShearCost_eq (dS : ℕ) (cap : Fin 3 → ℕ) :
   simp [globalShearCost, globalShearDegree, shearedPolynomialCap,
     Fin.sum_univ_three]
 
-/-- Sharply typed point-count seam for a common global shear.  Geometry must
-provide the component's S degree and the sheared zero count (or directly pay
-a singleton constant-Z component); downstream incidence sees no separability
-or coordinate-change details. -/
+/-- .
+
+
+ -/
 def GlobalShearFiberCertificate
     (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K)
     (Γ : Finset K) (w dS : ℕ) (cap : Fin 3 → ℕ) : Prop :=
@@ -129,8 +129,8 @@ def GlobalShearFiberCertificate
       (Γ.filter (fun γ ↦ (selected γ).eval x = u₀ + γ * u₁)).card ≤
         globalShearCost P dS cap
 
-/-- A singleton component needs no zero-count theorem: positivity of the
-chosen sheared cost pays every proper-node fibre directly. -/
+/-- .
+ -/
 theorem globalShearFiberCertificate_of_card_le_one
     (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K)
     (Γ : Finset K) (w dS : ℕ) (cap : Fin 3 → ℕ)
@@ -140,9 +140,9 @@ theorem globalShearFiberCertificate_of_card_le_one
   exact (Finset.card_le_card (Finset.filter_subset _ _)).trans
     (hcard.trans hcost)
 
-/-- Concrete constant-Z branch: the green selected-seed-coordinate lemma
-reduces it to the single honest obligation that the assigned family cost is
-positive. -/
+/-- .
+
+ -/
 theorem globalShearFiberCertificate_of_seedCoordinate_isAlgebraic
     (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K)
     (Γ : Finset K) (w dS : ℕ) (cap : Fin 3 → ℕ)
@@ -156,8 +156,8 @@ theorem globalShearFiberCertificate_of_seedCoordinate_isAlgebraic
       φ P selected Γ hpoint hZ
   · exact hcost
 
-/-- Finite-dimensionality, not separability, is enough to know that a
-transcendental coordinate has positive actual degree. -/
+/-- .
+ -/
 theorem coordinateDegree_pos_of_transcendental_finite
     (hfinite : ProjectionsFinite Ω P) (j : Fin 3)
     (hj : Transcendental Ω (coordinate Ω P j)) :
@@ -168,8 +168,8 @@ theorem coordinateDegree_pos_of_transcendental_finite
   rw [actualCoordinateDegree_of_transcendental Ω P j hj]
   exact Module.finrank_pos
 
-/-- Canonical rational-function embedding attached to an arbitrary
-transcendental element, used for the non-coordinate parameter `S = R + Z`. -/
+/-- .
+ -/
 abbrev rationalElementEmbedding
     (k L : Type*) [Field k] [Field L] [Algebra k L]
     (s : L) (hs : Transcendental k s) : RatFunc k →ₐ[k] L :=
@@ -182,9 +182,9 @@ theorem rationalElementEmbedding_variable
         (algebraMap (Polynomial k) (RatFunc k) Polynomial.X) = s := by
   exact elementEmbedding_variable k L s hs
 
-/-- Concrete instantiation of the compiled Kähler shear theorem in an
-actual prime-component coordinate field.  In particular, separability of S
-is no longer part of the downstream certificate. -/
+/-- .
+
+ -/
 theorem actual_shear_isSeparable
     (hR : Transcendental Ω (coordinate Ω P 1))
     (hZ : Transcendental Ω (coordinate Ω P 2))
@@ -217,9 +217,9 @@ theorem actual_shear_isSeparable
     rationalBaseEmbedding_polynomial, rationalBaseEmbedding_polynomial,
     Polynomial.aeval_X, Polynomial.aeval_X]
 
-/-- The remaining projection-level certificate after the Kähler theorem.
-It contains only transcendence, finite-dimensionality, and the degree
-triangle for the sheared parameter; separability of S is derived. -/
+/-- .
+
+ -/
 def BadRShearCoordinateCertificate (hfinite : ProjectionsFinite Ω P) : Prop :=
   ∀ (hR : Transcendental Ω (coordinate Ω P 1))
     (hZ : Transcendental Ω (coordinate Ω P 2)),
@@ -236,15 +236,15 @@ def BadRShearCoordinateCertificate (hfinite : ProjectionsFinite Ω P) : Prop :=
       Module.finrank (RatFunc Ω) (CoordinateField Ω P) ≤
         actualCoordinateDegree Ω P 1 + actualCoordinateDegree Ω P 2
 
-/-- The sheared generators in the original coordinate ring.  Working in the
-same ring avoids any need to transport prime ideals or affine points. -/
+/-- .
+ -/
 def shearedRingCoordinates : Fin 3 → CoordinateRing Ω P :=
   ![quotientCoordinate Ω P 0,
     quotientCoordinate Ω P 1 + quotientCoordinate Ω P 2,
     quotientCoordinate Ω P 2]
 
-/-- Pure triangular polynomial-transport statement.  It records only the
-substitution identity in the quotient ring and its support cap. -/
+/-- .
+ -/
 def ShearedPolynomialTransport
     (A : MvPolynomial (Fin 3) Ω) (cap : Fin 3 → ℕ) : Prop :=
   ∃ B : MvPolynomial (Fin 3) Ω,
@@ -252,16 +252,16 @@ def ShearedPolynomialTransport
       MvPolynomial.eval₂Hom (algebraMap Ω (CoordinateRing Ω P))
         (shearedRingCoordinates P) B = Ideal.Quotient.mk P A
 
-/-- Agreement-polynomial specialization of the purely algebraic transport
-certificate.  No field, point-count, or separability claim is included. -/
+/-- .
+ -/
 def ShearedAgreementTransportCertificate
     (F : MvPolynomial (Fin 4) K) (w : ℕ) (cap : Fin 3 → ℕ) : Prop :=
   ∀ (x u₀ u₁ : K),
     (∀ i, (agreementPolynomial φ F w x u₀ u₁).degreeOf i ≤ cap i) →
       ShearedPolynomialTransport P (agreementPolynomial φ F w x u₀ u₁) cap
 
-/-- One ordinary actual coordinate packaged for the box theorem, requiring
-separability only for this coordinate when it is transcendental. -/
+/-- .
+ -/
 def actualCoordinateDataAt
     (hfinite : ProjectionsFinite Ω P) (i : Fin 3)
     (hsep : ∀ hi : Transcendental Ω (coordinate Ω P i),
@@ -302,8 +302,8 @@ theorem actualCoordinateDataAt_degree
   unfold actualCoordinateDataAt actualCoordinateDegree
   split_ifs <;> rfl
 
-/-- The actual S coordinate after the Kähler theorem has supplied its
-separability. -/
+/-- .
+ -/
 def shearCoordinateData
     (hS : Transcendental Ω (coordinate Ω P 1 + coordinate Ω P 2))
     (hfiniteS :
@@ -357,9 +357,9 @@ theorem sheared_degree_cost_le_adaptive
 variable {ι : Type*}
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- Per-prime sharp incidence after replacing the separable zero-count call
-by the adaptive-shear fibre certificate.  The large-identity branch needs
-only finite-dimensionality of the Z projection. -/
+/-- .
+
+ -/
 theorem prime_seed_incidence_sharp_adaptive_shear
     (hfinite : ProjectionsFinite Ω P)
     (hnonpoint : ∀ v : Fin 3 → Ω,
@@ -434,10 +434,10 @@ theorem prime_seed_incidence_sharp_adaptive_shear
             Nat.mul_le_mul_left ((e + 1) * (a - w)) hδ
     omega
 
-/-- Per-prime incidence with the exact component degree of a common global
-shear.  This is deliberately independent of any componentwise comparison
-between `degree(S)` and the old R/Z degrees; only the later family sum needs
-such a comparison. -/
+/-- .
+
+
+ -/
 theorem prime_seed_incidence_sharp_global_shear
     (hfinite : ProjectionsFinite Ω P)
     (hnonpoint : ∀ v : Fin 3 → Ω,
@@ -513,9 +513,9 @@ theorem prime_seed_incidence_sharp_global_shear
             Nat.mul_le_mul_left ((e + 1) * (a - w)) hδ
     omega
 
-/-- Characteristic-free coordinate-family adapter.  The proper pair of
-equations supplies finite-dimensionality for every transcendental projection
-and bounds the sum of the full (possibly inseparable) coordinate degrees. -/
+/-- .
+
+ -/
 theorem family_finite_and_sum_actualCoordinateDegree_at_le
     {I : Type} [Fintype I]
     (Q : I → Ideal (MvPolynomial (Fin 3) Ω)) [∀ i, (Q i).IsPrime]
@@ -562,8 +562,8 @@ theorem family_finite_and_sum_actualCoordinateDegree_at_le
       _ ≤ coordinateMixedDegree Ω G T j := by
         exact hresult.2
 
-/-- Apply the preceding characteristic-free family theorem to the actual
-regular minimal-prime cover. -/
+/-- .
+ -/
 theorem regularComponents_finite_and_degree_budget_charfree
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hproper : ¬ G ∣ T) :
@@ -587,10 +587,10 @@ theorem regularComponents_finite_and_degree_budget_charfree
   · intro i
     exact (hfamily i).2
 
-/-- Downstream aggregation for one common shear parameter.  The crucial
-input is one *family* estimate `Σ degree(S) ≤ budgetR + budgetZ`; no
-componentwise degree triangle is assumed.  The exact resulting box is the
-old box with the conservative `2 * capR` addition to its Z weight. -/
+/-- .
+
+
+ -/
 theorem proper_cut_seed_bound_of_global_shear_sum
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F) (hproper : ¬ G ∣ T)
@@ -706,10 +706,10 @@ theorem proper_cut_seed_bound_of_global_shear_sum
   rw [hcost] at haggregate
   simpa only [shearBudget_two] using haggregate
 
-/-- Proper-cut aggregation of the adaptive per-prime bound.  The provider
-is indexed by the actual regular component and its actual component seed
-set, preventing an accidental mismatch between the field certificate and
-the fibre being counted. -/
+/-- .
+
+
+ -/
 theorem proper_cut_seed_bound_of_projection_sum_adaptive_shear
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F) (hproper : ¬ G ∣ T)
@@ -780,9 +780,9 @@ theorem proper_cut_seed_bound_of_projection_sum_adaptive_shear
     hGpoint hTpoint hHp (a - w) (nodes.card - w) (e + 1)
     (adaptiveShearCap cap) budget degree hcomponent hbudget
 
-/-- Complete characteristic-free proper-cut adapter.  After the fibre
-certificate, all finite-projection and full-degree-sum obligations are
-derived from the actual proper equations. -/
+/-- .
+
+ -/
 theorem proper_cut_seed_bound_adaptive_shear
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F) (hproper : ¬ G ∣ T)

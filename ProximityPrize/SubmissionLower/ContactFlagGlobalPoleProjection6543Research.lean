@@ -1,16 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagExactSeparableProjection6543Research
 
-/-!
-# All-place pole identities for the nested 65.43 flag projections
+/-! .
 
-`NestedFlagProjectionData` chooses common coefficients by avoiding
-cancellation on the finite union of coordinate pole places.  This file
-extends the resulting valuation equalities to pole-order identities at every
-normalized place.  Outside the finite union all three coordinate pole orders
-vanish; the nonarchimedean triangle inequality then forces both nested affine
-projections to have pole order zero as well.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research
 
@@ -30,7 +30,7 @@ noncomputable section
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
 
-/-- Taking the nonnegative logarithm commutes with a valuation maximum. -/
+/-- . -/
 theorem poleOrder_eq_max_of_valuation_eq_max
     {L : Type*} [Field L]
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x y z : L)
@@ -52,8 +52,8 @@ theorem poleOrder_eq_max_of_valuation_eq_max
     rw [max_eq_left
       (max_le_max_left 0 ((WithZero.log_le_log hz hy).2 hzy))]
 
-/-- Vanishing nonnegative pole order is equivalent to lying in the finite
-valuation chart in the direction needed below. -/
+/-- .
+ -/
 theorem valuation_le_one_of_poleOrder_eq_zero
     {L : Type*} [Field L]
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : L)
@@ -81,8 +81,8 @@ variable
     {hproj : ∀ C : RegularComponent Omega G T H,
       ProjectionsFiniteSeparable Omega C.1}
 
-/-- The first common projection realizes the `(Y,Z)` pole maximum at every
-place, not only at the finite set used during coefficient avoidance. -/
+/-- .
+ -/
 theorem nested_u_pole
     (D : NestedFlagProjectionData hseparator hproj)
     (C : RegularComponent Omega G T H)
@@ -117,8 +117,8 @@ theorem nested_u_pole
     rw [hU, hY, hZ]
     simp
 
-/-- The second common projection realizes the full `(S,Y,Z)` pole maximum
-at every place. -/
+/-- .
+ -/
 theorem nested_v_pole
     (D : NestedFlagProjectionData hseparator hproj)
     (C : RegularComponent Omega G T H)
@@ -169,8 +169,8 @@ theorem nested_v_pole
     rw [hV, hS, hY, hZ]
     simp
 
-/-- The nested second projection, rewritten in the affine family coordinates,
-is transcendental on every component. -/
+/-- .
+ -/
 theorem hAffineV
     (D : NestedFlagProjectionData hseparator hproj)
     (C : RegularComponent Omega G T H) :
@@ -178,9 +178,9 @@ theorem hAffineV
   rw [← nestedV_eq_affineV D C]
   exact D.hV C
 
-/-- The two presentations induce literally the same rational-function
-embedding, so dependent algebraic properties can be transported without an
-extra geometric argument. -/
+/-- .
+
+ -/
 theorem elementEmbedding_affineV_eq_nested
     (D : NestedFlagProjectionData hseparator hproj)
     (C : RegularComponent Omega G T H) :
@@ -201,7 +201,7 @@ theorem elementEmbedding_affineV_eq_nested
   rw [elementEmbedding_variable, elementEmbedding_variable]
   exact (nestedV_eq_affineV D C).symm
 
-/-- Finiteness transport from the nested presentation to `affineV`. -/
+/-- . -/
 theorem finiteAffineV
     (D : NestedFlagProjectionData hseparator hproj)
     (C : RegularComponent Omega G T H) :
@@ -213,7 +213,7 @@ theorem finiteAffineV
   rw [elementEmbedding_affineV_eq_nested D C]
   exact D.finiteV C
 
-/-- Separability transport from the nested presentation to `affineV`. -/
+/-- . -/
 theorem separableAffineV
     (D : NestedFlagProjectionData hseparator hproj)
     (C : RegularComponent Omega G T H) :

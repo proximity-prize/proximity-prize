@@ -2,13 +2,13 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6656Research
 import ProximityPrize.SubmissionLower.ContactSingularBranchParameterizedResearch
 
-/-!
-# Unconditional singular provider at the score-66.56 fixed meet
+/-! .
 
-The parameterized proper-cut singular theorem is instantiated at the final
-recursive-GCD meet.  Consequently the fixed-meet global family bound retains
-only the regular positive-`R` factor estimate as a local counting premise.
--/
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFixedMeetSingular6656Research
 
@@ -33,8 +33,8 @@ variable {K Iota : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- The tight implicit core at the fixed meet fits inside the retained
-singular contribution used by the robust fixed arithmetic. -/
+/-- .
+ -/
 theorem meet_tight_scaled_le_retained :
     meetTightProfile.tightNumerator * meetProfile.gap ≤
       meetProfile.retainedSingularContribution := by
@@ -48,9 +48,9 @@ theorem meet_tight_scaled_le_retained :
     Profile.liftedAgreement, Profile.unitZ, Profile.algebraicCap,
     Profile.implicitWeightedCap, Profile.implicitYCap, dot]
 
-/-- The actual singular union at the final meet at its natural one-`gap`
-scale.  This is the tight implicit-core-plus-exceptions output, before the
-legacy retained-singular padding is introduced. -/
+/-- .
+
+ -/
 theorem meet_singularSeeds_tight_gap_bound
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime6656]
@@ -94,10 +94,10 @@ theorem meet_singularSeeds_tight_gap_bound
       (by simpa [meetTightProfile, TightParameters.errors,
         Profile.errors] using hnoPencil)
 
-/-- Compatibility wrapper at the historical common-`gap²` scale.  Its last
-step is the deliberate weakening to `retainedSingularContribution`; callers
-which want the tight fixed cost should use
-`meet_singularSeeds_tight_gap_bound` instead. -/
+/-- .
+
+
+ -/
 theorem meet_singularSeeds_scaled_bound
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime6656]
@@ -131,9 +131,9 @@ theorem meet_singularSeeds_scaled_bound
         Nat.mul_le_mul_right meetTightProfile.gap hbase
   exact hscaled.trans meet_tight_scaled_le_retained
 
-/-- Fixed-meet selected-family count with `hregular` as its sole remaining
-local geometric counting input.  The cover, singular branch, finite sums, and
-fixed-cost arithmetic are all internal. -/
+/-- .
+
+ -/
 theorem meet_global_count_lt_fixedCost_of_regular_factors
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime6656]

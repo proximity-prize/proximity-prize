@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 
-/-!
-# Recursive GCD algebra for stacked contact interpolants
+/-! .
 
-This module packages only the commutative algebra needed before any
-`collectX`, localization, or geometric-component argument.  Quotients are
-chosen from divisibility rather than from Euclidean division, so the results
-apply to a multivariate UFD once its noncomputable normalized GCD structure is
-installed.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactRecursiveGCDResearch
 
@@ -18,10 +18,10 @@ section Quotients
 
 variable {A : Type*} [CommMonoidWithZero A] [GCDMonoid A]
 
-/-- The quotient of the left input by the chosen GCD. -/
+/-- . -/
 def leftGCDQuotient (a b : A) : A := Classical.choose (gcd_dvd_left a b)
 
-/-- The quotient of the right input by the chosen GCD. -/
+/-- . -/
 def rightGCDQuotient (a b : A) : A := Classical.choose (gcd_dvd_right a b)
 
 theorem left_eq_gcd_mul_leftGCDQuotient (a b : A) :
@@ -32,9 +32,9 @@ theorem right_eq_gcd_mul_rightGCDQuotient (a b : A) :
     b = gcd a b * rightGCDQuotient a b :=
   Classical.choose_spec (gcd_dvd_right a b)
 
-/-- Removing a full GCD leaves quotients with no common nonunit divisor.
-`IsRelPrime`, rather than Bezout `IsCoprime`, is the correct notion for a
-multivariate UFD. -/
+/-- .
+
+ -/
 theorem gcdQuotients_isRelPrime {a b : A} (ha : a ≠ 0) :
     IsRelPrime (leftGCDQuotient a b) (rightGCDQuotient a b) := by
   intro d hdleft hdright
@@ -116,9 +116,9 @@ section ThreeBranchCover
 variable {A B : Type*} [CommRing A] [GCDMonoid A]
 variable [CommRing B] [IsDomain B]
 
-/-- The algebraic disjoint three-branch cover used by the recursive stacked
-construction.  The input equations all vanish after applying `phi`; the
-target only needs to be a domain. -/
+/-- .
+
+ -/
 theorem recursive_three_branch_cover
     (phi : A →+* B) (a b c : A)
     (ha : phi a = 0) (hb : phi b = 0) (hc : phi c = 0) :

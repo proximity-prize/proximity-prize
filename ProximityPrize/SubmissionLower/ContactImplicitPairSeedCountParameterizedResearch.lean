@@ -1,13 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount
 
-/-!
-# Parameterized selected-seed count for one implicit pair
+/-! .
 
-This is the parameter-only retarget of `ContactImplicitPairSeedCount`.
-The geometric factor cover and proper-cut theorem are unchanged; all contact
-box and incidence parameters are explicit arguments.
--/
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactImplicitPairSeedCountParameterizedResearch
 
@@ -26,7 +26,7 @@ variable {ι : Type*}
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- One actual original implicit pair at arbitrary numerical contact caps. -/
+/-- . -/
 theorem implicit_pair_seed_bound
     (A G : MvPolynomial (Fin 4) K) (hG : Irreducible G)
     (hGR : G.degreeOf 2 = 1) (hproper : ¬ G ∣ A)

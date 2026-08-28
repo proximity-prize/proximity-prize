@@ -5,20 +5,20 @@ import ProximityPrize.SubmissionLower.ContactIdentityZeroSafePencilResearch
 import ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
 import ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
 
-/-!
-# Incidence bookkeeping for iterated actual-identity residualization
+/-! .
 
-The geometric residual transform sends every old agreement outside the
-chosen identity set to a residual agreement.  This file records the exact
-finite-set consequence and the arithmetic invariants needed if the
-transformed component acquires a further identity set.
 
-In particular, extracting identities in several rounds is lossless: after
-replacing the successive sets by their disjoint union, the agreement gap
-`a - w` and the node/degree difference `n - w` are unchanged.  Thus recursive
-re-stratification is a genuine fallback for the score-66 route, rather than
-an uncontrolled restart.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch
 
@@ -28,9 +28,9 @@ section FiniteAgreement
 
 variable {Node : Type*} [DecidableEq Node]
 
-/-- If all chosen identity nodes are old agreements and every remaining old
-agreement descends to a residual agreement, then deleting `I` loses exactly
-at most `I.card` agreements. -/
+/-- .
+
+ -/
 theorem residual_agreement_card
     (nodes I : Finset Node) (oldRelation residualRelation : Node → Prop)
     [DecidablePred oldRelation] [DecidablePred residualRelation]
@@ -55,9 +55,9 @@ theorem residual_agreement_card
     _ ≤ ((nodes \ I).filter residualRelation).card :=
       Finset.card_le_card hsub
 
-/-- Family-shaped form of `residual_agreement_card`.  It is the exact card
-premise passed from the polynomial residual-family theorem to an incidence
-caller. -/
+/-- .
+
+ -/
 theorem residual_family_agreement_card
     {Seed : Type*} (seeds : Finset Seed)
     (nodes I : Finset Node)
@@ -83,15 +83,15 @@ section IteratedSets
 
 variable {Node : Type*} [DecidableEq Node]
 
-/-- A second identity set chosen only among the nodes remaining after `I`
-is disjoint from `I`. -/
+/-- .
+ -/
 theorem disjoint_of_subset_sdiff
     (nodes I J : Finset Node) (hJ : J ⊆ nodes \ I) : Disjoint I J := by
   refine Finset.disjoint_left.mpr ?_
   intro i hiI hiJ
   exact (Finset.mem_sdiff.mp (hJ hiJ)).2 hiI
 
-/-- Successive deletion is deletion by the union. -/
+/-- . -/
 theorem sdiff_sdiff_eq_sdiff_union
     (nodes I J : Finset Node) :
     (nodes \ I) \ J = nodes \ (I ∪ J) := by
@@ -99,14 +99,14 @@ theorem sdiff_sdiff_eq_sdiff_union
   simp only [Finset.mem_sdiff, Finset.mem_union]
   tauto
 
-/-- Cardinalities of successive identity strata add exactly. -/
+/-- . -/
 theorem card_union_of_subset_sdiff
     (nodes I J : Finset Node) (hJ : J ⊆ nodes \ I) :
     (I ∪ J).card = I.card + J.card := by
   rw [Finset.card_union_of_disjoint (disjoint_of_subset_sdiff nodes I J hJ)]
 
-/-- Subtracting the two strata successively is the same as subtracting their
-union once. -/
+/-- .
+ -/
 theorem sub_cards_eq_sub_union_card
     (q : ℕ) (nodes I J : Finset Node) (hJ : J ⊆ nodes \ I) :
     (q - I.card) - J.card = q - (I ∪ J).card := by
@@ -116,21 +116,21 @@ end IteratedSets
 
 section Arithmetic
 
-/-- Removing the same number of identities from agreements and degree
-preserves the decoding gap. -/
+/-- .
+ -/
 theorem residual_gap_eq
     (a w k : ℕ) (hk : k ≤ w) (hwa : w ≤ a) :
     (a - k) - (w - k) = a - w := by
   omega
 
-/-- The remaining-node count and residual degree have the same invariant
-difference. -/
+/-- .
+ -/
 theorem residual_node_degree_eq
     (n w k : ℕ) (hk : k ≤ w) (hwn : w ≤ n) :
     (n - k) - (w - k) = n - w := by
   omega
 
-/-- The invariants remain exact after a second extraction. -/
+/-- . -/
 theorem iterated_residual_invariants
     (n a w k j : ℕ) (hkj : k + j ≤ w)
     (hwa : w ≤ a) (hwn : w ≤ n) :
@@ -138,15 +138,15 @@ theorem iterated_residual_invariants
       ((n - k) - j) - ((w - k) - j) = n - w := by
   constructor <;> omega
 
-/-- A nonempty new identity stratum strictly decreases the residual degree,
-so repeated residualization cannot cycle. -/
+/-- .
+ -/
 theorem residual_degree_strictly_decreases
     (w k j : ℕ) (hk : k ≤ w) (hjpos : 0 < j) (hj : j ≤ w - k) :
     (w - k) - j < w - k := by
   omega
 
-/-- The exact score-66 degree and unit compression inequalities can be
-reused after two rounds simply by replacing the round sizes by their sum. -/
+/-- .
+ -/
 theorem score6600_iterated_compression
     (k j : ℕ) (hkj : k + j ≤ w) :
     (n - (k + j)) * gap * (w - (k + j)) ≤
@@ -158,7 +158,7 @@ theorem score6600_iterated_compression
 
 end Arithmetic
 
-/-! ## Terminal-state composition over the stabilized iteration state -/
+/-! . -/
 
 section Terminalization
 
@@ -176,14 +176,14 @@ variable {p e : ℕ} [CharP Omega p]
 variable {flag : ContactFlagBezout6543Research.FlagDegree}
 variable {support : ResidualSupportParameters}
 
-/-- A terminal residual stage has no component-identity cut left. -/
+/-- . -/
 def IsTerminalStage {d : ℕ}
     (S : ResidualStage phi Gamma x p e flag d support) : Prop :=
   S.identities = ∅
 
-/-- At a terminal stage every agreement cut on a remaining node is proper on
-the current principal component.  This is the precise condition needed by
-the flag/Bézout zero-count caller. -/
+/-- .
+
+ -/
 theorem terminal_iff_all_cuts_proper {d : ℕ}
     (S : ResidualStage phi Gamma x p e flag d support) :
     IsTerminalStage S ↔
@@ -203,9 +203,9 @@ theorem terminal_iff_all_cuts_proper {d : ℕ}
     unfold ContactComponentPencils.identityNodes
     exact Finset.filter_eq_empty_iff.mpr hproper
 
-/-- The residual transform with zero affine pencil and unit nodal factor is
-the identity.  This turns the syntactically transformed global flag theorem
-into a theorem for an arbitrary current residual surface. -/
+/-- .
+
+ -/
 @[simp] theorem globalResidualHom_zero_zero_one
     (F : MvPolynomial (Fin 4) K) :
     globalResidualHom (0 : Polynomial K) 0 1 F = F := by
@@ -215,8 +215,8 @@ into a theorem for an arbitrary current residual surface. -/
   | mul_X F i hF =>
       fin_cases i <;> simp [globalResidualImage, hF]
 
-/-- Agreement support for an arbitrary surface carrying a supplied residual
-support profile. -/
+/-- .
+ -/
 theorem surfaceMap_agreement_in_flag_of_support
     (support : ResidualSupportParameters)
     (F : MvPolynomial (Fin 4) K)
@@ -234,8 +234,8 @@ theorem surfaceMap_agreement_in_flag_of_support
   let hsupport : ResidualSupportData support F := ⟨hS, hYS, hTotal⟩
   exact hsupport.surfaceMap_agreement_in_flag phi d coeffs x0 u0 u1
 
-/-- Accepted `(8,43,503)` compatibility alias for the original score-66
-agreement-flag API. -/
+/-- .
+ -/
 theorem surfaceMap_agreement_in_flag_of_surface_weights
     (F : MvPolynomial (Fin 4) K)
     (hS : ContactPost6464MinkowskiRecurrenceResearch.wt
@@ -253,10 +253,10 @@ theorem surfaceMap_agreement_in_flag_of_surface_weights
       (phi := phi) ResidualSupportParameters.acceptedSupport F
         hS hYS hTotal d coeffs x0 u0 u1
 
-/-- At a terminal recursive stage, every remaining cut is simultaneously
-proper on the current component and contained in the exact residual-degree
-flag.  This is the complete local input expected by the terminal geometric
-zero-count/Bézout caller. -/
+/-- .
+
+
+ -/
 theorem terminal_proper_cuts_in_residual_flag {d : ℕ}
     (S : ResidualStage phi Gamma x p e flag d support)
     (hterminal : IsTerminalStage S) :
@@ -273,9 +273,9 @@ theorem terminal_proper_cuts_in_residual_flag {d : ℕ}
     S.F S.surface_s_weight S.surface_ys_weight S.surface_total_weight
     d (fun j ↦ (j.factorial : K)⁻¹) (x i) (S.u0 i) (S.u1 i)
 
-/-- One recursive edge.  All algebraic invariants live in the endpoint
-`ResidualStage` types; the relation records the exact deleted nodes and
-agreement transport needed to compose incidence counts. -/
+/-- .
+
+ -/
 inductive ResidualAdvance :
     (Σ d, ResidualStage phi Gamma x p e flag d support) →
       (Σ d, ResidualStage phi Gamma x p e flag d support) → Prop
@@ -290,9 +290,9 @@ inductive ResidualAdvance :
         S.Agrees gamma i → Snext.Agrees gamma i) :
       ResidualAdvance ⟨d, S⟩ ⟨d - S.identities.card, Snext⟩
 
-/-- Every nonterminal valid stage has a strict residual-advance successor.
-This is a direct composition of `ResidualStage.advance`; no one-step
-algebra is duplicated here. -/
+/-- .
+
+ -/
 theorem exists_strict_advance
     (hphi : Function.Injective phi) {d : ℕ}
     (S : ResidualStage phi Gamma x p e flag d support)
@@ -308,16 +308,16 @@ theorem exists_strict_advance
   change d - S.identities.card < d
   omega
 
-/-- Reachability through zero or more strict identity-residualization
-steps. -/
+/-- .
+ -/
 abbrev ResidualReachable := Relation.ReflTransGen
   (ResidualAdvance (phi := phi) (Gamma := Gamma) (x := x)
     (p := p) (e := e) (flag := flag) (support := support))
 
-/-- Repeated actual-identity residualization always reaches a terminal
-stage.  Termination is by strict descent of the residual degree; the theorem
-returns the full final state and the composed advance chain, not merely a
-numeric bound. -/
+/-- .
+
+
+ -/
 theorem exists_terminal_reachable
     (hphi : Function.Injective phi) {d : ℕ}
     (S : ResidualStage phi Gamma x p e flag d support) :
@@ -332,13 +332,13 @@ theorem exists_terminal_reachable
         obtain ⟨T, hreach, hterminal⟩ := ih dnext hlt Snext
         exact ⟨T, Relation.ReflTransGen.head hstep hreach, hterminal⟩
 
-/-- Terminalization with the two numerical invariants needed by incidence.
+/-- .
 
-If every seed has at least `a` agreements at the initial degree `d`, the
-terminal stage of degree `dFinal` has at least `a-(d-dFinal)` agreements.
-Simultaneously, `nodes.card-degree` is unchanged.  Hence both the decoding
-gap and the sharp node coefficient survive an arbitrary number of residual
-identity extractions. -/
+
+
+
+
+ -/
 theorem exists_terminal_with_incidence_data
     (hphi : Function.Injective phi) {d a : ℕ}
     (S : ResidualStage phi Gamma x p e flag d support)

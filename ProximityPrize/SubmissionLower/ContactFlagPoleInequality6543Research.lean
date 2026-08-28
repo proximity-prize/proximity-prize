@@ -1,18 +1,18 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
 
-/-!
-# Local pole inequality for flag supports
+/-! .
 
-The flag support function is bounded by the weighted sum of the three nested
-simplex support functions.  This is the local valuation statement needed to
-replace a general toric BKK input by three ordinary affine projections.
 
-Only the upper inequality is needed: a separately chosen generic polynomial
-realizes the full flag support, while three independently generic linear
-forms realize the simple projection supports.  This avoids multiplying the
-linear forms, where zeros could cancel poles.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagPoleInequality6543Research
 
@@ -22,7 +22,7 @@ open ContactFlagBezout6543Research
 
 noncomputable section
 
-/-- Pure nested-polymatroid inequality behind the flag pole bound. -/
+/-- . -/
 theorem exponent_weight_le_flag_bound
     (p : FlagDegree) (d : Fin 3 →₀ ℕ) (q : Fin 3 → ℤ)
     (hd : InFlag p d) (hq : ∀ i, 0 ≤ q i) :
@@ -83,8 +83,8 @@ theorem exponent_weight_le_flag_bound
 
 variable {L : Type*} [Field L]
 
-/-- The full flag support function is bounded pointwise by the three nested
-coordinate maxima. -/
+/-- .
+ -/
 theorem exponentSetPoleWeight_flagSupport_le
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : Fin 3 → L)
     (p : FlagDegree) :
@@ -130,7 +130,7 @@ private theorem poleOrder_le_support_of_mem
   exact Finset.mem_insert_of_mem (Finset.mem_image.mpr
     ⟨Finsupp.single i 1, hi, rfl⟩)
 
-/-- The three unit flags are exactly the three nested coordinate maxima. -/
+/-- . -/
 theorem exponentSetPoleWeight_unitZ
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : Fin 3 → L) :
     exponentSetPoleWeight v x (flagSupport unitZFlag) = poleOrder v (x 2) := by
@@ -173,8 +173,8 @@ theorem exponentSetPoleWeight_unitAll
         rw [mem_flagSupport_iff]
         simp [InFlag, unitAllFlag]
 
-/-- Final local three-projection inequality in the exact support-function
-language used by the residual seam. -/
+/-- .
+ -/
 theorem exponentSetPoleWeight_flagSupport_le_three
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : Fin 3 → L)
     (p : FlagDegree) :

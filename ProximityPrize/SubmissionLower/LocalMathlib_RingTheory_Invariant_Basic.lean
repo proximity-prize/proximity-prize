@@ -30,41 +30,41 @@ These changes do not add mathematical hypotheses or change the original
 mathematical declarations, conclusions, or proof arguments.
 -/
 
-/-!
-# Invariant Extensions of Rings
+/-! .
 
-Given an extension of rings `B/A` and an action of `G` on `B`, we introduce a predicate
-`Algebra.IsInvariant A B G` which states that every fixed point of `B` lies in the image of `A`.
 
-The main application is in algebraic number theory, where `G := Gal(L/K)` is the Galois group
-of some finite Galois extension of number fields, and `A := 𝓞K` and `B := 𝓞L` are their ring of
-integers. This main result in this file implies the existence of Frobenius elements in this setting.
-See `Mathlib/RingTheory/Frobenius.lean`.
 
-## Main statements
 
-Let `G` be a finite group acting on a commutative ring `B` satisfying `Algebra.IsInvariant A B G`.
 
-* `Algebra.IsInvariant.isIntegral`: `B/A` is an integral extension.
-* `Algebra.IsInvariant.exists_smul_of_under_eq`: `G` acts transitivity on the prime ideals of `B`
-  lying above a given prime ideal of `A`.
 
-If `Q` is a prime ideal of `B` lying over a prime ideal `P` of `A`, then
 
-* `IsFractionRing.stabilizerHom_surjective`:
-  The stabilizer subgroup of `Q` surjects onto `Aut(Frac(B/Q)/Frac(A/P))`.
-* `Ideal.Quotient.stabilizerHom_surjective`:
-  The stabilizer subgroup of `Q` surjects onto `Aut((B/Q)/(A/P))`.
-* `Ideal.Quotient.exists_algEquiv_fixedPoint_quotient_under`:
-  If `k` is a domain containing `B/Q`, then any `A/P`-algebra automorphism of `k` restricts to
-  an automorphism of `B/Q`.
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
--- this file should not import any field theory beyond the contents of `FieldTheory/Fixed.lean`
--- material involving Galois theory should be placed in `RingTheory/Invariant/Galois.lean`
--- The upstream library-layering check excluding IntermediateField.adjoin is omitted.
+--
+--
+--
 
 open scoped Pointwise
 
@@ -114,7 +114,7 @@ open Polynomial
 
 variable {B} [Fintype G]
 
-/-- Characteristic polynomial of a finite group action on a ring. -/
+/-- . -/
 noncomputable def charpoly (b : B) : B[X] := ∏ g : G, (Polynomial.X - Polynomial.C (g • b))
 
 theorem charpoly_eq (b : B) : charpoly G b = ∏ g : G, (Polynomial.X - Polynomial.C (g • b)) := rfl
@@ -161,7 +161,7 @@ theorem isIntegral [Finite G] : Algebra.IsIntegral A B := by
     (charpoly_mem_lifts A B G b) (monic_charpoly G b)
   exact ⟨p, hp2, by rw [← eval_map, hp1, eval_charpoly]⟩
 
-/-- `G` acts transitively on the prime ideals of `B` above a given prime ideal of `A`. -/
+/-- . -/
 theorem exists_smul_of_under_eq [Finite G] [SMulCommClass G A B]
     (P Q : Ideal B) [hP : P.IsPrime] [hQ : Q.IsPrime]
     (hPQ : P.under A = Q.under A) :
@@ -208,7 +208,7 @@ variable (K L : Type*) [Field K] [Field L]
   [Algebra K L] [IsScalarTower (A ⧸ P) K L]
   [Algebra.IsInvariant A B G]
 
-/-- A technical lemma for `fixed_of_fixed1`. -/
+/-- . -/
 private theorem fixed_of_fixed1_aux1 :
     ∃ a b : B, (∀ g : G, g • a = a) ∧ a ∉ Q ∧
     ∀ g : G, algebraMap B (B ⧸ Q) (g • b) = algebraMap B (B ⧸ Q) (if g • Q = Q then a else 0) := by
@@ -264,7 +264,7 @@ private theorem fixed_of_fixed1_aux1 :
     · rw [smul_zero, sub_zero]
       exact hr' h⁻¹ hh
 
-/-- A technical lemma for `fixed_of_fixed1`. -/
+/-- . -/
 private theorem fixed_of_fixed1_aux2 (b₀ : B)
     (hx : ∀ g : G, g • Q = Q → algebraMap B (B ⧸ Q) (g • b₀) = algebraMap B (B ⧸ Q) b₀) :
     ∃ a b : B, (∀ g : G, g • a = a) ∧ a ∉ Q ∧
@@ -278,7 +278,7 @@ private theorem fixed_of_fixed1_aux2 (b₀ : B)
   · rw [map_mul, hx g hg]
   · rw [map_zero, zero_mul]
 
-/-- A technical lemma for `fixed_of_fixed1`. -/
+/-- . -/
 private theorem fixed_of_fixed1_aux3 [NoZeroDivisors B] {b : B} {i j : ℕ} {p : Polynomial A}
     (h : p.map (algebraMap A B) = (Polynomial.X - Polynomial.C b) ^ i * Polynomial.X ^ j) (f : B ≃ₐ[A] B) (hi : i ≠ 0) :
     f b = b := by
@@ -293,7 +293,7 @@ private theorem fixed_of_fixed1_aux3 [NoZeroDivisors B] {b : B} {i j : ℕ} {p :
     zero_eq_mul, or_iff_left (pow_ne_zero j ha), pow_eq_zero_iff hi, sub_eq_zero] at hf
   exact hf.symm
 
-/-- This theorem will be made redundant by `IsFractionRing.stabilizerHom_surjective`. -/
+/-- . -/
 private theorem fixed_of_fixed1 [Module.IsTorsionFree (B ⧸ Q) L] (f : Gal(L/K)) (b : B ⧸ Q)
     (hx : ∀ g : MulAction.stabilizer G Q, Ideal.Quotient.stabilizerHom Q P G g b = b) :
     f (algebraMap (B ⧸ Q) L b) = (algebraMap (B ⧸ Q) L b) := by
@@ -330,7 +330,7 @@ private theorem fixed_of_fixed1 [Module.IsTorsionFree (B ⧸ Q) L] (f : Gal(L/K)
 
 variable [IsFractionRing (A ⧸ P) K] [IsFractionRing (B ⧸ Q) L]
 
-/-- If `Q` lies over `P`, then the stabilizer of `Q` acts on `Frac(B/Q)/Frac(A/P)`. -/
+/-- . -/
 noncomputable def IsFractionRing.stabilizerHom : MulAction.stabilizer G Q →* Gal(L/K) :=
   MonoidHom.comp (IsFractionRing.fieldEquivOfAlgEquivHom K L) (Ideal.Quotient.stabilizerHom Q P G)
 
@@ -347,7 +347,7 @@ theorem IsFractionRing.ker_stabilizerHom :
   rw [stabilizerHom, MonoidHom.ker_comp_of_injective, Ideal.Quotient.ker_stabilizerHom]
   apply fieldEquivOfAlgEquivHom_injective
 
-/-- This theorem will be made redundant by `IsFractionRing.stabilizerHom_surjective`. -/
+/-- . -/
 private theorem fixed_of_fixed2 (f : Gal(L/K)) (x : L)
     (hx : ∀ g : MulAction.stabilizer G Q, IsFractionRing.stabilizerHom G P Q K L g x = x) :
     f x = x := by
@@ -370,7 +370,7 @@ private theorem fixed_of_fixed2 (f : Gal(L/K)) (x : L)
     ((IsFractionRing.fieldEquivOfAlgEquiv_algebraMap K L L
       (Ideal.Quotient.stabilizerHom Q P G g) b).symm.trans (hx g)))
 
-/-- The stabilizer subgroup of `Q` surjects onto `Aut(Frac(B/Q)/Frac(A/P))`. -/
+/-- . -/
 theorem IsFractionRing.stabilizerHom_surjective :
     Function.Surjective (stabilizerHom G P Q K L) := by
   let _ := MulSemiringAction.compHom L (stabilizerHom G P Q K L)
@@ -379,7 +379,7 @@ theorem IsFractionRing.stabilizerHom_surjective :
     (AlgEquiv.ofRingEquiv (f := f) (fun x ↦ fixed_of_fixed2 G P Q K L f x x.2))
   exact ⟨g, by rwa [AlgEquiv.ext_iff] at hg ⊢⟩
 
-/-- The stabilizer subgroup of `Q` surjects onto `Aut((B/Q)/(A/P))`. -/
+/-- . -/
 theorem Ideal.Quotient.stabilizerHom_surjective :
     Function.Surjective (Ideal.Quotient.stabilizerHom Q P G) := by
   have : P.IsPrime := Ideal.over_def Q P ▸ Ideal.IsPrime.under A Q
@@ -390,9 +390,9 @@ theorem Ideal.Quotient.stabilizerHom_surjective :
   exact key.of_comp_left (IsFractionRing.fieldEquivOfAlgEquivHom_injective (A ⧸ P) (B ⧸ Q)
     (FractionRing (A ⧸ P)) (FractionRing (B ⧸ Q)))
 
-/--
-The isomorphism between `stabilizer G Q ⧸ inertia G Q` and the Galois group of the residue fields.
--/
+/-- .
+
+ -/
 noncomputable def IsFractionRing.stabilizerQuotientInertiaEquiv :
     MulAction.stabilizer G Q ⧸ Q.inertia (MulAction.stabilizer G Q) ≃* Gal(L/K) :=
   QuotientGroup.liftEquiv (N := Q.inertia (MulAction.stabilizer G Q))
@@ -402,10 +402,10 @@ noncomputable def IsFractionRing.stabilizerQuotientInertiaEquiv :
 theorem IsFractionRing.stabilizerQuotientInertiaEquiv_mk (g : MulAction.stabilizer G Q) :
     stabilizerQuotientInertiaEquiv G P Q K L g = stabilizerHom G P Q K L g := rfl
 
-/--
-The isomorphism between `stabilizer G Q ⧸ inertia G Q` and the Galois group of the residue fields
-extension `B ⧸ Q` over `A ⧸ P`.
--/
+/-- .
+
+
+ -/
 noncomputable def Ideal.Quotient.stabilizerQuotientInertiaEquiv :
     MulAction.stabilizer G Q ⧸ Q.inertia (MulAction.stabilizer G Q) ≃*
       Gal((B ⧸ Q)/(A ⧸ P)) :=
@@ -427,12 +427,12 @@ variable {A B k : Type*} [CommRing A] [CommRing B] [Algebra A B]
   [IsDomain k] [FaithfulSMul (B ⧸ Q) k]
 
 include G in
-/--
-For any domain `k` containing `B ⧸ Q`,
-any endomorphism of `k` can be restricted to an endomorphism of `B ⧸ Q`.
+/-- .
 
-This is basically the fact that `L/K` normal implies `κ(Q)/κ(P)` normal in the Galois setting.
--/
+
+
+
+ -/
 lemma Ideal.Quotient.exists_algHom_fixedPoint_quotient_under
     (σ : k →ₐ[A ⧸ P] k) :
     ∃ τ : (B ⧸ Q) →ₐ[A ⧸ P] B ⧸ Q, ∀ x : B ⧸ Q,
@@ -467,10 +467,10 @@ lemma Ideal.Quotient.exists_algHom_fixedPoint_quotient_under
   exact ⟨Ideal.Quotient.mk _ (τ • x), hτ.symm⟩
 
 include G in
-/--
-For any domain `k` containing `B ⧸ Q`,
-any endomorphism of `k` can be restricted to an endomorphism of `B ⧸ Q`.
--/
+/-- .
+
+
+ -/
 lemma Ideal.Quotient.exists_algEquiv_fixedPoint_quotient_under
     (σ : k ≃ₐ[A ⧸ P] k) :
     ∃ τ : (B ⧸ Q) ≃ₐ[A ⧸ P] B ⧸ Q, ∀ x : B ⧸ Q,
@@ -504,8 +504,8 @@ variable (G A B K L : Type*) [Group G] [CommRing A] [CommRing B] [Algebra A B] [
   [IsScalarTower A K L] [IsScalarTower A B L] [MulSemiringAction G B] [MulSemiringAction G L]
   [SMulDistribClass G B L] [hAB : Algebra.IsInvariant A B G] [SMulCommClass G A B]
 
-/-- If `G` acts on `B/A` with `A` as the fixed subring, then `G` also acts on `L/K` with `K` as
-the fixed subfield, where `K` and `L` are the fraction fields of `A` and `B` respectively. -/
+/-- .
+ -/
 theorem isInvariant_of_isIntegral [Algebra.IsIntegral A B] : Algebra.IsInvariant K L G := by
   refine ⟨fun x h ↦ ?_⟩
   have hc (a : A) : (algebraMap K L) (algebraMap A K a) = (algebraMap B L) (algebraMap A B a) := by
@@ -526,8 +526,8 @@ theorem isInvariant_of_isIntegral [Algebra.IsIntegral A B] : Algebra.IsInvariant
   rw [hxy, map_div₀, hc, hc]
 
 include A B in
-/-- If `G` acts on `B/A` with `A` as the fixed subring, then `G` also acts on `L/K` with `K` as
-the fixed subfield, where `K` and `L` are the fraction fields of `A` and `B` respectively. -/
+/-- .
+ -/
 theorem isInvariant [Finite G] : Algebra.IsInvariant K L G :=
   have := hAB.isIntegral
   isInvariant_of_isIntegral G A B K L

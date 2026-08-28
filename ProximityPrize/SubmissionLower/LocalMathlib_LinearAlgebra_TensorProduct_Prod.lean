@@ -20,21 +20,21 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
-# Tensor products of products
+/-! .
 
-This file shows that taking `TensorProduct`s commutes with taking `Prod`s in both arguments.
 
-## Main results
 
-* `TensorProduct.prodLeft`
-* `TensorProduct.prodRight`
 
-## Notes
 
-See `Mathlib/LinearAlgebra/TensorProduct/Pi.lean` for arbitrary products.
 
--/
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -48,7 +48,7 @@ variable [Module R M₁] [Module S M₁] [IsScalarTower R S M₁] [Module R M₂
 
 attribute [ext] TensorProduct.ext
 
-/-- Tensor products distribute over a product on the right. -/
+/-- . -/
 def prodRight : M₁ ⊗[R] (M₂ × M₃) ≃ₗ[S] (M₁ ⊗[R] M₂) × (M₁ ⊗[R] M₃) :=
   LinearEquiv.ofLinear
     (TensorProduct.AlgebraTensorModule.lift <|
@@ -70,7 +70,7 @@ def prodRight : M₁ ⊗[R] (M₂ × M₃) ≃ₗ[S] (M₁ ⊗[R] M₂) × (M₁
 
 variable [Module S M₂] [IsScalarTower R S M₂]
 
-/-- Tensor products distribute over a product on the left . -/
+/-- . -/
 def prodLeft : (M₁ × M₂) ⊗[R] M₃ ≃ₗ[S] (M₁ ⊗[R] M₃) × (M₂ ⊗[R] M₃) :=
   AddEquiv.toLinearEquiv (TensorProduct.comm _ _ _ ≪≫ₗ
       TensorProduct.prodRight R R _ _ _ ≪≫ₗ

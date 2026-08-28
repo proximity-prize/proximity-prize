@@ -20,28 +20,28 @@ any explicitly documented ordinary-term expansion below.
 The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 -/
 
-/-!
+/-! .
 
-# Extension of algebras
 
-## Main definitions
 
-- `Algebra.Extension`: An extension of an `R`-algebra `S` is an `R` algebra `P` together with a
-  surjection `P →ₐ[R] R`.
 
-- `Algebra.Extension.Hom`: Given a commuting square
-  ```
-  R --→ P -→ S
-  |          |
-  ↓          ↓
-  R' -→ P' → S
-  ```
-  A hom between `P` and `P'` is a ring homomorphism that makes the two squares commute.
 
-- `Algebra.Extension.Cotangent`:
-  The cotangent space w.r.t. an extension `P → S` by `I`, i.e. the space `I/I²`.
 
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -51,18 +51,18 @@ open TensorProduct MvPolynomial
 
 variable (R : Type u) (S : Type v) [CommRing R] [CommRing S] [Algebra R S]
 
-/--
-An extension of an `R`-algebra `S` is an `R` algebra `P` together with a surjection `P →ₐ[R] S`.
-Also see `Algebra.Extension.ofSurjective`.
--/
+/-- .
+
+
+ -/
 structure Algebra.Extension where
-  /-- The underlying algebra of an extension. -/
+  /-- . -/
   Ring : Type w
   [commRing : CommRing Ring]
   [algebra₁ : Algebra R Ring]
   [algebra₂ : Algebra Ring S]
   [isScalarTower : IsScalarTower R Ring S]
-  /-- A chosen (set-theoretic) section of an extension. -/
+  /-- . -/
   σ : S → Ring
   algebraMap_σ : ∀ x, algebraMap Ring S (σ x) = x
 
@@ -75,7 +75,7 @@ attribute [instance] commRing algebra₁ algebra₂ isScalarTower
 
 attribute [simp] algebraMap_σ
 
--- We want to make sure `R₀` acts compatibly on `R` and `S` to avoid nonsensical instances
+--
 @[nolint unusedArguments]
 noncomputable instance {R₀} [CommRing R₀] [Algebra R₀ R] [Algebra R₀ S] [IsScalarTower R₀ R S] :
     Algebra R₀ P.Ring := Algebra.compHom P.Ring (algebraMap R₀ R)
@@ -107,7 +107,7 @@ lemma algebraMap_surjective : Function.Surjective (algebraMap P.Ring S) := (⟨_
 
 section Construction
 
-/-- Construct `Extension` from a surjective algebra homomorphism. -/
+/-- . -/
 @[simps -isSimp Ring σ]
 noncomputable
 def ofSurjective {P : Type w} [CommRing P] [Algebra R P] (f : P →ₐ[R] S)
@@ -119,7 +119,7 @@ def ofSurjective {P : Type w} [CommRing P] [Algebra R P] (f : P →ₐ[R] S)
   algebraMap_σ x := (h x).choose_spec
 
 variable (R S) in
-/-- The trivial extension of `S`. -/
+/-- . -/
 @[simps -isSimp Ring σ]
 noncomputable
 def self : Extension R S where
@@ -127,7 +127,7 @@ def self : Extension R S where
   σ := _root_.id
   algebraMap_σ _ := rfl
 
-/-- The kernel of an extension. -/
+/-- . -/
 abbrev ker : Ideal P.Ring := RingHom.ker (algebraMap P.Ring S)
 
 section Localization
@@ -135,10 +135,10 @@ section Localization
 variable (M : Submonoid S) {S' : Type*} [CommRing S'] [Algebra S S'] [IsLocalization M S']
 variable [Algebra R S'] [IsScalarTower R S S']
 
-/--
-An `R`-extension `P → S` gives an `R`-extension `Pₘ → Sₘ`.
-Note that this is different from `baseChange` as the base does not change.
--/
+/-- .
+
+
+ -/
 noncomputable
 def localization (P : Extension.{w} R S) : Extension R S' where
   Ring := Localization (M.comap (algebraMap P.Ring S))
@@ -163,7 +163,7 @@ end Localization
 
 variable {T} [CommRing T] [Algebra R T]
 
-/-- The base change of an `R`-extension of `S` to `T` gives a `T`-extension of `T ⊗[R] S`. -/
+/-- . -/
 noncomputable
 def baseChange {T} [CommRing T] [Algebra R T] (P : Extension R S) : Extension T (T ⊗[R] S) where
   Ring := T ⊗[R] P.Ring
@@ -178,11 +178,11 @@ lemma ker_baseChange :
     P.algebraMap_surjective
 
 variable (T) in
-/--
-The ring `T ⊗[R] P.Ring` underlying the extension `P.baseChange T` is a `P.Ring`-algebra
-by action on the right. This causes a (mathematical) diamond when `T = P.Ring`, so it is
-not an instance.
--/
+/-- .
+
+
+
+ -/
 @[instance_reducible]
 noncomputable def algebraBaseChange : Algebra P.Ring (P.baseChange (T := T)).Ring :=
   fast_instance% TensorProduct.rightAlgebra
@@ -204,18 +204,18 @@ section
 variable [Algebra R R'] [Algebra R' R''] [Algebra R R'']
 variable [Algebra S S'] [Algebra S' S''] [Algebra S S'']
 
-/-- Given a commuting square
-```
-R --→ P -→ S
-|          |
-↓          ↓
-R' -→ P' → S
-```
-A hom between `P` and `P'` is a ring homomorphism that makes the two squares commute.
--/
+/-- .
+
+
+
+
+
+
+
+ -/
 @[ext]
 structure Hom where
-  /-- The underlying ring homomorphism of a hom between extensions. -/
+  /-- . -/
   toRingHom : P.Ring →+* P'.Ring
   toRingHom_algebraMap :
     ∀ x, toRingHom (algebraMap R P.Ring x) = algebraMap R' P'.Ring (algebraMap R R' x)
@@ -226,7 +226,7 @@ attribute [simp] Hom.toRingHom_algebraMap Hom.algebraMap_toRingHom
 
 variable {P P'}
 
-/-- A hom between extensions as an algebra homomorphism. -/
+/-- . -/
 noncomputable
 def Hom.toAlgHom [Algebra R S'] [IsScalarTower R R' S'] (f : Hom P P') :
     P.Ring →ₐ[R] P'.Ring where
@@ -237,8 +237,8 @@ def Hom.toAlgHom [Algebra R S'] [IsScalarTower R R' S'] (f : Hom P P') :
 lemma Hom.toAlgHom_apply [Algebra R S'] [IsScalarTower R R' S'] (f : Hom P P') (x) :
     f.toAlgHom x = f.toRingHom x := rfl
 
-/-- A hom of extensions `P → P'` can be constructed from an algebra map
-`P.Ring →ₐ[R] P'.Ring`. -/
+/-- .
+ -/
 @[simps]
 def Hom.ofAlgHom [Algebra R S'] [IsScalarTower R R' S'] [IsScalarTower R S S']
     (f : P.Ring →ₐ[R] P'.Ring)
@@ -259,7 +259,7 @@ lemma Hom.toAlgHom_ofAlgHom [Algebra R S'] [IsScalarTower R R' S'] [IsScalarTowe
 
 variable (P P')
 
-/-- The identity hom. -/
+/-- . -/
 @[simps]
 protected noncomputable def Hom.id : Hom P P := ⟨RingHom.id _, by simp, by simp⟩
 
@@ -269,7 +269,7 @@ lemma Hom.toAlgHom_id : Hom.toAlgHom (.id P) = AlgHom.id _ _ := by ext1; simp
 variable {P P' P''}
 
 variable [IsScalarTower R R' R''] [IsScalarTower S S' S''] in
-/-- The composition of two homs. -/
+/-- . -/
 @[simps]
 noncomputable def Hom.comp (f : Hom P' P'') (g : Hom P P') : Hom P P'' where
   toRingHom := f.toRingHom.comp g.toRingHom
@@ -283,7 +283,7 @@ lemma Hom.comp_id (f : Hom P P') : f.comp (Hom.id P) = f := by ext; simp
 lemma Hom.id_comp (f : Hom P P') : (Hom.id P').comp f = f := by
   ext; simp [Hom.id]
 
-/-- A map between extensions induce a map between kernels. -/
+/-- . -/
 @[simps]
 def Hom.mapKer (f : P.Hom P')
     [alg : Algebra P.Ring P'.Ring] (halg : algebraMap P.Ring P'.Ring = f.toRingHom) :
@@ -294,7 +294,7 @@ def Hom.mapKer (f : P.Hom P')
 
 set_option backward.isDefEq.respectTransparency false in
 attribute [local instance] Algebra.TensorProduct.rightAlgebra in
-/-- The canonical hom from `P` to its base change `P.baseChange`. -/
+/-- . -/
 @[simps]
 noncomputable def toBaseChange (T : Type*) [CommRing T] [Algebra R T] :
     P.Hom (P.baseChange (T := T)) where
@@ -312,15 +312,15 @@ end Hom
 
 section Infinitesimal
 
-/-- Given an `R`-algebra extension `0 → I → P → S → 0` of `S`,
-the infinitesimal extension associated to it is `0 → I/I² → P/I² → S → 0`. -/
+/-- .
+ -/
 noncomputable
 def infinitesimal (P : Extension R S) : Extension R S where
   Ring := P.Ring ⧸ P.ker ^ 2
   σ := Ideal.Quotient.mk _ ∘ P.σ
   algebraMap_σ x := by dsimp; exact P.algebraMap_σ x
 
-/-- The canonical map `P → P/I²` as maps between extensions. -/
+/-- . -/
 noncomputable
 def toInfinitesimal (P : Extension R S) : P.Hom P.infinitesimal where
   toRingHom := Ideal.Quotient.mk _
@@ -335,9 +335,9 @@ end Infinitesimal
 
 section Cotangent
 
-/-- The cotangent space of an extension.
-This is a type synonym so that `P.Ring` can act on it through the action of `S` without creating
-a diamond. -/
+/-- .
+
+ -/
 def Cotangent : Type _ := P.ker.Cotangent
 
 noncomputable
@@ -345,10 +345,10 @@ instance : AddCommGroup P.Cotangent := inferInstanceAs (AddCommGroup P.ker.Cotan
 
 variable {P}
 
-/-- The identity map `P.ker.Cotangent → P.Cotangent` into the type synonym. -/
+/-- . -/
 def Cotangent.of (x : P.ker.Cotangent) : P.Cotangent := x
 
-/-- The identity map `P.Cotangent → P.ker.Cotangent` from the type synonym. -/
+/-- . -/
 def Cotangent.val (x : P.Cotangent) : P.ker.Cotangent := x
 
 @[ext]
@@ -402,26 +402,26 @@ instance {R₁ R₂} [CommRing R₁] [CommRing R₂] [Algebra R₁ S] [Algebra R
   change algebraMap R₂ S (r • s) • m = (algebraMap _ S r) • (algebraMap _ S s) • m
   rw [Algebra.smul_def, map_mul, mul_smul, ← IsScalarTower.algebraMap_apply]
 
-/-- The action of `R₀` on `P.Cotangent` for an extension `P → S`, if `S` is an `R₀` algebra. -/
+/-- . -/
 lemma Cotangent.val_smul''' {R₀} [CommRing R₀] [Algebra R₀ S] (r : R₀) (x : P.Cotangent) :
     (r • x).val = P.σ (algebraMap R₀ S r) • x.val := rfl
 
-/-- The action of `S` on `P.Cotangent` for an extension `P → S`. -/
+/-- . -/
 @[simp]
 lemma Cotangent.val_smul (r : S) (x : P.Cotangent) : (r • x).val = P.σ r • x.val := rfl
 
-/-- The action of `P` on `P.Cotangent` for an extension `P → S`. -/
+/-- . -/
 @[simp]
 lemma Cotangent.val_smul' (r : P.Ring) (x : P.Cotangent) : (r • x).val = r • x.val := by
   rw [val_smul''', ← sub_eq_zero, ← sub_smul]
   exact Cotangent.smul_eq_zero_of_mem _ (by simp) _
 
-/-- The action of `R` on `P.Cotangent` for an `R`-extension `P → S`. -/
+/-- . -/
 @[simp]
 lemma Cotangent.val_smul'' (r : R) (x : P.Cotangent) : (r • x).val = r • x.val := by
   rw [← algebraMap_smul P.Ring, val_smul', algebraMap_smul]
 
-/-- `Cotangent.val` as a linear isomorphism. -/
+/-- . -/
 @[simps]
 def cotangentEquivCotangentKer : P.Cotangent ≃ₗ[P.Ring] P.ker.Cotangent where
   toFun := Cotangent.val
@@ -429,7 +429,7 @@ def cotangentEquivCotangentKer : P.Cotangent ≃ₗ[P.Ring] P.ker.Cotangent wher
   map_add' x y := by simp
   map_smul' x y := by simp
 
-/-- The quotient map from the kernel of `P → S` onto the cotangent space. -/
+/-- . -/
 noncomputable def Cotangent.mk : P.ker →ₗ[P.Ring] P.Cotangent where
   toFun x := .of (Ideal.toCotangent _ x)
   map_add' x y := by simp
@@ -468,7 +468,7 @@ variable [Algebra R R'] [Algebra R' R''] [Algebra R' S'']
 variable [Algebra S S'] [Algebra S' S''] [Algebra S S'']
 variable [Algebra R S'] [IsScalarTower R R' S']
 
-/-- A hom between two extensions induces a map between cotangent spaces. -/
+/-- . -/
 noncomputable
 def Cotangent.map (f : Hom P P') : P.Cotangent →ₗ[S] P'.Cotangent where
   toFun x := .of (Ideal.mapCotangent (R := R) _ _ f.toAlgHom
@@ -550,7 +550,7 @@ lemma Cotangent.map_ker_of_surjective {P P' : Extension R S} {f : P.Hom P'}
     exact ⟨x - y, by rwa [← Submodule.neg_mem_iff, neg_sub], y, y_in, by ring⟩
 
 variable (P) in
-/-- The cotangent is isomorphic to `S ⊗[P] I`. -/
+/-- . -/
 noncomputable def cotangentEquiv : S ⊗[P.Ring] P.ker ≃ₗ[S] P.Cotangent := by
   refine .ofBijective (Cotangent.mk.liftBaseChange _) ⟨?_, ?_⟩
   · refine (injective_iff_map_eq_zero _).mpr fun x hx ↦ ?_

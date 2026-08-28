@@ -2,7 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSeedlessListBoundResearch
 import ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
 
-/-! # Seedless scalar bound transported to the protected squared code -/
+/-! . -/
 
 namespace ProximityPrize.SubmissionLower.ContactSeedlessLambdaResearch
 
@@ -24,9 +24,9 @@ local instance : CharP IRSProfile.Field prime := by
   change CharP KoalaBear.Ext6 2130706433
   exact charP_of_injective_algebraMap' KoalaBear.Field 2130706433
 
-/-- A finite list of actual base-code words is converted injectively to its
-unique degree-bounded interpolation polynomials and fed to the seedless
-contact theorem. -/
+/-- .
+
+ -/
 theorem irs_scalar_finite_list_card_le
     (received : IRSProfile.Index → IRSProfile.Field)
     (L : Finset (IRSProfile.Index → IRSProfile.Field))
@@ -95,8 +95,8 @@ theorem irs_scalar_finite_list_card_le
     (by norm_num [IRSProfile.Index, n]) hdegree hsolution hagreement
   rwa [hcard] at hbound
 
-/-- Moment-curve separation now consumes the small fixed-centre bound rather
-than the affine-line alignment bound. -/
+/-- .
+ -/
 theorem irs_interleaved_finite_list_card_le
     {r : ℕ}
     (received : IRSProfile.Index → Fin r → IRSProfile.Field)
@@ -143,8 +143,8 @@ theorem sixteen_row_separation :
     Nat.choose_eq_descFactorial_div_factorial]
   norm_num [listBudget, Nat.descFactorial_succ, Nat.factorial_succ]
 
-/-- A generic transport wrapper.  Keeping the carrier abstract prevents Lean
-from unfolding the full protected IRS code while checking the list argument. -/
+/-- .
+ -/
 theorem squared_eight_lambda_le_of_interleaved_list
     {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
     [Field F] [Fintype F] [DecidableEq F]
@@ -185,7 +185,7 @@ theorem squared_eight_lambda_le_of_interleaved_list
   have hbound := hfinite (flattenWord received) projected hrows hclose
   rwa [hcard] at hbound
 
-/-- Explicit two-by-eight carrier before transport to the protected alias. -/
+/-- . -/
 theorem squared_eight_lambda_seedless
     (delta : ℝ)
     (hcell : (delta : ℝ) * (Fintype.card IRSProfile.Index : ℝ) <
@@ -231,7 +231,7 @@ theorem squared_eight_lambda_seedless
   rw [hprojcard, hDcard] at hbound
   omega
 
-/-- The exact protected squared carrier has the seedless list cap. -/
+/-- . -/
 theorem irs_squared_lambda_seedless
     (delta : ℝ≥0)
     (hcell : (delta : ℝ) * (Fintype.card IRSProfile.Index : ℝ) <

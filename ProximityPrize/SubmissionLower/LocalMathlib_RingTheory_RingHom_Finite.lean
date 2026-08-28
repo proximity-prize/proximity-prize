@@ -22,20 +22,20 @@ Port elaboration adjustment: explicitly bind classical decidable equality
 for the original finite-union proof; all statements and arguments are retained.
 -/
 
-/-!
+/-! .
 
-# The meta properties of finite ring homomorphisms.
 
-## Main results
 
-Let `R` be a commutative ring, `S` is an `R`-algebra, `M` be a submonoid of `R`.
 
-* `finite_localizationPreserves` : If `S` is a finite `R`-algebra, then `S' = M⁻¹S` is a
-  finite `R' = M⁻¹R`-algebra.
-* `finite_ofLocalizationSpan` : `S` is a finite `R`-algebra if there exists
-  a set `{ r }` that spans `R` such that `Sᵣ` is a finite `Rᵣ`-algebra.
 
--/
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -73,7 +73,7 @@ variable {R S : Type*} [CommRing R] [CommRing S] (M : Submonoid R) (f : R →+* 
 variable (R' S' : Type*) [CommRing R'] [CommRing S']
 variable [Algebra R R'] [Algebra S S']
 
-/-- If `S` is a finite `R`-algebra, then `S' = M⁻¹S` is a finite `R' = M⁻¹R`-algebra. -/
+/-- . -/
 theorem RingHom.finite_localizationPreserves : RingHom.LocalizationPreserves @RingHom.Finite := by
   introv R hf
   letI := f.toAlgebra
@@ -94,14 +94,14 @@ theorem RingHom.localization_away_map_finite (R S R' S' : Type u) [CommRing R] [
     [IsLocalization.Away (f r) S'] (hf : f.Finite) : (IsLocalization.Away.map R' S' f r).Finite :=
   finite_localizationPreserves.away f r _ _ hf
 
-/-- `S` is a finite `R`-algebra if there exists a set `{ r }` that
-  spans `R` such that `Sᵣ` is a finite `Rᵣ`-algebra. -/
+/-- .
+ -/
 theorem RingHom.finite_ofLocalizationSpan : RingHom.OfLocalizationSpan @RingHom.Finite := by
   classical
   rw [RingHom.ofLocalizationSpan_iff_finite]
   introv R hs H
   letI : DecidableEq S := Classical.decEq S
-  -- We first setup the instances
+  --
   letI := f.toAlgebra
   letI := fun r : s => (Localization.awayMap f r).toAlgebra
   have (r : s) : IsLocalization ((Submonoid.powers (r : R)).map (algebraMap R S))
@@ -110,19 +110,19 @@ theorem RingHom.finite_ofLocalizationSpan : RingHom.OfLocalizationSpan @RingHom.
   haveI : ∀ r : s, IsScalarTower R (Localization.Away (r : R)) (Localization.Away (f r)) :=
     fun r => IsScalarTower.of_algebraMap_eq'
       (IsLocalization.map_comp (Submonoid.powers (r : R)).le_comap_map).symm
-  -- By the hypothesis, we may find a finite generating set for each `Sᵣ`. This set can then be
-  -- lifted into `R` by multiplying a sufficiently large power of `r`. I claim that the union of
-  -- these generates `S`.
+  --
+  --
+  --
   constructor
   replace H := fun r => (H r).1
   choose s₁ s₂ using H
   let sf := fun x : s => IsLocalization.finsetIntegerMultiple (Submonoid.powers (f x)) (s₁ x)
   use s.attach.biUnion sf
   rw [Submodule.span_attach_biUnion, eq_top_iff]
-  -- It suffices to show that `r ^ n • x ∈ span T` for each `r : s`, since `{ r ^ n }` spans `R`.
-  -- This then follows from the fact that each `x : R` is a linear combination of the generating set
-  -- of `Sᵣ`. By multiplying a sufficiently large power of `r`, we can cancel out the `r`s in the
-  -- denominators of both the generating set and the coefficients.
+  --
+  --
+  --
+  --
   rintro x -
   apply Submodule.mem_of_span_eq_top_of_smul_pow_mem _ (s : Set R) hs _ _
   intro r

@@ -3,13 +3,13 @@ import ProximityPrize.SubmissionLower.ContactAlignmentBridge
 import ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
 import ProximityPrize.SubmissionLower.ContactTranslation6600Research
 
-/-!
-# Score-66 interpolation frontend and stock alignment interface
+/-! .
 
-All interpolation and translation work is closed here.  The single exposed
-premise is the global selected-family count for the score-66 coefficient
-box; this is exactly the output targeted by the regular-factor geometry.
--/
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFrozenAlignment6600Research
 
@@ -28,8 +28,8 @@ local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 def SelectedNoLargePencilBound6600 : Prop :=
   SelectedNoLargePencilBound IRSProfile.domain w errors alignmentBudget
 
-/-- The exact remaining global counting proposition after the score-66
-interpolant has been constructed. -/
+/-- .
+ -/
 def GlobalCountLtAlignment6600 : Prop :=
   ∀ (Q : MvPolynomial (Fin 4) IRSProfile.Field),
     Q ≠ 0 →

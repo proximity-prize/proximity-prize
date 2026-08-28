@@ -31,29 +31,29 @@ mathematical declarations, hypotheses, and proof steps are retained; no
 resource limits are changed.
 -/
 
-/-!
+/-! .
 
-# Ideal norms
 
-This file defines the absolute ideal norm `Ideal.absNorm (I : Ideal R) : ℕ` as the cardinality of
-the quotient `R ⧸ I` (setting it to 0 if the cardinality is infinite).
 
-## Main definitions
 
-* `Submodule.cardQuot (S : Submodule R M)`: the cardinality of the quotient `M ⧸ S`, in `ℕ`.
-  This maps `⊥` to `0` and `⊤` to `1`.
-* `Ideal.absNorm (I : Ideal R)`: the absolute ideal norm, defined as
-  the cardinality of the quotient `R ⧸ I`, as a bundled monoid-with-zero homomorphism.
 
-## Main results
 
-* `map_mul Ideal.absNorm`: multiplicativity of the ideal norm is bundled in
-  the definition of `Ideal.absNorm`
-* `Ideal.natAbs_det_basis_change`: the ideal norm is given by the determinant
-  of the basis change matrix
-* `Ideal.absNorm_span_singleton`: the ideal norm of a principal ideal is the
-  norm of its generator
--/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -68,9 +68,9 @@ variable {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
 
 section
 
-/-- The cardinality of `(M ⧸ S)`, if `(M ⧸ S)` is finite, and `0` otherwise.
-This is used to define the absolute ideal norm `Ideal.absNorm`.
--/
+/-- .
+
+ -/
 noncomputable def cardQuot (S : Submodule R M) : ℕ :=
   AddSubgroup.index S.toAddSubgroup
 
@@ -103,18 +103,18 @@ variable {S : Type*} [CommRing S]
 
 open Submodule
 
-/-- Multiplicity of the ideal norm, for coprime ideals.
-This is essentially just a repackaging of the Chinese Remainder Theorem.
--/
+/-- .
+
+ -/
 theorem cardQuot_mul_of_coprime
     {I J : Ideal S} (coprime : IsCoprime I J) : cardQuot (I * J) = cardQuot I * cardQuot J := by
   rw [cardQuot_apply, cardQuot_apply, cardQuot_apply,
     Nat.card_congr (Ideal.quotientMulEquivQuotientProd I J coprime).toEquiv,
     Nat.card_prod]
 
-/-- If the `d` from `Ideal.exists_mul_add_mem_pow_succ` is unique, up to `P`,
-then so are the `c`s, up to `P ^ (i + 1)`.
-Inspired by [Neukirch], proposition 6.1 -/
+/-- .
+
+ -/
 theorem Ideal.mul_add_mem_pow_succ_inj (P : Ideal S) {i : ℕ} (a d d' e e' : S) (a_mem : a ∈ P ^ i)
     (e_mem : e ∈ P ^ (i + 1)) (e'_mem : e' ∈ P ^ (i + 1)) (h : d - d' ∈ P) :
     a * d + e - (a * d' + e') ∈ P ^ (i + 1) := by
@@ -128,9 +128,9 @@ section PPrime
 
 variable {P : Ideal S} [P_prime : P.IsPrime]
 
-/-- If `a ∈ P^i \ P^(i+1)` and `c ∈ P^i`, then `a * d + e = c` for `e ∈ P^(i+1)`.
-`Ideal.mul_add_mem_pow_succ_unique` shows the choice of `d` is unique, up to `P`.
-Inspired by [Neukirch], proposition 6.1 -/
+/-- .
+
+ -/
 theorem Ideal.exists_mul_add_mem_pow_succ [IsDedekindDomain S] (hP : P ≠ ⊥)
     {i : ℕ} (a c : S) (a_mem : a ∈ P ^ i)
     (a_notMem : a ∉ P ^ (i + 1)) (c_mem : c ∈ P ^ i) :
@@ -153,8 +153,8 @@ theorem Ideal.mem_prime_of_mul_mem_pow [IsDedekindDomain S] {P : Ideal S} [P_pri
     Ideal.span_singleton_mul_span_singleton] at a_notMem ab_mem ⊢
   exact (prime_pow_succ_dvd_mul (Ideal.prime_of_isPrime hP P_prime) ab_mem).resolve_left a_notMem
 
-/-- The choice of `d` in `Ideal.exists_mul_add_mem_pow_succ` is unique, up to `P`.
-Inspired by [Neukirch], proposition 6.1 -/
+/-- .
+ -/
 theorem Ideal.mul_add_mem_pow_succ_unique [IsDedekindDomain S] (hP : P ≠ ⊥)
     {i : ℕ} (a d d' e e' : S)
     (a_notMem : a ∉ P ^ (i + 1)) (e_mem : e ∈ P ^ (i + 1)) (e'_mem : e' ∈ P ^ (i + 1))
@@ -164,7 +164,7 @@ theorem Ideal.mul_add_mem_pow_succ_unique [IsDedekindDomain S] (hP : P ≠ ⊥)
     ring
   exact Ideal.mem_prime_of_mul_mem_pow hP a_notMem h'
 
-/-- Multiplicity of the ideal norm, for powers of prime ideals. -/
+/-- . -/
 theorem cardQuot_pow_of_prime [IsDedekindDomain S] (hP : P ≠ ⊥) {i : ℕ} :
     cardQuot (P ^ i) = cardQuot P ^ i := by
   induction i with
@@ -199,7 +199,7 @@ theorem cardQuot_pow_of_prime [IsDedekindDomain S] (hP : P ≠ ⊥) {i : ℕ} :
 
 end PPrime
 
-/-- Multiplicativity of the ideal norm in number rings. -/
+/-- . -/
 theorem cardQuot_mul [IsDedekindDomain S] [Module.Free ℤ S] (I J : Ideal S) :
     cardQuot (I * J) = cardQuot I * cardQuot J := by
   let b := Module.Free.chooseBasis ℤ S
@@ -213,7 +213,7 @@ theorem cardQuot_mul [IsDedekindDomain S] [Module.Free ℤ S] (I J : Ideal S) :
         (Ideal.isUnit_iff.mp
           (hIJ (Ideal.dvd_iff_le.mpr le_sup_left) (Ideal.dvd_iff_le.mpr le_sup_right)))
 
-/-- The absolute norm of the ideal `I : Ideal R` is the cardinality of the quotient `R ⧸ I`. -/
+/-- . -/
 noncomputable def Ideal.absNorm [IsDedekindDomain S] [Module.Free ℤ S] :
     Ideal S →*₀ ℕ where
   toFun := Submodule.cardQuot
@@ -288,15 +288,15 @@ theorem span_singleton_absNorm {I : Ideal S} (hI : (Ideal.absNorm I).Prime) :
 
 variable [Module.Finite ℤ S]
 
-/-- Let `e : S ≃ I` be an additive isomorphism (therefore a `ℤ`-linear equiv).
-Then an alternative way to compute the norm of `I` is given by taking the determinant of `e`.
-See `natAbs_det_basis_change` for a more familiar formulation of this result. -/
+/-- .
+
+ -/
 theorem natAbs_det_equiv (I : Ideal S) {E : Type*} [EquivLike E S I] [AddEquivClass E S I] (e : E) :
     Int.natAbs
         (LinearMap.det
           ((Submodule.subtype I).restrictScalars ℤ ∘ₗ AddMonoidHom.toIntLinearMap (e : S →+ I))) =
       Ideal.absNorm I := by
-  -- `S ⧸ I` might be infinite if `I = ⊥`, but then `e` can't be an equiv.
+  --
   by_cases hI : I = ⊥
   · subst hI
     have : (1 : S) ≠ 0 := one_ne_zero
@@ -304,9 +304,9 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type*} [EquivLike E S I] [AddEquivCl
     contradiction
   exact Submodule.natAbs_det_equiv (I.restrictScalars ℤ) e
 
-/-- Let `b` be a basis for `S` over `ℤ` and `bI` a basis for `I` over `ℤ` of the same dimension.
-Then an alternative way to compute the norm of `I` is given by taking the determinant of `bI`
-over `b`. -/
+/-- .
+
+ -/
 theorem natAbs_det_basis_change {ι : Type*} [Fintype ι] [DecidableEq ι] (b : Basis ι ℤ S)
     (I : Ideal S) (bI : Basis ι ℤ I) : (b.det ((↑) ∘ bI)).natAbs = Ideal.absNorm I :=
   Submodule.natAbs_det_basis_change b (I.restrictScalars ℤ) bI
@@ -377,9 +377,9 @@ lemma isFiniteRelIndex {I : Ideal S} (hI : I ≠ ⊥) (J : Ideal S) :
   have := finiteIndex hI
   exact isFiniteRelIndex_of_finiteIndex
 
-/-- The norm of a maximal ideal is a prime power.
-The prime is `(P.under ℤ).absNorm` and the exponent is `(P.under ℤ).inertialDeg P`.
-See `Ideal.absNorm_pow_inertiaDeg`. -/
+/-- .
+
+ -/
 lemma exists_prime_and_absNorm_eq_pow (P : Ideal S) [P.IsMaximal] :
     ∃ p n, 0 < n ∧ ↑p ∈ P ∧ p.Prime ∧ P.absNorm = p ^ n := by
   have : IsAddTorsionFree S := .of_isTorsionFree ℤ _
@@ -427,7 +427,7 @@ lemma exists_isMaximal_dvd_of_dvd_absNorm
       have : m ≠ 0 := fun h ↦ hpMax.ne_top (Ideal.span_singleton_eq_top.mpr (by simpa [h] using hp))
       exact Ideal.mem_of_dvd _ hp.symm.dvd (Ideal.pow_mem_of_mem _ (by simpa) _ this.bot_lt)
 
-/-- A version that takes a natural number and `Nat.Prime`. -/
+/-- . -/
 lemma exists_isMaximal_dvd_of_dvd_absNorm'
     {p : ℕ} (hp : p.Prime) (I : Ideal S) (hI : p ∣ I.absNorm) :
     ∃ P : Ideal S, P.IsMaximal ∧ P.under ℤ = .span {(p : ℤ)} ∧ P ∣ I :=

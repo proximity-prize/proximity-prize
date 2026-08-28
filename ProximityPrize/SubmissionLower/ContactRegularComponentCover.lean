@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactCurveComponents
 
-/-!
-# Actual regular minimal-prime cover and finite budget aggregation
+/-! .
 
-Model label: gpt-5.
 
-The index type is constructed from the actual minimal primes of (G,T),
-discarding precisely those containing the regularity polynomial H. Every
-regular common point is covered, and each retained prime is non-point.
-An actual finite seed set is bounded by the sum of its component subsets.
 
-The last lemma is finite arithmetic aggregation: its per-prime incidence
-bounds and summed coordinate budgets remain explicit inputs, to be supplied
-by the separately checked geometric interfaces. They are not asserted here.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactRegularComponentCover
 
@@ -58,8 +58,8 @@ theorem regularComponent_ne_point (C : RegularComponent K G T H) (v : Fin 3 → 
     C.1 ≠ RingHom.ker (MvPolynomial.aeval v).toRingHom :=
   component_ne_pointKernel K G T C.1 (regularComponent_mem K G T H C) v
 
-/-- Actual regular common points are covered by the constructed regular
-subfamily, including when the full component family is empty. -/
+/-- .
+ -/
 theorem exists_regular_component (v : Fin 3 → K)
     (hG : MvPolynomial.eval v G = 0) (hT : MvPolynomial.eval v T = 0)
     (hH : MvPolynomial.eval v H ≠ 0) :
@@ -90,8 +90,8 @@ theorem componentSeeds_on_prime {Seed : Type*}
   classical
   exact (Finset.mem_filter.mp hγ).2
 
-/-- No disjointness of the component subsets is assumed: overlaps only
-increase the sum and therefore are safe for this upper bound. -/
+/-- .
+ -/
 theorem card_le_sum_componentSeeds {Seed : Type*}
     (S : Finset Seed) (v : Seed → Fin 3 → K)
     (hG : ∀ γ ∈ S, MvPolynomial.eval (v γ) G = 0)
@@ -107,9 +107,9 @@ theorem card_le_sum_componentSeeds {Seed : Type*}
     exact ⟨C, Finset.mem_univ C, Finset.mem_filter.mpr ⟨hγ, hC⟩⟩
   exact (Finset.card_le_card hcover).trans (Finset.card_biUnion_le)
 
-/-- Sum independently proved per-prime bounds against a single summed
-coordinate budget. This is the explicit finite arithmetic step, not a
-replacement for deriving either of its geometric premises. -/
+/-- .
+
+ -/
 theorem aggregate_component_incidence {Seed : Type*}
     (S : Finset Seed) (v : Seed → Fin 3 → K)
     (hG : ∀ γ ∈ S, MvPolynomial.eval (v γ) G = 0)

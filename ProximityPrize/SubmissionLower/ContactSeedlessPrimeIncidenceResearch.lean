@@ -2,16 +2,16 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactProperCutSeedCount
 import ProximityPrize.SubmissionLower.ContactIdentityResidualSurfaceResearch
 
-/-!
-# Fixed-centre incidence on the plane cut `Z = 0`
+/-! .
 
-Nearby scalar codewords are represented by their actual polynomial and
-derivative at the generic `X`, with the unused seed coordinate set to zero.
-This point map is injective.  On every regular component of the plane cut,
-more than `w` identity nodes would force the zero seed coordinate to be
-transcendental, an immediate contradiction.  Hence the affine-pencil tail
-from the line-alignment argument is absent.
--/
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSeedlessPrimeIncidenceResearch
 
@@ -154,9 +154,9 @@ theorem identityNodes_card_le_of_seedless_cut
 variable {Iota : Type}
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Per-prime fixed-centre incidence.  The second summand in the affine
-incidence theorem is absent because the cut `Z=0` forbids a large identity
-set. -/
+/-- .
+
+ -/
 theorem seedless_prime_incidence
     (hphi : Function.Injective phi)
     (hproj : ProjectionsFiniteSeparable Omega P)

@@ -23,10 +23,10 @@ constant. This prevents target notation capture;
 all statements and mathematical arguments are retained.
 -/
 
-/-!
-The `R`-`AlgEquiv` between the localization of `R` away from `r` and
-`R` with an inverse of `r` adjoined.
--/
+/-! .
+
+
+ -/
 
 section ProximityFlatProofPort
 
@@ -36,8 +36,8 @@ variable {R : Type*} [CommRing R]
 
 attribute [local instance] AdjoinRoot.algHom_subsingleton
 
-/-- The `R`-`AlgEquiv` between the localization of `R` away from `r` and
-`R` with an inverse of `r` adjoined. -/
+/-- .
+ -/
 noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] AdjoinRoot (C r * Polynomial.X - 1) :=
   AlgEquiv.ofAlgHom
     { awayLift _ r _ with

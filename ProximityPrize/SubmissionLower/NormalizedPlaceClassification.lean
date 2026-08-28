@@ -3,20 +3,20 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Valuation_Discrete_IsDiscreteValuationRing
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Valuation_Integral
 
-/-!
-# Normalized valuations come from unique actual normalization primes
+/-! .
 
-Model label: gpt-5.
 
-The central theorem constructs the actual center prime in a Dedekind
-domain S with fraction field L and proves exact equality of valuations.
-Its hypotheses are surjectivity of v : L -> Z^m_0 and v(S) <= 1.
-It does not postulate a place correspondence or any curve-degree bound.
 
-A separate lemma derives unit-ball bounds from actual integrality. It
-supports applying the classification to actual integral closures once
-the base-ring unit-ball inclusion has been established.
--/
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.NormalizedPlaceClassification
 
@@ -31,8 +31,8 @@ variable {L : Type*} [Field L]
 
 local instance : DecidableEq L := Classical.decEq L
 
-/-- In the normalized discrete value group there is no value strictly
-between exp(-1) and 1. -/
+/-- .
+ -/
 theorem value_le_exp_neg_one {z : ℤᵐ⁰} (hz : z < 1) :
     z ≤ WithZero.exp (-1 : ℤ) := by
   by_cases hz0 : z = 0
@@ -45,8 +45,8 @@ theorem value_le_exp_neg_one {z : ℤᵐ⁰} (hz : z < 1) :
     z = WithZero.exp z.log := (WithZero.exp_log hz0).symm
     _ ≤ WithZero.exp (-1 : ℤ) := WithZero.exp_le_exp.mpr (by omega)
 
-/-- Equivalent surjective Z-valued valuations have the same
-normalization, so they are equal, not merely equivalent. -/
+/-- .
+ -/
 theorem eq_of_equiv_surjective (v w : Valuation L ℤᵐ⁰)
     (hv : Function.Surjective v) (hw : Function.Surjective w)
     (h : v.IsEquiv w) : v = w := by
@@ -82,8 +82,8 @@ section UnitBall
 variable (R L : Type*) [CommRing R] [Field L] [Algebra R L]
 variable (v : Valuation L ℤᵐ⁰) (hR : ∀ r : R, v (algebraMap R L r) ≤ 1)
 
-/-- The actual algebra map with codomain restricted to the valuation
-ring, constructed from the supplied base-ring unit-ball inclusion. -/
+/-- .
+ -/
 def unitBallMap : R →+* v.valuationSubring where
   toFun r := ⟨algebraMap R L r, hR r⟩
   map_zero' := Subtype.ext (map_zero _)
@@ -92,8 +92,8 @@ def unitBallMap : R →+* v.valuationSubring where
   map_mul' r s := Subtype.ext (map_mul _ r s)
 
 include hR in
-/-- Integral elements lie in the same actual unit ball. This derives the
-bound for an integral closure; it does not assume the final chart map. -/
+/-- .
+ -/
 theorem integral_le_one {x : L} (hx : IsIntegral R x) : v x ≤ 1 := by
   letI : Algebra R v.valuationSubring := (unitBallMap R L v hR).toAlgebra
   letI : IsScalarTower R v.valuationSubring L :=
@@ -101,8 +101,8 @@ theorem integral_le_one {x : L} (hx : IsIntegral R x) : v x ≤ 1 := by
   have hx' : IsIntegral v.valuationSubring x := hx.tower_top
   exact (Valuation.valuationSubring.integers v).isIntegral_iff_v_le_one.mp hx'
 
-/-- The actual center ideal is the pullback of the valuation-ring
-maximal ideal. -/
+/-- .
+ -/
 def centerIdeal : Ideal R :=
   Ideal.comap (unitBallMap R L v hR) (IsLocalRing.maximalIdeal v.valuationSubring)
 
@@ -157,8 +157,8 @@ theorem centerPlace_membership (hv : Function.Surjective v) (s : S) :
   mem_centerIdeal S L v hS s
 
 open scoped algebraMap in
-/-- The localization at the constructed center is contained in the
-actual valuation ring. Its nontrivial overring is therefore itself. -/
+/-- .
+ -/
 theorem center_localization_le (hv : Function.Surjective v) :
     HeightOneSpectrum.valuationSubringAtPrime L (centerPlace S L v hS hv) ≤
       v.valuationSubring := by
@@ -191,8 +191,8 @@ theorem centerPlace_valuation (hv : Function.Surjective v) :
     (p.valuation_surjective L) hv hequiv).symm
 
 include hS in
-/-- Actual normalized-place classification, with no assumed bijection.
-The prime is constructed as a maximal-ideal pullback and is unique. -/
+/-- .
+ -/
 theorem exists_unique_place (hv : Function.Surjective v) :
     ∃! p : HeightOneSpectrum S, v = p.valuation L := by
   refine ⟨centerPlace S L v hS hv, centerPlace_valuation S L v hS hv, ?_⟩

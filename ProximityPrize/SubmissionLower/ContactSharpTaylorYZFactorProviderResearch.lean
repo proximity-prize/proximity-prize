@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSharpTaylorFixedMeet6656Research
 import ProximityPrize.SubmissionLower.ContactProfileYZFactorProviderResearch
 
-/-!
-# Sharp equal-weight Taylor flags with the active Z/YZ factor provider
+/-! .
 
-This module supplies the missing direction seam between the equal-weight
-Taylor support theorem and the profile-generic active-YZ component provider.
-It keeps the stored residual support used by the recursive coordinate changes,
-but indexes every agreement cut by the smaller sharp flag.
--/
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactSharpTaylorYZFactorProviderResearch
 
@@ -66,9 +66,9 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Prime-budget recursive incidence with a caller-supplied flag for every
-terminal agreement degree.  This is the narrow parameterization of the
-accepted recursive theorem needed by equal-weight Taylor cuts. -/
+/-- .
+
+ -/
 theorem recursive_curve_stratified_incidence_of_prime_flag_budget_for_cuts
     {e d a : ℕ} {surfaceFlag cutFlag : FlagDegree}
     {support : ResidualSupportParameters}
@@ -157,9 +157,9 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget_for_cuts
   · have htail := hlarge D hpencil.1
     exact htail.trans (Nat.le_add_left _ _)
 
-/-- The recursive prime-budget theorem specialized to the equal-weight sharp
-agreement flags.  Every terminal cut is certified directly from the residual
-stage's preserved support weights. -/
+/-- .
+
+ -/
 theorem recursive_curve_stratified_incidence_of_sharp_prime_flag_budget
     {e d a : ℕ} {surfaceFlag cutFlag : FlagDegree}
     {support : ResidualSupportParameters}
@@ -239,7 +239,7 @@ theorem flagMixed_sharpResidualAgreement_z
     unitYZFlag, unitZFlag]
   ring
 
-/-- Component-family aggregation with sharp cuts and the joint Z/YZ tail. -/
+/-- . -/
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_sharp_z_yz
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
@@ -367,7 +367,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_sharp_z_yz
     (by simpa only [unitCost] using B.sum_weightedCost_le unitYZFlag)
     hlargeSum
 
-/-- Active-YZ terminal families whose second-cut box is the sharp Taylor flag. -/
+/-- . -/
 def TerminalAdaptiveProjectionFamiliesSharpYZ
     {e w : ℕ} {flag : FlagDegree}
     (support : ResidualSupportParameters)
@@ -384,8 +384,8 @@ def TerminalAdaptiveProjectionFamiliesSharpYZ
       Nonempty (AdaptiveUnitProjectionFamilyYZ base flag
         (sharpResidualAgreementFlag support D.degree))
 
-/-- Geometry-only active-YZ constructor for an arbitrary supplied sharp cut
-flag.  This is the accepted constructor with only its second box exposed. -/
+/-- .
+ -/
 theorem terminalAdaptiveProjectionAtSharpCutYZ_of_active_yz_gates
     {e w : ℕ} {support : ResidualSupportParameters} {flag : FlagDegree}
     (S : ResidualStage phi Gamma x pchar e flag w support)
@@ -451,7 +451,7 @@ theorem terminalAdaptiveProjectionAtSharpCutYZ_of_active_yz_gates
       (sharpResidualAgreementFlag support D.degree) T).2 hTflag)
   exact ⟨base, ⟨P⟩⟩
 
-/-- Rectangular-cap constructor for sharp active-YZ terminal families. -/
+/-- . -/
 theorem terminalAdaptiveProjectionFamiliesSharpYZ_of_active_yz_caps
     {e w : ℕ} {flag : FlagDegree}
     (support : ResidualSupportParameters) (hsy : support.s < support.ys)
@@ -520,8 +520,8 @@ theorem terminalAdaptiveProjectionFamiliesSharpYZ_of_active_yz_caps
   exact terminalAdaptiveProjectionAtSharpCutYZ_of_active_yz_gates
     S D i hproper hGdegree hmixedZ' hGflag hTflag
 
-/-- One terminal outer fiber, using sharp Taylor flags throughout the inner
-curve recursion and the joint Z/YZ large-pencil charge. -/
+/-- .
+ -/
 theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_sharp_z_yz
     (hphi : Function.Injective phi)
     (p : Profile) (support : ResidualSupportParameters)
@@ -671,7 +671,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_sharp_z_yz
     _ ≤ _ := hbound
     _ = _ := by ring
 
-/-- Profile-generic sharp Taylor plus active-YZ fixed-factor provider. -/
+/-- . -/
 theorem recursive_scaled_factorSharpYZ_of_adaptive_projection_families
     (hphi : Function.Injective phi)
     (p : Profile) (support : ResidualSupportParameters)

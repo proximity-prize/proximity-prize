@@ -3,21 +3,21 @@ import ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
 import ProximityPrize.SubmissionLower.ContactFlagPoleInequality6543Research
 import ProximityPrize.SubmissionLower.ContactDependentGenericity6543Research
 
-/-!
-# Three-projection residual provider for the 65.43 flag route
+/-! .
 
-For a flag support `Flag(a,b,c)`, the only global intersection input needed
-after generic leading-term avoidance is a budget for three ordinary affine
-projections:
 
-* `Z` with coefficient `a`;
-* a generic linear form in `(Y,Z)` with coefficient `b`;
-* a generic linear form in `(Y,S,Z)` with coefficient `c`.
 
-This module states that narrow interface componentwise and proves its exact
-conversion to the residual provider consumed by the agreement-first caller.
-No general toric intersection theorem is assumed here.
--/
+
+
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactFlagProjectionProvider6543Research
 
@@ -38,9 +38,9 @@ noncomputable section
 
 variable {Ω : Type} [Field Ω] [IsAlgClosed Ω]
 
-/-- Principal-cycle budget for one generic support polynomial.  For the flag
-route this is instantiated only at the three unit supports, so each instance
-is an ordinary affine-projection/resultant bound. -/
+/-- .
+
+ -/
 structure PrincipalCycleBudget
     {G T H : MvPolynomial (Fin 3) Ω}
     (E : Finset (Fin 3 →₀ ℕ)) (separator : Fin 3)
@@ -79,10 +79,10 @@ structure PrincipalCycleBudget
         (cost C : ℤ)
   sum_cost_le : (∑ C : RegularComponent Ω G T H, cost C) ≤ wholeCap
 
-/-- The exact geometric residue after generic flag leading terms have been
-constructed.  Each component receives three ordinary projection costs.  The
-local cycle bound uses their flag-weighted sum, while the three global fields
-are the only resultant/degree inequalities still required. -/
+/-- .
+
+
+ -/
 structure FlagProjectionCycleBudget
     {G T H : MvPolynomial (Fin 3) Ω}
     (p : FlagDegree) (separator : Fin 3)
@@ -127,11 +127,11 @@ structure FlagProjectionCycleBudget
   sum_yzCost_le : (∑ C : RegularComponent Ω G T H, yzCost C) ≤ yzCap
   sum_allCost_le : (∑ C : RegularComponent Ω G T H, allCost C) ≤ allCap
 
-/-- Three unit-support principal-cycle budgets imply the combined flag-cycle
-inequality.  The proof compares the full flag support at the places of `B`
-with the three unit support functions, then uses each unit polynomial's full
-principal pole divisor.  The unit polynomials are never multiplied, so zeros
-cannot cancel poles. -/
+/-- .
+
+
+
+ -/
 def FlagProjectionCycleBudget.ofNestedProjectionBudgets
     {G T H : MvPolynomial (Fin 3) Ω}
     {p : FlagDegree} {separator : Fin 3}
@@ -296,7 +296,7 @@ def FlagProjectionCycleBudget.ofNestedProjectionBudgets
         push_cast
         ring
 
-/-- Flag-weighted component cost supplied to the existing residual seam. -/
+/-- . -/
 def FlagProjectionCycleBudget.combinedCost
     {G T H : MvPolynomial (Fin 3) Ω}
     {p : FlagDegree} {separator : Fin 3}
@@ -338,8 +338,8 @@ theorem FlagProjectionCycleBudget.sum_combinedCost_le
       (Nat.mul_le_mul_left p.yz P.sum_yzCost_le))
     (Nat.mul_le_mul_left p.all P.sum_allCost_le)
 
-/-- The three projection budgets produce the exact residual component
-provider, with no further geometric hypothesis. -/
+/-- .
+ -/
 def FlagProjectionCycleBudget.toResidualComponentBudget
     {G T H : MvPolynomial (Fin 3) Ω}
     {p : FlagDegree} {separator : Fin 3}
@@ -359,9 +359,9 @@ def FlagProjectionCycleBudget.toResidualComponentBudget
       P.sum_combinedCost_le).toResidualPoleComponentBudget
     |>.toResidualComponentBudget hproj
 
-/-- Numeric 65.43 specialization.  The exact polarization identity rewrites
-the weighted sum of the three ordinary projection caps to the whole flag
-mixed cost expected by the outer incidence ledger. -/
+/-- .
+
+ -/
 def FlagProjectionCycleBudget.toResidualComponentBudget6543
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     {hseparator : ∀ C : RegularComponent Ω G T H,

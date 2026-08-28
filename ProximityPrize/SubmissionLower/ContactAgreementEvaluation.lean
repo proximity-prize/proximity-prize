@@ -2,18 +2,18 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactTaylorNumerators
 import ProximityPrize.SubmissionLower.ContactPolynomiality
 
-/-!
-# Actual semantics of the contact numerator equations
+/-! .
 
-Model label: gpt-5.
 
-The common-denominator identities are proved first in a commutative ring.
-They are then evaluated at the actual regular contact point. Inverse
-factorial weights recover the actual reconstructed Taylor polynomial.
-Numerator vanishing is equivalent to jet-coefficient vanishing only with
-the explicit factorial nonvanishing hypothesis, supplied below the
-characteristic when requested. No geometric count is assumed.
--/
+
+
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactAgreementEvaluation
 
@@ -66,8 +66,8 @@ section PolynomialClearing
 
 variable {K A : Type*} [Field K] [CommRing A]
 
-/-- The map is arbitrary: this is an identity of the constructed polynomial,
-not an assumed identification at a regular point. -/
+/-- .
+ -/
 theorem map_agreementNumerator
     (φ : Poly4 K →+* A) (F : Poly4 K) (w : ℕ) (c : ℕ → K) (x u₀ u₁ : K)
     (u : A) (hHU : φ (polyH K F) * u = 1) :
@@ -170,8 +170,8 @@ theorem numerator_eval_zero_iff_jetCoefficient_zero_of_char
   numerator_eval_zero_iff_jetCoefficient_zero coefficients F v hF hregular b
     (factorial_cast_ne_zero_below_characteristic p b hb)
 
-/-- The endpoint b=bound is included, as required by the slope-coordinate
-Taylor identity. -/
+/-- .
+ -/
 theorem all_tail_numerators_iff_all_tail_jets
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
@@ -222,9 +222,9 @@ theorem eval_agreementNumerator_clearing
     map_agreementNumerator (MvPolynomial.eval₂Hom coefficients v) F w c x u₀ u₁
       (MvPolynomial.eval₂Hom coefficients v (polyH K F))⁻¹ (mul_inv_cancel₀ hH)
 
-/-- Evaluation of the concrete agreement numerator equals the actual
-reconstructed polynomial's agreement error times the nonzero common
-denominator. Factorial weights are transported through the coefficient map. -/
+/-- .
+
+ -/
 theorem eval_factorial_agreementNumerator
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)

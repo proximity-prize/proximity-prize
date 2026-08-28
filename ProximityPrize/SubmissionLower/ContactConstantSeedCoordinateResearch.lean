@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
 
-/-!
-# Components with constant seed coordinate contain at most one seed
+/-! .
 
-The third actual curve coordinate is the embedded seed.  If that
-coordinate is algebraic over the algebraically closed coefficient field,
-it is a scalar.  Every affine point on the component therefore has the
-same third coordinate, and injectivity of the coefficient embedding leaves
-at most one selected seed on the component.
--/
+
+
+
+
+
+
+ -/
 
 namespace ProximityPrize.SubmissionLower.ContactConstantSeedCoordinateResearch
 
@@ -26,8 +26,8 @@ variable (P : Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Ω := Classical.decEq Ω
 
-/-- A scalar identity for an actual coordinate specializes to the same
-identity at every original affine point lying on the prime component. -/
+/-- .
+ -/
 theorem point_coordinate_eq_scalar
     (i : Fin 3) (c : Ω)
     (hc : algebraMap Ω (CoordinateField Ω P) c = coordinate Ω P i)
@@ -45,8 +45,8 @@ theorem point_coordinate_eq_scalar
   simpa only [Q, map_sub, MvPolynomial.aeval_X, MvPolynomial.aeval_C,
     sub_eq_zero, Algebra.algebraMap_self_apply] using hz
 
-/-- Any selected-seed set lying on a component whose Z coordinate is
-algebraic has cardinality at most one. -/
+/-- .
+ -/
 theorem selected_seed_set_card_le_one_of_seedCoordinate_isAlgebraic
     (selected : K → Polynomial K) (Γ : Finset K)
     (hpoint : ∀ γ ∈ Γ,
