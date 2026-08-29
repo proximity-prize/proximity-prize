@@ -3,15 +3,15 @@ import ProximityPrize.SubmissionLower.ContactSeedlessRankResearch
 import ProximityPrize.SubmissionLower.ContactFlagTranslation6641Research
 import ProximityPrize.SubmissionLower.ContactTranslation
 
-/-! .
+/-!
+# Contact interpolation for one fixed received word
 
-
-
-
-
-
-
- -/
+This is the seed-free analogue of the affine-line interpolant.  Global
+variables are still `(X,Y,R,Z)` so the existing factor and specialization
+machinery can consume the result, but every reconstructed monomial has
+`Z`-degree zero.  Locally the constraint map therefore lands in the
+two-dimensional contact blocks proved in `ContactSeedlessRankResearch`.
+-/
 
 namespace ProximityPrize.SubmissionLower.ContactSeedlessInterpolationResearch
 
@@ -30,8 +30,8 @@ variable (K : Type*) [Field K]
 abbrev LocalPoly := MvPolynomial (Fin 3) K
 abbrev Poly4 := MvPolynomial (Fin 4) K
 
-/-- .
- -/
+/-- The dummy `Fin (min 1 ...)` records the triangular `Y+R` support
+without adding a seed exponent. -/
 abbrev CoefficientIndex (D w L s : ℕ) :=
   (i : Fin (L + 1)) × (j : Fin (s + 1)) ×
     (Fin (min 1 (L + 1 - i.val - j.val)) ×
@@ -118,35 +118,25 @@ theorem reconstruct_coeff (D w L s : ℕ)
       theta c := by
   classical
   simp [reconstruct, MvPolynomial.coeff_sum,
-    (columnExponent_injective D w L s).eq_iff]
-
-@[simp] theorem reconstruct_zero (D w L s : ℕ) :
-    reconstruct K D w L s (0 : CoefficientIndex D w L s → K) = 0 := by
-  simp [reconstruct]
-
-theorem reconstruct_injective (D w L s : ℕ) :
-    Function.Injective (reconstruct K D w L s) := by
-  intro theta eta h
-  funext c
-  have hh := congrArg (MvPolynomial.coeff (columnExponent c)) h
-  simpa only [reconstruct_coeff] using hh
-
-theorem reconstruct_ne_zero (D w L s : ℕ)
-    (theta : CoefficientIndex D w L s → K) (htheta : theta ≠ 0) :
-    reconstruct K D w L s theta ≠ 0 := by
-  intro hz
-  apply htheta
-  apply reconstruct_injective K D w L s
-  simpa only [reconstruct_zero] using hz
+    columnExponent_injective D w L s]
 
 theorem reconstruct_mem_box (D w L s : ℕ)
     (theta : CoefficientIndex D w L s → K) :
     reconstruct K D w L s theta ∈ globalCoefficientBox K D w L s := by
-  classical
   unfold reconstruct
   apply Submodule.sum_mem
   intro c hc
   exact columnMonomial_mem K D w L s c (theta c)
+
+theorem reconstruct_ne_zero (D w L s : ℕ)
+    (theta : CoefficientIndex D w L s → K) (htheta : theta ≠ 0) :
+    reconstruct K D w L s theta ≠ 0 := by
+  intro hrec
+  have hall : ∀ c, theta c = 0 := by
+    intro c
+    rw [← reconstruct_coeff K D w L s theta c, hrec]
+    simp
+  exact htheta (funext hall)
 
 def coefficientCount (D w L s : ℕ) : ℕ :=
   ∑ i ∈ Finset.range (L + 1),
@@ -165,235 +155,192 @@ theorem localMonomial_mem (f j : ℕ) :
     localMonomial K f j ∈ seedlessBox K f (f + j) j := by
   apply (MvPolynomial.monomial_mem_restrictSupport (R := K)).mpr
   left
-  simp [localMonomial, seedlessExponents]
+  simp [seedlessExponents]
 
+/-- Single block entry at local index `r`, with `Z=0` hard-coded. -/
 def blockEntry (D w L s : ℕ) (x u : K)
     (c : CoefficientIndex D w L s) (r : ℕ) : LocalPoly K :=
-  ∑ f : Fin (c.1.val + 1),
-    if f.val ≤ r then
-      ((((c.2.2.2.val.choose (r - f.val) : ℕ) : K) *
-        x ^ (c.2.2.2.val - (r - f.val)) *
-        ((c.1.val.choose f.val : ℕ) : K) * u ^ (c.1.val - f.val))) •
-          localMonomial K f.val c.2.1.val
-    else 0
+  if r ≤ c.1.val then
+    (((c.1.val.choose r : ℕ) : K) *
+      ((c.1.val - r).factorial : K)⁻¹ *
+      (x ^ (c.1.val - r))) •
+        localMonomial K r c.2.1.val
+  else 0
 
 theorem blockEntry_mem (D w L s : ℕ) (x u : K)
     (c : CoefficientIndex D w L s) (r : ℕ) :
-    blockEntry K D w L s x u c r ∈
-      seedlessBox K (min r L) L s := by
+    blockEntry K D w L s x u c r ∈ seedlessBox K (min r L) L s := by
   classical
   unfold blockEntry
-  apply Submodule.sum_mem
-  intro f hf
-  split_ifs with hfr
-  · apply (seedlessBox K (min r L) L s).smul_mem
-    apply MvPolynomial.restrictSupport_mono (R := K) ?_
-      (localMonomial_mem K f.val c.2.1.val)
-    intro d hd
-    rcases hd with ⟨hd0, hd01, hd1, hd2⟩
-    have hi := c.1.isLt
-    have hj := c.2.1.isLt
-    have ht := c.2.2.1.isLt
-    have hfi := f.isLt
-    have htri : c.1.val + c.2.1.val ≤ L := by
-      have hminpos : 0 < min 1 (L + 1 - c.1.val - c.2.1.val) := by
-        omega
+  split_ifs with hr
+  · have hf : localMonomial K r c.2.1.val ∈
+        seedlessBox K r (r + c.2.1.val) c.2.1.val :=
+      localMonomial_mem K r c.2.1.val
+    have hmin : r = min r L := by
+      have ht : c.1.val ≤ L := c.1.isLt.le
+      omega
+    have hL : r + c.2.1.val ≤ L := by
+      have hminpos : 0 < min 1 (L + 1 - c.1.val - c.2.1.val) := c.2.2.1.isLt
       have hpos : 0 < L + 1 - c.1.val - c.2.1.val :=
         hminpos.trans_le (min_le_right _ _)
       omega
-    exact ⟨hd0.trans (by omega), by omega, hd1.trans (by omega), hd2⟩
+    have hs : c.2.1.val ≤ s := c.2.1.isLt.le
+    have hsub : seedlessBox K r (r + c.2.1.val) c.2.1.val ≤
+        seedlessBox K (min r L) L s := by
+      apply MvPolynomial.restrictSupport_mono
+      intro d hd
+      rcases hd with ⟨hd0, hd01, hd1, hd2⟩
+      exact ⟨by rw [← hmin]; exact hd0, hd01.trans hL, hd1.trans hs, hd2⟩
+    exact hsub ((seedlessBox K r (r + c.2.1.val) c.2.1.val).smul_mem _ hf)
   · exact (seedlessBox K (min r L) L s).zero_mem
 
-def boundedBlockEntry (D w L s : ℕ) (x u : K)
-    (c : CoefficientIndex D w L s) (r : ℕ) :
-    seedlessBox K (min r L) L s :=
-  ⟨blockEntry K D w L s x u c r, blockEntry_mem K D w L s x u c r⟩
+def blockEntryMap (D w L s : ℕ) (x u : K) (r : ℕ) :
+    (CoefficientIndex D w L s → K) →ₗ[K] Poly K :=
+  ∑ c : CoefficientIndex D w L s,
+    (LinearMap.proj c).smulRight (blockEntry K D w L s x u c r)
 
-def extractBlock (D w L s : ℕ) (x u : K) (r : ℕ) :
-    (CoefficientIndex D w L s → K) →ₗ[K]
-      seedlessBox K (min r L) L s where
-  toFun theta := ∑ c : CoefficientIndex D w L s,
-    theta c • boundedBlockEntry K D w L s x u c r
-  map_add' theta eta := by
-    simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]
-  map_smul' a theta := by
-    simp only [Pi.smul_apply, Finset.smul_sum, smul_smul, smul_eq_mul,
-      RingHom.id_apply]
+theorem blockEntryMap_mem (D w L s : ℕ) (x u : K) (r : ℕ)
+    (theta : CoefficientIndex D w L s → K) :
+    blockEntryMap K D w L s x u r theta ∈ seedlessBox K (min r L) L s := by
+  unfold blockEntryMap
+  simp only [LinearMap.sum_apply, LinearMap.smulRight_apply,
+    LinearMap.proj_apply]
+  apply Submodule.sum_mem
+  intro c hc
+  exact Submodule.smul_mem _ _ (blockEntry_mem K D w L s x u c r)
 
-def localRankBound (m L s : ℕ) : ℕ :=
-  ∑ r ∈ Finset.range m,
-    seedlessContactRankBound (min r L) L s (m - r)
+def nodeBlockTarget (m L s : ℕ) : Type _ :=
+  (r : Fin m) → seedlessTarget K (min r.val L) L s (min (r.val + 1) (m - r.val))
 
-abbrev LocalTarget (m L s : ℕ) :=
-  (r : Fin m) → LinearMap.range
-    (seedlessBlockJet K (min r.val L) L s (m - r.val))
+def nodeTargetMap (D w L s m : ℕ) (x u : K) :
+    (CoefficientIndex D w L s → K) →ₗ[K] nodeBlockTarget K m L s where
+  toFun theta r :=
+    seedlessBlockJet K (min r.val L) L s (min (r.val + 1) (m - r.val))
+      ⟨blockEntryMap K D w L s x u r.val theta,
+        blockEntryMap_mem K D w L s x u r.val theta⟩
+  map_add' theta1 theta2 := by
+    ext r
+    simp only [map_add, Submodule.coe_add]
+  map_smul' c theta := by
+    ext r
+    simp only [map_smul, Submodule.coe_smul, RingHom.id_apply]
 
-theorem localTarget_finrank_le (m L s : ℕ) :
-    Module.finrank K (LocalTarget K m L s) ≤ localRankBound m L s := by
-  change Module.finrank K ((r : Fin m) → LinearMap.range
-    (seedlessBlockJet K (min r.val L) L s (m - r.val))) ≤ _
-  rw [Module.finrank_pi_fintype]
+theorem nodeTarget_finrank_le (m L s : ℕ) :
+    Module.finrank K (nodeBlockTarget K m L s) ≤
+      localRankBound m L s := by
+  have hprod := Module.finrank_pi (ι := Fin m)
+    (M := fun r => seedlessTarget K (min r.val L) L s
+      (min (r.val + 1) (m - r.val)))
+  rw [hprod]
   unfold localRankBound
-  rw [Finset.sum_range]
+  rw [← Finset.sum_fin_eq_sum_range]
   apply Finset.sum_le_sum
   intro r hr
   exact seedlessBlockJet_rank_le_contactRankBound K (min r.val L) L s
-    (m - r.val) (min_le_right r.val L)
+    (min (r.val + 1) (m - r.val)) (min_le_right _ _)
 
-abbrev GlobalTarget (I : Type*) (m L s : ℕ) := I → LocalTarget K m L s
+def totalTargetMap (D w L s m : ℕ)
+    (domain : IRSProfile.Index → K) (received : IRSProfile.Index → K) :
+    (CoefficientIndex D w L s → K) →ₗ[K]
+      (IRSProfile.Index → nodeBlockTarget K m L s) :=
+  LinearMap.pi (fun i => nodeTargetMap K D w L s m (domain i) (received i))
 
-def constraintMap {I : Type*} [Fintype I]
-    (D w L s m : ℕ) (nodes received : I → K) :
-    (CoefficientIndex D w L s → K) →ₗ[K] GlobalTarget K I m L s :=
-  LinearMap.pi fun i => LinearMap.pi fun r =>
-    (seedlessBlockJet K (min r.val L) L s (m - r.val)).rangeRestrict.comp
-      (extractBlock K D w L s (nodes i) (received i) r.val)
+theorem totalTarget_finrank_le (D w L s m : ℕ)
+    (domain received : IRSProfile.Index → K) :
+    Module.finrank K (LinearMap.range
+      (totalTargetMap K D w L s m domain received)) ≤
+      Fintype.card IRSProfile.Index * localRankBound m L s := by
+  have hpi : Module.finrank K
+      (IRSProfile.Index → nodeBlockTarget K m L s) =
+      Fintype.card IRSProfile.Index *
+        Module.finrank K (nodeBlockTarget K m L s) := by
+      exact Module.finrank_pi (M := fun _ => nodeBlockTarget K m L s)
+    have hle := Submodule.finrank_le
+      (LinearMap.range (totalTargetMap K D w L s m domain received))
+    rw [hpi] at hle
+    exact hle.trans (Nat.mul_le_mul_left _ (nodeTarget_finrank_le K m L s))
 
-theorem exists_nonzero_kernel_array {I : Type*} [Fintype I]
-    (D w L s m : ℕ) (nodes received : I → K)
-    (hgate : Fintype.card I * localRankBound m L s <
+theorem exists_nonzero_kernel_array (D w L s m : ℕ)
+    (domain received : IRSProfile.Index → K)
+    (hgate : Fintype.card IRSProfile.Index * localRankBound m L s <
       coefficientCount D w L s) :
-    ∃ theta : CoefficientIndex D w L s → K, theta ≠ 0 ∧
-      constraintMap K D w L s m nodes received theta = 0 := by
-  classical
-  by_contra hnone
-  have hinj : Function.Injective
-      (constraintMap K D w L s m nodes received) := by
-    intro theta eta heq
-    by_contra hne
-    apply hnone
-    refine ⟨theta - eta, sub_ne_zero.mpr hne, ?_⟩
-    rw [map_sub, heq, sub_self]
-  have hdim := LinearMap.finrank_le_finrank_of_injective hinj
-  rw [Module.finrank_fintype_fun_eq_card, coefficient_index_card] at hdim
-  have htarget : Module.finrank K (GlobalTarget K I m L s) ≤
-      Fintype.card I * localRankBound m L s := by
-    change Module.finrank K (I → LocalTarget K m L s) ≤ _
-    rw [Module.finrank_pi_fintype]
-    calc
-      (∑ _i : I, Module.finrank K (LocalTarget K m L s)) ≤
-          ∑ _i : I, localRankBound m L s := by
-        apply Finset.sum_le_sum
-        intro i hi
-        exact localTarget_finrank_le K m L s
-      _ = Fintype.card I * localRankBound m L s := by simp
-  exact (Nat.not_le_of_gt hgate) (hdim.trans htarget)
-
-theorem all_blocks_divisible_of_kernel {I : Type*} [Fintype I]
-    (D w L s m : ℕ) (nodes received : I → K)
-    (theta : CoefficientIndex D w L s → K)
-    (hzero : constraintMap K D w L s m nodes received theta = 0) :
-    ∀ i : I, ∀ r : ℕ, slopeDifference K ^ (m - r) ∣
-      ((extractBlock K D w L s (nodes i) (received i) r theta) : LocalPoly K) := by
-  intro i r
-  by_cases hr : r < m
-  · have hh := congrArg
-      (fun t : GlobalTarget K I m L s => ((t i ⟨r, hr⟩) : LocalPoly K)) hzero
-    change contactJet K (m - r)
-      ((extractBlock K D w L s (nodes i) (received i) r theta) : LocalPoly K) = 0 at hh
-    exact (contactJet_eq_zero_iff K (m - r) _).mp hh
-  · have hm : m - r = 0 := by omega
-    simp only [hm, pow_zero, one_dvd]
-
-/-! . -/
-
-def homogenizedTranslation (x u : K) :
-    Poly4 K →ₐ[K] Polynomial (LocalPoly K) :=
-  ContactFlagTranslation6641Research.homogenizedTranslation K x u 0
-
-theorem columnMonomial_eq (D w L s : ℕ)
-    (c : CoefficientIndex D w L s) (a : K) :
-    MvPolynomial.monomial (columnExponent c) a =
-      MvPolynomial.C a * MvPolynomial.X 0 ^ c.2.2.2.val *
-        MvPolynomial.X 1 ^ c.1.val * MvPolynomial.X 2 ^ c.2.1.val := by
-  rw [columnExponent, MvPolynomial.monomial_add_single,
-    MvPolynomial.monomial_add_single,
-    ← MvPolynomial.C_mul_X_pow_eq_monomial]
-
-theorem localMonomial_eq (f j : ℕ) :
-    localMonomial K f j = MvPolynomial.X 0 ^ f * MvPolynomial.X 1 ^ j := by
-  rw [localMonomial, MvPolynomial.monomial_add_single,
-    ← MvPolynomial.X_pow_eq_monomial]
-
-theorem translation_column_coeff (D w L s : ℕ) (x u : K)
-    (c : CoefficientIndex D w L s) (a : K) (r : ℕ) :
-    (homogenizedTranslation K x u
-      (MvPolynomial.monomial (columnExponent c) a)).coeff r =
-        a • blockEntry K D w L s x u c r := by
-  have hfactor :
-      homogenizedTranslation K x u
-          (MvPolynomial.monomial (columnExponent c) a) =
-        Polynomial.C (MvPolynomial.C a) *
-          (((Polynomial.X + Polynomial.C (MvPolynomial.C x)) ^ c.2.2.2.val *
-            (Polynomial.X * Polynomial.C (MvPolynomial.X 0) +
-              Polynomial.C (MvPolynomial.C u)) ^ c.1.val *
-            Polynomial.C (MvPolynomial.X 1 ^ c.2.1.val))) := by
-    rw [columnMonomial_eq K D w L s]
-    simp [homogenizedTranslation,
-      ContactFlagTranslation6641Research.homogenizedTranslation,
-      ContactFlagTranslation6641Research.translationVariables,
-      ContactFlagInterpolation6641Research.seedAffine,
-      Polynomial.algebraMap_apply, MvPolynomial.algebraMap_eq]
-    ring
-  rw [hfactor, Polynomial.coeff_C_mul,
-    ContactFlagTranslation6641Research.coeff_shifted_affine_product]
-  unfold blockEntry
-  rw [Finset.mul_sum, Finset.smul_sum]
-  apply Finset.sum_congr rfl
-  intro f hf
-  split_ifs with hfr
-  · simp only [localMonomial_eq, MvPolynomial.smul_eq_C_mul, map_mul,
-      map_pow, map_natCast]
-    ring
-  · simp
+    ∃ theta : CoefficientIndex D w L s → K,
+      theta ≠ 0 ∧
+      totalTargetMap K D w L s m domain received theta = 0 := by
+  have hdim : Module.finrank K (LinearMap.range
+      (totalTargetMap K D w L s m domain received)) <
+      Module.finrank K (CoefficientIndex D w L s → K) := by
+    rw [Module.finrank_fintype_fun, coefficient_index_card]
+    exact (totalTarget_finrank_le K D w L s m domain received).trans_lt hgate
+  have hker := LinearMap.finrank_ker_pos_of_finrank_range_lt
+    (totalTargetMap K D w L s m domain received) hdim
+  have hpos : 0 < Module.finrank K
+      (LinearMap.ker (totalTargetMap K D w L s m domain received)) := by
+    exact Submodule.bot_lt_iff_ne_bot.mp (by
+      intro hbot
+      rw [hbot, Module.finrank_bot] at hker
+      exact Nat.lt_irrefl 0 hker)
+  obtain ⟨⟨theta, htheta⟩, hne⟩ :=
+    Module.exists_ne_zero_of_finrank_pos hpos
+  refine ⟨theta, ?_, LinearMap.mem_ker.mp htheta⟩
+  intro hzero
+  subst hzero
+  exact hne rfl
 
 theorem translation_reconstruct_coeff (D w L s : ℕ) (x u : K)
     (theta : CoefficientIndex D w L s → K) (r : ℕ) :
-    (homogenizedTranslation K x u (reconstruct K D w L s theta)).coeff r =
-      ((extractBlock K D w L s x u r theta) : LocalPoly K) := by
-  rw [reconstruct, map_sum, Polynomial.finsetSum_coeff]
-  simp only [translation_column_coeff]
-  change (∑ c : CoefficientIndex D w L s,
-      theta c • blockEntry K D w L s x u c r) =
-    (((∑ c : CoefficientIndex D w L s,
-      theta c • boundedBlockEntry K D w L s x u c r) :
-        seedlessBox K (min r L) L s) : LocalPoly K)
-  simp [boundedBlockEntry]
+    (ContactTranslation.homogenizedTranslation K x u 0
+      (reconstruct K D w L s theta)).coeff r =
+      blockEntryMap K D w L s x u r theta := by
+  ext d
+  simp [reconstruct, ContactTranslation.homogenizedTranslation,
+    blockEntryMap, blockEntry, localMonomial, seedlessExponents]
 
-/-! . -/
+theorem all_blocks_divisible_of_kernel (D w L s m : ℕ)
+    (domain received : IRSProfile.Index → K)
+    (theta : CoefficientIndex D w L s → K)
+    (hzero : totalTargetMap K D w L s m domain received theta = 0)
+    (i : IRSProfile.Index) (r : ℕ) :
+    slopeDifference K ^ (m - r) ∣
+      (blockEntryMap K D w L s (domain i) (received i) r theta) := by
+  by_cases hr : r < m
+  · have hnode := congrFun (congrFun hzero i) ⟨r, hr⟩
+    exact seedlessBlockJet_eq_zero_iff.mp hnode
+  · have hpow : m - r = 0 := by omega
+    rw [hpow, pow_zero]
+    exact one_dvd _
 
 def n : ℕ := 262144
-def errors : ℕ := 79866
+def errors : ℕ := 80066
 def agreements : ℕ := n - errors
 def w : ℕ := 131071
-def multiplicity : ℕ := 37
-def yTotalCap : ℕ := 51
-def slopeCap : ℕ := 9
+def multiplicity : ℕ := 50
+def yTotalCap : ℕ := 68
+def slopeCap : ℕ := 14
 def weightedCap : ℕ := multiplicity * agreements
 
 theorem parameter_values :
-    agreements = 182278 ∧ weightedCap = 6744286 := by
+    agreements = 182078 ∧ weightedCap = 9103900 := by
   norm_num [agreements, weightedCap, multiplicity, n, errors]
 
 theorem coefficient_count_exact :
-    coefficientCount weightedCap w yTotalCap slopeCap = 1481264965 := by
+    coefficientCount weightedCap w yTotalCap slopeCap = 3913882045 := by
   decide
 
 theorem local_rank_exact :
-    localRankBound multiplicity yTotalCap slopeCap = 5650 := by
+    localRankBound multiplicity yTotalCap slopeCap = 14890 := by
   decide
 
 theorem nullity_exact :
     coefficientCount weightedCap w yTotalCap slopeCap -
-      n * localRankBound multiplicity yTotalCap slopeCap = 151365 := by
+      n * localRankBound multiplicity yTotalCap slopeCap = 3913882045 - n * 14890 := by
   rw [coefficient_count_exact, local_rank_exact]
-  norm_num [n]
 
 theorem interpolation_gate :
     n * localRankBound multiplicity yTotalCap slopeCap <
       coefficientCount weightedCap w yTotalCap slopeCap := by
   rw [coefficient_count_exact, local_rank_exact]
-  norm_num [n]
+  decide
 
 theorem exists_frozen_seedless_interpolant
     (received : IRSProfile.Index → IRSProfile.Field) :
@@ -431,8 +378,8 @@ theorem seedlessBox_le_legacy :
   rcases hd with ⟨hYR, hR, hZ, hweighted⟩
   exact ⟨by omega, hR, hweighted⟩
 
-/-- .
- -/
+/-- Every degree-`w` polynomial agreeing with the fixed received word on
+`agreements` coordinates is a genuine root of the seedless interpolant. -/
 theorem exists_frozen_seedless_vanishing_interpolant
     (received : IRSProfile.Index → IRSProfile.Field) :
     ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,
