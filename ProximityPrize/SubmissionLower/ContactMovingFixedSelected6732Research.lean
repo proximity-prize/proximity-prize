@@ -36,7 +36,7 @@ local instance : DecidableEq (GenericField K) := Classical.decEq _
 
 private theorem geometric_identityDegree_pos
     {F : MvPolynomial (Fin 4) K} (g : GeometricFactor K F) :
-    1 ≤ identityDegree fixedProfile 1167 43 9 (geometricCumulativeFlag K g) := by
+    1 ≤ identityDegree fixedProfile 1169 43 9 (geometricCumulativeFlag K g) := by
   have hirr : Irreducible g.1 :=
     (surfaceFactors_spec (polynomialEmbedding K) F g.1 g.2).1
   have hp := irreducible_positive_surface_degree g.1 hirr
@@ -70,7 +70,7 @@ theorem regular_factor_seed_bound
     (hnoPencil : NoLargeSelectedPencil selected Γ fixedProfile.w fixedProfile.errors)
     (R : RegularIndex Q) :
     (regularSeeds Q selected Γ R).card*fixedProfile.gap ≤
-      factorLedger fixedProfile 1167 43 9 (regularCumulativeFlag Q R) := by
+      factorLedger fixedProfile 1169 43 9 (regularCumulativeFlag Q R) := by
   letI : CharP (GenericField K) prime := genericField_charP K prime
   have hRdata := directFactor_data Q R.1 hQ fixedProfile.weightedCap fixedProfile.w
     fixedProfile.seedTotalCap fixedProfile.slopeCap hbox R.2
@@ -82,7 +82,7 @@ theorem regular_factor_seed_bound
     (regularSeeds Q selected Γ R) hsolutions
   have hstage : ∀ g : GeometricFactor K R.1,
       (geometricSeeds K R.1 selected (regularSeeds Q selected Γ R) g).card*
-        fixedProfile.gap ≤ factorLedger fixedProfile 1167 43 9
+        fixedProfile.gap ≤ factorLedger fixedProfile 1169 43 9
           (geometricCumulativeFlag K g) := by
     intro g
     let S := fixedGeometricStage Q hQ hbox Hsupport selected Γ nodes x u0 u1
@@ -123,19 +123,19 @@ theorem regular_factor_seed_bound
             ContactMovingAgreementCertificate6719Research.support] at hc ⊢
           omega)
       change IdentityCurveCountProvider S
-        (identityDegree fixedProfile 1167 43 9 (geometricCumulativeFlag K g)) at hprovider
+        (identityDegree fixedProfile 1169 43 9 (geometricCumulativeFlag K g)) at hprovider
       have hi := identity_surface_seed_bound S fixedProfile.agreements
-        (identityDegree fixedProfile 1167 43 9 (geometricCumulativeFlag K g))
+        (identityDegree fixedProfile 1169 43 9 (geometricCumulativeFlag K g))
         hprovider hagreementS (by decide) (by rw [hnodesS]; decide)
         (geometric_identityDegree_pos g)
       have hi' : (geometricSeeds K R.1 selected (regularSeeds Q selected Γ R) g).card*
           fixedProfile.gap ≤ (fixedProfile.n-fixedProfile.w)*(fixedProfile.errors+1)*
-            identityDegree fixedProfile 1167 43 9 (geometricCumulativeFlag K g) := by
+            identityDegree fixedProfile 1169 43 9 (geometricCumulativeFlag K g) := by
         rw [hnodesS] at hi
         simpa only [Profile.gap] using hi
       exact hi'.trans (by unfold factorLedger; omega)
     · have hproper := proper_firstTail_reduced_seed_bound (polynomialEmbedding_injective K)
-        fixedProfile 1167 43 9 S hnodesS hagreementS (by decide) (by decide)
+        fixedProfile 1169 43 9 S hnodesS hagreementS (by decide) (by decide)
         fixed_degree_part_bound fixed_unit_part_bound htail
         (by
           exact ⟨hf.2.1.trans_lt (by decide), hf.1.trans_lt (by decide),
@@ -164,11 +164,11 @@ theorem regular_factor_seed_bound
         (geometricSeeds K R.1 selected (regularSeeds Q selected Γ R) g).card*
           fixedProfile.gap := by rw [Finset.sum_mul]
     _ ≤ ∑ g : GeometricFactor K R.1,
-        factorLedger fixedProfile 1167 43 9 (geometricCumulativeFlag K g) :=
+        factorLedger fixedProfile 1169 43 9 (geometricCumulativeFlag K g) :=
       Finset.sum_le_sum (fun g _ ↦ hstage g)
     _ ≤ _ := by
       have hc := geometricCumulativeFlag_budgets R.1 hRdata.1.ne_zero
-      exact sum_factorLedger_le fixedProfile 1167 43 9 (geometricCumulativeFlag K)
+      exact sum_factorLedger_le fixedProfile 1169 43 9 (geometricCumulativeFlag K)
         (originalCumulativeFlag R.1) hc.1 hc.2.1 hc.2.2
 
 theorem fixed_selected_count_le
@@ -192,20 +192,20 @@ theorem fixed_selected_count_le
     (by decide) (by decide) (by decide) (by decide) (by decide)
     selected Γ nodes x u0 u1 hinj hnodes hdegree hsolution hagreement hnoPencil
     (regularCumulativeFlag Q)
-    (fun flag ↦ factorLedger fixedProfile 1167 43 9 flag*fixedProfile.gap)
+    (fun flag ↦ factorLedger fixedProfile 1169 43 9 flag*fixedProfile.gap)
     (regularNumerator := fixedFactorLedger*fixedProfile.gap)
     (fun count hcount ↦ by
       have hc := regularCumulativeFlag_budgets Q hQ Hsupport
       calc
         (∑ R, count R)*fixedProfile.gap^2 =
             (∑ R, count R*fixedProfile.gap^2) := by rw [Finset.sum_mul]
-        _ ≤ ∑ R, factorLedger fixedProfile 1167 43 9
+        _ ≤ ∑ R, factorLedger fixedProfile 1169 43 9
             (regularCumulativeFlag Q R)*fixedProfile.gap :=
           Finset.sum_le_sum (fun R _ ↦ hcount R)
-        _ = (∑ R, factorLedger fixedProfile 1167 43 9
+        _ = (∑ R, factorLedger fixedProfile 1169 43 9
             (regularCumulativeFlag Q R))*fixedProfile.gap := by rw [Finset.sum_mul]
         _ ≤ fixedFactorLedger*fixedProfile.gap := Nat.mul_le_mul_right _
-          (sum_factorLedger_le fixedProfile 1167 43 9 (regularCumulativeFlag Q)
+          (sum_factorLedger_le fixedProfile 1169 43 9 (regularCumulativeFlag Q)
             fixedFlag hc.1 hc.2.1 hc.2.2))
     (fun R ↦ by
       have hr := regular_factor_seed_bound Q hQ hbox Hsupport selected Γ nodes x u0 u1
