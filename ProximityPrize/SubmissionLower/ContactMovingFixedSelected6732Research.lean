@@ -133,7 +133,7 @@ theorem regular_factor_seed_bound
             identityDegree fixedProfile 1167 43 9 (geometricCumulativeFlag K g) := by
         rw [hnodesS] at hi
         simpa only [Profile.gap] using hi
-      exact hi'.trans (by unfold factorLedger; omega)
+      exact hi'.trans (identity_le_proper (geometricCumulativeFlag K g))
     · have hproper := proper_firstTail_reduced_seed_bound (polynomialEmbedding_injective K)
         fixedProfile 1167 43 9 S hnodesS hagreementS (by decide) (by decide)
         fixed_degree_part_bound fixed_unit_part_bound htail
@@ -155,7 +155,7 @@ theorem regular_factor_seed_bound
           norm_num [fixedProfile, fixedSupport, prime, Profile.w,
             ContactMovingAgreementCertificate6719Research.support] at hc ⊢
           omega)
-      exact hproper.trans (by unfold factorLedger; omega)
+      exact hproper.trans (by unfold factorLedger properLedger; omega)
   calc
     _ ≤ (∑ g : GeometricFactor K R.1,
         (geometricSeeds K R.1 selected (regularSeeds Q selected Γ R) g).card)*

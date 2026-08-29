@@ -128,7 +128,7 @@ def firstTailFlag : FlagDegree := centre+w • direction
 def identityZDegree : ℕ := flagMixed fixedFlag identityFlag unitZFlag
 def identityYZDegree : ℕ := flagMixed fixedFlag identityFlag unitYZFlag
 def fixedIdentityYZCost : ℕ := U*(errors+1)*(identityZDegree+identityYZDegree)/gap+1
-def fixedRegularCost : ℕ := fixedProperTailCost+fixedIdentityYZCost
+def fixedRegularCost : ℕ := fixedProperTailCost
 
 def singularY (P : Profile) : ℕ := (P.characteristicCap-1)/w
 def singularZ (P : Profile) : ℕ := (2*P.slopeCap-1)*P.seedCap
@@ -159,18 +159,18 @@ theorem fixed_ledger_values :
     degreeCost=105864414635323281 ∧ unitCost=76428164359978857 ∧
     fixedProperTailCost=272125217847177994 ∧ identityZDegree=276826187 ∧
     identityYZDegree=6854200400 ∧ fixedIdentityYZCost=1467952828656011 ∧
-    fixedRegularCost=273593170675834005 := by decide
+    fixedRegularCost=272125217847177994 := by decide
 theorem residual_values :
     residualMixed profileA profileB=![978017,4393394,2707] ∧
     residualMixed profileABMeet profileC=![1019910,5458984,1313] ∧
     residualNumerator profileA profileB=11050798413504756831 ∧
     residualNumerator profileABMeet profileC=8347457366043536052 := by decide
 theorem six_cells_exact :
-    fixedRegularCost=273593170675834005 ∧ fixedSingularCost=60489048372185 ∧
+    fixedRegularCost=272125217847177994 ∧ fixedSingularCost=60489048372185 ∧
     firstResidualRegularCost=216720566639304 ∧ firstResidualSingularCeiling=667325631931636 ∧
     secondResidualRegularCost=163704523661892 ∧ secondResidualSingularCeiling=65054160163108 := by decide
-theorem total_and_slack_exact : totalCost=274766464606602130 ∧
-    mcaBudget-totalCost=214262504792957 ∧ totalCost<mcaBudget := by decide
+theorem total_and_slack_exact : totalCost=273298511777946119 ∧
+    mcaBudget-totalCost=1682215333448968 ∧ totalCost<mcaBudget := by decide
 theorem residual_characteristic_gates :
     singularY profileB=5513 ∧ singularZ profileB=59878 ∧
     2*singularY profileB*singularZ profileB<prime ∧

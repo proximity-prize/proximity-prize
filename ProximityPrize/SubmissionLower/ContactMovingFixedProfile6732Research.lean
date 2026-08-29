@@ -35,12 +35,14 @@ def identityDegree (p : Profile) (a b s : ℕ) (flag : FlagDegree) : ℕ :=
   flagMixed flag (paddedCut a b s (p.w+1)) unitZFlag +
     flagMixed flag (paddedCut a b s (p.w+1)) unitYZFlag
 
-def factorLedger (p : Profile) (a b s : ℕ) (flag : FlagDegree) : ℕ :=
+def properLedger (p : Profile) (a b s : ℕ) (flag : FlagDegree) : ℕ :=
   (p.w+1)*ContactMovingReducedFactorLedger6720Research.factorDegreeCost
       p (ContactMovingAgreementCertificate6719Research.support a b s) a b s flag +
     ContactMovingReducedFactorLedger6720Research.factorUnitCost
-      p (ContactMovingAgreementCertificate6719Research.support a b s) a b s flag +
-    (p.n-p.w)*(p.errors+1)*identityDegree p a b s flag
+      p (ContactMovingAgreementCertificate6719Research.support a b s) a b s flag
+
+def factorLedger (p : Profile) (a b s : ℕ) (flag : FlagDegree) : ℕ :=
+  properLedger p a b s flag
 
 theorem sum_factorLedger_le {J : Type*} [Fintype J]
     (p : Profile) (a b s : ℕ) (flags : J → FlagDegree) (cap : FlagDegree)
@@ -49,9 +51,9 @@ theorem sum_factorLedger_le {J : Type*} [Fintype J]
     (ht : (∑ j, ((flags j).zOnly+(flags j).yz+(flags j).all)) ≤
       cap.zOnly+cap.yz+cap.all) :
     (∑ j, factorLedger p a b s (flags j)) ≤ factorLedger p a b s cap := by
-  simp only [factorLedger,
+  simp only [factorLedger, properLedger,
     ContactMovingReducedFactorLedger6720Research.factorDegreeCost,
-    ContactMovingReducedFactorLedger6720Research.factorUnitCost, identityDegree,
+    ContactMovingReducedFactorLedger6720Research.factorUnitCost,
     Finset.sum_add_distrib, ← Finset.mul_sum]
   gcongr
   all_goals first
@@ -83,7 +85,7 @@ theorem fixed_values :
         ContactMovingParameters6732Research.identityYZDegree := by decide
 
 theorem fixed_regular_ceiling :
-    fixedFactorLedger/fixedProfile.gap+2 =
+    fixedFactorLedger/fixedProfile.gap+1 =
       ContactMovingParameters6732Research.fixedRegularCost := by decide
 
 theorem fixed_singular_ceiling : fixedTightProfile.countCap+1 =
@@ -146,5 +148,77 @@ theorem fixed_unit_part_bound (k : ℕ) (hk : k ≤ fixedProfile.w) :
   simpa only [Profile.gap, Profile.unitIncidence] using
     identity_unit_weight_le fixedProfile.n fixedProfile.agreements fixedProfile.w
       k hk (by decide) (by decide)
+
+private theorem flagMixed_left_expand (p q r : FlagDegree) :
+    flagMixed p q r =
+      p.zOnly * flagMixed unitZFlag q r +
+      p.yz * flagMixed unitYZFlag q r +
+      p.all * flagMixed unitAllFlag q r := by
+  cases p
+  simp [flagMixed, unitZFlag, unitYZFlag, unitAllFlag]
+  ring
+
+private theorem identityDegree_expand (p : Profile) (a b s : ℕ) (flag : FlagDegree) :
+    identityDegree p a b s flag =
+      flag.zOnly * identityDegree p a b s unitZFlag +
+      flag.yz * identityDegree p a b s unitYZFlag +
+      flag.all * identityDegree p a b s unitAllFlag := by
+  unfold identityDegree
+  rw [flagMixed_left_expand flag (paddedCut a b s (p.w+1)) unitZFlag,
+    flagMixed_left_expand flag (paddedCut a b s (p.w+1)) unitYZFlag]
+  ring
+
+private theorem properLedger_expand (p : Profile) (a b s : ℕ) (flag : FlagDegree) :
+    properLedger p a b s flag =
+      flag.zOnly * properLedger p a b s unitZFlag +
+      flag.yz * properLedger p a b s unitYZFlag +
+      flag.all * properLedger p a b s unitAllFlag := by
+  unfold properLedger
+    ContactMovingReducedFactorLedger6720Research.factorDegreeCost
+    ContactMovingReducedFactorLedger6720Research.factorUnitCost
+    ContactMovingReducedPositiveLedger6720Research.degreeSlope
+    ContactMovingReducedPositiveLedger6720Research.degreeBase
+    ContactMovingReducedPositiveLedger6720Research.unitSlope
+    ContactMovingReducedPositiveLedger6720Research.unitBase
+    ContactMovingReducedPositiveLedger6720Research.zSlope
+    ContactMovingReducedPositiveLedger6720Research.zBase
+    ContactMovingReducedPositiveLedger6720Research.yzSlope
+    ContactMovingReducedPositiveLedger6720Research.yzBase
+  simp only [weightedMixed_eq]
+  rw [flagMixed_left_expand flag, flagMixed_left_expand flag,
+    flagMixed_left_expand flag, flagMixed_left_expand flag,
+    flagMixed_left_expand flag, flagMixed_left_expand flag,
+    flagMixed_left_expand flag, flagMixed_left_expand flag,
+    flagMixed_left_expand flag, flagMixed_left_expand flag]
+  ring
+
+theorem identity_le_proper (flag : FlagDegree) :
+    (fixedProfile.n - fixedProfile.w) * (fixedProfile.errors + 1) *
+      identityDegree fixedProfile 1167 43 9 flag ≤
+    properLedger fixedProfile 1167 43 9 flag := by
+  have hz : (fixedProfile.n - fixedProfile.w) * (fixedProfile.errors + 1) *
+      identityDegree fixedProfile 1167 43 9 unitZFlag ≤
+      properLedger fixedProfile 1167 43 9 unitZFlag := by decide
+  have hyz : (fixedProfile.n - fixedProfile.w) * (fixedProfile.errors + 1) *
+      identityDegree fixedProfile 1167 43 9 unitYZFlag ≤
+      properLedger fixedProfile 1167 43 9 unitYZFlag := by decide
+  have hall : (fixedProfile.n - fixedProfile.w) * (fixedProfile.errors + 1) *
+      identityDegree fixedProfile 1167 43 9 unitAllFlag ≤
+      properLedger fixedProfile 1167 43 9 unitAllFlag := by decide
+  rw [identityDegree_expand, properLedger_expand]
+  have hdistrib :
+      (fixedProfile.n - fixedProfile.w) * (fixedProfile.errors + 1) *
+        (flag.zOnly * identityDegree fixedProfile 1167 43 9 unitZFlag +
+          flag.yz * identityDegree fixedProfile 1167 43 9 unitYZFlag +
+          flag.all * identityDegree fixedProfile 1167 43 9 unitAllFlag) =
+      flag.zOnly * ((fixedProfile.n - fixedProfile.w) * (fixedProfile.errors + 1) *
+        identityDegree fixedProfile 1167 43 9 unitZFlag) +
+      flag.yz * ((fixedProfile.n - fixedProfile.w) * (fixedProfile.errors + 1) *
+        identityDegree fixedProfile 1167 43 9 unitYZFlag) +
+      flag.all * ((fixedProfile.n - fixedProfile.w) * (fixedProfile.errors + 1) *
+        identityDegree fixedProfile 1167 43 9 unitAllFlag) := by ring
+  rw [hdistrib]
+  exact Nat.add_le_add (Nat.add_le_add (Nat.mul_le_mul_left _ hz)
+    (Nat.mul_le_mul_left _ hyz)) (Nat.mul_le_mul_left _ hall)
 
 end ProximityPrize.SubmissionLower.ContactMovingFixedProfile6732Research
