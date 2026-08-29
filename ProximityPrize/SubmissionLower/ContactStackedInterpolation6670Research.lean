@@ -2,12 +2,12 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagKernelUniversalityResearch
 import ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
 
-/-! .
+/-!
+# Three universal contact interpolants at the 66.70 row
 
-
-
-
- -/
+This is the target-specific instantiation of the generic contact-kernel
+universality theorem at `a = 182278`.
+-/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedInterpolation6670Research
 
@@ -25,8 +25,8 @@ set_option maxHeartbeats 2000000
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 
-/-- .
- -/
+/-- Three nonzero boxed kernel members with their shared universal
+specialization property. -/
 theorem exists_stacked_universal_vanishing_interpolants
     (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
     ∃ QA QB QC : MvPolynomial (Fin 4) IRSProfile.Field,
@@ -35,12 +35,12 @@ theorem exists_stacked_universal_vanishing_interpolants
         (34 * agreements) w 20000 10 ∧
       QB ≠ 0 ∧
       QB ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
-        (68 * agreements) w 900 21 ∧
+        (68 * agreements) w 899 21 ∧
       QC ≠ 0 ∧
       QC ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
         (37 * agreements) w 42000 9 ∧
       QB ∈ ContactFlagInterpolation6641Research.globalCoefficientBox IRSProfile.Field
-        (68 * agreements) w 900 21 ∧
+        (68 * agreements) w 899 21 ∧
       ∀ (gamma : IRSProfile.Field) (P : Polynomial IRSProfile.Field)
         (support : Finset IRSProfile.Index),
         P.natDegree ≤ w → agreements ≤ support.card →
@@ -55,8 +55,8 @@ theorem exists_stacked_universal_vanishing_interpolants
       norm_num [IRSProfile.Index, n]]
     change profileA.totalRank < profileA.coefficients
     exact interpolation_gates.1
-  have hgateB : Fintype.card IRSProfile.Index * localRankBound 68 900 21 <
-      coefficientCount (68 * agreements) w 900 21 := by
+  have hgateB : Fintype.card IRSProfile.Index * localRankBound 68 899 21 <
+      coefficientCount (68 * agreements) w 899 21 := by
     rw [show Fintype.card IRSProfile.Index = n by
       norm_num [IRSProfile.Index, n]]
     change profileB.totalRank < profileB.coefficients
@@ -71,7 +71,7 @@ theorem exists_stacked_universal_vanishing_interpolants
     IRSProfile.Field (34 * agreements) w 20000 10 34
       IRSProfile.domain u0 u1 hgateA
   obtain ⟨thetaB, hthetaB, hkernelB⟩ := exists_nonzero_kernel_array
-    IRSProfile.Field (68 * agreements) w 900 21 68
+    IRSProfile.Field (68 * agreements) w 899 21 68
       IRSProfile.domain u0 u1 hgateB
   obtain ⟨thetaC, hthetaC, hkernelC⟩ := exists_nonzero_kernel_array
     IRSProfile.Field (37 * agreements) w 42000 9 37
@@ -83,7 +83,7 @@ theorem exists_stacked_universal_vanishing_interpolants
     (34 * agreements) w 20000 10 34 agreements IRSProfile.domain u0 u1 thetaA
     hthetaA (LinearMap.mem_ker.mpr hkernelA) hDA rfl
   have hB := nonzero_kernel_member_universal IRSProfile.Field
-    (68 * agreements) w 900 21 68 agreements IRSProfile.domain u0 u1 thetaB
+    (68 * agreements) w 899 21 68 agreements IRSProfile.domain u0 u1 thetaB
     hthetaB (LinearMap.mem_ker.mpr hkernelB) hDB rfl
   have hC := nonzero_kernel_member_universal IRSProfile.Field
     (37 * agreements) w 42000 9 37 agreements IRSProfile.domain u0 u1 thetaC
@@ -91,11 +91,11 @@ theorem exists_stacked_universal_vanishing_interpolants
   have hOrdA := flag_box_to_ordinary IRSProfile.Field
     (34 * agreements) w 20000 10 _ hA.2.1
   have hOrdB := flag_box_to_ordinary IRSProfile.Field
-    (68 * agreements) w 900 21 _ hB.2.1
+    (68 * agreements) w 899 21 _ hB.2.1
   have hOrdC := flag_box_to_ordinary IRSProfile.Field
     (37 * agreements) w 42000 9 _ hC.2.1
   refine ⟨reconstruct IRSProfile.Field (34 * agreements) w 20000 10 thetaA,
-    reconstruct IRSProfile.Field (68 * agreements) w 900 21 thetaB,
+    reconstruct IRSProfile.Field (68 * agreements) w 899 21 thetaB,
     reconstruct IRSProfile.Field (37 * agreements) w 42000 9 thetaC,
     hA.1, hOrdA, hB.1, hOrdB, hC.1, hOrdC, hB.2.1, ?_⟩
   intro gamma P support hP hcard hvalues

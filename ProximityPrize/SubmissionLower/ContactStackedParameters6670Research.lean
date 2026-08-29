@@ -1,17 +1,17 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagInterpolation6641Research
 
-/-! .
+/-!
+# Exact interpolation profiles for the stacked 67.10 candidate
 
+This module certifies the three joint-support differential-contact kernels
+used by the bounded active-YZ recursive-GCD construction at `a = 182278`.
+The counts use the existing tetrahedral `Y+R+Z` support APIs. A weighted
+cutoff keeps the exact finite arithmetic certificates small.
 
-
-
-
-
-
-
-
- -/
+No GCD decomposition, residual ledger, or decoding claim is made in this
+arithmetic module.
+-/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
 
@@ -28,8 +28,8 @@ def agreements : ℕ := 182278
 def errors : ℕ := n - agreements
 def gap : ℕ := agreements - w
 
-/-- .
- -/
+/-- The profiles are `(multiplicity, total Y+R+Z cap, slope cap)`.
+`seedCap` retains its legacy name and bounds the full joint degree. -/
 structure Profile where
   multiplicity : ℕ
   seedCap : ℕ
@@ -37,7 +37,7 @@ structure Profile where
   deriving DecidableEq
 
 def profileA : Profile := ⟨34, 20000, 10⟩
-def profileB : Profile := ⟨68, 900, 21⟩
+def profileB : Profile := ⟨68, 899, 21⟩
 def profileC : Profile := ⟨37, 42000, 9⟩
 
 namespace Profile
@@ -59,8 +59,8 @@ def nullity (P : Profile) : ℕ := P.coefficients - P.totalRank
 
 end Profile
 
-/-- .
- -/
+/-- Every weighted layer beginning at `t` vanishes, so the certificates
+only reduce the short positive prefix. -/
 theorem coefficientCount_eq_sum_range_of_weighted_cutoff
     (D w L s t : ℕ) (ht : t ≤ L + 1) (hD : D ≤ w * t) :
     coefficientCount D w L s =
@@ -113,21 +113,21 @@ theorem profileA_values :
   norm_num [n]
 
 theorem profileB_coefficients_exact :
-    profileB.coefficients = 8952917932750 := by
-  change coefficientCount (68 * 182278) 131071 900 21 = 8952917932750
+    profileB.coefficients = 8942549042570 := by
+  change coefficientCount (68 * 182278) 131071 899 21 = 8942549042570
   rw [coefficientCount_eq_sum_range_of_weighted_cutoff
-    (68 * 182278) 131071 900 21 95 (by norm_num) (by norm_num)]
+    (68 * 182278) 131071 899 21 95 (by norm_num) (by norm_num)]
   decide
 
-theorem profileB_localRank_exact : profileB.localRank = 34148169 := by
-  change localRankBound 68 900 21 = 34148169
+theorem profileB_localRank_exact : profileB.localRank = 34108954 := by
+  change localRankBound 68 899 21 = 34108954
   decide
 
 theorem profileB_values :
     profileB.weightedCap = 12394904 ∧ profileB.yCap = 94 ∧
-      profileB.localRank = 34148169 ∧
-      profileB.coefficients = 8952917932750 ∧
-      profileB.nullity = 1180318414 := by
+      profileB.localRank = 34108954 ∧
+      profileB.coefficients = 8942549042570 ∧
+      profileB.nullity = 1091405194 := by
   refine ⟨by norm_num [Profile.weightedCap, profileB, agreements],
     by norm_num [Profile.yCap, Profile.weightedCap, profileB, agreements, w],
     profileB_localRank_exact, profileB_coefficients_exact, ?_⟩
@@ -158,7 +158,7 @@ theorem profileC_values :
     profileC_localRank_exact]
   norm_num [n]
 
-/-- . -/
+/-- Each of the three constraint maps has a nonzero kernel. -/
 theorem interpolation_gates :
       profileA.totalRank < profileA.coefficients ∧
       profileB.totalRank < profileB.coefficients ∧
@@ -169,8 +169,8 @@ theorem interpolation_gates :
     profileC_coefficients_exact, profileC_localRank_exact]
   norm_num [n]
 
-/-- .
- -/
+/-- The ordinary derivative and coefficient arithmetic stays below the
+challenge-field characteristic. -/
 theorem characteristic_gates :
     profileA.characteristicCap < prime ∧
       (2 * profileA.slopeCap - 1) * profileA.seedCap < prime ∧
@@ -184,19 +184,19 @@ theorem characteristic_gates :
   norm_num [Profile.characteristicCap, Profile.weightedCap, profileA, profileB,
     profileC, agreements, prime]
 
-/-- .
- -/
+/-- Coordinatewise caps inherited by the first GCD and the final common
+divisor, respectively. -/
 theorem meet_caps :
     (min profileA.multiplicity profileB.multiplicity,
         min profileA.seedCap profileB.seedCap,
-        min profileA.slopeCap profileB.slopeCap) = (34, 900, 10) ∧
+        min profileA.slopeCap profileB.slopeCap) = (34, 899, 10) ∧
       (min (min profileA.multiplicity profileB.multiplicity) profileC.multiplicity,
         min (min profileA.seedCap profileB.seedCap) profileC.seedCap,
         min (min profileA.slopeCap profileB.slopeCap) profileC.slopeCap) =
-          (34, 900, 9) := by
+          (34, 899, 9) := by
   norm_num [profileA, profileB, profileC]
 
-/-- . -/
+/-- The weighted caps also force the cumulative `Y+R` caps. -/
 theorem middle_support_gates :
     profileA.weightedCap + profileA.slopeCap ≤ w * (profileA.yCap + 1) ∧
       profileB.weightedCap + profileB.slopeCap ≤ w * (profileB.yCap + 1) ∧
