@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.ContactMovingSeedlessList6732Research
 import ProximityPrize.SubmissionLower.ContactSeedlessProtocolResearch
-/-! .
- -/
+
 namespace ProximityPrize.SubmissionLower.ContactMovingProtocol6732Research
+
 open ProximityPrize.Benchmark
 open CoreDefinitions ProximityGap ToyProblem
 open AlignmentMomentCurveProjection AlignmentInterleavedLambda
@@ -11,62 +11,28 @@ noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 5000000
+
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
+
 def n : ℕ := 262144
-def errors : ℕ := 80082
-def agreements : ℕ := n-errors
+def errors : ℕ := 80112
+def agreements : ℕ := n - errors
 def listBudget : ℕ := 1000000000
 def mcaBudget : ℕ := 274980727111395087
 def radius : ℝ≥0 := ContactMovingSeedless6732Research.radius
+
 theorem field_capacity_split :
-    2^(128 : ℕ)*(mcaBudget+listBudget) ≤ Fintype.card IRSProfile.Field :=
+    2^(128 : ℕ) * (mcaBudget + listBudget) ≤ Fintype.card IRSProfile.Field :=
   ContactMovingSeedless6732Research.field_capacity_split
-theorem irs_interleaved_finite_list_card_le
-    {r : ℕ}
-    (received : IRSProfile.Index → Fin r → IRSProfile.Field)
-    (L : Finset (IRSProfile.Index → Fin r → IRSProfile.Field))
-    (hrows : ∀ v ∈ L, ∀ j : Fin r,
-      (fun i => v i j) ∈ IRSProfile.baseCode)
-    (hclose : ∀ v ∈ L, agreements ≤
-      (Finset.univ.filter (fun i => v i = received i)).card)
-    (hseparation : (r - 1) * (listBudget + 1).choose 2 <
-      Fintype.card IRSProfile.Field) :
-    L.card ≤ listBudget := by
-  classical
-  letI : DecidableEq (IRSProfile.Index → Fin r → IRSProfile.Field) := Classical.decEq _
-  letI : DecidableEq (IRSProfile.Index → IRSProfile.Field) := Classical.decEq _
-  by_contra hnot
-  obtain ⟨D, hDL, hDcard⟩ :=
-    Finset.exists_subset_card_eq (show listBudget + 1 ≤ L.card by omega)
-  have hsepD : (r - 1) * D.card.choose 2 < Fintype.card IRSProfile.Field := by
-    rw [hDcard]
-    exact hseparation
-  obtain ⟨t, ht⟩ := exists_separating_moment_parameter D hsepD
-  let projected : Finset (IRSProfile.Index → IRSProfile.Field) :=
-    D.image (momentProjection (ι := IRSProfile.Index) (r := r) t)
-  have hprojcard : projected.card = D.card := Finset.card_image_of_injOn ht
-  have hcode : ∀ c ∈ projected, c ∈ IRSProfile.baseCode := by
-    intro c hc
-    obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hc
-    exact momentProjection_mem_code IRSProfile.baseCode t v (hrows v (hDL hv))
-  have hnear : ∀ c ∈ projected, agreements ≤
-      (Finset.univ.filter (fun i => c i = momentProjection t received i)).card := by
-    intro c hc
-    obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hc
-    exact (hclose v (hDL hv)).trans
-      (Finset.card_le_card (momentProjection_preserves_agreements t v received))
-  have hbound := ContactMovingSeedlessGeometry6732Research.irs_scalar_finite_list_card_le (momentProjection t received)
-    projected hcode hnear
-  change projected.card ≤ listBudget at hbound
-  rw [hprojcard, hDcard] at hbound
-  omega
+
 theorem sixteen_row_separation :
     15 * (listBudget + 1).choose 2 < Fintype.card IRSProfile.Field := by
   rw [show Fintype.card IRSProfile.Field = (2130706433 : ℕ) ^ 6 by
     norm_num [IRSProfile.Field, KoalaBear.Ext6, KoalaBear.fieldSize],
     Nat.choose_eq_descFactorial_div_factorial]
   norm_num [listBudget, Nat.descFactorial_succ, Nat.factorial_succ]
+
 theorem squared_eight_lambda_new
     (delta : ℝ)
     (hcell : (delta : ℝ) * (Fintype.card IRSProfile.Index : ℝ) <
@@ -124,6 +90,7 @@ theorem lambda_le :
   apply squared_eight_lambda_new (radius : ℝ)
   norm_num [radius, ContactMovingSeedless6732Research.radius, claimedRadius,
     errors, IRSProfile.Index]
+
 theorem base_mca_le_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
     mcaError (AffineLineGenerator IRSProfile.Field) IRSProfile.baseCode
@@ -145,6 +112,7 @@ theorem base_mca_le_of_alignment
     norm_num [errors, ContactMovingSeedless6732Research.errors] at hcomp ⊢
     omega
   · exact halign
+
 theorem mca_le_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
     mcaError (AffineLineGenerator IRSProfile.Field) IRSProfile.code
@@ -169,6 +137,7 @@ theorem mca_le_of_alignment
         (Fintype.card IRSProfile.Field : ENNReal) := by
       rw [ENNReal.ofReal_div_of_pos (by positivity), ENNReal.ofReal_natCast,
         ENNReal.ofReal_natCast]
+
 theorem certifiedGammaError_le_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
     certifiedGammaError IRSProfile.code radius ≤
@@ -201,15 +170,17 @@ theorem certifiedGammaError_le_of_alignment
       apply ContactSeedlessProtocolResearch.nat_div_le_inv_pow
       · norm_num [mcaBudget, listBudget]
       · simpa only [Nat.mul_comm] using field_capacity_split
+
 theorem protocolClaim6732_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-    ProtocolClaim 6732 10250623 33554432 where
+    ProtocolClaim 6735 10254463 33554432 where
   admissible := ContactMovingSeedless6732Research.radius_admissible
   reduction := by
     change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
     exact (certifiedGammaError_le_of_alignment halign).trans
       (by norm_num [reductionTarget, ProximityGap.prizeThreshold, div_le_iff₀])
   score := ContactMovingSeedless6732Research.radius_score
+
 #print axioms protocolClaim6732_of_alignment
 end
 end ProximityPrize.SubmissionLower.ContactMovingProtocol6732Research
