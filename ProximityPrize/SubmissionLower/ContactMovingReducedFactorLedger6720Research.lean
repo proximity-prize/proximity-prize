@@ -28,6 +28,21 @@ def factorUnitCost (p : Profile) (support : ResidualSupportParameters)
     p.unitIncidence * unitBase a b s flag +
     (p.errors + 1) * p.gap * (zBase flag + yzBase flag)
 
+def cappedFactorDegreeCost (p : Profile) (support : ResidualSupportParameters)
+    (a b s allc : ℕ) (flag : FlagDegree) : ℕ :=
+  p.degreeIncidence * cappedDegreeSlope support a b s allc flag +
+    p.unitIncidence * cappedUnitSlope support a b s allc flag +
+    (p.errors + 1) * p.gap *
+      (cappedZSlope support allc flag + cappedYZSlope support allc flag)
+
+def remainderFactorDegreeCost (p : Profile) (support : ResidualSupportParameters)
+    (a b s : ℕ) (flag : FlagDegree) : ℕ :=
+  p.degreeIncidence * remainderDegreeSlope support a b s flag +
+    p.unitIncidence * remainderUnitSlope support a b s flag +
+    (p.errors + 1) * p.gap *
+      (remainderZSlope support flag + remainderYZSlope support flag)
+
+
 def regularLedger (p : Profile) (support : ResidualSupportParameters)
     (a b s : ℕ) (flag : FlagDegree) : ℕ :=
   p.degreeIncidence * factorDegreeCost p support a b s flag +

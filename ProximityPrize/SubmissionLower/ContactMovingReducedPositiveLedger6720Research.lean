@@ -25,6 +25,66 @@ def cutBase : FlagDegree := unitYZFlag
 def reducedCut (support : ResidualSupportParameters) (d : ℕ) : FlagDegree :=
   cutBase + d • reducedAgreementDirection support
 
+/-- Saturated reduced all-slope `2s-2` with a strictly smaller remainder
+all-component. 67.33 MCA arithmetic; geometric remainder is
+`ContactRemainderR6733Research`. -/
+def cappedAgreementDirection (P : ResidualSupportParameters) (allc : ℕ) :
+    FlagDegree :=
+  ⟨2 * (P.total - P.ys), 2 * (P.ys - P.s), allc⟩
+
+def cappedCut (support : ResidualSupportParameters) (d allc : ℕ) : FlagDegree :=
+  cutBase + d • cappedAgreementDirection support allc
+
+/-- Remainder first-tail: Euclidean rem drops `R` into the cut base, folding
+the old all-slope `2s-2` into `Y+R`. Direction all-component is 0. -/
+def remainderAgreementDirection (P : ResidualSupportParameters) : FlagDegree :=
+  ⟨2 * (P.total - P.ys), 2 * (P.ys - 1), 0⟩
+
+def remainderCut (support : ResidualSupportParameters) (d : ℕ) : FlagDegree :=
+  cutBase + d • remainderAgreementDirection support
+
+/-- Full remainder flag: direction all-slope 0, `R`-degree `s-1` in the base. -/
+def remainderResidualAgreementFlag (P : ResidualSupportParameters) (d : ℕ) :
+    FlagDegree :=
+  ⟨(remainderAgreementDirection P).zOnly * d,
+    1 + (remainderAgreementDirection P).yz * d,
+    P.s - 1⟩
+
+def cappedDegreeSlope (support : ResidualSupportParameters) (a b s allc : ℕ)
+    (p : FlagDegree) : ℕ :=
+  weightedMixed p (cappedAgreementDirection support allc) (normalFlag a b s) +
+    flagMixed p (fiberFlag a b s) (surfaceFlag a b s)
+
+def cappedUnitSlope (support : ResidualSupportParameters) (a b s allc : ℕ)
+    (p : FlagDegree) : ℕ :=
+  weightedMixed p (cappedAgreementDirection support allc) (centreFlag a b s)
+
+def cappedZSlope (support : ResidualSupportParameters) (allc : ℕ)
+    (p : FlagDegree) : ℕ :=
+  flagMixed p (cappedAgreementDirection support allc) unitZFlag
+
+def cappedYZSlope (support : ResidualSupportParameters) (allc : ℕ)
+    (p : FlagDegree) : ℕ :=
+  flagMixed p (cappedAgreementDirection support allc) unitYZFlag
+
+def remainderDegreeSlope (support : ResidualSupportParameters) (a b s : ℕ)
+    (p : FlagDegree) : ℕ :=
+  weightedMixed p (remainderAgreementDirection support) (normalFlag a b s) +
+    flagMixed p (fiberFlag a b s) (surfaceFlag a b s)
+
+def remainderUnitSlope (support : ResidualSupportParameters) (a b s : ℕ)
+    (p : FlagDegree) : ℕ :=
+  weightedMixed p (remainderAgreementDirection support) (centreFlag a b s)
+
+def remainderZSlope (support : ResidualSupportParameters)
+    (p : FlagDegree) : ℕ :=
+  flagMixed p (remainderAgreementDirection support) unitZFlag
+
+def remainderYZSlope (support : ResidualSupportParameters)
+    (p : FlagDegree) : ℕ :=
+  flagMixed p (remainderAgreementDirection support) unitYZFlag
+
+
 theorem reducedCut_eq_residualFlag (support : ResidualSupportParameters)
     (d : ℕ) :
     reducedCut support d = reducedResidualAgreementFlag support d := by
