@@ -258,19 +258,39 @@ theorem projected_card : projected.card = 512 := by
 noncomputable def collisionRoots (z : (Finset Small) × (Finset Small)) : Finset FF :=
   (VF z.1 - VF z.2).roots.toFinset
 
-theorem collisionRoots_card_le (z : (Finset Small) × (Finset Small))
-    (hz : z ∈ Sel.offDiag) : (collisionRoots z).card ≤ 257 := by
+theorem VF_sub_eval_zero {U W : Finset Small} (hU : U ∈ Sel) (hW : W ∈ Sel) :
+    (VF U - VF W).eval 0 = 0 := by
+  have hmap (P : Polynomial K) :
+      (P.map (algebraMap K FF)).eval 0 = algebraMap K FF (P.eval 0) := by
+    rw [← map_zero (algebraMap K FF), Polynomial.eval_map, Polynomial.eval₂_at_apply]
+  rw [VF, VF, ← Polynomial.map_sub, hmap, Polynomial.eval_sub,
+    V_eval_zero_eq_of_key (Sel_mem hU) (Sel_mem hW), sub_self, map_zero]
+
+/-- Pairwise differences already vanish at `0` via the product key, so the
+off-grid point is not a fresh collision root.  The remaining distinct roots
+fit in a 256-set. -/
+noncomputable def extraCollisionRoots (z : (Finset Small) × (Finset Small)) : Finset FF :=
+  (collisionRoots z).erase 0
+
+theorem extraCollisionRoots_card_le (z : (Finset Small) × (Finset Small))
+    (hz : z ∈ Sel.offDiag) : (extraCollisionRoots z).card ≤ 256 := by
   have hmem := Finset.mem_offDiag.mp hz
   have hd := VF_sub_natDegree_lt hmem.1 hmem.2.1
-  exact (Multiset.toFinset_card_le _).trans
-    ((Polynomial.card_roots' (VF z.1 - VF z.2)).trans (by omega))
+  have h0 : (0 : FF) ∈ collisionRoots z := by
+    rw [collisionRoots, Multiset.mem_toFinset, Polynomial.mem_roots (VF_sub_ne_zero hmem.2.2)]
+    exact VF_sub_eval_zero hmem.1 hmem.2.1
+  have htot : (collisionRoots z).card ≤ 257 :=
+    (Multiset.toFinset_card_le _).trans
+      ((Polynomial.card_roots' (VF z.1 - VF z.2)).trans (by omega))
+  rw [extraCollisionRoots, Finset.card_erase_of_mem h0]
+  omega
 
 noncomputable def bad : Finset FF :=
-  (projected ∪ {0}) ∪ Sel.offDiag.biUnion collisionRoots
+  (projected ∪ {0}) ∪ Sel.offDiag.biUnion extraCollisionRoots
 
 theorem collision_union_card_le :
-    (Sel.offDiag.biUnion collisionRoots).card ≤ Sel.offDiag.card * 257 :=
-  Finset.card_biUnion_le_card_mul Sel.offDiag collisionRoots 257 collisionRoots_card_le
+    (Sel.offDiag.biUnion extraCollisionRoots).card ≤ Sel.offDiag.card * 256 :=
+  Finset.card_biUnion_le_card_mul Sel.offDiag extraCollisionRoots 256 extraCollisionRoots_card_le
 
 theorem offdiag_card : Sel.offDiag.card = NN * (NN - 1) := by
   rw [Finset.offDiag_card, Sel_card, Nat.mul_sub_left_distrib]
@@ -280,15 +300,15 @@ theorem projected_union_card_le : (projected ∪ {0}).card ≤ 513 := by
   calc (projected ∪ {0}).card ≤ projected.card + ({0} : Finset FF).card := Finset.card_union_le _ _
     _ = 513 := by rw [projected_card]; simp
 
-theorem collision_arith : 513 + Sel.offDiag.card * 257 ≤ NN^2 * 272 + 513 := by
+theorem collision_arith : 513 + Sel.offDiag.card * 256 ≤ NN^2 * 272 + 513 := by
   rw [offdiag_card]
   have h1 : NN * (NN - 1) ≤ NN * NN :=
     Nat.mul_le_mul_left NN (Nat.sub_le NN 1)
-  have h2 : NN * (NN - 1) * 257 ≤ NN^2 * 257 := by
-    simpa [pow_two] using Nat.mul_le_mul_right 257 h1
-  have h3 : NN^2 * 257 ≤ NN^2 * 272 := Nat.mul_le_mul_left _ (by norm_num)
+  have h2 : NN * (NN - 1) * 256 ≤ NN^2 * 256 := by
+    simpa [pow_two] using Nat.mul_le_mul_right 256 h1
+  have h3 : NN^2 * 256 ≤ NN^2 * 272 := Nat.mul_le_mul_left _ (by norm_num)
   calc
-    513 + NN * (NN - 1) * 257 ≤ 513 + NN^2 * 257 := Nat.add_le_add_left h2 513
+    513 + NN * (NN - 1) * 256 ≤ 513 + NN^2 * 256 := Nat.add_le_add_left h2 513
     _ ≤ 513 + NN^2 * 272 := Nat.add_le_add_left h3 513
     _ = NN^2 * 272 + 513 := Nat.add_comm _ _
 
@@ -298,10 +318,10 @@ theorem bad_card_le : bad.card ≤ NN^2 * 272 + 513 := by
   have hp := projected_union_card_le
   rw [bad]
   calc
-    ((projected ∪ {0}) ∪ Sel.offDiag.biUnion collisionRoots).card ≤
-        (projected ∪ {0}).card + (Sel.offDiag.biUnion collisionRoots).card :=
+    ((projected ∪ {0}) ∪ Sel.offDiag.biUnion extraCollisionRoots).card ≤
+        (projected ∪ {0}).card + (Sel.offDiag.biUnion extraCollisionRoots).card :=
       Finset.card_union_le _ _
-    _ ≤ 513 + Sel.offDiag.card * 257 := Nat.add_le_add hp hcoll
+    _ ≤ 513 + Sel.offDiag.card * 256 := Nat.add_le_add hp hcoll
     _ ≤ NN^2 * 272 + 513 := collision_arith
 
 set_option maxHeartbeats 1000000 in
@@ -340,7 +360,9 @@ theorem VF_eval_alpha_injective_on : Set.InjOn (fun U => (VF U).eval alpha) (Sel
   intro U hU W hW heq
   by_contra hne
   apply alpha_not_bad
-  have hroot : alpha ∈ collisionRoots (U, W) := by
+  have hroot : alpha ∈ extraCollisionRoots (U, W) := by
+    rw [extraCollisionRoots, Finset.mem_erase]
+    refine ⟨alpha_ne_zero, ?_⟩
     rw [collisionRoots, Multiset.mem_toFinset, Polynomial.mem_roots (VF_sub_ne_zero hne)]
     simpa [Polynomial.eval_sub] using sub_eq_zero.mpr heq
   simp only [bad, Finset.mem_union]
