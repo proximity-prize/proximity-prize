@@ -36,7 +36,7 @@ theorem alignmentBound6732 :
     (selectedNoLargePencilBound6732_of_fixedProvider fixedCellCountProvider6732)
   simpa [IRSProfile.baseCode, IRSProfile.baseDimension] using h
 
-theorem protocolClaim6732 : ProtocolClaim 6732 10250623 33554432 :=
+theorem protocolClaim6732 : ProtocolClaim 6733 10250751 33554432 :=
   ContactMovingProtocol6732Research.protocolClaim6732_of_alignment alignmentBound6732
 
 #print axioms protocolClaim6732

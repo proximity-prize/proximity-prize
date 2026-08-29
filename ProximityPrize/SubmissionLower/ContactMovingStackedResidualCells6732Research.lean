@@ -2,6 +2,7 @@ import ProximityPrize.SubmissionLower.ContactStackedResidualCells6656Research
 import ProximityPrize.SubmissionLower.ContactStackedSeedPartition6670Research
 import ProximityPrize.SubmissionLower.ContactMovingStackedBoxTransport6732Research
 import ProximityPrize.SubmissionLower.ContactMovingStackedResidualParameters6732Research
+import ProximityPrize.SubmissionLower.ContactAsymmetricResidualStageResearch
 /-! .
 
 
@@ -104,16 +105,13 @@ theorem firstResidualCell_count_lt
       pivotB.w pivotB.errors := by
     simpa [pivotB, TightParameters.errors, errors, n, agreements, w] using
       noLargeSelectedPencil_mono selected Gamma Delta w errors hsub hnoPencil
-  have hstage :=
-    ContactStackedResidualCells6656Research.asymmetric_stage_count_lt_of_regular_factors
-      stageOne pivotB Q T hQ prime
+  have himplicit :=
+    all_implicitSeeds_bound pivotB Q hQ prime hQbox
       (by norm_num [pivotB])
       (by norm_num [pivotB, prime])
       (by norm_num [pivotB])
       (by norm_num [pivotB, prime])
       (by norm_num [pivotB, TightParameters.kappa])
-      (by norm_num [pivotB, TightParameters.algebraicCap,
-        TightParameters.kappa])
       (by norm_num [pivotB, prime, TightParameters.implicitYCap,
         TightParameters.kappa])
       (by norm_num [pivotB, prime, TightParameters.algebraicCap,
@@ -122,6 +120,20 @@ theorem firstResidualCell_count_lt
         TightParameters.algebraicCap, TightParameters.kappa])
       (by norm_num [pivotB])
       (by norm_num [pivotB])
+      selected Delta (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain
+      u0 u1 IRSProfile.domain.injective.injOn
+      (by norm_num [IRSProfile.Index, pivotB])
+      hdegreeDelta hagreementDelta hnoPencilDelta
+  have hstage :=
+    asymmetric_stage_count_lt stageOne pivotB Q T hQ prime
+      (by norm_num [pivotB])
+      (by norm_num [pivotB, prime])
+      (by norm_num [pivotB])
+      (by norm_num [pivotB, TightParameters.kappa])
+      (by norm_num [pivotB, TightParameters.algebraicCap,
+        TightParameters.kappa])
+      (by norm_num [pivotB, prime, TightParameters.algebraicCap,
+        TightParameters.kappa])
       hQbox
       (by norm_num [stageOne, UnequalParameters.gap])
       (by norm_num [stageOne, pivotB, UnequalParameters.gap,
@@ -129,10 +141,7 @@ theorem firstResidualCell_count_lt
       (by norm_num [stageOne, pivotB])
       (by norm_num [stageOne, pivotB])
       (by norm_num [stageOne, pivotB])
-      selected Delta (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain
-      u0 u1 IRSProfile.domain.injective.injOn
-      (by norm_num [IRSProfile.Index, pivotB])
-      hdegreeDelta hQsolution hTsolution hagreementDelta hnoPencilDelta
+      selected Delta hQsolution hTsolution
       (all_regularPairSeeds_bound stageOne Q T hQ hrel
         pivotB.D pivotB.w pivotB.L pivotB.s prime hQbox
         (by norm_num [pivotB])
@@ -160,6 +169,7 @@ theorem firstResidualCell_count_lt
         (by simpa [stageOne, pivotB] using hagreementDelta)
         (by simpa [stageOne, pivotB, UnequalParameters.errors,
           TightParameters.errors] using hnoPencilDelta))
+      himplicit
   have hceil : stageOne.regularCountCap + pivotB.countCap + 1 =
       216720566639304 + 667325631931636 := by
     simpa only [stageOne, pivotB,
@@ -225,16 +235,13 @@ theorem secondResidualCell_count_lt
       pivotGcd12.w pivotGcd12.errors := by
     simpa [pivotGcd12, TightParameters.errors, errors, n, agreements, w] using
       noLargeSelectedPencil_mono selected Gamma Delta w errors hsub hnoPencil
-  have hstage :=
-    ContactStackedResidualCells6656Research.asymmetric_stage_count_lt_of_regular_factors
-      stageTwo pivotGcd12 Q T hQ prime
+  have himplicit :=
+    all_implicitSeeds_bound pivotGcd12 Q hQ prime hQbox
       (by norm_num [pivotGcd12])
       (by norm_num [pivotGcd12, prime])
       (by norm_num [pivotGcd12])
       (by norm_num [pivotGcd12, prime])
       (by norm_num [pivotGcd12, TightParameters.kappa])
-      (by norm_num [pivotGcd12, TightParameters.algebraicCap,
-        TightParameters.kappa])
       (by norm_num [pivotGcd12, prime, TightParameters.implicitYCap,
         TightParameters.kappa])
       (by norm_num [pivotGcd12, prime, TightParameters.algebraicCap,
@@ -243,6 +250,20 @@ theorem secondResidualCell_count_lt
         TightParameters.algebraicCap, TightParameters.kappa])
       (by norm_num [pivotGcd12])
       (by norm_num [pivotGcd12])
+      selected Delta (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain
+      u0 u1 IRSProfile.domain.injective.injOn
+      (by norm_num [IRSProfile.Index, pivotGcd12])
+      hdegreeDelta hagreementDelta hnoPencilDelta
+  have hstage :=
+    asymmetric_stage_count_lt stageTwo pivotGcd12 Q T hQ prime
+      (by norm_num [pivotGcd12])
+      (by norm_num [pivotGcd12, prime])
+      (by norm_num [pivotGcd12])
+      (by norm_num [pivotGcd12, TightParameters.kappa])
+      (by norm_num [pivotGcd12, TightParameters.algebraicCap,
+        TightParameters.kappa])
+      (by norm_num [pivotGcd12, prime, TightParameters.algebraicCap,
+        TightParameters.kappa])
       hQbox
       (by norm_num [stageTwo, UnequalParameters.gap])
       (by norm_num [stageTwo, pivotGcd12, UnequalParameters.gap,
@@ -250,10 +271,7 @@ theorem secondResidualCell_count_lt
       (by norm_num [stageTwo, pivotGcd12])
       (by norm_num [stageTwo, pivotGcd12])
       (by norm_num [stageTwo, pivotGcd12])
-      selected Delta (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain
-      u0 u1 IRSProfile.domain.injective.injOn
-      (by norm_num [IRSProfile.Index, pivotGcd12])
-      hdegreeDelta hQsolution hTsolution hagreementDelta hnoPencilDelta
+      selected Delta hQsolution hTsolution
       (all_regularPairSeeds_bound stageTwo Q T hQ hrel
         pivotGcd12.D pivotGcd12.w pivotGcd12.L pivotGcd12.s prime hQbox
         (by norm_num [pivotGcd12])
@@ -281,6 +299,7 @@ theorem secondResidualCell_count_lt
         (by simpa [stageTwo, pivotGcd12] using hagreementDelta)
         (by simpa [stageTwo, pivotGcd12, UnequalParameters.errors,
           TightParameters.errors] using hnoPencilDelta))
+      himplicit
   have hceil : stageTwo.regularCountCap + pivotGcd12.countCap + 1 =
       163704523661892 + 65054160163108 := by
     simpa only [stageTwo, pivotGcd12,

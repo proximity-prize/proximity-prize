@@ -78,15 +78,15 @@ theorem exists_seedless_interpolant (received : IRSProfile.Index → IRSProfile.
     yTotalCap slopeCap (IRSProfile.domain i) (received i) theta r] at hdiv
   exact hdiv
 
-def radius : ℝ≥0 := claimedRadius 10250623 33554432
-def score : ℕ := 6732
-theorem radius_numerator_exact : 10250623 = 128*errors+127 := by decide
+def radius : ℝ≥0 := claimedRadius 10250751 33554432
+def score : ℕ := 6733
+theorem radius_numerator_exact : 10250751 = 128*80083+127 := by decide
 theorem radius_floor :
-    ⌊(radius : ℝ)*(Fintype.card IRSProfile.Index : ℝ)⌋₊ = errors := by
-  norm_num [radius, claimedRadius, errors, IRSProfile.Index]
+    ⌊(radius : ℝ)*(Fintype.card IRSProfile.Index : ℝ)⌋₊ = 80083 := by
+  norm_num [radius, claimedRadius, IRSProfile.Index]
 theorem radius_cell_cross :
-    10250623*Fintype.card IRSProfile.Index < (errors+1)*33554432 := by
-  norm_num [IRSProfile.Index, errors]
+    10250751*Fintype.card IRSProfile.Index < (80083+1)*33554432 := by
+  norm_num [IRSProfile.Index]
 theorem radius_gap : w < Fintype.card IRSProfile.Index-errors := by
   norm_num [IRSProfile.Index, errors, w]
 theorem radius_admissible :
@@ -96,7 +96,7 @@ theorem radius_admissible :
 /-- . -/
 theorem root_power_integer : (2 : ℕ)^8 * 600^25 ≤ 749^25 := by decide
 theorem radius_power_integer :
-    (23303809 : ℕ)^128 * (2^67*749) ≤ 600*33554432^128 := by decide
+    (23303681 : ℕ)^128 * (2^67*749) ≤ 600*33554432^128 := by decide
 
 theorem two_rpow_fraction_le :
     (2 : ℝ≥0)^((8 : ℝ)/25) ≤ (749 : ℝ≥0)/600 := by
@@ -112,7 +112,7 @@ theorem two_rpow_fraction_le :
 
 theorem radius_power_rational_bound :
     (1-radius)^IRSProfile.repetitions ≤ ((1 : ℝ≥0)/2^(67 : ℕ))*(600/749) := by
-  have hsub : (1-radius : ℝ≥0)=23303809/33554432 := by
+  have hsub : (1-radius : ℝ≥0)=23303681/33554432 := by
     have hr : radius≤1 := by
       rw [← NNReal.coe_le_coe]
       norm_num [radius,claimedRadius]
@@ -124,7 +124,8 @@ theorem radius_power_rational_bound :
     div_le_div_iff₀ (by positivity) (by positivity)]
   exact_mod_cast radius_power_integer
 
-theorem radius_score : (1-radius)^IRSProfile.repetitions ≤ claimedError score := by
+theorem radius_score_le_6732 :
+    (1-radius)^IRSProfile.repetitions ≤ claimedError 6732 := by
   have hscale : (600 : ℝ≥0)/749 ≤ (2 : ℝ≥0)^(-((8 : ℝ)/25)) := by
     calc
       (600 : ℝ≥0)/749=1/((749 : ℝ≥0)/600) := by norm_num
@@ -136,12 +137,21 @@ theorem radius_score : (1-radius)^IRSProfile.repetitions ≤ claimedError score 
       radius_power_rational_bound
     _ ≤ ((1 : ℝ≥0)/2^(67 : ℕ))*(2 : ℝ≥0)^(-((8 : ℝ)/25)) :=
       mul_le_mul_of_nonneg_left hscale (by positivity)
-    _ = claimedError score := by
-      unfold claimedError score
+    _ = claimedError 6732 := by
+      unfold claimedError
       rw [show -((((6732 : ℕ) : ℝ)/100)) =
           -((67 : ℕ) : ℝ)+-((8 : ℝ)/25) by norm_num,
         NNReal.rpow_add (by norm_num : (2 : ℝ≥0)≠0)]
       simp only [NNReal.rpow_neg,NNReal.rpow_natCast,one_div]
+
+theorem radius_score : (1-radius)^IRSProfile.repetitions ≤ claimedError score :=
+  radius_score_le_6732.trans <| by
+    unfold claimedError score
+    apply NNReal.rpow_le_rpow_of_exponent_ge (by positivity : (0 : ℝ≥0) < 2)
+    · exact div_nonneg (Nat.cast_nonneg _) (by norm_num : (0 : ℝ) ≤ 100)
+    · exact div_le_div_of_nonneg_right
+        (Nat.cast_le.mpr (by decide : (6733 : ℕ) ≤ 6732))
+        (by norm_num : (0 : ℝ) ≤ 100)
 
 theorem field_cardinality : Fintype.card IRSProfile.Field = prime^6 := by
   norm_num [prime, IRSProfile.Field, KoalaBear.Ext6, KoalaBear.fieldSize]
@@ -157,7 +167,7 @@ theorem field_capacity_split :
 theorem protocolClaim6732_of_reduction
     (hred : ToyProblem.Impl.IRS.certifiedGammaError IRSProfile.totalDimension
       IRSProfile.interleaving IRSProfile.domain radius ≤ reductionTarget) :
-    ProtocolClaim 6732 10250623 33554432 := by
+    ProtocolClaim 6733 10250751 33554432 := by
   exact ⟨radius_admissible, hred, radius_score⟩
 
 end

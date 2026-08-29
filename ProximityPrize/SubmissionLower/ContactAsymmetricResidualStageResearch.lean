@@ -32,6 +32,8 @@ open ContactGenericSurface ContactGeometricFactorCover ContactGeometricFirstTail
 open ContactGenericInitialPoint
 open ContactOriginalRegularSeedCount ContactProperCutSeedCount ContactCountingCaps
 open ContactPrimeSeedIncidence ActualCoordinateDegreeSum
+open ContactImplicitPairSeedCountParameterizedResearch
+open ContactSingularDegreeBounds
 
 noncomputable section
 
@@ -568,6 +570,57 @@ theorem sum_regular_counts_bound
           (Nat.mul_le_mul_left P.agreement.z hcost.2.2))
       · exact Nat.mul_le_mul_left _ hcost.2.2
     _ = P.regularNumerator := rfl
+
+/-- Implicit-pair seed bound on each residual-stage `implicitSeeds` cell. -/
+theorem all_implicitSeeds_bound
+    (S : TightParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
+    (p : ℕ) [CharP K p]
+    (hbox : Q ∈ globalCoefficientBox K S.D S.w S.L S.s)
+    (hs : 1 ≤ S.s) (hsSmall : S.s < p)
+    (hw : 1 ≤ S.w) (hchar : S.w < p)
+    (hDw : S.w < S.kappa * S.D)
+    (hjYSmall : S.implicitYCap < p)
+    (hjZSmall : S.algebraicCap < p)
+    (hmixedSmall : 2 * S.implicitYCap * S.algebraicCap < p)
+    (hwa : S.w < S.a) (han : S.a ≤ S.n)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (nodes : Finset ι) (x u0 u1 : ι → K)
+    (hinj : Set.InjOn x nodes) (hnodes : nodes.card = S.n)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ S.w)
+    (hagreement : ∀ gamma ∈ Gamma,
+      S.a ≤ (nodes.filter (fun i =>
+        (selected gamma).eval (x i) = u0 i + gamma * u1 i)).card)
+    (hnoPencil : NoLargeSelectedPencil selected Gamma S.w S.errors) :
+    ∀ q : ImplicitIndex Q,
+      (implicitSeeds Q selected Gamma q).card * S.gap ≤
+        (S.n - S.w) * dot S.agreement (implicitVector q.1) +
+          (S.errors + 1) * S.gap * (implicitVector q.1).z := by
+  intro q
+  classical
+  obtain ⟨hJ, hJboxRaw⟩ := singularAuxiliary_nonzero_mem_box Q
+    S.D S.w S.L S.s p hQ hs hsSmall hbox
+  have hJbox : singularAuxiliary Q ∈
+      globalCoefficientBox K (S.kappa * S.D) S.w S.algebraicCap 0 := by
+    simpa [TightParameters.kappa, TightParameters.algebraicCap] using hJboxRaw
+  obtain ⟨_hA, hG, hGR, hAbox, hGbox, hproper⟩ :=
+    implicitPair_data (singularAuxiliary Q) hJ
+      (S.kappa * S.D) S.w S.algebraicCap hw hDw hJbox q.1 q.2
+  have hsub := implicitSeeds_subset Q selected Gamma q
+  have hpair := implicit_pair_seed_bound q.1.1 q.1.2 hG hGR hproper
+    (S.kappa * S.D) S.w S.implicitYCap S.algebraicCap
+    p S.n S.a S.errors hAbox hGbox rfl selected
+    (implicitSeeds Q selected Gamma q) nodes x u0 u1 hinj hnodes
+    hw hchar hwa han hjYSmall hjZSmall hmixedSmall
+    (fun gamma hgamma => hdegree gamma (hsub hgamma))
+    (fun gamma hgamma => (implicitSeeds_data Q selected Gamma q gamma hgamma).1)
+    (fun gamma hgamma =>
+      (implicitSeeds_data Q selected Gamma q gamma hgamma).2.2.1)
+    (fun gamma hgamma =>
+      (implicitSeeds_data Q selected Gamma q gamma hgamma).2.2.2)
+    (fun gamma hgamma => hagreement gamma (hsub hgamma))
+    (noLargeSelectedPencil_mono selected Gamma _ S.w S.errors hsub hnoPencil)
+  simpa [implicitVector, TightParameters.agreement, TightParameters.errors,
+    TightParameters.gap, dot] using hpair
 
 /-- .
 
