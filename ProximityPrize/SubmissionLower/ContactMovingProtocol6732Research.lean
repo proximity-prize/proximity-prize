@@ -14,7 +14,7 @@ set_option maxHeartbeats 5000000
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 def n : ℕ := 262144
-def errors : ℕ := 80082
+def errors : ℕ := 80092
 def agreements : ℕ := n-errors
 def listBudget : ℕ := 1000000000
 def mcaBudget : ℕ := 274980727111395087
@@ -203,7 +203,7 @@ theorem certifiedGammaError_le_of_alignment
       · simpa only [Nat.mul_comm] using field_capacity_split
 theorem protocolClaim6732_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-    ProtocolClaim 6732 10250623 33554432 where
+    ProtocolClaim 6733 10251903 33554432 where
   admissible := ContactMovingSeedless6732Research.radius_admissible
   reduction := by
     change certifiedGammaError IRSProfile.code radius ≤ reductionTarget

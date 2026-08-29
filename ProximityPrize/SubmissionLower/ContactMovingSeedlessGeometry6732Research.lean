@@ -22,12 +22,12 @@ set_option maxRecDepth 50000
 set_option maxHeartbeats 5000000
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 80082
+def errors : ℕ := 80092
 def agreements : ℕ := n - errors
 def gap : ℕ := agreements - w
 def prime : ℕ := 2130706433
-def multiplicity : ℕ := 40
-def yTotalCap : ℕ := 55
+def multiplicity : ℕ := 41
+def yTotalCap : ℕ := 56
 def slopeCap : ℕ := 12
 def weightedCap : ℕ := multiplicity * agreements
 def listBudget : ℕ := 1000000000

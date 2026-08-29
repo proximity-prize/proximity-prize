@@ -52,9 +52,9 @@ attribute [local simp]
 theorem firstResidualCell_count_lt
     (QA QB QC : StackedPoly) (hQA : QA ≠ 0) (hQB : QB ≠ 0)
     (hboxA : QA ∈ globalCoefficientBox IRSProfile.Field
-      (43 * agreements) w 38583 11)
+      (43 * agreements) w 6135 12)
     (hboxB : QB ∈ globalCoefficientBox IRSProfile.Field
-      (81 * agreements) w 1222 25)
+      (81 * agreements) w 1242 25)
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
     (Gamma : Finset IRSProfile.Field)
     (u0 u1 : IRSProfile.Index → IRSProfile.Field)
@@ -67,7 +67,7 @@ theorem firstResidualCell_count_lt
           u0 i + gamma * u1 i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Gamma w errors) :
     (firstResidualSeeds selected Gamma QA QB).card <
-      216720566639304 + 667325631931636 := by
+      36914696494058 + 678257591819300 := by
   let Delta := firstResidualSeeds selected Gamma QA QB
   let Q := quotientB QA QB
   let T := quotientA QA QB
@@ -85,7 +85,7 @@ theorem firstResidualCell_count_lt
     ContactStackedResidualCells6656Research.quotientB_ne_zero QA QB hQB
   have hQbox := quotientB_mem_parent_box QA QB hQB hboxB
   have hTbox := quotientA_mem_parent_box QA QB hQA hboxA
-  have hTcaps := degree_bounds_of_mem_box T (43 * agreements) w 38583 11
+  have hTcaps := degree_bounds_of_mem_box T (43 * agreements) w 6135 12
     (by norm_num [w]) hTbox
   have hrel : IsRelPrime Q T :=
     (firstQuotients_isRelPrime hQA).symm
@@ -161,7 +161,7 @@ theorem firstResidualCell_count_lt
         (by simpa [stageOne, pivotB, UnequalParameters.errors,
           TightParameters.errors] using hnoPencilDelta))
   have hceil : stageOne.regularCountCap + pivotB.countCap + 1 =
-      216720566639304 + 667325631931636 := by
+      36914696494058 + 678257591819300 := by
     simpa only [stageOne, pivotB,
       ContactMovingStackedResidualParameters6732Research.firstResidualSingularCeiling,
       ContactMovingParameters6732Research.six_cells_exact.2.2.2.1] using
@@ -171,11 +171,11 @@ theorem firstResidualCell_count_lt
 theorem secondResidualCell_count_lt
     (QA QB QC : StackedPoly) (hQA : QA ≠ 0) (hQB : QB ≠ 0) (hQC : QC ≠ 0)
     (hboxA : QA ∈ globalCoefficientBox IRSProfile.Field
-      (43 * agreements) w 38583 11)
+      (43 * agreements) w 6135 12)
     (hboxB : QB ∈ globalCoefficientBox IRSProfile.Field
-      (81 * agreements) w 1222 25)
+      (81 * agreements) w 1242 25)
     (hboxC : QC ∈ globalCoefficientBox IRSProfile.Field
-      (40 * agreements) w 91386 12)
+      (41 * agreements) w 19688 12)
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
     (Gamma : Finset IRSProfile.Field)
     (u0 u1 : IRSProfile.Index → IRSProfile.Field)
@@ -188,7 +188,7 @@ theorem secondResidualCell_count_lt
           u0 i + gamma * u1 i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Gamma w errors) :
     (secondResidualSeeds selected Gamma QA QB QC).card <
-      163704523661892 + 65054160163108 := by
+      37840936333035 + 79303483092774 := by
   let Delta := secondResidualSeeds selected Gamma QA QB QC
   let Q := middleQuotient QA QB QC
   let T := quotientC QA QB QC
@@ -207,7 +207,7 @@ theorem secondResidualCell_count_lt
     ContactStackedResidualCells6656Research.middleQuotient_ne_zero QA QB QC hQA
   have hQbox := middleQuotient_mem_parent_box QA QB QC hQA hbox12
   have hTbox := quotientC_mem_parent_box QA QB QC hQC hboxC
-  have hTcaps := degree_bounds_of_mem_box T (40 * agreements) w 91386 12
+  have hTcaps := degree_bounds_of_mem_box T (41 * agreements) w 19688 12
     (by norm_num [w]) hTbox
   have hrel : IsRelPrime Q T := secondQuotients_isRelPrime hQA
   have hdegreeDelta : ∀ gamma ∈ Delta,
@@ -282,7 +282,7 @@ theorem secondResidualCell_count_lt
         (by simpa [stageTwo, pivotGcd12, UnequalParameters.errors,
           TightParameters.errors] using hnoPencilDelta))
   have hceil : stageTwo.regularCountCap + pivotGcd12.countCap + 1 =
-      163704523661892 + 65054160163108 := by
+      37840936333035 + 79303483092774 := by
     simpa only [stageTwo, pivotGcd12,
       ContactMovingStackedResidualParameters6732Research.secondResidualSingularCeiling,
       ContactMovingParameters6732Research.six_cells_exact.2.2.2.2.2] using

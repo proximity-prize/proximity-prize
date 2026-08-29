@@ -23,13 +23,13 @@ set_option maxHeartbeats 5000000
 
 def prime : ℕ := 2130706433
 
-def fixedProfile : Profile := ⟨262144,131071,182062,7282480,1222,11⟩
+def fixedProfile : Profile := ⟨262144,131071,182052,7464132,1242,12⟩
 
 def fixedSupport : ResidualSupportParameters :=
   ContactMovingAgreementCertificate6719Research.support 1167 43 9
 
 def fixedTightProfile : TightParameters :=
-  ⟨262144,131071,182062,7282480,1222,11⟩
+  ⟨262144,131071,182052,7464132,1242,12⟩
 
 def identityDegree (p : Profile) (a b s : ℕ) (flag : FlagDegree) : ℕ :=
   flagMixed flag (paddedCut a b s (p.w+1)) unitZFlag +
@@ -75,8 +75,8 @@ def fixedFlag : FlagDegree := supportCumulativeFlag fixedSupport
 def fixedFactorLedger : ℕ := factorLedger fixedProfile 1167 43 9 fixedFlag
 
 theorem fixed_values :
-    fixedProfile.errors=80082 ∧ fixedProfile.gap=50991 ∧
-    fixedProfile.yCap=55 ∧ fixedProfile.degreeIncidence=9623227539 ∧
+    fixedProfile.errors=80092 ∧ fixedProfile.gap=50981 ∧
+    fixedProfile.yCap=56 ∧ fixedProfile.degreeIncidence=9621868793 ∧
     fixedProfile.unitIncidence=131073 ∧ fixedFlag=⟨1167,44,11⟩ ∧
     identityDegree fixedProfile 1167 43 9 fixedFlag=
       ContactMovingParameters6732Research.identityZDegree+

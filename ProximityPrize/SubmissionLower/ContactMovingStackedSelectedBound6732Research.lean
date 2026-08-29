@@ -37,7 +37,7 @@ local instance : GCDMonoid GlobalPoly :=
  -/
 def FixedCellCountProvider6732 : Prop :=
   ∀ (Q : GlobalPoly), Q ≠ 0 →
-    Q ∈ globalCoefficientBox IRSProfile.Field (40 * agreements) w 1222 11 →
+    Q ∈ globalCoefficientBox IRSProfile.Field (41 * agreements) w 1242 12 →
     ResidualSupportData ContactMovingStackedBoxTransport6732Research.fixedSupport Q →
     ∀ (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
       (Delta : Finset IRSProfile.Field)
@@ -134,13 +134,13 @@ theorem fixedSeeds_card_le_of_provider
     (hfixedProvider : FixedCellCountProvider6732)
     (QA QB QC : GlobalPoly) (hQA : QA ≠ 0) (hQB : QB ≠ 0) (hQC : QC ≠ 0)
     (hboxA : QA ∈ globalCoefficientBox IRSProfile.Field
-      (43 * agreements) w 38583 11)
+      (43 * agreements) w 6135 12)
     (hboxB : QB ∈ globalCoefficientBox IRSProfile.Field
-      (81 * agreements) w 1222 25)
+      (81 * agreements) w 1242 25)
     (hboxC : QC ∈ globalCoefficientBox IRSProfile.Field
-      (40 * agreements) w 91386 12)
+      (41 * agreements) w 19688 12)
     (hflagB : QB ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
-      IRSProfile.Field (81 * agreements) w 1222 25)
+      IRSProfile.Field (81 * agreements) w 1242 25)
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
     (Gamma : Finset IRSProfile.Field)
     (u0 u1 : IRSProfile.Index → IRSProfile.Field)
@@ -161,7 +161,7 @@ theorem fixedSeeds_card_le_of_provider
     ContactMovingStackedBoxTransport6732Research.gcd12_mem_meet_box
       QA QB hQA hQB hboxA hboxB
   have hQbox : Q ∈ globalCoefficientBox IRSProfile.Field
-      (40 * agreements) w 1222 11 := by
+      (41 * agreements) w 1242 12 := by
     simpa [Q] using
       ContactMovingStackedBoxTransport6732Research.gcd123_mem_meet_box
         QA QB QC hQA hQC hbox12 hboxC
@@ -191,7 +191,7 @@ theorem fixedSeeds_card_le_of_provider
 theorem selectedNoLargePencilBound6732_of_fixedProvider
     (hfixedProvider : FixedCellCountProvider6732) :
     SelectedNoLargePencilBound IRSProfile.domain
-      131071 80082 274980727111395087 := by
+      131071 80092 274980727111395087 := by
   intro U seeds A selected hdegreeRaw hcardRaw hvalues hnoRaw
   have hdegree : ∀ gamma ∈ seeds,
       (selected gamma).natDegree ≤ w := by

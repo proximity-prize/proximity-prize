@@ -30,13 +30,13 @@ theorem fixedCellCountProvider6732 : FixedCellCountProvider6732 := by
   simpa [ContactMovingParameters6732Research.fixedCost] using h
 
 theorem alignmentBound6732 :
-    AffineLineAlignmentBound IRSProfile.baseCode 80082 274980727111395087 := by
+    AffineLineAlignmentBound IRSProfile.baseCode 80092 274980727111395087 := by
   have h := ContactAlignmentBridge.alignmentBound_of_selected_count
-    IRSProfile.domain 131071 80082 274980727111395087
+    IRSProfile.domain 131071 80092 274980727111395087
     (selectedNoLargePencilBound6732_of_fixedProvider fixedCellCountProvider6732)
   simpa [IRSProfile.baseCode, IRSProfile.baseDimension] using h
 
-theorem protocolClaim6732 : ProtocolClaim 6732 10250623 33554432 :=
+theorem protocolClaim6732 : ProtocolClaim 6733 10251903 33554432 :=
   ContactMovingProtocol6732Research.protocolClaim6732_of_alignment alignmentBound6732
 
 #print axioms protocolClaim6732

@@ -16,7 +16,7 @@ set_option maxHeartbeats 5000000
 def n : ℕ := 262144
 def w : ℕ := 131071
 def prime : ℕ := 2130706433
-def errors : ℕ := 80082
+def errors : ℕ := 80092
 def agreements : ℕ := n-errors
 def gap : ℕ := agreements-w
 def listBudget : ℕ := 1000000000
@@ -28,11 +28,11 @@ structure Profile where
   seedCap : ℕ
   slopeCap : ℕ
   deriving DecidableEq
-def profileA : Profile := ⟨43,38583,11⟩
-def profileB : Profile := ⟨81,1222,25⟩
-def profileC : Profile := ⟨40,91386,12⟩
-def profileABMeet : Profile := ⟨43,1222,11⟩
-def profileFinalMeet : Profile := ⟨40,1222,11⟩
+def profileA : Profile := ⟨43,6135,12⟩
+def profileB : Profile := ⟨81,1242,25⟩
+def profileC : Profile := ⟨41,19688,12⟩
+def profileABMeet : Profile := ⟨43,1242,12⟩
+def profileFinalMeet : Profile := ⟨41,1242,12⟩
 namespace Profile
 def weightedCap (P : Profile) : ℕ := P.multiplicity*agreements
 def yCap (P : Profile) : ℕ := (P.weightedCap-1)/w
@@ -43,32 +43,32 @@ def nullity (P : Profile) : ℕ := P.coefficients-P.totalRank
 def characteristicCap (P : Profile) : ℕ := (2*P.slopeCap-1)*P.weightedCap
 end Profile
 
-theorem base_values : agreements=182062 ∧ gap=50991 ∧
+theorem base_values : agreements=182052 ∧ gap=50981 ∧
     capacity=274980728111395087 ∧ mcaBudget=274980727111395087 ∧
     mcaBudget+listBudget=capacity := by decide
-theorem profileA_coefficients_exact : profileA.coefficients=91190645134027 := by
-  change coefficientCount (43*182062) 131071 38583 11=91190645134027
+theorem profileA_coefficients_exact : profileA.coefficients=15385636022315 := by
+  change coefficientCount (43*182052) 131071 6135 12=15385636022315
   rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
-    (43*182062) 131071 38583 11 60 (by decide) (by decide)]
+    (43*182052) 131071 6135 12 60 (by decide) (by decide)]
   decide
-theorem profileB_coefficients_exact : profileB.coefficients=20395196377088 := by
-  change coefficientCount (81*182062) 131071 1222 25=20395196377088
+theorem profileB_coefficients_exact : profileB.coefficients=20738895387938 := by
+  change coefficientCount (81*182052) 131071 1242 25=20738895387938
   rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
-    (81*182062) 131071 1222 25 113 (by decide) (by decide)]
+    (81*182052) 131071 1242 25 113 (by decide) (by decide)]
   decide
-theorem profileC_coefficients_exact : profileC.coefficients=196166579454729 := by
-  change coefficientCount (40*182062) 131071 91386 12=196166579454729
+theorem profileC_coefficients_exact : profileC.coefficients=44579488339867 := by
+  change coefficientCount (41*182052) 131071 19688 12=44579488339867
   rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
-    (40*182062) 131071 91386 12 56 (by decide) (by decide)]
+    (41*182052) 131071 19688 12 57 (by decide) (by decide)]
   decide
-theorem profileA_rank_exact : profileA.localRank=347864704 := by decide
-theorem profileB_rank_exact : profileB.localRank=77801373 := by decide
-theorem profileC_rank_exact : profileC.localRank=748316114 := by decide
+theorem profileA_rank_exact : profileA.localRank=58691542 := by decide
+theorem profileB_rank_exact : profileB.localRank=79112293 := by decide
+theorem profileC_rank_exact : profileC.localRank=170057251 := by decide
 theorem profile_values :
-    profileA.weightedCap=7828666 ∧ profileB.weightedCap=14747022 ∧
-    profileC.weightedCap=7282480 ∧ profileA.yCap=59 ∧ profileB.yCap=112 ∧
-    profileC.yCap=55 ∧ profileABMeet.yCap=59 ∧ profileFinalMeet.yCap=55 ∧
-    profileA.nullity=168651 ∧ profileB.nullity=33253376 ∧ profileC.nullity=66313 := by
+    profileA.weightedCap=7828236 ∧ profileB.weightedCap=14746212 ∧
+    profileC.weightedCap=7464132 ∧ profileA.yCap=59 ∧ profileB.yCap=112 ∧
+    profileC.yCap=56 ∧ profileABMeet.yCap=59 ∧ profileFinalMeet.yCap=56 ∧
+    profileA.nullity=436267 ∧ profileB.nullity=82451746 ∧ profileC.nullity=333723 := by
   refine ⟨by decide,by decide,by decide,by decide,by decide,by decide,by decide,by decide,?_,?_,?_⟩
   · rw [Profile.nullity,Profile.totalRank,profileA_coefficients_exact,profileA_rank_exact]; decide
   · rw [Profile.nullity,Profile.totalRank,profileB_coefficients_exact,profileB_rank_exact]; decide
@@ -105,7 +105,7 @@ def fixedSupport : ResidualSupportParameters :=
   ContactMovingAgreementCertificate6719Research.support 1167 43 9
 
 def fixedProfileForLedger : ContactRobustFixedMeet6656Research.Profile :=
-  ⟨262144, 131071, 182062, 7282480, 1222, 11⟩
+  ⟨262144, 131071, 182052, 7464132, 1242, 12⟩
 
 def fixedFlag : FlagDegree := surfaceFlag 1167 43 9
 def direction : FlagDegree := directionFlag 1167 43 9
@@ -155,28 +155,28 @@ def totalCost : ℕ := fixedCost+firstResidualCeiling+secondResidualCeiling
 
 theorem fixed_ledger_values :
     fixedFlag=⟨1167,44,11⟩ ∧ direction=⟨2334,87,21⟩ ∧
-    E=9623227539 ∧ U=131073 ∧
-    degreeCost=105864414635323281 ∧ unitCost=76428164359978857 ∧
-    fixedProperTailCost=272125217847177994 ∧ identityZDegree=276826187 ∧
-    identityYZDegree=6854200400 ∧ fixedIdentityYZCost=1467952828656011 ∧
-    fixedRegularCost=273593170675834005 := by decide
+    E=9621868793 ∧ U=131073 ∧
+    degreeCost=105849482621676715 ∧ unitCost=76417373137135831 ∧
+    fixedProperTailCost=272140205244337058 ∧ identityZDegree=276826187 ∧
+    identityYZDegree=6854200400 ∧ fixedIdentityYZCost=1468424109697280 ∧
+    fixedRegularCost=273608629354034338 := by decide
 theorem residual_values :
-    residualMixed profileA profileB=![978017,4393394,2707] ∧
-    residualMixed profileABMeet profileC=![1019910,5458984,1313] ∧
-    residualNumerator profileA profileB=11050798413504756831 ∧
-    residualNumerator profileABMeet profileC=8347457366043536052 := by decide
+    residualMixed profileA profileB=![168279,760398,2819] ∧
+    residualMixed profileABMeet profileC=![251160,1231144,1380] ∧
+    residualNumerator profileA profileB=1881948141963608405 ∧
+    residualNumerator profileABMeet profileC=1929168775194494136 := by decide
 theorem six_cells_exact :
-    fixedRegularCost=273593170675834005 ∧ fixedSingularCost=60489048372185 ∧
-    firstResidualRegularCost=216720566639304 ∧ firstResidualSingularCeiling=667325631931636 ∧
-    secondResidualRegularCost=163704523661892 ∧ secondResidualSingularCeiling=65054160163108 := by decide
-theorem total_and_slack_exact : totalCost=274766464606602130 ∧
-    mcaBudget-totalCost=214262504792957 ∧ totalCost<mcaBudget := by decide
+    fixedRegularCost=273608629354034338 ∧ fixedSingularCost=75606965639647 ∧
+    firstResidualRegularCost=36914696494058 ∧ firstResidualSingularCeiling=678257591819300 ∧
+    secondResidualRegularCost=37840936333035 ∧ secondResidualSingularCeiling=79303483092774 := by decide
+theorem total_and_slack_exact : totalCost=274516553027413152 ∧
+    mcaBudget-totalCost=464174083981935 ∧ totalCost<mcaBudget := by decide
 theorem residual_characteristic_gates :
-    singularY profileB=5513 ∧ singularZ profileB=59878 ∧
+    singularY profileB=5512 ∧ singularZ profileB=60858 ∧
     2*singularY profileB*singularZ profileB<prime ∧
-    singularY profileABMeet=1254 ∧ singularZ profileABMeet=25662 ∧
+    singularY profileABMeet=1373 ∧ singularZ profileABMeet=28566 ∧
     2*singularY profileABMeet*singularZ profileABMeet<prime ∧
-    singularY profileFinalMeet=1166 ∧ singularZ profileFinalMeet=25662 ∧
+    singularY profileFinalMeet=1309 ∧ singularZ profileFinalMeet=28566 ∧
     2*singularY profileFinalMeet*singularZ profileFinalMeet<prime ∧
     (1+w*(direction.yz+direction.all))*fixedFlag.all+
       (fixedFlag.yz+fixedFlag.all)*(w*direction.all)<prime := by decide
