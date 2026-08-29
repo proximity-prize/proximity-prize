@@ -80,3 +80,4 @@ theorem candidate : ProtocolClaimUpper 11613 122369 where
   score := candidate_score
 
 end ProximityPrize.Benchmark.Upper
+
