@@ -7,11 +7,31 @@ Authors: Miriam Philipp, Justus Springer, Junyan Xu
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.FieldTheory.RatFunc.IntermediateField.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: 768f64cee55e4a59ede0f596e2f692acd09f3fd4cfc634d9a60534a050a507d8.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+-/
 
-/-! . -/
+/-!
+Port elaboration repairs (gpt-5, 2026-08-27): qualify RatFunc.X against
+the trusted target's conflicting polynomial notation. Prove the existing
+bivariate swap identity with its public map/swap lemmas instead of unfolding
+the evaluation implementation. All original statements and definitions remain.
+-/
 
-/-! . -/
+/-!
+# Intermediate Fields of Rational Function Fields
+
+Results relating `IntermediateField` and `RatFunc`.
+-/
 
 variable {K : Type*} [Field K]
 
@@ -32,12 +52,13 @@ theorem IntermediateField.adjoin_X (E : IntermediateField K K⟮X⟯) :
     _root_.eq_top_iff]
   exact le_trans (le_of_eq RatFunc.adjoin_X.symm) (adjoin.mono _ _ _ (by simp))
 
-/-- . -/
+/-- The equivalence between `E⟮X⟯` and `K⟮X⟯` as `E`-algebras. -/
 noncomputable def IntermediateField.adjoinXEquiv (E : IntermediateField K K⟮X⟯) :
     E⟮(RatFunc.X : K⟮X⟯)⟯ ≃ₐ[E] K⟮X⟯ :=
   (equivOfEq (adjoin_X E)).trans topEquiv
 
-/-- . -/
+/-- The minimal polynomial of `X` over `K⟮f⟯`. It is defined as `f.num - f * f.denom`, viewed
+as a polynomial with coefficients in `A`, where `A` is a `K[f]`-algebra. -/
 noncomputable abbrev minpolyX (A : Type*) [CommRing A] [Algebra K A] [Algebra K[f] A] : A[X] :=
   f.num.map (algebraMap K A) -
   Polynomial.C (algebraMap K[f] A (⟨f, self_mem_adjoin_singleton K f⟩ : K[f])) *

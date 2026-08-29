@@ -8,9 +8,37 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 import ProximityPrize.SubmissionLower.LocalMathlib_Topology_JacobsonSpace
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.RingTheory.Spectrum.Prime.Jacobson.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: 8e4c68d50aa35430c0983028e10bbd1f2c4f95e9461b56c67f74114ae78f552f.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 
-/-! . -/
+Elaboration repair (gpt-5, 2026-08-27): escape the original local identifier
+`Z` as `«Z»` in the locally-closed-set pattern. TargetLower imports a notation
+with that token. The binder, mathematical declarations, proof logic, license
+and allowed imports are otherwise unchanged.
+-/
+
+/-!
+# The prime spectrum of a Jacobson ring
+
+## Main results
+- `PrimeSpectrum.exists_isClosed_singleton_of_isJacobson`:
+  The spectrum of a Jacobson ring is a Jacobson space.
+- `PrimeSpectrum.isOpen_singleton_tfae_of_isNoetherian_of_isJacobson`:
+  If `R` is both Noetherian and Jacobson, then the following are equivalent for `x : Spec R`:
+  1. `{x}` is open (i.e. `x` is an isolated point)
+  2. `{x}` is clopen
+  3. `{x}` is both closed and stable under generalization
+    (i.e. `x` is both a minimal prime and a maximal ideal)
+-/
 
 section ProximityFlatProofPort
 
@@ -59,7 +87,13 @@ lemma isJacobsonRing_iff_jacobsonSpace :
   change jacobson I ≤ x.asIdeal
   exact sInf_le ⟨hx, (isClosed_singleton_iff_isMaximal _).mp hx'⟩
 
-/-- . -/
+/--
+If `R` is both Noetherian and Jacobson, then the following are equivalent for `x : Spec R`:
+1. `{x}` is open (i.e. `x` is an isolated point)
+2. `{x}` is clopen
+3. `{x}` is both closed and stable under generalization
+  (i.e. `x` is both a minimal prime and a maximal ideal)
+-/
 lemma isOpen_singleton_tfae_of_isNoetherian_of_isJacobsonRing
     [IsNoetherianRing R] [IsJacobsonRing R] (x : PrimeSpectrum R) :
     List.TFAE [IsOpen {x}, IsClopen {x}, IsClosed {x} ∧ StableUnderGeneralization {x}] := by

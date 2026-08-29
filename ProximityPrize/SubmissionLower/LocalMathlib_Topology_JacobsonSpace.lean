@@ -7,9 +7,38 @@ Authors: Andrew Yang
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.Topology.JacobsonSpace.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: c12a0b6da0d0b702fcab56f58c49c20e4468fd37d2d64d6c0a86a0d2fd94b2b0.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+Port elaboration adjustment: escape the original type-variable identifiers X, Y, and Z
+so the target's polynomial notation cannot capture them. All names, statements,
+and mathematical proof bodies are otherwise unchanged.
+-/
 
-/-! . -/
+/-!
+
+# Jacobson spaces
+
+## Main results
+- `JacobsonSpace`: The class of Jacobson spaces, i.e.
+  spaces such that the set of closed points are dense in every closed subspace.
+- `jacobsonSpace_iff_locallyClosed`:
+  `X` is a Jacobson space iff every locally closed subset contains a closed point of `X`.
+- `JacobsonSpace.discreteTopology`:
+  If `X` only has finitely many closed points, then the topology on `X` is discrete.
+
+## References
+- https://stacks.math.columbia.edu/tag/005T
+
+-/
 
 section ProximityFlatProofPort
 
@@ -19,7 +48,7 @@ variable («X») {«Y»} [TopologicalSpace «X»] [TopologicalSpace «Y»] {f : 
 
 section closedPoints
 
-/-- . -/
+/-- The set of closed points. -/
 def closedPoints : Set «X» := setOf (IsClosed {·})
 
 variable {«X»}
@@ -51,7 +80,8 @@ lemma Set.Finite.isDiscrete_of_subset_closedPoints
 
 end closedPoints
 
-/-- . -/
+/-- The class of Jacobson spaces, i.e.
+spaces such that the set of closed points are dense in every closed subspace. -/
 @[mk_iff, stacks 005U]
 class JacobsonSpace : Prop where
   closure_inter_closedPoints : ∀ {«Z»}, IsClosed «Z» → closure («Z» ∩ closedPoints «X») = «Z»

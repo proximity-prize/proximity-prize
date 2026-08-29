@@ -8,18 +8,66 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Invariant_Defs
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.RingTheory.IsGaloisGroup.Defs.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: d96c79f130eb50e1e2cc1fe7734d576c489491c8ade4de96c06bb1630180e5f4.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 
-/-! . -/
+Elaboration repair for the required TargetLower import environment:
+Only the upstream development-time dependency-layering assertion expecting
+IsFractionRing to be absent is omitted: the required trusted TargetLower
+import already provides it. The class and every mathematical proof remain
+unchanged; no protected verifier or import-policy check is edited.
+These changes do not add mathematical hypotheses or change the original
+mathematical declarations, conclusions, or proof arguments.
+-/
+
+/-!
+# Predicate for Galois Groups
+
+Given an action of a group `G` on an extension of fields `L/K`, we introduce a predicate
+`IsGaloisGroup G K L` saying that `G` acts faithfully on `L` with fixed field `K`. In particular,
+we do not assume that `L` is an algebraic extension of `K`.
+
+## Implementation notes
+
+We actually define `IsGaloisGroup G A B` for extensions of rings `B/A`, with the same definition
+(faithful action on `B` with fixed ring `A`). This definition turns out to axiomatize a common
+setup in algebraic number theory where a Galois group `Gal(L/K)` acts on an extension of subrings
+`B/A` (e.g., rings of integers). In particular, there are theorems in algebraic number theory that
+naturally assume `[IsGaloisGroup G A B]` and whose statements would otherwise require assuming
+`(K L : Type*) [Field K] [Field L] [Algebra K L] [IsGalois K L]` (along with predicates relating
+`K` and `L` to the rings `A` and `B`) despite `K` and `L` not appearing in the conclusion.
+
+Unfortunately, this definition of `IsGaloisGroup G A B` for extensions of rings `B/A` is
+nonstandard and clashes with other notions such as the étale fundamental group. In particular, if
+`G` is finite and `A` is integrally closed, then  `IsGaloisGroup G A B` is equivalent to `B/A`
+being integral and the fields of fractions `Frac(B)/Frac(A)` being Galois with Galois group `G`
+(see `IsGaloisGroup.iff_isFractionRing`), rather than `B/A` being étale for instance.
+
+But in the absence of a more suitable name, the utility of the predicate `IsGaloisGroup G A B` for
+extensions of rings `B/A` seems to outweigh these terminological issues.
+-/
 
 section ProximityFlatProofPort
 
-
+-- The upstream library-layering check excluding IsFractionRing is omitted.
 
 variable (G A A' B : Type*) [Group G] [CommSemiring A] [Semiring B] [Algebra A B]
   [MulSemiringAction G B]
 
-/-- . -/
+/-- `G` is a Galois group for `L/K` if the action of `G` on `L` is faithful with fixed field `K`.
+In particular, we do not assume that `L` is an algebraic extension of `K`.
+
+See the implementation notes in this file for the meaning of this definition in the case of rings.
+-/
 class IsGaloisGroup where
   faithful : FaithfulSMul G B
   commutes : SMulCommClass G A B
@@ -92,7 +140,8 @@ attribute [instance low] IsGaloisGroup.commutes IsGaloisGroup.isInvariant
 
 variable [hA : IsGaloisGroup G A B] [FaithfulSMul A B]
 
-/-- . -/
+/-- If `B/A` is Galois with Galois group `G`, then `A` is isomorphic to the subring of elements of
+`B` fixed by `G`. -/
 @[simps apply_coe]
 noncomputable def ringEquivFixedPoints :
     A ≃+* FixedPoints.subsemiring B G where
@@ -110,7 +159,7 @@ theorem algebraMap_ringEquivFixedPoints_symm_apply (x : FixedPoints.subsemiring 
 
 variable [CommSemiring A'] [Algebra A' B] [FaithfulSMul A' B] [hA' : IsGaloisGroup G A' B]
 
-/-- . -/
+/-- If `B/A` and `B/A'` are Galois with the same Galois group, then `A ≃+* A'`. -/
 noncomputable def ringEquiv : A ≃+* A' :=
   (ringEquivFixedPoints G A B).trans (ringEquivFixedPoints G A' B).symm
 

@@ -7,9 +7,41 @@ Authors: Andrew Yang
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.GroupTheory.Submonoid.Inverses.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: a94c3bced005a121864f0c9fa38feb3d92e3178fde885bad450b1c2c2e3f036e.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+-/
 
-/-! . -/
+/-!
+
+# Submonoid of inverses
+
+Given a submonoid `N` of a monoid `M`, we define the submonoid `N.leftInv` as the submonoid of
+left inverses of `N`. When `M` is commutative, we may define `fromCommLeftInv : N.leftInv →* N`
+since the inverses are unique. When `N ≤ IsUnit.Submonoid M`, this is precisely
+the pointwise inverse of `N`, and we may define `leftInvEquiv : S.leftInv ≃* S`.
+
+For the pointwise inverse of submonoids of groups, please refer to the file
+`Mathlib/Algebra/Group/Submonoid/Pointwise.lean`.
+
+`N.leftInv` is distinct from `N.units`, which is the subgroup of `Mˣ` containing all units that are
+in `N`. See the implementation notes of `Mathlib/Algebra/Group/Submonoid/Units.lean` for more
+details on related constructions.
+
+## TODO
+
+Define the submonoid of right inverses and two-sided inverses.
+See the comments of https://github.com/leanprover-community/mathlib4/pull/10679 for a possible
+implementation.
+-/
 
 section ProximityFlatProofPort
 
@@ -45,9 +77,9 @@ section Monoid
 
 variable [Monoid M] (S : Submonoid M)
 
-/-- . -/
+/-- `S.leftInv` is the submonoid containing all the left inverses of `S`. -/
 @[to_additive
-/-- . -/]
+/-- `S.leftNeg` is the additive submonoid containing all the left additive inverses of `S`. -/]
 def leftInv : Submonoid M where
   carrier := { x : M | ∃ y : S, x * y = 1 }
   one_mem' := ⟨1, mul_one 1⟩
@@ -74,9 +106,11 @@ theorem leftInv_leftInv_eq (hS : S ≤ IsUnit.submonoid M) : S.leftInv.leftInv =
   rw [this]
   exact S.leftInv.unit_mem_leftInv _ (S.unit_mem_leftInv _ hx)
 
-/-- . -/
+/-- The function from `S.leftInv` to `S` sending an element to its right inverse in `S`.
+This is a `MonoidHom` when `M` is commutative. -/
 @[to_additive
-/-- . -/]
+/-- The function from `S.leftAdd` to `S` sending an element to its right additive
+inverse in `S`. This is an `AddMonoidHom` when `M` is commutative. -/]
 noncomputable def fromLeftInv : S.leftInv → S := fun x ↦ x.prop.choose
 
 @[to_additive (attr := simp)]
@@ -106,8 +140,9 @@ theorem fromLeftInv_eq_iff (a : S.leftInv) (b : M) :
     (S.fromLeftInv a : M) = b ↔ (a : M) * b = 1 := by
   rw [← IsUnit.mul_right_inj (leftInv_le_isUnit _ a.prop), S.mul_fromLeftInv, eq_comm]
 
-/-- . -/
-@[to_additive (attr := simps) /-- . -/]
+/-- The `MonoidHom` from `S.leftInv` to `S` sending an element to its right inverse in `S`. -/
+@[to_additive (attr := simps) /-- The `AddMonoidHom` from `S.leftNeg` to `S` sending an element to
+its right additive inverse in  `S`. -/]
 noncomputable def fromCommLeftInv : S.leftInv →* S where
   toFun := S.fromLeftInv
   map_one' := S.fromLeftInv_one
@@ -118,8 +153,9 @@ noncomputable def fromCommLeftInv : S.leftInv →* S where
 
 variable (hS : S ≤ IsUnit.submonoid M)
 
-/-- . -/
-@[to_additive (attr := simps apply) /-- . -/]
+/-- The submonoid of pointwise inverse of `S` is `MulEquiv` to `S`. -/
+@[to_additive (attr := simps apply) /-- The additive submonoid of pointwise additive inverse of `S`
+is `AddEquiv` to `S`. -/]
 noncomputable def leftInvEquiv : S.leftInv ≃* S :=
   { S.fromCommLeftInv with
     invFun := fun x ↦ ⟨↑(hS x.2).unit⁻¹, x, by simp⟩

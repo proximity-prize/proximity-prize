@@ -9,9 +9,49 @@ import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_GradedAlgebra_Basic
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_GradedAlgebra_Homogeneous_Submodule
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.RingTheory.GradedAlgebra.Homogeneous.Ideal.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: b1eba809eafe3c75671ebfc739f9e05e910860b4405b4bf1704842a6ec1f5803.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+-/
 
-/-! . -/
+/-!
+# Homogeneous ideals of a graded algebra
+
+This file defines homogeneous ideals of `GradedRing 𝒜` where `𝒜 : ι → Submodule R A` and
+operations on them.
+
+## Main definitions
+
+For any `I : Ideal A`:
+* `Ideal.IsHomogeneous 𝒜 I`: The property that an ideal is closed under `GradedRing.proj`.
+* `HomogeneousIdeal 𝒜`: The structure extending ideals which satisfy `Ideal.IsHomogeneous`.
+* `Ideal.homogeneousCore I 𝒜`: The largest homogeneous ideal smaller than `I`.
+* `Ideal.homogeneousHull I 𝒜`: The smallest homogeneous ideal larger than `I`.
+
+## Main statements
+
+* `HomogeneousIdeal.completeLattice`: `Ideal.IsHomogeneous` is preserved by `⊥`, `⊤`, `⊔`, `⊓`,
+  `⨆`, `⨅`, and so the subtype of homogeneous ideals inherits a complete lattice structure.
+* `Ideal.homogeneousCore.gi`: `Ideal.homogeneousCore` forms a Galois insertion with coercion.
+* `Ideal.homogeneousHull.gi`: `Ideal.homogeneousHull` forms a Galois insertion with coercion.
+
+## Implementation notes
+
+We introduce `Ideal.homogeneousCore'` earlier than might be expected so that we can get access
+to `Ideal.IsHomogeneous.iff_exists` as quickly as possible.
+
+## Tags
+
+graded algebra, homogeneous
+-/
 
 section ProximityFlatProofPort
 
@@ -27,19 +67,20 @@ variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ)
 variable [DecidableEq ι] [AddMonoid ι] [GradedRing 𝒜]
 variable (I : Ideal A)
 
-/-- . -/
+/-- An `I : Ideal A` is homogeneous if for every `r ∈ I`, all homogeneous components
+  of `r` are in `I`. -/
 abbrev Ideal.IsHomogeneous : Prop := Submodule.IsHomogeneous I 𝒜
 
 theorem Ideal.IsHomogeneous.mem_iff {I} (hI : Ideal.IsHomogeneous 𝒜 I) {x} :
     x ∈ I ↔ ∀ i, (decompose 𝒜 x i : A) ∈ I :=
   AddSubmonoidClass.IsHomogeneous.mem_iff 𝒜 _ hI
 
-/-- . -/
+/-- For any `Semiring A`, we collect the homogeneous ideals of `A` into a type. -/
 abbrev HomogeneousIdeal := HomogeneousSubmodule 𝒜 𝒜
 
 variable {𝒜}
 
-/-- . -/
+/-- Converting a homogeneous ideal to an ideal. -/
 abbrev HomogeneousIdeal.toIdeal (I : HomogeneousIdeal 𝒜) : Ideal A :=
   I.toSubmodule
 
@@ -79,7 +120,8 @@ variable [Semiring A]
 variable [SetLike σ A] (𝒜 : ι → σ)
 variable (I : Ideal A)
 
-/-- . -/
+/-- For any `I : Ideal A`, not necessarily homogeneous, `I.homogeneousCore' 𝒜`
+is the largest homogeneous ideal of `A` contained in `I`, as an ideal. -/
 def Ideal.homogeneousCore' (I : Ideal A) : Ideal A :=
   Ideal.span ((↑) '' (((↑) : Subtype (SetLike.IsHomogeneousElem 𝒜) → A) ⁻¹' I))
 
@@ -138,7 +180,8 @@ theorem Ideal.homogeneous_span (s : Set A) (h : ∀ x ∈ s, SetLike.IsHomogeneo
     apply h _ hz2
   · exact Ideal.subset_span z.2
 
-/-- . -/
+/-- For any `I : Ideal A`, not necessarily homogeneous, `I.homogeneousCore' 𝒜`
+is the largest homogeneous ideal of `A` contained in `I`. -/
 def Ideal.homogeneousCore : HomogeneousIdeal 𝒜 :=
   ⟨Ideal.homogeneousCore' 𝒜 I,
     Ideal.homogeneous_span _ _ fun _ h => by
@@ -183,7 +226,10 @@ theorem Ideal.IsHomogeneous.iff_exists :
 
 end IsHomogeneousIdealDefs
 
-/-! . -/
+/-! ### Operations
+
+In this section, we show that `Ideal.IsHomogeneous` is preserved by various notations, then use
+these results to provide these notation typeclasses for `HomogeneousIdeal`. -/
 
 
 section Operations
@@ -382,7 +428,10 @@ end CommSemiring
 
 end Operations
 
-/-! . -/
+/-! ### Homogeneous core
+
+Note that many results about the homogeneous core came earlier in this file, as they are helpful
+for building the lattice structure. -/
 
 
 section homogeneousCore
@@ -397,7 +446,8 @@ theorem Ideal.homogeneousCore.gc : GaloisConnection toIdeal (Ideal.homogeneousCo
   ⟨fun H => I.toIdeal_homogeneousCore_eq_self ▸ Ideal.homogeneousCore_mono 𝒜 H,
     fun H => le_trans H (Ideal.homogeneousCore'_le _ _)⟩
 
-/-- . -/
+/-- `toIdeal : HomogeneousIdeal 𝒜 → Ideal A` and `Ideal.homogeneousCore 𝒜` forms a Galois
+coinsertion. -/
 def Ideal.homogeneousCore.gi : GaloisCoinsertion toIdeal (Ideal.homogeneousCore 𝒜) where
   choice I HI :=
     ⟨I, le_antisymm (I.toIdeal_homogeneousCore_le 𝒜) HI ▸ HomogeneousIdeal.isHomogeneous _⟩
@@ -423,7 +473,7 @@ theorem Ideal.homogeneousCore'_eq_sSup :
 
 end homogeneousCore
 
-/-! . -/
+/-! ### Homogeneous hulls -/
 
 
 section HomogeneousHull
@@ -434,7 +484,8 @@ variable [Semiring A] [DecidableEq ι] [AddMonoid ι]
 variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜]
 variable (I : Ideal A)
 
-/-- . -/
+/-- For any `I : Ideal A`, not necessarily homogeneous, `I.homogeneousHull 𝒜` is
+the smallest homogeneous ideal containing `I`. -/
 def Ideal.homogeneousHull : HomogeneousIdeal 𝒜 :=
   ⟨Ideal.span { r : A | ∃ (i : ι) (x : I), (DirectSum.decompose 𝒜 (x : A) i : A) = r }, by
     refine Ideal.homogeneous_span _ _ fun x hx => ?_
@@ -501,7 +552,8 @@ theorem Ideal.homogeneousHull.gc : GaloisConnection (Ideal.homogeneousHull 𝒜)
   ⟨le_trans (Ideal.le_toIdeal_homogeneousHull _ _),
     fun H => J.homogeneousHull_toIdeal_eq_self ▸ Ideal.homogeneousHull_mono 𝒜 H⟩
 
-/-- . -/
+/-- `Ideal.homogeneousHull 𝒜` and `toIdeal : HomogeneousIdeal 𝒜 → Ideal A` form a Galois
+insertion. -/
 def Ideal.homogeneousHull.gi : GaloisInsertion (Ideal.homogeneousHull 𝒜) toIdeal where
   choice I H := ⟨I, le_antisymm H (I.le_toIdeal_homogeneousHull 𝒜) ▸ isHomogeneous _⟩
   gc := Ideal.homogeneousHull.gc 𝒜
@@ -525,7 +577,11 @@ variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 
 
 open GradedRing SetLike.GradedMonoid DirectSum
 
-/-- . -/
+/-- For a graded ring `⨁ᵢ 𝒜ᵢ` graded by
+`[AddCommMonoid ι] [PartialOrder ι] [CanonicallyOrderedAdd ι]`, the irrelevant ideal refers to
+`⨁_{i>0} 𝒜ᵢ`, or equivalently `{a | a₀ = 0}`. This definition is used in `Proj` construction where
+`ι` is always `ℕ` so the irrelevant ideal is simply elements with `0` as 0-th coordinate.
+-/
 def irrelevant : HomogeneousIdeal 𝒜 :=
   ⟨RingHom.ker (GradedRing.projZeroRingHom 𝒜), fun i r (hr : (decompose 𝒜 r 0 : A) = 0) => by
     change (decompose 𝒜 (decompose 𝒜 r _ : A) 0 : A) = 0
@@ -549,7 +605,7 @@ lemma mem_irrelevant_of_mem {x : A} {i : ι} (hi : 0 < i) (hx : x ∈ 𝒜 i) : 
   rw [mem_irrelevant_iff, GradedRing.proj_apply, DirectSum.decompose_of_mem _ hx,
     DirectSum.of_eq_of_ne _ _ _ (by aesop), ZeroMemClass.coe_zero]
 
-/-- . -/
+/-- `irrelevant 𝒜 = ⨁_{i>0} 𝒜ᵢ` -/
 lemma irrelevant_eq_iSup : 𝒜₊.toAddSubmonoid = ⨆ i > 0, .ofClass (𝒜 i) := by
   refine le_antisymm (fun x hx ↦ ?_) <| iSup₂_le fun i hi x hx ↦ mem_irrelevant_of_mem _ hi hx
   classical rw [← DirectSum.sum_support_decompose 𝒜 x]
