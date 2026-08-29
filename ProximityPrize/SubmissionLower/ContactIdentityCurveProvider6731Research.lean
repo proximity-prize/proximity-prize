@@ -3,11 +3,7 @@ import ProximityPrize.SubmissionLower.ContactFirstTailIdentityIncidence6731Resea
 import ProximityPrize.SubmissionLower.ContactAgreementProjection6731Research
 import ProximityPrize.SubmissionLower.ContactIdentityCoefficientProfile6731Research
 import ProximityPrize.SubmissionLower.ContactMovingOuterBudget6719Research
-
-/-! Actual robust Z+YZ provider for identity-curve incidence. -/
-
 namespace ProximityPrize.SubmissionLower.ContactIdentityCurveProvider6731Research
-
 open scoped Classical BigOperators
 open ContactGenericInitialPoint ContactGenericSurface ContactPolynomialSolutions ContactTranslation
 open ContactTaylorNumerators ContactInterpolation
@@ -21,23 +17,17 @@ open ContactCoefficientPole6731Research ContactIdentityCurveCount6731Research
 open ContactFirstTailIdentityIncidence6731Research
 open ContactAdaptiveUnitPoleFamilyResearch ContactRegularComponentYZPositivity6630Research
 open ContactSparsePoleSupportResearch CoordinateBoxZeroCount ActualCurveCoordinateField
-
 noncomputable section
-
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 45000
 set_option synthInstance.maxHeartbeats 300000
-
 variable {K I : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
-
 abbrev Ω (K : Type) [Field K] := GenericField K
-
 def identityCurveDegree (flag : FlagDegree) (a b s w : ℕ) : ℕ :=
   flagMixed flag (paddedCut a b s (w+1)) unitZFlag+
     flagMixed flag (paddedCut a b s (w+1)) unitYZFlag
-
 theorem mixed_padded_le_succ (flag : FlagDegree) (a b s d : ℕ) (r : FlagDegree) :
     flagMixed flag (paddedCut a b s d) r ≤
       flagMixed flag (paddedCut a b s (d+1)) r := by
@@ -50,10 +40,8 @@ theorem mixed_padded_le_succ (flag : FlagDegree) (a b s d : ℕ) (r : FlagDegree
       add_zOnly,add_yz,add_all,nsmul_zOnly,nsmul_yz,nsmul_all] <;> ring
   rw [he,mixed_add_second]
   exact Nat.le_add_right _ _
-
 variable {Γ : Finset K} {x : I → K} {p e a b s : ℕ} [CharP (Ω K) p]
 variable {flag : FlagDegree} {w : ℕ}
-
 theorem actual_identityCurveCountProvider
     (S : ResidualStage (polynomialEmbedding K) Γ x p e flag w (support a b s))
     (agreements : ℕ) (hnodes : S.nodes.card=agreements+e)
@@ -156,10 +144,9 @@ theorem actual_identityCurveCountProvider
     have hyz' := hyz.trans (mixed_sharp_le_padded a b s w flag unitYZFlag)
     have hz'' := hz'.trans (mixed_padded_le_succ flag a b s w unitZFlag)
     have hyz'' := hyz'.trans (mixed_padded_le_succ flag a b s w unitYZFlag)
-    change (∑ C, (U.family.toPrimeFlagBudgetFamily.zCost C+
+    change (∑ C,(U.family.toPrimeFlagBudgetFamily.zCost C+
       U.family.toPrimeFlagBudgetFamily.yzCost C)) ≤ identityCurveDegree flag a b s w
     rw [Finset.sum_add_distrib]
     exact Nat.add_le_add hz'' hyz''
-
 end
 end ProximityPrize.SubmissionLower.ContactIdentityCurveProvider6731Research

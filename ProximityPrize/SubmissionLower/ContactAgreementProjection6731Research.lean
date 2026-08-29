@@ -1,10 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFirstTailProjection6731Research
-
-/-! Active YZ projection families for an actual order-w agreement cut. -/
-
 namespace ProximityPrize.SubmissionLower.ContactAgreementProjection6731Research
-
 open scoped Classical BigOperators
 open Polynomial KaehlerDifferential
 open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveJointProjectionBounds
@@ -18,17 +14,13 @@ open ContactAdaptiveNestedUnitFamily6600Research
 open ContactAdaptiveNestedUnitFamilyActive6630Research ContactAdaptiveNestedYZFamily6630Research
 open ContactRegularComponentYZPositivity6630Research ContactResidualStageDerivative6600Research
 open ContactMovingAgreementCertificate6719Research
-
 noncomputable section
-
 set_option maxHeartbeats 3500000
 set_option maxRecDepth 40000
 set_option synthInstance.maxHeartbeats 300000
-
 variable {K Ω I : Type} [Field K] [Field Ω] [IsAlgClosed Ω]
 variable {φ : Polynomial K →+* Ω} {Γ : Finset K} {x : I → K}
 variable {p e w a b s : ℕ} [CharP Ω p] {flag : FlagDegree}
-
 theorem exists_agreement_projection_of_caps
     (S : ResidualStage φ Γ x p e flag w (support a b s))
     (x0 u0 u1 : K)
@@ -105,6 +97,5 @@ theorem exists_agreement_projection_of_caps
     ((support_subset_flagSupport_iff
       (sharpResidualAgreementFlag (support a b s) w) T).2 hTflag)
   exact ⟨base,⟨P⟩⟩
-
 end
 end ProximityPrize.SubmissionLower.ContactAgreementProjection6731Research

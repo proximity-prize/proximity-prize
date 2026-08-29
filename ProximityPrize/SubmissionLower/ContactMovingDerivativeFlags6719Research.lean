@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.ContactMovingAgreementCertificate6719Research
-
 namespace ProximityPrize.SubmissionLower.ContactMovingDerivativeFlags6719Research
 open scoped Classical
 open ContactMovingAgreementCertificate6719Research
@@ -9,7 +8,6 @@ open ContactBaseIdealWeights6676Research ContactBaseIdealAlgebra6676Research
 noncomputable section
 set_option maxHeartbeats 3000000
 variable {K Ω : Type} [Field K] [Field Ω]
-
 private theorem mapped_flag (φ : Polynomial K →+* Ω)
     (Q : MvPolynomial (Fin 4) K) (a b s : ℕ)
     (hR : wt residualSWeights Q ≤ s)
@@ -21,28 +19,26 @@ private theorem mapped_flag (φ : Polynomial K →+* Ω)
   have hr := (MvPolynomial.le_weightedTotalDegree residualSWeights hq).trans hR
   have hm := (MvPolynomial.le_weightedTotalDegree residualYSWeights hq).trans hM
   have ht := (MvPolynomial.le_weightedTotalDegree residualTotalWeights hq).trans hT
-  simp [ContactFactorCaps.weight_fin4, residualSWeights] at hr
-  simp [ContactFactorCaps.weight_fin4, residualYSWeights] at hm
-  simp [ContactFactorCaps.weight_fin4, residualTotalWeights] at ht
+  simp [ContactFactorCaps.weight_fin4,residualSWeights] at hr
+  simp [ContactFactorCaps.weight_fin4,residualYSWeights] at hm
+  simp [ContactFactorCaps.weight_fin4,residualTotalWeights] at ht
   exact ⟨hr,hm,ht⟩
-
 private theorem G_weight (w : Fin 4 → ℕ) (t : ℕ)
     (h0 : w 0=0) (h1 : w 1=t) (h2 : w 2=1) (ht : t≤1)
     (F : MvPolynomial (Fin 4) K) (C : ℕ)
     (hC : 1≤C) (hF : wt w F≤C) : wt w (polyG K F)≤C+1-t := by
   have hf : WeightBound w F (C : ℤ) := Or.inr (by exact_mod_cast hF)
   have hg : WeightBound w (polyG K F) ((C : ℤ)+1-t) := by
-    simpa only [polyG, horizontalDerivation, Derivation.add_apply,
-      Derivation.smul_apply, smul_eq_mul] using (hf.horizontal t h0 h1 h2 ht).neg
+    simpa only [polyG,horizontalDerivation,Derivation.add_apply,
+      Derivation.smul_apply,smul_eq_mul] using (hf.horizontal t h0 h1 h2 ht).neg
   rcases hg with hz | hb
-  · simp [hz, wt, MvPolynomial.weightedTotalDegree]
+  · simp [hz,wt,MvPolynomial.weightedTotalDegree]
   · have htc : t≤C+1 := by omega
     have hb' : (wt w (polyG K F) : ℤ) ≤ ((C+1-t : ℕ) : ℤ) := by
       rw [Nat.cast_sub htc]
       push_cast
       exact hb
     exact_mod_cast hb'
-
 theorem surfaceMap_HG_flags (φ : Polynomial K →+* Ω)
     (a b s : ℕ) (F : MvPolynomial (Fin 4) K)
     (hR : F.degreeOf 2 ≤ s+2)
@@ -74,6 +70,5 @@ theorem surfaceMap_HG_flags (φ : Polynomial K →+* Ω)
     · have h := G_weight residualTotalWeights 1 rfl rfl rfl (by omega) F
         (a+b+s+3) (by omega) ha
       omega
-
 end
 end ProximityPrize.SubmissionLower.ContactMovingDerivativeFlags6719Research

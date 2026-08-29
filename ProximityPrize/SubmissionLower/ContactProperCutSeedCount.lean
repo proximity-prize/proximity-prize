@@ -3,39 +3,18 @@ import ProximityPrize.SubmissionLower.ContactRegularComponentCover
 import ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
 import ProximityPrize.SubmissionLower.ActualCurveProjectionBounds
 import ProximityPrize.SubmissionLower.ActualCoordinateDegreeSum
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactProperCutSeedCount
-
 open ActualCurveCoordinateField ActualCurveZeroCount ActualCurveProjectionBounds
 open ActualCoordinateDegreeSum ActualPlanePositiveOrder
 open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
 open ContactPrimeSeedIncidence ContactRegularComponentCover
-
 noncomputable section
-
 variable {K Ω : Type} [Field K] [Field Ω] [IsAlgClosed Ω]
 variable (φ : Polynomial K →+* Ω)
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Ω := Classical.decEq Ω
-
 def regularitySurface (F : MvPolynomial (Fin 4) K) : MvPolynomial (Fin 3) Ω :=
   surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F)
-
 theorem selectedPoint_evaluation (selected : K → Polynomial K) (γ : K)
     (Q : MvPolynomial (Fin 4) K) :
     MvPolynomial.eval (selectedPoint φ selected γ) (surfaceMap φ Q) =
@@ -47,7 +26,6 @@ theorem selectedPoint_evaluation (selected : K → Polynomial K) (γ : K)
     funext i
     fin_cases i <;> rfl
   rw [hv]
-
 theorem noLargeSelectedPencil_mono
     (selected : K → Polynomial K) (Γ Δ : Finset K) (w e : ℕ)
     (hsub : Δ ⊆ Γ) (hno : NoLargeSelectedPencil selected Γ w e) :
@@ -55,15 +33,10 @@ theorem noLargeSelectedPencil_mono
   intro P₀ P₁ h₀ h₁
   apply le_trans (Finset.card_le_card ?_) (hno P₀ P₁ h₀ h₁)
   intro γ hγ
-  obtain ⟨hΔ, hp⟩ := Finset.mem_filter.mp hγ
-  exact Finset.mem_filter.mpr ⟨hsub hΔ, hp⟩
-
+  obtain ⟨hΔ,hp⟩ := Finset.mem_filter.mp hγ
+  exact Finset.mem_filter.mpr ⟨hsub hΔ,hp⟩
 variable {ι : Type*}
 local instance : DecidableEq ι := Classical.decEq ι
-
-/-- .
-
- -/
 theorem proper_cut_seed_bound_of_projection_sum
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F) (hproper : ¬ G ∣ T)
@@ -71,30 +44,30 @@ theorem proper_cut_seed_bound_of_projection_sum
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (p w a e : ℕ) [CharP Ω p] (hw : 1 ≤ w) (hchar : w < p)
     (hwa : w < a) (han : a ≤ nodes.card)
-    (hGdegree : ∀ j : Fin 3, G.degreeOf j < p)
-    (hcutDegree : ∀ j k : Fin 3, j ≠ k →
+    (hGdegree : ∀ j : Fin 3,G.degreeOf j < p)
+    (hcutDegree : ∀ j k : Fin 3,j ≠ k →
       T.degreeOf j * G.degreeOf k + G.degreeOf j * T.degreeOf k < p)
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
-    (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
-    (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
+    (hdegree : ∀ γ ∈ Γ,(selected γ).natDegree ≤ w)
+    (hsolution : ∀ γ ∈ Γ,specialization K (selected γ) γ F = 0)
+    (hregular : ∀ γ ∈ Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
       (polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X))
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hGpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
-    (hTpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) T = 0)
+    (hGpoint : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
+    (hTpoint : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ) T = 0)
     (hagreement : ∀ γ ∈ Γ,
       a ≤ (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Γ w e)
     (cap budget : Fin 3 → ℕ)
-    (hcap : ∀ i ∈ nodes, ∀ j,
+    (hcap : ∀ i ∈ nodes,∀ j,
       (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j ≤ cap j)
     (hbudget : ∀ i,
       (∑ C : RegularComponent Ω G T (regularitySurface φ F),
         actualCoordinateDegree Ω C.1 i) ≤ budget i) :
-    Γ.card * (a - w) ≤ (nodes.card - w) * (∑ i, cap i * budget i) +
+    Γ.card * (a - w) ≤ (nodes.card - w) * (∑ i,cap i * budget i) +
       (e + 1) * (a - w) * budget 2 := by
   classical
   let H := regularitySurface φ F
-  have hHp : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) H ≠ 0 := by
+  have hHp : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ) H ≠ 0 := by
     intro γ hγ
     change MvPolynomial.eval (selectedPoint φ selected γ)
       (surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F)) ≠ 0
@@ -104,7 +77,7 @@ theorem proper_cut_seed_bound_of_projection_sum
     fun C i => actualCoordinateDegree Ω C.1 i
   have hcomponent : ∀ C : RegularComponent Ω G T H,
       (componentSeeds Ω G T H Γ (selectedPoint φ selected) C).card * (a - w) ≤
-        (nodes.card - w) * (∑ i, cap i * degree C i) +
+        (nodes.card - w) * (∑ i,cap i * degree C i) +
           (e + 1) * (a - w) * degree C 2 := by
     intro C
     have hsub := componentSeeds_subset Ω G T H Γ (selectedPoint φ selected) C
@@ -131,19 +104,16 @@ theorem proper_cut_seed_bound_of_projection_sum
   exact aggregate_component_incidence Ω G T H Γ (selectedPoint φ selected)
     hGpoint hTpoint hHp (a - w) (nodes.card - w) (e + 1)
     cap budget degree hcomponent hbudget
-
-/-- .
- -/
 theorem regularComponents_degree_budget
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (p : ℕ) [CharP Ω p] (hG : Irreducible G) (hproper : ¬ G ∣ T)
-    (hGdegree : ∀ j : Fin 3, G.degreeOf j < p)
-    (hcutDegree : ∀ j k : Fin 3, j ≠ k →
+    (hGdegree : ∀ j : Fin 3,G.degreeOf j < p)
+    (hcutDegree : ∀ j k : Fin 3,j ≠ k →
       T.degreeOf j * G.degreeOf k + G.degreeOf j * T.degreeOf k < p) :
-    ∀ i, (∑ C : RegularComponent Ω G T (regularitySurface φ F),
+    ∀ i,(∑ C : RegularComponent Ω G T (regularitySurface φ F),
       actualCoordinateDegree Ω C.1 i) ≤ coordinateMixedDegree Ω G T i := by
   intro i
-  letI : ∀ C : RegularComponent Ω G T (regularitySurface φ F), C.1.IsPrime :=
+  letI : ∀ C : RegularComponent Ω G T (regularitySurface φ F),C.1.IsPrime :=
     fun C => regularComponent_isPrime Ω G T (regularitySurface φ F) C
   have hneq : (Equiv.swap (0 : Fin 3) i) 1 ≠ (Equiv.swap (0 : Fin 3) i) 2 :=
     (Equiv.swap (0 : Fin 3) i).injective.ne (by decide)
@@ -155,10 +125,6 @@ theorem regularComponents_degree_budget
     (regularComponent_G_mem Ω G T (regularitySurface φ F))
     (regularComponent_T_mem Ω G T (regularitySurface φ F))
     hproper hGdegree hmixed
-
-/-- .
-
- -/
 theorem proper_cut_seed_bound
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F) (hproper : ¬ G ∣ T)
@@ -166,31 +132,29 @@ theorem proper_cut_seed_bound
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (p w a e : ℕ) [CharP Ω p] (hw : 1 ≤ w) (hchar : w < p)
     (hwa : w < a) (han : a ≤ nodes.card)
-    (hGdegree : ∀ j : Fin 3, G.degreeOf j < p)
-    (hcutDegree : ∀ j k : Fin 3, j ≠ k →
+    (hGdegree : ∀ j : Fin 3,G.degreeOf j < p)
+    (hcutDegree : ∀ j k : Fin 3,j ≠ k →
       T.degreeOf j * G.degreeOf k + G.degreeOf j * T.degreeOf k < p)
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
-    (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
-    (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
+    (hdegree : ∀ γ ∈ Γ,(selected γ).natDegree ≤ w)
+    (hsolution : ∀ γ ∈ Γ,specialization K (selected γ) γ F = 0)
+    (hregular : ∀ γ ∈ Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
       (polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X))
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hGpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
-    (hTpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) T = 0)
+    (hGpoint : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
+    (hTpoint : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ) T = 0)
     (hagreement : ∀ γ ∈ Γ,
       a ≤ (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Γ w e)
     (cap : Fin 3 → ℕ)
-    (hcap : ∀ i ∈ nodes, ∀ j,
+    (hcap : ∀ i ∈ nodes,∀ j,
       (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j ≤ cap j) :
     Γ.card * (a - w) ≤
-      (nodes.card - w) * (∑ i, cap i * coordinateMixedDegree Ω G T i) +
+      (nodes.card - w) * (∑ i,cap i * coordinateMixedDegree Ω G T i) +
       (e + 1) * (a - w) * coordinateMixedDegree Ω G T 2 :=
   proper_cut_seed_bound_of_projection_sum φ F G T hG hdiv hproper selected Γ
     nodes x u₀ u₁ hinj p w a e hw hchar hwa han hGdegree hcutDegree
     hdegree hsolution hregular hGpoint hTpoint hagreement hnoPencil cap
     (coordinateMixedDegree Ω G T) hcap
     (regularComponents_degree_budget φ F G T p hG hproper hGdegree hcutDegree)
-
 end
-
 end ProximityPrize.SubmissionLower.ContactProperCutSeedCount

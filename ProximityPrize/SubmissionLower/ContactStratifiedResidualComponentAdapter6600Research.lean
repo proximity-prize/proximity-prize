@@ -1,26 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactResidualSparseComponentAdapterResearch
 import ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactStratifiedResidualComponentAdapter6600Research
-
 open scoped Classical BigOperators
 open ActualCurveCoordinateField ActualCurveZeroCount
 open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
@@ -28,23 +9,15 @@ open ContactPrimeSeedIncidence ContactRegularComponentCover
 open ContactProperCutSeedCount ContactComponentPencils
 open ContactResidualSparseComponentAdapterResearch
 open ContactNearPencilStratifiedIncidenceResearch
-
 noncomputable section
-
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
-
 variable {K Omega : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable (phi : Polynomial K →+* Omega)
 variable {Iota : Type*}
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
-
- -/
 theorem prime_seed_incidence_of_stratified_residual_cost
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
     (hproj : ProjectionsFiniteSeparable Omega P)
@@ -67,7 +40,7 @@ theorem prime_seed_incidence_of_stratified_residual_cost
         (polynomialPoint (phi.comp Polynomial.C) (selected gamma) gamma
           (phi Polynomial.X))
         (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hpoint : ∀ gamma ∈ Gamma, P ≤ RingHom.ker
+    (hpoint : ∀ gamma ∈ Gamma,P ≤ RingHom.ker
       (MvPolynomial.aeval (selectedPoint phi selected gamma)).toRingHom)
     (hagreement : ∀ gamma ∈ Gamma,
       a ≤ (nodes.filter (fun i ↦
@@ -109,14 +82,14 @@ theorem prime_seed_incidence_of_stratified_residual_cost
       exact selected_agrees_on_identity_nodes phi P F nodes x u0 u1 p w
         hchar (selected t.1) t.1 (hdegreeSelected t.1 t.2)
         (hsolution t.1 t.2) (hregular t.1 t.2) (hpoint t.1 t.2)
-    obtain ⟨P0, P1, h0, h1, _, hpencil⟩ :=
+    obtain ⟨P0,P1,h0,h1,_,hpencil⟩ :=
       exists_common_pencil_of_many_identities phi P F hF hH nodes x u0 u1 w
         hinj hc (fun t : {gamma : K // gamma ∈ Gamma} ↦ t.1)
         (fun t ↦ selected t.1) (fun t ↦ hdegreeSelected t.1 t.2) hvalues
     have hfilter : Gamma.filter
         (fun gamma ↦ selected gamma = P0 + Polynomial.C gamma * P1) =
         Gamma :=
-      Finset.filter_eq_self.mpr (fun gamma hgamma ↦ hpencil ⟨gamma, hgamma⟩)
+      Finset.filter_eq_self.mpr (fun gamma hgamma ↦ hpencil ⟨gamma,hgamma⟩)
     have hGamma : Gamma.card ≤ e + 1 := by
       have h := hnoPencil P0 P1 h0 h1
       rwa [hfilter] at h
@@ -133,23 +106,21 @@ theorem prime_seed_incidence_of_stratified_residual_cost
           simpa only [Nat.mul_one] using
             Nat.mul_le_mul_left ((e + 1) * (a - w)) hdelta
     exact htail.trans (Nat.le_add_left _ _)
-
-/-- . -/
 theorem aggregate_component_stratified_incidence
     (G T H : MvPolynomial (Fin 3) Omega)
     {Seed : Type*} (S : Finset Seed) (v : Seed → Fin 3 → Omega)
-    (hG : ∀ gamma ∈ S, MvPolynomial.eval (v gamma) G = 0)
-    (hT : ∀ gamma ∈ S, MvPolynomial.eval (v gamma) T = 0)
-    (hH : ∀ gamma ∈ S, MvPolynomial.eval (v gamma) H ≠ 0)
+    (hG : ∀ gamma ∈ S,MvPolynomial.eval (v gamma) G = 0)
+    (hT : ∀ gamma ∈ S,MvPolynomial.eval (v gamma) T = 0)
+    (hH : ∀ gamma ∈ S,MvPolynomial.eval (v gamma) H ≠ 0)
     (gap U V pencil degreeWhole unitWhole zBudget : ℕ)
     (degreeCost unitCost zDegree : RegularComponent Omega G T H → ℕ)
     (hcomponent : ∀ C,
       (componentSeeds Omega G T H S v C).card * gap ≤
         U * degreeCost C + V * unitCost C +
           pencil * gap * zDegree C)
-    (hdegree : (∑ C, degreeCost C) ≤ degreeWhole)
-    (hunit : (∑ C, unitCost C) ≤ unitWhole)
-    (hz : (∑ C, zDegree C) ≤ zBudget) :
+    (hdegree : (∑ C,degreeCost C) ≤ degreeWhole)
+    (hunit : (∑ C,unitCost C) ≤ unitWhole)
+    (hz : (∑ C,zDegree C) ≤ zBudget) :
     S.card * gap ≤
       U * degreeWhole + V * unitWhole + pencil * gap * zBudget := by
   classical
@@ -165,21 +136,16 @@ theorem aggregate_component_stratified_incidence
     _ ≤ ∑ C : RegularComponent Omega G T H,
         (U * degreeCost C + V * unitCost C + pencil * gap * zDegree C) :=
       Finset.sum_le_sum (fun C _ ↦ hcomponent C)
-    _ = U * (∑ C : RegularComponent Omega G T H, degreeCost C) +
-        V * (∑ C : RegularComponent Omega G T H, unitCost C) +
+    _ = U * (∑ C : RegularComponent Omega G T H,degreeCost C) +
+        V * (∑ C : RegularComponent Omega G T H,unitCost C) +
         pencil * gap *
-          (∑ C : RegularComponent Omega G T H, zDegree C) := by
-      simp only [Finset.sum_add_distrib, Finset.mul_sum]
+          (∑ C : RegularComponent Omega G T H,zDegree C) := by
+      simp only [Finset.sum_add_distrib,Finset.mul_sum]
     _ ≤ U * degreeWhole + V * unitWhole + pencil * gap * zBudget :=
       Nat.add_le_add
         (Nat.add_le_add (Nat.mul_le_mul_left U hdegree)
           (Nat.mul_le_mul_left V hunit))
         (Nat.mul_le_mul_left (pencil * gap) hz)
-
-/-- .
-
-
- -/
 theorem proper_cut_seed_bound_of_stratified_component_budgets
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
     (hdiv : G ∣ surfaceMap phi F)
@@ -217,8 +183,8 @@ theorem proper_cut_seed_bound_of_stratified_component_budgets
           (selected gamma).eval (x i) = u0 i + gamma * u1 i)).card ≤
         (w - (identityNodes phi C.1 F nodes x u0 u1 w).card) *
             degreeCost C + unitCost C)
-    (hsumDegree : (∑ C, degreeCost C) ≤ degreeWhole)
-    (hsumUnit : (∑ C, unitCost C) ≤ unitWhole)
+    (hsumDegree : (∑ C,degreeCost C) ≤ degreeWhole)
+    (hsumUnit : (∑ C,unitCost C) ≤ unitWhole)
     (hproj : ∀ C : RegularComponent Omega G T (regularitySurface phi F),
       ProjectionsFiniteSeparable Omega C.1)
     (hzbudget :
@@ -275,7 +241,5 @@ theorem proper_cut_seed_bound_of_stratified_component_budgets
     (selectedPoint phi selected) hGpoint hTpoint hHp (a - w) U V (e + 1)
     degreeWhole unitWhole zBudget degreeCost unitCost zDegree hcomponent
     hsumDegree hsumUnit hzbudget
-
 end
-
 end ProximityPrize.SubmissionLower.ContactStratifiedResidualComponentAdapter6600Research

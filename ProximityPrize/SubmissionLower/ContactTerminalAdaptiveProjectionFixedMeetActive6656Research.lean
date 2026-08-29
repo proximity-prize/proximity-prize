@@ -2,23 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAdaptiveNestedYZFamily6630Research
 import ProximityPrize.SubmissionLower.ContactScalarCoordinateSeparator6630Research
 import ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6656Research
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjectionFixedMeetActive6656Research
-
 open scoped Classical
 open Polynomial KaehlerDifferential
 open ActualCurveCoordinateField ActualCurveRationalProjection
@@ -40,22 +24,15 @@ open ContactResidualStageDerivative6600Research
 open ContactResidualSupportParametersResearch
 open ContactRobustFixedMeet6656Research
 open ContactTerminalAdaptiveProjection6656Research
-
 noncomputable section
-
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
 set_option maxRecDepth 30000
-
 variable {K Omega Iota : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
- -/
 def TerminalAdaptiveProjectionFamiliesOfSupport
     {pchar e w : ℕ} [CharP Omega pchar]
     {flag : FlagDegree}
@@ -72,9 +49,6 @@ def TerminalAdaptiveProjectionFamiliesOfSupport
         SeparableLiteralCoordinate C.1,
       Nonempty (AdaptiveUnitProjectionFamily base flag
         (support.residualAgreementFlag D.degree))
-
-/-- .
- -/
 def TerminalAdaptiveProjectionFamiliesYZOfSupport
     {pchar e w : ℕ} [CharP Omega pchar]
     {flag : FlagDegree}
@@ -91,10 +65,6 @@ def TerminalAdaptiveProjectionFamiliesYZOfSupport
         SeparableLiteralCoordinate C.1,
       Nonempty (AdaptiveUnitProjectionFamilyYZ base flag
         (support.residualAgreementFlag D.degree))
-
-/-- .
-
- -/
 theorem terminalAdaptiveProjectionAtCutYZ_of_active_yz_gates
     {pchar e w : ℕ} [CharP Omega pchar]
     {support : ResidualSupportParameters} {flag : FlagDegree}
@@ -102,7 +72,7 @@ theorem terminalAdaptiveProjectionAtCutYZ_of_active_yz_gates
     (D : S.TerminalDescendant) (i : Iota)
     (hproper : ¬ D.stage.G ∣ agreementPolynomial phi D.stage.F D.degree
       (x i) (D.stage.u0 i) (D.stage.u1 i))
-    (hGdegree : ∀ j : Fin 3, D.stage.G.degreeOf j < pchar)
+    (hGdegree : ∀ j : Fin 3,D.stage.G.degreeOf j < pchar)
     (hmixedZ : coordinateMixedDegree Omega D.stage.G
       (agreementPolynomial phi D.stage.F D.degree
         (x i) (D.stage.u0 i) (D.stage.u1 i)) 2 < pchar)
@@ -122,7 +92,7 @@ theorem terminalAdaptiveProjectionAtCutYZ_of_active_yz_gates
     (x i) (D.stage.u0 i) (D.stage.u1 i)
   let H := regularitySurface phi D.stage.F
   let choiceData : ∀ C : RegularComponent Omega D.stage.G T H,
-      ∃ B : SeparableLiteralCoordinate C.1, B.index = 0 ∨ B.index = 2 :=
+      ∃ B : SeparableLiteralCoordinate C.1,B.index = 0 ∨ B.index = 2 :=
     fun C ↦ regularComponent_exists_separableLiteralCoordinate6630
       phi D.stage.F D.stage.G T pchar D.stage.G_dvd_surface
       D.stage.irreducible_G hproper D.stage.y_dependent hGdegree hmixedZ C
@@ -159,10 +129,7 @@ theorem terminalAdaptiveProjectionAtCutYZ_of_active_yz_gates
     ((support_subset_flagSupport_iff flag D.stage.G).2 hGflag)
     ((support_subset_flagSupport_iff (support.residualAgreementFlag D.degree)
       T).2 hTflag)
-  exact ⟨base, ⟨P⟩⟩
-
-/-- .
- -/
+  exact ⟨base,⟨P⟩⟩
 theorem terminalAdaptiveProjectionAtCut_of_active_yz_gates
     {pchar e w : ℕ} [CharP Omega pchar]
     {support : ResidualSupportParameters} {flag : FlagDegree}
@@ -170,7 +137,7 @@ theorem terminalAdaptiveProjectionAtCut_of_active_yz_gates
     (D : S.TerminalDescendant) (i : Iota)
     (hproper : ¬ D.stage.G ∣ agreementPolynomial phi D.stage.F D.degree
       (x i) (D.stage.u0 i) (D.stage.u1 i))
-    (hGdegree : ∀ j : Fin 3, D.stage.G.degreeOf j < pchar)
+    (hGdegree : ∀ j : Fin 3,D.stage.G.degreeOf j < pchar)
     (hmixedZ : coordinateMixedDegree Omega D.stage.G
       (agreementPolynomial phi D.stage.F D.degree
         (x i) (D.stage.u0 i) (D.stage.u1 i)) 2 < pchar)
@@ -185,13 +152,9 @@ theorem terminalAdaptiveProjectionAtCut_of_active_yz_gates
         SeparableLiteralCoordinate C.1,
       Nonempty (AdaptiveUnitProjectionFamily base flag
         (support.residualAgreementFlag D.degree)) := by
-  obtain ⟨base, ⟨P⟩⟩ := terminalAdaptiveProjectionAtCutYZ_of_active_yz_gates
+  obtain ⟨base,⟨P⟩⟩ := terminalAdaptiveProjectionAtCutYZ_of_active_yz_gates
     S D i hproper hGdegree hmixedZ hGflag hTflag
-  exact ⟨base, ⟨P.family⟩⟩
-
-/-- .
-
- -/
+  exact ⟨base,⟨P.family⟩⟩
 theorem terminalAdaptiveProjectionFamiliesYZOfSupport_of_active_yz_caps
     {pchar e w : ℕ} [CharP Omega pchar]
     {flag : FlagDegree}
@@ -213,10 +176,10 @@ theorem terminalAdaptiveProjectionFamiliesYZOfSupport_of_active_yz_caps
   have hGflag : PolynomialInFlag flag D.stage.G := D.stage.flag_support
   have hTflag : PolynomialInFlag (support.residualAgreementFlag D.degree) T :=
     (terminal_proper_cuts_in_residual_flag D.stage D.terminal i hi).2
-  obtain ⟨hGY, hGS, hGZ⟩ :=
+  obtain ⟨hGY,hGS,hGZ⟩ :=
     ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag
       hGflag
-  obtain ⟨hTY, hTS, _hTZ⟩ :=
+  obtain ⟨hTY,hTS,_hTZ⟩ :=
     ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag
       hTflag
   have hD : D.degree ≤ w := D.degree_le.trans (Nat.le_refl w)
@@ -243,7 +206,7 @@ theorem terminalAdaptiveProjectionFamiliesYZOfSupport_of_active_yz_caps
       _ ≤ (2 * support.s - 1) * w :=
         Nat.mul_le_mul_left (2 * support.s - 1) hD
       _ ≤ cutS := hcutS
-  have hGdegree : ∀ j : Fin 3, D.stage.G.degreeOf j < pchar := by
+  have hGdegree : ∀ j : Fin 3,D.stage.G.degreeOf j < pchar := by
     intro j
     fin_cases j
     · exact hGY'.trans_lt hsurfaceChar.1
@@ -256,8 +219,6 @@ theorem terminalAdaptiveProjectionFamiliesYZOfSupport_of_active_yz_caps
       (Nat.mul_le_mul hGY' hTS')).trans_lt hmixedZ
   exact terminalAdaptiveProjectionAtCutYZ_of_active_yz_gates S D i hproper
     hGdegree hmixedZ' hGflag hTflag
-
-/-- . -/
 theorem terminalAdaptiveProjectionFamiliesOfSupport_of_active_yz_caps
     {pchar e w : ℕ} [CharP Omega pchar]
     {flag : FlagDegree}
@@ -274,13 +235,11 @@ theorem terminalAdaptiveProjectionFamiliesOfSupport_of_active_yz_caps
     (hmixedZ : cutY * surfaceS + surfaceY * cutS < pchar) :
     TerminalAdaptiveProjectionFamiliesOfSupport support S := by
   intro D i hi hproper
-  obtain ⟨base, ⟨P⟩⟩ :=
+  obtain ⟨base,⟨P⟩⟩ :=
     terminalAdaptiveProjectionFamiliesYZOfSupport_of_active_yz_caps
       support S surfaceY surfaceS surfaceZ cutY cutS hflagY hflagS hflagZ
       hcutY hcutS hsurfaceChar hmixedZ D i hi hproper
-  exact ⟨base, ⟨P.family⟩⟩
-
-/-- . -/
+  exact ⟨base,⟨P.family⟩⟩
 theorem fixedMeetTerminalAdaptiveProjectionFamilies_of_active_yz
     [CharP Omega prime]
     {flag : FlagDegree}
@@ -295,12 +254,9 @@ theorem fixedMeetTerminalAdaptiveProjectionFamilies_of_active_yz
     ResidualSupportParameters.fixedMeetSupport S
     40 6 638 (1 + 67 * 131071) (11 * 131071)
     (by omega) hflagS (by omega)
-    (by norm_num [meetProfile, ResidualSupportParameters.fixedMeetSupport])
-    (by norm_num [meetProfile, ResidualSupportParameters.fixedMeetSupport])
+    (by norm_num [meetProfile,ResidualSupportParameters.fixedMeetSupport])
+    (by norm_num [meetProfile,ResidualSupportParameters.fixedMeetSupport])
     (by norm_num [prime]) (by norm_num [prime])) D i hi hproper
-
-/-- .
- -/
 def frontierMeetSupport182688 : ResidualSupportParameters where
   s := 7
   ys := 36
@@ -309,15 +265,11 @@ def frontierMeetSupport182688 : ResidualSupportParameters where
   s_le_ys := by norm_num
   ys_le_total := by norm_num
   two_le_ys := by norm_num
-
 theorem frontierMeet182688_parameters :
     26 * 182688 = 4749888 ∧ (4749888 - 1) / 131071 = 36 ∧
-      frontierMeetSupport182688.agreementDirection = ⟨1294, 58, 13⟩ := by
+      frontierMeetSupport182688.agreementDirection = ⟨1294,58,13⟩ := by
   norm_num [frontierMeetSupport182688,
     ResidualSupportParameters.agreementDirection]
-
-/-- .
- -/
 theorem frontierMeet182688TerminalAdaptiveProjectionFamilies_of_active_yz
     [CharP Omega prime]
     {e : ℕ} {flag : FlagDegree}
@@ -337,8 +289,6 @@ theorem frontierMeet182688TerminalAdaptiveProjectionFamilies_of_active_yz
   · norm_num [frontierMeetSupport182688]
   · norm_num [prime]
   · norm_num [prime]
-
-/-- . -/
 theorem frontierMeet182688TerminalAdaptiveProjectionFamiliesYZ_of_active_yz
     [CharP Omega prime]
     {e : ℕ} {flag : FlagDegree}
@@ -358,7 +308,5 @@ theorem frontierMeet182688TerminalAdaptiveProjectionFamiliesYZ_of_active_yz
   · norm_num [frontierMeetSupport182688]
   · norm_num [prime]
   · norm_num [prime]
-
 end
-
 end ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjectionFixedMeetActive6656Research

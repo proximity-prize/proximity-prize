@@ -4,27 +4,7 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch
 import ProximityPrize.SubmissionLower.ContactIdentityResidualZeroBudgetTransportResearch
 import ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch
 import ProximityPrize.SubmissionLower.ContactResidualSparseComponentAdapterResearch
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidenceResearch
-
 open scoped Classical
 open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
 open ContactPrimeSeedIncidence ContactIncidence
@@ -38,30 +18,17 @@ open ContactIdentityResidualGlobalFlagResearch
 open ContactIdentityResidualIncidenceResearch
 open ContactIdentityResidualZeroBudgetTransportResearch
 open ContactResidualSupportParametersResearch
-
 noncomputable section
-
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 20000
-
 variable {K Omega Iota : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
 variable {p e : ℕ} [CharP Omega p]
 variable {surfaceFlag cutFlag : FlagDegree}
 variable {support : ResidualSupportParameters}
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
-
-
-
-
-
-
- -/
 theorem recursive_curve_stratified_incidence_bound
     (hphi : Function.Injective phi) {d a : ℕ}
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
@@ -112,7 +79,7 @@ theorem recursive_curve_stratified_incidence_bound
         exact hterminalFiber i (by simpa using hi))
     have hraw : Gamma.card * (a - k) ≤
         (S.nodes.card - k) * ((d - k) * degreeCost + unitCost) := by
-      simpa only [Finset.card_empty, Nat.sub_zero, hnodeEq, hdegreeEq] using
+      simpa only [Finset.card_empty,Nat.sub_zero,hnodeEq,hdegreeEq] using
         hrawTerminal
     have hmain : Gamma.card * (a - d) ≤
         U * degreeCost + V * unitCost :=
@@ -121,11 +88,6 @@ theorem recursive_curve_stratified_incidence_bound
     exact hmain.trans (Nat.le_add_right _ _)
   · have htail := hlarge D hpencil.1
     exact htail.trans (Nat.le_add_left _ _)
-
-/-- .
-
-
- -/
 theorem recursive_curve_stratified_incidence_of_zero_bounds
     (hphi : Function.Injective phi) {d a : ℕ}
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
@@ -161,13 +123,6 @@ theorem recursive_curve_stratified_incidence_of_zero_bounds
   · exact hlarge
   · exact hdegree
   · exact hunit
-
-/-- .
-
-
-
-
- -/
 theorem recursive_curve_stratified_incidence_of_prime_flag_budget
     (hphi : Function.Injective phi) {d a : ℕ}
     (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
@@ -189,7 +144,7 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
     Gamma.card * (a - d) ≤
       U * degreeCost + V * unitCost + (e + 1) * (a - d) * zCharge := by
   classical
-  let Inv : ∀ n, CurveResidualStage phi Gamma x p e
+  let Inv : ∀ n,CurveResidualStage phi Gamma x p e
       surfaceFlag cutFlag n support → Prop :=
     fun _ A ↦ PrimeFlagZeroBudget A.primeIdeal cost
   have htransport : ∀ {n m}
@@ -197,11 +152,11 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
       {Anext : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag m support},
       A.ResidualTransition Anext → Inv n A → Inv m Anext := by
     intro n m A Anext htransition hbudget
-    obtain ⟨aY, v, bY, aS, bS, cS, hv, _, _, hprime⟩ := htransition
+    obtain ⟨aY,v,bY,aS,bS,cS,hv,_,_,hprime⟩ := htransition
     dsimp only [Inv] at hbudget ⊢
     rw [hprime]
     exact hbudget.mapResidual aY v bY aS bS cS hv
-  obtain ⟨D, hDBudget⟩ := S.exists_terminal_descendant_with_invariant
+  obtain ⟨D,hDBudget⟩ := S.exists_terminal_descendant_with_invariant
     hphi Inv htransport B
   rcases D.terminal with hproper | hpencil
   · let k := d - D.degree
@@ -249,7 +204,7 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
         exact hterminalFiber i (by simpa using hi))
     have hraw : Gamma.card * (a - k) ≤
         (S.nodes.card - k) * ((d - k) * degreeCost + unitCost) := by
-      simpa only [Finset.card_empty, Nat.sub_zero, hnodeEq, hdegreeEq] using
+      simpa only [Finset.card_empty,Nat.sub_zero,hnodeEq,hdegreeEq] using
         hrawTerminal
     have hmain : Gamma.card * (a - d) ≤
         U * degreeCost + V * unitCost :=
@@ -258,7 +213,5 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
     exact hmain.trans (Nat.le_add_right _ _)
   · have htail := hlarge D hpencil.1
     exact htail.trans (Nat.le_add_left _ _)
-
 end
-
 end ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidenceResearch

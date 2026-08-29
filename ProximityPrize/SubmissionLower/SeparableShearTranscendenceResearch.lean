@@ -1,52 +1,25 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.SeparableShearKaehlerResearch
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.SeparableShearTranscendenceResearch
-
 open scoped Classical
 open KaehlerDifferential
 open SeparableShearKaehlerResearch
-
 noncomputable section
-
 set_option maxHeartbeats 2000000
-
 variable (K L : Type*) [Field K] [Field L] [Algebra K L]
-
-/-- .
- -/
 theorem eq_algebraMap_of_isAlgebraic [IsAlgClosed K]
     (s : L) (hs : IsAlgebraic K s) :
-    ∃ c : K, algebraMap K L c = s := by
+    ∃ c : K,algebraMap K L c = s := by
   let S : IntermediateField K L := IntermediateField.adjoin K {s}
   letI : Algebra.IsAlgebraic K S :=
     IntermediateField.isAlgebraic_adjoin_simple hs.isIntegral
-  obtain ⟨c, hc⟩ :=
+  obtain ⟨c,hc⟩ :=
     (IsAlgClosed.algebraMap_bijective_of_isIntegral (k := K) (K := S)).2
-      (⟨s, IntermediateField.mem_adjoin_simple_self K s⟩ : S)
-  refine ⟨c, ?_⟩
+      (⟨s,IntermediateField.mem_adjoin_simple_self K s⟩ : S)
+  refine ⟨c,?_⟩
   have hcast := congrArg (algebraMap S L) hc
   simpa only [IntermediateField.algebraMap_apply,
     IntermediateField.coe_algebraMap_apply] using hcast
-
-/-- .
-
- -/
 theorem transcendental_add_of_not_isSeparable_isSeparable [IsAlgClosed K]
     (embeddingR embeddingZ : RatFunc K →ₐ[K] L)
     (hfiniteR :
@@ -86,21 +59,21 @@ theorem transcendental_add_of_not_isSeparable_isSeparable [IsAlgClosed K]
     have hdR_mem : dR ∈ Submodule.span L ({dZ} : Set Ω[L⁄K]) := by
       rw [hspanZ]
       trivial
-    obtain ⟨b, hb⟩ := Submodule.mem_span_singleton.mp hdR_mem
+    obtain ⟨b,hb⟩ := Submodule.mem_span_singleton.mp hdR_mem
     have hb0 : b ≠ 0 := by
       intro hzero
       apply hdR0
-      rw [← hb, hzero, zero_smul]
+      rw [← hb,hzero,zero_smul]
     apply Submodule.mem_span_singleton.mpr
-    refine ⟨b⁻¹, ?_⟩
-    rw [← hb, smul_smul, inv_mul_cancel₀ hb0, one_smul]
+    refine ⟨b⁻¹,?_⟩
+    rw [← hb,smul_smul,inv_mul_cancel₀ hb0,one_smul]
   have hdZ : dZ ≠ 0 := by
     intro hdZ
     apply hspanR_ne
-    simpa only [hdR, hdZ] using hspanZ
+    simpa only [hdR,hdZ] using hspanZ
   show ¬ IsAlgebraic K _
   intro halg
-  obtain ⟨c, hc⟩ := eq_algebraMap_of_isAlgebraic K L _ halg
+  obtain ⟨c,hc⟩ := eq_algebraMap_of_isAlgebraic K L _ halg
   apply hdZ
   have hD : D K L
       (embeddingR (algebraMap (Polynomial K) (RatFunc K) Polynomial.X) +
@@ -116,9 +89,7 @@ theorem transcendental_add_of_not_isSeparable_isSeparable [IsAlgClosed K]
     simpa only [map_add] using hD
   unfold dR at hdR
   unfold dZ
-  rw [hdR, zero_add] at hD'
+  rw [hdR,zero_add] at hD'
   exact hD'
-
 end
-
 end ProximityPrize.SubmissionLower.SeparableShearTranscendenceResearch

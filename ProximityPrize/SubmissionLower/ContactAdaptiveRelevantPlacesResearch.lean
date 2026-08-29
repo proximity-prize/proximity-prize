@@ -1,17 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactWeakSeparableSeparatorResearch
-
-/-! .
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveRelevantPlacesResearch
-
 open scoped Classical WithZero
 open IsDedekindDomain
 open ContactLocalPoleBound
@@ -19,16 +8,10 @@ open ActualCurveCoordinateField ActualCurveRationalProjection
   ActualCurveScalarTowers
 open CoordinateBoxZeroCount
 open ContactWeakSeparableSeparatorResearch
-
 noncomputable section
-
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
-
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
-
-/-- .
- -/
 def literalRelevantPlaces
     {P : Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime]
     (D : SeparableLiteralCoordinate P) :
@@ -54,9 +37,6 @@ def literalRelevantPlaces
       CommonPlaceBalance.placesFor Omega (CoordinateField Omega P)
         (coordinate Omega P i) hi
     else ∅)
-
-/-- .
- -/
 theorem coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant
     {P : Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime]
     (D : SeparableLiteralCoordinate P)
@@ -80,14 +60,14 @@ theorem coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant
   letI : FiniteDimensional (RatFunc Omega) (CoordinateField Omega P) := D.finite
   letI : Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega P) := D.separable
   by_cases hi : coordinate Omega P i = 0
-  · simp [hi, poleOrder]
+  · simp [hi,poleOrder]
   · have hnot : v ∉ CommonPlaceBalance.placesFor Omega
         (CoordinateField Omega P) (coordinate Omega P i) hi := by
       intro hmem
       apply hv
       unfold literalRelevantPlaces
       apply Finset.mem_biUnion.mpr
-      exact ⟨i, Finset.mem_univ _, by simp [hi, hmem]⟩
+      exact ⟨i,Finset.mem_univ _,by simp [hi,hmem]⟩
     have horder : CommonPlaceBalance.order Omega (CoordinateField Omega P) v
         (coordinate Omega P i) = 0 := by
       by_contra hne
@@ -98,7 +78,5 @@ theorem coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant
     have hlog : (v.val (coordinate Omega P i)).log = 0 := by omega
     rw [hlog]
     simp
-
 end
-
 end ProximityPrize.SubmissionLower.ContactAdaptiveRelevantPlacesResearch

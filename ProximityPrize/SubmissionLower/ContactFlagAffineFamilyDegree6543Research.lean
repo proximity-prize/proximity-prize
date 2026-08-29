@@ -1,64 +1,35 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagTriangularProjectionResearch
 import ProximityPrize.SubmissionLower.ContactFlagTrapezoidFamilyDegree6543Research
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactFlagAffineFamilyDegree6543Research
-
 open scoped Classical BigOperators
 open ActualCurveCoordinateField ActualCurveRationalProjection
   ArbitraryRationalProjectionResearch ActualPlaneCoordinateKernel
   TrivariateRationalCollection
 open ContactFlagTriangularProjectionResearch
 open ContactFlagTrapezoidFamilyDegree6543Research
-
 noncomputable section
-
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 200000
-
 variable (K : Type) [Field K]
 variable (P : Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
-
 def affineU (lam : K) : CoordinateField K P :=
   coordinate K P 0 + lam • coordinate K P 2
-
 def affineV (μ ν : K) : CoordinateField K P :=
   coordinate K P 1 + μ • coordinate K P 0 + ν • coordinate K P 2
-
-/-- . -/
 def flagEvaluation (lam μ ν : K) :
     MvPolynomial (Fin 3) K →ₐ[K] CoordinateField K P :=
-  MvPolynomial.aeval ![affineU K P lam, affineV K P μ ν,
+  MvPolynomial.aeval ![affineU K P lam,affineV K P μ ν,
     coordinate K P 2]
-
 @[simp] theorem flagEvaluation_X_zero (lam μ ν : K) :
     flagEvaluation K P lam μ ν (MvPolynomial.X 0) = affineU K P lam := by
   simp [flagEvaluation]
-
 @[simp] theorem flagEvaluation_X_one (lam μ ν : K) :
     flagEvaluation K P lam μ ν (MvPolynomial.X 1) = affineV K P μ ν := by
   simp [flagEvaluation]
-
 @[simp] theorem flagEvaluation_X_two (lam μ ν : K) :
     flagEvaluation K P lam μ ν (MvPolynomial.X 2) = coordinate K P 2 := by
   simp [flagEvaluation]
-
-/-- .
- -/
 theorem flagEvaluation_flag (lam μ ν : K)
     (F : MvPolynomial (Fin 3) K) :
     flagEvaluation K P lam μ ν (flagAlgHom lam μ ν F) =
@@ -78,15 +49,12 @@ theorem flagEvaluation_flag (lam μ ν : K)
         simp [Algebra.smul_def],
     eval₂Hom_flag_at_affine]
   rw [coordinateEvaluation_eq_aeval]
-  have hx : (![coordinate K P 0, coordinate K P 1, coordinate K P 2] :
+  have hx : (![coordinate K P 0,coordinate K P 1,coordinate K P 2] :
       Fin 3 → CoordinateField K P) = coordinate K P := by
     funext i
     fin_cases i <;> rfl
   rw [hx]
   exact (MvPolynomial.aeval_eq_eval₂Hom (coordinate K P) F).symm
-
-/-- .
- -/
 theorem flagEvaluation_kernel_contract (lam μ ν : K) :
     (RingHom.ker (flagEvaluation K P lam μ ν).toRingHom).comap
         (flagAlgHom lam μ ν).toRingHom = P := by
@@ -103,7 +71,6 @@ theorem flagEvaluation_kernel_contract (lam μ ν : K) :
       (flagAlgHom lam μ ν).toRingHom =
       (coordinateEvaluation K P).toRingHom from hring,
     coordinateEvaluation_ker]
-
 private theorem top_of_affine_flag_mem
     [Algebra (RatFunc K) (CoordinateField K P)]
     [IsScalarTower K (RatFunc K) (CoordinateField K P)]
@@ -125,7 +92,7 @@ private theorem top_of_affine_flag_mem
       (CoordinateField K P)] using h
   have hY : coordinate K P 0 ∈ L := by
     have h := L.sub_mem hU (L.mul_mem hlam hZ)
-    simpa only [affineU, Algebra.smul_def, add_sub_cancel_right] using h
+    simpa only [affineU,Algebra.smul_def,add_sub_cancel_right] using h
   have hS : coordinate K P 1 ∈ L := by
     have h := L.sub_mem hV
       (L.add_mem (L.mul_mem hμ hY) (L.mul_mem hν hZ))
@@ -133,11 +100,11 @@ private theorem top_of_affine_flag_mem
         (algebraMap K (CoordinateField K P) μ * coordinate K P 0 +
           algebraMap K (CoordinateField K P) ν * coordinate K P 2) =
         coordinate K P 1 := by
-      simp only [affineV, Algebra.smul_def]
+      simp only [affineV,Algebra.smul_def]
       ring
     rwa [heq] at h
   have hcoords : Set.range (coordinate K P) ⊆ L.restrictScalars K := by
-    rintro x ⟨i, rfl⟩
+    rintro x ⟨i,rfl⟩
     fin_cases i
     · exact hY
     · exact hS
@@ -147,15 +114,13 @@ private theorem top_of_affine_flag_mem
     rw [← adjoin_coordinates_eq_top K P]
     exact IntermediateField.adjoin_le_iff.mpr hcoords
   exact (IntermediateField.restrictScalars_eq_top_iff (K := K)).mp htop
-
-/-- . -/
 theorem flag_generators_u (lam μ ν : K)
     (hU : Transcendental K (affineU K P lam)) :
     letI : Algebra (RatFunc K) (CoordinateField K P) :=
       (elementEmbedding K (CoordinateField K P) (affineU K P lam)
         hU).toRingHom.toAlgebra
     IntermediateField.adjoin (RatFunc K)
-      ({coordinate K P 2, affineV K P μ ν} :
+      ({coordinate K P 2,affineV K P μ ν} :
         Set (CoordinateField K P)) = ⊤ := by
   letI : Algebra (RatFunc K) (CoordinateField K P) :=
     (elementEmbedding K (CoordinateField K P) (affineU K P lam)
@@ -166,7 +131,7 @@ theorem flag_generators_u (lam μ ν : K)
         hU).commutes c).symm
   let L : IntermediateField (RatFunc K) (CoordinateField K P) :=
     IntermediateField.adjoin (RatFunc K)
-      {coordinate K P 2, affineV K P μ ν}
+      {coordinate K P 2,affineV K P μ ν}
   have hZ : coordinate K P 2 ∈ L :=
     IntermediateField.mem_adjoin_pair_left _ _ _
   have hV : affineV K P μ ν ∈ L :=
@@ -178,15 +143,13 @@ theorem flag_generators_u (lam μ ν : K)
       (algebraMap (Polynomial K) (RatFunc K) Polynomial.X) ∈ L at hbase
     rwa [elementEmbedding_variable] at hbase
   exact top_of_affine_flag_mem K P lam μ ν L hUmem hV hZ
-
-/-- . -/
 theorem flag_generators_v (lam μ ν : K)
     (hV : Transcendental K (affineV K P μ ν)) :
     letI : Algebra (RatFunc K) (CoordinateField K P) :=
       (elementEmbedding K (CoordinateField K P) (affineV K P μ ν)
         hV).toRingHom.toAlgebra
     IntermediateField.adjoin (RatFunc K)
-      ({coordinate K P 2, affineU K P lam} :
+      ({coordinate K P 2,affineU K P lam} :
         Set (CoordinateField K P)) = ⊤ := by
   letI : Algebra (RatFunc K) (CoordinateField K P) :=
     (elementEmbedding K (CoordinateField K P) (affineV K P μ ν)
@@ -197,7 +160,7 @@ theorem flag_generators_v (lam μ ν : K)
         hV).commutes c).symm
   let L : IntermediateField (RatFunc K) (CoordinateField K P) :=
     IntermediateField.adjoin (RatFunc K)
-      {coordinate K P 2, affineU K P lam}
+      {coordinate K P 2,affineU K P lam}
   have hZ : coordinate K P 2 ∈ L :=
     IntermediateField.mem_adjoin_pair_left _ _ _
   have hU : affineU K P lam ∈ L :=
@@ -209,15 +172,13 @@ theorem flag_generators_v (lam μ ν : K)
       (algebraMap (Polynomial K) (RatFunc K) Polynomial.X) ∈ L at hbase
     rwa [elementEmbedding_variable] at hbase
   exact top_of_affine_flag_mem K P lam μ ν L hU hVmem hZ
-
-/-- . -/
 theorem flag_generators_z (lam μ ν : K)
     (hZ : Transcendental K (coordinate K P 2)) :
     letI : Algebra (RatFunc K) (CoordinateField K P) :=
       (elementEmbedding K (CoordinateField K P) (coordinate K P 2)
         hZ).toRingHom.toAlgebra
     IntermediateField.adjoin (RatFunc K)
-      ({affineU K P lam, affineV K P μ ν} :
+      ({affineU K P lam,affineV K P μ ν} :
         Set (CoordinateField K P)) = ⊤ := by
   letI : Algebra (RatFunc K) (CoordinateField K P) :=
     (elementEmbedding K (CoordinateField K P) (coordinate K P 2)
@@ -228,7 +189,7 @@ theorem flag_generators_z (lam μ ν : K)
         hZ).commutes c).symm
   let L : IntermediateField (RatFunc K) (CoordinateField K P) :=
     IntermediateField.adjoin (RatFunc K)
-      {affineU K P lam, affineV K P μ ν}
+      {affineU K P lam,affineV K P μ ν}
   have hU : affineU K P lam ∈ L :=
     IntermediateField.mem_adjoin_pair_left _ _ _
   have hV : affineV K P μ ν ∈ L :=
@@ -240,12 +201,9 @@ theorem flag_generators_z (lam μ ν : K)
       (algebraMap (Polynomial K) (RatFunc K) Polynomial.X) ∈ L at hbase
     rwa [elementEmbedding_variable] at hbase
   exact top_of_affine_flag_mem K P lam μ ν L hU hV hZmem
-
 section Family
-
 variable {I : Type} [Fintype I]
-variable (Q : I → Ideal (MvPolynomial (Fin 3) K)) [∀ i, (Q i).IsPrime]
-
+variable (Q : I → Ideal (MvPolynomial (Fin 3) K)) [∀ i,(Q i).IsPrime]
 theorem flagEvaluation_kernel_family_injective
     (hinj : Function.Injective Q) (lam μ ν : K) :
     Function.Injective (fun i ↦
@@ -254,14 +212,10 @@ theorem flagEvaluation_kernel_family_injective
   apply hinj
   have hc := congrArg (Ideal.comap (flagAlgHom lam μ ν).toRingHom) hij
   simpa only [flagEvaluation_kernel_contract] using hc
-
-/-- .
-
- -/
 theorem finite_sum_flag_finrank_trapezoid
     (hinj : Function.Injective Q) (lam μ ν : K)
     (order : Fin 3 ≃ Fin 3)
-    (ht : ∀ i, Transcendental K
+    (ht : ∀ i,Transcendental K
       (flagEvaluation K (Q i) lam μ ν (MvPolynomial.X (order 0))))
     (hgen : ∀ i,
       letI : Algebra (RatFunc K) (CoordinateField K (Q i)) :=
@@ -273,7 +227,7 @@ theorem finite_sum_flag_finrank_trapezoid
           flagEvaluation K (Q i) lam μ ν (MvPolynomial.X (order 1))} :
           Set (CoordinateField K (Q i))) = ⊤)
     (G H : MvPolynomial (Fin 3) K) (hG : Irreducible G)
-    (hGmem : ∀ i, G ∈ Q i) (hHmem : ∀ i, H ∈ Q i)
+    (hGmem : ∀ i,G ∈ Q i) (hHmem : ∀ i,H ∈ Q i)
     (hproper : ¬ G ∣ H)
     (hpositive : 0 <
       (planeMap K order (flagAlgHom lam μ ν G)).natDegree)
@@ -283,27 +237,27 @@ theorem finite_sum_flag_finrank_trapezoid
     (hHouter : (planeMap K order
       (flagAlgHom lam μ ν H)).natDegree ≤ mCap)
     (hGsupport : ∀ d ∈ (rationalMap K order
-      (flagAlgHom lam μ ν G)).support, d 0 + d 1 ≤ totalG)
+      (flagAlgHom lam μ ν G)).support,d 0 + d 1 ≤ totalG)
     (hHsupport : ∀ d ∈ (rationalMap K order
-      (flagAlgHom lam μ ν H)).support, d 0 + d 1 ≤ totalH)
-    (hbudget : ∀ m, m ≤ mCap →
+      (flagAlgHom lam μ ν H)).support,d 0 + d 1 ≤ totalH)
+    (hbudget : ∀ m,m ≤ mCap →
       m * totalG + n * totalH - m * n ≤ cap) :
-    letI : ∀ i, Algebra (RatFunc K) (CoordinateField K (Q i)) :=
+    letI : ∀ i,Algebra (RatFunc K) (CoordinateField K (Q i)) :=
       fun i ↦ (elementEmbedding K (CoordinateField K (Q i))
         (flagEvaluation K (Q i) lam μ ν (MvPolynomial.X (order 0)))
         (ht i)).toRingHom.toAlgebra
-    (∀ i, FiniteDimensional (RatFunc K) (CoordinateField K (Q i))) ∧
-      (∑ i, Module.finrank (RatFunc K) (CoordinateField K (Q i))) ≤ cap := by
-  let e : ∀ i, MvPolynomial (Fin 3) K →ₐ[K] CoordinateField K (Q i) :=
+    (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (Q i))) ∧
+      (∑ i,Module.finrank (RatFunc K) (CoordinateField K (Q i))) ≤ cap := by
+  let e : ∀ i,MvPolynomial (Fin 3) K →ₐ[K] CoordinateField K (Q i) :=
     fun i ↦ flagEvaluation K (Q i) lam μ ν
-  have hGroot : ∀ i, e i (flagAlgHom lam μ ν G) = 0 := by
+  have hGroot : ∀ i,e i (flagAlgHom lam μ ν G) = 0 := by
     intro i
     rw [show e i (flagAlgHom lam μ ν G) = coordinateEvaluation K (Q i) G
       from flagEvaluation_flag K (Q i) lam μ ν G]
     change G ∈ RingHom.ker (coordinateEvaluation K (Q i)).toRingHom
     rw [coordinateEvaluation_ker]
     exact hGmem i
-  have hHroot : ∀ i, e i (flagAlgHom lam μ ν H) = 0 := by
+  have hHroot : ∀ i,e i (flagAlgHom lam μ ν H) = 0 := by
     intro i
     rw [show e i (flagAlgHom lam μ ν H) = coordinateEvaluation K (Q i) H
       from flagEvaluation_flag K (Q i) lam μ ν H]
@@ -318,9 +272,6 @@ theorem finite_sum_flag_finrank_trapezoid
     hGroot hHroot (by simpa only [flag_dvd_iff] using hproper) hpositive
     n mCap totalG totalH cap (flag_ne_zero lam μ ν hHne)
     hGouter hHouter hGsupport hHsupport hbudget
-
 end Family
-
 end
-
 end ProximityPrize.SubmissionLower.ContactFlagAffineFamilyDegree6543Research

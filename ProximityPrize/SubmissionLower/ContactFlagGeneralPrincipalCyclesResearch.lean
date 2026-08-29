@@ -1,18 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagPrincipalCycles6543Research
 import ProximityPrize.SubmissionLower.ContactFlagSymbolicTrapezoidResearch
-
-/-! .
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactFlagGeneralPrincipalCyclesResearch
-
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
 open ActualCurveCoordinateField ActualCurveRationalProjection
@@ -32,22 +21,16 @@ open ContactFlagSymbolicTrapezoidResearch
 open ContactResidualSparseComponentAdapterResearch
 open TrivariateRationalCollection ActualPlaneCoordinateKernel
   ArbitraryRationalProjectionResearch
-
 noncomputable section
-
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
 set_option maxRecDepth 20000
-
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
 variable {hseparator : ∀ C : RegularComponent Omega G T H,
   Transcendental Omega (coordinate Omega C.1 2)}
 variable {hproj : ∀ C : RegularComponent Omega G T H,
   ProjectionsFiniteSeparable Omega C.1}
-
-/-- .
- -/
 def flagProjectionCycleBudget_of_nested_general
     (p q r : FlagDegree)
     (D : NestedFlagProjectionData hseparator hproj)
@@ -76,17 +59,17 @@ def flagProjectionCycleBudget_of_nested_general
       Transcendental Omega
         (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (zOrder 0))) := by
     intro C
-    simpa [zOrder, Equiv.swap_apply_def, lam, mu, nu] using hseparator C
+    simpa [zOrder,Equiv.swap_apply_def,lam,mu,nu] using hseparator C
   let htU : ∀ C : RegularComponent Omega G T H,
       Transcendental Omega
         (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (uOrder 0))) := by
     intro C
-    simpa [uOrder, lam, mu, nu] using D.hU C
+    simpa [uOrder,lam,mu,nu] using D.hU C
   let htV : ∀ C : RegularComponent Omega G T H,
       Transcendental Omega
         (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (vOrder 0))) := by
     intro C
-    simpa [vOrder, Equiv.swap_apply_def, lam, mu, nu] using hAffineV D C
+    simpa [vOrder,Equiv.swap_apply_def,lam,mu,nu] using hAffineV D C
   have hembZ (C : RegularComponent Omega G T H) :
       elementEmbedding Omega (CoordinateField Omega C.1)
           (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (zOrder 0)))
@@ -94,7 +77,7 @@ def flagProjectionCycleBudget_of_nested_general
         elementEmbedding Omega (CoordinateField Omega C.1)
           (coordinate Omega C.1 2) (hseparator C) :=
     elementEmbedding_congr (htZ C) (hseparator C)
-      (by simp [zOrder, Equiv.swap_apply_def, lam, mu, nu])
+      (by simp [zOrder,Equiv.swap_apply_def,lam,mu,nu])
   have hembU (C : RegularComponent Omega G T H) :
       elementEmbedding Omega (CoordinateField Omega C.1)
           (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (uOrder 0)))
@@ -102,7 +85,7 @@ def flagProjectionCycleBudget_of_nested_general
         elementEmbedding Omega (CoordinateField Omega C.1)
           (affineU Omega C.1 D.lam) (D.hU C) :=
     elementEmbedding_congr (htU C) (D.hU C)
-      (by simp [uOrder, lam, mu, nu])
+      (by simp [uOrder,lam,mu,nu])
   have hembV (C : RegularComponent Omega G T H) :
       elementEmbedding Omega (CoordinateField Omega C.1)
           (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (vOrder 0)))
@@ -110,7 +93,7 @@ def flagProjectionCycleBudget_of_nested_general
         elementEmbedding Omega (CoordinateField Omega C.1)
           (affineV Omega C.1 D.mu (D.mu * D.lam)) (hAffineV D C) :=
     elementEmbedding_congr (htV C) (hAffineV D C)
-      (by simp [vOrder, Equiv.swap_apply_def, lam, mu, nu])
+      (by simp [vOrder,Equiv.swap_apply_def,lam,mu,nu])
   have hTne : T ≠ 0 := by
     intro hzero
     apply hproper
@@ -122,7 +105,7 @@ def flagProjectionCycleBudget_of_nested_general
       (by
         intro C
         rw [hembZ C]
-        simpa [zOrder, Equiv.swap_apply_def, lam, mu, nu] using
+        simpa [zOrder,Equiv.swap_apply_def,lam,mu,nu] using
           flag_generators_z Omega C.1 lam mu nu (hseparator C))
       (by
         intro C
@@ -132,7 +115,7 @@ def flagProjectionCycleBudget_of_nested_general
         exact (hproj C 2 (hseparator C)).2)
       (by
         intro C v
-        simpa [zOrder, Equiv.swap_apply_def, lam, mu, nu,
+        simpa [zOrder,Equiv.swap_apply_def,lam,mu,nu,
           CoordinatePoleMass.poleOrder] using
           unitZ_polynomial_pole BZ C v)
       hG hproper hpositive.z p.all q.all (p.yz + p.all)
@@ -148,7 +131,7 @@ def flagProjectionCycleBudget_of_nested_general
       (by
         intro C
         rw [hembU C]
-        simpa [uOrder, lam, mu, nu] using
+        simpa [uOrder,lam,mu,nu] using
           flag_generators_u Omega C.1 lam mu nu (D.hU C))
       (by
         intro C
@@ -156,7 +139,7 @@ def flagProjectionCycleBudget_of_nested_general
         exact D.separableU C)
       (by
         intro C v
-        simpa [uOrder, lam, mu, nu, CoordinatePoleMass.poleOrder] using
+        simpa [uOrder,lam,mu,nu,CoordinatePoleMass.poleOrder] using
           unitYZ_polynomial_pole D BYZ C v)
       hG hproper hpositive.u p.all q.all
       (p.zOnly + p.yz + p.all) (q.zOnly + q.yz + q.all)
@@ -172,7 +155,7 @@ def flagProjectionCycleBudget_of_nested_general
       (by
         intro C
         rw [hembV C]
-        simpa [vOrder, Equiv.swap_apply_def, lam, mu, nu] using
+        simpa [vOrder,Equiv.swap_apply_def,lam,mu,nu] using
           flag_generators_v Omega C.1 lam mu nu (hAffineV D C))
       (by
         intro C
@@ -180,7 +163,7 @@ def flagProjectionCycleBudget_of_nested_general
         exact separableAffineV D C)
       (by
         intro C v
-        simpa [vOrder, Equiv.swap_apply_def, lam, mu, nu,
+        simpa [vOrder,Equiv.swap_apply_def,lam,mu,nu,
           CoordinatePoleMass.poleOrder] using
           unitAll_polynomial_pole D BAll C v)
       hG hproper hpositive.v (p.yz + p.all) (q.yz + q.all)
@@ -193,9 +176,6 @@ def flagProjectionCycleBudget_of_nested_general
       (v_flag_trapezoid_budget p q)
   exact FlagProjectionCycleBudget.ofNestedProjectionBudgets
     B BZ BYZ BAll zBudget yzBudget allBudget
-
-/-- .
- -/
 def residualComponentBudget_flagMixed_of_nested
     (p q r : FlagDegree)
     (D : NestedFlagProjectionData hseparator hproj)
@@ -216,8 +196,6 @@ def residualComponentBudget_flagMixed_of_nested
   rw [flagMixed_projection_decomposition]
   exact (flagProjectionCycleBudget_of_nested_general p q r D hG hproper
     hGsupport hTsupport hpositive B BZ BYZ BAll).toResidualComponentBudget
-
-/-- . -/
 theorem exists_residualComponentBudget_flagMixed_of_projectionPositivity
     (p q r : FlagDegree)
     (hG : Irreducible G) (hproper : ¬ G ∣ T)
@@ -227,7 +205,7 @@ theorem exists_residualComponentBudget_flagMixed_of_projectionPositivity
       FlagProjectionPositivity D G) :
     Nonempty (ResidualComponentBudget G T H
       (fun A ↦ A.support ⊆ flagSupport r) (flagMixed p q r)) := by
-  obtain ⟨D, hD⟩ := hpositive
+  obtain ⟨D,hD⟩ := hpositive
   obtain ⟨B⟩ := exists_genericExactPolePolynomial_flagSupport
     hseparator hproj r
   obtain ⟨BZ⟩ := exists_genericExactPolePolynomial_flagSupport
@@ -238,7 +216,5 @@ theorem exists_residualComponentBudget_flagMixed_of_projectionPositivity
     hseparator hproj unitAllFlag
   exact ⟨residualComponentBudget_flagMixed_of_nested p q r D hG hproper
     hGsupport hTsupport hD B BZ BYZ BAll⟩
-
 end
-
 end ProximityPrize.SubmissionLower.ContactFlagGeneralPrincipalCyclesResearch

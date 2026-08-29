@@ -1,22 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFreshCoefficientFieldGenerationResearch
 import ProximityPrize.SubmissionLower.ContactTrdegTower6731Research
-
-/-! Removing the one fresh rational-function parameter from the recovered
-coefficient field. -/
-
 namespace ProximityPrize.SubmissionLower.ContactCoefficientFieldTrdeg6731Research
-
 open ContactFreshCoefficientFieldGenerationResearch
-
 noncomputable section
-
 variable {k L : Type} [Field k] [Field L] [Algebra k L]
-
 def baseCoefficientField (P : Polynomial L) (γ : L) : IntermediateField k L :=
   IntermediateField.adjoin k
     (insert γ (Set.range (fun j : ℕ => P.coeff j)))
-
 theorem baseCoefficientField_map_le (P : Polynomial L) (γ : L) :
     (baseCoefficientField (k := k) P γ).map (IsScalarTower.toAlgHom k L (RatFunc L)) ≤
       coefficientField (k := k) P γ := by
@@ -31,9 +22,6 @@ theorem baseCoefficientField_map_le (P : Polynomial L) (γ : L) :
   rw [← hj]
   change algebraMap L (RatFunc L) (P.coeff j) ∈ coefficientField (k := k) P γ
   exact IntermediateField.subset_adjoin k _ (Or.inr (Or.inr ⟨j,rfl⟩))
-
-/-- A two-parameter bound on the field recovered after adding tau becomes a
-one-parameter bound on the genuine coefficient field. -/
 theorem baseCoefficientField_trdeg_le_one
     (P : Polynomial L) (γ : L)
     (hE : Algebra.trdeg k (coefficientField (k := k) P γ) ≤ 2) :
@@ -43,6 +31,5 @@ theorem baseCoefficientField_trdeg_le_one
     (E := coefficientField (k := k) P γ)
     (baseCoefficientField_map_le P γ) _ hE
   exact IntermediateField.subset_adjoin k _ (Or.inl rfl)
-
 end
 end ProximityPrize.SubmissionLower.ContactCoefficientFieldTrdeg6731Research

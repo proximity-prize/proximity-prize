@@ -3,26 +3,7 @@ import ProximityPrize.SubmissionLower.ContactProperCutSeedCount
 import ProximityPrize.SubmissionLower.ContactRegularFactorGate
 import ProximityPrize.SubmissionLower.ContactAdaptiveNestedUnitFamily6600Research
 import ProximityPrize.SubmissionLower.ContactGlobalShearPositivityResearch
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research
-
 open scoped Classical
 open ActualCurveCoordinateField ContactGenericSurface ContactProperCutSeedCount
 open ContactRegularComponentCover ContactRegularFactorGate
@@ -35,30 +16,24 @@ open ContactAdaptiveUnitPoleFamilyResearch
 open ContactGlobalShearPositivityResearch
 open ContactFlagAffineFamilyDegree6543Research
 open ContactFlagBezout6543Research
-
 noncomputable section
-
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
-
 def verticalPoint (y z : Omega) : Fin 3 → Polynomial Omega :=
-  ![Polynomial.C y, Polynomial.X, Polynomial.C z]
-
+  ![Polynomial.C y,Polynomial.X,Polynomial.C z]
 def verticalPolynomial (y z : Omega) :
     MvPolynomial (Fin 3) Omega →ₐ[Omega] Polynomial Omega :=
   MvPolynomial.aeval (verticalPoint y z)
-
 theorem verticalPolynomial_derivative (y z : Omega)
     (F : MvPolynomial (Fin 3) Omega) :
     (verticalPolynomial y z F).derivative =
       verticalPolynomial y z (MvPolynomial.pderiv (1 : Fin 3) F) := by
   induction F using MvPolynomial.induction_on with
   | C a => simp [verticalPolynomial]
-  | add P Q hP hQ => simp only [map_add, Polynomial.derivative_add, hP, hQ]
+  | add P Q hP hQ => simp only [map_add,Polynomial.derivative_add,hP,hQ]
   | mul_X P i hP =>
       fin_cases i <;>
-        simp [verticalPolynomial, verticalPoint, Polynomial.derivative_mul] at hP ⊢ <;>
+        simp [verticalPolynomial,verticalPoint,Polynomial.derivative_mul] at hP ⊢ <;>
         rw [hP] <;> ring
-
 theorem aeval_verticalPolynomial_eq_coordinateEvaluation
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
     (y z : Omega)
@@ -73,11 +48,8 @@ theorem aeval_verticalPolynomial_eq_coordinateEvaluation
     apply MvPolynomial.algHom_ext
     intro i
     fin_cases i <;>
-      simp [lhs, verticalPolynomial, verticalPoint, coordinate, hy, hz]
+      simp [lhs,verticalPolynomial,verticalPoint,coordinate,hy,hz]
   exact AlgHom.congr_fun hlhs F
-
-/-- .
- -/
 theorem y_or_z_transcendental_of_regular_polynomial
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
     (F : MvPolynomial (Fin 3) Omega)
@@ -91,9 +63,9 @@ theorem y_or_z_transcendental_of_regular_polynomial
   push_neg at hYZ
   have hYalg : IsAlgebraic Omega (coordinate Omega P 0) := not_not.mp hYZ.1
   have hZalg : IsAlgebraic Omega (coordinate Omega P 2) := not_not.mp hYZ.2
-  obtain ⟨y, hy⟩ := coordinate_eq_scalar_of_isAlgebraic Omega P 0 hYalg
-  obtain ⟨z, hz⟩ := coordinate_eq_scalar_of_isAlgebraic Omega P 2 hZalg
-  obtain ⟨i, hi⟩ :=
+  obtain ⟨y,hy⟩ := coordinate_eq_scalar_of_isAlgebraic Omega P 0 hYalg
+  obtain ⟨z,hz⟩ := coordinate_eq_scalar_of_isAlgebraic Omega P 2 hZalg
+  obtain ⟨i,hi⟩ :=
     exists_transcendental_coordinate_of_ne_point_kernel Omega P hnonpoint
   have hiR : i = (1 : Fin 3) := by
     fin_cases i <;> simp_all
@@ -108,7 +80,7 @@ theorem y_or_z_transcendental_of_regular_polynomial
   have hQ : Q = 0 := by
     apply transcendental_iff_injective.mp hi
     simpa using hQeval
-  have hQderiv : Q.derivative = 0 := by rw [hQ, Polynomial.derivative_zero]
+  have hQderiv : Q.derivative = 0 := by rw [hQ,Polynomial.derivative_zero]
   have hFReval : coordinateEvaluation Omega P
       (MvPolynomial.pderiv (1 : Fin 3) F) = 0 := by
     rw [← aeval_verticalPolynomial_eq_coordinateEvaluation P y z hy hz]
@@ -116,13 +88,9 @@ theorem y_or_z_transcendental_of_regular_polynomial
     simpa [Q] using congrArg
       (Polynomial.aeval (coordinate Omega P 1)) hQderiv
   apply hFR
-  rw [← coordinateEvaluation_ker Omega P, RingHom.mem_ker]
+  rw [← coordinateEvaluation_ker Omega P,RingHom.mem_ker]
   exact hFReval
-
 variable {K : Type} [Field K]
-
-/-- .
- -/
 theorem regularComponent_y_or_z_transcendental
     (phi : Polynomial K →+* Omega)
     (F : MvPolynomial (Fin 4) K)
@@ -134,7 +102,7 @@ theorem regularComponent_y_or_z_transcendental
   let H := regularitySurface phi F
   have hGmem : G ∈ C.1 := regularComponent_G_mem Omega G T H C
   have hFmem : surfaceMap phi F ∈ C.1 := by
-    obtain ⟨Q, hQ⟩ := hdiv
+    obtain ⟨Q,hQ⟩ := hdiv
     rw [hQ]
     exact C.1.mul_mem_right Q hGmem
   have hFRnot : MvPolynomial.pderiv (1 : Fin 3) (surfaceMap phi F) ∉ C.1 := by
@@ -142,16 +110,8 @@ theorem regularComponent_y_or_z_transcendental
     exact regularComponent_H_not_mem Omega G T H C
   exact y_or_z_transcendental_of_regular_polynomial C.1 (surfaceMap phi F)
     hFmem hFRnot (regularComponent_ne_point Omega G T H C)
-
 section RefinedAdaptiveFamily
-
 variable {G T H : MvPolynomial (Fin 3) Omega}
-
-/-- .
-
-
-
- -/
 structure AdaptiveUnitProjectionFamilyYZ
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
@@ -161,9 +121,6 @@ structure AdaptiveUnitProjectionFamilyYZ
   yzValue : ∀ C : RegularComponent Omega G T H,
     coordinateValue Omega (CoordinateField Omega C.1)
         (family.yzProjection C) = affineU Omega C.1 lam
-
-/-- .
- -/
 def adaptiveUnitProjectionFamilyYZ_of_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,
@@ -184,12 +141,6 @@ def adaptiveUnitProjectionFamilyYZ_of_nested
   yzValue := by
     intro C
     exact coordinateOfGate_value (affineU Omega C.1 D.lam) (D.uGate C)
-
-/-- .
-
-
-
- -/
 theorem AdaptiveUnitProjectionFamilyYZ.one_le_zCost_add_yzCost
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -223,8 +174,6 @@ theorem AdaptiveUnitProjectionFamilyYZ.one_le_zCost_add_yzCost
       rw [P.yzValue C]
       exact hU
     omega
-
-/-- . -/
 theorem exists_adaptiveUnitProjectionFamilyYZ_of_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,
@@ -241,9 +190,6 @@ theorem exists_adaptiveUnitProjectionFamilyYZ_of_nested
   obtain ⟨D⟩ := exists_adaptiveNestedProjectionData base hY hZ hSderiv
   exact ⟨adaptiveUnitProjectionFamilyYZ_of_nested p q base hY hZ hSderiv D
     hG hproper hGsupport hTsupport⟩
-
 end RefinedAdaptiveFamily
-
 end
-
 end ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research

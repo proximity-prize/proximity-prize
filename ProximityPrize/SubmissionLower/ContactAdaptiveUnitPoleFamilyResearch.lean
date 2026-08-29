@@ -1,18 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactWeakPrimeFlagBudgetResearch
 import ProximityPrize.SubmissionLower.ContactAdaptiveProjectionCoordinateResearch
-
-/-! .
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveUnitPoleFamilyResearch
-
 open scoped Classical BigOperators WithZero
 open ActualCurveCoordinateField
 open CoordinateBoxZeroCount ContactRegularComponentCover
@@ -22,15 +11,9 @@ open ContactWeakPrimeFlagBudgetResearch
 open ContactPrimeFlagBudgetFamilyResearch
 open ContactSparsePoleSupportResearch
 open ContactAdaptiveProjectionCoordinateResearch
-
 noncomputable section
-
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
-
-/-- .
-
- -/
 structure AdaptiveUnitProjectionFamily
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
@@ -77,9 +60,6 @@ structure AdaptiveUnitProjectionFamily
     (∑ C : RegularComponent Omega G T H,
       coordinateDegree Omega (CoordinateField Omega C.1) (allProjection C)) ≤
       flagMixed p q unitAllFlag
-
-/-- .
- -/
 def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -100,9 +80,9 @@ def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
     dsimp only
     intro W
     calc
-      (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega C.1)
+      (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Omega C.1)
           (flagSupport unitZFlag)) =
-          ∑ v ∈ W, CoordinatePoleMass.poleOrder Omega
+          ∑ v ∈ W,CoordinatePoleMass.poleOrder Omega
             (CoordinateField Omega C.1) v
             (coordinateValue Omega (CoordinateField Omega C.1)
               (P.zProjection C)) := by
@@ -119,9 +99,9 @@ def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
     dsimp only
     intro W
     calc
-      (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega C.1)
+      (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Omega C.1)
           (flagSupport unitYZFlag)) =
-          ∑ v ∈ W, CoordinatePoleMass.poleOrder Omega
+          ∑ v ∈ W,CoordinatePoleMass.poleOrder Omega
             (CoordinateField Omega C.1) v
             (coordinateValue Omega (CoordinateField Omega C.1)
               (P.yzProjection C)) := by
@@ -138,9 +118,9 @@ def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
     dsimp only
     intro W
     calc
-      (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega C.1)
+      (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Omega C.1)
           (flagSupport unitAllFlag)) =
-          ∑ v ∈ W, CoordinatePoleMass.poleOrder Omega
+          ∑ v ∈ W,CoordinatePoleMass.poleOrder Omega
             (CoordinateField Omega C.1) v
             (coordinateValue Omega (CoordinateField Omega C.1)
               (P.allProjection C)) := by
@@ -151,19 +131,12 @@ def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
           (P.allProjection C) : ℤ) :=
         finite_sum_coordinate_pole_le_degree Omega
           (CoordinateField Omega C.1) (P.allProjection C) W
-
-/-- .
-
- -/
 def AdaptiveUnitProjectionFamily.toPrimeFlagBudgetFamily
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
     {p q : FlagDegree} (P : AdaptiveUnitProjectionFamily base p q) :
     PrimeFlagBudgetFamily (G := G) (T := T) (H := H) p q :=
   P.toAdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily
-
-/-- .
- -/
 theorem AdaptiveUnitProjectionFamily.one_le_zDegree_of_transcendental
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -174,10 +147,6 @@ theorem AdaptiveUnitProjectionFamily.one_le_zDegree_of_transcendental
       (P.zProjection C) := by
   apply one_le_coordinateDegree_of_transcendental_value
   rwa [P.zValue C]
-
-/-- .
-
- -/
 theorem AdaptiveUnitProjectionFamily.one_le_toPrimeFlagBudgetFamily_zCost
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -186,9 +155,6 @@ theorem AdaptiveUnitProjectionFamily.one_le_toPrimeFlagBudgetFamily_zCost
     (hZ : Transcendental Omega (coordinate Omega C.1 2)) :
     1 ≤ P.toPrimeFlagBudgetFamily.zCost C :=
   P.one_le_zDegree_of_transcendental C hZ
-
-/-- .
- -/
 theorem AdaptiveUnitProjectionFamily.one_le_allDegree
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -198,8 +164,6 @@ theorem AdaptiveUnitProjectionFamily.one_le_allDegree
       (P.allProjection C) :=
   one_le_coordinateDegree_of_transcendental_value
     (P.allProjection C) (P.allTranscendental C)
-
-/-- . -/
 theorem AdaptiveUnitProjectionFamily.one_le_toPrimeFlagBudgetFamily_allCost
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -207,8 +171,5 @@ theorem AdaptiveUnitProjectionFamily.one_le_toPrimeFlagBudgetFamily_allCost
     (C : RegularComponent Omega G T H) :
     1 ≤ P.toPrimeFlagBudgetFamily.allCost C :=
   P.one_le_allDegree C
-
 end
-
-
 end ProximityPrize.SubmissionLower.ContactAdaptiveUnitPoleFamilyResearch

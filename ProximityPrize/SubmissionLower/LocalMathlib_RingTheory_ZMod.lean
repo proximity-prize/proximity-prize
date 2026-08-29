@@ -3,58 +3,24 @@ Copyright (c) 2022 Alex J. Best. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
-
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
-
-/-!
-Permitted flat proof port of Mathlib.RingTheory.ZMod.
-Model label: gpt-5.
-Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
-Original source SHA256: 31804f322172b6b70cbd8a116e4fe1d4d96c5eefec8ae4cfe2e79c585b9b45be.
-Original copyright and author notices are retained above.
-Modifications: module/public visibility packaging is removed; imports
-are replaced by the trusted target and the necessary flat proof ports.
-All mathematical declarations and proof bodies are retained, except
-any explicitly documented ordinary-term expansion below.
-The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
--/
-
-/-! .
-
-
-
-
-
-
-
-
-
- -/
-
 section ProximityFlatProofPort
-
-/-- . -/
 theorem ZMod.ker_intCastRingHom (n : ℕ) :
     RingHom.ker (Int.castRingHom (ZMod n)) = Ideal.span ({(n : ℤ)} : Set ℤ) := by
   ext
-  rw [Ideal.mem_span_singleton, RingHom.mem_ker, Int.coe_castRingHom,
+  rw [Ideal.mem_span_singleton,RingHom.mem_ker,Int.coe_castRingHom,
     ZMod.intCast_zmod_eq_zero_iff_dvd]
-
-/-- . -/
 theorem ZMod.ringHom_eq_of_ker_eq {n : ℕ} {R : Type*} [Ring R] (f g : R →+* ZMod n)
     (h : RingHom.ker f = RingHom.ker g) : f = g := by
-  have := f.liftOfRightInverse_comp _ (ZMod.ringHom_rightInverse f) ⟨g, le_of_eq h⟩
+  have := f.liftOfRightInverse_comp _ (ZMod.ringHom_rightInverse f) ⟨g,le_of_eq h⟩
   rw [Subtype.coe_mk] at this
-  rw [← this, RingHom.ext_zmod (f.liftOfRightInverse _ _ ⟨g, _⟩) _, RingHom.id_comp]
-
-/-- . -/
+  rw [← this,RingHom.ext_zmod (f.liftOfRightInverse _ _ ⟨g,_⟩) _,RingHom.id_comp]
 @[simp]
 theorem isReduced_zmod {n : ℕ} : IsReduced (ZMod n) ↔ Squarefree n ∨ n = 0 := by
   rw [← RingHom.ker_isRadical_iff_reduced_of_surjective
       (ZMod.ringHom_surjective <| Int.castRingHom <| ZMod n),
-      ZMod.ker_intCastRingHom, ← isRadical_iff_span_singleton, isRadical_iff_squarefree_or_zero,
-      Int.squarefree_natCast, Nat.cast_eq_zero]
-
+      ZMod.ker_intCastRingHom,← isRadical_iff_span_singleton,isRadical_iff_squarefree_or_zero,
+      Int.squarefree_natCast,Nat.cast_eq_zero]
 instance {n : ℕ} [Fact <| Squarefree n] : IsReduced (ZMod n) :=
   isReduced_zmod.2 <| Or.inl <| Fact.out

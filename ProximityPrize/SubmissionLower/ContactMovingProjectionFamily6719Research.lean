@@ -1,10 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactCommonProjectionChoice6676Research
 import ProximityPrize.SubmissionLower.ContactMovingFiberCount6676Research
-
-/-! .
-
- -/
 namespace ProximityPrize.SubmissionLower.ContactMovingProjectionFamily6719Research
 open scoped Classical BigOperators WithZero
 open ActualCurveCoordinateField ContactRegularComponentCover CoordinateBoxZeroCount
@@ -16,12 +12,8 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
 set_option synthInstance.maxHeartbeats 300000
-
 variable {K : Type} [Field K] [IsAlgClosed K]
 local notation "Poly" => MvPolynomial (Fin 3) K
-
-/-- .
- -/
 theorem exists_separable_moving_coordinates (F A H G : Poly)
     (base : ∀ C : RegularComponent K F A H,SeparableLiteralCoordinate C.1) :
     ∃ (Q U : Poly) (J : ∀ C : RegularComponent K F A H,SeparableCoordinate K (CoordinateField K C.1)),
@@ -48,13 +40,8 @@ theorem exists_separable_moving_coordinates (F A H G : Poly)
   intro v
   rw [hv C]
   exact (h C).2.2.1 v
-
 variable {E : Type} [Field E] [IsAlgClosed E]
 variable [Algebra K E] [Algebra (RatFunc K) E] [IsScalarTower K (RatFunc K) E]
-
-/-- .
-
- -/
 theorem exists_moving_projection_family (F H G : Poly) (k : ℕ) (B : Fin (k+1) → Poly)
     (base : ∀ C : RegularComponent K F (filteredCut k B H G) H,SeparableLiteralCoordinate C.1)
     (hF : F ≠ 0)
@@ -98,6 +85,5 @@ theorem exists_moving_projection_family (F H G : Poly) (k : ℕ) (B : Fin (k+1) 
     hFp hN hA pchar hdeg hmix
   refine ⟨J,fun C v ↦ (hJ C).2.2.1 v,?_⟩
   simpa only [SeparableCoordinate.degree] using hcount
-
 end
 end ProximityPrize.SubmissionLower.ContactMovingProjectionFamily6719Research

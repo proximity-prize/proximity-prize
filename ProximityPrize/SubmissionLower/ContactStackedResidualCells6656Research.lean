@@ -4,20 +4,7 @@ import ProximityPrize.SubmissionLower.ContactStackedSeedPartition6656Research
 import ProximityPrize.SubmissionLower.ContactStackedBoxTransport6656Research
 import ProximityPrize.SubmissionLower.ContactAsymmetricResidualStageResearch
 import ProximityPrize.SubmissionLower.ContactSingularBranchParameterizedResearch
-
-/-! .
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactStackedResidualCells6656Research
-
 open scoped Classical BigOperators
 open ProximityPrize.Benchmark
 open ContactInterpolation ContactTranslation ContactFactorCaps
@@ -32,57 +19,43 @@ open ContactSingularLedger6600Research
 open ContactSingularBranch6600Research
 open ContactSingularBranchParameterizedResearch
 open ContactAsymmetricResidualStageResearch
-
 noncomputable section
-
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 35000
-
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 abbrev StackedPoly := MvPolynomial (Fin 4) IRSProfile.Field
 local instance : GCDMonoid StackedPoly :=
   UniqueFactorizationMonoid.toGCDMonoid StackedPoly
 local instance : CharP IRSProfile.Field prime := by
-  simpa [prime, ContactParameters6600Research.prime] using
+  simpa [prime,ContactParameters6600Research.prime] using
     ContactFrozenAlignment6600Research.challenge_field_characteristic6600
-
-/-- .
-
- -/
 def firstResidualQ2Stage : UnequalParameters :=
-  ⟨262144, 131071, 182807, 65, 14, 598, 34, 7, 5263⟩
-
+  ⟨262144,131071,182807,65,14,598,34,7,5263⟩
 def firstResidualQ2Ceiling : ℕ := 66773536747163
 def secondResidualGcd12Ceiling : ℕ := 370003897865012
-
 theorem optimized_residual_cell_values :
-    firstResidualQ2Stage.agreement = ⟨17039231, 3538917, 1379653347⟩ ∧
-      firstResidualQ2Stage.mixedCost = ⟨77868, 362427, 931⟩ ∧
+    firstResidualQ2Stage.agreement = ⟨17039231,3538917,1379653347⟩ ∧
+      firstResidualQ2Stage.mixedCost = ⟨77868,362427,931⟩ ∧
       firstResidualQ2Stage.regularCountCap = 9865174615710 ∧
       firstResidualQ2Stage.regularCountCap + firstResidualQ2.countCap + 1 =
         firstResidualQ2Ceiling ∧
       residualStageTwo.regularCountCap + secondResidualGcd12.countCap + 1 =
         secondResidualGcd12Ceiling := by
-  norm_num [firstResidualQ2Stage, firstResidualQ2Ceiling,
-    secondResidualGcd12Ceiling, firstResidualQ2, secondResidualGcd12,
-    UnequalParameters.agreement, UnequalParameters.leftAgreement,
-    UnequalParameters.rightAgreement, UnequalParameters.mixedCost,
-    UnequalParameters.regularCountCap, UnequalParameters.regularNumerator,
-    UnequalParameters.errors, UnequalParameters.gap,
-    TightParameters.countCap, TightParameters.tightNumerator,
-    TightParameters.coreNumerator, TightParameters.aggregateCost,
-    TightParameters.agreement, TightParameters.implicitYCap,
-    TightParameters.algebraicCap, TightParameters.kappa,
-    TightParameters.errors, TightParameters.gap, residualStageTwo, dot]
-
+  norm_num [firstResidualQ2Stage,firstResidualQ2Ceiling,
+    secondResidualGcd12Ceiling,firstResidualQ2,secondResidualGcd12,
+    UnequalParameters.agreement,UnequalParameters.leftAgreement,
+    UnequalParameters.rightAgreement,UnequalParameters.mixedCost,
+    UnequalParameters.regularCountCap,UnequalParameters.regularNumerator,
+    UnequalParameters.errors,UnequalParameters.gap,
+    TightParameters.countCap,TightParameters.tightNumerator,
+    TightParameters.coreNumerator,TightParameters.aggregateCost,
+    TightParameters.agreement,TightParameters.implicitYCap,
+    TightParameters.algebraicCap,TightParameters.kappa,
+    TightParameters.errors,TightParameters.gap,residualStageTwo,dot]
 variable {K Iota : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
-
- -/
 theorem asymmetric_stage_count_lt_of_regular_factors
     (P : UnequalParameters)
     (S : ContactTightSingularLedgerResearch.TightParameters)
@@ -102,7 +75,7 @@ theorem asymmetric_stage_count_lt_of_regular_factors
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = S.n)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ S.w)
+    (hdegree : ∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ S.w)
     (hQsolution : ∀ gamma ∈ Gamma,
       specialization K (selected gamma) gamma Q = 0)
     (hTsolution : ∀ gamma ∈ Gamma,
@@ -139,23 +112,17 @@ theorem asymmetric_stage_count_lt_of_regular_factors
       S.countCap
     exact hsingularOld
   omega
-
-
-/-! . -/
-
 theorem quotientB_ne_zero
     (QA QB : StackedPoly) (hQB : QB ≠ 0) : quotientB QA QB ≠ 0 := by
   intro hz
   apply hQB
-  rw [b_eq_gcd12_mul_quotientB QA QB, hz, mul_zero]
-
+  rw [b_eq_gcd12_mul_quotientB QA QB,hz,mul_zero]
 theorem middleQuotient_ne_zero
     (QA QB QC : StackedPoly) (hQA : QA ≠ 0) :
     middleQuotient QA QB QC ≠ 0 := by
   intro hz
   apply gcd12_ne_zero (B := QB) hQA
-  rw [gcd12_eq_gcd123_mul_middleQuotient QA QB QC, hz, mul_zero]
-
+  rw [gcd12_eq_gcd123_mul_middleQuotient QA QB QC,hz,mul_zero]
 theorem firstResidualCell_count_lt
     (QA QB QC : StackedPoly) (hQA : QA ≠ 0) (hQB : QB ≠ 0)
     (hboxA : QA ∈ globalCoefficientBox IRSProfile.Field
@@ -167,7 +134,7 @@ theorem firstResidualCell_count_lt
     (u0 u1 : IRSProfile.Index → IRSProfile.Field)
     (hcover : ∀ gamma ∈ Gamma,
       RecursiveSpecializationBranch (selected gamma) gamma QA QB QC)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
+    (hdegree : ∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ w)
     (hagreement : ∀ gamma ∈ Gamma,
       agreements ≤ ((Finset.univ : Finset IRSProfile.Index).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
@@ -199,77 +166,76 @@ theorem firstResidualCell_count_lt
   have hdegreeDelta : ∀ gamma ∈ Delta,
       (selected gamma).natDegree ≤ firstResidualQ2.w := by
     intro gamma hgamma
-    simpa [firstResidualQ2, w] using hdegree gamma (hsub hgamma)
+    simpa [firstResidualQ2,w] using hdegree gamma (hsub hgamma)
   have hagreementDelta : ∀ gamma ∈ Delta,
       firstResidualQ2.a ≤
         ((Finset.univ : Finset IRSProfile.Index).filter (fun i =>
           (selected gamma).eval (IRSProfile.domain i) =
             u0 i + gamma * u1 i)).card := by
     intro gamma hgamma
-    simpa [firstResidualQ2, agreements] using hagreement gamma (hsub hgamma)
+    simpa [firstResidualQ2,agreements] using hagreement gamma (hsub hgamma)
   have hnoPencilDelta : NoLargeSelectedPencil selected Delta
       firstResidualQ2.w firstResidualQ2.errors := by
-    simpa [firstResidualQ2, TightParameters.errors, errors, n, agreements, w] using
+    simpa [firstResidualQ2,TightParameters.errors,errors,n,agreements,w] using
       noLargeSelectedPencil_mono selected Gamma Delta w errors hsub hnoPencil
   have hstage := asymmetric_stage_count_lt_of_regular_factors
     firstResidualQ2Stage firstResidualQ2 Q T hQ prime
     (by norm_num [firstResidualQ2])
-    (by norm_num [firstResidualQ2, prime])
+    (by norm_num [firstResidualQ2,prime])
     (by norm_num [firstResidualQ2])
-    (by norm_num [firstResidualQ2, prime])
-    (by norm_num [firstResidualQ2, TightParameters.kappa])
-    (by norm_num [firstResidualQ2, TightParameters.algebraicCap,
+    (by norm_num [firstResidualQ2,prime])
+    (by norm_num [firstResidualQ2,TightParameters.kappa])
+    (by norm_num [firstResidualQ2,TightParameters.algebraicCap,
       TightParameters.kappa])
-    (by norm_num [firstResidualQ2, prime, TightParameters.implicitYCap,
+    (by norm_num [firstResidualQ2,prime,TightParameters.implicitYCap,
       TightParameters.kappa])
-    (by norm_num [firstResidualQ2, prime, TightParameters.algebraicCap,
+    (by norm_num [firstResidualQ2,prime,TightParameters.algebraicCap,
       TightParameters.kappa])
-    (by norm_num [firstResidualQ2, prime, TightParameters.implicitYCap,
-      TightParameters.algebraicCap, TightParameters.kappa])
+    (by norm_num [firstResidualQ2,prime,TightParameters.implicitYCap,
+      TightParameters.algebraicCap,TightParameters.kappa])
     (by norm_num [firstResidualQ2])
     (by norm_num [firstResidualQ2])
     hQbox
-    (by norm_num [firstResidualQ2Stage, UnequalParameters.gap])
-    (by norm_num [firstResidualQ2Stage, firstResidualQ2,
-      UnequalParameters.gap, TightParameters.gap])
-    (by norm_num [firstResidualQ2Stage, firstResidualQ2])
-    (by norm_num [firstResidualQ2Stage, firstResidualQ2])
-    (by norm_num [firstResidualQ2Stage, firstResidualQ2])
+    (by norm_num [firstResidualQ2Stage,UnequalParameters.gap])
+    (by norm_num [firstResidualQ2Stage,firstResidualQ2,
+      UnequalParameters.gap,TightParameters.gap])
+    (by norm_num [firstResidualQ2Stage,firstResidualQ2])
+    (by norm_num [firstResidualQ2Stage,firstResidualQ2])
+    (by norm_num [firstResidualQ2Stage,firstResidualQ2])
     selected Delta (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain
     u0 u1 IRSProfile.domain.injective.injOn
-    (by norm_num [IRSProfile.Index, firstResidualQ2])
+    (by norm_num [IRSProfile.Index,firstResidualQ2])
     hdegreeDelta hQsolution hTsolution hagreementDelta hnoPencilDelta
     (all_regularPairSeeds_bound firstResidualQ2Stage Q T hQ hrel
       firstResidualQ2.D firstResidualQ2.w firstResidualQ2.L firstResidualQ2.s
       prime hQbox
       (by norm_num [firstResidualQ2])
-      (by norm_num [firstResidualQ2Stage, firstResidualQ2])
-      (by norm_num [firstResidualQ2Stage, firstResidualQ2])
-      (by norm_num [firstResidualQ2Stage, firstResidualQ2])
-      (by simpa [firstResidualQ2Stage, agreements, w] using hTcaps.1)
+      (by norm_num [firstResidualQ2Stage,firstResidualQ2])
+      (by norm_num [firstResidualQ2Stage,firstResidualQ2])
+      (by norm_num [firstResidualQ2Stage,firstResidualQ2])
+      (by simpa [firstResidualQ2Stage,agreements,w] using hTcaps.1)
       (by simpa [firstResidualQ2Stage] using hTcaps.2.1)
       (by simpa [firstResidualQ2Stage] using hTcaps.2.2)
       (by norm_num [firstResidualQ2Stage])
-      (by norm_num [firstResidualQ2Stage, prime])
-      (by norm_num [firstResidualQ2Stage, prime])
-      (by norm_num [firstResidualQ2Stage, prime])
-      (by norm_num [firstResidualQ2Stage, UnequalParameters.mixedCost, prime])
-      (by norm_num [firstResidualQ2Stage, UnequalParameters.mixedCost, prime])
-      (by norm_num [firstResidualQ2Stage, UnequalParameters.mixedCost, prime])
+      (by norm_num [firstResidualQ2Stage,prime])
+      (by norm_num [firstResidualQ2Stage,prime])
+      (by norm_num [firstResidualQ2Stage,prime])
+      (by norm_num [firstResidualQ2Stage,UnequalParameters.mixedCost,prime])
+      (by norm_num [firstResidualQ2Stage,UnequalParameters.mixedCost,prime])
+      (by norm_num [firstResidualQ2Stage,UnequalParameters.mixedCost,prime])
       selected Delta (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain
       u0 u1 IRSProfile.domain.injective.injOn
-      (by norm_num [IRSProfile.Index, firstResidualQ2Stage])
+      (by norm_num [IRSProfile.Index,firstResidualQ2Stage])
       (by norm_num [firstResidualQ2Stage])
-      (by norm_num [firstResidualQ2Stage, prime])
+      (by norm_num [firstResidualQ2Stage,prime])
       (by norm_num [firstResidualQ2Stage])
       (by norm_num [firstResidualQ2Stage])
-      (by simpa [firstResidualQ2Stage, firstResidualQ2] using hdegreeDelta)
-      (by simpa [firstResidualQ2Stage, firstResidualQ2] using hagreementDelta)
-      (by simpa [firstResidualQ2Stage, firstResidualQ2,
-        UnequalParameters.errors, TightParameters.errors] using hnoPencilDelta))
-  simpa [Delta, firstResidualQ2Ceiling, optimized_residual_cell_values.2.2.2.1]
+      (by simpa [firstResidualQ2Stage,firstResidualQ2] using hdegreeDelta)
+      (by simpa [firstResidualQ2Stage,firstResidualQ2] using hagreementDelta)
+      (by simpa [firstResidualQ2Stage,firstResidualQ2,
+        UnequalParameters.errors,TightParameters.errors] using hnoPencilDelta))
+  simpa [Delta,firstResidualQ2Ceiling,optimized_residual_cell_values.2.2.2.1]
     using hstage
-
 theorem secondResidualCell_count_lt
     (QA QB QC : StackedPoly) (hQA : QA ≠ 0) (hQB : QB ≠ 0) (hQC : QC ≠ 0)
     (hboxA : QA ∈ globalCoefficientBox IRSProfile.Field
@@ -283,7 +249,7 @@ theorem secondResidualCell_count_lt
     (u0 u1 : IRSProfile.Index → IRSProfile.Field)
     (hcover : ∀ gamma ∈ Gamma,
       RecursiveSpecializationBranch (selected gamma) gamma QA QB QC)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
+    (hdegree : ∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ w)
     (hagreement : ∀ gamma ∈ Gamma,
       agreements ≤ ((Finset.univ : Finset IRSProfile.Index).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
@@ -315,77 +281,75 @@ theorem secondResidualCell_count_lt
   have hdegreeDelta : ∀ gamma ∈ Delta,
       (selected gamma).natDegree ≤ secondResidualGcd12.w := by
     intro gamma hgamma
-    simpa [secondResidualGcd12, w] using hdegree gamma (hsub hgamma)
+    simpa [secondResidualGcd12,w] using hdegree gamma (hsub hgamma)
   have hagreementDelta : ∀ gamma ∈ Delta,
       secondResidualGcd12.a ≤
         ((Finset.univ : Finset IRSProfile.Index).filter (fun i =>
           (selected gamma).eval (IRSProfile.domain i) =
             u0 i + gamma * u1 i)).card := by
     intro gamma hgamma
-    simpa [secondResidualGcd12, agreements] using hagreement gamma (hsub hgamma)
+    simpa [secondResidualGcd12,agreements] using hagreement gamma (hsub hgamma)
   have hnoPencilDelta : NoLargeSelectedPencil selected Delta
       secondResidualGcd12.w secondResidualGcd12.errors := by
-    simpa [secondResidualGcd12, TightParameters.errors, errors, n, agreements, w] using
+    simpa [secondResidualGcd12,TightParameters.errors,errors,n,agreements,w] using
       noLargeSelectedPencil_mono selected Gamma Delta w errors hsub hnoPencil
   have hstage := asymmetric_stage_count_lt_of_regular_factors
     residualStageTwo secondResidualGcd12 Q T hQ prime
     (by norm_num [secondResidualGcd12])
-    (by norm_num [secondResidualGcd12, prime])
+    (by norm_num [secondResidualGcd12,prime])
     (by norm_num [secondResidualGcd12])
-    (by norm_num [secondResidualGcd12, prime])
-    (by norm_num [secondResidualGcd12, TightParameters.kappa])
-    (by norm_num [secondResidualGcd12, TightParameters.algebraicCap,
+    (by norm_num [secondResidualGcd12,prime])
+    (by norm_num [secondResidualGcd12,TightParameters.kappa])
+    (by norm_num [secondResidualGcd12,TightParameters.algebraicCap,
       TightParameters.kappa])
-    (by norm_num [secondResidualGcd12, prime, TightParameters.implicitYCap,
+    (by norm_num [secondResidualGcd12,prime,TightParameters.implicitYCap,
       TightParameters.kappa])
-    (by norm_num [secondResidualGcd12, prime, TightParameters.algebraicCap,
+    (by norm_num [secondResidualGcd12,prime,TightParameters.algebraicCap,
       TightParameters.kappa])
-    (by norm_num [secondResidualGcd12, prime, TightParameters.implicitYCap,
-      TightParameters.algebraicCap, TightParameters.kappa])
+    (by norm_num [secondResidualGcd12,prime,TightParameters.implicitYCap,
+      TightParameters.algebraicCap,TightParameters.kappa])
     (by norm_num [secondResidualGcd12])
     (by norm_num [secondResidualGcd12])
     hQbox
-    (by norm_num [residualStageTwo, UnequalParameters.gap])
-    (by norm_num [residualStageTwo, secondResidualGcd12,
-      UnequalParameters.gap, TightParameters.gap])
-    (by norm_num [residualStageTwo, secondResidualGcd12])
-    (by norm_num [residualStageTwo, secondResidualGcd12])
-    (by norm_num [residualStageTwo, secondResidualGcd12])
+    (by norm_num [residualStageTwo,UnequalParameters.gap])
+    (by norm_num [residualStageTwo,secondResidualGcd12,
+      UnequalParameters.gap,TightParameters.gap])
+    (by norm_num [residualStageTwo,secondResidualGcd12])
+    (by norm_num [residualStageTwo,secondResidualGcd12])
+    (by norm_num [residualStageTwo,secondResidualGcd12])
     selected Delta (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain
     u0 u1 IRSProfile.domain.injective.injOn
-    (by norm_num [IRSProfile.Index, secondResidualGcd12])
+    (by norm_num [IRSProfile.Index,secondResidualGcd12])
     hdegreeDelta hQsolution hTsolution hagreementDelta hnoPencilDelta
     (all_regularPairSeeds_bound residualStageTwo Q T hQ hrel
       secondResidualGcd12.D secondResidualGcd12.w secondResidualGcd12.L
       secondResidualGcd12.s prime hQbox
       (by norm_num [secondResidualGcd12])
-      (by norm_num [residualStageTwo, secondResidualGcd12])
-      (by norm_num [residualStageTwo, secondResidualGcd12])
-      (by norm_num [residualStageTwo, secondResidualGcd12])
-      (by simpa [residualStageTwo, agreements, w] using hTcaps.1)
+      (by norm_num [residualStageTwo,secondResidualGcd12])
+      (by norm_num [residualStageTwo,secondResidualGcd12])
+      (by norm_num [residualStageTwo,secondResidualGcd12])
+      (by simpa [residualStageTwo,agreements,w] using hTcaps.1)
       (by simpa [residualStageTwo] using hTcaps.2.1)
       (by simpa [residualStageTwo] using hTcaps.2.2)
       (by norm_num [residualStageTwo])
-      (by norm_num [residualStageTwo, prime])
-      (by norm_num [residualStageTwo, prime])
-      (by norm_num [residualStageTwo, prime])
-      (by norm_num [residualStageTwo, UnequalParameters.mixedCost, prime])
-      (by norm_num [residualStageTwo, UnequalParameters.mixedCost, prime])
-      (by norm_num [residualStageTwo, UnequalParameters.mixedCost, prime])
+      (by norm_num [residualStageTwo,prime])
+      (by norm_num [residualStageTwo,prime])
+      (by norm_num [residualStageTwo,prime])
+      (by norm_num [residualStageTwo,UnequalParameters.mixedCost,prime])
+      (by norm_num [residualStageTwo,UnequalParameters.mixedCost,prime])
+      (by norm_num [residualStageTwo,UnequalParameters.mixedCost,prime])
       selected Delta (Finset.univ : Finset IRSProfile.Index) IRSProfile.domain
       u0 u1 IRSProfile.domain.injective.injOn
-      (by norm_num [IRSProfile.Index, residualStageTwo])
+      (by norm_num [IRSProfile.Index,residualStageTwo])
       (by norm_num [residualStageTwo])
-      (by norm_num [residualStageTwo, prime])
+      (by norm_num [residualStageTwo,prime])
       (by norm_num [residualStageTwo])
       (by norm_num [residualStageTwo])
-      (by simpa [residualStageTwo, secondResidualGcd12] using hdegreeDelta)
-      (by simpa [residualStageTwo, secondResidualGcd12] using hagreementDelta)
-      (by simpa [residualStageTwo, secondResidualGcd12,
-        UnequalParameters.errors, TightParameters.errors] using hnoPencilDelta))
-  simpa [Delta, secondResidualGcd12Ceiling,
+      (by simpa [residualStageTwo,secondResidualGcd12] using hdegreeDelta)
+      (by simpa [residualStageTwo,secondResidualGcd12] using hagreementDelta)
+      (by simpa [residualStageTwo,secondResidualGcd12,
+        UnequalParameters.errors,TightParameters.errors] using hnoPencilDelta))
+  simpa [Delta,secondResidualGcd12Ceiling,
     optimized_residual_cell_values.2.2.2.2] using hstage
-
 end
-
 end ProximityPrize.SubmissionLower.ContactStackedResidualCells6656Research

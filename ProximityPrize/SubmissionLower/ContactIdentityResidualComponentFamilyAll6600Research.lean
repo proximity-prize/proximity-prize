@@ -1,18 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamily6600Research
-
-/-! .
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyAll6600Research
-
 open scoped Classical BigOperators
 open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
 open ContactPrimeSeedIncidence ContactRegularComponentCover
@@ -28,21 +16,14 @@ open ContactPost6464MinkowskiRecurrenceResearch
 open ContactNearPencil6600FlagResearch
 open ContactIdentityResidualComponentFamily6600Research
 open ContactResidualSupportParametersResearch
-
 noncomputable section
-
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 30000
-
 variable {K Omega Iota : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable {phi : Polynomial K →+* Omega}
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
- -/
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
@@ -79,7 +60,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
     (B : PrimeFlagBudgetFamily (G := G) (T := T)
       (H := regularitySurface phi F) surfaceFlag cutFlag)
     (hallPositive : ∀ C : RegularComponent Omega G T
-      (regularitySurface phi F), 1 ≤ B.allCost C)
+      (regularitySurface phi F),1 ≤ B.allCost C)
     (hdegree : ∀ k ≤ d,
       (nodes.card - k) * (a - d) * (d - k) ≤ U * (a - k))
     (hunit : ∀ k ≤ d,
@@ -123,7 +104,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
       hphi S (fun r ↦ B.weightedCost r C) (B.primeBudget C)
       (degreeCost C) (unitCost C) U V (largeCost C)
     · intro t
-      simpa only [degreeCost, unitCost] using
+      simpa only [degreeCost,unitCost] using
         B.weightedCost_supportResidualAgreementFlag support C t
     · exact hda
     · intro gamma hgamma
@@ -140,17 +121,17 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
         have hmul := Nat.mul_le_mul_left ((e + 1) * (a - d)) hlargePositive
         simpa only [Nat.mul_one] using hmul
       exact hscaled.trans hcharged
-    · simpa only [S, regularComponentCurveStageOfSupport] using hdegree
-    · simpa only [S, regularComponentCurveStageOfSupport] using hunit
+    · simpa only [S,regularComponentCurveStageOfSupport] using hdegree
+    · simpa only [S,regularComponentCurveStageOfSupport] using hunit
   have hlargeSum :
-      (∑ C : RegularComponent Omega G T H, largeCost C) ≤
+      (∑ C : RegularComponent Omega G T H,largeCost C) ≤
         flagMixed surfaceFlag cutFlag unitZFlag +
           flagMixed surfaceFlag cutFlag unitAllFlag := by
     calc
-      (∑ C : RegularComponent Omega G T H, largeCost C) =
-          (∑ C : RegularComponent Omega G T H, B.zCost C) +
-            ∑ C : RegularComponent Omega G T H, B.allCost C := by
-        simp only [largeCost, Finset.sum_add_distrib]
+      (∑ C : RegularComponent Omega G T H,largeCost C) =
+          (∑ C : RegularComponent Omega G T H,B.zCost C) +
+            ∑ C : RegularComponent Omega G T H,B.allCost C := by
+        simp only [largeCost,Finset.sum_add_distrib]
       _ ≤ flagMixed surfaceFlag cutFlag unitZFlag +
           flagMixed surfaceFlag cutFlag unitAllFlag :=
         Nat.add_le_add B.sum_zCost_le B.sum_allCost_le
@@ -165,8 +146,6 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
       B.sum_weightedCost_le support.agreementDirection)
     (by simpa only [unitCost] using B.sum_weightedCost_le unitYZFlag)
     hlargeSum
-
-/-- . -/
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
@@ -202,7 +181,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
     (B : PrimeFlagBudgetFamily (G := G) (T := T)
       (H := regularitySurface phi F) surfaceFlag cutFlag)
     (hallPositive : ∀ C : RegularComponent Omega G T
-      (regularitySurface phi F), 1 ≤ B.allCost C)
+      (regularitySurface phi F),1 ≤ B.allCost C)
     (hdegree : ∀ k ≤ d,
       (nodes.card - k) * (a - d) * (d - k) ≤ U * (a - k))
     (hunit : ∀ k ≤ d,
@@ -214,13 +193,11 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
           (flagMixed surfaceFlag cutFlag unitZFlag +
             flagMixed surfaceFlag cutFlag unitAllFlag) := by
   simpa only [ResidualSupportParameters.acceptedSupport,
-    ResidualSupportParameters.agreementDirection, agreementDirection6600] using
+    ResidualSupportParameters.agreementDirection,agreementDirection6600] using
     proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
       hphi F G T selected Gamma nodes x u0 u1 p e d a U V surfaceFlag cutFlag
       ResidualSupportParameters.acceptedSupport hdiv hGflag hTflag
       hFs hFys hFtotal hinj hdegreeSelected hsolution hregular hGpoint hTpoint
       hagreement hnoPencil hchar hda B hallPositive hdegree hunit
-
 end
-
 end ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyAll6600Research

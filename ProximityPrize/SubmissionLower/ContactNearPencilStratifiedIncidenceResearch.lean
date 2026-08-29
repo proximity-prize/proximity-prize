@@ -1,26 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIncidence
 import ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
-
-/-! .
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch
-
 open ContactIncidence
 open ContactNearPencil6600ArithmeticResearch
-
-/-- .
- -/
 theorem stratified_incidence_bound
     {Seed Node : Type*} [DecidableEq Seed] [DecidableEq Node]
-    (relation : Seed → Node → Prop) [∀ seed node, Decidable (relation seed node)]
+    (relation : Seed → Node → Prop) [∀ seed node,Decidable (relation seed node)]
     (seeds : Finset Seed) (nodes identities : Finset Node)
     (a w degreeCost unitCost U V : ℕ)
     (hidentities : identities ⊆ nodes) (hcard : identities.card ≤ w)
@@ -42,13 +28,9 @@ theorem stratified_incidence_bound
     hidentities hagreement hfiber
   exact stratified_incidence_linear seeds.card nodes.card a w identities.card
     degreeCost unitCost U V hcard hwa hraw hdegree hunit
-
-/-- .
-
- -/
 theorem scaled_stratified_incidence_bound
     {Seed Node : Type*} [DecidableEq Seed] [DecidableEq Node]
-    (relation : Seed → Node → Prop) [∀ seed node, Decidable (relation seed node)]
+    (relation : Seed → Node → Prop) [∀ seed node,Decidable (relation seed node)]
     (seeds : Finset Seed) (nodes identities : Finset Node)
     (a w degreeCost unitCost U V : ℕ)
     (hidentities : identities ⊆ nodes) (hcard : identities.card ≤ w)
@@ -96,5 +78,4 @@ theorem scaled_stratified_incidence_bound
   calc
     seeds.card * (a - w) ^ 2 = (seeds.card * (a - w)) * (a - w) := by ring
     _ ≤ U * degreeCost + V * unitCost := hcompressed
-
 end ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch

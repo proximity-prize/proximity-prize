@@ -1,52 +1,28 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualPlaneCharacteristicFreeDegreeResearch
 import ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch
-
-/-! .
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ArbitraryPlaneEvaluationFamilyResearch
-
 open scoped Classical BigOperators
 open TrivariateRationalCollection ActualPlaneCoordinateKernel
   ActualPlaneCoordinateCaps ActualPlanePositiveOrder
   ActualPlaneCharacteristicFreeDegreeResearch
   CharacteristicFreeMatrixMultiplicityResearch
   CharacteristicFreeProjectionAdapter ArbitraryRationalProjectionResearch
-
 noncomputable section
-
 set_option maxHeartbeats 1000000
-
 variable (K : Type) [Field K]
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-
 local instance : IsLocalization (coefficientDenominators K)
     (RationalPolynomials K) :=
   MvPolynomial.isLocalization (nonZeroDivisors (Polynomial K)) (RatFunc K)
-
 section OneEvaluation
-
 variable (L : Type) [Field L] [Algebra K L]
 variable (order : Fin 3 ≃ Fin 3) (e : Original K →ₐ[K] L)
-
-/-- . -/
 def collectedEvaluation : Collected K →+* L :=
   e.toRingHom.comp (collect K order).symm.toRingHom
-
 @[simp] theorem collectedEvaluation_collect (F : Original K) :
     collectedEvaluation K L order e (collect K order F) = e F := by
   simp [collectedEvaluation]
-
 @[simp] theorem collectedEvaluation_C (H : Polynomial K) :
     collectedEvaluation K L order e (MvPolynomial.C H) =
       Polynomial.aeval (e (MvPolynomial.X (order 0))) H := by
@@ -56,15 +32,12 @@ def collectedEvaluation : Collected K →+* L :=
     · intro a
       change e (coefficientLift K order (Polynomial.C a)) =
         Polynomial.aeval (e (MvPolynomial.X (order 0))) (Polynomial.C a)
-      rw [coefficientLift_C, Polynomial.aeval_C]
+      rw [coefficientLift_C,Polynomial.aeval_C]
       exact e.commutes a
     · change e (coefficientLift K order Polynomial.X) =
         Polynomial.aeval (e (MvPolynomial.X (order 0))) Polynomial.X
-      rw [coefficientLift_X, Polynomial.aeval_X]
+      rw [coefficientLift_X,Polynomial.aeval_X]
   exact RingHom.congr_fun hhom H
-
-/-- .
- -/
 theorem coefficientDenominators_disjoint_of_evaluation
     (G : Original K) (hroot : e G = 0)
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
@@ -72,15 +45,14 @@ theorem coefficientDenominators_disjoint_of_evaluation
       (Ideal.span ({collect K order G} : Set (Collected K)) : Set (Collected K)) := by
   rw [Set.disjoint_left]
   intro a ha hI
-  obtain ⟨H, hH, rfl⟩ := Submonoid.mem_map.mp ha
+  obtain ⟨H,hH,rfl⟩ := Submonoid.mem_map.mp ha
   have hH0 : H ≠ 0 := mem_nonZeroDivisors_iff_ne_zero.mp hH
-  obtain ⟨U, hU⟩ := Ideal.mem_span_singleton.mp hI
+  obtain ⟨U,hU⟩ := Ideal.mem_span_singleton.mp hI
   have hzero : Polynomial.aeval (e (MvPolynomial.X (order 0))) H = 0 := by
     have heval := congrArg (collectedEvaluation K L order e) hU
-    simpa only [map_mul, collectedEvaluation_collect, collectedEvaluation_C,
-      hroot, zero_mul] using heval
+    simpa only [map_mul,collectedEvaluation_collect,collectedEvaluation_C,
+      hroot,zero_mul] using heval
   exact hH0 (transcendental_iff.mp ht H hzero)
-
 theorem rationalMap_irreducible_of_evaluation
     (G : Original K) (hG : Irreducible G) (hroot : e G = 0)
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
@@ -92,10 +64,9 @@ theorem rationalMap_irreducible_of_evaluation
     (coefficientDenominators_disjoint_of_evaluation K L order e G hroot ht)
   have hp' :
       (Ideal.span ({rationalMap K order G} : Set (RationalPolynomials K))).IsPrime := by
-    simpa only [Ideal.map_span, Set.image_singleton, ← rationalMap_eq] using hp
+    simpa only [Ideal.map_span,Set.image_singleton,← rationalMap_eq] using hp
   exact ((Ideal.span_singleton_prime
     (rationalMap_ne_zero K order G hG.ne_zero)).mp hp').irreducible
-
 theorem rationalMap_dvd_iff_of_evaluation
     (G H : Original K) (hG : Irreducible G) (hroot : e G = 0)
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
@@ -105,7 +76,7 @@ theorem rationalMap_dvd_iff_of_evaluation
     have hm : algebraMap (Collected K) (RationalPolynomials K) (collect K order H) ∈
         Ideal.map (algebraMap (Collected K) (RationalPolynomials K))
           (Ideal.span ({collect K order G} : Set (Collected K))) := by
-      simpa only [Ideal.map_span, Set.image_singleton, Ideal.mem_span_singleton,
+      simpa only [Ideal.map_span,Set.image_singleton,Ideal.mem_span_singleton,
         ← rationalMap_eq] using hdiv
     have hu : collect K order H ∈
         (Ideal.map (algebraMap (Collected K) (RationalPolynomials K))
@@ -113,36 +84,31 @@ theorem rationalMap_dvd_iff_of_evaluation
     rw [IsLocalization.under_map_of_isPrime_disjoint (coefficientDenominators K)
       (RationalPolynomials K) (collected_principal_isPrime K order G hG)
       (coefficientDenominators_disjoint_of_evaluation K L order e G hroot ht)] at hu
-    obtain ⟨U, hU⟩ := Ideal.mem_span_singleton.mp hu
-    refine ⟨(collect K order).symm U, ?_⟩
+    obtain ⟨U,hU⟩ := Ideal.mem_span_singleton.mp hu
+    refine ⟨(collect K order).symm U,?_⟩
     apply (collect K order).injective
-    simpa only [map_mul, AlgEquiv.apply_symm_apply] using hU
+    simpa only [map_mul,AlgEquiv.apply_symm_apply] using hU
   · exact fun hdiv ↦ map_dvd (rationalMap K order) hdiv
-
 theorem planeMap_irreducible_of_evaluation
     (G : Original K) (hG : Irreducible G) (hroot : e G = 0)
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
     Irreducible (planeMap K order G) :=
   (MulEquiv.irreducible_iff (bivariateEquiv (RatFunc K))).mpr
     (rationalMap_irreducible_of_evaluation K L order e G hG hroot ht)
-
 theorem planeMap_dvd_iff_of_evaluation
     (G H : Original K) (hG : Irreducible G) (hroot : e G = 0)
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
     planeMap K order G ∣ planeMap K order H ↔ G ∣ H := by
   constructor
-  · rintro ⟨U, hU⟩
+  · rintro ⟨U,hU⟩
     have hrat : rationalMap K order G ∣ rationalMap K order H := by
-      refine ⟨(bivariateEquiv (RatFunc K)).symm U, ?_⟩
+      refine ⟨(bivariateEquiv (RatFunc K)).symm U,?_⟩
       apply (bivariateEquiv (RatFunc K)).injective
       change bivariateEquiv (RatFunc K) (rationalMap K order H) =
         bivariateEquiv (RatFunc K) (rationalMap K order G) * U at hU
-      simpa only [map_mul, AlgEquiv.apply_symm_apply] using hU
+      simpa only [map_mul,AlgEquiv.apply_symm_apply] using hU
     exact (rationalMap_dvd_iff_of_evaluation K L order e G H hG hroot ht).mp hrat
   · exact fun hdiv ↦ map_dvd (planeMap K order) hdiv
-
-/-- .
- -/
 def planeEvaluation
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
     PlaneRing K →+* L :=
@@ -151,54 +117,47 @@ def planeEvaluation
       (Polynomial.eval₂RingHom
         (elementEmbedding K L (e (MvPolynomial.X (order 0))) ht).toRingHom
         (e (MvPolynomial.X (order 2)))))
-
 @[simp] theorem planeEvaluation_C_C
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) (a : RatFunc K) :
     planeEvaluation K L order e ht (Polynomial.C (Polynomial.C a)) =
       elementEmbedding K L (e (MvPolynomial.X (order 0))) ht a := by
   simp [planeEvaluation]
-
 @[simp] theorem planeEvaluation_X
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
     planeEvaluation K L order e ht Polynomial.X =
       e (MvPolynomial.X (order 1)) := by
   simp [planeEvaluation]
-
 @[simp] theorem planeEvaluation_C_X
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
     planeEvaluation K L order e ht (Polynomial.C Polynomial.X) =
       e (MvPolynomial.X (order 2)) := by
   simp [planeEvaluation]
-
 theorem elementEmbedding_polynomial (s : L) (hs : Transcendental K s)
     (f : Polynomial K) :
     elementEmbedding K L s hs (algebraMap (Polynomial K) (RatFunc K) f) =
       Polynomial.aeval s f :=
   RatFunc.liftRingHom_algebraMap _ _ f
-
-/-- .
- -/
 theorem planeEvaluation_comp_planeMap
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
     (planeEvaluation K L order e ht).comp (planeMap K order) = e.toRingHom := by
   apply MvPolynomial.ringHom_ext
   · intro a
     simp only [RingHom.comp_apply]
-    rw [planeMap_C, planeEvaluation_C_C,
-      elementEmbedding_polynomial, Polynomial.aeval_C]
+    rw [planeMap_C,planeEvaluation_C_C,
+      elementEmbedding_polynomial,Polynomial.aeval_C]
     exact (e.commutes a).symm
   · intro i
-    obtain ⟨j, rfl⟩ := order.surjective i
+    obtain ⟨j,rfl⟩ := order.surjective i
     by_cases hj : j = 0
     · subst j
       simp only [RingHom.comp_apply]
-      rw [planeMap_X_first, planeEvaluation_C_C,
+      rw [planeMap_X_first,planeEvaluation_C_C,
         elementEmbedding_variable]
       rfl
     by_cases hj' : j = 1
     · subst j
       simp only [RingHom.comp_apply]
-      rw [planeMap_X_outer, planeEvaluation_X]
+      rw [planeMap_X_outer,planeEvaluation_X]
       rfl
     have hjtwo : j = 2 := by
       apply Fin.ext
@@ -208,51 +167,44 @@ theorem planeEvaluation_comp_planeMap
       omega
     subst j
     simp only [RingHom.comp_apply]
-    rw [planeMap_X_inner, planeEvaluation_C_X]
+    rw [planeMap_X_inner,planeEvaluation_C_X]
     rfl
-
 def relationKernel
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
     Ideal (PlaneRing K) := RingHom.ker (planeEvaluation K L order e ht)
-
 theorem relationKernel_contract
     (ht : Transcendental K (e (MvPolynomial.X (order 0)))) :
     (relationKernel K L order e ht).comap (planeMap K order) =
       RingHom.ker e.toRingHom := by
-  rw [relationKernel, RingHom.comap_ker, planeEvaluation_comp_planeMap]
-
+  rw [relationKernel,RingHom.comap_ker,planeEvaluation_comp_planeMap]
 end OneEvaluation
-
 section FixedFamily
-
 variable (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
 variable (E : I → Type)
-variable [∀ i, Field (E i)] [∀ i, Algebra K (E i)]
-variable (e : ∀ i, Original K →ₐ[K] E i)
-
-/-- . -/
+variable [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+variable (e : ∀ i,Original K →ₐ[K] E i)
 theorem finite_sum_finrank_bound
-    (ht : ∀ i, Transcendental K (e i (MvPolynomial.X (order 0))))
+    (ht : ∀ i,Transcendental K (e i (MvPolynomial.X (order 0))))
     (hgen : ∀ i,
       letI : Algebra (RatFunc K) (E i) :=
         (elementEmbedding K (E i) (e i (MvPolynomial.X (order 0))) (ht i)).toRingHom.toAlgebra
       IntermediateField.adjoin (RatFunc K)
-        ({e i (MvPolynomial.X (order 2)), e i (MvPolynomial.X (order 1))} :
+        ({e i (MvPolynomial.X (order 2)),e i (MvPolynomial.X (order 1))} :
           Set (E i)) = ⊤)
     (hkernels : Function.Injective (fun i ↦ RingHom.ker (e i).toRingHom))
     (G H : Original K) (hG : Irreducible G)
-    (hGroot : ∀ i, e i G = 0) (hHroot : ∀ i, e i H = 0)
+    (hGroot : ∀ i,e i G = 0) (hHroot : ∀ i,e i H = 0)
     (hproper : ¬ G ∣ H) (hpositive : 0 < (planeMap K order G).natDegree) :
-    letI : ∀ i, Algebra (RatFunc K) (E i) := fun i ↦
+    letI : ∀ i,Algebra (RatFunc K) (E i) := fun i ↦
       (elementEmbedding K (E i) (e i (MvPolynomial.X (order 0))) (ht i)).toRingHom.toAlgebra
-    (∀ i, FiniteDimensional (RatFunc K) (E i)) ∧
-      (∑ i, Module.finrank (RatFunc K) (E i)) ≤
+    (∀ i,FiniteDimensional (RatFunc K) (E i)) ∧
+      (∑ i,Module.finrank (RatFunc K) (E i)) ≤
         (planeMap K order H).natDegree *
             Polynomial.Bivariate.degreeX (planeMap K order G) +
           (planeMap K order G).natDegree *
             Polynomial.Bivariate.degreeX (planeMap K order H) := by
   classical
-  letI : ∀ i, Algebra (RatFunc K) (E i) := fun i ↦
+  letI : ∀ i,Algebra (RatFunc K) (E i) := fun i ↦
     (elementEmbedding K (E i) (e i (MvPolynomial.X (order 0))) (ht i)).toRingHom.toAlgebra
   by_cases hI : Nonempty I
   · let i₀ : I := Classical.choice hI
@@ -269,7 +221,7 @@ theorem finite_sum_finrank_bound
           (e i (MvPolynomial.X (order 1))) (planeMap K order G) = 0 := by
       intro i
       change planeEvaluation K (E i) order (e i) (ht i) (planeMap K order G) = 0
-      rw [← RingHom.comp_apply, planeEvaluation_comp_planeMap]
+      rw [← RingHom.comp_apply,planeEvaluation_comp_planeMap]
       exact hGroot i
     have hHroots : ∀ i,
         PlaneFunctionFieldDegree.planeEval (RatFunc K) (E i)
@@ -277,9 +229,9 @@ theorem finite_sum_finrank_bound
           (e i (MvPolynomial.X (order 1))) (planeMap K order H) = 0 := by
       intro i
       change planeEvaluation K (E i) order (e i) (ht i) (planeMap K order H) = 0
-      rw [← RingHom.comp_apply, planeEvaluation_comp_planeMap]
+      rw [← RingHom.comp_apply,planeEvaluation_comp_planeMap]
       exact hHroot i
-    have hfinite : ∀ i, FiniteDimensional (RatFunc K) (E i) := by
+    have hfinite : ∀ i,FiniteDimensional (RatFunc K) (E i) := by
       intro i
       have hGeval : Polynomial.eval₂
           (Polynomial.eval₂RingHom (algebraMap (RatFunc K) (E i))
@@ -297,7 +249,7 @@ theorem finite_sum_finrank_bound
         hirr hpositive hproperPlane
         (e i (MvPolynomial.X (order 2))) (e i (MvPolynomial.X (order 1)))
         hGeval hHeval (hgen i)
-    letI : ∀ i, FiniteDimensional (RatFunc K) (E i) := hfinite
+    letI : ∀ i,FiniteDimensional (RatFunc K) (E i) := hfinite
     have hrelation : Function.Injective (fun i ↦
         PlaneFunctionFieldDegree.relationIdeal (RatFunc K) (E i)
           (e i (MvPolynomial.X (order 2)))
@@ -317,10 +269,7 @@ theorem finite_sum_finrank_bound
         (fun i ↦ e i (MvPolynomial.X (order 1))) hgen
         hrelation hGroots hHroots⟩
   · letI : IsEmpty I := ⟨fun i ↦ hI ⟨i⟩⟩
-    exact ⟨fun i ↦ isEmptyElim i, by simp⟩
-
+    exact ⟨fun i ↦ isEmptyElim i,by simp⟩
 end FixedFamily
-
 end
-
 end ProximityPrize.SubmissionLower.ArbitraryPlaneEvaluationFamilyResearch

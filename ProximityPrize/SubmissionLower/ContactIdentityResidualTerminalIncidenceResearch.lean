@@ -2,19 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
 import ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
 import ProximityPrize.SubmissionLower.ContactIncidence
-
-/-! .
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualTerminalIncidenceResearch
-
 open scoped Classical
 open ContactIdentityResidualIterationResearch
 open ContactIdentityResidualIterationResearch.ResidualStage
@@ -23,21 +11,14 @@ open ContactIncidence
 open ContactPrimeSeedIncidence
 open ContactFlagBezout6543Research
 open ContactResidualSupportParametersResearch
-
 noncomputable section
-
 variable {K Omega Iota : Type} [Field K] [Field Omega]
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
 variable {p e : ℕ} [CharP Omega p] {flag : FlagDegree}
 variable {support : ResidualSupportParameters}
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
-
- -/
 theorem recursive_stratified_incidence_bound
     (hphi : Function.Injective phi) {w a : ℕ}
     (S : ResidualStage phi Gamma x p e flag w support)
@@ -45,7 +26,7 @@ theorem recursive_stratified_incidence_bound
     (hwa : w < a)
     (hagreement : ∀ gamma ∈ Gamma,
       a ≤ (S.agreementFiber gamma).card)
-    (hfiber : ∀ D : S.TerminalDescendant, ∀ i ∈ D.stage.nodes,
+    (hfiber : ∀ D : S.TerminalDescendant,∀ i ∈ D.stage.nodes,
       ¬ D.stage.G ∣ agreementPolynomial phi D.stage.F D.degree
           (x i) (D.stage.u0 i) (D.stage.u1 i) →
       (Gamma.filter (fun gamma ↦ D.stage.Agrees gamma i)).card ≤
@@ -85,13 +66,10 @@ theorem recursive_stratified_incidence_bound
       exact hterminalFiber i (by simpa using hi))
   have hraw : Gamma.card * (a - k) ≤
       (S.nodes.card - k) * ((w - k) * degreeCost + unitCost) := by
-    simpa only [Finset.card_empty, Nat.sub_zero, hnodeEq, hdegreeEq] using
+    simpa only [Finset.card_empty,Nat.sub_zero,hnodeEq,hdegreeEq] using
       hrawTerminal
   exact stratified_incidence_linear Gamma.card S.nodes.card a w k
     degreeCost unitCost U V hk hwa hraw (hdegree k hk) (hunit k hk)
-
-/-- .
- -/
 theorem recursive_scaled_stratified_incidence_bound
     (hphi : Function.Injective phi) {w a : ℕ}
     (S : ResidualStage phi Gamma x p e flag w support)
@@ -99,7 +77,7 @@ theorem recursive_scaled_stratified_incidence_bound
     (hwa : w < a)
     (hagreement : ∀ gamma ∈ Gamma,
       a ≤ (S.agreementFiber gamma).card)
-    (hfiber : ∀ D : S.TerminalDescendant, ∀ i ∈ D.stage.nodes,
+    (hfiber : ∀ D : S.TerminalDescendant,∀ i ∈ D.stage.nodes,
       ¬ D.stage.G ∣ agreementPolynomial phi D.stage.F D.degree
           (x i) (D.stage.u0 i) (D.stage.u1 i) →
       (Gamma.filter (fun gamma ↦ D.stage.Agrees gamma i)).card * (a - w) ≤
@@ -146,14 +124,14 @@ theorem recursive_scaled_stratified_incidence_bound
           (Gamma.card * (a - k)) * (a - w) := by ring
       _ ≤ ((D.stage.nodes.card * (geometricCost / (a - w))) *
           (a - w)) := Nat.mul_le_mul_right (a - w) (by
-            simpa only [Finset.card_empty, Nat.sub_zero] using hrawTerminal)
+            simpa only [Finset.card_empty,Nat.sub_zero] using hrawTerminal)
       _ = D.stage.nodes.card *
           ((geometricCost / (a - w)) * (a - w)) := by ring
       _ ≤ D.stage.nodes.card * geometricCost :=
         Nat.mul_le_mul_left _ (Nat.div_mul_le_self _ _)
       _ = (S.nodes.card - k) *
           ((w - k) * degreeCost + unitCost) := by
-        simp only [hnodeEq, geometricCost, hdegreeEq]
+        simp only [hnodeEq,geometricCost,hdegreeEq]
   have hlinear := stratified_incidence_linear
     (Gamma.card * (a - w)) S.nodes.card a w k
     degreeCost unitCost U V hk hwa hrawScaled
@@ -161,7 +139,5 @@ theorem recursive_scaled_stratified_incidence_bound
   calc
     Gamma.card * (a - w) ^ 2 = (Gamma.card * (a - w)) * (a - w) := by ring
     _ ≤ U * degreeCost + V * unitCost := hlinear
-
 end
-
 end ProximityPrize.SubmissionLower.ContactIdentityResidualTerminalIncidenceResearch

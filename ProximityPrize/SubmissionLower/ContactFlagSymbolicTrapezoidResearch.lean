@@ -1,20 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagTrapezoidCaps6543Research
-
-/-! .
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactFlagSymbolicTrapezoidResearch
-
 open ContactFlagBezout6543Research
-
-/-- .
- -/
 theorem flagMixed_projection_decomposition
     (p q r : FlagDegree) :
     flagMixed p q r =
@@ -24,11 +11,8 @@ theorem flagMixed_projection_decomposition
   cases p
   cases q
   cases r
-  simp [flagMixed, unitZFlag, unitYZFlag, unitAllFlag]
+  simp [flagMixed,unitZFlag,unitYZFlag,unitAllFlag]
   ring
-
-/-- .
- -/
 theorem trapezoid_budget_mono
     (n mCap totalG totalT m : ℕ)
     (hn : n ≤ totalG) (hm : m ≤ mCap) :
@@ -40,13 +24,11 @@ theorem trapezoid_budget_mono
     omega
   have hdecomp (a : ℕ) :
       a * totalG = a * n + a * delta := by
-    rw [hsplit, Nat.mul_add]
+    rw [hsplit,Nat.mul_add]
   have hdelta : m * delta ≤ mCap * delta :=
     Nat.mul_le_mul_right delta hm
-  rw [hdecomp m, hdecomp mCap]
+  rw [hdecomp m,hdecomp mCap]
   omega
-
-/-- . -/
 theorem u_flag_trapezoid_budget
     (p q : FlagDegree) (m : ℕ) (hm : m ≤ q.all) :
     m * (p.zOnly + p.yz + p.all) +
@@ -65,11 +47,9 @@ theorem u_flag_trapezoid_budget
           q.all * (p.zOnly + p.yz + p.all) +
               p.all * (q.zOnly + q.yz + q.all) =
             q.all * p.all + flagMixed p q unitYZFlag := by
-        simp [flagMixed, unitYZFlag]
+        simp [flagMixed,unitYZFlag]
         ring
-      rw [hsum, Nat.add_sub_cancel_left]
-
-/-- . -/
+      rw [hsum,Nat.add_sub_cancel_left]
 theorem v_flag_trapezoid_budget
     (p q : FlagDegree) (m : ℕ) (hm : m ≤ q.yz + q.all) :
     m * (p.zOnly + p.yz + p.all) +
@@ -92,11 +72,9 @@ theorem v_flag_trapezoid_budget
               (p.yz + p.all) * (q.zOnly + q.yz + q.all) =
             (q.yz + q.all) * (p.yz + p.all) +
               flagMixed p q unitAllFlag := by
-        simp [flagMixed, unitAllFlag]
+        simp [flagMixed,unitAllFlag]
         ring
-      rw [hsum, Nat.add_sub_cancel_left]
-
-/-- . -/
+      rw [hsum,Nat.add_sub_cancel_left]
 theorem z_flag_trapezoid_budget
     (p q : FlagDegree) (m : ℕ) (hm : m ≤ q.all) :
     m * (p.yz + p.all) + p.all * (q.yz + q.all) - m * p.all ≤
@@ -111,8 +89,7 @@ theorem z_flag_trapezoid_budget
       have hsum :
           q.all * (p.yz + p.all) + p.all * (q.yz + q.all) =
             q.all * p.all + flagMixed p q unitZFlag := by
-        simp [flagMixed, unitZFlag]
+        simp [flagMixed,unitZFlag]
         ring
-      rw [hsum, Nat.add_sub_cancel_left]
-
+      rw [hsum,Nat.add_sub_cancel_left]
 end ProximityPrize.SubmissionLower.ContactFlagSymbolicTrapezoidResearch

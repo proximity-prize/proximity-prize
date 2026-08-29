@@ -2,25 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
 import ProximityPrize.SubmissionLower.ContactFlagPoleInequality6543Research
 import ProximityPrize.SubmissionLower.ContactDependentGenericity6543Research
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactFlagProjectionProvider6543Research
-
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
 open ActualCurveCoordinateField ActualCurveRationalProjection
@@ -33,14 +15,8 @@ open ContactDependentGenericity6543Research
 open ContactFlagBezout6543Research
 open ContactFlagPoleInequality6543Research
 open ContactLocalPoleBound ContactSparsePoleSupportResearch
-
 noncomputable section
-
 variable {Ω : Type} [Field Ω] [IsAlgClosed Ω]
-
-/-- .
-
- -/
 structure PrincipalCycleBudget
     {G T H : MvPolynomial (Fin 3) Ω}
     (E : Finset (Fin 3 →₀ ℕ)) (separator : Fin 3)
@@ -77,12 +53,7 @@ structure PrincipalCycleBudget
         (CoordinateField Ω C.1) b hb,
       CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
         (cost C : ℤ)
-  sum_cost_le : (∑ C : RegularComponent Ω G T H, cost C) ≤ wholeCap
-
-/-- .
-
-
- -/
+  sum_cost_le : (∑ C : RegularComponent Ω G T H,cost C) ≤ wholeCap
 structure FlagProjectionCycleBudget
     {G T H : MvPolynomial (Fin 3) Ω}
     (p : FlagDegree) (separator : Fin 3)
@@ -123,15 +94,9 @@ structure FlagProjectionCycleBudget
       CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
         ((p.zOnly * zCost C + p.yz * yzCost C +
           p.all * allCost C : ℕ) : ℤ)
-  sum_zCost_le : (∑ C : RegularComponent Ω G T H, zCost C) ≤ zCap
-  sum_yzCost_le : (∑ C : RegularComponent Ω G T H, yzCost C) ≤ yzCap
-  sum_allCost_le : (∑ C : RegularComponent Ω G T H, allCost C) ≤ allCap
-
-/-- .
-
-
-
- -/
+  sum_zCost_le : (∑ C : RegularComponent Ω G T H,zCost C) ≤ zCap
+  sum_yzCost_le : (∑ C : RegularComponent Ω G T H,yzCost C) ≤ yzCap
+  sum_allCost_le : (∑ C : RegularComponent Ω G T H,allCost C) ≤ allCap
 def FlagProjectionCycleBudget.ofNestedProjectionBudgets
     {G T H : MvPolynomial (Fin 3) Ω}
     {p : FlagDegree} {separator : Fin 3}
@@ -204,7 +169,7 @@ def FlagProjectionCycleBudget.ofNestedProjectionBudgets
     let W := CommonPlaceBalance.placesFor Ω
       (CoordinateField Ω C.1) b hb
     have hZsupport :
-        (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Ω C.1)
+        (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Ω C.1)
           (flagSupport unitZFlag)) ≤
         ∑ v ∈ CommonPlaceBalance.placesFor Ω
             (CoordinateField Ω C.1) bZ hbZ,
@@ -213,7 +178,7 @@ def FlagProjectionCycleBudget.ofNestedProjectionBudgets
         (coordinate Ω C.1) (flagSupport unitZFlag) bZ hbZ
         (BZ.exact_pole C) W
     have hYZsupport :
-        (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Ω C.1)
+        (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Ω C.1)
           (flagSupport unitYZFlag)) ≤
         ∑ v ∈ CommonPlaceBalance.placesFor Ω
             (CoordinateField Ω C.1) bYZ hbYZ,
@@ -222,7 +187,7 @@ def FlagProjectionCycleBudget.ofNestedProjectionBudgets
         (coordinate Ω C.1) (flagSupport unitYZFlag) bYZ hbYZ
         (BYZ.exact_pole C) W
     have hAllsupport :
-        (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Ω C.1)
+        (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Ω C.1)
           (flagSupport unitAllFlag)) ≤
         ∑ v ∈ CommonPlaceBalance.placesFor Ω
             (CoordinateField Ω C.1) bAll hbAll,
@@ -261,7 +226,7 @@ def FlagProjectionCycleBudget.ofNestedProjectionBudgets
       exact exponentSetPoleWeight_flagSupport_le_three v.val
         (coordinate Ω C.1) p
     calc
-      (∑ v ∈ W, CoordinatePoleMass.poleOrder Ω
+      (∑ v ∈ W,CoordinatePoleMass.poleOrder Ω
           (CoordinateField Ω C.1) v b) ≤
           ∑ v ∈ W,
             ((p.zOnly : ℤ) * exponentSetPoleWeight v.val
@@ -274,15 +239,15 @@ def FlagProjectionCycleBudget.ofNestedProjectionBudgets
         intro v hv
         exact hlocal v hv
       _ = (p.zOnly : ℤ) *
-            (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Ω C.1)
+            (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Ω C.1)
               (flagSupport unitZFlag)) +
           (p.yz : ℤ) *
-            (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Ω C.1)
+            (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Ω C.1)
               (flagSupport unitYZFlag)) +
           (p.all : ℤ) *
-            (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Ω C.1)
+            (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Ω C.1)
               (flagSupport unitAllFlag)) := by
-        simp only [Finset.sum_add_distrib, Finset.mul_sum]
+        simp only [Finset.sum_add_distrib,Finset.mul_sum]
       _ ≤ (p.zOnly : ℤ) * (zBudget.cost C : ℤ) +
           (p.yz : ℤ) * (yzBudget.cost C : ℤ) +
           (p.all : ℤ) * (allBudget.cost C : ℤ) := by
@@ -295,8 +260,6 @@ def FlagProjectionCycleBudget.ofNestedProjectionBudgets
           p.all * allBudget.cost C : ℕ) : ℤ) := by
         push_cast
         ring
-
-/-- . -/
 def FlagProjectionCycleBudget.combinedCost
     {G T H : MvPolynomial (Fin 3) Ω}
     {p : FlagDegree} {separator : Fin 3}
@@ -311,7 +274,6 @@ def FlagProjectionCycleBudget.combinedCost
       zCap yzCap allCap)
     (C : RegularComponent Ω G T H) : ℕ :=
   p.zOnly * P.zCost C + p.yz * P.yzCost C + p.all * P.allCost C
-
 theorem FlagProjectionCycleBudget.sum_combinedCost_le
     {G T H : MvPolynomial (Fin 3) Ω}
     {p : FlagDegree} {separator : Fin 3}
@@ -324,22 +286,19 @@ theorem FlagProjectionCycleBudget.sum_combinedCost_le
     {zCap yzCap allCap : ℕ}
     (P : FlagProjectionCycleBudget p separator hseparator hproj B
       zCap yzCap allCap) :
-    (∑ C : RegularComponent Ω G T H, P.combinedCost C) ≤
+    (∑ C : RegularComponent Ω G T H,P.combinedCost C) ≤
       p.zOnly * zCap + p.yz * yzCap + p.all * allCap := by
-  rw [show (∑ C : RegularComponent Ω G T H, P.combinedCost C) =
-      p.zOnly * (∑ C, P.zCost C) +
-      p.yz * (∑ C, P.yzCost C) +
-      p.all * (∑ C, P.allCost C) by
+  rw [show (∑ C : RegularComponent Ω G T H,P.combinedCost C) =
+      p.zOnly * (∑ C,P.zCost C) +
+      p.yz * (∑ C,P.yzCost C) +
+      p.all * (∑ C,P.allCost C) by
     simp only [FlagProjectionCycleBudget.combinedCost,
-      Finset.sum_add_distrib, Finset.mul_sum]]
+      Finset.sum_add_distrib,Finset.mul_sum]]
   exact Nat.add_le_add
     (Nat.add_le_add
       (Nat.mul_le_mul_left p.zOnly P.sum_zCost_le)
       (Nat.mul_le_mul_left p.yz P.sum_yzCost_le))
     (Nat.mul_le_mul_left p.all P.sum_allCost_le)
-
-/-- .
- -/
 def FlagProjectionCycleBudget.toResidualComponentBudget
     {G T H : MvPolynomial (Fin 3) Ω}
     {p : FlagDegree} {separator : Fin 3}
@@ -358,10 +317,6 @@ def FlagProjectionCycleBudget.toResidualComponentBudget
   (B.toGenericSparseBKKWitness P.combinedCost P.cycle_le
       P.sum_combinedCost_le).toResidualPoleComponentBudget
     |>.toResidualComponentBudget hproj
-
-/-- .
-
- -/
 def FlagProjectionCycleBudget.toResidualComponentBudget6543
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     {hseparator : ∀ C : RegularComponent Ω G T H,
@@ -377,7 +332,5 @@ def FlagProjectionCycleBudget.toResidualComponentBudget6543
       flagWholeMixedCap := by
   rw [flag_projection_decomposition]
   exact P.toResidualComponentBudget
-
 end
-
 end ProximityPrize.SubmissionLower.ContactFlagProjectionProvider6543Research

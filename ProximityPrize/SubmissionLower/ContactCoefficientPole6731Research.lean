@@ -2,10 +2,6 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactComponentPencils
 import ProximityPrize.SubmissionLower.ContactRationalRegularZero6676Research
 import ProximityPrize.SubmissionLower.ContactMovingPoleTransport6719Research
-
-/-! Explicit coefficient-pole interface for the canonical globalPolynomial.
-It is a common MAX at each place, followed by a sum over places; it is not
-a sum over coefficient indices and contains no zero-count assumption. -/
 namespace ProximityPrize.SubmissionLower.ContactCoefficientPole6731Research
 open scoped Classical BigOperators WithZero
 open ContactLocalPoleBound ContactMovingPoleTransport6719Research
@@ -19,14 +15,12 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
 set_option synthInstance.maxHeartbeats 300000
-
 variable {L : Type} [Field L]
 def coefficientPoleWeight (v : Valuation L (WithZero (Multiplicative ℤ)))
     (T : Polynomial L) (z : L) : ℤ :=
   (insert (0 : ℤ) (insert (poleOrder v z)
     (T.support.image (fun j ↦ poleOrder v (T.coeff j))))).max'
     ⟨0,Finset.mem_insert_self _ _⟩
-
 theorem coefficientPoleWeight_nonneg (v : Valuation L (WithZero (Multiplicative ℤ)))
     (T : Polynomial L) (z : L) : 0 ≤ coefficientPoleWeight v T z :=
   Finset.le_max' _ _ (Finset.mem_insert_self _ _)
@@ -39,14 +33,12 @@ theorem coeffPole_le (v : Valuation L (WithZero (Multiplicative ℤ)))
   unfold coefficientPoleWeight
   apply Finset.le_max'
   exact Finset.mem_insert_of_mem (Finset.mem_insert_of_mem (Finset.mem_image.mpr ⟨j,hj,rfl⟩))
-
 private theorem pole_le_of_exp (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : L) (q : ℤ) (hq : 0 ≤ q) (hx : v x ≤ WithZero.exp q) : poleOrder v x ≤ q := by
   apply max_le hq
   by_cases hzero : v x=0
   · simpa [hzero] using hq
   · simpa only [WithZero.log_exp] using (WithZero.log_le_log hzero WithZero.exp_ne_zero).mpr hx
-
 theorem eval_pole_le (v : Valuation L (WithZero (Multiplicative ℤ)))
     (T : Polynomial L) (z a : L) (ha : v a ≤ 1) :
     poleOrder v (T.eval a) ≤ coefficientPoleWeight v T z := by
@@ -59,7 +51,6 @@ theorem eval_pole_le (v : Valuation L (WithZero (Multiplicative ℤ)))
     WithZero.le_exp_of_log_le ((le_max_right _ _).trans (coeffPole_le v T z j hj))
   have hp : v a ^ j ≤ 1 := pow_le_one₀ zero_le ha
   simpa only [mul_one] using mul_le_mul' hc hp
-
 theorem affine_eval_pole_le {Ω : Type} [Field Ω] [Algebra Ω L]
     (v : Place Ω L) (T : Polynomial L) (z : L) (a u0 u1 : Ω) :
     poleOrder v.val (T.eval (algebraMap Ω L a)-algebraMap Ω L u0-z*algebraMap Ω L u1) ≤
@@ -73,22 +64,15 @@ theorem affine_eval_pole_le {Ω : Type} [Field Ω] [Algebra Ω L]
     simpa only [sub_eq_add_neg,pole_neg] using pole_add_le v.val x (-y)
   exact (hsub _ _).trans (max_le ((hsub _ _).trans (max_le ht (h0.trans hn)))
     (by simpa only [mul_comm] using hz.trans hseed))
-
 variable {K Ω : Type} [Field K] [Field Ω]
 variable (φ : Polynomial K →+* Ω) (P : Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
 variable (F : MvPolynomial (Fin 4) K)
 variable (hF : surfaceMap φ F ∈ P)
 variable (hH : surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F) ∉ P)
-
-/-- The sole new geometric interface: finite sums of the common poles of
-the ACTUAL canonical reconstructed coefficients and the seed coordinate. -/
 def CoefficientPoleProfile (w cost : ℕ) : Prop :=
   ∀ W : Finset (Place Ω (CoordinateField Ω P)),
     (∑ v ∈ W,coefficientPoleWeight v.val (truncatedPolynomial φ P F hF hH w)
       (coordinate Ω P 2)) ≤ (cost : ℤ)
-
-/-- A producer may discharge the interface using any actual coordinate,
-in particular its existing YZ projection. -/
 theorem coefficientPoleProfile_of_coordinate [IsAlgClosed Ω] (w : ℕ)
     (J : Coordinate Ω (CoordinateField Ω P))
     (hprofile : ∀ v : Place Ω (CoordinateField Ω P),
@@ -99,9 +83,6 @@ theorem coefficientPoleProfile_of_coordinate [IsAlgClosed Ω] (w : ℕ)
   intro W
   exact (Finset.sum_le_sum (fun v _ ↦ hprofile v)).trans
     (finite_sum_coordinate_pole_le_degree Ω (CoordinateField Ω P) J W)
-
-/-- Explicit YZ producer: Gauss controls each reconstructed coefficient
-by Y, and the old unit-YZ budget then bounds their COMMON pole maximum. -/
 theorem coefficientPoleProfile_of_unitYZ_bound (w cost : ℕ)
     (hcoeff : ∀ (v : Place Ω (CoordinateField Ω P)) (j : ℕ),
       poleOrder v.val ((truncatedPolynomial φ P F hF hH w).coeff j) ≤
@@ -124,8 +105,6 @@ theorem coefficientPoleProfile_of_unitYZ_bound (w cost : ℕ)
   intro W
   exact (Finset.sum_le_sum (fun v _ ↦ hp v)).trans
     (by simpa only [exponentSetPoleWeight_unitYZ] using hyz W)
-
-/-- Exact normalization by H^(2w), not by the moving-budget H^(w-1). -/
 theorem normalized_agreement_eq (w : ℕ) (x u0 u1 : K) :
     coordinateEvaluation Ω P (agreementPolynomial φ F w x u0 u1)/
       (coordinateEvaluation Ω P (surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F)))^(2*w) =
@@ -146,7 +125,6 @@ theorem normalized_agreement_eq (w : ℕ) (x u0 u1 : K) :
     exact component_regular φ P F hH
   apply (div_eq_iff (pow_ne_zero _ hne)).mpr
   simpa only [agreementPolynomial,truncatedPolynomial,mul_comm] using hclear
-
 include hH in
 theorem normalized_agreement_ne_zero_iff (w : ℕ) (x u0 u1 : K) :
     coordinateEvaluation Ω P (agreementPolynomial φ F w x u0 u1)/
@@ -168,7 +146,6 @@ theorem normalized_agreement_ne_zero_iff (w : ℕ) (x u0 u1 : K) :
     apply h
     rw [← coordinateEvaluation_ker Ω P]
     exact hz
-
 theorem agreement_regular_zero_le [IsAlgClosed Ω] (base : SeparableLiteralCoordinate P)
     (w cost : ℕ) (hprofile : CoefficientPoleProfile φ P F hF hH w cost)
     (x u0 u1 : K) (hproper : agreementPolynomial φ F w x u0 u1 ∉ P) :
@@ -184,7 +161,6 @@ theorem agreement_regular_zero_le [IsAlgClosed Ω] (base : SeparableLiteralCoord
     exact affine_eval_pole_le v _ _ (φ (Polynomial.C x)) (φ (Polynomial.C u0)) (φ (Polynomial.C u1))
   simpa only [CoordinatePoleMass.poleOrder,coordinateEvaluation_eq_aeval] using
     (Finset.sum_le_sum (fun v _ ↦ hlocal v)).trans (hprofile W)
-
 #print axioms normalized_agreement_eq
 #print axioms normalized_agreement_ne_zero_iff
 #print axioms coefficientPoleProfile_of_unitYZ_bound

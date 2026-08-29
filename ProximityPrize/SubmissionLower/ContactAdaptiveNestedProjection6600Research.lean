@@ -4,16 +4,7 @@ import ProximityPrize.SubmissionLower.ContactAdaptiveRelevantPlacesResearch
 import ProximityPrize.SubmissionLower.ContactFlagDirectionalAvoidance6543Research
 import ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research
 import ProximityPrize.SubmissionLower.ContactFlagPrincipalCycles6543Research
-
-/-! .
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjection6600Research
-
 open scoped Classical WithZero TensorProduct
 open Polynomial KaehlerDifferential
 open ActualCurveCoordinateField ActualCurveRationalProjection
@@ -31,18 +22,12 @@ open ContactSparsePoleSupportResearch
 open ArbitraryRationalProjectionResearch
 open SeparableShearKaehlerResearch SeparableShearTranscendenceResearch
   GlobalSeparableShearResearch
-
 noncomputable section
-
 set_option maxHeartbeats 4000000
 set_option synthInstance.maxHeartbeats 400000
 set_option maxRecDepth 30000
-
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
-
-/-- .
- -/
 def LiteralProjectionGate
     (C : RegularComponent Omega G T H) (j : Fin 3) : Prop :=
   ∀ hj : Transcendental Omega (coordinate Omega C.1 j),
@@ -54,8 +39,6 @@ def LiteralProjectionGate
         (elementEmbedding Omega (CoordinateField Omega C.1)
           (coordinate Omega C.1 j) hj).toRingHom.toAlgebra;
       Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega C.1))
-
-/-- . -/
 theorem base_differential_ne_zero
     {P : Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime]
     (B : SeparableLiteralCoordinate P) :
@@ -71,24 +54,19 @@ theorem base_differential_ne_zero
     (rationalBaseEmbedding_polynomial Omega P B.index B.transcendental
       Polynomial.X).trans (Polynomial.aeval_X _)
   rwa [hvalue] at h
-
-/-- .
- -/
 theorem poleOrder_eq_zero_of_isAlgebraic
     {L : Type*} [Field L] [Algebra Omega L]
     (v : CoordinatePoleMass.Place Omega L) (x : L)
     (hx : IsAlgebraic Omega x) :
     ContactLocalPoleBound.poleOrder v.val x = 0 := by
-  obtain ⟨a, rfl⟩ := eq_algebraMap_of_isAlgebraic Omega L x hx
+  obtain ⟨a,rfl⟩ := eq_algebraMap_of_isAlgebraic Omega L x hx
   exact CoordinatePoleMass.poleOrder_eq_zero_of_le_one Omega L v _
     (constant_value_le_one Omega L v a)
-
-/-- . -/
 structure AdaptiveNestedProjectionData
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
-    (hY : ∀ C : RegularComponent Omega G T H, LiteralProjectionGate C 0)
-    (hZ : ∀ C : RegularComponent Omega G T H, LiteralProjectionGate C 2)
+    (hY : ∀ C : RegularComponent Omega G T H,LiteralProjectionGate C 0)
+    (hZ : ∀ C : RegularComponent Omega G T H,LiteralProjectionGate C 2)
     (hSderiv : MvPolynomial.pderiv (1 : Fin 3) G ≠ 0) where
   lam : Omega
   lam_ne : lam ≠ 0
@@ -146,14 +124,11 @@ structure AdaptiveNestedProjectionData
           (ContactLocalPoleBound.poleOrder v.val (coordinate Omega C.1 2)))
   directional : MvPolynomial.pderiv (0 : Fin 3) G -
     MvPolynomial.C mu * MvPolynomial.pderiv (1 : Fin 3) G ≠ 0
-
-/-- .
- -/
 theorem exists_adaptiveNestedProjectionData
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
-    (hY : ∀ C : RegularComponent Omega G T H, LiteralProjectionGate C 0)
-    (hZ : ∀ C : RegularComponent Omega G T H, LiteralProjectionGate C 2)
+    (hY : ∀ C : RegularComponent Omega G T H,LiteralProjectionGate C 0)
+    (hZ : ∀ C : RegularComponent Omega G T H,LiteralProjectionGate C 2)
     (hSderiv : MvPolynomial.pderiv (1 : Fin 3) G ≠ 0) :
     Nonempty (AdaptiveNestedProjectionData base hY hZ hSderiv) := by
   classical
@@ -161,13 +136,13 @@ theorem exists_adaptiveNestedProjectionData
     D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 0) ≠ 0 ∨
       D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 2) ≠ 0}
   let EU : ActiveU → Type := fun C => CoordinateField Omega C.1.1
-  let rY : ∀ C : ActiveU, EU C := fun C => coordinate Omega C.1.1 0
-  let z : ∀ C : ActiveU, EU C := fun C => coordinate Omega C.1.1 2
-  let WU : ∀ C : ActiveU, Finset (Place Omega (EU C)) :=
+  let rY : ∀ C : ActiveU,EU C := fun C => coordinate Omega C.1.1 0
+  let z : ∀ C : ActiveU,EU C := fun C => coordinate Omega C.1.1 2
+  let WU : ∀ C : ActiveU,Finset (Place Omega (EU C)) :=
     fun C => literalRelevantPlaces (base C.1)
-  let baseU : ∀ C : ActiveU, SeparableCoordinate Omega (EU C) :=
+  let baseU : ∀ C : ActiveU,SeparableCoordinate Omega (EU C) :=
     fun C => literalToSeparableCoordinate (base C.1)
-  obtain ⟨lam, hlam0, hlam⟩ :=
+  obtain ⟨lam,hlam0,hlam⟩ :=
     exists_common_exact_finite_separable_affine_adaptive EU rY z WU
       baseU (fun C => C.2)
   let U : ∀ C : RegularComponent Omega G T H,
@@ -187,11 +162,11 @@ theorem exists_adaptiveNestedProjectionData
     by_cases hactive :
         D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 0) ≠ 0 ∨
           D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 2) ≠ 0
-    · let CU : ActiveU := ⟨C, hactive⟩
-      obtain ⟨hs, hfinite, hsep, _⟩ := hlam CU
+    · let CU : ActiveU := ⟨C,hactive⟩
+      obtain ⟨hs,hfinite,hsep,_⟩ := hlam CU
       have hp : htr = hs := Subsingleton.elim _ _
       cases hp
-      exact ⟨hfinite, hsep⟩
+      exact ⟨hfinite,hsep⟩
     · have hzero := not_or.mp hactive
       have hYalg : IsAlgebraic Omega (coordinate Omega C.1 0) := by
         apply not_not.mp
@@ -219,10 +194,10 @@ theorem exists_adaptiveNestedProjectionData
     by_cases hactive :
         D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 0) ≠ 0 ∨
           D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 2) ≠ 0
-    · let CU : ActiveU := ⟨C, hactive⟩
+    · let CU : ActiveU := ⟨C,hactive⟩
       by_cases hv : v ∈ literalRelevantPlaces (base C)
       · exact poleOrder_eq_max_of_valuation_eq_max v.val _ _ _ (by
-          simpa only [WU, rY, z, U, affineU] using
+          simpa only [WU,rY,z,U,affineU] using
             (hlam CU).choose_spec.2.2 v hv)
       · have h0 := coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant
             (base C) v hv 0
@@ -233,15 +208,15 @@ theorem exists_adaptiveNestedProjectionData
         letI : v.val.IsTrivialOn Omega := v.property.2
         have hscalar : v.val (lam • coordinate Omega C.1 2) =
             v.val (coordinate Omega C.1 2) := by
-          rw [Algebra.smul_def, map_mul,
-            Valuation.IsTrivialOn.eq_one lam hlam0, one_mul]
+          rw [Algebra.smul_def,map_mul,
+            Valuation.IsTrivialOn.eq_one lam hlam0,one_mul]
         have hUle : v.val (U C) ≤ 1 := by
           exact (v.val.map_add _ _).trans
             (by rw [hscalar]; exact max_le h0le h2le)
         have hU0 : ContactLocalPoleBound.poleOrder v.val (U C) = 0 :=
           CoordinatePoleMass.poleOrder_eq_zero_of_le_one Omega
             (CoordinateField Omega C.1) v _ hUle
-        rw [hU0, h0, h2]
+        rw [hU0,h0,h2]
         simp
     · have hzero := not_or.mp hactive
       have hYalg : IsAlgebraic Omega (coordinate Omega C.1 0) := by
@@ -266,9 +241,9 @@ theorem exists_adaptiveNestedProjectionData
     by_cases hactive :
         D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 0) ≠ 0 ∨
           D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 2) ≠ 0
-    · let CU : ActiveU := ⟨C, hactive⟩
-      obtain ⟨hs, hfinite, hsep, _⟩ := hlam CU
-      exact Or.inr (differential_ne_zero_of_gate _ hs ⟨hfinite, hsep⟩)
+    · let CU : ActiveU := ⟨C,hactive⟩
+      obtain ⟨hs,hfinite,hsep,_⟩ := hlam CU
+      exact Or.inr (differential_ne_zero_of_gate _ hs ⟨hfinite,hsep⟩)
     · have hzero := not_or.mp hactive
       have hb := base_differential_ne_zero (base C)
       generalize hidx : (base C).index = i at hb
@@ -278,17 +253,17 @@ theorem exists_adaptiveNestedProjectionData
       · exact (hb (not_ne_iff.mp hzero.2)).elim
   let EC : RegularComponent Omega G T H → Type :=
     fun C => CoordinateField Omega C.1
-  let rS : ∀ C, EC C := fun C => coordinate Omega C.1 1
-  let W : ∀ C, Finset (Place Omega (EC C)) :=
+  let rS : ∀ C,EC C := fun C => coordinate Omega C.1 1
+  let W : ∀ C,Finset (Place Omega (EC C)) :=
     fun C => literalRelevantPlaces (base C)
-  let baseC : ∀ C, SeparableCoordinate Omega (EC C) :=
+  let baseC : ∀ C,SeparableCoordinate Omega (EC C) :=
     fun C => literalToSeparableCoordinate (base C)
   let Extra : Omega → Prop := fun mu =>
     MvPolynomial.pderiv (0 : Fin 3) G -
       MvPolynomial.C mu * MvPolynomial.pderiv (1 : Fin 3) G = 0
-  have hextra : ∀ {a b}, Extra a → Extra b → a = b := by
+  have hextra : ∀ {a b},Extra a → Extra b → a = b := by
     exact directional_bad_coefficient_subsingleton G hSderiv
-  obtain ⟨mu, hmu0, hmudir, hmu⟩ :=
+  obtain ⟨mu,hmu0,hmudir,hmu⟩ :=
     exists_common_exact_finite_separable_affine_adaptive_avoiding_one
       EC rS U W Extra hextra baseC hactiveV
   let V : ∀ C : RegularComponent Omega G T H,
@@ -313,7 +288,7 @@ theorem exists_adaptiveNestedProjectionData
     intro C v
     by_cases hv : v ∈ literalRelevantPlaces (base C)
     · exact poleOrder_eq_max_of_valuation_eq_max v.val _ _ _ (by
-        simpa only [W, rS, V] using (hmu C).choose_spec.2.2 v hv)
+        simpa only [W,rS,V] using (hmu C).choose_spec.2.2 v hv)
     · have hS := coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant
           (base C) v hv 1
       have hY := coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant
@@ -321,26 +296,26 @@ theorem exists_adaptiveNestedProjectionData
       have hZ := coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant
           (base C) v hv 2
       have hU : ContactLocalPoleBound.poleOrder v.val (U C) = 0 := by
-        rw [huPole C v, hY, hZ]
+        rw [huPole C v,hY,hZ]
         simp
       have hSle := valuation_le_one_of_poleOrder_eq_zero v.val _ hS
       have hUle := valuation_le_one_of_poleOrder_eq_zero v.val _ hU
       letI : v.val.IsTrivialOn Omega := v.property.2
       have hscalar : v.val (mu • U C) = v.val (U C) := by
-        rw [Algebra.smul_def, map_mul,
-          Valuation.IsTrivialOn.eq_one mu hmu0, one_mul]
+        rw [Algebra.smul_def,map_mul,
+          Valuation.IsTrivialOn.eq_one mu hmu0,one_mul]
       have hVle : v.val (V C) ≤ 1 :=
         (v.val.map_add _ _).trans
           (by rw [hscalar]; exact max_le hSle hUle)
       have hV0 : ContactLocalPoleBound.poleOrder v.val (V C) = 0 :=
         CoordinatePoleMass.poleOrder_eq_zero_of_le_one Omega
           (CoordinateField Omega C.1) v _ hVle
-      rw [hV0, hS, hU]
+      rw [hV0,hS,hU]
       simp
   let hVAff : ∀ C : RegularComponent Omega G T H,
       Transcendental Omega (affineV Omega C.1 mu (mu * lam)) := fun C => by
     rw [show affineV Omega C.1 mu (mu * lam) = V C by
-      simp only [V, U, affineU, affineV]
+      simp only [V,U,affineU,affineV]
       module]
     exact hV C
   have hembV (C : RegularComponent Omega G T H) :
@@ -348,8 +323,8 @@ theorem exists_adaptiveNestedProjectionData
           (affineV Omega C.1 mu (mu * lam)) (hVAff C) =
         elementEmbedding Omega (CoordinateField Omega C.1) (V C) (hV C) :=
     elementEmbedding_congr (hVAff C) (hV C) (by
-      simp only [V, U, affineU, affineV]
-      simp only [smul_add, smul_smul, add_assoc])
+      simp only [V,U,affineU,affineV]
+      simp only [smul_add,smul_smul,add_assoc])
   refine ⟨{
     lam := lam
     lam_ne := hlam0
@@ -375,8 +350,8 @@ theorem exists_adaptiveNestedProjectionData
     exact (hmu C).choose_spec.2.1
   · intro C
     rw [hvValue C]
-    simp only [V, U, affineU, affineV]
-    simp only [smul_add, smul_smul, add_assoc]
+    simp only [V,U,affineU,affineV]
+    simp only [smul_add,smul_smul,add_assoc]
   · intro C
     rw [hvValue C]
     exact hV C
@@ -384,8 +359,6 @@ theorem exists_adaptiveNestedProjectionData
     rw [huValue C]
     exact huPole C v
   · intro C v
-    rw [hvValue C, hvPole C v, huPole C v]
-
+    rw [hvValue C,hvPole C v,huPole C v]
 end
-
 end ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjection6600Research

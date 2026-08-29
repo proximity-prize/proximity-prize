@@ -2,19 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactRobustFixedMeet6656Research
 import ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6600Research
 import ProximityPrize.SubmissionLower.ContactSingularBranchParameterizedResearch
-
-/-! .
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactProfileFixedSelectedCombinerResearch
-
 open scoped Classical BigOperators
 open ContactInterpolation ContactTranslation ContactSelectedSeedDecomposition
 open ContactImplicitContactLift ContactImplicitPairBudgets
@@ -26,14 +14,9 @@ open ContactSingularBranch6600Research
 open ContactTightSingularLedgerResearch
 open ContactSingularBranchParameterizedResearch
 open ContactRobustFixedMeet6656Research
-
 noncomputable section
-
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 40000
-
-/-- .
- -/
 structure FixedParameterAlignment (p : Profile)
     (t : ContactTightSingularLedgerResearch.TightParameters) : Prop where
   n : t.n = p.n
@@ -42,30 +25,21 @@ structure FixedParameterAlignment (p : Profile)
   weightedCap : t.D = p.weightedCap
   seedTotalCap : t.L = p.seedTotalCap
   slopeCap : t.s = p.slopeCap
-
 namespace FixedParameterAlignment
-
 theorem errors {p : Profile}
     {t : ContactTightSingularLedgerResearch.TightParameters}
     (A : FixedParameterAlignment p t) : t.errors = p.errors := by
   simp only [ContactTightSingularLedgerResearch.TightParameters.errors,
-    Profile.errors, A.n, A.agreements]
-
+    Profile.errors,A.n,A.agreements]
 theorem gap {p : Profile}
     {t : ContactTightSingularLedgerResearch.TightParameters}
     (A : FixedParameterAlignment p t) : t.gap = p.gap := by
   simp only [ContactTightSingularLedgerResearch.TightParameters.gap,
-    Profile.gap, A.w, A.agreements]
-
+    Profile.gap,A.w,A.agreements]
 end FixedParameterAlignment
-
 variable {K Iota : Type} [Field K]
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
- -/
 theorem card_le_regular_sum_add_singular
     (p : Profile) {prime : ℕ}
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
@@ -80,7 +54,7 @@ theorem card_le_regular_sum_add_singular
     (hsolution : ∀ gamma ∈ Gamma,
       specialization K (selected gamma) gamma Q = 0) :
     Gamma.card ≤
-      (∑ F : RegularIndex Q, (regularSeeds Q selected Gamma F).card) +
+      (∑ F : RegularIndex Q,(regularSeeds Q selected Gamma F).card) +
         (singularSeeds Q selected Gamma).card := by
   classical
   have hdecomp := selected_seed_decomposition Q hQ
@@ -96,20 +70,20 @@ theorem card_le_regular_sum_add_singular
       apply Finset.mem_union.mpr
       right
       exact hexc
-    · obtain ⟨F, hF, hreg⟩ | ⟨q, hq, himp⟩ :=
+    · obtain ⟨F,hF,hreg⟩ | ⟨q,hq,himp⟩ :=
         hdecomp.2.1 gamma hgamma hexc
       · apply Finset.mem_union.mpr
         left
         apply Finset.mem_biUnion.mpr
-        exact ⟨⟨F, hF⟩, Finset.mem_univ _,
-          Finset.mem_filter.mpr ⟨hgamma, hreg⟩⟩
+        exact ⟨⟨F,hF⟩,Finset.mem_univ _,
+          Finset.mem_filter.mpr ⟨hgamma,hreg⟩⟩
       · apply Finset.mem_union.mpr
         right
         apply Finset.mem_union.mpr
         left
         apply Finset.mem_biUnion.mpr
-        exact ⟨⟨q, hq⟩, Finset.mem_univ _,
-          Finset.mem_filter.mpr ⟨hgamma, himp⟩⟩
+        exact ⟨⟨q,hq⟩,Finset.mem_univ _,
+          Finset.mem_filter.mpr ⟨hgamma,himp⟩⟩
   calc
     Gamma.card ≤ (regularUnion ∪ singularSeeds Q selected Gamma).card :=
       Finset.card_le_card hsub
@@ -119,10 +93,6 @@ theorem card_le_regular_sum_add_singular
           (regularSeeds Q selected Gamma F).card) +
         (singularSeeds Q selected Gamma).card :=
       Nat.add_le_add_right Finset.card_biUnion_le _
-
-/-- .
-
- -/
 theorem global_count_le_regular_div_add_tight_countCap
     (p : Profile)
     (t : ContactTightSingularLedgerResearch.TightParameters)
@@ -154,8 +124,8 @@ theorem global_count_le_regular_div_add_tight_countCap
     (regularLedger : FlagDegree → ℕ)
     (hregularAggregate :
       ∀ count : RegularIndex Q → ℕ,
-        (∀ F, count F * p.gap ^ 2 ≤ regularLedger (regularFlagFor F)) →
-        (∑ F, count F) * p.gap ^ 2 ≤ regularNumerator)
+        (∀ F,count F * p.gap ^ 2 ≤ regularLedger (regularFlagFor F)) →
+        (∑ F,count F) * p.gap ^ 2 ≤ regularNumerator)
     (hregular : ∀ F : RegularIndex Q,
       (regularSeeds Q selected Gamma F).card * p.gap ^ 2 ≤
         regularLedger (regularFlagFor F)) :
@@ -166,7 +136,7 @@ theorem global_count_le_regular_div_add_tight_countCap
     (fun F : RegularIndex Q ↦ (regularSeeds Q selected Gamma F).card)
     hregular
   have hboxT : Q ∈ globalCoefficientBox K t.D t.w t.L t.s := by
-    simpa only [A.weightedCap, A.w, A.seedTotalCap, A.slopeCap] using hbox
+    simpa only [A.weightedCap,A.w,A.seedTotalCap,A.slopeCap] using hbox
   have hsing :=
     ContactSingularBranchParameterizedResearch.TightParameters.singularSeeds_tight_gap_bound
       t Q hQ hboxT
@@ -176,36 +146,34 @@ theorem global_count_le_regular_div_add_tight_countCap
     (by simpa only [A.w] using hchar)
     (by
       simpa only [ContactTightSingularLedgerResearch.TightParameters.kappa,
-        A.w, A.weightedCap, A.slopeCap]
+        A.w,A.weightedCap,A.slopeCap]
         using hDw)
     (by simpa only
       [ContactTightSingularLedgerResearch.TightParameters.algebraicCap,
         ContactTightSingularLedgerResearch.TightParameters.kappa,
-        A.seedTotalCap, A.slopeCap] using hj)
+        A.seedTotalCap,A.slopeCap] using hj)
     hjYSmall
     (by simpa only
       [ContactTightSingularLedgerResearch.TightParameters.algebraicCap,
         ContactTightSingularLedgerResearch.TightParameters.kappa,
-        A.seedTotalCap, A.slopeCap] using hjSmall)
+        A.seedTotalCap,A.slopeCap] using hjSmall)
     hmixedSmall
-    (by simpa only [A.w, A.agreements] using hwa)
-    (by simpa only [A.agreements, A.n] using han)
+    (by simpa only [A.w,A.agreements] using hwa)
+    (by simpa only [A.agreements,A.n] using han)
     selected Gamma nodes x u0 u1 hinj
     (by simpa only [A.n] using hnodes)
     (by simpa only [A.w] using hdegree)
     (by simpa only [A.agreements] using hagreement)
-    (by simpa only [A.w, A.errors] using hnoPencil)
+    (by simpa only [A.w,A.errors] using hnoPencil)
   have hpgap : 0 < p.gap := by
     simpa only [Profile.gap] using Nat.sub_pos_of_lt hwa
   have htgap : 0 < t.gap := by simpa only [A.gap] using hpgap
   have hregCount :
-      (∑ F : RegularIndex Q, (regularSeeds Q selected Gamma F).card) ≤
+      (∑ F : RegularIndex Q,(regularSeeds Q selected Gamma F).card) ≤
         regularNumerator / p.gap ^ 2 :=
     (Nat.le_div_iff_mul_le (pow_pos hpgap 2)).2 hreg
   have hsingCount : (singularSeeds Q selected Gamma).card ≤ t.countCap :=
     t.count_le_countCap _ htgap hsing
   exact hcover.trans (Nat.add_le_add hregCount hsingCount)
-
 end
-
 end ProximityPrize.SubmissionLower.ContactProfileFixedSelectedCombinerResearch

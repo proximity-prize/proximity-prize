@@ -1,10 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSeedlessPrimeIncidenceResearch
-
-/-! . -/
-
 namespace ProximityPrize.SubmissionLower.ContactSeedlessProperCutResearch
-
 open scoped Classical BigOperators
 open ActualCurveCoordinateField ActualCurveZeroCount ActualCurveProjectionBounds
 open ActualCoordinateDegreeSum ActualPlanePositiveOrder
@@ -12,24 +8,16 @@ open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
 open ContactPrimeSeedIncidence ContactRegularComponentCover
 open ContactProperCutSeedCount
 open ContactSeedlessPrimeIncidenceResearch
-
 noncomputable section
-
 set_option autoImplicit false
 set_option maxRecDepth 30000
 set_option maxHeartbeats 3000000
-
 variable {K Omega Iota : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable (phi : Polynomial K →+* Omega)
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
 def seedlessCut : MvPolynomial (Fin 3) Omega := MvPolynomial.X 2
-
-/-- .
- -/
 theorem seedless_proper_cut_bound
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G : MvPolynomial (Fin 3) Omega)
@@ -39,13 +27,13 @@ theorem seedless_proper_cut_bound
     (nodes : Finset Iota) (x u : Iota → K) (hinj : Set.InjOn x nodes)
     (p w a : ℕ) [CharP Omega p] (hw : 1 ≤ w) (hchar : w < p)
     (hwa : w < a) (han : a ≤ nodes.card)
-    (hGdegree : ∀ j : Fin 3, G.degreeOf j < p)
-    (hcutDegree : ∀ j k : Fin 3, j ≠ k →
+    (hGdegree : ∀ j : Fin 3,G.degreeOf j < p)
+    (hcutDegree : ∀ j k : Fin 3,j ≠ k →
       (seedlessCut (Omega := Omega)).degreeOf j * G.degreeOf k +
         G.degreeOf j * (seedlessCut (Omega := Omega)).degreeOf k < p)
-    (hdegree : ∀ S ∈ Gamma, S.natDegree ≤ w)
-    (hsolution : ∀ S ∈ Gamma, specialization K S 0 F = 0)
-    (hregular : ∀ S ∈ Gamma, MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
+    (hdegree : ∀ S ∈ Gamma,S.natDegree ≤ w)
+    (hsolution : ∀ S ∈ Gamma,specialization K S 0 F = 0)
+    (hregular : ∀ S ∈ Gamma,MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
       (polynomialPoint (phi.comp Polynomial.C) S 0 (phi Polynomial.X))
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
     (hGpoint : ∀ S ∈ Gamma,
@@ -53,18 +41,18 @@ theorem seedless_proper_cut_bound
     (hagreement : ∀ S ∈ Gamma,
       a ≤ (nodes.filter (fun i => S.eval (x i) = u i)).card)
     (cap : Fin 3 → ℕ)
-    (hcap : ∀ i ∈ nodes, ∀ j,
+    (hcap : ∀ i ∈ nodes,∀ j,
       (agreementPolynomial phi F w (x i) (u i) 0).degreeOf j ≤ cap j) :
     Gamma.card * (a - w) ≤
       (nodes.card - w) *
-        (∑ i, cap i * coordinateMixedDegree Omega G seedlessCut i) := by
+        (∑ i,cap i * coordinateMixedDegree Omega G seedlessCut i) := by
   classical
   let T : MvPolynomial (Fin 3) Omega := seedlessCut
   let H := regularitySurface phi F
   have hTpoint : ∀ S ∈ Gamma,
       MvPolynomial.eval (seedlessPoint phi S) T = 0 := by
     intro S hS
-    simp [T, seedlessCut, seedlessPoint_value]
+    simp [T,seedlessCut,seedlessPoint_value]
   have hHp : ∀ S ∈ Gamma,
       MvPolynomial.eval (seedlessPoint phi S) H ≠ 0 := by
     intro S hS
@@ -77,7 +65,7 @@ theorem seedless_proper_cut_bound
   have hcomponent : ∀ C : RegularComponent Omega G T H,
       (componentSeeds Omega G T H Gamma (seedlessPoint phi) C).card *
           (a - w) ≤
-        (nodes.card - w) * (∑ i, cap i * degree C i) := by
+        (nodes.card - w) * (∑ i,cap i * degree C i) := by
     intro C
     have hsub := componentSeeds_subset Omega G T H Gamma (seedlessPoint phi) C
     have hgmem := regularComponent_G_mem Omega G T H C
@@ -107,10 +95,8 @@ theorem seedless_proper_cut_bound
   have hagg := aggregate_component_incidence Omega G T H Gamma
     (seedlessPoint phi) hGpoint hTpoint hHp (a - w) (nodes.card - w) 0
     cap (coordinateMixedDegree Omega G T) degree
-    (fun C => by simpa only [Nat.zero_mul, Nat.add_zero] using hcomponent C)
+    (fun C => by simpa only [Nat.zero_mul,Nat.add_zero] using hcomponent C)
     hbudget
-  simpa only [T, Nat.zero_mul, Nat.add_zero] using hagg
-
+  simpa only [T,Nat.zero_mul,Nat.add_zero] using hagg
 end
-
 end ProximityPrize.SubmissionLower.ContactSeedlessProperCutResearch

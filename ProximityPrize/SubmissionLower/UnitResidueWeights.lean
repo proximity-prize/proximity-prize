@@ -2,35 +2,12 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.IntegralPointLifting
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_RamificationInertia_Inertia
 import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_RamificationInertia_Inertia
-
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.UnitResidueWeights
-
 open scoped Classical
-
 noncomputable section
-
 variable {K R S : Type*} [Field K] [CommRing R] [CommRing S]
 variable [Algebra K R] [Algebra K S] [Algebra R S] [IsScalarTower K R S]
 variable [Algebra.IsIntegral R S]
-
-/-- .
- -/
 theorem pointFiber_quotient_integral (phi : R →ₐ[K] K) (P : Ideal S)
     (hP : P.comap (algebraMap R S) = RingHom.ker phi.toRingHom) :
     Algebra.IsIntegral K (S ⧸ P) := by
@@ -40,21 +17,16 @@ theorem pointFiber_quotient_integral (phi : R →ₐ[K] K) (P : Ideal S)
     exact (IntegralPointLifting.quotient_scalar_compatibility phi P hP r).symm
   constructor
   intro z
-  obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective z
+  obtain ⟨s,rfl⟩ := Ideal.Quotient.mk_surjective z
   exact IsIntegral.map_of_comp_eq phi.toRingHom (Ideal.Quotient.mk P) hcomp
     (Algebra.IsIntegral.isIntegral (R := R) s)
-
 variable [IsAlgClosed K]
-
 theorem pointFiber_constants_surjective (phi : R →ₐ[K] K) (P : Ideal S)
     [P.IsMaximal]
     (hP : P.comap (algebraMap R S) = RingHom.ker phi.toRingHom) :
     Function.Surjective (algebraMap K (S ⧸ P)) := by
   letI : Algebra.IsIntegral K (S ⧸ P) := pointFiber_quotient_integral phi P hP
   exact (IsAlgClosed.algebraMap_bijective_of_isIntegral (k := K) (K := S ⧸ P)).2
-
-/-- .
- -/
 theorem inertiaDeg_eq_one_of_point_fiber (phi : R →ₐ[K] K) (P : Ideal S)
     [P.IsMaximal]
     (hP : P.comap (algebraMap R S) = RingHom.ker phi.toRingHom) :
@@ -66,15 +38,12 @@ theorem inertiaDeg_eq_one_of_point_fiber (phi : R →ₐ[K] K) (P : Ideal S)
   letI : Field (S ⧸ P) := Ideal.Quotient.field P
   have hsurj : Function.Surjective (algebraMap (R ⧸ p) (S ⧸ P)) := by
     intro z
-    obtain ⟨c, hc⟩ := pointFiber_constants_surjective phi P hP z
-    refine ⟨algebraMap K (R ⧸ p) c, ?_⟩
-    rw [← IsScalarTower.algebraMap_apply K (R ⧸ p) (S ⧸ P), hc]
+    obtain ⟨c,hc⟩ := pointFiber_constants_surjective phi P hP z
+    refine ⟨algebraMap K (R ⧸ p) c,?_⟩
+    rw [← IsScalarTower.algebraMap_apply K (R ⧸ p) (S ⧸ P),hc]
   rw [Ideal.inertiaDeg_eq_of_isMaximal p P]
   exact Algebra.finrank_eq_one_iff_bijective_algebraMap.mpr
-    ⟨(algebraMap (R ⧸ p) (S ⧸ P)).injective, hsurj⟩
-
-/-- .
- -/
+    ⟨(algebraMap (R ⧸ p) (S ⧸ P)).injective,hsurj⟩
 theorem inertiaDeg'_eq_one_of_point_fiber (phi : R →ₐ[K] K) (P : Ideal S)
     [P.IsMaximal]
     (hP : P.comap (algebraMap R S) = RingHom.ker phi.toRingHom) :
@@ -84,7 +53,5 @@ theorem inertiaDeg'_eq_one_of_point_fiber (phi : R →ₐ[K] K) (P : Ideal S)
   letI : P.LiesOver (RingHom.ker phi.toRingHom) := ⟨hP.symm⟩
   rw [Ideal.inertiaDeg'_eq_inertiaDeg]
   exact inertiaDeg_eq_one_of_point_fiber phi P hP
-
 end
-
 end ProximityPrize.SubmissionLower.UnitResidueWeights

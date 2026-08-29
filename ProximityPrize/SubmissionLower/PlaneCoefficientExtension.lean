@@ -1,42 +1,22 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.PlaneResultantIrreducible
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Polynomial_ContentIdeal
-
-/-! .
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.PlaneCoefficientExtension
-
 noncomputable section
-
 variable {K L : Type} [Field K] [Field L]
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq L := Classical.decEq L
-
 def bimap (f : K →+* L) (P : Polynomial (Polynomial K)) :
     Polynomial (Polynomial L) := P.map (Polynomial.mapRingHom f)
-
 theorem bimap_primitive (f : K →+* L)
     (P : Polynomial (Polynomial K)) (hP : P.IsPrimitive) :
     (bimap f P).IsPrimitive := by
   apply Polynomial.isPrimitive_of_contentIdeal_eq_top
-  rw [bimap, Polynomial.contentIdeal_map_eq_map_contentIdeal,
-    (Polynomial.isPrimitive_iff_contentIdeal_eq_top P).mp hP, Ideal.map_top]
-
+  rw [bimap,Polynomial.contentIdeal_map_eq_map_contentIdeal,
+    (Polynomial.isPrimitive_iff_contentIdeal_eq_top P).mp hP,Ideal.map_top]
 theorem bimap_natDegree_le (f : K →+* L) (P : Polynomial (Polynomial K)) :
     (bimap f P).natDegree ≤ P.natDegree :=
   Polynomial.natDegree_map_le
-
 theorem bimap_degreeX_le (f : K →+* L) (P : Polynomial (Polynomial K)) :
     Polynomial.Bivariate.degreeX (bimap f P) ≤ Polynomial.Bivariate.degreeX P := by
   classical
@@ -46,14 +26,12 @@ theorem bimap_degreeX_le (f : K →+* L) (P : Polynomial (Polynomial K)) :
   rw [show (bimap f P).coeff j = (P.coeff j).map f by simp [bimap]]
   exact Polynomial.natDegree_map_le.trans
     (Polynomial.Bivariate.coeff_natDegree_le_degreeX P j)
-
 theorem bimap_specialization (f : K →+* L)
     (P : Polynomial (Polynomial K)) (x : L) :
     (bimap f P).map (Polynomial.evalRingHom x) =
       P.map (Polynomial.eval₂RingHom f x) := by
   ext j
-  simp [bimap, Polynomial.eval_map]
-
+  simp [bimap,Polynomial.eval_map]
 theorem bimap_eval_natural (f : K →+* L)
     (P : Polynomial (Polynomial K)) (x y : K) :
     ((bimap f P).map (Polynomial.evalRingHom (f x))).eval (f y) =
@@ -61,15 +39,13 @@ theorem bimap_eval_natural (f : K →+* L)
   have h : (bimap f P).map (Polynomial.evalRingHom (f x)) =
       (P.map (Polynomial.evalRingHom x)).map f := by
     ext j
-    simp [bimap, Polynomial.eval_map, Polynomial.eval₂_at_apply]
-  rw [h, Polynomial.eval_map_apply]
-
+    simp [bimap,Polynomial.eval_map,Polynomial.eval₂_at_apply]
+  rw [h,Polynomial.eval_map_apply]
 theorem bimap_comp {M : Type} [Field M]
     (f : K →+* L) (g : L →+* M) (P : Polynomial (Polynomial K)) :
     bimap g (bimap f P) = bimap (g.comp f) P := by
   ext j i
   simp [bimap]
-
 theorem bimap_resultant_ne_zero (f : K →+* L)
     (P Q : Polynomial (Polynomial K)) (m n : ℕ)
     (hres : Polynomial.resultant P Q m n ≠ 0) :
@@ -79,17 +55,13 @@ theorem bimap_resultant_ne_zero (f : K →+* L)
   intro hzero
   apply hres
   apply Polynomial.map_injective f f.injective
-  simpa only [Polynomial.coe_mapRingHom, Polynomial.map_zero] using hzero
-
+  simpa only [Polynomial.coe_mapRingHom,Polynomial.map_zero] using hzero
 theorem bimap_specialization_ne_zero (f : K →+* L)
     (P : Polynomial (Polynomial K)) (hP : P.IsPrimitive) (x : L) :
     (bimap f P).map (Polynomial.evalRingHom x) ≠ 0 := by
   classical
   exact PlaneResultantIrreducible.primitive_specialization_ne_zero
     (bimap f P) (bimap_primitive f P hP) x
-
-/-- .
- -/
 theorem common_points_card_le_after_extension (f : K →+* L)
     (P Q : Polynomial (Polynomial K)) (points : Finset (L × L))
     (hP : Irreducible P) (hdeg : 0 < P.natDegree) (hproper : ¬ P ∣ Q)
@@ -110,7 +82,5 @@ theorem common_points_card_le_after_extension (f : K →+* L)
   exact hcount.trans (Nat.add_le_add
     (Nat.mul_le_mul_left _ (bimap_degreeX_le f P))
     (Nat.mul_le_mul_left _ (bimap_degreeX_le f Q)))
-
 end
-
 end ProximityPrize.SubmissionLower.PlaneCoefficientExtension

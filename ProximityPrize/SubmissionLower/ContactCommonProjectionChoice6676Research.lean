@@ -2,10 +2,6 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactMovingSupport6676Research
 import ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjection6600Research
 import ProximityPrize.SubmissionLower.ContactMovingProjectionDegree6676Research
-
-/-! .
-
- -/
 namespace ProximityPrize.SubmissionLower.ContactCommonProjectionChoice6676Research
 open scoped Classical BigOperators WithZero
 open ContactMovingSupport6676Research ContactLeadingCancellationResearch
@@ -21,7 +17,6 @@ open ContactAdaptiveAffineProjectionResearch ArbitraryRationalProjectionResearch
 noncomputable section
 set_option maxHeartbeats 1500000
 set_option synthInstance.maxHeartbeats 250000
-
 private theorem exact_of_avoids {K L σ : Type*} [Field K] [Field L]
     [Algebra K L] [Fintype σ] [DecidableEq σ]
     (v : CoordinatePlaceClassification.NormalizedValuation K L) (x : σ → L)
@@ -32,13 +27,12 @@ private theorem exact_of_avoids {K L σ : Type*} [Field K] [Field L]
   · exact valuation_eval_le_exp_exponentSet v.val (algebraMap K L)
       (constant_value_le_one K L v) x E _ (support_polynomialOfSupport_subset _ _)
   · exact le_of_not_gt hc
-
 theorem exists_common_coefficients {K I : Type*} [Field K] [Infinite K] [Finite I]
     (L : I → Type*) [∀ i,Field (L i)] [∀ i,Algebra K (L i)]
     (x : ∀ i,Fin 3 → L i) (w : ∀ i,L i) (index : I → Fin 3)
     (hd : ∀ i,KaehlerDifferential.D K (L i) (x i (index i)) ≠ 0)
     (V : ∀ i,Finset (CoordinatePlaceClassification.NormalizedValuation K (L i))) :
-    ∃ c : movingSupport → K, ∀ i,
+    ∃ c : movingSupport → K,∀ i,
       coefficientEvaluation (x i) linearSupport (restrictU c) ≠ 0 ∧
       KaehlerDifferential.D K (L i)
         (coefficientEvaluation (movingCoordinates (x i) (w i)) movingSupport c) ≠ 0 ∧
@@ -105,7 +99,6 @@ theorem exists_common_coefficients {K I : Type*} [Field K] [Infinite K] [Finite 
     rw [exponentSetPoleWeight_moving] at hj
     rw [exponentSetPoleWeight_unitYZ] at hu
     exact ⟨hj,hu⟩
-
 variable {K : Type} [Field K] [IsAlgClosed K]
 def movingRelevantPlaces {P : Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
     (D : SeparableLiteralCoordinate P) (w : CoordinateField K P) :
@@ -119,7 +112,6 @@ def movingRelevantPlaces {P : Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
   letI : Algebra.IsSeparable (RatFunc K) (CoordinateField K P) := D.separable
   exact literalRelevantPlaces D ∪ if hw : w ≠ 0 then
     CommonPlaceBalance.placesFor K (CoordinateField K P) w hw else ∅
-
 theorem outside_movingRelevantPlaces {P : Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
     (D : SeparableLiteralCoordinate P) (w : CoordinateField K P)
     (v : Place K (CoordinateField K P)) (hv : v ∉ movingRelevantPlaces D w) :
@@ -144,7 +136,6 @@ theorem outside_movingRelevantPlaces {P : Ideal (MvPolynomial (Fin 3) K)} [P.IsP
       exact CommonPlaceBalance.placesFor_covers K (CoordinateField K P) w hw v hn
     simp only [CommonPlaceBalance.order] at horder
     simp [poleOrder,show (v.val w).log=0 by omega]
-
 def movingRatio (P : Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
     (H G : MvPolynomial (Fin 3) K) : CoordinateField K P :=
   coordinateEvaluation K P G / coordinateEvaluation K P H
@@ -154,18 +145,12 @@ def movingPoleTarget (P : Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
     (max (poleOrder v.val (coordinate K P 0)) (poleOrder v.val (coordinate K P 2))))
     (max (poleOrder v.val (coordinate K P 0)) (poleOrder v.val (coordinate K P 2))+
       poleOrder v.val (movingRatio P H G))
-
 private theorem field_eval (P : Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
     (A : MvPolynomial (Fin 3) K) :
     MvPolynomial.eval₂Hom (algebraMap K (CoordinateField K P)) (coordinate K P) A =
       coordinateEvaluation K P A := by
   rw [coordinateEvaluation_eq_aeval]
   exact (MvPolynomial.aeval_eq_eval₂Hom _ _).symm
-
-/-- .
-
-
- -/
 theorem exists_common_original_projection (F A H G : MvPolynomial (Fin 3) K)
     (base : ∀ C : RegularComponent K F A H,SeparableLiteralCoordinate C.1) :
     ∃ Q U : MvPolynomial (Fin 3) K,
@@ -223,9 +208,6 @@ theorem exists_common_original_projection (F A H G : MvPolynomial (Fin 3) K)
       rw [hJ C,hz] at hp
       have hp0 := le_antisymm hp (le_max_left _ _)
       simpa [movingPoleTarget,hcoord,hw] using hp0
-
-/-- .
- -/
 theorem moving_projection_gate {P : Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
     (base : SeparableLiteralCoordinate P) (H G Q U : MvPolynomial (Fin 3) K)
     (hd : KaehlerDifferential.D K (CoordinateField K P) (movingValue P H G Q U) ≠ 0) :
@@ -244,14 +226,12 @@ theorem moving_projection_gate {P : Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
   refine ⟨ht,hf,hs,?_,elementEmbedding_variable K (CoordinateField K P) _ ht⟩
   exact IsScalarTower.of_algebraMap_eq fun c ↦
     ((elementEmbedding K (CoordinateField K P) _ ht).commutes c).symm
-
 theorem moving_pole_mem_relevant {P : Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
     (base : SeparableLiteralCoordinate P) (w : CoordinateField K P)
     (v : Place K (CoordinateField K P)) (hw : poleOrder v.val w ≠ 0) :
     v ∈ movingRelevantPlaces base w := by
   by_contra hv
   exact hw (outside_movingRelevantPlaces base w v hv).2
-
 theorem value_one_at_finite_moving_pole {P : Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
     (base : SeparableLiteralCoordinate P) (w u : CoordinateField K P)
     (hu : ∀ v ∈ movingRelevantPlaces base w,
@@ -262,7 +242,5 @@ theorem value_one_at_finite_moving_pole {P : Ideal (MvPolynomial (Fin 3) K)} [P.
     (h2 : poleOrder v.val (coordinate K P 2)=0) : v.val u=1 := by
   rw [hu v (moving_pole_mem_relevant base w v hw),h0,h2]
   simp
-
-
 end
 end ProximityPrize.SubmissionLower.ContactCommonProjectionChoice6676Research

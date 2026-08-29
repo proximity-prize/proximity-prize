@@ -1,17 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyAll6600Research
-
-/-! .
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyYZSupportResearch
-
 open scoped Classical BigOperators
 open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
 open ContactPrimeSeedIncidence ContactRegularComponentCover
@@ -26,21 +15,14 @@ open ContactStratifiedResidualComponentAdapter6600Research
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactIdentityResidualComponentFamily6600Research
 open ContactResidualSupportParametersResearch
-
 noncomputable section
-
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 30000
-
 variable {K Omega Iota : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable {phi : Polynomial K →+* Omega}
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
- -/
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz_of_direction
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
@@ -77,10 +59,10 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz_of_direction
     (B : PrimeFlagBudgetFamily (G := G) (T := T)
       (H := regularitySurface phi F) surfaceFlag cutFlag)
     (hcost : ∀ C : RegularComponent Omega G T (regularitySurface phi F),
-      ∀ t : ℕ, B.weightedCost (support.residualAgreementFlag t) C =
+      ∀ t : ℕ,B.weightedCost (support.residualAgreementFlag t) C =
         t * B.weightedCost direction C + B.weightedCost unitYZFlag C)
     (hzyzPositive : ∀ C : RegularComponent Omega G T
-      (regularitySurface phi F), 1 ≤ B.zCost C + B.yzCost C)
+      (regularitySurface phi F),1 ≤ B.zCost C + B.yzCost C)
     (hdegree : ∀ k ≤ d,
       (nodes.card - k) * (a - d) * (d - k) ≤ U * (a - k))
     (hunit : ∀ k ≤ d,
@@ -123,7 +105,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz_of_direction
       hphi S (fun r ↦ B.weightedCost r C) (B.primeBudget C)
       (degreeCost C) (unitCost C) U V (largeCost C)
     · intro t
-      simpa only [degreeCost, unitCost] using hcost C t
+      simpa only [degreeCost,unitCost] using hcost C t
     · exact hda
     · intro gamma hgamma
       exact hagreement gamma (hsub hgamma)
@@ -136,19 +118,19 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz_of_direction
           (e + 1) * (a - d) * largeCost C := by
         have hmul := Nat.mul_le_mul_left ((e + 1) * (a - d))
           (hzyzPositive C)
-        simpa only [largeCost, Nat.mul_one] using hmul
+        simpa only [largeCost,Nat.mul_one] using hmul
       exact hscaled.trans hcharged
-    · simpa only [S, regularComponentCurveStageOfSupport] using hdegree
-    · simpa only [S, regularComponentCurveStageOfSupport] using hunit
+    · simpa only [S,regularComponentCurveStageOfSupport] using hdegree
+    · simpa only [S,regularComponentCurveStageOfSupport] using hunit
   have hlargeSum :
-      (∑ C : RegularComponent Omega G T H, largeCost C) ≤
+      (∑ C : RegularComponent Omega G T H,largeCost C) ≤
         flagMixed surfaceFlag cutFlag unitZFlag +
           flagMixed surfaceFlag cutFlag unitYZFlag := by
     calc
-      (∑ C : RegularComponent Omega G T H, largeCost C) =
-          (∑ C : RegularComponent Omega G T H, B.zCost C) +
-            ∑ C : RegularComponent Omega G T H, B.yzCost C := by
-        simp only [largeCost, Finset.sum_add_distrib]
+      (∑ C : RegularComponent Omega G T H,largeCost C) =
+          (∑ C : RegularComponent Omega G T H,B.zCost C) +
+            ∑ C : RegularComponent Omega G T H,B.yzCost C := by
+        simp only [largeCost,Finset.sum_add_distrib]
       _ ≤ flagMixed surfaceFlag cutFlag unitZFlag +
           flagMixed surfaceFlag cutFlag unitYZFlag :=
         Nat.add_le_add B.sum_zCost_le B.sum_yzCost_le
@@ -163,7 +145,5 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz_of_direction
       B.sum_weightedCost_le direction)
     (by simpa only [unitCost] using B.sum_weightedCost_le unitYZFlag)
     hlargeSum
-
 end
-
 end ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyYZSupportResearch

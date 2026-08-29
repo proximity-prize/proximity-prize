@@ -1,36 +1,11 @@
 import ProximityPrize.SubmissionLower.AlignmentMomentCurveProjection
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
-
 open ProximityPrize.Benchmark
 open scoped NNReal
-
 noncomputable section DraftProofs
-
 section RadiusCell
-
 variable {ι A : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
 variable [DecidableEq A]
-
-/-- .
- -/
 theorem agreement_card_ge_of_closeCodewordsRel
     (C : Set (ι → A)) (y c : ι → A) (δ : ℝ) (e : ℕ)
     (hcell : δ * (Fintype.card ι : ℝ) < ((e + 1 : ℕ) : ℝ))
@@ -52,10 +27,7 @@ theorem agreement_card_ge_of_closeCodewordsRel
     exact Code.agree_add_hammingDist (u := c) (v := y)
   change Fintype.card ι - e ≤ Code.agree c y
   omega
-
 end RadiusCell
-
-/-- . -/
 theorem radius_cell_of_floor_le (δ : ℝ) (n e : ℕ)
     (hfloor : ⌊δ * (n : ℝ)⌋₊ ≤ e) :
     δ * (n : ℝ) < ((e + 1 : ℕ) : ℝ) := by
@@ -63,10 +35,7 @@ theorem radius_cell_of_floor_le (δ : ℝ) (n e : ℕ)
   calc
     δ * (n : ℝ) < (⌊δ * (n : ℝ)⌋₊ : ℝ) + 1 := Nat.lt_floor_add_one _
     _ ≤ (e : ℝ) + 1 := by linarith
-    _ = ((e + 1 : ℕ) : ℝ) := by simp only [Nat.cast_add, Nat.cast_one]
-
-/-- .
- -/
+    _ = ((e + 1 : ℕ) : ℝ) := by simp only [Nat.cast_add,Nat.cast_one]
 theorem rational_radius_cell (num den n e : ℕ) (hden : 0 < den)
     (hcross : num * n < (e + 1) * den) :
     ((num : ℝ) / (den : ℝ)) * (n : ℝ) < ((e + 1 : ℕ) : ℝ) := by
@@ -75,14 +44,9 @@ theorem rational_radius_cell (num den n e : ℕ) (hden : 0 < den)
     ((num : ℝ) / (den : ℝ)) * (n : ℝ) =
         ((num * n : ℕ) : ℝ) / (den : ℝ) := by push_cast; ring
     _ < ((e + 1 : ℕ) : ℝ) := (div_lt_iff₀ hdenR).mpr (by exact_mod_cast hcross)
-
 section GenericCode
-
 variable {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
 variable [Field F] [Fintype F] [DecidableEq F]
-
-/-- .
- -/
 theorem interleaved_lambda_le
     (C : LinearCode ι F) (r e w B : ℕ)
     (hzero : AlignmentScalarListBridge.ZeroCoordinateBound C w)
@@ -105,44 +69,32 @@ theorem interleaved_lambda_le
     exact (Code.mem_moduleInterleavedCode_iff F F (Fin r) ι C c).mp hcode j
   · intro c hc
     exact agreement_card_ge_of_closeCodewordsRel _ y c δ e hcell (hT c hc)
-
-/-- .
- -/
 def sixteenIndexEquiv : Fin 2 × Fin 8 ≃ Fin 16 := finProdFinEquiv
-
 def flattenSymbol (v : Fin 2 → Fin 8 → F) (j : Fin 16) : F :=
   v (sixteenIndexEquiv.symm j).1 (sixteenIndexEquiv.symm j).2
-
 def unflattenSymbol (v : Fin 16 → F) (a : Fin 2) (b : Fin 8) : F :=
-  v (sixteenIndexEquiv (a, b))
-
+  v (sixteenIndexEquiv (a,b))
 theorem unflatten_flattenSymbol (v : Fin 2 → Fin 8 → F) :
     unflattenSymbol (flattenSymbol v) = v := by
   funext a b
-  simp only [unflattenSymbol, flattenSymbol, Equiv.symm_apply_apply]
-
+  simp only [unflattenSymbol,flattenSymbol,Equiv.symm_apply_apply]
 theorem flatten_unflattenSymbol (v : Fin 16 → F) :
     flattenSymbol (unflattenSymbol v) = v := by
   funext j
   change v (sixteenIndexEquiv (sixteenIndexEquiv.symm j)) = v j
   rw [Equiv.apply_symm_apply]
-
-/-- . -/
 def squaredEightSymbolEquiv : (Fin 2 → Fin 8 → F) ≃ (Fin 16 → F) where
   toFun := flattenSymbol
   invFun := unflattenSymbol
   left_inv := unflatten_flattenSymbol
   right_inv := flatten_unflattenSymbol
-
 def flattenWord (v : ι → Fin 2 → Fin 8 → F) : ι → Fin 16 → F :=
   fun i => squaredEightSymbolEquiv (v i)
-
 theorem flattenWord_injective :
     Function.Injective (flattenWord : (ι → Fin 2 → Fin 8 → F) → ι → Fin 16 → F) := by
   intro v u h
   funext i
   exact squaredEightSymbolEquiv.injective (congrFun h i)
-
 theorem flattenWord_agreement_iff
     (v u : ι → Fin 2 → Fin 8 → F) (i : ι) :
     flattenWord v i = flattenWord u i ↔ v i = u i := by
@@ -155,29 +107,23 @@ theorem flattenWord_agreement_iff
     change (squaredEightSymbolEquiv (F := F)) (v i) =
       (squaredEightSymbolEquiv (F := F)) (u i)
     exact congrArg (squaredEightSymbolEquiv (F := F)) hh
-
 theorem flattenWord_agreement_card (v u : ι → Fin 2 → Fin 8 → F) :
     (Finset.univ.filter (fun i => flattenWord v i = flattenWord u i)).card =
       (Finset.univ.filter (fun i => v i = u i)).card := by
   classical
   congr 1
   ext i
-  simp only [Finset.mem_filter, flattenWord_agreement_iff]
-
-/-- . -/
+  simp only [Finset.mem_filter,flattenWord_agreement_iff]
 theorem squared_eight_rows
     (C : LinearCode ι F) (v : ι → Fin 2 → Fin 8 → F)
     (hv : v ∈ ((C ^⋈ (Fin 8)) ^⋈ (Fin 2) :
       ModuleCode ι F (Fin 2 → Fin 8 → F))) :
-    ∀ a : Fin 2, ∀ b : Fin 8, (fun i => v i a b) ∈ C := by
+    ∀ a : Fin 2,∀ b : Fin 8,(fun i => v i a b) ∈ C := by
   intro a b
   have houter :=
     (Code.mem_moduleInterleavedCode_iff F (Fin 8 → F) (Fin 2) ι
       (C ^⋈ (Fin 8)) v).mp hv a
   exact (Code.mem_moduleInterleavedCode_iff F F (Fin 8) ι C _).mp houter b
-
-/-- .
- -/
 theorem squared_eight_lambda_le
     (C : LinearCode ι F) (e w B : ℕ)
     (hzero : AlignmentScalarListBridge.ZeroCoordinateBound C w)
@@ -199,9 +145,9 @@ theorem squared_eight_lambda_le
   have hinj : Set.InjOn flattenWord (T : Set (ι → Fin 2 → Fin 8 → F)) :=
     fun _ _ _ _ hh => flattenWord_injective hh
   have hcard : projected.card = T.card := Finset.card_image_of_injOn hinj
-  have hrows : ∀ v ∈ projected, ∀ j : Fin 16, (fun i => v i j) ∈ C := by
+  have hrows : ∀ v ∈ projected,∀ j : Fin 16,(fun i => v i j) ∈ C := by
     intro v hv j
-    obtain ⟨c, hc, rfl⟩ := Finset.mem_image.mp hv
+    obtain ⟨c,hc,rfl⟩ := Finset.mem_image.mp hv
     have hcode := (Code.mem_closeCodewordsRel_iff.mp (hT c hc)).1
     change (fun i => c i (sixteenIndexEquiv.symm j).1
       (sixteenIndexEquiv.symm j).2) ∈ C
@@ -210,14 +156,13 @@ theorem squared_eight_lambda_le
       Fintype.card ι - e ≤
         (Finset.univ.filter (fun i => v i = flattenWord y i)).card := by
     intro v hv
-    obtain ⟨c, hc, rfl⟩ := Finset.mem_image.mp hv
+    obtain ⟨c,hc,rfl⟩ := Finset.mem_image.mp hv
     rw [flattenWord_agreement_card]
     exact agreement_card_ge_of_closeCodewordsRel _ y c δ e hcell (hT c hc)
   have hbound := AlignmentMomentCurveProjection.interleaved_finite_list_card_le
     (r := 16) C e w B hzero hgap halign hfield hseparation
     (flattenWord y) projected hrows hclose
   rwa [hcard] at hbound
-
 theorem squared_eight_lambda_le_of_floor
     (C : LinearCode ι F) (e w B : ℕ)
     (hzero : AlignmentScalarListBridge.ZeroCoordinateBound C w)
@@ -231,11 +176,7 @@ theorem squared_eight_lambda_le_of_floor
         Set (ι → Fin 2 → Fin 8 → F)) δ ≤ (B : ℕ∞) :=
   squared_eight_lambda_le C e w B hzero hgap halign hfield hseparation δ
     (radius_cell_of_floor_le δ (Fintype.card ι) e hfloor)
-
 end GenericCode
-
-/-- .
- -/
 theorem irs_zeroCoordinateBound :
     AlignmentScalarListBridge.ZeroCoordinateBound IRSProfile.baseCode 131071 := by
   classical
@@ -253,21 +194,15 @@ theorem irs_zeroCoordinateBound :
     change Code.agree c (0 : IRSProfile.Index → IRSProfile.Field) ≤ 131071
     omega
   exact hz
-
-/-- .
- -/
 theorem irs_code_mem_iff_rows
     (v : IRSProfile.Index → Fin IRSProfile.interleaving → IRSProfile.Field) :
     v ∈ IRSProfile.code ↔
-      ∀ b : Fin IRSProfile.interleaving, (fun i => v i b) ∈ IRSProfile.baseCode := by
+      ∀ b : Fin IRSProfile.interleaving,(fun i => v i b) ∈ IRSProfile.baseCode := by
   change (∀ b : Fin IRSProfile.interleaving,
     (fun i => v i b) ∈ ReedSolomon.code IRSProfile.domain
       (IRSProfile.totalDimension / IRSProfile.interleaving)) ↔ _
   rw [IRSProfile.totalDimension_div_interleaving]
   rfl
-
-/-- .
- -/
 theorem irs_squared_carrier_eq :
     (((IRSProfile.code ^⋈ (Fin 2) :
       ModuleCode IRSProfile.Index IRSProfile.Field
@@ -277,16 +212,13 @@ theorem irs_squared_carrier_eq :
       ModuleCode IRSProfile.Index IRSProfile.Field (Fin 2 → Fin 8 → IRSProfile.Field)) :
       Set (IRSProfile.Index → Fin 2 → Fin 8 → IRSProfile.Field))) := by
   ext v
-  change (∀ a : Fin 2, (fun i => v i a) ∈ IRSProfile.code) ↔
-    ∀ a : Fin 2, ∀ b : Fin 8, (fun i => v i a b) ∈ IRSProfile.baseCode
+  change (∀ a : Fin 2,(fun i => v i a) ∈ IRSProfile.code) ↔
+    ∀ a : Fin 2,∀ b : Fin 8,(fun i => v i a b) ∈ IRSProfile.baseCode
   constructor
   · intro hv a b
     exact (irs_code_mem_iff_rows _).mp (hv a) b
   · intro hv a
     exact (irs_code_mem_iff_rows _).mpr (hv a)
-
-/-- .
- -/
 theorem irs_squared_lambda_le
     (e B : ℕ) (δ : ℝ≥0)
     (hgap : 131071 < Fintype.card IRSProfile.Index - e)
@@ -304,9 +236,6 @@ theorem irs_squared_lambda_le
   rw [irs_squared_carrier_eq]
   exact squared_eight_lambda_le IRSProfile.baseCode e 131071 B
     irs_zeroCoordinateBound hgap halign hfield hseparation (δ : ℝ) hcell
-
-/-- .
- -/
 theorem irs_squared_claimedRadius_lambda_le
     (num den e B : ℕ) (hden : 0 < den)
     (hcross : num * Fintype.card IRSProfile.Index < (e + 1) * den)
@@ -321,11 +250,8 @@ theorem irs_squared_claimedRadius_lambda_le
         Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
       (claimedRadius num den : ℝ) ≤ (B : ℕ∞) := by
   apply irs_squared_lambda_le e B (claimedRadius num den) hgap halign hfield hseparation
-  simpa only [claimedRadius, NNReal.coe_div, NNReal.coe_natCast] using
+  simpa only [claimedRadius,NNReal.coe_div,NNReal.coe_natCast] using
     rational_radius_cell num den (Fintype.card IRSProfile.Index) e hden hcross
-
-/-- .
- -/
 theorem irs_squared_lambda_toNat_le
     (e B : ℕ) (δ : ℝ≥0)
     (hgap : 131071 < Fintype.card IRSProfile.Index - e)
@@ -341,9 +267,5 @@ theorem irs_squared_lambda_toNat_le
       (δ : ℝ)).toNat ≤ B :=
   ENat.toNat_le_of_le_coe
     (irs_squared_lambda_le e B δ hgap halign hfield hseparation hcell)
-
 end DraftProofs
-
---
-
 end ProximityPrize.SubmissionLower.AlignmentInterleavedLambda

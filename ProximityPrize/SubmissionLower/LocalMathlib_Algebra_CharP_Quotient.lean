@@ -3,39 +3,16 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 -/
-
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
-
-/-!
-Permitted flat proof port of Mathlib.Algebra.CharP.Quotient.
-Model label: gpt-5.
-Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
-Original source SHA256: ea407ce90d0bcd3b3ba0a84f03b2ee1a72e29f8aab334cb83bc80378c9a40470.
-Original copyright and author notices are retained above.
-Modifications: module/public visibility packaging is removed; imports
-are replaced by the trusted target and the necessary flat proof ports.
-All mathematical declarations and proof bodies are retained, except
-any explicitly documented ordinary-term expansion below.
-The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
--/
-
-/-! .
-
- -/
-
 section ProximityFlatProofPort
-
 theorem CharP.ker_intAlgebraMap_eq_span
     {R : Type*} [Ring R] (p : ℕ) [CharP R p] :
     RingHom.ker (algebraMap ℤ R) = Ideal.span {(p : ℤ)} := by
   ext a
-  simp [CharP.intCast_eq_zero_iff R p, Ideal.mem_span_singleton]
-
+  simp [CharP.intCast_eq_zero_iff R p,Ideal.mem_span_singleton]
 variable {R : Type*} [CommRing R]
-
 namespace CharP
-
 variable (R) in
 theorem quotient (p : ℕ) [hp1 : Fact p.Prime] (hp2 : ↑p ∈ nonunits R) :
     CharP (R ⧸ (Ideal.span ({(p : R)} : Set R) : Ideal R)) p :=
@@ -49,37 +26,27 @@ theorem quotient (p : ℕ) [hp1 : Fact p.Prime] (hp2 : ↑p ∈ nonunits R) :
           Ideal.mem_span_singleton.1 <|
             Ideal.Quotient.eq_zero_iff_mem.1 <|
               @Subsingleton.elim _ (@CharOne.subsingleton _ _ (ringChar.of_eq h1)) _ _
-
-/-- .
- -/
-theorem quotient' (p : ℕ) [CharP R p] (I : Ideal R) (h : ∀ x : ℕ, (x : R) ∈ I → (x : R) = 0) :
+theorem quotient' (p : ℕ) [CharP R p] (I : Ideal R) (h : ∀ x : ℕ,(x : R) ∈ I → (x : R) = 0) :
     CharP (R ⧸ I) p where
   cast_eq_zero_iff x := by
-    rw [← cast_eq_zero_iff R p x, ← map_natCast (Ideal.Quotient.mk I)]
+    rw [← cast_eq_zero_iff R p x,← map_natCast (Ideal.Quotient.mk I)]
     refine Ideal.Quotient.eq.trans (?_ : ↑x - 0 ∈ I ↔ _)
     rw [sub_zero]
-    exact ⟨h x, fun h' => h'.symm ▸ I.zero_mem⟩
-
-/-- . -/
+    exact ⟨h x,fun h' => h'.symm ▸ I.zero_mem⟩
 theorem quotient_iff (n : ℕ) [CharP R n] (I : Ideal R) :
-    CharP (R ⧸ I) n ↔ ∀ x : ℕ, ↑x ∈ I → (x : R) = 0 := by
-  refine ⟨fun _ x hx => ?_, CharP.quotient' n I⟩
-  rw [CharP.cast_eq_zero_iff R n, ← CharP.cast_eq_zero_iff (R ⧸ I) n _]
+    CharP (R ⧸ I) n ↔ ∀ x : ℕ,↑x ∈ I → (x : R) = 0 := by
+  refine ⟨fun _ x hx => ?_,CharP.quotient' n I⟩
+  rw [CharP.cast_eq_zero_iff R n,← CharP.cast_eq_zero_iff (R ⧸ I) n _]
   exact (Submodule.Quotient.mk_eq_zero I).mpr hx
-
-/-- . -/
 theorem quotient_iff_le_ker_natCast (n : ℕ) [CharP R n] (I : Ideal R) :
     CharP (R ⧸ I) n ↔ I.comap (Nat.castRingHom R) ≤ RingHom.ker (Nat.castRingHom R) := by
-  rw [CharP.quotient_iff, RingHom.ker_eq_comap_bot]; rfl
-
+  rw [CharP.quotient_iff,RingHom.ker_eq_comap_bot]; rfl
 end CharP
-
 lemma Ideal.natCast_mem_of_charP_quotient (p : ℕ) (I : Ideal R) [CharP (R ⧸ I) p] :
     (p : R) ∈ I :=
   Ideal.Quotient.eq_zero_iff_mem.mp <| by simp
-
 theorem Ideal.Quotient.index_eq_zero (I : Ideal R) : (↑I.toAddSubgroup.index : R ⧸ I) = 0 := by
-  rw [AddSubgroup.index, Nat.card_eq]
+  rw [AddSubgroup.index,Nat.card_eq]
   split_ifs with hq; swap
   · simp
   letI : Fintype (R ⧸ I) := @Fintype.ofFinite _ hq

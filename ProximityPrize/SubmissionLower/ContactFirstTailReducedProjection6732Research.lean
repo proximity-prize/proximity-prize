@@ -1,10 +1,6 @@
 import ProximityPrize.SubmissionLower.ContactFirstTailProjection6731Research
 import ProximityPrize.SubmissionLower.ContactFirstTailReducedCertificate6732Research
-
-/-! Active-YZ projections for the reduced representative of the global first tail. -/
-
 namespace ProximityPrize.SubmissionLower.ContactFirstTailReducedProjection6732Research
-
 open scoped Classical BigOperators
 open Polynomial KaehlerDifferential
 open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveJointProjectionBounds
@@ -18,21 +14,16 @@ open ContactAdaptiveNestedUnitFamilyActive6630Research ContactAdaptiveNestedYZFa
 open ContactRegularComponentYZPositivity6630Research ContactResidualStageDerivative6600Research
 open ContactMovingAgreementCertificate6719Research ContactFirstTailCertificate6731Research
 open ContactReducedTaylorProfileResearch ContactFirstTailReducedCertificate6732Research
-
 noncomputable section
-
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 50000
 set_option synthInstance.maxHeartbeats 300000
-
 variable {K Omega Iota : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
 variable {pchar e w a b s : ℕ} [CharP Omega pchar] {flag : FlagDegree}
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
 theorem exists_reduced_firstTail_projection_of_caps
     (S : ResidualStage phi Gamma x pchar e flag w (support a b s))
     (hproper : ¬ S.G ∣ globalTailCut phi S.F (w + 1))
@@ -58,17 +49,17 @@ theorem exists_reduced_firstTail_projection_of_caps
     intro hr
     apply hproper
     have := hd.add hr
-    simpa only [T, Tred, sub_add_cancel] using this
+    simpa only [T,Tred,sub_add_cancel] using this
   have hGflag : PolynomialInFlag flag S.G := S.flag_support
   let Hsupport : ResidualSupportData supp S.F :=
-    ⟨S.surface_s_weight, S.surface_ys_weight, S.surface_total_weight⟩
+    ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
   have hTflag : PolynomialInFlag
       (reducedResidualAgreementFlag supp (w + 1)) Tred :=
     reducedGlobalTailCut_in_flag phi supp Hsupport (w + 1)
-  obtain ⟨hGY, hGS, hGZ⟩ :=
+  obtain ⟨hGY,hGS,hGZ⟩ :=
     ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag
       hGflag
-  obtain ⟨hTY, hTS, _hTZ⟩ :=
+  obtain ⟨hTY,hTS,_hTZ⟩ :=
     ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag
       hTflag
   have hTY' : Tred.degreeOf 0 ≤ 1 + (w + 1) * (2 * (b + s + 3) - 2) := by
@@ -77,7 +68,7 @@ theorem exists_reduced_firstTail_projection_of_caps
   have hTS' : Tred.degreeOf 1 ≤ (2 * (s + 2) - 2) * (w + 1) := by
     apply hTS.trans_eq
     rfl
-  have hGdegree : ∀ j : Fin 3, S.G.degreeOf j < pchar := by
+  have hGdegree : ∀ j : Fin 3,S.G.degreeOf j < pchar := by
     intro j
     fin_cases j
     · exact hGY.trans_lt hflagChar.1
@@ -88,7 +79,7 @@ theorem exists_reduced_firstTail_projection_of_caps
     exact (Nat.add_le_add (Nat.mul_le_mul hTY' hGS)
       (Nat.mul_le_mul hGY hTS')).trans_lt hmixed
   let choiceData : ∀ C : RegularComponent Omega S.G Tred H,
-      ∃ B : SeparableLiteralCoordinate C.1, B.index = 0 ∨ B.index = 2 :=
+      ∃ B : SeparableLiteralCoordinate C.1,B.index = 0 ∨ B.index = 2 :=
     fun C ↦ regularComponent_exists_separableLiteralCoordinate6630
       phi S.F S.G Tred pchar S.G_dvd_surface S.irreducible_G hproperRed
       S.y_dependent hGdegree hmixedZ C
@@ -125,8 +116,6 @@ theorem exists_reduced_firstTail_projection_of_caps
     ((support_subset_flagSupport_iff flag S.G).2 hGflag)
     ((support_subset_flagSupport_iff
       (reducedResidualAgreementFlag supp (w + 1)) Tred).2 hTflag)
-  exact ⟨base, ⟨P⟩⟩
-
+  exact ⟨base,⟨P⟩⟩
 end
-
 end ProximityPrize.SubmissionLower.ContactFirstTailReducedProjection6732Research

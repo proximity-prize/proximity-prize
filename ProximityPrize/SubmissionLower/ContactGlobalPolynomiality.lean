@@ -1,36 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactPolynomiality
 import ProximityPrize.SubmissionLower.ContactTranslation
-
-/-! .
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactGlobalPolynomiality
-
 open ContactDifferentialRing ContactRegularPoint ContactPolynomiality
 open DifferentialTaylorCoefficients ContactInterpolation ContactTranslation
-
 noncomputable section
-
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
-
 variable {K L : Type*} [Field K] [Field L]
-
 theorem derivative_taylor (r : L) (P : Polynomial L) :
     (Polynomial.taylor r P).derivative = Polynomial.taylor r P.derivative := by
-  simp [Polynomial.taylor_apply, Polynomial.derivative_comp]
-
-/-- .
- -/
+  simp [Polynomial.taylor_apply,Polynomial.derivative_comp]
 theorem taylor_reconstruction_eq_specialization
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L) (P : Polynomial L) :
     Polynomial.taylor (-(v 0))
@@ -46,36 +26,32 @@ theorem taylor_reconstruction_eq_specialization
           (MvPolynomial.map coefficients) := by
     apply MvPolynomial.ringHom_ext
     · intro a
-      simp [RingHom.comp_apply, reconstructionSubstitution, specialization]
+      simp [RingHom.comp_apply,reconstructionSubstitution,specialization]
     · intro i
       fin_cases i <;>
-        simp [RingHom.comp_apply, reconstructionSubstitution, specialization,
+        simp [RingHom.comp_apply,reconstructionSubstitution,specialization,
           derivative_taylor]
   exact DFunLike.congr_fun hhom F
-
 theorem map_mem_globalCoefficientBox
     (coefficients : K →+* L) (F : Poly4 K) (bound w seedCap slopeCap : ℕ)
     (hcaps : F ∈ globalCoefficientBox K bound w seedCap slopeCap) :
     MvPolynomial.map coefficients F ∈ globalCoefficientBox L bound w seedCap slopeCap := by
   intro d hd
   exact hcaps (MvPolynomial.support_map_subset coefficients F hd)
-
 noncomputable def globalPolynomial
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
     (hregular : MvPolynomial.eval₂Hom coefficients v
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0) (w : ℕ) : Polynomial L :=
   Polynomial.taylor (-(v 0)) (reconstructedPolynomial coefficients F v hF hregular w)
-
 theorem globalPolynomial_natDegree_le
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
     (hregular : MvPolynomial.eval₂Hom coefficients v
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0) (w : ℕ) :
     (globalPolynomial coefficients F v hF hregular w).natDegree ≤ w := by
-  simpa only [globalPolynomial, Polynomial.natDegree_taylor] using
+  simpa only [globalPolynomial,Polynomial.natDegree_taylor] using
     reconstructedPolynomial_natDegree_le coefficients F v hF hregular w
-
 theorem globalPolynomial_eval
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
@@ -83,30 +59,25 @@ theorem globalPolynomial_eval
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0) (w : ℕ) (x : L) :
     (globalPolynomial coefficients F v hF hregular w).eval x =
       (reconstructedPolynomial coefficients F v hF hregular w).eval (x - v 0) := by
-  simp only [globalPolynomial, Polynomial.taylor_eval, sub_eq_add_neg]
-
+  simp only [globalPolynomial,Polynomial.taylor_eval,sub_eq_add_neg]
 theorem globalPolynomial_initial_value
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
     (hregular : MvPolynomial.eval₂Hom coefficients v
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0) (w : ℕ) :
     (globalPolynomial coefficients F v hF hregular w).eval (v 0) = v 1 := by
-  rw [globalPolynomial_eval, sub_self, ← Polynomial.taylor_coeff_zero (0 : L),
+  rw [globalPolynomial_eval,sub_self,← Polynomial.taylor_coeff_zero (0 : L),
     Polynomial.taylor_zero]
   exact reconstructedPolynomial_coeff_zero coefficients F v hF hregular w
-
 theorem globalPolynomial_initial_slope
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
     (hregular : MvPolynomial.eval₂Hom coefficients v
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0) (w : ℕ) (hw : 1 ≤ w) :
     (globalPolynomial coefficients F v hF hregular w).derivative.eval (v 0) = v 2 := by
-  rw [globalPolynomial, derivative_taylor, Polynomial.taylor_eval, add_neg_cancel]
-  rw [← Polynomial.taylor_coeff_one (0 : L), Polynomial.taylor_zero]
+  rw [globalPolynomial,derivative_taylor,Polynomial.taylor_eval,add_neg_cancel]
+  rw [← Polynomial.taylor_coeff_one (0 : L),Polynomial.taylor_zero]
   exact reconstructedPolynomial_coeff_one coefficients F v hF hregular w hw
-
-/-- .
- -/
 theorem reconstructedEquation_natDegree_lt
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
@@ -124,11 +95,8 @@ theorem reconstructedEquation_natDegree_lt
   change Polynomial.taylor (-(v 0)) (reconstructedEquation coefficients F v hF hregular w) =
     specialization L (globalPolynomial coefficients F v hF hregular w) (v 3)
       (MvPolynomial.map coefficients F) at heq
-  rw [← heq, Polynomial.natDegree_taylor] at hdeg
+  rw [← heq,Polynomial.natDegree_taylor] at hdeg
   exact hdeg
-
-/-- .
- -/
 theorem global_polynomiality_of_all_tails
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
@@ -137,7 +105,7 @@ theorem global_polynomiality_of_all_tails
     (p bound w seedCap slopeCap : ℕ) [CharP L p] (hw : 1 ≤ w)
     (hshort : w + 1 ≤ bound) (hchar : bound < p)
     (hcaps : F ∈ globalCoefficientBox K bound w seedCap slopeCap)
-    (htails : ∀ j, w < j → j ≤ bound →
+    (htails : ∀ j,w < j → j ≤ bound →
       jetCoefficient (contactDerivation K F)
         (regularPointValue coefficients F v hF hregular)
         (contactCoordinate K F (1 : Fin 4)) j = 0) :
@@ -152,8 +120,7 @@ theorem global_polynomiality_of_all_tails
   change Polynomial.taylor (-(v 0)) (reconstructedEquation coefficients F v hF hregular w) =
     specialization L (globalPolynomial coefficients F v hF hregular w) (v 3)
       (MvPolynomial.map coefficients F) at heq
-  rw [← heq, hzero, map_zero]
-
+  rw [← heq,hzero,map_zero]
 theorem exists_global_polynomial_of_all_tails
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F = 0)
@@ -162,20 +129,18 @@ theorem exists_global_polynomial_of_all_tails
     (p bound w seedCap slopeCap : ℕ) [CharP L p] (hw : 1 ≤ w)
     (hshort : w + 1 ≤ bound) (hchar : bound < p)
     (hcaps : F ∈ globalCoefficientBox K bound w seedCap slopeCap)
-    (htails : ∀ j, w < j → j ≤ bound →
+    (htails : ∀ j,w < j → j ≤ bound →
       jetCoefficient (contactDerivation K F)
         (regularPointValue coefficients F v hF hregular)
         (contactCoordinate K F (1 : Fin 4)) j = 0) :
-    ∃ P : Polynomial L, P.natDegree ≤ w ∧
+    ∃ P : Polynomial L,P.natDegree ≤ w ∧
       specialization L P (v 3) (MvPolynomial.map coefficients F) = 0 ∧
       P.eval (v 0) = v 1 ∧ P.derivative.eval (v 0) = v 2 := by
   refine ⟨globalPolynomial coefficients F v hF hregular w,
-    globalPolynomial_natDegree_le coefficients F v hF hregular w, ?_,
+    globalPolynomial_natDegree_le coefficients F v hF hregular w,?_,
     globalPolynomial_initial_value coefficients F v hF hregular w,
     globalPolynomial_initial_slope coefficients F v hF hregular w hw⟩
   exact global_polynomiality_of_all_tails coefficients F v hF hregular p bound w seedCap
     slopeCap hw hshort hchar hcaps htails
-
 end
-
 end ProximityPrize.SubmissionLower.ContactGlobalPolynomiality

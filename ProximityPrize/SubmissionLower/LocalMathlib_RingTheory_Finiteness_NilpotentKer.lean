@@ -3,31 +3,10 @@ Copyright (c) 2025 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
-
-/-!
-Permitted flat proof port of Mathlib.RingTheory.Finiteness.NilpotentKer.
-Model label: gpt-5.
-Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
-Original source SHA256: 63cb50c2068d294c9500f4897c8fabae5af96d4e5f9a08b29e3c7284f048d05e.
-Original copyright and author notices are retained above.
-Modifications: module/public visibility packaging is removed; imports
-are replaced by the trusted target and the necessary flat proof ports.
-All mathematical declarations and proof bodies are retained, except
-any explicitly documented ordinary-term expansion below.
-The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
--/
-
-/-! . -/
-
 section ProximityFlatProofPort
-
 open TensorProduct
-
-/-- .
- -/
 lemma Module.finite_of_surjective_of_ker_le_nilradical
     {R S T : Type*} [CommRing R] [CommRing S] [CommRing T]
     [Algebra R S] [Algebra R T]
@@ -39,13 +18,13 @@ lemma Module.finite_of_surjective_of_ker_le_nilradical
     let e := Ideal.quotientKerAlgEquivOfSurjective hf₁
     .of_surjective e.symm.toLinearMap e.symm.surjective
   generalize hI : RingHom.ker f = I at *
-  suffices ∀ i, Module.Finite R (S ⧸ I ^ i) by
-    obtain ⟨n, hn : _ = ⊥⟩ := hf₃.isNilpotent_iff_le_nilradical.mpr hf₂
+  suffices ∀ i,Module.Finite R (S ⧸ I ^ i) by
+    obtain ⟨n,hn : _ = ⊥⟩ := hf₃.isNilpotent_iff_le_nilradical.mpr hf₂
     let e : (S ⧸ I ^ n) ≃ₐ[R] S := hn ▸ (AlgEquiv.quotientBot R S)
     exact .of_surjective e.toLinearMap e.surjective
   intro n
   induction n with
-  | zero => rw [pow_zero, Ideal.one_eq_top]; infer_instance
+  | zero => rw [pow_zero,Ideal.one_eq_top]; infer_instance
   | succ n IH =>
     let φ : (S ⧸ I ^ (n + 1)) →ₐ[S] S ⧸ I ^ n :=
       Ideal.Quotient.factorₐ _ (Ideal.pow_le_pow_right n.le_succ)
@@ -61,11 +40,11 @@ lemma Module.finite_of_surjective_of_ker_le_nilradical
       let ψ : (S ⧸ I) ⊗[S] ↑(I ^ n) →ₗ[S] (S ⧸ I ^ (n + 1)) := by
         refine ?_ ∘ₗ (TensorProduct.quotTensorEquivQuotSMul _ I).toLinearMap
         refine Submodule.liftQ _ ((Submodule.mkQ _).comp (I ^ n).subtype) ?_
-        rw [LinearMap.ker_comp, ← Submodule.map_le_map_iff_of_injective (I ^ n).subtype_injective,
-          Submodule.map_smul'', Submodule.map_comap_eq]
+        rw [LinearMap.ker_comp,← Submodule.map_le_map_iff_of_injective (I ^ n).subtype_injective,
+          Submodule.map_smul'',Submodule.map_comap_eq]
         simpa [pow_succ'] using Ideal.mul_le_left (I := I) (J := I ^ n)
       convert! Module.Finite.fg_top.map (ψ.restrictScalars R) using 1
       suffices LinearMap.ker φ.toLinearMap = Submodule.map (I ^ (n + 1)).mkQ (I ^ n) by
-        simpa [LinearMap.range_restrictScalars, ψ, LinearMap.range_comp, Submodule.range_liftQ]
+        simpa [LinearMap.range_restrictScalars,ψ,LinearMap.range_comp,Submodule.range_liftQ]
       apply Submodule.comap_injective_of_surjective (I ^ (n + 1)).mkQ_surjective
-      simpa [← LinearMap.ker_comp, hφ'] using Ideal.pow_le_pow_right n.le_succ
+      simpa [← LinearMap.ker_comp,hφ'] using Ideal.pow_le_pow_right n.le_succ

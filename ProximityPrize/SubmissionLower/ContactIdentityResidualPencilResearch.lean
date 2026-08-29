@@ -1,27 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualPolynomialResearch
 import ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
-
-/-! .
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualPencilResearch
-
 open ContactPrimeSeedIncidence
-
 noncomputable section
-
 variable {K ι : Type} [Field K]
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq ι := Classical.decEq ι
-
 theorem nodal_eval_ne_zero_of_mem_sdiff
     (I nodes : Finset ι) (x : ι → K)
     (hsub : I ⊆ nodes) (hinj : Set.InjOn x nodes)
@@ -31,13 +16,9 @@ theorem nodal_eval_ne_zero_of_mem_sdiff
   intro i hi hji
   have hji' : j = i := hinj (Finset.mem_sdiff.mp hj).1 (hsub hi) hji
   exact (Finset.mem_sdiff.mp hj).2 (hji' ▸ hi)
-
 def residualReceived
     (I : Finset ι) (x u : ι → K) (P : Polynomial K) (j : ι) : K :=
   (u j - P.eval (x j)) / (Lagrange.nodal I x).eval (x j)
-
-/-- .
- -/
 theorem residual_agreement_of_original
     (I nodes : Finset ι) (x u0 u1 : ι → K)
     (hsub : I ⊆ nodes) (hinj : Set.InjOn x nodes)
@@ -49,13 +30,10 @@ theorem residual_agreement_of_original
       gamma * residualReceived I x u1 P1 j := by
   have hV := nodal_eval_ne_zero_of_mem_sdiff I nodes x hsub hinj hj
   have heval := congrArg (fun P : Polynomial K ↦ P.eval (x j)) hnormal
-  simp only [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_C] at heval
+  simp only [Polynomial.eval_add,Polynomial.eval_mul,Polynomial.eval_C] at heval
   unfold residualReceived
   field_simp [hV]
   linear_combination hagree - heval
-
-/-- .
- -/
 theorem noLargeSelectedPencil_residual
     (I : Finset ι) (x : ι → K) (w e : ℕ) (hIw : I.card ≤ w)
     (selected residual : K → Polynomial K) (Gamma : Finset K)
@@ -95,14 +73,12 @@ theorem noLargeSelectedPencil_residual
           selected gamma = A0 + Polynomial.C gamma * B0)).card := by
       apply Finset.card_le_card
       intro gamma hgamma
-      obtain ⟨hGamma, hpencil⟩ := Finset.mem_filter.mp hgamma
+      obtain ⟨hGamma,hpencil⟩ := Finset.mem_filter.mp hgamma
       apply Finset.mem_filter.mpr
-      refine ⟨hGamma, ?_⟩
-      rw [hnormal gamma hGamma, hpencil]
-      simp only [A0, B0, V]
+      refine ⟨hGamma,?_⟩
+      rw [hnormal gamma hGamma,hpencil]
+      simp only [A0,B0,V]
       ring
     _ ≤ e + 1 := hno A0 B0 hA0 hB0
-
 end
-
 end ProximityPrize.SubmissionLower.ContactIdentityResidualPencilResearch

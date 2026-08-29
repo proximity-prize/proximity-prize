@@ -1,20 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFixedMeetSingular6656Research
-
-/-! .
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactTightFixedMeet6656Research
-
 open scoped Classical BigOperators
 open ContactInterpolation ContactTranslation ContactPrimeSeedIncidence
 open ContactRegularFactorFlag6600Research
@@ -25,27 +11,16 @@ open ContactTightSingularLedgerResearch
 open ContactRobustFixedMeet6656Research
 open ContactGlobalSelectedFamilies6656Research
 open ContactFixedMeetSingular6656Research
-
 noncomputable section
-
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 35000
-
 variable {K Iota : Type} [Field K]
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- . -/
 def tightRegularCountCap (p : Profile) : ℕ :=
   p.regularNumerator / p.gap ^ 2
-
-/-- . -/
 def tightFixedCountCap (p : Profile) (t : TightParameters) : ℕ :=
   tightRegularCountCap p + t.countCap
-
-/-- .
- -/
 theorem combined_tight_count_bound
     (p : Profile) (t : TightParameters) (regularCount singularCount : ℕ)
     (hpgap : 0 < p.gap) (htgap : 0 < t.gap)
@@ -55,45 +30,33 @@ theorem combined_tight_count_bound
   apply Nat.add_le_add
   · exact (Nat.le_div_iff_mul_le (pow_pos hpgap 2)).2 hregular
   · exact t.count_le_countCap singularCount htgap hsingular
-
-/-- . -/
 def meetTightFixedCountCap : ℕ :=
   tightFixedCountCap meetProfile meetTightProfile
-
-/-- . -/
 def meetTightFixedCost : ℕ := meetTightFixedCountCap + 1
-
 theorem meet_tight_regular_count_cap_exact :
     tightRegularCountCap meetProfile = 94991970521155972 := by
   rw [show tightRegularCountCap meetProfile =
       meetProfile.regularNumerator / meetProfile.gap ^ 2 by rfl,
     meet_regular_numerator_exact]
-  norm_num [meetProfile, Profile.gap]
-
+  norm_num [meetProfile,Profile.gap]
 theorem meet_tight_singular_count_cap_exact :
     meetTightProfile.countCap = 5019737604113 := by
-  norm_num [meetTightProfile, meetProfile, TightParameters.countCap,
-    TightParameters.tightNumerator, TightParameters.coreNumerator,
-    TightParameters.aggregateCost, TightParameters.agreement,
-    TightParameters.implicitYCap, TightParameters.algebraicCap,
-    TightParameters.kappa, TightParameters.errors, TightParameters.gap, dot]
-
+  norm_num [meetTightProfile,meetProfile,TightParameters.countCap,
+    TightParameters.tightNumerator,TightParameters.coreNumerator,
+    TightParameters.aggregateCost,TightParameters.agreement,
+    TightParameters.implicitYCap,TightParameters.algebraicCap,
+    TightParameters.kappa,TightParameters.errors,TightParameters.gap,dot]
 theorem meet_tight_fixed_costs_exact :
     meetTightFixedCountCap = 94996990258760085 ∧
       meetTightFixedCost = 94996990258760086 := by
   have hcap : meetTightFixedCountCap = 94996990258760085 := by
     rw [show meetTightFixedCountCap =
         tightRegularCountCap meetProfile + meetTightProfile.countCap by rfl,
-      meet_tight_regular_count_cap_exact, meet_tight_singular_count_cap_exact]
-  exact ⟨hcap, by rw [meetTightFixedCost, hcap]⟩
-
+      meet_tight_regular_count_cap_exact,meet_tight_singular_count_cap_exact]
+  exact ⟨hcap,by rw [meetTightFixedCost,hcap]⟩
 theorem meet_tight_fixed_strict_saving_exact :
     meetProfile.fixedCost - meetTightFixedCost = 759922684662857 := by
-  rw [meet_fixed_cost_exact, meet_tight_fixed_costs_exact.2]
-
-/-- .
-
- -/
+  rw [meet_fixed_cost_exact,meet_tight_fixed_costs_exact.2]
 theorem meet_global_count_le_tightFixedCountCap_of_regular_factors
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime6656]
@@ -124,12 +87,11 @@ theorem meet_global_count_le_tightFixedCountCap_of_regular_factors
   have hsing := meet_singularSeeds_tight_gap_bound Q hQ hbox selected Gamma
     nodes x u0 u1 hinj hnodes hdegree hagreement hnoPencil
   exact hcover.trans (combined_tight_count_bound meetProfile meetTightProfile
-    (∑ F : RegularIndex Q, (regularSeeds Q selected Gamma F).card)
+    (∑ F : RegularIndex Q,(regularSeeds Q selected Gamma F).card)
     (singularSeeds Q selected Gamma).card
-    (by norm_num [meetProfile, Profile.gap])
-    (by norm_num [meetTightProfile, meetProfile, TightParameters.gap])
+    (by norm_num [meetProfile,Profile.gap])
+    (by norm_num [meetTightProfile,meetProfile,TightParameters.gap])
     hreg hsing)
-
 theorem meet_global_count_lt_tightFixedCost_of_regular_factors
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime6656]
@@ -154,7 +116,5 @@ theorem meet_global_count_lt_tightFixedCost_of_regular_factors
   exact (meet_global_count_le_tightFixedCountCap_of_regular_factors Q hQ hbox
     selected Gamma nodes x u0 u1 hinj hnodes hdegree hsolution hagreement
     hnoPencil hregular).trans_lt (Nat.lt_succ_self _)
-
 end
-
 end ProximityPrize.SubmissionLower.ContactTightFixedMeet6656Research

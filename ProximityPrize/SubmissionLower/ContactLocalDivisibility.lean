@@ -1,55 +1,25 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BCHKSSubstitutionVanish
-
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactLocalDivisibility
-
 open Polynomial
-
 section LocalRing
-
 variable {F : Type*} [CommRing F]
-
-/-- .
-
- -/
 theorem shifted_power_dvd_iff_taylor_coeff_zero
     (P : F[X]) (x : F) (h : ℕ) :
     (Polynomial.X - Polynomial.C x) ^ h ∣ P ↔
-      ∀ j < h, (taylor x P).coeff j = 0 := by
+      ∀ j < h,(taylor x P).coeff j = 0 := by
   have hshift : taylor x ((Polynomial.X - Polynomial.C x) ^ h) =
       (Polynomial.X : F[X]) ^ h := by
-    rw [taylor_pow, map_sub, taylor_X, taylor_C, add_sub_cancel_right]
+    rw [taylor_pow,map_sub,taylor_X,taylor_C,add_sub_cancel_right]
   have hdiv := map_dvd_iff (taylorEquiv x)
     (a := ((Polynomial.X : F[X]) - Polynomial.C x) ^ h) (b := P)
   change taylor x ((Polynomial.X - Polynomial.C x) ^ h) ∣ taylor x P ↔
     (Polynomial.X - Polynomial.C x) ^ h ∣ P at hdiv
   rw [hshift] at hdiv
   exact hdiv.symm.trans (Polynomial.X_pow_dvd_iff (f := taylor x P) (n := h))
-
-/-- .
- -/
 noncomputable def contactResidual (P : F[X]) (x : F) : F[X] :=
   taylor x P - Polynomial.C (P.eval x) -
     Polynomial.X * taylor x P.derivative
-
-/-- .
- -/
 theorem X_sq_dvd_contactResidual (P : F[X]) (x : F) :
     (Polynomial.X : F[X]) ^ 2 ∣ contactResidual P x := by
   rw [X_pow_dvd_iff]
@@ -57,10 +27,7 @@ theorem X_sq_dvd_contactResidual (P : F[X]) (x : F) :
   have hcases : j = 0 ∨ j = 1 := by omega
   rcases hcases with rfl | rfl
   · simp [contactResidual]
-  · simp [contactResidual, coeff_X_mul]
-
-/-- .
- -/
+  · simp [contactResidual,coeff_X_mul]
 theorem contact_monomial_dvd
     (A S R : F[X]) (m i j k : ℕ)
     (hS : (Polynomial.X : F[X]) ^ 2 ∣ S) (hweight : m ≤ i + 2 * j) :
@@ -81,41 +48,34 @@ theorem contact_monomial_dvd
       (A * (Polynomial.X ^ i * S ^ j)) * R ^ k :=
     dvd_mul_of_dvd_left hleft (R ^ k)
   simpa only [mul_assoc] using hright
-
 theorem contact_sum_dvd
     {J : Type*} (terms : Finset J) (coefficient : J → F[X])
     (tExp sExp rExp : J → ℕ) (S R : F[X]) (m : ℕ)
     (hS : (Polynomial.X : F[X]) ^ 2 ∣ S)
-    (hweight : ∀ b ∈ terms, m ≤ tExp b + 2 * sExp b) :
+    (hweight : ∀ b ∈ terms,m ≤ tExp b + 2 * sExp b) :
     (Polynomial.X : F[X]) ^ m ∣
-      ∑ b ∈ terms, coefficient b * Polynomial.X ^ tExp b * S ^ sExp b * R ^ rExp b := by
+      ∑ b ∈ terms,coefficient b * Polynomial.X ^ tExp b * S ^ sExp b * R ^ rExp b := by
   apply Finset.dvd_sum
   intro b hb
   exact contact_monomial_dvd (coefficient b) S R m
     (tExp b) (sExp b) (rExp b) hS (hweight b hb)
-
 end LocalRing
-
 section GlobalVanishing
-
 variable {F I J : Type*} [Field F] [DecidableEq F] [DecidableEq I]
-
-/-- .
- -/
 theorem eq_zero_of_contact_representations
     (P H : F[X]) (nodes : I ↪ F) (support : Finset I) (m : ℕ)
     (terms : I → Finset J) (coefficient : I → J → F[X])
     (tExp sExp rExp : I → J → ℕ)
-    (hweight : ∀ i ∈ support, ∀ b ∈ terms i,
+    (hweight : ∀ i ∈ support,∀ b ∈ terms i,
       m ≤ tExp i b + 2 * sExp i b)
     (hrepresentation : ∀ i ∈ support,
       taylor (nodes i) H =
-        ∑ b ∈ terms i, coefficient i b * Polynomial.X ^ tExp i b *
+        ∑ b ∈ terms i,coefficient i b * Polynomial.X ^ tExp i b *
           (contactResidual P (nodes i)) ^ sExp i b *
           (taylor (nodes i) P.derivative) ^ rExp i b)
     (hdegree : H.natDegree < m * support.card) : H = 0 := by
   by_contra hnonzero
-  have hmult : ∀ i ∈ support, m ≤ H.rootMultiplicity (nodes i) := by
+  have hmult : ∀ i ∈ support,m ≤ H.rootMultiplicity (nodes i) := by
     intro i hi
     have hlocal : (Polynomial.X : F[X]) ^ m ∣ taylor (nodes i) H := by
       rw [hrepresentation i hi]
@@ -130,7 +90,5 @@ theorem eq_zero_of_contact_representations
   have hbound := BCHKSSubstitutionVanish.mul_card_le_natDegree_of_rootMultiplicity
     H nodes support m hmult
   exact (Nat.not_le_of_gt hdegree) hbound
-
 end GlobalVanishing
-
 end ProximityPrize.SubmissionLower.ContactLocalDivisibility

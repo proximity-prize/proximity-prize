@@ -4,12 +4,7 @@ import ProximityPrize.SubmissionLower.ContactFactorReconstruction6731Research
 import ProximityPrize.SubmissionLower.ContactFreshProperCoefficientTrdeg6731Research
 import ProximityPrize.SubmissionLower.ContactCoefficientBaseChange6731Research
 import ProximityPrize.SubmissionLower.ContactCoefficientPole6731Research
-
-/-! Actual coefficient-pole producer for a regular proper agreement curve in
-the global first-tail identity branch. -/
-
 namespace ProximityPrize.SubmissionLower.ContactIdentityCoefficientProfile6731Research
-
 open scoped Classical BigOperators
 open ContactGenericInitialPoint ContactGenericSurface ContactTaylorNumerators
 open ContactIdentityResidualIterationResearch ContactOriginalFactorTail6731Research
@@ -24,22 +19,16 @@ open ContactFlagPoleInequality6543Research ContactSparsePoleSupportResearch
 open ContactFlagBezout6543Research ContactResidualSupportParametersResearch
 open ContactTranslation
 open ActualCurveCoordinateField
-
 noncomputable section
-
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
 set_option synthInstance.maxHeartbeats 300000
-
 variable {K I : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
-
 abbrev Ω (K : Type) [Field K] := GenericField K
-
 variable {Γ : Finset K} {x : I → K} {p e : ℕ} [CharP (Ω K) p]
 variable {flag : FlagDegree} {w : ℕ} {support : ResidualSupportParameters}
-
 theorem stage_surface_mem
     (S : ResidualStage (polynomialEmbedding K) Γ x p e flag w support)
     (x0 u0 u1 : K)
@@ -51,7 +40,6 @@ theorem stage_surface_mem
   rw [hA]
   exact C.1.mul_mem_right A
     (regularComponent_G_mem (Ω K) S.G _ _ C)
-
 theorem stage_regularity_not_mem
     (S : ResidualStage (polynomialEmbedding K) Γ x p e flag w support)
     (x0 u0 u1 : K)
@@ -60,7 +48,6 @@ theorem stage_regularity_not_mem
       (regularitySurface (polynomialEmbedding K) S.F)) :
     surfaceMap (polynomialEmbedding K) (polyH K S.F) ∉ C.1 :=
   regularComponent_H_not_mem (Ω K) S.G _ _ C
-
 theorem coefficientPoleProfile_of_regular_agreement_curve
     (S : ResidualStage (polynomialEmbedding K) Γ x p e flag w support)
     (hTail : S.G ∣ surfaceMap (polynomialEmbedding K) (numerator K S.F (w+1)))
@@ -73,7 +60,7 @@ theorem coefficientPoleProfile_of_regular_agreement_curve
     (hw : 1≤w) (hshort : w+1≤bound) (hchar : bound<p)
     (hbox : S.F ∈ globalCoefficientBox K bound w seedCap slopeCap)
     (hyz : ∀ W : Finset (CoordinatePoleMass.Place (Ω K) (CoordinateField (Ω K) C.1)),
-      (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate (Ω K) C.1)
+      (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate (Ω K) C.1)
         (flagSupport unitYZFlag)) ≤ (cost : ℤ)) :
     CoefficientPoleProfile (polynomialEmbedding K) C.1 S.F
       (stage_surface_mem S x0 u0 u1 C)
@@ -174,7 +161,7 @@ theorem coefficientPoleProfile_of_regular_agreement_curve
     intro hz
     apply hmapped
     rw [← hvpoint]
-    rw [eval_polynomialPoint_eq_specialization, hz]
+    rw [eval_polynomialPoint_eq_specialization,hz]
     simp
   have hA0solution : specialization L P0 (v0 3) (MvPolynomial.map κ A0)=0 := by
     apply RatFunc.algebraMap_injective L
@@ -214,6 +201,5 @@ theorem coefficientPoleProfile_of_regular_agreement_curve
       (initialCoordinate K) hxk (coordinate (Ω K) Pcurve 0)
     exact globalPolynomial_initial_value κ F0 v0 hF0rel hF0reg w
   · exact hyz
-
 end
 end ProximityPrize.SubmissionLower.ContactIdentityCoefficientProfile6731Research

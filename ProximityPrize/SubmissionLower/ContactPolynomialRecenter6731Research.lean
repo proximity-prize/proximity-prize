@@ -1,28 +1,19 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactPolynomialRecovery
 import ProximityPrize.SubmissionLower.ContactTailClosure
-
-/-! Naturality and regular-jet uniqueness for polynomial reconstruction.
-These are the algebraic recentering steps needed for the first-tail identity
-branch; no assertion about coefficient-curve descent is assumed here. -/
-
 namespace ProximityPrize.SubmissionLower.ContactPolynomialRecenter6731Research
-
 open ContactDifferentialRing ContactRegularPoint ContactPolynomiality
 open ContactTaylorNumerators ContactAgreementEvaluation ContactPolynomialSolutions
 open ContactGlobalPolynomiality ContactPolynomialRecovery ContactTranslation
 open DifferentialTaylorCoefficients ContactTailClosure ContactInterpolation
-
 noncomputable section
 set_option maxHeartbeats 200000
 set_option maxRecDepth 15000
 set_option synthInstance.maxHeartbeats 30000
-
 variable {K L M : Type} [Field K] [Field L] [Field M]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq L := Classical.decEq L
 local instance : DecidableEq M := Classical.decEq M
-
 theorem map_reconstructedPolynomial
     (coefficients : K →+* L) (ψ : L →+* M) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F=0)
@@ -33,14 +24,13 @@ theorem map_reconstructedPolynomial
     (reconstructedPolynomial coefficients F v hF hreg w).map ψ =
       reconstructedPolynomial (ψ.comp coefficients) F (fun i => ψ (v i)) hF' hreg' w := by
   ext j
-  simp only [Polynomial.coeff_map, reconstructedPolynomial, jetPolynomial_coeff]
+  simp only [Polynomial.coeff_map,reconstructedPolynomial,jetPolynomial_coeff]
   by_cases hj : j<w+1
   · simp only [if_pos hj]
-    rw [jetCoefficient_eq_evaluated_numerator, jetCoefficient_eq_evaluated_numerator]
-    simp only [map_div₀, map_mul, map_pow, map_inv₀, map_natCast,
+    rw [jetCoefficient_eq_evaluated_numerator,jetCoefficient_eq_evaluated_numerator]
+    simp only [map_div₀,map_mul,map_pow,map_inv₀,map_natCast,
       MvPolynomial.map_eval₂Hom]
-  · simp only [if_neg hj, map_zero]
-
+  · simp only [if_neg hj,map_zero]
 theorem map_globalPolynomial
     (coefficients : K →+* L) (ψ : L →+* M) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F=0)
@@ -52,8 +42,7 @@ theorem map_globalPolynomial
       globalPolynomial (ψ.comp coefficients) F (fun i => ψ (v i)) hF' hreg' w := by
   unfold globalPolynomial
   rw [Polynomial.map_taylor,
-    map_reconstructedPolynomial coefficients ψ F v hF hreg hF' hreg' w, map_neg]
-
+    map_reconstructedPolynomial coefficients ψ F v hF hreg hF' hreg' w,map_neg]
 theorem globalPolynomial_congr_point
     (coefficients : K →+* L) (F : Poly4 K) {v v' : Fin 4 → L} (hv : v=v')
     (hF : MvPolynomial.eval₂Hom coefficients v F=0)
@@ -65,8 +54,6 @@ theorem globalPolynomial_congr_point
       globalPolynomial coefficients F v' hF' hreg' w := by
   cases hv
   rfl
-
-/-- Equal regular first jets determine all derivative values. -/
 theorem derivative_values_of_same_regular_jet
     (F : Poly4 K) (P Q : Polynomial K) (γ ξ : K)
     (hP : specialization K P γ F=0) (hQ : specialization K Q γ F=0)
@@ -79,15 +66,12 @@ theorem derivative_values_of_same_regular_jet
           (numerator K F j) =
         (MvPolynomial.eval₂Hom (RingHom.id K) (polynomialPoint (RingHom.id K) A γ ξ)
           (polyH K F))^(2*j) * (Polynomial.derivative^[j] A).eval ξ := by
-    simp only [eval_polynomialPoint_eq_specialization, Polynomial.eval₂_id]
-    rw [specialization_numerator_eq K F A γ hA j, Polynomial.eval_mul, Polynomial.eval_pow]
+    simp only [eval_polynomialPoint_eq_specialization,Polynomial.eval₂_id]
+    rw [specialization_numerator_eq K F A γ hA j,Polynomial.eval_mul,Polynomial.eval_pow]
   have hp := hformula P hP
   have hq := hformula Q hQ
   rw [← hv] at hq
   exact mul_left_cancel₀ (pow_ne_zero (2*j) hreg) (hp.symm.trans hq)
-
-/-- The existing low-weight first-tail theorem applied to the canonical
-reconstruction, rather than an unspecified existential polynomial. -/
 theorem canonical_polynomiality_of_first_tail
     (coefficients : K →+* L) (F : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom coefficients v F=0)
@@ -102,6 +86,5 @@ theorem canonical_polynomiality_of_first_tail
     p bound w seedCap slopeCap hw hshort hchar hcaps
   intro j hj _
   exact all_tail_jets_zero_of_first_tail_dvd coefficients F v hF hreg w hdiv j hj
-
 end
 end ProximityPrize.SubmissionLower.ContactPolynomialRecenter6731Research

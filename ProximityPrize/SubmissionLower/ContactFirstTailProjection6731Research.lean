@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.ContactFirstTailBudget6731Research
 import ProximityPrize.SubmissionLower.ContactSharpTaylorYZFactorProviderResearch
-/-! Active-YZ projections for the actual global first tail, with no factory assumption. -/
 namespace ProximityPrize.SubmissionLower.ContactFirstTailProjection6731Research
 open scoped Classical BigOperators
 open Polynomial KaehlerDifferential
@@ -24,7 +23,6 @@ variable {pchar e w a b s : ℕ} [CharP Omega pchar] {flag : FlagDegree}
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
 theorem firstTail_in_sharp_flag
     (S : ResidualStage phi Gamma x pchar e flag w
       (ContactMovingAgreementCertificate6719Research.support a b s)) :
@@ -33,15 +31,14 @@ theorem firstTail_in_sharp_flag
       (globalTailCut phi S.F (w+1)) := by
   let Hsupport : ResidualSupportData
       (ContactMovingAgreementCertificate6719Research.support a b s) S.F :=
-    ⟨S.surface_s_weight, S.surface_ys_weight, S.surface_total_weight⟩
+    ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
   exact globalTailCut_in_sharp_flag phi a b s S.F
     Hsupport.coordinate_bounds.2.1 Hsupport.ys_weight Hsupport.total_weight (w+1)
-
 theorem exists_firstTail_projection
     (S : ResidualStage phi Gamma x pchar e flag w
       (ContactMovingAgreementCertificate6719Research.support a b s))
     (hproper : ¬ S.G ∣ globalTailCut phi S.F (w+1))
-    (hGdegree : ∀ j : Fin 3, S.G.degreeOf j < pchar)
+    (hGdegree : ∀ j : Fin 3,S.G.degreeOf j < pchar)
     (hmixedZ : coordinateMixedDegree Omega S.G (globalTailCut phi S.F (w+1)) 2 < pchar) :
     ∃ base : ∀ C : RegularComponent Omega S.G
         (globalTailCut phi S.F (w+1)) (regularitySurface phi S.F),
@@ -54,7 +51,7 @@ theorem exists_firstTail_projection
   have hGflag : PolynomialInFlag flag S.G := S.flag_support
   have hTflag := firstTail_in_sharp_flag S
   let choiceData : ∀ C : RegularComponent Omega S.G T H,
-      ∃ B : SeparableLiteralCoordinate C.1, B.index = 0 ∨ B.index = 2 :=
+      ∃ B : SeparableLiteralCoordinate C.1,B.index = 0 ∨ B.index = 2 :=
     fun C ↦ regularComponent_exists_separableLiteralCoordinate6630
       phi S.F S.G T pchar S.G_dvd_surface
       S.irreducible_G hproper S.y_dependent hGdegree hmixedZ C
@@ -91,8 +88,7 @@ theorem exists_firstTail_projection
     ((support_subset_flagSupport_iff flag S.G).2 hGflag)
     ((support_subset_flagSupport_iff
       (sharpResidualAgreementFlag (ContactMovingAgreementCertificate6719Research.support a b s) (w+1)) T).2 hTflag)
-  exact ⟨base, ⟨P⟩⟩
-
+  exact ⟨base,⟨P⟩⟩
 theorem exists_firstTail_projection_of_caps
     (S : ResidualStage phi Gamma x pchar e flag w
       (ContactMovingAgreementCertificate6719Research.support a b s))
@@ -122,9 +118,9 @@ theorem exists_firstTail_projection_of_caps
     exact sharpResidualAgreementFlag_ys supp hsy (w+1)
   have hTS' : T.degreeOf 1 ≤ (2*(s+2)-1)*(w+1) := by
     apply hTS.trans_eq
-    simp only [sharpResidualAgreementFlag, sharpAgreementDirection, supp,
+    simp only [sharpResidualAgreementFlag,sharpAgreementDirection,supp,
       ContactMovingAgreementCertificate6719Research.support]
-  have hGdegree : ∀ j : Fin 3, S.G.degreeOf j < pchar := by
+  have hGdegree : ∀ j : Fin 3,S.G.degreeOf j < pchar := by
     intro j
     fin_cases j
     · exact hGY.trans_lt hflagChar.1
@@ -135,6 +131,5 @@ theorem exists_firstTail_projection_of_caps
     exact (Nat.add_le_add (Nat.mul_le_mul hTY' hGS)
       (Nat.mul_le_mul hGY hTS')).trans_lt hmixed
   exact exists_firstTail_projection S hproper hGdegree hmixZ
-
 end
 end ProximityPrize.SubmissionLower.ContactFirstTailProjection6731Research

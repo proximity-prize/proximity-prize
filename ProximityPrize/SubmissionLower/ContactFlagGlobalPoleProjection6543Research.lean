@@ -1,19 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagExactSeparableProjection6543Research
-
-/-! .
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research
-
 open scoped Classical WithZero
 open IsDedekindDomain
 open ContactLocalPoleBound
@@ -24,13 +11,9 @@ open ContactFlagAffineFamilyDegree6543Research
 open ContactFlagExactSeparableProjection6543Research
 open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveZeroCount
 open ArbitraryRationalProjectionResearch
-
 noncomputable section
-
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
-
-/-- . -/
 theorem poleOrder_eq_max_of_valuation_eq_max
     {L : Type*} [Field L]
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x y z : L)
@@ -51,9 +34,6 @@ theorem poleOrder_eq_max_of_valuation_eq_max
   · rw [max_eq_left hzy]
     rw [max_eq_left
       (max_le_max_left 0 ((WithZero.log_le_log hz hy).2 hzy))]
-
-/-- .
- -/
 theorem valuation_le_one_of_poleOrder_eq_zero
     {L : Type*} [Field L]
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : L)
@@ -70,9 +50,7 @@ theorem valuation_le_one_of_poleOrder_eq_zero
   unfold poleOrder at h
   rw [max_eq_right hlog.le] at h
   omega
-
 section RegularComponents
-
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
 variable
@@ -80,9 +58,6 @@ variable
       Transcendental Omega (coordinate Omega C.1 2)}
     {hproj : ∀ C : RegularComponent Omega G T H,
       ProjectionsFiniteSeparable Omega C.1}
-
-/-- .
- -/
 theorem nested_u_pole
     (D : NestedFlagProjectionData hseparator hproj)
     (C : RegularComponent Omega G T H)
@@ -105,8 +80,8 @@ theorem nested_u_pole
     have hscalar :
         v.val (D.lam • coordinate Omega C.1 2) =
           v.val (coordinate Omega C.1 2) := by
-      rw [Algebra.smul_def, map_mul,
-        Valuation.IsTrivialOn.eq_one D.lam D.lam_ne, one_mul]
+      rw [Algebra.smul_def,map_mul,
+        Valuation.IsTrivialOn.eq_one D.lam D.lam_ne,one_mul]
     have hUle : v.val (affineU Omega C.1 D.lam) ≤ 1 := by
       unfold affineU
       exact (v.val.map_add _ _).trans
@@ -114,11 +89,8 @@ theorem nested_u_pole
     have hU : poleOrder v.val (affineU Omega C.1 D.lam) = 0 :=
       CoordinatePoleMass.poleOrder_eq_zero_of_le_one
         Omega (CoordinateField Omega C.1) v _ hUle
-    rw [hU, hY, hZ]
+    rw [hU,hY,hZ]
     simp
-
-/-- .
- -/
 theorem nested_v_pole
     (D : NestedFlagProjectionData hseparator hproj)
     (C : RegularComponent Omega G T H)
@@ -147,7 +119,7 @@ theorem nested_v_pole
     have hZ := coordinate_poleOrder_eq_zero_of_not_mem_relevant
         hseparator hproj C v hv 2
     have hU : poleOrder v.val (affineU Omega C.1 D.lam) = 0 := by
-      rw [nested_u_pole D C v, hY, hZ]
+      rw [nested_u_pole D C v,hY,hZ]
       simp
     have hSle : v.val (coordinate Omega C.1 1) ≤ 1 :=
       valuation_le_one_of_poleOrder_eq_zero v.val _ hS
@@ -156,8 +128,8 @@ theorem nested_v_pole
     letI : v.val.IsTrivialOn Omega := v.property.2
     have hscalar : v.val (D.mu • affineU Omega C.1 D.lam) =
         v.val (affineU Omega C.1 D.lam) := by
-      rw [Algebra.smul_def, map_mul,
-        Valuation.IsTrivialOn.eq_one D.mu D.mu_ne, one_mul]
+      rw [Algebra.smul_def,map_mul,
+        Valuation.IsTrivialOn.eq_one D.mu D.mu_ne,one_mul]
     have hVle : v.val
         (coordinate Omega C.1 1 + D.mu • affineU Omega C.1 D.lam) ≤ 1 :=
       (v.val.map_add _ _).trans
@@ -166,21 +138,14 @@ theorem nested_v_pole
         (coordinate Omega C.1 1 + D.mu • affineU Omega C.1 D.lam) = 0 :=
       CoordinatePoleMass.poleOrder_eq_zero_of_le_one
         Omega (CoordinateField Omega C.1) v _ hVle
-    rw [hV, hS, hY, hZ]
+    rw [hV,hS,hY,hZ]
     simp
-
-/-- .
- -/
 theorem hAffineV
     (D : NestedFlagProjectionData hseparator hproj)
     (C : RegularComponent Omega G T H) :
     Transcendental Omega (affineV Omega C.1 D.mu (D.mu * D.lam)) := by
   rw [← nestedV_eq_affineV D C]
   exact D.hV C
-
-/-- .
-
- -/
 theorem elementEmbedding_affineV_eq_nested
     (D : NestedFlagProjectionData hseparator hproj)
     (C : RegularComponent Omega G T H) :
@@ -198,10 +163,8 @@ theorem elementEmbedding_affineV_eq_nested
       (coordinate Omega C.1 1 + D.mu • affineU Omega C.1 D.lam)
         (D.hV C)
         (algebraMap (Polynomial Omega) (RatFunc Omega) Polynomial.X)
-  rw [elementEmbedding_variable, elementEmbedding_variable]
+  rw [elementEmbedding_variable,elementEmbedding_variable]
   exact (nestedV_eq_affineV D C).symm
-
-/-- . -/
 theorem finiteAffineV
     (D : NestedFlagProjectionData hseparator hproj)
     (C : RegularComponent Omega G T H) :
@@ -212,8 +175,6 @@ theorem finiteAffineV
     FiniteDimensional (RatFunc Omega) (CoordinateField Omega C.1) := by
   rw [elementEmbedding_affineV_eq_nested D C]
   exact D.finiteV C
-
-/-- . -/
 theorem separableAffineV
     (D : NestedFlagProjectionData hseparator hproj)
     (C : RegularComponent Omega G T H) :
@@ -224,9 +185,6 @@ theorem separableAffineV
     Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega C.1) := by
   rw [elementEmbedding_affineV_eq_nested D C]
   exact D.separableV C
-
 end RegularComponents
-
 end
-
 end ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research

@@ -1,30 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualCurveRationalProjection
 import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_FunctionField
-
-/-! .
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch
-
 open scoped Classical
-
 noncomputable section
-
 variable (K L : Type*) [Field K] [Field L] [Algebra K L]
-
-/-- . -/
 def elementEmbedding (s : L) (hs : Transcendental K s) : RatFunc K →ₐ[K] L :=
   RatFunc.liftAlgHom (Polynomial.aeval s)
     (nonZeroDivisors_le_comap_nonZeroDivisors_of_injective
       (Polynomial.aeval s).toRingHom (transcendental_iff_injective.mp hs))
-
 theorem elementEmbedding_variable (s : L) (hs : Transcendental K s) :
     elementEmbedding K L s hs
         (algebraMap (Polynomial K) (RatFunc K) Polynomial.X) = s := by
@@ -34,9 +18,6 @@ theorem elementEmbedding_variable (s : L) (hs : Transcendental K s) :
     _ = Polynomial.aeval s Polynomial.X :=
       RatFunc.liftRingHom_algebraMap _ _ Polynomial.X
     _ = s := Polynomial.aeval_X s
-
-/-- .
- -/
 theorem elementEmbedding_eq_adjoin_comp (s : L) (hs : Transcendental K s) :
     elementEmbedding K L s hs =
       (IntermediateField.adjoin K ({s} : Set L)).val.comp
@@ -50,9 +31,6 @@ theorem elementEmbedding_eq_adjoin_comp (s : L) (hs : Transcendental K s) :
         IntermediateField.adjoin K ({s} : Set L)) : L)
   rw [elementEmbedding_variable]
   simp
-
-/-- .
- -/
 theorem finiteDimensional_elementEmbedding
     (base : RatFunc K →ₐ[K] L)
     (hfinite :
@@ -75,13 +53,11 @@ theorem finiteDimensional_elementEmbedding
   have hsmul : ∀ (c : IntermediateField.adjoin K ({s} : Set L)) (x : L),
       e.symm c • x = c • x := by
     intro c x
-    rw [Algebra.smul_def, Algebra.smul_def]
+    rw [Algebra.smul_def,Algebra.smul_def]
     change elementEmbedding K L s hs (e.symm c) * x = (c : L) * x
     rw [elementEmbedding_eq_adjoin_comp]
     simp [e]
   let b := Module.finBasis (IntermediateField.adjoin K ({s} : Set L)) L
   exact (b.mapCoeffs e.symm hsmul).finiteDimensional_of_finite
-
 end
-
 end ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch

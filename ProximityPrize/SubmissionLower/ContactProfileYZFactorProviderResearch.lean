@@ -3,18 +3,7 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualFactorProvider6600R
 import ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyYZSupportResearch
 import ProximityPrize.SubmissionLower.ContactProfileYZFactorLedgerResearch
 import ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjectionFixedMeetActive6656Research
-
-/-! .
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactProfileYZFactorProviderResearch
-
 open scoped Classical
 open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
 open ContactPrimeSeedIncidence ContactRegularComponentCover
@@ -35,24 +24,15 @@ open ContactProfileYZFactorLedgerResearch
 open ContactAdaptiveUnitPoleFamilyResearch
 open ContactRegularComponentYZPositivity6630Research
 open ContactTerminalAdaptiveProjectionFixedMeetActive6656Research
-
 noncomputable section
-
 set_option maxHeartbeats 3500000
 set_option maxRecDepth 40000
-
 variable {K Omega Iota : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
 variable {pchar : ℕ} [CharP Omega pchar]
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
-
-
- -/
 theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
     (hphi : Function.Injective phi)
     (p : Profile) (support : ResidualSupportParameters)
@@ -77,7 +57,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
     (hzyzPositive : ∀ C : RegularComponent Omega D.stage.G
       (agreementPolynomial phi D.stage.F D.degree
         (x i) (D.stage.u0 i) (D.stage.u1 i))
-      (regularitySurface phi D.stage.F), 1 ≤ B.zCost C + B.yzCost C) :
+      (regularitySurface phi D.stage.F),1 ≤ B.zCost C + B.yzCost C) :
     (Gamma.filter (fun gamma ↦ D.stage.Agrees gamma i)).card * p.gap ≤
       D.degree * factorDegreeCostYZ p support.agreementDirection flag +
         factorUnitCostYZ p support.agreementDirection flag := by
@@ -97,7 +77,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
   have hTpoint : ∀ gamma ∈ GammaI,
       MvPolynomial.eval (selectedPoint phi D.stage.selected gamma) T = 0 := by
     intro gamma hgamma
-    obtain ⟨hGamma, hagree⟩ := Finset.mem_filter.mp hgamma
+    obtain ⟨hGamma,hagree⟩ := Finset.mem_filter.mp hgamma
     exact (selected_agreement_zero_iff phi D.stage.F D.stage.selected
       pchar D.degree D.stage.characteristic_bound gamma
       (D.stage.degree_le gamma hGamma) (D.stage.solution gamma hGamma)
@@ -112,7 +92,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
     have h0 := Nat.sub_le_sub_right (hagreement gamma hGamma)
       (p.w - D.degree)
     exact h0.trans (by
-      simpa only [aD, ResidualStage.agreementFiber,
+      simpa only [aD,ResidualStage.agreementFiber,
         ResidualStage.Agrees] using D.agreement_card gamma hGamma)
   have hda : D.degree < aD := by
     have hD := D.degree_le
@@ -131,7 +111,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
     have hnodesD := D.nodes_card
     rw [hnodes] at hnodesD
     have hgap : aD - D.degree = p.gap := by
-      dsimp only [aD, Profile.gap]
+      dsimp only [aD,Profile.gap]
       omega
     have hn : p.n - total = D.stage.nodes.card - k := by
       rw [hnodesD]
@@ -141,10 +121,10 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
       dsimp only [total]
       omega
     have ha : p.agreements - total = aD - k := by
-      dsimp only [total, aD]
+      dsimp only [total,aD]
       omega
     rw [hgap]
-    rw [hn, hw, ha] at h
+    rw [hn,hw,ha] at h
     exact h
   have hunit : ∀ k ≤ D.degree,
       (D.stage.nodes.card - k) * (aD - D.degree) ≤
@@ -159,17 +139,17 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
     have hnodesD := D.nodes_card
     rw [hnodes] at hnodesD
     have hgap : aD - D.degree = p.gap := by
-      dsimp only [aD, Profile.gap]
+      dsimp only [aD,Profile.gap]
       omega
     have hn : p.n - total = D.stage.nodes.card - k := by
       rw [hnodesD]
       dsimp only [total]
       omega
     have ha : p.agreements - total = aD - k := by
-      dsimp only [total, aD]
+      dsimp only [total,aD]
       omega
     rw [hgap]
-    rw [hn, ha] at h
+    rw [hn,ha] at h
     exact h
   have hbound :=
     proper_cut_seed_bound_of_recursive_prime_flag_budget_z_yz_of_direction
@@ -192,7 +172,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
       (by simpa only [T] using hzyzPositive) hdegree hunit
   have hgapEq : aD - D.degree = p.gap := by
     have := D.degree_le
-    dsimp only [aD, Profile.gap]
+    dsimp only [aD,Profile.gap]
     omega
   rw [hgapEq] at hbound
   rw [flagMixed_supportResidualAgreement_direction,
@@ -200,13 +180,10 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
     flagMixed_supportResidualAgreement_z] at hbound
   have hyz := flagMixed_supportResidualAgreement_unit flag support D.degree
   dsimp only [GammaI] at hbound
-  simp only [factorDegreeCostYZ, factorUnitCostYZ]
+  simp only [factorDegreeCostYZ,factorUnitCostYZ]
   calc
     _ ≤ _ := hbound
     _ = _ := by ring
-
-/-- .
- -/
 theorem recursive_scaled_factorYZ_of_adaptive_projection_families
     (hphi : Function.Injective phi)
     (p : Profile) (support : ResidualSupportParameters)
@@ -230,7 +207,7 @@ theorem recursive_scaled_factorYZ_of_adaptive_projection_families
   apply recursive_scaled_factorYZ hphi p support support.agreementDirection S
     hwa hagreement
   · intro D i hi hproper
-    obtain ⟨base, ⟨P⟩⟩ := hprojection D i hi hproper
+    obtain ⟨base,⟨P⟩⟩ := hprojection D i hi hproper
     exact terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
       hphi p support S hnodes hagreement hwa han hdegreeGlobal hunitGlobal
       D i hi P.family.toPrimeFlagBudgetFamily
@@ -240,7 +217,5 @@ theorem recursive_scaled_factorYZ_of_adaptive_projection_families
     simpa only [hnodes] using hdegreeGlobal k hk
   · intro k hk
     simpa only [hnodes] using hunitGlobal k hk
-
 end
-
 end ProximityPrize.SubmissionLower.ContactProfileYZFactorProviderResearch

@@ -7,29 +7,8 @@ import ProximityPrize.SubmissionLower.SeparableShearKaehlerResearch
 import ProximityPrize.SubmissionLower.SeparableShearFieldResearch
 import ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch
 import ProximityPrize.SubmissionLower.ContactConstantSeedCoordinateResearch
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveShearConditional
-
 set_option maxHeartbeats 1000000
-
 open scoped Classical BigOperators
 open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveScalarTowers
   ActualCurveZeroCount
@@ -43,94 +22,55 @@ open SeparableShearKaehlerResearch
 open CoordinateBoxZeroCount SeparableShearFieldResearch
 open ArbitraryRationalProjectionResearch
 open ContactConstantSeedCoordinateResearch
-
 noncomputable section
-
 variable {K Ω : Type} [Field K] [Field Ω]
 variable (φ : Polynomial K →+* Ω)
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Ω := Classical.decEq Ω
-
 variable [IsAlgClosed Ω]
 variable (P : Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
-
 private def adaptiveFamilyFiniteSummary {I : Type} [Fintype I]
-    (Q : I → Ideal (MvPolynomial (Fin 3) Ω)) [∀ i, (Q i).IsPrime]
-    (A : ∀ i, Algebra (RatFunc Ω) (CoordinateField Ω (Q i)))
+    (Q : I → Ideal (MvPolynomial (Fin 3) Ω)) [∀ i,(Q i).IsPrime]
+    (A : ∀ i,Algebra (RatFunc Ω) (CoordinateField Ω (Q i)))
     (B : ℕ) : Prop :=
   letI := A
-  (∀ i, FiniteDimensional (RatFunc Ω) (CoordinateField Ω (Q i))) ∧
-    (∑ i, Module.finrank (RatFunc Ω) (CoordinateField Ω (Q i))) ≤ B
-
-/-- .
- -/
+  (∀ i,FiniteDimensional (RatFunc Ω) (CoordinateField Ω (Q i))) ∧
+    (∑ i,Module.finrank (RatFunc Ω) (CoordinateField Ω (Q i))) ≤ B
 def adaptiveShearCap (cap : Fin 3 → ℕ) : Fin 3 → ℕ :=
-  ![cap 0, cap 1, cap 2 + 2 * cap 1]
-
-/-- .
- -/
+  ![cap 0,cap 1,cap 2 + 2 * cap 1]
 def shearedPolynomialCap (cap : Fin 3 → ℕ) : Fin 3 → ℕ :=
-  ![cap 0, cap 1, cap 2 + cap 1]
-
-/-- . -/
+  ![cap 0,cap 1,cap 2 + cap 1]
 def adaptiveShearCost (cap : Fin 3 → ℕ) : ℕ :=
   componentCost P (adaptiveShearCap cap)
-
-/-- .
- -/
 theorem adaptiveShearCost_eq (cap : Fin 3 → ℕ) :
     adaptiveShearCost P cap = componentCost P cap +
       2 * cap 1 * actualCoordinateDegree Ω P 2 := by
-  simp [adaptiveShearCost, adaptiveShearCap, componentCost, Fin.sum_univ_three]
+  simp [adaptiveShearCost,adaptiveShearCap,componentCost,Fin.sum_univ_three]
   ring
-
-/-- .
-
-
- -/
 def AdaptiveShearFiberCertificate
     (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K)
     (Γ : Finset K) (w : ℕ) (cap : Fin 3 → ℕ) : Prop :=
-  ∀ (x u₀ u₁ : K), agreementPolynomial φ F w x u₀ u₁ ∉ P →
-    (∀ j, (agreementPolynomial φ F w x u₀ u₁).degreeOf j ≤ cap j) →
+  ∀ (x u₀ u₁ : K),agreementPolynomial φ F w x u₀ u₁ ∉ P →
+    (∀ j,(agreementPolynomial φ F w x u₀ u₁).degreeOf j ≤ cap j) →
       (Γ.filter (fun γ ↦ (selected γ).eval x = u₀ + γ * u₁)).card ≤
         adaptiveShearCost P cap
-
-/-- .
-
-
- -/
 def globalShearDegree (dS : ℕ) : Fin 3 → ℕ :=
-  ![actualCoordinateDegree Ω P 0, dS, actualCoordinateDegree Ω P 2]
-
-/-- .
-
- -/
+  ![actualCoordinateDegree Ω P 0,dS,actualCoordinateDegree Ω P 2]
 def globalShearCost (dS : ℕ) (cap : Fin 3 → ℕ) : ℕ :=
-  ∑ i, shearedPolynomialCap cap i * globalShearDegree P dS i
-
+  ∑ i,shearedPolynomialCap cap i * globalShearDegree P dS i
 theorem globalShearCost_eq (dS : ℕ) (cap : Fin 3 → ℕ) :
     globalShearCost P dS cap =
       cap 0 * actualCoordinateDegree Ω P 0 + cap 1 * dS +
         (cap 2 + cap 1) * actualCoordinateDegree Ω P 2 := by
-  simp [globalShearCost, globalShearDegree, shearedPolynomialCap,
+  simp [globalShearCost,globalShearDegree,shearedPolynomialCap,
     Fin.sum_univ_three]
-
-/-- .
-
-
- -/
 def GlobalShearFiberCertificate
     (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K)
     (Γ : Finset K) (w dS : ℕ) (cap : Fin 3 → ℕ) : Prop :=
-  ∀ (x u₀ u₁ : K), agreementPolynomial φ F w x u₀ u₁ ∉ P →
-    (∀ j, (agreementPolynomial φ F w x u₀ u₁).degreeOf j ≤ cap j) →
+  ∀ (x u₀ u₁ : K),agreementPolynomial φ F w x u₀ u₁ ∉ P →
+    (∀ j,(agreementPolynomial φ F w x u₀ u₁).degreeOf j ≤ cap j) →
       (Γ.filter (fun γ ↦ (selected γ).eval x = u₀ + γ * u₁)).card ≤
         globalShearCost P dS cap
-
-/-- .
- -/
 theorem globalShearFiberCertificate_of_card_le_one
     (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K)
     (Γ : Finset K) (w dS : ℕ) (cap : Fin 3 → ℕ)
@@ -139,14 +79,10 @@ theorem globalShearFiberCertificate_of_card_le_one
   intro x u₀ u₁ _ _
   exact (Finset.card_le_card (Finset.filter_subset _ _)).trans
     (hcard.trans hcost)
-
-/-- .
-
- -/
 theorem globalShearFiberCertificate_of_seedCoordinate_isAlgebraic
     (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K)
     (Γ : Finset K) (w dS : ℕ) (cap : Fin 3 → ℕ)
-    (hpoint : ∀ γ ∈ Γ, P ≤ RingHom.ker
+    (hpoint : ∀ γ ∈ Γ,P ≤ RingHom.ker
       (MvPolynomial.aeval (selectedPoint φ selected γ)).toRingHom)
     (hZ : IsAlgebraic Ω (coordinate Ω P 2))
     (hcost : 1 ≤ globalShearCost P dS cap) :
@@ -155,9 +91,6 @@ theorem globalShearFiberCertificate_of_seedCoordinate_isAlgebraic
   · exact selected_seed_set_card_le_one_of_seedCoordinate_isAlgebraic
       φ P selected Γ hpoint hZ
   · exact hcost
-
-/-- .
- -/
 theorem coordinateDegree_pos_of_transcendental_finite
     (hfinite : ProjectionsFinite Ω P) (j : Fin 3)
     (hj : Transcendental Ω (coordinate Ω P j)) :
@@ -167,24 +100,16 @@ theorem coordinateDegree_pos_of_transcendental_finite
   letI : FiniteDimensional (RatFunc Ω) (CoordinateField Ω P) := hfinite j hj
   rw [actualCoordinateDegree_of_transcendental Ω P j hj]
   exact Module.finrank_pos
-
-/-- .
- -/
 abbrev rationalElementEmbedding
     (k L : Type*) [Field k] [Field L] [Algebra k L]
     (s : L) (hs : Transcendental k s) : RatFunc k →ₐ[k] L :=
   elementEmbedding k L s hs
-
 theorem rationalElementEmbedding_variable
     (k L : Type*) [Field k] [Field L] [Algebra k L]
     (s : L) (hs : Transcendental k s) :
     rationalElementEmbedding k L s hs
         (algebraMap (Polynomial k) (RatFunc k) Polynomial.X) = s := by
   exact elementEmbedding_variable k L s hs
-
-/-- .
-
- -/
 theorem actual_shear_isSeparable
     (hR : Transcendental Ω (coordinate Ω P 1))
     (hZ : Transcendental Ω (coordinate Ω P 2))
@@ -212,14 +137,10 @@ theorem actual_shear_isSeparable
   apply isSeparable_shear_of_not_isSeparable Ω (CoordinateField Ω P)
     embeddingR embeddingZ embeddingS (hfinite 1 hR) (hfinite 2 hZ)
     hfiniteS hnotsepR hsepZ
-  dsimp only [embeddingR, embeddingZ, embeddingS]
+  dsimp only [embeddingR,embeddingZ,embeddingS]
   rw [rationalElementEmbedding_variable,
-    rationalBaseEmbedding_polynomial, rationalBaseEmbedding_polynomial,
-    Polynomial.aeval_X, Polynomial.aeval_X]
-
-/-- .
-
- -/
+    rationalBaseEmbedding_polynomial,rationalBaseEmbedding_polynomial,
+    Polynomial.aeval_X,Polynomial.aeval_X]
 def BadRShearCoordinateCertificate (hfinite : ProjectionsFinite Ω P) : Prop :=
   ∀ (hR : Transcendental Ω (coordinate Ω P 1))
     (hZ : Transcendental Ω (coordinate Ω P 2)),
@@ -235,33 +156,21 @@ def BadRShearCoordinateCertificate (hfinite : ProjectionsFinite Ω P) : Prop :=
           (coordinate Ω P 1 + coordinate Ω P 2) hS).toRingHom.toAlgebra;
       Module.finrank (RatFunc Ω) (CoordinateField Ω P) ≤
         actualCoordinateDegree Ω P 1 + actualCoordinateDegree Ω P 2
-
-/-- .
- -/
 def shearedRingCoordinates : Fin 3 → CoordinateRing Ω P :=
   ![quotientCoordinate Ω P 0,
     quotientCoordinate Ω P 1 + quotientCoordinate Ω P 2,
     quotientCoordinate Ω P 2]
-
-/-- .
- -/
 def ShearedPolynomialTransport
     (A : MvPolynomial (Fin 3) Ω) (cap : Fin 3 → ℕ) : Prop :=
   ∃ B : MvPolynomial (Fin 3) Ω,
-    (∀ i, B.degreeOf i ≤ shearedPolynomialCap cap i) ∧
+    (∀ i,B.degreeOf i ≤ shearedPolynomialCap cap i) ∧
       MvPolynomial.eval₂Hom (algebraMap Ω (CoordinateRing Ω P))
         (shearedRingCoordinates P) B = Ideal.Quotient.mk P A
-
-/-- .
- -/
 def ShearedAgreementTransportCertificate
     (F : MvPolynomial (Fin 4) K) (w : ℕ) (cap : Fin 3 → ℕ) : Prop :=
   ∀ (x u₀ u₁ : K),
-    (∀ i, (agreementPolynomial φ F w x u₀ u₁).degreeOf i ≤ cap i) →
+    (∀ i,(agreementPolynomial φ F w x u₀ u₁).degreeOf i ≤ cap i) →
       ShearedPolynomialTransport P (agreementPolynomial φ F w x u₀ u₁) cap
-
-/-- .
- -/
 def actualCoordinateDataAt
     (hfinite : ProjectionsFinite Ω P) (i : Fin 3)
     (hsep : ∀ hi : Transcendental Ω (coordinate Ω P i),
@@ -276,7 +185,6 @@ def actualCoordinateDataAt
       separable := hsep hi }
   else
     Sum.inl ((coordinate_eq_scalar_of_isAlgebraic Ω P i (not_not.mp hi)).choose)
-
 theorem actualCoordinateDataAt_value
     (hfinite : ProjectionsFinite Ω P) (i : Fin 3)
     (hsep : ∀ hi : Transcendental Ω (coordinate Ω P i),
@@ -290,7 +198,6 @@ theorem actualCoordinateDataAt_value
   · exact rational_variable_image Ω P i hi
   · exact (coordinate_eq_scalar_of_isAlgebraic Ω P i
       (not_not.mp hi)).choose_spec
-
 theorem actualCoordinateDataAt_degree
     (hfinite : ProjectionsFinite Ω P) (i : Fin 3)
     (hsep : ∀ hi : Transcendental Ω (coordinate Ω P i),
@@ -301,9 +208,6 @@ theorem actualCoordinateDataAt_degree
       (actualCoordinateDataAt P hfinite i hsep) = actualCoordinateDegree Ω P i := by
   unfold actualCoordinateDataAt actualCoordinateDegree
   split_ifs <;> rfl
-
-/-- .
- -/
 def shearCoordinateData
     (hS : Transcendental Ω (coordinate Ω P 1 + coordinate Ω P 2))
     (hfiniteS :
@@ -322,7 +226,6 @@ def shearCoordinateData
       (coordinate Ω P 1 + coordinate Ω P 2) hS
     finite := hfiniteS
     separable := hsepS }
-
 theorem shearCoordinateData_value
     (hS : Transcendental Ω (coordinate Ω P 1 + coordinate Ω P 2))
     (hfiniteS :
@@ -340,7 +243,6 @@ theorem shearCoordinateData_value
         coordinate Ω P 1 + coordinate Ω P 2 :=
   rationalElementEmbedding_variable Ω (CoordinateField Ω P)
     (coordinate Ω P 1 + coordinate Ω P 2) hS
-
 theorem sheared_degree_cost_le_adaptive
     (cap : Fin 3 → ℕ) (dS : ℕ)
     (hdegreeS : dS ≤ actualCoordinateDegree Ω P 1 +
@@ -352,14 +254,9 @@ theorem sheared_degree_cost_le_adaptive
     (cap 0) (cap 1) (cap 2)
     (actualCoordinateDegree Ω P 0) (actualCoordinateDegree Ω P 1)
     (actualCoordinateDegree Ω P 2) dS hdegreeS
-  simpa only [adaptiveShearCost_eq, componentCost, Fin.sum_univ_three] using h
-
+  simpa only [adaptiveShearCost_eq,componentCost,Fin.sum_univ_three] using h
 variable {ι : Type*}
 local instance : DecidableEq ι := Classical.decEq ι
-
-/-- .
-
- -/
 theorem prime_seed_incidence_sharp_adaptive_shear
     (hfinite : ProjectionsFinite Ω P)
     (hnonpoint : ∀ v : Fin 3 → Ω,
@@ -371,18 +268,18 @@ theorem prime_seed_incidence_sharp_adaptive_shear
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (p w a e : ℕ) [CharP Ω p] (hw : 1 ≤ w) (hchar : w < p)
     (hwa : w < a) (han : a ≤ nodes.card)
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
-    (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
-    (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
+    (hdegree : ∀ γ ∈ Γ,(selected γ).natDegree ≤ w)
+    (hsolution : ∀ γ ∈ Γ,specialization K (selected γ) γ F = 0)
+    (hregular : ∀ γ ∈ Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
       (polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X))
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hpoint : ∀ γ ∈ Γ, P ≤ RingHom.ker
+    (hpoint : ∀ γ ∈ Γ,P ≤ RingHom.ker
       (MvPolynomial.aeval (selectedPoint φ selected γ)).toRingHom)
     (hagreement : ∀ γ ∈ Γ,
       a ≤ (nodes.filter (fun i ↦ (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Γ w e)
     (cap : Fin 3 → ℕ)
-    (hcap : ∀ i ∈ nodes, ∀ j,
+    (hcap : ∀ i ∈ nodes,∀ j,
       (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j ≤ cap j)
     (hfiber : AdaptiveShearFiberCertificate φ P F selected Γ w cap) :
     Γ.card * (a - w) ≤ (nodes.card - w) * adaptiveShearCost P cap +
@@ -395,30 +292,30 @@ theorem prime_seed_incidence_sharp_adaptive_shear
   · have hproperFiber : ∀ i ∈ nodes \ I,
         (Γ.filter (fun γ ↦ relation γ i)).card ≤ adaptiveShearCost P cap := by
       intro i hi
-      obtain ⟨hinodes, hnotI⟩ := Finset.mem_sdiff.mp hi
+      obtain ⟨hinodes,hnotI⟩ := Finset.mem_sdiff.mp hi
       have hproper : agreementPolynomial φ F w (x i) (u₀ i) (u₁ i) ∉ P := by
         intro hmem
         apply hnotI
-        exact Finset.mem_filter.mpr ⟨hinodes, hmem⟩
+        exact Finset.mem_filter.mpr ⟨hinodes,hmem⟩
       exact hfiber (x i) (u₀ i) (u₁ i) hproper (hcap i hinodes)
     have hcount := ContactIncidence.sharp_incidence_bound relation Γ nodes I a w
       (adaptiveShearCost P cap) (identityNodes_subset φ P F nodes x u₀ u₁ w)
       hI hwa han hagreement hproperFiber
     omega
   · have hc : w < I.card := Nat.lt_of_not_ge hI
-    have hvalues : ∀ (t : {γ : K // γ ∈ Γ}) i, i ∈ I →
+    have hvalues : ∀ (t : {γ : K // γ ∈ Γ}) i,i ∈ I →
         (selected t.1).eval (x i) = u₀ i + t.1 * u₁ i := by
       intro t
       exact selected_agrees_on_identity_nodes φ P F nodes x u₀ u₁ p w hchar
         (selected t.1) t.1 (hdegree t.1 t.2) (hsolution t.1 t.2)
         (hregular t.1 t.2) (hpoint t.1 t.2)
-    obtain ⟨P₀, P₁, h₀, h₁, _, hpencil⟩ :=
+    obtain ⟨P₀,P₁,h₀,h₁,_,hpencil⟩ :=
       exists_common_pencil_of_many_identities φ P F hF hH nodes x u₀ u₁ w hinj hc
         (fun t : {γ : K // γ ∈ Γ} ↦ t.1) (fun t ↦ selected t.1)
         (fun t ↦ hdegree t.1 t.2) hvalues
     have hfilter : Γ.filter
         (fun γ ↦ selected γ = P₀ + Polynomial.C γ * P₁) = Γ :=
-      Finset.filter_eq_self.mpr (fun γ hγ ↦ hpencil ⟨γ, hγ⟩)
+      Finset.filter_eq_self.mpr (fun γ hγ ↦ hpencil ⟨γ,hγ⟩)
     have hΓ : Γ.card ≤ e + 1 := by
       have h := hnoPencil P₀ P₁ h₀ h₁
       rwa [hfilter] at h
@@ -433,11 +330,6 @@ theorem prime_seed_incidence_sharp_adaptive_shear
           simpa only [Nat.mul_one] using
             Nat.mul_le_mul_left ((e + 1) * (a - w)) hδ
     omega
-
-/-- .
-
-
- -/
 theorem prime_seed_incidence_sharp_global_shear
     (hfinite : ProjectionsFinite Ω P)
     (hnonpoint : ∀ v : Fin 3 → Ω,
@@ -449,18 +341,18 @@ theorem prime_seed_incidence_sharp_global_shear
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (p w a e : ℕ) [CharP Ω p] (hw : 1 ≤ w) (hchar : w < p)
     (hwa : w < a) (han : a ≤ nodes.card)
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
-    (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
-    (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
+    (hdegree : ∀ γ ∈ Γ,(selected γ).natDegree ≤ w)
+    (hsolution : ∀ γ ∈ Γ,specialization K (selected γ) γ F = 0)
+    (hregular : ∀ γ ∈ Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
       (polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X))
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hpoint : ∀ γ ∈ Γ, P ≤ RingHom.ker
+    (hpoint : ∀ γ ∈ Γ,P ≤ RingHom.ker
       (MvPolynomial.aeval (selectedPoint φ selected γ)).toRingHom)
     (hagreement : ∀ γ ∈ Γ,
       a ≤ (nodes.filter (fun i ↦ (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Γ w e)
     (cap : Fin 3 → ℕ)
-    (hcap : ∀ i ∈ nodes, ∀ j,
+    (hcap : ∀ i ∈ nodes,∀ j,
       (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j ≤ cap j)
     (dS : ℕ)
     (hfiber : GlobalShearFiberCertificate φ P F selected Γ w dS cap) :
@@ -474,30 +366,30 @@ theorem prime_seed_incidence_sharp_global_shear
   · have hproperFiber : ∀ i ∈ nodes \ I,
         (Γ.filter (fun γ ↦ relation γ i)).card ≤ globalShearCost P dS cap := by
       intro i hi
-      obtain ⟨hinodes, hnotI⟩ := Finset.mem_sdiff.mp hi
+      obtain ⟨hinodes,hnotI⟩ := Finset.mem_sdiff.mp hi
       have hproper : agreementPolynomial φ F w (x i) (u₀ i) (u₁ i) ∉ P := by
         intro hmem
         apply hnotI
-        exact Finset.mem_filter.mpr ⟨hinodes, hmem⟩
+        exact Finset.mem_filter.mpr ⟨hinodes,hmem⟩
       exact hfiber (x i) (u₀ i) (u₁ i) hproper (hcap i hinodes)
     have hcount := ContactIncidence.sharp_incidence_bound relation Γ nodes I a w
       (globalShearCost P dS cap) (identityNodes_subset φ P F nodes x u₀ u₁ w)
       hI hwa han hagreement hproperFiber
     omega
   · have hc : w < I.card := Nat.lt_of_not_ge hI
-    have hvalues : ∀ (t : {γ : K // γ ∈ Γ}) i, i ∈ I →
+    have hvalues : ∀ (t : {γ : K // γ ∈ Γ}) i,i ∈ I →
         (selected t.1).eval (x i) = u₀ i + t.1 * u₁ i := by
       intro t
       exact selected_agrees_on_identity_nodes φ P F nodes x u₀ u₁ p w hchar
         (selected t.1) t.1 (hdegree t.1 t.2) (hsolution t.1 t.2)
         (hregular t.1 t.2) (hpoint t.1 t.2)
-    obtain ⟨P₀, P₁, h₀, h₁, _, hpencil⟩ :=
+    obtain ⟨P₀,P₁,h₀,h₁,_,hpencil⟩ :=
       exists_common_pencil_of_many_identities φ P F hF hH nodes x u₀ u₁ w hinj hc
         (fun t : {γ : K // γ ∈ Γ} ↦ t.1) (fun t ↦ selected t.1)
         (fun t ↦ hdegree t.1 t.2) hvalues
     have hfilter : Γ.filter
         (fun γ ↦ selected γ = P₀ + Polynomial.C γ * P₁) = Γ :=
-      Finset.filter_eq_self.mpr (fun γ hγ ↦ hpencil ⟨γ, hγ⟩)
+      Finset.filter_eq_self.mpr (fun γ hγ ↦ hpencil ⟨γ,hγ⟩)
     have hΓ : Γ.card ≤ e + 1 := by
       have h := hnoPencil P₀ P₁ h₀ h₁
       rwa [hfilter] at h
@@ -512,22 +404,18 @@ theorem prime_seed_incidence_sharp_global_shear
           simpa only [Nat.mul_one] using
             Nat.mul_le_mul_left ((e + 1) * (a - w)) hδ
     omega
-
-/-- .
-
- -/
 theorem family_finite_and_sum_actualCoordinateDegree_at_le
     {I : Type} [Fintype I]
-    (Q : I → Ideal (MvPolynomial (Fin 3) Ω)) [∀ i, (Q i).IsPrime]
+    (Q : I → Ideal (MvPolynomial (Fin 3) Ω)) [∀ i,(Q i).IsPrime]
     (hinjQ : Function.Injective Q) (j : Fin 3)
     (G T : MvPolynomial (Fin 3) Ω)
-    (hG : Irreducible G) (hGmem : ∀ i, G ∈ Q i)
-    (hTmem : ∀ i, T ∈ Q i) (hproper : ¬ G ∣ T) :
+    (hG : Irreducible G) (hGmem : ∀ i,G ∈ Q i)
+    (hTmem : ∀ i,T ∈ Q i) (hproper : ¬ G ∣ T) :
     (∀ i (hi : Transcendental Ω (coordinate Ω (Q i) j)),
       letI : Algebra (RatFunc Ω) (CoordinateField Ω (Q i)) :=
         rationalBaseAlgebra Ω (Q i) j hi
       FiniteDimensional (RatFunc Ω) (CoordinateField Ω (Q i))) ∧
-      (∑ i, actualCoordinateDegree Ω (Q i) j) ≤
+      (∑ i,actualCoordinateDegree Ω (Q i) j) ≤
         coordinateMixedDegree Ω G T j := by
   classical
   let s : Set I := {i | Transcendental Ω (coordinate Ω (Q i) j)}
@@ -535,7 +423,7 @@ theorem family_finite_and_sum_actualCoordinateDegree_at_le
     letI : Algebra (RatFunc Ω) (CoordinateField Ω (Q i)) :=
       rationalBaseAlgebra Ω (Q i) j i.2
     Module.finrank (RatFunc Ω) (CoordinateField Ω (Q i))
-  letI : ∀ i : s, Algebra (RatFunc Ω) (CoordinateField Ω (Q i)) :=
+  letI : ∀ i : s,Algebra (RatFunc Ω) (CoordinateField Ω (Q i)) :=
     fun i ↦ rationalBaseAlgebra Ω (Q i) j i.2
   have hinj' : Function.Injective (fun i : s ↦ Q i) := by
     intro i k h
@@ -549,9 +437,9 @@ theorem family_finite_and_sum_actualCoordinateDegree_at_le
     (coordinateMixedDegree Ω G T j) at hresult
   constructor
   · intro i hi
-    exact hresult.1 ⟨i, hi⟩
+    exact hresult.1 ⟨i,hi⟩
   · calc
-      (∑ i, actualCoordinateDegree Ω (Q i) j) = ∑ i : s, D i := by
+      (∑ i,actualCoordinateDegree Ω (Q i) j) = ∑ i : s,D i := by
         apply Finset.sum_congr_set s
           (fun i ↦ actualCoordinateDegree Ω (Q i) j) D
         · intro i hi
@@ -561,19 +449,16 @@ theorem family_finite_and_sum_actualCoordinateDegree_at_le
           exact dif_neg hi
       _ ≤ coordinateMixedDegree Ω G T j := by
         exact hresult.2
-
-/-- .
- -/
 theorem regularComponents_finite_and_degree_budget_charfree
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hproper : ¬ G ∣ T) :
     (∀ C : RegularComponent Ω G T (regularitySurface φ F),
       ProjectionsFinite Ω C.1) ∧
-      ∀ i, (∑ C : RegularComponent Ω G T (regularitySurface φ F),
+      ∀ i,(∑ C : RegularComponent Ω G T (regularitySurface φ F),
         actualCoordinateDegree Ω C.1 i) ≤ coordinateMixedDegree Ω G T i := by
   classical
   let H := regularitySurface φ F
-  letI : ∀ C : RegularComponent Ω G T H, C.1.IsPrime :=
+  letI : ∀ C : RegularComponent Ω G T H,C.1.IsPrime :=
     fun C ↦ regularComponent_isPrime Ω G T H C
   have hfamily (i : Fin 3) :=
     family_finite_and_sum_actualCoordinateDegree_at_le
@@ -586,11 +471,6 @@ theorem regularComponents_finite_and_degree_budget_charfree
     exact (hfamily i).1 C hi
   · intro i
     exact (hfamily i).2
-
-/-- .
-
-
- -/
 theorem proper_cut_seed_bound_of_global_shear_sum
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F) (hproper : ¬ G ∣ T)
@@ -598,18 +478,18 @@ theorem proper_cut_seed_bound_of_global_shear_sum
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (p w a e : ℕ) [CharP Ω p] (hw : 1 ≤ w) (hchar : w < p)
     (hwa : w < a) (han : a ≤ nodes.card)
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
-    (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
-    (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
+    (hdegree : ∀ γ ∈ Γ,(selected γ).natDegree ≤ w)
+    (hsolution : ∀ γ ∈ Γ,specialization K (selected γ) γ F = 0)
+    (hregular : ∀ γ ∈ Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
       (polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X))
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hGpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
-    (hTpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) T = 0)
+    (hGpoint : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
+    (hTpoint : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ) T = 0)
     (hagreement : ∀ γ ∈ Γ,
       a ≤ (nodes.filter (fun i ↦ (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Γ w e)
     (cap budget : Fin 3 → ℕ)
-    (hcap : ∀ i ∈ nodes, ∀ j,
+    (hcap : ∀ i ∈ nodes,∀ j,
       (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j ≤ cap j)
     (hfinite : ∀ C : RegularComponent Ω G T (regularitySurface φ F),
       ProjectionsFinite Ω C.1)
@@ -617,16 +497,16 @@ theorem proper_cut_seed_bound_of_global_shear_sum
       (∑ C : RegularComponent Ω G T (regularitySurface φ F),
         actualCoordinateDegree Ω C.1 i) ≤ budget i)
     (dS : RegularComponent Ω G T (regularitySurface φ F) → ℕ)
-    (hSbudget : (∑ C, dS C) ≤ budget 1 + budget 2)
+    (hSbudget : (∑ C,dS C) ≤ budget 1 + budget 2)
     (hfiber : ∀ C : RegularComponent Ω G T (regularitySurface φ F),
       GlobalShearFiberCertificate φ C.1 F selected
         (componentSeeds Ω G T (regularitySurface φ F) Γ
           (selectedPoint φ selected) C) w (dS C) cap) :
     Γ.card * (a - w) ≤
-      (nodes.card - w) * (∑ i, adaptiveShearCap cap i * budget i) +
+      (nodes.card - w) * (∑ i,adaptiveShearCap cap i * budget i) +
         (e + 1) * (a - w) * budget 2 := by
   classical
-  let shearBudget : Fin 3 → ℕ := ![budget 0, budget 1 + budget 2, budget 2]
+  let shearBudget : Fin 3 → ℕ := ![budget 0,budget 1 + budget 2,budget 2]
   let degree : RegularComponent Ω G T (regularitySurface φ F) → Fin 3 → ℕ :=
     fun C ↦ globalShearDegree C.1 (dS C)
   have degree_zero (C : RegularComponent Ω G T (regularitySurface φ F)) :
@@ -638,7 +518,7 @@ theorem proper_cut_seed_bound_of_global_shear_sum
   have shearBudget_zero : shearBudget 0 = budget 0 := by rfl
   have shearBudget_one : shearBudget 1 = budget 1 + budget 2 := by rfl
   have shearBudget_two : shearBudget 2 = budget 2 := by rfl
-  have hHp : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ)
+  have hHp : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ)
       (regularitySurface φ F) ≠ 0 := by
     intro γ hγ
     change MvPolynomial.eval (selectedPoint φ selected γ)
@@ -648,7 +528,7 @@ theorem proper_cut_seed_bound_of_global_shear_sum
   have hcomponent : ∀ C : RegularComponent Ω G T (regularitySurface φ F),
       (componentSeeds Ω G T (regularitySurface φ F) Γ
         (selectedPoint φ selected) C).card * (a - w) ≤
-        (nodes.card - w) * (∑ i, shearedPolynomialCap cap i * degree C i) +
+        (nodes.card - w) * (∑ i,shearedPolynomialCap cap i * degree C i) +
           (e + 1) * (a - w) * degree C 2 := by
     intro C
     have hsub := componentSeeds_subset Ω G T (regularitySurface φ F) Γ
@@ -671,24 +551,24 @@ theorem proper_cut_seed_bound_of_global_shear_sum
       (fun γ hγ ↦ hagreement γ (hsub hγ))
       (noLargeSelectedPencil_mono selected Γ _ w e hsub hnoPencil)
       cap hcap (dS C) (hfiber C)
-    simpa only [globalShearCost, degree_two] using hcount
-  have hdegreeBudget0 : (∑ C, degree C 0) ≤ shearBudget 0 := by
+    simpa only [globalShearCost,degree_two] using hcount
+  have hdegreeBudget0 : (∑ C,degree C 0) ≤ shearBudget 0 := by
     rw [shearBudget_zero]
     exact le_trans
       (Finset.sum_le_sum (fun C _ ↦ le_of_eq (degree_zero C))) (hbudget 0)
-  have hdegreeBudget1 : (∑ C, degree C 1) ≤ shearBudget 1 := by
+  have hdegreeBudget1 : (∑ C,degree C 1) ≤ shearBudget 1 := by
     rw [shearBudget_one]
     calc
-      _ = ∑ C, dS C := by
+      _ = ∑ C,dS C := by
         apply Finset.sum_congr rfl
         intro C _
         exact degree_one C
       _ ≤ budget 1 + budget 2 := hSbudget
-  have hdegreeBudget2 : (∑ C, degree C 2) ≤ shearBudget 2 := by
+  have hdegreeBudget2 : (∑ C,degree C 2) ≤ shearBudget 2 := by
     rw [shearBudget_two]
     exact le_trans
       (Finset.sum_le_sum (fun C _ ↦ le_of_eq (degree_two C))) (hbudget 2)
-  have hdegreeBudget : ∀ i, (∑ C, degree C i) ≤ shearBudget i := by
+  have hdegreeBudget : ∀ i,(∑ C,degree C i) ≤ shearBudget i := by
     intro i
     fin_cases i
     · exact hdegreeBudget0
@@ -699,17 +579,12 @@ theorem proper_cut_seed_bound_of_global_shear_sum
     (a - w) (nodes.card - w) (e + 1)
     (shearedPolynomialCap cap) shearBudget degree hcomponent hdegreeBudget
   have hcost :
-      (∑ i, shearedPolynomialCap cap i * shearBudget i) =
-        ∑ i, adaptiveShearCap cap i * budget i := by
-    simp [shearedPolynomialCap, adaptiveShearCap, shearBudget, Fin.sum_univ_three]
+      (∑ i,shearedPolynomialCap cap i * shearBudget i) =
+        ∑ i,adaptiveShearCap cap i * budget i := by
+    simp [shearedPolynomialCap,adaptiveShearCap,shearBudget,Fin.sum_univ_three]
     ring
   rw [hcost] at haggregate
   simpa only [shearBudget_two] using haggregate
-
-/-- .
-
-
- -/
 theorem proper_cut_seed_bound_of_projection_sum_adaptive_shear
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F) (hproper : ¬ G ∣ T)
@@ -717,18 +592,18 @@ theorem proper_cut_seed_bound_of_projection_sum_adaptive_shear
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (p w a e : ℕ) [CharP Ω p] (hw : 1 ≤ w) (hchar : w < p)
     (hwa : w < a) (han : a ≤ nodes.card)
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
-    (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
-    (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
+    (hdegree : ∀ γ ∈ Γ,(selected γ).natDegree ≤ w)
+    (hsolution : ∀ γ ∈ Γ,specialization K (selected γ) γ F = 0)
+    (hregular : ∀ γ ∈ Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
       (polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X))
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hGpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
-    (hTpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) T = 0)
+    (hGpoint : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
+    (hTpoint : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ) T = 0)
     (hagreement : ∀ γ ∈ Γ,
       a ≤ (nodes.filter (fun i ↦ (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Γ w e)
     (cap budget : Fin 3 → ℕ)
-    (hcap : ∀ i ∈ nodes, ∀ j,
+    (hcap : ∀ i ∈ nodes,∀ j,
       (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j ≤ cap j)
     (hfinite : ∀ C : RegularComponent Ω G T (regularitySurface φ F),
       ProjectionsFinite Ω C.1)
@@ -740,11 +615,11 @@ theorem proper_cut_seed_bound_of_projection_sum_adaptive_shear
         (componentSeeds Ω G T (regularitySurface φ F) Γ
           (selectedPoint φ selected) C) w cap) :
     Γ.card * (a - w) ≤
-      (nodes.card - w) * (∑ i, adaptiveShearCap cap i * budget i) +
+      (nodes.card - w) * (∑ i,adaptiveShearCap cap i * budget i) +
         (e + 1) * (a - w) * budget 2 := by
   classical
   let H := regularitySurface φ F
-  have hHp : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) H ≠ 0 := by
+  have hHp : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ) H ≠ 0 := by
     intro γ hγ
     change MvPolynomial.eval (selectedPoint φ selected γ)
       (surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F)) ≠ 0
@@ -754,7 +629,7 @@ theorem proper_cut_seed_bound_of_projection_sum_adaptive_shear
     fun C i ↦ actualCoordinateDegree Ω C.1 i
   have hcomponent : ∀ C : RegularComponent Ω G T H,
       (componentSeeds Ω G T H Γ (selectedPoint φ selected) C).card * (a - w) ≤
-        (nodes.card - w) * (∑ i, adaptiveShearCap cap i * degree C i) +
+        (nodes.card - w) * (∑ i,adaptiveShearCap cap i * degree C i) +
           (e + 1) * (a - w) * degree C 2 := by
     intro C
     have hsub := componentSeeds_subset Ω G T H Γ (selectedPoint φ selected) C
@@ -775,14 +650,10 @@ theorem proper_cut_seed_bound_of_projection_sum_adaptive_shear
       (fun γ hγ ↦ hagreement γ (hsub hγ))
       (noLargeSelectedPencil_mono selected Γ _ w e hsub hnoPencil)
       cap hcap (hfiber C)
-    simpa only [adaptiveShearCost, componentCost, degree] using hcount
+    simpa only [adaptiveShearCost,componentCost,degree] using hcount
   exact aggregate_component_incidence Ω G T H Γ (selectedPoint φ selected)
     hGpoint hTpoint hHp (a - w) (nodes.card - w) (e + 1)
     (adaptiveShearCap cap) budget degree hcomponent hbudget
-
-/-- .
-
- -/
 theorem proper_cut_seed_bound_adaptive_shear
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Ω)
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F) (hproper : ¬ G ∣ T)
@@ -790,18 +661,18 @@ theorem proper_cut_seed_bound_adaptive_shear
     (nodes : Finset ι) (x u₀ u₁ : ι → K) (hinj : Set.InjOn x nodes)
     (p w a e : ℕ) [CharP Ω p] (hw : 1 ≤ w) (hchar : w < p)
     (hwa : w < a) (han : a ≤ nodes.card)
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
-    (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ F = 0)
-    (hregular : ∀ γ ∈ Γ, MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
+    (hdegree : ∀ γ ∈ Γ,(selected γ).natDegree ≤ w)
+    (hsolution : ∀ γ ∈ Γ,specialization K (selected γ) γ F = 0)
+    (hregular : ∀ γ ∈ Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
       (polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X))
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hGpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
-    (hTpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) T = 0)
+    (hGpoint : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
+    (hTpoint : ∀ γ ∈ Γ,MvPolynomial.eval (selectedPoint φ selected γ) T = 0)
     (hagreement : ∀ γ ∈ Γ,
       a ≤ (nodes.filter (fun i ↦ (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hnoPencil : NoLargeSelectedPencil selected Γ w e)
     (cap : Fin 3 → ℕ)
-    (hcap : ∀ i ∈ nodes, ∀ j,
+    (hcap : ∀ i ∈ nodes,∀ j,
       (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j ≤ cap j)
     (hfiber : ∀ C : RegularComponent Ω G T (regularitySurface φ F),
       AdaptiveShearFiberCertificate φ C.1 F selected
@@ -809,7 +680,7 @@ theorem proper_cut_seed_bound_adaptive_shear
           (selectedPoint φ selected) C) w cap) :
     Γ.card * (a - w) ≤
       (nodes.card - w) *
-          (∑ i, adaptiveShearCap cap i * coordinateMixedDegree Ω G T i) +
+          (∑ i,adaptiveShearCap cap i * coordinateMixedDegree Ω G T i) +
         (e + 1) * (a - w) * coordinateMixedDegree Ω G T 2 := by
   have hgeom := regularComponents_finite_and_degree_budget_charfree φ F G T hG hproper
   exact proper_cut_seed_bound_of_projection_sum_adaptive_shear
@@ -817,7 +688,5 @@ theorem proper_cut_seed_bound_adaptive_shear
     p w a e hw hchar hwa han hdegree hsolution hregular hGpoint hTpoint
     hagreement hnoPencil cap (coordinateMixedDegree Ω G T) hcap
     hgeom.1 hgeom.2 hfiber
-
 end
-
 end ProximityPrize.SubmissionLower.ContactAdaptiveShearConditional

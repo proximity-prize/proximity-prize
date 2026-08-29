@@ -1,26 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
-
 namespace ProximityPrize.SubmissionLower
-
 open scoped NNReal ProbabilityTheory
 open CoreDefinitions
 open ProximityGap
-
-/-- . -/
 def AffineLineGivenSetsBound
     {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
     [Field F] [Fintype F] [DecidableEq F]
     (C : LinearCode ι F) (δ : ℝ) (a : ℕ) : Prop :=
   ∀ (U : Fin 2 → ι → F) (S : Finset F) (T : F → Finset ι),
     a < S.card →
-    (∀ z ∈ S, (T z).card ≥ (Fintype.card ι : ℝ) * (1 - δ)) →
+    (∀ z ∈ S,(T z).card ≥ (Fintype.card ι : ℝ) * (1 - δ)) →
     (∀ z ∈ S,
       LinearCode.projectedWord (fun i => U 0 i + z * U 1 i) (T z) ∈
         LinearCode.projectedCodeSubmod C (T z)) →
-    ∃ z ∈ S, ∀ j : Fin 2,
+    ∃ z ∈ S,∀ j : Fin 2,
       LinearCode.projectedWord (U j) (T z) ∈ LinearCode.projectedCodeSubmod C (T z)
-
-/-- . -/
 theorem mcaError_affineLine_le_of_givenSetsBound
     {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
     [Field F] [Fintype F] [DecidableEq F]
@@ -51,35 +45,29 @@ theorem mcaError_affineLine_le_of_givenSetsBound
           (T z).card ≥ (Fintype.card ι : ℝ) * (1 - δ) ∧
           LinearCode.projectedWord (fun i => U 0 i + z * U 1 i) (T z) ∈
             LinearCode.projectedCodeSubmod C (T z) ∧
-          ∃ j : Fin 2, LinearCode.projectedWord (U j) (T z) ∉
+          ∃ j : Fin 2,LinearCode.projectedWord (U j) (T z) ∉
             LinearCode.projectedCodeSubmod C (T z) := by
-        rcases Classical.choose_spec (hmem z hz) with ⟨hcard, hcomb, hbad⟩
+        rcases Classical.choose_spec (hmem z hz) with ⟨hcard,hcomb,hbad⟩
         have hTz : T z = Classical.choose (hmem z hz) := by
-          simp only [T, dif_pos hz]
+          simp only [T,dif_pos hz]
         rw [hTz]
-        refine ⟨hcard, ?_, hbad⟩
-        simpa [AffineLineGenerator, Fin.sum_univ_two] using hcomb
-      obtain ⟨z, hzS, hall⟩ := hgiven U S T (by simpa [S] using hlarge)
+        refine ⟨hcard,?_,hbad⟩
+        simpa [AffineLineGenerator,Fin.sum_univ_two] using hcomb
+      obtain ⟨z,hzS,hall⟩ := hgiven U S T (by simpa [S] using hlarge)
         (fun z hz => (hTspec z hz).1) (fun z hz => (hTspec z hz).2.1)
-      obtain ⟨j, hj⟩ := (hTspec z hzS).2.2
+      obtain ⟨j,hj⟩ := (hTspec z hzS).2.2
       exact hj (hall j))
   · positivity
-
-
 open Finset
-
 variable {ι F : Type} [Fintype ι] [DecidableEq ι]
 variable [Field F] [DecidableEq F]
-
-/-- .
- -/
 theorem exists_common_affine_set
     (U p : Fin 2 → ι → F) (T : Finset F) (A : F → Finset ι) (e : ℕ)
     (hT : e + 1 < T.card)
-    (hAcard : ∀ z ∈ T, Fintype.card ι - e ≤ (A z).card)
-    (hEq : ∀ z ∈ T, ∀ x ∈ A z,
+    (hAcard : ∀ z ∈ T,Fintype.card ι - e ≤ (A z).card)
+    (hEq : ∀ z ∈ T,∀ x ∈ A z,
       U 0 x + z * U 1 x = p 0 x + z * p 1 x) :
-    ∃ z ∈ T, ∀ x ∈ A z, U 0 x = p 0 x ∧ U 1 x = p 1 x := by
+    ∃ z ∈ T,∀ x ∈ A z,U 0 x = p 0 x ∧ U 1 x = p 1 x := by
   classical
   let B : Finset ι := Finset.univ.filter fun x =>
     U 0 x ≠ p 0 x ∨ U 1 x ≠ p 1 x
@@ -105,7 +93,7 @@ theorem exists_common_affine_set
       rw [hrow1] at hzEq
       exact add_right_cancel hzEq
     have hxB : x ∈ B := (Finset.mem_inter.mp hxz).2
-    simp only [B, Finset.mem_filter, Finset.mem_univ, true_and] at hxB
+    simp only [B,Finset.mem_filter,Finset.mem_univ,true_and] at hxB
     exact hxB.elim (fun h => h hrow0) (fun h => h hrow1)
   have hRlower (z : F) (hz : z ∈ T) : B.card ≤ (R z).card + e := by
     have hsplit := Finset.card_inter_add_card_sdiff (A z) B
@@ -122,20 +110,20 @@ theorem exists_common_affine_set
   have hB : B.card ≤ e := by
     by_contra hnot
     have heB : e < B.card := Nat.lt_of_not_ge hnot
-    have hsumLower : T.card * (B.card - e) ≤ ∑ z ∈ T, (R z).card := by
+    have hsumLower : T.card * (B.card - e) ≤ ∑ z ∈ T,(R z).card := by
       calc
-        T.card * (B.card - e) = ∑ z ∈ T, (B.card - e) := by
+        T.card * (B.card - e) = ∑ z ∈ T,(B.card - e) := by
           exact (Finset.sum_const_nat (fun _ _ => rfl)).symm
-        _ ≤ ∑ z ∈ T, (R z).card := by
+        _ ≤ ∑ z ∈ T,(R z).card := by
           exact Finset.sum_le_sum fun z hz => by
             have := hRlower z hz
             omega
     have hunionSub : (T.biUnion R).card ≤ B.card := by
       apply Finset.card_le_card
       intro x hx
-      obtain ⟨z, hzT, hxR⟩ := Finset.mem_biUnion.mp hx
+      obtain ⟨z,hzT,hxR⟩ := Finset.mem_biUnion.mp hx
       exact hRsub z hxR
-    have hunionCard : (T.biUnion R).card = ∑ z ∈ T, (R z).card :=
+    have hunionCard : (T.biUnion R).card = ∑ z ∈ T,(R z).card :=
       Finset.card_biUnion hRpair
     rw [hunionCard] at hunionSub
     have hprod : T.card * (B.card - e) ≤ B.card := hsumLower.trans hunionSub
@@ -154,50 +142,42 @@ theorem exists_common_affine_set
     omega
   by_contra hno
   push Not at hno
-  have hRpos : ∀ z ∈ T, 1 ≤ (R z).card := by
+  have hRpos : ∀ z ∈ T,1 ≤ (R z).card := by
     intro z hz
-    obtain ⟨x, hxA, hxnot⟩ := hno z hz
+    obtain ⟨x,hxA,hxnot⟩ := hno z hz
     apply Finset.card_pos.mpr
-    refine ⟨x, Finset.mem_inter.mpr ⟨hxA, ?_⟩⟩
-    simp only [B, Finset.mem_filter, Finset.mem_univ, true_and]
+    refine ⟨x,Finset.mem_inter.mpr ⟨hxA,?_⟩⟩
+    simp only [B,Finset.mem_filter,Finset.mem_univ,true_and]
     by_cases h0 : U 0 x = p 0 x
     · exact Or.inr (hxnot h0)
     · exact Or.inl h0
-  have hTsum : T.card ≤ ∑ z ∈ T, (R z).card := by
+  have hTsum : T.card ≤ ∑ z ∈ T,(R z).card := by
     calc
-      T.card = ∑ z ∈ T, 1 := by simp
-      _ ≤ ∑ z ∈ T, (R z).card := Finset.sum_le_sum hRpos
+      T.card = ∑ z ∈ T,1 := by simp
+      _ ≤ ∑ z ∈ T,(R z).card := Finset.sum_le_sum hRpos
   have hunionSub : (T.biUnion R).card ≤ B.card := by
     apply Finset.card_le_card
     intro x hx
-    obtain ⟨z, hzT, hxR⟩ := Finset.mem_biUnion.mp hx
+    obtain ⟨z,hzT,hxR⟩ := Finset.mem_biUnion.mp hx
     exact hRsub z hxR
   rw [Finset.card_biUnion hRpair] at hunionSub
   have hTB : T.card ≤ B.card := hTsum.trans hunionSub
   omega
-
-
-
-/-- .
- -/
 def AffineLineAlignmentBound
     {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
     [Field F] [Fintype F] [DecidableEq F]
     (C : LinearCode ι F) (e a : ℕ) : Prop :=
   ∀ (U : Fin 2 → ι → F) (S : Finset F) (A : F → Finset ι),
     a < S.card →
-    (∀ z ∈ S, Fintype.card ι - e ≤ (A z).card) →
+    (∀ z ∈ S,Fintype.card ι - e ≤ (A z).card) →
     (∀ z ∈ S,
       LinearCode.projectedWord (fun i => U 0 i + z * U 1 i) (A z) ∈
         LinearCode.projectedCodeSubmod C (A z)) →
     ∃ p : Fin 2 → ι → F,
-      (∀ j, p j ∈ C) ∧
-      ∃ T : Finset F, T ⊆ S ∧ e + 1 < T.card ∧
-        ∀ z ∈ T, ∀ x ∈ A z,
+      (∀ j,p j ∈ C) ∧
+      ∃ T : Finset F,T ⊆ S ∧ e + 1 < T.card ∧
+        ∀ z ∈ T,∀ x ∈ A z,
           U 0 x + z * U 1 x = p 0 x + z * p 1 x
-
-/-- .
- -/
 theorem givenSetsBound_of_alignmentBound
     {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
     [Field F] [Fintype F] [DecidableEq F]
@@ -209,19 +189,18 @@ theorem givenSetsBound_of_alignmentBound
     AffineLineGivenSetsBound C δ a := by
   classical
   intro U S A hS hAcard hcomb
-  obtain ⟨p, hpC, T, hTS, hTcard, hEq⟩ :=
+  obtain ⟨p,hpC,T,hTS,hTcard,hEq⟩ :=
     halign U S A hS (fun z hz => hsize (A z) (hAcard z hz)) hcomb
-  obtain ⟨z, hzT, hz⟩ :=
+  obtain ⟨z,hzT,hz⟩ :=
     exists_common_affine_set U p T A e hTcard
       (fun z hz => hsize (A z) (hAcard z (hTS hz))) hEq
-  refine ⟨z, hTS hzT, fun j => ?_⟩
+  refine ⟨z,hTS hzT,fun j => ?_⟩
   rw [LinearCode.mem_projectedCodeSubmod_iff]
-  refine ⟨p j, hpC j, ?_⟩
+  refine ⟨p j,hpC j,?_⟩
   funext x
   simp only [LinearCode.projectedWord]
-  rcases hz x.1 x.2 with ⟨h0, h1⟩
+  rcases hz x.1 x.2 with ⟨h0,h1⟩
   fin_cases j
   · exact h0
   · exact h1
-
 end ProximityPrize.SubmissionLower

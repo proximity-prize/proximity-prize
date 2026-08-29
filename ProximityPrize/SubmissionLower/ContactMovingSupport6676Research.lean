@@ -1,8 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactLeadingCancellationResearch
 import ProximityPrize.SubmissionLower.ContactFlagPoleInequality6543Research
-
-/-! . -/
 namespace ProximityPrize.SubmissionLower.ContactMovingSupport6676Research
 open scoped Classical BigOperators WithZero
 open ContactGenericCoefficientAvoidanceResearch ContactLeadingCancellationResearch
@@ -10,7 +8,6 @@ open ContactSparsePoleSupportResearch ContactFlagBezout6543Research
 open ContactLocalPoleBound
 noncomputable section
 set_option maxHeartbeats 1000000
-
 def liftExponent (d : Fin 3 →₀ ℕ) : Fin 4 →₀ ℕ :=
   Finsupp.single 0 (d 0) + Finsupp.single 1 (d 1) + Finsupp.single 2 (d 2)
 def shiftExponent (d : Fin 3 →₀ ℕ) : Fin 4 →₀ ℕ :=
@@ -19,17 +16,14 @@ abbrev quadraticSupport := flagSupport (2 • unitAllFlag)
 abbrev linearSupport := flagSupport unitYZFlag
 def movingSupport : Finset (Fin 4 →₀ ℕ) :=
   quadraticSupport.image liftExponent ∪ linearSupport.image shiftExponent
-
 theorem liftExponent_injective : Function.Injective liftExponent := by
   intro d e h
   ext i
   have hh := DFunLike.congr_fun h i.castSucc
   fin_cases i <;> simpa [liftExponent] using hh
-
 theorem shiftExponent_injective : Function.Injective shiftExponent := by
   intro d e h
   exact liftExponent_injective (add_right_cancel h)
-
 theorem mem_movingSupport (d : Fin 4 →₀ ℕ) :
     d ∈ movingSupport ↔ d 0+d 1+d 2+d 3 ≤ 2 ∧ d 3 ≤ 1 ∧ d 1+2*d 3 ≤ 2 := by
   classical
@@ -38,12 +32,12 @@ theorem mem_movingSupport (d : Fin 4 →₀ ℕ) :
     rcases Finset.mem_union.mp hd with hd | hd
     · obtain ⟨e,he,rfl⟩ := Finset.mem_image.mp hd
       have he := (mem_flagSupport_iff _ _).mp he
-      simp only [InFlag, nsmul_zOnly, nsmul_yz, nsmul_all, unitAllFlag] at he
+      simp only [InFlag,nsmul_zOnly,nsmul_yz,nsmul_all,unitAllFlag] at he
       simp [liftExponent]
       omega
     · obtain ⟨e,he,rfl⟩ := Finset.mem_image.mp hd
       have he := (mem_flagSupport_iff _ _).mp he
-      simp only [InFlag, unitYZFlag] at he
+      simp only [InFlag,unitYZFlag] at he
       simp [shiftExponent,liftExponent]
       omega
   · rintro ⟨ht,hw,hr⟩
@@ -63,7 +57,6 @@ theorem mem_movingSupport (d : Fin 4 →₀ ℕ) :
         simp [InFlag,unitYZFlag,heq0.1,heq0.2.1,heq0.2.2]
         omega
       · ext i; fin_cases i <;> simp [shiftExponent,liftExponent,heq0.1,heq0.2.1,heq0.2.2,hdw]
-
 theorem movingSupport_downwardClosed : ExponentSetDownwardClosed movingSupport := by
   intro d hd e he
   rw [mem_movingSupport] at hd ⊢
@@ -71,7 +64,6 @@ theorem movingSupport_downwardClosed : ExponentSetDownwardClosed movingSupport :
   omega
 theorem zero_mem_movingSupport : (0 : Fin 4 →₀ ℕ) ∈ movingSupport := by
   simp [mem_movingSupport]
-
 def quadraticIndex (d : quadraticSupport) : movingSupport :=
   ⟨liftExponent d.1,Finset.mem_union_left _ (Finset.mem_image.mpr ⟨d.1,d.2,rfl⟩)⟩
 def linearIndex (d : linearSupport) : movingSupport :=
@@ -80,7 +72,6 @@ theorem quadraticIndex_injective : Function.Injective quadraticIndex :=
   fun _ _ h ↦ Subtype.ext (liftExponent_injective (congrArg Subtype.val h))
 theorem linearIndex_injective : Function.Injective linearIndex :=
   fun _ _ h ↦ Subtype.ext (shiftExponent_injective (congrArg Subtype.val h))
-
 def supportIndex : quadraticSupport ⊕ linearSupport → movingSupport :=
   Sum.elim quadraticIndex linearIndex
 theorem supportIndex_bijective : Function.Bijective supportIndex := by
@@ -103,7 +94,6 @@ theorem supportIndex_bijective : Function.Bijective supportIndex := by
       exact ⟨Sum.inl ⟨e,he⟩,Subtype.ext h⟩
     · obtain ⟨e,he,h⟩ := Finset.mem_image.mp hd
       exact ⟨Sum.inr ⟨e,he⟩,Subtype.ext h⟩
-
 variable {K L : Type*} [Field K] [Field L] [Algebra K L]
 def restrictQ : (movingSupport → K) →ₗ[K] (quadraticSupport → K) :=
   LinearMap.funLeft K K quadraticIndex
@@ -121,7 +111,6 @@ theorem quadraticPolynomial_inFlag (c : movingSupport → K) :
 theorem linearPolynomial_inFlag (c : movingSupport → K) :
     PolynomialInFlag unitYZFlag (linearPolynomial c) :=
   (support_subset_flagSupport_iff _ _).mp (support_polynomialOfSupport_subset _ _)
-
 def movingCoordinates (x : Fin 3 → L) (w : L) : Fin 4 → L := ![x 0,x 1,x 2,w]
 theorem evaluation_lift (x : Fin 3 → L) (w : L) (d : Fin 3 →₀ ℕ) (a : K) :
     MvPolynomial.eval₂Hom (algebraMap K L) (movingCoordinates x w)
@@ -135,7 +124,6 @@ theorem evaluation_shift (x : Fin 3 → L) (w : L) (d : Fin 3 →₀ ℕ) (a : K
     MvPolynomial.eval₂Hom (algebraMap K L) x (MvPolynomial.monomial d a) * w := by
   simp [MvPolynomial.eval₂Hom_monomial,Finsupp.prod_fintype,Fin.prod_univ_four,
     Fin.prod_univ_three,shiftExponent,liftExponent,movingCoordinates,mul_assoc]
-
 theorem coefficientEvaluation_eq (x : Fin 3 → L) (w : L) (c : movingSupport → K) :
     coefficientEvaluation (movingCoordinates x w) movingSupport c =
       MvPolynomial.eval₂Hom (algebraMap K L) x (quadraticPolynomial c) +
@@ -149,7 +137,6 @@ theorem coefficientEvaluation_eq (x : Fin 3 → L) (w : L) (c : movingSupport �
   simp only [evaluation_lift,evaluation_shift]
   simp [quadraticPolynomial,linearPolynomial,polynomialOfSupport,map_sum,
     Finset.sum_mul,restrictQ,restrictU,LinearMap.funLeft,quadraticIndex,linearIndex]
-
 theorem coordinate_mem (i : Fin 3) : Finsupp.single i.castSucc 1 ∈ movingSupport := by
   fin_cases i <;> simp [mem_movingSupport]
 theorem exists_coordinate_evaluation (x : Fin 3 → L) (w : L) (i : Fin 3) :
@@ -159,7 +146,6 @@ theorem exists_coordinate_evaluation (x : Fin 3 → L) (w : L) (i : Fin 3) :
   change MvPolynomial.eval₂Hom _ _ (polynomialOfSupport _ _) = _
   rw [polynomialOfSupport_deltaCoefficient]
   fin_cases i <;> simp [MvPolynomial.eval₂Hom_monomial,movingCoordinates]
-
 theorem exponentSetPoleWeight_moving (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : Fin 3 → L) (w : L) :
     exponentSetPoleWeight v (movingCoordinates x w) movingSupport =
@@ -168,7 +154,7 @@ theorem exponentSetPoleWeight_moving (v : Valuation L (WithZero (Multiplicative 
   let q : Fin 4 → ℤ := fun i ↦ poleOrder v (movingCoordinates x w i)
   let a := max (q 1) (max (q 0) (q 2))
   let b := max (q 0) (q 2)
-  have hq : ∀ i, 0 ≤ q i := fun i ↦ le_max_left _ _
+  have hq : ∀ i,0 ≤ q i := fun i ↦ le_max_left _ _
   have ha0 : q 0 ≤ a := (le_max_left _ _).trans (le_max_right _ _)
   have ha1 : q 1 ≤ a := le_max_left _ _
   have ha2 : q 2 ≤ a := (le_max_right _ _).trans (le_max_right _ _)
@@ -224,10 +210,7 @@ theorem exponentSetPoleWeight_moving (v : Valuation L (WithZero (Multiplicative 
     have hw0 := hw 0 (Or.inl rfl); have hw2 := hw 2 (Or.inr rfl)
     dsimp [a,b] at *
     omega
-
 theorem quadratic_max_signed_eq_truncated (a b w : ℤ) (ha : 0 ≤ a) (hb : b ≤ a) :
     max (2*a) (b+w)=max (2*a) (b+max 0 w) := by omega
-
-
 end
 end ProximityPrize.SubmissionLower.ContactMovingSupport6676Research

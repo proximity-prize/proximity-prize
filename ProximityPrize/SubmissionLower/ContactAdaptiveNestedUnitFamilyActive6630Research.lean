@@ -2,19 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjectionActive6630Research
 import ProximityPrize.SubmissionLower.ContactFlagGeneralPrincipalCyclesResearch
 import ProximityPrize.SubmissionLower.ContactFlagProjectionPositivity6543Research
-
-/-! .
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveNestedUnitFamilyActive6630Research
-
 open scoped Classical BigOperators WithZero
 open Polynomial KaehlerDifferential
 open ActualCurveCoordinateField ActualCurveRationalProjection
@@ -32,19 +20,13 @@ open ContactFlagProjectionPositivity6543Research
 open ContactFlagPrincipalCycles6543Research
 open ContactFlagTriangularProjectionResearch
 open ArbitraryRationalProjectionResearch
-
 noncomputable section
-
 set_option maxHeartbeats 4000000
 set_option synthInstance.maxHeartbeats 400000
 set_option maxRecDepth 30000
 set_option autoImplicit false
-
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
-
-/-- .
- -/
 def adaptiveUnitProjectionFamily_of_active_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,
@@ -84,7 +66,6 @@ def adaptiveUnitProjectionFamily_of_active_nested
     apply hproper
     rw [hzero]
     exact dvd_zero G
-
   let sZ := {C : RegularComponent Omega G T H //
     Transcendental Omega (coordinate Omega C.1 2)}
   have hinjZ : Function.Injective (fun C : sZ => C.1.1) := by
@@ -97,7 +78,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
         (flagEvaluation Omega C.1.1 lam mu nu
           (MvPolynomial.X (zOrder 0))) := by
     intro C
-    simpa [zOrder, Equiv.swap_apply_def, lam, mu, nu] using C.2
+    simpa [zOrder,Equiv.swap_apply_def,lam,mu,nu] using C.2
   have hembZ (C : sZ) :
       elementEmbedding Omega (CoordinateField Omega C.1.1)
           (flagEvaluation Omega C.1.1 lam mu nu
@@ -105,7 +86,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
         elementEmbedding Omega (CoordinateField Omega C.1.1)
           (coordinate Omega C.1.1 2) C.2 :=
     elementEmbedding_congr (htZ C) C.2
-      (by simp [zOrder, Equiv.swap_apply_def, lam, mu, nu])
+      (by simp [zOrder,Equiv.swap_apply_def,lam,mu,nu])
   have hgenZ : ∀ C : sZ,
       letI : Algebra (RatFunc Omega) (CoordinateField Omega C.1.1) :=
         (elementEmbedding Omega (CoordinateField Omega C.1.1)
@@ -119,7 +100,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
           Set (CoordinateField Omega C.1.1)) = ⊤ := by
     intro C
     rw [hembZ C]
-    simpa [zOrder, Equiv.swap_apply_def, lam, mu, nu] using
+    simpa [zOrder,Equiv.swap_apply_def,lam,mu,nu] using
       flag_generators_z Omega C.1.1 lam mu nu C.2
   have hfamilyZ := finite_sum_flag_finrank_trapezoid
     (K := Omega) (Q := fun C : sZ => C.1.1) hinjZ lam mu nu zOrder
@@ -163,7 +144,6 @@ def adaptiveUnitProjectionFamily_of_active_nested
         intro C _
         rw [hembZ C]
       _ ≤ _ := hfamilyZ.2
-
   let sU := {C : RegularComponent Omega G T H //
     Transcendental Omega (affineU Omega C.1 D.lam)}
   have hinjU : Function.Injective (fun C : sU => C.1.1) := by
@@ -176,7 +156,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
         (flagEvaluation Omega C.1.1 lam mu nu
           (MvPolynomial.X (uOrder 0))) := by
     intro C
-    simpa [uOrder, lam, mu, nu] using C.2
+    simpa [uOrder,lam,mu,nu] using C.2
   have hembU (C : sU) :
       elementEmbedding Omega (CoordinateField Omega C.1.1)
           (flagEvaluation Omega C.1.1 lam mu nu
@@ -184,7 +164,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
         elementEmbedding Omega (CoordinateField Omega C.1.1)
           (affineU Omega C.1.1 D.lam) C.2 :=
     elementEmbedding_congr (htU C) C.2
-      (by simp [uOrder, lam, mu, nu])
+      (by simp [uOrder,lam,mu,nu])
   have hgenU : ∀ C : sU,
       letI : Algebra (RatFunc Omega) (CoordinateField Omega C.1.1) :=
         (elementEmbedding Omega (CoordinateField Omega C.1.1)
@@ -198,7 +178,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
           Set (CoordinateField Omega C.1.1)) = ⊤ := by
     intro C
     rw [hembU C]
-    simpa [uOrder, lam, mu, nu] using
+    simpa [uOrder,lam,mu,nu] using
       flag_generators_u Omega C.1.1 lam mu nu C.2
   have hfamilyU := finite_sum_flag_finrank_trapezoid
     (K := Omega) (Q := fun C : sU => C.1.1) hinjU lam mu nu uOrder
@@ -242,13 +222,12 @@ def adaptiveUnitProjectionFamily_of_active_nested
         intro C _
         rw [hembU C]
       _ ≤ _ := hfamilyU.2
-
   let htV : ∀ C : RegularComponent Omega G T H,
       Transcendental Omega
         (flagEvaluation Omega C.1 lam mu nu
           (MvPolynomial.X (vOrder 0))) := by
     intro C
-    simpa [vOrder, Equiv.swap_apply_def, lam, mu, nu] using
+    simpa [vOrder,Equiv.swap_apply_def,lam,mu,nu] using
       D.allAffineTranscendental C
   have hembV (C : RegularComponent Omega G T H) :
       elementEmbedding Omega (CoordinateField Omega C.1)
@@ -258,7 +237,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
           (affineV Omega C.1 D.mu (D.mu * D.lam))
             (D.allAffineTranscendental C) :=
     elementEmbedding_congr (htV C) (D.allAffineTranscendental C)
-      (by simp [vOrder, Equiv.swap_apply_def, lam, mu, nu])
+      (by simp [vOrder,Equiv.swap_apply_def,lam,mu,nu])
   have hgenV : ∀ C : RegularComponent Omega G T H,
       letI : Algebra (RatFunc Omega) (CoordinateField Omega C.1) :=
         (elementEmbedding Omega (CoordinateField Omega C.1)
@@ -272,7 +251,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
           Set (CoordinateField Omega C.1)) = ⊤ := by
     intro C
     rw [hembV C]
-    simpa [vOrder, Equiv.swap_apply_def, lam, mu, nu] using
+    simpa [vOrder,Equiv.swap_apply_def,lam,mu,nu] using
       flag_generators_v Omega C.1 lam mu nu (D.allAffineTranscendental C)
   have hinjV : Function.Injective
       (fun C : RegularComponent Omega G T H => C.1) := by
@@ -317,15 +296,13 @@ def adaptiveUnitProjectionFamily_of_active_nested
         intro C _
         rw [hembV C]
       _ ≤ _ := hfamilyV.2
-
   have hvValue (C : RegularComponent Omega G T H) :
       coordinateValue Omega (CoordinateField Omega C.1) (vProj C) =
         affineV Omega C.1 D.mu (D.mu * D.lam) := by
-    dsimp only [vProj, coordinateValue, SeparableCoordinate.value, Sum.elim_inr]
+    dsimp only [vProj,coordinateValue,SeparableCoordinate.value,Sum.elim_inr]
     exact elementEmbedding_variable Omega (CoordinateField Omega C.1)
       (affineV Omega C.1 D.mu (D.mu * D.lam))
       (D.allAffineTranscendental C)
-
   refine {
     zProjection := zProj
     yzProjection := uProj
@@ -356,11 +333,8 @@ def adaptiveUnitProjectionFamily_of_active_nested
   · intro C v
     rw [exponentSetPoleWeight_unitAll]
     change _ = ContactLocalPoleBound.poleOrder v.val _
-    rw [hvValue C, ← D.allValue C]
+    rw [hvValue C,← D.allValue C]
     exact (D.allPole C v).symm
-
-/-- .
- -/
 theorem exists_adaptiveUnitProjectionFamily_of_active_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,
@@ -378,7 +352,5 @@ theorem exists_adaptiveUnitProjectionFamily_of_active_nested
   obtain ⟨D⟩ := exists_adaptiveNestedProjectionDataActive base hactive hSderiv
   exact ⟨adaptiveUnitProjectionFamily_of_active_nested p q base hactive hZ hSderiv D
     hG hproper hGsupport hTsupport⟩
-
 end
-
 end ProximityPrize.SubmissionLower.ContactAdaptiveNestedUnitFamilyActive6630Research

@@ -3,12 +3,7 @@ import ProximityPrize.SubmissionLower.ContactGeometricFactorCover
 import ProximityPrize.SubmissionLower.ContactNumeratorFactorScaling6731Research
 import ProximityPrize.SubmissionLower.ContactAgreementFactorScaling6731Research
 import ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
-
-/-! Contract a geometric first-tail identity to an original irreducible
-factor, including the separant needed for polynomial reconstruction. -/
-
 namespace ProximityPrize.SubmissionLower.ContactOriginalFactorTail6731Research
-
 open ContactGenericSurface ContactGenericInitialPoint ContactGeometricFirstTail
 open ContactGeometricFactorCover ContactFactorCover GeometricFactorContraction
 open ContactTaylorNumerators ContactIdentityResidualIterationResearch
@@ -16,17 +11,11 @@ open ContactNumeratorFactorScaling6731Research ActualCurveCoordinateField
 open ContactAgreementFactorScaling6731Research
 open ContactFlagBezout6543Research ContactResidualSupportParametersResearch
 open ContactComponentPencils
-
 noncomputable section
-
 variable {K I : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
-
 abbrev Ω (K : Type) [Field K] := GenericField K
-
-/-- A regular geometric factor on which the first tail vanishes comes from
-an original irreducible factor with its own first-tail identity. -/
 theorem exists_original_factor_with_first_tail
     {Γ : Finset K} {x : I → K} {p e : ℕ} [CharP (Ω K) p]
     {flag : FlagDegree} {w : ℕ} {support : ResidualSupportParameters}
@@ -55,8 +44,8 @@ theorem exists_original_factor_with_first_tail
     change MvPolynomial.eval₂Hom (componentCoefficients (polynomialEmbedding K) P)
       (componentPoint (polynomialEmbedding K) P) S.F=0
     rw [component_evaluation]
-    rw [coordinateEvaluation_eq_aeval, aeval_coordinate_eq_quotient,
-      Ideal.Quotient.eq_zero_iff_mem.mpr S.surface_mem_componentIdeal, map_zero]
+    rw [coordinateEvaluation_eq_aeval,aeval_coordinate_eq_quotient,
+      Ideal.Quotient.eq_zero_iff_mem.mpr S.surface_mem_componentIdeal,map_zero]
   have hφC : Function.Injective φC :=
     (algebraMap (Ω K) (CoordinateField (Ω K) P)).injective.comp
       (polynomialEmbedding_injective K)
@@ -76,13 +65,13 @@ theorem exists_original_factor_with_first_tail
   have hQnot : ¬ S.G ∣ surfaceMap (polynomialEmbedding K) Q := by
     intro hGQ
     apply S.regular_proper
-    rw [hprod, MvPolynomial.pderiv_mul]
+    rw [hprod,MvPolynomial.pderiv_mul]
     simp only [map_add,map_mul]
     exact dvd_add (dvd_mul_of_dvd_right hGQ _) (dvd_mul_of_dvd_left hGdivF0 _)
   have hH0not : ¬ S.G ∣ surfaceMap (polynomialEmbedding K) (polyH K F0) := by
     intro hGH
     apply S.regular_proper
-    rw [hprod, MvPolynomial.pderiv_mul]
+    rw [hprod,MvPolynomial.pderiv_mul]
     simp only [polyH,map_add,map_mul]
     exact dvd_add (dvd_mul_of_dvd_left hGH _) (dvd_mul_of_dvd_left hGdivF0 _)
   have hscale := factor_dvd_numerator_sub_power F0 Q (w+1)
@@ -112,9 +101,6 @@ theorem exists_original_factor_with_first_tail
       (by simpa only [canonical_geometricSurfaceMap] using hGdivF0)).mp
       (by simpa only [canonical_geometricSurfaceMap] using hnum)
   exact ⟨F0,Q,hF0spec.1,hF0spec.2.2,hprod,hGdivF0,hQnot,hH0not,hbase⟩
-
-/-- Proper agreement cuts remain proper after contraction to the selected
-original factor. -/
 theorem original_factor_agreement_proper
     (φ : Polynomial K →+* Ω K) (F0 Q : MvPolynomial (Fin 4) K)
     (G : MvPolynomial (Fin 3) (Ω K))
@@ -136,6 +122,5 @@ theorem original_factor_agreement_proper
       (factor_dvd_agreement_sub_power F0 Q w c x0 u0 u1))
   apply hproper
   simpa only [map_sub,map_mul,map_pow,sub_add_cancel] using dvd_add hdiff hscaled
-
 end
 end ProximityPrize.SubmissionLower.ContactOriginalFactorTail6731Research

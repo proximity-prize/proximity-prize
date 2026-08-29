@@ -1,9 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactMovingPoleLocal6719Research
 import ProximityPrize.SubmissionLower.ContactRationalRegularZero6676Research
-
-/-! .
- -/
 namespace ProximityPrize.SubmissionLower.ContactMovingCurveBudget6719Research
 open scoped Classical BigOperators WithZero
 open ActualCurveCoordinateField CoordinateBoxZeroCount ContactWeakSeparableSeparatorResearch
@@ -15,10 +12,8 @@ open ContactRationalRegularZero6676Research
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
-
 variable {K : Type} [Field K]
 local notation "Poly" => MvPolynomial (Fin 3) K
-
 structure MovingPoleBudget (P : Ideal Poly) [P.IsPrime] (H G : Poly) where
   zCost : ℕ
   yzCost : ℕ
@@ -32,14 +27,11 @@ structure MovingPoleBudget (P : Ideal Poly) [P.IsPrime] (H G : Poly) where
     (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate K P) (flagSupport unitAllFlag)) ≤ (allCost : ℤ)
   movingPole : ∀ W : Finset (Place K (CoordinateField K P)),
     (∑ v ∈ W,movingPoleTarget P H G v) ≤ (movingCost : ℤ)
-
 namespace MovingPoleBudget
 variable {P : Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
 variable {H G : MvPolynomial (Fin 3) K}
-
 def weightedCost (budget : MovingPoleBudget P H G) (r : FlagDegree) : ℕ :=
   r.zOnly*budget.zCost+r.yz*budget.yzCost+r.all*budget.allCost
-
 theorem sum_flagPole_le (budget : MovingPoleBudget P H G) (r : FlagDegree)
     (W : Finset (Place K (CoordinateField K P))) :
     (∑ v ∈ W,flagPole v.val (coordinate K P) r) ≤ (budget.weightedCost r : ℤ) := by
@@ -55,9 +47,6 @@ theorem sum_flagPole_le (budget : MovingPoleBudget P H G) (r : FlagDegree)
     (mul_le_mul_of_nonneg_left ha (Int.natCast_nonneg r.all))
   simpa only [flagPole,Finset.sum_add_distrib,← Finset.mul_sum,
     weightedCost,Nat.cast_add,Nat.cast_mul] using h
-
-/-- .
- -/
 theorem sum_filteredCut_pole_le (budget : MovingPoleBudget P H G)
     (a b s k : ℕ) (C : FlagDegree) (B : Fin (k+1) → Poly)
     (c : Fin (k+1) → FlagDegree) (hH : H ∉ P)
@@ -89,9 +78,6 @@ theorem sum_filteredCut_pole_le (budget : MovingPoleBudget P H G)
         ((budget.weightedCost (⟨a,b,s⟩ : FlagDegree) : ℤ)+budget.movingCost) :=
       add_le_add hflagC (mul_le_mul_of_nonneg_left (add_le_add hflagN hmoving) (Int.natCast_nonneg k))
     _ = _ := by push_cast; rfl
-
-/-- .
- -/
 theorem zero_le [IsAlgClosed K] (budget : MovingPoleBudget P H G)
     (base : SeparableLiteralCoordinate P) (a b s k : ℕ) (C : FlagDegree)
     (B : Fin (k+1) → Poly) (c : Fin (k+1) → FlagDegree)
@@ -105,7 +91,6 @@ theorem zero_le [IsAlgClosed K] (budget : MovingPoleBudget P H G)
   intro W
   simpa only [CoordinatePoleMass.poleOrder,coordinateEvaluation_eq_aeval] using
     budget.sum_filteredCut_pole_le a b s k C B c hH hB hc W
-
 end MovingPoleBudget
 end
 end ProximityPrize.SubmissionLower.ContactMovingCurveBudget6719Research

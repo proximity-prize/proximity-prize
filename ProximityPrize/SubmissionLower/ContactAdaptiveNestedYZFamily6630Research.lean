@@ -1,16 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactAdaptiveNestedUnitFamilyActive6630Research
 import ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research
-
-/-! .
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveNestedYZFamily6630Research
-
 open scoped Classical
 open Polynomial KaehlerDifferential
 open ActualCurveCoordinateField ActualCurveRationalProjection
@@ -25,19 +16,13 @@ open ContactAdaptiveNestedUnitFamilyActive6630Research
 open ContactAdaptiveUnitPoleFamilyResearch
 open ContactRegularComponentYZPositivity6630Research
 open ContactFlagBezout6543Research
-
 noncomputable section
-
 set_option maxHeartbeats 4000000
 set_option synthInstance.maxHeartbeats 400000
 set_option maxRecDepth 30000
 set_option autoImplicit false
-
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
-
-/-- .
- -/
 def adaptiveUnitProjectionFamilyYZ_of_active_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,
@@ -59,8 +44,6 @@ def adaptiveUnitProjectionFamilyYZ_of_active_nested
   yzValue := by
     intro C
     exact coordinateOfGate_value (affineU Omega C.1 D.lam) (D.uGate C)
-
-/-- . -/
 theorem exists_adaptiveUnitProjectionFamilyYZ_of_active_nested
     (p q : FlagDegree)
     (base : ∀ C : RegularComponent Omega G T H,
@@ -78,8 +61,5 @@ theorem exists_adaptiveUnitProjectionFamilyYZ_of_active_nested
   obtain ⟨D⟩ := exists_adaptiveNestedProjectionDataActive base hactive hSderiv
   exact ⟨adaptiveUnitProjectionFamilyYZ_of_active_nested p q base hactive hZ
     hSderiv D hG hproper hGsupport hTsupport⟩
-
 end
-
-
 end ProximityPrize.SubmissionLower.ContactAdaptiveNestedYZFamily6630Research

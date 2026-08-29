@@ -2,11 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactMovingProjectionDegree6676Research
 import ProximityPrize.SubmissionLower.ContactFactoredFlagCount6676Research
 import ProximityPrize.SubmissionLower.ContactDerivativeRegularity6719Research
-
-/-! .
- -/
 namespace ProximityPrize.SubmissionLower.ContactMovingFiberCount6676Research
-
 open scoped Classical BigOperators
 open ActualCurveCoordinateField ContactCurveComponents ContactRegularComponentCover
 open ContactMovingProjection6676Research ContactMovingProjectionDegree6676Research
@@ -14,23 +10,17 @@ open ContactGenericFiberEmbeddings6676Research ContactFactoredFlagCount6676Resea
 open ContactFlagBezout6543Research ContactWeakSeparableSeparatorResearch
 open ContactAdaptiveNestedProjection6600Research
 open ContactDerivativeRegularity6719Research
-
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
 set_option synthInstance.maxHeartbeats 300000
-
 variable {K E : Type} [Field K] [Field E] [IsAlgClosed E]
 variable [Algebra K E] [Algebra (RatFunc K) E] [IsScalarTower K (RatFunc K) E]
 local notation "Poly" => MvPolynomial (Fin 3) K
 local notation "PE" => MvPolynomial (Fin 3) E
-
 def rationalVariable (K : Type) [Field K] : RatFunc K :=
   algebraMap (Polynomial K) (RatFunc K) Polynomial.X
-
-/-- .
- -/
 theorem eliminated_not_mem_nonpoint
     (F H G Q U : Poly) (k : ℕ) (B : Fin (k+1) → Poly)
     (C : RegularComponent K F (filteredCut k B H G) H)
@@ -40,7 +30,7 @@ theorem eliminated_not_mem_nonpoint
     (hj : algebraMap (RatFunc K) (CoordinateField K C.1) (rationalVariable K) =
       movingValue C.1 H G Q U)
     (D : Ideal PE) [D.IsPrime]
-    (hnonpoint : ∀ v : Fin 3 → E, D ≠ RingHom.ker (MvPolynomial.aeval v).toRingHom)
+    (hnonpoint : ∀ v : Fin 3 → E,D ≠ RingHom.ker (MvPolynomial.aeval v).toRingHom)
     (hF : scalarPolynomialMap K E F ∈ D)
     (hN : movingEquation (scalarPolynomialMap K E H) (scalarPolynomialMap K E G)
       (scalarPolynomialMap K E Q) (scalarPolynomialMap K E U)
@@ -119,7 +109,7 @@ theorem eliminated_not_mem_nonpoint
           phi (algebraMap (RatFunc K) (CoordinateField K C.1) (rationalVariable K))
         rw [hj]; exact hjmap.symm
     exact RingHom.congr_fun hp p
-  have halg : ∀ i, IsAlgebraic E (coordinate E D i) := by
+  have halg : ∀ i,IsAlgebraic E (coordinate E D i) := by
     intro i
     have hint := IsIntegral.map_of_comp_eq (algebraMap (RatFunc K) E) phi hdiag
       (IsIntegral.of_finite (RatFunc K) (coordinate K C.1 i))
@@ -130,7 +120,6 @@ theorem eliminated_not_mem_nonpoint
     exact hint.isAlgebraic
   obtain ⟨v,hv⟩ := eq_point_kernel_of_coordinates_algebraic E D halg
   exact hnonpoint v hv
-
 theorem embedding_point_certificate
     (F H G Q U : Poly) (k : ℕ) (B : Fin (k+1) → Poly)
     (C : RegularComponent K F (filteredCut k B H G) H)
@@ -196,22 +185,14 @@ theorem embedding_point_certificate
     · exact fun h ↦ hHne (hp h)
     · exact fun h ↦ hUne (hp h)
     · exact comap_le_of_embedding_point C.1 (f.restrictScalars K) D hp
-
 abbrev fiberEquation (H G Q U : Poly) : PE :=
   movingEquation (scalarPolynomialMap K E H) (scalarPolynomialMap K E G)
     (scalarPolynomialMap K E Q) (scalarPolynomialMap K E U)
     (algebraMap (RatFunc K) E (rationalVariable K))
-
 abbrev fiberCut (k : ℕ) (B : Fin (k+1) → Poly) (Q U : Poly) : PE :=
   eliminatedCut k (fun j ↦ scalarPolynomialMap K E (B j))
     (scalarPolynomialMap K E Q) (scalarPolynomialMap K E U)
     (algebraMap (RatFunc K) E (rationalVariable K))
-
-/-- .
-
-
-
- -/
 theorem sum_moving_degrees_le
     (F H G Q U : Poly) (k : ℕ) (B : Fin (k+1) → Poly)
     [∀ C : RegularComponent K F (filteredCut k B H G) H,
@@ -224,9 +205,9 @@ theorem sum_moving_degrees_le
       Algebra.IsSeparable (RatFunc K) (CoordinateField K C.1)]
     (hj : ∀ C : RegularComponent K F (filteredCut k B H G) H,
       algebraMap (RatFunc K) (CoordinateField K C.1) (rationalVariable K)=movingValue C.1 H G Q U)
-    (hU : ∀ C : RegularComponent K F (filteredCut k B H G) H, U ∉ C.1)
+    (hU : ∀ C : RegularComponent K F (filteredCut k B H G) H,U ∉ C.1)
     (hF : F ≠ 0)
-    (hderiv : H ∈ Ideal.span ({F, MvPolynomial.pderiv (1 : Fin 3) F} : Set Poly))
+    (hderiv : H ∈ Ideal.span ({F,MvPolynomial.pderiv (1 : Fin 3) F} : Set Poly))
     (p q r : FlagDegree) (hFp : PolynomialInFlag p F)
     (hNq : PolynomialInFlag q (fiberEquation (E := E) H G Q U))
     (hAr : PolynomialInFlag r (fiberCut (E := E) k B Q U))
@@ -241,7 +222,7 @@ theorem sum_moving_degrees_le
   let R := mu H*mu U
   let P := fun C : RegularComponent K F (filteredCut k B H G) H ↦ C.1
   let points := genericFiberPoints (B := RatFunc K) (L := E) P
-  have hc : ∀ v ∈ points, MvPolynomial.eval v (mu F)=0 ∧ MvPolynomial.eval v N=0 ∧
+  have hc : ∀ v ∈ points,MvPolynomial.eval v (mu F)=0 ∧ MvPolynomial.eval v N=0 ∧
       MvPolynomial.aeval v A=0 ∧ MvPolynomial.eval v R≠0 ∧ IsolatedPoint (mu F) N A v := by
     intro v hv
     obtain ⟨⟨C,f⟩,_,rfl⟩ := Finset.mem_image.mp hv
@@ -270,13 +251,12 @@ theorem sum_moving_degrees_le
       (regularComponent_G_mem E g.1 N R C)
     exact (hc v hv).2.2.2.2 C.1 inferInstance (regularComponent_ne_point E g.1 N R C)
       hp hCF (regularComponent_T_mem E g.1 N R C)
-
 theorem fiber_small_flags (a b s k : ℕ) (C : FlagDegree)
     (H G Q U : Poly) (B : Fin (k+1) → Poly) (c : Fin (k+1) → FlagDegree)
     (hH : PolynomialInFlag ⟨a,b+1,s+1⟩ H) (hG : PolynomialInFlag ⟨a,b,s+3⟩ G)
     (hQ : PolynomialInFlag (2 • unitAllFlag) Q) (hU : PolynomialInFlag unitYZFlag U)
-    (hB : ∀ j, PolynomialInFlag (c j) (B j))
-    (hc : ∀ j, c j+(k-j.val) • (⟨a,b+1,s+1⟩ : FlagDegree)+
+    (hB : ∀ j,PolynomialInFlag (c j) (B j))
+    (hc : ∀ j,c j+(k-j.val) • (⟨a,b+1,s+1⟩ : FlagDegree)+
       j.val • (⟨a,b,s+3⟩ : FlagDegree)=C+k • (⟨2*a,2*b+1,2*s+3⟩ : FlagDegree)) :
     PolynomialInFlag ⟨a,b+1,s+3⟩ (fiberEquation (E := E) H G Q U) ∧
     PolynomialInFlag (C+k • (⟨a,b+1,s+2⟩ : FlagDegree)) (fiberCut (E := E) k B Q U) := by
@@ -287,7 +267,5 @@ theorem fiber_small_flags (a b s k : ℕ) (C : FlagDegree)
   · exact eliminatedCut_small_flag a b s k C _ _ _ _ c
       (fun j ↦ inFlag_map (algebraMap K E) (hB j))
       (inFlag_map (algebraMap K E) hQ) (inFlag_map (algebraMap K E) hU) hc
-
-
 end
 end ProximityPrize.SubmissionLower.ContactMovingFiberCount6676Research

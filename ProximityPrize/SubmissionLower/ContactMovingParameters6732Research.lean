@@ -2,8 +2,6 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
 import ProximityPrize.SubmissionLower.ContactMovingPositiveLedger6719Research
 import ProximityPrize.SubmissionLower.ContactMovingReducedFactorLedger6720Research
-
-/-! Exact arithmetic for the conditional 67.32 reduced-first-tail row. -/
 namespace ProximityPrize.SubmissionLower.ContactMovingParameters6732Research
 open ContactFlagInterpolation6641Research ContactFlagRankKernel6641Research
 open ContactFlagBezout6543Research ContactMovingPositiveLedger6719Research
@@ -12,7 +10,6 @@ open ContactMovingReducedPositiveLedger6720Research
 open scoped BigOperators
 set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
-
 def n : ℕ := 262144
 def w : ℕ := 131071
 def prime : ℕ := 2130706433
@@ -22,7 +19,6 @@ def gap : ℕ := agreements-w
 def listBudget : ℕ := 1000000000
 def capacity : ℕ := prime^6/2^128
 def mcaBudget : ℕ := capacity-listBudget
-
 structure Profile where
   multiplicity : ℕ
   seedCap : ℕ
@@ -42,7 +38,6 @@ def totalRank (P : Profile) : ℕ := n*P.localRank
 def nullity (P : Profile) : ℕ := P.coefficients-P.totalRank
 def characteristicCap (P : Profile) : ℕ := (2*P.slopeCap-1)*P.weightedCap
 end Profile
-
 theorem base_values : agreements=182062 ∧ gap=50991 ∧
     capacity=274980728111395087 ∧ mcaBudget=274980727111395087 ∧
     mcaBudget+listBudget=capacity := by decide
@@ -100,36 +95,28 @@ theorem profile_small_gates :
     (2*profileA.slopeCap-1)*profileA.seedCap<prime ∧ profileA.slopeCap<prime ∧
     (2*profileB.slopeCap-1)*profileB.seedCap<prime ∧ profileB.slopeCap<prime ∧
     (2*profileC.slopeCap-1)*profileC.seedCap<prime ∧ profileC.slopeCap<prime := by decide
-
 def fixedSupport : ResidualSupportParameters :=
   ContactMovingAgreementCertificate6719Research.support 1167 43 9
-
 def fixedProfileForLedger : ContactRobustFixedMeet6656Research.Profile :=
-  ⟨262144, 131071, 182062, 7282480, 1222, 11⟩
-
+  ⟨262144,131071,182062,7282480,1222,11⟩
 def fixedFlag : FlagDegree := surfaceFlag 1167 43 9
 def direction : FlagDegree := directionFlag 1167 43 9
 def centre : FlagDegree := centreFlag 1167 43 9
 def E : ℕ := (n*gap*w+agreements-1)/agreements
 def U : ℕ := n-w
-
 def degreeCost : ℕ :=
   ContactMovingReducedFactorLedger6720Research.factorDegreeCost
     fixedProfileForLedger fixedSupport 1167 43 9 fixedFlag
-
 def unitCost : ℕ :=
   ContactMovingReducedFactorLedger6720Research.factorUnitCost
     fixedProfileForLedger fixedSupport 1167 43 9 fixedFlag
-
 def fixedProperTailCost : ℕ := ((w+1)*degreeCost+unitCost)/gap+1
-
 def identityFlag : FlagDegree := centre+(w+1) • direction
 def firstTailFlag : FlagDegree := centre+w • direction
 def identityZDegree : ℕ := flagMixed fixedFlag identityFlag unitZFlag
 def identityYZDegree : ℕ := flagMixed fixedFlag identityFlag unitYZFlag
 def fixedIdentityYZCost : ℕ := U*(errors+1)*(identityZDegree+identityYZDegree)/gap+1
 def fixedRegularCost : ℕ := fixedProperTailCost+fixedIdentityYZCost
-
 def singularY (P : Profile) : ℕ := (P.characteristicCap-1)/w
 def singularZ (P : Profile) : ℕ := (2*P.slopeCap-1)*P.seedCap
 def singularNumerator (P : Profile) : ℕ :=
@@ -152,7 +139,6 @@ def fixedCost : ℕ := fixedRegularCost+fixedSingularCost
 def firstResidualCeiling : ℕ := firstResidualRegularCost+firstResidualSingularCeiling
 def secondResidualCeiling : ℕ := secondResidualRegularCost+secondResidualSingularCeiling
 def totalCost : ℕ := fixedCost+firstResidualCeiling+secondResidualCeiling
-
 theorem fixed_ledger_values :
     fixedFlag=⟨1167,44,11⟩ ∧ direction=⟨2334,87,21⟩ ∧
     E=9623227539 ∧ U=131073 ∧
@@ -197,8 +183,6 @@ theorem first_tail_characteristic_gates :
       (fixedFlag.yz+fixedFlag.all)*((2*(9+2)-2)*(w+1))=299892747 ∧
     (1+(w+1)*(2*(43+9+3)-2))*fixedFlag.all+
       (fixedFlag.yz+fixedFlag.all)*((2*(9+2)-2)*(w+1))<prime := by decide
-
-/-- Arithmetic consumer; construction of these three cell bounds is external. -/
 theorem total_lt_mcaBudget (total firstResidual secondResidual fixed : ℕ)
     (hpartition : total=firstResidual+secondResidual+fixed)
     (hfirst : firstResidual<firstResidualCeiling)
@@ -217,7 +201,6 @@ theorem total_lt_mcaBudget (total firstResidual secondResidual fixed : ℕ)
     total = _ := hpartition
     _ < totalCost := hsum
     _ < mcaBudget := total_and_slack_exact.2.2
-
 #print axioms interpolation_gates
 #print axioms six_cells_exact
 #print axioms total_and_slack_exact

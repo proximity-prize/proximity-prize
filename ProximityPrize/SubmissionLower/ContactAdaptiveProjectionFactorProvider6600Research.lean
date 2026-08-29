@@ -1,18 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualFactorProvider6600Research
 import ProximityPrize.SubmissionLower.ContactAdaptiveUnitPoleFamilyResearch
-
-/-! .
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactAdaptiveProjectionFactorProvider6600Research
-
 open scoped Classical
 open ContactNearPencil6600ArithmeticResearch ContactPolynomialSolutions
 open ContactPrimeSeedIncidence ContactRegularComponentCover
@@ -26,22 +15,15 @@ open ContactNearPencil6600FlagResearch
 open ContactNearPencil6600FactorLedgerResearch
 open ContactWeakSeparableSeparatorResearch
 open ContactAdaptiveUnitPoleFamilyResearch
-
 noncomputable section
-
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
-
 variable {K Omega Iota : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
 variable {pchar : ℕ} [CharP Omega pchar]
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
- -/
 def TerminalAdaptiveProjectionFamilies
     {flag : FlagDegree}
     (S : ResidualStage phi Gamma x pchar errors flag w) : Prop :=
@@ -56,10 +38,6 @@ def TerminalAdaptiveProjectionFamilies
         SeparableLiteralCoordinate C.1,
       Nonempty (AdaptiveUnitProjectionFamily base flag
         (residualAgreementFlag D.degree))
-
-/-- .
-
- -/
 theorem recursive_scaled_factor_6600_of_adaptive_projection_families
     (hphi : Function.Injective phi)
     {flag : FlagDegree}
@@ -72,11 +50,9 @@ theorem recursive_scaled_factor_6600_of_adaptive_projection_families
   apply recursive_scaled_factor_6600_of_prime_flag_budgets
     hphi S hnodes hagreement
   intro D i hi hproper
-  obtain ⟨base, ⟨P⟩⟩ := hprojection D i hi hproper
-  refine ⟨P.toPrimeFlagBudgetFamily, ?_⟩
+  obtain ⟨base,⟨P⟩⟩ := hprojection D i hi hproper
+  refine ⟨P.toPrimeFlagBudgetFamily,?_⟩
   intro C
   exact P.one_le_toPrimeFlagBudgetFamily_allCost C
-
 end
-
 end ProximityPrize.SubmissionLower.ContactAdaptiveProjectionFactorProvider6600Research

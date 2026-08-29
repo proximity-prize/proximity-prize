@@ -1,7 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactMovingStageZero6719Research
 import ProximityPrize.SubmissionLower.ContactSharpTaylorYZFactorProviderResearch
-
 namespace ProximityPrize.SubmissionLower.ContactMovingComponentIncidence6719Research
 open scoped Classical BigOperators
 open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
@@ -23,7 +22,6 @@ variable {phi : Polynomial K →+* Omega}
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
 theorem proper_cut_seed_bound_of_moving_budgets
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
@@ -64,10 +62,10 @@ theorem proper_cut_seed_bound_of_moving_budgets
     (hzyzPositive : ∀ C : RegularComponent Omega G T (regularitySurface phi F),
       1 ≤ (B C).zCost + (B C).yzCost)
     (zSum yzSum allSum movingSum : ℕ)
-    (hz : (∑ C, (B C).zCost) ≤ zSum)
-    (hyz : (∑ C, (B C).yzCost) ≤ yzSum)
-    (hall : (∑ C, (B C).allCost) ≤ allSum)
-    (hmoving : (∑ C, (B C).movingCost) ≤ movingSum)
+    (hz : (∑ C,(B C).zCost) ≤ zSum)
+    (hyz : (∑ C,(B C).yzCost) ≤ yzSum)
+    (hall : (∑ C,(B C).allCost) ≤ allSum)
+    (hmoving : (∑ C,(B C).movingCost) ≤ movingSum)
     (hdegree : ∀ k ≤ d,
       (nodes.card - k) * (a - d) * (d - k) ≤ U * (a - k))
     (hunit : ∀ k ≤ d,
@@ -107,7 +105,7 @@ theorem proper_cut_seed_bound_of_moving_budgets
     have hsub : GammaC ⊆ Gamma := componentSeeds_subset Omega G T H Gamma
       (selectedPoint phi selected) C
     have hInv : StageInvariant (B C).zCost (B C).yzCost (B C).allCost (B C).movingCost S := by
-      refine ⟨?_, B C, rfl, rfl, rfl, rfl⟩
+      refine ⟨?_,B C,rfl,rfl,rfl,rfl⟩
       exact RationalZeroCriterion.of_separator C.1 (base C)
     apply recursive_curve_moving_bound hphi S
       (B C).zCost (B C).yzCost (B C).allCost (B C).movingCost hInv
@@ -124,34 +122,31 @@ theorem proper_cut_seed_bound_of_moving_budgets
           (e + 1) * (a - d) * largeCost C := by
         have hmul := Nat.mul_le_mul_left ((e + 1) * (a - d))
           (hzyzPositive C)
-        simpa only [largeCost, Nat.mul_one] using hmul
+        simpa only [largeCost,Nat.mul_one] using hmul
       exact hscaled.trans hcharged
-    · simpa only [S, regularComponentCurveStageOfSupport] using hdegree
-    · simpa only [S, regularComponentCurveStageOfSupport] using hunit
-  have hdegreeSum : (∑ C : RegularComponent Omega G T H, degreeCost C) ≤
+    · simpa only [S,regularComponentCurveStageOfSupport] using hdegree
+    · simpa only [S,regularComponentCurveStageOfSupport] using hunit
+  have hdegreeSum : (∑ C : RegularComponent Omega G T H,degreeCost C) ≤
       ContactMovingStageZero6719Research.degreeCost a0 b0 s0 zSum yzSum allSum movingSum := by
-    simp only [degreeCost, ContactMovingStageZero6719Research.degreeCost,
-      Finset.sum_add_distrib, ← Finset.mul_sum]
+    simp only [degreeCost,ContactMovingStageZero6719Research.degreeCost,
+      Finset.sum_add_distrib,← Finset.mul_sum]
     exact Nat.add_le_add
       (Nat.add_le_add (Nat.add_le_add (Nat.mul_le_mul_left a0 hz)
         (Nat.mul_le_mul_left b0 hyz)) (Nat.mul_le_mul_left s0 hall)) hmoving
-  have hunitSum : (∑ C : RegularComponent Omega G T H, unitCost C) ≤
+  have hunitSum : (∑ C : RegularComponent Omega G T H,unitCost C) ≤
       ContactMovingStageZero6719Research.unitCost a0 b0 s0 zSum yzSum allSum := by
-    simp only [unitCost, ContactMovingStageZero6719Research.unitCost,
-      Finset.sum_add_distrib, ← Finset.mul_sum]
+    simp only [unitCost,ContactMovingStageZero6719Research.unitCost,
+      Finset.sum_add_distrib,← Finset.mul_sum]
     exact Nat.add_le_add
       (Nat.add_le_add (Nat.mul_le_mul_left _ hz) (Nat.mul_le_mul_left _ hyz))
       (Nat.mul_le_mul_left _ hall)
-  have hlargeSum : (∑ C : RegularComponent Omega G T H, largeCost C) ≤ zSum+yzSum := by
-    simpa only [largeCost, Finset.sum_add_distrib] using Nat.add_le_add hz hyz
+  have hlargeSum : (∑ C : RegularComponent Omega G T H,largeCost C) ≤ zSum+yzSum := by
+    simpa only [largeCost,Finset.sum_add_distrib] using Nat.add_le_add hz hyz
   exact aggregate_component_stratified_incidence G T H Gamma
     (selectedPoint phi selected) hGpoint hTpoint hHp (a-d) U V (e+1)
     (ContactMovingStageZero6719Research.degreeCost a0 b0 s0 zSum yzSum allSum movingSum)
     (ContactMovingStageZero6719Research.unitCost a0 b0 s0 zSum yzSum allSum)
     (zSum+yzSum) degreeCost unitCost largeCost hcomponent hdegreeSum hunitSum hlargeSum
-
-
-/-- . -/
 theorem regular_component_moving_incidence
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
@@ -205,7 +200,7 @@ theorem regular_component_moving_incidence
   have hsub : GammaC ⊆ Gamma := componentSeeds_subset Omega G T H Gamma
     (selectedPoint phi selected) C
   have hInv : StageInvariant B.zCost B.yzCost B.allCost B.movingCost S := by
-    refine ⟨?_, B, rfl, rfl, rfl, rfl⟩
+    refine ⟨?_,B,rfl,rfl,rfl,rfl⟩
     exact RationalZeroCriterion.of_separator C.1 base
   apply recursive_curve_moving_bound hphi S
     B.zCost B.yzCost B.allCost B.movingCost hInv
@@ -224,8 +219,7 @@ theorem regular_component_moving_incidence
         hzyzPositive
       simpa only [Nat.mul_one] using hmul
     exact hscaled.trans hcharged
-  · simpa only [S, regularComponentCurveStageOfSupport] using hdegree
-  · simpa only [S, regularComponentCurveStageOfSupport] using hunit
-
+  · simpa only [S,regularComponentCurveStageOfSupport] using hdegree
+  · simpa only [S,regularComponentCurveStageOfSupport] using hunit
 end
 end ProximityPrize.SubmissionLower.ContactMovingComponentIncidence6719Research

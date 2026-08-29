@@ -1,9 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactMovingFixedProfile6732Research
 import ProximityPrize.SubmissionLower.ContactRegularFactorResidualStage6600Research
-
 namespace ProximityPrize.SubmissionLower.ContactMovingFixedStage6732Research
-
 open scoped Classical
 open ContactInterpolation ContactSelectedSeedDecomposition ContactFactorCaps
 open ContactOriginalRegularSeedCount ContactOriginalRegularResidualStage6600Research
@@ -13,22 +11,18 @@ open ContactIdentityResidualIterationResearch ContactIdentityResidualGlobalFlagR
 open ContactResidualSupportParametersResearch ContactFlagBezout6543Research
 open ContactGCDCumulativeFlagsResearch ContactMovingFixedProfile6732Research
 open ContactPrimeSeedIncidence ContactProperCutSeedCount
-
 noncomputable section
 set_option maxHeartbeats 3000000
-
 variable {K I : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
 local instance : DecidableEq (GenericField K) := Classical.decEq _
-
 theorem fixedSupport_of_dvd
     (F Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) (hdiv : F ∣ Q)
     (Hsupport : ResidualSupportData fixedSupport Q) : ResidualSupportData fixedSupport F :=
   ⟨(weightedTotalDegree_le_of_dvd residualSWeights F Q hdiv hQ).trans Hsupport.s_weight,
     (weightedTotalDegree_le_of_dvd residualYSWeights F Q hdiv hQ).trans Hsupport.ys_weight,
     (weightedTotalDegree_le_of_dvd residualTotalWeights F Q hdiv hQ).trans Hsupport.total_weight⟩
-
 def fixedGeometricStage
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) [CharP K prime]
     (hbox : Q ∈ globalCoefficientBox K fixedProfile.weightedCap fixedProfile.w
@@ -36,7 +30,7 @@ def fixedGeometricStage
     (Hsupport : ResidualSupportData fixedSupport Q)
     (selected : K → Polynomial K) (Γ : Finset K)
     (nodes : Finset I) (x u0 u1 : I → K) (hinj : Set.InjOn x nodes)
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ fixedProfile.w)
+    (hdegree : ∀ γ ∈ Γ,(selected γ).natDegree ≤ fixedProfile.w)
     (hnoPencil : NoLargeSelectedPencil selected Γ fixedProfile.w fixedProfile.errors)
     (R : RegularIndex Q) (g : GeometricFactor K R.1) :
     letI : CharP (GenericField K) prime := genericField_charP K prime
@@ -55,7 +49,6 @@ def fixedGeometricStage
   let S := regularGeometricResidualStageOfSupport fixedSupport Q selected Γ nodes x u0 u1
     hinj hdegree hnoPencil R hRdata.1 hRdata.2.1 hRsmall hsupport (by decide) g
   exact reflagResidualStage S (polynomialIn_surfaceCumulativeFlag g.1)
-
 theorem geometric_flag_caps
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K fixedProfile.weightedCap fixedProfile.w
@@ -71,6 +64,5 @@ theorem geometric_flag_caps
   exact geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero
     (fixedSupport_of_dvd R.1 Q hQ
       (ContactImplicitContactLift.positiveRFactors_spec Q R.1 R.2).2.1 Hsupport) g
-
 end
 end ProximityPrize.SubmissionLower.ContactMovingFixedStage6732Research

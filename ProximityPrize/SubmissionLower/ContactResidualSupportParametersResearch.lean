@@ -1,68 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalFlagResearch
 import ProximityPrize.SubmissionLower.ContactFactorCaps
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactResidualSupportParametersResearch
-
 open ContactGenericSurface ContactTaylorNumerators
 open ContactInterpolation ContactFactorCaps
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactIdentityResidualGlobalTransformResearch
 open ContactIdentityResidualGlobalFlagResearch
 open ContactFlagBezout6543Research
-
 noncomputable section
-
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 20000
-
-/-- .
-
-
- -/
 structure ResidualSupportParameters where
   s : ℕ
   ys : ℕ
@@ -72,25 +20,16 @@ structure ResidualSupportParameters where
   ys_le_total : ys ≤ total
   two_le_ys : 2 ≤ ys
   deriving DecidableEq
-
 namespace ResidualSupportParameters
-
-/-- .
- -/
 def agreementDirection (P : ResidualSupportParameters) : FlagDegree :=
-  ⟨2 * (P.total - P.ys), 2 * (P.ys - P.s), 2 * P.s - 1⟩
-
-/-- .
- -/
+  ⟨2 * (P.total - P.ys),2 * (P.ys - P.s),2 * P.s - 1⟩
 def residualAgreementFlag (P : ResidualSupportParameters) (d : ℕ) : FlagDegree :=
   ⟨P.agreementDirection.zOnly * d,
     1 + P.agreementDirection.yz * d,
     P.agreementDirection.all * d⟩
-
 theorem agreementDirection_values (P : ResidualSupportParameters) :
     P.agreementDirection =
-      ⟨2 * (P.total - P.ys), 2 * (P.ys - P.s), 2 * P.s - 1⟩ := rfl
-
+      ⟨2 * (P.total - P.ys),2 * (P.ys - P.s),2 * P.s - 1⟩ := rfl
 theorem residualAgreementFlag_ys (P : ResidualSupportParameters) (d : ℕ) :
     (P.residualAgreementFlag d).yz + (P.residualAgreementFlag d).all =
       1 + d * (2 * P.ys - 1) := by
@@ -99,10 +38,9 @@ theorem residualAgreementFlag_ys (P : ResidualSupportParameters) (d : ℕ) :
     have hle := Nat.mul_le_mul_left 2 P.s_le_ys
     have hpos := P.one_le_s
     omega
-  simp only [residualAgreementFlag, agreementDirection]
+  simp only [residualAgreementFlag,agreementDirection]
   rw [← hcoeff]
   ring
-
 theorem residualAgreementFlag_total (P : ResidualSupportParameters) (d : ℕ) :
     (P.residualAgreementFlag d).zOnly +
         (P.residualAgreementFlag d).yz +
@@ -110,16 +48,14 @@ theorem residualAgreementFlag_total (P : ResidualSupportParameters) (d : ℕ) :
       1 + d * (2 * P.total - 1) := by
   have hcoeff : 2 * (P.total - P.ys) + 2 * (P.ys - P.s) +
       (2 * P.s - 1) = 2 * P.total - 1 := by
-    rw [Nat.mul_sub_left_distrib, Nat.mul_sub_left_distrib]
+    rw [Nat.mul_sub_left_distrib,Nat.mul_sub_left_distrib]
     have hle₁ := Nat.mul_le_mul_left 2 P.s_le_ys
     have hle₂ := Nat.mul_le_mul_left 2 P.ys_le_total
     have hpos := P.one_le_s
     omega
-  simp only [residualAgreementFlag, agreementDirection]
+  simp only [residualAgreementFlag,agreementDirection]
   rw [← hcoeff]
   ring
-
-/-- . -/
 def acceptedSupport : ResidualSupportParameters where
   s := 8
   ys := 43
@@ -128,8 +64,6 @@ def acceptedSupport : ResidualSupportParameters where
   s_le_ys := by norm_num
   ys_le_total := by norm_num
   two_le_ys := by norm_num
-
-/-- . -/
 def fixedMeetSupport : ResidualSupportParameters where
   s := 6
   ys := 34
@@ -138,43 +72,30 @@ def fixedMeetSupport : ResidualSupportParameters where
   s_le_ys := by norm_num
   ys_le_total := by norm_num
   two_le_ys := by norm_num
-
 theorem accepted_agreement_flag (d : ℕ) :
     acceptedSupport.residualAgreementFlag d =
       ContactIdentityResidualGlobalFlagResearch.residualAgreementFlag d := by
   rfl
-
 theorem fixedMeet_agreement_direction :
-    fixedMeetSupport.agreementDirection = ⟨1140, 56, 11⟩ := by
-  norm_num [fixedMeetSupport, agreementDirection]
-
+    fixedMeetSupport.agreementDirection = ⟨1140,56,11⟩ := by
+  norm_num [fixedMeetSupport,agreementDirection]
 theorem fixedMeet_agreement_flag (d : ℕ) :
     fixedMeetSupport.residualAgreementFlag d =
-      ⟨1140 * d, 1 + 56 * d, 11 * d⟩ := by
+      ⟨1140 * d,1 + 56 * d,11 * d⟩ := by
   rfl
-
 end ResidualSupportParameters
-
 variable {K Omega : Type} [Field K] [Field Omega]
-
 abbrev Poly4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
-
-/-- .
- -/
 structure ResidualSupportData (P : ResidualSupportParameters) (F : Poly4 K) : Prop where
   s_weight : wt residualSWeights F ≤ P.s
   ys_weight : wt residualYSWeights F ≤ P.ys
   total_weight : wt residualTotalWeights F ≤ P.total
-
 namespace ResidualSupportData
-
-/-- .
- -/
 theorem fixedMeet_of_mem_box
     (F : Poly4 K)
     (hbox : F ∈ globalCoefficientBox K 4570175 131071 598 6) :
     ResidualSupportData ResidualSupportParameters.fixedMeetSupport F := by
-  refine ⟨?_, ?_, ?_⟩
+  refine ⟨?_,?_,?_⟩
   · apply (weightedTotalDegree_le_iff residualSWeights F 6).mpr
     intro d hd
     have hb : d 1 + d 3 ≤ 598 ∧ d 2 ≤ 6 ∧
@@ -201,15 +122,12 @@ theorem fixedMeet_of_mem_box
     norm_num
     norm_num at hb
     omega
-
-/-- .
- -/
 theorem globalResidual
     {P : ResidualSupportParameters} {F : Poly4 K}
     (H : ResidualSupportData P F)
     (P0 P1 V : Polynomial K) :
     ResidualSupportData P (globalResidualHom P0 P1 V F) := by
-  refine ⟨?_, ?_, ?_⟩
+  refine ⟨?_,?_,?_⟩
   · exact (globalResidualHom_wt_le_pulled residualSWeights rfl
       P0 P1 V F).trans (by simpa [residualPullWeights_s] using H.s_weight)
   · exact (globalResidualHom_wt_le_pulled residualYSWeights rfl
@@ -217,9 +135,6 @@ theorem globalResidual
   · exact (globalResidualHom_wt_le_pulled residualTotalWeights rfl
       P0 P1 V F).trans (by
         simpa [residualPullWeights_total] using H.total_weight)
-
-/-- .
- -/
 theorem coordinate_bounds
     {P : ResidualSupportParameters} {F : Poly4 K}
     (H : ResidualSupportData P F) :
@@ -231,7 +146,7 @@ theorem coordinate_bounds
       funext i
       fin_cases i <;> rfl
     have hs := H.s_weight
-    rw [hw, wt, MvPolynomial.weightedTotalDegree_piSingle] at hs
+    rw [hw,wt,MvPolynomial.weightedTotalDegree_piSingle] at hs
     exact hs
   have hY : F.degreeOf (1 : Fin 4) ≤ P.ys := by
     apply MvPolynomial.degreeOf_le_iff.mpr
@@ -251,9 +166,7 @@ theorem coordinate_bounds
     change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 1 ≤ P.total at hw
     norm_num at hw
     omega
-  exact ⟨hY, hR, hZ⟩
-
-/-- . -/
+  exact ⟨hY,hR,hZ⟩
 theorem agreement_weight_bounds
     {P : ResidualSupportParameters} {F : Poly4 K}
     (H : ResidualSupportData P F)
@@ -264,9 +177,9 @@ theorem agreement_weight_bounds
         1 + d * (2 * P.ys - 1) ∧
       wt residualTotalWeights (agreementNumerator F d coeffs x u0 u1) ≤
         1 + d * (2 * P.total - 1) := by
-  obtain ⟨hY, hR, hZ⟩ := H.coordinate_bounds
+  obtain ⟨hY,hR,hZ⟩ := H.coordinate_bounds
   refine ⟨(agreementNumerator_degree_bounds F P.ys P.s P.total
-    P.one_le_s hY hR hZ d coeffs x u0 u1).2.1, ?_, ?_⟩
+    P.one_le_s hY hR hZ d coeffs x u0 u1).2.1,?_,?_⟩
   · have h := agreementNumerator_wt_le_minkowski residualYSWeights rfl
       F P.ys (by change 1 ≤ P.ys; exact P.one_le_s.trans P.s_le_ys)
       (by change 2 ≤ P.ys; exact P.two_le_ys)
@@ -290,10 +203,6 @@ theorem agreement_weight_bounds
       1 + d * (2 * P.total - 1)
     rw [hcoeff]
     norm_num
-
-/-- .
-
- -/
 theorem surfaceMap_agreement_in_flag
     {P : ResidualSupportParameters}
     (phi : Polynomial K →+* Omega) {F : Poly4 K}
@@ -302,9 +211,9 @@ theorem surfaceMap_agreement_in_flag
     PolynomialInFlag (P.residualAgreementFlag d)
       (surfaceMap phi (agreementNumerator F d coeffs x u0 u1)) := by
   intro e he
-  obtain ⟨q, hq, rfl⟩ := Finset.mem_image.mp
+  obtain ⟨q,hq,rfl⟩ := Finset.mem_image.mp
     (support_surfaceMap_subset phi (agreementNumerator F d coeffs x u0 u1) he)
-  obtain ⟨hR, hYS, hTotal⟩ := H.agreement_weight_bounds d coeffs x u0 u1
+  obtain ⟨hR,hYS,hTotal⟩ := H.agreement_weight_bounds d coeffs x u0 u1
   have hqR := (MvPolynomial.monomial_le_degreeOf (2 : Fin 4) hq).trans hR
   have hqYS := (MvPolynomial.le_weightedTotalDegree residualYSWeights hq).trans hYS
   have hqTotal :=
@@ -325,15 +234,11 @@ theorem surfaceMap_agreement_in_flag
     q 1 + q 2 + q 3 ≤ (P.residualAgreementFlag d).zOnly +
       (P.residualAgreementFlag d).yz +
       (P.residualAgreementFlag d).all
-  refine ⟨hqR', ?_, ?_⟩
+  refine ⟨hqR',?_,?_⟩
   · rw [P.residualAgreementFlag_ys]
     exact hqYS
   · rw [P.residualAgreementFlag_total]
     exact hqTotal
-
-/-- .
-
- -/
 theorem globalResidual_and_agreement_in_flag
     {P : ResidualSupportParameters} {F : Poly4 K}
     (H : ResidualSupportData P F)
@@ -345,10 +250,7 @@ theorem globalResidual_and_agreement_in_flag
       PolynomialInFlag (P.residualAgreementFlag d)
         (surfaceMap phi (agreementNumerator Fres d coeffs x u0 u1)) := by
   let Hres := H.globalResidual P0 P1 V
-  exact ⟨Hres, Hres.surfaceMap_agreement_in_flag phi d coeffs x u0 u1⟩
-
+  exact ⟨Hres,Hres.surfaceMap_agreement_in_flag phi d coeffs x u0 u1⟩
 end ResidualSupportData
-
 end
-
 end ProximityPrize.SubmissionLower.ContactResidualSupportParametersResearch

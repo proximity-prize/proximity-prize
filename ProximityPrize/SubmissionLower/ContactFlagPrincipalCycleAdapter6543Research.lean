@@ -1,27 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagProjectionProvider6543Research
 import ProximityPrize.SubmissionLower.ContactFlagAffineFamilyDegree6543Research
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactFlagPrincipalCycleAdapter6543Research
-
 open scoped Classical BigOperators
 open IsDedekindDomain
 open ActualCurveCoordinateField ActualCurveRationalProjection
@@ -35,14 +15,8 @@ open ContactFlagAffineFamilyDegree6543Research
 open ContactFlagTriangularProjectionResearch
 open TrivariateRationalCollection ActualPlaneCoordinateKernel
   ArbitraryRationalProjectionResearch
-
 noncomputable section
-
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
-
-/-- .
-
- -/
 structure SeparablePrincipalProjection
     {G T H : MvPolynomial (Fin 3) Omega}
     (E : Finset (Fin 3 →₀ ℕ)) (separator : Fin 3)
@@ -62,9 +36,6 @@ structure SeparablePrincipalProjection
       CoordinatePoleMass.poleOrder Omega (CoordinateField Omega C.1) v
         (SeparableCoordinate.value Omega (CoordinateField Omega C.1)
           (parameter C))
-
-/-- .
- -/
 def SeparablePrincipalProjection.cost
     {G T H : MvPolynomial (Fin 3) Omega}
     {E : Finset (Fin 3 →₀ ℕ)} {separator : Fin 3}
@@ -76,10 +47,6 @@ def SeparablePrincipalProjection.cost
     (P : SeparablePrincipalProjection E separator hseparator hproj B)
     (C : RegularComponent Omega G T H) : ℕ :=
   SeparableCoordinate.degree Omega (CoordinateField Omega C.1) (P.parameter C)
-
-/-- .
-
- -/
 def SeparablePrincipalProjection.toPrincipalCycleBudget
     {G T H : MvPolynomial (Fin 3) Omega}
     {E : Finset (Fin 3 →₀ ℕ)} {separator : Fin 3}
@@ -90,7 +57,7 @@ def SeparablePrincipalProjection.toPrincipalCycleBudget
     {B : GenericExactPolePolynomial G T H E separator hseparator hproj}
     (P : SeparablePrincipalProjection E separator hseparator hproj B)
     (wholeCap : ℕ)
-    (hsum : (∑ C : RegularComponent Omega G T H, P.cost C) ≤ wholeCap) :
+    (hsum : (∑ C : RegularComponent Omega G T H,P.cost C) ≤ wholeCap) :
     PrincipalCycleBudget E separator hseparator hproj B wholeCap where
   cost := P.cost
   cycle_le := by
@@ -120,9 +87,9 @@ def SeparablePrincipalProjection.toPrincipalCycleBudget
     let W := CommonPlaceBalance.placesFor Omega
       (CoordinateField Omega C.1) b hb
     calc
-      (∑ v ∈ W, CoordinatePoleMass.poleOrder Omega
+      (∑ v ∈ W,CoordinatePoleMass.poleOrder Omega
           (CoordinateField Omega C.1) v b) =
-          ∑ v ∈ W, CoordinatePoleMass.poleOrder Omega
+          ∑ v ∈ W,CoordinatePoleMass.poleOrder Omega
             (CoordinateField Omega C.1) v
             (SeparableCoordinate.value Omega (CoordinateField Omega C.1)
               (P.parameter C)) := by
@@ -135,9 +102,6 @@ def SeparablePrincipalProjection.toPrincipalCycleBudget
           (CoordinateField Omega C.1) (P.parameter C) W
       _ = (P.cost C : ℤ) := rfl
   sum_cost_le := hsum
-
-/-- .
- -/
 def flagSeparableCoordinate
     {G T H : MvPolynomial (Fin 3) Omega}
     (lam mu nu : Omega) (order : Fin 3 ≃ Fin 3)
@@ -162,7 +126,6 @@ def flagSeparableCoordinate
     (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (order 0))) (ht C)
   finite := hfinite C
   separable := hsep C
-
 @[simp] theorem flagSeparableCoordinate_value
     {G T H : MvPolynomial (Fin 3) Omega}
     (lam mu nu : Omega) (order : Fin 3 ≃ Fin 3)
@@ -187,11 +150,6 @@ def flagSeparableCoordinate
       flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (order 0)) := by
   exact elementEmbedding_variable Omega (CoordinateField Omega C.1)
     (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (order 0))) (ht C)
-
-/-- .
-
-
- -/
 def principalCycleBudget_of_flag_trapezoid
     {G T H : MvPolynomial (Fin 3) Omega}
     {E : Finset (Fin 3 →₀ ℕ)} {separator : Fin 3}
@@ -237,10 +195,10 @@ def principalCycleBudget_of_flag_trapezoid
     (hTouter : (planeMap Omega order
       (flagAlgHom lam mu nu T)).natDegree ≤ mCap)
     (hGsupport : ∀ d ∈ (rationalMap Omega order
-      (flagAlgHom lam mu nu G)).support, d 0 + d 1 ≤ totalG)
+      (flagAlgHom lam mu nu G)).support,d 0 + d 1 ≤ totalG)
     (hTsupport : ∀ d ∈ (rationalMap Omega order
-      (flagAlgHom lam mu nu T)).support, d 0 + d 1 ≤ totalT)
-    (hbudget : ∀ m, m ≤ mCap →
+      (flagAlgHom lam mu nu T)).support,d 0 + d 1 ≤ totalT)
+    (hbudget : ∀ m,m ≤ mCap →
       m * totalG + n * totalT - m * n ≤ cap) :
     PrincipalCycleBudget E separator hseparator hproj B cap := by
   have hinj : Function.Injective
@@ -269,7 +227,5 @@ def principalCycleBudget_of_flag_trapezoid
   apply Finset.sum_congr rfl
   intro C _
   rfl
-
 end
-
 end ProximityPrize.SubmissionLower.ContactFlagPrincipalCycleAdapter6543Research

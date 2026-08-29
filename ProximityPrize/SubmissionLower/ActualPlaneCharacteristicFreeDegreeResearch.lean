@@ -1,40 +1,21 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CharacteristicFreeProjectionAdapter
 import ProximityPrize.SubmissionLower.ActualPlanePositiveOrder
-
-/-! .
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ActualPlaneCharacteristicFreeDegreeResearch
-
 open scoped Classical BigOperators
 open ActualCurveCoordinateField ActualCurveRationalProjection
   TrivariateRationalCollection ActualPlaneCoordinateKernel
   ActualPlaneCoordinateCaps ActualPlanePositiveOrder ActualPlaneCoordinateDegree
   CharacteristicFreeMatrixMultiplicityResearch
   CharacteristicFreeProjectionAdapter
-
 noncomputable section
-
 variable (K : Type) [Field K]
-
 private def familyFiniteSummary {I : Type} [Fintype I]
-    (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
-    (A : ∀ i, Algebra (RatFunc K) (CoordinateField K (P i))) (B : ℕ) : Prop :=
+    (P : I → Ideal (Original K)) [∀ i,(P i).IsPrime]
+    (A : ∀ i,Algebra (RatFunc K) (CoordinateField K (P i))) (B : ℕ) : Prop :=
   letI := A
-  (∀ i, FiniteDimensional (RatFunc K) (CoordinateField K (P i))) ∧
-    (∑ i, Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤ B
-
+  (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i))) ∧
+    (∑ i,Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤ B
 theorem rationalBaseAlgebra_congr
     (P : Ideal (Original K)) [P.IsPrime]
     (i j : Fin 3) (hij : i = j)
@@ -43,7 +24,6 @@ theorem rationalBaseAlgebra_congr
     rationalBaseAlgebra K P i hi = rationalBaseAlgebra K P j hj := by
   subst j
   rfl
-
 theorem plane_budget_le_original (order : Fin 3 ≃ Fin 3) (G H : Original K) :
     (planeMap K order H).natDegree *
           Polynomial.Bivariate.degreeX (planeMap K order G) +
@@ -55,31 +35,25 @@ theorem plane_budget_le_original (order : Fin 3 ≃ Fin 3) (G H : Original K) :
       (planeMap_degreeX_le K order G))
     (Nat.mul_le_mul (planeMap_natDegree_le K order G)
       (planeMap_degreeX_le K order H))
-
 section FixedOrder
-
 variable (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
-variable (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
-
-/-- .
-
- -/
+variable (P : I → Ideal (Original K)) [∀ i,(P i).IsPrime]
 theorem actual_finite_sum_finrank_bound_without_separability
-    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
+    (ht : ∀ i,Transcendental K (coordinate K (P i) (order 0)))
     (hinj : Function.Injective P) (G H : Original K)
-    (hG : Irreducible G) (hGmem : ∀ i, G ∈ P i)
-    (hHmem : ∀ i, H ∈ P i) (hproper : ¬ G ∣ H)
+    (hG : Irreducible G) (hGmem : ∀ i,G ∈ P i)
+    (hHmem : ∀ i,H ∈ P i) (hproper : ¬ G ∣ H)
     (hpositive : 0 < (planeMap K order G).natDegree) :
-    letI : ∀ i, Algebra (RatFunc K) (CoordinateField K (P i)) :=
+    letI : ∀ i,Algebra (RatFunc K) (CoordinateField K (P i)) :=
       fun i => rationalBaseAlgebra K (P i) (order 0) (ht i)
-    (∀ i, FiniteDimensional (RatFunc K) (CoordinateField K (P i))) ∧
-      (∑ i, Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤
+    (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i))) ∧
+      (∑ i,Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤
         (planeMap K order H).natDegree *
             Polynomial.Bivariate.degreeX (planeMap K order G) +
           (planeMap K order G).natDegree *
             Polynomial.Bivariate.degreeX (planeMap K order H) := by
   classical
-  letI : ∀ i, Algebra (RatFunc K) (CoordinateField K (P i)) :=
+  letI : ∀ i,Algebra (RatFunc K) (CoordinateField K (P i)) :=
     fun i => rationalBaseAlgebra K (P i) (order 0) (ht i)
   by_cases hI : Nonempty I
   · let i₀ : I := Classical.choice hI
@@ -133,7 +107,7 @@ theorem actual_finite_sum_finrank_bound_without_separability
         (coordinate K (P i) (order 2))
         (coordinate K (P i) (order 1))
         hGeval hHeval (actual_generators K order (P i) (ht i))
-    letI : ∀ i, FiniteDimensional (RatFunc K) (CoordinateField K (P i)) :=
+    letI : ∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i)) :=
       hfinite
     have hkernels : Function.Injective (fun i =>
         PlaneFunctionFieldDegree.relationIdeal (RatFunc K)
@@ -159,31 +133,24 @@ theorem actual_finite_sum_finrank_bound_without_separability
     · intro i
       exact isEmptyElim i
     · simp
-
 end FixedOrder
-
 section OriginalOrder
-
 variable (order : Fin 3 ≃ Fin 3) {I : Type} [Fintype I]
-variable (P : I → Ideal (Original K)) [∀ i, (P i).IsPrime]
-
-/-- .
-
- -/
+variable (P : I → Ideal (Original K)) [∀ i,(P i).IsPrime]
 theorem original_finite_sum_finrank_bound_without_separability
-    (ht : ∀ i, Transcendental K (coordinate K (P i) (order 0)))
+    (ht : ∀ i,Transcendental K (coordinate K (P i) (order 0)))
     (hinj : Function.Injective P) (G H : Original K)
-    (hG : Irreducible G) (hGmem : ∀ i, G ∈ P i)
-    (hHmem : ∀ i, H ∈ P i) (hproper : ¬ G ∣ H) :
-    letI : ∀ i, Algebra (RatFunc K) (CoordinateField K (P i)) :=
+    (hG : Irreducible G) (hGmem : ∀ i,G ∈ P i)
+    (hHmem : ∀ i,H ∈ P i) (hproper : ¬ G ∣ H) :
+    letI : ∀ i,Algebra (RatFunc K) (CoordinateField K (P i)) :=
       fun i => rationalBaseAlgebra K (P i) (order 0) (ht i)
-    (∀ i, FiniteDimensional (RatFunc K) (CoordinateField K (P i))) ∧
-      (∑ i, Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤
+    (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i))) ∧
+      (∑ i,Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤
         originalMixedDegree K order G H := by
   classical
   by_cases hI : Nonempty I
   · let i₀ : I := Classical.choice hI
-    obtain ⟨order', hor, hbase, hpositive⟩ :=
+    obtain ⟨order',hor,hbase,hpositive⟩ :=
       exists_positive_outer_order K order (P i₀) G hG (hGmem i₀) (ht i₀)
     have hbudget : originalMixedDegree K order' G H =
         originalMixedDegree K order G H := by
@@ -195,17 +162,17 @@ theorem original_finite_sum_finrank_bound_without_separability
       intro i
       simpa only [hbase] using ht i
     have hresult :
-        letI : ∀ i, Algebra (RatFunc K) (CoordinateField K (P i)) :=
+        letI : ∀ i,Algebra (RatFunc K) (CoordinateField K (P i)) :=
           fun i => rationalBaseAlgebra K (P i) (order' 0) (ht' i)
-        (∀ i, FiniteDimensional (RatFunc K) (CoordinateField K (P i))) ∧
-          (∑ i, Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤
+        (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i))) ∧
+          (∑ i,Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤
             originalMixedDegree K order' G H := by
-      letI : ∀ i, Algebra (RatFunc K) (CoordinateField K (P i)) :=
+      letI : ∀ i,Algebra (RatFunc K) (CoordinateField K (P i)) :=
         fun i => rationalBaseAlgebra K (P i) (order' 0) (ht' i)
-      obtain ⟨hfinite, hbound⟩ :=
+      obtain ⟨hfinite,hbound⟩ :=
         actual_finite_sum_finrank_bound_without_separability
           K order' P ht' hinj G H hG hGmem hHmem hproper hpositive
-      exact ⟨hfinite, hbound.trans (plane_budget_le_original K order' G H)⟩
+      exact ⟨hfinite,hbound.trans (plane_budget_le_original K order' G H)⟩
     have halg :
         (fun i => rationalBaseAlgebra K (P i) (order' 0) (ht' i)) =
           (fun i => rationalBaseAlgebra K (P i) (order 0) (ht i)) := by
@@ -215,17 +182,13 @@ theorem original_finite_sum_finrank_bound_without_separability
     change familyFiniteSummary K P
       (fun i => rationalBaseAlgebra K (P i) (order' 0) (ht' i))
         (originalMixedDegree K order' G H) at hresult
-    rw [halg, hbudget] at hresult
+    rw [halg,hbudget] at hresult
     exact hresult
   · letI : IsEmpty I := ⟨fun i => hI ⟨i⟩⟩
     constructor
     · intro i
       exact isEmptyElim i
     · simp
-
 end OriginalOrder
-
 end
-
-
 end ProximityPrize.SubmissionLower.ActualPlaneCharacteristicFreeDegreeResearch

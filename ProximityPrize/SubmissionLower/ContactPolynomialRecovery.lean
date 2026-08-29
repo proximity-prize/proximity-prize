@@ -1,31 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactPolynomialSolutions
-
-/-! .
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactPolynomialRecovery
-
 open ContactDifferentialRing ContactRegularPoint ContactPolynomiality
 open ContactTaylorNumerators ContactAgreementEvaluation ContactPolynomialSolutions
 open ContactGlobalPolynomiality ContactTranslation DifferentialTaylorCoefficients
-
 noncomputable section
-
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
-
 variable {K L : Type*} [Field K] [Field L]
-
 theorem taylor_coeff_eq_derivative_div_factorial
     (P : Polynomial L) (ξ : L) (j : ℕ) (hfactorial : (j.factorial : L) ≠ 0) :
     (Polynomial.taylor ξ P).coeff j =
@@ -37,13 +19,12 @@ theorem taylor_coeff_eq_derivative_div_factorial
       Polynomial.derivative^[j] P at h
     simpa only [nsmul_eq_mul] using h
   have hvalue := congrArg (Polynomial.evalRingHom ξ) hpoly
-  simp only [map_mul, map_natCast] at hvalue
+  simp only [map_mul,map_natCast] at hvalue
   change (j.factorial : L) * (Polynomial.hasseDeriv j P).eval ξ =
     (Polynomial.derivative^[j] P).eval ξ at hvalue
   rw [Polynomial.taylor_coeff]
   apply (eq_div_iff hfactorial).mpr
   simpa only [mul_comm] using hvalue
-
 theorem polynomialPoint_jetCoefficient_eq
     (coefficients : K →+* L) (F : Poly4 K) (P : Polynomial K) (γ : K) (ξ : L)
     (hsolution : specialization K P γ F = 0)
@@ -61,11 +42,11 @@ theorem polynomialPoint_jetCoefficient_eq
       h ^ (2 * j) * (Polynomial.derivative^[j] P).eval₂ coefficients ξ := by
     rw [eval_polynomialPoint_eq_specialization,
       specialization_numerator_eq K F P γ hsolution j,
-      Polynomial.eval₂_mul, Polynomial.eval₂_pow]
+      Polynomial.eval₂_mul,Polynomial.eval₂_pow]
     rw [← eval_polynomialPoint_eq_specialization coefficients P γ ξ (polyH K F)]
   have hcancel : h ^ (2 * j) * h⁻¹ ^ (2 * j) = 1 := by
-    rw [← mul_pow, mul_inv_cancel₀ hH, one_pow]
-  rw [jetCoefficient_eq_evaluated_numerator, hnum]
+    rw [← mul_pow,mul_inv_cancel₀ hH,one_pow]
+  rw [jetCoefficient_eq_evaluated_numerator,hnum]
   change (h ^ (2 * j) * (Polynomial.derivative^[j] P).eval₂ coefficients ξ) *
       h⁻¹ ^ (2 * j) / (j.factorial : L) = _
   congr 1
@@ -73,8 +54,7 @@ theorem polynomialPoint_jetCoefficient_eq
     (h ^ (2 * j) * (Polynomial.derivative^[j] P).eval₂ coefficients ξ) * h⁻¹ ^ (2 * j) =
         (h ^ (2 * j) * h⁻¹ ^ (2 * j)) *
           (Polynomial.derivative^[j] P).eval₂ coefficients ξ := by ring
-    _ = (Polynomial.derivative^[j] P).eval₂ coefficients ξ := by rw [hcancel, one_mul]
-
+    _ = (Polynomial.derivative^[j] P).eval₂ coefficients ξ := by rw [hcancel,one_mul]
 theorem polynomialPoint_jetCoefficient_eq_taylor_coeff
     (coefficients : K →+* L) (F : Poly4 K) (P : Polynomial K) (γ : K) (ξ : L)
     (hsolution : specialization K P γ F = 0)
@@ -87,9 +67,8 @@ theorem polynomialPoint_jetCoefficient_eq_taylor_coeff
         (contactCoordinate K F (1 : Fin 4)) j =
       (Polynomial.taylor ξ (P.map coefficients)).coeff j := by
   rw [polynomialPoint_jetCoefficient_eq coefficients F P γ ξ hsolution hregular j,
-    Polynomial.eval₂_eq_eval_map, ← Polynomial.iterate_derivative_map]
+    Polynomial.eval₂_eq_eval_map,← Polynomial.iterate_derivative_map]
   exact (taylor_coeff_eq_derivative_div_factorial (P.map coefficients) ξ j hfactorial).symm
-
 theorem reconstructedPolynomial_eq_taylor_of_solution
     (coefficients : K →+* L) (F : Poly4 K) (P : Polynomial K) (γ : K) (ξ : L)
     (hsolution : specialization K P γ F = 0)
@@ -100,7 +79,7 @@ theorem reconstructedPolynomial_eq_taylor_of_solution
       (polynomialPoint_relation coefficients F P γ ξ hsolution) hregular w =
       Polynomial.taylor ξ (P.map coefficients) := by
   ext j
-  simp only [reconstructedPolynomial, jetPolynomial_coeff]
+  simp only [reconstructedPolynomial,jetPolynomial_coeff]
   by_cases hj : j < w + 1
   · rw [if_pos hj]
     exact polynomialPoint_jetCoefficient_eq_taylor_coeff coefficients F P γ ξ
@@ -113,9 +92,6 @@ theorem reconstructedPolynomial_eq_taylor_of_solution
     apply Polynomial.coeff_eq_zero_of_natDegree_lt
     rw [Polynomial.natDegree_taylor]
     omega
-
-/-- .
- -/
 theorem globalPolynomial_eq_map_of_solution
     (coefficients : K →+* L) (F : Poly4 K) (P : Polynomial K) (γ : K) (ξ : L)
     (hsolution : specialization K P γ F = 0)
@@ -129,11 +105,8 @@ theorem globalPolynomial_eq_map_of_solution
     (reconstructedPolynomial coefficients F (polynomialPoint coefficients P γ ξ)
       (polynomialPoint_relation coefficients F P γ ξ hsolution) hregular w) = _
   rw [reconstructedPolynomial_eq_taylor_of_solution coefficients F P γ ξ hsolution
-    hregular p w hchar hdegree, Polynomial.taylor_taylor, neg_add_cancel,
+    hregular p w hchar hdegree,Polynomial.taylor_taylor,neg_add_cancel,
     Polynomial.taylor_zero]
-
-/-- .
- -/
 theorem factorial_agreement_zero_iff_original_agreement
     (coefficients : K →+* L) (F : Poly4 K) (P : Polynomial K) (γ : K) (ξ : L)
     (hsolution : specialization K P γ F = 0)
@@ -152,11 +125,9 @@ theorem factorial_agreement_zero_iff_original_agreement
     globalPolynomial_eq_map_of_solution coefficients F P γ ξ hsolution hregular
       p w hchar hdegree] at heq
   have hvalue : (P.map coefficients).eval (coefficients x) = coefficients (P.eval x) := by
-    rw [← Polynomial.eval₂_eq_eval_map, Polynomial.eval₂_at_apply]
+    rw [← Polynomial.eval₂_eq_eval_map,Polynomial.eval₂_at_apply]
   have hseed : polynomialPoint coefficients P γ ξ (3 : Fin 4) = coefficients γ := rfl
-  rw [hvalue, hseed, ← map_mul, ← map_add] at heq
+  rw [hvalue,hseed,← map_mul,← map_add] at heq
   exact heq.trans coefficients.injective.eq_iff
-
 end
-
 end ProximityPrize.SubmissionLower.ContactPolynomialRecovery

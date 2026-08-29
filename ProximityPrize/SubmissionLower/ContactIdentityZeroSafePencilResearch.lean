@@ -1,35 +1,17 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactComponentPencils
-
-/-! .
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactIdentityZeroSafePencilResearch
-
 open ActualCurveCoordinateField ContactGenericSurface ContactPencilGeometry
 open ContactGlobalPolynomiality ContactPolynomiality ContactPolynomialSolutions
 open ContactPolynomialRecovery ContactTaylorNumerators ContactAgreementEvaluation
 open ContactIdentityPencil ContactTranslation ContactComponentPencils
-
 noncomputable section
-
 variable {K Omega : Type} [Field K] [Field Omega]
 variable (phi : Polynomial K →+* Omega)
 variable (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
 variable (F : MvPolynomial (Fin 4) K)
 variable (hF : surfaceMap phi F ∈ P)
 variable (hH : surfaceMap phi (MvPolynomial.pderiv (2 : Fin 4) F) ∉ P)
-
-/-- .
- -/
 theorem coordinate_y_affine_of_basefield_pencil
     (w : ℕ) (P0 P1 : Polynomial K)
     (hp : truncatedPolynomial phi P F hF hH w =
@@ -46,14 +28,11 @@ theorem coordinate_y_affine_of_basefield_pencil
         Polynomial.C (coordinate Omega P 2) *
           (P1.map (phi.comp Polynomial.C)).map
             (algebraMap Omega (CoordinateField Omega P)) := by
-    simpa only [Polynomial.map_map, componentCoefficients] using hp
-  rw [← truncatedPolynomial_initial_value phi P F hF hH w, hp']
-  simp only [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_C,
+    simpa only [Polynomial.map_map,componentCoefficients] using hp
+  rw [← truncatedPolynomial_initial_value phi P F hF hH w,hp']
+  simp only [Polynomial.eval_add,Polynomial.eval_mul,Polynomial.eval_C,
     Polynomial.eval_map_apply]
-
 include hF hH in
-/-- .
- -/
 theorem identityNodes_card_le_of_r_dependent_principal_zero_safe
     {iota : Type} [DecidableEq iota]
     (nodes : Finset iota) (x u0 u1 : iota → K) (w : ℕ)
@@ -64,7 +43,7 @@ theorem identityNodes_card_le_of_r_dependent_principal_zero_safe
   by_contra h
   have hc : w < (identityNodes phi P F nodes x u0 u1 w).card :=
     Nat.lt_of_not_ge h
-  obtain ⟨P0, P1, _, _, hp, _⟩ :=
+  obtain ⟨P0,P1,_,_,hp,_⟩ :=
     exists_common_pencil_of_many_identities phi P F hF hH
       nodes x u0 u1 w hinj hc
       (fun t : Empty ↦ t.elim) (fun t : Empty ↦ t.elim)
@@ -72,8 +51,5 @@ theorem identityNodes_card_le_of_r_dependent_principal_zero_safe
   have hy := coordinate_y_affine_of_basefield_pencil
     phi P F hF hH w P0 P1 hp
   exact not_y_affine_of_r_dependent_principal Omega P g hP hr _ _ hy
-
 end
-
-
 end ProximityPrize.SubmissionLower.ContactIdentityZeroSafePencilResearch

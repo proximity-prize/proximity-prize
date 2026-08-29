@@ -1,29 +1,20 @@
 import ProximityPrize.SubmissionLower.ContactIdentityCurveCount6731Research
 import ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
-
-/-! Compact outer incidence for identity first-tail factors. -/
-
 namespace ProximityPrize.SubmissionLower.ContactFirstTailIdentityIncidence6731Research
-
 open scoped Classical BigOperators
 open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
 open ContactPrimeSeedIncidence ContactComponentPencils ContactProperCutSeedCount
 open ContactRegularComponentCover ContactIdentityResidualIterationResearch
 open ContactFlagBezout6543Research ContactResidualSupportParametersResearch
-
 noncomputable section
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 25000
-
 variable {K Ω I : Type} [Field K] [Field Ω] [IsAlgClosed Ω]
 variable {φ : Polynomial K →+* Ω} {Γ : Finset K} {x : I → K}
 variable {p e : ℕ} [CharP Ω p]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Ω := Classical.decEq Ω
 local instance : DecidableEq I := Classical.decEq I
-
-/-- The geometric producer packages per-component bounds before the outer
-incidence, avoiding a large dependent proof term in the final theorem. -/
 def IdentityCurveCountProvider
     {flag : FlagDegree} {w : ℕ} {support : ResidualSupportParameters}
     (S : ResidualStage φ Γ x p e flag w support) (identityDegree : ℕ) : Prop :=
@@ -35,7 +26,6 @@ def IdentityCurveCountProvider
       (∀ C,(componentSeeds Ω S.G T (regularitySurface φ S.F) Gi
         (selectedPoint φ S.selected) C).card≤(e+1)*cost C) ∧
       (∑ C,cost C) ≤ identityDegree
-
 private theorem proper_node_fiber_bound
     {flag : FlagDegree} {w : ℕ} {support : ResidualSupportParameters}
     (S : ResidualStage φ Γ x p e flag w support)
@@ -70,7 +60,6 @@ private theorem proper_node_fiber_bound
     _≤∑ C,(e+1)*cost C:=Finset.sum_le_sum fun C _=>hcomponent C
     _=(e+1)*(∑ C,cost C):=by rw [Finset.mul_sum]
     _≤(e+1)*identityDegree:=Nat.mul_le_mul_left _ hsum
-
 theorem identity_surface_seed_bound
     {flag : FlagDegree} {w : ℕ} {support : ResidualSupportParameters}
     (S : ResidualStage φ Γ x p e flag w support)
@@ -119,6 +108,5 @@ theorem identity_surface_seed_bound
       _≤(S.nodes.card-w)*(e+1)*identityDegree:=by
         have h:=Nat.mul_le_mul_left ((S.nodes.card-w)*(e+1)) hdegreePos
         simpa [mul_assoc,mul_comm,mul_left_comm] using h
-
 end
 end ProximityPrize.SubmissionLower.ContactFirstTailIdentityIncidence6731Research

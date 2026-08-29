@@ -1,37 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFactorCaps
 import ProximityPrize.SubmissionLower.ContactTaylorNumerators
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactSharpYRecurrence
-
 open ContactInterpolation ContactFactorCaps ContactTaylorNumerators
 open scoped BigOperators
-
 noncomputable section
-
 variable {K : Type*} [Field K]
-
 abbrev Poly4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
-
-/-- .
- -/
 theorem polyH_Y_degree_pred_of_mem_box
     (F : Poly4 K) (D w L s c : ℕ) (hw : 0 < w)
     (hD : D ≤ w * c + (w - 1))
@@ -48,7 +23,7 @@ theorem polyH_Y_degree_pred_of_mem_box
   have h0 : e (0 : Fin 4) = d 0 := by simp [he]
   have h1 : e (1 : Fin 4) = d 1 := by simp [he]
   have h2 : e (2 : Fin 4) = d 2 + 1 := by simp [he]
-  rw [h0, h1, h2] at hc
+  rw [h0,h1,h2] at hc
   have hcontact : w * d 1 + (w - 1) < D := by
     have hr : (w - 1) * 1 ≤ (w - 1) * (d 2 + 1) :=
       Nat.mul_le_mul_left (w - 1) (by omega)
@@ -61,9 +36,6 @@ theorem polyH_Y_degree_pred_of_mem_box
   have hmul : w * d 1 < w * c := Nat.add_lt_add_iff_right.mp hadd
   have hlt : d 1 < c := (Nat.mul_lt_mul_left hw).mp hmul
   omega
-
-/-- .
- -/
 theorem numeratorStep_Y_degree_bound
     (F M : Poly4 K) (b a c : ℕ) (hc : 1 ≤ c)
     (hF : F.degreeOf (1 : Fin 4) ≤ c)
@@ -75,7 +47,7 @@ theorem numeratorStep_Y_degree_bound
   let R : Poly4 K := MvPolynomial.X (2 : Fin 4)
   change H.degreeOf (1 : Fin 4) ≤ c - 1 at hH
   have hR : R.degreeOf (1 : Fin 4) ≤ 0 := by
-    simp [R, MvPolynomial.degreeOf_X_of_ne
+    simp [R,MvPolynomial.degreeOf_X_of_ne
       (by decide : (1 : Fin 4) ≠ (2 : Fin 4))]
   have hG : G.degreeOf (1 : Fin 4) ≤ c := by
     simpa only [Nat.add_zero] using
@@ -131,8 +103,6 @@ theorem numeratorStep_Y_degree_bound
         a + (2 * c - 1)
   exact degree_sub_bound (1 : Fin 4)
     (degree_add_bound (1 : Fin 4) (degree_add_bound (1 : Fin 4) h1 h2) h3) h4
-
-/-- . -/
 theorem numerator_Y_degree_bound
     (F : Poly4 K) (c : ℕ) (hc : 1 ≤ c)
     (hF : F.degreeOf (1 : Fin 4) ≤ c)
@@ -145,10 +115,7 @@ theorem numerator_Y_degree_bound
       rw [numerator_succ]
       have hh := numeratorStep_Y_degree_bound F (numerator K F b) b
         (1 + b * (2 * c - 1)) c hc hF hH ih
-      simpa only [Nat.add_mul, Nat.one_mul, add_assoc] using hh
-
-/-- .
- -/
+      simpa only [Nat.add_mul,Nat.one_mul,add_assoc] using hh
 theorem commonNumeratorTerm_Y_degree_bound
     (F : Poly4 K) (c : ℕ) (hc : 1 ≤ c)
     (hF : F.degreeOf (1 : Fin 4) ≤ c)
@@ -179,7 +146,6 @@ theorem commonNumeratorTerm_Y_degree_bound
       _ ≤ 1 + 2 * w * (c - 1) + w := Nat.add_le_add_left hj _
       _ = 1 + w * (2 * (c - 1) + 1) := by ring
   simpa only [commonNumeratorTerm] using hterm.trans hcap
-
 theorem clearedTaylorNumerator_Y_degree_bound
     (F : Poly4 K) (c : ℕ) (hc : 1 ≤ c)
     (hF : F.degreeOf (1 : Fin 4) ≤ c)
@@ -192,10 +158,6 @@ theorem clearedTaylorNumerator_Y_degree_bound
   intro j hj
   exact commonNumeratorTerm_Y_degree_bound F c hc hF hH w j
     (by have := Finset.mem_range.mp hj; omega) coeffs x
-
-/-- .
-
- -/
 theorem agreementNumerator_Y_degree_bound
     (F : Poly4 K) (c : ℕ) (hc : 1 ≤ c)
     (hF : F.degreeOf (1 : Fin 4) ≤ c)
@@ -216,8 +178,6 @@ theorem agreementNumerator_Y_degree_bound
     calc
       0 + 2 * w * (c - 1) ≤ 1 + 2 * w * (c - 1) + w := by omega
       _ = 1 + w * (2 * (c - 1) + 1) := by ring
-
-/-- . -/
 theorem sharp_Y_bounds_of_mem_box
     (F : Poly4 K) (D w L s c : ℕ) (hw : 0 < w) (hc : 1 ≤ c)
     (hD : D ≤ w * c + (w - 1))
@@ -240,8 +200,5 @@ theorem sharp_Y_bounds_of_mem_box
   have hH := polyH_Y_degree_pred_of_mem_box F D w L s c hw hD hbox
   exact ⟨numerator_Y_degree_bound F c hc hcapped hH b,
     agreementNumerator_Y_degree_bound F c hc hcapped hH t coeffs x u₀ u₁⟩
-
 end
-
-
 end ProximityPrize.SubmissionLower.ContactSharpYRecurrence

@@ -1,9 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactCoefficientPole6731Research
 import ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
-
-/-! Actual prime-curve counting from the canonical coefficient-pole profile.
-The two incidence cases use a MAX bound, not the old additive tail cost. -/
 namespace ProximityPrize.SubmissionLower.ContactIdentityCurveCount6731Research
 open scoped Classical BigOperators
 open ActualCurveCoordinateField ContactGenericSurface ContactPolynomialSolutions
@@ -14,7 +11,6 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
 set_option synthInstance.maxHeartbeats 300000
-
 variable {K Ω : Type} [Field K] [Field Ω] [IsAlgClosed Ω]
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Ω := Classical.decEq Ω
@@ -22,9 +18,6 @@ variable (φ : Polynomial K →+* Ω) (P : Ideal (MvPolynomial (Fin 3) Ω)) [P.I
 variable (F : MvPolynomial (Fin 4) K)
 variable (hF : surfaceMap φ F ∈ P)
 variable (hH : surfaceMap φ (MvPolynomial.pderiv (2 : Fin 4) F) ∉ P)
-
-/-- The only new geometric premise is the explicitly defined coefficient
-pole profile. The separator and positive cost are ordinary curve data. -/
 theorem prime_curve_card_le_of_coefficientPoleProfile
     (base : SeparableLiteralCoordinate P) (p w a e cost : ℕ) [CharP Ω p]
     (hchar : w < p) (hwa : w < a) (hcost : 1 ≤ cost)
@@ -87,9 +80,6 @@ theorem prime_curve_card_le_of_coefficientPoleProfile
     have hsmall : Γ.card ≤ e+1 := by
       simpa only [hfilter] using hnoPencil P0 P1 h0 h1
     exact hsmall.trans (by simpa only [Nat.mul_one] using Nat.mul_le_mul_left (e+1) hcost)
-
-/-- Actual separable projection degrees supply the positivity gate; callers
-need not provide an abstract positive cost or any zero-count hypothesis. -/
 theorem prime_curve_card_le_projection_degree
     (base : SeparableLiteralCoordinate P) (J : SeparableCoordinate Ω (CoordinateField Ω P))
     (p w a e : ℕ) [CharP Ω p] (hchar : w < p) (hwa : w < a)
@@ -115,7 +105,6 @@ theorem prime_curve_card_le_projection_degree
   exact prime_curve_card_le_of_coefficientPoleProfile φ P F hF hH base p w a e _
     hchar hwa hcost hprofile selected Γ nodes x u0 u1 hinj hsize hdegree hsolution hregular
     hpoint hagreement hnoPencil
-
 #print axioms prime_curve_card_le_of_coefficientPoleProfile
 #print axioms prime_curve_card_le_projection_degree
 end

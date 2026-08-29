@@ -1,18 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
-
 namespace ProximityPrize.SubmissionLower
-
 open Polynomial Polynomial.Bivariate
 open scoped BigOperators
-
 set_option linter.constructorNameAsVariable false
-
-/-- . -/
 local instance concreteFieldChar :
     CharP ProximityPrize.Benchmark.IRSProfile.Field 2130706433 :=
   charP_of_injective_algebraMap' KoalaBear.Field 2130706433
-
-/-- . -/
 theorem derivative_ne_zero_of_pos_natDegree_lt_char
     {K : Type} [Field K] (p : ℕ) [CharP K p] (R : K[X])
     (hpos : 0 < R.natDegree) (hlt : R.natDegree < p) : R.derivative ≠ 0 := by
@@ -22,8 +15,8 @@ theorem derivative_ne_zero_of_pos_natDegree_lt_char
   have hsucc : R.natDegree - 1 + 1 = R.natDegree := by omega
   rw [hsucc] at hc
   have hcastSucc : ((R.natDegree - 1 : ℕ) : K) + 1 = (R.natDegree : K) := by
-    simpa only [Nat.cast_add, Nat.cast_one] using congrArg (fun z : ℕ => (z : K)) hsucc
-  rw [hcastSucc, coeff_natDegree] at hc
+    simpa only [Nat.cast_add,Nat.cast_one] using congrArg (fun z : ℕ => (z : K)) hsucc
+  rw [hcastSucc,coeff_natDegree] at hc
   simp only [coeff_zero] at hc
   have hcast : (R.natDegree : K) ≠ 0 := by
     intro hz
@@ -33,8 +26,6 @@ theorem derivative_ne_zero_of_pos_natDegree_lt_char
     intro hz
     simp [hz] at hpos
   exact (mul_ne_zero (Polynomial.leadingCoeff_ne_zero.mpr hR) hcast) hc
-
-/-- . -/
 theorem irreducible_isCoprime_derivative_of_natDegree_lt_char
     {K : Type} [Field K] (p : ℕ) [CharP K p] (R : K[X])
     (hirr : Irreducible R) (hpos : 0 < R.natDegree) (hlt : R.natDegree < p) :
@@ -48,8 +39,6 @@ theorem irreducible_isCoprime_derivative_of_natDegree_lt_char
     omega
   by_contra hnot
   exact hnotdvd ((hirr.dvd_iff_not_isCoprime).2 hnot)
-
-/-- . -/
 theorem irreducible_resultant_derivative_ne_zero_of_natDegree_lt_char
     {K : Type} [Field K] (p : ℕ) [CharP K p] (R : K[X])
     (hirr : Irreducible R) (hpos : 0 < R.natDegree) (hlt : R.natDegree < p) :
@@ -57,8 +46,6 @@ theorem irreducible_resultant_derivative_ne_zero_of_natDegree_lt_char
   intro hz
   have hc := (Polynomial.resultant_eq_zero_iff.mp hz).2
   exact hc (irreducible_isCoprime_derivative_of_natDegree_lt_char p R hirr hpos hlt)
-
-/-- . -/
 theorem monic_irreducible_discr_ne_zero_of_natDegree_lt_char
     {K : Type} [Field K] (p : ℕ) [CharP K p] (R : K[X])
     (hmonic : R.Monic) (hirr : Irreducible R)
@@ -72,8 +59,8 @@ theorem monic_irreducible_discr_ne_zero_of_natDegree_lt_char
     have hs : R.natDegree - 1 + 1 = R.natDegree := by omega
     rw [hs]
     have hcastSucc : ((R.natDegree - 1 : ℕ) : K) + 1 = (R.natDegree : K) := by
-      simpa only [Nat.cast_add, Nat.cast_one] using congrArg (fun z : ℕ => (z : K)) hs
-    rw [hcastSucc, Polynomial.coeff_natDegree]
+      simpa only [Nat.cast_add,Nat.cast_one] using congrArg (fun z : ℕ => (z : K)) hs
+    rw [hcastSucc,Polynomial.coeff_natDegree]
     have hcast : (R.natDegree : K) ≠ 0 := by
       intro hz
       exact (Nat.not_dvd_of_pos_of_lt hpos hlt)
@@ -84,13 +71,10 @@ theorem monic_irreducible_discr_ne_zero_of_natDegree_lt_char
       irreducible_resultant_derivative_ne_zero_of_natDegree_lt_char p R hirr hpos hlt
   have hdegree : 0 < R.degree := Polynomial.natDegree_pos_iff_degree_pos.mp hpos
   have hrel := Polynomial.resultant_deriv (f := R) hdegree
-  rw [hmonic.leadingCoeff, mul_one] at hrel
+  rw [hmonic.leadingCoeff,mul_one] at hrel
   intro hz
-  rw [hz, mul_zero] at hrel
+  rw [hz,mul_zero] at hrel
   exact hres hrel
-
-/-- .
- -/
 theorem monic_discr_ne_zero_of_fraction_irreducible
     {A K : Type} [CommRing A] [IsDomain A] [Field K]
     [Algebra A K] [IsFractionRing A K]
@@ -114,15 +98,15 @@ theorem monic_discr_ne_zero_of_fraction_irreducible
     have hs : RK.natDegree - 1 + 1 = RK.natDegree := by omega
     rw [hs]
     have hcastSucc : ((RK.natDegree - 1 : ℕ) : K) + 1 = (RK.natDegree : K) := by
-      simpa only [Nat.cast_add, Nat.cast_one] using congrArg (fun z : ℕ => (z : K)) hs
-    rw [hcastSucc, Polynomial.coeff_natDegree]
+      simpa only [Nat.cast_add,Nat.cast_one] using congrArg (fun z : ℕ => (z : K)) hs
+    rw [hcastSucc,Polynomial.coeff_natDegree]
     have hcast : (RK.natDegree : K) ≠ 0 := by
       intro hz
       exact (Nat.not_dvd_of_pos_of_lt hposK hltK)
         ((CharP.cast_eq_zero_iff K p RK.natDegree).mp hz)
     exact mul_ne_zero (Polynomial.leadingCoeff_ne_zero.mpr hirrK.ne_zero) hcast
   have hresKfixed : RK.resultant RK.derivative R.natDegree (R.natDegree - 1) ≠ 0 := by
-    simpa [hdeg, hddegK] using hresK
+    simpa [hdeg,hddegK] using hresK
   have hresRaw : R.resultant R.derivative R.natDegree (R.natDegree - 1) ≠ 0 := by
     intro hz
     apply hresKfixed
@@ -132,12 +116,10 @@ theorem monic_discr_ne_zero_of_fraction_irreducible
     simpa using congrArg f hz
   have hdegree : 0 < R.degree := Polynomial.natDegree_pos_iff_degree_pos.mp hpos
   have hrel := Polynomial.resultant_deriv (f := R) hdegree
-  rw [hmonic.leadingCoeff, mul_one] at hrel
+  rw [hmonic.leadingCoeff,mul_one] at hrel
   intro hzero
-  rw [hzero, mul_zero] at hrel
+  rw [hzero,mul_zero] at hrel
   exact hresRaw hrel
-
-/-- . -/
 theorem degreeX_derivative_le {F : Type} [Field F] (R : F[X][Y]) :
     degreeX R.derivative ≤ degreeX R := by
   classical
@@ -151,12 +133,9 @@ theorem degreeX_derivative_le {F : Type} [Field F] (R : F[X][Y]) :
       Polynomial.natDegree_mul_le
     _ ≤ degreeX R := by
       have hn : ((j : F[X]) + 1).natDegree = 0 := by
-        rw [← Nat.cast_one, ← Nat.cast_add, Polynomial.natDegree_natCast]
-      rw [hn, Nat.add_zero]
+        rw [← Nat.cast_one,← Nat.cast_add,Polynomial.natDegree_natCast]
+      rw [hn,Nat.add_zero]
       exact Polynomial.Bivariate.coeff_natDegree_le_degreeX R (j + 1)
-
-/-- .
- -/
 theorem discr_natDegree_le {F : Type} [Field F] (R : F[X][Y])
     (hmonic : R.Monic) (hpos : 0 < R.natDegree) :
     R.discr.natDegree ≤ (2 * R.natDegree - 1) * degreeX R := by
@@ -177,56 +156,48 @@ theorem discr_natDegree_le {F : Type} [Field F] (R : F[X][Y])
         omega
   have hdegree : 0 < R.degree := Polynomial.natDegree_pos_iff_degree_pos.mp hpos
   have hrel := Polynomial.resultant_deriv (f := R) hdegree
-  rw [hmonic.leadingCoeff, mul_one] at hrel
+  rw [hmonic.leadingCoeff,mul_one] at hrel
   by_cases hd : R.discr = 0
   · simp [hd]
   · have hu : ((-1 : F[X]) ^ (d * (d - 1) / 2)) ≠ 0 := pow_ne_zero _ (by simp)
     have heqdeg : S.natDegree = R.discr.natDegree := by
-      rw [show S = (-1) ^ (d * (d - 1) / 2) * R.discr by simpa [S, d] using hrel,
+      rw [show S = (-1) ^ (d * (d - 1) / 2) * R.discr by simpa [S,d] using hrel,
         Polynomial.natDegree_mul hu hd]
       simp
     rw [← heqdeg]
     exact hSdeg'
-
-/-- .
- -/
 theorem sum_discr_natDegree_le {F ρ : Type} [Field F] [DecidableEq ρ]
     (S : Finset ρ) (R : ρ → F[X][Y])
-    (hmonic : ∀ r ∈ S, (R r).Monic)
-    (hpos : ∀ r ∈ S, 0 < (R r).natDegree) :
-    (∑ r ∈ S, (R r).discr.natDegree) ≤
-      ∑ r ∈ S, (2 * (R r).natDegree - 1) * degreeX (R r) := by
+    (hmonic : ∀ r ∈ S,(R r).Monic)
+    (hpos : ∀ r ∈ S,0 < (R r).natDegree) :
+    (∑ r ∈ S,(R r).discr.natDegree) ≤
+      ∑ r ∈ S,(2 * (R r).natDegree - 1) * degreeX (R r) := by
   apply Finset.sum_le_sum
   intro r hr
   exact discr_natDegree_le (R r) (hmonic r hr) (hpos r hr)
-
-/-- .
-
- -/
 theorem exists_good_x_of_discriminants
     {F ρ : Type} [Field F] [Fintype F] [DecidableEq ρ]
     (S : Finset ρ) (R : ρ → F[X][Y])
-    (hne : ∀ r ∈ S, (R r).discr ≠ 0)
-    (hdeg : (∑ r ∈ S, (R r).discr.natDegree) < Fintype.card F) :
-    ∃ x₀ : F, ∀ r ∈ S, Polynomial.eval x₀ (R r).discr ≠ 0 := by
+    (hne : ∀ r ∈ S,(R r).discr ≠ 0)
+    (hdeg : (∑ r ∈ S,(R r).discr.natDegree) < Fintype.card F) :
+    ∃ x₀ : F,∀ r ∈ S,Polynomial.eval x₀ (R r).discr ≠ 0 := by
   classical
-  let P : F[X] := ∏ r ∈ S, (R r).discr
+  let P : F[X] := ∏ r ∈ S,(R r).discr
   have hPne : P ≠ 0 := by
-    change (∏ r ∈ S, (R r).discr) ≠ 0
+    change (∏ r ∈ S,(R r).discr) ≠ 0
     rw [Finset.prod_ne_zero_iff]
     exact hne
   have hPdeg : P.natDegree < Fintype.card F := by
     exact (Polynomial.natDegree_prod_le S (fun r => (R r).discr)).trans_lt hdeg
   by_contra hgood
   push Not at hgood
-  have hPeval : ∀ x : F, P.eval x = 0 := by
+  have hPeval : ∀ x : F,P.eval x = 0 := by
     intro x
-    obtain ⟨r, hr, hz⟩ := hgood x
-    change Polynomial.eval x (∏ r ∈ S, (R r).discr) = 0
+    obtain ⟨r,hr,hz⟩ := hgood x
+    change Polynomial.eval x (∏ r ∈ S,(R r).discr) = 0
     rw [Polynomial.eval_prod]
     exact Finset.prod_eq_zero hr hz
   have hzero := Polynomial.eq_zero_of_natDegree_lt_card_of_eval_eq_zero
     P Function.injective_id hPeval hPdeg
   exact hPne hzero
-
 end ProximityPrize.SubmissionLower

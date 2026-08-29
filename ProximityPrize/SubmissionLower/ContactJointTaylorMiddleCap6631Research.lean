@@ -1,36 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactPost6464MinkowskiRecurrenceResearch
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactJointTaylorMiddleCap6631Research
-
 open scoped BigOperators
 open ContactFactorCaps ContactImplicitContactLift ContactTaylorNumerators
 open ContactPost6464MinkowskiRecurrenceResearch
-
 noncomputable section
-
 variable {K : Type*} [Field K]
-
 abbrev Poly4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
-
-/-- .
- -/
 theorem wt_polyG_le_of_R_le_Y
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F : Poly4 K) (C : ℕ) (hRY : weights 2 ≤ weights 1)
@@ -47,9 +23,6 @@ theorem wt_polyG_le_of_R_le_Y
   unfold polyG
   rw [wt_neg]
   exact hsum.trans (max_le (by omega) (by omega))
-
-/-- .
- -/
 theorem numeratorStep_wt_le_equal_weight
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F M : Poly4 K) (b A C : ℕ)
@@ -75,7 +48,7 @@ theorem numeratorStep_wt_le_equal_weight
     omega
   have hMX : wt weights (MvPolynomial.pderiv 0 M) ≤ A := by
     have h := wt_pderiv_le weights M 0 A hM
-    rw [hX, Nat.sub_zero] at h
+    rw [hX,Nat.sub_zero] at h
     exact h
   have hMY : wt weights (MvPolynomial.pderiv 1 M) ≤ A - weights 1 :=
     wt_pderiv_le weights M 1 A hM
@@ -83,7 +56,7 @@ theorem numeratorStep_wt_le_equal_weight
     wt_pderiv_le weights M 2 A hM
   have hHX : wt weights (MvPolynomial.pderiv 0 H) ≤ Hcap := by
     have h := wt_pderiv_le weights H 0 Hcap hH
-    rw [hX, Nat.sub_zero] at h
+    rw [hX,Nat.sub_zero] at h
     exact h
   have hHY : wt weights (MvPolynomial.pderiv 1 H) ≤ Hcap - weights 1 :=
     wt_pderiv_le weights H 1 Hcap hH
@@ -142,8 +115,6 @@ theorem numeratorStep_wt_le_equal_weight
   exact (wt_sub_le weights _ _).trans
     (max_le ((wt_add_le weights _ _).trans
       (max_le ((wt_add_le weights _ _).trans (max_le htermX htermY)) htermR)) hlast)
-
-/-- . -/
 theorem numerator_wt_le_equal_weight
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F : Poly4 K) (C : ℕ) (hRY : weights 2 ≤ weights 1)
@@ -164,8 +135,6 @@ theorem numerator_wt_le_equal_weight
         (weights 1 + b * (2 * (C - weights 2))) C hRY hYC hRR
         (hbase.trans (Nat.le_add_right _ _)) hF ih
       convert h using 1 <;> ring
-
-/-- . -/
 theorem clearedTaylorNumerator_wt_le_equal_weight
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F : Poly4 K) (C : ℕ) (hRY : weights 2 ≤ weights 1)
@@ -185,7 +154,7 @@ theorem clearedTaylorNumerator_wt_le_equal_weight
   have hCM : wt weights (MvPolynomial.C (coeffs j) * numerator K F j) ≤
       weights 1 + j * (2 * (C - weights 2)) := by
     have hm := wt_mul_le weights (MvPolynomial.C (coeffs j)) (numerator K F j)
-    rw [wt_C, Nat.zero_add] at hm
+    rw [wt_C,Nat.zero_add] at hm
     exact hm.trans hM
   have hH : wt weights (polyH K F) ≤ C - weights 2 :=
     wt_polyH_le weights F C hF
@@ -198,7 +167,7 @@ theorem clearedTaylorNumerator_wt_le_equal_weight
       ((MvPolynomial.C x - MvPolynomial.X (0 : Fin 4) : Poly4 K) ^ j) ≤ 0 := by
     have hp := wt_pow_le weights
       (MvPolynomial.C x - MvPolynomial.X (0 : Fin 4) : Poly4 K) j
-    rw [hSX, Nat.mul_zero] at hp
+    rw [hSX,Nat.mul_zero] at hp
     exact hp
   have h1 := wt_mul_le weights
     (MvPolynomial.C (coeffs j) * numerator K F j)
@@ -223,9 +192,6 @@ theorem clearedTaylorNumerator_wt_le_equal_weight
             2 * (w - j) * (C - weights 2)) + 0 =
             weights 1 + (j + (w - j)) * (2 * (C - weights 2)) := by ring
         _ = weights 1 + w * (2 * (C - weights 2)) := by rw [hjw']
-
-/-- .
- -/
 theorem agreementNumerator_wt_le_equal_weight
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (F : Poly4 K) (C : ℕ) (hRY : weights 2 ≤ weights 1)
@@ -261,8 +227,5 @@ theorem agreementNumerator_wt_le_equal_weight
               weights 3 + w * (2 * (C - weights 2)) := by ring
           _ ≤ max (weights 1) (weights 3) + w * (2 * (C - weights 2)) :=
             Nat.add_le_add_right hz _
-
 end
-
-
 end ProximityPrize.SubmissionLower.ContactJointTaylorMiddleCap6631Research

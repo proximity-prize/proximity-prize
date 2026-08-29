@@ -1,30 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactLeadingCancellationResearch
 import ProximityPrize.SubmissionLower.ContactTropicalBKKSeamResearch
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactDependentGenericity6543Research
-
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
 open ContactLocalPoleBound
@@ -37,14 +14,8 @@ open CoordinateBoxZeroCount
 open ContactRegularComponentCover
 open ContactResidualSparsePoleProviderResearch
 open ContactTropicalBKKSeamResearch
-
 noncomputable section
-
 variable {Ω : Type} [Field Ω] [IsAlgClosed Ω]
-
-/-- .
-
- -/
 def componentRelevantPlaces
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -75,8 +46,6 @@ def componentRelevantPlaces
       CommonPlaceBalance.placesFor Ω (CoordinateField Ω C.1)
         (coordinate Ω C.1 i) hi
     else ∅)
-
-/-- . -/
 theorem coordinate_poleOrder_eq_zero_of_not_mem_relevant
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -105,14 +74,14 @@ theorem coordinate_poleOrder_eq_zero_of_not_mem_relevant
   letI : Algebra.IsSeparable (RatFunc Ω) (CoordinateField Ω C.1) :=
     (hproj C separator htr).2
   by_cases hi : coordinate Ω C.1 i = 0
-  · simp [hi, poleOrder]
+  · simp [hi,poleOrder]
   · have hnot : v ∉ CommonPlaceBalance.placesFor Ω
         (CoordinateField Ω C.1) (coordinate Ω C.1 i) hi := by
       intro hmem
       apply hv
       unfold componentRelevantPlaces
       apply Finset.mem_biUnion.mpr
-      exact ⟨i, Finset.mem_univ _, by simp [hi, hmem]⟩
+      exact ⟨i,Finset.mem_univ _,by simp [hi,hmem]⟩
     have horder : CommonPlaceBalance.order Ω (CoordinateField Ω C.1) v
         (coordinate Ω C.1 i) = 0 := by
       by_contra hne
@@ -123,9 +92,6 @@ theorem coordinate_poleOrder_eq_zero_of_not_mem_relevant
     have hlog : (v.val (coordinate Ω C.1 i)).log = 0 := by omega
     rw [hlog]
     simp
-
-/-- .
- -/
 theorem exponentSetPoleWeight_eq_zero_of_not_mem_relevant
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -148,11 +114,9 @@ theorem exponentSetPoleWeight_eq_zero_of_not_mem_relevant
     intro z hz
     obtain rfl | hz := Finset.mem_insert.mp hz
     · exact le_rfl
-    · obtain ⟨d, _, rfl⟩ := Finset.mem_image.mp hz
+    · obtain ⟨d,_,rfl⟩ := Finset.mem_image.mp hz
       simp [hcoord]
   · exact Finset.le_max' _ _ (Finset.mem_insert_self (0 : ℤ) _)
-
-/-- . -/
 abbrev RelevantPlaceIndex
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -162,9 +126,6 @@ abbrev RelevantPlaceIndex
   Σ C : RegularComponent Ω G T H,
     {v : Place Ω (CoordinateField Ω C.1) //
       v ∈ componentRelevantPlaces hseparator hproj C}
-
-/-- .
- -/
 abbrev DependentGenericityIndex
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -172,7 +133,6 @@ abbrev DependentGenericityIndex
     (hproj : ∀ C : RegularComponent Ω G T H,
       ProjectionsFiniteSeparable Ω C.1) :=
   RegularComponent Ω G T H ⊕ RelevantPlaceIndex hseparator hproj
-
 def dependentBadSubmodule
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -182,10 +142,9 @@ def dependentBadSubmodule
     (E : Finset (Fin 3 →₀ ℕ)) :
     DependentGenericityIndex hseparator hproj → Submodule Ω (E → Ω)
   | Sum.inl C => LinearMap.ker (coefficientEvaluation (coordinate Ω C.1) E)
-  | Sum.inr ⟨C, v⟩ => cancellationSubmodule v.1.val
+  | Sum.inr ⟨C,v⟩ => cancellationSubmodule v.1.val
       (fun a ↦ constant_value_le_one Ω (CoordinateField Ω C.1) v.1 a)
       (coordinate Ω C.1) E
-
 theorem dependentBadSubmodule_ne_top
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -198,9 +157,9 @@ theorem dependentBadSubmodule_ne_top
       dependentBadSubmodule hseparator hproj E j ≠ ⊤ := by
   classical
   intro j
-  rcases j with C | ⟨C, v⟩
+  rcases j with C | ⟨C,v⟩
   · intro htop
-    let e0 : E := ⟨0, hzero⟩
+    let e0 : E := ⟨0,hzero⟩
     let c0 : E → Ω := deltaCoefficient E e0
     have hc0 : c0 ∈ dependentBadSubmodule hseparator hproj E (Sum.inl C) := by
       rw [htop]
@@ -208,21 +167,18 @@ theorem dependentBadSubmodule_ne_top
     have hzeroeval : coefficientEvaluation (coordinate Ω C.1) E c0 = 0 := by
       exact LinearMap.mem_ker.mp hc0
     have honeeval : coefficientEvaluation (coordinate Ω C.1) E c0 = 1 := by
-      rw [coefficientEvaluation, LinearMap.coe_mk, AddHom.coe_mk,
+      rw [coefficientEvaluation,LinearMap.coe_mk,AddHom.coe_mk,
         polynomialOfSupport_deltaCoefficient]
       simp [e0]
     rw [honeeval] at hzeroeval
     exact one_ne_zero hzeroeval
-  · obtain ⟨c, hc⟩ :=
+  · obtain ⟨c,hc⟩ :=
       exists_exact_support_evaluation_of_downwardClosed
         (K := Ω) (L := CoordinateField Ω C.1) (σ := Fin 3)
         v.1.val (coordinate Ω C.1) E hdown hzero
     exact cancellationSubmodule_ne_top_of_exact v.1.val
       (fun a ↦ constant_value_le_one Ω (CoordinateField Ω C.1) v.1 a)
       (coordinate Ω C.1) E c hc
-
-/-- .
- -/
 structure GenericExactPolePolynomial
     (G T H : MvPolynomial (Fin 3) Ω)
     (E : Finset (Fin 3 →₀ ℕ)) (separator : Fin 3)
@@ -232,7 +188,7 @@ structure GenericExactPolePolynomial
       ProjectionsFiniteSeparable Ω C.1) where
   polynomial : MvPolynomial (Fin 3) Ω
   support_subset : polynomial.support ⊆ E
-  proper : ∀ C : RegularComponent Ω G T H, polynomial ∉ C.1
+  proper : ∀ C : RegularComponent Ω G T H,polynomial ∉ C.1
   exact_pole : ∀ C : RegularComponent Ω G T H,
     let htr := hseparator C
     letI : Algebra (Polynomial Ω) (CoordinateRing Ω C.1) :=
@@ -256,7 +212,6 @@ structure GenericExactPolePolynomial
             (algebraMap Ω (CoordinateField Ω C.1))
             (coordinate Ω C.1) polynomial) =
         exponentSetPoleWeight v.val (coordinate Ω C.1) E
-
 theorem exists_genericExactPolePolynomial
     {G T H : MvPolynomial (Fin 3) Ω} {separator : Fin 3}
     (hseparator : ∀ C : RegularComponent Ω G T H,
@@ -269,11 +224,11 @@ theorem exists_genericExactPolePolynomial
       hseparator hproj) := by
   classical
   let bad := dependentBadSubmodule hseparator hproj E
-  obtain ⟨c, hc⟩ := exists_avoiding_finite_proper_submodules bad
+  obtain ⟨c,hc⟩ := exists_avoiding_finite_proper_submodules bad
     (dependentBadSubmodule_ne_top hseparator hproj E hdown hzero)
   let B := polynomialOfSupport E c
   have hsupport : B.support ⊆ E := support_polynomialOfSupport_subset E c
-  have hproper : ∀ C : RegularComponent Ω G T H, B ∉ C.1 := by
+  have hproper : ∀ C : RegularComponent Ω G T H,B ∉ C.1 := by
     intro C hmem
     apply hc (Sum.inl C)
     change c ∈ LinearMap.ker
@@ -289,7 +244,7 @@ theorem exists_genericExactPolePolynomial
     change MvPolynomial.eval₂Hom (algebraMap Ω (CoordinateField Ω C.1))
       (coordinate Ω C.1) B = 0
     exact hz
-  refine ⟨⟨B, hsupport, hproper, ?_⟩⟩
+  refine ⟨⟨B,hsupport,hproper,?_⟩⟩
   intro C
   dsimp only
   let htr := hseparator C
@@ -310,7 +265,7 @@ theorem exists_genericExactPolePolynomial
     (hproj C separator htr).2
   intro v
   by_cases hv : v ∈ componentRelevantPlaces hseparator hproj C
-  · have havoid := hc (Sum.inr ⟨C, ⟨v, hv⟩⟩)
+  · have havoid := hc (Sum.inr ⟨C,⟨v,hv⟩⟩)
     change ¬v.val (coefficientEvaluation (coordinate Ω C.1) E c) <
       WithZero.exp (exponentSetPoleWeight v.val (coordinate Ω C.1) E) at havoid
     have hlower : WithZero.exp
@@ -342,9 +297,6 @@ theorem exists_genericExactPolePolynomial
         (coordinate Ω C.1) B E hsupport)
     rw [hweight] at hle ⊢
     exact le_antisymm hle (by unfold poleOrder; exact le_max_left _ _)
-
-/-- .
- -/
 def GenericExactPolePolynomial.toGenericSparseBKKWitness
     {G T H : MvPolynomial (Fin 3) Ω}
     {E : Finset (Fin 3 →₀ ℕ)} {separator : Fin 3} {wholeCost : ℕ}
@@ -380,7 +332,7 @@ def GenericExactPolePolynomial.toGenericSparseBKKWitness
           (CoordinateField Ω C.1) b hb,
         CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
           (cost C : ℤ))
-    (sum_cost_le : (∑ C : RegularComponent Ω G T H, cost C) ≤ wholeCost) :
+    (sum_cost_le : (∑ C : RegularComponent Ω G T H,cost C) ≤ wholeCost) :
     GenericSparseBKKWitness G T H E separator wholeCost hseparator hproj where
   polynomial := B.polynomial
   support_subset := B.support_subset
@@ -389,7 +341,5 @@ def GenericExactPolePolynomial.toGenericSparseBKKWitness
   exact_pole := B.exact_pole
   cycle_le := cycle_le
   sum_cost_le := sum_cost_le
-
 end
-
 end ProximityPrize.SubmissionLower.ContactDependentGenericity6543Research

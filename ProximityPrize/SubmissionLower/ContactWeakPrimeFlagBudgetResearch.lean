@@ -2,18 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactWeakSeparableSeparatorResearch
 import ProximityPrize.SubmissionLower.ContactFlagPoleInequality6543Research
 import ProximityPrize.SubmissionLower.ContactPrimeFlagBudgetFamilyResearch
-
-/-! .
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactWeakPrimeFlagBudgetResearch
-
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
 open ActualCurveCoordinateField ActualCurveRationalProjection
@@ -24,19 +13,12 @@ open ContactSparsePoleSupportResearch
 open ContactWeakSeparableSeparatorResearch
 open ContactPrimeFlagBudgetFamilyResearch
 open ContactIdentityResidualZeroBudgetTransportResearch
-
 noncomputable section
-
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 300000
 set_option maxRecDepth 20000
-
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
-
-/-- .
-
- -/
 def LiteralSupportPoleBound
     {P : Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime]
     (D : SeparableLiteralCoordinate P)
@@ -59,12 +41,8 @@ def LiteralSupportPoleBound
   letI : Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega P) :=
     D.separable
   ∀ W : Finset (Place Omega (CoordinateField Omega P)),
-    (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega P) E) ≤
+    (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Omega P) E) ≤
       (cost : ℤ)
-
-/-- .
-
- -/
 structure AdaptiveUnitPoleBudget
     (base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1)
@@ -78,15 +56,12 @@ structure AdaptiveUnitPoleBudget
     LiteralSupportPoleBound (base C) (flagSupport unitYZFlag) (yzCost C)
   allPole : ∀ C : RegularComponent Omega G T H,
     LiteralSupportPoleBound (base C) (flagSupport unitAllFlag) (allCost C)
-  sum_zCost_le : (∑ C : RegularComponent Omega G T H, zCost C) ≤
+  sum_zCost_le : (∑ C : RegularComponent Omega G T H,zCost C) ≤
     flagMixed p q unitZFlag
-  sum_yzCost_le : (∑ C : RegularComponent Omega G T H, yzCost C) ≤
+  sum_yzCost_le : (∑ C : RegularComponent Omega G T H,yzCost C) ≤
     flagMixed p q unitYZFlag
-  sum_allCost_le : (∑ C : RegularComponent Omega G T H, allCost C) ≤
+  sum_allCost_le : (∑ C : RegularComponent Omega G T H,allCost C) ≤
     flagMixed p q unitAllFlag
-
-/-- .
- -/
 def AdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily
     {base : ∀ C : RegularComponent Omega G T H,
       SeparableLiteralCoordinate C.1}
@@ -124,22 +99,22 @@ def AdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily
     have hyz := U.yzPole C
     have hall := U.allPole C
     change ∀ W : Finset (Place Omega (CoordinateField Omega C.1)),
-      (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega C.1)
+      (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Omega C.1)
         (flagSupport unitZFlag)) ≤ (U.zCost C : ℤ) at hz
     change ∀ W : Finset (Place Omega (CoordinateField Omega C.1)),
-      (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega C.1)
+      (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Omega C.1)
         (flagSupport unitYZFlag)) ≤ (U.yzCost C : ℤ) at hyz
     change ∀ W : Finset (Place Omega (CoordinateField Omega C.1)),
-      (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega C.1)
+      (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Omega C.1)
         (flagSupport unitAllFlag)) ≤ (U.allCost C : ℤ) at hall
     have hpole : ∀ W : Finset (Place Omega (CoordinateField Omega C.1)),
-        (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega C.1)
+        (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Omega C.1)
           (flagSupport r)) ≤
         ((r.zOnly * U.zCost C + r.yz * U.yzCost C +
           r.all * U.allCost C : ℕ) : ℤ) := by
       intro W
       calc
-        (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega C.1)
+        (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Omega C.1)
             (flagSupport r)) ≤
             ∑ v ∈ W,
               ((r.zOnly : ℤ) * exponentSetPoleWeight v.val
@@ -153,15 +128,15 @@ def AdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily
           exact exponentSetPoleWeight_flagSupport_le_three v.val
             (coordinate Omega C.1) r
         _ = (r.zOnly : ℤ) *
-              (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega C.1)
+              (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Omega C.1)
                 (flagSupport unitZFlag)) +
             (r.yz : ℤ) *
-              (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega C.1)
+              (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Omega C.1)
                 (flagSupport unitYZFlag)) +
             (r.all : ℤ) *
-              (∑ v ∈ W, exponentSetPoleWeight v.val (coordinate Omega C.1)
+              (∑ v ∈ W,exponentSetPoleWeight v.val (coordinate Omega C.1)
                 (flagSupport unitAllFlag)) := by
-          simp only [Finset.sum_add_distrib, Finset.mul_sum]
+          simp only [Finset.sum_add_distrib,Finset.mul_sum]
         _ ≤ (r.zOnly : ℤ) * (U.zCost C : ℤ) +
             (r.yz : ℤ) * (U.yzCost C : ℤ) +
             (r.all : ℤ) * (U.allCost C : ℤ) := by
@@ -179,7 +154,5 @@ def AdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily
       (r.zOnly * U.zCost C + r.yz * U.yzCost C + r.all * U.allCost C)
       hpole A ((support_subset_flagSupport_iff r A).2 hA) hproper
       points hpointsP hpointsA
-
 end
-
 end ProximityPrize.SubmissionLower.ContactWeakPrimeFlagBudgetResearch

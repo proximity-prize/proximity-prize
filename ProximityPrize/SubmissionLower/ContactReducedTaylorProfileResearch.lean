@@ -2,31 +2,22 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSharpTaylorFixedMeet6656Research
 import ProximityPrize.SubmissionLower.ContactReducedTaylorWeights6643Research
 import ProximityPrize.SubmissionLower.ContactCongruentCuts6643Research
-
 namespace ProximityPrize.SubmissionLower.ContactReducedTaylorProfileResearch
-
 open ContactGenericSurface ContactPolynomialSolutions ContactTaylorNumerators
 open ContactPrimeSeedIncidence ContactIdentityResidualGlobalFlagResearch
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactFlagBezout6543Research ContactResidualSupportParametersResearch
 open ContactReducedTaylorNumerators6643Research
 open ContactCongruentCuts6643Research
-
 noncomputable section
-
 variable {K Omega : Type} [Field K] [Field Omega]
-
-/-- The reduced representative moves the saved pure-`R` unit into the
-middle flag coordinate, leaving both cumulative facets unchanged. -/
 def reducedAgreementDirection (P : ResidualSupportParameters) : FlagDegree :=
-  ⟨2 * (P.total - P.ys), 2 * (P.ys - P.s), 2 * P.s - 2⟩
-
+  ⟨2 * (P.total - P.ys),2 * (P.ys - P.s),2 * P.s - 2⟩
 def reducedResidualAgreementFlag
     (P : ResidualSupportParameters) (d : ℕ) : FlagDegree :=
   ⟨(reducedAgreementDirection P).zOnly * d,
     1 + (reducedAgreementDirection P).yz * d,
     (reducedAgreementDirection P).all * d⟩
-
 theorem reducedResidualAgreementFlag_ys
     (P : ResidualSupportParameters) (d : ℕ) :
     (reducedResidualAgreementFlag P d).yz +
@@ -38,10 +29,9 @@ theorem reducedResidualAgreementFlag_ys
       2 * (P.ys - P.s) + (2 * P.s - 2) = 2 * P.ys - 2 := by
     rw [Nat.mul_sub_left_distrib]
     omega
-  simp only [reducedResidualAgreementFlag, reducedAgreementDirection]
+  simp only [reducedResidualAgreementFlag,reducedAgreementDirection]
   rw [← hcoeff]
   ring
-
 theorem reducedResidualAgreementFlag_total
     (P : ResidualSupportParameters) (d : ℕ) :
     (reducedResidualAgreementFlag P d).zOnly +
@@ -53,18 +43,16 @@ theorem reducedResidualAgreementFlag_total
   have h1 := P.one_le_s
   have hcoeff : 2 * (P.total - P.ys) + 2 * (P.ys - P.s) +
       (2 * P.s - 2) = 2 * P.total - 2 := by
-    rw [Nat.mul_sub_left_distrib, Nat.mul_sub_left_distrib]
+    rw [Nat.mul_sub_left_distrib,Nat.mul_sub_left_distrib]
     omega
-  simp only [reducedResidualAgreementFlag, reducedAgreementDirection]
+  simp only [reducedResidualAgreementFlag,reducedAgreementDirection]
   rw [← hcoeff]
   ring
-
 def reducedAgreementPolynomial (phi : Polynomial K →+* Omega)
     (P : ResidualSupportParameters) (F : MvPolynomial (Fin 4) K)
     (d : ℕ) (x u0 u1 : K) : MvPolynomial (Fin 3) Omega :=
   surfaceMap phi (reducedAgreementNumerator F P.s d
     (fun j ↦ (j.factorial : K)⁻¹) x u0 u1)
-
 theorem agreementPolynomial_sub_reduced_dvd
     (phi : Polynomial K →+* Omega) (P : ResidualSupportParameters)
     (F : MvPolynomial (Fin 4) K) (d : ℕ) (x u0 u1 : K) :
@@ -79,7 +67,6 @@ theorem agreementPolynomial_sub_reduced_dvd
   exact map_dvd (surfaceMap phi)
     (agreementNumerator_sub_reduced_dvd F P.s d
       (fun j ↦ (j.factorial : K)⁻¹) x u0 u1)
-
 theorem surfaceMap_reducedAgreement_in_flag
     (phi : Polynomial K →+* Omega) (P : ResidualSupportParameters)
     {F : MvPolynomial (Fin 4) K} (H : ResidualSupportData P F)
@@ -98,7 +85,7 @@ theorem surfaceMap_reducedAgreement_in_flag
   rw [show residualTotalWeights 3 = 1 from rfl] at hTotal
   norm_num at hYS hTotal
   intro e he
-  obtain ⟨q, hq, rfl⟩ := Finset.mem_image.mp
+  obtain ⟨q,hq,rfl⟩ := Finset.mem_image.mp
     (support_surfaceMap_subset phi
       (reducedAgreementNumerator F P.s d coeffs x u0 u1) he)
   have hqR := (MvPolynomial.monomial_le_degreeOf (2 : Fin 4) hq).trans hR
@@ -116,7 +103,7 @@ theorem surfaceMap_reducedAgreement_in_flag
     q 1 + q 2 + q 3 ≤ (reducedResidualAgreementFlag P d).zOnly +
       (reducedResidualAgreementFlag P d).yz +
       (reducedResidualAgreementFlag P d).all
-  refine ⟨?_, ?_, ?_⟩
+  refine ⟨?_,?_,?_⟩
   · change q 2 ≤ (2 * P.s - 2) * d
     have hs : 2 * (P.s - 1) = 2 * P.s - 2 := by omega
     have heq : 2 * d * (P.s - 1) = (2 * P.s - 2) * d := by
@@ -140,7 +127,6 @@ theorem surfaceMap_reducedAgreement_in_flag
       ring
     rw [heq] at hqTotal
     exact hqTotal
-
 theorem agreement_in_flag_mod_factor
     (phi : Polynomial K →+* Omega) (P : ResidualSupportParameters)
     {F : MvPolynomial (Fin 4) K} (H : ResidualSupportData P F)
@@ -150,10 +136,9 @@ theorem agreement_in_flag_mod_factor
       (agreementPolynomial phi F d x u0 u1) := by
   refine ⟨reducedAgreementPolynomial phi P F d x u0 u1,
     surfaceMap_reducedAgreement_in_flag phi P H d
-      (fun j ↦ (j.factorial : K)⁻¹) x u0 u1, ?_⟩
+      (fun j ↦ (j.factorial : K)⁻¹) x u0 u1,?_⟩
   exact Ideal.mem_span_singleton.mpr
     (hG.trans (agreementPolynomial_sub_reduced_dvd phi P F d x u0 u1))
-
 theorem agreement_in_flag_mod_ideal
     (phi : Polynomial K →+* Omega) (P : ResidualSupportParameters)
     {F : MvPolynomial (Fin 4) K} (H : ResidualSupportData P F)
@@ -163,10 +148,8 @@ theorem agreement_in_flag_mod_ideal
       (agreementPolynomial phi F d x u0 u1) := by
   refine ⟨reducedAgreementPolynomial phi P F d x u0 u1,
     surfaceMap_reducedAgreement_in_flag phi P H d
-      (fun j ↦ (j.factorial : K)⁻¹) x u0 u1, ?_⟩
+      (fun j ↦ (j.factorial : K)⁻¹) x u0 u1,?_⟩
   exact sub_mem_of_dvd I hF
     (agreementPolynomial_sub_reduced_dvd phi P F d x u0 u1)
-
 end
-
 end ProximityPrize.SubmissionLower.ContactReducedTaylorProfileResearch

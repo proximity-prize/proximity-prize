@@ -3,26 +3,17 @@ import ProximityPrize.SubmissionLower.ContactPolynomialRecenter6731Research
 import ProximityPrize.SubmissionLower.ContactAgreementFactorScaling6731Research
 import ProximityPrize.SubmissionLower.ContactGenericSurface
 import ProximityPrize.SubmissionLower.ContactReconstructionFieldMembershipResearch
-
-/-! Canonical reconstruction and proper agreement cuts survive contraction
-from a product surface to its regular active factor. -/
-
 namespace ProximityPrize.SubmissionLower.ContactFactorReconstruction6731Research
-
 open ContactDifferentialRing ContactTaylorNumerators ContactRegularPoint
 open ContactPolynomiality ContactGlobalPolynomiality DifferentialTaylorCoefficients
 open ContactAgreementEvaluation
 open ContactNumeratorFactorScaling6731Research ContactAgreementFactorScaling6731Research
 open ContactGenericSurface
 open ContactReconstructionFieldMembershipResearch
-
 noncomputable section
-
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 15000
-
 variable {K L Ω : Type} [Field K] [Field L] [Field Ω]
-
 theorem map_agreementNumerator_base
     (c : K →+* L) (F : Poly4 K) (w : ℕ) (a : ℕ → K) (x u0 u1 : K) :
     MvPolynomial.map c (agreementNumerator F w a x u0 u1) =
@@ -31,9 +22,6 @@ theorem map_agreementNumerator_base
   simp only [agreementNumerator,clearedTaylorNumerator,commonNumeratorTerm,
     affineSeedPolynomial,map_sub,map_sum,map_add,map_mul,map_pow,MvPolynomial.map_C,
     MvPolynomial.map_X,map_numerator,polyH,MvPolynomial.pderiv_map]
-
-/-- The canonical Taylor polynomial of a regular product branch is the
-canonical Taylor polynomial of its active factor. -/
 theorem globalPolynomial_mul_factor
     (c : K →+* L) (F Q : Poly4 K) (v : Fin 4 → L)
     (hF : MvPolynomial.eval₂Hom c v F = 0)
@@ -81,9 +69,6 @@ theorem globalPolynomial_mul_factor
     · rw [if_neg hj,if_neg hj]
   unfold globalPolynomial
   rw [hrecon]
-
-/-- Properness of a product agreement cut contracts to the active original
-factor; no geometric factorization premise is hidden here. -/
 theorem original_factor_agreement_proper
     (φ : Polynomial K →+* Ω) (F Q : Poly4 K)
     (G : MvPolynomial (Fin 3) Ω)
@@ -108,6 +93,5 @@ theorem original_factor_agreement_proper
       (factor_dvd_agreement_sub_power F Q w c x u0 u1))
   apply hproper
   simpa only [map_sub,map_mul,map_pow,sub_add_cancel] using dvd_add hdiff hscaled
-
 end
 end ProximityPrize.SubmissionLower.ContactFactorReconstruction6731Research

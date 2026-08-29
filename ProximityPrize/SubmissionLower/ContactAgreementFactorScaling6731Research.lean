@@ -1,19 +1,11 @@
 import ProximityPrize.SubmissionLower.ContactNumeratorFactorScaling6731Research
-
-/-! Scaling of cleared agreement numerators along an original factor. -/
-
 namespace ProximityPrize.SubmissionLower.ContactAgreementFactorScaling6731Research
-
 open scoped BigOperators
 open ContactDifferentialRing ContactTaylorNumerators
 open ContactNumeratorFactorScaling6731Research
-
 noncomputable section
-
 variable {K : Type*} [Field K]
-
 private abbrev factorIdeal (F : Poly4 K) : Ideal (Poly4 K) := Ideal.span {F}
-
 private theorem H_scaling_mod (F Q : Poly4 K) :
     Ideal.Quotient.mk (factorIdeal F) (polyH K (F*Q)) =
       Ideal.Quotient.mk (factorIdeal F) Q * Ideal.Quotient.mk (factorIdeal F) (polyH K F) := by
@@ -24,7 +16,6 @@ private theorem H_scaling_mod (F Q : Poly4 K) :
     Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.mem_span_singleton_self F)
   rw [hz,zero_mul,add_zero]
   ring
-
 private theorem numerator_scaling_mod (F Q : Poly4 K) (j : ℕ) :
     Ideal.Quotient.mk (factorIdeal F) (numerator K (F*Q) j) =
       Ideal.Quotient.mk (factorIdeal F) Q^(2*j) *
@@ -32,7 +23,6 @@ private theorem numerator_scaling_mod (F Q : Poly4 K) (j : ℕ) :
   have h := numerator_sub_factor_power_mem F Q j
   rw [← Ideal.Quotient.eq_zero_iff_mem,map_sub,map_mul,map_pow,sub_eq_zero] at h
   exact h
-
 private theorem commonTerm_scaling_mod (F Q : Poly4 K) (w j : ℕ) (hj : j≤w)
     (c : ℕ → K) (x : K) :
     Ideal.Quotient.mk (factorIdeal F) (commonNumeratorTerm (F*Q) w c x j) =
@@ -53,7 +43,6 @@ private theorem commonTerm_scaling_mod (F Q : Poly4 K) (w j : ℕ) (hj : j≤w)
         (ev (MvPolynomial.C (c j))*ev (numerator K F j)*
           ev (polyH K F)^(2*(w-j))*ev (MvPolynomial.C x-MvPolynomial.X 0)^j) := by rw [he]
     _ = _ := by ring
-
 private theorem seed_scaling_mod (F Q : Poly4 K) (w : ℕ) (u0 u1 : K) :
     Ideal.Quotient.mk (factorIdeal F)
         (affineSeedPolynomial u0 u1*polyH K (F*Q)^(2*w)) =
@@ -63,7 +52,6 @@ private theorem seed_scaling_mod (F Q : Poly4 K) (w : ℕ) (u0 u1 : K) :
   simp only [map_mul,map_pow]
   rw [H_scaling_mod,mul_pow]
   ring
-
 theorem agreementNumerator_scaling_mod (F Q : Poly4 K) (w : ℕ)
     (c : ℕ → K) (x u0 u1 : K) :
     Ideal.Quotient.mk (factorIdeal F) (agreementNumerator (F*Q) w c x u0 u1) =
@@ -81,15 +69,12 @@ theorem agreementNumerator_scaling_mod (F Q : Poly4 K) (w : ℕ)
   unfold agreementNumerator
   rw [map_sub,map_sub,hsum,seed_scaling_mod]
   ring
-
-/-- Divisibility form used to contract proper agreement cuts. -/
 theorem factor_dvd_agreement_sub_power (F Q : Poly4 K) (w : ℕ)
     (c : ℕ → K) (x u0 u1 : K) :
     F ∣ agreementNumerator (F*Q) w c x u0 u1-
       Q^(2*w)*agreementNumerator F w c x u0 u1 := by
   rw [← Ideal.mem_span_singleton]
-  rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub,map_mul,map_pow,
+  rw [← Ideal.Quotient.eq_zero_iff_mem,map_sub,map_mul,map_pow,
     agreementNumerator_scaling_mod,sub_self]
-
 end
 end ProximityPrize.SubmissionLower.ContactAgreementFactorScaling6731Research

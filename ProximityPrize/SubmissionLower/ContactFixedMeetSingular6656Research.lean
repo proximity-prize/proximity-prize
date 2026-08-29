@@ -1,17 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6656Research
 import ProximityPrize.SubmissionLower.ContactSingularBranchParameterizedResearch
-
-/-! .
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactFixedMeetSingular6656Research
-
 open scoped Classical BigOperators
 open ContactInterpolation ContactTranslation ContactPrimeSeedIncidence
 open ContactRegularFactorFlag6600Research
@@ -22,35 +12,24 @@ open ContactTightSingularLedgerResearch
 open ContactRobustFixedMeet6656Research
 open ContactGlobalSelectedFamilies6656Research
 open ContactSingularBranchParameterizedResearch
-
 noncomputable section
-
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 35000
-
 variable {K Iota : Type} [Field K]
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
- -/
 theorem meet_tight_scaled_le_retained :
     meetTightProfile.tightNumerator * meetProfile.gap ≤
       meetProfile.retainedSingularContribution := by
-  norm_num [meetTightProfile, meetProfile, TightParameters.tightNumerator,
-    TightParameters.coreNumerator, TightParameters.aggregateCost,
-    TightParameters.agreement, TightParameters.implicitYCap,
-    TightParameters.algebraicCap, TightParameters.kappa,
-    TightParameters.errors, TightParameters.gap, Profile.errors,
-    Profile.gap, Profile.retainedSingularContribution, Profile.mixed,
-    Profile.liftedSurface, Profile.implicitCut, Profile.liftedLast,
-    Profile.liftedAgreement, Profile.unitZ, Profile.algebraicCap,
-    Profile.implicitWeightedCap, Profile.implicitYCap, dot]
-
-/-- .
-
- -/
+  norm_num [meetTightProfile,meetProfile,TightParameters.tightNumerator,
+    TightParameters.coreNumerator,TightParameters.aggregateCost,
+    TightParameters.agreement,TightParameters.implicitYCap,
+    TightParameters.algebraicCap,TightParameters.kappa,
+    TightParameters.errors,TightParameters.gap,Profile.errors,
+    Profile.gap,Profile.retainedSingularContribution,Profile.mixed,
+    Profile.liftedSurface,Profile.implicitCut,Profile.liftedLast,
+    Profile.liftedAgreement,Profile.unitZ,Profile.algebraicCap,
+    Profile.implicitWeightedCap,Profile.implicitYCap,dot]
 theorem meet_singularSeeds_tight_gap_bound
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime6656]
@@ -71,33 +50,28 @@ theorem meet_singularSeeds_tight_gap_bound
   exact
     ContactSingularBranchParameterizedResearch.TightParameters.singularSeeds_tight_gap_bound
       meetTightProfile Q hQ hbox
-      (by norm_num [meetTightProfile, meetProfile])
-      (by norm_num [meetTightProfile, meetProfile, prime6656])
-      (by norm_num [meetTightProfile, meetProfile])
-      (by norm_num [meetTightProfile, meetProfile, prime6656])
-      (by norm_num [meetTightProfile, meetProfile, TightParameters.kappa])
-      (by norm_num [meetTightProfile, meetProfile,
-        TightParameters.algebraicCap, TightParameters.kappa])
-      (by norm_num [meetTightProfile, meetProfile, prime6656,
-        TightParameters.implicitYCap, TightParameters.kappa])
-      (by norm_num [meetTightProfile, meetProfile, prime6656,
-        TightParameters.algebraicCap, TightParameters.kappa])
-      (by norm_num [meetTightProfile, meetProfile, prime6656,
-        TightParameters.implicitYCap, TightParameters.algebraicCap,
+      (by norm_num [meetTightProfile,meetProfile])
+      (by norm_num [meetTightProfile,meetProfile,prime6656])
+      (by norm_num [meetTightProfile,meetProfile])
+      (by norm_num [meetTightProfile,meetProfile,prime6656])
+      (by norm_num [meetTightProfile,meetProfile,TightParameters.kappa])
+      (by norm_num [meetTightProfile,meetProfile,
+        TightParameters.algebraicCap,TightParameters.kappa])
+      (by norm_num [meetTightProfile,meetProfile,prime6656,
+        TightParameters.implicitYCap,TightParameters.kappa])
+      (by norm_num [meetTightProfile,meetProfile,prime6656,
+        TightParameters.algebraicCap,TightParameters.kappa])
+      (by norm_num [meetTightProfile,meetProfile,prime6656,
+        TightParameters.implicitYCap,TightParameters.algebraicCap,
         TightParameters.kappa])
-      (by norm_num [meetTightProfile, meetProfile])
-      (by norm_num [meetTightProfile, meetProfile])
+      (by norm_num [meetTightProfile,meetProfile])
+      (by norm_num [meetTightProfile,meetProfile])
       selected Gamma nodes x u0 u1 hinj
       (by simpa [meetTightProfile] using hnodes)
       (by simpa [meetTightProfile] using hdegree)
       (by simpa [meetTightProfile] using hagreement)
-      (by simpa [meetTightProfile, TightParameters.errors,
+      (by simpa [meetTightProfile,TightParameters.errors,
         Profile.errors] using hnoPencil)
-
-/-- .
-
-
- -/
 theorem meet_singularSeeds_scaled_bound
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime6656]
@@ -130,10 +104,6 @@ theorem meet_singularSeeds_scaled_bound
       _ ≤ meetTightProfile.tightNumerator * meetTightProfile.gap :=
         Nat.mul_le_mul_right meetTightProfile.gap hbase
   exact hscaled.trans meet_tight_scaled_le_retained
-
-/-- .
-
- -/
 theorem meet_global_count_lt_fixedCost_of_regular_factors
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     [CharP K prime6656]
@@ -179,10 +149,8 @@ theorem meet_global_count_lt_fixedCost_of_regular_factors
       _ = meetProfile.totalNumerator := rfl
   have hstrict : meetProfile.totalNumerator <
       meetProfile.fixedCost * meetProfile.gap ^ 2 := by
-    rw [meet_total_numerator_exact, meet_fixed_cost_exact]
-    norm_num [meetProfile, Profile.gap]
+    rw [meet_total_numerator_exact,meet_fixed_cost_exact]
+    norm_num [meetProfile,Profile.gap]
   exact Nat.lt_of_mul_lt_mul_right (hscaled.trans_lt hstrict)
-
 end
-
 end ProximityPrize.SubmissionLower.ContactFixedMeetSingular6656Research

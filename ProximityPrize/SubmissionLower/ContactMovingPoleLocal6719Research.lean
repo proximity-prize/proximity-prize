@@ -2,10 +2,6 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactMovingProjection6676Research
 import ProximityPrize.SubmissionLower.ContactMovingSupport6676Research
 import ProximityPrize.SubmissionLower.ContactCommonProjectionChoice6676Research
-
-/-! .
-
- -/
 namespace ProximityPrize.SubmissionLower.ContactMovingPoleLocal6719Research
 open scoped Classical BigOperators WithZero
 open ContactFlagBezout6543Research ContactFlagPoleInequality6543Research
@@ -16,13 +12,9 @@ open ContactCommonProjectionChoice6676Research
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
-
 private theorem flag_eq {p q : FlagDegree} (hx : p.zOnly=q.zOnly)
     (hy : p.yz=q.yz) (hz : p.all=q.all) : p=q := by
   cases p; cases q; simp_all
-
-/-- .
- -/
 theorem coefficient_flag_eq (a b s k : ℕ) (C : FlagDegree)
     (c : Fin (k+1) → FlagDegree)
     (hc : ∀ j,c j+(k-j.val) • (⟨a,b+1,s+1⟩ : FlagDegree)+
@@ -37,22 +29,18 @@ theorem coefficient_flag_eq (a b s k : ℕ) (C : FlagDegree)
   all_goals simp only [add_zOnly,add_yz,add_all,nsmul_zOnly,nsmul_yz,nsmul_all,
     unitAllFlag,unitYZFlag] at *
   all_goals nlinarith
-
 variable {K L : Type*} [Field K] [Field L]
-
 theorem filteredCut_div_pow (k : ℕ) (B : Fin (k+1) → L) (H G : L) (hH : H ≠ 0) :
     filteredCut k B H G / H^k = ∑ j,B j*(G/H)^j.val := by
   apply (div_eq_iff (pow_ne_zero k hH)).mpr
   have hrel : H*(G/H)=(1 : L)*G := by field_simp
   have h := binary_clearing k B H G 1 (G/H) hrel
   simpa [filteredCut,mul_comm,mul_left_comm,mul_assoc] using h.symm
-
 def flagPole (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : Fin 3 → L) (p : FlagDegree) : ℤ :=
   (p.zOnly : ℤ)*poleOrder v (x 2)+
   (p.yz : ℤ)*max (poleOrder v (x 0)) (poleOrder v (x 2))+
   (p.all : ℤ)*max (poleOrder v (x 1)) (max (poleOrder v (x 0)) (poleOrder v (x 2)))
-
 theorem flagPole_nonneg (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : Fin 3 → L) (p : FlagDegree) : 0 ≤ flagPole v x p := by
   unfold flagPole poleOrder
@@ -75,7 +63,6 @@ theorem flagPole_nonneg (v : Valuation L (WithZero (Multiplicative ℤ)))
     (x : Fin 3 → L) : flagPole v x unitYZFlag=
       max (poleOrder v (x 0)) (poleOrder v (x 2)) := by
   simp [flagPole,unitYZFlag]
-
 theorem valuation_eval_le_flag (v : Valuation L (WithZero (Multiplicative ℤ)))
     (coeff : K →+* L) (hcoeff : ∀ a,v (coeff a) ≤ 1) (x : Fin 3 → L)
     (p : FlagDegree) (B : MvPolynomial (Fin 3) K) (hB : PolynomialInFlag p B) :
@@ -83,7 +70,6 @@ theorem valuation_eval_le_flag (v : Valuation L (WithZero (Multiplicative ℤ)))
   (valuation_eval_le_exp_exponentSet v coeff hcoeff x (flagSupport p) B
     ((support_subset_flagSupport_iff _ _).mpr hB)).trans
     (WithZero.exp_le_exp.mpr (exponentSetPoleWeight_flagSupport_le v x p))
-
 private theorem mixed_weight_le (r j k : ℕ) (h : r+j=k) (A B : ℤ) :
     (r : ℤ)*A+(j : ℤ)*B ≤ (k : ℤ)*max A B := by
   calc
@@ -92,8 +78,6 @@ private theorem mixed_weight_le (r j k : ℕ) (h : r+j=k) (A B : ℤ) :
       (mul_le_mul_of_nonneg_left (le_max_right _ _) (Int.natCast_nonneg _))
     _ = ((r+j : ℕ) : ℤ)*max A B := by push_cast; ring
     _ = _ := by rw [h]
-
-/-- . -/
 theorem valuation_polynomialInW_le (v : Valuation L (WithZero (Multiplicative ℤ)))
     (coeff : K →+* L) (hcoeff : ∀ a,v (coeff a) ≤ 1) (x : Fin 3 → L)
     (w : L) (k : ℕ) (C N : FlagDegree) (B : Fin (k+1) → MvPolynomial (Fin 3) K)
@@ -125,16 +109,12 @@ theorem valuation_polynomialInW_le (v : Valuation L (WithZero (Multiplicative �
         (2*flagPole v x unitAllFlag) (flagPole v x unitYZFlag+poleOrder v w)
       simp only [p,flagPole_add,flagPole_nsmul,Nat.cast_ofNat]
       nlinarith
-
 private theorem poleOrder_le_of_value_le_exp (v : Valuation L (WithZero (Multiplicative ℤ)))
     (z : L) (q : ℤ) (hq : 0 ≤ q) (hz : v z ≤ WithZero.exp q) : poleOrder v z ≤ q := by
   apply max_le hq
   by_cases hv : v z=0
   · simpa [hv] using hq
   · simpa only [WithZero.log_exp] using (WithZero.log_le_log hv WithZero.exp_ne_zero).mpr hz
-
-/-- .
- -/
 theorem poleOrder_filteredCut_div_le (v : Valuation L (WithZero (Multiplicative ℤ)))
     (coeff : K →+* L) (hcoeff : ∀ a,v (coeff a) ≤ 1) (x : Fin 3 → L)
     (a b s k : ℕ) (C : FlagDegree) (B : Fin (k+1) → MvPolynomial (Fin 3) K)
@@ -161,9 +141,6 @@ theorem poleOrder_filteredCut_div_le (v : Valuation L (WithZero (Multiplicative 
         k C (⟨a,b,s⟩ : FlagDegree) B (fun j ↦ by
           rw [← coefficient_flag_eq a b s k C c hc j]
           exact hB j)
-
-/-- .
- -/
 theorem coordinate_filteredCut_pole_le {Ω : Type} [Field Ω]
     (P : Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
     (v : Place Ω (CoordinateField Ω P)) (a b s k : ℕ) (C : FlagDegree)
@@ -182,6 +159,5 @@ theorem coordinate_filteredCut_pole_le {Ω : Type} [Field Ω]
       simpa only [coordinateEvaluation_eq_aeval,MvPolynomial.aeval_eq_eval₂Hom] using hH) hB hc
   simpa only [coordinateEvaluation_eq_aeval,MvPolynomial.aeval_eq_eval₂Hom,
     movingPoleTarget,movingRatio] using h
-
 end
 end ProximityPrize.SubmissionLower.ContactMovingPoleLocal6719Research

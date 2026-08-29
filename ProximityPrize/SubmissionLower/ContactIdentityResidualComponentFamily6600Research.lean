@@ -2,23 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidenceResearch
 import ProximityPrize.SubmissionLower.ContactPrimeFlagBudgetFamilyResearch
 import ProximityPrize.SubmissionLower.ContactStratifiedResidualComponentAdapter6600Research
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamily6600Research
-
 open scoped Classical BigOperators
 open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
 open ContactPrimeSeedIncidence ContactRegularComponentCover
@@ -33,21 +17,14 @@ open ContactStratifiedResidualComponentAdapter6600Research
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactNearPencil6600FlagResearch
 open ContactResidualSupportParametersResearch
-
 noncomputable section
-
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
-
 variable {K Omega Iota : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable {phi : Polynomial K →+* Omega}
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
- -/
 def regularComponentCurveStageOfSupport
     (support : ResidualSupportParameters)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
@@ -61,7 +38,7 @@ def regularComponentCurveStageOfSupport
     (hFys : wt residualYSWeights F ≤ support.ys)
     (hFtotal : wt residualTotalWeights F ≤ support.total)
     (hinj : Set.InjOn x nodes)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d)
+    (hdegree : ∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ d)
     (hsolution : ∀ gamma ∈ Gamma,
       specialization K (selected gamma) gamma F = 0)
     (hregular : ∀ gamma ∈ Gamma,
@@ -115,10 +92,6 @@ def regularComponentCurveStageOfSupport
       hsub hnoPencil
     characteristic_bound := hchar
   }
-
-/-- .
-
- -/
 def activeDifferentialSupport : ResidualSupportParameters where
   s := 6
   ys := 33
@@ -127,9 +100,6 @@ def activeDifferentialSupport : ResidualSupportParameters where
   s_le_ys := by norm_num
   ys_le_total := by norm_num
   two_le_ys := by norm_num
-
-/-- .
- -/
 def regularComponentCurveStageActive
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
     (selected : K → Polynomial K) (Gamma : Finset K)
@@ -142,7 +112,7 @@ def regularComponentCurveStageActive
     (hFys : wt residualYSWeights F ≤ 33)
     (hFtotal : wt residualTotalWeights F ≤ 582)
     (hinj : Set.InjOn x nodes)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d)
+    (hdegree : ∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ d)
     (hsolution : ∀ gamma ∈ Gamma,
       specialization K (selected gamma) gamma F = 0)
     (hregular : ∀ gamma ∈ Gamma,
@@ -160,8 +130,6 @@ def regularComponentCurveStageActive
   regularComponentCurveStageOfSupport activeDifferentialSupport
     F G T selected Gamma nodes x u0 u1 p e d surfaceFlag cutFlag hdiv hGflag
     hTflag hFs hFys hFtotal hinj hdegree hsolution hregular hnoPencil hchar C
-
-/-- . -/
 def regularComponentCurveStage
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
     (selected : K → Polynomial K) (Gamma : Finset K)
@@ -174,7 +142,7 @@ def regularComponentCurveStage
     (hFys : wt residualYSWeights F ≤ 43)
     (hFtotal : wt residualTotalWeights F ≤ 503)
     (hinj : Set.InjOn x nodes)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ d)
+    (hdegree : ∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ d)
     (hsolution : ∀ gamma ∈ Gamma,
       specialization K (selected gamma) gamma F = 0)
     (hregular : ∀ gamma ∈ Gamma,
@@ -192,13 +160,6 @@ def regularComponentCurveStage
   regularComponentCurveStageOfSupport ResidualSupportParameters.acceptedSupport
     F G T selected Gamma nodes x u0 u1 p e d surfaceFlag cutFlag hdiv hGflag
     hTflag hFs hFys hFtotal hinj hdegree hsolution hregular hnoPencil hchar C
-
-/-- .
-
-
-
-
- -/
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
     (hphi : Function.Injective phi)
     (F : MvPolynomial (Fin 4) K) (G T : MvPolynomial (Fin 3) Omega)
@@ -280,17 +241,17 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
       hphi S (fun r ↦ B.weightedCost r C) (B.primeBudget C)
       (degreeCost C) (unitCost C) U V (B.zCost C)
     · intro t
-      simpa [degreeCost, unitCost, activeDifferentialSupport,
+      simpa [degreeCost,unitCost,activeDifferentialSupport,
         ResidualSupportParameters.agreementDirection] using
         B.weightedCost_supportResidualAgreementFlag
           activeDifferentialSupport C t
     · exact hda
     · intro gamma hgamma
       exact hagreement gamma (hsub hgamma)
-    · simpa only [GammaC, S, H] using hlarge C
-    · simpa only [S, regularComponentCurveStageActive,
+    · simpa only [GammaC,S,H] using hlarge C
+    · simpa only [S,regularComponentCurveStageActive,
         regularComponentCurveStageOfSupport] using hdegree
-    · simpa only [S, regularComponentCurveStageActive,
+    · simpa only [S,regularComponentCurveStageActive,
         regularComponentCurveStageOfSupport] using hunit
   exact aggregate_component_stratified_incidence G T H Gamma
     (selectedPoint phi selected) hGpoint hTpoint hHp (a - d) U V (e + 1)
@@ -302,7 +263,5 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
       B.sum_weightedCost_le activeDifferentialSupport.agreementDirection)
     (by simpa only [unitCost] using B.sum_weightedCost_le unitYZFlag)
     B.sum_zCost_le
-
 end
-
 end ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamily6600Research

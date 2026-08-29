@@ -2,18 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research
 import ProximityPrize.SubmissionLower.ContactFlagPrincipalCycleAdapter6543Research
 import ProximityPrize.SubmissionLower.ContactFlagTrapezoidCaps6543Research
-
-/-! .
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactFlagPrincipalCycles6543Research
-
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
 open ActualCurveCoordinateField ActualCurveRationalProjection
@@ -32,32 +21,21 @@ open ContactFlagTrapezoidCaps6543Research
 open ContactResidualSparseComponentAdapterResearch
 open TrivariateRationalCollection ActualPlaneCoordinateKernel
   ArbitraryRationalProjectionResearch
-
 noncomputable section
-
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
 set_option maxRecDepth 10000
-
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
 variable {hseparator : ∀ C : RegularComponent Omega G T H,
   Transcendental Omega (coordinate Omega C.1 2)}
 variable {hproj : ∀ C : RegularComponent Omega G T H,
   ProjectionsFiniteSeparable Omega C.1}
-
-/-- .
- -/
-def exactAgreementFlag6543 : FlagDegree := ⟨91749700, 5504983, 1179639⟩
-
+def exactAgreementFlag6543 : FlagDegree := ⟨91749700,5504983,1179639⟩
 theorem exactAgreementFlag6543_eq :
     exactAgreementFlag6543 = shearedAgreementFlag := by
   rw [shearedAgreementFlag_value]
   rfl
-
-/-- .
-
- -/
 theorem exists_genericExactPolePolynomial_flagSupport
     (hseparator : ∀ C : RegularComponent Omega G T H,
       Transcendental Omega (coordinate Omega C.1 2))
@@ -68,9 +46,6 @@ theorem exists_genericExactPolePolynomial_flagSupport
       hseparator hproj) :=
   exists_genericExactPolePolynomial hseparator hproj (flagSupport p)
     (flagSupport_downwardClosed p) (zero_mem_flagSupport p)
-
-/-- .
- -/
 theorem elementEmbedding_congr
     {L : Type} [Field L] [Algebra Omega L]
     {s t : L} (hs : Transcendental Omega s)
@@ -78,9 +53,6 @@ theorem elementEmbedding_congr
     elementEmbedding Omega L s hs = elementEmbedding Omega L t ht := by
   subst t
   rfl
-
-/-- .
- -/
 theorem elementEmbedding_coordinate_eq_rationalBaseEmbedding
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
     (i : Fin 3) (hs ht : Transcendental Omega (coordinate Omega P i)) :
@@ -88,10 +60,6 @@ theorem elementEmbedding_coordinate_eq_rationalBaseEmbedding
         (coordinate Omega P i) hs =
       rationalBaseEmbedding Omega P i ht := by
   rfl
-
-/-- .
-
- -/
 structure FlagProjectionPositivity
     (D : NestedFlagProjectionData hseparator hproj)
     (G : MvPolynomial (Fin 3) Omega) : Prop where
@@ -101,7 +69,6 @@ structure FlagProjectionPositivity
     (flagAlgHom D.lam D.mu (D.mu * D.lam) G)).natDegree
   z : 0 < (planeMap Omega zOrder
     (flagAlgHom D.lam D.mu (D.mu * D.lam) G)).natDegree
-
 theorem unitZ_polynomial_pole
     (B : GenericExactPolePolynomial G T H (flagSupport unitZFlag) 2
       hseparator hproj)
@@ -121,7 +88,6 @@ theorem unitZ_polynomial_pole
           (flagSupport unitZFlag) := B.exact_pole C v
     _ = poleOrder v.val (coordinate Omega C.1 2) :=
       exponentSetPoleWeight_unitZ v.val (coordinate Omega C.1)
-
 theorem unitYZ_polynomial_pole
     (D : NestedFlagProjectionData hseparator hproj)
     (B : GenericExactPolePolynomial G T H (flagSupport unitYZFlag) 2
@@ -145,7 +111,6 @@ theorem unitYZ_polynomial_pole
       exponentSetPoleWeight_unitYZ v.val (coordinate Omega C.1)
     _ = poleOrder v.val (affineU Omega C.1 D.lam) :=
       (nested_u_pole D C v).symm
-
 theorem unitAll_polynomial_pole
     (D : NestedFlagProjectionData hseparator hproj)
     (B : GenericExactPolePolynomial G T H (flagSupport unitAllFlag) 2
@@ -172,9 +137,6 @@ theorem unitAll_polynomial_pole
     _ = poleOrder v.val
           (affineV Omega C.1 D.mu (D.mu * D.lam)) :=
       (nested_v_pole D C v).symm
-
-/-- .
- -/
 def flagProjectionCycleBudget6543_of_nested
     (D : NestedFlagProjectionData hseparator hproj)
     (hG : Irreducible G) (hproper : ¬ G ∣ T)
@@ -202,17 +164,17 @@ def flagProjectionCycleBudget6543_of_nested
       Transcendental Omega
         (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (zOrder 0))) := by
     intro C
-    simpa [zOrder, Equiv.swap_apply_def, lam, mu, nu] using hseparator C
+    simpa [zOrder,Equiv.swap_apply_def,lam,mu,nu] using hseparator C
   let htU : ∀ C : RegularComponent Omega G T H,
       Transcendental Omega
         (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (uOrder 0))) := by
     intro C
-    simpa [uOrder, lam, mu, nu] using D.hU C
+    simpa [uOrder,lam,mu,nu] using D.hU C
   let htV : ∀ C : RegularComponent Omega G T H,
       Transcendental Omega
         (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (vOrder 0))) := by
     intro C
-    simpa [vOrder, Equiv.swap_apply_def, lam, mu, nu] using hAffineV D C
+    simpa [vOrder,Equiv.swap_apply_def,lam,mu,nu] using hAffineV D C
   have hembZ (C : RegularComponent Omega G T H) :
       elementEmbedding Omega (CoordinateField Omega C.1)
           (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (zOrder 0)))
@@ -220,7 +182,7 @@ def flagProjectionCycleBudget6543_of_nested
         elementEmbedding Omega (CoordinateField Omega C.1)
           (coordinate Omega C.1 2) (hseparator C) :=
     elementEmbedding_congr (htZ C) (hseparator C)
-      (by simp [zOrder, Equiv.swap_apply_def, lam, mu, nu])
+      (by simp [zOrder,Equiv.swap_apply_def,lam,mu,nu])
   have hembU (C : RegularComponent Omega G T H) :
       elementEmbedding Omega (CoordinateField Omega C.1)
           (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (uOrder 0)))
@@ -228,7 +190,7 @@ def flagProjectionCycleBudget6543_of_nested
         elementEmbedding Omega (CoordinateField Omega C.1)
           (affineU Omega C.1 D.lam) (D.hU C) :=
     elementEmbedding_congr (htU C) (D.hU C)
-      (by simp [uOrder, lam, mu, nu])
+      (by simp [uOrder,lam,mu,nu])
   have hembV (C : RegularComponent Omega G T H) :
       elementEmbedding Omega (CoordinateField Omega C.1)
           (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (vOrder 0)))
@@ -236,7 +198,7 @@ def flagProjectionCycleBudget6543_of_nested
         elementEmbedding Omega (CoordinateField Omega C.1)
           (affineV Omega C.1 D.mu (D.mu * D.lam)) (hAffineV D C) :=
     elementEmbedding_congr (htV C) (hAffineV D C)
-      (by simp [vOrder, Equiv.swap_apply_def, lam, mu, nu])
+      (by simp [vOrder,Equiv.swap_apply_def,lam,mu,nu])
   have hTne : T ≠ 0 := by
     intro hzero
     apply hproper
@@ -249,7 +211,7 @@ def flagProjectionCycleBudget6543_of_nested
       (by
         intro C
         rw [hembZ C]
-        simpa [zOrder, Equiv.swap_apply_def, lam, mu, nu] using
+        simpa [zOrder,Equiv.swap_apply_def,lam,mu,nu] using
           flag_generators_z Omega C.1 lam mu nu (hseparator C))
       (by
         intro C
@@ -257,14 +219,14 @@ def flagProjectionCycleBudget6543_of_nested
           elementEmbedding_coordinate_eq_rationalBaseEmbedding C.1 2
             (hseparator C) (hseparator C)]
         exact (hproj C 2 (hseparator C)).2)
-      (by intro C v; simpa [zOrder, Equiv.swap_apply_def, lam, mu, nu,
+      (by intro C v; simpa [zOrder,Equiv.swap_apply_def,lam,mu,nu,
           CoordinatePoleMass.poleOrder] using
         unitZ_polynomial_pole BZ C v)
       hG hproper hpositive.z 5 1179639 26 6684622 flagZMixedCap hTne
-      (by simpa [gCaps, shearedSurfaceFlag] using gCaps.zOuter)
-      (by simpa [tCaps, shearedAgreementFlag_value] using tCaps.zOuter)
-      (by simpa [gCaps, shearedSurfaceFlag] using gCaps.zTotal)
-      (by simpa [tCaps, shearedAgreementFlag_value] using tCaps.zTotal)
+      (by simpa [gCaps,shearedSurfaceFlag] using gCaps.zOuter)
+      (by simpa [tCaps,shearedAgreementFlag_value] using tCaps.zOuter)
+      (by simpa [gCaps,shearedSurfaceFlag] using gCaps.zTotal)
+      (by simpa [tCaps,shearedAgreementFlag_value] using tCaps.zTotal)
       ContactFlagTrapezoidCaps6543Research.z_trapezoid_budget6543
   let yzBudget : PrincipalCycleBudget (flagSupport unitYZFlag) 2
       hseparator hproj BYZ flagYZMixedCap :=
@@ -273,20 +235,20 @@ def flagProjectionCycleBudget6543_of_nested
       (by
         intro C
         rw [hembU C]
-        simpa [uOrder, lam, mu, nu] using
+        simpa [uOrder,lam,mu,nu] using
           flag_generators_u Omega C.1 lam mu nu (D.hU C))
       (by
         intro C
         rw [hembU C]
         exact D.separableU C)
-      (by intro C v; simpa [uOrder, lam, mu, nu,
+      (by intro C v; simpa [uOrder,lam,mu,nu,
           CoordinatePoleMass.poleOrder] using
         unitYZ_polynomial_pole D BYZ C v)
       hG hproper hpositive.u 5 1179639 376 98434322 flagYZMixedCap hTne
-      (by simpa [gCaps, shearedSurfaceFlag] using gCaps.uOuter)
-      (by simpa [tCaps, shearedAgreementFlag_value] using tCaps.uOuter)
-      (by simpa [gCaps, shearedSurfaceFlag] using gCaps.uTotal)
-      (by simpa [tCaps, shearedAgreementFlag_value] using tCaps.uTotal)
+      (by simpa [gCaps,shearedSurfaceFlag] using gCaps.uOuter)
+      (by simpa [tCaps,shearedAgreementFlag_value] using tCaps.uOuter)
+      (by simpa [gCaps,shearedSurfaceFlag] using gCaps.uTotal)
+      (by simpa [tCaps,shearedAgreementFlag_value] using tCaps.uTotal)
       ContactFlagTrapezoidCaps6543Research.u_trapezoid_budget6543
   let allBudget : PrincipalCycleBudget (flagSupport unitAllFlag) 2
       hseparator hproj BAll flagAllMixedCap :=
@@ -295,28 +257,23 @@ def flagProjectionCycleBudget6543_of_nested
       (by
         intro C
         rw [hembV C]
-        simpa [vOrder, Equiv.swap_apply_def, lam, mu, nu] using
+        simpa [vOrder,Equiv.swap_apply_def,lam,mu,nu] using
           flag_generators_v Omega C.1 lam mu nu (hAffineV D C))
       (by
         intro C
         rw [hembV C]
         exact separableAffineV D C)
-      (by intro C v; simpa [vOrder, Equiv.swap_apply_def, lam, mu, nu,
+      (by intro C v; simpa [vOrder,Equiv.swap_apply_def,lam,mu,nu,
           CoordinatePoleMass.poleOrder] using
         unitAll_polynomial_pole D BAll C v)
       hG hproper hpositive.v 26 6684622 376 98434322 flagAllMixedCap hTne
-      (by simpa [gCaps, shearedSurfaceFlag] using gCaps.vOuter)
-      (by simpa [tCaps, shearedAgreementFlag_value] using tCaps.vOuter)
-      (by simpa [gCaps, shearedSurfaceFlag] using gCaps.vTotal)
-      (by simpa [tCaps, shearedAgreementFlag_value] using tCaps.vTotal)
+      (by simpa [gCaps,shearedSurfaceFlag] using gCaps.vOuter)
+      (by simpa [tCaps,shearedAgreementFlag_value] using tCaps.vOuter)
+      (by simpa [gCaps,shearedSurfaceFlag] using gCaps.vTotal)
+      (by simpa [tCaps,shearedAgreementFlag_value] using tCaps.vTotal)
       ContactFlagTrapezoidCaps6543Research.v_trapezoid_budget6543
   exact FlagProjectionCycleBudget.ofNestedProjectionBudgets B BZ BYZ BAll
     zBudget yzBudget allBudget
-
-/-- .
-
-
- -/
 def residualComponentBudget6543_of_nested
     (D : NestedFlagProjectionData hseparator hproj)
     (hG : Irreducible G) (hproper : ¬ G ∣ T)
@@ -336,11 +293,6 @@ def residualComponentBudget6543_of_nested
       flagWholeMixedCap :=
   (flagProjectionCycleBudget6543_of_nested D hG hproper hGsupport hTsupport
     hpositive B BZ BYZ BAll).toResidualComponentBudget6543
-
-/-- .
-
-
- -/
 theorem exists_residualComponentBudget6543_of_projectionPositivity
     (hG : Irreducible G) (hproper : ¬ G ∣ T)
     (hGsupport : G.support ⊆ flagSupport shearedSurfaceFlag)
@@ -350,7 +302,7 @@ theorem exists_residualComponentBudget6543_of_projectionPositivity
     Nonempty (ResidualComponentBudget G T H
       (fun A ↦ A.support ⊆ flagSupport shearedAgreementFlag)
       flagWholeMixedCap) := by
-  obtain ⟨D, hD⟩ := hpositive
+  obtain ⟨D,hD⟩ := hpositive
   obtain ⟨B⟩ := exists_genericExactPolePolynomial_flagSupport
     hseparator hproj exactAgreementFlag6543
   rw [exactAgreementFlag6543_eq] at B
@@ -362,7 +314,5 @@ theorem exists_residualComponentBudget6543_of_projectionPositivity
     hseparator hproj unitAllFlag
   exact ⟨residualComponentBudget6543_of_nested D hG hproper hGsupport
     hTsupport hD B BZ BYZ BAll⟩
-
 end
-
 end ProximityPrize.SubmissionLower.ContactFlagPrincipalCycles6543Research

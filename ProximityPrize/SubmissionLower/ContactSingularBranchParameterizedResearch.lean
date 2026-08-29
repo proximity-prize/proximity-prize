@@ -2,19 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactTightSingularLedgerResearch
 import ProximityPrize.SubmissionLower.ContactSingularBranch6600Research
 import ProximityPrize.SubmissionLower.ContactImplicitPairSeedCountParameterizedResearch
-
-/-! .
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactSingularBranchParameterizedResearch
-
 open scoped Classical BigOperators
 open ContactSelectedSeedDecomposition ContactImplicitPairBudgets
 open ContactImplicitContactLift ContactSingularAuxiliary
@@ -24,29 +12,22 @@ open ContactSingularBranch6600Research
 open ContactTightSingularLedgerResearch
 open ContactImplicitPairSeedCountParameterizedResearch
 open ContactSingularLedger6600Research
-
 noncomputable section
-
 variable {K : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
-
 abbrev TightParameters := ContactTightSingularLedgerResearch.TightParameters
-
 namespace TightParameters
-
-/-- .
- -/
 theorem implicitVector_budgets_of_profile
     (P : TightParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     {p : ℕ} [CharP K p]
     (hbox : Q ∈ globalCoefficientBox K P.D P.w P.L P.s)
     (hs : 1 ≤ P.s) (hsSmall : P.s < p) (hw : 1 ≤ P.w) :
-    (∑ q : ImplicitIndex Q, (implicitVector Q q).y) ≤ P.algebraicCap ∧
-      (∑ q : ImplicitIndex Q, (implicitVector Q q).r) ≤
+    (∑ q : ImplicitIndex Q,(implicitVector Q q).y) ≤ P.algebraicCap ∧
+      (∑ q : ImplicitIndex Q,(implicitVector Q q).r) ≤
         2 * P.implicitYCap * P.algebraicCap ∧
-      (∑ q : ImplicitIndex Q, (implicitVector Q q).z) ≤ P.implicitYCap := by
+      (∑ q : ImplicitIndex Q,(implicitVector Q q).z) ≤ P.implicitYCap := by
   classical
-  obtain ⟨hJ, hJboxRaw⟩ := singularAuxiliary_nonzero_mem_box Q
+  obtain ⟨hJ,hJboxRaw⟩ := singularAuxiliary_nonzero_mem_box Q
     P.D P.w P.L P.s p hQ hs hsSmall hbox
   have hJbox : singularAuxiliary Q ∈
       globalCoefficientBox K (P.kappa * P.D) P.w P.algebraicCap 0 := by
@@ -54,11 +35,8 @@ theorem implicitVector_budgets_of_profile
       ContactTightSingularLedgerResearch.TightParameters.algebraicCap] using hJboxRaw
   have hb := implicitPair_input_budgets (singularAuxiliary Q) hJ
     (P.kappa * P.D) P.w P.algebraicCap (by omega) hJbox
-  simpa only [implicitVector, Finset.sum_coe_sort,
+  simpa only [implicitVector,Finset.sum_coe_sort,
     ContactTightSingularLedgerResearch.TightParameters.implicitYCap] using hb
-
-/-- .
- -/
 theorem exceptionalSeeds_bound_of_profile
     (P : TightParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     {p : ℕ} [CharP K p]
@@ -70,7 +48,7 @@ theorem exceptionalSeeds_bound_of_profile
     (exceptionalSeeds (singularAuxiliary Q) Gamma selected).card ≤
       2 * P.algebraicCap ^ 2 := by
   classical
-  obtain ⟨hJ, hJboxRaw⟩ := singularAuxiliary_nonzero_mem_box Q
+  obtain ⟨hJ,hJboxRaw⟩ := singularAuxiliary_nonzero_mem_box Q
     P.D P.w P.L P.s p hQ hs hsSmall hbox
   have hJbox : singularAuxiliary Q ∈
       globalCoefficientBox K (P.kappa * P.D) P.w P.algebraicCap 0 := by
@@ -88,12 +66,8 @@ theorem exceptionalSeeds_bound_of_profile
     degreeOf_Z_le_of_mem_box _ _ _ _ _ hJbox
   exact exceptionalSeeds_card_le (singularAuxiliary Q) hJ hJR
     P.algebraicCap p hj hjSmall hJY hJZ Gamma selected
-
 variable {Iota : Type}
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
- -/
 theorem implicitSeeds_pair_bound_of_profile
     (P : TightParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     {p : ℕ} [CharP K p]
@@ -108,7 +82,7 @@ theorem implicitSeeds_pair_bound_of_profile
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = P.n)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ P.w)
+    (hdegree : ∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ P.w)
     (hagreement : ∀ gamma ∈ Gamma,
       P.a ≤ (nodes.filter (fun i =>
         (selected gamma).eval (x i) = u0 i + gamma * u1 i)).card)
@@ -118,13 +92,13 @@ theorem implicitSeeds_pair_bound_of_profile
       (P.n - P.w) * dot P.agreement (implicitVector Q q) +
         (P.errors + 1) * P.gap * (implicitVector Q q).z := by
   classical
-  obtain ⟨hJ, hJboxRaw⟩ := singularAuxiliary_nonzero_mem_box Q
+  obtain ⟨hJ,hJboxRaw⟩ := singularAuxiliary_nonzero_mem_box Q
     P.D P.w P.L P.s p hQ hs hsSmall hbox
   have hJbox : singularAuxiliary Q ∈
       globalCoefficientBox K (P.kappa * P.D) P.w P.algebraicCap 0 := by
     simpa [ContactTightSingularLedgerResearch.TightParameters.kappa,
       ContactTightSingularLedgerResearch.TightParameters.algebraicCap] using hJboxRaw
-  obtain ⟨_hA, hG, hGR, hAbox, hGbox, hproper⟩ :=
+  obtain ⟨_hA,hG,hGR,hAbox,hGbox,hproper⟩ :=
     implicitPair_data (singularAuxiliary Q) hJ
       (P.kappa * P.D) P.w P.algebraicCap hw hDw hJbox q.1 q.2
   have hsub := implicitSeeds_subset Q selected Gamma q
@@ -145,10 +119,7 @@ theorem implicitSeeds_pair_bound_of_profile
   simpa [implicitVector,
     ContactTightSingularLedgerResearch.TightParameters.agreement,
     ContactTightSingularLedgerResearch.TightParameters.errors,
-    ContactTightSingularLedgerResearch.TightParameters.gap, dot] using hpair
-
-/-- .
- -/
+    ContactTightSingularLedgerResearch.TightParameters.gap,dot] using hpair
 theorem singularSeeds_tight_gap_bound
     (P : TightParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     {p : ℕ} [CharP K p]
@@ -164,7 +135,7 @@ theorem singularSeeds_tight_gap_bound
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = P.n)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ P.w)
+    (hdegree : ∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ P.w)
     (hagreement : ∀ gamma ∈ Gamma,
       P.a ≤ (nodes.filter (fun i =>
         (selected gamma).eval (x i) = u0 i + gamma * u1 i)).card)
@@ -184,8 +155,6 @@ theorem singularSeeds_tight_gap_bound
     hexc
   exact (Nat.mul_le_mul_right P.gap
     (singularSeeds_card_le_sum Q selected Gamma)).trans hsum
-
-/-- . -/
 theorem singularSeeds_count_le_countCap
     (P : TightParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     {p : ℕ} [CharP K p]
@@ -201,7 +170,7 @@ theorem singularSeeds_count_le_countCap
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = P.n)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ P.w)
+    (hdegree : ∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ P.w)
     (hagreement : ∀ gamma ∈ Gamma,
       P.a ≤ (nodes.filter (fun i =>
         (selected gamma).eval (x i) = u0 i + gamma * u1 i)).card)
@@ -213,17 +182,11 @@ theorem singularSeeds_count_le_countCap
   exact P.singularSeeds_tight_gap_bound Q hQ hbox hs hsSmall hw hchar hDw
     hj hjYSmall hjZSmall hmixedSmall hwa han selected Gamma nodes x u0 u1
     hinj hnodes hdegree hagreement hnoPencil
-
 end TightParameters
-
-/-! . -/
-
 def firstResidualQ2 : TightParameters :=
-  ⟨262144, 131071, 182807, 8591929, 598, 14⟩
-
+  ⟨262144,131071,182807,8591929,598,14⟩
 def secondResidualGcd12 : TightParameters :=
-  ⟨262144, 131071, 182807, 4570175, 598, 7⟩
-
+  ⟨262144,131071,182807,4570175,598,7⟩
 theorem optimized_pivot_values :
     firstResidualQ2.implicitYCap = 1769 ∧
       firstResidualQ2.algebraicCap = 16146 ∧
@@ -233,13 +196,12 @@ theorem optimized_pivot_values :
       secondResidualGcd12.algebraicCap = 7774 ∧
       secondResidualGcd12.tightNumerator = 363014145446108303 ∧
       secondResidualGcd12.countCap = 7016664323606 := by
-  norm_num [firstResidualQ2, secondResidualGcd12,
-    TightParameters.countCap, TightParameters.tightNumerator,
-    TightParameters.coreNumerator, TightParameters.aggregateCost,
-    TightParameters.agreement, TightParameters.implicitYCap,
-    TightParameters.algebraicCap, TightParameters.kappa,
-    TightParameters.errors, TightParameters.gap, dot]
-
+  norm_num [firstResidualQ2,secondResidualGcd12,
+    TightParameters.countCap,TightParameters.tightNumerator,
+    TightParameters.coreNumerator,TightParameters.aggregateCost,
+    TightParameters.agreement,TightParameters.implicitYCap,
+    TightParameters.algebraicCap,TightParameters.kappa,
+    TightParameters.errors,TightParameters.gap,dot]
 theorem optimized_pivot_characteristic_gates :
     firstResidualQ2.s < 2130706433 ∧
       firstResidualQ2.w < 2130706433 ∧
@@ -251,10 +213,8 @@ theorem optimized_pivot_characteristic_gates :
       secondResidualGcd12.implicitYCap < 2130706433 ∧
       secondResidualGcd12.algebraicCap < 2130706433 ∧
       2 * secondResidualGcd12.implicitYCap * secondResidualGcd12.algebraicCap < 2130706433 := by
-  norm_num [firstResidualQ2, secondResidualGcd12,
-    TightParameters.implicitYCap, TightParameters.algebraicCap,
+  norm_num [firstResidualQ2,secondResidualGcd12,
+    TightParameters.implicitYCap,TightParameters.algebraicCap,
     TightParameters.kappa]
-
 end
-
 end ProximityPrize.SubmissionLower.ContactSingularBranchParameterizedResearch

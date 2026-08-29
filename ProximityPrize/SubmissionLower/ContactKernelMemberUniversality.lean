@@ -1,26 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactTranslation
-
-/-! .
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactKernelMemberUniversality
-
 open ProximityPrize.Benchmark
 open ContactInterpolation ContactRankKernel ContactTranslation
-
 noncomputable section
-
 variable (K : Type*) [Field K]
-
-/-- . -/
 theorem block_equations_of_mem_ker
     {I : Type*} [Fintype I]
     (D w L s m : ℕ) (nodes u0 u1 : I → K)
@@ -40,9 +24,6 @@ theorem block_equations_of_mem_ker
     ((extractBlock K D w L s (nodes i) (u0 i) (u1 i) r.val theta) :
       Poly K) = 0 at happ
   exact happ
-
-/-- .
- -/
 theorem translated_contact_of_mem_ker
     {I : Type*} [Fintype I]
     (D w L s m : ℕ) (nodes u0 u1 : I → K)
@@ -58,9 +39,6 @@ theorem translated_contact_of_mem_ker
   exact all_blocks_divisible_of_equations K D w L s m
     (nodes i) (u0 i) (u1 i) theta
     (block_equations_of_mem_ker K D w L s m nodes u0 u1 theta htheta i) r
-
-/-- .
- -/
 theorem specialization_eq_zero_of_mem_ker
     [DecidableEq K] {I : Type*} [Fintype I] [DecidableEq I]
     (D w L s m : ℕ) (nodes : I ↪ K) (u0 u1 : I → K)
@@ -83,8 +61,6 @@ theorem specialization_eq_zero_of_mem_ker
       (reconstruct K D w L s theta) P gamma hD
       (reconstruct_mem_globalCoefficientBox K D w L s theta) hP
     exact hdegree.trans_le hcapacity
-
-/-- . -/
 theorem specialization_eq_zero_of_agreements
     [DecidableEq K] {I : Type*} [Fintype I] [DecidableEq I]
     (D w L s m a : ℕ) (nodes : I ↪ K) (u0 u1 : I → K)
@@ -102,9 +78,6 @@ theorem specialization_eq_zero_of_agreements
   · rw [hDa]
     exact Nat.mul_le_mul_left m hcard
   · exact hvalues
-
-/-- .
- -/
 theorem nonzero_kernel_member_universal
     [DecidableEq K] {I : Type*} [Fintype I] [DecidableEq I]
     (D w L s m a : ℕ) (nodes : I ↪ K) (u0 u1 : I → K)
@@ -121,11 +94,9 @@ theorem nonzero_kernel_member_universal
           P.eval (nodes i) = u0 i + gamma * u1 i) →
         specialization K P gamma (reconstruct K D w L s theta) = 0 := by
   refine ⟨reconstruct_ne_zero K D w L s theta htheta0,
-    reconstruct_mem_globalCoefficientBox K D w L s theta, ?_⟩
+    reconstruct_mem_globalCoefficientBox K D w L s theta,?_⟩
   intro gamma P support hP hcard hvalues
   exact specialization_eq_zero_of_agreements K D w L s m a nodes u0 u1
     theta htheta hD hDa P gamma support hP hcard hvalues
-
 end
-
 end ProximityPrize.SubmissionLower.ContactKernelMemberUniversality

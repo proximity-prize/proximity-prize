@@ -1,45 +1,19 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagAffineResidualAutomorphismResearch
-
-/-! .
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualPrimeTransportResearch
-
 open scoped Classical
 open ContactFlagAffineResidualAutomorphismResearch
-
 noncomputable section
-
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 20000
-
 variable {K : Type} [Field K]
-
 local instance : DecidableEq K := Classical.decEq K
-
 abbrev Poly3 (K : Type) [Field K] := MvPolynomial (Fin 3) K
-
-/-- .
- -/
 def forwardResidualPoint
     (aY v bY aS bS cS : K) (q : Fin 3 → K) : Fin 3 → K :=
   ![aY + v * q 0 + bY * q 2,
     aS + v * q 1 + bS * q 0 + cS * q 2,
     q 2]
-
-/-- .
- -/
 theorem eval_residualEquiv
     (aY v bY aS bS cS : K) (hv : v ≠ 0)
     (q : Fin 3 → K) (F : Poly3 K) :
@@ -50,7 +24,7 @@ theorem eval_residualEquiv
       (residualAlgHom aY v bY aS bS cS F) =
     MvPolynomial.eval₂Hom (RingHom.id K)
       (forwardResidualPoint aY v bY aS bS cS q) F
-  have hq : q = ![q 0, q 1, q 2] := by
+  have hq : q = ![q 0,q 1,q 2] := by
     funext i
     fin_cases i <;> rfl
   have hforward :
@@ -61,18 +35,15 @@ theorem eval_residualEquiv
     funext i
     fin_cases i <;> simp [forwardResidualPoint]
   calc
-    _ = MvPolynomial.eval₂Hom (RingHom.id K) ![q 0, q 1, q 2]
+    _ = MvPolynomial.eval₂Hom (RingHom.id K) ![q 0,q 1,q 2]
           (residualAlgHom aY v bY aS bS cS F) := by rw [← hq]
     _ = MvPolynomial.eval₂Hom (RingHom.id K)
           ![aY + v * q 0 + bY * q 2,
             aS + v * q 1 + bS * q 0 + cS * q 2,
             q 2] F := by
-      simpa only [Algebra.algebraMap_self, RingHom.id_apply] using
+      simpa only [Algebra.algebraMap_self,RingHom.id_apply] using
         (eval₂Hom_residual F (q 0) (q 1) (q 2) aY v bY aS bS cS)
     _ = _ := by rw [hforward]
-
-/-- .
- -/
 theorem comap_pointKernel_residualEquiv
     (aY v bY aS bS cS : K) (hv : v ≠ 0)
     (q : Fin 3 → K) :
@@ -82,14 +53,11 @@ theorem comap_pointKernel_residualEquiv
         (MvPolynomial.aeval
           (forwardResidualPoint aY v bY aS bS cS q)).toRingHom := by
   ext F
-  simp only [Ideal.mem_comap, RingHom.mem_ker]
+  simp only [Ideal.mem_comap,RingHom.mem_ker]
   change MvPolynomial.eval q
       (residualEquiv aY v bY aS bS cS hv F) = 0 ↔
     MvPolynomial.eval (forwardResidualPoint aY v bY aS bS cS q) F = 0
   rw [eval_residualEquiv]
-
-/-- .
- -/
 theorem map_le_pointKernel_iff
     (aY v bY aS bS cS : K) (hv : v ≠ 0)
     (P : Ideal (Poly3 K)) (q : Fin 3 → K) :
@@ -100,9 +68,6 @@ theorem map_le_pointKernel_iff
           (forwardResidualPoint aY v bY aS bS cS q)).toRingHom := by
   rw [Ideal.map_le_iff_le_comap,
     comap_pointKernel_residualEquiv aY v bY aS bS cS hv q]
-
-/-- .
- -/
 theorem map_le_pointKernel_of_forward_eq
     (aY v bY aS bS cS : K) (hv : v ≠ 0)
     (P : Ideal (Poly3 K)) (q qOld : Fin 3 → K)
@@ -110,11 +75,8 @@ theorem map_le_pointKernel_of_forward_eq
     (hold : P ≤ RingHom.ker (MvPolynomial.aeval qOld).toRingHom) :
     P.map (residualEquiv aY v bY aS bS cS hv).toRingEquiv.toRingHom ≤
       RingHom.ker (MvPolynomial.aeval q).toRingHom := by
-  rw [map_le_pointKernel_iff, hforward]
+  rw [map_le_pointKernel_iff,hforward]
   exact hold
-
-/-- .
- -/
 structure RegularPrimeData (G T H : Poly3 K) where
   ideal : Ideal (Poly3 K)
   isPrime : ideal.IsPrime
@@ -123,9 +85,6 @@ structure RegularPrimeData (G T H : Poly3 K) where
   H_not_mem : H ∉ ideal
   ne_point : ∀ q : Fin 3 → K,
     ideal ≠ RingHom.ker (MvPolynomial.aeval q).toRingHom
-
-/-- .
- -/
 def RegularPrimeData.mulRegularityUnit
     {G T H : Poly3 K} (D : RegularPrimeData G T H)
     (c : K) (hc : c ≠ 0) :
@@ -142,13 +101,10 @@ def RegularPrimeData.mulRegularityUnit
   }
   intro hmem
   exact D.H_not_mem ((D.ideal.unit_mul_mem_iff_mem hu).mp hmem)
-
 @[simp] theorem RegularPrimeData.mulRegularityUnit_ideal
     {G T H : Poly3 K} (D : RegularPrimeData G T H)
     (c : K) (hc : c ≠ 0) :
     (D.mulRegularityUnit c hc).ideal = D.ideal := rfl
-
-/-- . -/
 def RegularPrimeData.mapResidual
     {G T H : Poly3 K} (D : RegularPrimeData G T H)
     (aY v bY aS bS cS : K) (hv : v ≠ 0) :
@@ -180,17 +136,14 @@ def RegularPrimeData.mapResidual
       ext F
       exact Ideal.apply_mem_of_equiv_iff (f := E.toRingEquiv)
         (I := D.ideal) (x := F)
-    rw [← hback, heq,
+    rw [← hback,heq,
       comap_pointKernel_residualEquiv aY v bY aS bS cS hv q]
-
 @[simp] theorem RegularPrimeData.mapResidual_ideal
     {G T H : Poly3 K} (D : RegularPrimeData G T H)
     (aY v bY aS bS cS : K) (hv : v ≠ 0) :
     (D.mapResidual aY v bY aS bS cS hv).ideal =
       D.ideal.map
         (residualEquiv aY v bY aS bS cS hv).toRingEquiv.toRingHom := rfl
-
-/-- . -/
 theorem mem_mapResidual_iff
     {G T H : Poly3 K} (D : RegularPrimeData G T H)
     (aY v bY aS bS cS : K) (hv : v ≠ 0) (F : Poly3 K) :
@@ -200,7 +153,5 @@ theorem mem_mapResidual_iff
   exact Ideal.apply_mem_of_equiv_iff
     (f := (residualEquiv aY v bY aS bS cS hv).toRingEquiv)
       (I := D.ideal) (x := F)
-
 end
-
 end ProximityPrize.SubmissionLower.ContactIdentityResidualPrimeTransportResearch

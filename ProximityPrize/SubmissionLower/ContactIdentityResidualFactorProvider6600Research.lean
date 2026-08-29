@@ -2,18 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamilyAll6600Research
 import ProximityPrize.SubmissionLower.ContactIdentityResidualFactorIncidence6600Research
 import ProximityPrize.SubmissionLower.ContactFixedMeetFactorIncidence6656Research
-
-/-! .
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualFactorProvider6600Research
-
 open scoped Classical
 open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
 open ContactPrimeSeedIncidence ContactRegularComponentCover
@@ -35,24 +24,15 @@ open ContactNearPencil6600FactorLedgerResearch
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactRobustFixedMeet6656Research
 open ContactFixedMeetFactorIncidence6656Research
-
 noncomputable section
-
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 40000
-
 variable {K Omega Iota : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
 variable {pchar : ℕ} [CharP Omega pchar]
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
-
-
- -/
 def TerminalLargeZChargeOfSupport
     {support : ResidualSupportParameters} {flag : FlagDegree}
     (S : ResidualStage phi Gamma x pchar errors flag w support)
@@ -96,8 +76,6 @@ def TerminalLargeZChargeOfSupport
       E.degree < E.stage.identities.card →
         GammaC.card * (aD - D.degree) ≤
           (errors + 1) * (aD - D.degree) * B.zCost C
-
-/-- . -/
 abbrev TerminalLargeZCharge
     {flag : FlagDegree}
     (S : ResidualStage phi Gamma x pchar errors flag w)
@@ -109,11 +87,6 @@ abbrev TerminalLargeZCharge
       (H := regularitySurface phi D.stage.F)
       flag (residualAgreementFlag D.degree)) : Prop :=
   TerminalLargeZChargeOfSupport S D i B
-
-/-- .
-
-
- -/
 theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
     (hphi : Function.Injective phi)
     (n a w e U V : ℕ)
@@ -137,7 +110,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
     (hallPositive : ∀ C : RegularComponent Omega D.stage.G
       (agreementPolynomial phi D.stage.F D.degree
         (x i) (D.stage.u0 i) (D.stage.u1 i))
-      (regularitySurface phi D.stage.F), 1 ≤ B.allCost C) :
+      (regularitySurface phi D.stage.F),1 ≤ B.allCost C) :
     (Gamma.filter (fun gamma ↦ D.stage.Agrees gamma i)).card * (a - w) ≤
       D.degree *
           ((flagMixed flag support.agreementDirection support.agreementDirection *
@@ -169,7 +142,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
   have hTpoint : ∀ gamma ∈ GammaI,
       MvPolynomial.eval (selectedPoint phi D.stage.selected gamma) T = 0 := by
     intro gamma hgamma
-    obtain ⟨hGamma, hagree⟩ := Finset.mem_filter.mp hgamma
+    obtain ⟨hGamma,hagree⟩ := Finset.mem_filter.mp hgamma
     exact (selected_agreement_zero_iff phi D.stage.F D.stage.selected
       pchar D.degree D.stage.characteristic_bound gamma
       (D.stage.degree_le gamma hGamma) (D.stage.solution gamma hGamma)
@@ -184,7 +157,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
     have h0 := Nat.sub_le_sub_right (hagreement gamma hGamma)
       (w - D.degree)
     exact h0.trans (by
-      simpa only [aD, ResidualStage.agreementFiber,
+      simpa only [aD,ResidualStage.agreementFiber,
         ResidualStage.Agrees] using D.agreement_card gamma hGamma)
   have hda : D.degree < aD := by
     have hD := D.degree_le
@@ -214,10 +187,10 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
       dsimp only [total]
       omega
     have ha : a - total = aD - k := by
-      dsimp only [total, aD]
+      dsimp only [total,aD]
       omega
     rw [hgap]
-    rw [hn, hw, ha] at h
+    rw [hn,hw,ha] at h
     exact h
   have hunit : ∀ k ≤ D.degree,
       (D.stage.nodes.card - k) * (aD - D.degree) ≤
@@ -240,10 +213,10 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
       dsimp only [total]
       omega
     have ha : a - total = aD - k := by
-      dsimp only [total, aD]
+      dsimp only [total,aD]
       omega
     rw [hgap]
-    rw [hn, ha] at h
+    rw [hn,ha] at h
     exact h
   have hbound :=
     proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
@@ -277,8 +250,6 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
   calc
     _ ≤ _ := hbound
     _ = _ := by ring
-
-/-- . -/
 theorem terminal_outer_fiber_bound_of_prime_flag_budget_of_support
     (hphi : Function.Injective phi)
     {support : ResidualSupportParameters} {flag : FlagDegree}
@@ -296,7 +267,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_of_support
     (hallPositive : ∀ C : RegularComponent Omega D.stage.G
       (agreementPolynomial phi D.stage.F D.degree
         (x i) (D.stage.u0 i) (D.stage.u1 i))
-      (regularitySurface phi D.stage.F), 1 ≤ B.allCost C) :
+      (regularitySurface phi D.stage.F),1 ≤ B.allCost C) :
     (Gamma.filter (fun gamma ↦ D.stage.Agrees gamma i)).card * gap ≤
       D.degree *
           ((flagMixed flag support.agreementDirection support.agreementDirection *
@@ -314,13 +285,11 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_of_support
               flagMixed flag unitYZFlag unitAllFlag)) := by
   apply terminal_outer_fiber_bound_of_prime_flag_budget_profile hphi
     n agreements w errors degreeIncidence unitIncidence S hnodes hagreement
-    (by norm_num [agreements, n, errors, w])
-    (by norm_num [agreements, n, errors])
+    (by norm_num [agreements,n,errors,w])
+    (by norm_num [agreements,n,errors])
     (fun k hk => by simpa only [gap] using degree_part_bound k hk)
     (fun k hk => by simpa only [gap] using unit_part_bound k hk)
     D i hi B hallPositive
-
-/-- . -/
 theorem terminal_outer_fiber_bound_of_prime_flag_budget
     (hphi : Function.Injective phi)
     {flag : FlagDegree}
@@ -338,7 +307,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget
     (hallPositive : ∀ C : RegularComponent Omega D.stage.G
       (agreementPolynomial phi D.stage.F D.degree
         (x i) (D.stage.u0 i) (D.stage.u1 i))
-      (regularitySurface phi D.stage.F), 1 ≤ B.allCost C) :
+      (regularitySurface phi D.stage.F),1 ≤ B.allCost C) :
     (Gamma.filter (fun gamma ↦ D.stage.Agrees gamma i)).card * gap ≤
       D.degree *
           ((flagMixed flag agreementDirection6600 agreementDirection6600 *
@@ -355,14 +324,9 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget
             (flagMixed flag unitYZFlag unitZFlag +
               flagMixed flag unitYZFlag unitAllFlag)) := by
   simpa [ResidualSupportParameters.acceptedSupport,
-    ResidualSupportParameters.agreementDirection, agreementDirection6600] using
+    ResidualSupportParameters.agreementDirection,agreementDirection6600] using
     terminal_outer_fiber_bound_of_prime_flag_budget_of_support
       hphi S hnodes hagreement D i hi B hallPositive
-
-/-- .
-
-
- -/
 theorem recursive_scaled_factor_6600_of_prime_flag_budgets_of_support
     (hphi : Function.Injective phi)
     {support : ResidualSupportParameters} {flag : FlagDegree}
@@ -383,20 +347,15 @@ theorem recursive_scaled_factor_6600_of_prime_flag_budgets_of_support
         ∀ C : RegularComponent Omega D.stage.G
           (agreementPolynomial phi D.stage.F D.degree
             (x i) (D.stage.u0 i) (D.stage.u1 i))
-          (regularitySurface phi D.stage.F), 1 ≤ B.allCost C) :
+          (regularitySurface phi D.stage.F),1 ≤ B.allCost C) :
     Gamma.card * gap ^ 2 ≤
       factorRegularLedgerFor flag support.agreementDirection := by
   apply recursive_scaled_factor_with_support_6600 hphi support S flag
     hnodes hagreement
   intro D i hi hproper
-  obtain ⟨B, hallPositive⟩ := hbudget D i hi hproper
+  obtain ⟨B,hallPositive⟩ := hbudget D i hi hproper
   exact terminal_outer_fiber_bound_of_prime_flag_budget_of_support
     hphi S hnodes hagreement D i hi B hallPositive
-
-/-- .
-
-
- -/
 theorem recursive_scaled_factor_6656_of_prime_flag_budgets
     (hphi : Function.Injective phi)
     {flag : FlagDegree}
@@ -419,20 +378,18 @@ theorem recursive_scaled_factor_6656_of_prime_flag_budgets
         ∀ C : RegularComponent Omega D.stage.G
           (agreementPolynomial phi D.stage.F D.degree
             (x i) (D.stage.u0 i) (D.stage.u1 i))
-          (regularitySurface phi D.stage.F), 1 ≤ B.allCost C) :
+          (regularitySurface phi D.stage.F),1 ≤ B.allCost C) :
     Gamma.card * meetProfile.gap ^ 2 ≤
       meetProfile.factorRegularLedger flag := by
   apply recursive_scaled_factor_6656 hphi S flag hnodes hagreement
   intro D i hi hproper
-  obtain ⟨B, hallPositive⟩ := hbudget D i hi hproper
+  obtain ⟨B,hallPositive⟩ := hbudget D i hi hproper
   have h := terminal_outer_fiber_bound_of_prime_flag_budget_profile hphi
     meetProfile.n meetProfile.agreements meetProfile.w meetProfile.errors
     meetProfile.degreeIncidence meetProfile.unitIncidence S hnodes hagreement
     (by norm_num [meetProfile]) (by norm_num [meetProfile])
     meet_degree_part_bound meet_unit_part_bound D i hi B hallPositive
-  simpa only [Profile.gap, meetFactorDegreeCost, meetFactorUnitCost] using h
-
-/-- . -/
+  simpa only [Profile.gap,meetFactorDegreeCost,meetFactorUnitCost] using h
 theorem recursive_scaled_factor_6600_of_prime_flag_budgets
     (hphi : Function.Injective phi)
     {flag : FlagDegree}
@@ -453,7 +410,7 @@ theorem recursive_scaled_factor_6600_of_prime_flag_budgets
         ∀ C : RegularComponent Omega D.stage.G
           (agreementPolynomial phi D.stage.F D.degree
             (x i) (D.stage.u0 i) (D.stage.u1 i))
-          (regularitySurface phi D.stage.F), 1 ≤ B.allCost C) :
+          (regularitySurface phi D.stage.F),1 ≤ B.allCost C) :
     Gamma.card * gap ^ 2 ≤ factorRegularLedger flag := by
   have h := recursive_scaled_factor_6600_of_prime_flag_budgets_of_support
     hphi S hnodes hagreement hbudget
@@ -462,13 +419,11 @@ theorem recursive_scaled_factor_6600_of_prime_flag_budgets
         factorRegularLedgerFor flag
           ResidualSupportParameters.acceptedSupport.agreementDirection := h
     _ = factorRegularLedger flag := by
-      simp [factorRegularLedgerFor, factorRegularLedger, factorPrimary,
-        factorZTail, factorAllTail,
+      simp [factorRegularLedgerFor,factorRegularLedger,factorPrimary,
+        factorZTail,factorAllTail,
         ResidualSupportParameters.acceptedSupport,
         ResidualSupportParameters.agreementDirection,
         agreementDirection6600]
       ring
-
 end
-
 end ProximityPrize.SubmissionLower.ContactIdentityResidualFactorProvider6600Research

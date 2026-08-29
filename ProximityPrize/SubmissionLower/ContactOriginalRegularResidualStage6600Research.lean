@@ -3,19 +3,7 @@ import ProximityPrize.SubmissionLower.ContactOriginalRegularSeedCount
 import ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
 import ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
-
-/-! .
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research
-
 open scoped Classical BigOperators
 open ContactParameters6600Research
 open ContactGenericInitialPoint ContactGenericSurface ContactGeometricFirstTail
@@ -30,24 +18,16 @@ open ContactResidualSupportParametersResearch
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactFlagBezout6543Research
 open ContactNearPencil6600FactorLedgerResearch
-
 noncomputable section
-
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
-
 variable (K : Type) [Field K]
-
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq (GenericField K) := Classical.decEq (GenericField K)
-
-/-- .
- -/
 def geometricFlag {F : MvPolynomial (Fin 4) K}
     (g : GeometricFactor K F) : FlagDegree :=
-  ⟨g.1.degreeOf (2 : Fin 3), g.1.degreeOf (0 : Fin 3),
+  ⟨g.1.degreeOf (2 : Fin 3),g.1.degreeOf (0 : Fin 3),
     g.1.degreeOf (1 : Fin 3)⟩
-
 theorem polynomialIn_geometricFlag {F : MvPolynomial (Fin 4) K}
     (g : GeometricFactor K F) : PolynomialInFlag (geometricFlag K g) g.1 := by
   intro d hd
@@ -59,9 +39,6 @@ theorem polynomialIn_geometricFlag {F : MvPolynomial (Fin 4) K}
     d 0 + d 1 + d 2 ≤
       g.1.degreeOf 2 + g.1.degreeOf 0 + g.1.degreeOf 1
   omega
-
-/-- .
- -/
 theorem residual_surface_weights_of_box
     (F : MvPolynomial (Fin 4) K)
     (hbox : F ∈ globalCoefficientBox K weightedCap w seedTotalCap slopeCap) :
@@ -78,7 +55,7 @@ theorem residual_surface_weights_of_box
       show residualSWeights 1 = 0 by rfl,
       show residualSWeights 2 = 1 by rfl,
       show residualSWeights 3 = 0 by rfl]
-    simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add, Nat.add_zero]
+    simp only [Nat.mul_zero,Nat.mul_one,Nat.zero_add,Nat.add_zero]
     simpa only [slopeCap] using hb.2.1
   · constructor
     · apply (weightedTotalDegree_le_iff residualYSWeights F 43).mpr
@@ -90,9 +67,9 @@ theorem residual_surface_weights_of_box
         show residualYSWeights 1 = 1 by rfl,
         show residualYSWeights 2 = 1 by rfl,
         show residualYSWeights 3 = 0 by rfl]
-      simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add, Nat.add_zero]
-      norm_num [weightedCap, ContactParameters6600Research.multiplicity,
-        agreements, n, errors, w] at hb
+      simp only [Nat.mul_zero,Nat.mul_one,Nat.zero_add,Nat.add_zero]
+      norm_num [weightedCap,ContactParameters6600Research.multiplicity,
+        agreements,n,errors,w] at hb
       omega
     · apply (weightedTotalDegree_le_iff residualTotalWeights F 503).mpr
       intro d hd
@@ -103,17 +80,11 @@ theorem residual_surface_weights_of_box
         show residualTotalWeights 1 = 1 by rfl,
         show residualTotalWeights 2 = 1 by rfl,
         show residualTotalWeights 3 = 1 by rfl]
-      simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add, Nat.add_zero]
-      norm_num [seedTotalCap, slopeCap] at hb
+      simp only [Nat.mul_zero,Nat.mul_one,Nat.zero_add,Nat.add_zero]
+      norm_num [seedTotalCap,slopeCap] at hb
       omega
-
 variable {Iota : Type}
 local instance : DecidableEq Iota := Classical.decEq Iota
-
-/-- .
-
-
- -/
 def geometricResidualStageOfSupport
     (support : ResidualSupportParameters)
     {pchar errorCap degree : ℕ} [CharP K pchar]
@@ -124,7 +95,7 @@ def geometricResidualStageOfSupport
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ degree)
+    (hdegree : ∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ degree)
     (hsolutions : ∀ gamma ∈ Gamma,
       specialization K (selected gamma) gamma F = 0)
     (hregular : ∀ gamma ∈ Gamma,
@@ -173,9 +144,6 @@ def geometricResidualStageOfSupport
       hsub hnoPencil
     characteristic_bound := hdegreeChar
   }
-
-/-- .
- -/
 def geometricResidualStage
     [CharP K prime]
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
@@ -184,7 +152,7 @@ def geometricResidualStage
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K)
     (hinj : Set.InjOn x nodes)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
+    (hdegree : ∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ w)
     (hsolutions : ∀ gamma ∈ Gamma,
       specialization K (selected gamma) gamma F = 0)
     (hregular : ∀ gamma ∈ Gamma,
@@ -198,31 +166,24 @@ def geometricResidualStage
       (geometricFlag K g) w := by
   have hRsmall : F.degreeOf (2 : Fin 4) < prime :=
     (degreeOf_R_le_of_mem_box F weightedCap w seedTotalCap slopeCap hbox).trans_lt
-      (by norm_num [slopeCap, prime])
+      (by norm_num [slopeCap,prime])
   have hsupport := residual_surface_weights_of_box K F hbox
   exact geometricResidualStageOfSupport K
     ResidualSupportParameters.acceptedSupport F hF hRpos hRsmall
-    ⟨hsupport.1, hsupport.2.1, hsupport.2.2⟩ selected Gamma nodes x u0 u1
+    ⟨hsupport.1,hsupport.2.1,hsupport.2.2⟩ selected Gamma nodes x u0 u1
     hinj hdegree hsolutions hregular hnoPencil
-    (by norm_num [w, prime]) g
-
-/-- .
- -/
+    (by norm_num [w,prime]) g
 theorem geometricFlag_budgets
     (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0) :
-    (∑ g : GeometricFactor K F, (geometricFlag K g).zOnly) ≤
+    (∑ g : GeometricFactor K F,(geometricFlag K g).zOnly) ≤
         F.degreeOf (3 : Fin 4) ∧
-      (∑ g : GeometricFactor K F, (geometricFlag K g).yz) ≤
+      (∑ g : GeometricFactor K F,(geometricFlag K g).yz) ≤
         F.degreeOf (1 : Fin 4) ∧
-      (∑ g : GeometricFactor K F, (geometricFlag K g).all) ≤
+      (∑ g : GeometricFactor K F,(geometricFlag K g).all) ≤
         F.degreeOf (2 : Fin 4) := by
   exact ⟨geometricFactor_sum_degree_le K F hF 2,
     geometricFactor_sum_degree_le K F hF 0,
     geometricFactor_sum_degree_le K F hF 1⟩
-
-/-- .
-
- -/
 theorem original_regular_seed_bound_of_geometric_factor_counts
     (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
     (selected : K → Polynomial K) (Gamma : Finset K)
@@ -233,7 +194,7 @@ theorem original_regular_seed_bound_of_geometric_factor_counts
         factorRegularLedger (geometricFlag K g)) :
     Gamma.card * gap ^ 2 ≤
       factorRegularLedger
-        ⟨F.degreeOf (3 : Fin 4), F.degreeOf (1 : Fin 4),
+        ⟨F.degreeOf (3 : Fin 4),F.degreeOf (1 : Fin 4),
           F.degreeOf (2 : Fin 4)⟩ := by
   have hcover := card_le_sum_geometricSeeds K F hF.ne_zero selected Gamma
     hsolutions
@@ -250,13 +211,10 @@ theorem original_regular_seed_bound_of_geometric_factor_counts
         factorRegularLedger (geometricFlag K g) :=
       Finset.sum_le_sum (fun g _ ↦ hcount g)
     _ ≤ factorRegularLedger
-        ⟨F.degreeOf (3 : Fin 4), F.degreeOf (1 : Fin 4),
+        ⟨F.degreeOf (3 : Fin 4),F.degreeOf (1 : Fin 4),
           F.degreeOf (2 : Fin 4)⟩ :=
       sum_factorRegularLedger_le_flag (geometricFlag K)
-        ⟨F.degreeOf (3 : Fin 4), F.degreeOf (1 : Fin 4),
+        ⟨F.degreeOf (3 : Fin 4),F.degreeOf (1 : Fin 4),
           F.degreeOf (2 : Fin 4)⟩ hcaps.1 hcaps.2.1 hcaps.2.2
-
 end
-
-
 end ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research

@@ -1,32 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
-
-/-! .
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactFlagPoleInequality6543Research
-
 open scoped Classical BigOperators WithZero
 open ContactLocalPoleBound ContactSparsePoleSupportResearch
 open ContactFlagBezout6543Research
-
 noncomputable section
-
-/-- . -/
 theorem exponent_weight_le_flag_bound
     (p : FlagDegree) (d : Fin 3 →₀ ℕ) (q : Fin 3 → ℤ)
-    (hd : InFlag p d) (hq : ∀ i, 0 ≤ q i) :
-    (∑ i, (d i : ℤ) * q i) ≤
+    (hd : InFlag p d) (hq : ∀ i,0 ≤ q i) :
+    (∑ i,(d i : ℤ) * q i) ≤
       (p.zOnly : ℤ) * q 2 +
         (p.yz : ℤ) * max (q 0) (q 2) +
         (p.all : ℤ) * max (q 1) (max (q 0) (q 2)) := by
@@ -62,7 +44,7 @@ theorem exponent_weight_le_flag_bound
         (mul_le_mul_of_nonneg_right hys hdiff₁))
       (mul_le_mul_of_nonneg_right hs hdiff₂)
   calc
-    (∑ i, (d i : ℤ) * q i) =
+    (∑ i,(d i : ℤ) * q i) =
         (d 0 : ℤ) * q 0 + (d 1 : ℤ) * q 1 + (d 2 : ℤ) * q 2 := by
       simp [Fin.sum_univ_three]
     _ ≤ (d 0 : ℤ) * m₁ + (d 1 : ℤ) * m₂ + (d 2 : ℤ) * q 2 :=
@@ -80,11 +62,7 @@ theorem exponent_weight_le_flag_bound
       push_cast
       ring
     _ = _ := rfl
-
 variable {L : Type*} [Field L]
-
-/-- .
- -/
 theorem exponentSetPoleWeight_flagSupport_le
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : Fin 3 → L)
     (p : FlagDegree) :
@@ -98,7 +76,7 @@ theorem exponentSetPoleWeight_flagSupport_le
   apply Finset.max'_le
   intro z hz
   obtain rfl | hz := Finset.mem_insert.mp hz
-  · have h0 : ∀ i : Fin 3, 0 ≤ poleOrder v (x i) := fun i ↦ by
+  · have h0 : ∀ i : Fin 3,0 ≤ poleOrder v (x i) := fun i ↦ by
       unfold poleOrder
       exact le_max_left _ _
     exact add_nonneg
@@ -107,18 +85,16 @@ theorem exponentSetPoleWeight_flagSupport_le
           ((h0 0).trans (le_max_left _ _))))
       (mul_nonneg (by positivity)
         ((h0 1).trans (le_max_left _ _)))
-  · obtain ⟨d, hd, rfl⟩ := Finset.mem_image.mp hz
+  · obtain ⟨d,hd,rfl⟩ := Finset.mem_image.mp hz
     exact exponent_weight_le_flag_bound p d (fun i ↦ poleOrder v (x i))
       ((mem_flagSupport_iff p d).mp hd)
       (fun i ↦ by unfold poleOrder; exact le_max_left _ _)
-
 theorem exponentPoleWeight_single
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : Fin 3 → L)
     (i : Fin 3) :
     exponentPoleWeight v x (Finsupp.single i 1) = poleOrder v (x i) := by
   classical
-  fin_cases i <;> simp [exponentPoleWeight, Fin.sum_univ_three]
-
+  fin_cases i <;> simp [exponentPoleWeight,Fin.sum_univ_three]
 private theorem poleOrder_le_support_of_mem
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : Fin 3 → L)
     (p : FlagDegree) (i : Fin 3)
@@ -128,9 +104,7 @@ private theorem poleOrder_le_support_of_mem
   unfold exponentSetPoleWeight
   apply Finset.le_max'
   exact Finset.mem_insert_of_mem (Finset.mem_image.mpr
-    ⟨Finsupp.single i 1, hi, rfl⟩)
-
-/-- . -/
+    ⟨Finsupp.single i 1,hi,rfl⟩)
 theorem exponentSetPoleWeight_unitZ
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : Fin 3 → L) :
     exponentSetPoleWeight v x (flagSupport unitZFlag) = poleOrder v (x 2) := by
@@ -138,8 +112,7 @@ theorem exponentSetPoleWeight_unitZ
   · simpa [unitZFlag] using exponentSetPoleWeight_flagSupport_le v x unitZFlag
   · apply poleOrder_le_support_of_mem v x unitZFlag 2
     rw [mem_flagSupport_iff]
-    simp [InFlag, unitZFlag]
-
+    simp [InFlag,unitZFlag]
 theorem exponentSetPoleWeight_unitYZ
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : Fin 3 → L) :
     exponentSetPoleWeight v x (flagSupport unitYZFlag) =
@@ -149,11 +122,10 @@ theorem exponentSetPoleWeight_unitYZ
   · apply max_le
     · apply poleOrder_le_support_of_mem v x unitYZFlag 0
       rw [mem_flagSupport_iff]
-      simp [InFlag, unitYZFlag]
+      simp [InFlag,unitYZFlag]
     · apply poleOrder_le_support_of_mem v x unitYZFlag 2
       rw [mem_flagSupport_iff]
-      simp [InFlag, unitYZFlag]
-
+      simp [InFlag,unitYZFlag]
 theorem exponentSetPoleWeight_unitAll
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : Fin 3 → L) :
     exponentSetPoleWeight v x (flagSupport unitAllFlag) =
@@ -164,17 +136,14 @@ theorem exponentSetPoleWeight_unitAll
   · apply max_le
     · apply poleOrder_le_support_of_mem v x unitAllFlag 1
       rw [mem_flagSupport_iff]
-      simp [InFlag, unitAllFlag]
+      simp [InFlag,unitAllFlag]
     · apply max_le
       · apply poleOrder_le_support_of_mem v x unitAllFlag 0
         rw [mem_flagSupport_iff]
-        simp [InFlag, unitAllFlag]
+        simp [InFlag,unitAllFlag]
       · apply poleOrder_le_support_of_mem v x unitAllFlag 2
         rw [mem_flagSupport_iff]
-        simp [InFlag, unitAllFlag]
-
-/-- .
- -/
+        simp [InFlag,unitAllFlag]
 theorem exponentSetPoleWeight_flagSupport_le_three
     (v : Valuation L (WithZero (Multiplicative ℤ))) (x : Fin 3 → L)
     (p : FlagDegree) :
@@ -182,10 +151,8 @@ theorem exponentSetPoleWeight_flagSupport_le_three
       (p.zOnly : ℤ) * exponentSetPoleWeight v x (flagSupport unitZFlag) +
       (p.yz : ℤ) * exponentSetPoleWeight v x (flagSupport unitYZFlag) +
       (p.all : ℤ) * exponentSetPoleWeight v x (flagSupport unitAllFlag) := by
-  rw [exponentSetPoleWeight_unitZ, exponentSetPoleWeight_unitYZ,
+  rw [exponentSetPoleWeight_unitZ,exponentSetPoleWeight_unitYZ,
     exponentSetPoleWeight_unitAll]
   exact exponentSetPoleWeight_flagSupport_le v x p
-
 end
-
 end ProximityPrize.SubmissionLower.ContactFlagPoleInequality6543Research

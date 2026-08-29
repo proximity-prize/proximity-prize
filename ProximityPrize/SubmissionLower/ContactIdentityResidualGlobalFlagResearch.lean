@@ -2,51 +2,23 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalTransformResearch
 import ProximityPrize.SubmissionLower.ContactPost6464ShearSupportResearch
 import ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
-
-/-! .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- -/
-
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalFlagResearch
-
 open scoped Classical BigOperators
 open ContactIdentityResidualGlobalTransformResearch
 open ContactPost6464MinkowskiRecurrenceResearch
 open ContactPost6464ShearSupportResearch
 open ContactFlagBezout6543Research
 open ContactGenericSurface ContactTaylorNumerators
-
 noncomputable section
-
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
-
 variable {K Omega : Type} [Field K] [Field Omega]
-
 abbrev Poly4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
-
-/-- .
- -/
 def residualPullWeights (weights : Fin 4 → ℕ) : Fin 4 → ℕ :=
   ![weights 0,
     max (weights 1) (weights 3),
     max (weights 2) (max (weights 1) (weights 3)),
     weights 3]
-
 theorem wt_embedX_zero (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (P : Polynomial K) :
     wt weights (embedX K P) = 0 := by
@@ -55,7 +27,7 @@ theorem wt_embedX_zero (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
       rw [map_add]
       apply Nat.eq_zero_of_le_zero
       exact (wt_add_le weights (embedX K P) (embedX K Q)).trans
-        (by simpa only [hP, hQ, max_self] using (Nat.le_refl 0))
+        (by simpa only [hP,hQ,max_self] using (Nat.le_refl 0))
   | monomial n a =>
       have hembed : embedX K (Polynomial.monomial n a) =
           MvPolynomial.C a * MvPolynomial.X (0 : Fin 4) ^ n := by
@@ -66,17 +38,16 @@ theorem wt_embedX_zero (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
         (MvPolynomial.X (0 : Fin 4) ^ n)
       have hp := wt_pow_le weights (MvPolynomial.X (0 : Fin 4) : Poly4 K) n
       rw [wt_C] at hm
-      rw [wt_X, hX, Nat.mul_zero] at hp
+      rw [wt_X,hX,Nat.mul_zero] at hp
       omega
-
 theorem globalResidualImage_wt_le
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (P0 P1 V : Polynomial K) (i : Fin 4) :
     wt weights (globalResidualImage P0 P1 V i) ≤
       residualPullWeights weights i := by
   fin_cases i
-  · simp [globalResidualImage, residualPullWeights, wt_X]
-  · dsimp [globalResidualImage, residualPullWeights]
+  · simp [globalResidualImage,residualPullWeights,wt_X]
+  · dsimp [globalResidualImage,residualPullWeights]
     have hP0 := wt_embedX_zero weights hX P0
     have hP1 := wt_embedX_zero weights hX P1
     have hV := wt_embedX_zero weights hX V
@@ -84,15 +55,15 @@ theorem globalResidualImage_wt_le
       (MvPolynomial.X (3 : Fin 4) : Poly4 K) (embedX K P1)
     have hy := wt_mul_le weights (embedX K V)
       (MvPolynomial.X (1 : Fin 4) : Poly4 K)
-    rw [wt_X, hP1, Nat.add_zero] at hz
-    rw [hV, wt_X, Nat.zero_add] at hy
+    rw [wt_X,hP1,Nat.add_zero] at hz
+    rw [hV,wt_X,Nat.zero_add] at hy
     have h01 := wt_add_le weights (embedX K P0)
       (MvPolynomial.X (3 : Fin 4) * embedX K P1)
     have h012 := wt_add_le weights
       (embedX K P0 + MvPolynomial.X (3 : Fin 4) * embedX K P1)
       (embedX K V * MvPolynomial.X (1 : Fin 4))
     omega
-  · dsimp [globalResidualImage, residualPullWeights]
+  · dsimp [globalResidualImage,residualPullWeights]
     have hP0 := wt_embedX_zero weights hX P0.derivative
     have hP1 := wt_embedX_zero weights hX P1.derivative
     have hV' := wt_embedX_zero weights hX V.derivative
@@ -103,9 +74,9 @@ theorem globalResidualImage_wt_le
       (MvPolynomial.X (1 : Fin 4) : Poly4 K)
     have hr := wt_mul_le weights (embedX K V)
       (MvPolynomial.X (2 : Fin 4) : Poly4 K)
-    rw [wt_X, hP1, Nat.add_zero] at hz
-    rw [hV', wt_X, Nat.zero_add] at hy
-    rw [hV, wt_X, Nat.zero_add] at hr
+    rw [wt_X,hP1,Nat.add_zero] at hz
+    rw [hV',wt_X,Nat.zero_add] at hy
+    rw [hV,wt_X,Nat.zero_add] at hr
     have h01 := wt_add_le weights (embedX K P0.derivative)
       (MvPolynomial.X (3 : Fin 4) * embedX K P1.derivative)
     have h012 := wt_add_le weights
@@ -118,20 +89,19 @@ theorem globalResidualImage_wt_le
         embedX K V.derivative * MvPolynomial.X (1 : Fin 4))
       (embedX K V * MvPolynomial.X (2 : Fin 4))
     omega
-  · simp [globalResidualImage, residualPullWeights, wt_X]
-
+  · simp [globalResidualImage,residualPullWeights,wt_X]
 theorem globalResidual_monomial_product_wt_le
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (P0 P1 V : Polynomial K) (d : Fin 4 →₀ ℕ) :
     wt weights
-        (∏ i ∈ d.support, globalResidualImage P0 P1 V i ^ d i) ≤
+        (∏ i ∈ d.support,globalResidualImage P0 P1 V i ^ d i) ≤
       Finsupp.weight (residualPullWeights weights) d := by
   apply (wt_finset_prod_le_sum weights d.support
     (fun i ↦ globalResidualImage P0 P1 V i ^ d i)).trans
   calc
     (∑ i ∈ d.support,
         wt weights (globalResidualImage P0 P1 V i ^ d i)) ≤
-        ∑ i ∈ d.support, d i * residualPullWeights weights i := by
+        ∑ i ∈ d.support,d i * residualPullWeights weights i := by
       apply Finset.sum_le_sum
       intro i hi
       exact (wt_pow_le weights (globalResidualImage P0 P1 V i) (d i)).trans
@@ -139,12 +109,8 @@ theorem globalResidual_monomial_product_wt_le
           (globalResidualImage_wt_le weights hX P0 P1 V i))
     _ = Finsupp.weight (residualPullWeights weights) d := by
       rw [Finsupp.weight_apply]
-      simp only [Finsupp.sum, nsmul_eq_mul]
+      simp only [Finsupp.sum,nsmul_eq_mul]
       simp
-
-/-- .
-
- -/
 theorem globalResidualHom_wt_le_pulled
     (weights : Fin 4 → ℕ) (hX : weights 0 = 0)
     (P0 P1 V : Polynomial K) (F : Poly4 K) :
@@ -162,33 +128,26 @@ theorem globalResidualHom_wt_le_pulled
       (MvPolynomial.C (F.coeff d) : Poly4 K) = 0 := wt_C weights _
   have hmul := wt_mul_le weights
     (MvPolynomial.C (F.coeff d) : Poly4 K)
-    (∏ i ∈ d.support, globalResidualImage P0 P1 V i ^ d i)
-  rw [hcoeff, Nat.zero_add] at hmul
+    (∏ i ∈ d.support,globalResidualImage P0 P1 V i ^ d i)
+  rw [hcoeff,Nat.zero_add] at hmul
   exact hmul.trans (hprod.trans
     (MvPolynomial.le_weightedTotalDegree
       (residualPullWeights weights) hd))
-
-def residualSWeights : Fin 4 → ℕ := ![0, 0, 1, 0]
-def residualYSWeights : Fin 4 → ℕ := ![0, 1, 1, 0]
-def residualTotalWeights : Fin 4 → ℕ := ![0, 1, 1, 1]
-
+def residualSWeights : Fin 4 → ℕ := ![0,0,1,0]
+def residualYSWeights : Fin 4 → ℕ := ![0,1,1,0]
+def residualTotalWeights : Fin 4 → ℕ := ![0,1,1,1]
 theorem residualPullWeights_s :
     residualPullWeights residualSWeights = residualSWeights := by
   funext i
   fin_cases i <;> rfl
-
 theorem residualPullWeights_ys :
     residualPullWeights residualYSWeights = residualYSWeights := by
   funext i
   fin_cases i <;> rfl
-
 theorem residualPullWeights_total :
     residualPullWeights residualTotalWeights = residualTotalWeights := by
   funext i
   fin_cases i <;> rfl
-
-/-- .
- -/
 theorem globalResidualHom_surface_flag_weights
     (P0 P1 V : Polynomial K) (F : Poly4 K)
     (hS : wt residualSWeights F ≤ 8)
@@ -197,17 +156,13 @@ theorem globalResidualHom_surface_flag_weights
     wt residualSWeights (globalResidualHom P0 P1 V F) ≤ 8 ∧
       wt residualYSWeights (globalResidualHom P0 P1 V F) ≤ 43 ∧
       wt residualTotalWeights (globalResidualHom P0 P1 V F) ≤ 503 := by
-  refine ⟨?_, ?_, ?_⟩
+  refine ⟨?_,?_,?_⟩
   · exact (globalResidualHom_wt_le_pulled residualSWeights rfl
       P0 P1 V F).trans (by simpa [residualPullWeights_s] using hS)
   · exact (globalResidualHom_wt_le_pulled residualYSWeights rfl
       P0 P1 V F).trans (by simpa [residualPullWeights_ys] using hYS)
   · exact (globalResidualHom_wt_le_pulled residualTotalWeights rfl
       P0 P1 V F).trans (by simpa [residualPullWeights_total] using hTotal)
-
-/-- .
-
- -/
 theorem globalResidual_agreement_weight_bounds
     (P0 P1 V : Polynomial K) (F : Poly4 K)
     (hS : wt residualSWeights F ≤ 8)
@@ -223,13 +178,13 @@ theorem globalResidual_agreement_weight_bounds
         (agreementNumerator (globalResidualHom P0 P1 V F)
           d coeffs x u0 u1) ≤ 1 + 1005 * d := by
   let Fres := globalResidualHom P0 P1 V F
-  obtain ⟨hFs, hFys, hFtot⟩ :=
+  obtain ⟨hFs,hFys,hFtot⟩ :=
     globalResidualHom_surface_flag_weights P0 P1 V F hS hYS hTotal
   have hR : Fres.degreeOf (2 : Fin 4) ≤ 8 := by
     have hw : residualSWeights = Pi.single (2 : Fin 4) 1 := by
       funext i
       fin_cases i <;> rfl
-    rw [hw, wt, MvPolynomial.weightedTotalDegree_piSingle] at hFs
+    rw [hw,wt,MvPolynomial.weightedTotalDegree_piSingle] at hFs
     exact hFs
   have hY : Fres.degreeOf (1 : Fin 4) ≤ 43 := by
     apply MvPolynomial.degreeOf_le_iff.mpr
@@ -247,7 +202,7 @@ theorem globalResidual_agreement_weight_bounds
     change e 0 * 0 + e 1 * 1 + e 2 * 1 + e 3 * 1 ≤ 503 at hw
     norm_num at hw
     omega
-  refine ⟨?_, ?_, ?_⟩
+  refine ⟨?_,?_,?_⟩
   · have hr := (agreementNumerator_degree_bounds Fres 43 8 503
       (by norm_num) hY hR hZ d coeffs x u0 u1).2.1
     convert hr using 1 <;> ring
@@ -275,12 +230,8 @@ theorem globalResidual_agreement_weight_bounds
         change max 1 1 + d * (503 + (503 - 1)) = 1 + 1005 * d
         norm_num
         ring
-
 def residualAgreementFlag (d : ℕ) : FlagDegree :=
-  ⟨920 * d, 1 + 70 * d, 15 * d⟩
-
-/-- .
- -/
+  ⟨920 * d,1 + 70 * d,15 * d⟩
 theorem surfaceMap_globalResidual_agreement_in_flag
     (phi : Polynomial K →+* Omega)
     (P0 P1 V : Polynomial K) (F : Poly4 K)
@@ -293,11 +244,11 @@ theorem surfaceMap_globalResidual_agreement_in_flag
         (agreementNumerator (globalResidualHom P0 P1 V F)
           d coeffs x u0 u1)) := by
   intro e he
-  obtain ⟨q, hq, rfl⟩ := Finset.mem_image.mp
+  obtain ⟨q,hq,rfl⟩ := Finset.mem_image.mp
     (support_surfaceMap_subset phi
       (agreementNumerator (globalResidualHom P0 P1 V F)
         d coeffs x u0 u1) he)
-  obtain ⟨hR, hYS', hTot⟩ := globalResidual_agreement_weight_bounds
+  obtain ⟨hR,hYS',hTot⟩ := globalResidual_agreement_weight_bounds
     P0 P1 V F hS hYS hTotal d coeffs x u0 u1
   have hqR := (MvPolynomial.monomial_le_degreeOf (2 : Fin 4) hq).trans hR
   have hqYS := (MvPolynomial.le_weightedTotalDegree residualYSWeights hq).trans hYS'
@@ -310,7 +261,5 @@ theorem surfaceMap_globalResidual_agreement_in_flag
     q 1 + q 2 ≤ (1 + 70 * d) + 15 * d ∧
     q 1 + q 2 + q 3 ≤ 920 * d + (1 + 70 * d) + 15 * d
   omega
-
 end
-
 end ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalFlagResearch

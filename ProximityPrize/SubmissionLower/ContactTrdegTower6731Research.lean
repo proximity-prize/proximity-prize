@@ -1,16 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
-
-/-! A small cardinal transfer used after adjoining one fresh variable. -/
-
 namespace ProximityPrize.SubmissionLower.ContactTrdegTower6731Research
-
 noncomputable section
-
 variable {k B E : Type} [Field k] [Field B] [Field E]
 variable [Algebra k B] [Algebra B E] [Algebra k E] [IsScalarTower k B E]
-
-/-- If E has at most two parameters over k and still has a transcendental
-parameter over B, then B has at most one parameter over k. -/
 theorem trdeg_le_one_of_tower
     (hE : Algebra.trdeg k E ≤ 2) (htrans : Algebra.Transcendental B E) :
     Algebra.trdeg k B ≤ 1 := by
@@ -34,13 +26,8 @@ theorem trdeg_le_one_of_tower
       _ ≤ _ := add_le_add htwo hbone
   have : (3 : Cardinal) ≤ 2 := hthree.trans hab
   norm_num at this
-
 section RationalExtension
-
 variable {k L : Type} [Field k] [Field L] [Algebra k L]
-
-/-- A coefficient field embedded as constants in `RatFunc L` loses exactly
-the fresh rational-function parameter from a two-parameter ambient bound. -/
 theorem coefficient_trdeg_le_one_of_rational_extension
     (B : IntermediateField k L) (E : IntermediateField k (RatFunc L))
     (hmap : B.map (IsScalarTower.toAlgHom k L (RatFunc L)) ≤ E)
@@ -62,8 +49,6 @@ theorem coefficient_trdeg_le_one_of_rational_extension
     (show Transcendental L (RatFunc.X : RatFunc L) from RatFunc.transcendental_X).of_ringHom_of_comp_eq
       B.val E.val B.val.injective hcomp
   exact trdeg_le_one_of_tower hE ⟨xE,hxE⟩
-
 end RationalExtension
-
 end
 end ProximityPrize.SubmissionLower.ContactTrdegTower6731Research
