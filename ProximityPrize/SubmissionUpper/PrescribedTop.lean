@@ -107,6 +107,66 @@ theorem prod_sq_up :
       ≤ ((131072 + 1 + i) + (131072 + 1 + (8431 - 1 - i))) ^ 2 := four_mul_le_sq _ _
     _ = 270576 ^ 2 := by rw [hsum]
 
+/-- Pairing `4ab ≤ (a+b)^2` at block size 1: `131072` with its AM-GM partner
+`148494 = 2 * 139783 - 131072` yields `131072^2 ≤ 139783^2`.  Squeeze depth 2
+is the partner product then the factor comparison. -/
+theorem score_pair_sq :
+    (131072 : ℕ) ^ 2 ≤ 139783 ^ 2 := by
+  have hpair : 4 * (131072 * 148494) ≤ (131072 + 148494) ^ 2 :=
+    four_mul_le_sq 131072 148494
+  have hsum : (131072 : ℕ) + 148494 = 2 * 139783 := by norm_num
+  have hAM : 131072 * 148494 ≤ 139783 ^ 2 := by
+    have h4 : ((2 * 139783) ^ 2 : ℕ) = 4 * 139783 ^ 2 := by ring
+    rw [hsum, h4] at hpair
+    nlinarith
+  have hfac : (131072 : ℕ) ≤ 148494 := by norm_num
+  calc (131072 : ℕ) ^ 2 = 131072 * 131072 := by ring
+    _ ≤ 131072 * 148494 := Nat.mul_le_mul_left _ hfac
+    _ ≤ 139783 ^ 2 := hAM
+
+set_option maxHeartbeats 400000 in
+set_option maxRecDepth 200000 in
+set_option exponentiation.threshold 20000 in
+/-- Lite `decide` block (depth-1 residual after pairing).
+`22/237` is the first holding convergent above `1188/12800`. -/
+theorem score_pow_block :
+    (2 : ℕ) ^ 22 * 131072 ^ 237 ≤ 139783 ^ 237 := by decide
+
+/-- `2^1188 * 131072^12800 ≤ 139783^12800`, assembled from the lite block
+raised to `54` then the pairing leftover `131072^2 ≤ 139783^2`. -/
+theorem score_pow_reduced :
+    (2 : ℕ) ^ 1188 * 131072 ^ 12800 ≤ 139783 ^ 12800 := by
+  have hpow : ((2 : ℕ) ^ 22 * 131072 ^ 237) ^ 54 ≤ (139783 ^ 237) ^ 54 :=
+    Nat.pow_le_pow_left score_pow_block 54
+  have hL : ((2 : ℕ) ^ 22 * 131072 ^ 237) ^ 54 = 2 ^ 1188 * 131072 ^ 12798 := by
+    rw [mul_pow, ← pow_mul, ← pow_mul]
+  have hR : (139783 ^ 237) ^ 54 = 139783 ^ 12798 := by
+    rw [← pow_mul]
+  have hmain : (2 : ℕ) ^ 1188 * 131072 ^ 12798 ≤ 139783 ^ 12798 := by
+    rw [← hL, ← hR]
+    exact hpow
+  have hmul := Nat.mul_le_mul hmain score_pair_sq
+  have hL2 : (2 : ℕ) ^ 1188 * 131072 ^ 12798 * 131072 ^ 2
+      = 2 ^ 1188 * 131072 ^ 12800 := by
+    rw [mul_assoc, ← pow_add]
+  have hR2 : 139783 ^ 12798 * 139783 ^ 2 = 139783 ^ 12800 := by
+    rw [← pow_add]
+  rwa [hL2, hR2] at hmul
+
+/-- Spot-check payload for `B = 11612`: `2^218788 ≤ 139783^12800`. -/
+theorem score_pow_218788 :
+    (2 : ℕ) ^ 218788 ≤ 139783 ^ 12800 := by
+  have h2 : (2 : ℕ) ^ 218788 = 2 ^ 1188 * 131072 ^ 12800 := by
+    rw [show (131072 : ℕ) = 2 ^ (17 : ℕ) by norm_num, ← pow_mul, ← pow_add]
+  rw [h2]
+  exact score_pow_reduced
+
+/-- Spec inequality: `2^218787 ≤ 139783^12800`. -/
+theorem score_pow_218787 :
+    (2 : ℕ) ^ 218787 ≤ 139783 ^ 12800 :=
+  le_trans (Nat.pow_le_pow_right (by norm_num : 0 < 2)
+    (by norm_num : 218787 ≤ 218788)) score_pow_218788
+
 /-- Squared lower bound on the descending factorial, via pairing. -/
 theorem prod_sq_lo :
     ((131072 : ℕ) * 122642) ^ 8431
