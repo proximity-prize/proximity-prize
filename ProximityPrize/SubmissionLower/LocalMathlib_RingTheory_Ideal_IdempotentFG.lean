@@ -1,36 +1,61 @@
 /-
-Copyright (c) 2018 Mario Carneiro,Kevin Buzzard. All rights reserved.
+Copyright (c) 2018 Mario Carneiro, Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors:Mario Carneiro,Kevin Buzzard
+Authors: Mario Carneiro, Kevin Buzzard
 -/
+
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
+
+/-!
+Permitted flat proof port of Mathlib.RingTheory.Ideal.IdempotentFG.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: 198945d79757bbb5674c4dfcb812539ec2d8c6e1f697ac5c90d47e3ebc489ae1.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+-/
+
+/-! .
+
+ -/
+
 section ProximityFlatProofPort
+
+
 namespace Ideal
-theorem isIdempotentElem_iff_of_fg {R:Type*} [CommRing R] (I:Ideal R) (h:I.FG):
-    IsIdempotentElem I ↔ ∃ e:R,IsIdempotentElem e∧I=R ∙ e:=by
+
+/-- . -/
+theorem isIdempotentElem_iff_of_fg {R : Type*} [CommRing R] (I : Ideal R) (h : I.FG) :
+    IsIdempotentElem I ↔ ∃ e : R, IsIdempotentElem e ∧ I = R ∙ e := by
   constructor
   · intro e
-    obtain ⟨r,hr,hr'⟩:=
+    obtain ⟨r, hr, hr'⟩ :=
       Submodule.exists_mem_and_smul_eq_self_of_fg_of_le_smul I I h
         (by
           rw [smul_eq_mul]
           exact e.ge)
     simp_rw [smul_eq_mul] at hr'
-    refine ⟨r,hr' r hr,antisymm ?_ ((Submodule.span_singleton_le_iff_mem _ _).mpr hr)⟩
+    refine ⟨r, hr' r hr, antisymm ?_ ((Submodule.span_singleton_le_iff_mem _ _).mpr hr)⟩
     intro x hx
-    rw [←hr' x hx]
-    exact Ideal.mem_span_singleton'.mpr ⟨_,mul_comm _ _⟩
-  · rintro ⟨e,he,rfl⟩
-    simp [IsIdempotentElem,Ideal.span_singleton_mul_span_singleton,he.eq]
-theorem isIdempotentElem_iff_eq_bot_or_top {R:Type*} [CommRing R] [IsDomain R] (I:Ideal R)
-    (h:I.FG):IsIdempotentElem I ↔ I=⊥∨I=⊤:=by
+    rw [← hr' x hx]
+    exact Ideal.mem_span_singleton'.mpr ⟨_, mul_comm _ _⟩
+  · rintro ⟨e, he, rfl⟩
+    simp [IsIdempotentElem, Ideal.span_singleton_mul_span_singleton, he.eq]
+
+theorem isIdempotentElem_iff_eq_bot_or_top {R : Type*} [CommRing R] [IsDomain R] (I : Ideal R)
+    (h : I.FG) : IsIdempotentElem I ↔ I = ⊥ ∨ I = ⊤ := by
   constructor
   · intro H
-    obtain ⟨e,he,rfl⟩:=(I.isIdempotentElem_iff_of_fg h).mp H
-    simp only [Ideal.submodule_span_eq,Ideal.span_singleton_eq_bot]
+    obtain ⟨e, he, rfl⟩ := (I.isIdempotentElem_iff_of_fg h).mp H
+    simp only [Ideal.submodule_span_eq, Ideal.span_singleton_eq_bot]
     apply Or.imp id _ (IsIdempotentElem.iff_eq_zero_or_one.mp he)
     rintro rfl
     simp
   · rintro (rfl | rfl) <;> simp [IsIdempotentElem]
+
 end Ideal
