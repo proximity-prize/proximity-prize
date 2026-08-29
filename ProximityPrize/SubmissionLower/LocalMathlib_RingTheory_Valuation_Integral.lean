@@ -1,62 +1,101 @@
 /-
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors:Kenny Lau,Yakov Pechersky
+Authors: Kenny Lau, Yakov Pechersky
 -/
+
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
+
+/-!
+Permitted flat proof port of Mathlib.RingTheory.Valuation.Integral.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: 77e2767524434f0c52676fb3c6f3b313bc55b49d2fd0945a77bfa80ab20ab614.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+-/
+
+/-! .
+
+
+
+ -/
+
 section ProximityFlatProofPort
+
+
 universe u v w
+
 namespace Valuation
+
 namespace Integers
+
 section CommRing
-variable {R:Type u} {Γ₀:Type v} [CommRing R] [LinearOrderedCommGroupWithZero Γ₀]
-variable {v:Valuation R Γ₀} {O:Type w} [CommRing O] [Algebra O R] (hv:Integers v O)
+
+variable {R : Type u} {Γ₀ : Type v} [CommRing R] [LinearOrderedCommGroupWithZero Γ₀]
+variable {v : Valuation R Γ₀} {O : Type w} [CommRing O] [Algebra O R] (hv : Integers v O)
 include hv
+
 open Polynomial
-lemma isIntegral_iff_v_le_one {x:R}:
-    IsIntegral O x ↔ v x ≤ 1:=by
+
+lemma isIntegral_iff_v_le_one {x : R} :
+    IsIntegral O x ↔ v x ≤ 1 := by
   nontriviality R
-  have:Nontrivial O:=hv.nontrivial_iff.mpr inferInstance
+  have : Nontrivial O := hv.nontrivial_iff.mpr inferInstance
   constructor
-  · rintro ⟨f,hm,hf⟩
-    by_cases hn:f.natDegree=0
+  · rintro ⟨f, hm, hf⟩
+    by_cases hn : f.natDegree = 0
     · rw [Polynomial.natDegree_eq_zero] at hn
-      obtain ⟨c,rfl⟩:=hn
-      simp [map_eq_zero_iff _ hv.hom_inj,hm.ne_zero_of_C] at hf
-    simp only [Polynomial.eval₂_eq_sum_range,Finset.sum_range_succ,hm.coeff_natDegree,map_one,
-      one_mul,add_eq_zero_iff_eq_neg] at hf
+      obtain ⟨c, rfl⟩ := hn
+      simp [map_eq_zero_iff _ hv.hom_inj, hm.ne_zero_of_C] at hf
+    simp only [Polynomial.eval₂_eq_sum_range, Finset.sum_range_succ, hm.coeff_natDegree, map_one,
+      one_mul, add_eq_zero_iff_eq_neg] at hf
     apply_fun v at hf
-    simp only [map_neg,map_pow] at hf
+    simp only [map_neg, map_pow] at hf
     contrapose! hf
     refine ne_of_lt (v.map_sum_lt ?_ ?_)
-    · simp [hn,(hf.trans' (zero_lt_one)).ne']
-    · simp only [Finset.mem_range,map_mul,map_pow]
+    · simp [hn, (hf.trans' (zero_lt_one)).ne']
+    · simp only [Finset.mem_range, map_mul, map_pow]
       intro _ hi
       exact mul_lt_of_le_one_of_lt (hv.map_le_one _) <| pow_lt_pow_right₀ hf hi
   · intro h
-    obtain ⟨y,rfl⟩:=hv.exists_of_le_one h
-    exact ⟨Polynomial.X-.C y,by monicity,by simp⟩
-theorem mem_of_integral {x:R} (hx:IsIntegral O x):x∈v.integer:=
+    obtain ⟨y, rfl⟩ := hv.exists_of_le_one h
+    exact ⟨Polynomial.X - .C y, by monicity, by simp⟩
+
+theorem mem_of_integral {x : R} (hx : IsIntegral O x) : x ∈ v.integer :=
   hv.isIntegral_iff_v_le_one.mp hx
-protected theorem integralClosure:integralClosure O R=⊥:=
+
+protected theorem integralClosure : integralClosure O R = ⊥ :=
   bot_unique fun _ hr =>
-    let ⟨x,hx⟩:=hv.3 (hv.mem_of_integral hr)
-    Algebra.mem_bot.2 ⟨x,hx⟩
+    let ⟨x, hx⟩ := hv.3 (hv.mem_of_integral hr)
+    Algebra.mem_bot.2 ⟨x, hx⟩
+
 end CommRing
+
 section FractionField
-variable {K:Type u} {Γ₀:Type v} [Field K] [LinearOrderedCommGroupWithZero Γ₀]
-variable {v:Valuation K Γ₀} {O:Type w} [CommRing O]
+
+variable {K : Type u} {Γ₀ : Type v} [Field K] [LinearOrderedCommGroupWithZero Γ₀]
+variable {v : Valuation K Γ₀} {O : Type w} [CommRing O]
 variable [Algebra O K]
-variable (hv:Integers v O)
+variable (hv : Integers v O)
+
 include hv in
-theorem isIntegrallyClosed:IsIntegrallyClosed O:=by
-  have:IsFractionRing O K:=hv.isFractionRing
+theorem isIntegrallyClosed : IsIntegrallyClosed O := by
+  have : IsFractionRing O K := hv.isFractionRing
   exact
     (IsIntegrallyClosed.integralClosure_eq_bot_iff K).mp (Valuation.Integers.integralClosure hv)
-instance isIntegrallyClosed_integers (v:Valuation K Γ₀):
-    IsIntegrallyClosed v.integer:=
+
+instance isIntegrallyClosed_integers (v : Valuation K Γ₀) :
+    IsIntegrallyClosed v.integer :=
   (Valuation.integer.integers v).isIntegrallyClosed
+
 end FractionField
+
 end Integers
+
 end Valuation
