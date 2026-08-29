@@ -1,8 +1,17 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFactorCaps
 
-/-! .
- -/
+/-!
+# Finite product weighted degrees and cumulative nested costs
+
+Two reusable facts are isolated here.
+
+* Weighted total degree is additive across a finite family of genuine
+  nonzero factors, hence the sum is bounded whenever their product divides a
+  nonzero ambient polynomial.
+* A linear cost on nested-degree increments can be bounded directly from
+  cumulative caps when its three unit coefficients are monotone.
+-/
 
 namespace ProximityPrize.SubmissionLower.ContactCumulativeWeightedDegreeResearch
 
@@ -32,7 +41,7 @@ theorem weightedTotalDegree_prod_eq
         weightedTotalDegree_mul weights (f a) (∏ i ∈ s, f i) hfa hprod,
         ih hfs]
 
-/-- . -/
+/-- Consumer-shaped product/divisibility theorem. -/
 theorem sum_weightedTotalDegree_le_of_prod_dvd
     {I : Type*} [DecidableEq I] (weights : Fin 4 → ℕ) (s : Finset I)
     (f : I → MvPolynomial (Fin 4) K) (Q : MvPolynomial (Fin 4) K)
@@ -49,9 +58,9 @@ theorem sum_weightedTotalDegree_le_of_prod_dvd
   rw [← weightedTotalDegree_prod_eq weights s f hf]
   exact weightedTotalDegree_le_of_dvd weights _ Q hdiv hQ
 
-/-! . -/
+/-! ## Three-variable geometric-factor specialization -/
 
-/-- . -/
+/-- Preserve three exponents and append their weighted sum. -/
 def weightEmbed3 (weights : Fin 3 → ℕ) :
     (Fin 3 →₀ ℕ) →+ (Fin 4 →₀ ℕ) where
   toFun d := Finsupp.single 0 (d 0) + Finsupp.single 1 (d 1) +
@@ -176,7 +185,91 @@ theorem sum_weightedTotalDegree_le_of_prod_dvd_fin3
   rw [← weightedTotalDegree_prod_eq_fin3 weights s f hf]
   exact weightedTotalDegree_le_of_dvd_fin3 weights _ Q hdiv hQ
 
+/-- Cost of nested increments when `inner <= middle <= total`. -/
+def nestedIncrementCost
+    (outerWeight middleWeight innerWeight total middle inner : ℕ) : ℕ :=
+  outerWeight * (total - middle) +
+    middleWeight * (middle - inner) + innerWeight * inner
+
+theorem nestedIncrementCost_eq_cumulative
+    (outerWeight middleWeight innerWeight total middle inner : ℕ)
+    (hinner : inner ≤ middle) (hmiddle : middle ≤ total)
+    (hOM : outerWeight ≤ middleWeight)
+    (hMI : middleWeight ≤ innerWeight) :
+    nestedIncrementCost outerWeight middleWeight innerWeight
+        total middle inner =
+      outerWeight * total + (middleWeight - outerWeight) * middle +
+        (innerWeight - middleWeight) * inner := by
+  let outerPart := total - middle
+  let middlePart := middle - inner
+  let middleStep := middleWeight - outerWeight
+  let innerStep := innerWeight - middleWeight
+  have ht : total = outerPart + middlePart + inner := by
+    dsimp only [outerPart, middlePart]
+    omega
+  have hm : middle = middlePart + inner := by
+    dsimp only [middlePart]
+    omega
+  have hwM : middleWeight = outerWeight + middleStep := by
+    dsimp only [middleStep]
+    omega
+  have hwI : innerWeight = outerWeight + middleStep + innerStep := by
+    dsimp only [middleStep, innerStep]
+    omega
+  calc
+    nestedIncrementCost outerWeight middleWeight innerWeight
+        total middle inner =
+        outerWeight * outerPart + (outerWeight + middleStep) * middlePart +
+          (outerWeight + middleStep + innerStep) * inner := by
+      simp only [nestedIncrementCost, outerPart, middlePart, hwM, hwI]
+    _ = outerWeight * (outerPart + middlePart + inner) +
+          middleStep * (middlePart + inner) + innerStep * inner := by ring
+    _ = outerWeight * total + middleStep * middle + innerStep * inner := by
+      rw [← ht, ← hm]
+    _ = outerWeight * total + (middleWeight - outerWeight) * middle +
+          (innerWeight - middleWeight) * inner := by rfl
+
+/-- A family of nested flags is charged sharply from cumulative rather than
+coordinatewise caps. -/
+theorem sum_nestedIncrementCost_le_of_cumulative_caps
+    {I : Type*} [Fintype I]
+    (outerWeight middleWeight innerWeight : ℕ)
+    (total middle inner : I → ℕ)
+    (totalCap middleCap innerCap : ℕ)
+    (hnested : ∀ i, inner i ≤ middle i ∧ middle i ≤ total i)
+    (hOM : outerWeight ≤ middleWeight)
+    (hMI : middleWeight ≤ innerWeight)
+    (hTotal : (∑ i, total i) ≤ totalCap)
+    (hMiddle : (∑ i, middle i) ≤ middleCap)
+    (hInner : (∑ i, inner i) ≤ innerCap) :
+    (∑ i, nestedIncrementCost outerWeight middleWeight innerWeight
+        (total i) (middle i) (inner i)) ≤
+      outerWeight * totalCap +
+        (middleWeight - outerWeight) * middleCap +
+        (innerWeight - middleWeight) * innerCap := by
+  classical
+  calc
+    (∑ i, nestedIncrementCost outerWeight middleWeight innerWeight
+        (total i) (middle i) (inner i)) =
+        ∑ i, (outerWeight * total i +
+          (middleWeight - outerWeight) * middle i +
+          (innerWeight - middleWeight) * inner i) := by
+      apply Finset.sum_congr rfl
+      intro i _
+      exact nestedIncrementCost_eq_cumulative _ _ _ _ _ _
+        (hnested i).1 (hnested i).2 hOM hMI
+    _ = outerWeight * (∑ i, total i) +
+          (middleWeight - outerWeight) * (∑ i, middle i) +
+          (innerWeight - middleWeight) * (∑ i, inner i) := by
+      simp only [Finset.sum_add_distrib, Finset.mul_sum]
+    _ ≤ outerWeight * totalCap +
+          (middleWeight - outerWeight) * middleCap +
+          (innerWeight - middleWeight) * innerCap :=
+      Nat.add_le_add
+        (Nat.add_le_add (Nat.mul_le_mul_left outerWeight hTotal)
+          (Nat.mul_le_mul_left (middleWeight - outerWeight) hMiddle))
+        (Nat.mul_le_mul_left (innerWeight - middleWeight) hInner)
+
 end
 
 end ProximityPrize.SubmissionLower.ContactCumulativeWeightedDegreeResearch
-

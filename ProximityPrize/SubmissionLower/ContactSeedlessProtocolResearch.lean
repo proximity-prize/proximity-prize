@@ -2,12 +2,12 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSeedlessLambdaResearch
 import ProximityPrize.SubmissionLower.ContactScore6630Research
 
-/-! .
+/-! # Split-budget protocol bridge
 
-
-
-
- -/
+The affine-line count controls only MCA.  The seedless fixed-centre theorem
+controls Lambda independently, so the two terms no longer have to share the
+same allowance.
+-/
 
 namespace ProximityPrize.SubmissionLower.ContactSeedlessProtocolResearch
 
@@ -23,7 +23,7 @@ set_option maxHeartbeats 5000000
 
 def radius : ℝ≥0 := ContactScore6630Research.radius6630
 def errors : ℕ := ContactScore6630Research.errors6630
-def mcaBudget : ℕ := 274980727511395087
+def mcaBudget : ℕ := 274980727751395087
 
 theorem field_cardinality :
     Fintype.card IRSProfile.Field = (2130706433 : ℕ) ^ 6 := by
@@ -57,7 +57,7 @@ theorem nat_div_le_inv_pow {m q t : ℕ} (hm : 0 < m)
     _ = (m : ENNReal) * 1 / ((m : ENNReal) * 2 ^ t) := by rw [mul_one]
     _ = 1 / 2 ^ t := ENNReal.mul_div_mul_left 1 (2 ^ t) hm0 hmtop
 
-/-- . -/
+/-- Increasing the threshold only weakens the alignment premise. -/
 theorem affineLineAlignmentBound_mono_budget
     {ι F : Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
     [Field F] [Fintype F] [DecidableEq F]
@@ -167,21 +167,15 @@ theorem certifiedGammaError_le_of_alignment
       · norm_num [mcaBudget, ContactSeedlessListBoundResearch.listBudget]
       · simpa only [Nat.mul_comm] using field_capacity_split
 
-theorem protocolClaim6710_of_alignment
+theorem protocolClaim6675_of_alignment
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-    ProtocolClaim 6710 319467 1048576 where
+    ProtocolClaim 6675 318083 1048576 where
   admissible := ContactScore6630Research.radius6630_admissible
   reduction := by
     change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
     exact (certifiedGammaError_le_of_alignment halign).trans
       (by norm_num [reductionTarget, ProximityGap.prizeThreshold, div_le_iff₀])
   score := ContactScore6630Research.radius6630_score
-
-/-- . -/
-theorem protocolClaim6696_of_alignment
-    (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-    ProtocolClaim 6710 319467 1048576 :=
-  protocolClaim6710_of_alignment halign
 
 end
 

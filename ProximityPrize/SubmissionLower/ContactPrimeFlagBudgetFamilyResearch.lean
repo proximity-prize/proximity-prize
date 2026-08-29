@@ -2,17 +2,16 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactIdentityResidualZeroBudgetTransportResearch
 import ProximityPrize.SubmissionLower.ContactFlagSymbolicTrapezoidResearch
 import ProximityPrize.SubmissionLower.ContactNearPencil6600FlagResearch
-import ProximityPrize.SubmissionLower.ContactResidualSupportParametersResearch
 
-/-! .
+/-!
+# Shared per-prime unit flag budgets
 
-
-
-
-
-
-
- -/
+The score-66 recursion needs one cost assignment on the original regular
+components which is uniform in the residual agreement degree.  Three unit
+projection costs are sufficient.  Their flag-weighted combinations bound
+every nested flag and transport unchanged through component-specific
+residual automorphisms.
+-/
 
 namespace ProximityPrize.SubmissionLower.ContactPrimeFlagBudgetFamilyResearch
 
@@ -24,18 +23,17 @@ open ContactIdentityResidualZeroBudgetTransportResearch
 open ContactIdentityResidualGlobalFlagResearch
 open ContactNearPencil6600ArithmeticResearch
 open ContactNearPencil6600FlagResearch
-open ContactResidualSupportParametersResearch
 
 noncomputable section
 
 variable {Omega : Type} [Field Omega]
 variable {G T H : MvPolynomial (Fin 3) Omega}
 
-/-- .
-
-
-
- -/
+/-- A single three-cost assignment for the original regular component
+family.  `primeBudget` is uniform in the admissible second-cut flag, while
+the three global sums are the exact unit mixed costs of the surface and
+first-cut flags.
+-/
 structure PrimeFlagBudgetFamily (p q : FlagDegree) where
   zCost : RegularComponent Omega G T H → ℕ
   yzCost : RegularComponent Omega G T H → ℕ
@@ -55,8 +53,8 @@ def PrimeFlagBudgetFamily.weightedCost
     (r : FlagDegree) (C : RegularComponent Omega G T H) : ℕ :=
   r.zOnly * B.zCost C + r.yz * B.yzCost C + r.all * B.allCost C
 
-/-- .
- -/
+/-- Every reweighting of the shared unit costs has the literal symbolic
+flag mixed-volume sum bound. -/
 theorem PrimeFlagBudgetFamily.sum_weightedCost_le
     {p q : FlagDegree} (B : PrimeFlagBudgetFamily (G := G) (T := T) (H := H) p q)
     (r : FlagDegree) :
@@ -79,8 +77,8 @@ theorem PrimeFlagBudgetFamily.sum_weightedCost_le
         (Nat.mul_le_mul_left r.all B.sum_allCost_le)
     _ = flagMixed p q r := (flagMixed_projection_decomposition p q r).symm
 
-/-- .
- -/
+/-- Residual agreement costs are affine in the residual degree with the
+direction and unit costs assigned once to the original prime. -/
 theorem PrimeFlagBudgetFamily.weightedCost_residualAgreementFlag
     {p q : FlagDegree} (B : PrimeFlagBudgetFamily (G := G) (T := T) (H := H) p q)
     (C : RegularComponent Omega G T H) (d : ℕ) :
@@ -92,60 +90,7 @@ theorem PrimeFlagBudgetFamily.weightedCost_residualAgreementFlag
     nsmul_zOnly, nsmul_yz, nsmul_all]
   ring
 
-/-- . -/
-theorem PrimeFlagBudgetFamily.weightedCost_supportResidualAgreementFlag
-    {p q : FlagDegree} (B : PrimeFlagBudgetFamily (G := G) (T := T) (H := H) p q)
-    (support : ResidualSupportParameters)
-    (C : RegularComponent Omega G T H) (d : ℕ) :
-    B.weightedCost (support.residualAgreementFlag d) C =
-      d * B.weightedCost support.agreementDirection C +
-        B.weightedCost unitYZFlag C := by
-  simp only [ResidualSupportParameters.residualAgreementFlag,
-    ResidualSupportParameters.agreementDirection,
-    PrimeFlagBudgetFamily.weightedCost, unitYZFlag]
-  ring
-
-/-- . -/
-theorem flagMixed_supportResidualAgreement_direction
-    (p : FlagDegree) (support : ResidualSupportParameters) (d : ℕ) :
-    flagMixed p (support.residualAgreementFlag d) support.agreementDirection =
-      d * flagMixed p support.agreementDirection support.agreementDirection +
-        flagMixed p support.agreementDirection unitYZFlag := by
-  simp [flagMixed, ResidualSupportParameters.residualAgreementFlag,
-    ResidualSupportParameters.agreementDirection, unitYZFlag]
-  ring
-
-/-- . -/
-theorem flagMixed_supportResidualAgreement_unit
-    (p : FlagDegree) (support : ResidualSupportParameters) (d : ℕ) :
-    flagMixed p (support.residualAgreementFlag d) unitYZFlag =
-      d * flagMixed p support.agreementDirection unitYZFlag +
-        flagMixed p unitYZFlag unitYZFlag := by
-  simp [flagMixed, ResidualSupportParameters.residualAgreementFlag,
-    ResidualSupportParameters.agreementDirection, unitYZFlag]
-  ring
-
-/-- . -/
-theorem flagMixed_supportResidualAgreement_z
-    (p : FlagDegree) (support : ResidualSupportParameters) (d : ℕ) :
-    flagMixed p (support.residualAgreementFlag d) unitZFlag =
-      d * flagMixed p support.agreementDirection unitZFlag +
-        flagMixed p unitYZFlag unitZFlag := by
-  simp [flagMixed, ResidualSupportParameters.residualAgreementFlag,
-    ResidualSupportParameters.agreementDirection, unitYZFlag, unitZFlag]
-  ring
-
-/-- . -/
-theorem flagMixed_supportResidualAgreement_all
-    (p : FlagDegree) (support : ResidualSupportParameters) (d : ℕ) :
-    flagMixed p (support.residualAgreementFlag d) unitAllFlag =
-      d * flagMixed p support.agreementDirection unitAllFlag +
-        flagMixed p unitYZFlag unitAllFlag := by
-  simp [flagMixed, ResidualSupportParameters.residualAgreementFlag,
-    ResidualSupportParameters.agreementDirection, unitYZFlag, unitAllFlag]
-  ring
-
-/-- . -/
+/-- Exact factorwise affine coefficient of the residual-degree part. -/
 theorem flagMixed_residualAgreement_direction
     (p : FlagDegree) (d : ℕ) :
     flagMixed p (residualAgreementFlag d) agreementDirection6600 =
@@ -155,7 +100,7 @@ theorem flagMixed_residualAgreement_direction
   simp [flagMixed, unitYZFlag, agreementDirection6600]
   ring
 
-/-- . -/
+/-- Exact factorwise affine coefficient of the unit part. -/
 theorem flagMixed_residualAgreement_unit
     (p : FlagDegree) (d : ℕ) :
     flagMixed p (residualAgreementFlag d) unitYZFlag =
@@ -165,7 +110,7 @@ theorem flagMixed_residualAgreement_unit
   simp [flagMixed, unitYZFlag, agreementDirection6600]
   ring
 
-/-- . -/
+/-- Exact factorwise affine coefficient of the large-pencil `Z` charge. -/
 theorem flagMixed_residualAgreement_z
     (p : FlagDegree) (d : ℕ) :
     flagMixed p (residualAgreementFlag d) unitZFlag =
@@ -175,7 +120,7 @@ theorem flagMixed_residualAgreement_z
   simp [flagMixed, unitYZFlag, unitZFlag, agreementDirection6600]
   ring
 
-/-- . -/
+/-- Exact affine expansion of the degree-zero-safe all-coordinate tail. -/
 theorem flagMixed_residualAgreement_all
     (p : FlagDegree) (d : ℕ) :
     flagMixed p (residualAgreementFlag d) unitAllFlag =

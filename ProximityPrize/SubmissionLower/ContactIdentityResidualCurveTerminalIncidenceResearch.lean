@@ -5,23 +5,23 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualZeroBudgetTransport
 import ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch
 import ProximityPrize.SubmissionLower.ContactResidualSparseComponentAdapterResearch
 
-/-! .
+/-!
+# Recursive incidence on an arbitrary regular curve prime
 
+The outer surface incidence decomposes a proper agreement cut into regular
+curve primes.  Actual identity nodes can then appear again on one such
+prime after residualization.  `CurveResidualStage` transports the arbitrary
+prime through every residual coordinate change and terminates in the exact
+dichotomy needed here:
 
+* every remaining agreement cut is proper on the terminal prime; or
+* more identities remain than the residual degree, so the selected family
+  has already entered the no-large-pencil tail.
 
-
-
-
-
-
-
-
-
-
-
-
-
- -/
+This module performs all finite incidence bookkeeping across that recursive
+inner process.  The only geometric input in the proper branch is a terminal
+fiber bound affine in the terminal residual degree.
+-/
 
 namespace ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidenceResearch
 
@@ -37,7 +37,6 @@ open ContactFlagBezout6543Research
 open ContactIdentityResidualGlobalFlagResearch
 open ContactIdentityResidualIncidenceResearch
 open ContactIdentityResidualZeroBudgetTransportResearch
-open ContactResidualSupportParametersResearch
 
 noncomputable section
 
@@ -48,23 +47,22 @@ variable {K Omega Iota : Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
 variable {p e : ℕ} [CharP Omega p]
 variable {surfaceFlag cutFlag : FlagDegree}
-variable {support : ResidualSupportParameters}
 
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq Omega := Classical.decEq Omega
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- .
+/-- Inner recursive incidence with an abstract proper-terminal fiber bound.
 
-
-
-
-
-
- -/
+`hlarge` is deliberately branch-local.  In the intended application its
+charge is the original component's `Z` degree: a many-identity terminal
+stage forces `Z` to be transcendental, while the residual automorphism fixes
+`Z`.  Keeping exactly that implication explicit avoids assuming that every
+regular component is `Z`-transcendental.
+-/
 theorem recursive_curve_stratified_incidence_bound
     (hphi : Function.Injective phi) {d a : ℕ}
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
+    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
     (degreeCost unitCost U V zCharge : ℕ)
     (hda : d < a)
     (hagreement : ∀ gamma ∈ Gamma,
@@ -122,13 +120,13 @@ theorem recursive_curve_stratified_incidence_bound
   · have htail := hlarge D hpencil.1
     exact htail.trans (Nat.le_add_left _ _)
 
-/-- .
-
-
- -/
+/-- Concrete terminal wrapper: a finite-zero-set theorem on every proper
+terminal agreement polynomial supplies the affine terminal fiber premise.
+All selected-point injectivity and evaluation facts are discharged here.
+-/
 theorem recursive_curve_stratified_incidence_of_zero_bounds
     (hphi : Function.Injective phi) {d a : ℕ}
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
+    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
     (degreeCost unitCost U V zCharge : ℕ)
     (hda : d < a)
     (hagreement : ∀ gamma ∈ Gamma,
@@ -162,20 +160,20 @@ theorem recursive_curve_stratified_incidence_of_zero_bounds
   · exact hdegree
   · exact hunit
 
-/-- .
-
-
-
-
- -/
+/-- End-to-end recursive inner incidence from one original per-prime flag
+budget.  The invariant theorem carries that *same* cost through every
+component-specific residual path; no whole-component budget is rebuilt at
+the transformed stages.  This is what keeps the eventual global sum over
+the original regular components valid.
+-/
 theorem recursive_curve_stratified_incidence_of_prime_flag_budget
     (hphi : Function.Injective phi) {d a : ℕ}
-    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
+    (S : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d)
     (cost : FlagDegree → ℕ)
     (B : PrimeFlagZeroBudget S.primeIdeal cost)
     (degreeCost unitCost U V zCharge : ℕ)
     (hcost : ∀ t : ℕ,
-      cost (support.residualAgreementFlag t) = t * degreeCost + unitCost)
+      cost (residualAgreementFlag t) = t * degreeCost + unitCost)
     (hda : d < a)
     (hagreement : ∀ gamma ∈ Gamma,
       a ≤ (S.agreementFiber gamma).card)
@@ -190,11 +188,11 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
       U * degreeCost + V * unitCost + (e + 1) * (a - d) * zCharge := by
   classical
   let Inv : ∀ n, CurveResidualStage phi Gamma x p e
-      surfaceFlag cutFlag n support → Prop :=
+      surfaceFlag cutFlag n → Prop :=
     fun _ A ↦ PrimeFlagZeroBudget A.primeIdeal cost
   have htransport : ∀ {n m}
-      {A : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag n support}
-      {Anext : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag m support},
+      {A : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag n}
+      {Anext : CurveResidualStage phi Gamma x p e surfaceFlag cutFlag m},
       A.ResidualTransition Anext → Inv n A → Inv m Anext := by
     intro n m A Anext htransition hbudget
     obtain ⟨aY, v, bY, aS, bS, cS, hv, _, _, hprime⟩ := htransition
@@ -221,15 +219,15 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
         (Gamma.filter (fun gamma ↦ D.stage.Agrees gamma i)).card ≤
           D.degree * degreeCost + unitCost := by
       intro i hi
-      have hflag : PolynomialInFlag (support.residualAgreementFlag D.degree)
+      have hflag : PolynomialInFlag (residualAgreementFlag D.degree)
           (agreementPolynomial phi D.stage.F D.degree
             (x i) (D.stage.u0 i) (D.stage.u1 i)) :=
-        surfaceMap_agreement_in_flag_of_support support
+        surfaceMap_agreement_in_flag_of_surface_weights
           D.stage.F D.stage.surface_s_weight D.stage.surface_ys_weight
           D.stage.surface_total_weight D.degree
           (fun j ↦ (j.factorial : K)⁻¹)
           (x i) (D.stage.u0 i) (D.stage.u1 i)
-      have hzero := hDBudget.zero_le (support.residualAgreementFlag D.degree)
+      have hzero := hDBudget.zero_le (residualAgreementFlag D.degree)
         (agreementPolynomial phi D.stage.F D.degree
           (x i) (D.stage.u0 i) (D.stage.u1 i))
         hflag (D.stage.proper_agreement_of_terminal hproper hi)
