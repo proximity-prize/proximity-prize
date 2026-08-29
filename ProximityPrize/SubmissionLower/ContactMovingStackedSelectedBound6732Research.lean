@@ -6,14 +6,9 @@ import ProximityPrize.SubmissionLower.ContactStackedSeedPartition6670Research
 import ProximityPrize.SubmissionLower.ContactMovingStackedBoxTransport6732Research
 import ProximityPrize.SubmissionLower.ContactMovingStackedResidualCells6732Research
 import ProximityPrize.SubmissionLower.ContactMovingParameters6732Research
-/-! .
 
-
-
-
-
- -/
 namespace ProximityPrize.SubmissionLower.ContactMovingStackedSelectedBound6732Research
+
 open ProximityPrize.Benchmark
 open ContactAlignmentBridge ContactInterpolation ContactTranslation
 open ContactPrimeSeedIncidence ContactProperCutSeedCount
@@ -25,19 +20,20 @@ open ContactStackedSeedPartition6670Research
 open ContactMovingStackedResidualCells6732Research
 open ContactMovingParameters6732Research
 open ContactResidualSupportParametersResearch
+
 noncomputable section
+
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 100000
+
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 local instance : GCDMonoid GlobalPoly :=
   UniqueFactorizationMonoid.toGCDMonoid GlobalPoly
-/-- .
 
- -/
 def FixedCellCountProvider6732 : Prop :=
   ∀ (Q : GlobalPoly), Q ≠ 0 →
-    Q ∈ globalCoefficientBox IRSProfile.Field (40 * agreements) w 1222 11 →
+    Q ∈ globalCoefficientBox IRSProfile.Field (40 * agreements) w 1225 11 →
     ResidualSupportData ContactMovingStackedBoxTransport6732Research.fixedSupport Q →
     ∀ (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
       (Delta : Finset IRSProfile.Field)
@@ -51,7 +47,7 @@ def FixedCellCountProvider6732 : Prop :=
             u0 i + gamma * u1 i)).card) →
       NoLargeSelectedPencil selected Delta w errors →
       Delta.card ≤ fixedCost
-/-- . -/
+
 theorem selected_card_le_mcaBudget_of_cell_bounds
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
     (Gamma : Finset IRSProfile.Field) (QA QB QC : GlobalPoly)
@@ -72,8 +68,7 @@ theorem selected_card_le_mcaBudget_of_cell_bounds
     (fixedSeeds selected Gamma QA QB QC).card
     hpartition hfirst hsecond hfixed
   omega
-/-- .
- -/
+
 theorem selected_recursive_cover
     (U : Fin 2 → IRSProfile.Index → IRSProfile.Field)
     (seeds : Finset IRSProfile.Field)
@@ -101,8 +96,7 @@ theorem selected_recursive_cover
     norm_num [IRSProfile.Index, errors, n, agreements] at hh ⊢
     exact hh
   · exact hvalues gamma hgamma
-/-- .
- -/
+
 theorem selected_full_domain_agreement
     (U : Fin 2 → IRSProfile.Index → IRSProfile.Field)
     (seeds : Finset IRSProfile.Field)
@@ -128,19 +122,18 @@ theorem selected_full_domain_agreement
   have hsize := (hcard gamma hgamma).trans (Finset.card_le_card hA)
   norm_num [IRSProfile.Index, errors, n, agreements] at hsize ⊢
   exact hsize
-/-- .
- -/
+
 theorem fixedSeeds_card_le_of_provider
     (hfixedProvider : FixedCellCountProvider6732)
     (QA QB QC : GlobalPoly) (hQA : QA ≠ 0) (hQB : QB ≠ 0) (hQC : QC ≠ 0)
     (hboxA : QA ∈ globalCoefficientBox IRSProfile.Field
-      (43 * agreements) w 38583 11)
+      (43 * agreements) w 48000 11)
     (hboxB : QB ∈ globalCoefficientBox IRSProfile.Field
-      (81 * agreements) w 1222 25)
+      (81 * agreements) w 1225 25)
     (hboxC : QC ∈ globalCoefficientBox IRSProfile.Field
       (40 * agreements) w 91386 12)
     (hflagB : QB ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
-      IRSProfile.Field (81 * agreements) w 1222 25)
+      IRSProfile.Field (81 * agreements) w 1225 25)
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
     (Gamma : Finset IRSProfile.Field)
     (u0 u1 : IRSProfile.Index → IRSProfile.Field)
@@ -161,7 +154,7 @@ theorem fixedSeeds_card_le_of_provider
     ContactMovingStackedBoxTransport6732Research.gcd12_mem_meet_box
       QA QB hQA hQB hboxA hboxB
   have hQbox : Q ∈ globalCoefficientBox IRSProfile.Field
-      (40 * agreements) w 1222 11 := by
+      (40 * agreements) w 1225 11 := by
     simpa [Q] using
       ContactMovingStackedBoxTransport6732Research.gcd123_mem_meet_box
         QA QB QC hQA hQC hbox12 hboxC
@@ -186,12 +179,11 @@ theorem fixedSeeds_card_le_of_provider
     noLargeSelectedPencil_mono selected Gamma Delta w errors hsub hnoPencil
   simpa [Delta] using hfixedProvider Q hQ hQbox hQsupport selected Delta u0 u1
     hsolution hdegreeDelta hagreementDelta hnoPencilDelta
-/-- .
- -/
+
 theorem selectedNoLargePencilBound6732_of_fixedProvider
     (hfixedProvider : FixedCellCountProvider6732) :
     SelectedNoLargePencilBound IRSProfile.domain
-      131071 80082 274980727111395087 := by
+      131071 80084 274980727111395087 := by
   intro U seeds A selected hdegreeRaw hcardRaw hvalues hnoRaw
   have hdegree : ∀ gamma ∈ seeds,
       (selected gamma).natDegree ≤ w := by

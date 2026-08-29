@@ -22,12 +22,12 @@ set_option maxRecDepth 50000
 set_option maxHeartbeats 5000000
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 80082
+def errors : ℕ := 80084
 def agreements : ℕ := n - errors
 def gap : ℕ := agreements - w
 def prime : ℕ := 2130706433
-def multiplicity : ℕ := 40
-def yTotalCap : ℕ := 55
+def multiplicity : ℕ := 41
+def yTotalCap : ℕ := 56
 def slopeCap : ℕ := 12
 def weightedCap : ℕ := multiplicity * agreements
 def listBudget : ℕ := 1000000000
@@ -37,6 +37,7 @@ def regularListNumerator : ℕ := (n-w)*(capY*slopeCap + capR*yTotalCap)
 def singularListCap : ℕ := (2*slopeCap - 1)*yTotalCap
 def listNumerator : ℕ := regularListNumerator + singularListCap*gap
 def agreementCap : Fin 3 → ℕ := ![capY, capR, 1]
+
 theorem list_numerator_fits : listNumerator < listBudget*gap := by decide
 variable (K : Type) [Field K]
 abbrev GeometricFactor (F : MvPolynomial (Fin 4) K) :=
