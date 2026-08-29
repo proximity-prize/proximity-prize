@@ -9,9 +9,31 @@ import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Invariant_Basic
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_IntegralClosure_IntegralRestrict
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.RingTheory.Invariant.Galois.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: d413c26eca04159c0d356d93cf1df1671c131b427fd0d12ebae829dd3f96a321.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
 
-/-! . -/
+Candidate compatibility repair: explicitly qualify the original univariate
+Polynomial.X in the composition polynomial. Mathematical APIs, hypotheses,
+and proof arguments are unchanged.
+-/
+
+/-!
+# Invariant Extensions of Rings and Galois Theory
+
+Given an extension of rings `B/A` and an action of `G` on `B`, the predicate
+`Algebra.IsInvariant A B G` states that every fixed point of `B` lies in the image of `A`.
+
+This file relates this predicate `Algebra.IsInvariant` to Galois theory.
+-/
 
 section ProximityFlatProofPort
 
@@ -24,7 +46,7 @@ variable (A K L B : Type*) [CommRing A] [CommRing B] [Field K] [Field L]
   [Algebra A B] [Algebra K L] [Algebra A L] [IsScalarTower A K L] [IsScalarTower A B L]
   [IsIntegrallyClosed A] [IsIntegralClosure B A L]
 
-/-- . -/
+/-- In the AKLB setup, the Galois group of `L/K` acts on `B`. -/
 @[implicit_reducible]
 noncomputable def IsIntegralClosure.MulSemiringAction [Algebra.IsAlgebraic K L] :
     MulSemiringAction Gal(L/K) B :=
@@ -37,7 +59,7 @@ instance [Algebra.IsAlgebraic K L] : let := IsIntegralClosure.MulSemiringAction 
     simp only [Algebra.smul_def, smul_mul', mul_eq_mul_right_iff]
     exact Or.inl (algebraMap_galRestrictHom_apply A K L B g b).symm⟩
 
-/-- . -/
+/-- In the AKLB setup, every fixed point of `B` lies in the image of `A`. -/
 theorem Algebra.isInvariant_of_isGalois [FiniteDimensional K L] [h : IsGalois K L] :
     letI := IsIntegralClosure.MulSemiringAction A K L B
     Algebra.IsInvariant A B Gal(L/K) := by
@@ -57,7 +79,7 @@ theorem Algebra.isInvariant_of_isGalois [FiniteDimensional K L] [h : IsGalois K 
     (FaithfulSMul.algebraMap_injective B L).eq_iff] at hk
   exact ⟨a, hk⟩
 
-/-- . -/
+/-- A variant of `Algebra.isInvariant_of_isGalois`, replacing `Gal(L/K)` by `Aut(B/A)`. -/
 theorem Algebra.isInvariant_of_isGalois' [FiniteDimensional K L] [IsGalois K L] :
     Algebra.IsInvariant A B (B ≃ₐ[A] B) :=
   ⟨fun b h ↦ (isInvariant_of_isGalois A K L B).1 b (fun g ↦ h (galRestrict A K L B g))⟩
@@ -130,14 +152,16 @@ end Ideal.IsFractionRing
 
 attribute [local instance] Ideal.Quotient.field in
 include G in
-/-- . -/
+/--
+For any domain `k` containing `B ⧸ Q`,
+any endomorphism of `k` can be restricted to an endomorphism of `B ⧸ Q`. -/
 lemma Ideal.Quotient.normal [P.IsMaximal] [Q.IsMaximal] :
     Normal (A ⧸ P) (B ⧸ Q) :=
   IsFractionRing.normal G P Q (A ⧸ P) (B ⧸ Q)
 
 attribute [local instance] Ideal.Quotient.field in
 include G in
-/-- . -/
+/-- If the extension `B/Q` over `A/P` is separable, then it is finite dimensional. -/
 lemma Ideal.Quotient.finite_of_isInvariant [P.IsMaximal] [Q.IsMaximal]
     [SMulCommClass G A B] [Algebra.IsSeparable (A ⧸ P) (B ⧸ Q)] :
     Module.Finite (A ⧸ P) (B ⧸ Q) :=

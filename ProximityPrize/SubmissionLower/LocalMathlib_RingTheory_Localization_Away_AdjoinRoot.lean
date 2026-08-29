@@ -7,9 +7,26 @@ Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baan
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.RingTheory.Localization.Away.AdjoinRoot.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: 3dd1eb23af494ca086b108075fd260807423faf01e096edcacd17a105d91580d.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+Port elaboration adjustment: explicitly qualify the original polynomial-variable
+constant. This prevents target notation capture;
+all statements and mathematical arguments are retained.
+-/
 
-/-! . -/
+/-!
+The `R`-`AlgEquiv` between the localization of `R` away from `r` and
+`R` with an inverse of `r` adjoined.
+-/
 
 section ProximityFlatProofPort
 
@@ -19,7 +36,8 @@ variable {R : Type*} [CommRing R]
 
 attribute [local instance] AdjoinRoot.algHom_subsingleton
 
-/-- . -/
+/-- The `R`-`AlgEquiv` between the localization of `R` away from `r` and
+`R` with an inverse of `r` adjoined. -/
 noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] AdjoinRoot (C r * Polynomial.X - 1) :=
   AlgEquiv.ofAlgHom
     { awayLift _ r _ with

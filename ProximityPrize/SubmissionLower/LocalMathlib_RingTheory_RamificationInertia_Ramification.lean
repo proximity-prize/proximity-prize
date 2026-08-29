@@ -12,9 +12,38 @@ import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_LocalRing_ResidueF
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_QuasiFinite_Basic
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Unramified_LocalRing
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.RingTheory.RamificationInertia.Ramification.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: c2a305dfe70efa8b26dc73bcf117952d39ebe260fc8fd5417f3e2f5226cf2887.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+-/
 
-/-! . -/
+/-!
+# Ramification index
+
+Let `S/R` be an extension of rings, and let `q` be a prime ideal of `S` lying over a prime ideal
+`p` of `R`. Let `Sq` be the localization of `S` and `q`, and let `pSq` be the image of `p` in `Sq`.
+Then the ramification index of `q` over `R` is defined to be the length of the quotient `Sq/pSq` as
+an `Sq`-module.
+
+## Main definitions
+
+* `Ideal.ramificationIdx q R`: The ramification index of `q` over `R`.
+
+## Main statements
+
+* `ramificationIdx'_eq_ramificationIdx`: The ramification index agrees with the usual definition in
+  the case of Dedekind domains.
+* `ramificationIdx_tower`: Ramification index is multiplicative in towers.
+
+-/
 
 section ProximityFlatProofPort
 
@@ -25,7 +54,14 @@ section
 variable {S : Type*} [CommRing S] (q : Ideal S) (R : Type*) [CommRing R] [Algebra R S]
 
 open scoped Classical in
-/-- . -/
+/-- Let `S/R` be an extension of rings, and let `q` be a prime ideal of `S` lying over a prime ideal
+`p` of `R`. Let `Sq` be the localization of `S` and `q`, and let `pSq` be the image of `p` in `Sq`.
+Then the ramification index of `q` over `R` is defined to be the length of the quotient `Sq/pSq` as
+an `Sq`-module.
+
+When `q` is not prime, we use a junk value of `0`.
+
+This will eventually replace the existing definition of `Ideal.ramificationIdx'`. -/
 noncomputable def ramificationIdx : ℕ :=
   if _ : q.IsPrime then
     letI Sq := Localization.AtPrime q
@@ -175,7 +211,7 @@ theorem ramificationIdx_eq_multiplicity [IsDedekindDomain S]
 
 end IsDedekindDomain
 
-/-- . -/
+/-- See `ramificationIdx_tower` for a version that does not assume primality. -/
 theorem ramificationIdx_tower' [q.IsPrime] [r.IsPrime] [r.LiesOver q]
     [Algebra (Localization.AtPrime q) (Localization.AtPrime r)]
     [Localization.AtPrime.IsLiesOverAlgebra q r]
@@ -192,7 +228,7 @@ theorem ramificationIdx_tower' [q.IsPrime] [r.IsPrime] [r.LiesOver q]
 
 @[deprecated (since := "2026-07-01")] alias ramificationIdx'_tower' := ramificationIdx_tower'
 
-/-- . -/
+/-- See `ramificationIdx_tower'` for a version that only assumes local flatness. -/
 theorem ramificationIdx_tower [r.LiesOver q] [Module.Flat S T] :
     r.ramificationIdx R = q.ramificationIdx R * r.ramificationIdx S := by
   by_cases hr : r.IsPrime

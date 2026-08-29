@@ -8,9 +8,36 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 import ProximityPrize.SubmissionLower.LocalMathlib_Data_DFinsupp_WellFounded
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.Data.Finsupp.WellFounded.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: f126bde8897caf687895f1258db9d5c6b8f56a9b50e4ba69f8ea3f6c9bd962aa.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+Port elaboration adjustment: explicitly bind classical decidable equality
+for the original finitely supported accessibility proof.
+-/
 
-/-! . -/
+/-!
+# Well-foundedness of the lexicographic and product orders on `Finsupp`
+
+`Finsupp.Lex.wellFounded` and the two variants that follow it essentially say that if `(· > ·)` is
+a well order on `α`, `(· < ·)` is well-founded on `N`, and `0` is a bottom element in `N`, then the
+lexicographic `(· < ·)` is well-founded on `α →₀ N`.
+
+`Finsupp.Lex.wellFoundedLT_of_finite` says that if `α` is finite and equipped with a linear order
+and `(· < ·)` is well-founded on `N`, then the lexicographic `(· < ·)` is well-founded on `α →₀ N`.
+
+`Finsupp.wellFoundedLT` and `wellFoundedLT_of_finite` state the same results for the product
+order `(· < ·)`, but without the ordering conditions on `α`.
+
+All results are transferred from `DFinsupp` via `Finsupp.toDFinsupp`.
+-/
 
 section ProximityFlatProofPort
 
@@ -21,7 +48,8 @@ namespace Finsupp
 
 variable [Zero N] {r : α → α → Prop} {s : N → N → Prop}
 
-/-- . -/
+/-- Transferred from `DFinsupp.Lex.acc`. See the top of that file for an explanation for the
+  appearance of the relation `rᶜ ⊓ (≠)`. -/
 theorem Lex.acc (hbot : ∀ ⦃n⦄, ¬s n 0) (hs : WellFounded s) (x : α →₀ N)
     (h : ∀ a ∈ x.support, Acc (rᶜ ⊓ (· ≠ ·)) a) :
     Acc (Finsupp.Lex r s) x := by

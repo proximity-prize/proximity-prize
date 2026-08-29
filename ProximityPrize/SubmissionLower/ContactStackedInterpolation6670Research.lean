@@ -2,45 +2,39 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactFlagKernelUniversalityResearch
 import ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
 
-/-! .
+/-!
+# Three universal contact interpolants at the 67.40 row
 
-
-
-
- -/
+This is the target-specific instantiation of the generic contact-kernel
+universality theorem at `a = 181982`.
+-/
 
 namespace ProximityPrize.SubmissionLower.ContactStackedInterpolation6670Research
 
 open ProximityPrize.Benchmark
 open ContactFlagInterpolation6641Research ContactFlagRankKernel6641Research
-open ContactTranslation
-open ContactFlagKernelUniversalityResearch
-open ContactStackedParameters6670Research
+open ContactFlagKernelUniversalityResearch ContactStackedParameters6670Research
 
 noncomputable section
 
-set_option maxRecDepth 100000
-set_option maxHeartbeats 2000000
+abbrev GlobalPoly := MvPolynomial (Fin 4) IRSProfile.Field
 
-local instance : DecidableEq IRSProfile.Field := Classical.decEq _
-local instance : DecidableEq IRSProfile.Index := Classical.decEq _
-
-/-- .
- -/
+/-- Three boxed interpolants that vanish universally on all agreement points
+with multiplicity vector `(45, 76, 45)`. -/
 theorem exists_stacked_universal_vanishing_interpolants
     (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
-    ∃ QA QB QC : MvPolynomial (Fin 4) IRSProfile.Field,
+    ∃ QA QB QC : GlobalPoly,
       QA ≠ 0 ∧
-      QA ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
-        (34 * agreements) w 20000 10 ∧
+      QA ∈ globalCoefficientBox IRSProfile.Field
+        (45 * agreements) w 20000 14 ∧
       QB ≠ 0 ∧
-      QB ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
-        (68 * agreements) w 900 21 ∧
+      QB ∈ globalCoefficientBox IRSProfile.Field
+        (76 * agreements) w 1450 23 ∧
       QC ≠ 0 ∧
-      QC ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
-        (37 * agreements) w 42000 9 ∧
+      QC ∈ globalCoefficientBox IRSProfile.Field
+        (45 * agreements) w 50000 14 ∧
       QB ∈ ContactFlagInterpolation6641Research.globalCoefficientBox IRSProfile.Field
-        (68 * agreements) w 900 21 ∧
+        (76 * agreements) w 1450 23 ∧
       ∀ (gamma : IRSProfile.Field) (P : Polynomial IRSProfile.Field)
         (support : Finset IRSProfile.Index),
         P.natDegree ≤ w → agreements ≤ support.card →
@@ -49,59 +43,32 @@ theorem exists_stacked_universal_vanishing_interpolants
         specialization IRSProfile.Field P gamma QA = 0 ∧
         specialization IRSProfile.Field P gamma QB = 0 ∧
         specialization IRSProfile.Field P gamma QC = 0 := by
-  have hgateA : Fintype.card IRSProfile.Index * localRankBound 34 20000 10 <
-      coefficientCount (34 * agreements) w 20000 10 := by
-    rw [show Fintype.card IRSProfile.Index = n by
-      norm_num [IRSProfile.Index, n]]
-    change profileA.totalRank < profileA.coefficients
-    exact interpolation_gates.1
-  have hgateB : Fintype.card IRSProfile.Index * localRankBound 68 900 21 <
-      coefficientCount (68 * agreements) w 900 21 := by
-    rw [show Fintype.card IRSProfile.Index = n by
-      norm_num [IRSProfile.Index, n]]
-    change profileB.totalRank < profileB.coefficients
-    exact interpolation_gates.2.1
-  have hgateC : Fintype.card IRSProfile.Index * localRankBound 37 42000 9 <
-      coefficientCount (37 * agreements) w 42000 9 := by
-    rw [show Fintype.card IRSProfile.Index = n by
-      norm_num [IRSProfile.Index, n]]
-    change profileC.totalRank < profileC.coefficients
-    exact interpolation_gates.2.2
-  obtain ⟨thetaA, hthetaA, hkernelA⟩ := exists_nonzero_kernel_array
-    IRSProfile.Field (34 * agreements) w 20000 10 34
-      IRSProfile.domain u0 u1 hgateA
-  obtain ⟨thetaB, hthetaB, hkernelB⟩ := exists_nonzero_kernel_array
-    IRSProfile.Field (68 * agreements) w 900 21 68
-      IRSProfile.domain u0 u1 hgateB
-  obtain ⟨thetaC, hthetaC, hkernelC⟩ := exists_nonzero_kernel_array
-    IRSProfile.Field (37 * agreements) w 42000 9 37
-      IRSProfile.domain u0 u1 hgateC
-  have hDA : 0 < 34 * agreements := by norm_num [agreements]
-  have hDB : 0 < 68 * agreements := by norm_num [agreements]
-  have hDC : 0 < 37 * agreements := by norm_num [agreements]
-  have hA := nonzero_kernel_member_universal IRSProfile.Field
-    (34 * agreements) w 20000 10 34 agreements IRSProfile.domain u0 u1 thetaA
-    hthetaA (LinearMap.mem_ker.mpr hkernelA) hDA rfl
-  have hB := nonzero_kernel_member_universal IRSProfile.Field
-    (68 * agreements) w 900 21 68 agreements IRSProfile.domain u0 u1 thetaB
-    hthetaB (LinearMap.mem_ker.mpr hkernelB) hDB rfl
-  have hC := nonzero_kernel_member_universal IRSProfile.Field
-    (37 * agreements) w 42000 9 37 agreements IRSProfile.domain u0 u1 thetaC
-    hthetaC (LinearMap.mem_ker.mpr hkernelC) hDC rfl
-  have hOrdA := flag_box_to_ordinary IRSProfile.Field
-    (34 * agreements) w 20000 10 _ hA.2.1
-  have hOrdB := flag_box_to_ordinary IRSProfile.Field
-    (68 * agreements) w 900 21 _ hB.2.1
-  have hOrdC := flag_box_to_ordinary IRSProfile.Field
-    (37 * agreements) w 42000 9 _ hC.2.1
-  refine ⟨reconstruct IRSProfile.Field (34 * agreements) w 20000 10 thetaA,
-    reconstruct IRSProfile.Field (68 * agreements) w 900 21 thetaB,
-    reconstruct IRSProfile.Field (37 * agreements) w 42000 9 thetaC,
-    hA.1, hOrdA, hB.1, hOrdB, hC.1, hOrdC, hB.2.1, ?_⟩
+  have hA := exists_universal_vanishing_interpolant u0 u1
+    45 20000 14 (by norm_num [agreements])
+    (by norm_num [agreements]) (by norm_num [agreements])
+    (by norm_num [agreements])
+    profileA_values.2.2.2.2
+  have hB := exists_universal_vanishing_interpolant u0 u1
+    76 1450 23 (by norm_num [agreements])
+    (by norm_num [agreements]) (by norm_num [agreements])
+    (by norm_num [agreements])
+    profileB_values.2.2.2.2
+  have hC := exists_universal_vanishing_interpolant u0 u1
+    45 50000 14 (by norm_num [agreements])
+    (by norm_num [agreements]) (by norm_num [agreements])
+    (by norm_num [agreements])
+    profileC_values.2.2.2.2
+  rcases hA with ⟨QA, hQA_ne, hQA_box, hQA_univ⟩
+  rcases hB with ⟨QB, hQB_ne, hQB_box, hQB_univ⟩
+  rcases hC with ⟨QC, hQC_ne, hQC_box, hQC_univ⟩
+  have hQB_flag : QB ∈ ContactFlagInterpolation6641Research.globalCoefficientBox IRSProfile.Field
+      (76 * agreements) w 1450 23 := by
+    exact mem_globalFlagBox_of_mem_box QB (76 * agreements) w 1450 23 hQB_box
+  refine ⟨QA, QB, QC, hQA_ne, hQA_box, hQB_ne, hQB_box, hQC_ne, hQC_box, hQB_flag, ?_⟩
   intro gamma P support hP hcard hvalues
-  exact ⟨hA.2.2 gamma P support hP hcard hvalues,
-    hB.2.2 gamma P support hP hcard hvalues,
-    hC.2.2 gamma P support hP hcard hvalues⟩
+  exact ⟨hQA_univ gamma P support hP hcard hvalues,
+    hQB_univ gamma P support hP hcard hvalues,
+    hQC_univ gamma P support hP hcard hvalues⟩
 
 end
 

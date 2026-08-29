@@ -9,11 +9,38 @@ import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_MvPolynomial_MonomialOrder_DegLex
 import ProximityPrize.SubmissionLower.LocalMathlib_Algebra_MvPolynomial_Division
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.Algebra.MvPolynomial.NoZeroDivisors.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: e7b90cbd807f2fae55add63069efed444e8690520fe8f6f9f82619c63a04dc11.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+-/
 
-/-! . -/
+/-!
+Elaboration repair after actual WMI build 229471 (model: gpt-5).
+TargetLower's ambient notation parses bare X as a bivariate polynomial;
+its typeclass environment also stalls the existing equality decisions and
+the resulting multiset extensionality search. This revision spells the
+intended MvPolynomial.X and supplies explicit local Classical.decEq
+instances in the affected coefficient, finite-product, multiset, and
+variable-divisibility proofs. Mathematical statements and hypotheses,
+copyright, license, imports, and protected checks are unchanged.
+No heartbeat limit or kernel setting is changed.
+-/
 
-/-! . -/
+/-!
+# Multivariate polynomials over integral domains
+
+This file proves results about multivariate polynomials
+that hold when the coefficient (semi)ring has no zero divisors.
+
+-/
 
 section ProximityFlatProofPort
 
