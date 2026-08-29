@@ -10,15 +10,15 @@ local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
 local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
 theorem alignmentBound6733_of_proper
     (proper:ProperStageProvider6733):
-    AffineLineAlignmentBound IRSProfile.baseCode 80092 274980727256461038:=by
+    AffineLineAlignmentBound IRSProfile.baseCode 80102 274980727208431873:=by
   have h:=ContactAlignmentBridge.alignmentBound_of_selected_count
-    IRSProfile.domain 131071 80092 274980727256461038
+    IRSProfile.domain 131071 80102 274980727208431873
     (ContactTwoTailStackedSelectedBound6733Research.selectedNoLargePencilBound6733_of_fixedProvider
         (fixedCellCountProvider_of_proper proper))
   simpa [IRSProfile.baseCode,IRSProfile.baseDimension] using h
 theorem protocolClaim6733_of_proper
     (proper:ProperStageProvider6733):
-    ProtocolClaim 6733 10251903 33554432:=
+    ProtocolClaim 6734 10253183 33554432:=
   ContactMovingProtocol6733Research.protocolClaim6733_of_alignment
     (alignmentBound6733_of_proper proper)
 end

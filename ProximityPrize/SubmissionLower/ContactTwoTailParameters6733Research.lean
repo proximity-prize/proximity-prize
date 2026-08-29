@@ -13,8 +13,8 @@ set_option exponentiation.threshold 20000
 def n:ℕ:=262144
 def w:ℕ:=131071
 def prime:ℕ:=2130706433
-def score:ℕ:=6733
-def errors:ℕ:=80092
+def score:ℕ:=6734
+def errors:ℕ:=80102
 def agreements:ℕ:=n-errors
 def gap:ℕ:=agreements-w
 def radiusNumerator:ℕ:=128*errors+127
@@ -36,10 +36,10 @@ def totalRank (P:Profile):ℕ:=n*P.rank
 def characteristicCap (P:Profile):ℕ:=
   (2*P.slopeCap-1)*P.weightedCap
 end Profile
-def profileA:Profile:=⟨41,19688,12,56,44579488339867,170057251⟩
-def profileB:Profile:=⟨81,1242,25,112,20738895387938,79112293⟩
-def profileC:Profile:=⟨43,624668,11,59,1477011414465277,5634351404⟩
-def finalMeet:Profile:=⟨41,1242,11,56,0,0⟩
+def profileA:Profile:=⟨43,8000,12,59,20077376487545,76584352⟩
+def profileB:Profile:=⟨81,1262,25,112,21082509737588,80423213⟩
+def profileC:Profile:=⟨43,8000,12,59,20077376487545,76584352⟩
+def finalMeet:Profile:=⟨43,1262,12,59,0,0⟩
 def fixedFlag:FlagDegree:=
   ⟨finalMeet.totalCap-finalMeet.middleCap,
     finalMeet.middleCap-finalMeet.slopeCap,
@@ -48,11 +48,11 @@ def direction:FlagDegree:=
   ⟨2*fixedFlag.zOnly,2*fixedFlag.yz-1,2*fixedFlag.all-1⟩
 def tailFlag (d:ℕ):FlagDegree:=unitYZFlag+(d+1) • direction
 def fixedRegularCost:ℕ:=flagMixed fixedFlag (tailFlag (w+1)) (tailFlag (w+2))
-def fixedSingularCost:ℕ:=63020462332448
-def firstResidualRegularCost:ℕ:=112248424128199
-def firstResidualSingularCost:ℕ:=678257591819300
-def secondResidualRegularCost:ℕ:=1127729807323574
-def secondResidualSingularCost:ℕ:=75606965639647
+def fixedSingularCost:ℕ:=80596345495370
+def firstResidualRegularCost:ℕ:=47473538768802
+def firstResidualSingularCost:ℕ:=689314936957386
+def secondResidualRegularCost:ℕ:=16293039752618
+def secondResidualSingularCost:ℕ:=80596345495370
 def fixedCost:ℕ:=fixedRegularCost+fixedSingularCost
 def firstResidualCeiling:ℕ:=
   firstResidualRegularCost+firstResidualSingularCost
@@ -62,7 +62,7 @@ def totalCost:ℕ:=
   fixedRegularCost+fixedSingularCost+
     firstResidualRegularCost+firstResidualSingularCost+
     secondResidualRegularCost+secondResidualSingularCost
-def seedlessListNumerator:ℕ:=43585392724533
+def seedlessListNumerator:ℕ:=46024937937114
 def seedlessListCeiling:ℕ:=seedlessListNumerator/gap+1
 def capacity:ℕ:=prime^6/2^128
 def mcaBudget:ℕ:=capacity-seedlessListCeiling
@@ -71,36 +71,36 @@ abbrev scoreGate (e:ℕ):Prop:=
   (radiusDenominator-(128*e+127))^12800*2^score ≤
     radiusDenominator^12800
 theorem radius_row_exact:
-    errors=80092∧agreements=182052∧gap=50981∧
-      radiusNumerator=10251903∧radiusDenominator=33554432:=by
+    errors=80102∧agreements=182042∧gap=50971∧
+      radiusNumerator=10253183∧radiusDenominator=33554432:=by
   decide
 theorem radius_cell_exact:scoreGate errors∧¬ scoreGate (errors-1):=by
   decide
 theorem profile_values:
-    profileA.nullity=333723∧profileB.nullity=82451746∧
-      profileC.nullity=15101∧
-      finalMeet=⟨41,1242,11,56,0,0⟩:=by
+    profileA.nullity=1248116857∧profileB.nullity=46988916∧
+      profileC.nullity=1248116857∧
+      finalMeet=⟨43,1262,12,59,0,0⟩:=by
   decide
 theorem profileA_coefficients_exact:
     coefficientCount profileA.weightedCap w profileA.totalCap profileA.slopeCap=
       profileA.coefficients:=by
-  change coefficientCount (41*182052) 131071 19688 12=44579488339867
+  change coefficientCount (43*182042) 131071 8000 12=20077376487545
   rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
-    (41*182052) 131071 19688 12 57 (by decide) (by decide)]
+    (43*182042) 131071 8000 12 60 (by decide) (by decide)]
   decide
 theorem profileB_coefficients_exact:
     coefficientCount profileB.weightedCap w profileB.totalCap profileB.slopeCap=
       profileB.coefficients:=by
-  change coefficientCount (81*182052) 131071 1242 25=20738895387938
+  change coefficientCount (81*182042) 131071 1262 25=21082509737588
   rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
-    (81*182052) 131071 1242 25 113 (by decide) (by decide)]
+    (81*182042) 131071 1262 25 113 (by decide) (by decide)]
   decide
 theorem profileC_coefficients_exact:
     coefficientCount profileC.weightedCap w profileC.totalCap profileC.slopeCap=
       profileC.coefficients:=by
-  change coefficientCount (43*182052) 131071 624668 11=1477011414465277
+  change coefficientCount (43*182042) 131071 8000 12=20077376487545
   rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
-    (43*182052) 131071 624668 11 60 (by decide) (by decide)]
+    (43*182042) 131071 8000 12 60 (by decide) (by decide)]
   decide
 theorem profileA_rank_exact:
     localRankBound profileA.multiplicity profileA.totalCap profileA.slopeCap=
@@ -151,24 +151,24 @@ theorem profile_small_gates:
       profileC.slopeCap < prime:=by
   decide
 theorem fixed_flag_values:
-    fixedFlag=⟨1186,45,11⟩∧direction=⟨2372,89,21⟩∧
-      tailFlag (w+1)=⟨310905156,11665498,2752533⟩∧
-      tailFlag (w+2)=⟨310907528,11665587,2752554⟩:=by
+    fixedFlag=⟨1203,47,12⟩∧direction=⟨2406,93,23⟩∧
+      tailFlag (w+1)=⟨315361638,12189790,3014679⟩∧
+      tailFlag (w+2)=⟨315364044,12189883,3014702⟩:=by
   decide
 theorem six_cells_exact:
-    fixedRegularCost=266307292786686640∧
-      fixedSingularCost=63020462332448∧
-      firstResidualRegularCost=112248424128199∧
-      firstResidualSingularCost=678257591819300∧
-      secondResidualRegularCost=1127729807323574∧
-      secondResidualSingularCost=75606965639647:=by
+    fixedRegularCost=270046217001125523∧
+      fixedSingularCost=80596345495370∧
+      firstResidualRegularCost=47473538768802∧
+      firstResidualSingularCost=689314936957386∧
+      secondResidualRegularCost=16293039752618∧
+      secondResidualSingularCost=80596345495370:=by
   decide
 theorem budget_and_slack_exact:
-    seedlessListCeiling=854934049∧
+    seedlessListCeiling=902963214∧
       capacity=274980728111395087∧
-      totalCost=268364156037929808∧
-      mcaBudget=274980727256461038∧
-      slack=6616571218531230∧totalCost < mcaBudget:=by
+      totalCost=270960491207595069∧
+      mcaBudget=274980727208431873∧
+      slack=4020236000836804∧totalCost < mcaBudget:=by
   decide
 theorem cell_budget_strict:
     fixedCost+firstResidualCeiling+secondResidualCeiling < mcaBudget:=by
