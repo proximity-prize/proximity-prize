@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactMovingFixedStage6719Research
-import ProximityPrize.SubmissionLower.ContactMovingOuterFiber6719Research
+import ProximityPrize.SubmissionLower.ContactMovingReducedRecursiveWrapper6720Research
 import ProximityPrize.SubmissionLower.ContactProfileFixedSelectedCombinerResearch
 
 namespace ProximityPrize.SubmissionLower.ContactMovingFixedSelected6719Research
@@ -14,10 +14,12 @@ open ContactOriginalRegularResidualStage6600Research ContactRegularFactorResidua
 open ContactGlobalSelectedFamilies6600Research ContactIdentityResidualIterationResearch
 open ContactIdentityResidualGlobalFlagResearch ContactResidualSupportParametersResearch
 open ContactFlagBezout6543Research ContactRobustFixedMeet6656Research
-open ContactGCDCumulativeFlagsResearch ContactSharpTaylorYZFactorProviderResearch
+open ContactGCDCumulativeFlagsResearch ContactReducedTaylorYZFactorProviderResearch
+open ContactSharpTaylorYZFactorProviderResearch
 open ContactProfileFixedSelectedCombinerResearch
 open ContactMovingFixedProfile6719Research ContactMovingFixedStage6719Research
-open ContactMovingFactorLedger6719Research ContactMovingOuterFiber6719Research
+open ContactMovingReducedFactorLedger6720Research
+open ContactMovingReducedOuterFiber6720Research
 
 noncomputable section
 set_option maxHeartbeats 5000000
@@ -45,7 +47,8 @@ theorem regular_factor_seed_bound
     (hnoPencil : NoLargeSelectedPencil selected Γ fixedProfile.w fixedProfile.errors)
     (R : RegularIndex Q) :
     (regularSeeds Q selected Γ R).card*fixedProfile.gap^2 ≤
-      regularLedger fixedProfile 955 40 8 (regularCumulativeFlag Q R) := by
+      regularLedger fixedProfile fixedSupport 968 40 8
+        (regularCumulativeFlag Q R) := by
   letI : CharP (GenericField K) prime := genericField_charP K prime
   let E := AlgebraicClosure (RatFunc (GenericField K))
   letI : IsScalarTower (GenericField K) (RatFunc (GenericField K)) E :=
@@ -57,7 +60,8 @@ theorem regular_factor_seed_bound
       specialization K (selected γ) γ R.1 = 0 := by
     intro γ hγ
     exact (Finset.mem_filter.mp hγ).2.1
-  apply geometric_seed_counts_le fixedProfile 955 40 8 R.1 hRdata.1.ne_zero
+  apply geometric_seed_counts_le fixedProfile fixedSupport 968 40 8
+    R.1 hRdata.1.ne_zero
     selected (regularSeeds Q selected Γ R) hsolutions
   intro g
   let S := fixedGeometricStage Q hQ hbox Hsupport selected Γ nodes x u0 u1
@@ -75,21 +79,29 @@ theorem regular_factor_seed_bound
       reflagResidualStage, regularGeometricResidualStageOfSupport,
       geometricResidualStageOfSupport] using hagreement γ (hsub hγ)
   have hflags := geometric_flag_caps Q hQ hbox Hsupport R g
-  have hprojection : TerminalAdaptiveProjectionFamiliesSharpYZ fixedSupport S :=
+  have hprojectionSharp : TerminalAdaptiveProjectionFamiliesSharpYZ fixedSupport S :=
     terminalAdaptiveProjectionFamiliesSharpYZ_of_active_yz_caps fixedSupport
       (by decide) S fixedSupport.ys fixedSupport.s fixedSupport.total
       (1+fixedProfile.w*(2*fixedSupport.ys-2))
       ((2*fixedSupport.s-1)*fixedProfile.w)
       hflags.2.1 hflags.1 hflags.2.2 le_rfl le_rfl
       ⟨by decide, by decide, by decide⟩ (by decide)
+  have hprojection : TerminalAdaptiveProjectionFamiliesReducedYZ fixedSupport S :=
+    terminalAdaptiveProjectionFamiliesReducedYZ_of_active_yz_caps fixedSupport
+      S fixedSupport.ys fixedSupport.s fixedSupport.total
+      (1+fixedProfile.w*(2*fixedSupport.ys-2))
+      ((2*fixedSupport.s-2)*fixedProfile.w)
+      hflags.2.1 hflags.1 hflags.2.2 le_rfl le_rfl
+      ⟨by decide, by decide, by decide⟩ (by decide)
   have hsmall : 2*((geometricCumulativeFlag K g).zOnly+
         (geometricCumulativeFlag K g).yz+(geometricCumulativeFlag K g).all)*
-        (955+40+8+4) < prime :=
+        (968+40+8+4) < prime :=
     (Nat.mul_le_mul_right _ (Nat.mul_le_mul_left 2 hflags.2.2)).trans_lt
       fixed_small_moving_gate
-  exact recursive_scaled_moving_factor (E := E) (polynomialEmbedding_injective K)
-    fixedProfile 955 40 8 S hnodesS hagreementS (by decide) (by decide)
-    fixed_degree_part_bound fixed_unit_part_bound hprojection hsmall
+  exact recursive_scaled_moving_factor_reduced (E := E)
+    (polynomialEmbedding_injective K)
+    fixedProfile 968 40 8 S hnodesS hagreementS (by decide) (by decide)
+    fixed_degree_part_bound fixed_unit_part_bound hprojectionSharp hprojection hsmall
 
 /-- .
  -/
@@ -112,8 +124,9 @@ theorem fixed_selected_count_le
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
     (by decide) (by decide) (by decide) (by decide) (by decide)
     selected Γ nodes x u0 u1 hinj hnodes hdegree hsolution hagreement hnoPencil
-    (regularCumulativeFlag Q) (regularLedger fixedProfile 955 40 8)
-    (fun count hcount ↦ sum_regular_counts_le fixedProfile 955 40 8
+    (regularCumulativeFlag Q)
+    (regularLedger fixedProfile fixedSupport 968 40 8)
+    (fun count hcount ↦ sum_regular_counts_le fixedProfile fixedSupport 968 40 8
       Q hQ Hsupport count hcount)
     (regular_factor_seed_bound Q hQ hbox Hsupport selected Γ nodes x u0 u1
       hinj hnodes hdegree hagreement hnoPencil)

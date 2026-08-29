@@ -38,7 +38,7 @@ local instance : GCDMonoid GlobalPoly :=
  -/
 def FixedCellCountProvider6719 : Prop :=
   ∀ (Q : GlobalPoly), Q ≠ 0 →
-    Q ∈ globalCoefficientBox IRSProfile.Field (37 * agreements) w 1006 10 →
+    Q ∈ globalCoefficientBox IRSProfile.Field (37 * agreements) w 1019 10 →
     ResidualSupportData ContactMovingStackedBoxTransport6719Research.fixedSupport Q →
     ∀ (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
       (Delta : Finset IRSProfile.Field)
@@ -135,13 +135,13 @@ theorem fixedSeeds_card_le_of_provider
     (hfixedProvider : FixedCellCountProvider6719)
     (QA QB QC : GlobalPoly) (hQA : QA ≠ 0) (hQB : QB ≠ 0) (hQC : QC ≠ 0)
     (hboxA : QA ∈ globalCoefficientBox IRSProfile.Field
-      (37 * agreements) w 22092 10)
+      (37 * agreements) w 52037 10)
     (hboxB : QB ∈ globalCoefficientBox IRSProfile.Field
-      (71 * agreements) w 1006 22)
+      (71 * agreements) w 1019 22)
     (hboxC : QC ∈ globalCoefficientBox IRSProfile.Field
-      (71 * agreements) w 1006 22)
+      (71 * agreements) w 1019 22)
     (hflagB : QB ∈ ContactFlagInterpolation6641Research.globalCoefficientBox
-      IRSProfile.Field (71 * agreements) w 1006 22)
+      IRSProfile.Field (71 * agreements) w 1019 22)
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
     (Gamma : Finset IRSProfile.Field)
     (u0 u1 : IRSProfile.Index → IRSProfile.Field)
@@ -162,7 +162,7 @@ theorem fixedSeeds_card_le_of_provider
     ContactMovingStackedBoxTransport6719Research.gcd12_mem_meet_box
       QA QB hQA hQB hboxA hboxB
   have hQbox : Q ∈ globalCoefficientBox IRSProfile.Field
-      (37 * agreements) w 1006 10 := by
+      (37 * agreements) w 1019 10 := by
     simpa [Q] using
       ContactMovingStackedBoxTransport6719Research.gcd123_mem_meet_box
         QA QB QC hQA hQC hbox12 hboxC
@@ -192,7 +192,7 @@ theorem fixedSeeds_card_le_of_provider
 theorem selectedNoLargePencilBound6719_of_fixedProvider
     (hfixedProvider : FixedCellCountProvider6719) :
     SelectedNoLargePencilBound IRSProfile.domain
-      131071 79955 274980727411395087 := by
+      131071 79964 274980727411395087 := by
   intro U seeds A selected hdegreeRaw hcardRaw hvalues hnoRaw
   have hdegree : ∀ gamma ∈ seeds,
       (selected gamma).natDegree ≤ w := by
@@ -236,15 +236,15 @@ theorem selectedNoLargePencilBound6719_of_fixedProvider
       hfirst hsecond hfixed
 theorem alignmentBound6719_of_fixedProvider
     (hfixedProvider : FixedCellCountProvider6719) :
-    AffineLineAlignmentBound IRSProfile.baseCode 79955 274980727411395087 := by
+    AffineLineAlignmentBound IRSProfile.baseCode 79964 274980727411395087 := by
   have h := ContactAlignmentBridge.alignmentBound_of_selected_count
-    IRSProfile.domain 131071 79955 274980727411395087
+    IRSProfile.domain 131071 79964 274980727411395087
     (selectedNoLargePencilBound6719_of_fixedProvider hfixedProvider)
   simpa [IRSProfile.baseCode, IRSProfile.baseDimension] using h
 
 theorem protocolClaim6719_of_fixedProvider
     (hfixedProvider : FixedCellCountProvider6719) :
-    ProtocolClaim 6719 319823 1048576 :=
+    ProtocolClaim 6720 319859 1048576 :=
   ContactMovingProtocol6719Research.protocolClaim6719_of_alignment
     (alignmentBound6719_of_fixedProvider hfixedProvider)
 

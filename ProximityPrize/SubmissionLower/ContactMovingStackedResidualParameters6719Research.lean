@@ -9,11 +9,11 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 2000000
 
 def residualStageOne : UnequalParameters :=
-  ⟨262144, 131071, 182189, 98, 22, 1006, 51, 10, 22092⟩
+  ⟨262144, 131071, 182180, 98, 22, 1019, 51, 10, 52037⟩
 def residualStageTwo : UnequalParameters :=
-  ⟨262144, 131071, 182189, 51, 10, 1006, 98, 22, 1006⟩
-def pivotB : TightParameters := ⟨262144, 131071, 182189, 12935419, 1006, 22⟩
-def pivotGcd12 : TightParameters := ⟨262144, 131071, 182189, 6740993, 1006, 10⟩
+  ⟨262144, 131071, 182180, 51, 10, 1019, 98, 22, 1019⟩
+def pivotB : TightParameters := ⟨262144, 131071, 182180, 12934780, 1019, 22⟩
+def pivotGcd12 : TightParameters := ⟨262144, 131071, 182180, 6740660, 1019, 10⟩
 def firstResidualSingularCeiling : ℕ :=
   ContactMovingParameters6719Research.firstResidualSingularCeiling
 def secondResidualSingularCeiling : ℕ :=
@@ -21,9 +21,9 @@ def secondResidualSingularCeiling : ℕ :=
 
 theorem residual_stage_ceilings :
     residualStageOne.regularCountCap + pivotB.countCap + 1 =
-      95921187844877 + firstResidualSingularCeiling ∧
+      224093416924844 + firstResidualSingularCeiling ∧
     residualStageTwo.regularCountCap + pivotGcd12.countCap + 1 =
-      5708294799780 + secondResidualSingularCeiling := by decide
+      5783076045166 + secondResidualSingularCeiling := by decide
 
 /-- . -/
 theorem ledger_identifications :

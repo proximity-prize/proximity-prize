@@ -27,7 +27,7 @@ theorem fixedCellCountProvider6719 : FixedCellCountProvider6719 := by
     (by norm_num [IRSProfile.Index, fixedProfile])
     hdegree hsolution hagreement hnoPencil
 
-theorem protocolClaim6719 : ProtocolClaim 6719 319823 1048576 :=
+theorem protocolClaim6719 : ProtocolClaim 6720 319859 1048576 :=
   protocolClaim6719_of_fixedProvider fixedCellCountProvider6719
 
 end

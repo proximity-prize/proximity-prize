@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactMovingParameters6719Research
-import ProximityPrize.SubmissionLower.ContactMovingFactorLedger6719Research
+import ProximityPrize.SubmissionLower.ContactMovingReducedFactorLedger6720Research
 import ProximityPrize.SubmissionLower.ContactMovingAgreementCertificate6719Research
 import ProximityPrize.SubmissionLower.ContactProfileFixedSelectedCombinerResearch
 
@@ -9,7 +9,7 @@ namespace ProximityPrize.SubmissionLower.ContactMovingFixedProfile6719Research
 open ContactFlagBezout6543Research ContactRobustFixedMeet6656Research
 open ContactResidualSupportParametersResearch ContactGCDCumulativeFlagsResearch
 open ContactTightSingularLedgerResearch ContactNearPencil6600ArithmeticResearch
-open ContactMovingFactorLedger6719Research
+open ContactMovingReducedFactorLedger6720Research
 
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
@@ -17,29 +17,30 @@ set_option maxRecDepth 20000
 def prime : ℕ := 2130706433
 
 def fixedProfile : ContactRobustFixedMeet6656Research.Profile :=
-  ⟨262144,131071,182189,6740993,1006,10⟩
+  ⟨262144,131071,182180,6740660,1019,10⟩
 
 def fixedSupport : ResidualSupportParameters :=
-  ContactMovingAgreementCertificate6719Research.support 955 40 8
+  ContactMovingAgreementCertificate6719Research.support 968 40 8
 
 def fixedTightProfile : TightParameters :=
-  ⟨262144,131071,182189,6740993,1006,10⟩
+  ⟨262144,131071,182180,6740660,1019,10⟩
 
 def fixedLedger : ℕ :=
-  regularLedger fixedProfile 955 40 8 (supportCumulativeFlag fixedSupport)
+  regularLedger fixedProfile fixedSupport 968 40 8
+    (supportCumulativeFlag fixedSupport)
 
 theorem fixed_values :
-    fixedProfile.errors = 79955 ∧ fixedProfile.gap = 51118 ∧
-    fixedProfile.yCap = 51 ∧ fixedProfile.degreeIncidence = 9640470642 ∧
+    fixedProfile.errors = 79964 ∧ fixedProfile.gap = 51109 ∧
+    fixedProfile.yCap = 51 ∧ fixedProfile.degreeIncidence = 9639249481 ∧
     fixedProfile.unitIncidence = 131073 ∧
-    supportCumulativeFlag fixedSupport = ⟨955,41,10⟩ := by decide
+    supportCumulativeFlag fixedSupport = ⟨968,41,10⟩ := by decide
 
 theorem fixedLedger_eq_numeric : fixedLedger =
     ContactMovingParameters6719Research.primary +
       ContactMovingParameters6719Research.zTail + ContactMovingParameters6719Research.yzTail := by
   decide
 
-theorem fixed_ledger_exact : fixedLedger = 712013114602776259677364218 := by decide
+theorem fixed_ledger_exact : fixedLedger = 713809835387386030399963866 := by decide
 
 theorem fixed_tight_ceiling : fixedTightProfile.countCap + 1 =
     ContactMovingParameters6719Research.fixedSingularCost := by decide
@@ -83,7 +84,7 @@ theorem fixed_active_yz_gates :
       fixedSupport.ys*((2*fixedSupport.s-1)*fixedProfile.w) < prime := by decide
 
 theorem fixed_small_moving_gate :
-    2*fixedSupport.total*(955+40+8+4) < prime := by decide
+    2*fixedSupport.total*(968+40+8+4) < prime := by decide
 
 theorem fixed_degree_incidence_ceiling :
     fixedProfile.n*fixedProfile.gap*fixedProfile.w ≤

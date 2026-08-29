@@ -15,7 +15,7 @@ set_option maxHeartbeats 5000000
 
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 79955
+def errors : ℕ := 79964
 def agreements : ℕ := n - errors
 def gap : ℕ := agreements - w
 def prime : ℕ := 2130706433
@@ -31,12 +31,12 @@ def singularListCap : ℕ := (2*slopeCap - 1)*yTotalCap
 def listNumerator : ℕ := regularListNumerator + singularListCap*gap
 
 theorem coefficient_count_exact :
-    coefficientCount weightedCap w yTotalCap slopeCap = 1594920965 := by decide
+    coefficientCount weightedCap w yTotalCap slopeCap = 1594748804 := by decide
 theorem local_rank_exact :
     localRankBound multiplicity yTotalCap slopeCap = 6083 := by decide
 theorem nullity_exact :
     coefficientCount weightedCap w yTotalCap slopeCap -
-      n*localRankBound multiplicity yTotalCap slopeCap = 299013 := by
+      n*localRankBound multiplicity yTotalCap slopeCap = 126852 := by
   rw [coefficient_count_exact, local_rank_exact]
   decide
 theorem interpolation_gate :
@@ -46,10 +46,10 @@ theorem interpolation_gate :
   decide
 
 theorem list_numeric_values :
-    agreements = 182189 ∧ gap = 51118 ∧ weightedCap = 6740993 ∧
-    singularListCap = 969 ∧ listNumerator = 34170810649059 ∧
-    listNumerator/gap + 1 = 668469241 ∧
-    listNumerator < 668469241*gap ∧ 668469241 < listBudget := by decide
+    agreements = 182180 ∧ gap = 51109 ∧ weightedCap = 6740660 ∧
+    singularListCap = 969 ∧ listNumerator = 34170810640338 ∧
+    listNumerator/gap + 1 = 668586955 ∧
+    listNumerator < 668586955*gap ∧ 668586955 < listBudget := by decide
 
 theorem list_numerator_fits : listNumerator < listBudget*gap := by decide
 theorem characteristic_gates : 0 < slopeCap ∧ slopeCap < prime ∧ yTotalCap < prime ∧
@@ -78,14 +78,14 @@ theorem exists_seedless_interpolant (received : IRSProfile.Index → IRSProfile.
     yTotalCap slopeCap (IRSProfile.domain i) (received i) theta r] at hdiv
   exact hdiv
 
-def radius : ℝ≥0 := claimedRadius 319823 1048576
-def score : ℕ := 6719
-theorem radius_numerator_exact : 319823 = 4*errors+3 := by decide
+def radius : ℝ≥0 := claimedRadius 319859 1048576
+def score : ℕ := 6720
+theorem radius_numerator_exact : 319859 = 4*errors+3 := by decide
 theorem radius_floor :
     ⌊(radius : ℝ)*(Fintype.card IRSProfile.Index : ℝ)⌋₊ = errors := by
   norm_num [radius, claimedRadius, errors, IRSProfile.Index]
 theorem radius_cell_cross :
-    319823*Fintype.card IRSProfile.Index < (errors+1)*1048576 := by
+    319859*Fintype.card IRSProfile.Index < (errors+1)*1048576 := by
   norm_num [IRSProfile.Index, errors]
 theorem radius_gap : w < Fintype.card IRSProfile.Index-errors := by
   norm_num [IRSProfile.Index, errors, w]
@@ -94,53 +94,56 @@ theorem radius_admissible :
   constructor <;> norm_num [radius, claimedRadius, IRSProfile.minRelativeDistance]
 
 /-- . -/
-theorem root_power_integer : (2 : ℕ)^19 * 625^100 ≤ 713^100 := by decide
+theorem root_power_integer : (2 : ℕ) * 10000^5 ≤ 11487^5 := by decide
 theorem radius_power_integer :
-    (728753 : ℕ)^128 * (2^67*713) ≤ 625*1048576^128 := by decide
+    (728717 : ℕ)^128 * (2^67*11487) ≤ 10000*1048576^128 := by decide
 
 theorem two_rpow_fraction_le :
-    (2 : ℝ≥0)^((19 : ℝ)/100) ≤ (713 : ℝ≥0)/625 := by
-  have hroot : ((2 : ℝ≥0)^(19 : ℕ))^((100 : ℝ)⁻¹) ≤ (713 : ℝ≥0)/625 := by
-    rw [NNReal.rpow_inv_le_iff (by norm_num : (0 : ℝ) < 100)]
+    (2 : ℝ≥0)^((1 : ℝ)/5) ≤ (11487 : ℝ≥0)/10000 := by
+  have hroot : ((2 : ℝ≥0)^(1 : ℕ))^((5 : ℝ)⁻¹) ≤
+      (11487 : ℝ≥0)/10000 := by
+    rw [NNReal.rpow_inv_le_iff (by norm_num : (0 : ℝ) < 5)]
     rw [NNReal.rpow_ofNat, div_pow, le_div_iff₀ (by positivity)]
     exact_mod_cast root_power_integer
   calc
-    (2 : ℝ≥0)^((19 : ℝ)/100) =
-        ((2 : ℝ≥0)^(19 : ℕ))^((100 : ℝ)⁻¹) := by
+    (2 : ℝ≥0)^((1 : ℝ)/5) =
+        ((2 : ℝ≥0)^(1 : ℕ))^((5 : ℝ)⁻¹) := by
       rw [← NNReal.rpow_natCast_mul]
       norm_num [div_eq_mul_inv]
-    _ ≤ (713 : ℝ≥0)/625 := hroot
+    _ ≤ (11487 : ℝ≥0)/10000 := hroot
 
 theorem radius_power_rational_bound :
-    (1-radius)^IRSProfile.repetitions ≤ ((1 : ℝ≥0)/2^(67 : ℕ))*(625/713) := by
-  have hsub : (1-radius : ℝ≥0) = 728753/1048576 := by
+    (1-radius)^IRSProfile.repetitions ≤
+      ((1 : ℝ≥0)/2^(67 : ℕ))*(10000/11487) := by
+  have hsub : (1-radius : ℝ≥0) = 728717/1048576 := by
     have hr : radius ≤ 1 := by
       rw [← NNReal.coe_le_coe]
       norm_num [radius, claimedRadius]
     apply NNReal.coe_injective
     rw [NNReal.coe_sub hr]
     norm_num [radius, claimedRadius]
-  change (1-radius)^128 ≤ ((1 : ℝ≥0)/2^(67 : ℕ))*(625/713)
+  change (1-radius)^128 ≤ ((1 : ℝ≥0)/2^(67 : ℕ))*(10000/11487)
   rw [hsub, div_pow, div_mul_div_comm, one_mul,
     div_le_div_iff₀ (by positivity) (by positivity)]
   exact_mod_cast radius_power_integer
 
 theorem radius_score : (1-radius)^IRSProfile.repetitions ≤ claimedError score := by
-  have hscale : (625 : ℝ≥0)/713 ≤ (2 : ℝ≥0)^(-((19 : ℝ)/100)) := by
+  have hscale : (10000 : ℝ≥0)/11487 ≤ (2 : ℝ≥0)^(-((1 : ℝ)/5)) := by
     calc
-      (625 : ℝ≥0)/713 = 1/((713 : ℝ≥0)/625) := by norm_num
-      _ ≤ 1/((2 : ℝ≥0)^((19 : ℝ)/100)) :=
+      (10000 : ℝ≥0)/11487 = 1/((11487 : ℝ≥0)/10000) := by norm_num
+      _ ≤ 1/((2 : ℝ≥0)^((1 : ℝ)/5)) :=
         one_div_le_one_div_of_le (by positivity) two_rpow_fraction_le
-      _ = (2 : ℝ≥0)^(-((19 : ℝ)/100)) := by rw [one_div, NNReal.rpow_neg]
+      _ = (2 : ℝ≥0)^(-((1 : ℝ)/5)) := by rw [one_div, NNReal.rpow_neg]
   calc
-    (1-radius)^IRSProfile.repetitions ≤ ((1 : ℝ≥0)/2^(67 : ℕ))*(625/713) :=
+    (1-radius)^IRSProfile.repetitions ≤
+        ((1 : ℝ≥0)/2^(67 : ℕ))*(10000/11487) :=
       radius_power_rational_bound
-    _ ≤ ((1 : ℝ≥0)/2^(67 : ℕ))*(2 : ℝ≥0)^(-((19 : ℝ)/100)) :=
+    _ ≤ ((1 : ℝ≥0)/2^(67 : ℕ))*(2 : ℝ≥0)^(-((1 : ℝ)/5)) :=
       mul_le_mul_of_nonneg_left hscale (by positivity)
     _ = claimedError score := by
       unfold claimedError score
-      rw [show -((((6719 : ℕ) : ℝ)/100)) =
-          -((67 : ℕ) : ℝ) + -((19 : ℝ)/100) by norm_num,
+      rw [show -((((6720 : ℕ) : ℝ)/100)) =
+          -((67 : ℕ) : ℝ) + -((1 : ℝ)/5) by norm_num,
         NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0)]
       simp only [NNReal.rpow_neg, NNReal.rpow_natCast, one_div]
 
@@ -158,7 +161,7 @@ theorem field_capacity_split :
 theorem protocolClaim6719_of_reduction
     (hred : ToyProblem.Impl.IRS.certifiedGammaError IRSProfile.totalDimension
       IRSProfile.interleaving IRSProfile.domain radius ≤ reductionTarget) :
-    ProtocolClaim 6719 319823 1048576 := by
+    ProtocolClaim 6720 319859 1048576 := by
   exact ⟨radius_admissible, hred, radius_score⟩
 
 end
