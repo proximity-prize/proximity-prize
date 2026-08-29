@@ -7,9 +7,40 @@ Authors: María Inés de Frutos-Fernández
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: 24a27073de0d984d79d0173e0caa3d6b889b281ba20e1025ae77f1ba880486f1.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+Port elaboration adjustment: explicitly bind classical decidable equality
+at the three original valuation case-split proofs; no statements are changed.
+-/
 
-/-! . -/
+/-!
+# Valuations associated to discrete valuation rings
+
+Given a discrete valuation ring `A` with field of fractions `K`, the maximal ideal of `A`
+is a height-one prime, and the associated valuation `(maximalIdeal A).valuation K` is
+a rank-one discrete valuation on `K`.
+
+## Main Definitions
+
+* `IsDiscreteValuationRing.maximalIdeal`: The maximal ideal of `A` (as an element of
+  `HeightOneSpectrum A`).
+* `IsDiscreteValuationRing.equivValuationSubring`: The ring isomorphism between a DVR and the
+  unit ball in its field of fractions endowed with the adic valuation of the maximal ideal.
+
+## Main Results
+
+* `IsDiscreteValuationRing.isRankOneDiscrete`: Given a DVR `A` and a field `K` satisfying
+  `IsFractionRing A K`, the valuation induced on `K` is discrete.
+-/
 
 section ProximityFlatProofPort
 
@@ -21,7 +52,7 @@ open IsDedekindDomain IsDedekindDomain.HeightOneSpectrum IsDiscreteValuationRing
 variable (A K : Type*) [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] [Field K]
   [Algebra A K] [IsFractionRing A K]
 
-/-- . -/
+/-- The maximal ideal of a discrete valuation ring. -/
 def maximalIdeal : HeightOneSpectrum A where
   asIdeal := IsLocalRing.maximalIdeal A
   isPrime := Ideal.IsMaximal.isPrime (maximalIdeal.isMaximal A)
@@ -128,7 +159,8 @@ theorem map_algebraMap_eq_valuationSubring : Subring.map (algebraMap A K) ⊤ =
     rw [Subring.mem_map]
     exact ⟨y, mem_top _, rfl⟩
 
-/-- . -/
+/-- The ring isomorphism between a DVR `A` and the valuation subring of a field of fractions
+  of `A` endowed with the adic valuation of the maximal ideal. -/
 noncomputable def equivValuationSubring :
     A ≃+* ((maximalIdeal A).valuation K).valuationSubring :=
   (topEquiv.symm.trans (equivMapOfInjective ⊤ (algebraMap A K)

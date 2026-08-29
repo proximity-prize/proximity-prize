@@ -9,9 +9,45 @@ import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Norm_Basic
 import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Discriminant
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.RingTheory.Localization.NormTrace.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: 47a7b5378b7b5f65128c47af07dcd2d1a3444f6f7d112f8461d281a579bcd299.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+-/
 
-/-! . -/
+/-!
+
+# Field/algebra norm / trace and localization
+
+This file contains results on the combination of `IsLocalization` and `Algebra.norm`,
+`Algebra.trace` and `Algebra.discr`.
+
+## Main results
+
+* `Algebra.norm_localization`: let `S` be an extension of `R` and `Rₘ Sₘ` be localizations at `M`
+  of `R S` respectively. Then the norm of `a : Sₘ` over `Rₘ` is the norm of `a : S` over `R`
+  if `S` is free as `R`-module.
+
+* `Algebra.trace_localization`: let `S` be an extension of `R` and `Rₘ Sₘ` be localizations at `M`
+  of `R S` respectively. Then the trace of `a : Sₘ` over `Rₘ` is the trace of `a : S` over `R`
+  if `S` is free as `R`-module.
+
+* `Algebra.discr_localizationLocalization`: let `S` be an extension of `R` and `Rₘ Sₘ` be
+  localizations at `M` of `R S` respectively. Let `b` be an `R`-basis of `S`. Then discriminant of
+  the `Rₘ`-basis of `Sₘ` induced by `b` is the discriminant of `b`.
+
+## Tags
+
+field norm, algebra norm, localization
+
+-/
 
 section ProximityFlatProofPort
 
@@ -34,7 +70,9 @@ theorem Algebra.map_leftMulMatrix_localization {ι : Type*} [Fintype ι] [Decida
   simp only [Matrix.map_apply, RingHom.mapMatrix_apply, leftMulMatrix_eq_repr_mul, ← map_mul,
     Basis.localizationLocalization_apply, Basis.localizationLocalization_repr_algebraMap]
 
-/-- . -/
+/-- Let `S` be an extension of `R` and `Rₘ Sₘ` be localizations at `M` of `R S` respectively.
+Then the norm of `a : Sₘ` over `Rₘ` is the norm of `a : S` over `R` if `S` is free as `R`-module.
+-/
 theorem Algebra.norm_localization [Module.Free R S] [Module.Finite R S] (a : S) :
     Algebra.norm Rₘ (algebraMap S Sₘ a) = algebraMap R Rₘ (Algebra.norm R a) := by
   cases subsingleton_or_nontrivial R
@@ -46,14 +84,16 @@ theorem Algebra.norm_localization [Module.Free R S] [Module.Finite R S] (a : S) 
     Algebra.norm_eq_matrix_det b, RingHom.map_det, ← Algebra.map_leftMulMatrix_localization]
 
 variable {M} in
-/-- . -/
+/-- The norm of `a : S` in `R` can be computed in `Sₘ`. -/
 lemma Algebra.norm_eq_iff [Module.Free R S] [Module.Finite R S] {a : S} {b : R}
     (hM : M ≤ nonZeroDivisors R) : Algebra.norm R a = b ↔
       (Algebra.norm Rₘ) ((algebraMap S Sₘ) a) = algebraMap R Rₘ b :=
   ⟨fun h ↦ h.symm ▸ Algebra.norm_localization _ M _, fun h ↦
     IsLocalization.injective Rₘ hM <| h.symm ▸ (Algebra.norm_localization R M a).symm⟩
 
-/-- . -/
+/-- Let `S` be an extension of `R` and `Rₘ Sₘ` be localizations at `M` of `R S` respectively.
+Then the trace of `a : Sₘ` over `Rₘ` is the trace of `a : S` over `R` if `S` is free as `R`-module.
+-/
 theorem Algebra.trace_localization [Module.Free R S] [Module.Finite R S] (a : S) :
     Algebra.trace Rₘ Sₘ (algebraMap S Sₘ a) = algebraMap R Rₘ (Algebra.trace R S a) := by
   cases subsingleton_or_nontrivial R
@@ -82,7 +122,10 @@ theorem Algebra.traceMatrix_localizationLocalization (b : Basis ι R S) :
     Basis.localizationLocalization_apply, ← map_mul]
   exact Algebra.trace_localization R M _
 
-/-- . -/
+/-- Let `S` be an extension of `R` and `Rₘ Sₘ` be localizations at `M` of `R S` respectively. Let
+`b` be an `R`-basis of `S`. Then discriminant of the `Rₘ`-basis of `Sₘ` induced by `b` is the
+discriminant of `b`.
+-/
 theorem Algebra.discr_localizationLocalization (b : Basis ι R S) :
     Algebra.discr Rₘ (b.localizationLocalization Rₘ M Sₘ) =
     algebraMap R Rₘ (Algebra.discr R b) := by

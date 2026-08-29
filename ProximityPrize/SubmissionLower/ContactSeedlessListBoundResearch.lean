@@ -8,15 +8,15 @@ import ProximityPrize.SubmissionLower.ContactTaylorNumerators
 import ProximityPrize.SubmissionLower.ContactExceptionalSeedCount
 import ProximityPrize.SubmissionLower.ContactSelectedSeedDecomposition
 
-/-! .
+/-!
+# Fixed-centre scalar list bound at the 67.10 radius
 
-
-
-
-
-
-
- -/
+The seedless interpolant is factored exactly as in the affine alignment
+argument.  Positive-`R` factors are counted on the plane curve `Z=0` using
+one agreement incidence.  The `R`-independent auxiliary is a genuine
+univariate polynomial in `Y` over the generic coefficient field, so its
+distinct polynomial roots are counted directly.
+-/
 
 namespace ProximityPrize.SubmissionLower.ContactSeedlessListBoundResearch
 
@@ -49,12 +49,12 @@ def regularListNumerator : ℕ :=
   (n - w) * (capY * slopeCap + capR * yTotalCap)
 def singularListCap : ℕ := (2 * slopeCap - 1) * yTotalCap
 def listNumerator : ℕ := regularListNumerator + singularListCap * gap
-def listBudget : ℕ := 600000000
+def listBudget : ℕ := 1300000000
 
 theorem numeric_values :
-    gap = 51207 ∧ capY = 13369243 ∧ capR = 2228207 ∧
-      regularListNumerator = 30666067671312 ∧
-      singularListCap = 867 ∧ listNumerator = 30666112067781 := by
+    gap = 50807 ∧ capY = 17825657 ∧ capR = 3538917 ∧
+      regularListNumerator = 64252712579442 ∧
+      singularListCap = 1836 ∧ listNumerator = 64252805861094 := by
   norm_num [gap, capY, capR, regularListNumerator, singularListCap,
     listNumerator, agreements, n, errors, w, yTotalCap, slopeCap]
 
@@ -62,11 +62,11 @@ theorem list_numerator_fits : listNumerator < listBudget * gap := by
   norm_num [listNumerator, regularListNumerator, singularListCap, listBudget,
     gap, capY, capR, agreements, n, errors, w, yTotalCap, slopeCap]
 
-/-- . -/
+/-- Exact strict integer ceiling before rounding the protocol reserve up. -/
 theorem list_strict_ceiling_exact :
-    listNumerator / gap + 1 = 598865626 ∧
-      listNumerator < 598865626 * gap ∧
-      598865626 < listBudget := by
+    listNumerator / gap + 1 = 1264644751 ∧
+      listNumerator < 1264644751 * gap ∧
+      1264644751 < listBudget := by
   norm_num [listNumerator, regularListNumerator, singularListCap, listBudget,
     gap, capY, capR, agreements, n, errors, w, yTotalCap, slopeCap]
 
@@ -284,7 +284,7 @@ theorem original_regular_seedless_bound
         (Nat.mul_le_mul_left capY (geometricFactor_sum_degree_le K F hF.ne_zero 1))
         (Nat.mul_le_mul_left capR (geometricFactor_sum_degree_le K F hF.ne_zero 0))
 
-/-! . -/
+/-! ## The R-independent auxiliary is univariate in Y -/
 
 def yProjection (T : Type*) [Field T] :
     MvPolynomial (Fin 3) T →+* Polynomial T :=
@@ -456,7 +456,7 @@ theorem singular_seedless_card_le
     _ ≤ J.degreeOf 1 := surfaceMap_degreeOf_le phi J 0
     _ ≤ singularListCap := hJY
 
-/-! . -/
+/-! ## Global fixed-centre list -/
 
 def singularPolynomials (Q : MvPolynomial (Fin 4) K)
     (Gamma : Finset (Polynomial K)) : Finset (Polynomial K) := by

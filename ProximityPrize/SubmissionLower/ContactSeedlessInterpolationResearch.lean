@@ -3,15 +3,15 @@ import ProximityPrize.SubmissionLower.ContactSeedlessRankResearch
 import ProximityPrize.SubmissionLower.ContactFlagTranslation6641Research
 import ProximityPrize.SubmissionLower.ContactTranslation
 
-/-! .
+/-!
+# Contact interpolation for one fixed received word
 
-
-
-
-
-
-
- -/
+This is the seed-free analogue of the affine-line interpolant.  Global
+variables are still `(X,Y,R,Z)` so the existing factor and specialization
+machinery can consume the result, but every reconstructed monomial has
+`Z`-degree zero.  Locally the constraint map therefore lands in the
+two-dimensional contact blocks proved in `ContactSeedlessRankResearch`.
+-/
 
 namespace ProximityPrize.SubmissionLower.ContactSeedlessInterpolationResearch
 
@@ -30,8 +30,8 @@ variable (K : Type*) [Field K]
 abbrev LocalPoly := MvPolynomial (Fin 3) K
 abbrev Poly4 := MvPolynomial (Fin 4) K
 
-/-- .
- -/
+/-- The dummy `Fin (min 1 ...)` records the triangular `Y+R` support
+without adding a seed exponent. -/
 abbrev CoefficientIndex (D w L s : ℕ) :=
   (i : Fin (L + 1)) × (j : Fin (s + 1)) ×
     (Fin (min 1 (L + 1 - i.val - j.val)) ×
@@ -295,7 +295,7 @@ theorem all_blocks_divisible_of_kernel {I : Type*} [Fintype I]
   · have hm : m - r = 0 := by omega
     simp only [hm, pow_zero, one_dvd]
 
-/-! . -/
+/-! ## Translation identity -/
 
 def homogenizedTranslation (x u : K) :
     Poly4 K →ₐ[K] Polynomial (LocalPoly K) :=
@@ -360,32 +360,32 @@ theorem translation_reconstruct_coeff (D w L s : ℕ) (x u : K)
         seedlessBox K (min r L) L s) : LocalPoly K)
   simp [boundedBlockEntry]
 
-/-! . -/
+/-! ## Frozen 67.10 fixed-centre row -/
 
 def n : ℕ := 262144
-def errors : ℕ := 79866
+def errors : ℕ := 80266
 def agreements : ℕ := n - errors
 def w : ℕ := 131071
-def multiplicity : ℕ := 37
-def yTotalCap : ℕ := 51
-def slopeCap : ℕ := 9
+def multiplicity : ℕ := 50
+def yTotalCap : ℕ := 68
+def slopeCap : ℕ := 14
 def weightedCap : ℕ := multiplicity * agreements
 
 theorem parameter_values :
-    agreements = 182278 ∧ weightedCap = 6744286 := by
+    agreements = 181878 ∧ weightedCap = 9093900 := by
   norm_num [agreements, weightedCap, multiplicity, n, errors]
 
 theorem coefficient_count_exact :
-    coefficientCount weightedCap w yTotalCap slopeCap = 1481264965 := by
+    coefficientCount weightedCap w yTotalCap slopeCap = 3904582045 := by
   decide
 
 theorem local_rank_exact :
-    localRankBound multiplicity yTotalCap slopeCap = 5650 := by
+    localRankBound multiplicity yTotalCap slopeCap = 14890 := by
   decide
 
 theorem nullity_exact :
     coefficientCount weightedCap w yTotalCap slopeCap -
-      n * localRankBound multiplicity yTotalCap slopeCap = 151365 := by
+      n * localRankBound multiplicity yTotalCap slopeCap = 1257885 := by
   rw [coefficient_count_exact, local_rank_exact]
   norm_num [n]
 
@@ -431,8 +431,8 @@ theorem seedlessBox_le_legacy :
   rcases hd with ⟨hYR, hR, hZ, hweighted⟩
   exact ⟨by omega, hR, hweighted⟩
 
-/-- .
- -/
+/-- Every degree-`w` polynomial agreeing with the fixed received word on
+`agreements` coordinates is a genuine root of the seedless interpolant. -/
 theorem exists_frozen_seedless_vanishing_interpolant
     (received : IRSProfile.Index → IRSProfile.Field) :
     ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,

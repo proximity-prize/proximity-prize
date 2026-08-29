@@ -7,11 +7,34 @@ Authors: Anne Baanen
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.FieldTheory.RatFunc.Degree.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: f92ad0e7d471b925eba21d3dc40708d34e9a126b63fb834c30a1fe2061fbbcfe.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+-/
 
-/-! . -/
+/-!
+Port elaboration repair (gpt-5, 2026-08-27): qualify the rational-function
+variable as RatFunc.X because the trusted target opens a conflicting
+bivariate-polynomial X notation. The original theorem and proof are unchanged.
+-/
 
-/-! . -/
+/-!
+# The degree of rational functions
+
+## Main definitions
+We define the degree of a rational function, with values in `ℤ`:
+- `intDegree` is the degree of a rational function, defined as the difference between the
+  `natDegree` of its numerator and the `natDegree` of its denominator. In particular,
+  `intDegree 0 = 0`.
+-/
 
 section ProximityFlatProofPort
 
@@ -30,7 +53,9 @@ open Polynomial
 
 variable [Field K]
 
-/-- . -/
+/-- `intDegree x` is the degree of the rational function `x`, defined as the difference between
+the `natDegree` of its numerator and the `natDegree` of its denominator. In particular,
+`intDegree 0 = 0`. -/
 def intDegree (x : K⟮X⟯) : ℤ :=
   natDegree x.num - natDegree x.denom
 

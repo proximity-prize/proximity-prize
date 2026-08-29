@@ -7,11 +7,37 @@ Authors: Thomas Browning
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
 
-/-! . -/
+/-!
+Permitted flat proof port of Mathlib.RingTheory.LocalRing.Length.
+Model label: gpt-5.
+Original Mathlib revision: 905b95818eb32af7874a58b427f50c1711a5e96c.
+Original source SHA256: e9ce787da9f1184f805ecc503de117c396d2242e4d7ff24809a8e5cc7f47b5b4.
+Original copyright and author notices are retained above.
+Modifications: module/public visibility packaging is removed; imports
+are replaced by the trusted target and the necessary flat proof ports.
+All mathematical declarations and proof bodies are retained, except
+any explicitly documented ordinary-term expansion below.
+The full Apache 2.0 license is in LocalMathlibPortLicense.lean.
+-/
 
-/-! . -/
+/-!
+Port elaboration repair (gpt-5, 2026-08-27): elaborate the two original
+base-change length equalities under explicit source/target types before
+rewriting. This avoids the larger trusted environment's p/q inference
+collision without changing either length formula or any hypothesis.
+-/
 
-/-! . -/
+/-!
+# Lengths along extensions of local rings
+
+This file proves results relating lengths along extensions of local rings.
+
+## Main results
+- `IsLocalRing.length_restrictScalars`: If `B/A` is an extension of local rings, and if `M`
+  is a `B`-module, then `ℓ_A(M) = ℓ_B(M) * [κ(B) : κ(A)]`.
+- `IsLocalRing.length_baseChange`: If `B/A` is a flat extension of local rings, and if `M` is an
+  `A`-module, then `ℓ_B(B ⊗[A] M) = ℓ_A(M) * ℓ_B(B ⧸ m_A)`.
+-/
 
 section ProximityFlatProofPort
 
@@ -32,7 +58,7 @@ theorem CovBy.length_restrictScalars {p q : Submodule B M} (h : p ⋖ q) :
     rwa [range_inclusion, ← covBy_iff_quot_is_simple h.le]
   obtain ⟨m, hm, ⟨e⟩⟩ := isSimpleModule_iff_quot_maximal.mp key
   rw [eq_maximalIdeal hm] at e
-
+  -- `0 -> p -> q -> κ(B) -> 0` is exact, and length is additive
   let g : q →ₗ[B] ResidueField B := e.comp f.range.mkQ
   have : Function.Injective f := inclusion_injective _
   have : Function.Surjective g := e.surjective.comp f.range.mkQ_surjective
@@ -42,7 +68,8 @@ theorem CovBy.length_restrictScalars {p q : Submodule B M} (h : p ⋖ q) :
       (residue_surjective (R := A)), Module.length_eq_rank]
 
 variable (A B M) in
-/-- . -/
+/-- If `B/A` is an extension of local rings, and if `M` is a `B`-module, then
+`ℓ_A(M) = ℓ_B(M) * [κ(B) : κ(A)]`. -/
 theorem IsLocalRing.length_restrictScalars :
     length A M = length B M * Module.length (ResidueField A) (ResidueField B) := by
   by_cases h : IsFiniteLength B M
@@ -74,19 +101,19 @@ variable (B) in
 theorem CovBy.length_baseChange {p q : Submodule A M} (h : p ⋖ q) :
     length B (q.baseChange B) =
       length B (p.baseChange B) + length B (B ⧸ (maximalIdeal A).map (algebraMap A B)) := by
-
+  -- Reduce the statement to ℓ_B(B ⊗[A] p) = ℓ_B(B ⊗[A] q) + ℓ_B(B ⧸ m_A B)
   have hp : length B (B ⊗[A] p) = length B (p.baseChange B) :=
     (toBaseChange.toLinearEquiv B p).length_eq
   have hq : length B (B ⊗[A] q) = length B (q.baseChange B) :=
     (toBaseChange.toLinearEquiv B q).length_eq
   rw [← hp, ← hq]
-
+  -- Identify q / p with A / m_A, so (B ⊗[A] p ⧸ B ⊗[A] q) ≃ₗ B ⧸ m_A B
   let f : p →ₗ[A] q := inclusion h.le
   have key : IsSimpleModule A (q ⧸ f.range) := by
     rwa [range_inclusion, ← covBy_iff_quot_is_simple h.le]
   obtain ⟨m, hm, ⟨e⟩⟩ := isSimpleModule_iff_quot_maximal.mp key
   obtain rfl := eq_maximalIdeal hm
-
+  -- `0 -> B ⊗[A] p -> B ⊗[A] q -> B ⧸ m_A B -> 0` is exact by flatness, and length is additive
   let g := e.comp f.range.mkQ
   have : Function.Injective f := inclusion_injective _
   have : Function.Surjective g := e.surjective.comp f.range.mkQ_surjective
@@ -96,7 +123,8 @@ theorem CovBy.length_baseChange {p q : Submodule A M} (h : p ⋖ q) :
     (Algebra.TensorProduct.quotIdealMapEquivTensorQuot B (maximalIdeal A)).toLinearEquiv.length_eq]
 
 variable (A B M) in
-/-- . -/
+/-- If `B/A` is a flat extension of local rings, and if `M` is an `A`-module, then
+`ℓ_B(B ⊗[A] M) = ℓ_A(M) * ℓ_B(B ⧸ m_A)`. -/
 theorem IsLocalRing.length_baseChange :
     length B (B ⊗[A] M) = length A M * length B (B ⧸ (maximalIdeal A).map (algebraMap A B)) := by
   by_cases h : IsFiniteLength A M
