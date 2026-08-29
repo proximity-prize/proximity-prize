@@ -3,7 +3,18 @@ import ProximityPrize.SubmissionLower.ContactIdentityResidualTerminalIncidenceRe
 import ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
 import ProximityPrize.SubmissionLower.ContactResidualSupportParametersResearch
 import ProximityPrize.SubmissionLower.ContactRobustFixedMeet6656Research
+
+/-! .
+
+
+
+
+
+
+ -/
+
 namespace ProximityPrize.SubmissionLower.ContactFixedMeetFactorIncidence6656Research
+
 open scoped Classical
 open ContactIdentityResidualIterationResearch
 open ContactIdentityResidualTerminalIncidenceResearch
@@ -12,106 +23,134 @@ open ContactResidualSupportParametersResearch
 open ContactRobustFixedMeet6656Research
 open ContactPrimeSeedIncidence
 open ContactFlagBezout6543Research
+
 noncomputable section
+
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 50000
-variable {K Omega Iota:Type} [Field K] [Field Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
-variable {pchar:ℕ} [CharP Omega pchar] {flag:FlagDegree}
-local instance:DecidableEq K:=Classical.decEq K
-local instance:DecidableEq Iota:=Classical.decEq Iota
-theorem fixedMeet_agreementDirection_eq:
-    ResidualSupportParameters.fixedMeetSupport.agreementDirection=
-      meetProfile.agreementDirection:=by
+
+variable {K Omega Iota : Type} [Field K] [Field Omega]
+variable {phi : Polynomial K →+* Omega} {Gamma : Finset K} {x : Iota → K}
+variable {pchar : ℕ} [CharP Omega pchar] {flag : FlagDegree}
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq Iota := Classical.decEq Iota
+
+/-- .
+ -/
+theorem fixedMeet_agreementDirection_eq :
+    ResidualSupportParameters.fixedMeetSupport.agreementDirection =
+      meetProfile.agreementDirection := by
   rw [ResidualSupportParameters.fixedMeet_agreement_direction]
   exact meet_parameter_values.2.2.2.2.2.2.1.symm
-theorem meet_incidence_values:
-    meetProfile.degreeIncidence=9724036071∧
-      meetProfile.unitIncidence=131073:=by
+
+/-- . -/
+theorem meet_incidence_values :
+    meetProfile.degreeIncidence = 9724036071 ∧
+      meetProfile.unitIncidence = 131073 := by
   exact ⟨meet_parameter_values.2.2.2.1,
     meet_parameter_values.2.2.2.2.1⟩
-theorem meet_degree_incidence_ceiling:
-    meetProfile.n*meetProfile.gap*meetProfile.w ≤
-      meetProfile.degreeIncidence*meetProfile.agreements:=by
-  norm_num [meetProfile,Profile.gap,Profile.degreeIncidence]
-theorem meet_degree_part_bound (k:ℕ) (hk:k ≤ meetProfile.w):
-    (meetProfile.n-k)*meetProfile.gap*(meetProfile.w-k) ≤
-      meetProfile.degreeIncidence*(meetProfile.agreements-k):=by
-  have hcross:=identity_degree_weight_cross_le meetProfile.n
+
+/-- . -/
+theorem meet_degree_incidence_ceiling :
+    meetProfile.n * meetProfile.gap * meetProfile.w ≤
+      meetProfile.degreeIncidence * meetProfile.agreements := by
+  norm_num [meetProfile, Profile.gap, Profile.degreeIncidence]
+
+/-- . -/
+theorem meet_degree_part_bound (k : ℕ) (hk : k ≤ meetProfile.w) :
+    (meetProfile.n - k) * meetProfile.gap * (meetProfile.w - k) ≤
+      meetProfile.degreeIncidence * (meetProfile.agreements - k) := by
+  have hcross := identity_degree_weight_cross_le meetProfile.n
     meetProfile.agreements meetProfile.w k hk
       (by norm_num [meetProfile]) (by norm_num [meetProfile])
-  have hmul:=Nat.mul_le_mul_right (meetProfile.agreements-k)
+  have hmul := Nat.mul_le_mul_right (meetProfile.agreements - k)
     meet_degree_incidence_ceiling
-  have htotal:
-      ((meetProfile.n-k)*meetProfile.gap*(meetProfile.w-k))*
+  have htotal :
+      ((meetProfile.n - k) * meetProfile.gap * (meetProfile.w - k)) *
           meetProfile.agreements ≤
-        (meetProfile.degreeIncidence*(meetProfile.agreements-k))*
-          meetProfile.agreements:=by
+        (meetProfile.degreeIncidence * (meetProfile.agreements - k)) *
+          meetProfile.agreements := by
     calc
-      ((meetProfile.n-k)*meetProfile.gap*(meetProfile.w-k))*
-            meetProfile.agreements=
-          (meetProfile.n-k)*
-            (meetProfile.agreements-meetProfile.w)*
-            (meetProfile.w-k)*meetProfile.agreements:=by
+      ((meetProfile.n - k) * meetProfile.gap * (meetProfile.w - k)) *
+            meetProfile.agreements =
+          (meetProfile.n - k) *
+            (meetProfile.agreements - meetProfile.w) *
+            (meetProfile.w - k) * meetProfile.agreements := by
               rfl
-      _ ≤ meetProfile.n*(meetProfile.agreements-meetProfile.w)*
-          meetProfile.w*(meetProfile.agreements-k):=hcross
-      _ ≤ (meetProfile.degreeIncidence*meetProfile.agreements)*
-          (meetProfile.agreements-k):=by
+      _ ≤ meetProfile.n * (meetProfile.agreements - meetProfile.w) *
+          meetProfile.w * (meetProfile.agreements - k) := hcross
+      _ ≤ (meetProfile.degreeIncidence * meetProfile.agreements) *
+          (meetProfile.agreements - k) := by
             simpa only [Profile.gap] using hmul
-      _=(meetProfile.degreeIncidence*(meetProfile.agreements-k))*
-          meetProfile.agreements:=by ring
+      _ = (meetProfile.degreeIncidence * (meetProfile.agreements - k)) *
+          meetProfile.agreements := by ring
   exact Nat.le_of_mul_le_mul_right htotal (by norm_num [meetProfile])
-theorem meet_unit_part_bound (k:ℕ) (hk:k ≤ meetProfile.w):
-    (meetProfile.n-k)*meetProfile.gap ≤
-      meetProfile.unitIncidence*(meetProfile.agreements-k):=by
-  simpa only [Profile.gap,Profile.unitIncidence] using
+
+/-- . -/
+theorem meet_unit_part_bound (k : ℕ) (hk : k ≤ meetProfile.w) :
+    (meetProfile.n - k) * meetProfile.gap ≤
+      meetProfile.unitIncidence * (meetProfile.agreements - k) := by
+  simpa only [Profile.gap, Profile.unitIncidence] using
     identity_unit_weight_le meetProfile.n meetProfile.agreements
       meetProfile.w k hk (by norm_num [meetProfile]) (by norm_num [meetProfile])
-def meetFactorDegreeCost (p:FlagDegree):ℕ:=
+
+/-- . -/
+def meetFactorDegreeCost (p : FlagDegree) : ℕ :=
   (flagMixed p ResidualSupportParameters.fixedMeetSupport.agreementDirection
-        ResidualSupportParameters.fixedMeetSupport.agreementDirection*
-      meetProfile.degreeIncidence+
+        ResidualSupportParameters.fixedMeetSupport.agreementDirection *
+      meetProfile.degreeIncidence +
     flagMixed p ResidualSupportParameters.fixedMeetSupport.agreementDirection
-        unitYZFlag*meetProfile.unitIncidence)+
-  (meetProfile.errors+1)*meetProfile.gap*
+        unitYZFlag * meetProfile.unitIncidence) +
+  (meetProfile.errors + 1) * meetProfile.gap *
     (flagMixed p ResidualSupportParameters.fixedMeetSupport.agreementDirection
-        unitZFlag+
+        unitZFlag +
       flagMixed p ResidualSupportParameters.fixedMeetSupport.agreementDirection
         unitAllFlag)
-def meetFactorUnitCost (p:FlagDegree):ℕ:=
+
+/-- . -/
+def meetFactorUnitCost (p : FlagDegree) : ℕ :=
   (flagMixed p ResidualSupportParameters.fixedMeetSupport.agreementDirection
-        unitYZFlag*meetProfile.degreeIncidence+
-    flagMixed p unitYZFlag unitYZFlag*meetProfile.unitIncidence)+
-  (meetProfile.errors+1)*meetProfile.gap*
-    (flagMixed p unitYZFlag unitZFlag+
+        unitYZFlag * meetProfile.degreeIncidence +
+    flagMixed p unitYZFlag unitYZFlag * meetProfile.unitIncidence) +
+  (meetProfile.errors + 1) * meetProfile.gap *
+    (flagMixed p unitYZFlag unitZFlag +
       flagMixed p unitYZFlag unitAllFlag)
-theorem meet_incidence_cost_eq_factorRegularLedger (p:FlagDegree):
-    meetProfile.degreeIncidence*meetFactorDegreeCost p+
-      meetProfile.unitIncidence*meetFactorUnitCost p=
-      meetProfile.factorRegularLedger p:=by
-  simp only [meetFactorDegreeCost,meetFactorUnitCost]
+
+/-- .
+ -/
+theorem meet_incidence_cost_eq_factorRegularLedger (p : FlagDegree) :
+    meetProfile.degreeIncidence * meetFactorDegreeCost p +
+      meetProfile.unitIncidence * meetFactorUnitCost p =
+      meetProfile.factorRegularLedger p := by
+  simp only [meetFactorDegreeCost, meetFactorUnitCost]
   rw [fixedMeet_agreementDirection_eq]
-  simp only [Profile.factorRegularLedger,Profile.factorPrimary,
-    Profile.factorZTail,Profile.factorAllTail]
+  simp only [Profile.factorRegularLedger, Profile.factorPrimary,
+    Profile.factorZTail, Profile.factorAllTail]
   ring
+
+/-- .
+
+
+
+ -/
 theorem recursive_scaled_factor_6656
-    (hphi:Function.Injective phi)
-    (S:ResidualStage phi Gamma x pchar meetProfile.errors flag meetProfile.w
+    (hphi : Function.Injective phi)
+    (S : ResidualStage phi Gamma x pchar meetProfile.errors flag meetProfile.w
       ResidualSupportParameters.fixedMeetSupport)
-    (p:FlagDegree)
-    (hnodes:S.nodes.card=meetProfile.n)
-    (hagreement:∀ gamma∈Gamma,
+    (p : FlagDegree)
+    (hnodes : S.nodes.card = meetProfile.n)
+    (hagreement : ∀ gamma ∈ Gamma,
       meetProfile.agreements ≤ (S.agreementFiber gamma).card)
-    (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,
-      ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
+    (hfiber : ∀ D : S.TerminalDescendant, ∀ i ∈ D.stage.nodes,
+      ¬ D.stage.G ∣ agreementPolynomial phi D.stage.F D.degree
           (x i) (D.stage.u0 i) (D.stage.u1 i) →
-      (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*
+      (Gamma.filter (fun gamma ↦ D.stage.Agrees gamma i)).card *
           meetProfile.gap ≤
-        D.degree*meetFactorDegreeCost p+meetFactorUnitCost p):
-    Gamma.card*meetProfile.gap^2 ≤
-      meetProfile.factorRegularLedger p:=by
-  have h:=recursive_scaled_stratified_incidence_bound
+        D.degree * meetFactorDegreeCost p + meetFactorUnitCost p) :
+    Gamma.card * meetProfile.gap ^ 2 ≤
+      meetProfile.factorRegularLedger p := by
+  have h := recursive_scaled_stratified_incidence_bound
     hphi S (meetFactorDegreeCost p) (meetFactorUnitCost p)
       meetProfile.degreeIncidence meetProfile.unitIncidence
       (by norm_num [meetProfile]) hagreement hfiber
@@ -124,11 +163,13 @@ theorem recursive_scaled_factor_6656
         rw [hnodes]
         exact meet_unit_part_bound k hk)
   calc
-    Gamma.card*meetProfile.gap^2 ≤
-        meetProfile.degreeIncidence*meetFactorDegreeCost p+
-          meetProfile.unitIncidence*meetFactorUnitCost p:=by
+    Gamma.card * meetProfile.gap ^ 2 ≤
+        meetProfile.degreeIncidence * meetFactorDegreeCost p +
+          meetProfile.unitIncidence * meetFactorUnitCost p := by
             simpa only [Profile.gap] using h
-    _=meetProfile.factorRegularLedger p:=
+    _ = meetProfile.factorRegularLedger p :=
       meet_incidence_cost_eq_factorRegularLedger p
+
 end
+
 end ProximityPrize.SubmissionLower.ContactFixedMeetFactorIncidence6656Research
