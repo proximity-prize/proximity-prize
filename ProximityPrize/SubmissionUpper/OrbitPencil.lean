@@ -10,8 +10,9 @@ import ProximityPrize.SubmissionUpper.PrescribedTop
 The size-`2^18` NTT domain is partitioned into 512 fibres by `x ↦ x^512`.
 We use 272 whole fibres together with a fixed 511-point core.  Prescribing 14
 top coefficients and the product of the selected fibre labels leaves more than
-`2^59` choices while forcing pairwise differences to have the two roots needed
-to fit under the row-degree budget.
+`⌊|FF|/2^128⌋+1` choices while forcing pairwise differences to have the two
+roots needed to fit under the row-degree budget. The pigeonhole `decide` is
+the exact `epsilonStar` comparison `|K|^14 · 512 · NN < C(511,272)`.
 -/
 
 namespace ProximityPrize.SubmissionUpper.OrbitPencil
@@ -125,6 +126,9 @@ noncomputable def productKey (U : Finset Small) : Small :=
 noncomputable def key (U : Finset Small) : (Fin 14 → K) × Small :=
   (topKey U, productKey U)
 
+/-- Exact `epsilonStar` numerator: `⌊|FF|/2^128⌋+1`. -/
+abbrev NN : ℕ := 274980728111395088
+
 theorem card_keys : Fintype.card ((Fin 14 → K) × Small) =
     (2 ^ 31 - 2 ^ 24 + 1) ^ 14 * 512 := by
   rw [Fintype.card_prod, Fintype.card_fun, PrescribedTop.card_K]
@@ -134,13 +138,13 @@ set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 1000000 in
 set_option exponentiation.threshold 100000 in
 theorem orbit_count :
-    ((2 ^ 31 - 2 ^ 24 + 1)^14 * 512) * 2^59 < Nat.choose 511 272 := by
+    ((2 ^ 31 - 2 ^ 24 + 1)^14 * 512) * NN < Nat.choose 511 272 := by
   rw [Nat.choose_eq_fast_choose]
   decide
 
 theorem exists_big_fiber :
     ∃ σ : (Fin 14 → K) × Small,
-      2^59 < (Candidates.filter fun U => key U = σ).card := by
+      NN < (Candidates.filter fun U => key U = σ).card := by
   refine PrescribedTop.pigeonhole Candidates key _ ?_
   rw [card_keys, candidates_card]
   exact orbit_count
@@ -148,7 +152,7 @@ theorem exists_big_fiber :
 noncomputable def sigma0 := Classical.choose exists_big_fiber
 noncomputable def Fam : Finset (Finset Small) := Candidates.filter fun U => key U = sigma0
 
-theorem Fam_card_gt : 2^59 < Fam.card := Classical.choose_spec exists_big_fiber
+theorem Fam_card_gt : NN < Fam.card := Classical.choose_spec exists_big_fiber
 
 theorem Fam_mem {U : Finset Small} (hU : U ∈ Fam) : U ⊆ outer ∧ U.card = 272 := by
   exact Finset.mem_powersetCard.mp (Finset.mem_filter.mp hU).1
@@ -212,11 +216,9 @@ theorem V_sub_degree_lt {U W : Finset Small} (hU : U ∈ Fam) (hW : W ∈ Fam) :
     rw [V_coeff_top hU, V_coeff_top hW, sub_self]
   · rw [V_coeff_gt hU hgt, V_coeff_gt hW hgt, sub_self]
 
-abbrev NN : ℕ := 2^59 + 1
-
 theorem exists_selected : ∃ S : Finset (Finset Small), S ⊆ Fam ∧ S.card = NN := by
   obtain ⟨S, hsub, hcard⟩ := Finset.exists_subset_card_eq (s := Fam)
-    (n := NN) (by simpa [NN] using Nat.succ_le_iff.mpr Fam_card_gt : NN ≤ Fam.card)
+    (n := NN) (Nat.le_of_lt Fam_card_gt)
   exact ⟨S, hsub, hcard⟩
 
 noncomputable def Sel : Finset (Finset Small) := Classical.choose exists_selected
