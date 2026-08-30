@@ -3,20 +3,20 @@ import ProximityPrize.SubmissionLower.ET
 import ProximityPrize.SubmissionLower.EY
 import ProximityPrize.SubmissionLower.BR
 import ProximityPrize.SubmissionLower.D6
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidenceResearch
+namespace ProximityPrize.SubmissionLower.RCN152
 open scoped Classical
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactIncidence
-open ContactIdentityResidualCurveIterationResearch
-open ContactIdentityResidualCurveIterationResearch.CurveResidualStage
-open ContactNearPencilStratifiedIncidenceResearch
-open ContactNearPencil6600ArithmeticResearch
-open ContactResidualSparseComponentAdapterResearch
-open ContactFlagBezout6543Research
-open ContactIdentityResidualGlobalFlagResearch
-open ContactIdentityResidualIncidenceResearch
-open ContactIdentityResidualZeroBudgetTransportResearch
-open ContactResidualSupportParametersResearch
+open RCN136 RCN231 RCN319
+open RCN238 RCN173
+open RCN151
+open RCN151.CurveResidualStage
+open RCN216
+open RCN213
+open RCN272
+open RCN095
+open RCN156
+open RCN158
+open RCN165
+open RCN275
 noncomputable section
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 20000
@@ -213,4 +213,4 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
  · have htail:=hlarge D hpencil.1
    exact htail.trans (Nat.le_add_left _ _)
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualCurveTerminalIncidenceResearch
+end ProximityPrize.SubmissionLower.RCN152

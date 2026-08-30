@@ -1,17 +1,17 @@
 import ProximityPrize.SubmissionLower.FW
 import ProximityPrize.SubmissionLower.O
-namespace ProximityPrize.SubmissionLower.ContactProperStageIndexedFamily6733Research
+namespace ProximityPrize.SubmissionLower.RCN249
 open scoped Classical BigOperators
-open ContactGenericInitialPoint ContactFirstTailCertificate6731Research
-open ContactProperDelayedTailCertificate6732Research
-open ContactDelayedTailMultiplicityProvider6732Research
-open ContactProperFlagFiberData6733Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactFlagPlaneIndexedResidueWeight6733Research
-open ContactFlagBezout6543Research
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ContactFlagAffineFamilyDegree6543Research
-open ActualCurveCoordinateField
+open RCN135 RCN086
+open RCN244
+open RCN074
+open RCN245
+open RCN106
+open RCN111
+open RCN095
+open RCN120
+open RCN093
+open RCN002
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -20,7 +20,9 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
-variable (S:Stage K I Gamma x p flag) (A:Type) [Fintype A]
+variable {errorCap : ℕ}
+variable {stageSupport : RCN275.ResidualSupportParameters}
+variable (S:Stage K I Gamma x p flag errorCap stageSupport) (A:Type) [Fintype A]
 structure StageIndexedFlagFamily where
  component:A → StageComponent S
  injective:Function.Injective component
@@ -51,7 +53,7 @@ structure StageIndexedFactor (F:StageIndexedFlagFamily S A) where
  witness:IndexedFactorFiber F.component F.lam F.mu F.nu F.order F.ht q
 noncomputable def stageFamilyGroupedExponent
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w+1))
+     (RCN326.w+1))
    (F:StageIndexedFlagFamily S A)
    (q:Polynomial (RatFunc (GenericField K))):ℕ:=
  ∑ a:IndexedFactorFiber F.component F.lam F.mu F.nu F.order F.ht q,
@@ -66,7 +68,7 @@ noncomputable def stageFamilyResultant (F:StageIndexedFlagFamily S A):
    (stageTailPlane S F.lam F.mu F.nu F.order).natDegree
 @[simp] theorem stageFamilyGroupedExponent_eq
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w+1))
+     (RCN326.w+1))
    (F:StageIndexedFlagFamily S A) (q):
    stageFamilyGroupedExponent S A hfirstProper F q=
      ∑ a:IndexedFactorFiber F.component F.lam F.mu F.nu F.order F.ht q,
@@ -74,4 +76,4 @@ noncomputable def stageFamilyResultant (F:StageIndexedFlagFamily S A):
          indexedPlaneResidueWeight F.component F.lam F.mu F.nu F.order
            F.ht F.finite a.1:=rfl
 end
-end ProximityPrize.SubmissionLower.ContactProperStageIndexedFamily6733Research
+end ProximityPrize.SubmissionLower.RCN249

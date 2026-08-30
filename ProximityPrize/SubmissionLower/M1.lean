@@ -1,10 +1,10 @@
 import ProximityPrize.SubmissionLower.C8
-namespace ProximityPrize.SubmissionLower.ContactLocalizedSurfaceNonzero6733Research
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
-open ArbitraryRationalProjectionResearch
-open ContactPlaneRelationCoefficientFiber6733Research
-open ContactLocalizedPlaneRelation6733Research
-open ContactLocalizedResidueDegree6733Research
+namespace ProximityPrize.SubmissionLower.RCN195
+open RCN011 RCN021
+open RCN022
+open RCN226
+open RCN191
+open RCN193
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -42,4 +42,4 @@ theorem localized_surface_residue_ne_zero
  have htargetZero:target=0:=hzero
  rw [hmap,htargetZero,Polynomial.map_zero]
 end
-end ProximityPrize.SubmissionLower.ContactLocalizedSurfaceNonzero6733Research
+end ProximityPrize.SubmissionLower.RCN195

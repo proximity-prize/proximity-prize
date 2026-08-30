@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.H
-namespace ProximityPrize.SubmissionLower.ContactParameters6600Research
+namespace ProximityPrize.SubmissionLower.RCN223
 open Finset
 set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
@@ -101,23 +101,23 @@ theorem retained_singular_contribution_exact:
  norm_num [gap,agreements,n,errors,w]
 theorem retained_singular_matches_residual_ledger:
    retainedSingularContribution=
-     ContactNearPencil6600ArithmeticResearch.retainedSingularContribution:=by
+     RCN213.retainedSingularContribution:=by
  rw [retained_singular_contribution_exact]
  rfl
 theorem exact_stratified_ledger:
-   ContactNearPencil6600ArithmeticResearch.stratifiedTotalNumerator=
+   RCN213.stratifiedTotalNumerator=
        334108271852906376395189477∧
-     ContactNearPencil6600ArithmeticResearch.ledgerCeiling=
+     RCN213.ledgerCeiling=
        123016040356180749∧
-     ContactNearPencil6600ArithmeticResearch.alignmentBudget-
-         ContactNearPencil6600ArithmeticResearch.ledgerCeiling=
+     RCN213.alignmentBudget-
+         RCN213.ledgerCeiling=
        14474323699516794:=by
- exact ⟨ContactNearPencil6600ArithmeticResearch.stratified_total_exact,
-   ContactNearPencil6600ArithmeticResearch.ledger_ceiling_exact,
-   ContactNearPencil6600ArithmeticResearch.budget_slack⟩
+ exact ⟨RCN213.stratified_total_exact,
+   RCN213.ledger_ceiling_exact,
+   RCN213.budget_slack⟩
 theorem strict_alignment_budget:
-   ContactNearPencil6600ArithmeticResearch.stratifiedTotalNumerator <
+   RCN213.stratifiedTotalNumerator <
      alignmentBudget*gap^2:=by
- rw [ContactNearPencil6600ArithmeticResearch.stratified_total_exact]
+ rw [RCN213.stratified_total_exact]
  norm_num [alignmentBudget,gap,agreements,n,errors,w]
-end ProximityPrize.SubmissionLower.ContactParameters6600Research
+end ProximityPrize.SubmissionLower.RCN223

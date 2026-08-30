@@ -3,11 +3,11 @@ import ProximityPrize.SubmissionLower.FI
 import ProximityPrize.SubmissionLower.BM
 import ProximityPrize.SubmissionLower.E
 import ProximityPrize.SubmissionLower.T
-namespace ProximityPrize.SubmissionLower.ContactComponentPencils
-open ActualCurveCoordinateField ContactGenericSurface ContactPencilGeometry
-open ContactGlobalPolynomiality ContactPolynomiality ContactPolynomialSolutions
-open ContactPolynomialRecovery ContactTaylorNumerators ContactAgreementEvaluation
-open ContactIdentityPencil ContactTranslation
+namespace ProximityPrize.SubmissionLower.RCN065
+open RCN002 RCN136 RCN224
+open RCN139 RCN233 RCN231
+open RCN229 RCN313 RCN047
+open RCN147 RCN319
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
 variable (φ:Polynomial K →+*Ω)
@@ -201,4 +201,4 @@ theorem selected_agrees_on_identity_nodes {ι:Type*}
  exact (factorial_agreement_zero_iff_original_agreement (φ.comp Polynomial.C) F S γ
    (φ Polynomial.X) hsolution hregular p w hw hdegree (x i) (u₀ i) (u₁ i)).mp hz
 end
-end ProximityPrize.SubmissionLower.ContactComponentPencils
+end ProximityPrize.SubmissionLower.RCN065

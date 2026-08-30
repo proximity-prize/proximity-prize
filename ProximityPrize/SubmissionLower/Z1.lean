@@ -1,11 +1,11 @@
 import ProximityPrize.SubmissionLower.EC
 import ProximityPrize.SubmissionLower.Y1
-namespace ProximityPrize.SubmissionLower.ContactFlagResidueDegreeCostAdapter6732Research
-open ActualCurveCoordinateField ActualPlaneCoordinateKernel
-open TrivariateRationalCollection ArbitraryPlaneEvaluationFamilyResearch
-open ArbitraryRationalProjectionResearch
-open ContactFlagTriangularProjectionResearch
-open ContactFlagAffineFamilyDegree6543Research
+namespace ProximityPrize.SubmissionLower.RCN120
+open RCN002 RCN011
+open RCN371 RCN021
+open RCN022
+open RCN125
+open RCN093
 noncomputable section
 set_option autoImplicit false
 @[reducible] def residueAlgebra
@@ -68,4 +68,4 @@ variable (K:Type) [Field K]
  (elementEmbedding K (CoordinateField K P)
    (flagEvaluation K P lam mu nu (MvPolynomial.X (order 0))) ht).toRingHom.toAlgebra
 end
-end ProximityPrize.SubmissionLower.ContactFlagResidueDegreeCostAdapter6732Research
+end ProximityPrize.SubmissionLower.RCN120

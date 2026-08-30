@@ -1,19 +1,19 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BZ
 import ProximityPrize.SubmissionLower.GU
-namespace ProximityPrize.SubmissionLower.ContactDependentGenericity6543Research
+namespace ProximityPrize.SubmissionLower.RCN075
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
-open ContactLocalPoleBound
-open ContactGenericCoefficientAvoidanceResearch
-open ContactLeadingCancellationResearch
-open ContactSparsePoleSupportResearch
-open ActualCurveCoordinateField ActualCurveRationalProjection
- ActualCurveScalarTowers ActualCurveZeroCount
-open CoordinateBoxZeroCount
-open ContactRegularComponentCover
-open ContactResidualSparsePoleProviderResearch
-open ContactTropicalBKKSeamResearch
+open RCN187
+open RCN133
+open RCN184
+open RCN295
+open RCN002 RCN005
+ RCN006 RCN007
+open RCN344
+open RCN264
+open RCN273
+open RCN323
 noncomputable section
 variable {Ω:Type} [Field Ω] [IsAlgClosed Ω]
 def componentRelevantPlaces
@@ -43,7 +43,7 @@ def componentRelevantPlaces
    (hproj C separator htr).2
  exact Finset.univ.biUnion (fun i:Fin 3↦
    if hi:coordinate Ω C.1 i≠0 then
-     CommonPlaceBalance.placesFor Ω (CoordinateField Ω C.1)
+     RCN026.placesFor Ω (CoordinateField Ω C.1)
        (coordinate Ω C.1 i) hi
    else ∅)
 theorem coordinate_poleOrder_eq_zero_of_not_mem_relevant
@@ -75,19 +75,19 @@ theorem coordinate_poleOrder_eq_zero_of_not_mem_relevant
    (hproj C separator htr).2
  by_cases hi:coordinate Ω C.1 i=0
  · simp [hi,poleOrder]
- · have hnot:v∉CommonPlaceBalance.placesFor Ω
+ · have hnot:v∉RCN026.placesFor Ω
        (CoordinateField Ω C.1) (coordinate Ω C.1 i) hi:=by
      intro hmem
      apply hv
      unfold componentRelevantPlaces
      apply Finset.mem_biUnion.mpr
      exact ⟨i,Finset.mem_univ _,by simp [hi,hmem]⟩
-   have horder:CommonPlaceBalance.order Ω (CoordinateField Ω C.1) v
+   have horder:RCN026.order Ω (CoordinateField Ω C.1) v
        (coordinate Ω C.1 i)=0:=by
      by_contra hne
-     exact hnot (CommonPlaceBalance.placesFor_covers Ω
+     exact hnot (RCN026.placesFor_covers Ω
        (CoordinateField Ω C.1) (coordinate Ω C.1 i) hi v hne)
-   unfold CommonPlaceBalance.order at horder
+   unfold RCN026.order at horder
    unfold poleOrder
    have hlog:(v.val (coordinate Ω C.1 i)).log=0:=by omega
    rw [hlog]
@@ -279,7 +279,7 @@ theorem exists_genericExactPolePolynomial
        (fun a↦constant_value_le_one Ω (CoordinateField Ω C.1) v a)
        (coordinate Ω C.1) E B hsupport
    exact poleOrder_eq_of_valuation_eq_exp v.val _ _
-     (ContactLeadingCancellationResearch.exponentSetPoleWeight_nonneg
+     (RCN184.exponentSetPoleWeight_nonneg
        v.val (coordinate Ω C.1) E)
      (le_antisymm hupper hlower)
  · have hweight:exponentSetPoleWeight v.val (coordinate Ω C.1) E=0:=
@@ -328,9 +328,9 @@ def GenericExactPolePolynomial.toGenericSparseBKKWitness
        (coordinate Ω C.1) B.polynomial
      let hb:b≠0:=coordinate_eval_ne_zero_of_not_mem
        C.1 B.polynomial (B.proper C)
-     (∑ v∈CommonPlaceBalance.placesFor Ω
+     (∑ v∈RCN026.placesFor Ω
          (CoordinateField Ω C.1) b hb,
-       CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
+       RCN346.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
          (cost C:ℤ))
    (sum_cost_le:(∑ C:RegularComponent Ω G T H,cost C) ≤ wholeCost):
    GenericSparseBKKWitness G T H E separator wholeCost hseparator hproj where
@@ -342,4 +342,4 @@ def GenericExactPolePolynomial.toGenericSparseBKKWitness
  cycle_le:=cycle_le
  sum_cost_le:=sum_cost_le
 end
-end ProximityPrize.SubmissionLower.ContactDependentGenericity6543Research
+end ProximityPrize.SubmissionLower.RCN075

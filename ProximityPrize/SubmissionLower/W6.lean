@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G5
-namespace ProximityPrize.SubmissionLower.PlaneResultantIrreducible
+namespace ProximityPrize.SubmissionLower.RCN362
 noncomputable section
 variable {K:Type} [Field K] [DecidableEq K]
 theorem inner_linear_C_dvd_of_specialization_eq_zero
@@ -64,11 +64,11 @@ theorem irreducible_common_points_card_le_bidegree_bound
      (Q.map (Polynomial.evalRingHom point.1)).eval point.2=0):
    points.card ≤ Q.natDegree*Polynomial.Bivariate.degreeX P+
      P.natDegree*Polynomial.Bivariate.degreeX Q:=by
- apply PlaneResultantPointCount.common_points_card_le_bidegree_bound
+ apply RCN363.common_points_card_le_bidegree_bound
    P Q P.natDegree Q.natDegree points le_rfl le_rfl
  · exact irreducible_resultant_ne_zero_of_not_dvd P Q hirreducible hdegree hproper
  · intro point _
    exact Or.inl (irreducible_specialization_ne_zero P hirreducible hdegree point.1)
  · exact hroots
 end
-end ProximityPrize.SubmissionLower.PlaneResultantIrreducible
+end ProximityPrize.SubmissionLower.RCN362

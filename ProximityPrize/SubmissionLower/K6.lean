@@ -2,19 +2,19 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BV
 import ProximityPrize.SubmissionLower.I3
 import ProximityPrize.SubmissionLower.CB
-namespace ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount6600Research
+namespace ProximityPrize.SubmissionLower.RCN171
 open scoped Classical BigOperators
-open ContactParameters6600Research ContactSingularLedger6600Research ContactCountingCaps6600Research
-open ContactCountingCaps ContactGenericSurface ContactGenericInitialPoint
-open ContactGeometricFirstTail ContactGeometricFactorCover
-open ContactPrimeSeedIncidence ContactProperCutSeedCount ContactFactorCaps
-open ContactInterpolation ContactTranslation ActualCoordinateDegreeSum
+open RCN223 RCN294 RCN069
+open RCN068 RCN136 RCN135
+open RCN138 RCN137
+open RCN238 RCN243 RCN081
+open RCN174 RCN319 RCN001
 noncomputable section
 variable {K:Type} [Field K]
-def pairCost (A G:MvPolynomial (Fin 4) K):ContactParameters6600Research.DegreeVector:=
- ⟨ContactImplicitPairBudgets.pairYCost ⟨A,G⟩,
-   ContactImplicitPairBudgets.pairRCost ⟨A,G⟩,
-   ContactImplicitPairBudgets.pairZCost ⟨A,G⟩⟩
+def pairCost (A G:MvPolynomial (Fin 4) K):RCN223.DegreeVector:=
+ ⟨RCN169.pairYCost ⟨A,G⟩,
+   RCN169.pairRCost ⟨A,G⟩,
+   RCN169.pairZCost ⟨A,G⟩⟩
 variable {ι:Type*}
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq ι:=Classical.decEq ι
@@ -36,7 +36,7 @@ theorem implicit_pair_seed_bound_fixed
        (selected γ).eval (x i)=u₀ i+γ*u₁ i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Γ w errors):
    Γ.card*gap ≤ (n-w)*dot liftedAgreement (pairCost A G)+
-     (errors+1)*gap*ContactImplicitPairBudgets.pairZCost ⟨A,G⟩:=by
+     (errors+1)*gap*RCN169.pairZCost ⟨A,G⟩:=by
  classical
  let φ:=polynomialEmbedding K
  let factors:=surfaceFactors φ G
@@ -51,21 +51,21 @@ theorem implicit_pair_seed_bound_fixed
  have hAcaps:HasCaps (surfaceMap φ A) (legacyVector implicitCut):=by
    intro i
    fin_cases i
-   · simpa [legacyVector,ContactCountingCaps.capAt,implicitCut,implicitYCap] using
+   · simpa [legacyVector,RCN068.capAt,implicitCut,implicitYCap] using
        (surfaceMap_degreeOf_le φ A 0).trans hAGcaps.1
-   · simpa [legacyVector,ContactCountingCaps.capAt,implicitCut] using
+   · simpa [legacyVector,RCN068.capAt,implicitCut] using
        (surfaceMap_degreeOf_le φ A 1).trans hAGcaps.2.1
-   · simpa [legacyVector,ContactCountingCaps.capAt,implicitCut] using
+   · simpa [legacyVector,RCN068.capAt,implicitCut] using
        (surfaceMap_degreeOf_le φ A 2).trans hAGcaps.2.2
  have hFzero:∀ γ∈Γ,
      MvPolynomial.eval (selectedPoint φ selected γ) (surfaceMap φ G)=0:=by
    intro γ hγ
-   rw [ContactImplicitPairSeedCount.canonical_selectedPoint_surface_evaluation,
+   rw [RCN170.canonical_selectedPoint_surface_evaluation,
      hsolutionG γ hγ,map_zero]
  have hAzero:∀ γ∈Γ,
      MvPolynomial.eval (selectedPoint φ selected γ) (surfaceMap φ A)=0:=by
    intro γ hγ
-   rw [ContactImplicitPairSeedCount.canonical_selectedPoint_surface_evaluation,
+   rw [RCN170.canonical_selectedPoint_surface_evaluation,
      hsolutionA γ hγ,map_zero]
  have hcover:Γ ⊆ factors.biUnion seedsFor:=by
    intro γ hγ
@@ -78,9 +78,9 @@ theorem implicit_pair_seed_bound_fixed
      (seedsFor g).card*gap ≤
        (n-w)*(∑ i:Fin 3,
          capAt (legacyVector liftedAgreement) i*
-           capAt (ContactImplicitPairSeedCount.geometricPairCost A g) i)+
+           capAt (RCN170.geometricPairCost A g) i)+
          (errors+1)*gap*
-           capAt (ContactImplicitPairSeedCount.geometricPairCost A g) 2:=by
+           capAt (RCN170.geometricPairCost A g) 2:=by
    obtain ⟨hgi,hdiv⟩:=surfaceFactors_spec φ G g hg
    have hfacdegree (i:Fin 3):g.degreeOf i ≤ G.degreeOf i.succ:=
      (coordinate_degree_le_of_dvd i g (surfaceMap φ G) hdiv
@@ -89,24 +89,24 @@ theorem implicit_pair_seed_bound_fixed
    have hgcaps:HasCaps g (legacyVector liftedSurface):=by
      intro i
      fin_cases i
-     · simpa [legacyVector,ContactCountingCaps.capAt,liftedSurface,implicitYCap] using
+     · simpa [legacyVector,RCN068.capAt,liftedSurface,implicitYCap] using
          (hfacdegree 0).trans hGGcaps.1
-     · simpa [legacyVector,ContactCountingCaps.capAt,liftedSurface] using
+     · simpa [legacyVector,RCN068.capAt,liftedSurface] using
          (hfacdegree 1).trans hGGcaps.2.1
-     · simpa [legacyVector,ContactCountingCaps.capAt,liftedSurface] using
+     · simpa [legacyVector,RCN068.capAt,liftedSurface] using
          (hfacdegree 2).trans hGGcaps.2.2
    have hgates:=fixed_implicit_characteristic_gates g (surfaceMap φ A) hgcaps hAcaps
    have hreg:∀ γ∈seedsFor g,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
-       (ContactPolynomialSolutions.polynomialPoint (φ.comp Polynomial.C)
+       (RCN231.polynomialPoint (φ.comp Polynomial.C)
          (selected γ) γ (φ Polynomial.X)) (MvPolynomial.pderiv (2:Fin 4) G)≠0:=by
      intro γ hγ
      exact (initialPoint_regular_iff K G (selected γ) γ).mpr (hregular γ (hsub g hγ))
    have hcap (i:ι):HasCaps (agreementPolynomial φ G w (x i) (u₀ i) (u₁ i))
        (legacyVector liftedAgreement):=
-     ContactCountingCaps6600Research.fixed_implicit_agreement_caps φ G
+     RCN069.fixed_implicit_agreement_caps φ G
        hGGcaps.1 hGGcaps.2.1 hGGcaps.2.2 (x i) (u₀ i) (u₁ i)
    have hcount:=proper_cut_seed_bound φ G g (surfaceMap φ A) hgi hdiv
-     (ContactImplicitPairSeedCount.geometric_factor_proper_cut A G hG hGR hproper g hg)
+     (RCN170.geometric_factor_proper_cut A G hG hGR hproper g hg)
      selected (seedsFor g) nodes x u₀ u₁ hinj prime w agreements errors
      (by norm_num [w]) (by norm_num [w,prime])
      (by norm_num [w,agreements,n,errors])
@@ -120,23 +120,23 @@ theorem implicit_pair_seed_bound_fixed
      (capAt (legacyVector liftedAgreement)) (fun i _ => hcap i)
    rw [hnodes] at hcount
    have hδ (i:Fin 3):=
-     ContactImplicitPairSeedCount.coordinateMixedDegree_le_geometricPairCost φ A hAR g i
+     RCN170.coordinateMixedDegree_le_geometricPairCost φ A hAR g i
    exact hcount.trans (Nat.add_le_add
      (Nat.mul_le_mul_left (n-w) (Finset.sum_le_sum
        (fun i _ => Nat.mul_le_mul_left (capAt (legacyVector liftedAgreement) i) (hδ i))))
      (Nat.mul_le_mul_left ((errors+1)*gap) (hδ 2)))
  have hbudget (i:Fin 3):
      (∑ g∈factors,
-       capAt (ContactImplicitPairSeedCount.geometricPairCost A g) i) ≤
-         capAt (ContactImplicitPairSeedCount.pairCost A G) i:=
-   ContactImplicitPairSeedCount.sum_geometricPairCost_le φ
+       capAt (RCN170.geometricPairCost A g) i) ≤
+         capAt (RCN170.pairCost A G) i:=
+   RCN170.sum_geometricPairCost_le φ
      (polynomialEmbedding_injective K) A G hG.ne_zero i
  have hfubini:
      (∑ g∈factors,∑ i:Fin 3,capAt (legacyVector liftedAgreement) i*
-         capAt (ContactImplicitPairSeedCount.geometricPairCost A g) i)=
+         capAt (RCN170.geometricPairCost A g) i)=
        ∑ i:Fin 3,capAt (legacyVector liftedAgreement) i*
          (∑ g∈factors,
-           capAt (ContactImplicitPairSeedCount.geometricPairCost A g) i):=by
+           capAt (RCN170.geometricPairCost A g) i):=by
    rw [Finset.sum_comm]
    apply Finset.sum_congr rfl
    intro i _
@@ -147,29 +147,29 @@ theorem implicit_pair_seed_bound_fixed
    _=∑ g∈factors,(seedsFor g).card*gap:=by rw [Finset.sum_mul]
    _ ≤ ∑ g∈factors,((n-w)*(∑ i:Fin 3,
        capAt (legacyVector liftedAgreement) i*
-         capAt (ContactImplicitPairSeedCount.geometricPairCost A g) i)+
+         capAt (RCN170.geometricPairCost A g) i)+
        (errors+1)*gap*
-         capAt (ContactImplicitPairSeedCount.geometricPairCost A g) 2):=
+         capAt (RCN170.geometricPairCost A g) 2):=
      Finset.sum_le_sum (fun g hg => hsingle g hg)
    _=(n-w)*(∑ i:Fin 3,capAt (legacyVector liftedAgreement) i*
        (∑ g∈factors,
-         capAt (ContactImplicitPairSeedCount.geometricPairCost A g) i))+
+         capAt (RCN170.geometricPairCost A g) i))+
        (errors+1)*gap*
          (∑ g∈factors,
-           capAt (ContactImplicitPairSeedCount.geometricPairCost A g) 2):=by
+           capAt (RCN170.geometricPairCost A g) 2):=by
      rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,hfubini]
    _ ≤ (n-w)*(∑ i:Fin 3,capAt (legacyVector liftedAgreement) i*
-       capAt (ContactImplicitPairSeedCount.pairCost A G) i)+
-       (errors+1)*gap*capAt (ContactImplicitPairSeedCount.pairCost A G) 2:=
+       capAt (RCN170.pairCost A G) i)+
+       (errors+1)*gap*capAt (RCN170.pairCost A G) 2:=
      Nat.add_le_add (Nat.mul_le_mul_left (n-w) (Finset.sum_le_sum
        (fun i _ => Nat.mul_le_mul_left (capAt (legacyVector liftedAgreement) i)
          (hbudget i))))
        (Nat.mul_le_mul_left ((errors+1)*gap) (hbudget 2))
    _=(n-w)*dot liftedAgreement (pairCost A G)+
-       (errors+1)*gap*ContactImplicitPairBudgets.pairZCost ⟨A,G⟩:=by
-     simp [Fin.sum_univ_three,ContactCountingCaps.capAt,legacyVector,
-       ContactImplicitPairSeedCount.pairCost,pairCost,
-       ContactImplicitPairBudgets.pairYCost,ContactImplicitPairBudgets.pairRCost,
-       ContactImplicitPairBudgets.pairZCost,dot]
+       (errors+1)*gap*RCN169.pairZCost ⟨A,G⟩:=by
+     simp [Fin.sum_univ_three,RCN068.capAt,legacyVector,
+       RCN170.pairCost,pairCost,
+       RCN169.pairYCost,RCN169.pairRCost,
+       RCN169.pairZCost,dot]
 end
-end ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount6600Research
+end ProximityPrize.SubmissionLower.RCN171

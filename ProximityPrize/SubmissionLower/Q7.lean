@@ -1,10 +1,10 @@
 import ProximityPrize.SubmissionLower.CJ
 import ProximityPrize.SubmissionLower.I
-namespace ProximityPrize.SubmissionLower.ContactTwoTailTangentCost6732Research
-open ContactFlagBezout6543Research
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactRegularComponentCover
-open ContactTwoTailParameters6733Research
+namespace ProximityPrize.SubmissionLower.RCN339
+open RCN095
+open RCN237
+open RCN264
+open RCN326
 noncomputable section
 set_option autoImplicit false
 variable {Omega:Type} [Field Omega]
@@ -60,4 +60,4 @@ theorem tangentCost_le_multiplicity_secondTail_weightedCost
  yzCost_le_multiplicity_weightedCost B (tailFlag (w+2)) C
    multiplicity (errors+1) hmultiplicity errors_succ_le_secondTail_yz
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailTangentCost6732Research
+end ProximityPrize.SubmissionLower.RCN339

@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CA
-namespace ProximityPrize.SubmissionLower.ContactImplicitContactLift
-open ContactFactorCaps ContactFactorCover ContactSingularDegreeBounds
-open ContactRegularFactorGate ContactTaylorNumerators ContactGenericSurface
-open ContactTranslation ContactPolynomialSolutions
+namespace ProximityPrize.SubmissionLower.RCN167
+open RCN081 RCN082 RCN293
+open RCN267 RCN313 RCN136
+open RCN319 RCN231
 noncomputable section
 variable {K:Type*} [Field K]
 def implicitLift (A:MvPolynomial (Fin 4) K):MvPolynomial (Fin 4) K:=
@@ -115,8 +115,8 @@ theorem implicitLift_contact_weight_le
  exact (weighted_add_le (contactWeights w) _ _).trans (max_le hx hm')
 theorem implicitLift_mem_box
    (A:MvPolynomial (Fin 4) K) (D w L:ℕ) (hw:1 ≤ w) (hDw:w < D)
-   (hbox:A∈ContactInterpolation.globalCoefficientBox K D w L 0):
-   implicitLift A∈ContactInterpolation.globalCoefficientBox K D w L 1:=by
+   (hbox:A∈RCN174.globalCoefficientBox K D w L 0):
+   implicitLift A∈RCN174.globalCoefficientBox K D w L 1:=by
  have hD:0 < D:=by omega
  have hcaps:=(mem_globalCoefficientBox_iff A D w L 0 hD).mp hbox
  have hR:A.degreeOf 2=0:=by
@@ -165,7 +165,7 @@ theorem lift_positive_factor_budgets (A:MvPolynomial (Fin 4) K)
      (∑ G∈positiveRFactors (implicitLift A),G.degreeOf (3:Fin 4)) ≤ A.degreeOf 3:=by
  have hF:=implicitLift_nonzero A hR hY
  have hprod:=positiveRFactors_product_dvd (implicitLift A) hF
- have hb:=ContactFactorCaps.sum_degreeOf_le_of_prod_dvd
+ have hb:=RCN081.sum_degreeOf_le_of_prod_dvd
    (positiveRFactors (implicitLift A)) id (implicitLift A) hF hprod
  exact ⟨(hb 2).trans (implicitLift_R_degree_le A hR),
    (hb 1).trans (implicitLift_other_degree_le A 1 (by decide)),
@@ -209,23 +209,23 @@ theorem exists_regular_lift_factor_at_surface
    apply hGreg
    rw [pderiv_zero_of_degree_zero (2:Fin 4) G hn,map_zero]
  have hdeg:G.degreeOf 2=1:=by
-   have hh:=(ContactFactorCaps.degreeOf_le_of_dvd (2:Fin 4) G (implicitLift A)
+   have hh:=(RCN081.degreeOf_le_of_dvd (2:Fin 4) G (implicitLift A)
      hspec.2.1 hF).trans (implicitLift_R_degree_le A hR)
    omega
  have hproper:¬ G∣A:=by
    intro hd
-   have hh:=ContactFactorCaps.degreeOf_le_of_dvd (2:Fin 4) G A hd hA
+   have hh:=RCN081.degreeOf_le_of_dvd (2:Fin 4) G A hd hA
    omega
  exact ⟨G,Finset.mem_filter.mpr ⟨hG,hpos⟩,hspec.1,hspec.2.1,hdeg,hz,hGreg,hproper⟩
 end SurfacePoints
 theorem exists_regular_lift_factor_of_solution
    (A:MvPolynomial (Fin 4) K) (hA:A≠0) (P:Polynomial K) (γ:K)
    (D w L:ℕ) (hw:1 ≤ w) (hDw:w < D)
-   (hbox:A∈ContactInterpolation.globalCoefficientBox K D w L 0)
+   (hbox:A∈RCN174.globalCoefficientBox K D w L 0)
    (hsolution:specialization K P γ A=0)
    (hregular:specialization K P γ (MvPolynomial.pderiv (1:Fin 4) A)≠0):
    ∃ G∈positiveRFactors (implicitLift A),Irreducible G∧G.degreeOf 2=1∧
-     G∈ContactInterpolation.globalCoefficientBox K D w L 1∧
+     G∈RCN174.globalCoefficientBox K D w L 1∧
      specialization K P γ G=0∧
      specialization K P γ (MvPolynomial.pderiv (2:Fin 4) G)≠0∧¬ G∣A:=by
  have hR:A.degreeOf 2=0:=by
@@ -234,33 +234,33 @@ theorem exists_regular_lift_factor_of_solution
    intro d hd
    exact (hbox hd).2.1
  have hFsolution:=implicitLift_solution A hR P γ hsolution
- let φ:=ContactGenericInitialPoint.polynomialEmbedding K
- let v:Fin 3 → ContactGenericInitialPoint.GenericField K:=
-   fun i => ContactGenericInitialPoint.initialPoint K P γ i.succ
+ let φ:=RCN135.polynomialEmbedding K
+ let v:Fin 3 → RCN135.GenericField K:=
+   fun i => RCN135.initialPoint K P γ i.succ
  have hzero:MvPolynomial.eval v (surfaceMap φ (implicitLift A))=0:=by
-   have hh:=(ContactGeometricFirstTail.actual_generic_initial_zero_iff K P γ (implicitLift A)).mpr hFsolution
-   simpa only [ContactGeometricFirstTail.canonical_geometricSurfaceMap] using hh
+   have hh:=(RCN138.actual_generic_initial_zero_iff K P γ (implicitLift A)).mpr hFsolution
+   simpa only [RCN138.canonical_geometricSurfaceMap] using hh
  have hreg:MvPolynomial.eval v (surfaceMap φ (MvPolynomial.pderiv (1:Fin 4) A))≠0:=by
    intro hz
    apply hregular
-   apply (ContactGeometricFirstTail.actual_generic_initial_zero_iff K P γ _).mp
-   simpa only [ContactGeometricFirstTail.canonical_geometricSurfaceMap] using hz
+   apply (RCN138.actual_generic_initial_zero_iff K P γ _).mp
+   simpa only [RCN138.canonical_geometricSurfaceMap] using hz
  obtain ⟨G,hG,hi,hd,hdeg,hpoint,hGreg,hproper⟩:=
-   exists_regular_lift_factor_at_surface φ (ContactGenericInitialPoint.polynomialEmbedding_injective K)
+   exists_regular_lift_factor_at_surface φ (RCN135.polynomialEmbedding_injective K)
      A hA hR v hzero hreg
  have hY:MvPolynomial.pderiv (1:Fin 4) A≠0:=by
    intro hz
    exact hregular (by rw [hz,map_zero])
- have hGbox:=ContactFactorCaps.mem_globalCoefficientBox_of_dvd G (implicitLift A)
+ have hGbox:=RCN081.mem_globalCoefficientBox_of_dvd G (implicitLift A)
    D w L 1 (implicitLift_nonzero A hR hY) hd (implicitLift_mem_box A D w L hw hDw hbox)
  have hGsol:specialization K P γ G=0:=by
-   apply (ContactGeometricFirstTail.actual_generic_initial_zero_iff K P γ G).mp
-   simpa only [ContactGeometricFirstTail.canonical_geometricSurfaceMap] using hpoint
+   apply (RCN138.actual_generic_initial_zero_iff K P γ G).mp
+   simpa only [RCN138.canonical_geometricSurfaceMap] using hpoint
  have hGregular:specialization K P γ (MvPolynomial.pderiv (2:Fin 4) G)≠0:=by
    intro hz
    apply hGreg
-   have hh:=(ContactGeometricFirstTail.actual_generic_initial_zero_iff K P γ _).mpr hz
-   simpa only [ContactGeometricFirstTail.canonical_geometricSurfaceMap] using hh
+   have hh:=(RCN138.actual_generic_initial_zero_iff K P γ _).mpr hz
+   simpa only [RCN138.canonical_geometricSurfaceMap] using hh
  exact ⟨G,hG,hi,hdeg,hGbox,hGsol,hGregular,hproper⟩
 end
-end ProximityPrize.SubmissionLower.ContactImplicitContactLift
+end ProximityPrize.SubmissionLower.RCN167

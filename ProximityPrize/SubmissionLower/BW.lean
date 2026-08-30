@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BV
-namespace ProximityPrize.SubmissionLower.ContactImplicitPairSeedCountParameterizedResearch
+namespace ProximityPrize.SubmissionLower.RCN172
 open scoped Classical BigOperators
-open ContactImplicitPairBudgets ContactGenericSurface ContactGenericInitialPoint
-open ContactGeometricFirstTail ContactGeometricFactorCover
-open ContactPrimeSeedIncidence ContactProperCutSeedCount ContactFactorCaps
-open ContactInterpolation ContactTranslation ActualCoordinateDegreeSum
-open ContactCountingCaps
+open RCN169 RCN136 RCN135
+open RCN138 RCN137
+open RCN238 RCN243 RCN081
+open RCN174 RCN319 RCN001
+open RCN068
 noncomputable section
 variable {K:Type} [Field K]
 variable {ι:Type*}
@@ -45,9 +45,9 @@ theorem implicit_pair_seed_bound
  let factors:=surfaceFactors φ G
  let seedsFor:=fun g:MvPolynomial (Fin 3) (GenericField K) =>
    Γ.filter (fun γ => MvPolynomial.eval (selectedPoint φ selected γ) g=0)
- let surfaceCap:ContactAlignmentParameters.DegreeVector:=⟨jY,1,jZ⟩
- let cutCap:ContactAlignmentParameters.DegreeVector:=⟨jY,0,jZ⟩
- let agreementCap:ContactAlignmentParameters.DegreeVector:=
+ let surfaceCap:RCN051.DegreeVector:=⟨jY,1,jZ⟩
+ let cutCap:RCN051.DegreeVector:=⟨jY,0,jZ⟩
+ let agreementCap:RCN051.DegreeVector:=
    ⟨1+2*w*jY,w,2*w*jZ+1⟩
  have hsub (g):seedsFor g ⊆ Γ:=Finset.filter_subset _ _
  have hAGcaps:=degree_bounds_of_mem_box A implicitD w jZ 0 hw hAbox
@@ -64,12 +64,12 @@ theorem implicit_pair_seed_bound
  have hFzero:∀ γ∈Γ,
      MvPolynomial.eval (selectedPoint φ selected γ) (surfaceMap φ G)=0:=by
    intro γ hγ
-   rw [ContactImplicitPairSeedCount.canonical_selectedPoint_surface_evaluation,
+   rw [RCN170.canonical_selectedPoint_surface_evaluation,
      hsolutionG γ hγ,map_zero]
  have hAzero:∀ γ∈Γ,
      MvPolynomial.eval (selectedPoint φ selected γ) (surfaceMap φ A)=0:=by
    intro γ hγ
-   rw [ContactImplicitPairSeedCount.canonical_selectedPoint_surface_evaluation,
+   rw [RCN170.canonical_selectedPoint_surface_evaluation,
      hsolutionA γ hγ,map_zero]
  have hcover:Γ ⊆ factors.biUnion seedsFor:=by
    intro γ hγ
@@ -83,9 +83,9 @@ theorem implicit_pair_seed_bound
      (seedsFor g).card*(a-w) ≤
        (n-w)*(∑ i:Fin 3,
          capAt agreementCap i*
-           capAt (ContactImplicitPairSeedCount.geometricPairCost A g) i)+
+           capAt (RCN170.geometricPairCost A g) i)+
          (e+1)*(a-w)*
-           capAt (ContactImplicitPairSeedCount.geometricPairCost A g) 2:=by
+           capAt (RCN170.geometricPairCost A g) 2:=by
    obtain ⟨hgi,hdiv⟩:=surfaceFactors_spec φ G g hg
    have hfacdegree (i:Fin 3):g.degreeOf i ≤ G.degreeOf i.succ:=
      (coordinate_degree_le_of_dvd i g (surfaceMap φ G) hdiv
@@ -105,18 +105,18 @@ theorem implicit_pair_seed_bound
      · simpa [surfaceCap,capAt] using hjZsmall
    have hgates:=actual_characteristic_gates g (surfaceMap φ A)
      surfaceCap cutCap p hgcaps hAcaps hsurfaceSmall
-     (by simpa [ContactAlignmentParameters.mixed,surfaceCap,cutCap,
-       ContactAlignmentParameters.unitY] using hjZsmall)
+     (by simpa [RCN051.mixed,surfaceCap,cutCap,
+       RCN051.unitY] using hjZsmall)
      (by
-       simp [ContactAlignmentParameters.mixed,surfaceCap,cutCap,
-         ContactAlignmentParameters.unitR]
+       simp [RCN051.mixed,surfaceCap,cutCap,
+         RCN051.unitR]
        rw [show jY*jZ+jZ*jY=2*jY*jZ by ring]
        exact hmixedSmall)
-     (by simpa [ContactAlignmentParameters.mixed,surfaceCap,cutCap,
-       ContactAlignmentParameters.unitZ] using hjYsmall)
+     (by simpa [RCN051.mixed,surfaceCap,cutCap,
+       RCN051.unitZ] using hjYsmall)
    have hreg:∀ γ∈seedsFor g,
        MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
-         (ContactPolynomialSolutions.polynomialPoint (φ.comp Polynomial.C)
+         (RCN231.polynomialPoint (φ.comp Polynomial.C)
            (selected γ) γ (φ Polynomial.X))
          (MvPolynomial.pderiv (2:Fin 4) G)≠0:=by
      intro γ hγ
@@ -129,7 +129,7 @@ theorem implicit_pair_seed_bound
        (fun j => (j.factorial:K)⁻¹) (x i) (u₀ i) (u₁ i)
      simpa [agreementPolynomial,agreementCaps,agreementCap] using h
    have hcount:=proper_cut_seed_bound φ G g (surfaceMap φ A) hgi hdiv
-     (ContactImplicitPairSeedCount.geometric_factor_proper_cut
+     (RCN170.geometric_factor_proper_cut
        A G hG hGR hproper g hg)
      selected (seedsFor g) nodes x u₀ u₁ hinj p w a e hw hchar hwa
      (by simpa [hnodes] using han) hgates.1 hgates.2
@@ -142,7 +142,7 @@ theorem implicit_pair_seed_bound
      (capAt agreementCap) (fun i _ => hcap i)
    rw [hnodes] at hcount
    have hδ (i:Fin 3):=
-     ContactImplicitPairSeedCount.coordinateMixedDegree_le_geometricPairCost
+     RCN170.coordinateMixedDegree_le_geometricPairCost
        φ A hAR g i
    exact hcount.trans (Nat.add_le_add
      (Nat.mul_le_mul_left (n-w) (Finset.sum_le_sum
@@ -150,16 +150,16 @@ theorem implicit_pair_seed_bound
      (Nat.mul_le_mul_left ((e+1)*(a-w)) (hδ 2)))
  have hbudget (i:Fin 3):
      (∑ g∈factors,
-       capAt (ContactImplicitPairSeedCount.geometricPairCost A g) i) ≤
-         capAt (ContactImplicitPairSeedCount.pairCost A G) i:=
-   ContactImplicitPairSeedCount.sum_geometricPairCost_le φ
+       capAt (RCN170.geometricPairCost A g) i) ≤
+         capAt (RCN170.pairCost A G) i:=
+   RCN170.sum_geometricPairCost_le φ
      (polynomialEmbedding_injective K) A G hG.ne_zero i
  have hfubini:
      (∑ g∈factors,∑ i:Fin 3,capAt agreementCap i*
-         capAt (ContactImplicitPairSeedCount.geometricPairCost A g) i)=
+         capAt (RCN170.geometricPairCost A g) i)=
        ∑ i:Fin 3,capAt agreementCap i*
          (∑ g∈factors,
-           capAt (ContactImplicitPairSeedCount.geometricPairCost A g) i):=by
+           capAt (RCN170.geometricPairCost A g) i):=by
    rw [Finset.sum_comm]
    apply Finset.sum_congr rfl
    intro i _
@@ -171,21 +171,21 @@ theorem implicit_pair_seed_bound
      rw [Finset.sum_mul]
    _ ≤ ∑ g∈factors,((n-w)*(∑ i:Fin 3,
        capAt agreementCap i*
-         capAt (ContactImplicitPairSeedCount.geometricPairCost A g) i)+
+         capAt (RCN170.geometricPairCost A g) i)+
        (e+1)*(a-w)*
-         capAt (ContactImplicitPairSeedCount.geometricPairCost A g) 2):=
+         capAt (RCN170.geometricPairCost A g) 2):=
      Finset.sum_le_sum (fun g hg => hsingle g hg)
    _=(n-w)*(∑ i:Fin 3,capAt agreementCap i*
        (∑ g∈factors,
-         capAt (ContactImplicitPairSeedCount.geometricPairCost A g) i))+
+         capAt (RCN170.geometricPairCost A g) i))+
        (e+1)*(a-w)*
          (∑ g∈factors,
-           capAt (ContactImplicitPairSeedCount.geometricPairCost A g) 2):=by
+           capAt (RCN170.geometricPairCost A g) 2):=by
      rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,hfubini]
    _ ≤ (n-w)*(∑ i:Fin 3,capAt agreementCap i*
-       capAt (ContactImplicitPairSeedCount.pairCost A G) i)+
+       capAt (RCN170.pairCost A G) i)+
        (e+1)*(a-w)*
-         capAt (ContactImplicitPairSeedCount.pairCost A G) 2:=
+         capAt (RCN170.pairCost A G) 2:=
      Nat.add_le_add (Nat.mul_le_mul_left (n-w) (Finset.sum_le_sum
        (fun i _ => Nat.mul_le_mul_left (capAt agreementCap i) (hbudget i))))
        (Nat.mul_le_mul_left ((e+1)*(a-w)) (hbudget 2))
@@ -195,6 +195,6 @@ theorem implicit_pair_seed_bound
          (2*w*jZ+1)*pairZCost ⟨A,G⟩)+
        (e+1)*(a-w)*pairZCost ⟨A,G⟩:=by
      simp [Fin.sum_univ_three,capAt,agreementCap,
-       ContactImplicitPairSeedCount.pairCost]
+       RCN170.pairCost]
 end
-end ProximityPrize.SubmissionLower.ContactImplicitPairSeedCountParameterizedResearch
+end ProximityPrize.SubmissionLower.RCN172

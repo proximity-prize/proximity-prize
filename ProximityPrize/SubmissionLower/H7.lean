@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.AZ
-namespace ProximityPrize.SubmissionLower.AlignmentScalarListBridge
+namespace ProximityPrize.SubmissionLower.RCN020
 noncomputable section Proofs
 variable {ι F:Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
 variable [Field F] [Fintype F] [DecidableEq F]
@@ -159,4 +159,4 @@ theorem scalarList_card_le
  · intro c hc
    exact (Finset.mem_filter.mp hc).2.2
 end Proofs
-end ProximityPrize.SubmissionLower.AlignmentScalarListBridge
+end ProximityPrize.SubmissionLower.RCN020

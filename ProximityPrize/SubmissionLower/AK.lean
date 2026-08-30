@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CB
-namespace ProximityPrize.SubmissionLower.ContactTightSingularLedgerResearch
+namespace ProximityPrize.SubmissionLower.RCN318
 open scoped BigOperators
-open ContactParameters6600Research
-open ContactSingularLedger6600Research
+open RCN223
+open RCN294
 theorem implicit_with_exceptions_tight_bound {I:Type} [Fintype I]
    (count:I → ℕ) (cost:I → DegreeVector) (exceptions:ℕ)
    (hy:(∑ i,(cost i).y) ≤ algebraicCap)
@@ -146,4 +146,4 @@ theorem maximal_residual_total_below_budget:
        maximalResidualH.countCap < 100000000000000000:=by
  rw [maximal_residual_count_caps.1,maximal_residual_count_caps.2]
  norm_num
-end ProximityPrize.SubmissionLower.ContactTightSingularLedgerResearch
+end ProximityPrize.SubmissionLower.RCN318

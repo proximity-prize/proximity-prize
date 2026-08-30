@@ -2,21 +2,21 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z9
 import ProximityPrize.SubmissionLower.AC
 import ProximityPrize.SubmissionLower.B
-namespace ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research
+namespace ProximityPrize.SubmissionLower.RCN221
 open scoped Classical BigOperators
-open ContactParameters6600Research
-open ContactGenericInitialPoint ContactGenericSurface ContactGeometricFirstTail
-open ContactGeometricFactorCover ContactRegularFactorGate ContactFactorCaps
-open ContactPrimeSeedIncidence ContactPolynomialSolutions ContactInterpolation
-open ContactTranslation ContactProperCutSeedCount
-open ContactOriginalRegularSeedCount
-open ContactRegularFactorFlag6600Research
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactResidualSupportParametersResearch
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactFlagBezout6543Research
-open ContactNearPencil6600FactorLedgerResearch
+open RCN223
+open RCN135 RCN136 RCN138
+open RCN137 RCN267 RCN081
+open RCN238 RCN231 RCN174
+open RCN319 RCN243
+open RCN222
+open RCN266
+open RCN159
+open RCN156
+open RCN275
+open RCN234
+open RCN095
+open RCN214
 noncomputable section
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
@@ -67,7 +67,7 @@ theorem residual_surface_weights_of_box
        show residualYSWeights 2=1 by rfl,
        show residualYSWeights 3=0 by rfl]
      simp only [Nat.mul_zero,Nat.mul_one,Nat.zero_add,Nat.add_zero]
-     norm_num [weightedCap,ContactParameters6600Research.multiplicity,
+     norm_num [weightedCap,RCN223.multiplicity,
        agreements,n,errors,w] at hb
      omega
    · apply (weightedTotalDegree_le_iff residualTotalWeights F 503).mpr
@@ -216,4 +216,4 @@ theorem original_regular_seed_bound_of_geometric_factor_counts
        ⟨F.degreeOf (3:Fin 4),F.degreeOf (1:Fin 4),
          F.degreeOf (2:Fin 4)⟩ hcaps.1 hcaps.2.1 hcaps.2.2
 end
-end ProximityPrize.SubmissionLower.ContactOriginalRegularResidualStage6600Research
+end ProximityPrize.SubmissionLower.RCN221

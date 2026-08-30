@@ -1,10 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.K
 import ProximityPrize.SubmissionLower.BD
-namespace ProximityPrize.SubmissionLower.ContactFlagKernelUniversalityResearch
+namespace ProximityPrize.SubmissionLower.RCN101
 open ProximityPrize.Benchmark
-open ContactFlagInterpolation6641Research ContactFlagRankKernel6641Research
-open ContactFlagTranslation6641Research
+open RCN100 RCN119
+open RCN122
 noncomputable section
 variable (K:Type*) [Field K]
 theorem block_equations_of_mem_ker
@@ -103,11 +103,11 @@ theorem nonzero_kernel_member_universal
 theorem flag_box_to_ordinary (D w L s:ℕ)
    (Q:MvPolynomial (Fin 4) K)
    (hQ:Q∈globalCoefficientBox K D w L s):
-   Q∈ContactInterpolation.globalCoefficientBox K D w L s:=by
+   Q∈RCN174.globalCoefficientBox K D w L s:=by
  intro d hd
  obtain ⟨hT,hR,hD⟩:=hQ hd
  exact ⟨by omega,hR,hD⟩
 theorem specialization_eq_ordinary (P:Polynomial K) (gamma:K):
-   specialization K P gamma=ContactTranslation.specialization K P gamma:=rfl
+   specialization K P gamma=RCN319.specialization K P gamma:=rfl
 end
-end ProximityPrize.SubmissionLower.ContactFlagKernelUniversalityResearch
+end ProximityPrize.SubmissionLower.RCN101

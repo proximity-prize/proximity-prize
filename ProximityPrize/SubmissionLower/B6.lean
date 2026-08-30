@@ -1,18 +1,18 @@
 import ProximityPrize.SubmissionLower.J3
 import ProximityPrize.SubmissionLower.P3
-namespace ProximityPrize.SubmissionLower.ContactFirstTailProjection6731Research
+namespace ProximityPrize.SubmissionLower.RCN088
 open scoped Classical BigOperators
 open Polynomial KaehlerDifferential
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveJointProjectionBounds
-open ActualCoordinateDegreeSum ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactRegularComponentCover ContactProperCutSeedCount
-open ContactFlagBezout6543Research ContactIdentityResidualIterationResearch
-open ContactResidualSupportParametersResearch ContactSharpTaylorFixedMeet6656Research
-open ContactWeakSeparableSeparatorResearch ContactScalarCoordinateSeparator6630Research
-open ContactAdaptiveNestedProjection6600Research ContactAdaptiveNestedProjectionActive6630Research
-open ContactAdaptiveNestedUnitFamilyActive6630Research ContactAdaptiveNestedYZFamily6630Research
-open ContactRegularComponentYZPositivity6630Research ContactResidualStageDerivative6600Research
-open ContactFirstTailCertificate6731Research
+open RCN002 RCN005 RCN003
+open RCN001 RCN136 RCN231 RCN319
+open RCN238 RCN264 RCN243
+open RCN095 RCN159
+open RCN275 RCN287
+open RCN341 RCN277
+open RCN037 RCN038
+open RCN040 RCN041
+open RCN265 RCN274
+open RCN086
 noncomputable section
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 50000
@@ -25,18 +25,18 @@ local instance:DecidableEq Omega:=Classical.decEq Omega
 local instance:DecidableEq Iota:=Classical.decEq Iota
 theorem firstTail_in_sharp_flag
    (S:ResidualStage phi Gamma x pchar e flag w
-     (ContactMovingAgreementCertificate6719Research.support a b s)):
+     (RCN198.support a b s)):
    PolynomialInFlag
-     (sharpResidualAgreementFlag (ContactMovingAgreementCertificate6719Research.support a b s) (w+1))
+     (sharpResidualAgreementFlag (RCN198.support a b s) (w+1))
      (globalTailCut phi S.F (w+1)):=by
  let Hsupport:ResidualSupportData
-     (ContactMovingAgreementCertificate6719Research.support a b s) S.F:=
+     (RCN198.support a b s) S.F:=
    ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
  exact globalTailCut_in_sharp_flag phi a b s S.F
    Hsupport.coordinate_bounds.2.1 Hsupport.ys_weight Hsupport.total_weight (w+1)
 theorem exists_firstTail_projection
    (S:ResidualStage phi Gamma x pchar e flag w
-     (ContactMovingAgreementCertificate6719Research.support a b s))
+     (RCN198.support a b s))
    (hproper:¬ S.G∣globalTailCut phi S.F (w+1))
    (hGdegree:∀ j:Fin 3,S.G.degreeOf j < pchar)
    (hmixedZ:coordinateMixedDegree Omega S.G (globalTailCut phi S.F (w+1)) 2 < pchar):
@@ -44,7 +44,7 @@ theorem exists_firstTail_projection
        (globalTailCut phi S.F (w+1)) (regularitySurface phi S.F),
        SeparableLiteralCoordinate C.1,
      Nonempty (AdaptiveUnitProjectionFamilyYZ base flag
-       (sharpResidualAgreementFlag (ContactMovingAgreementCertificate6719Research.support a b s) (w+1))):=by
+       (sharpResidualAgreementFlag (RCN198.support a b s) (w+1))):=by
  classical
  let T:=globalTailCut phi S.F (w+1)
  let H:=regularitySurface phi S.F
@@ -82,16 +82,16 @@ theorem exists_firstTail_projection
      (regularComponent_T_mem Omega S.G T H C)
      hproper hGdegree hmixedZ
  obtain ⟨P⟩:=exists_adaptiveUnitProjectionFamilyYZ_of_active_nested
-   flag (sharpResidualAgreementFlag (ContactMovingAgreementCertificate6719Research.support a b s) (w+1))
-   base hactive hZ (ContactTerminalAdaptiveProjection6656Research.residualStage_pderiv_one_ne_zero_of_support S)
+   flag (sharpResidualAgreementFlag (RCN198.support a b s) (w+1))
+   base hactive hZ (RCN315.residualStage_pderiv_one_ne_zero_of_support S)
    S.irreducible_G hproper
    ((support_subset_flagSupport_iff flag S.G).2 hGflag)
    ((support_subset_flagSupport_iff
-     (sharpResidualAgreementFlag (ContactMovingAgreementCertificate6719Research.support a b s) (w+1)) T).2 hTflag)
+     (sharpResidualAgreementFlag (RCN198.support a b s) (w+1)) T).2 hTflag)
  exact ⟨base,⟨P⟩⟩
 theorem exists_firstTail_projection_of_caps
    (S:ResidualStage phi Gamma x pchar e flag w
-     (ContactMovingAgreementCertificate6719Research.support a b s))
+     (RCN198.support a b s))
    (hproper:¬ S.G∣globalTailCut phi S.F (w+1))
    (hflagChar:flag.yz+flag.all < pchar∧flag.all < pchar∧
      flag.zOnly+flag.yz+flag.all < pchar)
@@ -101,25 +101,25 @@ theorem exists_firstTail_projection_of_caps
        (globalTailCut phi S.F (w+1)) (regularitySurface phi S.F),
        SeparableLiteralCoordinate C.1,
      Nonempty (AdaptiveUnitProjectionFamilyYZ base flag
-       (sharpResidualAgreementFlag (ContactMovingAgreementCertificate6719Research.support a b s) (w+1))):=by
+       (sharpResidualAgreementFlag (RCN198.support a b s) (w+1))):=by
  let T:=globalTailCut phi S.F (w+1)
- let supp:=ContactMovingAgreementCertificate6719Research.support a b s
+ let supp:=RCN198.support a b s
  have hsy:supp.s < supp.ys:=by
    change s+2 < b+s+3
    omega
  have hTflag:PolynomialInFlag (sharpResidualAgreementFlag supp (w+1)) T:=
    firstTail_in_sharp_flag S
  obtain ⟨hGY,hGS,hGZ⟩:=
-   ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag S.flag_support
+   RCN314.degree_bounds_of_polynomialInFlag S.flag_support
  obtain ⟨hTY,hTS,_⟩:=
-   ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag hTflag
+   RCN314.degree_bounds_of_polynomialInFlag hTflag
  have hTY':T.degreeOf 0 ≤ 1+(w+1)*(2*(b+s+3)-2):=by
    apply hTY.trans_eq
    exact sharpResidualAgreementFlag_ys supp hsy (w+1)
  have hTS':T.degreeOf 1 ≤ (2*(s+2)-1)*(w+1):=by
    apply hTS.trans_eq
    simp only [sharpResidualAgreementFlag,sharpAgreementDirection,supp,
-     ContactMovingAgreementCertificate6719Research.support]
+     RCN198.support]
  have hGdegree:∀ j:Fin 3,S.G.degreeOf j < pchar:=by
    intro j
    fin_cases j
@@ -132,4 +132,4 @@ theorem exists_firstTail_projection_of_caps
      (Nat.mul_le_mul hGY hTS')).trans_lt hmixed
  exact exists_firstTail_projection S hproper hGdegree hmixZ
 end
-end ProximityPrize.SubmissionLower.ContactFirstTailProjection6731Research
+end ProximityPrize.SubmissionLower.RCN088

@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y2
-namespace ProximityPrize.SubmissionLower.ContactImplicitLiftParameters
-open ContactAlignmentParameters
+namespace ProximityPrize.SubmissionLower.RCN168
+open RCN051
 def implicitWeightedCap:ℕ:=(2*slopeCap-1)*weightedCap
 def implicitYCap:ℕ:=(implicitWeightedCap-1)/w
 def liftedSurface:DegreeVector:=⟨implicitYCap,1,algebraicCap⟩
@@ -22,7 +22,7 @@ theorem lifted_parameter_values:
    liftedLastTail=⟨13645635841,29924640,94801259520⟩∧
    liftedAgreement=⟨59768377,131071,415232929⟩:=by
  norm_num [implicitWeightedCap,implicitYCap,liftedLastTail,liftedAgreement,
-   algebraicCap,weightedCap,ContactAlignmentParameters.multiplicity,agreements,
+   algebraicCap,weightedCap,RCN051.multiplicity,agreements,
    w,slopeCap,seedTotalCap]
 theorem lifted_projection_values:
    mixed liftedSurface implicitCut unitY=1584∧
@@ -30,7 +30,7 @@ theorem lifted_projection_values:
    mixed liftedSurface implicitCut unitZ=228:=by
  norm_num [mixed,liftedSurface,implicitCut,implicitYCap,implicitWeightedCap,
    unitY,unitR,unitZ,algebraicCap,weightedCap,
-   ContactAlignmentParameters.multiplicity,agreements,w,slopeCap,seedTotalCap]
+   RCN051.multiplicity,agreements,w,slopeCap,seedTotalCap]
 theorem lifted_projection_characteristic_gates:
    implicitWeightedCap < prime∧
    mixed liftedSurface implicitCut unitY < prime∧
@@ -43,14 +43,14 @@ theorem lifted_singular_numerator_exact:
    liftedSingularNumerator=3516047537415780312:=by
  norm_num [liftedSingularNumerator,mixed,liftedSurface,implicitCut,liftedLastTail,
    liftedAgreement,implicitYCap,implicitWeightedCap,unitZ,algebraicCap,
-   weightedCap,ContactAlignmentParameters.multiplicity,agreements,w,gap,
+   weightedCap,RCN051.multiplicity,agreements,w,gap,
    errors,n,slopeCap,seedTotalCap]
 theorem lifted_total_numerator_exact:
    liftedTotalNumerator=143697127886496891242366373:=by
  rw [liftedTotalNumerator,lifted_singular_numerator_exact]
  norm_num [regularNumerator,cutNumerator,wholeNumerator,mixed,
    firstTail,lastTail,tailVector,agreementVector,unitY,unitR,unitZ,
-   yCap,weightedCap,ContactAlignmentParameters.multiplicity,agreements,
+   yCap,weightedCap,RCN051.multiplicity,agreements,
    w,gap,errors,n,slopeCap,seedTotalCap]
 theorem lifted_division_certificate:
    liftedTotalNumerator=49925776167317549*gap^2+2316504024∧
@@ -66,4 +66,4 @@ theorem lifted_strict_budget:
    liftedTotalNumerator < alignmentBudget*gap^2:=by
  rw [lifted_total_numerator_exact,denominator_exact]
  norm_num [alignmentBudget]
-end ProximityPrize.SubmissionLower.ContactImplicitLiftParameters
+end ProximityPrize.SubmissionLower.RCN168

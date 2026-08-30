@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.K
-namespace ProximityPrize.SubmissionLower.ContactKernelMemberUniversality
+namespace ProximityPrize.SubmissionLower.RCN182
 open ProximityPrize.Benchmark
-open ContactInterpolation ContactRankKernel ContactTranslation
+open RCN174 RCN256 RCN319
 noncomputable section
 variable (K:Type*) [Field K]
 theorem block_equations_of_mem_ker
@@ -99,4 +99,4 @@ theorem nonzero_kernel_member_universal
  exact specialization_eq_zero_of_agreements K D w L s m a nodes u0 u1
    theta htheta hD hDa P gamma support hP hcard hvalues
 end
-end ProximityPrize.SubmissionLower.ContactKernelMemberUniversality
+end ProximityPrize.SubmissionLower.RCN182

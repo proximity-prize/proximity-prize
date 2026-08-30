@@ -1,13 +1,13 @@
 import ProximityPrize.SubmissionLower.Y6
 import ProximityPrize.SubmissionLower.E5
-namespace ProximityPrize.SubmissionLower.ContactFirstTailReducedCertificate6732Research
-open ContactGenericSurface ContactTaylorNumerators ContactPrimeSeedIncidence
-open ContactResidualSupportParametersResearch
-open ContactFlagBezout6543Research
-open ContactMovingAgreementCertificate6719Research
-open ContactFirstTailCertificate6731Research
-open ContactReducedTaylorNumerators6643Research
-open ContactReducedTaylorProfileResearch
+namespace ProximityPrize.SubmissionLower.RCN089
+open RCN136 RCN313 RCN238
+open RCN275
+open RCN095
+open RCN198
+open RCN086
+open RCN262
+open RCN263
 noncomputable section
 variable {K Omega : Type} [Field K] [Field Omega]
 def reducedGlobalTailCut (phi : Polynomial K →+* Omega)
@@ -37,4 +37,4 @@ theorem reducedGlobalTailCut_in_flag
  exact surfaceMap_reducedAgreement_in_flag phi support H d
    (tailSelector d) 0 0 0
 end
-end ProximityPrize.SubmissionLower.ContactFirstTailReducedCertificate6732Research
+end ProximityPrize.SubmissionLower.RCN089

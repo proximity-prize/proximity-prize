@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.O3
 import ProximityPrize.SubmissionLower.X
-namespace ProximityPrize.SubmissionLower.ContactRationalRegularZero6676Research
+namespace ProximityPrize.SubmissionLower.RCN257
 open scoped Classical BigOperators WithZero
-open CoordinateBoxZeroCount ActualAffineModelPlaces
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveScalarTowers
-open ActualCurveZeroCount ContactRegularZeroBudget6676Research
-open ContactWeakSeparableSeparatorResearch
+open RCN344 RCN000
+open RCN002 RCN005 RCN006
+open RCN007 RCN271
+open RCN341
 noncomputable section
 variable (K L:Type) [Field K] [Field L] [Algebra K L] [IsAlgClosed K]
 variable [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
@@ -29,7 +29,7 @@ theorem model_regular_value_eq_one (ψ:A →ₐ[K] K) (h:A) (hψ:ψ h≠0):
 theorem model_regular_quotient_zero_order
    (ψ:A →ₐ[K] K) (a h:A) (k:ℕ) (ha:a≠0)
    (hzero:ψ a=0) (hregular:ψ h≠0):
-   1 ≤ CommonPlaceBalance.order K L (modelPlace K L A ψ)
+   1 ≤ RCN026.order K L (modelPlace K L A ψ)
      (algebraMap A L a/(algebraMap A L h)^k):=by
  have hv:=model_regular_value_eq_one K L A ψ h hregular
  change 1 ≤-((modelPlace K L A ψ).val
@@ -39,7 +39,7 @@ theorem model_regular_quotient_zero_order
 theorem finite_model_regular_zeros_le_poleMass
    (a h:A) (k cost:ℕ) (ha:a≠0) (hh:h≠0)
    (hpole:∀ W:Finset (Place K L),
-     (∑ v∈W,CoordinatePoleMass.poleOrder K L v
+     (∑ v∈W,RCN346.poleOrder K L v
        (algebraMap A L a/(algebraMap A L h)^k)) ≤ (cost:ℤ))
    (S:Finset (A →ₐ[K] K))
    (hzero:∀ ψ∈S,ψ a=0) (hregular:∀ ψ∈S,ψ h≠0):
@@ -52,12 +52,12 @@ theorem finite_model_regular_zeros_le_poleMass
    simpa only [map_zero] using (IsFractionRing.injective A L).ne hh
  have hf:f≠0:=div_ne_zero hfa (pow_ne_zero k hfh)
  let U:=S.image (modelPlace K L A)
- have hU:∀ v∈U,1 ≤ CommonPlaceBalance.order K L v f:=by
+ have hU:∀ v∈U,1 ≤ RCN026.order K L v f:=by
    intro v hv
    obtain ⟨ψ,hψ,rfl⟩:=Finset.mem_image.mp hv
    exact model_regular_quotient_zero_order K L A ψ a h k ha
      (hzero ψ hψ) (hregular ψ hψ)
- have hcount:=CommonPlaceBalance.finite_zero_places_le_poleMass K L f hf U hU
+ have hcount:=RCN026.finite_zero_places_le_poleMass K L f hf U hU
  have hcard:U.card=S.card:=
    Finset.card_image_of_injective _ (modelPlace_injective K L A)
  have hb:(S.card:ℤ) ≤ cost:=by
@@ -77,7 +77,7 @@ theorem finite_regular_zero_bound_of_separator
      letI:Algebra (RatFunc K) (CoordinateField K P):=
        rationalBaseAlgebra K P base.index base.transcendental
      ∀ W:Finset (Place K (CoordinateField K P)),
-       (∑ v∈W,CoordinatePoleMass.poleOrder K (CoordinateField K P) v
+       (∑ v∈W,RCN346.poleOrder K (CoordinateField K P) v
          (MvPolynomial.aeval (coordinate K P) F/
            (MvPolynomial.aeval (coordinate K P) H)^k)) ≤ (cost:ℤ)):
    FiniteRegularZeroSetBound P H F cost:=by
@@ -127,4 +127,4 @@ theorem finite_regular_zero_bound_of_separator
  rwa [hcard] at hcount
 end ActualCurve
 end
-end ProximityPrize.SubmissionLower.ContactRationalRegularZero6676Research
+end ProximityPrize.SubmissionLower.RCN257

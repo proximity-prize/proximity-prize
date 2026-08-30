@@ -1,16 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J6
-namespace ProximityPrize.SubmissionLower.ContactTightFixedMeet6656Research
+namespace ProximityPrize.SubmissionLower.RCN317
 open scoped Classical BigOperators
-open ContactInterpolation ContactTranslation ContactPrimeSeedIncidence
-open ContactRegularFactorFlag6600Research
-open ContactGlobalSelectedFamilies6600Research
-open ContactSingularBranch6600Research
-open ContactSingularLedger6600Research
-open ContactTightSingularLedgerResearch
-open ContactRobustFixedMeet6656Research
-open ContactGlobalSelectedFamilies6656Research
-open ContactFixedMeetSingular6656Research
+open RCN174 RCN319 RCN238
+open RCN266
+open RCN140
+open RCN291
+open RCN294
+open RCN318
+open RCN276
+open RCN141
+open RCN092
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 35000
@@ -117,4 +117,4 @@ theorem meet_global_count_lt_tightFixedCost_of_regular_factors
    selected Gamma nodes x u0 u1 hinj hnodes hdegree hsolution hagreement
    hnoPencil hregular).trans_lt (Nat.lt_succ_self _)
 end
-end ProximityPrize.SubmissionLower.ContactTightFixedMeet6656Research
+end ProximityPrize.SubmissionLower.RCN317

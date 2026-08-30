@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BT
-namespace ProximityPrize.SubmissionLower.ContactCountingLedger
-open ContactAlignmentParameters ContactImplicitLiftParameters
+namespace ProximityPrize.SubmissionLower.RCN070
+open RCN051 RCN168
 open scoped BigOperators
 def addVector (a b:DegreeVector):DegreeVector:=
  ⟨a.y+b.y,a.r+b.r,a.z+b.z⟩
@@ -242,4 +242,4 @@ theorem final_family_ledger {I J:Type} [Fintype I] [Fintype J]
    exceptions hreg himp
  exact below_budget_of_lifted_scaled_bound cardinality
    ((Nat.mul_le_mul_right (gap^2) hcover).trans hscaled)
-end ProximityPrize.SubmissionLower.ContactCountingLedger
+end ProximityPrize.SubmissionLower.RCN070

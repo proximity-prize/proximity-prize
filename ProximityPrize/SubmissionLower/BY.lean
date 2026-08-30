@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AA
-namespace ProximityPrize.SubmissionLower.ContactJointTaylorMiddleCap6631Research
+namespace ProximityPrize.SubmissionLower.RCN179
 open scoped BigOperators
-open ContactFactorCaps ContactImplicitContactLift ContactTaylorNumerators
-open ContactPost6464MinkowskiRecurrenceResearch
+open RCN081 RCN167 RCN313
+open RCN234
 noncomputable section
 variable {K:Type*} [Field K]
 abbrev Poly4 (K:Type*) [Field K]:=MvPolynomial (Fin 4) K
@@ -228,4 +228,4 @@ theorem agreementNumerator_wt_le_equal_weight
          _ ≤ max (weights 1) (weights 3)+w*(2*(C-weights 2)):=
            Nat.add_le_add_right hz _
 end
-end ProximityPrize.SubmissionLower.ContactJointTaylorMiddleCap6631Research
+end ProximityPrize.SubmissionLower.RCN179

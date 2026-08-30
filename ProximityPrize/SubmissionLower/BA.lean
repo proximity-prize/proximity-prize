@@ -1,13 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z0
 import ProximityPrize.SubmissionLower.AD
-namespace ProximityPrize.SubmissionLower.ContactFlagProjectionPositivity6543Research
+namespace ProximityPrize.SubmissionLower.RCN117
 open scoped Classical
-open ContactRegularFactorGate
-open ContactFlagTriangularProjectionResearch
-open ContactFlagExactSeparableProjection6543Research
-open ContactFlagPrincipalCycles6543Research
-open ActualPlaneCoordinateKernel
+open RCN267
+open RCN125
+open RCN097
+open RCN116
+open RCN011
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 20000
@@ -105,13 +105,13 @@ theorem flag_v_outer_positive_of_directional
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega] [CharP Omega p]
 variable {G T H:MvPolynomial (Fin 3) Omega}
 variable
-   {hseparator:∀ C:ContactRegularComponentCover.RegularComponent
+   {hseparator:∀ C:RCN264.RegularComponent
        Omega G T H,
      Transcendental Omega
-       (ActualCurveCoordinateField.coordinate Omega C.1 2)}
-   {hproj:∀ C:ContactRegularComponentCover.RegularComponent
+       (RCN002.coordinate Omega C.1 2)}
+   {hproj:∀ C:RCN264.RegularComponent
        Omega G T H,
-     ActualCurveZeroCount.ProjectionsFiniteSeparable Omega C.1}
+     RCN007.ProjectionsFiniteSeparable Omega C.1}
 theorem flagProjectionPositivity_of_degree_directional
    (D:NestedFlagProjectionData hseparator hproj)
    (hSpos:0 < G.degreeOf 1) (hSchar:G.degreeOf 1 < p)
@@ -134,4 +134,4 @@ theorem flagProjectionPositivity_of_derivatives
    huz.2⟩
 end Characteristic
 end
-end ProximityPrize.SubmissionLower.ContactFlagProjectionPositivity6543Research
+end ProximityPrize.SubmissionLower.RCN117

@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Q
-namespace ProximityPrize.SubmissionLower.ContactFactorCaps
-open ContactInterpolation
+namespace ProximityPrize.SubmissionLower.RCN081
+open RCN174
 noncomputable section
 def weightEmbed (weights:Fin 4 → ℕ):(Fin 4 →₀ ℕ) →+(Fin 5 →₀ ℕ) where
  toFun d:=Finsupp.single 0 (d 0)+Finsupp.single 1 (d 1)+
@@ -241,4 +241,4 @@ theorem separated_factor_caps_of_prod_dvd {ι:Type*}
  have hcaps:=degree_bounds_of_mem_box Q D w L s hw hbox
  exact ⟨hsum.1.trans hcaps.1,hsum.2.1.trans hcaps.2.1,hsum.2.2.trans hcaps.2.2⟩
 end
-end ProximityPrize.SubmissionLower.ContactFactorCaps
+end ProximityPrize.SubmissionLower.RCN081

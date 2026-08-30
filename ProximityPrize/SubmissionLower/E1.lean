@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z6
 import ProximityPrize.SubmissionLower.U
-namespace ProximityPrize.SubmissionLower.ContactProfileYZFactorLedgerResearch
+namespace ProximityPrize.SubmissionLower.RCN240
 open scoped Classical BigOperators
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualTerminalIncidenceResearch
-open ContactResidualSupportParametersResearch
-open ContactRobustFixedMeet6656Research
-open ContactInterpolation ContactSelectedSeedDecomposition
-open ContactRegularFactorFlag6600Research
-open ContactPrimeSeedIncidence ContactFlagBezout6543Research
+open RCN159
+open RCN164
+open RCN275
+open RCN276
+open RCN174 RCN286
+open RCN266
+open RCN238 RCN095
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 50000
 def factorPrimaryForDirection
@@ -185,4 +185,4 @@ theorem recursive_scaled_factorYZ
    _=factorRegularLedgerYZForDirection p direction flag:=
      incidence_cost_eq_factorRegularLedgerYZ p direction flag
 end
-end ProximityPrize.SubmissionLower.ContactProfileYZFactorLedgerResearch
+end ProximityPrize.SubmissionLower.RCN240

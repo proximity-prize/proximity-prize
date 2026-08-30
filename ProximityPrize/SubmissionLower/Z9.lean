@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.L0
 import ProximityPrize.SubmissionLower.AD
 import ProximityPrize.SubmissionLower.B2
-namespace ProximityPrize.SubmissionLower.ContactOriginalRegularSeedCount
+namespace ProximityPrize.SubmissionLower.RCN222
 open scoped Classical BigOperators
-open ContactAlignmentParameters ContactCountingCaps ContactCountingLedger
-open ContactGenericInitialPoint ContactGenericSurface ContactGeometricFirstTail
-open ContactGeometricFactorCover ContactRegularFactorGate ContactFactorCaps
-open ContactSurfaceSeedCount ContactPrimeSeedIncidence ContactProperCutSeedCount
-open ContactPolynomialSolutions ContactInterpolation ContactTranslation
-open ContactJointSurfaceSeedCount ContactJointSeedCaps
+open RCN051 RCN068 RCN070
+open RCN135 RCN136 RCN138
+open RCN137 RCN267 RCN081
+open RCN306 RCN238 RCN243
+open RCN231 RCN174 RCN319
+open RCN178 RCN177
 noncomputable section
 variable (K:Type) [Field K]
 local instance:DecidableEq K:=Classical.decEq K
@@ -114,7 +114,7 @@ theorem original_regular_seed_bound
  have hZ:F.degreeOf 3 ≤ seedTotalCap:=hc.2.2
  have hFseed:seedDegree F ≤ seedTotalCap:=by
    exact ((mem_globalCoefficientBox_iff F weightedCap w seedTotalCap slopeCap
-     (by norm_num [weightedCap,ContactAlignmentParameters.multiplicity,
+     (by norm_num [weightedCap,RCN051.multiplicity,
        agreements])).mp hbox).1
  have hsmall:F.degreeOf 2 < prime:=hR.trans_lt (by norm_num [slopeCap,prime])
  have hcount (g:GeometricFactor K F):
@@ -125,7 +125,7 @@ theorem original_regular_seed_bound
    have hHproper:¬ g.1∣surfaceMap (polynomialEmbedding K)
        (MvPolynomial.pderiv (2:Fin 4) F):=by
      simpa only [canonical_geometricSurfaceMap] using hgate.2.2.2.2
-   have hgcaps:HasCaps g.1 ContactProjectionParameters.surfaceVector:=by
+   have hgcaps:HasCaps g.1 RCN242.surfaceVector:=by
      intro i
      fin_cases i
      · exact (geometricFactor_degree_le K F hF.ne_zero g 0).trans hY
@@ -141,7 +141,7 @@ theorem original_regular_seed_bound
      rw [←seed_weight]
      exact (MvPolynomial.le_weightedTotalDegree seedWeights hd).trans hFseed
    have hgJoint:∀ e∈
-       (TrivariateRationalCollection.rationalMap (GenericField K)
+       (RCN371.rationalMap (GenericField K)
          (Equiv.swap 0 1) g.1).support,
        e 0+e 1 ≤ seedTotalCap:=
      rationalMap_joint_support_of_dvd g.1
@@ -168,4 +168,4 @@ theorem original_regular_seed_bound
      Finset.sum_le_sum (fun g _ => hcount g)
    _ ≤ wholeNumerator (originalDegreeVector K F):=sum_wholeNumerator_geometricFactors_le K F hF.ne_zero
 end
-end ProximityPrize.SubmissionLower.ContactOriginalRegularSeedCount
+end ProximityPrize.SubmissionLower.RCN222

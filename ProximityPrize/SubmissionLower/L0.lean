@@ -2,16 +2,16 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CD
 import ProximityPrize.SubmissionLower.K8
 import ProximityPrize.SubmissionLower.K9
-namespace ProximityPrize.SubmissionLower.ContactJointSurfaceSeedCount
+namespace ProximityPrize.SubmissionLower.RCN178
 open scoped Classical BigOperators
-open ContactAlignmentParameters ContactCountingCaps ContactGenericSurface
-open ContactPrimeSeedIncidence ContactProperCutSeedCount ContactComponentPencils
-open ContactPolynomialSolutions ContactTranslation ActualCoordinateDegreeSum
-open ContactInterpolation
-open ContactSurfaceSeedCount ContactJointProperCutSeedCount ContactJointSeedCaps
-open ActualCurveJointProjectionBounds ActualPlaneJointProjection
-open ActualPlaneCoordinateKernel ActualPlaneCoordinateCaps ActualPlanePositiveOrder
-open TrivariateRationalCollection
+open RCN051 RCN068 RCN136
+open RCN238 RCN243 RCN065
+open RCN231 RCN319 RCN001
+open RCN174
+open RCN306 RCN176 RCN177
+open RCN003 RCN012
+open RCN011 RCN009 RCN013
+open RCN371
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
 local instance:DecidableEq K:=Classical.decEq K
@@ -137,7 +137,7 @@ theorem whole_surface_seed_bound_fixed_joint_R
    (hr:0 < G.degreeOf 1)
    (hHproper:¬ G∣surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F))
    (hbox:F∈globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-   (hGcaps:HasCaps G ContactProjectionParameters.surfaceVector)
+   (hGcaps:HasCaps G RCN242.surfaceVector)
    (hGjoint:∀ e∈(rationalMap Ω (Equiv.swap 0 1) G).support,
      e 0+e 1 ≤ seedTotalCap)
    (hFseed:seedDegree F ≤ seedTotalCap)
@@ -184,15 +184,15 @@ theorem whole_surface_seed_bound_fixed_joint_R
      rw [hzero]
      exact dvd_zero G
    have hG0:G.degreeOf 0 ≤ 25:=by
-     simpa [ContactProjectionParameters.surfaceVector,capAt,yCap,weightedCap,
-       ContactAlignmentParameters.multiplicity,agreements,w] using hGcaps 0
+     simpa [RCN242.surfaceVector,capAt,yCap,weightedCap,
+       RCN051.multiplicity,agreements,w] using hGcaps 0
    have hG2:G.degreeOf 2 ≤ 176:=by
-     simpa [ContactProjectionParameters.surfaceVector,capAt,seedTotalCap] using hGcaps 2
+     simpa [RCN242.surfaceVector,capAt,seedTotalCap] using hGcaps 2
    have hT0:T.degreeOf 0 ≤ 6422480:=by
      have h:=hcap i 0
      change T.degreeOf 0 ≤ capAt agreementVector 0 at h
      norm_num [capAt,agreementVector,yCap,weightedCap,
-       ContactAlignmentParameters.multiplicity,agreements,w] at h
+       RCN051.multiplicity,agreements,w] at h
      exact h
    have hGouter:(planeMap Ω order G).natDegree ≤ 25:=by
      exact (planeMap_natDegree_le Ω order G).trans (by simpa [order] using hG0)
@@ -241,4 +241,4 @@ theorem whole_surface_seed_bound_fixed_joint_R
      unfold fiberNumerator wholeNumerator gap
      ring
 end
-end ProximityPrize.SubmissionLower.ContactJointSurfaceSeedCount
+end ProximityPrize.SubmissionLower.RCN178

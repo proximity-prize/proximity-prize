@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.AS
-namespace ProximityPrize.SubmissionLower.ContactPlaneLocalOrderPrimary6732Research
+namespace ProximityPrize.SubmissionLower.RCN225
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -108,4 +108,4 @@ theorem exponent_mul_residueDegree_le_length_span_surface_sup_relation_pow
      (R:=R) relationBar hrelationBarNe n
  exact hlocal.trans_eq (e₁.trans e₂).toLinearEquiv.length_eq
 end
-end ProximityPrize.SubmissionLower.ContactPlaneLocalOrderPrimary6732Research
+end ProximityPrize.SubmissionLower.RCN225

@@ -1,9 +1,9 @@
 import ProximityPrize.SubmissionLower.Y9
-namespace ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedResidueWeight6733Research
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
-open ActualCurveCoordinateField ContactRegularComponentCover
-open ContactFlagAffineFamilyDegree6543Research ContactFlagResidueDegreeCostAdapter6732Research
-open ContactPlaneRelationCoefficientFiber6733Research
+namespace ProximityPrize.SubmissionLower.RCN111
+open RCN011 RCN021
+open RCN002 RCN264
+open RCN093 RCN120
+open RCN226
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -31,4 +31,4 @@ noncomputable def indexedPlaneResidueWeight (a:A):ℕ:=by
  letI:Module (AdjoinRoot q) (PlaneRing Omega ⧸ J):=Algebra.toModule
  exact Module.finrank (AdjoinRoot q) (PlaneRing Omega ⧸ J)
 end
-end ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedResidueWeight6733Research
+end ProximityPrize.SubmissionLower.RCN111

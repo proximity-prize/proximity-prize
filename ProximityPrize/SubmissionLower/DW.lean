@@ -3,17 +3,17 @@ import ProximityPrize.SubmissionLower.N5
 import ProximityPrize.SubmissionLower.V
 import ProximityPrize.SubmissionLower.BW
 import ProximityPrize.SubmissionLower.Z9
-namespace ProximityPrize.SubmissionLower.ContactAsymmetricResidualStageResearch
+namespace ProximityPrize.SubmissionLower.RCN052
 open scoped Classical BigOperators
-open ContactRecursiveResidualStages6656Research
-open ContactTightSingularLedgerResearch ContactSingularLedger6600Research
-open ContactSelectedSeedDecomposition ContactImplicitPairBudgets
-open ContactImplicitContactLift ContactSingularAuxiliary ContactFactorCover
-open ContactFactorCaps ContactInterpolation ContactTranslation
-open ContactGenericSurface ContactGeometricFactorCover ContactGeometricFirstTail
-open ContactGenericInitialPoint
-open ContactOriginalRegularSeedCount ContactProperCutSeedCount ContactCountingCaps
-open ContactPrimeSeedIncidence ActualCoordinateDegreeSum
+open RCN260
+open RCN318 RCN294
+open RCN286 RCN169
+open RCN167 RCN290 RCN082
+open RCN081 RCN174 RCN319
+open RCN136 RCN137 RCN138
+open RCN135
+open RCN222 RCN243 RCN068
+open RCN238 RCN001
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
@@ -129,11 +129,11 @@ theorem geometricFactor_not_dvd_second
    g hgirred hgeo).mp
  simpa only [canonical_geometricSurfaceMap] using hgT
 def regularVector (P:UnequalParameters)
-   (F:MvPolynomial (Fin 4) K):ContactParameters6600Research.DegreeVector:=
+   (F:MvPolynomial (Fin 4) K):RCN223.DegreeVector:=
  ⟨F.degreeOf 2*P.rightZ+F.degreeOf 3*P.rightR,
    F.degreeOf 1*P.rightZ+F.degreeOf 3*P.rightY,
    F.degreeOf 1*P.rightR+F.degreeOf 2*P.rightY⟩
-def regularCapAt (v:ContactParameters6600Research.DegreeVector):Fin 3 → ℕ:=
+def regularCapAt (v:RCN223.DegreeVector):Fin 3 → ℕ:=
  ![v.y,v.r,v.z]
 theorem sum_coordinateMixedDegree_geometricFactors_le
    (P:UnequalParameters) (F T:MvPolynomial (Fin 4) K) (hF:F≠0)
@@ -179,7 +179,7 @@ theorem sum_coordinateMixedDegree_geometricFactors_le
    simpa only [Nat.add_comm,Nat.mul_comm] using
      Nat.add_le_add (Nat.mul_le_mul hT0 hsum2)
        (Nat.mul_le_mul hsum0 hT2)
- · simp only [ActualCoordinateDegreeSum.coordinateMixedDegree_two,
+ · simp only [RCN001.coordinateMixedDegree_two,
      regularCapAt,regularVector,Matrix.cons_val_two]
    change (∑ geom:GeometricFactor K F,
        ((surfaceMap (polynomialEmbedding K) T).degreeOf 0*geom.1.degreeOf 1+
@@ -223,9 +223,9 @@ theorem regularPairSeeds_bound
  classical
  let phi:=polynomialEmbedding K
  let Delta:=regularPairSeeds Q T selected Gamma F
- let carrierCap:ContactAlignmentParameters.DegreeVector:=
+ let carrierCap:RCN051.DegreeVector:=
    ⟨P.leftY,P.leftR,P.leftZ⟩
- let cutCap:ContactAlignmentParameters.DegreeVector:=
+ let cutCap:RCN051.DegreeVector:=
    ⟨P.rightY,P.rightR,P.rightZ⟩
  have hFspec:=positiveRFactors_spec Q F.1 F.2
  have hFne:F.1≠0:=hFspec.1.ne_zero
@@ -269,18 +269,18 @@ theorem regularPairSeeds_bound
      · exact hleftZSmall
    have hgates:=actual_characteristic_gates g.1 (surfaceMap phi T)
      carrierCap cutCap p hgCaps hTCaps hcarrierSmall
-     (by simpa [carrierCap,cutCap,ContactAlignmentParameters.mixed,
-         ContactAlignmentParameters.unitY,UnequalParameters.mixedCost,
+     (by simpa [carrierCap,cutCap,RCN051.mixed,
+         RCN051.unitY,UnequalParameters.mixedCost,
          capAt,Nat.add_comm,Nat.mul_comm] using hmixedYSmall)
-     (by simpa [carrierCap,cutCap,ContactAlignmentParameters.mixed,
-         ContactAlignmentParameters.unitR,UnequalParameters.mixedCost,
+     (by simpa [carrierCap,cutCap,RCN051.mixed,
+         RCN051.unitR,UnequalParameters.mixedCost,
          capAt,Nat.add_comm,Nat.mul_comm] using hmixedRSmall)
-     (by simpa [carrierCap,cutCap,ContactAlignmentParameters.mixed,
-         ContactAlignmentParameters.unitZ,UnequalParameters.mixedCost,
+     (by simpa [carrierCap,cutCap,RCN051.mixed,
+         RCN051.unitZ,UnequalParameters.mixedCost,
          capAt,Nat.add_comm,Nat.mul_comm] using hmixedZSmall)
    have hregular:∀ gamma∈geometricSeeds K F.1 selected Delta g,
        MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
-         (ContactPolynomialSolutions.polynomialPoint (phi.comp Polynomial.C)
+         (RCN231.polynomialPoint (phi.comp Polynomial.C)
            (selected gamma) gamma (phi Polynomial.X))
          (MvPolynomial.pderiv (2:Fin 4) F.1)≠0:=by
      intro gamma hgamma
@@ -410,7 +410,7 @@ theorem all_regularPairSeeds_bound
    hmixedYSmall hmixedRSmall hmixedZSmall selected Gamma nodes x u₀ u₁
    hinj hnodes hw hchar hwa han hdegree hagreement hnoPencil
 def implicitVector (q:(_:MvPolynomial (Fin 4) K) × MvPolynomial (Fin 4) K):
-   ContactParameters6600Research.DegreeVector:=
+   RCN223.DegreeVector:=
  ⟨pairYCost (K:=K) q,pairRCost (K:=K) q,pairZCost (K:=K) q⟩
 theorem regularVector_budgets
    (P:UnequalParameters) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
@@ -448,15 +448,15 @@ theorem regularVector_budgets
      (Nat.mul_le_mul_right P.rightR (hbY.trans hY))
      (Nat.mul_le_mul_right P.rightY (hbR.trans hR))
 theorem dot_sum_right {I:Type} [Fintype I]
-   (v:I → ContactParameters6600Research.DegreeVector)
-   (a:ContactParameters6600Research.DegreeVector):
-   dot a (ContactSingularLedger6600Research.sumVector v)=∑ i,dot a (v i):=by
+   (v:I → RCN223.DegreeVector)
+   (a:RCN223.DegreeVector):
+   dot a (RCN294.sumVector v)=∑ i,dot a (v i):=by
  calc
-   _=dot (ContactSingularLedger6600Research.sumVector v) a:=by
+   _=dot (RCN294.sumVector v) a:=by
      simp only [dot]
      ring
    _=∑ i,dot (v i) a:=
-     ContactSingularLedger6600Research.dot_sum_left v a
+     RCN294.dot_sum_left v a
    _=_:=by
      apply Finset.sum_congr rfl
      intro i _
@@ -484,14 +484,14 @@ theorem sum_regular_counts_bound
          (P.errors+1)*P.gap*(regularVector P F.1).z):=
      Finset.sum_le_sum fun F _↦hcount F
    _=(P.n-P.w)*dot P.agreement
-         (ContactSingularLedger6600Research.sumVector fun F:RegularIndex Q↦
+         (RCN294.sumVector fun F:RegularIndex Q↦
            regularVector P F.1)+
        (P.errors+1)*P.gap*
-         (ContactSingularLedger6600Research.sumVector fun F:RegularIndex Q↦
+         (RCN294.sumVector fun F:RegularIndex Q↦
            regularVector P F.1).z:=by
      rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,
        ←dot_sum_right]
-     simp only [ContactSingularLedger6600Research.sumVector]
+     simp only [RCN294.sumVector]
    _ ≤ (P.n-P.w)*dot P.agreement P.mixedCost+
        (P.errors+1)*P.gap*P.mixedCost.z:=by
      apply Nat.add_le_add
@@ -581,4 +581,4 @@ theorem asymmetric_stage_count_lt
    S.count_le_countCap _ hSgap hsingularUnionScaled
  omega
 end
-end ProximityPrize.SubmissionLower.ContactAsymmetricResidualStageResearch
+end ProximityPrize.SubmissionLower.RCN052

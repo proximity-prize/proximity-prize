@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.C
-namespace ProximityPrize.SubmissionLower.ContactCumulativeWeightedDegreeResearch
+namespace ProximityPrize.SubmissionLower.RCN071
 open scoped BigOperators
-open ContactFactorCaps
+open RCN081
 noncomputable section
 variable {K:Type*} [Field K]
 theorem weightedTotalDegree_prod_eq
@@ -150,4 +150,4 @@ theorem sum_weightedTotalDegree_le_of_prod_dvd_fin3
  rw [←weightedTotalDegree_prod_eq_fin3 weights s f hf]
  exact weightedTotalDegree_le_of_dvd_fin3 weights _ Q hdiv hQ
 end
-end ProximityPrize.SubmissionLower.ContactCumulativeWeightedDegreeResearch
+end ProximityPrize.SubmissionLower.RCN071

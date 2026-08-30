@@ -1,13 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.O9
-namespace ProximityPrize.SubmissionLower.ContactSeedlessProperCutResearch
+namespace ProximityPrize.SubmissionLower.RCN283
 open scoped Classical BigOperators
-open ActualCurveCoordinateField ActualCurveZeroCount ActualCurveProjectionBounds
-open ActualCoordinateDegreeSum ActualPlanePositiveOrder
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactRegularComponentCover
-open ContactProperCutSeedCount
-open ContactSeedlessPrimeIncidenceResearch
+open RCN002 RCN007 RCN004
+open RCN001 RCN013
+open RCN136 RCN231 RCN319
+open RCN238 RCN264
+open RCN243
+open RCN282
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 30000
@@ -99,4 +99,4 @@ theorem seedless_proper_cut_bound
    hbudget
  simpa only [T,Nat.zero_mul,Nat.add_zero] using hagg
 end
-end ProximityPrize.SubmissionLower.ContactSeedlessProperCutResearch
+end ProximityPrize.SubmissionLower.RCN283

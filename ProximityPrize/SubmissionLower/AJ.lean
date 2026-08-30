@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.C1
-namespace ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
-open ContactFlagInterpolation6641Research ContactFlagRankKernel6641Research
+namespace ProximityPrize.SubmissionLower.RCN302
+open RCN100 RCN119
 open scoped BigOperators
 set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
@@ -154,4 +154,4 @@ theorem middle_support_gates:
      profileC.weightedCap+profileC.slopeCap ≤ w*(profileC.yCap+1):=by
  norm_num [Profile.weightedCap,Profile.yCap,profileA,profileB,profileC,
    agreements,w]
-end ProximityPrize.SubmissionLower.ContactStackedParameters6670Research
+end ProximityPrize.SubmissionLower.RCN302

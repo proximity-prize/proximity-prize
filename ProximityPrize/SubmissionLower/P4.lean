@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.C
 import ProximityPrize.SubmissionLower.W
-namespace ProximityPrize.SubmissionLower.ContactSharpYRecurrence
-open ContactInterpolation ContactFactorCaps ContactTaylorNumerators
+namespace ProximityPrize.SubmissionLower.RCN289
+open RCN174 RCN081 RCN313
 open scoped BigOperators
 noncomputable section
 variable {K:Type*} [Field K]
@@ -201,4 +201,4 @@ theorem sharp_Y_bounds_of_mem_box
  exact ⟨numerator_Y_degree_bound F c hc hcapped hH b,
    agreementNumerator_Y_degree_bound F c hc hcapped hH t coeffs x u₀ u₁⟩
 end
-end ProximityPrize.SubmissionLower.ContactSharpYRecurrence
+end ProximityPrize.SubmissionLower.RCN289

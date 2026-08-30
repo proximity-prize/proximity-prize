@@ -1,10 +1,10 @@
 import ProximityPrize.SubmissionLower.Z8
-namespace ProximityPrize.SubmissionLower.ContactMovingDerivativeFlags6719Research
+namespace ProximityPrize.SubmissionLower.RCN201
 open scoped Classical
-open ContactMovingAgreementCertificate6719Research
-open ContactGenericSurface ContactTaylorNumerators ContactFlagBezout6543Research
-open ContactPost6464MinkowskiRecurrenceResearch ContactIdentityResidualGlobalFlagResearch
-open ContactBaseIdealWeights6676Research ContactBaseIdealAlgebra6676Research
+open RCN198
+open RCN136 RCN313 RCN095
+open RCN234 RCN156
+open RCN057 RCN055
 noncomputable section
 set_option maxHeartbeats 3000000
 variable {K Ω:Type} [Field K] [Field Ω]
@@ -19,9 +19,9 @@ private theorem mapped_flag (φ:Polynomial K →+*Ω)
  have hr:=(MvPolynomial.le_weightedTotalDegree residualSWeights hq).trans hR
  have hm:=(MvPolynomial.le_weightedTotalDegree residualYSWeights hq).trans hM
  have ht:=(MvPolynomial.le_weightedTotalDegree residualTotalWeights hq).trans hT
- simp [ContactFactorCaps.weight_fin4,residualSWeights] at hr
- simp [ContactFactorCaps.weight_fin4,residualYSWeights] at hm
- simp [ContactFactorCaps.weight_fin4,residualTotalWeights] at ht
+ simp [RCN081.weight_fin4,residualSWeights] at hr
+ simp [RCN081.weight_fin4,residualYSWeights] at hm
+ simp [RCN081.weight_fin4,residualTotalWeights] at ht
  exact ⟨hr,hm,ht⟩
 private theorem G_weight (w:Fin 4 → ℕ) (t:ℕ)
    (h0:w 0=0) (h1:w 1=t) (h2:w 2=1) (ht:t≤1)
@@ -71,4 +71,4 @@ theorem surfaceMap_HG_flags (φ:Polynomial K →+*Ω)
        (a+b+s+3) (by omega) ha
      omega
 end
-end ProximityPrize.SubmissionLower.ContactMovingDerivativeFlags6719Research
+end ProximityPrize.SubmissionLower.RCN201

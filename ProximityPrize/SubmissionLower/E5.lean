@@ -2,13 +2,13 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AF
 import ProximityPrize.SubmissionLower.N9
 import ProximityPrize.SubmissionLower.B1
-namespace ProximityPrize.SubmissionLower.ContactReducedTaylorProfileResearch
-open ContactGenericSurface ContactPolynomialSolutions ContactTaylorNumerators
-open ContactPrimeSeedIncidence ContactIdentityResidualGlobalFlagResearch
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactFlagBezout6543Research ContactResidualSupportParametersResearch
-open ContactReducedTaylorNumerators6643Research
-open ContactCongruentCuts6643Research
+namespace ProximityPrize.SubmissionLower.RCN263
+open RCN136 RCN231 RCN313
+open RCN238 RCN156
+open RCN234
+open RCN095 RCN275
+open RCN262
+open RCN066
 noncomputable section
 variable {K Omega : Type} [Field K] [Field Omega]
 def reducedAgreementDirection (P : ResidualSupportParameters) : FlagDegree :=
@@ -93,7 +93,7 @@ theorem surfaceMap_reducedAgreement_in_flag
    (MvPolynomial.le_weightedTotalDegree residualYSWeights hq).trans hYS
  have hqTotal :=
    (MvPolynomial.le_weightedTotalDegree residualTotalWeights hq).trans hTotal
- rw [ContactFactorCaps.weight_fin4] at hqYS hqTotal
+ rw [RCN081.weight_fin4] at hqYS hqTotal
  change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 0 ≤ _ at hqYS
  change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 1 ≤ _ at hqTotal
  norm_num at hqYS hqTotal
@@ -152,4 +152,4 @@ theorem agreement_in_flag_mod_ideal
  exact sub_mem_of_dvd I hF
    (agreementPolynomial_sub_reduced_dvd phi P F d x u0 u1)
 end
-end ProximityPrize.SubmissionLower.ContactReducedTaylorProfileResearch
+end ProximityPrize.SubmissionLower.RCN263

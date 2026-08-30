@@ -2,13 +2,13 @@ import ProximityPrize.SubmissionLower.CJ
 import ProximityPrize.SubmissionLower.E5
 import ProximityPrize.SubmissionLower.D1
 import ProximityPrize.SubmissionLower.Z8
-namespace ProximityPrize.SubmissionLower.ContactTwoTailParameters6734Research
+namespace ProximityPrize.SubmissionLower.RCN327
 open ProximityPrize.Benchmark
-open ContactFlagBezout6543Research
-open ContactResidualSupportParametersResearch
-open ContactMovingAgreementCertificate6719Research
-open ContactMovingPositiveLedger6719Research
-open ContactReducedTaylorProfileResearch
+open RCN095
+open RCN275
+open RCN198
+open RCN206
+open RCN263
 open scoped NNReal
 noncomputable section
 set_option maxHeartbeats 1000000
@@ -38,9 +38,9 @@ def profileB : Profile := ⟨81,1262,25,112⟩
 def profileC : Profile := ⟨41,41787,12,56⟩
 def profileH : Profile := ⟨42,1261,12,55⟩
 def supportYS : ResidualSupportParameters :=
- ContactMovingAgreementCertificate6719Research.support 1207 41 10
+ RCN198.support 1207 41 10
 def supportS : ResidualSupportParameters :=
- ContactMovingAgreementCertificate6719Research.support 1206 43 9
+ RCN198.support 1206 43 9
 def fixedFlagYS : FlagDegree := surfaceFlag 1207 41 10
 def fixedFlagS : FlagDegree := surfaceFlag 1206 43 9
 def firstTailYS : FlagDegree := reducedResidualAgreementFlag supportYS (w + 1)
@@ -166,4 +166,4 @@ theorem score_target_le :
        NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0)]
      simp only [NNReal.rpow_neg, NNReal.rpow_natCast, one_div]
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailParameters6734Research
+end ProximityPrize.SubmissionLower.RCN327

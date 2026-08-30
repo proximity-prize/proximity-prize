@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.H6
-namespace ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
+namespace ProximityPrize.SubmissionLower.RCN018
 open ProximityPrize.Benchmark
 open scoped NNReal
 noncomputable section DraftProofs
@@ -49,7 +49,7 @@ variable {ι F:Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
 variable [Field F] [Fintype F] [DecidableEq F]
 theorem interleaved_lambda_le
    (C:LinearCode ι F) (r e w B:ℕ)
-   (hzero:AlignmentScalarListBridge.ZeroCoordinateBound C w)
+   (hzero:RCN020.ZeroCoordinateBound C w)
    (hgap:w < Fintype.card ι-e)
    (halign:AffineLineAlignmentBound C e B)
    (hfield:B < Fintype.card F)
@@ -62,7 +62,7 @@ theorem interleaved_lambda_le
  classical
  apply Code.Lambda_le_of_forall_finset_card_le
  intro y T hT
- apply AlignmentMomentCurveProjection.interleaved_finite_list_card_le
+ apply RCN019.interleaved_finite_list_card_le
    C e w B hzero hgap halign hfield hseparation y T
  · intro c hc j
    have hcode:=(Code.mem_closeCodewordsRel_iff.mp (hT c hc)).1
@@ -126,7 +126,7 @@ theorem squared_eight_rows
  exact (Code.mem_moduleInterleavedCode_iff F F (Fin 8) ι C _).mp houter b
 theorem squared_eight_lambda_le
    (C:LinearCode ι F) (e w B:ℕ)
-   (hzero:AlignmentScalarListBridge.ZeroCoordinateBound C w)
+   (hzero:RCN020.ZeroCoordinateBound C w)
    (hgap:w < Fintype.card ι-e)
    (halign:AffineLineAlignmentBound C e B)
    (hfield:B < Fintype.card F)
@@ -159,13 +159,13 @@ theorem squared_eight_lambda_le
    obtain ⟨c,hc,rfl⟩:=Finset.mem_image.mp hv
    rw [flattenWord_agreement_card]
    exact agreement_card_ge_of_closeCodewordsRel _ y c δ e hcell (hT c hc)
- have hbound:=AlignmentMomentCurveProjection.interleaved_finite_list_card_le
+ have hbound:=RCN019.interleaved_finite_list_card_le
    (r:=16) C e w B hzero hgap halign hfield hseparation
    (flattenWord y) projected hrows hclose
  rwa [hcard] at hbound
 theorem squared_eight_lambda_le_of_floor
    (C:LinearCode ι F) (e w B:ℕ)
-   (hzero:AlignmentScalarListBridge.ZeroCoordinateBound C w)
+   (hzero:RCN020.ZeroCoordinateBound C w)
    (hgap:w < Fintype.card ι-e)
    (halign:AffineLineAlignmentBound C e B)
    (hfield:B < Fintype.card F)
@@ -178,7 +178,7 @@ theorem squared_eight_lambda_le_of_floor
    (radius_cell_of_floor_le δ (Fintype.card ι) e hfloor)
 end GenericCode
 theorem irs_zeroCoordinateBound:
-   AlignmentScalarListBridge.ZeroCoordinateBound IRSProfile.baseCode 131071:=by
+   RCN020.ZeroCoordinateBound IRSProfile.baseCode 131071:=by
  classical
  intro c hc hne
  have hdist:=Code.minDist_le_dist
@@ -268,4 +268,4 @@ theorem irs_squared_lambda_toNat_le
  ENat.toNat_le_of_le_coe
    (irs_squared_lambda_le e B δ hgap halign hfield hseparation hcell)
 end DraftProofs
-end ProximityPrize.SubmissionLower.AlignmentInterleavedLambda
+end ProximityPrize.SubmissionLower.RCN018

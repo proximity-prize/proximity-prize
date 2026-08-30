@@ -5,21 +5,21 @@ import ProximityPrize.SubmissionLower.G7
 import ProximityPrize.SubmissionLower.X0
 import ProximityPrize.SubmissionLower.G
 import ProximityPrize.SubmissionLower.I2
-namespace ProximityPrize.SubmissionLower.ContactAdaptiveShearConditional
+namespace ProximityPrize.SubmissionLower.RCN045
 set_option maxHeartbeats 1000000
 open scoped Classical BigOperators
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveScalarTowers
- ActualCurveZeroCount
-open ContactGenericSurface ContactPolynomialSolutions ContactPolynomialRecovery
-open ContactTaylorNumerators ContactComponentPencils ContactTranslation
-open ContactPrimeSeedIncidence ContactRegularComponentCover
-open ContactProperCutSeedCount ContactSurfaceSeedCount
-open CharacteristicFreeInseparableDichotomyResearch
-open ActualCoordinateDegreeSum ActualPlaneCharacteristicFreeDegreeResearch
-open SeparableShearKaehlerResearch
-open CoordinateBoxZeroCount SeparableShearFieldResearch
-open ArbitraryRationalProjectionResearch
-open ContactConstantSeedCoordinateResearch
+open RCN002 RCN005 RCN006
+ RCN007
+open RCN136 RCN231 RCN229
+open RCN313 RCN065 RCN319
+open RCN238 RCN264
+open RCN243 RCN306
+open RCN023
+open RCN001 RCN008
+open RCN369
+open RCN344 RCN368
+open RCN022
+open RCN067
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
 variable (φ:Polynomial K →+*Ω)
@@ -296,7 +296,7 @@ theorem prime_seed_incidence_sharp_adaptive_shear
        apply hnotI
        exact Finset.mem_filter.mpr ⟨hinodes,hmem⟩
      exact hfiber (x i) (u₀ i) (u₁ i) hproper (hcap i hinodes)
-   have hcount:=ContactIncidence.sharp_incidence_bound relation Γ nodes I a w
+   have hcount:=RCN173.sharp_incidence_bound relation Γ nodes I a w
      (adaptiveShearCost P cap) (identityNodes_subset φ P F nodes x u₀ u₁ w)
      hI hwa han hagreement hproperFiber
    omega
@@ -370,7 +370,7 @@ theorem prime_seed_incidence_sharp_global_shear
        apply hnotI
        exact Finset.mem_filter.mpr ⟨hinodes,hmem⟩
      exact hfiber (x i) (u₀ i) (u₁ i) hproper (hcap i hinodes)
-   have hcount:=ContactIncidence.sharp_incidence_bound relation Γ nodes I a w
+   have hcount:=RCN173.sharp_incidence_bound relation Γ nodes I a w
      (globalShearCost P dS cap) (identityNodes_subset φ P F nodes x u₀ u₁ w)
      hI hwa han hagreement hproperFiber
    omega
@@ -687,4 +687,4 @@ theorem proper_cut_seed_bound_adaptive_shear
    hagreement hnoPencil cap (coordinateMixedDegree Ω G T) hcap
    hgeom.1 hgeom.2 hfiber
 end
-end ProximityPrize.SubmissionLower.ContactAdaptiveShearConditional
+end ProximityPrize.SubmissionLower.RCN045

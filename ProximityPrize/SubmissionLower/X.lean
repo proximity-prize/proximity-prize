@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DO
 import ProximityPrize.SubmissionLower.Y
-namespace ProximityPrize.SubmissionLower.ContactWeakSeparableSeparatorResearch
+namespace ProximityPrize.SubmissionLower.RCN341
 open scoped Classical
-open ActualCurveCoordinateField ActualCurveRationalProjection
- ActualCurveScalarTowers ActualCurveZeroCount
-open CoordinateBoxZeroCount ContactRegularComponentCover
-open ContactSparsePoleSupportResearch ContactSparsePoleZeroCountResearch
+open RCN002 RCN005
+ RCN006 RCN007
+open RCN344 RCN264
+open RCN295 RCN296
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 300000
@@ -190,4 +190,4 @@ theorem exists_separableLiteralCoordinate_of_YZ_gates
    P hi hyalg hzalg
  exact ⟨⟨1,hi,hs.1,hs.2⟩⟩
 end
-end ProximityPrize.SubmissionLower.ContactWeakSeparableSeparatorResearch
+end ProximityPrize.SubmissionLower.RCN341

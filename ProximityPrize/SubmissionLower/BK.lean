@@ -4,21 +4,21 @@ import ProximityPrize.SubmissionLower.J2
 import ProximityPrize.SubmissionLower.EG
 import ProximityPrize.SubmissionLower.H8
 import ProximityPrize.SubmissionLower.A8
-namespace ProximityPrize.SubmissionLower.ContactIdentityCoefficientProfile6731Research
+namespace ProximityPrize.SubmissionLower.RCN144
 open scoped Classical BigOperators
-open ContactGenericInitialPoint ContactGenericSurface ContactTaylorNumerators
-open ContactIdentityResidualIterationResearch ContactOriginalFactorTail6731Research
-open ContactFactorReconstruction6731Research ContactPolynomialRecenter6731Research
-open ContactFreshProperCoefficientTrdeg6731Research
-open ContactCoefficientBaseChange6731Research ContactCoefficientPole6731Research
-open ContactComponentPencils ContactPrimeSeedIncidence ContactProperCutSeedCount
-open ContactRegularComponentCover ContactPolynomialSolutions ContactPolynomialRecovery
-open ContactFreshCoefficientFieldGenerationResearch ContactCoefficientFieldTrdeg6731Research
-open ContactAgreementEvaluation ContactGlobalPolynomiality ContactInterpolation
-open ContactFlagPoleInequality6543Research ContactSparsePoleSupportResearch
-open ContactFlagBezout6543Research ContactResidualSupportParametersResearch
-open ContactTranslation
-open ActualCurveCoordinateField
+open RCN135 RCN136 RCN313
+open RCN159 RCN220
+open RCN083 RCN228
+open RCN127
+open RCN058 RCN063
+open RCN065 RCN238 RCN243
+open RCN264 RCN231 RCN229
+open RCN126 RCN062
+open RCN047 RCN139 RCN174
+open RCN114 RCN295
+open RCN095 RCN275
+open RCN319
+open RCN002
 noncomputable section
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
@@ -59,7 +59,7 @@ theorem coefficientPoleProfile_of_regular_agreement_curve
    (bound seedCap slopeCap cost:ℕ)
    (hw:1≤w) (hshort:w+1≤bound) (hchar:bound<p)
    (hbox:S.F∈globalCoefficientBox K bound w seedCap slopeCap)
-   (hyz:∀ W:Finset (CoordinatePoleMass.Place (Ω K) (CoordinateField (Ω K) C.1)),
+   (hyz:∀ W:Finset (RCN346.Place (Ω K) (CoordinateField (Ω K) C.1)),
      (∑ v∈W,exponentSetPoleWeight v.val (coordinate (Ω K) C.1)
        (flagSupport unitYZFlag)) ≤ (cost:ℤ)):
    CoefficientPoleProfile (polynomialEmbedding K) C.1 S.F
@@ -116,7 +116,7 @@ theorem coefficientPoleProfile_of_regular_agreement_curve
    rw [hz]
    simp
  have hF0box:F0∈globalCoefficientBox K bound w seedCap slopeCap:=by
-   apply ContactFactorCaps.mem_globalCoefficientBox_of_dvd F0 S.F bound w seedCap slopeCap
+   apply RCN081.mem_globalCoefficientBox_of_dvd F0 S.F bound w seedCap slopeCap
      hSne ⟨Q,hprod⟩ hbox
  have hP0solution:specialization L P0 (v0 3) (MvPolynomial.map κ F0)=0:=
    canonical_polynomiality_of_first_tail κ F0 v0 hF0rel hF0reg
@@ -142,7 +142,7 @@ theorem coefficientPoleProfile_of_regular_agreement_curve
    exact hv
  let A0:=agreementNumerator F0 w (fun j => (j.factorial:K)⁻¹) x0 u0 u1
  have hA0proper:¬F0∣A0:=by
-   apply ContactOriginalFactorTail6731Research.original_factor_agreement_proper
+   apply RCN220.original_factor_agreement_proper
      φ F0 Q S.G hGF0 w _ x0 u0 u1
    simpa only [agreementPolynomial,hprod] using hproper
  have hvpoint:polynomialPoint (RingHom.id L) P0 (v0 3) (v0 0)=v0:=by
@@ -202,4 +202,4 @@ theorem coefficientPoleProfile_of_regular_agreement_curve
    exact globalPolynomial_initial_value κ F0 v0 hF0rel hF0reg w
  · exact hyz
 end
-end ProximityPrize.SubmissionLower.ContactIdentityCoefficientProfile6731Research
+end ProximityPrize.SubmissionLower.RCN144

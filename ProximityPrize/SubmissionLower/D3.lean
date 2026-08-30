@@ -3,11 +3,11 @@ import ProximityPrize.SubmissionLower.D2
 import ProximityPrize.SubmissionLower.G
 import ProximityPrize.SubmissionLower.E6
 import ProximityPrize.SubmissionLower.EJ
-namespace ProximityPrize.SubmissionLower.ContactMovingProjectionDegree6676Research
+namespace ProximityPrize.SubmissionLower.RCN208
 open scoped Classical
-open ActualCurveCoordinateField ContactCurveComponents ContactRegularComponentCover
-open ArbitraryRationalProjectionResearch ContactMovingProjection6676Research
-open ContactGenericFiberEmbeddings6676Research
+open RCN002 RCN072 RCN264
+open RCN022 RCN207
+open RCN134
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 20000
@@ -170,4 +170,4 @@ theorem eliminatedCut_not_mem_of_contraction
  obtain ⟨point,hpoint⟩:=eq_point_kernel_of_coordinates_algebraic E D.1 halg
  exact regularComponent_ne_point E _ _ _ D point hpoint
 end
-end ProximityPrize.SubmissionLower.ContactMovingProjectionDegree6676Research
+end ProximityPrize.SubmissionLower.RCN208

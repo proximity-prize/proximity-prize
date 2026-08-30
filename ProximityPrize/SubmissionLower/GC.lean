@@ -2,11 +2,11 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.C
 import ProximityPrize.SubmissionLower.AB
 import ProximityPrize.SubmissionLower.AI
-namespace ProximityPrize.SubmissionLower.ContactStackedBoxTransport6656Research
+namespace ProximityPrize.SubmissionLower.RCN298
 open ProximityPrize.Benchmark
-open ContactInterpolation ContactFactorCaps
-open ContactRecursiveGCDResearch
-open ContactStackedParameters6656Research
+open RCN174 RCN081
+open RCN259
+open RCN301
 noncomputable section
 abbrev GlobalPoly:=MvPolynomial (Fin 4) IRSProfile.Field
 local instance:GCDMonoid GlobalPoly:=
@@ -93,4 +93,4 @@ theorem quotientC_mem_parent_box
  mem_globalCoefficientBox_of_dvd (quotientC A B C) C
    (27*agreements) w 579299 6 hC (quotientC_dvd_right A B C) hboxC
 end
-end ProximityPrize.SubmissionLower.ContactStackedBoxTransport6656Research
+end ProximityPrize.SubmissionLower.RCN298

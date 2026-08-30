@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I0
-namespace ProximityPrize.SubmissionLower.ContactCoefficientCurveTrdegAtMostOne6731Research
+namespace ProximityPrize.SubmissionLower.RCN061
 open scoped BigOperators
-open ContactCoefficientCurveResidueApproxResearch
+open RCN060
 noncomputable section
 variable {k F L:Type*} [Field k] [Field F] [Field L] [Algebra k F]
 theorem coefficient_pole_le_generic_evaluation_of_trdeg_le_one
@@ -14,8 +14,8 @@ theorem coefficient_pole_le_generic_evaluation_of_trdeg_le_one
    (htrdeg:Algebra.trdeg k F ≤ 1)
    (x:Ω) (htrans:Transcendental k x)
    (a:Fin (w+1) → F) (i:Fin (w+1)):
-   ContactLocalPoleBound.poleOrder v (φ (a i)) ≤
-     ContactLocalPoleBound.poleOrder v
+   RCN187.poleOrder v (φ (a i)) ≤
+     RCN187.poleOrder v
        (∑ j,φ (a j)*(algebraMap Ω L x)^(j:ℕ)):=by
  classical
  letI:Decidable (Algebra.trdeg k F=0):=Classical.propDecidable _
@@ -27,10 +27,10 @@ theorem coefficient_pole_le_generic_evaluation_of_trdeg_le_one
      (IsAlgClosed.algebraMap_bijective_of_isIntegral (k:=k)).2 (a i)
    have hφ:φ (a i)=algebraMap Ω L (algebraMap k Ω c):=by
      rw [←hc,hcompat]
-   have hpole:ContactLocalPoleBound.poleOrder v (φ (a i))=0:=by
+   have hpole:RCN187.poleOrder v (φ (a i))=0:=by
      rw [hφ]
      change max 0 (v (algebraMap Ω L (algebraMap k Ω c))).log=0
-     rw [←ContactLocalPoleBound.log_max_one,
+     rw [←RCN187.log_max_one,
        max_eq_left (Valuation.IsTrivialOn.valuation_algebraMap_le_one v _),
        WithZero.log_one]
    rw [hpole]
@@ -40,4 +40,4 @@ theorem coefficient_pole_le_generic_evaluation_of_trdeg_le_one
    have heq:Algebra.trdeg k F=1:=le_antisymm htrdeg hone
    exact coefficient_pole_le_generic_evaluation v φ hcompat heq x htrans a i
 end
-end ProximityPrize.SubmissionLower.ContactCoefficientCurveTrdegAtMostOne6731Research
+end ProximityPrize.SubmissionLower.RCN061

@@ -1,13 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AH
 import ProximityPrize.SubmissionLower.M
-namespace ProximityPrize.SubmissionLower.ContactSparsePoleZeroCountResearch
+namespace ProximityPrize.SubmissionLower.RCN296
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
-open ContactSparsePoleSupportResearch
-open CoordinateBoxZeroCount
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveScalarTowers
-open ActualCurveZeroCount
+open RCN295
+open RCN344
+open RCN002 RCN005 RCN006
+open RCN007
 noncomputable section
 variable {K L σ:Type} [Field K] [Field L] [Fintype σ]
 variable [Algebra K L] [IsAlgClosed K]
@@ -48,16 +48,16 @@ theorem finite_model_zero_points_le_exponentSet
    apply IsFractionRing.injective A L
    simpa only [map_zero] using hz
  let U:=S.image (modelPlace K L A)
- have hU:∀ v∈U,1 ≤ CommonPlaceBalance.order K L v
+ have hU:∀ v∈U,1 ≤ RCN026.order K L v
      (MvPolynomial.eval₂Hom (algebraMap K L)
        (fun i↦algebraMap A L (x i)) F):=by
    intro v hv
    obtain ⟨ψ,hψ,rfl⟩:=Finset.mem_image.mp hv
    rw [heval]
-   exact ActualAffineModelPlaces.actual_model_zero_order_ge_one
+   exact RCN000.actual_model_zero_order_ge_one
      K A L ψ _ hF (hS ψ hψ)
- let W:=CommonPlaceBalance.placesFor K L _ hnonzero
- have hcount:=CommonPlaceBalance.finite_zero_places_le_poleMass
+ let W:=RCN026.placesFor K L _ hnonzero
+ have hcount:=RCN026.finite_zero_places_le_poleMass
    K L _ hnonzero U hU
  have hsupport:=weighted_poleOrder_eval_le_exponentSet W
    (fun _↦1) (fun v↦v.val) (algebraMap K L)
@@ -68,12 +68,12 @@ theorem finite_model_zero_points_le_exponentSet
  have hq:(S.card:ℤ) ≤ q:=by
    calc
      (S.card:ℤ)=(U.card:ℤ):=by rw [hcard]
-     _ ≤ ∑ v∈W,CoordinatePoleMass.poleOrder K L v
+     _ ≤ ∑ v∈W,RCN346.poleOrder K L v
          (MvPolynomial.eval₂Hom (algebraMap K L)
            (fun i↦algebraMap A L (x i)) F):=hcount
      _ ≤ ∑ v∈W,exponentSetPoleWeight v.val
          (fun i↦algebraMap A L (x i)) E:=by
-       simpa only [CoordinatePoleMass.poleOrder,Nat.cast_one,one_mul] using hsupport
+       simpa only [RCN346.poleOrder,Nat.cast_one,one_mul] using hsupport
      _ ≤ (q:ℤ):=hpole W
  exact_mod_cast hq
 section ActualCurve
@@ -139,4 +139,4 @@ theorem finite_zero_points_le_exponentSet_of_separator
  rwa [hcard] at hcount
 end ActualCurve
 end
-end ProximityPrize.SubmissionLower.ContactSparsePoleZeroCountResearch
+end ProximityPrize.SubmissionLower.RCN296

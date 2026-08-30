@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J0
-namespace ProximityPrize.SubmissionLower.ContactImplicitPairBudgets
-open ContactExceptionalSeedAuxiliary ContactImplicitContactLift
-open ContactFactorCaps ContactRegularFactorGate ContactInterpolation
+namespace ProximityPrize.SubmissionLower.RCN169
+open RCN079 RCN167
+open RCN081 RCN267 RCN174
 noncomputable section
 variable {K:Type*} [Field K]
 def implicitBaseFactors (J:MvPolynomial (Fin 4) K):
@@ -21,7 +21,7 @@ theorem implicitBaseFactors_spec (J A:MvPolynomial (Fin 4) K)
  classical
  obtain ⟨hm,hy⟩:=Finset.mem_filter.mp hA
  have hs:=originalImplicitFactors_spec J A hm
- have hr:=ContactFactorCaps.degreeOf_le_of_dvd (2:Fin 4) A J hs.2 hJ
+ have hr:=RCN081.degreeOf_le_of_dvd (2:Fin 4) A J hs.2 hJ
  exact ⟨hs.1,hs.2,by omega,hy⟩
 theorem implicitBaseFactors_degree_budgets
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0):
@@ -51,11 +51,11 @@ theorem implicitPair_spec (J A G:MvPolynomial (Fin 4) K)
  obtain ⟨hiA,hdA,hrA,hyA⟩:=implicitBaseFactors_spec J A hJ hR hA
  obtain ⟨hiG,hdG,hrG⟩:=positiveRFactors_spec (implicitLift A) G hG
  have hF:=implicitLift_nonzero A hrA hyA
- have hgcap:=(ContactFactorCaps.degreeOf_le_of_dvd (2:Fin 4)
+ have hgcap:=(RCN081.degreeOf_le_of_dvd (2:Fin 4)
    G (implicitLift A) hdG hF).trans (implicitLift_R_degree_le A hrA)
  refine ⟨hiA,hdA,hrA,hyA,hiG,hdG,by omega,?_⟩
  intro hd
- have hh:=ContactFactorCaps.degreeOf_le_of_dvd (2:Fin 4) G A hd hiA.ne_zero
+ have hh:=RCN081.degreeOf_le_of_dvd (2:Fin 4) G A hd hiA.ne_zero
  omega
 theorem sum_products_le_product_sums {ι:Type*} (I:Finset ι) (f g:ι → ℕ):
    (∑ i∈I,f i*g i) ≤ (∑ i∈I,f i)*(∑ i∈I,g i):=by
@@ -146,4 +146,4 @@ theorem implicitPair_input_budgets
  exact ⟨hb.1.trans hz,
    hb.2.1.trans (Nat.mul_le_mul (Nat.mul_le_mul_left 2 hy) hz),hb.2.2.trans hy⟩
 end
-end ProximityPrize.SubmissionLower.ContactImplicitPairBudgets
+end ProximityPrize.SubmissionLower.RCN169

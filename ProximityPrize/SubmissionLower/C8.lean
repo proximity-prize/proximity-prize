@@ -1,11 +1,11 @@
 import ProximityPrize.SubmissionLower.C7
 import ProximityPrize.SubmissionLower.Z1
-namespace ProximityPrize.SubmissionLower.ContactLocalizedResidueDegree6733Research
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
-open ArbitraryRationalProjectionResearch
-open ContactPlaneRelationCoefficientFiber6733Research
-open ContactLocalizedPlaneRelation6733Research
-open ContactFlagResidueDegreeCostAdapter6732Research
+namespace ProximityPrize.SubmissionLower.RCN193
+open RCN011 RCN021
+open RCN022
+open RCN226
+open RCN191
+open RCN120
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -190,4 +190,4 @@ noncomputable def coefficientResidueEquiv
        (algebraMap (Polynomial (RatFunc K))
          (LocalCoefficient K L order e ht hfinite) x):=rfl
 end
-end ProximityPrize.SubmissionLower.ContactLocalizedResidueDegree6733Research
+end ProximityPrize.SubmissionLower.RCN193

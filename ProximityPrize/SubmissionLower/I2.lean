@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J
-namespace ProximityPrize.SubmissionLower.ContactConstantSeedCoordinateResearch
+namespace ProximityPrize.SubmissionLower.RCN067
 open scoped Classical
-open ActualCurveCoordinateField ActualCurveZeroCount
- ContactPrimeSeedIncidence
+open RCN002 RCN007
+ RCN238
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
 variable (φ:Polynomial K →+*Ω)
@@ -44,4 +44,4 @@ theorem selected_seed_set_card_le_one_of_seedCoordinate_isAlgebraic
    simpa only [selectedPoint_seed] using hcγ.trans hcη.symm
  exact (φ.comp Polynomial.C).injective hc
 end
-end ProximityPrize.SubmissionLower.ContactConstantSeedCoordinateResearch
+end ProximityPrize.SubmissionLower.RCN067

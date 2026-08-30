@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z7
 import ProximityPrize.SubmissionLower.C
-namespace ProximityPrize.SubmissionLower.ContactSparsePoleSupportResearch
+namespace ProximityPrize.SubmissionLower.RCN295
 open scoped Classical BigOperators WithZero
-open ContactLocalPoleBound
+open RCN187
 noncomputable section
 variable {K L σ:Type*} [Field K] [Field L] [Fintype σ]
 local instance:DecidableEq K:=Classical.decEq K
@@ -249,4 +249,4 @@ theorem weighted_poleOrder_eval_le_exponentSet
  exact (poleOrder_eval_le_support (v t) coeff (hcoeff t ht) x F).trans
    (supportPoleWeight_le_exponentSetPoleWeight (v t) x F E hFE)
 end
-end ProximityPrize.SubmissionLower.ContactSparsePoleSupportResearch
+end ProximityPrize.SubmissionLower.RCN295

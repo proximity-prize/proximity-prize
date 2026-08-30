@@ -1,19 +1,19 @@
 import ProximityPrize.SubmissionLower.B6
 import ProximityPrize.SubmissionLower.B7
-namespace ProximityPrize.SubmissionLower.ContactFirstTailReducedProjection6732Research
+namespace ProximityPrize.SubmissionLower.RCN090
 open scoped Classical BigOperators
 open Polynomial KaehlerDifferential
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveJointProjectionBounds
-open ActualCoordinateDegreeSum ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactRegularComponentCover ContactProperCutSeedCount
-open ContactFlagBezout6543Research ContactIdentityResidualIterationResearch
-open ContactResidualSupportParametersResearch ContactSharpTaylorFixedMeet6656Research
-open ContactWeakSeparableSeparatorResearch ContactScalarCoordinateSeparator6630Research
-open ContactAdaptiveNestedProjection6600Research ContactAdaptiveNestedProjectionActive6630Research
-open ContactAdaptiveNestedUnitFamilyActive6630Research ContactAdaptiveNestedYZFamily6630Research
-open ContactRegularComponentYZPositivity6630Research ContactResidualStageDerivative6600Research
-open ContactMovingAgreementCertificate6719Research ContactFirstTailCertificate6731Research
-open ContactReducedTaylorProfileResearch ContactFirstTailReducedCertificate6732Research
+open RCN002 RCN005 RCN003
+open RCN001 RCN136 RCN231 RCN319
+open RCN238 RCN264 RCN243
+open RCN095 RCN159
+open RCN275 RCN287
+open RCN341 RCN277
+open RCN037 RCN038
+open RCN040 RCN041
+open RCN265 RCN274
+open RCN198 RCN086
+open RCN263 RCN089
 noncomputable section
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 50000
@@ -57,10 +57,10 @@ theorem exists_reduced_firstTail_projection_of_caps
      (reducedResidualAgreementFlag supp (w + 1)) Tred :=
    reducedGlobalTailCut_in_flag phi supp Hsupport (w + 1)
  obtain ⟨hGY,hGS,hGZ⟩ :=
-   ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag
+   RCN314.degree_bounds_of_polynomialInFlag
      hGflag
  obtain ⟨hTY,hTS,_hTZ⟩ :=
-   ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag
+   RCN314.degree_bounds_of_polynomialInFlag
      hTflag
  have hTY' : Tred.degreeOf 0 ≤ 1 + (w + 1) * (2 * (b + s + 3) - 2) := by
    apply hTY.trans_eq
@@ -111,7 +111,7 @@ theorem exists_reduced_firstTail_projection_of_caps
      hproperRed hGdegree hmixedZ
  obtain ⟨P⟩ := exists_adaptiveUnitProjectionFamilyYZ_of_active_nested
    flag (reducedResidualAgreementFlag supp (w + 1)) base hactive hZ
-   (ContactTerminalAdaptiveProjection6656Research.residualStage_pderiv_one_ne_zero_of_support S)
+   (RCN315.residualStage_pderiv_one_ne_zero_of_support S)
    S.irreducible_G hproperRed
    ((support_subset_flagSupport_iff flag S.G).2 hGflag)
    ((support_subset_flagSupport_iff
@@ -138,7 +138,7 @@ theorem exists_reduced_firstTail_activeNestedData_of_caps
            (reducedGlobalTailCut phi (support a b s) S.F (w + 1))
            (regularitySurface phi S.F), LiteralProjectionGate C 2),
          Nonempty (AdaptiveNestedProjectionDataActive base hactive
-           (ContactTerminalAdaptiveProjection6656Research.residualStage_pderiv_one_ne_zero_of_support S)) := by
+           (RCN315.residualStage_pderiv_one_ne_zero_of_support S)) := by
  classical
  let supp := support a b s
  let T := globalTailCut phi S.F (w + 1)
@@ -158,10 +158,10 @@ theorem exists_reduced_firstTail_activeNestedData_of_caps
      (reducedResidualAgreementFlag supp (w + 1)) Tred :=
    reducedGlobalTailCut_in_flag phi supp Hsupport (w + 1)
  obtain ⟨hGY, hGS, hGZ⟩ :=
-   ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag
+   RCN314.degree_bounds_of_polynomialInFlag
      hGflag
  obtain ⟨hTY, hTS, _hTZ⟩ :=
-   ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag
+   RCN314.degree_bounds_of_polynomialInFlag
      hTflag
  have hTY' : Tred.degreeOf 0 ≤ 1 + (w + 1) * (2 * (b + s + 3) - 2) := by
    apply hTY.trans_eq
@@ -212,6 +212,6 @@ theorem exists_reduced_firstTail_activeNestedData_of_caps
      hproperRed hGdegree hmixedZ
  exact ⟨base, hactive, hZ,
    exists_adaptiveNestedProjectionDataActive base hactive
-     (ContactTerminalAdaptiveProjection6656Research.residualStage_pderiv_one_ne_zero_of_support S)⟩
+     (RCN315.residualStage_pderiv_one_ne_zero_of_support S)⟩
 end
-end ProximityPrize.SubmissionLower.ContactFirstTailReducedProjection6732Research
+end ProximityPrize.SubmissionLower.RCN090

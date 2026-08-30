@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.L
 import ProximityPrize.SubmissionLower.AO
-namespace ProximityPrize.SubmissionLower.ContactPencilGeometry
-open ActualCurveCoordinateField
+namespace ProximityPrize.SubmissionLower.RCN224
+open RCN002
 noncomputable section
 variable (K:Type) [Field K]
 def graphEquation (a b:K):MvPolynomial (Fin 3) K:=
@@ -97,4 +97,4 @@ theorem affine_coordinates_of_polynomial_pencil
    simp only [Polynomial.derivative_map,Polynomial.eval_add,Polynomial.eval_mul,
      Polynomial.eval_C,Polynomial.eval_map_apply]
 end
-end ProximityPrize.SubmissionLower.ContactPencilGeometry
+end ProximityPrize.SubmissionLower.RCN224

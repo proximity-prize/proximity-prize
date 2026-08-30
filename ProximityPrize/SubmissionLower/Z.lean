@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.L
-namespace ProximityPrize.SubmissionLower.ActualCurveRationalProjection
-open ActualCurveCoordinateField
+namespace ProximityPrize.SubmissionLower.RCN005
+open RCN002
 noncomputable section
 variable (K:Type) [Field K] (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
 def rationalBaseEmbedding (i:Fin 3)
@@ -83,4 +83,4 @@ theorem exists_two_generators_over_ratFunc (i:Fin 3)
  exact ⟨j,k,hji,hki,hjk,
    adjoin_two_coordinates_over_ratFunc_eq_top K P i j k hi hcover⟩
 end
-end ProximityPrize.SubmissionLower.ActualCurveRationalProjection
+end ProximityPrize.SubmissionLower.RCN005

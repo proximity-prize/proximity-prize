@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G7
-namespace ProximityPrize.SubmissionLower.SeparableShearTranscendenceResearch
+namespace ProximityPrize.SubmissionLower.RCN370
 open scoped Classical
 open KaehlerDifferential
-open SeparableShearKaehlerResearch
+open RCN369
 noncomputable section
 set_option maxHeartbeats 2000000
 variable (K L:Type*) [Field K] [Field L] [Algebra K L]
@@ -92,4 +92,4 @@ theorem transcendental_add_of_not_isSeparable_isSeparable [IsAlgClosed K]
  rw [hdR,zero_add] at hD'
  exact hD'
 end
-end ProximityPrize.SubmissionLower.SeparableShearTranscendenceResearch
+end ProximityPrize.SubmissionLower.RCN370

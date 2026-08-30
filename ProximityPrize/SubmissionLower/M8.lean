@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A9
-namespace ProximityPrize.SubmissionLower.ContactMovingPoleLocal6719Research
+namespace ProximityPrize.SubmissionLower.RCN204
 open scoped Classical BigOperators WithZero
-open ContactFlagBezout6543Research ContactFlagPoleInequality6543Research
-open ContactMovingProjection6676Research ContactMovingSupport6676Research
-open ContactSparsePoleSupportResearch ContactLocalPoleBound
-open ActualCurveCoordinateField CoordinateBoxZeroCount
-open ContactCommonProjectionChoice6676Research
+open RCN095 RCN114
+open RCN207 RCN212
+open RCN295 RCN187
+open RCN002 RCN344
+open RCN064
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -158,4 +158,4 @@ theorem coordinate_filteredCut_pole_le {Ω:Type} [Field Ω]
  simpa only [coordinateEvaluation_eq_aeval,MvPolynomial.aeval_eq_eval₂Hom,
    movingPoleTarget,movingRatio] using h
 end
-end ProximityPrize.SubmissionLower.ContactMovingPoleLocal6719Research
+end ProximityPrize.SubmissionLower.RCN204

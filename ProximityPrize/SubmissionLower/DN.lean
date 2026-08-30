@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X
 import ProximityPrize.SubmissionLower.Y8
-namespace ProximityPrize.SubmissionLower.ContactAdaptiveAffineProjectionResearch
+namespace ProximityPrize.SubmissionLower.RCN035
 open scoped Classical BigOperators WithZero TensorProduct
 open Polynomial KaehlerDifferential
-open CoordinateBoxZeroCount
-open SeparableShearKaehlerResearch SeparableShearTranscendenceResearch
- GlobalSeparableShearResearch
-open ArbitraryRationalProjectionResearch
-open ContactFlagExactSeparableProjection6543Research
+open RCN344
+open RCN369 RCN370
+ RCN351
+open RCN022
+open RCN097
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 300000
@@ -72,7 +72,7 @@ variable {I:Type*} [Fintype I]
 variable (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 variable (r z:∀ i,E i)
 variable (W:∀ i,
- Finset (CoordinatePlaceClassification.NormalizedValuation K (E i)))
+ Finset (RCN345.NormalizedValuation K (E i)))
 theorem exists_common_exact_finite_separable_affine_adaptive
    (base:∀ i,SeparableCoordinate K (E i))
    (hactive:∀ i,D K (E i) (r i)≠0∨D K (E i) (z i)≠0):
@@ -184,4 +184,4 @@ theorem exists_common_exact_finite_separable_affine_adaptive_avoiding_one
  exact le_antisymm hupper (le_of_not_gt hnotlt)
 end FiniteFamily
 end
-end ProximityPrize.SubmissionLower.ContactAdaptiveAffineProjectionResearch
+end ProximityPrize.SubmissionLower.RCN035

@@ -1,13 +1,13 @@
 import ProximityPrize.SubmissionLower.DM
 import ProximityPrize.SubmissionLower.L8
 import ProximityPrize.SubmissionLower.Y7
-namespace ProximityPrize.SubmissionLower.ContactFlagPlaneSurfaceLocalAdapter6732Research
-open ActualCurveCoordinateField ActualPlaneCoordinateKernel
-open TrivariateRationalCollection ArbitraryPlaneEvaluationFamilyResearch
-open ContactFlagTriangularProjectionResearch
-open ContactFlagAffineFamilyDegree6543Research
-open ContactActualPlaneLocalOrderAdapter6732Research
-open ContactLocalizationSurfacePrimeAdapter6732Research
+namespace ProximityPrize.SubmissionLower.RCN113
+open RCN002 RCN011
+open RCN371 RCN021
+open RCN125
+open RCN093
+open RCN034
+open RCN190
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -86,4 +86,4 @@ noncomputable def flagSurfaceComponentToPlaneLocalEquiv
    (by simpa only [Ideal.span_singleton_le_iff_mem] using hGmem)
    (flagRelationKernel_contract K P lam mu nu order ht)
 end
-end ProximityPrize.SubmissionLower.ContactFlagPlaneSurfaceLocalAdapter6732Research
+end ProximityPrize.SubmissionLower.RCN113

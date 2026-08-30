@@ -1,10 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B0
-namespace ProximityPrize.SubmissionLower.ContactIdentityZeroSafePencilResearch
-open ActualCurveCoordinateField ContactGenericSurface ContactPencilGeometry
-open ContactGlobalPolynomiality ContactPolynomiality ContactPolynomialSolutions
-open ContactPolynomialRecovery ContactTaylorNumerators ContactAgreementEvaluation
-open ContactIdentityPencil ContactTranslation ContactComponentPencils
+namespace ProximityPrize.SubmissionLower.RCN166
+open RCN002 RCN136 RCN224
+open RCN139 RCN233 RCN231
+open RCN229 RCN313 RCN047
+open RCN147 RCN319 RCN065
 noncomputable section
 variable {K Omega:Type} [Field K] [Field Omega]
 variable (phi:Polynomial K →+*Omega)
@@ -52,4 +52,4 @@ theorem identityNodes_card_le_of_r_dependent_principal_zero_safe
    phi P F hF hH w P0 P1 hp
  exact not_y_affine_of_r_dependent_principal Omega P g hP hr _ _ hy
 end
-end ProximityPrize.SubmissionLower.ContactIdentityZeroSafePencilResearch
+end ProximityPrize.SubmissionLower.RCN166

@@ -1,10 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.N8
-namespace ProximityPrize.SubmissionLower.ContactReducedTaylorNumerators6643Research
+namespace ProximityPrize.SubmissionLower.RCN262
 open scoped BigOperators
-open ContactDifferentialRing ContactTaylorNumerators ContactSingularDegreeBounds
-open ContactReducedCoefficient6643Research
-open ContactPost6464MinkowskiRecurrenceResearch ContactJointTaylorMiddleCap6631Research
+open RCN077 RCN313 RCN293
+open RCN261
+open RCN234 RCN179
 noncomputable section
 variable {K : Type*} [Field K]
 theorem excessFactor_wt_le (weights : Fin 4 → ℕ)
@@ -187,4 +187,4 @@ theorem reducedAgreementNumerator_wt_le (weights : Fin 4 → ℕ)
    (hTaylor.trans (Nat.add_le_add_right (Nat.le_max_left _ _) _))
    (hprod.trans (Nat.add_le_add_right (Nat.le_max_right _ _) _)))
 end
-end ProximityPrize.SubmissionLower.ContactReducedTaylorNumerators6643Research
+end ProximityPrize.SubmissionLower.RCN262

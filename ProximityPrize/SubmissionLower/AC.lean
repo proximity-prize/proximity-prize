@@ -2,12 +2,12 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R
 import ProximityPrize.SubmissionLower.V
 import ProximityPrize.SubmissionLower.D4
-namespace ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
+namespace ProximityPrize.SubmissionLower.RCN266
 open scoped BigOperators
-open ContactParameters6600Research
-open ContactSelectedSeedDecomposition ContactImplicitContactLift
-open ContactInterpolation ContactGenericSurface
-open ContactFlagBezout6543Research
+open RCN223
+open RCN286 RCN167
+open RCN174 RCN136
+open RCN095
 noncomputable section
 variable {K Omega:Type} [Field K] [Field Omega]
 abbrev RegularIndex (Q:MvPolynomial (Fin 4) K):=
@@ -49,13 +49,13 @@ theorem regularFlag_budgets
  refine ⟨?_,?_,?_⟩
  · simpa [seedTotalCap] using hb.2.2
  · have hy:(weightedCap-1)/w=43:=by
-     norm_num [ContactParameters6600Research.weightedCap,
-       ContactParameters6600Research.multiplicity,
-       ContactParameters6600Research.agreements,
-       ContactParameters6600Research.n,
-       ContactParameters6600Research.errors,
-       ContactParameters6600Research.w]
+     norm_num [RCN223.weightedCap,
+       RCN223.multiplicity,
+       RCN223.agreements,
+       RCN223.n,
+       RCN223.errors,
+       RCN223.w]
    simpa only [hy] using hb.1
  · simpa [slopeCap] using hb.2.1
 end
-end ProximityPrize.SubmissionLower.ContactRegularFactorFlag6600Research
+end ProximityPrize.SubmissionLower.RCN266

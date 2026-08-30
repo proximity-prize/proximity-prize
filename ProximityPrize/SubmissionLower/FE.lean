@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Y3
-namespace ProximityPrize.SubmissionLower.ContactNumeratorFactorScaling6731Research
-open ContactDifferentialRing ContactTaylorNumerators
- DifferentialTaylorCoefficients ContactBaseIdealAlgebra6676Research
+namespace ProximityPrize.SubmissionLower.RCN217
+open RCN077 RCN313
+ RCN347 RCN055
 noncomputable section
 variable {K:Type*} [CommRing K]
 private abbrev factorIdeal (F:Poly4 K):Ideal (Poly4 K):=Ideal.span {F}
@@ -118,4 +118,4 @@ theorem factor_dvd_numerator_sub_power_of_eq (F Q S:Poly4 K)
  subst S
  exact factor_dvd_numerator_sub_power F Q b
 end
-end ProximityPrize.SubmissionLower.ContactNumeratorFactorScaling6731Research
+end ProximityPrize.SubmissionLower.RCN217

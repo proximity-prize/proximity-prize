@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.CT
 import ProximityPrize.SubmissionLower.I8
-namespace ProximityPrize.SubmissionLower.ContactLocalizationDerivation6731Research
-open ContactDualNumberCompat6733Research
+namespace ProximityPrize.SubmissionLower.RCN188
+open RCN078
 variable {K R S:Type*} [CommRing K] [CommRing R] [CommRing S]
 variable [Algebra K R] [Algebra K S] [Algebra R S] [IsScalarTower K R S]
 variable (M:Submonoid R) [IsLocalization M S]
@@ -66,4 +66,4 @@ theorem localizationDerivation_algebraMap (D:Derivation K R R) (r:R):
    localizationDerivation M D (algebraMap R S r)=algebraMap R S (D r):=by
  change (localizedDualAlgHom M D (algebraMap R S r)).snd=_
  rw [localizedDualAlgHom_algebraMap]
-end ProximityPrize.SubmissionLower.ContactLocalizationDerivation6731Research
+end ProximityPrize.SubmissionLower.RCN188

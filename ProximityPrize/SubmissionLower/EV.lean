@@ -1,16 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z6
 import ProximityPrize.SubmissionLower.D4
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualFactorIncidence6600Research
+namespace ProximityPrize.SubmissionLower.RCN153
 open scoped Classical
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualTerminalIncidenceResearch
-open ContactNearPencil6600ArithmeticResearch
-open ContactNearPencil6600FlagResearch
-open ContactNearPencil6600FactorLedgerResearch
-open ContactPrimeSeedIncidence
-open ContactFlagBezout6543Research
-open ContactResidualSupportParametersResearch
+open RCN159
+open RCN164
+open RCN213
+open RCN215
+open RCN214
+open RCN238
+open RCN095
+open RCN275
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 50000
@@ -147,4 +147,4 @@ theorem recursive_scaled_factor_6600
        agreementDirection6600]
      ring
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualFactorIncidence6600Research
+end ProximityPrize.SubmissionLower.RCN153

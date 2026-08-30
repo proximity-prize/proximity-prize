@@ -1,17 +1,17 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EN
 import ProximityPrize.SubmissionLower.AG
-namespace ProximityPrize.SubmissionLower.ContactFixedMeetSingular6656Research
+namespace ProximityPrize.SubmissionLower.RCN092
 open scoped Classical BigOperators
-open ContactInterpolation ContactTranslation ContactPrimeSeedIncidence
-open ContactRegularFactorFlag6600Research
-open ContactGlobalSelectedFamilies6600Research
-open ContactSingularBranch6600Research
-open ContactSingularLedger6600Research
-open ContactTightSingularLedgerResearch
-open ContactRobustFixedMeet6656Research
-open ContactGlobalSelectedFamilies6656Research
-open ContactSingularBranchParameterizedResearch
+open RCN174 RCN319 RCN238
+open RCN266
+open RCN140
+open RCN291
+open RCN294
+open RCN318
+open RCN276
+open RCN141
+open RCN292
 noncomputable section
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 35000
@@ -48,7 +48,7 @@ theorem meet_singularSeeds_tight_gap_bound
    (singularSeeds Q selected Gamma).card*meetTightProfile.gap ≤
      meetTightProfile.tightNumerator:=by
  exact
-   ContactSingularBranchParameterizedResearch.TightParameters.singularSeeds_tight_gap_bound
+   RCN292.TightParameters.singularSeeds_tight_gap_bound
      meetTightProfile Q hQ hbox
      (by norm_num [meetTightProfile,meetProfile])
      (by norm_num [meetTightProfile,meetProfile,prime6656])
@@ -153,4 +153,4 @@ theorem meet_global_count_lt_fixedCost_of_regular_factors
    norm_num [meetProfile,Profile.gap]
  exact Nat.lt_of_mul_lt_mul_right (hscaled.trans_lt hstrict)
 end
-end ProximityPrize.SubmissionLower.ContactFixedMeetSingular6656Research
+end ProximityPrize.SubmissionLower.RCN092

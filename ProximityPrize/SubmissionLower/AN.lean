@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.CK
-namespace ProximityPrize.SubmissionLower.ContactWeightedGroupedResultantChannel6733Research
+namespace ProximityPrize.SubmissionLower.RCN343
 open scoped Classical BigOperators
-open ContactTwoTailResultantMultiplicity6732Research
+open RCN337
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -45,4 +45,4 @@ theorem WeightedGroupedResultantChannel.sum_mul_cost_le
    _ ≤ C.resultant.natDegree:=hfactor
    _ ≤ budget:=C.resultant_degree_le
 end
-end ProximityPrize.SubmissionLower.ContactWeightedGroupedResultantChannel6733Research
+end ProximityPrize.SubmissionLower.RCN343

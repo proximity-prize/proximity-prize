@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A4
 import ProximityPrize.SubmissionLower.BJ
-namespace ProximityPrize.SubmissionLower.ContactTailClosure
-open ContactDifferentialRing ContactTaylorNumerators ContactAgreementEvaluation
-open ContactRegularPoint ContactPolynomiality ContactGlobalPolynomiality
-open DifferentialTaylorCoefficients
-open ContactInterpolation ContactTranslation
+namespace ProximityPrize.SubmissionLower.RCN311
+open RCN077 RCN313 RCN047
+open RCN269 RCN233 RCN139
+open RCN347
+open RCN174 RCN319
 noncomputable section
 variable (K:Type*) [CommRing K]
 theorem cleared_vector_field_annihilates (F:Poly4 K):
@@ -79,4 +79,4 @@ theorem exists_global_polynomial_of_first_tail_dvd
  intro j hj _
  exact all_tail_jets_zero_of_first_tail_dvd coefficients F v hF hreg w hdiv j hj
 end PolynomialFamily
-end ProximityPrize.SubmissionLower.ContactTailClosure
+end ProximityPrize.SubmissionLower.RCN311

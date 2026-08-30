@@ -2,24 +2,24 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.FD
 import ProximityPrize.SubmissionLower.X9
 import ProximityPrize.SubmissionLower.D3
-namespace ProximityPrize.SubmissionLower.ContactCommonProjectionChoice6676Research
+namespace ProximityPrize.SubmissionLower.RCN064
 open scoped Classical BigOperators WithZero
-open ContactMovingSupport6676Research ContactLeadingCancellationResearch
-open ContactGenericCoefficientAvoidanceResearch ContactSparsePoleSupportResearch
-open ContactFlagBezout6543Research ContactFlagPoleInequality6543Research
-open ContactLocalPoleBound CoordinateBoxZeroCount
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveScalarTowers
-open ContactWeakSeparableSeparatorResearch ContactAdaptiveRelevantPlacesResearch
-open ContactAdaptiveNestedProjection6600Research ContactMovingProjection6676Research
-open ContactMovingProjectionDegree6676Research
-open ContactRegularComponentCover ContactAdaptiveProjectionCoordinateResearch
-open ContactAdaptiveAffineProjectionResearch ArbitraryRationalProjectionResearch
+open RCN212 RCN184
+open RCN133 RCN295
+open RCN095 RCN114
+open RCN187 RCN344
+open RCN002 RCN005 RCN006
+open RCN341 RCN044
+open RCN037 RCN207
+open RCN208
+open RCN264 RCN042
+open RCN035 RCN022
 noncomputable section
 set_option maxHeartbeats 1500000
 set_option synthInstance.maxHeartbeats 250000
 private theorem exact_of_avoids {K L σ:Type*} [Field K] [Field L]
    [Algebra K L] [Fintype σ] [DecidableEq σ]
-   (v:CoordinatePlaceClassification.NormalizedValuation K L) (x:σ → L)
+   (v:RCN345.NormalizedValuation K L) (x:σ → L)
    (E:Finset (σ →₀ ℕ)) (c:E → K)
    (hc:c∉cancellationSubmodule v.val (constant_value_le_one K L v) x E):
    v.val (coefficientEvaluation x E c)=WithZero.exp (exponentSetPoleWeight v.val x E):=by
@@ -31,7 +31,7 @@ theorem exists_common_coefficients {K I:Type*} [Field K] [Infinite K] [Finite I]
    (L:I → Type*) [∀ i,Field (L i)] [∀ i,Algebra K (L i)]
    (x:∀ i,Fin 3 → L i) (w:∀ i,L i) (index:I → Fin 3)
    (hd:∀ i,KaehlerDifferential.D K (L i) (x i (index i))≠0)
-   (V:∀ i,Finset (CoordinatePlaceClassification.NormalizedValuation K (L i))):
+   (V:∀ i,Finset (RCN345.NormalizedValuation K (L i))):
    ∃ c:movingSupport → K,∀ i,
      coefficientEvaluation (x i) linearSupport (restrictU c)≠0∧
      KaehlerDifferential.D K (L i)
@@ -111,7 +111,7 @@ def movingRelevantPlaces {P:Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
  letI:FiniteDimensional (RatFunc K) (CoordinateField K P):=D.finite
  letI:Algebra.IsSeparable (RatFunc K) (CoordinateField K P):=D.separable
  exact literalRelevantPlaces D ∪ if hw:w≠0 then
-   CommonPlaceBalance.placesFor K (CoordinateField K P) w hw else ∅
+   RCN026.placesFor K (CoordinateField K P) w hw else ∅
 theorem outside_movingRelevantPlaces {P:Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
    (D:SeparableLiteralCoordinate P) (w:CoordinateField K P)
    (v:Place K (CoordinateField K P)) (hv:v∉movingRelevantPlaces D w):
@@ -128,13 +128,13 @@ theorem outside_movingRelevantPlaces {P:Ideal (MvPolynomial (Fin 3) K)} [P.IsPri
      (fun h↦hv (Finset.mem_union_left _ h))
  · by_cases hw:w=0
    · simp [hw,poleOrder]
-   have horder:CommonPlaceBalance.order K (CoordinateField K P) v w=0:=by
+   have horder:RCN026.order K (CoordinateField K P) v w=0:=by
      by_contra hn
      apply hv
      apply Finset.mem_union_right
      simp only [dif_pos hw]
-     exact CommonPlaceBalance.placesFor_covers K (CoordinateField K P) w hw v hn
-   simp only [CommonPlaceBalance.order] at horder
+     exact RCN026.placesFor_covers K (CoordinateField K P) w hw v hn
+   simp only [RCN026.order] at horder
    simp [poleOrder,show (v.val w).log=0 by omega]
 def movingRatio (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
    (H G:MvPolynomial (Fin 3) K):CoordinateField K P:=
@@ -243,4 +243,4 @@ theorem value_one_at_finite_moving_pole {P:Ideal (MvPolynomial (Fin 3) K)} [P.Is
  rw [hu v (moving_pole_mem_relevant base w v hw),h0,h2]
  simp
 end
-end ProximityPrize.SubmissionLower.ContactCommonProjectionChoice6676Research
+end ProximityPrize.SubmissionLower.RCN064

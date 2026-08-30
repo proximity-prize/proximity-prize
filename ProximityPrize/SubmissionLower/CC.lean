@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.GD
-namespace ProximityPrize.SubmissionLower.ContactStackedSeedPartition6656Research
+namespace ProximityPrize.SubmissionLower.RCN304
 open ProximityPrize.Benchmark
-open ContactTranslation ContactRecursiveGCDResearch
-open ContactStackedGCDCover6656Research
+open RCN319 RCN259
+open RCN299
 noncomputable section
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
 local instance:DecidableEq (Polynomial IRSProfile.Field):=Classical.decEq _
@@ -107,4 +107,4 @@ theorem fixedSeeds_vanish
  rw [fixedSeeds] at hgamma
  exact (Finset.mem_filter.mp hgamma).2
 end
-end ProximityPrize.SubmissionLower.ContactStackedSeedPartition6656Research
+end ProximityPrize.SubmissionLower.RCN304

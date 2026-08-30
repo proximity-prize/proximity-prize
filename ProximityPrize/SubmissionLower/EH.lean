@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G
-namespace ProximityPrize.SubmissionLower.ContactFunctionFieldTrdeg6731Research
+namespace ProximityPrize.SubmissionLower.RCN129
 noncomputable section
 variable (K L:Type*) [Field K] [Field L] [Algebra K L]
  [Algebra (RatFunc K) L] [IsScalarTower K (RatFunc K) L]
@@ -30,4 +30,4 @@ theorem trdeg_le_one_of_functionField:Algebra.trdeg K L ≤ 1:=by
  rw [himage] at hytr
  exact hytr hyalg
 end
-end ProximityPrize.SubmissionLower.ContactFunctionFieldTrdeg6731Research
+end ProximityPrize.SubmissionLower.RCN129

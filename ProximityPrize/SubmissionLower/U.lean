@@ -1,10 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AC
-namespace ProximityPrize.SubmissionLower.ContactRobustFixedMeet6656Research
+namespace ProximityPrize.SubmissionLower.RCN276
 open scoped BigOperators
-open ContactInterpolation ContactSelectedSeedDecomposition
-open ContactFlagBezout6543Research
-open ContactRegularFactorFlag6600Research
+open RCN174 RCN286
+open RCN095
+open RCN266
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 30000
 structure Profile where
@@ -226,4 +226,4 @@ theorem meet_fixed_cost_lt_budget:
    meetProfile.fixedCost < 100000000000000000:=by
  rw [meet_fixed_cost_exact]
  norm_num
-end ProximityPrize.SubmissionLower.ContactRobustFixedMeet6656Research
+end ProximityPrize.SubmissionLower.RCN276

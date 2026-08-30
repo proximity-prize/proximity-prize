@@ -1,17 +1,17 @@
 import ProximityPrize.SubmissionLower.FV
-namespace ProximityPrize.SubmissionLower.ContactProperFlagIndexedFiberPrimary6733Research
-open ContactProperDelayedTailCertificate6732Research ContactProperMultiplicitySymbolic6732Research
-open ContactDelayedTailMultiplicityProvider6732Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactFlagPlaneIndexedFiberCertificate6733Research
-open ContactFlagPlaneFiberPrimary6733Research
-open ContactProperFlagFiberData6733Research
-open ContactProperFlagIndexedFiberData6733Research
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ContactFirstTailCertificate6731Research ContactOriginalFactorLocalDVR6731Research
-open ContactGenericInitialPoint ContactTaylorNumerators
-open ContactFlagBezout6543Research ContactFlagAffineFamilyDegree6543Research
-open ActualCurveCoordinateField ArbitraryPlaneEvaluationFamilyResearch
+namespace ProximityPrize.SubmissionLower.RCN247
+open RCN244 RCN248
+open RCN074
+open RCN106
+open RCN107
+open RCN102
+open RCN245
+open RCN246
+open RCN120
+open RCN086 RCN218
+open RCN135 RCN313
+open RCN095 RCN093
+open RCN002 RCN021
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 5000000
@@ -20,11 +20,13 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
+variable {errorCap : ℕ}
+variable {stageSupport : RCN275.ResidualSupportParameters}
 variable {A:Type} [Fintype A]
 theorem indexedFiberTail_mem_primary
-   (S:Stage K I Gamma x p flag)
+   (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w+1))
+     (RCN326.w+1))
    (component:A → StageComponent S)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3)
    (ht:∀ a:A,Transcendental (GenericField K)
@@ -69,4 +71,4 @@ theorem indexedFiberTail_mem_primary
  · exact hcontract
  · exact htail
 end
-end ProximityPrize.SubmissionLower.ContactProperFlagIndexedFiberPrimary6733Research
+end ProximityPrize.SubmissionLower.RCN247

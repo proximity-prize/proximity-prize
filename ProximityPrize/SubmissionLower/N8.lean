@@ -1,10 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.N7
 import ProximityPrize.SubmissionLower.N6
-namespace ProximityPrize.SubmissionLower.ContactReducedTaylorNumerators6643Research
+namespace ProximityPrize.SubmissionLower.RCN262
 open scoped BigOperators
-open ContactDifferentialRing ContactTaylorNumerators ContactSingularDegreeBounds
-open ContactReducedCoefficient6643Research
+open RCN077 RCN313 RCN293
+open RCN261
 noncomputable section
 set_option maxHeartbeats 800000
 variable {K : Type*} [Field K]
@@ -214,4 +214,4 @@ theorem reducedAgreementNumerator_R_degree_bound (F : Poly K) (s : ℕ)
    simpa only [polyH,Nat.zero_add] using
      degree_mul_bound (2 : Fin 4) hA (degree_pow_bound (2 : Fin 4) (2 * w) hH)
 end
-end ProximityPrize.SubmissionLower.ContactReducedTaylorNumerators6643Research
+end ProximityPrize.SubmissionLower.RCN262

@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CM
 import ProximityPrize.SubmissionLower.F7
-namespace ProximityPrize.SubmissionLower.UnitResidueWeights
+namespace ProximityPrize.SubmissionLower.RCN373
 open scoped Classical
 noncomputable section
 variable {K R S:Type*} [Field K] [CommRing R] [CommRing S]
@@ -13,7 +13,7 @@ theorem pointFiber_quotient_integral (phi:R →ₐ[K] K) (P:Ideal S)
  have hcomp:(algebraMap K (S ⧸ P)).comp phi.toRingHom=
      (Ideal.Quotient.mk P).comp (algebraMap R S):=by
    ext r
-   exact (IntegralPointLifting.quotient_scalar_compatibility phi P hP r).symm
+   exact (RCN354.quotient_scalar_compatibility phi P hP r).symm
  constructor
  intro z
  obtain ⟨s,rfl⟩:=Ideal.Quotient.mk_surjective z
@@ -31,7 +31,7 @@ theorem inertiaDeg_eq_one_of_point_fiber (phi:R →ₐ[K] K) (P:Ideal S)
    (hP:P.comap (algebraMap R S)=RingHom.ker phi.toRingHom):
    P.inertiaDeg R=1:=by
  let p:Ideal R:=RingHom.ker phi.toRingHom
- letI:p.IsMaximal:=IntegralPointLifting.pointKernel_isMaximal phi
+ letI:p.IsMaximal:=RCN354.pointKernel_isMaximal phi
  letI:P.LiesOver p:=⟨hP.symm⟩
  letI:Field (R ⧸ p):=Ideal.Quotient.field p
  letI:Field (S ⧸ P):=Ideal.Quotient.field P
@@ -48,9 +48,9 @@ theorem inertiaDeg'_eq_one_of_point_fiber (phi:R →ₐ[K] K) (P:Ideal S)
    (hP:P.comap (algebraMap R S)=RingHom.ker phi.toRingHom):
    (RingHom.ker phi.toRingHom).inertiaDeg' P=1:=by
  letI:(RingHom.ker phi.toRingHom).IsMaximal:=
-   IntegralPointLifting.pointKernel_isMaximal phi
+   RCN354.pointKernel_isMaximal phi
  letI:P.LiesOver (RingHom.ker phi.toRingHom):=⟨hP.symm⟩
  rw [Ideal.inertiaDeg'_eq_inertiaDeg]
  exact inertiaDeg_eq_one_of_point_fiber phi P hP
 end
-end ProximityPrize.SubmissionLower.UnitResidueWeights
+end ProximityPrize.SubmissionLower.RCN373

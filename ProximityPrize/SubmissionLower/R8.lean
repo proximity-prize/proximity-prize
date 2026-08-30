@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CL
-namespace ProximityPrize.SubmissionLower.InfinityResidueField
+namespace ProximityPrize.SubmissionLower.RCN352
 open scoped Classical WithZero
 noncomputable section
 variable (K:Type*) [Field K]
 local instance:DecidableEq K:=Classical.decEq K
-abbrev InfinityRing:=InfinityValuationRing.InfinityRing K
+abbrev InfinityRing:=RCN353.InfinityRing K
 def constantMap:K →+*InfinityRing K where
  toFun c:=⟨RatFunc.C c,by
    change RatFunc.inftyValuation K (RatFunc.C c) ≤ 1
@@ -120,4 +120,4 @@ def residueEquiv:K ≃+*ResidueField K:=
    ⟨residueConstant_injective K,residueConstant_surjective K⟩
 theorem residueEquiv_apply (c:K):residueEquiv K c=residueConstant K c:=rfl
 end
-end ProximityPrize.SubmissionLower.InfinityResidueField
+end ProximityPrize.SubmissionLower.RCN352

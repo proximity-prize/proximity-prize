@@ -1,10 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D5
-namespace ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
+namespace ProximityPrize.SubmissionLower.RCN214
 open scoped BigOperators
-open ContactFlagBezout6543Research
-open ContactNearPencil6600ArithmeticResearch
-open ContactNearPencil6600FlagResearch
+open RCN095
+open RCN213
+open RCN215
 set_option maxHeartbeats 1000000
 def factorPrimary (p:FlagDegree):ℕ:=
  flagMixed p agreementDirection6600 agreementDirection6600*degreeIncidence^2+
@@ -160,4 +160,4 @@ theorem combined_rectangular_scaled_bound
    _ ≤ rectangularRegularNumerator+retainedSingularContribution:=
      Nat.add_le_add hregular hsingular
    _=rectangularTotalNumerator:=rfl
-end ProximityPrize.SubmissionLower.ContactNearPencil6600FactorLedgerResearch
+end ProximityPrize.SubmissionLower.RCN214

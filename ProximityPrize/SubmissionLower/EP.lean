@@ -1,12 +1,12 @@
 import ProximityPrize.SubmissionLower.FK
 import ProximityPrize.SubmissionLower.GB
-namespace ProximityPrize.SubmissionLower.ContactGroupedResultantModMax6733Research
+namespace ProximityPrize.SubmissionLower.RCN143
 open scoped Classical BigOperators
-open ContactPolynomialAtPrimeOrder6732Research
-open ContactSylvesterCokernelQuotient6732Research
-open ContactSylvesterPrimaryDirect6733Research
-open ContactSylvesterModMax6733Research
-open ContactSpecializedMonicReducer6733Research
+open RCN227
+open RCN307
+open RCN309
+open RCN308
+open RCN297
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -102,4 +102,4 @@ theorem grouped_resultant_power_dvd_of_primary_pieces_of_surface_mod_ne_zero
    primeIdeal factor multiplicity hprime hfactor hfactorMonic
      P₀ Q₀ m n P Q hPmap hQmap hPcap hQcap hresultant C hmod
 end
-end ProximityPrize.SubmissionLower.ContactGroupedResultantModMax6733Research
+end ProximityPrize.SubmissionLower.RCN143

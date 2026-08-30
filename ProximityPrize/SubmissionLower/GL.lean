@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.S
-namespace ProximityPrize.SubmissionLower.ContactSymbolicPowerTransport6732Research
+namespace ProximityPrize.SubmissionLower.RCN310
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -113,4 +113,4 @@ theorem mapped_mem_span_sup_pow_of_localized_mem
  exact mem_span_sup_pow_of_mul_mem_of_not_mem_maximal
    surface (f x) (f s) J hsurface n hn hfs hmul
 end
-end ProximityPrize.SubmissionLower.ContactSymbolicPowerTransport6732Research
+end ProximityPrize.SubmissionLower.RCN310

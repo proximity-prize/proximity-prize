@@ -1,19 +1,19 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y0
 import ProximityPrize.SubmissionLower.EO
-namespace ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research
+namespace ProximityPrize.SubmissionLower.RCN265
 open scoped Classical
-open ActualCurveCoordinateField ContactGenericSurface ContactProperCutSeedCount
-open ContactRegularComponentCover ContactRegularFactorGate
-open CoordinateBoxZeroCount
-open ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveProjectionCoordinateResearch
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedUnitFamily6600Research
-open ContactAdaptiveUnitPoleFamilyResearch
-open ContactGlobalShearPositivityResearch
-open ContactFlagAffineFamilyDegree6543Research
-open ContactFlagBezout6543Research
+open RCN002 RCN136 RCN243
+open RCN264 RCN267
+open RCN344
+open RCN341
+open RCN042
+open RCN037
+open RCN039
+open RCN046
+open RCN142
+open RCN093
+open RCN095
 noncomputable section
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
 def verticalPoint (y z:Omega):Fin 3 → Polynomial Omega:=
@@ -190,4 +190,4 @@ theorem exists_adaptiveUnitProjectionFamilyYZ_of_nested
    hG hproper hGsupport hTsupport⟩
 end RefinedAdaptiveFamily
 end
-end ProximityPrize.SubmissionLower.ContactRegularComponentYZPositivity6630Research
+end ProximityPrize.SubmissionLower.RCN265

@@ -2,20 +2,20 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J4
 import ProximityPrize.SubmissionLower.DU
 import ProximityPrize.SubmissionLower.BK
-namespace ProximityPrize.SubmissionLower.ContactIdentityCurveProvider6731Research
+namespace ProximityPrize.SubmissionLower.RCN146
 open scoped Classical BigOperators
-open ContactGenericInitialPoint ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactTaylorNumerators ContactInterpolation
-open ContactPrimeSeedIncidence ContactComponentPencils ContactProperCutSeedCount
-open ContactRegularComponentCover ContactIdentityResidualIterationResearch
-open ContactFlagBezout6543Research ContactResidualSupportParametersResearch
-open ContactMovingAgreementCertificate6719Research ContactMovingOuterBudget6719Research
-open ContactSharpTaylorFixedMeet6656Research
-open ContactAgreementProjection6731Research ContactIdentityCoefficientProfile6731Research
-open ContactCoefficientPole6731Research ContactIdentityCurveCount6731Research
-open ContactFirstTailIdentityIncidence6731Research
-open ContactAdaptiveUnitPoleFamilyResearch ContactRegularComponentYZPositivity6630Research
-open ContactSparsePoleSupportResearch CoordinateBoxZeroCount ActualCurveCoordinateField
+open RCN135 RCN136 RCN231 RCN319
+open RCN313 RCN174
+open RCN238 RCN065 RCN243
+open RCN264 RCN159
+open RCN095 RCN275
+open RCN198 RCN203
+open RCN287
+open RCN049 RCN144
+open RCN063 RCN145
+open RCN087
+open RCN046 RCN265
+open RCN295 RCN344 RCN002
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 45000
@@ -31,11 +31,11 @@ theorem mixed_padded_le_succ (flag:FlagDegree) (a b s d:ℕ) (r:FlagDegree):
    flagMixed flag (paddedCut a b s d) r ≤
      flagMixed flag (paddedCut a b s (d+1)) r:=by
  have he:paddedCut a b s (d+1)=paddedCut a b s d+
-     ContactMovingPositiveLedger6719Research.directionFlag a b s:=by
+     RCN206.directionFlag a b s:=by
    change FlagDegree.mk _ _ _=FlagDegree.mk _ _ _
    congr 1 <;> simp only [paddedCut,
-     ContactMovingPositiveLedger6719Research.centreFlag,
-     ContactMovingPositiveLedger6719Research.directionFlag,
+     RCN206.centreFlag,
+     RCN206.directionFlag,
      add_zOnly,add_yz,add_all,nsmul_zOnly,nsmul_yz,nsmul_all] <;> ring
  rw [he,mixed_add_second]
  exact Nat.le_add_right _ _
@@ -76,7 +76,7 @@ theorem actual_identityCurveCountProvider
    have hGcGi:Gc⊆Gi:=componentSeeds_subset (Ω K) S.G T _ Gi _ C
    have hGiΓ:Gi⊆Γ:=Finset.filter_subset _ _
    have hGcΓ:Gc⊆Γ:=hGcGi.trans hGiΓ
-   have hyzC:∀ W:Finset (CoordinatePoleMass.Place (Ω K)
+   have hyzC:∀ W:Finset (RCN346.Place (Ω K)
        (CoordinateField (Ω K) C.1)),
        (∑ v∈W,exponentSetPoleWeight v.val (coordinate (Ω K) C.1)
          (flagSupport unitYZFlag))≤
@@ -87,7 +87,7 @@ theorem actual_identityCurveCountProvider
        (coordinateDegree (Ω K) (CoordinateField (Ω K) C.1)
          (U.family.yzProjection C):ℤ)
      calc
-       _=∑ v∈W,CoordinatePoleMass.poleOrder (Ω K)
+       _=∑ v∈W,RCN346.poleOrder (Ω K)
            (CoordinateField (Ω K) C.1) v
            (coordinateValue (Ω K) (CoordinateField (Ω K) C.1)
              (U.family.yzProjection C)):=by
@@ -148,4 +148,4 @@ theorem actual_identityCurveCountProvider
    rw [Finset.sum_add_distrib]
    exact Nat.add_le_add hz'' hyz''
 end
-end ProximityPrize.SubmissionLower.ContactIdentityCurveProvider6731Research
+end ProximityPrize.SubmissionLower.RCN146

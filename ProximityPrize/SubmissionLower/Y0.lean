@@ -2,22 +2,22 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X9
 import ProximityPrize.SubmissionLower.C0
 import ProximityPrize.SubmissionLower.BA
-namespace ProximityPrize.SubmissionLower.ContactAdaptiveNestedUnitFamily6600Research
+namespace ProximityPrize.SubmissionLower.RCN039
 open scoped Classical BigOperators WithZero
-open ActualCurveCoordinateField ActualCurveRationalProjection
-open CoordinateBoxZeroCount ContactRegularComponentCover
-open ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveProjectionCoordinateResearch
-open ContactAdaptiveUnitPoleFamilyResearch
-open ContactAdaptiveNestedProjection6600Research
-open ContactFlagBezout6543Research ContactFlagPoleInequality6543Research
-open ContactFlagAffineFamilyDegree6543Research
-open ContactFlagTrapezoidCaps6543Research
-open ContactFlagSymbolicTrapezoidResearch
-open ContactFlagProjectionPositivity6543Research
-open ContactFlagPrincipalCycles6543Research
-open ContactFlagTriangularProjectionResearch
-open ArbitraryRationalProjectionResearch
+open RCN002 RCN005
+open RCN344 RCN264
+open RCN341
+open RCN042
+open RCN046
+open RCN037
+open RCN095 RCN114
+open RCN093
+open RCN123
+open RCN121
+open RCN117
+open RCN116
+open RCN125
+open RCN022
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option synthInstance.maxHeartbeats 400000
@@ -318,17 +318,17 @@ def adaptiveUnitProjectionFamily_of_nested
    exact D.allAffineTranscendental C
  · intro C v
    rw [exponentSetPoleWeight_unitZ]
-   change _=ContactLocalPoleBound.poleOrder v.val _
+   change _=RCN187.poleOrder v.val _
    rw [coordinateOfGate_value]
  · intro C v
    rw [exponentSetPoleWeight_unitYZ]
-   change _=ContactLocalPoleBound.poleOrder v.val _
+   change _=RCN187.poleOrder v.val _
    rw [coordinateOfGate_value]
    rw [←D.uValue C]
    exact (D.uPole C v).symm
  · intro C v
    rw [exponentSetPoleWeight_unitAll]
-   change _=ContactLocalPoleBound.poleOrder v.val _
+   change _=RCN187.poleOrder v.val _
    rw [hvValue C, ←D.allValue C]
    exact (D.allPole C v).symm
 theorem exists_adaptiveUnitProjectionFamily_of_nested
@@ -348,4 +348,4 @@ theorem exists_adaptiveUnitProjectionFamily_of_nested
  exact ⟨adaptiveUnitProjectionFamily_of_nested p q base hY hZ hSderiv D
    hG hproper hGsupport hTsupport⟩
 end
-end ProximityPrize.SubmissionLower.ContactAdaptiveNestedUnitFamily6600Research
+end ProximityPrize.SubmissionLower.RCN039

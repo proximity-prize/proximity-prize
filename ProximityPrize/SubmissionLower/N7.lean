@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BY
-namespace ProximityPrize.SubmissionLower.ContactReducedTaylorNumerators6643Research
+namespace ProximityPrize.SubmissionLower.RCN262
 open scoped BigOperators
-open ContactDifferentialRing ContactTaylorNumerators ContactSingularDegreeBounds
-open ContactPost6464MinkowskiRecurrenceResearch ContactJointTaylorMiddleCap6631Research
+open RCN077 RCN313 RCN293
+open RCN234 RCN179
 noncomputable section
 variable {K : Type*} [Field K]
 abbrev Poly (K : Type*) [Field K] := MvPolynomial (Fin 4) K
@@ -142,4 +142,4 @@ theorem agreementNumerator_sub_reduced_dvd (F : Poly K) (s w : ℕ)
  simpa only [sub_sub_sub_cancel_right] using
    clearedTaylorNumerator_sub_reduced_dvd F s w c x
 end
-end ProximityPrize.SubmissionLower.ContactReducedTaylorNumerators6643Research
+end ProximityPrize.SubmissionLower.RCN262

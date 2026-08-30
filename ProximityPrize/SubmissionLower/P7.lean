@@ -1,10 +1,10 @@
 import ProximityPrize.SubmissionLower.Y6
-namespace ProximityPrize.SubmissionLower.ContactTwoTailRecurrence6731Research
+namespace ProximityPrize.SubmissionLower.RCN330
 open scoped Classical
-open ContactTaylorNumerators ContactPolynomialSolutions ContactGenericSurface
-open ContactPrimeSeedIncidence ContactFirstTailCertificate6731Research
-open ContactBaseIdealAlgebra6676Research ContactRegularComponentCover
-open ContactProperCutSeedCount
+open RCN313 RCN231 RCN136
+open RCN238 RCN086
+open RCN055 RCN264
+open RCN243
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 30000
@@ -13,7 +13,7 @@ theorem selected_globalTailCut_zero_of_lt
    (φ:Polynomial K →+*Ω) (F:MvPolynomial (Fin 4) K)
    (selected:K → Polynomial K) (γ:K) (w d:ℕ)
    (hdegree:(selected γ).natDegree ≤ w)
-   (hsolution:ContactTranslation.specialization K (selected γ) γ F=0)
+   (hsolution:RCN319.specialization K (selected γ) γ F=0)
    (hwd:w < d):
    MvPolynomial.aeval (selectedPoint φ selected γ)
      (globalTailCut φ F d)=0:=by
@@ -37,7 +37,7 @@ theorem selected_secondTail_zero
    (φ:Polynomial K →+*Ω) (F:MvPolynomial (Fin 4) K)
    (selected:K → Polynomial K) (γ:K) (w:ℕ)
    (hdegree:(selected γ).natDegree ≤ w)
-   (hsolution:ContactTranslation.specialization K (selected γ) γ F=0):
+   (hsolution:RCN319.specialization K (selected γ) γ F=0):
    MvPolynomial.aeval (selectedPoint φ selected γ)
      (globalTailCut φ F (w+2))=0:=by
  exact selected_globalTailCut_zero_of_lt φ F selected γ w (w+2)
@@ -113,4 +113,4 @@ theorem regularComponent_two_tail_dichotomy
    · simpa only [Nat.add_assoc,Nat.add_left_comm,Nat.add_comm] using hT2
  · exact Or.inl hT2
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailRecurrence6731Research
+end ProximityPrize.SubmissionLower.RCN330

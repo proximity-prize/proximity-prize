@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HE
-namespace ProximityPrize.SubmissionLower.DifferentialTaylorCoefficients
+namespace ProximityPrize.SubmissionLower.RCN347
 open Finset
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
@@ -168,4 +168,4 @@ theorem X_pow_dvd_jetPolynomial_product_error_of_char
  intro j hj
  exact factorial_cast_ne_zero_below_characteristic p j (lt_of_lt_of_le hj hbound)
 end NormalizedCoefficients
-end ProximityPrize.SubmissionLower.DifferentialTaylorCoefficients
+end ProximityPrize.SubmissionLower.RCN347

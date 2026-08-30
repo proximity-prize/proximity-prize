@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.E3
 import ProximityPrize.SubmissionLower.D0
-namespace ProximityPrize.SubmissionLower.ContactCoefficientPole6731Research
+namespace ProximityPrize.SubmissionLower.RCN063
 open scoped Classical BigOperators WithZero
-open ContactLocalPoleBound ContactMovingPoleTransport6719Research
-open CoordinateBoxZeroCount ActualCurveCoordinateField
-open ContactComponentPencils ContactGenericSurface ContactGlobalPolynomiality
-open ContactAgreementEvaluation ContactTaylorNumerators ContactPolynomiality
-open ContactPrimeSeedIncidence ContactWeakSeparableSeparatorResearch
-open ContactRegularZeroBudget6676Research ContactRationalRegularZero6676Research
-open ContactFlagBezout6543Research ContactFlagPoleInequality6543Research ContactSparsePoleSupportResearch
+open RCN187 RCN205
+open RCN344 RCN002
+open RCN065 RCN136 RCN139
+open RCN047 RCN313 RCN233
+open RCN238 RCN341
+open RCN271 RCN257
+open RCN095 RCN114 RCN295
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -76,7 +76,7 @@ theorem coefficientPoleProfile_of_coordinate [IsAlgClosed Ω] (w:ℕ)
    (J:Coordinate Ω (CoordinateField Ω P))
    (hprofile:∀ v:Place Ω (CoordinateField Ω P),
      coefficientPoleWeight v.val (truncatedPolynomial φ P F hF hH w) (coordinate Ω P 2) ≤
-       CoordinatePoleMass.poleOrder Ω (CoordinateField Ω P) v
+       RCN346.poleOrder Ω (CoordinateField Ω P) v
          (coordinateValue Ω (CoordinateField Ω P) J)):
    CoefficientPoleProfile φ P F hF hH w (coordinateDegree Ω (CoordinateField Ω P) J):=by
  intro W
@@ -158,7 +158,7 @@ theorem agreement_regular_zero_le [IsAlgClosed Ω] (base:SeparableLiteralCoordin
      coefficientPoleWeight v.val (truncatedPolynomial φ P F hF hH w) (coordinate Ω P 2):=by
    rw [normalized_agreement_eq φ P F hF hH]
    exact affine_eval_pole_le v _ _ (φ (Polynomial.C x)) (φ (Polynomial.C u0)) (φ (Polynomial.C u1))
- simpa only [CoordinatePoleMass.poleOrder,coordinateEvaluation_eq_aeval] using
+ simpa only [RCN346.poleOrder,coordinateEvaluation_eq_aeval] using
    (Finset.sum_le_sum (fun v _↦hlocal v)).trans (hprofile W)
 end
-end ProximityPrize.SubmissionLower.ContactCoefficientPole6731Research
+end ProximityPrize.SubmissionLower.RCN063

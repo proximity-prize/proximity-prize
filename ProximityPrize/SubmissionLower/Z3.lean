@@ -2,14 +2,14 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D
 import ProximityPrize.SubmissionLower.X3
 import ProximityPrize.SubmissionLower.Y
-namespace ProximityPrize.SubmissionLower.ContactFlagTriangularProjectionResearch
+namespace ProximityPrize.SubmissionLower.RCN125
 open scoped Classical BigOperators
-open ContactFlagBezout6543Research
-open TrivariateShearResearch
-open ActualCurveJointProjectionBounds
-open ActualCurveCoordinateField ActualPlaneCoordinateKernel
-open TrivariateRationalCollection ActualPlaneJointProjection
-open ActualPlanePositiveOrder
+open RCN095
+open RCN372
+open RCN003
+open RCN002 RCN011
+open RCN371 RCN012
+open RCN013
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 20000
@@ -245,20 +245,20 @@ theorem flag_jointOrderCertificate_of_projection_data
    (hGmem:flagAlgHom lam μ ν G∈P)
    (ht:Transcendental K (coordinate K P (order 0)))
    (hHne:H≠0)
-   (hGouter:(ActualPlaneCoordinateKernel.planeMap K order
+   (hGouter:(RCN011.planeMap K order
      (flagAlgHom lam μ ν G)).natDegree ≤ n)
-   (hHouter:(ActualPlaneCoordinateKernel.planeMap K order
+   (hHouter:(RCN011.planeMap K order
      (flagAlgHom lam μ ν H)).natDegree ≤ mCap)
-   (hGsupport:∀ d∈(TrivariateRationalCollection.rationalMap K order
+   (hGsupport:∀ d∈(RCN371.rationalMap K order
      (flagAlgHom lam μ ν G)).support,d 0+d 1 ≤ totalG)
-   (hHsupport:∀ d∈(TrivariateRationalCollection.rationalMap K order
+   (hHsupport:∀ d∈(RCN371.rationalMap K order
      (flagAlgHom lam μ ν H)).support,d 0+d 1 ≤ totalH)
-   (hGswapOuter:(ActualPlaneCoordinateKernel.planeMap K
-     (ActualPlanePositiveOrder.swapOtherOrder order)
+   (hGswapOuter:(RCN011.planeMap K
+     (RCN013.swapOtherOrder order)
      (flagAlgHom lam μ ν G)).natDegree ≤ gOuter)
    (hHswapInner:Polynomial.Bivariate.degreeX
-     (ActualPlaneCoordinateKernel.planeMap K
-       (ActualPlanePositiveOrder.swapOtherOrder order)
+     (RCN011.planeMap K
+       (RCN013.swapOtherOrder order)
        (flagAlgHom lam μ ν H)) ≤ hInner)
    (hnp:n < p) (hgOuterP:gOuter < p) (hcapP:cap < p)
    (hswapP:gOuter*hInner < p)
@@ -273,4 +273,4 @@ theorem flag_jointOrderCertificate_of_projection_data
    (flag_ne_zero lam μ ν hHne) hGouter hHouter hGsupport hHsupport
    hGswapOuter hHswapInner hnp hgOuterP hcapP hswapP hbudget
 end
-end ProximityPrize.SubmissionLower.ContactFlagTriangularProjectionResearch
+end ProximityPrize.SubmissionLower.RCN125

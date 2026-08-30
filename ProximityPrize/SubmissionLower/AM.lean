@@ -1,11 +1,11 @@
 import ProximityPrize.SubmissionLower.CK
 import ProximityPrize.SubmissionLower.B3
-namespace ProximityPrize.SubmissionLower.ContactTwoTailResultantProvider6732Research
+namespace ProximityPrize.SubmissionLower.RCN338
 open scoped Classical BigOperators
-open ContactFlagBezout6543Research ContactRegularComponentCover
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactFlagSymbolicTrapezoidResearch
-open ContactTwoTailResultantMultiplicity6732Research
+open RCN095 RCN264
+open RCN237
+open RCN121
+open RCN337
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -60,4 +60,4 @@ theorem RegularComponentWeightedInertiaResultantCertificate.divisor_le
      (flagMixed_projection_decomposition
        surfaceFlag firstTailFlag secondTailFlag).symm
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailResultantProvider6732Research
+end ProximityPrize.SubmissionLower.RCN338

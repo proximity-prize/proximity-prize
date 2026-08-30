@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B4
-namespace ProximityPrize.SubmissionLower.ContactAdaptiveComponentSeparatorResearch
+namespace ProximityPrize.SubmissionLower.RCN036
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
-open ActualCurveCoordinateField ActualCurveRationalProjection
- ActualCurveScalarTowers ActualCurveZeroCount
-open CoordinateBoxZeroCount ContactRegularComponentCover
-open ContactLocalPoleBound ContactLeadingCancellationResearch
- ContactGenericCoefficientAvoidanceResearch ContactSparsePoleSupportResearch
-open ContactTropicalBKKSeamResearch ContactResidualSparseComponentAdapterResearch
-open ContactSparsePoleZeroCountResearch
+open RCN002 RCN005
+ RCN006 RCN007
+open RCN344 RCN264
+open RCN187 RCN184
+ RCN133 RCN295
+open RCN323 RCN272
+open RCN296
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 300000
@@ -53,7 +53,7 @@ def componentRelevantPlacesAdaptive
    (hproj C i0 htr).2
  exact Finset.univ.biUnion (fun i:Fin 3 =>
    if hi:coordinate Omega C.1 i≠0 then
-     CommonPlaceBalance.placesFor Omega (CoordinateField Omega C.1)
+     RCN026.placesFor Omega (CoordinateField Omega C.1)
        (coordinate Omega C.1 i) hi
    else ∅)
 theorem coordinate_poleOrder_eq_zero_of_not_mem_adaptive
@@ -83,19 +83,19 @@ theorem coordinate_poleOrder_eq_zero_of_not_mem_adaptive
    (hproj C i0 htr).2
  by_cases hi:coordinate Omega C.1 i=0
  · simp [hi,poleOrder]
- · have hnot:v∉CommonPlaceBalance.placesFor Omega
+ · have hnot:v∉RCN026.placesFor Omega
        (CoordinateField Omega C.1) (coordinate Omega C.1 i) hi:=by
      intro hmem
      apply hv
      unfold componentRelevantPlacesAdaptive
      apply Finset.mem_biUnion.mpr
      exact ⟨i,Finset.mem_univ _,by simp [hi,hmem]⟩
-   have horder:CommonPlaceBalance.order Omega (CoordinateField Omega C.1) v
+   have horder:RCN026.order Omega (CoordinateField Omega C.1) v
        (coordinate Omega C.1 i)=0:=by
      by_contra hne
-     exact hnot (CommonPlaceBalance.placesFor_covers Omega
+     exact hnot (RCN026.placesFor_covers Omega
        (CoordinateField Omega C.1) (coordinate Omega C.1 i) hi v hne)
-   unfold CommonPlaceBalance.order at horder
+   unfold RCN026.order at horder
    unfold poleOrder
    have hlog:(v.val (coordinate Omega C.1 i)).log=0:=by omega
    rw [hlog]
@@ -263,7 +263,7 @@ theorem exists_adaptiveGenericExactPolePolynomial
        (fun a => constant_value_le_one Omega (CoordinateField Omega C.1) v a)
        (coordinate Omega C.1) E B hsupport
    exact poleOrder_eq_of_valuation_eq_exp v.val _ _
-     (ContactLeadingCancellationResearch.exponentSetPoleWeight_nonneg
+     (RCN184.exponentSetPoleWeight_nonneg
        v.val (coordinate Omega C.1) E)
      (le_antisymm hupper hlower)
  · have hweight:exponentSetPoleWeight v.val (coordinate Omega C.1) E=0:=
@@ -309,9 +309,9 @@ def AdaptiveGenericExactPolePolynomial.toResidualComponentBudget
        (coordinate Omega C.1) B.polynomial
      let hb:b≠0:=coordinate_eval_ne_zero_of_not_mem
        C.1 B.polynomial (B.proper C)
-     (∑ v∈CommonPlaceBalance.placesFor Omega
+     (∑ v∈RCN026.placesFor Omega
          (CoordinateField Omega C.1) b hb,
-       CoordinatePoleMass.poleOrder Omega (CoordinateField Omega C.1) v b) ≤
+       RCN346.poleOrder Omega (CoordinateField Omega C.1) v b) ≤
          (cost C:ℤ))
    (sum_cost_le:(∑ C:RegularComponent Omega G T H,cost C) ≤ wholeCost):
    ResidualComponentBudget G T H (fun A => A.support ⊆ E) wholeCost where
@@ -351,4 +351,4 @@ def AdaptiveGenericExactPolePolynomial.toResidualComponentBudget
    exact finite_zero_points_le_exponentSet_of_separator C.1 (hproj C)
      i0 htr E (cost C) hpole A hAE hproper points hpointsP hpointsA
 end
-end ProximityPrize.SubmissionLower.ContactAdaptiveComponentSeparatorResearch
+end ProximityPrize.SubmissionLower.RCN036

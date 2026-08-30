@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z5
 import ProximityPrize.SubmissionLower.AE
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualZeroBudgetTransportResearch
+namespace ProximityPrize.SubmissionLower.RCN165
 open scoped Classical
-open ContactFlagBezout6543Research
-open ContactFlagAffineResidualAutomorphismResearch
-open ContactIdentityResidualPrimeTransportResearch
-open ContactResidualSparseComponentAdapterResearch
+open RCN095
+open RCN094
+open RCN162
+open RCN272
 noncomputable section
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 20000
@@ -31,7 +31,7 @@ theorem polynomialInFlag_originalAlgHom
    (hA:PolynomialInFlag r A):
    PolynomialInFlag r (originalAlgHom aY v bY aS bS cS A):=by
  rw [originalAlgHom_eq_residualAlgHom]
- exact ContactFlagAffineResidualAutomorphismResearch.polynomialInFlag_residualAlgHom
+ exact RCN094.polynomialInFlag_residualAlgHom
    r A _ _ _ _ _ _ hA
 @[simp] theorem residual_original_apply
    (aY v bY aS bS cS:K) (hv:v≠0) (A:Poly3 K):
@@ -139,4 +139,4 @@ def PrimeFlagZeroBudget.mapResidual
      aY v bY aS bS cS hv P A (cost r)
      (B.zero_le r _ hAold hproperOld)
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualZeroBudgetTransportResearch
+end ProximityPrize.SubmissionLower.RCN165

@@ -2,21 +2,21 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EU
 import ProximityPrize.SubmissionLower.I
 import ProximityPrize.SubmissionLower.GJ
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamily6600Research
+namespace ProximityPrize.SubmissionLower.RCN148
 open scoped Classical BigOperators
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactRegularComponentCover
-open ContactProperCutSeedCount ContactComponentPencils
-open ContactFlagBezout6543Research
-open ContactIdentityResidualCurveIterationResearch
-open ContactIdentityResidualCurveTerminalIncidenceResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactIdentityResidualZeroBudgetTransportResearch
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactStratifiedResidualComponentAdapter6600Research
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactNearPencil6600FlagResearch
-open ContactResidualSupportParametersResearch
+open RCN136 RCN231 RCN319
+open RCN238 RCN264
+open RCN243 RCN065
+open RCN095
+open RCN151
+open RCN152
+open RCN156
+open RCN165
+open RCN237
+open RCN305
+open RCN234
+open RCN215
+open RCN275
 noncomputable section
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
@@ -264,4 +264,4 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
    (by simpa only [unitCost] using B.sum_weightedCost_le unitYZFlag)
    B.sum_zCost_le
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualComponentFamily6600Research
+end ProximityPrize.SubmissionLower.RCN148

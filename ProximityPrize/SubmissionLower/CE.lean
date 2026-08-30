@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.M2
-namespace ProximityPrize.SubmissionLower.ContactSylvesterCokernelQuotient6732Research
+namespace ProximityPrize.SubmissionLower.RCN307
 noncomputable section
 set_option autoImplicit false
 variable {R:Type*} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
@@ -14,4 +14,4 @@ structure PrimaryPiecesCertificate
  length_le:∀ j,(multiplicity j:ℕ∞) ≤
    Module.length R (Polynomial R ⧸ pieces j)
 end
-end ProximityPrize.SubmissionLower.ContactSylvesterCokernelQuotient6732Research
+end ProximityPrize.SubmissionLower.RCN307

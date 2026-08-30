@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AX
 import ProximityPrize.SubmissionLower.W7
-namespace ProximityPrize.SubmissionLower.ActualPlaneCoordinateDegree
-open ActualCurveCoordinateField ActualCurveRationalProjection
- TrivariateRationalCollection ActualPlaneCoordinateKernel
+namespace ProximityPrize.SubmissionLower.RCN010
+open RCN002 RCN005
+ RCN371 RCN011
 noncomputable section
 theorem order_cover (order:Fin 3 ≃ Fin 3) (l:Fin 3):
    l=order 0∨l=order 2∨l=order 1:=by
@@ -24,12 +24,12 @@ theorem actual_generators:
    (order_cover order)
 theorem planeEval_eq_actual:
    letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P (order 0) ht
-   PlaneFunctionFieldDegree.planeEval (RatFunc K) (CoordinateField K P)
+   RCN361.planeEval (RatFunc K) (CoordinateField K P)
      (coordinate K P (order 2)) (coordinate K P (order 1))=
        actualPlaneEvaluation K order P ht:=rfl
 theorem relationIdeal_eq_actual:
    letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P (order 0) ht
-   PlaneFunctionFieldDegree.relationIdeal (RatFunc K) (CoordinateField K P)
+   RCN361.relationIdeal (RatFunc K) (CoordinateField K P)
      (coordinate K P (order 2)) (coordinate K P (order 1))=
        actualRelationKernel K order P ht:=rfl
 theorem actual_finite_separable_finrank_bound
@@ -54,15 +54,15 @@ theorem actual_finite_separable_finrank_bound
    intro h
    exact hproper ((planeMap_dvd_iff_of_component
      (K:=K) (order:=order) (P:=P) (ht:=ht) G H hG hGmem).mp h)
- have hGroots:PlaneFunctionFieldDegree.planeEval (RatFunc K) (CoordinateField K P)
+ have hGroots:RCN361.planeEval (RatFunc K) (CoordinateField K P)
      (coordinate K P (order 2)) (coordinate K P (order 1)) (planeMap K order G)=0:=by
    change actualPlaneEvaluation K order P ht (planeMap K order G)=0
    exact (actualPlane_root_iff K order P ht G).mpr hGmem
- have hHroots:PlaneFunctionFieldDegree.planeEval (RatFunc K) (CoordinateField K P)
+ have hHroots:RCN361.planeEval (RatFunc K) (CoordinateField K P)
      (coordinate K P (order 2)) (coordinate K P (order 1)) (planeMap K order H)=0:=by
    change actualPlaneEvaluation K order P ht (planeMap K order H)=0
    exact (actualPlane_root_iff K order P ht H).mpr hHmem
- exact PlaneSmallCharacteristicDegree.finite_separable_finrank_le_planar_bound
+ exact RCN365.finite_separable_finrank_le_planar_bound
    (RatFunc K) (CoordinateField K P) p (planeMap K order G) (planeMap K order H)
    hirr hpositive hproperPlane hRdegree hresultantDegree
    (coordinate K P (order 2)) (coordinate K P (order 1))
@@ -101,25 +101,25 @@ theorem actual_finite_separable_sum_finrank_bound
      exact hproper ((planeMap_dvd_iff_of_component
        (K:=K) (order:=order) (P:=P i₀) (ht:=ht i₀) G H hG (hGmem i₀)).mp h)
    have hkernels:Function.Injective (fun i =>
-       PlaneFunctionFieldDegree.relationIdeal (RatFunc K) (CoordinateField K (P i))
+       RCN361.relationIdeal (RatFunc K) (CoordinateField K (P i))
          (coordinate K (P i) (order 2)) (coordinate K (P i) (order 1))):=by
      change Function.Injective (fun i => actualRelationKernel K order (P i) (ht i))
      exact actualRelationKernel_family_injective K order P ht hinj
    have hGroots:∀ i,
-       PlaneFunctionFieldDegree.planeEval (RatFunc K) (CoordinateField K (P i))
+       RCN361.planeEval (RatFunc K) (CoordinateField K (P i))
          (coordinate K (P i) (order 2)) (coordinate K (P i) (order 1))
            (planeMap K order G)=0:=by
      intro i
      change actualPlaneEvaluation K order (P i) (ht i) (planeMap K order G)=0
      exact (actualPlane_root_iff K order (P i) (ht i) G).mpr (hGmem i)
    have hHroots:∀ i,
-       PlaneFunctionFieldDegree.planeEval (RatFunc K) (CoordinateField K (P i))
+       RCN361.planeEval (RatFunc K) (CoordinateField K (P i))
          (coordinate K (P i) (order 2)) (coordinate K (P i) (order 1))
            (planeMap K order H)=0:=by
      intro i
      change actualPlaneEvaluation K order (P i) (ht i) (planeMap K order H)=0
      exact (actualPlane_root_iff K order (P i) (ht i) H).mpr (hHmem i)
-   exact PlaneSmallCharacteristicDegree.finite_separable_sum_finrank_le_planar_bound
+   exact RCN365.finite_separable_sum_finrank_le_planar_bound
      (RatFunc K) (fun i => CoordinateField K (P i)) p
      (planeMap K order G) (planeMap K order H) hirr hpositive hproperPlane
      hRdegree hresultantDegree
@@ -132,4 +132,4 @@ theorem actual_finite_separable_sum_finrank_bound
    · simp
 end FiniteFamily
 end
-end ProximityPrize.SubmissionLower.ActualPlaneCoordinateDegree
+end ProximityPrize.SubmissionLower.RCN010

@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AQ
-namespace ProximityPrize.SubmissionLower.AffinePointValuation
+namespace ProximityPrize.SubmissionLower.RCN017
 open IsDedekindDomain
 noncomputable section
 section PointKernels
@@ -122,4 +122,4 @@ theorem normalization_point_zero_order_ge_one
    phi h hne hzero
 end ConcreteNormalization
 end
-end ProximityPrize.SubmissionLower.AffinePointValuation
+end ProximityPrize.SubmissionLower.RCN017

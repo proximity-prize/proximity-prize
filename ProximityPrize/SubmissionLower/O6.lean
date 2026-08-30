@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.E7
-namespace ProximityPrize.SubmissionLower.ContactScalarCoordinateSeparator6630Research
+namespace ProximityPrize.SubmissionLower.RCN277
 open scoped Classical
-open ActualCurveCoordinateField ActualCurveRationalProjection
-open ActualCurveJointProjectionBounds ActualPlaneCoordinateCaps
-open ActualCoordinateDegreeSum
-open ContactCurveComponents ContactRegularComponentCover
-open ContactGenericSurface ContactProperCutSeedCount
-open ContactWeakSeparableSeparatorResearch
-open ContactRegularComponentYZPositivity6630Research
+open RCN002 RCN005
+open RCN003 RCN009
+open RCN001
+open RCN072 RCN264
+open RCN136 RCN243
+open RCN341
+open RCN265
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 300000
@@ -168,4 +168,4 @@ theorem regularComponent_nonempty_separableLiteralCoordinate6630
    phi F G T p hdiv hG hproper hdep hdegree hmixedZ C
  exact ⟨D⟩
 end
-end ProximityPrize.SubmissionLower.ContactScalarCoordinateSeparator6630Research
+end ProximityPrize.SubmissionLower.RCN277

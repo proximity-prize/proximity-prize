@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BS
-namespace ProximityPrize.SubmissionLower.ContactExceptionalSeedAuxiliary
-open ContactGenericSurface ContactFactorCover ContactSingularAuxiliary
-open ContactSingularDegreeBounds ContactFactorCaps ContactTranslation
+namespace ProximityPrize.SubmissionLower.RCN079
+open RCN136 RCN082 RCN290
+open RCN293 RCN081 RCN319
 noncomputable section
 variable {K:Type*} [Field K]
 def swapYR (K:Type*) [Field K]:MvPolynomial (Fin 4) K ≃ₐ[K] MvPolynomial (Fin 4) K:=
@@ -128,7 +128,7 @@ theorem originalImplicitFactors_degree_budgets
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0):
    (∑ A∈originalImplicitFactors J,A.degreeOf (1:Fin 4)) ≤ J.degreeOf 1∧
      (∑ A∈originalImplicitFactors J,A.degreeOf (3:Fin 4)) ≤ J.degreeOf 3:=by
- have hh:=ContactFactorCaps.sum_degreeOf_le_of_prod_dvd
+ have hh:=RCN081.sum_degreeOf_le_of_prod_dvd
    (originalImplicitFactors J) id J hJ (originalImplicitFactors_product_dvd J hJ)
  exact ⟨hh 1,hh 3⟩
 section SurfaceCoverage
@@ -182,7 +182,7 @@ theorem surface_zero_exceptional_or_implicit_regular
    have hmem:swapYR K F∈originalImplicitFactors J:=Finset.mem_image.mpr ⟨F,hF,rfl⟩
    have hs:=originalImplicitFactors_spec J (swapYR K F) hmem
    have hAR:(swapYR K F).degreeOf 2=0:=by
-     have hh:=ContactFactorCaps.degreeOf_le_of_dvd (2:Fin 4) (swapYR K F) J hs.2 hJ
+     have hh:=RCN081.degreeOf_le_of_dvd (2:Fin 4) (swapYR K F) J hs.2 hJ
      omega
    refine ⟨swapYR K F,hmem,hs.1,hs.2,hAR,?_,?_,?_⟩
    · rw [swapYR_degree_Y]
@@ -199,17 +199,17 @@ theorem solution_exceptional_or_implicit_regular
      ∃ A∈originalImplicitFactors J,Irreducible A∧A∣J∧
        A.degreeOf 2=0∧0 < A.degreeOf 1∧specialization K P γ A=0∧
        specialization K P γ (MvPolynomial.pderiv (1:Fin 4) A)≠0:=by
- let φ:=ContactGenericInitialPoint.polynomialEmbedding K
- let v:Fin 3 → ContactGenericInitialPoint.GenericField K:=
-   fun i => ContactGenericInitialPoint.initialPoint K P γ i.succ
+ let φ:=RCN135.polynomialEmbedding K
+ let v:Fin 3 → RCN135.GenericField K:=
+   fun i => RCN135.initialPoint K P γ i.succ
  have heval (F:MvPolynomial (Fin 4) K):
      MvPolynomial.eval v (surfaceMap φ F)=0 ↔ specialization K P γ F=0:=by
-   simpa only [ContactGeometricFirstTail.canonical_geometricSurfaceMap] using
-     (ContactGeometricFirstTail.actual_generic_initial_zero_iff K P γ F)
+   simpa only [RCN138.canonical_geometricSurfaceMap] using
+     (RCN138.actual_generic_initial_zero_iff K P γ F)
  obtain haux | ⟨A,hA,hi,hd,hAR,hAY,hz,hreg⟩:=
    surface_zero_exceptional_or_implicit_regular φ
-     (ContactGenericInitialPoint.polynomialEmbedding_injective K) J hJ hR v ((heval J).mpr hsolution)
+     (RCN135.polynomialEmbedding_injective K) J hJ hR v ((heval J).mpr hsolution)
  · exact Or.inl ((heval _).mp haux)
  · exact Or.inr ⟨A,hA,hi,hd,hAR,hAY,(heval _).mp hz,(heval _).not.mp hreg⟩
 end
-end ProximityPrize.SubmissionLower.ContactExceptionalSeedAuxiliary
+end ProximityPrize.SubmissionLower.RCN079

@@ -1,17 +1,17 @@
 import ProximityPrize.SubmissionLower.A1
 import ProximityPrize.SubmissionLower.O
 import ProximityPrize.SubmissionLower.C4
-namespace ProximityPrize.SubmissionLower.ContactActiveNestedFixedPowers6733Research
+namespace ProximityPrize.SubmissionLower.RCN029
 open scoped Classical BigOperators
-open ContactRegularComponentCover ActualCurveCoordinateField
-open ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedProjectionActive6630Research
-open ContactFlagTriangularProjectionResearch
-open ContactActiveNestedFlagData6733Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactFlagPlaneIndexedResidueWeight6733Research
-open ContactFlagPlaneResultantBounds6733Research
+open RCN264 RCN002
+open RCN341
+open RCN037
+open RCN038
+open RCN125
+open RCN031
+open RCN106
+open RCN111
+open RCN112
 noncomputable section
 set_option autoImplicit false
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
@@ -76,4 +76,4 @@ structure ActiveNestedFixedPowers:Prop where
  u:ActiveNestedUFixedPowers base hactive hSderiv D multiplicity
  v:ActiveNestedVFixedPowers base hactive hSderiv D multiplicity
 end
-end ProximityPrize.SubmissionLower.ContactActiveNestedFixedPowers6733Research
+end ProximityPrize.SubmissionLower.RCN029

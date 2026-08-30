@@ -1,14 +1,14 @@
 import ProximityPrize.SubmissionLower.Y9
 import ProximityPrize.SubmissionLower.K0
-namespace ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedFiberSurface6733Research
-open ActualCurveCoordinateField ActualPlaneCoordinateKernel
-open ArbitraryPlaneEvaluationFamilyResearch ContactRegularComponentCover
-open ContactFlagTriangularProjectionResearch ContactFlagAffineFamilyDegree6543Research
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ContactFlagPlaneFiberPrimary6733Research
-open ContactFlagPlaneFiberSurface6733Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactPlaneRelationCoefficientFiber6733Research
+namespace ProximityPrize.SubmissionLower.RCN108
+open RCN002 RCN011
+open RCN021 RCN264
+open RCN125 RCN093
+open RCN120
+open RCN102
+open RCN103
+open RCN106
+open RCN226
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -123,4 +123,4 @@ theorem indexedFiberTail_not_mem_surface
  exact transformedSurface_not_dvd_tail lam mu nu order hG hproper
    (component a.1) (ht a.1) (Ideal.mem_span_singleton.mp hglobal)
 end
-end ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedFiberSurface6733Research
+end ProximityPrize.SubmissionLower.RCN108

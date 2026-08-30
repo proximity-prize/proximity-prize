@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.C7
 import ProximityPrize.SubmissionLower.Z1
 import ProximityPrize.SubmissionLower.S
-namespace ProximityPrize.SubmissionLower.ContactFlagPlaneFiberPrimary6733Research
-open ActualPlaneCoordinateKernel
+namespace ProximityPrize.SubmissionLower.RCN102
+open RCN011
 noncomputable section
 set_option autoImplicit false
 variable {Omega:Type} [Field Omega]
@@ -20,4 +20,4 @@ def fiberLocalizePlane
  Polynomial.mapRingHom
    (algebraMap (Polynomial (RatFunc Omega)) (FiberCoefficient q hq))
 end
-end ProximityPrize.SubmissionLower.ContactFlagPlaneFiberPrimary6733Research
+end ProximityPrize.SubmissionLower.RCN102

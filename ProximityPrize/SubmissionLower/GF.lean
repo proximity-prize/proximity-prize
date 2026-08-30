@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.L3
 import ProximityPrize.SubmissionLower.AI
-namespace ProximityPrize.SubmissionLower.ContactStackedInterpolation6656Research
+namespace ProximityPrize.SubmissionLower.RCN300
 open ProximityPrize.Benchmark
-open ContactInterpolation ContactRankKernel ContactTranslation
-open ContactKernelMemberUniversality
-open ContactStackedParameters6656Research
+open RCN174 RCN256 RCN319
+open RCN182
+open RCN301
 noncomputable section
 set_option maxRecDepth 100000
 set_option maxHeartbeats 2000000
@@ -73,4 +73,4 @@ theorem exists_stacked_universal_vanishing_interpolants
    hB.2.2 gamma P support hP hcard hvalues,
    hC.2.2 gamma P support hP hcard hvalues⟩
 end
-end ProximityPrize.SubmissionLower.ContactStackedInterpolation6656Research
+end ProximityPrize.SubmissionLower.RCN300

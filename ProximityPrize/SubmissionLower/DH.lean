@@ -1,21 +1,21 @@
 import ProximityPrize.SubmissionLower.DI
 import ProximityPrize.SubmissionLower.DK
 import ProximityPrize.SubmissionLower.DL
-namespace ProximityPrize.SubmissionLower.ContactActiveNestedCertificate6733Research
+namespace ProximityPrize.SubmissionLower.RCN027
 open scoped Classical BigOperators
-open ContactRegularComponentCover ActualCurveCoordinateField
-open ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveProjectionCoordinateResearch CoordinateBoxZeroCount
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedProjectionActive6630Research
-open ContactFlagBezout6543Research
-open ContactActiveNestedFlagData6733Research ContactActiveNestedFlagCosts6733Research
-open ContactActiveNestedFixedPowers6733Research ContactActiveNestedChannels6733Research
-open ContactActiveSubtypeWeightedSum6733Research
-open ContactActiveThreeChannelAssembly6733Research
-open ContactWeightedGroupedResultantChannel6733Research
-open ContactWeightedChannelUtilities6733Research
-open ContactTwoTailResultantProvider6732Research
+open RCN264 RCN002
+open RCN341
+open RCN042 RCN344
+open RCN037
+open RCN038
+open RCN095
+open RCN031 RCN030
+open RCN029 RCN028
+open RCN032
+open RCN033
+open RCN343
+open RCN342
+open RCN338
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 3000000
@@ -99,4 +99,4 @@ noncomputable def activeNestedWeightedCertificate:
    multiplicity zComponent (fun C:RegularComponent Omega G T H↦C)
    zRewrite rfl zChannel uChannel allChannel
 end
-end ProximityPrize.SubmissionLower.ContactActiveNestedCertificate6733Research
+end ProximityPrize.SubmissionLower.RCN027

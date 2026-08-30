@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.IntegralPointLifting
+namespace ProximityPrize.SubmissionLower.RCN354
 noncomputable section
 variable {K A S:Type*} [Field K] [CommRing A] [CommRing S]
  [Algebra K A] [Algebra K S] [Algebra A S] [IsScalarTower K A S]
@@ -89,4 +89,4 @@ theorem exists_point_lift_of_integral_base
  exact exists_point_lift hinj phi
 end IntegralBase
 end
-end ProximityPrize.SubmissionLower.IntegralPointLifting
+end ProximityPrize.SubmissionLower.RCN354

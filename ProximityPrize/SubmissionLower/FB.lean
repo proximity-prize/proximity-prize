@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.E9
-namespace ProximityPrize.SubmissionLower.ContactMovingSeedless6732Research
+namespace ProximityPrize.SubmissionLower.RCN210
 open ProximityPrize.Benchmark
-open ContactSeedlessInterpolationResearch
+open RCN279
 open scoped NNReal
 noncomputable section
 set_option maxRecDepth 20000
@@ -49,8 +49,8 @@ theorem exists_seedless_interpolant (received : IRSProfile.Index → IRSProfile.
    ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,
      Q ≠ 0 ∧ Q ∈ globalCoefficientBox IRSProfile.Field weightedCap w yTotalCap slopeCap ∧
      ∀ (i : IRSProfile.Index) (r : ℕ),
-       ContactFlagRankKernel6641Research.slopeDifference IRSProfile.Field ^ (multiplicity-r) ∣
-         (ContactTranslation.homogenizedTranslation IRSProfile.Field
+       RCN119.slopeDifference IRSProfile.Field ^ (multiplicity-r) ∣
+         (RCN319.homogenizedTranslation IRSProfile.Field
            (IRSProfile.domain i) (received i) 0 Q).coeff r := by
  obtain ⟨theta, htheta, hzero⟩ := exists_nonzero_kernel_array
    IRSProfile.Field weightedCap w yTotalCap slopeCap multiplicity
@@ -122,4 +122,4 @@ theorem score_target_le :
      (mul_le_mul_right hfrac (((2 : ℝ≥0) ^ (67 : ℝ))⁻¹))
  exact radius_power_rational_bound.trans htwo
 end
-end ProximityPrize.SubmissionLower.ContactMovingSeedless6732Research
+end ProximityPrize.SubmissionLower.RCN210

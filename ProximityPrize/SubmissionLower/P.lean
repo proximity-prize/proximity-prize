@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D
-namespace ProximityPrize.SubmissionLower.ContactFlagPoleInequality6543Research
+namespace ProximityPrize.SubmissionLower.RCN114
 open scoped Classical BigOperators WithZero
-open ContactLocalPoleBound ContactSparsePoleSupportResearch
-open ContactFlagBezout6543Research
+open RCN187 RCN295
+open RCN095
 noncomputable section
 theorem exponent_weight_le_flag_bound
    (p:FlagDegree) (d:Fin 3 →₀ ℕ) (q:Fin 3 → ℤ)
@@ -155,4 +155,4 @@ theorem exponentSetPoleWeight_flagSupport_le_three
    exponentSetPoleWeight_unitAll]
  exact exponentSetPoleWeight_flagSupport_le v x p
 end
-end ProximityPrize.SubmissionLower.ContactFlagPoleInequality6543Research
+end ProximityPrize.SubmissionLower.RCN114

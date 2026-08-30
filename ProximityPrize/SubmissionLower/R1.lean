@@ -2,7 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W5
 import ProximityPrize.SubmissionLower.R5
 import ProximityPrize.SubmissionLower.S5
-namespace ProximityPrize.SubmissionLower.CoordinatePlaceClassification
+namespace ProximityPrize.SubmissionLower.RCN345
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
 noncomputable section
@@ -14,16 +14,16 @@ variable [IsScalarTower (Polynomial K) (RatFunc K) L]
 variable [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq L:=Classical.decEq L
-abbrev FiniteNormalization:=FixedCurveNormSum.FiniteNormalization K L
-abbrev InfinityBase:=FixedCurveNormSum.InfinityBase K
+abbrev FiniteNormalization:=RCN349.FiniteNormalization K L
+abbrev InfinityBase:=RCN349.InfinityBase K
 local instance:IsFractionRing (InfinityBase K) (RatFunc K):=
- InfinityValuationRing.infinityRing_isFractionRing K
+ RCN353.infinityRing_isFractionRing K
 local instance (priority:=100):Algebra (InfinityBase K) L:=
  ((algebraMap (RatFunc K) L).comp
    (algebraMap (InfinityBase K) (RatFunc K))).toAlgebra
 local instance:IsScalarTower (InfinityBase K) (RatFunc K) L:=
  IsScalarTower.of_algebraMap_eq' rfl
-abbrev InfiniteNormalization:=FixedCurveNormSum.InfiniteNormalization K L
+abbrev InfiniteNormalization:=RCN349.InfiniteNormalization K L
 def parameter:L:=algebraMap (Polynomial K) L Polynomial.X
 theorem parameter_eq_ratFunc:
    parameter K L=algebraMap (RatFunc K) L (RatFunc.X:RatFunc K):=by
@@ -56,7 +56,7 @@ theorem polynomial_le_one (ht:v (parameter K L) ≤ 1) (f:Polynomial K):
 theorem finiteNormalization_le_one (ht:v (parameter K L) ≤ 1)
    (s:FiniteNormalization K L):
    v (algebraMap (FiniteNormalization K L) L s) ≤ 1:=by
- exact NormalizedPlaceClassification.integral_le_one (Polynomial K) L v
+ exact RCN359.integral_le_one (Polynomial K) L v
    (polynomial_le_one K L v ht) s.property
 theorem polynomial_value_of_parameter_gt_one (ht:1 < v (parameter K L))
    (f:Polynomial K) (hf:f≠0):
@@ -88,17 +88,17 @@ theorem infinityBase_le_one (ht:1 < v (parameter K L)) (r:InfinityBase K):
 theorem infiniteNormalization_le_one (ht:1 < v (parameter K L))
    (s:InfiniteNormalization K L):
    v (algebraMap (InfiniteNormalization K L) L s) ≤ 1:=by
- exact NormalizedPlaceClassification.integral_le_one (InfinityBase K) L v
+ exact RCN359.integral_le_one (InfinityBase K) L v
    (infinityBase_le_one K L v ht) s.property
 theorem exists_unique_finite_place (hv:Function.Surjective v)
    (ht:v (parameter K L) ≤ 1):
    ∃! p:HeightOneSpectrum (FiniteNormalization K L),v=p.valuation L:=
- NormalizedPlaceClassification.exists_unique_place (FiniteNormalization K L) L v
+ RCN359.exists_unique_place (FiniteNormalization K L) L v
    (finiteNormalization_le_one K L v ht) hv
 theorem exists_unique_infinite_place (hv:Function.Surjective v)
    (ht:1 < v (parameter K L)):
    ∃! q:HeightOneSpectrum (InfiniteNormalization K L),v=q.valuation L:=
- NormalizedPlaceClassification.exists_unique_place (InfiniteNormalization K L) L v
+ RCN359.exists_unique_place (InfiniteNormalization K L) L v
    (infiniteNormalization_le_one K L v ht) hv
 theorem finite_or_infinite_place (hv:Function.Surjective v):
    (∃ p:HeightOneSpectrum (FiniteNormalization K L),v=p.valuation L)∨
@@ -109,9 +109,9 @@ theorem finite_or_infinite_place (hv:Function.Surjective v):
 end GivenValuation
 theorem infinitePlace_liesOver
    (q:HeightOneSpectrum (InfiniteNormalization K L)):
-   q.asIdeal.LiesOver (FixedCurveNormSum.infinityPlace K).asIdeal:=by
+   q.asIdeal.LiesOver (RCN349.infinityPlace K).asIdeal:=by
  have hbase:HeightOneSpectrum.under (InfinityBase K) q=
-     FixedCurveNormSum.infinityPlace K:=by
+     RCN349.infinityPlace K:=by
    apply HeightOneSpectrum.ext
    exact IsLocalRing.eq_maximalIdeal
      ((HeightOneSpectrum.under (InfinityBase K) q).isPrime.isMaximal
@@ -129,15 +129,15 @@ theorem finitePlace_parameter_le_one
 theorem infinitePlace_parameter_value
    (q:HeightOneSpectrum (InfiniteNormalization K L)):
    q.valuation L (parameter K L)=
-     WithZero.exp ((FixedCurveNormSum.infinityPlace K).asIdeal.ramificationIdx'
+     WithZero.exp ((RCN349.infinityPlace K).asIdeal.ramificationIdx'
        q.asIdeal:ℤ):=by
  letI:=infinitePlace_liesOver K L q
  have h:=HeightOneSpectrum.valuation_liesOver (K:=RatFunc K) L
-   (FixedCurveNormSum.infinityPlace K) q (RatFunc.X:RatFunc K)
- rw [FixedCurveNormSum.infinityPlace,InfinityValuationRing.infinity_valuation_eq,
+   (RCN349.infinityPlace K) q (RatFunc.X:RatFunc K)
+ rw [RCN349.infinityPlace,RCN353.infinity_valuation_eq,
    RatFunc.inftyValuation.X] at h
  rw [parameter_eq_ratFunc]
- simpa [FixedCurveNormSum.infinityPlace] using h.symm
+ simpa [RCN349.infinityPlace] using h.symm
 theorem infinitePlace_parameter_gt_one
    (q:HeightOneSpectrum (InfiniteNormalization K L)):
    1 < q.valuation L (parameter K L):=by
@@ -145,7 +145,7 @@ theorem infinitePlace_parameter_gt_one
  rw [infinitePlace_parameter_value, ←WithZero.exp_zero,WithZero.exp_lt_exp]
  exact_mod_cast Nat.pos_iff_ne_zero.mpr
    (Ideal.IsDedekindDomain.ramificationIdx'_ne_zero_of_liesOver q.asIdeal
-     (FixedCurveNormSum.infinityPlace K).ne_bot)
+     (RCN349.infinityPlace K).ne_bot)
 theorem finitePlace_trivial
    (p:HeightOneSpectrum (FiniteNormalization K L)):
    (p.valuation L).IsTrivialOn K:=by
@@ -170,8 +170,8 @@ theorem infinitePlace_trivial
  intro c hc
  letI:=infinitePlace_liesOver K L q
  have h:=HeightOneSpectrum.valuation_liesOver (K:=RatFunc K) L
-   (FixedCurveNormSum.infinityPlace K) q (algebraMap K (RatFunc K) c)
- rw [FixedCurveNormSum.infinityPlace,InfinityValuationRing.infinity_valuation_eq] at h
+   (RCN349.infinityPlace K) q (algebraMap K (RatFunc K) c)
+ rw [RCN349.infinityPlace,RCN353.infinity_valuation_eq] at h
  have hC:RatFunc.inftyValuation K (algebraMap K (RatFunc K) c)=1:=
    RatFunc.inftyValuation.C K hc
  rw [hC,one_pow, ←IsScalarTower.algebraMap_apply K (RatFunc K) L] at h
@@ -230,4 +230,4 @@ theorem chartMap_bijective:Function.Bijective (chartMap K L):=by
 def chartEquiv:ChartPlace K L ≃ NormalizedValuation K L:=
  Equiv.ofBijective (chartMap K L) (chartMap_bijective K L)
 end
-end ProximityPrize.SubmissionLower.CoordinatePlaceClassification
+end ProximityPrize.SubmissionLower.RCN345

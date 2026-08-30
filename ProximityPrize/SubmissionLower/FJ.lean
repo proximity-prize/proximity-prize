@@ -1,9 +1,9 @@
 import ProximityPrize.SubmissionLower.X6
 import ProximityPrize.SubmissionLower.X7
-namespace ProximityPrize.SubmissionLower.ContactPlaneRelationCoefficientFiber6733Research
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
-open ArbitraryRationalProjectionResearch
-open ActualPlaneRelationMaximal6732Research
+namespace ProximityPrize.SubmissionLower.RCN226
+open RCN011 RCN021
+open RCN022
+open RCN014
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -87,4 +87,4 @@ theorem relationKernel_isMaximal
  exact planeEvaluation_surjective_of_finite_generatingPair
    (e (MvPolynomial.X (order 2))) (e (MvPolynomial.X (order 1))) hgen
 end
-end ProximityPrize.SubmissionLower.ContactPlaneRelationCoefficientFiber6733Research
+end ProximityPrize.SubmissionLower.RCN226

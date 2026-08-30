@@ -1,17 +1,17 @@
 import ProximityPrize.SubmissionLower.K2
 import ProximityPrize.SubmissionLower.AN
-namespace ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedChannel6733Research
+namespace ProximityPrize.SubmissionLower.RCN104
 open scoped Classical BigOperators
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
-open ActualCurveCoordinateField ContactRegularComponentCover
-open ContactFlagAffineFamilyDegree6543Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactFlagPlaneIndexedResidueWeight6733Research
-open ContactFlagPlaneIndexedCost6733Research
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ContactPlaneRelationCoefficientFiber6733Research
-open ContactAdaptiveProjectionCoordinateResearch CoordinateBoxZeroCount
-open ContactWeightedGroupedResultantChannel6733Research
+open RCN011 RCN021
+open RCN002 RCN264
+open RCN093
+open RCN106
+open RCN111
+open RCN105
+open RCN120
+open RCN226
+open RCN042 RCN344
+open RCN343
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2500000
@@ -104,4 +104,4 @@ noncomputable def indexedWeightedFlagPlaneChannel_of_fixedFactors
      component lam mu nu order ht hfinite hgen hgate a
    simpa only [factor,weight,Nat.mul_comm] using hcost.le
 end
-end ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedChannel6733Research
+end ProximityPrize.SubmissionLower.RCN104

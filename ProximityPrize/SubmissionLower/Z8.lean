@@ -2,13 +2,13 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DY
 import ProximityPrize.SubmissionLower.D2
 import ProximityPrize.SubmissionLower.AF
-namespace ProximityPrize.SubmissionLower.ContactMovingAgreementCertificate6719Research
+namespace ProximityPrize.SubmissionLower.RCN198
 open scoped Classical BigOperators
-open ContactTaylorNumerators ContactGenericSurface ContactPrimeSeedIncidence
-open ContactBaseIdealAgreement6676Research ContactBaseIdealAgreementFlags6676Research
-open ContactFlagBezout6543Research ContactMovingProjection6676Research
-open ContactPost6464MinkowskiRecurrenceResearch ContactIdentityResidualGlobalFlagResearch
-open ContactResidualSupportParametersResearch ContactSharpTaylorFixedMeet6656Research
+open RCN313 RCN136 RCN238
+open RCN053 RCN054
+open RCN095 RCN207
+open RCN234 RCN156
+open RCN275 RCN287
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 35000
@@ -136,4 +136,4 @@ theorem exists_actual_agreement_certificate (φ:Polynomial K →+*Ω)
      change FlagDegree.mk _ _ _=FlagDegree.mk _ _ _
      congr 1 <;> simp [center,direction,unitYZFlag]
 end
-end ProximityPrize.SubmissionLower.ContactMovingAgreementCertificate6719Research
+end ProximityPrize.SubmissionLower.RCN198

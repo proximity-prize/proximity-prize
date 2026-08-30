@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z3
-namespace ProximityPrize.SubmissionLower.ContactFlagAffineResidualAutomorphismResearch
+namespace ProximityPrize.SubmissionLower.RCN094
 open scoped Classical BigOperators
-open ContactFlagBezout6543Research
-open TrivariateShearResearch
+open RCN095
+open RCN372
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
@@ -157,10 +157,10 @@ theorem wt_add_le_residual
 theorem residualImage_wt_le
    (weights:Fin 3 → ℕ) (aY v bY aS bS cS:K) (i:Fin 3):
    wt weights (residualImage aY v bY aS bS cS i) ≤
-     ContactFlagTriangularProjectionResearch.flagPullWeights weights i:=by
+     RCN125.flagPullWeights weights i:=by
  fin_cases i
  · dsimp [residualImage,
-     ContactFlagTriangularProjectionResearch.flagPullWeights]
+     RCN125.flagPullWeights]
    have hvx:=wt_mul_le weights (MvPolynomial.C v:Poly3 K)
      (MvPolynomial.X 0)
    have hbx:=wt_mul_le weights (MvPolynomial.C bY:Poly3 K)
@@ -174,7 +174,7 @@ theorem residualImage_wt_le
    rw [wt_C] at hleft
    exact hall.trans (by omega)
  · dsimp [residualImage,
-     ContactFlagTriangularProjectionResearch.flagPullWeights]
+     RCN125.flagPullWeights]
    have hvx:=wt_mul_le weights (MvPolynomial.C v:Poly3 K)
      (MvPolynomial.X 1)
    have hbx:=wt_mul_le weights (MvPolynomial.C bS:Poly3 K)
@@ -194,35 +194,35 @@ theorem residualImage_wt_le
    rw [wt_C] at h0
    exact h2.trans (by omega)
  · simp [residualImage,
-     ContactFlagTriangularProjectionResearch.flagPullWeights,wt_X]
+     RCN125.flagPullWeights,wt_X]
 theorem residual_monomial_product_wt_le
    (weights:Fin 3 → ℕ) (aY v bY aS bS cS:K)
    (d:Fin 3 →₀ ℕ):
    wt weights
        (∏ i∈d.support,residualImage aY v bY aS bS cS i^d i) ≤
      Finsupp.weight
-       (ContactFlagTriangularProjectionResearch.flagPullWeights weights) d:=by
+       (RCN125.flagPullWeights weights) d:=by
  apply (wt_finset_prod_le_sum weights d.support
    (fun i↦residualImage aY v bY aS bS cS i^d i)).trans
  calc
    (∑ i∈d.support,
        wt weights (residualImage aY v bY aS bS cS i^d i)) ≤
        ∑ i∈d.support,d i*
-         ContactFlagTriangularProjectionResearch.flagPullWeights weights i:=by
+         RCN125.flagPullWeights weights i:=by
      apply Finset.sum_le_sum
      intro i hi
      exact (wt_pow_le weights (residualImage aY v bY aS bS cS i) (d i)).trans
        (Nat.mul_le_mul_left _
          (residualImage_wt_le weights aY v bY aS bS cS i))
    _=Finsupp.weight
-       (ContactFlagTriangularProjectionResearch.flagPullWeights weights) d:=by
+       (RCN125.flagPullWeights weights) d:=by
      rw [Finsupp.weight_apply]
      simp only [Finsupp.sum,nsmul_eq_mul]
      simp
 theorem residualAlgHom_wt_le_pulled
    (weights:Fin 3 → ℕ) (aY v bY aS bS cS:K) (F:Poly3 K):
    wt weights (residualAlgHom aY v bY aS bS cS F) ≤
-     wt (ContactFlagTriangularProjectionResearch.flagPullWeights weights) F:=by
+     wt (RCN125.flagPullWeights weights) F:=by
  change wt weights
      (MvPolynomial.eval₂ MvPolynomial.C
        (residualImage aY v bY aS bS cS) F) ≤ _
@@ -238,42 +238,42 @@ theorem residualAlgHom_wt_le_pulled
  rw [hcoeff,Nat.zero_add] at hmul
  exact hmul.trans (hprod.trans
    (MvPolynomial.le_weightedTotalDegree
-     (ContactFlagTriangularProjectionResearch.flagPullWeights weights) hd))
+     (RCN125.flagPullWeights weights) hd))
 theorem polynomialInFlag_residualAlgHom
    (p:FlagDegree) (F:Poly3 K) (aY v bY aS bS cS:K)
-   (hF:ContactFlagTriangularProjectionResearch.PolynomialInFlag p F):
-   ContactFlagTriangularProjectionResearch.PolynomialInFlag p
+   (hF:RCN125.PolynomialInFlag p F):
+   RCN125.PolynomialInFlag p
      (residualAlgHom aY v bY aS bS cS F):=by
  intro d hd
- let sWeight:=ContactFlagTriangularProjectionResearch.sWeight
- let ysWeight:=ContactFlagTriangularProjectionResearch.ysWeight
- let totalWeight:=ContactFlagTriangularProjectionResearch.totalWeight
+ let sWeight:=RCN125.sWeight
+ let ysWeight:=RCN125.ysWeight
+ let totalWeight:=RCN125.totalWeight
  have hs:=MvPolynomial.le_weightedTotalDegree sWeight hd
  have hys:=MvPolynomial.le_weightedTotalDegree ysWeight hd
  have htot:=MvPolynomial.le_weightedTotalDegree totalWeight hd
  have hsw:=(residualAlgHom_wt_le_pulled sWeight
    aY v bY aS bS cS F).trans (by
      simpa [sWeight] using
-       ContactFlagTriangularProjectionResearch.wt_s_le_of_inFlag hF)
+       RCN125.wt_s_le_of_inFlag hF)
  have hysw:=(residualAlgHom_wt_le_pulled ysWeight
    aY v bY aS bS cS F).trans (by
      simpa [ysWeight] using
-       ContactFlagTriangularProjectionResearch.wt_ys_le_of_inFlag hF)
+       RCN125.wt_ys_le_of_inFlag hF)
  have htotw:=(residualAlgHom_wt_le_pulled totalWeight
    aY v bY aS bS cS F).trans (by
      simpa [totalWeight] using
-       ContactFlagTriangularProjectionResearch.wt_total_le_of_inFlag hF)
+       RCN125.wt_total_le_of_inFlag hF)
  refine ⟨?_,?_,?_⟩
  · have:=hs.trans hsw
-   simpa [sWeight,ContactFlagTriangularProjectionResearch.sWeight,
+   simpa [sWeight,RCN125.sWeight,
      weight_fin3] using this
  · have:=hys.trans hysw
-   simpa [ysWeight,ContactFlagTriangularProjectionResearch.ysWeight,
+   simpa [ysWeight,RCN125.ysWeight,
      weight_fin3,
      Nat.add_comm] using this
  · have:=htot.trans htotw
-   simpa [totalWeight,ContactFlagTriangularProjectionResearch.totalWeight,
+   simpa [totalWeight,RCN125.totalWeight,
      weight_fin3,
      Nat.add_comm,Nat.add_left_comm,Nat.add_assoc] using this
 end
-end ProximityPrize.SubmissionLower.ContactFlagAffineResidualAutomorphismResearch
+end ProximityPrize.SubmissionLower.RCN094

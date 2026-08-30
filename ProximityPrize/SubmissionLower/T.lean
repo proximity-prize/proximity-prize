@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D9
-namespace ProximityPrize.SubmissionLower.ContactPolynomialRecovery
-open ContactDifferentialRing ContactRegularPoint ContactPolynomiality
-open ContactTaylorNumerators ContactAgreementEvaluation ContactPolynomialSolutions
-open ContactGlobalPolynomiality ContactTranslation DifferentialTaylorCoefficients
+namespace ProximityPrize.SubmissionLower.RCN229
+open RCN077 RCN269 RCN233
+open RCN313 RCN047 RCN231
+open RCN139 RCN319 RCN347
 noncomputable section
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
@@ -130,4 +130,4 @@ theorem factorial_agreement_zero_iff_original_agreement
  rw [hvalue,hseed, ←map_mul, ←map_add] at heq
  exact heq.trans coefficients.injective.eq_iff
 end
-end ProximityPrize.SubmissionLower.ContactPolynomialRecovery
+end ProximityPrize.SubmissionLower.RCN229

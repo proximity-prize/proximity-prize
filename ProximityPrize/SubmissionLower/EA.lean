@@ -1,20 +1,20 @@
 import ProximityPrize.SubmissionLower.EP
 import ProximityPrize.SubmissionLower.EB
-namespace ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedGrouped6733Research
+namespace ProximityPrize.SubmissionLower.RCN109
 open scoped Classical BigOperators
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
-open ActualCurveCoordinateField ContactRegularComponentCover
-open ContactFlagAffineFamilyDegree6543Research
-open ContactFlagPlaneFiberPrimary6733Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactFlagPlaneIndexedFiberCertificate6733Research
-open ContactGroupedResultantModMax6733Research
-open ContactSylvesterCokernelQuotient6732Research
-open ActualPlaneRelationMaximal6732Research
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ContactPrimaryPiecesFromLocalOrders6732Research
-open ContactFlagPlaneIndexedNaturalResidue6733Research
-open ContactFlagPlaneIndexedResidueWeight6733Research
+open RCN011 RCN021
+open RCN002 RCN264
+open RCN093
+open RCN102
+open RCN106
+open RCN107
+open RCN143
+open RCN307
+open RCN014
+open RCN120
+open RCN236
+open RCN110
+open RCN111
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 4000000
@@ -81,7 +81,7 @@ theorem indexedFixedFactor_grouped_resultant_power_dvd
        (Polynomial (FiberCoefficient q hq) ⧸ cert.pieces a):=fun a => by
    obtain ⟨M,hMmonic,hMmem⟩:=exists_monic_mem_indexedFiberRelation
      component lam mu nu order ht hfinite hgen q hq a
-   apply ContactSylvesterPrimaryDirect6733Research.moduleFinite_quotient_of_monic_mem
+   apply RCN309.moduleFinite_quotient_of_monic_mem
      (cert.pieces a) (M^multiplicity a) (hMmonic.pow _)
    have hpow:M^multiplicity a∈
        Ideal.span {indexedFiberSurface q hq surface} ⊔
@@ -148,4 +148,4 @@ theorem indexedFixedFactor_grouped_resultant_power_dvd_of_geometry
      order ht hfinite hgen q hq surface a (hsurface a)
  simpa only [hweight] using hpow
 end
-end ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedGrouped6733Research
+end ProximityPrize.SubmissionLower.RCN109

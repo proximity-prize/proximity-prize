@@ -1,13 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DF
 import ProximityPrize.SubmissionLower.X5
-namespace ProximityPrize.SubmissionLower.ActualPlaneCharacteristicFreeDegreeResearch
+namespace ProximityPrize.SubmissionLower.RCN008
 open scoped Classical BigOperators
-open ActualCurveCoordinateField ActualCurveRationalProjection
- TrivariateRationalCollection ActualPlaneCoordinateKernel
- ActualPlaneCoordinateCaps ActualPlanePositiveOrder ActualPlaneCoordinateDegree
- CharacteristicFreeMatrixMultiplicityResearch
- CharacteristicFreeProjectionAdapter
+open RCN002 RCN005
+ RCN371 RCN011
+ RCN009 RCN013 RCN010
+ RCN024
+ RCN025
 noncomputable section
 variable (K:Type) [Field K]
 private def familyFiniteSummary {I:Type} [Fintype I]
@@ -67,7 +67,7 @@ theorem actual_finite_sum_finrank_bound_without_separability
        (K:=K) (order:=order) (P:=P i₀) (ht:=ht i₀)
          G H hG (hGmem i₀)).mp hdiv)
    have hGroots:∀ i,
-       PlaneFunctionFieldDegree.planeEval (RatFunc K)
+       RCN361.planeEval (RatFunc K)
          (CoordinateField K (P i))
          (coordinate K (P i) (order 2))
          (coordinate K (P i) (order 1)) (planeMap K order G)=0:=by
@@ -76,7 +76,7 @@ theorem actual_finite_sum_finrank_bound_without_separability
        (planeMap K order G)=0
      exact (actualPlane_root_iff K order (P i) (ht i) G).mpr (hGmem i)
    have hHroots:∀ i,
-       PlaneFunctionFieldDegree.planeEval (RatFunc K)
+       RCN361.planeEval (RatFunc K)
          (CoordinateField K (P i))
          (coordinate K (P i) (order 2))
          (coordinate K (P i) (order 1)) (planeMap K order H)=0:=by
@@ -92,14 +92,14 @@ theorem actual_finite_sum_finrank_bound_without_separability
            (algebraMap (RatFunc K) (CoordinateField K (P i)))
            (coordinate K (P i) (order 2)))
          (coordinate K (P i) (order 1)) (planeMap K order G)=0:=by
-       rw [←PlaneSmallCharacteristicDegree.planeEval_eq_eval₂]
+       rw [←RCN365.planeEval_eq_eval₂]
        exact hGroots i
      have hHeval:Polynomial.eval₂
          (Polynomial.eval₂RingHom
            (algebraMap (RatFunc K) (CoordinateField K (P i)))
            (coordinate K (P i) (order 2)))
          (coordinate K (P i) (order 1)) (planeMap K order H)=0:=by
-       rw [←PlaneSmallCharacteristicDegree.planeEval_eq_eval₂]
+       rw [←RCN365.planeEval_eq_eval₂]
        exact hHroots i
      exact finite_of_proper_plane_roots
        (planeMap K order G) (planeMap K order H)
@@ -110,7 +110,7 @@ theorem actual_finite_sum_finrank_bound_without_separability
    letI:∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i)):=
      hfinite
    have hkernels:Function.Injective (fun i =>
-       PlaneFunctionFieldDegree.relationIdeal (RatFunc K)
+       RCN361.relationIdeal (RatFunc K)
          (CoordinateField K (P i))
          (coordinate K (P i) (order 2))
          (coordinate K (P i) (order 1))):=by
@@ -191,4 +191,4 @@ theorem original_finite_sum_finrank_bound_without_separability
    · simp
 end OriginalOrder
 end
-end ProximityPrize.SubmissionLower.ActualPlaneCharacteristicFreeDegreeResearch
+end ProximityPrize.SubmissionLower.RCN008

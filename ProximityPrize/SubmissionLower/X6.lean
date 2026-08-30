@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.X4
-namespace ProximityPrize.SubmissionLower.ActualPlaneRelationMaximal6732Research
-open ActualCurveCoordinateField ActualCurveRationalProjection
-open ActualPlaneCoordinateKernel ActualPlaneCoordinateDegree
+namespace ProximityPrize.SubmissionLower.RCN014
+open RCN002 RCN005
+open RCN011 RCN010
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -11,10 +11,10 @@ theorem planeEvaluation_surjective_of_finite_generatingPair
    (y r:E)
    (hgen:IntermediateField.adjoin F ({y,r}:Set E)=⊤):
    Function.Surjective
-     (PlaneFunctionFieldDegree.planeEval F E y r):=by
+     (RCN361.planeEval F E y r):=by
  let φ:Polynomial (Polynomial F) →ₐ[F] E:={
-   toRingHom:=PlaneFunctionFieldDegree.planeEval F E y r
-   commutes':=fun a↦by simp [PlaneFunctionFieldDegree.planeEval]}
+   toRingHom:=RCN361.planeEval F E y r
+   commutes':=fun a↦by simp [RCN361.planeEval]}
  let A:Subalgebra F E:=φ.range
  let inclusion:A →ₗ[F] E:=A.val
  letI:Module.Finite F A:=
@@ -24,11 +24,11 @@ theorem planeEvaluation_surjective_of_finite_generatingPair
  have hy:y∈L:=by
    change y∈A
    refine ⟨Polynomial.C Polynomial.X,?_⟩
-   simp [φ,PlaneFunctionFieldDegree.planeEval]
+   simp [φ,RCN361.planeEval]
  have hr:r∈L:=by
    change r∈A
    refine ⟨Polynomial.X,?_⟩
-   simp [φ,PlaneFunctionFieldDegree.planeEval]
+   simp [φ,RCN361.planeEval]
  have htop:L=⊤:=by
    apply top_unique
    rw [←hgen]
@@ -123,4 +123,4 @@ theorem span_pair_le_mappedPrimaryPiece
    subst x
    exact htail
 end
-end ProximityPrize.SubmissionLower.ActualPlaneRelationMaximal6732Research
+end ProximityPrize.SubmissionLower.RCN014
