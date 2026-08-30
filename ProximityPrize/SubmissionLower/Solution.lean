@@ -4,3 +4,4 @@ namespace ProximityPrize.Benchmark
 theorem candidate:ProtocolClaim 6733 10251903 33554432:=
   ProximityPrize.SubmissionLower.ContactTwoTailUnconditional6733Research.protocolClaim6733
 end ProximityPrize.Benchmark
+
