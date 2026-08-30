@@ -167,5 +167,52 @@ theorem factor_ys_le_of_square_collar
   rw [pow_two,hpow] at hsq
   omega
 
+theorem factor_ys_or_total_le_of_square_collar
+    (D w L s m c p R yCap totalCap Dcap Lcap qcap J:ℕ) [CharP K p]
+    (nodes u0 u1:I → K) (F:MvPolynomial (Fin 4) K)
+    (hF:Irreducible F)
+    (hdiv:∀ v:ConstraintKernel (K:=K) D w L s m nodes u0 u1,
+      F∣reconstruct K D w L s v.1)
+    (hR:F.degreeOf (2:Fin 4)=R)
+    (hRpos:0<R) (hRchar:R<p) (hm:1≤m)
+    (hwpos:1≤w) (hDpos:0<D)
+    (hcost:Fintype.card I≤c+(w - 1))
+    (hD:D - (w*(yCap+1) - R)≤Dcap)
+    (hL:L - (totalCap+1)≤Lcap) (hq:s - R≤qcap)
+    (hJ:Dcap≤w*J) (hsquare:L<2*(totalCap+1))
+    (hcollar:
+      (∑ j∈Finset.range J,∑ r∈Finset.range (qcap+1),
+        (Lcap+1-j-r)*min c (Dcap-w*j-(w-1)*r))<
+      coefficientCount D w L s-Fintype.card I*localRankBound m L s):
+    wt residualYSWeights F≤yCap ∨
+      wt residualTotalWeights F≤totalCap:=by
+  by_cases hy:wt residualYSWeights F≤yCap
+  · exact Or.inl hy
+  right
+  by_contra ht
+  have hy':yCap+1≤wt residualYSWeights F:=by omega
+  have ht':totalCap+1≤wt residualTotalWeights F:=by omega
+  have hS:wt residualSWeights F=R:=
+    (LocatorContact.slope_weight_eq_degreeR F).trans hR
+  have hw:=residualYS_mul_le_contact_add_slope F w hwpos
+  have hm':=Nat.mul_le_mul_left w hy'
+  have hc:w*(yCap+1)-R≤wt (contactWeights w) F:=by omega
+  have hD':D-wt (contactWeights w) F≤Dcap:=
+    (Nat.sub_le_sub_left hc D).trans hD
+  have hL':L-wt residualTotalWeights F≤Lcap:=
+    (Nat.sub_le_sub_left ht' L).trans hL
+  have hq':s-wt residualSWeights F≤qcap:=by omega
+  obtain ⟨Q,hQ,hsqdvd,hbox⟩:=exists_square_witness_of_collar
+    D w L s m c p R Dcap Lcap qcap J nodes u0 u1 F hF hdiv hR
+    hRpos hRchar hm hcost hD' hL' hq' hJ hcollar
+  have hQtotal:=((mem_flagGlobalCoefficientBox_iff Q D w L s hDpos).mp hbox).1
+  have hsq:=weightedTotalDegree_le_of_dvd residualTotalWeights (F^2) Q hsqdvd hQ
+  have hpow:=weightedTotalDegree_mul residualTotalWeights F F hF.ne_zero hF.ne_zero
+  change wt residualTotalWeights (F^2)≤wt residualTotalWeights Q at hsq
+  change wt residualTotalWeights (F*F)=
+    wt residualTotalWeights F+wt residualTotalWeights F at hpow
+  rw [pow_two,hpow] at hsq
+  omega
+
 end
 end ProximityPrize.SubmissionLower.LocatorSquareWitness

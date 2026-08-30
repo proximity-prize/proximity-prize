@@ -21,31 +21,31 @@ theorem gcd_fixed_count_le
     (u0 u1:I → K) (S:SelectedPair u0 u1)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤131071)
-    (hagreement:∀ gamma∈Gamma,181963≤
+    (hagreement:∀ gamma∈Gamma,181953≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80181):
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80191):
     (LocatorCover.fixed
       (fun gamma=>(specialization K (selected gamma) gamma).toRingHom)
       Gamma S.QA S.QB).card≤
-      272527456851746043+LocatorArithmetic.fixedSingular.countCap:=by
+      272095001656214111+LocatorArithmetic.fixedSingular.countCap:=by
   classical
   let H:P4:=gcd12 S.QA S.QB
   let phi:K → P4 →+*Polynomial K:=
     fun gamma=>(specialization K (selected gamma) gamma).toRingHom
   let Delta:Finset K:=LocatorCover.fixed phi Gamma S.QA S.QB
   have hH:H≠0:=gcd_ne_zero_of_left S.QA_ne
-  have hHflagC:H∈RCN100.globalCoefficientBox K 8188335 131071 100000 13:=
+  have hHflagC:H∈RCN100.globalCoefficientBox K 8187885 131071 62248 13:=
     S.common_C_flag
   have hHcaps:=(mem_flagGlobalCoefficientBox_iff H
-    8188335 131071 100000 13 (by decide)).mp hHflagC
-  have hT:wt residualTotalWeights H≤1445:=S.common_total_le
-  have hY:wt residualYSWeights H≤59:=S.common_ys_le
+    8187885 131071 62248 13 (by decide)).mp hHflagC
+  have hT:wt residualTotalWeights H≤1468:=S.common_total_le
+  have hY:wt residualYSWeights H≤60:=S.common_ys_le
   have hS:wt residualSWeights H≤13:=S.common_slope_le
-  have hflag:H∈RCN100.globalCoefficientBox K 8188335 131071 1445 13:=
-    (mem_flagGlobalCoefficientBox_iff H 8188335 131071 1445 13 (by decide)).mpr
+  have hflag:H∈RCN100.globalCoefficientBox K 8187885 131071 1468 13:=
+    (mem_flagGlobalCoefficientBox_iff H 8187885 131071 1468 13 (by decide)).mpr
       ⟨hT,hS,hHcaps.2.2⟩
-  have hbox:=flag_box_to_ordinary K 8188335 131071 1445 13 H hflag
+  have hbox:=flag_box_to_ordinary K 8187885 131071 1468 13 H hflag
   have hsupport:ResidualSupportData LocatorFixed.wholeSupport H:=
     ⟨hS,hY,hT⟩
   have hsub:Delta ⊆ Gamma:=by
@@ -58,12 +58,12 @@ theorem gcd_fixed_count_le
     exact LocatorCover.fixed_vanish phi Gamma S.QA S.QB gamma hg
   have hdegreeD:∀ gamma∈Delta,(selected gamma).natDegree≤131071:=
     fun gamma hg=>hdegree gamma (hsub hg)
-  have hagreementD:∀ gamma∈Delta,181963≤
+  have hagreementD:∀ gamma∈Delta,181953≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card:=
     fun gamma hg=>hagreement gamma (hsub hg)
-  have hnoD:NoLargeSelectedPencil selected Delta 131071 80181:=
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80181 hsub hno
+  have hnoD:NoLargeSelectedPencil selected Delta 131071 80191:=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80191 hsub hno
   have h10 (R:RegularIndex H) (hs:(regularCumulativeFlag H R).all=10):
       LocatorFactorAggregate.middle (regularCumulativeFlag H R)≤56:=by
     have hf:=RCN167.positiveRFactors_spec H R.1 R.2
@@ -74,7 +74,7 @@ theorem gcd_fixed_count_le
     have hy:=S.factor_r10_ys_le R.1 hf.1 hf.2.1 hR
     simpa only [LocatorFactorAggregate.middle,regularCumulativeFlag,hc.2.1] using hy
   have h11 (R:RegularIndex H) (hs:(regularCumulativeFlag H R).all=11):
-      LocatorFactorAggregate.middle (regularCumulativeFlag H R)≤52:=by
+      LocatorFactorAggregate.middle (regularCumulativeFlag H R)≤53:=by
     have hf:=RCN167.positiveRFactors_spec H R.1 R.2
     have hc:=originalCumulativeFlag_cumulative R.1
     have hR:R.1.degreeOf (2:Fin 4)=11:=by
@@ -100,41 +100,49 @@ theorem gcd_fixed_count_le
       exact hs
     have hy:=S.factor_r13_ys_le R.1 hf.1 hf.2.1 hR
     simpa only [LocatorFactorAggregate.middle,regularCumulativeFlag,hc.2.1] using hy
-  have ht10 (R:RegularIndex H) (hs:(regularCumulativeFlag H R).all=10):
-      LocatorFactorAggregate.total (regularCumulativeFlag H R)≤1414:=by
+  have htr10 (R:RegularIndex H) (hs:(regularCumulativeFlag H R).all=10):
+      LocatorFactorAggregate.middle (regularCumulativeFlag H R)≤53 ∨
+        LocatorFactorAggregate.total (regularCumulativeFlag H R)≤1374:=by
     have hf:=RCN167.positiveRFactors_spec H R.1 R.2
     have hc:=originalCumulativeFlag_cumulative R.1
     have hR:R.1.degreeOf (2:Fin 4)=10:=by
       rw [← LocatorContact.slope_weight_eq_degreeR,← hc.1]; exact hs
-    have ht:=S.factor_r10_total_le R.1 hf.1 hf.2.1 hR
-    simpa only [LocatorFactorAggregate.total,regularCumulativeFlag,hc.2.2] using ht
-  have ht11 (R:RegularIndex H) (hs:(regularCumulativeFlag H R).all=11):
-      LocatorFactorAggregate.total (regularCumulativeFlag H R)≤1414:=by
+    have ht:=S.factor_r10_trade R.1 hf.1 hf.2.1 hR
+    simpa only [LocatorFactorAggregate.middle,LocatorFactorAggregate.total,
+      regularCumulativeFlag,hc.2.1,hc.2.2] using ht
+  have htr11 (R:RegularIndex H) (hs:(regularCumulativeFlag H R).all=11):
+      LocatorFactorAggregate.middle (regularCumulativeFlag H R)≤50 ∨
+        LocatorFactorAggregate.total (regularCumulativeFlag H R)≤1374:=by
     have hf:=RCN167.positiveRFactors_spec H R.1 R.2
     have hc:=originalCumulativeFlag_cumulative R.1
     have hR:R.1.degreeOf (2:Fin 4)=11:=by
       rw [← LocatorContact.slope_weight_eq_degreeR,← hc.1]; exact hs
-    have ht:=S.factor_r11_total_le R.1 hf.1 hf.2.1 hR
-    simpa only [LocatorFactorAggregate.total,regularCumulativeFlag,hc.2.2] using ht
-  have ht12 (R:RegularIndex H) (hs:(regularCumulativeFlag H R).all=12):
-      LocatorFactorAggregate.total (regularCumulativeFlag H R)≤1414:=by
+    have ht:=S.factor_r11_trade R.1 hf.1 hf.2.1 hR
+    simpa only [LocatorFactorAggregate.middle,LocatorFactorAggregate.total,
+      regularCumulativeFlag,hc.2.1,hc.2.2] using ht
+  have htr12 (R:RegularIndex H) (hs:(regularCumulativeFlag H R).all=12):
+      LocatorFactorAggregate.middle (regularCumulativeFlag H R)≤46 ∨
+        LocatorFactorAggregate.total (regularCumulativeFlag H R)≤1378:=by
     have hf:=RCN167.positiveRFactors_spec H R.1 R.2
     have hc:=originalCumulativeFlag_cumulative R.1
     have hR:R.1.degreeOf (2:Fin 4)=12:=by
       rw [← LocatorContact.slope_weight_eq_degreeR,← hc.1]; exact hs
-    have ht:=S.factor_r12_total_le R.1 hf.1 hf.2.1 hR
-    simpa only [LocatorFactorAggregate.total,regularCumulativeFlag,hc.2.2] using ht
-  have ht13 (R:RegularIndex H) (hs:(regularCumulativeFlag H R).all=13):
-      LocatorFactorAggregate.total (regularCumulativeFlag H R)≤1413:=by
+    have ht:=S.factor_r12_trade R.1 hf.1 hf.2.1 hR
+    simpa only [LocatorFactorAggregate.middle,LocatorFactorAggregate.total,
+      regularCumulativeFlag,hc.2.1,hc.2.2] using ht
+  have htr13 (R:RegularIndex H) (hs:(regularCumulativeFlag H R).all=13):
+      LocatorFactorAggregate.middle (regularCumulativeFlag H R)≤43 ∨
+        LocatorFactorAggregate.total (regularCumulativeFlag H R)≤1374:=by
     have hf:=RCN167.positiveRFactors_spec H R.1 R.2
     have hc:=originalCumulativeFlag_cumulative R.1
     have hR:R.1.degreeOf (2:Fin 4)=13:=by
       rw [← LocatorContact.slope_weight_eq_degreeR,← hc.1]; exact hs
-    have ht:=S.factor_r13_total_le R.1 hf.1 hf.2.1 hR
-    simpa only [LocatorFactorAggregate.total,regularCumulativeFlag,hc.2.2] using ht
+    have ht:=S.factor_r13_trade R.1 hf.1 hf.2.1 hR
+    simpa only [LocatorFactorAggregate.middle,LocatorFactorAggregate.total,
+      regularCumulativeFlag,hc.2.1,hc.2.2] using ht
   exact LocatorFixed.fixed_count_le H hH hbox hsupport
     selected Delta u0 u1 hsolution hdegreeD hagreementD hnoD h10 h11 h12 h13
-    ht10 ht11 ht12 ht13
+    htr10 htr11 htr12 htr13
 
 end
 end ProximityPrize.SubmissionLower.LocatorFixedBridge

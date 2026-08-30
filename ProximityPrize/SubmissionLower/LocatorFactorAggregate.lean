@@ -209,24 +209,6 @@ private theorem cost_le_diagonal_rate (p:FlagDegree) (u s:ℕ)
       simp only [diagonalRate,flagMixed]
       ring
 
-private theorem affine59 (t:ℕ) (ht:59≤t):
-    paddedCost 131072 131073 (cap t 59 9)+5930261250834585=
-      186093771685922*t:=by
-  have hsub:t - 59+59=t:=Nat.sub_add_cancel ht
-  unfold paddedCost
-  rw [paddedTail_cap t 59 9 131072 (by decide) (by decide) ht,
-    paddedTail_cap t 59 9 131073 (by decide) (by decide) ht]
-  simp only [cap,flagMixed]
-  ring_nf
-  omega
-
-private theorem middle_tail_formula59 (p:FlagDegree):
-    flagMixed p (paddedTail (cap 59 59 9) 131072)
-        (paddedTail (cap 59 59 9) 131073)=
-      59374085079056*total p+171800028774501*p.all:=by
-  norm_num [paddedTail,padT,padY,padS,cap,total,middle,flagMixed]
-  ring
-
 private theorem middle_cost_le (p:FlagDegree) (u s a b:ℕ)
     (h:Below p (cap u u s))
     (heq:flagMixed p (paddedTail (cap u u s) 131072)
@@ -239,44 +221,6 @@ private theorem middle_cost_le (p:FlagDegree) (u s a b:ℕ)
     _=a*total p+b*p.all:=heq
     _≤a*total p+b*s:=
       Nat.add_le_add_left (Nat.mul_le_mul_left b h.1) _
-
-private abbrev bound6742:ℕ:=272527456851746043
-
-private theorem low_scale {c t:ℕ} (hc:c≤186093771685922*t):
-    1445*c≤bound6742*t:=by
-  calc
-    1445*c≤1445*(186093771685922*t):=Nat.mul_le_mul_left 1445 hc
-    _=(1445*186093771685922)*t:=by ring
-    _≤bound6742*t:=Nat.mul_le_mul_right t (by decide)
-
-private theorem low_rate (p:FlagDegree) (hs:p.all≤9)
-    (hy:middle p≤59) (ht:total p≤1445):
-    1445*paddedCost 131072 131073 p≤bound6742*total p:=by
-  have hn:=middle_le_total p
-  by_cases ht12:total p≤12
-  · have hb:=below_cap_of_bounds p 12 12 10 (by decide) (by decide)
-      (by omega) (hn.trans ht12) ht12
-    have hc:=cost_le_diagonal_rate p 12 10 hb
-    exact low_scale (hc.trans (by
-      unfold diagonalRate
-      norm_num [paddedTail,padT,padY,padS,cap,total,middle,flagMixed]
-      omega))
-  · by_cases ht59:total p≤59
-    · have hb:=below_cap_of_bounds p 59 59 9 (by decide) (by decide) hs hy ht59
-      have hc:=middle_cost_le p 59 9 59374085079056 171800028774501
-        hb (middle_tail_formula59 p)
-      apply low_scale
-      exact hc.trans (by omega)
-    · have hlo:59≤total p:=by omega
-      have hb:=below_cap_of_bounds p (total p) 59 9 (by decide) hlo hs hy (le_refl _)
-      apply low_scale
-      calc
-        paddedCost 131072 131073 p≤
-            paddedCost 131072 131073 (cap (total p) 59 9):=
-          paddedCost_mono 131072 131073 hb
-        _≤186093771685922*total p:=by
-          have h:=affine59 (total p) hlo
-          omega
 
 private theorem sum_mixed_le_on {I:Type*} [Fintype I] (S:Finset I)
     (p:I → FlagDegree) (P q r:FlagDegree)
@@ -306,106 +250,145 @@ private theorem merge_on {I:Type*} [Fintype I] (S:Finset I)
         (paddedTail_mono 131072 (hi i hiS)) (paddedTail_mono 131073 (hi i hiS)))
     _≤paddedCost 131072 131073 P:=sum_mixed_le_on S p P _ _ hs hy ht
 
-private theorem pair10 (a b:ℕ) (ha:a≤1386) (hab:a+b≤1404)
-    (hb0:1≤b) (hb:b≤45):
-    paddedCost 131072 131073 (cap (10+b+a) (10+b) 10)+
-      paddedCost 131072 131073 (cap (1435-b-a) (49-b) 3)≤bound6742:=by
-  have h1:2≤10:=by omega
-  have h2:10+1≤10+b:=by omega
-  have h3:10+b≤10+b+a:=by omega
-  have h4:2≤3:=by omega
-  have h5:3+1≤49-b:=by omega
-  have h6:49-b≤1435-b-a:=by omega
-  simp only [paddedCost]
-  rw [paddedTail_cap _ _ _ 131072 h1 h2 h3,paddedTail_cap _ _ _ 131073 h1 h2 h3,
-    paddedTail_cap _ _ _ 131072 h4 h5 h6,paddedTail_cap _ _ _ 131073 h4 h5 h6]
-  simp only [cap]
-  have e1:10+b+a-(10+b)=a:=by omega
-  have e2:10+b-10=b:=by omega
-  have e3:10-1=9:=by omega
-  have e4:1435-b-a-(49-b)=1386-a:=by omega
-  have e5:49-b-3=46-b:=by omega
-  have e6:3-1=2:=by omega
-  rw [e1,e2,e3,e4,e5,e6]
-  simp only [flagMixed]
-  ring_nf
-  have ea:1386-a+a=1386:=Nat.sub_add_cancel ha
-  have eb:46-b+b=46:=Nat.sub_add_cancel (by omega:b≤46)
-  nlinarith
-
-private theorem pair11 (a b:ℕ) (ha:a≤1386) (hab:a+b≤1403)
-    (hb0:1≤b) (hb:b≤41):
-    paddedCost 131072 131073 (cap (11+b+a) (11+b) 11)+
-      paddedCost 131072 131073 (cap (1434-b-a) (48-b) 2)≤bound6742:=by
-  have h1:2≤11:=by omega
-  have h2:11+1≤11+b:=by omega
-  have h3:11+b≤11+b+a:=by omega
-  have h4:2≤2:=by omega
-  have h5:2+1≤48-b:=by omega
-  have h6:48-b≤1434-b-a:=by omega
-  simp only [paddedCost]
-  rw [paddedTail_cap _ _ _ 131072 h1 h2 h3,paddedTail_cap _ _ _ 131073 h1 h2 h3,
-    paddedTail_cap _ _ _ 131072 h4 h5 h6,paddedTail_cap _ _ _ 131073 h4 h5 h6]
-  simp only [cap]
-  have e1:11+b+a-(11+b)=a:=by omega
-  have e2:11+b-11=b:=by omega
-  have e3:11-1=10:=by omega
-  have e4:1434-b-a-(48-b)=1386-a:=by omega
-  have e5:48-b-2=46-b:=by omega
-  have e6:2-1=1:=by omega
-  rw [e1,e2,e3,e4,e5,e6]
-  simp only [flagMixed]
-  ring_nf
-  have ea:1386-a+a=1386:=Nat.sub_add_cancel ha
-  have eb:46-b+b=46:=Nat.sub_add_cancel (by omega:b≤46)
-  nlinarith
-
-private theorem pair12 (a b:ℕ) (ha:a≤1386) (hab:a+b≤1402)
-    (hb0:1≤b) (hb:b≤36):
-    paddedCost 131072 131073 (cap (12+b+a) (12+b) 12)+
-      paddedCost 131072 131073 (cap (1433-b-a) (47-b) 2)≤bound6742:=by
-  have h1:2≤12:=by omega
-  have h2:12+1≤12+b:=by omega
-  have h3:12+b≤12+b+a:=by omega
-  have h4:2≤2:=by omega
-  have h5:2+1≤47-b:=by omega
-  have h6:47-b≤1433-b-a:=by omega
-  simp only [paddedCost]
-  rw [paddedTail_cap _ _ _ 131072 h1 h2 h3,paddedTail_cap _ _ _ 131073 h1 h2 h3,
-    paddedTail_cap _ _ _ 131072 h4 h5 h6,paddedTail_cap _ _ _ 131073 h4 h5 h6]
-  simp only [cap]
-  have e1:12+b+a-(12+b)=a:=by omega
-  have e2:12+b-12=b:=by omega
-  have e3:12-1=11:=by omega
-  have e4:1433-b-a-(47-b)=1386-a:=by omega
-  have e5:47-b-2=45-b:=by omega
-  have e6:2-1=1:=by omega
-  rw [e1,e2,e3,e4,e5,e6]
-  simp only [flagMixed]
-  ring_nf
-  have ea:1386-a+a=1386:=Nat.sub_add_cancel ha
-  have eb:45-b+b=45:=Nat.sub_add_cancel (by omega:b≤45)
-  nlinarith
-
 private theorem self_cap (p:FlagDegree):p=cap (total p) (middle p) p.all:=by
   cases p
   simp only [cap,total,middle]
   congr<;>omega
 
-theorem aggregate_6742 {I:Type*} [Fintype I] (p:I → FlagDegree)
-    (hpos:∀ i,0<(p i).all)
-    (hsum:(∑ i,(p i).all)≤13)
-    (hysum:(∑ i,middle (p i))≤59)
-    (htsum:(∑ i,total (p i))≤1445)
+private abbrev bound6743:ℕ:=272095001656214111
+
+private theorem affine60 (t:ℕ) (ht:60≤t):
+    paddedCost 131072 131073 (cap t 60 9)+6134703253880985=
+      189529771737122*t:=by
+  have hsub:t-60+60=t:=Nat.sub_add_cancel ht
+  unfold paddedCost
+  rw [paddedTail_cap t 60 9 131072 (by decide) (by decide) ht,
+    paddedTail_cap t 60 9 131073 (by decide) (by decide) ht]
+  simp only [cap,flagMixed]
+  ring_nf
+  omega
+
+private theorem middle_tail_formula60 (p:FlagDegree):
+    flagMixed p (paddedTail (cap 60 60 9) 131072)
+        (paddedTail (cap 60 60 9) 131073)=
+      60473605095440*total p+178740749402215*p.all:=by
+  norm_num [paddedTail,padT,padY,padS,cap,total,middle,flagMixed]
+  ring
+
+private theorem low_rate43 (p:FlagDegree) (hs:p.all≤9)
+    (hy:middle p≤60) (ht:total p≤1468):
+    1468*paddedCost 131072 131073 p≤bound6743*total p:=by
+  have hn:=middle_le_total p
+  by_cases ht12:total p≤12
+  · have hb:=below_cap_of_bounds p 12 12 10 (by decide) (by decide)
+      (by omega) (hn.trans ht12) ht12
+    have hc:=cost_le_diagonal_rate p 12 10 hb
+    calc
+      1468*paddedCost 131072 131073 p≤1468*(diagonalRate 12 10*total p):=
+        Nat.mul_le_mul_left 1468 hc
+      _≤bound6743*total p:=by
+        unfold diagonalRate
+        norm_num [paddedTail,padT,padY,padS,cap,total,middle,flagMixed]
+        omega
+  · by_cases ht60:total p≤60
+    · have hb:=below_cap_of_bounds p 60 60 9 (by decide) (by decide)
+          hs hy ht60
+      have hc:=middle_cost_le p 60 9 60473605095440 178740749402215
+        hb (middle_tail_formula60 p)
+      calc
+        1468*paddedCost 131072 131073 p≤
+            1468*(60473605095440*total p+178740749402215*9):=
+          Nat.mul_le_mul_left 1468 hc
+        _≤bound6743*total p:=by
+          simp only [bound6743]
+          omega
+    · have hlo:60≤total p:=by omega
+      have hb:=below_cap_of_bounds p (total p) 60 9 (by decide) hlo hs hy le_rfl
+      have hc:=paddedCost_mono 131072 131073 hb
+      have he:=affine60 (total p) hlo
+      calc
+        1468*paddedCost 131072 131073 p≤
+            1468*paddedCost 131072 131073 (cap (total p) 60 9):=
+          Nat.mul_le_mul_left 1468 hc
+        _≤bound6743*total p:=by
+          simp only [bound6743]
+          omega
+
+private theorem pair10_43 (a b:ℕ) (ha:a≤1408) (hab:a+b≤1458)
+    (hb0:1≤b) (hb:b≤46) (htrade:b≤43 ∨ a+b≤1364):
+    paddedCost 131072 131073 (cap (10+b+a) (10+b) 10)+
+      paddedCost 131072 131073 (cap (1458-b-a) (50-b) 3)≤bound6743:=by
+  simp only [paddedCost]
+  rw [paddedTail_cap _ _ _ 131072 (by decide) (by omega) (by omega),
+    paddedTail_cap _ _ _ 131073 (by decide) (by omega) (by omega),
+    paddedTail_cap _ _ _ 131072 (by decide) (by omega) (by omega),
+    paddedTail_cap _ _ _ 131073 (by decide) (by omega) (by omega)]
+  simp only [cap]
+  have ea:1408-a+a=1408:=Nat.sub_add_cancel ha
+  have eb:47-b+b=47:=Nat.sub_add_cancel (by omega:b≤47)
+  have e1:10+b+a-(10+b)=a:=by omega
+  have e2:10+b-10=b:=by omega
+  have e3:1458-b-a-(50-b)=1408-a:=by omega
+  have e4:50-b-3=47-b:=by omega
+  rw [e1,e2,e3,e4]
+  simp only [flagMixed]
+  ring_nf
+  rcases htrade with h|h <;> nlinarith
+
+private theorem pair11_43 (a b:ℕ) (ha:a≤1408) (hab:a+b≤1457)
+    (hb0:1≤b) (hb:b≤42) (htrade:b≤39 ∨ a+b≤1363):
+    paddedCost 131072 131073 (cap (11+b+a) (11+b) 11)+
+      paddedCost 131072 131073 (cap (1457-b-a) (49-b) 2)≤bound6743:=by
+  simp only [paddedCost]
+  rw [paddedTail_cap _ _ _ 131072 (by decide) (by omega) (by omega),
+    paddedTail_cap _ _ _ 131073 (by decide) (by omega) (by omega),
+    paddedTail_cap _ _ _ 131072 (by decide) (by omega) (by omega),
+    paddedTail_cap _ _ _ 131073 (by decide) (by omega) (by omega)]
+  simp only [cap]
+  have ea:1408-a+a=1408:=Nat.sub_add_cancel ha
+  have eb:47-b+b=47:=Nat.sub_add_cancel (by omega:b≤47)
+  have e1:11+b+a-(11+b)=a:=by omega
+  have e2:11+b-11=b:=by omega
+  have e3:1457-b-a-(49-b)=1408-a:=by omega
+  have e4:49-b-2=47-b:=by omega
+  rw [e1,e2,e3,e4]
+  simp only [flagMixed]
+  ring_nf
+  rcases htrade with h|h <;> nlinarith
+
+private theorem pair12_43 (a b:ℕ) (ha:a≤1408) (hab:a+b≤1456)
+    (hb0:1≤b) (hb:b≤36) (htrade:b≤34 ∨ a+b≤1366):
+    paddedCost 131072 131073 (cap (12+b+a) (12+b) 12)+
+      paddedCost 131072 131073 (cap (1456-b-a) (48-b) 2)≤bound6743:=by
+  simp only [paddedCost]
+  rw [paddedTail_cap _ _ _ 131072 (by decide) (by omega) (by omega),
+    paddedTail_cap _ _ _ 131073 (by decide) (by omega) (by omega),
+    paddedTail_cap _ _ _ 131072 (by decide) (by omega) (by omega),
+    paddedTail_cap _ _ _ 131073 (by decide) (by omega) (by omega)]
+  simp only [cap]
+  have ea:1408-a+a=1408:=Nat.sub_add_cancel ha
+  have eb:46-b+b=46:=Nat.sub_add_cancel (by omega:b≤46)
+  have e1:12+b+a-(12+b)=a:=by omega
+  have e2:12+b-12=b:=by omega
+  have e3:1456-b-a-(48-b)=1408-a:=by omega
+  have e4:48-b-2=46-b:=by omega
+  rw [e1,e2,e3,e4]
+  simp only [flagMixed]
+  ring_nf
+  rcases htrade with h|h <;> nlinarith
+
+theorem aggregate_6743 {I:Type*} [Fintype I] (p:I → FlagDegree)
+    (hpos:∀ i,0<(p i).all) (hsum:(∑ i,(p i).all)≤13)
+    (hysum:(∑ i,middle (p i))≤60) (htsum:(∑ i,total (p i))≤1468)
     (h10:∀ i,(p i).all=10 → middle (p i)≤56)
-    (h11:∀ i,(p i).all=11 → middle (p i)≤52)
+    (h11:∀ i,(p i).all=11 → middle (p i)≤53)
     (h12:∀ i,(p i).all=12 → middle (p i)≤48)
     (h13:∀ i,(p i).all=13 → middle (p i)≤44)
-    (ht10:∀ i,(p i).all=10 → total (p i)≤1414)
-    (ht11:∀ i,(p i).all=11 → total (p i)≤1414)
-    (ht12:∀ i,(p i).all=12 → total (p i)≤1414)
-    (ht13:∀ i,(p i).all=13 → total (p i)≤1413):
-    (∑ i,paddedCost 131072 131073 (p i))≤bound6742:=by
+    (htr10:∀ i,(p i).all=10 → middle (p i)≤53 ∨ total (p i)≤1374)
+    (htr11:∀ i,(p i).all=11 → middle (p i)≤50 ∨ total (p i)≤1374)
+    (htr12:∀ i,(p i).all=12 → middle (p i)≤46 ∨ total (p i)≤1378)
+    (htr13:∀ i,(p i).all=13 → middle (p i)≤43 ∨ total (p i)≤1374):
+    (∑ i,paddedCost 131072 131073 (p i))≤bound6743:=by
   classical
   letI:DecidableEq I:=Classical.decEq I
   by_cases hhigh:∃ i,10≤(p i).all
@@ -414,28 +397,25 @@ theorem aggregate_6742 {I:Type*} [Fintype I] (p:I → FlagDegree)
     let R:=(p i0).all
     let y:=middle (p i0)
     let t:=total (p i0)
-    have hRi:R=(p i0).all:=rfl
-    have hRy:R≤y:=by dsimp [R,y,middle]; omega
+    have hRy:R≤y:=by dsimp [R,y,middle];omega
     have hyt:y≤t:=middle_le_total (p i0)
-    have hR13:R≤13:=
-      (Finset.single_le_sum (fun _ _=>Nat.zero_le _) (Finset.mem_univ i0)).trans hsum
+    have hR13:R≤13:=(Finset.single_le_sum (fun _ _=>Nat.zero_le _)
+      (Finset.mem_univ i0)).trans hsum
     have hsE:(∑ i∈S,(p i).all)+R≤13:=by
       rw [show (∑ i∈S,(p i).all)+R=∑ i,(p i).all by
-        simpa only [S,R] using Finset.sum_erase_add Finset.univ (fun i=>(p i).all)
-          (Finset.mem_univ i0)]
+        simpa only [S,R] using Finset.sum_erase_add Finset.univ
+          (fun i=>(p i).all) (Finset.mem_univ i0)]
       exact hsum
-    have hyE:(∑ i∈S,middle (p i))+y≤59:=by
+    have hyE:(∑ i∈S,middle (p i))+y≤60:=by
       rw [show (∑ i∈S,middle (p i))+y=∑ i,middle (p i) by
-        simpa only [S,y] using Finset.sum_erase_add Finset.univ (fun i=>middle (p i))
-          (Finset.mem_univ i0)]
+        simpa only [S,y] using Finset.sum_erase_add Finset.univ
+          (fun i=>middle (p i)) (Finset.mem_univ i0)]
       exact hysum
-    have htE:(∑ i∈S,total (p i))+t≤1445:=by
+    have htE:(∑ i∈S,total (p i))+t≤1468:=by
       rw [show (∑ i∈S,total (p i))+t=∑ i,total (p i) by
-        simpa only [S,t] using Finset.sum_erase_add Finset.univ (fun i=>total (p i))
-          (Finset.mem_univ i0)]
+        simpa only [S,t] using Finset.sum_erase_add Finset.univ
+          (fun i=>total (p i)) (Finset.mem_univ i0)]
       exact htsum
-    have hyEt:(∑ i∈S,middle (p i))≤∑ i∈S,total (p i):=
-      Finset.sum_le_sum (fun i _=>middle_le_total (p i))
     have hcostE:(∑ i,paddedCost 131072 131073 (p i))=
         (∑ i∈S,paddedCost 131072 131073 (p i))+
           paddedCost 131072 131073 (p i0):=by
@@ -444,164 +424,164 @@ theorem aggregate_6742 {I:Type*} [Fintype I] (p:I → FlagDegree)
         (fun i=>paddedCost 131072 131073 (p i)) (Finset.mem_univ i0)
     have hp:p i0=cap t y R:=by simpa only [t,y,R] using self_cap (p i0)
     have hcases:R=10 ∨ R=11 ∨ R=12 ∨ R=13:=by omega
-    rcases hcases with hR | hR | hR | hR
+    rcases hcases with hR|hR|hR|hR
     · have hycap:y≤56:=by simpa only [R] using h10 i0 (by simpa only [R] using hR)
-      have htcap:t≤1414:=by simpa only [R] using ht10 i0 (by simpa only [R] using hR)
-      let a:=t-y
-      let b:=y-R
-      have hyeq:y=10+b:=by dsimp [b]; omega
-      have hteq:t=10+b+a:=by dsimp [a]; omega
+      have htrade:=htr10 i0 (by simpa only [R] using hR)
+      let a:=t-y;let b:=y-R
+      have hyeq:y=10+b:=by dsimp [b];omega
+      have hteq:t=10+b+a:=by dsimp [a];omega
       have hb:b≤46:=by omega
-      have hab:a+b≤1404:=by omega
-      by_cases ha:a≤1386
-      · by_cases hb0:b=0
-        · have hmain:paddedCost 131072 131073 (p i0)≤
-              paddedCost 131072 131073 (cap 1414 11 10):=by
-            apply paddedCost_mono 131072 131073
-            apply below_cap_of_bounds (p i0) 1414 11 10 (by decide) (by decide)
-            · simpa only [R] using hR.le
-            · dsimp [y] at hyeq ⊢; omega
-            · simpa only [t] using htcap
-          have hrest:=merge_on S p (cap 1445 49 3)
-            (by rw [(cap_cumulative 1445 49 3 (by decide) (by decide)).1]; omega)
-            (by rw [(cap_cumulative 1445 49 3 (by decide) (by decide)).2.1]; omega)
-            (by rw [(cap_cumulative 1445 49 3 (by decide) (by decide)).2.2]; omega)
-          rw [hcostE]
-          exact (Nat.add_le_add hrest hmain).trans (by decide)
-        · by_cases hb46:b=46
-          · have hmain:paddedCost 131072 131073 (p i0)≤
-                paddedCost 131072 131073 (cap 1414 56 10):=by
-              apply paddedCost_mono 131072 131073
-              apply below_cap_of_bounds (p i0) 1414 56 10 (by decide) (by decide)
-              · simpa only [R] using hR.le
-              · dsimp [y] at hyeq ⊢; omega
-              · simpa only [t] using htcap
-            have hrest:=merge_on S p (cap 1389 3 3)
-              (by rw [(cap_cumulative 1389 3 3 (by decide) (by decide)).1]; omega)
-              (by rw [(cap_cumulative 1389 3 3 (by decide) (by decide)).2.1]; omega)
-              (by rw [(cap_cumulative 1389 3 3 (by decide) (by decide)).2.2]; omega)
-            rw [hcostE]
-            exact (Nat.add_le_add hrest hmain).trans (by decide)
-          · have hrest:=merge_on S p (cap (1435-b-a) (49-b) 3)
-              (by rw [(cap_cumulative (1435-b-a) (49-b) 3 (by omega) (by omega)).1]; omega)
-              (by rw [(cap_cumulative (1435-b-a) (49-b) 3 (by omega) (by omega)).2.1]; omega)
-              (by rw [(cap_cumulative (1435-b-a) (49-b) 3 (by omega) (by omega)).2.2]; omega)
-            rw [hcostE,hp,hR,hyeq,hteq]
-            exact (Nat.add_le_add hrest le_rfl).trans
-              (by simpa [Nat.add_comm] using pair10 a b ha hab (by omega) (by omega))
-      · have hy27:y≤27:=by omega
-        have hmain:paddedCost 131072 131073 (p i0)≤
-            paddedCost 131072 131073 (cap 1414 27 10):=by
-          apply paddedCost_mono 131072 131073
-          exact below_cap_of_bounds (p i0) 1414 27 10 (by decide) (by decide)
-            (by simpa only [R] using hR.le) hy27 htcap
-        have hrest:=merge_on S p (cap 48 48 3)
-          (by rw [(cap_cumulative 48 48 3 (by decide) (by decide)).1]; omega)
-          (by rw [(cap_cumulative 48 48 3 (by decide) (by decide)).2.1]; omega)
-          (by rw [(cap_cumulative 48 48 3 (by decide) (by decide)).2.2]; omega)
+      have hab:a+b≤1458:=by
+        have hi: t≤1468:=(Finset.single_le_sum (fun _ _=>Nat.zero_le _)
+          (Finset.mem_univ i0)).trans htsum
+        omega
+      have htrade':b≤43 ∨ a+b≤1364:=by
+        rcases htrade with h|h
+        · left;omega
+        · right;omega
+      by_cases hb0:b=0
+      · have hm:=paddedCost_mono 131072 131073
+          (below_cap_of_bounds (p i0) 1468 11 10 (by decide) (by decide)
+            (by simpa only [R] using hR.le) (by omega) (by omega))
+        have hr:=merge_on S p (cap 1468 50 3)
+          (by rw [(cap_cumulative 1468 50 3 (by decide) (by decide)).1];omega)
+          (by rw [(cap_cumulative 1468 50 3 (by decide) (by decide)).2.1];omega)
+          (by rw [(cap_cumulative 1468 50 3 (by decide) (by decide)).2.2];omega)
         rw [hcostE]
-        exact (Nat.add_le_add hrest hmain).trans (by decide)
-    · have hycap:y≤52:=by simpa only [R] using h11 i0 (by simpa only [R] using hR)
-      have htcap:t≤1414:=by simpa only [R] using ht11 i0 (by simpa only [R] using hR)
-      let a:=t-y
-      let b:=y-R
-      have hyeq:y=11+b:=by dsimp [b]; omega
-      have hteq:t=11+b+a:=by dsimp [a]; omega
-      have hb:b≤41:=by omega
-      have hab:a+b≤1403:=by omega
-      by_cases ha:a≤1386
-      · by_cases hb0:b=0
-        · have hmain:=paddedCost_mono 131072 131073
-              (below_cap_of_bounds (p i0) 1414 12 11 (by decide) (by decide)
-                (by simpa only [R] using hR.le) (by omega) htcap)
-          have hrest:=merge_on S p (cap 1445 48 2)
-            (by rw [(cap_cumulative 1445 48 2 (by decide) (by decide)).1]; omega)
-            (by rw [(cap_cumulative 1445 48 2 (by decide) (by decide)).2.1]; omega)
-            (by rw [(cap_cumulative 1445 48 2 (by decide) (by decide)).2.2]; omega)
-          rw [hcostE]
-          exact (Nat.add_le_add hrest hmain).trans (by decide)
-        · have hrest:=merge_on S p (cap (1434-b-a) (48-b) 2)
-            (by rw [(cap_cumulative (1434-b-a) (48-b) 2 (by omega) (by omega)).1]; omega)
-            (by rw [(cap_cumulative (1434-b-a) (48-b) 2 (by omega) (by omega)).2.1]; omega)
-            (by rw [(cap_cumulative (1434-b-a) (48-b) 2 (by omega) (by omega)).2.2]; omega)
+        exact (Nat.add_le_add hr hm).trans (by decide)
+      · by_cases ha:a≤1408
+        · have hr:=merge_on S p (cap (1458-b-a) (50-b) 3)
+            (by rw [(cap_cumulative (1458-b-a) (50-b) 3 (by omega) (by omega)).1];omega)
+            (by rw [(cap_cumulative (1458-b-a) (50-b) 3 (by omega) (by omega)).2.1];omega)
+            (by rw [(cap_cumulative (1458-b-a) (50-b) 3 (by omega) (by omega)).2.2];omega)
           rw [hcostE,hp,hR,hyeq,hteq]
-          exact (Nat.add_le_add hrest le_rfl).trans
-            (by simpa [Nat.add_comm] using pair11 a b ha hab (by omega) hb)
-      · have hy27:y≤27:=by omega
-        have hmain:=paddedCost_mono 131072 131073
-          (below_cap_of_bounds (p i0) 1414 27 11 (by decide) (by decide)
-            (by simpa only [R] using hR.le) hy27 htcap)
-        have hrest:=merge_on S p (cap 48 48 3)
-          (by rw [(cap_cumulative 48 48 3 (by decide) (by decide)).1]; omega)
-          (by rw [(cap_cumulative 48 48 3 (by decide) (by decide)).2.1]; omega)
-          (by rw [(cap_cumulative 48 48 3 (by decide) (by decide)).2.2]; omega)
+          exact (Nat.add_le_add hr le_rfl).trans
+            (by simpa [Nat.add_comm] using pair10_43 a b ha hab (by omega) hb htrade')
+        · have hy53:y≤53:=by rcases htrade' with h|h<;>omega
+          have hm:=paddedCost_mono 131072 131073
+            (below_cap_of_bounds (p i0) 1468 53 10 (by decide) (by decide)
+              (by simpa only [R] using hR.le) hy53 (by omega))
+          have hr:=merge_on S p (cap 49 49 3)
+            (by rw [(cap_cumulative 49 49 3 (by decide) (by decide)).1];omega)
+            (by rw [(cap_cumulative 49 49 3 (by decide) (by decide)).2.1];omega)
+            (by rw [(cap_cumulative 49 49 3 (by decide) (by decide)).2.2];omega)
+          rw [hcostE]
+          exact (Nat.add_le_add hr hm).trans (by decide)
+    · have hycap:y≤53:=by simpa only [R] using h11 i0 (by simpa only [R] using hR)
+      have htrade:=htr11 i0 (by simpa only [R] using hR)
+      let a:=t-y;let b:=y-R
+      have hyeq:y=11+b:=by dsimp [b];omega
+      have hteq:t=11+b+a:=by dsimp [a];omega
+      have hb:b≤42:=by omega
+      have hab:a+b≤1457:=by
+        have hi:t≤1468:=(Finset.single_le_sum (fun _ _=>Nat.zero_le _)
+          (Finset.mem_univ i0)).trans htsum
+        omega
+      have htrade':b≤39 ∨ a+b≤1363:=by
+        rcases htrade with h|h
+        · left;omega
+        · right;omega
+      by_cases hb0:b=0
+      · have hm:=paddedCost_mono 131072 131073
+          (below_cap_of_bounds (p i0) 1468 12 11 (by decide) (by decide)
+            (by simpa only [R] using hR.le) (by omega) (by omega))
+        have hr:=merge_on S p (cap 1468 49 2)
+          (by rw [(cap_cumulative 1468 49 2 (by decide) (by decide)).1];omega)
+          (by rw [(cap_cumulative 1468 49 2 (by decide) (by decide)).2.1];omega)
+          (by rw [(cap_cumulative 1468 49 2 (by decide) (by decide)).2.2];omega)
         rw [hcostE]
-        exact (Nat.add_le_add hrest hmain).trans (by decide)
+        exact (Nat.add_le_add hr hm).trans (by decide)
+      · by_cases ha:a≤1408
+        · have hr:=merge_on S p (cap (1457-b-a) (49-b) 2)
+            (by rw [(cap_cumulative (1457-b-a) (49-b) 2 (by omega) (by omega)).1];omega)
+            (by rw [(cap_cumulative (1457-b-a) (49-b) 2 (by omega) (by omega)).2.1];omega)
+            (by rw [(cap_cumulative (1457-b-a) (49-b) 2 (by omega) (by omega)).2.2];omega)
+          rw [hcostE,hp,hR,hyeq,hteq]
+          exact (Nat.add_le_add hr le_rfl).trans
+            (by simpa [Nat.add_comm] using pair11_43 a b ha hab (by omega) hb htrade')
+        · have hy50:y≤50:=by rcases htrade' with h|h<;>omega
+          have hm:=paddedCost_mono 131072 131073
+            (below_cap_of_bounds (p i0) 1468 50 11 (by decide) (by decide)
+              (by simpa only [R] using hR.le) hy50 (by omega))
+          have hr:=merge_on S p (cap 48 48 2)
+            (by rw [(cap_cumulative 48 48 2 (by decide) (by decide)).1];omega)
+            (by rw [(cap_cumulative 48 48 2 (by decide) (by decide)).2.1];omega)
+            (by rw [(cap_cumulative 48 48 2 (by decide) (by decide)).2.2];omega)
+          rw [hcostE]
+          exact (Nat.add_le_add hr hm).trans (by decide)
     · have hycap:y≤48:=by simpa only [R] using h12 i0 (by simpa only [R] using hR)
-      have htcap:t≤1414:=by simpa only [R] using ht12 i0 (by simpa only [R] using hR)
-      let a:=t-y
-      let b:=y-R
-      have hyeq:y=12+b:=by dsimp [b]; omega
-      have hteq:t=12+b+a:=by dsimp [a]; omega
+      have htrade:=htr12 i0 (by simpa only [R] using hR)
+      let a:=t-y;let b:=y-R
+      have hyeq:y=12+b:=by dsimp [b];omega
+      have hteq:t=12+b+a:=by dsimp [a];omega
       have hb:b≤36:=by omega
-      have hab:a+b≤1402:=by omega
-      by_cases ha:a≤1386
-      · by_cases hb0:b=0
-        · have hmain:=paddedCost_mono 131072 131073
-              (below_cap_of_bounds (p i0) 1414 13 12 (by decide) (by decide)
-                (by simpa only [R] using hR.le) (by omega) htcap)
-          have hrest:=merge_on S p (cap 1445 47 2)
-            (by rw [(cap_cumulative 1445 47 2 (by decide) (by decide)).1]; omega)
-            (by rw [(cap_cumulative 1445 47 2 (by decide) (by decide)).2.1]; omega)
-            (by rw [(cap_cumulative 1445 47 2 (by decide) (by decide)).2.2]; omega)
-          rw [hcostE]
-          exact (Nat.add_le_add hrest hmain).trans (by decide)
-        · have hrest:=merge_on S p (cap (1433-b-a) (47-b) 2)
-            (by rw [(cap_cumulative (1433-b-a) (47-b) 2 (by omega) (by omega)).1]; omega)
-            (by rw [(cap_cumulative (1433-b-a) (47-b) 2 (by omega) (by omega)).2.1]; omega)
-            (by rw [(cap_cumulative (1433-b-a) (47-b) 2 (by omega) (by omega)).2.2]; omega)
-          rw [hcostE,hp,hR,hyeq,hteq]
-          exact (Nat.add_le_add hrest le_rfl).trans
-            (by simpa [Nat.add_comm] using pair12 a b ha hab (by omega) hb)
-      · have hy27:y≤27:=by omega
-        have hmain:=paddedCost_mono 131072 131073
-          (below_cap_of_bounds (p i0) 1414 27 12 (by decide) (by decide)
-            (by simpa only [R] using hR.le) hy27 htcap)
-        have hrest:=merge_on S p (cap 48 48 3)
-          (by rw [(cap_cumulative 48 48 3 (by decide) (by decide)).1]; omega)
-          (by rw [(cap_cumulative 48 48 3 (by decide) (by decide)).2.1]; omega)
-          (by rw [(cap_cumulative 48 48 3 (by decide) (by decide)).2.2]; omega)
+      have hab:a+b≤1456:=by
+        have hi:t≤1468:=(Finset.single_le_sum (fun _ _=>Nat.zero_le _)
+          (Finset.mem_univ i0)).trans htsum
+        omega
+      have htrade':b≤34 ∨ a+b≤1366:=by
+        rcases htrade with h|h
+        · left;omega
+        · right;omega
+      by_cases hb0:b=0
+      · have hm:=paddedCost_mono 131072 131073
+          (below_cap_of_bounds (p i0) 1468 13 12 (by decide) (by decide)
+            (by simpa only [R] using hR.le) (by omega) (by omega))
+        have hr:=merge_on S p (cap 1468 48 2)
+          (by rw [(cap_cumulative 1468 48 2 (by decide) (by decide)).1];omega)
+          (by rw [(cap_cumulative 1468 48 2 (by decide) (by decide)).2.1];omega)
+          (by rw [(cap_cumulative 1468 48 2 (by decide) (by decide)).2.2];omega)
         rw [hcostE]
-        exact (Nat.add_le_add hrest hmain).trans (by decide)
+        exact (Nat.add_le_add hr hm).trans (by decide)
+      · by_cases ha:a≤1408
+        · have hr:=merge_on S p (cap (1456-b-a) (48-b) 2)
+            (by rw [(cap_cumulative (1456-b-a) (48-b) 2 (by omega) (by omega)).1];omega)
+            (by rw [(cap_cumulative (1456-b-a) (48-b) 2 (by omega) (by omega)).2.1];omega)
+            (by rw [(cap_cumulative (1456-b-a) (48-b) 2 (by omega) (by omega)).2.2];omega)
+          rw [hcostE,hp,hR,hyeq,hteq]
+          exact (Nat.add_le_add hr le_rfl).trans
+            (by simpa [Nat.add_comm] using pair12_43 a b ha hab (by omega) hb htrade')
+        · have hy46:y≤46:=by rcases htrade' with h|h<;>omega
+          have hm:=paddedCost_mono 131072 131073
+            (below_cap_of_bounds (p i0) 1468 46 12 (by decide) (by decide)
+              (by simpa only [R] using hR.le) hy46 (by omega))
+          have hr:=merge_on S p (cap 47 47 2)
+            (by rw [(cap_cumulative 47 47 2 (by decide) (by decide)).1];omega)
+            (by rw [(cap_cumulative 47 47 2 (by decide) (by decide)).2.1];omega)
+            (by rw [(cap_cumulative 47 47 2 (by decide) (by decide)).2.2];omega)
+          rw [hcostE]
+          exact (Nat.add_le_add hr hm).trans (by decide)
     · have hycap:y≤44:=by simpa only [R] using h13 i0 (by simpa only [R] using hR)
-      have htcap:t≤1413:=by simpa only [R] using ht13 i0 (by simpa only [R] using hR)
+      have htrade:=htr13 i0 (by simpa only [R] using hR)
       have hSempty:S=∅:=by
         apply Finset.eq_empty_iff_forall_notMem.mpr
         intro j hj
-        have hsJ:=Finset.single_le_sum
-          (fun i _=>Nat.zero_le ((p i).all)) hj
+        have hsJ:=Finset.single_le_sum (fun i _=>Nat.zero_le ((p i).all)) hj
         have hpj:=hpos j
         omega
-      have hmain:=paddedCost_mono 131072 131073
-        (below_cap_of_bounds (p i0) 1413 44 13 (by decide) (by decide)
-          (by simpa only [R] using hR.le) hycap htcap)
       rw [hcostE,hSempty]
       simp only [Finset.sum_empty,zero_add]
-      exact hmain.trans (by decide)
+      rcases htrade with hy43|ht1374
+      · exact (paddedCost_mono 131072 131073
+          (below_cap_of_bounds (p i0) 1468 43 13 (by decide) (by decide)
+            (by simpa only [R] using hR.le) hy43 (by omega))).trans (by decide)
+      · exact (paddedCost_mono 131072 131073
+          (below_cap_of_bounds (p i0) 1374 44 13 (by decide) (by decide)
+            (by simpa only [R] using hR.le) hycap ht1374)).trans (by decide)
   · have hsmall (i:I):(p i).all≤9:=by
       by_contra h
       exact hhigh ⟨i,by omega⟩
-    have hscaled:1445*(∑ i,paddedCost 131072 131073 (p i))≤
-        1445*bound6742:=by
+    have hscaled:1468*(∑ i,paddedCost 131072 131073 (p i))≤
+        1468*bound6743:=by
       calc
-        _=∑ i,1445*paddedCost 131072 131073 (p i):=by rw [Finset.mul_sum]
-        _≤∑ i,bound6742*total (p i):=
-          Finset.sum_le_sum (fun i _=>low_rate (p i) (hsmall i)
+        _=∑ i,1468*paddedCost 131072 131073 (p i):=by rw [Finset.mul_sum]
+        _≤∑ i,bound6743*total (p i):=
+          Finset.sum_le_sum (fun i _=>low_rate43 (p i) (hsmall i)
             ((Finset.single_le_sum (fun _ _=>Nat.zero_le _) (Finset.mem_univ i)).trans hysum)
             ((Finset.single_le_sum (fun _ _=>Nat.zero_le _) (Finset.mem_univ i)).trans htsum))
-        _=bound6742*(∑ i,total (p i)):=by rw [Finset.mul_sum]
-        _≤bound6742*1445:=Nat.mul_le_mul_left _ htsum
-        _=1445*bound6742:=by ring
+        _=bound6743*(∑ i,total (p i)):=by rw [Finset.mul_sum]
+        _≤bound6743*1468:=Nat.mul_le_mul_left _ htsum
+        _=1468*bound6743:=by ring
     exact Nat.le_of_mul_le_mul_left hscaled (by decide)
 
 end ProximityPrize.SubmissionLower.LocatorFactorAggregate
