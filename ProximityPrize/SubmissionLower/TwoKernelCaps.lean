@@ -1,6 +1,4 @@
 import ProximityPrize.SubmissionLower.TwoKernelSelection
-/- Uncompiled research draft. The bare import names the sibling research
-   file; rewrite it to a permitted SubmissionLower import only at integration. -/
 namespace ProximityPrize.SubmissionLower.TwoKernelCaps
 open ProximityPrize.Benchmark
 open RCN180 RCN100
@@ -10,7 +8,6 @@ open RCN156 TwoKernelSelection
 noncomputable section
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
-
 theorem quotient_box_of_full_divisor
     {K I : Type*} [Field K] [Fintype I]
     (D w L s m c t r : ℕ) (x u0 u1 : I → K)
@@ -46,12 +43,10 @@ theorem quotient_box_of_full_divisor
       (recon v) H (quotientPolynomial recon H hdiv v)
       D w L s c t r hQ hH hq
       hReconBox heq hc ht hr
-
 theorem small_A_box : coefficientCount 174309 131071 239943 12 = 62573949507 := by
   rw [RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
     174309 131071 239943 12 2 (by decide) (by decide)]
   decide
-
 theorem common_A_ys_le
     (u0 u1 : I → K) (H : P4) (hH : H ≠ 0)
     (hbox : H ∈ globalCoefficientBox K 7645344 131071 240000 12)
@@ -81,7 +76,6 @@ theorem common_A_ys_le
   simp only [show Fintype.card I = 262144 by norm_num [I, IRSProfile.Index],
     RegularColonArithmetic.kernelA_nullity, small_A_box] at hobs
   omega
-
 theorem common_B_total_le
     (u0 u1 : I → K) (H : P4) (hH : H ≠ 0)
     (hdiv : ∀ v : BKernel u0 u1,
@@ -104,7 +98,6 @@ theorem common_B_total_le
     RegularColonArithmetic.kernelB_nullity,
     show coefficientCount 14744592 131071 0 25 = 14744592 by decide] at hobs
   omega
-
 namespace SelectedPair
 local instance : GCDMonoid P4 := UniqueFactorizationMonoid.toGCDMonoid P4
 theorem common_caps {u0 u1 : I → K} (S : SelectedPair u0 u1) :

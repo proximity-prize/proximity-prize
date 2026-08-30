@@ -42,8 +42,6 @@ variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
 variable {stageErrorCap : ℕ}
 variable {tightSupport : ResidualSupportParameters}
-/- The general path keeps the supplied support; the legacy widening API below
-   remains available with its original three cap hypotheses. -/
 def loosenStageGeneral
    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w tightSupport) :
    Stage K I Gamma x p flag stageErrorCap tightSupport := S
@@ -254,6 +252,5 @@ theorem loosenStageGeneral_dichotomy_with_tangent
  rcases dichotomy.2 with hproper | hall
  · exact Or.inl hproper
  · exact Or.inr ⟨hall, htangent C hall⟩
-
 end
 end ProximityPrize.SubmissionLower.RCN334

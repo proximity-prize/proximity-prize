@@ -29,7 +29,6 @@ local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
 variable {stageErrorCap : ℕ}
-/- Agreement and error parameters are explicit data on the general path. -/
 theorem exists_delayedTailMultiplicityProvider_of_reducedGeneral
    {a b s : ℕ}
    (agreementCap : ℕ)
@@ -137,8 +136,6 @@ theorem exists_delayedTailMultiplicityProvider_of_reducedGeneral
      _ = 1 * B.weightedCost secondFlag C := by simp
      _ ≤ multiplicity C * B.weightedCost secondFlag C :=
        Nat.mul_le_mul_right (B.weightedCost secondFlag C) (hone C)
-
-/- Backward-compatible accepted-row entry point. -/
 theorem exists_delayedTailMultiplicityProvider_of_reduced
    {a b s : ℕ}
    (S : ResidualStage (polynomialEmbedding K) Gamma x p errors flag w
@@ -164,6 +161,5 @@ theorem exists_delayedTailMultiplicityProvider_of_reduced
  exact exists_delayedTailMultiplicityProvider_of_reducedGeneral agreements S
    hfirstProper hflagChar hmixed bound seedCap slopeCap hnodes hagreement
    (by norm_num [agreements, errors, n, w]) hshort hchar hbox htangentGate
-
 end
 end ProximityPrize.SubmissionLower.RCN335

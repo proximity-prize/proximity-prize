@@ -245,7 +245,6 @@ theorem reducedBudgetFamily_yzPole
    (flagSupport unitYZFlag)
    ((reducedUnitFamily S hfirstProper hflagChar hmixed).toPrimeFlagBudgetFamily.yzCost C')
  exact (reducedUnitFamily S hfirstProper hflagChar hmixed).toAdaptiveUnitPoleBudget.yzPole C'
-/- Support-generic counterparts. The legacy functions above are retained. -/
 noncomputable def reducedMultiplicityGeneral
    {a b s : ℕ}
    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
@@ -254,7 +253,6 @@ noncomputable def reducedMultiplicityGeneral
    FirstTailComponent S → ℕ :=
  localMultiplicity (loosenStageGeneral S)
    (canonicalLocalDVRFamily (loosenStageGeneral S) hfirstProper)
-
 theorem reducedFixedPowersGeneral
    {a b s : ℕ}
    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
@@ -277,7 +275,6 @@ theorem reducedFixedPowersGeneral
    (reducedActiveGeometry S hfirstProper hflagChar hmixed).hZ
    (RCN315.residualStage_pderiv_one_ne_zero_of_support S)
    (reducedActiveGeometry S hfirstProper hflagChar hmixed).data
-
 theorem reducedWeightedResultantsGeneral
    {a b s : ℕ}
    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
@@ -302,7 +299,6 @@ theorem reducedWeightedResultantsGeneral
    (transportedMultiplicity (ordinary_sub_reducedFirstCut_dvd S)
      (reducedMultiplicityGeneral S hfirstProper))
    (reducedFixedPowersGeneral S hfirstProper hflagChar hmixed)
-
 theorem transportedWeightedResultantsGeneral
    {a b s : ℕ}
    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
@@ -319,6 +315,5 @@ theorem transportedWeightedResultantsGeneral
    (reducedUnitFamily S hfirstProper hflagChar hmixed).toPrimeFlagBudgetFamily
    (reducedMultiplicityGeneral S hfirstProper)
    (reducedWeightedResultantsGeneral S hfirstProper hflagChar hmixed)
-
 end
 end ProximityPrize.SubmissionLower.RCN332
