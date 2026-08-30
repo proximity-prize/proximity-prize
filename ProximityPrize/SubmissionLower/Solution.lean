@@ -74008,8 +74008,8 @@ set_option exponentiation.threshold 20000
 def n : ℕ := 262144
 def w : ℕ := 131071
 def prime : ℕ := 2130706433
-def score : ℕ := 6737
-def errors : ℕ := 80139
+def score : ℕ := 6738
+def errors : ℕ := 80142
 def agreements : ℕ := n - errors
 def gap : ℕ := agreements - w
 def radiusNumerator : ℕ := 128 * errors + 127
@@ -74037,14 +74037,14 @@ def characteristicCap (P : Profile) : ℕ :=
 end Profile
 
 def profileA : Profile :=
-  ⟨42, 538741, 12, 58, 1286967242532010, 4909390421⟩
+  ⟨43, 26631, 12, 59, 66933271437123, 255330166⟩
 def profileB : Profile :=
-  ⟨81, 1344, 25, 112, 22491529666775, 85797985⟩
+  ⟨81, 1351, 25, 112, 22611795644750, 86256807⟩
 def profileC : Profile :=
-  ⟨42, 538741, 12, 58, 1286967242532010, 4909390421⟩
-def finalMeet : Profile := ⟨42, 1344, 12, 58, 0, 0⟩
+  ⟨43, 26631, 12, 59, 66933271437123, 255330166⟩
+def finalMeet : Profile := ⟨43, 1351, 12, 59, 0, 0⟩
 
-def supportProfile := support 1286 45 10
+def supportProfile := support 1292 46 10
 def fixedFlag : FlagDegree :=
   ⟨finalMeet.totalCap - finalMeet.middleCap,
     finalMeet.middleCap - finalMeet.slopeCap,
@@ -74053,21 +74053,21 @@ def direction : FlagDegree :=
   ⟨2 * fixedFlag.zOnly, 2 * fixedFlag.yz - 1, 2 * fixedFlag.all - 1⟩
 def tailFlag (d : ℕ) : FlagDegree := unitYZFlag + (d + 1) • direction
 def exactFirstTailFlag : FlagDegree := unitYZFlag + (w + 1) • direction
-def rationalCoordinateFlag : FlagDegree := ⟨168561164, 5898332, 1310743⟩
-def hybridCoordinateFlag : FlagDegree := ⟨168561164, 5963868, 1507351⟩
-def movingFiberFlag : FlagDegree := ⟨1286, 46, 13⟩
-def movingCutFlag : FlagDegree := ⟨168561164, 6029404, 1572887⟩
+def rationalCoordinateFlag : FlagDegree := ⟨169347608, 6029406, 1310743⟩
+def hybridCoordinateFlag : FlagDegree := ⟨169347608, 6094942, 1507351⟩
+def movingFiberFlag : FlagDegree := ⟨1292, 47, 13⟩
+def movingCutFlag : FlagDegree := ⟨169347608, 6160478, 1572887⟩
 
 def hybridStageCost (flag : FlagDegree) : ℕ :=
   flagMixed flag exactFirstTailFlag hybridCoordinateFlag +
     (w + 1) * flagMixed flag movingFiberFlag movingCutFlag
 
 def fixedRegularCost : ℕ := hybridStageCost fixedFlag
-def fixedSingularCost : ℕ := 83893758529825
-def firstResidualRegularCost : ℕ := 3032795693425483
-def firstResidualSingularCost : ℕ := 734504513333884
-def secondResidualRegularCost : ℕ := 1002488586064965
-def secondResidualSingularCost : ℕ := 83893758529825
+def fixedSingularCost : ℕ := 86348120365437
+def firstResidualRegularCost : ℕ := 152793606167599
+def firstResidualSingularCost : ℕ := 738373590282431
+def secondResidualRegularCost : ℕ := 51613957850868
+def secondResidualSingularCost : ℕ := 86348120365437
 def fixedCost : ℕ := fixedRegularCost + fixedSingularCost
 def firstResidualCeiling : ℕ :=
   firstResidualRegularCost + firstResidualSingularCost
@@ -74079,16 +74079,16 @@ def totalCost : ℕ :=
     secondResidualRegularCost + secondResidualSingularCost
 
 def residualStageOne : UnequalParameters :=
-  ⟨262144, 131071, 182005, 112, 25, 1344, 58, 12, 538741⟩
+  ⟨262144, 131071, 182002, 112, 25, 1351, 59, 12, 26631⟩
 def residualStageTwo : UnequalParameters :=
-  ⟨262144, 131071, 182005, 58, 12, 1344, 58, 12, 538741⟩
+  ⟨262144, 131071, 182002, 59, 12, 1351, 59, 12, 26631⟩
 def pivotB : TightParameters :=
-  ⟨262144, 131071, 182005, 14742405, 1344, 25⟩
+  ⟨262144, 131071, 182002, 14742162, 1351, 25⟩
 def pivotGcd12 : TightParameters :=
-  ⟨262144, 131071, 182005, 7644210, 1344, 12⟩
+  ⟨262144, 131071, 182002, 7826086, 1351, 12⟩
 
-def seedlessMultiplicity : ℕ := 42
-def seedlessYTotalCap : ℕ := 58
+def seedlessMultiplicity : ℕ := 43
+def seedlessYTotalCap : ℕ := 59
 def seedlessSlopeCap : ℕ := 12
 def seedlessWeightedCap : ℕ := seedlessMultiplicity * agreements
 def seedlessCapY : ℕ := 1 + 2 * w * seedlessYTotalCap
@@ -74110,33 +74110,33 @@ abbrev scoreGate (e : ℕ) : Prop :=
     radiusDenominator ^ 12800
 
 theorem radius_row_exact :
-    errors = 80139 ∧ agreements = 182005 ∧ gap = 50934 ∧
-      radiusNumerator = 10257919 ∧ radiusDenominator = 33554432 := by
+    errors = 80142 ∧ agreements = 182002 ∧ gap = 50931 ∧
+      radiusNumerator = 10258303 ∧ radiusDenominator = 33554432 := by
   decide
 
-theorem radius_cell_exact : scoreGate errors := by
+theorem radius_cell_exact : scoreGate errors ∧ ¬ scoreGate (errors - 1) := by
   decide
 
 theorem profile_values :
-    profileA.nullity = 9386 ∧ profileB.nullity = 102686935 ∧
-      profileC.nullity = 9386 ∧
-      finalMeet = ⟨42, 1344, 12, 58, 0, 0⟩ := by
+    profileA.nullity = 401219 ∧ profileB.nullity = 91230542 ∧
+      profileC.nullity = 401219 ∧
+      finalMeet = ⟨43, 1351, 12, 59, 0, 0⟩ := by
   decide
 
 theorem profileA_coefficients_exact :
     coefficientCount profileA.weightedCap w profileA.totalCap profileA.slopeCap =
       profileA.coefficients := by
-  change coefficientCount (42 * 182005) 131071 538741 12 = 1286967242532010
+  change coefficientCount (43 * 182002) 131071 26631 12 = 66933271437123
   rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
-    (42 * 182005) 131071 538741 12 59 (by decide) (by decide)]
+    (43 * 182002) 131071 26631 12 60 (by decide) (by decide)]
   decide
 
 theorem profileB_coefficients_exact :
     coefficientCount profileB.weightedCap w profileB.totalCap profileB.slopeCap =
       profileB.coefficients := by
-  change coefficientCount (81 * 182005) 131071 1344 25 = 22491529666775
+  change coefficientCount (81 * 182002) 131071 1351 25 = 22611795644750
   rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
-    (81 * 182005) 131071 1344 25 113 (by decide) (by decide)]
+    (81 * 182002) 131071 1351 25 113 (by decide) (by decide)]
   decide
 
 theorem profileC_coefficients_exact :
@@ -74205,24 +74205,24 @@ theorem profile_small_gates :
   decide
 
 theorem support_and_flag_values :
-    supportProfile = support 1286 45 10 ∧
-      fixedFlag = ⟨1286, 46, 12⟩ ∧ direction = ⟨2572, 91, 23⟩ ∧
-      tailFlag (w + 1) = ⟨337119756, 11927644, 3014679⟩ ∧
-      tailFlag (w + 2) = ⟨337122328, 11927735, 3014702⟩ := by
+    supportProfile = support 1292 46 10 ∧
+      fixedFlag = ⟨1292, 47, 12⟩ ∧ direction = ⟨2584, 93, 23⟩ ∧
+      tailFlag (w + 1) = ⟨338692632, 12189790, 3014679⟩ ∧
+      tailFlag (w + 2) = ⟨338695216, 12189883, 3014702⟩ := by
   decide
 
 theorem fixed_flag_values :
-    fixedFlag = ⟨1286, 46, 12⟩ ∧ direction = ⟨2572, 91, 23⟩ ∧
-      tailFlag (w + 1) = ⟨337119756, 11927644, 3014679⟩ ∧
-      tailFlag (w + 2) = ⟨337122328, 11927735, 3014702⟩ := by
+    fixedFlag = ⟨1292, 47, 12⟩ ∧ direction = ⟨2584, 93, 23⟩ ∧
+      tailFlag (w + 1) = ⟨338692632, 12189790, 3014679⟩ ∧
+      tailFlag (w + 2) = ⟨338695216, 12189883, 3014702⟩ := by
   decide
 
 theorem hybrid_flag_values :
-    exactFirstTailFlag = ⟨337117184, 11927553, 3014656⟩ ∧
-      rationalCoordinateFlag = ⟨168561164, 5898332, 1310743⟩ ∧
-      hybridCoordinateFlag = ⟨168561164, 5963868, 1507351⟩ ∧
-      movingFiberFlag = ⟨1286, 46, 13⟩ ∧
-      movingCutFlag = ⟨168561164, 6029404, 1572887⟩ := by
+    exactFirstTailFlag = ⟨338690048, 12189697, 3014656⟩ ∧
+      rationalCoordinateFlag = ⟨169347608, 6029406, 1310743⟩ ∧
+      hybridCoordinateFlag = ⟨169347608, 6094942, 1507351⟩ ∧
+      movingFiberFlag = ⟨1292, 47, 13⟩ ∧
+      movingCutFlag = ⟨169347608, 6160478, 1572887⟩ := by
   decide
 
 theorem residual_formula_values :
@@ -74233,26 +74233,26 @@ theorem residual_formula_values :
   decide
 
 theorem six_cells_exact :
-    fixedRegularCost = 249505974298932640 ∧
-      fixedSingularCost = 83893758529825 ∧
-      firstResidualRegularCost = 3032795693425483 ∧
-      firstResidualSingularCost = 734504513333884 ∧
-      secondResidualRegularCost = 1002488586064965 ∧
-      secondResidualSingularCost = 83893758529825 := by
+    fixedRegularCost = 255589140588263145 ∧
+      fixedSingularCost = 86348120365437 ∧
+      firstResidualRegularCost = 152793606167599 ∧
+      firstResidualSingularCost = 738373590282431 ∧
+      secondResidualRegularCost = 51613957850868 ∧
+      secondResidualSingularCost = 86348120365437 := by
   decide
 
 theorem seedless_numeric_values :
-    seedlessWeightedCap = 7644210 ∧
-      seedlessSingularListCap = 1334 ∧
-      seedlessListNumerator = 46832392911690 ∧
-      seedlessListCeiling = 919472120 := by
+    seedlessWeightedCap = 7826086 ∧
+      seedlessSingularListCap = 1357 ∧
+      seedlessListNumerator = 47639847930702 ∧
+      seedlessListCeiling = 935380180 := by
   decide
 
 theorem budget_and_slack_exact :
     capacity = 274980728111395087 ∧
-      totalCost = 254443550608816622 ∧
-      mcaBudget = 274980727191922967 ∧
-      slack = 20537176583106345 ∧ totalCost < mcaBudget := by
+      totalCost = 256704617983294917 ∧
+      mcaBudget = 274980727176014907 ∧
+      slack = 18276109192719990 ∧ totalCost < mcaBudget := by
   decide
 
 theorem cell_budget_strict :
@@ -74440,7 +74440,7 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
-abbrev fixedSupport:=support 1286 45 10
+abbrev fixedSupport:=support 1292 46 10
 abbrev Stage (K I:Type) [Field K]
     (Gamma:Finset K) (x:I → K) (p:ℕ) [CharP (GenericField K) p]
     (flag:FlagDegree):=
@@ -74761,9 +74761,9 @@ theorem laterTail_in_delay_secondFlag
   intro exponent hexponent
   have hs:=hsharp exponent hexponent
   rw [ContactTwoTailParameters6735Research.fixed_flag_values.2.2.2]
-  change InFlag (delay • (⟨337122328,11927735,3014702⟩:FlagDegree)) exponent
+  change InFlag (delay • (⟨338695216,12189883,3014702⟩:FlagDegree)) exponent
   change InFlag
-    (sharpResidualAgreementFlag (support 1286 45 10)
+    (sharpResidualAgreementFlag (support 1292 46 10)
       (131071+1+delay)) exponent at hs
   norm_num [InFlag,sharpResidualAgreementFlag,sharpAgreementDirection,
     ContactMovingAgreementCertificate6719Research.support] at hs
@@ -74864,9 +74864,9 @@ namespace ProximityPrize.SubmissionLower.ContactTwoTailFixedProvider6735Research
 open ContactResidualSupportParametersResearch
 noncomputable section
 def fixedProfile:ContactRobustFixedMeet6656Research.Profile:=
-  ⟨262144,131071,182005,7644210,1344,12⟩
+  ⟨262144,131071,182002,7826086,1351,12⟩
 def fixedSupport:ResidualSupportParameters:=
-  ContactMovingAgreementCertificate6719Research.support 1286 45 10
+  ContactMovingAgreementCertificate6719Research.support 1292 46 10
 end
 end ProximityPrize.SubmissionLower.ContactTwoTailFixedProvider6735Research
 end
@@ -75173,7 +75173,7 @@ open ContactPost6464MinkowskiRecurrenceResearch
 noncomputable section
 abbrev GlobalPoly:=MvPolynomial (Fin 4) IRSProfile.Field
 def fixedSupport:ResidualSupportParameters:=
-  ⟨12,58,1344,by decide,by decide,by decide,by decide⟩
+  ⟨12,59,1351,by decide,by decide,by decide,by decide⟩
 local instance:GCDMonoid GlobalPoly:=
   UniqueFactorizationMonoid.toGCDMonoid GlobalPoly
 theorem gcd12_mem_meet_box
@@ -75183,7 +75183,7 @@ theorem gcd12_mem_meet_box
     (hboxB:B∈globalCoefficientBox IRSProfile.Field
       profileB.weightedCap w profileB.totalCap profileB.slopeCap):
     gcd12 A B∈globalCoefficientBox IRSProfile.Field
-      (42*agreements) w 1344 12:=by
+      (43*agreements) w 1351 12:=by
   have hfromA:=mem_globalCoefficientBox_of_dvd (gcd12 A B) A
     profileA.weightedCap w profileA.totalCap profileA.slopeCap hA
     (gcd_dvd_left A B) hboxA
@@ -75195,14 +75195,14 @@ theorem gcd12_mem_meet_box
 theorem gcd123_mem_meet_box
     (A B C:GlobalPoly) (hA:A≠0) (hC:C≠0)
     (hbox12:gcd12 A B∈globalCoefficientBox IRSProfile.Field
-      (42*agreements) w 1344 12)
+      (43*agreements) w 1351 12)
     (hboxC:C∈globalCoefficientBox IRSProfile.Field
       profileC.weightedCap w profileC.totalCap profileC.slopeCap):
     gcd123 A B C∈globalCoefficientBox IRSProfile.Field
-      (42*agreements) w 1344 12:=by
+      (43*agreements) w 1351 12:=by
   have h12:=ContactStackedBoxTransport6656Research.gcd12_ne_zero (B:=B) hA
   have hfrom12:=mem_globalCoefficientBox_of_dvd (gcd123 A B C) (gcd12 A B)
-    (42*agreements) w 1344 12 h12 (gcd_dvd_left (gcd12 A B) C) hbox12
+    (43*agreements) w 1351 12 h12 (gcd_dvd_left (gcd12 A B) C) hbox12
   have hfromC:=mem_globalCoefficientBox_of_dvd (gcd123 A B C) C
     profileC.weightedCap w profileC.totalCap profileC.slopeCap hC
     (gcd_dvd_right (gcd12 A B) C) hboxC
@@ -75229,11 +75229,11 @@ theorem quotientB_mem_parent_box
 theorem middleQuotient_mem_parent_box
     (A B C:GlobalPoly) (hA:A≠0)
     (hbox12:gcd12 A B∈globalCoefficientBox IRSProfile.Field
-      (42*agreements) w 1344 12):
+      (43*agreements) w 1351 12):
     middleQuotient A B C∈globalCoefficientBox IRSProfile.Field
-      (42*agreements) w 1344 12:=
+      (43*agreements) w 1351 12:=
   mem_globalCoefficientBox_of_dvd (middleQuotient A B C) (gcd12 A B)
-    (42*agreements) w 1344 12
+    (43*agreements) w 1351 12
     (ContactStackedBoxTransport6656Research.gcd12_ne_zero (B:=B) hA)
     (ContactStackedBoxTransport6656Research.middleQuotient_dvd_gcd12 A B C) hbox12
 theorem quotientC_mem_parent_box
@@ -75265,23 +75265,23 @@ theorem gcd123_support_of_flagB
     rw [ContactFactorCaps.weight_fin4]
     change d 0*0+d 1*0+d 2*1+d 3*0 ≤ 12
     simpa using hb.2.1
-  · apply (weightedTotalDegree_le_iff residualYSWeights (gcd123 A B C) 58).mpr
+  · apply (weightedTotalDegree_le_iff residualYSWeights (gcd123 A B C) 59).mpr
     intro d hd
-    have hb:d 1+d 3 ≤ 1344∧d 2 ≤ 12∧
-        d 0+131071*d 1+131070*d 2 < 42*agreements:=hbox hd
+    have hb:d 1+d 3 ≤ 1351∧d 2 ≤ 12∧
+        d 0+131071*d 1+131070*d 2 < 43*agreements:=hbox hd
     rw [ContactFactorCaps.weight_fin4]
-    change d 0*0+d 1*1+d 2*1+d 3*0 ≤ 58
+    change d 0*0+d 1*1+d 2*1+d 3*0 ≤ 59
     norm_num [ContactTwoTailParameters6735Research.agreements,
       ContactTwoTailParameters6735Research.n,
       ContactTwoTailParameters6735Research.errors,
       ContactTwoTailParameters6735Research.w] at hb ⊢
     omega
-  · have hBtotal:wt residualTotalWeights B ≤ 1344:=by
-      apply (weightedTotalDegree_le_iff residualTotalWeights B 1344).mpr
+  · have hBtotal:wt residualTotalWeights B ≤ 1351:=by
+      apply (weightedTotalDegree_le_iff residualTotalWeights B 1351).mpr
       intro d hd
       have hb:=hflagB hd
       rw [ContactFactorCaps.weight_fin4]
-      change d 0*0+d 1*1+d 2*1+d 3*1 ≤ 1344
+      change d 0*0+d 1*1+d 2*1+d 3*1 ≤ 1351
       simpa [profileB] using hb.1
     have hdiv:gcd123 A B C∣B:=
       (gcd_dvd_left (gcd12 A B) C).trans (gcd_dvd_right A B)
@@ -76342,7 +76342,7 @@ variable [CharP (GenericField K) prime]
 theorem identity_degree_direct_two_tail
     (flag:FlagDegree):
     (n-w)*(errors+1)*
-        identityCurveDegree flag 1286 45 10 w ≤
+        identityCurveDegree flag 1292 46 10 w ≤
       gap*hybridStageCost flag:=by
   norm_num [identityCurveDegree,n,w,errors,agreements,gap,
     hybridStageCost,exactFirstTailFlag,hybridCoordinateFlag,
@@ -76354,9 +76354,9 @@ theorem identity_degree_direct_two_tail
     add_zOnly,add_yz,add_all,nsmul_zOnly,nsmul_yz,nsmul_all]
   omega
 theorem identity_degree_exact (flag:FlagDegree):
-    identityCurveDegree flag 1286 45 10 w=
+    identityCurveDegree flag 1292 46 10 w=
       3014679*flag.zOnly+6029358*flag.yz+
-        367004402*flag.all:=by
+        369101570*flag.all:=by
   norm_num [identityCurveDegree,w,paddedCut,
     ContactMovingPositiveLedger6719Research.centreFlag,
     ContactMovingPositiveLedger6719Research.directionFlag,
@@ -76369,16 +76369,16 @@ theorem identity_stage_card_le
     (hnodes:S.nodes.card=agreements+errors)
     (hagreement:∀ gamma∈Gamma,
       agreements ≤ (S.agreementFiber gamma).card)
-    (hbox:S.F∈globalCoefficientBox K (42*agreements) w 1344 12)
-    (hflag:flag.all ≤ 12∧flag.yz+flag.all ≤ 58∧
-      flag.zOnly+flag.yz+flag.all ≤ 1344):
+    (hbox:S.F∈globalCoefficientBox K (43*agreements) w 1351 12)
+    (hflag:flag.all ≤ 12∧flag.yz+flag.all ≤ 59∧
+      flag.zOnly+flag.yz+flag.all ≤ 1351):
     Gamma.card ≤ hybridStageCost flag:=by
   have hTailNumerator:S.G∣surfaceMap (polynomialEmbedding K)
       (numerator K S.F (w+1)):=
     (globalTailCut_dvd_iff (polynomialEmbedding K)
       (polynomialEmbedding_injective K) S.F (w+1) S.G).mp hTail
   have hprovider:=actual_identityCurveCountProvider S agreements hnodes
-    hagreement (by decide) hTailNumerator (42*agreements) 1344 12
+    hagreement (by decide) hTailNumerator (43*agreements) 1351 12
     (by decide) (by decide) (by decide) hbox
     (by
       refine ⟨hflag.2.1.trans_lt (by decide),hflag.1.trans_lt (by decide),
@@ -76387,10 +76387,10 @@ theorem identity_stage_card_le
       have h:=hflag
       norm_num [prime,w] at h ⊢
       omega)
-  let identityDegree:=identityCurveDegree flag 1286 45 10 w
+  let identityDegree:=identityCurveDegree flag 1292 46 10 w
   have hpositive:1 ≤ identityDegree:=by
     rw [show identityDegree=3014679*flag.zOnly+
-        6029358*flag.yz+367004402*flag.all by
+        6029358*flag.yz+369101570*flag.all by
       exact identity_degree_exact flag]
     have hy:0 < S.G.degreeOf 1:=S.y_dependent
     have hdeg:=ContactFactoredFlagCount6676Research.degreeOf_le_flag_total
@@ -78491,13 +78491,13 @@ open ContactTwoTailParameters6735Research
 set_option maxRecDepth 20000
 set_option maxHeartbeats 2000000
 def residualStageOne:UnequalParameters:=
-  ⟨262144,131071,182005,112,25,1344,58,12,538741⟩
+  ⟨262144,131071,182002,112,25,1351,59,12,26631⟩
 def residualStageTwo:UnequalParameters:=
-  ⟨262144,131071,182005,58,12,1344,58,12,538741⟩
+  ⟨262144,131071,182002,59,12,1351,59,12,26631⟩
 def pivotB:TightParameters:=
-  ⟨262144,131071,182005,14742405,1344,25⟩
+  ⟨262144,131071,182002,14742162,1351,25⟩
 def pivotGcd12:TightParameters:=
-  ⟨262144,131071,182005,7644210,1344,12⟩
+  ⟨262144,131071,182002,7826086,1351,12⟩
 theorem residual_stage_ceilings:
     residualStageOne.regularCountCap+pivotB.countCap+1=
       firstResidualRegularCost+firstResidualSingularCost∧
@@ -78569,7 +78569,7 @@ theorem firstResidualCell_count_lt
           u0 i+gamma*u1 i)).card)
     (hnoPencil:NoLargeSelectedPencil selected Gamma w errors):
     (firstResidualSeeds selected Gamma QA QB).card <
-      3032795693425483+734504513333884:=by
+      152793606167599+738373590282431:=by
   let Delta:=firstResidualSeeds selected Gamma QA QB
   let Q:=quotientB QA QB
   let T:=quotientA QA QB
@@ -78659,7 +78659,7 @@ theorem firstResidualCell_count_lt
         (by simpa [stageOne,pivotB,UnequalParameters.errors,
           TightParameters.errors] using hnoPencilDelta))
   have hceil:stageOne.regularCountCap+pivotB.countCap+1=
-      3032795693425483+734504513333884:=by
+      152793606167599+738373590282431:=by
     simpa only [stageOne,pivotB,
       ContactTwoTailParameters6735Research.firstResidualRegularCost,
       ContactTwoTailParameters6735Research.firstResidualSingularCost] using
@@ -78718,7 +78718,7 @@ theorem secondResidualCell_count_lt
           u0 i+gamma*u1 i)).card)
     (hnoPencil:NoLargeSelectedPencil selected Gamma w errors):
     (secondResidualSeeds selected Gamma QA QB QC).card <
-      1002488586064965+83893758529825:=by
+      51613957850868+86348120365437:=by
   let Delta:=secondResidualSeeds selected Gamma QA QB QC
   let Q:=middleQuotient QA QB QC
   let T:=quotientC QA QB QC
@@ -78809,7 +78809,7 @@ theorem secondResidualCell_count_lt
         (by simpa [stageTwo,pivotGcd12,UnequalParameters.errors,
           TightParameters.errors] using hnoPencilDelta))
   have hceil:stageTwo.regularCountCap+pivotGcd12.countCap+1=
-      1002488586064965+83893758529825:=by
+      51613957850868+86348120365437:=by
     simpa only [stageTwo,pivotGcd12,
       ContactTwoTailParameters6735Research.secondResidualRegularCost,
       ContactTwoTailParameters6735Research.secondResidualSingularCost] using
@@ -78840,7 +78840,7 @@ local instance:GCDMonoid GlobalPoly:=
   UniqueFactorizationMonoid.toGCDMonoid GlobalPoly
 def FixedCellCountProvider6735:Prop:=
   ∀ (Q:GlobalPoly),Q≠0 →
-    Q∈globalCoefficientBox IRSProfile.Field (42*agreements) w 1344 12 →
+    Q∈globalCoefficientBox IRSProfile.Field (43*agreements) w 1351 12 →
     ResidualSupportData fixedSupport Q →
     ∀ (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
       (Delta:Finset IRSProfile.Field)
@@ -78946,7 +78946,7 @@ theorem fixedSeeds_card_le_of_provider
       (B:=QB) (C:=QC) hQA
   have hbox12:=gcd12_mem_meet_box QA QB hQA hQB hboxA hboxB
   have hQbox:Q∈globalCoefficientBox IRSProfile.Field
-      (42*agreements) w 1344 12:=by
+      (43*agreements) w 1351 12:=by
     simpa [Q] using gcd123_mem_meet_box QA QB QC hQA hQC hbox12 hboxC
   have hsupport:=gcd123_support_of_flagB
     QA QB QC hQA hQB hQC hboxA hboxB hboxC hflagB
@@ -78969,7 +78969,7 @@ theorem fixedSeeds_card_le_of_provider
 theorem selectedNoLargePencilBound6735_of_fixedProvider
     (provider:FixedCellCountProvider6735):
     SelectedNoLargePencilBound IRSProfile.domain
-      131071 80139 274980727191922967:=by
+      131071 80142 274980727176014907:=by
   intro U seeds A selected hdegreeRaw hcardRaw hvalues hnoRaw
   have hdegree:∀ gamma∈seeds,(selected gamma).natDegree ≤ w:=by
     simpa [w] using hdegreeRaw
@@ -78997,18 +78997,18 @@ theorem selectedNoLargePencilBound6735_of_fixedProvider
     hcover hdegree hagreement hno
   have hfirst:(firstResidualSeeds selected seeds QA QB).card <
       firstResidualCeiling:=by
-    change (firstResidualSeeds selected seeds QA QB).card < 3767300206759367
+    change (firstResidualSeeds selected seeds QA QB).card < 891167196450030
     exact hfirstRaw
   have hsecond:(secondResidualSeeds selected seeds QA QB QC).card <
       secondResidualCeiling:=by
-    change (secondResidualSeeds selected seeds QA QB QC).card < 1086382344594790
+    change (secondResidualSeeds selected seeds QA QB QC).card < 137962078216305
     exact hsecondRaw
   have hfixed:=fixedSeeds_card_le_of_provider provider QA QB QC hQA hQB hQC
     hboxA hboxB hboxC hflagB selected seeds (U 0) (U 1)
     hdegree hagreement hno
   have hfinal:=selected_card_le_mcaBudget_of_cell_bounds
     selected seeds QA QB QC hfirst hsecond hfixed
-  change seeds.card ≤ 274980727191922967 at hfinal
+  change seeds.card ≤ 274980727176014907 at hfinal
   exact hfinal
 end
 end ProximityPrize.SubmissionLower.ContactTwoTailStackedSelectedBound6735Research
@@ -79228,7 +79228,7 @@ local instance:CharP K prime:=by
   simpa [prime,ContactParameters6600Research.prime] using
     ContactFrozenAlignment6600Research.challenge_field_characteristic6600
 def fixedTightProfile:TightParameters:=
-  ⟨n,w,agreements,42*agreements,1344,12⟩
+  ⟨n,w,agreements,43*agreements,1351,12⟩
 def fixedAlignment:FixedParameterAlignment fixedProfile fixedTightProfile where
   n:=by decide
   w:=by decide
@@ -79251,9 +79251,9 @@ def ProperStageProvider6733:Prop:=
     ¬ S.G∣globalTailCut (polynomialEmbedding K) S.F (w+1) →
     S.nodes.card=agreements+errors →
     (∀ gamma∈Gamma,agreements ≤ (S.agreementFiber gamma).card) →
-    S.F∈globalCoefficientBox K (42*agreements) w 1344 12 →
-    (flag.all ≤ 12∧flag.yz+flag.all ≤ 58∧
-      flag.zOnly+flag.yz+flag.all ≤ 1344) →
+    S.F∈globalCoefficientBox K (43*agreements) w 1351 12 →
+    (flag.all ≤ 12∧flag.yz+flag.all ≤ 59∧
+      flag.zOnly+flag.yz+flag.all ≤ 1351) →
     Gamma.card ≤ hybridStageCost flag
 theorem regular_factor_seed_bound
     (proper:ProperStageProvider6733)
@@ -79305,8 +79305,8 @@ theorem regular_factor_seed_bound
         geometricResidualStageOfSupport] using
           hagreement gamma (hsub hgamma)
     have hflag:=geometric_flag_caps Q hQ hbox Hsupport R g
-    have hboxS:S.F∈globalCoefficientBox K (42*agreements) w 1344 12:=by
-      change R.1∈globalCoefficientBox K (42*agreements) w 1344 12
+    have hboxS:S.F∈globalCoefficientBox K (43*agreements) w 1351 12:=by
+      change R.1∈globalCoefficientBox K (43*agreements) w 1351 12
       simpa [fixedProfile,
         ContactTwoTailFixedProvider6735Research.fixedProfile,
         agreements,errors,n,w] using hRdata.2.2
@@ -79477,10 +79477,10 @@ theorem laterTail_in_hybrid_flag
       d (tailSelector d) 0 0 0
   intro exponent hexponent
   have hs:=hsharp exponent hexponent
-  change InFlag (multiplicity • (⟨168561164,5963868,1507351⟩:FlagDegree)) exponent
+  change InFlag (multiplicity • (⟨169347608,6094942,1507351⟩:FlagDegree)) exponent
   change InFlag
     (ContactSharpTaylorFixedMeet6656Research.sharpResidualAgreementFlag
-      (support 1286 45 10) (131071+1+delay)) exponent at hs
+      (support 1292 46 10) (131071+1+delay)) exponent at hs
   norm_num [InFlag,
     ContactSharpTaylorFixedMeet6656Research.sharpResidualAgreementFlag,
     ContactSharpTaylorFixedMeet6656Research.sharpAgreementDirection,
@@ -79512,7 +79512,7 @@ theorem component_secondTail_moving_card_le
       ContactProperDelayedTailCertificate6735Research.fixedSupport S.F:=
     ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
   obtain ⟨coeffs,cflags,hcut,hcoeff,hclass⟩:=globalTailCut_certificate
-    phi 1286 45 10 S.F Hsupport.coordinate_bounds.2.1
+    phi 1292 46 10 S.F Hsupport.coordinate_bounds.2.1
       Hsupport.ys_weight Hsupport.total_weight (w+1) (by decide)
   have hcutT:T2=filteredCut (w+1) coeffs H G0:=by
     simpa [T2,H,G0,regularitySurface,polyH,show w+1+1=w+2 by omega] using hcut
@@ -79520,11 +79520,11 @@ theorem component_secondTail_moving_card_le
     rwa [←hcutT]
   have hzeroBudget:FiniteRegularZeroSetBound C.1 H
       (filteredCut (w+1) coeffs H G0)
-      ((M C).weightedCost (centreFlag 1286 45 10)+
-        (w+1)*((M C).weightedCost (normalFlag 1286 45 10)+
+      ((M C).weightedCost (centreFlag 1292 46 10)+
+        (w+1)*((M C).weightedCost (normalFlag 1292 46 10)+
           (M C).movingCost)):=by
-    exact (M C).zero_le (base C) 1286 45 10 (w+1)
-      (centreFlag 1286 45 10) coeffs cflags
+    exact (M C).zero_le (base C) 1292 46 10 (w+1)
+      (centreFlag 1292 46 10) coeffs cflags
       (regularComponent_H_not_mem Omega S.G T1 H C) hfiltered hcoeff hclass
   let seeds:=componentSeeds Omega S.G T1 H Gamma
     (selectedPoint phi S.selected) C
@@ -79557,8 +79557,8 @@ theorem component_secondTail_moving_card_le
   have hcard:points.card=seeds.card:=
     Finset.card_image_of_injective _ (selectedPoint_injective phi S.selected)
   have hcost:
-      (M C).weightedCost (centreFlag 1286 45 10)+
-          (w+1)*((M C).weightedCost (normalFlag 1286 45 10)+
+      (M C).weightedCost (centreFlag 1292 46 10)+
+          (w+1)*((M C).weightedCost (normalFlag 1292 46 10)+
             (M C).movingCost)=
         (M C).weightedCost rationalCoordinateFlag+(w+1)*(M C).movingCost:=by
     simp only [MovingPoleBudget.weightedCost,centreFlag,directionFlag,
@@ -79590,7 +79590,7 @@ theorem stage_card_le_hybrid
         (localMultiplicity S (canonicalLocalDVRFamily S hfirstProper)))
     (hnodes:S.nodes.card=agreements+errors)
     (hagreement:∀ gamma∈Gamma,agreements ≤ (S.agreementFiber gamma).card)
-    (hbox:S.F∈globalCoefficientBox K (42*agreements) w 1344 12):
+    (hbox:S.F∈globalCoefficientBox K (43*agreements) w 1351 12):
     Gamma.card ≤ hybridStageCost flag:=by
   let multiplicity:FirstTailComponent S → ℕ:=
     localMultiplicity S (canonicalLocalDVRFamily S hfirstProper)
@@ -79618,7 +79618,7 @@ theorem stage_card_le_hybrid
       (componentSeeds Omega S.G T1 H Gamma point C).card ≤
         (errors+1)*B.yzCost C:=by
     exact tangent_component_card_le S C hfirstProper (base C)
-      agreements (42*agreements) 1344 12 hnodes hagreement
+      agreements (43*agreements) 1351 12 hnodes hagreement
       (by decide) (by decide) (by decide) (by decide) hbox B
       (hyzPositive C) hall (hyzPole C)
   have componentBound (C:FirstTailComponent S):
@@ -79668,7 +79668,7 @@ theorem stage_card_le_hybrid
         simpa [T1,H,point,Omega] using hc
     · have ht:=tangentCount C htangent
       have hfactor:errors+1 ≤ multiplicity C*hybridCoordinateFlag.yz:=by
-        rw [show hybridCoordinateFlag.yz=5963868 by rfl]
+        rw [show hybridCoordinateFlag.yz=6094942 by rfl]
         have:=hone C
         norm_num [errors] at ⊢
         omega
@@ -79778,7 +79778,7 @@ theorem properStageProvider6733_of_activeFixedPowers
     dsimp [prime]
     omega
   have hmixed:
-      (1+(w+1)*(2*(45+10+3)-2))*flag.all+
+      (1+(w+1)*(2*(46+10+3)-2))*flag.all+
         (flag.yz+flag.all)*((2*(10+2)-1)*(w+1)) < prime:=by
     rcases hflag with ⟨hall,hyz,htotal⟩
     norm_num [w,prime] at ⊢
@@ -79820,7 +79820,7 @@ theorem properStageProvider6733_of_activeFixedPowers
       ContactProperDelayedTailCertificate6735Research.fixedSupport S.F:=
     ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
   have hmix:
-      2*(flag.zOnly+flag.yz+flag.all)*(1286+45+10+4)<prime:=by
+      2*(flag.zOnly+flag.yz+flag.all)*(1292+46+10+4)<prime:=by
     rcases hflag with ⟨hall,hyz,htotal⟩
     norm_num [prime] at ⊢
     omega
@@ -79828,16 +79828,16 @@ theorem properStageProvider6733_of_activeFixedPowers
     exists_firstTail_cut_budgets (E:=E)
       (polynomialEmbedding K) S.F S.G
       (globalTailCut (polynomialEmbedding K) S.F (w+1))
-      1286 45 10 w (by decide) rfl Hsupport flag
+      1292 46 10 w (by decide) rfl Hsupport flag
       S.irreducible_G.ne_zero S.G_dvd_surface S.flag_support
       base U prime hmix
   have hfiber:
-      ContactMovingPositiveLedger6719Research.fiberFlag 1286 45 10=
+      ContactMovingPositiveLedger6719Research.fiberFlag 1292 46 10=
         movingFiberFlag:=by decide
   have hcut:
-      ContactMovingAgreementCertificate6719Research.center 1286 45 10+
+      ContactMovingAgreementCertificate6719Research.center 1292 46 10+
           (w+1) • ContactMovingPositiveLedger6719Research.surfaceFlag
-            1286 45 10=movingCutFlag:=by decide
+            1292 46 10=movingCutFlag:=by decide
   have hmoveExact:
       (∑ C,(M C).movingCost) ≤
         flagMixed flag movingFiberFlag movingCutFlag:=by
@@ -84911,27 +84911,27 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80139
+def errors:ℕ:=80142
 def agreements:ℕ:=n-errors
 def gap:ℕ:=agreements-w
 def prime:ℕ:=2130706433
-def multiplicity:ℕ:=42
-def yTotalCap:ℕ:=58
+def multiplicity:ℕ:=43
+def yTotalCap:ℕ:=59
 def slopeCap:ℕ:=12
 def weightedCap:ℕ:=multiplicity*agreements
-def listBudget:ℕ:=919472120
+def listBudget:ℕ:=935380180
 def capY:ℕ:=1+2*w*yTotalCap
 def capR:ℕ:=w*(2*slopeCap-1)
 def regularListNumerator:ℕ:=(n-w)*(capY*slopeCap+capR*yTotalCap)
 def singularListCap:ℕ:=(2*slopeCap-1)*yTotalCap
 def listNumerator:ℕ:=regularListNumerator+singularListCap*gap
 theorem coefficient_count_exact:
-    coefficientCount weightedCap w yTotalCap slopeCap=2388938695:=by decide
+    coefficientCount weightedCap w yTotalCap slopeCap=2515458998:=by decide
 theorem local_rank_exact:
-    localRankBound multiplicity yTotalCap slopeCap=9113:=by decide
+    localRankBound multiplicity yTotalCap slopeCap=9594:=by decide
 theorem nullity_exact:
     coefficientCount weightedCap w yTotalCap slopeCap-
-      n*localRankBound multiplicity yTotalCap slopeCap=20423:=by
+      n*localRankBound multiplicity yTotalCap slopeCap=449462:=by
   rw [coefficient_count_exact,local_rank_exact]
   decide
 theorem interpolation_gate:
@@ -84940,10 +84940,10 @@ theorem interpolation_gate:
   rw [coefficient_count_exact,local_rank_exact]
   decide
 theorem list_numeric_values:
-    agreements=182005∧gap=50934∧weightedCap=7644210∧
-    singularListCap=1334∧listNumerator=46832392911690∧
-    listNumerator/gap+1=919472120∧
-    listNumerator<919472120*gap∧listBudget=919472120:=by decide
+    agreements=182002∧gap=50931∧weightedCap=7826086∧
+    singularListCap=1357∧listNumerator=47639847930702∧
+    listNumerator/gap+1=935380180∧
+    listNumerator<935380180*gap∧listBudget=935380180:=by decide
 theorem list_numerator_fits:listNumerator < listBudget*gap:=by decide
 theorem characteristic_gates:0 < slopeCap∧slopeCap < prime∧yTotalCap < prime∧
     (2*slopeCap-1)*weightedCap < prime∧singularListCap < prime:=by decide
@@ -84968,63 +84968,63 @@ theorem exists_seedless_interpolant (received:IRSProfile.Index → IRSProfile.Fi
   rw [←translation_reconstruct_coeff IRSProfile.Field weightedCap w
     yTotalCap slopeCap (IRSProfile.domain i) (received i) theta r] at hdiv
   exact hdiv
-def radius:ℝ≥0:=claimedRadius 10257919 33554432
-def score:ℕ:=6737
-theorem radius_numerator_exact:10257919=128*errors+127:=by decide
+def radius:ℝ≥0:=claimedRadius 10258303 33554432
+def score:ℕ:=6738
+theorem radius_numerator_exact:10258303=128*errors+127:=by decide
 theorem radius_floor:
     ⌊(radius:ℝ)*(Fintype.card IRSProfile.Index:ℝ)⌋₊=errors:=by
   norm_num [radius,claimedRadius,errors,IRSProfile.Index]
 theorem radius_cell_cross:
-    10257919*Fintype.card IRSProfile.Index < (errors+1)*33554432:=by
+    10258303*Fintype.card IRSProfile.Index < (errors+1)*33554432:=by
   norm_num [IRSProfile.Index,errors]
 theorem radius_gap:w < Fintype.card IRSProfile.Index-errors:=by
   norm_num [IRSProfile.Index,errors,w]
 theorem radius_admissible:
     radius∈Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance:=by
   constructor <;> norm_num [radius,claimedRadius,IRSProfile.minRelativeDistance]
-theorem root_power_integer:(2:ℕ)^37*77^100 ≤ 100^100:=by decide
+theorem root_power_integer:(2:ℕ)^38*53^100 ≤ 69^100:=by decide
 theorem radius_power_integer:
-    (23296513:ℕ)^128*(2^67*100) ≤ 77*33554432^128:=by decide
+    (23296129:ℕ)^128*(2^67*69) ≤ 53*33554432^128:=by decide
 theorem two_rpow_fraction_le:
-    (2:ℝ≥0)^((37:ℝ)/100) ≤ (100:ℝ≥0)/77:=by
-  have hroot:((2:ℝ≥0)^(37:ℕ))^((100:ℝ)⁻¹) ≤ (100:ℝ≥0)/77:=by
+    (2:ℝ≥0)^((38:ℝ)/100) ≤ (69:ℝ≥0)/53:=by
+  have hroot:((2:ℝ≥0)^(38:ℕ))^((100:ℝ)⁻¹) ≤ (69:ℝ≥0)/53:=by
     rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ)<100)]
     rw [NNReal.rpow_ofNat,div_pow,le_div_iff₀ (by positivity)]
     exact_mod_cast root_power_integer
   calc
-    (2:ℝ≥0)^((37:ℝ)/100)=((2:ℝ≥0)^(37:ℕ))^((100:ℝ)⁻¹):=by
+    (2:ℝ≥0)^((38:ℝ)/100)=((2:ℝ≥0)^(38:ℕ))^((100:ℝ)⁻¹):=by
       rw [←NNReal.rpow_natCast_mul]
       norm_num [div_eq_mul_inv]
-    _ ≤ (100:ℝ≥0)/77:=hroot
+    _ ≤ (69:ℝ≥0)/53:=hroot
 theorem radius_power_rational_bound:
-    (1-radius)^IRSProfile.repetitions ≤ ((1:ℝ≥0)/2^(67:ℕ))*(77/100):=by
-  have hsub:(1-radius:ℝ≥0)=23296513/33554432:=by
+    (1-radius)^IRSProfile.repetitions ≤ ((1:ℝ≥0)/2^(67:ℕ))*(53/69):=by
+  have hsub:(1-radius:ℝ≥0)=23296129/33554432:=by
     have hr:radius≤1:=by
       rw [←NNReal.coe_le_coe]
       norm_num [radius,claimedRadius]
     apply NNReal.coe_injective
     rw [NNReal.coe_sub hr]
     norm_num [radius,claimedRadius]
-  change (1-radius)^128 ≤ ((1:ℝ≥0)/2^(67:ℕ))*(77/100)
+  change (1-radius)^128 ≤ ((1:ℝ≥0)/2^(67:ℕ))*(53/69)
   rw [hsub,div_pow,div_mul_div_comm,one_mul,
     div_le_div_iff₀ (by positivity) (by positivity)]
   exact_mod_cast radius_power_integer
 theorem radius_score:(1-radius)^IRSProfile.repetitions ≤ claimedError score:=by
-  have hscale:(77:ℝ≥0)/100 ≤ (2:ℝ≥0)^(-((37:ℝ)/100)):=by
+  have hscale:(53:ℝ≥0)/69 ≤ (2:ℝ≥0)^(-((38:ℝ)/100)):=by
     calc
-      (77:ℝ≥0)/100=1/((100:ℝ≥0)/77):=by norm_num
-      _ ≤ 1/((2:ℝ≥0)^((37:ℝ)/100)):=
+      (53:ℝ≥0)/69=1/((69:ℝ≥0)/53):=by norm_num
+      _ ≤ 1/((2:ℝ≥0)^((38:ℝ)/100)):=
         one_div_le_one_div_of_le (by positivity) two_rpow_fraction_le
-      _=(2:ℝ≥0)^(-((37:ℝ)/100)):=by rw [one_div,NNReal.rpow_neg]
+      _=(2:ℝ≥0)^(-((38:ℝ)/100)):=by rw [one_div,NNReal.rpow_neg]
   calc
-    (1-radius)^IRSProfile.repetitions ≤ ((1:ℝ≥0)/2^(67:ℕ))*(77/100):=
+    (1-radius)^IRSProfile.repetitions ≤ ((1:ℝ≥0)/2^(67:ℕ))*(53/69):=
       radius_power_rational_bound
-    _ ≤ ((1:ℝ≥0)/2^(67:ℕ))*(2:ℝ≥0)^(-((37:ℝ)/100)):=
+    _ ≤ ((1:ℝ≥0)/2^(67:ℕ))*(2:ℝ≥0)^(-((38:ℝ)/100)):=
       mul_le_mul_of_nonneg_left hscale (by positivity)
     _=claimedError score:=by
       unfold claimedError score
-      rw [show-((((6737:ℕ):ℝ)/100))=
-          -((67:ℕ):ℝ)+-((37:ℝ)/100) by norm_num,
+      rw [show-((((6738:ℕ):ℝ)/100))=
+          -((67:ℕ):ℝ)+-((38:ℝ)/100) by norm_num,
         NNReal.rpow_add (by norm_num:(2:ℝ≥0)≠0)]
       simp only [NNReal.rpow_neg,NNReal.rpow_natCast,one_div]
 theorem field_cardinality:Fintype.card IRSProfile.Field=prime^6:=by
@@ -85037,7 +85037,7 @@ theorem field_capacity_split:
 theorem protocolClaim6735_of_reduction
     (hred:ToyProblem.Impl.IRS.certifiedGammaError IRSProfile.totalDimension
       IRSProfile.interleaving IRSProfile.domain radius ≤ reductionTarget):
-    ProtocolClaim 6737 10257919 33554432:=by
+    ProtocolClaim 6738 10258303 33554432:=by
   exact ⟨radius_admissible,hred,radius_score⟩
 end
 end ProximityPrize.SubmissionLower.ContactMovingSeedless6735Research
@@ -85065,15 +85065,15 @@ set_option maxRecDepth 50000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80139
+def errors:ℕ:=80142
 def agreements:ℕ:=n-errors
 def gap:ℕ:=agreements-w
 def prime:ℕ:=2130706433
-def multiplicity:ℕ:=42
-def yTotalCap:ℕ:=58
+def multiplicity:ℕ:=43
+def yTotalCap:ℕ:=59
 def slopeCap:ℕ:=12
 def weightedCap:ℕ:=multiplicity*agreements
-def listBudget:ℕ:=919472120
+def listBudget:ℕ:=935380180
 def capY:ℕ:=1+2*w*yTotalCap
 def capR:ℕ:=w*(2*slopeCap-1)
 def regularListNumerator:ℕ:=(n-w)*(capY*slopeCap+capR*yTotalCap)
@@ -86668,10 +86668,10 @@ set_option maxHeartbeats 5000000
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
 local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
 def n:ℕ:=262144
-def errors:ℕ:=80139
+def errors:ℕ:=80142
 def agreements:ℕ:=n-errors
-def listBudget:ℕ:=919472120
-def mcaBudget:ℕ:=274980727191922967
+def listBudget:ℕ:=935380180
+def mcaBudget:ℕ:=274980727176014907
 def radius:ℝ≥0:=ContactMovingSeedless6735Research.radius
 theorem field_capacity_split:
     2^(128:ℕ)*(mcaBudget+listBudget) ≤ Fintype.card IRSProfile.Field:=
@@ -86856,7 +86856,7 @@ theorem certifiedGammaError_le_of_alignment
       · simpa only [Nat.mul_comm] using field_capacity_split
 theorem protocolClaim6735_of_alignment
     (halign:AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget):
-    ProtocolClaim 6737 10257919 33554432 where
+    ProtocolClaim 6738 10258303 33554432 where
   admissible:=ContactMovingSeedless6735Research.radius_admissible
   reduction:=by
     change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
@@ -86878,15 +86878,15 @@ local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
 local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
 theorem alignmentBound6733_of_proper
     (proper:ProperStageProvider6733):
-    AffineLineAlignmentBound IRSProfile.baseCode 80139 274980727191922967:=by
+    AffineLineAlignmentBound IRSProfile.baseCode 80142 274980727176014907:=by
   have h:=ContactAlignmentBridge.alignmentBound_of_selected_count
-    IRSProfile.domain 131071 80139 274980727191922967
+    IRSProfile.domain 131071 80142 274980727176014907
     (ContactTwoTailStackedSelectedBound6735Research.selectedNoLargePencilBound6735_of_fixedProvider
         (fixedCellCountProvider_of_proper proper))
   simpa [IRSProfile.baseCode,IRSProfile.baseDimension] using h
 theorem protocolClaim6733_of_proper
     (proper:ProperStageProvider6733):
-    ProtocolClaim 6737 10257919 33554432:=
+    ProtocolClaim 6738 10258303 33554432:=
   ContactMovingProtocol6735Research.protocolClaim6735_of_alignment
     (alignmentBound6733_of_proper proper)
 end
@@ -86904,7 +86904,7 @@ set_option autoImplicit false
 set_option maxHeartbeats 1000000
 theorem properStageProvider6733:ProperStageProvider6733:=
   properStageProvider6733_of_activeFixedPowers activeStageFixedPowerProvider6733
-theorem protocolClaim6733:ProtocolClaim 6737 10257919 33554432:=
+theorem protocolClaim6733:ProtocolClaim 6738 10258303 33554432:=
   ContactTwoTailClosure6735Research.protocolClaim6733_of_proper properStageProvider6733
 end
 end ProximityPrize.SubmissionLower.ContactTwoTailUnconditional6735Research
@@ -86912,7 +86912,7 @@ end
 
 section
 namespace ProximityPrize.Benchmark
-theorem candidate:ProtocolClaim 6737 10257919 33554432:=
+theorem candidate:ProtocolClaim 6738 10258303 33554432:=
   ProximityPrize.SubmissionLower.ContactTwoTailUnconditional6735Research.protocolClaim6733
 end ProximityPrize.Benchmark
 end
