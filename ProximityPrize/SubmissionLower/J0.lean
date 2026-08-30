@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I9
-namespace ProximityPrize.SubmissionLower.ContactExceptionalSeedCount
-open ContactGenericSurface ContactExceptionalSeedAuxiliary ContactTranslation
+namespace ProximityPrize.SubmissionLower.RCN080
+open RCN136 RCN079 RCN319
 noncomputable section
 section SeedProjection
 variable {T:Type*} [Field T]
@@ -139,14 +139,14 @@ theorem card_actual_solution_seeds_le
    (hY:H.degreeOf 1=0) (hR:H.degreeOf 2=0) (seeds:Finset K)
    (hsolutions:∀ γ∈seeds,∃ P:Polynomial K,specialization K P γ H=0):
    seeds.card ≤ H.degreeOf 3:=by
- apply card_surface_seeds_le (ContactGenericInitialPoint.polynomialEmbedding K)
-   (ContactGenericInitialPoint.polynomialEmbedding_injective K) H hH hY hR seeds
+ apply card_surface_seeds_le (RCN135.polynomialEmbedding K)
+   (RCN135.polynomialEmbedding_injective K) H hH hY hR seeds
  intro γ hγ
  obtain ⟨P,hP⟩:=hsolutions γ hγ
- refine ⟨fun i => ContactGenericInitialPoint.initialPoint K P γ i.succ,?_,?_⟩
+ refine ⟨fun i => RCN135.initialPoint K P γ i.succ,?_,?_⟩
  · rfl
- · have hh:=(ContactGeometricFirstTail.actual_generic_initial_zero_iff K P γ H).mpr hP
-   simpa only [ContactGeometricFirstTail.canonical_geometricSurfaceMap] using hh
+ · have hh:=(RCN138.actual_generic_initial_zero_iff K P γ H).mpr hP
+   simpa only [RCN138.canonical_geometricSurfaceMap] using hh
 theorem exceptional_solution_seed_card_le
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0) (hR:J.degreeOf 2=0)
    (j p:ℕ) [CharP K p] (hj:1 ≤ j) (hsmall:j < p)
@@ -158,4 +158,4 @@ theorem exceptional_solution_seed_card_le
    seeds hsolutions).trans hd.2.2.2.2
 end ActualSolutions
 end
-end ProximityPrize.SubmissionLower.ContactExceptionalSeedCount
+end ProximityPrize.SubmissionLower.RCN080

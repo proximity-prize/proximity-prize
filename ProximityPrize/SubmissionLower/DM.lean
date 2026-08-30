@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.X6
-namespace ProximityPrize.SubmissionLower.ContactActualPlaneLocalOrderAdapter6732Research
-open ActualCurveCoordinateField ActualCurveRationalProjection
-open ActualPlaneCoordinateKernel ActualPlaneCoordinateDegree
-open TrivariateRationalCollection
+namespace ProximityPrize.SubmissionLower.RCN034
+open RCN002 RCN005
+open RCN011 RCN010
+open RCN371
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -46,4 +46,4 @@ theorem planeRingLocalization (order:Fin 3 ≃ Fin 3):
  exact IsLocalization.isLocalization_of_algEquiv
    (planeDenominators K order) e
 end
-end ProximityPrize.SubmissionLower.ContactActualPlaneLocalOrderAdapter6732Research
+end ProximityPrize.SubmissionLower.RCN034

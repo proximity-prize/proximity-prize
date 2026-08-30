@@ -2,28 +2,28 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BN
 import ProximityPrize.SubmissionLower.EV
 import ProximityPrize.SubmissionLower.B8
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualFactorProvider6600Research
+namespace ProximityPrize.SubmissionLower.RCN154
 open scoped Classical
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactRegularComponentCover
-open ContactProperCutSeedCount ContactComponentPencils
-open ContactFlagBezout6543Research
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualIterationResearch.ResidualStage
-open ContactIdentityResidualCurveIterationResearch
-open ContactIdentityResidualComponentFamily6600Research
-open ContactIdentityResidualComponentFamilyAll6600Research
-open ContactIdentityResidualFactorIncidence6600Research
-open ContactIdentityResidualGlobalFlagResearch
-open ContactIdentityResidualIncidenceResearch
-open ContactResidualSupportParametersResearch
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactNearPencil6600ArithmeticResearch
-open ContactNearPencil6600FlagResearch
-open ContactNearPencil6600FactorLedgerResearch
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactRobustFixedMeet6656Research
-open ContactFixedMeetFactorIncidence6656Research
+open RCN136 RCN231 RCN319
+open RCN238 RCN264
+open RCN243 RCN065
+open RCN095
+open RCN159
+open RCN159.ResidualStage
+open RCN151
+open RCN148
+open RCN149
+open RCN153
+open RCN156
+open RCN158
+open RCN275
+open RCN237
+open RCN213
+open RCN215
+open RCN214
+open RCN234
+open RCN276
+open RCN091
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 40000
@@ -426,4 +426,4 @@ theorem recursive_scaled_factor_6600_of_prime_flag_budgets
        agreementDirection6600]
      ring
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualFactorProvider6600Research
+end ProximityPrize.SubmissionLower.RCN154

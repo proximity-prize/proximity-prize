@@ -2,17 +2,17 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X
 import ProximityPrize.SubmissionLower.P
 import ProximityPrize.SubmissionLower.I
-namespace ProximityPrize.SubmissionLower.ContactWeakPrimeFlagBudgetResearch
+namespace ProximityPrize.SubmissionLower.RCN340
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
-open ActualCurveCoordinateField ActualCurveRationalProjection
- ActualCurveScalarTowers
-open CoordinateBoxZeroCount ContactRegularComponentCover
-open ContactFlagBezout6543Research ContactFlagPoleInequality6543Research
-open ContactSparsePoleSupportResearch
-open ContactWeakSeparableSeparatorResearch
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactIdentityResidualZeroBudgetTransportResearch
+open RCN002 RCN005
+ RCN006
+open RCN344 RCN264
+open RCN095 RCN114
+open RCN295
+open RCN341
+open RCN237
+open RCN165
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 300000
@@ -155,4 +155,4 @@ def AdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily
      hpole A ((support_subset_flagSupport_iff r A).2 hA) hproper
      points hpointsP hpointsA
 end
-end ProximityPrize.SubmissionLower.ContactWeakPrimeFlagBudgetResearch
+end ProximityPrize.SubmissionLower.RCN340

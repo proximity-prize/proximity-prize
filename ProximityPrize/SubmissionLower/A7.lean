@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EF
 import ProximityPrize.SubmissionLower.GS
-namespace ProximityPrize.SubmissionLower.ContactCoefficientFieldTrdeg6731Research
-open ContactFreshCoefficientFieldGenerationResearch
+namespace ProximityPrize.SubmissionLower.RCN062
+open RCN126
 noncomputable section
 variable {k L:Type} [Field k] [Field L] [Algebra k L]
 def baseCoefficientField (P:Polynomial L) (γ:L):IntermediateField k L:=
@@ -26,10 +26,10 @@ theorem baseCoefficientField_trdeg_le_one
    (P:Polynomial L) (γ:L)
    (hE:Algebra.trdeg k (coefficientField (k:=k) P γ) ≤ 2):
    Algebra.trdeg k (baseCoefficientField (k:=k) P γ) ≤ 1:=by
- apply ContactTrdegTower6731Research.coefficient_trdeg_le_one_of_rational_extension
+ apply RCN321.coefficient_trdeg_le_one_of_rational_extension
    (B:=baseCoefficientField (k:=k) P γ)
    (E:=coefficientField (k:=k) P γ)
    (baseCoefficientField_map_le P γ) _ hE
  exact IntermediateField.subset_adjoin k _ (Or.inl rfl)
 end
-end ProximityPrize.SubmissionLower.ContactCoefficientFieldTrdeg6731Research
+end ProximityPrize.SubmissionLower.RCN062

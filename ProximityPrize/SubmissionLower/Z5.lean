@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B9
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualPrimeTransportResearch
+namespace ProximityPrize.SubmissionLower.RCN162
 open scoped Classical
-open ContactFlagAffineResidualAutomorphismResearch
+open RCN094
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 20000
@@ -154,4 +154,4 @@ theorem mem_mapResidual_iff
    (f:=(residualEquiv aY v bY aS bS cS hv).toRingEquiv)
      (I:=D.ideal) (x:=F)
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualPrimeTransportResearch
+end ProximityPrize.SubmissionLower.RCN162

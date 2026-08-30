@@ -2,20 +2,20 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AK
 import ProximityPrize.SubmissionLower.F1
 import ProximityPrize.SubmissionLower.BW
-namespace ProximityPrize.SubmissionLower.ContactSingularBranchParameterizedResearch
+namespace ProximityPrize.SubmissionLower.RCN292
 open scoped Classical BigOperators
-open ContactSelectedSeedDecomposition ContactImplicitPairBudgets
-open ContactImplicitContactLift ContactSingularAuxiliary
-open ContactSingularDegreeBounds ContactInterpolation ContactTranslation
-open ContactFactorCaps ContactPrimeSeedIncidence ContactProperCutSeedCount
-open ContactSingularBranch6600Research
-open ContactTightSingularLedgerResearch
-open ContactImplicitPairSeedCountParameterizedResearch
-open ContactSingularLedger6600Research
+open RCN286 RCN169
+open RCN167 RCN290
+open RCN293 RCN174 RCN319
+open RCN081 RCN238 RCN243
+open RCN291
+open RCN318
+open RCN172
+open RCN294
 noncomputable section
 variable {K:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
-abbrev TightParameters:=ContactTightSingularLedgerResearch.TightParameters
+abbrev TightParameters:=RCN318.TightParameters
 namespace TightParameters
 theorem implicitVector_budgets_of_profile
    (P:TightParameters) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
@@ -31,12 +31,12 @@ theorem implicitVector_budgets_of_profile
    P.D P.w P.L P.s p hQ hs hsSmall hbox
  have hJbox:singularAuxiliary Q∈
      globalCoefficientBox K (P.kappa*P.D) P.w P.algebraicCap 0:=by
-   simpa [ContactTightSingularLedgerResearch.TightParameters.kappa,
-     ContactTightSingularLedgerResearch.TightParameters.algebraicCap] using hJboxRaw
+   simpa [RCN318.TightParameters.kappa,
+     RCN318.TightParameters.algebraicCap] using hJboxRaw
  have hb:=implicitPair_input_budgets (singularAuxiliary Q) hJ
    (P.kappa*P.D) P.w P.algebraicCap (by omega) hJbox
  simpa only [implicitVector,Finset.sum_coe_sort,
-   ContactTightSingularLedgerResearch.TightParameters.implicitYCap] using hb
+   RCN318.TightParameters.implicitYCap] using hb
 theorem exceptionalSeeds_bound_of_profile
    (P:TightParameters) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    {p:ℕ} [CharP K p]
@@ -52,8 +52,8 @@ theorem exceptionalSeeds_bound_of_profile
    P.D P.w P.L P.s p hQ hs hsSmall hbox
  have hJbox:singularAuxiliary Q∈
      globalCoefficientBox K (P.kappa*P.D) P.w P.algebraicCap 0:=by
-   simpa [ContactTightSingularLedgerResearch.TightParameters.kappa,
-     ContactTightSingularLedgerResearch.TightParameters.algebraicCap] using hJboxRaw
+   simpa [RCN318.TightParameters.kappa,
+     RCN318.TightParameters.algebraicCap] using hJboxRaw
  have hJR:(singularAuxiliary Q).degreeOf 2=0:=
    Nat.eq_zero_of_le_zero
      (degreeOf_R_le_of_mem_box _ _ _ _ _ hJbox)
@@ -96,8 +96,8 @@ theorem implicitSeeds_pair_bound_of_profile
    P.D P.w P.L P.s p hQ hs hsSmall hbox
  have hJbox:singularAuxiliary Q∈
      globalCoefficientBox K (P.kappa*P.D) P.w P.algebraicCap 0:=by
-   simpa [ContactTightSingularLedgerResearch.TightParameters.kappa,
-     ContactTightSingularLedgerResearch.TightParameters.algebraicCap] using hJboxRaw
+   simpa [RCN318.TightParameters.kappa,
+     RCN318.TightParameters.algebraicCap] using hJboxRaw
  obtain ⟨_hA,hG,hGR,hAbox,hGbox,hproper⟩:=
    implicitPair_data (singularAuxiliary Q) hJ
      (P.kappa*P.D) P.w P.algebraicCap hw hDw hJbox q.1 q.2
@@ -117,9 +117,9 @@ theorem implicitSeeds_pair_bound_of_profile
    (fun gamma hgamma => hagreement gamma (hsub hgamma))
    (noLargeSelectedPencil_mono selected Gamma _ P.w P.errors hsub hnoPencil)
  simpa [implicitVector,
-   ContactTightSingularLedgerResearch.TightParameters.agreement,
-   ContactTightSingularLedgerResearch.TightParameters.errors,
-   ContactTightSingularLedgerResearch.TightParameters.gap,dot] using hpair
+   RCN318.TightParameters.agreement,
+   RCN318.TightParameters.errors,
+   RCN318.TightParameters.gap,dot] using hpair
 theorem singularSeeds_tight_gap_bound
    (P:TightParameters) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    {p:ℕ} [CharP K p]
@@ -177,7 +177,7 @@ theorem singularSeeds_count_le_countCap
    (hnoPencil:NoLargeSelectedPencil selected Gamma P.w P.errors):
    (singularSeeds Q selected Gamma).card ≤ P.countCap:=by
  apply P.count_le_countCap _ (by
-   simpa [ContactTightSingularLedgerResearch.TightParameters.gap] using
+   simpa [RCN318.TightParameters.gap] using
      Nat.sub_pos_of_lt hwa)
  exact P.singularSeeds_tight_gap_bound Q hQ hbox hs hsSmall hw hchar hDw
    hj hjYSmall hjZSmall hmixedSmall hwa han selected Gamma nodes x u0 u1
@@ -217,4 +217,4 @@ theorem optimized_pivot_characteristic_gates:
    TightParameters.implicitYCap,TightParameters.algebraicCap,
    TightParameters.kappa]
 end
-end ProximityPrize.SubmissionLower.ContactSingularBranchParameterizedResearch
+end ProximityPrize.SubmissionLower.RCN292

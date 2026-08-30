@@ -2,12 +2,12 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A7
 import ProximityPrize.SubmissionLower.GT
 import ProximityPrize.SubmissionLower.BH
-namespace ProximityPrize.SubmissionLower.ContactFreshProperCoefficientTrdeg6731Research
-open ContactDifferentialRing ContactTranslation ContactGenericSurface
- ContactGaussLocalization ContactFreshCoefficientFieldGenerationResearch
- ContactCoefficientFieldTrdeg6731Research
- ContactTrivariateTrdeg6731Research ContactFunctionFieldTrdeg6731Research
- ArbitraryRationalProjectionResearch
+namespace ProximityPrize.SubmissionLower.RCN127
+open RCN077 RCN319 RCN136
+ RCN132 RCN126
+ RCN062
+ RCN322 RCN129
+ RCN022
 noncomputable section
 variable {k L:Type} [Field k] [Field L] [Algebra k L]
 private def freshJet (P:Polynomial L) (γ:L) (i:Fin 4):
@@ -175,4 +175,4 @@ theorem baseCoefficientField_trdeg_le_one_of_fresh_proper_relations
  rw [hfield] at hjet
  exact baseCoefficientField_trdeg_le_one P γ hjet
 end
-end ProximityPrize.SubmissionLower.ContactFreshProperCoefficientTrdeg6731Research
+end ProximityPrize.SubmissionLower.RCN127

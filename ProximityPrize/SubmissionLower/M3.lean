@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.M8
 import ProximityPrize.SubmissionLower.E3
-namespace ProximityPrize.SubmissionLower.ContactMovingCurveBudget6719Research
+namespace ProximityPrize.SubmissionLower.RCN199
 open scoped Classical BigOperators WithZero
-open ActualCurveCoordinateField CoordinateBoxZeroCount ContactWeakSeparableSeparatorResearch
-open ContactFlagBezout6543Research ContactFlagPoleInequality6543Research
-open ContactSparsePoleSupportResearch ContactLocalPoleBound
-open ContactMovingProjection6676Research ContactCommonProjectionChoice6676Research
-open ContactMovingPoleLocal6719Research ContactRegularZeroBudget6676Research
-open ContactRationalRegularZero6676Research
+open RCN002 RCN344 RCN341
+open RCN095 RCN114
+open RCN295 RCN187
+open RCN207 RCN064
+open RCN204 RCN271
+open RCN257
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -89,8 +89,8 @@ theorem zero_le [IsAlgClosed K] (budget:MovingPoleBudget P H G)
      (budget.weightedCost C+k*(budget.weightedCost (⟨a,b,s⟩:FlagDegree)+budget.movingCost)):=by
  apply finite_regular_zero_bound_of_separator K P base H (filteredCut k B H G) k _ hA hH
  intro W
- simpa only [CoordinatePoleMass.poleOrder,coordinateEvaluation_eq_aeval] using
+ simpa only [RCN346.poleOrder,coordinateEvaluation_eq_aeval] using
    budget.sum_filteredCut_pole_le a b s k C B c hH hB hc W
 end MovingPoleBudget
 end
-end ProximityPrize.SubmissionLower.ContactMovingCurveBudget6719Research
+end ProximityPrize.SubmissionLower.RCN199

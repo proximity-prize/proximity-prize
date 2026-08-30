@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.V
 import ProximityPrize.SubmissionLower.K6
-namespace ProximityPrize.SubmissionLower.ContactSingularBranch6600Research
+namespace ProximityPrize.SubmissionLower.RCN291
 open scoped BigOperators
-open ContactParameters6600Research ContactSingularLedger6600Research
-open ContactSelectedSeedDecomposition ContactImplicitPairBudgets
-open ContactImplicitContactLift ContactSingularAuxiliary
-open ContactSingularDegreeBounds ContactInterpolation ContactTranslation
-open ContactImplicitPairSeedCount6600Research
-open ContactFactorCaps
-open ContactPrimeSeedIncidence ContactProperCutSeedCount
+open RCN223 RCN294
+open RCN286 RCN169
+open RCN167 RCN290
+open RCN293 RCN174 RCN319
+open RCN171
+open RCN081
+open RCN238 RCN243
 noncomputable section
 variable {K:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
@@ -86,7 +86,7 @@ theorem exceptionalSeeds_bound
  · exact characteristic_gates.2.2.1
  · exact hcaps.1.trans (by
      norm_num [implicitYCap,implicitWeightedCap,weightedCap,
-       ContactParameters6600Research.multiplicity,agreements,n,errors,
+       RCN223.multiplicity,agreements,n,errors,
        w,algebraicCap,slopeCap,seedTotalCap])
  · exact hcaps.2.2
 variable {Iota:Type}
@@ -115,10 +115,10 @@ theorem implicitSeeds_pair_bound
    implicitPair_data (singularAuxiliary Q) hJ implicitWeightedCap w
      algebraicCap (by norm_num [w])
      (by norm_num [w,implicitWeightedCap,weightedCap,
-       ContactParameters6600Research.multiplicity,agreements,n,errors,
+       RCN223.multiplicity,agreements,n,errors,
        slopeCap]) hJbox q.1 q.2
  have hsub:=implicitSeeds_subset Q selected Gamma q
- have hpair:=ContactImplicitPairSeedCount6600Research.implicit_pair_seed_bound_fixed
+ have hpair:=RCN171.implicit_pair_seed_bound_fixed
    q.1.1 q.1.2 hG hGR hproper hAbox hGbox selected
    (implicitSeeds Q selected Gamma q) nodes x u0 u1 hinj hnodes
    (fun gamma hgamma => hdegree gamma (hsub hgamma))
@@ -131,7 +131,7 @@ theorem implicitSeeds_pair_bound
    (fun gamma hgamma => hagreement gamma (hsub hgamma))
    (noLargeSelectedPencil_mono selected Gamma _ w errors hsub hnoPencil)
  simpa [implicitVector,
-   ContactImplicitPairSeedCount6600Research.pairCost] using hpair
+   RCN171.pairCost] using hpair
 theorem singularSeeds_gap_bound
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    [CharP K prime]
@@ -182,4 +182,4 @@ theorem singularSeeds_scaled_bound
      simp only [retainedSingularContribution]
      ring
 end
-end ProximityPrize.SubmissionLower.ContactSingularBranch6600Research
+end ProximityPrize.SubmissionLower.RCN291

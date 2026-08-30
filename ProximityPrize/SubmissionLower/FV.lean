@@ -1,20 +1,20 @@
 import ProximityPrize.SubmissionLower.C3
 import ProximityPrize.SubmissionLower.FU
-namespace ProximityPrize.SubmissionLower.ContactProperFlagIndexedFiberData6733Research
-open ContactProperDelayedTailCertificate6732Research ContactProperMultiplicitySymbolic6732Research
-open ContactGenericInitialPoint ContactGenericSurface ContactFlagBezout6543Research
-open ContactDelayedTailMultiplicityProvider6732Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactFlagPlaneIndexedFiberCertificate6733Research
-open ContactFlagPlaneFiberPrimary6733Research
-open ContactProperFlagFiberData6733Research
-open ContactFlagPlaneSurfaceLocalAdapter6732Research
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ContactFirstTailCertificate6731Research ContactRegularComponentCover
-open ContactOriginalFactorLocalDVR6731Research ContactTaylorNumerators
-open ActualCurveCoordinateField ActualPlaneCoordinateKernel
-open ArbitraryPlaneEvaluationFamilyResearch ContactFlagTriangularProjectionResearch
-open ContactFlagAffineFamilyDegree6543Research
+namespace ProximityPrize.SubmissionLower.RCN246
+open RCN244 RCN248
+open RCN135 RCN136 RCN095
+open RCN074
+open RCN106
+open RCN107
+open RCN102
+open RCN245
+open RCN113
+open RCN120
+open RCN086 RCN264
+open RCN218 RCN313
+open RCN002 RCN011
+open RCN021 RCN125
+open RCN093
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2500000
@@ -23,9 +23,11 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
+variable {errorCap : ℕ}
+variable {stageSupport : RCN275.ResidualSupportParameters}
 variable {A:Type} [Fintype A]
 theorem indexedStageSurface_mem_relation
-   (S:Stage K I Gamma x p flag)
+   (S:Stage K I Gamma x p flag errorCap stageSupport)
    (component:A → StageComponent S)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3)
    (ht:∀ a:A,Transcendental (GenericField K)
@@ -48,7 +50,7 @@ theorem indexedStageSurface_mem_relation
  rw [coordinateEvaluation_ker]
  exact regularComponent_G_mem (GenericField K) S.G _ _ (component a)
 theorem indexedStageTail_mem_relation
-   (S:Stage K I Gamma x p flag)
+   (S:Stage K I Gamma x p flag errorCap stageSupport)
    (component:A → StageComponent S)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3)
    (ht:∀ a:A,Transcendental (GenericField K)
@@ -59,7 +61,7 @@ theorem indexedStageTail_mem_relation
        (CoordinateField (GenericField K) (component a).1) order
        (flagEvaluation (GenericField K) (component a).1 lam mu nu) (ht a):=by
  let tail:=globalTailCut (polynomialEmbedding K) S.F
-   (ContactTwoTailParameters6733Research.w+1)
+   (RCN326.w+1)
  change planeEvaluation (GenericField K)
    (CoordinateField (GenericField K) (component a).1) order
      (flagEvaluation (GenericField K) (component a).1 lam mu nu) (ht a)
@@ -73,7 +75,7 @@ theorem indexedStageTail_mem_relation
  rw [coordinateEvaluation_ker]
  exact regularComponent_T_mem (GenericField K) S.G tail _ (component a)
 structure IndexedFiberProjectionData
-   (S:Stage K I Gamma x p flag) (component:A → StageComponent S)
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (component:A → StageComponent S)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3)
    (ht:∀ a:A,Transcendental (GenericField K)
      (flagEvaluation (GenericField K) (component a).1 lam mu nu
@@ -90,10 +92,10 @@ structure IndexedFiberProjectionData
    (stageFiberTargetMap S lam mu nu order q hq)=componentPrime S (component a.1)
  tail_eq:indexedFiberTail q hq (stageTailPlane S lam mu nu order)=
    stageFiberTargetMap S lam mu nu order q hq
-     (numerator K S.F (ContactTwoTailParameters6733Research.w+1))*
+     (numerator K S.F (RCN326.w+1))*
        stageFiberScalar S lam mu nu order q hq
 theorem indexedFiberProjectionData
-   (S:Stage K I Gamma x p flag) (component:A → StageComponent S)
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (component:A → StageComponent S)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3)
    (ht:∀ a:A,Transcendental (GenericField K)
      (flagEvaluation (GenericField K) (component a).1 lam mu nu
@@ -140,11 +142,11 @@ theorem indexedFiberProjectionData
      indexedFiberRelation_under,hplane]
    rfl
  · change localize (plane (globalTailCut phi S.F
-     (ContactTwoTailParameters6733Research.w+1)))=
+     (RCN326.w+1)))=
      localize (plane (surfaceMap phi (numerator K S.F
-       (ContactTwoTailParameters6733Research.w+1))))*
+       (RCN326.w+1))))*
        localize (plane (MvPolynomial.C
-         ((-phi Polynomial.X)^(ContactTwoTailParameters6733Research.w+1))))
+         ((-phi Polynomial.X)^(RCN326.w+1))))
    rw [globalTailCut_eq,map_mul,map_mul]
 end
-end ProximityPrize.SubmissionLower.ContactProperFlagIndexedFiberData6733Research
+end ProximityPrize.SubmissionLower.RCN246

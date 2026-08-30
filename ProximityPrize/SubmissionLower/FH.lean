@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A5
 import ProximityPrize.SubmissionLower.B
-namespace ProximityPrize.SubmissionLower.ContactOriginalFactorTail6731Research
-open ContactGenericSurface ContactGenericInitialPoint ContactGeometricFirstTail
-open ContactGeometricFactorCover ContactFactorCover GeometricFactorContraction
-open ContactTaylorNumerators ContactIdentityResidualIterationResearch
-open ContactNumeratorFactorScaling6731Research ActualCurveCoordinateField
-open ContactAgreementFactorScaling6731Research
-open ContactFlagBezout6543Research ContactResidualSupportParametersResearch
-open ContactComponentPencils
+namespace ProximityPrize.SubmissionLower.RCN220
+open RCN136 RCN135 RCN138
+open RCN137 RCN082 RCN350
+open RCN313 RCN159
+open RCN217 RCN002
+open RCN048
+open RCN095 RCN275
+open RCN065
 noncomputable section
 variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
@@ -121,4 +121,4 @@ theorem original_factor_agreement_proper
  apply hproper
  simpa only [map_sub,map_mul,map_pow,sub_add_cancel] using dvd_add hdiff hscaled
 end
-end ProximityPrize.SubmissionLower.ContactOriginalFactorTail6731Research
+end ProximityPrize.SubmissionLower.RCN220

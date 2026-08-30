@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.U6
-namespace ProximityPrize.SubmissionLower.SeparableIdealNorm
+namespace ProximityPrize.SubmissionLower.RCN367
 noncomputable section
 section Fields
 variable (F E Ω:Type*) [Field F] [Field E] [Field Ω]
@@ -120,4 +120,4 @@ theorem intNorm_maps_to_fieldNorm (x:S):
  Algebra.algebraMap_intNorm_fractionRing x
 end Domains
 end
-end ProximityPrize.SubmissionLower.SeparableIdealNorm
+end ProximityPrize.SubmissionLower.RCN367

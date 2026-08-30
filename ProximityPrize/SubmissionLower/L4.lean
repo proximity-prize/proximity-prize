@@ -1,14 +1,14 @@
 import ProximityPrize.SubmissionLower.L2
-namespace ProximityPrize.SubmissionLower.ContactKernelSelectedInterpolation6733Research
+namespace ProximityPrize.SubmissionLower.RCN183
 open scoped BigOperators
 open ProximityPrize.Benchmark
-open ContactFlagInterpolation6641Research ContactFlagRankKernel6641Research
-open ContactFlagKernelUniversalityResearch
-open ContactKernelCommonGCDResearch ContactKernelGenericChoiceResearch
-open ContactGeometricFactorCover ContactGCDCumulativeFlagsResearch
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactFactorCaps
+open RCN100 RCN119
+open RCN101
+open RCN180 RCN181
+open RCN137 RCN130
+open RCN234
+open RCN156
+open RCN081
 noncomputable section
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
@@ -34,7 +34,7 @@ theorem gateA :
      coefficientCount 7645764 131071 84439 12 := by
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]]
- rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
+ rw [RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
    7645764 131071 84439 12 59 (by decide) (by decide)]
  decide
 theorem gateB :
@@ -42,7 +42,7 @@ theorem gateB :
      coefficientCount 14745402 131071 1262 25 := by
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]]
- rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
+ rw [RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
    14745402 131071 1262 25 113 (by decide) (by decide)]
  decide
 theorem gateC :
@@ -50,7 +50,7 @@ theorem gateC :
      coefficientCount 7463722 131071 41787 12 := by
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]]
- rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
+ rw [RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
    7463722 131071 41787 12 57 (by decide) (by decide)]
  decide
 theorem field_cardinality :
@@ -132,11 +132,11 @@ structure SelectedInterpolants
    14745402 131071 1262 25
  QC_flag : QC ∈ globalCoefficientBox IRSProfile.Field
    7463722 131071 41787 12
- QA_ordinary : QA ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+ QA_ordinary : QA ∈ RCN174.globalCoefficientBox IRSProfile.Field
    7645764 131071 84439 12
- QB_ordinary : QB ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+ QB_ordinary : QB ∈ RCN174.globalCoefficientBox IRSProfile.Field
    14745402 131071 1262 25
- QC_ordinary : QC ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+ QC_ordinary : QC ∈ RCN174.globalCoefficientBox IRSProfile.Field
    7463722 131071 41787 12
  H_flagA : H ∈ globalCoefficientBox IRSProfile.Field
    7645764 131071 84439 12
@@ -170,36 +170,36 @@ structure SelectedInterpolants
      P.natDegree ≤ 131071 → agreements6733 ≤ support.card →
      (∀ i ∈ support,
        P.eval (IRSProfile.domain i) = u₀ i + gamma * u₁ i) →
-     ContactFlagTranslation6641Research.specialization
+     RCN122.specialization
          IRSProfile.Field P gamma QA = 0 ∧
-       ContactFlagTranslation6641Research.specialization
+       RCN122.specialization
          IRSProfile.Field P gamma QB = 0 ∧
-     ContactFlagTranslation6641Research.specialization
+     RCN122.specialization
          IRSProfile.Field P gamma QC = 0
 namespace SelectedInterpolants
 variable {u₀ u₁ : IRSProfile.Index → IRSProfile.Field}
 theorem H_ordinaryA (S : SelectedInterpolants u₀ u₁) :
-   S.H ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+   S.H ∈ RCN174.globalCoefficientBox IRSProfile.Field
      7645764 131071 84439 12 :=
  flag_box_to_ordinary IRSProfile.Field
    7645764 131071 84439 12 S.H S.H_flagA
 theorem H_ordinaryB (S : SelectedInterpolants u₀ u₁) :
-   S.H ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+   S.H ∈ RCN174.globalCoefficientBox IRSProfile.Field
      14745402 131071 1262 25 :=
  flag_box_to_ordinary IRSProfile.Field
    14745402 131071 1262 25 S.H S.H_flagB
 theorem G_ordinaryA (S : SelectedInterpolants u₀ u₁) :
-   S.G ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+   S.G ∈ RCN174.globalCoefficientBox IRSProfile.Field
      7645764 131071 84439 12 :=
  flag_box_to_ordinary IRSProfile.Field
    7645764 131071 84439 12 S.G S.G_flagA
 theorem G_ordinaryB (S : SelectedInterpolants u₀ u₁) :
-   S.G ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+   S.G ∈ RCN174.globalCoefficientBox IRSProfile.Field
      14745402 131071 1262 25 :=
  flag_box_to_ordinary IRSProfile.Field
    14745402 131071 1262 25 S.G S.G_flagB
 theorem G_ordinaryC (S : SelectedInterpolants u₀ u₁) :
-   S.G ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+   S.G ∈ RCN174.globalCoefficientBox IRSProfile.Field
      7463722 131071 41787 12 :=
  flag_box_to_ordinary IRSProfile.Field
    7463722 131071 41787 12 S.G S.G_flagC
@@ -444,16 +444,16 @@ theorem exists_selected_interpolants
      hQC (by dsimp only [G]; exact gcd_dvd_right H QC) hQCbox
  have hHAys : wt residualYSWeights HA ≤ 55 := by
    dsimp only [HA]
-   exact ContactKernelCommonGCDResearch.Caps6734.profileA_commonGCD_ys_le
+   exact RCN180.Caps6734.profileA_commonGCD_ys_le
      u₀ u₁ bA
  have hHAcorner : wt residualYSWeights HA ≤ 54 ∨
      wt residualSWeights HA ≤ 11 := by
    dsimp only [HA]
-   exact ContactKernelCommonGCDResearch.Caps6734.profileA_commonGCD_corner
+   exact RCN180.Caps6734.profileA_commonGCD_corner
      u₀ u₁ bA
  have hHBtotal : wt residualTotalWeights HB ≤ 1261 := by
    dsimp only [HB]
-   exact ContactKernelCommonGCDResearch.Caps6734.profileB_commonGCD_total_le
+   exact RCN180.Caps6734.profileB_commonGCD_total_le
      u₀ u₁ bB
  have hHys : wt residualYSWeights H ≤ 55 :=
    (weightedTotalDegree_le_of_dvd residualYSWeights H HA hHHA hHA).trans hHAys
@@ -544,4 +544,4 @@ theorem exists_selected_interpolants
        exact hUnivC gamma P support hP hcard hvalues
  }⟩
 end
-end ProximityPrize.SubmissionLower.ContactKernelSelectedInterpolation6733Research
+end ProximityPrize.SubmissionLower.RCN183

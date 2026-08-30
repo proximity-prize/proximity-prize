@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y4
 import ProximityPrize.SubmissionLower.R
-namespace ProximityPrize.SubmissionLower.ContactCountingCaps6600Research
-open ContactParameters6600Research ContactInterpolation ContactGenericSurface
-open ContactCountingCaps ContactPrimeSeedIncidence
+namespace ProximityPrize.SubmissionLower.RCN069
+open RCN223 RCN174 RCN136
+open RCN068 RCN238
 noncomputable section
-def legacyVector (v:ContactParameters6600Research.DegreeVector):
-   ContactAlignmentParameters.DegreeVector:=⟨v.y,v.r,v.z⟩
+def legacyVector (v:RCN223.DegreeVector):
+   RCN051.DegreeVector:=⟨v.y,v.r,v.z⟩
 variable {K Omega:Type} [Field K] [Field Omega]
 theorem fixed_implicit_agreement_caps
    (phi:Polynomial K →+*Omega) (F:MvPolynomial (Fin 4) K)
@@ -25,7 +25,7 @@ theorem fixed_implicit_surface_caps_below_characteristic:
  fin_cases j <;>
    norm_num [capAt,legacyVector,liftedSurface,implicitYCap,
      implicitWeightedCap,algebraicCap,weightedCap,
-     ContactParameters6600Research.multiplicity,agreements,n,errors,
+     RCN223.multiplicity,agreements,n,errors,
      w,slopeCap,seedTotalCap,prime]
 theorem fixed_implicit_characteristic_gates
    (G T:MvPolynomial (Fin 3) Omega)
@@ -36,20 +36,20 @@ theorem fixed_implicit_characteristic_gates
        T.degreeOf j*G.degreeOf k+G.degreeOf j*T.degreeOf k < prime:=by
  apply actual_characteristic_gates G T _ _ prime hG hT
    fixed_implicit_surface_caps_below_characteristic
- · norm_num [ContactAlignmentParameters.mixed,legacyVector,liftedSurface,
-     implicitCut,ContactAlignmentParameters.unitY,implicitYCap,
+ · norm_num [RCN051.mixed,legacyVector,liftedSurface,
+     implicitCut,RCN051.unitY,implicitYCap,
      implicitWeightedCap,algebraicCap,weightedCap,
-     ContactParameters6600Research.multiplicity,agreements,n,errors,
+     RCN223.multiplicity,agreements,n,errors,
      w,slopeCap,seedTotalCap,prime]
- · norm_num [ContactAlignmentParameters.mixed,legacyVector,liftedSurface,
-     implicitCut,ContactAlignmentParameters.unitR,implicitYCap,
+ · norm_num [RCN051.mixed,legacyVector,liftedSurface,
+     implicitCut,RCN051.unitR,implicitYCap,
      implicitWeightedCap,algebraicCap,weightedCap,
-     ContactParameters6600Research.multiplicity,agreements,n,errors,
+     RCN223.multiplicity,agreements,n,errors,
      w,slopeCap,seedTotalCap,prime]
- · norm_num [ContactAlignmentParameters.mixed,legacyVector,liftedSurface,
-     implicitCut,ContactAlignmentParameters.unitZ,implicitYCap,
+ · norm_num [RCN051.mixed,legacyVector,liftedSurface,
+     implicitCut,RCN051.unitZ,implicitYCap,
      implicitWeightedCap,algebraicCap,weightedCap,
-     ContactParameters6600Research.multiplicity,agreements,n,errors,
+     RCN223.multiplicity,agreements,n,errors,
      w,slopeCap,seedTotalCap,prime]
 end
-end ProximityPrize.SubmissionLower.ContactCountingCaps6600Research
+end ProximityPrize.SubmissionLower.RCN069

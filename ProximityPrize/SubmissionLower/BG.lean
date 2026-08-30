@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I4
 import ProximityPrize.SubmissionLower.D8
-namespace ProximityPrize.SubmissionLower.ContactGCDCumulativeFlagsResearch
+namespace ProximityPrize.SubmissionLower.RCN130
 open scoped Classical BigOperators
-open ContactFactorCaps ContactGenericSurface ContactGenericInitialPoint
-open ContactGeometricFactorCover ContactOriginalRegularSeedCount
-open ContactRegularFactorFlag6600Research ContactImplicitContactLift
-open ContactIdentityResidualGlobalFlagResearch ContactFlagBezout6543Research
-open ContactFlagTriangularProjectionResearch (sWeight ysWeight totalWeight)
-open ContactCumulativeWeightedDegreeResearch ContactPost6464MinkowskiRecurrenceResearch
-open ContactResidualSupportParametersResearch ContactIdentityResidualIterationResearch
+open RCN081 RCN136 RCN135
+open RCN137 RCN222
+open RCN266 RCN167
+open RCN156 RCN095
+open RCN125 (sWeight ysWeight totalWeight)
+open RCN071 RCN234
+open RCN275 RCN159
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 30000
@@ -52,13 +52,13 @@ theorem surface_weight_nested (G:MvPolynomial (Fin 3) L):
    apply Finset.sup_le
    intro d hd
    exact (show Finsupp.weight sWeight d ≤ Finsupp.weight ysWeight d by
-     rw [TrivariateShearResearch.weight_fin3,TrivariateShearResearch.weight_fin3]
+     rw [RCN372.weight_fin3,RCN372.weight_fin3]
      simp [sWeight,ysWeight]).trans (Finset.le_sup hd)
  · unfold MvPolynomial.weightedTotalDegree
    apply Finset.sup_le
    intro d hd
    exact (show Finsupp.weight ysWeight d ≤ Finsupp.weight totalWeight d by
-     rw [TrivariateShearResearch.weight_fin3,TrivariateShearResearch.weight_fin3]
+     rw [RCN372.weight_fin3,RCN372.weight_fin3]
      simp [ysWeight,totalWeight]).trans (Finset.le_sup hd)
 def originalCumulativeFlag (F:MvPolynomial (Fin 4) K):FlagDegree:=
  flagFromCaps (wt residualTotalWeights F) (wt residualYSWeights F)
@@ -96,7 +96,7 @@ theorem polynomialIn_surfaceCumulativeFlag (G:MvPolynomial (Fin 3) L):
  have hs:=MvPolynomial.le_weightedTotalDegree sWeight hd
  have hm:=MvPolynomial.le_weightedTotalDegree ysWeight hd
  have ht:=MvPolynomial.le_weightedTotalDegree totalWeight hd
- rw [TrivariateShearResearch.weight_fin3] at hs hm ht
+ rw [RCN372.weight_fin3] at hs hm ht
  simp [sWeight,ysWeight,totalWeight] at hs hm ht
  have hc:=surfaceCumulativeFlag_cumulative G
  change d 1 ≤ (surfaceCumulativeFlag G).all∧
@@ -119,7 +119,7 @@ theorem surfaceMap_nested_weights_le (phi:Polynomial K →+*L)
    apply Finset.sup_le
    intro e he
    obtain ⟨d,hd,rfl⟩:=Finset.mem_image.mp (support_surfaceMap_subset phi F he)
-   rw [TrivariateShearResearch.weight_fin3]
+   rw [RCN372.weight_fin3]
  · have h:=MvPolynomial.le_weightedTotalDegree residualSWeights hd
    rw [weight_fin4] at h
    simpa [wt,sWeight,residualSWeights,Finsupp.tail_apply] using h
@@ -240,4 +240,4 @@ def reflagResidualStage {Iota:Type} {phi:Polynomial K →+*L}
    ResidualStage phi Gamma x p e newFlag d support:=
  { S with flag_support:=hflag}
 end
-end ProximityPrize.SubmissionLower.ContactGCDCumulativeFlagsResearch
+end ProximityPrize.SubmissionLower.RCN130

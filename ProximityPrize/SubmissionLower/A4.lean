@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W
 import ProximityPrize.SubmissionLower.E0
-namespace ProximityPrize.SubmissionLower.ContactAgreementEvaluation
-open ContactDifferentialRing ContactRegularPoint ContactPolynomiality
-open ContactTaylorNumerators DifferentialTaylorCoefficients
+namespace ProximityPrize.SubmissionLower.RCN047
+open RCN077 RCN269 RCN233
+open RCN313 RCN347
 noncomputable section
 section ScalarClearing
 variable {A:Type*} [CommRing A]
@@ -229,4 +229,4 @@ theorem factorial_agreement_zero_iff_actual_agreement
    ring
 end ActualPoint
 end
-end ProximityPrize.SubmissionLower.ContactAgreementEvaluation
+end ProximityPrize.SubmissionLower.RCN047

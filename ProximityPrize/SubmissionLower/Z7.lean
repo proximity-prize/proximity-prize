@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactLocalPoleBound
+namespace ProximityPrize.SubmissionLower.RCN187
 open scoped BigOperators
 noncomputable section
 section Multiplicative
@@ -125,4 +125,4 @@ theorem weighted_poleOrder_eval_le_box {τ:Type*} (S:Finset τ)
      ring
 end IntegerPole
 end
-end ProximityPrize.SubmissionLower.ContactLocalPoleBound
+end ProximityPrize.SubmissionLower.RCN187

@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I5
-namespace ProximityPrize.SubmissionLower.ContactRegularComponentCover
-open ContactCurveComponents
+namespace ProximityPrize.SubmissionLower.RCN264
+open RCN072
 noncomputable section
 variable (K:Type) [Field K]
 def regularComponents (G T H:MvPolynomial (Fin 3) K):
@@ -106,4 +106,4 @@ theorem aggregate_component_incidence {Seed:Type*}
          (fun i _ => Nat.mul_le_mul_left (cap i) (hbudget i))))
        (Nat.mul_le_mul_left (pencil*gap) (hbudget 2))
 end
-end ProximityPrize.SubmissionLower.ContactRegularComponentCover
+end ProximityPrize.SubmissionLower.RCN264

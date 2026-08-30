@@ -1,36 +1,36 @@
 import ProximityPrize.SubmissionLower.J5
 import ProximityPrize.SubmissionLower.P8
 import ProximityPrize.SubmissionLower.DH
-namespace ProximityPrize.SubmissionLower.ContactTwoTailReducedProvider6734Research
+namespace ProximityPrize.SubmissionLower.RCN334
 open scoped Classical BigOperators
-open ContactGenericInitialPoint ContactGenericSurface
-open ContactTranslation ContactInterpolation
-open ContactIdentityResidualIterationResearch ContactRegularComponentCover
-open ContactDelayedTailMultiplicityProvider6732Research
-open ContactFirstTailCertificate6731Research ContactProperCutSeedCount
-open ContactPrimeSeedIncidence ContactFlagBezout6543Research
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactMovingAgreementCertificate6719Research
-open ContactResidualSupportParametersResearch
-open ContactProperDelayedTailCertificate6732Research
-open ContactTwoTailParameters6734Research
-open ContactReducedTaylorProfileResearch ContactFirstTailReducedCertificate6732Research
-open ContactCongruentCuts6643Research
-open ContactFirstTailReducedProjection6732Research
-open ContactTwoTailReducedActivePowers6734Research
-open ContactTwoTailReducedTransport6734Research
-open ContactActiveNestedCertificate6733Research
-open ContactActiveNestedFlagCosts6733Research
-open ContactActiveNestedFixedPowers6733Research
-open ContactTwoTailResultantProvider6732Research
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedProjectionActive6630Research
-open ContactAdaptiveProjectionCoordinateResearch
-open ContactWeakSeparableSeparatorResearch
-open ContactTangentCoefficientProvider6732Research
-open ContactTwoTailTangentCost6732Research
-open ContactTwoTailRecurrence6731Research
-open ActualCurveCoordinateField CoordinateBoxZeroCount
+open RCN135 RCN136
+open RCN319 RCN174
+open RCN159 RCN264
+open RCN074
+open RCN086 RCN243
+open RCN238 RCN095
+open RCN237
+open RCN198
+open RCN275
+open RCN244
+open RCN327
+open RCN263 RCN089
+open RCN066
+open RCN090
+open RCN331
+open RCN336
+open RCN027
+open RCN030
+open RCN029
+open RCN338
+open RCN037
+open RCN038
+open RCN042
+open RCN341
+open RCN312
+open RCN339
+open RCN330
+open RCN002 RCN344
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 5000000
@@ -40,19 +40,31 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
+variable {stageErrorCap : ℕ}
 variable {tightSupport : ResidualSupportParameters}
+/- The general path keeps the supplied support; the legacy widening API below
+   remains available with its original three cap hypotheses. -/
+def loosenStageGeneral
+   (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w tightSupport) :
+   Stage K I Gamma x p flag stageErrorCap tightSupport := S
+theorem loosenStageGeneral_one_le_localMultiplicity
+   (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w tightSupport)
+   (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1)) :
+   ∀ C, 1 ≤ localMultiplicity (loosenStageGeneral S)
+     (canonicalLocalDVRFamily (loosenStageGeneral S) hfirstProper) C := by
+ exact one_le_localMultiplicity (loosenStageGeneral S) hfirstProper
 def loosenStage
-   (S : ResidualStage (polynomialEmbedding K) Gamma x p errors flag w tightSupport)
+   (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w tightSupport)
    (hs : tightSupport.s ≤ fixedSupport.s)
    (hys : tightSupport.ys ≤ fixedSupport.ys)
    (htotal : tightSupport.total ≤ fixedSupport.total) :
-   Stage K I Gamma x p flag :=
+   Stage K I Gamma x p flag stageErrorCap fixedSupport :=
  { S with
    surface_s_weight := S.surface_s_weight.trans hs
    surface_ys_weight := S.surface_ys_weight.trans hys
    surface_total_weight := S.surface_total_weight.trans htotal }
 theorem loosenStage_one_le_localMultiplicity
-   (S : ResidualStage (polynomialEmbedding K) Gamma x p errors flag w tightSupport)
+   (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w tightSupport)
    (hs : tightSupport.s ≤ fixedSupport.s)
    (hys : tightSupport.ys ≤ fixedSupport.ys)
    (htotal : tightSupport.total ≤ fixedSupport.total)
@@ -61,7 +73,7 @@ theorem loosenStage_one_le_localMultiplicity
      (canonicalLocalDVRFamily (loosenStage S hs hys htotal) hfirstProper) C := by
  exact one_le_localMultiplicity (loosenStage S hs hys htotal) hfirstProper
 theorem laterTail_in_reduced_delay_secondFlag
-   (S : ResidualStage (polynomialEmbedding K) Gamma x p errors flag w tightSupport)
+   (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w tightSupport)
    (C : FirstTailComponent S) (delay : ℕ) (hdelay : 1 ≤ delay) :
    PolynomialInFlagMod C.1
      (delay • reducedResidualAgreementFlag tightSupport (w + 2))
@@ -129,7 +141,7 @@ theorem laterTail_in_reduced_delay_secondFlag
      (regularitySurface (polynomialEmbedding K) S.F) C)
 theorem loosenStage_dichotomy_with_tangent
    {tailFlag1 : FlagDegree}
-   (S : ResidualStage (polynomialEmbedding K) Gamma x p errors flag w tightSupport)
+   (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w tightSupport)
    (hs : tightSupport.s ≤ fixedSupport.s)
    (hys : tightSupport.ys ≤ fixedSupport.ys)
    (htotal : tightSupport.total ≤ fixedSupport.total)
@@ -144,7 +156,7 @@ theorem loosenStage_dichotomy_with_tangent
        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
        (regularitySurface (polynomialEmbedding K) S.F) Gamma
        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
-         (errors + 1) * B.yzCost C) :
+         (stageErrorCap + 1) * B.yzCost C) :
    ∀ C : FirstTailComponent S,
      (∃ delay, 1 ≤ delay ∧
        delay ≤ localMultiplicity (loosenStage S hs hys htotal)
@@ -156,7 +168,7 @@ theorem loosenStage_dichotomy_with_tangent
          (globalTailCut (polynomialEmbedding K) S.F (w + 1))
          (regularitySurface (polynomialEmbedding K) S.F) Gamma
          (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
-           (errors + 1) * B.yzCost C) := by
+           (stageErrorCap + 1) * B.yzCost C) := by
  intro C
  have dichotomy := local_order_tail_dichotomy (loosenStage S hs hys htotal)
    (canonicalLocalDVRFamily (loosenStage S hs hys htotal) hfirstProper)
@@ -166,7 +178,7 @@ theorem loosenStage_dichotomy_with_tangent
  · exact Or.inr ⟨hall, htangent C hall⟩
 structure ReducedActiveGeometry
    {a b s : ℕ}
-   (S : ResidualStage (polynomialEmbedding K) Gamma x p errors flag w
+   (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
      (support a b s)) where
  base : ∀ C : RegularComponent (GenericField K) S.G
      (reducedGlobalTailCut (polynomialEmbedding K) (support a b s) S.F (w + 1))
@@ -183,10 +195,10 @@ structure ReducedActiveGeometry
      (reducedGlobalTailCut (polynomialEmbedding K) (support a b s) S.F (w + 1))
      (regularitySurface (polynomialEmbedding K) S.F), LiteralProjectionGate C 2
  data : AdaptiveNestedProjectionDataActive base hactive
-   (ContactTerminalAdaptiveProjection6656Research.residualStage_pderiv_one_ne_zero_of_support S)
+   (RCN315.residualStage_pderiv_one_ne_zero_of_support S)
 theorem exists_reducedActiveGeometry
    {a b s : ℕ}
-   (S : ResidualStage (polynomialEmbedding K) Gamma x p errors flag w
+   (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
      (support a b s))
    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
    (hflagChar : flag.yz + flag.all < p ∧ flag.all < p ∧
@@ -199,7 +211,7 @@ theorem exists_reducedActiveGeometry
  exact ⟨⟨base, hactive, hZ, D⟩⟩
 noncomputable def reducedActiveGeometry
    {a b s : ℕ}
-   (S : ResidualStage (polynomialEmbedding K) Gamma x p errors flag w
+   (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
      (support a b s))
    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
    (hflagChar : flag.yz + flag.all < p ∧ flag.all < p ∧
@@ -208,5 +220,40 @@ noncomputable def reducedActiveGeometry
      (flag.yz + flag.all) * ((2 * (s + 2) - 2) * (w + 1)) < p) :
    ReducedActiveGeometry S :=
  Classical.choice (exists_reducedActiveGeometry S hfirstProper hflagChar hmixed)
+theorem loosenStageGeneral_dichotomy_with_tangent
+   {tailFlag1 : FlagDegree}
+   (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w tightSupport)
+   (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
+   (B : PrimeFlagBudgetFamily
+     (G := S.G) (T := globalTailCut (polynomialEmbedding K) S.F (w + 1))
+     (H := regularitySurface (polynomialEmbedding K) S.F) flag tailFlag1)
+   (htangent : ∀ C : FirstTailComponent S,
+     (∀ delay, globalTailCut (polynomialEmbedding K) S.F
+       (w + 1 + delay) ∈ C.1) →
+     (componentSeeds (GenericField K) S.G
+       (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+       (regularitySurface (polynomialEmbedding K) S.F) Gamma
+       (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+         (stageErrorCap + 1) * B.yzCost C) :
+   ∀ C : FirstTailComponent S,
+     (∃ delay, 1 ≤ delay ∧
+       delay ≤ localMultiplicity (loosenStageGeneral S)
+         (canonicalLocalDVRFamily (loosenStageGeneral S) hfirstProper) C ∧
+       globalTailCut (polynomialEmbedding K) S.F (w + 1 + delay) ∉ C.1) ∨
+     ((∀ delay, globalTailCut (polynomialEmbedding K) S.F
+         (w + 1 + delay) ∈ C.1) ∧
+       (componentSeeds (GenericField K) S.G
+         (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+         (regularitySurface (polynomialEmbedding K) S.F) Gamma
+         (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+           (stageErrorCap + 1) * B.yzCost C) := by
+ intro C
+ have dichotomy := local_order_tail_dichotomy (loosenStageGeneral S)
+   (canonicalLocalDVRFamily (loosenStageGeneral S) hfirstProper)
+   C hfirstProper
+ rcases dichotomy.2 with hproper | hall
+ · exact Or.inl hproper
+ · exact Or.inr ⟨hall, htangent C hall⟩
+
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailReducedProvider6734Research
+end ProximityPrize.SubmissionLower.RCN334

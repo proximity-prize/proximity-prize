@@ -1,13 +1,13 @@
 import ProximityPrize.SubmissionLower.GX
 import ProximityPrize.SubmissionLower.P7
-namespace ProximityPrize.SubmissionLower.ContactDelayedTailMultiplicityProvider6732Research
+namespace ProximityPrize.SubmissionLower.RCN074
 open scoped Classical BigOperators
-open ContactIdentityResidualIterationResearch ContactGenericSurface
-open ContactPrimeSeedIncidence ContactRegularComponentCover
-open ContactProperCutSeedCount
-open ContactFirstTailCertificate6731Research
-open ContactFlagBezout6543Research ContactPrimeFlagBudgetFamilyResearch
-open ContactTwoTailMultiplicityAggregation6732Research
+open RCN159 RCN136
+open RCN238 RCN264
+open RCN243
+open RCN086
+open RCN095 RCN237
+open RCN325
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -15,7 +15,7 @@ variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
 variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
 variable {pchar errors w:ℕ} [CharP Omega pchar]
 variable {flag tailFlag1 tailFlag2:FlagDegree}
-variable {support:ContactResidualSupportParametersResearch.ResidualSupportParameters}
+variable {support:RCN275.ResidualSupportParameters}
 abbrev FirstTailComponent
    (S:ResidualStage phi Gamma x pchar errors flag w support):=
  RegularComponent Omega S.G (globalTailCut phi S.F (w+1))
@@ -81,4 +81,4 @@ theorem stage_card_le_flagMixed
      Finset.sum_le_sum (fun C _↦P.cost_le C)
    _ ≤ flagMixed flag tailFlag1 tailFlag2:=P.divisor_le
 end
-end ProximityPrize.SubmissionLower.ContactDelayedTailMultiplicityProvider6732Research
+end ProximityPrize.SubmissionLower.RCN074

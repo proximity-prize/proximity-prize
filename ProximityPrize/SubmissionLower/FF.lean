@@ -4,14 +4,14 @@ import ProximityPrize.SubmissionLower.Y3
 import ProximityPrize.SubmissionLower.CH
 import ProximityPrize.SubmissionLower.E
 import ProximityPrize.SubmissionLower.FM
-namespace ProximityPrize.SubmissionLower.ContactOriginalFactorLocalDVR6731Research
-open ContactTaylorNumerators ContactDifferentialRing
-open ContactGenericSurface
-open ContactBaseIdealAlgebra6676Research
-open ContactLocalizationDerivation6731Research
-open ContactRegularQuotient6731Research
-open ContactLocalHypersurfaceBridge6731Research
-open ContactPolynomialRegularLocalCompat6732Research
+namespace ProximityPrize.SubmissionLower.RCN218
+open RCN313 RCN077
+open RCN136
+open RCN055
+open RCN188
+open RCN270
+open RCN186
+open RCN230
 open IsLocalRing
 variable {K:Type*} [Field K]
 abbrev Poly:=MvPolynomial (Fin 4) K
@@ -189,7 +189,7 @@ theorem factorLocal_isDiscreteValuationRing
    exact_mod_cast quotientPrime_height_eq_one F p hFp hheight hH
  letI:IsRegularLocalRing (FactorLocal F p hFp):=
    factorLocal_isRegularLocalRing F p hFp hheight hH hdim
- exact ContactTwoTailDVRExact6731Research.isDiscreteValuationRing_of_isRegularLocalRing_of_dimension_one hdim
+ exact RCN324.isDiscreteValuationRing_of_isRegularLocalRing_of_dimension_one hdim
 private theorem baseDerivation_self (F:Poly (K:=K)):baseDerivation F F=0:=by
  rw [baseDerivation_apply]
  unfold polyG polyH
@@ -223,7 +223,7 @@ theorem factorLocalDerivation_mk
      algebraMap (Poly (K:=K) ⧸ factorIdeal F) (FactorLocal F p hFp)
        (Ideal.Quotient.mk (factorIdeal F) (baseDerivation F P)):=by
  rw [factorLocalDerivation,localizationDerivation_algebraMap]
- have hq:=ContactDifferentialRing.quotientDerivation_mk
+ have hq:=RCN077.quotientDerivation_mk
    (K:=K) (A:=Poly (K:=K)) (baseDerivation F) (factorIdeal F)
      (baseDerivation_stable_factor F) P
  exact congrArg
@@ -267,4 +267,4 @@ theorem factorLocal_image_isUnit_of_not_mem
      (Ideal.Quotient.mk (factorIdeal F)):=hmem
  rw [quotientPrime_comap_quotientMk (factorIdeal F) p hFp] at hmem'
  exact hmem'
-end ProximityPrize.SubmissionLower.ContactOriginalFactorLocalDVR6731Research
+end ProximityPrize.SubmissionLower.RCN218

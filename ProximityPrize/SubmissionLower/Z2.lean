@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BE
-namespace ProximityPrize.SubmissionLower.ContactFlagSymbolicTrapezoidResearch
-open ContactFlagBezout6543Research
+namespace ProximityPrize.SubmissionLower.RCN121
+open RCN095
 theorem flagMixed_projection_decomposition
    (p q r:FlagDegree):
    flagMixed p q r=
@@ -92,4 +92,4 @@ theorem z_flag_trapezoid_budget
        simp [flagMixed,unitZFlag]
        ring
      rw [hsum,Nat.add_sub_cancel_left]
-end ProximityPrize.SubmissionLower.ContactFlagSymbolicTrapezoidResearch
+end ProximityPrize.SubmissionLower.RCN121

@@ -1,11 +1,11 @@
 import ProximityPrize.SubmissionLower.C5
 import ProximityPrize.SubmissionLower.Z2
-namespace ProximityPrize.SubmissionLower.ContactFlagPlaneResultantBounds6733Research
-open ContactFlagBezout6543Research ContactFlagTriangularProjectionResearch
-open ContactFlagAffineFamilyDegree6543Research ContactFlagTrapezoidCaps6543Research
-open ContactFlagSymbolicTrapezoidResearch ContactFlagPlaneFiberSurface6733Research
-open ActualPlaneJointProjection ActualPlaneCoordinateKernel
-open ContactRegularComponentCover
+namespace ProximityPrize.SubmissionLower.RCN112
+open RCN095 RCN125
+open RCN093 RCN123
+open RCN121 RCN103
+open RCN012 RCN011
+open RCN264
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -25,7 +25,7 @@ theorem flagPlaneResultant_ne
      (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (order 0))))
    (hpositive:0 < (planeMap Omega order (flagAlgHom lam mu nu G)).natDegree):
    flagPlaneResultant lam mu nu order G T≠0:=by
- exact PlaneResultantIrreducible.irreducible_resultant_ne_zero_of_not_dvd
+ exact RCN362.irreducible_resultant_ne_zero_of_not_dvd
    (planeMap Omega order (flagAlgHom lam mu nu G))
    (planeMap Omega order (flagAlgHom lam mu nu T))
    (transformedSurface_irreducible lam mu nu order hG C ht) hpositive
@@ -86,4 +86,4 @@ theorem flagPlaneResultant_v_degree_le
    (flag_ne_zero lam mu nu hTne) gCaps.vOuter tCaps.vOuter
    gCaps.vTotal tCaps.vTotal (v_flag_trapezoid_budget surfaceFlag tailFlag)
 end
-end ProximityPrize.SubmissionLower.ContactFlagPlaneResultantBounds6733Research
+end ProximityPrize.SubmissionLower.RCN112

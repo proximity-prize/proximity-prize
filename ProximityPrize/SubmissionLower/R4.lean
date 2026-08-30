@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R3
-namespace ProximityPrize.SubmissionLower.DifferentialTaylorHom
-open DifferentialTaylorCoefficients
+namespace ProximityPrize.SubmissionLower.RCN348
+open RCN347
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
 section TaylorMap
@@ -160,4 +160,4 @@ theorem polynomial_relation_of_taylor_substitution
  rw [hrelation,map_zero] at hF
  exact hF.symm
 end PolynomialRelation
-end ProximityPrize.SubmissionLower.DifferentialTaylorHom
+end ProximityPrize.SubmissionLower.RCN348

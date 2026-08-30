@@ -3,16 +3,16 @@ import ProximityPrize.SubmissionLower.BR
 import ProximityPrize.SubmissionLower.Z2
 import ProximityPrize.SubmissionLower.D5
 import ProximityPrize.SubmissionLower.E8
-namespace ProximityPrize.SubmissionLower.ContactPrimeFlagBudgetFamilyResearch
+namespace ProximityPrize.SubmissionLower.RCN237
 open scoped Classical BigOperators
-open ContactRegularComponentCover
-open ContactFlagBezout6543Research
-open ContactFlagSymbolicTrapezoidResearch
-open ContactIdentityResidualZeroBudgetTransportResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactNearPencil6600ArithmeticResearch
-open ContactNearPencil6600FlagResearch
-open ContactResidualSupportParametersResearch
+open RCN264
+open RCN095
+open RCN121
+open RCN165
+open RCN156
+open RCN213
+open RCN215
+open RCN275
 noncomputable section
 variable {Omega:Type} [Field Omega]
 variable {G T H:MvPolynomial (Fin 3) Omega}
@@ -140,4 +140,4 @@ theorem flagMixed_residualAgreement_all
  simp [flagMixed,unitYZFlag,unitAllFlag,agreementDirection6600]
  ring
 end
-end ProximityPrize.SubmissionLower.ContactPrimeFlagBudgetFamilyResearch
+end ProximityPrize.SubmissionLower.RCN237

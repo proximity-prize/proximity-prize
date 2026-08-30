@@ -1,46 +1,46 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AF
 import ProximityPrize.SubmissionLower.FR
-namespace ProximityPrize.SubmissionLower.ContactSharpTaylorYZFactorProviderResearch
+namespace ProximityPrize.SubmissionLower.RCN288
 open scoped Classical BigOperators
 open Polynomial KaehlerDifferential
-open ActualCurveCoordinateField ActualCurveRationalProjection
-open ActualCurveJointProjectionBounds ActualCoordinateDegreeSum
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactRegularComponentCover
-open ContactProperCutSeedCount ContactComponentPencils ContactIncidence
-open ContactFlagBezout6543Research
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualCurveIterationResearch
-open ContactIdentityResidualCurveIterationResearch.CurveResidualStage
-open ContactIdentityResidualCurveTerminalIncidenceResearch
-open ContactIdentityResidualComponentFamily6600Research
-open ContactIdentityResidualComponentFamilyYZSupportResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactIdentityResidualIncidenceResearch
-open ContactIdentityResidualZeroBudgetTransportResearch
-open ContactIdentityResidualFactorProvider6600Research
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactResidualSupportParametersResearch
-open ContactRobustFixedMeet6656Research
-open ContactSharpTaylorFixedMeet6656Research
-open ContactProfileYZFactorLedgerResearch
-open ContactTerminalAdaptiveProjectionFixedMeetActive6656Research
-open ContactNearPencilStratifiedIncidenceResearch
-open ContactNearPencil6600ArithmeticResearch
-open ContactResidualSparseComponentAdapterResearch
-open ContactStratifiedResidualComponentAdapter6600Research
-open ContactAdaptiveUnitPoleFamilyResearch
-open ContactRegularComponentYZPositivity6630Research
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedProjectionActive6630Research
-open ContactAdaptiveNestedUnitFamilyActive6630Research
-open ContactAdaptiveNestedYZFamily6630Research
-open ContactWeakSeparableSeparatorResearch
-open ContactScalarCoordinateSeparator6630Research
-open ContactResidualStageDerivative6600Research
-open ContactTerminalAdaptiveProjection6656Research
+open RCN002 RCN005
+open RCN003 RCN001
+open RCN136 RCN231 RCN319
+open RCN238 RCN264
+open RCN243 RCN065 RCN173
+open RCN095
+open RCN159
+open RCN151
+open RCN151.CurveResidualStage
+open RCN152
+open RCN148
+open RCN150
+open RCN156
+open RCN158
+open RCN165
+open RCN154
+open RCN237
+open RCN234
+open RCN275
+open RCN276
+open RCN287
+open RCN240
+open RCN316
+open RCN216
+open RCN213
+open RCN272
+open RCN305
+open RCN046
+open RCN265
+open RCN037
+open RCN038
+open RCN040
+open RCN041
+open RCN341
+open RCN277
+open RCN274
+open RCN315
 noncomputable section
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 50000
@@ -442,10 +442,10 @@ theorem terminalAdaptiveProjectionFamiliesSharpYZ_of_active_yz_caps
      D.degree (fun j:ℕ↦(j.factorial:K)⁻¹)
      (x i) (D.stage.u0 i) (D.stage.u1 i)
  obtain ⟨hGY,hGS,hGZ⟩:=
-   ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag
+   RCN314.degree_bounds_of_polynomialInFlag
      hGflag
  obtain ⟨hTY,hTS,_hTZ⟩:=
-   ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag
+   RCN314.degree_bounds_of_polynomialInFlag
      hTflag
  have hD:D.degree ≤ w:=D.degree_le
  have hGY':D.stage.G.degreeOf 0 ≤ surfaceY:=hGY.trans hflagY
@@ -664,4 +664,4 @@ theorem recursive_scaled_factorSharpYZ_of_adaptive_projection_families
  · intro k hk
    simpa only [hnodes] using hunitGlobal k hk
 end
-end ProximityPrize.SubmissionLower.ContactSharpTaylorYZFactorProviderResearch
+end ProximityPrize.SubmissionLower.RCN288

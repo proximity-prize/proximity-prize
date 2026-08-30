@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.CF
-namespace ProximityPrize.SubmissionLower.ContactSylvesterModMax6733Research
+namespace ProximityPrize.SubmissionLower.RCN308
 open scoped Classical
-open ContactSylvesterCokernelQuotient6732Research
-open ContactSylvesterPrimaryDirect6733Research
+open RCN307
+open RCN309
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -117,11 +117,11 @@ theorem sum_multiplicities_le_ord_resultant_of_primary_pieces_modMax
      simpa using hcomp.symm
    exact (smul_eq_zero.mp hscalar).resolve_left hresultant
  have hbound:=
-   ContactMatrixCokernelOrder6732Research.sum_multiplicities_le_ord_toMatrix_det_of_surjective
+   RCN196.sum_multiplicities_le_ord_toMatrix_det_of_surjective
      (Polynomial.degreeLT.basisProd R m n)
      (Polynomial.degreeLT.basis R (m+n)) f hinj
      (fun j↦Polynomial R ⧸ pieces j) multiplicity hlength
-     (ContactSylvesterPrimaryDirect6733Research.cokerToPieces
+     (RCN309.cokerToPieces
        P Q m n hPcap hQcap pieces hcontains)
      (cokerToPieces_surjective_of_modMax P Q m n hPcap hQcap
        pieces hcontains hmod)
@@ -144,4 +144,4 @@ theorem sum_multiplicities_le_ord_resultant_of_primary_pieces_modMax
      unfold Polynomial.resultant
      convert! rfl
 end
-end ProximityPrize.SubmissionLower.ContactSylvesterModMax6733Research
+end ProximityPrize.SubmissionLower.RCN308

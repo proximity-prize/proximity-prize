@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y8
-namespace ProximityPrize.SubmissionLower.ContactFlagDirectionalAvoidance6543Research
+namespace ProximityPrize.SubmissionLower.RCN096
 open scoped Classical BigOperators WithZero TensorProduct
 open Polynomial KaehlerDifferential IsDedekindDomain
-open ArbitraryRationalProjectionResearch GlobalSeparableShearResearch
-open CoordinateBoxZeroCount ContactSparsePoleSupportResearch
-open ContactDependentGenericity6543Research
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveZeroCount
-open ContactRegularComponentCover
-open ContactFlagAffineFamilyDegree6543Research
-open ContactFlagExactSeparableProjection6543Research
+open RCN022 RCN351
+open RCN344 RCN295
+open RCN075
+open RCN002 RCN005 RCN007
+open RCN264
+open RCN093
+open RCN097
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
@@ -45,7 +45,7 @@ variable {I:Type*} [Fintype I]
 variable (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 variable (r z:∀ i,E i)
 variable (W:∀ i,
- Finset (CoordinatePlaceClassification.NormalizedValuation K (E i)))
+ Finset (RCN345.NormalizedValuation K (E i)))
 theorem exists_common_exact_finite_separable_shear_avoiding
    {J:Type*} [Finite J]
    (Extra:J → K → Prop)
@@ -75,7 +75,7 @@ theorem exists_common_exact_finite_separable_shear_avoiding
    intro i
    have h:=parameterDifferential_ne_zero_of_isSeparable
      K (E i) (embeddingZ i) (hfiniteZ i) (hsepZ i)
-   unfold SeparableShearKaehlerResearch.parameterDifferential at h
+   unfold RCN369.parameterDifferential at h
    rwa [hvalueZ i] at h
  let Q:=J ⊕ (I ⊕ Σ i:I,{v//v∈W i})
  let Bad:Q → K → Prop
@@ -132,7 +132,7 @@ theorem exists_nestedFlagProjectionData_directional
  let rY:∀ C,E C:=fun C↦coordinate Omega C.1 0
  let z:∀ C,E C:=fun C↦coordinate Omega C.1 2
  let W:∀ C,Finset
-     (CoordinatePlaceClassification.NormalizedValuation Omega (E C)):=
+     (RCN345.NormalizedValuation Omega (E C)):=
    fun C↦componentRelevantPlaces hseparator hproj C
  let embeddingZ:∀ C,RatFunc Omega →ₐ[Omega] E C:=
    fun C↦rationalBaseEmbedding Omega C.1 2 (hseparator C)
@@ -233,4 +233,4 @@ theorem exists_nestedFlagProjectionData_directional
  exact hmudir PUnit.unit
 end RegularComponents
 end
-end ProximityPrize.SubmissionLower.ContactFlagDirectionalAvoidance6543Research
+end ProximityPrize.SubmissionLower.RCN096

@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AV
 import ProximityPrize.SubmissionLower.AY
-namespace ProximityPrize.SubmissionLower.ActualCurveJointProjectionBounds
-open ActualCurveCoordinateField ActualCurveRationalProjection
- TrivariateRationalCollection ActualPlaneCoordinateKernel
- ActualPlaneCoordinateCaps ActualPlanePositiveOrder ActualPlaneCoordinateDegree
- ActualCurveProjectionBounds ActualCurveZeroCount ActualCoordinateDegreeSum
-open ActualPlaneJointProjection
+namespace ProximityPrize.SubmissionLower.RCN003
+open RCN002 RCN005
+ RCN371 RCN011
+ RCN009 RCN013 RCN010
+ RCN004 RCN007 RCN001
+open RCN012
 noncomputable section
 variable (K:Type) [Field K]
 def JointOrderCertificate (order:Fin 3 ≃ Fin 3)
@@ -349,4 +349,4 @@ theorem sum_actualCoordinateDegree_at_le_of_joint_R_provider
  · exact sum_actualCoordinateDegree_at_le K P hinj 2 p G H hG hGmem hHmem
      hproper hdegree hmixedZ
 end
-end ProximityPrize.SubmissionLower.ActualCurveJointProjectionBounds
+end ProximityPrize.SubmissionLower.RCN003

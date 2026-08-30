@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BM
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualPolynomialResearch
+namespace ProximityPrize.SubmissionLower.RCN161
 noncomputable section
 open scoped Function
 set_option maxHeartbeats 2000000
@@ -149,4 +149,4 @@ theorem exists_basefield_affine_nodal_residual
    Lagrange.nodal I (fun i↦coefficients (x i))*C at hC
  linear_combination hC
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualPolynomialResearch
+end ProximityPrize.SubmissionLower.RCN161

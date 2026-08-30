@@ -1,16 +1,16 @@
 import ProximityPrize.SubmissionLower.N
-namespace ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedFiber6733Research
+namespace ProximityPrize.SubmissionLower.RCN106
 open scoped Classical BigOperators
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
-open ActualCurveCoordinateField ArbitraryRationalProjectionResearch
-open ContactRegularComponentCover
-open ContactFlagTriangularProjectionResearch ContactFlagAffineFamilyDegree6543Research
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ContactFlagPlaneFiberPrimary6733Research
-open ActualPlaneRelationMaximal6732Research
-open ContactPlaneRelationCoefficientFiber6733Research
-open ContactPlaneLocalOrderPrimary6732Research
-open ContactLocalizedPlaneRelation6733Research
+open RCN011 RCN021
+open RCN002 RCN022
+open RCN264
+open RCN125 RCN093
+open RCN120
+open RCN102
+open RCN014
+open RCN226
+open RCN225
+open RCN191
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2500000
@@ -146,4 +146,4 @@ theorem indexedFiberRelation_pairwise_coprime
      (fun heq => hab (indexedFiberRelation_injective
        component hcomponent lam mu nu order ht q hq heq))
 end
-end ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedFiber6733Research
+end ProximityPrize.SubmissionLower.RCN106

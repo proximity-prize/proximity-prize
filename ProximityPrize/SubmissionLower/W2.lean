@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X8
-namespace ProximityPrize.SubmissionLower.MatrixRootMultiplicity
+namespace ProximityPrize.SubmissionLower.RCN355
 open scoped BigOperators
 noncomputable section
 variable {K:Type*} [Field K] [DecidableEq K]
@@ -153,4 +153,4 @@ theorem sum_sylvester_coranks_le_bidegree_bound
  exact Nat.le_trans
    (sum_sylvester_coranks_le_resultant_natDegree P Q m n points hresultant) hdegree
 end
-end ProximityPrize.SubmissionLower.MatrixRootMultiplicity
+end ProximityPrize.SubmissionLower.RCN355

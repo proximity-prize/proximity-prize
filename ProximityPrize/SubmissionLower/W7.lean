@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G6
 import ProximityPrize.SubmissionLower.G4
-namespace ProximityPrize.SubmissionLower.PlaneSmallCharacteristicDegree
-open PlaneFunctionFieldDegree
+namespace ProximityPrize.SubmissionLower.RCN365
+open RCN361
 noncomputable section
 section SingleField
 variable (K E:Type) [Field K] [Field E] [Algebra K E]
@@ -30,12 +30,12 @@ theorem finite_separable_finrank_le_planar_bound
      (Polynomial.eval₂RingHom (algebraMap K E) y) r Q=0:=by
    rw [←planeEval_eq_eval₂]
    exact hQ
- have hfields:=PlaneRootSeparability.finite_separable_of_proper_plane_roots
+ have hfields:=RCN364.finite_separable_of_proper_plane_roots
    p P Q hirreducible hpositive hproper hRdegree hresultantDegree y r hPeval hQeval hgenerate
  letI:FiniteDimensional K E:=hfields.1
  letI:Algebra.IsSeparable K E:=hfields.2
  exact ⟨hfields.1,hfields.2,
-   PlaneFunctionFieldDegree.finrank_le_planar_bound K E P Q
+   RCN361.finrank_le_planar_bound K E P Q
      hirreducible hpositive hproper y r hgenerate hP hQ⟩
 end SingleField
 section FiniteFamily
@@ -65,8 +65,8 @@ theorem finite_separable_sum_finrank_le_planar_bound
  letI:∀ i,FiniteDimensional K (E i):=fun i => (hfields i).1
  letI:∀ i,Algebra.IsSeparable K (E i):=fun i => (hfields i).2
  exact ⟨hfields,
-   PlaneFunctionFieldDegree.sum_finrank_le_planar_bound K E P Q
+   RCN361.sum_finrank_le_planar_bound K E P Q
      hirreducible hpositive hproper y r hgenerate hkernels hP hQ⟩
 end FiniteFamily
 end
-end ProximityPrize.SubmissionLower.PlaneSmallCharacteristicDegree
+end ProximityPrize.SubmissionLower.RCN365

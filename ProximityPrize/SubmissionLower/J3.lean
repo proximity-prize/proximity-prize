@@ -1,15 +1,15 @@
 import ProximityPrize.SubmissionLower.Y6
 import ProximityPrize.SubmissionLower.M7
-namespace ProximityPrize.SubmissionLower.ContactFirstTailBudget6731Research
+namespace ProximityPrize.SubmissionLower.RCN085
 open scoped Classical BigOperators
-open ContactGenericSurface ContactTaylorNumerators ContactPrimeSeedIncidence
-open ContactProperCutSeedCount ContactRegularComponentCover
-open ContactWeakSeparableSeparatorResearch ContactAdaptiveUnitPoleFamilyResearch
-open ContactFlagBezout6543Research ContactMovingCurveBudget6719Research
-open ContactMovingCurveFamily6719Research ContactMovingProjection6676Research
-open ContactMovingAgreementCertificate6719Research ContactMovingOuterBudget6719Research
-open ContactMovingDerivativeFlags6719Research ContactResidualSupportParametersResearch
-open ContactSharpTaylorFixedMeet6656Research ContactFirstTailCertificate6731Research
+open RCN136 RCN313 RCN238
+open RCN243 RCN264
+open RCN341 RCN046
+open RCN095 RCN199
+open RCN200 RCN207
+open RCN198 RCN203
+open RCN201 RCN275
+open RCN287 RCN086
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 50000
@@ -36,8 +36,8 @@ theorem exists_firstTail_cut_budgets
      (∑ C,(budget C).yzCost) ≤ flagMixed flag (paddedCut a b s (w+1)) unitYZFlag∧
      (∑ C,(budget C).allCost) ≤ flagMixed flag (paddedCut a b s (w+1)) unitAllFlag∧
      (∑ C,(budget C).movingCost) ≤ flagMixed flag
-       (ContactMovingPositiveLedger6719Research.fiberFlag a b s)
-       (center a b s+(w+1) • ContactMovingPositiveLedger6719Research.surfaceFlag a b s):=by
+       (RCN206.fiberFlag a b s)
+       (center a b s+(w+1) • RCN206.surfaceFlag a b s):=by
  classical
  obtain ⟨coeffs,cflags,heq,hcoeff,hclass⟩:=globalTailCut_certificate
    φ a b s F hF.coordinate_bounds.2.1 hF.ys_weight hF.total_weight w hw
@@ -45,8 +45,8 @@ theorem exists_firstTail_cut_budgets
    φ a b s F hF.coordinate_bounds.2.1 hF.ys_weight hF.total_weight
  have hderiv:regularitySurface φ F∈
      Ideal.span ({G,MvPolynomial.pderiv (1:Fin 3) G}:Set (MvPolynomial (Fin 3) Ω)):=by
-   rw [regularitySurface, ←ContactRegularFactorGate.surfaceMap_pderiv_R]
-   exact ContactDerivativeRegularity6719Research.pderiv_mem_span_of_dvd G (surfaceMap φ F) hdiv
+   rw [regularitySurface, ←RCN267.surfaceMap_pderiv_R]
+   exact RCN076.pderiv_mem_span_of_dvd G (surfaceMap φ F) hdiv
  have hT':T=filteredCut w coeffs (surfaceMap φ (polyH K F))
      (surfaceMap φ (polyG K F)):=hT.trans heq
  clear hT
@@ -62,4 +62,4 @@ theorem exists_firstTail_cut_budgets
  rw [mixed_affine_third,mixed_affine_third]
  exact Nat.add_le_add_left (Nat.mul_le_mul_right _ (Nat.le_succ w)) _
 end
-end ProximityPrize.SubmissionLower.ContactFirstTailBudget6731Research
+end ProximityPrize.SubmissionLower.RCN085

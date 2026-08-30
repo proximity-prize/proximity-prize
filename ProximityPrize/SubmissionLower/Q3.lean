@@ -1,10 +1,10 @@
 import ProximityPrize.SubmissionLower.B1
 import ProximityPrize.SubmissionLower.AM
-namespace ProximityPrize.SubmissionLower.ContactTwoTailReducedTransport6734Research
+namespace ProximityPrize.SubmissionLower.RCN336
 open scoped Classical BigOperators
-open ContactRegularComponentCover ContactFlagBezout6543Research
-open ContactPrimeFlagBudgetFamilyResearch ContactCongruentCuts6643Research
-open ContactTwoTailResultantProvider6732Research
+open RCN264 RCN095
+open RCN237 RCN066
+open RCN338
 noncomputable section
 set_option autoImplicit false
 variable {Omega Seed : Type} [Field Omega]
@@ -35,7 +35,7 @@ theorem component_secondTail_card_le_mod
    obtain ⟨gamma,hgamma,rfl⟩ := Finset.mem_image.mp hv
    exact hzero gamma hgamma
  have hbound :=
-   ContactCongruentCuts6643Research.PrimeFlagZeroBudget.zero_le_congr
+   RCN066.PrimeFlagZeroBudget.zero_le_congr
      (B.primeBudget C) secondTailFlag T2 hT2flag hproper
      points hpointsPrime hpointsZero
  have hcard : points.card = component.card :=
@@ -75,4 +75,4 @@ theorem weightedCertificate_of_congruentCut
    simpa only [PrimeFlagBudgetFamily.ofCongruentCut,
      Equiv.symm_apply_apply] using hall
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailReducedTransport6734Research
+end ProximityPrize.SubmissionLower.RCN336

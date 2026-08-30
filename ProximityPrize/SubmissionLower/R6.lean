@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.GeometricFactorContraction
+namespace ProximityPrize.SubmissionLower.RCN350
 noncomputable section
 section FlatPrincipal
 variable {A B:Type*} [CommRing A] [IsDomain A]
@@ -95,4 +95,4 @@ theorem geometric_factor_not_dvd_of_original_not_dvd
  exact hnot (original_dvd_of_geometric_factor_dvd F M hF g hg hdivF hdivM)
 end CoefficientExtension
 end
-end ProximityPrize.SubmissionLower.GeometricFactorContraction
+end ProximityPrize.SubmissionLower.RCN350

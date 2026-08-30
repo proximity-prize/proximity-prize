@@ -1,13 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X
-namespace ProximityPrize.SubmissionLower.ContactAdaptiveRelevantPlacesResearch
+namespace ProximityPrize.SubmissionLower.RCN044
 open scoped Classical WithZero
 open IsDedekindDomain
-open ContactLocalPoleBound
-open ActualCurveCoordinateField ActualCurveRationalProjection
- ActualCurveScalarTowers
-open CoordinateBoxZeroCount
-open ContactWeakSeparableSeparatorResearch
+open RCN187
+open RCN002 RCN005
+ RCN006
+open RCN344
+open RCN341
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
@@ -34,7 +34,7 @@ def literalRelevantPlaces
  letI:Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega P):=D.separable
  exact Finset.univ.biUnion (fun i:Fin 3 =>
    if hi:coordinate Omega P i≠0 then
-     CommonPlaceBalance.placesFor Omega (CoordinateField Omega P)
+     RCN026.placesFor Omega (CoordinateField Omega P)
        (coordinate Omega P i) hi
    else ∅)
 theorem coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant
@@ -61,22 +61,22 @@ theorem coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant
  letI:Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega P):=D.separable
  by_cases hi:coordinate Omega P i=0
  · simp [hi,poleOrder]
- · have hnot:v∉CommonPlaceBalance.placesFor Omega
+ · have hnot:v∉RCN026.placesFor Omega
        (CoordinateField Omega P) (coordinate Omega P i) hi:=by
      intro hmem
      apply hv
      unfold literalRelevantPlaces
      apply Finset.mem_biUnion.mpr
      exact ⟨i,Finset.mem_univ _,by simp [hi,hmem]⟩
-   have horder:CommonPlaceBalance.order Omega (CoordinateField Omega P) v
+   have horder:RCN026.order Omega (CoordinateField Omega P) v
        (coordinate Omega P i)=0:=by
      by_contra hne
-     exact hnot (CommonPlaceBalance.placesFor_covers Omega
+     exact hnot (RCN026.placesFor_covers Omega
        (CoordinateField Omega P) (coordinate Omega P i) hi v hne)
-   unfold CommonPlaceBalance.order at horder
+   unfold RCN026.order at horder
    unfold poleOrder
    have hlog:(v.val (coordinate Omega P i)).log=0:=by omega
    rw [hlog]
    simp
 end
-end ProximityPrize.SubmissionLower.ContactAdaptiveRelevantPlacesResearch
+end ProximityPrize.SubmissionLower.RCN044

@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BB
 import ProximityPrize.SubmissionLower.Y7
-namespace ProximityPrize.SubmissionLower.ContactFlagPrincipalCycleAdapter6543Research
+namespace ProximityPrize.SubmissionLower.RCN115
 open scoped Classical BigOperators
 open IsDedekindDomain
-open ActualCurveCoordinateField ActualCurveRationalProjection
- ActualCurveScalarTowers ActualCurveZeroCount
-open CoordinateBoxZeroCount
-open ContactRegularComponentCover
-open ContactDependentGenericity6543Research
-open ContactTropicalBKKSeamResearch
-open ContactFlagProjectionProvider6543Research
-open ContactFlagAffineFamilyDegree6543Research
-open ContactFlagTriangularProjectionResearch
-open TrivariateRationalCollection ActualPlaneCoordinateKernel
- ArbitraryRationalProjectionResearch
+open RCN002 RCN005
+ RCN006 RCN007
+open RCN344
+open RCN264
+open RCN075
+open RCN323
+open RCN118
+open RCN093
+open RCN125
+open RCN371 RCN011
+ RCN022
 noncomputable section
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
 structure SeparablePrincipalProjection
@@ -32,8 +32,8 @@ structure SeparablePrincipalProjection
    let b:=MvPolynomial.eval₂Hom
      (algebraMap Omega (CoordinateField Omega C.1))
      (coordinate Omega C.1) B.polynomial
-   CoordinatePoleMass.poleOrder Omega (CoordinateField Omega C.1) v b=
-     CoordinatePoleMass.poleOrder Omega (CoordinateField Omega C.1) v
+   RCN346.poleOrder Omega (CoordinateField Omega C.1) v b=
+     RCN346.poleOrder Omega (CoordinateField Omega C.1) v
        (SeparableCoordinate.value Omega (CoordinateField Omega C.1)
          (parameter C))
 def SeparablePrincipalProjection.cost
@@ -84,12 +84,12 @@ def SeparablePrincipalProjection.toPrincipalCycleBudget
      (coordinate Omega C.1) B.polynomial
    let hb:b≠0:=coordinate_eval_ne_zero_of_not_mem
      C.1 B.polynomial (B.proper C)
-   let W:=CommonPlaceBalance.placesFor Omega
+   let W:=RCN026.placesFor Omega
      (CoordinateField Omega C.1) b hb
    calc
-     (∑ v∈W,CoordinatePoleMass.poleOrder Omega
+     (∑ v∈W,RCN346.poleOrder Omega
          (CoordinateField Omega C.1) v b)=
-         ∑ v∈W,CoordinatePoleMass.poleOrder Omega
+         ∑ v∈W,RCN346.poleOrder Omega
            (CoordinateField Omega C.1) v
            (SeparableCoordinate.value Omega (CoordinateField Omega C.1)
              (P.parameter C)):=by
@@ -182,8 +182,8 @@ def principalCycleBudget_of_flag_trapezoid
      let b:=MvPolynomial.eval₂Hom
        (algebraMap Omega (CoordinateField Omega C.1))
        (coordinate Omega C.1) B.polynomial
-     CoordinatePoleMass.poleOrder Omega (CoordinateField Omega C.1) v b=
-       CoordinatePoleMass.poleOrder Omega (CoordinateField Omega C.1) v
+     RCN346.poleOrder Omega (CoordinateField Omega C.1) v b=
+       RCN346.poleOrder Omega (CoordinateField Omega C.1) v
          (flagEvaluation Omega C.1 lam mu nu
            (MvPolynomial.X (order 0))))
    (hG:Irreducible G) (hproper:¬ G∣T)
@@ -228,4 +228,4 @@ def principalCycleBudget_of_flag_trapezoid
  intro C _
  rfl
 end
-end ProximityPrize.SubmissionLower.ContactFlagPrincipalCycleAdapter6543Research
+end ProximityPrize.SubmissionLower.RCN115

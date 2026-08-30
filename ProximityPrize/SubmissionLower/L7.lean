@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactLocalizationQuotientAdapter6732Research
+namespace ProximityPrize.SubmissionLower.RCN189
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -54,4 +54,4 @@ theorem quotient_isLocalization
      Ideal.Quotient.eq_zero_iff_mem]
    simpa only [mul_sub] using hmI
 end
-end ProximityPrize.SubmissionLower.ContactLocalizationQuotientAdapter6732Research
+end ProximityPrize.SubmissionLower.RCN189

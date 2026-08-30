@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DE
 import ProximityPrize.SubmissionLower.X4
-namespace ProximityPrize.SubmissionLower.CharacteristicFreeProjectionAdapter
+namespace ProximityPrize.SubmissionLower.RCN025
 open scoped Classical BigOperators
-open CharacteristicFreeMatrixMultiplicityResearch
+open RCN024
 noncomputable section
 section ScalarBridge
 variable {K B E:Type} [Field K] [Field B] [Field E]
@@ -68,7 +68,7 @@ theorem sum_relative_finrank_le_sylvester_corank
    (hgen:∀ i,IntermediateField.adjoin (AdjoinRoot mu)
      ({r i}:Set (E i))=⊤)
    (hkernels:Function.Injective (fun i =>
-     PlaneFunctionFieldDegree.relationIdeal K (E i)
+     RCN361.relationIdeal K (E i)
        (algebraMap (AdjoinRoot mu) (E i) (AdjoinRoot.root mu)) (r i)))
    (P Q:Polynomial (Polynomial K)) (m n:ℕ)
    (hPcap:P.natDegree ≤ m) (hQcap:Q.natDegree ≤ n)
@@ -188,10 +188,10 @@ theorem sum_finrank_le_resultant_of_relationIdeal_injective
    (hgen:∀ i,IntermediateField.adjoin K
      ({y i,r i}:Set (E i))=⊤)
    (hkernels:Function.Injective (fun i =>
-     PlaneFunctionFieldDegree.relationIdeal K (E i) (y i) (r i)))
-   (hProot:∀ i,PlaneFunctionFieldDegree.planeEval K (E i)
+     RCN361.relationIdeal K (E i) (y i) (r i)))
+   (hProot:∀ i,RCN361.planeEval K (E i)
      (y i) (r i) P=0)
-   (hQroot:∀ i,PlaneFunctionFieldDegree.planeEval K (E i)
+   (hQroot:∀ i,RCN361.planeEval K (E i)
      (y i) (r i) Q=0)
    (hPspecial:∀ f∈
      (Finset.univ.image (fun i => minpoly K (y i))),
@@ -253,7 +253,7 @@ theorem sum_finrank_le_resultant_of_relationIdeal_injective
        (y j.1) (r j.1) (hgen j.1)
          ⟨AdjoinRoot.root f,hroot j⟩
    have hkernelFiber:Function.Injective (fun j:J =>
-       PlaneFunctionFieldDegree.relationIdeal K (E j.1)
+       RCN361.relationIdeal K (E j.1)
          (algebraMap (AdjoinRoot f) (E j.1) (AdjoinRoot.root f)) (r j.1)):=by
      intro a b hab
      apply Subtype.ext
@@ -315,10 +315,10 @@ theorem sum_finrank_le_planar_bound_without_separability
    (hgen:∀ i,IntermediateField.adjoin K
      ({y i,r i}:Set (E i))=⊤)
    (hkernels:Function.Injective (fun i =>
-     PlaneFunctionFieldDegree.relationIdeal K (E i) (y i) (r i)))
-   (hProot:∀ i,PlaneFunctionFieldDegree.planeEval K (E i)
+     RCN361.relationIdeal K (E i) (y i) (r i)))
+   (hProot:∀ i,RCN361.planeEval K (E i)
      (y i) (r i) P=0)
-   (hQroot:∀ i,PlaneFunctionFieldDegree.planeEval K (E i)
+   (hQroot:∀ i,RCN361.planeEval K (E i)
      (y i) (r i) Q=0):
    (∑ i,Module.finrank K (E i)) ≤
      Q.natDegree*Polynomial.Bivariate.degreeX P+
@@ -341,14 +341,14 @@ theorem sum_finrank_le_planar_bound_without_separability
          AdjoinRoot.mk_C,AdjoinRoot.algebraMap_eq]
      · simp only [Polynomial.coe_eval₂RingHom,Polynomial.eval₂_X,
          AdjoinRoot.mk_X]
-   have h:=PlaneCoefficientExtension.bimap_specialization_ne_zero
+   have h:=RCN360.bimap_specialization_ne_zero
      (algebraMap K (AdjoinRoot (minpoly K (y i)))) P
      (hP.isPrimitive (Nat.ne_of_gt hpositive))
      (AdjoinRoot.root (minpoly K (y i)))
-   rw [PlaneCoefficientExtension.bimap_specialization,hcoeff] at h
+   rw [RCN360.bimap_specialization,hcoeff] at h
    exact h
  have hresultant:Polynomial.resultant P Q P.natDegree Q.natDegree≠0:=
-   PlaneResultantIrreducible.irreducible_resultant_ne_zero_of_not_dvd
+   RCN362.irreducible_resultant_ne_zero_of_not_dvd
      P Q hP hpositive hproper
  exact (sum_finrank_le_resultant_of_relationIdeal_injective
    (K:=K) E P Q P.natDegree Q.natDegree le_rfl le_rfl y r hgen
@@ -357,4 +357,4 @@ theorem sum_finrank_le_planar_bound_without_separability
          (F:=K) P Q P.natDegree Q.natDegree)
 end FinitePlaneFamily
 end
-end ProximityPrize.SubmissionLower.CharacteristicFreeProjectionAdapter
+end ProximityPrize.SubmissionLower.RCN025

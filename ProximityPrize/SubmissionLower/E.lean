@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactGenericSurface
+namespace ProximityPrize.SubmissionLower.RCN136
 noncomputable section
 variable {K L:Type*} [Field K] [Field L]
 def collectX (K:Type*) [Field K]:
@@ -105,4 +105,4 @@ theorem surfaceMap_joint_seed_cap (φ:Polynomial K →+*L)
  obtain ⟨d,hd,rfl⟩:=Finset.mem_image.mp (support_surfaceMap_subset φ Q he)
  exact hcap d hd
 end
-end ProximityPrize.SubmissionLower.ContactGenericSurface
+end ProximityPrize.SubmissionLower.RCN136

@@ -1,21 +1,21 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A2
 import ProximityPrize.SubmissionLower.E7
-namespace ProximityPrize.SubmissionLower.ContactAdaptiveNestedYZFamily6630Research
+namespace ProximityPrize.SubmissionLower.RCN041
 open scoped Classical
 open Polynomial KaehlerDifferential
-open ActualCurveCoordinateField ActualCurveRationalProjection
-open CoordinateBoxZeroCount ContactRegularComponentCover
-open ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveProjectionCoordinateResearch
-open ContactAdaptiveAffineProjectionResearch
-open ContactFlagAffineFamilyDegree6543Research
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedProjectionActive6630Research
-open ContactAdaptiveNestedUnitFamilyActive6630Research
-open ContactAdaptiveUnitPoleFamilyResearch
-open ContactRegularComponentYZPositivity6630Research
-open ContactFlagBezout6543Research
+open RCN002 RCN005
+open RCN344 RCN264
+open RCN341
+open RCN042
+open RCN035
+open RCN093
+open RCN037
+open RCN038
+open RCN040
+open RCN046
+open RCN265
+open RCN095
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option synthInstance.maxHeartbeats 400000
@@ -62,4 +62,4 @@ theorem exists_adaptiveUnitProjectionFamilyYZ_of_active_nested
  exact ⟨adaptiveUnitProjectionFamilyYZ_of_active_nested p q base hactive hZ
    hSderiv D hG hproper hGsupport hTsupport⟩
 end
-end ProximityPrize.SubmissionLower.ContactAdaptiveNestedYZFamily6630Research
+end ProximityPrize.SubmissionLower.RCN041

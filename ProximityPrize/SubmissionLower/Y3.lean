@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.W
-namespace ProximityPrize.SubmissionLower.ContactBaseIdealAlgebra6676Research
-open ContactDifferentialRing ContactTaylorNumerators DifferentialTaylorCoefficients
+namespace ProximityPrize.SubmissionLower.RCN055
+open RCN077 RCN313 RCN347
 noncomputable section
 section Algebra
 variable {K:Type*} [CommRing K]
@@ -145,4 +145,4 @@ theorem agreementNumerator_mem_pow (F:Poly4 K) (d:ℕ) (hd:2 ≤ d)
      (Ideal.pow_le_pow_right (by omega) (Ideal.pow_mem_pow (H_mem_baseIdeal F) (2*d)))
 end Agreement
 end
-end ProximityPrize.SubmissionLower.ContactBaseIdealAlgebra6676Research
+end ProximityPrize.SubmissionLower.RCN055

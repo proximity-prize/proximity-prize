@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I
-namespace ProximityPrize.SubmissionLower.ContactCongruentCuts6643Research
+namespace ProximityPrize.SubmissionLower.RCN066
 open scoped Classical BigOperators
-open ContactCurveComponents ContactRegularComponentCover
-open ContactFlagBezout6543Research
-open ContactResidualSparseComponentAdapterResearch
-open ContactIdentityResidualZeroBudgetTransportResearch
-open ContactPrimeFlagBudgetFamilyResearch
+open RCN072 RCN264
+open RCN095
+open RCN272
+open RCN165
+open RCN237
 noncomputable section
 variable {K : Type} [Field K]
 abbrev Poly3 := MvPolynomial (Fin 3) K
@@ -140,9 +140,9 @@ theorem PrimeFlagBudgetFamily.ofCongruentCut_z_positive
    (B : PrimeFlagBudgetFamily (G := G) (T := T') (H := H) p q)
    (i : Fin 3)
    (hpos : ∀ C,Transcendental K
-     (ActualCurveCoordinateField.coordinate K C.1 i) → 1 ≤ B.zCost C) :
+     (RCN002.coordinate K C.1 i) → 1 ≤ B.zCost C) :
    ∀ C,Transcendental K
-     (ActualCurveCoordinateField.coordinate K C.1 i) →
+     (RCN002.coordinate K C.1 i) →
      1 ≤ (PrimeFlagBudgetFamily.ofCongruentCut h B).zCost C := by
  intro C htr
  exact hpos (regularComponentEquiv h C) htr
@@ -152,11 +152,11 @@ theorem PrimeFlagBudgetFamily.ofCongruentCut_yz_positive
    (B : PrimeFlagBudgetFamily (G := G) (T := T') (H := H) p q)
    (i : Fin 3)
    (hpos : ∀ C,¬ Transcendental K
-     (ActualCurveCoordinateField.coordinate K C.1 i) → 1 ≤ B.yzCost C) :
+     (RCN002.coordinate K C.1 i) → 1 ≤ B.yzCost C) :
    ∀ C,¬ Transcendental K
-     (ActualCurveCoordinateField.coordinate K C.1 i) →
+     (RCN002.coordinate K C.1 i) →
      1 ≤ (PrimeFlagBudgetFamily.ofCongruentCut h B).yzCost C := by
  intro C htr
  exact hpos (regularComponentEquiv h C) htr
 end
-end ProximityPrize.SubmissionLower.ContactCongruentCuts6643Research
+end ProximityPrize.SubmissionLower.RCN066

@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AO
-namespace ProximityPrize.SubmissionLower.ContactRankKernel
+namespace ProximityPrize.SubmissionLower.RCN256
 open scoped BigOperators Pointwise
 noncomputable section
 variable (K:Type*) [Field K]
@@ -335,4 +335,4 @@ theorem sum_blockJet_ranks_le_localRankBound (m L s:ℕ):
  exact blockJet_rank_le_contactRankBound K (min r L) L s
    (min (r+1) (m-r)) (min_le_right r L)
 end
-end ProximityPrize.SubmissionLower.ContactRankKernel
+end ProximityPrize.SubmissionLower.RCN256

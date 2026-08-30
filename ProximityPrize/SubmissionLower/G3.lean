@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W6
 import ProximityPrize.SubmissionLower.IT
-namespace ProximityPrize.SubmissionLower.PlaneCoefficientExtension
+namespace ProximityPrize.SubmissionLower.RCN360
 noncomputable section
 variable {K L:Type} [Field K] [Field L]
 local instance:DecidableEq K:=Classical.decEq K
@@ -60,7 +60,7 @@ theorem bimap_specialization_ne_zero (f:K →+*L)
    (P:Polynomial (Polynomial K)) (hP:P.IsPrimitive) (x:L):
    (bimap f P).map (Polynomial.evalRingHom x)≠0:=by
  classical
- exact PlaneResultantIrreducible.primitive_specialization_ne_zero
+ exact RCN362.primitive_specialization_ne_zero
    (bimap f P) (bimap_primitive f P hP) x
 theorem common_points_card_le_after_extension (f:K →+*L)
    (P Q:Polynomial (Polynomial K)) (points:Finset (L × L))
@@ -71,11 +71,11 @@ theorem common_points_card_le_after_extension (f:K →+*L)
    points.card ≤ Q.natDegree*Polynomial.Bivariate.degreeX P+
      P.natDegree*Polynomial.Bivariate.degreeX Q:=by
  classical
- have hcount:=PlaneResultantPointCount.common_points_card_le_bidegree_bound
+ have hcount:=RCN363.common_points_card_le_bidegree_bound
    (bimap f P) (bimap f Q) P.natDegree Q.natDegree points
    (bimap_natDegree_le f P) (bimap_natDegree_le f Q)
    (bimap_resultant_ne_zero f P Q P.natDegree Q.natDegree
-     (PlaneResultantIrreducible.irreducible_resultant_ne_zero_of_not_dvd
+     (RCN362.irreducible_resultant_ne_zero_of_not_dvd
        P Q hP hdeg hproper))
    (fun point _ => Or.inl (bimap_specialization_ne_zero f P
      (hP.isPrimitive (Nat.ne_of_gt hdeg)) point.1)) hroots
@@ -83,4 +83,4 @@ theorem common_points_card_le_after_extension (f:K →+*L)
    (Nat.mul_le_mul_left _ (bimap_degreeX_le f P))
    (Nat.mul_le_mul_left _ (bimap_degreeX_le f Q)))
 end
-end ProximityPrize.SubmissionLower.PlaneCoefficientExtension
+end ProximityPrize.SubmissionLower.RCN360

@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HJ
-namespace ProximityPrize.SubmissionLower.ContactIncidence
+namespace ProximityPrize.SubmissionLower.RCN173
 theorem enlarge_exempt_card_bound
    {q n a i w M:ℕ}
    (hiw:i ≤ w) (hwa:w ≤ a) (han:a ≤ n)
@@ -84,4 +84,4 @@ theorem card_le_sharp_incidence_quotient
  exact sharp_incidence_bound relation seeds nodes identities a w M
    hidentities hcard hwa han hagreement hfiber
 end FiniteIncidence
-end ProximityPrize.SubmissionLower.ContactIncidence
+end ProximityPrize.SubmissionLower.RCN173

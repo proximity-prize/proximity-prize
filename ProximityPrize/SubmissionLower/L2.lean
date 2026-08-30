@@ -1,11 +1,11 @@
 import ProximityPrize.SubmissionLower.L1
 import ProximityPrize.SubmissionLower.BI
-namespace ProximityPrize.SubmissionLower.ContactKernelGenericChoiceResearch
+namespace ProximityPrize.SubmissionLower.RCN181
 open scoped BigOperators
 open Set UniqueFactorizationMonoid
-open ContactFlagInterpolation6641Research
-open ContactKernelCommonGCDResearch
-open ContactGeometricFactorCover
+open RCN100
+open RCN180
+open RCN137
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 30000
@@ -103,7 +103,7 @@ theorem exists_common_quotient_isRelPrime {D w L s : ℕ}
        (normalizedFactorSet_spec P F.1 F.2).1
    have hsmall : (Finset.univ : Finset S).card < ENat.card K := by
      simpa [S] using hcard
-   have hss := ContactGenericCoefficientAvoidanceResearch.finite_iUnion_ssubset
+   have hss := RCN133.finite_iUnion_ssubset
      (Finset.univ : Finset S) bad hproper hsmall
    obtain ⟨v,hv⟩ := Set.ssubset_univ_iff_nonempty_compl.mp hss
    have havoid : ∀ F : S,v ∉ bad F := by
@@ -229,4 +229,4 @@ theorem normalizedFactorSet_card_le_of_mem_flagBox
    omega
  omega
 end
-end ProximityPrize.SubmissionLower.ContactKernelGenericChoiceResearch
+end ProximityPrize.SubmissionLower.RCN181

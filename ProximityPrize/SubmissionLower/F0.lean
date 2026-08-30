@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.O8
 import ProximityPrize.SubmissionLower.H5
-namespace ProximityPrize.SubmissionLower.ContactSeedlessLambdaResearch
+namespace ProximityPrize.SubmissionLower.RCN280
 open scoped Classical NNReal
 open ProximityPrize.Benchmark
-open ContactSeedlessInterpolationResearch ContactSeedlessListBoundResearch
-open AlignmentMomentCurveProjection AlignmentInterleavedLambda
-open ContactTranslation
+open RCN279 RCN281
+open RCN019 RCN018
+open RCN319
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 1000000
@@ -223,4 +223,4 @@ theorem irs_squared_lambda_seedless
  rw [irs_squared_carrier_eq]
  exact squared_eight_lambda_seedless (delta:ℝ) hcell
 end
-end ProximityPrize.SubmissionLower.ContactSeedlessLambdaResearch
+end ProximityPrize.SubmissionLower.RCN280

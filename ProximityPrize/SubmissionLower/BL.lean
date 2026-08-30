@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A8
-namespace ProximityPrize.SubmissionLower.ContactIdentityCurveCount6731Research
+namespace ProximityPrize.SubmissionLower.RCN145
 open scoped Classical BigOperators
-open ActualCurveCoordinateField ContactGenericSurface ContactPolynomialSolutions
-open ContactTranslation ContactPrimeSeedIncidence ContactComponentPencils
-open ContactRegularZeroBudget6676Research ContactCoefficientPole6731Research
-open ContactWeakSeparableSeparatorResearch CoordinateBoxZeroCount
+open RCN002 RCN136 RCN231
+open RCN319 RCN238 RCN065
+open RCN271 RCN063
+open RCN341 RCN344
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -48,7 +48,7 @@ theorem prime_curve_card_le_of_coefficientPoleProfile
      exact agreement_fiber_card_le_of_regular_zero_bound φ P F selected Γ p w hchar
        hdegree hsolution hregular hpoint (x i) (u0 i) (u1 i) cost
        (agreement_regular_zero_le φ P F hF hH base w cost hprofile _ _ _ hproper)
-   have hcount:=ContactIncidence.sharp_incidence_bound relation Γ nodes I a w cost
+   have hcount:=RCN173.sharp_incidence_bound relation Γ nodes I a w cost
      (identityNodes_subset φ P F nodes x u0 u1 w) hI hwa (by omega) hagreement hfiber
    have hg:0 < a-w:=Nat.sub_pos_of_lt hwa
    have hu:nodes.card-w ≤ (e+1)*(a-w):=by
@@ -105,4 +105,4 @@ theorem prime_curve_card_le_projection_degree
    hchar hwa hcost hprofile selected Γ nodes x u0 u1 hinj hsize hdegree hsolution hregular
    hpoint hagreement hnoPencil
 end
-end ProximityPrize.SubmissionLower.ContactIdentityCurveCount6731Research
+end ProximityPrize.SubmissionLower.RCN145

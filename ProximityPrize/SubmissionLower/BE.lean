@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z3
-namespace ProximityPrize.SubmissionLower.ContactFlagTrapezoidCaps6543Research
+namespace ProximityPrize.SubmissionLower.RCN123
 open scoped Classical
-open ContactFlagBezout6543Research
-open ContactFlagTriangularProjectionResearch
-open TrivariateRationalCollection ActualPlaneCoordinateKernel
- ActualPlaneCoordinateCaps ActualPlaneJointProjection
+open RCN095
+open RCN125
+open RCN371 RCN011
+ RCN009 RCN012
 noncomputable section
 variable {K:Type} [Field K]
 abbrev Poly3 (K:Type) [Field K]:=MvPolynomial (Fin 3) K
@@ -21,21 +21,21 @@ structure FlagTrapezoidCaps (p:FlagDegree) (F:Poly3 K):Prop where
    d 0+d 1 ≤ p.yz+p.all
 private theorem degreeOf_s_le
    {p:FlagDegree} {F:Poly3 K}
-   (hF:ContactFlagTriangularProjectionResearch.PolynomialInFlag p F):
+   (hF:RCN125.PolynomialInFlag p F):
    F.degreeOf 1 ≤ p.all:=by
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro d hd
  exact (hF d hd).1
 private theorem degreeOf_y_le
    {p:FlagDegree} {F:Poly3 K}
-   (hF:ContactFlagTriangularProjectionResearch.PolynomialInFlag p F):
+   (hF:RCN125.PolynomialInFlag p F):
    F.degreeOf 0 ≤ p.yz+p.all:=by
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro d hd
  exact (Nat.le_add_right (d 0) (d 1)).trans (hF d hd).2.1
 theorem flagTrapezoidCaps_of_inFlag
    (p:FlagDegree) (F:Poly3 K)
-   (hF:ContactFlagTriangularProjectionResearch.PolynomialInFlag p F):
+   (hF:RCN125.PolynomialInFlag p F):
    FlagTrapezoidCaps p F:=by
  refine ⟨?_,?_,?_,?_,?_,?_⟩
  · exact (planeMap_natDegree_le K uOrder F).trans
@@ -79,4 +79,4 @@ theorem z_trapezoid_budget6543 (m:ℕ) (hm:m ≤ 1179639):
  rw [flag_mixed_values.2.1]
  omega
 end
-end ProximityPrize.SubmissionLower.ContactFlagTrapezoidCaps6543Research
+end ProximityPrize.SubmissionLower.RCN123

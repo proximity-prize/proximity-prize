@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.G5
-namespace ProximityPrize.SubmissionLower.ContactTwoTailResultantMultiplicity6732Research
+namespace ProximityPrize.SubmissionLower.RCN337
 open scoped BigOperators
 noncomputable section
 set_option maxHeartbeats 400000
@@ -126,4 +126,4 @@ theorem sum_grouped_power_factor_degrees_le
  rw [←hregroup]
  exact hbound
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailResultantMultiplicity6732Research
+end ProximityPrize.SubmissionLower.RCN337

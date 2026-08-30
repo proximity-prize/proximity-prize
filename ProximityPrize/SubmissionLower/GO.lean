@@ -1,22 +1,22 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.GN
-namespace ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6656Research
+namespace ProximityPrize.SubmissionLower.RCN315
 open scoped Classical
-open ActualCurveCoordinateField ActualCurveRationalProjection
-open ActualCurveJointProjectionBounds ActualCoordinateDegreeSum
-open ContactParameters6600Research ContactPrimeSeedIncidence
-open ContactGenericSurface ContactProperCutSeedCount ContactRegularComponentCover
-open ContactRegularFactorGate
-open ContactFlagBezout6543Research
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualIncidenceResearch
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedUnitFamily6600Research
-open ContactAdaptiveUnitPoleFamilyResearch
-open ContactWeakSeparableSeparatorResearch
-open ContactResidualStageDerivative6600Research
-open ContactResidualSupportParametersResearch
-open ContactRobustFixedMeet6656Research
+open RCN002 RCN005
+open RCN003 RCN001
+open RCN223 RCN238
+open RCN136 RCN243 RCN264
+open RCN267
+open RCN095
+open RCN159
+open RCN158
+open RCN037
+open RCN039
+open RCN046
+open RCN341
+open RCN274
+open RCN275
+open RCN276
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
@@ -152,9 +152,9 @@ theorem literalProjectionGates_of_fixedMeet_flags
    (∀ C:RegularComponent Omega G T H,LiteralProjectionGate C 0)∧
      (∀ C:RegularComponent Omega G T H,LiteralProjectionGate C 2):=by
  obtain ⟨hGY,hGS,hGZ⟩:=
-   _root_.ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag hGflag
+   _root_.ProximityPrize.SubmissionLower.RCN314.degree_bounds_of_polynomialInFlag hGflag
  obtain ⟨hTY,hTS,hTZ⟩:=
-   _root_.ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag hTflag
+   _root_.ProximityPrize.SubmissionLower.RCN314.degree_bounds_of_polynomialInFlag hTflag
  have hGY':G.degreeOf 0 ≤ 40:=
    hGY.trans (Nat.add_le_add hflagY hflagS)
  have hGS':G.degreeOf 1 ≤ 6:=hGS.trans hflagS
@@ -269,4 +269,4 @@ theorem fixedMeetTerminalAdaptiveProjectionFamilies_of_rectangular_caps
  exact fixedMeetTerminalAdaptiveProjection_at_cut S hflagZ hflagY hflagS
    D i hi hproper
 end
-end ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6656Research
+end ProximityPrize.SubmissionLower.RCN315

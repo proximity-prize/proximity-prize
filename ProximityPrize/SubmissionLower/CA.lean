@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.P5
-namespace ProximityPrize.SubmissionLower.ContactSingularDegreeBounds
-open ContactSingularAuxiliary ContactFactorCaps ContactFactorCover
+namespace ProximityPrize.SubmissionLower.RCN293
+open RCN290 RCN081 RCN082
 noncomputable section
 variable {K:Type*} [Field K]
 def embedCoefficients (K:Type*) [Field K]:
@@ -84,7 +84,7 @@ theorem pderiv_weight_le (weights:Fin 4 → ℕ)
      MvPolynomial.weightedTotalDegree weights F:=by
  apply (weightedTotalDegree_le_iff weights _ _).mpr
  intro e he
- have hd:=ContactTaylorNumerators.support_before_pderiv i F e he
+ have hd:=RCN313.support_before_pderiv i F e he
  have hle:Finsupp.weight weights e ≤
      Finsupp.weight weights (e+Finsupp.single i 1):=by
    rw [map_add]
@@ -179,7 +179,7 @@ theorem sum_weighted_degrees_le_of_prod_dvd {ι:Type*} (weights:Fin 4 → ℕ)
      (MvPolynomial.degreeOf_prod_eq I _
        (fun i hi => weightedLift_ne_zero weights (f i) (hf i hi))).symm
    _ ≤ (weightedLift K weights Q).degreeOf (4:Fin 5):=
-     ContactGeometricFactorCover.coordinate_degree_le_of_dvd (4:Fin 5) _ _ hmap
+     RCN137.coordinate_degree_le_of_dvd (4:Fin 5) _ _ hmap
        (weightedLift_ne_zero weights Q hQ)
    _=MvPolynomial.weightedTotalDegree weights Q:=degree_weightedLift weights Q
 theorem singularContribution_weight_le (weights:Fin 4 → ℕ)
@@ -192,7 +192,7 @@ theorem singularContribution_weight_le (weights:Fin 4 → ℕ)
    simpa only [one_mul] using
      (Nat.mul_le_mul_right (MvPolynomial.weightedTotalDegree weights F) hfactor)
  · have hpos:0 < F.degreeOf 2:=Nat.pos_of_ne_zero h
-   have hder:=ContactRegularFactorGate.R_derivative_degree_lt F hpos
+   have hder:=RCN267.R_derivative_degree_lt F hpos
    have hfactor:F.degreeOf 2+(MvPolynomial.pderiv (2:Fin 4) F).degreeOf 2 ≤
        2*s-1:=by omega
    exact (eliminateR_weight_le weights F (MvPolynomial.pderiv (2:Fin 4) F)
@@ -213,7 +213,7 @@ theorem singularAuxiliary_weight_le (weights:Fin 4 → ℕ)
      apply Finset.sum_le_sum
      intro F hF
      exact singularContribution_weight_le weights F s hs
-       ((ContactFactorCaps.degreeOf_le_of_dvd (2:Fin 4) F Q
+       ((RCN081.degreeOf_le_of_dvd (2:Fin 4) F Q
          (activeFactors_spec Q F hF).2.1 hQ).trans hR)
    _=(2*s-1)*∑ F∈activeFactors Q,MvPolynomial.weightedTotalDegree weights F:=by
      rw [Finset.mul_sum]
@@ -223,7 +223,7 @@ theorem singularAuxiliary_weight_le (weights:Fin 4 → ℕ)
 theorem singularAuxiliary_input_caps
    (Q:MvPolynomial (Fin 4) K) (D w L s:ℕ)
    (hQ:Q≠0) (hs:1 ≤ s)
-   (hbox:Q∈ContactInterpolation.globalCoefficientBox K D w L s):
+   (hbox:Q∈RCN174.globalCoefficientBox K D w L s):
    MvPolynomial.weightedTotalDegree seedWeights (singularAuxiliary Q) ≤ (2*s-1)*L∧
      MvPolynomial.weightedTotalDegree (contactWeights w) (singularAuxiliary Q) <
        (2*s-1)*D:=by
@@ -245,9 +245,9 @@ theorem singularAuxiliary_input_caps
 theorem singularAuxiliary_nonzero_mem_box
    (Q:MvPolynomial (Fin 4) K) (D w L s p:ℕ) [CharP K p]
    (hQ:Q≠0) (hs:1 ≤ s) (hsmall:s < p)
-   (hbox:Q∈ContactInterpolation.globalCoefficientBox K D w L s):
+   (hbox:Q∈RCN174.globalCoefficientBox K D w L s):
    singularAuxiliary Q≠0∧
-     singularAuxiliary Q∈ContactInterpolation.globalCoefficientBox K
+     singularAuxiliary Q∈RCN174.globalCoefficientBox K
        ((2*s-1)*D) w ((2*s-1)*L) 0:=by
  have hR:Q.degreeOf 2 ≤ s:=by
    apply MvPolynomial.degreeOf_le_iff.mpr
@@ -265,4 +265,4 @@ theorem singularAuxiliary_nonzero_mem_box
  rw [contact_weight] at hcontact
  exact ⟨hseed,hslope,hcontact⟩
 end
-end ProximityPrize.SubmissionLower.ContactSingularDegreeBounds
+end ProximityPrize.SubmissionLower.RCN293

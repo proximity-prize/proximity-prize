@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B
 import ProximityPrize.SubmissionLower.H
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch
-open ContactNearPencil6600ArithmeticResearch
+namespace ProximityPrize.SubmissionLower.RCN158
+open RCN213
 section FiniteAgreement
 variable {Node:Type*} [DecidableEq Node]
 theorem residual_agreement_card
@@ -99,15 +99,15 @@ theorem score6600_iterated_compression
 end Arithmetic
 section Terminalization
 open scoped Classical
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualGlobalTransformResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactResidualSupportParametersResearch
+open RCN159
+open RCN157
+open RCN156
+open RCN275
 noncomputable section
 variable {K Omega Iota:Type} [Field K] [Field Omega]
 variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
 variable {p e:ℕ} [CharP Omega p]
-variable {flag:ContactFlagBezout6543Research.FlagDegree}
+variable {flag:RCN095.FlagDegree}
 variable {support:ResidualSupportParameters}
 def IsTerminalStage {d:ℕ}
    (S:ResidualStage phi Gamma x p e flag d support):Prop:=
@@ -116,7 +116,7 @@ theorem terminal_iff_all_cuts_proper {d:ℕ}
    (S:ResidualStage phi Gamma x p e flag d support):
    IsTerminalStage S ↔
      ∀ i∈S.nodes,
-       ContactPrimeSeedIncidence.agreementPolynomial
+       RCN238.agreementPolynomial
          phi S.F d (x i) (S.u0 i) (S.u1 i)∉S.componentIdeal:=by
  classical
  constructor
@@ -127,8 +127,8 @@ theorem terminal_iff_all_cuts_proper {d:ℕ}
    simpa using hid
  · intro hproper
    change S.identities=∅
-   unfold ContactIdentityResidualIterationResearch.ResidualStage.identities
-   unfold ContactComponentPencils.identityNodes
+   unfold RCN159.ResidualStage.identities
+   unfold RCN065.identityNodes
    exact Finset.filter_eq_empty_iff.mpr hproper
 @[simp] theorem globalResidualHom_zero_zero_one
    (F:MvPolynomial (Fin 4) K):
@@ -141,31 +141,31 @@ theorem terminal_iff_all_cuts_proper {d:ℕ}
 theorem surfaceMap_agreement_in_flag_of_support
    (support:ResidualSupportParameters)
    (F:MvPolynomial (Fin 4) K)
-   (hS:ContactPost6464MinkowskiRecurrenceResearch.wt
+   (hS:RCN234.wt
      residualSWeights F ≤ support.s)
-   (hYS:ContactPost6464MinkowskiRecurrenceResearch.wt
+   (hYS:RCN234.wt
      residualYSWeights F ≤ support.ys)
-   (hTotal:ContactPost6464MinkowskiRecurrenceResearch.wt
+   (hTotal:RCN234.wt
      residualTotalWeights F ≤ support.total)
    (d:ℕ) (coeffs:ℕ → K) (x0 u0 u1:K):
-   ContactFlagBezout6543Research.PolynomialInFlag
+   RCN095.PolynomialInFlag
      (support.residualAgreementFlag d)
-     (ContactGenericSurface.surfaceMap phi
-       (ContactTaylorNumerators.agreementNumerator F d coeffs x0 u0 u1)):=by
+     (RCN136.surfaceMap phi
+       (RCN313.agreementNumerator F d coeffs x0 u0 u1)):=by
  let hsupport:ResidualSupportData support F:=⟨hS,hYS,hTotal⟩
  exact hsupport.surfaceMap_agreement_in_flag phi d coeffs x0 u0 u1
 theorem surfaceMap_agreement_in_flag_of_surface_weights
    (F:MvPolynomial (Fin 4) K)
-   (hS:ContactPost6464MinkowskiRecurrenceResearch.wt
+   (hS:RCN234.wt
      residualSWeights F ≤ 8)
-   (hYS:ContactPost6464MinkowskiRecurrenceResearch.wt
+   (hYS:RCN234.wt
      residualYSWeights F ≤ 43)
-   (hTotal:ContactPost6464MinkowskiRecurrenceResearch.wt
+   (hTotal:RCN234.wt
      residualTotalWeights F ≤ 503)
    (d:ℕ) (coeffs:ℕ → K) (x0 u0 u1:K):
-   ContactFlagBezout6543Research.PolynomialInFlag (residualAgreementFlag d)
-     (ContactGenericSurface.surfaceMap phi
-       (ContactTaylorNumerators.agreementNumerator F d coeffs x0 u0 u1)):=by
+   RCN095.PolynomialInFlag (residualAgreementFlag d)
+     (RCN136.surfaceMap phi
+       (RCN313.agreementNumerator F d coeffs x0 u0 u1)):=by
  simpa only [ResidualSupportParameters.accepted_agreement_flag] using
    surfaceMap_agreement_in_flag_of_support
      (phi:=phi) ResidualSupportParameters.acceptedSupport F
@@ -174,11 +174,11 @@ theorem terminal_proper_cuts_in_residual_flag {d:ℕ}
    (S:ResidualStage phi Gamma x p e flag d support)
    (hterminal:IsTerminalStage S):
    ∀ i∈S.nodes,
-     ContactPrimeSeedIncidence.agreementPolynomial
+     RCN238.agreementPolynomial
          phi S.F d (x i) (S.u0 i) (S.u1 i)∉S.componentIdeal∧
-       ContactFlagBezout6543Research.PolynomialInFlag
+       RCN095.PolynomialInFlag
          (support.residualAgreementFlag d)
-         (ContactPrimeSeedIncidence.agreementPolynomial
+         (RCN238.agreementPolynomial
            phi S.F d (x i) (S.u0 i) (S.u1 i)):=by
  intro i hi
  refine ⟨(terminal_iff_all_cuts_proper S).mp hterminal i hi,?_⟩
@@ -266,7 +266,7 @@ theorem exists_terminal_with_incidence_data
              S.nodes.filter (S.Agrees gamma):=by
            intro i hi
            exact Finset.mem_filter.mpr
-             ⟨ContactComponentPencils.identityNodes_subset
+             ⟨RCN065.identityNodes_subset
                  phi S.componentIdeal S.F S.nodes x S.u0 S.u1 d hi,
                hold gamma hgamma i hi⟩
          have hcard:=residual_agreement_card
@@ -279,7 +279,7 @@ theorem exists_terminal_with_incidence_data
          ih (d-k) hlt Snext hdaNext hnextAgreement
        letI:S.componentIdeal.IsPrime:=S.componentIdeal_isPrime
        have hidentitiesSub:S.identities ⊆ S.nodes:=
-         ContactComponentPencils.identityNodes_subset
+         RCN065.identityNodes_subset
            phi S.componentIdeal S.F S.nodes x S.u0 S.u1 d
        have hstepNode:
            Snext.nodes.card-(d-k)=S.nodes.card-d:=by
@@ -310,4 +310,4 @@ theorem exists_terminal_with_incidence_data
          rwa [heq]
 end
 end Terminalization
-end ProximityPrize.SubmissionLower.ContactIdentityResidualIncidenceResearch
+end ProximityPrize.SubmissionLower.RCN158

@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactRecursiveGCDResearch
+namespace ProximityPrize.SubmissionLower.RCN259
 noncomputable section
 section Quotients
 variable {A:Type*} [CommMonoidWithZero A] [GCDMonoid A]
@@ -95,4 +95,4 @@ theorem recursive_three_branch_cover
    exact Or.inl ⟨h12,hqA,hqB⟩
 end ThreeBranchCover
 end
-end ProximityPrize.SubmissionLower.ContactRecursiveGCDResearch
+end ProximityPrize.SubmissionLower.RCN259

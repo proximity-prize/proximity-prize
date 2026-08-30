@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.CF
-namespace ProximityPrize.SubmissionLower.ContactMaximalRelationMonicLift6733Research
+namespace ProximityPrize.SubmissionLower.RCN197
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -70,7 +70,7 @@ theorem moduleFinite_primary_piece_of_maximal_relation
    Module.Finite R (Polynomial R ⧸ piece):=by
  obtain ⟨H,hHMonic,hHJ⟩:=
    exists_monic_mem_maximal_relation J hcontract hfinite
- exact ContactSylvesterPrimaryDirect6733Research.moduleFinite_quotient_of_monic_mem
+ exact RCN309.moduleFinite_quotient_of_monic_mem
    piece (H^mu) (hHMonic.pow mu) (hpow (Ideal.pow_mem_pow hHJ mu))
 end
-end ProximityPrize.SubmissionLower.ContactMaximalRelationMonicLift6733Research
+end ProximityPrize.SubmissionLower.RCN197

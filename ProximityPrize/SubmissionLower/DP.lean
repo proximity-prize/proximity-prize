@@ -1,24 +1,24 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X9
-namespace ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjectionActive6630Research
+namespace ProximityPrize.SubmissionLower.RCN038
 open scoped Classical WithZero TensorProduct
 open Polynomial KaehlerDifferential
-open ActualCurveCoordinateField ActualCurveRationalProjection
-open CoordinateBoxZeroCount ContactRegularComponentCover
-open ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveProjectionCoordinateResearch
-open ContactAdaptiveAffineProjectionResearch
-open ContactAdaptiveRelevantPlacesResearch
-open ContactFlagAffineFamilyDegree6543Research
-open ContactFlagGlobalPoleProjection6543Research
-open ContactFlagDirectionalAvoidance6543Research
-open ContactFlagPoleInequality6543Research
-open ContactFlagPrincipalCycles6543Research
-open ContactSparsePoleSupportResearch
-open ArbitraryRationalProjectionResearch
-open SeparableShearKaehlerResearch SeparableShearTranscendenceResearch
- GlobalSeparableShearResearch
-open ContactAdaptiveNestedProjection6600Research
+open RCN002 RCN005
+open RCN344 RCN264
+open RCN341
+open RCN042
+open RCN035
+open RCN044
+open RCN093
+open RCN099
+open RCN096
+open RCN114
+open RCN116
+open RCN295
+open RCN022
+open RCN369 RCN370
+ RCN351
+open RCN037
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option synthInstance.maxHeartbeats 400000
@@ -78,17 +78,17 @@ structure AdaptiveNestedProjectionDataActive
      (coordinateValue Omega (CoordinateField Omega C.1) (allProjection C))
  uPole:∀ (C:RegularComponent Omega G T H)
      (v:Place Omega (CoordinateField Omega C.1)),
-   ContactLocalPoleBound.poleOrder v.val
+   RCN187.poleOrder v.val
        (coordinateValue Omega (CoordinateField Omega C.1) (uProjection C))=
-     max (ContactLocalPoleBound.poleOrder v.val (coordinate Omega C.1 0))
-       (ContactLocalPoleBound.poleOrder v.val (coordinate Omega C.1 2))
+     max (RCN187.poleOrder v.val (coordinate Omega C.1 0))
+       (RCN187.poleOrder v.val (coordinate Omega C.1 2))
  allPole:∀ (C:RegularComponent Omega G T H)
      (v:Place Omega (CoordinateField Omega C.1)),
-   ContactLocalPoleBound.poleOrder v.val
+   RCN187.poleOrder v.val
        (coordinateValue Omega (CoordinateField Omega C.1) (allProjection C))=
-     max (ContactLocalPoleBound.poleOrder v.val (coordinate Omega C.1 1))
-       (max (ContactLocalPoleBound.poleOrder v.val (coordinate Omega C.1 0))
-         (ContactLocalPoleBound.poleOrder v.val (coordinate Omega C.1 2)))
+     max (RCN187.poleOrder v.val (coordinate Omega C.1 1))
+       (max (RCN187.poleOrder v.val (coordinate Omega C.1 0))
+         (RCN187.poleOrder v.val (coordinate Omega C.1 2)))
  directional:MvPolynomial.pderiv (0:Fin 3) G-
    MvPolynomial.C mu*MvPolynomial.pderiv (1:Fin 3) G≠0
 theorem exists_adaptiveNestedProjectionDataActive
@@ -136,9 +136,9 @@ theorem exists_adaptiveNestedProjectionDataActive
    fun C => coordinateOfGate_value (U C) (hUgate C)
  have huPole:∀ (C:RegularComponent Omega G T H)
      (v:Place Omega (CoordinateField Omega C.1)),
-     ContactLocalPoleBound.poleOrder v.val (U C)=
-       max (ContactLocalPoleBound.poleOrder v.val (coordinate Omega C.1 0))
-         (ContactLocalPoleBound.poleOrder v.val (coordinate Omega C.1 2)):=by
+     RCN187.poleOrder v.val (U C)=
+       max (RCN187.poleOrder v.val (coordinate Omega C.1 0))
+         (RCN187.poleOrder v.val (coordinate Omega C.1 2)):=by
    intro C v
    by_cases hv:v∈literalRelevantPlaces (base C)
    · exact poleOrder_eq_max_of_valuation_eq_max v.val _ _ _ (by
@@ -158,8 +158,8 @@ theorem exists_adaptiveNestedProjectionDataActive
      have hUle:v.val (U C) ≤ 1:=by
        exact (v.val.map_add _ _).trans
          (by rw [hscalar];exact max_le h0le h2le)
-     have hU0:ContactLocalPoleBound.poleOrder v.val (U C)=0:=
-       CoordinatePoleMass.poleOrder_eq_zero_of_le_one Omega
+     have hU0:RCN187.poleOrder v.val (U C)=0:=
+       RCN346.poleOrder_eq_zero_of_le_one Omega
          (CoordinateField Omega C.1) v _ hUle
      rw [hU0,h0,h2]
      simp
@@ -194,9 +194,9 @@ theorem exists_adaptiveNestedProjectionDataActive
    exact elementEmbedding_variable Omega (CoordinateField Omega C.1) (V C) (hV C)
  have hvPole:∀ (C:RegularComponent Omega G T H)
      (v:Place Omega (CoordinateField Omega C.1)),
-     ContactLocalPoleBound.poleOrder v.val (V C)=
-       max (ContactLocalPoleBound.poleOrder v.val (coordinate Omega C.1 1))
-         (ContactLocalPoleBound.poleOrder v.val (U C)):=by
+     RCN187.poleOrder v.val (V C)=
+       max (RCN187.poleOrder v.val (coordinate Omega C.1 1))
+         (RCN187.poleOrder v.val (U C)):=by
    intro C v
    by_cases hv:v∈literalRelevantPlaces (base C)
    · exact poleOrder_eq_max_of_valuation_eq_max v.val _ _ _ (by
@@ -207,7 +207,7 @@ theorem exists_adaptiveNestedProjectionDataActive
          (base C) v hv 0
      have hZ:=coordinate_poleOrder_eq_zero_of_not_mem_literalRelevant
          (base C) v hv 2
-     have hU:ContactLocalPoleBound.poleOrder v.val (U C)=0:=by
+     have hU:RCN187.poleOrder v.val (U C)=0:=by
        rw [huPole C v,hY,hZ]
        simp
      have hSle:=valuation_le_one_of_poleOrder_eq_zero v.val _ hS
@@ -219,8 +219,8 @@ theorem exists_adaptiveNestedProjectionDataActive
      have hVle:v.val (V C) ≤ 1:=
        (v.val.map_add _ _).trans
          (by rw [hscalar];exact max_le hSle hUle)
-     have hV0:ContactLocalPoleBound.poleOrder v.val (V C)=0:=
-       CoordinatePoleMass.poleOrder_eq_zero_of_le_one Omega
+     have hV0:RCN187.poleOrder v.val (V C)=0:=
+       RCN346.poleOrder_eq_zero_of_le_one Omega
          (CoordinateField Omega C.1) v _ hVle
      rw [hV0,hS,hU]
      simp
@@ -274,4 +274,4 @@ theorem exists_adaptiveNestedProjectionDataActive
  · intro C v
    rw [hvValue C,hvPole C v,huPole C v]
 end
-end ProximityPrize.SubmissionLower.ContactAdaptiveNestedProjectionActive6630Research
+end ProximityPrize.SubmissionLower.RCN038

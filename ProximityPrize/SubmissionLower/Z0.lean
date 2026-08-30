@@ -2,25 +2,25 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J8
 import ProximityPrize.SubmissionLower.ED
 import ProximityPrize.SubmissionLower.BE
-namespace ProximityPrize.SubmissionLower.ContactFlagPrincipalCycles6543Research
+namespace ProximityPrize.SubmissionLower.RCN116
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
-open ActualCurveCoordinateField ActualCurveRationalProjection
- ActualCurveScalarTowers ActualCurveZeroCount
-open CoordinateBoxZeroCount ContactRegularComponentCover
-open ContactLocalPoleBound ContactDependentGenericity6543Research
-open ContactSparsePoleSupportResearch
-open ContactFlagBezout6543Research ContactFlagPoleInequality6543Research
-open ContactFlagTriangularProjectionResearch
-open ContactFlagAffineFamilyDegree6543Research
-open ContactFlagExactSeparableProjection6543Research
-open ContactFlagGlobalPoleProjection6543Research
-open ContactFlagPrincipalCycleAdapter6543Research
-open ContactFlagProjectionProvider6543Research
-open ContactFlagTrapezoidCaps6543Research
-open ContactResidualSparseComponentAdapterResearch
-open TrivariateRationalCollection ActualPlaneCoordinateKernel
- ArbitraryRationalProjectionResearch
+open RCN002 RCN005
+ RCN006 RCN007
+open RCN344 RCN264
+open RCN187 RCN075
+open RCN295
+open RCN095 RCN114
+open RCN125
+open RCN093
+open RCN097
+open RCN099
+open RCN115
+open RCN118
+open RCN123
+open RCN272
+open RCN371 RCN011
+ RCN022
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
@@ -220,14 +220,14 @@ def flagProjectionCycleBudget6543_of_nested
            (hseparator C) (hseparator C)]
        exact (hproj C 2 (hseparator C)).2)
      (by intro C v;simpa [zOrder,Equiv.swap_apply_def,lam,mu,nu,
-         CoordinatePoleMass.poleOrder] using
+         RCN346.poleOrder] using
        unitZ_polynomial_pole BZ C v)
      hG hproper hpositive.z 5 1179639 26 6684622 flagZMixedCap hTne
      (by simpa [gCaps,shearedSurfaceFlag] using gCaps.zOuter)
      (by simpa [tCaps,shearedAgreementFlag_value] using tCaps.zOuter)
      (by simpa [gCaps,shearedSurfaceFlag] using gCaps.zTotal)
      (by simpa [tCaps,shearedAgreementFlag_value] using tCaps.zTotal)
-     ContactFlagTrapezoidCaps6543Research.z_trapezoid_budget6543
+     RCN123.z_trapezoid_budget6543
  let yzBudget:PrincipalCycleBudget (flagSupport unitYZFlag) 2
      hseparator hproj BYZ flagYZMixedCap:=
    principalCycleBudget_of_flag_trapezoid BYZ lam mu nu uOrder
@@ -242,14 +242,14 @@ def flagProjectionCycleBudget6543_of_nested
        rw [hembU C]
        exact D.separableU C)
      (by intro C v;simpa [uOrder,lam,mu,nu,
-         CoordinatePoleMass.poleOrder] using
+         RCN346.poleOrder] using
        unitYZ_polynomial_pole D BYZ C v)
      hG hproper hpositive.u 5 1179639 376 98434322 flagYZMixedCap hTne
      (by simpa [gCaps,shearedSurfaceFlag] using gCaps.uOuter)
      (by simpa [tCaps,shearedAgreementFlag_value] using tCaps.uOuter)
      (by simpa [gCaps,shearedSurfaceFlag] using gCaps.uTotal)
      (by simpa [tCaps,shearedAgreementFlag_value] using tCaps.uTotal)
-     ContactFlagTrapezoidCaps6543Research.u_trapezoid_budget6543
+     RCN123.u_trapezoid_budget6543
  let allBudget:PrincipalCycleBudget (flagSupport unitAllFlag) 2
      hseparator hproj BAll flagAllMixedCap:=
    principalCycleBudget_of_flag_trapezoid BAll lam mu nu vOrder
@@ -264,14 +264,14 @@ def flagProjectionCycleBudget6543_of_nested
        rw [hembV C]
        exact separableAffineV D C)
      (by intro C v;simpa [vOrder,Equiv.swap_apply_def,lam,mu,nu,
-         CoordinatePoleMass.poleOrder] using
+         RCN346.poleOrder] using
        unitAll_polynomial_pole D BAll C v)
      hG hproper hpositive.v 26 6684622 376 98434322 flagAllMixedCap hTne
      (by simpa [gCaps,shearedSurfaceFlag] using gCaps.vOuter)
      (by simpa [tCaps,shearedAgreementFlag_value] using tCaps.vOuter)
      (by simpa [gCaps,shearedSurfaceFlag] using gCaps.vTotal)
      (by simpa [tCaps,shearedAgreementFlag_value] using tCaps.vTotal)
-     ContactFlagTrapezoidCaps6543Research.v_trapezoid_budget6543
+     RCN123.v_trapezoid_budget6543
  exact FlagProjectionCycleBudget.ofNestedProjectionBudgets B BZ BYZ BAll
    zBudget yzBudget allBudget
 def residualComponentBudget6543_of_nested
@@ -315,4 +315,4 @@ theorem exists_residualComponentBudget6543_of_projectionPositivity
  exact ⟨residualComponentBudget6543_of_nested D hG hproper hGsupport
    hTsupport hD B BZ BYZ BAll⟩
 end
-end ProximityPrize.SubmissionLower.ContactFlagPrincipalCycles6543Research
+end ProximityPrize.SubmissionLower.RCN116

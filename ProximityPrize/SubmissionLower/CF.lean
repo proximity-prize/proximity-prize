@@ -1,9 +1,9 @@
 import ProximityPrize.SubmissionLower.CE
-namespace ProximityPrize.SubmissionLower.ContactSylvesterPrimaryDirect6733Research
+namespace ProximityPrize.SubmissionLower.RCN309
 open scoped Classical BigOperators
 open Module
-open ContactMatrixCokernelOrder6732Research
-open ContactSylvesterCokernelQuotient6732Research
+open RCN196
+open RCN307
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -89,4 +89,4 @@ theorem cokerToPieces_surjective_of_modMax
  change rawPiecesMap P Q m n pieces v=y
  exact hv
 end
-end ProximityPrize.SubmissionLower.ContactSylvesterPrimaryDirect6733Research
+end ProximityPrize.SubmissionLower.RCN309

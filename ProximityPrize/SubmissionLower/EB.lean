@@ -1,18 +1,18 @@
 import ProximityPrize.SubmissionLower.FN
 import ProximityPrize.SubmissionLower.O
 import ProximityPrize.SubmissionLower.C3
-namespace ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedNaturalResidue6733Research
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
-open ActualCurveCoordinateField ContactRegularComponentCover
-open ContactFlagAffineFamilyDegree6543Research ContactFlagResidueDegreeCostAdapter6732Research
-open ContactFlagPlaneFiberPrimary6733Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactFlagPlaneIndexedFiberCertificate6733Research
-open ContactPolynomialSurfaceNaturalResidue6733Research
-open ContactMaximalRelationMonicLift6733Research
-open ContactLocalizedRelationResidueFinite6733Research
-open ContactFlagPlaneIndexedResidueWeight6733Research
-open ContactLocalizedPlaneRelation6733Research
+namespace ProximityPrize.SubmissionLower.RCN110
+open RCN011 RCN021
+open RCN002 RCN264
+open RCN093 RCN120
+open RCN102
+open RCN106
+open RCN107
+open RCN232
+open RCN197
+open RCN192
+open RCN111
+open RCN191
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -140,4 +140,4 @@ theorem indexedNaturalSurfaceResidue_finrank_eq_plane
          localizedRelationResidue_finrank_eq_unlocalized Omega L order e
            (ht a) (hfinite a) (hgen a)
 end
-end ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedNaturalResidue6733Research
+end ProximityPrize.SubmissionLower.RCN110

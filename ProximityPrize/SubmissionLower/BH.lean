@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J1
 import ProximityPrize.SubmissionLower.AU
-namespace ProximityPrize.SubmissionLower.ContactGaussLocalization
-open ContactGenericSurface ContactFactorCover
+namespace ProximityPrize.SubmissionLower.RCN132
+open RCN136 RCN082
 noncomputable section
 variable (K:Type*) [Field K]
 abbrev Collected:=MvPolynomial (Fin 3) (Polynomial K)
@@ -67,7 +67,7 @@ theorem not_dvd_xLift_of_positive_degree
    · exact ⟨1,hr⟩
    exact ⟨2,by change 0 < F.degreeOf (3:Fin 4);omega⟩
  obtain ⟨i,hi⟩:=hi
- have hb:=ContactFactorCaps.degreeOf_le_of_dvd i.succ F (xLift K P)
+ have hb:=RCN081.degreeOf_le_of_dvd i.succ F (xLift K P)
    hdiv (xLift_ne_zero K P hP)
  rw [xLift_degreeOf_succ] at hb
  omega
@@ -139,4 +139,4 @@ theorem activeFactor_rational_dvd_iff
  have hs:=activeFactors_spec Q F hF
  exact rationalSurfaceMap_dvd_iff K F M hs.1 hs.2.2
 end
-end ProximityPrize.SubmissionLower.ContactGaussLocalization
+end ProximityPrize.SubmissionLower.RCN132

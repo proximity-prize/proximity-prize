@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BC
-namespace ProximityPrize.SubmissionLower.ContactSeedlessRankResearch
+namespace ProximityPrize.SubmissionLower.RCN285
 open scoped BigOperators Pointwise
-open ContactFlagRankKernel6641Research
+open RCN119
 noncomputable section
 variable (K:Type*) [Field K]
 abbrev Poly:=MvPolynomial (Fin 3) K
@@ -192,4 +192,4 @@ theorem seedlessBlockJet_rank_le_contactRankBound
    rw [if_neg hbad,Nat.sub_zero]
    omega
 end
-end ProximityPrize.SubmissionLower.ContactSeedlessRankResearch
+end ProximityPrize.SubmissionLower.RCN285

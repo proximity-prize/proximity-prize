@@ -1,14 +1,14 @@
 import ProximityPrize.SubmissionLower.E2
-namespace ProximityPrize.SubmissionLower.ContactProperStageIndexedSpecialization6733Research
-open ContactGenericInitialPoint ContactGenericSurface
-open ContactProperDelayedTailCertificate6732Research
-open ContactProperStageIndexedFamily6733Research
-open ContactProperFlagFiberData6733Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactFlagPlaneFiberSurface6733Research
-open ContactFlagAffineFamilyDegree6543Research ContactFlagBezout6543Research
-open ContactFlagTriangularProjectionResearch
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
+namespace ProximityPrize.SubmissionLower.RCN255
+open RCN135 RCN136
+open RCN244
+open RCN249
+open RCN245
+open RCN106
+open RCN103
+open RCN093 RCN095
+open RCN125
+open RCN011 RCN021
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -27,17 +27,19 @@ theorem planeSurface_map_adjoinRoot_ne_zero
      simp only [Polynomial.coe_eval₂RingHom,Polynomial.eval₂_C,
        AdjoinRoot.mk_C,AdjoinRoot.algebraMap_eq]
    · simp only [Polynomial.coe_eval₂RingHom,Polynomial.eval₂_X,AdjoinRoot.mk_X]
- have hs:=PlaneCoefficientExtension.bimap_specialization_ne_zero
+ have hs:=RCN360.bimap_specialization_ne_zero
    (algebraMap (RatFunc Omega) (AdjoinRoot q)) surface
    (hirr.isPrimitive (Nat.ne_of_gt hpositive)) (AdjoinRoot.root q)
- rw [PlaneCoefficientExtension.bimap_specialization,hcoeff] at hs
+ rw [RCN360.bimap_specialization,hcoeff] at hs
  exact hs
 variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
-variable (S:Stage K I Gamma x p flag) {A:Type} [Fintype A]
+variable {errorCap : ℕ}
+variable {stageSupport : RCN275.ResidualSupportParameters}
+variable (S:Stage K I Gamma x p flag errorCap stageSupport) {A:Type} [Fintype A]
 def StageFamilySurfaceSpecializationNonzero
    (F:StageIndexedFlagFamily S A)
    (q:Polynomial (RatFunc (GenericField K))):Prop:=
@@ -54,4 +56,4 @@ theorem stageFamily_surface_specialization_ne
    (transformedSurface_irreducible F.lam F.mu F.nu F.order S.irreducible_G
      (F.component a.1) (F.ht a.1)) F.positive
 end
-end ProximityPrize.SubmissionLower.ContactProperStageIndexedSpecialization6733Research
+end ProximityPrize.SubmissionLower.RCN255

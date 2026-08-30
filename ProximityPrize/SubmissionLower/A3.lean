@@ -1,16 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Q8
 import ProximityPrize.SubmissionLower.Y1
-namespace ProximityPrize.SubmissionLower.ContactAdaptiveUnitPoleFamilyResearch
+namespace ProximityPrize.SubmissionLower.RCN046
 open scoped Classical BigOperators WithZero
-open ActualCurveCoordinateField
-open CoordinateBoxZeroCount ContactRegularComponentCover
-open ContactFlagBezout6543Research
-open ContactWeakSeparableSeparatorResearch
-open ContactWeakPrimeFlagBudgetResearch
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactSparsePoleSupportResearch
-open ContactAdaptiveProjectionCoordinateResearch
+open RCN002
+open RCN344 RCN264
+open RCN095
+open RCN341
+open RCN340
+open RCN237
+open RCN295
+open RCN042
 noncomputable section
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H:MvPolynomial (Fin 3) Omega}
@@ -34,19 +34,19 @@ structure AdaptiveUnitProjectionFamily
      (v:Place Omega (CoordinateField Omega C.1)),
    exponentSetPoleWeight v.val (coordinate Omega C.1)
        (flagSupport unitZFlag)=
-     CoordinatePoleMass.poleOrder Omega (CoordinateField Omega C.1) v
+     RCN346.poleOrder Omega (CoordinateField Omega C.1) v
        (coordinateValue Omega (CoordinateField Omega C.1) (zProjection C))
  yzPole_eq:∀ (C:RegularComponent Omega G T H)
      (v:Place Omega (CoordinateField Omega C.1)),
    exponentSetPoleWeight v.val (coordinate Omega C.1)
        (flagSupport unitYZFlag)=
-     CoordinatePoleMass.poleOrder Omega (CoordinateField Omega C.1) v
+     RCN346.poleOrder Omega (CoordinateField Omega C.1) v
        (coordinateValue Omega (CoordinateField Omega C.1) (yzProjection C))
  allPole_eq:∀ (C:RegularComponent Omega G T H)
      (v:Place Omega (CoordinateField Omega C.1)),
    exponentSetPoleWeight v.val (coordinate Omega C.1)
        (flagSupport unitAllFlag)=
-     CoordinatePoleMass.poleOrder Omega (CoordinateField Omega C.1) v
+     RCN346.poleOrder Omega (CoordinateField Omega C.1) v
        (coordinateValue Omega (CoordinateField Omega C.1) (allProjection C))
  sum_zDegree_le:
    (∑ C:RegularComponent Omega G T H,
@@ -82,7 +82,7 @@ def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
    calc
      (∑ v∈W,exponentSetPoleWeight v.val (coordinate Omega C.1)
          (flagSupport unitZFlag))=
-         ∑ v∈W,CoordinatePoleMass.poleOrder Omega
+         ∑ v∈W,RCN346.poleOrder Omega
            (CoordinateField Omega C.1) v
            (coordinateValue Omega (CoordinateField Omega C.1)
              (P.zProjection C)):=by
@@ -101,7 +101,7 @@ def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
    calc
      (∑ v∈W,exponentSetPoleWeight v.val (coordinate Omega C.1)
          (flagSupport unitYZFlag))=
-         ∑ v∈W,CoordinatePoleMass.poleOrder Omega
+         ∑ v∈W,RCN346.poleOrder Omega
            (CoordinateField Omega C.1) v
            (coordinateValue Omega (CoordinateField Omega C.1)
              (P.yzProjection C)):=by
@@ -120,7 +120,7 @@ def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
    calc
      (∑ v∈W,exponentSetPoleWeight v.val (coordinate Omega C.1)
          (flagSupport unitAllFlag))=
-         ∑ v∈W,CoordinatePoleMass.poleOrder Omega
+         ∑ v∈W,RCN346.poleOrder Omega
            (CoordinateField Omega C.1) v
            (coordinateValue Omega (CoordinateField Omega C.1)
              (P.allProjection C)):=by
@@ -172,4 +172,4 @@ theorem AdaptiveUnitProjectionFamily.one_le_toPrimeFlagBudgetFamily_allCost
    1 ≤ P.toPrimeFlagBudgetFamily.allCost C:=
  P.one_le_allDegree C
 end
-end ProximityPrize.SubmissionLower.ContactAdaptiveUnitPoleFamilyResearch
+end ProximityPrize.SubmissionLower.RCN046

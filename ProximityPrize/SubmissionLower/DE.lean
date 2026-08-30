@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G4
 import ProximityPrize.SubmissionLower.G6
-namespace ProximityPrize.SubmissionLower.CharacteristicFreeMatrixMultiplicityResearch
+namespace ProximityPrize.SubmissionLower.RCN024
 open scoped BigOperators
 noncomputable section
 variable {K:Type*} [Field K] [DecidableEq K]
@@ -238,7 +238,7 @@ theorem planeEval_quotientRoot_eq_aeval_map
    (mu:Polynomial K₀) [Fact (Irreducible mu)]
    [Algebra (AdjoinRoot mu) E₁] [IsScalarTower K₀ (AdjoinRoot mu) E₁]
    (r:E₁) (P:Polynomial (Polynomial K₀)):
-   PlaneFunctionFieldDegree.planeEval K₀ E₁
+   RCN361.planeEval K₀ E₁
      (algebraMap (AdjoinRoot mu) E₁ (AdjoinRoot.root mu)) r P=
      Polynomial.aeval r (P.map (AdjoinRoot.mk mu)):=by
  let y:E₁:=algebraMap (AdjoinRoot mu) E₁ (AdjoinRoot.root mu)
@@ -256,15 +256,15 @@ theorem planeEval_quotientRoot_eq_aeval_map
  let rhs:Polynomial (Polynomial K₀) →+*E₁:=
    (Polynomial.aeval r).toRingHom.comp
      (Polynomial.mapRingHom (AdjoinRoot.mk mu))
- have heq:PlaneFunctionFieldDegree.planeEval K₀ E₁ y r=rhs:=by
+ have heq:RCN361.planeEval K₀ E₁ y r=rhs:=by
    apply Polynomial.ringHom_ext
    · intro c
-     simpa only [PlaneFunctionFieldDegree.planeEval,RingHom.comp_apply,
+     simpa only [RCN361.planeEval,RingHom.comp_apply,
        Polynomial.coe_mapRingHom,Polynomial.map_C,
        Polynomial.coe_evalRingHom,Polynomial.eval_C,Polynomial.aeval_C,
        rhs,AlgHom.toRingHom_eq_coe,AlgHom.coe_toRingHom] using
        (congrFun (congrArg DFunLike.coe hcoeff) c).symm
-   · simp only [PlaneFunctionFieldDegree.planeEval,RingHom.comp_apply,
+   · simp only [RCN361.planeEval,RingHom.comp_apply,
        Polynomial.coe_mapRingHom,Polynomial.map_X,
        Polynomial.coe_evalRingHom,Polynomial.eval_X,Polynomial.aeval_X,
        rhs,AlgHom.toRingHom_eq_coe,AlgHom.coe_toRingHom]
@@ -273,10 +273,10 @@ theorem mem_relationIdeal_quotientRoot_iff_minpoly_dvd_map
    (mu:Polynomial K₀) [Fact (Irreducible mu)]
    [Algebra (AdjoinRoot mu) E₁] [IsScalarTower K₀ (AdjoinRoot mu) E₁]
    (r:E₁) (P:Polynomial (Polynomial K₀)):
-   P∈PlaneFunctionFieldDegree.relationIdeal K₀ E₁
+   P∈RCN361.relationIdeal K₀ E₁
        (algebraMap (AdjoinRoot mu) E₁ (AdjoinRoot.root mu)) r ↔
      minpoly (AdjoinRoot mu) r∣P.map (AdjoinRoot.mk mu):=by
- change PlaneFunctionFieldDegree.planeEval K₀ E₁
+ change RCN361.planeEval K₀ E₁
      (algebraMap (AdjoinRoot mu) E₁ (AdjoinRoot.root mu)) r P=0 ↔ _
  rw [planeEval_quotientRoot_eq_aeval_map]
  exact minpoly.dvd_iff.symm
@@ -286,9 +286,9 @@ theorem relationIdeal_eq_of_adjoinRoot_minpoly_eq
    [Algebra (AdjoinRoot mu) E₂] [IsScalarTower K₀ (AdjoinRoot mu) E₂]
    (r₁:E₁) (r₂:E₂)
    (hmin:minpoly (AdjoinRoot mu) r₁=minpoly (AdjoinRoot mu) r₂):
-   PlaneFunctionFieldDegree.relationIdeal K₀ E₁
+   RCN361.relationIdeal K₀ E₁
        (algebraMap (AdjoinRoot mu) E₁ (AdjoinRoot.root mu)) r₁=
-     PlaneFunctionFieldDegree.relationIdeal K₀ E₂
+     RCN361.relationIdeal K₀ E₂
        (algebraMap (AdjoinRoot mu) E₂ (AdjoinRoot.root mu)) r₂:=by
  apply Ideal.ext
  intro P
@@ -304,7 +304,7 @@ theorem relative_minpolys_pairwise_coprime_of_relationIdeal_injective
    [∀ i,FiniteDimensional (AdjoinRoot mu) (E i)]
    (r:∀ i,E i)
    (hkernels:Function.Injective (fun i =>
-     PlaneFunctionFieldDegree.relationIdeal K₀ (E i)
+     RCN361.relationIdeal K₀ (E i)
        (algebraMap (AdjoinRoot mu) (E i) (AdjoinRoot.root mu)) (r i))):
    Pairwise fun i j => IsCoprime
      (minpoly (AdjoinRoot mu) (r i)) (minpoly (AdjoinRoot mu) (r j)):=by
@@ -415,8 +415,8 @@ theorem finrank_le_planar_bound_without_separability
    (hP:Irreducible P) (hpositive:0 < P.natDegree) (hproper:¬P∣Q)
    (y r:E₀)
    (hgen:IntermediateField.adjoin K₀ ({y,r}:Set E₀)=⊤)
-   (hPy:PlaneFunctionFieldDegree.planeEval K₀ E₀ y r P=0)
-   (hQy:PlaneFunctionFieldDegree.planeEval K₀ E₀ y r Q=0):
+   (hPy:RCN361.planeEval K₀ E₀ y r P=0)
+   (hQy:RCN361.planeEval K₀ E₀ y r Q=0):
    Module.finrank K₀ E₀ ≤
      Q.natDegree*Polynomial.Bivariate.degreeX P+
        P.natDegree*Polynomial.Bivariate.degreeX Q:=by
@@ -471,10 +471,10 @@ theorem finrank_le_planar_bound_without_separability
    · simp only [Polynomial.coe_eval₂RingHom,Polynomial.eval₂_X,
        AdjoinRoot.mk_X]
  have hPne:P.map (AdjoinRoot.mk mu)≠0:=by
-   have hspecial:=PlaneCoefficientExtension.bimap_specialization_ne_zero
+   have hspecial:=RCN360.bimap_specialization_ne_zero
      (algebraMap K₀ (AdjoinRoot mu)) P
      (hP.isPrimitive (Nat.ne_of_gt hpositive)) (AdjoinRoot.root mu)
-   rw [PlaneCoefficientExtension.bimap_specialization,hcoeff] at hspecial
+   rw [RCN360.bimap_specialization,hcoeff] at hspecial
    exact hspecial
  have hProot:Polynomial.aeval r (P.map (AdjoinRoot.mk mu))=0:=by
    rw [←planeEval_quotientRoot_eq_aeval_map,hroot]
@@ -483,7 +483,7 @@ theorem finrank_le_planar_bound_without_separability
    rw [←planeEval_quotientRoot_eq_aeval_map,hroot]
    exact hQy
  have hresultant:Polynomial.resultant P Q P.natDegree Q.natDegree≠0:=
-   PlaneResultantIrreducible.irreducible_resultant_ne_zero_of_not_dvd
+   RCN362.irreducible_resultant_ne_zero_of_not_dvd
      P Q hP hpositive hproper
  exact finrank_le_bidegree_of_adjoinRoot_component
    P Q P.natDegree Q.natDegree mu r hgenRelative le_rfl le_rfl
@@ -514,9 +514,9 @@ theorem finite_of_proper_plane_roots
    (hgen:IntermediateField.adjoin K₀ ({y,r}:Set E₀)=⊤):
    FiniteDimensional K₀ E₀:=by
  classical
- have hresne:=PlaneResultantIrreducible.irreducible_resultant_ne_zero_of_not_dvd
+ have hresne:=RCN362.irreducible_resultant_ne_zero_of_not_dvd
    P Q hirreducible hpositive hproper
- have hresroot:=PlaneRootSeparability.resultant_aeval_eq_zero_of_common_root P Q
+ have hresroot:=RCN364.resultant_aeval_eq_zero_of_common_root P Q
    P.natDegree Q.natDegree le_rfl le_rfl (Or.inl (Nat.ne_of_gt hpositive))
      y r hP hQ
  have hyIntegral:IsIntegral K₀ y:=
@@ -527,10 +527,10 @@ theorem finite_of_proper_plane_roots
  let g:Polynomial K₀ →+*S:=Polynomial.eval₂RingHom (algebraMap K₀ S) yS
  let Py:Polynomial S:=P.map g
  have hPyne:Py≠0:=by
-   have h:=PlaneCoefficientExtension.bimap_specialization_ne_zero
+   have h:=RCN360.bimap_specialization_ne_zero
      (algebraMap K₀ S) P
      (hirreducible.isPrimitive (Nat.ne_of_gt hpositive)) yS
-   rw [PlaneCoefficientExtension.bimap_specialization] at h
+   rw [RCN360.bimap_specialization] at h
    exact h
  have hcoefficient:(algebraMap S E₀).comp g=
      Polynomial.eval₂RingHom (algebraMap K₀ E₀) y:=by
@@ -577,4 +577,4 @@ theorem finrank_le_planar_bound_from_proper_roots
    simpa only [Polynomial.eval₂_eq_eval_map] using hQ
 end FiniteWithoutSeparability
 end
-end ProximityPrize.SubmissionLower.CharacteristicFreeMatrixMultiplicityResearch
+end ProximityPrize.SubmissionLower.RCN024

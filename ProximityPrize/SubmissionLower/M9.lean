@@ -1,13 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A9
 import ProximityPrize.SubmissionLower.M6
-namespace ProximityPrize.SubmissionLower.ContactMovingProjectionFamily6719Research
+namespace ProximityPrize.SubmissionLower.RCN209
 open scoped Classical BigOperators WithZero
-open ActualCurveCoordinateField ContactRegularComponentCover CoordinateBoxZeroCount
-open ContactWeakSeparableSeparatorResearch ArbitraryRationalProjectionResearch
-open ContactMovingProjection6676Research ContactMovingProjectionDegree6676Research
-open ContactCommonProjectionChoice6676Research ContactMovingFiberCount6676Research
-open ContactFlagBezout6543Research ContactLocalPoleBound
+open RCN002 RCN264 RCN344
+open RCN341 RCN022
+open RCN207 RCN208
+open RCN064 RCN202
+open RCN095 RCN187
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -86,4 +86,4 @@ theorem exists_moving_projection_family (F H G:Poly) (k:ℕ) (B:Fin (k+1) → Po
  refine ⟨J,fun C v↦(hJ C).2.2.1 v,?_⟩
  simpa only [SeparableCoordinate.degree] using hcount
 end
-end ProximityPrize.SubmissionLower.ContactMovingProjectionFamily6719Research
+end ProximityPrize.SubmissionLower.RCN209

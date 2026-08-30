@@ -3,20 +3,20 @@ import ProximityPrize.SubmissionLower.E9
 import ProximityPrize.SubmissionLower.P0
 import ProximityPrize.SubmissionLower.Z9
 import ProximityPrize.SubmissionLower.V
-namespace ProximityPrize.SubmissionLower.ContactSeedlessListBoundResearch
+namespace ProximityPrize.SubmissionLower.RCN281
 open scoped Classical BigOperators
 open ProximityPrize.Benchmark
-open ContactTranslation ContactInterpolation ContactPolynomialSolutions
-open ContactFactorCaps ContactImplicitContactLift ContactTaylorNumerators
-open ContactGenericSurface ContactGenericInitialPoint ContactGeometricFirstTail
-open ContactGeometricFactorCover ContactRegularFactorGate
-open ContactPrimeSeedIncidence ContactProperCutSeedCount
-open ContactOriginalRegularSeedCount ContactSingularAuxiliary
-open ContactSingularDegreeBounds
-open ContactSelectedSeedDecomposition
-open ContactSeedlessInterpolationResearch
-open ContactSeedlessPrimeIncidenceResearch ContactSeedlessProperCutResearch
-open ActualCoordinateDegreeSum
+open RCN319 RCN174 RCN231
+open RCN081 RCN167 RCN313
+open RCN136 RCN135 RCN138
+open RCN137 RCN267
+open RCN238 RCN243
+open RCN222 RCN290
+open RCN293
+open RCN286
+open RCN279
+open RCN282 RCN283
+open RCN001
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 50000
@@ -51,7 +51,7 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq (GenericField K):=Classical.decEq (GenericField K)
 theorem seedless_degree_caps
    (Q:MvPolynomial (Fin 4) K)
-   (hbox:Q∈ContactSeedlessInterpolationResearch.globalCoefficientBox K
+   (hbox:Q∈RCN279.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap):
    Q.degreeOf 1 ≤ yTotalCap∧Q.degreeOf 2 ≤ slopeCap∧
      Q.degreeOf 3=0:=by
@@ -84,7 +84,7 @@ theorem agreement_cap
  · exact (surfaceMap_degreeOf_le phi _ 2).trans
      (hb.2.2.trans (by simp [agreementCap]))
 abbrev GeometricFactor (F:MvPolynomial (Fin 4) K):=
- ContactOriginalRegularSeedCount.GeometricFactor K F
+ RCN222.GeometricFactor K F
 def geometricPolynomials (F:MvPolynomial (Fin 4) K)
    (Gamma:Finset (Polynomial K)) (g:GeometricFactor K F):
    Finset (Polynomial K):=by
@@ -131,7 +131,7 @@ theorem original_regular_seedless_bound
    [CharP K prime]
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F)
    (hRpos:0 < F.degreeOf 2)
-   (hbox:F∈ContactInterpolation.globalCoefficientBox K
+   (hbox:F∈RCN174.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap)
    (hY:F.degreeOf 1 ≤ yTotalCap)
    (hR:F.degreeOf 2 ≤ slopeCap)
@@ -211,14 +211,14 @@ theorem original_regular_seedless_bound
      simp [seedlessCut]
    have hm0:coordinateMixedDegree (GenericField K) g.1 seedlessCut 0=
        g.1.degreeOf 1:=by
-     rw [ActualCoordinateDegreeSum.coordinateMixedDegree_zero,hx1,hx2]
+     rw [RCN001.coordinateMixedDegree_zero,hx1,hx2]
      omega
    have hm1:coordinateMixedDegree (GenericField K) g.1 seedlessCut 1=
        g.1.degreeOf 0:=by
-     rw [ActualCoordinateDegreeSum.coordinateMixedDegree_one,hx0,hx2]
+     rw [RCN001.coordinateMixedDegree_one,hx0,hx2]
      omega
    have hm2:coordinateMixedDegree (GenericField K) g.1 seedlessCut 2=0:=by
-     rw [ActualCoordinateDegreeSum.coordinateMixedDegree_two,hx0,hx1]
+     rw [RCN001.coordinateMixedDegree_two,hx0,hx1]
      omega
    have hcost:
        (∑ i:Fin 3,agreementCap i*
@@ -298,7 +298,7 @@ theorem yProjection_natDegree_le {T:Type*} [Field T]
    have heq:MvPolynomial.monomial d (S.coeff d)=
        MvPolynomial.C (S.coeff d)*MvPolynomial.X 0^d 0*
          MvPolynomial.X 1^d 1*MvPolynomial.X 2^d 2:=by
-     exact ContactExceptionalSeedCount.monomial_fin3 d (S.coeff d)
+     exact RCN080.monomial_fin3 d (S.coeff d)
    rw [heq]
    by_cases h1:d 1=0 <;> by_cases h2:d 2=0 <;>
      simp [yProjection,h1,h2]
@@ -339,7 +339,7 @@ theorem degreeZ_le_zWeight (Q:MvPolynomial (Fin 4) K):
 theorem singular_seedless_card_le
    [CharP K prime]
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
-   (hbox:Q∈ContactSeedlessInterpolationResearch.globalCoefficientBox K
+   (hbox:Q∈RCN279.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap)
    (Gamma:Finset (Polynomial K))
    (hsolutions:∀ S∈Gamma,
@@ -445,9 +445,9 @@ theorem seedless_solution_cover
 theorem seedless_list_card_le
    [CharP K prime]
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
-   (hbox:Q∈ContactSeedlessInterpolationResearch.globalCoefficientBox K
+   (hbox:Q∈RCN279.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap)
-   (hlegacy:Q∈ContactInterpolation.globalCoefficientBox K
+   (hlegacy:Q∈RCN174.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap)
    (Gamma:Finset (Polynomial K))
    {Iota:Type} [Fintype Iota] [DecidableEq Iota]
@@ -527,4 +527,4 @@ theorem seedless_list_card_le
  have hcontra:listBudget*gap < listNumerator:=hmul.trans_le htotal
  exact (Nat.not_lt_of_ge hcontra.le) list_numerator_fits
 end
-end ProximityPrize.SubmissionLower.ContactSeedlessListBoundResearch
+end ProximityPrize.SubmissionLower.RCN281

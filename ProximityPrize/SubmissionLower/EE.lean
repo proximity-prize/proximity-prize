@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X7
 import ProximityPrize.SubmissionLower.AY
-namespace ProximityPrize.SubmissionLower.ContactFlagTrapezoidFamilyDegree6543Research
+namespace ProximityPrize.SubmissionLower.RCN124
 open scoped Classical BigOperators
-open TrivariateRationalCollection ActualPlaneCoordinateKernel
- ActualPlaneCoordinateCaps ActualPlanePositiveOrder
- ActualPlaneCharacteristicFreeDegreeResearch
- CharacteristicFreeMatrixMultiplicityResearch
- CharacteristicFreeProjectionAdapter ArbitraryRationalProjectionResearch
- ArbitraryPlaneEvaluationFamilyResearch ActualPlaneJointProjection
+open RCN371 RCN011
+ RCN009 RCN013
+ RCN008
+ RCN024
+ RCN025 RCN022
+ RCN021 RCN012
 noncomputable section
 theorem sum_finrank_le_ordinary_resultant_without_separability
    {F:Type} [Field F] {I:Type*} [Fintype I]
@@ -21,10 +21,10 @@ theorem sum_finrank_le_ordinary_resultant_without_separability
    (hgen:∀ i,IntermediateField.adjoin F
      ({y i,r i}:Set (E i))=⊤)
    (hkernels:Function.Injective (fun i↦
-     PlaneFunctionFieldDegree.relationIdeal F (E i) (y i) (r i)))
-   (hProot:∀ i,PlaneFunctionFieldDegree.planeEval F (E i)
+     RCN361.relationIdeal F (E i) (y i) (r i)))
+   (hProot:∀ i,RCN361.planeEval F (E i)
      (y i) (r i) P=0)
-   (hQroot:∀ i,PlaneFunctionFieldDegree.planeEval F (E i)
+   (hQroot:∀ i,RCN361.planeEval F (E i)
      (y i) (r i) Q=0):
    (∑ i,Module.finrank F (E i)) ≤
      (Polynomial.resultant P Q).natDegree:=by
@@ -47,14 +47,14 @@ theorem sum_finrank_le_ordinary_resultant_without_separability
          AdjoinRoot.mk_C,AdjoinRoot.algebraMap_eq]
      · simp only [Polynomial.coe_eval₂RingHom,Polynomial.eval₂_X,
          AdjoinRoot.mk_X]
-   have h:=PlaneCoefficientExtension.bimap_specialization_ne_zero
+   have h:=RCN360.bimap_specialization_ne_zero
      (algebraMap F (AdjoinRoot (minpoly F (y i)))) P
      (hP.isPrimitive (Nat.ne_of_gt hpositive))
      (AdjoinRoot.root (minpoly F (y i)))
-   rw [PlaneCoefficientExtension.bimap_specialization,hcoeff] at h
+   rw [RCN360.bimap_specialization,hcoeff] at h
    exact h
  have hresultant:Polynomial.resultant P Q P.natDegree Q.natDegree≠0:=
-   PlaneResultantIrreducible.irreducible_resultant_ne_zero_of_not_dvd
+   RCN362.irreducible_resultant_ne_zero_of_not_dvd
      P Q hP hpositive hproper
  simpa only using
    (sum_finrank_le_resultant_of_relationIdeal_injective
@@ -110,7 +110,7 @@ theorem finite_sum_finrank_bound_trapezoid
    have hfinite:∀ i,FiniteDimensional (RatFunc K) (E i):=hbase.1
    letI:∀ i,FiniteDimensional (RatFunc K) (E i):=hfinite
    have hGroots:∀ i,
-       PlaneFunctionFieldDegree.planeEval (RatFunc K) (E i)
+       RCN361.planeEval (RatFunc K) (E i)
          (e i (MvPolynomial.X (order 2)))
          (e i (MvPolynomial.X (order 1))) (planeMap K order G)=0:=by
      intro i
@@ -119,7 +119,7 @@ theorem finite_sum_finrank_bound_trapezoid
      rw [←RingHom.comp_apply,planeEvaluation_comp_planeMap]
      exact hGroot i
    have hHroots:∀ i,
-       PlaneFunctionFieldDegree.planeEval (RatFunc K) (E i)
+       RCN361.planeEval (RatFunc K) (E i)
          (e i (MvPolynomial.X (order 2)))
          (e i (MvPolynomial.X (order 1))) (planeMap K order H)=0:=by
      intro i
@@ -128,7 +128,7 @@ theorem finite_sum_finrank_bound_trapezoid
      rw [←RingHom.comp_apply,planeEvaluation_comp_planeMap]
      exact hHroot i
    have hrelation:Function.Injective (fun i↦
-       PlaneFunctionFieldDegree.relationIdeal (RatFunc K) (E i)
+       RCN361.relationIdeal (RatFunc K) (E i)
          (e i (MvPolynomial.X (order 2)))
          (e i (MvPolynomial.X (order 1)))):=by
      intro i j hij
@@ -149,4 +149,4 @@ theorem finite_sum_finrank_bound_trapezoid
  · letI:IsEmpty I:=⟨fun i↦hI ⟨i⟩⟩
    exact ⟨fun i↦isEmptyElim i,by simp⟩
 end
-end ProximityPrize.SubmissionLower.ContactFlagTrapezoidFamilyDegree6543Research
+end ProximityPrize.SubmissionLower.RCN124

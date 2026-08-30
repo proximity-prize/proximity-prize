@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y0
 import ProximityPrize.SubmissionLower.EI
-namespace ProximityPrize.SubmissionLower.ContactFactoredFlagCount6676Research
+namespace ProximityPrize.SubmissionLower.RCN084
 open scoped Classical BigOperators
-open ContactFlagBezout6543Research ContactFlagSymbolicTrapezoidResearch
-open ContactCumulativeWeightedDegreeResearch ContactGeometricFactorCover
-open ContactRegularComponentCover ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveNestedProjection6600Research ContactAdaptiveNestedUnitFamily6600Research
-open ContactAdaptiveUnitPoleFamilyResearch ContactPrimeFlagBudgetFamilyResearch
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveJointProjectionBounds
-open ActualCoordinateDegreeSum
+open RCN095 RCN121
+open RCN071 RCN137
+open RCN264 RCN341
+open RCN037 RCN039
+open RCN046 RCN237
+open RCN002 RCN005 RCN003
+open RCN001
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 3000000
@@ -91,7 +91,7 @@ theorem sum_flagMixed_le_of_cumulative {I:Type*} [Fintype I]
      flagMixed v q r=v.zOnly*z+v.yz*y+v.all*a:=by
        simp only [z,y,a,flagMixed,unitZFlag,unitYZFlag,unitAllFlag]
        ring
-     _=_:=ContactGCDCumulativeLedgerResearch.linear_cost_cumulative z y a v hzy hya
+     _=_:=RCN131.linear_cost_cumulative z y a v hzy hya
  rw [Finset.sum_congr rfl (fun i _↦heq (f i)),heq p]
  simp only [Finset.sum_add_distrib, ←Finset.mul_sum]
  simpa only [Finset.sum_add_distrib] using Nat.add_le_add
@@ -254,4 +254,4 @@ theorem exists_small_projection_data (F N R:Poly) (hF:F≠0)
  · exact fun g C↦hgate g C 0
  · exact fun g C↦hgate g C 2
 end
-end ProximityPrize.SubmissionLower.ContactFactoredFlagCount6676Research
+end ProximityPrize.SubmissionLower.RCN084

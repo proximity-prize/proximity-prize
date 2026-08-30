@@ -1,25 +1,25 @@
 import ProximityPrize.SubmissionLower.Q0
 import ProximityPrize.SubmissionLower.A0
-namespace ProximityPrize.SubmissionLower.ContactTwoTailReducedActivePowers6734Research
+namespace ProximityPrize.SubmissionLower.RCN331
 open scoped Classical BigOperators
-open ContactGenericInitialPoint ContactGenericSurface
-open ContactFirstTailCertificate6731Research
-open ContactProperDelayedTailCertificate6732Research
-open ContactDelayedTailMultiplicityProvider6732Research
-open ContactProperCutSeedCount
-open ContactRegularComponentCover
-open ContactFlagBezout6543Research
-open ContactCongruentCuts6643Research
-open ContactTwoTailReducedTransport6734Research
-open ContactTwoTailReducedPowers6734Research
-open ContactActiveNestedFixedPowers6733Research
-open ContactActiveNestedFlagData6733Research
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedProjectionActive6630Research
-open ContactWeakSeparableSeparatorResearch
-open ContactFlagProjectionPositivity6543Research
-open ContactFlagTriangularProjectionResearch
-open ActualCurveCoordinateField
+open RCN135 RCN136
+open RCN086
+open RCN244
+open RCN074
+open RCN243
+open RCN264
+open RCN095
+open RCN066
+open RCN336
+open RCN333
+open RCN029
+open RCN031
+open RCN037
+open RCN038
+open RCN341
+open RCN117
+open RCN125
+open RCN002
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 5000000
@@ -29,13 +29,15 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
+variable {errorCap : ℕ}
+variable {stageSupport : RCN275.ResidualSupportParameters}
 theorem reducedStage_activeFixedPowers
-   (S : Stage K I Gamma x p flag)
+   (S : Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w + 1))
+     (RCN326.w + 1))
    (Tred : MvPolynomial (Fin 3) (GenericField K))
    (hd : S.G ∣ globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w + 1) - Tred)
+     (RCN326.w + 1) - Tred)
    (base : ∀ C : RegularComponent (GenericField K) S.G Tred
      (regularitySurface (polynomialEmbedding K) S.F),
      SeparableLiteralCoordinate C.1)
@@ -87,4 +89,4 @@ theorem reducedStage_activeFixedPowers
      (flag_v_outer_positive_of_directional D.lam D.mu S.G D.directional)
      q hq hqMonic a0
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailReducedActivePowers6734Research
+end ProximityPrize.SubmissionLower.RCN331

@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BC
-namespace ProximityPrize.SubmissionLower.ContactFlagInterpolation6641Research
-open ContactFlagRankKernel6641Research
+namespace ProximityPrize.SubmissionLower.RCN100
+open RCN119
 open ProximityPrize.Benchmark
 open scoped BigOperators
 noncomputable section
@@ -286,4 +286,4 @@ theorem all_blocks_divisible_of_equations
  · have hm:m-r=0:=by omega
    simp only [hm,pow_zero,one_dvd]
 end
-end ProximityPrize.SubmissionLower.ContactFlagInterpolation6641Research
+end ProximityPrize.SubmissionLower.RCN100

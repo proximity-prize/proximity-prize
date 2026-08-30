@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AP
 import ProximityPrize.SubmissionLower.G1
-namespace ProximityPrize.SubmissionLower.InfinityValuationRing
+namespace ProximityPrize.SubmissionLower.RCN353
 open scoped Classical
 noncomputable section
 variable (K:Type*) [Field K]
@@ -78,4 +78,4 @@ theorem infinity_valuation_eq (x:RatFunc K):
    IsDedekindDomain.HeightOneSpectrum.valuation_of_algebraMap,
    infinity_intValuation_eq]
 end
-end ProximityPrize.SubmissionLower.InfinityValuationRing
+end ProximityPrize.SubmissionLower.RCN353

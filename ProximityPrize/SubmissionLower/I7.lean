@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D3
-namespace ProximityPrize.SubmissionLower.ContactDerivativeRegularity6719Research
-open ContactMovingProjectionDegree6676Research
+namespace ProximityPrize.SubmissionLower.RCN076
+open RCN208
 noncomputable section
 set_option autoImplicit false
 variable {K E:Type} [Field K] [Field E]
@@ -51,4 +51,4 @@ theorem map_pderiv_ne_zero_of_mem_span (ev:Poly →+*E) (F H:Poly)
  rw [←hAB,map_add,map_mul,map_mul,hF,hD]
  ring
 end
-end ProximityPrize.SubmissionLower.ContactDerivativeRegularity6719Research
+end ProximityPrize.SubmissionLower.RCN076

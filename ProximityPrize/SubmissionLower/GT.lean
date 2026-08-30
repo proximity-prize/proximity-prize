@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X7
 import ProximityPrize.SubmissionLower.EH
-namespace ProximityPrize.SubmissionLower.ContactTrivariateTrdeg6731Research
-open TrivariateRationalCollection ActualPlaneCoordinateKernel ActualPlaneCoordinateCaps
- ActualPlanePositiveOrder
- ArbitraryRationalProjectionResearch ArbitraryPlaneEvaluationFamilyResearch
- CharacteristicFreeMatrixMultiplicityResearch
- ContactFunctionFieldTrdeg6731Research
+namespace ProximityPrize.SubmissionLower.RCN322
+open RCN371 RCN011 RCN009
+ RCN013
+ RCN022 RCN021
+ RCN024
+ RCN129
 noncomputable section
 variable (K L:Type) [Field K] [Field L] [Algebra K L]
 set_option maxHeartbeats 1000000
@@ -76,7 +76,7 @@ theorem trdeg_le_one_of_generated_relations
      Polynomial.eval₂ (Polynomial.eval₂RingHom (algebraMap (RatFunc K) L)
        (e (MvPolynomial.X (order 2))))
        (e (MvPolynomial.X (order 1))) (planeMap K order G)=0:=by
-   rw [←PlaneSmallCharacteristicDegree.planeEval_eq_eval₂]
+   rw [←RCN365.planeEval_eq_eval₂]
    change planeEvaluation K L order e ht (planeMap K order G)=0
    rw [←RingHom.comp_apply,planeEvaluation_comp_planeMap]
    exact hG
@@ -117,4 +117,4 @@ theorem trdeg_adjoin_le_one_of_irreducible_proper_relations
  exact trdeg_le_one_of_generated_relations K E vE hgen F T hF hproper
    (hroot F hFzero) (hroot T hTzero)
 end
-end ProximityPrize.SubmissionLower.ContactTrivariateTrdeg6731Research
+end ProximityPrize.SubmissionLower.RCN322

@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B5
-namespace ProximityPrize.SubmissionLower.ContactRegularPoint
-open ContactDifferentialRing
+namespace ProximityPrize.SubmissionLower.RCN269
+open RCN077
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
 section Evaluation
@@ -159,4 +159,4 @@ theorem regularPointValue_coordinate
  rw [contactCoordinate,regularPointValue_mk]
  simp only [pointEvaluation,MvPolynomial.eval₂Hom_X',extendPoint_castSucc]
 end Coordinates
-end ProximityPrize.SubmissionLower.ContactRegularPoint
+end ProximityPrize.SubmissionLower.RCN269

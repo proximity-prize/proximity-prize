@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X5
 import ProximityPrize.SubmissionLower.DB
-namespace ProximityPrize.SubmissionLower.ActualPlaneJointProjection
+namespace ProximityPrize.SubmissionLower.RCN012
 open Polynomial Polynomial.Bivariate
-open ActualCurveCoordinateField ActualCurveRationalProjection TrivariateRationalCollection
-open ActualPlaneCoordinateKernel ActualPlaneCoordinateCaps
-open ActualPlanePositiveOrder
+open RCN002 RCN005 RCN371
+open RCN011 RCN009
+open RCN013
 noncomputable section
 variable {A:Type} [Field A]
 theorem bivariateEquiv_coeff_natDegree_le_of_support
@@ -336,4 +336,4 @@ theorem exists_positive_sparse_characteristic_order
    exact (swapped_resultant_natDegree_le_of_outer_zero K order G T
      gOuter tInner hzero hGswapOuter hTswapInner).trans_lt hswapP
 end
-end ProximityPrize.SubmissionLower.ActualPlaneJointProjection
+end ProximityPrize.SubmissionLower.RCN012

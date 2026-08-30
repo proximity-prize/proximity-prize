@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.AN
-namespace ProximityPrize.SubmissionLower.ContactWeightedChannelUtilities6733Research
+namespace ProximityPrize.SubmissionLower.RCN342
 open scoped Classical BigOperators
-open ContactWeightedGroupedResultantChannel6733Research
+open RCN343
 noncomputable section
 set_option autoImplicit false
 variable {Base:Type} [Field Base] [DecidableEq Base]
@@ -36,4 +36,4 @@ noncomputable def emptyChannel
  cost_le_residue_mul_degree i:=isEmptyElim i
  resultant_degree_le:=by simp
 end
-end ProximityPrize.SubmissionLower.ContactWeightedChannelUtilities6733Research
+end ProximityPrize.SubmissionLower.RCN342

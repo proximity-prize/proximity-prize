@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y5
 import ProximityPrize.SubmissionLower.I7
-namespace ProximityPrize.SubmissionLower.ContactMovingFiberCount6676Research
+namespace ProximityPrize.SubmissionLower.RCN202
 open scoped Classical BigOperators
-open ActualCurveCoordinateField ContactCurveComponents ContactRegularComponentCover
-open ContactMovingProjection6676Research ContactMovingProjectionDegree6676Research
-open ContactGenericFiberEmbeddings6676Research ContactFactoredFlagCount6676Research
-open ContactFlagBezout6543Research ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveNestedProjection6600Research
-open ContactDerivativeRegularity6719Research
+open RCN002 RCN072 RCN264
+open RCN207 RCN208
+open RCN134 RCN084
+open RCN095 RCN341
+open RCN037
+open RCN076
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 3000000
@@ -267,4 +267,4 @@ theorem fiber_small_flags (a b s k:ℕ) (C:FlagDegree)
      (fun j↦inFlag_map (algebraMap K E) (hB j))
      (inFlag_map (algebraMap K E) hQ) (inFlag_map (algebraMap K E) hU) hc
 end
-end ProximityPrize.SubmissionLower.ContactMovingFiberCount6676Research
+end ProximityPrize.SubmissionLower.RCN202

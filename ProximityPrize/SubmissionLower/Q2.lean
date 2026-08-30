@@ -1,24 +1,24 @@
 import ProximityPrize.SubmissionLower.P9
-namespace ProximityPrize.SubmissionLower.ContactTwoTailReducedProviderAssembly6734Research
+namespace ProximityPrize.SubmissionLower.RCN335
 open scoped Classical BigOperators
-open ContactGenericInitialPoint ContactGenericSurface
-open ContactIdentityResidualIterationResearch ContactRegularComponentCover
-open ContactDelayedTailMultiplicityProvider6732Research
-open ContactFirstTailCertificate6731Research ContactProperCutSeedCount
-open ContactPrimeSeedIncidence ContactFlagBezout6543Research
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactMovingAgreementCertificate6719Research
-open ContactResidualSupportParametersResearch
-open ContactProperDelayedTailCertificate6732Research
-open ContactTwoTailParameters6734Research
-open ContactReducedTaylorProfileResearch
-open ContactTwoTailReducedProvider6734Research
-open ContactTwoTailReducedBudget6734Research
-open ContactTwoTailReducedTransport6734Research
-open ContactTangentCoefficientProvider6732Research
-open ContactTwoTailTangentCost6732Research
-open ContactTwoTailRecurrence6731Research
-open ContactInterpolation ContactTranslation
+open RCN135 RCN136
+open RCN159 RCN264
+open RCN074
+open RCN086 RCN243
+open RCN238 RCN095
+open RCN237
+open RCN198
+open RCN275
+open RCN244
+open RCN327
+open RCN263
+open RCN334
+open RCN332
+open RCN336
+open RCN312
+open RCN339
+open RCN330
+open RCN174 RCN319
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 5000000
@@ -28,48 +28,49 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
-theorem exists_delayedTailMultiplicityProvider_of_reduced
+variable {stageErrorCap : ℕ}
+/- Agreement and error parameters are explicit data on the general path. -/
+theorem exists_delayedTailMultiplicityProvider_of_reducedGeneral
    {a b s : ℕ}
-   (S : ResidualStage (polynomialEmbedding K) Gamma x p errors flag w
+   (agreementCap : ℕ)
+   (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
      (support a b s))
-   (hs : (support a b s).s ≤ fixedSupport.s)
-   (hys : (support a b s).ys ≤ fixedSupport.ys)
-   (htotal : (support a b s).total ≤ fixedSupport.total)
    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
    (hflagChar : flag.yz + flag.all < p ∧ flag.all < p ∧
      flag.zOnly + flag.yz + flag.all < p)
    (hmixed : (1 + (w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
      (flag.yz + flag.all) * ((2 * (s + 2) - 2) * (w + 1)) < p)
    (bound seedCap slopeCap : ℕ)
-   (hnodes : S.nodes.card = agreements + errors)
-   (hagreement : ∀ gamma ∈ Gamma, agreements ≤ (S.agreementFiber gamma).card)
+   (hnodes : S.nodes.card = agreementCap + stageErrorCap)
+   (hagreement : ∀ gamma ∈ Gamma, agreementCap ≤ (S.agreementFiber gamma).card)
+   (hwa : w < agreementCap)
    (hshort : w + 1 ≤ bound) (hchar : bound < p)
    (hbox : S.F ∈ globalCoefficientBox K bound w seedCap slopeCap)
-   (htangentGate : errors + 1 ≤
+   (htangentGate : stageErrorCap + 1 ≤
      (reducedResidualAgreementFlag (support a b s) (w + 2)).yz) :
    Nonempty (DelayedTailMultiplicityProvider
      (tailFlag1 := reducedResidualAgreementFlag (support a b s) (w + 1))
      (tailFlag2 := reducedResidualAgreementFlag (support a b s) (w + 2)) S) := by
  classical
  let supp := support a b s
- let S0 := loosenStage S hs hys htotal
+ let S0 := loosenStageGeneral S
  let T := globalTailCut (polynomialEmbedding K) S.F (w + 1)
  let H := regularitySurface (polynomialEmbedding K) S.F
  let secondFlag := reducedResidualAgreementFlag supp (w + 2)
  let B := reducedBudgetFamily S hfirstProper hflagChar hmixed
- let multiplicity := reducedMultiplicity S hs hys htotal hfirstProper
+ let multiplicity := reducedMultiplicityGeneral S hfirstProper
  have hone : ∀ C, 1 ≤ multiplicity C := by
-   exact loosenStage_one_le_localMultiplicity S hs hys htotal hfirstProper
+   exact loosenStageGeneral_one_le_localMultiplicity S hfirstProper
  have tangentCount (C : FirstTailComponent S)
      (hall : ∀ delay, globalTailCut (polynomialEmbedding K) S.F
        (w + 1 + delay) ∈ C.1) :
      (componentSeeds (GenericField K) S.G T H Gamma
        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
-         (errors + 1) * B.yzCost C := by
+         (stageErrorCap + 1) * B.yzCost C := by
    exact tangent_component_card_le S C hfirstProper
      (reducedBaseOrd S hfirstProper hflagChar hmixed C)
-     agreements bound seedCap slopeCap hnodes hagreement
-     (by norm_num [agreements, errors, n, w]) (by norm_num [w])
+     agreementCap bound seedCap slopeCap hnodes hagreement
+     hwa (by norm_num [w])
      hshort hchar hbox B
      (reducedBudgetFamily_yzPositive S hfirstProper hflagChar hmixed C)
      hall (reducedBudgetFamily_yzPole S hfirstProper hflagChar hmixed C)
@@ -110,7 +111,7 @@ theorem exists_delayedTailMultiplicityProvider_of_reduced
        hcount.trans (Nat.mul_le_mul_right (B.weightedCost secondFlag C) hdelayMu)⟩
    · exact Or.inr htangent
  have providerDichotomy :=
-   loosenStage_dichotomy_with_tangent S hs hys htotal hfirstProper B tangentCount
+   loosenStageGeneral_dichotomy_with_tangent S hfirstProper B tangentCount
  refine ⟨{
    budgetFamily := B
    multiplicity := multiplicity
@@ -119,7 +120,7 @@ theorem exists_delayedTailMultiplicityProvider_of_reduced
    tangentYZGate := htangentGate
    cost_le := fun _ => le_rfl
    divisor_le :=
-     (transportedWeightedResultants S hs hys htotal hfirstProper hflagChar hmixed).divisor_le
+     (transportedWeightedResultantsGeneral S hfirstProper hflagChar hmixed).divisor_le
        B multiplicity
    componentBound := ?_
    dichotomy := providerDichotomy }⟩
@@ -130,11 +131,39 @@ theorem exists_delayedTailMultiplicityProvider_of_reduced
  · calc
      (componentSeeds (GenericField K) S.G T H Gamma
          (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
-         (errors + 1) * B.yzCost C := tangentCount C htangent
+         (stageErrorCap + 1) * B.yzCost C := tangentCount C htangent
      _ ≤ B.weightedCost secondFlag C :=
-       yzCost_mul_le_weightedCost B secondFlag C (errors + 1) htangentGate
+       yzCost_mul_le_weightedCost B secondFlag C (stageErrorCap + 1) htangentGate
      _ = 1 * B.weightedCost secondFlag C := by simp
      _ ≤ multiplicity C * B.weightedCost secondFlag C :=
        Nat.mul_le_mul_right (B.weightedCost secondFlag C) (hone C)
+
+/- Backward-compatible accepted-row entry point. -/
+theorem exists_delayedTailMultiplicityProvider_of_reduced
+   {a b s : ℕ}
+   (S : ResidualStage (polynomialEmbedding K) Gamma x p errors flag w
+     (support a b s))
+   (hs : (support a b s).s ≤ fixedSupport.s)
+   (hys : (support a b s).ys ≤ fixedSupport.ys)
+   (htotal : (support a b s).total ≤ fixedSupport.total)
+   (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
+   (hflagChar : flag.yz + flag.all < p ∧ flag.all < p ∧
+     flag.zOnly + flag.yz + flag.all < p)
+   (hmixed : (1 + (w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
+     (flag.yz + flag.all) * ((2 * (s + 2) - 2) * (w + 1)) < p)
+   (bound seedCap slopeCap : ℕ)
+   (hnodes : S.nodes.card = agreements + errors)
+   (hagreement : ∀ gamma ∈ Gamma, agreements ≤ (S.agreementFiber gamma).card)
+   (hshort : w + 1 ≤ bound) (hchar : bound < p)
+   (hbox : S.F ∈ globalCoefficientBox K bound w seedCap slopeCap)
+   (htangentGate : errors + 1 ≤
+     (reducedResidualAgreementFlag (support a b s) (w + 2)).yz) :
+   Nonempty (DelayedTailMultiplicityProvider
+     (tailFlag1 := reducedResidualAgreementFlag (support a b s) (w + 1))
+     (tailFlag2 := reducedResidualAgreementFlag (support a b s) (w + 2)) S) := by
+ exact exists_delayedTailMultiplicityProvider_of_reducedGeneral agreements S
+   hfirstProper hflagChar hmixed bound seedCap slopeCap hnodes hagreement
+   (by norm_num [agreements, errors, n, w]) hshort hchar hbox htangentGate
+
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailReducedProviderAssembly6734Research
+end ProximityPrize.SubmissionLower.RCN335

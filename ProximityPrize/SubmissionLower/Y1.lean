@@ -1,13 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DN
-namespace ProximityPrize.SubmissionLower.ContactAdaptiveProjectionCoordinateResearch
+namespace ProximityPrize.SubmissionLower.RCN042
 open scoped Classical TensorProduct
 open Polynomial KaehlerDifferential
-open CoordinateBoxZeroCount
-open ArbitraryRationalProjectionResearch
-open SeparableShearKaehlerResearch SeparableShearTranscendenceResearch
- GlobalSeparableShearResearch
-open ContactWeakSeparableSeparatorResearch
+open RCN344
+open RCN022
+open RCN369 RCN370
+ RCN351
+open RCN341
 noncomputable section
 variable {K:Type} {L:Type*} [Field K] [Field L] [Algebra K L] [IsAlgClosed K]
 def coordinateOfGate (x:L)
@@ -109,18 +109,18 @@ end FiniteFamily
 def literalToSeparableCoordinate
    {P:Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
    (D:SeparableLiteralCoordinate P):
-   SeparableCoordinate K (ActualCurveCoordinateField.CoordinateField K P) where
- embedding:=ActualCurveRationalProjection.rationalBaseEmbedding
+   SeparableCoordinate K (RCN002.CoordinateField K P) where
+ embedding:=RCN005.rationalBaseEmbedding
    K P D.index D.transcendental
  finite:=D.finite
  separable:=D.separable
 @[simp] theorem literalToSeparableCoordinate_value
    {P:Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
    (D:SeparableLiteralCoordinate P):
-   coordinateValue K (ActualCurveCoordinateField.CoordinateField K P)
+   coordinateValue K (RCN002.CoordinateField K P)
        (Sum.inr (literalToSeparableCoordinate D))=
-     ActualCurveCoordinateField.coordinate K P D.index:=by
- exact ActualCurveRationalProjection.rational_variable_image
+     RCN002.coordinate K P D.index:=by
+ exact RCN005.rational_variable_image
    K P D.index D.transcendental
 theorem differential_ne_zero_of_gate (x:L)
    (hx:Transcendental K x)
@@ -137,4 +137,4 @@ theorem differential_ne_zero_of_gate (x:L)
  unfold parameterDifferential at h
  rwa [elementEmbedding_variable] at h
 end
-end ProximityPrize.SubmissionLower.ContactAdaptiveProjectionCoordinateResearch
+end ProximityPrize.SubmissionLower.RCN042

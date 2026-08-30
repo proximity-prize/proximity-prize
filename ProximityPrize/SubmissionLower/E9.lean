@@ -2,11 +2,11 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.P2
 import ProximityPrize.SubmissionLower.BD
 import ProximityPrize.SubmissionLower.K
-namespace ProximityPrize.SubmissionLower.ContactSeedlessInterpolationResearch
+namespace ProximityPrize.SubmissionLower.RCN279
 open scoped BigOperators
 open ProximityPrize.Benchmark
-open ContactSeedlessRankResearch
-open ContactFlagRankKernel6641Research
+open RCN285
+open RCN119
 noncomputable section
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
@@ -247,7 +247,7 @@ theorem all_blocks_divisible_of_kernel {I:Type*} [Fintype I]
    simp only [hm,pow_zero,one_dvd]
 def homogenizedTranslation (x u:K):
    Poly4 K →ₐ[K] Polynomial (LocalPoly K):=
- ContactFlagTranslation6641Research.homogenizedTranslation K x u 0
+ RCN122.homogenizedTranslation K x u 0
 theorem columnMonomial_eq (D w L s:ℕ)
    (c:CoefficientIndex D w L s) (a:K):
    MvPolynomial.monomial (columnExponent c) a=
@@ -275,13 +275,13 @@ theorem translation_column_coeff (D w L s:ℕ) (x u:K)
            Polynomial.C (MvPolynomial.X 1^c.2.1.val))):=by
    rw [columnMonomial_eq K D w L s]
    simp [homogenizedTranslation,
-     ContactFlagTranslation6641Research.homogenizedTranslation,
-     ContactFlagTranslation6641Research.translationVariables,
-     ContactFlagInterpolation6641Research.seedAffine,
+     RCN122.homogenizedTranslation,
+     RCN122.translationVariables,
+     RCN100.seedAffine,
      Polynomial.algebraMap_apply,MvPolynomial.algebraMap_eq]
    ring
  rw [hfactor,Polynomial.coeff_C_mul,
-   ContactFlagTranslation6641Research.coeff_shifted_affine_product]
+   RCN122.coeff_shifted_affine_product]
  unfold blockEntry
  rw [Finset.mul_sum,Finset.smul_sum]
  apply Finset.sum_congr rfl
@@ -338,7 +338,7 @@ theorem exists_frozen_seedless_interpolant
        weightedCap w yTotalCap slopeCap∧
      ∀ (i:IRSProfile.Index) (r:ℕ),
        slopeDifference IRSProfile.Field^(multiplicity-r)∣
-         (ContactTranslation.homogenizedTranslation IRSProfile.Field
+         (RCN319.homogenizedTranslation IRSProfile.Field
            (IRSProfile.domain i) (received i) 0 Q).coeff r:=by
  obtain ⟨theta,htheta,hzero⟩:=exists_nonzero_kernel_array
    IRSProfile.Field weightedCap w yTotalCap slopeCap multiplicity
@@ -358,7 +358,7 @@ theorem exists_frozen_seedless_interpolant
  exact hdiv
 theorem seedlessBox_le_legacy:
    globalCoefficientBox IRSProfile.Field weightedCap w yTotalCap slopeCap ≤
-     ContactInterpolation.globalCoefficientBox IRSProfile.Field
+     RCN174.globalCoefficientBox IRSProfile.Field
        weightedCap w yTotalCap slopeCap:=by
  apply MvPolynomial.restrictSupport_mono
  intro d hd
@@ -370,27 +370,27 @@ theorem exists_frozen_seedless_vanishing_interpolant
      Q≠0∧
      Q∈globalCoefficientBox IRSProfile.Field
        weightedCap w yTotalCap slopeCap∧
-     Q∈ContactInterpolation.globalCoefficientBox IRSProfile.Field
+     Q∈RCN174.globalCoefficientBox IRSProfile.Field
        weightedCap w yTotalCap slopeCap∧
      ∀ (P:Polynomial IRSProfile.Field)
        (support:Finset IRSProfile.Index),
        P.natDegree ≤ w → agreements ≤ support.card →
        (∀ i∈support,P.eval (IRSProfile.domain i)=received i) →
-       ContactTranslation.specialization IRSProfile.Field P 0 Q=0:=by
+       RCN319.specialization IRSProfile.Field P 0 Q=0:=by
  classical
  obtain ⟨Q,hQ,hbox,hcontact⟩:=
    exists_frozen_seedless_interpolant received
  have hlegacy:=seedlessBox_le_legacy hbox
  refine ⟨Q,hQ,hbox,hlegacy,?_⟩
  intro P support hdegree hcard hvalues
- apply ContactTranslation.specialization_eq_zero_of_contact_and_degree
+ apply RCN319.specialization_eq_zero_of_contact_and_degree
    IRSProfile.Field Q P 0 IRSProfile.domain received (fun _ => 0)
      support multiplicity
  · intro i hi r
    exact hcontact i r
  · intro i hi
    simpa only [mul_zero,add_zero] using hvalues i hi
- · have hdeg:=ContactTranslation.specialization_natDegree_lt
+ · have hdeg:=RCN319.specialization_natDegree_lt
      IRSProfile.Field weightedCap w yTotalCap slopeCap Q P 0
      (by norm_num [weightedCap,multiplicity,agreements,n,errors])
      hlegacy hdegree
@@ -399,4 +399,4 @@ theorem exists_frozen_seedless_vanishing_interpolant
      exact Nat.mul_le_mul_left multiplicity hcard
    exact hdeg.trans_le hbound
 end
-end ProximityPrize.SubmissionLower.ContactSeedlessInterpolationResearch
+end ProximityPrize.SubmissionLower.RCN279

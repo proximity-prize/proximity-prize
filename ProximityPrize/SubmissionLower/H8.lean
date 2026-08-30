@@ -2,10 +2,10 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A7
 import ProximityPrize.SubmissionLower.I1
 import ProximityPrize.SubmissionLower.D0
-namespace ProximityPrize.SubmissionLower.ContactCoefficientBaseChange6731Research
-open ContactCoefficientFieldTrdeg6731Research
-open ContactCoefficientCurveTrdegAtMostOne6731Research ContactLocalPoleBound
-open ContactMovingPoleTransport6719Research ActualCurveCoordinateField
+namespace ProximityPrize.SubmissionLower.RCN058
+open RCN062
+open RCN061 RCN187
+open RCN205 RCN002
 noncomputable section
 set_option maxHeartbeats 500000
 set_option synthInstance.maxHeartbeats 200000
@@ -75,7 +75,7 @@ theorem coefficient_pole_le_of_trdeg_le_one
    (htr:Algebra.trdeg k (baseCoefficientField (k:=k) P γ) ≤ 1)
    (x:Ω) (hx:Transcendental k x) (y:L)
    (hy:P.eval (algebraMap Ω L x)=y)
-   (v:CoordinatePoleMass.Place Ω L) (j:ℕ):
+   (v:RCN346.Place Ω L) (j:ℕ):
    poleOrder v.val (P.coeff j) ≤ poleOrder v.val y:=by
  letI:v.val.IsTrivialOn Ω:=v.property.2
  let B:IntermediateField k L:=baseCoefficientField (k:=k) P γ
@@ -108,4 +108,4 @@ theorem coefficient_pole_le_of_trdeg_le_one
    simp only [poleOrder,map_zero,WithZero.log_zero,max_self]
    exact le_max_left _ _
 end
-end ProximityPrize.SubmissionLower.ContactCoefficientBaseChange6731Research
+end ProximityPrize.SubmissionLower.RCN058

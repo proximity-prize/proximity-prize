@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.GK
-namespace ProximityPrize.SubmissionLower.ContactSpecializedMonicReducer6733Research
-open ContactSylvesterCokernelQuotient6732Research
-open ContactSylvesterModMax6733Research
+namespace ProximityPrize.SubmissionLower.RCN297
+open RCN307
+open RCN308
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -58,4 +58,4 @@ theorem exists_specialized_monic_reducer
  rw [hMdegree,hdegreeBar]
  exact Polynomial.natDegree_map_le
 end
-end ProximityPrize.SubmissionLower.ContactSpecializedMonicReducer6733Research
+end ProximityPrize.SubmissionLower.RCN297

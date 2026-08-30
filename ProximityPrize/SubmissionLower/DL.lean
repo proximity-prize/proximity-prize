@@ -1,11 +1,11 @@
 import ProximityPrize.SubmissionLower.AN
 import ProximityPrize.SubmissionLower.AM
-namespace ProximityPrize.SubmissionLower.ContactActiveThreeChannelAssembly6733Research
+namespace ProximityPrize.SubmissionLower.RCN033
 open scoped Classical BigOperators
-open ContactRegularComponentCover ContactFlagBezout6543Research
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactWeightedGroupedResultantChannel6733Research
-open ContactTwoTailResultantProvider6732Research
+open RCN264 RCN095
+open RCN237
+open RCN343
+open RCN338
 noncomputable section
 set_option autoImplicit false
 variable {Base Omega:Type} [Field Base] [Field Omega]
@@ -42,4 +42,4 @@ theorem regularComponentWeightedInertiaCertificate_of_active_channels
    exact uChannel.sum_mul_cost_le
  all:=allChannel.sum_mul_cost_le
 end
-end ProximityPrize.SubmissionLower.ContactActiveThreeChannelAssembly6733Research
+end ProximityPrize.SubmissionLower.RCN033

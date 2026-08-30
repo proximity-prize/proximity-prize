@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G3
-namespace ProximityPrize.SubmissionLower.PlaneFunctionFieldDegree
-open PlaneCoefficientExtension
+namespace ProximityPrize.SubmissionLower.RCN361
+open RCN360
 noncomputable section
 section Evaluation
 variable (K E:Type) [Field K] [Field E] [Algebra K E]
@@ -148,4 +148,4 @@ theorem sum_finrank_le_planar_bound
  · rw [←planeEval_eq, ←algHom_planeEval K (E i) Ω φ (y i) (r i) Q,hQy i,map_zero]
 end FiniteFamily
 end
-end ProximityPrize.SubmissionLower.PlaneFunctionFieldDegree
+end ProximityPrize.SubmissionLower.RCN361

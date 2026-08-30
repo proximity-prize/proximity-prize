@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T
-namespace ProximityPrize.SubmissionLower.ContactGenericInitialPoint
-open ContactDifferentialRing ContactRegularPoint ContactPolynomiality
-open ContactPolynomialSolutions ContactPolynomialRecovery ContactGlobalPolynomiality
-open ContactTaylorNumerators ContactTranslation
+namespace ProximityPrize.SubmissionLower.RCN135
+open RCN077 RCN269 RCN233
+open RCN231 RCN229 RCN139
+open RCN313 RCN319
 noncomputable section
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
@@ -117,4 +117,4 @@ theorem global_recovery_at_initialPoint
    (initialCoordinate K) hsolution ((initialPoint_regular_iff K F P γ).mpr hregular)
    p w hchar hdegree
 end
-end ProximityPrize.SubmissionLower.ContactGenericInitialPoint
+end ProximityPrize.SubmissionLower.RCN135

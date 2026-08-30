@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CA
-namespace ProximityPrize.SubmissionLower.ContactReducedCoefficient6643Research
-open ContactSingularAuxiliary ContactSingularDegreeBounds ContactFactorCaps
+namespace ProximityPrize.SubmissionLower.RCN261
+open RCN290 RCN293 RCN081
 noncomputable section
 variable {K : Type*} [Field K]
 theorem embedCoefficients_injective : Function.Injective (embedCoefficients K) := by
@@ -233,13 +233,13 @@ theorem degreeR_sub_cancel_top (W F q : MvPolynomial (Fin 4) K) (t s k : ℕ)
      ((MvPolynomial.X (2 : Fin 4)) ^ k)
    omega
  have hprod : (q * MvPolynomial.X (2 : Fin 4) ^ k * F).degreeOf 2 ≤ t := by
-   have h := ContactTaylorNumerators.degree_mul_bound (2 : Fin 4) hqR hF
+   have h := RCN313.degree_mul_bound (2 : Fin 4) hqR hF
    omega
  apply degreeR_le_sub_one_of_top_zero _ t ht
-   (ContactTaylorNumerators.degree_sub_bound (2 : Fin 4) hW hprod)
+   (RCN313.degree_sub_bound (2 : Fin 4) hW hprod)
  rw [liftedCoefficient_sub,← hks,
    liftedCoefficient_mul_top _ F k s hqR hF,
    liftedCoefficient_mul_degree_zero_left _ _ k hq,
    liftedCoefficient_X_R_pow,mul_one,hks,hcoeff,sub_self]
 end
-end ProximityPrize.SubmissionLower.ContactReducedCoefficient6643Research
+end ProximityPrize.SubmissionLower.RCN261

@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BS
-namespace ProximityPrize.SubmissionLower.ContactPost6464MinkowskiRecurrenceResearch
+namespace ProximityPrize.SubmissionLower.RCN234
 open scoped BigOperators
-open ContactFactorCaps ContactImplicitContactLift ContactTaylorNumerators
+open RCN081 RCN167 RCN313
 noncomputable section
 variable {K:Type*} [Field K]
 abbrev Poly4 (K:Type*) [Field K]:=MvPolynomial (Fin 4) K
@@ -313,4 +313,4 @@ theorem agreementNumerator_wt_le_minkowski
      hTaylor.trans (Nat.add_le_add_right (Nat.le_max_left _ _) _)
  · simpa only [Hcap,Qcap] using hright
 end
-end ProximityPrize.SubmissionLower.ContactPost6464MinkowskiRecurrenceResearch
+end ProximityPrize.SubmissionLower.RCN234

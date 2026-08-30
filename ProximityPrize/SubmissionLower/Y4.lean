@@ -3,11 +3,11 @@ import ProximityPrize.SubmissionLower.J
 import ProximityPrize.SubmissionLower.FS
 import ProximityPrize.SubmissionLower.BT
 import ProximityPrize.SubmissionLower.P4
-namespace ProximityPrize.SubmissionLower.ContactCountingCaps
+namespace ProximityPrize.SubmissionLower.RCN068
 open scoped Classical
-open ContactAlignmentParameters ContactTaylorNumerators ContactGenericSurface ContactInterpolation
-open ContactPolynomialSolutions ContactPrimeSeedIncidence
-open ContactSharpYRecurrence
+open RCN051 RCN313 RCN136 RCN174
+open RCN231 RCN238
+open RCN289
 noncomputable section
 def capAt (v:DegreeVector):Fin 3 → ℕ:=![v.y,v.r,v.z]
 def numeratorCaps (ell s L b:ℕ):DegreeVector:=
@@ -52,9 +52,9 @@ theorem fixed_firstTail_caps (F:MvPolynomial (Fin 4) K)
  have hold:=surface_numerator_caps φ F yCap slopeCap seedTotalCap (by decide)
    hY hR hZ (w+1)
  have hsharp:=sharp_Y_bounds_of_mem_box F weightedCap w seedTotalCap slopeCap yCap
-   (by norm_num [w]) (by norm_num [yCap,weightedCap,ContactAlignmentParameters.multiplicity,
+   (by norm_num [w]) (by norm_num [yCap,weightedCap,RCN051.multiplicity,
      agreements,w])
-   (by norm_num [weightedCap,ContactAlignmentParameters.multiplicity,agreements,
+   (by norm_num [weightedCap,RCN051.multiplicity,agreements,
      w,yCap]) hbox (w+1) 0 (fun _ => 0) 0 0 0
  intro i
  fin_cases i
@@ -70,9 +70,9 @@ theorem fixed_agreement_caps (F:MvPolynomial (Fin 4) K)
  have hold:=surface_agreement_caps φ F yCap slopeCap seedTotalCap (by decide)
    hY hR hZ w (fun j↦(j.factorial:K)⁻¹) x u₀ u₁
  have hsharp:=sharp_Y_bounds_of_mem_box F weightedCap w seedTotalCap slopeCap yCap
-   (by norm_num [w]) (by norm_num [yCap,weightedCap,ContactAlignmentParameters.multiplicity,
+   (by norm_num [w]) (by norm_num [yCap,weightedCap,RCN051.multiplicity,
      agreements,w])
-   (by norm_num [weightedCap,ContactAlignmentParameters.multiplicity,agreements,
+   (by norm_num [weightedCap,RCN051.multiplicity,agreements,
      w,yCap]) hbox 0 w (fun j↦(j.factorial:K)⁻¹) x u₀ u₁
  intro i
  fin_cases i
@@ -83,7 +83,7 @@ theorem fixed_agreement_caps (F:MvPolynomial (Fin 4) K)
 theorem selected_firstTail_zero
    (F:MvPolynomial (Fin 4) K) (selected:K → Polynomial K)
    (γ:K) (w:ℕ) (hdegree:(selected γ).natDegree ≤ w)
-   (hsolution:ContactTranslation.specialization K (selected γ) γ F=0):
+   (hsolution:RCN319.specialization K (selected γ) γ F=0):
    MvPolynomial.aeval (selectedPoint φ selected γ) (firstTailSurface φ F w)=0:=by
  change MvPolynomial.eval (selectedPoint φ selected γ)
    (surfaceMap φ (numerator K F (w+1)))=0
@@ -96,14 +96,14 @@ theorem selected_firstTail_zero
  exact polynomialPoint_numerator_zero (φ.comp Polynomial.C) F (selected γ) γ
    (φ Polynomial.X) hsolution (w+1) (Nat.lt_succ_of_le hdegree)
 theorem fixed_implicit_agreement_caps (F:MvPolynomial (Fin 4) K)
-   (hY:F.degreeOf 1 ≤ ContactImplicitLiftParameters.implicitYCap)
+   (hY:F.degreeOf 1 ≤ RCN168.implicitYCap)
    (hR:F.degreeOf 2 ≤ 1) (hZ:F.degreeOf 3 ≤ algebraicCap)
    (x u₀ u₁:K):
    HasCaps (agreementPolynomial φ F w x u₀ u₁)
-     ContactImplicitLiftParameters.liftedAgreement:=by
- have h:=surface_agreement_caps φ F ContactImplicitLiftParameters.implicitYCap 1
+     RCN168.liftedAgreement:=by
+ have h:=surface_agreement_caps φ F RCN168.implicitYCap 1
    algebraicCap (by decide) hY hR hZ w (fun j↦(j.factorial:K)⁻¹) x u₀ u₁
- simpa [agreementPolynomial,agreementCaps,ContactImplicitLiftParameters.liftedAgreement] using h
+ simpa [agreementPolynomial,agreementCaps,RCN168.liftedAgreement] using h
 section MixedGates
 variable (G T:MvPolynomial (Fin 3) Ω) (g t:DegreeVector)
 theorem actual_pair_degree_le (hG:HasCaps G g) (hT:HasCaps T t) (j k:Fin 3):
@@ -134,17 +134,17 @@ theorem actual_characteristic_gates (p:ℕ)
    (pair_caps_below_of_mixed g t p hY hR hZ j k hjk)
 end MixedGates
 theorem fixed_surface_caps_below_characteristic:
-   ∀ j,capAt ContactProjectionParameters.surfaceVector j < prime:=by
+   ∀ j,capAt RCN242.surfaceVector j < prime:=by
  intro j
  fin_cases j <;>
-   norm_num [capAt,ContactProjectionParameters.surfaceVector,yCap,weightedCap,
-     ContactAlignmentParameters.multiplicity,agreements,w,slopeCap,seedTotalCap,prime]
+   norm_num [capAt,RCN242.surfaceVector,yCap,weightedCap,
+     RCN051.multiplicity,agreements,w,slopeCap,seedTotalCap,prime]
 theorem fixed_firstTail_nonR_characteristic_gates (G T:MvPolynomial (Fin 3) Ω)
-   (hG:HasCaps G ContactProjectionParameters.surfaceVector) (hT:HasCaps T firstTail):
+   (hG:HasCaps G RCN242.surfaceVector) (hT:HasCaps T firstTail):
    (∀ j,G.degreeOf j < prime)∧
      T.degreeOf 1*G.degreeOf 2+G.degreeOf 1*T.degreeOf 2 < prime∧
      T.degreeOf 0*G.degreeOf 1+G.degreeOf 0*T.degreeOf 1 < prime:=by
- rcases ContactProjectionParameters.non_R_projection_caps_below_characteristic with
+ rcases RCN242.non_R_projection_caps_below_characteristic with
    ⟨hY,hZ,_,_⟩
  refine ⟨fun j => (hG j).trans_lt (fixed_surface_caps_below_characteristic j),
    (actual_pair_degree_le G T _ _ hG hT 1 2).trans_lt ?_,
@@ -152,11 +152,11 @@ theorem fixed_firstTail_nonR_characteristic_gates (G T:MvPolynomial (Fin 3) Ω)
  · simpa [capAt,mixed,unitY,Nat.mul_comm,Nat.add_comm] using hY
  · simpa [capAt,mixed,unitZ,Nat.mul_comm,Nat.add_comm] using hZ
 theorem fixed_agreement_nonR_characteristic_gates (G T:MvPolynomial (Fin 3) Ω)
-   (hG:HasCaps G ContactProjectionParameters.surfaceVector) (hT:HasCaps T agreementVector):
+   (hG:HasCaps G RCN242.surfaceVector) (hT:HasCaps T agreementVector):
    (∀ j,G.degreeOf j < prime)∧
      T.degreeOf 1*G.degreeOf 2+G.degreeOf 1*T.degreeOf 2 < prime∧
      T.degreeOf 0*G.degreeOf 1+G.degreeOf 0*T.degreeOf 1 < prime:=by
- rcases ContactProjectionParameters.non_R_projection_caps_below_characteristic with
+ rcases RCN242.non_R_projection_caps_below_characteristic with
    ⟨_,_,hY,hZ⟩
  refine ⟨fun j => (hG j).trans_lt (fixed_surface_caps_below_characteristic j),
    (actual_pair_degree_le G T _ _ hG hT 1 2).trans_lt ?_,
@@ -164,22 +164,22 @@ theorem fixed_agreement_nonR_characteristic_gates (G T:MvPolynomial (Fin 3) Ω)
  · simpa [capAt,mixed,unitY,Nat.mul_comm,Nat.add_comm] using hY
  · simpa [capAt,mixed,unitZ,Nat.mul_comm,Nat.add_comm] using hZ
 theorem fixed_implicit_surface_caps_below_characteristic:
-   ∀ j,capAt ContactImplicitLiftParameters.liftedSurface j < prime:=by
+   ∀ j,capAt RCN168.liftedSurface j < prime:=by
  intro j
  fin_cases j <;>
-   norm_num [capAt,ContactImplicitLiftParameters.liftedSurface,
-     ContactImplicitLiftParameters.implicitYCap,ContactImplicitLiftParameters.implicitWeightedCap,
-     algebraicCap,weightedCap,ContactAlignmentParameters.multiplicity,agreements,
+   norm_num [capAt,RCN168.liftedSurface,
+     RCN168.implicitYCap,RCN168.implicitWeightedCap,
+     algebraicCap,weightedCap,RCN051.multiplicity,agreements,
      w,slopeCap,seedTotalCap,prime]
 theorem fixed_implicit_characteristic_gates (G T:MvPolynomial (Fin 3) Ω)
-   (hG:HasCaps G ContactImplicitLiftParameters.liftedSurface)
-   (hT:HasCaps T ContactImplicitLiftParameters.implicitCut):
+   (hG:HasCaps G RCN168.liftedSurface)
+   (hT:HasCaps T RCN168.implicitCut):
    (∀ j,G.degreeOf j < prime)∧
      ∀ j k:Fin 3,j≠k →
        T.degreeOf j*G.degreeOf k+G.degreeOf j*T.degreeOf k < prime:=by
- rcases ContactImplicitLiftParameters.lifted_projection_characteristic_gates with
+ rcases RCN168.lifted_projection_characteristic_gates with
    ⟨_,hY,hR,hZ⟩
  exact actual_characteristic_gates G T _ _ prime hG hT
    fixed_implicit_surface_caps_below_characteristic hY hR hZ
 end
-end ProximityPrize.SubmissionLower.ContactCountingCaps
+end ProximityPrize.SubmissionLower.RCN068

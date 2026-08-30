@@ -1,21 +1,21 @@
 import ProximityPrize.SubmissionLower.Y9
 import ProximityPrize.SubmissionLower.L9
 import ProximityPrize.SubmissionLower.FP
-namespace ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedFiberCertificate6733Research
+namespace ProximityPrize.SubmissionLower.RCN107
 open scoped Classical BigOperators
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
-open ActualCurveCoordinateField ArbitraryRationalProjectionResearch
-open ContactRegularComponentCover
-open ContactFlagTriangularProjectionResearch ContactFlagAffineFamilyDegree6543Research
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ContactFlagPlaneFiberPrimary6733Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactLocalizedRelationResidueFinite6733Research
-open ContactMaximalRelationMonicLift6733Research
-open ContactPrimaryPiecesFromLocalOrders6732Research
-open ContactSylvesterCokernelQuotient6732Research
-open ContactPlaneLocalOrderPrimary6732Research
-open ContactLocalizedPlaneRelation6733Research
+open RCN011 RCN021
+open RCN002 RCN022
+open RCN264
+open RCN125 RCN093
+open RCN120
+open RCN102
+open RCN106
+open RCN192
+open RCN197
+open RCN236
+open RCN307
+open RCN225
+open RCN191
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 3500000
@@ -154,4 +154,4 @@ noncomputable def indexedWeightedFiberPrimaryPieces
    (indexedFiberRelation_pairwise_coprime component hcomponent lam mu nu order
      ht hfinite hgen q hq)
 end
-end ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedFiberCertificate6733Research
+end ProximityPrize.SubmissionLower.RCN107

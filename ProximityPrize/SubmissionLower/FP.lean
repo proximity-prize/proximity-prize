@@ -1,10 +1,10 @@
 import ProximityPrize.SubmissionLower.X6
 import ProximityPrize.SubmissionLower.S
 import ProximityPrize.SubmissionLower.CE
-namespace ProximityPrize.SubmissionLower.ContactPrimaryPiecesFromLocalOrders6732Research
-open ActualPlaneRelationMaximal6732Research
-open ContactPlaneLocalOrderPrimary6732Research
-open ContactSylvesterCokernelQuotient6732Research
+namespace ProximityPrize.SubmissionLower.RCN236
+open RCN014
+open RCN225
+open RCN307
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -53,4 +53,4 @@ noncomputable def primaryPiecesCertificateOfMembershipWeighted
    rw [hmap]
    exact hbound
 end
-end ProximityPrize.SubmissionLower.ContactPrimaryPiecesFromLocalOrders6732Research
+end ProximityPrize.SubmissionLower.RCN236

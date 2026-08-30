@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AE
 import ProximityPrize.SubmissionLower.D6
-namespace ProximityPrize.SubmissionLower.ContactStratifiedResidualComponentAdapter6600Research
+namespace ProximityPrize.SubmissionLower.RCN305
 open scoped Classical BigOperators
-open ActualCurveCoordinateField ActualCurveZeroCount
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactRegularComponentCover
-open ContactProperCutSeedCount ContactComponentPencils
-open ContactResidualSparseComponentAdapterResearch
-open ContactNearPencilStratifiedIncidenceResearch
+open RCN002 RCN007
+open RCN136 RCN231 RCN319
+open RCN238 RCN264
+open RCN243 RCN065
+open RCN272
+open RCN216
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
@@ -242,4 +242,4 @@ theorem proper_cut_seed_bound_of_stratified_component_budgets
    degreeWhole unitWhole zBudget degreeCost unitCost zDegree hcomponent
    hsumDegree hsumUnit hzbudget
 end
-end ProximityPrize.SubmissionLower.ContactStratifiedResidualComponentAdapter6600Research
+end ProximityPrize.SubmissionLower.RCN305

@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BO
-namespace ProximityPrize.SubmissionLower.ContactResidualSupportParametersResearch
-open ContactGenericSurface ContactTaylorNumerators
-open ContactInterpolation ContactFactorCaps
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactIdentityResidualGlobalTransformResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactFlagBezout6543Research
+namespace ProximityPrize.SubmissionLower.RCN275
+open RCN136 RCN313
+open RCN174 RCN081
+open RCN234
+open RCN157
+open RCN156
+open RCN095
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 20000
@@ -73,7 +73,7 @@ def fixedMeetSupport:ResidualSupportParameters where
  two_le_ys:=by norm_num
 theorem accepted_agreement_flag (d:ℕ):
    acceptedSupport.residualAgreementFlag d=
-     ContactIdentityResidualGlobalFlagResearch.residualAgreementFlag d:=by
+     RCN156.residualAgreementFlag d:=by
  rfl
 theorem fixedMeet_agreement_direction:
    fixedMeetSupport.agreementDirection=⟨1140,56,11⟩:=by
@@ -99,7 +99,7 @@ theorem fixedMeet_of_mem_box
    intro d hd
    have hb:d 1+d 3 ≤ 598∧d 2 ≤ 6∧
        d 0+131071*d 1+(131071-1)*d 2 < 4570175:=hbox hd
-   rw [ContactFactorCaps.weight_fin4]
+   rw [RCN081.weight_fin4]
    change d 0*0+d 1*0+d 2*1+d 3*0 ≤ 6
    norm_num
    exact hb.2.1
@@ -107,7 +107,7 @@ theorem fixedMeet_of_mem_box
    intro d hd
    have hb:d 1+d 3 ≤ 598∧d 2 ≤ 6∧
        d 0+131071*d 1+(131071-1)*d 2 < 4570175:=hbox hd
-   rw [ContactFactorCaps.weight_fin4]
+   rw [RCN081.weight_fin4]
    change d 0*0+d 1*1+d 2*1+d 3*0 ≤ 34
    norm_num
    norm_num at hb
@@ -116,7 +116,7 @@ theorem fixedMeet_of_mem_box
    intro d hd
    have hb:d 1+d 3 ≤ 598∧d 2 ≤ 6∧
        d 0+131071*d 1+(131071-1)*d 2 < 4570175:=hbox hd
-   rw [ContactFactorCaps.weight_fin4]
+   rw [RCN081.weight_fin4]
    change d 0*0+d 1*1+d 2*1+d 3*1 ≤ 604
    norm_num
    norm_num at hb
@@ -152,7 +152,7 @@ theorem coordinate_bounds
    intro e he
    have hw:=(MvPolynomial.le_weightedTotalDegree residualYSWeights he).trans
      H.ys_weight
-   rw [ContactFactorCaps.weight_fin4] at hw
+   rw [RCN081.weight_fin4] at hw
    change e 0*0+e 1*1+e 2*1+e 3*0 ≤ P.ys at hw
    norm_num at hw
    omega
@@ -161,7 +161,7 @@ theorem coordinate_bounds
    intro e he
    have hw:=(MvPolynomial.le_weightedTotalDegree residualTotalWeights he).trans
      H.total_weight
-   rw [ContactFactorCaps.weight_fin4] at hw
+   rw [RCN081.weight_fin4] at hw
    change e 0*0+e 1*1+e 2*1+e 3*1 ≤ P.total at hw
    norm_num at hw
    omega
@@ -217,7 +217,7 @@ theorem surfaceMap_agreement_in_flag
  have hqYS:=(MvPolynomial.le_weightedTotalDegree residualYSWeights hq).trans hYS
  have hqTotal:=
    (MvPolynomial.le_weightedTotalDegree residualTotalWeights hq).trans hTotal
- rw [ContactFactorCaps.weight_fin4] at hqYS hqTotal
+ rw [RCN081.weight_fin4] at hqYS hqTotal
  change q 0*0+q 1*1+q 2*1+q 3*0 ≤
    1+d*(2*P.ys-1) at hqYS
  change q 0*0+q 1*1+q 2*1+q 3*1 ≤
@@ -252,4 +252,4 @@ theorem globalResidual_and_agreement_in_flag
  exact ⟨Hres,Hres.surfaceMap_agreement_in_flag phi d coeffs x u0 u1⟩
 end ResidualSupportData
 end
-end ProximityPrize.SubmissionLower.ContactResidualSupportParametersResearch
+end ProximityPrize.SubmissionLower.RCN275

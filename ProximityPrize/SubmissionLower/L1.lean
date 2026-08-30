@@ -2,12 +2,12 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.C2
 import ProximityPrize.SubmissionLower.BG
 import ProximityPrize.SubmissionLower.AJ
-namespace ProximityPrize.SubmissionLower.ContactKernelCommonGCDResearch
+namespace ProximityPrize.SubmissionLower.RCN180
 open scoped BigOperators
-open ContactFlagInterpolation6641Research
-open ContactFactorCaps
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactIdentityResidualGlobalFlagResearch
+open RCN100
+open RCN081
+open RCN234
+open RCN156
 noncomputable section
 variable {K : Type*} [Field K]
 abbrev Poly4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
@@ -309,7 +309,7 @@ theorem finrank_le_quotient_box
  exact congrArg Subtype.val hvz
 end LinearQuotient
 section ConstraintKernel
-open ContactFlagRankKernel6641Research
+open RCN119
 variable {I : Type*} [Fintype I]
 abbrev ConstraintKernel (D w L s m : ℕ)
    (nodes u₀ u₁ : I → K) :=
@@ -375,9 +375,9 @@ theorem common_divisor_dimension_obstruction
  exact hlo.trans hhi
 end ConstraintKernel
 namespace Numeric6733
-open ContactFlagRankKernel6641Research
-open ContactFlagInterpolation6641Research
-open ContactStackedParameters6670Research
+open RCN119
+open RCN100
+open RCN302
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 theorem profileA_localRank_exact :
@@ -448,9 +448,9 @@ theorem profileB_dimension_stratum :
 end Numeric6733
 namespace Caps6733
 open ProximityPrize.Benchmark
-open ContactFlagRankKernel6641Research
-open ContactFlagInterpolation6641Research
-open ContactGCDCumulativeFlagsResearch
+open RCN119
+open RCN100
+open RCN130
 open Numeric6733
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
@@ -646,9 +646,9 @@ theorem profileB_commonGCD_total_le
  exact (Nat.not_le_of_gt profileB_dimension_stratum) hobs
 end Caps6733
 namespace Numeric6734
-open ContactFlagRankKernel6641Research
-open ContactFlagInterpolation6641Research
-open ContactStackedParameters6670Research
+open RCN119
+open RCN100
+open RCN302
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 theorem profileA_localRank_exact :
@@ -717,9 +717,9 @@ theorem profileB_dimension :
 end Numeric6734
 namespace Caps6734
 open ProximityPrize.Benchmark
-open ContactFlagRankKernel6641Research
-open ContactFlagInterpolation6641Research
-open ContactGCDCumulativeFlagsResearch
+open RCN119
+open RCN100
+open RCN130
 open Numeric6734
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
@@ -926,4 +926,4 @@ theorem profileB_commonGCD_total_le
  exact (Nat.not_le_of_gt profileB_dimension) hobs
 end Caps6734
 end
-end ProximityPrize.SubmissionLower.ContactKernelCommonGCDResearch
+end ProximityPrize.SubmissionLower.RCN180

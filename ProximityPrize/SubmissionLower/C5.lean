@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.N
-namespace ProximityPrize.SubmissionLower.ContactFlagPlaneFiberSurface6733Research
-open ActualCurveCoordinateField ActualPlaneCoordinateKernel
-open ArbitraryPlaneEvaluationFamilyResearch ContactRegularComponentCover
-open ContactFlagTriangularProjectionResearch ContactFlagAffineFamilyDegree6543Research
+namespace ProximityPrize.SubmissionLower.RCN103
+open RCN002 RCN011
+open RCN021 RCN264
+open RCN125 RCN093
 noncomputable section
 set_option autoImplicit false
 variable {Omega:Type} [Field Omega]
@@ -44,4 +44,4 @@ theorem transformedSurface_not_dvd_tail
      ((flag_irreducible_iff lam mu nu G).mpr hG) hroot htC).mp hdiv
  exact hproper ((flag_dvd_iff lam mu nu G T).mp hflagDvd)
 end
-end ProximityPrize.SubmissionLower.ContactFlagPlaneFiberSurface6733Research
+end ProximityPrize.SubmissionLower.RCN103

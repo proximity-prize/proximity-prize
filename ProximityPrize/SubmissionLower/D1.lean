@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y5
-namespace ProximityPrize.SubmissionLower.ContactMovingPositiveLedger6719Research
+namespace ProximityPrize.SubmissionLower.RCN206
 open scoped Classical BigOperators
-open ContactFlagBezout6543Research ContactFactoredFlagCount6676Research
+open RCN095 RCN084
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -120,4 +120,4 @@ theorem qeff_row:qeff 955 40 8 (surfaceFlag 955 40 8)=7643526:=by
 theorem correction_row:2*flagMixed (surfaceFlag 955 40 8) unitAllFlag unitYZFlag=2012:=by
  norm_num [surfaceFlag,flagMixed,unitAllFlag,unitYZFlag]
 end
-end ProximityPrize.SubmissionLower.ContactMovingPositiveLedger6719Research
+end ProximityPrize.SubmissionLower.RCN206

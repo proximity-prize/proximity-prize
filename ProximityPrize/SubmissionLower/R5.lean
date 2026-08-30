@@ -3,9 +3,9 @@ import ProximityPrize.SubmissionLower.W3
 import ProximityPrize.SubmissionLower.W8
 import ProximityPrize.SubmissionLower.CL
 import ProximityPrize.SubmissionLower.AQ
-namespace ProximityPrize.SubmissionLower.FixedCurveNormSum
+namespace ProximityPrize.SubmissionLower.RCN349
 open scoped BigOperators Classical nonZeroDivisors
-open IsDedekindDomain NormValuationTransport
+open IsDedekindDomain RCN357
 noncomputable section
 variable (K L:Type*) [Field K] [Field L]
 variable [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
@@ -21,9 +21,9 @@ instance finiteNormalization_torsionFree:
  letI:Module.IsTorsionFree (Polynomial K) L:=
    Module.IsTorsionFree.trans_faithfulSMul (Polynomial K) (RatFunc K) L
  exact IsIntegralClosure.isTorsionFree (Polynomial K) L
-abbrev InfinityBase:=InfinityValuationRing.InfinityRing K
+abbrev InfinityBase:=RCN353.InfinityRing K
 local instance:IsFractionRing (InfinityBase K) (RatFunc K):=
- InfinityValuationRing.infinityRing_isFractionRing K
+ RCN353.infinityRing_isFractionRing K
 local instance (priority:=100):Algebra (InfinityBase K) L:=
  ((algebraMap (RatFunc K) L).comp
    (algebraMap (InfinityBase K) (RatFunc K))).toAlgebra
@@ -54,15 +54,15 @@ def infinityContribution (x:L):ℤ:=
        (placeAbove (InfinityBase K) (InfiniteNormalization K L) (infinityPlace K) P) x
 theorem infinityContribution_eq_normOrder (x:L) (hx:x≠0):
    infinityContribution K L x=
-     RatFuncProductFormula.infinityOrder K (Algebra.norm (RatFunc K) x):=by
+     RCN366.infinityOrder K (Algebra.norm (RatFunc K) x):=by
  have h:=fieldOrder_norm (InfinityBase K) (InfiniteNormalization K L)
    (RatFunc K) L (infinityPlace K) x hx
  change-((infinityPlace K).valuation (RatFunc K)
      (Algebra.norm (RatFunc K) x)).log=infinityContribution K L x at h
- rw [infinityPlace,InfinityValuationRing.infinity_valuation_eq] at h
+ rw [infinityPlace,RCN353.infinity_valuation_eq] at h
  exact h.symm
 theorem asFraction_eq_canonical (x:RatFunc K):
-   RatFuncProductFormula.asFraction K x=
+   RCN366.asFraction K x=
      (FractionRing.algEquiv (Polynomial K) (RatFunc K)).symm x:=by
  letI:Subsingleton
      ((RatFunc K) →ₐ[Polynomial K] FractionRing (Polynomial K)):=
@@ -73,40 +73,40 @@ theorem asFraction_eq_canonical (x:RatFunc K):
  exact DFunLike.congr_fun h x
 theorem finiteOrder_eq_specifiedOrder
    (p:Polynomial K) (hp:Irreducible p) (x:RatFunc K):
-   RatFuncProductFormula.finiteOrder K p hp x=
-     fieldOrder (Polynomial K) (RatFunc K) (RatFuncProductFormula.primePlace K p hp) x:=by
- rw [RatFuncProductFormula.finiteOrder,asFraction_eq_canonical K]
+   RCN366.finiteOrder K p hp x=
+     fieldOrder (Polynomial K) (RatFunc K) (RCN366.primePlace K p hp) x:=by
+ rw [RCN366.finiteOrder,asFraction_eq_canonical K]
  exact (fieldOrder_transport (Polynomial K) (RatFunc K)
-   (RatFuncProductFormula.primePlace K p hp) x).symm
+   (RCN366.primePlace K p hp) x).symm
 theorem finitePrimeContribution_eq_normOrder
    (p:Polynomial K) (hp:Irreducible p) (x:L) (hx:x≠0):
    (∑ P∈(IsDedekindDomain.primesOverFinset
-       (RatFuncProductFormula.primePlace K p hp).asIdeal (FiniteNormalization K L)).attach,
+       (RCN366.primePlace K p hp).asIdeal (FiniteNormalization K L)).attach,
      (P.1.inertiaDeg (Polynomial K):ℤ)*
        fieldOrder (FiniteNormalization K L) L
          (placeAbove (Polynomial K) (FiniteNormalization K L)
-           (RatFuncProductFormula.primePlace K p hp) P) x)=
-     RatFuncProductFormula.finiteOrder K p hp (Algebra.norm (RatFunc K) x):=by
+           (RCN366.primePlace K p hp) P) x)=
+     RCN366.finiteOrder K p hp (Algebra.norm (RatFunc K) x):=by
  have h:=fieldOrder_norm (Polynomial K) (FiniteNormalization K L) (RatFunc K) L
-   (RatFuncProductFormula.primePlace K p hp) x hx
+   (RCN366.primePlace K p hp) x hx
  rw [←finiteOrder_eq_specifiedOrder K p hp] at h
  exact h.symm
 def finiteContribution (s:Finset (Polynomial K))
    (hs:∀ p∈s,Irreducible p∧p.Monic) (x:L):ℤ:=
  ∑ p∈s.attach,(p.1.natDegree:ℤ)*
    ∑ P∈(IsDedekindDomain.primesOverFinset
-       (RatFuncProductFormula.primePlace K p.1 (hs p.1 p.2).1).asIdeal
+       (RCN366.primePlace K p.1 (hs p.1 p.2).1).asIdeal
        (FiniteNormalization K L)).attach,
      (P.1.inertiaDeg (Polynomial K):ℤ)*
        fieldOrder (FiniteNormalization K L) L
          (placeAbove (Polynomial K) (FiniteNormalization K L)
-           (RatFuncProductFormula.primePlace K p.1 (hs p.1 p.2).1) P) x
+           (RCN366.primePlace K p.1 (hs p.1 p.2).1) P) x
 theorem finiteContribution_eq_normOrders
    (s:Finset (Polynomial K)) (hs:∀ p∈s,Irreducible p∧p.Monic)
    (x:L) (hx:x≠0):
    finiteContribution K L s hs x=
      ∑ p∈s.attach,(p.1.natDegree:ℤ)*
-       RatFuncProductFormula.finiteOrder K p.1 (hs p.1 p.2).1
+       RCN366.finiteOrder K p.1 (hs p.1 p.2).1
          (Algebra.norm (RatFunc K) x):=by
  unfold finiteContribution
  apply Finset.sum_congr rfl
@@ -123,8 +123,8 @@ theorem balanced_fiber_sum
  have hnorm:Algebra.norm (RatFunc K) x≠0:=Algebra.norm_ne_zero_iff.mpr hx
  rw [finiteContribution_eq_normOrders K L s hs x hx,
    infinityContribution_eq_normOrder K L x hx,
-   RatFuncProductFormula.weighted_finite_order_sum K _ hnorm s hs hnum hden,
-   RatFuncProductFormula.infinityOrder_eq_neg_intDegree K _ hnorm,
+   RCN366.weighted_finite_order_sum K _ hnorm s hs hnum hden,
+   RCN366.infinityOrder_eq_neg_intDegree K _ hnorm,
    add_neg_cancel]
 theorem finite_orders_support_finite (x:L) (hx:x≠0):
    Function.HasFiniteSupport
@@ -167,32 +167,32 @@ theorem mem_finiteOrderSupport (x:L) (hx:x≠0)
      fieldOrder (FiniteNormalization K L) L w x≠0:=by
  simp [finiteOrderSupport]
 def baseRepresentative (w:HeightOneSpectrum (FiniteNormalization K L)):Polynomial K:=
- (RatFuncProductFormula.exists_monic_primePlace K
+ (RCN366.exists_monic_primePlace K
    (HeightOneSpectrum.under (Polynomial K) w)).choose
 theorem baseRepresentative_spec (w:HeightOneSpectrum (FiniteNormalization K L)):
    ∃ hp:Irreducible (baseRepresentative K L w),
      (baseRepresentative K L w).Monic∧
-       RatFuncProductFormula.primePlace K (baseRepresentative K L w) hp=
+       RCN366.primePlace K (baseRepresentative K L w) hp=
          HeightOneSpectrum.under (Polynomial K) w:=
- (RatFuncProductFormula.exists_monic_primePlace K
+ (RCN366.exists_monic_primePlace K
    (HeightOneSpectrum.under (Polynomial K) w)).choose_spec
 def basePrimesFor (x:L) (hx:x≠0):Finset (Polynomial K):=
  (finiteOrderSupport K L x hx).image (baseRepresentative K L) ∪
-   RatFuncProductFormula.factorSupport K (Algebra.norm (RatFunc K) x)
+   RCN366.factorSupport K (Algebra.norm (RatFunc K) x)
 theorem basePrimesFor_primes (x:L) (hx:x≠0)
    (p:Polynomial K) (hp:p∈basePrimesFor K L x hx):Irreducible p∧p.Monic:=by
  rcases Finset.mem_union.mp hp with hleft | hright
  · obtain ⟨w,hw,rfl⟩:=Finset.mem_image.mp hleft
    obtain ⟨hp,hm,_⟩:=baseRepresentative_spec K L w
    exact ⟨hp,hm⟩
- · exact RatFuncProductFormula.factorSupport_primes K _
+ · exact RCN366.factorSupport_primes K _
      (Algebra.norm_ne_zero_iff.mpr hx) p hright
 theorem basePrimesFor_covers (x:L) (hx:x≠0)
    (w:HeightOneSpectrum (FiniteNormalization K L))
    (hw:fieldOrder (FiniteNormalization K L) L w x≠0):
    ∃ p∈basePrimesFor K L x hx,∃ hp:Irreducible p,
      w.asIdeal∈IsDedekindDomain.primesOverFinset
-       (RatFuncProductFormula.primePlace K p hp).asIdeal (FiniteNormalization K L):=by
+       (RCN366.primePlace K p hp).asIdeal (FiniteNormalization K L):=by
  obtain ⟨hp,hm,hplace⟩:=baseRepresentative_spec K L w
  refine ⟨baseRepresentative K L w,
    Finset.mem_union_left _ (Finset.mem_image.mpr
@@ -214,4 +214,4 @@ theorem projective_curve_order_sum (x:L) (hx:x≠0):
  · intro p hp
    exact Finset.mem_union_right _ (Finset.mem_union_right _ hp)
 end
-end ProximityPrize.SubmissionLower.FixedCurveNormSum
+end ProximityPrize.SubmissionLower.RCN349

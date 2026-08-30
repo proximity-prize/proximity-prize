@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.H3
 import ProximityPrize.SubmissionLower.CM
-namespace ProximityPrize.SubmissionLower.AffineModelPointLift
-open IsDedekindDomain AffinePointValuation AffineOverringPointValuation
+namespace ProximityPrize.SubmissionLower.RCN015
+open IsDedekindDomain RCN017 RCN016
 noncomputable section
 abbrev ModelClosure (A L:Type*) [CommRing A] [Field L] [Algebra A L]:=
  integralClosure A L
@@ -41,12 +41,12 @@ theorem modelClosure_embedding_injective:
  Subtype.val_injective
 def modelClosurePoint (hinj:Function.Injective (algebraMap A L))
    (φ:A →ₐ[K] K):ModelClosure A L →ₐ[K] K:=
- IntegralPointLifting.chosenPointLift (modelClosure_base_injective hinj) φ
+ RCN354.chosenPointLift (modelClosure_base_injective hinj) φ
 theorem modelClosurePoint_restrict
    (hinj:Function.Injective (algebraMap A L)) (φ:A →ₐ[K] K) (a:A):
    modelClosurePoint hinj φ (algebraMap A (ModelClosure A L) a)=φ a:=
  AlgHom.congr_fun
-   (IntegralPointLifting.chosenPointLift_spec (modelClosure_base_injective hinj) φ) a
+   (RCN354.chosenPointLift_spec (modelClosure_base_injective hinj) φ) a
 def modelPointPlace
    (hS:Function.Injective (algebraMap (Polynomial K) S))
    (hA:Function.Injective (algebraMap A L)) (φ:A →ₐ[K] K):
@@ -89,7 +89,7 @@ theorem modelPointPlace_injective
    (hA:Function.Injective (algebraMap A L)):
    Function.Injective (modelPointPlace hS hA:(A →ₐ[K] K) → HeightOneSpectrum S):=by
  intro φ ψ h
- apply AffinePointValuation.pointKernel_injective
+ apply RCN017.pointKernel_injective
  apply Ideal.ext
  intro a
  change φ a=0 ↔ ψ a=0
@@ -107,4 +107,4 @@ theorem model_zero_order_ge_one
  omega
 end Construction
 end
-end ProximityPrize.SubmissionLower.AffineModelPointLift
+end ProximityPrize.SubmissionLower.RCN015

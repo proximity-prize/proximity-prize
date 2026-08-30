@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B
-namespace ProximityPrize.SubmissionLower.ContactResidualStageDerivative6600Research
-open ContactGenericSurface ContactRegularFactorGate
-open ContactIdentityResidualIterationResearch
-open ContactFlagBezout6543Research
+namespace ProximityPrize.SubmissionLower.RCN274
+open RCN136 RCN267
+open RCN159
+open RCN095
 noncomputable section
 variable {K Omega Iota:Type} [Field K] [Field Omega]
 variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
@@ -18,4 +18,4 @@ theorem residualStage_pderiv_one_ne_zero
  refine ⟨MvPolynomial.pderiv (1:Fin 3) Q,?_⟩
  rw [hQ,MvPolynomial.pderiv_mul,hzero,zero_mul,zero_add]
 end
-end ProximityPrize.SubmissionLower.ContactResidualStageDerivative6600Research
+end ProximityPrize.SubmissionLower.RCN274

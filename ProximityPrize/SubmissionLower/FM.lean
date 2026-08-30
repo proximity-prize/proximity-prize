@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactPolynomialRegularLocalCompat6732Research
+namespace ProximityPrize.SubmissionLower.RCN230
 open IsLocalRing Polynomial Ideal
 noncomputable section
 set_option maxHeartbeats 3000000
@@ -161,4 +161,4 @@ theorem mvPolynomial_atPrime_isRegularLocalRing
    mvPolynomial_isRegularRing_compat K
  infer_instance
 end
-end ProximityPrize.SubmissionLower.ContactPolynomialRegularLocalCompat6732Research
+end ProximityPrize.SubmissionLower.RCN230

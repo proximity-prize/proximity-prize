@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F
 import ProximityPrize.SubmissionLower.Y4
-namespace ProximityPrize.SubmissionLower.ContactSurfaceSeedCount
+namespace ProximityPrize.SubmissionLower.RCN306
 open scoped Classical BigOperators
-open ContactAlignmentParameters ContactCountingCaps ContactGenericSurface
-open ContactPrimeSeedIncidence ContactProperCutSeedCount ContactComponentPencils
-open ContactPolynomialSolutions ContactTranslation ActualCoordinateDegreeSum
+open RCN051 RCN068 RCN136
+open RCN238 RCN243 RCN065
+open RCN231 RCN319 RCN001
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
 local instance:DecidableEq K:=Classical.decEq K
@@ -44,7 +44,7 @@ theorem scaled_sharp_incidence_bound
    (hfiber:∀ node∈nodes \ identities,
      (seeds.filter (fun seed => relation seed node)).card*(a-w) ≤ M):
    seeds.card*(a-w)^2 ≤ (nodes.card-w)*M:=by
- have hcount:=ContactIncidence.sharp_incidence_bound relation seeds nodes identities
+ have hcount:=RCN173.sharp_incidence_bound relation seeds nodes identities
    a w (M/(a-w)) hidentities hcard hwa han hagreement
    (fun node hnode => (Nat.le_div_iff_mul_le (Nat.sub_pos_of_lt hwa)).mpr
      (hfiber node hnode))
@@ -138,4 +138,4 @@ theorem whole_surface_seed_bound
  exact hcount.trans (Nat.add_le_add (Nat.mul_le_mul_left _ hsum)
    (Nat.mul_le_mul_left _ (hδ 2)))
 end
-end ProximityPrize.SubmissionLower.ContactSurfaceSeedCount
+end ProximityPrize.SubmissionLower.RCN306

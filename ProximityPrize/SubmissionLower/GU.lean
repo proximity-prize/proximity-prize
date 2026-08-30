@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.O4
-namespace ProximityPrize.SubmissionLower.ContactTropicalBKKSeamResearch
+namespace ProximityPrize.SubmissionLower.RCN323
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
-open ContactSparsePoleSupportResearch
-open ActualCurveCoordinateField ActualCurveRationalProjection
- ActualCurveScalarTowers ActualCurveZeroCount
-open CoordinateBoxZeroCount
-open ContactRegularComponentCover
-open ContactResidualSparsePoleProviderResearch
+open RCN295
+open RCN002 RCN005
+ RCN006 RCN007
+open RCN344
+open RCN264
+open RCN273
 noncomputable section
 variable {K L σ:Type} [Field K] [Field L] [Fintype σ]
 variable [Algebra K L] [IsAlgClosed K]
@@ -29,22 +29,22 @@ theorem exponentSetPoleWeight_nonneg
 theorem support_sum_le_principal_poleMass_of_exact
    (x:σ → L) (E:Finset (σ →₀ ℕ)) (b:L) (hb:b≠0)
    (hexact:∀ v:Place K L,
-     ContactLocalPoleBound.poleOrder v.val b=
+     RCN187.poleOrder v.val b=
        exponentSetPoleWeight v.val x E)
    (W:Finset (Place K L)):
    (∑ v∈W,exponentSetPoleWeight v.val x E) ≤
-     ∑ v∈CommonPlaceBalance.placesFor K L b hb,
-       CoordinatePoleMass.poleOrder K L v b:=by
+     ∑ v∈RCN026.placesFor K L b hb,
+       RCN346.poleOrder K L v b:=by
  classical
- let P:=CommonPlaceBalance.placesFor K L b hb
+ let P:=RCN026.placesFor K L b hb
  have hout:∀ v∈W,v∉P →
      exponentSetPoleWeight v.val x E=0:=by
    intro v hvW hvP
-   have hpole:ContactLocalPoleBound.poleOrder v.val b=0:=by
+   have hpole:RCN187.poleOrder v.val b=0:=by
      by_contra hpole
      apply hvP
-     apply CommonPlaceBalance.placesFor_covers K L b hb v
-     unfold CommonPlaceBalance.order ContactLocalPoleBound.poleOrder at*
+     apply RCN026.placesFor_covers K L b hb v
+     unfold RCN026.order RCN187.poleOrder at*
      omega
    rw [←hexact v,hpole]
  calc
@@ -60,7 +60,7 @@ theorem support_sum_le_principal_poleMass_of_exact
      apply Finset.sum_le_sum_of_subset_of_nonneg Finset.inter_subset_right
      intro v _ _
      exact exponentSetPoleWeight_nonneg v.val x E
-   _=∑ v∈P,CoordinatePoleMass.poleOrder K L v b:=by
+   _=∑ v∈P,RCN346.poleOrder K L v b:=by
      apply Finset.sum_congr rfl
      intro v _
      exact (hexact v).symm
@@ -103,7 +103,7 @@ structure GenericSparseBKKWitness
    letI:Algebra.IsSeparable (RatFunc Ω) (CoordinateField Ω C.1):=
      (hproj C separator htr).2
    ∀ v:Place Ω (CoordinateField Ω C.1),
-     ContactLocalPoleBound.poleOrder v.val
+     RCN187.poleOrder v.val
          (MvPolynomial.eval₂Hom
            (algebraMap Ω (CoordinateField Ω C.1))
            (coordinate Ω C.1) polynomial)=
@@ -129,8 +129,8 @@ structure GenericSparseBKKWitness
      (algebraMap Ω (CoordinateField Ω C.1))
      (coordinate Ω C.1) polynomial
    let hb:b≠0:=coordinate_eval_ne_zero_of_not_mem C.1 polynomial (proper C)
-   (∑ v∈CommonPlaceBalance.placesFor Ω (CoordinateField Ω C.1) b hb,
-     CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
+   (∑ v∈RCN026.placesFor Ω (CoordinateField Ω C.1) b hb,
+     RCN346.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
        (cost C:ℤ)
  sum_cost_le:(∑ C:RegularComponent Ω G T H,cost C) ≤ wholeCost
 def GenericSparseBKKWitness.toResidualPoleComponentBudget
@@ -176,4 +176,4 @@ def GenericSparseBKKWitness.toResidualPoleComponentBudget
        (B.cycle_le C)
  sum_cost_le:=B.sum_cost_le
 end
-end ProximityPrize.SubmissionLower.ContactTropicalBKKSeamResearch
+end ProximityPrize.SubmissionLower.RCN323

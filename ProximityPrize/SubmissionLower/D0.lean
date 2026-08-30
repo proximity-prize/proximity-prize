@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z5
 import ProximityPrize.SubmissionLower.P
-namespace ProximityPrize.SubmissionLower.ContactMovingPoleTransport6719Research
+namespace ProximityPrize.SubmissionLower.RCN205
 open scoped Classical WithZero
-open ContactLocalPoleBound ContactSparsePoleSupportResearch
-open ContactFlagBezout6543Research ContactFlagPoleInequality6543Research
-open ContactIdentityResidualPrimeTransportResearch
+open RCN187 RCN295
+open RCN095 RCN114
+open RCN162
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
@@ -120,7 +120,7 @@ theorem forward_unit_invariant (ν:DV L)
 theorem unitAll_eval_pole_le (ν:DV L)
    (hν:∀ c:K,ν (algebraMap K L c) ≤ 1)
    (x:Fin 3 → L) (P:MvPolynomial (Fin 3) K)
-   (hP:ContactFlagTriangularProjectionResearch.PolynomialInFlag unitAllFlag P):
+   (hP:RCN125.PolynomialInFlag unitAllFlag P):
    poleOrder ν (MvPolynomial.eval₂Hom (algebraMap K L) x P) ≤ allPole ν x:=by
  have h:=(poleOrder_eval_le_support ν (algebraMap K L) hν x P).trans
    (supportPoleWeight_le_exponentSetPoleWeight ν x P (flagSupport unitAllFlag)
@@ -142,7 +142,7 @@ theorem moving_pole_invariant (ν:DV L)
    (hν:∀ c:K,ν (algebraMap K L c) ≤ 1)
    (aY v bY aS bS cS:K) (hv:v≠0) (x:Fin 3 → L)
    (c:K) (hc:c≠0) (P:MvPolynomial (Fin 3) K)
-   (hP:ContactFlagTriangularProjectionResearch.PolynomialInFlag unitAllFlag P)
+   (hP:RCN125.PolynomialInFlag unitAllFlag P)
    (W W':L)
    (hW:W'=algebraMap K L c*W+
      MvPolynomial.eval₂Hom (algebraMap K L) x P):
@@ -174,7 +174,7 @@ theorem actual_forward_moving_pole_invariant (ν:DV L)
    (hν:∀ c:K,ν (algebraMap K L c) ≤ 1)
    (aY v bY aS bS cS:K) (hv:v≠0) (x:Fin 3 → L)
    (c:K) (hc:c≠0) (P:MvPolynomial (Fin 3) K)
-   (hP:ContactFlagTriangularProjectionResearch.PolynomialInFlag unitAllFlag P)
+   (hP:RCN125.PolynomialInFlag unitAllFlag P)
    (W W':L)
    (hW:W'=algebraMap K L c*W+
      MvPolynomial.eval₂Hom (algebraMap K L) x P):
@@ -184,4 +184,4 @@ theorem actual_forward_moving_pole_invariant (ν:DV L)
        (algebraMap K L cS) x) W'=movingPole ν x W:=
  moving_pole_invariant ν hν aY v bY aS bS cS hv x c hc P hP W W' hW
 end
-end ProximityPrize.SubmissionLower.ContactMovingPoleTransport6719Research
+end ProximityPrize.SubmissionLower.RCN205

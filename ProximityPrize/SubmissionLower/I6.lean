@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.CH
-namespace ProximityPrize.SubmissionLower.ContactDVRRecurrenceDichotomy6732Research
-open ContactTwoTailDVRExact6731Research
+namespace ProximityPrize.SubmissionLower.RCN073
+open RCN324
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -177,4 +177,4 @@ theorem recurrence_unit_or_persistent
    exact hpi.not_isUnit (isUnit_of_dvd_one
      ((hall j).trans (isUnit_iff_dvd_one.mp hunit)))
 end
-end ProximityPrize.SubmissionLower.ContactDVRRecurrenceDichotomy6732Research
+end ProximityPrize.SubmissionLower.RCN073

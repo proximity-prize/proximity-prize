@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ActualCurveCoordinateField
+namespace ProximityPrize.SubmissionLower.RCN002
 noncomputable section
 abbrev CoordinateRing (K:Type) [Field K]
    (P:Ideal (MvPolynomial (Fin 3) K)):=MvPolynomial (Fin 3) K ⧸ P
@@ -91,4 +91,4 @@ theorem exists_transcendental_coordinate_of_ne_point_kernel
  exact hnonpoint v hv
 end AlgebraicallyClosed
 end
-end ProximityPrize.SubmissionLower.ActualCurveCoordinateField
+end ProximityPrize.SubmissionLower.RCN002

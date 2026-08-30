@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EL
-namespace ProximityPrize.SubmissionLower.ContactRegularFactorGate
-open ContactGenericSurface ContactTaylorNumerators ContactGeometricFirstTail
-open ContactGaussLocalization ContactGeometricFactorCover
+namespace ProximityPrize.SubmissionLower.RCN267
+open RCN136 RCN313 RCN138
+open RCN132 RCN137
 noncomputable section
 section PartialDerivatives
 variable {σ K:Type*} [Field K]
@@ -84,7 +84,7 @@ theorem equation_not_dvd_R_derivative
    (hpos:0 < F.degreeOf 2) (hsmall:F.degreeOf 2 < p):
    ¬ F∣MvPolynomial.pderiv (2:Fin 4) F:=by
  intro hdiv
- have hle:=ContactFactorCaps.degreeOf_le_of_dvd (2:Fin 4) F _ hdiv
+ have hle:=RCN081.degreeOf_le_of_dvd (2:Fin 4) F _ hdiv
    (R_derivative_nonzero F p hpos hsmall)
  have hlt:=R_derivative_degree_lt F hpos
  omega
@@ -158,4 +158,4 @@ theorem geometric_factor_regular_gate
    H_proper_on_every_geometric_factor K L F hF p hpos hsmall g hg hdivF⟩
 end GeometricRegularity
 end
-end ProximityPrize.SubmissionLower.ContactRegularFactorGate
+end ProximityPrize.SubmissionLower.RCN267

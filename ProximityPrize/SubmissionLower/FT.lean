@@ -2,25 +2,25 @@ import ProximityPrize.SubmissionLower.I6
 import ProximityPrize.SubmissionLower.FF
 import ProximityPrize.SubmissionLower.FG
 import ProximityPrize.SubmissionLower.AL
-namespace ProximityPrize.SubmissionLower.ContactProperDelayedTailCertificate6732Research
+namespace ProximityPrize.SubmissionLower.RCN244
 open scoped Classical BigOperators
-open ContactGenericInitialPoint ContactGenericSurface
-open ContactIdentityResidualIterationResearch ContactRegularComponentCover
-open ContactDelayedTailMultiplicityProvider6732Research
-open ContactTwoTailProviderAssembly6732Research
-open ContactTangentCoefficientProvider6732Research
-open ContactOriginalFactorLocalDVR6732Research
-open ContactOriginalFactorLocalDVR6731Research
-open ContactDVRRecurrenceDichotomy6732Research
-open ContactFirstTailCertificate6731Research ContactTwoTailRecurrence6731Research
-open ContactTwoTailProperBranch6731Research
-open ContactPrimeFlagBudgetFamilyResearch ContactFlagBezout6543Research
-open ContactMovingAgreementCertificate6719Research
-open ContactSharpTaylorFixedMeet6656Research
-open ContactTaylorNumerators
-open ContactNumeratorFactorScaling6731Research
-open ContactProperCutSeedCount ContactCurveComponents
-open ContactPrimeSeedIncidence
+open RCN135 RCN136
+open RCN159 RCN264
+open RCN074
+open RCN329
+open RCN312
+open RCN219
+open RCN218
+open RCN073
+open RCN086 RCN330
+open RCN328
+open RCN237 RCN095
+open RCN198
+open RCN287
+open RCN313
+open RCN217
+open RCN243 RCN072
+open RCN238
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 4000000
@@ -34,12 +34,15 @@ variable [CharP (GenericField K) p]
 abbrev fixedSupport:=support 1206 42 10
 abbrev Stage (K I:Type) [Field K]
    (Gamma:Finset K) (x:I → K) (p:ℕ) [CharP (GenericField K) p]
-   (flag:FlagDegree):=
- ResidualStage (polynomialEmbedding K) Gamma x p
-   ContactTwoTailParameters6734Research.errors flag
-   ContactTwoTailParameters6733Research.w fixedSupport
+   (flag:FlagDegree)
+   (errorCap:ℕ:=RCN327.errors)
+   (stageSupport:RCN275.ResidualSupportParameters:=fixedSupport):=
+ ResidualStage (polynomialEmbedding K) Gamma x p errorCap flag
+   RCN326.w stageSupport
+variable {errorCap : ℕ}
+variable {stageSupport : RCN275.ResidualSupportParameters}
 structure OriginalData
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S) where
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S) where
  factor:MvPolynomial (Fin 4) K
  cofactor:MvPolynomial (Fin 4) K
  irreducible:Irreducible factor
@@ -51,7 +54,7 @@ structure OriginalData
  regularity_not_mem:
    surfaceMap (polynomialEmbedding K) (polyH K factor)∉C.1
 noncomputable def originalData
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S):
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S):
    OriginalData S C:=by
  let h:=exists_original_factor_of_firstTailComponent S C
  let factor:=h.choose
@@ -60,43 +63,43 @@ noncomputable def originalData
  exact ⟨factor,cofactor,hs.1,hs.2.1,hs.2.2.1,hs.2.2.2.1,
    hs.2.2.2.2.1,hs.2.2.2.2.2.1,hs.2.2.2.2.2.2⟩
 abbrev componentPrime
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S):=
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S):=
  contractedPrime (polynomialEmbedding K) C.1
 theorem factorLe
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S):
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S):
    factorIdeal (originalData S C).factor ≤ componentPrime S C:=
  factorIdeal_le_contractedPrime (polynomialEmbedding K) C.1
    (originalData S C).factor (originalData S C).factor_mem
 abbrev LocalRing
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S):=
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S):=
  FactorLocal (originalData S C).factor (componentPrime S C) (factorLe S C)
 local instance factorIdealPrime
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S):
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S):
    (factorIdeal (originalData S C).factor).IsPrime:=
  factorIdeal_isPrime _ (originalData S C).irreducible
 local instance quotientPrimeInstance
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S):
-   (ContactLocalHypersurfaceBridge6731Research.quotientPrime
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S):
+   (RCN186.quotientPrime
      (factorIdeal (originalData S C).factor) (componentPrime S C)).IsPrime:=
- ContactLocalHypersurfaceBridge6731Research.quotientPrime_isPrime _ _ (factorLe S C)
+ RCN186.quotientPrime_isPrime _ _ (factorLe S C)
 noncomputable def localImage
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S)
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S)
    (A:MvPolynomial (Fin 4) K):LocalRing S C:=
  factorLocalImage (originalData S C).factor (componentPrime S C)
    (factorLe S C) A
 noncomputable def localDerivation
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S):
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S):
    Derivation K (LocalRing S C) (LocalRing S C):=
  factorLocalDerivation (originalData S C).factor (componentPrime S C)
    (factorLe S C)
 theorem original_firstNumerator_mem_component
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S):
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S):
    surfaceMap (polynomialEmbedding K)
      (numerator K (originalData S C).factor
-       (ContactTwoTailParameters6733Research.w+1))∈C.1:=by
+       (RCN326.w+1))∈C.1:=by
  let phi:=polynomialEmbedding K
  let d:=originalData S C
- let b:=ContactTwoTailParameters6733Research.w+1
+ let b:=RCN326.w+1
  have hwhole:surfaceMap phi (numerator K S.F b)∈C.1:=by
    apply (globalTailCut_mem_iff phi (polynomialEmbedding_injective K)
      S.F b C.1).mp
@@ -132,19 +135,19 @@ theorem original_firstNumerator_mem_component
  · exact False.elim (hcofactorPow (by simpa only [map_pow] using hleft))
  · exact hright
 theorem componentPrime_height_eq_two
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S)
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w+1)):
+     (RCN326.w+1)):
    (componentPrime S C).height=2:=by
  let d:=originalData S C
- let N:=numerator K d.factor (ContactTwoTailParameters6733Research.w+1)
+ let N:=numerator K d.factor (RCN326.w+1)
  have hproperN:¬ d.factor∣N:=
    original_factor_firstTail_proper S hfirstProper d.factor d.cofactor
      d.product d.factor_dvd
  have hheightC:C.1.height ≤ 2:=
    component_height_le_two (GenericField K) S.G
      (globalTailCut (polynomialEmbedding K) S.F
-       (ContactTwoTailParameters6733Research.w+1)) C.1
+       (RCN326.w+1)) C.1
      (regularComponent_mem (GenericField K) S.G _ _ C)
  have horiginal:=originalPrime_height_eq_two C.1 hheightC d.factor N
    d.irreducible d.factor_mem (original_firstNumerator_mem_component S C) hproperN
@@ -155,14 +158,14 @@ theorem componentPrime_height_eq_two
      (mem_originalPrime_iff C.1 A).symm
  rw [heq]
  exact horiginal
-structure LocalDVRFamily (S:Stage K I Gamma x p flag) where
+structure LocalDVRFamily (S:Stage K I Gamma x p flag errorCap stageSupport) where
  domain:∀ C:FirstTailComponent S,IsDomain (LocalRing S C)
  dvr:∀ C:FirstTailComponent S,
    @IsDiscreteValuationRing (LocalRing S C) _ (domain C)
 theorem canonicalLocalDVRFamily
-   (S:Stage K I Gamma x p flag)
+   (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w+1)):
+     (RCN326.w+1)):
    LocalDVRFamily S where
  domain:=fun C↦inferInstance
  dvr:=fun C↦by
@@ -171,15 +174,15 @@ theorem canonicalLocalDVRFamily
      (componentPrime_height_eq_two S C hfirstProper)
      (originalData S C).regularity_not_mem
 noncomputable def localMultiplicity
-   (S:Stage K I Gamma x p flag) (L:LocalDVRFamily S)
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (L:LocalDVRFamily S)
    (C:FirstTailComponent S):ℕ:=by
  letI:IsDomain (LocalRing S C):=L.domain C
  letI:IsDiscreteValuationRing (LocalRing S C):=L.dvr C
  exact (IsDiscreteValuationRing.addVal (LocalRing S C)
    (localImage S C (numerator K (originalData S C).factor
-     (ContactTwoTailParameters6733Research.w+1)))).toNat
+     (RCN326.w+1)))).toNat
 theorem localImage_isUnit_iff_not_mem
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S)
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S)
    (A:MvPolynomial (Fin 4) K):
    IsUnit (localImage S C A) ↔
      surfaceMap (polynomialEmbedding K) A∉C.1:=by
@@ -192,14 +195,14 @@ theorem localImage_isUnit_iff_not_mem
      have hmax:=
        (IsLocalization.AtPrime.to_map_mem_maximal_iff
          (LocalRing S C)
-         (ContactLocalHypersurfaceBridge6731Research.quotientPrime
+         (RCN186.quotientPrime
            (factorIdeal (originalData S C).factor) (componentPrime S C))
          (Ideal.Quotient.mk (factorIdeal (originalData S C).factor) A)).2 (by
            have:A∈
-               (ContactLocalHypersurfaceBridge6731Research.quotientPrime
+               (RCN186.quotientPrime
                  (factorIdeal (originalData S C).factor) (componentPrime S C)).comap
                  (Ideal.Quotient.mk (factorIdeal (originalData S C).factor)):=by
-             rw [ContactLocalHypersurfaceBridge6731Research.quotientPrime_comap_quotientMk
+             rw [RCN186.quotientPrime_comap_quotientMk
                (factorIdeal (originalData S C).factor) (componentPrime S C)
                (factorLe S C)]
              exact hmem
@@ -211,7 +214,7 @@ theorem localImage_isUnit_iff_not_mem
    exact factorLocal_image_isUnit_of_not_mem
      (originalData S C).factor A (componentPrime S C) (factorLe S C) hnot
 theorem tail_mem_iff_original_numerator_mem
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S) (b:ℕ):
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S) (b:ℕ):
    globalTailCut (polynomialEmbedding K) S.F b∈C.1 ↔
      surfaceMap (polynomialEmbedding K)
        (numerator K (originalData S C).factor b)∈C.1:=by
@@ -253,30 +256,30 @@ theorem tail_mem_iff_original_numerator_mem
    have:=C.1.add_mem hscaledMap hproduct
    simpa only [map_sub,map_mul,map_pow,sub_add_cancel] using this
 private theorem chosenLocalImage_ne_zero_of_not_dvd
-   (S:Stage K I Gamma x p flag) (C:FirstTailComponent S)
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S)
    (A:MvPolynomial (Fin 4) K)
    (hA:¬ (originalData S C).factor∣A):
    localImage S C A≠0:=by
  intro hzero
  have hquot:Ideal.Quotient.mk (factorIdeal (originalData S C).factor) A=0:=by
    apply (IsLocalization.injective (LocalRing S C)
-     (ContactLocalHypersurfaceBridge6731Research.quotientPrime
+     (RCN186.quotientPrime
        (factorIdeal (originalData S C).factor)
        (componentPrime S C)).primeCompl_le_nonZeroDivisors)
    simpa only [localImage,factorLocalImage,map_zero] using hzero
  exact hA (Ideal.mem_span_singleton.mp
    (Ideal.Quotient.eq_zero_iff_mem.mp hquot))
 theorem local_order_tail_dichotomy
-   (S:Stage K I Gamma x p flag) (L:LocalDVRFamily S)
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (L:LocalDVRFamily S)
    (C:FirstTailComponent S)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w+1)):
+     (RCN326.w+1)):
    1 ≤ localMultiplicity S L C∧
      ((∃ delay,1 ≤ delay∧delay ≤ localMultiplicity S L C∧
        globalTailCut (polynomialEmbedding K) S.F
-         (ContactTwoTailParameters6733Research.w+1+delay)∉C.1)∨
+         (RCN326.w+1+delay)∉C.1)∨
      (∀ delay,globalTailCut (polynomialEmbedding K) S.F
-       (ContactTwoTailParameters6733Research.w+1+delay)∈C.1)):=by
+       (RCN326.w+1+delay)∈C.1)):=by
  let d:=originalData S C
  let p0:=componentPrime S C
  let hFp:=factorLe S C
@@ -284,9 +287,9 @@ theorem local_order_tail_dichotomy
  let D:=localDerivation S C
  let H:R:=localImage S C (polyH K d.factor)
  let N:ℕ → R:=fun j↦localImage S C
-   (numerator K d.factor (ContactTwoTailParameters6733Research.w+1+j))
+   (numerator K d.factor (RCN326.w+1+j))
  let coeff:ℕ → R:=fun j↦
-   (2*(ContactTwoTailParameters6733Research.w+1+j):R)
+   (2*(RCN326.w+1+j):R)
  letI:IsDomain R:=L.domain C
  letI:IsDiscreteValuationRing R:=L.dvr C
  letI:CharP K p:=
@@ -295,11 +298,11 @@ theorem local_order_tail_dichotomy
    (algebraMap K R).injective p
  have hpne:p≠0:=by
    have:=S.characteristic_bound
-   dsimp only [ContactTwoTailParameters6733Research.w] at this
+   dsimp only [RCN326.w] at this
    omega
  have hp:p.Prime:=CharP.char_prime_of_ne_zero (GenericField K) hpne
  have hproperN:¬ d.factor∣
-     numerator K d.factor (ContactTwoTailParameters6733Research.w+1):=
+     numerator K d.factor (RCN326.w+1):=
    original_factor_firstTail_proper S hfirstProper d.factor d.cofactor
      d.product d.factor_dvd
  have hN0ne:N 0≠0:=by
@@ -316,7 +319,7 @@ theorem local_order_tail_dichotomy
    convert
      (factorLocal_numerator_succ
        (originalData S C).factor (componentPrime S C) (factorLe S C)
-       (ContactTwoTailParameters6733Research.w+1+j)) using 1 <;>
+       (RCN326.w+1+j)) using 1 <;>
      push_cast <;> ring
  have hd:=recurrence_unit_or_persistent D H (D H) coeff N p hp
    hrec hHunit hN0ne hN0nonunit
@@ -336,13 +339,13 @@ theorem local_order_tail_dichotomy
    apply (localImage_isUnit_iff_not_mem S C _).2
    exact (tail_mem_iff_original_numerator_mem S C _).not.mp hnot
 theorem one_le_localMultiplicity
-   (S:Stage K I Gamma x p flag)
+   (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w+1)):
+     (RCN326.w+1)):
    ∀ C,1 ≤ localMultiplicity S
      (canonicalLocalDVRFamily S hfirstProper) C:=by
  intro C
  exact (local_order_tail_dichotomy S
    (canonicalLocalDVRFamily S hfirstProper) C hfirstProper).1
 end
-end ProximityPrize.SubmissionLower.ContactProperDelayedTailCertificate6732Research
+end ProximityPrize.SubmissionLower.RCN244

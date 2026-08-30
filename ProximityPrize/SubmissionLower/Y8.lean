@@ -2,15 +2,15 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R7
 import ProximityPrize.SubmissionLower.Y7
 import ProximityPrize.SubmissionLower.BB
-namespace ProximityPrize.SubmissionLower.ContactFlagExactSeparableProjection6543Research
+namespace ProximityPrize.SubmissionLower.RCN097
 open scoped Classical BigOperators WithZero TensorProduct
 open Polynomial KaehlerDifferential IsDedekindDomain
-open ArbitraryRationalProjectionResearch GlobalSeparableShearResearch
-open CoordinateBoxZeroCount ContactSparsePoleSupportResearch
-open ContactDependentGenericity6543Research
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveZeroCount
-open ContactRegularComponentCover
-open ContactFlagAffineFamilyDegree6543Research
+open RCN022 RCN351
+open RCN344 RCN295
+open RCN075
+open RCN002 RCN005 RCN007
+open RCN264
+open RCN093
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
@@ -41,7 +41,7 @@ theorem exists_nonzero_avoiding_finite_subsingleton
    exact ha (Finset.mem_insert_of_mem (hab ▸ hmem))
 theorem valuation_shear_bad_coefficient_subsingleton
    {K L:Type*} [Field K] [Field L] [Algebra K L]
-   (v:CoordinatePlaceClassification.NormalizedValuation K L)
+   (v:RCN345.NormalizedValuation K L)
    (r z:L):
    ∀ {a b:K},
      v.val (r+a • z) < max (v.val r) (v.val z) →
@@ -78,7 +78,7 @@ variable {I:Type*} [Fintype I]
 variable (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 variable (r z:∀ i,E i)
 variable (W:∀ i,
- Finset (CoordinatePlaceClassification.NormalizedValuation K (E i)))
+ Finset (RCN345.NormalizedValuation K (E i)))
 theorem exists_common_exact_finite_separable_shear
    (embeddingZ:∀ i,RatFunc K →ₐ[K] E i)
    (hvalueZ:∀ i,embeddingZ i
@@ -105,7 +105,7 @@ theorem exists_common_exact_finite_separable_shear
    intro i
    have h:=parameterDifferential_ne_zero_of_isSeparable
      K (E i) (embeddingZ i) (hfiniteZ i) (hsepZ i)
-   unfold SeparableShearKaehlerResearch.parameterDifferential at h
+   unfold RCN369.parameterDifferential at h
    rwa [hvalueZ i] at h
  let J:=I ⊕ Σ i:I,{v//v∈W i}
  let Bad:J → K → Prop
@@ -210,7 +210,7 @@ theorem exists_nestedFlagProjectionData
  let rY:∀ C,E C:=fun C↦coordinate Ω C.1 0
  let z:∀ C,E C:=fun C↦coordinate Ω C.1 2
  let W:∀ C,Finset
-     (CoordinatePlaceClassification.NormalizedValuation Ω (E C)):=
+     (RCN345.NormalizedValuation Ω (E C)):=
    fun C↦componentRelevantPlaces hseparator hproj C
  let embeddingZ:∀ C,RatFunc Ω →ₐ[Ω] E C:=
    fun C↦rationalBaseEmbedding Ω C.1 2 (hseparator C)
@@ -302,4 +302,4 @@ theorem exists_nestedFlagProjectionData
    (fun C↦(hVdata C).2.2)⟩⟩
 end RegularComponents
 end
-end ProximityPrize.SubmissionLower.ContactFlagExactSeparableProjection6543Research
+end ProximityPrize.SubmissionLower.RCN097

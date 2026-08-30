@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactIdentityPencil
+namespace ProximityPrize.SubmissionLower.RCN147
 noncomputable section
 variable {K L:Type*} [Field K] [Field L]
 theorem degree_lt_card_of_natDegree_le {ι:Type*}
@@ -70,4 +70,4 @@ theorem exists_affine_pencil_of_identity_nodes {ι τ:Type*}
  intro t
  simpa only [Polynomial.map_id] using hfamily t
 end
-end ProximityPrize.SubmissionLower.ContactIdentityPencil
+end ProximityPrize.SubmissionLower.RCN147

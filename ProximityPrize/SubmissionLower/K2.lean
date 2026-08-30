@@ -1,15 +1,15 @@
 import ProximityPrize.SubmissionLower.O
-namespace ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedCost6733Research
-open ActualCurveCoordinateField ActualPlaneCoordinateKernel ContactRegularComponentCover
-open ContactFlagAffineFamilyDegree6543Research
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ContactAdaptiveProjectionCoordinateResearch CoordinateBoxZeroCount
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactFlagPlaneIndexedResidueWeight6733Research
-open ContactPlaneRelationCoefficientFiber6733Research
-open ContactFlagPlaneSurfaceLocalAdapter6732Research
-open ArbitraryPlaneEvaluationFamilyResearch
-open ActualPlaneRelationMaximal6732Research
+namespace ProximityPrize.SubmissionLower.RCN105
+open RCN002 RCN011 RCN264
+open RCN093
+open RCN120
+open RCN042 RCN344
+open RCN106
+open RCN111
+open RCN226
+open RCN113
+open RCN021
+open RCN014
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -75,7 +75,7 @@ theorem indexed_coordinateDegree_eq_factorDegree_mul_planeWeight
      rfl}
  have hsurj:Function.Surjective phi:=by
    change Function.Surjective
-     (PlaneFunctionFieldDegree.planeEval F L
+     (RCN361.planeEval F L
        (e (MvPolynomial.X (order 2))) (e (MvPolynomial.X (order 1))))
    exact planeEvaluation_surjective_of_finite_generatingPair
      (e (MvPolynomial.X (order 2))) (e (MvPolynomial.X (order 1))) (hgen a)
@@ -94,4 +94,4 @@ theorem indexed_coordinateDegree_eq_factorDegree_mul_planeWeight
      quotient_finrank_eq_natDegree_mul_residue_finrank q hq J
        (relationKernel_comap_C Omega L order e (ht a))
 end
-end ProximityPrize.SubmissionLower.ContactFlagPlaneIndexedCost6733Research
+end ProximityPrize.SubmissionLower.RCN105

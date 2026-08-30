@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F
 import ProximityPrize.SubmissionLower.Y
-namespace ProximityPrize.SubmissionLower.ContactJointProperCutSeedCount
-open ActualCurveCoordinateField ActualCurveZeroCount ActualCurveProjectionBounds
-open ActualCoordinateDegreeSum ActualCurveJointProjectionBounds
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactRegularComponentCover
-open ContactProperCutSeedCount
+namespace ProximityPrize.SubmissionLower.RCN176
+open RCN002 RCN007 RCN004
+open RCN001 RCN003
+open RCN136 RCN231 RCN319
+open RCN238 RCN264
+open RCN243
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
 variable (φ:Polynomial K →+*Ω)
@@ -139,4 +139,4 @@ theorem proper_cut_seed_bound_joint_R
    (regularComponents_degree_budget_joint_R φ F G T p hG hproper
      hGdegree hmixedY hmixedZ hjoint)
 end
-end ProximityPrize.SubmissionLower.ContactJointProperCutSeedCount
+end ProximityPrize.SubmissionLower.RCN176

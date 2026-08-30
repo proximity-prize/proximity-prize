@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.O1
-namespace ProximityPrize.SubmissionLower.ContactPolynomiality
-open DifferentialTaylorCoefficients DifferentialTaylorHom
-open ContactDifferentialRing ContactRegularPoint
+namespace ProximityPrize.SubmissionLower.RCN233
+open RCN347 RCN348
+open RCN077 RCN269
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
 section GeneralTaylorCoordinates
@@ -174,4 +174,4 @@ theorem polynomiality_of_all_tails
  rw [hcoeff] at hzero
  exact hzero
 end ActualRegularPoint
-end ProximityPrize.SubmissionLower.ContactPolynomiality
+end ProximityPrize.SubmissionLower.RCN233
