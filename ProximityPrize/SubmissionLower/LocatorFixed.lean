@@ -95,7 +95,7 @@ theorem own_box (F:P4) (D w L s:ℕ)
 
 
 def wholeSupport:ResidualSupportParameters:=
-  ⟨13,59,1445,by decide,by decide,by decide,by decide⟩
+  ⟨13,60,1469,by decide,by decide,by decide,by decide⟩
 
 theorem factor_support (Q:P4) (hQ:Q≠0)
     (HQ:ResidualSupportData wholeSupport Q) (R:RegularIndex Q):
@@ -106,26 +106,26 @@ theorem factor_support (Q:P4) (hQ:Q≠0)
     (weightedTotalDegree_le_of_dvd residualTotalWeights R.1 Q hd hQ).trans HQ.total_weight⟩
 
 theorem own_parameter_caps (p:FlagDegree)
-    (hs:p.all≤13) (hy:middle p≤59) (ht:total p≤1445):
-    padSlope p+2≤13 ∧ padB p+padSlope p+3≤59 ∧
-      padA p+padB p+padSlope p+3≤1445:=by
+    (hs:p.all≤13) (hy:middle p≤60) (ht:total p≤1469):
+    padSlope p+2≤13 ∧ padB p+padSlope p+3≤60 ∧
+      padA p+padB p+padSlope p+3≤1469:=by
   have hp:=pad_sums p
   have hps:padS p≤13:=max_le hs (by decide)
-  have hpy:padY p≤59:=max_le hy (by omega)
-  have hpt:padT p≤1445:=max_le ht (by omega)
+  have hpy:padY p≤60:=max_le hy (by omega)
+  have hpt:padT p≤1469:=max_le ht (by omega)
   rw [hp.1,hp.2.1,hp.2.2]
   exact ⟨hps,hpy,hpt⟩
 
 theorem regular_factor_count
     (Q:P4) (hQ:Q≠0)
-    (hbox:Q∈RCN174.globalCoefficientBox K 8188335 131071 1445 13)
+    (hbox:Q∈RCN174.globalCoefficientBox K 8187885 131071 1469 13)
     (HQ:ResidualSupportData wholeSupport Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤131071)
-    (hagreement:∀ gamma∈Gamma,181963≤
+    (hagreement:∀ gamma∈Gamma,181953≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80181)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80191)
     (R:RegularIndex Q):
     (regularSeeds Q selected Gamma R).card≤
       paddedCost 131072 131073 (regularCumulativeFlag Q R):=by
@@ -134,14 +134,14 @@ theorem regular_factor_count
   let a:=padA p
   let b:=padB p
   let s:=padSlope p
-  have hRdata:=directFactor_data Q R.1 hQ 8188335 131071 1445 13 hbox R.2
+  have hRdata:=directFactor_data Q R.1 hQ 8187885 131071 1469 13 hbox R.2
   have hRsmall:R.1.degreeOf (2:Fin 4)<2130706433:=
     (degreeOf_R_le_of_mem_box _ _ _ _ _ hRdata.2.2).trans_lt (by decide)
-  have hRbox:=own_box R.1 8188335 131071 1445 13 hRdata.2.2
+  have hRbox:=own_box R.1 8187885 131071 1469 13 hRdata.2.2
   have hRsupport:=own_support R.1
   have hRwhole:=factor_support Q hQ HQ R
   have hc:=originalCumulativeFlag_cumulative R.1
-  have hparam:s+2≤13 ∧ b+s+3≤59 ∧ a+b+s+3≤1445:=by
+  have hparam:s+2≤13 ∧ b+s+3≤60 ∧ a+b+s+3≤1469:=by
     apply own_parameter_caps p
     · exact hRwhole.s_weight
     · simpa only [p,middle,regularCumulativeFlag,hc.2.1,wholeSupport] using
@@ -166,11 +166,11 @@ theorem regular_factor_count
     have hsub:geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g ⊆ Gamma:=
       (geometricSeeds_subset K R.1 selected _ g).trans (regularSeeds_subset Q selected Gamma R)
-    have hnodes:S.nodes.card=181963+80181:=by
+    have hnodes:S.nodes.card=181953+80191:=by
       change (Finset.univ:Finset I).card=_
       norm_num [I,IRSProfile.Index]
     have hag:∀ gamma∈geometricSeeds K R.1 selected
-        (regularSeeds Q selected Gamma R) g,181963≤(S.agreementFiber gamma).card:=by
+        (regularSeeds Q selected Gamma R) g,181953≤(S.agreementFiber gamma).card:=by
       intro gamma hgamma
       simpa [S,S0,ResidualStage.agreementFiber,ResidualStage.Agrees,
         reflagResidualStage,regularGeometricResidualStageOfSupport,
@@ -197,14 +197,14 @@ theorem regular_factor_count
 
 theorem regular_sum_count
     (Q:P4) (hQ:Q≠0)
-    (hbox:Q∈RCN174.globalCoefficientBox K 8188335 131071 1445 13)
+    (hbox:Q∈RCN174.globalCoefficientBox K 8187885 131071 1469 13)
     (HQ:ResidualSupportData wholeSupport Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤131071)
-    (hagreement:∀ gamma∈Gamma,181963≤
+    (hagreement:∀ gamma∈Gamma,181953≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80181)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80191)
     (h10:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=10 →
       middle (regularCumulativeFlag Q R)≤56)
     (h11:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=11 →
@@ -213,45 +213,52 @@ theorem regular_sum_count
       middle (regularCumulativeFlag Q R)≤48)
     (h13:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=13 →
       middle (regularCumulativeFlag Q R)≤44)
+    (ht9:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=9 →
+      60≤middle (regularCumulativeFlag Q R) →
+      total (regularCumulativeFlag Q R)≤1252)
     (ht10:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=10 →
-      total (regularCumulativeFlag Q R)≤1414)
+      40≤middle (regularCumulativeFlag Q R) →
+      total (regularCumulativeFlag Q R)≤1406)
     (ht11:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=11 →
-      total (regularCumulativeFlag Q R)≤1414)
+      36≤middle (regularCumulativeFlag Q R) →
+      total (regularCumulativeFlag Q R)≤1407)
     (ht12:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=12 →
-      total (regularCumulativeFlag Q R)≤1414)
+      32≤middle (regularCumulativeFlag Q R) →
+      total (regularCumulativeFlag Q R)≤1405)
     (ht13:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=13 →
-      total (regularCumulativeFlag Q R)≤1413):
+      27≤middle (regularCumulativeFlag Q R) →
+      total (regularCumulativeFlag Q R)≤1408):
     (∑ R:RegularIndex Q,(regularSeeds Q selected Gamma R).card)≤
-      272527456851746043:=by
+      271263904445294429:=by
   have hb:=regularCumulativeFlag_budgets Q hQ HQ
   have hsSum:(∑ R:RegularIndex Q,(regularCumulativeFlag Q R).all)≤13:=
     hb.1
-  have hySum:(∑ R:RegularIndex Q,middle (regularCumulativeFlag Q R))≤59:=
+  have hySum:(∑ R:RegularIndex Q,middle (regularCumulativeFlag Q R))≤60:=
     hb.2.1
-  have htSum:(∑ R:RegularIndex Q,total (regularCumulativeFlag Q R))≤1445:=
+  have htSum:(∑ R:RegularIndex Q,total (regularCumulativeFlag Q R))≤1469:=
     hb.2.2
-  have hcost:=LocatorFactorAggregate.aggregate_6742 (regularCumulativeFlag Q)
+  have hcost:=LocatorFactorAggregate.aggregate_80191 (regularCumulativeFlag Q)
     (regularCumulativeFlag_positive Q) hsSum hySum htSum h10 h11 h12 h13
-    ht10 ht11 ht12 ht13
+    ht9 ht10 ht11 ht12 ht13
   exact (Finset.sum_le_sum (fun R _=>
     regular_factor_count Q hQ hbox HQ selected Gamma u0 u1
       hdegree hagreement hno R)).trans hcost
 
 def profile:RCN276.Profile:=
-  ⟨262144,131071,181963,8188335,1445,13⟩
+  ⟨262144,131071,181953,8187885,1469,13⟩
 
 
 theorem fixed_count_le
     (Q:P4) (hQ:Q≠0)
-    (hbox:Q∈RCN174.globalCoefficientBox K 8188335 131071 1445 13)
+    (hbox:Q∈RCN174.globalCoefficientBox K 8187885 131071 1469 13)
     (HQ:ResidualSupportData wholeSupport Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hsolution:∀ gamma∈Gamma,specialization K (selected gamma) gamma Q=0)
     (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤131071)
-    (hagreement:∀ gamma∈Gamma,181963≤
+    (hagreement:∀ gamma∈Gamma,181953≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80181)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80191)
     (h10:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=10 →
       middle (regularCumulativeFlag Q R)≤56)
     (h11:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=11 →
@@ -260,21 +267,28 @@ theorem fixed_count_le
       middle (regularCumulativeFlag Q R)≤48)
     (h13:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=13 →
       middle (regularCumulativeFlag Q R)≤44)
+    (ht9:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=9 →
+      60≤middle (regularCumulativeFlag Q R) →
+      total (regularCumulativeFlag Q R)≤1252)
     (ht10:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=10 →
-      total (regularCumulativeFlag Q R)≤1414)
+      40≤middle (regularCumulativeFlag Q R) →
+      total (regularCumulativeFlag Q R)≤1406)
     (ht11:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=11 →
-      total (regularCumulativeFlag Q R)≤1414)
+      36≤middle (regularCumulativeFlag Q R) →
+      total (regularCumulativeFlag Q R)≤1407)
     (ht12:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=12 →
-      total (regularCumulativeFlag Q R)≤1414)
+      32≤middle (regularCumulativeFlag Q R) →
+      total (regularCumulativeFlag Q R)≤1405)
     (ht13:∀ R:RegularIndex Q,(regularCumulativeFlag Q R).all=13 →
-      total (regularCumulativeFlag Q R)≤1413):
-    Gamma.card≤272527456851746043+LocatorArithmetic.fixedSingular.countCap:=by
+      27≤middle (regularCumulativeFlag Q R) →
+      total (regularCumulativeFlag Q R)≤1408):
+    Gamma.card≤271263904445294429+LocatorArithmetic.fixedSingular.countCap:=by
   have hg:=LocatorArithmetic.fixed_singular_gates
   have hcover:=RCN239.card_le_regular_sum_add_singular
     profile Q hQ hbox hg.s_pos hg.s_small hg.w_pos hg.kD
     hg.algebraic_pos hg.algebraic_small selected Gamma hsolution
   have hreg:=regular_sum_count Q hQ hbox HQ selected Gamma u0 u1
-    hdegree hagreement hno h10 h11 h12 h13 ht10 ht11 ht12 ht13
+    hdegree hagreement hno h10 h11 h12 h13 ht9 ht10 ht11 ht12 ht13
   have hsing:=RCN292.TightParameters.singularSeeds_count_le_countCap
     LocatorArithmetic.fixedSingular Q hQ hbox
     hg.s_pos hg.s_small hg.w_pos hg.w_small hg.kD hg.algebraic_pos

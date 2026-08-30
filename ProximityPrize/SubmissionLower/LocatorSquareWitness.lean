@@ -77,17 +77,18 @@ theorem exists_square_witness_of_collar
     _=F*(F*G):=by rw [hG]
     _=F*F*G:=(mul_assoc F F G).symm
 
-theorem factor_total_le_of_square_collar
-    (D w L s m c p R cap Dcap Lcap qcap J:ℕ) [CharP K p]
+theorem factor_total_le_of_ys_square_collar
+    (D w L s m c p R yLower cap Dcap Lcap qcap J:ℕ) [CharP K p]
     (nodes u0 u1:I → K) (F:MvPolynomial (Fin 4) K)
     (hF:Irreducible F)
     (hdiv:∀ v:ConstraintKernel (K:=K) D w L s m nodes u0 u1,
       F∣reconstruct K D w L s v.1)
     (hR:F.degreeOf (2:Fin 4)=R)
+    (hyLower:yLower≤wt residualYSWeights F)
     (hRpos:0<R) (hRchar:R<p) (hm:1≤m)
     (hwpos:1≤w) (hDpos:0<D)
     (hcost:Fintype.card I≤c+(w - 1))
-    (hD:D - (w*R - R)≤Dcap)
+    (hD:D - (w*yLower - R)≤Dcap)
     (hL:L - (cap+1)≤Lcap) (hq:s - R≤qcap)
     (hJ:Dcap≤w*J) (hsquare:L<2*(cap+1))
     (hcollar:
@@ -99,12 +100,9 @@ theorem factor_total_le_of_square_collar
   have htotal:cap+1≤wt residualTotalWeights F:=by omega
   have hS:wt residualSWeights F=R:=
     (LocatorContact.slope_weight_eq_degreeR F).trans hR
-  have hYS:R≤wt residualYSWeights F:=by
-    rw [← hS]
-    exact (residual_weight_nested F).1
   have hw:=residualYS_mul_le_contact_add_slope F w hwpos
-  have hmul:=Nat.mul_le_mul_left w hYS
-  have hcontact:w*R - R≤wt (contactWeights w) F:=by omega
+  have hmul:=Nat.mul_le_mul_left w hyLower
+  have hcontact:w*yLower - R≤wt (contactWeights w) F:=by omega
   have hD':D - wt (contactWeights w) F≤Dcap:=
     (Nat.sub_le_sub_left hcontact D).trans hD
   have hL':L - wt residualTotalWeights F≤Lcap:=
