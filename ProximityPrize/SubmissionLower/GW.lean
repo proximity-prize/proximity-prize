@@ -1,106 +1,309 @@
-import ProximityPrize.SubmissionLower.CI
-import ProximityPrize.SubmissionLower.Q2
-import ProximityPrize.SubmissionLower.EQ
-namespace ProximityPrize.SubmissionLower.ContactTwoTailFixedStageBound6734Research
-open ProximityPrize.Benchmark
+import ProximityPrize.SubmissionLower.GV
+
+set_option autoImplicit true
+
+section
+namespace ProximityPrize.SubmissionLower.ContactTwoTailResidualCells6735Research
 open scoped Classical BigOperators
-open ContactGenericInitialPoint ContactGenericSurface ContactInterpolation ContactTranslation
-open ContactTaylorNumerators ContactPrimeSeedIncidence ContactProperCutSeedCount
-open ContactFirstTailCertificate6731Research
-open ContactFlagBezout6543Research ContactResidualSupportParametersResearch
-open ContactMovingAgreementCertificate6719Research ContactReducedTaylorProfileResearch
-open ContactIdentityCurveProvider6731Research ContactFirstTailIdentityIncidence6731Research
-open ContactFactoredFlagCount6676Research
-open ContactDelayedTailMultiplicityProvider6732Research
-open ContactProperDelayedTailCertificate6732Research
-open ContactTwoTailParameters6734Research
-open ContactTwoTailFixedSelectedGeneric6734Research
-open ContactTwoTailReducedProviderAssembly6734Research
+open ProximityPrize.Benchmark
+open ContactInterpolation ContactTranslation ContactFactorCaps
+open ContactPrimeSeedIncidence ContactProperCutSeedCount ContactRecursiveGCDResearch
+open ContactTwoTailParameters6735Research
+open ContactStackedGCDCover6670Research ContactStackedSeedPartition6670Research
+open ContactTwoTailStackedBoxTransport6735Research
+open ContactTightSingularLedgerResearch ContactSingularLedger6600Research
+open ContactSingularBranch6600Research ContactAsymmetricResidualStageResearch
+open ContactRecursiveResidualStages6656Research
 noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 5000000
-set_option maxRecDepth 100000
-abbrev K := IRSProfile.Field
-abbrev I := IRSProfile.Index
-local instance : DecidableEq K := Classical.decEq K
-local instance : DecidableEq I := Classical.decEq I
-local instance : DecidableEq (GenericField K) := Classical.decEq _
-local instance : CharP K prime := by
- simpa [prime, ContactParameters6600Research.prime] using
-   ContactFrozenAlignment6600Research.challenge_field_characteristic6600
-theorem fixedStageBound_of_numeric
-   (a b s : ℕ)
-   (hcommonS : (support a b s).s ≤
-     ContactProperDelayedTailCertificate6732Research.fixedSupport.s)
-   (hcommonYS : (support a b s).ys ≤
-     ContactProperDelayedTailCertificate6732Research.fixedSupport.ys)
-   (hcommonTotal : (support a b s).total ≤
-     ContactProperDelayedTailCertificate6732Research.fixedSupport.total)
-   (hsupportChar : a + b + s + 3 < prime)
-   (hidentityMixed : ∀ flag : FlagDegree,
-     (flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
-       flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) →
-     (1 + w * (2 * (b + s + 3) - 2)) * flag.all +
-       (flag.yz + flag.all) * ((2 * (s + 2) - 1) * w) < prime)
-   (hproviderMixed : ∀ flag : FlagDegree,
-     (flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
-       flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) →
-     (1 + (w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
-       (flag.yz + flag.all) * ((2 * (s + 2) - 2) * (w + 1)) < prime)
-   (htangentGate : errors + 1 ≤
-     (reducedResidualAgreementFlag (support a b s) (w + 2)).yz)
-   (hidentityBudget : ∀ flag : FlagDegree,
-     (n - w) * (errors + 1) * identityCurveDegree flag a b s w ≤
-       gap * flagMixed flag (firstTail a b s) (secondTail a b s))
-   (hidentityPositive : ∀ flag : FlagDegree,
-     0 < flag.zOnly + flag.yz + flag.all →
-       1 ≤ identityCurveDegree flag a b s w) :
-   FixedStageBound a b s := by
- intro Gamma flag S hnodes hagreement hbox hflag
- by_cases hTail : S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1)
- · have hTailNumerator : S.G ∣ surfaceMap (polynomialEmbedding K)
-       (numerator K S.F (w + 1)) :=
-     (globalTailCut_dvd_iff (polynomialEmbedding K)
-       (polynomialEmbedding_injective K) S.F (w + 1) S.G).mp hTail
-   have hflagChar : flag.yz + flag.all < prime ∧ flag.all < prime ∧
-       flag.zOnly + flag.yz + flag.all < prime := by
-     omega
-   have hprovider := actual_identityCurveCountProvider S agreements hnodes
-     hagreement (by norm_num [agreements, errors, n, w]) hTailNumerator
-     (42 * agreements) (a + b + s + 3) (s + 2)
-     (by norm_num [w]) (by norm_num [agreements, errors, n, w])
-     (by norm_num [prime, agreements, errors, n]) hbox hflagChar
-     (hidentityMixed flag hflag)
-   let identityDegree := identityCurveDegree flag a b s w
-   have hpositive : 1 ≤ identityDegree := by
-     apply hidentityPositive flag
-     have hy : 0 < S.G.degreeOf 1 := S.y_dependent
-     have hdeg := degreeOf_le_flag_total S.G flag S.flag_support 1
-     omega
-   have hinc := identity_surface_seed_bound S agreements identityDegree hprovider
-     hagreement (by norm_num [agreements, errors, n, w])
-     (by rw [hnodes]; norm_num [agreements, errors, n]) hpositive
-   have hbudget := hidentityBudget flag
-   have hscaled : Gamma.card * gap ≤
-       gap * flagMixed flag (firstTail a b s) (secondTail a b s) := by
-     calc
-       Gamma.card * gap = Gamma.card * (agreements - w) := rfl
-       _ ≤ (S.nodes.card - w) * (errors + 1) * identityDegree := hinc
-       _ = (n - w) * (errors + 1) * identityDegree := by
-         rw [hnodes]
-         norm_num [n, agreements, errors]
-       _ ≤ gap * flagMixed flag (firstTail a b s) (secondTail a b s) := hbudget
-   apply Nat.le_of_mul_le_mul_right ?_ (by decide : 0 < gap)
-   simpa only [Nat.mul_comm] using hscaled
- · have hflagChar : flag.yz + flag.all < prime ∧ flag.all < prime ∧
-       flag.zOnly + flag.yz + flag.all < prime := by
-     omega
-   have hprovider := exists_delayedTailMultiplicityProvider_of_reduced S
-     hcommonS hcommonYS hcommonTotal hTail hflagChar
-     (hproviderMixed flag hflag)
-     (42 * agreements) (a + b + s + 3) (s + 2) hnodes hagreement
-     (by norm_num [agreements, errors, n, w])
-     (by norm_num [prime, agreements, errors, n]) hbox htangentGate
-   exact stage_card_le_flagMixed S hprovider.some
+set_option maxHeartbeats 6000000
+set_option maxRecDepth 35000
+attribute [local simp] n errors agreements
+local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
+local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
+abbrev StackedPoly:=MvPolynomial (Fin 4) IRSProfile.Field
+local instance:GCDMonoid StackedPoly:=
+  UniqueFactorizationMonoid.toGCDMonoid StackedPoly
+local instance:CharP IRSProfile.Field prime:=by
+  simpa [prime,ContactParameters6600Research.prime] using
+    ContactFrozenAlignment6600Research.challenge_field_characteristic6600
+def stageOne:UnequalParameters:=
+  ContactTwoTailStackedResidualParameters6735Research.residualStageOne
+def stageTwo:UnequalParameters:=
+  ContactTwoTailStackedResidualParameters6735Research.residualStageTwo
+def pivotB:TightParameters:=
+  ContactTwoTailStackedResidualParameters6735Research.pivotB
+def pivotGcd12:TightParameters:=
+  ContactTwoTailStackedResidualParameters6735Research.pivotGcd12
+attribute [local simp] stageOne stageTwo pivotB pivotGcd12
+attribute [local simp]
+  ContactTwoTailStackedResidualParameters6735Research.residualStageOne
+  ContactTwoTailStackedResidualParameters6735Research.residualStageTwo
+  ContactTwoTailStackedResidualParameters6735Research.pivotB
+  ContactTwoTailStackedResidualParameters6735Research.pivotGcd12
+theorem firstResidualCell_count_lt
+    (QA QB QC:StackedPoly) (hQA:QA≠0) (hQB:QB≠0)
+    (hboxA:QA∈globalCoefficientBox IRSProfile.Field
+      profileA.weightedCap w profileA.totalCap profileA.slopeCap)
+    (hboxB:QB∈globalCoefficientBox IRSProfile.Field
+      profileB.weightedCap w profileB.totalCap profileB.slopeCap)
+    (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+    (Gamma:Finset IRSProfile.Field)
+    (u0 u1:IRSProfile.Index → IRSProfile.Field)
+    (hcover:∀ gamma∈Gamma,
+      RecursiveSpecializationBranch (selected gamma) gamma QA QB QC)
+    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
+    (hagreement:∀ gamma∈Gamma,
+      agreements ≤ ((Finset.univ:Finset IRSProfile.Index).filter (fun i↦
+        (selected gamma).eval (IRSProfile.domain i)=
+          u0 i+gamma*u1 i)).card)
+    (hnoPencil:NoLargeSelectedPencil selected Gamma w errors):
+    (firstResidualSeeds selected Gamma QA QB).card <
+      536839172882674+856170430068949:=by
+  let Delta:=firstResidualSeeds selected Gamma QA QB
+  let Q:=quotientB QA QB
+  let T:=quotientA QA QB
+  have hsub:Delta ⊆ Gamma:=by
+    simpa [Delta] using firstResidualSeeds_subset selected Gamma QA QB
+  have hsolutions:=firstResidualSeeds_quotient_vanish selected Gamma
+    QA QB QC hcover
+  have hQsolution:∀ gamma∈Delta,
+      specialization IRSProfile.Field (selected gamma) gamma Q=0:=
+    fun gamma hgamma↦(hsolutions gamma hgamma).2
+  have hTsolution:∀ gamma∈Delta,
+      specialization IRSProfile.Field (selected gamma) gamma T=0:=
+    fun gamma hgamma↦(hsolutions gamma hgamma).1
+  have hQ:Q≠0:=
+    ContactStackedResidualCells6656Research.quotientB_ne_zero QA QB hQB
+  have hQbox:=quotientB_mem_parent_box QA QB hQB hboxB
+  have hTbox:=quotientA_mem_parent_box QA QB hQA hboxA
+  have hTcaps:=degree_bounds_of_mem_box T profileA.weightedCap w
+    profileA.totalCap profileA.slopeCap (by norm_num [w,profileA]) hTbox
+  have hrel:IsRelPrime Q T:=(firstQuotients_isRelPrime hQA).symm
+  have hdegreeDelta:∀ gamma∈Delta,
+      (selected gamma).natDegree ≤ pivotB.w:=by
+    intro gamma hgamma
+    simpa [pivotB,w] using hdegree gamma (hsub hgamma)
+  have hagreementDelta:∀ gamma∈Delta,
+      pivotB.a ≤ ((Finset.univ:Finset IRSProfile.Index).filter (fun i↦
+        (selected gamma).eval (IRSProfile.domain i)=
+          u0 i+gamma*u1 i)).card:=by
+    intro gamma hgamma
+    simpa [pivotB,agreements] using hagreement gamma (hsub hgamma)
+  have hnoPencilDelta:NoLargeSelectedPencil selected Delta
+      pivotB.w pivotB.errors:=by
+    simpa [pivotB,TightParameters.errors,errors,n,agreements,w] using
+      noLargeSelectedPencil_mono selected Gamma Delta w errors hsub hnoPencil
+  have hstage:=
+    ContactStackedResidualCells6656Research.asymmetric_stage_count_lt_of_regular_factors
+      stageOne pivotB Q T hQ prime
+      (by norm_num [pivotB])
+      (by norm_num [pivotB,prime])
+      (by norm_num [pivotB])
+      (by norm_num [pivotB,prime])
+      (by norm_num [pivotB,TightParameters.kappa])
+      (by norm_num [pivotB,TightParameters.algebraicCap,TightParameters.kappa])
+      (by norm_num [pivotB,prime,TightParameters.implicitYCap,TightParameters.kappa])
+      (by norm_num [pivotB,prime,TightParameters.algebraicCap,TightParameters.kappa])
+      (by norm_num [pivotB,prime,TightParameters.implicitYCap,
+        TightParameters.algebraicCap,TightParameters.kappa])
+      (by norm_num [pivotB])
+      (by norm_num [pivotB])
+      hQbox
+      (by norm_num [stageOne,UnequalParameters.gap])
+      (by norm_num [stageOne,pivotB,UnequalParameters.gap,TightParameters.gap])
+      (by norm_num [stageOne,pivotB])
+      (by norm_num [stageOne,pivotB])
+      (by norm_num [stageOne,pivotB])
+      selected Delta (Finset.univ:Finset IRSProfile.Index) IRSProfile.domain
+      u0 u1 IRSProfile.domain.injective.injOn
+      (by norm_num [IRSProfile.Index,pivotB])
+      hdegreeDelta hQsolution hTsolution hagreementDelta hnoPencilDelta
+      (all_regularPairSeeds_bound stageOne Q T hQ hrel
+        pivotB.D pivotB.w pivotB.L pivotB.s prime hQbox
+        (by norm_num [pivotB])
+        (by norm_num [stageOne,pivotB])
+        (by norm_num [stageOne,pivotB])
+        (by norm_num [stageOne,pivotB])
+        (by
+          norm_num [stageOne,profileA,Profile.weightedCap,agreements,w] at hTcaps ⊢
+          exact hTcaps.1)
+        (by simpa [stageOne,profileA] using hTcaps.2.1)
+        (by simpa [stageOne,profileA] using hTcaps.2.2)
+        (by norm_num [stageOne])
+        (by norm_num [stageOne,prime])
+        (by norm_num [stageOne,prime])
+        (by norm_num [stageOne,prime])
+        (by norm_num [stageOne,UnequalParameters.mixedCost,prime])
+        (by norm_num [stageOne,UnequalParameters.mixedCost,prime])
+        (by norm_num [stageOne,UnequalParameters.mixedCost,prime])
+        selected Delta (Finset.univ:Finset IRSProfile.Index) IRSProfile.domain
+        u0 u1 IRSProfile.domain.injective.injOn
+        (by norm_num [IRSProfile.Index,stageOne])
+        (by norm_num [stageOne])
+        (by norm_num [stageOne,prime])
+        (by norm_num [stageOne])
+        (by norm_num [stageOne])
+        (by simpa [stageOne,pivotB] using hdegreeDelta)
+        (by simpa [stageOne,pivotB] using hagreementDelta)
+        (by simpa [stageOne,pivotB,UnequalParameters.errors,
+          TightParameters.errors] using hnoPencilDelta))
+  have hceil:stageOne.regularCountCap+pivotB.countCap+1=
+      536839172882674+856170430068949:=by
+    simpa only [stageOne,pivotB,
+      ContactTwoTailParameters6735Research.firstResidualRegularCost,
+      ContactTwoTailParameters6735Research.firstResidualSingularCost] using
+      ContactTwoTailStackedResidualParameters6735Research.residual_stage_ceilings.1
+  rw [hceil] at hstage
+  simpa [Delta] using hstage
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailFixedStageBound6734Research
+end ProximityPrize.SubmissionLower.ContactTwoTailResidualCells6735Research
+end
+section
+namespace ProximityPrize.SubmissionLower.ContactTwoTailResidualCells6735Research
+open scoped Classical BigOperators
+open ProximityPrize.Benchmark
+open ContactInterpolation ContactTranslation ContactFactorCaps
+open ContactPrimeSeedIncidence ContactProperCutSeedCount ContactRecursiveGCDResearch
+open ContactTwoTailParameters6735Research
+open ContactStackedGCDCover6670Research ContactStackedSeedPartition6670Research
+open ContactTwoTailStackedBoxTransport6735Research
+open ContactTightSingularLedgerResearch ContactSingularLedger6600Research
+open ContactSingularBranch6600Research ContactAsymmetricResidualStageResearch
+open ContactRecursiveResidualStages6656Research
+noncomputable section
+set_option maxHeartbeats 6000000
+set_option maxRecDepth 35000
+attribute [local simp] n errors agreements stageOne stageTwo pivotB pivotGcd12
+attribute [local simp]
+  ContactTwoTailStackedResidualParameters6735Research.residualStageOne
+  ContactTwoTailStackedResidualParameters6735Research.residualStageTwo
+  ContactTwoTailStackedResidualParameters6735Research.pivotB
+  ContactTwoTailStackedResidualParameters6735Research.pivotGcd12
+local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
+local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
+local instance:GCDMonoid StackedPoly:=
+  UniqueFactorizationMonoid.toGCDMonoid StackedPoly
+local instance:CharP IRSProfile.Field prime:=by
+  simpa [prime,ContactParameters6600Research.prime] using
+    ContactFrozenAlignment6600Research.challenge_field_characteristic6600
+theorem secondResidualCell_count_lt
+    (QA QB QC:StackedPoly) (hQA:QA≠0) (hQB:QB≠0) (hQC:QC≠0)
+    (hboxA:QA∈globalCoefficientBox IRSProfile.Field
+      profileA.weightedCap w profileA.totalCap profileA.slopeCap)
+    (hboxB:QB∈globalCoefficientBox IRSProfile.Field
+      profileB.weightedCap w profileB.totalCap profileB.slopeCap)
+    (hboxC:QC∈globalCoefficientBox IRSProfile.Field
+      profileC.weightedCap w profileC.totalCap profileC.slopeCap)
+    (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+    (Gamma:Finset IRSProfile.Field)
+    (u0 u1:IRSProfile.Index → IRSProfile.Field)
+    (hcover:∀ gamma∈Gamma,
+      RecursiveSpecializationBranch (selected gamma) gamma QA QB QC)
+    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
+    (hagreement:∀ gamma∈Gamma,
+      agreements ≤ ((Finset.univ:Finset IRSProfile.Index).filter (fun i↦
+        (selected gamma).eval (IRSProfile.domain i)=
+          u0 i+gamma*u1 i)).card)
+    (hnoPencil:NoLargeSelectedPencil selected Gamma w errors):
+    (secondResidualSeeds selected Gamma QA QB QC).card <
+      55442323120491+105276894357776:=by
+  let Delta:=secondResidualSeeds selected Gamma QA QB QC
+  let Q:=middleQuotient QA QB QC
+  let T:=quotientC QA QB QC
+  have hsub:Delta ⊆ Gamma:=by
+    simpa [Delta] using secondResidualSeeds_subset selected Gamma QA QB QC
+  have hsolutions:=secondResidualSeeds_quotient_vanish selected Gamma
+    QA QB QC hcover
+  have hQsolution:∀ gamma∈Delta,
+      specialization IRSProfile.Field (selected gamma) gamma Q=0:=
+    fun gamma hgamma↦(hsolutions gamma hgamma).1
+  have hTsolution:∀ gamma∈Delta,
+      specialization IRSProfile.Field (selected gamma) gamma T=0:=
+    fun gamma hgamma↦(hsolutions gamma hgamma).2
+  have hbox12:=gcd12_mem_meet_box QA QB hQA hQB hboxA hboxB
+  have hQ:Q≠0:=
+    ContactStackedResidualCells6656Research.middleQuotient_ne_zero QA QB QC hQA
+  have hQbox:=middleQuotient_mem_parent_box QA QB QC hQA hbox12
+  have hTbox:=quotientC_mem_parent_box QA QB QC hQC hboxC
+  have hTcaps:=degree_bounds_of_mem_box T profileC.weightedCap w
+    profileC.totalCap profileC.slopeCap (by norm_num [w,profileC]) hTbox
+  have hrel:IsRelPrime Q T:=secondQuotients_isRelPrime hQA
+  have hdegreeDelta:∀ gamma∈Delta,
+      (selected gamma).natDegree ≤ pivotGcd12.w:=by
+    intro gamma hgamma
+    simpa [pivotGcd12,w] using hdegree gamma (hsub hgamma)
+  have hagreementDelta:∀ gamma∈Delta,
+      pivotGcd12.a ≤ ((Finset.univ:Finset IRSProfile.Index).filter (fun i↦
+        (selected gamma).eval (IRSProfile.domain i)=
+          u0 i+gamma*u1 i)).card:=by
+    intro gamma hgamma
+    simpa [pivotGcd12,agreements] using hagreement gamma (hsub hgamma)
+  have hnoPencilDelta:NoLargeSelectedPencil selected Delta
+      pivotGcd12.w pivotGcd12.errors:=by
+    simpa [pivotGcd12,TightParameters.errors,errors,n,agreements,w] using
+      noLargeSelectedPencil_mono selected Gamma Delta w errors hsub hnoPencil
+  have hstage:=
+    ContactStackedResidualCells6656Research.asymmetric_stage_count_lt_of_regular_factors
+      stageTwo pivotGcd12 Q T hQ prime
+      (by norm_num [pivotGcd12])
+      (by norm_num [pivotGcd12,prime])
+      (by norm_num [pivotGcd12])
+      (by norm_num [pivotGcd12,prime])
+      (by norm_num [pivotGcd12,TightParameters.kappa])
+      (by norm_num [pivotGcd12,TightParameters.algebraicCap,TightParameters.kappa])
+      (by norm_num [pivotGcd12,prime,TightParameters.implicitYCap,TightParameters.kappa])
+      (by norm_num [pivotGcd12,prime,TightParameters.algebraicCap,TightParameters.kappa])
+      (by norm_num [pivotGcd12,prime,TightParameters.implicitYCap,
+        TightParameters.algebraicCap,TightParameters.kappa])
+      (by norm_num [pivotGcd12])
+      (by norm_num [pivotGcd12])
+      hQbox
+      (by norm_num [stageTwo,UnequalParameters.gap])
+      (by norm_num [stageTwo,pivotGcd12,UnequalParameters.gap,TightParameters.gap])
+      (by norm_num [stageTwo,pivotGcd12])
+      (by norm_num [stageTwo,pivotGcd12])
+      (by norm_num [stageTwo,pivotGcd12])
+      selected Delta (Finset.univ:Finset IRSProfile.Index) IRSProfile.domain
+      u0 u1 IRSProfile.domain.injective.injOn
+      (by norm_num [IRSProfile.Index,pivotGcd12])
+      hdegreeDelta hQsolution hTsolution hagreementDelta hnoPencilDelta
+      (all_regularPairSeeds_bound stageTwo Q T hQ hrel
+        pivotGcd12.D pivotGcd12.w pivotGcd12.L pivotGcd12.s prime hQbox
+        (by norm_num [pivotGcd12])
+        (by norm_num [stageTwo,pivotGcd12])
+        (by norm_num [stageTwo,pivotGcd12])
+        (by norm_num [stageTwo,pivotGcd12])
+        (by
+          norm_num [stageTwo,profileC,Profile.weightedCap,agreements,w] at hTcaps ⊢
+          exact hTcaps.1)
+        (by simpa [stageTwo,profileC] using hTcaps.2.1)
+        (by simpa [stageTwo,profileC] using hTcaps.2.2)
+        (by norm_num [stageTwo])
+        (by norm_num [stageTwo,prime])
+        (by norm_num [stageTwo,prime])
+        (by norm_num [stageTwo,prime])
+        (by norm_num [stageTwo,UnequalParameters.mixedCost,prime])
+        (by norm_num [stageTwo,UnequalParameters.mixedCost,prime])
+        (by norm_num [stageTwo,UnequalParameters.mixedCost,prime])
+        selected Delta (Finset.univ:Finset IRSProfile.Index) IRSProfile.domain
+        u0 u1 IRSProfile.domain.injective.injOn
+        (by norm_num [IRSProfile.Index,stageTwo])
+        (by norm_num [stageTwo])
+        (by norm_num [stageTwo,prime])
+        (by norm_num [stageTwo])
+        (by norm_num [stageTwo])
+        (by simpa [stageTwo,pivotGcd12] using hdegreeDelta)
+        (by simpa [stageTwo,pivotGcd12] using hagreementDelta)
+        (by simpa [stageTwo,pivotGcd12,UnequalParameters.errors,
+          TightParameters.errors] using hnoPencilDelta))
+  have hceil:stageTwo.regularCountCap+pivotGcd12.countCap+1=
+      55442323120491+105276894357776:=by
+    simpa only [stageTwo,pivotGcd12,
+      ContactTwoTailParameters6735Research.secondResidualRegularCost,
+      ContactTwoTailParameters6735Research.secondResidualSingularCost] using
+      ContactTwoTailStackedResidualParameters6735Research.residual_stage_ceilings.2
+  rw [hceil] at hstage
+  simpa [Delta] using hstage
+end
+end ProximityPrize.SubmissionLower.ContactTwoTailResidualCells6735Research
+end

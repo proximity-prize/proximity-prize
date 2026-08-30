@@ -1,318 +1,456 @@
-import ProximityPrize.SubmissionLower.GH
-import ProximityPrize.SubmissionLower.GI
-import ProximityPrize.SubmissionLower.L4
-import ProximityPrize.SubmissionLower.AL
-namespace ProximityPrize.SubmissionLower.ContactTwoTailResidualGeneric6734Research
+import ProximityPrize.SubmissionLower.P6
+
+set_option autoImplicit true
+
+section
+namespace ProximityPrize.SubmissionLower.ContactProperStageActiveProvider6735Research
 open scoped Classical BigOperators
 open ProximityPrize.Benchmark
-open ContactInterpolation ContactTranslation ContactFactorCaps
-open ContactPrimeSeedIncidence ContactProperCutSeedCount ContactRecursiveGCDResearch
-open ContactStackedGCDCover6670Research ContactStackedSeedPartition6670Research
-open ContactTightSingularLedgerResearch ContactSingularLedger6600Research
-open ContactSingularBranch6600Research ContactAsymmetricResidualStageResearch
-open ContactRecursiveResidualStages6656Research
-open ContactIdentityResidualGlobalFlagResearch
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactKernelCommonGCDResearch
-open ContactTwoTailParameters6734Research
+open ContactGenericInitialPoint
+open ActualCurveCoordinateField ContactRegularComponentCover
+open CoordinateBoxZeroCount
+open ContactGenericSurface ContactIdentityResidualIterationResearch
+open ContactProperCutSeedCount ContactPrimeSeedIncidence
+open ContactFlagBezout6543Research ContactPrimeFlagBudgetFamilyResearch
+open ContactMovingAgreementCertificate6719Research
+open ContactSharpTaylorFixedMeet6656Research
+open ContactWeakSeparableSeparatorResearch
+open ContactAdaptiveNestedProjection6600Research
+open ContactAdaptiveNestedProjectionActive6630Research
+open ContactAdaptiveProjectionCoordinateResearch
+open ContactActiveNestedFlagCosts6733Research
+open ContactActiveNestedFixedPowers6733Research
+open ContactActiveNestedCertificate6733Research
+open ContactFirstTailCertificate6731Research
+open ContactFirstTailProjection6731Research
+open ContactFirstTailActiveData6733Research
+open ContactDelayedTailMultiplicityProvider6732Research
+open ContactTwoTailProviderAssembly6735Research
+open ContactTwoTailResultantProvider6732Research
+open ContactProperDelayedTailCertificate6735Research
+open ContactTwoTailFixedSelected6735Research
+open ContactTwoTailParameters6735Research
+open ContactMovingCurveBudget6719Research
+open ContactFirstTailBudget6731Research
+open ContactMovingPositiveLedger6719Research
+open ContactTerminalAdaptiveProjection6656Research
+open ContactAdaptiveUnitPoleFamilyResearch
+open ContactInterpolation
+open ContactTaylorNumerators
+open ContactMovingProjection6676Research
+open ContactRegularZeroBudget6676Research
+open ContactTwoTailRecurrence6731Research
+open ContactTwoTailProperBranch6731Research
+open ContactTangentCoefficientProvider6732Research
 noncomputable section
 set_option autoImplicit false
-set_option maxHeartbeats 6000000
-set_option maxRecDepth 100000
-abbrev K := IRSProfile.Field
-abbrev I := IRSProfile.Index
-abbrev Poly4 := MvPolynomial (Fin 4) K
-local instance : DecidableEq K := Classical.decEq _
-local instance : DecidableEq I := Classical.decEq _
-local instance : GCDMonoid Poly4 := UniqueFactorizationMonoid.toGCDMonoid Poly4
-local instance : CharP K prime := by
- simpa [prime, ContactParameters6600Research.prime] using
-   ContactFrozenAlignment6600Research.challenge_field_characteristic6600
-def firstStage (lt ly ls us : ℕ) : UnequalParameters :=
- ⟨n, w, agreements,
-   (profileB.weightedCap - 1) / w, profileB.slopeCap - ls,
-     profileB.totalCap - lt,
-   (profileA.weightedCap - (w * ly - us) - 1) / w,
-     profileA.slopeCap - ls, profileA.totalCap - lt⟩
-def firstPivot (lt ls : ℕ) : TightParameters :=
- ⟨n, w, agreements, profileB.weightedCap,
-   profileB.totalCap - lt, profileB.slopeCap - ls⟩
-def secondStage (lt ly ls us : ℕ) : UnequalParameters :=
- ⟨n, w, agreements,
-   (profileA.weightedCap - 1) / w, profileA.slopeCap - ls, 1281 - lt,
-   (profileC.weightedCap - (w * ly - us) - 1) / w,
-     profileC.slopeCap - ls, profileC.totalCap - lt⟩
-def secondPivot (lt ls : ℕ) : TightParameters :=
- ⟨n, w, agreements, profileA.weightedCap, 1281 - lt,
-   profileA.slopeCap - ls⟩
-structure ResidualValidity (P : UnequalParameters) (S : TightParameters) : Prop where
- P_n : P.n = n
- S_n : S.n = n
- w_eq : P.w = S.w
- a_eq : P.a = S.a
- s_one : 1 ≤ S.s
- s_small : S.s < prime
- w_one : 1 ≤ S.w
- w_small : S.w < prime
- kD : S.w < S.kappa * S.D
- algebraic_pos : 1 ≤ S.algebraicCap
- implicit_small : S.implicitYCap < prime
- algebraic_small : S.algebraicCap < prime
- mixed_small : 2 * S.implicitYCap * S.algebraicCap < prime
- wa : S.w < S.a
- an : S.a ≤ S.n
- gap_pos : 0 < P.gap
- gap_eq : S.gap = P.gap
- qY : (S.D - 1) / S.w ≤ P.leftY
- qR : S.s ≤ P.leftR
- qZ : S.L ≤ P.leftZ
- leftR_pos : 1 ≤ P.leftR
- leftY_small : P.leftY < prime
- leftR_small : P.leftR < prime
- leftZ_small : P.leftZ < prime
- mixedY_small : P.mixedCost.y < prime
- mixedR_small : P.mixedCost.r < prime
- mixedZ_small : P.mixedCost.z < prime
-theorem residual_count_lt
-   (P : UnequalParameters) (S : TightParameters) (valid : ResidualValidity P S)
-   (Q T : Poly4) (hQ : Q ≠ 0) (hrel : IsRelPrime Q T)
-   (hQbox : Q ∈ globalCoefficientBox K S.D S.w S.L S.s)
-   (hTcaps : T.degreeOf 1 ≤ P.rightY ∧ T.degreeOf 2 ≤ P.rightR ∧
-     T.degreeOf 3 ≤ P.rightZ)
-   (selected : K → Polynomial K) (Delta : Finset K)
-   (u0 u1 : I → K)
-   (hQsolution : ∀ gamma ∈ Delta,
-     specialization K (selected gamma) gamma Q = 0)
-   (hTsolution : ∀ gamma ∈ Delta,
-     specialization K (selected gamma) gamma T = 0)
-   (hdegree : ∀ gamma ∈ Delta, (selected gamma).natDegree ≤ S.w)
-   (hagreement : ∀ gamma ∈ Delta, S.a ≤
-     ((Finset.univ : Finset I).filter (fun i =>
-       (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-   (hnoPencil : NoLargeSelectedPencil selected Delta S.w S.errors) :
-   Delta.card < P.regularCountCap + S.countCap + 1 := by
- apply ContactStackedResidualCells6656Research.asymmetric_stage_count_lt_of_regular_factors
-   P S Q T hQ prime valid.s_one valid.s_small valid.w_one valid.w_small valid.kD
-   valid.algebraic_pos valid.implicit_small valid.algebraic_small valid.mixed_small
-   valid.wa valid.an hQbox valid.gap_pos valid.gap_eq valid.qY valid.qR valid.qZ
-   selected Delta (Finset.univ : Finset I) IRSProfile.domain u0 u1
-   IRSProfile.domain.injective.injOn
-   (by rw [valid.S_n]; norm_num [I, IRSProfile.Index, n])
-   hdegree hQsolution hTsolution hagreement hnoPencil
- exact all_regularPairSeeds_bound P Q T hQ hrel S.D S.w S.L S.s prime hQbox
-   valid.w_one valid.qY valid.qR valid.qZ hTcaps.1 hTcaps.2.1 hTcaps.2.2
-   valid.leftR_pos valid.leftY_small valid.leftR_small valid.leftZ_small
-   valid.mixedY_small valid.mixedR_small valid.mixedZ_small selected Delta
-   (Finset.univ : Finset I) IRSProfile.domain u0 u1 IRSProfile.domain.injective.injOn
-   (by rw [valid.P_n]; norm_num [I, IRSProfile.Index, n])
-   (by rw [valid.w_eq]; exact valid.w_one)
-   (by rw [valid.w_eq]; exact valid.w_small)
-   (by rw [valid.w_eq, valid.a_eq]; exact valid.wa)
-   (by
-     rw [valid.a_eq, valid.P_n]
-     have hh := valid.an
-     rw [valid.S_n] at hh
-     exact hh)
-   (by rw [valid.w_eq]; exact hdegree)
-   (by rw [valid.a_eq]; exact hagreement)
-   (by
-     have herr : P.errors = S.errors := by
-       simp only [UnequalParameters.errors, TightParameters.errors,
-         valid.P_n, valid.S_n, valid.a_eq]
-     simpa only [valid.w_eq, herr] using hnoPencil)
-theorem gcd_contact_lower
-   (G : Poly4) (ly us : ℕ)
-   (hgy : ly ≤ wt residualYSWeights G)
-   (hgs : wt residualSWeights G ≤ us) :
-   w * ly - us ≤ wt (contactWeights w) G := by
- have h := residualYS_mul_le_contact_add_slope G w (by norm_num [w])
- have hlow : w * ly ≤ w * wt residualYSWeights G :=
-   Nat.mul_le_mul_left w hgy
- omega
-theorem firstResidualCell_count_lt
-   (lt ly ls us : ℕ)
-   (valid : ResidualValidity (firstStage lt ly ls us) (firstPivot lt ls))
-   (QA QB QC : Poly4) (hQA : QA ≠ 0) (hQB : QB ≠ 0)
-   (hboxA : QA ∈ ContactFlagInterpolation6641Research.globalCoefficientBox K
-     profileA.weightedCap w profileA.totalCap profileA.slopeCap)
-   (hboxB : QB ∈ ContactFlagInterpolation6641Research.globalCoefficientBox K
-     profileB.weightedCap w profileB.totalCap profileB.slopeCap)
-   (hgt : lt ≤ wt residualTotalWeights (gcd123 QA QB QC))
-   (hgy : ly ≤ wt residualYSWeights (gcd123 QA QB QC))
-   (hgs : ls ≤ wt residualSWeights (gcd123 QA QB QC))
-   (hgsUpper : wt residualSWeights (gcd123 QA QB QC) ≤ us)
-   (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
-   (hcover : ∀ gamma ∈ Gamma,
-     RecursiveSpecializationBranch (selected gamma) gamma QA QB QC)
-   (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
-   (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-     ((Finset.univ : Finset I).filter (fun i =>
-       (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-   (hnoPencil : NoLargeSelectedPencil selected Gamma w errors) :
-   (firstResidualSeeds selected Gamma QA QB).card <
-     (firstStage lt ly ls us).regularCountCap + (firstPivot lt ls).countCap + 1 := by
- let Delta := firstResidualSeeds selected Gamma QA QB
- let H := gcd12 QA QB
- let G := gcd123 QA QB QC
- let Q := quotientB QA QB
- let T := quotientA QA QB
- have hH : H ≠ 0 := ContactStackedBoxTransport6656Research.gcd12_ne_zero hQA
- have hG : G ≠ 0 := ContactStackedBoxTransport6656Research.gcd123_ne_zero hQA
- have hQ : Q ≠ 0 := ContactStackedResidualCells6656Research.quotientB_ne_zero QA QB hQB
- have hT : T ≠ 0 := by
-   intro hz
-   apply hQA
-   rw [a_eq_gcd12_mul_quotientA QA QB]
-   simpa only [T, hz, mul_zero]
- have hGdivH : G ∣ H := by
-   dsimp only [G, H]
-   exact gcd_dvd_left (gcd12 QA QB) QC
- have htotalH : lt ≤ wt residualTotalWeights H := hgt.trans
-   (weightedTotalDegree_le_of_dvd residualTotalWeights G H hGdivH hH)
- have hslopeH : ls ≤ wt residualSWeights H := hgs.trans
-   (weightedTotalDegree_le_of_dvd residualSWeights G H hGdivH hH)
- have hcontactH : w * ly - us ≤ wt (contactWeights w) H :=
-   (gcd_contact_lower G ly us hgy hgsUpper).trans
-     (weightedTotalDegree_le_of_dvd (contactWeights w) G H hGdivH hH)
- have hQeq : QB = H * Q := by
-   exact b_eq_gcd12_mul_quotientB QA QB
- have hTeq : QA = H * T := by
-   exact a_eq_gcd12_mul_quotientA QA QB
- have hQflag := quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-   QB H Q profileB.weightedCap w profileB.totalCap profileB.slopeCap
-   0 lt ls hQB hH hQ hboxB hQeq (by omega) htotalH hslopeH
- have hTflag := quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-   QA H T profileA.weightedCap w profileA.totalCap profileA.slopeCap
-   (w * ly - us) lt ls hQA hH hT hboxA hTeq hcontactH htotalH hslopeH
- have hQbox : Q ∈ globalCoefficientBox K (firstPivot lt ls).D
-     (firstPivot lt ls).w (firstPivot lt ls).L (firstPivot lt ls).s := by
-   apply ContactFlagKernelUniversalityResearch.flag_box_to_ordinary
-   simpa [firstPivot] using hQflag
- have hTbox : T ∈ globalCoefficientBox K
-     (profileA.weightedCap - (w * ly - us)) w (profileA.totalCap - lt)
-     (profileA.slopeCap - ls) :=
-   ContactFlagKernelUniversalityResearch.flag_box_to_ordinary
-     (K := K) (D := profileA.weightedCap - (w * ly - us)) (w := w)
-     (L := profileA.totalCap - lt) (s := profileA.slopeCap - ls) T hTflag
- have hTraw := degree_bounds_of_mem_box T
-   (profileA.weightedCap - (w * ly - us)) w (profileA.totalCap - lt)
-   (profileA.slopeCap - ls) (by norm_num [w]) hTbox
- have hTcaps : T.degreeOf 1 ≤ (firstStage lt ly ls us).rightY ∧
-     T.degreeOf 2 ≤ (firstStage lt ly ls us).rightR ∧
-     T.degreeOf 3 ≤ (firstStage lt ly ls us).rightZ := by
-   simpa only [firstStage] using hTraw
- have hsub : Delta ⊆ Gamma := by
-   simpa only [Delta] using firstResidualSeeds_subset selected Gamma QA QB
- have hsolutions := firstResidualSeeds_quotient_vanish selected Gamma
-   QA QB QC hcover
- have hQD : ∀ gamma ∈ Delta, specialization K (selected gamma) gamma Q = 0 :=
-   fun gamma hgamma => (hsolutions gamma hgamma).2
- have hTD : ∀ gamma ∈ Delta, specialization K (selected gamma) gamma T = 0 :=
-   fun gamma hgamma => (hsolutions gamma hgamma).1
- have hrel : IsRelPrime Q T := (firstQuotients_isRelPrime hQA).symm
- have hdD : ∀ gamma ∈ Delta, (selected gamma).natDegree ≤ (firstPivot lt ls).w := by
-   intro gamma hgamma
-   simpa [firstPivot] using hdegree gamma (hsub hgamma)
- have haD : ∀ gamma ∈ Delta, (firstPivot lt ls).a ≤
-     ((Finset.univ : Finset I).filter (fun i =>
-       (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card := by
-   intro gamma hgamma
-   simpa [firstPivot] using hagreement gamma (hsub hgamma)
- have hnD : NoLargeSelectedPencil selected Delta (firstPivot lt ls).w
-     (firstPivot lt ls).errors := by
-   simpa [firstPivot, TightParameters.errors, errors, agreements, n, w] using
-     noLargeSelectedPencil_mono selected Gamma Delta w errors hsub hnoPencil
- simpa only [Delta] using residual_count_lt (firstStage lt ly ls us)
-   (firstPivot lt ls) valid Q T hQ hrel hQbox hTcaps selected Delta u0 u1
-   hQD hTD hdD haD hnD
-theorem secondResidualCell_count_lt
-   (lt ly ls us : ℕ)
-   (valid : ResidualValidity (secondStage lt ly ls us) (secondPivot lt ls))
-   (QA QB QC : Poly4) (hQA : QA ≠ 0) (hQC : QC ≠ 0)
-   (hboxC : QC ∈ ContactFlagInterpolation6641Research.globalCoefficientBox K
-     profileC.weightedCap w profileC.totalCap profileC.slopeCap)
-   (hboxH : gcd12 QA QB ∈ ContactFlagInterpolation6641Research.globalCoefficientBox K
-     profileA.weightedCap w 1281 profileA.slopeCap)
-   (hgt : lt ≤ wt residualTotalWeights (gcd123 QA QB QC))
-   (hgy : ly ≤ wt residualYSWeights (gcd123 QA QB QC))
-   (hgs : ls ≤ wt residualSWeights (gcd123 QA QB QC))
-   (hgsUpper : wt residualSWeights (gcd123 QA QB QC) ≤ us)
-   (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
-   (hcover : ∀ gamma ∈ Gamma,
-     RecursiveSpecializationBranch (selected gamma) gamma QA QB QC)
-   (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
-   (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-     ((Finset.univ : Finset I).filter (fun i =>
-       (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-   (hnoPencil : NoLargeSelectedPencil selected Gamma w errors) :
-   (secondResidualSeeds selected Gamma QA QB QC).card <
-     (secondStage lt ly ls us).regularCountCap + (secondPivot lt ls).countCap + 1 := by
- let Delta := secondResidualSeeds selected Gamma QA QB QC
- let H := gcd12 QA QB
- let G := gcd123 QA QB QC
- let Q := middleQuotient QA QB QC
- let T := quotientC QA QB QC
- have hH : H ≠ 0 := ContactStackedBoxTransport6656Research.gcd12_ne_zero hQA
- have hG : G ≠ 0 := ContactStackedBoxTransport6656Research.gcd123_ne_zero hQA
- have hQ : Q ≠ 0 :=
-   ContactStackedResidualCells6656Research.middleQuotient_ne_zero QA QB QC hQA
- have hT : T ≠ 0 := by
-   intro hz
-   apply hQC
-   rw [c_eq_gcd123_mul_quotientC QA QB QC]
-   simpa only [T, hz, mul_zero]
- have hcontactG := gcd_contact_lower G ly us hgy hgsUpper
- have hQeq : H = G * Q := by
-   exact gcd12_eq_gcd123_mul_middleQuotient QA QB QC
- have hTeq : QC = G * T := by
-   exact c_eq_gcd123_mul_quotientC QA QB QC
- have hQflag := quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-   H G Q profileA.weightedCap w 1281 profileA.slopeCap 0 lt ls
-   hH hG hQ hboxH hQeq (by omega)
-   hgt hgs
- have hTflag := quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-   QC G T profileC.weightedCap w profileC.totalCap profileC.slopeCap
-   (w * ly - us) lt ls hQC hG hT hboxC hTeq hcontactG hgt hgs
- have hQbox : Q ∈ globalCoefficientBox K (secondPivot lt ls).D
-     (secondPivot lt ls).w (secondPivot lt ls).L (secondPivot lt ls).s := by
-   apply ContactFlagKernelUniversalityResearch.flag_box_to_ordinary
-   simpa [secondPivot] using hQflag
- have hTbox : T ∈ globalCoefficientBox K
-     (profileC.weightedCap - (w * ly - us)) w (profileC.totalCap - lt)
-     (profileC.slopeCap - ls) :=
-   ContactFlagKernelUniversalityResearch.flag_box_to_ordinary
-     (K := K) (D := profileC.weightedCap - (w * ly - us)) (w := w)
-     (L := profileC.totalCap - lt) (s := profileC.slopeCap - ls) T hTflag
- have hTraw := degree_bounds_of_mem_box T
-   (profileC.weightedCap - (w * ly - us)) w (profileC.totalCap - lt)
-   (profileC.slopeCap - ls) (by norm_num [w]) hTbox
- have hTcaps : T.degreeOf 1 ≤ (secondStage lt ly ls us).rightY ∧
-     T.degreeOf 2 ≤ (secondStage lt ly ls us).rightR ∧
-     T.degreeOf 3 ≤ (secondStage lt ly ls us).rightZ := by
-   simpa only [secondStage] using hTraw
- have hsub : Delta ⊆ Gamma := by
-   simpa only [Delta] using secondResidualSeeds_subset selected Gamma QA QB QC
- have hsolutions := secondResidualSeeds_quotient_vanish selected Gamma
-   QA QB QC hcover
- have hQD : ∀ gamma ∈ Delta, specialization K (selected gamma) gamma Q = 0 :=
-   fun gamma hgamma => (hsolutions gamma hgamma).1
- have hTD : ∀ gamma ∈ Delta, specialization K (selected gamma) gamma T = 0 :=
-   fun gamma hgamma => (hsolutions gamma hgamma).2
- have hrel : IsRelPrime Q T := secondQuotients_isRelPrime hQA
- have hdD : ∀ gamma ∈ Delta, (selected gamma).natDegree ≤ (secondPivot lt ls).w := by
-   intro gamma hgamma
-   simpa [secondPivot] using hdegree gamma (hsub hgamma)
- have haD : ∀ gamma ∈ Delta, (secondPivot lt ls).a ≤
-     ((Finset.univ : Finset I).filter (fun i =>
-       (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card := by
-   intro gamma hgamma
-   simpa [secondPivot] using hagreement gamma (hsub hgamma)
- have hnD : NoLargeSelectedPencil selected Delta (secondPivot lt ls).w
-     (secondPivot lt ls).errors := by
-   simpa [secondPivot, TightParameters.errors, errors, agreements, n, w] using
-     noLargeSelectedPencil_mono selected Gamma Delta w errors hsub hnoPencil
- simpa only [Delta] using residual_count_lt (secondStage lt ly ls us)
-   (secondPivot lt ls) valid Q T hQ hrel hQbox hTcaps selected Delta u0 u1
-   hQD hTD hdD haD hnD
+set_option maxHeartbeats 12000000
+set_option maxRecDepth 200000
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+abbrev Omega:=GenericField K
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:DecidableEq (GenericField K):=Classical.decEq _
+local instance:CharP K prime:=by
+  simpa [prime,ContactParameters6600Research.prime] using
+    ContactFrozenAlignment6600Research.challenge_field_characteristic6600
+local instance:CharP Omega prime:=genericField_charP K prime
+theorem firstTail_in_exact_flag
+    {Gamma:Finset K} {flag:FlagDegree}
+    (S:Stage K I Gamma IRSProfile.domain prime flag):
+    PolynomialInFlag exactFirstTailFlag
+      (globalTailCut (polynomialEmbedding K) S.F (w+1)):=by
+  have heq:exactFirstTailFlag=
+      sharpResidualAgreementFlag ContactProperDelayedTailCertificate6735Research.fixedSupport (w+1):=by decide
+  rw [heq]
+  exact firstTail_in_sharp_flag S
+
+theorem laterTail_in_hybrid_flag
+    {Gamma:Finset K} {flag:FlagDegree}
+    (S:Stage K I Gamma IRSProfile.domain prime flag)
+    (delay multiplicity:ℕ) (hdelay:1 ≤ delay)
+    (hdelayMu:delay ≤ multiplicity) (hmu:2 ≤ multiplicity):
+    PolynomialInFlag (multiplicity • hybridCoordinateFlag)
+      (globalTailCut (polynomialEmbedding K) S.F (w+1+delay)):=by
+  let d:=w+1+delay
+  have hsharp:PolynomialInFlag
+      (ContactSharpTaylorFixedMeet6656Research.sharpResidualAgreementFlag
+        ContactProperDelayedTailCertificate6735Research.fixedSupport d)
+      (globalTailCut (polynomialEmbedding K) S.F d):=by
+    exact surfaceMap_agreement_in_sharp_flag
+      (P:=ContactProperDelayedTailCertificate6735Research.fixedSupport) (by decide) (polynomialEmbedding K)
+      ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
+      d (tailSelector d) 0 0 0
+  intro exponent hexponent
+  have hs:=hsharp exponent hexponent
+  change InFlag (multiplicity • (⟨174983790,6094942,1507351⟩:FlagDegree)) exponent
+  change InFlag
+    (ContactSharpTaylorFixedMeet6656Research.sharpResidualAgreementFlag
+      (support 1335 46 10) (131071+1+delay)) exponent at hs
+  norm_num [InFlag,
+    ContactSharpTaylorFixedMeet6656Research.sharpResidualAgreementFlag,
+    ContactSharpTaylorFixedMeet6656Research.sharpAgreementDirection,
+    ContactMovingAgreementCertificate6719Research.support] at hs
+  simp only [InFlag,nsmul_zOnly,nsmul_yz,nsmul_all] at ⊢
+  omega
+
+theorem component_secondTail_moving_card_le
+    {Gamma:Finset K} {flag:FlagDegree}
+    (S:Stage K I Gamma IRSProfile.domain prime flag)
+    (base:∀ C:FirstTailComponent S,SeparableLiteralCoordinate C.1)
+    (M:∀ C:FirstTailComponent S,
+      MovingPoleBudget C.1
+        (regularitySurface (polynomialEmbedding K) S.F)
+        (surfaceMap (polynomialEmbedding K) (polyG K S.F)))
+    (C:FirstTailComponent S)
+    (hproper:globalTailCut (polynomialEmbedding K) S.F (w+2)∉C.1):
+    (componentSeeds Omega S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w+1))
+      (regularitySurface (polynomialEmbedding K) S.F) Gamma
+      (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+        (M C).weightedCost rationalCoordinateFlag+(w+1)*(M C).movingCost:=by
+  let phi:=polynomialEmbedding K
+  let T1:=globalTailCut phi S.F (w+1)
+  let T2:=globalTailCut phi S.F (w+2)
+  let H:=regularitySurface phi S.F
+  let G0:=surfaceMap phi (polyG K S.F)
+  let Hsupport:ContactResidualSupportParametersResearch.ResidualSupportData
+      ContactProperDelayedTailCertificate6735Research.fixedSupport S.F:=
+    ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
+  obtain ⟨coeffs,cflags,hcut,hcoeff,hclass⟩:=globalTailCut_certificate
+    phi 1335 46 10 S.F Hsupport.coordinate_bounds.2.1
+      Hsupport.ys_weight Hsupport.total_weight (w+1) (by decide)
+  have hcutT:T2=filteredCut (w+1) coeffs H G0:=by
+    simpa [T2,H,G0,regularitySurface,polyH,show w+1+1=w+2 by omega] using hcut
+  have hfiltered:filteredCut (w+1) coeffs H G0∉C.1:=by
+    rwa [←hcutT]
+  have hzeroBudget:FiniteRegularZeroSetBound C.1 H
+      (filteredCut (w+1) coeffs H G0)
+      ((M C).weightedCost (centreFlag 1335 46 10)+
+        (w+1)*((M C).weightedCost (normalFlag 1335 46 10)+
+          (M C).movingCost)):=by
+    exact (M C).zero_le (base C) 1335 46 10 (w+1)
+      (centreFlag 1335 46 10) coeffs cflags
+      (regularComponent_H_not_mem Omega S.G T1 H C) hfiltered hcoeff hclass
+  let seeds:=componentSeeds Omega S.G T1 H Gamma
+    (selectedPoint phi S.selected) C
+  let points:=seeds.image (selectedPoint phi S.selected)
+  have hpointsPrime:∀ v∈points,
+      C.1 ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom:=by
+    intro v hv
+    obtain ⟨gamma,hgamma,rfl⟩:=Finset.mem_image.mp hv
+    exact componentSeeds_on_prime Omega S.G T1 H Gamma
+      (selectedPoint phi S.selected) C gamma hgamma
+  have hpointsRegular:∀ v∈points,MvPolynomial.aeval v H≠0:=by
+    intro v hv
+    obtain ⟨gamma,hgamma,rfl⟩:=Finset.mem_image.mp hv
+    have hGamma:=componentSeeds_subset Omega S.G T1 H Gamma
+      (selectedPoint phi S.selected) C hgamma
+    change MvPolynomial.eval (selectedPoint phi S.selected gamma)
+      (surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) S.F))≠0
+    rw [selectedPoint_evaluation]
+    exact S.regular gamma hGamma
+  have hpointsZero:∀ v∈points,
+      MvPolynomial.aeval v (filteredCut (w+1) coeffs H G0)=0:=by
+    intro v hv
+    obtain ⟨gamma,hgamma,rfl⟩:=Finset.mem_image.mp hv
+    have hGamma:=componentSeeds_subset Omega S.G T1 H Gamma
+      (selectedPoint phi S.selected) C hgamma
+    rw [←hcutT]
+    exact selected_globalTailCut_zero_of_lt phi S.F S.selected gamma w (w+2)
+      (S.degree_le gamma hGamma) (S.solution gamma hGamma) (by omega)
+  have hbound:=hzeroBudget points hpointsPrime hpointsRegular hpointsZero
+  have hcard:points.card=seeds.card:=
+    Finset.card_image_of_injective _ (selectedPoint_injective phi S.selected)
+  have hcost:
+      (M C).weightedCost (centreFlag 1335 46 10)+
+          (w+1)*((M C).weightedCost (normalFlag 1335 46 10)+
+            (M C).movingCost)=
+        (M C).weightedCost rationalCoordinateFlag+(w+1)*(M C).movingCost:=by
+    simp only [MovingPoleBudget.weightedCost,centreFlag,directionFlag,
+      normalFlag,rationalCoordinateFlag,add_zOnly,add_yz,add_all,
+      unitYZFlag,w]
+    ring
+  simpa only [seeds,hcard,hcost] using hbound
+
+theorem stage_card_le_hybrid
+    {Gamma:Finset K} {flag:FlagDegree}
+    (S:Stage K I Gamma IRSProfile.domain prime flag)
+    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F (w+1))
+    (base:∀ C:FirstTailComponent S,SeparableLiteralCoordinate C.1)
+    (U:AdaptiveUnitProjectionFamily base flag exactFirstTailFlag)
+    (hyzTranscendental:∀ C:FirstTailComponent S,
+      Transcendental Omega
+        (coordinateValue Omega (CoordinateField Omega C.1) (U.yzProjection C)))
+    (M:∀ C:FirstTailComponent S,
+      MovingPoleBudget C.1
+        (regularitySurface (polynomialEmbedding K) S.F)
+        (surfaceMap (polynomialEmbedding K) (polyG K S.F)))
+    (hcost:∀ C,(M C).zCost=U.toPrimeFlagBudgetFamily.zCost C∧
+      (M C).yzCost=U.toPrimeFlagBudgetFamily.yzCost C∧
+      (M C).allCost=U.toPrimeFlagBudgetFamily.allCost C)
+    (hmoving:(∑ C,(M C).movingCost) ≤
+      flagMixed flag movingFiberFlag movingCutFlag)
+    (resultants:RegularComponentWeightedInertiaResultantCertificate
+      U.toPrimeFlagBudgetFamily
+        (localMultiplicity S (canonicalLocalDVRFamily S hfirstProper)))
+    (hnodes:S.nodes.card=agreements+errors)
+    (hagreement:∀ gamma∈Gamma,agreements ≤ (S.agreementFiber gamma).card)
+    (hbox:S.F∈globalCoefficientBox K (43*agreements) w 1394 12):
+    Gamma.card ≤ hybridStageCost flag:=by
+  let multiplicity:FirstTailComponent S → ℕ:=
+    localMultiplicity S (canonicalLocalDVRFamily S hfirstProper)
+  have hone:∀ C,1 ≤ multiplicity C:=by
+    exact one_le_localMultiplicity S hfirstProper
+  let B:=U.toPrimeFlagBudgetFamily
+  let T1:=globalTailCut (polynomialEmbedding K) S.F (w+1)
+  let H:=regularitySurface (polynomialEmbedding K) S.F
+  let point:=selectedPoint (polynomialEmbedding K) S.selected
+  let cost:FirstTailComponent S → ℕ:=fun C =>
+    multiplicity C*B.weightedCost hybridCoordinateFlag C+
+      if multiplicity C=1 then (w+1)*(M C).movingCost else 0
+  have hyzPositive (C:FirstTailComponent S):1 ≤ B.yzCost C:=by
+    change 1 ≤ coordinateDegree Omega (CoordinateField Omega C.1) (U.yzProjection C)
+    exact one_le_coordinateDegree_of_transcendental_value
+      (U.yzProjection C) (hyzTranscendental C)
+  have hyzPole (C:FirstTailComponent S):∀ W:Finset
+      (CoordinatePoleMass.Place Omega (CoordinateField Omega C.1)),
+      (∑ v∈W,ContactSparsePoleSupportResearch.exponentSetPoleWeight
+        v.val (coordinate Omega C.1) (flagSupport unitYZFlag)) ≤ (B.yzCost C:ℤ):=by
+    exact U.toAdaptiveUnitPoleBudget.yzPole C
+  have tangentCount (C:FirstTailComponent S)
+      (hall:∀ delay,globalTailCut (polynomialEmbedding K) S.F
+        (w+1+delay)∈C.1):
+      (componentSeeds Omega S.G T1 H Gamma point C).card ≤
+        (errors+1)*B.yzCost C:=by
+    exact tangent_component_card_le S C hfirstProper (base C)
+      agreements (43*agreements) 1394 12 hnodes hagreement
+      (by decide) (by decide) (by decide) (by decide) hbox B
+      (hyzPositive C) hall (hyzPole C)
+  have componentBound (C:FirstTailComponent S):
+      (componentSeeds Omega S.G T1 H Gamma point C).card ≤ cost C:=by
+    have hd:=local_order_tail_dichotomy S
+      (canonicalLocalDVRFamily S hfirstProper) C hfirstProper
+    rcases hd.2 with hproper | htangent
+    · obtain ⟨delay,hdelay,hdelayMu,hproperTail⟩:=hproper
+      change delay ≤ multiplicity C at hdelayMu
+      by_cases hmu:multiplicity C=1
+      · have hdelayOne:delay=1:=by omega
+        subst delay
+        have hm:=component_secondTail_moving_card_le S base M C hproperTail
+        have hcoordinate:(M C).weightedCost rationalCoordinateFlag ≤
+            B.weightedCost hybridCoordinateFlag C:=by
+          simp only [MovingPoleBudget.weightedCost,
+            PrimeFlagBudgetFamily.weightedCost,B,rationalCoordinateFlag,
+            hybridCoordinateFlag,(hcost C).1,(hcost C).2.1,(hcost C).2.2]
+          omega
+        have hm2:=hm.trans (Nat.add_le_add_right hcoordinate _)
+        rw [show cost C=B.weightedCost hybridCoordinateFlag C+
+            (w+1)*(M C).movingCost by simp [cost,hmu]]
+        simpa [T1,H,point,Omega] using hm2
+      · have hmuTwo:2 ≤ multiplicity C:=by omega
+        have hflag:=laterTail_in_hybrid_flag S delay (multiplicity C)
+          hdelay hdelayMu hmuTwo
+        have hzero:∀ gamma∈componentSeeds Omega S.G T1 H Gamma point C,
+            MvPolynomial.aeval (point gamma)
+              (globalTailCut (polynomialEmbedding K) S.F (w+1+delay))=0:=by
+          intro gamma hgamma
+          have hGamma:=componentSeeds_subset Omega S.G T1 H Gamma point C hgamma
+          exact selected_globalTailCut_zero_of_lt (polynomialEmbedding K) S.F
+            S.selected gamma w (w+1+delay) (S.degree_le gamma hGamma)
+              (S.solution gamma hGamma) (by omega)
+        have hc:=component_secondTail_card_le B C Gamma point
+          (selectedPoint_injective (polynomialEmbedding K) S.selected)
+          hflag hproperTail hzero
+        have hscale:B.weightedCost
+            (multiplicity C • hybridCoordinateFlag) C=
+              multiplicity C*B.weightedCost hybridCoordinateFlag C:=by
+          simp only [PrimeFlagBudgetFamily.weightedCost,nsmul_zOnly,
+            nsmul_yz,nsmul_all]
+          ring
+        rw [hscale] at hc
+        rw [show cost C=multiplicity C*B.weightedCost hybridCoordinateFlag C by
+          simp [cost,hmu]]
+        simpa [T1,H,point,Omega] using hc
+    · have ht:=tangentCount C htangent
+      have hfactor:errors+1 ≤ multiplicity C*hybridCoordinateFlag.yz:=by
+        rw [show hybridCoordinateFlag.yz=6094942 by rfl]
+        have:=hone C
+        norm_num [errors] at ⊢
+        omega
+      have hscaled:(errors+1)*B.yzCost C ≤
+          (multiplicity C*hybridCoordinateFlag.yz)*B.yzCost C:=
+        Nat.mul_le_mul_right _ hfactor
+      have hinside:hybridCoordinateFlag.yz*B.yzCost C ≤
+          B.weightedCost hybridCoordinateFlag C:=by
+        simp only [PrimeFlagBudgetFamily.weightedCost]
+        omega
+      have hfinal:(multiplicity C*hybridCoordinateFlag.yz)*B.yzCost C ≤
+          multiplicity C*B.weightedCost hybridCoordinateFlag C:=by
+        calc
+          _=multiplicity C*(hybridCoordinateFlag.yz*B.yzCost C):=by ring
+          _ ≤ _:=Nat.mul_le_mul_left _ hinside
+      exact (ht.trans (hscaled.trans hfinal)).trans (Nat.le_add_right _ _)
+  have hG:∀ gamma∈Gamma,MvPolynomial.eval (point gamma) S.G=0:=S.on_component
+  have hT1:∀ gamma∈Gamma,MvPolynomial.eval (point gamma) T1=0:=by
+    intro gamma hgamma
+    exact selected_globalTailCut_zero (polynomialEmbedding K) S.F S.selected gamma w
+      (S.degree_le gamma hgamma) (S.solution gamma hgamma)
+  have hH:∀ gamma∈Gamma,MvPolynomial.eval (point gamma) H≠0:=by
+    intro gamma hgamma
+    change MvPolynomial.eval (point gamma)
+      (surfaceMap (polynomialEmbedding K)
+        (MvPolynomial.pderiv (2:Fin 4) S.F))≠0
+    rw [selectedPoint_evaluation]
+    exact S.regular gamma hgamma
+  have hcover:=card_le_sum_componentSeeds Omega S.G T1 H Gamma point hG hT1 hH
+  have hcoordinate:
+      (∑ C,multiplicity C*B.weightedCost hybridCoordinateFlag C) ≤
+        flagMixed flag exactFirstTailFlag hybridCoordinateFlag:=
+    resultants.divisor_le B multiplicity
+  have hmovingPart:
+      (∑ C,if multiplicity C=1 then (w+1)*(M C).movingCost else 0) ≤
+        (w+1)*flagMixed flag movingFiberFlag movingCutFlag:=by
+    calc
+      _ ≤ ∑ C,(w+1)*(M C).movingCost:=by
+        apply Finset.sum_le_sum
+        intro C _
+        split_ifs <;> omega
+      _=(w+1)*(∑ C,(M C).movingCost):=by rw [Finset.mul_sum]
+      _ ≤ _:=Nat.mul_le_mul_left _ hmoving
+  calc
+    Gamma.card ≤ ∑ C:FirstTailComponent S,
+        (componentSeeds Omega S.G T1 H Gamma point C).card:=hcover
+    _ ≤ ∑ C:FirstTailComponent S,cost C:=
+      Finset.sum_le_sum (fun C _↦componentBound C)
+    _=(∑ C,multiplicity C*B.weightedCost hybridCoordinateFlag C)+
+        ∑ C,if multiplicity C=1 then (w+1)*(M C).movingCost else 0:=by
+      simp only [cost,Finset.sum_add_distrib]
+    _ ≤ flagMixed flag exactFirstTailFlag hybridCoordinateFlag+
+        (w+1)*flagMixed flag movingFiberFlag movingCutFlag:=
+      Nat.add_le_add hcoordinate hmovingPart
+    _=hybridStageCost flag:=rfl
+def ActiveStageFixedPowerProvider6733:Prop:=
+  ∀ {Gamma:Finset K} {flag:FlagDegree}
+    (S:Stage K I Gamma IRSProfile.domain prime flag)
+    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F (w+1))
+    (base:∀ C:FirstTailComponent S,SeparableLiteralCoordinate C.1)
+    (hactive:∀ C:FirstTailComponent S,
+      KaehlerDifferential.D (GenericField K) (CoordinateField (GenericField K) C.1)
+          (coordinate (GenericField K) C.1 0)≠0∨
+        KaehlerDifferential.D (GenericField K) (CoordinateField (GenericField K) C.1)
+          (coordinate (GenericField K) C.1 2)≠0)
+    (hZ:∀ C:FirstTailComponent S,LiteralProjectionGate C 2)
+    (D:AdaptiveNestedProjectionDataActive base hactive
+      (residualStage_pderiv_one_ne_zero_of_support S)),
+    ActiveNestedFixedPowers base hactive hZ
+      (residualStage_pderiv_one_ne_zero_of_support S) D
+      (localMultiplicity S (canonicalLocalDVRFamily S hfirstProper))
+theorem firstTail_in_twoTailFlag
+    {Gamma:Finset K} {flag:FlagDegree}
+    (S:Stage K I Gamma IRSProfile.domain prime flag):
+    PolynomialInFlag (tailFlag (w+1))
+      (globalTailCut (polynomialEmbedding K) S.F (w+1)):=by
+  have hs:=firstTail_in_sharp_flag S
+  have hAll:
+      (sharpResidualAgreementFlag
+        ContactProperDelayedTailCertificate6735Research.fixedSupport (w+1)).all ≤
+        (tailFlag (w+1)).all:=by decide
+  have hYZ:
+      (sharpResidualAgreementFlag
+          ContactProperDelayedTailCertificate6735Research.fixedSupport (w+1)).yz+
+          (sharpResidualAgreementFlag
+            ContactProperDelayedTailCertificate6735Research.fixedSupport (w+1)).all ≤
+        (tailFlag (w+1)).yz+(tailFlag (w+1)).all:=by decide
+  have hTotal:
+      (sharpResidualAgreementFlag
+          ContactProperDelayedTailCertificate6735Research.fixedSupport (w+1)).zOnly+
+          (sharpResidualAgreementFlag
+            ContactProperDelayedTailCertificate6735Research.fixedSupport (w+1)).yz+
+          (sharpResidualAgreementFlag
+            ContactProperDelayedTailCertificate6735Research.fixedSupport (w+1)).all ≤
+        (tailFlag (w+1)).zOnly+(tailFlag (w+1)).yz+
+          (tailFlag (w+1)).all:=by decide
+  intro d hd
+  have h:=hs d hd
+  exact ⟨h.1.trans hAll,h.2.1.trans hYZ,h.2.2.trans hTotal⟩
+theorem properStageProvider6733_of_activeFixedPowers
+    (fixedPowers:ActiveStageFixedPowerProvider6733):
+    ProperStageProvider6733:=by
+  intro Gamma flag S hfirstProper hnodes hagreement hbox hflag
+  have hflagChar:flag.yz+flag.all < prime∧flag.all < prime∧
+      flag.zOnly+flag.yz+flag.all < prime:=by
+    rcases hflag with ⟨hall,hyz,htotal⟩
+    dsimp [prime]
+    omega
+  have hmixed:
+      (1+(w+1)*(2*(46+10+3)-2))*flag.all+
+        (flag.yz+flag.all)*((2*(10+2)-1)*(w+1)) < prime:=by
+    rcases hflag with ⟨hall,hyz,htotal⟩
+    norm_num [w,prime] at ⊢
+    omega
+  obtain ⟨base,hactive,hZ,⟨D⟩⟩:=
+    exists_firstTail_activeNestedData_of_caps S hfirstProper hflagChar hmixed
+  let hSderiv:=residualStage_pderiv_one_ne_zero_of_support S
+  have hGsupport:S.G.support ⊆ flagSupport flag:=
+    (support_subset_flagSupport_iff flag S.G).2 S.flag_support
+  have hTsupport:
+      (globalTailCut (polynomialEmbedding K) S.F (w+1)).support ⊆
+        flagSupport exactFirstTailFlag:=
+    (support_subset_flagSupport_iff _ _).2 (firstTail_in_exact_flag S)
+  let U:=activeNestedUnitFamily base hactive hZ hSderiv D
+    S.irreducible_G hfirstProper hGsupport hTsupport
+  let multiplicity:FirstTailComponent S → ℕ:=
+    localMultiplicity S (canonicalLocalDVRFamily S hfirstProper)
+  have powers:ActiveNestedFixedPowers base hactive hZ hSderiv D multiplicity:=by
+    exact fixedPowers S hfirstProper base hactive hZ D
+  have resultants:RegularComponentWeightedInertiaResultantCertificate
+      U.toPrimeFlagBudgetFamily multiplicity:=by
+    exact activeNestedWeightedCertificate base hactive hZ hSderiv D
+      S.irreducible_G hfirstProper hGsupport hTsupport multiplicity powers
+  have hyzTranscendental:∀ C:FirstTailComponent S,
+      Transcendental (GenericField K)
+        (coordinateValue (GenericField K) (CoordinateField (GenericField K) C.1)
+          (U.yzProjection C)):=by
+    intro C
+    have hproj:U.yzProjection C=coordinateOfGate
+        (ContactFlagAffineFamilyDegree6543Research.affineU
+          (GenericField K) C.1 D.lam) (D.uGate C):=rfl
+    rw [hproj,coordinateOfGate_value]
+    exact D.uTranscendental C
+  let E:=AlgebraicClosure (RatFunc (GenericField K))
+  letI:IsScalarTower (GenericField K) (RatFunc (GenericField K)) E:=by
+    infer_instance
+  letI:CharP E prime:=by infer_instance
+  let Hsupport:ContactResidualSupportParametersResearch.ResidualSupportData
+      ContactProperDelayedTailCertificate6735Research.fixedSupport S.F:=
+    ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
+  have hmix:
+      2*(flag.zOnly+flag.yz+flag.all)*(1335+46+10+4)<prime:=by
+    rcases hflag with ⟨hall,hyz,htotal⟩
+    norm_num [prime] at ⊢
+    omega
+  obtain ⟨M,hcost,hz,hyz,hall,hmove⟩:=
+    exists_firstTail_cut_budgets (E:=E)
+      (polynomialEmbedding K) S.F S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w+1))
+      1335 46 10 w (by decide) rfl Hsupport flag
+      S.irreducible_G.ne_zero S.G_dvd_surface S.flag_support
+      base U prime hmix
+  have hfiber:
+      ContactMovingPositiveLedger6719Research.fiberFlag 1335 46 10=
+        movingFiberFlag:=by decide
+  have hcut:
+      ContactMovingAgreementCertificate6719Research.center 1335 46 10+
+          (w+1) • ContactMovingPositiveLedger6719Research.surfaceFlag
+            1335 46 10=movingCutFlag:=by decide
+  have hmoveExact:
+      (∑ C,(M C).movingCost) ≤
+        flagMixed flag movingFiberFlag movingCutFlag:=by
+    simpa only [hfiber,hcut] using hmove
+  exact stage_card_le_hybrid S hfirstProper base U hyzTranscendental
+    M hcost hmoveExact resultants hnodes hagreement hbox
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailResidualGeneric6734Research
+end ProximityPrize.SubmissionLower.ContactProperStageActiveProvider6735Research
+end

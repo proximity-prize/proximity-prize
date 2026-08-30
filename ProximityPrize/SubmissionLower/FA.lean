@@ -1,195 +1,150 @@
-import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.Q6
-import ProximityPrize.SubmissionLower.FC
-import ProximityPrize.SubmissionLower.P1
-namespace ProximityPrize.SubmissionLower.ContactMovingProtocol6734Research
-open ProximityPrize.Benchmark
-open CoreDefinitions ProximityGap ToyProblem
-open AlignmentInterleavedLambda AlignmentMomentCurveProjection
-open ContactSeedlessProtocolResearch
-open ContactSeedlessLambdaResearch
-open scoped NNReal
+import ProximityPrize.SubmissionLower.CI
+
+set_option autoImplicit true
+
+section
+namespace ProximityPrize.SubmissionLower.ContactTwoTailProviderAssembly6735Research
+open scoped Classical BigOperators
+open ContactGenericInitialPoint ContactGenericSurface
+open ContactIdentityResidualIterationResearch ContactRegularComponentCover
+open ContactDelayedTailMultiplicityProvider6732Research
+open ContactFirstTailCertificate6731Research ContactProperCutSeedCount
+open ContactPrimeSeedIncidence ContactFlagBezout6543Research
+open ContactPrimeFlagBudgetFamilyResearch ContactAdaptiveUnitPoleFamilyResearch
+open ContactWeakSeparableSeparatorResearch ActualCurveCoordinateField
+open CoordinateBoxZeroCount
+open ContactTangentCoefficientProvider6732Research
+open ContactTwoTailResultantProvider6732Research
+open ContactInterpolation
+open ContactAdaptiveProjectionCoordinateResearch
+open ContactTwoTailTangentCost6732Research
 noncomputable section
-set_option maxRecDepth 20000
-set_option maxHeartbeats 5000000
-local instance : DecidableEq IRSProfile.Field := Classical.decEq _
-local instance : DecidableEq IRSProfile.Index := Classical.decEq _
-def n : ℕ := 262144
-def errors : ℕ := 80112
-def agreements : ℕ := n-errors
-def listBudget : ℕ := 1000000000
-def mcaBudget : ℕ := 274980727111395087
-def radius : ℝ≥0 := ContactTwoTailParameters6734Research.radius
-theorem sixteen_row_separation :
-   15 * (listBudget + 1).choose 2 < Fintype.card IRSProfile.Field := by
- rw [show Fintype.card IRSProfile.Field = (2130706433 : ℕ) ^ 6 by
-   norm_num [IRSProfile.Field, KoalaBear.Ext6, KoalaBear.fieldSize],
-   Nat.choose_eq_descFactorial_div_factorial]
- norm_num [listBudget, Nat.descFactorial_succ, Nat.factorial_succ]
-theorem squared_eight_lambda_new
-   (delta : ℝ)
-   (hcell : (delta : ℝ) * (Fintype.card IRSProfile.Index : ℝ) <
-     ((errors + 1 : ℕ) : ℝ)) :
-   Code.Lambda
-     (((IRSProfile.baseCode ^⋈ (Fin 8)) ^⋈ (Fin 2) :
-       ModuleCode IRSProfile.Index IRSProfile.Field
-         (Fin 2 → Fin 8 → IRSProfile.Field)) :
-       Set (IRSProfile.Index → Fin 2 → Fin 8 → IRSProfile.Field))
-     delta ≤ (listBudget : ℕ∞) := by
- apply ContactSeedlessLambdaResearch.squared_eight_lambda_le_of_interleaved_list
-   IRSProfile.baseCode errors listBudget ?_ delta hcell
- intro received L hrows hclose
- have hclose' : ∀ v ∈ L, agreements ≤
-     (Finset.univ.filter (fun i => v i = received i)).card := by
-   intro v hv
-   simpa [agreements, n, errors, IRSProfile.Index] using hclose v hv
- classical
- letI : DecidableEq (IRSProfile.Index → Fin 16 → IRSProfile.Field) := Classical.decEq _
- letI : DecidableEq (IRSProfile.Index → IRSProfile.Field) := Classical.decEq _
- by_contra hnot
- obtain ⟨D, hDL, hDcard⟩ :=
-   Finset.exists_subset_card_eq (show listBudget + 1 ≤ L.card by omega)
- have hsepD : 15 * D.card.choose 2 < Fintype.card IRSProfile.Field := by
-   rw [hDcard]
-   exact sixteen_row_separation
- obtain ⟨t, ht⟩ := exists_separating_moment_parameter D hsepD
- let projected : Finset (IRSProfile.Index → IRSProfile.Field) :=
-   D.image (momentProjection (ι := IRSProfile.Index) (r := 16) t)
- have hprojcard : projected.card = D.card := Finset.card_image_of_injOn ht
- have hcode : ∀ c ∈ projected, c ∈ IRSProfile.baseCode := by
-   intro c hc
-   obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hc
-   exact momentProjection_mem_code IRSProfile.baseCode t v (hrows v (hDL hv))
- have hnear : ∀ c ∈ projected, agreements ≤
-     (Finset.univ.filter (fun i => c i = momentProjection t received i)).card := by
-   intro c hc
-   obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hc
-   exact (hclose' v (hDL hv)).trans
-     (Finset.card_le_card (momentProjection_preserves_agreements t v received))
- have hnearWeak : ∀ c ∈ projected,
-     ContactMovingSeedless6732Research.agreements ≤
-       (Finset.univ.filter (fun i =>
-         c i = momentProjection t received i)).card := by
-   intro c hc
-   have hh := hnear c hc
-   norm_num [ContactMovingSeedless6732Research.agreements,
-     ContactMovingSeedless6732Research.n,
-     ContactMovingSeedless6732Research.errors,
-     agreements, n, errors] at hh ⊢
-   omega
- have hbound := ContactMovingSeedlessGeometry6732Research.irs_scalar_finite_list_card_le
-   (momentProjection t received) projected hcode hnearWeak
- change projected.card ≤ listBudget at hbound
- rw [hprojcard, hDcard] at hbound
- omega
-theorem lambda_le :
-   Code.Lambda
-     ((IRSProfile.code ^⋈ (Fin 2) :
-       ModuleCode IRSProfile.Index IRSProfile.Field
-         (Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field)) :
-       Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
-     (radius : ℝ) ≤ (listBudget : ℕ∞) := by
- rw [irs_squared_carrier_eq]
- apply squared_eight_lambda_new (radius : ℝ)
- norm_num [radius, ContactTwoTailParameters6734Research.radius, claimedRadius,
-   ContactTwoTailParameters6734Research.radiusNumerator,
-   ContactTwoTailParameters6734Research.radiusDenominator,
-   errors, IRSProfile.Index]
-theorem base_mca_le_of_alignment
-   (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-   mcaError (AffineLineGenerator IRSProfile.Field) IRSProfile.baseCode
-       (radius : ℝ) ≤
-     ENNReal.ofReal ((mcaBudget : ℝ) / Fintype.card IRSProfile.Field) := by
- apply mcaError_affineLine_le_of_givenSetsBound
- apply givenSetsBound_of_alignmentBound IRSProfile.baseCode
-   (radius : ℝ) errors mcaBudget
- · intro A hA
-   have hcomp :=
-     (mul_one_sub_le_card_iff_sub_card_le_floor A
-       (show (0 : ℝ) ≤ (radius : ℝ) by positivity)).mp hA
-   rw [show ⌊(radius : ℝ) * (Fintype.card IRSProfile.Index : ℝ)⌋₊ = errors by
-     simpa only [radius, errors, ContactTwoTailParameters6734Research.errors] using
-       ContactTwoTailParameters6734Research.radius_floor] at hcomp
-   have hn : Fintype.card IRSProfile.Index = 262144 := by
-     norm_num [IRSProfile.Index]
-   rw [hn]
-   norm_num [errors, ContactTwoTailParameters6734Research.errors] at hcomp ⊢
-   omega
- · exact halign
-theorem mca_le_of_alignment
-   (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-   mcaError (AffineLineGenerator IRSProfile.Field) IRSProfile.code
-       (radius : ℝ) ≤
-     (mcaBudget : ENNReal) /
-       (Fintype.card IRSProfile.Field : ENNReal) := by
- calc
-   _ ≤ mcaError (AffineLineGenerator IRSProfile.Field) IRSProfile.baseCode
-       (radius : ℝ) := by
-     rw [ContactSeedlessProtocolResearch.irs_code_eq_base_interleaved]
-     exact ProximityGap.mcaError_interleaved_le IRSProfile.baseCode
-       IRSProfile.interleaving radius
-       (by norm_num [IRSProfile.interleaving])
-       (by norm_num [radius, ContactTwoTailParameters6734Research.radius,
-         claimedRadius, ContactTwoTailParameters6734Research.radiusNumerator,
-         ContactTwoTailParameters6734Research.radiusDenominator])
-       (by norm_num [radius, ContactTwoTailParameters6734Research.radius,
-         claimedRadius, ContactTwoTailParameters6734Research.radiusNumerator,
-         ContactTwoTailParameters6734Research.radiusDenominator])
-   _ ≤ ENNReal.ofReal
-       ((mcaBudget : ℝ) / Fintype.card IRSProfile.Field) :=
-     base_mca_le_of_alignment halign
-   _ = (mcaBudget : ENNReal) /
-       (Fintype.card IRSProfile.Field : ENNReal) := by
-     rw [ENNReal.ofReal_div_of_pos (by positivity), ENNReal.ofReal_natCast,
-       ENNReal.ofReal_natCast]
-theorem field_capacity_split :
-   2 ^ (128 : ℕ) * (mcaBudget + listBudget) ≤
-     Fintype.card IRSProfile.Field := by
- rw [ContactSeedlessProtocolResearch.field_cardinality]
- norm_num [mcaBudget, listBudget]
-theorem certifiedGammaError_le_of_alignment
-   (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-   certifiedGammaError IRSProfile.code radius ≤
-     (1 : ℝ≥0) / 2 ^ (128 : ℕ) := by
- rw [← ENNReal.coe_le_coe, coe_certifiedGammaError]
- push_cast
- have hLambdaNat := ENat.toNat_le_of_le_coe lambda_le
- have hList :
-     ((Code.Lambda
-       ((IRSProfile.code ^⋈ (Fin 2) :
-         ModuleCode IRSProfile.Index IRSProfile.Field
-           (Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field)) :
-         Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving →
-           IRSProfile.Field))
-       (radius : ℝ)).toNat : ENNReal) /
-         (Fintype.card IRSProfile.Field : ENNReal) ≤
-       (listBudget : ENNReal) /
-         (Fintype.card IRSProfile.Field : ENNReal) :=
-   ENNReal.div_le_div_right (by exact_mod_cast hLambdaNat) _
- calc
-   _ ≤ (mcaBudget : ENNReal) /
-         (Fintype.card IRSProfile.Field : ENNReal) +
-       (listBudget : ENNReal) /
-         (Fintype.card IRSProfile.Field : ENNReal) :=
-     add_le_add (mca_le_of_alignment halign) hList
-   _ = ((mcaBudget + listBudget : ℕ) : ENNReal) /
-       (Fintype.card IRSProfile.Field : ENNReal) := by
-     rw [← ENNReal.add_div, Nat.cast_add]
-   _ ≤ (1 : ENNReal) / 2 ^ (128 : ℕ) := by
-     apply ContactSeedlessProtocolResearch.nat_div_le_inv_pow
-     · norm_num [mcaBudget, listBudget]
-     · simpa only [Nat.mul_comm] using field_capacity_split
-theorem protocolClaim6735_of_alignment
-   (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-   ProtocolClaim 6735 10254463 33554432 where
- admissible := ContactTwoTailParameters6734Research.radius_admissible
- reduction := by
-   change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
-   simpa [reductionTarget, ProximityGap.prizeThreshold] using
-     certifiedGammaError_le_of_alignment halign
- score := by
-   change (1 - ContactTwoTailParameters6734Research.radius) ^
-     IRSProfile.repetitions ≤ claimedError 6735
-   exact ContactTwoTailParameters6734Research.score_target_le
+set_option autoImplicit false
+set_option maxHeartbeats 3000000
+set_option maxRecDepth 30000
+variable {K I:Type} [Field K]
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+abbrev Omega (K:Type) [Field K]:=GenericField K
+variable {Gamma:Finset K} {x:I → K} {p:ℕ}
+variable [CharP (Omega K) p] {flag:FlagDegree}
+variable {support:ContactResidualSupportParametersResearch.ResidualSupportParameters}
+abbrev FixedStage
+    (phi:Polynomial K →+*Omega K:=polynomialEmbedding K):=
+  ResidualStage phi Gamma x p ContactTwoTailParameters6735Research.errors
+    flag ContactTwoTailParameters6735Research.w support
+structure ProperDelayedTailCertificate
+    (S:FixedStage (Gamma:=Gamma) (x:=x) (p:=p) (flag:=flag)
+      (support:=support))
+    (B:PrimeFlagBudgetFamily
+      (G:=S.G)
+      (T:=globalTailCut (polynomialEmbedding K) S.F
+        (ContactTwoTailParameters6735Research.w+1))
+      (H:=regularitySurface (polynomialEmbedding K) S.F) flag
+      (ContactTwoTailParameters6735Research.tailFlag
+        (ContactTwoTailParameters6735Research.w+1)))
+    (multiplicity:FirstTailComponent S → ℕ) where
+  branch:∀ C:FirstTailComponent S,
+    (∃ delay,1 ≤ delay∧delay ≤ multiplicity C∧
+      globalTailCut (polynomialEmbedding K) S.F
+        (ContactTwoTailParameters6735Research.w+1+delay)∉C.1∧
+      (componentSeeds (Omega K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F
+          (ContactTwoTailParameters6735Research.w+1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+          multiplicity C*B.weightedCost
+            (ContactTwoTailParameters6735Research.tailFlag
+              (ContactTwoTailParameters6735Research.w+2)) C)∨
+    (∀ delay,globalTailCut (polynomialEmbedding K) S.F
+      (ContactTwoTailParameters6735Research.w+1+delay)∈C.1)
+theorem delayedTailMultiplicityProvider_of_certificates
+    (S:FixedStage (Gamma:=Gamma) (x:=x) (p:=p) (flag:=flag)
+      (support:=support))
+    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
+      (ContactTwoTailParameters6735Research.w+1))
+    (baseFamily:∀ C:FirstTailComponent S,SeparableLiteralCoordinate C.1)
+    (U:AdaptiveUnitProjectionFamily baseFamily flag
+      (ContactTwoTailParameters6735Research.tailFlag
+        (ContactTwoTailParameters6735Research.w+1)))
+    (hyzTranscendental:∀ C:FirstTailComponent S,
+      Transcendental (Omega K)
+        (coordinateValue (Omega K) (CoordinateField (Omega K) C.1)
+          (U.yzProjection C)))
+    (bound seedCap slopeCap:ℕ)
+    (hnodes:S.nodes.card=ContactTwoTailParameters6735Research.agreements+
+      ContactTwoTailParameters6735Research.errors)
+    (hagreement:∀ gamma∈Gamma,
+      ContactTwoTailParameters6735Research.agreements ≤
+        (S.agreementFiber gamma).card)
+    (hshort:ContactTwoTailParameters6735Research.w+1 ≤ bound)
+    (hchar:bound < p)
+    (hbox:S.F∈globalCoefficientBox K bound
+      ContactTwoTailParameters6735Research.w seedCap slopeCap)
+    (multiplicity:FirstTailComponent S → ℕ)
+    (hone:∀ C,1 ≤ multiplicity C)
+    (proper:ProperDelayedTailCertificate S U.toPrimeFlagBudgetFamily multiplicity)
+    (resultants:RegularComponentWeightedInertiaResultantCertificate
+      U.toPrimeFlagBudgetFamily multiplicity):
+    Nonempty (DelayedTailMultiplicityProvider
+      (tailFlag1:=ContactTwoTailParameters6735Research.tailFlag
+        (ContactTwoTailParameters6735Research.w+1))
+      (tailFlag2:=ContactTwoTailParameters6735Research.tailFlag
+        (ContactTwoTailParameters6735Research.w+2)) S):=by
+  let B:=U.toPrimeFlagBudgetFamily
+  let secondTail:=ContactTwoTailParameters6735Research.tailFlag
+    (ContactTwoTailParameters6735Research.w+2)
+  let cost:FirstTailComponent S → ℕ:=
+    fun C => multiplicity C*B.weightedCost secondTail C
+  have hyzPositive (C:FirstTailComponent S):1 ≤ B.yzCost C:=by
+    change 1 ≤ coordinateDegree (Omega K) (CoordinateField (Omega K) C.1)
+      (U.yzProjection C)
+    exact one_le_coordinateDegree_of_transcendental_value
+      (U.yzProjection C) (hyzTranscendental C)
+  have hyzPole (C:FirstTailComponent S):∀ W:Finset
+      (CoordinatePoleMass.Place (Omega K) (CoordinateField (Omega K) C.1)),
+      (∑ v∈W,ContactSparsePoleSupportResearch.exponentSetPoleWeight
+        v.val (coordinate (Omega K) C.1)
+        (ContactFlagBezout6543Research.flagSupport
+          ContactFlagBezout6543Research.unitYZFlag)) ≤ (B.yzCost C:ℤ):=by
+    exact U.toAdaptiveUnitPoleBudget.yzPole C
+  have tangentCount (C:FirstTailComponent S)
+      (hall:∀ delay,globalTailCut (polynomialEmbedding K) S.F
+        (ContactTwoTailParameters6735Research.w+1+delay)∈C.1):
+      (componentSeeds (Omega K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F
+          (ContactTwoTailParameters6735Research.w+1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+          (ContactTwoTailParameters6735Research.errors+1)*B.yzCost C:=by
+    exact tangent_component_card_le S C hfirstProper (baseFamily C)
+      ContactTwoTailParameters6735Research.agreements bound seedCap slopeCap
+      hnodes hagreement (by decide) (by decide) hshort hchar hbox B
+      (hyzPositive C) hall (hyzPole C)
+  refine ⟨{
+    budgetFamily:=B
+    multiplicity:=multiplicity
+    cost:=cost
+    one_le_multiplicity:=hone
+    tangentYZGate:=by decide
+    cost_le:=fun C => le_rfl
+    divisor_le:=resultants.divisor_le B multiplicity
+    componentBound:=?_
+    dichotomy:=?_}⟩
+  · intro C
+    rcases proper.branch C with hproper | htangent
+    · exact hproper.choose_spec.2.2.2
+    · exact (tangentCount C htangent).trans
+        (yzCost_le_multiplicity_weightedCost B
+          (ContactTwoTailParameters6735Research.tailFlag
+            (ContactTwoTailParameters6735Research.w+2)) C
+          (multiplicity C) (ContactTwoTailParameters6735Research.errors+1)
+          (hone C) (by decide))
+  · intro C
+    rcases proper.branch C with hproper | htangent
+    · exact Or.inl ⟨hproper.choose,hproper.choose_spec.1,
+        hproper.choose_spec.2.1,hproper.choose_spec.2.2.1⟩
+    · exact Or.inr ⟨htangent,tangentCount C htangent⟩
 end
-end ProximityPrize.SubmissionLower.ContactMovingProtocol6734Research
+end ProximityPrize.SubmissionLower.ContactTwoTailProviderAssembly6735Research
+end
