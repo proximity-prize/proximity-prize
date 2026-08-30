@@ -1,6 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.LocatorClosure
 namespace ProximityPrize.Benchmark
-theorem candidate : ProtocolClaim 6743 10264575 33554432 :=
- ProximityPrize.SubmissionLower.LocatorClosure.protocolClaim6743
+set_option maxHeartbeats 0 in
+theorem candidate : ProtocolClaim 6744 10265855 33554432 :=
+  ProximityPrize.SubmissionLower.LocatorClosure.protocolClaim6744
 end ProximityPrize.Benchmark
