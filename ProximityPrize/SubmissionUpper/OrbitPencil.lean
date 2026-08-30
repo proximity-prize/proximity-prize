@@ -10,8 +10,11 @@ import ProximityPrize.SubmissionUpper.PrescribedTop
 The size-`2^18` NTT domain is partitioned into 512 fibres by `x ↦ x^512`.
 We use 272 whole fibres together with a fixed 511-point core.  Prescribing 14
 top coefficients and the product of the selected fibre labels leaves more than
-`2^59` choices while forcing pairwise differences to have the two roots needed
-to fit under the row-degree budget.
+`⌊|FF|/2¹²⁸⌋ + 1` choices while forcing pairwise differences to have the two
+roots needed to fit under the row-degree budget. The pigeonhole is the same
+count the winning-set comparison uses, not a `2^59` proxy. The origin of fibre
+`0` is still excluded: `511 + 255 * 512 = 131071` saturates the row budget,
+and `512 + 255 * 512 = 131072` is not strictly below `131072`.
 -/
 
 namespace ProximityPrize.SubmissionUpper.OrbitPencil
@@ -130,17 +133,23 @@ theorem card_keys : Fintype.card ((Fin 14 → K) × Small) =
   rw [Fintype.card_prod, Fintype.card_fun, PrescribedTop.card_K]
   norm_num
 
+/-- `epsilonStar = 2⁻¹²⁸` needs `|Sel| > |FF| / 2¹²⁸`. The sextic cardinality is
+`2130706433^6`, so the exact threshold is `⌊|FF| / 2¹²⁸⌋ + 1`. The pigeonhole
+is stated at this count, not at `2^59`. -/
+abbrev NN : ℕ := 274980728111395088
+
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 1000000 in
 set_option exponentiation.threshold 100000 in
 theorem orbit_count :
-    ((2 ^ 31 - 2 ^ 24 + 1)^14 * 512) * 2^59 < Nat.choose 511 272 := by
+    ((2 ^ 31 - 2 ^ 24 + 1)^14 * 512) * NN < Nat.choose 511 272 := by
   rw [Nat.choose_eq_fast_choose]
+  dsimp [NN]
   decide
 
 theorem exists_big_fiber :
     ∃ σ : (Fin 14 → K) × Small,
-      2^59 < (Candidates.filter fun U => key U = σ).card := by
+      NN < (Candidates.filter fun U => key U = σ).card := by
   refine PrescribedTop.pigeonhole Candidates key _ ?_
   rw [card_keys, candidates_card]
   exact orbit_count
@@ -148,7 +157,7 @@ theorem exists_big_fiber :
 noncomputable def sigma0 := Classical.choose exists_big_fiber
 noncomputable def Fam : Finset (Finset Small) := Candidates.filter fun U => key U = sigma0
 
-theorem Fam_card_gt : 2^59 < Fam.card := Classical.choose_spec exists_big_fiber
+theorem Fam_card_gt : NN < Fam.card := Classical.choose_spec exists_big_fiber
 
 theorem Fam_mem {U : Finset Small} (hU : U ∈ Fam) : U ⊆ outer ∧ U.card = 272 := by
   exact Finset.mem_powersetCard.mp (Finset.mem_filter.mp hU).1
@@ -212,11 +221,9 @@ theorem V_sub_degree_lt {U W : Finset Small} (hU : U ∈ Fam) (hW : W ∈ Fam) :
     rw [V_coeff_top hU, V_coeff_top hW, sub_self]
   · rw [V_coeff_gt hU hgt, V_coeff_gt hW hgt, sub_self]
 
-abbrev NN : ℕ := 2^59 + 1
-
 theorem exists_selected : ∃ S : Finset (Finset Small), S ⊆ Fam ∧ S.card = NN := by
-  obtain ⟨S, hsub, hcard⟩ := Finset.exists_subset_card_eq (s := Fam)
-    (n := NN) (by simpa [NN] using Nat.succ_le_iff.mpr Fam_card_gt : NN ≤ Fam.card)
+  obtain ⟨S, hsub, hcard⟩ := Finset.exists_subset_card_eq (s := Fam) (n := NN)
+    (Nat.le_of_lt Fam_card_gt)
   exact ⟨S, hsub, hcard⟩
 
 noncomputable def Sel : Finset (Finset Small) := Classical.choose exists_selected
@@ -246,6 +253,14 @@ theorem VF_sub_natDegree_lt {U W : Finset Small} (hU : U ∈ Sel) (hW : W ∈ Se
     _ ≤ (V U - V W).natDegree := Polynomial.natDegree_map_le
     _ < 258 := hn
 
+theorem VF_sub_eval_zero {U W : Finset Small} (hU : U ∈ Sel) (hW : W ∈ Sel) :
+    (VF U - VF W).eval 0 = 0 := by
+  have hmap (P : Polynomial K) :
+      (P.map (algebraMap K FF)).eval 0 = algebraMap K FF (P.eval 0) := by
+    rw [← map_zero (algebraMap K FF), Polynomial.eval_map, Polynomial.eval₂_at_apply]
+  rw [Polynomial.eval_sub, VF, VF, hmap, hmap,
+    V_eval_zero_eq_of_key (Sel_mem hU) (Sel_mem hW), sub_self]
+
 noncomputable def projected : Finset FF :=
   Finset.univ.image (fun b : Small => algebraMap K FF (y b))
 
@@ -255,45 +270,72 @@ theorem projected_card : projected.card = 512 := by
   intro b c h
   exact y_injective (PrescribedTop.algebraMap_injective h)
 
+/-- Pairwise `V`-differences already vanish at `0` by the product key, and `bad`
+already contains `{0}`. Erasing that root from each collision fibre drops the
+union bound from `257` to `256`. -/
 noncomputable def collisionRoots (z : (Finset Small) × (Finset Small)) : Finset FF :=
-  (VF z.1 - VF z.2).roots.toFinset
+  ((VF z.1 - VF z.2).roots.toFinset).erase 0
 
 theorem collisionRoots_card_le (z : (Finset Small) × (Finset Small))
-    (hz : z ∈ Sel.offDiag) : (collisionRoots z).card ≤ 257 := by
+    (hz : z ∈ Sel.offDiag) : (collisionRoots z).card ≤ 256 := by
   have hmem := Finset.mem_offDiag.mp hz
   have hd := VF_sub_natDegree_lt hmem.1 hmem.2.1
-  exact (Multiset.toFinset_card_le _).trans
-    ((Polynomial.card_roots' (VF z.1 - VF z.2)).trans (by omega))
+  have hne : VF z.1 - VF z.2 ≠ 0 := VF_sub_ne_zero hmem.2.2
+  have hle : (VF z.1 - VF z.2).roots.toFinset.card ≤ 257 :=
+    (Multiset.toFinset_card_le _).trans ((Polynomial.card_roots' _).trans (by omega))
+  have h0 : 0 ∈ (VF z.1 - VF z.2).roots.toFinset := by
+    rw [Multiset.mem_toFinset, Polynomial.mem_roots hne, Polynomial.IsRoot.def]
+    exact VF_sub_eval_zero hmem.1 hmem.2.1
+  rw [collisionRoots, Finset.card_erase_of_mem h0]
+  omega
 
 noncomputable def bad : Finset FF :=
   (projected ∪ {0}) ∪ Sel.offDiag.biUnion collisionRoots
 
 theorem collision_union_card_le :
-    (Sel.offDiag.biUnion collisionRoots).card ≤ Sel.offDiag.card * 257 :=
-  Finset.card_biUnion_le_card_mul Sel.offDiag collisionRoots 257 collisionRoots_card_le
+    (Sel.offDiag.biUnion collisionRoots).card ≤ Sel.offDiag.card * 256 :=
+  Finset.card_biUnion_le_card_mul Sel.offDiag collisionRoots 256 collisionRoots_card_le
 
 theorem offdiag_card : Sel.offDiag.card = NN * (NN - 1) := by
   rw [Finset.offDiag_card, Sel_card, Nat.mul_sub_left_distrib]
   simp
 
-theorem projected_union_card_le : (projected ∪ {0}).card ≤ 513 := by
-  calc (projected ∪ {0}).card ≤ projected.card + ({0} : Finset FF).card := Finset.card_union_le _ _
-    _ = 513 := by rw [projected_card]; simp
+theorem y_map_ne_zero (b : Small) : algebraMap K FF (y b) ≠ 0 := by
+  intro h
+  have hy : y b ≠ 0 := by
+    rw [y, node]
+    exact pow_ne_zero _ (pow_ne_zero _
+      (IRSProfile.baseNttDomain.primitive.ne_zero (by norm_num)))
+  exact hy (PrescribedTop.algebraMap_injective (by simpa using h))
 
-theorem collision_arith : 513 + Sel.offDiag.card * 257 ≤ NN^2 * 272 + 513 := by
+/-- `y b` is a power of a primitive `2^18`-th root, so `0` is never a projected
+fibre label. The forbidden set `projected ∪ {0}` is therefore a disjoint union
+of size exactly `513`, not a `card_union_le` slack of one. -/
+theorem projected_disjoint_zero : Disjoint projected ({0} : Finset FF) := by
+  rw [Finset.disjoint_left]
+  intro a ha h0
+  have : a = 0 := Finset.mem_singleton.mp h0
+  subst a
+  rw [projected, Finset.mem_image] at ha
+  obtain ⟨b, _, hb⟩ := ha
+  exact y_map_ne_zero b hb
+
+theorem projected_union_card_le : (projected ∪ {0}).card ≤ 513 := by
+  rw [Finset.card_union_of_disjoint projected_disjoint_zero, projected_card]
+  simp
+
+theorem collision_arith : 513 + Sel.offDiag.card * 256 ≤ NN^2 * 256 + 513 := by
   rw [offdiag_card]
   have h1 : NN * (NN - 1) ≤ NN * NN :=
     Nat.mul_le_mul_left NN (Nat.sub_le NN 1)
-  have h2 : NN * (NN - 1) * 257 ≤ NN^2 * 257 := by
-    simpa [pow_two] using Nat.mul_le_mul_right 257 h1
-  have h3 : NN^2 * 257 ≤ NN^2 * 272 := Nat.mul_le_mul_left _ (by norm_num)
+  have h2 : NN * (NN - 1) * 256 ≤ NN^2 * 256 := by
+    simpa [pow_two] using Nat.mul_le_mul_right 256 h1
   calc
-    513 + NN * (NN - 1) * 257 ≤ 513 + NN^2 * 257 := Nat.add_le_add_left h2 513
-    _ ≤ 513 + NN^2 * 272 := Nat.add_le_add_left h3 513
-    _ = NN^2 * 272 + 513 := Nat.add_comm _ _
+    513 + NN * (NN - 1) * 256 ≤ 513 + NN^2 * 256 := Nat.add_le_add_left h2 513
+    _ = NN^2 * 256 + 513 := Nat.add_comm _ _
 
 set_option maxRecDepth 10000 in
-theorem bad_card_le : bad.card ≤ NN^2 * 272 + 513 := by
+theorem bad_card_le : bad.card ≤ NN^2 * 256 + 513 := by
   have hcoll := collision_union_card_le
   have hp := projected_union_card_le
   rw [bad]
@@ -301,13 +343,13 @@ theorem bad_card_le : bad.card ≤ NN^2 * 272 + 513 := by
     ((projected ∪ {0}) ∪ Sel.offDiag.biUnion collisionRoots).card ≤
         (projected ∪ {0}).card + (Sel.offDiag.biUnion collisionRoots).card :=
       Finset.card_union_le _ _
-    _ ≤ 513 + Sel.offDiag.card * 257 := Nat.add_le_add hp hcoll
-    _ ≤ NN^2 * 272 + 513 := collision_arith
+    _ ≤ 513 + Sel.offDiag.card * 256 := Nat.add_le_add hp hcoll
+    _ ≤ NN^2 * 256 + 513 := collision_arith
 
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 1000000 in
 set_option exponentiation.threshold 100000 in
-theorem alpha_count : NN^2 * 272 + 513 < (2 ^ 31 - 2 ^ 24 + 1)^6 := by
+theorem alpha_count : NN^2 * 256 + 513 < (2 ^ 31 - 2 ^ 24 + 1)^6 := by
   dsimp [NN]
   decide
 
@@ -341,7 +383,9 @@ theorem VF_eval_alpha_injective_on : Set.InjOn (fun U => (VF U).eval alpha) (Sel
   by_contra hne
   apply alpha_not_bad
   have hroot : alpha ∈ collisionRoots (U, W) := by
-    rw [collisionRoots, Multiset.mem_toFinset, Polynomial.mem_roots (VF_sub_ne_zero hne)]
+    rw [collisionRoots, Finset.mem_erase]
+    refine ⟨alpha_ne_zero, ?_⟩
+    rw [Multiset.mem_toFinset, Polynomial.mem_roots (VF_sub_ne_zero hne)]
     simpa [Polynomial.eval_sub] using sub_eq_zero.mpr heq
   simp only [bad, Finset.mem_union]
   exact Or.inr (Finset.mem_biUnion.mpr ⟨(U, W), Finset.mem_offDiag.mpr ⟨hU, hW, hne⟩, hroot⟩)
@@ -482,6 +526,13 @@ noncomputable def zpoly : Polynomial FF := (Polynomial.X : Polynomial FF)^512
 
 noncomputable def cpoly (U : Finset Small) : Polynomial FF := RF * (Q U).comp zpoly
 
+/-- Row budget: a 511-point core plus a degree-`255` polynomial in `X^512`
+saturates `natDegree ≤ 131071`. Seven extra core points need `Q.natDegree ≤ 254`. -/
+theorem row_budget : 511 + 255 * 512 = 131071 := by norm_num
+
+/-- Agreement-set mass: 511 core points plus 272 fibres of 512. -/
+theorem agreement_mass : 511 + 272 * 512 = 139775 := by norm_num
+
 theorem cpoly_natDegree_le {U : Finset Small} (hU : U ∈ Sel) :
     (cpoly U).natDegree ≤ 131071 := by
   calc
@@ -496,7 +547,7 @@ theorem cpoly_natDegree_le {U : Finset Small} (hU : U ∈ Sel) :
       have hz : zpoly.natDegree = 512 := by simp [zpoly]
       rw [hz]
       exact Nat.add_le_add_left (Nat.mul_le_mul_right 512 hq) 511
-    _ = 131071 := by norm_num
+    _ = 131071 := row_budget
 
 theorem cpoly_degree_lt {U : Finset Small} (hU : U ∈ Sel) :
     (cpoly U).degree < (131072 : ℕ) := by
@@ -551,7 +602,10 @@ theorem pair_disjoint {U : Finset Small} (hU : U ∈ Sel) :
 theorem T_card {U : Finset Small} (hU : U ∈ Sel) : (T U).card = 139775 := by
   rw [T, Finset.card_image_of_injective _ idx_injective, pairSet,
     Finset.card_union_of_disjoint (pair_disjoint hU)]
-  simp [corePairs, blockPairs, coreA_card, (Fam_mem (Sel_mem hU)).2]
+  have hcore : corePairs.card = 511 := by simp [corePairs, coreA_card]
+  have hblock : (blockPairs U).card = 272 * 512 := by
+    simp [blockPairs, Finset.card_product, Finset.card_univ, (Fam_mem (Sel_mem hU)).2]
+  rw [hcore, hblock, agreement_mass]
 
 noncomputable def zval (j : Idx) : FF := IRSProfile.domain j ^ 512
 
@@ -596,7 +650,7 @@ theorem cpoly_eval (U : Finset Small) (j : Idx) :
   rw [cpoly, Polynomial.eval_mul, Polynomial.eval_comp, zpoly, Polynomial.eval_pow,
     Polynomial.eval_X, zval]
 
-theorem scalar_agree_core {U : Finset Small} (hU : U ∈ Sel) (a : Small) (ha : a ∈ coreA) :
+theorem scalar_agree_core {U : Finset Small} (_hU : U ∈ Sel) (a : Small) (ha : a ∈ coreA) :
     f1scalar (idx a 0) + gamma U * f2scalar (idx a 0) =
       (cpoly U).eval (IRSProfile.domain (idx a 0)) := by
   rw [f1scalar, f2scalar, cpoly_eval, RF_eval_core a ha]
