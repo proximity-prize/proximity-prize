@@ -164,6 +164,9 @@ structure SelectedInterpolants
  G_total_le : wt residualTotalWeights G ≤ 1261
  G_corner : wt residualYSWeights G ≤ 54 ∨
    wt residualSWeights G ≤ 11
+ G_joint : wt residualTotalWeights G ≤ 1260 ∨
+   wt residualYSWeights G ≤ 53 ∨
+   wt residualSWeights G ≤ 11
  universal_vanishing :
    ∀ (gamma : IRSProfile.Field) (P : Polynomial IRSProfile.Field)
      (support : Finset IRSProfile.Index),
@@ -455,6 +458,13 @@ theorem exists_selected_interpolants
    dsimp only [HB]
    exact ContactKernelCommonGCDResearch.Caps6734.profileB_commonGCD_total_le
      u₀ u₁ bB
+ have hHBjoint :
+     wt residualTotalWeights HB ≤ 1260 ∨
+       wt residualYSWeights HB ≤ 53 ∨
+       wt residualSWeights HB ≤ 11 := by
+   dsimp only [HB]
+   exact ContactKernelCommonGCDResearch.Caps6734.profileB_commonGCD_joint
+     u₀ u₁ bB
  have hHys : wt residualYSWeights H ≤ 55 :=
    (weightedTotalDegree_le_of_dvd residualYSWeights H HA hHHA hHA).trans hHAys
  have hHtotal : wt residualTotalWeights H ≤ 1261 :=
@@ -472,6 +482,16 @@ theorem exists_selected_interpolants
        (hGH.trans hHHA) hHA).trans hys)
    · exact Or.inr ((weightedTotalDegree_le_of_dvd residualSWeights G HA
        (hGH.trans hHHA) hHA).trans hslope)
+ have hGjoint : wt residualTotalWeights G ≤ 1260 ∨
+     wt residualYSWeights G ≤ 53 ∨
+     wt residualSWeights G ≤ 11 := by
+   rcases hHBjoint with htot | hys | hslope
+   · exact Or.inl ((weightedTotalDegree_le_of_dvd residualTotalWeights G HB
+       (hGH.trans hHHB) hHB).trans htot)
+   · exact Or.inr (Or.inl ((weightedTotalDegree_le_of_dvd residualYSWeights G HB
+       (hGH.trans hHHB) hHB).trans hys))
+   · exact Or.inr (Or.inr ((weightedTotalDegree_le_of_dvd residualSWeights G HB
+       (hGH.trans hHHB) hHB).trans hslope))
  have hvAcoeff : vA.1 ≠ 0 := by
    intro hz
    apply hvA
@@ -530,6 +550,7 @@ theorem exists_selected_interpolants
    G_ys_le := hGys
    G_total_le := hGtotal
    G_corner := hGcorner
+   G_joint := hGjoint
    universal_vanishing := by
      intro gamma P support hP hcard hvalues
      refine ⟨?_,?_,?_⟩

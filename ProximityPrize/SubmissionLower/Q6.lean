@@ -278,10 +278,10 @@ theorem selectedNoLargePencilBound6734 :
    rcases htSplit with htHigh | htLow
    · rcases hySplit with hyHigh | hyLow
      · rcases hsSplit with hsHigh | hsLow
-       · refine selected_card_le_of_certified_rectangle 1207 41 10 1260 53 11 12
-           stageBoundYS111 firstValidYS111 secondValidYS111 budgetYS111
-           (rectangleSideConditions_of_profiles 1207 41 10 (by simp))
-           S selected seeds hcover hdegree hagreement hno ?_ ?_ ?_ ?_ ?_ ?_ ?_ <;> omega
+       · have : False := by
+           have hJ := S.G_joint
+           omega
+         exact this.elim
        · refine selected_card_le_of_certified_rectangle 1207 42 9 1260 53 0 11
            stageBoundYS110 firstValidYS110 secondValidYS110 budgetYS110
            (rectangleSideConditions_of_profiles 1207 42 9 (by simp))

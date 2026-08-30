@@ -714,6 +714,18 @@ theorem profileB_dimension :
  norm_num
  rw [profileB_quotient_exact]
  decide
+theorem profileB_joint_quotient_exact :
+   coefficientCount 7667593 131071 1 13 = 30408231 := by
+ decide
+theorem profileB_joint_dimension :
+   coefficientCount 14745402 131071 1262 25 -
+       262144 * localRankBound 81 1262 25 >
+     coefficientCount (14745402 - (54 * 131071 - 25)) 131071
+       (1262 - 1261) (25 - 12) := by
+ rw [profileB_full_nullity_exact]
+ norm_num
+ rw [profileB_joint_quotient_exact]
+ decide
 end Numeric6734
 namespace Caps6734
 open ProximityPrize.Benchmark
@@ -924,6 +936,45 @@ theorem profileB_commonGCD_total_le
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]] at hobs
  exact (Nat.not_le_of_gt profileB_dimension) hobs
+theorem profileB_commonGCD_joint
+   (u₀ u₁ : IRSProfile.Index → IRSProfile.Field)
+   {ι : Type*} [Fintype ι] [Nonempty ι]
+   (b : Module.Basis ι IRSProfile.Field (BKernel u₀ u₁)) :
+   wt residualTotalWeights
+       (commonGCD (D := 14745402) (w := 131071) (L := 1262) (s := 25)
+         (BKernel u₀ u₁) b) ≤ 1260 ∨
+     wt residualYSWeights
+       (commonGCD (D := 14745402) (w := 131071) (L := 1262) (s := 25)
+         (BKernel u₀ u₁) b) ≤ 53 ∨
+     wt residualSWeights
+       (commonGCD (D := 14745402) (w := 131071) (L := 1262) (s := 25)
+         (BKernel u₀ u₁) b) ≤ 11 := by
+ let H := commonGCD (D := 14745402) (w := 131071) (L := 1262) (s := 25)
+   (BKernel u₀ u₁) b
+ obtain ⟨hH,hdiv,hHbox⟩ := commonGCD_data 14745402 1262 25 81 u₀ u₁ b
+ have hHcaps := (mem_flagGlobalCoefficientBox_iff H
+   14745402 131071 1262 25 (by decide)).mp hHbox
+ by_contra hnot
+ change ¬ (wt residualTotalWeights H ≤ 1260 ∨
+   wt residualYSWeights H ≤ 53 ∨
+   wt residualSWeights H ≤ 11) at hnot
+ push_neg at hnot
+ have htotal : 1261 ≤ wt residualTotalWeights H := by omega
+ have hys : 54 ≤ wt residualYSWeights H := by omega
+ have hslope : 12 ≤ wt residualSWeights H := by omega
+ have hs25 : wt residualSWeights H ≤ 25 := hHcaps.2.1
+ have hrel := residualYS_mul_le_contact_add_slope H 131071 (by decide)
+ have hcontact : 54 * 131071 - 25 ≤ wt (contactWeights 131071) H := by
+   omega
+ have hqbox := quotient_box_of_commonGCD 14745402 1262 25 81
+   (54 * 131071 - 25) 1261 12 u₀ u₁ b hcontact htotal hslope
+ have hobs := common_divisor_dimension_obstruction
+   (K := IRSProfile.Field) 14745402 131071 1262 25 81
+   (14745402 - (54 * 131071 - 25)) (1262 - 1261) (25 - 12)
+   IRSProfile.domain u₀ u₁ H hH hdiv hqbox
+ rw [show Fintype.card IRSProfile.Index = 262144 by
+   norm_num [IRSProfile.Index]] at hobs
+ exact (Nat.not_le_of_gt profileB_joint_dimension) hobs
 end Caps6734
 end
 end ProximityPrize.SubmissionLower.ContactKernelCommonGCDResearch
