@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D
-namespace ProximityPrize.SubmissionLower.ContactMovingProjection6676Research
+namespace ProximityPrize.SubmissionLower.RCN207
 open scoped Classical BigOperators Pointwise
-open ContactFlagBezout6543Research
+open RCN095
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 20000
@@ -184,4 +184,4 @@ theorem small_projection_cap_identity (a b s k:ℕ) (C:FlagDegree):
    nsmul_all,unitZFlag,unitYZFlag,unitAllFlag]
  ring
 end
-end ProximityPrize.SubmissionLower.ContactMovingProjection6676Research
+end ProximityPrize.SubmissionLower.RCN207

@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Q
 import ProximityPrize.SubmissionLower.R
-namespace ProximityPrize.SubmissionLower.ContactInterpolation6600Research
-open ContactInterpolation ContactRankKernel ContactParameters6600Research
+namespace ProximityPrize.SubmissionLower.RCN175
+open RCN174 RCN256 RCN223
 open ProximityPrize.Benchmark
 noncomputable section
 set_option maxHeartbeats 2000000
@@ -22,13 +22,13 @@ theorem exists_frozen_nonzero_contact_array6600
    (fun i:IRSProfile.Index↦IRSProfile.domain i) u0 u1
  rw [show Fintype.card IRSProfile.Index=n by
    norm_num [IRSProfile.Index,n]]
- simpa only [totalContactRank,ContactParameters6600Research.localContactRank,
-   ContactRankKernel.localRankBound,
-   ContactParameters6600Research.contactExponent,
-   ContactParameters6600Research.coefficientCount,
-   ContactInterpolation.coefficientCount,ContactRankKernel.contactRankBound,
-   ContactRankKernel.blockInputCount,
-   ContactRankKernel.blockKernelLowerBound] using interpolation_gate
+ simpa only [totalContactRank,RCN223.localContactRank,
+   RCN256.localRankBound,
+   RCN223.contactExponent,
+   RCN223.coefficientCount,
+   RCN174.coefficientCount,RCN256.contactRankBound,
+   RCN256.blockInputCount,
+   RCN256.blockKernelLowerBound] using interpolation_gate
 theorem exists_frozen_nonzero_polynomial_and_equations6600
    (u0 u1:IRSProfile.Index → IRSProfile.Field):
    ∃ (Q:MvPolynomial (Fin 4) IRSProfile.Field)
@@ -52,4 +52,4 @@ theorem exists_frozen_nonzero_polynomial_and_equations6600
      weightedCap w seedTotalCap slopeCap theta,
    rfl,hconstraints⟩
 end
-end ProximityPrize.SubmissionLower.ContactInterpolation6600Research
+end ProximityPrize.SubmissionLower.RCN175

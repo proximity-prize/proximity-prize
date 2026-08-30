@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.Y1
-namespace ProximityPrize.SubmissionLower.ContactActiveSubtypeWeightedSum6733Research
+namespace ProximityPrize.SubmissionLower.RCN032
 open scoped Classical BigOperators
-open ContactAdaptiveProjectionCoordinateResearch
-open CoordinateBoxZeroCount ArbitraryRationalProjectionResearch
+open RCN042
+open RCN344 RCN022
 noncomputable section
 set_option autoImplicit false
 theorem sum_mul_eq_active_subtype
@@ -50,4 +50,4 @@ theorem sum_mul_coordinateOfGate_eq_active
  exact coordinateOfGate_degree_of_isAlgebraic
    (K:=K) (L:=E i) (x i) (hgate i) (not_not.mp hi)
 end
-end ProximityPrize.SubmissionLower.ContactActiveSubtypeWeightedSum6733Research
+end ProximityPrize.SubmissionLower.RCN032

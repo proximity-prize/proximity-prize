@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G2
 import ProximityPrize.SubmissionLower.AP
-namespace ProximityPrize.SubmissionLower.RatFuncProductFormula
+namespace ProximityPrize.SubmissionLower.RCN366
 open scoped BigOperators Classical
 open UniqueFactorizationMonoid IsDedekindDomain
 noncomputable section
@@ -14,7 +14,7 @@ def primePlace (p:Polynomial K) (hp:Irreducible p):
 def asFraction (x:RatFunc K):FractionRing (Polynomial K):=
  RatFunc.toFractionRingAlgEquiv K (Polynomial K) x
 def finiteOrder (p:Polynomial K) (hp:Irreducible p) (x:RatFunc K):ℤ:=
- NormValuation.orderAt (primePlace K p hp) (asFraction K x)
+ RCN356.orderAt (primePlace K p hp) (asFraction K x)
 def infinityOrder (x:RatFunc K):ℤ:=
  -(RatFunc.inftyValuation K x).log
 theorem finiteOrder_eq_factorCounts
@@ -31,10 +31,10 @@ theorem finiteOrder_eq_factorCounts
      (RatFunc.num_div_denom x)
    simpa only [asFraction,map_div₀,AlgEquiv.commutes] using h.symm
  rw [finiteOrder,hrepr,
-   NormValuation.orderAt_div _ _ _ (by simp [RatFunc.num_ne_zero hx])
+   RCN356.orderAt_div _ _ _ (by simp [RatFunc.num_ne_zero hx])
      (by simp [x.denom_ne_zero]),
-   NormValuation.orderAt_algebraMap _ x.num (RatFunc.num_ne_zero hx),
-   NormValuation.orderAt_algebraMap _ x.denom x.denom_ne_zero]
+   RCN356.orderAt_algebraMap _ x.num (RatFunc.num_ne_zero hx),
+   RCN356.orderAt_algebraMap _ x.denom x.denom_ne_zero]
  change ((normalizedFactors (Ideal.span {x.num})).count (Ideal.span {p}):ℤ)-
      ((normalizedFactors (Ideal.span {x.denom})).count (Ideal.span {p}):ℤ)=_
  rw [Ideal.count_span_normalizedFactors_eq (RatFunc.num_ne_zero hx) hp.prime,
@@ -124,7 +124,7 @@ theorem finiteOrder_eq_zero_of_not_mem
  simp
 theorem nonzero_order_has_supported_representative
    (x:RatFunc K) (hx:x≠0) (v:HeightOneSpectrum (Polynomial K))
-   (hv:NormValuation.orderAt v (asFraction K x)≠0):
+   (hv:RCN356.orderAt v (asFraction K x)≠0):
    ∃ p∈factorSupport K x,∃ hp:Irreducible p,
      p.Monic∧primePlace K p hp=v:=by
  obtain ⟨p,hp,hm,hplace⟩:=exists_monic_primePlace K v
@@ -135,7 +135,7 @@ theorem nonzero_order_has_supported_representative
 theorem finite_support_actual_orders (x:RatFunc K) (hx:x≠0):
    Function.HasFiniteSupport
      (fun v:HeightOneSpectrum (Polynomial K)↦
-       NormValuation.orderAt v (asFraction K x)):=by
+       RCN356.orderAt v (asFraction K x)):=by
  classical
  let f:{p:Polynomial K//p∈factorSupport K x} →
      HeightOneSpectrum (Polynomial K):=fun p↦
@@ -190,4 +190,4 @@ theorem projective_line_order_sum (x:RatFunc K) (hx:x≠0):
    Finset.subset_union_left Finset.subset_union_right,
    infinityOrder_eq_neg_intDegree K x hx,add_neg_cancel]
 end
-end ProximityPrize.SubmissionLower.RatFuncProductFormula
+end ProximityPrize.SubmissionLower.RCN366

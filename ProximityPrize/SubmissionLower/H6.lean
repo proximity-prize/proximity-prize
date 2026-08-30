@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.H7
-namespace ProximityPrize.SubmissionLower.AlignmentMomentCurveProjection
+namespace ProximityPrize.SubmissionLower.RCN019
 open scoped BigOperators
 noncomputable section Proofs
 variable {ι F:Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
@@ -173,7 +173,7 @@ theorem momentProjection_preserves_agreements
  rw [hv]
 theorem interleaved_finite_list_card_le
    (C:LinearCode ι F) (e w B:ℕ)
-   (hzero:AlignmentScalarListBridge.ZeroCoordinateBound C w)
+   (hzero:RCN020.ZeroCoordinateBound C w)
    (hgap:w < Fintype.card ι-e)
    (halign:AffineLineAlignmentBound C e B)
    (hfield:B < Fintype.card F)
@@ -206,9 +206,9 @@ theorem interleaved_finite_list_card_le
    obtain ⟨v,hv,rfl⟩:=Finset.mem_image.mp hc
    exact (hclose v (hDL hv)).trans
      (Finset.card_le_card (momentProjection_preserves_agreements t v u))
- have hbound:=AlignmentScalarListBridge.finite_list_card_le C e w B
+ have hbound:=RCN020.finite_list_card_le C e w B
    hzero hgap halign hfield (momentProjection t u) projected hcode hnear
  rw [hprojcard,hDcard] at hbound
  omega
 end Proofs
-end ProximityPrize.SubmissionLower.AlignmentMomentCurveProjection
+end ProximityPrize.SubmissionLower.RCN019

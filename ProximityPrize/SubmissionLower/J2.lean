@@ -3,13 +3,13 @@ import ProximityPrize.SubmissionLower.FL
 import ProximityPrize.SubmissionLower.A5
 import ProximityPrize.SubmissionLower.E
 import ProximityPrize.SubmissionLower.E4
-namespace ProximityPrize.SubmissionLower.ContactFactorReconstruction6731Research
-open ContactDifferentialRing ContactTaylorNumerators ContactRegularPoint
-open ContactPolynomiality ContactGlobalPolynomiality DifferentialTaylorCoefficients
-open ContactAgreementEvaluation
-open ContactNumeratorFactorScaling6731Research ContactAgreementFactorScaling6731Research
-open ContactGenericSurface
-open ContactReconstructionFieldMembershipResearch
+namespace ProximityPrize.SubmissionLower.RCN083
+open RCN077 RCN313 RCN269
+open RCN233 RCN139 RCN347
+open RCN047
+open RCN217 RCN048
+open RCN136
+open RCN258
 noncomputable section
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 15000
@@ -94,4 +94,4 @@ theorem original_factor_agreement_proper
  apply hproper
  simpa only [map_sub,map_mul,map_pow,sub_add_cancel] using dvd_add hdiff hscaled
 end
-end ProximityPrize.SubmissionLower.ContactFactorReconstruction6731Research
+end ProximityPrize.SubmissionLower.RCN083

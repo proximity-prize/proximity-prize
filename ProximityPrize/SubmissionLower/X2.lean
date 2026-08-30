@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.L
 import ProximityPrize.SubmissionLower.AU
-namespace ProximityPrize.SubmissionLower.TrivariateRationalCollection
-open ActualCurveCoordinateField
+namespace ProximityPrize.SubmissionLower.RCN371
+open RCN002
 noncomputable section
 variable (K:Type) [Field K]
 abbrev Original:=MvPolynomial (Fin 3) K
@@ -148,4 +148,4 @@ theorem rationalMap_proper_of_component
  exact hproper ((rationalMap_dvd_iff_of_component K order P G H hG hmem ht).mp h)
 end ActualComponent
 end
-end ProximityPrize.SubmissionLower.TrivariateRationalCollection
+end ProximityPrize.SubmissionLower.RCN371

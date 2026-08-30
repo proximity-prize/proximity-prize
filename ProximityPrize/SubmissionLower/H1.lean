@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AX
 import ProximityPrize.SubmissionLower.X8
-namespace ProximityPrize.SubmissionLower.ActualPlaneCoordinateCaps
-open TrivariateRationalCollection ActualPlaneCoordinateKernel
+namespace ProximityPrize.SubmissionLower.RCN009
+open RCN371 RCN011
 noncomputable section
 variable (K:Type) [Field K]
 section FirstCoordinate
@@ -130,4 +130,4 @@ theorem original_characteristic_gates (order:Fin 3 ≃ Fin 3) (G H:Original K) (
  ⟨(planeMap_natDegree_le K order G).trans_lt houter,
    (planeMap_resultant_natDegree_le K order G H).trans_lt hmixed⟩
 end
-end ProximityPrize.SubmissionLower.ActualPlaneCoordinateCaps
+end ProximityPrize.SubmissionLower.RCN009

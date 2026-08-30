@@ -2,24 +2,24 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DP
 import ProximityPrize.SubmissionLower.C0
 import ProximityPrize.SubmissionLower.BA
-namespace ProximityPrize.SubmissionLower.ContactAdaptiveNestedUnitFamilyActive6630Research
+namespace ProximityPrize.SubmissionLower.RCN040
 open scoped Classical BigOperators WithZero
 open Polynomial KaehlerDifferential
-open ActualCurveCoordinateField ActualCurveRationalProjection
-open CoordinateBoxZeroCount ContactRegularComponentCover
-open ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveProjectionCoordinateResearch
-open ContactAdaptiveUnitPoleFamilyResearch
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedProjectionActive6630Research
-open ContactFlagBezout6543Research ContactFlagPoleInequality6543Research
-open ContactFlagAffineFamilyDegree6543Research
-open ContactFlagTrapezoidCaps6543Research
-open ContactFlagSymbolicTrapezoidResearch
-open ContactFlagProjectionPositivity6543Research
-open ContactFlagPrincipalCycles6543Research
-open ContactFlagTriangularProjectionResearch
-open ArbitraryRationalProjectionResearch
+open RCN002 RCN005
+open RCN344 RCN264
+open RCN341
+open RCN042
+open RCN046
+open RCN037
+open RCN038
+open RCN095 RCN114
+open RCN093
+open RCN123
+open RCN121
+open RCN117
+open RCN116
+open RCN125
+open RCN022
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option synthInstance.maxHeartbeats 400000
@@ -322,18 +322,35 @@ def adaptiveUnitProjectionFamily_of_active_nested
    exact D.allAffineTranscendental C
  · intro C v
    rw [exponentSetPoleWeight_unitZ]
-   change _=ContactLocalPoleBound.poleOrder v.val _
+   change _=RCN187.poleOrder v.val _
    rw [coordinateOfGate_value]
  · intro C v
    rw [exponentSetPoleWeight_unitYZ]
-   change _=ContactLocalPoleBound.poleOrder v.val _
+   change _=RCN187.poleOrder v.val _
    rw [coordinateOfGate_value]
    rw [←D.uValue C]
    exact (D.uPole C v).symm
  · intro C v
    rw [exponentSetPoleWeight_unitAll]
-   change _=ContactLocalPoleBound.poleOrder v.val _
+   change _=RCN187.poleOrder v.val _
    rw [hvValue C, ←D.allValue C]
    exact (D.allPole C v).symm
+theorem exists_adaptiveUnitProjectionFamily_of_active_nested
+   (p q:FlagDegree)
+   (base:∀ C:RegularComponent Omega G T H,
+     SeparableLiteralCoordinate C.1)
+   (hactive:∀ C:RegularComponent Omega G T H,
+     D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 0)≠0∨
+       D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 2)≠0)
+   (hZ:∀ C:RegularComponent Omega G T H,
+     LiteralProjectionGate C 2)
+   (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0)
+   (hG:Irreducible G) (hproper:¬ G∣T)
+   (hGsupport:G.support ⊆ flagSupport p)
+   (hTsupport:T.support ⊆ flagSupport q):
+   Nonempty (AdaptiveUnitProjectionFamily base p q):=by
+ obtain ⟨D⟩:=exists_adaptiveNestedProjectionDataActive base hactive hSderiv
+ exact ⟨adaptiveUnitProjectionFamily_of_active_nested p q base hactive hZ hSderiv D
+   hG hproper hGsupport hTsupport⟩
 end
-end ProximityPrize.SubmissionLower.ContactAdaptiveNestedUnitFamilyActive6630Research
+end ProximityPrize.SubmissionLower.RCN040

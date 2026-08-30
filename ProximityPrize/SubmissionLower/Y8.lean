@@ -2,15 +2,15 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R7
 import ProximityPrize.SubmissionLower.Y7
 import ProximityPrize.SubmissionLower.BB
-namespace ProximityPrize.SubmissionLower.ContactFlagExactSeparableProjection6543Research
+namespace ProximityPrize.SubmissionLower.RCN097
 open scoped Classical BigOperators WithZero TensorProduct
 open Polynomial KaehlerDifferential IsDedekindDomain
-open ArbitraryRationalProjectionResearch GlobalSeparableShearResearch
-open CoordinateBoxZeroCount ContactSparsePoleSupportResearch
-open ContactDependentGenericity6543Research
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveZeroCount
-open ContactRegularComponentCover
-open ContactFlagAffineFamilyDegree6543Research
+open RCN022 RCN351
+open RCN344 RCN295
+open RCN075
+open RCN002 RCN005 RCN007
+open RCN264
+open RCN093
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
@@ -41,7 +41,7 @@ theorem exists_nonzero_avoiding_finite_subsingleton
    exact ha (Finset.mem_insert_of_mem (hab ▸ hmem))
 theorem valuation_shear_bad_coefficient_subsingleton
    {K L:Type*} [Field K] [Field L] [Algebra K L]
-   (v:CoordinatePlaceClassification.NormalizedValuation K L)
+   (v:RCN345.NormalizedValuation K L)
    (r z:L):
    ∀ {a b:K},
      v.val (r+a • z) < max (v.val r) (v.val z) →
@@ -78,7 +78,7 @@ variable {I:Type*} [Fintype I]
 variable (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 variable (r z:∀ i,E i)
 variable (W:∀ i,
- Finset (CoordinatePlaceClassification.NormalizedValuation K (E i)))
+ Finset (RCN345.NormalizedValuation K (E i)))
 theorem exists_common_exact_finite_separable_shear
    (embeddingZ:∀ i,RatFunc K →ₐ[K] E i)
    (hvalueZ:∀ i,embeddingZ i
@@ -105,7 +105,7 @@ theorem exists_common_exact_finite_separable_shear
    intro i
    have h:=parameterDifferential_ne_zero_of_isSeparable
      K (E i) (embeddingZ i) (hfiniteZ i) (hsepZ i)
-   unfold SeparableShearKaehlerResearch.parameterDifferential at h
+   unfold RCN369.parameterDifferential at h
    rwa [hvalueZ i] at h
  let J:=I ⊕ Σ i:I,{v//v∈W i}
  let Bad:J → K → Prop
@@ -198,6 +198,108 @@ theorem nestedV_eq_affineV
      affineV Ω C.1 D.mu (D.mu*D.lam):=by
  simp only [affineU,affineV]
  simp only [smul_add,smul_smul,add_assoc]
+theorem exists_nestedFlagProjectionData
+   (hseparator:∀ C:RegularComponent Ω G T H,
+     Transcendental Ω (coordinate Ω C.1 2))
+   (hproj:∀ C:RegularComponent Ω G T H,
+     ProjectionsFiniteSeparable Ω C.1):
+   Nonempty (NestedFlagProjectionData hseparator hproj):=by
+ classical
+ let E:RegularComponent Ω G T H → Type:=
+   fun C↦CoordinateField Ω C.1
+ let rY:∀ C,E C:=fun C↦coordinate Ω C.1 0
+ let z:∀ C,E C:=fun C↦coordinate Ω C.1 2
+ let W:∀ C,Finset
+     (RCN345.NormalizedValuation Ω (E C)):=
+   fun C↦componentRelevantPlaces hseparator hproj C
+ let embeddingZ:∀ C,RatFunc Ω →ₐ[Ω] E C:=
+   fun C↦rationalBaseEmbedding Ω C.1 2 (hseparator C)
+ have hvalueZ:∀ C,embeddingZ C
+     (algebraMap (Polynomial Ω) (RatFunc Ω) Polynomial.X)=z C:=by
+   intro C
+   exact rationalBaseEmbedding_polynomial Ω C.1 2 (hseparator C) Polynomial.X
+     |>.trans (Polynomial.aeval_X _)
+ have hfiniteZ:∀ C,
+     letI:Algebra (RatFunc Ω) (E C):=
+       (embeddingZ C).toRingHom.toAlgebra
+     FiniteDimensional (RatFunc Ω) (E C):=by
+   intro C
+   exact (hproj C 2 (hseparator C)).1
+ have hsepZ:∀ C,
+     letI:Algebra (RatFunc Ω) (E C):=
+       (embeddingZ C).toRingHom.toAlgebra
+     Algebra.IsSeparable (RatFunc Ω) (E C):=by
+   intro C
+   exact (hproj C 2 (hseparator C)).2
+ obtain ⟨lam,hlam0,hlam⟩:=
+   exists_common_exact_finite_separable_shear E rY z W
+     embeddingZ hvalueZ hfiniteZ hsepZ
+ let hU:∀ C:RegularComponent Ω G T H,
+     Transcendental Ω (affineU Ω C.1 lam):=
+   fun C↦Classical.choose (hlam C)
+ have hUdata:∀ C,
+     (letI:Algebra (RatFunc Ω) (E C):=
+         (elementEmbedding Ω (E C) (affineU Ω C.1 lam)
+           (hU C)).toRingHom.toAlgebra;
+       FiniteDimensional (RatFunc Ω) (E C))∧
+     (letI:Algebra (RatFunc Ω) (E C):=
+         (elementEmbedding Ω (E C) (affineU Ω C.1 lam)
+           (hU C)).toRingHom.toAlgebra;
+       Algebra.IsSeparable (RatFunc Ω) (E C))∧
+     ∀ v∈W C,v.val (affineU Ω C.1 lam)=
+       max (v.val (coordinate Ω C.1 0))
+         (v.val (coordinate Ω C.1 2)):=by
+   intro C
+   have hp:hU C=Classical.choose (hlam C):=Subsingleton.elim _ _
+   cases hp
+   simpa only [E,rY,z,affineU,hU] using! Classical.choose_spec (hlam C)
+ let rS:∀ C,E C:=fun C↦coordinate Ω C.1 1
+ let u:∀ C,E C:=fun C↦affineU Ω C.1 lam
+ let embeddingU:∀ C,RatFunc Ω →ₐ[Ω] E C:=fun C↦
+   elementEmbedding Ω (E C) (u C) (hU C)
+ have hvalueU:∀ C,embeddingU C
+     (algebraMap (Polynomial Ω) (RatFunc Ω) Polynomial.X)=u C:=by
+   intro C
+   exact elementEmbedding_variable Ω (E C) (u C) (hU C)
+ have hfiniteU:∀ C,
+     letI:Algebra (RatFunc Ω) (E C):=
+       (embeddingU C).toRingHom.toAlgebra
+     FiniteDimensional (RatFunc Ω) (E C):=fun C↦(hUdata C).1
+ have hsepU:∀ C,
+     letI:Algebra (RatFunc Ω) (E C):=
+       (embeddingU C).toRingHom.toAlgebra
+     Algebra.IsSeparable (RatFunc Ω) (E C):=fun C↦(hUdata C).2.1
+ obtain ⟨mu,hmu0,hmu⟩:=
+   exists_common_exact_finite_separable_shear E rS u W
+     embeddingU hvalueU hfiniteU hsepU
+ let hV:∀ C:RegularComponent Ω G T H,Transcendental Ω
+     (coordinate Ω C.1 1+mu • affineU Ω C.1 lam):=
+   fun C↦Classical.choose (hmu C)
+ have hVdata:∀ C,
+     (letI:Algebra (RatFunc Ω) (E C):=
+         (elementEmbedding Ω (E C)
+           (coordinate Ω C.1 1+mu • affineU Ω C.1 lam)
+           (hV C)).toRingHom.toAlgebra;
+       FiniteDimensional (RatFunc Ω) (E C))∧
+     (letI:Algebra (RatFunc Ω) (E C):=
+         (elementEmbedding Ω (E C)
+           (coordinate Ω C.1 1+mu • affineU Ω C.1 lam)
+           (hV C)).toRingHom.toAlgebra;
+       Algebra.IsSeparable (RatFunc Ω) (E C))∧
+     ∀ v∈W C,
+       v.val (coordinate Ω C.1 1+mu • affineU Ω C.1 lam)=
+         max (v.val (coordinate Ω C.1 1))
+           (v.val (affineU Ω C.1 lam)):=by
+   intro C
+   have hp:hV C=Classical.choose (hmu C):=Subsingleton.elim _ _
+   cases hp
+   simpa only [E,rS,u,hV] using! Classical.choose_spec (hmu C)
+ exact ⟨⟨lam,hlam0,hU,
+   (fun C↦(hUdata C).1),(fun C↦(hUdata C).2.1),
+   (fun C↦(hUdata C).2.2),
+   mu,hmu0,hV,
+   (fun C↦(hVdata C).1),(fun C↦(hVdata C).2.1),
+   (fun C↦(hVdata C).2.2)⟩⟩
 end RegularComponents
 end
-end ProximityPrize.SubmissionLower.ContactFlagExactSeparableProjection6543Research
+end ProximityPrize.SubmissionLower.RCN097

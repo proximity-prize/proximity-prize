@@ -2,12 +2,12 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.C2
 import ProximityPrize.SubmissionLower.BG
 import ProximityPrize.SubmissionLower.AJ
-namespace ProximityPrize.SubmissionLower.ContactKernelCommonGCDResearch
+namespace ProximityPrize.SubmissionLower.RCN180
 open scoped BigOperators
-open ContactFlagInterpolation6641Research
-open ContactFactorCaps
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactIdentityResidualGlobalFlagResearch
+open RCN100
+open RCN081
+open RCN234
+open RCN156
 noncomputable section
 variable {K : Type*} [Field K]
 abbrev Poly4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
@@ -309,7 +309,7 @@ theorem finrank_le_quotient_box
  exact congrArg Subtype.val hvz
 end LinearQuotient
 section ConstraintKernel
-open ContactFlagRankKernel6641Research
+open RCN119
 variable {I : Type*} [Fintype I]
 abbrev ConstraintKernel (D w L s m : ℕ)
    (nodes u₀ u₁ : I → K) :=
@@ -374,82 +374,352 @@ theorem common_divisor_dimension_obstruction
  rw [globalCoefficientBox_finrank] at hhi
  exact hlo.trans hhi
 end ConstraintKernel
+namespace Numeric6733
+open RCN119
+open RCN100
+open RCN302
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+theorem profileA_localRank_exact :
+   localRankBound 41 1003041 12 = 8671143936 := by
+ decide
+theorem profileB_localRank_exact :
+   localRankBound 81 1242 25 = 79112293 := by
+ decide
+theorem profileB_smallCoefficient_exact :
+   coefficientCount 14746212 131071 1 25 = 58722707 := by
+ decide
+theorem coefficientCount_mono_D_s
+   {D D' w L s s' : ℕ} (hD : D ≤ D') (hs : s ≤ s') :
+   coefficientCount D w L s ≤ coefficientCount D' w L s' := by
+ unfold coefficientCount
+ apply Finset.sum_le_sum
+ intro i hi
+ calc
+   (∑ j ∈ Finset.range (s + 1),
+     (L + 1 - i - j) * (D - w * i - (w - 1) * j)) ≤
+     ∑ j ∈ Finset.range (s + 1),
+       (L + 1 - i - j) * (D' - w * i - (w - 1) * j) := by
+         apply Finset.sum_le_sum
+         intro j hj
+         gcongr
+   _ ≤ ∑ j ∈ Finset.range (s' + 1),
+       (L + 1 - i - j) * (D' - w * i - (w - 1) * j) :=
+     Finset.sum_le_sum_of_subset_of_nonneg
+       (Finset.range_mono (Nat.succ_le_succ hs)) (by simp)
+theorem profileA_full_nullity_exact :
+   coefficientCount 7464132 131071 1003041 12 -
+       262144 * localRankBound 41 1003041 12 = 505079935113 := by
+ rw [profileA_localRank_exact]
+ rw [coefficientCount_eq_sum_range_of_weighted_cutoff
+   7464132 131071 1003041 12 57 (by decide) (by decide)]
+ decide
+theorem profileA_quotient_cap_exact :
+   coefficientCount 255239 131071 1002986 12 = 505079933175 := by
+ rw [coefficientCount_eq_sum_range_of_weighted_cutoff
+   255239 131071 1002986 12 2 (by decide) (by decide)]
+ decide
+theorem profileA_dimension_strata (r : ℕ) (hr : r ≤ 12) :
+   coefficientCount 7464132 131071 1003041 12 -
+       262144 * localRankBound 41 1003041 12 >
+     coefficientCount (7464132 - (55 * 131071 - r)) 131071
+       (1003041 - 55) (12 - r) := by
+ rw [profileA_full_nullity_exact]
+ have hmono := coefficientCount_mono_D_s
+   (D := 7464132 - (55 * 131071 - r)) (D' := 255239)
+   (w := 131071) (L := 1002986) (s := 12 - r) (s' := 12)
+   (by omega) (by omega)
+ rw [profileA_quotient_cap_exact] at hmono
+ norm_num at hmono ⊢
+ omega
+theorem profileB_full_nullity_exact :
+   coefficientCount 14746212 131071 1242 25 -
+       262144 * localRankBound 81 1242 25 = 82451746 := by
+ rw [profileB_localRank_exact]
+ rw [coefficientCount_eq_sum_range_of_weighted_cutoff
+   14746212 131071 1242 25 113 (by decide) (by decide)]
+ decide
+theorem profileB_dimension_stratum :
+   coefficientCount 14746212 131071 1242 25 -
+       262144 * localRankBound 81 1242 25 >
+     coefficientCount 14746212 131071 1 25 := by
+ rw [profileB_full_nullity_exact,profileB_smallCoefficient_exact]
+ decide
+end Numeric6733
+namespace Caps6733
+open ProximityPrize.Benchmark
+open RCN119
+open RCN100
+open RCN130
+open Numeric6733
+local instance : DecidableEq IRSProfile.Field := Classical.decEq _
+local instance : DecidableEq IRSProfile.Index := Classical.decEq _
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+abbrev AKernel (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :=
+ ConstraintKernel (K := IRSProfile.Field)
+   7464132 131071 1003041 12 41 IRSProfile.domain u₀ u₁
+theorem profileA_commonGCD_ys_le
+   (u₀ u₁ : IRSProfile.Index → IRSProfile.Field)
+   {ι : Type*} [Fintype ι] [Nonempty ι]
+   (b : Module.Basis ι IRSProfile.Field (AKernel u₀ u₁)) :
+   wt residualYSWeights
+     (commonGCD (D := 7464132) (w := 131071) (L := 1003041) (s := 12)
+       (AKernel u₀ u₁) b) ≤ 54 := by
+ let H : Poly4 IRSProfile.Field :=
+   commonGCD (D := 7464132) (w := 131071) (L := 1003041) (s := 12)
+     (AKernel u₀ u₁) b
+ have hH : H ≠ 0 := commonGCD_ne_zero
+   (D := 7464132) (w := 131071) (L := 1003041) (s := 12)
+   (AKernel u₀ u₁) b
+ have hdiv : ∀ v : AKernel u₀ u₁,
+     H ∣ kernelReconstructLinear (K := IRSProfile.Field)
+       7464132 131071 1003041 12 41 IRSProfile.domain u₀ u₁ v := by
+   intro v
+   rw [kernelReconstructLinear_apply]
+   exact
+     (commonGCD_dvd (D := 7464132) (w := 131071)
+       (L := 1003041) (s := 12) (AKernel u₀ u₁) b v)
+ let i : ι := Classical.choice inferInstance
+ let Qi := reconstruct IRSProfile.Field
+   7464132 131071 1003041 12 (b i).1
+ have hQi : Qi ≠ 0 := by
+   change reconstruct IRSProfile.Field 7464132 131071 1003041 12 (b i).1 ≠ 0
+   apply reconstruct_ne_zero IRSProfile.Field 7464132 131071 1003041 12
+   intro hbzero
+   apply b.ne_zero i
+   exact Subtype.ext hbzero
+ have hQibox : Qi ∈ globalCoefficientBox IRSProfile.Field
+     7464132 131071 1003041 12 := by
+   change reconstruct IRSProfile.Field 7464132 131071 1003041 12 (b i).1 ∈ _
+   exact reconstruct_mem_globalCoefficientBox IRSProfile.Field _ _ _ _ _
+ have hHbox : H ∈ globalCoefficientBox IRSProfile.Field
+     7464132 131071 1003041 12 :=
+   mem_flagGlobalCoefficientBox_of_dvd H Qi
+     7464132 131071 1003041 12 hQi
+     (commonGCD_dvd_basis (D := 7464132) (w := 131071)
+       (L := 1003041) (s := 12) (AKernel u₀ u₁) b i) hQibox
+ have hHcaps := (mem_flagGlobalCoefficientBox_iff H
+   7464132 131071 1003041 12 (by decide)).mp hHbox
+ by_contra hnot
+ change ¬ wt residualYSWeights H ≤ 54 at hnot
+ have hys : 55 ≤ wt residualYSWeights H := by omega
+ let r := wt residualSWeights H
+ have hr : r ≤ 12 := hHcaps.2.1
+ have htotal : 55 ≤ wt residualTotalWeights H :=
+   hys.trans (residual_weight_nested H).2
+ have hrel := residualYS_mul_le_contact_add_slope H 131071 (by decide)
+ have hcontact : 55 * 131071 - r ≤ wt (contactWeights 131071) H := by
+   dsimp [r]
+   omega
+ have hqbox : ∀ v : AKernel u₀ u₁,
+     quotientPolynomial
+       (kernelReconstructLinear (K := IRSProfile.Field)
+         7464132 131071 1003041 12 41 IRSProfile.domain u₀ u₁)
+       H hdiv v ∈ globalCoefficientBox IRSProfile.Field
+         (7464132 - (55 * 131071 - r)) 131071
+         (1003041 - 55) (12 - r) := by
+   intro v
+   by_cases hv : v = 0
+   · subst v
+     have hqzero : quotientPolynomial
+         (kernelReconstructLinear (K := IRSProfile.Field)
+           7464132 131071 1003041 12 41 IRSProfile.domain u₀ u₁)
+         H hdiv 0 = 0 := by
+       apply mul_left_cancel₀ hH
+       rw [← recon_eq_mul_quotientPolynomial
+         (kernelReconstructLinear (K := IRSProfile.Field)
+           7464132 131071 1003041 12 41 IRSProfile.domain u₀ u₁)
+         H hdiv 0]
+       simp
+     rw [hqzero]
+     exact (globalCoefficientBox IRSProfile.Field _ _ _ _).zero_mem
+   · let recon := kernelReconstructLinear (K := IRSProfile.Field)
+         7464132 131071 1003041 12 41 IRSProfile.domain u₀ u₁
+     let R := quotientPolynomial recon H hdiv v
+     have hQv : recon v ≠ 0 := by
+       intro hz
+       apply hv
+       apply kernelReconstructLinear_injective (K := IRSProfile.Field)
+         7464132 131071 1003041 12 41 IRSProfile.domain u₀ u₁
+       simpa only [map_zero] using hz
+     have hR : R ≠ 0 := by
+       intro hz
+       apply hQv
+       rw [recon_eq_mul_quotientPolynomial recon H hdiv v]
+       change H * R = 0
+       rw [hz,mul_zero]
+     have hReconBox : recon v ∈ globalCoefficientBox IRSProfile.Field
+         7464132 131071 1003041 12 := by
+       rw [kernelReconstructLinear_apply]
+       exact reconstruct_mem_globalCoefficientBox IRSProfile.Field
+         7464132 131071 1003041 12 v.1
+     exact quotient_mem_flagGlobalCoefficientBox_of_mul_eq
+       (recon v) H R 7464132 131071 1003041 12
+       (55 * 131071 - r) 55 r hQv hH hR hReconBox
+       (recon_eq_mul_quotientPolynomial recon H hdiv v)
+       hcontact htotal (le_refl r)
+ have hobs := common_divisor_dimension_obstruction
+   (K := IRSProfile.Field) 7464132 131071 1003041 12 41
+   (7464132 - (55 * 131071 - r)) (1003041 - 55) (12 - r)
+   IRSProfile.domain u₀ u₁ H hH hdiv hqbox
+ rw [show Fintype.card IRSProfile.Index = 262144 by
+   norm_num [IRSProfile.Index]] at hobs
+ exact (Nat.not_le_of_gt (profileA_dimension_strata r hr)) hobs
+abbrev BKernel (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :=
+ ConstraintKernel (K := IRSProfile.Field)
+   14746212 131071 1242 25 81 IRSProfile.domain u₀ u₁
+theorem profileB_commonGCD_total_le
+   (u₀ u₁ : IRSProfile.Index → IRSProfile.Field)
+   {ι : Type*} [Fintype ι] [Nonempty ι]
+   (b : Module.Basis ι IRSProfile.Field (BKernel u₀ u₁)) :
+   wt residualTotalWeights
+     (commonGCD (D := 14746212) (w := 131071) (L := 1242) (s := 25)
+       (BKernel u₀ u₁) b) ≤ 1240 := by
+ let H : Poly4 IRSProfile.Field :=
+   commonGCD (D := 14746212) (w := 131071) (L := 1242) (s := 25)
+     (BKernel u₀ u₁) b
+ have hH : H ≠ 0 := commonGCD_ne_zero
+   (D := 14746212) (w := 131071) (L := 1242) (s := 25)
+   (BKernel u₀ u₁) b
+ have hdiv : ∀ v : BKernel u₀ u₁,
+     H ∣ kernelReconstructLinear (K := IRSProfile.Field)
+       14746212 131071 1242 25 81 IRSProfile.domain u₀ u₁ v := by
+   intro v
+   rw [kernelReconstructLinear_apply]
+   exact commonGCD_dvd (D := 14746212) (w := 131071)
+     (L := 1242) (s := 25) (BKernel u₀ u₁) b v
+ by_contra hnot
+ change ¬ wt residualTotalWeights H ≤ 1240 at hnot
+ have htotal : 1241 ≤ wt residualTotalWeights H := by omega
+ have hqbox : ∀ v : BKernel u₀ u₁,
+     quotientPolynomial
+       (kernelReconstructLinear (K := IRSProfile.Field)
+         14746212 131071 1242 25 81 IRSProfile.domain u₀ u₁)
+       H hdiv v ∈ globalCoefficientBox IRSProfile.Field
+         14746212 131071 1 25 := by
+   intro v
+   by_cases hv : v = 0
+   · subst v
+     have hqzero : quotientPolynomial
+         (kernelReconstructLinear (K := IRSProfile.Field)
+           14746212 131071 1242 25 81 IRSProfile.domain u₀ u₁)
+         H hdiv 0 = 0 := by
+       apply mul_left_cancel₀ hH
+       rw [← recon_eq_mul_quotientPolynomial
+         (kernelReconstructLinear (K := IRSProfile.Field)
+           14746212 131071 1242 25 81 IRSProfile.domain u₀ u₁)
+         H hdiv 0]
+       simp
+     rw [hqzero]
+     exact (globalCoefficientBox IRSProfile.Field _ _ _ _).zero_mem
+   · let recon := kernelReconstructLinear (K := IRSProfile.Field)
+         14746212 131071 1242 25 81 IRSProfile.domain u₀ u₁
+     let R := quotientPolynomial recon H hdiv v
+     have hQv : recon v ≠ 0 := by
+       intro hz
+       apply hv
+       apply kernelReconstructLinear_injective (K := IRSProfile.Field)
+         14746212 131071 1242 25 81 IRSProfile.domain u₀ u₁
+       simpa only [map_zero] using hz
+     have hR : R ≠ 0 := by
+       intro hz
+       apply hQv
+       rw [recon_eq_mul_quotientPolynomial recon H hdiv v]
+       change H * R = 0
+       rw [hz,mul_zero]
+     have hReconBox : recon v ∈ globalCoefficientBox IRSProfile.Field
+         14746212 131071 1242 25 := by
+       rw [kernelReconstructLinear_apply]
+       exact reconstruct_mem_globalCoefficientBox IRSProfile.Field
+         14746212 131071 1242 25 v.1
+     exact quotient_mem_flagGlobalCoefficientBox_of_mul_eq
+       (recon v) H R 14746212 131071 1242 25
+       0 1241 0 hQv hH hR hReconBox
+       (recon_eq_mul_quotientPolynomial recon H hdiv v)
+       (Nat.zero_le _) htotal (Nat.zero_le _)
+ have hobs := common_divisor_dimension_obstruction
+   (K := IRSProfile.Field) 14746212 131071 1242 25 81
+   14746212 1 25 IRSProfile.domain u₀ u₁ H hH hdiv hqbox
+ rw [show Fintype.card IRSProfile.Index = 262144 by
+   norm_num [IRSProfile.Index]] at hobs
+ exact (Nat.not_le_of_gt profileB_dimension_stratum) hobs
+end Caps6733
 namespace Numeric6734
-open ContactFlagRankKernel6641Research
-open ContactFlagInterpolation6641Research
-open ContactStackedParameters6670Research
+open RCN119
+open RCN100
+open RCN302
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 theorem profileA_localRank_exact :
    localRankBound 42 84439 12 = 769336295 := by
  decide
 theorem profileB_localRank_exact :
-   localRankBound 81 1284 25 = 81865225 := by
+   localRankBound 81 1262 25 = 80423213 := by
  decide
 theorem profileA_full_nullity_exact :
-   coefficientCount 7645344 131071 84439 12 -
-       262144 * localRankBound 42 84439 12 = 56672067842 := by
+   coefficientCount 7645764 131071 84439 12 -
+       262144 * localRankBound 42 84439 12 = 81098093102 := by
  rw [profileA_localRank_exact]
  rw [coefficientCount_eq_sum_range_of_weighted_cutoff
-   7645344 131071 84439 12 59 (by decide) (by decide)]
+   7645764 131071 84439 12 59 (by decide) (by decide)]
+ decide
+theorem profileA_ys_quotient_cap_exact :
+   coefficientCount 305800 131071 84383 12 = 66345127211 := by
+ rw [coefficientCount_eq_sum_range_of_weighted_cutoff
+   305800 131071 84383 12 3 (by decide) (by decide)]
  decide
 theorem profileA_corner_quotient_exact :
-   coefficientCount 305380 131071 84383 0 = 44126411183 := by
+   coefficientCount 436871 131071 84384 0 = 81098093098 := by
  rw [coefficientCount_eq_sum_range_of_weighted_cutoff
-   305380 131071 84383 0 3 (by decide) (by decide)]
- decide
-theorem profileA_uniform_ys_quotient_exact :
-   coefficientCount 174309 131071 84382 12 = 22005818561 := by
- rw [coefficientCount_eq_sum_range_of_weighted_cutoff
-   174309 131071 84382 12 2 (by decide) (by decide)]
+   436871 131071 84384 0 4 (by decide) (by decide)]
  decide
 theorem profileB_full_nullity_exact :
-   coefficientCount 14744592 131071 1284 25 -
-       262144 * localRankBound 81 1284 25 = 169054054 := by
+   coefficientCount 14745402 131071 1262 25 -
+       262144 * localRankBound 81 1262 25 = 46988916 := by
  rw [profileB_localRank_exact]
  rw [coefficientCount_eq_sum_range_of_weighted_cutoff
-   14744592 131071 1284 25 113 (by decide) (by decide)]
+   14745402 131071 1262 25 113 (by decide) (by decide)]
  decide
-theorem profileB_total_quotient_exact :
-   coefficientCount 14744592 131071 2 25 = 146135215 := by
+theorem profileB_quotient_exact :
+   coefficientCount 14745402 131071 0 25 = 14745402 := by
  decide
-theorem profileB_uniform_ys_quotient_exact :
-   coefficientCount 8584280 131071 3 25 = 167753485 := by
- decide
-theorem profileA_uniform_ys_dimension :
-   coefficientCount 7645344 131071 84439 12 -
+theorem profileA_ys_dimension_strata (r : ℕ) (hr : r ≤ 12) :
+   coefficientCount 7645764 131071 84439 12 -
        262144 * localRankBound 42 84439 12 >
-     coefficientCount 174309 131071 84382 12 := by
+     coefficientCount (7645764 - (56 * 131071 - r)) 131071
+       (84439 - 56) (12 - r) := by
  rw [profileA_full_nullity_exact]
- rw [profileA_uniform_ys_quotient_exact]
- decide
+ have hmono := Numeric6733.coefficientCount_mono_D_s
+   (D := 7645764 - (56 * 131071 - r)) (D' := 305800)
+   (w := 131071) (L := 84383) (s := 12 - r) (s' := 12)
+   (by omega) (by omega)
+ rw [profileA_ys_quotient_cap_exact] at hmono
+ norm_num at hmono ⊢
+ omega
 theorem profileA_corner_dimension :
-   coefficientCount 7645344 131071 84439 12 -
+   coefficientCount 7645764 131071 84439 12 -
        262144 * localRankBound 42 84439 12 >
-     coefficientCount 305380 131071 84383 0 := by
+     coefficientCount (7645764 - (55 * 131071 - 12)) 131071
+       (84439 - 55) (12 - 12) := by
  rw [profileA_full_nullity_exact]
+ norm_num
  rw [profileA_corner_quotient_exact]
  decide
-theorem profileB_total_dimension :
-   coefficientCount 14744592 131071 1284 25 -
-       262144 * localRankBound 81 1284 25 >
-     coefficientCount 14744592 131071 2 25 := by
+theorem profileB_dimension :
+   coefficientCount 14745402 131071 1262 25 -
+       262144 * localRankBound 81 1262 25 >
+     coefficientCount 14745402 131071 (1262 - 1262) 25 := by
  rw [profileB_full_nullity_exact]
- rw [profileB_total_quotient_exact]
- decide
-theorem profileB_uniform_ys_dimension :
-   coefficientCount 14744592 131071 1284 25 -
-       262144 * localRankBound 81 1284 25 >
-     coefficientCount 8584280 131071 3 25 := by
- rw [profileB_full_nullity_exact]
- rw [profileB_uniform_ys_quotient_exact]
+ norm_num
+ rw [profileB_quotient_exact]
  decide
 end Numeric6734
 namespace Caps6734
 open ProximityPrize.Benchmark
-open ContactFlagRankKernel6641Research
-open ContactFlagInterpolation6641Research
-open ContactGCDCumulativeFlagsResearch
+open RCN119
+open RCN100
+open RCN130
 open Numeric6734
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
@@ -457,10 +727,10 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 abbrev AKernel (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :=
  ConstraintKernel (K := IRSProfile.Field)
-   7645344 131071 84439 12 42 IRSProfile.domain u₀ u₁
+   7645764 131071 84439 12 42 IRSProfile.domain u₀ u₁
 abbrev BKernel (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :=
  ConstraintKernel (K := IRSProfile.Field)
-   14744592 131071 1284 25 81 IRSProfile.domain u₀ u₁
+   14745402 131071 1262 25 81 IRSProfile.domain u₀ u₁
 private theorem commonGCD_data
    (D L s m : ℕ) (u₀ u₁ : IRSProfile.Index → IRSProfile.Field)
    {ι : Type*} [Fintype ι] [Nonempty ι]
@@ -566,87 +836,69 @@ private theorem quotient_box_of_commonGCD
      (recon v) H R D 131071 L s contactLower totalLower slopeLower
      hQv hH hR hReconBox (recon_eq_mul_quotientPolynomial recon H hdiv v)
      hcontact htotal hslope
-private theorem globalCoefficientBox_mono
-   {D D' w L L' s s' : ℕ} (hD : D ≤ D') (hL : L ≤ L') (hs : s ≤ s') :
-   globalCoefficientBox IRSProfile.Field D w L s ≤
-     globalCoefficientBox IRSProfile.Field D' w L' s' := by
- intro Q hQ d hd
- exact ⟨(hQ hd).1.trans hL,(hQ hd).2.1.trans hs,
-   lt_of_lt_of_le (hQ hd).2.2 hD⟩
 theorem profileA_commonGCD_ys_le
    (u₀ u₁ : IRSProfile.Index → IRSProfile.Field)
    {ι : Type*} [Fintype ι] [Nonempty ι]
    (b : Module.Basis ι IRSProfile.Field (AKernel u₀ u₁)) :
    wt residualYSWeights
-     (commonGCD (D := 7645344) (w := 131071) (L := 84439) (s := 12)
-       (AKernel u₀ u₁) b) ≤ 56 := by
- let H := commonGCD (D := 7645344) (w := 131071) (L := 84439) (s := 12)
+     (commonGCD (D := 7645764) (w := 131071) (L := 84439) (s := 12)
+       (AKernel u₀ u₁) b) ≤ 55 := by
+ let H := commonGCD (D := 7645764) (w := 131071) (L := 84439) (s := 12)
    (AKernel u₀ u₁) b
- obtain ⟨hH,hdiv,hHbox⟩ := commonGCD_data 7645344 84439 12 42 u₀ u₁ b
+ obtain ⟨hH,hdiv,hHbox⟩ := commonGCD_data 7645764 84439 12 42 u₀ u₁ b
  have hHcaps := (mem_flagGlobalCoefficientBox_iff H
-   7645344 131071 84439 12 (by decide)).mp hHbox
+   7645764 131071 84439 12 (by decide)).mp hHbox
  by_contra hnot
- change ¬ wt residualYSWeights H ≤ 56 at hnot
- have hys : 57 ≤ wt residualYSWeights H := by omega
+ change ¬ wt residualYSWeights H ≤ 55 at hnot
+ have hys : 56 ≤ wt residualYSWeights H := by omega
  let r := wt residualSWeights H
  have hr : r ≤ 12 := hHcaps.2.1
- have htotal : 57 ≤ wt residualTotalWeights H :=
+ have htotal : 56 ≤ wt residualTotalWeights H :=
    hys.trans (residual_weight_nested H).2
  have hrel := residualYS_mul_le_contact_add_slope H 131071 (by decide)
- have hcontact : 57 * 131071 - r ≤ wt (contactWeights 131071) H := by
+ have hcontact : 56 * 131071 - r ≤ wt (contactWeights 131071) H := by
    dsimp [r]
    omega
- have hqbox0 := quotient_box_of_commonGCD 7645344 84439 12 42
-   (57 * 131071 - r) 57 r u₀ u₁ b hcontact htotal (le_refl r)
- have hqbox : ∀ v : AKernel u₀ u₁,
-     quotientPolynomial
-       (kernelReconstructLinear (K := IRSProfile.Field)
-         7645344 131071 84439 12 42 IRSProfile.domain u₀ u₁)
-       H hdiv v ∈ globalCoefficientBox IRSProfile.Field
-         174309 131071 84382 12 := by
-   intro v
-   apply globalCoefficientBox_mono
-     (D := 7645344 - (57 * 131071 - r)) (L := 84439 - 57) (s := 12 - r)
-     (by omega) (by omega) (by omega)
-   exact hqbox0 v
+ have hqbox := quotient_box_of_commonGCD 7645764 84439 12 42
+   (56 * 131071 - r) 56 r u₀ u₁ b hcontact htotal (le_refl r)
  have hobs := common_divisor_dimension_obstruction
-   (K := IRSProfile.Field) 7645344 131071 84439 12 42
-   174309 84382 12
+   (K := IRSProfile.Field) 7645764 131071 84439 12 42
+   (7645764 - (56 * 131071 - r)) (84439 - 56) (12 - r)
    IRSProfile.domain u₀ u₁ H hH hdiv hqbox
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]] at hobs
- exact (Nat.not_le_of_gt profileA_uniform_ys_dimension) hobs
+ exact (Nat.not_le_of_gt (profileA_ys_dimension_strata r hr)) hobs
 theorem profileA_commonGCD_corner
    (u₀ u₁ : IRSProfile.Index → IRSProfile.Field)
    {ι : Type*} [Fintype ι] [Nonempty ι]
    (b : Module.Basis ι IRSProfile.Field (AKernel u₀ u₁)) :
    wt residualYSWeights
-       (commonGCD (D := 7645344) (w := 131071) (L := 84439) (s := 12)
-         (AKernel u₀ u₁) b) ≤ 55 ∨
+       (commonGCD (D := 7645764) (w := 131071) (L := 84439) (s := 12)
+         (AKernel u₀ u₁) b) ≤ 54 ∨
      wt residualSWeights
-       (commonGCD (D := 7645344) (w := 131071) (L := 84439) (s := 12)
+       (commonGCD (D := 7645764) (w := 131071) (L := 84439) (s := 12)
          (AKernel u₀ u₁) b) ≤ 11 := by
- let H := commonGCD (D := 7645344) (w := 131071) (L := 84439) (s := 12)
+ let H := commonGCD (D := 7645764) (w := 131071) (L := 84439) (s := 12)
    (AKernel u₀ u₁) b
- obtain ⟨hH,hdiv,hHbox⟩ := commonGCD_data 7645344 84439 12 42 u₀ u₁ b
+ obtain ⟨hH,hdiv,hHbox⟩ := commonGCD_data 7645764 84439 12 42 u₀ u₁ b
  have hHcaps := (mem_flagGlobalCoefficientBox_iff H
-   7645344 131071 84439 12 (by decide)).mp hHbox
+   7645764 131071 84439 12 (by decide)).mp hHbox
  by_contra hnot
- change ¬ (wt residualYSWeights H ≤ 55 ∨
+ change ¬ (wt residualYSWeights H ≤ 54 ∨
    wt residualSWeights H ≤ 11) at hnot
  push_neg at hnot
- have hys : 56 ≤ wt residualYSWeights H := by omega
+ have hys : 55 ≤ wt residualYSWeights H := by omega
  have hslope : 12 ≤ wt residualSWeights H := by omega
- have htotal : 56 ≤ wt residualTotalWeights H :=
+ have htotal : 55 ≤ wt residualTotalWeights H :=
    hys.trans (residual_weight_nested H).2
  have hrel := residualYS_mul_le_contact_add_slope H 131071 (by decide)
- have hcontact : 56 * 131071 - 12 ≤ wt (contactWeights 131071) H := by
+ have hcontact : 55 * 131071 - 12 ≤ wt (contactWeights 131071) H := by
    omega
- have hqbox := quotient_box_of_commonGCD 7645344 84439 12 42
-   (56 * 131071 - 12) 56 12 u₀ u₁ b hcontact htotal hslope
+ have hqbox := quotient_box_of_commonGCD 7645764 84439 12 42
+   (55 * 131071 - 12) 55 12 u₀ u₁ b hcontact htotal hslope
  have hobs := common_divisor_dimension_obstruction
-   (K := IRSProfile.Field) 7645344 131071 84439 12 42
-   305380 84383 0
+   (K := IRSProfile.Field) 7645764 131071 84439 12 42
+   (7645764 - (55 * 131071 - 12)) (84439 - 55) (12 - 12)
    IRSProfile.domain u₀ u₁ H hH hdiv hqbox
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]] at hobs
@@ -656,68 +908,22 @@ theorem profileB_commonGCD_total_le
    {ι : Type*} [Fintype ι] [Nonempty ι]
    (b : Module.Basis ι IRSProfile.Field (BKernel u₀ u₁)) :
    wt residualTotalWeights
-     (commonGCD (D := 14744592) (w := 131071) (L := 1284) (s := 25)
-       (BKernel u₀ u₁) b) ≤ 1281 := by
- let H := commonGCD (D := 14744592) (w := 131071) (L := 1284) (s := 25)
+     (commonGCD (D := 14745402) (w := 131071) (L := 1262) (s := 25)
+       (BKernel u₀ u₁) b) ≤ 1261 := by
+ let H := commonGCD (D := 14745402) (w := 131071) (L := 1262) (s := 25)
    (BKernel u₀ u₁) b
- obtain ⟨hH,hdiv,_hHbox⟩ := commonGCD_data 14744592 1284 25 81 u₀ u₁ b
+ obtain ⟨hH,hdiv,_hHbox⟩ := commonGCD_data 14745402 1262 25 81 u₀ u₁ b
  by_contra hnot
- change ¬ wt residualTotalWeights H ≤ 1281 at hnot
- have htotal : 1282 ≤ wt residualTotalWeights H := by omega
- have hqbox := quotient_box_of_commonGCD 14744592 1284 25 81
-   0 1282 0 u₀ u₁ b (Nat.zero_le _) htotal (Nat.zero_le _)
+ change ¬ wt residualTotalWeights H ≤ 1261 at hnot
+ have htotal : 1262 ≤ wt residualTotalWeights H := by omega
+ have hqbox := quotient_box_of_commonGCD 14745402 1262 25 81
+   0 1262 0 u₀ u₁ b (Nat.zero_le _) htotal (Nat.zero_le _)
  have hobs := common_divisor_dimension_obstruction
-   (K := IRSProfile.Field) 14744592 131071 1284 25 81
-   14744592 2 25 IRSProfile.domain u₀ u₁ H hH hdiv hqbox
+   (K := IRSProfile.Field) 14745402 131071 1262 25 81
+   14745402 (1262 - 1262) 25 IRSProfile.domain u₀ u₁ H hH hdiv hqbox
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]] at hobs
- exact (Nat.not_le_of_gt profileB_total_dimension) hobs
-theorem profileB_commonGCD_corner
-   (u₀ u₁ : IRSProfile.Index → IRSProfile.Field)
-   {ι : Type*} [Fintype ι] [Nonempty ι]
-   (b : Module.Basis ι IRSProfile.Field (BKernel u₀ u₁)) :
-   wt residualTotalWeights
-       (commonGCD (D := 14744592) (w := 131071) (L := 1284) (s := 25)
-         (BKernel u₀ u₁) b) ≤ 1280 ∨
-     wt residualYSWeights
-       (commonGCD (D := 14744592) (w := 131071) (L := 1284) (s := 25)
-         (BKernel u₀ u₁) b) ≤ 46 := by
- let H := commonGCD (D := 14744592) (w := 131071) (L := 1284) (s := 25)
-   (BKernel u₀ u₁) b
- obtain ⟨hH,hdiv,hHbox⟩ := commonGCD_data 14744592 1284 25 81 u₀ u₁ b
- have hHcaps := (mem_flagGlobalCoefficientBox_iff H
-   14744592 131071 1284 25 (by decide)).mp hHbox
- by_contra hnot
- change ¬ (wt residualTotalWeights H ≤ 1280 ∨
-   wt residualYSWeights H ≤ 46) at hnot
- push_neg at hnot
- have htotal : 1281 ≤ wt residualTotalWeights H := by omega
- have hys : 47 ≤ wt residualYSWeights H := by omega
- let r := wt residualSWeights H
- have hr : r ≤ 25 := hHcaps.2.1
- have hrel := residualYS_mul_le_contact_add_slope H 131071 (by decide)
- have hcontact : 47 * 131071 - r ≤ wt (contactWeights 131071) H := by
-   dsimp [r]
-   omega
- have hqbox0 := quotient_box_of_commonGCD 14744592 1284 25 81
-   (47 * 131071 - r) 1281 r u₀ u₁ b hcontact htotal (le_refl r)
- have hqbox : ∀ v : BKernel u₀ u₁,
-     quotientPolynomial
-       (kernelReconstructLinear (K := IRSProfile.Field)
-         14744592 131071 1284 25 81 IRSProfile.domain u₀ u₁)
-       H hdiv v ∈ globalCoefficientBox IRSProfile.Field
-         8584280 131071 3 25 := by
-   intro v
-   apply globalCoefficientBox_mono
-     (D := 14744592 - (47 * 131071 - r)) (L := 1284 - 1281) (s := 25 - r)
-     (by omega) (by omega) (by omega)
-   exact hqbox0 v
- have hobs := common_divisor_dimension_obstruction
-   (K := IRSProfile.Field) 14744592 131071 1284 25 81
-   8584280 3 25 IRSProfile.domain u₀ u₁ H hH hdiv hqbox
- rw [show Fintype.card IRSProfile.Index = 262144 by
-   norm_num [IRSProfile.Index]] at hobs
- exact (Nat.not_le_of_gt profileB_uniform_ys_dimension) hobs
+ exact (Nat.not_le_of_gt profileB_dimension) hobs
 end Caps6734
 end
-end ProximityPrize.SubmissionLower.ContactKernelCommonGCDResearch
+end ProximityPrize.SubmissionLower.RCN180

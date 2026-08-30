@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R4
-namespace ProximityPrize.SubmissionLower.ContactDifferentialRing
-open DifferentialTaylorCoefficients
+namespace ProximityPrize.SubmissionLower.RCN077
+open RCN347
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
 section StableIdeals
@@ -183,4 +183,4 @@ theorem contactRing_inverse (F:Poly4 K):
    Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span (by simp))
  simpa only [inverseRelation,map_sub,map_mul,map_one,sub_eq_zero] using hrel
 end PolynomialVectorField
-end ProximityPrize.SubmissionLower.ContactDifferentialRing
+end ProximityPrize.SubmissionLower.RCN077

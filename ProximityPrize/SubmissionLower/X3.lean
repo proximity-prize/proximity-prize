@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F3
-namespace ProximityPrize.SubmissionLower.TrivariateShearResearch
+namespace ProximityPrize.SubmissionLower.RCN372
 open scoped Classical BigOperators
 noncomputable section
 variable {K:Type} [Field K]
@@ -247,4 +247,4 @@ theorem shear_degreeOf_two_le (a:K) (F:Poly3 K):
  exact h'.trans (by simpa [Nat.add_comm] using two_weight_degree_le F)
 end WeightedDegree
 end
-end ProximityPrize.SubmissionLower.TrivariateShearResearch
+end ProximityPrize.SubmissionLower.RCN372

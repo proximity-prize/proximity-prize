@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.C1
 import ProximityPrize.SubmissionLower.C6
-namespace ProximityPrize.SubmissionLower.ContactFlagTranslation6641Research
-open ContactFlagRankKernel6641Research ContactFlagInterpolation6641Research
+namespace ProximityPrize.SubmissionLower.RCN122
+open RCN119 RCN100
 open ProximityPrize.Benchmark
 open scoped BigOperators
 noncomputable section
@@ -184,7 +184,7 @@ theorem X_pow_dvd_taylor_specialization
      (homogenizedTranslation K x u₀ u₁ Q).coeff r):
    (Polynomial.X:Polynomial K)^m∣
      Polynomial.taylor x (specialization K P γ Q):=by
- obtain ⟨B,hB⟩:=ContactLocalDivisibility.X_sq_dvd_contactResidual P x
+ obtain ⟨B,hB⟩:=RCN185.X_sq_dvd_contactResidual P x
  have hP:Polynomial.taylor x P=
      Polynomial.C (u₀+γ*u₁)+Polynomial.X*
        (Polynomial.taylor x P.derivative+Polynomial.X*B):=by
@@ -213,7 +213,7 @@ theorem specialization_eq_zero_of_contact_and_degree
      (nodes i) (u₀ i) (u₁ i) γ m (hvalues i hi) (hcontact i hi)
    have hshifted:(Polynomial.X-Polynomial.C (nodes i))^m∣
        specialization K P γ Q:=
-     (ContactLocalDivisibility.shifted_power_dvd_iff_taylor_coeff_zero
+     (RCN185.shifted_power_dvd_iff_taylor_coeff_zero
        (specialization K P γ Q) (nodes i) m).mpr (Polynomial.X_pow_dvd_iff.mp hlocal)
    exact (Polynomial.le_rootMultiplicity_iff hnonzero).mpr hshifted
  have hh:=BCHKSSubstitutionVanish.mul_card_le_natDegree_of_rootMultiplicity
@@ -280,4 +280,4 @@ theorem specialization_natDegree_lt
    (fun d => specialization K P γ (MvPolynomial.monomial d (MvPolynomial.coeff d Q))) hterms
  exact lt_of_le_of_lt hh (by omega)
 end
-end ProximityPrize.SubmissionLower.ContactFlagTranslation6641Research
+end ProximityPrize.SubmissionLower.RCN122

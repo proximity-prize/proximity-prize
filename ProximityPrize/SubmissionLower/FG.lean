@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.GZ
-namespace ProximityPrize.SubmissionLower.ContactOriginalFactorLocalDVR6732Research
+namespace ProximityPrize.SubmissionLower.RCN219
 open scoped Classical TensorProduct
-open ContactGenericInitialPoint ContactGenericSurface
-open ContactCurveComponents ContactRegularComponentCover
+open RCN135 RCN136
+open RCN072 RCN264
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 3000000
@@ -126,4 +126,4 @@ private theorem derivation_sq_mem_maximal
  · intro x y hx hy
    simpa only [map_add] using (IsLocalRing.maximalIdeal A).add_mem hx hy
 end
-end ProximityPrize.SubmissionLower.ContactOriginalFactorLocalDVR6732Research
+end ProximityPrize.SubmissionLower.RCN219

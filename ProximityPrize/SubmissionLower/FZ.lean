@@ -1,18 +1,18 @@
 import ProximityPrize.SubmissionLower.N2
-namespace ProximityPrize.SubmissionLower.ContactProperStageIndexedFixedFactor6733Research
+namespace ProximityPrize.SubmissionLower.RCN250
 open scoped Classical BigOperators
-open ContactGenericInitialPoint ContactFirstTailCertificate6731Research
-open ContactProperDelayedTailCertificate6732Research
-open ContactProperFlagFiberData6733Research
-open ContactProperStageIndexedFamily6733Research
-open ContactProperStageIndexedGeometry6733Research
-open ContactProperStageIndexedResultant6733Research
-open ContactFlagPlaneFiberPrimary6733Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactFlagPlaneIndexedFiberCertificate6733Research
-open ContactFlagPlaneIndexedGrouped6733Research
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ContactFlagBezout6543Research
+open RCN135 RCN086
+open RCN244
+open RCN245
+open RCN249
+open RCN251
+open RCN254
+open RCN102
+open RCN106
+open RCN107
+open RCN109
+open RCN120
+open RCN095
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -22,24 +22,26 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
+variable {errorCap : ℕ}
+variable {stageSupport : RCN275.ResidualSupportParameters}
 variable {A:Type} [Fintype A]
 def StageFamilySurfaceModNonzero
-   (S:Stage K I Gamma x p flag) (F:StageIndexedFlagFamily S A)
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (F:StageIndexedFlagFamily S A)
    (W:StageIndexedFactor S A F):Prop:=
  (indexedFiberSurface W.q W.irreducible
    (stageSurfacePlane S F.lam F.mu F.nu F.order)).map
      (IsLocalRing.residue (FiberCoefficient W.q W.irreducible))≠0
 @[simp] theorem stageFamilySurfaceModNonzero_eq
-   (S:Stage K I Gamma x p flag) (F:StageIndexedFlagFamily S A)
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (F:StageIndexedFlagFamily S A)
    (W:StageIndexedFactor S A F):
    StageFamilySurfaceModNonzero S F W ↔
      (indexedFiberSurface W.q W.irreducible
        (stageSurfacePlane S F.lam F.mu F.nu F.order)).map
          (IsLocalRing.residue (FiberCoefficient W.q W.irreducible))≠0:=Iff.rfl
 theorem properStage_indexedFixedFactor_groupedPowerDvd_of_surfaceMod
-   (S:Stage K I Gamma x p flag)
+   (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w+1))
+     (RCN326.w+1))
    (F:StageIndexedFlagFamily S A) (W:StageIndexedFactor S A F)
    (hPbar:StageFamilySurfaceModNonzero S F W):
    W.q^stageFamilyGroupedExponent S A hfirstProper F W.q∣
@@ -60,4 +62,4 @@ theorem properStage_indexedFixedFactor_groupedPowerDvd_of_surfaceMod
      (stageFamily_resultant_ne S hfirstProper F W) hPbar
  simpa only [stageFamilyGroupedExponent_eq,stageFamilyResultant] using hpower
 end
-end ProximityPrize.SubmissionLower.ContactProperStageIndexedFixedFactor6733Research
+end ProximityPrize.SubmissionLower.RCN250

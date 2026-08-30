@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.FJ
-namespace ProximityPrize.SubmissionLower.ContactLocalizedPlaneRelation6733Research
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
-open ArbitraryRationalProjectionResearch
-open ContactPlaneRelationCoefficientFiber6733Research
+namespace ProximityPrize.SubmissionLower.RCN191
+open RCN011 RCN021
+open RCN022
+open RCN226
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -191,4 +191,4 @@ theorem localizedRelationBar_ne_bot
  rw [hbot,Ideal.mem_bot] at hbar
  exact hproper (Ideal.Quotient.eq_zero_iff_mem.mp hbar)
 end
-end ProximityPrize.SubmissionLower.ContactLocalizedPlaneRelation6733Research
+end ProximityPrize.SubmissionLower.RCN191

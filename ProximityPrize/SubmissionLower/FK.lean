@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.D7
-namespace ProximityPrize.SubmissionLower.ContactPolynomialAtPrimeOrder6732Research
+namespace ProximityPrize.SubmissionLower.RCN227
 open UniqueFactorizationMonoid
 noncomputable section
 set_option autoImplicit false
@@ -86,4 +86,4 @@ theorem pow_sum_dvd_of_sum_le_localized_ord
  rw [hem]
  exact_mod_cast hcount
 end
-end ProximityPrize.SubmissionLower.ContactPolynomialAtPrimeOrder6732Research
+end ProximityPrize.SubmissionLower.RCN227

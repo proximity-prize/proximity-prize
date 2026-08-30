@@ -1,46 +1,46 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AF
 import ProximityPrize.SubmissionLower.FR
-namespace ProximityPrize.SubmissionLower.ContactSharpTaylorYZFactorProviderResearch
+namespace ProximityPrize.SubmissionLower.RCN288
 open scoped Classical BigOperators
 open Polynomial KaehlerDifferential
-open ActualCurveCoordinateField ActualCurveRationalProjection
-open ActualCurveJointProjectionBounds ActualCoordinateDegreeSum
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactRegularComponentCover
-open ContactProperCutSeedCount ContactComponentPencils ContactIncidence
-open ContactFlagBezout6543Research
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualCurveIterationResearch
-open ContactIdentityResidualCurveIterationResearch.CurveResidualStage
-open ContactIdentityResidualCurveTerminalIncidenceResearch
-open ContactIdentityResidualComponentFamily6600Research
-open ContactIdentityResidualComponentFamilyYZSupportResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactIdentityResidualIncidenceResearch
-open ContactIdentityResidualZeroBudgetTransportResearch
-open ContactIdentityResidualFactorProvider6600Research
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactResidualSupportParametersResearch
-open ContactRobustFixedMeet6656Research
-open ContactSharpTaylorFixedMeet6656Research
-open ContactProfileYZFactorLedgerResearch
-open ContactTerminalAdaptiveProjectionFixedMeetActive6656Research
-open ContactNearPencilStratifiedIncidenceResearch
-open ContactNearPencil6600ArithmeticResearch
-open ContactResidualSparseComponentAdapterResearch
-open ContactStratifiedResidualComponentAdapter6600Research
-open ContactAdaptiveUnitPoleFamilyResearch
-open ContactRegularComponentYZPositivity6630Research
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedProjectionActive6630Research
-open ContactAdaptiveNestedUnitFamilyActive6630Research
-open ContactAdaptiveNestedYZFamily6630Research
-open ContactWeakSeparableSeparatorResearch
-open ContactScalarCoordinateSeparator6630Research
-open ContactResidualStageDerivative6600Research
-open ContactTerminalAdaptiveProjection6656Research
+open RCN002 RCN005
+open RCN003 RCN001
+open RCN136 RCN231 RCN319
+open RCN238 RCN264
+open RCN243 RCN065 RCN173
+open RCN095
+open RCN159
+open RCN151
+open RCN151.CurveResidualStage
+open RCN152
+open RCN148
+open RCN150
+open RCN156
+open RCN158
+open RCN165
+open RCN154
+open RCN237
+open RCN234
+open RCN275
+open RCN276
+open RCN287
+open RCN240
+open RCN316
+open RCN216
+open RCN213
+open RCN272
+open RCN305
+open RCN046
+open RCN265
+open RCN037
+open RCN038
+open RCN040
+open RCN041
+open RCN341
+open RCN277
+open RCN274
+open RCN315
 noncomputable section
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 50000
@@ -416,6 +416,73 @@ theorem terminalAdaptiveProjectionAtSharpCutYZ_of_active_yz_gates
    ((support_subset_flagSupport_iff
      (sharpResidualAgreementFlag support D.degree) T).2 hTflag)
  exact ⟨base,⟨P⟩⟩
+theorem terminalAdaptiveProjectionFamiliesSharpYZ_of_active_yz_caps
+   {e w:ℕ} {flag:FlagDegree}
+   (support:ResidualSupportParameters) (hsy:support.s < support.ys)
+   (S:ResidualStage phi Gamma x pchar e flag w support)
+   (surfaceY surfaceS surfaceZ cutY cutS:ℕ)
+   (hflagY:flag.yz+flag.all ≤ surfaceY)
+   (hflagS:flag.all ≤ surfaceS)
+   (hflagZ:flag.zOnly+flag.yz+flag.all ≤ surfaceZ)
+   (hcutY:1+w*(2*support.ys-2) ≤ cutY)
+   (hcutS:(2*support.s-1)*w ≤ cutS)
+   (hsurfaceChar:surfaceY < pchar∧surfaceS < pchar∧
+     surfaceZ < pchar)
+   (hmixedZ:cutY*surfaceS+surfaceY*cutS < pchar):
+   TerminalAdaptiveProjectionFamiliesSharpYZ support S:=by
+ intro D i _hi hproper
+ let T:=agreementPolynomial phi D.stage.F D.degree
+   (x i) (D.stage.u0 i) (D.stage.u1 i)
+ have hGflag:PolynomialInFlag flag D.stage.G:=D.stage.flag_support
+ have hTflag:PolynomialInFlag
+     (sharpResidualAgreementFlag support D.degree) T:=
+   surfaceMap_agreement_in_sharp_flag hsy (phi:=phi)
+     ⟨D.stage.surface_s_weight,D.stage.surface_ys_weight,
+       D.stage.surface_total_weight⟩
+     D.degree (fun j:ℕ↦(j.factorial:K)⁻¹)
+     (x i) (D.stage.u0 i) (D.stage.u1 i)
+ obtain ⟨hGY,hGS,hGZ⟩:=
+   RCN314.degree_bounds_of_polynomialInFlag
+     hGflag
+ obtain ⟨hTY,hTS,_hTZ⟩:=
+   RCN314.degree_bounds_of_polynomialInFlag
+     hTflag
+ have hD:D.degree ≤ w:=D.degree_le
+ have hGY':D.stage.G.degreeOf 0 ≤ surfaceY:=hGY.trans hflagY
+ have hGS':D.stage.G.degreeOf 1 ≤ surfaceS:=hGS.trans hflagS
+ have hGZ':D.stage.G.degreeOf 2 ≤ surfaceZ:=hGZ.trans hflagZ
+ have hTY':T.degreeOf 0 ≤ cutY:=by
+   calc
+     T.degreeOf 0 ≤
+         (sharpResidualAgreementFlag support D.degree).yz+
+           (sharpResidualAgreementFlag support D.degree).all:=hTY
+     _=1+D.degree*(2*support.ys-2):=
+       sharpResidualAgreementFlag_ys support hsy D.degree
+     _ ≤ 1+w*(2*support.ys-2):=
+       Nat.add_le_add_left
+         (Nat.mul_le_mul_right (2*support.ys-2) hD) 1
+     _ ≤ cutY:=hcutY
+ have hTS':T.degreeOf 1 ≤ cutS:=by
+   calc
+     T.degreeOf 1 ≤ (sharpResidualAgreementFlag support D.degree).all:=hTS
+     _=(2*support.s-1)*D.degree:=by
+       simp only [sharpResidualAgreementFlag,sharpAgreementDirection]
+     _ ≤ (2*support.s-1)*w:=
+       Nat.mul_le_mul_left (2*support.s-1) hD
+     _ ≤ cutS:=hcutS
+ have hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j < pchar:=by
+   intro j
+   fin_cases j
+   · exact hGY'.trans_lt hsurfaceChar.1
+   · exact hGS'.trans_lt hsurfaceChar.2.1
+   · exact hGZ'.trans_lt hsurfaceChar.2.2
+ have hmixedZ':coordinateMixedDegree Omega D.stage.G T 2 < pchar:=by
+   rw [coordinateMixedDegree_two]
+   exact (Nat.add_le_add
+     (Nat.mul_le_mul hTY' hGS')
+     (Nat.mul_le_mul hGY' hTS')).trans_lt hmixedZ
+ exact terminalAdaptiveProjectionAtSharpCutYZ_of_active_yz_gates
+   S D i hproper hGdegree hmixedZ' hGflag hTflag
 theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_sharp_z_yz
    (hphi:Function.Injective phi)
    (p:Profile) (support:ResidualSupportParameters)
@@ -564,5 +631,37 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_sharp_z_yz
  calc
    _ ≤ _:=hbound
    _=_:=by ring
+theorem recursive_scaled_factorSharpYZ_of_adaptive_projection_families
+   (hphi:Function.Injective phi)
+   (p:Profile) (support:ResidualSupportParameters)
+   (hsy:support.s < support.ys)
+   {flag:FlagDegree}
+   (S:ResidualStage phi Gamma x pchar p.errors flag p.w support)
+   (hnodes:S.nodes.card=p.n)
+   (hagreement:∀ gamma∈Gamma,
+     p.agreements ≤ (S.agreementFiber gamma).card)
+   (hwa:p.w < p.agreements) (han:p.agreements ≤ p.n)
+   (hdegreeGlobal:∀ k ≤ p.w,
+     (p.n-k)*p.gap*(p.w-k) ≤
+       p.degreeIncidence*(p.agreements-k))
+   (hunitGlobal:∀ k ≤ p.w,
+     (p.n-k)*p.gap ≤ p.unitIncidence*(p.agreements-k))
+   (hprojection:TerminalAdaptiveProjectionFamiliesSharpYZ support S):
+   Gamma.card*p.gap^2 ≤
+     factorRegularLedgerYZForDirection p
+       (sharpAgreementDirection support) flag:=by
+ apply recursive_scaled_factorYZ hphi p support
+   (sharpAgreementDirection support) S hwa hagreement
+ · intro D i hi hproper
+   obtain ⟨base,⟨P⟩⟩:=hprojection D i hi hproper
+   exact terminal_outer_fiber_bound_of_prime_flag_budget_profile_sharp_z_yz
+     hphi p support hsy S hnodes hagreement hwa han
+     hdegreeGlobal hunitGlobal D i hi P.family.toPrimeFlagBudgetFamily
+     (fun C↦P.one_le_zCost_add_yzCost phi D.stage.F rfl
+       D.stage.G_dvd_surface C)
+ · intro k hk
+   simpa only [hnodes] using hdegreeGlobal k hk
+ · intro k hk
+   simpa only [hnodes] using hunitGlobal k hk
 end
-end ProximityPrize.SubmissionLower.ContactSharpTaylorYZFactorProviderResearch
+end ProximityPrize.SubmissionLower.RCN288

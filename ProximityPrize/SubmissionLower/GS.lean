@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactTrdegTower6731Research
+namespace ProximityPrize.SubmissionLower.RCN321
 noncomputable section
 variable {k B E:Type} [Field k] [Field B] [Field E]
 variable [Algebra k B] [Algebra B E] [Algebra k E] [IsScalarTower k B E]
@@ -51,4 +51,4 @@ theorem coefficient_trdeg_le_one_of_rational_extension
  exact trdeg_le_one_of_tower hE ⟨xE,hxE⟩
 end RationalExtension
 end
-end ProximityPrize.SubmissionLower.ContactTrdegTower6731Research
+end ProximityPrize.SubmissionLower.RCN321

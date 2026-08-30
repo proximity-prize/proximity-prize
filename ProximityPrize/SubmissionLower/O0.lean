@@ -1,17 +1,17 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z4
 import ProximityPrize.SubmissionLower.D8
-namespace ProximityPrize.SubmissionLower.ContactRegularFactorResidualStage6600Research
+namespace ProximityPrize.SubmissionLower.RCN268
 open scoped Classical
-open ContactParameters6600Research
-open ContactSelectedSeedDecomposition ContactInterpolation ContactTranslation
-open ContactGenericInitialPoint ContactPrimeSeedIncidence ContactProperCutSeedCount
-open ContactFactorCaps
-open ContactOriginalRegularSeedCount ContactOriginalRegularResidualStage6600Research
-open ContactRegularFactorFlag6600Research ContactGlobalSelectedFamilies6600Research
-open ContactIdentityResidualIterationResearch ContactFlagBezout6543Research
-open ContactResidualSupportParametersResearch
-open ContactNearPencil6600FactorLedgerResearch
+open RCN223
+open RCN286 RCN174 RCN319
+open RCN135 RCN238 RCN243
+open RCN081
+open RCN222 RCN221
+open RCN266 RCN140
+open RCN159 RCN095
+open RCN275
+open RCN214
 noncomputable section
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
@@ -28,7 +28,7 @@ def regularGeometricResidualStageOfSupport
    (hinj:Set.InjOn x nodes)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ degree)
    (hnoPencil:NoLargeSelectedPencil selected Gamma degree errorCap)
-   (R:ContactRegularFactorFlag6600Research.RegularIndex Q)
+   (R:RCN266.RegularIndex Q)
    (hRirred:Irreducible R.1)
    (hRpos:0 < R.1.degreeOf (2:Fin 4))
    (hRsmall:R.1.degreeOf (2:Fin 4) < pchar)
@@ -56,7 +56,7 @@ def regularGeometricResidualStage
    (hinj:Set.InjOn x nodes)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
    (hnoPencil:NoLargeSelectedPencil selected Gamma w errors)
-   (R:ContactRegularFactorFlag6600Research.RegularIndex Q)
+   (R:RCN266.RegularIndex Q)
    (g:GeometricFactor K R.1):
    letI:CharP (GenericField K) prime:=genericField_charP K prime
    ResidualStage (polynomialEmbedding K)
@@ -77,7 +77,7 @@ theorem regular_factor_seed_bound_of_geometric_counts
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    (hbox:Q∈globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
    (selected:K → Polynomial K) (Gamma:Finset K)
-   (R:ContactRegularFactorFlag6600Research.RegularIndex Q)
+   (R:RCN266.RegularIndex Q)
    (hcount:∀ g:GeometricFactor K R.1,
      (geometricSeeds K R.1 selected (regularSeeds Q selected Gamma R) g).card*
          gap^2 ≤ factorRegularLedger (geometricFlag K g)):
@@ -93,4 +93,4 @@ theorem regular_factor_seed_bound_of_geometric_counts
    original_regular_seed_bound_of_geometric_factor_counts K R.1 hRirred
      selected (regularSeeds Q selected Gamma R) hsolutions hcount
 end
-end ProximityPrize.SubmissionLower.ContactRegularFactorResidualStage6600Research
+end ProximityPrize.SubmissionLower.RCN268

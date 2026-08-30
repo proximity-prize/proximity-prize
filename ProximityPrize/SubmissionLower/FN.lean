@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.S
 import ProximityPrize.SubmissionLower.C9
-namespace ProximityPrize.SubmissionLower.ContactPolynomialSurfaceNaturalResidue6733Research
-open ContactPlaneLocalOrderPrimary6732Research
-open ContactMaximalRelationMonicLift6733Research
+namespace ProximityPrize.SubmissionLower.RCN232
+open RCN225
+open RCN197
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -195,4 +195,4 @@ theorem polynomialSurfaceResidue_finrank_eq_relation
      (polynomialSurfaceResidueEquiv_compatible
        surface relation hcontract hsurface)).symm
 end
-end ProximityPrize.SubmissionLower.ContactPolynomialSurfaceNaturalResidue6733Research
+end ProximityPrize.SubmissionLower.RCN232

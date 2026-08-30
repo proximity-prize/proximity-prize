@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactCurveComponents
+namespace ProximityPrize.SubmissionLower.RCN072
 noncomputable section
 variable (K:Type) [Field K]
 abbrev Poly3:=MvPolynomial (Fin 3) K
@@ -134,4 +134,4 @@ theorem component_ne_pointKernel
  have hbad:(3:ℕ∞) ≤ 2:=(pointKernel_height_ge_three K v).trans hle
  norm_num at hbad
 end
-end ProximityPrize.SubmissionLower.ContactCurveComponents
+end ProximityPrize.SubmissionLower.RCN072

@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F
 import ProximityPrize.SubmissionLower.BQ
-namespace ProximityPrize.SubmissionLower.ContactSeedlessPrimeIncidenceResearch
+namespace ProximityPrize.SubmissionLower.RCN282
 open scoped Classical BigOperators
-open ActualCurveCoordinateField ActualCurveZeroCount ActualCurveProjectionBounds
-open ActualCoordinateDegreeSum ActualPlanePositiveOrder
-open ContactGenericSurface ContactPolynomialSolutions ContactPolynomialRecovery
-open ContactComponentPencils ContactPrimeSeedIncidence ContactIncidence
-open ContactRegularComponentCover ContactProperCutSeedCount ContactTranslation
-open ContactIdentityResidualSurfaceResearch
+open RCN002 RCN007 RCN004
+open RCN001 RCN013
+open RCN136 RCN231 RCN229
+open RCN065 RCN238 RCN173
+open RCN264 RCN243 RCN319
+open RCN163
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 30000
@@ -91,7 +91,7 @@ theorem seedless_agreement_fiber_card_le
    obtain ⟨hGamma,hagree⟩:=Finset.mem_filter.mp hS
    exact (seedless_agreement_zero_iff phi F S p w hchar
      (hdegree S hGamma) (hsolution S hGamma) (hregular S hGamma) x u).mpr hagree
- have hcount:=ActualCurveZeroCount.finite_zero_points_le_box Omega P hproj
+ have hcount:=RCN007.finite_zero_points_le_box Omega P hproj
    hnonpoint (agreementPolynomial phi F w x u 0) hproper cap hcap
    points hpointsP hpointsF
  have hcard:points.card=fiber.card:=
@@ -172,4 +172,4 @@ theorem seedless_prime_incidence
    (identityNodes_subset phi P F nodes x u (fun _ => 0) w) hI hwa han
    hagreement hfiber
 end
-end ProximityPrize.SubmissionLower.ContactSeedlessPrimeIncidenceResearch
+end ProximityPrize.SubmissionLower.RCN282

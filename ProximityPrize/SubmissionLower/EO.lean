@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DT
-namespace ProximityPrize.SubmissionLower.ContactGlobalShearPositivityResearch
-open ActualCurveCoordinateField ActualCurveZeroCount
-open ContactAdaptiveShearConditional
-open CharacteristicFreeInseparableDichotomyResearch
+namespace ProximityPrize.SubmissionLower.RCN142
+open RCN002 RCN007
+open RCN045
+open RCN023
 noncomputable section
 variable (K:Type) [Field K] [IsAlgClosed K]
 variable (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
@@ -50,4 +50,4 @@ theorem globalShearCost_pos_of_seedCoordinate_isAlgebraic
          (cap 2+cap 1)*actualCoordinateDegree K P 2:=by omega
  · exact (hj hZ).elim
 end
-end ProximityPrize.SubmissionLower.ContactGlobalShearPositivityResearch
+end ProximityPrize.SubmissionLower.RCN142

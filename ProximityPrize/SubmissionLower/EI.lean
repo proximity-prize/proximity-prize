@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BG
 import ProximityPrize.SubmissionLower.E1
-namespace ProximityPrize.SubmissionLower.ContactGCDCumulativeLedgerResearch
+namespace ProximityPrize.SubmissionLower.RCN131
 open scoped Classical BigOperators
-open ContactFlagBezout6543Research ContactGCDCumulativeFlagsResearch
-open ContactProfileYZFactorLedgerResearch ContactRobustFixedMeet6656Research
-open ContactRegularFactorFlag6600Research ContactOriginalRegularSeedCount
-open ContactResidualSupportParametersResearch ContactInterpolation ContactTranslation
+open RCN095 RCN130
+open RCN240 RCN276
+open RCN266 RCN222
+open RCN275 RCN174 RCN319
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 30000
@@ -136,4 +136,4 @@ theorem geometric_seed_counts_cumulative_le
      sum_ledger_cumulative_le p direction (geometricCumulativeFlag K)
        (originalCumulativeFlag F) hc.1 hc.2.1 hc.2.2
 end
-end ProximityPrize.SubmissionLower.ContactGCDCumulativeLedgerResearch
+end ProximityPrize.SubmissionLower.RCN131

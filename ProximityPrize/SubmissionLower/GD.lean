@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AB
 import ProximityPrize.SubmissionLower.GF
-namespace ProximityPrize.SubmissionLower.ContactStackedGCDCover6656Research
+namespace ProximityPrize.SubmissionLower.RCN299
 open ProximityPrize.Benchmark
-open ContactInterpolation ContactTranslation
-open ContactRecursiveGCDResearch
-open ContactStackedParameters6656Research
-open ContactStackedInterpolation6656Research
+open RCN174 RCN319
+open RCN259
+open RCN301
+open RCN300
 noncomputable section
 abbrev GlobalPoly:=MvPolynomial (Fin 4) IRSProfile.Field
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
@@ -57,4 +57,4 @@ theorem exists_stacked_interpolants_with_recursive_cover
  obtain ⟨hA,hB,hC⟩:=huniversal gamma P support hP hcard hvalues
  exact recursive_branch_of_three_vanishings P gamma QA QB QC hA hB hC
 end
-end ProximityPrize.SubmissionLower.ContactStackedGCDCover6656Research
+end ProximityPrize.SubmissionLower.RCN299

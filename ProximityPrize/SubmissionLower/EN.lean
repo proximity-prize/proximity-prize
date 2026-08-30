@@ -2,18 +2,18 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.U
 import ProximityPrize.SubmissionLower.Z4
 import ProximityPrize.SubmissionLower.AK
-namespace ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6656Research
+namespace ProximityPrize.SubmissionLower.RCN141
 open scoped Classical BigOperators
-open ContactInterpolation ContactTranslation ContactSelectedSeedDecomposition
-open ContactImplicitContactLift ContactImplicitPairBudgets
-open ContactSingularAuxiliary
-open ContactPrimeSeedIncidence
-open ContactRegularFactorFlag6600Research
-open ContactGlobalSelectedFamilies6600Research
-open ContactSingularBranch6600Research
-open ContactSingularLedger6600Research
-open ContactTightSingularLedgerResearch
-open ContactRobustFixedMeet6656Research
+open RCN174 RCN319 RCN286
+open RCN167 RCN169
+open RCN290
+open RCN238
+open RCN266
+open RCN140
+open RCN291
+open RCN294
+open RCN318
+open RCN276
 noncomputable section
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 35000
@@ -97,7 +97,7 @@ theorem meet_card_le_regular_sum_add_singular
        (singularSeeds Q selected Gamma).card:=
      Nat.add_le_add_right Finset.card_biUnion_le _
 def meetImplicitCost (Q:MvPolynomial (Fin 4) K)
-   (q:ImplicitIndex Q):ContactParameters6600Research.DegreeVector:=
+   (q:ImplicitIndex Q):RCN223.DegreeVector:=
  ⟨pairYCost q.1,pairRCost q.1,pairZCost q.1⟩
 theorem meet_singularSeeds_scaled_bound_of_implicit_pairs
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime6656]
@@ -239,4 +239,4 @@ theorem meet_global_count_lt_fixed_cost_of_local_counts
    norm_num [meetProfile,Profile.gap]
  exact Nat.lt_of_mul_lt_mul_right (hscaled.trans_lt hstrict)
 end
-end ProximityPrize.SubmissionLower.ContactGlobalSelectedFamilies6656Research
+end ProximityPrize.SubmissionLower.RCN141

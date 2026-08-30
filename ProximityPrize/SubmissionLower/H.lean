@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
+namespace ProximityPrize.SubmissionLower.RCN213
 open scoped BigOperators
 theorem identity_degree_weight_cross_le
    (n a w k:ℕ) (hk:k ≤ w) (hwa:w < a) (han:a ≤ n):
@@ -168,4 +168,4 @@ theorem strict_budget:stratifiedTotalNumerator < alignmentBudget*gapSquared:=by
 theorem budget_slack:alignmentBudget-ledgerCeiling=14474323699516794:=by
  rw [ledger_ceiling_exact]
  norm_num [alignmentBudget]
-end ProximityPrize.SubmissionLower.ContactNearPencil6600ArithmeticResearch
+end ProximityPrize.SubmissionLower.RCN213

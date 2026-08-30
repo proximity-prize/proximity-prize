@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W2
-namespace ProximityPrize.SubmissionLower.PlaneResultantPointCount
+namespace ProximityPrize.SubmissionLower.RCN363
 open scoped BigOperators
 noncomputable section
 variable {K:Type} [Field K] [DecidableEq K]
@@ -121,7 +121,7 @@ theorem sum_common_fiber_cards_le_resultant_natDegree
      intro alpha halpha
      exact common_fiber_card_le_sylvester_corank P Q m n alpha (fibers alpha)
        hP hQ (hnonzero alpha halpha) (hroots alpha halpha)
-   _ ≤ _:=MatrixRootMultiplicity.sum_sylvester_coranks_le_resultant_natDegree
+   _ ≤ _:=RCN355.sum_sylvester_coranks_le_resultant_natDegree
      P Q m n points hresultant
 theorem sum_common_fiber_cards_le_bidegree_bound
    (P Q:Polynomial (Polynomial K)) (m n:ℕ)
@@ -178,4 +178,4 @@ theorem common_points_card_le_bidegree_bound
    obtain ⟨hpoint,hfirst⟩:=Finset.mem_filter.mp hpoint
    simpa only [hfirst] using hroots point hpoint
 end
-end ProximityPrize.SubmissionLower.PlaneResultantPointCount
+end ProximityPrize.SubmissionLower.RCN363

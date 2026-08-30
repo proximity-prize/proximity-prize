@@ -1,10 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G9
 import ProximityPrize.SubmissionLower.M
-namespace ProximityPrize.SubmissionLower.ActualCoordinateDegreeSum
-open ActualCurveCoordinateField ActualCurveRationalProjection
- TrivariateRationalCollection ActualCurveZeroCount ActualPlanePositiveOrder
- ActualCurveProjectionBounds
+namespace ProximityPrize.SubmissionLower.RCN001
+open RCN002 RCN005
+ RCN371 RCN007 RCN013
+ RCN004
 noncomputable section
 variable (K:Type) [Field K]
 section Family
@@ -86,4 +86,4 @@ theorem projectionsFiniteSeparable_of_original_gates
  all_transcendental_coordinates_finite_separable K P p G H
    hG hGmem hHmem hproper hdegree hmixed
 end
-end ProximityPrize.SubmissionLower.ActualCoordinateDegreeSum
+end ProximityPrize.SubmissionLower.RCN001

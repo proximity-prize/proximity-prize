@@ -1,16 +1,16 @@
 import ProximityPrize.SubmissionLower.FT
 import ProximityPrize.SubmissionLower.GL
-namespace ProximityPrize.SubmissionLower.ContactProperMultiplicitySymbolic6732Research
-open ContactProperDelayedTailCertificate6732Research
-open ContactGenericInitialPoint
-open ContactFlagBezout6543Research
-open ContactDelayedTailMultiplicityProvider6732Research
-open ContactOriginalFactorLocalDVR6731Research
-open ContactLocalHypersurfaceBridge6731Research
-open ContactSymbolicPowerTransport6732Research
-open ContactTaylorNumerators
-open ContactFirstTailCertificate6731Research
-open ContactNumeratorFactorScaling6731Research
+namespace ProximityPrize.SubmissionLower.RCN248
+open RCN244
+open RCN135
+open RCN095
+open RCN074
+open RCN218
+open RCN186
+open RCN310
+open RCN313
+open RCN086
+open RCN217
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2500000
@@ -20,23 +20,25 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
+variable {errorCap : ℕ}
+variable {stageSupport : RCN275.ResidualSupportParameters}
 theorem exists_original_multiplier_for_localMultiplicity
-   (S:Stage K I Gamma x p flag)
+   (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w+1))
+     (RCN326.w+1))
    (C:FirstTailComponent S):
    let d:=originalData S C
    let mu:=localMultiplicity S (canonicalLocalDVRFamily S hfirstProper) C
    ∃ s:MvPolynomial (Fin 4) K,
      s∉componentPrime S C∧
      s*numerator K d.factor
-       (ContactTwoTailParameters6733Research.w+1)∈
+       (RCN326.w+1)∈
          factorIdeal d.factor ⊔ componentPrime S C^mu:=by
  let d:=originalData S C
  let family:=canonicalLocalDVRFamily S hfirstProper
  let mu:=localMultiplicity S family C
  let N:=numerator K d.factor
-   (ContactTwoTailParameters6733Research.w+1)
+   (RCN326.w+1)
  let p0:=componentPrime S C
  let I0:=factorIdeal d.factor
  let q0:=quotientPrime I0 p0
@@ -67,9 +69,9 @@ theorem exists_original_multiplier_for_localMultiplicity
    I0 p0 (factorLe S C) q0 rfl N mu hxMax
 theorem proper_global_tail_mem_projected_primary
    {B:Type*} [CommRing B]
-   (S:Stage K I Gamma x p flag)
+   (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w+1))
+     (RCN326.w+1))
    (C:FirstTailComponent S)
    (f:MvPolynomial (Fin 4) K →+*B)
    (surface tail scalar:B) (J:Ideal B) [J.IsMaximal]
@@ -77,12 +79,12 @@ theorem proper_global_tail_mem_projected_primary
    (hsurface:surface∈J)
    (hcontract:Ideal.comap f J=componentPrime S C)
    (htail:tail=f (numerator K S.F
-     (ContactTwoTailParameters6733Research.w+1))*scalar):
+     (RCN326.w+1))*scalar):
    tail∈Ideal.span {surface} ⊔
      J^localMultiplicity S (canonicalLocalDVRFamily S hfirstProper) C:=by
  let d:=originalData S C
  let mu:=localMultiplicity S (canonicalLocalDVRFamily S hfirstProper) C
- let b:=ContactTwoTailParameters6733Research.w+1
+ let b:=RCN326.w+1
  let Nfactor:=numerator K d.factor b
  let Q:=Ideal.span {surface} ⊔ J^mu
  obtain ⟨s,hsnot,hsN⟩:=
@@ -130,4 +132,4 @@ theorem proper_global_tail_mem_projected_primary
  rw [htail]
  exact Q.mul_mem_right scalar hwhole
 end
-end ProximityPrize.SubmissionLower.ContactProperMultiplicitySymbolic6732Research
+end ProximityPrize.SubmissionLower.RCN248

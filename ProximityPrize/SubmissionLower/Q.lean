@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.N4
 import ProximityPrize.SubmissionLower.Y2
-namespace ProximityPrize.SubmissionLower.ContactInterpolation
-open ContactRankKernel
+namespace ProximityPrize.SubmissionLower.RCN174
+open RCN256
 open ProximityPrize.Benchmark
 open scoped BigOperators
 noncomputable section
@@ -294,7 +294,7 @@ theorem exists_frozen_nonzero_contact_array
  apply exists_nonzero_block_equations IRSProfile.Field 3324960 131071 176 5 18
    (fun i:IRSProfile.Index => IRSProfile.domain i) u₀ u₁
  rw [show Fintype.card IRSProfile.Index=262144 by norm_num [IRSProfile.Index]]
- exact ContactAlignmentParameters.interpolation_gate
+ exact RCN051.interpolation_gate
 theorem exists_frozen_nonzero_polynomial_and_equations
    (u₀ u₁:IRSProfile.Index → IRSProfile.Field):
    ∃ (Q:MvPolynomial (Fin 4) IRSProfile.Field)
@@ -312,4 +312,4 @@ theorem exists_frozen_nonzero_polynomial_and_equations
    reconstruct_mem_globalCoefficientBox IRSProfile.Field 3324960 131071 176 5 θ,
    rfl,hconstraints⟩
 end
-end ProximityPrize.SubmissionLower.ContactInterpolation
+end ProximityPrize.SubmissionLower.RCN174

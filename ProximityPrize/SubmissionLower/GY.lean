@@ -1,14 +1,14 @@
 import ProximityPrize.SubmissionLower.Y5
-namespace ProximityPrize.SubmissionLower.ContactTwoTailProperBranch6731Research
+namespace ProximityPrize.SubmissionLower.RCN328
 open scoped Classical BigOperators
-open ContactRegularComponentCover ContactFlagBezout6543Research
-open ContactResidualSparseComponentAdapterResearch
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactAdaptiveNestedUnitFamily6600Research
-open ContactAdaptiveUnitPoleFamilyResearch
-open ContactAdaptiveNestedProjection6600Research
-open ContactWeakSeparableSeparatorResearch
-open ContactFlagSymbolicTrapezoidResearch
+open RCN264 RCN095
+open RCN272
+open RCN237
+open RCN039
+open RCN046
+open RCN037
+open RCN341
+open RCN121
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -93,4 +93,4 @@ theorem properSecondTail_component_sum_le_flagMixed
  exact properSecondTail_component_sum_le P.toPrimeFlagBudgetFamily
    S point hpoint_injective hT2flag hzero
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailProperBranch6731Research
+end ProximityPrize.SubmissionLower.RCN328

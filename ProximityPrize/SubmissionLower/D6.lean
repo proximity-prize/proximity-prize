@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BX
 import ProximityPrize.SubmissionLower.H
-namespace ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch
-open ContactIncidence
-open ContactNearPencil6600ArithmeticResearch
+namespace ProximityPrize.SubmissionLower.RCN216
+open RCN173
+open RCN213
 theorem stratified_incidence_bound
    {Seed Node:Type*} [DecidableEq Seed] [DecidableEq Node]
    (relation:Seed → Node → Prop) [∀ seed node,Decidable (relation seed node)]
@@ -78,4 +78,4 @@ theorem scaled_stratified_incidence_bound
  calc
    seeds.card*(a-w)^2=(seeds.card*(a-w))*(a-w):=by ring
    _ ≤ U*degreeCost+V*unitCost:=hcompressed
-end ProximityPrize.SubmissionLower.ContactNearPencilStratifiedIncidenceResearch
+end ProximityPrize.SubmissionLower.RCN216

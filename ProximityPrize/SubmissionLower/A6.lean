@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Y3
-namespace ProximityPrize.SubmissionLower.ContactBaseIdealCoefficients6676Research
-open ContactDifferentialRing ContactTaylorNumerators DifferentialTaylorCoefficients
-open ContactBaseIdealAlgebra6676Research
+namespace ProximityPrize.SubmissionLower.RCN056
+open RCN077 RCN313 RCN347
+open RCN055
 noncomputable section
 variable {K:Type*} [CommRing K]
 def sameContribution (F:Poly4 K) (n j:ℕ) (P:Poly4 K):Poly4 K:=
@@ -135,4 +135,4 @@ theorem numerator_eq_coefficient_sum (F:Poly4 K) (n:ℕ):
  rw [numerator_eq_H_cube,baseNumerator_eq_sum]
  rfl
 end
-end ProximityPrize.SubmissionLower.ContactBaseIdealCoefficients6676Research
+end ProximityPrize.SubmissionLower.RCN056

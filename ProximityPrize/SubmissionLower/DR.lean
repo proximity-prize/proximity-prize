@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EW
 import ProximityPrize.SubmissionLower.A3
-namespace ProximityPrize.SubmissionLower.ContactAdaptiveProjectionFactorProvider6600Research
+namespace ProximityPrize.SubmissionLower.RCN043
 open scoped Classical
-open ContactNearPencil6600ArithmeticResearch ContactPolynomialSolutions
-open ContactPrimeSeedIncidence ContactRegularComponentCover
-open ContactProperCutSeedCount ContactFlagBezout6543Research
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualCurveIterationResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactIdentityResidualFactorProvider6600Research
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactNearPencil6600FlagResearch
-open ContactNearPencil6600FactorLedgerResearch
-open ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveUnitPoleFamilyResearch
+open RCN213 RCN231
+open RCN238 RCN264
+open RCN243 RCN095
+open RCN159
+open RCN151
+open RCN156
+open RCN154
+open RCN237
+open RCN215
+open RCN214
+open RCN341
+open RCN046
 noncomputable section
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
@@ -55,4 +55,4 @@ theorem recursive_scaled_factor_6600_of_adaptive_projection_families
  intro C
  exact P.one_le_toPrimeFlagBudgetFamily_allCost C
 end
-end ProximityPrize.SubmissionLower.ContactAdaptiveProjectionFactorProvider6600Research
+end ProximityPrize.SubmissionLower.RCN043

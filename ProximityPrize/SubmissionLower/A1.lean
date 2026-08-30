@@ -1,13 +1,13 @@
 import ProximityPrize.SubmissionLower.A2
 import ProximityPrize.SubmissionLower.Z1
-namespace ProximityPrize.SubmissionLower.ContactActiveNestedFlagData6733Research
-open ActualCurveCoordinateField ContactRegularComponentCover
-open ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedProjectionActive6630Research
-open ContactFlagAffineFamilyDegree6543Research ContactFlagTriangularProjectionResearch
-open ContactFlagPrincipalCycles6543Research ContactFlagResidueDegreeCostAdapter6732Research
-open ArbitraryPlaneEvaluationFamilyResearch ArbitraryRationalProjectionResearch
+namespace ProximityPrize.SubmissionLower.RCN031
+open RCN002 RCN264
+open RCN341
+open RCN037
+open RCN038
+open RCN093 RCN125
+open RCN116 RCN120
+open RCN021 RCN022
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2500000
@@ -184,4 +184,4 @@ theorem activeNestedVGenerates (C:RegularComponent Omega G T H):
  simpa [vOrder,Equiv.swap_apply_def] using flag_generators_v Omega C.1 D.lam D.mu
    (D.mu*D.lam) (D.allAffineTranscendental C)
 end
-end ProximityPrize.SubmissionLower.ContactActiveNestedFlagData6733Research
+end ProximityPrize.SubmissionLower.RCN031

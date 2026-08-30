@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AD
-namespace ProximityPrize.SubmissionLower.ContactSingularAuxiliary
-open ContactFactorCover ContactGenericSurface ContactRegularFactorGate
+namespace ProximityPrize.SubmissionLower.RCN290
+open RCN082 RCN136 RCN267
 noncomputable section
 section GenericResultant
 variable {A:Type*} [CommRing A] [IsDomain A] [IsGCDMonoid A]
@@ -116,7 +116,7 @@ theorem singularAuxiliary_nonzero
  intro F hF
  have hs:=activeFactors_spec Q F hF
  apply singularContribution_nonzero F hs.1 p
- exact (ContactFactorCaps.degreeOf_le_of_dvd (2:Fin 4) F Q hs.2.1 hQ).trans_lt hsmall
+ exact (RCN081.degreeOf_le_of_dvd (2:Fin 4) F Q hs.2.1 hQ).trans_lt hsmall
 theorem singularAuxiliary_R_degree
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) (p:ℕ) [CharP K p]
    (hsmall:Q.degreeOf 2 < p):(singularAuxiliary Q).degreeOf 2=0:=by
@@ -125,7 +125,7 @@ theorem singularAuxiliary_R_degree
    intro F hF
    have hs:=activeFactors_spec Q F hF
    exact singularContribution_nonzero F hs.1 p
-     ((ContactFactorCaps.degreeOf_le_of_dvd (2:Fin 4) F Q hs.2.1 hQ).trans_lt hsmall)
+     ((RCN081.degreeOf_le_of_dvd (2:Fin 4) F Q hs.2.1 hQ).trans_lt hsmall)
  change (∏ F∈activeFactors Q,singularContribution F).degreeOf 2=0
  rw [MvPolynomial.degreeOf_prod_eq (n:=(2:Fin 4)) _ _ hne]
  simp only [singularContribution_R_degree,Finset.sum_const_zero]
@@ -170,4 +170,4 @@ theorem surface_zero_singular_or_regular
    · exact Or.inr ⟨F,hF,(activeFactors_spec Q F hF).1,Nat.pos_of_ne_zero hr,hz,hh⟩
 end ActualCoverage
 end
-end ProximityPrize.SubmissionLower.ContactSingularAuxiliary
+end ProximityPrize.SubmissionLower.RCN290

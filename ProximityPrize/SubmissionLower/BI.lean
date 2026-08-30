@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactGenericCoefficientAvoidanceResearch
+namespace ProximityPrize.SubmissionLower.RCN133
 open Function Set
 open scoped BigOperators
 noncomputable section
@@ -136,4 +136,4 @@ theorem exists_supportedPolynomial_simultaneous_noncancellation
  obtain ⟨c,hc⟩:=exists_simultaneous_noncancellation lead hlead
  exact ⟨c,support_polynomialOfSupport_subset E c,hc⟩
 end
-end ProximityPrize.SubmissionLower.ContactGenericCoefficientAvoidanceResearch
+end ProximityPrize.SubmissionLower.RCN133

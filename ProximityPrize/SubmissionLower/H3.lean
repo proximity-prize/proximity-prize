@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.H4
-namespace ProximityPrize.SubmissionLower.AffineOverringPointValuation
+namespace ProximityPrize.SubmissionLower.RCN016
 open IsDedekindDomain
 noncomputable section
 section Fractions
@@ -124,4 +124,4 @@ theorem overring_zero_order_ge_one (x:B) (hx:x≠0) (hzero:Φ x=0):
  omega
 end Overring
 end
-end ProximityPrize.SubmissionLower.AffineOverringPointValuation
+end ProximityPrize.SubmissionLower.RCN016

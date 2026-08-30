@@ -2,10 +2,10 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.C
 import ProximityPrize.SubmissionLower.W
 import ProximityPrize.SubmissionLower.E
-namespace ProximityPrize.SubmissionLower.ContactJointSeedCaps
+namespace ProximityPrize.SubmissionLower.RCN177
 open scoped BigOperators
-open ContactInterpolation ContactFactorCaps ContactTaylorNumerators
- ContactGenericSurface
+open RCN174 RCN081 RCN313
+ RCN136
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
 abbrev Poly4 (K:Type) [Field K]:=MvPolynomial (Fin 4) K
@@ -276,4 +276,4 @@ theorem surfaceMap_agreement_joint_seed_cap
  surfaceMap_joint_seed_cap φ _ _
    (agreementNumerator_joint_seed_cap F L w hF c x u₀ u₁)
 end
-end ProximityPrize.SubmissionLower.ContactJointSeedCaps
+end ProximityPrize.SubmissionLower.RCN177

@@ -2,20 +2,20 @@ import ProximityPrize.SubmissionLower.DJ
 import ProximityPrize.SubmissionLower.A0
 import ProximityPrize.SubmissionLower.K1
 import ProximityPrize.SubmissionLower.Q9
-namespace ProximityPrize.SubmissionLower.ContactActiveNestedChannels6733Research
+namespace ProximityPrize.SubmissionLower.RCN028
 open scoped Classical BigOperators
-open ContactRegularComponentCover ActualCurveCoordinateField
-open ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedProjectionActive6630Research
-open ContactFlagBezout6543Research ContactFlagTriangularProjectionResearch
-open ContactFlagProjectionPositivity6543Research
-open ContactActiveNestedFlagData6733Research ContactActiveNestedFlagCosts6733Research
-open ContactActiveNestedFixedPowers6733Research
-open ContactFlagPlaneResultantBounds6733Research
-open ContactFlagPlaneIndexedChannel6733Research
-open ContactWeightedGroupedResultantChannel6733Research
-open ContactWeightedChannelUtilities6733Research
+open RCN264 RCN002
+open RCN341
+open RCN037
+open RCN038
+open RCN095 RCN125
+open RCN117
+open RCN031 RCN030
+open RCN029
+open RCN112
+open RCN104
+open RCN343
+open RCN342
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 3000000
@@ -120,4 +120,4 @@ noncomputable def activeNestedVChannel
    (activeNestedUnitFamily_allCost_eq_flagCost base hactive hZ hSderiv D
      hG hproper hGsupport hTsupport C).le
 end
-end ProximityPrize.SubmissionLower.ContactActiveNestedChannels6733Research
+end ProximityPrize.SubmissionLower.RCN028

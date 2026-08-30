@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DD
-namespace ProximityPrize.SubmissionLower.SeparableShearFieldResearch
+namespace ProximityPrize.SubmissionLower.RCN368
 open scoped Classical
 noncomputable section
 theorem add_not_mem_frobenius_range_of_mem_not_mem
@@ -68,4 +68,4 @@ theorem sheared_box_cost_le_old_add_two_penalty
    _=(cY*dY+cR*dR+cZ*dZ)+2*cR*dZ:=by
      ring
 end
-end ProximityPrize.SubmissionLower.SeparableShearFieldResearch
+end ProximityPrize.SubmissionLower.RCN368

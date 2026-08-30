@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.C
 import ProximityPrize.SubmissionLower.E
-namespace ProximityPrize.SubmissionLower.ContactFactorCover
-open UniqueFactorizationMonoid ContactGenericSurface ContactInterpolation
+namespace ProximityPrize.SubmissionLower.RCN082
+open UniqueFactorizationMonoid RCN136 RCN174
 noncomputable section
 variable {K L:Type*} [Field K] [Field L]
 local instance:StrongNormalizationMonoid (MvPolynomial (Fin 4) K):=
@@ -103,13 +103,13 @@ theorem activeFactors_mem_box (Q F:MvPolynomial (Fin 4) K)
    (D w zcap s:ℕ) (hQ:Q≠0)
    (hbox:Q∈globalCoefficientBox K D w zcap s) (hF:F∈activeFactors Q):
    F∈globalCoefficientBox K D w zcap s:=
- ContactFactorCaps.mem_globalCoefficientBox_of_dvd F Q D w zcap s hQ
+ RCN081.mem_globalCoefficientBox_of_dvd F Q D w zcap s hQ
    (activeFactors_spec Q F hF).2.1 hbox
 theorem activeFactors_degree_budgets (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0):
    (∑ F∈activeFactors Q,F.degreeOf (1:Fin 4)) ≤ Q.degreeOf 1∧
    (∑ F∈activeFactors Q,F.degreeOf (2:Fin 4)) ≤ Q.degreeOf 2∧
    (∑ F∈activeFactors Q,F.degreeOf (3:Fin 4)) ≤ Q.degreeOf 3:=
- ContactFactorCaps.separated_degree_budgets_of_prod_dvd (activeFactors Q) id Q hQ
+ RCN081.separated_degree_budgets_of_prod_dvd (activeFactors Q) id Q hQ
    (activeFactors_product_dvd Q hQ)
 theorem activeFactors_input_budgets (Q:MvPolynomial (Fin 4) K)
    (D w zcap s:ℕ) (hw:0 < w) (hQ:Q≠0)
@@ -117,7 +117,7 @@ theorem activeFactors_input_budgets (Q:MvPolynomial (Fin 4) K)
    (∑ F∈activeFactors Q,F.degreeOf (1:Fin 4)) ≤ (D-1)/w∧
    (∑ F∈activeFactors Q,F.degreeOf (2:Fin 4)) ≤ s∧
    (∑ F∈activeFactors Q,F.degreeOf (3:Fin 4)) ≤ zcap:=
- ContactFactorCaps.separated_factor_caps_of_prod_dvd (activeFactors Q) id Q
+ RCN081.separated_factor_caps_of_prod_dvd (activeFactors Q) id Q
    D w zcap s hw hQ hbox (activeFactors_product_dvd Q hQ)
 theorem activeFactors_card_le (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0):
    (activeFactors Q).card ≤ Q.degreeOf 1+Q.degreeOf 2+Q.degreeOf 3:=by
@@ -142,4 +142,4 @@ theorem exists_active_irreducible_box_factor
  have hs:=activeFactors_spec Q F hF
  exact ⟨F,hF,hs.1,hs.2.1,activeFactors_mem_box Q F D w zcap s hQ hbox hF,hz⟩
 end
-end ProximityPrize.SubmissionLower.ContactFactorCover
+end ProximityPrize.SubmissionLower.RCN082

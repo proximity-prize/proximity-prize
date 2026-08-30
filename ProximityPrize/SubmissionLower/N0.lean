@@ -1,22 +1,22 @@
 import ProximityPrize.SubmissionLower.N3
 import ProximityPrize.SubmissionLower.FZ
-namespace ProximityPrize.SubmissionLower.ContactProperStageIndexedPbar6733Research
-open ContactGenericInitialPoint ContactGenericSurface
-open ContactDelayedTailMultiplicityProvider6732Research
-open ContactProperDelayedTailCertificate6732Research
-open ContactProperStageIndexedFamily6733Research
-open ContactProperFlagFiberData6733Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactFlagPlaneIndexedFiberCertificate6733Research
-open ContactFlagPlaneIndexedFiberSurface6733Research
-open ContactFlagPlaneFiberSurface6733Research
-open ContactFlagPlaneFiberPrimary6733Research
-open ContactLocalizedSurfaceNonzero6733Research
-open ContactProperStageIndexedSpecialization6733Research
-open ContactProperStageIndexedFixedFactor6733Research
-open ContactFlagAffineFamilyDegree6543Research ContactFlagBezout6543Research
-open ActualCurveCoordinateField ActualPlaneCoordinateKernel
-open ArbitraryPlaneEvaluationFamilyResearch
+namespace ProximityPrize.SubmissionLower.RCN252
+open RCN135 RCN136
+open RCN074
+open RCN244
+open RCN249
+open RCN245
+open RCN106
+open RCN107
+open RCN108
+open RCN103
+open RCN102
+open RCN195
+open RCN255
+open RCN250
+open RCN093 RCN095
+open RCN002 RCN011
+open RCN021
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -26,7 +26,9 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
-variable (S:Stage K I Gamma x p flag) {A:Type} [Fintype A]
+variable {errorCap : ℕ}
+variable {stageSupport : RCN275.ResidualSupportParameters}
+variable (S:Stage K I Gamma x p flag errorCap stageSupport) {A:Type} [Fintype A]
 theorem stageFamily_surface_mod_ne
    (F:StageIndexedFlagFamily S A) (W:StageIndexedFactor S A F):
    StageFamilySurfaceModNonzero S F W:=by
@@ -43,4 +45,4 @@ theorem stageFamily_surface_mod_ne
    (flagEvaluation (GenericField K) (F.component a).1 F.lam F.mu F.nu) (F.ht a)
    (F.finite a) surface hspecial
 end
-end ProximityPrize.SubmissionLower.ContactProperStageIndexedPbar6733Research
+end ProximityPrize.SubmissionLower.RCN252

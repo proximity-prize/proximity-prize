@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.GY
-namespace ProximityPrize.SubmissionLower.ContactTwoTailMultiplicityAggregation6732Research
+namespace ProximityPrize.SubmissionLower.RCN325
 open scoped Classical BigOperators
-open ContactRegularComponentCover ContactFlagBezout6543Research
-open ContactPrimeFlagBudgetFamilyResearch
+open RCN264 RCN095
+open RCN237
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -81,4 +81,4 @@ def DelayedBranchFlagBudget.immediate
      _ ≤ flagMixed flag tailFlag1 tailFlag2:=
        B.sum_weightedCost_le tailFlag2
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailMultiplicityAggregation6732Research
+end ProximityPrize.SubmissionLower.RCN325

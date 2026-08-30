@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.FE
-namespace ProximityPrize.SubmissionLower.ContactAgreementFactorScaling6731Research
+namespace ProximityPrize.SubmissionLower.RCN048
 open scoped BigOperators
-open ContactDifferentialRing ContactTaylorNumerators
-open ContactNumeratorFactorScaling6731Research
+open RCN077 RCN313
+open RCN217
 noncomputable section
 variable {K:Type*} [Field K]
 private abbrev factorIdeal (F:Poly4 K):Ideal (Poly4 K):=Ideal.span {F}
@@ -77,4 +77,4 @@ theorem factor_dvd_agreement_sub_power (F Q:Poly4 K) (w:ℕ)
  rw [←Ideal.Quotient.eq_zero_iff_mem,map_sub,map_mul,map_pow,
    agreementNumerator_scaling_mod,sub_self]
 end
-end ProximityPrize.SubmissionLower.ContactAgreementFactorScaling6731Research
+end ProximityPrize.SubmissionLower.RCN048

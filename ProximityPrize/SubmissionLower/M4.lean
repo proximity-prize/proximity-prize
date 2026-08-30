@@ -1,14 +1,14 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.M3
 import ProximityPrize.SubmissionLower.M9
-namespace ProximityPrize.SubmissionLower.ContactMovingCurveFamily6719Research
+namespace ProximityPrize.SubmissionLower.RCN200
 open scoped Classical BigOperators WithZero
-open ActualCurveCoordinateField ContactRegularComponentCover CoordinateBoxZeroCount
-open ContactWeakSeparableSeparatorResearch ContactAdaptiveUnitPoleFamilyResearch
-open ContactFlagBezout6543Research ContactSparsePoleSupportResearch
-open ContactLocalPoleBound ContactMovingProjection6676Research
-open ContactCommonProjectionChoice6676Research ContactMovingProjectionFamily6719Research
-open ContactMovingCurveBudget6719Research
+open RCN002 RCN264 RCN344
+open RCN341 RCN046
+open RCN095 RCN295
+open RCN187 RCN207
+open RCN064 RCN209
+open RCN199
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -34,7 +34,7 @@ def budgetOfProjections (F A H G:Poly)
    intro W
    calc
      (∑ v∈W,movingPoleTarget C.1 H G v)=
-         ∑ v∈W,CoordinatePoleMass.poleOrder K (CoordinateField K C.1) v
+         ∑ v∈W,RCN346.poleOrder K (CoordinateField K C.1) v
            (SeparableCoordinate.value K (CoordinateField K C.1) (J C)):=by
        apply Finset.sum_congr rfl
        intro v _
@@ -77,4 +77,4 @@ theorem exists_moving_pole_budget_family (F H G:Poly) (k:ℕ) (B:Fin (k+1) → P
  · exact unit.sum_allDegree_le
  · exact hdegree
 end
-end ProximityPrize.SubmissionLower.ContactMovingCurveFamily6719Research
+end ProximityPrize.SubmissionLower.RCN200

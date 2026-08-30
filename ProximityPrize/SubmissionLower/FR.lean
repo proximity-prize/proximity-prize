@@ -2,27 +2,27 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ES
 import ProximityPrize.SubmissionLower.E1
 import ProximityPrize.SubmissionLower.GP
-namespace ProximityPrize.SubmissionLower.ContactProfileYZFactorProviderResearch
+namespace ProximityPrize.SubmissionLower.RCN241
 open scoped Classical
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactRegularComponentCover
-open ContactProperCutSeedCount ContactComponentPencils
-open ContactFlagBezout6543Research
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualCurveIterationResearch
-open ContactIdentityResidualComponentFamily6600Research
-open ContactIdentityResidualComponentFamilyYZSupportResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactIdentityResidualIncidenceResearch
-open ContactIdentityResidualFactorProvider6600Research
-open ContactPrimeFlagBudgetFamilyResearch
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactResidualSupportParametersResearch
-open ContactRobustFixedMeet6656Research
-open ContactProfileYZFactorLedgerResearch
-open ContactAdaptiveUnitPoleFamilyResearch
-open ContactRegularComponentYZPositivity6630Research
-open ContactTerminalAdaptiveProjectionFixedMeetActive6656Research
+open RCN136 RCN231 RCN319
+open RCN238 RCN264
+open RCN243 RCN065
+open RCN095
+open RCN159
+open RCN151
+open RCN148
+open RCN150
+open RCN156
+open RCN158
+open RCN154
+open RCN237
+open RCN234
+open RCN275
+open RCN276
+open RCN240
+open RCN046
+open RCN265
+open RCN316
 noncomputable section
 set_option maxHeartbeats 3500000
 set_option maxRecDepth 40000
@@ -217,4 +217,4 @@ theorem recursive_scaled_factorYZ_of_adaptive_projection_families
  · intro k hk
    simpa only [hnodes] using hunitGlobal k hk
 end
-end ProximityPrize.SubmissionLower.ContactProfileYZFactorProviderResearch
+end ProximityPrize.SubmissionLower.RCN241

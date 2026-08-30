@@ -2,11 +2,11 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.M
 import ProximityPrize.SubmissionLower.B0
 import ProximityPrize.SubmissionLower.BX
-namespace ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
+namespace ProximityPrize.SubmissionLower.RCN238
 open scoped Classical BigOperators
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveZeroCount
-open ContactGenericSurface ContactPolynomialSolutions ContactPolynomialRecovery
-open ContactTaylorNumerators ContactComponentPencils ContactTranslation
+open RCN002 RCN005 RCN007
+open RCN136 RCN231 RCN229
+open RCN313 RCN065 RCN319
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
 variable (φ:Polynomial K →+*Ω)
@@ -81,7 +81,7 @@ theorem agreement_fiber_card_le
    obtain ⟨hΓ,hagree⟩:=Finset.mem_filter.mp hγ
    exact (selected_agreement_zero_iff φ F selected p w hchar γ
      (hdegree γ hΓ) (hsolution γ hΓ) (hregular γ hΓ) x u₀ u₁).mpr hagree
- have hcount:=ActualCurveZeroCount.finite_zero_points_le_box Ω P hproj hnonpoint
+ have hcount:=RCN007.finite_zero_points_le_box Ω P hproj hnonpoint
    (agreementPolynomial φ F w x u₀ u₁) hproper cap hcap points hpointsP hpointsF
  have hcard:points.card=fiber.card:=
    Finset.card_image_of_injective _ (selectedPoint_injective φ selected)
@@ -140,7 +140,7 @@ theorem prime_seed_incidence_sharp
        exact Finset.mem_filter.mpr ⟨hinodes,hmem⟩
      exact agreement_fiber_card_le φ P hproj hnonpoint F selected Γ p w hchar
        hdegree hsolution hregular hpoint (x i) (u₀ i) (u₁ i) hproper cap (hcap i hinodes)
-   have hcount:=ContactIncidence.sharp_incidence_bound relation Γ nodes I a w
+   have hcount:=RCN173.sharp_incidence_bound relation Γ nodes I a w
      (componentCost P cap) (identityNodes_subset φ P F nodes x u₀ u₁ w) hI hwa han
      hagreement hfiber
    omega
@@ -203,4 +203,4 @@ theorem prime_seed_incidence
    Nat.mul_le_mul_right _ (Nat.sub_le _ _)
  exact h.trans (Nat.add_le_add_right hcost _)
 end
-end ProximityPrize.SubmissionLower.ContactPrimeSeedIncidence
+end ProximityPrize.SubmissionLower.RCN238

@@ -1,13 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.GA
 import ProximityPrize.SubmissionLower.AE
-namespace ProximityPrize.SubmissionLower.ContactResidualSparsePoleProviderResearch
+namespace ProximityPrize.SubmissionLower.RCN273
 open scoped Classical BigOperators WithZero
-open ActualCurveCoordinateField ActualCurveZeroCount
-open ContactRegularComponentCover ContactProperCutSeedCount
-open ContactSparsePoleSupportResearch ContactSparsePoleZeroCountResearch
-open ContactResidualSparseComponentAdapterResearch
-open CoordinateBoxZeroCount
+open RCN002 RCN007
+open RCN264 RCN243
+open RCN295 RCN296
+open RCN272
+open RCN344
 noncomputable section
 variable {Ω:Type} [Field Ω] [IsAlgClosed Ω]
 structure ResidualPoleComponentBudget
@@ -19,7 +19,7 @@ structure ResidualPoleComponentBudget
  pole_le:∀ C:RegularComponent Ω G T H,
    let htr:=separator_transcendental C
    letI:Algebra (RatFunc Ω) (CoordinateField Ω C.1):=
-     ActualCurveRationalProjection.rationalBaseAlgebra Ω C.1 separator htr
+     RCN005.rationalBaseAlgebra Ω C.1 separator htr
    ∀ W:Finset (Place Ω (CoordinateField Ω C.1)),
      (∑ v∈W,exponentSetPoleWeight v.val (coordinate Ω C.1) E) ≤
        (cost C:ℤ)
@@ -39,4 +39,4 @@ def ResidualPoleComponentBudget.toResidualComponentBudget
      A hAE hproper points hpointsP hpointsA
  sum_cost_le:=B.sum_cost_le
 end
-end ProximityPrize.SubmissionLower.ContactResidualSparsePoleProviderResearch
+end ProximityPrize.SubmissionLower.RCN273

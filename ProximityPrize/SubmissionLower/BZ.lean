@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BI
 import ProximityPrize.SubmissionLower.AH
-namespace ProximityPrize.SubmissionLower.ContactLeadingCancellationResearch
+namespace ProximityPrize.SubmissionLower.RCN184
 open scoped Classical BigOperators WithZero
-open ContactLocalPoleBound
-open ContactGenericCoefficientAvoidanceResearch
-open ContactSparsePoleSupportResearch
+open RCN187
+open RCN133
+open RCN295
 noncomputable section
 variable {K L σ:Type*} [Field K] [Field L] [Fintype σ]
  [DecidableEq σ] [Algebra K L]
@@ -282,4 +282,4 @@ theorem exists_simultaneous_exact_poleOrder_of_downwardClosed
  exact poleOrder_eq_of_valuation_eq_exp (v t) _ _
    (exponentSetPoleWeight_nonneg (v t) x E) (hexact t)
 end
-end ProximityPrize.SubmissionLower.ContactLeadingCancellationResearch
+end ProximityPrize.SubmissionLower.RCN184

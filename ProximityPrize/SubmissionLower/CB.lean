@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R
-namespace ProximityPrize.SubmissionLower.ContactSingularLedger6600Research
+namespace ProximityPrize.SubmissionLower.RCN294
 open scoped BigOperators
-open ContactParameters6600Research
+open RCN223
 def sumVector {I:Type} [Fintype I] (v:I-> DegreeVector):DegreeVector:=
  ⟨∑ i,(v i).y,∑ i,(v i).r,∑ i,(v i).z⟩
 def vectorLE (a b:DegreeVector):Prop:=
@@ -109,4 +109,4 @@ theorem implicit_with_exceptions_scaled_bound {I:Type} [Fintype I]
    _=retainedSingularContribution:=by
      simp only [retainedSingularContribution]
      ring
-end ProximityPrize.SubmissionLower.ContactSingularLedger6600Research
+end ProximityPrize.SubmissionLower.RCN294

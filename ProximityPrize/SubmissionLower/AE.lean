@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F
-namespace ProximityPrize.SubmissionLower.ContactResidualSparseComponentAdapterResearch
+namespace ProximityPrize.SubmissionLower.RCN272
 open scoped Classical BigOperators
-open ActualCurveCoordinateField ActualCurveZeroCount
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactRegularComponentCover
-open ContactProperCutSeedCount ContactComponentPencils
+open RCN002 RCN007
+open RCN136 RCN231 RCN319
+open RCN238 RCN264
+open RCN243 RCN065
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
 variable (φ:Polynomial K →+*Ω)
@@ -108,7 +108,7 @@ theorem prime_seed_incidence_sharp_of_residual_cost
      exact agreement_fiber_card_le_of_zero_bound φ P F selected Γ p w hchar
        hdegree hsolution hregular hpoint (x i) (u₀ i) (u₁ i) cost
        (hzero i hinodes hproper)
-   have hcount:=ContactIncidence.sharp_incidence_bound relation Γ nodes I a w
+   have hcount:=RCN173.sharp_incidence_bound relation Γ nodes I a w
      cost (identityNodes_subset φ P F nodes x u₀ u₁ w) hI hwa han
      hagreement hfiber
    omega
@@ -247,4 +247,4 @@ theorem proper_cut_seed_bound_of_residual_component_budget
    (nodes.card-w) (e+1) wholeCost zBudget hsparse.cost zDegree
    hcomponent hsparse.sum_cost_le hzbudget
 end
-end ProximityPrize.SubmissionLower.ContactResidualSparseComponentAdapterResearch
+end ProximityPrize.SubmissionLower.RCN272

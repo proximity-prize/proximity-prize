@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G2
-namespace ProximityPrize.SubmissionLower.NormValuationTransport
+namespace ProximityPrize.SubmissionLower.RCN357
 open scoped BigOperators Classical
 open IsDedekindDomain
 noncomputable section
@@ -16,7 +16,7 @@ theorem valuation_transport (v:HeightOneSpectrum A) (x:F):
  simp only [map_div₀,AlgEquiv.commutes,
    HeightOneSpectrum.valuation_of_algebraMap]
 theorem fieldOrder_transport (v:HeightOneSpectrum A) (x:F):
-   fieldOrder A F v x=NormValuation.orderAt v
+   fieldOrder A F v x=RCN356.orderAt v
      ((FractionRing.algEquiv A F).symm x):=by
  rw [fieldOrder,valuation_transport]
  rfl
@@ -71,18 +71,18 @@ theorem fieldOrder_norm (v:HeightOneSpectrum R) (x:L) (hx:x≠0):
        (P.1.inertiaDeg R:ℤ)*fieldOrder S L (placeAbove R S v P) x:=by
  letI:Algebra.IsSeparable (FractionRing R) (FractionRing S):=
    canonical_separable R S F L
- have h:=NormValuation.orderAt_fieldNorm R S v
+ have h:=RCN356.orderAt_fieldNorm R S v
    ((FractionRing.algEquiv S L).symm x) (by simpa using hx)
  calc
    fieldOrder R F v (Algebra.norm F x)=
-       NormValuation.orderAt v
+       RCN356.orderAt v
          ((FractionRing.algEquiv R F).symm (Algebra.norm F x)):=
      fieldOrder_transport R F v (Algebra.norm F x)
    _=∑ P∈(IsDedekindDomain.primesOverFinset v.asIdeal S).attach,
-       (P.1.inertiaDeg R:ℤ)*NormValuation.orderAt (placeAbove R S v P)
+       (P.1.inertiaDeg R:ℤ)*RCN356.orderAt (placeAbove R S v P)
          ((FractionRing.algEquiv S L).symm x):=by
-     simpa only [norm_transport R S F L x,NormValuation.primeFiber,
-       NormValuation.fiberPlace,placeAbove] using h
+     simpa only [norm_transport R S F L x,RCN356.primeFiber,
+       RCN356.fiberPlace,placeAbove] using h
    _=_:=by
      apply Finset.sum_congr rfl
      intro P _
@@ -90,4 +90,4 @@ theorem fieldOrder_norm (v:HeightOneSpectrum R) (x:L) (hx:x≠0):
      exact (fieldOrder_transport S L (placeAbove R S v P) x).symm
 end TwoRings
 end
-end ProximityPrize.SubmissionLower.NormValuationTransport
+end ProximityPrize.SubmissionLower.RCN357

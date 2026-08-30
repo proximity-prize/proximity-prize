@@ -2,26 +2,26 @@ import ProximityPrize.SubmissionLower.B3
 import ProximityPrize.SubmissionLower.Q7
 import ProximityPrize.SubmissionLower.BK
 import ProximityPrize.SubmissionLower.BL
-namespace ProximityPrize.SubmissionLower.ContactTangentCoefficientProvider6732Research
+namespace ProximityPrize.SubmissionLower.RCN312
 open scoped Classical BigOperators
-open ContactGenericInitialPoint ContactGenericSurface ContactTaylorNumerators
-open ContactIdentityResidualIterationResearch ContactRegularComponentCover
-open ContactDelayedTailMultiplicityProvider6732Research
-open ContactFirstTailCertificate6731Research ContactTwoTailRecurrence6731Research
-open ContactComponentPencils ContactPrimeSeedIncidence ContactProperCutSeedCount
-open ContactPolynomialSolutions ContactGlobalPolynomiality ContactAgreementEvaluation
-open ContactGeometricFactorCover ContactFactorCover ContactFactorReconstruction6731Research
-open ContactReconstructionFieldMembershipResearch
-open ContactNumeratorFactorScaling6731Research ContactFreshProperCoefficientTrdeg6731Research
-open ContactFreshCoefficientFieldGenerationResearch ContactCoefficientFieldTrdeg6731Research
-open ContactCoefficientBaseChange6731Research ContactCoefficientPole6731Research
-open ContactIdentityCurveCount6731Research ContactTwoTailTangentCost6732Research
-open ContactFlagBezout6543Research ContactPrimeFlagBudgetFamilyResearch
-open ContactSparsePoleSupportResearch ContactInterpolation ContactTranslation
-open ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveUnitPoleFamilyResearch ContactAdaptiveProjectionCoordinateResearch
-open CoordinateBoxZeroCount
-open ActualCurveCoordinateField
+open RCN135 RCN136 RCN313
+open RCN159 RCN264
+open RCN074
+open RCN086 RCN330
+open RCN065 RCN238 RCN243
+open RCN231 RCN139 RCN047
+open RCN137 RCN082 RCN083
+open RCN258
+open RCN217 RCN127
+open RCN126 RCN062
+open RCN058 RCN063
+open RCN145 RCN339
+open RCN095 RCN237
+open RCN295 RCN174 RCN319
+open RCN341
+open RCN046 RCN042
+open RCN344
+open RCN002
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 5000000
@@ -34,7 +34,7 @@ abbrev Omega (K:Type) [Field K]:=GenericField K
 variable {Gamma:Finset K} {x:I → K} {p errors w:ℕ}
 variable [CharP (Omega K) p]
 variable {flag tailFlag1:FlagDegree}
-variable {support:ContactResidualSupportParametersResearch.ResidualSupportParameters}
+variable {support:RCN275.ResidualSupportParameters}
 theorem firstTailComponent_surface_mem
    (S:ResidualStage (polynomialEmbedding K) Gamma x p errors flag w support)
    (C:FirstTailComponent S):
@@ -189,7 +189,7 @@ theorem coefficientPoleProfile_of_tangent_firstTail
    (hallTails:∀ delay,
      globalTailCut (polynomialEmbedding K) S.F (w+1+delay)∈C.1)
    (hyz:∀ W:Finset
-     (CoordinatePoleMass.Place (Omega K) (CoordinateField (Omega K) C.1)),
+     (RCN346.Place (Omega K) (CoordinateField (Omega K) C.1)),
      (∑ v∈W,exponentSetPoleWeight v.val (coordinate (Omega K) C.1)
        (flagSupport unitYZFlag)) ≤ (cost:ℤ)):
    CoefficientPoleProfile (polynomialEmbedding K) C.1 S.F
@@ -309,7 +309,7 @@ theorem tangent_component_card_le
    (hallTails:∀ delay,
      globalTailCut (polynomialEmbedding K) S.F (w+1+delay)∈C.1)
    (hyz:∀ W:Finset
-     (CoordinatePoleMass.Place (Omega K) (CoordinateField (Omega K) C.1)),
+     (RCN346.Place (Omega K) (CoordinateField (Omega K) C.1)),
      (∑ v∈W,exponentSetPoleWeight v.val (coordinate (Omega K) C.1)
        (flagSupport unitYZFlag)) ≤ (B.yzCost C:ℤ)):
    (componentSeeds (Omega K) S.G
@@ -350,4 +350,4 @@ theorem tangent_component_card_le
  · exact noLargeSelectedPencil_mono S.selected Gamma Gc w errors
      hGcGamma S.no_large_pencil
 end
-end ProximityPrize.SubmissionLower.ContactTangentCoefficientProvider6732Research
+end ProximityPrize.SubmissionLower.RCN312

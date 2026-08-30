@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R0
 import ProximityPrize.SubmissionLower.H0
-namespace ProximityPrize.SubmissionLower.ActualCurveZeroCount
+namespace ProximityPrize.SubmissionLower.RCN007
 open scoped Classical BigOperators
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveScalarTowers
+open RCN002 RCN005 RCN006
 noncomputable section
 variable (K:Type) [Field K]
 variable (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
@@ -62,7 +62,7 @@ theorem actualCoordinateDegree_of_isAlgebraic (i:Fin 3)
  exact dif_neg (not_not.mpr hi)
 variable [IsAlgClosed K]
 def coordinateData (hproj:ProjectionsFiniteSeparable K P) (i:Fin 3):
-   CoordinateBoxZeroCount.Coordinate K (CoordinateField K P):=
+   RCN344.Coordinate K (CoordinateField K P):=
  if hi:Transcendental K (coordinate K P i) then
    Sum.inr {
      embedding:=rationalBaseEmbedding K P i hi
@@ -71,14 +71,14 @@ def coordinateData (hproj:ProjectionsFiniteSeparable K P) (i:Fin 3):
  else
    Sum.inl ((coordinate_eq_scalar_of_isAlgebraic K P i (not_not.mp hi)).choose)
 theorem coordinateData_value (hproj:ProjectionsFiniteSeparable K P) (i:Fin 3):
-   CoordinateBoxZeroCount.coordinateValue K (CoordinateField K P)
+   RCN344.coordinateValue K (CoordinateField K P)
      (coordinateData K P hproj i)=coordinate K P i:=by
  unfold coordinateData
  split_ifs with hi
  · exact rational_variable_image K P i hi
  · exact (coordinate_eq_scalar_of_isAlgebraic K P i (not_not.mp hi)).choose_spec
 theorem coordinateData_degree (hproj:ProjectionsFiniteSeparable K P) (i:Fin 3):
-   CoordinateBoxZeroCount.coordinateDegree K (CoordinateField K P)
+   RCN344.coordinateDegree K (CoordinateField K P)
      (coordinateData K P hproj i)=actualCoordinateDegree K P i:=by
  unfold coordinateData actualCoordinateDegree
  split_ifs <;> rfl
@@ -103,7 +103,7 @@ theorem finite_zero_points_le_box_of_separator
  letI:FiniteDimensional (RatFunc K) (CoordinateField K P):=(hproj i₀ hi₀).1
  letI:Algebra.IsSeparable (RatFunc K) (CoordinateField K P):=(hproj i₀ hi₀).2
  let c:=coordinateData K P hproj
- have hc:∀ i,CoordinateBoxZeroCount.coordinateValue K (CoordinateField K P) (c i)=
+ have hc:∀ i,RCN344.coordinateValue K (CoordinateField K P) (c i)=
      algebraMap (CoordinateRing K P) (CoordinateField K P) (quotientCoordinate K P i):=by
    intro i
    rw [quotientCoordinate_fraction]
@@ -122,7 +122,7 @@ theorem finite_zero_points_le_box_of_separator
    obtain ⟨v,_,rfl⟩:=Finset.mem_image.mp hφ
    rw [quotient_eval_eq_mk]
    exact hSF v.1 v.2
- have hcount:=CoordinateBoxZeroCount.finite_model_zero_points_le_box
+ have hcount:=RCN344.finite_model_zero_points_le_box
    K (CoordinateField K P) (CoordinateRing K P) (quotientCoordinate K P)
    c hc cap F hcap (quotient_eval_ne_zero_of_not_mem K P F hF) points hpoints
  have hcard:points.card=S.card:=by
@@ -143,4 +143,4 @@ theorem finite_zero_points_le_box
  obtain ⟨i,hi⟩:=exists_transcendental_coordinate_of_ne_point_kernel K P hnonpoint
  exact finite_zero_points_le_box_of_separator K P hproj i hi F hF cap hcap S hSP hSF
 end
-end ProximityPrize.SubmissionLower.ActualCurveZeroCount
+end ProximityPrize.SubmissionLower.RCN007

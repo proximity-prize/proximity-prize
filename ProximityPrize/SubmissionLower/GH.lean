@@ -4,21 +4,21 @@ import ProximityPrize.SubmissionLower.CC
 import ProximityPrize.SubmissionLower.GC
 import ProximityPrize.SubmissionLower.DW
 import ProximityPrize.SubmissionLower.AG
-namespace ProximityPrize.SubmissionLower.ContactStackedResidualCells6656Research
+namespace ProximityPrize.SubmissionLower.RCN303
 open scoped Classical BigOperators
 open ProximityPrize.Benchmark
-open ContactInterpolation ContactTranslation ContactFactorCaps
-open ContactPrimeSeedIncidence ContactProperCutSeedCount ContactRecursiveGCDResearch
-open ContactStackedParameters6656Research
-open ContactStackedGCDCover6656Research
-open ContactStackedSeedPartition6656Research
-open ContactStackedBoxTransport6656Research
-open ContactRecursiveResidualStages6656Research
-open ContactTightSingularLedgerResearch
-open ContactSingularLedger6600Research
-open ContactSingularBranch6600Research
-open ContactSingularBranchParameterizedResearch
-open ContactAsymmetricResidualStageResearch
+open RCN174 RCN319 RCN081
+open RCN238 RCN243 RCN259
+open RCN301
+open RCN299
+open RCN304
+open RCN298
+open RCN260
+open RCN318
+open RCN294
+open RCN291
+open RCN292
+open RCN052
 noncomputable section
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 35000
@@ -28,8 +28,8 @@ abbrev StackedPoly:=MvPolynomial (Fin 4) IRSProfile.Field
 local instance:GCDMonoid StackedPoly:=
  UniqueFactorizationMonoid.toGCDMonoid StackedPoly
 local instance:CharP IRSProfile.Field prime:=by
- simpa [prime,ContactParameters6600Research.prime] using
-   ContactFrozenAlignment6600Research.challenge_field_characteristic6600
+ simpa [prime,RCN223.prime] using
+   RCN128.challenge_field_characteristic6600
 def firstResidualQ2Stage:UnequalParameters:=
  ⟨262144,131071,182807,65,14,598,34,7,5263⟩
 def firstResidualQ2Ceiling:ℕ:=66773536747163
@@ -58,7 +58,7 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Iota:=Classical.decEq Iota
 theorem asymmetric_stage_count_lt_of_regular_factors
    (P:UnequalParameters)
-   (S:ContactTightSingularLedgerResearch.TightParameters)
+   (S:RCN318.TightParameters)
    (Q T:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    (p:ℕ) [CharP K p]
    (hs:1 ≤ S.s) (hsmall:S.s < p) (hw:1 ≤ S.w)
@@ -84,7 +84,7 @@ theorem asymmetric_stage_count_lt_of_regular_factors
      S.a ≤ (nodes.filter (fun i =>
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma S.w S.errors)
-   (hregular:∀ F:ContactAsymmetricResidualStageResearch.RegularIndex Q,
+   (hregular:∀ F:RCN052.RegularIndex Q,
      (regularPairSeeds Q T selected Gamma F).card*P.gap ≤
        (P.n-P.w)*dot P.agreement (regularVector P F.1)+
          (P.errors+1)*P.gap*(regularVector P F.1).z):
@@ -97,18 +97,18 @@ theorem asymmetric_stage_count_lt_of_regular_factors
    (regularVector_budgets P Q hQ S.D S.w S.L S.s (by omega) hbox hY hR hZ)
    hregular
  have hregularCap:
-     (∑ F:ContactAsymmetricResidualStageResearch.RegularIndex Q,
+     (∑ F:RCN052.RegularIndex Q,
        (regularPairSeeds Q T selected Gamma F).card) ≤ P.regularCountCap:=
    P.regular_count_le _ hgap hregularScaled
  have hsingularOld:=
-   ContactSingularBranchParameterizedResearch.TightParameters.singularSeeds_count_le_countCap
+   RCN292.TightParameters.singularSeeds_count_le_countCap
      S Q hQ hbox hs hsmall hw hchar hDw hj hjYSmall hjZSmall hmixedSmall
      hwa han selected Gamma nodes x u0 u1 hinj hnodes hdegree hagreement
      hnoPencil
  have hsingular:
-     (ContactAsymmetricResidualStageResearch.singularSeeds Q selected Gamma).card ≤
+     (RCN052.singularSeeds Q selected Gamma).card ≤
        S.countCap:=by
-   change (ContactSingularBranch6600Research.singularSeeds Q selected Gamma).card ≤
+   change (RCN291.singularSeeds Q selected Gamma).card ≤
      S.countCap
    exact hsingularOld
  omega
@@ -352,4 +352,4 @@ theorem secondResidualCell_count_lt
  simpa [Delta,secondResidualGcd12Ceiling,
    optimized_residual_cell_values.2.2.2.2] using hstage
 end
-end ProximityPrize.SubmissionLower.ContactStackedResidualCells6656Research
+end ProximityPrize.SubmissionLower.RCN303

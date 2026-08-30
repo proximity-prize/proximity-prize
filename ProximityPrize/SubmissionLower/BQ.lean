@@ -2,15 +2,15 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B9
 import ProximityPrize.SubmissionLower.EX
 import ProximityPrize.SubmissionLower.BP
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualSurfaceResearch
+namespace ProximityPrize.SubmissionLower.RCN163
 open scoped Classical
-open ContactFlagAffineResidualAutomorphismResearch
-open ContactIdentityResidualGlobalTransformResearch
-open ContactIdentityResidualFamilyResearch
-open ContactIdentityResidualPencilResearch
-open ContactPrimeSeedIncidence
-open ContactFlagTriangularProjectionResearch
-open TrivariateShearResearch
+open RCN094
+open RCN157
+open RCN155
+open RCN160
+open RCN238
+open RCN125
+open RCN372
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
@@ -76,47 +76,47 @@ theorem componentResidualHom_eq_residualAlgHom
      residualAlgHom,residualImage]
 theorem surfaceMap_globalResidualHom_eq_residualAlgHom
    (phi:Polynomial K →+*Omega) (P0 P1 V:Polynomial K) (F:Poly4 K):
-   ContactGenericSurface.surfaceMap phi
+   RCN136.surfaceMap phi
        (globalResidualHom P0 P1 V F)=
      residualAlgHom (phi P0) (phi V) (phi P1)
        (phi P0.derivative) (phi V.derivative) (phi P1.derivative)
-       (ContactGenericSurface.surfaceMap phi F):=by
+       (RCN136.surfaceMap phi F):=by
  rw [surfaceMap_globalResidualHom]
  rw [componentResidualHom_eq_residualAlgHom]
 theorem surfaceMap_globalResidualHom_degreeOf_one
    (phi:Polynomial K →+*Omega) (hphi:Function.Injective phi)
    (P0 P1 V:Polynomial K) (hV:V≠0) (F:Poly4 K):
-   (ContactGenericSurface.surfaceMap phi
+   (RCN136.surfaceMap phi
      (globalResidualHom P0 P1 V F)).degreeOf 1=
-       (ContactGenericSurface.surfaceMap phi F).degreeOf 1:=by
+       (RCN136.surfaceMap phi F).degreeOf 1:=by
  rw [surfaceMap_globalResidualHom_eq_residualAlgHom]
  exact residual_degreeOf_one_eq _ _ _ _ _ _
    ((map_ne_zero_iff phi hphi).mpr hV) _
 theorem surfaceMap_globalResidualHom_irreducible_iff
    (phi:Polynomial K →+*Omega) (hphi:Function.Injective phi)
    (P0 P1 V:Polynomial K) (hV:V≠0) (F:Poly4 K):
-   Irreducible (ContactGenericSurface.surfaceMap phi
+   Irreducible (RCN136.surfaceMap phi
      (globalResidualHom P0 P1 V F)) ↔
-     Irreducible (ContactGenericSurface.surfaceMap phi F):=by
+     Irreducible (RCN136.surfaceMap phi F):=by
  rw [surfaceMap_globalResidualHom_eq_residualAlgHom]
  exact residual_irreducible_iff _ _ _ _ _ _
    ((map_ne_zero_iff phi hphi).mpr hV) _
 theorem surfaceMap_globalResidualHom_dvd_iff
    (phi:Polynomial K →+*Omega) (hphi:Function.Injective phi)
    (P0 P1 V:Polynomial K) (hV:V≠0) (F G:Poly4 K):
-   ContactGenericSurface.surfaceMap phi (globalResidualHom P0 P1 V F)∣
-       ContactGenericSurface.surfaceMap phi (globalResidualHom P0 P1 V G) ↔
-     ContactGenericSurface.surfaceMap phi F∣
-       ContactGenericSurface.surfaceMap phi G:=by
+   RCN136.surfaceMap phi (globalResidualHom P0 P1 V F)∣
+       RCN136.surfaceMap phi (globalResidualHom P0 P1 V G) ↔
+     RCN136.surfaceMap phi F∣
+       RCN136.surfaceMap phi G:=by
  rw [surfaceMap_globalResidualHom_eq_residualAlgHom,
    surfaceMap_globalResidualHom_eq_residualAlgHom]
  exact residual_dvd_iff _ _ _ _ _ _
    ((map_ne_zero_iff phi hphi).mpr hV) _ _
 theorem surfaceMap_globalResidualHom_polynomialInFlag
    (phi:Polynomial K →+*Omega) (P0 P1 V:Polynomial K)
-   (F:Poly4 K) (p:ContactFlagBezout6543Research.FlagDegree)
-   (hflag:PolynomialInFlag p (ContactGenericSurface.surfaceMap phi F)):
-   PolynomialInFlag p (ContactGenericSurface.surfaceMap phi
+   (F:Poly4 K) (p:RCN095.FlagDegree)
+   (hflag:PolynomialInFlag p (RCN136.surfaceMap phi F)):
+   PolynomialInFlag p (RCN136.surfaceMap phi
      (globalResidualHom P0 P1 V F)):=by
  rw [surfaceMap_globalResidualHom_eq_residualAlgHom]
  exact polynomialInFlag_residualAlgHom p _ _ _ _ _ _ _ hflag
@@ -128,10 +128,10 @@ theorem pderiv_globalResidualHom
  pderiv_globalResidualHom_R P0 P1 V F
 theorem specialization_pderiv_globalResidualHom
    (P0 P1 V C:Polynomial K) (gamma:K) (F:Poly4 K):
-   ContactTranslation.specialization K C gamma
+   RCN319.specialization K C gamma
        (MvPolynomial.pderiv (2:Fin 4)
          (globalResidualHom P0 P1 V F))=
-     V*ContactTranslation.specialization K
+     V*RCN319.specialization K
        (P0+Polynomial.C gamma*P1+V*C) gamma
          (MvPolynomial.pderiv (2:Fin 4) F):=by
  rw [pderiv_globalResidualHom,map_mul,specialization_embedX,
@@ -139,23 +139,23 @@ theorem specialization_pderiv_globalResidualHom
 theorem residual_specialization_regular
    (P0 P1 V C:Polynomial K) (gamma:K) (F:Poly4 K)
    (hV:V≠0)
-   (hregular:ContactTranslation.specialization K
+   (hregular:RCN319.specialization K
      (P0+Polynomial.C gamma*P1+V*C) gamma
        (MvPolynomial.pderiv (2:Fin 4) F)≠0):
-   ContactTranslation.specialization K C gamma
+   RCN319.specialization K C gamma
      (MvPolynomial.pderiv (2:Fin 4)
        (globalResidualHom P0 P1 V F))≠0:=by
  rw [specialization_pderiv_globalResidualHom]
  exact mul_ne_zero hV hregular
 theorem surfaceMap_pderiv_globalResidualHom
    (phi:Polynomial K →+*Omega) (P0 P1 V:Polynomial K) (F:Poly4 K):
-   ContactGenericSurface.surfaceMap phi
+   RCN136.surfaceMap phi
        (MvPolynomial.pderiv (2:Fin 4)
          (globalResidualHom P0 P1 V F))=
      MvPolynomial.C (phi V)*
        residualAlgHom (phi P0) (phi V) (phi P1)
          (phi P0.derivative) (phi V.derivative) (phi P1.derivative)
-         (ContactGenericSurface.surfaceMap phi
+         (RCN136.surfaceMap phi
            (MvPolynomial.pderiv (2:Fin 4) F)):=by
  rw [pderiv_globalResidualHom,map_mul,surfaceMap_embedX,
    surfaceMap_globalResidualHom_eq_residualAlgHom]
@@ -165,9 +165,9 @@ theorem residual_dvd_surfaceMap_globalResidualHom_iff
    (G:Poly3 Omega) (F:Poly4 K):
    residualAlgHom (phi P0) (phi V) (phi P1)
        (phi P0.derivative) (phi V.derivative) (phi P1.derivative) G∣
-     ContactGenericSurface.surfaceMap phi
+     RCN136.surfaceMap phi
        (globalResidualHom P0 P1 V F) ↔
-     G∣ContactGenericSurface.surfaceMap phi F:=by
+     G∣RCN136.surfaceMap phi F:=by
  rw [surfaceMap_globalResidualHom_eq_residualAlgHom]
  exact residual_dvd_iff _ _ _ _ _ _
    ((map_ne_zero_iff phi hphi).mpr hV) _ _
@@ -177,10 +177,10 @@ theorem residual_dvd_pderiv_globalResidualHom_iff
    (G:Poly3 Omega) (F:Poly4 K):
    residualAlgHom (phi P0) (phi V) (phi P1)
        (phi P0.derivative) (phi V.derivative) (phi P1.derivative) G∣
-     ContactGenericSurface.surfaceMap phi
+     RCN136.surfaceMap phi
        (MvPolynomial.pderiv (2:Fin 4)
          (globalResidualHom P0 P1 V F)) ↔
-     G∣ContactGenericSurface.surfaceMap phi
+     G∣RCN136.surfaceMap phi
        (MvPolynomial.pderiv (2:Fin 4) F):=by
  rw [surfaceMap_pderiv_globalResidualHom]
  have hv:phi V≠0:=(map_ne_zero_iff phi hphi).mpr hV
@@ -193,19 +193,19 @@ theorem residual_component_transport
    (P0 P1 V:Polynomial K) (hV:V≠0)
    (F:Poly4 K) (G:Poly3 Omega)
    (hG:Irreducible G)
-   (hdiv:G∣ContactGenericSurface.surfaceMap phi F)
+   (hdiv:G∣RCN136.surfaceMap phi F)
    (hr:0 < G.degreeOf 1)
-   (hproper:¬ G∣ContactGenericSurface.surfaceMap phi
+   (hproper:¬ G∣RCN136.surfaceMap phi
      (MvPolynomial.pderiv (2:Fin 4) F))
-   (p:ContactFlagBezout6543Research.FlagDegree)
+   (p:RCN095.FlagDegree)
    (hflag:PolynomialInFlag p G):
    let Gres:=residualAlgHom (phi P0) (phi V) (phi P1)
      (phi P0.derivative) (phi V.derivative) (phi P1.derivative) G
    Irreducible Gres∧
-     Gres∣ContactGenericSurface.surfaceMap phi
+     Gres∣RCN136.surfaceMap phi
        (globalResidualHom P0 P1 V F)∧
      0 < Gres.degreeOf 1∧
-     ¬ Gres∣ContactGenericSurface.surfaceMap phi
+     ¬ Gres∣RCN136.surfaceMap phi
        (MvPolynomial.pderiv (2:Fin 4)
          (globalResidualHom P0 P1 V F))∧
      PolynomialInFlag p Gres:=by
@@ -240,13 +240,13 @@ theorem eval_residualComponent_selectedPoint
      ![phi C,phi C.derivative,(phi.comp Polynomial.C) gamma]:=by
    funext i
    fin_cases i <;>
-     simp [selectedPoint,ContactPolynomialSolutions.polynomialPoint,
+     simp [selectedPoint,RCN231.polynomialPoint,
        RingHom.comp_apply]
  have hSpoint:selectedPoint phi (fun _↦S) gamma=
      ![phi S,phi S.derivative,(phi.comp Polynomial.C) gamma]:=by
    funext i
    fin_cases i <;>
-     simp [selectedPoint,ContactPolynomialSolutions.polynomialPoint,
+     simp [selectedPoint,RCN231.polynomialPoint,
        RingHom.comp_apply]
  rw [hCpoint,hSpoint]
  change MvPolynomial.eval₂Hom (algebraMap Omega Omega)
@@ -282,10 +282,10 @@ theorem exists_residual_family_with_surface_data
    (hno:NoLargeSelectedPencil selected Gamma w e)
    (F:Poly4 K)
    (hsolution:∀ gamma∈Gamma,
-     ContactTranslation.specialization K (selected gamma) gamma F=0)
+     RCN319.specialization K (selected gamma) gamma F=0)
    (hregular:∀ gamma∈Gamma,
      MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
-       (ContactPolynomialSolutions.polynomialPoint
+       (RCN231.polynomialPoint
          (phi.comp Polynomial.C) (selected gamma) gamma (phi Polynomial.X))
        (MvPolynomial.pderiv (2:Fin 4) F)≠0):
    ∃ P0 P1:Polynomial K,∃ residual:K → Polynomial K,
@@ -302,11 +302,11 @@ theorem exists_residual_family_with_surface_data
            residualReceived I x u0 P0 j+
              gamma*residualReceived I x u1 P1 j)∧
      (∀ gamma∈Gamma,
-       ContactTranslation.specialization K (residual gamma) gamma
+       RCN319.specialization K (residual gamma) gamma
          (globalResidualHom P0 P1 (Lagrange.nodal I x) F)=0)∧
      ∀ gamma∈Gamma,
        MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
-         (ContactPolynomialSolutions.polynomialPoint
+         (RCN231.polynomialPoint
            (phi.comp Polynomial.C) (residual gamma) gamma
              (phi Polynomial.X))
          (MvPolynomial.pderiv (2:Fin 4)
@@ -338,4 +338,4 @@ theorem exists_residual_family_with_surface_data
    rw [←hnormal gamma hgamma]
    exact hregular gamma hgamma
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualSurfaceResearch
+end ProximityPrize.SubmissionLower.RCN163

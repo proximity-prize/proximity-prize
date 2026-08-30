@@ -1,13 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z3
 import ProximityPrize.SubmissionLower.EE
-namespace ProximityPrize.SubmissionLower.ContactFlagAffineFamilyDegree6543Research
+namespace ProximityPrize.SubmissionLower.RCN093
 open scoped Classical BigOperators
-open ActualCurveCoordinateField ActualCurveRationalProjection
- ArbitraryRationalProjectionResearch ActualPlaneCoordinateKernel
- TrivariateRationalCollection
-open ContactFlagTriangularProjectionResearch
-open ContactFlagTrapezoidFamilyDegree6543Research
+open RCN002 RCN005
+ RCN022 RCN011
+ RCN371
+open RCN125
+open RCN124
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 200000
@@ -274,4 +274,4 @@ theorem finite_sum_flag_finrank_trapezoid
    hGouter hHouter hGsupport hHsupport hbudget
 end Family
 end
-end ProximityPrize.SubmissionLower.ContactFlagAffineFamilyDegree6543Research
+end ProximityPrize.SubmissionLower.RCN093

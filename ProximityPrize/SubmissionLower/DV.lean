@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AZ
-namespace ProximityPrize.SubmissionLower.ContactAlignmentBridge
+namespace ProximityPrize.SubmissionLower.RCN050
 open ProximityPrize.Benchmark
 noncomputable section
 variable {ι K:Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
@@ -143,4 +143,4 @@ theorem alignmentBound6400_of_selected_count
  exact alignmentBound_of_selected_count IRSProfile.domain 131071 76780
    274980728111352763 hcount
 end
-end ProximityPrize.SubmissionLower.ContactAlignmentBridge
+end ProximityPrize.SubmissionLower.RCN050

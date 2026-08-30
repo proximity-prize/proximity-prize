@@ -227,6 +227,49 @@ lemma Algebra.intTrace_eq_trace [Module.Free A B]:Algebra.intTrace A B=Algebra.t
 open nonZeroDivisors
 variable [IsDomain Aₘ] [IsIntegrallyClosed Aₘ] [IsDomain Bₘ] [IsIntegrallyClosed Bₘ]
 variable [IsTorsionFree Aₘ Bₘ] [Module.Finite Aₘ Bₘ]
+include M in
+lemma Algebra.intTrace_eq_of_isLocalization
+   (x:B):
+   algebraMap A Aₘ (Algebra.intTrace A B x)=Algebra.intTrace Aₘ Bₘ (algebraMap B Bₘ x):=by
+ by_cases hM:0∈M
+ · subsingleton [IsLocalization.uniqueOfZeroMem (S:=Aₘ) hM]
+ replace hM:M ≤ A⁰:=fun x hx↦mem_nonZeroDivisors_iff_ne_zero.mpr (fun e↦hM (e ▸ hx))
+ let K:=FractionRing A
+ let L:=FractionRing B
+ have:IsIntegralClosure B A L:=
+   IsIntegralClosure.of_isIntegrallyClosed _ _ _
+ haveI:Algebra.IsAlgebraic (FractionRing A) (FractionRing B):=
+   isAlgebraic_of_isFractionRing A B ..
+ have:IsLocalization (algebraMapSubmonoid B A⁰) L:=
+   IsIntegralClosure.isLocalization _ (FractionRing A) _ _
+ let f:Aₘ →+*K:=IsLocalization.map _ (T:=A⁰) (RingHom.id A) hM
+ letI:=f.toAlgebra
+ have:IsScalarTower A Aₘ K:=IsScalarTower.of_algebraMap_eq'
+   (by rw [RingHom.algebraMap_toAlgebra,IsLocalization.map_comp,RingHomCompTriple.comp_eq])
+ letI:=IsFractionRing.isFractionRing_of_isDomain_of_isLocalization M Aₘ K
+ let g:Bₘ →+*L:=IsLocalization.map _
+     (M:=algebraMapSubmonoid B M) (T:=algebraMapSubmonoid B A⁰)
+     (RingHom.id B) (Submonoid.monotone_map hM)
+ letI:=g.toAlgebra
+ have:IsScalarTower B Bₘ L:=IsScalarTower.of_algebraMap_eq'
+   (by rw [RingHom.algebraMap_toAlgebra,IsLocalization.map_comp,RingHomCompTriple.comp_eq])
+ letI:=((algebraMap K L).comp f).toAlgebra
+ have:IsScalarTower Aₘ K L:=IsScalarTower.of_algebraMap_eq' rfl
+ have:IsScalarTower Aₘ Bₘ L:=by
+   apply IsScalarTower.of_algebraMap_eq'
+   apply IsLocalization.ringHom_ext M
+   rw [RingHom.algebraMap_toAlgebra,RingHom.algebraMap_toAlgebra (R:=Bₘ),RingHom.comp_assoc,
+     RingHom.comp_assoc, ←IsScalarTower.algebraMap_eq,IsScalarTower.algebraMap_eq A B Bₘ,
+     IsLocalization.map_comp,RingHom.comp_id, ←RingHom.comp_assoc,IsLocalization.map_comp,
+     RingHom.comp_id, ←IsScalarTower.algebraMap_eq, ←IsScalarTower.algebraMap_eq]
+ letI:=IsFractionRing.isFractionRing_of_isDomain_of_isLocalization
+   (algebraMapSubmonoid B M) Bₘ L
+ have:FiniteDimensional K L:=.of_isLocalization A B A⁰
+ have:IsIntegralClosure Bₘ Aₘ L:=
+   IsIntegralClosure.of_isIntegrallyClosed _ _ _
+ apply IsFractionRing.injective Aₘ K
+ rw [←IsScalarTower.algebraMap_apply,Algebra.algebraMap_intTrace_fractionRing,
+   Algebra.algebraMap_intTrace (L:=L), ←IsScalarTower.algebraMap_apply]
 end trace
 section norm
 variable [IsIntegrallyClosed A]

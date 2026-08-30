@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AH
-namespace ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
+namespace ProximityPrize.SubmissionLower.RCN095
 open scoped BigOperators
-open ProximityPrize.SubmissionLower.ContactSparsePoleSupportResearch
+open ProximityPrize.SubmissionLower.RCN295
 set_option maxRecDepth 20000
 set_option maxHeartbeats 4000000
 structure FlagDegree where
@@ -222,4 +222,4 @@ theorem flag_strict_budget:
  rw [flag_total_numerator_exact]
  norm_num [legacyAlignmentBudget,legacyGapSquared,legacyGap,
    legacyAgreements,legacyN,legacyErrors,legacyW]
-end ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
+end ProximityPrize.SubmissionLower.RCN095

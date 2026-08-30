@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.H2
-namespace ProximityPrize.SubmissionLower.ActualAffineModelPlaces
+namespace ProximityPrize.SubmissionLower.RCN000
 open IsDedekindDomain
 noncomputable section
 variable (K A L:Type*) [Field K] [IsAlgClosed K]
@@ -13,29 +13,29 @@ variable (K A L:Type*) [Field K] [IsAlgClosed K]
  [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 abbrev Normalization:=FunctionField.ringOfIntegers K L
 def actualPointPlace (φ:A →ₐ[K] K):HeightOneSpectrum (Normalization K L):=
- AffineModelPointLift.modelPointPlace
+ RCN015.modelPointPlace
    (FunctionField.ringOfIntegers.algebraMap_injective K L)
    (IsFractionRing.injective A L) φ
 theorem actualPointPlace_injective:
    Function.Injective (actualPointPlace K A L):=
- AffineModelPointLift.modelPointPlace_injective
+ RCN015.modelPointPlace_injective
    (FunctionField.ringOfIntegers.algebraMap_injective K L)
    (IsFractionRing.injective A L)
 theorem actual_model_value_le_one (φ:A →ₐ[K] K) (a:A):
    (actualPointPlace K A L φ).valuation L (algebraMap A L a) ≤ 1:=
- AffineModelPointLift.model_value_le_one
+ RCN015.model_value_le_one
    (FunctionField.ringOfIntegers.algebraMap_injective K L)
    (IsFractionRing.injective A L) φ a
 theorem actual_model_value_lt_one_iff (φ:A →ₐ[K] K) (a:A):
    (actualPointPlace K A L φ).valuation L (algebraMap A L a) < 1 ↔ φ a=0:=
- AffineModelPointLift.model_value_lt_one_iff
+ RCN015.model_value_lt_one_iff
    (FunctionField.ringOfIntegers.algebraMap_injective K L)
    (IsFractionRing.injective A L) φ a
 theorem actual_model_zero_order_ge_one
    (φ:A →ₐ[K] K) (a:A) (ha:a≠0) (hzero:φ a=0):
    1 ≤-((actualPointPlace K A L φ).valuation L (algebraMap A L a)).log:=
- AffineModelPointLift.model_zero_order_ge_one
+ RCN015.model_zero_order_ge_one
    (FunctionField.ringOfIntegers.algebraMap_injective K L)
    (IsFractionRing.injective A L) φ a ha hzero
 end
-end ProximityPrize.SubmissionLower.ActualAffineModelPlaces
+end ProximityPrize.SubmissionLower.RCN000

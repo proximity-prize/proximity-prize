@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X2
 import ProximityPrize.SubmissionLower.Z
-namespace ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
-open ActualCurveCoordinateField ActualCurveRationalProjection TrivariateRationalCollection
+namespace ProximityPrize.SubmissionLower.RCN011
+open RCN002 RCN005 RCN371
 noncomputable section
 def bivariateEquiv (A:Type) [Field A]:
    MvPolynomial (Fin 2) A ≃ₐ[A] Polynomial (Polynomial A):=
@@ -151,4 +151,4 @@ theorem actualRelationKernel_family_injective
  apply hinj
  exact prime_eq_of_actualRelationKernel_eq K order (P i) (P j) (ht i) (ht j) hij
 end
-end ProximityPrize.SubmissionLower.ActualPlaneCoordinateKernel
+end ProximityPrize.SubmissionLower.RCN011

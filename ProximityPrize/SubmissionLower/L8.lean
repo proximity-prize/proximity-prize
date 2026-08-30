@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.L7
-namespace ProximityPrize.SubmissionLower.ContactLocalizationSurfacePrimeAdapter6732Research
-open ContactLocalizationQuotientAdapter6732Research
+namespace ProximityPrize.SubmissionLower.RCN190
+open RCN189
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -106,4 +106,4 @@ noncomputable def surfaceLocalEquiv
  letI:IsLocalization.AtPrime (Localization.AtPrime q) p:=hloc
  exact (IsLocalization.algEquiv p.primeCompl _ _).toRingEquiv
 end
-end ProximityPrize.SubmissionLower.ContactLocalizationSurfacePrimeAdapter6732Research
+end ProximityPrize.SubmissionLower.RCN190

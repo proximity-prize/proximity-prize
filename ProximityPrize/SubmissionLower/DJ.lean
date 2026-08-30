@@ -1,15 +1,15 @@
 import ProximityPrize.SubmissionLower.A1
-namespace ProximityPrize.SubmissionLower.ContactActiveNestedFlagCosts6733Research
-open ActualCurveCoordinateField ContactRegularComponentCover
-open ContactWeakSeparableSeparatorResearch
-open ContactAdaptiveProjectionCoordinateResearch CoordinateBoxZeroCount
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedProjectionActive6630Research
-open ContactAdaptiveNestedUnitFamilyActive6630Research
-open ContactAdaptiveUnitPoleFamilyResearch ContactPrimeFlagBudgetFamilyResearch
-open ContactFlagBezout6543Research ContactFlagAffineFamilyDegree6543Research
-open ContactFlagTriangularProjectionResearch ContactFlagPrincipalCycles6543Research
-open ArbitraryRationalProjectionResearch ContactActiveNestedFlagData6733Research
+namespace ProximityPrize.SubmissionLower.RCN030
+open RCN002 RCN264
+open RCN341
+open RCN042 RCN344
+open RCN037
+open RCN038
+open RCN040
+open RCN046 RCN237
+open RCN095 RCN093
+open RCN125 RCN116
+open RCN022 RCN031
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -106,4 +106,4 @@ theorem activeNestedUnitFamily_allCost_eq_flagCost
    (activeNestedVTranscendental base hactive hSderiv D C)
    (D.allAffineTranscendental C) (by simp [vOrder,flagEvaluation_X_one])]
 end
-end ProximityPrize.SubmissionLower.ContactActiveNestedFlagCosts6733Research
+end ProximityPrize.SubmissionLower.RCN030

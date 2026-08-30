@@ -2,45 +2,45 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.FB
 import ProximityPrize.SubmissionLower.F0
 /-!.-/
-namespace ProximityPrize.SubmissionLower.ContactMovingSeedlessGeometry6732Research
+namespace ProximityPrize.SubmissionLower.RCN211
 open scoped Classical BigOperators
 open ProximityPrize.Benchmark
-open ContactTranslation ContactInterpolation ContactPolynomialSolutions
-open ContactFactorCaps ContactImplicitContactLift ContactTaylorNumerators
-open ContactGenericSurface ContactGenericInitialPoint ContactGeometricFirstTail
-open ContactGeometricFactorCover ContactRegularFactorGate
-open ContactPrimeSeedIncidence ContactProperCutSeedCount
-open ContactOriginalRegularSeedCount ContactSingularAuxiliary
-open ContactSingularDegreeBounds
-open ContactSelectedSeedDecomposition
-open ContactSeedlessInterpolationResearch
-open ContactSeedlessPrimeIncidenceResearch ContactSeedlessProperCutResearch
-open ActualCoordinateDegreeSum
-open ContactSeedlessListBoundResearch
-open AlignmentMomentCurveProjection AlignmentInterleavedLambda
+open RCN319 RCN174 RCN231
+open RCN081 RCN167 RCN313
+open RCN136 RCN135 RCN138
+open RCN137 RCN267
+open RCN238 RCN243
+open RCN222 RCN290
+open RCN293
+open RCN286
+open RCN279
+open RCN282 RCN283
+open RCN001
+open RCN281
+open RCN019 RCN018
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 50000
 set_option maxHeartbeats 5000000
-private abbrev n := ContactMovingSeedless6732Research.n
-private abbrev w := ContactMovingSeedless6732Research.w
-private abbrev errors := ContactMovingSeedless6732Research.errors
-private abbrev agreements := ContactMovingSeedless6732Research.agreements
-private abbrev gap := ContactMovingSeedless6732Research.gap
-private abbrev prime := ContactMovingSeedless6732Research.prime
-private abbrev multiplicity := ContactMovingSeedless6732Research.multiplicity
-private abbrev yTotalCap := ContactMovingSeedless6732Research.yTotalCap
-private abbrev slopeCap := ContactMovingSeedless6732Research.slopeCap
-private abbrev weightedCap := ContactMovingSeedless6732Research.weightedCap
-private abbrev listBudget := ContactMovingSeedless6732Research.listBudget
-private abbrev capY := ContactMovingSeedless6732Research.capY
-private abbrev capR := ContactMovingSeedless6732Research.capR
+private abbrev n := RCN210.n
+private abbrev w := RCN210.w
+private abbrev errors := RCN210.errors
+private abbrev agreements := RCN210.agreements
+private abbrev gap := RCN210.gap
+private abbrev prime := RCN210.prime
+private abbrev multiplicity := RCN210.multiplicity
+private abbrev yTotalCap := RCN210.yTotalCap
+private abbrev slopeCap := RCN210.slopeCap
+private abbrev weightedCap := RCN210.weightedCap
+private abbrev listBudget := RCN210.listBudget
+private abbrev capY := RCN210.capY
+private abbrev capR := RCN210.capR
 private abbrev regularListNumerator :=
- ContactMovingSeedless6732Research.regularListNumerator
-private abbrev singularListCap := ContactMovingSeedless6732Research.singularListCap
-private abbrev listNumerator := ContactMovingSeedless6732Research.listNumerator
+ RCN210.regularListNumerator
+private abbrev singularListCap := RCN210.singularListCap
+private abbrev listNumerator := RCN210.listNumerator
 private theorem list_numerator_fits : listNumerator < listBudget * gap :=
- ContactMovingSeedless6732Research.list_numerator_fits
+ RCN210.list_numerator_fits
 private theorem w_pos : 0 < w := by decide
 private theorem prime_pos : 0 < prime := by decide
 private theorem w_lt_prime : w < prime := by decide
@@ -52,9 +52,9 @@ private theorem slopeCap_pos : 0 < slopeCap := by decide
 private theorem weightedCap_pos : 0 < weightedCap := by decide
 private theorem gap_pos : 0 < gap := by decide
 private theorem base_dimension_exact : IRSProfile.baseDimension = w + 1 := by
- norm_num [IRSProfile.baseDimension, w, ContactMovingSeedless6732Research.w]
+ norm_num [IRSProfile.baseDimension, w, RCN210.w]
 private theorem index_card_exact : Fintype.card IRSProfile.Index = n := by
- norm_num [IRSProfile.Index, n, ContactMovingSeedless6732Research.n]
+ norm_num [IRSProfile.Index, n, RCN210.n]
 section
 variable (K : Type) [Field K]
 local instance : DecidableEq K := Classical.decEq K
@@ -62,7 +62,7 @@ local instance : DecidableEq (GenericField K) := Classical.decEq (GenericField K
 private def agreementCap : Fin 3 → ℕ := ![capY, capR, 1]
 private theorem seedless_degree_caps
    (Q : MvPolynomial (Fin 4) K)
-   (hbox : Q ∈ ContactSeedlessInterpolationResearch.globalCoefficientBox K
+   (hbox : Q ∈ RCN279.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap) :
    Q.degreeOf 1 ≤ yTotalCap ∧ Q.degreeOf 2 ≤ slopeCap ∧
      Q.degreeOf 3 = 0 := by
@@ -89,10 +89,10 @@ private theorem agreement_cap
  intro j
  fin_cases j
  · exact (surfaceMap_degreeOf_le phi _ 0).trans
-     (by simpa [agreementCap, capY, ContactMovingSeedless6732Research.capY]
+     (by simpa [agreementCap, capY, RCN210.capY]
        using hb.1)
  · exact (surfaceMap_degreeOf_le phi _ 1).trans
-     (by simpa [agreementCap, capR, ContactMovingSeedless6732Research.capR]
+     (by simpa [agreementCap, capR, RCN210.capR]
        using hb.2.1)
  · exact (surfaceMap_degreeOf_le phi _ 2).trans
      (hb.2.2.trans (by simp [agreementCap]))
@@ -100,7 +100,7 @@ private theorem original_regular_seedless_bound
    [CharP K prime]
    (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
    (hRpos : 0 < F.degreeOf 2)
-   (hbox : F ∈ ContactInterpolation.globalCoefficientBox K
+   (hbox : F ∈ RCN174.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap)
    (hY : F.degreeOf 1 ≤ yTotalCap)
    (hR : F.degreeOf 2 ≤ slopeCap)
@@ -120,15 +120,15 @@ private theorem original_regular_seedless_bound
  classical
  letI : CharP (GenericField K) prime := genericField_charP K prime
  have hsmall : F.degreeOf 2 < prime := hR.trans_lt slopeCap_lt_prime
- have hcount (g : ContactSeedlessListBoundResearch.GeometricFactor K F) :
-     (ContactSeedlessListBoundResearch.geometricPolynomials K F Gamma g).card * gap ≤
+ have hcount (g : RCN281.GeometricFactor K F) :
+     (RCN281.geometricPolynomials K F Gamma g).card * gap ≤
        (n - w) * (capY * g.1.degreeOf 1 + capR * g.1.degreeOf 0) := by
    obtain ⟨hgirred, hgdiv⟩ :=
      surfaceFactors_spec (polynomialEmbedding K) F g.1 g.2
    have hgate := geometric_factor_regular_gate K (GenericField K) F hF
      prime hRpos hsmall g.1 hgirred
      (by simpa only [canonical_geometricSurfaceMap] using hgdiv)
-   have hproper := ContactSeedlessListBoundResearch.geometric_seedless_cut_proper
+   have hproper := RCN281.geometric_seedless_cut_proper
      K g.1 hgate.1
    have hgY := (geometricFactor_degree_le K F hF.ne_zero g 0).trans hY
    have hgR := (geometricFactor_degree_le K F hF.ne_zero g 1).trans hR
@@ -152,10 +152,10 @@ private theorem original_regular_seedless_bound
      fin_cases j <;> fin_cases k <;>
        simp [seedlessCut, MvPolynomial.degreeOf_X_of_ne] at hjk ⊢ <;>
        omega
-   have hsub := ContactSeedlessListBoundResearch.geometricPolynomials_subset K F Gamma g
+   have hsub := RCN281.geometricPolynomials_subset K F Gamma g
    have hraw := seedless_proper_cut_bound (polynomialEmbedding K)
      (polynomialEmbedding_injective K) F g.1 hgirred hgdiv hproper
-     (ContactSeedlessListBoundResearch.geometricPolynomials K F Gamma g)
+     (RCN281.geometricPolynomials K F Gamma g)
      nodes x received hinj prime w agreements
      w_pos w_lt_prime w_lt_agreements
      (by rw [hnodes]; exact agreements_le_n)
@@ -179,14 +179,14 @@ private theorem original_regular_seedless_bound
      simp [seedlessCut]
    have hm0 : coordinateMixedDegree (GenericField K) g.1 seedlessCut 0 =
        g.1.degreeOf 1 := by
-     rw [ActualCoordinateDegreeSum.coordinateMixedDegree_zero, hx1, hx2]
+     rw [RCN001.coordinateMixedDegree_zero, hx1, hx2]
      omega
    have hm1 : coordinateMixedDegree (GenericField K) g.1 seedlessCut 1 =
        g.1.degreeOf 0 := by
-     rw [ActualCoordinateDegreeSum.coordinateMixedDegree_one, hx0, hx2]
+     rw [RCN001.coordinateMixedDegree_one, hx0, hx2]
      omega
    have hm2 : coordinateMixedDegree (GenericField K) g.1 seedlessCut 2 = 0 := by
-     rw [ActualCoordinateDegreeSum.coordinateMixedDegree_two, hx0, hx1]
+     rw [RCN001.coordinateMixedDegree_two, hx0, hx1]
      omega
    have hcost :
        (∑ i : Fin 3, agreementCap i *
@@ -194,27 +194,27 @@ private theorem original_regular_seedless_bound
        capY * g.1.degreeOf 1 + capR * g.1.degreeOf 0 := by
      simp [Fin.sum_univ_succ, agreementCap, hm0, hm1, hm2]
    rw [hnodes, hcost] at hraw
-   change (ContactSeedlessListBoundResearch.geometricPolynomials K F Gamma g).card *
+   change (RCN281.geometricPolynomials K F Gamma g).card *
        (agreements - w) ≤
      (n - w) * (capY * g.1.degreeOf 1 + capR * g.1.degreeOf 0)
    exact hraw
  calc
    Gamma.card * gap ≤
-       (∑ g : ContactSeedlessListBoundResearch.GeometricFactor K F,
-         (ContactSeedlessListBoundResearch.geometricPolynomials K F Gamma g).card) * gap :=
+       (∑ g : RCN281.GeometricFactor K F,
+         (RCN281.geometricPolynomials K F Gamma g).card) * gap :=
      Nat.mul_le_mul_right _
-       (ContactSeedlessListBoundResearch.card_le_sum_geometricPolynomials
+       (RCN281.card_le_sum_geometricPolynomials
          K F hF.ne_zero Gamma hsolutions)
-   _ = ∑ g : ContactSeedlessListBoundResearch.GeometricFactor K F,
-       (ContactSeedlessListBoundResearch.geometricPolynomials K F Gamma g).card * gap := by
+   _ = ∑ g : RCN281.GeometricFactor K F,
+       (RCN281.geometricPolynomials K F Gamma g).card * gap := by
      rw [Finset.sum_mul]
-   _ ≤ ∑ g : ContactSeedlessListBoundResearch.GeometricFactor K F,
+   _ ≤ ∑ g : RCN281.GeometricFactor K F,
        (n - w) * (capY * g.1.degreeOf 1 + capR * g.1.degreeOf 0) :=
      Finset.sum_le_sum (fun g _ => hcount g)
    _ = (n - w) *
-       (capY * (∑ g : ContactSeedlessListBoundResearch.GeometricFactor K F,
+       (capY * (∑ g : RCN281.GeometricFactor K F,
          g.1.degreeOf 1) +
-       capR * (∑ g : ContactSeedlessListBoundResearch.GeometricFactor K F,
+       capR * (∑ g : RCN281.GeometricFactor K F,
          g.1.degreeOf 0)) := by
      rw [← Finset.mul_sum, Finset.sum_add_distrib,
        ← Finset.mul_sum, ← Finset.mul_sum]
@@ -226,7 +226,7 @@ private theorem original_regular_seedless_bound
 private theorem singular_seedless_card_le
    [CharP K prime]
    (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
-   (hbox : Q ∈ ContactSeedlessInterpolationResearch.globalCoefficientBox K
+   (hbox : Q ∈ RCN279.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap)
    (Gamma : Finset (Polynomial K))
    (hsolutions : ∀ S ∈ Gamma,
@@ -241,35 +241,35 @@ private theorem singular_seedless_card_le
  have hJR : J.degreeOf 2 = 0 := singularAuxiliary_R_degree Q hQ prime
    (hcaps.2.1.trans_lt slopeCap_lt_prime)
  have hQY : MvPolynomial.weightedTotalDegree
-     ContactSeedlessListBoundResearch.yWeights Q ≤ yTotalCap := by
+     RCN281.yWeights Q ≤ yTotalCap := by
    apply (weightedTotalDegree_le_iff
-     ContactSeedlessListBoundResearch.yWeights Q yTotalCap).mpr
+     RCN281.yWeights Q yTotalCap).mpr
    intro d hd
    have hh := (hbox hd).1
    rw [weight_fin4]
-   simpa [ContactSeedlessListBoundResearch.yWeights] using
+   simpa [RCN281.yWeights] using
      (Nat.le_add_right (d 1) (d 2)).trans hh
  have hQZ : MvPolynomial.weightedTotalDegree
-     ContactSeedlessListBoundResearch.zWeights Q ≤ 0 := by
+     RCN281.zWeights Q ≤ 0 := by
    apply (weightedTotalDegree_le_iff
-     ContactSeedlessListBoundResearch.zWeights Q 0).mpr
+     RCN281.zWeights Q 0).mpr
    intro d hd
    have hh := (hbox hd).2.2.1
    rw [weight_fin4]
-   simpa [ContactSeedlessListBoundResearch.zWeights, hh]
+   simpa [RCN281.zWeights, hh]
  have hJYw := singularAuxiliary_weight_le
-   ContactSeedlessListBoundResearch.yWeights Q hQ slopeCap
+   RCN281.yWeights Q hQ slopeCap
    slopeCap_pos hcaps.2.1
  have hJZw := singularAuxiliary_weight_le
-   ContactSeedlessListBoundResearch.zWeights Q hQ slopeCap
+   RCN281.zWeights Q hQ slopeCap
    slopeCap_pos hcaps.2.1
  have hJY : J.degreeOf 1 ≤ singularListCap :=
-   (ContactSeedlessListBoundResearch.degreeY_le_yWeight K J).trans
+   (RCN281.degreeY_le_yWeight K J).trans
      (hJYw.trans (by
-       simp only [singularListCap, ContactMovingSeedless6732Research.singularListCap]
+       simp only [singularListCap, RCN210.singularListCap]
        exact Nat.mul_le_mul_left _ hQY))
  have hJZ : J.degreeOf 3 = 0 := Nat.eq_zero_of_le_zero
-   ((ContactSeedlessListBoundResearch.degreeZ_le_zWeight K J).trans
+   ((RCN281.degreeZ_le_zWeight K J).trans
      (hJZw.trans (by
        simpa only [Nat.mul_zero] using
          Nat.mul_le_mul_left (2 * slopeCap - 1) hQZ)))
@@ -281,9 +281,9 @@ private theorem singular_seedless_card_le
  have hAZ : A.degreeOf 2 = 0 := Nat.eq_zero_of_le_zero
    ((surfaceMap_degreeOf_le phi J 2).trans_eq hJZ)
  let q : Polynomial (GenericField K) :=
-   ContactSeedlessListBoundResearch.yProjection (GenericField K) A
+   RCN281.yProjection (GenericField K) A
  have hq : q ≠ 0 :=
-   ContactSeedlessListBoundResearch.yProjection_nonzero A hAne hAR hAZ
+   RCN281.yProjection_nonzero A hAne hAR hAZ
  have hroots : ∀ z ∈ Gamma.image phi, z ∈ q.roots := by
    intro z hz
    obtain ⟨S, hS, rfl⟩ := Finset.mem_image.mp hz
@@ -291,9 +291,9 @@ private theorem singular_seedless_card_le
    change q.eval (phi S) = 0
    have hv : seedlessPoint phi S 0 = phi S := by
      simp [seedlessPoint_value]
-   change (ContactSeedlessListBoundResearch.yProjection (GenericField K) A).eval
+   change (RCN281.yProjection (GenericField K) A).eval
      (phi S) = 0
-   rw [← hv, ContactSeedlessListBoundResearch.yProjection_eval A hAR hAZ
+   rw [← hv, RCN281.yProjection_eval A hAR hAZ
      (seedlessPoint phi S)]
    rw [seedlessPoint_surface_evaluation, eval_polynomialPoint_eq_specialization,
      hsolutions S hS]
@@ -308,15 +308,15 @@ private theorem singular_seedless_card_le
      exact Multiset.mem_toFinset.mpr (hroots z hz)
    _ ≤ q.roots.card := Multiset.toFinset_card_le _
    _ ≤ q.natDegree := Polynomial.card_roots' q
-   _ ≤ A.degreeOf 0 := ContactSeedlessListBoundResearch.yProjection_natDegree_le A
+   _ ≤ A.degreeOf 0 := RCN281.yProjection_natDegree_le A
    _ ≤ J.degreeOf 1 := surfaceMap_degreeOf_le phi J 0
    _ ≤ singularListCap := hJY
 theorem seedless_list_card_le
    [CharP K prime]
    (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
-   (hbox : Q ∈ ContactSeedlessInterpolationResearch.globalCoefficientBox K
+   (hbox : Q ∈ RCN279.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap)
-   (hlegacy : Q ∈ ContactInterpolation.globalCoefficientBox K
+   (hlegacy : Q ∈ RCN174.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap)
    (Gamma : Finset (Polynomial K))
    {Iota : Type} [Fintype Iota] [DecidableEq Iota]
@@ -389,7 +389,7 @@ theorem seedless_list_card_le
      _ ≤ singularListCap * gap + regularListNumerator :=
        Nat.add_le_add (Nat.mul_le_mul_right gap hsing) hregularScaled
      _ = listNumerator := by
-       simp only [listNumerator, ContactMovingSeedless6732Research.listNumerator,
+       simp only [listNumerator, RCN210.listNumerator,
          regularListNumerator, singularListCap, gap]
        omega
  by_contra hnot
@@ -408,35 +408,35 @@ theorem exists_seedless_vanishing_interpolant
    (received : IRSProfile.Index → IRSProfile.Field) :
    ∃ Q : MvPolynomial (Fin 4) IRSProfile.Field,
      Q ≠ 0 ∧
-     Q ∈ ContactSeedlessInterpolationResearch.globalCoefficientBox IRSProfile.Field
+     Q ∈ RCN279.globalCoefficientBox IRSProfile.Field
        weightedCap w yTotalCap slopeCap ∧
-     Q ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+     Q ∈ RCN174.globalCoefficientBox IRSProfile.Field
        weightedCap w yTotalCap slopeCap ∧
      ∀ (P : Polynomial IRSProfile.Field)
        (support : Finset IRSProfile.Index),
        P.natDegree ≤ w → agreements ≤ support.card →
        (∀ i ∈ support, P.eval (IRSProfile.domain i) = received i) →
-       ContactTranslation.specialization IRSProfile.Field P 0 Q = 0 := by
+       RCN319.specialization IRSProfile.Field P 0 Q = 0 := by
  classical
  obtain ⟨Q, hQ, hbox, hcontact⟩ :=
-   ContactMovingSeedless6732Research.exists_seedless_interpolant received
- change Q ∈ ContactSeedlessInterpolationResearch.globalCoefficientBox IRSProfile.Field
+   RCN210.exists_seedless_interpolant received
+ change Q ∈ RCN279.globalCoefficientBox IRSProfile.Field
    weightedCap w yTotalCap slopeCap at hbox
- have hlegacy : Q ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+ have hlegacy : Q ∈ RCN174.globalCoefficientBox IRSProfile.Field
      weightedCap w yTotalCap slopeCap := by
    intro d hd
    obtain ⟨hYR, hR, hZ, hweight⟩ := hbox hd
    exact ⟨by omega, hR, hweight⟩
  refine ⟨Q, hQ, hbox, hlegacy, ?_⟩
  intro P support hdegree hcard hvalues
- apply ContactTranslation.specialization_eq_zero_of_contact_and_degree
+ apply RCN319.specialization_eq_zero_of_contact_and_degree
    IRSProfile.Field Q P 0 IRSProfile.domain received (fun _ => 0)
      support multiplicity
  · intro i hi r
    exact hcontact i r
  · intro i hi
    simpa only [mul_zero, add_zero] using hvalues i hi
- · have hdeg := ContactTranslation.specialization_natDegree_lt
+ · have hdeg := RCN319.specialization_natDegree_lt
      IRSProfile.Field weightedCap w yTotalCap slopeCap Q P 0
      weightedCap_pos
      hlegacy hdegree
@@ -511,4 +511,4 @@ theorem irs_scalar_finite_list_card_le
    (by simpa using index_card_exact) hdegree hsolution hagreement
  rwa [hcard] at hbound
 end
-end ProximityPrize.SubmissionLower.ContactMovingSeedlessGeometry6732Research
+end ProximityPrize.SubmissionLower.RCN211

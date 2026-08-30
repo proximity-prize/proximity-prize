@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W9
-namespace ProximityPrize.SubmissionLower.NormValuation
+namespace ProximityPrize.SubmissionLower.RCN356
 open scoped BigOperators nonZeroDivisors
 open UniqueFactorizationMonoid IsDedekindDomain
 noncomputable section
@@ -49,7 +49,7 @@ theorem factorCount_relNorm_prime (v:HeightOneSpectrum R)
  have hUnderPrime:(P.under R).IsPrime:=inferInstance
  have hUnderIrred:Irreducible (P.under R):=
    (Ideal.prime_of_isPrime hUnderZero hUnderPrime).irreducible
- rw [SeparableIdealNorm.relNorm_prime_eq_pow R S P (P.under R),
+ rw [RCN367.relNorm_prime_eq_pow R S P (P.under R),
    hUnderIrred.normalizedFactors_pow,normalize_eq,Multiset.count_replicate]
 theorem factorCount_relNorm (v:HeightOneSpectrum R)
    (I:Ideal S) (hI:I≠⊥):
@@ -154,4 +154,4 @@ theorem orderAt_fieldNorm (v:HeightOneSpectrum R)
  rw [orderAt_div _ _ _ (by simpa using hazero) (by simpa using hbzero),mul_sub]
 end FixedExtension
 end
-end ProximityPrize.SubmissionLower.NormValuation
+end ProximityPrize.SubmissionLower.RCN356

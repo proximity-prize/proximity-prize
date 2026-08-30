@@ -2,20 +2,20 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BQ
 import ProximityPrize.SubmissionLower.K5
 import ProximityPrize.SubmissionLower.E8
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
+namespace ProximityPrize.SubmissionLower.RCN159
 open scoped Classical
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactTaylorNumerators ContactComponentPencils ContactPrimeSeedIncidence
-open ContactIdentityResidualPencilResearch
-open ContactIdentityResidualGlobalTransformResearch
-open ContactIdentityResidualSurfaceResearch
-open ContactIdentityZeroSafePencilResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactResidualSupportParametersResearch
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactFlagAffineResidualAutomorphismResearch
-open ContactFlagBezout6543Research
-open ContactFlagTriangularProjectionResearch
+open RCN136 RCN231 RCN319
+open RCN313 RCN065 RCN238
+open RCN160
+open RCN157
+open RCN163
+open RCN166
+open RCN156
+open RCN275
+open RCN234
+open RCN094
+open RCN095
+open RCN125
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
@@ -40,7 +40,7 @@ structure ResidualStage
  G_dvd_surface:G∣surfaceMap phi F
  y_dependent:0 < G.degreeOf 1
  regular_proper:¬ G∣surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F)
- flag_support:ContactFlagBezout6543Research.PolynomialInFlag flag G
+ flag_support:RCN095.PolynomialInFlag flag G
  surface_s_weight:wt residualSWeights F ≤ support.s
  surface_ys_weight:wt residualYSWeights F ≤ support.ys
  surface_total_weight:wt residualTotalWeights F ≤ support.total
@@ -321,4 +321,4 @@ theorem exists_terminal_descendant
            _ ≤ (Dnext.stage.agreementFiber gamma).card:=htail
 end ResidualStage
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualIterationResearch
+end ProximityPrize.SubmissionLower.RCN159

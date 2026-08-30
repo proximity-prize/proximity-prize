@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z
 import ProximityPrize.SubmissionLower.AQ
-namespace ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch
+namespace ProximityPrize.SubmissionLower.RCN022
 open scoped Classical
 noncomputable section
 variable (K L:Type*) [Field K] [Field L] [Algebra K L]
@@ -60,4 +60,4 @@ theorem finiteDimensional_elementEmbedding
  let b:=Module.finBasis (IntermediateField.adjoin K ({s}:Set L)) L
  exact (b.mapCoeffs e.symm hsmul).finiteDimensional_of_finite
 end
-end ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch
+end ProximityPrize.SubmissionLower.RCN022

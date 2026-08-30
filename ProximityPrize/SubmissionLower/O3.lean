@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I
-namespace ProximityPrize.SubmissionLower.ContactRegularZeroBudget6676Research
+namespace ProximityPrize.SubmissionLower.RCN271
 open scoped Classical
-open ContactResidualSparseComponentAdapterResearch
-open ContactFlagAffineResidualAutomorphismResearch
-open ContactIdentityResidualPrimeTransportResearch
-open ContactIdentityResidualZeroBudgetTransportResearch
+open RCN272
+open RCN094
+open RCN162
+open RCN165
 noncomputable section
 variable {K:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
@@ -107,8 +107,8 @@ theorem FiniteRegularZeroSetBound.map_residual_of_inverse
  have ht:=h.map_residual aY v bY aS bS cS hv
  simpa only [residual_original_apply aY v bY aS bS cS hv] using ht
 section Selected
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactProperCutSeedCount
+open RCN136 RCN231 RCN319
+open RCN238 RCN243
 variable {Ω:Type} [Field Ω] [IsAlgClosed Ω]
 local instance:DecidableEq Ω:=Classical.decEq Ω
 theorem agreement_fiber_card_le_of_regular_zero_bound
@@ -150,4 +150,4 @@ theorem agreement_fiber_card_le_of_regular_zero_bound
  rwa [hcard] at hcount
 end Selected
 end
-end ProximityPrize.SubmissionLower.ContactRegularZeroBudget6676Research
+end ProximityPrize.SubmissionLower.RCN271

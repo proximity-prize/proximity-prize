@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T
 import ProximityPrize.SubmissionLower.CG
-namespace ProximityPrize.SubmissionLower.ContactPolynomialRecenter6731Research
-open ContactDifferentialRing ContactRegularPoint ContactPolynomiality
-open ContactTaylorNumerators ContactAgreementEvaluation ContactPolynomialSolutions
-open ContactGlobalPolynomiality ContactPolynomialRecovery ContactTranslation
-open DifferentialTaylorCoefficients ContactTailClosure ContactInterpolation
+namespace ProximityPrize.SubmissionLower.RCN228
+open RCN077 RCN269 RCN233
+open RCN313 RCN047 RCN231
+open RCN139 RCN229 RCN319
+open RCN347 RCN311 RCN174
 noncomputable section
 set_option maxHeartbeats 200000
 set_option maxRecDepth 15000
@@ -87,4 +87,4 @@ theorem canonical_polynomiality_of_first_tail
  intro j hj _
  exact all_tail_jets_zero_of_first_tail_dvd coefficients F v hF hreg w hdiv j hj
 end
-end ProximityPrize.SubmissionLower.ContactPolynomialRecenter6731Research
+end ProximityPrize.SubmissionLower.RCN228

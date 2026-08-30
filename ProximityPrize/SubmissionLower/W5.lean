@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G1
 import ProximityPrize.SubmissionLower.V6
-namespace ProximityPrize.SubmissionLower.NormalizedPlaceClassification
+namespace ProximityPrize.SubmissionLower.RCN359
 open scoped Classical nonZeroDivisors WithZero
 open IsDedekindDomain
 noncomputable section
@@ -147,4 +147,4 @@ theorem exists_unique_place (hv:Function.Surjective v):
    (hq.symm.trans (centerPlace_valuation S L v hS hv))
 end Center
 end
-end ProximityPrize.SubmissionLower.NormalizedPlaceClassification
+end ProximityPrize.SubmissionLower.RCN359

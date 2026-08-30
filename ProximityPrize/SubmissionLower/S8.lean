@@ -175,6 +175,22 @@ theorem finprod_heightOneSpectrum_factorization_principal_fraction {n:R} (hn:n�
    apply congr_arg
    rw [IsFractionRing.mk'_eq_div,div_eq_mul_inv,mul_comm]
  exact finprod_heightOneSpectrum_factorization h0 hI
+open Classical in
+theorem finprod_heightOneSpectrum_factorization_principal {I:FractionalIdeal R⁰ K} (hI:I≠0)
+   (k:K) (hk:I=spanSingleton R⁰ k):
+   ∏ᶠ v:HeightOneSpectrum R,(v.asIdeal:FractionalIdeal R⁰ K)^
+     ((Associates.mk v.asIdeal).count (Associates.mk (Ideal.span {choose
+         (exists_mk'_eq R⁰ k)}:Ideal R)).factors-
+       (Associates.mk v.asIdeal).count (Associates.mk ((Ideal.span {(↑(choose
+         (choose_spec (exists_mk'_eq R⁰ k)):↥R⁰):R)}):Ideal R)).factors:ℤ)=I:=by
+ set n:R:=choose (exists_mk'_eq R⁰ k)
+ set d:↥R⁰:=choose (choose_spec (exists_mk'_eq R⁰ k))
+ have hnd:mk' K n d=k:=choose_spec (choose_spec (exists_mk'_eq R⁰ k))
+ have hn0:n≠0:=by
+   by_contra h
+   rw [←hnd,h,IsFractionRing.mk'_eq_div,map_zero,zero_div,spanSingleton_zero] at hk
+   exact hI hk
+ rw [finprod_heightOneSpectrum_factorization_principal_fraction hn0 d,hk,hnd]
 variable (K)
 open Classical in
 def count (I:FractionalIdeal R⁰ K):ℤ:=

@@ -2,13 +2,13 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BP
 import ProximityPrize.SubmissionLower.FO
 import ProximityPrize.SubmissionLower.D
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalFlagResearch
+namespace ProximityPrize.SubmissionLower.RCN156
 open scoped Classical BigOperators
-open ContactIdentityResidualGlobalTransformResearch
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactPost6464ShearSupportResearch
-open ContactFlagBezout6543Research
-open ContactGenericSurface ContactTaylorNumerators
+open RCN157
+open RCN234
+open RCN235
+open RCN095
+open RCN136 RCN313
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
@@ -190,7 +190,7 @@ theorem globalResidual_agreement_weight_bounds
    apply MvPolynomial.degreeOf_le_iff.mpr
    intro e he
    have hw:=(MvPolynomial.le_weightedTotalDegree residualYSWeights he).trans hFys
-   rw [ContactFactorCaps.weight_fin4] at hw
+   rw [RCN081.weight_fin4] at hw
    change e 0*0+e 1*1+e 2*1+e 3*0 ≤ 43 at hw
    norm_num at hw
    omega
@@ -198,7 +198,7 @@ theorem globalResidual_agreement_weight_bounds
    apply MvPolynomial.degreeOf_le_iff.mpr
    intro e he
    have hw:=(MvPolynomial.le_weightedTotalDegree residualTotalWeights he).trans hFtot
-   rw [ContactFactorCaps.weight_fin4] at hw
+   rw [RCN081.weight_fin4] at hw
    change e 0*0+e 1*1+e 2*1+e 3*1 ≤ 503 at hw
    norm_num at hw
    omega
@@ -253,7 +253,7 @@ theorem surfaceMap_globalResidual_agreement_in_flag
  have hqR:=(MvPolynomial.monomial_le_degreeOf (2:Fin 4) hq).trans hR
  have hqYS:=(MvPolynomial.le_weightedTotalDegree residualYSWeights hq).trans hYS'
  have hqTot:=(MvPolynomial.le_weightedTotalDegree residualTotalWeights hq).trans hTot
- rw [ContactFactorCaps.weight_fin4] at hqYS hqTot
+ rw [RCN081.weight_fin4] at hqYS hqTot
  change q 0*0+q 1*1+q 2*1+q 3*0 ≤ 1+85*d at hqYS
  change q 0*0+q 1*1+q 2*1+q 3*1 ≤ 1+1005*d at hqTot
  norm_num at hqYS hqTot
@@ -262,4 +262,4 @@ theorem surfaceMap_globalResidual_agreement_in_flag
    q 1+q 2+q 3 ≤ 920*d+(1+70*d)+15*d
  omega
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalFlagResearch
+end ProximityPrize.SubmissionLower.RCN156

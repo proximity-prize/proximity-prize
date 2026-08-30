@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EM
-namespace ProximityPrize.SubmissionLower.ContactGeometricFactorCover
-open UniqueFactorizationMonoid ContactGenericSurface ContactFactorCover
-open ContactGenericInitialPoint ContactGeometricFirstTail
-open ContactInterpolation ContactTranslation
+namespace ProximityPrize.SubmissionLower.RCN137
+open UniqueFactorizationMonoid RCN136 RCN082
+open RCN135 RCN138
+open RCN174 RCN319
 noncomputable section
 section ArbitraryVariables
 variable {σ A:Type*} [Field A]
@@ -115,7 +115,7 @@ theorem surfaceFactor_family_input_budgets
    (∑ F∈activeFactors Q,∑ g∈surfaceFactors φ F,g.degreeOf (0:Fin 3)) ≤ (D-1)/w∧
    (∑ F∈activeFactors Q,∑ g∈surfaceFactors φ F,g.degreeOf (1:Fin 3)) ≤ s∧
    (∑ F∈activeFactors Q,∑ g∈surfaceFactors φ F,g.degreeOf (2:Fin 3)) ≤ zcap:=by
- have hc:=ContactFactorCaps.degree_bounds_of_mem_box Q D w zcap s hw hbox
+ have hc:=RCN081.degree_bounds_of_mem_box Q D w zcap s hw hbox
  exact ⟨(surfaceFactor_family_degree_budget φ hφ Q hQ 0).trans hc.1,
    (surfaceFactor_family_degree_budget φ hφ Q hQ 1).trans hc.2.1,
    (surfaceFactor_family_degree_budget φ hφ Q hQ 2).trans hc.2.2⟩
@@ -182,4 +182,4 @@ theorem exists_component_at_actual_initial_point
    (fun i:Fin 3 => initialPoint K P γ i.succ) hz
 end CanonicalPoints
 end
-end ProximityPrize.SubmissionLower.ContactGeometricFactorCover
+end ProximityPrize.SubmissionLower.RCN137

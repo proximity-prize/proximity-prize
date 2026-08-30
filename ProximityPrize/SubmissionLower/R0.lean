@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DG
 import ProximityPrize.SubmissionLower.G8
-namespace ProximityPrize.SubmissionLower.CoordinateBoxZeroCount
+namespace ProximityPrize.SubmissionLower.RCN344
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
 noncomputable section
 variable (K L:Type*) [Field K] [Field L] [Algebra K L]
-abbrev Place:=CoordinatePlaceClassification.NormalizedValuation K L
+abbrev Place:=RCN345.NormalizedValuation K L
 structure SeparableCoordinate where
  embedding:RatFunc K →ₐ[K] L
  finite:letI:Algebra (RatFunc K) L:=embedding.toRingHom.toAlgebra
@@ -22,7 +22,7 @@ def degree (c:SeparableCoordinate K L):ℕ:=
 variable [IsAlgClosed K]
 theorem finite_sum_pole_le_degree (c:SeparableCoordinate K L)
    (W:Finset (Place K L)):
-   (∑ v∈W,CoordinatePoleMass.poleOrder K L v (value K L c)) ≤
+   (∑ v∈W,RCN346.poleOrder K L v (value K L c)) ≤
      (degree K L c:ℤ):=by
  letI:Algebra (RatFunc K) L:=c.embedding.toRingHom.toAlgebra
  letI:Algebra (Polynomial K) L:=
@@ -39,7 +39,7 @@ theorem finite_sum_pole_le_degree (c:SeparableCoordinate K L)
      exact (c.embedding.commutes a).symm
  letI:FiniteDimensional (RatFunc K) L:=c.finite
  letI:Algebra.IsSeparable (RatFunc K) L:=c.separable
- exact CoordinatePoleMass.finite_sum_pole_le_finrank K L W
+ exact RCN346.finite_sum_pole_le_finrank K L W
 end SeparableCoordinate
 abbrev Coordinate:=K ⊕ SeparableCoordinate K L
 def coordinateValue:Coordinate K L → L:=
@@ -53,12 +53,12 @@ theorem constant_value_le_one (v:Place K L) (c:K):
 variable [IsAlgClosed K]
 theorem finite_sum_coordinate_pole_le_degree (c:Coordinate K L)
    (W:Finset (Place K L)):
-   (∑ v∈W,CoordinatePoleMass.poleOrder K L v (coordinateValue K L c)) ≤
+   (∑ v∈W,RCN346.poleOrder K L v (coordinateValue K L c)) ≤
      (coordinateDegree K L c:ℤ):=by
  rcases c with a | c
  · have hz:∀ v:Place K L,
-       CoordinatePoleMass.poleOrder K L v (algebraMap K L a)=0:=
-     fun v↦CoordinatePoleMass.poleOrder_eq_zero_of_le_one K L v _
+       RCN346.poleOrder K L v (algebraMap K L a)=0:=
+     fun v↦RCN346.poleOrder_eq_zero_of_le_one K L v _
        (constant_value_le_one K L v a)
    simp only [coordinateValue,coordinateDegree,Sum.elim_inl,hz,Finset.sum_const_zero,
      Nat.cast_zero,le_refl]
@@ -67,17 +67,17 @@ variable {σ:Type*} [Fintype σ]
 theorem finite_sum_polynomial_pole_le_box (W:Finset (Place K L))
    (c:σ → Coordinate K L) (cap:σ → ℕ) (F:MvPolynomial σ K)
    (hcap:∀ i,F.degreeOf i ≤ cap i):
-   (∑ v∈W,CoordinatePoleMass.poleOrder K L v
+   (∑ v∈W,RCN346.poleOrder K L v
      (MvPolynomial.eval₂Hom (algebraMap K L) (fun i↦coordinateValue K L (c i)) F)) ≤
      ∑ i,(cap i:ℤ)*(coordinateDegree K L (c i):ℤ):=by
- have hlocal:=ContactLocalPoleBound.weighted_poleOrder_eval_le_box
+ have hlocal:=RCN187.weighted_poleOrder_eval_le_box
    W (fun _↦1) (fun v↦v.val) (algebraMap K L)
    (fun v _ a↦constant_value_le_one K L v a)
    (fun i↦coordinateValue K L (c i)) cap F hcap
  simp only [Nat.cast_one,one_mul] at hlocal
  calc
    _ ≤ ∑ i,(cap i:ℤ)*
-       ∑ v∈W,CoordinatePoleMass.poleOrder K L v (coordinateValue K L (c i)):=hlocal
+       ∑ v∈W,RCN346.poleOrder K L v (coordinateValue K L (c i)):=hlocal
    _ ≤ _:=by
      apply Finset.sum_le_sum
      intro i _
@@ -94,10 +94,10 @@ theorem finite_zero_places_le_box (c:σ → Coordinate K L)
    (cap:σ → ℕ) (F:MvPolynomial σ K) (hcap:∀ i,F.degreeOf i ≤ cap i)
    (hF:MvPolynomial.eval₂Hom (algebraMap K L) (fun i↦coordinateValue K L (c i)) F≠0)
    (U:Finset (Place K L))
-   (hU:∀ v∈U,1 ≤ CommonPlaceBalance.order K L v
+   (hU:∀ v∈U,1 ≤ RCN026.order K L v
      (MvPolynomial.eval₂Hom (algebraMap K L) (fun i↦coordinateValue K L (c i)) F)):
    (U.card:ℤ) ≤ ∑ i,(cap i:ℤ)*(coordinateDegree K L (c i):ℤ):=by
- exact (CommonPlaceBalance.finite_zero_places_le_poleMass K L _ hF U hU).trans
+ exact (RCN026.finite_zero_places_le_poleMass K L _ hF U hU).trans
    (finite_sum_polynomial_pole_le_box K L _ c cap F hcap)
 section AffineModel
 variable (A:Type*) [CommRing A] [IsDomain A]
@@ -106,12 +106,12 @@ variable [Algebra (Polynomial K) A]
 variable [IsScalarTower K (Polynomial K) A] [IsScalarTower K A L]
 variable [IsScalarTower (Polynomial K) A L]
 def modelPlace (φ:A →ₐ[K] K):Place K L:=
- CoordinatePlaceClassification.chartMap K L
-   (Sum.inl (ActualAffineModelPlaces.actualPointPlace K A L φ))
+ RCN345.chartMap K L
+   (Sum.inl (RCN000.actualPointPlace K A L φ))
 theorem modelPlace_injective:Function.Injective (modelPlace K L A):=by
  intro φ ψ h
- have hchart:=(CoordinatePlaceClassification.chartMap_bijective K L).1 h
- exact ActualAffineModelPlaces.actualPointPlace_injective K A L (Sum.inl.inj hchart)
+ have hchart:=(RCN345.chartMap_bijective K L).1 h
+ exact RCN000.actualPointPlace_injective K A L (Sum.inl.inj hchart)
 theorem map_model_eval (x:σ → A) (F:MvPolynomial σ K):
    algebraMap A L (MvPolynomial.eval₂Hom (algebraMap K A) x F)=
      MvPolynomial.eval₂Hom (algebraMap K L) (fun i↦algebraMap A L (x i)) F:=by
@@ -144,16 +144,16 @@ theorem finite_model_zero_points_le_box
    apply IsFractionRing.injective A L
    simpa only [map_zero] using hz
  let U:=S.image (modelPlace K L A)
- have hU:∀ v∈U,1 ≤ CommonPlaceBalance.order K L v
+ have hU:∀ v∈U,1 ≤ RCN026.order K L v
      (MvPolynomial.eval₂Hom (algebraMap K L) (fun i↦coordinateValue K L (c i)) F):=by
    intro v hv
    obtain ⟨φ,hφ,rfl⟩:=Finset.mem_image.mp hv
    rw [heval]
-   exact ActualAffineModelPlaces.actual_model_zero_order_ge_one K A L φ _ hF (hS φ hφ)
+   exact RCN000.actual_model_zero_order_ge_one K A L φ _ hF (hS φ hφ)
  have h:=finite_zero_places_le_box K L c cap F hcap hnonzero U hU
  have hcard:U.card=S.card:=Finset.card_image_of_injective _ (modelPlace_injective K L A)
  rwa [hcard] at h
 end AffineModel
 end FixedSeparator
 end
-end ProximityPrize.SubmissionLower.CoordinateBoxZeroCount
+end ProximityPrize.SubmissionLower.RCN344

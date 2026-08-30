@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.A6
-namespace ProximityPrize.SubmissionLower.ContactBaseIdealAgreement6676Research
-open ContactDifferentialRing ContactTaylorNumerators
-open ContactBaseIdealAlgebra6676Research ContactBaseIdealCoefficients6676Research
+namespace ProximityPrize.SubmissionLower.RCN053
+open RCN077 RCN313
+open RCN055 RCN056
 noncomputable section
 variable {K:Type*} [Field K]
 def agreementLow (c:ℕ → K) (x u₀ u₁:K):Poly4 K:=
@@ -91,4 +91,4 @@ theorem agreementNumerator_eq_coefficient_sum (F:Poly4 K) (d:ℕ) (hd:2 ≤ d)
  exact commonNumeratorTerm_eq_coefficient_sum F d n
    (by have:=Finset.mem_range.mp hn;omega) c x
 end
-end ProximityPrize.SubmissionLower.ContactBaseIdealAgreement6676Research
+end ProximityPrize.SubmissionLower.RCN053

@@ -1,9 +1,9 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.E0
 import ProximityPrize.SubmissionLower.K
-namespace ProximityPrize.SubmissionLower.ContactGlobalPolynomiality
-open ContactDifferentialRing ContactRegularPoint ContactPolynomiality
-open DifferentialTaylorCoefficients ContactInterpolation ContactTranslation
+namespace ProximityPrize.SubmissionLower.RCN139
+open RCN077 RCN269 RCN233
+open RCN347 RCN174 RCN319
 noncomputable section
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
@@ -143,4 +143,4 @@ theorem exists_global_polynomial_of_all_tails
  exact global_polynomiality_of_all_tails coefficients F v hF hregular p bound w seedCap
    slopeCap hw hshort hchar hcaps htails
 end
-end ProximityPrize.SubmissionLower.ContactGlobalPolynomiality
+end ProximityPrize.SubmissionLower.RCN139

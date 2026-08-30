@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Q
 import ProximityPrize.SubmissionLower.C6
-namespace ProximityPrize.SubmissionLower.ContactTranslation
-open ContactRankKernel ContactInterpolation
+namespace ProximityPrize.SubmissionLower.RCN319
+open RCN256 RCN174
 open ProximityPrize.Benchmark
 open scoped BigOperators
 noncomputable section
@@ -199,7 +199,7 @@ theorem X_pow_dvd_taylor_specialization
      (homogenizedTranslation K x u₀ u₁ Q).coeff r):
    (Polynomial.X:Polynomial K)^m∣
      Polynomial.taylor x (specialization K P γ Q):=by
- obtain ⟨B,hB⟩:=ContactLocalDivisibility.X_sq_dvd_contactResidual P x
+ obtain ⟨B,hB⟩:=RCN185.X_sq_dvd_contactResidual P x
  have hP:Polynomial.taylor x P=
      Polynomial.C (u₀+γ*u₁)+Polynomial.X*
        (Polynomial.taylor x P.derivative+Polynomial.X*B):=by
@@ -228,7 +228,7 @@ theorem specialization_eq_zero_of_contact_and_degree
      (nodes i) (u₀ i) (u₁ i) γ m (hvalues i hi) (hcontact i hi)
    have hshifted:(Polynomial.X-Polynomial.C (nodes i))^m∣
        specialization K P γ Q:=
-     (ContactLocalDivisibility.shifted_power_dvd_iff_taylor_coeff_zero
+     (RCN185.shifted_power_dvd_iff_taylor_coeff_zero
        (specialization K P γ Q) (nodes i) m).mpr (Polynomial.X_pow_dvd_iff.mp hlocal)
    exact (Polynomial.le_rootMultiplicity_iff hnonzero).mpr hshifted
  have hh:=BCHKSSubstitutionVanish.mul_card_le_natDegree_of_rootMultiplicity
@@ -293,5 +293,27 @@ theorem specialization_natDegree_lt
  have hh:=Polynomial.natDegree_sum_le_of_forall_le Q.support
    (fun d => specialization K P γ (MvPolynomial.monomial d (MvPolynomial.coeff d Q))) hterms
  exact lt_of_le_of_lt hh (by omega)
+theorem exists_frozen_universal_vanishing_interpolant
+   (u₀ u₁:IRSProfile.Index → IRSProfile.Field):
+   ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
+     Q≠0∧Q∈globalCoefficientBox IRSProfile.Field 3324960 131071 176 5∧
+     ∀ (γ:IRSProfile.Field) (P:Polynomial IRSProfile.Field)
+       (support:Finset IRSProfile.Index),
+       P.natDegree ≤ 131071 → 184720 ≤ support.card →
+       (∀ i∈support,P.eval (IRSProfile.domain i)=u₀ i+γ*u₁ i) →
+       specialization IRSProfile.Field P γ Q=0:=by
+ classical
+ obtain ⟨Q,hQ,hcaps,hcontact⟩:=exists_frozen_translated_contact_interpolant u₀ u₁
+ refine ⟨Q,hQ,hcaps,?_⟩
+ intro γ P support hP hcard hvalues
+ apply specialization_eq_zero_of_contact_and_degree IRSProfile.Field Q P γ
+   IRSProfile.domain u₀ u₁ support 18
+ · intro i hi r
+   exact hcontact i r
+ · exact hvalues
+ · have hdegree:=specialization_natDegree_lt IRSProfile.Field
+     3324960 131071 176 5 Q P γ (by decide) hcaps hP
+   have hbound:3324960 ≤ 18*support.card:=by omega
+   exact hdegree.trans_le hbound
 end
-end ProximityPrize.SubmissionLower.ContactTranslation
+end ProximityPrize.SubmissionLower.RCN319

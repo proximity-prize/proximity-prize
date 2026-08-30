@@ -1,11 +1,11 @@
 import ProximityPrize.SubmissionLower.DX
 import ProximityPrize.SubmissionLower.DZ
 import ProximityPrize.SubmissionLower.D
-namespace ProximityPrize.SubmissionLower.ContactBaseIdealAgreementFlags6676Research
-open ContactTaylorNumerators ContactBaseIdealAlgebra6676Research
-open ContactBaseIdealCoefficients6676Research ContactBaseIdealWeights6676Research
-open ContactBaseIdealAgreement6676Research ContactPost6464MinkowskiRecurrenceResearch
-open ContactFlagBezout6543Research
+namespace ProximityPrize.SubmissionLower.RCN054
+open RCN313 RCN055
+open RCN056 RCN057
+open RCN053 RCN234
+open RCN095
 noncomputable section
 variable {K:Type*} [Field K]
 theorem weightBound_C (w:Fin 4 → ℕ) (c:K):
@@ -187,7 +187,7 @@ theorem agreementCoefficients_in_flag (F:Poly K) (a b s:ℕ) (hb:1 ≤ b) (hs:2 
  have heR:=(MvPolynomial.le_degreeOf_of_mem_support (2:Fin 4) he).trans hr
  have heYR:=(MvPolynomial.le_weightedTotalDegree ![0,1,1,0] he).trans hyr
  have heT:=(MvPolynomial.le_weightedTotalDegree ![0,1,1,1] he).trans ht
- rw [ContactFactorCaps.weight_fin4] at heYR heT
+ rw [RCN081.weight_fin4] at heYR heT
  change e 0*0+e 1*1+e 2*1+e 3*0 ≤ _ at heYR
  change e 0*0+e 1*1+e 2*1+e 3*1 ≤ _ at heT
  simp only [Nat.mul_zero,Nat.mul_one,Nat.add_zero,Nat.zero_add] at heYR heT
@@ -198,19 +198,19 @@ theorem surfaceMap_agreementCoefficients_in_flag {Ω:Type*} [Field Ω]
    (hAll:wt ![0,1,1,1] F ≤ a+b+s) (d:ℕ) (hd:2 ≤ d)
    (c:ℕ → K) (x u₀ u₁:K) (j:ℕ) (hj:j < d):
    PolynomialInFlag (coefficientFlag a b s d j)
-     (ContactGenericSurface.surfaceMap φ (agreementCoefficients F d c x u₀ u₁ j)):=by
+     (RCN136.surfaceMap φ (agreementCoefficients F d c x u₀ u₁ j)):=by
  intro e he
  obtain ⟨q,hq,rfl⟩:=Finset.mem_image.mp
-   (ContactGenericSurface.support_surfaceMap_subset φ _ he)
+   (RCN136.support_surfaceMap_subset φ _ he)
  exact agreementCoefficients_in_flag F a b s hb hs hR hYR hAll d hd c x u₀ u₁ j hj q hq
 theorem surfaceMap_agreementNumerator_eq_coefficient_sum {Ω:Type*} [Field Ω]
    (φ:Polynomial K →+*Ω) (F:Poly K) (d:ℕ) (hd:2 ≤ d)
    (c:ℕ → K) (x u₀ u₁:K):
-   ContactGenericSurface.surfaceMap φ (agreementNumerator F d c x u₀ u₁)=
-     ∑ j∈Finset.range d,ContactGenericSurface.surfaceMap φ (polyH K F)^(d-1-j)*
-       ContactGenericSurface.surfaceMap φ (polyG K F)^j*
-         ContactGenericSurface.surfaceMap φ (agreementCoefficients F d c x u₀ u₁ j):=by
+   RCN136.surfaceMap φ (agreementNumerator F d c x u₀ u₁)=
+     ∑ j∈Finset.range d,RCN136.surfaceMap φ (polyH K F)^(d-1-j)*
+       RCN136.surfaceMap φ (polyG K F)^j*
+         RCN136.surfaceMap φ (agreementCoefficients F d c x u₀ u₁ j):=by
  rw [agreementNumerator_eq_coefficient_sum F d hd c x u₀ u₁]
  simp only [map_sum,map_mul,map_pow]
 end
-end ProximityPrize.SubmissionLower.ContactBaseIdealAgreementFlags6676Research
+end ProximityPrize.SubmissionLower.RCN054

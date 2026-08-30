@@ -1,11 +1,11 @@
 import ProximityPrize.SubmissionLower.BL
 import ProximityPrize.SubmissionLower.B
-namespace ProximityPrize.SubmissionLower.ContactFirstTailIdentityIncidence6731Research
+namespace ProximityPrize.SubmissionLower.RCN087
 open scoped Classical BigOperators
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactPrimeSeedIncidence ContactComponentPencils ContactProperCutSeedCount
-open ContactRegularComponentCover ContactIdentityResidualIterationResearch
-open ContactFlagBezout6543Research ContactResidualSupportParametersResearch
+open RCN136 RCN231 RCN319
+open RCN238 RCN065 RCN243
+open RCN264 RCN159
+open RCN095 RCN275
 noncomputable section
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 25000
@@ -81,7 +81,7 @@ theorem identity_surface_seed_bound
        intro hd
        exact hiNot (Finset.mem_filter.mpr ⟨hiNode,Ideal.mem_span_singleton.mpr hd⟩)
      exact proper_node_fiber_bound S identityDegree hprovider i hiNode hproper
-   simpa only [mul_assoc] using ContactIncidence.sharp_incidence_bound relation Γ S.nodes
+   simpa only [mul_assoc] using RCN173.sharp_incidence_bound relation Γ S.nodes
      identities a w ((e+1)*identityDegree)
      (identityNodes_subset φ S.componentIdeal S.F S.nodes x S.u0 S.u1 w)
      hI hwa han hagreement hfiber
@@ -109,4 +109,4 @@ theorem identity_surface_seed_bound
        have h:=Nat.mul_le_mul_left ((S.nodes.card-w)*(e+1)) hdegreePos
        simpa [mul_assoc,mul_comm,mul_left_comm] using h
 end
-end ProximityPrize.SubmissionLower.ContactFirstTailIdentityIncidence6731Research
+end ProximityPrize.SubmissionLower.RCN087

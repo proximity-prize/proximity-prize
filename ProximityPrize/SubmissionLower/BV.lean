@@ -3,13 +3,13 @@ import ProximityPrize.SubmissionLower.F
 import ProximityPrize.SubmissionLower.Y4
 import ProximityPrize.SubmissionLower.BU
 import ProximityPrize.SubmissionLower.B2
-namespace ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount
+namespace ProximityPrize.SubmissionLower.RCN170
 open scoped Classical BigOperators
-open ContactAlignmentParameters ContactImplicitLiftParameters ContactCountingCaps
-open ContactCountingLedger ContactImplicitPairBudgets ContactGenericSurface
-open ContactGenericInitialPoint ContactGeometricFirstTail ContactGeometricFactorCover
-open ContactPrimeSeedIncidence ContactProperCutSeedCount ContactFactorCaps
-open ContactInterpolation ContactTranslation ActualCoordinateDegreeSum
+open RCN051 RCN168 RCN068
+open RCN070 RCN169 RCN136
+open RCN135 RCN138 RCN137
+open RCN238 RCN243 RCN081
+open RCN174 RCN319 RCN001
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
 local instance:DecidableEq K:=Classical.decEq K
@@ -154,7 +154,7 @@ theorem implicit_pair_seed_bound_fixed
      · exact (hfacdegree 2).trans hGGcaps.2.2
    have hgates:=fixed_implicit_characteristic_gates g (surfaceMap φ A) hgcaps hAcaps
    have hreg:∀ γ∈seedsFor g,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
-       (ContactPolynomialSolutions.polynomialPoint (φ.comp Polynomial.C)
+       (RCN231.polynomialPoint (φ.comp Polynomial.C)
          (selected γ) γ (φ Polynomial.X)) (MvPolynomial.pderiv (2:Fin 4) G)≠0:=by
      intro γ hγ
      exact (initialPoint_regular_iff K G (selected γ) γ).mpr (hregular γ (hsub g hγ))
@@ -212,4 +212,4 @@ theorem implicit_pair_seed_bound_fixed
      rw [capAt_dot]
      rfl
 end
-end ProximityPrize.SubmissionLower.ContactImplicitPairSeedCount
+end ProximityPrize.SubmissionLower.RCN170

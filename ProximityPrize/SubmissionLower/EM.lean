@@ -3,10 +3,10 @@ import ProximityPrize.SubmissionLower.BH
 import ProximityPrize.SubmissionLower.R6
 import ProximityPrize.SubmissionLower.CG
 import ProximityPrize.SubmissionLower.EK
-namespace ProximityPrize.SubmissionLower.ContactGeometricFirstTail
-open ContactGenericSurface ContactGaussLocalization ContactTaylorNumerators
-open ContactTailClosure ContactInterpolation ContactTranslation
-open ContactGenericInitialPoint
+namespace ProximityPrize.SubmissionLower.RCN138
+open RCN136 RCN132 RCN313
+open RCN311 RCN174 RCN319
+open RCN135
 noncomputable section
 variable (K L:Type*) [Field K] [Field L] [Algebra (RationalCoefficients K) L]
 def geometricPolynomialEmbedding:Polynomial K →+*L:=
@@ -46,7 +46,7 @@ theorem geometric_factor_dvd_iff
  constructor
  · intro hdivM
    have hfrac:rationalSurfaceMap K F∣rationalSurfaceMap K M:=
-     GeometricFactorContraction.original_dvd_of_geometric_factor_dvd
+     RCN350.original_dvd_of_geometric_factor_dvd
        (rationalSurfaceMap K F) (rationalSurfaceMap K M)
        (rationalSurfaceMap_irreducible K F hF hpos) g hg hdivF hdivM
    exact (rationalSurfaceMap_dvd_iff K F M hF hpos).mp hfrac
@@ -139,4 +139,4 @@ theorem canonical_first_tail_dichotomy
    first_tail_dichotomy K (GenericField K) F hF hpos w
 end CanonicalGenericField
 end
-end ProximityPrize.SubmissionLower.ContactGeometricFirstTail
+end ProximityPrize.SubmissionLower.RCN138

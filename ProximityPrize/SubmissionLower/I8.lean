@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactDualNumberCompat6733Research
+namespace ProximityPrize.SubmissionLower.RCN078
 def DualNumber (R:Type*):=R × R
 namespace DualNumber
 variable {K R:Type*}
@@ -85,4 +85,4 @@ theorem isUnit_of_isUnit_fst [CommRing R] {x:DualNumber R} (hx:IsUnit x.1):
  · ext <;> simp [mul_assoc]
  · ext <;> simp [mul_assoc]
 end DualNumber
-end ProximityPrize.SubmissionLower.ContactDualNumberCompat6733Research
+end ProximityPrize.SubmissionLower.RCN078

@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BU
-namespace ProximityPrize.SubmissionLower.ContactSelectedSeedDecomposition
-open ContactImplicitPairBudgets ContactImplicitContactLift
-open ContactExceptionalSeedAuxiliary ContactExceptionalSeedCount
-open ContactSingularAuxiliary ContactSingularDegreeBounds
-open ContactGenericInitialPoint ContactGenericSurface ContactGeometricFirstTail
-open ContactFactorCover ContactFactorCaps ContactInterpolation ContactTranslation
+namespace ProximityPrize.SubmissionLower.RCN286
+open RCN169 RCN167
+open RCN079 RCN080
+open RCN290 RCN293
+open RCN135 RCN136 RCN138
+open RCN082 RCN081 RCN174 RCN319
 noncomputable section
 variable {K:Type*} [Field K]
 def RegularSolution (F:MvPolynomial (Fin 4) K) (P:Polynomial K) (γ:K):Prop:=
@@ -166,4 +166,4 @@ theorem selected_seed_decomposition
  · exact Or.inr himplicit
  · exact False.elim (hnot (Finset.mem_filter.mpr ⟨hγ,hexceptional⟩))
 end
-end ProximityPrize.SubmissionLower.ContactSelectedSeedDecomposition
+end ProximityPrize.SubmissionLower.RCN286

@@ -1,38 +1,38 @@
 import ProximityPrize.SubmissionLower.Q3
 import ProximityPrize.SubmissionLower.B7
 import ProximityPrize.SubmissionLower.N1
-namespace ProximityPrize.SubmissionLower.ContactTwoTailReducedPowers6734Research
+namespace ProximityPrize.SubmissionLower.RCN333
 open scoped Classical BigOperators
-open ContactGenericInitialPoint ContactGenericSurface
-open ContactFirstTailCertificate6731Research
-open ContactProperDelayedTailCertificate6732Research
-open ContactDelayedTailMultiplicityProvider6732Research
-open ContactProperStageIndexedFamily6733Research
-open ContactProperStageIndexedGeometry6733Research
-open ContactProperStageIndexedPbar6733Research
-open ContactProperStageIndexedSpecialization6733Research
-open ContactProperStageIndexedFixedFactor6733Research
-open ContactProperFlagIndexedFiberPrimary6733Research
-open ContactProperFlagFiberData6733Research
-open ContactFlagPlaneIndexedFiber6733Research
-open ContactFlagPlaneIndexedFiberCertificate6733Research
-open ContactFlagPlaneIndexedFiberSurface6733Research
-open ContactFlagPlaneFiberPrimary6733Research
-open ContactFlagPlaneFiberSurface6733Research
-open ContactFlagPlaneIndexedGrouped6733Research
-open ContactFlagPlaneResultantBounds6733Research
-open ContactFlagPlaneSurfaceLocalAdapter6732Research
-open ContactRegularComponentCover
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ContactProperCutSeedCount
-open ContactFlagPlaneIndexedResidueWeight6733Research
-open ContactFlagAffineFamilyDegree6543Research ContactFlagBezout6543Research
-open ContactFlagTriangularProjectionResearch
-open ContactCongruentCuts6643Research
-open ContactTwoTailReducedTransport6734Research
-open ContactPlaneRelationCoefficientFiber6733Research
-open ActualCurveCoordinateField ActualPlaneCoordinateKernel
-open ArbitraryPlaneEvaluationFamilyResearch
+open RCN135 RCN136
+open RCN086
+open RCN244
+open RCN074
+open RCN249
+open RCN251
+open RCN252
+open RCN255
+open RCN250
+open RCN247
+open RCN245
+open RCN106
+open RCN107
+open RCN108
+open RCN102
+open RCN103
+open RCN109
+open RCN112
+open RCN113
+open RCN264
+open RCN120
+open RCN243
+open RCN111
+open RCN093 RCN095
+open RCN125
+open RCN066
+open RCN336
+open RCN226
+open RCN002 RCN011
+open RCN021
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 800000
@@ -42,6 +42,8 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
+variable {errorCap : ℕ}
+variable {stageSupport : RCN275.ResidualSupportParameters}
 theorem finiteDimensional_coordinateField_congr
    {Omega : Type} [Field Omega]
    {P Q : Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime] [Q.IsPrime]
@@ -134,12 +136,12 @@ theorem ideal_mem_right_of_sub_mem
    flagPlaneMap Omega lam mu nu order A =
      planeMap Omega order (flagAlgHom lam mu nu A) := rfl
 theorem reducedStage_indexedFixedFactor_groupedPowerDvd
-   (S : Stage K I Gamma x p flag)
+   (S : Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w+1))
+     (RCN326.w+1))
    (Tred : MvPolynomial (Fin 3) (GenericField K))
    (hd : S.G ∣ globalTailCut (polynomialEmbedding K) S.F
-     (ContactTwoTailParameters6733Research.w+1) - Tred)
+     (RCN326.w+1) - Tred)
    {A : Type} [Fintype A]
    (component : A → RegularComponent (GenericField K) S.G Tred
      (regularitySurface (polynomialEmbedding K) S.F))
@@ -346,4 +348,4 @@ theorem reducedStage_indexedFixedFactor_groupedPowerDvd
  simpa only [flagPlaneResultant,surface,redTail,stageSurfacePlane,
    flagPlaneMap_apply] using hpow
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailReducedPowers6734Research
+end ProximityPrize.SubmissionLower.RCN333

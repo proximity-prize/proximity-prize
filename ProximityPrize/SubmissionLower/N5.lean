@@ -2,11 +2,11 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F
 import ProximityPrize.SubmissionLower.AI
 import ProximityPrize.SubmissionLower.AK
-namespace ProximityPrize.SubmissionLower.ContactRecursiveResidualStages6656Research
+namespace ProximityPrize.SubmissionLower.RCN260
 open scoped BigOperators
-open ContactTightSingularLedgerResearch
-open ContactParameters6600Research
-open ContactSingularLedger6600Research
+open RCN318
+open RCN223
+open RCN294
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
 structure UnequalParameters where
@@ -23,19 +23,19 @@ structure UnequalParameters where
 namespace UnequalParameters
 def errors (P:UnequalParameters):ℕ:=P.n-P.a
 def gap (P:UnequalParameters):ℕ:=P.a-P.w
-def leftAgreement (P:UnequalParameters):ContactParameters6600Research.DegreeVector:=
+def leftAgreement (P:UnequalParameters):RCN223.DegreeVector:=
  ⟨1+2*P.w*P.leftY,
    P.w*(2*P.leftR-1),
    2*P.w*P.leftZ+1⟩
-def rightAgreement (P:UnequalParameters):ContactParameters6600Research.DegreeVector:=
+def rightAgreement (P:UnequalParameters):RCN223.DegreeVector:=
  ⟨1+2*P.w*P.rightY,
    P.w*(2*P.rightR-1),
    2*P.w*P.rightZ+1⟩
-def agreement (P:UnequalParameters):ContactParameters6600Research.DegreeVector:=
+def agreement (P:UnequalParameters):RCN223.DegreeVector:=
  ⟨max P.leftAgreement.y P.rightAgreement.y,
    max P.leftAgreement.r P.rightAgreement.r,
    max P.leftAgreement.z P.rightAgreement.z⟩
-def mixedCost (P:UnequalParameters):ContactParameters6600Research.DegreeVector:=
+def mixedCost (P:UnequalParameters):RCN223.DegreeVector:=
  ⟨P.leftR*P.rightZ+P.leftZ*P.rightR,
    P.leftY*P.rightZ+P.leftZ*P.rightY,
    P.leftY*P.rightR+P.leftR*P.rightY⟩
@@ -53,7 +53,7 @@ theorem complete_stage_count_lt
    (hgap:0 < R.gap) (hgapEq:S.gap=R.gap)
    {I:Type} [Fintype I]
    (total regular exceptions:ℕ) (count:I → ℕ)
-   (cost:I → ContactParameters6600Research.DegreeVector)
+   (cost:I → RCN223.DegreeVector)
    (hcover:total ≤ regular+((∑ i,count i)+exceptions))
    (hregular:regular*R.gap ≤ R.regularNumerator)
    (hy:(∑ i,(cost i).y) ≤ S.algebraicCap)
@@ -101,7 +101,7 @@ theorem residual_stage_ceilings:
 theorem residual_stage_one_count_lt
    {I:Type} [Fintype I]
    (total regular exceptions:ℕ) (count:I → ℕ)
-   (cost:I → ContactParameters6600Research.DegreeVector)
+   (cost:I → RCN223.DegreeVector)
    (hcover:total ≤ regular+((∑ i,count i)+exceptions))
    (hregular:regular*residualStageOne.gap ≤ residualStageOne.regularNumerator)
    (hy:(∑ i,(cost i).y) ≤ maximalResidualQA.algebraicCap)
@@ -124,7 +124,7 @@ theorem residual_stage_one_count_lt
 theorem residual_stage_two_count_lt
    {I:Type} [Fintype I]
    (total regular exceptions:ℕ) (count:I → ℕ)
-   (cost:I → ContactParameters6600Research.DegreeVector)
+   (cost:I → RCN223.DegreeVector)
    (hcover:total ≤ regular+((∑ i,count i)+exceptions))
    (hregular:regular*residualStageTwo.gap ≤ residualStageTwo.regularNumerator)
    (hy:(∑ i,(cost i).y) ≤ maximalResidualH.algebraicCap)
@@ -144,4 +144,4 @@ theorem residual_stage_two_count_lt
      hy hr hz hcount hexceptions
  rw [residual_stage_ceilings.2] at h
  exact h
-end ProximityPrize.SubmissionLower.ContactRecursiveResidualStages6656Research
+end ProximityPrize.SubmissionLower.RCN260

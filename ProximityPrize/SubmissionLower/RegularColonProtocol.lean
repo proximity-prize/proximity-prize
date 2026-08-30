@@ -1,13 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.Q6
+import ProximityPrize.SubmissionLower.RegularColonScore
 import ProximityPrize.SubmissionLower.FC
 import ProximityPrize.SubmissionLower.P1
-namespace ProximityPrize.SubmissionLower.ContactMovingProtocol6734Research
+namespace ProximityPrize.SubmissionLower.RegularColonProtocol
 open ProximityPrize.Benchmark
 open CoreDefinitions ProximityGap ToyProblem
-open AlignmentInterleavedLambda AlignmentMomentCurveProjection
-open ContactSeedlessProtocolResearch
-open ContactSeedlessLambdaResearch
+open RCN018 RCN019
+open RCN284
+open RCN280
 open scoped NNReal
 noncomputable section
 set_option maxRecDepth 20000
@@ -19,7 +19,7 @@ def errors : ℕ := 80112
 def agreements : ℕ := n-errors
 def listBudget : ℕ := 1000000000
 def mcaBudget : ℕ := 274980727111395087
-def radius : ℝ≥0 := ContactTwoTailParameters6734Research.radius
+def radius : ℝ≥0 := RegularColonScore.radius
 theorem sixteen_row_separation :
    15 * (listBudget + 1).choose 2 < Fintype.card IRSProfile.Field := by
  rw [show Fintype.card IRSProfile.Field = (2130706433 : ℕ) ^ 6 by
@@ -36,7 +36,7 @@ theorem squared_eight_lambda_new
          (Fin 2 → Fin 8 → IRSProfile.Field)) :
        Set (IRSProfile.Index → Fin 2 → Fin 8 → IRSProfile.Field))
      delta ≤ (listBudget : ℕ∞) := by
- apply ContactSeedlessLambdaResearch.squared_eight_lambda_le_of_interleaved_list
+ apply RCN280.squared_eight_lambda_le_of_interleaved_list
    IRSProfile.baseCode errors listBudget ?_ delta hcell
  intro received L hrows hclose
  have hclose' : ∀ v ∈ L, agreements ≤
@@ -67,17 +67,17 @@ theorem squared_eight_lambda_new
    exact (hclose' v (hDL hv)).trans
      (Finset.card_le_card (momentProjection_preserves_agreements t v received))
  have hnearWeak : ∀ c ∈ projected,
-     ContactMovingSeedless6732Research.agreements ≤
+     RCN210.agreements ≤
        (Finset.univ.filter (fun i =>
          c i = momentProjection t received i)).card := by
    intro c hc
    have hh := hnear c hc
-   norm_num [ContactMovingSeedless6732Research.agreements,
-     ContactMovingSeedless6732Research.n,
-     ContactMovingSeedless6732Research.errors,
+   norm_num [RCN210.agreements,
+     RCN210.n,
+     RCN210.errors,
      agreements, n, errors] at hh ⊢
    omega
- have hbound := ContactMovingSeedlessGeometry6732Research.irs_scalar_finite_list_card_le
+ have hbound := RCN211.irs_scalar_finite_list_card_le
    (momentProjection t received) projected hcode hnearWeak
  change projected.card ≤ listBudget at hbound
  rw [hprojcard, hDcard] at hbound
@@ -91,9 +91,9 @@ theorem lambda_le :
      (radius : ℝ) ≤ (listBudget : ℕ∞) := by
  rw [irs_squared_carrier_eq]
  apply squared_eight_lambda_new (radius : ℝ)
- norm_num [radius, ContactTwoTailParameters6734Research.radius, claimedRadius,
-   ContactTwoTailParameters6734Research.radiusNumerator,
-   ContactTwoTailParameters6734Research.radiusDenominator,
+ norm_num [radius, RegularColonScore.radius, claimedRadius,
+   RegularColonScore.radiusNumerator,
+   RegularColonScore.radiusDenominator,
    errors, IRSProfile.Index]
 theorem base_mca_le_of_alignment
    (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
@@ -108,12 +108,12 @@ theorem base_mca_le_of_alignment
      (mul_one_sub_le_card_iff_sub_card_le_floor A
        (show (0 : ℝ) ≤ (radius : ℝ) by positivity)).mp hA
    rw [show ⌊(radius : ℝ) * (Fintype.card IRSProfile.Index : ℝ)⌋₊ = errors by
-     simpa only [radius, errors, ContactTwoTailParameters6734Research.errors] using
-       ContactTwoTailParameters6734Research.radius_floor] at hcomp
+     simpa only [radius, errors, RegularColonScore.errors] using
+       RegularColonScore.radius_floor] at hcomp
    have hn : Fintype.card IRSProfile.Index = 262144 := by
      norm_num [IRSProfile.Index]
    rw [hn]
-   norm_num [errors, ContactTwoTailParameters6734Research.errors] at hcomp ⊢
+   norm_num [errors, RegularColonScore.errors] at hcomp ⊢
    omega
  · exact halign
 theorem mca_le_of_alignment
@@ -125,16 +125,16 @@ theorem mca_le_of_alignment
  calc
    _ ≤ mcaError (AffineLineGenerator IRSProfile.Field) IRSProfile.baseCode
        (radius : ℝ) := by
-     rw [ContactSeedlessProtocolResearch.irs_code_eq_base_interleaved]
+     rw [RCN284.irs_code_eq_base_interleaved]
      exact ProximityGap.mcaError_interleaved_le IRSProfile.baseCode
        IRSProfile.interleaving radius
        (by norm_num [IRSProfile.interleaving])
-       (by norm_num [radius, ContactTwoTailParameters6734Research.radius,
-         claimedRadius, ContactTwoTailParameters6734Research.radiusNumerator,
-         ContactTwoTailParameters6734Research.radiusDenominator])
-       (by norm_num [radius, ContactTwoTailParameters6734Research.radius,
-         claimedRadius, ContactTwoTailParameters6734Research.radiusNumerator,
-         ContactTwoTailParameters6734Research.radiusDenominator])
+       (by norm_num [radius, RegularColonScore.radius,
+         claimedRadius, RegularColonScore.radiusNumerator,
+         RegularColonScore.radiusDenominator])
+       (by norm_num [radius, RegularColonScore.radius,
+         claimedRadius, RegularColonScore.radiusNumerator,
+         RegularColonScore.radiusDenominator])
    _ ≤ ENNReal.ofReal
        ((mcaBudget : ℝ) / Fintype.card IRSProfile.Field) :=
      base_mca_le_of_alignment halign
@@ -145,7 +145,7 @@ theorem mca_le_of_alignment
 theorem field_capacity_split :
    2 ^ (128 : ℕ) * (mcaBudget + listBudget) ≤
      Fintype.card IRSProfile.Field := by
- rw [ContactSeedlessProtocolResearch.field_cardinality]
+ rw [RCN284.field_cardinality]
  norm_num [mcaBudget, listBudget]
 theorem certifiedGammaError_le_of_alignment
    (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
@@ -176,20 +176,20 @@ theorem certifiedGammaError_le_of_alignment
        (Fintype.card IRSProfile.Field : ENNReal) := by
      rw [← ENNReal.add_div, Nat.cast_add]
    _ ≤ (1 : ENNReal) / 2 ^ (128 : ℕ) := by
-     apply ContactSeedlessProtocolResearch.nat_div_le_inv_pow
+     apply RCN284.nat_div_le_inv_pow
      · norm_num [mcaBudget, listBudget]
      · simpa only [Nat.mul_comm] using field_capacity_split
 theorem protocolClaim6735_of_alignment
    (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
    ProtocolClaim 6735 10254463 33554432 where
- admissible := ContactTwoTailParameters6734Research.radius_admissible
+ admissible := RegularColonScore.radius_admissible
  reduction := by
    change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
    simpa [reductionTarget, ProximityGap.prizeThreshold] using
      certifiedGammaError_le_of_alignment halign
  score := by
-   change (1 - ContactTwoTailParameters6734Research.radius) ^
+   change (1 - RegularColonScore.radius) ^
      IRSProfile.repetitions ≤ claimedError 6735
-   exact ContactTwoTailParameters6734Research.score_target_le
+   exact RegularColonScore.score_target_le
 end
-end ProximityPrize.SubmissionLower.ContactMovingProtocol6734Research
+end ProximityPrize.SubmissionLower.RegularColonProtocol

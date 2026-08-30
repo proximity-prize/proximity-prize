@@ -1,10 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.K
 import ProximityPrize.SubmissionLower.K7
-namespace ProximityPrize.SubmissionLower.ContactTranslation6600Research
+namespace ProximityPrize.SubmissionLower.RCN320
 open ProximityPrize.Benchmark
-open ContactInterpolation ContactInterpolation6600Research ContactRankKernel
-open ContactParameters6600Research ContactTranslation
+open RCN174 RCN175 RCN256
+open RCN223 RCN319
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
@@ -52,17 +52,17 @@ theorem exists_frozen_universal_vanishing_interpolant6600
  · exact hvalues
  · have hdegree:=specialization_natDegree_lt IRSProfile.Field
      weightedCap w seedTotalCap slopeCap Q P gamma
-     (by norm_num [ContactParameters6600Research.weightedCap,
-       ContactParameters6600Research.multiplicity,
-       ContactParameters6600Research.agreements,
-       ContactParameters6600Research.n,
-       ContactParameters6600Research.errors])
+     (by norm_num [RCN223.weightedCap,
+       RCN223.multiplicity,
+       RCN223.agreements,
+       RCN223.n,
+       RCN223.errors])
      hcaps hP
    have hbound:weightedCap ≤
-       ContactParameters6600Research.multiplicity*support.card:=by
-     rw [ContactParameters6600Research.weightedCap]
+       RCN223.multiplicity*support.card:=by
+     rw [RCN223.weightedCap]
      exact Nat.mul_le_mul_left
-       ContactParameters6600Research.multiplicity hcard
+       RCN223.multiplicity hcard
    exact hdegree.trans_le hbound
 end
-end ProximityPrize.SubmissionLower.ContactTranslation6600Research
+end ProximityPrize.SubmissionLower.RCN320

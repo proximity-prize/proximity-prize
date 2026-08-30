@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z8
-namespace ProximityPrize.SubmissionLower.ContactFirstTailCertificate6731Research
+namespace ProximityPrize.SubmissionLower.RCN086
 open scoped Classical BigOperators
-open ContactTaylorNumerators ContactGenericSurface ContactPrimeSeedIncidence
-open ContactBaseIdealAgreement6676Research ContactBaseIdealAgreementFlags6676Research
-open ContactFlagBezout6543Research ContactMovingProjection6676Research
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactMovingAgreementCertificate6719Research
+open RCN313 RCN136 RCN238
+open RCN053 RCN054
+open RCN095 RCN207
+open RCN234
+open RCN198
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 35000
@@ -54,10 +54,10 @@ theorem globalTailCut_dvd_iff (φ:Polynomial K →+*Ω)
 theorem selected_globalTailCut_zero (φ:Polynomial K →+*Ω)
    (F:MvPolynomial (Fin 4) K) (selected:K → Polynomial K)
    (γ:K) (w:ℕ) (hdegree:(selected γ).natDegree ≤ w)
-   (hsolution:ContactTranslation.specialization K (selected γ) γ F=0):
+   (hsolution:RCN319.specialization K (selected γ) γ F=0):
    MvPolynomial.aeval (selectedPoint φ selected γ) (globalTailCut φ F (w+1))=0:=by
  rw [globalTailCut_eq,map_mul]
- have hzero:=ContactCountingCaps.selected_firstTail_zero φ F selected γ w hdegree hsolution
+ have hzero:=RCN068.selected_firstTail_zero φ F selected γ w hdegree hsolution
  change MvPolynomial.aeval _ (surfaceMap φ (numerator K F (w+1)))=0 at hzero
  rw [hzero,zero_mul]
 theorem globalTailCut_in_sharp_flag (φ:Polynomial K →+*Ω)
@@ -66,9 +66,9 @@ theorem globalTailCut_in_sharp_flag (φ:Polynomial K →+*Ω)
    (hYR:wt ![0,1,1,0] F ≤ b+s+3)
    (hAll:wt ![0,1,1,1] F ≤ a+b+s+3) (d:ℕ):
    PolynomialInFlag
-     (ContactSharpTaylorFixedMeet6656Research.sharpResidualAgreementFlag (support a b s) d)
+     (RCN287.sharpResidualAgreementFlag (support a b s) d)
      (globalTailCut φ F d):=by
- exact ContactSharpTaylorFixedMeet6656Research.surfaceMap_agreement_in_sharp_flag
+ exact RCN287.surfaceMap_agreement_in_sharp_flag
    (P:=support a b s) (by change s+2 < b+s+3;omega) φ
    (support_data a b s F hR hYR hAll) d (tailSelector d) 0 0 0
 theorem exists_filtered_certificate (φ:Polynomial K →+*Ω)
@@ -139,4 +139,4 @@ theorem globalTailCut_certificate (φ:Polynomial K →+*Ω)
  rw [show w+1-1=w by omega] at h
  exact h
 end
-end ProximityPrize.SubmissionLower.ContactFirstTailCertificate6731Research
+end ProximityPrize.SubmissionLower.RCN086

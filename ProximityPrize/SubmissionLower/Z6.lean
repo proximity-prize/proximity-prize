@@ -1,15 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B
 import ProximityPrize.SubmissionLower.H
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualTerminalIncidenceResearch
+namespace ProximityPrize.SubmissionLower.RCN164
 open scoped Classical
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualIterationResearch.ResidualStage
-open ContactNearPencil6600ArithmeticResearch
-open ContactIncidence
-open ContactPrimeSeedIncidence
-open ContactFlagBezout6543Research
-open ContactResidualSupportParametersResearch
+open RCN159
+open RCN159.ResidualStage
+open RCN213
+open RCN173
+open RCN238
+open RCN095
+open RCN275
 noncomputable section
 variable {K Omega Iota:Type} [Field K] [Field Omega]
 variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
@@ -139,4 +139,4 @@ theorem recursive_scaled_stratified_incidence_bound
    Gamma.card*(a-w)^2=(Gamma.card*(a-w))*(a-w):=by ring
    _ ≤ U*degreeCost+V*unitCost:=hlinear
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualTerminalIncidenceResearch
+end ProximityPrize.SubmissionLower.RCN164

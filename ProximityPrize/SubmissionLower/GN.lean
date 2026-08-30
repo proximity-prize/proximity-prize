@@ -2,25 +2,25 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DR
 import ProximityPrize.SubmissionLower.Y0
 import ProximityPrize.SubmissionLower.O5
-namespace ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Research
+namespace ProximityPrize.SubmissionLower.RCN314
 open scoped Classical
-open ActualCurveCoordinateField ActualCurveRationalProjection
-open ActualCurveJointProjectionBounds
-open ActualCoordinateDegreeSum
-open ContactParameters6600Research
-open ContactPrimeSeedIncidence
-open ContactGenericSurface
-open ContactProperCutSeedCount
-open ContactRegularComponentCover
-open ContactFlagBezout6543Research
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualIncidenceResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedUnitFamily6600Research
-open ContactAdaptiveProjectionFactorProvider6600Research
-open ContactWeakSeparableSeparatorResearch
-open ContactResidualStageDerivative6600Research
+open RCN002 RCN005
+open RCN003
+open RCN001
+open RCN223
+open RCN238
+open RCN136
+open RCN243
+open RCN264
+open RCN095
+open RCN159
+open RCN158
+open RCN156
+open RCN037
+open RCN039
+open RCN043
+open RCN341
+open RCN274
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
@@ -133,4 +133,4 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
    ((support_subset_flagSupport_iff flag D.stage.G).2 hGflag)
    ((support_subset_flagSupport_iff (residualAgreementFlag D.degree) T).2 hTflag)
 end
-end ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjection6600Research
+end ProximityPrize.SubmissionLower.RCN314

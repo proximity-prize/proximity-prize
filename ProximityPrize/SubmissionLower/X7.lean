@@ -1,13 +1,13 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AW
 import ProximityPrize.SubmissionLower.G
-namespace ProximityPrize.SubmissionLower.ArbitraryPlaneEvaluationFamilyResearch
+namespace ProximityPrize.SubmissionLower.RCN021
 open scoped Classical BigOperators
-open TrivariateRationalCollection ActualPlaneCoordinateKernel
- ActualPlaneCoordinateCaps ActualPlanePositiveOrder
- ActualPlaneCharacteristicFreeDegreeResearch
- CharacteristicFreeMatrixMultiplicityResearch
- CharacteristicFreeProjectionAdapter ArbitraryRationalProjectionResearch
+open RCN371 RCN011
+ RCN009 RCN013
+ RCN008
+ RCN024
+ RCN025 RCN022
 noncomputable section
 set_option maxHeartbeats 1000000
 variable (K:Type) [Field K]
@@ -216,7 +216,7 @@ theorem finite_sum_finrank_bound
      exact hproper ((planeMap_dvd_iff_of_evaluation K (E i₀) order (e i₀)
        G H hG (hGroot i₀) (ht i₀)).mp hdiv)
    have hGroots:∀ i,
-       PlaneFunctionFieldDegree.planeEval (RatFunc K) (E i)
+       RCN361.planeEval (RatFunc K) (E i)
          (e i (MvPolynomial.X (order 2)))
          (e i (MvPolynomial.X (order 1))) (planeMap K order G)=0:=by
      intro i
@@ -224,7 +224,7 @@ theorem finite_sum_finrank_bound
      rw [←RingHom.comp_apply,planeEvaluation_comp_planeMap]
      exact hGroot i
    have hHroots:∀ i,
-       PlaneFunctionFieldDegree.planeEval (RatFunc K) (E i)
+       RCN361.planeEval (RatFunc K) (E i)
          (e i (MvPolynomial.X (order 2)))
          (e i (MvPolynomial.X (order 1))) (planeMap K order H)=0:=by
      intro i
@@ -237,13 +237,13 @@ theorem finite_sum_finrank_bound
          (Polynomial.eval₂RingHom (algebraMap (RatFunc K) (E i))
            (e i (MvPolynomial.X (order 2))))
          (e i (MvPolynomial.X (order 1))) (planeMap K order G)=0:=by
-       rw [←PlaneSmallCharacteristicDegree.planeEval_eq_eval₂]
+       rw [←RCN365.planeEval_eq_eval₂]
        exact hGroots i
      have hHeval:Polynomial.eval₂
          (Polynomial.eval₂RingHom (algebraMap (RatFunc K) (E i))
            (e i (MvPolynomial.X (order 2))))
          (e i (MvPolynomial.X (order 1))) (planeMap K order H)=0:=by
-       rw [←PlaneSmallCharacteristicDegree.planeEval_eq_eval₂]
+       rw [←RCN365.planeEval_eq_eval₂]
        exact hHroots i
      exact finite_of_proper_plane_roots (planeMap K order G) (planeMap K order H)
        hirr hpositive hproperPlane
@@ -251,7 +251,7 @@ theorem finite_sum_finrank_bound
        hGeval hHeval (hgen i)
    letI:∀ i,FiniteDimensional (RatFunc K) (E i):=hfinite
    have hrelation:Function.Injective (fun i↦
-       PlaneFunctionFieldDegree.relationIdeal (RatFunc K) (E i)
+       RCN361.relationIdeal (RatFunc K) (E i)
          (e i (MvPolynomial.X (order 2)))
          (e i (MvPolynomial.X (order 1)))):=by
      intro i j hij
@@ -272,4 +272,4 @@ theorem finite_sum_finrank_bound
    exact ⟨fun i↦isEmptyElim i,by simp⟩
 end FixedFamily
 end
-end ProximityPrize.SubmissionLower.ArbitraryPlaneEvaluationFamilyResearch
+end ProximityPrize.SubmissionLower.RCN021

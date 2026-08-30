@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z
-namespace ProximityPrize.SubmissionLower.ActualCurveScalarTowers
-open ActualCurveCoordinateField ActualCurveRationalProjection
+namespace ProximityPrize.SubmissionLower.RCN006
+open RCN002 RCN005
 noncomputable section
 variable (K:Type) [Field K] (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
 abbrev polynomialBaseAlgebra (i:Fin 3):
@@ -89,4 +89,4 @@ theorem quotientBase_injective (i:Fin 3)
  rw [←quotient_polynomial_fraction K P i f, ←quotient_polynomial_fraction K P i g]
  exact congrArg (algebraMap (CoordinateRing K P) (CoordinateField K P)) hfg
 end
-end ProximityPrize.SubmissionLower.ActualCurveScalarTowers
+end ProximityPrize.SubmissionLower.RCN006

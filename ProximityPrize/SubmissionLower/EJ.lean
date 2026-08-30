@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.L
-namespace ProximityPrize.SubmissionLower.ContactGenericFiberEmbeddings6676Research
+namespace ProximityPrize.SubmissionLower.RCN134
 open scoped BigOperators
-open ActualCurveCoordinateField
+open RCN002
 noncomputable section
 variable {K L:Type} [Field K] [Field L] [Algebra K L]
 def embeddingPoint (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
@@ -90,4 +90,4 @@ theorem genericFiberPoints_card (hP:Function.Injective P):
  simp only [Finset.card_univ,Fintype.card_sigma,AlgHom.card]
 end CommonBase
 end
-end ProximityPrize.SubmissionLower.ContactGenericFiberEmbeddings6676Research
+end ProximityPrize.SubmissionLower.RCN134

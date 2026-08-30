@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactTwoTailDVRExact6731Research
+namespace ProximityPrize.SubmissionLower.RCN324
 open IsLocalRing
 variable {K R:Type*} [CommRing K] [CommRing R] [Algebra K R]
 private theorem prime_dvd_factorial:∀ {n p:ℕ},p.Prime → (p∣n.factorial ↔ p ≤ n)
@@ -128,4 +128,4 @@ theorem isDiscreteValuationRing_of_isRegularLocalRing_of_dimension_one
  have hfin:Module.finrank (ResidueField R) (CotangentSpace R)=1:=by
    exact_mod_cast hfin'
  exact IsLocalRing.finrank_CotangentSpace_eq_one_iff.mp hfin
-end ProximityPrize.SubmissionLower.ContactTwoTailDVRExact6731Research
+end ProximityPrize.SubmissionLower.RCN324

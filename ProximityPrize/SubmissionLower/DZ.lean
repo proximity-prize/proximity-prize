@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.A6
 import ProximityPrize.SubmissionLower.AA
-namespace ProximityPrize.SubmissionLower.ContactBaseIdealWeights6676Research
-open ContactTaylorNumerators ContactBaseIdealAlgebra6676Research
-open ContactBaseIdealCoefficients6676Research ContactPost6464MinkowskiRecurrenceResearch
+namespace ProximityPrize.SubmissionLower.RCN057
+open RCN313 RCN055
+open RCN056 RCN234
 noncomputable section
 variable {K:Type*} [Field K]
 abbrev Poly (K:Type*) [Field K]:=MvPolynomial (Fin 4) K
@@ -195,4 +195,4 @@ theorem baseCoefficients_support_bounds (F:Poly K) (s M L:ℕ)
    baseCoefficients_cumulative_wt_le _ rfl rfl rfl F M hM hYR n j,
    baseCoefficients_cumulative_wt_le _ rfl rfl rfl F L hL hAll n j⟩
 end
-end ProximityPrize.SubmissionLower.ContactBaseIdealWeights6676Research
+end ProximityPrize.SubmissionLower.RCN057

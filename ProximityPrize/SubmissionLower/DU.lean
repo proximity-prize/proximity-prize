@@ -1,19 +1,19 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B6
-namespace ProximityPrize.SubmissionLower.ContactAgreementProjection6731Research
+namespace ProximityPrize.SubmissionLower.RCN049
 open scoped Classical BigOperators
 open Polynomial KaehlerDifferential
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveJointProjectionBounds
-open ActualCoordinateDegreeSum ContactGenericSurface
-open ContactPrimeSeedIncidence ContactRegularComponentCover ContactProperCutSeedCount
-open ContactFlagBezout6543Research ContactIdentityResidualIterationResearch
-open ContactResidualSupportParametersResearch ContactSharpTaylorFixedMeet6656Research
-open ContactWeakSeparableSeparatorResearch ContactScalarCoordinateSeparator6630Research
-open ContactAdaptiveNestedProjection6600Research ContactAdaptiveNestedProjectionActive6630Research
-open ContactAdaptiveNestedUnitFamily6600Research
-open ContactAdaptiveNestedUnitFamilyActive6630Research ContactAdaptiveNestedYZFamily6630Research
-open ContactRegularComponentYZPositivity6630Research ContactResidualStageDerivative6600Research
-open ContactMovingAgreementCertificate6719Research
+open RCN002 RCN005 RCN003
+open RCN001 RCN136
+open RCN238 RCN264 RCN243
+open RCN095 RCN159
+open RCN275 RCN287
+open RCN341 RCN277
+open RCN037 RCN038
+open RCN039
+open RCN040 RCN041
+open RCN265 RCN274
+open RCN198
 noncomputable section
 set_option maxHeartbeats 3500000
 set_option maxRecDepth 40000
@@ -43,16 +43,16 @@ theorem exists_agreement_projection_of_caps
      ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
      w (fun j:ℕ => (j.factorial:K)⁻¹) x0 u0 u1
  obtain ⟨hGY,hGS,hGZ⟩:=
-   ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag S.flag_support
+   RCN314.degree_bounds_of_polynomialInFlag S.flag_support
  obtain ⟨hTY,hTS,_⟩:=
-   ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag hTflag
+   RCN314.degree_bounds_of_polynomialInFlag hTflag
  have hTY':T.degreeOf 0 ≤ 1+w*(2*(b+s+3)-2):=by
    apply hTY.trans_eq
    exact sharpResidualAgreementFlag_ys (support a b s) hsy w
  have hTS':T.degreeOf 1 ≤ (2*(s+2)-1)*w:=by
    apply hTS.trans_eq
    simp only [sharpResidualAgreementFlag,sharpAgreementDirection,
-     ContactMovingAgreementCertificate6719Research.support]
+     RCN198.support]
  have hGdegree:∀ j:Fin 3,S.G.degreeOf j<p:=by
    intro j
    fin_cases j
@@ -91,11 +91,11 @@ theorem exists_agreement_projection_of_caps
      hproper hGdegree hmixZ
  obtain ⟨P⟩:=exists_adaptiveUnitProjectionFamilyYZ_of_active_nested
    flag (sharpResidualAgreementFlag (support a b s) w) base hactive hZ
-   (ContactTerminalAdaptiveProjection6656Research.residualStage_pderiv_one_ne_zero_of_support S)
+   (RCN315.residualStage_pderiv_one_ne_zero_of_support S)
    S.irreducible_G hproper
    ((support_subset_flagSupport_iff flag S.G).2 S.flag_support)
    ((support_subset_flagSupport_iff
      (sharpResidualAgreementFlag (support a b s) w) T).2 hTflag)
  exact ⟨base,⟨P⟩⟩
 end
-end ProximityPrize.SubmissionLower.ContactAgreementProjection6731Research
+end ProximityPrize.SubmissionLower.RCN049

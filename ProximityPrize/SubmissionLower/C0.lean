@@ -1,26 +1,26 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z0
 import ProximityPrize.SubmissionLower.Z2
-namespace ProximityPrize.SubmissionLower.ContactFlagGeneralPrincipalCyclesResearch
+namespace ProximityPrize.SubmissionLower.RCN098
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
-open ActualCurveCoordinateField ActualCurveRationalProjection
- ActualCurveScalarTowers ActualCurveZeroCount
-open CoordinateBoxZeroCount ContactRegularComponentCover
-open ContactLocalPoleBound ContactDependentGenericity6543Research
-open ContactFlagBezout6543Research ContactFlagPoleInequality6543Research
-open ContactFlagTriangularProjectionResearch
-open ContactFlagAffineFamilyDegree6543Research
-open ContactFlagExactSeparableProjection6543Research
-open ContactFlagGlobalPoleProjection6543Research
-open ContactFlagPrincipalCycleAdapter6543Research
-open ContactFlagProjectionProvider6543Research
-open ContactFlagTrapezoidCaps6543Research
-open ContactFlagPrincipalCycles6543Research
-open ContactFlagSymbolicTrapezoidResearch
-open ContactResidualSparseComponentAdapterResearch
-open TrivariateRationalCollection ActualPlaneCoordinateKernel
- ArbitraryRationalProjectionResearch
+open RCN002 RCN005
+ RCN006 RCN007
+open RCN344 RCN264
+open RCN187 RCN075
+open RCN095 RCN114
+open RCN125
+open RCN093
+open RCN097
+open RCN099
+open RCN115
+open RCN118
+open RCN123
+open RCN116
+open RCN121
+open RCN272
+open RCN371 RCN011
+ RCN022
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
@@ -116,7 +116,7 @@ def flagProjectionCycleBudget_of_nested_general
      (by
        intro C v
        simpa [zOrder,Equiv.swap_apply_def,lam,mu,nu,
-         CoordinatePoleMass.poleOrder] using
+         RCN346.poleOrder] using
          unitZ_polynomial_pole BZ C v)
      hG hproper hpositive.z p.all q.all (p.yz+p.all)
      (q.yz+q.all) (flagMixed p q unitZFlag) hTne
@@ -139,7 +139,7 @@ def flagProjectionCycleBudget_of_nested_general
        exact D.separableU C)
      (by
        intro C v
-       simpa [uOrder,lam,mu,nu,CoordinatePoleMass.poleOrder] using
+       simpa [uOrder,lam,mu,nu,RCN346.poleOrder] using
          unitYZ_polynomial_pole D BYZ C v)
      hG hproper hpositive.u p.all q.all
      (p.zOnly+p.yz+p.all) (q.zOnly+q.yz+q.all)
@@ -164,7 +164,7 @@ def flagProjectionCycleBudget_of_nested_general
      (by
        intro C v
        simpa [vOrder,Equiv.swap_apply_def,lam,mu,nu,
-         CoordinatePoleMass.poleOrder] using
+         RCN346.poleOrder] using
          unitAll_polynomial_pole D BAll C v)
      hG hproper hpositive.v (p.yz+p.all) (q.yz+q.all)
      (p.zOnly+p.yz+p.all) (q.zOnly+q.yz+q.all)
@@ -217,4 +217,4 @@ theorem exists_residualComponentBudget_flagMixed_of_projectionPositivity
  exact ⟨residualComponentBudget_flagMixed_of_nested p q r D hG hproper
    hGsupport hTsupport hD B BZ BYZ BAll⟩
 end
-end ProximityPrize.SubmissionLower.ContactFlagGeneralPrincipalCyclesResearch
+end ProximityPrize.SubmissionLower.RCN098

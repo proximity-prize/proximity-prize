@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B5
-namespace ProximityPrize.SubmissionLower.ContactTaylorNumerators
-open ContactDifferentialRing DifferentialTaylorCoefficients
+namespace ProximityPrize.SubmissionLower.RCN313
+open RCN077 RCN347
 noncomputable section
 section AlgebraicStep
 variable {K A B:Type*} [CommRing K] [CommRing A] [CommRing B] [Algebra K A]
@@ -506,4 +506,4 @@ theorem agreementNumerator_degree_bounds
      omega
 end AgreementNumerators
 end
-end ProximityPrize.SubmissionLower.ContactTaylorNumerators
+end ProximityPrize.SubmissionLower.RCN313

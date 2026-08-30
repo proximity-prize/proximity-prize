@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.E
 import ProximityPrize.SubmissionLower.D9
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalTransformResearch
-open ContactGenericSurface ContactTranslation
+namespace ProximityPrize.SubmissionLower.RCN157
+open RCN136 RCN319
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
@@ -115,40 +115,40 @@ theorem eval_globalResidualHom_polynomialPoint
    (coefficients:K →+*Omega) (P0 P1 V C:Polynomial K)
    (gamma:K) (xi:Omega) (F:Poly4 K):
    MvPolynomial.eval₂Hom coefficients
-       (ContactPolynomialSolutions.polynomialPoint coefficients C gamma xi)
+       (RCN231.polynomialPoint coefficients C gamma xi)
        (globalResidualHom P0 P1 V F)=
      MvPolynomial.eval₂Hom coefficients
-       (ContactPolynomialSolutions.polynomialPoint coefficients
+       (RCN231.polynomialPoint coefficients
          (P0+Polynomial.C gamma*P1+V*C) gamma xi) F:=by
- rw [ContactPolynomialSolutions.eval_polynomialPoint_eq_specialization,
-   ContactPolynomialSolutions.eval_polynomialPoint_eq_specialization,
+ rw [RCN231.eval_polynomialPoint_eq_specialization,
+   RCN231.eval_polynomialPoint_eq_specialization,
    specialization_globalResidualHom]
 theorem globalResidual_regular_at_polynomialPoint
    (coefficients:K →+*Omega) (P0 P1 V C:Polynomial K)
    (gamma:K) (xi:Omega) (F:Poly4 K)
    (hV:V.eval₂ coefficients xi≠0)
    (hregular:MvPolynomial.eval₂Hom coefficients
-     (ContactPolynomialSolutions.polynomialPoint coefficients
+     (RCN231.polynomialPoint coefficients
        (P0+Polynomial.C gamma*P1+V*C) gamma xi)
      (MvPolynomial.pderiv (2:Fin 4) F)≠0):
    MvPolynomial.eval₂Hom coefficients
-     (ContactPolynomialSolutions.polynomialPoint coefficients C gamma xi)
+     (RCN231.polynomialPoint coefficients C gamma xi)
      (MvPolynomial.pderiv (2:Fin 4)
        (globalResidualHom P0 P1 V F))≠0:=by
  rw [pderiv_globalResidualHom_R,map_mul,
    eval_globalResidualHom_polynomialPoint]
  have hembed:MvPolynomial.eval₂Hom coefficients
-     (ContactPolynomialSolutions.polynomialPoint coefficients C gamma xi)
+     (RCN231.polynomialPoint coefficients C gamma xi)
      (embedX K V)=V.eval₂ coefficients xi:=by
    change ((MvPolynomial.eval₂Hom coefficients
-     (ContactPolynomialSolutions.polynomialPoint coefficients C gamma xi)).comp
+     (RCN231.polynomialPoint coefficients C gamma xi)).comp
        (embedX K)) V=(Polynomial.eval₂RingHom coefficients xi) V
    congr 1
    apply Polynomial.ringHom_ext
    · intro a
-     simp [embedX,ContactPolynomialSolutions.polynomialPoint,
+     simp [embedX,RCN231.polynomialPoint,
        RingHom.comp_apply]
-   · simp [embedX,ContactPolynomialSolutions.polynomialPoint,
+   · simp [embedX,RCN231.polynomialPoint,
        RingHom.comp_apply]
  rw [hembed]
  exact mul_ne_zero hV hregular
@@ -189,4 +189,4 @@ theorem surfaceMap_globalResidualHom
          globalResidualHom,componentResidualHom] <;> ring
  exact RingHom.congr_fun hhom F
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualGlobalTransformResearch
+end ProximityPrize.SubmissionLower.RCN157

@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.O2
-namespace ProximityPrize.SubmissionLower.ContactLocalHypersurfaceBridge6731Research
+namespace ProximityPrize.SubmissionLower.RCN186
 variable {A:Type*} [CommRing A]
 noncomputable def quotientPrime (I p:Ideal A):Ideal (A ⧸ I):=
  p.map (Ideal.Quotient.mk I)
@@ -87,4 +87,4 @@ noncomputable def quotientAmbientEquivLocalizedQuotient
  (Ideal.quotEquivOfEq (ambientToLocalizedQuotient_ker I p hIp).symm).trans
    (RingHom.quotientKerEquivOfSurjective
      (ambientToLocalizedQuotient_surjective I p hIp))
-end ProximityPrize.SubmissionLower.ContactLocalHypersurfaceBridge6731Research
+end ProximityPrize.SubmissionLower.RCN186

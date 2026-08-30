@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DA
 import ProximityPrize.SubmissionLower.G3
-namespace ProximityPrize.SubmissionLower.PlaneRootSeparability
+namespace ProximityPrize.SubmissionLower.RCN364
 noncomputable section
 variable {K L:Type} [Field K] [Field L] [Algebra K L]
 local instance:DecidableEq K:=Classical.decEq K
@@ -62,7 +62,7 @@ theorem finite_separable_of_proper_plane_roots
    (hgenerate:IntermediateField.adjoin K ({y,r}:Set L)=⊤):
    FiniteDimensional K L∧Algebra.IsSeparable K L:=by
  classical
- have hresne:=PlaneResultantIrreducible.irreducible_resultant_ne_zero_of_not_dvd
+ have hresne:=RCN362.irreducible_resultant_ne_zero_of_not_dvd
    P Q hirreducible hpositive hproper
  have hresroot:=resultant_aeval_eq_zero_of_common_root P Q
    P.natDegree Q.natDegree le_rfl le_rfl (Or.inl (Nat.ne_of_gt hpositive)) y r hP hQ
@@ -75,9 +75,9 @@ theorem finite_separable_of_proper_plane_roots
  let g:Polynomial K →+*S:=Polynomial.eval₂RingHom (algebraMap K S) yS
  let Py:Polynomial S:=P.map g
  have hPyne:Py≠0:=by
-   have h:=PlaneCoefficientExtension.bimap_specialization_ne_zero
+   have h:=RCN360.bimap_specialization_ne_zero
      (algebraMap K S) P (hirreducible.isPrimitive (Nat.ne_of_gt hpositive)) yS
-   rw [PlaneCoefficientExtension.bimap_specialization] at h
+   rw [RCN360.bimap_specialization] at h
    exact h
  have hPydegree:Py.natDegree < p:=Polynomial.natDegree_map_le.trans_lt hRdegree
  have hcoefficient:(algebraMap S L).comp g=
@@ -104,4 +104,4 @@ theorem finite_separable_of_proper_plane_roots
    IsSeparable.of_algebra_isSeparable_of_isSeparable K hrSeparable
  exact finite_separable_of_two_generators y r hySeparable hrOverK hgenerate
 end
-end ProximityPrize.SubmissionLower.PlaneRootSeparability
+end ProximityPrize.SubmissionLower.RCN364

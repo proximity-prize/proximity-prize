@@ -1,9 +1,9 @@
 import ProximityPrize.SubmissionLower.D
 import ProximityPrize.SubmissionLower.AJ
-namespace ProximityPrize.SubmissionLower.ContactTwoTailParameters6733Research
+namespace ProximityPrize.SubmissionLower.RCN326
 open ProximityPrize.Benchmark
-open ContactFlagBezout6543Research
-open ContactFlagInterpolation6641Research ContactFlagRankKernel6641Research
+open RCN095
+open RCN100 RCN119
 open scoped NNReal
 noncomputable section
 set_option maxHeartbeats 5000000
@@ -84,21 +84,21 @@ theorem profileA_coefficients_exact:
    coefficientCount profileA.weightedCap w profileA.totalCap profileA.slopeCap=
      profileA.coefficients:=by
  change coefficientCount (41*182052) 131071 19688 12=44579488339867
- rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
+ rw [RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
    (41*182052) 131071 19688 12 57 (by decide) (by decide)]
  decide
 theorem profileB_coefficients_exact:
    coefficientCount profileB.weightedCap w profileB.totalCap profileB.slopeCap=
      profileB.coefficients:=by
  change coefficientCount (81*182052) 131071 1242 25=20738895387938
- rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
+ rw [RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
    (81*182052) 131071 1242 25 113 (by decide) (by decide)]
  decide
 theorem profileC_coefficients_exact:
    coefficientCount profileC.weightedCap w profileC.totalCap profileC.slopeCap=
      profileC.coefficients:=by
  change coefficientCount (43*182052) 131071 624668 11=1477011414465277
- rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
+ rw [RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
    (43*182052) 131071 624668 11 60 (by decide) (by decide)]
  decide
 theorem profileA_rank_exact:
@@ -173,4 +173,4 @@ theorem cell_budget_strict:
    fixedCost+firstResidualCeiling+secondResidualCeiling < mcaBudget:=by
  decide
 end
-end ProximityPrize.SubmissionLower.ContactTwoTailParameters6733Research
+end ProximityPrize.SubmissionLower.RCN326

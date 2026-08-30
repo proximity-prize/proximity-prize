@@ -1,16 +1,16 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y8
-namespace ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research
+namespace ProximityPrize.SubmissionLower.RCN099
 open scoped Classical WithZero
 open IsDedekindDomain
-open ContactLocalPoleBound
-open CoordinateBoxZeroCount
-open ContactRegularComponentCover
-open ContactDependentGenericity6543Research
-open ContactFlagAffineFamilyDegree6543Research
-open ContactFlagExactSeparableProjection6543Research
-open ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveZeroCount
-open ArbitraryRationalProjectionResearch
+open RCN187
+open RCN344
+open RCN264
+open RCN075
+open RCN093
+open RCN097
+open RCN002 RCN005 RCN007
+open RCN022
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
@@ -87,7 +87,7 @@ theorem nested_u_pole
      exact (v.val.map_add _ _).trans
        (by rw [hscalar];exact max_le hYle hZle)
    have hU:poleOrder v.val (affineU Omega C.1 D.lam)=0:=
-     CoordinatePoleMass.poleOrder_eq_zero_of_le_one
+     RCN346.poleOrder_eq_zero_of_le_one
        Omega (CoordinateField Omega C.1) v _ hUle
    rw [hU,hY,hZ]
    simp
@@ -136,7 +136,7 @@ theorem nested_v_pole
        (by rw [hscalar];exact max_le hSle hUle)
    have hV:poleOrder v.val
        (coordinate Omega C.1 1+D.mu • affineU Omega C.1 D.lam)=0:=
-     CoordinatePoleMass.poleOrder_eq_zero_of_le_one
+     RCN346.poleOrder_eq_zero_of_le_one
        Omega (CoordinateField Omega C.1) v _ hVle
    rw [hV,hS,hY,hZ]
    simp
@@ -187,4 +187,4 @@ theorem separableAffineV
  exact D.separableV C
 end RegularComponents
 end
-end ProximityPrize.SubmissionLower.ContactFlagGlobalPoleProjection6543Research
+end ProximityPrize.SubmissionLower.RCN099

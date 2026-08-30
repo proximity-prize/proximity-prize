@@ -2,23 +2,23 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.U
 import ProximityPrize.SubmissionLower.Z4
 import ProximityPrize.SubmissionLower.AG
-namespace ProximityPrize.SubmissionLower.ContactProfileFixedSelectedCombinerResearch
+namespace ProximityPrize.SubmissionLower.RCN239
 open scoped Classical BigOperators
-open ContactInterpolation ContactTranslation ContactSelectedSeedDecomposition
-open ContactImplicitContactLift ContactImplicitPairBudgets
-open ContactSingularAuxiliary ContactPrimeSeedIncidence
-open ContactRegularFactorFlag6600Research
-open ContactFlagBezout6543Research
-open ContactGlobalSelectedFamilies6600Research
-open ContactSingularBranch6600Research
-open ContactTightSingularLedgerResearch
-open ContactSingularBranchParameterizedResearch
-open ContactRobustFixedMeet6656Research
+open RCN174 RCN319 RCN286
+open RCN167 RCN169
+open RCN290 RCN238
+open RCN266
+open RCN095
+open RCN140
+open RCN291
+open RCN318
+open RCN292
+open RCN276
 noncomputable section
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 40000
 structure FixedParameterAlignment (p:Profile)
-   (t:ContactTightSingularLedgerResearch.TightParameters):Prop where
+   (t:RCN318.TightParameters):Prop where
  n:t.n=p.n
  w:t.w=p.w
  agreements:t.a=p.agreements
@@ -27,14 +27,14 @@ structure FixedParameterAlignment (p:Profile)
  slopeCap:t.s=p.slopeCap
 namespace FixedParameterAlignment
 theorem errors {p:Profile}
-   {t:ContactTightSingularLedgerResearch.TightParameters}
+   {t:RCN318.TightParameters}
    (A:FixedParameterAlignment p t):t.errors=p.errors:=by
- simp only [ContactTightSingularLedgerResearch.TightParameters.errors,
+ simp only [RCN318.TightParameters.errors,
    Profile.errors,A.n,A.agreements]
 theorem gap {p:Profile}
-   {t:ContactTightSingularLedgerResearch.TightParameters}
+   {t:RCN318.TightParameters}
    (A:FixedParameterAlignment p t):t.gap=p.gap:=by
- simp only [ContactTightSingularLedgerResearch.TightParameters.gap,
+ simp only [RCN318.TightParameters.gap,
    Profile.gap,A.w,A.agreements]
 end FixedParameterAlignment
 variable {K Iota:Type} [Field K]
@@ -95,7 +95,7 @@ theorem card_le_regular_sum_add_singular
      Nat.add_le_add_right Finset.card_biUnion_le _
 theorem global_count_le_regular_div_add_tight_countCap
    (p:Profile)
-   (t:ContactTightSingularLedgerResearch.TightParameters)
+   (t:RCN318.TightParameters)
    (A:FixedParameterAlignment p t)
    {prime regularNumerator:ℕ}
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime]
@@ -138,24 +138,24 @@ theorem global_count_le_regular_div_add_tight_countCap
  have hboxT:Q∈globalCoefficientBox K t.D t.w t.L t.s:=by
    simpa only [A.weightedCap,A.w,A.seedTotalCap,A.slopeCap] using hbox
  have hsing:=
-   ContactSingularBranchParameterizedResearch.TightParameters.singularSeeds_tight_gap_bound
+   RCN292.TightParameters.singularSeeds_tight_gap_bound
      t Q hQ hboxT
    (by simpa only [A.slopeCap] using hs)
    (by simpa only [A.slopeCap] using hsSmall)
    (by simpa only [A.w] using hw)
    (by simpa only [A.w] using hchar)
    (by
-     simpa only [ContactTightSingularLedgerResearch.TightParameters.kappa,
+     simpa only [RCN318.TightParameters.kappa,
        A.w,A.weightedCap,A.slopeCap]
        using hDw)
    (by simpa only
-     [ContactTightSingularLedgerResearch.TightParameters.algebraicCap,
-       ContactTightSingularLedgerResearch.TightParameters.kappa,
+     [RCN318.TightParameters.algebraicCap,
+       RCN318.TightParameters.kappa,
        A.seedTotalCap,A.slopeCap] using hj)
    hjYSmall
    (by simpa only
-     [ContactTightSingularLedgerResearch.TightParameters.algebraicCap,
-       ContactTightSingularLedgerResearch.TightParameters.kappa,
+     [RCN318.TightParameters.algebraicCap,
+       RCN318.TightParameters.kappa,
        A.seedTotalCap,A.slopeCap] using hjSmall)
    hmixedSmall
    (by simpa only [A.w,A.agreements] using hwa)
@@ -176,4 +176,4 @@ theorem global_count_le_regular_div_add_tight_countCap
    t.count_le_countCap _ htgap hsing
  exact hcover.trans (Nat.add_le_add hregCount hsingCount)
 end
-end ProximityPrize.SubmissionLower.ContactProfileFixedSelectedCombinerResearch
+end ProximityPrize.SubmissionLower.RCN239

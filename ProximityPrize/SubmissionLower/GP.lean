@@ -2,28 +2,28 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DQ
 import ProximityPrize.SubmissionLower.O6
 import ProximityPrize.SubmissionLower.GO
-namespace ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjectionFixedMeetActive6656Research
+namespace ProximityPrize.SubmissionLower.RCN316
 open scoped Classical
 open Polynomial KaehlerDifferential
-open ActualCurveCoordinateField ActualCurveRationalProjection
-open ActualCurveJointProjectionBounds ActualCoordinateDegreeSum
-open ContactParameters6600Research ContactPrimeSeedIncidence
-open ContactGenericSurface ContactProperCutSeedCount ContactRegularComponentCover
-open ContactFlagBezout6543Research
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualIncidenceResearch
-open ContactAdaptiveNestedProjection6600Research
-open ContactAdaptiveNestedProjectionActive6630Research
-open ContactAdaptiveNestedUnitFamilyActive6630Research
-open ContactAdaptiveNestedYZFamily6630Research
-open ContactAdaptiveUnitPoleFamilyResearch
-open ContactRegularComponentYZPositivity6630Research
-open ContactWeakSeparableSeparatorResearch
-open ContactScalarCoordinateSeparator6630Research
-open ContactResidualStageDerivative6600Research
-open ContactResidualSupportParametersResearch
-open ContactRobustFixedMeet6656Research
-open ContactTerminalAdaptiveProjection6656Research
+open RCN002 RCN005
+open RCN003 RCN001
+open RCN223 RCN238
+open RCN136 RCN243 RCN264
+open RCN095
+open RCN159
+open RCN158
+open RCN037
+open RCN038
+open RCN040
+open RCN041
+open RCN046
+open RCN265
+open RCN341
+open RCN277
+open RCN274
+open RCN275
+open RCN276
+open RCN315
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
@@ -177,10 +177,10 @@ theorem terminalAdaptiveProjectionFamiliesYZOfSupport_of_active_yz_caps
  have hTflag:PolynomialInFlag (support.residualAgreementFlag D.degree) T:=
    (terminal_proper_cuts_in_residual_flag D.stage D.terminal i hi).2
  obtain ⟨hGY,hGS,hGZ⟩:=
-   ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag
+   RCN314.degree_bounds_of_polynomialInFlag
      hGflag
  obtain ⟨hTY,hTS,_hTZ⟩:=
-   ContactTerminalAdaptiveProjection6600Research.degree_bounds_of_polynomialInFlag
+   RCN314.degree_bounds_of_polynomialInFlag
      hTflag
  have hD:D.degree ≤ w:=D.degree_le.trans (Nat.le_refl w)
  have hGY':D.stage.G.degreeOf 0 ≤ surfaceY:=hGY.trans hflagY
@@ -309,4 +309,4 @@ theorem frontierMeet182688TerminalAdaptiveProjectionFamiliesYZ_of_active_yz
  · norm_num [prime]
  · norm_num [prime]
 end
-end ProximityPrize.SubmissionLower.ContactTerminalAdaptiveProjectionFixedMeetActive6656Research
+end ProximityPrize.SubmissionLower.RCN316

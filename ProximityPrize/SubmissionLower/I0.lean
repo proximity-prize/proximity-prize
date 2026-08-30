@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.H9
-namespace ProximityPrize.SubmissionLower.ContactCoefficientCurveResidueApproxResearch
+namespace ProximityPrize.SubmissionLower.RCN060
 open scoped BigOperators
 open Polynomial
 noncomputable section
@@ -137,7 +137,7 @@ theorem exists_constant_approx_of_trdeg_one [IsAlgClosed k]
    (constant_coefficient_value_lt_one v (algebraMap k F) hκ u f hu hf q hqval)
 variable {L:Type*} [Field L]
 open ProximityPrize.SubmissionLower
-open ContactCoefficientCurveGaussResearch
+open RCN059
 theorem residueApprox_of_trdeg_one [IsAlgClosed k]
    (v:Valuation L Γ) (φ:F →+*L)
    (hconst:∀ c:k,c≠0 → v (φ (algebraMap k F c))=1)
@@ -155,12 +155,12 @@ theorem coefficient_pole_le_of_trdeg_one [IsAlgClosed k] {w:ℕ}
    (x:L) (hx:v x=1)
    (hunit:ConstantPolynomialUnit v φ (algebraMap k F) x w)
    (a:Fin (w+1) → F) (i:Fin (w+1)):
-   ContactLocalPoleBound.poleOrder v (φ (a i)) ≤
-     ContactLocalPoleBound.poleOrder v (∑ j,φ (a j)*x^(j:ℕ)):=by
+   RCN187.poleOrder v (φ (a i)) ≤
+     RCN187.poleOrder v (∑ j,φ (a j)*x^(j:ℕ)):=by
  by_cases hi:v (φ (a i)) ≤ 1
- · have hz:ContactLocalPoleBound.poleOrder v (φ (a i))=0:=by
+ · have hz:RCN187.poleOrder v (φ (a i))=0:=by
      change max 0 (v (φ (a i))).log=0
-     rw [←ContactLocalPoleBound.log_max_one,max_eq_left hi,WithZero.log_one]
+     rw [←RCN187.log_max_one,max_eq_left hi,WithZero.log_one]
    rw [hz]
    exact le_max_left _ _
  have hbig:1 < v (φ (a i)):=lt_of_not_ge hi
@@ -212,8 +212,8 @@ theorem coefficient_pole_le_generic_evaluation
    (htrdeg:Algebra.trdeg k F=1)
    (x:Ω) (htrans:Transcendental k x)
    (a:Fin (w+1) → F) (i:Fin (w+1)):
-   ContactLocalPoleBound.poleOrder v (φ (a i)) ≤
-     ContactLocalPoleBound.poleOrder v
+   RCN187.poleOrder v (φ (a i)) ≤
+     RCN187.poleOrder v
        (∑ j,φ (a j)*(algebraMap Ω L x)^(j:ℕ)):=by
  have hconst:∀ c:k,c≠0 → v (φ (algebraMap k F c))=1:=by
    intro c hc
@@ -232,4 +232,4 @@ theorem coefficient_pole_le_generic_evaluation
  exact coefficient_pole_le_of_trdeg_one v φ hconst htrdeg (algebraMap Ω L x) hx
    (constantPolynomialUnit_of_base_constants v φ hcompat x htrans) a i
 end
-end ProximityPrize.SubmissionLower.ContactCoefficientCurveResidueApproxResearch
+end ProximityPrize.SubmissionLower.RCN060

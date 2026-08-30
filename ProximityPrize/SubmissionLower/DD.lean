@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.M
-namespace ProximityPrize.SubmissionLower.CharacteristicFreeInseparableDichotomyResearch
+namespace ProximityPrize.SubmissionLower.RCN023
 open scoped Classical BigOperators
-open Field ActualCurveCoordinateField ActualCurveRationalProjection ActualCurveZeroCount
+open Field RCN002 RCN005 RCN007
 noncomputable section
 theorem char_le_finrank_of_not_isSeparable
    (F E:Type) [Field F] [Field E] [Algebra F E] [FiniteDimensional F E]
@@ -135,4 +135,4 @@ theorem finite_zero_points_le_box_of_finite_or_inseparable
        (fun _ _↦Nat.zero_le _) (Finset.mem_univ i)
    exact hS_card.trans (hp_degree.trans (hdegree_term.trans hterm_sum))
 end
-end ProximityPrize.SubmissionLower.CharacteristicFreeInseparableDichotomyResearch
+end ProximityPrize.SubmissionLower.RCN023

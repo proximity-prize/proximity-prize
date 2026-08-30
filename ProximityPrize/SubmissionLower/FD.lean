@@ -1,11 +1,11 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BZ
 import ProximityPrize.SubmissionLower.P
-namespace ProximityPrize.SubmissionLower.ContactMovingSupport6676Research
+namespace ProximityPrize.SubmissionLower.RCN212
 open scoped Classical BigOperators WithZero
-open ContactGenericCoefficientAvoidanceResearch ContactLeadingCancellationResearch
-open ContactSparsePoleSupportResearch ContactFlagBezout6543Research
-open ContactLocalPoleBound
+open RCN133 RCN184
+open RCN295 RCN095
+open RCN187
 noncomputable section
 set_option maxHeartbeats 1000000
 def liftExponent (d:Fin 3 →₀ ℕ):Fin 4 →₀ ℕ:=
@@ -213,4 +213,4 @@ theorem exponentSetPoleWeight_moving (v:Valuation L (WithZero (Multiplicative �
 theorem quadratic_max_signed_eq_truncated (a b w:ℤ) (ha:0 ≤ a) (hb:b ≤ a):
    max (2*a) (b+w)=max (2*a) (b+max 0 w):=by omega
 end
-end ProximityPrize.SubmissionLower.ContactMovingSupport6676Research
+end ProximityPrize.SubmissionLower.RCN212

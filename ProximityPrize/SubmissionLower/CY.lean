@@ -323,6 +323,30 @@ lemma Ideal.Quotient.exists_algHom_fixedPoint_quotient_under
  obtain ⟨τ,hτ⟩:∃ τ:G,σ (algebraMap _ _ x)=algebraMap _ _ (τ • x):=by
    simpa [MulSemiringAction.charpoly,sub_eq_zero,Finset.prod_eq_zero_iff] using! this
  exact ⟨Ideal.Quotient.mk _ (τ • x),hτ.symm⟩
+include G in
+lemma Ideal.Quotient.exists_algEquiv_fixedPoint_quotient_under
+   (σ:k ≃ₐ[A ⧸ P] k):
+   ∃ τ:(B ⧸ Q) ≃ₐ[A ⧸ P] B ⧸ Q,∀ x:B ⧸ Q,
+     algebraMap _ _ (τ x)=σ (algebraMap (B ⧸ Q) k x):=by
+ let f:(B ⧸ Q) →ₐ[A ⧸ P] k:=IsScalarTower.toAlgHom _ _ _
+ have hf:Function.Injective f:=FaithfulSMul.algebraMap_injective _ _
+ obtain ⟨τ₁,h₁⟩:=Ideal.Quotient.exists_algHom_fixedPoint_quotient_under G P Q σ.toAlgHom
+ obtain ⟨τ₂,h₂⟩:=Ideal.Quotient.exists_algHom_fixedPoint_quotient_under G P Q σ.symm.toAlgHom
+ refine ⟨{ __:=τ₁,invFun:=τ₂,left_inv:=?_,right_inv:=?_},h₁⟩
+ · intro x
+   obtain ⟨x,rfl⟩:=Ideal.Quotient.mk_surjective x
+   obtain ⟨y,e⟩:=Ideal.Quotient.mk_surjective (τ₁ (Ideal.Quotient.mk Q x))
+   apply hf
+   dsimp [f] at h₁ h₂ ⊢
+   refine .trans ?_ (σ.symm_apply_apply _)
+   rw [←h₁, ←e,h₂]
+ · intro x
+   obtain ⟨x,rfl⟩:=Ideal.Quotient.mk_surjective x
+   obtain ⟨y,e⟩:=Ideal.Quotient.mk_surjective (τ₂ (Ideal.Quotient.mk Q x))
+   apply hf
+   dsimp [f] at h₁ h₂ ⊢
+   refine .trans ?_ (σ.apply_symm_apply _)
+   rw [←h₂, ←e,h₁]
 end normal
 namespace IsFractionRing
 variable (G A B K L:Type*) [Group G] [CommRing A] [CommRing B] [Algebra A B] [Field K] [Field L]

@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactRegularQuotient6731Research
+namespace ProximityPrize.SubmissionLower.RCN270
 open IsLocalRing Ideal
 set_option synthInstance.maxHeartbeats 200000
 set_option maxHeartbeats 2000000
@@ -131,4 +131,4 @@ theorem quotient_span_singleton_isRegularLocalRing
    exact (Submodule.spanFinrank_span_le_ncard_of_finite
      (Set.finite_singleton _)).trans (by simp)
  exact_mod_cast hle
-end ProximityPrize.SubmissionLower.ContactRegularQuotient6731Research
+end ProximityPrize.SubmissionLower.RCN270

@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactAlignmentParameters
+namespace ProximityPrize.SubmissionLower.RCN051
 open Finset
 set_option maxRecDepth 20000
 set_option maxHeartbeats 4000000
@@ -112,4 +112,4 @@ theorem below_budget_of_scaled_cardinality_bound
  have hstrict:=h.trans_lt strict_ledger_budget
  rw [denominator_exact] at hstrict
  exact Nat.lt_of_mul_lt_mul_right hstrict
-end ProximityPrize.SubmissionLower.ContactAlignmentParameters
+end ProximityPrize.SubmissionLower.RCN051

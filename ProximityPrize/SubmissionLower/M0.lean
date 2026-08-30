@@ -1,11 +1,11 @@
 import ProximityPrize.SubmissionLower.C8
-namespace ProximityPrize.SubmissionLower.ContactLocalizedResidueFinrank6733Research
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
-open ArbitraryRationalProjectionResearch
-open ContactPlaneRelationCoefficientFiber6733Research
-open ContactLocalizedPlaneRelation6733Research
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ContactLocalizedResidueDegree6733Research
+namespace ProximityPrize.SubmissionLower.RCN194
+open RCN011 RCN021
+open RCN022
+open RCN226
+open RCN191
+open RCN120
+open RCN193
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -80,4 +80,4 @@ theorem localized_residue_finrank_eq
    Polynomial.map (algebraMap (Polynomial (RatFunc K)) Rp) (Polynomial.C x)
  rw [Polynomial.map_C]
 end
-end ProximityPrize.SubmissionLower.ContactLocalizedResidueFinrank6733Research
+end ProximityPrize.SubmissionLower.RCN194

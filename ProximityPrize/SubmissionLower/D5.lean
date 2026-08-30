@@ -1,10 +1,10 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BO
 import ProximityPrize.SubmissionLower.H
-namespace ProximityPrize.SubmissionLower.ContactNearPencil6600FlagResearch
-open ContactFlagBezout6543Research
-open ContactIdentityResidualGlobalFlagResearch
-open ContactNearPencil6600ArithmeticResearch
+namespace ProximityPrize.SubmissionLower.RCN215
+open RCN095
+open RCN156
+open RCN213
 def surfaceFlag6600:FlagDegree:=⟨460,35,8⟩
 def derivativeFlag6600:FlagDegree:=⟨460,35,7⟩
 def agreementDirection6600:FlagDegree:=⟨920,70,15⟩
@@ -42,4 +42,4 @@ theorem flagMixed_direction_values:
  norm_num [flagMixed,surfaceFlag6600,agreementDirection6600,
    unitYZFlag,unitZFlag,mixedQuadratic,mixedLinear,mixedUnit,
    zLinear,zUnit]
-end ProximityPrize.SubmissionLower.ContactNearPencil6600FlagResearch
+end ProximityPrize.SubmissionLower.RCN215

@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G0
-namespace ProximityPrize.SubmissionLower.SeparableShearKaehlerResearch
+namespace ProximityPrize.SubmissionLower.RCN369
 open scoped Classical
 open KaehlerDifferential
 noncomputable section
@@ -170,4 +170,4 @@ theorem isSeparable_shear_of_not_isSeparable
  exact hspanZ
 end ProjectionCriterion
 end
-end ProximityPrize.SubmissionLower.SeparableShearKaehlerResearch
+end ProximityPrize.SubmissionLower.RCN369

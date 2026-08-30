@@ -39,6 +39,23 @@ lemma freeLocus_congr {M'} [AddCommGroup M'] [Module R M'] (e:M ≃ₗ[R] M'):
  ext p
  exact mem_freeLocus_of_isLocalization _ _ _
    (LocalizedModule.mkLinearMap p.asIdeal.primeCompl M' ∘ₗ e.toLinearMap)
+set_option backward.isDefEq.respectTransparency false in
+open TensorProduct in
+lemma comap_freeLocus_le {A} [CommRing A] [Algebra R A]:
+   comap (algebraMap R A) ⁻¹' freeLocus R M ≤ freeLocus A (A ⊗[R] M):=by
+ intro p hp
+ let Rₚ:=Localization.AtPrime (comap (algebraMap R A) p).asIdeal
+ let Aₚ:=Localization.AtPrime p.asIdeal
+ rw [Set.mem_preimage,mem_freeLocus_iff_tensor _ Rₚ] at hp
+ rw [mem_freeLocus_iff_tensor _ Aₚ]
+ letI algebra:Algebra Rₚ Aₚ:=(Localization.localRingHom
+   (comap (algebraMap R A) p).asIdeal p.asIdeal (algebraMap R A) rfl).toAlgebra
+ have:IsScalarTower R Rₚ Aₚ:=IsScalarTower.of_algebraMap_eq'
+   (by simp [Rₚ,Aₚ,algebra,RingHom.algebraMap_toAlgebra,Localization.localRingHom,
+       ←IsScalarTower.algebraMap_eq])
+ let e:=AlgebraTensorModule.cancelBaseChange R Rₚ Aₚ Aₚ M ≪≫ₗ
+   (AlgebraTensorModule.cancelBaseChange R A Aₚ Aₚ M).symm
+ exact .of_equiv e
 lemma freeLocus_localization (S:Submonoid R):
    freeLocus (Localization S) (LocalizedModule S M)=
      comap (algebraMap R _) ⁻¹' freeLocus R M:=by
@@ -181,6 +198,21 @@ lemma rankAtStalk_eq_finrank_of_free [Module.Free R M]:
 lemma rankAtStalk_self [Nontrivial R]:rankAtStalk (R:=R) R=1:=by
  simp
 open LocalizedModule Localization
+lemma rankAtStalk_pi {ι:Type*} [Finite ι] (M:ι → Type*)
+   [∀ i,AddCommGroup (M i)] [∀ i,Module R (M i)] [∀ i,Module.Flat R (M i)]
+   [∀ i,Module.Finite R (M i)] (p:PrimeSpectrum R):
+   rankAtStalk (Π i,M i) p=∑ᶠ i,rankAtStalk (M i) p:=by
+ cases nonempty_fintype ι
+ let f:(Π i,M i) →ₗ[R] Π i,LocalizedModule p.asIdeal.primeCompl (M i):=
+   .pi (fun i↦mkLinearMap p.asIdeal.primeCompl (M i) ∘ₗ LinearMap.proj i)
+ let e:LocalizedModule p.asIdeal.primeCompl (Π i,M i) ≃ₗ[Localization.AtPrime p.asIdeal]
+     Π i,LocalizedModule p.asIdeal.primeCompl (M i):=
+   IsLocalizedModule.linearEquiv p.asIdeal.primeCompl
+     (mkLinearMap _ _) f |>.extendScalarsOfIsLocalization p.asIdeal.primeCompl _
+ have (i:ι):Free (Localization.AtPrime p.asIdeal)
+     (LocalizedModule p.asIdeal.primeCompl (M i)):=
+   free_of_flat_of_isLocalRing
+ simp_rw [rankAtStalk,e.finrank_eq,Module.finrank_pi_fintype,finsum_eq_sum_of_fintype]
 lemma rankAtStalk_eq_finrank_tensorProduct (p:PrimeSpectrum R):
    rankAtStalk M p=
      finrank (Localization.AtPrime p.asIdeal) (Localization.AtPrime p.asIdeal ⊗[R] M):=by

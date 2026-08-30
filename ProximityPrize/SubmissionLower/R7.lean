@@ -1,12 +1,12 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G
 import ProximityPrize.SubmissionLower.X1
-namespace ProximityPrize.SubmissionLower.GlobalSeparableShearResearch
+namespace ProximityPrize.SubmissionLower.RCN351
 open scoped Classical TensorProduct
 open Polynomial KaehlerDifferential
-open SeparableShearKaehlerResearch
-open SeparableShearTranscendenceResearch
-open ArbitraryRationalProjectionResearch
+open RCN369
+open RCN370
+open RCN022
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 200000
@@ -253,4 +253,4 @@ theorem exists_common_finite_separable_shear
      (hvalueZ i) (hfiniteZ i) (hsepZ i) (hdiff i)
 end FiniteFamily
 end
-end ProximityPrize.SubmissionLower.GlobalSeparableShearResearch
+end ProximityPrize.SubmissionLower.RCN351

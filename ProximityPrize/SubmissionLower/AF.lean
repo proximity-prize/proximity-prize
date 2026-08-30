@@ -2,24 +2,24 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BY
 import ProximityPrize.SubmissionLower.B8
 import ProximityPrize.SubmissionLower.GQ
-namespace ProximityPrize.SubmissionLower.ContactSharpTaylorFixedMeet6656Research
+namespace ProximityPrize.SubmissionLower.RCN287
 open scoped Classical BigOperators
-open ContactFactorCaps ContactTaylorNumerators ContactGenericSurface
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactJointTaylorMiddleCap6631Research
-open ContactFlagBezout6543Research
-open ContactResidualSupportParametersResearch
-open ContactResidualSupportParametersResearch.ResidualSupportParameters
-open ContactIdentityResidualGlobalFlagResearch
-open ContactInterpolation ContactPrimeSeedIncidence
-open ContactRegularFactorFlag6600Research
-open ContactIdentityResidualIterationResearch
-open ContactIdentityResidualTerminalIncidenceResearch
-open ContactFixedMeetFactorIncidence6656Research
-open ContactRobustFixedMeet6656Research
-open ContactTightSingularLedgerResearch
-open ContactGlobalSelectedFamilies6656Research
-open ContactTightFixedMeet6656Research
+open RCN081 RCN313 RCN136
+open RCN234
+open RCN179
+open RCN095
+open RCN275
+open RCN275.ResidualSupportParameters
+open RCN156
+open RCN174 RCN238
+open RCN266
+open RCN159
+open RCN164
+open RCN091
+open RCN276
+open RCN318
+open RCN141
+open RCN317
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 35000
@@ -158,7 +158,7 @@ theorem surfaceMap_agreement_in_sharp_flag
    (MvPolynomial.le_weightedTotalDegree residualYSWeights hq).trans hYS
  have hqTotal:=
    (MvPolynomial.le_weightedTotalDegree residualTotalWeights hq).trans hTotal
- rw [ContactFactorCaps.weight_fin4] at hqYS hqTotal
+ rw [RCN081.weight_fin4] at hqYS hqTotal
  change q 0*0+q 1*1+q 2*1+q 3*0 ≤
    1+d*(2*P.ys-2) at hqYS
  change q 0*0+q 1*1+q 2*1+q 3*1 ≤
@@ -248,6 +248,29 @@ variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
 variable {pchar:ℕ} [CharP Omega pchar]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Iota:=Classical.decEq Iota
+theorem sum_factor_counts_rectangular_sharp_le
+   (p:Profile) (support:ResidualSupportParameters)
+   (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) (hw:0 < p.w)
+   (hbox:Q∈globalCoefficientBox K p.weightedCap p.w
+     p.seedTotalCap p.slopeCap)
+   (count:RegularIndex Q → ℕ)
+   (hcount:∀ F,count F*p.gap^2 ≤
+     factorRegularLedgerForDirection p (sharpAgreementDirection support)
+       (regularFlag Q F)):
+   (∑ F,count F)*p.gap^2 ≤ sharpRegularNumerator p support:=by
+ have hcaps:=regularFlag_budgets p Q hQ hw hbox
+ calc
+   (∑ F,count F)*p.gap^2=∑ F,count F*p.gap^2:=by
+     rw [Finset.sum_mul]
+   _ ≤ ∑ F,factorRegularLedgerForDirection p
+       (sharpAgreementDirection support) (regularFlag Q F):=
+     Finset.sum_le_sum (fun F _↦hcount F)
+   _ ≤ factorRegularLedgerForDirection p (sharpAgreementDirection support)
+       p.rectangularSurfaceFlag:=
+     sum_factorRegularLedgerForDirection_le_flag p
+       (sharpAgreementDirection support) (regularFlag Q)
+       p.rectangularSurfaceFlag hcaps.1 hcaps.2.1 hcaps.2.2
+   _=sharpRegularNumerator p support:=rfl
 def meetSharpFactorDegreeCost (flag:FlagDegree):ℕ:=
  (flagMixed flag (sharpAgreementDirection fixedMeetSupport)
        (sharpAgreementDirection fixedMeetSupport)*
@@ -272,6 +295,44 @@ theorem meet_sharp_incidence_cost_eq_ledger (flag:FlagDegree):
  simp [meetSharpFactorDegreeCost,meetSharpFactorUnitCost,
    factorRegularLedgerForDirection]
  ring
+theorem recursive_scaled_factor_sharp_6656
+   {flag:FlagDegree}
+   (hphi:Function.Injective phi)
+   (S:ResidualStage phi Gamma x pchar meetProfile.errors flag meetProfile.w
+     fixedMeetSupport)
+   (hnodes:S.nodes.card=meetProfile.n)
+   (hagreement:∀ gamma∈Gamma,
+     meetProfile.agreements ≤ (S.agreementFiber gamma).card)
+   (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,
+     ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
+         (x i) (D.stage.u0 i) (D.stage.u1 i) →
+     (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*
+         meetProfile.gap ≤
+       D.degree*meetSharpFactorDegreeCost flag+
+         meetSharpFactorUnitCost flag):
+   Gamma.card*meetProfile.gap^2 ≤
+     factorRegularLedgerForDirection meetProfile
+       (sharpAgreementDirection fixedMeetSupport) flag:=by
+ have h:=recursive_scaled_stratified_incidence_bound
+   hphi S (meetSharpFactorDegreeCost flag) (meetSharpFactorUnitCost flag)
+     meetProfile.degreeIncidence meetProfile.unitIncidence
+     (by norm_num [meetProfile]) hagreement hfiber
+     (by
+       intro k hk
+       rw [hnodes]
+       exact meet_degree_part_bound k hk)
+     (by
+       intro k hk
+       rw [hnodes]
+       exact meet_unit_part_bound k hk)
+ calc
+   Gamma.card*meetProfile.gap^2 ≤
+       meetProfile.degreeIncidence*meetSharpFactorDegreeCost flag+
+         meetProfile.unitIncidence*meetSharpFactorUnitCost flag:=by
+     simpa only [Profile.gap] using h
+   _=factorRegularLedgerForDirection meetProfile
+       (sharpAgreementDirection fixedMeetSupport) flag:=
+     meet_sharp_incidence_cost_eq_ledger flag
 def meetSharpRegularNumerator:ℕ:=
  sharpRegularNumerator meetProfile fixedMeetSupport
 def meetSharpTightFixedCountCap:ℕ:=
@@ -301,4 +362,4 @@ theorem meet_sharp_saving_over_tight_fixed_exact:
    meetTightFixedCost-meetSharpTightFixedCost=1012255769609106:=by
  rw [meet_tight_fixed_costs_exact.2,meet_sharp_tight_fixed_costs_exact.2]
 end
-end ProximityPrize.SubmissionLower.ContactSharpTaylorFixedMeet6656Research
+end ProximityPrize.SubmissionLower.RCN287

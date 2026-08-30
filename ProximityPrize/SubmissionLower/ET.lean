@@ -1,20 +1,20 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B
 import ProximityPrize.SubmissionLower.Z5
-namespace ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIterationResearch
+namespace ProximityPrize.SubmissionLower.RCN151
 open scoped Classical
-open ContactGenericSurface ContactPolynomialSolutions ContactTranslation
-open ContactTaylorNumerators ContactComponentPencils ContactPrimeSeedIncidence
-open ContactIdentityResidualPencilResearch
-open ContactIdentityResidualGlobalTransformResearch
-open ContactIdentityResidualSurfaceResearch
-open ContactIdentityResidualGlobalFlagResearch
-open ContactResidualSupportParametersResearch
-open ContactPost6464MinkowskiRecurrenceResearch
-open ContactFlagAffineResidualAutomorphismResearch
-open ContactFlagBezout6543Research
-open ContactFlagTriangularProjectionResearch
-open ContactIdentityResidualPrimeTransportResearch
+open RCN136 RCN231 RCN319
+open RCN313 RCN065 RCN238
+open RCN160
+open RCN157
+open RCN163
+open RCN156
+open RCN275
+open RCN234
+open RCN094
+open RCN095
+open RCN125
+open RCN162
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
@@ -40,8 +40,8 @@ structure CurveResidualStage
  primeData:RegularPrimeData G T
    (surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F))
  G_dvd_surface:G∣surfaceMap phi F
- G_flag_support:ContactFlagBezout6543Research.PolynomialInFlag surfaceFlag G
- T_flag_support:ContactFlagBezout6543Research.PolynomialInFlag cutFlag T
+ G_flag_support:RCN095.PolynomialInFlag surfaceFlag G
+ T_flag_support:RCN095.PolynomialInFlag cutFlag T
  surface_s_weight:wt residualSWeights F ≤ support.s
  surface_ys_weight:wt residualYSWeights F ≤ support.ys
  surface_total_weight:wt residualTotalWeights F ≤ support.total
@@ -201,13 +201,13 @@ theorem advance_certified
  have hGdiv:Gres∣surfaceMap phi Fres:=by
    exact (residual_dvd_surfaceMap_globalResidualHom_iff
      phi hphi P0 P1 V hV S.G S.F).mpr S.G_dvd_surface
- have hGflag:ContactFlagBezout6543Research.PolynomialInFlag
+ have hGflag:RCN095.PolynomialInFlag
      surfaceFlag Gres:=
    polynomialInFlag_residualAlgHom surfaceFlag S.G
      (phi P0) (phi V) (phi P1)
      (phi P0.derivative) (phi V.derivative) (phi P1.derivative)
      S.G_flag_support
- have hTflag:ContactFlagBezout6543Research.PolynomialInFlag
+ have hTflag:RCN095.PolynomialInFlag
      cutFlag Tres:=
    polynomialInFlag_residualAlgHom cutFlag S.T
      (phi P0) (phi V) (phi P1)
@@ -249,7 +249,7 @@ theorem advance_certified
        funext i
        fin_cases i <;>
          simp [forwardResidualPoint,selectedPoint,
-           ContactPolynomialSolutions.polynomialPoint,
+           RCN231.polynomialPoint,
            hnormal gamma hgamma,RingHom.comp_apply] <;> ring
      change Dnext.ideal ≤ RingHom.ker
        (MvPolynomial.aeval
@@ -569,4 +569,4 @@ theorem exists_terminal_descendant_with_invariant
          },hInv⟩
 end CurveResidualStage
 end
-end ProximityPrize.SubmissionLower.ContactIdentityResidualCurveIterationResearch
+end ProximityPrize.SubmissionLower.RCN151

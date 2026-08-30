@@ -2,11 +2,11 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DV
 import ProximityPrize.SubmissionLower.J
 import ProximityPrize.SubmissionLower.GR
-namespace ProximityPrize.SubmissionLower.ContactFrozenAlignment6600Research
+namespace ProximityPrize.SubmissionLower.RCN128
 open ProximityPrize.Benchmark
-open ContactAlignmentBridge ContactInterpolation ContactTranslation
-open ContactTranslation6600Research ContactPrimeSeedIncidence
-open ContactParameters6600Research
+open RCN050 RCN174 RCN319
+open RCN320 RCN238
+open RCN223
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 20000
@@ -86,4 +86,4 @@ theorem alignment_of_global_count_lt_alignment6600
  exact alignmentBound_of_selected_count IRSProfile.domain w errors
    alignmentBudget (selected_count_of_global_count_lt_alignment6600 hcount)
 end
-end ProximityPrize.SubmissionLower.ContactFrozenAlignment6600Research
+end ProximityPrize.SubmissionLower.RCN128

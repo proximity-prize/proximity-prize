@@ -1,19 +1,19 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.P
 import ProximityPrize.SubmissionLower.B4
-namespace ProximityPrize.SubmissionLower.ContactFlagProjectionProvider6543Research
+namespace ProximityPrize.SubmissionLower.RCN118
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
-open ActualCurveCoordinateField ActualCurveRationalProjection
- ActualCurveScalarTowers ActualCurveZeroCount
-open CoordinateBoxZeroCount ContactRegularComponentCover
-open ContactResidualSparseComponentAdapterResearch
- ContactResidualSparsePoleProviderResearch
-open ContactTropicalBKKSeamResearch
-open ContactDependentGenericity6543Research
-open ContactFlagBezout6543Research
-open ContactFlagPoleInequality6543Research
-open ContactLocalPoleBound ContactSparsePoleSupportResearch
+open RCN002 RCN005
+ RCN006 RCN007
+open RCN344 RCN264
+open RCN272
+ RCN273
+open RCN323
+open RCN075
+open RCN095
+open RCN114
+open RCN187 RCN295
 noncomputable section
 variable {Ω:Type} [Field Ω] [IsAlgClosed Ω]
 structure PrincipalCycleBudget
@@ -48,9 +48,9 @@ structure PrincipalCycleBudget
      (coordinate Ω C.1) B.polynomial
    let hb:b≠0:=coordinate_eval_ne_zero_of_not_mem
      C.1 B.polynomial (B.proper C)
-   (∑ v∈CommonPlaceBalance.placesFor Ω
+   (∑ v∈RCN026.placesFor Ω
        (CoordinateField Ω C.1) b hb,
-     CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
+     RCN346.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
        (cost C:ℤ)
  sum_cost_le:(∑ C:RegularComponent Ω G T H,cost C) ≤ wholeCap
 structure FlagProjectionCycleBudget
@@ -88,9 +88,9 @@ structure FlagProjectionCycleBudget
      (coordinate Ω C.1) B.polynomial
    let hb:b≠0:=coordinate_eval_ne_zero_of_not_mem
      C.1 B.polynomial (B.proper C)
-   (∑ v∈CommonPlaceBalance.placesFor Ω
+   (∑ v∈RCN026.placesFor Ω
        (CoordinateField Ω C.1) b hb,
-     CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
+     RCN346.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
        ((p.zOnly*zCost C+p.yz*yzCost C+
          p.all*allCost C:ℕ):ℤ)
  sum_zCost_le:(∑ C:RegularComponent Ω G T H,zCost C) ≤ zCap
@@ -165,51 +165,51 @@ def FlagProjectionCycleBudget.ofNestedProjectionBudgets
      (coordinate Ω C.1) BAll.polynomial
    let hbAll:bAll≠0:=coordinate_eval_ne_zero_of_not_mem
      C.1 BAll.polynomial (BAll.proper C)
-   let W:=CommonPlaceBalance.placesFor Ω
+   let W:=RCN026.placesFor Ω
      (CoordinateField Ω C.1) b hb
    have hZsupport:
        (∑ v∈W,exponentSetPoleWeight v.val (coordinate Ω C.1)
          (flagSupport unitZFlag)) ≤
-       ∑ v∈CommonPlaceBalance.placesFor Ω
+       ∑ v∈RCN026.placesFor Ω
            (CoordinateField Ω C.1) bZ hbZ,
-         CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v bZ:=by
+         RCN346.poleOrder Ω (CoordinateField Ω C.1) v bZ:=by
      exact support_sum_le_principal_poleMass_of_exact
        (coordinate Ω C.1) (flagSupport unitZFlag) bZ hbZ
        (BZ.exact_pole C) W
    have hYZsupport:
        (∑ v∈W,exponentSetPoleWeight v.val (coordinate Ω C.1)
          (flagSupport unitYZFlag)) ≤
-       ∑ v∈CommonPlaceBalance.placesFor Ω
+       ∑ v∈RCN026.placesFor Ω
            (CoordinateField Ω C.1) bYZ hbYZ,
-         CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v bYZ:=by
+         RCN346.poleOrder Ω (CoordinateField Ω C.1) v bYZ:=by
      exact support_sum_le_principal_poleMass_of_exact
        (coordinate Ω C.1) (flagSupport unitYZFlag) bYZ hbYZ
        (BYZ.exact_pole C) W
    have hAllsupport:
        (∑ v∈W,exponentSetPoleWeight v.val (coordinate Ω C.1)
          (flagSupport unitAllFlag)) ≤
-       ∑ v∈CommonPlaceBalance.placesFor Ω
+       ∑ v∈RCN026.placesFor Ω
            (CoordinateField Ω C.1) bAll hbAll,
-         CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v bAll:=by
+         RCN346.poleOrder Ω (CoordinateField Ω C.1) v bAll:=by
      exact support_sum_le_principal_poleMass_of_exact
        (coordinate Ω C.1) (flagSupport unitAllFlag) bAll hbAll
        (BAll.exact_pole C) W
    have hZcycle:
-       (∑ v∈CommonPlaceBalance.placesFor Ω
+       (∑ v∈RCN026.placesFor Ω
            (CoordinateField Ω C.1) bZ hbZ,
-         CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v bZ) ≤
+         RCN346.poleOrder Ω (CoordinateField Ω C.1) v bZ) ≤
        (zBudget.cost C:ℤ):=by
      simpa only using zBudget.cycle_le C
    have hYZcycle:
-       (∑ v∈CommonPlaceBalance.placesFor Ω
+       (∑ v∈RCN026.placesFor Ω
            (CoordinateField Ω C.1) bYZ hbYZ,
-         CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v bYZ) ≤
+         RCN346.poleOrder Ω (CoordinateField Ω C.1) v bYZ) ≤
        (yzBudget.cost C:ℤ):=by
      simpa only using yzBudget.cycle_le C
    have hAllcycle:
-       (∑ v∈CommonPlaceBalance.placesFor Ω
+       (∑ v∈RCN026.placesFor Ω
            (CoordinateField Ω C.1) bAll hbAll,
-         CoordinatePoleMass.poleOrder Ω (CoordinateField Ω C.1) v bAll) ≤
+         RCN346.poleOrder Ω (CoordinateField Ω C.1) v bAll) ≤
        (allBudget.cost C:ℤ):=by
      simpa only using allBudget.cycle_le C
    have hlocal:∀ v∈W,
@@ -225,7 +225,7 @@ def FlagProjectionCycleBudget.ofNestedProjectionBudgets
      exact exponentSetPoleWeight_flagSupport_le_three v.val
        (coordinate Ω C.1) p
    calc
-     (∑ v∈W,CoordinatePoleMass.poleOrder Ω
+     (∑ v∈W,RCN346.poleOrder Ω
          (CoordinateField Ω C.1) v b) ≤
          ∑ v∈W,
            ((p.zOnly:ℤ)*exponentSetPoleWeight v.val
@@ -332,4 +332,4 @@ def FlagProjectionCycleBudget.toResidualComponentBudget6543
  rw [flag_projection_decomposition]
  exact P.toResidualComponentBudget
 end
-end ProximityPrize.SubmissionLower.ContactFlagProjectionProvider6543Research
+end ProximityPrize.SubmissionLower.RCN118

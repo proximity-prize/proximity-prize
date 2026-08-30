@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.CQ
 import ProximityPrize.SubmissionLower.D7
-namespace ProximityPrize.SubmissionLower.ContactMatrixCokernelOrder6732Research
+namespace ProximityPrize.SubmissionLower.RCN196
 open scoped Classical BigOperators
 open Module
 noncomputable section
@@ -139,4 +139,4 @@ theorem sum_multiplicities_le_ord_toMatrix_det_of_surjective
      Module.length_le_of_surjective project hsurj
 end TwoModules
 end
-end ProximityPrize.SubmissionLower.ContactMatrixCokernelOrder6732Research
+end ProximityPrize.SubmissionLower.RCN196

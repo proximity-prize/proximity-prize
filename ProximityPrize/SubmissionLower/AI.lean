@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Q
-namespace ProximityPrize.SubmissionLower.ContactStackedParameters6656Research
-open ContactInterpolation ContactRankKernel
+namespace ProximityPrize.SubmissionLower.RCN301
+open RCN174 RCN256
 set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
@@ -146,4 +146,4 @@ theorem meet_caps:
        min (min profileA.slopeCap profileB.slopeCap) profileC.slopeCap)=
          (25,598,6):=by
  norm_num [profileA,profileB,profileC]
-end ProximityPrize.SubmissionLower.ContactStackedParameters6656Research
+end ProximityPrize.SubmissionLower.RCN301

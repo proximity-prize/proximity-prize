@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DC
-namespace ProximityPrize.SubmissionLower.ContactLocalDivisibility
+namespace ProximityPrize.SubmissionLower.RCN185
 open Polynomial
 section LocalRing
 variable {F:Type*} [CommRing F]
@@ -91,4 +91,4 @@ theorem eq_zero_of_contact_representations
    H nodes support m hmult
  exact (Nat.not_le_of_gt hdegree) hbound
 end GlobalVanishing
-end ProximityPrize.SubmissionLower.ContactLocalDivisibility
+end ProximityPrize.SubmissionLower.RCN185

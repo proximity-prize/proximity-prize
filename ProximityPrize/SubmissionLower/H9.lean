@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z7
-namespace ProximityPrize.SubmissionLower.ContactCoefficientCurveGaussResearch
+namespace ProximityPrize.SubmissionLower.RCN059
 open scoped BigOperators
 noncomputable section
 variable {k F L Γ:Type*} [Field k] [Field F] [Field L]
@@ -103,12 +103,12 @@ theorem coefficient_pole_le_generic_value_of_residueApprox {w:ℕ}
    (hres:ResidueApprox v φ κ)
    (hunit:ConstantPolynomialUnit v φ κ x w)
    (a:Fin (w+1) → F) (i:Fin (w+1)):
-   ContactLocalPoleBound.poleOrder v (φ (a i)) ≤
-     ContactLocalPoleBound.poleOrder v (∑ j,φ (a j)*x^(j:ℕ)):=by
+   RCN187.poleOrder v (φ (a i)) ≤
+     RCN187.poleOrder v (∑ j,φ (a j)*x^(j:ℕ)):=by
  have hval:=valuation_coefficient_le_sum_of_residueApprox
    v φ κ x hx hres hunit a i
  by_cases hai:a i=0
- · simp only [hai,map_zero,ContactLocalPoleBound.poleOrder,
+ · simp only [hai,map_zero,RCN187.poleOrder,
      WithZero.log_zero,max_self]
    exact le_max_left _ _
  have hφi:φ (a i)≠0:=by
@@ -121,4 +121,4 @@ theorem coefficient_pole_le_generic_value_of_residueApprox {w:ℕ}
    ne_of_gt ((zero_lt_iff.mpr hvi).trans_le hval)
  exact max_le_max_left 0 ((WithZero.log_le_log hvi hsum).mpr hval)
 end
-end ProximityPrize.SubmissionLower.ContactCoefficientCurveGaussResearch
+end ProximityPrize.SubmissionLower.RCN059

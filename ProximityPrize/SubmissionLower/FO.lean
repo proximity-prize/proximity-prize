@@ -1,8 +1,8 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AA
-namespace ProximityPrize.SubmissionLower.ContactPost6464ShearSupportResearch
+namespace ProximityPrize.SubmissionLower.RCN235
 open scoped BigOperators Matrix
-open ProximityPrize.SubmissionLower.ContactPost6464MinkowskiRecurrenceResearch
+open ProximityPrize.SubmissionLower.RCN234
 noncomputable section
 variable {K:Type*} [Field K]
 abbrev Poly4 (K:Type*) [Field K]:=MvPolynomial (Fin 4) K
@@ -37,12 +37,12 @@ theorem wt_finset_sum_le {ι:Type*} [DecidableEq ι]
    (hf:∀ i∈I,wt weights (f i) ≤ cap):
    wt weights (∑ i∈I,f i) ≤ cap:=by
  unfold wt
- rw [←ContactFactorCaps.degree_weightedLift,map_sum]
+ rw [←RCN081.degree_weightedLift,map_sum]
  apply (MvPolynomial.degreeOf_sum_le (4:Fin 5) I
-   (fun i => ContactFactorCaps.weightedLift K weights (f i))).trans
+   (fun i => RCN081.weightedLift K weights (f i))).trans
  apply Finset.sup_le
  intro i hi
- rw [ContactFactorCaps.degree_weightedLift]
+ rw [RCN081.degree_weightedLift]
  exact hf i hi
 theorem shear_monomial_product_wt_le
    (weights:Fin 4 → ℕ) (d:Fin 4 →₀ ℕ):
@@ -77,4 +77,4 @@ theorem shearMap_wt_le_pulled (weights:Fin 4 → ℕ) (P:Poly4 K):
  exact hmul.trans (hprod.trans
    (MvPolynomial.le_weightedTotalDegree (pullShearWeights weights) hd))
 end
-end ProximityPrize.SubmissionLower.ContactPost6464ShearSupportResearch
+end ProximityPrize.SubmissionLower.RCN235

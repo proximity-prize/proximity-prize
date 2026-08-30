@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-namespace ProximityPrize.SubmissionLower.ContactScore6630Research
+namespace ProximityPrize.SubmissionLower.RCN278
 open ProximityPrize.Benchmark
 open scoped NNReal
 noncomputable section
@@ -65,4 +65,4 @@ theorem radius6630_score:
        NNReal.rpow_add (by norm_num:(2:ℝ≥0)≠0)]
      simp only [NNReal.rpow_neg,NNReal.rpow_natCast,one_div]
 end
-end ProximityPrize.SubmissionLower.ContactScore6630Research
+end ProximityPrize.SubmissionLower.RCN278

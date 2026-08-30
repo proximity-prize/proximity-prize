@@ -1,14 +1,14 @@
 import ProximityPrize.SubmissionLower.M0
 import ProximityPrize.SubmissionLower.C9
-namespace ProximityPrize.SubmissionLower.ContactLocalizedRelationResidueFinite6733Research
-open ActualPlaneCoordinateKernel ArbitraryPlaneEvaluationFamilyResearch
-open ArbitraryRationalProjectionResearch
-open ContactPlaneRelationCoefficientFiber6733Research
-open ContactLocalizedPlaneRelation6733Research
-open ContactLocalizedResidueDegree6733Research
-open ContactFlagResidueDegreeCostAdapter6732Research
-open ActualPlaneRelationMaximal6732Research
-open ContactMaximalRelationMonicLift6733Research
+namespace ProximityPrize.SubmissionLower.RCN192
+open RCN011 RCN021
+open RCN022
+open RCN226
+open RCN191
+open RCN193
+open RCN120
+open RCN014
+open RCN197
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2500000
@@ -84,7 +84,7 @@ theorem localizedRelationResidue_finite
      rfl}
  have hsurj:Function.Surjective phi:=by
    change Function.Surjective
-     (PlaneFunctionFieldDegree.planeEval F L
+     (RCN361.planeEval F L
        (e (MvPolynomial.X (order 2))) (e (MvPolynomial.X (order 1))))
    exact planeEvaluation_surjective_of_finite_generatingPair
      (e (MvPolynomial.X (order 2))) (e (MvPolynomial.X (order 1))) hgen
@@ -208,4 +208,4 @@ theorem localizedRelationResidue_finrank_eq_unlocalized
    rw [Polynomial.map_C]
  exact (Algebra.finrank_eq_of_equiv_equiv e1 e2 hcompat).symm
 end
-end ProximityPrize.SubmissionLower.ContactLocalizedRelationResidueFinite6733Research
+end ProximityPrize.SubmissionLower.RCN192
