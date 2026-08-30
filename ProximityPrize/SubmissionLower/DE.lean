@@ -557,6 +557,24 @@ theorem finite_of_proper_plane_roots
  letI:Algebra.IsIntegral K₀ S:=Algebra.IsIntegral.of_finite K₀ S
  have hrIntegral:IsIntegral K₀ r:=isIntegral_trans r hrIntegralS
  exact finiteDimensional_of_integral_generating_pair y r hyIntegral hrIntegral hgen
+theorem finrank_le_planar_bound_from_proper_roots
+   (P Q:Polynomial (Polynomial K₀))
+   (hirreducible:Irreducible P) (hpositive:0 < P.natDegree)
+   (hproper:¬P∣Q) (y r:E₀)
+   (hP:Polynomial.eval₂ (Polynomial.eval₂RingHom (algebraMap K₀ E₀) y) r P=0)
+   (hQ:Polynomial.eval₂ (Polynomial.eval₂RingHom (algebraMap K₀ E₀) y) r Q=0)
+   (hgen:IntermediateField.adjoin K₀ ({y,r}:Set E₀)=⊤):
+   Module.finrank K₀ E₀ ≤
+     Q.natDegree*Polynomial.Bivariate.degreeX P+
+       P.natDegree*Polynomial.Bivariate.degreeX Q:=by
+ letI:FiniteDimensional K₀ E₀:=
+   finite_of_proper_plane_roots P Q hirreducible hpositive hproper y r hP hQ hgen
+ apply finrank_le_planar_bound_without_separability P Q
+   hirreducible hpositive hproper y r hgen
+ · change (P.map (Polynomial.eval₂RingHom (algebraMap K₀ E₀) y)).eval r=0
+   simpa only [Polynomial.eval₂_eq_eval_map] using hP
+ · change (Q.map (Polynomial.eval₂RingHom (algebraMap K₀ E₀) y)).eval r=0
+   simpa only [Polynomial.eval₂_eq_eval_map] using hQ
 end FiniteWithoutSeparability
 end
 end ProximityPrize.SubmissionLower.CharacteristicFreeMatrixMultiplicityResearch

@@ -117,6 +117,120 @@ end FiniteFamily
 section RegularComponents
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H:MvPolynomial (Fin 3) Omega}
+theorem exists_nestedFlagProjectionData_directional
+   (hseparator:∀ C:RegularComponent Omega G T H,
+     Transcendental Omega (coordinate Omega C.1 2))
+   (hproj:∀ C:RegularComponent Omega G T H,
+     ProjectionsFiniteSeparable Omega C.1)
+   (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0):
+   ∃ D:NestedFlagProjectionData hseparator hproj,
+     MvPolynomial.pderiv (0:Fin 3) G-
+       MvPolynomial.C D.mu*MvPolynomial.pderiv (1:Fin 3) G≠0:=by
+ classical
+ let E:RegularComponent Omega G T H → Type:=
+   fun C↦CoordinateField Omega C.1
+ let rY:∀ C,E C:=fun C↦coordinate Omega C.1 0
+ let z:∀ C,E C:=fun C↦coordinate Omega C.1 2
+ let W:∀ C,Finset
+     (CoordinatePlaceClassification.NormalizedValuation Omega (E C)):=
+   fun C↦componentRelevantPlaces hseparator hproj C
+ let embeddingZ:∀ C,RatFunc Omega →ₐ[Omega] E C:=
+   fun C↦rationalBaseEmbedding Omega C.1 2 (hseparator C)
+ have hvalueZ:∀ C,embeddingZ C
+     (algebraMap (Polynomial Omega) (RatFunc Omega) Polynomial.X)=z C:=by
+   intro C
+   exact rationalBaseEmbedding_polynomial Omega C.1 2 (hseparator C) Polynomial.X
+     |>.trans (Polynomial.aeval_X _)
+ have hfiniteZ:∀ C,
+     letI:Algebra (RatFunc Omega) (E C):=
+       (embeddingZ C).toRingHom.toAlgebra
+     FiniteDimensional (RatFunc Omega) (E C):=by
+   intro C
+   exact (hproj C 2 (hseparator C)).1
+ have hsepZ:∀ C,
+     letI:Algebra (RatFunc Omega) (E C):=
+       (embeddingZ C).toRingHom.toAlgebra
+     Algebra.IsSeparable (RatFunc Omega) (E C):=by
+   intro C
+   exact (hproj C 2 (hseparator C)).2
+ obtain ⟨lam,hlam0,hlam⟩:=
+   exists_common_exact_finite_separable_shear E rY z W
+     embeddingZ hvalueZ hfiniteZ hsepZ
+ let hU:∀ C:RegularComponent Omega G T H,
+     Transcendental Omega (affineU Omega C.1 lam):=
+   fun C↦Classical.choose (hlam C)
+ have hUdata:∀ C,
+     (letI:Algebra (RatFunc Omega) (E C):=
+         (elementEmbedding Omega (E C) (affineU Omega C.1 lam)
+           (hU C)).toRingHom.toAlgebra;
+       FiniteDimensional (RatFunc Omega) (E C))∧
+     (letI:Algebra (RatFunc Omega) (E C):=
+         (elementEmbedding Omega (E C) (affineU Omega C.1 lam)
+           (hU C)).toRingHom.toAlgebra;
+       Algebra.IsSeparable (RatFunc Omega) (E C))∧
+     ∀ v∈W C,v.val (affineU Omega C.1 lam)=
+       max (v.val (coordinate Omega C.1 0))
+         (v.val (coordinate Omega C.1 2)):=by
+   intro C
+   have hp:hU C=Classical.choose (hlam C):=Subsingleton.elim _ _
+   cases hp
+   simpa only [E,rY,z,affineU,hU] using! Classical.choose_spec (hlam C)
+ let rS:∀ C,E C:=fun C↦coordinate Omega C.1 1
+ let u:∀ C,E C:=fun C↦affineU Omega C.1 lam
+ let embeddingU:∀ C,RatFunc Omega →ₐ[Omega] E C:=fun C↦
+   elementEmbedding Omega (E C) (u C) (hU C)
+ have hvalueU:∀ C,embeddingU C
+     (algebraMap (Polynomial Omega) (RatFunc Omega) Polynomial.X)=u C:=by
+   intro C
+   exact elementEmbedding_variable Omega (E C) (u C) (hU C)
+ have hfiniteU:∀ C,
+     letI:Algebra (RatFunc Omega) (E C):=
+       (embeddingU C).toRingHom.toAlgebra
+     FiniteDimensional (RatFunc Omega) (E C):=fun C↦(hUdata C).1
+ have hsepU:∀ C,
+     letI:Algebra (RatFunc Omega) (E C):=
+       (embeddingU C).toRingHom.toAlgebra
+     Algebra.IsSeparable (RatFunc Omega) (E C):=fun C↦(hUdata C).2.1
+ let Extra:PUnit → Omega → Prop:=fun _ mu↦
+   MvPolynomial.pderiv (0:Fin 3) G-
+     MvPolynomial.C mu*MvPolynomial.pderiv (1:Fin 3) G=0
+ have hextra:∀ j {a b},Extra j a → Extra j b → a=b:=by
+   intro j a b ha hb
+   exact directional_bad_coefficient_subsingleton G hSderiv ha hb
+ obtain ⟨mu,hmu0,hmudir,hmu⟩:=
+   exists_common_exact_finite_separable_shear_avoiding E rS u W
+     Extra hextra embeddingU hvalueU hfiniteU hsepU
+ let hV:∀ C:RegularComponent Omega G T H,Transcendental Omega
+     (coordinate Omega C.1 1+mu • affineU Omega C.1 lam):=
+   fun C↦Classical.choose (hmu C)
+ have hVdata:∀ C,
+     (letI:Algebra (RatFunc Omega) (E C):=
+         (elementEmbedding Omega (E C)
+           (coordinate Omega C.1 1+mu • affineU Omega C.1 lam)
+           (hV C)).toRingHom.toAlgebra;
+       FiniteDimensional (RatFunc Omega) (E C))∧
+     (letI:Algebra (RatFunc Omega) (E C):=
+         (elementEmbedding Omega (E C)
+           (coordinate Omega C.1 1+mu • affineU Omega C.1 lam)
+           (hV C)).toRingHom.toAlgebra;
+       Algebra.IsSeparable (RatFunc Omega) (E C))∧
+     ∀ v∈W C,
+       v.val (coordinate Omega C.1 1+mu • affineU Omega C.1 lam)=
+         max (v.val (coordinate Omega C.1 1))
+           (v.val (affineU Omega C.1 lam)):=by
+   intro C
+   have hp:hV C=Classical.choose (hmu C):=Subsingleton.elim _ _
+   cases hp
+   simpa only [E,rS,u,hV] using! Classical.choose_spec (hmu C)
+ let D:NestedFlagProjectionData hseparator hproj:=
+   ⟨lam,hlam0,hU,
+     (fun C↦(hUdata C).1),(fun C↦(hUdata C).2.1),
+     (fun C↦(hUdata C).2.2),
+     mu,hmu0,hV,
+     (fun C↦(hVdata C).1),(fun C↦(hVdata C).2.1),
+     (fun C↦(hVdata C).2.2)⟩
+ refine ⟨D,?_⟩
+ exact hmudir PUnit.unit
 end RegularComponents
 end
 end ProximityPrize.SubmissionLower.ContactFlagDirectionalAvoidance6543Research

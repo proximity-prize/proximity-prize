@@ -198,6 +198,108 @@ theorem nestedV_eq_affineV
      affineV Ω C.1 D.mu (D.mu*D.lam):=by
  simp only [affineU,affineV]
  simp only [smul_add,smul_smul,add_assoc]
+theorem exists_nestedFlagProjectionData
+   (hseparator:∀ C:RegularComponent Ω G T H,
+     Transcendental Ω (coordinate Ω C.1 2))
+   (hproj:∀ C:RegularComponent Ω G T H,
+     ProjectionsFiniteSeparable Ω C.1):
+   Nonempty (NestedFlagProjectionData hseparator hproj):=by
+ classical
+ let E:RegularComponent Ω G T H → Type:=
+   fun C↦CoordinateField Ω C.1
+ let rY:∀ C,E C:=fun C↦coordinate Ω C.1 0
+ let z:∀ C,E C:=fun C↦coordinate Ω C.1 2
+ let W:∀ C,Finset
+     (CoordinatePlaceClassification.NormalizedValuation Ω (E C)):=
+   fun C↦componentRelevantPlaces hseparator hproj C
+ let embeddingZ:∀ C,RatFunc Ω →ₐ[Ω] E C:=
+   fun C↦rationalBaseEmbedding Ω C.1 2 (hseparator C)
+ have hvalueZ:∀ C,embeddingZ C
+     (algebraMap (Polynomial Ω) (RatFunc Ω) Polynomial.X)=z C:=by
+   intro C
+   exact rationalBaseEmbedding_polynomial Ω C.1 2 (hseparator C) Polynomial.X
+     |>.trans (Polynomial.aeval_X _)
+ have hfiniteZ:∀ C,
+     letI:Algebra (RatFunc Ω) (E C):=
+       (embeddingZ C).toRingHom.toAlgebra
+     FiniteDimensional (RatFunc Ω) (E C):=by
+   intro C
+   exact (hproj C 2 (hseparator C)).1
+ have hsepZ:∀ C,
+     letI:Algebra (RatFunc Ω) (E C):=
+       (embeddingZ C).toRingHom.toAlgebra
+     Algebra.IsSeparable (RatFunc Ω) (E C):=by
+   intro C
+   exact (hproj C 2 (hseparator C)).2
+ obtain ⟨lam,hlam0,hlam⟩:=
+   exists_common_exact_finite_separable_shear E rY z W
+     embeddingZ hvalueZ hfiniteZ hsepZ
+ let hU:∀ C:RegularComponent Ω G T H,
+     Transcendental Ω (affineU Ω C.1 lam):=
+   fun C↦Classical.choose (hlam C)
+ have hUdata:∀ C,
+     (letI:Algebra (RatFunc Ω) (E C):=
+         (elementEmbedding Ω (E C) (affineU Ω C.1 lam)
+           (hU C)).toRingHom.toAlgebra;
+       FiniteDimensional (RatFunc Ω) (E C))∧
+     (letI:Algebra (RatFunc Ω) (E C):=
+         (elementEmbedding Ω (E C) (affineU Ω C.1 lam)
+           (hU C)).toRingHom.toAlgebra;
+       Algebra.IsSeparable (RatFunc Ω) (E C))∧
+     ∀ v∈W C,v.val (affineU Ω C.1 lam)=
+       max (v.val (coordinate Ω C.1 0))
+         (v.val (coordinate Ω C.1 2)):=by
+   intro C
+   have hp:hU C=Classical.choose (hlam C):=Subsingleton.elim _ _
+   cases hp
+   simpa only [E,rY,z,affineU,hU] using! Classical.choose_spec (hlam C)
+ let rS:∀ C,E C:=fun C↦coordinate Ω C.1 1
+ let u:∀ C,E C:=fun C↦affineU Ω C.1 lam
+ let embeddingU:∀ C,RatFunc Ω →ₐ[Ω] E C:=fun C↦
+   elementEmbedding Ω (E C) (u C) (hU C)
+ have hvalueU:∀ C,embeddingU C
+     (algebraMap (Polynomial Ω) (RatFunc Ω) Polynomial.X)=u C:=by
+   intro C
+   exact elementEmbedding_variable Ω (E C) (u C) (hU C)
+ have hfiniteU:∀ C,
+     letI:Algebra (RatFunc Ω) (E C):=
+       (embeddingU C).toRingHom.toAlgebra
+     FiniteDimensional (RatFunc Ω) (E C):=fun C↦(hUdata C).1
+ have hsepU:∀ C,
+     letI:Algebra (RatFunc Ω) (E C):=
+       (embeddingU C).toRingHom.toAlgebra
+     Algebra.IsSeparable (RatFunc Ω) (E C):=fun C↦(hUdata C).2.1
+ obtain ⟨mu,hmu0,hmu⟩:=
+   exists_common_exact_finite_separable_shear E rS u W
+     embeddingU hvalueU hfiniteU hsepU
+ let hV:∀ C:RegularComponent Ω G T H,Transcendental Ω
+     (coordinate Ω C.1 1+mu • affineU Ω C.1 lam):=
+   fun C↦Classical.choose (hmu C)
+ have hVdata:∀ C,
+     (letI:Algebra (RatFunc Ω) (E C):=
+         (elementEmbedding Ω (E C)
+           (coordinate Ω C.1 1+mu • affineU Ω C.1 lam)
+           (hV C)).toRingHom.toAlgebra;
+       FiniteDimensional (RatFunc Ω) (E C))∧
+     (letI:Algebra (RatFunc Ω) (E C):=
+         (elementEmbedding Ω (E C)
+           (coordinate Ω C.1 1+mu • affineU Ω C.1 lam)
+           (hV C)).toRingHom.toAlgebra;
+       Algebra.IsSeparable (RatFunc Ω) (E C))∧
+     ∀ v∈W C,
+       v.val (coordinate Ω C.1 1+mu • affineU Ω C.1 lam)=
+         max (v.val (coordinate Ω C.1 1))
+           (v.val (affineU Ω C.1 lam)):=by
+   intro C
+   have hp:hV C=Classical.choose (hmu C):=Subsingleton.elim _ _
+   cases hp
+   simpa only [E,rS,u,hV] using! Classical.choose_spec (hmu C)
+ exact ⟨⟨lam,hlam0,hU,
+   (fun C↦(hUdata C).1),(fun C↦(hUdata C).2.1),
+   (fun C↦(hUdata C).2.2),
+   mu,hmu0,hV,
+   (fun C↦(hVdata C).1),(fun C↦(hVdata C).2.1),
+   (fun C↦(hVdata C).2.2)⟩⟩
 end RegularComponents
 end
 end ProximityPrize.SubmissionLower.ContactFlagExactSeparableProjection6543Research

@@ -39,11 +39,11 @@ def firstPivot (lt ls : ℕ) : TightParameters :=
    profileB.totalCap - lt, profileB.slopeCap - ls⟩
 def secondStage (lt ly ls us : ℕ) : UnequalParameters :=
  ⟨n, w, agreements,
-   (profileA.weightedCap - 1) / w, profileA.slopeCap - ls, 1281 - lt,
+   (profileA.weightedCap - 1) / w, profileA.slopeCap - ls, 1261 - lt,
    (profileC.weightedCap - (w * ly - us) - 1) / w,
      profileC.slopeCap - ls, profileC.totalCap - lt⟩
 def secondPivot (lt ls : ℕ) : TightParameters :=
- ⟨n, w, agreements, profileA.weightedCap, 1281 - lt,
+ ⟨n, w, agreements, profileA.weightedCap, 1261 - lt,
    profileA.slopeCap - ls⟩
 structure ResidualValidity (P : UnequalParameters) (S : TightParameters) : Prop where
  P_n : P.n = n
@@ -232,7 +232,7 @@ theorem secondResidualCell_count_lt
    (hboxC : QC ∈ ContactFlagInterpolation6641Research.globalCoefficientBox K
      profileC.weightedCap w profileC.totalCap profileC.slopeCap)
    (hboxH : gcd12 QA QB ∈ ContactFlagInterpolation6641Research.globalCoefficientBox K
-     profileA.weightedCap w 1281 profileA.slopeCap)
+     profileA.weightedCap w 1261 profileA.slopeCap)
    (hgt : lt ≤ wt residualTotalWeights (gcd123 QA QB QC))
    (hgy : ly ≤ wt residualYSWeights (gcd123 QA QB QC))
    (hgs : ls ≤ wt residualSWeights (gcd123 QA QB QC))
@@ -267,7 +267,7 @@ theorem secondResidualCell_count_lt
  have hTeq : QC = G * T := by
    exact c_eq_gcd123_mul_quotientC QA QB QC
  have hQflag := quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-   H G Q profileA.weightedCap w 1281 profileA.slopeCap 0 lt ls
+   H G Q profileA.weightedCap w 1261 profileA.slopeCap 0 lt ls
    hH hG hQ hboxH hQeq (by omega)
    hgt hgs
  have hTflag := quotient_mem_flagGlobalCoefficientBox_of_mul_eq

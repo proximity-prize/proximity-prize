@@ -19,39 +19,39 @@ local instance : StrongNormalizationMonoid GlobalPoly :=
  UniqueFactorizationMonoid.strongNormalizationMonoid
 local instance : NormalizedGCDMonoid GlobalPoly :=
  UniqueFactorizationMonoid.toNormalizedGCDMonoid GlobalPoly
-def agreements6733 : ℕ := 182032
+def agreements6733 : ℕ := 182042
 abbrev AKernel (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :=
  ConstraintKernel (K := IRSProfile.Field)
-   7645344 131071 84439 12 42 IRSProfile.domain u₀ u₁
+   7645764 131071 84439 12 42 IRSProfile.domain u₀ u₁
 abbrev BKernel (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :=
  ConstraintKernel (K := IRSProfile.Field)
-   14744592 131071 1284 25 81 IRSProfile.domain u₀ u₁
+   14745402 131071 1262 25 81 IRSProfile.domain u₀ u₁
 abbrev CKernel (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :=
  ConstraintKernel (K := IRSProfile.Field)
-   7645344 131071 13754 12 42 IRSProfile.domain u₀ u₁
+   7463722 131071 41787 12 41 IRSProfile.domain u₀ u₁
 theorem gateA :
    Fintype.card IRSProfile.Index * localRankBound 42 84439 12 <
-     coefficientCount 7645344 131071 84439 12 := by
+     coefficientCount 7645764 131071 84439 12 := by
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]]
  rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
-   7645344 131071 84439 12 59 (by decide) (by decide)]
+   7645764 131071 84439 12 59 (by decide) (by decide)]
  decide
 theorem gateB :
-   Fintype.card IRSProfile.Index * localRankBound 81 1284 25 <
-     coefficientCount 14744592 131071 1284 25 := by
+   Fintype.card IRSProfile.Index * localRankBound 81 1262 25 <
+     coefficientCount 14745402 131071 1262 25 := by
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]]
  rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
-   14744592 131071 1284 25 113 (by decide) (by decide)]
+   14745402 131071 1262 25 113 (by decide) (by decide)]
  decide
 theorem gateC :
-   Fintype.card IRSProfile.Index * localRankBound 42 13754 12 <
-     coefficientCount 7645344 131071 13754 12 := by
+   Fintype.card IRSProfile.Index * localRankBound 41 41787 12 <
+     coefficientCount 7463722 131071 41787 12 := by
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]]
  rw [ContactStackedParameters6670Research.coefficientCount_eq_sum_range_of_weighted_cutoff
-   7645344 131071 13754 12 59 (by decide) (by decide)]
+   7463722 131071 41787 12 57 (by decide) (by decide)]
  decide
 theorem field_cardinality :
    Fintype.card IRSProfile.Field = (2130706433 : ℕ) ^ 6 := by
@@ -124,28 +124,46 @@ structure SelectedInterpolants
  QA_ne : QA ≠ 0
  QB_ne : QB ≠ 0
  QC_ne : QC ≠ 0
+ H_ne : H ≠ 0
  G_ne : G ≠ 0
  QA_flag : QA ∈ globalCoefficientBox IRSProfile.Field
-   7645344 131071 84439 12
+   7645764 131071 84439 12
  QB_flag : QB ∈ globalCoefficientBox IRSProfile.Field
-   14744592 131071 1284 25
+   14745402 131071 1262 25
  QC_flag : QC ∈ globalCoefficientBox IRSProfile.Field
-   7645344 131071 13754 12
+   7463722 131071 41787 12
+ QA_ordinary : QA ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+   7645764 131071 84439 12
+ QB_ordinary : QB ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+   14745402 131071 1262 25
+ QC_ordinary : QC ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+   7463722 131071 41787 12
  H_flagA : H ∈ globalCoefficientBox IRSProfile.Field
-   7645344 131071 84439 12
+   7645764 131071 84439 12
+ H_flagB : H ∈ globalCoefficientBox IRSProfile.Field
+   14745402 131071 1262 25
+ G_flagA : G ∈ globalCoefficientBox IRSProfile.Field
+   7645764 131071 84439 12
+ G_flagB : G ∈ globalCoefficientBox IRSProfile.Field
+   14745402 131071 1262 25
  G_flagC : G ∈ globalCoefficientBox IRSProfile.Field
-   7645344 131071 13754 12
+   7463722 131071 41787 12
+ H_dvd_A : ∀ v : AKernel u₀ u₁,
+   H ∣ reconstruct IRSProfile.Field 7645764 131071 84439 12 v.1
+ H_dvd_B : ∀ v : BKernel u₀ u₁,
+   H ∣ reconstruct IRSProfile.Field 14745402 131071 1262 25 v.1
  G_dvd_A : ∀ v : AKernel u₀ u₁,
-   G ∣ reconstruct IRSProfile.Field 7645344 131071 84439 12 v.1
+   G ∣ reconstruct IRSProfile.Field 7645764 131071 84439 12 v.1
  G_dvd_B : ∀ v : BKernel u₀ u₁,
-   G ∣ reconstruct IRSProfile.Field 14744592 131071 1284 25 v.1
- H_total_le : wt residualTotalWeights H ≤ 1281
- G_ys_le : wt residualYSWeights G ≤ 56
- G_total_le : wt residualTotalWeights G ≤ 1281
- G_corner : wt residualYSWeights G ≤ 55 ∨
+   G ∣ reconstruct IRSProfile.Field 14745402 131071 1262 25 v.1
+ G_dvd_C : ∀ v : CKernel u₀ u₁,
+   G ∣ reconstruct IRSProfile.Field 7463722 131071 41787 12 v.1
+ H_ys_le : wt residualYSWeights H ≤ 55
+ H_total_le : wt residualTotalWeights H ≤ 1261
+ G_ys_le : wt residualYSWeights G ≤ 55
+ G_total_le : wt residualTotalWeights G ≤ 1261
+ G_corner : wt residualYSWeights G ≤ 54 ∨
    wt residualSWeights G ≤ 11
- G_total_corner : wt residualTotalWeights G ≤ 1280 ∨
-   wt residualYSWeights G ≤ 46
  universal_vanishing :
    ∀ (gamma : IRSProfile.Field) (P : Polynomial IRSProfile.Field)
      (support : Finset IRSProfile.Index),
@@ -160,6 +178,41 @@ structure SelectedInterpolants
          IRSProfile.Field P gamma QC = 0
 namespace SelectedInterpolants
 variable {u₀ u₁ : IRSProfile.Index → IRSProfile.Field}
+theorem H_ordinaryA (S : SelectedInterpolants u₀ u₁) :
+   S.H ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+     7645764 131071 84439 12 :=
+ flag_box_to_ordinary IRSProfile.Field
+   7645764 131071 84439 12 S.H S.H_flagA
+theorem H_ordinaryB (S : SelectedInterpolants u₀ u₁) :
+   S.H ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+     14745402 131071 1262 25 :=
+ flag_box_to_ordinary IRSProfile.Field
+   14745402 131071 1262 25 S.H S.H_flagB
+theorem G_ordinaryA (S : SelectedInterpolants u₀ u₁) :
+   S.G ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+     7645764 131071 84439 12 :=
+ flag_box_to_ordinary IRSProfile.Field
+   7645764 131071 84439 12 S.G S.G_flagA
+theorem G_ordinaryB (S : SelectedInterpolants u₀ u₁) :
+   S.G ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+     14745402 131071 1262 25 :=
+ flag_box_to_ordinary IRSProfile.Field
+   14745402 131071 1262 25 S.G S.G_flagB
+theorem G_ordinaryC (S : SelectedInterpolants u₀ u₁) :
+   S.G ∈ ContactInterpolation.globalCoefficientBox IRSProfile.Field
+     7463722 131071 41787 12 :=
+ flag_box_to_ordinary IRSProfile.Field
+   7463722 131071 41787 12 S.G S.G_flagC
+theorem H_dvd_A_commonGCD (S : SelectedInterpolants u₀ u₁)
+   {ι : Type*} [Fintype ι]
+   (b : Module.Basis ι IRSProfile.Field (AKernel u₀ u₁)) :
+   S.H ∣ commonGCD (AKernel u₀ u₁) b :=
+ (dvd_commonGCD_iff (AKernel u₀ u₁) b S.H).2 S.H_dvd_A
+theorem H_dvd_B_commonGCD (S : SelectedInterpolants u₀ u₁)
+   {ι : Type*} [Fintype ι]
+   (b : Module.Basis ι IRSProfile.Field (BKernel u₀ u₁)) :
+   S.H ∣ commonGCD (BKernel u₀ u₁) b :=
+ (dvd_commonGCD_iff (BKernel u₀ u₁) b S.H).2 S.H_dvd_B
 theorem G_dvd_A_commonGCD (S : SelectedInterpolants u₀ u₁)
    {ι : Type*} [Fintype ι]
    (b : Module.Basis ι IRSProfile.Field (AKernel u₀ u₁)) :
@@ -170,19 +223,24 @@ theorem G_dvd_B_commonGCD (S : SelectedInterpolants u₀ u₁)
    (b : Module.Basis ι IRSProfile.Field (BKernel u₀ u₁)) :
    S.G ∣ commonGCD (BKernel u₀ u₁) b :=
  (dvd_commonGCD_iff (BKernel u₀ u₁) b S.G).2 S.G_dvd_B
+theorem G_dvd_C_commonGCD (S : SelectedInterpolants u₀ u₁)
+   {ι : Type*} [Fintype ι]
+   (b : Module.Basis ι IRSProfile.Field (CKernel u₀ u₁)) :
+   S.G ∣ commonGCD (CKernel u₀ u₁) b :=
+ (dvd_commonGCD_iff (CKernel u₀ u₁) b S.G).2 S.G_dvd_C
 end SelectedInterpolants
 theorem exists_selected_interpolants
    (u₀ u₁ : IRSProfile.Index → IRSProfile.Field) :
    Nonempty (SelectedInterpolants u₀ u₁) := by
  classical
  obtain ⟨thetaA,hthetaA,hkernelA⟩ := exists_nonzero_kernel_array
-   IRSProfile.Field 7645344 131071 84439 12 42
+   IRSProfile.Field 7645764 131071 84439 12 42
      IRSProfile.domain u₀ u₁ gateA
  obtain ⟨thetaB,hthetaB,hkernelB⟩ := exists_nonzero_kernel_array
-   IRSProfile.Field 14744592 131071 1284 25 81
+   IRSProfile.Field 14745402 131071 1262 25 81
      IRSProfile.domain u₀ u₁ gateB
  obtain ⟨thetaC,hthetaC,hkernelC⟩ := exists_nonzero_kernel_array
-   IRSProfile.Field 7645344 131071 13754 12 42
+   IRSProfile.Field 7463722 131071 41787 12 41
      IRSProfile.domain u₀ u₁ gateC
  let vA0 : AKernel u₀ u₁ := ⟨thetaA,LinearMap.mem_ker.mpr hkernelA⟩
  let vB0 : BKernel u₀ u₁ := ⟨thetaB,LinearMap.mem_ker.mpr hkernelB⟩
@@ -232,12 +290,20 @@ theorem exists_selected_interpolants
  have hHC : HC ≠ 0 := by
    dsimp [HC]
    exact commonGCD_ne_zero (CKernel u₀ u₁) bC
+ have hHAbox : HA ∈ globalCoefficientBox IRSProfile.Field
+     7645764 131071 84439 12 := by
+   dsimp [HA]
+   exact commonGCD_mem_flagBox (AKernel u₀ u₁) bA
  have hHBbox : HB ∈ globalCoefficientBox IRSProfile.Field
-     14744592 131071 1284 25 := by
+     14745402 131071 1262 25 := by
    dsimp [HB]
    exact commonGCD_mem_flagBox (BKernel u₀ u₁) bB
+ have hHCbox : HC ∈ globalCoefficientBox IRSProfile.Field
+     7463722 131071 41787 12 := by
+   dsimp [HC]
+   exact commonGCD_mem_flagBox (CKernel u₀ u₁) bC
  have hcardHB : (normalizedFactorSet HB).card < ENat.card IRSProfile.Field :=
-   normalizedFactorSet_card_lt_field_of_mem_flagBox HB 14744592 1284 25
+   normalizedFactorSet_card_lt_field_of_mem_flagBox HB 14745402 1262 25
      hHB hHBbox (by norm_num)
  obtain ⟨vA,hvA,hcopA⟩ := exists_common_quotient_isRelPrime
    (AKernel u₀ u₁) bA hHA HB hHB hcardHB
@@ -253,13 +319,13 @@ theorem exists_selected_interpolants
    apply submoduleReconstructLinear_injective (AKernel u₀ u₁)
    simpa only [map_zero,QA] using hz
  have hQAbox : QA ∈ globalCoefficientBox IRSProfile.Field
-     7645344 131071 84439 12 := by
+     7645764 131071 84439 12 := by
    dsimp only [QA]
    rw [submoduleReconstructLinear_apply]
    exact reconstruct_mem_globalCoefficientBox IRSProfile.Field
-     7645344 131071 84439 12 vA.1
+     7645764 131071 84439 12 vA.1
  have hcardQA : (normalizedFactorSet QA).card < ENat.card IRSProfile.Field :=
-   normalizedFactorSet_card_lt_field_of_mem_flagBox QA 7645344 84439 12
+   normalizedFactorSet_card_lt_field_of_mem_flagBox QA 7645764 84439 12
      hQA hQAbox (by norm_num)
  obtain ⟨vB,hvB,hcopB⟩ := exists_common_quotient_isRelPrime
    (BKernel u₀ u₁) bB hHB QA hQA hcardQA
@@ -275,11 +341,11 @@ theorem exists_selected_interpolants
    apply submoduleReconstructLinear_injective (BKernel u₀ u₁)
    simpa only [map_zero,QB] using hz
  have hQBbox : QB ∈ globalCoefficientBox IRSProfile.Field
-     14744592 131071 1284 25 := by
+     14745402 131071 1262 25 := by
    dsimp only [QB]
    rw [submoduleReconstructLinear_apply]
    exact reconstruct_mem_globalCoefficientBox IRSProfile.Field
-     14744592 131071 1284 25 vB.1
+     14745402 131071 1262 25 vB.1
  have hAssocA : Associated (gcd QA HB) (gcd HA HB) := by
    have h := gcd_mul_left_plain_associated HA qA HB
      (by simpa only [qA] using hcopA)
@@ -300,34 +366,47 @@ theorem exists_selected_interpolants
  have hHHB : H ∣ HB :=
    hAssocH.dvd_iff_dvd_left.mpr (gcd_dvd_right HA HB)
  have hHdivA : ∀ v : AKernel u₀ u₁,
-     H ∣ reconstruct IRSProfile.Field 7645344 131071 84439 12 v.1 := by
+     H ∣ reconstruct IRSProfile.Field 7645764 131071 84439 12 v.1 := by
    intro v
    exact hHHA.trans (commonGCD_dvd (AKernel u₀ u₁) bA v)
  have hHdivB : ∀ v : BKernel u₀ u₁,
-     H ∣ reconstruct IRSProfile.Field 14744592 131071 1284 25 v.1 := by
+     H ∣ reconstruct IRSProfile.Field 14745402 131071 1262 25 v.1 := by
    intro v
    exact hHHB.trans (commonGCD_dvd (BKernel u₀ u₁) bB v)
  have hHboxA : H ∈ globalCoefficientBox IRSProfile.Field
-     7645344 131071 84439 12 :=
-   mem_flagGlobalCoefficientBox_of_dvd H QA 7645344 131071 84439 12
+     7645764 131071 84439 12 :=
+   mem_flagGlobalCoefficientBox_of_dvd H QA 7645764 131071 84439 12
      hQA (by dsimp only [H]; exact gcd_dvd_left QA QB) hQAbox
+ have hHboxB : H ∈ globalCoefficientBox IRSProfile.Field
+     14745402 131071 1262 25 :=
+   mem_flagGlobalCoefficientBox_of_dvd H QB 14745402 131071 1262 25
+     hQB (by dsimp only [H]; exact gcd_dvd_right QA QB) hQBbox
  have hcardH : (normalizedFactorSet H).card < ENat.card IRSProfile.Field :=
-   normalizedFactorSet_card_lt_field_of_mem_flagBox H 7645344 84439 12
+   normalizedFactorSet_card_lt_field_of_mem_flagBox H 7645764 84439 12
      hH hHboxA (by norm_num)
- obtain ⟨vC,hvC,_⟩ := exists_common_quotient_isRelPrime
+ obtain ⟨vC,hvC,hcopC⟩ := exists_common_quotient_isRelPrime
    (CKernel u₀ u₁) bC hHC H hH hcardH
+ let qC := commonQuotientLinear (CKernel u₀ u₁) bC hHC vC
  let QC := submoduleReconstructLinear (CKernel u₀ u₁) vC
+ have hQCeq : QC = HC * qC := by
+   exact recon_eq_mul_quotientPolynomial
+     (submoduleReconstructLinear (CKernel u₀ u₁)) HC
+     (commonDivisorProof (CKernel u₀ u₁) bC) vC
  have hQC : QC ≠ 0 := by
    intro hz
    apply hvC
    apply submoduleReconstructLinear_injective (CKernel u₀ u₁)
    simpa only [map_zero,QC] using hz
  have hQCbox : QC ∈ globalCoefficientBox IRSProfile.Field
-     7645344 131071 13754 12 := by
+     7463722 131071 41787 12 := by
    dsimp only [QC]
    rw [submoduleReconstructLinear_apply]
    exact reconstruct_mem_globalCoefficientBox IRSProfile.Field
-     7645344 131071 13754 12 vC.1
+     7463722 131071 41787 12 vC.1
+ have hAssocG : Associated (gcd H QC) (gcd H HC) := by
+   have h := gcd_mul_right_plain_associated H HC qC
+     (by simpa only [qC] using hcopC)
+   rwa [← hQCeq] at h
  let G := gcd H QC
  have hG : G ≠ 0 := by
    intro hz
@@ -336,58 +415,63 @@ theorem exists_selected_interpolants
  have hGH : G ∣ H := by
    dsimp only [G]
    exact gcd_dvd_left H QC
+ have hGHC : G ∣ HC := by
+   apply hAssocG.dvd_iff_dvd_left.mpr
+   exact gcd_dvd_right H HC
  have hGdivA : ∀ v : AKernel u₀ u₁,
-     G ∣ reconstruct IRSProfile.Field 7645344 131071 84439 12 v.1 := by
+     G ∣ reconstruct IRSProfile.Field 7645764 131071 84439 12 v.1 := by
    intro v
    exact hGH.trans (hHdivA v)
  have hGdivB : ∀ v : BKernel u₀ u₁,
-     G ∣ reconstruct IRSProfile.Field 14744592 131071 1284 25 v.1 := by
+     G ∣ reconstruct IRSProfile.Field 14745402 131071 1262 25 v.1 := by
    intro v
    exact hGH.trans (hHdivB v)
+ have hGdivC : ∀ v : CKernel u₀ u₁,
+     G ∣ reconstruct IRSProfile.Field 7463722 131071 41787 12 v.1 := by
+   intro v
+   exact hGHC.trans (commonGCD_dvd (CKernel u₀ u₁) bC v)
+ have hGboxA : G ∈ globalCoefficientBox IRSProfile.Field
+     7645764 131071 84439 12 :=
+   mem_flagGlobalCoefficientBox_of_dvd G H 7645764 131071 84439 12
+     hH hGH hHboxA
+ have hGboxB : G ∈ globalCoefficientBox IRSProfile.Field
+     14745402 131071 1262 25 :=
+   mem_flagGlobalCoefficientBox_of_dvd G H 14745402 131071 1262 25
+     hH hGH hHboxB
  have hGboxC : G ∈ globalCoefficientBox IRSProfile.Field
-     7645344 131071 13754 12 :=
-   mem_flagGlobalCoefficientBox_of_dvd G QC 7645344 131071 13754 12
+     7463722 131071 41787 12 :=
+   mem_flagGlobalCoefficientBox_of_dvd G QC 7463722 131071 41787 12
      hQC (by dsimp only [G]; exact gcd_dvd_right H QC) hQCbox
- have hHAys : wt residualYSWeights HA ≤ 56 := by
+ have hHAys : wt residualYSWeights HA ≤ 55 := by
    dsimp only [HA]
    exact ContactKernelCommonGCDResearch.Caps6734.profileA_commonGCD_ys_le
      u₀ u₁ bA
- have hHAcorner : wt residualYSWeights HA ≤ 55 ∨
+ have hHAcorner : wt residualYSWeights HA ≤ 54 ∨
      wt residualSWeights HA ≤ 11 := by
    dsimp only [HA]
    exact ContactKernelCommonGCDResearch.Caps6734.profileA_commonGCD_corner
      u₀ u₁ bA
- have hHBtotal : wt residualTotalWeights HB ≤ 1281 := by
+ have hHBtotal : wt residualTotalWeights HB ≤ 1261 := by
    dsimp only [HB]
    exact ContactKernelCommonGCDResearch.Caps6734.profileB_commonGCD_total_le
      u₀ u₁ bB
- have hHBcorner : wt residualTotalWeights HB ≤ 1280 ∨
-     wt residualYSWeights HB ≤ 46 := by
-   dsimp only [HB]
-   exact ContactKernelCommonGCDResearch.Caps6734.profileB_commonGCD_corner
-     u₀ u₁ bB
- have hHtotal : wt residualTotalWeights H ≤ 1281 :=
+ have hHys : wt residualYSWeights H ≤ 55 :=
+   (weightedTotalDegree_le_of_dvd residualYSWeights H HA hHHA hHA).trans hHAys
+ have hHtotal : wt residualTotalWeights H ≤ 1261 :=
    (weightedTotalDegree_le_of_dvd residualTotalWeights H HB hHHB hHB).trans hHBtotal
- have hGys : wt residualYSWeights G ≤ 56 :=
+ have hGys : wt residualYSWeights G ≤ 55 :=
    (weightedTotalDegree_le_of_dvd residualYSWeights G HA
      (hGH.trans hHHA) hHA).trans hHAys
- have hGtotal : wt residualTotalWeights G ≤ 1281 :=
+ have hGtotal : wt residualTotalWeights G ≤ 1261 :=
    (weightedTotalDegree_le_of_dvd residualTotalWeights G HB
      (hGH.trans hHHB) hHB).trans hHBtotal
- have hGcorner : wt residualYSWeights G ≤ 55 ∨
+ have hGcorner : wt residualYSWeights G ≤ 54 ∨
      wt residualSWeights G ≤ 11 := by
    rcases hHAcorner with hys | hslope
    · exact Or.inl ((weightedTotalDegree_le_of_dvd residualYSWeights G HA
        (hGH.trans hHHA) hHA).trans hys)
    · exact Or.inr ((weightedTotalDegree_le_of_dvd residualSWeights G HA
        (hGH.trans hHHA) hHA).trans hslope)
- have hGtotalCorner : wt residualTotalWeights G ≤ 1280 ∨
-     wt residualYSWeights G ≤ 46 := by
-   rcases hHBcorner with htotal | hys
-   · exact Or.inl ((weightedTotalDegree_le_of_dvd residualTotalWeights G HB
-       (hGH.trans hHHB) hHB).trans htotal)
-   · exact Or.inr ((weightedTotalDegree_le_of_dvd residualYSWeights G HB
-       (hGH.trans hHHB) hHB).trans hys)
  have hvAcoeff : vA.1 ≠ 0 := by
    intro hz
    apply hvA
@@ -401,13 +485,13 @@ theorem exists_selected_interpolants
    apply hvC
    exact Subtype.ext hz
  have hUnivA := (nonzero_kernel_member_universal IRSProfile.Field
-   7645344 131071 84439 12 42 agreements6733 IRSProfile.domain u₀ u₁
+   7645764 131071 84439 12 42 agreements6733 IRSProfile.domain u₀ u₁
    vA.1 hvAcoeff vA.2 (by decide) (by norm_num [agreements6733])).2.2
  have hUnivB := (nonzero_kernel_member_universal IRSProfile.Field
-   14744592 131071 1284 25 81 agreements6733 IRSProfile.domain u₀ u₁
+   14745402 131071 1262 25 81 agreements6733 IRSProfile.domain u₀ u₁
    vB.1 hvBcoeff vB.2 (by decide) (by norm_num [agreements6733])).2.2
  have hUnivC := (nonzero_kernel_member_universal IRSProfile.Field
-   7645344 131071 13754 12 42 agreements6733 IRSProfile.domain u₀ u₁
+   7463722 131071 41787 12 41 agreements6733 IRSProfile.domain u₀ u₁
    vC.1 hvCcoeff vC.2 (by decide) (by norm_num [agreements6733])).2.2
  refine ⟨{
    QA := QA
@@ -420,19 +504,32 @@ theorem exists_selected_interpolants
    QA_ne := hQA
    QB_ne := hQB
    QC_ne := hQC
+   H_ne := hH
    G_ne := hG
    QA_flag := hQAbox
    QB_flag := hQBbox
    QC_flag := hQCbox
+   QA_ordinary := flag_box_to_ordinary IRSProfile.Field
+     7645764 131071 84439 12 QA hQAbox
+   QB_ordinary := flag_box_to_ordinary IRSProfile.Field
+     14745402 131071 1262 25 QB hQBbox
+   QC_ordinary := flag_box_to_ordinary IRSProfile.Field
+     7463722 131071 41787 12 QC hQCbox
    H_flagA := hHboxA
+   H_flagB := hHboxB
+   G_flagA := hGboxA
+   G_flagB := hGboxB
    G_flagC := hGboxC
+   H_dvd_A := hHdivA
+   H_dvd_B := hHdivB
    G_dvd_A := hGdivA
    G_dvd_B := hGdivB
+   G_dvd_C := hGdivC
+   H_ys_le := hHys
    H_total_le := hHtotal
    G_ys_le := hGys
    G_total_le := hGtotal
    G_corner := hGcorner
-   G_total_corner := hGtotalCorner
    universal_vanishing := by
      intro gamma P support hP hcard hvalues
      refine ⟨?_,?_,?_⟩

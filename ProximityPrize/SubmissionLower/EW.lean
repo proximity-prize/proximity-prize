@@ -290,6 +290,43 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_of_support
    (fun k hk => by simpa only [gap] using degree_part_bound k hk)
    (fun k hk => by simpa only [gap] using unit_part_bound k hk)
    D i hi B hallPositive
+theorem terminal_outer_fiber_bound_of_prime_flag_budget
+   (hphi:Function.Injective phi)
+   {flag:FlagDegree}
+   (S:ResidualStage phi Gamma x pchar errors flag w)
+   (hnodes:S.nodes.card=n)
+   (hagreement:∀ gamma∈Gamma,
+     agreements ≤ (S.agreementFiber gamma).card)
+   (D:S.TerminalDescendant) (i:Iota) (hi:i∈D.stage.nodes)
+   (B:PrimeFlagBudgetFamily
+     (G:=D.stage.G)
+     (T:=agreementPolynomial phi D.stage.F D.degree
+       (x i) (D.stage.u0 i) (D.stage.u1 i))
+     (H:=regularitySurface phi D.stage.F)
+     flag (residualAgreementFlag D.degree))
+   (hallPositive:∀ C:RegularComponent Omega D.stage.G
+     (agreementPolynomial phi D.stage.F D.degree
+       (x i) (D.stage.u0 i) (D.stage.u1 i))
+     (regularitySurface phi D.stage.F),1 ≤ B.allCost C):
+   (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*gap ≤
+     D.degree*
+         ((flagMixed flag agreementDirection6600 agreementDirection6600*
+             degreeIncidence+
+           flagMixed flag agreementDirection6600 unitYZFlag*
+             unitIncidence)+
+           (errors+1)*gap*
+             (flagMixed flag agreementDirection6600 unitZFlag+
+               flagMixed flag agreementDirection6600 unitAllFlag))+
+       ((flagMixed flag agreementDirection6600 unitYZFlag*
+             degreeIncidence+
+           flagMixed flag unitYZFlag unitYZFlag*unitIncidence)+
+         (errors+1)*gap*
+           (flagMixed flag unitYZFlag unitZFlag+
+             flagMixed flag unitYZFlag unitAllFlag)):=by
+ simpa [ResidualSupportParameters.acceptedSupport,
+   ResidualSupportParameters.agreementDirection,agreementDirection6600] using
+   terminal_outer_fiber_bound_of_prime_flag_budget_of_support
+     hphi S hnodes hagreement D i hi B hallPositive
 theorem recursive_scaled_factor_6600_of_prime_flag_budgets_of_support
    (hphi:Function.Injective phi)
    {support:ResidualSupportParameters} {flag:FlagDegree}
@@ -319,6 +356,40 @@ theorem recursive_scaled_factor_6600_of_prime_flag_budgets_of_support
  obtain ⟨B,hallPositive⟩:=hbudget D i hi hproper
  exact terminal_outer_fiber_bound_of_prime_flag_budget_of_support
    hphi S hnodes hagreement D i hi B hallPositive
+theorem recursive_scaled_factor_6656_of_prime_flag_budgets
+   (hphi:Function.Injective phi)
+   {flag:FlagDegree}
+   (S:ResidualStage phi Gamma x pchar meetProfile.errors flag meetProfile.w
+     ResidualSupportParameters.fixedMeetSupport)
+   (hnodes:S.nodes.card=meetProfile.n)
+   (hagreement:∀ gamma∈Gamma,
+     meetProfile.agreements ≤ (S.agreementFiber gamma).card)
+   (hbudget:∀ (D:S.TerminalDescendant) (i:Iota),
+     i∈D.stage.nodes →
+     ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
+         (x i) (D.stage.u0 i) (D.stage.u1 i) →
+     ∃ B:PrimeFlagBudgetFamily
+       (G:=D.stage.G)
+       (T:=agreementPolynomial phi D.stage.F D.degree
+         (x i) (D.stage.u0 i) (D.stage.u1 i))
+       (H:=regularitySurface phi D.stage.F)
+       flag (ResidualSupportParameters.fixedMeetSupport.residualAgreementFlag
+         D.degree),
+       ∀ C:RegularComponent Omega D.stage.G
+         (agreementPolynomial phi D.stage.F D.degree
+           (x i) (D.stage.u0 i) (D.stage.u1 i))
+         (regularitySurface phi D.stage.F),1 ≤ B.allCost C):
+   Gamma.card*meetProfile.gap^2 ≤
+     meetProfile.factorRegularLedger flag:=by
+ apply recursive_scaled_factor_6656 hphi S flag hnodes hagreement
+ intro D i hi hproper
+ obtain ⟨B,hallPositive⟩:=hbudget D i hi hproper
+ have h:=terminal_outer_fiber_bound_of_prime_flag_budget_profile hphi
+   meetProfile.n meetProfile.agreements meetProfile.w meetProfile.errors
+   meetProfile.degreeIncidence meetProfile.unitIncidence S hnodes hagreement
+   (by norm_num [meetProfile]) (by norm_num [meetProfile])
+   meet_degree_part_bound meet_unit_part_bound D i hi B hallPositive
+ simpa only [Profile.gap,meetFactorDegreeCost,meetFactorUnitCost] using h
 theorem recursive_scaled_factor_6600_of_prime_flag_budgets
    (hphi:Function.Injective phi)
    {flag:FlagDegree}

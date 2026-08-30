@@ -33,9 +33,9 @@ local instance : CharP K prime := by
  simpa [prime, ContactParameters6600Research.prime] using
    ContactFrozenAlignment6600Research.challenge_field_characteristic6600
 def fixedProfile (a b s : ℕ) : ContactRobustFixedMeet6656Research.Profile :=
- ⟨n, w, agreements, 42 * agreements, a + b + s + 3, s + 2⟩
+ ⟨n, w, agreements, 41 * agreements, a + b + s + 3, s + 2⟩
 def fixedTightProfile (a b s : ℕ) : TightParameters :=
- ⟨n, w, agreements, 42 * agreements, a + b + s + 3, s + 2⟩
+ ⟨n, w, agreements, 41 * agreements, a + b + s + 3, s + 2⟩
 def fixedAlignment (a b s : ℕ) :
    FixedParameterAlignment (fixedProfile a b s) (fixedTightProfile a b s) where
  n := rfl
@@ -64,7 +64,7 @@ theorem support_of_dvd
 def fixedGeometricStage
    (a b s : ℕ) (hsSmall : s + 2 < prime)
    (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
-   (hbox : Q ∈ globalCoefficientBox K (42 * agreements) w
+   (hbox : Q ∈ globalCoefficientBox K (41 * agreements) w
      (a + b + s + 3) (s + 2))
    (Hsupport : ResidualSupportData (support a b s) Q)
    (selected : K → Polynomial K) (Gamma : Finset K)
@@ -78,10 +78,10 @@ def fixedGeometricStage
      IRSProfile.domain prime errors (geometricCumulativeFlag K g) w
      (support a b s) := by
  letI : CharP (GenericField K) prime := genericField_charP K prime
- have hRdata := directFactor_data Q R.1 hQ (42 * agreements) w
+ have hRdata := directFactor_data Q R.1 hQ (41 * agreements) w
    (a + b + s + 3) (s + 2) hbox R.2
  have hRsmall : R.1.degreeOf (2 : Fin 4) < prime :=
-   (degreeOf_R_le_of_mem_box R.1 (42 * agreements) w
+   (degreeOf_R_le_of_mem_box R.1 (41 * agreements) w
      (a + b + s + 3) (s + 2) hRdata.2.2).trans_lt hsSmall
  have hsupport : ResidualSupportData (support a b s) R.1 :=
    support_of_dvd a b s R.1 Q hQ
@@ -94,7 +94,7 @@ def fixedGeometricStage
 theorem geometric_flag_caps
    (a b s : ℕ)
    (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
-   (hbox : Q ∈ globalCoefficientBox K (42 * agreements) w
+   (hbox : Q ∈ globalCoefficientBox K (41 * agreements) w
      (a + b + s + 3) (s + 2))
    (Hsupport : ResidualSupportData (support a b s) Q)
    (R : RegularIndex Q) (g : GeometricFactor K R.1) :
@@ -104,7 +104,7 @@ theorem geometric_flag_caps
      (geometricCumulativeFlag K g).zOnly +
        (geometricCumulativeFlag K g).yz +
        (geometricCumulativeFlag K g).all ≤ a + b + s + 3 := by
- have hRdata := directFactor_data Q R.1 hQ (42 * agreements) w
+ have hRdata := directFactor_data Q R.1 hQ (41 * agreements) w
    (a + b + s + 3) (s + 2) hbox R.2
  simpa only [ContactMovingAgreementCertificate6719Research.support] using
    geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero
@@ -117,7 +117,7 @@ def FixedStageBound (a b s : ℕ) : Prop :=
      prime errors flag w (support a b s)) →
    S.nodes.card = agreements + errors →
    (∀ gamma ∈ Gamma, agreements ≤ (S.agreementFiber gamma).card) →
-   S.F ∈ globalCoefficientBox K (42 * agreements) w
+   S.F ∈ globalCoefficientBox K (41 * agreements) w
      (a + b + s + 3) (s + 2) →
    (flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
      flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) →
@@ -126,7 +126,7 @@ theorem regular_factor_seed_bound
    (a b s : ℕ) (hsSmall : s + 2 < prime)
    (stageBound : FixedStageBound a b s)
    (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
-   (hbox : Q ∈ globalCoefficientBox K (42 * agreements) w
+   (hbox : Q ∈ globalCoefficientBox K (41 * agreements) w
      (a + b + s + 3) (s + 2))
    (Hsupport : ResidualSupportData (support a b s) Q)
    (selected : K → Polynomial K) (Gamma : Finset K)
@@ -140,7 +140,7 @@ theorem regular_factor_seed_bound
    (regularSeeds Q selected Gamma R).card ≤
      flagMixed (regularCumulativeFlag Q R) (firstTail a b s) (secondTail a b s) := by
  letI : CharP (GenericField K) prime := genericField_charP K prime
- have hRdata := directFactor_data Q R.1 hQ (42 * agreements) w
+ have hRdata := directFactor_data Q R.1 hQ (41 * agreements) w
    (a + b + s + 3) (s + 2) hbox R.2
  have hsolutions : ∀ gamma ∈ regularSeeds Q selected Gamma R,
      specialization K (selected gamma) gamma R.1 = 0 := by
@@ -172,9 +172,9 @@ theorem regular_factor_seed_bound
        geometricResidualStageOfSupport] using
          hagreement gamma (hsub hgamma)
    have hflag := geometric_flag_caps a b s Q hQ hbox Hsupport R g
-   have hboxS : S.F ∈ globalCoefficientBox K (42 * agreements) w
+   have hboxS : S.F ∈ globalCoefficientBox K (41 * agreements) w
        (a + b + s + 3) (s + 2) := by
-     change R.1 ∈ globalCoefficientBox K (42 * agreements) w
+     change R.1 ∈ globalCoefficientBox K (41 * agreements) w
        (a + b + s + 3) (s + 2)
      simpa only using hRdata.2.2
    exact stageBound S hnodesS hagreementS hboxS hflag
@@ -197,7 +197,7 @@ theorem fixed_count_le
    (hmixedSmall : 2 * (fixedTightProfile a b s).implicitYCap *
      (fixedTightProfile a b s).algebraicCap < prime)
    (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
-   (hbox : Q ∈ globalCoefficientBox K (42 * agreements) w
+   (hbox : Q ∈ globalCoefficientBox K (41 * agreements) w
      (a + b + s + 3) (s + 2))
    (Hsupport : ResidualSupportData (support a b s) Q)
    (selected : K → Polynomial K) (Gamma : Finset K)

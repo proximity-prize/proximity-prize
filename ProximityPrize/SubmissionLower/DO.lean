@@ -203,6 +203,83 @@ structure AdaptiveGenericExactPolePolynomial
            (algebraMap Omega (CoordinateField Omega C.1))
            (coordinate Omega C.1) polynomial)=
        exponentSetPoleWeight v.val (coordinate Omega C.1) E
+theorem exists_adaptiveGenericExactPolePolynomial
+   (hproj:forall C:RegularComponent Omega G T H,
+     ProjectionsFiniteSeparable Omega C.1)
+   (E:Finset (Fin 3 →₀ ℕ))
+   (hdown:ExponentSetDownwardClosed E) (hzero:0∈E):
+   Nonempty (AdaptiveGenericExactPolePolynomial G T H E hproj):=by
+ classical
+ let bad:=adaptiveBadSubmodule hproj E
+ obtain ⟨c,hc⟩:=exists_avoiding_finite_proper_submodules bad
+   (adaptiveBadSubmodule_ne_top hproj E hdown hzero)
+ let B:=polynomialOfSupport E c
+ have hsupport:B.support ⊆ E:=support_polynomialOfSupport_subset E c
+ have hproper:forall C:RegularComponent Omega G T H,B∉C.1:=by
+   intro C hmem
+   apply hc (Sum.inl C)
+   change c∈LinearMap.ker (coefficientEvaluation (coordinate Omega C.1) E)
+   rw [LinearMap.mem_ker]
+   have hker:B∈RingHom.ker
+       (MvPolynomial.aeval (coordinate Omega C.1)).toRingHom:=by
+     rw [aeval_coordinate_ker]
+     exact hmem
+   have hz:=RingHom.mem_ker.mp hker
+   change MvPolynomial.aeval (coordinate Omega C.1) B=0 at hz
+   rw [MvPolynomial.aeval_eq_eval₂Hom] at hz
+   exact hz
+ refine ⟨⟨B,hsupport,hproper,?_⟩⟩
+ intro C
+ dsimp only
+ let i0:=componentSeparator C
+ let htr:=componentSeparator_transcendental C
+ letI:Algebra (Polynomial Omega) (CoordinateRing Omega C.1):=
+   quotientPolynomialAlgebra Omega C.1 i0
+ letI:Algebra (Polynomial Omega) (CoordinateField Omega C.1):=
+   polynomialBaseAlgebra Omega C.1 i0
+ letI:Algebra (RatFunc Omega) (CoordinateField Omega C.1):=
+   rationalBaseAlgebra Omega C.1 i0 htr
+ letI:=quotientBaseScalarTower Omega C.1 i0
+ letI:=polynomialBaseScalarTower Omega C.1 i0
+ letI:=quotientFractionScalarTower Omega C.1 i0
+ letI:=polynomialRationalScalarTower Omega C.1 i0 htr
+ letI:=rationalBaseScalarTower Omega C.1 i0 htr
+ letI:FiniteDimensional (RatFunc Omega) (CoordinateField Omega C.1):=
+   (hproj C i0 htr).1
+ letI:Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega C.1):=
+   (hproj C i0 htr).2
+ intro v
+ by_cases hv:v∈componentRelevantPlacesAdaptive hproj C
+ · have havoid:=hc (Sum.inr ⟨C,⟨v,hv⟩⟩)
+   change ¬(v.val (coefficientEvaluation (coordinate Omega C.1) E c) <
+     WithZero.exp (exponentSetPoleWeight v.val (coordinate Omega C.1) E)) at havoid
+   have hlower:WithZero.exp
+       (exponentSetPoleWeight v.val (coordinate Omega C.1) E) ≤
+       v.val (coefficientEvaluation (coordinate Omega C.1) E c):=
+     le_of_not_gt havoid
+   have hupper:v.val (coefficientEvaluation (coordinate Omega C.1) E c) ≤
+       WithZero.exp (exponentSetPoleWeight v.val (coordinate Omega C.1) E):=
+     valuation_eval_le_exp_exponentSet v.val (algebraMap Omega _)
+       (fun a => constant_value_le_one Omega (CoordinateField Omega C.1) v a)
+       (coordinate Omega C.1) E B hsupport
+   exact poleOrder_eq_of_valuation_eq_exp v.val _ _
+     (ContactLeadingCancellationResearch.exponentSetPoleWeight_nonneg
+       v.val (coordinate Omega C.1) E)
+     (le_antisymm hupper hlower)
+ · have hweight:exponentSetPoleWeight v.val (coordinate Omega C.1) E=0:=
+     exponentSetPoleWeight_eq_zero_of_not_mem_adaptive hproj E C v hv
+   have hle:poleOrder v.val
+       (MvPolynomial.eval₂Hom
+         (algebraMap Omega (CoordinateField Omega C.1))
+         (coordinate Omega C.1) B) ≤
+       exponentSetPoleWeight v.val (coordinate Omega C.1) E:=
+     (poleOrder_eval_le_support v.val (algebraMap Omega _)
+       (fun a => constant_value_le_one Omega (CoordinateField Omega C.1) v a)
+       (coordinate Omega C.1) B).trans
+     (supportPoleWeight_le_exponentSetPoleWeight v.val
+       (coordinate Omega C.1) B E hsupport)
+   rw [hweight] at hle ⊢
+   exact le_antisymm hle (by unfold poleOrder;exact le_max_left _ _)
 def AdaptiveGenericExactPolePolynomial.toResidualComponentBudget
    {E:Finset (Fin 3 →₀ ℕ)} {wholeCost:ℕ}
    {hproj:forall C:RegularComponent Omega G T H,

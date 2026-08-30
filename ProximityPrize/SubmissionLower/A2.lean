@@ -335,5 +335,22 @@ def adaptiveUnitProjectionFamily_of_active_nested
    change _=ContactLocalPoleBound.poleOrder v.val _
    rw [hvValue C, ←D.allValue C]
    exact (D.allPole C v).symm
+theorem exists_adaptiveUnitProjectionFamily_of_active_nested
+   (p q:FlagDegree)
+   (base:∀ C:RegularComponent Omega G T H,
+     SeparableLiteralCoordinate C.1)
+   (hactive:∀ C:RegularComponent Omega G T H,
+     D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 0)≠0∨
+       D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 2)≠0)
+   (hZ:∀ C:RegularComponent Omega G T H,
+     LiteralProjectionGate C 2)
+   (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0)
+   (hG:Irreducible G) (hproper:¬ G∣T)
+   (hGsupport:G.support ⊆ flagSupport p)
+   (hTsupport:T.support ⊆ flagSupport q):
+   Nonempty (AdaptiveUnitProjectionFamily base p q):=by
+ obtain ⟨D⟩:=exists_adaptiveNestedProjectionDataActive base hactive hSderiv
+ exact ⟨adaptiveUnitProjectionFamily_of_active_nested p q base hactive hZ hSderiv D
+   hG hproper hGsupport hTsupport⟩
 end
 end ProximityPrize.SubmissionLower.ContactAdaptiveNestedUnitFamilyActive6630Research

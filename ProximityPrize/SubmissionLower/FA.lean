@@ -15,7 +15,7 @@ set_option maxHeartbeats 5000000
 local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 def n : ℕ := 262144
-def errors : ℕ := 80112
+def errors : ℕ := 80102
 def agreements : ℕ := n-errors
 def listBudget : ℕ := 1000000000
 def mcaBudget : ℕ := 274980727111395087
@@ -179,9 +179,9 @@ theorem certifiedGammaError_le_of_alignment
      apply ContactSeedlessProtocolResearch.nat_div_le_inv_pow
      · norm_num [mcaBudget, listBudget]
      · simpa only [Nat.mul_comm] using field_capacity_split
-theorem protocolClaim6735_of_alignment
+theorem protocolClaim6734_of_alignment
    (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-   ProtocolClaim 6735 10254463 33554432 where
+   ProtocolClaim 6734 10253183 33554432 where
  admissible := ContactTwoTailParameters6734Research.radius_admissible
  reduction := by
    change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
@@ -189,7 +189,7 @@ theorem protocolClaim6735_of_alignment
      certifiedGammaError_le_of_alignment halign
  score := by
    change (1 - ContactTwoTailParameters6734Research.radius) ^
-     IRSProfile.repetitions ≤ claimedError 6735
+     IRSProfile.repetitions ≤ claimedError 6734
    exact ContactTwoTailParameters6734Research.score_target_le
 end
 end ProximityPrize.SubmissionLower.ContactMovingProtocol6734Research

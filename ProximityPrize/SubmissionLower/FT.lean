@@ -31,7 +31,7 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
-abbrev fixedSupport:=support 1225 43 10
+abbrev fixedSupport:=support 1206 42 10
 abbrev Stage (K I:Type) [Field K]
    (Gamma:Finset K) (x:I → K) (p:ℕ) [CharP (GenericField K) p]
    (flag:FlagDegree):=

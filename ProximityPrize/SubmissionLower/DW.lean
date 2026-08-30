@@ -502,5 +502,83 @@ theorem sum_regular_counts_bound
          (Nat.mul_le_mul_left P.agreement.z hcost.2.2))
      · exact Nat.mul_le_mul_left _ hcost.2.2
    _=P.regularNumerator:=rfl
+theorem asymmetric_stage_count_lt
+   (P:UnequalParameters) (S:TightParameters)
+   (Q T:MvPolynomial (Fin 4) K) (hQ:Q≠0)
+   (p:ℕ) [CharP K p]
+   (hs:1 ≤ S.s) (hsmall:S.s < p) (hw:1 ≤ S.w)
+   (hDw:S.w < (2*S.s-1)*S.D)
+   (hj:1 ≤ (2*S.s-1)*S.L)
+   (hjSmall:(2*S.s-1)*S.L < p)
+   (hbox:Q∈globalCoefficientBox K S.D S.w S.L S.s)
+   (hgap:0 < P.gap) (hgapEq:S.gap=P.gap)
+   (hY:(S.D-1)/S.w ≤ P.leftY)
+   (hR:S.s ≤ P.leftR) (hZ:S.L ≤ P.leftZ)
+   (selected:K → Polynomial K) (Gamma:Finset K)
+   (hQsolution:∀ gamma∈Gamma,
+     specialization K (selected gamma) gamma Q=0)
+   (hTsolution:∀ gamma∈Gamma,
+     specialization K (selected gamma) gamma T=0)
+   (hregular:∀ F:RegularIndex Q,
+     (regularPairSeeds Q T selected Gamma F).card*P.gap ≤
+       (P.n-P.w)*dot P.agreement (regularVector P F.1)+
+         (P.errors+1)*P.gap*(regularVector P F.1).z)
+   (himplicit:∀ q:ImplicitIndex Q,
+     (implicitSeeds Q selected Gamma q).card*S.gap ≤
+       (S.n-S.w)*dot S.agreement (implicitVector q.1)+
+         (S.errors+1)*S.gap*(implicitVector q.1).z):
+   Gamma.card < P.regularCountCap+S.countCap+1:=by
+ classical
+ have hcover:=card_le_regular_sum_add_singular Q T hQ S.D S.w S.L S.s p
+   hs hsmall hw hDw hj hjSmall hbox selected Gamma hQsolution hTsolution
+ have hdecomp:=selected_seed_decomposition Q hQ S.D S.w S.L S.s p
+   hs hsmall hw hDw hj hjSmall hbox Gamma selected hQsolution
+ have hregularScaled:=sum_regular_counts_bound P Q T selected Gamma
+   (regularVector_budgets P Q hQ S.D S.w S.L S.s (by omega) hbox hY hR hZ)
+   hregular
+ have hregularCap:
+     (∑ F:RegularIndex Q,(regularPairSeeds Q T selected Gamma F).card) ≤
+       P.regularCountCap:=
+   P.regular_count_le _ hgap hregularScaled
+ have himplicitBudgets:
+     (∑ q:ImplicitIndex Q,(implicitVector q.1).y) ≤ S.algebraicCap∧
+     (∑ q:ImplicitIndex Q,(implicitVector q.1).r) ≤
+       2*S.implicitYCap*S.algebraicCap∧
+     (∑ q:ImplicitIndex Q,(implicitVector q.1).z) ≤ S.implicitYCap:=by
+   constructor
+   · change (∑ q∈(implicitPairSet (singularAuxiliary Q)).attach,
+         pairYCost (K:=K) q.1) ≤ S.algebraicCap
+     rw [Finset.sum_attach]
+     simpa [implicitVector,TightParameters.algebraicCap,
+       TightParameters.implicitYCap,TightParameters.kappa] using hdecomp.2.2.2.1
+   constructor
+   · change (∑ q∈(implicitPairSet (singularAuxiliary Q)).attach,
+         pairRCost (K:=K) q.1) ≤ 2*S.implicitYCap*S.algebraicCap
+     rw [Finset.sum_attach]
+     simpa [implicitVector,TightParameters.algebraicCap,
+       TightParameters.implicitYCap,TightParameters.kappa] using hdecomp.2.2.2.2.1
+   · change (∑ q∈(implicitPairSet (singularAuxiliary Q)).attach,
+         pairZCost (K:=K) q.1) ≤ S.implicitYCap
+     rw [Finset.sum_attach]
+     simpa [implicitVector,TightParameters.algebraicCap,
+       TightParameters.implicitYCap,TightParameters.kappa] using hdecomp.2.2.2.2.2
+ have hexceptions:
+     (exceptionalSeeds (singularAuxiliary Q) Gamma selected).card ≤
+       2*S.algebraicCap^2:=by
+   simpa [TightParameters.algebraicCap,TightParameters.kappa] using hdecomp.1
+ have hsingularScaled:=S.with_exceptions_bound
+   (fun q:ImplicitIndex Q↦(implicitSeeds Q selected Gamma q).card)
+   (fun q:ImplicitIndex Q↦implicitVector q.1)
+   (exceptionalSeeds (singularAuxiliary Q) Gamma selected).card
+   himplicitBudgets.1 himplicitBudgets.2.1 himplicitBudgets.2.2
+   himplicit hexceptions
+ have hsingularUnionScaled:
+     (singularSeeds Q selected Gamma).card*S.gap ≤ S.tightNumerator:=
+   (Nat.mul_le_mul_right S.gap
+     (singularSeeds_card_le_sum Q selected Gamma)).trans hsingularScaled
+ have hSgap:0 < S.gap:=by simpa [hgapEq] using hgap
+ have hsingularCap:(singularSeeds Q selected Gamma).card ≤ S.countCap:=
+   S.count_le_countCap _ hSgap hsingularUnionScaled
+ omega
 end
 end ProximityPrize.SubmissionLower.ContactAsymmetricResidualStageResearch

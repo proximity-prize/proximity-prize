@@ -293,5 +293,27 @@ theorem specialization_natDegree_lt
  have hh:=Polynomial.natDegree_sum_le_of_forall_le Q.support
    (fun d => specialization K P γ (MvPolynomial.monomial d (MvPolynomial.coeff d Q))) hterms
  exact lt_of_le_of_lt hh (by omega)
+theorem exists_frozen_universal_vanishing_interpolant
+   (u₀ u₁:IRSProfile.Index → IRSProfile.Field):
+   ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
+     Q≠0∧Q∈globalCoefficientBox IRSProfile.Field 3324960 131071 176 5∧
+     ∀ (γ:IRSProfile.Field) (P:Polynomial IRSProfile.Field)
+       (support:Finset IRSProfile.Index),
+       P.natDegree ≤ 131071 → 184720 ≤ support.card →
+       (∀ i∈support,P.eval (IRSProfile.domain i)=u₀ i+γ*u₁ i) →
+       specialization IRSProfile.Field P γ Q=0:=by
+ classical
+ obtain ⟨Q,hQ,hcaps,hcontact⟩:=exists_frozen_translated_contact_interpolant u₀ u₁
+ refine ⟨Q,hQ,hcaps,?_⟩
+ intro γ P support hP hcard hvalues
+ apply specialization_eq_zero_of_contact_and_degree IRSProfile.Field Q P γ
+   IRSProfile.domain u₀ u₁ support 18
+ · intro i hi r
+   exact hcontact i r
+ · exact hvalues
+ · have hdegree:=specialization_natDegree_lt IRSProfile.Field
+     3324960 131071 176 5 Q P γ (by decide) hcaps hP
+   have hbound:3324960 ≤ 18*support.card:=by omega
+   exact hdegree.trans_le hbound
 end
 end ProximityPrize.SubmissionLower.ContactTranslation

@@ -309,6 +309,25 @@ theorem sum_actualCoordinateDegree_at_R_le_of_joint_provider
    simpa only [coordinateMixedDegree,Equiv.swap_apply_left] using hbound'
  · letI:IsEmpty s:=⟨fun i => hs ⟨i⟩⟩
    simp
+theorem sum_actualCoordinateDegree_at_le_of_joint_R
+   {I:Type} [Fintype I] (P:I → Ideal (Original K))
+   [∀ i,(P i).IsPrime] (hinj:Function.Injective P)
+   (p:ℕ) [CharP K p] (G H:Original K) (hG:Irreducible G)
+   (hGmem:∀ i,G∈P i) (hHmem:∀ i,H∈P i)
+   (hproper:¬ G∣H) (hdegree:∀ j:Fin 3,G.degreeOf j < p)
+   (hmixedY:coordinateMixedDegree K G H 0 < p)
+   (hmixedZ:coordinateMixedDegree K G H 2 < p)
+   (hjoint:JointOrderCertificate K (Equiv.swap 0 1) G H p):
+   ∀ j,(∑ i,actualCoordinateDegree K (P i) j) ≤
+     coordinateMixedDegree K G H j:=by
+ intro j
+ fin_cases j
+ · exact sum_actualCoordinateDegree_at_le K P hinj 0 p G H hG hGmem hHmem
+     hproper hdegree hmixedY
+ · exact sum_actualCoordinateDegree_at_R_le_of_joint_certificate K P hinj p
+     G H hG hGmem hHmem hproper hjoint
+ · exact sum_actualCoordinateDegree_at_le K P hinj 2 p G H hG hGmem hHmem
+     hproper hdegree hmixedZ
 theorem sum_actualCoordinateDegree_at_le_of_joint_R_provider
    {I:Type} [Fintype I] (P:I → Ideal (Original K))
    [∀ i,(P i).IsPrime] (hinj:Function.Injective P)

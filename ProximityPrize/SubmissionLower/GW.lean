@@ -67,7 +67,7 @@ theorem fixedStageBound_of_numeric
      omega
    have hprovider := actual_identityCurveCountProvider S agreements hnodes
      hagreement (by norm_num [agreements, errors, n, w]) hTailNumerator
-     (42 * agreements) (a + b + s + 3) (s + 2)
+     (41 * agreements) (a + b + s + 3) (s + 2)
      (by norm_num [w]) (by norm_num [agreements, errors, n, w])
      (by norm_num [prime, agreements, errors, n]) hbox hflagChar
      (hidentityMixed flag hflag)
@@ -98,7 +98,7 @@ theorem fixedStageBound_of_numeric
    have hprovider := exists_delayedTailMultiplicityProvider_of_reduced S
      hcommonS hcommonYS hcommonTotal hTail hflagChar
      (hproviderMixed flag hflag)
-     (42 * agreements) (a + b + s + 3) (s + 2) hnodes hagreement
+     (41 * agreements) (a + b + s + 3) (s + 2) hnodes hagreement
      (by norm_num [agreements, errors, n, w])
      (by norm_num [prime, agreements, errors, n]) hbox htangentGate
    exact stage_card_le_flagMixed S hprovider.some

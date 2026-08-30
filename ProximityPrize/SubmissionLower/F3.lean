@@ -243,6 +243,23 @@ lemma finSuccEquiv_coeff_isHomogeneous {N:ℕ} {φ:MvPolynomial (Fin (N+1)) R} {
  simp only [weight_apply,Pi.one_apply,smul_eq_mul,mul_one,Finsupp.sum_cons,
    add_right_inj] at h' ⊢
  exact h'
+set_option backward.defeqAttrib.useBackward true in
+lemma coeff_isHomogeneous_of_optionEquivLeft_symm
+   [hσ:Finite σ] {p:Polynomial (MvPolynomial σ R)}
+   (hp:((optionEquivLeft R σ).symm p).IsHomogeneous n) (i j:ℕ) (h:i+j=n):
+   (p.coeff i).IsHomogeneous j:=by
+ obtain ⟨k,⟨e⟩⟩:=Finite.exists_equiv_fin σ
+ let e':=e.optionCongr.trans (_root_.finSuccEquiv _).symm
+ let F:=renameEquiv R e
+ let F':=renameEquiv R e'
+ let φ:=F' ((optionEquivLeft R σ).symm p)
+ have hφ:φ.IsHomogeneous n:=hp.rename_isHomogeneous
+ suffices IsHomogeneous (F (p.coeff i)) j by
+   rwa [←(IsHomogeneous.rename_isHomogeneous_iff e.injective)]
+ convert! hφ.finSuccEquiv_coeff_isHomogeneous i j h using 1
+ dsimp only [φ,F',F,renameEquiv_apply]
+ rw [finSuccEquiv_rename_finSuccEquiv,AlgEquiv.apply_symm_apply]
+ simp
 open Polynomial in
 private
 lemma exists_eval_ne_zero_of_coeff_finSuccEquiv_ne_zero_aux

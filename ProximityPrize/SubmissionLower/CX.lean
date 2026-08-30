@@ -322,6 +322,28 @@ theorem finite_setOf_absNorm_le₀ [CharZero S] (n:ℕ):
  have:Finite {I:Ideal S//I∈(Ideal S)⁰∧absNorm I ≤ n}:=
    (finite_setOf_absNorm_le n).subset fun _ ⟨_,h⟩↦h
  exact Finite.of_equiv _ (Equiv.subtypeSubtypeEquivSubtypeInter _ (fun I↦absNorm I ≤ n)).symm
+theorem card_norm_le_eq_card_norm_le_add_one (n:ℕ) [CharZero S]:
+   Nat.card {I:Ideal S//absNorm I ≤ n}=
+     Nat.card {I:(Ideal S)⁰//absNorm (I:Ideal S) ≤ n}+1:=by
+ classical
+ have:Finite {I:Ideal S//I∈(Ideal S)⁰∧absNorm I ≤ n}:=
+   (finite_setOf_absNorm_le n).subset fun _ ⟨_,h⟩↦h
+ have:Finite {I:Ideal S//I∉(Ideal S)⁰∧absNorm I ≤ n}:=
+   (finite_setOf_absNorm_le n).subset fun _ ⟨_,h⟩↦h
+ rw [Nat.card_congr (Equiv.subtypeSubtypeEquivSubtypeInter (fun I↦I∈(Ideal S)⁰)
+   (fun I↦absNorm I ≤ n))]
+ let e:{I:Ideal S//absNorm I ≤ n} ≃ {I:Ideal S//I∈(Ideal S)⁰∧absNorm I ≤ n} ⊕
+     {I:Ideal S//I∉(Ideal S)⁰∧absNorm I ≤ n}:=by
+   refine (Equiv.subtypeEquivRight ?_).trans (subtypeOrEquiv _ _ ?_)
+   · intro _
+     simp_rw [←or_and_right,em,true_and]
+   · exact Pi.disjoint_iff.mpr fun I↦Prop.disjoint_iff.mpr (by tauto)
+ simp_rw [Nat.card_congr e,Nat.card_sum,add_right_inj]
+ conv_lhs =>
+   enter [1,1,I]
+   rw [←absNorm_ne_zero_iff_mem_nonZeroDivisors,ne_eq,not_not,and_iff_left_iff_imp.mpr
+     (fun h↦by rw [h];exact Nat.zero_le n),absNorm_eq_zero_iff]
+ rw [Nat.card_unique]
 theorem norm_dvd_iff {x:S} (hx:Prime (Algebra.norm ℤ x)) {y:ℤ}:
    Algebra.norm ℤ x∣y ↔ x∣y:=by
  rw [←Ideal.mem_span_singleton (y:=x), ←eq_intCast (algebraMap ℤ S), ←Ideal.mem_comap,

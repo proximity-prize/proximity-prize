@@ -91,5 +91,81 @@ theorem sum_wholeNumerator_geometricFactors_le
    geometricFactor_sum_degree_le K F hF 1,geometricFactor_sum_degree_le K F hF 2⟩
 variable {ι:Type*}
 local instance:DecidableEq ι:=Classical.decEq ι
+theorem original_regular_seed_bound
+   [CharP K prime]
+   (F:MvPolynomial (Fin 4) K) (hF:Irreducible F) (hRpos:0 < F.degreeOf 2)
+   (hbox:F∈globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
+   (selected:K → Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
+   (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
+   (hsolutions:∀ γ∈Γ,specialization K (selected γ) γ F=0)
+   (hregular:∀ γ∈Γ,
+     specialization K (selected γ) γ (MvPolynomial.pderiv (2:Fin 4) F)≠0)
+   (hagreement:∀ γ∈Γ,
+     agreements ≤ (nodes.filter (fun i => (selected γ).eval (x i)=u₀ i+γ*u₁ i)).card)
+   (hnoPencil:NoLargeSelectedPencil selected Γ w errors):
+   Γ.card*gap^2 ≤ wholeNumerator (originalDegreeVector K F):=by
+ classical
+ letI:CharP (GenericField K) prime:=genericField_charP K prime
+ have hc:=degree_bounds_of_mem_box F weightedCap w seedTotalCap slopeCap
+   (by norm_num [w]) hbox
+ have hY:F.degreeOf 1 ≤ yCap:=hc.1
+ have hR:F.degreeOf 2 ≤ slopeCap:=hc.2.1
+ have hZ:F.degreeOf 3 ≤ seedTotalCap:=hc.2.2
+ have hFseed:seedDegree F ≤ seedTotalCap:=by
+   exact ((mem_globalCoefficientBox_iff F weightedCap w seedTotalCap slopeCap
+     (by norm_num [weightedCap,ContactAlignmentParameters.multiplicity,
+       agreements])).mp hbox).1
+ have hsmall:F.degreeOf 2 < prime:=hR.trans_lt (by norm_num [slopeCap,prime])
+ have hcount (g:GeometricFactor K F):
+     (geometricSeeds K F selected Γ g).card*gap^2 ≤ wholeNumerator (degreeVector g.1):=by
+   obtain ⟨hgirred,hgdiv⟩:=surfaceFactors_spec (polynomialEmbedding K) F g.1 g.2
+   have hgate:=geometric_factor_regular_gate K (GenericField K) F hF prime hRpos hsmall
+     g.1 hgirred (by simpa only [canonical_geometricSurfaceMap] using hgdiv)
+   have hHproper:¬ g.1∣surfaceMap (polynomialEmbedding K)
+       (MvPolynomial.pderiv (2:Fin 4) F):=by
+     simpa only [canonical_geometricSurfaceMap] using hgate.2.2.2.2
+   have hgcaps:HasCaps g.1 ContactProjectionParameters.surfaceVector:=by
+     intro i
+     fin_cases i
+     · exact (geometricFactor_degree_le K F hF.ne_zero g 0).trans hY
+     · exact (geometricFactor_degree_le K F hF.ne_zero g 1).trans hR
+     · exact (geometricFactor_degree_le K F hF.ne_zero g 2).trans hZ
+   have hsurfaceNe:surfaceMap (polynomialEmbedding K) F≠0:=
+     surfaceMap_ne_zero (polynomialEmbedding K) (polynomialEmbedding_injective K)
+       F hF.ne_zero
+   have hsurfaceJoint:∀ d∈(surfaceMap (polynomialEmbedding K) F).support,
+       d 0+d 2 ≤ seedTotalCap:=by
+     apply surfaceMap_joint_seed_cap (polynomialEmbedding K) F seedTotalCap
+     intro d hd
+     rw [←seed_weight]
+     exact (MvPolynomial.le_weightedTotalDegree seedWeights hd).trans hFseed
+   have hgJoint:∀ e∈
+       (TrivariateRationalCollection.rationalMap (GenericField K)
+         (Equiv.swap 0 1) g.1).support,
+       e 0+e 1 ≤ seedTotalCap:=
+     rationalMap_joint_support_of_dvd g.1
+       (surfaceMap (polynomialEmbedding K) F) seedTotalCap hgdiv hsurfaceNe hsurfaceJoint
+   have hsub:=geometricSeeds_subset K F selected Γ g
+   exact whole_surface_seed_bound_fixed_joint_R (polynomialEmbedding K) F g.1 hgirred hgdiv
+     hgate.1 hHproper hbox hgcaps hgJoint hFseed hY hR hZ
+     selected (geometricSeeds K F selected Γ g)
+     nodes x u₀ u₁ hinj hnodes
+     (fun γ hγ => hdegree γ (hsub hγ))
+     (fun γ hγ => hsolutions γ (hsub hγ))
+     (fun γ hγ => selectedPoint_regular_of_specialization K F selected γ
+       (hregular γ (hsub hγ)))
+     (fun γ hγ => (Finset.mem_filter.mp hγ).2)
+     (fun γ hγ => hagreement γ (hsub hγ))
+     (noLargeSelectedPencil_mono selected Γ _ w errors hsub hnoPencil)
+ calc
+   Γ.card*gap^2 ≤
+       (∑ g:GeometricFactor K F,(geometricSeeds K F selected Γ g).card)*gap^2:=
+     Nat.mul_le_mul_right _ (card_le_sum_geometricSeeds K F hF.ne_zero selected Γ hsolutions)
+   _=∑ g:GeometricFactor K F,(geometricSeeds K F selected Γ g).card*gap^2:=by
+     rw [Finset.sum_mul]
+   _ ≤ ∑ g:GeometricFactor K F,wholeNumerator (degreeVector g.1):=
+     Finset.sum_le_sum (fun g _ => hcount g)
+   _ ≤ wholeNumerator (originalDegreeVector K F):=sum_wholeNumerator_geometricFactors_le K F hF.ne_zero
 end
 end ProximityPrize.SubmissionLower.ContactOriginalRegularSeedCount

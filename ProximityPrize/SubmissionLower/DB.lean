@@ -479,6 +479,84 @@ theorem resultant_natDegree_le
  apply resultant_natDegree_le_of_budget B H K hK hB hH
  exact (potentialBudget K hK).le
 end CornerStaircase
+theorem bivariate_resultant_natDegree_le_of_index_sum_height_bound
+   (B H:F[X][Y]) (n m:ℕ)
+   (heightB heightH:ℕ → ℕ) (C:ℕ)
+   (hB:∀ i,(B.coeff i).natDegree ≤ heightB i)
+   (hH:∀ i,(H.coeff i).natDegree ≤ heightH i)
+   (htransport:∀ (lidx:Fin n → ℕ) (ridx:Fin m → ℕ),
+     (∀ j,lidx j ≤ m) → (∀ j,ridx j ≤ n) →
+     (∑ j:Fin n,lidx j)+(∑ j:Fin m,ridx j)=m*n →
+     (∑ j:Fin n,heightH (lidx j))+
+       (∑ j:Fin m,heightB (ridx j)) ≤ C):
+   (Polynomial.resultant B H n m).natDegree ≤ C:=by
+ apply bivariate_resultant_natDegree_le_of_coefficient_heights
+   B H n m heightB heightH C hB hH
+ intro σ hleft_Icc hright_Icc
+ let lidx:Fin n → ℕ:=fun j =>
+   ((σ (Fin.castAdd m j):Fin (n+m)):ℕ)-(j:ℕ)
+ let ridx:Fin m → ℕ:=fun j =>
+   ((σ (Fin.natAdd n j):Fin (n+m)):ℕ)-(j:ℕ)
+ have hleft_le (j:Fin n):lidx j ≤ m:=by
+   dsimp [lidx]
+   have hh:=Set.mem_Icc.mp (hleft_Icc j)
+   omega
+ have hright_le (j:Fin m):ridx j ≤ n:=by
+   dsimp [ridx]
+   have hh:=Set.mem_Icc.mp (hright_Icc j)
+   omega
+ have hidxsum:
+     (∑ j:Fin n,lidx j)+(∑ j:Fin m,ridx j)=m*n:=by
+   have hleft_row (j:Fin n):
+       ((σ (Fin.castAdd m j):Fin (n+m)):ℕ)=(j:ℕ)+lidx j:=by
+     dsimp [lidx]
+     have hle:=(Set.mem_Icc.mp (hleft_Icc j)).1
+     omega
+   have hright_row (j:Fin m):
+       ((σ (Fin.natAdd n j):Fin (n+m)):ℕ)=(j:ℕ)+ridx j:=by
+     dsimp [ridx]
+     have hle:=(Set.mem_Icc.mp (hright_Icc j)).1
+     omega
+   have hsum_left_rows:
+       (∑ j:Fin n,((σ (Fin.castAdd m j):Fin (n+m)):ℕ))=
+         (∑ j:Fin n,(j:ℕ))+(∑ j:Fin n,lidx j):=by
+     calc
+       _=∑ j:Fin n,((j:ℕ)+lidx j):=
+         Finset.sum_congr rfl (fun j _ => hleft_row j)
+       _=_:=Finset.sum_add_distrib
+   have hsum_right_rows:
+       (∑ j:Fin m,((σ (Fin.natAdd n j):Fin (n+m)):ℕ))=
+         (∑ j:Fin m,(j:ℕ))+(∑ j:Fin m,ridx j):=by
+     calc
+       _=∑ j:Fin m,((j:ℕ)+ridx j):=
+         Finset.sum_congr rfl (fun j _ => hright_row j)
+       _=_:=Finset.sum_add_distrib
+   have hperm_sum:
+       (∑ i:Fin (n+m),((σ i:Fin (n+m)):ℕ))=
+         ∑ i:Fin (n+m),(i:ℕ):=by
+     simpa using (Equiv.sum_comp σ (fun i:Fin (n+m) => (i:ℕ)))
+   have hrows_split:
+       (∑ i:Fin (n+m),((σ i:Fin (n+m)):ℕ))=
+         (∑ j:Fin n,((σ (Fin.castAdd m j):Fin (n+m)):ℕ))+
+           (∑ j:Fin m,((σ (Fin.natAdd n j):Fin (n+m)):ℕ)):=by
+     simpa using (Fin.sum_univ_add
+       (fun i:Fin (n+m) => ((σ i:Fin (n+m)):ℕ)))
+   have hcols_split:
+       (∑ i:Fin (n+m),(i:ℕ))=
+         (∑ j:Fin n,(j:ℕ))+(∑ j:Fin m,(n+(j:ℕ))):=by
+     simpa using (Fin.sum_univ_add (fun i:Fin (n+m) => (i:ℕ)))
+   have hright_cols:
+       (∑ j:Fin m,(n+(j:ℕ)))=
+         m*n+∑ j:Fin m,(j:ℕ):=by
+     simp [Finset.sum_add_distrib,Finset.sum_const]
+   have hmain:
+       (∑ j:Fin n,((σ (Fin.castAdd m j):Fin (n+m)):ℕ))+
+           (∑ j:Fin m,((σ (Fin.natAdd n j):Fin (n+m)):ℕ))=
+         (∑ j:Fin n,(j:ℕ))+
+           (m*n+∑ j:Fin m,(j:ℕ)):=by
+     rw [←hrows_split,hperm_sum,hcols_split,hright_cols]
+   omega
+ exact htransport lidx ridx hleft_le hright_le hidxsum
 theorem bivariate_resultant_natDegree_le_totalDegree
    (B H:F[X][Y]) (n m:ℕ):
    (Polynomial.resultant B H n m).natDegree ≤
