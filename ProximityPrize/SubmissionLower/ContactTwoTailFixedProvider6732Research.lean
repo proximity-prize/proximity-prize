@@ -1,0 +1,13 @@
+import ProximityPrize.SubmissionLower.ContactDelayedTailMultiplicityProvider6732Research
+import ProximityPrize.SubmissionLower.ContactTwoTailParameters6733Research
+import ProximityPrize.SubmissionLower.ContactRobustFixedMeet6656Research
+import ProximityPrize.SubmissionLower.ContactMovingAgreementCertificate6719Research
+namespace ProximityPrize.SubmissionLower.ContactTwoTailFixedProvider6732Research
+open ContactResidualSupportParametersResearch
+noncomputable section
+def fixedProfile:ContactRobustFixedMeet6656Research.Profile:=
+  ⟨262144,131071,181717,11629888,1000,18⟩
+def fixedSupport:ResidualSupportParameters:=
+  ContactMovingAgreementCertificate6719Research.support 0 69 16
+end
+end ProximityPrize.SubmissionLower.ContactTwoTailFixedProvider6732Research
