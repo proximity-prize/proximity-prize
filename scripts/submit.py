@@ -50,7 +50,7 @@ TOKEN_REFRESH_SECONDS = 240      # well inside the service's 600s ceiling
 
 # Every state the service can stop in. `rejected` is a verdict about the proof;
 # the others are failures of everything around it, and mean something different.
-TERMINAL = {"verified", "rejected", "failed", "source_failed", "timeout"}
+TERMINAL = {"verified", "rejected", "failed", "source_failed", "timeout", "cancelled"}
 
 
 class Busy(Exception):
