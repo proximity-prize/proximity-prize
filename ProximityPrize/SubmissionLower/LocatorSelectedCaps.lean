@@ -14,12 +14,12 @@ noncomputable section
 local instance : GCDMonoid P4 := UniqueFactorizationMonoid.toGCDMonoid P4
 
 theorem common_C_flag {u0 u1 : I → K} (S : SelectedPair u0 u1) :
-    gcd S.QA S.QB ∈ globalCoefficientBox K 9092750 131071 100000 14 :=
+    gcd S.QA S.QB ∈ globalCoefficientBox K 9092250 131071 67500 14 :=
   LocatorCaps.full_A_divisor_mem_box u0 u1 _
     (gcd_ne_zero_of_left S.QA_ne) S.common_divides_C
 
 theorem common_total_le {u0 u1 : I → K} (S : SelectedPair u0 u1) :
-    wt residualTotalWeights (gcd S.QA S.QB) ≤ 1761 :=
+    wt residualTotalWeights (gcd S.QA S.QB) ≤ 1796 :=
   LocatorCaps.common_B_total_le u0 u1 _
     (gcd_ne_zero_of_left S.QA_ne) S.common_divides_B
 

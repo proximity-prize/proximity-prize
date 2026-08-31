@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.E9
-/- Scalar interpolation certificate for 80289 errors.
+/- Scalar interpolation certificate for 80299 errors.
    The (multiplicity, Y+R cap, R cap) profile is (48,66,14).
    Finite sums are split into small certificates before recombination. -/
 namespace ProximityPrize.SubmissionLower.LocatorScalarArithmetic
@@ -12,7 +12,7 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 80289
+def errors : ℕ := 80299
 def agreements : ℕ := n - errors
 def gap : ℕ := agreements - w
 def prime : ℕ := 2130706433
@@ -30,21 +30,21 @@ private def coefficientRow (i : ℕ) : ℕ :=
  ∑ j ∈ Finset.range (slopeCap + 1),
    min 1 (yTotalCap + 1 - i - j) * (weightedCap - w*i - (w-1)*j)
 private theorem coefficient_0 :
- (∑ i ∈ Finset.range 10, coefficientRow i) = 1137816075 := by decide
+ (∑ i ∈ Finset.range 10, coefficientRow i) = 1137741075 := by decide
 private theorem coefficient_10 :
- (∑ i ∈ Finset.range 10, coefficientRow (10+i)) = 941209575 := by decide
+ (∑ i ∈ Finset.range 10, coefficientRow (10+i)) = 941134575 := by decide
 private theorem coefficient_20 :
- (∑ i ∈ Finset.range 10, coefficientRow (20+i)) = 744603075 := by decide
+ (∑ i ∈ Finset.range 10, coefficientRow (20+i)) = 744528075 := by decide
 private theorem coefficient_30 :
- (∑ i ∈ Finset.range 10, coefficientRow (30+i)) = 547996575 := by decide
+ (∑ i ∈ Finset.range 10, coefficientRow (30+i)) = 547921575 := by decide
 private theorem coefficient_40 :
- (∑ i ∈ Finset.range 10, coefficientRow (40+i)) = 351390075 := by decide
+ (∑ i ∈ Finset.range 10, coefficientRow (40+i)) = 351315075 := by decide
 private theorem coefficient_50 :
- (∑ i ∈ Finset.range 10, coefficientRow (50+i)) = 156916355 := by decide
+ (∑ i ∈ Finset.range 10, coefficientRow (50+i)) = 156846355 := by decide
 private theorem coefficient_60 :
- (∑ i ∈ Finset.range 10, coefficientRow (60+i)) = 24313685 := by decide
+ (∑ i ∈ Finset.range 10, coefficientRow (60+i)) = 24286185 := by decide
 theorem coefficient_count_exact :
-   coefficientCount weightedCap w yTotalCap slopeCap = 3904245415 := by
+   coefficientCount weightedCap w yTotalCap slopeCap = 3903772915 := by
  change (∑ i ∈ Finset.range 70, coefficientRow i) = _
  rw [Finset.sum_range_add coefficientRow 60 10,
    Finset.sum_range_add coefficientRow 50 10,
@@ -77,7 +77,7 @@ theorem local_rank_exact :
    rank_0, rank_10, rank_20, rank_30, rank_40] <;> norm_num
 theorem nullity_exact :
    coefficientCount weightedCap w yTotalCap slopeCap -
-     n*localRankBound multiplicity yTotalCap slopeCap = 921255 := by
+     n*localRankBound multiplicity yTotalCap slopeCap = 448755 := by
  rw [coefficient_count_exact, local_rank_exact]
  decide
 theorem interpolation_gate :
@@ -86,10 +86,10 @@ theorem interpolation_gate :
  rw [coefficient_count_exact, local_rank_exact]
  decide
 theorem list_numeric_values :
-   agreements=181855 ∧ gap=50784 ∧ weightedCap=9092750 ∧
-   singularListCap=1863 ∧ listNumerator=65197699995099 ∧
-   listNumerator/gap+1=1283823646 ∧
-   listNumerator<1283823646*gap ∧ 1283823646<listBudget := by decide
+   agreements=181845 ∧ gap=50774 ∧ weightedCap=9092250 ∧
+   singularListCap=1863 ∧ listNumerator=65197699976469 ∧
+   listNumerator/gap+1=1284076496 ∧
+   listNumerator<1284076496*gap ∧ 1284076496<listBudget := by decide
 theorem list_numerator_fits : listNumerator < listBudget*gap := by decide
 theorem characteristic_gates : 0 < slopeCap ∧ slopeCap < prime ∧ yTotalCap < prime ∧
    (2*slopeCap - 1)*weightedCap < prime ∧ singularListCap < prime := by decide

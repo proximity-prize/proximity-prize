@@ -4,7 +4,7 @@ import ProximityPrize.SubmissionLower.LocatorEquation
 
 /-! A receipt bounds the regular seeds of one actual factor.  On an ordinary
 cell its own-support bound suffices.  On a replacement cell a single nonzero
-quotient is selected from the whole A68/3346 contact kernel; all regular seeds
+quotient is selected from the whole A68/2820 contact kernel; all regular seeds
 of the original factor satisfy that same quotient equation. -/
 namespace ProximityPrize.SubmissionLower.LocatorQuotientReplacement
 
@@ -47,14 +47,14 @@ theorem factor_weights_of_cell (H : P4) (F : RegularIndex H)
 theorem regularSeeds_count_le_chosen
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181855 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181845 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80289)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80299)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
-    (hdiv : ∀ v : ConstraintKernel (K := K) 12366140 131071 3346 20 68
+    (hdiv : ∀ v : ConstraintKernel (K := K) 13456530 131071 2820 22 74
       IRSProfile.domain u0 u1,
-      F.1 ∣ reconstruct K 12366140 131071 3346 20 v.1)
+      F.1 ∣ reconstruct K 13456530 131071 2820 22 v.1)
     (c : LocatorReplacementGrid.Cell)
     (hcell : LocatorReplacementGrid.InCell (regularCumulativeFlag H F) c)
     (hown : (regularSeeds H selected Gamma F).card ≤
@@ -68,40 +68,40 @@ theorem regularSeeds_count_le_chosen
   have hvalid := LocatorReplacementGrid.valid_of_inCell
     (regularCumulativeFlag H F) c hcell
   obtain ⟨hr, hy, ht, hc⟩ := factor_weights_of_cell H F c hcell
-  have hqT : 3346 - wt residualTotalWeights F.1 ≤
+  have hqT : 2820 - wt residualTotalWeights F.1 ≤
       LocatorReplacementData.quotientT c := by
     dsimp [LocatorReplacementData.quotientT]
     omega
-  have hqY : 94 - wt residualYSWeights F.1 ≤
+  have hqY : 102 - wt residualYSWeights F.1 ≤
       LocatorReplacementData.quotientYS c := by
     dsimp [LocatorReplacementData.quotientYS]
     omega
-  have hqS : 20 - wt residualSWeights F.1 ≤
+  have hqS : 22 - wt residualSWeights F.1 ≤
       LocatorReplacementData.quotientS c := by
     dsimp [LocatorReplacementData.quotientS]
     omega
-  have hqD : 12366140 - 50785 - wt (contactWeights 131071) F.1 ≤
+  have hqD : 13456530 - 50775 - wt (contactWeights 131071) F.1 ≤
       LocatorReplacementData.quotientD c := by
     dsimp [LocatorReplacementData.quotientD]
     omega
   have hchannels := channelCount_mono hqT hqY hqS
-  have hband : 50785 * channelCount
+  have hband : 50775 * channelCount
       (LocatorReplacementData.quotientT c) (LocatorReplacementData.quotientYS c)
-        (LocatorReplacementData.quotientS c) < 39935418943 :=
+        (LocatorReplacementData.quotientS c) < 41375181758 :=
     LocatorReplacementData.band_lt c hvalid ho
-  have hslab : 50785 * channelCount (3346 - wt residualTotalWeights F.1)
-      (94 - wt residualYSWeights F.1) (20 - wt residualSWeights F.1) < 39935418943 :=
-    (Nat.mul_le_mul_left 50785 hchannels).trans_lt hband
-  have hsource : 50785 * channelCount (3346 - wt residualTotalWeights F.1)
-      (94 - wt residualYSWeights F.1) (20 - wt residualSWeights F.1) <
-      coefficientCount 12366140 131071 3346 20 -
-        Fintype.card I * localRankBound 68 3346 20 := by
+  have hslab : 50775 * channelCount (2820 - wt residualTotalWeights F.1)
+      (102 - wt residualYSWeights F.1) (22 - wt residualSWeights F.1) < 41375181758 :=
+    (Nat.mul_le_mul_left 50775 hchannels).trans_lt hband
+  have hsource : 50775 * channelCount (2820 - wt residualTotalWeights F.1)
+      (102 - wt residualYSWeights F.1) (22 - wt residualSWeights F.1) <
+      coefficientCount 13456530 131071 2820 22 -
+        Fintype.card I * localRankBound 74 2820 22 := by
     rw [show Fintype.card I = 262144 by norm_num [I, IRSProfile.Index],
       LocatorAuxiliaryArithmetic.auxiliary_nullity]
     exact hslab
   obtain ⟨v, Q, _hv, hQ, _heq, hqbox, _hparent, hproduct⟩ :=
     exists_fixed_quotient_with_derivative_vanishing (K := K) (I := I)
-      12366140 131071 3346 20 68 94 50785 181855 IRSProfile.domain u0 u1 F.1 hF hdiv
+      13456530 131071 2820 22 74 102 50775 181845 IRSProfile.domain u0 u1 F.1 hF hdiv
       (by decide) LocatorAuxiliaryArithmetic.auxiliary_shape hsource
       LocatorAuxiliaryArithmetic.auxiliary_capacity selected Gamma hdegree hagreement
   have hbox : Q ∈ nestedCoefficientBox K (LocatorReplacementData.quotientD c) 131071

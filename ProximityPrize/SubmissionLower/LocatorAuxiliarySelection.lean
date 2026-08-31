@@ -117,22 +117,22 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
 local instance : GCDMonoid P4 := UniqueFactorizationMonoid.toGCDMonoid P4
 
-/-- A68 at any L ≤ 10000 is already contained in Selection.AKernel (L=109000). -/
+/-- A68 at any L ≤ 10000 is already contained in Selection.AKernel (L=67500). -/
 theorem common_divides_A68_small {u0 u1 : I → K}
     (S : LocatorSelection.SelectedPair u0 u1) (L : ℕ) (hL : L ≤ 10000) :
-    ∀ a : ConstraintKernel (K := K) 12366140 131071 L 20 68
+    ∀ a : ConstraintKernel (K := K) 13456530 131071 L 22 74
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 12366140 131071 L 20 a.1 := by
-  exact full_kernel_divisor_small (E := K) (Lmax := 109000) (by omega)
+      gcd S.QA S.QB ∣ reconstruct K 13456530 131071 L 22 a.1 := by
+  exact full_kernel_divisor_small (E := K) (Lmax := 67500) (by omega)
     IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_A
 
 /-- The same extension for the joined A51 Y-source family. -/
 theorem common_divides_A51_small {u0 u1 : I → K}
-    (S : LocatorSelection.SelectedPair u0 u1) (L : ℕ) (hL : L ≤ 100000) :
-    ∀ a : ConstraintKernel (K := K) 9274605 131071 L 15 51
+    (S : LocatorSelection.SelectedPair u0 u1) (L : ℕ) (hL : L ≤ 67500) :
+    ∀ a : ConstraintKernel (K := K) 9092250 131071 L 15 50
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 9274605 131071 L 15 a.1 := by
-  exact full_kernel_divisor_small (E := K) (Lmax := 100000) hL
+      gcd S.QA S.QB ∣ reconstruct K 9092250 131071 L 15 a.1 := by
+  exact full_kernel_divisor_small (E := K) (Lmax := 67500) hL
     IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_Aux
 
 end Selected

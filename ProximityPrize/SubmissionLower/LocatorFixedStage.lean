@@ -3,7 +3,7 @@ import ProximityPrize.SubmissionLower.BF
 import ProximityPrize.SubmissionLower.Q2
 import ProximityPrize.SubmissionLower.EQ
 
-/- Factor-adapted stage count for the 80289-error row.
+/- Factor-adapted stage count for the 80299-error row.
    Both counting branches below use existing counting theorems; no independent
    seed-count assumption or ProtocolClaim is introduced.  The weighted cutoff
    is a parameter; only the two tail supports are padded. -/
@@ -26,13 +26,13 @@ set_option maxHeartbeats 5000000
 
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 80289
-def agreements : ℕ := 181855
-def gap : ℕ := 50784
+def errors : ℕ := 80299
+def agreements : ℕ := 181845
+def gap : ℕ := 50774
 def prime : ℕ := 2130706433
 /- Generic quotient equations retain the accepted ceiling; the selected
-   ambient source itself uses the smaller cutoff 12366140. -/
-def weightedCap : ℕ := 12367432
+   ambient source itself uses the smaller cutoff 13456530. -/
+def weightedCap : ℕ := 12488265
 
 abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
@@ -50,7 +50,7 @@ def secondTail (a b s : ℕ) : FlagDegree :=
 
 theorem row_values :
     agreements + errors = n ∧ agreements - w = gap ∧
-    68 * agreements ≤ weightedCap ∧ w < agreements ∧
+    50 * agreements ≤ weightedCap ∧ w < agreements ∧
     w + 1 ≤ weightedCap ∧ weightedCap < prime := by
   norm_num [agreements, errors, n, w, gap, weightedCap, prime]
 
@@ -77,17 +77,17 @@ theorem identityDegree_linear (flag : FlagDegree) (a b s : ℕ) :
   ring
 
 def identitySlackZ (b s : ℕ) : ℕ :=
-  6331477988335578 + 6979753064005632 * b + 11200747264743804 * s +
-    3489876532002816 * s ^ 2 + 6979753064005632 * b * s
+  6328900979122088 + 6978378663985152 * b + 11197654856833364 * s +
+    3489189331992576 * s ^ 2 + 6978378663985152 * b * s
 def identitySlackYZ (a b s : ℕ) : ℕ :=
-  2193299755119348 + 6979753064005632 * a + 6979753064005632 * b +
-    8441961775932984 * s + 3489876532002816 * s ^ 2 +
-    6979753064005632 * a * s + 6979753064005632 * b * s
+  2190207341965988 + 6978378663985152 * a + 6978378663985152 * b +
+    8438525765395964 * s + 3489189331992576 * s ^ 2 +
+    6978378663985152 * a * s + 6978378663985152 * b * s
 def identitySlackAll (a b s : ℕ) : ℕ :=
-  2924396376203148 + 11200747264743804 * a + 8441961775932984 * b +
-    3489876532002816 * b ^ 2 + 8441961775932984 * s +
-    3489876532002816 * s ^ 2 + 6979753064005632 * a * b +
-    6979753064005632 * a * s + 6979753064005632 * b * s
+  2920273152548598 + 11197654856833364 * a + 8438525765395964 * b +
+    3489189331992576 * b ^ 2 + 8438525765395964 * s +
+    3489189331992576 * s ^ 2 + 6978378663985152 * a * b +
+    6978378663985152 * a * s + 6978378663985152 * b * s
 def identitySlack (flag : FlagDegree) (a b s : ℕ) : ℕ :=
   flag.zOnly * identitySlackZ b s + flag.yz * identitySlackYZ a b s +
     flag.all * identitySlackAll a b s
@@ -133,7 +133,7 @@ theorem tangent_gate (a b s : ℕ) :
     (Nat.add_le_add_left hb 1)
 
 theorem flag_characteristic (a b s : ℕ) (flag : FlagDegree)
-    (hS : s + 2 ≤ 14) (hY : b + s + 3 ≤ 94) (hT : a + b + s + 3 ≤ 10000)
+    (hS : s + 2 ≤ 15) (hY : b + s + 3 ≤ 95) (hT : a + b + s + 3 ≤ 10000)
     (hflag : flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
       flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) :
     flag.yz + flag.all < prime ∧ flag.all < prime ∧
@@ -142,32 +142,32 @@ theorem flag_characteristic (a b s : ℕ) (flag : FlagDegree)
   omega
 
 theorem identity_mixed_gate (b s : ℕ) (flag : FlagDegree)
-    (hS : s + 2 ≤ 14) (hY : b + s + 3 ≤ 94)
+    (hS : s + 2 ≤ 15) (hY : b + s + 3 ≤ 95)
     (hfs : flag.all ≤ s + 2) (hfy : flag.yz + flag.all ≤ b + s + 3) :
     (1 + w * (2 * (b + s + 3) - 2)) * flag.all +
       (flag.yz + flag.all) * ((2 * (s + 2) - 1) * w) < prime := by
-  have hy : 2 * (b + s + 3) - 2 ≤ 186 := by omega
-  have hs : 2 * (s + 2) - 1 ≤ 27 := by omega
-  have hfS : flag.all ≤ 14 := hfs.trans hS
-  have hfY : flag.yz + flag.all ≤ 94 := hfy.trans hY
+  have hy : 2 * (b + s + 3) - 2 ≤ 188 := by omega
+  have hs : 2 * (s + 2) - 1 ≤ 29 := by omega
+  have hfS : flag.all ≤ 15 := hfs.trans hS
+  have hfY : flag.yz + flag.all ≤ 95 := hfy.trans hY
   calc
-    _ ≤ (1 + w * 186) * 14 + 94 * (27 * w) :=
+    _ ≤ (1 + w * 188) * 15 + 95 * (29 * w) :=
       Nat.add_le_add
         (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left w hy) 1) hfS)
         (Nat.mul_le_mul hfY (Nat.mul_le_mul_right w hs))
     _ < prime := by norm_num [w, prime]
 
 theorem provider_mixed_gate (b s : ℕ) (flag : FlagDegree)
-    (hS : s + 2 ≤ 14) (hY : b + s + 3 ≤ 94)
+    (hS : s + 2 ≤ 15) (hY : b + s + 3 ≤ 95)
     (hfs : flag.all ≤ s + 2) (hfy : flag.yz + flag.all ≤ b + s + 3) :
     (1 + (w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
       (flag.yz + flag.all) * ((2 * (s + 2) - 2) * (w + 1)) < prime := by
-  have hy : 2 * (b + s + 3) - 2 ≤ 186 := by omega
-  have hs : 2 * (s + 2) - 2 ≤ 26 := by omega
-  have hfS : flag.all ≤ 14 := hfs.trans hS
-  have hfY : flag.yz + flag.all ≤ 94 := hfy.trans hY
+  have hy : 2 * (b + s + 3) - 2 ≤ 188 := by omega
+  have hs : 2 * (s + 2) - 2 ≤ 28 := by omega
+  have hfS : flag.all ≤ 15 := hfs.trans hS
+  have hfY : flag.yz + flag.all ≤ 95 := hfy.trans hY
   calc
-    _ ≤ (1 + (w + 1) * 186) * 14 + 94 * (26 * (w + 1)) :=
+    _ ≤ (1 + (w + 1) * 188) * 15 + 95 * (28 * (w + 1)) :=
       Nat.add_le_add
         (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left (w + 1) hy) 1) hfS)
         (Nat.mul_le_mul hfY (Nat.mul_le_mul_right (w + 1) hs))
@@ -188,7 +188,7 @@ def FixedStageBound (D a b s : ℕ) : Prop :=
 
 theorem fixedStageBound (D a b s : ℕ)
     (hDlow : w + 1 ≤ D) (hDhigh : D ≤ weightedCap)
-    (hS : s + 2 ≤ 14) (hY : b + s + 3 ≤ 94) (hT : a + b + s + 3 ≤ 10000) :
+    (hS : s + 2 ≤ 15) (hY : b + s + 3 ≤ 95) (hT : a + b + s + 3 ≤ 10000) :
     FixedStageBound D a b s := by
   intro Gamma flag S hnodes hagreement hbox hflag
   have hDchar : D < prime := hDhigh.trans_lt (by norm_num [weightedCap, prime])

@@ -154,26 +154,26 @@ theorem aggregate_of_rate_and_cells {I : Type*} [Fintype I]
         _ = T * bound := by ring
     exact Nat.le_of_mul_le_mul_left hscaled hT
 
-theorem aggregate_6753 {I : Type*} [Fintype I]
+theorem aggregate_6754 {I : Type*} [Fintype I]
     (p : I → FlagDegree) (count q : I → ℕ)
     (hs : (∑ i, (p i).all) ≤ 14)
     (hy : (∑ i, middle (p i)) ≤ 66)
-    (ht : (∑ i, total (p i)) ≤ 1761)
+    (ht : (∑ i, total (p i)) ≤ 1796)
     (hstage : ∀ i, count i ≤ paddedCost 131072 131073 (p i))
     (hzero : ∀ i, (p i).all = 0 → count i = 0)
     (hrepl : ∀ i, 7 ≤ (p i).all → count i ≤ q i)
     (hcell : ∀ i, 7 ≤ (p i).all →
-      cellCost 1761 66 14 131072 131073 (p i) (q i) ≤ 269000000000000000) :
-    (∑ i, count i) ≤ 269000000000000000 := by
+      cellCost 1796 66 14 131072 131073 (p i) (q i) ≤ 272439803693259383) :
+    (∑ i, count i) ≤ 272439803693259383 := by
   classical
-  refine aggregate_of_rate_and_cells p count q 1761 66 14 131072 131073 6
-    269000000000000000 (by decide) hs hy ht hstage hzero ?_ ?_ ?_
+  refine aggregate_of_rate_and_cells p count q 1796 66 14 131072 131073 6
+    272439803693259383 (by decide) hs hy ht hstage hzero ?_ ?_ ?_
   · intro i hi
     have hyi : middle (p i) ≤ 66 :=
       (Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)).trans hy
-    have hti : total (p i) ≤ 1761 :=
+    have hti : total (p i) ≤ 1796 :=
       (Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)).trans ht
-    exact rate_bound_6753_low (p i) hi hyi hti
+    exact rate_bound_6754_low (p i) hi hyi hti
   · intro i hi
     exact hrepl i (by omega)
   · intro i hi

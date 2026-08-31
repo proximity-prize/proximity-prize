@@ -4,9 +4,9 @@ import ProximityPrize.SubmissionLower.LocatorAuxiliarySelection
 import ProximityPrize.SubmissionLower.LocatorQuotientReplacement
 import ProximityPrize.SubmissionLower.LocatorCover
 
-/- The whole A51/A50/B97 divisor has actual T/YS/R budgets 1761/66/14.
+/- The whole A51/A50/B97 divisor has actual T/YS/R budgets 1796/66/14.
 Each high regular factor is replaced, when needed, by one fixed low-contact
-A68/3346 quotient. The original singular set is counted only once. -/
+A68/2820 quotient. The original singular set is counted only once. -/
 namespace ProximityPrize.SubmissionLower.LocatorFixedBridge
 open ProximityPrize.Benchmark
 open scoped Classical
@@ -26,31 +26,31 @@ theorem gcd_fixed_count_le
     (u0 u1 : I → K) (S : SelectedPair u0 u1)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181855 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181845 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80289) :
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80299) :
     (LocatorCover.fixed
       (fun gamma => (specialization K (selected gamma) gamma).toRingHom)
       Gamma S.QA S.QB).card ≤
-      269000000000000000 + LocatorArithmetic.fixedSingular.countCap := by
+      272439803693259383 + LocatorArithmetic.fixedSingular.countCap := by
   classical
   let H : P4 := gcd12 S.QA S.QB
   let phi : K → P4 →+* Polynomial K :=
     fun gamma => (specialization K (selected gamma) gamma).toRingHom
   let Delta : Finset K := LocatorCover.fixed phi Gamma S.QA S.QB
   have hH : H ≠ 0 := gcd_ne_zero_of_left S.QA_ne
-  have hHflagC : H ∈ RCN100.globalCoefficientBox K 9092750 131071 100000 14 :=
+  have hHflagC : H ∈ RCN100.globalCoefficientBox K 9092250 131071 67500 14 :=
     S.common_C_flag
   have hHcaps := (mem_flagGlobalCoefficientBox_iff H
-    9092750 131071 100000 14 (by decide)).mp hHflagC
-  have hT : wt residualTotalWeights H ≤ 1761 := S.common_total_le
+    9092250 131071 67500 14 (by decide)).mp hHflagC
+  have hT : wt residualTotalWeights H ≤ 1796 := S.common_total_le
   have hYS : wt residualYSWeights H ≤ 66 := S.common_ys_le
   have hS : wt residualSWeights H ≤ 14 := S.common_slope_le
-  have hflag : H ∈ RCN100.globalCoefficientBox K 9092750 131071 1761 14 :=
-    (mem_flagGlobalCoefficientBox_iff H 9092750 131071 1761 14 (by decide)).mpr
+  have hflag : H ∈ RCN100.globalCoefficientBox K 9092250 131071 1796 14 :=
+    (mem_flagGlobalCoefficientBox_iff H 9092250 131071 1796 14 (by decide)).mpr
       ⟨hT, hS, hHcaps.2.2⟩
-  have hbox := flag_box_to_ordinary K 9092750 131071 1761 14 H hflag
+  have hbox := flag_box_to_ordinary K 9092250 131071 1796 14 H hflag
   have hsupport : ResidualSupportData LocatorFixedConsumer.wholeSupport H :=
     ⟨hS, hYS, hT⟩
   have hsub : Delta ⊆ Gamma := by
@@ -63,15 +63,15 @@ theorem gcd_fixed_count_le
     exact LocatorCover.fixed_vanish phi Gamma S.QA S.QB gamma hg
   have hdegreeD : ∀ gamma ∈ Delta, (selected gamma).natDegree ≤ 131071 :=
     fun gamma hg => hdegree gamma (hsub hg)
-  have hagreementD : ∀ gamma ∈ Delta, 181855 ≤
+  have hagreementD : ∀ gamma ∈ Delta, 181845 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card :=
     fun gamma hg => hagreement gamma (hsub hg)
-  have hnoD : NoLargeSelectedPencil selected Delta 131071 80289 :=
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80289 hsub hno
+  have hnoD : NoLargeSelectedPencil selected Delta 131071 80299 :=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80299 hsub hno
   let p := regularCumulativeFlag H
   have hfcaps (F : RegularIndex H) :
-      (p F).all ≤ 14 ∧ middle (p F) ≤ 66 ∧ total (p F) ≤ 1761 := by
+      (p F).all ≤ 14 ∧ middle (p F) ≤ 66 ∧ total (p F) ≤ 1796 := by
     have hf := LocatorFixed.factor_support H hH hsupport F
     have hc := originalCumulativeFlag_cumulative F.1
     refine ⟨?_, ?_, ?_⟩
@@ -91,12 +91,12 @@ theorem gcd_fixed_count_le
     rw [dif_pos h8]
     have hf := RCN167.positiveRFactors_spec H F.1 F.2
     have hdiv : ∀ v : RCN180.ConstraintKernel (K := K)
-        12366140 131071 3346 20 68 IRSProfile.domain u0 u1,
-        F.1 ∣ RCN100.reconstruct K 12366140 131071 3346 20 v.1 := by
+        13456530 131071 2820 22 74 IRSProfile.domain u0 u1,
+        F.1 ∣ RCN100.reconstruct K 13456530 131071 2820 22 v.1 := by
       intro v
       exact hf.2.1.trans
-        (LocatorAuxiliarySelection.common_divides_A68_small S 3346 (by decide) v)
-    have hown := LocatorFixed.regular_factor_count 9092750
+        (LocatorAuxiliarySelection.common_divides_A68_small S 2820 (by decide) v)
+    have hown := LocatorFixed.regular_factor_count 9092250
       LocatorFixedConsumer.wholeSupport (by decide) (by decide)
       (by decide) (by decide) (by decide)
       H hH hbox hsupport selected Delta u0 u1 hdegreeD hagreementD hnoD F
@@ -105,8 +105,8 @@ theorem gcd_fixed_count_le
       (cellOf (p F) h8 (hfcaps F).1 (hfcaps F).2.1 (hfcaps F).2.2)
       (cellOf_bounds (p F) h8 (hfcaps F).1 (hfcaps F).2.1 (hfcaps F).2.2) hown
   have hcell (F : RegularIndex H) (h8 : 7 ≤ (p F).all) :
-      LocatorFactorReplacement.cellCost 1761 66 14 131072 131073
-        (p F) (qCost F) ≤ 269000000000000000 := by
+      LocatorFactorReplacement.cellCost 1796 66 14 131072 131073
+        (p F) (qCost F) ≤ 272439803693259383 := by
     dsimp only [qCost]
     rw [dif_pos h8]
     exact cellCost_le_of_choice chosenCost chosenCost_with_rest

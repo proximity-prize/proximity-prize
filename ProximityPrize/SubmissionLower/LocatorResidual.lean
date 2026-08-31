@@ -39,13 +39,13 @@ theorem gates : Gates := by
     residual_gates.mixedY_small, residual_gates.mixedR_small,
     residual_gates.mixedZ_small⟩
 
-/- Existing asymmetric residual counting, now with the 80289-error row.
+/- Existing asymmetric residual counting, now with the 80299-error row.
    This is not a proof of the fixed-factor count or the full ProtocolClaim. -/
 theorem residual_count_lt
     (valid : Gates)
     (Q T : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) (hrel : IsRelPrime Q T)
-    (hbox : Q ∈ globalCoefficientBox K (97 * agreements) w 1764 30)
-    (hTcaps : T.degreeOf 1 ≤ 94 ∧ T.degreeOf 2 ≤ 20 ∧ T.degreeOf 3 ≤ 109000)
+    (hbox : Q ∈ globalCoefficientBox K (97 * agreements) w 1799 30)
+    (hTcaps : T.degreeOf 1 ≤ 102 ∧ T.degreeOf 2 ≤ 22 ∧ T.degreeOf 3 ≤ 67500)
     (selected : K → Polynomial K) (seeds : Finset K)
     (nodes : Finset I) (x u0 u1 : I → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
@@ -63,7 +63,7 @@ theorem residual_count_lt
     (by change 1 ≤ 30; decide) (by change 30 < 2130706433; decide)
     (by change 1 ≤ 131071; decide) (by change 131071 < 2130706433; decide) valid.kD
     valid.algebraic_pos valid.implicit_small valid.algebraic_small valid.mixed_small
-    (by change 131071 < 181855; decide) (by change 181855 ≤ 262144; decide)
+    (by change 131071 < 181845; decide) (by change 181845 ≤ 262144; decide)
     hbox (by norm_num only [residualStage, UnequalParameters.gap, agreements, w])
     (by simp only [residualSingular, residualStage, TightParameters.gap,
       UnequalParameters.gap])
@@ -71,14 +71,14 @@ theorem residual_count_lt
     selected seeds nodes x u0 u1 hinj hnodes hdegree hQsolution hTsolution hagreement
     (by simpa only [residualSingular, TightParameters.errors] using hno)
   exact all_regularPairSeeds_bound residualStage Q T hQ hrel
-    (97 * agreements) w 1764 30 2130706433 hbox (by decide)
+    (97 * agreements) w 1799 30 2130706433 hbox (by decide)
     valid.qY (by change 30 ≤ 30; decide) (by exact Nat.le_refl _)
     hTcaps.1 hTcaps.2.1 hTcaps.2.2 (by change 1 ≤ 30; decide)
     (by change 134 < 2130706433; decide) (by change 30 < 2130706433; decide)
     valid.leftZ_small valid.mixedY_small valid.mixedR_small valid.mixedZ_small
     selected seeds nodes x u0 u1 hinj hnodes
     (by change 1 ≤ 131071; decide) (by change 131071 < 2130706433; decide)
-    (by change 131071 < 181855; decide) (by change 181855 ≤ 262144; decide)
+    (by change 131071 < 181845; decide) (by change 181845 ≤ 262144; decide)
     hdegree hagreement
     (by simpa only [residualStage, UnequalParameters.errors] using hno)
 
@@ -88,9 +88,9 @@ theorem gcd_residual_count_lt
     [GCDMonoid (MvPolynomial (Fin 4) K)]
     (QA QB : MvPolynomial (Fin 4) K) (hQA : QA ≠ 0) (hQB : QB ≠ 0)
     (hboxA : QA ∈ RCN100.globalCoefficientBox K
-      (68 * agreements) w 109000 20)
+      (74 * agreements) w 67500 22)
     (hboxB : QB ∈ RCN100.globalCoefficientBox K
-      (97 * agreements) w 1764 30)
+      (97 * agreements) w 1799 30)
     (selected : K → Polynomial K) (seeds : Finset K)
     (nodes : Finset I) (x u0 u1 : I → K)
     (hinj : Set.InjOn x nodes) (hnodes : nodes.card = n)
@@ -120,20 +120,20 @@ theorem gcd_residual_count_lt
     intro hz
     exact hQA (by rw [hTeq, hz, mul_zero])
   have hQflag := quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-    QB H Q (97 * agreements) w 1764 30 0 0 0 hQB hH hQ hboxB hQeq
+    QB H Q (97 * agreements) w 1799 30 0 0 0 hQB hH hQ hboxB hQeq
     (Nat.zero_le _) (Nat.zero_le _) (Nat.zero_le _)
   have hTflag := quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-    QA H T (68 * agreements) w 109000 20 0 0 0 hQA hH hT hboxA hTeq
+    QA H T (74 * agreements) w 67500 22 0 0 0 hQA hH hT hboxA hTeq
     (Nat.zero_le _) (Nat.zero_le _) (Nat.zero_le _)
-  have hQbox : Q ∈ globalCoefficientBox K (97 * agreements) w 1764 30 :=
+  have hQbox : Q ∈ globalCoefficientBox K (97 * agreements) w 1799 30 :=
     RCN101.flag_box_to_ordinary K
-      (97 * agreements) w 1764 30 Q (by simpa only [Nat.sub_zero] using hQflag)
-  have hTbox : T ∈ globalCoefficientBox K (68 * agreements) w 109000 20 :=
+      (97 * agreements) w 1799 30 Q (by simpa only [Nat.sub_zero] using hQflag)
+  have hTbox : T ∈ globalCoefficientBox K (74 * agreements) w 67500 22 :=
     RCN101.flag_box_to_ordinary K
-      (68 * agreements) w 109000 20 T (by simpa only [Nat.sub_zero] using hTflag)
+      (74 * agreements) w 67500 22 T (by simpa only [Nat.sub_zero] using hTflag)
   have hTcaps := RCN081.degree_bounds_of_mem_box
-    T (68 * agreements) w 109000 20 (by decide) hTbox
-  rw [show (68 * agreements - 1) / w = 94 by decide] at hTcaps
+    T (74 * agreements) w 67500 22 (by decide) hTbox
+  rw [show (74 * agreements - 1) / w = 102 by decide] at hTcaps
   have hsub : Delta ⊆ seeds := by
     intro gamma hg
     have hm : gamma ∈ seeds ∧ (phi gamma) (gcd12 QA QB) ≠ 0 := by
