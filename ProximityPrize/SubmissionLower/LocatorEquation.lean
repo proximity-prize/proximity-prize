@@ -60,19 +60,19 @@ theorem regularSeeds_quotient_equation
 Only the regular seed subset belonging to F is being bounded. -/
 theorem regularSeeds_count_le_equation
     (D T YS S : ℕ)
-    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 12367432)
+    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 12488265)
     (hSpos : 1 ≤ S) (hSY : S ≤ YS) (hYT : YS ≤ T) (hYpos : 2 ≤ YS)
-    (hS : S ≤ 14) (hY : YS ≤ 94) (hT : T ≤ 10000)
+    (hS : S ≤ 15) (hY : YS ≤ 95) (hT : T ≤ 10000)
     (H Q : P4) (hQ : Q ≠ 0)
     (hbox : Q ∈ RCN174.globalCoefficientBox K D 131071 T S)
     (hcaps : wt residualSWeights Q ≤ S ∧ wt residualYSWeights Q ≤ YS ∧
       wt residualTotalWeights Q ≤ T)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181855 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181845 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80289)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80299)
     (F : RegularIndex H)
     (hproduct : ∀ gamma ∈ regularSeeds H selected Gamma F,
       specialization K (selected gamma) gamma
@@ -85,25 +85,25 @@ theorem regularSeeds_count_le_equation
     (regularSeeds_quotient_equation H Q selected Gamma F hproduct)
     (fun gamma hgamma => hdegree gamma (hsub hgamma))
     (fun gamma hgamma => hagreement gamma (hsub hgamma))
-    (RCN243.noLargeSelectedPencil_mono selected Gamma _ 131071 80289 hsub hno)
+    (RCN243.noLargeSelectedPencil_mono selected Gamma _ 131071 80299 hsub hno)
 
 /-- A compositional minimum bridge when the original factor's already-proved
 own-support count is available to the caller. -/
 theorem regularSeeds_count_le_min
     (D T YS S : ℕ)
-    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 12367432)
+    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 12488265)
     (hSpos : 1 ≤ S) (hSY : S ≤ YS) (hYT : YS ≤ T) (hYpos : 2 ≤ YS)
-    (hS : S ≤ 14) (hY : YS ≤ 94) (hT : T ≤ 10000)
+    (hS : S ≤ 15) (hY : YS ≤ 95) (hT : T ≤ 10000)
     (H Q : P4) (hQ : Q ≠ 0)
     (hbox : Q ∈ RCN174.globalCoefficientBox K D 131071 T S)
     (hcaps : wt residualSWeights Q ≤ S ∧ wt residualYSWeights Q ≤ YS ∧
       wt residualTotalWeights Q ≤ T)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181855 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181845 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80289)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80299)
     (F : RegularIndex H)
     (hproduct : ∀ gamma ∈ regularSeeds H selected Gamma F,
       specialization K (selected gamma) gamma
@@ -122,25 +122,25 @@ theorem regularSeeds_count_le_min
 than introducing a separate counting hypothesis. -/
 theorem regular_factor_count_le_min_equation
     (DH : ℕ) (PH : ResidualSupportParameters)
-    (hDHlow : 131072 ≤ DH) (hDHhigh : DH ≤ 12367432)
-    (hHS : PH.s ≤ 14) (hHY : PH.ys ≤ 94) (hHT : PH.total ≤ 10000)
+    (hDHlow : 131072 ≤ DH) (hDHhigh : DH ≤ 12488265)
+    (hHS : PH.s ≤ 15) (hHY : PH.ys ≤ 95) (hHT : PH.total ≤ 10000)
     (H : P4) (hH : H ≠ 0)
     (hHbox : H ∈ RCN174.globalCoefficientBox K DH 131071 PH.total PH.s)
     (hHcaps : ResidualSupportData PH H)
     (D T YS S : ℕ)
-    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 12367432)
+    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 12488265)
     (hSpos : 1 ≤ S) (hSY : S ≤ YS) (hYT : YS ≤ T) (hYpos : 2 ≤ YS)
-    (hS : S ≤ 14) (hY : YS ≤ 94) (hT : T ≤ 10000)
+    (hS : S ≤ 15) (hY : YS ≤ 95) (hT : T ≤ 10000)
     (Q : P4) (hQ : Q ≠ 0)
     (hbox : Q ∈ RCN174.globalCoefficientBox K D 131071 T S)
     (hcaps : wt residualSWeights Q ≤ S ∧ wt residualYSWeights Q ≤ YS ∧
       wt residualTotalWeights Q ≤ T)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181855 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181845 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80289)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80299)
     (F : RegularIndex H)
     (hproduct : ∀ gamma ∈ regularSeeds H selected Gamma F,
       specialization K (selected gamma) gamma

@@ -199,7 +199,7 @@ theorem paddedTail_cap (t y s d : ℕ)
   simp only [paddedTail, hps, hpy, hpt]
 
 
-private abbrev lowCap6753 : ℕ := 269000000000000000
+private abbrev lowCap6754 : ℕ := 269000000000000000
 
 theorem all_le_middle (p : FlagDegree) : p.all ≤ middle p := by
   dsimp [middle]
@@ -259,26 +259,26 @@ private theorem affine66 (t : ℕ) (ht : 66 ≤ t) :
   omega
 
 private theorem rate_of_affine {t c top alpha deficit : ℕ}
-    (ht : t ≤ 1761) (hc : c + deficit = alpha * t)
-    (hTop : top + deficit = alpha * 1761) (hbound : top ≤ lowCap6753) :
-    1761 * c ≤ lowCap6753 * t := by
-  have hscaled : 1761 * c + deficit * t ≤ top * t + deficit * t := by
+    (ht : t ≤ 1796) (hc : c + deficit = alpha * t)
+    (hTop : top + deficit = alpha * 1796) (hbound : top ≤ lowCap6754) :
+    1796 * c ≤ lowCap6754 * t := by
+  have hscaled : 1796 * c + deficit * t ≤ top * t + deficit * t := by
     calc
-      _ ≤ 1761 * c + deficit * 1761 :=
+      _ ≤ 1796 * c + deficit * 1796 :=
         Nat.add_le_add_left (Nat.mul_le_mul_left deficit ht) _
-      _ = (c + deficit) * 1761 := by ring
-      _ = (alpha * t) * 1761 := by rw [hc]
-      _ = (alpha * 1761) * t := by ring
+      _ = (c + deficit) * 1796 := by ring
+      _ = (alpha * t) * 1796 := by rw [hc]
+      _ = (alpha * 1796) * t := by ring
       _ = (top + deficit) * t := by rw [← hTop]
       _ = top * t + deficit * t := by ring
   exact (Nat.le_of_add_le_add_right hscaled).trans
     (Nat.mul_le_mul_right t hbound)
 
-private theorem large_rate66 (t : ℕ) (hlo : 66 ≤ t) (hhi : t ≤ 1761) :
-    1761 * paddedCost 131072 131073 (cap t 66 6) ≤ lowCap6753 * t := by
-  have htop := affine66 1761 (by decide)
-  have hb : paddedCost 131072 131073 (cap 1761 66 6) ≤ lowCap6753 := by
-    unfold lowCap6753
+private theorem large_rate66 (t : ℕ) (hlo : 66 ≤ t) (hhi : t ≤ 1796) :
+    1796 * paddedCost 131072 131073 (cap t 66 6) ≤ lowCap6754 * t := by
+  have htop := affine66 1796 (by decide)
+  have hb : paddedCost 131072 131073 (cap 1796 66 6) ≤ lowCap6754 := by
+    unfold lowCap6754
     omega
   exact rate_of_affine hhi (affine66 t hlo) htop hb
 
@@ -290,23 +290,23 @@ private theorem middle_tail_formula66 (p : FlagDegree) :
   ring
 
 private theorem middle_rate66 (t : ℕ) (ht : 14 ≤ t) :
-    1761 * (42950003261450 * t + 247392035143801 * 6) ≤ lowCap6753 * t := by
-  unfold lowCap6753
+    1796 * (42950003261450 * t + 247392035143801 * 6) ≤ lowCap6754 * t := by
+  unfold lowCap6754
   omega
 
 /-- The slope cutoff is per factor, not a bound on the slope of their product. -/
-theorem rate_bound_6753_low (p : FlagDegree)
-    (hs : p.all ≤ 6) (hy : middle p ≤ 66) (ht : total p ≤ 1761) :
-    1761 * paddedCost 131072 131073 p ≤ 269000000000000000 * total p := by
+theorem rate_bound_6754_low (p : FlagDegree)
+    (hs : p.all ≤ 6) (hy : middle p ≤ 66) (ht : total p ≤ 1796) :
+    1796 * paddedCost 131072 131073 p ≤ 269000000000000000 * total p := by
   have hn := middle_le_total p
   by_cases ht14 : total p ≤ 14
   · have hb := below_cap_of_bounds p 14 14 6 (by decide) (by decide)
       hs (hn.trans ht14) ht14
     have hc := cost_le_diagonal_rate p 14 6 hb
-    have hk : 1761 * diagonalRate 14 6 ≤ 269000000000000000 := by decide
+    have hk : 1796 * diagonalRate 14 6 ≤ 269000000000000000 := by decide
     calc
-      _ ≤ 1761 * (diagonalRate 14 6 * total p) := Nat.mul_le_mul_left 1761 hc
-      _ = (1761 * diagonalRate 14 6) * total p := by ring
+      _ ≤ 1796 * (diagonalRate 14 6 * total p) := Nat.mul_le_mul_left 1796 hc
+      _ = (1796 * diagonalRate 14 6) * total p := by ring
       _ ≤ _ := Nat.mul_le_mul_right (total p) hk
   · by_cases ht66 : total p ≤ 66
     · have hb := below_cap_of_bounds p 66 66 6 (by decide) (by decide) hs hy ht66
@@ -319,29 +319,29 @@ theorem rate_bound_6753_low (p : FlagDegree)
           _ = 42950003261450 * total p + 247392035143801 * p.all :=
             middle_tail_formula66 p
           _ ≤ _ := Nat.add_le_add_left (Nat.mul_le_mul_left _ hs) _
-      exact (Nat.mul_le_mul_left 1761 hc).trans (middle_rate66 (total p) (by omega))
+      exact (Nat.mul_le_mul_left 1796 hc).trans (middle_rate66 (total p) (by omega))
     · have hlo : 66 ≤ total p := by omega
       have hb := below_cap_of_bounds p (total p) 66 6 (by decide) hlo hs hy (le_refl _)
-      exact (Nat.mul_le_mul_left 1761 (paddedCost_mono 131072 131073 hb)).trans
+      exact (Nat.mul_le_mul_left 1796 (paddedCost_mono 131072 131073 hb)).trans
         (large_rate66 (total p) hlo ht)
 
 /-- No positivity or sum-of-slopes assumption is needed in the low-factor branch. -/
-theorem aggregate_6753_low {I : Type*} [Fintype I] (p : I → FlagDegree)
+theorem aggregate_6754_low {I : Type*} [Fintype I] (p : I → FlagDegree)
     (hs : ∀ i, (p i).all ≤ 6) (hy : ∀ i, middle (p i) ≤ 66)
-    (htsum : (∑ i, total (p i)) ≤ 1761) :
+    (htsum : (∑ i, total (p i)) ≤ 1796) :
     (∑ i, paddedCost 131072 131073 (p i)) ≤ 269000000000000000 := by
   classical
-  have hti (i : I) : total (p i) ≤ 1761 :=
+  have hti (i : I) : total (p i) ≤ 1796 :=
     (Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)).trans htsum
-  have hscaled : 1761 * (∑ i, paddedCost 131072 131073 (p i)) ≤
-      1761 * 269000000000000000 := by
+  have hscaled : 1796 * (∑ i, paddedCost 131072 131073 (p i)) ≤
+      1796 * 269000000000000000 := by
     calc
-      _ = ∑ i, 1761 * paddedCost 131072 131073 (p i) := by rw [Finset.mul_sum]
+      _ = ∑ i, 1796 * paddedCost 131072 131073 (p i) := by rw [Finset.mul_sum]
       _ ≤ ∑ i, 269000000000000000 * total (p i) :=
-        Finset.sum_le_sum (fun i _ => rate_bound_6753_low (p i) (hs i) (hy i) (hti i))
+        Finset.sum_le_sum (fun i _ => rate_bound_6754_low (p i) (hs i) (hy i) (hti i))
       _ = 269000000000000000 * (∑ i, total (p i)) := by rw [Finset.mul_sum]
-      _ ≤ 269000000000000000 * 1761 := Nat.mul_le_mul_left _ htsum
-      _ = 1761 * 269000000000000000 := by ring
+      _ ≤ 269000000000000000 * 1796 := Nat.mul_le_mul_left _ htsum
+      _ = 1796 * 269000000000000000 := by ring
   exact Nat.le_of_mul_le_mul_left hscaled (by decide)
 
 end ProximityPrize.SubmissionLower.LocatorFactorAggregate
