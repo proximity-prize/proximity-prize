@@ -9,34 +9,34 @@ open RCN260
 set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
 private abbrev prime:ℕ:=2130706433
-private abbrev bound:ℕ:=272036573261625803
-def quotient95D (c:Cell):ℕ:=18541152 - (131071 * ylo c - r c) - 50706
-def quotient95T (c:Cell):ℕ:=2800 - tlo c
-def quotient95YS (c:Cell):ℕ:=141 - ylo c
-def quotient95S (c:Cell):ℕ:=31 - r c
+private abbrev bound:ℕ:=272105793527427921
+def quotient95D (c:Cell):ℕ:=20721324 - (131071 * ylo c - r c) - 50696
+def quotient95T (c:Cell):ℕ:=2750 - tlo c
+def quotient95YS (c:Cell):ℕ:=158 - ylo c
+def quotient95S (c:Cell):ℕ:=35 - r c
 def band95 (c:Cell):ℕ :=
-  50706 * LocatorLowQuotient.channelCount
+  50696 * LocatorLowQuotient.channelCount
     (quotient95T c) (quotient95YS c) (quotient95S c)
-def quotient72D (c:Cell):ℕ:=13087872 - (131071 * ylo c - r c) - 50706
+def quotient72D (c:Cell):ℕ:=13087152 - (131071 * ylo c - r c) - 50696
 def quotient72T (c:Cell):ℕ:=12000 - tlo c
 def quotient72YS (c:Cell):ℕ:=99 - ylo c
 def quotient72S (c:Cell):ℕ:=21 - r c
 def band72 (c:Cell):ℕ :=
-  50706 * LocatorLowQuotient.channelCount
+  50696 * LocatorLowQuotient.channelCount
     (quotient72T c) (quotient72YS c) (quotient72S c)
 def pair95 (c:Cell):UnequalParameters :=
-  ⟨262144, 131071, 181776, min (yhi c) (thi c), r c, thi c,
+  ⟨262144, 131071, 181766, min (yhi c) (thi c), r c, thi c,
     quotient95YS c, quotient95S c, quotient95T c⟩
 def pair72 (c:Cell):UnequalParameters :=
-  ⟨262144, 131071, 181776, min (yhi c) (thi c), r c, thi c,
+  ⟨262144, 131071, 181766, min (yhi c) (thi c), r c, thi c,
     quotient72YS c, quotient72S c, quotient72T c⟩
 def pair95Cost (c:Cell):ℕ:=(pair95 c).regularCountCap
 def pair72Cost (c:Cell):ℕ:=(pair72 c).regularCountCap
 def RateFits (c:Cell):Prop :=
-  2080 * LocatorFactorAggregate.paddedCost 131072 131073
+  2133 * LocatorFactorAggregate.paddedCost 131072 131073
       (LocatorFactorAggregate.cap (r c) (r c) (r c)) ≤ bound * r c ∧
     LocatorFactorAggregate.paddedCost 131072 131073
-      (LocatorFactorAggregate.cap 2080 (yhi c) (r c)) ≤ bound
+      (LocatorFactorAggregate.cap 2133 (yhi c) (r c)) ≤ bound
 instance (c:Cell):Decidable (RateFits c):=by
   unfold RateFits
   infer_instance
@@ -61,13 +61,13 @@ instance (P:UnequalParameters):Decidable (PairGates P):=by
   unfold PairGates
   infer_instance
 def Pair95Fits (c:Cell):Prop :=
-  band95 c < 131094816568 ∧ Coprime95 c ∧ PairGates (pair95 c) ∧
+  band95 c < 171987925155 ∧ Coprime95 c ∧ PairGates (pair95 c) ∧
     pair95Cost c + gridRestCost c ≤ bound
 instance (c:Cell):Decidable (Pair95Fits c):=by
   unfold Pair95Fits
   infer_instance
 def Pair72Fits (c:Cell):Prop :=
-  band72 c < 316829900618 ∧ Coprime72 c ∧ PairGates (pair72 c) ∧
+  band72 c < 299893622138 ∧ Coprime72 c ∧ PairGates (pair72 c) ∧
     pair72Cost c + gridRestCost c ≤ bound
 instance (c:Cell):Decidable (Pair72Fits c):=by
   unfold Pair72Fits
@@ -77,37 +77,37 @@ def Receipt (c:Cell):Prop:=Valid c →
 instance (c:Cell):Decidable (Receipt c):=by
   unfold Receipt
   infer_instance
-theorem receipt_0:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_0:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((0:Fin 16), yi, ti):=by decide
-theorem receipt_1:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_1:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((1:Fin 16), yi, ti):=by decide
-theorem receipt_2:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_2:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((2:Fin 16), yi, ti):=by decide
-theorem receipt_3:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_3:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((3:Fin 16), yi, ti):=by decide
-theorem receipt_4:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_4:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((4:Fin 16), yi, ti):=by decide
-theorem receipt_5:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_5:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((5:Fin 16), yi, ti):=by decide
-theorem receipt_6:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_6:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((6:Fin 16), yi, ti):=by decide
-theorem receipt_7:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_7:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((7:Fin 16), yi, ti):=by decide
-theorem receipt_8:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_8:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((8:Fin 16), yi, ti):=by decide
-theorem receipt_9:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_9:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((9:Fin 16), yi, ti):=by decide
-theorem receipt_10:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_10:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((10:Fin 16), yi, ti):=by decide
-theorem receipt_11:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_11:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((11:Fin 16), yi, ti):=by decide
-theorem receipt_12:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_12:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((12:Fin 16), yi, ti):=by decide
-theorem receipt_13:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_13:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((13:Fin 16), yi, ti):=by decide
-theorem receipt_14:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_14:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((14:Fin 16), yi, ti):=by decide
-theorem receipt_15:∀ yi:Fin 20, ∀ ti:Fin 17,
+theorem receipt_15:∀ yi:Fin 37, ∀ ti:Fin 17,
     Receipt ((15:Fin 16), yi, ti):=by decide
 theorem receipt (c:Cell):Receipt c:=by
   rcases c with ⟨ri, yi, ti⟩
