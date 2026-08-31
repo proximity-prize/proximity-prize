@@ -1,0 +1,39 @@
+import ProximityPrize.SubmissionLower.ContactProperStageActiveProvider6733Research
+import ProximityPrize.SubmissionLower.ContactProperStageActiveZPower6733Research
+import ProximityPrize.SubmissionLower.ContactProperStageActiveUVPower6733Research
+namespace ProximityPrize.SubmissionLower.ContactProperStageActiveFixedPowers6733Research
+open ProximityPrize.Benchmark
+open ContactGenericInitialPoint ContactGenericSurface
+open ContactFirstTailCertificate6731Research
+open ContactProperDelayedTailCertificate6732Research
+open ContactProperStageActiveProvider6733Research
+open ContactTwoTailParameters6733Research
+open ContactTerminalAdaptiveProjection6656Research
+open ContactProperStageActiveZPower6733Research
+open ContactProperStageActiveUVPower6733Research
+open ContactActiveNestedFixedPowers6733Research
+open ContactAdaptiveNestedProjectionActive6630Research
+open ContactAdaptiveNestedProjection6600Research
+open ContactWeakSeparableSeparatorResearch
+open ContactFlagBezout6543Research
+open ActualCurveCoordinateField
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:DecidableEq (GenericField K):=Classical.decEq _
+local instance:CharP K prime:=by
+  simpa [prime,ContactParameters6600Research.prime] using
+    ContactFrozenAlignment6600Research.challenge_field_characteristic6600
+theorem activeStageFixedPowerProvider6733:ActiveStageFixedPowerProvider6733:=by
+  intro Gamma flag S hfirstProper base hactive hZ D
+  let hSderiv:=residualStage_pderiv_one_ne_zero_of_support S
+  exact {
+    z:=properStage_activeZFixedPowers S hfirstProper base hactive hZ hSderiv D
+    u:=properStage_activeUFixedPowers S hfirstProper base hactive hSderiv D
+    v:=properStage_activeVFixedPowers S hfirstProper base hactive hSderiv D}
+end
+end ProximityPrize.SubmissionLower.ContactProperStageActiveFixedPowers6733Research
