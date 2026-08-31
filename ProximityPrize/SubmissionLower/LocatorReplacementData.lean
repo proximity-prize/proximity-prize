@@ -8,8 +8,8 @@ open LocatorReplacementGrid RCN260 RCN302 RCN180
 set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
 private abbrev prime:ℕ:=2130706433
-private abbrev bound:ℕ:=271873949264936910
-private abbrev delta:ℕ:=50666
+private abbrev bound:ℕ:=271823484960074903
+private abbrev delta:ℕ:=50657
 abbrev GridCell:=LocatorReplacementGrid.Cell
 
 def channelMultiplicity (ys ss:ℕ):ℕ:=
@@ -27,14 +27,14 @@ def suggestedLength (a debt minimumL Ysrc sourceS:ℕ) (c:GridCell):ℕ:=
   let base:=max minimumL (max (ft+qY) (ft+1))
   if slope=0 then base else max base (rhs/slope+1)
 
-def length72 (c:GridCell):ℕ:=suggestedLength 28489197 92785577302 3257 99 21 c
-def length126 (c:GridCell):ℕ:=suggestedLength 385505160 886023375230 2299 174 39 c
-def lengthDouble126 (c:GridCell):ℕ:=2*tlo c+500
-def quotient72D (c:GridCell):ℕ:=13084992-(131071*ylo c-r c)-delta
+def length72 (c:GridCell):ℕ:=suggestedLength 27213285 92717283934 3408 99 21 c
+def length126 (c:GridCell):ℕ:=suggestedLength 378451680 885351026630 2340 174 39 c
+def lengthDouble126 (c:GridCell):ℕ:=2*tlo c+1000
+def quotient72D (c:GridCell):ℕ:=13084344-(131071*ylo c-r c)-delta
 def quotient72T (c:GridCell):ℕ:=length72 c-tlo c
 def quotient72YS (c:GridCell):ℕ:=99-ylo c
 def quotient72S (c:GridCell):ℕ:=21-r c
-def quotient126D (c:GridCell):ℕ:=22898736-(131071*ylo c-r c)-delta
+def quotient126D (c:GridCell):ℕ:=22897602-(131071*ylo c-r c)-delta
 def quotient126T (c:GridCell):ℕ:=length126 c-tlo c
 def quotient126YS (c:GridCell):ℕ:=174-ylo c
 def quotient126S (c:GridCell):ℕ:=39-r c
@@ -53,32 +53,32 @@ def bandDoubleFirst (c:GridCell):ℕ:=delta*LocatorLowQuotient.channelCount
 def bandDoubleSecond (c:GridCell):ℕ:=delta*LocatorLowQuotient.channelCount
   (secondDoubleT c) (secondDoubleYS c) (secondDoubleS c)
 def sourceGap72 (c:GridCell):ℕ:=
-  28489197*length72 c-92785577302
+  27213285*length72 c-92717283934
 def sourceGap126 (c:GridCell):ℕ:=
-  385505160*length126 c-886023375230
+  378451680*length126 c-885351026630
 def sourceGapDouble126 (c:GridCell):ℕ:=
-  385505160*lengthDouble126 c-886023375230
+  378451680*lengthDouble126 c-885351026630
 def pair72 (c:GridCell):UnequalParameters:=
-  ⟨262144,131071,181736,min (yhi c) (thi c),r c,thi c,
+  ⟨262144,131071,181727,min (yhi c) (thi c),r c,thi c,
     quotient72YS c,quotient72S c,quotient72T c⟩
 def pair126 (c:GridCell):UnequalParameters:=
-  ⟨262144,131071,181736,min (yhi c) (thi c),r c,thi c,
+  ⟨262144,131071,181727,min (yhi c) (thi c),r c,thi c,
     quotient126YS c,quotient126S c,quotient126T c⟩
 def pairDoubleFirst (c:GridCell):UnequalParameters:=
-  ⟨262144,131071,181736,min (yhi c) (thi c),r c,thi c,
+  ⟨262144,131071,181727,min (yhi c) (thi c),r c,thi c,
     quotientDoubleYS c,quotientDoubleS c,quotientDoubleT c⟩
 def pairDoubleSecond (c:GridCell):UnequalParameters:=
-  ⟨262144,131071,181736,min (yhi c) (thi c),r c,thi c,
+  ⟨262144,131071,181727,min (yhi c) (thi c),r c,thi c,
     secondDoubleYS c,secondDoubleS c,secondDoubleT c⟩
 def pair72Cost (c:GridCell):ℕ:=(pair72 c).regularCountCap
 def pair126Cost (c:GridCell):ℕ:=(pair126 c).regularCountCap
 def doubleCost (c:GridCell):ℕ:=max (pairDoubleFirst c).regularCountCap
   (pairDoubleSecond c).regularCountCap
 def RateFits (c:GridCell):Prop:=
-  2319*LocatorFactorAggregate.paddedCost 131072 131073
+  2382*LocatorFactorAggregate.paddedCost 131072 131073
       (LocatorFactorAggregate.cap (r c) (r c) (r c))≤bound*r c ∧
     LocatorFactorAggregate.paddedCost 131072 131073
-      (LocatorFactorAggregate.cap 2319 (yhi c) (r c))≤bound
+      (LocatorFactorAggregate.cap 2382 (yhi c) (r c))≤bound
 instance (c:GridCell):Decidable (RateFits c):=by unfold RateFits;infer_instance
 def OrdinaryFits (c:GridCell):Prop:=ordinaryCost c+gridRestCost c≤bound
 instance (c:GridCell):Decidable (OrdinaryFits c):=by unfold OrdinaryFits;infer_instance
@@ -93,15 +93,15 @@ def PairGates (P:UnequalParameters):Prop:=
     P.mixedCost.y<prime ∧ P.mixedCost.r<prime ∧ P.mixedCost.z<prime
 instance (P:UnequalParameters):Decidable (PairGates P):=by unfold PairGates;infer_instance
 def Pair72Fits (c:GridCell):Prop:=
-  length72 c≤51967 ∧ band72 c<sourceGap72 c ∧ Coprime72 c ∧
+  length72 c≤52091 ∧ band72 c<sourceGap72 c ∧ Coprime72 c ∧
     PairGates (pair72 c) ∧ pair72Cost c+gridRestCost c≤bound
 instance (c:GridCell):Decidable (Pair72Fits c):=by unfold Pair72Fits;infer_instance
 def Pair126Fits (c:GridCell):Prop:=
-  length126 c≤51967 ∧ band126 c<sourceGap126 c ∧ Coprime126 c ∧
+  length126 c≤52091 ∧ band126 c<sourceGap126 c ∧ Coprime126 c ∧
     PairGates (pair126 c) ∧ pair126Cost c+gridRestCost c≤bound
 instance (c:GridCell):Decidable (Pair126Fits c):=by unfold Pair126Fits;infer_instance
 def Double126Fits (c:GridCell):Prop:=
-  2299≤lengthDouble126 c ∧ lengthDouble126 c≤51967 ∧
+  2340≤lengthDouble126 c ∧ lengthDouble126 c≤52091 ∧
     lengthDouble126 c<3*tlo c ∧
     bandDoubleFirst c+bandDoubleSecond c<sourceGapDouble126 c ∧
     PairGates (pairDoubleFirst c) ∧ PairGates (pairDoubleSecond c) ∧

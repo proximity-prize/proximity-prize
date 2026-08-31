@@ -11,11 +11,11 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80408
-def agreements:ℕ:=181736
-def gap:ℕ:=50665
+def errors:ℕ:=80417
+def agreements:ℕ:=181727
+def gap:ℕ:=50656
 def prime:ℕ:=2130706433
-def weightedCap:ℕ:=10177216
+def weightedCap:ℕ:=10358439
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index
 local instance:DecidableEq K:=Classical.decEq K
@@ -48,17 +48,17 @@ theorem identityDegree_linear (flag:FlagDegree) (a b s:ℕ) :
     nsmul_zOnly,nsmul_yz,nsmul_all,w]
   ring
 def identitySlackZ (b s:ℕ):ℕ:=
-  6300811578695047 + 6963397703761920 * b + 11163947610609568 * s +
-    3481698851880960 * s ^ 2 + 6963397703761920 * b * s
+  6298492270402906 + 6962160743743488 * b + 11161164443490172 * s +
+    3481080371871744 * s ^ 2 + 6962160743743488 * b * s
 def identitySlackYZ (a b s:ℕ):ℕ:=
-  2156500038594364 + 6963397703761920 * a + 6963397703761920 * b +
-    8401073250542446 * s + 3481698851880960 * s ^ 2 +
-    6963397703761920 * a * s + 6963397703761920 * b * s
+  2153716866756340 + 6962160743743488 * a + 6962160743743488 * b +
+    8397980841059128 * s + 3481080371871744 * s ^ 2 +
+    6962160743743488 * a * s + 6962160743743488 * b * s
 def identitySlackAll (a b s:ℕ):ℕ:=
-  2875330014714003 + 11163947610609568 * a + 8401073250542446 * b +
-    3481698851880960 * b ^ 2 + 8401073250542446 * s +
-    3481698851880960 * s ^ 2 + 6963397703761920 * a * b +
-    6963397703761920 * a * s + 6963397703761920 * b * s
+  2871619113424908 + 11161164443490172 * a + 8397980841059128 * b +
+    3481080371871744 * b ^ 2 + 8397980841059128 * s +
+    3481080371871744 * s ^ 2 + 6962160743743488 * a * b +
+    6962160743743488 * a * s + 6962160743743488 * b * s
 def identitySlack (flag:FlagDegree) (a b s:ℕ):ℕ:=
   flag.zOnly * identitySlackZ b s + flag.yz * identitySlackYZ a b s +
     flag.all * identitySlackAll a b s
@@ -98,7 +98,7 @@ theorem tangent_gate (a b s:ℕ) :
   exact (by norm_num [errors,w]:errors + 1 ≤ 1 + 2 * (w + 2)).trans
     (Nat.add_le_add_left hb 1)
 theorem flag_characteristic (a b s:ℕ) (flag:FlagDegree)
-    (hS:s + 2 ≤ 16) (hY:b + s + 3 ≤ 76) (hT:a + b + s + 3 ≤ 2319)
+    (hS:s + 2 ≤ 16) (hY:b + s + 3 ≤ 76) (hT:a + b + s + 3 ≤ 2382)
     (hflag:flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
       flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) :
     flag.yz + flag.all < prime ∧ flag.all < prime ∧
@@ -147,7 +147,7 @@ def FixedStageBound (D a b s:ℕ):Prop:=
     Gamma.card ≤ flagMixed flag (firstTail a b s) (secondTail a b s)
 theorem fixedStageBound (D a b s:ℕ)
     (hDlow:w + 1 ≤ D) (hDhigh:D ≤ weightedCap)
-    (hS:s + 2 ≤ 16) (hY:b + s + 3 ≤ 76) (hT:a + b + s + 3 ≤ 2319) :
+    (hS:s + 2 ≤ 16) (hY:b + s + 3 ≤ 76) (hT:a + b + s + 3 ≤ 2382) :
     FixedStageBound D a b s:=by
   intro Gamma flag S hnodes hagreement hbox hflag
   have hDchar:D < prime:=hDhigh.trans_lt (by norm_num [weightedCap,prime])

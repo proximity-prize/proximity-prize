@@ -2,7 +2,7 @@ import ProximityPrize.SubmissionLower.LocatorArithmetic
 namespace ProximityPrize.SubmissionLower.LocatorSourceArithmetic
 open RCN100 RCN119 RCN302
 theorem kernelAmbient_nullity:
-    coefficientCount 22898736 131071 51967 39 -
-      262144 * localRankBound 126 51967 39=19147523274490:=
+    coefficientCount 22897602 131071 52091 39 -
+      262144 * localRankBound 126 52091 39=18828575436250:=
   LocatorArithmetic.kernelC_nullity
 end ProximityPrize.SubmissionLower.LocatorSourceArithmetic

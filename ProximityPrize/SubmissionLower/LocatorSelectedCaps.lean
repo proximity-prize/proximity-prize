@@ -6,7 +6,7 @@ open RCN100 RCN180 RCN234 RCN156
 noncomputable section
 local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
 theorem common_total_le {u0 u1:I → K} (S:SelectedPair u0 u1) :
-    wt residualTotalWeights (gcd S.QA S.QB) ≤ 2319:=
+    wt residualTotalWeights (gcd S.QA S.QB) ≤ 2382:=
   LocatorCaps.common_B_total_le u0 u1 _
     (gcd_ne_zero_of_left S.QA_ne) S.common_divides_B
 theorem common_ys_le {u0 u1:I → K} (S:SelectedPair u0 u1) :

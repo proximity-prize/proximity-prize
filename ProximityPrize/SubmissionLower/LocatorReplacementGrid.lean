@@ -8,26 +8,24 @@ def coarseR (c:CoarseCell):ℕ:=c.1.val+1
 def coarseYlo (c:CoarseCell):ℕ:=coarseR c+4*c.2.1.val
 def coarseYhi (c:CoarseCell):ℕ:=min 76 (coarseYlo c+3)
 def coarseTlo (c:CoarseCell):ℕ:=128*c.2.2.val
-def coarseThi (c:CoarseCell):ℕ:=min 2319 (coarseTlo c+127)
+def coarseThi (c:CoarseCell):ℕ:=min 2382 (coarseTlo c+127)
 def HardCoarse (c:CoarseCell):Prop:=
-  (coarseR c=8 ∧ coarseYlo c=52 ∧ coarseTlo c=1280) ∨
-  (coarseR c=8 ∧ coarseYlo c=52 ∧ coarseTlo c=1408) ∨
+  (coarseR c=8 ∧ coarseYlo c=48 ∧ coarseTlo c=1280) ∨
+  (coarseR c=9 ∧ coarseYlo c=41 ∧ coarseTlo c=1280) ∨
   (coarseR c=9 ∧ coarseYlo c=45 ∧ coarseTlo c=1280) ∨
-  (coarseR c=9 ∧ coarseYlo c=45 ∧ coarseTlo c=1408) ∨
   (coarseR c=9 ∧ coarseYlo c=49 ∧ coarseTlo c=1152) ∨
-  (coarseR c=9 ∧ coarseYlo c=49 ∧ coarseTlo c=1280) ∨
-  (coarseR c=9 ∧ coarseYlo c=49 ∧ coarseTlo c=1408) ∨
+  (coarseR c=9 ∧ coarseYlo c=53 ∧ coarseTlo c=1152) ∨
+  (coarseR c=10 ∧ coarseYlo c=38 ∧ coarseTlo c=1280) ∨
+  (coarseR c=10 ∧ coarseYlo c=42 ∧ coarseTlo c=1152) ∨
   (coarseR c=10 ∧ coarseYlo c=42 ∧ coarseTlo c=1280) ∨
-  (coarseR c=10 ∧ coarseYlo c=42 ∧ coarseTlo c=1408) ∨
   (coarseR c=10 ∧ coarseYlo c=46 ∧ coarseTlo c=1152) ∨
-  (coarseR c=10 ∧ coarseYlo c=46 ∧ coarseTlo c=1280) ∨
-  (coarseR c=10 ∧ coarseYlo c=46 ∧ coarseTlo c=1408) ∨
+  (coarseR c=10 ∧ coarseYlo c=50 ∧ coarseTlo c=1024) ∨
+  (coarseR c=10 ∧ coarseYlo c=50 ∧ coarseTlo c=1152) ∨
   (coarseR c=11 ∧ coarseYlo c=39 ∧ coarseTlo c=1280) ∨
-  (coarseR c=11 ∧ coarseYlo c=39 ∧ coarseTlo c=1408) ∨
   (coarseR c=11 ∧ coarseYlo c=43 ∧ coarseTlo c=1152) ∨
-  (coarseR c=11 ∧ coarseYlo c=43 ∧ coarseTlo c=1280) ∨
-  (coarseR c=11 ∧ coarseYlo c=43 ∧ coarseTlo c=1408) ∨
-  (coarseR c=12 ∧ coarseYlo c=40 ∧ coarseTlo c=1280)
+  (coarseR c=11 ∧ coarseYlo c=47 ∧ coarseTlo c=1024) ∨
+  (coarseR c=11 ∧ coarseYlo c=47 ∧ coarseTlo c=1152) ∨
+  (coarseR c=12 ∧ coarseYlo c=44 ∧ coarseTlo c=1152)
 instance (c:CoarseCell):Decidable (HardCoarse c):=by unfold HardCoarse;infer_instance
 structure FineCell where
   parent:{c:CoarseCell // HardCoarse c}
@@ -38,11 +36,7 @@ def fineR (c:FineCell):ℕ:=coarseR c.parent.1
 def fineY (c:FineCell):ℕ:=coarseYlo c.parent.1+c.yi.val
 def fineTlo (c:FineCell):ℕ:=coarseTlo c.parent.1+32*c.ti.val
 def fineThi (c:FineCell):ℕ:=fineTlo c+31
-def HardFine (c:FineCell):Prop:=
-  (fineR c=10 ∧ fineY c=48 ∧ fineTlo c=1408) ∨
-  (fineR c=10 ∧ fineY c=49 ∧ fineTlo c=1312) ∨
-  (fineR c=10 ∧ fineY c=49 ∧ fineTlo c=1376) ∨
-  (fineR c=10 ∧ fineY c=49 ∧ fineTlo c=1408)
+def HardFine (_c:FineCell):Prop:=False
 instance (c:FineCell):Decidable (HardFine c):=by unfold HardFine;infer_instance
 structure UnitCell where
   parent:{c:FineCell // HardFine c}
@@ -78,22 +72,17 @@ theorem yhi_le_76 (c:Cell):yhi c≤76:=by
   · rcases c with c|c
     · have hp:=c.parent.2
       simp only [yhi,fineY]
-      rcases hp with h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h <;> omega
-    · have hp:=c.parent.1.parent.2
-      simp only [yhi,unitY,fineY]
-      rcases hp with h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h <;> omega
-theorem thi_le_2319 (c:Cell):thi c≤2319:=by
+      rcases hp with h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h <;> omega
+    · exact c.parent.2.elim
+theorem thi_le_2319 (c:Cell):thi c≤2382:=by
   rcases c with c|c
   · exact Nat.min_le_left _ _
   · rcases c with c|c
     · have hp:=c.parent.2
       have hti:=c.ti.isLt
       simp only [thi,fineThi,fineTlo]
-      rcases hp with h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h <;> omega
-    · have hp:=c.parent.2
-      have hti:=c.ti.isLt
-      simp only [thi,unitT]
-      rcases hp with h|h|h|h <;> omega
+      rcases hp with h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h <;> omega
+    · exact c.parent.2.elim
 def Leaf:Cell→Prop
   | .inl c=>¬HardCoarse c
   | .inr (.inl c)=>¬HardFine c
@@ -109,9 +98,9 @@ instance (c:Cell):Decidable (Valid c):=by unfold Valid;infer_instance
 def ordinaryCap (c:Cell):FlagDegree:=cap (thi c) (min (yhi c) (thi c)) (r c)
 def ordinaryCost (c:Cell):ℕ:=paddedCost 131072 131073 (ordinaryCap c)
 def gridRestCap (c:Cell):FlagDegree:=
-  cap (2319-max (tlo c) (ylo c))
-    (min (76-ylo c) (2319-max (tlo c) (ylo c)))
-    (min (16-r c) (min (76-ylo c) (2319-max (tlo c) (ylo c))))
+  cap (2382-max (tlo c) (ylo c))
+    (min (76-ylo c) (2382-max (tlo c) (ylo c)))
+    (min (16-r c) (min (76-ylo c) (2382-max (tlo c) (ylo c))))
 def gridRestCost (c:Cell):ℕ:=
   if (gridRestCap c).all=0 then 0 else paddedCost 131072 131073 (gridRestCap c)
 structure InCell (p:FlagDegree) (c:Cell):Prop where
@@ -122,11 +111,11 @@ structure InCell (p:FlagDegree) (c:Cell):Prop where
   total_le_thi:total p≤thi c
   leaf:Leaf c
 def coarseCellOf (p:FlagDegree) (hslo:1≤p.all) (hshi:p.all≤16)
-    (hy:middle p≤76) (ht:total p≤2319):CoarseCell:=
+    (hy:middle p≤76) (ht:total p≤2382):CoarseCell:=
   (⟨p.all-1,by omega⟩,⟨(middle p-p.all)/4,by omega⟩,
     ⟨total p/128,by omega⟩)
 theorem coarseCellOf_bounds (p:FlagDegree) (hslo:1≤p.all) (hshi:p.all≤16)
-    (hy:middle p≤76) (ht:total p≤2319):
+    (hy:middle p≤76) (ht:total p≤2382):
     p.all=coarseR (coarseCellOf p hslo hshi hy ht) ∧
       coarseYlo (coarseCellOf p hslo hshi hy ht)≤middle p ∧
       middle p≤coarseYhi (coarseCellOf p hslo hshi hy ht) ∧
@@ -139,7 +128,7 @@ theorem coarseCellOf_bounds (p:FlagDegree) (hslo:1≤p.all) (hshi:p.all≤16)
   · change middle p≤min 76 ((p.all-1+1)+4*((middle p-p.all)/4)+3)
     exact le_min hy (by omega)
   · change 128*(total p/128)≤total p;omega
-  · change total p≤min 2319 (128*(total p/128)+127)
+  · change total p≤min 2382 (128*(total p/128)+127)
     exact le_min ht (by omega)
 def fineCellOf (p:FlagDegree) (c:CoarseCell) (hc:HardCoarse c)
     (hylo:coarseYlo c≤middle p) (hyhi:middle p≤coarseYhi c)
@@ -170,7 +159,7 @@ theorem unitCellOf_bounds (p:FlagDegree) (c:FineCell) (hc:HardFine c)
     unitT (unitCellOf p c hc htlo hthi)=total p:=by
   simp only [unitT,unitCellOf];omega
 def cellOf (p:FlagDegree) (hslo:1≤p.all) (hshi:p.all≤16)
-    (hy:middle p≤76) (ht:total p≤2319):Cell:=
+    (hy:middle p≤76) (ht:total p≤2382):Cell:=
   let c:=coarseCellOf p hslo hshi hy ht
   if hc:HardCoarse c then
     let hb:=coarseCellOf_bounds p hslo hshi hy ht
@@ -182,7 +171,7 @@ def cellOf (p:FlagDegree) (hslo:1≤p.all) (hshi:p.all≤16)
     else .inr (.inl f)
   else .inl c
 theorem cellOf_bounds (p:FlagDegree) (hslo:1≤p.all) (hshi:p.all≤16)
-    (hy:middle p≤76) (ht:total p≤2319):
+    (hy:middle p≤76) (ht:total p≤2382):
     InCell p (cellOf p hslo hshi hy ht):=by
   let c:=coarseCellOf p hslo hshi hy ht
   have hb:=coarseCellOf_bounds p hslo hshi hy ht
@@ -226,11 +215,8 @@ theorem ordinaryCap_cumulative (c:Cell) (h:Valid c):
       · have hp:=c.parent.2
         change fineR c≤fineY c
         simp only [fineR,fineY]
-        rcases hp with h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h <;> omega
-      · have hp:=c.parent.1.parent.2
-        change unitR c≤unitY c
-        simp only [unitR,unitY,fineR,fineY]
-        rcases hp with h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h <;> omega
+        rcases hp with h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h <;> omega
+      · exact c.parent.2.elim
   have hryhi:r c≤yhi c:=by
     rcases c with c|c
     · change coarseR c≤coarseYhi c
@@ -259,12 +245,12 @@ theorem count_le_ordinaryCost (p:FlagDegree) (c:Cell) (count:ℕ)
     count≤ordinaryCost c:=hstage.trans (paddedCost_le_ordinaryCost p c h)
 theorem gridRestCap_cumulative (c:Cell):
     (gridRestCap c).all=
-        min (16-r c) (min (76-ylo c) (2319-max (tlo c) (ylo c))) ∧
-      middle (gridRestCap c)=min (76-ylo c) (2319-max (tlo c) (ylo c)) ∧
-      total (gridRestCap c)=2319-max (tlo c) (ylo c):=
+        min (16-r c) (min (76-ylo c) (2382-max (tlo c) (ylo c))) ∧
+      middle (gridRestCap c)=min (76-ylo c) (2382-max (tlo c) (ylo c)) ∧
+      total (gridRestCap c)=2382-max (tlo c) (ylo c):=
   cap_cumulative _ _ _ (Nat.min_le_right _ _) (Nat.min_le_right _ _)
 theorem remainingCap_below_gridRestCap (p:FlagDegree) (c:Cell) (h:InCell p c):
-    Below (remainingCap 2319 76 16 p) (gridRestCap c):=by
+    Below (remainingCap 2382 76 16 p) (gridRestCap c):=by
   have heq:=h.all_eq
   have hylo:=h.ylo_le
   have htlo:=h.tlo_le
@@ -272,29 +258,29 @@ theorem remainingCap_below_gridRestCap (p:FlagDegree) (c:Cell) (h:InCell p c):
   have hy:76-middle p≤76-ylo c:=by omega
   have htmax:max (tlo c) (ylo c)≤total p:=
     max_le htlo (hylo.trans (middle_le_total p))
-  have ht:2319-total p≤2319-max (tlo c) (ylo c):=by omega
-  have hp:=remainingCap_cumulative 2319 76 16 p
+  have ht:2382-total p≤2382-max (tlo c) (ylo c):=by omega
+  have hp:=remainingCap_cumulative 2382 76 16 p
   have hg:=gridRestCap_cumulative c
   unfold Below
   rw [hp.1,hp.2.1,hp.2.2,hg.1,hg.2.1,hg.2.2]
   exact ⟨min_le_min hr (min_le_min hy ht),min_le_min hy ht,ht⟩
 theorem remainingCost_le_gridRestCost (p:FlagDegree) (c:Cell) (h:InCell p c):
-    remainingCost 2319 76 16 131072 131073 p≤gridRestCost c:=by
+    remainingCost 2382 76 16 131072 131073 p≤gridRestCost c:=by
   have hb:=remainingCap_below_gridRestCap p c h
   by_cases hg:(gridRestCap c).all=0
   · have hs:=hb.1
-    have hp:(remainingCap 2319 76 16 p).all=0:=by omega
+    have hp:(remainingCap 2382 76 16 p).all=0:=by omega
     rw [remainingCost,gridRestCost,if_pos hp,if_pos hg]
-  · by_cases hp:(remainingCap 2319 76 16 p).all=0
+  · by_cases hp:(remainingCap 2382 76 16 p).all=0
     · rw [remainingCost,if_pos hp];exact Nat.zero_le _
     · rw [remainingCost,gridRestCost,if_neg hp,if_neg hg]
       exact paddedCost_mono 131072 131073 hb
 theorem cellCost_le_of_grid_bound {bound:ℕ} (p:FlagDegree) (c:Cell) (q:ℕ)
     (h:InCell p c) (hq:q+gridRestCost c≤bound):
-    cellCost 2319 76 16 131072 131073 p q≤bound:=by
+    cellCost 2382 76 16 131072 131073 p q≤bound:=by
   calc
     _=min (paddedCost 131072 131073 p) q+
-        remainingCost 2319 76 16 131072 131073 p:=rfl
+        remainingCost 2382 76 16 131072 131073 p:=rfl
     _≤q+gridRestCost c:=Nat.add_le_add (Nat.min_le_right _ _)
       (remainingCost_le_gridRestCost p c h)
     _≤bound:=hq
