@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualCurveCoordinateField
-import Mathlib.RingTheory.MvPolynomial.Localization
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_MvPolynomial_Localization
 namespace ProximityPrize.SubmissionLower.TrivariateRationalCollection
 open ActualCurveCoordinateField
 noncomputable section

@@ -37,7 +37,7 @@ local instance:CharP K prime:=by
   simpa [prime,ContactParameters6600Research.prime] using
     ContactFrozenAlignment6600Research.challenge_field_characteristic6600
 def fixedTightProfile:TightParameters:=
-  ⟨n,w,agreements,41*agreements,1242,11⟩
+  ⟨n,w,agreements,64*agreements,1000,18⟩
 def fixedAlignment:FixedParameterAlignment fixedProfile fixedTightProfile where
   n:=by decide
   w:=by decide
@@ -60,9 +60,9 @@ def ProperStageProvider6733:Prop:=
     ¬ S.G∣globalTailCut (polynomialEmbedding K) S.F (w+1) →
     S.nodes.card=agreements+errors →
     (∀ gamma∈Gamma,agreements ≤ (S.agreementFiber gamma).card) →
-    S.F∈globalCoefficientBox K (41*agreements) w 1242 11 →
-    (flag.all ≤ 11∧flag.yz+flag.all ≤ 56∧
-      flag.zOnly+flag.yz+flag.all ≤ 1242) →
+    S.F∈globalCoefficientBox K (64*agreements) w 1000 18 →
+    (flag.all ≤ 18∧flag.yz+flag.all ≤ 88∧
+      flag.zOnly+flag.yz+flag.all ≤ 1000) →
     Nonempty (DelayedTailMultiplicityProvider
       (tailFlag1:=tailFlag (w+1))
       (tailFlag2:=tailFlag (w+2)) S)
@@ -118,8 +118,8 @@ theorem regular_factor_seed_bound
         geometricResidualStageOfSupport] using
           hagreement gamma (hsub hgamma)
     have hflag:=geometric_flag_caps Q hQ hbox Hsupport R g
-    have hboxS:S.F∈globalCoefficientBox K (41*agreements) w 1242 11:=by
-      change R.1∈globalCoefficientBox K (41*agreements) w 1242 11
+    have hboxS:S.F∈globalCoefficientBox K (64*agreements) w 1000 18:=by
+      change R.1∈globalCoefficientBox K (64*agreements) w 1000 18
       simpa [fixedProfile,
         ContactTwoTailFixedProvider6732Research.fixedProfile,
         agreements,errors,n,w] using hRdata.2.2

@@ -6,8 +6,8 @@ namespace ProximityPrize.SubmissionLower.ContactTwoTailFixedProvider6732Research
 open ContactResidualSupportParametersResearch
 noncomputable section
 def fixedProfile:ContactRobustFixedMeet6656Research.Profile:=
-  ⟨262144,131071,182052,7464132,1242,11⟩
+  ⟨262144,131071,181717,11629888,1000,18⟩
 def fixedSupport:ResidualSupportParameters:=
-  ContactMovingAgreementCertificate6719Research.support 1186 44 9
+  ContactMovingAgreementCertificate6719Research.support 0 69 16
 end
 end ProximityPrize.SubmissionLower.ContactTwoTailFixedProvider6732Research

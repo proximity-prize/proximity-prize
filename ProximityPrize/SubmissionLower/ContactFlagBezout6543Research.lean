@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactSparsePoleSupportResearch
-import Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_MvPolynomial_WeightedHomogeneous
 namespace ProximityPrize.SubmissionLower.ContactFlagBezout6543Research
 open scoped BigOperators
 open ProximityPrize.SubmissionLower.ContactSparsePoleSupportResearch

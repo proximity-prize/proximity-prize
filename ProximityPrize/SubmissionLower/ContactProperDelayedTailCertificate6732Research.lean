@@ -33,7 +33,7 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
-abbrev fixedSupport:=support 1186 44 9
+abbrev fixedSupport:=support 0 69 16
 abbrev Stage (K I:Type) [Field K]
     (Gamma:Finset K) (x:I → K) (p:ℕ) [CharP (GenericField K) p]
     (flag:FlagDegree):=
@@ -354,9 +354,9 @@ theorem laterTail_in_delay_secondFlag
   intro exponent hexponent
   have hs:=hsharp exponent hexponent
   rw [ContactTwoTailParameters6733Research.fixed_flag_values.2.2.2]
-  change InFlag (delay • (⟨310907528,11665587,2752554⟩:FlagDegree)) exponent
+  change InFlag (delay • (⟨0,18219287,4587590⟩:FlagDegree)) exponent
   change InFlag
-    (sharpResidualAgreementFlag (support 1186 44 9)
+    (sharpResidualAgreementFlag (support 0 69 16)
       (131071+1+delay)) exponent at hs
   norm_num [InFlag,sharpResidualAgreementFlag,sharpAgreementDirection,
     ContactMovingAgreementCertificate6719Research.support] at hs

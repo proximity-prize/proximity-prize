@@ -2,7 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.NormValuationTransport
 import ProximityPrize.SubmissionLower.RatFuncProductFormula
 import ProximityPrize.SubmissionLower.InfinityValuationRing
-import Mathlib.NumberTheory.FunctionField
+import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_FunctionField
 namespace ProximityPrize.SubmissionLower.FixedCurveNormSum
 open scoped BigOperators Classical nonZeroDivisors
 open IsDedekindDomain NormValuationTransport

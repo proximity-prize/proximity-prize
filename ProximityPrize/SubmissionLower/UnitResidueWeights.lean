@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.IntegralPointLifting
-import Mathlib.RingTheory.RamificationInertia.Inertia
-import Mathlib.NumberTheory.RamificationInertia.Inertia
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_RamificationInertia_Inertia
+import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_RamificationInertia_Inertia
 namespace ProximityPrize.SubmissionLower.UnitResidueWeights
 open scoped Classical
 noncomputable section

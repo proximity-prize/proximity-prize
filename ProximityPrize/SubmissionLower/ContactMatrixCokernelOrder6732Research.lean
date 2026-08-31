@@ -1,5 +1,4 @@
-import ProximityPrize.Benchmark.TargetLower
-import Mathlib.LinearAlgebra.FreeModule.Finite.Quotient
+import ProximityPrize.SubmissionLower.LocalMathlib_LinearAlgebra_FreeModule_Finite_Quotient
 import ProximityPrize.SubmissionLower.ContactOrderOfVanishingCompat6733Research
 namespace ProximityPrize.SubmissionLower.ContactMatrixCokernelOrder6732Research
 open scoped Classical BigOperators

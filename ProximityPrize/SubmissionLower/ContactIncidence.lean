@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-import Mathlib.Combinatorics.Enumerative.DoubleCounting
+import ProximityPrize.SubmissionLower.LocalMathlib_Combinatorics_Enumerative_DoubleCounting
 namespace ProximityPrize.SubmissionLower.ContactIncidence
 theorem enlarge_exempt_card_bound
     {q n a i w M:ℕ}

@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.NormValuation
-import Mathlib.FieldTheory.RatFunc.Valuation
+import ProximityPrize.SubmissionLower.LocalMathlib_FieldTheory_RatFunc_Valuation
 namespace ProximityPrize.SubmissionLower.RatFuncProductFormula
 open scoped BigOperators Classical
 open UniqueFactorizationMonoid IsDedekindDomain

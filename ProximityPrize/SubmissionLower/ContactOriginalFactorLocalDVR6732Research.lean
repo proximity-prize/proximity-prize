@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.ContactTwoTailProviderAssembly6732Research
-import ProximityPrize.Benchmark.TargetLower
-import Mathlib.RingTheory.Flat.TorsionFree
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Flat_TorsionFree
 namespace ProximityPrize.SubmissionLower.ContactOriginalFactorLocalDVR6732Research
 open scoped Classical TensorProduct
 open ContactGenericInitialPoint ContactGenericSurface

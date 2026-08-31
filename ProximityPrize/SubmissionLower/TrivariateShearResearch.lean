@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-import Mathlib.RingTheory.MvPolynomial.Homogeneous
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_MvPolynomial_Homogeneous
 namespace ProximityPrize.SubmissionLower.TrivariateShearResearch
 open scoped Classical BigOperators
 noncomputable section

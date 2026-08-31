@@ -46,7 +46,7 @@ theorem secondResidualCell_count_lt
           u0 i+gamma*u1 i)).card)
     (hnoPencil:NoLargeSelectedPencil selected Gamma w errors):
     (secondResidualSeeds selected Gamma QA QB QC).card <
-      1127729807323574+75606965639647:=by
+      7839710703227545+274645133867136:=by
   let Delta:=secondResidualSeeds selected Gamma QA QB QC
   let Q:=middleQuotient QA QB QC
   let T:=quotientC QA QB QC
@@ -137,7 +137,7 @@ theorem secondResidualCell_count_lt
         (by simpa [stageTwo,pivotGcd12,UnequalParameters.errors,
           TightParameters.errors] using hnoPencilDelta))
   have hceil:stageTwo.regularCountCap+pivotGcd12.countCap+1=
-      1127729807323574+75606965639647:=by
+      7839710703227545+274645133867136:=by
     simpa only [stageTwo,pivotGcd12,
       ContactTwoTailParameters6733Research.secondResidualRegularCost,
       ContactTwoTailParameters6733Research.secondResidualSingularCost] using

@@ -1,5 +1,4 @@
-import ProximityPrize.Benchmark.TargetLower
-import Mathlib.RingTheory.Derivation.ToSquareZero
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Derivation_ToSquareZero
 import ProximityPrize.SubmissionLower.ContactDualNumberCompat6733Research
 namespace ProximityPrize.SubmissionLower.ContactLocalizationDerivation6731Research
 open ContactDualNumberCompat6733Research

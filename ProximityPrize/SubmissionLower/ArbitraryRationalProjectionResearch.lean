@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualCurveRationalProjection
-import Mathlib.NumberTheory.FunctionField
+import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_FunctionField
 namespace ProximityPrize.SubmissionLower.ArbitraryRationalProjectionResearch
 open scoped Classical
 noncomputable section

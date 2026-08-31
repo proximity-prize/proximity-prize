@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ContactInterpolation
-import Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous
-import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_MvPolynomial_WeightedHomogeneous
+import ProximityPrize.SubmissionLower.LocalMathlib_Algebra_MvPolynomial_NoZeroDivisors
 namespace ProximityPrize.SubmissionLower.ContactFactorCaps
 open ContactInterpolation
 noncomputable section

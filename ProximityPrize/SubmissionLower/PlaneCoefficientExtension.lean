@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.PlaneResultantIrreducible
-import Mathlib.RingTheory.Polynomial.ContentIdeal
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Polynomial_ContentIdeal
 namespace ProximityPrize.SubmissionLower.PlaneCoefficientExtension
 noncomputable section
 variable {K L:Type} [Field K] [Field L]

@@ -24,7 +24,7 @@ variable [CharP (GenericField K) prime]
 theorem identity_degree_direct_two_tail
     (flag:FlagDegree):
     (n-w)*(errors+1)*
-        identityCurveDegree flag 1186 44 9 w ≤
+        identityCurveDegree flag 0 69 16 w ≤
       gap*flagMixed flag (tailFlag (w+1)) (tailFlag (w+2)):=by
   norm_num [identityCurveDegree,n,w,errors,agreements,gap,tailFlag,fixedFlag,
     finalMeet,direction,paddedCut,
@@ -34,9 +34,9 @@ theorem identity_degree_direct_two_tail
     add_zOnly,add_yz,add_all,nsmul_zOnly,nsmul_yz,nsmul_all]
   omega
 theorem identity_degree_exact (flag:FlagDegree):
-    identityCurveDegree flag 1186 44 9 w=
-      2752533*flag.zOnly+5505066*flag.yz+
-        339741218*flag.all:=by
+    identityCurveDegree flag 0 69 16 w=
+      4587555*flag.zOnly+9175110*flag.yz+
+        45613406*flag.all:=by
   norm_num [identityCurveDegree,w,paddedCut,
     ContactMovingPositiveLedger6719Research.centreFlag,
     ContactMovingPositiveLedger6719Research.directionFlag,
@@ -49,16 +49,16 @@ theorem identity_stage_card_le
     (hnodes:S.nodes.card=agreements+errors)
     (hagreement:∀ gamma∈Gamma,
       agreements ≤ (S.agreementFiber gamma).card)
-    (hbox:S.F∈globalCoefficientBox K (41*agreements) w 1242 11)
-    (hflag:flag.all ≤ 11∧flag.yz+flag.all ≤ 56∧
-      flag.zOnly+flag.yz+flag.all ≤ 1242):
+    (hbox:S.F∈globalCoefficientBox K (64*agreements) w 1000 18)
+    (hflag:flag.all ≤ 18∧flag.yz+flag.all ≤ 88∧
+      flag.zOnly+flag.yz+flag.all ≤ 1000):
     Gamma.card ≤ flagMixed flag (tailFlag (w+1)) (tailFlag (w+2)):=by
   have hTailNumerator:S.G∣surfaceMap (polynomialEmbedding K)
       (numerator K S.F (w+1)):=
     (globalTailCut_dvd_iff (polynomialEmbedding K)
       (polynomialEmbedding_injective K) S.F (w+1) S.G).mp hTail
   have hprovider:=actual_identityCurveCountProvider S agreements hnodes
-    hagreement (by decide) hTailNumerator (41*agreements) 1242 11
+    hagreement (by decide) hTailNumerator (64*agreements) 1000 18
     (by decide) (by decide) (by decide) hbox
     (by
       refine ⟨hflag.2.1.trans_lt (by decide),hflag.1.trans_lt (by decide),
@@ -67,10 +67,10 @@ theorem identity_stage_card_le
       have h:=hflag
       norm_num [prime,w] at h ⊢
       omega)
-  let identityDegree:=identityCurveDegree flag 1186 44 9 w
+  let identityDegree:=identityCurveDegree flag 0 69 16 w
   have hpositive:1 ≤ identityDegree:=by
-    rw [show identityDegree=2752533*flag.zOnly+
-        5505066*flag.yz+339741218*flag.all by
+    rw [show identityDegree=4587555*flag.zOnly+
+        9175110*flag.yz+45613406*flag.all by
       exact identity_degree_exact flag]
     have hy:0 < S.G.degreeOf 1:=S.y_dependent
     have hdeg:=ContactFactoredFlagCount6676Research.degreeOf_le_flag_total

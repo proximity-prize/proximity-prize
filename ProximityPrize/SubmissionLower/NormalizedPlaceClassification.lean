@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
-import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
-import Mathlib.RingTheory.Valuation.Integral
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Valuation_Discrete_IsDiscreteValuationRing
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Valuation_Integral
 namespace ProximityPrize.SubmissionLower.NormalizedPlaceClassification
 open scoped Classical nonZeroDivisors WithZero
 open IsDedekindDomain

@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+import ProximityPrize.SubmissionLower.LocalMathlib_Algebra_MvPolynomial_NoZeroDivisors
 namespace ProximityPrize.SubmissionLower.ContactFlagRankKernel6641Research
 open scoped BigOperators Pointwise
 noncomputable section

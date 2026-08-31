@@ -1,5 +1,4 @@
-import ProximityPrize.Benchmark.TargetLower
-import Mathlib.RingTheory.LocalRing.Length
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_LocalRing_Length
 namespace ProximityPrize.SubmissionLower.ContactPlaneLocalOrderPrimary6732Research
 noncomputable section
 set_option autoImplicit false

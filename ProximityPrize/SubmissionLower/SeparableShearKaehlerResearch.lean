@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
-import Mathlib.RingTheory.Kaehler.Polynomial
-import Mathlib.RingTheory.Etale.Kaehler
-import Mathlib.RingTheory.Unramified.Field
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Kaehler_Polynomial
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Etale_Kaehler
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Unramified_Field
 namespace ProximityPrize.SubmissionLower.SeparableShearKaehlerResearch
 open scoped Classical
 open KaehlerDifferential

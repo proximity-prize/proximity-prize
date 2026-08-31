@@ -7,13 +7,13 @@ open ContactTwoTailParameters6733Research
 set_option maxRecDepth 20000
 set_option maxHeartbeats 2000000
 def residualStageOne:UnequalParameters:=
-  ⟨262144,131071,182052,112,25,1242,56,12,19688⟩
+  ⟨262144,131071,181717,180,38,1000,88,20,400000⟩
 def residualStageTwo:UnequalParameters:=
-  ⟨262144,131071,182052,56,12,1242,59,11,624668⟩
+  ⟨262144,131071,181717,88,20,1000,98,18,1600000⟩
 def pivotB:TightParameters:=
-  ⟨262144,131071,182052,14746212,1242,25⟩
+  ⟨262144,131071,181717,23623210,1000,38⟩
 def pivotGcd12:TightParameters:=
-  ⟨262144,131071,182052,7464132,1242,12⟩
+  ⟨262144,131071,181717,11629888,1000,20⟩
 theorem residual_stage_ceilings:
     residualStageOne.regularCountCap+pivotB.countCap+1=
       firstResidualRegularCost+firstResidualSingularCost∧

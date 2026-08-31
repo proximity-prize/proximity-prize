@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-import Mathlib.RingTheory.Ideal.Norm.RelNorm
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Ideal_Norm_RelNorm
 namespace ProximityPrize.SubmissionLower.SeparableIdealNorm
 noncomputable section
 section Fields

@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ActualCurveCoordinateField
-import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+import ProximityPrize.SubmissionLower.LocalMathlib_Algebra_MvPolynomial_NoZeroDivisors
 namespace ProximityPrize.SubmissionLower.ContactPencilGeometry
 open ActualCurveCoordinateField
 noncomputable section

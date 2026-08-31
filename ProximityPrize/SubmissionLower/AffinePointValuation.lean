@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-import Mathlib.NumberTheory.FunctionField
+import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_FunctionField
 namespace ProximityPrize.SubmissionLower.AffinePointValuation
 open IsDedekindDomain
 noncomputable section

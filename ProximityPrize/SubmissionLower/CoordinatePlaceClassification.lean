@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.NormalizedPlaceClassification
 import ProximityPrize.SubmissionLower.FixedCurveNormSum
-import Mathlib.NumberTheory.RamificationInertia.Valuation
+import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_RamificationInertia_Valuation
 namespace ProximityPrize.SubmissionLower.CoordinatePlaceClassification
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain

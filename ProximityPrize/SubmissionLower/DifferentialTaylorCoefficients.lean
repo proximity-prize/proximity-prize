@@ -1,5 +1,5 @@
 import ProximityPrize.Benchmark.TargetLower
-import Mathlib.Algebra.Lie.Derivation.Basic
+import ProximityPrize.SubmissionLower.LocalMathlib_Algebra_Lie_Derivation_Basic
 namespace ProximityPrize.SubmissionLower.DifferentialTaylorCoefficients
 open Finset
 set_option maxRecDepth 10000

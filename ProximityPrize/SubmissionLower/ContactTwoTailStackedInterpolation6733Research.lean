@@ -8,7 +8,7 @@ open ContactTranslation ContactFlagKernelUniversalityResearch
 open ContactTwoTailParameters6733Research ContactStackedGCDCover6670Research
 noncomputable section
 set_option maxRecDepth 100000
-set_option maxHeartbeats 2500000
+set_option maxHeartbeats 0
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
 local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
 abbrev GlobalPoly:=MvPolynomial (Fin 4) IRSProfile.Field
@@ -37,8 +37,10 @@ theorem exists_universal_interpolants
     rw [hindex]
     exact interpolation_gateA_exact
   have hB:Fintype.card IRSProfile.Index*
-      localRankBound profileB.multiplicity profileB.totalCap profileB.slopeCap <
-      coefficientCount profileB.weightedCap w profileB.totalCap profileB.slopeCap:=by
+      ContactSeedlessInterpolationResearch.localRankBound
+        profileB.multiplicity profileB.totalCap profileB.slopeCap <
+      ContactSeedlessInterpolationResearch.coefficientCount
+        profileB.weightedCap w profileB.totalCap profileB.slopeCap:=by
     rw [hindex]
     exact interpolation_gateB_exact
   have hC:Fintype.card IRSProfile.Index*

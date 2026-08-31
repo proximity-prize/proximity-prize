@@ -1,10 +1,11 @@
- 
-
-
-
-
+/-
+Copyright (c) 2025 Raphael Douglas Giles. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors:Raphael Douglas Giles
+-/
 import ProximityPrize.Benchmark.TargetLower
-import Mathlib.RingTheory.LocalRing.Length
+import ProximityPrize.SubmissionLower.LocalMathlibPortLicense
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_LocalRing_Length
 open LinearMap Pointwise Ideal WithZero
 variable {R:Type*} {M:Type*} [AddCommMonoid M]
 namespace Ring

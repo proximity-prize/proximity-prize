@@ -1,6 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
-import Mathlib.FieldTheory.RatFunc.Valuation
-import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
+import ProximityPrize.SubmissionLower.LocalMathlib_FieldTheory_RatFunc_Valuation
+import ProximityPrize.SubmissionLower.LocalMathlib_RingTheory_Valuation_Discrete_IsDiscreteValuationRing
 namespace ProximityPrize.SubmissionLower.InfinityValuationRing
 open scoped Classical
 noncomputable section

@@ -1,7 +1,7 @@
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.NormalizationUnitWeights
 import ProximityPrize.SubmissionLower.ContactLocalPoleBound
-import Mathlib.NumberTheory.RamificationInertia.Basic
+import ProximityPrize.SubmissionLower.LocalMathlib_NumberTheory_RamificationInertia_Basic
 namespace ProximityPrize.SubmissionLower.CoordinatePoleMass
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
