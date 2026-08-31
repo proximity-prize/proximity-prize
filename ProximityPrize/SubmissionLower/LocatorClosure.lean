@@ -3,7 +3,7 @@ import ProximityPrize.SubmissionLower.LocatorResidual
 import ProximityPrize.SubmissionLower.LocatorProtocol
 import ProximityPrize.SubmissionLower.DV
 
-/- Unconditional 67.54 candidate: every counting premise is supplied by
+/- Unconditional 67.60 candidate: every counting premise is supplied by
    the span-selected pair, whole-kernel divisor bounds and stage theorems. -/
 namespace ProximityPrize.SubmissionLower.LocatorClosure
 open ProximityPrize.Benchmark
@@ -24,10 +24,10 @@ theorem selected_pair_count
     (u0 u1 : I → K) (S : SelectedPair u0 u1)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ seeds, 181845 ≤
+    (hagreement : ∀ gamma ∈ seeds, 181786 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected seeds 131071 80299) :
+    (hno : NoLargeSelectedPencil selected seeds 131071 80358) :
     seeds.card < LocatorArithmetic.budget := by
   have hnoResidual : NoLargeSelectedPencil selected seeds LocatorArithmetic.w
       (LocatorArithmetic.n - LocatorArithmetic.agreements) := by
@@ -58,16 +58,16 @@ theorem selected_pair_count
   unfold LocatorArithmetic.ledger LocatorArithmetic.fixedRegularCap at hledger
   omega
 
-theorem selectedNoLargePencilBound6754 :
-    SelectedNoLargePencilBound IRSProfile.domain 131071 80299
+theorem selectedNoLargePencilBound6760 :
+    SelectedNoLargePencilBound IRSProfile.domain 131071 80358
       LocatorArithmetic.budget := by
   intro U seeds A selected hdegree hcard hvalues hno
   obtain ⟨S⟩ := exists_selected_pair (U 0) (U 1)
-  have hA : ∀ gamma ∈ seeds, 181845 ≤ (A gamma).card := by
+  have hA : ∀ gamma ∈ seeds, 181786 ≤ (A gamma).card := by
     intro gamma hg
     have hc := hcard gamma hg
     simpa [I, IRSProfile.Index] using hc
-  have hagreement : ∀ gamma ∈ seeds, 181845 ≤
+  have hagreement : ∀ gamma ∈ seeds, 181786 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = U 0 i + gamma * U 1 i)).card := by
     intro gamma hg
@@ -75,23 +75,23 @@ theorem selectedNoLargePencilBound6754 :
     apply Finset.card_le_card
     intro i hi
     exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, hvalues gamma hg i hi⟩
-  have hno' : NoLargeSelectedPencil selected seeds 131071 80299 := by
+  have hno' : NoLargeSelectedPencil selected seeds 131071 80358 := by
     intro P0 P1 h0 h1
     simpa only [pencilSeeds] using hno P0 P1 h0 h1
   exact Nat.le_of_lt (selected_pair_count (U 0) (U 1) S selected seeds
     hdegree hagreement hno')
 
-theorem alignmentBound6754 :
+theorem alignmentBound6760 :
     AffineLineAlignmentBound IRSProfile.baseCode
       LocatorProtocol.errors LocatorProtocol.mcaBudget := by
-  have h := alignmentBound_of_selected_count IRSProfile.domain 131071 80299
-    LocatorArithmetic.budget selectedNoLargePencilBound6754
+  have h := alignmentBound_of_selected_count IRSProfile.domain 131071 80358
+    LocatorArithmetic.budget selectedNoLargePencilBound6760
   simpa [IRSProfile.baseCode, IRSProfile.baseDimension,
     LocatorArithmetic.budget, LocatorProtocol.errors,
     LocatorProtocol.mcaBudget] using h
 
-theorem protocolClaim6754 : ProtocolClaim 6754 10278369 33554432 :=
-  LocatorProtocol.protocolClaim6754_of_alignment alignmentBound6754
+theorem protocolClaim6760 : ProtocolClaim 6760 10285930 33554432 :=
+  LocatorProtocol.protocolClaim6760_of_alignment alignmentBound6760
 
 end
 end ProximityPrize.SubmissionLower.LocatorClosure

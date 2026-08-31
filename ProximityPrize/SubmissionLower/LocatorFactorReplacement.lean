@@ -20,6 +20,11 @@ def remainingCost (T YS S d e : ℕ) (p : FlagDegree) : ℕ :=
 def cellCost (T YS S d e : ℕ) (p : FlagDegree) (q : ℕ) : ℕ :=
   min (paddedCost d e p) q + remainingCost T YS S d e p
 
+/-- A factor is selected only when its own support exceeds the allowed
+per-total rate. This definition does not impose a slope cutoff. -/
+def Bad (T d e bound : ℕ) (p : FlagDegree) : Prop :=
+  bound * total p < T * paddedCost d e p
+
 theorem remainingCap_cumulative (T YS S : ℕ) (p : FlagDegree) :
     (remainingCap T YS S p).all =
         min (S - p.all) (min (YS - middle p) (T - total p)) ∧
@@ -154,26 +159,64 @@ theorem aggregate_of_rate_and_cells {I : Type*} [Fintype I]
         _ = T * bound := by ring
     exact Nat.le_of_mul_le_mul_left hscaled hT
 
-theorem aggregate_6754 {I : Type*} [Fintype I]
+/-- Either every factor meets the rate, or one bad factor is replaced and
+the other factors are charged against their actual cumulative remainder.
+No uniqueness or maximal-slope assumption is used. -/
+theorem aggregate_of_bad_cells {I : Type*} [Fintype I]
+    (p : I → FlagDegree) (count q : I → ℕ) (T YS S d e bound : ℕ)
+    (hT : 0 < T)
+    (hs : (∑ i, (p i).all) ≤ S)
+    (hy : (∑ i, middle (p i)) ≤ YS)
+    (ht : (∑ i, total (p i)) ≤ T)
+    (hstage : ∀ i, count i ≤ paddedCost d e (p i))
+    (hzero : ∀ i, (p i).all = 0 → count i = 0)
+    (hrepl : ∀ i, Bad T d e bound (p i) → count i ≤ q i)
+    (hcell : ∀ i, Bad T d e bound (p i) →
+      cellCost T YS S d e (p i) (q i) ≤ bound) :
+    (∑ i, count i) ≤ bound := by
+  classical
+  letI : DecidableEq I := Classical.decEq I
+  by_cases hh : ∃ i, Bad T d e bound (p i)
+  · obtain ⟨i, hi⟩ := hh
+    exact (sum_le_cellCost p count T YS S d e i (q i) hs hy ht hstage hzero
+      (hrepl i hi)).trans (hcell i hi)
+  · have hrate (i : I) : T * paddedCost d e (p i) ≤ bound * total (p i) := by
+      have hn : ¬ Bad T d e bound (p i) := fun hi => hh ⟨i, hi⟩
+      dsimp only [Bad] at hn
+      omega
+    have hscaled : T * (∑ i, count i) ≤ T * bound := by
+      calc
+        _ = ∑ i, T * count i := by rw [Finset.mul_sum]
+        _ ≤ ∑ i, T * paddedCost d e (p i) :=
+          Finset.sum_le_sum (fun i _ => Nat.mul_le_mul_left T (hstage i))
+        _ ≤ ∑ i, bound * total (p i) := Finset.sum_le_sum (fun i _ => hrate i)
+        _ = bound * (∑ i, total (p i)) := by rw [Finset.mul_sum]
+        _ ≤ bound * T := Nat.mul_le_mul_left bound ht
+        _ = T * bound := by ring
+    exact Nat.le_of_mul_le_mul_left hscaled hT
+
+theorem aggregate_6751 {I : Type*} [Fintype I]
     (p : I → FlagDegree) (count q : I → ℕ)
     (hs : (∑ i, (p i).all) ≤ 14)
-    (hy : (∑ i, middle (p i)) ≤ 66)
-    (ht : (∑ i, total (p i)) ≤ 1796)
+    (hy : (∑ i, middle (p i)) ≤ 64)
+    (ht : (∑ i, total (p i)) ≤ 1698)
     (hstage : ∀ i, count i ≤ paddedCost 131072 131073 (p i))
     (hzero : ∀ i, (p i).all = 0 → count i = 0)
-    (hrepl : ∀ i, 7 ≤ (p i).all → count i ≤ q i)
-    (hcell : ∀ i, 7 ≤ (p i).all →
-      cellCost 1796 66 14 131072 131073 (p i) (q i) ≤ 269000000000000000) :
-    (∑ i, count i) ≤ 269000000000000000 := by
+    (hrepl : ∀ i, 8 ≤ (p i).all → count i ≤ q i)
+    (hcell : ∀ i, 8 ≤ (p i).all →
+      cellCost 1698 64 14 131072 131073 (p i) (q i) ≤ 266000000000000000) :
+    (∑ i, count i) ≤ 266000000000000000 := by
   classical
-  refine aggregate_of_rate_and_cells p count q 1796 66 14 131072 131073 6
-    269000000000000000 (by decide) hs hy ht hstage hzero ?_ ?_ ?_
+  refine aggregate_of_rate_and_cells p count q 1698 64 14 131072 131073 7
+    266000000000000000 (by decide) hs hy ht hstage hzero ?_ ?_ ?_
   · intro i hi
-    have hyi : middle (p i) ≤ 66 :=
+    have hyi : middle (p i) ≤ 64 :=
       (Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)).trans hy
-    have hti : total (p i) ≤ 1796 :=
+    have hti : total (p i) ≤ 1698 :=
       (Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)).trans ht
-    exact rate_bound_6754_low (p i) hi hyi hti
+    exact (rate_bound_6751_low (p i) hi hyi hti).trans
+      (Nat.mul_le_mul_right (total (p i))
+        (by decide : 261420997282933785 ≤ 266000000000000000))
   · intro i hi
     exact hrepl i (by omega)
   · intro i hi
