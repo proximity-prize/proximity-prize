@@ -11,7 +11,6 @@
       "setupCommand": ["bash", "-lc", "./setup.sh"],
       "benchmarkCommand": ["bash", "-lc", "./benchmark.sh lower"],
       "scorePath": ".yukon/irs-reduction-threshold-lower-score.json",
-      "maxSubmissionBytes": 4194304,
       "runner": {"provider": "github-actions", "workflow": "benchmark-irs-reduction-threshold-lower.yml"}
     },
     {
@@ -23,7 +22,6 @@
       "setupCommand": ["bash", "-lc", "./setup.sh"],
       "benchmarkCommand": ["bash", "-lc", "./benchmark.sh upper"],
       "scorePath": ".yukon/irs-reduction-threshold-upper-score.json",
-      "maxSubmissionBytes": 4194304,
       "runner": {"provider": "github-actions", "workflow": "benchmark-irs-reduction-threshold-upper.yml"}
     }
   ]
