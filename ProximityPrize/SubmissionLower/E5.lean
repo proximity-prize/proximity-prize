@@ -11,66 +11,66 @@ open RCN262
 open RCN066
 noncomputable section
 variable {K Omega:Type} [Field K] [Field Omega]
-def reducedAgreementDirection (P:ResidualSupportParameters):FlagDegree :=
- ⟨2 * (P.total - P.ys),2 * (P.ys - P.s),2 * P.s - 2⟩
+def reducedAgreementDirection (P:ResidualSupportParameters):FlagDegree:=
+ ⟨2*(P.total-P.ys),2*(P.ys-P.s),2*P.s-2⟩
 def reducedResidualAgreementFlag
-   (P:ResidualSupportParameters) (d:ℕ):FlagDegree :=
- ⟨(reducedAgreementDirection P).zOnly * d,
-   1 + (reducedAgreementDirection P).yz * d,
-   (reducedAgreementDirection P).all * d⟩
+   (P:ResidualSupportParameters) (d:ℕ):FlagDegree:=
+ ⟨(reducedAgreementDirection P).zOnly*d,
+   1+(reducedAgreementDirection P).yz*d,
+   (reducedAgreementDirection P).all*d⟩
 theorem reducedResidualAgreementFlag_ys
-   (P:ResidualSupportParameters) (d:ℕ) :
-   (reducedResidualAgreementFlag P d).yz +
-       (reducedResidualAgreementFlag P d).all =
-     1 + d * (2 * P.ys - 2):=by
+   (P:ResidualSupportParameters) (d:ℕ):
+   (reducedResidualAgreementFlag P d).yz+
+       (reducedResidualAgreementFlag P d).all=
+     1+d*(2*P.ys-2):=by
  have hs:=P.s_le_ys
  have h1:=P.one_le_s
- have hcoeff :
-     2 * (P.ys - P.s) + (2 * P.s - 2) = 2 * P.ys - 2:=by
+ have hcoeff:
+     2*(P.ys-P.s)+(2*P.s-2)=2*P.ys-2:=by
    rw [Nat.mul_sub_left_distrib]
    omega
  simp only [reducedResidualAgreementFlag,reducedAgreementDirection]
- rw [← hcoeff]
+ rw [←hcoeff]
  ring
 theorem reducedResidualAgreementFlag_total
-   (P:ResidualSupportParameters) (d:ℕ) :
-   (reducedResidualAgreementFlag P d).zOnly +
-       (reducedResidualAgreementFlag P d).yz +
-       (reducedResidualAgreementFlag P d).all =
-     1 + d * (2 * P.total - 2):=by
+   (P:ResidualSupportParameters) (d:ℕ):
+   (reducedResidualAgreementFlag P d).zOnly+
+       (reducedResidualAgreementFlag P d).yz+
+       (reducedResidualAgreementFlag P d).all=
+     1+d*(2*P.total-2):=by
  have hs:=P.s_le_ys
  have ht:=P.ys_le_total
  have h1:=P.one_le_s
- have hcoeff:2 * (P.total - P.ys) + 2 * (P.ys - P.s) +
-     (2 * P.s - 2) = 2 * P.total - 2:=by
+ have hcoeff:2*(P.total-P.ys)+2*(P.ys-P.s)+
+     (2*P.s-2)=2*P.total-2:=by
    rw [Nat.mul_sub_left_distrib,Nat.mul_sub_left_distrib]
    omega
  simp only [reducedResidualAgreementFlag,reducedAgreementDirection]
- rw [← hcoeff]
+ rw [←hcoeff]
  ring
-def reducedAgreementPolynomial (phi:Polynomial K →+* Omega)
+def reducedAgreementPolynomial (phi:Polynomial K →+*Omega)
    (P:ResidualSupportParameters) (F:MvPolynomial (Fin 4) K)
-   (d:ℕ) (x u0 u1:K):MvPolynomial (Fin 3) Omega :=
+   (d:ℕ) (x u0 u1:K):MvPolynomial (Fin 3) Omega:=
  surfaceMap phi (reducedAgreementNumerator F P.s d
-   (fun j ↦ (j.factorial:K)⁻¹) x u0 u1)
+   (fun j↦(j.factorial:K)⁻¹) x u0 u1)
 theorem agreementPolynomial_sub_reduced_dvd
-   (phi:Polynomial K →+* Omega) (P:ResidualSupportParameters)
-   (F:MvPolynomial (Fin 4) K) (d:ℕ) (x u0 u1:K) :
-   surfaceMap phi F ∣ agreementPolynomial phi F d x u0 u1 -
+   (phi:Polynomial K →+*Omega) (P:ResidualSupportParameters)
+   (F:MvPolynomial (Fin 4) K) (d:ℕ) (x u0 u1:K):
+   surfaceMap phi F∣agreementPolynomial phi F d x u0 u1-
      reducedAgreementPolynomial phi P F d x u0 u1:=by
- change surfaceMap phi F ∣
+ change surfaceMap phi F∣
    surfaceMap phi (agreementNumerator F d
-     (fun j ↦ (j.factorial:K)⁻¹) x u0 u1) -
+     (fun j↦(j.factorial:K)⁻¹) x u0 u1)-
    surfaceMap phi (reducedAgreementNumerator F P.s d
-     (fun j ↦ (j.factorial:K)⁻¹) x u0 u1)
- rw [← map_sub]
+     (fun j↦(j.factorial:K)⁻¹) x u0 u1)
+ rw [←map_sub]
  exact map_dvd (surfaceMap phi)
    (agreementNumerator_sub_reduced_dvd F P.s d
-     (fun j ↦ (j.factorial:K)⁻¹) x u0 u1)
+     (fun j↦(j.factorial:K)⁻¹) x u0 u1)
 theorem surfaceMap_reducedAgreement_in_flag
-   (phi:Polynomial K →+* Omega) (P:ResidualSupportParameters)
+   (phi:Polynomial K →+*Omega) (P:ResidualSupportParameters)
    {F:MvPolynomial (Fin 4) K} (H:ResidualSupportData P F)
-   (d:ℕ) (coeffs:ℕ → K) (x u0 u1:K) :
+   (d:ℕ) (coeffs:ℕ → K) (x u0 u1:K):
    PolynomialInFlag (reducedResidualAgreementFlag P d)
      (surfaceMap phi
        (reducedAgreementNumerator F P.s d coeffs x u0 u1)):=by
@@ -81,74 +81,74 @@ theorem surfaceMap_reducedAgreement_in_flag
  have hTotal:=reducedAgreementNumerator_wt_le residualTotalWeights rfl rfl rfl
    F P.s P.total P.one_le_s (P.two_le_ys.trans P.ys_le_total)
    H.total_weight d coeffs x u0 u1
- rw [show residualYSWeights 3 = 0 from rfl] at hYS
- rw [show residualTotalWeights 3 = 1 from rfl] at hTotal
+ rw [show residualYSWeights 3=0 from rfl] at hYS
+ rw [show residualTotalWeights 3=1 from rfl] at hTotal
  norm_num at hYS hTotal
  intro e he
  obtain ⟨q,hq,rfl⟩:=Finset.mem_image.mp
    (support_surfaceMap_subset phi
      (reducedAgreementNumerator F P.s d coeffs x u0 u1) he)
  have hqR:=(MvPolynomial.monomial_le_degreeOf (2:Fin 4) hq).trans hR
- have hqYS :=
+ have hqYS:=
    (MvPolynomial.le_weightedTotalDegree residualYSWeights hq).trans hYS
- have hqTotal :=
+ have hqTotal:=
    (MvPolynomial.le_weightedTotalDegree residualTotalWeights hq).trans hTotal
  rw [RCN081.weight_fin4] at hqYS hqTotal
- change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 0 ≤ _ at hqYS
- change q 0 * 0 + q 1 * 1 + q 2 * 1 + q 3 * 1 ≤ _ at hqTotal
+ change q 0*0+q 1*1+q 2*1+q 3*0 ≤ _ at hqYS
+ change q 0*0+q 1*1+q 2*1+q 3*1 ≤ _ at hqTotal
  norm_num at hqYS hqTotal
- change q 2 ≤ (reducedResidualAgreementFlag P d).all ∧
-   q 1 + q 2 ≤ (reducedResidualAgreementFlag P d).yz +
-     (reducedResidualAgreementFlag P d).all ∧
-   q 1 + q 2 + q 3 ≤ (reducedResidualAgreementFlag P d).zOnly +
-     (reducedResidualAgreementFlag P d).yz +
+ change q 2 ≤ (reducedResidualAgreementFlag P d).all∧
+   q 1+q 2 ≤ (reducedResidualAgreementFlag P d).yz+
+     (reducedResidualAgreementFlag P d).all∧
+   q 1+q 2+q 3 ≤ (reducedResidualAgreementFlag P d).zOnly+
+     (reducedResidualAgreementFlag P d).yz+
      (reducedResidualAgreementFlag P d).all
  refine ⟨?_,?_,?_⟩
- · change q 2 ≤ (2 * P.s - 2) * d
-   have hs:2 * (P.s - 1) = 2 * P.s - 2:=by omega
-   have heq:2 * d * (P.s - 1) = (2 * P.s - 2) * d:=by
-     rw [← hs]
+ · change q 2 ≤ (2*P.s-2)*d
+   have hs:2*(P.s-1)=2*P.s-2:=by omega
+   have heq:2*d*(P.s-1)=(2*P.s-2)*d:=by
+     rw [←hs]
      ring
    rw [heq] at hqR
    exact hqR
  · rw [reducedResidualAgreementFlag_ys]
-   have hs:2 * (P.ys - 1) = 2 * P.ys - 2:=by omega
-   have heq:2 * d * (P.ys - 1) = d * (2 * P.ys - 2):=by
-     rw [← hs]
+   have hs:2*(P.ys-1)=2*P.ys-2:=by omega
+   have heq:2*d*(P.ys-1)=d*(2*P.ys-2):=by
+     rw [←hs]
      ring
    rw [heq] at hqYS
    exact hqYS
  · rw [reducedResidualAgreementFlag_total]
-   have hs:2 * (P.total - 1) = 2 * P.total - 2:=by
+   have hs:2*(P.total-1)=2*P.total-2:=by
      have:=P.one_le_s.trans (P.s_le_ys.trans P.ys_le_total)
      omega
-   have heq:2 * d * (P.total - 1) = d * (2 * P.total - 2):=by
-     rw [← hs]
+   have heq:2*d*(P.total-1)=d*(2*P.total-2):=by
+     rw [←hs]
      ring
    rw [heq] at hqTotal
    exact hqTotal
 theorem agreement_in_flag_mod_factor
-   (phi:Polynomial K →+* Omega) (P:ResidualSupportParameters)
+   (phi:Polynomial K →+*Omega) (P:ResidualSupportParameters)
    {F:MvPolynomial (Fin 4) K} (H:ResidualSupportData P F)
-   (G:MvPolynomial (Fin 3) Omega) (hG:G ∣ surfaceMap phi F)
-   (d:ℕ) (x u0 u1:K) :
+   (G:MvPolynomial (Fin 3) Omega) (hG:G∣surfaceMap phi F)
+   (d:ℕ) (x u0 u1:K):
    PolynomialInFlagMod (Ideal.span {G}) (reducedResidualAgreementFlag P d)
      (agreementPolynomial phi F d x u0 u1):=by
  refine ⟨reducedAgreementPolynomial phi P F d x u0 u1,
    surfaceMap_reducedAgreement_in_flag phi P H d
-     (fun j ↦ (j.factorial:K)⁻¹) x u0 u1,?_⟩
+     (fun j↦(j.factorial:K)⁻¹) x u0 u1,?_⟩
  exact Ideal.mem_span_singleton.mpr
    (hG.trans (agreementPolynomial_sub_reduced_dvd phi P F d x u0 u1))
 theorem agreement_in_flag_mod_ideal
-   (phi:Polynomial K →+* Omega) (P:ResidualSupportParameters)
+   (phi:Polynomial K →+*Omega) (P:ResidualSupportParameters)
    {F:MvPolynomial (Fin 4) K} (H:ResidualSupportData P F)
-   (I:Ideal (MvPolynomial (Fin 3) Omega)) (hF:surfaceMap phi F ∈ I)
-   (d:ℕ) (x u0 u1:K) :
+   (I:Ideal (MvPolynomial (Fin 3) Omega)) (hF:surfaceMap phi F∈I)
+   (d:ℕ) (x u0 u1:K):
    PolynomialInFlagMod I (reducedResidualAgreementFlag P d)
      (agreementPolynomial phi F d x u0 u1):=by
  refine ⟨reducedAgreementPolynomial phi P F d x u0 u1,
    surfaceMap_reducedAgreement_in_flag phi P H d
-     (fun j ↦ (j.factorial:K)⁻¹) x u0 u1,?_⟩
+     (fun j↦(j.factorial:K)⁻¹) x u0 u1,?_⟩
  exact sub_mem_of_dvd I hF
    (agreementPolynomial_sub_reduced_dvd phi P F d x u0 u1)
 end
