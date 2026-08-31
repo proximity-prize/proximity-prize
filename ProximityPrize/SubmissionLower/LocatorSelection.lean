@@ -1,10 +1,10 @@
 import ProximityPrize.SubmissionLower.L4
 import ProximityPrize.SubmissionLower.LocatorSourceArithmetic
 
-/- The A68, A51, and A50 contact kernels share one ambient coefficient box.
-   CKernel and ThinKernel name the same A50 kernel for interface compatibility;
-   they do not assert a fourth independent dimension contribution. The common
-   divisor of the selected span divides every polynomial in each whole kernel. -/
+/- The A54, Aux72, C95, and Thin56 contact kernels share the C95 ambient
+   coefficient box at length 40000.  They are four genuinely distinct whole
+   kernels.  The common divisor of the selected span divides every polynomial
+   in each kernel, while the independent B100 kernel supplies the total cap. -/
 namespace ProximityPrize.SubmissionLower.LocatorSelection
 open ProximityPrize.Benchmark
 open RCN100 RCN119 RCN101 RCN180 RCN181 RCN137 RCN183
@@ -15,7 +15,7 @@ set_option maxRecDepth 3000
 
 /- Prove the coefficient and sum identities before specializing the large
    finite coefficient indices. This keeps their proofs independent of the
-   concrete Fintype implementations at length 109000. -/
+   concrete Fintype implementations at length 40000. -/
 section GenericCoefficients
 variable {E V : Type*} [Field E] [AddCommGroup V] [Module E V]
 
@@ -96,133 +96,133 @@ local instance : NormalizedGCDMonoid P4 :=
 local instance : GCDMonoid P4 := UniqueFactorizationMonoid.toGCDMonoid P4
 
 abbrev AKernel (u0 u1 : I → K) :=
-  ConstraintKernel (K := K) 12366140 131071 109000 20 68 IRSProfile.domain u0 u1
+  ConstraintKernel (K := K) 9816444 131071 40000 16 54 IRSProfile.domain u0 u1
 abbrev AuxKernel (u0 u1 : I → K) :=
-  ConstraintKernel (K := K) 9274605 131071 100000 15 51 IRSProfile.domain u0 u1
+  ConstraintKernel (K := K) 13088592 131071 40000 21 72 IRSProfile.domain u0 u1
 abbrev CKernel (u0 u1 : I → K) :=
-  ConstraintKernel (K := K) 9092750 131071 100000 14 50 IRSProfile.domain u0 u1
+  ConstraintKernel (K := K) 17269670 131071 40000 29 95 IRSProfile.domain u0 u1
 abbrev ThinKernel (u0 u1 : I → K) :=
-  ConstraintKernel (K := K) 9092750 131071 100000 14 50 IRSProfile.domain u0 u1
+  ConstraintKernel (K := K) 10180016 131071 40000 15 56 IRSProfile.domain u0 u1
 abbrev BKernel (u0 u1 : I → K) :=
-  ConstraintKernel (K := K) 17639935 131071 1764 30 97 IRSProfile.domain u0 u1
-abbrev Ambient := CoefficientIndex 12366140 131071 109000 20 → K
+  ConstraintKernel (K := K) 18178600 131071 2031 31 100 IRSProfile.domain u0 u1
+abbrev Ambient := CoefficientIndex 17269670 131071 40000 29 → K
 
-theorem gateA : Fintype.card I * localRankBound 68 109000 20 <
-    coefficientCount 12366140 131071 109000 20 := by
+theorem gateC : Fintype.card I * localRankBound 95 40000 29 <
+    coefficientCount 17269670 131071 40000 29 := by
   rw [show Fintype.card I = 262144 by norm_num [I, IRSProfile.Index]]
   have h := LocatorSourceArithmetic.kernelAmbient_nullity
   omega
-theorem gateB : Fintype.card I * localRankBound 97 1764 30 <
-    coefficientCount 17639935 131071 1764 30 := by
+theorem gateB : Fintype.card I * localRankBound 100 2031 31 <
+    coefficientCount 18178600 131071 2031 31 := by
   rw [show Fintype.card I = 262144 by norm_num [I, IRSProfile.Index]]
   have h := LocatorArithmetic.kernelB_nullity
   omega
 
-theorem auxBox_le_aBox : globalCoefficientBox K 9274605 131071 100000 15 ≤
-    globalCoefficientBox K 12366140 131071 109000 20 := by
+theorem aBox_le_cBox : globalCoefficientBox K 9816444 131071 40000 16 ≤
+    globalCoefficientBox K 17269670 131071 40000 29 := by
   intro Q hQ d hd
   obtain ⟨ht, hs, hc⟩ := hQ hd
-  exact ⟨ht.trans (by decide), hs.trans (by decide), hc.trans_le (by decide)⟩
+  exact ⟨ht, hs.trans (by decide), hc.trans_le (by decide)⟩
+
+def embedA (u0 u1 : I → K) : AKernel u0 u1 →ₗ[K] Ambient :=
+  polynomialCoefficientsLinear 17269670 131071 40000 29
+    (kernelReconstructLinear (K := K) 9816444 131071 40000 16 54
+      IRSProfile.domain u0 u1)
+
+@[simp] theorem reconstruct_embedA (u0 u1 : I → K) (v : AKernel u0 u1) :
+    reconstruct K 17269670 131071 40000 29 (embedA u0 u1 v) =
+      reconstruct K 9816444 131071 40000 16 v.1 := by
+  have hbox : kernelReconstructLinear (K := K) 9816444 131071 40000 16 54
+      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 17269670 131071 40000 29 := by
+    rw [kernelReconstructLinear_apply]
+    exact aBox_le_cBox (reconstruct_mem_globalCoefficientBox
+      K 9816444 131071 40000 16 v.1)
+  have h := reconstruct_polynomialCoefficientsLinear 17269670 131071 40000 29
+    (kernelReconstructLinear (K := K) 9816444 131071 40000 16 54
+      IRSProfile.domain u0 u1) v hbox
+  simpa only [embedA, kernelReconstructLinear_apply] using h
+
+theorem auxBox_le_cBox : globalCoefficientBox K 13088592 131071 40000 21 ≤
+    globalCoefficientBox K 17269670 131071 40000 29 := by
+  intro Q hQ d hd
+  obtain ⟨ht, hs, hc⟩ := hQ hd
+  exact ⟨ht, hs.trans (by decide), hc.trans_le (by decide)⟩
 
 def embedAux (u0 u1 : I → K) : AuxKernel u0 u1 →ₗ[K] Ambient :=
-  polynomialCoefficientsLinear 12366140 131071 109000 20
-    (kernelReconstructLinear (K := K) 9274605 131071 100000 15 51
+  polynomialCoefficientsLinear 17269670 131071 40000 29
+    (kernelReconstructLinear (K := K) 13088592 131071 40000 21 72
       IRSProfile.domain u0 u1)
 
 @[simp] theorem reconstruct_embedAux (u0 u1 : I → K) (v : AuxKernel u0 u1) :
-    reconstruct K 12366140 131071 109000 20 (embedAux u0 u1 v) =
-      reconstruct K 9274605 131071 100000 15 v.1 := by
-  have hbox : kernelReconstructLinear (K := K) 9274605 131071 100000 15 51
-      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 12366140 131071 109000 20 := by
+    reconstruct K 17269670 131071 40000 29 (embedAux u0 u1 v) =
+      reconstruct K 13088592 131071 40000 21 v.1 := by
+  have hbox : kernelReconstructLinear (K := K) 13088592 131071 40000 21 72
+      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 17269670 131071 40000 29 := by
     rw [kernelReconstructLinear_apply]
-    exact auxBox_le_aBox (reconstruct_mem_globalCoefficientBox
-      K 9274605 131071 100000 15 v.1)
-  have h := reconstruct_polynomialCoefficientsLinear 12366140 131071 109000 20
-    (kernelReconstructLinear (K := K) 9274605 131071 100000 15 51
+    exact auxBox_le_cBox (reconstruct_mem_globalCoefficientBox
+      K 13088592 131071 40000 21 v.1)
+  have h := reconstruct_polynomialCoefficientsLinear 17269670 131071 40000 29
+    (kernelReconstructLinear (K := K) 13088592 131071 40000 21 72
       IRSProfile.domain u0 u1) v hbox
   simpa only [embedAux, kernelReconstructLinear_apply] using h
 
-theorem cBox_le_aBox : globalCoefficientBox K 9092750 131071 100000 14 ≤
-    globalCoefficientBox K 12366140 131071 109000 20 := by
+theorem thinBox_le_cBox : globalCoefficientBox K 10180016 131071 40000 15 ≤
+    globalCoefficientBox K 17269670 131071 40000 29 := by
   intro Q hQ d hd
   obtain ⟨ht, hs, hc⟩ := hQ hd
-  exact ⟨ht.trans (by decide), hs.trans (by decide), hc.trans_le (by decide)⟩
-
-def embedC (u0 u1 : I → K) : CKernel u0 u1 →ₗ[K] Ambient :=
-  polynomialCoefficientsLinear 12366140 131071 109000 20
-    (kernelReconstructLinear (K := K) 9092750 131071 100000 14 50
-      IRSProfile.domain u0 u1)
-
-@[simp] theorem reconstruct_embedC (u0 u1 : I → K) (v : CKernel u0 u1) :
-    reconstruct K 12366140 131071 109000 20 (embedC u0 u1 v) =
-      reconstruct K 9092750 131071 100000 14 v.1 := by
-  have hbox : kernelReconstructLinear (K := K) 9092750 131071 100000 14 50
-      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 12366140 131071 109000 20 := by
-    rw [kernelReconstructLinear_apply]
-    exact cBox_le_aBox (reconstruct_mem_globalCoefficientBox
-      K 9092750 131071 100000 14 v.1)
-  have h := reconstruct_polynomialCoefficientsLinear 12366140 131071 109000 20
-    (kernelReconstructLinear (K := K) 9092750 131071 100000 14 50
-      IRSProfile.domain u0 u1) v hbox
-  simpa only [embedC, kernelReconstructLinear_apply] using h
-
-theorem thinBox_le_aBox : globalCoefficientBox K 9092750 131071 100000 14 ≤
-    globalCoefficientBox K 12366140 131071 109000 20 := by
-  intro Q hQ d hd
-  obtain ⟨ht, hs, hc⟩ := hQ hd
-  exact ⟨ht.trans (by decide), hs.trans (by decide), hc.trans_le (by decide)⟩
+  exact ⟨ht, hs.trans (by decide), hc.trans_le (by decide)⟩
 
 def embedThin (u0 u1 : I → K) : ThinKernel u0 u1 →ₗ[K] Ambient :=
-  polynomialCoefficientsLinear 12366140 131071 109000 20
-    (kernelReconstructLinear (K := K) 9092750 131071 100000 14 50
+  polynomialCoefficientsLinear 17269670 131071 40000 29
+    (kernelReconstructLinear (K := K) 10180016 131071 40000 15 56
       IRSProfile.domain u0 u1)
 
 @[simp] theorem reconstruct_embedThin (u0 u1 : I → K) (v : ThinKernel u0 u1) :
-    reconstruct K 12366140 131071 109000 20 (embedThin u0 u1 v) =
-      reconstruct K 9092750 131071 100000 14 v.1 := by
-  have hbox : kernelReconstructLinear (K := K) 9092750 131071 100000 14 50
-      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 12366140 131071 109000 20 := by
+    reconstruct K 17269670 131071 40000 29 (embedThin u0 u1 v) =
+      reconstruct K 10180016 131071 40000 15 v.1 := by
+  have hbox : kernelReconstructLinear (K := K) 10180016 131071 40000 15 56
+      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 17269670 131071 40000 29 := by
     rw [kernelReconstructLinear_apply]
-    exact thinBox_le_aBox (reconstruct_mem_globalCoefficientBox
-      K 9092750 131071 100000 14 v.1)
-  have h := reconstruct_polynomialCoefficientsLinear 12366140 131071 109000 20
-    (kernelReconstructLinear (K := K) 9092750 131071 100000 14 50
+    exact thinBox_le_cBox (reconstruct_mem_globalCoefficientBox
+      K 10180016 131071 40000 15 v.1)
+  have h := reconstruct_polynomialCoefficientsLinear 17269670 131071 40000 29
+    (kernelReconstructLinear (K := K) 10180016 131071 40000 15 56
       IRSProfile.domain u0 u1) v hbox
   simpa only [embedThin, kernelReconstructLinear_apply] using h
 
 def joinedMap (u0 u1 : I → K) :
-    (AKernel u0 u1 × (AuxKernel u0 u1 × (CKernel u0 u1 × ThinKernel u0 u1))) →ₗ[K]
+    (CKernel u0 u1 × (AKernel u0 u1 × (AuxKernel u0 u1 × ThinKernel u0 u1))) →ₗ[K]
       Ambient :=
-  joinLinear (AKernel u0 u1)
-    (tripleLinear (embedAux u0 u1) (embedC u0 u1) (embedThin u0 u1))
+  joinLinear (CKernel u0 u1)
+    (tripleLinear (embedA u0 u1) (embedAux u0 u1) (embedThin u0 u1))
 abbrev JoinedKernel (u0 u1 : I → K) := LinearMap.range (joinedMap u0 u1)
 
 @[simp] theorem joinedMap_apply (u0 u1 : I → K)
-    (v : AKernel u0 u1 × (AuxKernel u0 u1 × (CKernel u0 u1 × ThinKernel u0 u1))) :
+    (v : CKernel u0 u1 × (AKernel u0 u1 × (AuxKernel u0 u1 × ThinKernel u0 u1))) :
     joinedMap u0 u1 v =
-      v.1.1 + (embedAux u0 u1 v.2.1 + embedC u0 u1 v.2.2.1 +
+      v.1.1 + (embedA u0 u1 v.2.1 + embedAux u0 u1 v.2.2.1 +
         embedThin u0 u1 v.2.2.2) := by
   simp only [joinedMap, joinLinear_apply, tripleLinear_apply]
 
 theorem reconstruct_joinedMap (u0 u1 : I → K)
-    (v : AKernel u0 u1 × (AuxKernel u0 u1 × (CKernel u0 u1 × ThinKernel u0 u1))) :
-    reconstruct K 12366140 131071 109000 20 (joinedMap u0 u1 v) =
-      reconstruct K 12366140 131071 109000 20 v.1.1 +
-        (reconstruct K 9274605 131071 100000 15 v.2.1.1 +
-          reconstruct K 9092750 131071 100000 14 v.2.2.1.1 +
-          reconstruct K 9092750 131071 100000 14 v.2.2.2.1) := by
+    (v : CKernel u0 u1 × (AKernel u0 u1 × (AuxKernel u0 u1 × ThinKernel u0 u1))) :
+    reconstruct K 17269670 131071 40000 29 (joinedMap u0 u1 v) =
+      reconstruct K 17269670 131071 40000 29 v.1.1 +
+        (reconstruct K 9816444 131071 40000 16 v.2.1.1 +
+          reconstruct K 13088592 131071 40000 21 v.2.2.1.1 +
+          reconstruct K 10180016 131071 40000 15 v.2.2.2.1) := by
   rw [joinedMap_apply, reconstruct_add_generic, reconstruct_add_generic,
-    reconstruct_add_generic, reconstruct_embedAux, reconstruct_embedC,
+    reconstruct_add_generic, reconstruct_embedA, reconstruct_embedAux,
     reconstruct_embedThin]
 
-def includeA (u0 u1 : I → K) (v : AKernel u0 u1) : JoinedKernel u0 u1 :=
+def includeC (u0 u1 : I → K) (v : CKernel u0 u1) : JoinedKernel u0 u1 :=
   ⟨v.1, ⟨(v, (0, (0, 0))), by
     simp only [joinedMap_apply, map_zero, zero_add, add_zero]⟩⟩
-def includeAux (u0 u1 : I → K) (v : AuxKernel u0 u1) : JoinedKernel u0 u1 :=
-  ⟨embedAux u0 u1 v, ⟨(0, (v, (0, 0))), by
+def includeA (u0 u1 : I → K) (v : AKernel u0 u1) : JoinedKernel u0 u1 :=
+  ⟨embedA u0 u1 v, ⟨(0, (v, (0, 0))), by
     simp only [joinedMap_apply, ZeroMemClass.coe_zero, map_zero, zero_add, add_zero]⟩⟩
-def includeC (u0 u1 : I → K) (v : CKernel u0 u1) : JoinedKernel u0 u1 :=
-  ⟨embedC u0 u1 v, ⟨(0, (0, (v, 0))), by
+def includeAux (u0 u1 : I → K) (v : AuxKernel u0 u1) : JoinedKernel u0 u1 :=
+  ⟨embedAux u0 u1 v, ⟨(0, (0, (v, 0))), by
     simp only [joinedMap_apply, ZeroMemClass.coe_zero, map_zero, zero_add, add_zero]⟩⟩
 def includeThin (u0 u1 : I → K) (v : ThinKernel u0 u1) : JoinedKernel u0 u1 :=
   ⟨embedThin u0 u1 v, ⟨(0, (0, (0, v))), by
@@ -230,27 +230,27 @@ def includeThin (u0 u1 : I → K) (v : ThinKernel u0 u1) : JoinedKernel u0 u1 :=
 
 theorem joined_universal (u0 u1 : I → K) (v : JoinedKernel u0 u1)
     (gamma : K) (P : Polynomial K) (points : Finset I)
-    (hP : P.natDegree ≤ 131071) (hcard : 181855 ≤ points.card)
+    (hP : P.natDegree ≤ 131071) (hcard : 181786 ≤ points.card)
     (hvalues : ∀ i ∈ points,
       P.eval (IRSProfile.domain i) = u0 i + gamma * u1 i) :
     RCN319.specialization K P gamma
-      (reconstruct K 12366140 131071 109000 20 v.1) = 0 := by
+      (reconstruct K 17269670 131071 40000 29 v.1) = 0 := by
   obtain ⟨z, hz⟩ := v.2
   rw [← hz, reconstruct_joinedMap, map_add, map_add, map_add]
-  have ha := specialization_eq_zero_of_agreements K
-    12366140 131071 109000 20 68 181855 IRSProfile.domain u0 u1
-    z.1.1 z.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
-  have haux := specialization_eq_zero_of_agreements K
-    9274605 131071 100000 15 51 181855 IRSProfile.domain u0 u1
-    z.2.1.1 z.2.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have hc := specialization_eq_zero_of_agreements K
-    9092750 131071 100000 14 50 181855 IRSProfile.domain u0 u1
+    17269670 131071 40000 29 95 181786 IRSProfile.domain u0 u1
+    z.1.1 z.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
+  have ha := specialization_eq_zero_of_agreements K
+    9816444 131071 40000 16 54 181786 IRSProfile.domain u0 u1
+    z.2.1.1 z.2.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
+  have haux := specialization_eq_zero_of_agreements K
+    13088592 131071 40000 21 72 181786 IRSProfile.domain u0 u1
     z.2.2.1.1 z.2.2.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have hthin := specialization_eq_zero_of_agreements K
-    9092750 131071 100000 14 50 181855 IRSProfile.domain u0 u1
+    10180016 131071 40000 15 56 181786 IRSProfile.domain u0 u1
     z.2.2.2.1 z.2.2.2.2 (by decide) (by decide) P gamma points hP hcard hvalues
   rw [specialization_eq_ordinary] at ha haux hc hthin
-  rw [ha, haux, hc, hthin, zero_add, zero_add, zero_add]
+  rw [hc, ha, haux, hthin, zero_add, zero_add, zero_add]
 
 private theorem gcd_mul_right_plain_associated
     (P H q : P4) (hc : IsRelPrime q P) :
@@ -278,37 +278,37 @@ structure SelectedPair (u0 u1 : I → K) where
   QB : P4
   QA_ne : QA ≠ 0
   QB_ne : QB ≠ 0
-  QA_flag : QA ∈ globalCoefficientBox K 12366140 131071 109000 20
-  QB_flag : QB ∈ globalCoefficientBox K 17639935 131071 1764 30
+  QA_flag : QA ∈ globalCoefficientBox K 17269670 131071 40000 29
+  QB_flag : QB ∈ globalCoefficientBox K 18178600 131071 2031 31
   common_divides_A : ∀ v : AKernel u0 u1,
-    gcd QA QB ∣ reconstruct K 12366140 131071 109000 20 v.1
+    gcd QA QB ∣ reconstruct K 9816444 131071 40000 16 v.1
   common_divides_Aux : ∀ v : AuxKernel u0 u1,
-    gcd QA QB ∣ reconstruct K 9274605 131071 100000 15 v.1
+    gcd QA QB ∣ reconstruct K 13088592 131071 40000 21 v.1
   common_divides_C : ∀ v : CKernel u0 u1,
-    gcd QA QB ∣ reconstruct K 9092750 131071 100000 14 v.1
+    gcd QA QB ∣ reconstruct K 17269670 131071 40000 29 v.1
   common_divides_Thin : ∀ v : ThinKernel u0 u1,
-    gcd QA QB ∣ reconstruct K 9092750 131071 100000 14 v.1
+    gcd QA QB ∣ reconstruct K 10180016 131071 40000 15 v.1
   common_divides_B : ∀ v : BKernel u0 u1,
-    gcd QA QB ∣ reconstruct K 17639935 131071 1764 30 v.1
+    gcd QA QB ∣ reconstruct K 18178600 131071 2031 31 v.1
   universal_vanishing :
     ∀ (gamma : K) (P : Polynomial K) (points : Finset I),
-      P.natDegree ≤ 131071 → 181855 ≤ points.card →
+      P.natDegree ≤ 131071 → 181786 ≤ points.card →
       (∀ i ∈ points, P.eval (IRSProfile.domain i) = u0 i + gamma * u1 i) →
       RCN319.specialization K P gamma QA = 0 ∧
         RCN319.specialization K P gamma QB = 0
 
 theorem exists_selected_pair (u0 u1 : I → K) : Nonempty (SelectedPair u0 u1) := by
   classical
-  obtain ⟨thetaA, htA, hkA⟩ := exists_nonzero_kernel_array (I := I)
-    K 12366140 131071 109000 20 68 IRSProfile.domain u0 u1 gateA
+  obtain ⟨thetaC, htC, hkC⟩ := exists_nonzero_kernel_array (I := I)
+    K 17269670 131071 40000 29 95 IRSProfile.domain u0 u1 gateC
   obtain ⟨thetaB, htB, hkB⟩ := exists_nonzero_kernel_array (I := I)
-    K 17639935 131071 1764 30 97 IRSProfile.domain u0 u1 gateB
-  let a0 : AKernel u0 u1 := ⟨thetaA, LinearMap.mem_ker.mpr hkA⟩
-  let vA0 : JoinedKernel u0 u1 := includeA u0 u1 a0
+    K 18178600 131071 2031 31 100 IRSProfile.domain u0 u1 gateB
+  let c0 : CKernel u0 u1 := ⟨thetaC, LinearMap.mem_ker.mpr hkC⟩
+  let vC0 : JoinedKernel u0 u1 := includeC u0 u1 c0
   let vB0 : BKernel u0 u1 := ⟨thetaB, LinearMap.mem_ker.mpr hkB⟩
-  letI : Nontrivial (JoinedKernel u0 u1) := ⟨⟨vA0, 0, by
+  letI : Nontrivial (JoinedKernel u0 u1) := ⟨⟨vC0, 0, by
     intro h
-    exact htA (congrArg Subtype.val h)⟩⟩
+    exact htC (congrArg Subtype.val h)⟩⟩
   letI : Nontrivial (BKernel u0 u1) := ⟨⟨vB0, 0, by
     intro h
     exact htB (congrArg Subtype.val h)⟩⟩
@@ -326,10 +326,10 @@ theorem exists_selected_pair (u0 u1 : I → K) : Nonempty (SelectedPair u0 u1) :
   let HB := commonGCD (BKernel u0 u1) bB
   have hHA : HA ≠ 0 := commonGCD_ne_zero (JoinedKernel u0 u1) bA
   have hHB : HB ≠ 0 := commonGCD_ne_zero (BKernel u0 u1) bB
-  have hHBbox : HB ∈ globalCoefficientBox K 17639935 131071 1764 30 :=
+  have hHBbox : HB ∈ globalCoefficientBox K 18178600 131071 2031 31 :=
     commonGCD_mem_flagBox (BKernel u0 u1) bB
   have hcardHB : (normalizedFactorSet HB).card < ENat.card K :=
-    normalizedFactorSet_card_lt_field_of_mem_flagBox HB 17639935 1764 30
+    normalizedFactorSet_card_lt_field_of_mem_flagBox HB 18178600 2031 31
       hHB hHBbox (by norm_num)
   obtain ⟨vA, hvA, hcopA⟩ := exists_common_quotient_isRelPrime
     (JoinedKernel u0 u1) bA hHA HB hHB hcardHB
@@ -343,12 +343,12 @@ theorem exists_selected_pair (u0 u1 : I → K) : Nonempty (SelectedPair u0 u1) :
     apply hvA
     apply submoduleReconstructLinear_injective (JoinedKernel u0 u1)
     simpa only [map_zero, QA] using hz
-  have hQAbox : QA ∈ globalCoefficientBox K 12366140 131071 109000 20 := by
+  have hQAbox : QA ∈ globalCoefficientBox K 17269670 131071 40000 29 := by
     dsimp only [QA]
     rw [submoduleReconstructLinear_apply]
-    exact reconstruct_mem_globalCoefficientBox K 12366140 131071 109000 20 vA.1
+    exact reconstruct_mem_globalCoefficientBox K 17269670 131071 40000 29 vA.1
   have hcardQA : (normalizedFactorSet QA).card < ENat.card K :=
-    normalizedFactorSet_card_lt_field_of_mem_flagBox QA 12366140 109000 20
+    normalizedFactorSet_card_lt_field_of_mem_flagBox QA 17269670 40000 29
       hQA hQAbox (by norm_num)
   obtain ⟨vB, hvB, hcopB⟩ := exists_common_quotient_isRelPrime
     (BKernel u0 u1) bB hHB QA hQA hcardQA
@@ -362,10 +362,10 @@ theorem exists_selected_pair (u0 u1 : I → K) : Nonempty (SelectedPair u0 u1) :
     apply hvB
     apply submoduleReconstructLinear_injective (BKernel u0 u1)
     simpa only [map_zero, QB] using hz
-  have hQBbox : QB ∈ globalCoefficientBox K 17639935 131071 1764 30 := by
+  have hQBbox : QB ∈ globalCoefficientBox K 18178600 131071 2031 31 := by
     dsimp only [QB]
     rw [submoduleReconstructLinear_apply]
-    exact reconstruct_mem_globalCoefficientBox K 17639935 131071 1764 30 vB.1
+    exact reconstruct_mem_globalCoefficientBox K 18178600 131071 2031 31 vB.1
   have hAssocA : Associated (gcd QA HB) (gcd HA HB) := by
     rw [hQAeq]
     exact gcd_mul_left_plain_associated HA qA HB hcopA
@@ -384,18 +384,18 @@ theorem exists_selected_pair (u0 u1 : I → K) : Nonempty (SelectedPair u0 u1) :
     common_divides_Thin := ?_, common_divides_B := ?_
     universal_vanishing := ?_ }⟩
   · intro v
-    exact hHHA.trans (commonGCD_dvd (JoinedKernel u0 u1) bA (includeA u0 u1 v))
+    have h := hHHA.trans (commonGCD_dvd (JoinedKernel u0 u1) bA (includeA u0 u1 v))
+    change gcd QA QB ∣ reconstruct K 17269670 131071 40000 29 (embedA u0 u1 v) at h
+    simpa only [reconstruct_embedA] using h
   · intro v
     have h := hHHA.trans (commonGCD_dvd (JoinedKernel u0 u1) bA (includeAux u0 u1 v))
-    change gcd QA QB ∣ reconstruct K 12366140 131071 109000 20 (embedAux u0 u1 v) at h
+    change gcd QA QB ∣ reconstruct K 17269670 131071 40000 29 (embedAux u0 u1 v) at h
     simpa only [reconstruct_embedAux] using h
   · intro v
-    have h := hHHA.trans (commonGCD_dvd (JoinedKernel u0 u1) bA (includeC u0 u1 v))
-    change gcd QA QB ∣ reconstruct K 12366140 131071 109000 20 (embedC u0 u1 v) at h
-    simpa only [reconstruct_embedC] using h
+    exact hHHA.trans (commonGCD_dvd (JoinedKernel u0 u1) bA (includeC u0 u1 v))
   · intro v
     have h := hHHA.trans (commonGCD_dvd (JoinedKernel u0 u1) bA (includeThin u0 u1 v))
-    change gcd QA QB ∣ reconstruct K 12366140 131071 109000 20 (embedThin u0 u1 v) at h
+    change gcd QA QB ∣ reconstruct K 17269670 131071 40000 29 (embedThin u0 u1 v) at h
     simpa only [reconstruct_embedThin] using h
   · intro v
     exact hHHB.trans (commonGCD_dvd (BKernel u0 u1) bB v)
@@ -407,7 +407,7 @@ theorem exists_selected_pair (u0 u1 : I → K) : Nonempty (SelectedPair u0 u1) :
     · dsimp only [QB]
       rw [submoduleReconstructLinear_apply]
       exact specialization_eq_zero_of_agreements K
-        17639935 131071 1764 30 97 181855 IRSProfile.domain u0 u1
+        18178600 131071 2031 31 100 181786 IRSProfile.domain u0 u1
         vB.1 vB.2 (by decide) (by decide) P gamma points hP hcard hvalues
 
 end

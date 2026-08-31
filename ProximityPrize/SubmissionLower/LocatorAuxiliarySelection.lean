@@ -117,22 +117,22 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
 local instance : GCDMonoid P4 := UniqueFactorizationMonoid.toGCDMonoid P4
 
-/-- A68 at any L ≤ 10000 is already contained in Selection.AKernel (L=109000). -/
-theorem common_divides_A68_small {u0 u1 : I → K}
-    (S : LocatorSelection.SelectedPair u0 u1) (L : ℕ) (hL : L ≤ 10000) :
-    ∀ a : ConstraintKernel (K := K) 12366140 131071 L 20 68
+/-- Every A95 kernel with L ≤ 40000 is contained in the selected A95 source. -/
+theorem common_divides_A95_small {u0 u1 : I → K}
+    (S : LocatorSelection.SelectedPair u0 u1) (L : ℕ) (hL : L ≤ 40000) :
+    ∀ a : ConstraintKernel (K := K) 17269670 131071 L 29 95
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 12366140 131071 L 20 a.1 := by
-  exact full_kernel_divisor_small (E := K) (Lmax := 109000) (by omega)
-    IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_A
+      gcd S.QA S.QB ∣ reconstruct K 17269670 131071 L 29 a.1 := by
+  exact full_kernel_divisor_small (E := K) (Lmax := 40000) hL
+    IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_C
 
-/-- The same extension for the joined A51 Y-source family. -/
-theorem common_divides_A51_small {u0 u1 : I → K}
-    (S : LocatorSelection.SelectedPair u0 u1) (L : ℕ) (hL : L ≤ 100000) :
-    ∀ a : ConstraintKernel (K := K) 9274605 131071 L 15 51
+/-- Every A72 kernel with L ≤ 40000 is contained in the selected A72 source. -/
+theorem common_divides_A72_small {u0 u1 : I → K}
+    (S : LocatorSelection.SelectedPair u0 u1) (L : ℕ) (hL : L ≤ 40000) :
+    ∀ a : ConstraintKernel (K := K) 13088592 131071 L 21 72
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 9274605 131071 L 15 a.1 := by
-  exact full_kernel_divisor_small (E := K) (Lmax := 100000) hL
+      gcd S.QA S.QB ∣ reconstruct K 13088592 131071 L 21 a.1 := by
+  exact full_kernel_divisor_small (E := K) (Lmax := 40000) hL
     IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_Aux
 
 end Selected
