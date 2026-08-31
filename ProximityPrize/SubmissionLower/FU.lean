@@ -17,8 +17,8 @@ set_option autoImplicit false
 variable {K I:Type} [Field K]
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
-variable {errorCap:ℕ}
-variable {stageSupport:RCN275.ResidualSupportParameters}
+variable {errorCap : ℕ}
+variable {stageSupport : RCN275.ResidualSupportParameters}
 abbrev StageComponent (S:Stage K I Gamma x p flag errorCap stageSupport):=FirstTailComponent S
 def stageSurfacePlane (S:Stage K I Gamma x p flag errorCap stageSupport)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3):
