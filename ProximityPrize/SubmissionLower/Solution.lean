@@ -1,5 +1,6 @@
-import ProximityPrize.SubmissionLower.LocatorClosure
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.ContactTwoTailUnconditional6733Research
 namespace ProximityPrize.Benchmark
-theorem candidate:ProtocolClaim 6764 10290970 33554432:=
- ProximityPrize.SubmissionLower.LocatorClosure.protocolClaim6764
+theorem candidate:ProtocolClaim 6767 10294783 33554432:=by
+  exact ProximityPrize.SubmissionLower.ContactTwoTailUnconditional6733Research.protocolClaim6767
 end ProximityPrize.Benchmark
