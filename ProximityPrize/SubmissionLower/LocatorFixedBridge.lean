@@ -14,15 +14,15 @@ set_option maxRecDepth 100000
 local instance:DecidableEq K:=Classical.decEq _
 local instance:DecidableEq I:=Classical.decEq _
 local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
-private abbrev regularBound:ℕ:=271752452545913260
+private abbrev regularBound:ℕ:=271873949264936910
 theorem gcd_fixed_count_le
     (u0 u1:I → K) (S:SelectedPair u0 u1)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181746 ≤
+    (hagreement:∀ gamma ∈ Gamma,181736 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80398) :
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80408) :
     (LocatorCover.fixed
       (fun gamma=> (specialization K (selected gamma) gamma).toRingHom)
       Gamma S.QA S.QB).card ≤
@@ -33,17 +33,21 @@ theorem gcd_fixed_count_le
     fun gamma=> (specialization K (selected gamma) gamma).toRingHom
   let Delta:Finset K:=LocatorCover.fixed phi Gamma S.QA S.QB
   have hH:H ≠ 0:=gcd_ne_zero_of_left S.QA_ne
-  have hHflagThin:H ∈ RCN100.globalCoefficientBox K 10177776 131071 51967 16:=
+  have hHflagA:H ∈ RCN100.globalCoefficientBox K 10177216 131071 51967 17:=
+    LocatorCaps.full_A_divisor_mem_box u0 u1 H hH S.common_divides_A
+  have hHflagThin:H ∈ RCN100.globalCoefficientBox K 10358952 131071 51967 16:=
     LocatorCaps.full_Thin_divisor_mem_box u0 u1 H hH S.common_divides_Thin
-  have hHcaps:=(mem_flagGlobalCoefficientBox_iff H
-    10177776 131071 51967 16 (by decide)).mp hHflagThin
-  have hT:wt residualTotalWeights H ≤ 2239:=S.common_total_le
-  have hYS:wt residualYSWeights H ≤ 74:=S.common_ys_le
-  have hS:wt residualSWeights H ≤ 16:=S.common_slope_le
-  have hflag:H ∈ RCN100.globalCoefficientBox K 10177776 131071 2239 16:=
-    (mem_flagGlobalCoefficientBox_iff H 10177776 131071 2239 16 (by decide)).mpr
-      ⟨hT,hS,hHcaps.2.2⟩
-  have hbox:=flag_box_to_ordinary K 10177776 131071 2239 16 H hflag
+  have hHcapsA:=(mem_flagGlobalCoefficientBox_iff H
+    10177216 131071 51967 17 (by decide)).mp hHflagA
+  have hHcapsThin:=(mem_flagGlobalCoefficientBox_iff H
+    10358952 131071 51967 16 (by decide)).mp hHflagThin
+  have hT:wt residualTotalWeights H ≤ 2319:=S.common_total_le
+  have hYS:wt residualYSWeights H ≤ 76:=S.common_ys_le
+  have hS:wt residualSWeights H ≤ 16:=hHcapsThin.2.1
+  have hflag:H ∈ RCN100.globalCoefficientBox K 10177216 131071 2319 16:=
+    (mem_flagGlobalCoefficientBox_iff H 10177216 131071 2319 16 (by decide)).mpr
+      ⟨hT,hS,hHcapsA.2.2⟩
+  have hbox:=flag_box_to_ordinary K 10177216 131071 2319 16 H hflag
   have hsupport:ResidualSupportData LocatorFixedConsumer.wholeSupport H:=
     ⟨hS,hYS,hT⟩
   have hsub:Delta ⊆ Gamma:=by
@@ -56,15 +60,15 @@ theorem gcd_fixed_count_le
     exact LocatorCover.fixed_vanish phi Gamma S.QA S.QB gamma hg
   have hdegreeD:∀ gamma ∈ Delta, (selected gamma).natDegree ≤ 131071:=
     fun gamma hg=> hdegree gamma (hsub hg)
-  have hagreementD:∀ gamma ∈ Delta,181746 ≤
+  have hagreementD:∀ gamma ∈ Delta,181736 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card:=
     fun gamma hg=> hagreement gamma (hsub hg)
-  have hnoD:NoLargeSelectedPencil selected Delta 131071 80398:=
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80398 hsub hno
+  have hnoD:NoLargeSelectedPencil selected Delta 131071 80408:=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80408 hsub hno
   let p:=regularCumulativeFlag H
   have hfcaps (F:RegularIndex H) :
-      (p F).all ≤ 16 ∧ middle (p F) ≤ 74 ∧ total (p F) ≤ 2239:=by
+      (p F).all ≤ 16 ∧ middle (p F) ≤ 76 ∧ total (p F) ≤ 2319:=by
     have hf:=LocatorFixed.factor_support H hH hsupport F
     have hc:=originalCumulativeFlag_cumulative F.1
     refine ⟨?_, ?_, ?_⟩
@@ -82,26 +86,26 @@ theorem gcd_fixed_count_le
     let c:=cellOf (p F) (hfpos F) (hfcaps F).1 (hfcaps F).2.1 (hfcaps F).2.2
     chosenCost c
   have hqCost (F:RegularIndex H)
-      (hbad:Bad 2239 131072 131073 regularBound (p F)) :
+      (hbad:Bad 2319 131072 131073 regularBound (p F)) :
       (regularSeeds H selected Delta F).card ≤ qCost F:=by
     let c:=cellOf (p F) (hfpos F) (hfcaps F).1 (hfcaps F).2.1 (hfcaps F).2.2
     have hc:InCell (p F) c:=
       cellOf_bounds (p F) (hfpos F) (hfcaps F).1
         (hfcaps F).2.1 (hfcaps F).2.2
-    have hown:=LocatorFixed.regular_factor_count 10177776
+    have hown:=LocatorFixed.regular_factor_count 10177216
       LocatorFixedConsumer.wholeSupport (by decide) (by decide)
       (by decide) (by decide) (by decide)
       H hH hbox hsupport selected Delta u0 u1 hdegreeD hagreementD hnoD F
     have hf:=RCN167.positiveRFactors_spec H F.1 F.2
     have hdiv72 (L:ℕ) (hL:L ≤ 51967) : ∀ v:RCN180.ConstraintKernel (K:=K)
-        13085712 131071 L 21 72 IRSProfile.domain u0 u1,
-        F.1 ∣ RCN100.reconstruct K 13085712 131071 L 21 v.1:=by
+        13084992 131071 L 21 72 IRSProfile.domain u0 u1,
+        F.1 ∣ RCN100.reconstruct K 13084992 131071 L 21 v.1:=by
       intro v
       exact hf.2.1.trans
         (LocatorAuxiliarySelection.common_divides_A72_small S L hL v)
     have hdiv126 (L:ℕ) (hL:L ≤ 51967) : ∀ v:RCN180.ConstraintKernel (K:=K)
-        22899996 131071 L 39 126 IRSProfile.domain u0 u1,
-        F.1 ∣ RCN100.reconstruct K 22899996 131071 L 39 v.1:=by
+        22898736 131071 L 39 126 IRSProfile.domain u0 u1,
+        F.1 ∣ RCN100.reconstruct K 22898736 131071 L 39 v.1:=by
       intro v
       exact hf.2.1.trans
         (LocatorAuxiliarySelection.common_divides_A126_small S L hL v)
@@ -110,8 +114,8 @@ theorem gcd_fixed_count_le
       hdiv72 hdiv126 c hc hbad hown
     simpa only [qCost,c] using h
   have hcell (F:RegularIndex H)
-      (hbad:Bad 2239 131072 131073 regularBound (p F)) :
-      cellCost 2239 74 16 131072 131073 (p F) (qCost F) ≤
+      (hbad:Bad 2319 131072 131073 regularBound (p F)) :
+      cellCost 2319 76 16 131072 131073 (p F) (qCost F) ≤
         regularBound:=by
     let c:=cellOf (p F) (hfpos F) (hfcaps F).1 (hfcaps F).2.1 (hfcaps F).2.2
     have hc:InCell (p F) c:=
@@ -122,10 +126,10 @@ theorem gcd_fixed_count_le
       have hrpos:1 ≤ r c:=by
         simpa only [hc.all_eq] using hfpos F
       have hglobal:=LocatorRateCover.global_rate_of_endpoints
-        (p F) 2239 (yhi c) (r c) regularBound
+        (p F) 2319 (yhi c) (r c) regularBound
         hrpos hc.all_eq hc.middle_le_yhi
-        ((yhi_le_74 c).trans (by decide))
-        (hc.total_le_thi.trans (thi_le_2239 c)) hrate.1 hrate.2
+        ((yhi_le_76 c).trans (by decide))
+        (hc.total_le_thi.trans (thi_le_2319 c)) hrate.1 hrate.2
       exact (not_lt_of_ge hglobal) hbad
     exact cellCost_le_of_grid_bound (p F) c (qCost F) hc
       (by simpa only [qCost,c] using chosenCost_with_rest c hv hnr)
