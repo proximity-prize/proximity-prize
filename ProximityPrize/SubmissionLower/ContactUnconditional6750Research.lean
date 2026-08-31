@@ -1,0 +1,29 @@
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.ContactFinalComposition6750Research
+import ProximityPrize.SubmissionLower.ContactLegacyAdaptiveArithmetic6750Research
+import ProximityPrize.SubmissionLower.ContactLegacyDirectArithmetic6750Research
+
+ 
+
+
+
+
+
+
+namespace ProximityPrize.SubmissionLower
+namespace ContactUnconditional6750Research
+
+open ProximityPrize.Benchmark
+open ContactFinalComposition6750Research
+open ContactLegacyAdaptiveArithmetic6750Research
+open ContactLegacyDirectArithmetic6750Research
+
+set_option autoImplicit false
+
+theorem protocolClaim6750 : ProtocolClaim 6751 321083 1048576 :=
+  protocolClaim6750_of_ledgers legacyOldGLedger6750 directOldGLedger6750
+
+end ContactUnconditional6750Research
+end ProximityPrize.SubmissionLower
+
+#print axioms ProximityPrize.SubmissionLower.ContactUnconditional6750Research.protocolClaim6750
