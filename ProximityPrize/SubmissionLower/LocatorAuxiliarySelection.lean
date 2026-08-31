@@ -97,19 +97,26 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
 theorem common_divides_A95_small {u0 u1:I → K}
-    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 40000) :
-    ∀ a:ConstraintKernel (K:=K) 17269670 131071 L 29 95
+    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 79970) :
+    ∀ a:ConstraintKernel (K:=K) 17266820 131071 L 29 95
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 17269670 131071 L 29 a.1:=by
-  exact full_kernel_divisor_small (E:=K) (Lmax:=40000) hL
-    IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_C
+      gcd S.QA S.QB ∣ reconstruct K 17266820 131071 L 29 a.1:=by
+  exact full_kernel_divisor_small (E:=K) (Lmax:=79970) hL
+    IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_Thin
 theorem common_divides_A72_small {u0 u1:I → K}
-    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 40000) :
-    ∀ a:ConstraintKernel (K:=K) 13088592 131071 L 21 72
+    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 79970) :
+    ∀ a:ConstraintKernel (K:=K) 13086432 131071 L 21 72
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 13088592 131071 L 21 a.1:=by
-  exact full_kernel_divisor_small (E:=K) (Lmax:=40000) hL
+      gcd S.QA S.QB ∣ reconstruct K 13086432 131071 L 21 a.1:=by
+  exact full_kernel_divisor_small (E:=K) (Lmax:=79970) hL
     IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_Aux
+theorem common_divides_A126_small {u0 u1:I → K}
+    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 79970) :
+    ∀ a:ConstraintKernel (K:=K) 22901256 131071 L 39 126
+      IRSProfile.domain u0 u1,
+      gcd S.QA S.QB ∣ reconstruct K 22901256 131071 L 39 a.1:=by
+  exact full_kernel_divisor_small (E:=K) (Lmax:=79970) hL
+    IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_C
 end Selected
 end
 end ProximityPrize.SubmissionLower.LocatorAuxiliarySelection
