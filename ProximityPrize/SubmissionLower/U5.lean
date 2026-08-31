@@ -45,7 +45,7 @@ theorem associatesEquivIsPrincipal_symm_apply {I:Ideal R} (hI:IsPrincipal I):
 theorem associatesEquivIsPrincipal_mul (x y:Associates R):
    (associatesEquivIsPrincipal R (x*y):Ideal R)=
      (associatesEquivIsPrincipal R x)*(associatesEquivIsPrincipal R y):=by
- rw [←quot_out x, ←quot_out y]
+ rw [←quot_out x,←quot_out y]
  simp_rw [mk_mul_mk,associatesEquivIsPrincipal_apply,span_singleton_mul_span_singleton]
 @[simp]
 theorem associatesEquivIsPrincipal_map_zero:
@@ -106,7 +106,7 @@ noncomputable def associatesNonZeroDivisorsMulEquivIsPrincipal:
 noncomputable def isoBaseOfIsPrincipal {I:Ideal R}
    [hprinc:I.IsPrincipal] (hI:I≠⊥):R ≃ₗ[R] I:=
  letI x:=IsPrincipal.generator I
- have hx:x≠0:=by rwa [Ne, ←IsPrincipal.eq_bot_iff_generator_eq_zero]
+ have hx:x≠0:=by rwa [Ne,←IsPrincipal.eq_bot_iff_generator_eq_zero]
  (LinearEquiv.toSpanNonzeroSingleton R R x hx).trans
    (LinearEquiv.ofEq (Submodule.span R {x}) I (IsPrincipal.span_singleton_generator I))
 @[simp]

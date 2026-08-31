@@ -27,9 +27,9 @@ instance:SMul ℕ FlagDegree:=⟨fun n p↦
 @[simp] theorem nsmul_all (n:ℕ) (p:FlagDegree):
    (n • p).all=n*p.all:=rfl
 def InFlag (p:FlagDegree) (d:Fin 3 →₀ ℕ):Prop:=
- d 1 ≤ p.all∧
-   d 0+d 1 ≤ p.yz+p.all∧
-   d 0+d 1+d 2 ≤ p.zOnly+p.yz+p.all
+ d 1≤p.all∧
+   d 0+d 1≤p.yz+p.all∧
+   d 0+d 1+d 2≤p.zOnly+p.yz+p.all
 theorem inFlag_zero (p:FlagDegree):InFlag p 0:=by
  simp [InFlag]
 theorem inFlag_add {p q:FlagDegree} {d e:Fin 3 →₀ ℕ}
@@ -108,8 +108,8 @@ theorem flag_weight_fin3 (weights:Fin 3 → ℕ) (d:Fin 3 →₀ ℕ):
 theorem support_subset_flagSupport_of_weighted_degrees
    {K:Type*} [Field K] (p:FlagDegree)
    (A:MvPolynomial (Fin 3) K)
-   (hS:MvPolynomial.weightedTotalDegree flagSWeights A ≤ p.all)
-   (hYS:MvPolynomial.weightedTotalDegree flagYSWeights A ≤ p.yz+p.all)
+   (hS:MvPolynomial.weightedTotalDegree flagSWeights A≤p.all)
+   (hYS:MvPolynomial.weightedTotalDegree flagYSWeights A≤p.yz+p.all)
    (hTotal:MvPolynomial.weightedTotalDegree flagTotalWeights A ≤
      p.zOnly+p.yz+p.all):
    A.support ⊆ flagSupport p:=by
@@ -120,8 +120,8 @@ theorem support_subset_flagSupport_of_weighted_degrees
  have htotal:=
    (MvPolynomial.le_weightedTotalDegree flagTotalWeights hd).trans hTotal
  rw [flag_weight_fin3] at hs hys htotal
- change d 0*0+d 1*1+d 2*0 ≤ p.all at hs
- change d 0*1+d 1*1+d 2*0 ≤ p.yz+p.all at hys
+ change d 0*0+d 1*1+d 2*0≤p.all at hs
+ change d 0*1+d 1*1+d 2*0≤p.yz+p.all at hys
  change d 0*1+d 1*1+d 2*1 ≤
    p.zOnly+p.yz+p.all at htotal
  simp only [Nat.mul_zero,Nat.mul_one,Nat.add_zero,Nat.zero_add] at hs hys htotal
@@ -218,7 +218,7 @@ theorem flag_budget_slack:
  rw [flag_ledger_ceiling_exact]
  norm_num [legacyAlignmentBudget]
 theorem flag_strict_budget:
-   flagTotalNumerator < legacyAlignmentBudget*legacyGapSquared:=by
+   flagTotalNumerator<legacyAlignmentBudget*legacyGapSquared:=by
  rw [flag_total_numerator_exact]
  norm_num [legacyAlignmentBudget,legacyGapSquared,legacyGap,
    legacyAgreements,legacyN,legacyErrors,legacyW]

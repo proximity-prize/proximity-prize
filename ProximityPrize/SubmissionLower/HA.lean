@@ -63,7 +63,7 @@ theorem coe_mul_apply [AddMonoid ι] [SetLike.GradedMonoid A]
    ((r*r') n:R)=
      ∑ ij∈r.support ×ˢ r'.support with ij.1+ij.2=n,(r ij.1*r' ij.2:R):=by
  rw [mul_eq_sum_support_ghas_mul,DFinsupp.finsetSum_apply,AddSubmonoidClass.coe_finsetSum]
- simp_rw [coe_of_apply,apply_ite,ZeroMemClass.coe_zero, ←Finset.sum_filter,SetLike.coe_gMul]
+ simp_rw [coe_of_apply,apply_ite,ZeroMemClass.coe_zero,←Finset.sum_filter,SetLike.coe_gMul]
 set_option backward.isDefEq.respectTransparency false in
 theorem coe_mul_apply_eq_dfinsuppSum [AddMonoid ι] [SetLike.GradedMonoid A]
    [∀ (i:ι) (x:A i),Decidable (x≠0)] (r r':⨁ i,A i) (n:ι):
@@ -152,14 +152,14 @@ variable [Sub ι] [OrderedSub ι] [AddLeftReflectLE ι]
 theorem coe_mul_of_apply_of_le (r:⨁ i,A i) {i:ι} (r':A i) (n:ι) (h:i ≤ n):
    ((r*of (fun i => A i) i r') n:R)=r (n-i)*r':=
  coe_mul_of_apply_aux _ _ _ fun _x => (eq_tsub_iff_add_eq_of_le h).symm
-theorem coe_of_mul_apply_of_le {i:ι} (r:A i) (r':⨁ i,A i) (n:ι) (h:i ≤ n):
+theorem coe_of_mul_apply_of_le {i:ι} (r:A i) (r':⨁ i,A i) (n:ι) (h:i≤n):
    ((of (fun i => A i) i r*r') n:R)=r*r' (n-i):=
  coe_of_mul_apply_aux _ _ _ fun x => by rw [eq_tsub_iff_add_eq_of_le h,add_comm]
 theorem coe_mul_of_apply (r:⨁ i,A i) {i:ι} (r':A i) (n:ι) [Decidable (i ≤ n)]:
-   ((r*of (fun i => A i) i r') n:R)=if i ≤ n then (r (n-i):R)*r' else 0:=by
+   ((r*of (fun i => A i) i r') n:R)=if i≤n then (r (n-i):R)*r' else 0:=by
  split_ifs with h
  exacts [coe_mul_of_apply_of_le _ _ _ n h,coe_mul_of_apply_of_not_le _ _ _ n h]
-theorem coe_of_mul_apply {i:ι} (r:A i) (r':⨁ i,A i) (n:ι) [Decidable (i ≤ n)]:
+theorem coe_of_mul_apply {i:ι} (r:A i) (r':⨁ i,A i) (n:ι) [Decidable (i≤n)]:
    ((of (fun i => A i) i r*r') n:R)=if i ≤ n then (r*r' (n-i):R) else 0:=by
  split_ifs with h
  exacts [coe_of_mul_apply_of_le _ _ _ n h,coe_of_mul_apply_of_not_le _ _ _ n h]
@@ -262,19 +262,19 @@ section Semiring
 variable [Semiring R] [SetLike σ R] [AddSubmonoidClass σ R]
 variable {A:ι → σ} [SetLike.GradedMonoid A]
 theorem mul_apply_eq_zero {r r':⨁ i,A i} {m n:ι}
-   (hr:∀ i < m,r i=0) (hr':∀ i < n,r' i=0) ⦃k:ι⦄ (hk:k < m+n):
+   (hr:∀ i < m,r i=0) (hr':∀ i<n,r' i=0) ⦃k:ι⦄ (hk:k < m+n):
    (r*r') k=0:=by
  classical
  rw [Subtype.ext_iff,ZeroMemClass.coe_zero,coe_mul_apply]
  apply Finset.sum_eq_zero fun x hx↦?_
- obtain (hx | hx):x.1 < m∨x.2 < n:=by
+ obtain (hx | hx):x.1<m∨x.2<n:=by
    by_contra! ⟨hm,hn⟩
    obtain rfl:x.1+x.2=k:=by simp_all
    apply lt_irrefl (m+n) <| lt_of_le_of_lt (by gcongr) hk
  all_goals simp [hr,hr',hx]
 variable [CanonicallyOrderedAdd ι]
 theorem listProd_apply_eq_zero' {l:List ((⨁ i,A i) × ι)}
-   (hl:∀ xn∈l,∀ k < xn.2,xn.1 k=0) ⦃n:ι⦄ (hn:n < (l.map Prod.snd).sum):
+   (hl:∀ xn∈l,∀ k<xn.2,xn.1 k=0) ⦃n:ι⦄ (hn:n<(l.map Prod.snd).sum):
    (l.map Prod.fst).prod n=0:=by
  induction l generalizing n with
  | nil => simp at hn
@@ -283,7 +283,7 @@ theorem listProd_apply_eq_zero' {l:List ((⨁ i,A i) × ι)}
      List.prod_cons] at hl hn ⊢
    exact mul_apply_eq_zero hl.1 (ih hl.2) hn
 theorem listProd_apply_eq_zero {l:List (⨁ i,A i)} {m:ι}
-   (hl:∀ x∈l,∀ k < m,x k=0) ⦃n:ι⦄ (hn:n < l.length • m):
+   (hl:∀ x∈l,∀ k<m,x k=0) ⦃n:ι⦄ (hn:n<l.length • m):
    l.prod n=0:=by
  induction l generalizing n with
  | nil => simp at hn
@@ -300,20 +300,20 @@ theorem multisetProd_apply_eq_zero' {s:Multiset ((⨁ i,A i) × ι)}
    (hs:∀ xn∈s,∀ k < xn.2,xn.1 k=0) ⦃n:ι⦄ (hn:n < (s.map Prod.snd).sum):
    (s.map Prod.fst).prod n=0:=by
  have:=listProd_apply_eq_zero' (l:=s.toList) (by simpa using hs)
-   (by simpa [←Multiset.sum_coe, ←Multiset.map_coe])
- simpa [←Multiset.prod_coe, ←Multiset.map_coe]
+   (by simpa [←Multiset.sum_coe,←Multiset.map_coe])
+ simpa [←Multiset.prod_coe,←Multiset.map_coe]
 theorem multisetProd_apply_eq_zero {s:Multiset (⨁ i,A i)} {m:ι}
-   (hs:∀ x∈s,∀ k < m,x k=0) ⦃n:ι⦄ (hn:n < s.card • m):
+   (hs:∀ x∈s,∀ k<m,x k=0) ⦃n:ι⦄ (hn:n<s.card • m):
    s.prod n=0:=by
  have:=listProd_apply_eq_zero (l:=s.toList) (by simpa using hs)
-   (by simpa [←Multiset.sum_coe, ←Multiset.map_coe])
- simpa [←Multiset.prod_coe, ←Multiset.map_coe]
+   (by simpa [←Multiset.sum_coe,←Multiset.map_coe])
+ simpa [←Multiset.prod_coe,←Multiset.map_coe]
 theorem finsetProd_apply_eq_zero' {s:Finset ((⨁ i,A i) × ι)}
    (hs:∀ xn∈s,∀ k < xn.2,xn.1 k=0) ⦃n:ι⦄ (hn:n < ∑ xn∈s,xn.2):
    (∏ xn∈s,xn.1) n=0:=by
  simpa using listProd_apply_eq_zero' (l:=s.toList) (by simpa using hs) (by simpa)
 theorem finsetProd_apply_eq_zero {s:Finset (⨁ i,A i)} {m:ι}
-   (hs:∀ x∈s,∀ k < m,x k=0) ⦃n:ι⦄ (hn:n < s.card • m):
+   (hs:∀ x∈s,∀ k<m,x k=0) ⦃n:ι⦄ (hn:n<s.card • m):
    (∏ x∈s,x) n=0:=by
  simpa using listProd_apply_eq_zero (l:=s.toList) (by simpa using hs) (by simpa)
 end CommSemiring

@@ -233,21 +233,21 @@ theorem finite_sum_flag_finrank_trapezoid
      (planeMap K order (flagAlgHom lam μ ν G)).natDegree)
    (n mCap totalG totalH cap:ℕ) (hHne:H≠0)
    (hGouter:(planeMap K order
-     (flagAlgHom lam μ ν G)).natDegree ≤ n)
+     (flagAlgHom lam μ ν G)).natDegree≤n)
    (hHouter:(planeMap K order
-     (flagAlgHom lam μ ν H)).natDegree ≤ mCap)
+     (flagAlgHom lam μ ν H)).natDegree≤mCap)
    (hGsupport:∀ d∈(rationalMap K order
-     (flagAlgHom lam μ ν G)).support,d 0+d 1 ≤ totalG)
+     (flagAlgHom lam μ ν G)).support,d 0+d 1≤totalG)
    (hHsupport:∀ d∈(rationalMap K order
-     (flagAlgHom lam μ ν H)).support,d 0+d 1 ≤ totalH)
-   (hbudget:∀ m,m ≤ mCap →
-     m*totalG+n*totalH-m*n ≤ cap):
+     (flagAlgHom lam μ ν H)).support,d 0+d 1≤totalH)
+   (hbudget:∀ m,m≤mCap →
+     m*totalG+n*totalH-m*n≤cap):
    letI:∀ i,Algebra (RatFunc K) (CoordinateField K (Q i)):=
      fun i↦(elementEmbedding K (CoordinateField K (Q i))
        (flagEvaluation K (Q i) lam μ ν (MvPolynomial.X (order 0)))
        (ht i)).toRingHom.toAlgebra
    (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (Q i)))∧
-     (∑ i,Module.finrank (RatFunc K) (CoordinateField K (Q i))) ≤ cap:=by
+     (∑ i,Module.finrank (RatFunc K) (CoordinateField K (Q i)))≤cap:=by
  let e:∀ i,MvPolynomial (Fin 3) K →ₐ[K] CoordinateField K (Q i):=
    fun i↦flagEvaluation K (Q i) lam μ ν
  have hGroot:∀ i,e i (flagAlgHom lam μ ν G)=0:=by

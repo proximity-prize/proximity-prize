@@ -69,9 +69,9 @@ lemma X_dvd_comp_sub_C_eval {F:Type*} [Field F]
 lemma X_pow_dvd_mul_pow_of_total_coeff_zero {F:Type*} [Field F]
    {A U:Polynomial F} {m b:Nat}
    (hU:Polynomial.X∣U)
-   (hzero:∀ a,a+b < m → A.coeff a=0):
+   (hzero:∀ a,a+b<m → A.coeff a=0):
    Polynomial.X^m∣A*U^b:=by
- by_cases hb:b < m
+ by_cases hb:b<m
  · have hA:Polynomial.X^(m-b)∣A:=by
      rw [Polynomial.X_pow_dvd_iff]
      intro d hd
@@ -85,7 +85,7 @@ lemma X_pow_dvd_mul_pow_of_total_coeff_zero {F:Type*} [Field F]
    rw [←pow_add]
    have hmb:m-b+b=m:=Nat.sub_add_cancel (Nat.le_of_lt hb)
    rw [hmb]
- · have hbm:m ≤ b:=Nat.le_of_not_gt hb
+ · have hbm:m≤b:=Nat.le_of_not_gt hb
    have hXb:(Polynomial.X:Polynomial F)^m∣Polynomial.X^b:=
      pow_dvd_pow Polynomial.X hbm
    have hUb:Polynomial.X^b∣U^b:=pow_dvd_pow_of_dvd hU b
@@ -93,7 +93,7 @@ lemma X_pow_dvd_mul_pow_of_total_coeff_zero {F:Type*} [Field F]
 lemma X_pow_dvd_eval_of_total_coeff_zero {F:Type*} [Field F]
    {B:Polynomial (Polynomial F)} {U:Polynomial F} {m:Nat}
    (hU:Polynomial.X∣U)
-   (hzero:∀ a b,a+b < m → (B.coeff b).coeff a=0):
+   (hzero:∀ a b,a+b<m → (B.coeff b).coeff a=0):
    Polynomial.X^m∣Polynomial.eval U B:=by
  rw [Polynomial.eval_eq_sum]
  apply Finset.dvd_sum
@@ -103,9 +103,9 @@ lemma X_pow_dvd_eval_of_total_coeff_zero {F:Type*} [Field F]
 lemma specialize_shift_total_coeff_zero {F:Type*} [Field F]
    (Q:Polynomial (Polynomial (Polynomial F))) (ω z:F) (yZ:Polynomial F)
    (m:Nat)
-   (hvan:∀ s t h,s+t < m →
+   (hvan:∀ s t h,s+t<m →
      ((((Polynomial.Bivariate.shift Q (Polynomial.C ω) yZ).coeff t).coeff s).coeff h)=0):
-   ∀ s t,s+t < m →
+   ∀ s t,s+t<m →
      (((Polynomial.Bivariate.shift (specializeZ Q z) ω (Polynomial.eval z yZ)).coeff t).coeff s)=0:=by
  intro s t hst
  have hpoly:
@@ -121,15 +121,15 @@ theorem rootMultiplicity_triEval_ge_of_shift_coeff_zero
    {F:Type*} [Field F]
    (Q:Polynomial (Polynomial (Polynomial F))) (ω z:F)
    (yZ P:Polynomial F) (m:Nat)
-   (hvan:∀ s t h,s+t < m →
+   (hvan:∀ s t h,s+t<m →
      ((((Polynomial.Bivariate.shift Q (Polynomial.C ω) yZ).coeff t).coeff s).coeff h)=0)
    (hmatch:Polynomial.eval ω P=Polynomial.eval z yZ)
    (hne:triEval Q z P≠0):
-   m ≤ (triEval Q z P).rootMultiplicity ω:=by
+   m≤(triEval Q z P).rootMultiplicity ω:=by
  let y:=Polynomial.eval z yZ
  let B:=specializeZ Q z
  let U:=P.comp (Polynomial.X+Polynomial.C ω)-Polynomial.C y
- have hzero:∀ a b,a+b < m →
+ have hzero:∀ a b,a+b<m →
      (((Polynomial.Bivariate.shift B ω y).coeff b).coeff a)=0:=by
    exact specialize_shift_total_coeff_zero Q ω z yZ m hvan
  have hU:Polynomial.X∣U:=
@@ -148,11 +148,11 @@ theorem rootMultiplicity_triEval_ge_of_shift_coeff_zero
 theorem mul_card_le_natDegree_of_rootMultiplicity
    {F ι:Type*} [Field F] [DecidableEq F] [DecidableEq ι]
    (R:Polynomial F) (ω:ι ↪ F) (A:Finset ι) (m:Nat)
-   (hmult:∀ i∈A,m ≤ R.rootMultiplicity (ω i)):
-   m*A.card ≤ R.natDegree:=by
+   (hmult:∀ i∈A,m≤R.rootMultiplicity (ω i)):
+   m*A.card≤R.natDegree:=by
  let xs:Finset F:=A.map ω
  have hselected:
-     ∑ x∈xs,Multiset.count x R.roots ≤ R.roots.card:=by
+     ∑ x∈xs,Multiset.count x R.roots≤R.roots.card:=by
    let all:=xs ∪ R.roots.toFinset
    calc
      ∑ x∈xs,Multiset.count x R.roots ≤
@@ -166,7 +166,7 @@ theorem mul_card_le_natDegree_of_rootMultiplicity
      _=R.roots.card:=Multiset.toFinset_sum_count_eq R.roots
  calc
    m*A.card=∑ i∈A,m:=by simp [Nat.mul_comm]
-   _ ≤ ∑ i∈A,R.rootMultiplicity (ω i):=
+   _≤∑ i∈A,R.rootMultiplicity (ω i):=
      Finset.sum_le_sum fun i hi => hmult i hi
    _=∑ x∈xs,R.rootMultiplicity x:=by
      symm
@@ -175,8 +175,8 @@ theorem mul_card_le_natDegree_of_rootMultiplicity
      apply Finset.sum_congr rfl
      intro x hx
      exact (Polynomial.count_roots R).symm
-   _ ≤ R.roots.card:=hselected
-   _ ≤ R.natDegree:=Polynomial.card_roots' R
+   _≤R.roots.card:=hselected
+   _≤R.natDegree:=Polynomial.card_roots' R
 theorem triEval_eq_zero_of_many_shift_vanishing
    {F ι:Type*} [Field F] [DecidableEq F] [DecidableEq ι]
    (Q:Polynomial (Polynomial (Polynomial F))) (z:F)

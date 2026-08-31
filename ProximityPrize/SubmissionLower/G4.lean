@@ -75,10 +75,10 @@ variable (K E:Type) [Field K] [Field E] [Algebra K E]
  [FiniteDimensional K E] [Algebra.IsSeparable K E]
 theorem finrank_le_planar_bound
    (P Q:Polynomial (Polynomial K))
-   (hP:Irreducible P) (hdeg:0 < P.natDegree) (hproper:¬ P∣Q)
+   (hP:Irreducible P) (hdeg:0<P.natDegree) (hproper:¬ P∣Q)
    (y r:E) (hgen:IntermediateField.adjoin K ({y,r}:Set E)=⊤)
    (hPy:planeEval K E y r P=0) (hQy:planeEval K E y r Q=0):
-   Module.finrank K E ≤ Q.natDegree*Polynomial.Bivariate.degreeX P+
+   Module.finrank K E≤Q.natDegree*Polynomial.Bivariate.degreeX P+
      P.natDegree*Polynomial.Bivariate.degreeX Q:=by
  classical
  let Ω:=AlgebraicClosure E
@@ -105,7 +105,7 @@ variable {I:Type} [Fintype I] (E:I → Type)
  [∀ i,FiniteDimensional K (E i)] [∀ i,Algebra.IsSeparable K (E i)]
 theorem sum_finrank_le_planar_bound
    (P Q:Polynomial (Polynomial K))
-   (hP:Irreducible P) (hdeg:0 < P.natDegree) (hproper:¬ P∣Q)
+   (hP:Irreducible P) (hdeg:0<P.natDegree) (hproper:¬ P∣Q)
    (y r:∀ i,E i)
    (hgen:∀ i,IntermediateField.adjoin K ({y i,r i}:Set (E i))=⊤)
    (hkernels:Function.Injective (fun i => relationIdeal K (E i) (y i) (r i)))
@@ -144,8 +144,8 @@ theorem sum_finrank_le_planar_bound
    ((bimap (algebraMap K Ω) P).map (Polynomial.evalRingHom (φ (y i)))).eval (φ (r i))=0∧
    ((bimap (algebraMap K Ω) Q).map (Polynomial.evalRingHom (φ (y i)))).eval (φ (r i))=0
  constructor
- · rw [←planeEval_eq, ←algHom_planeEval K (E i) Ω φ (y i) (r i) P,hPy i,map_zero]
- · rw [←planeEval_eq, ←algHom_planeEval K (E i) Ω φ (y i) (r i) Q,hQy i,map_zero]
+ · rw [←planeEval_eq,←algHom_planeEval K (E i) Ω φ (y i) (r i) P,hPy i,map_zero]
+ · rw [←planeEval_eq,←algHom_planeEval K (E i) Ω φ (y i) (r i) Q,hQy i,map_zero]
 end FiniteFamily
 end
 end ProximityPrize.SubmissionLower.RCN361

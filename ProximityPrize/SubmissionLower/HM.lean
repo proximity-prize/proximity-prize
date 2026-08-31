@@ -19,7 +19,7 @@ theorem Lex.wellFounded' (hbot:∀ ⦃n⦄,¬s n 0) (hs:WellFounded s)
    [Std.Trichotomous r] (hr:WellFounded (Function.swap r)):WellFounded (Finsupp.Lex r s):=
  (lex_eq_invImage_dfinsupp_lex r s).symm ▸
    InvImage.wf _ (DFinsupp.Lex.wellFounded' (fun _ => hbot) (fun _ => hs) hr)
-instance Lex.wellFoundedLT {α N} [LT α] [@Std.Trichotomous α (· < ·)] [hα:WellFoundedGT α]
+instance Lex.wellFoundedLT {α N} [LT α] [@Std.Trichotomous α (·<·)] [hα:WellFoundedGT α]
    [AddMonoid N] [PartialOrder N] [IsBotZeroClass N]
    [hN:WellFoundedLT N]:WellFoundedLT (Lex (α →₀ N)):=
  ⟨Lex.wellFounded' (fun _ => not_lt_zero) hN.wf hα.wf⟩

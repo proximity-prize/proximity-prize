@@ -22,7 +22,7 @@ theorem InftyValuation.map_mul' (x y:RatFunc F):
    · rw [hy,mul_zero,if_pos (Eq.refl _),mul_zero]
    · simp_all [RatFunc.intDegree_mul]
 theorem InftyValuation.map_add_le_max' (x y:RatFunc F):
-   inftyValuationDef F (x+y) ≤ max (inftyValuationDef F x) (inftyValuationDef F y):=by
+   inftyValuationDef F (x+y)≤max (inftyValuationDef F x) (inftyValuationDef F y):=by
  unfold inftyValuationDef
  have:=@RatFunc.intDegree_add_le F
  aesop
@@ -47,7 +47,7 @@ theorem inftyValuation.X:inftyValuation F RatFunc.X=exp 1:=by
  simp [inftyValuation_apply,inftyValuationDef,if_neg RatFunc.X_ne_zero,RatFunc.intDegree_X]
 lemma inftyValuation.X_zpow (m:ℤ):inftyValuation F (RatFunc.X^m)=exp m:=by simp
 theorem inftyValuation.X_inv:inftyValuation F (1/RatFunc.X)=exp (-1):=by
- rw [one_div, ←zpow_neg_one,inftyValuation.X_zpow]
+ rw [one_div,←zpow_neg_one,inftyValuation.X_zpow]
 theorem inftyValuation.polynomial {p:F[X]} (hp:p≠0):
    inftyValuationDef F (algebraMap F[X] (RatFunc F) p)=exp (p.natDegree:ℤ):=by
  rw [inftyValuationDef,if_neg (by simpa),RatFunc.intDegree_polynomial]

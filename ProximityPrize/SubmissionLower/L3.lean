@@ -46,8 +46,8 @@ theorem specialization_eq_zero_of_mem_ker
    (htheta:theta∈LinearMap.ker
      (constraintMap K D w L s m nodes u0 u1))
    (P:Polynomial K) (gamma:K) (support:Finset I)
-   (hD:0 < D) (hP:P.natDegree ≤ w)
-   (hcapacity:D ≤ m*support.card)
+   (hD:0<D) (hP:P.natDegree≤w)
+   (hcapacity:D≤m*support.card)
    (hvalues:∀ i∈support,
      P.eval (nodes i)=u0 i+gamma*u1 i):
    specialization K P gamma (reconstruct K D w L s theta)=0:=by
@@ -67,9 +67,9 @@ theorem specialization_eq_zero_of_agreements
    (theta:CoefficientIndex D w L s → K)
    (htheta:theta∈LinearMap.ker
      (constraintMap K D w L s m nodes u0 u1))
-   (hD:0 < D) (hDa:D=m*a)
+   (hD:0<D) (hDa:D=m*a)
    (P:Polynomial K) (gamma:K) (support:Finset I)
-   (hP:P.natDegree ≤ w) (hcard:a ≤ support.card)
+   (hP:P.natDegree≤w) (hcard:a≤support.card)
    (hvalues:∀ i∈support,
      P.eval (nodes i)=u0 i+gamma*u1 i):
    specialization K P gamma (reconstruct K D w L s theta)=0:=by
@@ -85,11 +85,11 @@ theorem nonzero_kernel_member_universal
    (htheta0:theta≠0)
    (htheta:theta∈LinearMap.ker
      (constraintMap K D w L s m nodes u0 u1))
-   (hD:0 < D) (hDa:D=m*a):
+   (hD:0<D) (hDa:D=m*a):
    reconstruct K D w L s theta≠0∧
      reconstruct K D w L s theta∈globalCoefficientBox K D w L s∧
      ∀ (gamma:K) (P:Polynomial K) (support:Finset I),
-       P.natDegree ≤ w → a ≤ support.card →
+       P.natDegree≤w → a≤support.card →
        (∀ i∈support,
          P.eval (nodes i)=u0 i+gamma*u1 i) →
        specialization K P gamma (reconstruct K D w L s theta)=0:=by

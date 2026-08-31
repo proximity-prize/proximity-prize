@@ -57,18 +57,18 @@ omit [Fintype m] in
 lemma polyToMatrix_cornerAddX:
    f.polyToMatrix (cornerAddX M k k k)=(-f (M k k)).charmatrix:=by
  simp [cornerAddX,Matrix.add_apply,charmatrix,
-   RingHom.polyToMatrix, -AlgEquiv.symm_toRingEquiv,map_neg]
+   RingHom.polyToMatrix,-AlgEquiv.symm_toRingEquiv,map_neg]
 lemma eval_zero_det_det:eval 0 (f.polyToMatrix (cornerAddX M k).det).det=(f M.det).det:=by
- rw [←coe_evalRingHom,RingHom.map_det, ←RingHom.comp_apply,
+ rw [←coe_evalRingHom,RingHom.map_det,←RingHom.comp_apply,
    evalRingHom_mapMatrix_comp_polyToMatrix,f.comp_apply,RingHom.map_det]
  congr;ext;simp [cornerAddX,diagonal,apply_ite]
 lemma eval_zero_comp_det:
    eval 0 (comp m m n n R[X] <| (cornerAddX M k).map f.polyToMatrix).det=
      (comp m m n n R <| M.map f).det:=by
- simp_rw [←coe_evalRingHom,RingHom.map_det, ←compRingEquiv_apply, ←RingEquiv.coe_toRingHom,
-   ←RingHom.mapMatrix_apply, ←RingHom.comp_apply, ←RingHom.comp_assoc,
+ simp_rw [←coe_evalRingHom,RingHom.map_det,←compRingEquiv_apply,←RingEquiv.coe_toRingHom,
+   ←RingHom.mapMatrix_apply,←RingHom.comp_apply,←RingHom.comp_assoc,
    evalRingHom_mapMatrix_comp_compRingEquiv,RingHom.comp_assoc,RingHom.mapMatrix_comp,
-   evalRingHom_mapMatrix_comp_polyToMatrix, ←RingHom.mapMatrix_comp,RingHom.comp_apply]
+   evalRingHom_mapMatrix_comp_polyToMatrix,←RingHom.mapMatrix_comp,RingHom.comp_apply]
  congr with i j
  simp [cornerAddX,diagonal,apply_ite]
 theorem comp_det_mul_pow:
@@ -76,10 +76,10 @@ theorem comp_det_mul_pow:
      (f (M k k)).det*(((mulAuxMatBlock).map f).comp _ _ n n R).det:=by
  letI:DecidableEq Prop:=Classical.decEq Prop
  trans (((M*auxMat M k).map f).comp m m n n R).det
- · simp_rw [←f.mapMatrix_apply, ←compRingEquiv_apply,map_mul,det_mul,f.mapMatrix_apply,
+ · simp_rw [←f.mapMatrix_apply,←compRingEquiv_apply,map_mul,det_mul,f.mapMatrix_apply,
      compRingEquiv_apply,((auxMat_blockTriangular M k).map f).comp.det_fintype,Fintype.prod_Prop,
      comp_toSquareBlock (b:=(·≠k)),det_reindex_self,map_toSquareBlock,
-     auxMat_toSquareBlock_eq,auxMat_toSquareBlock_ne,smul_one_eq_diagonal, ←diagonal_one,
+     auxMat_toSquareBlock_eq,auxMat_toSquareBlock_ne,smul_one_eq_diagonal,←diagonal_one,
      diagonal_map (map_zero _),comp_diagonal,det_reindex_self]
    simp
  · simp_rw [((mul_auxMat_blockTriangular M k).map f).comp.det_fintype,Fintype.prod_Prop,
@@ -93,7 +93,7 @@ lemma det_det_aux
    (ih:∀ M,(f (det M)).det=((M.map f).comp {a//(a=k)=False} _ n n R).det):
    ((f M.det).det-((M.map f).comp m m n n R).det)*
      (f (M k k)).det^(Fintype.card m-1)=0:=by
- rw [sub_mul,comp_det_mul_pow, ←det_pow, ←map_pow, ←det_mul, ←map_mul,
+ rw [sub_mul,comp_det_mul_pow,←det_pow,←map_pow,←det_mul,←map_mul,
    det_mul_corner_pow,map_mul,det_mul,ih,sub_self]
 end Algebra.Norm.Transitivity
 open Algebra.Norm.Transitivity
@@ -111,7 +111,7 @@ theorem Matrix.det_det [Fintype m] [Fintype n] (f:S →+*Matrix n n R):
      refine sub_eq_zero.mp <| mem_nonZeroDivisors_iff_right.mp
        (pow_mem ?_ _) _ (det_det_aux k fun M↦ih _ _ <| by
          grind [Fintype.card_subtype_compl,Fintype.card_unique])
-     rw [polyToMatrix_cornerAddX, ←charpoly]
+     rw [polyToMatrix_cornerAddX,←charpoly]
      exact (Matrix.charpoly_monic _).mem_nonZeroDivisors
    rw [←eval_zero_det_det,congr_arg (eval 0) this,eval_zero_comp_det]
 variable [Algebra R S] [Module.Free R S]
@@ -134,7 +134,7 @@ theorem LinearMap.det_restrictScalars [AddCommGroup A] [Module R A] [Module S A]
  cases fintypeOrInfinite ιA;swap
  · rw [det_eq_one_of_not_module_finite (Module.not_finite_of_infinite_basis bA),map_one,
      det_eq_one_of_not_module_finite (Module.not_finite_of_infinite_basis (bS.smulTower bA))]
- rw [Algebra.norm_eq_matrix_det bS, ←AlgHom.coe_toRingHom, ←det_toMatrix bA,det_det,
+ rw [Algebra.norm_eq_matrix_det bS,←AlgHom.coe_toRingHom,←det_toMatrix bA,det_det,
    ←det_toMatrix (bS.smulTower' bA),restrictScalars_toMatrix,RingHom.coe_coe]
 theorem Algebra.norm_norm {A} [Ring A] [Algebra R A] [Algebra S A]
    [IsScalarTower R S A] [Module.Free S A] {a:A}:
@@ -175,7 +175,7 @@ theorem norm_eq_norm_adjoin (x:L):
        exact IsIntegral.isIntegral (gen K x)
  let F:=K⟮x⟯
  nth_rw 1 [←coe_gen K x]
- rw [←norm_norm (S:=F), ←IntermediateField.algebraMap_apply,
+ rw [←norm_norm (S:=F),←IntermediateField.algebraMap_apply,
    norm_algebraMap_of_basis (Module.Free.chooseBasis F L) (gen K x),map_pow,
    finrank_eq_card_chooseBasisIndex]
 variable (F E:Type*) [Field F] [Algebra K F] [Field E] [Algebra K E]
@@ -188,7 +188,7 @@ variable [FiniteDimensional K L]
 theorem norm_eq_prod_embeddings [Algebra.IsSeparable K L] [IsAlgClosed E]
    (x:L):algebraMap K E (norm K x)=∏ σ:L →ₐ[K] E,σ x:=by
  have hx:=Algebra.IsSeparable.isIntegral K x
- rw [norm_eq_norm_adjoin K x,map_pow, ←adjoin.powerBasis_gen hx,
+ rw [norm_eq_norm_adjoin K x,map_pow,←adjoin.powerBasis_gen hx,
    norm_eq_prod_embeddings_gen E (adjoin.powerBasis hx) (IsAlgClosed.splits _)]
  · exact (prod_embeddings_eq_finrank_pow L (L:=K⟮x⟯) E (adjoin.powerBasis hx)).symm
  · haveI:=Algebra.isSeparable_tower_bot_of_isSeparable K K⟮x⟯ L
@@ -198,7 +198,7 @@ theorem norm_eq_prod_automorphisms [IsGalois K L] (x:L):
  apply FaithfulSMul.algebraMap_injective L (AlgebraicClosure L)
  rw [map_prod (algebraMap L (AlgebraicClosure L))]
  rw [←Fintype.prod_equiv (Normal.algHomEquivAut K (AlgebraicClosure L) L)]
- · rw [←norm_eq_prod_embeddings _ _ x, ←IsScalarTower.algebraMap_apply]
+ · rw [←norm_eq_prod_embeddings _ _ x,←IsScalarTower.algebraMap_apply]
  · intro σ
    simp only [Normal.algHomEquivAut,AlgHom.restrictNormal',Equiv.coe_fn_mk,
      AlgEquiv.coe_ofBijective,AlgHom.restrictNormal_commutes,algebraMap_self,RingHom.id_apply]

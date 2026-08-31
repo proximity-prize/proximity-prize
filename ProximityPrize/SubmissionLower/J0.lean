@@ -47,21 +47,21 @@ theorem seedProjection_monomial (d:Fin 3 →₀ ℕ) (a:T):
  rw [monomial_fin3]
  simp [seedProjection]
 theorem seedProjection_monomial_natDegree_le (d:Fin 3 →₀ ℕ) (a:T):
-   (seedProjection T (MvPolynomial.monomial d a)).natDegree ≤ d 2:=by
+   (seedProjection T (MvPolynomial.monomial d a)).natDegree≤d 2:=by
  rw [seedProjection_monomial]
- have hc:(Polynomial.C a).natDegree ≤ 0:=by simp
- have h0:((0:Polynomial T)^d 0).natDegree ≤ 0:=by
+ have hc:(Polynomial.C a).natDegree≤0:=by simp
+ have h0:((0:Polynomial T)^d 0).natDegree≤0:=by
    simpa only [Nat.mul_zero] using Polynomial.natDegree_pow_le_of_le (d 0)
-     (show (0:Polynomial T).natDegree ≤ 0 by simp)
- have h1:((0:Polynomial T)^d 1).natDegree ≤ 0:=by
+     (show (0:Polynomial T).natDegree≤0 by simp)
+ have h1:((0:Polynomial T)^d 1).natDegree≤0:=by
    simpa only [Nat.mul_zero] using Polynomial.natDegree_pow_le_of_le (d 1)
-     (show (0:Polynomial T).natDegree ≤ 0 by simp)
- have hx:((Polynomial.X:Polynomial T)^d 2).natDegree ≤ d 2:=by simp
+     (show (0:Polynomial T).natDegree≤0 by simp)
+ have hx:((Polynomial.X:Polynomial T)^d 2).natDegree≤d 2:=by simp
  have hh:=Polynomial.natDegree_mul_le_of_le
    (Polynomial.natDegree_mul_le_of_le (Polynomial.natDegree_mul_le_of_le hc h0) h1) hx
  simpa using hh
 theorem seedProjection_natDegree_le (S:MvPolynomial (Fin 3) T):
-   (seedProjection T S).natDegree ≤ S.degreeOf 2:=by
+   (seedProjection T S).natDegree≤S.degreeOf 2:=by
  classical
  have hsum:seedProjection T S=
      ∑ d∈S.support,seedProjection T (MvPolynomial.monomial d (S.coeff d)):=by
@@ -98,7 +98,7 @@ theorem auxiliarySeedPolynomial_nonzero
  exact seedProjection_nonzero (surfaceMap φ H) (surfaceMap_ne_zero φ hφ H hH) hs.1 hs.2
 theorem auxiliarySeedPolynomial_natDegree_le
    (φ:Polynomial K →+*T) (H:MvPolynomial (Fin 4) K):
-   (auxiliarySeedPolynomial φ H).natDegree ≤ H.degreeOf 3:=
+   (auxiliarySeedPolynomial φ H).natDegree≤H.degreeOf 3:=
  (seedProjection_natDegree_le (surfaceMap φ H)).trans (surfaceMap_degreeOf_le φ H 2)
 theorem auxiliarySeedPolynomial_eval
    (φ:Polynomial K →+*T) (H:MvPolynomial (Fin 4) K)
@@ -112,7 +112,7 @@ theorem card_surface_seeds_le
    (hY:H.degreeOf 1=0) (hR:H.degreeOf 2=0) (seeds:Finset K)
    (hsolutions:∀ γ∈seeds,∃ v:Fin 3 → T,
      v 2=φ (Polynomial.C γ)∧MvPolynomial.eval v (surfaceMap φ H)=0):
-   seeds.card ≤ H.degreeOf 3:=by
+   seeds.card≤H.degreeOf 3:=by
  classical
  letI:DecidableEq K:=Classical.decEq K
  letI:DecidableEq T:=Classical.decEq T
@@ -129,8 +129,8 @@ theorem card_surface_seeds_le
    exact (auxiliarySeedPolynomial_eval φ H hY hR v).trans hzero
  calc
    seeds.card=(seeds.image c).card:=(Finset.card_image_of_injOn c.injective.injOn).symm
-   _ ≤ q.natDegree:=Polynomial.card_le_degree_of_subset_roots hroots
-   _ ≤ H.degreeOf 3:=auxiliarySeedPolynomial_natDegree_le φ H
+   _≤q.natDegree:=Polynomial.card_le_degree_of_subset_roots hroots
+   _≤H.degreeOf 3:=auxiliarySeedPolynomial_natDegree_le φ H
 end GenericSurface
 section ActualSolutions
 variable {K:Type*} [Field K]
@@ -138,7 +138,7 @@ theorem card_actual_solution_seeds_le
    (H:MvPolynomial (Fin 4) K) (hH:H≠0)
    (hY:H.degreeOf 1=0) (hR:H.degreeOf 2=0) (seeds:Finset K)
    (hsolutions:∀ γ∈seeds,∃ P:Polynomial K,specialization K P γ H=0):
-   seeds.card ≤ H.degreeOf 3:=by
+   seeds.card≤H.degreeOf 3:=by
  apply card_surface_seeds_le (RCN135.polynomialEmbedding K)
    (RCN135.polynomialEmbedding_injective K) H hH hY hR seeds
  intro γ hγ
@@ -149,10 +149,10 @@ theorem card_actual_solution_seeds_le
    simpa only [RCN138.canonical_geometricSurfaceMap] using hh
 theorem exceptional_solution_seed_card_le
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0) (hR:J.degreeOf 2=0)
-   (j p:ℕ) [CharP K p] (hj:1 ≤ j) (hsmall:j < p)
-   (hY:J.degreeOf 1 ≤ j) (hZ:J.degreeOf 3 ≤ j) (seeds:Finset K)
+   (j p:ℕ) [CharP K p] (hj:1≤j) (hsmall:j<p)
+   (hY:J.degreeOf 1≤j) (hZ:J.degreeOf 3≤j) (seeds:Finset K)
    (hsolutions:∀ γ∈seeds,∃ P:Polynomial K,
-     specialization K P γ (exceptionalAuxiliary J)=0):seeds.card ≤ 2*j^2:=by
+     specialization K P γ (exceptionalAuxiliary J)=0):seeds.card≤2*j^2:=by
  have hd:=exceptionalAuxiliary_data J hJ hR j p hj hsmall hY hZ
  exact (card_actual_solution_seeds_le (exceptionalAuxiliary J) hd.1 hd.2.1 hd.2.2.1
    seeds hsolutions).trans hd.2.2.2.2

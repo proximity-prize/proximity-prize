@@ -7,7 +7,7 @@ noncomputable section
 variable (K:Type*) [Field K]
 abbrev Poly:=MvPolynomial (Fin 3) K
 def seedlessExponents (M L s:ℕ):Set (Fin 3 →₀ ℕ):=
- {d | d 0 ≤ M∧d 0+d 1 ≤ L∧d 1 ≤ s∧d 2=0}
+ {d | d 0≤M∧d 0+d 1≤L∧d 1≤s∧d 2=0}
 def seedlessBox (M L s:ℕ):Submodule K (Poly K):=
  MvPolynomial.restrictSupport K (seedlessExponents M L s)
 theorem seedlessBox_mul

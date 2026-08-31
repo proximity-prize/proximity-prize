@@ -26,7 +26,7 @@ def weightedTotalDegree (w:σ → M) (p:MvPolynomial σ R):M:=
  p.support.sup fun s => weight w s
 theorem weightedTotalDegree_coe (w:σ → M) (p:MvPolynomial σ R) (hp:p≠0):
    weightedTotalDegree' w p=↑(weightedTotalDegree w p):=by
- rw [Ne, ←weightedTotalDegree'_eq_bot_iff w p, ←Ne,WithBot.ne_bot_iff_exists] at hp
+ rw [Ne, ←weightedTotalDegree'_eq_bot_iff w p,←Ne,WithBot.ne_bot_iff_exists] at hp
  obtain ⟨m,hm⟩:=hp
  apply le_antisymm
  · simp only [weightedTotalDegree,weightedTotalDegree',Finset.sup_le_iff,WithBot.coe_le_coe]
@@ -73,7 +73,7 @@ theorem weightedHomogeneousSubmodule_eq_finsupp_supported (w:σ → M) (m:M):
  simp [AddMonoidAlgebra.mem_supported,Set.subset_def,MvPolynomial,coeff]
 lemma weightedHomogeneousSubmodule_fg [Finite σ] (w:σ → ℕ) (hw:∀ (x:σ),w x≠0) (n:ℕ):
    (weightedHomogeneousSubmodule R w n).FG:=by
- rw [weightedHomogeneousSubmodule_eq_finsupp_supported, ←Module.Finite.iff_fg]
+ rw [weightedHomogeneousSubmodule_eq_finsupp_supported,←Module.Finite.iff_fg]
  have:=(Finsupp.finite_of_nat_weight_eq w hw n).to_subtype
  exact Module.Finite.of_basis (basisRestrictSupport R {d | Finsupp.weight w d=n})
 variable {R}
@@ -92,7 +92,7 @@ theorem weightedHomogeneousSubmodule_mul (w:σ → M) (m n:M):
    contrapose! H
    by_cases h:coeff d φ=0 <;>
      simp_all only [Ne,not_false_iff,zero_mul,mul_zero]
- rw [←mem_antidiagonal.mp hde, ←hφ aux.1, ←hψ aux.2,map_add]
+ rw [←mem_antidiagonal.mp hde,←hφ aux.1,←hψ aux.2,map_add]
 theorem isWeightedHomogeneous_monomial (w:σ → M) (d:σ →₀ ℕ) (r:R) {m:M}
    (hm:weight w d=m):IsWeightedHomogeneous w (monomial d r) m:=by
  classical
@@ -197,7 +197,7 @@ lemma induction_on {w:σ → M} {m:M}
        ⟨.add ‹_› ‹_›,fun a↦by simp [mul_add,add _ _ _ _ (hx a) (hy a)]⟩
      zero_mem':=⟨isWeightedHomogeneous_zero R w m,by simp [zero]⟩
      smul_mem':=fun a x ⟨_,hx⟩↦⟨by simp [Algebra.smul_def,C_mul ‹_› a],fun a↦by
-       simp_rw [Algebra.smul_def,algebraMap_eq, ←mul_assoc, ←map_mul]
+       simp_rw [Algebra.smul_def,algebraMap_eq,←mul_assoc,←map_mul]
        apply hx⟩}
  rw [←mem_weightedHomogeneousSubmodule,weightedHomogeneousSubmodule_eq_finsupp_supported,
    AddMonoidAlgebra.supported_eq_span_single] at hp
@@ -207,7 +207,7 @@ lemma induction_on {w:σ → M} {m:M}
  simp only [MvPolynomial,Submodule.coe_set_mk,AddSubmonoid.coe_set_mk,
    AddSubsemigroup.coe_set_mk,preimage_setOf_eq,mem_setOf_eq,A]
  refine ⟨isWeightedHomogeneous_monomial w d 1 hd,fun a↦?_⟩
- simpa only [single_eq_monomial, ←MvPolynomial.C_mul_monomial] using monomial _ (a*1) hd
+ simpa only [single_eq_monomial,←MvPolynomial.C_mul_monomial] using monomial _ (a*1) hd
 end IsWeightedHomogeneous
 variable {R}
 lemma WeightedHomogeneousSubmodule.gradedMonoid {w:σ → M}:
@@ -255,7 +255,7 @@ theorem weightedHomogeneousComponent_eq_zero'
  intro d hd;rw [mem_filter] at hd
  exfalso;exact h _ hd.1 hd.2
 theorem weightedHomogeneousComponent_eq_zero [SemilatticeSup M] [OrderBot M]
-   (h:weightedTotalDegree w φ < n):weightedHomogeneousComponent w n φ=0:=by
+   (h:weightedTotalDegree w φ<n):weightedHomogeneousComponent w n φ=0:=by
  classical
  letI:DecidableEq M:=Classical.decEq M
  rw [weightedHomogeneousComponent_apply,sum_eq_zero]

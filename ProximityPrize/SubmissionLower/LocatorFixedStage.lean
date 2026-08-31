@@ -2,11 +2,6 @@ import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BF
 import ProximityPrize.SubmissionLower.Q2
 import ProximityPrize.SubmissionLower.EQ
-
-/- Factor-adapted stage count for the 80289-error row.
-   Both counting branches below use existing counting theorems; no independent
-   seed-count assumption or ProtocolClaim is introduced.  The weighted cutoff
-   is a parameter; only the two tail supports are padded. -/
 namespace ProximityPrize.SubmissionLower.LocatorFixedStage
 open ProximityPrize.Benchmark
 open scoped Classical BigOperators
@@ -18,220 +13,196 @@ open RCN146 RCN087
 open RCN203 RCN084
 open RCN313 RCN074
 open RCN335
-
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
-
-def n : ℕ := 262144
-def w : ℕ := 131071
-def errors : ℕ := 80289
-def agreements : ℕ := 181855
-def gap : ℕ := 50784
-def prime : ℕ := 2130706433
-/- Generic quotient equations retain the accepted ceiling; the selected
-   ambient source itself uses the smaller cutoff 12366140. -/
-def weightedCap : ℕ := 12367432
-
-abbrev K := IRSProfile.Field
-abbrev I := IRSProfile.Index
-local instance : DecidableEq K := Classical.decEq K
-local instance : DecidableEq I := Classical.decEq I
-local instance : DecidableEq (GenericField K) := Classical.decEq _
-local instance : CharP K prime := by
-  simpa [prime, RCN223.prime] using
+def n:ℕ:=262144
+def w:ℕ:=131071
+def errors:ℕ:=80358
+def agreements:ℕ:=181786
+def gap:ℕ:=50715
+def prime:ℕ:=2130706433
+def weightedCap:ℕ:=9816444
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:DecidableEq (GenericField K):=Classical.decEq _
+local instance:CharP K prime:=by
+  simpa [prime,RCN223.prime] using
     RCN128.challenge_field_characteristic6600
-
-def firstTail (a b s : ℕ) : FlagDegree :=
-  reducedResidualAgreementFlag (RCN198.support a b s) (w + 1)
-def secondTail (a b s : ℕ) : FlagDegree :=
-  reducedResidualAgreementFlag (RCN198.support a b s) (w + 2)
-
+def firstTail (a b s:ℕ):FlagDegree :=
+  reducedResidualAgreementFlag (RCN198.support a b s) (w+1)
+def secondTail (a b s:ℕ):FlagDegree :=
+  reducedResidualAgreementFlag (RCN198.support a b s) (w+2)
 theorem row_values :
-    agreements + errors = n ∧ agreements - w = gap ∧
-    68 * agreements ≤ weightedCap ∧ w < agreements ∧
-    w + 1 ≤ weightedCap ∧ weightedCap < prime := by
-  norm_num [agreements, errors, n, w, gap, weightedCap, prime]
-
-theorem tail_support_formula (a b s d : ℕ) :
+    agreements+errors=n ∧ agreements - w=gap ∧
+    weightedCap=54*agreements ∧ w<agreements ∧
+    w+1≤weightedCap ∧ weightedCap<prime:=by
+  norm_num [agreements,errors,n,w,gap,weightedCap,prime]
+theorem tail_support_formula (a b s d:ℕ) :
     reducedResidualAgreementFlag (RCN198.support a b s) d =
-      ⟨2 * a * d, 1 + 2 * (b + 1) * d, 2 * (s + 1) * d⟩ := by
-  have ht : a + b + s + 3 - (b + s + 3) = a := by omega
-  have hy : b + s + 3 - (s + 2) = b + 1 := by omega
-  have hs : 2 * (s + 2) - 2 = 2 * (s + 1) := by omega
-  simp only [reducedResidualAgreementFlag, reducedAgreementDirection, RCN198.support]
-  rw [ht, hy, hs]
-
-/- The identity degree is linear in the actual first flag. -/
-theorem identityDegree_linear (flag : FlagDegree) (a b s : ℕ) :
+      ⟨2*a*d,1+2*(b+1)*d,2*(s+1)*d⟩:=by
+  have ht:a+b+s+3 - (b+s+3)=a:=by omega
+  have hy:b+s+3 - (s+2)=b+1:=by omega
+  have hs:2*(s+2) - 2=2*(s+1):=by omega
+  simp only [reducedResidualAgreementFlag,reducedAgreementDirection,RCN198.support]
+  rw [ht,hy,hs]
+theorem identityDegree_linear (flag:FlagDegree) (a b s:ℕ) :
     identityCurveDegree flag a b s w =
-      flag.zOnly * (393219 + 262146 * s) +
-      flag.yz * (786438 + 524292 * s) +
-      flag.all * (1048586 + 262146 * a + 524292 * b + 524292 * s) := by
-  simp only [identityCurveDegree, paddedCut,
+      flag.zOnly*(393219+262146*s) +
+      flag.yz*(786438+524292*s) +
+      flag.all*(1048586+262146*a+524292*b+524292*s):=by
+  simp only [identityCurveDegree,paddedCut,
     RCN206.centreFlag,
     RCN206.directionFlag,
-    flagMixed, unitZFlag, unitYZFlag, add_zOnly, add_yz, add_all,
-    nsmul_zOnly, nsmul_yz, nsmul_all, w]
+    flagMixed,unitZFlag,unitYZFlag,add_zOnly,add_yz,add_all,
+    nsmul_zOnly,nsmul_yz,nsmul_all,w]
   ring
-
-def identitySlackZ (b s : ℕ) : ℕ :=
-  6331477988335578 + 6979753064005632 * b + 11200747264743804 * s +
-    3489876532002816 * s ^ 2 + 6979753064005632 * b * s
-def identitySlackYZ (a b s : ℕ) : ℕ :=
-  2193299755119348 + 6979753064005632 * a + 6979753064005632 * b +
-    8441961775932984 * s + 3489876532002816 * s ^ 2 +
-    6979753064005632 * a * s + 6979753064005632 * b * s
-def identitySlackAll (a b s : ℕ) : ℕ :=
-  2924396376203148 + 11200747264743804 * a + 8441961775932984 * b +
-    3489876532002816 * b ^ 2 + 8441961775932984 * s +
-    3489876532002816 * s ^ 2 + 6979753064005632 * a * b +
-    6979753064005632 * a * s + 6979753064005632 * b * s
-def identitySlack (flag : FlagDegree) (a b s : ℕ) : ℕ :=
-  flag.zOnly * identitySlackZ b s + flag.yz * identitySlackYZ a b s +
-    flag.all * identitySlackAll a b s
-
-/- A subtraction-free certificate, valid for all a,b,s and all flags. -/
-theorem identity_budget_exact (flag : FlagDegree) (a b s : ℕ) :
-    gap * flagMixed flag (firstTail a b s) (secondTail a b s) =
-      (n - w) * (errors + 1) * identityCurveDegree flag a b s w +
-        identitySlack flag a b s := by
+def identitySlackZ (b s:ℕ):ℕ :=
+  6313696624762497+6970269703864320*b+11179409650161768*s +
+    3485134851932160*s ^ 2+6970269703864320*b*s
+def identitySlackYZ (a b s:ℕ):ℕ :=
+  2171962104361164+6970269703864320*a+6970269703864320*b +
+    8418253303227546*s+3485134851932160*s ^ 2 +
+    6970269703864320*a*s+6970269703864320*b*s
+def identitySlackAll (a b s:ℕ):ℕ :=
+  2895946132986753+11179409650161768*a+8418253303227546*b +
+    3485134851932160*b ^ 2+8418253303227546*s +
+    3485134851932160*s ^ 2+6970269703864320*a*b +
+    6970269703864320*a*s+6970269703864320*b*s
+def identitySlack (flag:FlagDegree) (a b s:ℕ):ℕ :=
+  flag.zOnly*identitySlackZ b s+flag.yz*identitySlackYZ a b s +
+    flag.all*identitySlackAll a b s
+theorem identity_budget_exact (flag:FlagDegree) (a b s:ℕ) :
+    gap*flagMixed flag (firstTail a b s) (secondTail a b s) =
+      (n - w)*(errors+1)*identityCurveDegree flag a b s w +
+        identitySlack flag a b s:=by
   rw [identityDegree_linear]
-  norm_num [firstTail, secondTail, tail_support_formula, w, n, errors, gap,
-    identitySlack, identitySlackZ, identitySlackYZ, identitySlackAll, flagMixed] <;>
+  norm_num [firstTail,secondTail,tail_support_formula,w,n,errors,gap,
+    identitySlack,identitySlackZ,identitySlackYZ,identitySlackAll,flagMixed] <;>
     ring
-
-theorem identity_budget (flag : FlagDegree) (a b s : ℕ) :
-    (n - w) * (errors + 1) * identityCurveDegree flag a b s w ≤
-      gap * flagMixed flag (firstTail a b s) (secondTail a b s) := by
+theorem identity_budget (flag:FlagDegree) (a b s:ℕ) :
+    (n - w)*(errors+1)*identityCurveDegree flag a b s w ≤
+      gap*flagMixed flag (firstTail a b s) (secondTail a b s):=by
   rw [identity_budget_exact]
   exact Nat.le_add_right _ _
-
-theorem identity_positive (flag : FlagDegree) (a b s : ℕ)
-    (hpos : 0 < flag.zOnly + flag.yz + flag.all) :
-    1 ≤ identityCurveDegree flag a b s w := by
+theorem identity_positive (flag:FlagDegree) (a b s:ℕ)
+    (hpos:0<flag.zOnly+flag.yz+flag.all) :
+    1≤identityCurveDegree flag a b s w:=by
   rw [identityDegree_linear]
-  have hz := Nat.mul_le_mul_left flag.zOnly
-    (show 1 ≤ 393219 + 262146 * s by omega)
-  have hy := Nat.mul_le_mul_left flag.yz
-    (show 1 ≤ 786438 + 524292 * s by omega)
-  have ha := Nat.mul_le_mul_left flag.all
-    (show 1 ≤ 1048586 + 262146 * a + 524292 * b + 524292 * s by omega)
+  have hz:=Nat.mul_le_mul_left flag.zOnly
+    (show 1≤393219+262146*s by omega)
+  have hy:=Nat.mul_le_mul_left flag.yz
+    (show 1≤786438+524292*s by omega)
+  have ha:=Nat.mul_le_mul_left flag.all
+    (show 1≤1048586+262146*a+524292*b+524292*s by omega)
   simp only [Nat.mul_one] at hz hy ha
   omega
-
-theorem tangent_gate (a b s : ℕ) :
-    errors + 1 ≤ (secondTail a b s).yz := by
-  rw [secondTail, tail_support_formula]
-  change errors + 1 ≤ 1 + 2 * (b + 1) * (w + 2)
-  have hb : 2 * (w + 2) ≤ 2 * (b + 1) * (w + 2) := by
-    have h := Nat.mul_le_mul_right (w + 2)
-      (Nat.mul_le_mul_left 2 (show 1 ≤ b + 1 by omega))
+theorem tangent_gate (a b s:ℕ) :
+    errors+1≤(secondTail a b s).yz:=by
+  rw [secondTail,tail_support_formula]
+  change errors+1≤1+2*(b+1)*(w+2)
+  have hb:2*(w+2)≤2*(b+1)*(w+2):=by
+    have h:=Nat.mul_le_mul_right (w+2)
+      (Nat.mul_le_mul_left 2 (show 1≤b+1 by omega))
     simpa only [Nat.mul_one] using h
-  exact (by norm_num [errors, w] : errors + 1 ≤ 1 + 2 * (w + 2)).trans
+  exact (by norm_num [errors,w]:errors+1≤1+2*(w+2)).trans
     (Nat.add_le_add_left hb 1)
-
-theorem flag_characteristic (a b s : ℕ) (flag : FlagDegree)
-    (hS : s + 2 ≤ 14) (hY : b + s + 3 ≤ 94) (hT : a + b + s + 3 ≤ 10000)
-    (hflag : flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
-      flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) :
-    flag.yz + flag.all < prime ∧ flag.all < prime ∧
-      flag.zOnly + flag.yz + flag.all < prime := by
+theorem flag_characteristic (a b s:ℕ) (flag:FlagDegree)
+    (hS:s+2≤15) (hY:b+s+3≤71) (hT:a+b+s+3≤2029)
+    (hflag:flag.all≤s+2 ∧ flag.yz+flag.all≤b+s+3 ∧
+      flag.zOnly+flag.yz+flag.all≤a+b+s+3) :
+    flag.yz+flag.all<prime ∧ flag.all<prime ∧
+      flag.zOnly+flag.yz+flag.all<prime:=by
   dsimp [prime]
   omega
-
-theorem identity_mixed_gate (b s : ℕ) (flag : FlagDegree)
-    (hS : s + 2 ≤ 14) (hY : b + s + 3 ≤ 94)
-    (hfs : flag.all ≤ s + 2) (hfy : flag.yz + flag.all ≤ b + s + 3) :
-    (1 + w * (2 * (b + s + 3) - 2)) * flag.all +
-      (flag.yz + flag.all) * ((2 * (s + 2) - 1) * w) < prime := by
-  have hy : 2 * (b + s + 3) - 2 ≤ 186 := by omega
-  have hs : 2 * (s + 2) - 1 ≤ 27 := by omega
-  have hfS : flag.all ≤ 14 := hfs.trans hS
-  have hfY : flag.yz + flag.all ≤ 94 := hfy.trans hY
+theorem identity_mixed_gate (b s:ℕ) (flag:FlagDegree)
+    (hS:s+2≤15) (hY:b+s+3≤71)
+    (hfs:flag.all≤s+2) (hfy:flag.yz+flag.all≤b+s+3) :
+    (1+w*(2*(b+s+3) - 2))*flag.all +
+      (flag.yz+flag.all)*((2*(s+2) - 1)*w)<prime:=by
+  have hy:2*(b+s+3) - 2≤140:=by omega
+  have hs:2*(s+2) - 1≤29:=by omega
+  have hfS:flag.all≤15:=hfs.trans hS
+  have hfY:flag.yz+flag.all≤71:=hfy.trans hY
   calc
-    _ ≤ (1 + w * 186) * 14 + 94 * (27 * w) :=
+    _≤(1+w*140)*15+71*(29*w) :=
       Nat.add_le_add
         (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left w hy) 1) hfS)
         (Nat.mul_le_mul hfY (Nat.mul_le_mul_right w hs))
-    _ < prime := by norm_num [w, prime]
-
-theorem provider_mixed_gate (b s : ℕ) (flag : FlagDegree)
-    (hS : s + 2 ≤ 14) (hY : b + s + 3 ≤ 94)
-    (hfs : flag.all ≤ s + 2) (hfy : flag.yz + flag.all ≤ b + s + 3) :
-    (1 + (w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
-      (flag.yz + flag.all) * ((2 * (s + 2) - 2) * (w + 1)) < prime := by
-  have hy : 2 * (b + s + 3) - 2 ≤ 186 := by omega
-  have hs : 2 * (s + 2) - 2 ≤ 26 := by omega
-  have hfS : flag.all ≤ 14 := hfs.trans hS
-  have hfY : flag.yz + flag.all ≤ 94 := hfy.trans hY
+    _<prime:=by norm_num [w,prime]
+theorem provider_mixed_gate (b s:ℕ) (flag:FlagDegree)
+    (hS:s+2≤15) (hY:b+s+3≤71)
+    (hfs:flag.all≤s+2) (hfy:flag.yz+flag.all≤b+s+3) :
+    (1+(w+1)*(2*(b+s+3) - 2))*flag.all +
+      (flag.yz+flag.all)*((2*(s+2) - 2)*(w+1))<prime:=by
+  have hy:2*(b+s+3) - 2≤140:=by omega
+  have hs:2*(s+2) - 2≤28:=by omega
+  have hfS:flag.all≤15:=hfs.trans hS
+  have hfY:flag.yz+flag.all≤71:=hfy.trans hY
   calc
-    _ ≤ (1 + (w + 1) * 186) * 14 + 94 * (26 * (w + 1)) :=
+    _≤(1+(w+1)*140)*15+71*(28*(w+1)) :=
       Nat.add_le_add
-        (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left (w + 1) hy) 1) hfS)
-        (Nat.mul_le_mul hfY (Nat.mul_le_mul_right (w + 1) hs))
-    _ < prime := by norm_num [w, prime]
-
-/- This has the accepted CI interface shape, but with the new error,
-   agreement and weighted-degree values, and an arbitrary actual first flag. -/
-def FixedStageBound (D a b s : ℕ) : Prop :=
-  ∀ {Gamma : Finset K} {flag : FlagDegree},
-    (S : ResidualStage (polynomialEmbedding K) Gamma IRSProfile.domain
+        (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left (w+1) hy) 1) hfS)
+        (Nat.mul_le_mul hfY (Nat.mul_le_mul_right (w+1) hs))
+    _<prime:=by norm_num [w,prime]
+def FixedStageBound (D a b s:ℕ):Prop :=
+  ∀ {Gamma:Finset K} {flag:FlagDegree},
+    (S:ResidualStage (polynomialEmbedding K) Gamma IRSProfile.domain
       prime errors flag w (RCN198.support a b s)) →
-    S.nodes.card = agreements + errors →
-    (∀ gamma ∈ Gamma, agreements ≤ (S.agreementFiber gamma).card) →
-    S.F ∈ RCN174.globalCoefficientBox K D w (a + b + s + 3) (s + 2) →
-    (flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
-      flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) →
-    Gamma.card ≤ flagMixed flag (firstTail a b s) (secondTail a b s)
-
-theorem fixedStageBound (D a b s : ℕ)
-    (hDlow : w + 1 ≤ D) (hDhigh : D ≤ weightedCap)
-    (hS : s + 2 ≤ 14) (hY : b + s + 3 ≤ 94) (hT : a + b + s + 3 ≤ 10000) :
-    FixedStageBound D a b s := by
+    S.nodes.card=agreements+errors →
+    (∀ gamma ∈ Gamma,agreements≤(S.agreementFiber gamma).card) →
+    S.F ∈ RCN174.globalCoefficientBox K D w (a+b+s+3) (s+2) →
+    (flag.all≤s+2 ∧ flag.yz+flag.all≤b+s+3 ∧
+      flag.zOnly+flag.yz+flag.all≤a+b+s+3) →
+    Gamma.card≤flagMixed flag (firstTail a b s) (secondTail a b s)
+theorem fixedStageBound (D a b s:ℕ)
+    (hDlow:w+1≤D) (hDhigh:D≤weightedCap)
+    (hS:s+2≤15) (hY:b+s+3≤71) (hT:a+b+s+3≤2029) :
+    FixedStageBound D a b s:=by
   intro Gamma flag S hnodes hagreement hbox hflag
-  have hDchar : D < prime := hDhigh.trans_lt (by norm_num [weightedCap, prime])
-  have hflagChar := flag_characteristic a b s flag hS hY hT hflag
-  by_cases hTail : S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1)
-  · have hTailNumerator : S.G ∣ surfaceMap (polynomialEmbedding K)
-        (numerator K S.F (w + 1)) :=
+  have hDchar:D<prime:=hDhigh.trans_lt (by norm_num [weightedCap,prime])
+  have hflagChar:=flag_characteristic a b s flag hS hY hT hflag
+  by_cases hTail:S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1)
+  · have hTailNumerator:S.G ∣ surfaceMap (polynomialEmbedding K)
+        (numerator K S.F (w+1)) :=
       (globalTailCut_dvd_iff (polynomialEmbedding K)
-        (polynomialEmbedding_injective K) S.F (w + 1) S.G).mp hTail
-    have hprovider := actual_identityCurveCountProvider S agreements hnodes
-      hagreement (by norm_num [agreements, w]) hTailNumerator
-      D (a + b + s + 3) (s + 2)
+        (polynomialEmbedding_injective K) S.F (w+1) S.G).mp hTail
+    have hprovider:=actual_identityCurveCountProvider S agreements hnodes
+      hagreement (by norm_num [agreements,w]) hTailNumerator
+      D (a+b+s+3) (s+2)
       (by norm_num [w]) hDlow hDchar hbox hflagChar
       (identity_mixed_gate b s flag hS hY hflag.1 hflag.2.1)
-    have hpositive : 1 ≤ identityCurveDegree flag a b s w := by
+    have hpositive:1≤identityCurveDegree flag a b s w:=by
       apply identity_positive
-      have hy : 0 < S.G.degreeOf 1 := S.y_dependent
-      have hdeg := degreeOf_le_flag_total S.G flag S.flag_support 1
+      have hy:0<S.G.degreeOf 1:=S.y_dependent
+      have hdeg:=degreeOf_le_flag_total S.G flag S.flag_support 1
       omega
-    have hinc := identity_surface_seed_bound S agreements
+    have hinc:=identity_surface_seed_bound S agreements
       (identityCurveDegree flag a b s w) hprovider hagreement
-      (by norm_num [agreements, w])
-      (by rw [hnodes] <;> norm_num [agreements, errors]) hpositive
-    have hscaled : Gamma.card * gap ≤
-        gap * flagMixed flag (firstTail a b s) (secondTail a b s) := by
+      (by norm_num [agreements,w])
+      (by rw [hnodes] <;> norm_num [agreements,errors]) hpositive
+    have hscaled:Gamma.card*gap ≤
+        gap*flagMixed flag (firstTail a b s) (secondTail a b s):=by
       calc
-        Gamma.card * gap = Gamma.card * (agreements - w) := rfl
-        _ ≤ (S.nodes.card - w) * (errors + 1) *
-            identityCurveDegree flag a b s w := hinc
-        _ = (n - w) * (errors + 1) * identityCurveDegree flag a b s w := by
-          rw [hnodes] <;> norm_num [n, agreements, errors]
-        _ ≤ gap * flagMixed flag (firstTail a b s) (secondTail a b s) :=
+        Gamma.card*gap=Gamma.card*(agreements - w):=rfl
+        _≤(S.nodes.card - w)*(errors+1) *
+            identityCurveDegree flag a b s w:=hinc
+        _=(n - w)*(errors+1)*identityCurveDegree flag a b s w:=by
+          rw [hnodes] <;> norm_num [n,agreements,errors]
+        _≤gap*flagMixed flag (firstTail a b s) (secondTail a b s) :=
           identity_budget flag a b s
-    apply Nat.le_of_mul_le_mul_right ?_ (by norm_num [gap] : 0 < gap)
+    apply Nat.le_of_mul_le_mul_right ?_ (by norm_num [gap]:0<gap)
     simpa only [Nat.mul_comm] using hscaled
-  · have hprovider := exists_delayedTailMultiplicityProvider_of_reducedGeneral
-      (stageErrorCap := errors) agreements S hTail hflagChar
+  · have hprovider:=exists_delayedTailMultiplicityProvider_of_reducedGeneral
+      (stageErrorCap:=errors) agreements S hTail hflagChar
       (provider_mixed_gate b s flag hS hY hflag.1 hflag.2.1)
-      D (a + b + s + 3) (s + 2) hnodes hagreement
-      (by norm_num [RCN327.w, agreements])
-      (by simpa only [RCN327.w, w] using hDlow)
+      D (a+b+s+3) (s+2) hnodes hagreement
+      (by norm_num [RCN327.w,agreements])
+      (by simpa only [RCN327.w,w] using hDlow)
       hDchar hbox (tangent_gate a b s)
     exact stage_card_le_flagMixed S hprovider.some
-
 end
 end ProximityPrize.SubmissionLower.LocatorFixedStage

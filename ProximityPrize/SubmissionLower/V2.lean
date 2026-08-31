@@ -16,15 +16,15 @@ theorem iff_exists_tensorProduct [EssFiniteType R S]:
    intro t
    simp only [KaehlerDifferential.ideal,RingHom.mem_ker,map_sub,map_one,
      sub_eq_zero,@eq_comm S 1]
- simp_rw [this, ←KaehlerDifferential.span_range_eq_ideal]
+ simp_rw [this,←KaehlerDifferential.span_range_eq_ideal]
  constructor
  · rintro ⟨e,he₁,he₂:_=Ideal.span _⟩
    refine ⟨1-e,?_,?_⟩
    · intro s
      obtain ⟨x,hx⟩:e∣1 ⊗ₜ[R] s-s ⊗ₜ[R] 1:=by
-       rw [←Ideal.mem_span_singleton, ←he₂]
+       rw [←Ideal.mem_span_singleton,←he₂]
        exact Ideal.subset_span ⟨s,rfl⟩
-     rw [hx,mul_comm, ←mul_assoc,sub_mul,one_mul,he₁.eq,sub_self,zero_mul]
+     rw [hx,mul_comm,←mul_assoc,sub_mul,one_mul,he₁.eq,sub_self,zero_mul]
    · rw [sub_sub_cancel,he₂,Ideal.mem_span_singleton]
  · rintro ⟨t,ht₁,ht₂⟩
    use 1-t
@@ -33,7 +33,7 @@ theorem iff_exists_tensorProduct [EssFiniteType R S]:
    · suffices e∈(Submodule.span (S ⊗[R] S) {1-e}).annihilator by
        simpa [IsIdempotentElem,mul_sub,sub_eq_zero,eq_comm,
          Submodule.mem_annihilator_span_singleton] using this
-     exact (show Ideal.span _ ≤ _ by simpa only [Ideal.span_le,Set.range_subset_iff,
+     exact (show Ideal.span _≤_ by simpa only [Ideal.span_le,Set.range_subset_iff,
        Submodule.mem_annihilator_span_singleton,SetLike.mem_coe]) ht₂
    · apply le_antisymm <;> simp only [Ideal.submodule_span_eq,Ideal.mem_span_singleton,ht₂,
        Ideal.span_le,Set.singleton_subset_iff,SetLike.mem_coe,Set.range_subset_iff]
@@ -63,7 +63,7 @@ lemma finite_of_free_aux (I) [DecidableEq I] (b:Basis I R S)
    · congr
      ext j s
      rw [Finsupp.sum_smul_index]
-     · simp only [mul_smul,Finsupp.sum, ←Finset.smul_sum]
+     · simp only [mul_smul,Finsupp.sum,←Finset.smul_sum]
      intro;simp only [zero_smul]
    · intro;simp only [zero_smul]
    · intros;simp only [add_smul]
@@ -137,7 +137,7 @@ lemma finite_of_free [Module.Free R S]:Module.Finite R S:=by
      simpa [Finsupp.linearCombination_apply,Finsupp.sum_uncurry_index]
    have:∀ i,((b.repr (x*f i)).sum fun j k↦k • b j ⊗ₜ[R] b i)=(x*f i) ⊗ₜ[R] b i:=by
      intro i
-     simp_rw [Finsupp.sum,TensorProduct.smul_tmul', ←TensorProduct.sum_tmul]
+     simp_rw [Finsupp.sum,TensorProduct.smul_tmul',←TensorProduct.sum_tmul]
      congr 1
      exact b.linearCombination_repr _
    rw [Finsupp.onFinset_sum,Finsupp.onFinset_sum]
@@ -151,7 +151,7 @@ lemma finite_of_free [Module.Free R S]:Module.Finite R S:=by
    intro j
    apply b.repr.injective
    exact DFunLike.congr_fun this j
- rw [←mul_one x, ←@lmul_elem R,hf,map_finsuppSum,Finsupp.sum,Finset.mul_sum]
+ rw [←mul_one x,←@lmul_elem R,hf,map_finsuppSum,Finsupp.sum,Finset.mul_sum]
  simp only [TensorProduct.lmul'_apply_tmul,Finset.coe_image₂, ←mul_assoc,this,
    Finsupp.sum,Finset.sum_mul,smul_mul_assoc]
  apply Submodule.sum_mem;intro i hi
@@ -172,7 +172,7 @@ def sec:
    · induction elem R S using TensorProduct.induction_on
      · simp
      · simp [smul_comm r]
-     · simp only [map_add,mul_add, *]
+     · simp only [map_add,mul_add,*]
    · have:=one_tmul_sub_tmul_one_mul_elem (R:=R) r
      rw [sub_mul,sub_eq_zero] at this
      rw [this]

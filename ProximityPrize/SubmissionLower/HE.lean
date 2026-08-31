@@ -177,7 +177,7 @@ variable {R L:Type*} [CommRing R] [LieRing L] [LieAlgebra R L]
 instance instBracket:Bracket (LieDerivation R L L) (LieDerivation R L L) where
  bracket D1 D2:=LieDerivation.mk ⁅(D1:Module.End R L),(D2:Module.End R L)⁆ (fun a b => by
    simp only [Ring.lie_def,apply_lie_eq_add,coeFn_coe,
-     LinearMap.sub_apply,Module.End.mul_apply,map_add,sub_lie,lie_sub, ←lie_skew b]
+     LinearMap.sub_apply,Module.End.mul_apply,map_add,sub_lie,lie_sub,←lie_skew b]
    abel)
 variable {D1 D2:LieDerivation R L L}
 @[simp]
@@ -240,7 +240,7 @@ instance instLieModule:LieModule R L (LieDerivation R L M) where
 protected lemma leibniz_lie (x:L) (D₁ D₂:LieDerivation R L L):
    ⁅x,⁅D₁,D₂⁆⁆=⁅⁅x,D₁⁆,D₂⁆+⁅D₁,⁅x,D₂⁆⁆:=by
  ext y
- simp [-lie_skew, ←lie_skew (D₁ x) (D₂ y), ←lie_skew (D₂ x) (D₁ y),sub_eq_neg_add]
+ simp [-lie_skew,←lie_skew (D₁ x) (D₂ y),←lie_skew (D₂ x) (D₁ y),sub_eq_neg_add]
 end Inner
 section ExpNilpotent
 variable {R L:Type*} [CommRing R] [LieRing L] [LieAlgebra R L] [LieAlgebra ℚ L]

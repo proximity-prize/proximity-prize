@@ -22,10 +22,10 @@ theorem PowerBasis.norm_gen_eq_prod_roots [Algebra R F] (pb:PowerBasis R S)
    algebraMap R F (norm R pb.gen)=((minpoly R pb.gen).aroots F).prod:=by
  haveI:=Module.nontrivial R F
  have:=minpoly.monic pb.isIntegral_gen
- rw [PowerBasis.norm_gen_eq_coeff_zero_minpoly, ←pb.natDegree_minpoly,map_mul,
+ rw [PowerBasis.norm_gen_eq_coeff_zero_minpoly,←pb.natDegree_minpoly,map_mul,
    ←coeff_map,
    hf.coeff_zero_eq_prod_roots_of_monic (this.map _),
-   this.natDegree_map,map_pow, ←mul_assoc, ←mul_pow]
+   this.natDegree_map,map_pow,←mul_assoc,←mul_pow]
  simp only [map_neg,map_one,neg_mul,neg_neg,one_pow,one_mul]
 end EqProdRoots
 section EqZeroIff
@@ -71,7 +71,7 @@ theorem norm_inv (x:L):Algebra.norm K x⁻¹=(Algebra.norm K x)⁻¹:=by
  letI:DecidableEq L:=Classical.decEq L
  by_cases hx:x=0
  · simp [hx]
- exact mul_left_injective₀ (norm_ne_zero_iff.mpr hx) (by simp [hx, ←map_mul])
+ exact mul_left_injective₀ (norm_ne_zero_iff.mpr hx) (by simp [hx,←map_mul])
 theorem norm_zpow (x:L) (n:ℤ):Algebra.norm K (x^n)=Algebra.norm K x^n:=
  map_zpow' _ norm_inv _ _
 end DivisionRing
@@ -132,7 +132,7 @@ theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAl
      IsScalarTower.coe_toAlgHom']
 lemma norm_eq_of_algEquiv [Ring T] [Algebra R T] (e:S ≃ₐ[R] T) (x):
    Algebra.norm R (e x)=Algebra.norm R x:=by
- simp_rw [Algebra.norm_apply, ←LinearMap.det_conj _ e.toLinearEquiv];congr;ext;simp
+ simp_rw [Algebra.norm_apply,←LinearMap.det_conj _ e.toLinearEquiv];congr;ext;simp
 set_option backward.isDefEq.respectTransparency false in
 lemma norm_eq_of_ringEquiv {A B C:Type*} [CommRing A] [CommRing B] [Ring C]
    [Algebra A C] [Algebra B C] (e:A ≃+*B) (he:(algebraMap B C).comp e=algebraMap A C)
@@ -158,7 +158,7 @@ lemma norm_eq_of_equiv_equiv {A₁ B₁ A₂ B₂:Type*} [CommRing A₁] [Ring B
    Algebra.norm A₁ x=e₁.symm (Algebra.norm A₂ (e₂ x)):=by
  letI:=(RingHom.comp (e₂:B₁ →+*B₂) (algebraMap A₁ B₁)).toAlgebra' ?_
  · let e':B₁ ≃ₐ[A₁] B₂:={ e₂ with commutes':=fun _↦rfl}
-   rw [←Algebra.norm_eq_of_ringEquiv e₁ he, ←Algebra.norm_eq_of_algEquiv e']
+   rw [←Algebra.norm_eq_of_ringEquiv e₁ he,←Algebra.norm_eq_of_algEquiv e']
    simp [e']
  intro c x
  apply e₂.symm.injective

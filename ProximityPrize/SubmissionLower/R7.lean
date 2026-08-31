@@ -44,8 +44,8 @@ theorem formallyEtale_of_finite_isSeparable
  · apply pb.algHom_ext
    simp [hx,hx']
  · rw [←eval_map_algebraMap,Polynomial.eval_add_of_sq_eq_zero,
-     derivative_map, ←one_mul (eval x _),eval_map_algebraMap,
-     eval_map_algebraMap, ←mul_assoc, ←add_mul, ←Ideal.mem_bot,
+     derivative_map,←one_mul (eval x _),eval_map_algebraMap,
+     eval_map_algebraMap,←mul_assoc,←add_mul,←Ideal.mem_bot,
      ←h,pow_two,add_comm]
    · exact Ideal.mul_mem_mul hu (Ideal.Quotient.eq_zero_iff_mem.mp hx')
    rw [←Ideal.mem_bot, ←h]

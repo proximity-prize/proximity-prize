@@ -36,12 +36,12 @@ lemma OrthogonalIdempotents.map (he:OrthogonalIdempotents e):
    OrthogonalIdempotents (f ∘ e):=by
  classical
  letI:DecidableEq I:=Classical.decEq I
- simp [iff_mul_eq,he.mul_eq, ←map_mul f,apply_ite f]
+ simp [iff_mul_eq,he.mul_eq,←map_mul f,apply_ite f]
 lemma OrthogonalIdempotents.map_injective_iff (hf:Function.Injective f):
    OrthogonalIdempotents (f ∘ e) ↔ OrthogonalIdempotents e:=by
  classical
  letI:DecidableEq I:=Classical.decEq I
- simp [iff_mul_eq, ←hf.eq_iff,apply_ite]
+ simp [iff_mul_eq,←hf.eq_iff,apply_ite]
 lemma OrthogonalIdempotents.embedding (he:OrthogonalIdempotents e) {J} (i:J ↪ I):
    OrthogonalIdempotents (e ∘ i):=by
  classical
@@ -170,7 +170,7 @@ theorem exists_isIdempotentElem_mul_eq_zero_of_ker_isNilpotent
  obtain ⟨e',h₁,rfl,h₂⟩:=exists_isIdempotentElem_mul_eq_zero_of_ker_isNilpotent_aux
    f h e₁ he he₁ e₂ he₂ he₁e₂
  refine ⟨(1-e₂)*e',?_,?_,?_,?_⟩
- · rw [IsIdempotentElem,mul_assoc, ←mul_assoc e',mul_sub,mul_one,h₂,sub_zero,h₁.eq]
+ · rw [IsIdempotentElem,mul_assoc,←mul_assoc e',mul_sub,mul_one,h₂,sub_zero,h₁.eq]
  · rw [map_mul,map_sub,map_one,sub_mul,one_mul,he₂e₁,sub_zero]
  · rw [mul_assoc,h₂,mul_zero]
  · rw [←mul_assoc,mul_sub,mul_one,he₂.eq,sub_self,zero_mul]
@@ -206,7 +206,7 @@ lemma OrthogonalIdempotents.lift_of_isNilpotent_ker [Finite I]
    by ext x;simpa using congr_fun h₂ (Fintype.equivFin I x)⟩
 lemma CompleteOrthogonalIdempotents.pair_iff {x y:R}:
    CompleteOrthogonalIdempotents ![x,y] ↔ IsIdempotentElem x∧y=1-x:=by
- rw [pair_iff'ₛ, ←eq_sub_iff_add_eq', ←and_assoc,and_congr_left_iff]
+ rw [pair_iff'ₛ,←eq_sub_iff_add_eq', ←and_assoc,and_congr_left_iff]
  rintro rfl
  simp [mul_sub,sub_mul,IsIdempotentElem,sub_eq_zero,eq_comm]
 lemma CompleteOrthogonalIdempotents.of_isIdempotentElem {e:R} (he:IsIdempotentElem e):
@@ -389,10 +389,10 @@ lemma CompleteOrthogonalIdempotents.exists_eq_comp_of_ker_eq_span
    · obtain ⟨k,hk⟩:=Ideal.mem_span_singleton.mp
        (hfe₀.le (show f (e' i*e' j)=0 by simp [he',he.1.2 (by simpa using h)]))
      dsimp
-     rw [mul_mul_mul_comm,hk,he₀.one_sub.eq, ←mul_assoc,he₀.one_sub_mul_self,zero_mul]
+     rw [mul_mul_mul_comm,hk,he₀.one_sub.eq,←mul_assoc,he₀.one_sub_mul_self,zero_mul]
  · obtain ⟨k,hk⟩:=Ideal.mem_span_singleton.mp
      (hfe₀.le (show f (∑ i,e' i-1)=0 by simpa [he',sub_eq_zero] using he.2))
-   simp only [Fintype.sum_option,Pi.smul_apply,smul_eq_mul, ←Finset.mul_sum,
+   simp only [Fintype.sum_option,Pi.smul_apply,smul_eq_mul,←Finset.mul_sum,
      sub_eq_iff_eq_add.mp hk]
    linear_combination-he₀.eq*k
  · have:f e₀=0:=by simpa using hfe₀.ge (Ideal.mem_span_singleton_self _)
@@ -418,7 +418,7 @@ lemma mem_corner_iff_mul_right (hc:IsMulCentral e) {r:R}:r∈corner e ↔ r*e=r:
  rw [mem_corner_iff_mul_left idem hc,hc.comm]
 lemma mem_corner_iff_mem_range_mul_left (hc:IsMulCentral e) {r:R}:
    r∈corner e ↔ r∈Set.range (e*·):=by
- simp_rw [corner,mem_mk,Set.mem_range, ←(hc.comm _).eq, ←mul_assoc,idem.eq]
+ simp_rw [corner,mem_mk,Set.mem_range,←(hc.comm _).eq,←mul_assoc,idem.eq]
 lemma mem_corner_iff_mem_range_mul_right (hc:IsMulCentral e) {r:R}:
    r∈corner e ↔ r∈Set.range (·*e):=by
  simp_rw [mem_corner_iff_mem_range_mul_left idem hc,(hc.comm _).eq]
@@ -467,7 +467,7 @@ def CompleteOrthogonalIdempotents.ringEquivOfIsMulCentral [Semiring R]
  map_mul' r₁ r₂:=funext fun i↦Subtype.ext <|
    calc e i*(r₁*r₂)*e i
     _=e i*(r₁*e i*r₂)*e i:=by
-      simp_rw [←((hc i).comm r₁).eq, ←mul_assoc,(he.idem i).eq]
+      simp_rw [←((hc i).comm r₁).eq,←mul_assoc,(he.idem i).eq]
     _=e i*r₁*e i*(e i*r₂*e i):=by
      conv in (r₁*_*r₂) => rw [←(he.idem i).eq]
      simp_rw [mul_assoc]

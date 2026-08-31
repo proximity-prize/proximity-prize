@@ -5,7 +5,7 @@ set_option autoImplicit false
 set_option maxHeartbeats 1500000
 variable {A:Type*} [CommRing A]
 theorem exists_multiplier_mem_sup_pow_of_localized_mem
-   (I p:Ideal A) (hIp:I ≤ p)
+   (I p:Ideal A) (hIp:I≤p)
    (pbar:Ideal (A ⧸ I)) [pbar.IsPrime]
    (hpbar:pbar=Ideal.map (Ideal.Quotient.mk I) p)
    (x:A) (n:ℕ)
@@ -43,8 +43,8 @@ theorem exists_multiplier_mem_sup_pow_of_localized_mem
    ←RingHom.ker_eq_comap_bot,Ideal.mk_ker] at hcomapPow
  exact ⟨s,hsnot,by simpa only [sup_comm] using hcomapPow⟩
 theorem isPrimary_of_maximal_power_le_le
-   (J Q:Ideal A) [J.IsMaximal] (n:ℕ) (hn:1 ≤ n)
-   (hpow:J^n ≤ Q) (hle:Q ≤ J):Q.IsPrimary:=by
+   (J Q:Ideal A) [J.IsMaximal] (n:ℕ) (hn:1≤n)
+   (hpow:J^n≤Q) (hle:Q≤J):Q.IsPrimary:=by
  apply Ideal.isPrimary_of_isMaximal_radical
  have hrad:Ideal.radical Q=J:=by
    apply le_antisymm
@@ -55,13 +55,13 @@ theorem isPrimary_of_maximal_power_le_le
  exact inferInstance
 theorem mem_span_sup_pow_of_mul_mem_of_not_mem_maximal
    (surface x s:A) (J:Ideal A) [J.IsMaximal]
-   (hsurface:surface∈J) (n:ℕ) (hn:1 ≤ n)
+   (hsurface:surface∈J) (n:ℕ) (hn:1≤n)
    (hs:s∉J)
    (hmul:s*x∈Ideal.span {surface} ⊔ J^n):
    x∈Ideal.span {surface} ⊔ J^n:=by
  let Q:=Ideal.span {surface} ⊔ J^n
- have hpow:J^n ≤ Q:=le_sup_right
- have hle:Q ≤ J:=by
+ have hpow:J^n≤Q:=le_sup_right
+ have hle:Q≤J:=by
    exact sup_le (Ideal.span_le.mpr (by simpa))
      (Ideal.pow_le_self (Nat.ne_of_gt hn))
  have hprimary:Q.IsPrimary:=
@@ -78,24 +78,24 @@ theorem mem_span_sup_pow_of_mul_mem_of_not_mem_maximal
    exact False.elim (hs (hrad ▸ hsrad))
 theorem mapped_mem_span_sup_pow_of_localized_mem
    {B:Type*} [CommRing B]
-   (I p:Ideal A) (hIp:I ≤ p)
+   (I p:Ideal A) (hIp:I≤p)
    (pbar:Ideal (A ⧸ I)) [pbar.IsPrime]
    (hpbar:pbar=Ideal.map (Ideal.Quotient.mk I) p)
-   (x:A) (n:ℕ) (hn:1 ≤ n)
+   (x:A) (n:ℕ) (hn:1≤n)
    (hx:algebraMap (A ⧸ I) (Localization.AtPrime pbar)
      (Ideal.Quotient.mk I x)∈
        IsLocalRing.maximalIdeal (Localization.AtPrime pbar)^n)
    (f:A →+*B) (surface:B) (J:Ideal B) [J.IsMaximal]
-   (hmapI:Ideal.map f I ≤ Ideal.span {surface})
+   (hmapI:Ideal.map f I≤Ideal.span {surface})
    (hsurface:surface∈J)
    (hcontract:Ideal.comap f J=p):
    f x∈Ideal.span {surface} ⊔ J^n:=by
  obtain ⟨s,hsnot,hsx⟩:=
    exists_multiplier_mem_sup_pow_of_localized_mem
      I p hIp pbar hpbar x n hx
- have hmapP:Ideal.map f p ≤ J:=by
+ have hmapP:Ideal.map f p≤J:=by
    rw [Ideal.map_le_iff_le_comap,hcontract]
- have hmapPow:Ideal.map f (p^n) ≤ J^n:=by
+ have hmapPow:Ideal.map f (p^n)≤J^n:=by
    rw [Ideal.map_pow]
    exact pow_le_pow_left' hmapP n
  have htarget:Ideal.map f (I ⊔ p^n) ≤

@@ -17,7 +17,7 @@ lemma preimage_closedPoints_subset (hf:Function.Injective f) (hf':Continuous f):
 lemma Topology.IsClosedEmbedding.preimage_closedPoints (hf:IsClosedEmbedding f):
    f ⁻¹' closedPoints «Y»=closedPoints «X»:=by
  ext x
- simp [mem_closedPoints_iff, ←Set.image_singleton,hf.isClosed_iff_image_isClosed]
+ simp [mem_closedPoints_iff,←Set.image_singleton,hf.isClosed_iff_image_isClosed]
 lemma closedPoints_eq_univ [T1Space «X»]:
    closedPoints «X»=Set.univ:=
  Set.eq_univ_iff_forall.mpr fun _↦isClosed_singleton
@@ -145,7 +145,7 @@ theorem subsingleton_image_closure_of_finite_of_isPreirreducible [JacobsonSpace 
  · simp
  replace hS':IsIrreducible S:=⟨hS'',hS'⟩
  have H₁:IsIrreducible (S ∩ closedPoints «X»):=by
-   rwa [←isIrreducible_iff_closure, ←JacobsonSpace.closure_inter_closedPoints_eq_closure hS,
+   rwa [←isIrreducible_iff_closure,←JacobsonSpace.closure_inter_closedPoints_eq_closure hS,
      isIrreducible_iff_closure] at hS'
  have H₂:f '' (S ∩ closedPoints «X») ⊆ closedPoints «Y»:=by
    rintro _ ⟨x,hx,rfl⟩;simpa using hf₂ _ hx.2

@@ -80,7 +80,7 @@ theorem cardQuot_pow_of_prime [IsDedekindDomain S] (hP:P≠⊥) {i:ℕ}:
  induction i with
  | zero => simp
  | succ i ih => ?_
- have:P^(i+1) < P^i:=Ideal.pow_succ_lt_pow hP i
+ have:P^(i+1)<P^i:=Ideal.pow_succ_lt_pow hP i
  suffices hquot:map (P^i.succ).mkQ (P^i) ≃ S ⧸ P by
    rw [pow_succ' (cardQuot P), ←ih,cardQuot_apply (P^i.succ), ←
      card_quotient_mul_card_quotient (P^i) (P^i.succ) this.le,cardQuot_apply (P^i),
@@ -92,8 +92,8 @@ theorem cardQuot_pow_of_prime [IsDedekindDomain S] (hP:P≠⊥) {i:ℕ}:
    Submodule.mem_map.mp hc'
  refine Equiv.ofBijective (fun c' => Quotient.mk'' (f (k c' c'.prop) (hk_mem c' c'.prop))) ⟨?_,?_⟩
  · rintro ⟨c₁',hc₁'⟩ ⟨c₂',hc₂'⟩ h
-   rw [Subtype.mk_eq_mk, ←hk_eq _ hc₁', ←hk_eq _ hc₂',mkQ_apply,mkQ_apply,
-     Submodule.Quotient.eq, ←hf _ (hk_mem _ hc₁'), ←hf _ (hk_mem _ hc₂')]
+   rw [Subtype.mk_eq_mk,←hk_eq _ hc₁', ←hk_eq _ hc₂',mkQ_apply,mkQ_apply,
+     Submodule.Quotient.eq,←hf _ (hk_mem _ hc₁'), ←hf _ (hk_mem _ hc₂')]
    refine Ideal.mul_add_mem_pow_succ_inj _ _ _ _ _ _ a_mem (hg _ _) (hg _ _) ?_
    simpa only [Submodule.Quotient.mk''_eq_mk,Submodule.Quotient.mk''_eq_mk,
      Submodule.Quotient.eq] using h

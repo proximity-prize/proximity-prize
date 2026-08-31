@@ -23,7 +23,7 @@ structure ResidualPoleComponentBudget
    ∀ W:Finset (Place Ω (CoordinateField Ω C.1)),
      (∑ v∈W,exponentSetPoleWeight v.val (coordinate Ω C.1) E) ≤
        (cost C:ℤ)
- sum_cost_le:(∑ C:RegularComponent Ω G T H,cost C) ≤ wholeCost
+ sum_cost_le:(∑ C:RegularComponent Ω G T H,cost C)≤wholeCost
 def ResidualPoleComponentBudget.toResidualComponentBudget
    {G T H:MvPolynomial (Fin 3) Ω}
    {E:Finset (Fin 3 →₀ ℕ)} {separator:Fin 3} {wholeCost:ℕ}

@@ -17,7 +17,7 @@ theorem IsGaloisGroup.smul_mem_of_normal (N:Subgroup G) [hN:N.Normal]
    g • algebraMap C B x∈Set.range (algebraMap C B):=by
  apply hC.isInvariant.isInvariant (g • algebraMap C B x)
  intro n
- rw [←inv_smul_eq_iff,Subgroup.smul_def, ←mul_smul, ←mul_smul]
+ rw [←inv_smul_eq_iff,Subgroup.smul_def,←mul_smul,←mul_smul]
  exact Subgroup.smul_algebraMap B (hN.conj_mem' n n.prop g) x
 @[deprecated (since:="2026-05-28")] alias smul_eq_self:=Subgroup.smul_algebraMap
 @[deprecated (since:="2026-05-28")] alias smul_mem_of_normal:=IsGaloisGroup.smul_mem_of_normal
@@ -29,7 +29,7 @@ variable (G A B K L:Type*) [Group G] [CommRing A] [CommRing B] [MulSemiringActio
  [MulSemiringAction G L] [SMulDistribClass G B L]
 instance [IsGaloisGroup G A B]:IsGaloisGroup G (algebraMap A B).range B where
  faithful:=IsGaloisGroup.faithful A
- commutes:=⟨fun g ⟨a',⟨a,ha⟩⟩ b↦by simp [Subring.smul_def, ←ha]⟩
+ commutes:=⟨fun g ⟨a',⟨a,ha⟩⟩ b↦by simp [Subring.smul_def,←ha]⟩
  isInvariant:=⟨fun b hb↦by
    obtain ⟨a,ha⟩:=Algebra.IsInvariant.isInvariant (A:=A) b hb
    exact ⟨⟨algebraMap A B a,⟨a,rfl⟩⟩,ha⟩⟩

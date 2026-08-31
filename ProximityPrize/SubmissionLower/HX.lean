@@ -30,17 +30,17 @@ def leftInv:Submonoid M where
   carrier:={ x:M | ∃ y:S,x*y=1}
   one_mem':=⟨1,mul_one 1⟩
   mul_mem':=fun {a} _b ⟨a',ha⟩ ⟨b',hb⟩↦
-    ⟨b'*a',by simp only [coe_mul, ←mul_assoc,mul_assoc a,hb,mul_one,ha]⟩
+    ⟨b'*a',by simp only [coe_mul,←mul_assoc,mul_assoc a,hb,mul_one,ha]⟩
 @[to_additive]
-theorem leftInv_leftInv_le:S.leftInv.leftInv ≤ S:=by
+theorem leftInv_leftInv_le:S.leftInv.leftInv≤S:=by
   rintro x ⟨⟨y,z,h₁⟩,h₂:x*y=1⟩
   convert! z.prop
-  rw [←mul_one x, ←h₁, ←mul_assoc,h₂,one_mul]
+  rw [←mul_one x,←h₁,←mul_assoc,h₂,one_mul]
 @[to_additive]
 theorem unit_mem_leftInv (x:Mˣ) (hx:(x:M)∈S):((x⁻¹:):M)∈S.leftInv:=
   ⟨⟨x,hx⟩,x.inv_val⟩
 @[to_additive]
-theorem leftInv_leftInv_eq (hS:S ≤ IsUnit.submonoid M):S.leftInv.leftInv=S:=by
+theorem leftInv_leftInv_eq (hS:S≤IsUnit.submonoid M):S.leftInv.leftInv=S:=by
   refine le_antisymm S.leftInv_leftInv_le ?_
   intro x hx
   have:x=((hS hx).unit⁻¹⁻¹:Mˣ):=by
@@ -64,7 +64,7 @@ variable [CommMonoid M] (S:Submonoid M)
 theorem fromLeftInv_mul (x:S.leftInv):(S.fromLeftInv x:M)*x=1:=by
   rw [mul_comm,mul_fromLeftInv]
 @[to_additive]
-theorem leftInv_le_isUnit:S.leftInv ≤ IsUnit.submonoid M:=fun x ⟨y,hx⟩↦
+theorem leftInv_le_isUnit:S.leftInv≤IsUnit.submonoid M:=fun x ⟨y,hx⟩↦
   ⟨⟨x,y,hx,mul_comm x y ▸ hx⟩,rfl⟩
 @[to_additive]
 theorem fromLeftInv_eq_iff (a:S.leftInv) (b:M):
@@ -77,9 +77,9 @@ noncomputable def fromCommLeftInv:S.leftInv →*S where
   map_one':=S.fromLeftInv_one
   map_mul' x y:=
     Subtype.ext <| by
-      rw [fromLeftInv_eq_iff,mul_comm x,Submonoid.coe_mul,Submonoid.coe_mul,mul_assoc, ←
+      rw [fromLeftInv_eq_iff,mul_comm x,Submonoid.coe_mul,Submonoid.coe_mul,mul_assoc,←
         mul_assoc (x:M),mul_fromLeftInv,one_mul,mul_fromLeftInv]
-variable (hS:S ≤ IsUnit.submonoid M)
+variable (hS:S≤IsUnit.submonoid M)
 @[to_additive (attr:=simps apply)
  ]
 noncomputable def leftInvEquiv:S.leftInv ≃*S:=
@@ -129,7 +129,7 @@ theorem fromLeftInv_eq_inv (x:S.leftInv):(S.fromLeftInv x:M)=(x:M)⁻¹:=by
   rw [←mul_right_inj (x:M),mul_inv_cancel,mul_fromLeftInv]
 end Group
 section CommGroup
-variable [CommGroup M] (S:Submonoid M) (hS:S ≤ IsUnit.submonoid M)
+variable [CommGroup M] (S:Submonoid M) (hS:S≤IsUnit.submonoid M)
 @[to_additive (attr:=simp)]
 theorem leftInvEquiv_symm_eq_inv (x:S):((S.leftInvEquiv hS).symm x:M)=(x:M)⁻¹:=by
   rw [←mul_right_inj (x:M),mul_inv_cancel,mul_leftInvEquiv_symm]

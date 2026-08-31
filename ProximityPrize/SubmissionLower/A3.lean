@@ -89,7 +89,7 @@ def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
        apply Finset.sum_congr rfl
        intro v _
        exact P.zPole_eq C v
-     _ ≤ (coordinateDegree Omega (CoordinateField Omega C.1)
+     _≤(coordinateDegree Omega (CoordinateField Omega C.1)
          (P.zProjection C):ℤ):=
        finite_sum_coordinate_pole_le_degree Omega
          (CoordinateField Omega C.1) (P.zProjection C) W
@@ -108,7 +108,7 @@ def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
        apply Finset.sum_congr rfl
        intro v _
        exact P.yzPole_eq C v
-     _ ≤ (coordinateDegree Omega (CoordinateField Omega C.1)
+     _≤(coordinateDegree Omega (CoordinateField Omega C.1)
          (P.yzProjection C):ℤ):=
        finite_sum_coordinate_pole_le_degree Omega
          (CoordinateField Omega C.1) (P.yzProjection C) W
@@ -127,7 +127,7 @@ def AdaptiveUnitProjectionFamily.toAdaptiveUnitPoleBudget
        apply Finset.sum_congr rfl
        intro v _
        exact P.allPole_eq C v
-     _ ≤ (coordinateDegree Omega (CoordinateField Omega C.1)
+     _≤(coordinateDegree Omega (CoordinateField Omega C.1)
          (P.allProjection C):ℤ):=
        finite_sum_coordinate_pole_le_degree Omega
          (CoordinateField Omega C.1) (P.allProjection C) W
@@ -143,7 +143,7 @@ theorem AdaptiveUnitProjectionFamily.one_le_zDegree_of_transcendental
    {p q:FlagDegree} (P:AdaptiveUnitProjectionFamily base p q)
    (C:RegularComponent Omega G T H)
    (hZ:Transcendental Omega (coordinate Omega C.1 2)):
-   1 ≤ coordinateDegree Omega (CoordinateField Omega C.1)
+   1≤coordinateDegree Omega (CoordinateField Omega C.1)
      (P.zProjection C):=by
  apply one_le_coordinateDegree_of_transcendental_value
  rwa [P.zValue C]
@@ -153,14 +153,14 @@ theorem AdaptiveUnitProjectionFamily.one_le_toPrimeFlagBudgetFamily_zCost
    {p q:FlagDegree} (P:AdaptiveUnitProjectionFamily base p q)
    (C:RegularComponent Omega G T H)
    (hZ:Transcendental Omega (coordinate Omega C.1 2)):
-   1 ≤ P.toPrimeFlagBudgetFamily.zCost C:=
+   1≤P.toPrimeFlagBudgetFamily.zCost C:=
  P.one_le_zDegree_of_transcendental C hZ
 theorem AdaptiveUnitProjectionFamily.one_le_allDegree
    {base:∀ C:RegularComponent Omega G T H,
      SeparableLiteralCoordinate C.1}
    {p q:FlagDegree} (P:AdaptiveUnitProjectionFamily base p q)
    (C:RegularComponent Omega G T H):
-   1 ≤ coordinateDegree Omega (CoordinateField Omega C.1)
+   1≤coordinateDegree Omega (CoordinateField Omega C.1)
      (P.allProjection C):=
  one_le_coordinateDegree_of_transcendental_value
    (P.allProjection C) (P.allTranscendental C)
@@ -169,7 +169,7 @@ theorem AdaptiveUnitProjectionFamily.one_le_toPrimeFlagBudgetFamily_allCost
      SeparableLiteralCoordinate C.1}
    {p q:FlagDegree} (P:AdaptiveUnitProjectionFamily base p q)
    (C:RegularComponent Omega G T H):
-   1 ≤ P.toPrimeFlagBudgetFamily.allCost C:=
+   1≤P.toPrimeFlagBudgetFamily.allCost C:=
  P.one_le_allDegree C
 end
 end ProximityPrize.SubmissionLower.RCN046

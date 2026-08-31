@@ -53,24 +53,24 @@ theorem polynomial_le_one (ht:v (parameter K L) ≤ 1) (f:Polynomial K):
        map_mul,map_pow,polynomial_C_map]
      exact mul_le_one₀ (coefficient_le_one K L v c) zero_le
        (pow_le_one₀ zero_le ht)
-theorem finiteNormalization_le_one (ht:v (parameter K L) ≤ 1)
+theorem finiteNormalization_le_one (ht:v (parameter K L)≤1)
    (s:FiniteNormalization K L):
-   v (algebraMap (FiniteNormalization K L) L s) ≤ 1:=by
+   v (algebraMap (FiniteNormalization K L) L s)≤1:=by
  exact RCN359.integral_le_one (Polynomial K) L v
    (polynomial_le_one K L v ht) s.property
-theorem polynomial_value_of_parameter_gt_one (ht:1 < v (parameter K L))
+theorem polynomial_value_of_parameter_gt_one (ht:1<v (parameter K L))
    (f:Polynomial K) (hf:f≠0):
    v (algebraMap (Polynomial K) L f)=v (parameter K L)^f.natDegree:=by
  rw [←aeval_parameter K L f]
  exact Polynomial.valuation_aeval_eq_valuation_X_pow_natDegree_of_one_lt_valuation_X
    (v:=v) (parameter K L) ht hf
-theorem infinityBase_le_one (ht:1 < v (parameter K L)) (r:InfinityBase K):
-   v (algebraMap (InfinityBase K) L r) ≤ 1:=by
- change v (algebraMap (RatFunc K) L r.val) ≤ 1
+theorem infinityBase_le_one (ht:1<v (parameter K L)) (r:InfinityBase K):
+   v (algebraMap (InfinityBase K) L r)≤1:=by
+ change v (algebraMap (RatFunc K) L r.val)≤1
  by_cases hr:r.val=0
  · simp [hr]
- have hdegree:r.val.num.natDegree ≤ r.val.denom.natDegree:=by
-   have hmem:RatFunc.inftyValuation K r.val ≤ 1:=r.property
+ have hdegree:r.val.num.natDegree≤r.val.denom.natDegree:=by
+   have hmem:RatFunc.inftyValuation K r.val≤1:=r.property
    rw [RatFunc.inftyValuation_apply,RatFunc.inftyValuation_of_nonzero K hr,
      ←WithZero.exp_zero,WithZero.exp_le_exp] at hmem
    dsimp [RatFunc.intDegree] at hmem
@@ -85,25 +85,25 @@ theorem infinityBase_le_one (ht:1 < v (parameter K L)) (r:InfinityBase K):
    hnum,hden]
  apply (div_le_one₀ (pow_pos (zero_lt_one.trans ht) _)).mpr
  exact pow_le_pow_right₀ ht.le hdegree
-theorem infiniteNormalization_le_one (ht:1 < v (parameter K L))
+theorem infiniteNormalization_le_one (ht:1<v (parameter K L))
    (s:InfiniteNormalization K L):
-   v (algebraMap (InfiniteNormalization K L) L s) ≤ 1:=by
+   v (algebraMap (InfiniteNormalization K L) L s)≤1:=by
  exact RCN359.integral_le_one (InfinityBase K) L v
    (infinityBase_le_one K L v ht) s.property
 theorem exists_unique_finite_place (hv:Function.Surjective v)
-   (ht:v (parameter K L) ≤ 1):
+   (ht:v (parameter K L)≤1):
    ∃! p:HeightOneSpectrum (FiniteNormalization K L),v=p.valuation L:=
  RCN359.exists_unique_place (FiniteNormalization K L) L v
    (finiteNormalization_le_one K L v ht) hv
 theorem exists_unique_infinite_place (hv:Function.Surjective v)
-   (ht:1 < v (parameter K L)):
+   (ht:1<v (parameter K L)):
    ∃! q:HeightOneSpectrum (InfiniteNormalization K L),v=q.valuation L:=
  RCN359.exists_unique_place (InfiniteNormalization K L) L v
    (infiniteNormalization_le_one K L v ht) hv
 theorem finite_or_infinite_place (hv:Function.Surjective v):
    (∃ p:HeightOneSpectrum (FiniteNormalization K L),v=p.valuation L)∨
    (∃ q:HeightOneSpectrum (InfiniteNormalization K L),v=q.valuation L):=by
- by_cases ht:v (parameter K L) ≤ 1
+ by_cases ht:v (parameter K L)≤1
  · exact Or.inl (exists_unique_finite_place K L v hv ht).exists
  · exact Or.inr (exists_unique_infinite_place K L v hv (lt_of_not_ge ht)).exists
 end GivenValuation
@@ -123,7 +123,7 @@ theorem infinitePlace_liesOver
  rwa [hbase] at hq
 theorem finitePlace_parameter_le_one
    (p:HeightOneSpectrum (FiniteNormalization K L)):
-   p.valuation L (parameter K L) ≤ 1:=by
+   p.valuation L (parameter K L)≤1:=by
  rw [parameter,IsScalarTower.algebraMap_apply (Polynomial K) (FiniteNormalization K L) L]
  exact p.valuation_le_one _
 theorem infinitePlace_parameter_value

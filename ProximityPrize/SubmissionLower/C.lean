@@ -85,8 +85,8 @@ theorem weightedTotalDegree_le_of_dvd (weights:Fin 4 → ℕ)
  exact Nat.le_add_right _ _
 theorem weightedTotalDegree_le_iff (weights:Fin 4 → ℕ)
    (P:MvPolynomial (Fin 4) K) (cap:ℕ):
-   MvPolynomial.weightedTotalDegree weights P ≤ cap ↔
-     ∀ d∈P.support,Finsupp.weight weights d ≤ cap:=by
+   MvPolynomial.weightedTotalDegree weights P≤cap ↔
+     ∀ d∈P.support,Finsupp.weight weights d≤cap:=by
  simp only [MvPolynomial.weightedTotalDegree,Finset.sup_le_iff]
 theorem weight_fin4 (weights:Fin 4 → ℕ) (d:Fin 4 →₀ ℕ):
    Finsupp.weight weights d=
@@ -114,11 +114,11 @@ theorem contact_weight (w:ℕ) (d:Fin 4 →₀ ℕ):
  rw [weight_fin4]
  simp [contactWeights,Nat.mul_comm]
 theorem mem_globalCoefficientBox_iff (P:MvPolynomial (Fin 4) K)
-   (D w L s:ℕ) (hD:0 < D):
+   (D w L s:ℕ) (hD:0<D):
    P∈globalCoefficientBox K D w L s ↔
-     MvPolynomial.weightedTotalDegree seedWeights P ≤ L∧
-     MvPolynomial.weightedTotalDegree slopeWeights P ≤ s∧
-     MvPolynomial.weightedTotalDegree (contactWeights w) P ≤ D-1:=by
+     MvPolynomial.weightedTotalDegree seedWeights P≤L∧
+     MvPolynomial.weightedTotalDegree slopeWeights P≤s∧
+     MvPolynomial.weightedTotalDegree (contactWeights w) P≤D-1:=by
  constructor
  · intro h
    refine ⟨?_,?_,?_⟩
@@ -148,7 +148,7 @@ theorem mem_globalCoefficientBox_of_dvd
    (hQ:Q≠0) (hdiv:F∣Q)
    (hbox:Q∈globalCoefficientBox K D w L s):
    F∈globalCoefficientBox K D w L s:=by
- have hD:0 < D:=by
+ have hD:0<D:=by
    rcases MvPolynomial.support_nonempty.mpr hQ with ⟨d,hd⟩
    have hh:=(hbox hd).2.2
    omega
@@ -158,7 +158,7 @@ theorem mem_globalCoefficientBox_of_dvd
    (weightedTotalDegree_le_of_dvd slopeWeights F Q hdiv hQ).trans hcaps.2.1,
    (weightedTotalDegree_le_of_dvd (contactWeights w) F Q hdiv hQ).trans hcaps.2.2⟩
 theorem degreeOf_le_of_dvd (i:Fin 4) (F Q:MvPolynomial (Fin 4) K)
-   (hdiv:F∣Q) (hQ:Q≠0):F.degreeOf i ≤ Q.degreeOf i:=by
+   (hdiv:F∣Q) (hQ:Q≠0):F.degreeOf i≤Q.degreeOf i:=by
  rcases hdiv with ⟨G,rfl⟩
  rcases mul_ne_zero_iff.mp hQ with ⟨hF,hG⟩
  rw [MvPolynomial.degreeOf_mul_eq hF hG]
@@ -166,7 +166,7 @@ theorem degreeOf_le_of_dvd (i:Fin 4) (F Q:MvPolynomial (Fin 4) K)
 theorem sum_degreeOf_le_of_prod_dvd {ι:Type*}
    (I:Finset ι) (f:ι → MvPolynomial (Fin 4) K) (Q:MvPolynomial (Fin 4) K)
    (hQ:Q≠0) (hdiv:(∏ j∈I,f j)∣Q) (i:Fin 4):
-   (∑ j∈I,(f j).degreeOf i) ≤ Q.degreeOf i:=by
+   (∑ j∈I,(f j).degreeOf i)≤Q.degreeOf i:=by
  classical
  have hprod:(∏ j∈I,f j)≠0:=by
    intro hz
@@ -177,13 +177,13 @@ theorem sum_degreeOf_le_of_prod_dvd {ι:Type*}
  calc
    (∑ j∈I,(f j).degreeOf i)=(∏ j∈I,f j).degreeOf i:=
      (MvPolynomial.degreeOf_prod_eq (n:=i) I f hf).symm
-   _ ≤ Q.degreeOf i:=degreeOf_le_of_dvd i _ Q hdiv hQ
+   _≤Q.degreeOf i:=degreeOf_le_of_dvd i _ Q hdiv hQ
 theorem separated_degree_budgets_of_prod_dvd {ι:Type*}
    (I:Finset ι) (f:ι → MvPolynomial (Fin 4) K) (Q:MvPolynomial (Fin 4) K)
    (hQ:Q≠0) (hdiv:(∏ j∈I,f j)∣Q):
-   (∑ j∈I,(f j).degreeOf (1:Fin 4)) ≤ Q.degreeOf (1:Fin 4)∧
-   (∑ j∈I,(f j).degreeOf (2:Fin 4)) ≤ Q.degreeOf (2:Fin 4)∧
-   (∑ j∈I,(f j).degreeOf (3:Fin 4)) ≤ Q.degreeOf (3:Fin 4):=
+   (∑ j∈I,(f j).degreeOf (1:Fin 4))≤Q.degreeOf (1:Fin 4)∧
+   (∑ j∈I,(f j).degreeOf (2:Fin 4))≤Q.degreeOf (2:Fin 4)∧
+   (∑ j∈I,(f j).degreeOf (3:Fin 4))≤Q.degreeOf (3:Fin 4):=
  ⟨sum_degreeOf_le_of_prod_dvd I f Q hQ hdiv 1,
    sum_degreeOf_le_of_prod_dvd I f Q hQ hdiv 2,
    sum_degreeOf_le_of_prod_dvd I f Q hQ hdiv 3⟩
@@ -200,9 +200,9 @@ theorem degreeOf_eq_sum_of_scalar_factorization {ι:Type*}
  rw [hfactor,MvPolynomial.degreeOf_mul_eq hc hprod,MvPolynomial.degreeOf_C,
    Nat.zero_add,MvPolynomial.degreeOf_prod_eq I f hf]
 theorem degreeOf_Y_le_of_mem_box (Q:MvPolynomial (Fin 4) K)
-   (D w L s:ℕ) (hw:0 < w)
+   (D w L s:ℕ) (hw:0<w)
    (hbox:Q∈globalCoefficientBox K D w L s):
-   Q.degreeOf (1:Fin 4) ≤ (D-1)/w:=by
+   Q.degreeOf (1:Fin 4)≤(D-1)/w:=by
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro d hd
  apply (Nat.le_div_iff_mul_le hw).mpr
@@ -211,32 +211,32 @@ theorem degreeOf_Y_le_of_mem_box (Q:MvPolynomial (Fin 4) K)
  omega
 theorem degreeOf_R_le_of_mem_box (Q:MvPolynomial (Fin 4) K)
    (D w L s:ℕ) (hbox:Q∈globalCoefficientBox K D w L s):
-   Q.degreeOf (2:Fin 4) ≤ s:=by
+   Q.degreeOf (2:Fin 4)≤s:=by
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro d hd
  exact (hbox hd).2.1
 theorem degreeOf_Z_le_of_mem_box (Q:MvPolynomial (Fin 4) K)
    (D w L s:ℕ) (hbox:Q∈globalCoefficientBox K D w L s):
-   Q.degreeOf (3:Fin 4) ≤ L:=by
+   Q.degreeOf (3:Fin 4)≤L:=by
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro d hd
  have hs:=(hbox hd).1
  omega
 theorem degree_bounds_of_mem_box (Q:MvPolynomial (Fin 4) K)
-   (D w L s:ℕ) (hw:0 < w)
+   (D w L s:ℕ) (hw:0<w)
    (hbox:Q∈globalCoefficientBox K D w L s):
-   Q.degreeOf (1:Fin 4) ≤ (D-1)/w∧
-   Q.degreeOf (2:Fin 4) ≤ s∧Q.degreeOf (3:Fin 4) ≤ L:=
+   Q.degreeOf (1:Fin 4)≤(D-1)/w∧
+   Q.degreeOf (2:Fin 4)≤s∧Q.degreeOf (3:Fin 4)≤L:=
  ⟨degreeOf_Y_le_of_mem_box Q D w L s hw hbox,
    degreeOf_R_le_of_mem_box Q D w L s hbox,
    degreeOf_Z_le_of_mem_box Q D w L s hbox⟩
 theorem separated_factor_caps_of_prod_dvd {ι:Type*}
    (I:Finset ι) (f:ι → MvPolynomial (Fin 4) K) (Q:MvPolynomial (Fin 4) K)
-   (D w L s:ℕ) (hw:0 < w) (hQ:Q≠0)
+   (D w L s:ℕ) (hw:0<w) (hQ:Q≠0)
    (hbox:Q∈globalCoefficientBox K D w L s) (hdiv:(∏ j∈I,f j)∣Q):
-   (∑ j∈I,(f j).degreeOf (1:Fin 4)) ≤ (D-1)/w∧
-   (∑ j∈I,(f j).degreeOf (2:Fin 4)) ≤ s∧
-   (∑ j∈I,(f j).degreeOf (3:Fin 4)) ≤ L:=by
+   (∑ j∈I,(f j).degreeOf (1:Fin 4))≤(D-1)/w∧
+   (∑ j∈I,(f j).degreeOf (2:Fin 4))≤s∧
+   (∑ j∈I,(f j).degreeOf (3:Fin 4))≤L:=by
  have hsum:=separated_degree_budgets_of_prod_dvd I f Q hQ hdiv
  have hcaps:=degree_bounds_of_mem_box Q D w L s hw hbox
  exact ⟨hsum.1.trans hcaps.1,hsum.2.1.trans hcaps.2.1,hsum.2.2.trans hcaps.2.2⟩

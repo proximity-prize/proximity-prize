@@ -12,7 +12,7 @@ local instance:DecidableEq K:=Classical.decEq K
 abbrev Ring3 (K:Type) [Field K]:=MvPolynomial (Fin 3) K
 private theorem eval_eq_of_sub_mem (P:Ideal (Ring3 K))
    {A B:Ring3 K} (h:A-B∈P) (v:Fin 3 → K)
-   (hv:P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom):
+   (hv:P≤RingHom.ker (MvPolynomial.aeval v).toRingHom):
    MvPolynomial.aeval v A=MvPolynomial.aeval v B:=by
  have hz:=hv h
  change MvPolynomial.aeval v (A-B)=0 at hz
@@ -21,9 +21,9 @@ private theorem eval_eq_of_sub_mem (P:Ideal (Ring3 K))
 def FiniteRegularZeroSetBound (P:Ideal (Ring3 K)) (H A:Ring3 K)
    (cost:ℕ):Prop:=
  ∀ points:Finset (Fin 3 → K),
-   (∀ v∈points,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom) →
+   (∀ v∈points,P≤RingHom.ker (MvPolynomial.aeval v).toRingHom) →
    (∀ v∈points,MvPolynomial.aeval v H≠0) →
-   (∀ v∈points,MvPolynomial.aeval v A=0) → points.card ≤ cost
+   (∀ v∈points,MvPolynomial.aeval v A=0) → points.card≤cost
 theorem FiniteRegularZeroSetBound.of_all_points
    {P:Ideal (Ring3 K)} {H A:Ring3 K} {cost:ℕ}
    (h:FiniteZeroSetBound P A cost):FiniteRegularZeroSetBound P H A cost:=by

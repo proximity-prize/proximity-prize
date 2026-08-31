@@ -31,7 +31,7 @@ def KaehlerDifferential.mvPolynomialEquiv (σ:Type*):
      congr 1
      induction a using MvPolynomial.induction_on
      · simp only [MvPolynomial.derivation_C,map_zero]
-     · simp only [map_add, *]
+     · simp only [map_add,*]
      · simp [*]
 def KaehlerDifferential.mvPolynomialBasis (σ):
    Basis σ (MvPolynomial σ R) Ω[MvPolynomial σ R⁄R]:=
@@ -60,7 +60,7 @@ lemma KaehlerDifferential.mvPolynomialBasis_repr_apply (σ) (x) (i):
  simp [Finsupp.single_apply,Pi.single_apply]
 lemma KaehlerDifferential.mvPolynomialBasis_repr_symm_single (σ) (i) (x):
    (mvPolynomialBasis R σ).repr.symm (Finsupp.single i x)=x • D R (MvPolynomial σ R) (.X i):=by
- apply (mvPolynomialBasis R σ).repr.injective;simp [LinearEquiv.map_smul, -map_smul]
+ apply (mvPolynomialBasis R σ).repr.injective;simp [LinearEquiv.map_smul,-map_smul]
 @[simp]
 lemma KaehlerDifferential.mvPolynomialBasis_apply (σ) (i):
    mvPolynomialBasis R σ i=D R (MvPolynomial σ R) (.X i):=

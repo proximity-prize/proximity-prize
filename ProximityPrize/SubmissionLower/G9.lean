@@ -19,7 +19,7 @@ private def singleSummary (P:Ideal (Original K)) [P.IsPrime]
  letI:=A
  FiniteDimensional (RatFunc K) (CoordinateField K P)∧
    Algebra.IsSeparable (RatFunc K) (CoordinateField K P)∧
-   Module.finrank (RatFunc K) (CoordinateField K P) ≤ B
+   Module.finrank (RatFunc K) (CoordinateField K P)≤B
 private def fieldsSummary (P:Ideal (Original K)) [P.IsPrime]
    (A:Algebra (RatFunc K) (CoordinateField K P)):Prop:=
  letI:=A
@@ -31,7 +31,7 @@ private def familySummary {I:Type} [Fintype I] (P:I → Ideal (Original K))
  letI:=A
  (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i))∧
    Algebra.IsSeparable (RatFunc K) (CoordinateField K (P i)))∧
-   (∑ i,Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤ B
+   (∑ i,Module.finrank (RatFunc K) (CoordinateField K (P i)))≤B
 theorem plane_budget_le_original (order:Fin 3 ≃ Fin 3) (G H:Original K):
    (planeMap K order H).natDegree*Polynomial.Bivariate.degreeX (planeMap K order G)+
      (planeMap K order G).natDegree*Polynomial.Bivariate.degreeX (planeMap K order H) ≤
@@ -45,12 +45,12 @@ variable (ht:Transcendental K (coordinate K P (order 0)))
 theorem original_finite_separable_finrank_bound
    (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:G∈P) (hHmem:H∈P) (hproper:¬ G∣H)
-   (h1:G.degreeOf (order 1) < p) (h2:G.degreeOf (order 2) < p)
-   (hmixed:originalMixedDegree K order G H < p):
+   (h1:G.degreeOf (order 1)<p) (h2:G.degreeOf (order 2)<p)
+   (hmixed:originalMixedDegree K order G H<p):
    letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P (order 0) ht
    FiniteDimensional (RatFunc K) (CoordinateField K P)∧
      Algebra.IsSeparable (RatFunc K) (CoordinateField K P)∧
-     Module.finrank (RatFunc K) (CoordinateField K P) ≤ originalMixedDegree K order G H:=by
+     Module.finrank (RatFunc K) (CoordinateField K P)≤originalMixedDegree K order G H:=by
  obtain ⟨order',hbase,hbudget,hpos,houter,hres⟩:=
    exists_positive_characteristic_order K order P G H p hG hGmem ht h1 h2 hmixed
  have ht':Transcendental K (coordinate K P (order' 0)):=by
@@ -77,8 +77,8 @@ theorem original_finite_separable_sum_finrank_bound
    (hinj:Function.Injective P) (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:∀ i,G∈P i) (hHmem:∀ i,H∈P i)
    (hproper:¬ G∣H)
-   (h1:G.degreeOf (order 1) < p) (h2:G.degreeOf (order 2) < p)
-   (hmixed:originalMixedDegree K order G H < p):
+   (h1:G.degreeOf (order 1)<p) (h2:G.degreeOf (order 2)<p)
+   (hmixed:originalMixedDegree K order G H<p):
    letI:∀ i,Algebra (RatFunc K) (CoordinateField K (P i)):=
      fun i => rationalBaseAlgebra K (P i) (order 0) (ht i)
    (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i))∧
@@ -123,9 +123,9 @@ end Family
 theorem all_transcendental_coordinates_finite_separable
    (P:Ideal (Original K)) [P.IsPrime] (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:G∈P) (hHmem:H∈P) (hproper:¬ G∣H)
-   (hdegree:∀ j:Fin 3,G.degreeOf j < p)
+   (hdegree:∀ j:Fin 3,G.degreeOf j<p)
    (hmixed:∀ j k:Fin 3,j≠k →
-     H.degreeOf j*G.degreeOf k+G.degreeOf j*H.degreeOf k < p):
+     H.degreeOf j*G.degreeOf k+G.degreeOf j*H.degreeOf k<p):
    ∀ (i:Fin 3) (hi:Transcendental K (coordinate K P i)),
      letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P i hi
      FiniteDimensional (RatFunc K) (CoordinateField K P)∧
@@ -139,7 +139,7 @@ theorem all_transcendental_coordinates_finite_separable
    intro h
    have heq:=order.injective h
    exact (by decide:(1:Fin 3)≠2) heq
- have hbudget:originalMixedDegree K order G H < p:=
+ have hbudget:originalMixedDegree K order G H<p:=
    hmixed (order 1) (order 2) hneq
  have hresult:
      letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P (order 0) ht

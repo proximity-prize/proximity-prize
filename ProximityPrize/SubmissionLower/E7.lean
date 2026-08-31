@@ -149,12 +149,12 @@ theorem AdaptiveUnitProjectionFamilyYZ.one_le_zCost_add_yzCost
    (hH:H=regularitySurface phi F)
    (hdiv:G∣surfaceMap phi F)
    (C:RegularComponent Omega G T H):
-   1 ≤ P.family.toPrimeFlagBudgetFamily.zCost C+
+   1≤P.family.toPrimeFlagBudgetFamily.zCost C+
      P.family.toPrimeFlagBudgetFamily.yzCost C:=by
  subst H
  have hYZ:=regularComponent_y_or_z_transcendental phi F G T hdiv C
  by_cases hZ:Transcendental Omega (coordinate Omega C.1 2)
- · have hzpos:1 ≤ P.family.toPrimeFlagBudgetFamily.zCost C:=
+ · have hzpos:1≤P.family.toPrimeFlagBudgetFamily.zCost C:=
      P.family.one_le_toPrimeFlagBudgetFamily_zCost C hZ
    omega
  · have hZalg:IsAlgebraic Omega (coordinate Omega C.1 2):=
@@ -167,7 +167,7 @@ theorem AdaptiveUnitProjectionFamilyYZ.one_le_zCost_add_yzCost
      exact transcendental_add_smul_of_transcendental_isAlgebraic
        Omega C.1 (coordinate Omega C.1 0) (coordinate Omega C.1 2)
          P.lam hY hZalg
-   have hyzpos:1 ≤ P.family.toPrimeFlagBudgetFamily.yzCost C:=by
+   have hyzpos:1≤P.family.toPrimeFlagBudgetFamily.yzCost C:=by
      apply one_le_coordinateDegree_of_transcendental_value
      rw [P.yzValue C]
      exact hU

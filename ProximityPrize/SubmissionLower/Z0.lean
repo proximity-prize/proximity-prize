@@ -63,11 +63,11 @@ theorem elementEmbedding_coordinate_eq_rationalBaseEmbedding
 structure FlagProjectionPositivity
    (D:NestedFlagProjectionData hseparator hproj)
    (G:MvPolynomial (Fin 3) Omega):Prop where
- u:0 < (planeMap Omega uOrder
+ u:0<(planeMap Omega uOrder
    (flagAlgHom D.lam D.mu (D.mu*D.lam) G)).natDegree
- v:0 < (planeMap Omega vOrder
+ v:0<(planeMap Omega vOrder
    (flagAlgHom D.lam D.mu (D.mu*D.lam) G)).natDegree
- z:0 < (planeMap Omega zOrder
+ z:0<(planeMap Omega zOrder
    (flagAlgHom D.lam D.mu (D.mu*D.lam) G)).natDegree
 theorem unitZ_polynomial_pole
    (B:GenericExactPolePolynomial G T H (flagSupport unitZFlag) 2

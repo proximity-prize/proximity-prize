@@ -41,7 +41,7 @@ theorem leadingCoeff_ne_zero_iff {f:MvPolynomial sigma R}:
    rw [hf,leadingCoeff_zero]
  · intro hf
    rw [←support_nonempty] at hf
-   rw [leadingCoeff, ←MvPolynomial.mem_support_iff,degree]
+   rw [leadingCoeff,←MvPolynomial.mem_support_iff,degree]
    suffices f.support.sup m.toSyn∈m.toSyn '' f.support by
      obtain ⟨d,hd,hd'⟩:=this
      rw [←hd',AddEquiv.symm_apply_apply]
@@ -78,7 +78,7 @@ theorem degree_mul_le {f g:MvPolynomial sigma R}:
      rw [m.coeff_eq_zero_of_lt this,mul_zero]
    simp only [not_lt] at hd
    apply lt_of_add_lt_add_left (a:=m.toSyn d)
-   grw [←map_add _ _ e,hd, ←map_add,hde]
+   grw [←map_add _ _ e,hd,←map_add,hde]
    exact hc
 theorem coeff_mul_of_add_of_degree_le {f g:MvPolynomial sigma R}
    {a b:sigma →₀ ℕ} (ha:m.degree f ≼[m] a) (hb:m.degree g ≼[m] b):

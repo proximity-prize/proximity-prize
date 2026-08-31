@@ -23,7 +23,7 @@ local instance:DecidableEq (Place K L):=Classical.decEq _
 theorem exponentSetPoleWeight_nonneg
    (v:Valuation L (WithZero (Multiplicative ℤ)))
    (x:σ → L) (E:Finset (σ →₀ ℕ)):
-   0 ≤ exponentSetPoleWeight v x E:=by
+   0≤exponentSetPoleWeight v x E:=by
  unfold exponentSetPoleWeight
  exact Finset.le_max' _ _ (Finset.mem_insert_self (0:ℤ) _)
 theorem support_sum_le_principal_poleMass_of_exact

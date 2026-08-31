@@ -27,7 +27,7 @@ lemma FormallySmooth.comp_surjective [FormallySmooth R A] (I:Ideal B) (hI:I^2=�
  intro f
  let P:Algebra.Generators R A A:=Generators.self R A
  have hP:Function.Injective P.toExtension.cotangentComplex:=by
-   rw [←LinearMap.ker_eq_bot, ←Submodule.subsingleton_iff_eq_bot]
+   rw [←LinearMap.ker_eq_bot,←Submodule.subsingleton_iff_eq_bot]
    exact FormallySmooth.subsingleton_h1Cotangent
  obtain ⟨l,hl⟩:=((P.toExtension.exact_cotangentComplex_toKaehler.split_tfae'.out 0 1 rfl rfl).mp
    ⟨P.toExtension.subsingleton_h1Cotangent.mp FormallySmooth.subsingleton_h1Cotangent,
@@ -37,21 +37,21 @@ lemma FormallySmooth.comp_surjective [FormallySmooth R A] (I:Ideal B) (hI:I^2=�
      l.restrictScalars P.toExtension.Ring,LinearMap.ext fun x↦congr($hl x)⟩
  let σ:=Function.surjInv (f:=algebraMap B (B ⧸ I)) Ideal.Quotient.mk_surjective
  have H (x:P.Ring):↑(aeval (σ ∘ f) x)=f (algebraMap _ A x):=by
-   rw [←Ideal.Quotient.algebraMap_eq, ←aeval_algebraMap_apply,P.algebraMap_eq,
-     AlgHom.coe_toRingHom,comp_aeval_apply, ←Function.comp_assoc,Function.comp_surjInv,]
+   rw [←Ideal.Quotient.algebraMap_eq,←aeval_algebraMap_apply,P.algebraMap_eq,
+     AlgHom.coe_toRingHom,comp_aeval_apply,←Function.comp_assoc,Function.comp_surjInv,]
    simp [P]
  let l:P.Ring ⧸ (RingHom.ker (algebraMap P.Ring A))^2 →ₐ[R] B:=
    Ideal.Quotient.liftₐ _ (aeval (σ ∘ f)) <|
-     have:RingHom.ker (algebraMap P.Ring A) ≤ I.comap (aeval (σ ∘ f)).toRingHom:=fun x hx↦by
-       simp_all [←Ideal.Quotient.eq_zero_iff_mem (I:=I), -map_aeval]
-     show RingHom.ker _^2 ≤ RingHom.ker _ from
+     have:RingHom.ker (algebraMap P.Ring A)≤I.comap (aeval (σ ∘ f)).toRingHom:=fun x hx↦by
+       simp_all [←Ideal.Quotient.eq_zero_iff_mem (I:=I),-map_aeval]
+     show RingHom.ker _^2≤RingHom.ker _ from
        (Ideal.pow_right_mono this 2).trans ((Ideal.le_comap_pow _ _).trans_eq (hI ▸ rfl))
  have:f.comp (IsScalarTower.toAlgHom R P.Ring A).kerSquareLift=
      (Ideal.Quotient.mkₐ R _).comp l:=by
    refine Ideal.Quotient.algHom_ext _ (MvPolynomial.algHom_ext fun i↦?_)
    change f (algebraMap P.Ring A (.X i))=algebraMap _ _ (MvPolynomial.aeval (σ ∘ f) (.X i))
    simpa using! (Function.surjInv_eq _ _).symm
- exact ⟨l.comp g,by rw [←AlgHom.comp_assoc, ←this,AlgHom.comp_assoc,hg,AlgHom.comp_id]⟩
+ exact ⟨l.comp g,by rw [←AlgHom.comp_assoc,←this,AlgHom.comp_assoc,hg,AlgHom.comp_id]⟩
 set_option backward.defeqAttrib.useBackward true in
 instance instFormallySmoothMvPolynomial (σ:Type*):FormallySmooth R (MvPolynomial σ R):=by
  let P:=Generators.mvPolynomial R σ
@@ -108,7 +108,7 @@ theorem liftOfSurjective_apply [FormallySmooth R A] (f:A →ₐ[R] C) (g:B →�
    ←FormallySmooth.mk_lift (A:=A) _ hg']
  apply (Ideal.quotientKerAlgEquivOfSurjective hg).injective
  rw [AlgEquiv.apply_symm_apply,Ideal.quotientKerAlgEquivOfSurjective_apply]
- simp only [liftOfSurjective, ←RingHom.ker_coe_toRingHom g,RingHom.kerLift_mk,RingHom.coe_coe]
+ simp only [liftOfSurjective,←RingHom.ker_coe_toRingHom g,RingHom.kerLift_mk,RingHom.coe_coe]
 @[simp]
 theorem comp_liftOfSurjective [FormallySmooth R A] (f:A →ₐ[R] C) (g:B →ₐ[R] C)
    (hg:Function.Surjective g) (hg':IsNilpotent <| RingHom.ker (g:B →+*C)):
@@ -193,7 +193,7 @@ theorem iff_split_injection
    Algebra.FormallySmooth R A ↔ ∃ l,LinearMap.comp l (kerCotangentToTensor R P A)=LinearMap.id:=by
  rw [formallySmooth_iff,and_comm,
    Module.Projective.iff_split_of_projective (KaehlerDifferential.mapBaseChange R P A)
-     (mapBaseChange_surjective R P A hf), ←kerCotangentToTensor_injective_iff hf]
+     (mapBaseChange_surjective R P A hf),←kerCotangentToTensor_injective_iff hf]
  convert!
    (((exact_kerCotangentToTensor_mapBaseChange R _ _ hf).split_tfae' (g:=
          (KaehlerDifferential.mapBaseChange R P A).restrictScalars P)).out
@@ -218,7 +218,7 @@ theorem _root_.Algebra.Extension.formallySmooth_iff_split_injection
 theorem iff_split_surjection (f:P →ₐ[R] A) (hf:Function.Surjective f):
    FormallySmooth R A ↔ ∃ g,f.kerSquareLift.comp g=AlgHom.id R A:=by
  letI:=f.toAlgebra
- rw [iff_split_injection hf, ←nonempty_subtype, ←nonempty_subtype,
+ rw [iff_split_injection hf,←nonempty_subtype,←nonempty_subtype,
    (retractionKerCotangentToTensorEquivSection hf).nonempty_congr]
  rfl
 theorem of_split (f:P →ₐ[R] A) (g:A →ₐ[R] P ⧸ RingHom.ker f.toRingHom^2)

@@ -32,7 +32,7 @@ theorem originalAlgHom_eq_residualAlgHom_inverse
    ring
 theorem residual_degreeOf_one_le
    (aY v bY aS bS cS:Omega) (F:Poly3 Omega):
-   (residualAlgHom aY v bY aS bS cS F).degreeOf 1 ≤ F.degreeOf 1:=by
+   (residualAlgHom aY v bY aS bS cS F).degreeOf 1≤F.degreeOf 1:=by
  have h:=residualAlgHom_wt_le_pulled
    (Pi.single (1:Fin 3) 1) aY v bY aS bS cS F
  have hp:flagPullWeights (Pi.single (1:Fin 3) 1)=
@@ -43,7 +43,7 @@ theorem residual_degreeOf_one_le
  simpa [wt] using h
 theorem original_degreeOf_one_le
    (aY v bY aS bS cS:Omega) (F:Poly3 Omega):
-   (originalAlgHom aY v bY aS bS cS F).degreeOf 1 ≤ F.degreeOf 1:=by
+   (originalAlgHom aY v bY aS bS cS F).degreeOf 1≤F.degreeOf 1:=by
  rw [originalAlgHom_eq_residualAlgHom_inverse]
  exact residual_degreeOf_one_le _ _ _ _ _ _ F
 theorem residual_degreeOf_one_eq
@@ -62,8 +62,8 @@ theorem residual_degreeOf_one_eq
    simpa only [hback] using h
 theorem residual_degreeOf_one_pos_iff
    (aY v bY aS bS cS:Omega) (hv:v≠0) (F:Poly3 Omega):
-   0 < (residualAlgHom aY v bY aS bS cS F).degreeOf 1 ↔
-     0 < F.degreeOf 1:=by
+   0<(residualAlgHom aY v bY aS bS cS F).degreeOf 1 ↔
+     0<F.degreeOf 1:=by
  rw [residual_degreeOf_one_eq aY v bY aS bS cS hv F]
 theorem componentResidualHom_eq_residualAlgHom
    (aY v bY aS bS cS:Omega):
@@ -194,7 +194,7 @@ theorem residual_component_transport
    (F:Poly4 K) (G:Poly3 Omega)
    (hG:Irreducible G)
    (hdiv:G∣RCN136.surfaceMap phi F)
-   (hr:0 < G.degreeOf 1)
+   (hr:0<G.degreeOf 1)
    (hproper:¬ G∣RCN136.surfaceMap phi
      (MvPolynomial.pderiv (2:Fin 4) F))
    (p:RCN095.FlagDegree)
@@ -204,7 +204,7 @@ theorem residual_component_transport
    Irreducible Gres∧
      Gres∣RCN136.surfaceMap phi
        (globalResidualHom P0 P1 V F)∧
-     0 < Gres.degreeOf 1∧
+     0<Gres.degreeOf 1∧
      ¬ Gres∣RCN136.surfaceMap phi
        (MvPolynomial.pderiv (2:Fin 4)
          (globalResidualHom P0 P1 V F))∧
@@ -273,10 +273,10 @@ theorem exists_residual_family_with_surface_data
    {iota:Type} [DecidableEq iota]
    (phi:Polynomial K →+*Omega) (hphi:Function.Injective phi)
    (I nodes:Finset iota) (x u0 u1:iota → K)
-   (w e:ℕ) (hsub:I ⊆ nodes) (hIw:I.card ≤ w)
+   (w e:ℕ) (hsub:I ⊆ nodes) (hIw:I.card≤w)
    (hinj:Set.InjOn x nodes)
    (selected:K → Polynomial K) (Gamma:Finset K)
-   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
+   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤w)
    (hvalues:∀ gamma∈Gamma,∀ i∈I,
      (selected gamma).eval (x i)=u0 i+gamma*u1 i)
    (hno:NoLargeSelectedPencil selected Gamma w e)
@@ -289,9 +289,9 @@ theorem exists_residual_family_with_surface_data
          (phi.comp Polynomial.C) (selected gamma) gamma (phi Polynomial.X))
        (MvPolynomial.pderiv (2:Fin 4) F)≠0):
    ∃ P0 P1:Polynomial K,∃ residual:K → Polynomial K,
-     P0.natDegree ≤ w∧P1.natDegree ≤ w∧
+     P0.natDegree≤w∧P1.natDegree≤w∧
      (∀ gamma∈Gamma,
-       (residual gamma).natDegree ≤ w-I.card)∧
+       (residual gamma).natDegree≤w-I.card)∧
      NoLargeSelectedPencil residual Gamma (w-I.card) e∧
      (∀ gamma∈Gamma,
        selected gamma=P0+Polynomial.C gamma*P1+

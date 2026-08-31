@@ -38,8 +38,8 @@ theorem exists_firstTail_projection
    (S:ResidualStage phi Gamma x pchar e flag w
      (RCN198.support a b s))
    (hproper:¬ S.G∣globalTailCut phi S.F (w+1))
-   (hGdegree:∀ j:Fin 3,S.G.degreeOf j < pchar)
-   (hmixedZ:coordinateMixedDegree Omega S.G (globalTailCut phi S.F (w+1)) 2 < pchar):
+   (hGdegree:∀ j:Fin 3,S.G.degreeOf j<pchar)
+   (hmixedZ:coordinateMixedDegree Omega S.G (globalTailCut phi S.F (w+1)) 2<pchar):
    ∃ base:∀ C:RegularComponent Omega S.G
        (globalTailCut phi S.F (w+1)) (regularitySurface phi S.F),
        SeparableLiteralCoordinate C.1,
@@ -93,10 +93,10 @@ theorem exists_firstTail_projection_of_caps
    (S:ResidualStage phi Gamma x pchar e flag w
      (RCN198.support a b s))
    (hproper:¬ S.G∣globalTailCut phi S.F (w+1))
-   (hflagChar:flag.yz+flag.all < pchar∧flag.all < pchar∧
-     flag.zOnly+flag.yz+flag.all < pchar)
+   (hflagChar:flag.yz+flag.all<pchar∧flag.all<pchar∧
+     flag.zOnly+flag.yz+flag.all<pchar)
    (hmixed:(1+(w+1)*(2*(b+s+3)-2))*flag.all+
-     (flag.yz+flag.all)*((2*(s+2)-1)*(w+1)) < pchar):
+     (flag.yz+flag.all)*((2*(s+2)-1)*(w+1))<pchar):
    ∃ base:∀ C:RegularComponent Omega S.G
        (globalTailCut phi S.F (w+1)) (regularitySurface phi S.F),
        SeparableLiteralCoordinate C.1,
@@ -104,8 +104,8 @@ theorem exists_firstTail_projection_of_caps
        (sharpResidualAgreementFlag (RCN198.support a b s) (w+1))):=by
  let T:=globalTailCut phi S.F (w+1)
  let supp:=RCN198.support a b s
- have hsy:supp.s < supp.ys:=by
-   change s+2 < b+s+3
+ have hsy:supp.s<supp.ys:=by
+   change s+2<b+s+3
    omega
  have hTflag:PolynomialInFlag (sharpResidualAgreementFlag supp (w+1)) T:=
    firstTail_in_sharp_flag S
@@ -116,17 +116,17 @@ theorem exists_firstTail_projection_of_caps
  have hTY':T.degreeOf 0 ≤ 1+(w+1)*(2*(b+s+3)-2):=by
    apply hTY.trans_eq
    exact sharpResidualAgreementFlag_ys supp hsy (w+1)
- have hTS':T.degreeOf 1 ≤ (2*(s+2)-1)*(w+1):=by
+ have hTS':T.degreeOf 1≤(2*(s+2)-1)*(w+1):=by
    apply hTS.trans_eq
    simp only [sharpResidualAgreementFlag,sharpAgreementDirection,supp,
      RCN198.support]
- have hGdegree:∀ j:Fin 3,S.G.degreeOf j < pchar:=by
+ have hGdegree:∀ j:Fin 3,S.G.degreeOf j<pchar:=by
    intro j
    fin_cases j
    · exact hGY.trans_lt hflagChar.1
    · exact hGS.trans_lt hflagChar.2.1
    · exact hGZ.trans_lt hflagChar.2.2
- have hmixZ:coordinateMixedDegree Omega S.G T 2 < pchar:=by
+ have hmixZ:coordinateMixedDegree Omega S.G T 2<pchar:=by
    rw [coordinateMixedDegree_two]
    exact (Nat.add_le_add (Nat.mul_le_mul hTY' hGS)
      (Nat.mul_le_mul hGY hTS')).trans_lt hmixed

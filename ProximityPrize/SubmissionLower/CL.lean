@@ -15,7 +15,7 @@ theorem infinityRing_isFractionRing:
    IsFractionRing (InfinityRing K) (RatFunc K):=inferInstance
 def infinityUniformizer:InfinityRing K:=by
  refine ⟨(RatFunc.X:RatFunc K)⁻¹,?_⟩
- change RatFunc.inftyValuation K (RatFunc.X:RatFunc K)⁻¹ ≤ 1
+ change RatFunc.inftyValuation K (RatFunc.X:RatFunc K)⁻¹≤1
  rw [show RatFunc.inftyValuation K (RatFunc.X:RatFunc K)⁻¹=
      WithZero.exp (-1:ℤ) by
    simpa only [one_div] using RatFunc.inftyValuation.X_inv K]

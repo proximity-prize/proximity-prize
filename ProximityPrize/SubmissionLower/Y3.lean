@@ -97,7 +97,7 @@ theorem baseNumerator_mem_pow (F:Poly4 K) (n:ℕ):
    · simpa only [mul_assoc] using
        (baseIdeal F^(n+1)*baseIdeal F).mul_mem_left (2*n+1:ℕ)
          (Ideal.mul_mem_mul ih (baseDerivation_mem F (polyH K F)))
-theorem numerator_mem_pow (F:Poly4 K) (b:ℕ) (hb:2 ≤ b):
+theorem numerator_mem_pow (F:Poly4 K) (b:ℕ) (hb:2≤b):
    numerator K F b∈baseIdeal F^(b+2):=by
  obtain ⟨n,rfl⟩:=Nat.exists_eq_add_of_le hb
  rw [Nat.add_comm 2 n,numerator_eq_H_cube]
@@ -109,11 +109,11 @@ end Algebra
 section Agreement
 variable {K:Type*} [Field K]
 theorem commonNumeratorTerm_mem_pow (F:Poly4 K) (d j:ℕ)
-   (hd:2 ≤ d) (hj:j ≤ d) (c:ℕ → K) (x:K):
+   (hd:2≤d) (hj:j≤d) (c:ℕ → K) (x:K):
    commonNumeratorTerm F d c x j∈baseIdeal F^(d+2):=by
  unfold commonNumeratorTerm
  apply (baseIdeal F^(d+2)).mul_mem_right
- by_cases hj2:2 ≤ j
+ by_cases hj2:2≤j
  · have h:=Ideal.mul_mem_mul (numerator_mem_pow F j hj2)
      (Ideal.pow_mem_pow (H_mem_baseIdeal F) (2*(d-j)))
    rw [←pow_add] at h
@@ -134,7 +134,7 @@ theorem commonNumeratorTerm_mem_pow (F:Poly4 K) (d j:ℕ)
        (MvPolynomial.C (c 1)*MvPolynomial.X (2:Fin 4)) hmem using 1
      rw [←hpow,pow_add]
      ring
-theorem agreementNumerator_mem_pow (F:Poly4 K) (d:ℕ) (hd:2 ≤ d)
+theorem agreementNumerator_mem_pow (F:Poly4 K) (d:ℕ) (hd:2≤d)
    (c:ℕ → K) (x u₀ u₁:K):
    agreementNumerator F d c x u₀ u₁∈baseIdeal F^(d+2):=by
  unfold agreementNumerator clearedTaylorNumerator

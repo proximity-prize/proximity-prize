@@ -76,11 +76,11 @@ theorem swapped_outer_degree (order:Fin 3 ≃ Fin 3) (F:Original K):
      (Equiv.swap (0:Fin 2) 1).injective (1:Fin 2))
 theorem positive_degree_of_irreducible {A:Type} [Field A]
    (f:MvPolynomial (Fin 2) A) (hf:Irreducible f):
-   0 < f.degreeOf 0∨0 < f.degreeOf 1:=by
+   0<f.degreeOf 0∨0<f.degreeOf 1:=by
  classical
- by_cases h0:0 < f.degreeOf 0
+ by_cases h0:0<f.degreeOf 0
  · exact Or.inl h0
- by_cases h1:0 < f.degreeOf 1
+ by_cases h1:0<f.degreeOf 1
  · exact Or.inr h1
  exfalso
  have hdeg:∀ i:Fin 2,f.degreeOf i=0:=by
@@ -116,7 +116,7 @@ theorem exists_positive_outer_order (order:Fin 3 ≃ Fin 3)
    (ht:Transcendental K (coordinate K P (order 0))):
    ∃ order':Fin 3 ≃ Fin 3,
      (order'=order∨order'=swapOtherOrder order)∧
-     order' 0=order 0∧0 < (planeMap K order' G).natDegree:=by
+     order' 0=order 0∧0<(planeMap K order' G).natDegree:=by
  have hirr:=rationalMap_irreducible_of_component K order P G hG hmem ht
  rcases positive_degree_of_irreducible (rationalMap K order G) hirr with h0 | h1
  · refine ⟨order,Or.inl rfl,rfl,?_⟩
@@ -140,9 +140,9 @@ theorem exists_positive_characteristic_order (order:Fin 3 ≃ Fin 3)
    ∃ order':Fin 3 ≃ Fin 3,
      order' 0=order 0∧
      originalMixedDegree K order' G H=originalMixedDegree K order G H∧
-     0 < (planeMap K order' G).natDegree∧
-     (planeMap K order' G).natDegree < p∧
-     (Polynomial.resultant (planeMap K order' G) (planeMap K order' H)).natDegree < p:=by
+     0<(planeMap K order' G).natDegree∧
+     (planeMap K order' G).natDegree<p∧
+     (Polynomial.resultant (planeMap K order' G) (planeMap K order' H)).natDegree<p:=by
  obtain ⟨order',hor,hbase,hpos⟩:=exists_positive_outer_order K order P G hG hmem ht
  have hbudget:originalMixedDegree K order' G H=originalMixedDegree K order G H:=by
    rcases hor with rfl | rfl
@@ -153,7 +153,7 @@ theorem exists_positive_characteristic_order (order:Fin 3 ≃ Fin 3)
    · exact h1
    · simpa only [swapOtherOrder_one] using h2
  have hmix':H.degreeOf (order' 1)*G.degreeOf (order' 2)+
-     G.degreeOf (order' 1)*H.degreeOf (order' 2) < p:=by
+     G.degreeOf (order' 1)*H.degreeOf (order' 2)<p:=by
    change originalMixedDegree K order' G H < p
    rwa [hbudget]
  exact ⟨order',hbase,hbudget,hpos,

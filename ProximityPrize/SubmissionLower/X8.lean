@@ -23,27 +23,27 @@ theorem resultant_eq_zero_of_common_root {p q:F[X]} {t:F}
  simp [Polynomial.eval_add,Polynomial.eval_mul,hp,hq] at heval
 theorem resultant_fixed_degree_eq_zero_of_common_root_of_monic_right
    {p q:F[X]} {m n:ℕ} {t:F}
-   (hpdeg:p.natDegree ≤ m) (hqmonic:q.Monic) (hqdeg:q.natDegree=n)
+   (hpdeg:p.natDegree≤m) (hqmonic:q.Monic) (hqdeg:q.natDegree=n)
    (hp:p.eval t=0) (hq:q.eval t=0):
    Polynomial.resultant p q m n=0:=by
  have hstd:Polynomial.resultant p q=0:=
    resultant_eq_zero_of_common_root (Or.inr hqmonic.ne_zero) hp hq
  have hm:p.natDegree+(m-p.natDegree)=m:=Nat.add_sub_of_le hpdeg
- rw [←hm, ←hqdeg]
+ rw [←hm,←hqdeg]
  rw [Polynomial.resultant_add_left_deg]
  · simp [hstd]
  · exact le_rfl
 theorem resultant_fixed_degree_eq_zero_of_common_root
    {p q:F[X]} {m n:ℕ} {t:F}
-   (hpdeg:p.natDegree ≤ m) (hqdeg:q.natDegree ≤ n)
-   (hsize:0 < m+n) (hp:p.eval t=0) (hq:q.eval t=0):
+   (hpdeg:p.natDegree≤m) (hqdeg:q.natDegree≤n)
+   (hsize:0<m+n) (hp:p.eval t=0) (hq:q.eval t=0):
    Polynomial.resultant p q m n=0:=by
  by_cases hne:p≠0∨q≠0
  · have hstd:Polynomial.resultant p q=0:=
      resultant_eq_zero_of_common_root hne hp hq
    have hm:p.natDegree+(m-p.natDegree)=m:=Nat.add_sub_of_le hpdeg
    have hn:q.natDegree+(n-q.natDegree)=n:=Nat.add_sub_of_le hqdeg
-   rw [←hm, ←hn]
+   rw [←hm,←hn]
    rw [Polynomial.resultant_add_left_deg]
    · rw [Polynomial.resultant_add_right_deg]
      · simp [hstd]
@@ -54,9 +54,9 @@ theorem resultant_fixed_degree_eq_zero_of_common_root
    rcases m with _ | m <;> rcases n with _ | n <;> simp_all
 theorem bivariate_resultant_eval_eq_zero_of_common_root
    (B H:F[X][Y]) (n m:ℕ) (z t:F)
-   (hBdeg:(B.map (Polynomial.evalRingHom z)).natDegree ≤ n)
-   (hHdeg:(H.map (Polynomial.evalRingHom z)).natDegree ≤ m)
-   (hsize:0 < n+m)
+   (hBdeg:(B.map (Polynomial.evalRingHom z)).natDegree≤n)
+   (hHdeg:(H.map (Polynomial.evalRingHom z)).natDegree≤m)
+   (hsize:0<n+m)
    (hBroot:(B.map (Polynomial.evalRingHom z)).eval t=0)
    (hHroot:(H.map (Polynomial.evalRingHom z)).eval t=0):
    (Polynomial.resultant B H n m).eval z=0:=by
@@ -64,7 +64,7 @@ theorem bivariate_resultant_eval_eq_zero_of_common_root
  exact resultant_fixed_degree_eq_zero_of_common_root hBdeg hHdeg hsize hBroot hHroot
 theorem bivariate_resultant_eval_eq_zero_of_common_root_original_degrees
    (B H:F[X][Y]) (z t:F)
-   (hsize:0 < B.natDegree+H.natDegree)
+   (hsize:0<B.natDegree+H.natDegree)
    (hBroot:(B.map (Polynomial.evalRingHom z)).eval t=0)
    (hHroot:(H.map (Polynomial.evalRingHom z)).eval t=0):
    (Polynomial.resultant B H).eval z=0:=by
@@ -111,7 +111,7 @@ theorem irreducible_dvd_of_many_bivariate_common_roots
    (B H:F[X][Y]) (n m:ℕ) (S:Finset F) (t:F → F)
    (hBY:B.natDegree=n) (hHY:H.natDegree=m)
    (hHmonic:H.Monic) (hHirreducible:Irreducible H)
-   (hmany:m*degreeX B+n*degreeX H < S.card)
+   (hmany:m*degreeX B+n*degreeX H<S.card)
    (hroots:∀ z∈S,
      (B.map (Polynomial.evalRingHom z)).eval (t z)=0∧
      (H.map (Polynomial.evalRingHom z)).eval (t z)=0):
@@ -125,7 +125,7 @@ theorem irreducible_dvd_of_many_bivariate_common_roots
      (hHmonic.map (Polynomial.evalRingHom z))
      ((hHmonic.natDegree_map (Polynomial.evalRingHom z)).trans hHY)
      (hroots z hz).1 (hroots z hz).2
- have hRdeg:R.natDegree ≤ m*degreeX B+n*degreeX H:=by
+ have hRdeg:R.natDegree≤m*degreeX B+n*degreeX H:=by
    exact bivariate_resultant_natDegree_le B H n m
  have hRzero:R=0:=
    Polynomial.eq_zero_of_natDegree_lt_card_of_eval_eq_zero' R S hReval

@@ -28,7 +28,7 @@ theorem primitive_irreducible_dvd_of_resultant_zero
  exact hprimitive.dvd_of_fraction_map_dvd_fraction_map
    ((Irreducible.dvd_iff_not_isCoprime hi).mpr hnot)
 theorem irreducible_resultant_nonzero
-   (P Q:Polynomial A) (hP:Irreducible P) (hpos:0 < P.natDegree)
+   (P Q:Polynomial A) (hP:Irreducible P) (hpos:0<P.natDegree)
    (hproper:¬ P∣Q):
    Polynomial.resultant P Q P.natDegree Q.natDegree≠0:=by
  intro hz
@@ -56,9 +56,9 @@ theorem eliminateR_R_degree (F G:MvPolynomial (Fin 4) K):
    Polynomial.natDegree_C]
 theorem eliminateR_nonzero
    (F G:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (hpos:0 < F.degreeOf 2) (hproper:¬ F∣G):eliminateR F G≠0:=by
+   (hpos:0<F.degreeOf 2) (hproper:¬ F∣G):eliminateR F G≠0:=by
  have hi:Irreducible (collectR K F):=(MulEquiv.irreducible_iff (collectR K)).mpr hF
- have hdegree:0 < (collectR K F).natDegree:=by
+ have hdegree:0<(collectR K F).natDegree:=by
    rw [collectR_natDegree]
    exact hpos
  have hnot:¬ collectR K F∣collectR K G:=by
@@ -76,7 +76,7 @@ theorem eliminateR_nonzero
    simpa only [eliminateR,AlgEquiv.apply_symm_apply,map_zero] using hh
  exact hres (Polynomial.C_eq_zero.mp hc)
 theorem eliminateR_bezout (F G:MvPolynomial (Fin 4) K)
-   (hpos:0 < F.degreeOf 2):
+   (hpos:0<F.degreeOf 2):
    ∃ A B:MvPolynomial (Fin 4) K,F*A+G*B=eliminateR F G:=by
  obtain ⟨A,B,_,_,hab⟩:=Polynomial.exists_mul_add_mul_eq_C_resultant
    (collectR K F) (collectR K G) le_rfl le_rfl
@@ -86,7 +86,7 @@ theorem eliminateR_bezout (F G:MvPolynomial (Fin 4) K)
  simpa only [map_add,map_mul,AlgEquiv.apply_symm_apply,eliminateR] using hab
 theorem eliminateR_map_zero {A:Type*} [CommRing A]
    (ψ:MvPolynomial (Fin 4) K →+*A)
-   (F G:MvPolynomial (Fin 4) K) (hpos:0 < F.degreeOf 2)
+   (F G:MvPolynomial (Fin 4) K) (hpos:0<F.degreeOf 2)
    (hF:ψ F=0) (hG:ψ G=0):ψ (eliminateR F G)=0:=by
  obtain ⟨U,V,huv⟩:=eliminateR_bezout F G hpos
  rw [←huv,map_add,map_mul,map_mul,hF,hG,zero_mul,zero_mul,zero_add]
@@ -96,11 +96,11 @@ def singularAuxiliary (Q:MvPolynomial (Fin 4) K):MvPolynomial (Fin 4) K:=
  ∏ F∈activeFactors Q,singularContribution F
 theorem singularContribution_nonzero
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F) (p:ℕ) [CharP K p]
-   (hsmall:F.degreeOf 2 < p):singularContribution F≠0:=by
+   (hsmall:F.degreeOf 2<p):singularContribution F≠0:=by
  unfold singularContribution
  split_ifs with h
  · exact hF.ne_zero
- · have hp:0 < F.degreeOf 2:=Nat.pos_of_ne_zero h
+ · have hp:0<F.degreeOf 2:=Nat.pos_of_ne_zero h
    exact eliminateR_nonzero F _ hF hp (equation_not_dvd_R_derivative F p hp hsmall)
 theorem singularContribution_R_degree (F:MvPolynomial (Fin 4) K):
    (singularContribution F).degreeOf 2=0:=by
@@ -110,7 +110,7 @@ theorem singularContribution_R_degree (F:MvPolynomial (Fin 4) K):
  · exact eliminateR_R_degree F _
 theorem singularAuxiliary_nonzero
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) (p:ℕ) [CharP K p]
-   (hsmall:Q.degreeOf 2 < p):singularAuxiliary Q≠0:=by
+   (hsmall:Q.degreeOf 2<p):singularAuxiliary Q≠0:=by
  classical
  apply Finset.prod_ne_zero_iff.mpr
  intro F hF
@@ -119,7 +119,7 @@ theorem singularAuxiliary_nonzero
  exact (RCN081.degreeOf_le_of_dvd (2:Fin 4) F Q hs.2.1 hQ).trans_lt hsmall
 theorem singularAuxiliary_R_degree
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) (p:ℕ) [CharP K p]
-   (hsmall:Q.degreeOf 2 < p):(singularAuxiliary Q).degreeOf 2=0:=by
+   (hsmall:Q.degreeOf 2<p):(singularAuxiliary Q).degreeOf 2=0:=by
  classical
  have hne:∀ F∈activeFactors Q,singularContribution F≠0:=by
    intro F hF
@@ -156,7 +156,7 @@ theorem surface_zero_singular_or_regular
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    (v:Fin 3 → L) (hzero:MvPolynomial.eval v (surfaceMap φ Q)=0):
    MvPolynomial.eval v (surfaceMap φ (singularAuxiliary Q))=0∨
-     ∃ F∈activeFactors Q,Irreducible F∧0 < F.degreeOf 2∧
+     ∃ F∈activeFactors Q,Irreducible F∧0<F.degreeOf 2∧
        MvPolynomial.eval v (surfaceMap φ F)=0∧
        MvPolynomial.eval v (surfaceMap φ (MvPolynomial.pderiv 2 F))≠0:=by
  classical

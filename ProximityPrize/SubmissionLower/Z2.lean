@@ -15,7 +15,7 @@ theorem flagMixed_projection_decomposition
  ring
 theorem trapezoid_budget_mono
    (n mCap totalG totalT m:ℕ)
-   (hn:n ≤ totalG) (hm:m ≤ mCap):
+   (hn:n≤totalG) (hm:m≤mCap):
    m*totalG+n*totalT-m*n ≤
      mCap*totalG+n*totalT-mCap*n:=by
  let delta:=totalG-n
@@ -25,12 +25,12 @@ theorem trapezoid_budget_mono
  have hdecomp (a:ℕ):
      a*totalG=a*n+a*delta:=by
    rw [hsplit,Nat.mul_add]
- have hdelta:m*delta ≤ mCap*delta:=
+ have hdelta:m*delta≤mCap*delta:=
    Nat.mul_le_mul_right delta hm
  rw [hdecomp m,hdecomp mCap]
  omega
 theorem u_flag_trapezoid_budget
-   (p q:FlagDegree) (m:ℕ) (hm:m ≤ q.all):
+   (p q:FlagDegree) (m:ℕ) (hm:m≤q.all):
    m*(p.zOnly+p.yz+p.all)+
          p.all*(q.zOnly+q.yz+q.all)-m*p.all ≤
      flagMixed p q unitYZFlag:=by
@@ -51,7 +51,7 @@ theorem u_flag_trapezoid_budget
        ring
      rw [hsum,Nat.add_sub_cancel_left]
 theorem v_flag_trapezoid_budget
-   (p q:FlagDegree) (m:ℕ) (hm:m ≤ q.yz+q.all):
+   (p q:FlagDegree) (m:ℕ) (hm:m≤q.yz+q.all):
    m*(p.zOnly+p.yz+p.all)+
          (p.yz+p.all)*(q.zOnly+q.yz+q.all)-
            m*(p.yz+p.all) ≤
@@ -76,7 +76,7 @@ theorem v_flag_trapezoid_budget
        ring
      rw [hsum,Nat.add_sub_cancel_left]
 theorem z_flag_trapezoid_budget
-   (p q:FlagDegree) (m:ℕ) (hm:m ≤ q.all):
+   (p q:FlagDegree) (m:ℕ) (hm:m≤q.all):
    m*(p.yz+p.all)+p.all*(q.yz+q.all)-m*p.all ≤
      flagMixed p q unitZFlag:=by
  calc

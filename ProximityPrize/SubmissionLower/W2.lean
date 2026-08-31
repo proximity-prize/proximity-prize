@@ -86,10 +86,10 @@ theorem corank_le_rootMultiplicity_det
    (pow_corank_dvd_det M alpha)
 theorem sum_rootMultiplicity_le_natDegree
    (P:Polynomial K) (points:Finset K):
-   (∑ alpha∈points,P.rootMultiplicity alpha) ≤ P.natDegree:=by
+   (∑ alpha∈points,P.rootMultiplicity alpha)≤P.natDegree:=by
  classical
  have hselected:
-     (∑ alpha∈points,Multiset.count alpha P.roots) ≤ P.roots.card:=by
+     (∑ alpha∈points,Multiset.count alpha P.roots)≤P.roots.card:=by
    let all:=points ∪ P.roots.toFinset
    calc
      (∑ alpha∈points,Multiset.count alpha P.roots) ≤
@@ -107,8 +107,8 @@ theorem sum_rootMultiplicity_le_natDegree
      apply Finset.sum_congr rfl
      intro alpha _
      exact (Polynomial.count_roots P).symm
-   _ ≤ P.roots.card:=hselected
-   _ ≤ P.natDegree:=Polynomial.card_roots' P
+   _≤P.roots.card:=hselected
+   _≤P.natDegree:=Polynomial.card_roots' P
 theorem sum_coranks_le_natDegree_det
    (M:Matrix ι ι (Polynomial K)) (points:Finset K) (hdet:M.det≠0):
    (∑ alpha∈points,

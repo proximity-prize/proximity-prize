@@ -158,7 +158,7 @@ theorem sum_actualCoordinateDegree_le_of_joint_certificate
    intro i j h
    apply Subtype.ext
    exact hinj h
- have hbound:(∑ i:s,D i) ≤ originalMixedDegree K order G H:=by
+ have hbound:(∑ i:s,D i)≤originalMixedDegree K order G H:=by
    have h:=finite_separable_sum_finrank_bound_of_joint_certificate
      K order (fun i:s => P i) (fun i => i.2) hinj' p G H hG
      (fun i => hGmem i) (fun i => hHmem i) hproper hcertificate
@@ -314,9 +314,9 @@ theorem sum_actualCoordinateDegree_at_le_of_joint_R
    [∀ i,(P i).IsPrime] (hinj:Function.Injective P)
    (p:ℕ) [CharP K p] (G H:Original K) (hG:Irreducible G)
    (hGmem:∀ i,G∈P i) (hHmem:∀ i,H∈P i)
-   (hproper:¬ G∣H) (hdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixedY:coordinateMixedDegree K G H 0 < p)
-   (hmixedZ:coordinateMixedDegree K G H 2 < p)
+   (hproper:¬ G∣H) (hdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixedY:coordinateMixedDegree K G H 0<p)
+   (hmixedZ:coordinateMixedDegree K G H 2<p)
    (hjoint:JointOrderCertificate K (Equiv.swap 0 1) G H p):
    ∀ j,(∑ i,actualCoordinateDegree K (P i) j) ≤
      coordinateMixedDegree K G H j:=by
@@ -333,9 +333,9 @@ theorem sum_actualCoordinateDegree_at_le_of_joint_R_provider
    [∀ i,(P i).IsPrime] (hinj:Function.Injective P)
    (p:ℕ) [CharP K p] (G H:Original K) (hG:Irreducible G)
    (hGmem:∀ i,G∈P i) (hHmem:∀ i,H∈P i)
-   (hproper:¬ G∣H) (hdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixedY:coordinateMixedDegree K G H 0 < p)
-   (hmixedZ:coordinateMixedDegree K G H 2 < p)
+   (hproper:¬ G∣H) (hdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixedY:coordinateMixedDegree K G H 0<p)
+   (hmixedZ:coordinateMixedDegree K G H 2<p)
    (hjoint:∀ i,Transcendental K (coordinate K (P i) 1) →
      JointOrderCertificate K (Equiv.swap 0 1) G H p):
    ∀ j,(∑ i,actualCoordinateDegree K (P i) j) ≤

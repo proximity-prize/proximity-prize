@@ -81,7 +81,7 @@ theorem support_surfaceMap_subset (φ:Polynomial K →+*L)
  exact Finset.mem_image.mpr ⟨d,hd,heq.symm⟩
 theorem surfaceMap_degreeOf_le (φ:Polynomial K →+*L)
    (Q:MvPolynomial (Fin 4) K) (i:Fin 3):
-   (surfaceMap φ Q).degreeOf i ≤ Q.degreeOf i.succ:=by
+   (surfaceMap φ Q).degreeOf i≤Q.degreeOf i.succ:=by
  classical
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro e he
@@ -89,17 +89,17 @@ theorem surfaceMap_degreeOf_le (φ:Polynomial K →+*L)
  exact MvPolynomial.monomial_le_degreeOf i.succ hd
 theorem surfaceMap_separated_caps (φ:Polynomial K →+*L)
    (Q:MvPolynomial (Fin 4) K) (ell s zcap:ℕ)
-   (hy:Q.degreeOf 1 ≤ ell) (hr:Q.degreeOf 2 ≤ s) (hz:Q.degreeOf 3 ≤ zcap):
-   (surfaceMap φ Q).degreeOf 0 ≤ ell∧
-     (surfaceMap φ Q).degreeOf 1 ≤ s∧
-     (surfaceMap φ Q).degreeOf 2 ≤ zcap:=
+   (hy:Q.degreeOf 1≤ell) (hr:Q.degreeOf 2≤s) (hz:Q.degreeOf 3≤zcap):
+   (surfaceMap φ Q).degreeOf 0≤ell∧
+     (surfaceMap φ Q).degreeOf 1≤s∧
+     (surfaceMap φ Q).degreeOf 2≤zcap:=
  ⟨(surfaceMap_degreeOf_le φ Q 0).trans hy,
    (surfaceMap_degreeOf_le φ Q 1).trans hr,
    (surfaceMap_degreeOf_le φ Q 2).trans hz⟩
 theorem surfaceMap_joint_seed_cap (φ:Polynomial K →+*L)
    (Q:MvPolynomial (Fin 4) K) (cap:ℕ)
-   (hcap:∀ d∈Q.support,d 1+d 3 ≤ cap):
-   ∀ e∈(surfaceMap φ Q).support,e 0+e 2 ≤ cap:=by
+   (hcap:∀ d∈Q.support,d 1+d 3≤cap):
+   ∀ e∈(surfaceMap φ Q).support,e 0+e 2≤cap:=by
  classical
  intro e he
  obtain ⟨d,hd,rfl⟩:=Finset.mem_image.mp (support_surfaceMap_subset φ Q he)

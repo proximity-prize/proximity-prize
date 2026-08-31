@@ -37,13 +37,13 @@ theorem numeric_values:
      singularListCap=867∧listNumerator=30666112067781:=by
  norm_num [gap,capY,capR,regularListNumerator,singularListCap,
    listNumerator,agreements,n,errors,w,yTotalCap,slopeCap]
-theorem list_numerator_fits:listNumerator < listBudget*gap:=by
+theorem list_numerator_fits:listNumerator<listBudget*gap:=by
  norm_num [listNumerator,regularListNumerator,singularListCap,listBudget,
    gap,capY,capR,agreements,n,errors,w,yTotalCap,slopeCap]
 theorem list_strict_ceiling_exact:
    listNumerator/gap+1=598865626∧
-     listNumerator < 598865626*gap∧
-     598865626 < listBudget:=by
+     listNumerator<598865626*gap∧
+     598865626<listBudget:=by
  norm_num [listNumerator,regularListNumerator,singularListCap,listBudget,
    gap,capY,capR,agreements,n,errors,w,yTotalCap,slopeCap]
 variable (K:Type) [Field K]
@@ -53,7 +53,7 @@ theorem seedless_degree_caps
    (Q:MvPolynomial (Fin 4) K)
    (hbox:Q∈RCN279.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap):
-   Q.degreeOf 1 ≤ yTotalCap∧Q.degreeOf 2 ≤ slopeCap∧
+   Q.degreeOf 1≤yTotalCap∧Q.degreeOf 2≤slopeCap∧
      Q.degreeOf 3=0:=by
  refine ⟨MvPolynomial.degreeOf_le_iff.mpr ?_,
    MvPolynomial.degreeOf_le_iff.mpr ?_,?_⟩
@@ -68,10 +68,10 @@ theorem seedless_degree_caps
 theorem agreement_cap
    (phi:Polynomial K →+*GenericField K)
    (F:MvPolynomial (Fin 4) K)
-   (hY:F.degreeOf 1 ≤ yTotalCap)
-   (hR:F.degreeOf 2 ≤ slopeCap)
+   (hY:F.degreeOf 1≤yTotalCap)
+   (hR:F.degreeOf 2≤slopeCap)
    (hZ:F.degreeOf 3=0) (x u:K):
-   ∀ j,(agreementPolynomial phi F w x u 0).degreeOf j ≤ agreementCap j:=by
+   ∀ j,(agreementPolynomial phi F w x u 0).degreeOf j≤agreementCap j:=by
  have hb:=agreementNumerator_degree_bounds F yTotalCap slopeCap 0
    (by norm_num [slopeCap]) hY hR hZ.le w
      (fun j => (j.factorial:K)⁻¹) x u 0
@@ -100,7 +100,7 @@ theorem card_le_sum_geometricPolynomials
    (F:MvPolynomial (Fin 4) K) (hF:F≠0)
    (Gamma:Finset (Polynomial K))
    (hsolutions:∀ S∈Gamma,specialization K S 0 F=0):
-   Gamma.card ≤ ∑ g:GeometricFactor K F,
+   Gamma.card≤∑ g:GeometricFactor K F,
      (geometricPolynomials K F Gamma g).card:=by
  classical
  have hcover:Gamma ⊆ Finset.univ.biUnion (geometricPolynomials K F Gamma):=by
@@ -118,7 +118,7 @@ theorem card_le_sum_geometricPolynomials
  exact (Finset.card_le_card hcover).trans Finset.card_biUnion_le
 theorem geometric_seedless_cut_proper
    (g:MvPolynomial (Fin 3) (GenericField K))
-   (hR:0 < g.degreeOf 1):
+   (hR:0<g.degreeOf 1):
    ¬ g∣(seedlessCut:MvPolynomial (Fin 3) (GenericField K)):=by
  intro hdvd
  have hle:=coordinate_degree_le_of_dvd 1 g seedlessCut hdvd
@@ -130,14 +130,14 @@ theorem geometric_seedless_cut_proper
 theorem original_regular_seedless_bound
    [CharP K prime]
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (hRpos:0 < F.degreeOf 2)
+   (hRpos:0<F.degreeOf 2)
    (hbox:F∈RCN174.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap)
-   (hY:F.degreeOf 1 ≤ yTotalCap)
-   (hR:F.degreeOf 2 ≤ slopeCap)
+   (hY:F.degreeOf 1≤yTotalCap)
+   (hR:F.degreeOf 2≤slopeCap)
    (hZ:F.degreeOf 3=0)
    (Gamma:Finset (Polynomial K))
-   (hdegree:∀ S∈Gamma,S.natDegree ≤ w)
+   (hdegree:∀ S∈Gamma,S.natDegree≤w)
    (hsolutions:∀ S∈Gamma,specialization K S 0 F=0)
    (hregular:∀ S∈Gamma,
      specialization K S 0 (MvPolynomial.pderiv (2:Fin 4) F)≠0)
@@ -150,7 +150,7 @@ theorem original_regular_seedless_bound
      (n-w)*(capY*F.degreeOf 2+capR*F.degreeOf 1):=by
  classical
  letI:CharP (GenericField K) prime:=genericField_charP K prime
- have hsmall:F.degreeOf 2 < prime:=hR.trans_lt (by
+ have hsmall:F.degreeOf 2<prime:=hR.trans_lt (by
    norm_num [slopeCap,prime])
  have hcount (g:GeometricFactor K F):
      (geometricPolynomials K F Gamma g).card*gap ≤
@@ -165,7 +165,7 @@ theorem original_regular_seedless_bound
    have hgR:=(geometricFactor_degree_le K F hF.ne_zero g 1).trans hR
    have hgZ:g.1.degreeOf 2=0:=Nat.eq_zero_of_le_zero
      ((geometricFactor_degree_le K F hF.ne_zero g 2).trans_eq hZ)
-   have hGdegree:∀ j:Fin 3,g.1.degreeOf j < prime:=by
+   have hGdegree:∀ j:Fin 3,g.1.degreeOf j<prime:=by
      intro j
      fin_cases j
      · exact hgY.trans_lt (by norm_num [yTotalCap,prime])
@@ -175,7 +175,7 @@ theorem original_regular_seedless_bound
        (seedlessCut:MvPolynomial (Fin 3) (GenericField K)).degreeOf j*
            g.1.degreeOf k+
          g.1.degreeOf j*
-           (seedlessCut:MvPolynomial (Fin 3) (GenericField K)).degreeOf k < prime:=by
+           (seedlessCut:MvPolynomial (Fin 3) (GenericField K)).degreeOf k<prime:=by
      intro j k hjk
      have h0:=hGdegree 0
      have h1:=hGdegree 1
@@ -238,14 +238,14 @@ theorem original_regular_seedless_bound
    _=∑ g:GeometricFactor K F,
        (geometricPolynomials K F Gamma g).card*gap:=by
      rw [Finset.sum_mul]
-   _ ≤ ∑ g:GeometricFactor K F,
+   _≤∑ g:GeometricFactor K F,
        (n-w)*(capY*g.1.degreeOf 1+capR*g.1.degreeOf 0):=
      Finset.sum_le_sum (fun g _ => hcount g)
    _=(n-w)*(capY*(∑ g:GeometricFactor K F,g.1.degreeOf 1)+
        capR*(∑ g:GeometricFactor K F,g.1.degreeOf 0)):=by
      rw [←Finset.mul_sum,Finset.sum_add_distrib,
-       ←Finset.mul_sum, ←Finset.mul_sum]
-   _ ≤ (n-w)*(capY*F.degreeOf 2+capR*F.degreeOf 1):=by
+       ←Finset.mul_sum,←Finset.mul_sum]
+   _≤(n-w)*(capY*F.degreeOf 2+capR*F.degreeOf 1):=by
      apply Nat.mul_le_mul_left
      exact Nat.add_le_add
        (Nat.mul_le_mul_left capY (geometricFactor_sum_degree_le K F hF.ne_zero 1))
@@ -285,7 +285,7 @@ theorem yProjection_nonzero {T:Type*} [Field T]
  rw [←yProjection_reconstruct S hR hZ,hz,map_zero]
 theorem yProjection_natDegree_le {T:Type*} [Field T]
    (S:MvPolynomial (Fin 3) T):
-   (yProjection T S).natDegree ≤ S.degreeOf 0:=by
+   (yProjection T S).natDegree≤S.degreeOf 0:=by
  classical
  have hsum:yProjection T S=
      ∑ d∈S.support,yProjection T (MvPolynomial.monomial d (S.coeff d)):=by
@@ -302,8 +302,8 @@ theorem yProjection_natDegree_le {T:Type*} [Field T]
    rw [heq]
    by_cases h1:d 1=0 <;> by_cases h2:d 2=0 <;>
      simp [yProjection,h1,h2]
-   have hc:(Polynomial.C (S.coeff d)).natDegree ≤ 0:=by simp
-   have hx:((Polynomial.X:Polynomial T)^d 0).natDegree ≤ d 0:=by simp
+   have hc:(Polynomial.C (S.coeff d)).natDegree≤0:=by simp
+   have hx:((Polynomial.X:Polynomial T)^d 0).natDegree≤d 0:=by simp
    simpa only [Nat.zero_add] using Polynomial.natDegree_mul_le_of_le hc hx
  exact hmono.trans (MvPolynomial.monomial_le_degreeOf 0 hd)
 theorem yProjection_eval {T:Type*} [Field T]
@@ -323,14 +323,14 @@ theorem yProjection_eval {T:Type*} [Field T]
 def yWeights:Fin 4 → ℕ:=![0,1,0,0]
 def zWeights:Fin 4 → ℕ:=![0,0,0,1]
 theorem degreeY_le_yWeight (Q:MvPolynomial (Fin 4) K):
-   Q.degreeOf 1 ≤ MvPolynomial.weightedTotalDegree yWeights Q:=by
+   Q.degreeOf 1≤MvPolynomial.weightedTotalDegree yWeights Q:=by
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro d hd
  have h:=MvPolynomial.le_weightedTotalDegree yWeights hd
  rw [weight_fin4] at h
  simpa [yWeights] using h
 theorem degreeZ_le_zWeight (Q:MvPolynomial (Fin 4) K):
-   Q.degreeOf 3 ≤ MvPolynomial.weightedTotalDegree zWeights Q:=by
+   Q.degreeOf 3≤MvPolynomial.weightedTotalDegree zWeights Q:=by
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro d hd
  have h:=MvPolynomial.le_weightedTotalDegree zWeights hd
@@ -344,7 +344,7 @@ theorem singular_seedless_card_le
    (Gamma:Finset (Polynomial K))
    (hsolutions:∀ S∈Gamma,
      specialization K S 0 (singularAuxiliary Q)=0):
-   Gamma.card ≤ singularListCap:=by
+   Gamma.card≤singularListCap:=by
  classical
  let phi:=polynomialEmbedding K
  let J:=singularAuxiliary Q
@@ -353,13 +353,13 @@ theorem singular_seedless_card_le
    (hcaps.2.1.trans_lt (by norm_num [slopeCap,prime]))
  have hJR:J.degreeOf 2=0:=singularAuxiliary_R_degree Q hQ prime
    (hcaps.2.1.trans_lt (by norm_num [slopeCap,prime]))
- have hQY:MvPolynomial.weightedTotalDegree yWeights Q ≤ yTotalCap:=by
+ have hQY:MvPolynomial.weightedTotalDegree yWeights Q≤yTotalCap:=by
    apply (weightedTotalDegree_le_iff yWeights Q yTotalCap).mpr
    intro d hd
    have hh:=(hbox hd).1
    rw [weight_fin4]
    simpa [yWeights] using (Nat.le_add_right (d 1) (d 2)).trans hh
- have hQZ:MvPolynomial.weightedTotalDegree zWeights Q ≤ 0:=by
+ have hQZ:MvPolynomial.weightedTotalDegree zWeights Q≤0:=by
    apply (weightedTotalDegree_le_iff zWeights Q 0).mpr
    intro d hd
    have hh:=(hbox hd).2.2.1
@@ -369,7 +369,7 @@ theorem singular_seedless_card_le
    (by norm_num [slopeCap]) hcaps.2.1
  have hJZw:=singularAuxiliary_weight_le zWeights Q hQ slopeCap
    (by norm_num [slopeCap]) hcaps.2.1
- have hJY:J.degreeOf 1 ≤ singularListCap:=
+ have hJY:J.degreeOf 1≤singularListCap:=
    (degreeY_le_yWeight K J).trans (hJYw.trans (by
      unfold singularListCap
      exact Nat.mul_le_mul_left _ hQY))
@@ -400,12 +400,12 @@ theorem singular_seedless_card_le
    Finset.card_image_of_injective _ (polynomialEmbedding_injective K)
  rw [←hcard]
  calc
-   (Gamma.image phi).card ≤ q.roots.toFinset.card:=by
+   (Gamma.image phi).card≤q.roots.toFinset.card:=by
      apply Finset.card_le_card
      intro z hz
      exact Multiset.mem_toFinset.mpr (hroots z hz)
-   _ ≤ q.roots.card:=Multiset.toFinset_card_le _
-   _ ≤ q.natDegree:=Polynomial.card_roots' q
+   _≤q.roots.card:=Multiset.toFinset_card_le _
+   _≤q.natDegree:=Polynomial.card_roots' q
    _ ≤ A.degreeOf 0:=yProjection_natDegree_le A
    _ ≤ J.degreeOf 1:=surfaceMap_degreeOf_le phi J 0
    _ ≤ singularListCap:=hJY
@@ -484,7 +484,7 @@ theorem seedless_list_card_le
    (positiveRFactors Q) id Q hQ (positiveRFactors_product_dvd Q hQ) 1
  have hsumR:=sum_coordinate_degrees_le_of_prod_dvd
    (positiveRFactors Q) id Q hQ (positiveRFactors_product_dvd Q hQ) 2
- have hsumY':(∑ F:↥(positiveRFactors Q),F.1.degreeOf 1) ≤ Q.degreeOf 1:=by
+ have hsumY':(∑ F:↥(positiveRFactors Q),F.1.degreeOf 1)≤Q.degreeOf 1:=by
    simpa only [Finset.sum_coe_sort,id_eq] using hsumY
  have hsumR':(∑ F:↥(positiveRFactors Q),F.1.degreeOf 2) ≤ Q.degreeOf 2:=by
    simpa only [Finset.sum_coe_sort,id_eq] using hsumR

@@ -61,7 +61,7 @@ theorem coefficientPoleProfile_of_regular_agreement_curve
    (hbox:S.F∈globalCoefficientBox K bound w seedCap slopeCap)
    (hyz:∀ W:Finset (RCN346.Place (Ω K) (CoordinateField (Ω K) C.1)),
      (∑ v∈W,exponentSetPoleWeight v.val (coordinate (Ω K) C.1)
-       (flagSupport unitYZFlag)) ≤ (cost:ℤ)):
+       (flagSupport unitYZFlag))≤(cost:ℤ)):
    CoefficientPoleProfile (polynomialEmbedding K) C.1 S.F
      (stage_surface_mem S x0 u0 u1 C)
      (stage_regularity_not_mem S x0 u0 u1 C) w cost:=by

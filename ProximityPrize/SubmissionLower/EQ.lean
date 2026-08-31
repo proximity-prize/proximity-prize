@@ -94,7 +94,7 @@ theorem actual_identityCurveCountProvider
          apply Finset.sum_congr rfl
          intro v _
          exact U.family.yzPole_eq C v
-       _ ≤ _:=finite_sum_coordinate_pole_le_degree (Ω K)
+       _≤_:=finite_sum_coordinate_pole_le_degree (Ω K)
          (CoordinateField (Ω K) C.1) (U.family.yzProjection C) W
    have hprofileYZ:=coefficientPoleProfile_of_regular_agreement_curve
      S hTail (x i) (S.u0 i) (S.u1 i) hproper C
@@ -144,7 +144,7 @@ theorem actual_identityCurveCountProvider
    have hz'':=hz'.trans (mixed_padded_le_succ flag a b s w unitZFlag)
    have hyz'':=hyz'.trans (mixed_padded_le_succ flag a b s w unitYZFlag)
    change (∑ C,(U.family.toPrimeFlagBudgetFamily.zCost C+
-     U.family.toPrimeFlagBudgetFamily.yzCost C)) ≤ identityCurveDegree flag a b s w
+     U.family.toPrimeFlagBudgetFamily.yzCost C))≤identityCurveDegree flag a b s w
    rw [Finset.sum_add_distrib]
    exact Nat.add_le_add hz'' hyz''
 end

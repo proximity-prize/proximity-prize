@@ -7,7 +7,7 @@ variable {F:Type*} [CommRing F]
 theorem shifted_power_dvd_iff_taylor_coeff_zero
    (P:F[X]) (x:F) (h:ℕ):
    (Polynomial.X-Polynomial.C x)^h∣P ↔
-     ∀ j < h,(taylor x P).coeff j=0:=by
+     ∀ j<h,(taylor x P).coeff j=0:=by
  have hshift:taylor x ((Polynomial.X-Polynomial.C x)^h)=
      (Polynomial.X:F[X])^h:=by
    rw [taylor_pow,map_sub,taylor_X,taylor_C,add_sub_cancel_right]
@@ -30,7 +30,7 @@ theorem X_sq_dvd_contactResidual (P:F[X]) (x:F):
  · simp [contactResidual,coeff_X_mul]
 theorem contact_monomial_dvd
    (A S R:F[X]) (m i j k:ℕ)
-   (hS:(Polynomial.X:F[X])^2∣S) (hweight:m ≤ i+2*j):
+   (hS:(Polynomial.X:F[X])^2∣S) (hweight:m≤i+2*j):
    (Polynomial.X:F[X])^m∣A*Polynomial.X^i*S^j*R^k:=by
  have hSj:(Polynomial.X:F[X])^(2*j)∣S^j:=by
    simpa only [pow_mul] using pow_dvd_pow_of_dvd hS j
@@ -52,7 +52,7 @@ theorem contact_sum_dvd
    {J:Type*} (terms:Finset J) (coefficient:J → F[X])
    (tExp sExp rExp:J → ℕ) (S R:F[X]) (m:ℕ)
    (hS:(Polynomial.X:F[X])^2∣S)
-   (hweight:∀ b∈terms,m ≤ tExp b+2*sExp b):
+   (hweight:∀ b∈terms,m≤tExp b+2*sExp b):
    (Polynomial.X:F[X])^m∣
      ∑ b∈terms,coefficient b*Polynomial.X^tExp b*S^sExp b*R^rExp b:=by
  apply Finset.dvd_sum
@@ -67,15 +67,15 @@ theorem eq_zero_of_contact_representations
    (terms:I → Finset J) (coefficient:I → J → F[X])
    (tExp sExp rExp:I → J → ℕ)
    (hweight:∀ i∈support,∀ b∈terms i,
-     m ≤ tExp i b+2*sExp i b)
+     m≤tExp i b+2*sExp i b)
    (hrepresentation:∀ i∈support,
      taylor (nodes i) H=
        ∑ b∈terms i,coefficient i b*Polynomial.X^tExp i b*
          (contactResidual P (nodes i))^sExp i b*
          (taylor (nodes i) P.derivative)^rExp i b)
-   (hdegree:H.natDegree < m*support.card):H=0:=by
+   (hdegree:H.natDegree<m*support.card):H=0:=by
  by_contra hnonzero
- have hmult:∀ i∈support,m ≤ H.rootMultiplicity (nodes i):=by
+ have hmult:∀ i∈support,m≤H.rootMultiplicity (nodes i):=by
    intro i hi
    have hlocal:(Polynomial.X:F[X])^m∣taylor (nodes i) H:=by
      rw [hrepresentation i hi]

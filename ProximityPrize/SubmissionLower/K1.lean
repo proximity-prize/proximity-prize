@@ -45,7 +45,7 @@ noncomputable def indexedWeightedFlagPlaneChannel_of_fixedFactors
    (multiplicity:A → ℕ)
    (resultant:Polynomial (RatFunc Omega)) (budget:ℕ)
    (hresultant:resultant≠0)
-   (hdegree:resultant.natDegree ≤ budget)
+   (hdegree:resultant.natDegree≤budget)
    (hfixed:∀ (q:Polynomial (RatFunc Omega))
      (hq:Irreducible q) (hqMonic:q.Monic)
      (a₀:IndexedFactorFiber component lam mu nu order ht q),

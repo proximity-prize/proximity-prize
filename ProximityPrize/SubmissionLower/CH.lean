@@ -2,7 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 namespace ProximityPrize.SubmissionLower.RCN324
 open IsLocalRing
 variable {K R:Type*} [CommRing K] [CommRing R] [Algebra K R]
-private theorem prime_dvd_factorial:∀ {n p:ℕ},p.Prime → (p∣n.factorial ↔ p ≤ n)
+private theorem prime_dvd_factorial:∀ {n p:ℕ},p.Prime → (p∣n.factorial ↔ p≤n)
  | 0,_,hp => iff_of_false hp.not_dvd_one (not_le_of_gt hp.pos)
  | n+1,p,hp => by
      rw [Nat.factorial_succ,hp.dvd_mul,prime_dvd_factorial hp]
@@ -10,7 +10,7 @@ private theorem prime_dvd_factorial:∀ {n p:ℕ},p.Prime → (p∣n.factorial �
        fun h => (_root_.lt_or_eq_of_le h).elim
          (Or.inr ∘ Nat.le_of_lt_succ) fun h => Or.inl <| by rw [h]⟩
 theorem derivation_pow_mul (D:Derivation K R R) (pi u:R) (mu:ℕ)
-   (hmu:1 ≤ mu):
+   (hmu:1≤mu):
    D (pi^mu*u)=
      pi^(mu-1)*((mu:R)*u*D pi+pi*D u):=by
  rw [D.leibniz,Derivation.leibniz_pow]
@@ -21,7 +21,7 @@ theorem derivation_pow_mul (D:Derivation K R R) (pi u:R) (mu:ℕ)
  rw [hpow]
  ring
 theorem tangent_pow_mul (D:Derivation K R R) (pi u a:R) (mu:ℕ)
-   (hmu:1 ≤ mu) (htangent:D pi=pi*a):
+   (hmu:1≤mu) (htangent:D pi=pi*a):
    D (pi^mu*u)=pi^mu*((mu:R)*a*u+D u):=by
  rw [derivation_pow_mul D pi u mu hmu,htangent]
  have hpow:pi^mu=pi^(mu-1)*pi:=by
@@ -30,14 +30,14 @@ theorem tangent_pow_mul (D:Derivation K R R) (pi u a:R) (mu:ℕ)
  rw [hpow]
  ring
 theorem tangent_preserves_divisibility (D:Derivation K R R) (pi a:R) (mu:ℕ)
-   (hmu:1 ≤ mu) (htangent:D pi=pi*a) (f:R) (hf:pi^mu∣f):
+   (hmu:1≤mu) (htangent:D pi=pi*a) (f:R) (hf:pi^mu∣f):
    pi^mu∣D f:=by
  obtain ⟨u,rfl⟩:=hf
  rw [tangent_pow_mul D pi u a mu hmu htangent]
  exact dvd_mul_right _ _
 theorem tangent_iterate_preserves_divisibility
    (D:Derivation K R R) (pi a:R) (mu:ℕ)
-   (hmu:1 ≤ mu) (htangent:D pi=pi*a) (f:R) (hf:pi^mu∣f):
+   (hmu:1≤mu) (htangent:D pi=pi*a) (f:R) (hf:pi^mu∣f):
    ∀ r,pi^mu∣(D:R → R)^[r] f:=by
  intro r
  induction r with

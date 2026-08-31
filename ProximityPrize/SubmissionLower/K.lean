@@ -30,13 +30,13 @@ theorem localMonomial_eq (f j z:ℕ):
    localMonomial K f j z=
      MvPolynomial.X 0^f*MvPolynomial.X 1^j*MvPolynomial.X 2^z:=by
  rw [localMonomial,MvPolynomial.monomial_add_single,
-   MvPolynomial.monomial_add_single, ←MvPolynomial.X_pow_eq_monomial]
+   MvPolynomial.monomial_add_single,←MvPolynomial.X_pow_eq_monomial]
 theorem coeff_shifted_affine_product
    {A:Type*} [CommRing A] (x a y b:A) (e i r:ℕ):
    (((Polynomial.X+Polynomial.C x)^e*
        (Polynomial.X*Polynomial.C y+Polynomial.C a)^i*
        Polynomial.C b):Polynomial A).coeff r=
-     ∑ f:Fin (i+1),if f.val ≤ r then
+     ∑ f:Fin (i+1),if f.val≤r then
        (x^(e-(r-f.val))*(e.choose (r-f.val):A))*
          (y^f.val*a^(i-f.val)*(i.choose f.val:A)*b)
      else 0:=by

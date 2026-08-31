@@ -10,7 +10,7 @@ variable {v:Valuation R Γ₀} {O:Type w} [CommRing O] [Algebra O R] (hv:Integer
 include hv
 open Polynomial
 lemma isIntegral_iff_v_le_one {x:R}:
-   IsIntegral O x ↔ v x ≤ 1:=by
+   IsIntegral O x ↔ v x≤1:=by
  nontriviality R
  have:Nontrivial O:=hv.nontrivial_iff.mpr inferInstance
  constructor

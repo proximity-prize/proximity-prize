@@ -52,7 +52,7 @@ structure PrincipalCycleBudget
        (CoordinateField Ω C.1) b hb,
      RCN346.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
        (cost C:ℤ)
- sum_cost_le:(∑ C:RegularComponent Ω G T H,cost C) ≤ wholeCap
+ sum_cost_le:(∑ C:RegularComponent Ω G T H,cost C)≤wholeCap
 structure FlagProjectionCycleBudget
    {G T H:MvPolynomial (Fin 3) Ω}
    (p:FlagDegree) (separator:Fin 3)
@@ -93,9 +93,9 @@ structure FlagProjectionCycleBudget
      RCN346.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
        ((p.zOnly*zCost C+p.yz*yzCost C+
          p.all*allCost C:ℕ):ℤ)
- sum_zCost_le:(∑ C:RegularComponent Ω G T H,zCost C) ≤ zCap
- sum_yzCost_le:(∑ C:RegularComponent Ω G T H,yzCost C) ≤ yzCap
- sum_allCost_le:(∑ C:RegularComponent Ω G T H,allCost C) ≤ allCap
+ sum_zCost_le:(∑ C:RegularComponent Ω G T H,zCost C)≤zCap
+ sum_yzCost_le:(∑ C:RegularComponent Ω G T H,yzCost C)≤yzCap
+ sum_allCost_le:(∑ C:RegularComponent Ω G T H,allCost C)≤allCap
 def FlagProjectionCycleBudget.ofNestedProjectionBudgets
    {G T H:MvPolynomial (Fin 3) Ω}
    {p:FlagDegree} {separator:Fin 3}
@@ -247,7 +247,7 @@ def FlagProjectionCycleBudget.ofNestedProjectionBudgets
            (∑ v∈W,exponentSetPoleWeight v.val (coordinate Ω C.1)
              (flagSupport unitAllFlag)):=by
        simp only [Finset.sum_add_distrib,Finset.mul_sum]
-     _ ≤ (p.zOnly:ℤ)*(zBudget.cost C:ℤ)+
+     _≤(p.zOnly:ℤ)*(zBudget.cost C:ℤ)+
          (p.yz:ℤ)*(yzBudget.cost C:ℤ)+
          (p.all:ℤ)*(allBudget.cost C:ℤ):=by
        exact add_le_add

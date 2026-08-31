@@ -16,7 +16,7 @@ lemma fixingSubgroup_isClosed (L:IntermediateField k K) [IsGalois k K]:
    constructor
    · intro f hf
      rcases (Set.mem_smul_set.mp hf) with ⟨g,hg,eq⟩
-     simp only [Set.mem_compl_iff,SetLike.mem_coe, ←eq]
+     simp only [Set.mem_compl_iff,SetLike.mem_coe,←eq]
      apply (mem_fixingSubgroup_iff Gal(K/k)).not.mpr
      push Not
      use y
@@ -100,7 +100,7 @@ lemma fixingSubgroup_fixedField (H:ClosedSubgroup Gal(K/k)) [IsGalois k K]:
    rintro φ ⟨τ,hτ,muleq⟩
    have sub':σ • b ⊆ H.carrierᶜ:=Set.smul_set_subset_iff.mpr sub
    apply sub'
-   simp only [←muleq, ←eq]
+   simp only [←muleq,←eq]
    apply Set.smul_mem_smul_set
    exact (L.fixingSubgroup_le (IntermediateField.le_normalClosure L) hτ)
  have fix:∀ x∈IntermediateField.fixedField H.toSubgroup ⊓ ↑L',σ x=x:=
@@ -199,11 +199,11 @@ theorem normal_iff_isGalois (L:IntermediateField k K) [IsGalois k K]:
      apply le_antisymm
      · apply iSup_le
        intro l
-       simpa only [f,g, ←restrict_fixedField L.fixingSubgroup (adjoin k {l.1}),
+       simpa only [f,g,←restrict_fixedField L.fixingSubgroup (adjoin k {l.1}),
          fixedField_fixingSubgroup L] using inf_le_left
      · intro l hl
        apply le_iSup f ⟨l,hl⟩
-       simpa only [f,g, ←restrict_fixedField L.fixingSubgroup (adjoin k {l}),
+       simpa only [f,g,←restrict_fixedField L.fixingSubgroup (adjoin k {l}),
          fixedField_fixingSubgroup L,IntermediateField.mem_inf,hl,true_and]
          using adjoin_simple_le_iff.mp le_rfl
    rw [this] at n

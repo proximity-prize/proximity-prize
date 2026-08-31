@@ -18,14 +18,14 @@ structure WeightedGroupedResultantChannel
  groupedPowerDvd:∀ f∈Finset.univ.image factor,
    f^(∑ i with factor i=f,multiplicity i*residueWeight i)∣resultant
  cost_le_residue_mul_degree:∀ i,
-   cost i ≤ residueWeight i*(factor i).natDegree
- resultant_degree_le:resultant.natDegree ≤ budget
+   cost i≤residueWeight i*(factor i).natDegree
+ resultant_degree_le:resultant.natDegree≤budget
 theorem WeightedGroupedResultantChannel.sum_mul_cost_le
    {I:Type*} [Fintype I]
    {multiplicity cost:I → ℕ} {budget:ℕ}
    (C:WeightedGroupedResultantChannel
      (Base:=Base) multiplicity cost budget):
-   (∑ i,multiplicity i*cost i) ≤ budget:=by
+   (∑ i,multiplicity i*cost i)≤budget:=by
  let weightedMultiplicity:I → ℕ:=fun i↦
    multiplicity i*C.residueWeight i
  have hfactor:=sum_grouped_power_factor_degrees_le
@@ -42,7 +42,7 @@ theorem WeightedGroupedResultantChannel.sum_mul_cost_le
      apply Finset.sum_congr rfl
      intro i _
      simp only [weightedMultiplicity,Nat.mul_assoc]
-   _ ≤ C.resultant.natDegree:=hfactor
-   _ ≤ budget:=C.resultant_degree_le
+   _≤C.resultant.natDegree:=hfactor
+   _≤budget:=C.resultant_degree_le
 end
 end ProximityPrize.SubmissionLower.RCN343

@@ -10,10 +10,10 @@ local instance:StrongNormalizationMonoid (MvPolynomial (Fin 4) K):=
 def activeFactors (Q:MvPolynomial (Fin 4) K):Finset (MvPolynomial (Fin 4) K):=by
  classical
  exact (normalizedFactors Q).toFinset.filter
-   (fun F => 0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
+   (fun F => 0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
 theorem activeFactors_spec (Q F:MvPolynomial (Fin 4) K)
    (hF:F∈activeFactors Q):
-   Irreducible F∧F∣Q∧0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3:=by
+   Irreducible F∧F∣Q∧0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3:=by
  classical
  obtain ⟨hm,hp⟩:=Finset.mem_filter.mp hF
  have hmem:F∈normalizedFactors Q:=Multiset.mem_toFinset.mp hm
@@ -65,11 +65,11 @@ theorem positive_seed_degree_of_surface_zero
    (φ:Polynomial K →+*L) (hφ:Function.Injective φ)
    (F:MvPolynomial (Fin 4) K) (hF:F≠0) (v:Fin 3 → L)
    (hzero:MvPolynomial.eval v (surfaceMap φ F)=0):
-   0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3:=by
+   0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3:=by
  by_contra hn
- have hy:F.degreeOf 1 ≤ 0:=by omega
- have hr:F.degreeOf 2 ≤ 0:=by omega
- have hz:F.degreeOf 3 ≤ 0:=by omega
+ have hy:F.degreeOf 1≤0:=by omega
+ have hr:F.degreeOf 2≤0:=by omega
+ have hz:F.degreeOf 3≤0:=by omega
  have hc:=surfaceMap_separated_caps φ F 0 0 0 hy hr hz
  have hconst:surfaceMap φ F=MvPolynomial.C ((surfaceMap φ F).coeff 0):=by
    apply eq_C_of_all_degreeOf_zero
@@ -106,27 +106,27 @@ theorem activeFactors_mem_box (Q F:MvPolynomial (Fin 4) K)
  RCN081.mem_globalCoefficientBox_of_dvd F Q D w zcap s hQ
    (activeFactors_spec Q F hF).2.1 hbox
 theorem activeFactors_degree_budgets (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0):
-   (∑ F∈activeFactors Q,F.degreeOf (1:Fin 4)) ≤ Q.degreeOf 1∧
-   (∑ F∈activeFactors Q,F.degreeOf (2:Fin 4)) ≤ Q.degreeOf 2∧
-   (∑ F∈activeFactors Q,F.degreeOf (3:Fin 4)) ≤ Q.degreeOf 3:=
+   (∑ F∈activeFactors Q,F.degreeOf (1:Fin 4))≤Q.degreeOf 1∧
+   (∑ F∈activeFactors Q,F.degreeOf (2:Fin 4))≤Q.degreeOf 2∧
+   (∑ F∈activeFactors Q,F.degreeOf (3:Fin 4))≤Q.degreeOf 3:=
  RCN081.separated_degree_budgets_of_prod_dvd (activeFactors Q) id Q hQ
    (activeFactors_product_dvd Q hQ)
 theorem activeFactors_input_budgets (Q:MvPolynomial (Fin 4) K)
-   (D w zcap s:ℕ) (hw:0 < w) (hQ:Q≠0)
+   (D w zcap s:ℕ) (hw:0<w) (hQ:Q≠0)
    (hbox:Q∈globalCoefficientBox K D w zcap s):
-   (∑ F∈activeFactors Q,F.degreeOf (1:Fin 4)) ≤ (D-1)/w∧
-   (∑ F∈activeFactors Q,F.degreeOf (2:Fin 4)) ≤ s∧
-   (∑ F∈activeFactors Q,F.degreeOf (3:Fin 4)) ≤ zcap:=
+   (∑ F∈activeFactors Q,F.degreeOf (1:Fin 4))≤(D-1)/w∧
+   (∑ F∈activeFactors Q,F.degreeOf (2:Fin 4))≤s∧
+   (∑ F∈activeFactors Q,F.degreeOf (3:Fin 4))≤zcap:=
  RCN081.separated_factor_caps_of_prod_dvd (activeFactors Q) id Q
    D w zcap s hw hQ hbox (activeFactors_product_dvd Q hQ)
 theorem activeFactors_card_le (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0):
-   (activeFactors Q).card ≤ Q.degreeOf 1+Q.degreeOf 2+Q.degreeOf 3:=by
+   (activeFactors Q).card≤Q.degreeOf 1+Q.degreeOf 2+Q.degreeOf 3:=by
  classical
  have hsum:(activeFactors Q).card ≤
      ∑ F∈activeFactors Q,(F.degreeOf 1+F.degreeOf 2+F.degreeOf 3):=by
    calc
      (activeFactors Q).card=∑ _F∈activeFactors Q,(1:ℕ):=by simp
-     _ ≤ _:=Finset.sum_le_sum fun F hF => (activeFactors_spec Q F hF).2.2
+     _≤_:=Finset.sum_le_sum fun F hF => (activeFactors_spec Q F hF).2.2
  rw [Finset.sum_add_distrib,Finset.sum_add_distrib] at hsum
  have hb:=activeFactors_degree_budgets Q hQ
  omega

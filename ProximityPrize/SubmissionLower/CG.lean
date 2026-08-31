@@ -28,7 +28,7 @@ theorem equation_dvd_numeratorStep (F M:Poly4 K) (b:ℕ) (h:F∣M):
  exact dvd_mul_right F _
 theorem equation_dvd_all_later_numerators (F:Poly4 K) (b:ℕ)
    (h:F∣numerator K F b):
-   ∀ j,b ≤ j → F∣numerator K F j:=by
+   ∀ j,b≤j → F∣numerator K F j:=by
  intro j hbj
  obtain ⟨d,rfl⟩:=Nat.exists_eq_add_of_le hbj
  clear hbj
@@ -42,7 +42,7 @@ theorem all_later_numerators_vanish (coefficients:K →+*L)
    (F:Poly4 K) (v:Fin 4 → L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (b:ℕ) (h:F∣numerator K F b):
-   ∀ j,b ≤ j →
+   ∀ j,b≤j →
      MvPolynomial.eval₂Hom coefficients v (numerator K F j)=0:=by
  intro j hbj
  rcases equation_dvd_all_later_numerators K F b h j hbj with ⟨A,hA⟩
@@ -55,7 +55,7 @@ theorem all_tail_jets_zero_of_first_tail_dvd
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hreg:MvPolynomial.eval₂Hom coefficients v (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (w:ℕ) (hdiv:F∣numerator K F (w+1)):
-   ∀ j,w < j →
+   ∀ j,w<j →
      jetCoefficient (contactDerivation K F)
        (regularPointValue coefficients F v hF hreg)
        (contactCoordinate K F (1:Fin 4)) j=0:=by
@@ -68,10 +68,10 @@ theorem exists_global_polynomial_of_first_tail_dvd
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hreg:MvPolynomial.eval₂Hom coefficients v (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (p bound w seedCap slopeCap:ℕ) [CharP L p]
-   (hw:1 ≤ w) (hshort:w+1 ≤ bound) (hchar:bound < p)
+   (hw:1≤w) (hshort:w+1≤bound) (hchar:bound<p)
    (hcaps:F∈globalCoefficientBox K bound w seedCap slopeCap)
    (hdiv:F∣numerator K F (w+1)):
-   ∃ P:Polynomial L,P.natDegree ≤ w∧
+   ∃ P:Polynomial L,P.natDegree≤w∧
      specialization L P (v 3) (MvPolynomial.map coefficients F)=0∧
      P.eval (v 0)=v 1∧P.derivative.eval (v 0)=v 2:=by
  apply exists_global_polynomial_of_all_tails coefficients F v hF hreg

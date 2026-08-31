@@ -35,7 +35,7 @@ lemma nonempty_rankOne_iff_mulArchimedean {v:Valuation R Γ₀} [v.IsNontrivial]
    have H:StrictMono (map' (rf.comp e)):=by
      refine map'_strictMono ?_
      intro a b h
-     simpa [←Units.val_lt_val, ←NNReal.coe_lt_coe,rf] using he h
+     simpa [←Units.val_lt_val,←NNReal.coe_lt_coe,rf] using he h
    exact ⟨{
      hom':=withZeroUnitsEquiv.toMonoidWithZeroHom.comp <| (map' (rf.comp e)).comp
        withZeroUnitsEquiv.symm.toMonoidWithZeroHom
@@ -121,7 +121,7 @@ def rankOne_of_nontrivial (H:Nontrivial (ValueGroup₀ (.ofClass v))ˣ):RankOne 
    exact h1 (H' k h0)
 theorem exists_val_lt {K:Type*} [DivisionRing K] (v:Valuation K Γ₀) [RankLeOne v]:
    Subsingleton ((ValueGroup₀ (.ofClass v))ˣ)∨
-     ∀ {γ:ℝ≥0} (_:γ≠0),∃ (x:K),x≠0∧(RankLeOne.hom' v) (v.restrict x) < γ:=by
+     ∀ {γ:ℝ≥0} (_:γ≠0),∃ (x:K),x≠0∧(RankLeOne.hom' v) (v.restrict x)<γ:=by
  simp only [ne_eq,or_iff_not_imp_left,not_subsingleton_iff_nontrivial]
  exact fun H↦(rankOne_of_nontrivial v H).exists_val_lt
 end RankLeOne

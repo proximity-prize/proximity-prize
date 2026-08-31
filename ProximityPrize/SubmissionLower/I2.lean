@@ -14,7 +14,7 @@ theorem point_coordinate_eq_scalar
    (i:Fin 3) (c:Ω)
    (hc:algebraMap Ω (CoordinateField Ω P) c=coordinate Ω P i)
    (v:Fin 3 → Ω)
-   (hv:P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom):
+   (hv:P≤RingHom.ker (MvPolynomial.aeval v).toRingHom):
    v i=c:=by
  let Q:MvPolynomial (Fin 3) Ω:=MvPolynomial.X i-MvPolynomial.C c
  have hQ:Q∈P:=by
@@ -29,10 +29,10 @@ theorem point_coordinate_eq_scalar
 theorem selected_seed_set_card_le_one_of_seedCoordinate_isAlgebraic
    (selected:K → Polynomial K) (Γ:Finset K)
    (hpoint:∀ γ∈Γ,
-     P ≤ RingHom.ker
+     P≤RingHom.ker
        (MvPolynomial.aeval (selectedPoint φ selected γ)).toRingHom)
    (hZ:IsAlgebraic Ω (coordinate Ω P 2)):
-   Γ.card ≤ 1:=by
+   Γ.card≤1:=by
  obtain ⟨c,hc⟩:=coordinate_eq_scalar_of_isAlgebraic Ω P 2 hZ
  apply Finset.card_le_one.mpr
  intro γ hγ η hη

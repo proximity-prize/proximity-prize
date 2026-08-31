@@ -70,7 +70,7 @@ def coordinateOfGate (x:L)
 theorem one_le_coordinateDegree_of_transcendental_value
    (c:Coordinate K L)
    (hc:Transcendental K (coordinateValue K L c)):
-   1 ≤ coordinateDegree K L c:=by
+   1≤coordinateDegree K L c:=by
  rcases c with a | c
  · exact (hc (isAlgebraic_algebraMap a)).elim
  · letI:Algebra (RatFunc K) L:=c.embedding.toRingHom.toAlgebra

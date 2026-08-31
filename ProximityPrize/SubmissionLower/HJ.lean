@@ -32,13 +32,13 @@ theorem sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow [∀ a b,Decidable (r
 section OrderedSemiring
 variable [Semiring R] [PartialOrder R] [IsOrderedRing R] {m n:R}
 theorem card_nsmul_le_card_nsmul [∀ a b,Decidable (r a b)]
-   (hm:∀ a∈s,m ≤ #(t.bipartiteAbove r a))
-   (hn:∀ b∈t,#(s.bipartiteBelow r b) ≤ n):#s • m ≤ #t • n:=
+   (hm:∀ a∈s,m≤#(t.bipartiteAbove r a))
+   (hn:∀ b∈t,#(s.bipartiteBelow r b)≤n):#s • m≤#t • n:=
  calc
-   _ ≤ ∑ a∈s,(#(t.bipartiteAbove r a):R):=s.card_nsmul_le_sum _ _ hm
+   _≤∑ a∈s,(#(t.bipartiteAbove r a):R):=s.card_nsmul_le_sum _ _ hm
    _=∑ b∈t,(#(s.bipartiteBelow r b):R):=by
      norm_cast;rw [sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow]
-   _ ≤ _:=t.sum_le_card_nsmul _ _ hn
+   _≤_:=t.sum_le_card_nsmul _ _ hn
 theorem card_nsmul_le_card_nsmul' [∀ a b,Decidable (r a b)]
    (hn:∀ b∈t,n ≤ #(s.bipartiteBelow r b))
    (hm:∀ a∈s,#(t.bipartiteAbove r a) ≤ m):#t • n ≤ #s • m:=
@@ -66,8 +66,8 @@ theorem card_nsmul_lt_card_nsmul_of_le_of_lt [∀ a b,Decidable (r a b)] (ht:t.N
    _ < ∑ _b∈t,n:=sum_lt_sum_of_nonempty ht hn
    _=_:=sum_const _
 theorem card_nsmul_lt_card_nsmul_of_lt_of_le' [∀ a b,Decidable (r a b)] (ht:t.Nonempty)
-   (hn:∀ b∈t,n < #(s.bipartiteBelow r b))
-   (hm:∀ a∈s,#(t.bipartiteAbove r a) ≤ m):#t • n < #s • m:=
+   (hn:∀ b∈t,n<#(s.bipartiteBelow r b))
+   (hm:∀ a∈s,#(t.bipartiteAbove r a)≤m):#t • n<#s • m:=
  card_nsmul_lt_card_nsmul_of_lt_of_le (swap r) ht hn hm
 theorem card_nsmul_lt_card_nsmul_of_le_of_lt' [∀ a b,Decidable (r a b)] (hs:s.Nonempty)
    (hn:∀ b∈t,n ≤ #(s.bipartiteBelow r b))
@@ -79,8 +79,8 @@ theorem card_mul_le_card_mul [∀ a b,Decidable (r a b)]
    (hn:∀ b∈t,#(s.bipartiteBelow r b) ≤ n):#s*m ≤ #t*n:=
  card_nsmul_le_card_nsmul _ hm hn
 theorem card_mul_le_card_mul' [∀ a b,Decidable (r a b)]
-   (hn:∀ b∈t,n ≤ #(s.bipartiteBelow r b))
-   (hm:∀ a∈s,#(t.bipartiteAbove r a) ≤ m):#t*n ≤ #s*m:=
+   (hn:∀ b∈t,n≤#(s.bipartiteBelow r b))
+   (hm:∀ a∈s,#(t.bipartiteAbove r a)≤m):#t*n≤#s*m:=
  card_nsmul_le_card_nsmul' _ hn hm
 theorem card_mul_eq_card_mul [∀ a b,Decidable (r a b)]
    (hm:∀ a∈s,#(t.bipartiteAbove r a)=m)
@@ -88,9 +88,9 @@ theorem card_mul_eq_card_mul [∀ a b,Decidable (r a b)]
  (card_mul_le_card_mul _ (fun a ha↦(hm a ha).ge) fun b hb↦(hn b hb).le).antisymm <|
    card_mul_le_card_mul' _ (fun a ha↦(hn a ha).ge) fun b hb↦(hm b hb).le
 theorem card_le_card_of_forall_subsingleton (hs:∀ a∈s,∃ b,b∈t∧r a b)
-   (ht:∀ b∈t,({ a∈s | r a b}:Set α).Subsingleton):#s ≤ #t:=by
+   (ht:∀ b∈t,({ a∈s | r a b}:Set α).Subsingleton):#s≤#t:=by
  classical
-   rw [←mul_one #s, ←mul_one #t]
+   rw [←mul_one #s,←mul_one #t]
    exact card_mul_le_card_mul r
      (fun a h↦card_pos.2 (by
        rw [←coe_nonempty,coe_bipartiteAbove]

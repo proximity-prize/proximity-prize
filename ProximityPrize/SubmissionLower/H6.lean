@@ -28,7 +28,7 @@ theorem rowPolynomial_injective:
  have hc:=congrArg (fun P:Polynomial F => P.coeff j.val) heq
  simpa only [rowPolynomial_coeff] using hc
 theorem rowPolynomial_natDegree_le (v:Fin r → F):
-   (rowPolynomial v).natDegree ≤ r-1:=by
+   (rowPolynomial v).natDegree≤r-1:=by
  apply Polynomial.natDegree_sum_le_of_forall_le
  intro j _
  have hterm:=Polynomial.natDegree_monomial_le (v j) (m:=j.val)
@@ -47,7 +47,7 @@ theorem momentProjection_apply (t:F) (v:ι → Fin r → F) (i:ι):
  rw [Polynomial.eval_monomial,mul_comm]
 theorem exists_nonzero_coordinate_difference
    (v u:ι → Fin r → F) (hne:v≠u):
-   ∃ P:Polynomial F,P≠0∧P.natDegree ≤ r-1∧
+   ∃ P:Polynomial F,P≠0∧P.natDegree≤r-1∧
      ∀ t:F,momentProjection t v=momentProjection t u → P.eval t=0:=by
  classical
  obtain ⟨i,hi⟩:∃ i:ι,v i≠u i:=by
@@ -75,7 +75,7 @@ theorem mem_pairCollisionSeeds_iff
  simp only [pairCollisionSeeds,Finset.mem_filter,Finset.mem_univ,true_and]
 theorem pairCollisionSeeds_card_le
    (pair:Finset (ι → Fin r → F)) (hpair:pair.card=2):
-   (pairCollisionSeeds pair).card ≤ r-1:=by
+   (pairCollisionSeeds pair).card≤r-1:=by
  classical
  letI:DecidableEq (ι → Fin r → F):=Classical.decEq (ι → Fin r → F)
  obtain ⟨v,u,hne,rfl⟩:=Finset.card_eq_two.mp hpair
@@ -100,13 +100,13 @@ def allCollisionSeeds (L:Finset (ι → Fin r → F)):Finset F:=by
  classical
  exact (L.powersetCard 2).biUnion pairCollisionSeeds
 theorem allCollisionSeeds_card_le (L:Finset (ι → Fin r → F)):
-   (allCollisionSeeds L).card ≤ (r-1)*L.card.choose 2:=by
+   (allCollisionSeeds L).card≤(r-1)*L.card.choose 2:=by
  classical
  calc
    (allCollisionSeeds L).card ≤
        ∑ pair∈L.powersetCard 2,(pairCollisionSeeds pair).card:=
      Finset.card_biUnion_le
-   _ ≤ ∑ _pair∈L.powersetCard 2,(r-1):=by
+   _≤∑ _pair∈L.powersetCard 2,(r-1):=by
      apply Finset.sum_le_sum
      intro pair hpair
      exact pairCollisionSeeds_card_le pair (Finset.mem_powersetCard.mp hpair).2
@@ -115,12 +115,12 @@ theorem allCollisionSeeds_card_le (L:Finset (ι → Fin r → F)):
      rw [Finset.card_powersetCard,Nat.mul_comm]
 theorem exists_separating_moment_parameter
    (L:Finset (ι → Fin r → F))
-   (hfield:(r-1)*L.card.choose 2 < Fintype.card F):
+   (hfield:(r-1)*L.card.choose 2<Fintype.card F):
    ∃ t:F,Set.InjOn (momentProjection (ι:=ι) (r:=r) t)
      (L:Set (ι → Fin r → F)):=by
  classical
  letI:DecidableEq (ι → Fin r → F):=Classical.decEq (ι → Fin r → F)
- have hsmall:(allCollisionSeeds L).card < Fintype.card F:=
+ have hsmall:(allCollisionSeeds L).card<Fintype.card F:=
    (allCollisionSeeds_card_le L).trans_lt hfield
  obtain ⟨t,ht⟩:∃ t:F,t∉allCollisionSeeds L:=by
    by_contra hno
@@ -174,22 +174,22 @@ theorem momentProjection_preserves_agreements
 theorem interleaved_finite_list_card_le
    (C:LinearCode ι F) (e w B:ℕ)
    (hzero:RCN020.ZeroCoordinateBound C w)
-   (hgap:w < Fintype.card ι-e)
+   (hgap:w<Fintype.card ι-e)
    (halign:AffineLineAlignmentBound C e B)
-   (hfield:B < Fintype.card F)
-   (hseparation:(r-1)*(B+1).choose 2 < Fintype.card F)
+   (hfield:B<Fintype.card F)
+   (hseparation:(r-1)*(B+1).choose 2<Fintype.card F)
    (u:ι → Fin r → F) (L:Finset (ι → Fin r → F))
    (hrows:∀ v∈L,∀ j:Fin r,(fun i => v i j)∈C)
    (hclose:∀ v∈L,
-     Fintype.card ι-e ≤ (Finset.univ.filter (fun i => v i=u i)).card):
-   L.card ≤ B:=by
+     Fintype.card ι-e≤(Finset.univ.filter (fun i => v i=u i)).card):
+   L.card≤B:=by
  classical
  letI:DecidableEq (ι → Fin r → F):=Classical.decEq (ι → Fin r → F)
  letI:DecidableEq (ι → F):=Classical.decEq (ι → F)
  by_contra hnot
  obtain ⟨D,hDL,hDcard⟩:=
-   Finset.exists_subset_card_eq (show B+1 ≤ L.card by omega)
- have hsepD:(r-1)*D.card.choose 2 < Fintype.card F:=by
+   Finset.exists_subset_card_eq (show B+1≤L.card by omega)
+ have hsepD:(r-1)*D.card.choose 2<Fintype.card F:=by
    rw [hDcard]
    exact hseparation
  obtain ⟨t,ht⟩:=exists_separating_moment_parameter D hsepD

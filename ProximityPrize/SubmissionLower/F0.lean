@@ -188,8 +188,8 @@ theorem squared_eight_lambda_seedless
  letI:DecidableEq (IRSProfile.Index → IRSProfile.Field):=Classical.decEq _
  by_contra hnot
  obtain ⟨D,hDL,hDcard⟩:=
-   Finset.exists_subset_card_eq (show listBudget+1 ≤ L.card by omega)
- have hsepD:15*D.card.choose 2 < Fintype.card IRSProfile.Field:=by
+   Finset.exists_subset_card_eq (show listBudget+1≤L.card by omega)
+ have hsepD:15*D.card.choose 2<Fintype.card IRSProfile.Field:=by
    rw [hDcard]
    exact sixteen_row_separation
  obtain ⟨t,ht⟩:=exists_separating_moment_parameter D hsepD

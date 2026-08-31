@@ -44,9 +44,9 @@ theorem recursive_scaled_factor_6600_of_adaptive_projection_families
    (S:ResidualStage phi Gamma x pchar errors flag w)
    (hnodes:S.nodes.card=n)
    (hagreement:∀ gamma∈Gamma,
-     agreements ≤ (S.agreementFiber gamma).card)
+     agreements≤(S.agreementFiber gamma).card)
    (hprojection:TerminalAdaptiveProjectionFamilies S):
-   Gamma.card*gap^2 ≤ factorRegularLedger flag:=by
+   Gamma.card*gap^2≤factorRegularLedger flag:=by
  apply recursive_scaled_factor_6600_of_prime_flag_budgets
    hphi S hnodes hagreement
  intro D i hi hproper

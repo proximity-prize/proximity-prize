@@ -13,8 +13,8 @@ attribute [local instance] Ideal.Quotient.field
 section DecEq
 noncomputable def ramificationIdx':ℕ:=sSup {n | map f p ≤ P^n}
 variable {p P}
-theorem ramificationIdx'_eq_find [DecidablePred fun n↦∀ (k:ℕ),map f p ≤ P^k → k ≤ n]
-   (h:∃ n,∀ k,map f p ≤ P^k → k ≤ n):
+theorem ramificationIdx'_eq_find [DecidablePred fun n↦∀ (k:ℕ),map f p≤P^k → k≤n]
+   (h:∃ n,∀ k,map f p≤P^k → k≤n):
    ramificationIdx' p P=Nat.find h:=by
  convert! Nat.sSup_def h
 @[deprecated (since:="2026-07-01")] alias ramificationIdx_eq_find:=ramificationIdx'_eq_find
@@ -22,7 +22,7 @@ theorem ramificationIdx'_eq_zero (h:∀ n:ℕ,∃ k,map f p ≤ P^k∧n < k):
    ramificationIdx' p P=0:=
  dif_neg (by push Not;exact h)
 @[deprecated (since:="2026-07-01")] alias ramificationIdx_eq_zero:=ramificationIdx'_eq_zero
-theorem ramificationIdx'_spec {n:ℕ} (hle:map f p ≤ P^n) (hgt:¬map f p ≤ P^(n+1)):
+theorem ramificationIdx'_spec {n:ℕ} (hle:map f p≤P^n) (hgt:¬map f p≤P^(n+1)):
    ramificationIdx' p P=n:=by
  classical
  let Q:ℕ → Prop:=fun m => ∀ k:ℕ,map f p ≤ P^k → k ≤ m
@@ -35,12 +35,12 @@ theorem ramificationIdx'_spec {n:ℕ} (hle:map f p ≤ P^n) (hgt:¬map f p ≤ P
  obtain this':=Nat.find_spec ⟨n,this⟩
  exact h.not_ge (this' _ hle)
 @[deprecated (since:="2026-07-01")] alias ramificationIdx_spec:=ramificationIdx'_spec
-theorem ramificationIdx'_lt {n:ℕ} (hgt:¬map f p ≤ P^n):ramificationIdx' p P < n:=by
+theorem ramificationIdx'_lt {n:ℕ} (hgt:¬map f p ≤ P^n):ramificationIdx' p P<n:=by
  classical
  rcases n with-| n
  · simp at hgt
  · rw [Nat.lt_succ_iff]
-   have:∀ k,map f p ≤ P^k → k ≤ n:=by
+   have:∀ k,map f p≤P^k → k≤n:=by
      refine fun k hk => le_of_not_gt fun hnk => ?_
      exact hgt (hk.trans (Ideal.pow_le_pow_right hnk))
    rw [ramificationIdx'_eq_find ⟨n,this⟩]
@@ -58,20 +58,20 @@ theorem ramificationIdx'_bot' (hp:p≠⊥) (hf:Function.Injective f):
    ramificationIdx' p (⊥:Ideal S)=0:=
  ramificationIdx'_of_not_le <| le_bot_iff.not.mpr <| (map_eq_bot_iff_of_injective hf).not.mpr hp
 @[deprecated (since:="2026-07-01")] alias ramificationIdx_bot':=ramificationIdx'_bot'
-theorem ramificationIdx'_ne_zero {e:ℕ} (he:e≠0) (hle:map f p ≤ P^e)
-   (hnle:¬map f p ≤ P^(e+1)):ramificationIdx' p P≠0:=by
+theorem ramificationIdx'_ne_zero {e:ℕ} (he:e≠0) (hle:map f p≤P^e)
+   (hnle:¬map f p≤P^(e+1)):ramificationIdx' p P≠0:=by
  rwa [ramificationIdx'_spec hle hnle]
 @[deprecated (since:="2026-07-01")] alias ramificationIdx_ne_zero:=ramificationIdx'_ne_zero
-theorem le_pow_of_le_ramificationIdx' {n:ℕ} (hn:n ≤ ramificationIdx' p P):
+theorem le_pow_of_le_ramificationIdx' {n:ℕ} (hn:n≤ramificationIdx' p P):
    map f p ≤ P^n:=by
  contrapose! hn
  exact ramificationIdx'_lt hn
 @[deprecated (since:="2026-07-01")] alias le_pow_of_le_ramificationIdx:=
  le_pow_of_le_ramificationIdx'
-theorem le_pow_ramificationIdx':map f p ≤ P^ramificationIdx' p P:=
+theorem le_pow_ramificationIdx':map f p≤P^ramificationIdx' p P:=
  le_pow_of_le_ramificationIdx' (le_refl _)
 @[deprecated (since:="2026-07-01")] alias le_pow_ramificationIdx:=le_pow_ramificationIdx'
-theorem le_comap_pow_ramificationIdx':p ≤ comap f (P^ramificationIdx' p P):=
+theorem le_comap_pow_ramificationIdx':p≤comap f (P^ramificationIdx' p P):=
  map_le_iff_le_comap.mp le_pow_ramificationIdx'
 @[deprecated (since:="2026-07-01")] alias le_comap_pow_ramificationIdx:=
  le_comap_pow_ramificationIdx'
@@ -99,7 +99,7 @@ lemma ramificationIdx'_map_eq {E:Type*} [EquivLike E S S₁] [AlgEquivClass E R 
  rw [show P.map e=_ from P.map_comap_of_equiv (RingEquivClass.toRingEquiv e:S ≃+*S₁)]
  exact p.ramificationIdx'_comap_eq (AlgEquivClass.toAlgEquiv e).symm P
 @[deprecated (since:="2026-07-01")] alias ramificationIdx_map_eq:=ramificationIdx'_map_eq
-lemma ramificationIdx'_ne_one_iff (hp:map f p ≤ P):
+lemma ramificationIdx'_ne_one_iff (hp:map f p≤P):
    ramificationIdx' p P≠1 ↔ p.map f ≤ P^2:=by
  classical
  by_cases! H:∀ n:ℕ,∃ k,p.map f ≤ P^k∧n < k
@@ -121,7 +121,7 @@ lemma ramificationIdx'_ne_one_iff (hp:map f p ≤ P):
 open IsLocalRing in
 lemma ramificationIdx'_eq_one_of_map_localization
    {p:Ideal R} {P:Ideal S} [P.IsPrime] [IsNoetherianRing S]
-   (hpP:map (algebraMap R S) p ≤ P) (hp:P≠⊥) (hp':P.primeCompl ≤ nonZeroDivisors S)
+   (hpP:map (algebraMap R S) p ≤ P) (hp:P≠⊥) (hp':P.primeCompl≤nonZeroDivisors S)
    (H:p.map (algebraMap R (Localization.AtPrime P))=maximalIdeal (Localization.AtPrime P)):
    ramificationIdx' p P=1:=by
  rw [←not_ne_iff (b:=1),Ideal.ramificationIdx'_ne_one_iff hpP]
@@ -149,7 +149,7 @@ theorem ramificationIdx'_map_self_eq_one [IsDedekindDomain S]
 variable (p P) in
 theorem ramificationIdx'_le_ramificationIdx' {T:Type*} [CommRing T] [Algebra R T]
    [Algebra S T] [IsScalarTower R S T] (Q:Ideal T) (hp:p=comap f P)
-   (h:ramificationIdx' p Q≠0):ramificationIdx' P Q ≤ ramificationIdx' p Q:=by
+   (h:ramificationIdx' p Q≠0):ramificationIdx' P Q≤ramificationIdx' p Q:=by
  simp_rw [ramificationIdx',Ne] at*
  refine csSup_le_csSup' (h.imp_symm Nat.sSup_of_not_bddAbove) fun n hn↦?_
  simp_rw [hp,IsScalarTower.algebraMap_eq R S T, ←map_map,map_le_iff_le_comap]
@@ -165,16 +165,16 @@ theorem ramificationIdx'_eq_normalizedFactors_count
  refine ramificationIdx'_spec (Ideal.le_of_dvd ?_) (mt Ideal.dvd_iff_le.mpr ?_) <;>
    rw [dvd_iff_normalizedFactors_le_normalizedFactors (pow_ne_zero _ hP0) hp0,
      normalizedFactors_pow,normalizedFactors_irreducible hPirr,normalize_eq,
-     Multiset.nsmul_singleton, ←Multiset.le_count_iff_replicate_le]
+     Multiset.nsmul_singleton,←Multiset.le_count_iff_replicate_le]
  exact (Nat.lt_succ_self _).not_ge
 theorem ramificationIdx'_eq_multiplicity (hp:map f p≠⊥) (hP:P.IsPrime):
    ramificationIdx' p P=multiplicity P (Ideal.map f p):=by
  classical
  by_cases hP₂:P=⊥
- · rw [hP₂, ←Ideal.zero_eq_bot,multiplicity_zero_eq_zero_of_ne_zero _ hp]
+ · rw [hP₂,←Ideal.zero_eq_bot,multiplicity_zero_eq_zero_of_ne_zero _ hp]
    exact Ideal.ramificationIdx'_of_not_le (mt le_bot_iff.mp hp)
  rw [multiplicity_eq_of_emultiplicity_eq_some]
- rw [ramificationIdx'_eq_normalizedFactors_count hp hP hP₂, ←normalize_eq P,
+ rw [ramificationIdx'_eq_normalizedFactors_count hp hP hP₂,←normalize_eq P,
    ←UniqueFactorizationMonoid.emultiplicity_eq_count_normalizedFactors _ hp,normalize_eq]
  exact irreducible_iff_prime.mpr <| prime_of_isPrime hP₂ hP
 theorem ramificationIdx'_eq_factors_count
@@ -182,7 +182,7 @@ theorem ramificationIdx'_eq_factors_count
    ramificationIdx' p P=(factors (map f p)).count P:=by
  rw [IsDedekindDomain.ramificationIdx'_eq_normalizedFactors_count hp0 hP hP0,
    factors_eq_normalizedFactors]
-theorem ramificationIdx'_ne_zero (hp0:map f p≠⊥) (hP:P.IsPrime) (le:map f p ≤ P):
+theorem ramificationIdx'_ne_zero (hp0:map f p≠⊥) (hP:P.IsPrime) (le:map f p≤P):
    ramificationIdx' p P≠0:=by
  classical
  have hP0:P≠⊥:=by
@@ -204,7 +204,7 @@ theorem ramificationIdx'_ne_zero_of_liesOver [IsDomain R] [IsTorsionFree R S]
 open IsLocalRing in
 lemma ramificationIdx'_eq_one_iff
    {p:Ideal R} {P:Ideal S} [P.IsPrime]
-   (hp:P≠⊥) (hpP:p.map (algebraMap R S) ≤ P):
+   (hp:P≠⊥) (hpP:p.map (algebraMap R S)≤P):
    ramificationIdx' p P=1 ↔
      p.map (algebraMap R (Localization.AtPrime P))=maximalIdeal (Localization.AtPrime P):=by
  refine ⟨?_,ramificationIdx'_eq_one_of_map_localization hpP hp (primeCompl_le_nonZeroDivisors _)⟩
@@ -212,8 +212,8 @@ lemma ramificationIdx'_eq_one_iff
  rw [←not_ne_iff (b:=1),ramificationIdx'_ne_one_iff hpP,pow_two]
  intro H₁
  obtain ⟨a,ha⟩:P∣p.map (algebraMap R S):=Ideal.dvd_iff_le.mpr hpP
- have ha':¬ a ≤ P:=fun h↦H₁ (ha.trans_le (Ideal.mul_mono_right h))
- rw [IsScalarTower.algebraMap_eq _ S, ←Ideal.map_map,ha,Ideal.map_mul,
+ have ha':¬ a≤P:=fun h↦H₁ (ha.trans_le (Ideal.mul_mono_right h))
+ rw [IsScalarTower.algebraMap_eq _ S,←Ideal.map_map,ha,Ideal.map_mul,
    Localization.AtPrime.map_eq_maximalIdeal]
  convert! Ideal.mul_top _
  on_goal 2 => infer_instance
@@ -224,7 +224,7 @@ lemma ramificationIdx'_eq_one_iff
 theorem ramificationIdx'_le_ramificationIdx' [IsDomain R] [IsTorsionFree R S] {S₀:Type*}
    [CommRing S₀] [Algebra R S₀] [Algebra S₀ S] [IsScalarTower R S₀ S] (p:Ideal R)
    (P:Ideal S₀) (Q:Ideal S) [Q.LiesOver p] [hP:P.LiesOver p] [Q.IsPrime] (hp:p≠⊥):
-   Ideal.ramificationIdx' P Q ≤ Ideal.ramificationIdx' p Q:=
+   Ideal.ramificationIdx' P Q≤Ideal.ramificationIdx' p Q:=
  p.ramificationIdx'_le_ramificationIdx' P Q ((liesOver_iff ..).mp hP) <|
    ramificationIdx'_ne_zero_of_liesOver _ hp
 @[deprecated (since:="2026-07-01")] alias ramificationIdx_le_ramificationIdx:=
@@ -233,7 +233,7 @@ theorem emultiplicity_map_eq_zero_of_ne [IsDedekindDomain R] {v:Ideal R}
    {w:Ideal S} {p:Ideal R} (hv:Irreducible v) (hp:Prime p) (hvp:v≠p) [w.LiesOver v]:
    emultiplicity w (p.map (algebraMap R S))=0:=by
  refine emultiplicity_eq_zero.2 fun h↦hvp.symm ?_
- rw [Ideal.dvd_iff_le,Ideal.map_le_iff_le_comap, ←under_def, ←Ideal.over_def w v] at h
+ rw [Ideal.dvd_iff_le,Ideal.map_le_iff_le_comap,←under_def,←Ideal.over_def w v] at h
  exact ((isPrime_of_prime hp).isMaximal hp.ne_zero).eq_of_le (isPrime_of_prime hv.prime).ne_top h
 private theorem emultiplicity_map_eq_ramificationIdx'_mul_of_prime [IsDedekindDomain R]
    [FaithfulSMul R S] {v:Ideal R} {w:Ideal S} {p:Ideal R}
@@ -272,7 +272,7 @@ variable [Algebra R S] [Algebra S T] [Algebra R T] [IsScalarTower R S T]
 theorem ramificationIdx'_algebra_tower [IsDedekindDomain S] [IsDedekindDomain T]
    {p:Ideal R} {P:Ideal S} {Q:Ideal T} [hpm:P.IsPrime] [hqm:Q.IsPrime]
    (hg0:map (algebraMap S T) P≠⊥)
-   (hfg:map (algebraMap R T) p≠⊥) (hg:map (algebraMap S T) P ≤ Q):
+   (hfg:map (algebraMap R T) p≠⊥) (hg:map (algebraMap S T) P≤Q):
    ramificationIdx' p Q=
    ramificationIdx' p P*ramificationIdx' P Q:=by
  classical
@@ -285,10 +285,10 @@ theorem ramificationIdx'_algebra_tower [IsDedekindDomain S] [IsDedekindDomain T]
  rw [IsDedekindDomain.ramificationIdx'_eq_normalizedFactors_count hf0 hpm hp0,
    IsDedekindDomain.ramificationIdx'_eq_normalizedFactors_count hg0 hqm hq0,
    IsDedekindDomain.ramificationIdx'_eq_normalizedFactors_count hfg hqm hq0,
-   IsScalarTower.algebraMap_eq R S T, ←map_map]
+   IsScalarTower.algebraMap_eq R S T,←map_map]
  rcases eq_prime_pow_mul_coprime hf0 P with ⟨I,hcp,heq⟩
  have hcp:⊤=map (algebraMap S T) P ⊔ map (algebraMap S T) I:=by rw [←map_sup,hcp,map_top]
- have hntq:¬ ⊤ ≤ Q:=fun ht↦IsPrime.ne_top hqm (Iff.mpr (eq_top_iff_one Q) (ht trivial))
+ have hntq:¬ ⊤≤Q:=fun ht↦IsPrime.ne_top hqm (Iff.mpr (eq_top_iff_one Q) (ht trivial))
  nth_rw 1 [heq,Ideal.map_mul,Ideal.map_pow,normalizedFactors_mul (pow_ne_zero _ hg0) <| by
    by_contra h
    simp only [h,Submodule.zero_eq_bot,bot_le,sup_of_le_left] at hcp

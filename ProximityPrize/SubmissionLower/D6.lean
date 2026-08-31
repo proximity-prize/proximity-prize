@@ -9,10 +9,10 @@ theorem stratified_incidence_bound
    (relation:Seed → Node → Prop) [∀ seed node,Decidable (relation seed node)]
    (seeds:Finset Seed) (nodes identities:Finset Node)
    (a w degreeCost unitCost U V:ℕ)
-   (hidentities:identities ⊆ nodes) (hcard:identities.card ≤ w)
-   (hwa:w < a)
+   (hidentities:identities ⊆ nodes) (hcard:identities.card≤w)
+   (hwa:w<a)
    (hagreement:∀ seed∈seeds,
-     a ≤ (nodes.filter (relation seed)).card)
+     a≤(nodes.filter (relation seed)).card)
    (hfiber:∀ node∈nodes \ identities,
      (seeds.filter (fun seed↦relation seed node)).card ≤
        (w-identities.card)*degreeCost+unitCost)
@@ -22,7 +22,7 @@ theorem stratified_incidence_bound
    (hunit:
      (nodes.card-identities.card)*(a-w) ≤
        V*(a-identities.card)):
-   seeds.card*(a-w) ≤ U*degreeCost+V*unitCost:=by
+   seeds.card*(a-w)≤U*degreeCost+V*unitCost:=by
  have hraw:=incidence_after_exempt_nodes relation seeds nodes identities a
    ((w-identities.card)*degreeCost+unitCost)
    hidentities hagreement hfiber
@@ -33,10 +33,10 @@ theorem scaled_stratified_incidence_bound
    (relation:Seed → Node → Prop) [∀ seed node,Decidable (relation seed node)]
    (seeds:Finset Seed) (nodes identities:Finset Node)
    (a w degreeCost unitCost U V:ℕ)
-   (hidentities:identities ⊆ nodes) (hcard:identities.card ≤ w)
-   (hwa:w < a)
+   (hidentities:identities ⊆ nodes) (hcard:identities.card≤w)
+   (hwa:w<a)
    (hagreement:∀ seed∈seeds,
-     a ≤ (nodes.filter (relation seed)).card)
+     a≤(nodes.filter (relation seed)).card)
    (hfiber:∀ node∈nodes \ identities,
      (seeds.filter (fun seed↦relation seed node)).card*(a-w) ≤
        (w-identities.card)*degreeCost+unitCost)
@@ -46,9 +46,9 @@ theorem scaled_stratified_incidence_bound
    (hunit:
      (nodes.card-identities.card)*(a-w) ≤
        V*(a-identities.card)):
-   seeds.card*(a-w)^2 ≤ U*degreeCost+V*unitCost:=by
+   seeds.card*(a-w)^2≤U*degreeCost+V*unitCost:=by
  let geometricCost:=(w-identities.card)*degreeCost+unitCost
- have hgap:0 < a-w:=Nat.sub_pos_of_lt hwa
+ have hgap:0<a-w:=Nat.sub_pos_of_lt hwa
  have hfiberDiv:∀ node∈nodes \ identities,
      (seeds.filter (fun seed↦relation seed node)).card ≤
        geometricCost/(a-w):=by
@@ -63,12 +63,12 @@ theorem scaled_stratified_incidence_bound
    calc
      (seeds.card*(a-w))*(a-identities.card)=
          (seeds.card*(a-identities.card))*(a-w):=by ring
-     _ ≤ ((nodes.card-identities.card)*
+     _≤((nodes.card-identities.card)*
          (geometricCost/(a-w)))*(a-w):=
        Nat.mul_le_mul_right (a-w) hraw
      _=(nodes.card-identities.card)*
          ((geometricCost/(a-w))*(a-w)):=by ring
-     _ ≤ (nodes.card-identities.card)*geometricCost:=
+     _≤(nodes.card-identities.card)*geometricCost:=
        Nat.mul_le_mul_left _ (Nat.div_mul_le_self _ _)
      _=(nodes.card-identities.card)*
          ((w-identities.card)*degreeCost+unitCost):=rfl
@@ -77,5 +77,5 @@ theorem scaled_stratified_incidence_bound
    degreeCost unitCost U V hcard hwa hrawScaled hdegree hunit
  calc
    seeds.card*(a-w)^2=(seeds.card*(a-w))*(a-w):=by ring
-   _ ≤ U*degreeCost+V*unitCost:=hcompressed
+   _≤U*degreeCost+V*unitCost:=hcompressed
 end ProximityPrize.SubmissionLower.RCN216

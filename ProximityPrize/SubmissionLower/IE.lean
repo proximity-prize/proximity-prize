@@ -52,7 +52,7 @@ theorem of_ringHom_surjective [hG:IsGaloisGroup G A B] [CommSemiring A']
   commutes:=⟨by
     intro g a' b
     obtain ⟨a,rfl⟩:∃ a,e a=a':=he' a'
-    rw [Algebra.smul_def,Algebra.smul_def,he, ←Algebra.smul_def, ←Algebra.smul_def]
+    rw [Algebra.smul_def,Algebra.smul_def,he,←Algebra.smul_def,←Algebra.smul_def]
     exact hG.commutes.smul_comm g a b⟩
   isInvariant:=⟨by
     intro b h

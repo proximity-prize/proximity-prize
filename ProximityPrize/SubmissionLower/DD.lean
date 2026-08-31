@@ -8,7 +8,7 @@ theorem char_le_finrank_of_not_isSeparable
    (F E:Type) [Field F] [Field E] [Algebra F E] [FiniteDimensional F E]
    (p:ℕ) [CharP F p] (hp:p≠0)
    (hsep:¬ Algebra.IsSeparable F E):
-   p ≤ Module.finrank F E:=by
+   p≤Module.finrank F E:=by
  letI:Fact p.Prime:=⟨CharP.char_prime_of_ne_zero F hp⟩
  obtain ⟨n,hn⟩:=finInsepDegree_eq_pow (F:=F) (E:=E) p
  have hinsep_ne_one:finInsepDegree F E≠1:=by
@@ -21,12 +21,12 @@ theorem char_le_finrank_of_not_isSeparable
    intro hn0
    subst n
    exact hinsep_ne_one (by simpa using hn)
- have hp_le_insep:p ≤ finInsepDegree F E:=by
+ have hp_le_insep:p≤finInsepDegree F E:=by
    rw [hn]
    simpa only [pow_one] using
      Nat.pow_le_pow_right (CharP.char_prime_of_ne_zero F hp).pos
        (Nat.one_le_iff_ne_zero.mpr hn_ne_zero)
- have hinsep_le_finrank:finInsepDegree F E ≤ Module.finrank F E:=by
+ have hinsep_le_finrank:finInsepDegree F E≤Module.finrank F E:=by
    rw [←Field.finSepDegree_mul_finInsepDegree]
    exact Nat.le_mul_of_pos_left _ (Nat.pos_of_ne_zero (NeZero.ne _))
  exact hp_le_insep.trans hinsep_le_finrank
@@ -65,7 +65,7 @@ theorem char_le_actualCoordinateDegree_of_not_isSeparable
    (hsep:
      letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P i hi
      ¬ Algebra.IsSeparable (RatFunc K) (CoordinateField K P)):
-   p ≤ actualCoordinateDegree K P i:=by
+   p≤actualCoordinateDegree K P i:=by
  letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P i hi
  letI:FiniteDimensional (RatFunc K) (CoordinateField K P):=hfinite i hi
  rw [actualCoordinateDegree_of_transcendental K P i hi]
@@ -75,7 +75,7 @@ theorem char_le_actualCoordinateDegree_of_not_isSeparable
 theorem isSeparable_of_actualCoordinateDegree_lt_char
    (hfinite:ProjectionsFinite K P) (p:ℕ) [CharP K p] (hp:p≠0)
    (i:Fin 3) (hi:Transcendental K (coordinate K P i))
-   (hdegree:actualCoordinateDegree K P i < p):
+   (hdegree:actualCoordinateDegree K P i<p):
    letI:Algebra (RatFunc K) (CoordinateField K P):=
      rationalBaseAlgebra K P i hi
    Algebra.IsSeparable (RatFunc K) (CoordinateField K P):=by
@@ -90,7 +90,7 @@ theorem family_coordinate_isSeparable_of_sum_degree_lt_char
    (Q:I → Ideal (MvPolynomial (Fin 3) K)) [∀ i,(Q i).IsPrime]
    (hfinite:∀ i,ProjectionsFinite K (Q i))
    (p:ℕ) [CharP K p] (hp:p≠0) (j:Fin 3)
-   (hsum:(∑ i,actualCoordinateDegree K (Q i) j) < p)
+   (hsum:(∑ i,actualCoordinateDegree K (Q i) j)<p)
    (i:I) (hi:Transcendental K (coordinate K (Q i) j)):
    letI:Algebra (RatFunc K) (CoordinateField K (Q i)):=
      rationalBaseAlgebra K (Q i) j hi
@@ -107,12 +107,12 @@ theorem finite_zero_points_le_box_of_finite_or_inseparable
    (hnonpoint:∀ v:Fin 3 → K,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (F:MvPolynomial (Fin 3) K) (hF:F∉P)
-   (cap:Fin 3 → ℕ) (hcap:∀ i,F.degreeOf i ≤ cap i)
-   (hcap_pos:∀ i,1 ≤ cap i)
-   (S:Finset (Fin 3 → K)) (hS_card:S.card ≤ p)
-   (hSP:∀ v∈S,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom)
+   (cap:Fin 3 → ℕ) (hcap:∀ i,F.degreeOf i≤cap i)
+   (hcap_pos:∀ i,1≤cap i)
+   (S:Finset (Fin 3 → K)) (hS_card:S.card≤p)
+   (hSP:∀ v∈S,P≤RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hSF:∀ v∈S,MvPolynomial.aeval v F=0):
-   S.card ≤ ∑ i,cap i*actualCoordinateDegree K P i:=by
+   S.card≤∑ i,cap i*actualCoordinateDegree K P i:=by
  classical
  by_cases hsep:∀ (i:Fin 3) (hi:Transcendental K (coordinate K P i)),
      letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P i hi
@@ -122,7 +122,7 @@ theorem finite_zero_points_le_box_of_finite_or_inseparable
    exact_mod_cast hcount
  · push_neg at hsep
    obtain ⟨i,hi,hnotsep⟩:=hsep
-   have hp_degree:p ≤ actualCoordinateDegree K P i:=
+   have hp_degree:p≤actualCoordinateDegree K P i:=
      char_le_actualCoordinateDegree_of_not_isSeparable K P hfinite p hp i hi hnotsep
    have hdegree_term:actualCoordinateDegree K P i ≤
        cap i*actualCoordinateDegree K P i:=

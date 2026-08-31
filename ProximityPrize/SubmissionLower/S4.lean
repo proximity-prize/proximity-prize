@@ -111,7 +111,7 @@ theorem inertiaDegIn_mul_inertiaDegIn:
  obtain ⟨⟨Q,_,_⟩⟩:=(inferInstance:Nonempty (primesOver P C))
  have:Q.LiesOver p:=LiesOver.trans Q P p
  rw [inertiaDegIn_eq_inertiaDeg p P G,inertiaDegIn_eq_inertiaDeg p Q GAC,
-   inertiaDegIn_eq_inertiaDeg P Q GBC, ←inertiaDeg_tower P Q]
+   inertiaDegIn_eq_inertiaDeg P Q GBC,←inertiaDeg_tower P Q]
 variable {p} in
 include G GAC GBC in
 theorem ramificationIdxIn_mul_ramificationIdxIn [Flat B C]:
@@ -119,7 +119,7 @@ theorem ramificationIdxIn_mul_ramificationIdxIn [Flat B C]:
  obtain ⟨⟨Q,_,hQ⟩⟩:=(inferInstance:Nonempty (primesOver P C))
  have:Q.LiesOver p:=LiesOver.trans Q P p
  rw [ramificationIdxIn_eq_ramificationIdx p P G,ramificationIdxIn_eq_ramificationIdx p Q GAC,
-   ramificationIdxIn_eq_ramificationIdx P Q GBC, ←ramificationIdx_tower P Q]
+   ramificationIdxIn_eq_ramificationIdx P Q GBC,←ramificationIdx_tower P Q]
 @[deprecated (since:="2026-06-18")] alias ramificationIdxIn_mul_ramificationIdxIn':=
  ramificationIdxIn_mul_ramificationIdxIn
 end tower
@@ -153,7 +153,7 @@ theorem ncard_primesOver_mul_ncard_primesOver:
  let f:=restrictHom GAC G A B C
  let H:=(stabilizer G P).comap f
  have key (Q Q':Ideal C) [Q.LiesOver P] [Q'.LiesOver P] g (hg:g • Q=Q'):g∈H:=by
-   simpa [←restrictHom_smul_under GAC G A, ←over_def _ P,H] using congr_arg (Ideal.under B) hg
+   simpa [←restrictHom_smul_under GAC G A,←over_def _ P,H] using congr_arg (Ideal.under B) hg
  obtain ⟨Q,_,_⟩:=(inferInstance:Nonempty (P.primesOver C))
  have:Q.LiesOver p:=.trans Q P p
  have orbit_eq:orbit H Q=P.primesOver C:=by
@@ -161,7 +161,7 @@ theorem ncard_primesOver_mul_ncard_primesOver:
    constructor
    · rintro ⟨g,rfl:g • Q=Q'⟩
      refine ⟨inferInstance,?_⟩
-     rw [liesOver_iff,H.smul_def, ←restrictHom_smul_under GAC G A B C, ←Q.over_def P]
+     rw [liesOver_iff,H.smul_def,←restrictHom_smul_under GAC G A B C,←Q.over_def P]
      exact g.2.symm
    · rintro ⟨_,_⟩
      have:Q'.LiesOver p:=.trans Q' P p

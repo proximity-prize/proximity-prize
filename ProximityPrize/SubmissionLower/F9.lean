@@ -81,7 +81,7 @@ theorem lift_unique
    ext x
    replace e:=AlgHom.congr_fun e x
    dsimp only [AlgHom.comp_apply,Ideal.Quotient.mkₐ_eq_mk] at e ⊢
-   rwa [Ideal.Quotient.eq, ←map_sub,Ideal.mem_quotient_iff_mem hIJ, ←Ideal.Quotient.eq]
+   rwa [Ideal.Quotient.eq,←map_sub,Ideal.mem_quotient_iff_mem hIJ,←Ideal.Quotient.eq]
 theorem ext [FormallyUnramified R A] (hI:IsNilpotent I) {g₁ g₂:A →ₐ[R] B}
    (H:∀ x,Ideal.Quotient.mk I (g₁ x)=Ideal.Quotient.mk I (g₂ x)):g₁=g₂:=
  FormallyUnramified.lift_unique I hI g₁ g₂ (AlgHom.ext H)
@@ -116,12 +116,12 @@ theorem ext_of_iInf [FormallyUnramified R A] (hI:⨅ i,I^i=⊥) {g₁ g₂:A →
    intro x
    dsimp
    rw [Ideal.Quotient.eq, ←map_sub, ←Ideal.mem_comap,Ideal.comap_map_of_surjective',
-     sup_eq_left.mpr, ←Ideal.Quotient.eq]
+     sup_eq_left.mpr,←Ideal.Quotient.eq]
    · exact H _
    · simpa using Ideal.pow_le_self hi
    · exact Ideal.Quotient.mk_surjective
  ext x
- rw [←sub_eq_zero, ←Ideal.mem_bot, ←hI,Ideal.mem_iInf]
+ rw [←sub_eq_zero,←Ideal.mem_bot,←hI,Ideal.mem_iInf]
  intro i
  rw [←Ideal.Quotient.eq_zero_iff_mem,map_sub,sub_eq_zero]
  exact DFunLike.congr_fun (this i) x

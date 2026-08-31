@@ -12,7 +12,7 @@ local notation3 "F" => FractionRing T
 section
 theorem algebraMapSubmonoid_le_nonZeroDivisors_of_faithfulSMul {A:Type*} (B:Type*)
    [CommSemiring A] [CommSemiring B] [Algebra A B] [NoZeroDivisors B] [FaithfulSMul A B]
-   {S:Submonoid A} (hS:S ≤ A⁰):algebraMapSubmonoid B S ≤ B⁰:=
+   {S:Submonoid A} (hS:S≤A⁰):algebraMapSubmonoid B S≤B⁰:=
  map_le_nonZeroDivisors_of_injective _ (FaithfulSMul.algebraMap_injective A B) hS
 variable (Rₘ Sₘ:Type*) [CommRing Rₘ] [CommRing Sₘ] [Algebra R Rₘ] [IsTorsionFree R S]
    [Algebra.IsSeparable (FractionRing R) (FractionRing S)] {M:Submonoid R} [IsLocalization M Rₘ]
@@ -22,10 +22,10 @@ variable (Rₘ Sₘ:Type*) [CommRing Rₘ] [CommRing Sₘ] [Algebra R Rₘ] [IsT
    [IsScalarTower Rₘ (FractionRing Rₘ) (FractionRing Sₘ)]
 set_option backward.isDefEq.respectTransparency false in
 include R S in
-theorem FractionRing.isSeparable_of_isLocalization (hM:M ≤ R⁰):
+theorem FractionRing.isSeparable_of_isLocalization (hM:M≤R⁰):
    Algebra.IsSeparable (FractionRing Rₘ) (FractionRing Sₘ):=by
  let M':=algebraMapSubmonoid S M
- have hM':algebraMapSubmonoid S M ≤ S⁰:=algebraMapSubmonoid_le_nonZeroDivisors_of_faithfulSMul
+ have hM':algebraMapSubmonoid S M≤S⁰:=algebraMapSubmonoid_le_nonZeroDivisors_of_faithfulSMul
    _ hM
  let f₁:Rₘ →+*K:=map _ (T:=R⁰) (RingHom.id R) hM
  let f₂:Sₘ →+*L:=map _ (T:=S⁰) (RingHom.id S) hM'

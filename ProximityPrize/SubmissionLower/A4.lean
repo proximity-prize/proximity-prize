@@ -8,12 +8,12 @@ noncomputable section
 section ScalarClearing
 variable {A:Type*} [CommRing A]
 theorem common_denominator_power (h u:A) (hHU:h*u=1)
-   (w j:ℕ) (hj:j ≤ w):
+   (w j:ℕ) (hj:j≤w):
    h^(2*w)*u^(2*j)=h^(2*(w-j)):=by
  have hexp:2*w=2*(w-j)+2*j:=by omega
- rw [hexp,pow_add,mul_assoc, ←mul_pow,hHU,one_pow,mul_one]
+ rw [hexp,pow_add,mul_assoc,←mul_pow,hHU,one_pow,mul_one]
 theorem common_denominator_term (h u:A) (hHU:h*u=1)
-   (w j:ℕ) (hj:j ≤ w) (c m z:A):
+   (w j:ℕ) (hj:j≤w) (c m z:A):
    c*m*h^(2*(w-j))*z^j=
      h^(2*w)*(c*m*u^(2*j)*z^j):=by
  rw [←common_denominator_power h u hHU w j hj]
@@ -125,7 +125,7 @@ theorem numerator_eval_zero_iff_jetCoefficient_zero_of_char
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (p b:ℕ) [CharP L p] (hb:b < p):
+   (p b:ℕ) [CharP L p] (hb:b<p):
    MvPolynomial.eval₂Hom coefficients v (numerator K F b)=0 ↔
      jetCoefficient (contactDerivation K F)
        (regularPointValue coefficients F v hF hregular)
@@ -137,10 +137,10 @@ theorem all_tail_numerators_iff_all_tail_jets
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (p bound w:ℕ) [CharP L p] (hchar:bound < p):
-   (∀ b,w < b → b ≤ bound →
+   (p bound w:ℕ) [CharP L p] (hchar:bound<p):
+   (∀ b,w<b → b≤bound →
      MvPolynomial.eval₂Hom coefficients v (numerator K F b)=0) ↔
-   (∀ b,w < b → b ≤ bound →
+   (∀ b,w<b → b≤bound →
      jetCoefficient (contactDerivation K F)
        (regularPointValue coefficients F v hF hregular)
        (contactCoordinate K F (1:Fin 4)) b=0):=by

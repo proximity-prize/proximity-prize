@@ -6,7 +6,7 @@ theorem isCoprime_iff_nat_coprime {a b:ℤ}:IsCoprime a b ↔ Nat.Coprime a.natA
  rw [isCoprime_iff_gcd_eq_one,Nat.coprime_iff_gcd_eq_one,gcd_eq_natAbs]
 theorem gcd_ne_one_iff_gcd_mul_right_ne_one {a:ℤ} {m n:ℕ}:
    a.gcd (m*n)≠1 ↔ a.gcd m≠1∨a.gcd n≠1:=by
- simp only [←isCoprime_iff_gcd_eq_one, ←not_and_or,not_iff_not,IsCoprime.mul_right_iff]
+ simp only [←isCoprime_iff_gcd_eq_one,←not_and_or,not_iff_not,IsCoprime.mul_right_iff]
 theorem sq_of_gcd_eq_one {a b c:ℤ} (h:Int.gcd a b=1) (heq:a*b=c^2):
    ∃ a0:ℤ,a=a0^2∨a= -a0^2:=by
  have h':IsUnit (GCDMonoid.gcd a b):=by
@@ -75,7 +75,7 @@ theorem eq_pow_of_mul_eq_pow_odd_left {a b c:ℤ} (hab:IsCoprime a b) {k:ℕ} (h
    (h:a*b=c^k):∃ d,a=d^k:=by
  obtain ⟨d,hd⟩:=exists_associated_pow_of_mul_eq_pow' hab h
  replace hd:=hd.symm
- rw [associated_iff_natAbs,natAbs_eq_natAbs_iff, ←hk.neg_pow] at hd
+ rw [associated_iff_natAbs,natAbs_eq_natAbs_iff,←hk.neg_pow] at hd
  obtain rfl | rfl:=hd <;> exact ⟨_,rfl⟩
 theorem eq_pow_of_mul_eq_pow_odd_right {a b c:ℤ} (hab:IsCoprime a b) {k:ℕ} (hk:Odd k)
    (h:a*b=c^k):∃ d,b=d^k:=

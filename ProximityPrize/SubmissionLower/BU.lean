@@ -25,8 +25,8 @@ theorem implicitBaseFactors_spec (J A:MvPolynomial (Fin 4) K)
  exact ⟨hs.1,hs.2,by omega,hy⟩
 theorem implicitBaseFactors_degree_budgets
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0):
-   (∑ A∈implicitBaseFactors J,A.degreeOf (1:Fin 4)) ≤ J.degreeOf 1∧
-     (∑ A∈implicitBaseFactors J,A.degreeOf (3:Fin 4)) ≤ J.degreeOf 3:=by
+   (∑ A∈implicitBaseFactors J,A.degreeOf (1:Fin 4))≤J.degreeOf 1∧
+     (∑ A∈implicitBaseFactors J,A.degreeOf (3:Fin 4))≤J.degreeOf 3:=by
  classical
  have hb:=originalImplicitFactors_degree_budgets J hJ
  exact ⟨(Finset.sum_le_sum_of_subset (implicitBaseFactors_subset J)).trans hb.1,
@@ -58,9 +58,9 @@ theorem implicitPair_spec (J A G:MvPolynomial (Fin 4) K)
  have hh:=RCN081.degreeOf_le_of_dvd (2:Fin 4) G A hd hiA.ne_zero
  omega
 theorem sum_products_le_product_sums {ι:Type*} (I:Finset ι) (f g:ι → ℕ):
-   (∑ i∈I,f i*g i) ≤ (∑ i∈I,f i)*(∑ i∈I,g i):=by
+   (∑ i∈I,f i*g i)≤(∑ i∈I,f i)*(∑ i∈I,g i):=by
  calc
-   _ ≤ ∑ i∈I,f i*(∑ j∈I,g j):=by
+   _≤∑ i∈I,f i*(∑ j∈I,g j):=by
      apply Finset.sum_le_sum
      intro i hi
      exact Nat.mul_le_mul_left (f i) (Finset.single_le_sum (fun _ _ => Nat.zero_le _) hi)
@@ -80,14 +80,14 @@ def pairZCost (q:(A:MvPolynomial (Fin 4) K) × MvPolynomial (Fin 4) K):ℕ:=
  q.2.degreeOf 2*q.1.degreeOf 1
 theorem implicitPair_degree_budgets
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0) (hR:J.degreeOf 2=0):
-   (∑ q∈implicitPairSet J,pairYCost q) ≤ J.degreeOf 3∧
-     (∑ q∈implicitPairSet J,pairRCost q) ≤ 2*J.degreeOf 1*J.degreeOf 3∧
-     (∑ q∈implicitPairSet J,pairZCost q) ≤ J.degreeOf 1:=by
+   (∑ q∈implicitPairSet J,pairYCost q)≤J.degreeOf 3∧
+     (∑ q∈implicitPairSet J,pairRCost q)≤2*J.degreeOf 1*J.degreeOf 3∧
+     (∑ q∈implicitPairSet J,pairZCost q)≤J.degreeOf 1:=by
  classical
  have hlocal (A:MvPolynomial (Fin 4) K) (hA:A∈implicitBaseFactors J):
-     (∑ G∈positiveRFactors (implicitLift A),G.degreeOf (2:Fin 4)) ≤ 1∧
-       (∑ G∈positiveRFactors (implicitLift A),G.degreeOf (1:Fin 4)) ≤ A.degreeOf 1∧
-       (∑ G∈positiveRFactors (implicitLift A),G.degreeOf (3:Fin 4)) ≤ A.degreeOf 3:=by
+     (∑ G∈positiveRFactors (implicitLift A),G.degreeOf (2:Fin 4))≤1∧
+       (∑ G∈positiveRFactors (implicitLift A),G.degreeOf (1:Fin 4))≤A.degreeOf 1∧
+       (∑ G∈positiveRFactors (implicitLift A),G.degreeOf (3:Fin 4))≤A.degreeOf 3:=by
    obtain ⟨_,_,hr,hy⟩:=implicitBaseFactors_spec J A hJ hR hA
    exact lift_positive_factor_budgets A hr hy
  have hb:=implicitBaseFactors_degree_budgets J hJ
@@ -96,7 +96,7 @@ theorem implicitPair_degree_budgets
    rw [implicitPairSet,Finset.sum_sigma]
    apply Finset.sum_le_sum
    intro A hA
-   change (∑ G∈positiveRFactors (implicitLift A),G.degreeOf 2*A.degreeOf 3) ≤ _
+   change (∑ G∈positiveRFactors (implicitLift A),G.degreeOf 2*A.degreeOf 3)≤_
    rw [←Finset.sum_mul]
    simpa only [one_mul] using Nat.mul_le_mul_right (A.degreeOf 3) (hlocal A hA).1
  have hz:(∑ q∈implicitPairSet J,pairZCost q) ≤
@@ -104,7 +104,7 @@ theorem implicitPair_degree_budgets
    rw [implicitPairSet,Finset.sum_sigma]
    apply Finset.sum_le_sum
    intro A hA
-   change (∑ G∈positiveRFactors (implicitLift A),G.degreeOf 2*A.degreeOf 1) ≤ _
+   change (∑ G∈positiveRFactors (implicitLift A),G.degreeOf 2*A.degreeOf 1)≤_
    rw [←Finset.sum_mul]
    simpa only [one_mul] using Nat.mul_le_mul_right (A.degreeOf 1) (hlocal A hA).1
  have hr:(∑ q∈implicitPairSet J,pairRCost q) ≤
@@ -113,35 +113,35 @@ theorem implicitPair_degree_budgets
    apply Finset.sum_le_sum
    intro A hA
    change (∑ G∈positiveRFactors (implicitLift A),
-     (G.degreeOf 1*A.degreeOf 3+G.degreeOf 3*A.degreeOf 1)) ≤ _
-   rw [Finset.sum_add_distrib, ←Finset.sum_mul, ←Finset.sum_mul]
+     (G.degreeOf 1*A.degreeOf 3+G.degreeOf 3*A.degreeOf 1))≤_
+   rw [Finset.sum_add_distrib,←Finset.sum_mul,←Finset.sum_mul]
    calc
-     _ ≤ A.degreeOf 1*A.degreeOf 3+A.degreeOf 3*A.degreeOf 1:=
+     _≤A.degreeOf 1*A.degreeOf 3+A.degreeOf 3*A.degreeOf 1:=
        Nat.add_le_add (Nat.mul_le_mul_right _ (hlocal A hA).2.1)
          (Nat.mul_le_mul_right _ (hlocal A hA).2.2)
      _=_:=by ring
  refine ⟨hy.trans hb.2,?_,hz.trans hb.1⟩
  calc
-   _ ≤ ∑ A∈implicitBaseFactors J,2*(A.degreeOf (1:Fin 4)*A.degreeOf (3:Fin 4)):=hr
+   _≤∑ A∈implicitBaseFactors J,2*(A.degreeOf (1:Fin 4)*A.degreeOf (3:Fin 4)):=hr
    _=2*(∑ A∈implicitBaseFactors J,A.degreeOf (1:Fin 4)*A.degreeOf (3:Fin 4)):=
      (Finset.mul_sum _ _ _).symm
-   _ ≤ 2*(J.degreeOf 1*J.degreeOf 3):=
+   _≤2*(J.degreeOf 1*J.degreeOf 3):=
      Nat.mul_le_mul_left 2 (implicitBaseFactors_product_degree_budget J hJ)
    _=_:=by ring
 theorem implicitPair_input_budgets
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0)
-   (D w j:ℕ) (hw:0 < w) (hbox:J∈globalCoefficientBox K D w j 0):
-   (∑ q∈implicitPairSet J,pairYCost q) ≤ j∧
-     (∑ q∈implicitPairSet J,pairRCost q) ≤ 2*((D-1)/w)*j∧
-     (∑ q∈implicitPairSet J,pairZCost q) ≤ (D-1)/w:=by
+   (D w j:ℕ) (hw:0<w) (hbox:J∈globalCoefficientBox K D w j 0):
+   (∑ q∈implicitPairSet J,pairYCost q)≤j∧
+     (∑ q∈implicitPairSet J,pairRCost q)≤2*((D-1)/w)*j∧
+     (∑ q∈implicitPairSet J,pairZCost q)≤(D-1)/w:=by
  have hR:J.degreeOf 2=0:=by
    apply Nat.eq_zero_of_le_zero
    apply MvPolynomial.degreeOf_le_iff.mpr
    intro d hd
    exact (hbox hd).2.1
  have hcaps:=degree_bounds_of_mem_box J D w j 0 hw hbox
- have hy:J.degreeOf 1 ≤ (D-1)/w:=hcaps.1
- have hz:J.degreeOf 3 ≤ j:=hcaps.2.2
+ have hy:J.degreeOf 1≤(D-1)/w:=hcaps.1
+ have hz:J.degreeOf 3≤j:=hcaps.2.2
  have hb:=implicitPair_degree_budgets J hJ hR
  exact ⟨hb.1.trans hz,
    hb.2.1.trans (Nat.mul_le_mul (Nat.mul_le_mul_left 2 hy) hz),hb.2.2.trans hy⟩

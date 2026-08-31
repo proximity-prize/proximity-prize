@@ -8,31 +8,31 @@ noncomputable section
 section NormalizedEquality
 variable {L:Type*} [Field L]
 local instance:DecidableEq L:=Classical.decEq L
-theorem value_le_exp_neg_one {z:ℤᵐ⁰} (hz:z < 1):
-   z ≤ WithZero.exp (-1:ℤ):=by
+theorem value_le_exp_neg_one {z:ℤᵐ⁰} (hz:z<1):
+   z≤WithZero.exp (-1:ℤ):=by
  by_cases hz0:z=0
  · simp [hz0]
- have hlog:z.log < 0:=by
-   have h:WithZero.exp z.log < WithZero.exp (0:ℤ):=by
+ have hlog:z.log<0:=by
+   have h:WithZero.exp z.log<WithZero.exp (0:ℤ):=by
      simpa only [WithZero.exp_log hz0,WithZero.exp_zero] using hz
    exact WithZero.exp_lt_exp.mp h
  calc
    z=WithZero.exp z.log:=(WithZero.exp_log hz0).symm
-   _ ≤ WithZero.exp (-1:ℤ):=WithZero.exp_le_exp.mpr (by omega)
+   _≤WithZero.exp (-1:ℤ):=WithZero.exp_le_exp.mpr (by omega)
 theorem eq_of_equiv_surjective (v w:Valuation L ℤᵐ⁰)
    (hv:Function.Surjective v) (hw:Function.Surjective w)
    (h:v.IsEquiv w):v=w:=by
- have hneg:WithZero.exp (-1:ℤ) < 1:=by
+ have hneg:WithZero.exp (-1:ℤ)<1:=by
    rw [←WithZero.exp_zero,WithZero.exp_lt_exp]
    norm_num
  obtain ⟨π,hπ⟩:=hv (WithZero.exp (-1:ℤ))
- have hvπlt:v π < 1:=hπ ▸ hneg
- have hwπlt:w π < 1:=h.lt_one_iff_lt_one.mp hvπlt
- have hlower:WithZero.exp (-1:ℤ) ≤ w π:=by
+ have hvπlt:v π<1:=hπ ▸ hneg
+ have hwπlt:w π<1:=h.lt_one_iff_lt_one.mp hvπlt
+ have hlower:WithZero.exp (-1:ℤ)≤w π:=by
    obtain ⟨a,ha⟩:=hw (WithZero.exp (-1:ℤ))
-   have haw:w a < 1:=ha ▸ hneg
-   have hav:v a < 1:=h.lt_one_iff_lt_one.mpr haw
-   have hal:v a ≤ v π:=hπ ▸ value_le_exp_neg_one hav
+   have haw:w a<1:=ha ▸ hneg
+   have hav:v a<1:=h.lt_one_iff_lt_one.mpr haw
+   have hal:v a≤v π:=hπ ▸ value_le_exp_neg_one hav
    have hal':w a ≤ w π:=(h a π).mp hal
    simpa only [ha] using hal'
  have hwπ:w π=WithZero.exp (-1:ℤ):=
@@ -49,7 +49,7 @@ theorem eq_of_equiv_surjective (v w:Valuation L ℤᵐ⁰)
 end NormalizedEquality
 section UnitBall
 variable (R L:Type*) [CommRing R] [Field L] [Algebra R L]
-variable (v:Valuation L ℤᵐ⁰) (hR:∀ r:R,v (algebraMap R L r) ≤ 1)
+variable (v:Valuation L ℤᵐ⁰) (hR:∀ r:R,v (algebraMap R L r)≤1)
 def unitBallMap:R →+*v.valuationSubring where
  toFun r:=⟨algebraMap R L r,hR r⟩
  map_zero':=Subtype.ext (map_zero _)
@@ -57,7 +57,7 @@ def unitBallMap:R →+*v.valuationSubring where
  map_add' r s:=Subtype.ext (map_add _ r s)
  map_mul' r s:=Subtype.ext (map_mul _ r s)
 include hR in
-theorem integral_le_one {x:L} (hx:IsIntegral R x):v x ≤ 1:=by
+theorem integral_le_one {x:L} (hx:IsIntegral R x):v x≤1:=by
  letI:Algebra R v.valuationSubring:=(unitBallMap R L v hR).toAlgebra
  letI:IsScalarTower R v.valuationSubring L:=
    IsScalarTower.of_algebraMap_eq' rfl

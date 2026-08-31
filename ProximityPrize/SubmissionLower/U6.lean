@@ -51,9 +51,9 @@ theorem map_spanIntNorm (I:Ideal S) {T:Type*} [Semiring T] (f:R →+*T):
  nth_rw 2 [map]
  simp [map_span,Set.image_image]
 @[gcongr,mono]
-theorem spanNorm_mono {I J:Ideal S} (h:I ≤ J):spanNorm R I ≤ spanNorm R J:=
+theorem spanNorm_mono {I J:Ideal S} (h:I≤J):spanNorm R I≤spanNorm R J:=
  Ideal.span_mono (Set.monotone_image h)
-theorem spanIntNorm_localization (I:Ideal S) (M:Submonoid R) (hM:M ≤ R⁰)
+theorem spanIntNorm_localization (I:Ideal S) (M:Submonoid R) (hM:M≤R⁰)
    {Rₘ:Type*} (Sₘ:Type*) [CommRing Rₘ] [Algebra R Rₘ] [CommRing Sₘ] [Algebra S Sₘ]
    [Algebra Rₘ Sₘ] [Algebra R Sₘ] [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
    [IsLocalization M Rₘ] [IsLocalization (Algebra.algebraMapSubmonoid S M) Sₘ]
@@ -110,7 +110,7 @@ theorem spanNorm_mul_spanNorm_le (I J:Ideal S):
    spanNorm R I*spanNorm R J ≤ spanNorm R (I*J):=by
  rw [spanNorm,spanNorm,spanNorm]
  nth_rw 1 [map];nth_rw 1 [map]
- rw [Ideal.span_mul_span', ←Set.image_mul]
+ rw [Ideal.span_mul_span',←Set.image_mul]
  refine Ideal.span_mono (Set.monotone_image ?_)
  rintro _ ⟨x,hxI,y,hyJ,rfl⟩
  exact Ideal.mul_mem_mul hxI hyJ
@@ -125,8 +125,8 @@ theorem spanNorm_mul_of_bot_or_top (eq_bot_or_top:∀ I:Ideal R,I=⊥∨I=⊤) (
  · rw [hJ,spanNorm_eq_bot_iff.mp hJ,mul_bot,spanNorm_bot]
  rw [hJ]
  exact le_top
-theorem spanNorm_le_comap (I:Ideal S):spanNorm R I ≤ comap (algebraMap R S) I:=by
- rw [spanNorm,Ideal.map,Ideal.span_le, ←Submodule.span_le]
+theorem spanNorm_le_comap (I:Ideal S):spanNorm R I≤comap (algebraMap R S) I:=by
+ rw [spanNorm,Ideal.map,Ideal.span_le,←Submodule.span_le]
  intro x hx
  induction hx using Submodule.span_induction with
  | mem _ h =>
@@ -152,7 +152,7 @@ theorem spanNorm_mul [IsDedekindDomain R] [IsDedekindDomain S] (I J:Ideal S):
  let P':=Algebra.algebraMapSubmonoid S P.primeCompl
  simp only [Ideal.map_mul, ←spanIntNorm_localization (R:=R) (Sₘ:=Localization P')
    _ _ P.primeCompl_le_nonZeroDivisors]
- rw [←(I.map _).span_singleton_generator, ←(J.map _).span_singleton_generator,
+ rw [←(I.map _).span_singleton_generator,←(J.map _).span_singleton_generator,
    span_singleton_mul_span_singleton,spanNorm_singleton,spanNorm_singleton,
    spanNorm_singleton,span_singleton_mul_span_singleton,map_mul]
 section spanNorm_spanNorm
@@ -160,7 +160,7 @@ variable (T:Type*) [CommRing T] [IsDomain T] [IsIntegrallyClosed T] [Algebra R T
  [Module.Finite R T] [Module.Finite T S] [IsTorsionFree R T] [IsTorsionFree T S]
  [IsScalarTower R T S]
 open _root_.Algebra
-theorem le_spanNorm_spanNorm (I:Ideal S):spanNorm R I ≤ spanNorm R (spanNorm T I):=by
+theorem le_spanNorm_spanNorm (I:Ideal S):spanNorm R I≤spanNorm R (spanNorm T I):=by
  simp_rw [spanNorm,map]
  refine span_mono ?_
  rintro _ ⟨x,hx,rfl⟩
@@ -182,11 +182,11 @@ theorem spanNorm_spanNorm [IsDedekindDomain R] [IsDedekindDomain T] [IsDedekindD
  let Tₚ:=Localization (algebraMapSubmonoid T P.primeCompl)
  let Sₚ:=Localization (algebraMapSubmonoid S P.primeCompl)
  have:NeZero P:=⟨hP⟩
- have h:algebraMapSubmonoid T P.primeCompl ≤ T⁰:=
+ have h:algebraMapSubmonoid T P.primeCompl≤T⁰:=
      algebraMapSubmonoid_le_nonZeroDivisors_of_faithfulSMul _ (primeCompl_le_nonZeroDivisors P)
  rw [←spanIntNorm_localization R (spanNorm T I) _ (primeCompl_le_nonZeroDivisors P) Tₚ,
-   ←spanIntNorm_localization T (Rₘ:=Tₚ) I _ h Sₚ, ←spanIntNorm_localization R (Rₘ:=Rₚ) I _
-   (primeCompl_le_nonZeroDivisors P) Sₚ, ←(I.map _).span_singleton_generator,spanNorm_singleton,
+   ←spanIntNorm_localization T (Rₘ:=Tₚ) I _ h Sₚ,←spanIntNorm_localization R (Rₘ:=Rₚ) I _
+   (primeCompl_le_nonZeroDivisors P) Sₚ,←(I.map _).span_singleton_generator,spanNorm_singleton,
    spanNorm_singleton,intNorm_intNorm,spanNorm_singleton]
 end spanNorm_spanNorm
 variable [IsDedekindDomain R] [IsDedekindDomain S]
@@ -311,10 +311,10 @@ theorem relNorm_eq_pow_of_isPrime_isGalois [p.IsMaximal] [P.IsPrime]
    have:Q.LiesOver p:=hQ.2
    rw [←ramificationIdxIn_eq_ramificationIdx p Q G]
    obtain ⟨σ,rfl⟩:=Ideal.exists_smul_eq_of_isGaloisGroup p P Q G
-   rw [relNorm_smul,hs, ←pow_mul,mul_comm]
+   rw [relNorm_smul,hs,←pow_mul,mul_comm]
  have h:=(congr_arg (relNorm R ·) <|
    map_algebraMap_eq_finsetProd_pow hp).symm.trans <| relNorm_algebraMap S p
- simp+contextual only [map_prod,map_pow,h₀,Finset.prod_const, ←pow_mul] at h
+ simp+contextual only [map_prod,map_pow,h₀,Finset.prod_const,←pow_mul] at h
  rwa [←IsGaloisGroup.card_eq_finrank G (FractionRing R) (FractionRing S),
    ←Ideal.ncard_primesOver_mul_ramificationIdxIn_mul_inertiaDegIn p S G,mul_comm,
    ←Set.ncard_eq_toFinset_card',
@@ -355,15 +355,15 @@ theorem absNorm_relNorm [PerfectField (FractionRing R)] (I:Ideal S):
    let P:=Ideal.under R Q
    let p:=absNorm (Ideal.under ℤ P)
    have:Q.LiesOver (span {(p:ℤ)}):=LiesOver.trans Q P _
-   rw [relNorm_eq_pow_of_isMaximal Q P,map_pow, ←pow_inertiaDeg p, ←pow_inertiaDeg p,
-     ←pow_mul, ←inertiaDeg_tower]
+   rw [relNorm_eq_pow_of_isMaximal Q P,map_pow,←pow_inertiaDeg p,←pow_inertiaDeg p,
+     ←pow_mul,←inertiaDeg_tower]
 theorem relNorm_int (I:Ideal S):
    relNorm ℤ I=Ideal.span {(absNorm I:ℤ)}:=by
  rw [←Int.ideal_span_absNorm_eq_self (relNorm ℤ I),absNorm_relNorm]
 theorem absNorm_algebraMap (I:Ideal R) [Module.Finite ℤ R]:
    absNorm (I.map (algebraMap R S))=
      (absNorm I)^Module.finrank (FractionRing R) (FractionRing S):=by
- rw [←absNorm_relNorm ℤ, ←relNorm_relNorm ℤ R,relNorm_algebraMap,absNorm_relNorm,map_pow]
+ rw [←absNorm_relNorm ℤ,←relNorm_relNorm ℤ R,relNorm_algebraMap,absNorm_relNorm,map_pow]
 end absNorm
 end Ideal
 end SpanNorm

@@ -39,7 +39,7 @@ def budgetOfProjections (F A H G:Poly)
        apply Finset.sum_congr rfl
        intro v _
        exact (hJ C v).symm
-     _ ≤ (SeparableCoordinate.degree K (CoordinateField K C.1) (J C):ℤ):=
+     _≤(SeparableCoordinate.degree K (CoordinateField K C.1) (J C):ℤ):=
        SeparableCoordinate.finite_sum_pole_le_degree K (CoordinateField K C.1) (J C) W
 variable {E:Type} [Field E] [IsAlgClosed E]
 variable [Algebra K E] [Algebra (RatFunc K) E] [IsScalarTower K (RatFunc K) E]
@@ -55,7 +55,7 @@ theorem exists_moving_pole_budget_family (F H G:Poly) (k:ℕ) (B:Fin (k+1) → P
    (hc:∀ j,c j+(k-j.val) • (⟨a,b+1,s+1⟩:FlagDegree)+
      j.val • (⟨a,b,s+3⟩:FlagDegree)=C0+k • (⟨2*a,2*b+1,2*s+3⟩:FlagDegree))
    (pchar:ℕ) [CharP E pchar]
-   (hmix:2*(p.zOnly+p.yz+p.all)*(a+(b+1)+(s+3)) < pchar):
+   (hmix:2*(p.zOnly+p.yz+p.all)*(a+(b+1)+(s+3))<pchar):
    ∃ budget:∀ C:RegularComponent K F (filteredCut k B H G) H,MovingPoleBudget C.1 H G,
      (∀ C,(budget C).zCost=coordinateDegree K (CoordinateField K C.1) (unit.zProjection C)∧
        (budget C).yzCost=coordinateDegree K (CoordinateField K C.1) (unit.yzProjection C)∧

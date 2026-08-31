@@ -20,13 +20,13 @@ structure MovingPoleBudget (P:Ideal Poly) [P.IsPrime] (H G:Poly) where
  allCost:ℕ
  movingCost:ℕ
  zPole:∀ W:Finset (Place K (CoordinateField K P)),
-   (∑ v∈W,exponentSetPoleWeight v.val (coordinate K P) (flagSupport unitZFlag)) ≤ (zCost:ℤ)
+   (∑ v∈W,exponentSetPoleWeight v.val (coordinate K P) (flagSupport unitZFlag))≤(zCost:ℤ)
  yzPole:∀ W:Finset (Place K (CoordinateField K P)),
-   (∑ v∈W,exponentSetPoleWeight v.val (coordinate K P) (flagSupport unitYZFlag)) ≤ (yzCost:ℤ)
+   (∑ v∈W,exponentSetPoleWeight v.val (coordinate K P) (flagSupport unitYZFlag))≤(yzCost:ℤ)
  allPole:∀ W:Finset (Place K (CoordinateField K P)),
-   (∑ v∈W,exponentSetPoleWeight v.val (coordinate K P) (flagSupport unitAllFlag)) ≤ (allCost:ℤ)
+   (∑ v∈W,exponentSetPoleWeight v.val (coordinate K P) (flagSupport unitAllFlag))≤(allCost:ℤ)
  movingPole:∀ W:Finset (Place K (CoordinateField K P)),
-   (∑ v∈W,movingPoleTarget P H G v) ≤ (movingCost:ℤ)
+   (∑ v∈W,movingPoleTarget P H G v)≤(movingCost:ℤ)
 namespace MovingPoleBudget
 variable {P:Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
 variable {H G:MvPolynomial (Fin 3) K}
@@ -34,7 +34,7 @@ def weightedCost (budget:MovingPoleBudget P H G) (r:FlagDegree):ℕ:=
  r.zOnly*budget.zCost+r.yz*budget.yzCost+r.all*budget.allCost
 theorem sum_flagPole_le (budget:MovingPoleBudget P H G) (r:FlagDegree)
    (W:Finset (Place K (CoordinateField K P))):
-   (∑ v∈W,flagPole v.val (coordinate K P) r) ≤ (budget.weightedCost r:ℤ):=by
+   (∑ v∈W,flagPole v.val (coordinate K P) r)≤(budget.weightedCost r:ℤ):=by
  have hz:=budget.zPole W
  have hy:=budget.yzPole W
  have ha:=budget.allPole W
@@ -68,13 +68,13 @@ theorem sum_filteredCut_pole_le (budget:MovingPoleBudget P H G)
  have hflagN:=budget.sum_flagPole_le (⟨a,b,s⟩:FlagDegree) W
  have hmoving:=budget.movingPole W
  calc
-   _ ≤ ∑ v∈W,(flagPole v.val (coordinate K P) C+(k:ℤ)*
+   _≤∑ v∈W,(flagPole v.val (coordinate K P) C+(k:ℤ)*
        (flagPole v.val (coordinate K P) (⟨a,b,s⟩:FlagDegree)+movingPoleTarget P H G v)):=hloc
    _=(∑ v∈W,flagPole v.val (coordinate K P) C)+(k:ℤ)*
        ((∑ v∈W,flagPole v.val (coordinate K P) (⟨a,b,s⟩:FlagDegree))+
          ∑ v∈W,movingPoleTarget P H G v):=by
      simp only [Finset.sum_add_distrib,←Finset.mul_sum]
-   _ ≤ (budget.weightedCost C:ℤ)+(k:ℤ)*
+   _≤(budget.weightedCost C:ℤ)+(k:ℤ)*
        ((budget.weightedCost (⟨a,b,s⟩:FlagDegree):ℤ)+budget.movingCost):=
      add_le_add hflagC (mul_le_mul_of_nonneg_left (add_le_add hflagN hmoving) (Int.natCast_nonneg k))
    _=_:=by push_cast;rfl

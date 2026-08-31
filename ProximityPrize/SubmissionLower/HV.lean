@@ -32,24 +32,24 @@ theorem intDegree_mul {x y:K⟮X⟯} (hx:x≠0) (hy:y≠0):
    intDegree (x*y)=intDegree x+intDegree y:=by
  simp only [intDegree,add_sub,sub_add,sub_sub_eq_add_sub,sub_sub,sub_eq_sub_iff_add_eq_add]
  norm_cast
- rw [←Polynomial.natDegree_mul x.denom_ne_zero y.denom_ne_zero, ←
+ rw [←Polynomial.natDegree_mul x.denom_ne_zero y.denom_ne_zero,←
    Polynomial.natDegree_mul (RatFunc.num_ne_zero (mul_ne_zero hx hy))
      (mul_ne_zero x.denom_ne_zero y.denom_ne_zero),
-   ←Polynomial.natDegree_mul (RatFunc.num_ne_zero hx) (RatFunc.num_ne_zero hy), ←
+   ←Polynomial.natDegree_mul (RatFunc.num_ne_zero hx) (RatFunc.num_ne_zero hy),←
    Polynomial.natDegree_mul (mul_ne_zero (RatFunc.num_ne_zero hx) (RatFunc.num_ne_zero hy))
      (x*y).denom_ne_zero,
    RatFunc.num_denom_mul]
 @[simp]
 theorem intDegree_inv (x:K⟮X⟯):intDegree (x⁻¹)= -intDegree x:=by
- by_cases hx:x=0 <;> simp [hx,eq_neg_iff_add_eq_zero, ←intDegree_mul (inv_ne_zero hx) hx]
+ by_cases hx:x=0 <;> simp [hx,eq_neg_iff_add_eq_zero,←intDegree_mul (inv_ne_zero hx) hx]
 lemma intDegree_div {x y:RatFunc K} (hx:x≠0) (hy:y≠0):
    (x/y).intDegree=x.intDegree-y.intDegree:=by
- rw [div_eq_mul_inv,intDegree_mul,intDegree_inv, ←sub_eq_add_neg] <;> grind
+ rw [div_eq_mul_inv,intDegree_mul,intDegree_inv,←sub_eq_add_neg] <;> grind
 @[simp]
 theorem intDegree_neg (x:K⟮X⟯):intDegree (-x)=intDegree x:=by
  by_cases hx:x=0
  · rw [hx,neg_zero]
- · rw [intDegree,intDegree, ←natDegree_neg x.num]
+ · rw [intDegree,intDegree,←natDegree_neg x.num]
    exact
      natDegree_sub_eq_of_prod_eq (num_ne_zero (neg_ne_zero.mpr hx)) (denom_ne_zero (-x))
        (neg_ne_zero.mpr (num_ne_zero hx)) (denom_ne_zero x) (num_denom_neg x)
@@ -66,14 +66,14 @@ theorem natDegree_num_mul_right_sub_natDegree_denom_mul_left_eq_intDegree {x:K�
    (mul_ne_zero hs x.denom_ne_zero) (num_ne_zero hx) x.denom_ne_zero
  rw [mul_assoc]
 theorem intDegree_add_le {x y:K⟮X⟯} (hy:y≠0) (hxy:x+y≠0):
-   intDegree (x+y) ≤ max (intDegree x) (intDegree y):=by
+   intDegree (x+y)≤max (intDegree x) (intDegree y):=by
  by_cases hx:x=0
  · simp [hx]
- rw [intDegree_add hxy, ←
+ rw [intDegree_add hxy,←
    natDegree_num_mul_right_sub_natDegree_denom_mul_left_eq_intDegree hx y.denom_ne_zero,
-   mul_comm y.denom, ←
+   mul_comm y.denom,←
    natDegree_num_mul_right_sub_natDegree_denom_mul_left_eq_intDegree hy x.denom_ne_zero,
-   le_max_iff,sub_le_sub_iff_right,Int.ofNat_le,sub_le_sub_iff_right,Int.ofNat_le, ←
+   le_max_iff,sub_le_sub_iff_right,Int.ofNat_le,sub_le_sub_iff_right,Int.ofNat_le,←
    le_max_iff,mul_comm y.num]
  exact natDegree_add_le _ _
 end IntDegree

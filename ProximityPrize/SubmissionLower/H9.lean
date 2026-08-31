@@ -7,7 +7,7 @@ variable {k F L Γ:Type*} [Field k] [Field F] [Field L]
  [LinearOrderedCommGroupWithZero Γ]
 local instance:DecidableEq F:=Classical.decEq F
 def ResidueApprox (v:Valuation L Γ) (φ:F →+*L) (κ:k →+*F):Prop:=
- ∀ f:F,v (φ f) ≤ 1 → ∃ c:k,v (φ (f-κ c)) < 1
+ ∀ f:F,v (φ f)≤1 → ∃ c:k,v (φ (f-κ c))<1
 def ConstantPolynomialUnit (v:Valuation L Γ) (φ:F →+*L) (κ:k →+*F)
    (x:L) (w:ℕ):Prop:=
  ∀ c:Fin (w+1) → k,(∃ i,c i≠0) →
@@ -15,10 +15,10 @@ def ConstantPolynomialUnit (v:Valuation L Γ) (φ:F →+*L) (κ:k →+*F)
 private theorem sum_eq_one_of_close {w:ℕ}
    (v:Valuation L Γ) (x:L) (hx:v x=1)
    (b c:Fin (w+1) → L)
-   (hclose:∀ i,v (b i-c i) < 1)
+   (hclose:∀ i,v (b i-c i)<1)
    (hc:v (∑ i,c i*x^(i:ℕ))=1):
    v (∑ i,b i*x^(i:ℕ))=1:=by
- have herr:v (∑ i,(b i-c i)*x^(i:ℕ)) < 1:=by
+ have herr:v (∑ i,(b i-c i)*x^(i:ℕ))<1:=by
    apply v.map_sum_lt (by simp)
    intro i _
    simpa only [map_mul,map_pow,hx,one_pow,mul_one] using hclose i
@@ -36,7 +36,7 @@ theorem valuation_sum_eq_dominant_of_residueApprox {w:ℕ}
    (hres:ResidueApprox v φ κ)
    (hunit:ConstantPolynomialUnit v φ κ x w)
    (a:Fin (w+1) → F) (j:Fin (w+1)) (haj:a j≠0)
-   (hmax:∀ i,v (φ (a i)) ≤ v (φ (a j))):
+   (hmax:∀ i,v (φ (a i))≤v (φ (a j))):
    v (∑ i,φ (a i)*x^(i:ℕ))=v (φ (a j)):=by
  have hφj:φ (a j)≠0:=by
    intro h
@@ -44,7 +44,7 @@ theorem valuation_sum_eq_dominant_of_residueApprox {w:ℕ}
    apply φ.injective
    simpa using h
  have hvj:v (φ (a j))≠0:=(Valuation.ne_zero_iff v).mpr hφj
- have hnorm:∀ i,v (φ (a i/a j)) ≤ 1:=by
+ have hnorm:∀ i,v (φ (a i/a j))≤1:=by
    intro i
    rw [map_div₀,map_div₀]
    exact (div_le_one₀ (zero_lt_iff.mpr hvj)).mpr (hmax i)
@@ -73,7 +73,7 @@ theorem valuation_coefficient_le_sum_of_residueApprox {w:ℕ}
    (hres:ResidueApprox v φ κ)
    (hunit:ConstantPolynomialUnit v φ κ x w)
    (a:Fin (w+1) → F) (i:Fin (w+1)):
-   v (φ (a i)) ≤ v (∑ j,φ (a j)*x^(j:ℕ)):=by
+   v (φ (a i))≤v (∑ j,φ (a j)*x^(j:ℕ)):=by
  classical
  by_cases hai:a i=0
  · simp [hai]

@@ -21,7 +21,7 @@ theorem inertiaDeg_of_not_isPrime (hq:¬ q.IsPrime):q.inertiaDeg R=0:=
  dif_neg hq
 @[deprecated (since:="2026-07-03")] alias inertiaDeg'_of_not_isPrime:=
  inertiaDeg_of_not_isPrime
-theorem inertiaDeg_pos [hq:q.IsPrime] [Module.Finite R S]:0 < q.inertiaDeg R:=by
+theorem inertiaDeg_pos [hq:q.IsPrime] [Module.Finite R S]:0<q.inertiaDeg R:=by
  let:=Localization.AtPrime.algebraOfLiesOver (q.under R) q
  rw [inertiaDeg_def]
  apply Module.finrank_pos
@@ -91,14 +91,14 @@ theorem inertiaDeg_below_dvd [r.LiesOver q]:
 theorem inertiaDeg_above_dvd [r.LiesOver q]:
    r.inertiaDeg S∣r.inertiaDeg R:=by
  use q.inertiaDeg R
- rw [mul_comm, ←inertiaDeg_tower]
+ rw [mul_comm,←inertiaDeg_tower]
 @[deprecated (since:="2026-07-03")] alias inertiaDeg'_above_dvd:=inertiaDeg_above_dvd
 theorem inertiaDeg_below_le [r.IsPrime] [r.LiesOver q] [Module.Finite R T]:
    q.inertiaDeg R ≤ r.inertiaDeg R:=
  Nat.le_of_dvd (r.inertiaDeg_pos R) (q.inertiaDeg_below_dvd r)
 @[deprecated (since:="2026-07-03")] alias inertiaDeg'_below_le:=inertiaDeg_below_le
 theorem inertiaDeg_above_le [r.IsPrime] [r.LiesOver q] [Module.Finite R T]:
-   r.inertiaDeg S ≤ r.inertiaDeg R:=
+   r.inertiaDeg S≤r.inertiaDeg R:=
  Nat.le_of_dvd (r.inertiaDeg_pos R) (q.inertiaDeg_above_dvd r)
 @[deprecated (since:="2026-07-03")] alias inertiaDeg'_above_le:=inertiaDeg_above_le
 variable (R) in

@@ -31,7 +31,7 @@ def totalRank (P:Profile):ℕ:=n*P.localRank
 def nullity (P:Profile):ℕ:=P.coefficients-P.totalRank
 end Profile
 theorem coefficientCount_eq_sum_range_of_weighted_cutoff
-   (D w L s t:ℕ) (ht:t ≤ L+1) (hD:D ≤ w*t):
+   (D w L s t:ℕ) (ht:t≤L+1) (hD:D≤w*t):
    coefficientCount D w L s=
      ∑ i∈Finset.range t,
        ∑ j∈Finset.range (s+1),
@@ -48,7 +48,7 @@ theorem coefficientCount_eq_sum_range_of_weighted_cutoff
    intro i hi
    apply Finset.sum_eq_zero
    intro j hj
-   have hti:t ≤ t+i:=by omega
+   have hti:t≤t+i:=by omega
    have hzero:D-w*(t+i)=0:=
      Nat.sub_eq_zero_of_le (hD.trans (Nat.mul_le_mul_left w hti))
    simp [hzero]
@@ -117,24 +117,24 @@ theorem profileC_values:
    profileC_localRank_exact]
  norm_num [n]
 theorem interpolation_gates:
-     profileA.totalRank < profileA.coefficients∧
-     profileB.totalRank < profileB.coefficients∧
-     profileC.totalRank < profileC.coefficients:=by
+     profileA.totalRank<profileA.coefficients∧
+     profileB.totalRank<profileB.coefficients∧
+     profileC.totalRank<profileC.coefficients:=by
  simp only [Profile.totalRank]
  rw [profileA_coefficients_exact,profileA_localRank_exact,
    profileB_coefficients_exact,profileB_localRank_exact,
    profileC_coefficients_exact,profileC_localRank_exact]
  norm_num [n]
 theorem characteristic_gates:
-   profileA.characteristicCap < prime∧
-     (2*profileA.slopeCap-1)*profileA.seedCap < prime∧
-     profileA.slopeCap < prime∧
-   profileB.characteristicCap < prime∧
-     (2*profileB.slopeCap-1)*profileB.seedCap < prime∧
-     profileB.slopeCap < prime∧
-   profileC.characteristicCap < prime∧
-     (2*profileC.slopeCap-1)*profileC.seedCap < prime∧
-     profileC.slopeCap < prime:=by
+   profileA.characteristicCap<prime∧
+     (2*profileA.slopeCap-1)*profileA.seedCap<prime∧
+     profileA.slopeCap<prime∧
+   profileB.characteristicCap<prime∧
+     (2*profileB.slopeCap-1)*profileB.seedCap<prime∧
+     profileB.slopeCap<prime∧
+   profileC.characteristicCap<prime∧
+     (2*profileC.slopeCap-1)*profileC.seedCap<prime∧
+     profileC.slopeCap<prime:=by
  norm_num [Profile.characteristicCap,Profile.weightedCap,profileA,profileB,
    profileC,agreements,prime]
 theorem meet_caps:

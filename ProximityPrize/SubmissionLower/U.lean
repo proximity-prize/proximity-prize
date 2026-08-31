@@ -102,9 +102,9 @@ theorem factorRegularLedger_projection_decomposition
 theorem sum_factorRegularLedger_le_flag
    {I:Type} [Fintype I] (p:Profile)
    (flag:I → FlagDegree) (cap:FlagDegree)
-   (hz:(∑ i,(flag i).zOnly) ≤ cap.zOnly)
-   (hyz:(∑ i,(flag i).yz) ≤ cap.yz)
-   (hall:(∑ i,(flag i).all) ≤ cap.all):
+   (hz:(∑ i,(flag i).zOnly)≤cap.zOnly)
+   (hyz:(∑ i,(flag i).yz)≤cap.yz)
+   (hall:(∑ i,(flag i).all)≤cap.all):
    (∑ i,p.factorRegularLedger (flag i)) ≤
      p.factorRegularLedger cap:=by
  classical
@@ -120,7 +120,7 @@ theorem sum_factorRegularLedger_le_flag
        (∑ i,(flag i).yz)*p.factorRegularLedger unitYZFlag+
        (∑ i,(flag i).all)*p.factorRegularLedger unitAllFlag:=by
      simp only [Finset.sum_add_distrib,Finset.sum_mul]
-   _ ≤ cap.zOnly*p.factorRegularLedger unitZFlag+
+   _≤cap.zOnly*p.factorRegularLedger unitZFlag+
        cap.yz*p.factorRegularLedger unitYZFlag+
        cap.all*p.factorRegularLedger unitAllFlag:=
      Nat.add_le_add
@@ -133,12 +133,12 @@ noncomputable section
 variable {K:Type} [Field K]
 theorem regularFlag_budgets
    (p:Profile) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
-   (hw:0 < p.w)
+   (hw:0<p.w)
    (hbox:Q∈globalCoefficientBox K p.weightedCap p.w
      p.seedTotalCap p.slopeCap):
-   (∑ F:RegularIndex Q,(regularFlag Q F).zOnly) ≤ p.seedTotalCap∧
-     (∑ F:RegularIndex Q,(regularFlag Q F).yz) ≤ p.yCap∧
-     (∑ F:RegularIndex Q,(regularFlag Q F).all) ≤ p.slopeCap:=by
+   (∑ F:RegularIndex Q,(regularFlag Q F).zOnly)≤p.seedTotalCap∧
+     (∑ F:RegularIndex Q,(regularFlag Q F).yz)≤p.yCap∧
+     (∑ F:RegularIndex Q,(regularFlag Q F).all)≤p.slopeCap:=by
  classical
  have hb:=directFactor_input_budgets Q hQ p.weightedCap p.w
    p.seedTotalCap p.slopeCap hw hbox
@@ -146,34 +146,34 @@ theorem regularFlag_budgets
  exact ⟨hb.2.2,hb.1,hb.2.1⟩
 theorem sum_factor_counts_rectangular_le
    (p:Profile) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
-   (hw:0 < p.w)
+   (hw:0<p.w)
    (hbox:Q∈globalCoefficientBox K p.weightedCap p.w
      p.seedTotalCap p.slopeCap)
    (count:RegularIndex Q → ℕ)
    (hcount:∀ F,count F*p.gap^2 ≤
      p.factorRegularLedger (regularFlag Q F)):
-   (∑ F,count F)*p.gap^2 ≤ p.regularNumerator:=by
+   (∑ F,count F)*p.gap^2≤p.regularNumerator:=by
  have hcaps:=regularFlag_budgets p Q hQ hw hbox
  calc
    (∑ F,count F)*p.gap^2=∑ F,count F*p.gap^2:=by
      rw [Finset.sum_mul]
-   _ ≤ ∑ F,p.factorRegularLedger (regularFlag Q F):=
+   _≤∑ F,p.factorRegularLedger (regularFlag Q F):=
      Finset.sum_le_sum (fun F _↦hcount F)
-   _ ≤ p.factorRegularLedger p.rectangularSurfaceFlag:=
+   _≤p.factorRegularLedger p.rectangularSurfaceFlag:=
      sum_factorRegularLedger_le_flag p (regularFlag Q)
        p.rectangularSurfaceFlag hcaps.1 hcaps.2.1 hcaps.2.2
    _=p.regularNumerator:=rfl
 end
 theorem combined_fixed_scaled_bound
    (p:Profile) (regularCount singularCount:ℕ)
-   (hregular:regularCount*p.gap^2 ≤ p.regularNumerator)
+   (hregular:regularCount*p.gap^2≤p.regularNumerator)
    (hsingular:singularCount*p.gap^2 ≤
      p.retainedSingularContribution):
-   (regularCount+singularCount)*p.gap^2 ≤ p.totalNumerator:=by
+   (regularCount+singularCount)*p.gap^2≤p.totalNumerator:=by
  calc
    (regularCount+singularCount)*p.gap^2=
        regularCount*p.gap^2+singularCount*p.gap^2:=by ring
-   _ ≤ p.regularNumerator+p.retainedSingularContribution:=
+   _≤p.regularNumerator+p.retainedSingularContribution:=
      Nat.add_le_add hregular hsingular
    _=p.totalNumerator:=rfl
 def meetProfile:Profile where
@@ -223,7 +223,7 @@ theorem meet_fixed_cost_exact:
    meet_total_numerator_exact]
  norm_num [Profile.gap,meetProfile]
 theorem meet_fixed_cost_lt_budget:
-   meetProfile.fixedCost < 100000000000000000:=by
+   meetProfile.fixedCost<100000000000000000:=by
  rw [meet_fixed_cost_exact]
  norm_num
 end ProximityPrize.SubmissionLower.RCN276

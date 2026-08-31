@@ -27,15 +27,15 @@ theorem capAt_dot (a b:DegreeVector):
 theorem coordinateMixedDegree_le_geometricPairCost
    (φ:Polynomial K →+*Ω) (A:MvPolynomial (Fin 4) K)
    (hAR:A.degreeOf 2=0) (g:MvPolynomial (Fin 3) Ω) (i:Fin 3):
-   coordinateMixedDegree Ω g (surfaceMap φ A) i ≤ capAt (geometricPairCost A g) i:=by
- have hTY:(surfaceMap φ A).degreeOf (0:Fin 3) ≤ A.degreeOf (1:Fin 4):=
+   coordinateMixedDegree Ω g (surfaceMap φ A) i≤capAt (geometricPairCost A g) i:=by
+ have hTY:(surfaceMap φ A).degreeOf (0:Fin 3)≤A.degreeOf (1:Fin 4):=
    surfaceMap_degreeOf_le φ A (0:Fin 3)
- have hTRle:(surfaceMap φ A).degreeOf (1:Fin 3) ≤ A.degreeOf (2:Fin 4):=
+ have hTRle:(surfaceMap φ A).degreeOf (1:Fin 3)≤A.degreeOf (2:Fin 4):=
    surfaceMap_degreeOf_le φ A (1:Fin 3)
  rw [hAR] at hTRle
  have hTR:(surfaceMap φ A).degreeOf (1:Fin 3)=0:=
    Nat.eq_zero_of_le_zero hTRle
- have hTZ:(surfaceMap φ A).degreeOf (2:Fin 3) ≤ A.degreeOf (3:Fin 4):=
+ have hTZ:(surfaceMap φ A).degreeOf (2:Fin 3)≤A.degreeOf (3:Fin 4):=
    surfaceMap_degreeOf_le φ A (2:Fin 3)
  fin_cases i
  · simpa [coordinateMixedDegree_zero,hTR,capAt,geometricPairCost] using
@@ -50,18 +50,18 @@ theorem coordinateMixedDegree_le_geometricPairCost
 theorem sum_geometricPairCost_le
    (φ:Polynomial K →+*Ω) (hφ:Function.Injective φ)
    (A G:MvPolynomial (Fin 4) K) (hG:G≠0) (i:Fin 3):
-   (∑ g∈surfaceFactors φ G,capAt (geometricPairCost A g) i) ≤ capAt (pairCost A G) i:=by
+   (∑ g∈surfaceFactors φ G,capAt (geometricPairCost A g) i)≤capAt (pairCost A G) i:=by
  have hY:=surfaceFactors_degree_budget φ hφ G hG (0:Fin 3)
  have hR:=surfaceFactors_degree_budget φ hφ G hG (1:Fin 3)
  have hZ:=surfaceFactors_degree_budget φ hφ G hG (2:Fin 3)
  fin_cases i
- · simpa [capAt,geometricPairCost,pairCost,pairYCost, ←Finset.sum_mul] using
+ · simpa [capAt,geometricPairCost,pairCost,pairYCost,←Finset.sum_mul] using
      Nat.mul_le_mul_right (A.degreeOf 3) hR
  · simpa [capAt,geometricPairCost,pairCost,pairRCost,
-     Finset.sum_add_distrib, ←Finset.sum_mul] using
+     Finset.sum_add_distrib,←Finset.sum_mul] using
      Nat.add_le_add (Nat.mul_le_mul_right (A.degreeOf 3) hY)
        (Nat.mul_le_mul_right (A.degreeOf 1) hZ)
- · simpa [capAt,geometricPairCost,pairCost,pairZCost, ←Finset.sum_mul] using
+ · simpa [capAt,geometricPairCost,pairCost,pairZCost,←Finset.sum_mul] using
      Nat.mul_le_mul_right (A.degreeOf 1) hR
 theorem canonical_selectedPoint_surface_evaluation
    (selected:K → Polynomial K) (γ:K) (F:MvPolynomial (Fin 4) K):
@@ -77,7 +77,7 @@ theorem geometric_factor_proper_cut
    (hg:g∈surfaceFactors (polynomialEmbedding K) G):
    ¬ g∣surfaceMap (polynomialEmbedding K) A:=by
  obtain ⟨hgi,hdiv⟩:=surfaceFactors_spec (polynomialEmbedding K) G g hg
- have hpos:0 < G.degreeOf 1+G.degreeOf 2+G.degreeOf 3:=by omega
+ have hpos:0<G.degreeOf 1+G.degreeOf 2+G.degreeOf 3:=by omega
  have hgeo:g∣geometricSurfaceMap K (GenericField K) G:=by
    simpa only [canonical_geometricSurfaceMap] using hdiv
  intro h
@@ -94,15 +94,15 @@ theorem implicit_pair_seed_bound_fixed
    (selected:K → Polynomial K) (Γ:Finset K)
    (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
    (hnodes:nodes.card=n) [CharP K prime]
-   (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
+   (hdegree:∀ γ∈Γ,(selected γ).natDegree≤w)
    (hsolutionA:∀ γ∈Γ,specialization K (selected γ) γ A=0)
    (hsolutionG:∀ γ∈Γ,specialization K (selected γ) γ G=0)
    (hregular:∀ γ∈Γ,
      specialization K (selected γ) γ (MvPolynomial.pderiv (2:Fin 4) G)≠0)
    (hagreement:∀ γ∈Γ,
-     agreements ≤ (nodes.filter (fun i => (selected γ).eval (x i)=u₀ i+γ*u₁ i)).card)
+     agreements≤(nodes.filter (fun i => (selected γ).eval (x i)=u₀ i+γ*u₁ i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Γ w errors):
-   Γ.card*gap ≤ (n-w)*dot liftedAgreement (pairCost A G)+
+   Γ.card*gap≤(n-w)*dot liftedAgreement (pairCost A G)+
      (errors+1)*gap*pairZCost ⟨A,G⟩:=by
  classical
  let φ:=polynomialEmbedding K
@@ -134,7 +134,7 @@ theorem implicit_pair_seed_bound_fixed
    obtain ⟨g,hg,hz⟩:=exists_surfaceFactor_zero φ (polynomialEmbedding_injective K)
      G hG.ne_zero (selectedPoint φ selected γ) (hFzero γ hγ)
    exact Finset.mem_biUnion.mpr ⟨g,hg,Finset.mem_filter.mpr ⟨hγ,hz⟩⟩
- have hcard:Γ.card ≤ ∑ g∈factors,(seedsFor g).card:=
+ have hcard:Γ.card≤∑ g∈factors,(seedsFor g).card:=
    (Finset.card_le_card hcover).trans Finset.card_biUnion_le
  have hsingle (g:MvPolynomial (Fin 3) (GenericField K)) (hg:g∈factors):
      (seedsFor g).card*gap ≤
@@ -142,7 +142,7 @@ theorem implicit_pair_seed_bound_fixed
          capAt liftedAgreement i*capAt (geometricPairCost A g) i)+
          (errors+1)*gap*capAt (geometricPairCost A g) 2:=by
    obtain ⟨hgi,hdiv⟩:=surfaceFactors_spec φ G g hg
-   have hfacdegree (i:Fin 3):g.degreeOf i ≤ G.degreeOf i.succ:=
+   have hfacdegree (i:Fin 3):g.degreeOf i≤G.degreeOf i.succ:=
      (coordinate_degree_le_of_dvd i g (surfaceMap φ G) hdiv
        (surfaceMap_ne_zero φ (polynomialEmbedding_injective K) G hG.ne_zero)).trans
          (surfaceMap_degreeOf_le φ G i)
@@ -180,7 +180,7 @@ theorem implicit_pair_seed_bound_fixed
        (fun i _ => Nat.mul_le_mul_left (capAt liftedAgreement i) (hδ i))))
      (Nat.mul_le_mul_left ((errors+1)*gap) (hδ 2)))
  have hbudget (i:Fin 3):
-     (∑ g∈factors,capAt (geometricPairCost A g) i) ≤ capAt (pairCost A G) i:=
+     (∑ g∈factors,capAt (geometricPairCost A g) i)≤capAt (pairCost A G) i:=
    sum_geometricPairCost_le φ (polynomialEmbedding_injective K) A G hG.ne_zero i
  have hfubini:
      (∑ g∈factors,∑ i:Fin 3,capAt liftedAgreement i*capAt (geometricPairCost A g) i)=
@@ -191,17 +191,17 @@ theorem implicit_pair_seed_bound_fixed
    intro i _
    rw [Finset.mul_sum]
  calc
-   Γ.card*gap ≤ (∑ g∈factors,(seedsFor g).card)*gap:=Nat.mul_le_mul_right gap hcard
+   Γ.card*gap≤(∑ g∈factors,(seedsFor g).card)*gap:=Nat.mul_le_mul_right gap hcard
    _=∑ g∈factors,(seedsFor g).card*gap:=by rw [Finset.sum_mul]
-   _ ≤ ∑ g∈factors,((n-w)*(∑ i:Fin 3,
+   _≤∑ g∈factors,((n-w)*(∑ i:Fin 3,
        capAt liftedAgreement i*capAt (geometricPairCost A g) i)+
          (errors+1)*gap*capAt (geometricPairCost A g) 2):=
      Finset.sum_le_sum (fun g hg => hsingle g hg)
    _=(n-w)*(∑ i:Fin 3,capAt liftedAgreement i*
        (∑ g∈factors,capAt (geometricPairCost A g) i))+
          (errors+1)*gap*(∑ g∈factors,capAt (geometricPairCost A g) 2):=by
-     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,hfubini]
-   _ ≤ (n-w)*
+     rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.mul_sum,hfubini]
+   _≤(n-w)*
        (∑ i:Fin 3,capAt liftedAgreement i*capAt (pairCost A G) i)+
        (errors+1)*gap*capAt (pairCost A G) 2:=
      Nat.add_le_add (Nat.mul_le_mul_left (n-w) (Finset.sum_le_sum

@@ -29,10 +29,10 @@ theorem prime_seed_incidence_of_stratified_residual_cost
    (selected:K → Polynomial K) (Gamma:Finset K)
    (nodes:Finset Iota) (x u0 u1:Iota → K)
    (hinj:Set.InjOn x nodes)
-   (p w a e:ℕ) [CharP Omega p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
+   (p w a e:ℕ) [CharP Omega p] (hw:1≤w) (hchar:w<p)
+   (hwa:w<a) (han:a≤nodes.card)
    (hdegreeSelected:∀ gamma∈Gamma,
-     (selected gamma).natDegree ≤ w)
+     (selected gamma).natDegree≤w)
    (hsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma F=0)
    (hregular:∀ gamma∈Gamma,
@@ -40,10 +40,10 @@ theorem prime_seed_incidence_of_stratified_residual_cost
        (polynomialPoint (phi.comp Polynomial.C) (selected gamma) gamma
          (phi Polynomial.X))
        (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (hpoint:∀ gamma∈Gamma,P ≤ RingHom.ker
+   (hpoint:∀ gamma∈Gamma,P≤RingHom.ker
      (MvPolynomial.aeval (selectedPoint phi selected gamma)).toRingHom)
    (hagreement:∀ gamma∈Gamma,
-     a ≤ (nodes.filter (fun i↦
+     a≤(nodes.filter (fun i↦
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma w e)
    (degreeCost unitCost U V:ℕ)
@@ -53,10 +53,10 @@ theorem prime_seed_incidence_of_stratified_residual_cost
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card ≤
        (w-(identityNodes phi P F nodes x u0 u1 w).card)*degreeCost+
          unitCost)
-   (hdegree:∀ k ≤ w,
-     (nodes.card-k)*(a-w)*(w-k) ≤ U*(a-k))
-   (hunit:∀ k ≤ w,
-     (nodes.card-k)*(a-w) ≤ V*(a-k)):
+   (hdegree:∀ k≤w,
+     (nodes.card-k)*(a-w)*(w-k)≤U*(a-k))
+   (hunit:∀ k≤w,
+     (nodes.card-k)*(a-w)≤V*(a-k)):
    Gamma.card*(a-w) ≤
      U*degreeCost+V*unitCost+
        (e+1)*(a-w)*actualCoordinateDegree Omega P 2:=by
@@ -64,7 +64,7 @@ theorem prime_seed_incidence_of_stratified_residual_cost
  let identities:=identityNodes phi P F nodes x u0 u1 w
  let relation:K → Iota → Prop:=fun gamma i↦
    (selected gamma).eval (x i)=u0 i+gamma*u1 i
- by_cases hcard:identities.card ≤ w
+ by_cases hcard:identities.card≤w
  · have hmain:=stratified_incidence_bound relation Gamma nodes identities
      a w degreeCost unitCost U V
      (identityNodes_subset phi P F nodes x u0 u1 w)
@@ -74,7 +74,7 @@ theorem prime_seed_incidence_of_stratified_residual_cost
        exact hfiber i (by simpa only [identities] using hi))
      (hdegree identities.card hcard) (hunit identities.card hcard)
    exact hmain.trans (Nat.le_add_right _ _)
- · have hc:w < identities.card:=Nat.lt_of_not_ge hcard
+ · have hc:w<identities.card:=Nat.lt_of_not_ge hcard
    have hvalues:∀ (t:{gamma:K//gamma∈Gamma}) i,
        i∈identities →
        (selected t.1).eval (x i)=u0 i+t.1*u1 i:=by
@@ -90,7 +90,7 @@ theorem prime_seed_incidence_of_stratified_residual_cost
        (fun gamma↦selected gamma=P0+Polynomial.C gamma*P1)=
        Gamma:=
      Finset.filter_eq_self.mpr (fun gamma hgamma↦hpencil ⟨gamma,hgamma⟩)
-   have hGamma:Gamma.card ≤ e+1:=by
+   have hGamma:Gamma.card≤e+1:=by
      have h:=hnoPencil P0 P1 h0 h1
      rwa [hfilter] at h
    have hZ:=seed_transcendental_of_many_identities phi P F hF hH
@@ -100,9 +100,9 @@ theorem prime_seed_incidence_of_stratified_residual_cost
    have htail:Gamma.card*(a-w) ≤
        (e+1)*(a-w)*actualCoordinateDegree Omega P 2:=by
      calc
-       Gamma.card*(a-w) ≤ (e+1)*(a-w):=
+       Gamma.card*(a-w)≤(e+1)*(a-w):=
          Nat.mul_le_mul_right _ hGamma
-       _ ≤ (e+1)*(a-w)*actualCoordinateDegree Omega P 2:=by
+       _≤(e+1)*(a-w)*actualCoordinateDegree Omega P 2:=by
          simpa only [Nat.mul_one] using
            Nat.mul_le_mul_left ((e+1)*(a-w)) hdelta
    exact htail.trans (Nat.le_add_left _ _)
@@ -118,9 +118,9 @@ theorem aggregate_component_stratified_incidence
      (componentSeeds Omega G T H S v C).card*gap ≤
        U*degreeCost C+V*unitCost C+
          pencil*gap*zDegree C)
-   (hdegree:(∑ C,degreeCost C) ≤ degreeWhole)
-   (hunit:(∑ C,unitCost C) ≤ unitWhole)
-   (hz:(∑ C,zDegree C) ≤ zBudget):
+   (hdegree:(∑ C,degreeCost C)≤degreeWhole)
+   (hunit:(∑ C,unitCost C)≤unitWhole)
+   (hz:(∑ C,zDegree C)≤zBudget):
    S.card*gap ≤
      U*degreeWhole+V*unitWhole+pencil*gap*zBudget:=by
  classical
@@ -133,7 +133,7 @@ theorem aggregate_component_stratified_incidence
    _=∑ C:RegularComponent Omega G T H,
        (componentSeeds Omega G T H S v C).card*gap:=by
      rw [Finset.sum_mul]
-   _ ≤ ∑ C:RegularComponent Omega G T H,
+   _≤∑ C:RegularComponent Omega G T H,
        (U*degreeCost C+V*unitCost C+pencil*gap*zDegree C):=
      Finset.sum_le_sum (fun C _↦hcomponent C)
    _=U*(∑ C:RegularComponent Omega G T H,degreeCost C)+
@@ -141,7 +141,7 @@ theorem aggregate_component_stratified_incidence
        pencil*gap*
          (∑ C:RegularComponent Omega G T H,zDegree C):=by
      simp only [Finset.sum_add_distrib,Finset.mul_sum]
-   _ ≤ U*degreeWhole+V*unitWhole+pencil*gap*zBudget:=
+   _≤U*degreeWhole+V*unitWhole+pencil*gap*zBudget:=
      Nat.add_le_add
        (Nat.add_le_add (Nat.mul_le_mul_left U hdegree)
          (Nat.mul_le_mul_left V hunit))
@@ -152,10 +152,10 @@ theorem proper_cut_seed_bound_of_stratified_component_budgets
    (selected:K → Polynomial K) (Gamma:Finset K)
    (nodes:Finset Iota) (x u0 u1:Iota → K)
    (hinj:Set.InjOn x nodes)
-   (p w a e:ℕ) [CharP Omega p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
+   (p w a e:ℕ) [CharP Omega p] (hw:1≤w) (hchar:w<p)
+   (hwa:w<a) (han:a≤nodes.card)
    (hdegreeSelected:∀ gamma∈Gamma,
-     (selected gamma).natDegree ≤ w)
+     (selected gamma).natDegree≤w)
    (hsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma F=0)
    (hregular:∀ gamma∈Gamma,
@@ -168,7 +168,7 @@ theorem proper_cut_seed_bound_of_stratified_component_budgets
    (hTpoint:∀ gamma∈Gamma,
      MvPolynomial.eval (selectedPoint phi selected gamma) T=0)
    (hagreement:∀ gamma∈Gamma,
-     a ≤ (nodes.filter (fun i↦
+     a≤(nodes.filter (fun i↦
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma w e)
    (degreeWhole unitWhole zBudget U V:ℕ)
@@ -183,17 +183,17 @@ theorem proper_cut_seed_bound_of_stratified_component_budgets
          (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card ≤
        (w-(identityNodes phi C.1 F nodes x u0 u1 w).card)*
            degreeCost C+unitCost C)
-   (hsumDegree:(∑ C,degreeCost C) ≤ degreeWhole)
-   (hsumUnit:(∑ C,unitCost C) ≤ unitWhole)
+   (hsumDegree:(∑ C,degreeCost C)≤degreeWhole)
+   (hsumUnit:(∑ C,unitCost C)≤unitWhole)
    (hproj:∀ C:RegularComponent Omega G T (regularitySurface phi F),
      ProjectionsFiniteSeparable Omega C.1)
    (hzbudget:
      (∑ C:RegularComponent Omega G T (regularitySurface phi F),
-       actualCoordinateDegree Omega C.1 2) ≤ zBudget)
-   (hdegree:∀ k ≤ w,
-     (nodes.card-k)*(a-w)*(w-k) ≤ U*(a-k))
-   (hunit:∀ k ≤ w,
-     (nodes.card-k)*(a-w) ≤ V*(a-k)):
+       actualCoordinateDegree Omega C.1 2)≤zBudget)
+   (hdegree:∀ k≤w,
+     (nodes.card-k)*(a-w)*(w-k)≤U*(a-k))
+   (hunit:∀ k≤w,
+     (nodes.card-k)*(a-w)≤V*(a-k)):
    Gamma.card*(a-w) ≤
      U*degreeWhole+V*unitWhole+(e+1)*(a-w)*zBudget:=by
  classical

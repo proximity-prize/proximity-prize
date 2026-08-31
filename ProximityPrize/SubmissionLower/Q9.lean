@@ -10,7 +10,7 @@ noncomputable def recost
    {budget:ℕ}
    (C:WeightedGroupedResultantChannel (Base:=Base)
      multiplicity oldCost budget)
-   (hcost:∀ i,newCost i ≤ oldCost i):
+   (hcost:∀ i,newCost i≤oldCost i):
    WeightedGroupedResultantChannel (Base:=Base)
      multiplicity newCost budget where
  resultant:=C.resultant

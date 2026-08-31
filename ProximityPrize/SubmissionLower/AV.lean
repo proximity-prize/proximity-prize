@@ -14,9 +14,9 @@ theorem sum_actualCoordinateDegree_le_original
    (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:∀ i,G∈P i) (hHmem:∀ i,H∈P i)
    (hproper:¬ G∣H)
-   (h1:G.degreeOf (order 1) < p) (h2:G.degreeOf (order 2) < p)
-   (hmixed:originalMixedDegree K order G H < p):
-   (∑ i,actualCoordinateDegree K (P i) (order 0)) ≤ originalMixedDegree K order G H:=by
+   (h1:G.degreeOf (order 1)<p) (h2:G.degreeOf (order 2)<p)
+   (hmixed:originalMixedDegree K order G H<p):
+   (∑ i,actualCoordinateDegree K (P i) (order 0))≤originalMixedDegree K order G H:=by
  classical
  let s:Set I:={i | Transcendental K (coordinate K (P i) (order 0))}
  let D:s → ℕ:=fun i =>
@@ -40,9 +40,9 @@ theorem sum_actualCoordinateDegree_le_original
      · intro i hi
        change ¬ Transcendental K (coordinate K (P i) (order 0)) at hi
        exact dif_neg hi
-   _ ≤ _:=hbound
+   _≤_:=hbound
 theorem weighted_sum_actualCoordinateDegree_le (weight bound:Fin 3 → ℕ)
-   (hbound:∀ j,(∑ i,actualCoordinateDegree K (P i) j) ≤ bound j):
+   (hbound:∀ j,(∑ i,actualCoordinateDegree K (P i) j)≤bound j):
    (∑ i,∑ j,weight j*actualCoordinateDegree K (P i) j) ≤
      ∑ j,weight j*bound j:=by
  rw [Finset.sum_comm]
@@ -69,9 +69,9 @@ theorem sum_actualCoordinateDegree_at_le
    {I:Type} [Fintype I] (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
    (hinj:Function.Injective P) (j:Fin 3) (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:∀ i,G∈P i) (hHmem:∀ i,H∈P i)
-   (hproper:¬ G∣H) (hdegree:∀ k:Fin 3,G.degreeOf k < p)
-   (hmixed:coordinateMixedDegree K G H j < p):
-   (∑ i,actualCoordinateDegree K (P i) j) ≤ coordinateMixedDegree K G H j:=by
+   (hproper:¬ G∣H) (hdegree:∀ k:Fin 3,G.degreeOf k<p)
+   (hmixed:coordinateMixedDegree K G H j<p):
+   (∑ i,actualCoordinateDegree K (P i) j)≤coordinateMixedDegree K G H j:=by
  have h:=sum_actualCoordinateDegree_le_original K P (Equiv.swap 0 j) hinj p G H
    hG hGmem hHmem hproper (hdegree ((Equiv.swap 0 j) 1))
      (hdegree ((Equiv.swap 0 j) 2)) hmixed
@@ -79,9 +79,9 @@ theorem sum_actualCoordinateDegree_at_le
 theorem projectionsFiniteSeparable_of_original_gates
    (P:Ideal (Original K)) [P.IsPrime] (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:G∈P) (hHmem:H∈P) (hproper:¬ G∣H)
-   (hdegree:∀ j:Fin 3,G.degreeOf j < p)
+   (hdegree:∀ j:Fin 3,G.degreeOf j<p)
    (hmixed:∀ j k:Fin 3,j≠k →
-     H.degreeOf j*G.degreeOf k+G.degreeOf j*H.degreeOf k < p):
+     H.degreeOf j*G.degreeOf k+G.degreeOf j*H.degreeOf k<p):
    ProjectionsFiniteSeparable K P:=
  all_transcendental_coordinates_finite_separable K P p G H
    hG hGmem hHmem hproper hdegree hmixed

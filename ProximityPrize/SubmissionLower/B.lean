@@ -38,14 +38,14 @@ structure ResidualStage
  G:Poly3 Omega
  irreducible_G:Irreducible G
  G_dvd_surface:G∣surfaceMap phi F
- y_dependent:0 < G.degreeOf 1
+ y_dependent:0<G.degreeOf 1
  regular_proper:¬ G∣surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F)
  flag_support:RCN095.PolynomialInFlag flag G
- surface_s_weight:wt residualSWeights F ≤ support.s
- surface_ys_weight:wt residualYSWeights F ≤ support.ys
- surface_total_weight:wt residualTotalWeights F ≤ support.total
+ surface_s_weight:wt residualSWeights F≤support.s
+ surface_ys_weight:wt residualYSWeights F≤support.ys
+ surface_total_weight:wt residualTotalWeights F≤support.total
  x_injective:Set.InjOn x nodes
- degree_le:∀ gamma∈Gamma,(selected gamma).natDegree ≤ d
+ degree_le:∀ gamma∈Gamma,(selected gamma).natDegree≤d
  solution:∀ gamma∈Gamma,
    specialization K (selected gamma) gamma F=0
  regular:∀ gamma∈Gamma,
@@ -56,7 +56,7 @@ structure ResidualStage
  on_component:∀ gamma∈Gamma,
    MvPolynomial.eval (selectedPoint phi selected gamma) G=0
  no_large_pencil:NoLargeSelectedPencil selected Gamma d e
- characteristic_bound:d < p
+ characteristic_bound:d<p
 namespace ResidualStage
 variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
 variable {p e:ℕ} [CharP Omega p] {flag:FlagDegree} {d:ℕ}
@@ -89,7 +89,7 @@ theorem regularity_not_mem_componentIdeal
 theorem selected_point_ideal
    (S:ResidualStage phi Gamma x p e flag d support)
    {gamma:K} (hgamma:gamma∈Gamma):
-   S.componentIdeal ≤ RingHom.ker
+   S.componentIdeal≤RingHom.ker
      (MvPolynomial.aeval (selectedPoint phi S.selected gamma)).toRingHom:=by
  change Ideal.span {S.G} ≤
    RingHom.ker
@@ -111,7 +111,7 @@ theorem agrees_on_identities
    (S.solution gamma hgamma) (S.regular gamma hgamma)
    (S.selected_point_ideal hgamma) i hi
 theorem identities_card_le
-   (S:ResidualStage phi Gamma x p e flag d support):S.identities.card ≤ d:=by
+   (S:ResidualStage phi Gamma x p e flag d support):S.identities.card≤d:=by
  let P:=S.componentIdeal
  letI:P.IsPrime:=S.componentIdeal_isPrime
  exact identityNodes_card_le_of_r_dependent_principal_zero_safe
@@ -121,7 +121,7 @@ theorem advance
    (hphi:Function.Injective phi)
    (S:ResidualStage phi Gamma x p e flag d support)
    (hne:S.identities≠∅):
-   0 < S.identities.card∧
+   0<S.identities.card∧
      ∃ Snext:ResidualStage phi Gamma x p e flag
          (d-S.identities.card) support,
        Snext.nodes=S.nodes \ S.identities∧
@@ -135,8 +135,8 @@ theorem advance
  let J:=S.identities
  have hJsub:J ⊆ S.nodes:=identityNodes_subset
    phi P S.F S.nodes x S.u0 S.u1 d
- have hJcard:J.card ≤ d:=S.identities_card_le
- have hJpos:0 < J.card:=Finset.card_pos.mpr
+ have hJcard:J.card≤d:=S.identities_card_le
+ have hJpos:0<J.card:=Finset.card_pos.mpr
    (Finset.nonempty_iff_ne_empty.mpr (by simpa only [J] using hne))
  have hvalues:∀ gamma∈Gamma,∀ i∈J,
      (S.selected gamma).eval (x i)=S.u0 i+gamma*S.u1 i:=by
@@ -240,12 +240,12 @@ theorem advance_card
      (S.agreementFiber gamma).card-S.identities.card=
          (S.agreementFiber gamma \ S.identities).card:=by
        rw [Finset.card_sdiff_of_subset hIdentitySubset]
-     _ ≤ (Snext.agreementFiber gamma).card:=
+     _≤(Snext.agreementFiber gamma).card:=
        Finset.card_le_card hRemainingSubset
 structure TerminalDescendant
    (S:ResidualStage phi Gamma x p e flag d support) where
  degree:ℕ
- degree_le:degree ≤ d
+ degree_le:degree≤d
  stage:ResidualStage phi Gamma x p e flag degree support
  terminal:stage.identities=∅
  nodes_card:stage.nodes.card=S.nodes.card-(d-degree)
@@ -277,14 +277,14 @@ theorem exists_terminal_descendant
          nodes_card:=by simp
          agreement_card:=by simp
        }⟩
-     · have hk:S.identities.card ≤ d:=S.identities_card_le
-       have hkpos:0 < S.identities.card:=Finset.card_pos.mpr
+     · have hk:S.identities.card≤d:=S.identities_card_le
+       have hkpos:0<S.identities.card:=Finset.card_pos.mpr
          (Finset.nonempty_iff_ne_empty.mpr hterminal)
        obtain ⟨Snext,hnodes,hagreements⟩:=
          S.advance_card hphi hterminal
-       have hdegree_lt:d-S.identities.card < d:=by omega
+       have hdegree_lt:d-S.identities.card<d:=by omega
        obtain ⟨Dnext⟩:=ih (d-S.identities.card) hdegree_lt Snext
-       have hDle:Dnext.degree ≤ d-S.identities.card:=
+       have hDle:Dnext.degree≤d-S.identities.card:=
          Dnext.degree_le
        have hdegree_split:d-Dnext.degree=
            S.identities.card+
@@ -316,9 +316,9 @@ theorem exists_terminal_descendant
                  ((d-S.identities.card)-Dnext.degree):=by
              rw [hdegree_split]
              exact (Nat.sub_sub _ _ _).symm
-           _ ≤ (Snext.agreementFiber gamma).card-
+           _≤(Snext.agreementFiber gamma).card-
                  ((d-S.identities.card)-Dnext.degree):=hmono
-           _ ≤ (Dnext.stage.agreementFiber gamma).card:=htail
+           _≤(Dnext.stage.agreementFiber gamma).card:=htail
 end ResidualStage
 end
 end ProximityPrize.SubmissionLower.RCN159

@@ -55,8 +55,8 @@ theorem indexedFixedFactor_grouped_resultant_power_dvd
    (htail:∀ a,indexedFiberTail q hq tail∈
      Ideal.span {indexedFiberSurface q hq surface} ⊔
        indexedFiberRelation component lam mu nu order ht q hq a^multiplicity a)
-   (hPcap:(indexedFiberSurface q hq surface).natDegree ≤ m)
-   (hQcap:(indexedFiberTail q hq tail).natDegree ≤ n)
+   (hPcap:(indexedFiberSurface q hq surface).natDegree≤m)
+   (hQcap:(indexedFiberTail q hq tail).natDegree≤n)
    (hresultant:Polynomial.resultant surface tail m n≠0)
    (hPbar:(indexedFiberSurface q hq surface).map
      (IsLocalRing.residue (FiberCoefficient q hq))≠0):
@@ -113,8 +113,8 @@ theorem indexedFixedFactor_grouped_resultant_power_dvd_of_geometry
    (htail:∀ a,indexedFiberTail q hq tail∈
      Ideal.span {indexedFiberSurface q hq surface} ⊔
        indexedFiberRelation component lam mu nu order ht q hq a^multiplicity a)
-   (hPcap:(indexedFiberSurface q hq surface).natDegree ≤ m)
-   (hQcap:(indexedFiberTail q hq tail).natDegree ≤ n)
+   (hPcap:(indexedFiberSurface q hq surface).natDegree≤m)
+   (hQcap:(indexedFiberTail q hq tail).natDegree≤n)
    (hresultant:Polynomial.resultant surface tail m n≠0)
    (hPbar:(indexedFiberSurface q hq surface).map
      (IsLocalRing.residue (FiberCoefficient q hq))≠0):

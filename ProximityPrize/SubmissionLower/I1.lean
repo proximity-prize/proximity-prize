@@ -11,7 +11,7 @@ theorem coefficient_pole_le_generic_evaluation_of_trdeg_le_one
    (φ:F →+*L)
    (hcompat:∀ c:k,φ (algebraMap k F c)=
      algebraMap Ω L (algebraMap k Ω c))
-   (htrdeg:Algebra.trdeg k F ≤ 1)
+   (htrdeg:Algebra.trdeg k F≤1)
    (x:Ω) (htrans:Transcendental k x)
    (a:Fin (w+1) → F) (i:Fin (w+1)):
    RCN187.poleOrder v (φ (a i)) ≤
@@ -35,7 +35,7 @@ theorem coefficient_pole_le_generic_evaluation_of_trdeg_le_one
        WithZero.log_one]
    rw [hpole]
    exact le_max_left _ _
- · have hone:(1:Cardinal) ≤ Algebra.trdeg k F:=
+ · have hone:(1:Cardinal)≤Algebra.trdeg k F:=
      Cardinal.one_le_iff_ne_zero.mpr hz
    have heq:Algebra.trdeg k F=1:=le_antisymm htrdeg hone
    exact coefficient_pole_le_generic_evaluation v φ hcompat heq x htrans a i

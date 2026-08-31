@@ -20,7 +20,7 @@ theorem degree_degLexDegree:(degLex.degree f).degree=f.totalDegree:=by
    intro b hb
    exact DegLex.monotone_degree (degLex.le_degree hb)
 theorem degLex_totalDegree_monotone (h:degLex.degree f ≼[degLex] degLex.degree g):
-   f.totalDegree ≤ g.totalDegree:=by
+   f.totalDegree≤g.totalDegree:=by
  simp only [←MvPolynomial.degree_degLexDegree]
  exact DegLex.monotone_degree h
 end LinearOrder

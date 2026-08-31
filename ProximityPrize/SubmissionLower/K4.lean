@@ -22,28 +22,28 @@ theorem nodal_dvd_of_eval_eq_zero
    exact hzero i hi
 theorem exists_affine_nodal_residual
    {ι:Type*} (I:Finset ι) (x u0 u1:ι → K)
-   (w:ℕ) (hIw:I.card ≤ w) (hinj:Set.InjOn x I)
-   (gamma:K) (S:Polynomial K) (hS:S.natDegree ≤ w)
+   (w:ℕ) (hIw:I.card≤w) (hinj:Set.InjOn x I)
+   (gamma:K) (S:Polynomial K) (hS:S.natDegree≤w)
    (hvalues:∀ i∈I,S.eval (x i)=u0 i+gamma*u1 i):
    ∃ P0 P1 C:Polynomial K,
-     P0.natDegree ≤ w∧P1.natDegree ≤ w∧
-     C.natDegree ≤ w-I.card∧
+     P0.natDegree≤w∧P1.natDegree≤w∧
+     C.natDegree≤w-I.card∧
      S=P0+Polynomial.C gamma*P1+Lagrange.nodal I x*C:=by
  classical
  letI:DecidableEq ι:=Classical.decEq ι
  let P0:Polynomial K:=Lagrange.interpolate I x u0
  let P1:Polynomial K:=Lagrange.interpolate I x u1
- have hpredw:I.card-1 ≤ w:=(Nat.sub_le I.card 1).trans hIw
- have hP0:P0.natDegree ≤ w:=by
+ have hpredw:I.card-1≤w:=(Nat.sub_le I.card 1).trans hIw
+ have hP0:P0.natDegree≤w:=by
    apply Polynomial.natDegree_le_of_degree_le
    exact (Lagrange.degree_interpolate_le u0 hinj).trans
      (WithBot.coe_le_coe.mpr hpredw)
- have hP1:P1.natDegree ≤ w:=by
+ have hP1:P1.natDegree≤w:=by
    apply Polynomial.natDegree_le_of_degree_le
    exact (Lagrange.degree_interpolate_le u1 hinj).trans
      (WithBot.coe_le_coe.mpr hpredw)
  let D:=S-(P0+Polynomial.C gamma*P1)
- have hDdegree:D.natDegree ≤ w:=by
+ have hDdegree:D.natDegree≤w:=by
    apply (Polynomial.natDegree_sub_le _ _).trans
    exact max_le hS ((Polynomial.natDegree_add_le _ _).trans
      (max_le hP0 ((Polynomial.natDegree_C_mul_le gamma P1).trans hP1)))
@@ -55,7 +55,7 @@ theorem exists_affine_nodal_residual
      Lagrange.eval_interpolate_at_node u1 hinj hi,hvalues i hi]
    ring
  obtain ⟨C,hC⟩:=nodal_dvd_of_eval_eq_zero I x hinj D hDeval
- have hCdegree:C.natDegree ≤ w-I.card:=by
+ have hCdegree:C.natDegree≤w-I.card:=by
    by_cases hC0:C=0
    · simp [hC0]
    · have hdegmul:(Lagrange.nodal I x*C).natDegree=
@@ -136,7 +136,7 @@ theorem exists_basefield_affine_nodal_residual
          (s:=I) (v:=fun i↦coefficients (x i))).natDegree_mul' hC0,
          Lagrange.natDegree_nodal]
      have hmul:
-         (Lagrange.nodal I (fun i↦coefficients (x i))*C).natDegree ≤ w:=by
+         (Lagrange.nodal I (fun i↦coefficients (x i))*C).natDegree≤w:=by
        rw [←hC]
        exact hDdegree
      rw [hdegmul] at hmul

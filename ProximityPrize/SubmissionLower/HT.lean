@@ -32,7 +32,7 @@ instance of_isGalois [IsGalois K L]:IsGaloisGroup Gal(L/K) K L where
 theorem card_eq_finrank [IsGaloisGroup G K L]:Nat.card G=Module.finrank K L:=by
  rcases fintypeOrInfinite G with _ | hG
  · have:FaithfulSMul G L:=faithful K
-   rw [←IntermediateField.finrank_bot', ←fixedPoints_eq_bot G,Nat.card_eq_fintype_card]
+   rw [←IntermediateField.finrank_bot',←fixedPoints_eq_bot G,Nat.card_eq_fintype_card]
    exact (FixedPoints.finrank_eq_card G L).symm
  · rw [Nat.card_eq_zero_of_infinite,eq_comm]
    contrapose! hG
@@ -227,13 +227,13 @@ theorem fixingSubgroup_range_algebraMap [Finite G] (A B C:Type*) (H:Subgroup G)
    have {x}:g • (algebraMap B L) x=(algebraMap B L) x:=by
      rw [IsScalarTower.algebraMap_apply B C L, ←algebraMap.smul',h _ ⟨x,rfl⟩]
    obtain ⟨a,b,_,rfl⟩:=IsFractionRing.div_surjective B x
-   simp only [map_div₀, ←IsScalarTower.algebraMap_apply,smul_div₀',this]
+   simp only [map_div₀,←IsScalarTower.algebraMap_apply,smul_div₀',this]
  · rintro h _ ⟨x,rfl⟩
    apply FaithfulSMul.algebraMap_injective C L
    rw [algebraMap.smul']
    apply h
    use algebraMap B (FractionRing B) x
-   rw [←IsScalarTower.algebraMap_apply, ←IsScalarTower.algebraMap_apply]
+   rw [←IsScalarTower.algebraMap_apply,←IsScalarTower.algebraMap_apply]
 open Pointwise in
 theorem normal_of_isGalois (E:Type*) [Field E] [Algebra K E] [Algebra E L] [IsScalarTower K E L]
    [Finite G] [IsGaloisGroup H E L] [IsGalois K E]:H.Normal:=by
@@ -259,16 +259,16 @@ theorem quotient [Finite G] (N:Subgroup G) [N.Normal] [MulSemiringAction G C]
  faithful.eq_of_smul_eq_smul:=fun {g₁} {g₂}↦Quotient.inductionOn₂' g₁ g₂ fun g₁ g₂ h↦by
    have:FaithfulSMul A C:=FaithfulSMul.trans A B C
    have h':∀ g:G,(∀ x:B,g • x=x) → g∈N:=by
-     simp [←fixingSubgroup_range_algebraMap G A B C N,mem_fixingSubgroup_iff, ←algebraMap.smul',
+     simp [←fixingSubgroup_range_algebraMap G A B C N,mem_fixingSubgroup_iff,←algebraMap.smul',
        (FaithfulSMul.algebraMap_injective B C).eq_iff]
    have {g:G}:Quotient.mk'' g=QuotientGroup.mk' N g:=rfl
-   simp_rw [←inv_smul_eq_iff,this, ←map_inv,smul_smul, ←map_mul,
+   simp_rw [←inv_smul_eq_iff,this,←map_inv,smul_smul,←map_mul,
      QuotientGroup.mk'_apply,MulAction.coe_quotient_smul] at h
    have:=h' _ h
-   rwa [QuotientGroup.eq, ←Subgroup.inv_mem_iff,mul_inv_rev,inv_inv]
+   rwa [QuotientGroup.eq,←Subgroup.inv_mem_iff,mul_inv_rev,inv_inv]
  commutes:=inferInstance
  isInvariant.isInvariant x h:=by
-   simp_rw [←(FaithfulSMul.algebraMap_injective B C).eq_iff, ←IsScalarTower.algebraMap_apply]
+   simp_rw [←(FaithfulSMul.algebraMap_injective B C).eq_iff,←IsScalarTower.algebraMap_apply]
    apply hG.isInvariant.isInvariant (algebraMap B C x)
    intro g
    have:=(FaithfulSMul.algebraMap_injective B C).eq_iff.mpr <| h g
@@ -332,7 +332,7 @@ theorem algebraMap_restrictHom_smul [Finite G] [Finite G'] [MulSemiringAction G 
  simp only [restrictHom,MulEquiv.toMonoidHom_eq_coe,MonoidHom.coe_comp,MonoidHom.coe_coe,
    QuotientGroup.coe_mk',Function.comp_apply]
  rw [algebraMap.smul',algebraMap_quotientMulEquiv_smul, ←IsScalarTower.algebraMap_apply,
-   algebraMap.smul', ←IsScalarTower.algebraMap_apply]
+   algebraMap.smul',←IsScalarTower.algebraMap_apply]
 attribute [local instance] FractionRing.liftAlgebra in
 theorem restrictHom_surjective [Finite G] [Finite G'] [MulSemiringAction G C]
    [IsGaloisGroup G A C] [MulSemiringAction G' B] [IsGaloisGroup G' A B]:
@@ -342,7 +342,7 @@ open Pointwise in
 theorem restrictHom_smul_under [Finite G] [Finite G'] [MulSemiringAction G C]
    [IsGaloisGroup G A C] [MulSemiringAction G' B] [IsGaloisGroup G' A B] (g:G) (I:Ideal C):
    restrictHom G G' A B C g • I.under B=(g • I).under B:=by
- simp [Ideal.ext_iff,Ideal.mem_pointwise_smul_iff_inv_smul_mem, ←map_inv]
+ simp [Ideal.ext_iff,Ideal.mem_pointwise_smul_iff_inv_smul_mem,←map_inv]
 end Domain
 noncomputable section IntermediateField
 variable (N:Subgroup G) [N.Normal] [IsGaloisGroup N F L]
@@ -369,7 +369,7 @@ theorem map_quotientMk' [Finite G] [IsGaloisGroup G K L] (h:E ≤ F):
    isInvariant:=⟨fun x h↦by
      obtain ⟨a,ha⟩:=hE.isInvariant.isInvariant (algebraMap F L x) (by
        rintro ⟨g,hg⟩
-       rw [MulAction.subgroup_smul_def, ←algebraMap.smul']
+       rw [MulAction.subgroup_smul_def,←algebraMap.smul']
        exact congr_arg (algebraMap F L) <| h ⟨g,⟨g,hg,rfl⟩⟩)
      exact ⟨a,FaithfulSMul.algebraMap_injective F L
        (by rw [←IsScalarTower.algebraMap_apply,ha])⟩⟩}

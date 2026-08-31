@@ -332,7 +332,7 @@ def GenericExactPolePolynomial.toGenericSparseBKKWitness
          (CoordinateField Ω C.1) b hb,
        RCN346.poleOrder Ω (CoordinateField Ω C.1) v b) ≤
          (cost C:ℤ))
-   (sum_cost_le:(∑ C:RegularComponent Ω G T H,cost C) ≤ wholeCost):
+   (sum_cost_le:(∑ C:RegularComponent Ω G T H,cost C)≤wholeCost):
    GenericSparseBKKWitness G T H E separator wholeCost hseparator hproj where
  polynomial:=B.polynomial
  support_subset:=B.support_subset

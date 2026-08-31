@@ -126,7 +126,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
      (x:=fun C => coordinate Omega C.1 2) hZ
    change (∑ C:RegularComponent Omega G T H,
      coordinateDegree Omega (CoordinateField Omega C.1)
-       (coordinateOfGate (coordinate Omega C.1 2) (hZ C))) ≤ _
+       (coordinateOfGate (coordinate Omega C.1 2) (hZ C)))≤_
    rw [hsplit]
    calc
      (∑ C:sZ,
@@ -143,7 +143,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
        apply Finset.sum_congr rfl
        intro C _
        rw [hembZ C]
-     _ ≤ _:=hfamilyZ.2
+     _≤_:=hfamilyZ.2
  let sU:={C:RegularComponent Omega G T H//
    Transcendental Omega (affineU Omega C.1 D.lam)}
  have hinjU:Function.Injective (fun C:sU => C.1.1):=by
@@ -204,7 +204,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
      (x:=fun C => affineU Omega C.1 D.lam) D.uGate
    change (∑ C:RegularComponent Omega G T H,
      coordinateDegree Omega (CoordinateField Omega C.1)
-       (coordinateOfGate (affineU Omega C.1 D.lam) (D.uGate C))) ≤ _
+       (coordinateOfGate (affineU Omega C.1 D.lam) (D.uGate C)))≤_
    rw [hsplit]
    calc
      (∑ C:sU,
@@ -221,7 +221,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
        apply Finset.sum_congr rfl
        intro C _
        rw [hembU C]
-     _ ≤ _:=hfamilyU.2
+     _≤_:=hfamilyU.2
  let htV:∀ C:RegularComponent Omega G T H,
      Transcendental Omega
        (flagEvaluation Omega C.1 lam mu nu
@@ -295,7 +295,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
        apply Finset.sum_congr rfl
        intro C _
        rw [hembV C]
-     _ ≤ _:=hfamilyV.2
+     _≤_:=hfamilyV.2
  have hvValue (C:RegularComponent Omega G T H):
      coordinateValue Omega (CoordinateField Omega C.1) (vProj C)=
        affineV Omega C.1 D.mu (D.mu*D.lam):=by
@@ -333,7 +333,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
  · intro C v
    rw [exponentSetPoleWeight_unitAll]
    change _=RCN187.poleOrder v.val _
-   rw [hvValue C, ←D.allValue C]
+   rw [hvValue C,←D.allValue C]
    exact (D.allPole C v).symm
 theorem exists_adaptiveUnitProjectionFamily_of_active_nested
    (p q:FlagDegree)

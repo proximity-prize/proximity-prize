@@ -23,7 +23,7 @@ theorem flagPlaneResultant_ne
    (C:RegularComponent Omega G T H)
    (ht:Transcendental Omega
      (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (order 0))))
-   (hpositive:0 < (planeMap Omega order (flagAlgHom lam mu nu G)).natDegree):
+   (hpositive:0<(planeMap Omega order (flagAlgHom lam mu nu G)).natDegree):
    flagPlaneResultant lam mu nu order G T≠0:=by
  exact RCN362.irreducible_resultant_ne_zero_of_not_dvd
    (planeMap Omega order (flagAlgHom lam mu nu G))
@@ -40,7 +40,7 @@ theorem flagPlaneResultant_z_degree_le
  let tCaps:=flagTrapezoidCaps_flagAlgHom tailFlag T lam mu nu hTsupport
  change (Polynomial.resultant
    (planeMap Omega zOrder (flagAlgHom lam mu nu G))
-   (planeMap Omega zOrder (flagAlgHom lam mu nu T))).natDegree ≤ _
+   (planeMap Omega zOrder (flagAlgHom lam mu nu T))).natDegree≤_
  exact planeMap_trapezoid_resultant_natDegree_le Omega zOrder
    (flagAlgHom lam mu nu G) (flagAlgHom lam mu nu T)
    surfaceFlag.all tailFlag.all (surfaceFlag.yz+surfaceFlag.all)
@@ -57,7 +57,7 @@ theorem flagPlaneResultant_u_degree_le
  let tCaps:=flagTrapezoidCaps_flagAlgHom tailFlag T lam mu nu hTsupport
  change (Polynomial.resultant
    (planeMap Omega uOrder (flagAlgHom lam mu nu G))
-   (planeMap Omega uOrder (flagAlgHom lam mu nu T))).natDegree ≤ _
+   (planeMap Omega uOrder (flagAlgHom lam mu nu T))).natDegree≤_
  exact planeMap_trapezoid_resultant_natDegree_le Omega uOrder
    (flagAlgHom lam mu nu G) (flagAlgHom lam mu nu T)
    surfaceFlag.all tailFlag.all
@@ -76,7 +76,7 @@ theorem flagPlaneResultant_v_degree_le
  let tCaps:=flagTrapezoidCaps_flagAlgHom tailFlag T lam mu nu hTsupport
  change (Polynomial.resultant
    (planeMap Omega vOrder (flagAlgHom lam mu nu G))
-   (planeMap Omega vOrder (flagAlgHom lam mu nu T))).natDegree ≤ _
+   (planeMap Omega vOrder (flagAlgHom lam mu nu T))).natDegree≤_
  exact planeMap_trapezoid_resultant_natDegree_le Omega vOrder
    (flagAlgHom lam mu nu G) (flagAlgHom lam mu nu T)
    (surfaceFlag.yz+surfaceFlag.all) (tailFlag.yz+tailFlag.all)

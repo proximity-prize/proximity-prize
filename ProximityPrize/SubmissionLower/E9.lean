@@ -54,8 +54,8 @@ theorem columnExponent_injective (D w L s:ℕ):
  subst dz
  rfl
 def globalExponents (D w L s:ℕ):Set (Fin 4 →₀ ℕ):=
- {d | d 1+d 2 ≤ L∧d 2 ≤ s∧d 3=0∧
-   d 0+w*d 1+(w-1)*d 2 < D}
+ {d | d 1+d 2≤L∧d 2≤s∧d 3=0∧
+   d 0+w*d 1+(w-1)*d 2<D}
 def globalCoefficientBox (D w L s:ℕ):Submodule K (Poly4 K):=
  MvPolynomial.restrictSupport K (globalExponents D w L s)
 theorem columnMonomial_mem (D w L s:ℕ)
@@ -68,10 +68,10 @@ theorem columnMonomial_mem (D w L s:ℕ)
  have hj:=c.2.1.isLt
  have ht:=c.2.2.1.isLt
  have he:=c.2.2.2.isLt
- have htri:c.1.val+c.2.1.val ≤ L:=by
-   have hminpos:0 < min 1 (L+1-c.1.val-c.2.1.val):=by
+ have htri:c.1.val+c.2.1.val≤L:=by
+   have hminpos:0<min 1 (L+1-c.1.val-c.2.1.val):=by
      omega
-   have hpos:0 < L+1-c.1.val-c.2.1.val:=
+   have hpos:0<L+1-c.1.val-c.2.1.val:=
      hminpos.trans_le (min_le_right _ _)
    omega
  unfold globalExponents
@@ -131,7 +131,7 @@ theorem localMonomial_mem (f j:ℕ):
 def blockEntry (D w L s:ℕ) (x u:K)
    (c:CoefficientIndex D w L s) (r:ℕ):LocalPoly K:=
  ∑ f:Fin (c.1.val+1),
-   if f.val ≤ r then
+   if f.val≤r then
      ((((c.2.2.2.val.choose (r-f.val):ℕ):K)*
        x^(c.2.2.2.val-(r-f.val))*
        ((c.1.val.choose f.val:ℕ):K)*u^(c.1.val-f.val))) •
@@ -155,10 +155,10 @@ theorem blockEntry_mem (D w L s:ℕ) (x u:K)
    have hj:=c.2.1.isLt
    have ht:=c.2.2.1.isLt
    have hfi:=f.isLt
-   have htri:c.1.val+c.2.1.val ≤ L:=by
-     have hminpos:0 < min 1 (L+1-c.1.val-c.2.1.val):=by
+   have htri:c.1.val+c.2.1.val≤L:=by
+     have hminpos:0<min 1 (L+1-c.1.val-c.2.1.val):=by
        omega
-     have hpos:0 < L+1-c.1.val-c.2.1.val:=
+     have hpos:0<L+1-c.1.val-c.2.1.val:=
        hminpos.trans_le (min_le_right _ _)
      omega
    exact ⟨hd0.trans (by omega),by omega,hd1.trans (by omega),hd2⟩
@@ -184,9 +184,9 @@ abbrev LocalTarget (m L s:ℕ):=
  (r:Fin m) → LinearMap.range
    (seedlessBlockJet K (min r.val L) L s (m-r.val))
 theorem localTarget_finrank_le (m L s:ℕ):
-   Module.finrank K (LocalTarget K m L s) ≤ localRankBound m L s:=by
+   Module.finrank K (LocalTarget K m L s)≤localRankBound m L s:=by
  change Module.finrank K ((r:Fin m) → LinearMap.range
-   (seedlessBlockJet K (min r.val L) L s (m-r.val))) ≤ _
+   (seedlessBlockJet K (min r.val L) L s (m-r.val)))≤_
  rw [Module.finrank_pi_fintype]
  unfold localRankBound
  rw [Finset.sum_range]
@@ -220,7 +220,7 @@ theorem exists_nonzero_kernel_array {I:Type*} [Fintype I]
  rw [Module.finrank_fintype_fun_eq_card,coefficient_index_card] at hdim
  have htarget:Module.finrank K (GlobalTarget K I m L s) ≤
      Fintype.card I*localRankBound m L s:=by
-   change Module.finrank K (I → LocalTarget K m L s) ≤ _
+   change Module.finrank K (I → LocalTarget K m L s)≤_
    rw [Module.finrank_pi_fintype]
    calc
      (∑ _i:I,Module.finrank K (LocalTarget K m L s)) ≤
@@ -237,7 +237,7 @@ theorem all_blocks_divisible_of_kernel {I:Type*} [Fintype I]
    ∀ i:I,∀ r:ℕ,slopeDifference K^(m-r)∣
      ((extractBlock K D w L s (nodes i) (received i) r theta):LocalPoly K):=by
  intro i r
- by_cases hr:r < m
+ by_cases hr:r<m
  · have hh:=congrArg
      (fun t:GlobalTarget K I m L s => ((t i ⟨r,hr⟩):LocalPoly K)) hzero
    change contactJet K (m-r)
@@ -374,7 +374,7 @@ theorem exists_frozen_seedless_vanishing_interpolant
        weightedCap w yTotalCap slopeCap∧
      ∀ (P:Polynomial IRSProfile.Field)
        (support:Finset IRSProfile.Index),
-       P.natDegree ≤ w → agreements ≤ support.card →
+       P.natDegree≤w → agreements≤support.card →
        (∀ i∈support,P.eval (IRSProfile.domain i)=received i) →
        RCN319.specialization IRSProfile.Field P 0 Q=0:=by
  classical
@@ -394,7 +394,7 @@ theorem exists_frozen_seedless_vanishing_interpolant
      IRSProfile.Field weightedCap w yTotalCap slopeCap Q P 0
      (by norm_num [weightedCap,multiplicity,agreements,n,errors])
      hlegacy hdegree
-   have hbound:weightedCap ≤ multiplicity*support.card:=by
+   have hbound:weightedCap≤multiplicity*support.card:=by
      rw [weightedCap]
      exact Nat.mul_le_mul_left multiplicity hcard
    exact hdeg.trans_le hbound

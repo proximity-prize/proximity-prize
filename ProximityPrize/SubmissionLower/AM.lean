@@ -45,7 +45,7 @@ theorem RegularComponentWeightedInertiaResultantCertificate.divisor_le
      simp only [PrimeFlagBudgetFamily.weightedCost,
        Nat.mul_add,Finset.sum_add_distrib,Finset.mul_sum,
        Nat.mul_left_comm]
-   _ ≤ secondTailFlag.zOnly*
+   _≤secondTailFlag.zOnly*
          flagMixed surfaceFlag firstTailFlag unitZFlag+
        secondTailFlag.yz*
          flagMixed surfaceFlag firstTailFlag unitYZFlag+

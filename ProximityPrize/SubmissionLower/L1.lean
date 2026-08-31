@@ -9,251 +9,251 @@ open RCN081
 open RCN234
 open RCN156
 noncomputable section
-variable {K : Type*} [Field K]
-abbrev Poly4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
-def reconstructLinear (D w L s : ℕ) :
+variable {K:Type*} [Field K]
+abbrev Poly4 (K:Type*) [Field K]:=MvPolynomial (Fin 4) K
+def reconstructLinear (D w L s:ℕ) :
    (CoefficientIndex D w L s → K) →ₗ[K] Poly4 K where
- toFun := reconstruct K D w L s
+ toFun:=reconstruct K D w L s
  map_add' θ η := by
    classical
    simp [reconstruct,Finset.sum_add_distrib]
- map_smul' a θ := by
+ map_smul' a θ:=by
    classical
    rw [show reconstruct K D w L s (a • θ) =
-       ∑ c : CoefficientIndex D w L s,
-         MvPolynomial.monomial (columnExponent c) (a * θ c) by
+       ∑ c:CoefficientIndex D w L s,
+         MvPolynomial.monomial (columnExponent c) (a*θ c) by
      simp [reconstruct]]
-   change (∑ c : CoefficientIndex D w L s,
-     MvPolynomial.monomial (columnExponent c) (a * θ c)) =
-     a • (∑ c : CoefficientIndex D w L s,
+   change (∑ c:CoefficientIndex D w L s,
+     MvPolynomial.monomial (columnExponent c) (a*θ c)) =
+     a • (∑ c:CoefficientIndex D w L s,
        MvPolynomial.monomial (columnExponent c) (θ c))
    rw [Finset.smul_sum]
    apply Finset.sum_congr rfl
    intro c hc
    rw [MvPolynomial.smul_monomial]
    simp [smul_eq_mul]
-theorem reconstructLinear_injective (D w L s : ℕ) :
-   Function.Injective (reconstructLinear (K := K) D w L s) :=
+theorem reconstructLinear_injective (D w L s:ℕ) :
+   Function.Injective (reconstructLinear (K:=K) D w L s) :=
  reconstruct_injective K D w L s
-def reconstructIntoBox (D w L s : ℕ) :
+def reconstructIntoBox (D w L s:ℕ) :
    (CoefficientIndex D w L s → K) →ₗ[K]
      globalCoefficientBox K D w L s :=
  LinearMap.codRestrict (globalCoefficientBox K D w L s)
-   (reconstructLinear (K := K) D w L s)
+   (reconstructLinear (K:=K) D w L s)
    (reconstruct_mem_globalCoefficientBox K D w L s)
-theorem reconstructIntoBox_injective (D w L s : ℕ) :
-   Function.Injective (reconstructIntoBox (K := K) D w L s) := by
+theorem reconstructIntoBox_injective (D w L s:ℕ) :
+   Function.Injective (reconstructIntoBox (K:=K) D w L s):=by
  intro θ η h
- apply reconstructLinear_injective (K := K) D w L s
+ apply reconstructLinear_injective (K:=K) D w L s
  exact congrArg Subtype.val h
-def columnIndexOfExponent {D w L s : ℕ} (d : Fin 4 →₀ ℕ)
-   (hd : d ∈ globalExponents D w L s) : CoefficientIndex D w L s := by
+def columnIndexOfExponent {D w L s:ℕ} (d:Fin 4 →₀ ℕ)
+   (hd:d ∈ globalExponents D w L s):CoefficientIndex D w L s:=by
  rcases hd with ⟨hL,hs,hD⟩
- have hi : d 1 < L + 1 := by omega
- have hj : d 2 < s + 1 := by omega
- have hz : d 3 < L + 1 - d 1 - d 2 := by omega
- have hx : d 0 < D - w * d 1 - (w - 1) * d 2 := by omega
+ have hi:d 1<L+1:=by omega
+ have hj:d 2<s+1:=by omega
+ have hz:d 3<L+1 - d 1 - d 2:=by omega
+ have hx:d 0<D - w*d 1 - (w - 1)*d 2:=by omega
  exact ⟨⟨d 1,hi⟩,⟨⟨d 2,hj⟩,⟨⟨d 3,hz⟩,⟨d 0,hx⟩⟩⟩⟩
-theorem columnExponent_columnIndexOfExponent {D w L s : ℕ}
-   (d : Fin 4 →₀ ℕ) (hd : d ∈ globalExponents D w L s) :
-   columnExponent (columnIndexOfExponent d hd) = d := by
+theorem columnExponent_columnIndexOfExponent {D w L s:ℕ}
+   (d:Fin 4 →₀ ℕ) (hd:d ∈ globalExponents D w L s) :
+   columnExponent (columnIndexOfExponent d hd)=d:=by
  rcases hd with ⟨hL,hs,hD⟩
  ext i
  fin_cases i <;> simp [columnIndexOfExponent]
-def encodeBox {D w L s : ℕ} (Q : globalCoefficientBox K D w L s) :
+def encodeBox {D w L s:ℕ} (Q:globalCoefficientBox K D w L s) :
    CoefficientIndex D w L s → K :=
  fun c ↦ MvPolynomial.coeff (columnExponent c) Q.1
-theorem reconstruct_encodeBox {D w L s : ℕ}
-   (Q : globalCoefficientBox K D w L s) :
-   reconstruct K D w L s (encodeBox Q) = Q.1 := by
+theorem reconstruct_encodeBox {D w L s:ℕ}
+   (Q:globalCoefficientBox K D w L s) :
+   reconstruct K D w L s (encodeBox Q)=Q.1:=by
  classical
  ext d
- by_cases hd : d ∈ globalExponents D w L s
- · let c := columnIndexOfExponent d hd
-   have hc : columnExponent c = d :=
+ by_cases hd:d ∈ globalExponents D w L s
+ · let c:=columnIndexOfExponent d hd
+   have hc:columnExponent c=d :=
      columnExponent_columnIndexOfExponent d hd
    rw [← hc,reconstruct_coeff]
    rfl
- · have hQ : MvPolynomial.coeff d Q.1 = 0 := by
+ · have hQ:MvPolynomial.coeff d Q.1=0:=by
      by_contra hn
      exact hd (Q.2 (MvPolynomial.mem_support_iff.mpr hn))
-   have hRmem := reconstruct_mem_globalCoefficientBox K D w L s (encodeBox Q)
-   have hR : MvPolynomial.coeff d
-       (reconstruct K D w L s (encodeBox Q)) = 0 := by
+   have hRmem:=reconstruct_mem_globalCoefficientBox K D w L s (encodeBox Q)
+   have hR:MvPolynomial.coeff d
+       (reconstruct K D w L s (encodeBox Q))=0:=by
      by_contra hn
      exact hd (hRmem (MvPolynomial.mem_support_iff.mpr hn))
    rw [hQ,hR]
-theorem reconstructIntoBox_surjective (D w L s : ℕ) :
-   Function.Surjective (reconstructIntoBox (K := K) D w L s) := by
+theorem reconstructIntoBox_surjective (D w L s:ℕ) :
+   Function.Surjective (reconstructIntoBox (K:=K) D w L s):=by
  intro Q
  refine ⟨encodeBox Q,?_⟩
  apply Subtype.ext
  exact reconstruct_encodeBox Q
-def reconstructBoxEquiv (D w L s : ℕ) :
+def reconstructBoxEquiv (D w L s:ℕ) :
    (CoefficientIndex D w L s → K) ≃ₗ[K]
      globalCoefficientBox K D w L s :=
- LinearEquiv.ofBijective (reconstructIntoBox (K := K) D w L s)
-   ⟨reconstructIntoBox_injective (K := K) D w L s,
-     reconstructIntoBox_surjective (K := K) D w L s⟩
-instance globalCoefficientBoxFinite (D w L s : ℕ) :
+ LinearEquiv.ofBijective (reconstructIntoBox (K:=K) D w L s)
+   ⟨reconstructIntoBox_injective (K:=K) D w L s,
+     reconstructIntoBox_surjective (K:=K) D w L s⟩
+instance globalCoefficientBoxFinite (D w L s:ℕ) :
    Module.Finite K (globalCoefficientBox K D w L s) :=
- Module.Finite.of_surjective (reconstructIntoBox (K := K) D w L s)
-   (reconstructIntoBox_surjective (K := K) D w L s)
-theorem globalCoefficientBox_finrank (D w L s : ℕ) :
+ Module.Finite.of_surjective (reconstructIntoBox (K:=K) D w L s)
+   (reconstructIntoBox_surjective (K:=K) D w L s)
+theorem globalCoefficientBox_finrank (D w L s:ℕ) :
    Module.finrank K (globalCoefficientBox K D w L s) =
-     coefficientCount D w L s := by
+     coefficientCount D w L s:=by
  rw [← coefficient_index_card D w L s,
    ← Module.finrank_fintype_fun_eq_card K]
- exact LinearEquiv.finrank_eq (reconstructBoxEquiv (K := K) D w L s).symm
-theorem mem_flagGlobalCoefficientBox_iff (Q : Poly4 K)
-   (D w L s : ℕ) (hD : 0 < D) :
+ exact LinearEquiv.finrank_eq (reconstructBoxEquiv (K:=K) D w L s).symm
+theorem mem_flagGlobalCoefficientBox_iff (Q:Poly4 K)
+   (D w L s:ℕ) (hD:0<D) :
    Q ∈ globalCoefficientBox K D w L s ↔
-     wt residualTotalWeights Q ≤ L ∧
-     wt residualSWeights Q ≤ s ∧
-     wt (contactWeights w) Q ≤ D - 1 := by
+     wt residualTotalWeights Q≤L ∧
+     wt residualSWeights Q≤s ∧
+     wt (contactWeights w) Q≤D - 1:=by
  constructor
  · intro h
    refine ⟨?_,?_,?_⟩
    · apply (weightedTotalDegree_le_iff residualTotalWeights Q L).mpr
      intro d hd
-     have hq := h hd
+     have hq:=h hd
      rw [weight_fin4]
      simp [residualTotalWeights]
      exact hq.1
    · apply (weightedTotalDegree_le_iff residualSWeights Q s).mpr
      intro d hd
-     have hq := h hd
+     have hq:=h hd
      rw [weight_fin4]
      simp [residualSWeights]
      exact hq.2.1
    · apply (weightedTotalDegree_le_iff (contactWeights w) Q (D - 1)).mpr
      intro d hd
      rw [contact_weight]
-     have hq := (h hd).2.2
+     have hq:=(h hd).2.2
      omega
  · rintro ⟨ht,hs,hc⟩ d hd
-   have hdt := (MvPolynomial.le_weightedTotalDegree residualTotalWeights hd).trans ht
-   have hds := (MvPolynomial.le_weightedTotalDegree residualSWeights hd).trans hs
-   have hdc := (MvPolynomial.le_weightedTotalDegree (contactWeights w) hd).trans hc
+   have hdt:=(MvPolynomial.le_weightedTotalDegree residualTotalWeights hd).trans ht
+   have hds:=(MvPolynomial.le_weightedTotalDegree residualSWeights hd).trans hs
+   have hdc:=(MvPolynomial.le_weightedTotalDegree (contactWeights w) hd).trans hc
    rw [weight_fin4] at hdt hds
    rw [contact_weight] at hdc
    simp [residualTotalWeights] at hdt
    simp [residualSWeights] at hds
    exact ⟨hdt,hds,by omega⟩
-theorem residualYS_mul_le_contact_add_slope (Q : Poly4 K)
-   (w : ℕ) (hw : 1 ≤ w) :
-   w * wt residualYSWeights Q ≤
-     wt (contactWeights w) Q + wt residualSWeights Q := by
- by_cases hQ : Q = 0
+theorem residualYS_mul_le_contact_add_slope (Q:Poly4 K)
+   (w:ℕ) (hw:1≤w) :
+   w*wt residualYSWeights Q ≤
+     wt (contactWeights w) Q+wt residualSWeights Q:=by
+ by_cases hQ:Q=0
  · subst Q
    simp [wt,MvPolynomial.weightedTotalDegree]
- obtain ⟨d,hd,heq⟩ := Finset.exists_mem_eq_sup Q.support
+ obtain ⟨d,hd,heq⟩:=Finset.exists_mem_eq_sup Q.support
    (MvPolynomial.support_nonempty.mpr hQ)
    (Finsupp.weight residualYSWeights)
- have hc := MvPolynomial.le_weightedTotalDegree (contactWeights w) hd
- have hs := MvPolynomial.le_weightedTotalDegree residualSWeights hd
- change wt residualYSWeights Q = Finsupp.weight residualYSWeights d at heq
+ have hc:=MvPolynomial.le_weightedTotalDegree (contactWeights w) hd
+ have hs:=MvPolynomial.le_weightedTotalDegree residualSWeights hd
+ change wt residualYSWeights Q=Finsupp.weight residualYSWeights d at heq
  rw [weight_fin4] at heq hs
  rw [contact_weight] at hc
  simp [residualYSWeights] at heq
  simp [residualSWeights] at hs
  simp only [residualYSWeights,residualSWeights]
  rw [heq]
- have hwsub : w - 1 + 1 = w := by omega
- have hwmul : w * d 2 = (w - 1) * d 2 + d 2 := by
+ have hwsub:w - 1+1=w:=by omega
+ have hwmul:w*d 2=(w - 1)*d 2+d 2:=by
    calc
-     w * d 2 = ((w - 1) + 1) * d 2 := by rw [hwsub]
-     _ = (w - 1) * d 2 + d 2 := by ring
+     w*d 2=((w - 1)+1)*d 2:=by rw [hwsub]
+     _=(w - 1)*d 2+d 2:=by ring
  calc
-   w * (d 1 + d 2) ≤
-       (d 0 + w * d 1 + (w - 1) * d 2) + d 2 := by
+   w*(d 1+d 2) ≤
+       (d 0+w*d 1+(w - 1)*d 2)+d 2:=by
      rw [Nat.mul_add,hwmul]
      omega
-   _ ≤ wt (contactWeights w) Q + wt residualSWeights Q :=
+   _≤wt (contactWeights w) Q+wt residualSWeights Q :=
      Nat.add_le_add hc hs
 theorem quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-   (Q H R : Poly4 K) (D w L s contactLower totalLower slopeLower : ℕ)
-   (hQ : Q ≠ 0) (hH : H ≠ 0) (hR : R ≠ 0)
-   (hbox : Q ∈ globalCoefficientBox K D w L s)
-   (heq : Q = H * R)
-   (hcontact : contactLower ≤ wt (contactWeights w) H)
-   (htotal : totalLower ≤ wt residualTotalWeights H)
-   (hslope : slopeLower ≤ wt residualSWeights H) :
+   (Q H R:Poly4 K) (D w L s contactLower totalLower slopeLower:ℕ)
+   (hQ:Q ≠ 0) (hH:H ≠ 0) (hR:R ≠ 0)
+   (hbox:Q ∈ globalCoefficientBox K D w L s)
+   (heq:Q=H*R)
+   (hcontact:contactLower≤wt (contactWeights w) H)
+   (htotal:totalLower≤wt residualTotalWeights H)
+   (hslope:slopeLower≤wt residualSWeights H) :
    R ∈ globalCoefficientBox K (D - contactLower) w
-     (L - totalLower) (s - slopeLower) := by
- have hD : 0 < D := by
+     (L - totalLower) (s - slopeLower):=by
+ have hD:0<D:=by
    rcases MvPolynomial.support_nonempty.mpr hQ with ⟨d,hd⟩
-   have := (hbox hd).2.2
+   have:=(hbox hd).2.2
    omega
- have hc := (mem_flagGlobalCoefficientBox_iff Q D w L s hD).mp hbox
+ have hc:=(mem_flagGlobalCoefficientBox_iff Q D w L s hD).mp hbox
  simp only [wt] at hc hcontact htotal hslope
- have hmulT := weightedTotalDegree_mul residualTotalWeights H R hH hR
- have hmulS := weightedTotalDegree_mul residualSWeights H R hH hR
- have hmulC := weightedTotalDegree_mul (contactWeights w) H R hH hR
+ have hmulT:=weightedTotalDegree_mul residualTotalWeights H R hH hR
+ have hmulS:=weightedTotalDegree_mul residualSWeights H R hH hR
+ have hmulC:=weightedTotalDegree_mul (contactWeights w) H R hH hR
  rw [← heq] at hmulT hmulS hmulC
- have hDq : 0 < D - contactLower := by omega
+ have hDq:0<D - contactLower:=by omega
  apply (mem_flagGlobalCoefficientBox_iff R (D - contactLower) w
    (L - totalLower) (s - slopeLower) hDq).mpr
  simp only [wt]
  omega
 theorem mem_flagGlobalCoefficientBox_of_dvd
-   (F Q : Poly4 K) (D w L s : ℕ)
-   (hQ : Q ≠ 0) (hdiv : F ∣ Q)
-   (hbox : Q ∈ globalCoefficientBox K D w L s) :
-   F ∈ globalCoefficientBox K D w L s := by
- have hD : 0 < D := by
+   (F Q:Poly4 K) (D w L s:ℕ)
+   (hQ:Q ≠ 0) (hdiv:F ∣ Q)
+   (hbox:Q ∈ globalCoefficientBox K D w L s) :
+   F ∈ globalCoefficientBox K D w L s:=by
+ have hD:0<D:=by
    rcases MvPolynomial.support_nonempty.mpr hQ with ⟨d,hd⟩
-   have := (hbox hd).2.2
+   have:=(hbox hd).2.2
    omega
- have hc := (mem_flagGlobalCoefficientBox_iff Q D w L s hD).mp hbox
+ have hc:=(mem_flagGlobalCoefficientBox_iff Q D w L s hD).mp hbox
  apply (mem_flagGlobalCoefficientBox_iff F D w L s hD).mpr
  exact ⟨(weightedTotalDegree_le_of_dvd residualTotalWeights F Q hdiv hQ).trans hc.1,
    (weightedTotalDegree_le_of_dvd residualSWeights F Q hdiv hQ).trans hc.2.1,
    (weightedTotalDegree_le_of_dvd (contactWeights w) F Q hdiv hQ).trans hc.2.2⟩
 section CommonGCD
-local instance : StrongNormalizationMonoid (Poly4 K) :=
+local instance:StrongNormalizationMonoid (Poly4 K) :=
  UniqueFactorizationMonoid.strongNormalizationMonoid
-local instance : NormalizedGCDMonoid (Poly4 K) :=
+local instance:NormalizedGCDMonoid (Poly4 K) :=
  UniqueFactorizationMonoid.toNormalizedGCDMonoid (Poly4 K)
-def commonGCD {D w L s : ℕ}
-   (V : Submodule K (CoefficientIndex D w L s → K))
-   {ι : Type*} [Fintype ι] (b : Module.Basis ι K V) : Poly4 K :=
+def commonGCD {D w L s:ℕ}
+   (V:Submodule K (CoefficientIndex D w L s → K))
+   {ι:Type*} [Fintype ι] (b:Module.Basis ι K V):Poly4 K :=
  Finset.univ.gcd (fun i ↦ reconstruct K D w L s (b i).1)
-theorem commonGCD_dvd_basis {D w L s : ℕ}
-   (V : Submodule K (CoefficientIndex D w L s → K))
-   {ι : Type*} [Fintype ι] (b : Module.Basis ι K V) (i : ι) :
-   commonGCD V b ∣ reconstruct K D w L s (b i).1 := by
+theorem commonGCD_dvd_basis {D w L s:ℕ}
+   (V:Submodule K (CoefficientIndex D w L s → K))
+   {ι:Type*} [Fintype ι] (b:Module.Basis ι K V) (i:ι) :
+   commonGCD V b ∣ reconstruct K D w L s (b i).1:=by
  exact Finset.gcd_dvd (Finset.mem_univ i)
-theorem commonGCD_ne_zero {D w L s : ℕ}
-   (V : Submodule K (CoefficientIndex D w L s → K))
-   {ι : Type*} [Fintype ι] [Nonempty ι] (b : Module.Basis ι K V) :
-   commonGCD V b ≠ 0 := by
+theorem commonGCD_ne_zero {D w L s:ℕ}
+   (V:Submodule K (CoefficientIndex D w L s → K))
+   {ι:Type*} [Fintype ι] [Nonempty ι] (b:Module.Basis ι K V) :
+   commonGCD V b ≠ 0:=by
  rw [commonGCD,Finset.gcd_ne_zero_iff]
- let i : ι := Classical.choice inferInstance
+ let i:ι:=Classical.choice inferInstance
  refine ⟨i,Finset.mem_univ i,?_⟩
  apply reconstruct_ne_zero K D w L s
  intro hi
  apply b.ne_zero i
  exact Subtype.ext hi
-theorem commonGCD_dvd {D w L s : ℕ}
-   (V : Submodule K (CoefficientIndex D w L s → K))
-   {ι : Type*} [Fintype ι] (b : Module.Basis ι K V) (v : V) :
-   commonGCD V b ∣ reconstruct K D w L s v.1 := by
+theorem commonGCD_dvd {D w L s:ℕ}
+   (V:Submodule K (CoefficientIndex D w L s → K))
+   {ι:Type*} [Fintype ι] (b:Module.Basis ι K V) (v:V) :
+   commonGCD V b ∣ reconstruct K D w L s v.1:=by
  rw [← b.sum_repr v]
  simp only [Submodule.coe_sum,Submodule.coe_smul]
  change commonGCD V b ∣
-   reconstructLinear (K := K) D w L s
+   reconstructLinear (K:=K) D w L s
      (∑ i,(b.repr v) i • (b i).1)
  rw [map_sum]
  apply Finset.dvd_sum
  intro i hi
  rw [map_smul,MvPolynomial.smul_eq_C_mul]
  exact dvd_mul_of_dvd_right (commonGCD_dvd_basis V b i) _
-theorem dvd_commonGCD_iff {D w L s : ℕ}
-   (V : Submodule K (CoefficientIndex D w L s → K))
-   {ι : Type*} [Fintype ι] (b : Module.Basis ι K V) (F : Poly4 K) :
+theorem dvd_commonGCD_iff {D w L s:ℕ}
+   (V:Submodule K (CoefficientIndex D w L s → K))
+   {ι:Type*} [Fintype ι] (b:Module.Basis ι K V) (F:Poly4 K) :
    F ∣ commonGCD V b ↔
-     ∀ v : V,F ∣ reconstruct K D w L s v.1 := by
+     ∀ v:V,F ∣ reconstruct K D w L s v.1:=by
  constructor
  · intro hF v
    exact hF.trans (commonGCD_dvd V b v)
@@ -263,113 +263,113 @@ theorem dvd_commonGCD_iff {D w L s : ℕ}
    exact hF (b i)
 end CommonGCD
 section LinearQuotient
-variable {V : Type*} [AddCommGroup V] [Module K V]
-def quotientPolynomial (recon : V →ₗ[K] Poly4 K) (H : Poly4 K)
-   (hdiv : ∀ v,H ∣ recon v) (v : V) : Poly4 K :=
+variable {V:Type*} [AddCommGroup V] [Module K V]
+def quotientPolynomial (recon:V →ₗ[K] Poly4 K) (H:Poly4 K)
+   (hdiv:∀ v,H ∣ recon v) (v:V):Poly4 K :=
  Classical.choose (hdiv v)
 theorem recon_eq_mul_quotientPolynomial
-   (recon : V →ₗ[K] Poly4 K) (H : Poly4 K)
-   (hdiv : ∀ v,H ∣ recon v) (v : V) :
-   recon v = H * quotientPolynomial recon H hdiv v :=
+   (recon:V →ₗ[K] Poly4 K) (H:Poly4 K)
+   (hdiv:∀ v,H ∣ recon v) (v:V) :
+   recon v=H*quotientPolynomial recon H hdiv v :=
  Classical.choose_spec (hdiv v)
-def quotientLinear (recon : V →ₗ[K] Poly4 K) (H : Poly4 K)
-   (hH : H ≠ 0) (hdiv : ∀ v,H ∣ recon v) : V →ₗ[K] Poly4 K where
- toFun := quotientPolynomial recon H hdiv
+def quotientLinear (recon:V →ₗ[K] Poly4 K) (H:Poly4 K)
+   (hH:H ≠ 0) (hdiv:∀ v,H ∣ recon v):V →ₗ[K] Poly4 K where
+ toFun:=quotientPolynomial recon H hdiv
  map_add' v z := by
    apply mul_left_cancel₀ hH
    rw [← recon_eq_mul_quotientPolynomial recon H hdiv (v + z),map_add,
      recon_eq_mul_quotientPolynomial recon H hdiv v,
      recon_eq_mul_quotientPolynomial recon H hdiv z,mul_add]
- map_smul' a v := by
+ map_smul' a v:=by
    apply mul_left_cancel₀ hH
    rw [← recon_eq_mul_quotientPolynomial recon H hdiv (a • v),map_smul,
      recon_eq_mul_quotientPolynomial recon H hdiv v]
    simp only [MvPolynomial.smul_eq_C_mul]
    ac_rfl
 theorem quotientLinear_injective
-   (recon : V →ₗ[K] Poly4 K) (hrecon : Function.Injective recon)
-   (H : Poly4 K) (hH : H ≠ 0) (hdiv : ∀ v,H ∣ recon v) :
-   Function.Injective (quotientLinear recon H hH hdiv) := by
+   (recon:V →ₗ[K] Poly4 K) (hrecon:Function.Injective recon)
+   (H:Poly4 K) (hH:H ≠ 0) (hdiv:∀ v,H ∣ recon v) :
+   Function.Injective (quotientLinear recon H hH hdiv):=by
  intro v z hvz
  apply hrecon
  rw [recon_eq_mul_quotientPolynomial recon H hdiv v,
    recon_eq_mul_quotientPolynomial recon H hdiv z]
- exact congrArg (fun Q : Poly4 K ↦ H * Q) hvz
+ exact congrArg (fun Q:Poly4 K ↦ H*Q) hvz
 theorem finrank_le_quotient_box
-   (recon : V →ₗ[K] Poly4 K) (hrecon : Function.Injective recon)
-   (H : Poly4 K) (hH : H ≠ 0) (hdiv : ∀ v,H ∣ recon v)
-   (W : Submodule K (Poly4 K)) [Module.Finite K W]
-   (hmem : ∀ v,quotientPolynomial recon H hdiv v ∈ W) :
-   Module.finrank K V ≤ Module.finrank K W := by
- let q : V →ₗ[K] W := LinearMap.codRestrict W
+   (recon:V →ₗ[K] Poly4 K) (hrecon:Function.Injective recon)
+   (H:Poly4 K) (hH:H ≠ 0) (hdiv:∀ v,H ∣ recon v)
+   (W:Submodule K (Poly4 K)) [Module.Finite K W]
+   (hmem:∀ v,quotientPolynomial recon H hdiv v ∈ W) :
+   Module.finrank K V≤Module.finrank K W:=by
+ let q:V →ₗ[K] W:=LinearMap.codRestrict W
    (quotientLinear recon H hH hdiv) hmem
- apply LinearMap.finrank_le_finrank_of_injective (f := q)
+ apply LinearMap.finrank_le_finrank_of_injective (f:=q)
  intro v z hvz
  apply quotientLinear_injective recon hrecon H hH hdiv
  exact congrArg Subtype.val hvz
 end LinearQuotient
 section ConstraintKernel
 open RCN119
-variable {I : Type*} [Fintype I]
-abbrev ConstraintKernel (D w L s m : ℕ)
-   (nodes u₀ u₁ : I → K) :=
+variable {I:Type*} [Fintype I]
+abbrev ConstraintKernel (D w L s m:ℕ)
+   (nodes u₀ u₁:I → K) :=
  LinearMap.ker (constraintMap K D w L s m nodes u₀ u₁)
-def kernelReconstructLinear (D w L s m : ℕ)
-   (nodes u₀ u₁ : I → K) :
-   ConstraintKernel (K := K) D w L s m nodes u₀ u₁ →ₗ[K] Poly4 K :=
- (reconstructLinear (K := K) D w L s).comp
-   (ConstraintKernel (K := K) D w L s m nodes u₀ u₁).subtype
-@[simp] theorem kernelReconstructLinear_apply (D w L s m : ℕ)
-   (nodes u₀ u₁ : I → K)
-   (v : ConstraintKernel (K := K) D w L s m nodes u₀ u₁) :
-   kernelReconstructLinear (K := K) D w L s m nodes u₀ u₁ v =
-     reconstruct K D w L s v.1 := rfl
-theorem kernelReconstructLinear_injective (D w L s m : ℕ)
-   (nodes u₀ u₁ : I → K) :
+def kernelReconstructLinear (D w L s m:ℕ)
+   (nodes u₀ u₁:I → K) :
+   ConstraintKernel (K:=K) D w L s m nodes u₀ u₁ →ₗ[K] Poly4 K :=
+ (reconstructLinear (K:=K) D w L s).comp
+   (ConstraintKernel (K:=K) D w L s m nodes u₀ u₁).subtype
+@[simp] theorem kernelReconstructLinear_apply (D w L s m:ℕ)
+   (nodes u₀ u₁:I → K)
+   (v:ConstraintKernel (K:=K) D w L s m nodes u₀ u₁) :
+   kernelReconstructLinear (K:=K) D w L s m nodes u₀ u₁ v =
+     reconstruct K D w L s v.1:=rfl
+theorem kernelReconstructLinear_injective (D w L s m:ℕ)
+   (nodes u₀ u₁:I → K) :
    Function.Injective
-     (kernelReconstructLinear (K := K) D w L s m nodes u₀ u₁) := by
+     (kernelReconstructLinear (K:=K) D w L s m nodes u₀ u₁):=by
  intro v z hvz
  apply Subtype.ext
- apply reconstructLinear_injective (K := K) D w L s
+ apply reconstructLinear_injective (K:=K) D w L s
  exact hvz
-private theorem nat_sub_le_of_add_eq_of_le {R K C B : ℕ}
-   (hsum : R + K = C) (hr : R ≤ B) : C - B ≤ K := by
+private theorem nat_sub_le_of_add_eq_of_le {R K C B:ℕ}
+   (hsum:R+K=C) (hr:R≤B):C - B≤K:=by
  apply Nat.sub_le_of_le_add
  rw [← hsum]
  simpa [Nat.add_comm] using Nat.add_le_add_right hr K
-theorem constraintKernel_finrank_lower_bound (D w L s m : ℕ)
-   (nodes u₀ u₁ : I → K) :
-   coefficientCount D w L s - Fintype.card I * localRankBound m L s ≤
+theorem constraintKernel_finrank_lower_bound (D w L s m:ℕ)
+   (nodes u₀ u₁:I → K) :
+   coefficientCount D w L s - Fintype.card I*localRankBound m L s ≤
      Module.finrank K
-       (ConstraintKernel (K := K) D w L s m nodes u₀ u₁) := by
- let f := constraintMap K D w L s m nodes u₀ u₁
- have hsum := f.finrank_range_add_finrank_ker
- have hrange : Module.finrank K f.range ≤
-     Fintype.card I * localRankBound m L s :=
+       (ConstraintKernel (K:=K) D w L s m nodes u₀ u₁):=by
+ let f:=constraintMap K D w L s m nodes u₀ u₁
+ have hsum:=f.finrank_range_add_finrank_ker
+ have hrange:Module.finrank K f.range ≤
+     Fintype.card I*localRankBound m L s :=
    f.range.finrank_le.trans (globalTarget_finrank_le K m L s)
- have hdom : Module.finrank K (CoefficientIndex D w L s → K) =
-     coefficientCount D w L s := by
+ have hdom:Module.finrank K (CoefficientIndex D w L s → K) =
+     coefficientCount D w L s:=by
    rw [Module.finrank_fintype_fun_eq_card K,coefficient_index_card]
  dsimp [f] at hsum hrange
  rw [hdom] at hsum
  dsimp [ConstraintKernel] at hsum ⊢
  exact nat_sub_le_of_add_eq_of_le hsum hrange
 theorem common_divisor_dimension_obstruction
-   (D w L s m Dq Lq sq : ℕ) (nodes u₀ u₁ : I → K)
-   (H : Poly4 K) (hH : H ≠ 0)
-   (hdiv : ∀ v : ConstraintKernel (K := K) D w L s m nodes u₀ u₁,
-     H ∣ kernelReconstructLinear (K := K) D w L s m nodes u₀ u₁ v)
-   (hqbox : ∀ v : ConstraintKernel (K := K) D w L s m nodes u₀ u₁,
+   (D w L s m Dq Lq sq:ℕ) (nodes u₀ u₁:I → K)
+   (H:Poly4 K) (hH:H ≠ 0)
+   (hdiv:∀ v:ConstraintKernel (K:=K) D w L s m nodes u₀ u₁,
+     H ∣ kernelReconstructLinear (K:=K) D w L s m nodes u₀ u₁ v)
+   (hqbox:∀ v:ConstraintKernel (K:=K) D w L s m nodes u₀ u₁,
      quotientPolynomial
-       (kernelReconstructLinear (K := K) D w L s m nodes u₀ u₁)
+       (kernelReconstructLinear (K:=K) D w L s m nodes u₀ u₁)
        H hdiv v ∈ globalCoefficientBox K Dq w Lq sq) :
-   coefficientCount D w L s - Fintype.card I * localRankBound m L s ≤
-     coefficientCount Dq w Lq sq := by
- have hlo := constraintKernel_finrank_lower_bound
-   (K := K) D w L s m nodes u₀ u₁
- have hhi := finrank_le_quotient_box
-   (kernelReconstructLinear (K := K) D w L s m nodes u₀ u₁)
-   (kernelReconstructLinear_injective (K := K) D w L s m nodes u₀ u₁)
+   coefficientCount D w L s - Fintype.card I*localRankBound m L s ≤
+     coefficientCount Dq w Lq sq:=by
+ have hlo:=constraintKernel_finrank_lower_bound
+   (K:=K) D w L s m nodes u₀ u₁
+ have hhi:=finrank_le_quotient_box
+   (kernelReconstructLinear (K:=K) D w L s m nodes u₀ u₁)
+   (kernelReconstructLinear_injective (K:=K) D w L s m nodes u₀ u₁)
    H hH hdiv (globalCoefficientBox K Dq w Lq sq) hqbox
  rw [globalCoefficientBox_finrank] at hhi
  exact hlo.trans hhi
@@ -381,30 +381,30 @@ open RCN302
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 theorem profileA_localRank_exact :
-   localRankBound 41 1003041 12 = 8671143936 := by
+   localRankBound 41 1003041 12=8671143936:=by
  decide
 theorem profileB_localRank_exact :
-   localRankBound 81 1242 25 = 79112293 := by
+   localRankBound 81 1242 25=79112293:=by
  decide
 theorem profileB_smallCoefficient_exact :
-   coefficientCount 14746212 131071 1 25 = 58722707 := by
+   coefficientCount 14746212 131071 1 25=58722707:=by
  decide
 theorem coefficientCount_mono_D_s
-   {D D' w L s s' : ℕ} (hD : D ≤ D') (hs : s ≤ s') :
-   coefficientCount D w L s ≤ coefficientCount D' w L s' := by
+   {D D' w L s s':ℕ} (hD:D≤D') (hs : s ≤ s') :
+   coefficientCount D w L s≤coefficientCount D' w L s':=by
  unfold coefficientCount
  apply Finset.sum_le_sum
  intro i hi
  calc
-   (∑ j ∈ Finset.range (s + 1),
-     (L + 1 - i - j) * (D - w * i - (w - 1) * j)) ≤
-     ∑ j ∈ Finset.range (s + 1),
-       (L + 1 - i - j) * (D' - w * i - (w - 1) * j) := by
+   (∑ j ∈ Finset.range (s+1),
+     (L+1 - i - j)*(D - w*i - (w - 1)*j)) ≤
+     ∑ j ∈ Finset.range (s+1),
+       (L+1 - i - j)*(D' - w * i - (w - 1) * j) := by
          apply Finset.sum_le_sum
          intro j hj
          gcongr
-   _ ≤ ∑ j ∈ Finset.range (s' + 1),
-       (L + 1 - i - j) * (D' - w * i - (w - 1) * j) :=
+   _ ≤ ∑ j ∈ Finset.range (s'+1),
+       (L+1 - i - j)*(D' - w * i - (w - 1) * j) :=
      Finset.sum_le_sum_of_subset_of_nonneg
        (Finset.range_mono (Nat.succ_le_succ hs)) (by simp)
 theorem profileA_full_nullity_exact :
@@ -426,8 +426,8 @@ theorem profileA_dimension_strata (r : ℕ) (hr : r ≤ 12) :
        (1003041 - 55) (12 - r) := by
  rw [profileA_full_nullity_exact]
  have hmono := coefficientCount_mono_D_s
-   (D := 7464132 - (55 * 131071 - r)) (D' := 255239)
-   (w := 131071) (L := 1002986) (s := 12 - r) (s' := 12)
+   (D := 7464132 - (55 * 131071 - r)) (D':=255239)
+   (w:=131071) (L:=1002986) (s:=12 - r) (s' := 12)
    (by omega) (by omega)
  rw [profileA_quotient_cap_exact] at hmono
  norm_num at hmono ⊢
@@ -691,8 +691,8 @@ theorem profileA_ys_dimension_strata (r : ℕ) (hr : r ≤ 12) :
        (84439 - 56) (12 - r) := by
  rw [profileA_full_nullity_exact]
  have hmono := Numeric6733.coefficientCount_mono_D_s
-   (D := 7645764 - (56 * 131071 - r)) (D' := 305800)
-   (w := 131071) (L := 84383) (s := 12 - r) (s' := 12)
+   (D := 7645764 - (56 * 131071 - r)) (D':=305800)
+   (w:=131071) (L:=84383) (s:=12 - r) (s' := 12)
    (by omega) (by omega)
  rw [profileA_ys_quotient_cap_exact] at hmono
  norm_num at hmono ⊢

@@ -12,7 +12,7 @@ theorem exists_specialized_monic_reducer
    ∃ M:Polynomial R,
      M.Monic∧
      M∈Ideal.span {P} ⊔ coefficientMaxIdeal (R:=R)∧
-     M.natDegree ≤ P.natDegree:=by
+     M.natDegree≤P.natDegree:=by
  let k:=IsLocalRing.ResidueField R
  let q:R →+*k:=IsLocalRing.residue R
  let Pbar:Polynomial k:=P.map q

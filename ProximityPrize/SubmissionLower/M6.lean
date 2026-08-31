@@ -35,7 +35,7 @@ theorem eliminated_not_mem_nonpoint
      (scalarPolynomialMap K E Q) (scalarPolynomialMap K E U)
      (algebraMap (RatFunc K) E (rationalVariable K))∈D)
    (hH:scalarPolynomialMap K E H∉D) (hU:scalarPolynomialMap K E U∉D)
-   (hbelow:D.comap (scalarPolynomialMap K E) ≤ C.1):
+   (hbelow:D.comap (scalarPolynomialMap K E)≤C.1):
    eliminatedCut k (fun j↦scalarPolynomialMap K E (B j))
      (scalarPolynomialMap K E Q) (scalarPolynomialMap K E U)
      (algebraMap (RatFunc K) E (rationalVariable K))∉D:=by
@@ -48,7 +48,7 @@ theorem eliminated_not_mem_nonpoint
    rw [map_filteredCut]
    exact original_mem_of_eliminated_mem D k (fun j↦mu (B j))
      (mu H) (mu G) (mu Q) (mu U) t hN hA hU
- have hcut:cutIdeal K F (filteredCut k B H G) ≤ D.comap mu:=by
+ have hcut:cutIdeal K F (filteredCut k B H G)≤D.comap mu:=by
    apply Ideal.span_le.mpr
    intro A hA
    rcases (by simpa only [Set.mem_insert_iff,Set.mem_singleton_iff] using hA) with rfl | rfl
@@ -210,10 +210,10 @@ theorem sum_moving_degrees_le
    (p q r:FlagDegree) (hFp:PolynomialInFlag p F)
    (hNq:PolynomialInFlag q (fiberEquation (E:=E) H G Q U))
    (hAr:PolynomialInFlag r (fiberCut (E:=E) k B Q U))
-   (c:ℕ) [CharP E c] (hdeg:p.zOnly+p.yz+p.all < c)
-   (hmix:2*(p.zOnly+p.yz+p.all)*(q.zOnly+q.yz+q.all) < c):
+   (c:ℕ) [CharP E c] (hdeg:p.zOnly+p.yz+p.all<c)
+   (hmix:2*(p.zOnly+p.yz+p.all)*(q.zOnly+q.yz+q.all)<c):
    (∑ C:RegularComponent K F (filteredCut k B H G) H,
-     Module.finrank (RatFunc K) (CoordinateField K C.1)) ≤ flagMixed p q r:=by
+     Module.finrank (RatFunc K) (CoordinateField K C.1))≤flagMixed p q r:=by
  classical
  let mu:=scalarPolynomialMap K E
  let N:=fiberEquation (E:=E) H G Q U

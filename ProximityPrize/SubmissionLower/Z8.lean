@@ -30,9 +30,9 @@ theorem class_total (a b s k:ℕ):
  congr 1 <;> simp only [center,direction,unitYZFlag,
    add_zOnly,add_yz,add_all,nsmul_zOnly,nsmul_yz,nsmul_all] <;> ring
 theorem support_data (a b s:ℕ) (F:MvPolynomial (Fin 4) K)
-   (hR:F.degreeOf 2 ≤ s+2)
-   (hYR:wt ![0,1,1,0] F ≤ b+s+3)
-   (hAll:wt ![0,1,1,1] F ≤ a+b+s+3):
+   (hR:F.degreeOf 2≤s+2)
+   (hYR:wt ![0,1,1,0] F≤b+s+3)
+   (hAll:wt ![0,1,1,1] F≤a+b+s+3):
    ResidualSupportData (support a b s) F:=by
  refine ⟨?_,hYR,hAll⟩
  have hw:residualSWeights=Pi.single (2:Fin 4) 1:=by
@@ -50,10 +50,10 @@ theorem sharp_flag_eq (a b s d:ℕ):
    nsmul_zOnly,nsmul_yz,nsmul_all] <;> ring
 theorem low_agreement_in_center (φ:Polynomial K →+*Ω)
    (a b s:ℕ) (F:MvPolynomial (Fin 4) K)
-   (hR:F.degreeOf 2 ≤ s+2)
-   (hYR:wt ![0,1,1,0] F ≤ b+s+3)
-   (hAll:wt ![0,1,1,1] F ≤ a+b+s+3)
-   (d:ℕ) (hd:d ≤ 1) (x u0 u1:K):
+   (hR:F.degreeOf 2≤s+2)
+   (hYR:wt ![0,1,1,0] F≤b+s+3)
+   (hAll:wt ![0,1,1,1] F≤a+b+s+3)
+   (d:ℕ) (hd:d≤1) (x u0 u1:K):
    PolynomialInFlag (center a b s) (agreementPolynomial φ F d x u0 u1):=by
  have hh:=surfaceMap_agreement_in_sharp_flag
    (P:=support a b s) (by dsimp [support];omega) φ
@@ -68,9 +68,9 @@ theorem low_agreement_in_center (φ:Polynomial K →+*Ω)
  · simpa [center,InFlag,direction,unitYZFlag] using h
 theorem exists_actual_agreement_certificate (φ:Polynomial K →+*Ω)
    (a b s:ℕ) (F:MvPolynomial (Fin 4) K)
-   (hR:F.degreeOf 2 ≤ s+2)
-   (hYR:wt ![0,1,1,0] F ≤ b+s+3)
-   (hAll:wt ![0,1,1,1] F ≤ a+b+s+3)
+   (hR:F.degreeOf 2≤s+2)
+   (hYR:wt ![0,1,1,0] F≤b+s+3)
+   (hAll:wt ![0,1,1,1] F≤a+b+s+3)
    (d:ℕ) (x u0 u1:K):
    ∃ (B:Fin (d-1+1) → MvPolynomial (Fin 3) Ω)
      (c:Fin (d-1+1) → FlagDegree),
@@ -79,9 +79,9 @@ theorem exists_actual_agreement_certificate (φ:Polynomial K →+*Ω)
      (∀ j,PolynomialInFlag (c j) (B j))∧
      (∀ j,c j+(d-1-j.val) • (⟨a,b+1,s+1⟩:FlagDegree)+
        j.val • (⟨a,b,s+3⟩:FlagDegree)=
-         center a b s+(d-1) • direction a b s)∧d-1 ≤ d:=by
+         center a b s+(d-1) • direction a b s)∧d-1≤d:=by
  classical
- by_cases hd:2 ≤ d
+ by_cases hd:2≤d
  · let coeffs:ℕ → K:=fun j => (j.factorial:K)⁻¹
    let B0:=fun j => surfaceMap φ (agreementCoefficients F d coeffs x u0 u1 j)
    refine ⟨(fun j => B0 j.val),(fun j => coefficientFlag a (b+1) (s+2) d j.val),?_,?_,?_,Nat.sub_le _ _⟩
@@ -113,7 +113,7 @@ theorem exists_actual_agreement_certificate (φ:Polynomial K →+*Ω)
      have:=j.isLt
      omega
    · intro j
-     have hj:j.val < d:=by have:=j.isLt;omega
+     have hj:j.val<d:=by have:=j.isLt;omega
      have h:=coefficientFlag_add_baseMonomial a (b+1) (s+2) d j.val
        (by omega) (by omega) hj
      rw [(shifted_flags a b s).1,(shifted_flags a b s).2.1,

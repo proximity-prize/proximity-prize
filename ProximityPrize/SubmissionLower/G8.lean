@@ -22,12 +22,12 @@ theorem actualPointPlace_injective:
    (FunctionField.ringOfIntegers.algebraMap_injective K L)
    (IsFractionRing.injective A L)
 theorem actual_model_value_le_one (φ:A →ₐ[K] K) (a:A):
-   (actualPointPlace K A L φ).valuation L (algebraMap A L a) ≤ 1:=
+   (actualPointPlace K A L φ).valuation L (algebraMap A L a)≤1:=
  RCN015.model_value_le_one
    (FunctionField.ringOfIntegers.algebraMap_injective K L)
    (IsFractionRing.injective A L) φ a
 theorem actual_model_value_lt_one_iff (φ:A →ₐ[K] K) (a:A):
-   (actualPointPlace K A L φ).valuation L (algebraMap A L a) < 1 ↔ φ a=0:=
+   (actualPointPlace K A L φ).valuation L (algebraMap A L a)<1 ↔ φ a=0:=
  RCN015.model_value_lt_one_iff
    (FunctionField.ringOfIntegers.algebraMap_injective K L)
    (IsFractionRing.injective A L) φ a

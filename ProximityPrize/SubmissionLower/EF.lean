@@ -43,7 +43,7 @@ theorem coefficient_mem_of_freshPoint_mem
    (hreg:specialization L P γ
      (MvPolynomial.pderiv (2:Fin 4) (MvPolynomial.map (algebraMap k L) F))≠0)
    (hv:∀ i,freshPoint P γ i∈E)
-   (p w:ℕ) [CharP L p] (hw:w < p) (hP:P.natDegree ≤ w) (j:ℕ):
+   (p w:ℕ) [CharP L p] (hw:w<p) (hP:P.natDegree≤w) (j:ℕ):
    algebraMap L (RatFunc L) (P.coeff j)∈E:=by
  apply solution_coeff_mem_of_regular_point E.toSubfield (algebraMap k L)
    (algebraMap L (RatFunc L)) _ F P γ RatFunc.X hsolution
@@ -56,14 +56,14 @@ theorem coefficient_mem_jetField
    (hsolution:specialization L P γ (MvPolynomial.map (algebraMap k L) F)=0)
    (hreg:specialization L P γ
      (MvPolynomial.pderiv (2:Fin 4) (MvPolynomial.map (algebraMap k L) F))≠0)
-   (p w:ℕ) [CharP L p] (hw:w < p) (hP:P.natDegree ≤ w) (j:ℕ):
+   (p w:ℕ) [CharP L p] (hw:w<p) (hP:P.natDegree≤w) (j:ℕ):
    algebraMap L (RatFunc L) (P.coeff j)∈jetField (k:=k) P γ:=by
  apply coefficient_mem_of_freshPoint_mem (jetField (k:=k) P γ)
    F P γ hsolution hreg _ p w hw hP j
  intro i
  exact IntermediateField.subset_adjoin k _ ⟨i,rfl⟩
 theorem jetField_le_coefficientField (P:Polynomial L) (γ:L):
-   jetField (k:=k) P γ ≤ coefficientField (k:=k) P γ:=by
+   jetField (k:=k) P γ≤coefficientField (k:=k) P γ:=by
  let E:=coefficientField (k:=k) P γ
  have hX:(RatFunc.X:RatFunc L)∈E:=
    IntermediateField.subset_adjoin k _ (Or.inl rfl)
@@ -88,8 +88,8 @@ theorem coefficientField_le_jetField
    (hsolution:specialization L P γ (MvPolynomial.map (algebraMap k L) F)=0)
    (hreg:specialization L P γ
      (MvPolynomial.pderiv (2:Fin 4) (MvPolynomial.map (algebraMap k L) F))≠0)
-   (p w:ℕ) [CharP L p] (hw:w < p) (hP:P.natDegree ≤ w):
-   coefficientField (k:=k) P γ ≤ jetField (k:=k) P γ:=by
+   (p w:ℕ) [CharP L p] (hw:w<p) (hP:P.natDegree≤w):
+   coefficientField (k:=k) P γ≤jetField (k:=k) P γ:=by
  apply IntermediateField.adjoin_le_iff.mpr
  intro x hx
  rcases hx with rfl | hx
@@ -103,7 +103,7 @@ theorem fresh_jetField_eq_coefficientField
    (hsolution:specialization L P γ (MvPolynomial.map (algebraMap k L) F)=0)
    (hreg:specialization L P γ
      (MvPolynomial.pderiv (2:Fin 4) (MvPolynomial.map (algebraMap k L) F))≠0)
-   (p w:ℕ) [CharP L p] (hw:w < p) (hP:P.natDegree ≤ w):
+   (p w:ℕ) [CharP L p] (hw:w<p) (hP:P.natDegree≤w):
    jetField (k:=k) P γ=coefficientField (k:=k) P γ:=
  le_antisymm (jetField_le_coefficientField P γ)
    (coefficientField_le_jetField F P γ hsolution hreg p w hw hP)

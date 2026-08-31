@@ -11,7 +11,7 @@ theorem Ideal.eq_span_singleton_of_mem_of_notMem_sq_of_notMem_prime_ne {P:Ideal 
  classical
  by_cases hP0:P=⊥
  · subst hP0
-   rwa [eq_comm,span_singleton_eq_bot, ←mem_bot]
+   rwa [eq_comm,span_singleton_eq_bot,←mem_bot]
  have hspan0:span {x}≠⊥:=mt Ideal.span_singleton_eq_bot.mp (hxP2 <| · ▸ zero_mem _)
  rw [←associated_iff_eq,associated_iff_normalizedFactors_eq_normalizedFactors hP0 hspan0]
  refine Multiset.ext' fun Q↦?_
@@ -80,7 +80,7 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A:Type*} [CommRin
  replace hM:=hf.mem_toFinset.2 hM
  have:∀ a∈I,∀ b∈I',∃ c,algebraMap R _ c=a*b:=by
    intro a ha b hb;have hi:=hinv.le
-   obtain ⟨c, -,hc⟩:=hi (Submodule.mul_mem_mul ha hb)
+   obtain ⟨c,-,hc⟩:=hi (Submodule.mul_mem_mul ha hb)
    exact ⟨c,hc⟩
  have hmem:a M*v∈IsLocalization.coeSubmodule A M:=by
    obtain ⟨c,hc⟩:=this _ (ha M hM) v hv
@@ -92,7 +92,7 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A:Type*} [CommRin
  · refine hm M hM ?_
    obtain ⟨c,hc:algebraMap R A c=a M*b M⟩:=this _ (ha M hM) _ (hb M hM)
    rw [←hc] at hmem ⊢
-   rw [Algebra.smul_def, ←map_mul] at hmem
+   rw [Algebra.smul_def,←map_mul] at hmem
    obtain ⟨d,hdM,he⟩:=hmem
    rw [IsLocalization.injective _ hS he] at hdM
    exact Submodule.mem_map_of_mem <|
@@ -132,7 +132,7 @@ variable [IsDedekindDomain Sₚ]
 theorem IsLocalization.OverPrime.mem_normalizedFactors_of_isPrime [IsDomain S]
    {P:Ideal Sₚ} (hP:IsPrime P) (hP0:P≠⊥):
    P∈normalizedFactors (Ideal.map (algebraMap R Sₚ) p):=by
- have non_zero_div:Algebra.algebraMapSubmonoid S p.primeCompl ≤ S⁰:=
+ have non_zero_div:Algebra.algebraMapSubmonoid S p.primeCompl≤S⁰:=
    map_le_nonZeroDivisors_of_injective _ (FaithfulSMul.algebraMap_injective _ _)
      p.primeCompl_le_nonZeroDivisors
  letI:Algebra (Localization.AtPrime p) Sₚ:=localizationAlgebra p.primeCompl S

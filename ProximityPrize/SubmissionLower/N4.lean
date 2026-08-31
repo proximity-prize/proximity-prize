@@ -45,7 +45,7 @@ def monomialRemainder (d:Fin 3 →₀ ℕ):Poly K →ₗ[K] Poly K where
    · simp [MvPolynomial.coeff_modMonomial_of_not_le _ he]
  map_smul' c f:=by
    ext e
-   by_cases he:d ≤ e
+   by_cases he:d≤e
    · simp [MvPolynomial.coeff_modMonomial_of_le _ he]
    · simp [MvPolynomial.coeff_modMonomial_of_not_le _ he]
 def contactJet (h:ℕ):Poly K →ₗ[K] Poly K:=
@@ -69,10 +69,10 @@ theorem contactJet_mul_slopeDifference (h:ℕ) (q:Poly K):
  (contactJet_eq_zero_iff K h _).2 ⟨q,rfl⟩
 theorem contactJet_eq_zero_iff_coeff (h:ℕ) (f:Poly K):
    contactJet K h f=0 ↔
-     ∀ d:Fin 3 →₀ ℕ,d 0 < h → MvPolynomial.coeff d (shiftPlus K f)=0:=by
+     ∀ d:Fin 3 →₀ ℕ,d 0<h → MvPolynomial.coeff d (shiftPlus K f)=0:=by
  constructor
  · intro hf d hd
-   have hnot:¬ Finsupp.single (0:Fin 3) h ≤ d:=by
+   have hnot:¬ Finsupp.single (0:Fin 3) h≤d:=by
      intro hle
      have hh:=hle 0
      simp only [Finsupp.single_eq_same] at hh
@@ -81,9 +81,9 @@ theorem contactJet_eq_zero_iff_coeff (h:ℕ) (f:Poly K):
    simpa [contactJet_apply,MvPolynomial.coeff_modMonomial_of_not_le _ hnot] using hh
  · intro hf
    ext d
-   by_cases hle:Finsupp.single (0:Fin 3) h ≤ d
+   by_cases hle:Finsupp.single (0:Fin 3) h≤d
    · simp [contactJet_apply,MvPolynomial.coeff_modMonomial_of_le _ hle]
-   · have hd:d 0 < h:=by
+   · have hd:d 0<h:=by
        by_contra hnot
        apply hle
        intro i
@@ -94,12 +94,12 @@ theorem contactJet_eq_zero_iff_coeff (h:ℕ) (f:Poly K):
        · simp [Finsupp.single_eq_of_ne hi]
      simp [contactJet_apply,MvPolynomial.coeff_modMonomial_of_not_le _ hle,hf d hd]
 def boxExponents (M L s:ℕ):Set (Fin 3 →₀ ℕ):=
- {d | d 0 ≤ M∧d 0+d 2 ≤ L∧d 1 ≤ s}
+ {d | d 0≤M∧d 0+d 2≤L∧d 1≤s}
 def coefficientBox (M L s:ℕ):Submodule K (Poly K):=
  MvPolynomial.restrictSupport K (boxExponents M L s)
 theorem mem_coefficientBox_iff (M L s:ℕ) (f:Poly K):
    f∈coefficientBox K M L s ↔
-     ∀ d∈f.support,d 0 ≤ M∧d 0+d 2 ≤ L∧d 1 ≤ s:=by
+     ∀ d∈f.support,d 0≤M∧d 0+d 2≤L∧d 1≤s:=by
  rfl
 theorem coefficientBox_mul
    {M L s M' L' s':ℕ} {f g:Poly K}

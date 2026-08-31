@@ -51,7 +51,7 @@ theorem support_firstMap_subset (φ:Polynomial K →+*A)
  exact Finset.mem_image.mpr ⟨d,hd,heq.symm⟩
 theorem firstMap_degreeOf_le (φ:Polynomial K →+*A)
    (F:MvPolynomial (Fin 3) K) (i:Fin 2):
-   (firstMap K φ F).degreeOf i ≤ F.degreeOf i.succ:=by
+   (firstMap K φ F).degreeOf i≤F.degreeOf i.succ:=by
  classical
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro e he
@@ -62,10 +62,10 @@ theorem rationalMap_eq_firstMap (order:Fin 3 ≃ Fin 3) (F:Original K):
    rationalMap K order F=firstMap K (algebraMap (Polynomial K) (RatFunc K))
      (MvPolynomial.rename order.symm F):=rfl
 theorem rationalMap_degreeOf_le (order:Fin 3 ≃ Fin 3) (F:Original K) (i:Fin 2):
-   (rationalMap K order F).degreeOf i ≤ F.degreeOf (order i.succ):=by
+   (rationalMap K order F).degreeOf i≤F.degreeOf (order i.succ):=by
  rw [rationalMap_eq_firstMap]
  calc
-   _ ≤ (MvPolynomial.rename order.symm F).degreeOf i.succ:=
+   _≤(MvPolynomial.rename order.symm F).degreeOf i.succ:=
      firstMap_degreeOf_le K _ _ i
    _=F.degreeOf (order i.succ):=by
      simpa only [Equiv.symm_apply_apply] using
@@ -80,7 +80,7 @@ theorem bivariateEquiv_natDegree (f:MvPolynomial (Fin 2) A):
  rw [Polynomial.natDegree_map_eq_of_injective (MvPolynomial.uniqueAlgEquiv A (Fin 1)).injective]
  exact MvPolynomial.natDegree_finSuccEquiv f
 theorem uniqueAlgEquiv_natDegree_le (f:MvPolynomial (Fin 1) A):
-   (MvPolynomial.uniqueAlgEquiv A (Fin 1) f).natDegree ≤ f.degreeOf 0:=by
+   (MvPolynomial.uniqueAlgEquiv A (Fin 1) f).natDegree≤f.degreeOf 0:=by
  classical
  apply Polynomial.natDegree_le_iff_coeff_eq_zero.mpr
  intro n hn
@@ -92,7 +92,7 @@ theorem uniqueAlgEquiv_natDegree_le (f:MvPolynomial (Fin 1) A):
  simp only [hdefault,Finsupp.single_eq_same] at hd
  omega
 theorem bivariateEquiv_degreeX_le (f:MvPolynomial (Fin 2) A):
-   Polynomial.Bivariate.degreeX (bivariateEquiv A f) ≤ f.degreeOf 1:=by
+   Polynomial.Bivariate.degreeX (bivariateEquiv A f)≤f.degreeOf 1:=by
  classical
  unfold Polynomial.Bivariate.degreeX
  apply Finset.sup_le
@@ -104,12 +104,12 @@ theorem bivariateEquiv_degreeX_le (f:MvPolynomial (Fin 2) A):
    (MvPolynomial.degreeOf_coeff_finSuccEquiv f (0:Fin 1) j)
 end NestedDegrees
 theorem planeMap_natDegree_le (order:Fin 3 ≃ Fin 3) (F:Original K):
-   (planeMap K order F).natDegree ≤ F.degreeOf (order 1):=by
- change (bivariateEquiv (RatFunc K) (rationalMap K order F)).natDegree ≤ _
+   (planeMap K order F).natDegree≤F.degreeOf (order 1):=by
+ change (bivariateEquiv (RatFunc K) (rationalMap K order F)).natDegree≤_
  rw [bivariateEquiv_natDegree]
  exact rationalMap_degreeOf_le K order F (0:Fin 2)
 theorem planeMap_degreeX_le (order:Fin 3 ≃ Fin 3) (F:Original K):
-   Polynomial.Bivariate.degreeX (planeMap K order F) ≤ F.degreeOf (order 2):=by
+   Polynomial.Bivariate.degreeX (planeMap K order F)≤F.degreeOf (order 2):=by
  exact (bivariateEquiv_degreeX_le (RatFunc K) (rationalMap K order F)).trans
    (rationalMap_degreeOf_le K order F (1:Fin 2))
 theorem planeMap_resultant_natDegree_le (order:Fin 3 ≃ Fin 3) (G H:Original K):
@@ -122,11 +122,11 @@ theorem planeMap_resultant_natDegree_le (order:Fin 3 ≃ Fin 3) (G H:Original K)
        (Nat.mul_le_mul (planeMap_natDegree_le K order H) (planeMap_degreeX_le K order G))
        (Nat.mul_le_mul (planeMap_natDegree_le K order G) (planeMap_degreeX_le K order H)))
 theorem original_characteristic_gates (order:Fin 3 ≃ Fin 3) (G H:Original K) (p:ℕ)
-   (houter:G.degreeOf (order 1) < p)
+   (houter:G.degreeOf (order 1)<p)
    (hmixed:H.degreeOf (order 1)*G.degreeOf (order 2)+
-     G.degreeOf (order 1)*H.degreeOf (order 2) < p):
-   (planeMap K order G).natDegree < p∧
-     (Polynomial.resultant (planeMap K order G) (planeMap K order H)).natDegree < p:=
+     G.degreeOf (order 1)*H.degreeOf (order 2)<p):
+   (planeMap K order G).natDegree<p∧
+     (Polynomial.resultant (planeMap K order G) (planeMap K order H)).natDegree<p:=
  ⟨(planeMap_natDegree_le K order G).trans_lt houter,
    (planeMap_resultant_natDegree_le K order G H).trans_lt hmixed⟩
 end

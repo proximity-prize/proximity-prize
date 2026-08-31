@@ -8,17 +8,17 @@ variable {Ms:ι → Type*} [∀ i,AddCommGroup (Ms i)] [∀ i,Module R (Ms i)]
 variable {N:Type*} [AddCommGroup N] [Module R N]
 variable {Ns:ι → Type*} [∀ i,AddCommGroup (Ns i)] [∀ i,Module R (Ns i)]
 def piQuotientLift [Fintype ι] [DecidableEq ι] (p:∀ i,Submodule R (Ms i)) (q:Submodule R N)
-   (f:∀ i,Ms i →ₗ[R] N) (hf:∀ i,p i ≤ q.comap (f i)):(∀ i,Ms i ⧸ p i) →ₗ[R] N ⧸ q:=
+   (f:∀ i,Ms i →ₗ[R] N) (hf:∀ i,p i≤q.comap (f i)):(∀ i,Ms i ⧸ p i) →ₗ[R] N ⧸ q:=
  lsum R (fun i => Ms i ⧸ p i) R fun i => (p i).mapQ q (f i) (hf i)
 @[simp]
 theorem piQuotientLift_mk [Fintype ι] [DecidableEq ι] (p:∀ i,Submodule R (Ms i))
-   (q:Submodule R N) (f:∀ i,Ms i →ₗ[R] N) (hf:∀ i,p i ≤ q.comap (f i)) (x:∀ i,Ms i):
+   (q:Submodule R N) (f:∀ i,Ms i →ₗ[R] N) (hf:∀ i,p i≤q.comap (f i)) (x:∀ i,Ms i):
    (piQuotientLift p q f hf fun i => Quotient.mk (x i))=Quotient.mk (lsum _ _ R f x):=by
- rw [piQuotientLift,lsum_apply,LinearMap.sum_apply, ←mkQ_apply,lsum_apply,LinearMap.sum_apply,_root_.map_sum]
+ rw [piQuotientLift,lsum_apply,LinearMap.sum_apply,←mkQ_apply,lsum_apply,LinearMap.sum_apply,_root_.map_sum]
  simp only [coe_proj,mapQ_apply,mkQ_apply,comp_apply]
 @[simp]
 theorem piQuotientLift_single [Fintype ι] [DecidableEq ι] (p:∀ i,Submodule R (Ms i))
-   (q:Submodule R N) (f:∀ i,Ms i →ₗ[R] N) (hf:∀ i,p i ≤ q.comap (f i)) (i)
+   (q:Submodule R N) (f:∀ i,Ms i →ₗ[R] N) (hf:∀ i,p i≤q.comap (f i)) (i)
    (x:Ms i ⧸ p i):piQuotientLift p q f hf (Pi.single i x)=mapQ _ _ (f i) (hf i) x:=by
  simp_rw [piQuotientLift,lsum_apply,LinearMap.sum_apply,comp_apply,proj_apply]
  rw [Finset.sum_eq_single i]
@@ -29,14 +29,14 @@ theorem piQuotientLift_single [Fintype ι] [DecidableEq ι] (p:∀ i,Submodule R
    have:=Finset.mem_univ i
    contradiction
 def quotientPiLift (p:∀ i,Submodule R (Ms i)) (f:∀ i,Ms i →ₗ[R] Ns i)
-   (hf:∀ i,p i ≤ ker (f i)):(∀ i,Ms i) ⧸ pi Set.univ p →ₗ[R] ∀ i,Ns i:=
+   (hf:∀ i,p i≤ker (f i)):(∀ i,Ms i) ⧸ pi Set.univ p →ₗ[R] ∀ i,Ns i:=
  (pi Set.univ p).liftQ (LinearMap.pi fun i => (f i).comp (proj i)) fun x hx =>
    mem_ker.mpr <| by
      ext i
      simpa using hf i (mem_pi.mp hx i (Set.mem_univ i))
 @[simp]
 theorem quotientPiLift_mk (p:∀ i,Submodule R (Ms i)) (f:∀ i,Ms i →ₗ[R] Ns i)
-   (hf:∀ i,p i ≤ ker (f i)) (x:∀ i,Ms i):
+   (hf:∀ i,p i≤ker (f i)) (x:∀ i,Ms i):
    quotientPiLift p f hf (Quotient.mk x)=fun i => f i (x i):=
  rfl
 namespace quotientPi_aux
@@ -61,7 +61,7 @@ theorem left_inv:Function.LeftInverse (invFun p) (toFun p):=fun x =>
      lsum_single,id_apply]
 theorem right_inv:Function.RightInverse (invFun p) (toFun p):=by
  dsimp only [toFun,invFun]
- rw [Function.rightInverse_iff_comp, ←coe_comp, ←@id_coe R]
+ rw [Function.rightInverse_iff_comp,←coe_comp,←@id_coe R]
  congr
  refine pi_ext fun i x↦?_
  induction x using Submodule.Quotient.induction_on with | _ x'

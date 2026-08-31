@@ -18,7 +18,7 @@ def baseMonomial (F:Poly4 K) (k j:ℕ) (P:Poly4 K):Poly4 K:=
 def baseStep (F:Poly4 K) (n:ℕ) (P:Poly4 K):Poly4 K:=
  polyH K F*baseDerivation F P-
    (2*n+1:ℕ)*P*baseDerivation F (polyH K F)
-theorem baseStep_monomial (F P:Poly4 K) (n j:ℕ) (hj:j ≤ n+1):
+theorem baseStep_monomial (F P:Poly4 K) (n j:ℕ) (hj:j≤n+1):
    baseStep F n (baseMonomial F (n+1) j P)=
      baseMonomial F (n+2) j (sameContribution F n j P)+
      baseMonomial F (n+2) (j-1) (downContribution F j P)+
@@ -43,7 +43,7 @@ theorem baseStep_monomial (F P:Poly4 K) (n j:ℕ) (hj:j ≤ n+1):
        leibniz_product,Derivation.leibniz_pow,nsmul_eq_mul]
      simp only [Nat.cast_add,Nat.cast_mul,Nat.cast_ofNat,Nat.cast_one,pow_succ]
      ring
-   · have hjn:j+1 ≤ n:=by omega
+   · have hjn:j+1≤n:=by omega
      obtain ⟨u,hu⟩:=Nat.exists_eq_add_of_le hjn
      subst n
      have e₁:j+1+u+1-(j+1)=u+1:=by omega
@@ -62,7 +62,7 @@ def coefficientStep (F:Poly4 K) (n:ℕ) (C:ℕ → Poly4 K) (j:ℕ):Poly4 K:=
 def baseCoefficients (F:Poly4 K):ℕ → ℕ → Poly4 K
  | 0,j => if j=1 then 1 else 0
  | n+1,j => coefficientStep F n (baseCoefficients F n) j
-theorem baseCoefficients_zero (F:Poly4 K) (n j:ℕ) (hj:n+1 < j):
+theorem baseCoefficients_zero (F:Poly4 K) (n j:ℕ) (hj:n+1<j):
    baseCoefficients F n j=0:=by
  induction n generalizing j with
  | zero => simp [baseCoefficients,show j≠1 by omega]
@@ -74,7 +74,7 @@ theorem baseStep_sum (F:Poly4 K) (n:ℕ) (s:Finset ℕ) (P:ℕ → Poly4 K):
    baseStep F n (∑ j∈s,P j)=∑ j∈s,baseStep F n (P j):=by
  simp only [baseStep,map_sum,Finset.mul_sum,Finset.sum_mul,Finset.sum_sub_distrib]
 theorem coefficientStep_represents (F:Poly4 K) (n:ℕ) (C:ℕ → Poly4 K)
-   (hC:∀ j,n+1 < j → C j=0):
+   (hC:∀ j,n+1<j → C j=0):
    baseStep F n (∑ j∈Finset.range (n+2),baseMonomial F (n+1) j (C j))=
      ∑ j∈Finset.range (n+3),baseMonomial F (n+2) j (coefficientStep F n C j):=by
  let a j:=baseMonomial F (n+2) j (sameContribution F n j (C j))

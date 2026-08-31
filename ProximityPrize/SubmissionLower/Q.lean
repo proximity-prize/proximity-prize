@@ -8,8 +8,8 @@ open scoped BigOperators
 noncomputable section
 variable (K:Type*) [Field K]
 theorem coefficientBox_mono {M L s M' L' s':ℕ}
-   (hM:M ≤ M') (hL:L ≤ L') (hs:s ≤ s'):
-   coefficientBox K M L s ≤ coefficientBox K M' L' s':=by
+   (hM:M ≤ M') (hL:L≤L') (hs:s ≤ s'):
+   coefficientBox K M L s≤coefficientBox K M' L' s':=by
  apply MvPolynomial.restrictSupport_mono
  intro d hd
  exact ⟨hd.1.trans hM,hd.2.1.trans hL,hd.2.2.trans hs⟩
@@ -197,7 +197,7 @@ theorem full_contactRankBound_eq (r m L s:ℕ):
    have hzero':min r L+1-(r+1)=0:=by omega
    simp only [Nat.min_eq_left h,contactRankBound,blockKernelLowerBound,
      hzero,hzero',Finset.range_zero,Finset.sum_empty,mul_zero,Nat.sub_zero]
- · have h':m-r ≤ r+1:=by omega
+ · have h':m-r≤r+1:=by omega
    rw [Nat.min_eq_right h']
 abbrev LocalTarget (m L s:ℕ):=
  (r:Fin m) → LinearMap.range

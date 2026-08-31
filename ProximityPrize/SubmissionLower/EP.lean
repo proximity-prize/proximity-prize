@@ -24,7 +24,7 @@ theorem grouped_resultant_power_dvd_of_primary_pieces_modMax
      (algebraMap (Polynomial Base) (LocalBase primeIdeal)))
    (hQmap:Q=Q₀.map
      (algebraMap (Polynomial Base) (LocalBase primeIdeal)))
-   (hPcap:P.natDegree ≤ m) (hQcap:Q.natDegree ≤ n)
+   (hPcap:P.natDegree≤m) (hQcap:Q.natDegree≤n)
    (hresultant:Polynomial.resultant P₀ Q₀ m n≠0)
    (C:PrimaryPiecesCertificate P Q multiplicity)
    [Module.Finite (LocalBase primeIdeal)
@@ -75,7 +75,7 @@ theorem grouped_resultant_power_dvd_of_primary_pieces_of_surface_mod_ne_zero
      (algebraMap (Polynomial Base) (LocalBase primeIdeal)))
    (hQmap:Q=Q₀.map
      (algebraMap (Polynomial Base) (LocalBase primeIdeal)))
-   (hPcap:P.natDegree ≤ m) (hQcap:Q.natDegree ≤ n)
+   (hPcap:P.natDegree≤m) (hQcap:Q.natDegree≤n)
    (hresultant:Polynomial.resultant P₀ Q₀ m n≠0)
    (hPbar:P.map (IsLocalRing.residue (LocalBase primeIdeal))≠0)
    (C:PrimaryPiecesCertificate P Q multiplicity)
@@ -85,7 +85,7 @@ theorem grouped_resultant_power_dvd_of_primary_pieces_of_surface_mod_ne_zero
      Polynomial.resultant P₀ Q₀ m n:=by
  obtain ⟨M,hMMonic,hMmem,hMdegreeP⟩:=
    exists_specialized_monic_reducer P hPbar
- have hspan:Ideal.span {P} ≤ intersectionIdeal P Q:=by
+ have hspan:Ideal.span {P}≤intersectionIdeal P Q:=by
    rw [Ideal.span_le]
    intro x hx
    rw [Set.mem_singleton_iff] at hx

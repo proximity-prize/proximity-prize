@@ -85,7 +85,7 @@ theorem exists_smul_of_under_eq [Finite G] [SMulCommClass G A B]
      hPQ,Q.mem_comap,ha,hQ.prod_mem_iff]
    exact ⟨1,Finset.mem_univ 1,(one_smul G b).symm ▸ hb⟩
  obtain ⟨g, -,hg⟩:=this P Q hPQ
- obtain ⟨g', -,hg'⟩:=this Q (g • P) ((P.under_smul A g).trans hPQ).symm
+ obtain ⟨g',-,hg'⟩:=this Q (g • P) ((P.under_smul A g).trans hPQ).symm
  exact ⟨g,le_antisymm hg (smul_eq_of_le_smul (hg.trans hg') ▸ hg')⟩
 theorem orbit_eq_primesOver [Finite G] [SMulCommClass G A B] (P:Ideal A) (Q:Ideal B)
    [hP:Q.LiesOver P] [hQ:Q.IsPrime]:MulAction.orbit G Q=P.primesOver B:=by
@@ -116,7 +116,7 @@ private theorem fixed_of_fixed1_aux1:
    exact (Finset.mem_filter.mp hg1).2 (smul_eq_of_smul_le hg2)
  obtain ⟨b,hbP,hbQ⟩:=SetLike.not_le_iff_exists.mp h1
  replace hbP:∀ g:G,g • Q≠Q → b∈g • Q:=
-   fun g hg↦(Finset.inf_le (Finset.mem_filter.mpr ⟨Finset.mem_univ g,hg⟩):P ≤ g • Q) hbP
+   fun g hg↦(Finset.inf_le (Finset.mem_filter.mpr ⟨Finset.mem_univ g,hg⟩):P≤g • Q) hbP
  let f:=MulSemiringAction.charpoly G b
  obtain ⟨q,hq,hq0⟩:=
    (f.map (algebraMap B (B ⧸ Q))).exists_eq_pow_rootMultiplicity_mul_and_not_dvd
@@ -246,7 +246,7 @@ private theorem fixed_of_fixed2 (f:Gal(L/K)) (x:L)
  replace h:algebraMap (B ⧸ Q) L x/algebraMap (B ⧸ Q) L y=
      algebraMap (B ⧸ Q) L b/algebraMap (A ⧸ P) L a:=by
    rw [mul_comm,Algebra.smul_def,mul_comm] at h
-   rw [div_eq_div_iff hy ha, ←map_mul, ←h,map_mul, ←algebraMap_apply]
+   rw [div_eq_div_iff hy ha,←map_mul,←h,map_mul,←algebraMap_apply]
  simp only [h,map_div₀,algebraMap_apply (A ⧸ P) K L,AlgEquiv.commutes] at hx ⊢
  simp only [←algebraMap_apply,div_left_inj' ha] at hx ⊢
  exact fixed_of_fixed1 G P Q K L f b (fun g↦IsFractionRing.injective (B ⧸ Q) L
@@ -368,7 +368,7 @@ theorem isInvariant_of_isIntegral [Algebra.IsIntegral A B]:Algebra.IsInvariant K
    algebraMap B L b/algebraMap B L (algebraMap A B a):=by
    rw [div_eq_div_iff hy' ha, ←map_mul,hb,map_mul]
  obtain ⟨b,rfl⟩:=hAB.isInvariant b
-   (by simpa [ha,hxy,smul_div₀', ←algebraMap.coe_smul'] using h)
+   (by simpa [ha,hxy,smul_div₀',←algebraMap.coe_smul'] using h)
  use algebraMap A K b/algebraMap A K a
  rw [hxy,map_div₀,hc,hc]
 include A B in

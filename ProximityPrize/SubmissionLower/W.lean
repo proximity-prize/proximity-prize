@@ -420,7 +420,7 @@ theorem commonNumeratorTerm_R_degree_bound
  have hterm:=degree_mul_bound (2:Fin 4) (degree_mul_bound (2:Fin 4) hCM hHP) hXP
  have hw:j+(w-j)=w:=by omega
  have hs':2*s-1=2*(s-1)+1:=by omega
- have hcap:j*(2*s-1)+2*(w-j)*(s-1) ≤ w*(2*s-1):=by
+ have hcap:j*(2*s-1)+2*(w-j)*(s-1)≤w*(2*s-1):=by
    rw [hs']
    calc
      j*(2*(s-1)+1)+2*(w-j)*(s-1)=
@@ -488,7 +488,7 @@ theorem agreementNumerator_degree_bounds
      have hH:=pderiv_same_degree_bound (2:Fin 4) F s hR
      have hh:=degree_mul_bound (2:Fin 4) ha (degree_pow_bound (2:Fin 4) (2*w) hH)
      have hs':2*s-1=2*(s-1)+1:=by omega
-     have hcap:0+(2*w)*(s-1) ≤ w*(2*s-1):=by
+     have hcap:0+(2*w)*(s-1)≤w*(2*s-1):=by
        rw [hs']
        calc
          0+(2*w)*(s-1) ≤ 2*w*(s-1)+w:=by omega

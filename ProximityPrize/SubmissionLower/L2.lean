@@ -9,43 +9,43 @@ open RCN137
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 30000
-variable {K : Type*} [Field K]
-abbrev Poly4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
-local instance : StrongNormalizationMonoid (Poly4 K) :=
+variable {K:Type*} [Field K]
+abbrev Poly4 (K:Type*) [Field K]:=MvPolynomial (Fin 4) K
+local instance:StrongNormalizationMonoid (Poly4 K) :=
  UniqueFactorizationMonoid.strongNormalizationMonoid
-local instance : NormalizedGCDMonoid (Poly4 K) :=
+local instance:NormalizedGCDMonoid (Poly4 K) :=
  UniqueFactorizationMonoid.toNormalizedGCDMonoid (Poly4 K)
-def submoduleReconstructLinear {D w L s : ℕ}
-   (V : Submodule K (CoefficientIndex D w L s → K)) :
+def submoduleReconstructLinear {D w L s:ℕ}
+   (V:Submodule K (CoefficientIndex D w L s → K)) :
    V →ₗ[K] Poly4 K :=
- (reconstructLinear (K := K) D w L s).comp V.subtype
-theorem submoduleReconstructLinear_injective {D w L s : ℕ}
-   (V : Submodule K (CoefficientIndex D w L s → K)) :
-   Function.Injective (submoduleReconstructLinear V) := by
+ (reconstructLinear (K:=K) D w L s).comp V.subtype
+theorem submoduleReconstructLinear_injective {D w L s:ℕ}
+   (V:Submodule K (CoefficientIndex D w L s → K)) :
+   Function.Injective (submoduleReconstructLinear V):=by
  intro x y h
  apply Subtype.ext
- exact reconstructLinear_injective (K := K) D w L s h
-def commonDivisorProof {D w L s : ℕ}
-   (V : Submodule K (CoefficientIndex D w L s → K))
-   {ι : Type*} [Fintype ι] (b : Module.Basis ι K V) :
-   ∀ v : V,commonGCD V b ∣ submoduleReconstructLinear V v := by
+ exact reconstructLinear_injective (K:=K) D w L s h
+def commonDivisorProof {D w L s:ℕ}
+   (V:Submodule K (CoefficientIndex D w L s → K))
+   {ι:Type*} [Fintype ι] (b:Module.Basis ι K V) :
+   ∀ v:V,commonGCD V b ∣ submoduleReconstructLinear V v:=by
  intro v
  exact commonGCD_dvd V b v
-def commonQuotientLinear {D w L s : ℕ}
-   (V : Submodule K (CoefficientIndex D w L s → K))
-   {ι : Type*} [Fintype ι] (b : Module.Basis ι K V)
-   (hH : commonGCD V b ≠ 0) : V →ₗ[K] Poly4 K :=
+def commonQuotientLinear {D w L s:ℕ}
+   (V:Submodule K (CoefficientIndex D w L s → K))
+   {ι:Type*} [Fintype ι] (b:Module.Basis ι K V)
+   (hH:commonGCD V b ≠ 0):V →ₗ[K] Poly4 K :=
  quotientLinear (submoduleReconstructLinear V) (commonGCD V b) hH
    (commonDivisorProof V b)
-def quotientDvdSubmodule {V : Type*} [AddCommGroup V] [Module K V]
-   (q : V →ₗ[K] Poly4 K) (F : Poly4 K) : Submodule K V where
- carrier := {v | F ∣ q v}
+def quotientDvdSubmodule {V:Type*} [AddCommGroup V] [Module K V]
+   (q:V →ₗ[K] Poly4 K) (F:Poly4 K):Submodule K V where
+ carrier:={v | F ∣ q v}
  zero_mem' := by simp
- add_mem' := by
+ add_mem':=by
    intro x y hx hy
    change F ∣ q x at hx
    change F ∣ q y at hy
-   change F ∣ q (x + y)
+   change F ∣ q (x+y)
    rw [map_add]
    exact dvd_add hx hy
  smul_mem' := by

@@ -4,15 +4,15 @@ variable {A:Type*} [CommRing A]
 noncomputable def quotientPrime (I p:Ideal A):Ideal (A ⧸ I):=
  p.map (Ideal.Quotient.mk I)
 theorem quotientPrime_isPrime (I p:Ideal A) [p.IsPrime]
-   (hIp:I ≤ p):(quotientPrime I p).IsPrime:=by
+   (hIp:I≤p):(quotientPrime I p).IsPrime:=by
  apply Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective
  simpa only [Ideal.mk_ker] using hIp
 noncomputable abbrev LocalizedQuotient (I p:Ideal A) [p.IsPrime]
-   (hIp:I ≤ p):Type _:=
+   (hIp:I≤p):Type _:=
  @Localization.AtPrime (A ⧸ I) _ (quotientPrime I p)
    (quotientPrime_isPrime I p hIp)
 theorem quotientPrime_comap_quotientMk (I p:Ideal A) [p.IsPrime]
-   (hIp:I ≤ p):
+   (hIp:I≤p):
    (quotientPrime I p).comap (Ideal.Quotient.mk I)=p:=by
  rw [quotientPrime,Ideal.comap_map_of_surjective _ Ideal.Quotient.mk_surjective]
  change p ⊔ RingHom.ker (Ideal.Quotient.mk I)=p
@@ -20,7 +20,7 @@ theorem quotientPrime_comap_quotientMk (I p:Ideal A) [p.IsPrime]
  exact hIp
 theorem quotientMk_map_primeCompl (I p:Ideal A) [p.IsPrime]
    [hquotientPrime:(quotientPrime I p).IsPrime]
-   (hIp:I ≤ p):
+   (hIp:I≤p):
    Submonoid.map (Ideal.Quotient.mk I) p.primeCompl=
      (quotientPrime I p).primeCompl:=by
  apply SetLike.ext
@@ -39,7 +39,7 @@ theorem quotientMk_map_primeCompl (I p:Ideal A) [p.IsPrime]
    exact hs
 noncomputable def ambientToLocalizedQuotient
    (I p:Ideal A) [p.IsPrime] [hquotientPrime:(quotientPrime I p).IsPrime]
-   (hIp:I ≤ p):
+   (hIp:I≤p):
    Localization.AtPrime p →+*LocalizedQuotient I p hIp:=by
  have hM:=quotientMk_map_primeCompl I p hIp
  letI:IsLocalization (Submonoid.map (Ideal.Quotient.mk I) p.primeCompl)
@@ -48,7 +48,7 @@ noncomputable def ambientToLocalizedQuotient
    p.primeCompl.le_comap_map
 theorem ambientToLocalizedQuotient_surjective
    (I p:Ideal A) [p.IsPrime] [hquotientPrime:(quotientPrime I p).IsPrime]
-   (hIp:I ≤ p):
+   (hIp:I≤p):
    Function.Surjective (ambientToLocalizedQuotient I p hIp):=by
  have hM:=quotientMk_map_primeCompl I p hIp
  letI:IsLocalization (Submonoid.map (Ideal.Quotient.mk I) p.primeCompl)
@@ -58,7 +58,7 @@ theorem ambientToLocalizedQuotient_surjective
      (LocalizedQuotient I p hIp) Ideal.Quotient.mk_surjective)
 theorem ambientToLocalizedQuotient_ker
    (I p:Ideal A) [p.IsPrime] [hquotientPrime:(quotientPrime I p).IsPrime]
-   (hIp:I ≤ p):
+   (hIp:I≤p):
    RingHom.ker (ambientToLocalizedQuotient I p hIp)=
      I.map (algebraMap A (Localization.AtPrime p)):=by
  have hM:=quotientMk_map_primeCompl I p hIp
@@ -81,7 +81,7 @@ theorem ambientToLocalizedQuotient_ker
      simpa only [Ideal.mk_ker] using hk
 noncomputable def quotientAmbientEquivLocalizedQuotient
    (I p:Ideal A) [p.IsPrime] [hquotientPrime:(quotientPrime I p).IsPrime]
-   (hIp:I ≤ p):
+   (hIp:I≤p):
    (Localization.AtPrime p ⧸ I.map (algebraMap A (Localization.AtPrime p))) ≃+*
      LocalizedQuotient I p hIp:=
  (Ideal.quotEquivOfEq (ambientToLocalizedQuotient_ker I p hIp).symm).trans

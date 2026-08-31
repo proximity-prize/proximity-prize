@@ -31,10 +31,10 @@ theorem quotient' (p:ℕ) [CharP R p] (I:Ideal R) (h:∀ x:ℕ,(x:R)∈I → (x:
 theorem quotient_iff (n:ℕ) [CharP R n] (I:Ideal R):
    CharP (R ⧸ I) n ↔ ∀ x:ℕ,↑x∈I → (x:R)=0:=by
  refine ⟨fun _ x hx => ?_,CharP.quotient' n I⟩
- rw [CharP.cast_eq_zero_iff R n, ←CharP.cast_eq_zero_iff (R ⧸ I) n _]
+ rw [CharP.cast_eq_zero_iff R n,←CharP.cast_eq_zero_iff (R ⧸ I) n _]
  exact (Submodule.Quotient.mk_eq_zero I).mpr hx
 theorem quotient_iff_le_ker_natCast (n:ℕ) [CharP R n] (I:Ideal R):
-   CharP (R ⧸ I) n ↔ I.comap (Nat.castRingHom R) ≤ RingHom.ker (Nat.castRingHom R):=by
+   CharP (R ⧸ I) n ↔ I.comap (Nat.castRingHom R)≤RingHom.ker (Nat.castRingHom R):=by
  rw [CharP.quotient_iff,RingHom.ker_eq_comap_bot];rfl
 end CharP
 lemma Ideal.natCast_mem_of_charP_quotient (p:ℕ) (I:Ideal R) [CharP (R ⧸ I) p]:

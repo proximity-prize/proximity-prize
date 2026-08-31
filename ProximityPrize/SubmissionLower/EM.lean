@@ -25,21 +25,21 @@ theorem geometricSurfaceMap_eq_surfaceMap:
  exact MvPolynomial.map_map _ _ _
 theorem geometricSurfaceMap_separated_caps
    (F:MvPolynomial (Fin 4) K) (ell s zcap:ℕ)
-   (hy:F.degreeOf 1 ≤ ell) (hr:F.degreeOf 2 ≤ s) (hz:F.degreeOf 3 ≤ zcap):
-   (geometricSurfaceMap K L F).degreeOf 0 ≤ ell∧
-     (geometricSurfaceMap K L F).degreeOf 1 ≤ s∧
-     (geometricSurfaceMap K L F).degreeOf 2 ≤ zcap:=by
+   (hy:F.degreeOf 1≤ell) (hr:F.degreeOf 2≤s) (hz:F.degreeOf 3≤zcap):
+   (geometricSurfaceMap K L F).degreeOf 0≤ell∧
+     (geometricSurfaceMap K L F).degreeOf 1≤s∧
+     (geometricSurfaceMap K L F).degreeOf 2≤zcap:=by
  rw [geometricSurfaceMap_eq_surfaceMap]
  exact surfaceMap_separated_caps _ F ell s zcap hy hr hz
 theorem geometricSurfaceMap_joint_seed_cap
    (F:MvPolynomial (Fin 4) K) (cap:ℕ)
-   (hcap:∀ d∈F.support,d 1+d 3 ≤ cap):
-   ∀ e∈(geometricSurfaceMap K L F).support,e 0+e 2 ≤ cap:=by
+   (hcap:∀ d∈F.support,d 1+d 3≤cap):
+   ∀ e∈(geometricSurfaceMap K L F).support,e 0+e 2≤cap:=by
  rw [geometricSurfaceMap_eq_surfaceMap]
  exact surfaceMap_joint_seed_cap _ F cap hcap
 theorem geometric_factor_dvd_iff
    (F M:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (hpos:0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
+   (hpos:0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
    (g:MvPolynomial (Fin 3) L) (hg:Irreducible g)
    (hdivF:g∣geometricSurfaceMap K L F):
    g∣geometricSurfaceMap K L M ↔ F∣M:=by
@@ -54,19 +54,19 @@ theorem geometric_factor_dvd_iff
    exact hdivF.trans (map_dvd (geometricSurfaceMap K L) hdiv)
 theorem all_later_tails_of_geometric_first_tail
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (hpos:0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
+   (hpos:0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
    (g:MvPolynomial (Fin 3) L) (hg:Irreducible g)
    (hdivF:g∣geometricSurfaceMap K L F) (w:ℕ)
    (hfirst:g∣geometricSurfaceMap K L (numerator K F (w+1))):
-   ∀ j,w < j → F∣numerator K F j:=by
+   ∀ j,w<j → F∣numerator K F j:=by
  have hbase:=(geometric_factor_dvd_iff K L F (numerator K F (w+1))
    hF hpos g hg hdivF).mp hfirst
  intro j hj
  exact equation_dvd_all_later_numerators K F (w+1) hbase j (by omega)
 theorem first_tail_dichotomy
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (hpos:0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3) (w:ℕ):
-   (F∣numerator K F (w+1)∧∀ j,w < j → F∣numerator K F j)∨
+   (hpos:0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3) (w:ℕ):
+   (F∣numerator K F (w+1)∧∀ j,w<j → F∣numerator K F j)∨
      (∀ g:MvPolynomial (Fin 3) L,Irreducible g →
        g∣geometricSurfaceMap K L F →
        ¬ g∣geometricSurfaceMap K L (numerator K F (w+1))):=by
@@ -81,7 +81,7 @@ theorem first_tail_dichotomy
      hF hpos g hg hdivF).mp hdivM)
 theorem polynomiality_of_geometric_first_tail
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (hpos:0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
+   (hpos:0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
    (g:MvPolynomial (Fin 3) L) (hg:Irreducible g)
    (hdivF:g∣geometricSurfaceMap K L F)
    (v:Fin 4 → L)
@@ -91,10 +91,10 @@ theorem polynomiality_of_geometric_first_tail
      ((geometricPolynomialEmbedding K L).comp Polynomial.C) v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (p bound w seedCap slopeCap:ℕ) [CharP L p]
-   (hw:1 ≤ w) (hshort:w+1 ≤ bound) (hchar:bound < p)
+   (hw:1≤w) (hshort:w+1≤bound) (hchar:bound<p)
    (hcaps:F∈globalCoefficientBox K bound w seedCap slopeCap)
    (hfirst:g∣geometricSurfaceMap K L (numerator K F (w+1))):
-   ∃ P:Polynomial L,P.natDegree ≤ w∧
+   ∃ P:Polynomial L,P.natDegree≤w∧
      specialization L P (v 3)
        (MvPolynomial.map ((geometricPolynomialEmbedding K L).comp Polynomial.C) F)=0∧
      P.eval (v 0)=v 1∧P.derivative.eval (v 0)=v 2:=by
@@ -130,8 +130,8 @@ theorem actual_generic_initial_zero_iff
  rw [eval_at_actual_generic_initial_point,polynomialEmbedding_eq_zero_iff]
 theorem canonical_first_tail_dichotomy
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (hpos:0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3) (w:ℕ):
-   (F∣numerator K F (w+1)∧∀ j,w < j → F∣numerator K F j)∨
+   (hpos:0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3) (w:ℕ):
+   (F∣numerator K F (w+1)∧∀ j,w<j → F∣numerator K F j)∨
      (∀ g:MvPolynomial (Fin 3) (GenericField K),Irreducible g →
        g∣surfaceMap (polynomialEmbedding K) F →
        ¬ g∣surfaceMap (polynomialEmbedding K) (numerator K F (w+1))):=by

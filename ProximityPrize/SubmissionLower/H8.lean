@@ -13,14 +13,14 @@ variable {K k L:Type} [Field K] [Field k] [Field L]
  [Algebra K k] [Algebra K L] [Algebra k L] [IsScalarTower K k L]
 theorem baseCoefficientField_trdeg_le_one_of_algebraic_constants
    [Algebra.IsAlgebraic K k] (P:Polynomial L) (γ:L)
-   (htr:Algebra.trdeg K (baseCoefficientField (k:=K) P γ) ≤ 1):
-   Algebra.trdeg k (baseCoefficientField (k:=k) P γ) ≤ 1:=by
+   (htr:Algebra.trdeg K (baseCoefficientField (k:=K) P γ)≤1):
+   Algebra.trdeg k (baseCoefficientField (k:=k) P γ)≤1:=by
  let S:Set L:=insert γ (Set.range (fun j:ℕ => P.coeff j))
  let BK:IntermediateField K L:=baseCoefficientField (k:=K) P γ
  let Bk:IntermediateField k L:=baseCoefficientField (k:=k) P γ
  let BkK:IntermediateField K L:=Bk.restrictScalars K
- have hBK:BK ≤ BkK:=by
-   change IntermediateField.adjoin K S ≤ BkK
+ have hBK:BK≤BkK:=by
+   change IntermediateField.adjoin K S≤BkK
    apply IntermediateField.adjoin_le_iff.mpr
    intro z hz
    change z∈Bk

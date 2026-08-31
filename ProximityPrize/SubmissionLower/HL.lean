@@ -70,12 +70,12 @@ noncomputable instance:LinearOrder (DegLex (α →₀ ℕ)):=
    (fun (f:DegLex (α →₀ ℕ))↦toLex ((ofDegLex f).degree,toLex (ofDegLex f)))
    (fun f g↦by simp)
 theorem le_iff {x y:DegLex (α →₀ ℕ)}:
-   x ≤ y ↔ (ofDegLex x).degree < (ofDegLex y).degree∨
-     (ofDegLex x).degree=(ofDegLex y).degree∧toLex (ofDegLex x) ≤ toLex (ofDegLex y):=by
+   x≤y ↔ (ofDegLex x).degree<(ofDegLex y).degree∨
+     (ofDegLex x).degree=(ofDegLex y).degree∧toLex (ofDegLex x)≤toLex (ofDegLex y):=by
  simp only [le_iff_eq_or_lt,lt_iff,EmbeddingLike.apply_eq_iff_eq]
  by_cases h:x=y
  · simp [h]
- · by_cases k:(ofDegLex x).degree < (ofDegLex y).degree
+ · by_cases k:(ofDegLex x).degree<(ofDegLex y).degree
    · simp [k]
    · simp only [h,k,false_or]
 instance:IsOrderedCancelAddMonoid (DegLex (α →₀ ℕ)) where
@@ -93,10 +93,10 @@ theorem single_strictAnti:StrictAnti (fun (a:α)↦toDegLex (single a 1)):=by
 theorem single_antitone:Antitone (fun (a:α)↦toDegLex (single a 1)):=
  single_strictAnti.antitone
 theorem single_lt_iff {a b:α}:
-   toDegLex (Finsupp.single b 1) < toDegLex (Finsupp.single a 1) ↔ a < b:=
+   toDegLex (Finsupp.single b 1)<toDegLex (Finsupp.single a 1) ↔ a<b:=
  single_strictAnti.lt_iff_gt
 theorem single_le_iff {a b:α}:
-   toDegLex (Finsupp.single b 1) ≤ toDegLex (Finsupp.single a 1) ↔ a ≤ b:=
+   toDegLex (Finsupp.single b 1)≤toDegLex (Finsupp.single a 1) ↔ a≤b:=
  single_strictAnti.le_iff_ge
 theorem monotone_degree:
    Monotone (fun (x:DegLex (α →₀ ℕ))↦(ofDegLex x).degree):=by

@@ -37,7 +37,7 @@ theorem exists_agreement_projection_of_caps
  classical
  let T:=agreementPolynomial φ S.F w x0 u0 u1
  let H:=regularitySurface φ S.F
- have hsy:s+2 < b+s+3:=by omega
+ have hsy:s+2<b+s+3:=by omega
  have hTflag:PolynomialInFlag (sharpResidualAgreementFlag (support a b s) w) T:=
    surfaceMap_agreement_in_sharp_flag hsy (phi:=φ)
      ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
@@ -49,7 +49,7 @@ theorem exists_agreement_projection_of_caps
  have hTY':T.degreeOf 0 ≤ 1+w*(2*(b+s+3)-2):=by
    apply hTY.trans_eq
    exact sharpResidualAgreementFlag_ys (support a b s) hsy w
- have hTS':T.degreeOf 1 ≤ (2*(s+2)-1)*w:=by
+ have hTS':T.degreeOf 1≤(2*(s+2)-1)*w:=by
    apply hTS.trans_eq
    simp only [sharpResidualAgreementFlag,sharpAgreementDirection,
      RCN198.support]

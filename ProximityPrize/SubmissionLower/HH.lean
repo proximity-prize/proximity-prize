@@ -46,7 +46,7 @@ theorem coeff_modMonomial_of_not_le {s' s:σ →₀ ℕ} (x:MvPolynomial σ R) (
    coeff s' (x %ᵐᵒⁿᵒᵐⁱᵃˡ s)=coeff s' x:=
  x.coeff_modOf_of_not_exists_add s s' <| by rintro ⟨d,rfl⟩;exact h le_self_add
 @[simp]
-theorem coeff_modMonomial_of_le {s' s:σ →₀ ℕ} (x:MvPolynomial σ R) (h:s ≤ s'):
+theorem coeff_modMonomial_of_le {s' s:σ →₀ ℕ} (x:MvPolynomial σ R) (h:s≤s'):
    coeff s' (x %ᵐᵒⁿᵒᵐⁱᵃˡ s)=0:=
  x.coeff_modOf_of_exists_add _ _ <| exists_add_of_le h
 @[simp]
@@ -106,7 +106,7 @@ theorem X_dvd_iff_modMonomial_eq_zero {i:σ} {x:MvPolynomial σ R}:
  monomial_one_dvd_iff_modMonomial_eq_zero
 end XLemmas
 theorem monomial_dvd_monomial {r s:R} {i j:σ →₀ ℕ}:
-   monomial i r∣monomial j s ↔ (s=0∨i ≤ j)∧r∣s:=by
+   monomial i r∣monomial j s ↔ (s=0∨i≤j)∧r∣s:=by
  constructor
  · rintro ⟨x,hx⟩
    rw [MvPolynomial.ext_iff] at hx
@@ -270,7 +270,7 @@ theorem dvd_monomial_mul_iff_exists [IsCancelMulZero R] {n:σ →₀ ℕ}:
      have hn':n'+Finsupp.single i 1=n:=by
        apply Finsupp.sub_add_single_one_cancel
        rwa [←Finsupp.mem_support_iff]
-     have hnn':n' ≤ n:=by simp [←hn']
+     have hnn':n'≤n:=by simp [←hn']
      have hd':n'.degree=d:=by
        rw [←add_left_inj, ←hn, ←hn']
        simp
@@ -283,7 +283,7 @@ theorem dvd_monomial_mul_iff_exists [IsCancelMulZero R] {n:σ →₀ ℕ}:
        use m+Finsupp.single i 1,r,?_,hr
        · simp [monomial_add_single,pow_one,mul_comm _ (MvPolynomial.X i),mul_assoc, ←hp]
        · simpa [←hn'] using hm
-   · rw [hp, ←add_tsub_cancel_of_le hmn, ←mul_one 1, ←monomial_mul,mul_one,mul_assoc]
+   · rw [hp,←add_tsub_cancel_of_le hmn,←mul_one 1,←monomial_mul,mul_one,mul_assoc]
      apply mul_dvd_mul dvd_rfl
      apply dvd_mul_of_dvd_right hrq
 end CommRing

@@ -33,7 +33,7 @@ theorem exists_regular_component (v:Fin 3 → K)
    (hG:MvPolynomial.eval v G=0) (hT:MvPolynomial.eval v T=0)
    (hH:MvPolynomial.eval v H≠0):
    ∃ C:RegularComponent K G T H,
-     C.1 ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom:=by
+     C.1≤RingHom.ker (MvPolynomial.aeval v).toRingHom:=by
  classical
  obtain ⟨P,hP,hv⟩:=exists_component_of_common_point K G T v hG hT
  have hnot:H∉P:=by
@@ -43,7 +43,7 @@ theorem exists_regular_component (v:Fin 3 → K)
 def componentSeeds {Seed:Type*} (S:Finset Seed) (v:Seed → Fin 3 → K)
    (C:RegularComponent K G T H):Finset Seed:=by
  classical
- exact S.filter (fun γ => C.1 ≤ RingHom.ker (MvPolynomial.aeval (v γ)).toRingHom)
+ exact S.filter (fun γ => C.1≤RingHom.ker (MvPolynomial.aeval (v γ)).toRingHom)
 theorem componentSeeds_subset {Seed:Type*}
    (S:Finset Seed) (v:Seed → Fin 3 → K) (C:RegularComponent K G T H):
    componentSeeds K G T H S v C ⊆ S:=by
@@ -52,7 +52,7 @@ theorem componentSeeds_subset {Seed:Type*}
 theorem componentSeeds_on_prime {Seed:Type*}
    (S:Finset Seed) (v:Seed → Fin 3 → K) (C:RegularComponent K G T H)
    (γ:Seed) (hγ:γ∈componentSeeds K G T H S v C):
-   C.1 ≤ RingHom.ker (MvPolynomial.aeval (v γ)).toRingHom:=by
+   C.1≤RingHom.ker (MvPolynomial.aeval (v γ)).toRingHom:=by
  classical
  exact (Finset.mem_filter.mp hγ).2
 theorem card_le_sum_componentSeeds {Seed:Type*}
@@ -60,7 +60,7 @@ theorem card_le_sum_componentSeeds {Seed:Type*}
    (hG:∀ γ∈S,MvPolynomial.eval (v γ) G=0)
    (hT:∀ γ∈S,MvPolynomial.eval (v γ) T=0)
    (hH:∀ γ∈S,MvPolynomial.eval (v γ) H≠0):
-   S.card ≤ ∑ C:RegularComponent K G T H,(componentSeeds K G T H S v C).card:=by
+   S.card≤∑ C:RegularComponent K G T H,(componentSeeds K G T H S v C).card:=by
  classical
  letI:DecidableEq Seed:=Classical.decEq Seed
  have hcover:S ⊆ Finset.univ.biUnion (componentSeeds K G T H S v):=by
@@ -79,8 +79,8 @@ theorem aggregate_component_incidence {Seed:Type*}
    (hcomponent:∀ C,
      (componentSeeds K G T H S v C).card*gap ≤
        nodes*(∑ i,cap i*degree C i)+pencil*gap*degree C 2)
-   (hbudget:∀ i,(∑ C,degree C i) ≤ budget i):
-   S.card*gap ≤ nodes*(∑ i,cap i*budget i)+pencil*gap*budget 2:=by
+   (hbudget:∀ i,(∑ C,degree C i)≤budget i):
+   S.card*gap≤nodes*(∑ i,cap i*budget i)+pencil*gap*budget 2:=by
  classical
  have hfubini:(∑ C:RegularComponent K G T H,∑ i:Fin 3,cap i*degree C i)=
      ∑ i:Fin 3,cap i*(∑ C:RegularComponent K G T H,degree C i):=by
@@ -89,18 +89,18 @@ theorem aggregate_component_incidence {Seed:Type*}
    intro i _
    rw [Finset.mul_sum]
  calc
-   S.card*gap ≤ (∑ C:RegularComponent K G T H,
+   S.card*gap≤(∑ C:RegularComponent K G T H,
        (componentSeeds K G T H S v C).card)*gap:=
      Nat.mul_le_mul_right gap (card_le_sum_componentSeeds K G T H S v hG hT hH)
    _=∑ C:RegularComponent K G T H,
        (componentSeeds K G T H S v C).card*gap:=by rw [Finset.sum_mul]
-   _ ≤ ∑ C:RegularComponent K G T H,
+   _≤∑ C:RegularComponent K G T H,
        (nodes*(∑ i,cap i*degree C i)+pencil*gap*degree C 2):=
      Finset.sum_le_sum (fun C _ => hcomponent C)
    _=nodes*(∑ i:Fin 3,cap i*(∑ C:RegularComponent K G T H,degree C i))+
        pencil*gap*(∑ C:RegularComponent K G T H,degree C 2):=by
-     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,hfubini]
-   _ ≤ nodes*(∑ i,cap i*budget i)+pencil*gap*budget 2:=
+     rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.mul_sum,hfubini]
+   _≤nodes*(∑ i,cap i*budget i)+pencil*gap*budget 2:=
      Nat.add_le_add
        (Nat.mul_le_mul_left nodes (Finset.sum_le_sum
          (fun i _ => Nat.mul_le_mul_left (cap i) (hbudget i))))

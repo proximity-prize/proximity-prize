@@ -100,13 +100,13 @@ def AdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily
    have hall:=U.allPole C
    change ∀ W:Finset (Place Omega (CoordinateField Omega C.1)),
      (∑ v∈W,exponentSetPoleWeight v.val (coordinate Omega C.1)
-       (flagSupport unitZFlag)) ≤ (U.zCost C:ℤ) at hz
+       (flagSupport unitZFlag))≤(U.zCost C:ℤ) at hz
    change ∀ W:Finset (Place Omega (CoordinateField Omega C.1)),
      (∑ v∈W,exponentSetPoleWeight v.val (coordinate Omega C.1)
-       (flagSupport unitYZFlag)) ≤ (U.yzCost C:ℤ) at hyz
+       (flagSupport unitYZFlag))≤(U.yzCost C:ℤ) at hyz
    change ∀ W:Finset (Place Omega (CoordinateField Omega C.1)),
      (∑ v∈W,exponentSetPoleWeight v.val (coordinate Omega C.1)
-       (flagSupport unitAllFlag)) ≤ (U.allCost C:ℤ) at hall
+       (flagSupport unitAllFlag))≤(U.allCost C:ℤ) at hall
    have hpole:∀ W:Finset (Place Omega (CoordinateField Omega C.1)),
        (∑ v∈W,exponentSetPoleWeight v.val (coordinate Omega C.1)
          (flagSupport r)) ≤
@@ -137,7 +137,7 @@ def AdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily
              (∑ v∈W,exponentSetPoleWeight v.val (coordinate Omega C.1)
                (flagSupport unitAllFlag)):=by
          simp only [Finset.sum_add_distrib,Finset.mul_sum]
-       _ ≤ (r.zOnly:ℤ)*(U.zCost C:ℤ)+
+       _≤(r.zOnly:ℤ)*(U.zCost C:ℤ)+
            (r.yz:ℤ)*(U.yzCost C:ℤ)+
            (r.all:ℤ)*(U.allCost C:ℤ):=by
          exact add_le_add

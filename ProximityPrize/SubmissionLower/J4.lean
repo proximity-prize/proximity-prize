@@ -25,7 +25,7 @@ def IdentityCurveCountProvider
    ∃ cost:RegularComponent Ω S.G T (regularitySurface φ S.F)→ℕ,
      (∀ C,(componentSeeds Ω S.G T (regularitySurface φ S.F) Gi
        (selectedPoint φ S.selected) C).card≤(e+1)*cost C)∧
-     (∑ C,cost C) ≤ identityDegree
+     (∑ C,cost C)≤identityDegree
 private theorem proper_node_fiber_bound
    {flag:FlagDegree} {w:ℕ} {support:ResidualSupportParameters}
    (S:ResidualStage φ Γ x p e flag w support)
@@ -66,13 +66,13 @@ theorem identity_surface_seed_bound
    (a identityDegree:ℕ)
    (hprovider:IdentityCurveCountProvider S identityDegree)
    (hagreement:∀ γ∈Γ,a≤(S.agreementFiber γ).card)
-   (hwa:w < a) (han:a ≤ S.nodes.card) (hdegreePos:1 ≤ identityDegree):
+   (hwa:w<a) (han:a≤S.nodes.card) (hdegreePos:1≤identityDegree):
    Γ.card*(a-w)≤(S.nodes.card-w)*(e+1)*identityDegree:=by
  classical
  letI:S.componentIdeal.IsPrime:=S.componentIdeal_isPrime
  let relation:K→I→Prop:=fun γ i=>S.Agrees γ i
  let identities:=S.identities
- by_cases hI:identities.card ≤ w
+ by_cases hI:identities.card≤w
  · have hfiber:∀ i∈S.nodes\identities,
        (Γ.filter (fun γ=>relation γ i)).card≤(e+1)*identityDegree:=by
      intro i hi
@@ -85,7 +85,7 @@ theorem identity_surface_seed_bound
      identities a w ((e+1)*identityDegree)
      (identityNodes_subset φ S.componentIdeal S.F S.nodes x S.u0 S.u1 w)
      hI hwa han hagreement hfiber
- · have hi:w < identities.card:=Nat.lt_of_not_ge hI
+ · have hi:w<identities.card:=Nat.lt_of_not_ge hI
    have hvalues:∀ (t:{γ:K//γ∈Γ}) i,i∈identities→
        (S.selected t.1).eval (x i)=S.u0 i+t.1*S.u1 i:=by
      intro t
@@ -97,7 +97,7 @@ theorem identity_surface_seed_bound
      S.nodes x S.u0 S.u1 w S.x_injective hi
      (fun t:{γ:K//γ∈Γ}=>t.1) (fun t=>S.selected t.1)
      (fun t=>S.degree_le t.1 t.2) hvalues
-   have hsmall:Γ.card ≤ e+1:=by
+   have hsmall:Γ.card≤e+1:=by
      have hf:Γ.filter (fun γ=>S.selected γ=P0+Polynomial.C γ*P1)=Γ:=
        Finset.filter_eq_self.mpr (fun γ hγ=>hpencil ⟨γ,hγ⟩)
      simpa only [hf] using S.no_large_pencil P0 P1 h0 h1

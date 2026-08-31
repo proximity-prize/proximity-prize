@@ -15,7 +15,7 @@ theorem sum_finrank_le_ordinary_resultant_without_separability
    (E:I → Type) [∀ i,Field (E i)] [∀ i,Algebra F (E i)]
    [∀ i,FiniteDimensional F (E i)]
    (P Q:Polynomial (Polynomial F))
-   (hP:Irreducible P) (hpositive:0 < P.natDegree)
+   (hP:Irreducible P) (hpositive:0<P.natDegree)
    (hproper:¬ P∣Q)
    (y r:∀ i,E i)
    (hgen:∀ i,IntermediateField.adjoin F
@@ -77,21 +77,21 @@ theorem finite_sum_finrank_bound_trapezoid
    (hkernels:Function.Injective (fun i↦RingHom.ker (e i).toRingHom))
    (G H:Original K) (hG:Irreducible G)
    (hGroot:∀ i,e i G=0) (hHroot:∀ i,e i H=0)
-   (hproper:¬ G∣H) (hpositive:0 < (planeMap K order G).natDegree)
+   (hproper:¬ G∣H) (hpositive:0<(planeMap K order G).natDegree)
    (n mCap totalG totalH cap:ℕ) (hHne:H≠0)
-   (hGouter:(planeMap K order G).natDegree ≤ n)
-   (hHouter:(planeMap K order H).natDegree ≤ mCap)
+   (hGouter:(planeMap K order G).natDegree≤n)
+   (hHouter:(planeMap K order H).natDegree≤mCap)
    (hGsupport:∀ d∈(rationalMap K order G).support,
-     d 0+d 1 ≤ totalG)
+     d 0+d 1≤totalG)
    (hHsupport:∀ d∈(rationalMap K order H).support,
-     d 0+d 1 ≤ totalH)
-   (hbudget:∀ m,m ≤ mCap →
-     m*totalG+n*totalH-m*n ≤ cap):
+     d 0+d 1≤totalH)
+   (hbudget:∀ m,m≤mCap →
+     m*totalG+n*totalH-m*n≤cap):
    letI:∀ i,Algebra (RatFunc K) (E i):=fun i↦
      (elementEmbedding K (E i) (e i (MvPolynomial.X (order 0)))
        (ht i)).toRingHom.toAlgebra
    (∀ i,FiniteDimensional (RatFunc K) (E i))∧
-     (∑ i,Module.finrank (RatFunc K) (E i)) ≤ cap:=by
+     (∑ i,Module.finrank (RatFunc K) (E i))≤cap:=by
  classical
  letI:∀ i,Algebra (RatFunc K) (E i):=fun i↦
    (elementEmbedding K (E i) (e i (MvPolynomial.X (order 0)))

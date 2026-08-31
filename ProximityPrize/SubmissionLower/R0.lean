@@ -125,11 +125,11 @@ theorem map_model_eval (x:σ → A) (F:MvPolynomial σ K):
 theorem finite_model_zero_points_le_box
    (x:σ → A) (c:σ → Coordinate K L)
    (hc:∀ i,coordinateValue K L (c i)=algebraMap A L (x i))
-   (cap:σ → ℕ) (F:MvPolynomial σ K) (hcap:∀ i,F.degreeOf i ≤ cap i)
+   (cap:σ → ℕ) (F:MvPolynomial σ K) (hcap:∀ i,F.degreeOf i≤cap i)
    (hF:MvPolynomial.eval₂Hom (algebraMap K A) x F≠0)
    (S:Finset (A →ₐ[K] K))
    (hS:∀ φ∈S,φ (MvPolynomial.eval₂Hom (algebraMap K A) x F)=0):
-   (S.card:ℤ) ≤ ∑ i,(cap i:ℤ)*(coordinateDegree K L (c i):ℤ):=by
+   (S.card:ℤ)≤∑ i,(cap i:ℤ)*(coordinateDegree K L (c i):ℤ):=by
  classical
  have heval:MvPolynomial.eval₂Hom (algebraMap K L)
      (fun i↦coordinateValue K L (c i)) F=
@@ -144,7 +144,7 @@ theorem finite_model_zero_points_le_box
    apply IsFractionRing.injective A L
    simpa only [map_zero] using hz
  let U:=S.image (modelPlace K L A)
- have hU:∀ v∈U,1 ≤ RCN026.order K L v
+ have hU:∀ v∈U,1≤RCN026.order K L v
      (MvPolynomial.eval₂Hom (algebraMap K L) (fun i↦coordinateValue K L (c i)) F):=by
    intro v hv
    obtain ⟨φ,hφ,rfl⟩:=Finset.mem_image.mp hv

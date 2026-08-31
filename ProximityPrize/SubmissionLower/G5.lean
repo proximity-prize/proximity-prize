@@ -10,14 +10,14 @@ def evaluationOn (N:ℕ) (roots:Finset K):
  map_add' _ _:=funext fun _ => Polynomial.eval_add
  map_smul' _ _:=funext <| by simp
 theorem evaluationOn_surjective (N:ℕ) (roots:Finset K)
-   (hcard:roots.card ≤ N):Function.Surjective (evaluationOn N roots):=by
+   (hcard:roots.card≤N):Function.Surjective (evaluationOn N roots):=by
  let E:=Lagrange.funEquivDegreeLT (s:=roots) (v:=fun x:K => x)
    (Set.injOn_id (roots:Set K))
  intro values
  let small:=E.symm values
- have hsmall:(small:Polynomial K).degree < (roots.card:WithBot ℕ):=
+ have hsmall:(small:Polynomial K).degree<(roots.card:WithBot ℕ):=
    Polynomial.mem_degreeLT.mp small.property
- have hlarge:(small:Polynomial K).degree < (N:WithBot ℕ):=
+ have hlarge:(small:Polynomial K).degree<(N:WithBot ℕ):=
    hsmall.trans_le (by exact_mod_cast hcard)
  refine ⟨⟨(small:Polynomial K),Polynomial.mem_degreeLT.mpr hlarge⟩,?_⟩
  change E small=values
@@ -27,7 +27,7 @@ theorem finrank_degreeLT (N:ℕ):
  simpa using Module.finrank_eq_card_basis (Polynomial.degreeLT.basis K N)
 theorem sylvester_rank_eq_finrank_range
    (p q:Polynomial K) (m n:ℕ)
-   (hp:p.natDegree ≤ m) (hq:q.natDegree ≤ n):
+   (hp:p.natDegree≤m) (hq:q.natDegree≤n):
    (Polynomial.sylvester p q m n).rank=
      Module.finrank K (LinearMap.range (Polynomial.sylvesterMap p q hp hq)):=by
  have hmatrix:LinearMap.toMatrix

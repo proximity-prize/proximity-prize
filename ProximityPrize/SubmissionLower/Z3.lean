@@ -109,7 +109,7 @@ def flagPullWeights (weights:Fin 3 → ℕ):Fin 3 → ℕ:=
    max (weights 1) (max (weights 0) (weights 2)),
    weights 2]
 theorem flagImage_wt_le (weights:Fin 3 → ℕ) (lam μ ν:K) (i:Fin 3):
-   wt weights (flagImage lam μ ν i) ≤ flagPullWeights weights i:=by
+   wt weights (flagImage lam μ ν i)≤flagPullWeights weights i:=by
  fin_cases i
  · dsimp [flagImage,flagPullWeights]
    have hm:=wt_mul_le weights (MvPolynomial.C lam:Poly3 K)
@@ -152,9 +152,9 @@ theorem flag_monomial_product_wt_le
      simp
 theorem flagAlgHom_wt_le_pulled
    (weights:Fin 3 → ℕ) (lam μ ν:K) (F:Poly3 K):
-   wt weights (flagAlgHom lam μ ν F) ≤ wt (flagPullWeights weights) F:=by
+   wt weights (flagAlgHom lam μ ν F)≤wt (flagPullWeights weights) F:=by
  change wt weights
-     (MvPolynomial.eval₂ MvPolynomial.C (flagImage lam μ ν) F) ≤ _
+     (MvPolynomial.eval₂ MvPolynomial.C (flagImage lam μ ν) F)≤_
  rw [MvPolynomial.eval₂_eq]
  apply wt_finset_sum_le
  intro d hd
@@ -182,14 +182,14 @@ def totalWeight:Fin 3 → ℕ:=![1,1,1]
 def PolynomialInFlag (p:FlagDegree) (F:Poly3 K):Prop:=
  ∀ d∈F.support,InFlag p d
 theorem wt_s_le_of_inFlag {p:FlagDegree} {F:Poly3 K}
-   (hF:PolynomialInFlag p F):wt sWeight F ≤ p.all:=by
+   (hF:PolynomialInFlag p F):wt sWeight F≤p.all:=by
  unfold wt MvPolynomial.weightedTotalDegree
  apply Finset.sup_le
  intro d hd
  have h:=(hF d hd).1
  simpa [sWeight,weight_fin3] using h
 theorem wt_ys_le_of_inFlag {p:FlagDegree} {F:Poly3 K}
-   (hF:PolynomialInFlag p F):wt ysWeight F ≤ p.yz+p.all:=by
+   (hF:PolynomialInFlag p F):wt ysWeight F≤p.yz+p.all:=by
  unfold wt MvPolynomial.weightedTotalDegree
  apply Finset.sup_le
  intro d hd
@@ -197,7 +197,7 @@ theorem wt_ys_le_of_inFlag {p:FlagDegree} {F:Poly3 K}
  simpa [ysWeight,weight_fin3,Nat.add_comm] using h
 theorem wt_total_le_of_inFlag {p:FlagDegree} {F:Poly3 K}
    (hF:PolynomialInFlag p F):
-   wt totalWeight F ≤ p.zOnly+p.yz+p.all:=by
+   wt totalWeight F≤p.zOnly+p.yz+p.all:=by
  unfold wt MvPolynomial.weightedTotalDegree
  apply Finset.sup_le
  intro d hd
@@ -246,24 +246,24 @@ theorem flag_jointOrderCertificate_of_projection_data
    (ht:Transcendental K (coordinate K P (order 0)))
    (hHne:H≠0)
    (hGouter:(RCN011.planeMap K order
-     (flagAlgHom lam μ ν G)).natDegree ≤ n)
+     (flagAlgHom lam μ ν G)).natDegree≤n)
    (hHouter:(RCN011.planeMap K order
-     (flagAlgHom lam μ ν H)).natDegree ≤ mCap)
+     (flagAlgHom lam μ ν H)).natDegree≤mCap)
    (hGsupport:∀ d∈(RCN371.rationalMap K order
-     (flagAlgHom lam μ ν G)).support,d 0+d 1 ≤ totalG)
+     (flagAlgHom lam μ ν G)).support,d 0+d 1≤totalG)
    (hHsupport:∀ d∈(RCN371.rationalMap K order
-     (flagAlgHom lam μ ν H)).support,d 0+d 1 ≤ totalH)
+     (flagAlgHom lam μ ν H)).support,d 0+d 1≤totalH)
    (hGswapOuter:(RCN011.planeMap K
      (RCN013.swapOtherOrder order)
-     (flagAlgHom lam μ ν G)).natDegree ≤ gOuter)
+     (flagAlgHom lam μ ν G)).natDegree≤gOuter)
    (hHswapInner:Polynomial.Bivariate.degreeX
      (RCN011.planeMap K
        (RCN013.swapOtherOrder order)
-       (flagAlgHom lam μ ν H)) ≤ hInner)
-   (hnp:n < p) (hgOuterP:gOuter < p) (hcapP:cap < p)
-   (hswapP:gOuter*hInner < p)
-   (hbudget:∀ m,m ≤ mCap →
-     m*totalG+n*totalH-m*n ≤ cap):
+       (flagAlgHom lam μ ν H))≤hInner)
+   (hnp:n<p) (hgOuterP:gOuter<p) (hcapP:cap<p)
+   (hswapP:gOuter*hInner<p)
+   (hbudget:∀ m,m≤mCap →
+     m*totalG+n*totalH-m*n≤cap):
    JointOrderCertificate K order
      (flagAlgHom lam μ ν G) (flagAlgHom lam μ ν H) p:=by
  exact jointOrderCertificate_of_projection_data K order P

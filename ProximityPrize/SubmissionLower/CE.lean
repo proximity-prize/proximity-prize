@@ -10,7 +10,7 @@ structure PrimaryPiecesCertificate
    (P Q:Polynomial R) (multiplicity:J → ℕ) where
  pieces:J → Ideal (Polynomial R)
  coprime:Pairwise fun i j↦IsCoprime (pieces i) (pieces j)
- contains:∀ j,intersectionIdeal P Q ≤ pieces j
+ contains:∀ j,intersectionIdeal P Q≤pieces j
  length_le:∀ j,(multiplicity j:ℕ∞) ≤
    Module.length R (Polynomial R ⧸ pieces j)
 end

@@ -26,7 +26,7 @@ theorem surfaceMap_in_regularFlag
  have h2:=MvPolynomial.monomial_le_degreeOf (2:Fin 3) hd
  have h0':d 0 ≤ F.1.degreeOf (1:Fin 4):=by
    simpa using h0.trans (surfaceMap_degreeOf_le phi F.1 0)
- have h1':d 1 ≤ F.1.degreeOf (2:Fin 4):=by
+ have h1':d 1≤F.1.degreeOf (2:Fin 4):=by
    simpa using h1.trans (surfaceMap_degreeOf_le phi F.1 1)
  have h2':d 2 ≤ F.1.degreeOf (3:Fin 4):=by
    simpa using h2.trans (surfaceMap_degreeOf_le phi F.1 2)

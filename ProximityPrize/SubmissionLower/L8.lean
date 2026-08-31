@@ -19,26 +19,26 @@ def targetPrime (I:Ideal A) (J:Ideal B):
    Ideal (B ⧸ I.map (algebraMap A B)):=
  J.map (Ideal.Quotient.mk (I.map (algebraMap A B)))
 theorem sourcePrime_isPrime
-   (I P:Ideal A) [P.IsPrime] (hIP:I ≤ P):
+   (I P:Ideal A) [P.IsPrime] (hIP:I≤P):
    (sourcePrime I P).IsPrime:=by
  apply Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective
  simpa only [Ideal.mk_ker] using hIP
 theorem map_ideal_le_relation
    (I P:Ideal A) (J:Ideal B)
-   (hIP:I ≤ P) (hcontract:J.comap (algebraMap A B)=P):
-   I.map (algebraMap A B) ≤ J:=by
+   (hIP:I≤P) (hcontract:J.comap (algebraMap A B)=P):
+   I.map (algebraMap A B)≤J:=by
  rw [Ideal.map_le_iff_le_comap,hcontract]
  exact hIP
 theorem targetPrime_isPrime
    (I P:Ideal A) (J:Ideal B) [J.IsPrime]
-   (hIP:I ≤ P) (hcontract:J.comap (algebraMap A B)=P):
+   (hIP:I≤P) (hcontract:J.comap (algebraMap A B)=P):
    (targetPrime I J).IsPrime:=by
  apply Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective
  simpa only [Ideal.mk_ker] using
    map_ideal_le_relation I P J hIP hcontract
 theorem targetPrime_contract
    (I P:Ideal A) (J:Ideal B)
-   (hIP:I ≤ P) (hcontract:J.comap (algebraMap A B)=P):
+   (hIP:I≤P) (hcontract:J.comap (algebraMap A B)=P):
    (targetPrime I J).comap (surfaceMap I)=sourcePrime I P:=by
  let qA:A →+*A ⧸ I:=Ideal.Quotient.mk I
  let qB:B →+*B ⧸ I.map (algebraMap A B):=
@@ -53,7 +53,7 @@ theorem targetPrime_contract
    apply DFunLike.ext _ _
    intro a
    rfl
- rw [hcomp, ←Ideal.comap_comap,
+ rw [hcomp,←Ideal.comap_comap,
    Ideal.comap_map_of_surjective' qB Ideal.Quotient.mk_surjective,
    Ideal.mk_ker,
    sup_eq_left.mpr (map_ideal_le_relation I P J hIP hcontract),
@@ -67,17 +67,17 @@ theorem surface_isLocalization (I:Ideal A):
  letI:=surfaceAlgebra (A:=A) (B:=B) I
  exact quotient_isLocalization M I (I.map (algebraMap A B)) rfl
 noncomputable abbrev SourceLocal
-   (I P:Ideal A) [P.IsPrime] (hIP:I ≤ P):=
+   (I P:Ideal A) [P.IsPrime] (hIP:I≤P):=
  @Localization.AtPrime (A ⧸ I) _ (sourcePrime I P)
    (sourcePrime_isPrime I P hIP)
 noncomputable abbrev TargetLocal
    (I P:Ideal A) (J:Ideal B) [J.IsPrime]
-   (hIP:I ≤ P) (hcontract:J.comap (algebraMap A B)=P):=
+   (hIP:I≤P) (hcontract:J.comap (algebraMap A B)=P):=
  @Localization.AtPrime (B ⧸ I.map (algebraMap A B)) _ (targetPrime I J)
    (targetPrime_isPrime I P J hIP hcontract)
 noncomputable def surfaceLocalEquiv
    (I P:Ideal A) [P.IsPrime] (J:Ideal B) [J.IsPrime]
-   (hIP:I ≤ P) (hcontract:J.comap (algebraMap A B)=P):
+   (hIP:I≤P) (hcontract:J.comap (algebraMap A B)=P):
    SourceLocal I P hIP ≃+*TargetLocal I P J hIP hcontract:=by
  let p:=sourcePrime I P
  let q:=targetPrime I J

@@ -35,10 +35,10 @@ theorem residual_agreement_of_original
  field_simp [hV]
  linear_combination hagree-heval
 theorem noLargeSelectedPencil_residual
-   (I:Finset ι) (x:ι → K) (w e:ℕ) (hIw:I.card ≤ w)
+   (I:Finset ι) (x:ι → K) (w e:ℕ) (hIw:I.card≤w)
    (selected residual:K → Polynomial K) (Gamma:Finset K)
-   (P0 P1:Polynomial K) (hP0:P0.natDegree ≤ w)
-   (hP1:P1.natDegree ≤ w)
+   (P0 P1:Polynomial K) (hP0:P0.natDegree≤w)
+   (hP1:P1.natDegree≤w)
    (hnormal:∀ gamma∈Gamma,
      selected gamma=P0+Polynomial.C gamma*P1+
        Lagrange.nodal I x*residual gamma)
@@ -50,21 +50,21 @@ theorem noLargeSelectedPencil_residual
  let B0:=P1+V*B
  have hV:V.natDegree=I.card:=by
    exact Lagrange.natDegree_nodal
- have hVA:(V*A).natDegree ≤ w:=by
+ have hVA:(V*A).natDegree≤w:=by
    calc
-     (V*A).natDegree ≤ V.natDegree+A.natDegree:=
+     (V*A).natDegree≤V.natDegree+A.natDegree:=
        Polynomial.natDegree_mul_le
-     _ ≤ I.card+(w-I.card):=by omega
+     _≤I.card+(w-I.card):=by omega
      _=w:=Nat.add_sub_of_le hIw
- have hVB:(V*B).natDegree ≤ w:=by
+ have hVB:(V*B).natDegree≤w:=by
    calc
-     (V*B).natDegree ≤ V.natDegree+B.natDegree:=
+     (V*B).natDegree≤V.natDegree+B.natDegree:=
        Polynomial.natDegree_mul_le
-     _ ≤ I.card+(w-I.card):=by omega
+     _≤I.card+(w-I.card):=by omega
      _=w:=Nat.add_sub_of_le hIw
- have hA0:A0.natDegree ≤ w:=by
+ have hA0:A0.natDegree≤w:=by
    exact (Polynomial.natDegree_add_le _ _).trans (max_le hP0 hVA)
- have hB0:B0.natDegree ≤ w:=by
+ have hB0:B0.natDegree≤w:=by
    exact (Polynomial.natDegree_add_le _ _).trans (max_le hP1 hVB)
  calc
    (Gamma.filter (fun gamma↦
@@ -79,6 +79,6 @@ theorem noLargeSelectedPencil_residual
      rw [hnormal gamma hGamma,hpencil]
      simp only [A0,B0,V]
      ring
-   _ ≤ e+1:=hno A0 B0 hA0 hB0
+   _≤e+1:=hno A0 B0 hA0 hB0
 end
 end ProximityPrize.SubmissionLower.RCN160

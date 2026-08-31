@@ -5,11 +5,11 @@ variable {ι F:Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
 variable [Field F] [Fintype F] [DecidableEq F]
 def ZeroCoordinateBound (C:LinearCode ι F) (w:ℕ):Prop:=
  ∀ c:ι → F,c∈C → c≠0 →
-   (Finset.univ.filter (fun i => c i=0)).card ≤ w
+   (Finset.univ.filter (fun i => c i=0)).card≤w
 theorem eq_of_agreement_on_large_support
    (C:LinearCode ι F) (w:ℕ) (hzero:ZeroCoordinateBound C w)
    (c d:ι → F) (hc:c∈C) (hd:d∈C)
-   (A:Finset ι) (hA:w < A.card)
+   (A:Finset ι) (hA:w<A.card)
    (hagree:∀ i∈A,c i=d i):c=d:=by
  classical
  by_contra hne
@@ -24,18 +24,18 @@ theorem eq_of_agreement_on_large_support
 theorem seed_indexed_list_card_le
    (C:LinearCode ι F) (e w B:ℕ)
    (hzero:ZeroCoordinateBound C w)
-   (hgap:w < Fintype.card ι-e)
+   (hgap:w<Fintype.card ι-e)
    (halign:AffineLineAlignmentBound C e B)
    (u:ι → F) (S:Finset F) (selected:F → ι → F)
    (A:F → Finset ι)
    (hinj:Set.InjOn selected S)
    (hcode:∀ seed∈S,selected seed∈C)
-   (hcard:∀ seed∈S,Fintype.card ι-e ≤ (A seed).card)
+   (hcard:∀ seed∈S,Fintype.card ι-e≤(A seed).card)
    (hagree:∀ seed∈S,∀ i∈A seed,selected seed i=u i):
-   S.card ≤ B:=by
+   S.card≤B:=by
  classical
  by_contra hnot
- have hlarge:B < S.card:=Nat.lt_of_not_ge hnot
+ have hlarge:B<S.card:=Nat.lt_of_not_ge hnot
  let U:Fin 2 → ι → F:=![u,0]
  have hprojected:∀ seed∈S,
      LinearCode.projectedWord (fun i => U 0 i+seed*U 1 i) (A seed)∈
@@ -69,7 +69,7 @@ theorem seed_indexed_list_card_le
    have huv:u i=p 0 i:=by
      simpa only [hdi,mul_zero,add_zero] using hv
    exact (hagree z (hTS hz) i hi).trans huv
- have hsmall:T.card ≤ 1:=by
+ have hsmall:T.card≤1:=by
    apply Finset.card_le_one.mpr
    intro z hz t ht
    exact hinj (hTS hz) (hTS ht) ((hselected z hz).trans (hselected t ht).symm)
@@ -77,20 +77,20 @@ theorem seed_indexed_list_card_le
 theorem finite_list_card_le
    (C:LinearCode ι F) (e w B:ℕ)
    (hzero:ZeroCoordinateBound C w)
-   (hgap:w < Fintype.card ι-e)
+   (hgap:w<Fintype.card ι-e)
    (halign:AffineLineAlignmentBound C e B)
-   (hfield:B < Fintype.card F)
+   (hfield:B<Fintype.card F)
    (u:ι → F) (L:Finset (ι → F))
    (hcode:∀ c∈L,c∈C)
    (hclose:∀ c∈L,
-     Fintype.card ι-e ≤ (Finset.univ.filter (fun i => c i=u i)).card):
-   L.card ≤ B:=by
+     Fintype.card ι-e≤(Finset.univ.filter (fun i => c i=u i)).card):
+   L.card≤B:=by
  classical
  letI:DecidableEq (ι → F):=Classical.decEq (ι → F)
  by_contra hnot
  obtain ⟨D,hDL,hDcard⟩:=
-   Finset.exists_subset_card_eq (show B+1 ≤ L.card by omega)
- have hsize:Fintype.card ↥D ≤ Fintype.card F:=by
+   Finset.exists_subset_card_eq (show B+1≤L.card by omega)
+ have hsize:Fintype.card ↥D≤Fintype.card F:=by
    rw [Fintype.card_coe,hDcard]
    omega
  let toSeed:↥D → F:=fun d =>
@@ -133,7 +133,7 @@ theorem finite_list_card_le
      ((congrArg toSeed hd).trans (hchosen other hother))
  let A:F → Finset ι:=fun seed =>
    Finset.univ.filter (fun i => selected seed i=u i)
- have hbounded:S.card ≤ B:=seed_indexed_list_card_le C e w B hzero hgap
+ have hbounded:S.card≤B:=seed_indexed_list_card_le C e w B hzero hgap
    halign u S selected A hinj
    (fun seed hseed => hcode _ (hmem seed hseed))
    (fun seed hseed => hclose _ (hmem seed hseed))
@@ -144,14 +144,14 @@ def scalarList (C:LinearCode ι F) (u:ι → F) (e:ℕ):
    Finset (ι → F):=by
  classical
  exact Finset.univ.filter (fun c => c∈C∧
-   Fintype.card ι-e ≤ (Finset.univ.filter (fun i => c i=u i)).card)
+   Fintype.card ι-e≤(Finset.univ.filter (fun i => c i=u i)).card)
 theorem scalarList_card_le
    (C:LinearCode ι F) (e w B:ℕ)
    (hzero:ZeroCoordinateBound C w)
-   (hgap:w < Fintype.card ι-e)
+   (hgap:w<Fintype.card ι-e)
    (halign:AffineLineAlignmentBound C e B)
-   (hfield:B < Fintype.card F) (u:ι → F):
-   (scalarList C u e).card ≤ B:=by
+   (hfield:B<Fintype.card F) (u:ι → F):
+   (scalarList C u e).card≤B:=by
  classical
  apply finite_list_card_le C e w B hzero hgap halign hfield u (scalarList C u e)
  · intro c hc

@@ -109,9 +109,9 @@ def remainderOn (D:Polynomial F) (N:ℕ) (hD:D.Monic):
  map_add' p q:=Subtype.ext (Polynomial.add_modByMonic _ _)
  map_smul' c p:=Subtype.ext (Polynomial.smul_modByMonic c (p:Polynomial F))
 theorem remainderOn_surjective (D:Polynomial F) (N:ℕ) (hD:D.Monic)
-   (hdegree:D.natDegree ≤ N):Function.Surjective (remainderOn D N hD):=by
+   (hdegree:D.natDegree≤N):Function.Surjective (remainderOn D N hD):=by
  intro q
- have hqN:(q:Polynomial F).degree < (N:WithBot ℕ):=
+ have hqN:(q:Polynomial F).degree<(N:WithBot ℕ):=
    (Polynomial.mem_degreeLT.mp q.property).trans_le (by exact_mod_cast hdegree)
  refine ⟨⟨q,Polynomial.mem_degreeLT.mpr hqN⟩,?_⟩
  apply Subtype.ext
@@ -120,7 +120,7 @@ theorem remainderOn_surjective (D:Polynomial F) (N:ℕ) (hD:D.Monic)
    exact Polynomial.mem_degreeLT.mp q.property)
 theorem sylvester_rank_eq_finrank_range
    (p q:Polynomial F) (m n:ℕ)
-   (hp:p.natDegree ≤ m) (hq:q.natDegree ≤ n):
+   (hp:p.natDegree≤m) (hq:q.natDegree≤n):
    (Polynomial.sylvester p q m n).rank=
      Module.finrank F (LinearMap.range (Polynomial.sylvesterMap p q hp hq)):=by
  have hmatrix:LinearMap.toMatrix

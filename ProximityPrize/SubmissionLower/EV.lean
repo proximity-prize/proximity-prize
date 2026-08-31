@@ -39,7 +39,7 @@ theorem recursive_scaled_factor_with_support_6600
    (p:FlagDegree)
    (hnodes:S.nodes.card=n)
    (hagreement:∀ gamma∈Gamma,
-     agreements ≤ (S.agreementFiber gamma).card)
+     agreements≤(S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,
      ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
          (x i) (D.stage.u0 i) (D.stage.u1 i) →
@@ -109,7 +109,7 @@ theorem recursive_scaled_factor_6600
    (p:FlagDegree)
    (hnodes:S.nodes.card=n)
    (hagreement:∀ gamma∈Gamma,
-     agreements ≤ (S.agreementFiber gamma).card)
+     agreements≤(S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,
      ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
          (x i) (D.stage.u0 i) (D.stage.u1 i) →
@@ -128,7 +128,7 @@ theorem recursive_scaled_factor_6600
            (errors+1)*gap*
              (flagMixed p unitYZFlag unitZFlag+
                flagMixed p unitYZFlag unitAllFlag))):
-   Gamma.card*gap^2 ≤ factorRegularLedger p:=by
+   Gamma.card*gap^2≤factorRegularLedger p:=by
  have h:=recursive_scaled_factor_with_support_6600 hphi
    ResidualSupportParameters.acceptedSupport S p hnodes hagreement
      (by

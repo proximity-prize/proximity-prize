@@ -15,12 +15,12 @@ variable {A C} in
 theorem discr_eq_discr_of_algEquiv [Fintype ι] (b:ι → B) (f:B ≃ₐ[A] C):
    Algebra.discr A b=Algebra.discr A (f ∘ b):=by
  rw [discr_def];congr;ext
- simp_rw [traceMatrix_apply,traceForm_apply,Function.comp, ←map_mul f,trace_eq_of_algEquiv]
+ simp_rw [traceMatrix_apply,traceForm_apply,Function.comp,←map_mul f,trace_eq_of_algEquiv]
 variable {ι':Type*} [Fintype ι'] [Fintype ι] [DecidableEq ι']
 section Basic
 @[simp]
 theorem discr_reindex (b:Basis ι A B) (f:ι ≃ ι'):discr A (b ∘ ⇑f.symm)=discr A b:=by
- classical rw [←Basis.coe_reindex,discr_def,traceMatrix_reindex,det_reindex_self, ←discr_def]
+ classical rw [←Basis.coe_reindex,discr_def,traceMatrix_reindex,det_reindex_self,←discr_def]
 theorem discr_zero_of_not_linearIndependent [IsDomain A] {b:ι → B}
    (hli:¬LinearIndependent A b):discr A b=0:=by
  classical
@@ -31,18 +31,18 @@ theorem discr_zero_of_not_linearIndependent [IsDomain A] {b:ι → B}
      intro j
      simp [mul_comm]
    simp only [mulVec,dotProduct,traceMatrix_apply,Pi.zero_apply,traceForm_apply,fun j =>
-     this j, ←map_sum, ←sum_mul,hg,zero_mul,map_zero]
+     this j,←map_sum,←sum_mul,hg,zero_mul,map_zero]
  by_contra h
  rw [discr_def] at h
  simp [Matrix.eq_zero_of_mulVec_eq_zero h this] at hi
 variable {A}
 theorem discr_of_matrix_vecMul (b:ι → B) (P:Matrix ι ι A):
    discr A (b ᵥ*P.map (algebraMap A B))=P.det^2*discr A b:=by
- rw [discr_def,traceMatrix_of_matrix_vecMul,det_mul,det_mul,det_transpose,mul_comm, ←
+ rw [discr_def,traceMatrix_of_matrix_vecMul,det_mul,det_mul,det_transpose,mul_comm,←
    mul_assoc,discr_def,pow_two]
 theorem discr_of_matrix_mulVec (b:ι → B) (P:Matrix ι ι A):
    discr A (P.map (algebraMap A B)*ᵥ b)=P.det^2*discr A b:=by
- rw [discr_def,traceMatrix_of_matrix_mulVec,det_mul,det_mul,det_transpose,mul_comm, ←
+ rw [discr_def,traceMatrix_of_matrix_mulVec,det_mul,det_mul,det_transpose,mul_comm,←
    mul_assoc,discr_def,pow_two]
 end Basic
 section Field
@@ -51,7 +51,7 @@ variable [Algebra K L] [Algebra K E]
 variable [Module.Finite K L] [IsAlgClosed E]
 theorem discr_not_zero_of_basis [Algebra.IsSeparable K L] (b:Basis ι K L):
    discr K b≠0:=by
- rw [discr_def,traceMatrix_of_basis, ←LinearMap.BilinForm.nondegenerate_iff_det_ne_zero]
+ rw [discr_def,traceMatrix_of_basis,←LinearMap.BilinForm.nondegenerate_iff_det_ne_zero]
  exact traceForm_nondegenerate _ _
 theorem discr_isUnit_of_basis [Algebra.IsSeparable K L] (b:Basis ι K L):IsUnit (discr K b):=
  IsUnit.mk0 _ (discr_not_zero_of_basis _ _)
@@ -65,7 +65,7 @@ theorem discr_powerBasis_eq_prod (e:Fin pb.dim ≃ (L →ₐ[K] E)) [Algebra.IsS
    algebraMap K E (discr K pb.basis)=
      ∏ i:Fin pb.dim,∏ j∈Ioi i,(e j pb.gen-e i pb.gen)^2:=by
  rw [discr_eq_det_embeddingsMatrixReindex_pow_two K E pb.basis e,
-   embeddingsMatrixReindex_eq_vandermonde,det_transpose,det_vandermonde, ←prod_pow]
+   embeddingsMatrixReindex_eq_vandermonde,det_transpose,det_vandermonde,←prod_pow]
  congr;ext i
  rw [←prod_pow]
 theorem discr_powerBasis_eq_prod' [Algebra.IsSeparable K L] (e:Fin pb.dim ≃ (L →ₐ[K] E)):
@@ -86,18 +86,18 @@ theorem discr_powerBasis_eq_prod'' [Algebra.IsSeparable K L] (e:Fin pb.dim ≃ (
  simp only [prod_pow_eq_pow_sum,prod_const]
  congr
  rw [←@Nat.cast_inj ℚ,Nat.cast_sum]
- have:∀ x:Fin pb.dim,↑x+1 ≤ pb.dim:=by simp [Fin.is_lt]
+ have:∀ x:Fin pb.dim,↑x+1≤pb.dim:=by simp [Fin.is_lt]
  simp_rw [Fin.card_Ioi,Nat.sub_sub,add_comm 1]
  simp only [Nat.cast_sub,this,Finset.card_fin,nsmul_eq_mul,sum_const,sum_sub_distrib,
    Nat.cast_add,Nat.cast_one,sum_add_distrib,mul_one]
- rw [←Nat.cast_sum, ←@Finset.sum_range ℕ _ pb.dim fun i => i,sum_range_id]
+ rw [←Nat.cast_sum,←@Finset.sum_range ℕ _ pb.dim fun i => i,sum_range_id]
  have hn:n=pb.dim:=by
-   rw [←AlgHom.card K L E, ←Fintype.card_fin pb.dim]
+   rw [←AlgHom.card K L E,←Fintype.card_fin pb.dim]
    exact Fintype.card_congr e.symm
  have h₂:2∣pb.dim*(pb.dim-1):=pb.dim.even_mul_pred_self.two_dvd
  have hne:((2:ℕ):ℚ)≠0:=by simp
- have hle:1 ≤ pb.dim:=by
-   rw [←hn,Nat.one_le_iff_ne_zero, ←zero_lt_iff,Module.finrank_pos_iff]
+ have hle:1≤pb.dim:=by
+   rw [←hn,Nat.one_le_iff_ne_zero,←zero_lt_iff,Module.finrank_pos_iff]
    infer_instance
  rw [hn,Nat.cast_div h₂ hne,Nat.cast_mul,Nat.cast_sub hle]
  ring
@@ -190,7 +190,7 @@ theorem discr_eq_discr (b:Basis ι ℤ A) (b':Basis ι ℤ A):
  convert! Algebra.discr_of_matrix_vecMul b' (b'.toMatrix b)
  · rw [Basis.toMatrix_map_vecMul]
  · suffices IsUnit (b'.toMatrix b).det by
-     rw [Int.isUnit_iff, ←sq_eq_one_iff] at this
+     rw [Int.isUnit_iff,←sq_eq_one_iff] at this
      rw [this,one_mul]
    rw [←LinearMap.toMatrix_id_eq_basis_toMatrix b b']
    exact LinearEquiv.isUnit_det (LinearEquiv.refl ℤ A) b b'

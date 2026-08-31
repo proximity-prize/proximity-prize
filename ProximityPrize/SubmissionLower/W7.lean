@@ -13,14 +13,14 @@ theorem planeEval_eq_eval₂ (y r:E) (P:Polynomial (Polynomial K)):
  rw [Polynomial.eval_map]
 theorem finite_separable_finrank_le_planar_bound
    (p:ℕ) [CharP K p] (P Q:Polynomial (Polynomial K))
-   (hirreducible:Irreducible P) (hpositive:0 < P.natDegree)
-   (hproper:¬ P∣Q) (hRdegree:P.natDegree < p)
-   (hresultantDegree:(Polynomial.resultant P Q P.natDegree Q.natDegree).natDegree < p)
+   (hirreducible:Irreducible P) (hpositive:0<P.natDegree)
+   (hproper:¬ P∣Q) (hRdegree:P.natDegree<p)
+   (hresultantDegree:(Polynomial.resultant P Q P.natDegree Q.natDegree).natDegree<p)
    (y r:E)
    (hgenerate:IntermediateField.adjoin K ({y,r}:Set E)=⊤)
    (hP:planeEval K E y r P=0) (hQ:planeEval K E y r Q=0):
    FiniteDimensional K E∧Algebra.IsSeparable K E∧
-     Module.finrank K E ≤ Q.natDegree*Polynomial.Bivariate.degreeX P+
+     Module.finrank K E≤Q.natDegree*Polynomial.Bivariate.degreeX P+
        P.natDegree*Polynomial.Bivariate.degreeX Q:=by
  have hPeval:Polynomial.eval₂
      (Polynomial.eval₂RingHom (algebraMap K E) y) r P=0:=by
@@ -44,9 +44,9 @@ variable {I:Type} [Fintype I] (E:I → Type)
  [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 theorem finite_separable_sum_finrank_le_planar_bound
    (p:ℕ) [CharP K p] (P Q:Polynomial (Polynomial K))
-   (hirreducible:Irreducible P) (hpositive:0 < P.natDegree)
-   (hproper:¬ P∣Q) (hRdegree:P.natDegree < p)
-   (hresultantDegree:(Polynomial.resultant P Q P.natDegree Q.natDegree).natDegree < p)
+   (hirreducible:Irreducible P) (hpositive:0<P.natDegree)
+   (hproper:¬ P∣Q) (hRdegree:P.natDegree<p)
+   (hresultantDegree:(Polynomial.resultant P Q P.natDegree Q.natDegree).natDegree<p)
    (y r:∀ i,E i)
    (hgenerate:∀ i,IntermediateField.adjoin K ({y i,r i}:Set (E i))=⊤)
    (hkernels:Function.Injective (fun i => relationIdeal K (E i) (y i) (r i)))

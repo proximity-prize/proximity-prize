@@ -148,7 +148,7 @@ theorem pderiv_residual
        simp [residualImage,hP,Derivation.leibniz] <;> ring
 theorem wt_add_le_residual
    (weights:Fin 3 → ℕ) (F G:Poly3 K):
-   wt weights (F+G) ≤ max (wt weights F) (wt weights G):=by
+   wt weights (F+G)≤max (wt weights F) (wt weights G):=by
  unfold wt
  rw [←degree_weightedLift,map_add]
  simpa only [degree_weightedLift] using
@@ -225,7 +225,7 @@ theorem residualAlgHom_wt_le_pulled
      wt (RCN125.flagPullWeights weights) F:=by
  change wt weights
      (MvPolynomial.eval₂ MvPolynomial.C
-       (residualImage aY v bY aS bS cS) F) ≤ _
+       (residualImage aY v bY aS bS cS) F)≤_
  rw [MvPolynomial.eval₂_eq]
  apply wt_finset_sum_le
  intro d hd

@@ -10,9 +10,9 @@ variable (K L:Type*) [Field K] [Field L] [Algebra K L]
 abbrev Place:=RCN345.NormalizedValuation K L
 def poleOrder (v:Place K L) (x:L):ℤ:=
  RCN187.poleOrder v.val x
-theorem poleOrder_nonneg (v:Place K L) (x:L):0 ≤ poleOrder K L v x:=
+theorem poleOrder_nonneg (v:Place K L) (x:L):0≤poleOrder K L v x:=
  le_max_left _ _
-theorem poleOrder_eq_zero_of_le_one (v:Place K L) (x:L) (h:v.val x ≤ 1):
+theorem poleOrder_eq_zero_of_le_one (v:Place K L) (x:L) (h:v.val x≤1):
    poleOrder K L v x=0:=by
  change max 0 (v.val x).log=0
  rw [←RCN187.log_max_one,max_eq_left h,WithZero.log_one]
@@ -99,7 +99,7 @@ theorem poleOrder_eq_zero_of_not_mem_infinity (v:Place K L)
    (hv:v∉infinityValues K L):
    poleOrder K L v (RCN345.parameter K L)=0:=by
  by_contra hnonzero
- have ht:1 < v.val (RCN345.parameter K L):=
+ have ht:1<v.val (RCN345.parameter K L):=
    lt_of_not_ge fun hle↦hnonzero (poleOrder_eq_zero_of_le_one K L v _ hle)
  letI:v.val.IsTrivialOn K:=v.property.2
  obtain ⟨q,hq,_⟩:=
@@ -136,7 +136,7 @@ theorem finite_sum_pole_le_finrank (W:Finset (Place K L)):
  calc
    _=∑ v∈W ∩ infinityValues K L,
        poleOrder K L v (RCN345.parameter K L):=htrim
-   _ ≤ ∑ v∈infinityValues K L,
+   _≤∑ v∈infinityValues K L,
        poleOrder K L v (RCN345.parameter K L):=by
      apply Finset.sum_le_sum_of_subset_of_nonneg Finset.inter_subset_right
      intro v _ _

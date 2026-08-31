@@ -24,9 +24,9 @@ theorem irs_code_eq_base_interleaved:
  change v∈IRSProfile.code ↔
    ∀ b:Fin IRSProfile.interleaving,(fun i => v i b)∈IRSProfile.baseCode
  exact RCN018.irs_code_mem_iff_rows v
-theorem nat_div_le_inv_pow {m q t:ℕ} (hm:0 < m)
-   (hq:m*2^t ≤ q):
-   (m:ENNReal)/(q:ENNReal) ≤ 1/2^t:=by
+theorem nat_div_le_inv_pow {m q t:ℕ} (hm:0<m)
+   (hq:m*2^t≤q):
+   (m:ENNReal)/(q:ENNReal)≤1/2^t:=by
  have hm0:(m:ENNReal)≠0:=by exact_mod_cast hm.ne'
  have hmtop:(m:ENNReal)≠⊤:=ENNReal.natCast_ne_top m
  have hqE:((m*2^t:ℕ):ENNReal) ≤ (q:ENNReal):=by

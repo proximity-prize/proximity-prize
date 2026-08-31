@@ -313,7 +313,7 @@ def AdaptiveGenericExactPolePolynomial.toResidualComponentBudget
          (CoordinateField Omega C.1) b hb,
        RCN346.poleOrder Omega (CoordinateField Omega C.1) v b) ≤
          (cost C:ℤ))
-   (sum_cost_le:(∑ C:RegularComponent Omega G T H,cost C) ≤ wholeCost):
+   (sum_cost_le:(∑ C:RegularComponent Omega G T H,cost C)≤wholeCost):
    ResidualComponentBudget G T H (fun A => A.support ⊆ E) wholeCost where
  cost:=cost
  sum_cost_le:=sum_cost_le

@@ -20,8 +20,8 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
-variable {errorCap : ℕ}
-variable {stageSupport : RCN275.ResidualSupportParameters}
+variable {errorCap:ℕ}
+variable {stageSupport:RCN275.ResidualSupportParameters}
 theorem exists_original_multiplier_for_localMultiplicity
    (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
@@ -45,13 +45,13 @@ theorem exists_original_multiplier_for_localMultiplicity
  let R:=LocalRing S C
  letI:IsDomain R:=family.domain C
  letI:IsDiscreteValuationRing R:=family.dvr C
- have hmuPos:1 ≤ mu:=one_le_localMultiplicity S hfirstProper C
+ have hmuPos:1≤mu:=one_le_localMultiplicity S hfirstProper C
  have horder:IsDiscreteValuationRing.addVal R (localImage S C N)=mu:=by
    change IsDiscreteValuationRing.addVal R (localImage S C N)=
      (IsDiscreteValuationRing.addVal R (localImage S C N)).toNat
    apply (ENat.coe_toNat ?_).symm
    intro htop
-   change 1 ≤ (IsDiscreteValuationRing.addVal R (localImage S C N)).toNat at hmuPos
+   change 1≤(IsDiscreteValuationRing.addVal R (localImage S C N)).toNat at hmuPos
    rw [htop] at hmuPos
    simp at hmuPos
  obtain ⟨uniformizer,hUniformizer⟩:=
@@ -89,12 +89,12 @@ theorem proper_global_tail_mem_projected_primary
  let Q:=Ideal.span {surface} ⊔ J^mu
  obtain ⟨s,hsnot,hsN⟩:=
    exists_original_multiplier_for_localMultiplicity S hfirstProper C
- have hmapI:Ideal.map f (factorIdeal d.factor) ≤ Ideal.span {surface}:=by
+ have hmapI:Ideal.map f (factorIdeal d.factor)≤Ideal.span {surface}:=by
    rw [factorIdeal,Ideal.map_span,Set.image_singleton,Ideal.span_le]
    exact Set.singleton_subset_iff.mpr hfactor
- have hmapP:Ideal.map f (componentPrime S C) ≤ J:=by
+ have hmapP:Ideal.map f (componentPrime S C)≤J:=by
    rw [Ideal.map_le_iff_le_comap,hcontract]
- have hmapPow:Ideal.map f (componentPrime S C^mu) ≤ J^mu:=by
+ have hmapPow:Ideal.map f (componentPrime S C^mu)≤J^mu:=by
    rw [Ideal.map_pow]
    exact pow_le_pow_left' hmapP mu
  have htarget:Ideal.map f

@@ -28,7 +28,7 @@ lemma mem_freeLocus_of_isLocalization (p:PrimeSpectrum R)
  intro r x
  obtain ⟨r,s,rfl⟩:=IsLocalization.exists_mk'_eq p.asIdeal.primeCompl r
  apply ((Module.End.isUnit_iff _).mp (IsLocalizedModule.map_units f s)).1
- simp [e, ←map_smul, ←smul_assoc]
+ simp [e,←map_smul,←smul_assoc]
 attribute [local instance] RingHomInvPair.of_ringEquiv in
 lemma mem_freeLocus_iff_tensor (p:PrimeSpectrum R)
    (Rₚ) [CommRing Rₚ] [Algebra R Rₚ] [IsLocalization.AtPrime Rₚ p.asIdeal]:
@@ -83,9 +83,9 @@ lemma freeLocus_localization (S:Submonoid R):
  letI:Module (Localization S) Mₚ:=Module.compHom Mₚ (algebraMap _ Rₚ)
  have:IsScalarTower R (Localization S) Mₚ:=
    ⟨fun r r' m↦show algebraMap _ Rₚ (r • r') • m=_ by
-     simp [p',Rₚ,Mₚ,Algebra.smul_def, ←IsScalarTower.algebraMap_apply,mul_smul];rfl⟩
+     simp [p',Rₚ,Mₚ,Algebra.smul_def,←IsScalarTower.algebraMap_apply,mul_smul];rfl⟩
  have:IsScalarTower (Localization S) Rₚ Mₚ:=
-   ⟨fun r r' m↦show _=algebraMap _ Rₚ r • r' • m by rw [←mul_smul, ←Algebra.smul_def]⟩
+   ⟨fun r r' m↦show _=algebraMap _ Rₚ r • r' • m by rw [←mul_smul,←Algebra.smul_def]⟩
  let l:=(IsLocalizedModule.liftOfLE _ _ hp' (LocalizedModule.mkLinearMap S M)
    (LocalizedModule.mkLinearMap p'.primeCompl M)).extendScalarsOfIsLocalization S
    (Localization S)
@@ -153,9 +153,9 @@ lemma isLocallyConstant_rankAtStalk_freeLocus [Module.FinitePresentation R M]:
  letI:Module (Localization.Away f) Mₚ:=Module.compHom Mₚ (algebraMap _ Rₚ)
  have:IsScalarTower R (Localization.Away f) Mₚ:=
    ⟨fun r r' m↦show algebraMap _ Rₚ (r • r') • m=_ by
-     simp [Rₚ,Mₚ,Algebra.smul_def, ←IsScalarTower.algebraMap_apply,mul_smul];rfl⟩
+     simp [Rₚ,Mₚ,Algebra.smul_def,←IsScalarTower.algebraMap_apply,mul_smul];rfl⟩
  have:IsScalarTower (Localization.Away f) Rₚ Mₚ:=
-   ⟨fun r r' m↦show _=algebraMap _ Rₚ r • r' • m by rw [←mul_smul, ←Algebra.smul_def]⟩
+   ⟨fun r r' m↦show _=algebraMap _ Rₚ r • r' • m by rw [←mul_smul,←Algebra.smul_def]⟩
  let l:=(IsLocalizedModule.liftOfLE _ _ hp' (LocalizedModule.mkLinearMap (.powers f) M)
    (LocalizedModule.mkLinearMap p.asIdeal.primeCompl M)).extendScalarsOfIsLocalization (.powers f)
    (Localization.Away f)
@@ -279,7 +279,7 @@ lemma rankAtStalk_eq_of_le_of_finite_of_flat {p q:PrimeSpectrum R} (hpq:p ≤ q)
  simp [rankAtStalk]
 variable (M) in
 lemma rankAtStalk_eq_of_le_of_finite_of_flat' {p q:Ideal R} [hp:p.IsPrime] [hq:q.IsPrime]
-   (hpq:p ≤ q):rankAtStalk M ⟨p,hp⟩=rankAtStalk M ⟨q,hq⟩:=
+   (hpq:p≤q):rankAtStalk M ⟨p,hp⟩=rankAtStalk M ⟨q,hq⟩:=
  rankAtStalk_eq_of_le_of_finite_of_flat M hpq
 lemma rankAtStalk_tensorProduct (N:Type*) [AddCommGroup N] [Module R N] [Module.Finite R N]
    [Module.Flat R N]:rankAtStalk (M ⊗[R] N)=rankAtStalk M*rankAtStalk (R:=R) N:=by
@@ -290,7 +290,7 @@ lemma rankAtStalk_tensorProduct (N:Type*) [AddCommGroup N] [Module R N] [Module.
    (AlgebraTensorModule.assoc _ _ _ _ _ _).symm ≪≫ₗ
      (AlgebraTensorModule.cancelBaseChange _ _ _ _ _).symm
  rw [rankAtStalk_eq_finrank_tensorProduct,e.finrank_eq,finrank_tensorProduct,
-   ←rankAtStalk_eq_finrank_tensorProduct, ←rankAtStalk_eq_finrank_tensorProduct,Pi.mul_apply]
+   ←rankAtStalk_eq_finrank_tensorProduct,←rankAtStalk_eq_finrank_tensorProduct,Pi.mul_apply]
 lemma rankAtStalk_tensorProduct_of_isScalarTower {S:Type*} [CommRing S] [Algebra R S]
    (N:Type*) [AddCommGroup N] [Module R N] [Module S N] [IsScalarTower R S N]
    [Module.Finite S N] [Module.Flat S N] (p:PrimeSpectrum S):
@@ -312,7 +312,7 @@ lemma _root_.Ideal.finrank_fiber_eq_finrank [IsDomain R] (p:Ideal R) [p.IsPrime]
  let K:=FractionRing R
  let Rp:=Localization.AtPrime p
  let Mp:=LocalizedModule.AtPrime p M
- rw [p.finrank_fiber_eq_rankAtStalk,rankAtStalk, ←(isBaseChange Rp Mp K).finrank_eq,
+ rw [p.finrank_fiber_eq_rankAtStalk,rankAtStalk,←(isBaseChange Rp Mp K).finrank_eq,
    (((LocalizedModule.equivTensorProduct p.primeCompl M).baseChange Rp K Mp _)).finrank_eq,
    (AlgebraTensorModule.cancelBaseChange R Rp K K M).finrank_eq,(isBaseChange R M K).finrank_eq]
 end Module

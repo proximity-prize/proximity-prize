@@ -155,7 +155,7 @@ theorem exists_adaptiveNestedProjectionDataActive
          v.val (coordinate Omega C.1 2):=by
        rw [Algebra.smul_def,map_mul,
          Valuation.IsTrivialOn.eq_one lam hlam0,one_mul]
-     have hUle:v.val (U C) ≤ 1:=by
+     have hUle:v.val (U C)≤1:=by
        exact (v.val.map_add _ _).trans
          (by rw [hscalar];exact max_le h0le h2le)
      have hU0:RCN187.poleOrder v.val (U C)=0:=
@@ -216,7 +216,7 @@ theorem exists_adaptiveNestedProjectionDataActive
      have hscalar:v.val (mu • U C)=v.val (U C):=by
        rw [Algebra.smul_def,map_mul,
          Valuation.IsTrivialOn.eq_one mu hmu0,one_mul]
-     have hVle:v.val (V C) ≤ 1:=
+     have hVle:v.val (V C)≤1:=
        (v.val.map_add _ _).trans
          (by rw [hscalar];exact max_le hSle hUle)
      have hV0:RCN187.poleOrder v.val (V C)=0:=

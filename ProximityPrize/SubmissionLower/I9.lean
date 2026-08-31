@@ -46,22 +46,22 @@ def exceptionalAuxiliary (J:MvPolynomial (Fin 4) K):MvPolynomial (Fin 4) K:=
  swapYR K (singularAuxiliary (swapYR K J))
 theorem exceptionalAuxiliary_nonzero
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0) (j p:ℕ) [CharP K p]
-   (hY:J.degreeOf 1 ≤ j) (hsmall:j < p):exceptionalAuxiliary J≠0:=by
+   (hY:J.degreeOf 1≤j) (hsmall:j<p):exceptionalAuxiliary J≠0:=by
  apply swapYR_ne_zero
  apply singularAuxiliary_nonzero (swapYR K J) (swapYR_ne_zero J hJ) p
  rw [swapYR_degree_R]
  exact hY.trans_lt hsmall
 theorem exceptionalAuxiliary_Y_degree_zero
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0) (j p:ℕ) [CharP K p]
-   (hY:J.degreeOf 1 ≤ j) (hsmall:j < p):(exceptionalAuxiliary J).degreeOf 1=0:=by
+   (hY:J.degreeOf 1≤j) (hsmall:j<p):(exceptionalAuxiliary J).degreeOf 1=0:=by
  rw [exceptionalAuxiliary,swapYR_degree_Y]
  apply singularAuxiliary_R_degree (swapYR K J) (swapYR_ne_zero J hJ) p
  rw [swapYR_degree_R]
  exact hY.trans_lt hsmall
 theorem exceptionalAuxiliary_R_degree_zero
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0) (hR:J.degreeOf 2=0)
-   (j:ℕ) (hj:1 ≤ j) (hY:J.degreeOf 1 ≤ j):(exceptionalAuxiliary J).degreeOf 2=0:=by
- have hRswap:(swapYR K J).degreeOf 2 ≤ j:=by rw [swapYR_degree_R];exact hY
+   (j:ℕ) (hj:1≤j) (hY:J.degreeOf 1≤j):(exceptionalAuxiliary J).degreeOf 2=0:=by
+ have hRswap:(swapYR K J).degreeOf 2≤j:=by rw [swapYR_degree_R];exact hY
  have hb:=singularAuxiliary_weight_le (Pi.single (1:Fin 4) 1)
    (swapYR K J) (swapYR_ne_zero J hJ) j hj hRswap
  rw [coordinate_weight_degree,coordinate_weight_degree,swapYR_degree_Y,hR,mul_zero] at hb
@@ -69,9 +69,9 @@ theorem exceptionalAuxiliary_R_degree_zero
  exact Nat.eq_zero_of_le_zero hb
 theorem exceptionalAuxiliary_Z_degree_le
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0)
-   (j:ℕ) (hj:1 ≤ j) (hY:J.degreeOf 1 ≤ j):
-   (exceptionalAuxiliary J).degreeOf 3 ≤ (2*j-1)*J.degreeOf 3:=by
- have hRswap:(swapYR K J).degreeOf 2 ≤ j:=by rw [swapYR_degree_R];exact hY
+   (j:ℕ) (hj:1≤j) (hY:J.degreeOf 1≤j):
+   (exceptionalAuxiliary J).degreeOf 3≤(2*j-1)*J.degreeOf 3:=by
+ have hRswap:(swapYR K J).degreeOf 2≤j:=by rw [swapYR_degree_R];exact hY
  have hb:=singularAuxiliary_weight_le (Pi.single (3:Fin 4) 1)
    (swapYR K J) (swapYR_ne_zero J hJ) j hj hRswap
  rw [coordinate_weight_degree,coordinate_weight_degree,swapYR_degree_Z] at hb
@@ -79,19 +79,19 @@ theorem exceptionalAuxiliary_Z_degree_le
  exact hb
 theorem exceptionalAuxiliary_data
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0) (hR:J.degreeOf 2=0)
-   (j p:ℕ) [CharP K p] (hj:1 ≤ j) (hsmall:j < p)
-   (hY:J.degreeOf 1 ≤ j) (hZ:J.degreeOf 3 ≤ j):
+   (j p:ℕ) [CharP K p] (hj:1≤j) (hsmall:j<p)
+   (hY:J.degreeOf 1≤j) (hZ:J.degreeOf 3≤j):
    exceptionalAuxiliary J≠0∧(exceptionalAuxiliary J).degreeOf 1=0∧
      (exceptionalAuxiliary J).degreeOf 2=0∧
-     (exceptionalAuxiliary J).degreeOf 3 ≤ (2*j-1)*j∧
-     (exceptionalAuxiliary J).degreeOf 3 ≤ 2*j^2:=by
+     (exceptionalAuxiliary J).degreeOf 3≤(2*j-1)*j∧
+     (exceptionalAuxiliary J).degreeOf 3≤2*j^2:=by
  have hz:=(exceptionalAuxiliary_Z_degree_le J hJ j hj hY).trans (Nat.mul_le_mul_left _ hZ)
  refine ⟨exceptionalAuxiliary_nonzero J hJ j p hY hsmall,
    exceptionalAuxiliary_Y_degree_zero J hJ j p hY hsmall,
    exceptionalAuxiliary_R_degree_zero J hJ hR j hj hY,hz,?_⟩
  calc
-   _ ≤ (2*j-1)*j:=hz
-   _ ≤ (2*j)*j:=Nat.mul_le_mul_right j (Nat.sub_le _ _)
+   _≤(2*j-1)*j:=hz
+   _≤(2*j)*j:=Nat.mul_le_mul_right j (Nat.sub_le _ _)
    _=2*j^2:=by ring
 def originalImplicitFactors (J:MvPolynomial (Fin 4) K):Finset (MvPolynomial (Fin 4) K):=by
  classical
@@ -126,8 +126,8 @@ theorem originalImplicitFactors_product_dvd (J:MvPolynomial (Fin 4) K) (hJ:J≠0
  simpa only [swapYR_twice] using hh
 theorem originalImplicitFactors_degree_budgets
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0):
-   (∑ A∈originalImplicitFactors J,A.degreeOf (1:Fin 4)) ≤ J.degreeOf 1∧
-     (∑ A∈originalImplicitFactors J,A.degreeOf (3:Fin 4)) ≤ J.degreeOf 3:=by
+   (∑ A∈originalImplicitFactors J,A.degreeOf (1:Fin 4))≤J.degreeOf 1∧
+     (∑ A∈originalImplicitFactors J,A.degreeOf (3:Fin 4))≤J.degreeOf 3:=by
  have hh:=RCN081.sum_degreeOf_le_of_prod_dvd
    (originalImplicitFactors J) id J hJ (originalImplicitFactors_product_dvd J hJ)
  exact ⟨hh 1,hh 3⟩
@@ -166,7 +166,7 @@ theorem surface_zero_exceptional_or_implicit_regular
    (v:Fin 3 → T) (hzero:MvPolynomial.eval v (surfaceMap φ J)=0):
    MvPolynomial.eval v (surfaceMap φ (exceptionalAuxiliary J))=0∨
      ∃ A∈originalImplicitFactors J,Irreducible A∧A∣J∧
-       A.degreeOf 2=0∧0 < A.degreeOf 1∧
+       A.degreeOf 2=0∧0<A.degreeOf 1∧
        MvPolynomial.eval v (surfaceMap φ A)=0∧
        MvPolynomial.eval v (surfaceMap φ (MvPolynomial.pderiv (1:Fin 4) A))≠0:=by
  classical
@@ -197,7 +197,7 @@ theorem solution_exceptional_or_implicit_regular
    (P:Polynomial K) (γ:K) (hsolution:specialization K P γ J=0):
    specialization K P γ (exceptionalAuxiliary J)=0∨
      ∃ A∈originalImplicitFactors J,Irreducible A∧A∣J∧
-       A.degreeOf 2=0∧0 < A.degreeOf 1∧specialization K P γ A=0∧
+       A.degreeOf 2=0∧0<A.degreeOf 1∧specialization K P γ A=0∧
        specialization K P γ (MvPolynomial.pderiv (1:Fin 4) A)≠0:=by
  let φ:=RCN135.polynomialEmbedding K
  let v:Fin 3 → RCN135.GenericField K:=

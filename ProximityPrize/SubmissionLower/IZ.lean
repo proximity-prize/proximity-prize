@@ -16,7 +16,7 @@ include hRT
 lemma PrimeSpectrum.isEmbedding_tensorProductTo_of_surjectiveOnStalks_aux
    (p₁ p₂:PrimeSpectrum (S ⊗[R] T))
    (h:tensorProductTo R S T p₁=tensorProductTo R S T p₂):
-   p₁ ≤ p₂:=by
+   p₁≤p₂:=by
  let g:T →+*S ⊗[R] T:=Algebra.TensorProduct.includeRight.toRingHom
  intro x hxp₁
  by_contra hxp₂
@@ -24,7 +24,7 @@ lemma PrimeSpectrum.isEmbedding_tensorProductTo_of_surjectiveOnStalks_aux
    (p₂.asIdeal.comap g) inferInstance
  have h₁:a ⊗ₜ[R] t∈p₁.asIdeal:=e ▸ p₁.asIdeal.mul_mem_left (1 ⊗ₜ[R] (r • t)) hxp₁
  have h₂:a ⊗ₜ[R] t∉p₂.asIdeal:=e ▸ p₂.asIdeal.primeCompl.mul_mem ht hxp₂
- rw [←mul_one a, ←one_mul t, ←Algebra.TensorProduct.tmul_mul_tmul] at h₁ h₂
+ rw [←mul_one a,←one_mul t,←Algebra.TensorProduct.tmul_mul_tmul] at h₁ h₂
  have h₃:t∉p₂.asIdeal.comap g:=fun h↦h₂ (Ideal.mul_mem_left _ _ h)
  have h₄:a∉p₂.asIdeal.comap (algebraMap S (S ⊗[R] T)):=
    fun h↦h₂ (Ideal.mul_mem_right _ _ h)
@@ -49,9 +49,9 @@ lemma PrimeSpectrum.isEmbedding_tensorProductTo_of_surjectiveOnStalks:
  · rintro x ⟨hx₁:a ⊗ₜ[R] (1:T)∉x.asIdeal,hx₂:(1:S) ⊗ₜ[R] t∉x.asIdeal⟩
      (hx₃:f∈x.asIdeal)
    apply x.asIdeal.primeCompl.mul_mem hx₁ hx₂
-   rw [Algebra.TensorProduct.tmul_mul_tmul,mul_one,one_mul, ←e]
+   rw [Algebra.TensorProduct.tmul_mul_tmul,mul_one,one_mul,←e]
    exact x.asIdeal.mul_mem_left _ hx₃
  · have:a ⊗ₜ[R] (1:T)*(1:S) ⊗ₜ[R] t∉J.asIdeal:=by
-     rw [Algebra.TensorProduct.tmul_mul_tmul,mul_one,one_mul, ←e]
+     rw [Algebra.TensorProduct.tmul_mul_tmul,mul_one,one_mul,←e]
      exact J.asIdeal.primeCompl.mul_mem ht hJ
    rwa [J.isPrime.mul_mem_iff_mem_or_mem.not,not_or] at this

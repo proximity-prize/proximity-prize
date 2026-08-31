@@ -52,7 +52,7 @@ theorem specialization_numeratorStep
    map_pow,map_natCast]
  have hR:specialization K P γ (MvPolynomial.X (2:Fin 4))=P.derivative:=by
    simp [specialization]
- rw [hR, ←solution_slope_identity K F P γ hsolution,
+ rw [hR,←solution_slope_identity K F P γ hsolution,
    derivative_specialization K P γ M,
    derivative_specialization K P γ (polyH K F)]
  push_cast

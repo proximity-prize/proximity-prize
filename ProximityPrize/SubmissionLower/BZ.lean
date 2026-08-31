@@ -33,11 +33,11 @@ def coefficientEvaluation (x:σ → L) (E:Finset (σ →₀ ℕ)):
 def livePoleTruncation
    (v:Valuation L (WithZero (Multiplicative ℤ)))
    (x:σ → L) (d:σ →₀ ℕ):σ →₀ ℕ:=
- d.filter (fun i↦x i≠0∧0 ≤ (v (x i)).log)
+ d.filter (fun i↦x i≠0∧0≤(v (x i)).log)
 theorem livePoleTruncation_le
    (v:Valuation L (WithZero (Multiplicative ℤ)))
    (x:σ → L) (d:σ →₀ ℕ):
-   livePoleTruncation v x d ≤ d:=by
+   livePoleTruncation v x d≤d:=by
  intro i
  simp only [livePoleTruncation,Finsupp.filter_apply]
  split_ifs
@@ -55,9 +55,9 @@ theorem exponentValuationWeight_livePoleTruncation
  simp only [livePoleTruncation,Finsupp.filter_apply]
  by_cases hx:x i=0
  · simp [hx]
- · by_cases hlog:0 ≤ (v (x i)).log
+ · by_cases hlog:0≤(v (x i)).log
    · rw [if_pos ⟨hx,hlog⟩,max_eq_right hlog]
-   · have hle:(v (x i)).log ≤ 0:=le_of_not_ge hlog
+   · have hle:(v (x i)).log≤0:=le_of_not_ge hlog
      rw [if_neg (fun h↦hlog h.2),max_eq_left hle]
      simp
 theorem livePoleTruncation_coordinate_ne_zero
@@ -67,7 +67,7 @@ theorem livePoleTruncation_coordinate_ne_zero
  classical
  simp only [livePoleTruncation,Finsupp.filter_apply] at hi
  split at hi
- · exact ‹x i≠0∧0 ≤ (v (x i)).log›.1
+ · exact ‹x i≠0∧0≤(v (x i)).log›.1
  · exact (hi rfl).elim
 private theorem exp_sum (s:Finset σ) (z:σ → ℤ):
    WithZero.exp (∑ i∈s,z i)=∏ i∈s,WithZero.exp (z i):=by
@@ -159,13 +159,13 @@ theorem exponentSetPoleWeight_nonneg
  exact Finset.le_max' _ _ (Finset.mem_insert_self (0:ℤ) _)
 theorem poleOrder_eq_of_valuation_eq_exp
    (v:Valuation L (WithZero (Multiplicative ℤ))) (b:L) (q:ℤ)
-   (hq:0 ≤ q) (hexact:v b=WithZero.exp q):
+   (hq:0≤q) (hexact:v b=WithZero.exp q):
    poleOrder v b=q:=by
  unfold poleOrder
  rw [hexact,WithZero.log_exp,max_eq_right hq]
 def cancellationSubmodule
    (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (hcoeff:∀ a:K,v (algebraMap K L a) ≤ 1)
+   (hcoeff:∀ a:K,v (algebraMap K L a)≤1)
    (x:σ → L) (E:Finset (σ →₀ ℕ)):
    Submodule K (E → K) where
  carrier:={c | v (coefficientEvaluation x E c) <
@@ -196,11 +196,11 @@ def cancellationSubmodule
      v (algebraMap K L a)*v (coefficientEvaluation x E c) ≤
          1*v (coefficientEvaluation x E c):=
        mul_le_mul' (hcoeff a) le_rfl
-     _ < WithZero.exp (exponentSetPoleWeight v x E):=by
+     _<WithZero.exp (exponentSetPoleWeight v x E):=by
        simpa using hc
 theorem cancellationSubmodule_ne_top_of_exact
    (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (hcoeff:∀ a:K,v (algebraMap K L a) ≤ 1)
+   (hcoeff:∀ a:K,v (algebraMap K L a)≤1)
    (x:σ → L) (E:Finset (σ →₀ ℕ))
    (c:E → K)
    (hc:v (coefficientEvaluation x E c)=
@@ -217,7 +217,7 @@ theorem cancellationSubmodule_ne_top_of_exact
 theorem exists_simultaneous_exact_support_evaluation
    {τ:Type*} [Finite τ] [Infinite K]
    (v:τ → Valuation L (WithZero (Multiplicative ℤ)))
-   (hcoeff:∀ t,∀ a:K,v t (algebraMap K L a) ≤ 1)
+   (hcoeff:∀ t,∀ a:K,v t (algebraMap K L a)≤1)
    (x:σ → L) (E:Finset (σ →₀ ℕ))
    (hwitness:∀ t,∃ c:E → K,
      v t (coefficientEvaluation x E c)=
@@ -252,7 +252,7 @@ theorem exists_simultaneous_exact_support_evaluation
 theorem exists_simultaneous_exact_support_evaluation_of_downwardClosed
    {τ:Type*} [Finite τ] [Infinite K]
    (v:τ → Valuation L (WithZero (Multiplicative ℤ)))
-   (hcoeff:∀ t,∀ a:K,v t (algebraMap K L a) ≤ 1)
+   (hcoeff:∀ t,∀ a:K,v t (algebraMap K L a)≤1)
    (x:σ → L) (E:Finset (σ →₀ ℕ))
    (hdown:ExponentSetDownwardClosed E) (hzero:0∈E):
    ∃ c:E → K,
@@ -266,7 +266,7 @@ theorem exists_simultaneous_exact_support_evaluation_of_downwardClosed
 theorem exists_simultaneous_exact_poleOrder_of_downwardClosed
    {τ:Type*} [Finite τ] [Infinite K]
    (v:τ → Valuation L (WithZero (Multiplicative ℤ)))
-   (hcoeff:∀ t,∀ a:K,v t (algebraMap K L a) ≤ 1)
+   (hcoeff:∀ t,∀ a:K,v t (algebraMap K L a)≤1)
    (x:σ → L) (E:Finset (σ →₀ ℕ))
    (hdown:ExponentSetDownwardClosed E) (hzero:0∈E):
    ∃ c:E → K,

@@ -3,16 +3,16 @@ import ProximityPrize.SubmissionLower.HJ
 namespace ProximityPrize.SubmissionLower.RCN173
 theorem enlarge_exempt_card_bound
    {q n a i w M:ℕ}
-   (hiw:i ≤ w) (hwa:w ≤ a) (han:a ≤ n)
-   (hcount:q*(a-i) ≤ (n-i)*M):
-   q*(a-w) ≤ (n-w)*M:=by
- by_cases hqM:q ≤ M
+   (hiw:i≤w) (hwa:w≤a) (han:a≤n)
+   (hcount:q*(a-i)≤(n-i)*M):
+   q*(a-w)≤(n-w)*M:=by
+ by_cases hqM:q≤M
  · calc
-     q*(a-w) ≤ M*(a-w):=Nat.mul_le_mul_right _ hqM
-     _ ≤ M*(n-w):=
+     q*(a-w)≤M*(a-w):=Nat.mul_le_mul_right _ hqM
+     _≤M*(n-w):=
        Nat.mul_le_mul_left _ (Nat.sub_le_sub_right han w)
      _=(n-w)*M:=Nat.mul_comm _ _
- · have hMq:M ≤ q:=(Nat.lt_of_not_ge hqM).le
+ · have hMq:M≤q:=(Nat.lt_of_not_ge hqM).le
    have ha:a-i=(a-w)+(w-i):=by omega
    have hn:n-i=(n-w)+(w-i):=by omega
    have hcount':

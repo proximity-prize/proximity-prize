@@ -22,31 +22,31 @@ theorem recursive_stratified_incidence_bound
    (hphi:Function.Injective phi) {w a:ℕ}
    (S:ResidualStage phi Gamma x p e flag w support)
    (degreeCost unitCost U V:ℕ)
-   (hwa:w < a)
+   (hwa:w<a)
    (hagreement:∀ gamma∈Gamma,
-     a ≤ (S.agreementFiber gamma).card)
+     a≤(S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,
      ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
          (x i) (D.stage.u0 i) (D.stage.u1 i) →
      (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card ≤
        D.degree*degreeCost+unitCost)
-   (hdegree:∀ k ≤ w,
-     (S.nodes.card-k)*(a-w)*(w-k) ≤ U*(a-k))
-   (hunit:∀ k ≤ w,
-     (S.nodes.card-k)*(a-w) ≤ V*(a-k)):
-   Gamma.card*(a-w) ≤ U*degreeCost+V*unitCost:=by
+   (hdegree:∀ k≤w,
+     (S.nodes.card-k)*(a-w)*(w-k)≤U*(a-k))
+   (hunit:∀ k≤w,
+     (S.nodes.card-k)*(a-w)≤V*(a-k)):
+   Gamma.card*(a-w)≤U*degreeCost+V*unitCost:=by
  classical
  obtain ⟨D⟩:=S.exists_terminal_descendant hphi
  let k:=w-D.degree
- have hk:k ≤ w:=Nat.sub_le w D.degree
- have hDle:D.degree ≤ w:=D.degree_le
+ have hk:k≤w:=Nat.sub_le w D.degree
+ have hDle:D.degree≤w:=D.degree_le
  have hdegreeEq:D.degree=w-k:=by
    dsimp only [k]
    omega
  have hnodeEq:D.stage.nodes.card=S.nodes.card-k:=by
    simpa only [k] using D.nodes_card
  have hterminalAgreement:∀ gamma∈Gamma,
-     a-k ≤ (D.stage.agreementFiber gamma).card:=by
+     a-k≤(D.stage.agreementFiber gamma).card:=by
    intro gamma hgamma
    exact (Nat.sub_le_sub_right (hagreement gamma hgamma) k).trans
      (by simpa only [k] using D.agreement_card gamma hgamma)
@@ -73,36 +73,36 @@ theorem recursive_scaled_stratified_incidence_bound
    (hphi:Function.Injective phi) {w a:ℕ}
    (S:ResidualStage phi Gamma x p e flag w support)
    (degreeCost unitCost U V:ℕ)
-   (hwa:w < a)
+   (hwa:w<a)
    (hagreement:∀ gamma∈Gamma,
-     a ≤ (S.agreementFiber gamma).card)
+     a≤(S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,
      ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
          (x i) (D.stage.u0 i) (D.stage.u1 i) →
      (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*(a-w) ≤
        D.degree*degreeCost+unitCost)
-   (hdegree:∀ k ≤ w,
-     (S.nodes.card-k)*(a-w)*(w-k) ≤ U*(a-k))
-   (hunit:∀ k ≤ w,
-     (S.nodes.card-k)*(a-w) ≤ V*(a-k)):
-   Gamma.card*(a-w)^2 ≤ U*degreeCost+V*unitCost:=by
+   (hdegree:∀ k≤w,
+     (S.nodes.card-k)*(a-w)*(w-k)≤U*(a-k))
+   (hunit:∀ k≤w,
+     (S.nodes.card-k)*(a-w)≤V*(a-k)):
+   Gamma.card*(a-w)^2≤U*degreeCost+V*unitCost:=by
  classical
  obtain ⟨D⟩:=S.exists_terminal_descendant hphi
  let k:=w-D.degree
- have hk:k ≤ w:=Nat.sub_le w D.degree
- have hDle:D.degree ≤ w:=D.degree_le
+ have hk:k≤w:=Nat.sub_le w D.degree
+ have hDle:D.degree≤w:=D.degree_le
  have hdegreeEq:D.degree=w-k:=by
    dsimp only [k]
    omega
  have hnodeEq:D.stage.nodes.card=S.nodes.card-k:=by
    simpa only [k] using D.nodes_card
  have hterminalAgreement:∀ gamma∈Gamma,
-     a-k ≤ (D.stage.agreementFiber gamma).card:=by
+     a-k≤(D.stage.agreementFiber gamma).card:=by
    intro gamma hgamma
    exact (Nat.sub_le_sub_right (hagreement gamma hgamma) k).trans
      (by simpa only [k] using D.agreement_card gamma hgamma)
  let geometricCost:=D.degree*degreeCost+unitCost
- have hgap:0 < a-w:=Nat.sub_pos_of_lt hwa
+ have hgap:0<a-w:=Nat.sub_pos_of_lt hwa
  have hterminalFiberDiv:∀ i∈D.stage.nodes,
      (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card ≤
        geometricCost/(a-w):=by
@@ -121,12 +121,12 @@ theorem recursive_scaled_stratified_incidence_bound
    calc
      (Gamma.card*(a-w))*(a-k)=
          (Gamma.card*(a-k))*(a-w):=by ring
-     _ ≤ ((D.stage.nodes.card*(geometricCost/(a-w)))*
+     _≤((D.stage.nodes.card*(geometricCost/(a-w)))*
          (a-w)):=Nat.mul_le_mul_right (a-w) (by
            simpa only [Finset.card_empty,Nat.sub_zero] using hrawTerminal)
      _=D.stage.nodes.card*
          ((geometricCost/(a-w))*(a-w)):=by ring
-     _ ≤ D.stage.nodes.card*geometricCost:=
+     _≤D.stage.nodes.card*geometricCost:=
        Nat.mul_le_mul_left _ (Nat.div_mul_le_self _ _)
      _=(S.nodes.card-k)*
          ((w-k)*degreeCost+unitCost):=by
@@ -137,6 +137,6 @@ theorem recursive_scaled_stratified_incidence_bound
    (hdegree k hk) (hunit k hk)
  calc
    Gamma.card*(a-w)^2=(Gamma.card*(a-w))*(a-w):=by ring
-   _ ≤ U*degreeCost+V*unitCost:=hlinear
+   _≤U*degreeCost+V*unitCost:=hlinear
 end
 end ProximityPrize.SubmissionLower.RCN164

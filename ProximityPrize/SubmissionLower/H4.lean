@@ -69,7 +69,7 @@ variable [Field L] [Algebra S L] [IsFractionRing S L]
 theorem point_valuation_lt_one_iff
    (hinj:Function.Injective (algebraMap (Polynomial K) S))
    (phi:S →ₐ[K] K) (h:S):
-   (pointPlace hinj phi).valuation L (algebraMap S L h) < 1 ↔ phi h=0:=by
+   (pointPlace hinj phi).valuation L (algebraMap S L h)<1 ↔ phi h=0:=by
  rw [HeightOneSpectrum.valuation_of_algebraMap]
  rw [HeightOneSpectrum.intValuation_lt_one_iff_mem]
  exact mem_pointKernel phi h
@@ -79,9 +79,9 @@ theorem point_zero_order_ge_one
    1 ≤-((pointPlace hinj phi).valuation L (algebraMap S L h)).log:=by
  rw [HeightOneSpectrum.valuation_of_algebraMap]
  have hv0:=(pointPlace hinj phi).intValuation_ne_zero h hne
- have hvlt:(pointPlace hinj phi).intValuation h < 1:=
+ have hvlt:(pointPlace hinj phi).intValuation h<1:=
    ((pointPlace hinj phi).intValuation_lt_one_iff_mem h).2 hzero
- have hlog:((pointPlace hinj phi).intValuation h).log < (0:ℤ):=by
+ have hlog:((pointPlace hinj phi).intValuation h).log<(0:ℤ):=by
    simpa using (WithZero.log_lt_log hv0 (by simp)).2 hvlt
  omega
 end ActualPlaces

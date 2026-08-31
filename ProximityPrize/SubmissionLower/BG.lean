@@ -17,7 +17,7 @@ variable {K L:Type} [Field K] [Field L]
 def flagFromCaps (total middle inner:ℕ):FlagDegree:=
  ⟨total-middle,middle-inner,inner⟩
 theorem flagFromCaps_cumulative (total middle inner:ℕ)
-   (hi:inner ≤ middle) (hm:middle ≤ total):
+   (hi:inner≤middle) (hm:middle≤total):
    (flagFromCaps total middle inner).all=inner∧
      (flagFromCaps total middle inner).yz+
        (flagFromCaps total middle inner).all=middle∧
@@ -27,8 +27,8 @@ theorem flagFromCaps_cumulative (total middle inner:ℕ)
  dsimp [flagFromCaps]
  omega
 theorem residual_weight_nested (F:MvPolynomial (Fin 4) K):
-   wt residualSWeights F ≤ wt residualYSWeights F∧
-     wt residualYSWeights F ≤ wt residualTotalWeights F:=by
+   wt residualSWeights F≤wt residualYSWeights F∧
+     wt residualYSWeights F≤wt residualTotalWeights F:=by
  constructor
  · apply (weightedTotalDegree_le_iff residualSWeights F _).mpr
    intro d hd
@@ -51,13 +51,13 @@ theorem surface_weight_nested (G:MvPolynomial (Fin 3) L):
  · unfold MvPolynomial.weightedTotalDegree
    apply Finset.sup_le
    intro d hd
-   exact (show Finsupp.weight sWeight d ≤ Finsupp.weight ysWeight d by
+   exact (show Finsupp.weight sWeight d≤Finsupp.weight ysWeight d by
      rw [RCN372.weight_fin3,RCN372.weight_fin3]
      simp [sWeight,ysWeight]).trans (Finset.le_sup hd)
  · unfold MvPolynomial.weightedTotalDegree
    apply Finset.sup_le
    intro d hd
-   exact (show Finsupp.weight ysWeight d ≤ Finsupp.weight totalWeight d by
+   exact (show Finsupp.weight ysWeight d≤Finsupp.weight totalWeight d by
      rw [RCN372.weight_fin3,RCN372.weight_fin3]
      simp [ysWeight,totalWeight]).trans (Finset.le_sup hd)
 def originalCumulativeFlag (F:MvPolynomial (Fin 4) K):FlagDegree:=
@@ -99,9 +99,9 @@ theorem polynomialIn_surfaceCumulativeFlag (G:MvPolynomial (Fin 3) L):
  rw [RCN372.weight_fin3] at hs hm ht
  simp [sWeight,ysWeight,totalWeight] at hs hm ht
  have hc:=surfaceCumulativeFlag_cumulative G
- change d 1 ≤ (surfaceCumulativeFlag G).all∧
-   d 0+d 1 ≤ (surfaceCumulativeFlag G).yz+(surfaceCumulativeFlag G).all∧
-   d 0+d 1+d 2 ≤ (surfaceCumulativeFlag G).zOnly+
+ change d 1≤(surfaceCumulativeFlag G).all∧
+   d 0+d 1≤(surfaceCumulativeFlag G).yz+(surfaceCumulativeFlag G).all∧
+   d 0+d 1+d 2≤(surfaceCumulativeFlag G).zOnly+
      (surfaceCumulativeFlag G).yz+(surfaceCumulativeFlag G).all
  rw [hc.2.2,hc.2.1,hc.1]
  exact ⟨hs,hm,ht⟩
@@ -142,11 +142,11 @@ theorem surfaceMap_in_originalCumulativeFlag (phi:Polynomial K →+*L)
 theorem regularCumulativeFlag_budgets
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    {P:ResidualSupportParameters} (H:ResidualSupportData P Q):
-   (∑ R:RegularIndex Q,(regularCumulativeFlag Q R).all) ≤ P.s∧
+   (∑ R:RegularIndex Q,(regularCumulativeFlag Q R).all)≤P.s∧
      (∑ R:RegularIndex Q,((regularCumulativeFlag Q R).yz+
-       (regularCumulativeFlag Q R).all)) ≤ P.ys∧
+       (regularCumulativeFlag Q R).all))≤P.ys∧
      (∑ R:RegularIndex Q,((regularCumulativeFlag Q R).zOnly+
-       (regularCumulativeFlag Q R).yz+(regularCumulativeFlag Q R).all)) ≤ P.total:=by
+       (regularCumulativeFlag Q R).yz+(regularCumulativeFlag Q R).all))≤P.total:=by
  have hp:=positiveRFactors_product_dvd Q hQ
  have hs:=sum_weightedTotalDegree_le_of_prod_dvd residualSWeights
    (positiveRFactors Q) id Q hQ hp
@@ -199,10 +199,10 @@ theorem geometricCumulativeFlag_le_support
    (F:MvPolynomial (Fin 4) K) (hF:F≠0)
    {P:ResidualSupportParameters} (H:ResidualSupportData P F)
    (g:GeometricFactor K F):
-   (geometricCumulativeFlag K g).all ≤ P.s∧
-     (geometricCumulativeFlag K g).yz+(geometricCumulativeFlag K g).all ≤ P.ys∧
+   (geometricCumulativeFlag K g).all≤P.s∧
+     (geometricCumulativeFlag K g).yz+(geometricCumulativeFlag K g).all≤P.ys∧
      (geometricCumulativeFlag K g).zOnly+(geometricCumulativeFlag K g).yz+
-       (geometricCumulativeFlag K g).all ≤ P.total:=by
+       (geometricCumulativeFlag K g).all≤P.total:=by
  have hb:=geometricCumulativeFlag_budgets F hF
  have hc:=originalCumulativeFlag_cumulative F
  rw [hc.2.2,hc.2.1,hc.1] at hb
@@ -222,7 +222,7 @@ theorem originalCumulativeFlag_all (F:MvPolynomial (Fin 4) K):
  rw [hw,MvPolynomial.weightedTotalDegree_piSingle]
 theorem regularCumulativeFlag_positive
    (Q:MvPolynomial (Fin 4) K) (R:RegularIndex Q):
-   0 < (regularCumulativeFlag Q R).all:=by
+   0<(regularCumulativeFlag Q R).all:=by
  rw [originalCumulativeFlag_all]
  exact (positiveRFactors_spec Q R.1 R.2).2.2
 theorem surfaceCumulativeFlag_all (G:MvPolynomial (Fin 3) L):

@@ -10,26 +10,26 @@ noncomputable section
 variable {K:Type} [Field K]
 abbrev Poly3 (K:Type) [Field K]:=MvPolynomial (Fin 3) K
 structure FlagTrapezoidCaps (p:FlagDegree) (F:Poly3 K):Prop where
- uOuter:(planeMap K uOrder F).natDegree ≤ p.all
+ uOuter:(planeMap K uOrder F).natDegree≤p.all
  uTotal:∀ d∈(rationalMap K uOrder F).support,
-   d 0+d 1 ≤ p.zOnly+p.yz+p.all
- vOuter:(planeMap K vOrder F).natDegree ≤ p.yz+p.all
+   d 0+d 1≤p.zOnly+p.yz+p.all
+ vOuter:(planeMap K vOrder F).natDegree≤p.yz+p.all
  vTotal:∀ d∈(rationalMap K vOrder F).support,
-   d 0+d 1 ≤ p.zOnly+p.yz+p.all
- zOuter:(planeMap K zOrder F).natDegree ≤ p.all
+   d 0+d 1≤p.zOnly+p.yz+p.all
+ zOuter:(planeMap K zOrder F).natDegree≤p.all
  zTotal:∀ d∈(rationalMap K zOrder F).support,
-   d 0+d 1 ≤ p.yz+p.all
+   d 0+d 1≤p.yz+p.all
 private theorem degreeOf_s_le
    {p:FlagDegree} {F:Poly3 K}
    (hF:RCN125.PolynomialInFlag p F):
-   F.degreeOf 1 ≤ p.all:=by
+   F.degreeOf 1≤p.all:=by
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro d hd
  exact (hF d hd).1
 private theorem degreeOf_y_le
    {p:FlagDegree} {F:Poly3 K}
    (hF:RCN125.PolynomialInFlag p F):
-   F.degreeOf 0 ≤ p.yz+p.all:=by
+   F.degreeOf 0≤p.yz+p.all:=by
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro d hd
  exact (Nat.le_add_right (d 0) (d 1)).trans (hF d hd).2.1
@@ -66,16 +66,16 @@ theorem flagTrapezoidCaps_flagAlgHom
  apply polynomialInFlag_flagAlgHom p F lam mu nu
  intro d hd
  exact (mem_flagSupport_iff p d).mp (hF hd)
-theorem u_trapezoid_budget6543 (m:ℕ) (hm:m ≤ 1179639):
-   m*376+5*98434322-m*5 ≤ flagYZMixedCap:=by
+theorem u_trapezoid_budget6543 (m:ℕ) (hm:m≤1179639):
+   m*376+5*98434322-m*5≤flagYZMixedCap:=by
  rw [flag_mixed_values.2.2.1]
  omega
-theorem v_trapezoid_budget6543 (m:ℕ) (hm:m ≤ 6684622):
-   m*376+26*98434322-m*26 ≤ flagAllMixedCap:=by
+theorem v_trapezoid_budget6543 (m:ℕ) (hm:m≤6684622):
+   m*376+26*98434322-m*26≤flagAllMixedCap:=by
  rw [flag_mixed_values.2.2.2]
  omega
-theorem z_trapezoid_budget6543 (m:ℕ) (hm:m ≤ 1179639):
-   m*26+5*6684622-m*5 ≤ flagZMixedCap:=by
+theorem z_trapezoid_budget6543 (m:ℕ) (hm:m≤1179639):
+   m*26+5*6684622-m*5≤flagZMixedCap:=by
  rw [flag_mixed_values.2.1]
  omega
 end

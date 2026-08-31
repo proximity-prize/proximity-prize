@@ -19,7 +19,7 @@ theorem functionField_iff (Ft:Type*) [Field Ft] [Algebra F[X] Ft]
    congr
    refine congr_fun (f:=fun c => algebraMap Ft K (e c)) ?_ c
    refine IsLocalization.ext (nonZeroDivisors F[X]) _ _ ?_ ?_ ?_ ?_ ?_ <;> intros <;>
-     simp only [map_one,map_mul,AlgEquiv.commutes, ←IsScalarTower.algebraMap_apply]
+     simp only [map_one,map_mul,AlgEquiv.commutes,←IsScalarTower.algebraMap_apply]
  constructor <;> intro h
  · let b:=Module.finBasis F⟮X⟯ K
    exact (b.mapCoeffs e this).finiteDimensional_of_finite

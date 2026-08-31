@@ -280,10 +280,10 @@ def Ideal.homogeneousCore.gi:GaloisCoinsertion toIdeal (Ideal.homogeneousCore �
  u_l_le _:=Ideal.homogeneousCore'_le _ _
  choice_eq I H:=le_antisymm H (I.toIdeal_homogeneousCore_le _)
 theorem Ideal.homogeneousCore_eq_sSup:
-   I.homogeneousCore 𝒜=sSup { J:HomogeneousIdeal 𝒜 | J.toIdeal ≤ I}:=
+   I.homogeneousCore 𝒜=sSup { J:HomogeneousIdeal 𝒜 | J.toIdeal≤I}:=
  Eq.symm <| IsLUB.sSup_eq <| (Ideal.homogeneousCore.gc 𝒜).isGreatest_u.isLUB
 theorem Ideal.homogeneousCore'_eq_sSup:
-   I.homogeneousCore' 𝒜=sSup { J:Ideal A | J.IsHomogeneous 𝒜∧J ≤ I}:=by
+   I.homogeneousCore' 𝒜=sSup { J:Ideal A | J.IsHomogeneous 𝒜∧J≤I}:=by
  refine (IsLUB.sSup_eq ?_).symm
  apply IsGreatest.isLUB
  have coe_mono:Monotone (toIdeal:HomogeneousIdeal 𝒜 → Ideal A):=fun x y => id
@@ -304,7 +304,7 @@ def Ideal.homogeneousHull:HomogeneousIdeal 𝒜:=
    refine Ideal.homogeneous_span _ _ fun x hx => ?_
    obtain ⟨i,x,rfl⟩:=hx
    apply SetLike.isHomogeneousElem_coe⟩
-theorem Ideal.le_toIdeal_homogeneousHull:I ≤ (Ideal.homogeneousHull 𝒜 I).toIdeal:=by
+theorem Ideal.le_toIdeal_homogeneousHull:I≤(Ideal.homogeneousHull 𝒜 I).toIdeal:=by
  intro r hr
  classical
  rw [←DirectSum.sum_support_decompose 𝒜 r]
@@ -339,7 +339,7 @@ theorem Ideal.toIdeal_homogeneousHull_eq_iSup:
 theorem Ideal.homogeneousHull_eq_iSup:
    I.homogeneousHull 𝒜=
      ⨆ i,⟨Ideal.span (GradedRing.proj 𝒜 i '' I),Ideal.homogeneous_span 𝒜 _ (by
-       rintro _ ⟨x, -,rfl⟩
+       rintro _ ⟨x,-,rfl⟩
        apply SetLike.isHomogeneousElem_coe)⟩:=by
  ext1
  rw [Ideal.toIdeal_homogeneousHull_eq_iSup,toIdeal_iSup]
@@ -357,7 +357,7 @@ def Ideal.homogeneousHull.gi:GaloisInsertion (Ideal.homogeneousHull 𝒜) toIdea
  le_l_u _:=Ideal.le_toIdeal_homogeneousHull _ _
  choice_eq I H:=le_antisymm (I.le_toIdeal_homogeneousHull 𝒜) H
 theorem Ideal.homogeneousHull_eq_sInf (I:Ideal A):
-   Ideal.homogeneousHull 𝒜 I=sInf { J:HomogeneousIdeal 𝒜 | I ≤ J.toIdeal}:=
+   Ideal.homogeneousHull 𝒜 I=sInf { J:HomogeneousIdeal 𝒜 | I≤J.toIdeal}:=
  Eq.symm <| IsGLB.sInf_eq <| (Ideal.homogeneousHull.gc 𝒜).isLeast_l.isGLB
 end GaloisConnection
 section IrrelevantIdeal
@@ -382,7 +382,7 @@ theorem mem_irrelevant_iff (a:A):
 theorem toIdeal_irrelevant:
    𝒜₊.toIdeal=RingHom.ker (GradedRing.projZeroRingHom 𝒜):=
  rfl
-lemma mem_irrelevant_of_mem {x:A} {i:ι} (hi:0 < i) (hx:x∈𝒜 i):x∈𝒜₊:=by
+lemma mem_irrelevant_of_mem {x:A} {i:ι} (hi:0<i) (hx:x∈𝒜 i):x∈𝒜₊:=by
  rw [mem_irrelevant_iff,GradedRing.proj_apply,DirectSum.decompose_of_mem _ hx,
    DirectSum.of_eq_of_ne _ _ _ (by aesop),ZeroMemClass.coe_zero]
 lemma irrelevant_eq_iSup:𝒜₊.toAddSubmonoid=⨆ i > 0,.ofClass (𝒜 i):=by
@@ -404,13 +404,13 @@ lemma irrelevant_eq_span:𝒜₊.toIdeal=.span (⋃ i > 0,𝒜 i):=
    Ideal.span_le.mpr <| iUnion_subset fun _↦iUnion_subset fun hi _ hx↦
    mem_irrelevant_of_mem _ hi hx
 lemma toAddSubmonoid_irrelevant_le {P:AddSubmonoid A}:
-   𝒜₊.toAddSubmonoid ≤ P ↔ ∀ i > 0,.ofClass (𝒜 i) ≤ P:=by
+   𝒜₊.toAddSubmonoid≤P ↔ ∀ i > 0,.ofClass (𝒜 i)≤P:=by
  rw [irrelevant_eq_iSup,iSup₂_le_iff]
 lemma toIdeal_irrelevant_le {I:Ideal A}:
-   𝒜₊.toIdeal ≤ I ↔ ∀ i > 0,.ofClass (𝒜 i) ≤ I.toAddSubmonoid:=
+   𝒜₊.toIdeal≤I ↔ ∀ i > 0,.ofClass (𝒜 i)≤I.toAddSubmonoid:=
  toAddSubmonoid_irrelevant_le _
 lemma irrelevant_le {P:HomogeneousIdeal 𝒜}:
-   𝒜₊ ≤ P ↔ ∀ i > 0,.ofClass (𝒜 i) ≤ P.toAddSubmonoid:=
+   𝒜₊≤P ↔ ∀ i > 0,.ofClass (𝒜 i)≤P.toAddSubmonoid:=
  toIdeal_irrelevant_le _
 end HomogeneousIdeal
 end IrrelevantIdeal

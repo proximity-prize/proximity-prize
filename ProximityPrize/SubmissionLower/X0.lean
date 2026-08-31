@@ -23,12 +23,12 @@ theorem pow_prime_mem_base_of_pure_degree_prime
    IsPurelyInseparable.minpoly_eq_X_pow_sub_C F p x
  have hmin_degree:(minpoly F x).natDegree=p^n:=by
    rw [hmin,Polynomial.natDegree_sub_C,Polynomial.natDegree_X_pow]
- have hpow_le:p^n ≤ p:=by
+ have hpow_le:p^n≤p:=by
    calc
      p^n=(minpoly F x).natDegree:=hmin_degree.symm
-     _ ≤ Module.finrank F E:=minpoly.natDegree_le x
+     _≤Module.finrank F E:=minpoly.natDegree_le x
      _=p:=hdegree
- have hn_le:n ≤ 1:=by
+ have hn_le:n≤1:=by
    apply (Nat.pow_le_pow_iff_right hp.one_lt).mp
    simpa only [pow_one] using hpow_le
  have hrel:x^p^n=algebraMap F E y:=by
@@ -56,7 +56,7 @@ theorem separating_add_of_differential_criterion
  rw [map_add,hDr,zero_add]
  exact hDz
 theorem sheared_box_cost_le_old_add_two_penalty
-   (cY cR cZ dY dR dZ dS:ℕ) (hS:dS ≤ dR+dZ):
+   (cY cR cZ dY dR dZ dS:ℕ) (hS:dS≤dR+dZ):
    cY*dY+cR*dS+(cZ+cR)*dZ ≤
      (cY*dY+cR*dR+cZ*dZ)+2*cR*dZ:=by
  calc

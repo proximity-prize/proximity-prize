@@ -9,7 +9,7 @@ variable {K R:Type} [Field K] [CommRing R] [IsDomain R]
 variable [Algebra K R] [IsDiscreteValuationRing R]
 private theorem derivation_preserves_char_pow
    (D:Derivation K R R) (pi:R) (p:ℕ) [CharP R p]
-   (_hp:1 ≤ p) (f:R) (hf:pi^p∣f):pi^p∣D f:=by
+   (_hp:1≤p) (f:R) (hf:pi^p∣f):pi^p∣D f:=by
  obtain ⟨u,rfl⟩:=hf
  rw [D.leibniz,Derivation.leibniz_pow]
  simp only [nsmul_eq_mul,smul_eq_mul,CharP.cast_eq_zero R p,zero_mul,
@@ -41,7 +41,7 @@ private theorem tangent_chain
 private theorem char_pow_chain
    (D:Derivation K R R) (H DH:R) (c:ℕ → R) (N:ℕ → R)
    (hrec:∀ j,N (j+1)=H*D (N j)-c j*N j*DH)
-   (pi:R) (p:ℕ) [CharP R p] (hp:1 ≤ p)
+   (pi:R) (p:ℕ) [CharP R p] (hp:1≤p)
    (hN0:pi^p∣N 0):∀ j,pi^p∣N j:=by
  intro j
  induction j with
@@ -52,7 +52,7 @@ private theorem char_pow_chain
 private theorem addVal_derivation_eq_pred
    (D:Derivation K R R) (pi:R) (hpi:Irreducible pi)
    (htrans:IsUnit (D pi)) (p k:ℕ) [CharP R p]
-   (hp:p.Prime) (hkpos:1 ≤ k) (hkp:k < p)
+   (hp:p.Prime) (hkpos:1≤k) (hkp:k<p)
    (x:R) (u:Rˣ) (hx:x=(u:R)*pi^k):
    IsDiscreteValuationRing.addVal R (D x)=k-1:=by
  have h:=addVal_iterate_eq_sub_of_transverse D pi (u:R) k 1 p hp hkp
@@ -63,7 +63,7 @@ private theorem transverse_recurrence_step
    (D:Derivation K R R) (H DH c x next pi:R)
    (hrec:next=H*D x-c*x*DH)
    (hH:IsUnit H) (hpi:Irreducible pi) (htrans:IsUnit (D pi))
-   (p k:ℕ) [CharP R p] (hp:p.Prime) (hkpos:1 ≤ k) (hkp:k < p)
+   (p k:ℕ) [CharP R p] (hp:p.Prime) (hkpos:1≤k) (hkp:k<p)
    (u:Rˣ) (hx:x=(u:R)*pi^k):
    IsDiscreteValuationRing.addVal R next=k-1:=by
  let v:=IsDiscreteValuationRing.addVal R
@@ -73,11 +73,11 @@ private theorem transverse_recurrence_step
  have hfirst:v (H*D x)=k-1:=by
    rw [IsDiscreteValuationRing.addVal_mul,
      IsDiscreteValuationRing.addVal_eq_zero_iff.mpr hH,zero_add,hDx]
- have hsecond:k ≤ v (c*x*DH):=by
+ have hsecond:k≤v (c*x*DH):=by
    rw [IsDiscreteValuationRing.addVal_mul,
      IsDiscreteValuationRing.addVal_mul,hxv]
    exact le_add_right (le_add_left (le_refl (k:ℕ∞)))
- have hlt:v (H*D x) < v (c*x*DH):=by
+ have hlt:v (H*D x)<v (c*x*DH):=by
    rw [hfirst]
    exact (ENat.coe_lt_coe.mpr (Nat.pred_lt (Nat.ne_zero_of_lt hkpos))).trans_le hsecond
  rw [hrec,v.map_sub_eq_of_lt_left hlt,hfirst]
@@ -87,8 +87,8 @@ theorem recurrence_unit_or_persistent
    (hrec:∀ j,N (j+1)=H*D (N j)-c j*N j*DH)
    (hH:IsUnit H) (hN0ne:N 0≠0) (hN0nonunit:¬ IsUnit (N 0)):
    let mu:=(IsDiscreteValuationRing.addVal R (N 0)).toNat
-   1 ≤ mu∧
-     ((∃ delay,1 ≤ delay∧delay ≤ mu∧IsUnit (N delay))∨
+   1≤mu∧
+     ((∃ delay,1≤delay∧delay≤mu∧IsUnit (N delay))∨
        (∀ delay,¬ IsUnit (N delay))):=by
  classical
  let v:=IsDiscreteValuationRing.addVal R
@@ -97,7 +97,7 @@ theorem recurrence_unit_or_persistent
    IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hN0ne hpi
  have hv0:v (N 0)=mu:=IsDiscreteValuationRing.addVal_def (N 0) u hpi mu hN0
  have hmuDef:(v (N 0)).toNat=mu:=by rw [hv0];simp
- have hmuPos:1 ≤ mu:=by
+ have hmuPos:1≤mu:=by
    by_contra h
    have hz:mu=0:=Nat.eq_zero_of_not_pos h
    apply hN0nonunit
@@ -109,15 +109,15 @@ theorem recurrence_unit_or_persistent
  refine ⟨hmuPos,?_⟩
  letI:Decidable (IsUnit (D pi)):=Classical.propDecidable _
  by_cases htrans:IsUnit (D pi)
- · by_cases hmup:mu < p
+ · by_cases hmup:mu<p
    · left
      refine ⟨mu,hmuPos,le_rfl,?_⟩
-     have horders:∀ j ≤ mu,v (N j)=mu-j:=by
+     have horders:∀ j≤mu,v (N j)=mu-j:=by
        intro j hj
        induction j with
        | zero => simpa using hv0
        | succ j ih =>
-           have hjlt:j < mu:=by omega
+           have hjlt:j<mu:=by omega
            have hord:=ih hjlt.le
            have hNjNe:N j≠0:=by
              intro hz
@@ -129,8 +129,8 @@ theorem recurrence_unit_or_persistent
              IsDiscreteValuationRing.addVal_def (N j) uj hpi k hNj
            have hk:k=mu-j:=by
              exact ENat.coe_inj.mp (hkv.symm.trans hord)
-           have hkpos:1 ≤ k:=by omega
-           have hkp:k < p:=by omega
+           have hkpos:1≤k:=by omega
+           have hkp:k<p:=by omega
            have hstep:=transverse_recurrence_step D H DH (c j) (N j)
              (N (j+1)) pi (hrec j) hH hpi htrans p k hp hkpos hkp uj hNj
            rw [hstep,hk]
@@ -138,8 +138,8 @@ theorem recurrence_unit_or_persistent
      exact IsDiscreteValuationRing.addVal_eq_zero_iff.mp (by
        simpa using horders mu le_rfl)
    · right
-     have hpLe:p ≤ mu:=Nat.le_of_not_gt hmup
-     have hpPos:1 ≤ p:=hp.one_le
+     have hpLe:p≤mu:=Nat.le_of_not_gt hmup
+     have hpPos:1≤p:=hp.one_le
      have hpow:pi^p∣N 0:=by
        rw [hN0]
        refine ⟨(u:R)*pi^(mu-p),?_⟩

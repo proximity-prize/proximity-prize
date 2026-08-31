@@ -11,7 +11,7 @@ theorem sum_pairwise_power_factor_degrees_le
    (hqMonic:∀ i,(q i).Monic)
    (hqCoprime:Pairwise fun i j↦IsCoprime (q i) (q j))
    (hpow:∀ i,q i^multiplicity i∣R):
-   (∑ i,multiplicity i*(q i).natDegree) ≤ R.natDegree:=by
+   (∑ i,multiplicity i*(q i).natDegree)≤R.natDegree:=by
  classical
  have hpowersCoprime:Pairwise fun i j↦
      IsCoprime ((q i)^multiplicity i) ((q j)^multiplicity j):=by
@@ -37,7 +37,7 @@ theorem sum_power_factor_degrees_le
    (hqMonic:∀ i,(q i).Monic)
    (hqInjective:Function.Injective q)
    (hpow:∀ i,q i^multiplicity i∣R):
-   (∑ i,multiplicity i*(q i).natDegree) ≤ R.natDegree:=by
+   (∑ i,multiplicity i*(q i).natDegree)≤R.natDegree:=by
  apply sum_pairwise_power_factor_degrees_le R q multiplicity hR hqMonic
  · intro i j hij
    apply (hqIrreducible i).coprime_iff_not_dvd.mpr
@@ -73,7 +73,7 @@ theorem sum_grouped_power_factor_degrees_le
    (hqMonic:∀ i,(q i).Monic)
    (hpow:∀ f∈Finset.univ.image q,
      f^(∑ i with q i=f,multiplicity i)∣R):
-   (∑ i,multiplicity i*(q i).natDegree) ≤ R.natDegree:=by
+   (∑ i,multiplicity i*(q i).natDegree)≤R.natDegree:=by
  classical
  let roots:Finset (Polynomial K):=Finset.univ.image q
  let grouped:roots → ℕ:=fun f↦∑ i with q i=f.1,multiplicity i

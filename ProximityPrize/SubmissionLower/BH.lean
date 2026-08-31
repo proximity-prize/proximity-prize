@@ -27,7 +27,7 @@ theorem xLift_monomial (n:ℕ) (a:K):
    xLift K (Polynomial.monomial n a)=
      MvPolynomial.C a*MvPolynomial.X (0:Fin 4)^n:=by
  apply (collectX K).injective
- simp [xLift, ←Polynomial.C_mul_X_pow_eq_monomial]
+ simp [xLift,←Polynomial.C_mul_X_pow_eq_monomial]
 theorem xLift_ne_zero (P:Polynomial K) (hP:P≠0):xLift K P≠0:=by
  intro h
  have hh:=congrArg (collectX K) h

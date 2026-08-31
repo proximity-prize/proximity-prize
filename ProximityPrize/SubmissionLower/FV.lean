@@ -23,8 +23,8 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
-variable {errorCap : ℕ}
-variable {stageSupport : RCN275.ResidualSupportParameters}
+variable {errorCap:ℕ}
+variable {stageSupport:RCN275.ResidualSupportParameters}
 variable {A:Type} [Fintype A]
 theorem indexedStageSurface_mem_relation
    (S:Stage K I Gamma x p flag errorCap stageSupport)
@@ -138,7 +138,7 @@ theorem indexedFiberProjectionData
        flagEvaluation_kernel_contract]
    change J.comap ((localize.comp plane).comp (surfaceMap phi))=
      componentPrime S (component a.1)
-   rw [←Ideal.comap_comap, ←Ideal.comap_comap,
+   rw [←Ideal.comap_comap,←Ideal.comap_comap,
      indexedFiberRelation_under,hplane]
    rfl
  · change localize (plane (globalTailCut phi S.F

@@ -45,7 +45,7 @@ theorem PrimeFlagBudgetFamily.sum_weightedCost_le
        r.all*(∑ C:RegularComponent Omega G T H,B.allCost C):=by
      simp only [PrimeFlagBudgetFamily.weightedCost,
        Finset.sum_add_distrib,Finset.mul_sum]
-   _ ≤ r.zOnly*flagMixed p q unitZFlag+
+   _≤r.zOnly*flagMixed p q unitZFlag+
        r.yz*flagMixed p q unitYZFlag+
        r.all*flagMixed p q unitAllFlag:=
      Nat.add_le_add

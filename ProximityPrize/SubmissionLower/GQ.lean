@@ -23,10 +23,10 @@ def tightFixedCountCap (p:Profile) (t:TightParameters):ℕ:=
  tightRegularCountCap p+t.countCap
 theorem combined_tight_count_bound
    (p:Profile) (t:TightParameters) (regularCount singularCount:ℕ)
-   (hpgap:0 < p.gap) (htgap:0 < t.gap)
-   (hregular:regularCount*p.gap^2 ≤ p.regularNumerator)
-   (hsingular:singularCount*t.gap ≤ t.tightNumerator):
-   regularCount+singularCount ≤ tightFixedCountCap p t:=by
+   (hpgap:0<p.gap) (htgap:0<t.gap)
+   (hregular:regularCount*p.gap^2≤p.regularNumerator)
+   (hsingular:singularCount*t.gap≤t.tightNumerator):
+   regularCount+singularCount≤tightFixedCountCap p t:=by
  apply Nat.add_le_add
  · exact (Nat.le_div_iff_mul_le (pow_pos hpgap 2)).2 hregular
  · exact t.count_le_countCap singularCount htgap hsingular
@@ -66,18 +66,18 @@ theorem meet_global_count_le_tightFixedCountCap_of_regular_factors
    (nodes:Finset Iota) (x u0 u1:Iota → K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=meetProfile.n)
    (hdegree:∀ gamma∈Gamma,
-     (selected gamma).natDegree ≤ meetProfile.w)
+     (selected gamma).natDegree≤meetProfile.w)
    (hsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0)
    (hagreement:∀ gamma∈Gamma,
-     meetProfile.agreements ≤ (nodes.filter (fun i =>
+     meetProfile.agreements≤(nodes.filter (fun i =>
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma meetProfile.w
      meetProfile.errors)
    (hregular:∀ F:RegularIndex Q,
      (regularSeeds Q selected Gamma F).card*meetProfile.gap^2 ≤
        meetProfile.factorRegularLedger (regularFlag Q F)):
-   Gamma.card ≤ meetTightFixedCountCap:=by
+   Gamma.card≤meetTightFixedCountCap:=by
  have hcover:=meet_card_le_regular_sum_add_singular Q hQ hbox selected
    Gamma hsolution
  have hreg:=sum_factor_counts_rectangular_le meetProfile Q hQ
@@ -101,18 +101,18 @@ theorem meet_global_count_lt_tightFixedCost_of_regular_factors
    (nodes:Finset Iota) (x u0 u1:Iota → K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=meetProfile.n)
    (hdegree:∀ gamma∈Gamma,
-     (selected gamma).natDegree ≤ meetProfile.w)
+     (selected gamma).natDegree≤meetProfile.w)
    (hsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0)
    (hagreement:∀ gamma∈Gamma,
-     meetProfile.agreements ≤ (nodes.filter (fun i =>
+     meetProfile.agreements≤(nodes.filter (fun i =>
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma meetProfile.w
      meetProfile.errors)
    (hregular:∀ F:RegularIndex Q,
      (regularSeeds Q selected Gamma F).card*meetProfile.gap^2 ≤
        meetProfile.factorRegularLedger (regularFlag Q F)):
-   Gamma.card < meetTightFixedCost:=by
+   Gamma.card<meetTightFixedCost:=by
  exact (meet_global_count_le_tightFixedCountCap_of_regular_factors Q hQ hbox
    selected Gamma nodes x u0 u1 hinj hnodes hdegree hsolution hagreement
    hnoPencil hregular).trans_lt (Nat.lt_succ_self _)

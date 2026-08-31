@@ -42,7 +42,7 @@ structure ProperDelayedTailCertificate
        (RCN326.w+1)))
    (multiplicity:FirstTailComponent S → ℕ) where
  branch:∀ C:FirstTailComponent S,
-   (∃ delay,1 ≤ delay∧delay ≤ multiplicity C∧
+   (∃ delay,1≤delay∧delay≤multiplicity C∧
      globalTailCut (polynomialEmbedding K) S.F
        (RCN326.w+1+delay)∉C.1∧
      (componentSeeds (Omega K) S.G
@@ -74,12 +74,12 @@ theorem delayedTailMultiplicityProvider_of_certificates
    (hagreement:∀ gamma∈Gamma,
      RCN326.agreements ≤
        (S.agreementFiber gamma).card)
-   (hshort:RCN326.w+1 ≤ bound)
-   (hchar:bound < p)
+   (hshort:RCN326.w+1≤bound)
+   (hchar:bound<p)
    (hbox:S.F∈globalCoefficientBox K bound
      RCN326.w seedCap slopeCap)
    (multiplicity:FirstTailComponent S → ℕ)
-   (hone:∀ C,1 ≤ multiplicity C)
+   (hone:∀ C,1≤multiplicity C)
    (proper:ProperDelayedTailCertificate S U.toPrimeFlagBudgetFamily multiplicity)
    (resultants:RegularComponentWeightedInertiaResultantCertificate
      U.toPrimeFlagBudgetFamily multiplicity):
@@ -93,8 +93,8 @@ theorem delayedTailMultiplicityProvider_of_certificates
    (RCN326.w+2)
  let cost:FirstTailComponent S → ℕ:=
    fun C => multiplicity C*B.weightedCost secondTail C
- have hyzPositive (C:FirstTailComponent S):1 ≤ B.yzCost C:=by
-   change 1 ≤ coordinateDegree (Omega K) (CoordinateField (Omega K) C.1)
+ have hyzPositive (C:FirstTailComponent S):1≤B.yzCost C:=by
+   change 1≤coordinateDegree (Omega K) (CoordinateField (Omega K) C.1)
      (U.yzProjection C)
    exact one_le_coordinateDegree_of_transcendental_value
      (U.yzProjection C) (hyzTranscendental C)
@@ -103,7 +103,7 @@ theorem delayedTailMultiplicityProvider_of_certificates
      (∑ v∈W,RCN295.exponentSetPoleWeight
        v.val (coordinate (Omega K) C.1)
        (RCN095.flagSupport
-         RCN095.unitYZFlag)) ≤ (B.yzCost C:ℤ):=by
+         RCN095.unitYZFlag))≤(B.yzCost C:ℤ):=by
    exact U.toAdaptiveUnitPoleBudget.yzPole C
  have tangentCount (C:FirstTailComponent S)
      (hall:∀ delay,globalTailCut (polynomialEmbedding K) S.F

@@ -32,7 +32,7 @@ theorem meet_degree_incidence_ceiling:
    meetProfile.n*meetProfile.gap*meetProfile.w ≤
      meetProfile.degreeIncidence*meetProfile.agreements:=by
  norm_num [meetProfile,Profile.gap,Profile.degreeIncidence]
-theorem meet_degree_part_bound (k:ℕ) (hk:k ≤ meetProfile.w):
+theorem meet_degree_part_bound (k:ℕ) (hk:k≤meetProfile.w):
    (meetProfile.n-k)*meetProfile.gap*(meetProfile.w-k) ≤
      meetProfile.degreeIncidence*(meetProfile.agreements-k):=by
  have hcross:=identity_degree_weight_cross_le meetProfile.n
@@ -52,15 +52,15 @@ theorem meet_degree_part_bound (k:ℕ) (hk:k ≤ meetProfile.w):
            (meetProfile.agreements-meetProfile.w)*
            (meetProfile.w-k)*meetProfile.agreements:=by
              rfl
-     _ ≤ meetProfile.n*(meetProfile.agreements-meetProfile.w)*
+     _≤meetProfile.n*(meetProfile.agreements-meetProfile.w)*
          meetProfile.w*(meetProfile.agreements-k):=hcross
-     _ ≤ (meetProfile.degreeIncidence*meetProfile.agreements)*
+     _≤(meetProfile.degreeIncidence*meetProfile.agreements)*
          (meetProfile.agreements-k):=by
            simpa only [Profile.gap] using hmul
      _=(meetProfile.degreeIncidence*(meetProfile.agreements-k))*
          meetProfile.agreements:=by ring
  exact Nat.le_of_mul_le_mul_right htotal (by norm_num [meetProfile])
-theorem meet_unit_part_bound (k:ℕ) (hk:k ≤ meetProfile.w):
+theorem meet_unit_part_bound (k:ℕ) (hk:k≤meetProfile.w):
    (meetProfile.n-k)*meetProfile.gap ≤
      meetProfile.unitIncidence*(meetProfile.agreements-k):=by
  simpa only [Profile.gap,Profile.unitIncidence] using
@@ -100,7 +100,7 @@ theorem recursive_scaled_factor_6656
    (p:FlagDegree)
    (hnodes:S.nodes.card=meetProfile.n)
    (hagreement:∀ gamma∈Gamma,
-     meetProfile.agreements ≤ (S.agreementFiber gamma).card)
+     meetProfile.agreements≤(S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,
      ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
          (x i) (D.stage.u0 i) (D.stage.u1 i) →

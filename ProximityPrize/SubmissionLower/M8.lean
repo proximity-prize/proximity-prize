@@ -40,7 +40,7 @@ def flagPole (v:Valuation L (WithZero (Multiplicative ℤ)))
  (p.yz:ℤ)*max (poleOrder v (x 0)) (poleOrder v (x 2))+
  (p.all:ℤ)*max (poleOrder v (x 1)) (max (poleOrder v (x 0)) (poleOrder v (x 2)))
 theorem flagPole_nonneg (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (x:Fin 3 → L) (p:FlagDegree):0 ≤ flagPole v x p:=by
+   (x:Fin 3 → L) (p:FlagDegree):0≤flagPole v x p:=by
  unfold flagPole poleOrder
  positivity
 @[simp] theorem flagPole_add (v:Valuation L (WithZero (Multiplicative ℤ)))
@@ -62,22 +62,22 @@ theorem flagPole_nonneg (v:Valuation L (WithZero (Multiplicative ℤ)))
      max (poleOrder v (x 0)) (poleOrder v (x 2)):=by
  simp [flagPole,unitYZFlag]
 theorem valuation_eval_le_flag (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (coeff:K →+*L) (hcoeff:∀ a,v (coeff a) ≤ 1) (x:Fin 3 → L)
+   (coeff:K →+*L) (hcoeff:∀ a,v (coeff a)≤1) (x:Fin 3 → L)
    (p:FlagDegree) (B:MvPolynomial (Fin 3) K) (hB:PolynomialInFlag p B):
-   v (MvPolynomial.eval₂Hom coeff x B) ≤ WithZero.exp (flagPole v x p):=
+   v (MvPolynomial.eval₂Hom coeff x B)≤WithZero.exp (flagPole v x p):=
  (valuation_eval_le_exp_exponentSet v coeff hcoeff x (flagSupport p) B
    ((support_subset_flagSupport_iff _ _).mpr hB)).trans
    (WithZero.exp_le_exp.mpr (exponentSetPoleWeight_flagSupport_le v x p))
 private theorem mixed_weight_le (r j k:ℕ) (h:r+j=k) (A B:ℤ):
-   (r:ℤ)*A+(j:ℤ)*B ≤ (k:ℤ)*max A B:=by
+   (r:ℤ)*A+(j:ℤ)*B≤(k:ℤ)*max A B:=by
  calc
-   _ ≤ (r:ℤ)*max A B+(j:ℤ)*max A B:=add_le_add
+   _≤(r:ℤ)*max A B+(j:ℤ)*max A B:=add_le_add
      (mul_le_mul_of_nonneg_left (le_max_left _ _) (Int.natCast_nonneg _))
      (mul_le_mul_of_nonneg_left (le_max_right _ _) (Int.natCast_nonneg _))
    _=((r+j:ℕ):ℤ)*max A B:=by push_cast;ring
    _=_:=by rw [h]
 theorem valuation_polynomialInW_le (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (coeff:K →+*L) (hcoeff:∀ a,v (coeff a) ≤ 1) (x:Fin 3 → L)
+   (coeff:K →+*L) (hcoeff:∀ a,v (coeff a)≤1) (x:Fin 3 → L)
    (w:L) (k:ℕ) (C N:FlagDegree) (B:Fin (k+1) → MvPolynomial (Fin 3) K)
    (hB:∀ j,PolynomialInFlag
      (C+k • N+(k-j.val) • (2 • unitAllFlag)+j.val • unitYZFlag) (B j)):
@@ -88,12 +88,12 @@ theorem valuation_polynomialInW_le (v:Valuation L (WithZero (Multiplicative ℤ)
  intro j _
  let p:=C+k • N+(k-j.val) • (2 • unitAllFlag)+j.val • unitYZFlag
  have hBj:=valuation_eval_le_flag v coeff hcoeff x p (B j) (hB j)
- have hw:v w ≤ WithZero.exp (poleOrder v w):=
+ have hw:v w≤WithZero.exp (poleOrder v w):=
    WithZero.le_exp_of_log_le (le_max_right _ _)
- have hpow:v (w^j.val) ≤ WithZero.exp ((j.val:ℤ)*poleOrder v w):=by
+ have hpow:v (w^j.val)≤WithZero.exp ((j.val:ℤ)*poleOrder v w):=by
    rw [map_pow]
    simpa only [←WithZero.exp_nsmul,nsmul_eq_mul] using
-     pow_le_pow_left₀ (show (0:WithZero (Multiplicative ℤ)) ≤ v w from zero_le) hw j.val
+     pow_le_pow_left₀ (show (0:WithZero (Multiplicative ℤ))≤v w from zero_le) hw j.val
  calc
    v (MvPolynomial.eval₂Hom coeff x (B j)*w^j.val) ≤
        WithZero.exp (flagPole v x p)*WithZero.exp ((j.val:ℤ)*poleOrder v w):=by

@@ -8,7 +8,7 @@ noncomputable section
 variable (K:Type) [Field K]
 variable (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
 abbrev PointOn:=
- {v:Fin 3 → K//P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom}
+ {v:Fin 3 → K//P≤RingHom.ker (MvPolynomial.aeval v).toRingHom}
 def pointHom (v:PointOn K P):CoordinateRing K P →ₐ[K] K:=
  Ideal.Quotient.liftₐ P (MvPolynomial.aeval v.1) (fun F hF↦v.2 hF)
 theorem pointHom_mk (v:PointOn K P) (F:MvPolynomial (Fin 3) K):
@@ -86,11 +86,11 @@ theorem finite_zero_points_le_box_of_separator
    (hproj:ProjectionsFiniteSeparable K P)
    (i₀:Fin 3) (hi₀:Transcendental K (coordinate K P i₀))
    (F:MvPolynomial (Fin 3) K) (hF:F∉P)
-   (cap:Fin 3 → ℕ) (hcap:∀ i,F.degreeOf i ≤ cap i)
+   (cap:Fin 3 → ℕ) (hcap:∀ i,F.degreeOf i≤cap i)
    (S:Finset (Fin 3 → K))
-   (hSP:∀ v∈S,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom)
+   (hSP:∀ v∈S,P≤RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hSF:∀ v∈S,MvPolynomial.aeval v F=0):
-   (S.card:ℤ) ≤ ∑ i,(cap i:ℤ)*(actualCoordinateDegree K P i:ℤ):=by
+   (S.card:ℤ)≤∑ i,(cap i:ℤ)*(actualCoordinateDegree K P i:ℤ):=by
  classical
  letI:Algebra (Polynomial K) (CoordinateRing K P):=quotientPolynomialAlgebra K P i₀
  letI:Algebra (Polynomial K) (CoordinateField K P):=polynomialBaseAlgebra K P i₀
@@ -135,11 +135,11 @@ theorem finite_zero_points_le_box
    (hnonpoint:∀ v:Fin 3 → K,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (F:MvPolynomial (Fin 3) K) (hF:F∉P)
-   (cap:Fin 3 → ℕ) (hcap:∀ i,F.degreeOf i ≤ cap i)
+   (cap:Fin 3 → ℕ) (hcap:∀ i,F.degreeOf i≤cap i)
    (S:Finset (Fin 3 → K))
-   (hSP:∀ v∈S,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom)
+   (hSP:∀ v∈S,P≤RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hSF:∀ v∈S,MvPolynomial.aeval v F=0):
-   (S.card:ℤ) ≤ ∑ i,(cap i:ℤ)*(actualCoordinateDegree K P i:ℤ):=by
+   (S.card:ℤ)≤∑ i,(cap i:ℤ)*(actualCoordinateDegree K P i:ℤ):=by
  obtain ⟨i,hi⟩:=exists_transcendental_coordinate_of_ne_point_kernel K P hnonpoint
  exact finite_zero_points_le_box_of_separator K P hproj i hi F hF cap hcap S hSP hSF
 end

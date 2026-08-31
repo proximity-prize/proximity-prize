@@ -21,10 +21,10 @@ theorem rawPieces_modMax_surjective_of_monic_mod
    (P Q:Polynomial R) (m n:ℕ)
    (pieces:J → Ideal (Polynomial R))
    (hcoprime:Pairwise fun i j↦IsCoprime (pieces i) (pieces j))
-   (hcontains:∀ j,intersectionIdeal P Q ≤ pieces j)
+   (hcontains:∀ j,intersectionIdeal P Q≤pieces j)
    (M:Polynomial R) (hMMonic:M.Monic)
    (hMmem:M∈intersectionIdeal P Q ⊔ coefficientMaxIdeal (R:=R))
-   (hMdegree:M.natDegree ≤ m+n):
+   (hMdegree:M.natDegree≤m+n):
    Function.Surjective
      (((IsLocalRing.maximalIdeal R •
          (⊤:Submodule R (∀ j,Polynomial R ⧸ pieces j))).mkQ).comp
@@ -58,7 +58,7 @@ theorem rawPieces_modMax_surjective_of_monic_mod
  obtain ⟨y,rfl⟩:=Submodule.mkQ_surjective maxTarget ybar
  obtain ⟨A,hA⟩:=Ideal.pi_mkQ_surjective hcoprime y
  let rem:Polynomial R:=A %ₘ M
- have hremDegree:rem.degree < (m+n:ℕ):=by
+ have hremDegree:rem.degree<(m+n:ℕ):=by
    have hlt:=Polynomial.degree_modByMonic_lt A hMMonic
    rw [Polynomial.degree_eq_natDegree hMMonic.ne_zero] at hlt
    exact hlt.trans_le (by exact_mod_cast hMdegree)
@@ -70,7 +70,7 @@ theorem rawPieces_modMax_surjective_of_monic_mod
  have hraw:rawPiecesMap P Q m n pieces v=full rem:=by
    rfl
  have hfullA:full A=y:=hA
- rw [hraw, ←hfullA, ←map_sub]
+ rw [hraw,←hfullA,←map_sub]
  have hdiff:rem-A= -(M*(A/ₘ M)):=by
    dsimp only [rem]
    rw [Polynomial.modByMonic_eq_sub_mul_div]
@@ -88,10 +88,10 @@ theorem rawPieces_modMax_surjective_of_monic_mod
 theorem sum_multiplicities_le_ord_resultant_of_primary_pieces_modMax
    {J:Type*} [Fintype J]
    (P Q:Polynomial R) (m n:ℕ)
-   (hPcap:P.natDegree ≤ m) (hQcap:Q.natDegree ≤ n)
+   (hPcap:P.natDegree≤m) (hQcap:Q.natDegree≤n)
    (hresultant:Polynomial.resultant P Q m n≠0)
    (pieces:J → Ideal (Polynomial R))
-   (hcontains:∀ j,intersectionIdeal P Q ≤ pieces j)
+   (hcontains:∀ j,intersectionIdeal P Q≤pieces j)
    [Module.Finite R (∀ j,Polynomial R ⧸ pieces j)]
    (hmod:Function.Surjective
      (((IsLocalRing.maximalIdeal R •

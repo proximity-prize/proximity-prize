@@ -194,7 +194,7 @@ theorem finite_sum_finrank_bound
    (hkernels:Function.Injective (fun i↦RingHom.ker (e i).toRingHom))
    (G H:Original K) (hG:Irreducible G)
    (hGroot:∀ i,e i G=0) (hHroot:∀ i,e i H=0)
-   (hproper:¬ G∣H) (hpositive:0 < (planeMap K order G).natDegree):
+   (hproper:¬ G∣H) (hpositive:0<(planeMap K order G).natDegree):
    letI:∀ i,Algebra (RatFunc K) (E i):=fun i↦
      (elementEmbedding K (E i) (e i (MvPolynomial.X (order 0))) (ht i)).toRingHom.toAlgebra
    (∀ i,FiniteDimensional (RatFunc K) (E i))∧

@@ -19,23 +19,23 @@ variable [Field E] [IsAlgClosed E] [Algebra Ω E] [Algebra (RatFunc Ω) E]
 variable [IsScalarTower Ω (RatFunc Ω) E]
 theorem exists_firstTail_cut_budgets
    (φ:Polynomial K →+*Ω) (F:MvPolynomial (Fin 4) K)
-   (G T:MvPolynomial (Fin 3) Ω) (a b s w:ℕ) (hw:1 ≤ w)
+   (G T:MvPolynomial (Fin 3) Ω) (a b s w:ℕ) (hw:1≤w)
    (hT:T=globalTailCut φ F (w+1))
    (hF:ResidualSupportData (support a b s) F) (flag:FlagDegree)
    (hG:G≠0) (hdiv:G∣surfaceMap φ F) (hGflag:PolynomialInFlag flag G)
    (base:∀ C:RegularComponent Ω G T (regularitySurface φ F),SeparableLiteralCoordinate C.1)
    (unit:AdaptiveUnitProjectionFamily base flag (sharpResidualAgreementFlag (support a b s) (w+1)))
    (pchar:ℕ) [CharP E pchar]
-   (hmix:2*(flag.zOnly+flag.yz+flag.all)*(a+b+s+4) < pchar):
+   (hmix:2*(flag.zOnly+flag.yz+flag.all)*(a+b+s+4)<pchar):
    ∃ budget:∀ C:RegularComponent Ω G T (regularitySurface φ F),
      MovingPoleBudget C.1 (regularitySurface φ F) (surfaceMap φ (polyG K F)),
      (∀ C,(budget C).zCost=unit.toPrimeFlagBudgetFamily.zCost C∧
        (budget C).yzCost=unit.toPrimeFlagBudgetFamily.yzCost C∧
        (budget C).allCost=unit.toPrimeFlagBudgetFamily.allCost C)∧
-     (∑ C,(budget C).zCost) ≤ flagMixed flag (paddedCut a b s (w+1)) unitZFlag∧
-     (∑ C,(budget C).yzCost) ≤ flagMixed flag (paddedCut a b s (w+1)) unitYZFlag∧
-     (∑ C,(budget C).allCost) ≤ flagMixed flag (paddedCut a b s (w+1)) unitAllFlag∧
-     (∑ C,(budget C).movingCost) ≤ flagMixed flag
+     (∑ C,(budget C).zCost)≤flagMixed flag (paddedCut a b s (w+1)) unitZFlag∧
+     (∑ C,(budget C).yzCost)≤flagMixed flag (paddedCut a b s (w+1)) unitYZFlag∧
+     (∑ C,(budget C).allCost)≤flagMixed flag (paddedCut a b s (w+1)) unitAllFlag∧
+     (∑ C,(budget C).movingCost)≤flagMixed flag
        (RCN206.fiberFlag a b s)
        (center a b s+(w+1) • RCN206.surfaceFlag a b s):=by
  classical
@@ -45,7 +45,7 @@ theorem exists_firstTail_cut_budgets
    φ a b s F hF.coordinate_bounds.2.1 hF.ys_weight hF.total_weight
  have hderiv:regularitySurface φ F∈
      Ideal.span ({G,MvPolynomial.pderiv (1:Fin 3) G}:Set (MvPolynomial (Fin 3) Ω)):=by
-   rw [regularitySurface, ←RCN267.surfaceMap_pderiv_R]
+   rw [regularitySurface,←RCN267.surfaceMap_pderiv_R]
    exact RCN076.pderiv_mem_span_of_dvd G (surfaceMap φ F) hdiv
  have hT':T=filteredCut w coeffs (surfaceMap φ (polyH K F))
      (surfaceMap φ (polyG K F)):=hT.trans heq

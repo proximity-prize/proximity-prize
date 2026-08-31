@@ -24,8 +24,8 @@ theorem baseCoefficientField_map_le (P:Polynomial L) (γ:L):
  exact IntermediateField.subset_adjoin k _ (Or.inr (Or.inr ⟨j,rfl⟩))
 theorem baseCoefficientField_trdeg_le_one
    (P:Polynomial L) (γ:L)
-   (hE:Algebra.trdeg k (coefficientField (k:=k) P γ) ≤ 2):
-   Algebra.trdeg k (baseCoefficientField (k:=k) P γ) ≤ 1:=by
+   (hE:Algebra.trdeg k (coefficientField (k:=k) P γ)≤2):
+   Algebra.trdeg k (baseCoefficientField (k:=k) P γ)≤1:=by
  apply RCN321.coefficient_trdeg_le_one_of_rational_extension
    (B:=baseCoefficientField (k:=k) P γ)
    (E:=coefficientField (k:=k) P γ)

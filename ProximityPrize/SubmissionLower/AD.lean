@@ -13,7 +13,7 @@ theorem pderiv_zero_of_degree_zero (i:σ) (F:MvPolynomial σ K)
  exact (MvPolynomial.mem_vars_iff_degreeOf_ne_zero.mp hmem) hdegree
 theorem pderiv_zero_iff_degree_zero_below_char
    (i:σ) (F:MvPolynomial σ K) (p:ℕ) [CharP K p]
-   (hdegree:F.degreeOf i < p):
+   (hdegree:F.degreeOf i<p):
    MvPolynomial.pderiv i F=0 ↔ F.degreeOf i=0:=by
  classical
  constructor
@@ -22,8 +22,8 @@ theorem pderiv_zero_iff_degree_zero_below_char
    apply MvPolynomial.degreeOf_le_iff.mpr
    intro d hd
    by_contra hn
-   have hpos:0 < d i:=by omega
-   have hsmall:d i < p:=(MvPolynomial.monomial_le_degreeOf i hd).trans_lt hdegree
+   have hpos:0<d i:=by omega
+   have hsmall:d i<p:=(MvPolynomial.monomial_le_degreeOf i hd).trans_lt hdegree
    let e:σ →₀ ℕ:=d-Finsupp.single i 1
    have he:e+Finsupp.single i 1=d:=
      Finsupp.sub_add_single_one_cancel (by omega:d i≠0)
@@ -70,18 +70,18 @@ end SurfaceCommutation
 section BaseRegularity
 variable {K:Type*} [Field K]
 theorem R_derivative_nonzero (F:MvPolynomial (Fin 4) K) (p:ℕ) [CharP K p]
-   (hpos:0 < F.degreeOf 2) (hsmall:F.degreeOf 2 < p):
+   (hpos:0<F.degreeOf 2) (hsmall:F.degreeOf 2<p):
    MvPolynomial.pderiv (2:Fin 4) F≠0:=by
  intro hzero
  have hd:=(pderiv_zero_iff_degree_zero_below_char (2:Fin 4) F p hsmall).mp hzero
  omega
-theorem R_derivative_degree_lt (F:MvPolynomial (Fin 4) K) (hpos:0 < F.degreeOf 2):
-   (MvPolynomial.pderiv (2:Fin 4) F).degreeOf 2 < F.degreeOf 2:=by
+theorem R_derivative_degree_lt (F:MvPolynomial (Fin 4) K) (hpos:0<F.degreeOf 2):
+   (MvPolynomial.pderiv (2:Fin 4) F).degreeOf 2<F.degreeOf 2:=by
  have hb:=pderiv_same_degree_bound (2:Fin 4) F (F.degreeOf 2) le_rfl
  omega
 theorem equation_not_dvd_R_derivative
    (F:MvPolynomial (Fin 4) K) (p:ℕ) [CharP K p]
-   (hpos:0 < F.degreeOf 2) (hsmall:F.degreeOf 2 < p):
+   (hpos:0<F.degreeOf 2) (hsmall:F.degreeOf 2<p):
    ¬ F∣MvPolynomial.pderiv (2:Fin 4) F:=by
  intro hdiv
  have hle:=RCN081.degreeOf_le_of_dvd (2:Fin 4) F _ hdiv
@@ -98,7 +98,7 @@ theorem geometricSurfaceMap_pderiv_R (F:MvPolynomial (Fin 4) K):
  exact surfaceMap_pderiv_R _ F
 theorem H_proper_on_every_geometric_factor
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F) (p:ℕ) [CharP K p]
-   (hpos:0 < F.degreeOf 2) (hsmall:F.degreeOf 2 < p)
+   (hpos:0<F.degreeOf 2) (hsmall:F.degreeOf 2<p)
    (g:MvPolynomial (Fin 3) L) (hg:Irreducible g)
    (hdivF:g∣geometricSurfaceMap K L F):
    ¬ g∣geometricSurfaceMap K L (MvPolynomial.pderiv (2:Fin 4) F):=by
@@ -108,7 +108,7 @@ theorem H_proper_on_every_geometric_factor
    hF (by omega) g hg hdivF).mp hdivH
 theorem geometric_factor_R_derivative_nonzero
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F) (p:ℕ) [CharP K p]
-   (hpos:0 < F.degreeOf 2) (hsmall:F.degreeOf 2 < p)
+   (hpos:0<F.degreeOf 2) (hsmall:F.degreeOf 2<p)
    (g:MvPolynomial (Fin 3) L) (hg:Irreducible g)
    (hdivF:g∣geometricSurfaceMap K L F):
    MvPolynomial.pderiv (1:Fin 3) g≠0:=by
@@ -121,10 +121,10 @@ theorem geometric_factor_R_derivative_nonzero
  exact H_proper_on_every_geometric_factor K L F hF p hpos hsmall g hg hdivF hdivH
 theorem geometric_factor_R_degree_positive
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F) (p:ℕ) [CharP K p]
-   (hpos:0 < F.degreeOf 2) (hsmall:F.degreeOf 2 < p)
+   (hpos:0<F.degreeOf 2) (hsmall:F.degreeOf 2<p)
    (g:MvPolynomial (Fin 3) L) (hg:Irreducible g)
    (hdivF:g∣geometricSurfaceMap K L F):
-   0 < g.degreeOf (1:Fin 3):=by
+   0<g.degreeOf (1:Fin 3):=by
  apply Nat.pos_of_ne_zero
  intro hzero
  exact geometric_factor_R_derivative_nonzero K L F hF p hpos hsmall g hg hdivF
@@ -132,24 +132,24 @@ theorem geometric_factor_R_degree_positive
 theorem geometric_factor_R_degree_le
    (F:MvPolynomial (Fin 4) K) (hF:F≠0)
    (g:MvPolynomial (Fin 3) L) (hdivF:g∣geometricSurfaceMap K L F):
-   g.degreeOf (1:Fin 3) ≤ F.degreeOf (2:Fin 4):=by
+   g.degreeOf (1:Fin 3)≤F.degreeOf (2:Fin 4):=by
  have hφ:Function.Injective (geometricPolynomialEmbedding K L):=
    (algebraMap (RationalCoefficients K) L).injective.comp
      (IsFractionRing.injective (Polynomial K) (RationalCoefficients K))
  have hne:geometricSurfaceMap K L F≠0:=by
    rw [geometricSurfaceMap_eq_surfaceMap]
    exact surfaceMap_ne_zero _ hφ F hF
- have hc:(geometricSurfaceMap K L F).degreeOf (1:Fin 3) ≤ F.degreeOf (2:Fin 4):=by
+ have hc:(geometricSurfaceMap K L F).degreeOf (1:Fin 3)≤F.degreeOf (2:Fin 4):=by
    rw [geometricSurfaceMap_eq_surfaceMap]
    exact surfaceMap_degreeOf_le _ F 1
  exact (coordinate_degree_le_of_dvd (1:Fin 3) g _ hdivF hne).trans hc
 theorem geometric_factor_regular_gate
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F) (p:ℕ) [CharP K p]
-   (hpos:0 < F.degreeOf 2) (hsmall:F.degreeOf 2 < p)
+   (hpos:0<F.degreeOf 2) (hsmall:F.degreeOf 2<p)
    (g:MvPolynomial (Fin 3) L) (hg:Irreducible g)
    (hdivF:g∣geometricSurfaceMap K L F):
-   0 < g.degreeOf (1:Fin 3)∧g.degreeOf (1:Fin 3) ≤ F.degreeOf (2:Fin 4)∧
-     g.degreeOf (1:Fin 3) < p∧MvPolynomial.pderiv (1:Fin 3) g≠0∧
+   0<g.degreeOf (1:Fin 3)∧g.degreeOf (1:Fin 3)≤F.degreeOf (2:Fin 4)∧
+     g.degreeOf (1:Fin 3)<p∧MvPolynomial.pderiv (1:Fin 3) g≠0∧
      ¬ g∣geometricSurfaceMap K L (MvPolynomial.pderiv (2:Fin 4) F):=by
  have hle:=geometric_factor_R_degree_le K L F hF.ne_zero g hdivF
  exact ⟨geometric_factor_R_degree_positive K L F hF p hpos hsmall g hg hdivF,

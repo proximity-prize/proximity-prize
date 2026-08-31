@@ -24,7 +24,7 @@ theorem coefficientPoleWeight_nonneg (v:Valuation L (WithZero (Multiplicative �
    (T:Polynomial L) (z:L):0 ≤ coefficientPoleWeight v T z:=
  Finset.le_max' _ _ (Finset.mem_insert_self _ _)
 theorem seedPole_le (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (T:Polynomial L) (z:L):poleOrder v z ≤ coefficientPoleWeight v T z:=
+   (T:Polynomial L) (z:L):poleOrder v z≤coefficientPoleWeight v T z:=
  Finset.le_max' _ _ (Finset.mem_insert_of_mem (Finset.mem_insert_self _ _))
 theorem coeffPole_le (v:Valuation L (WithZero (Multiplicative ℤ)))
    (T:Polynomial L) (z:L) (j:ℕ) (hj:j∈T.support):
@@ -33,22 +33,22 @@ theorem coeffPole_le (v:Valuation L (WithZero (Multiplicative ℤ)))
  apply Finset.le_max'
  exact Finset.mem_insert_of_mem (Finset.mem_insert_of_mem (Finset.mem_image.mpr ⟨j,hj,rfl⟩))
 private theorem pole_le_of_exp (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (x:L) (q:ℤ) (hq:0 ≤ q) (hx:v x ≤ WithZero.exp q):poleOrder v x ≤ q:=by
+   (x:L) (q:ℤ) (hq:0≤q) (hx:v x≤WithZero.exp q):poleOrder v x≤q:=by
  apply max_le hq
  by_cases hzero:v x=0
  · simpa [hzero] using hq
  · simpa only [WithZero.log_exp] using (WithZero.log_le_log hzero WithZero.exp_ne_zero).mpr hx
 theorem eval_pole_le (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (T:Polynomial L) (z a:L) (ha:v a ≤ 1):
-   poleOrder v (T.eval a) ≤ coefficientPoleWeight v T z:=by
+   (T:Polynomial L) (z a:L) (ha:v a≤1):
+   poleOrder v (T.eval a)≤coefficientPoleWeight v T z:=by
  apply pole_le_of_exp _ _ _ (coefficientPoleWeight_nonneg v T z)
  rw [Polynomial.eval_eq_sum,Polynomial.sum_def]
  apply v.map_sum_le
  intro j hj
  rw [map_mul,map_pow]
- have hc:v (T.coeff j) ≤ WithZero.exp (coefficientPoleWeight v T z):=
+ have hc:v (T.coeff j)≤WithZero.exp (coefficientPoleWeight v T z):=
    WithZero.le_exp_of_log_le ((le_max_right _ _).trans (coeffPole_le v T z j hj))
- have hp:v a^j ≤ 1:=pow_le_one₀ zero_le ha
+ have hp:v a^j≤1:=pow_le_one₀ zero_le ha
  simpa only [mul_one] using mul_le_mul' hc hp
 theorem affine_eval_pole_le {Ω:Type} [Field Ω] [Algebra Ω L]
    (v:Place Ω L) (T:Polynomial L) (z:L) (a u0 u1:Ω):

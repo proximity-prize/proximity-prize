@@ -123,7 +123,7 @@ theorem ofList_dProd {α} (l:List α) (fι:α → ι) (fA:∀ a,A (fι a)):
  | nil => simp only [List.map_nil,List.prod_nil,List.dProd_nil];rfl
  | cons head tail =>
    rename_i ih
-   simp only [List.map_cons,List.prod_cons,List.dProd_cons, ←ih]
+   simp only [List.map_cons,List.prod_cons,List.dProd_cons,←ih]
    rw [DirectSum.of_mul_of (fA head)]
    rfl
 theorem list_prod_ofFn_of_eq_dProd (n:ℕ) (fι:Fin n → ι) (fA:∀ a,A (fι a)):

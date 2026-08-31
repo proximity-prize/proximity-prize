@@ -14,7 +14,7 @@ def shearMap:Poly4 K →+*Poly4 K:=
 def pullShearWeights (weights:Fin 4 → ℕ):Fin 4 → ℕ:=
  ![weights 0,weights 1,max (weights 2) (weights 3),weights 3]
 theorem shearImage_wt_le (weights:Fin 4 → ℕ) (i:Fin 4):
-   wt weights (shearImage (K:=K) i) ≤ pullShearWeights weights i:=by
+   wt weights (shearImage (K:=K) i)≤pullShearWeights weights i:=by
  fin_cases i
  · simp [shearImage,pullShearWeights,wt_X]
  · simp [shearImage,pullShearWeights,wt_X]
@@ -23,7 +23,7 @@ theorem shearImage_wt_le (weights:Fin 4 → ℕ) (i:Fin 4):
  · simp [shearImage,pullShearWeights,wt_X]
 theorem wt_finset_prod_le_sum {ι:Type*} [DecidableEq ι]
    (weights:Fin 4 → ℕ) (I:Finset ι) (f:ι → Poly4 K):
-   wt weights (∏ i∈I,f i) ≤ ∑ i∈I,wt weights (f i):=by
+   wt weights (∏ i∈I,f i)≤∑ i∈I,wt weights (f i):=by
  induction I using Finset.induction_on with
  | empty =>
      simp only [Finset.prod_empty,Finset.sum_empty]
@@ -34,8 +34,8 @@ theorem wt_finset_prod_le_sum {ι:Type*} [DecidableEq ι]
      exact (wt_mul_le weights _ _).trans (Nat.add_le_add le_rfl ih)
 theorem wt_finset_sum_le {ι:Type*} [DecidableEq ι]
    (weights:Fin 4 → ℕ) (I:Finset ι) (f:ι → Poly4 K) (cap:ℕ)
-   (hf:∀ i∈I,wt weights (f i) ≤ cap):
-   wt weights (∑ i∈I,f i) ≤ cap:=by
+   (hf:∀ i∈I,wt weights (f i)≤cap):
+   wt weights (∑ i∈I,f i)≤cap:=by
  unfold wt
  rw [←RCN081.degree_weightedLift,map_sum]
  apply (MvPolynomial.degreeOf_sum_le (4:Fin 5) I
@@ -62,9 +62,9 @@ theorem shear_monomial_product_wt_le
      simp only [Finsupp.sum,nsmul_eq_mul]
      simp
 theorem shearMap_wt_le_pulled (weights:Fin 4 → ℕ) (P:Poly4 K):
-   wt weights (shearMap P) ≤ wt (pullShearWeights weights) P:=by
+   wt weights (shearMap P)≤wt (pullShearWeights weights) P:=by
  change wt weights
-     (MvPolynomial.eval₂ MvPolynomial.C (shearImage (K:=K)) P) ≤ _
+     (MvPolynomial.eval₂ MvPolynomial.C (shearImage (K:=K)) P)≤_
  rw [MvPolynomial.eval₂_eq]
  apply wt_finset_sum_le
  intro d hd

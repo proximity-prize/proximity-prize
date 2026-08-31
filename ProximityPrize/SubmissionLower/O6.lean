@@ -28,12 +28,12 @@ theorem exists_coordinate_difference_mem_of_isAlgebraic
  rw [←hc,sub_self]
 theorem not_dvd_coordinate_two_sub_C_of_degreeOf_one_pos
    (G:Poly3 (Omega:=Omega)) (hG:G≠0)
-   (hdep:0 < G.degreeOf (1:Fin 3)) (c:Omega):
+   (hdep:0<G.degreeOf (1:Fin 3)) (c:Omega):
    ¬ G∣(MvPolynomial.X (2:Fin 3)-MvPolynomial.C c):=by
  let H:Poly3 (Omega:=Omega):=
    MvPolynomial.X (2:Fin 3)-MvPolynomial.C c
  have hHne:H≠0:=coordinate_difference_ne_zero Omega 2 c
- have hHdegree:H.degreeOf (1:Fin 3) ≤ 0:=by
+ have hHdegree:H.degreeOf (1:Fin 3)≤0:=by
    calc
      H.degreeOf (1:Fin 3) ≤
          max ((MvPolynomial.X (2:Fin 3):Poly3).degreeOf 1)
@@ -51,7 +51,7 @@ theorem not_dvd_coordinate_two_sub_C_of_degreeOf_one_pos
    intro hzero
    apply hHne
    rw [hHA,hzero,mul_zero]
- have hle:G.degreeOf (1:Fin 3) ≤ H.degreeOf (1:Fin 3):=by
+ have hle:G.degreeOf (1:Fin 3)≤H.degreeOf (1:Fin 3):=by
    calc
      G.degreeOf (1:Fin 3) ≤
          G.degreeOf (1:Fin 3)+A.degreeOf (1:Fin 3):=
@@ -65,8 +65,8 @@ theorem finite_separable_at_y_of_z_algebraic
    (p:ℕ) [CharP Omega p]
    (G:Poly3 (Omega:=Omega))
    (hG:Irreducible G) (hGmem:G∈P)
-   (hdep:0 < G.degreeOf (1:Fin 3))
-   (hdegree:∀ j:Fin 3,G.degreeOf j < p)
+   (hdep:0<G.degreeOf (1:Fin 3))
+   (hdegree:∀ j:Fin 3,G.degreeOf j<p)
    (hY:Transcendental Omega (coordinate Omega P 0))
    (hZ:IsAlgebraic Omega (coordinate Omega P 2)):
    letI:Algebra (RatFunc Omega) (CoordinateField Omega P):=
@@ -79,7 +79,7 @@ theorem finite_separable_at_y_of_z_algebraic
    MvPolynomial.X (2:Fin 3)-MvPolynomial.C c
  have hproper:¬ G∣H:=
    not_dvd_coordinate_two_sub_C_of_degreeOf_one_pos G hG.ne_zero hdep c
- have hHone:H.degreeOf (1:Fin 3) ≤ 0:=by
+ have hHone:H.degreeOf (1:Fin 3)≤0:=by
    calc
      H.degreeOf (1:Fin 3) ≤
          max ((MvPolynomial.X (2:Fin 3):Poly3).degreeOf 1)
@@ -90,7 +90,7 @@ theorem finite_separable_at_y_of_z_algebraic
        rw [MvPolynomial.degreeOf_X_of_ne (by decide:(1:Fin 3)≠2),
          MvPolynomial.degreeOf_C]
        rfl
- have hHtwo:H.degreeOf (2:Fin 3) ≤ 1:=by
+ have hHtwo:H.degreeOf (2:Fin 3)≤1:=by
    calc
      H.degreeOf (2:Fin 3) ≤
          max ((MvPolynomial.X (2:Fin 3):Poly3).degreeOf 2)
@@ -98,7 +98,7 @@ theorem finite_separable_at_y_of_z_algebraic
        simpa only [H] using MvPolynomial.degreeOf_sub_le (2:Fin 3)
          (MvPolynomial.X (2:Fin 3):Poly3) (MvPolynomial.C c)
      _=1:=by simp
- have hmixed:coordinateMixedDegree Omega G H 0 < p:=by
+ have hmixed:coordinateMixedDegree Omega G H 0<p:=by
    rw [coordinateMixedDegree_zero]
    calc
      H.degreeOf 1*G.degreeOf 2+G.degreeOf 1*H.degreeOf 2 ≤
@@ -106,7 +106,7 @@ theorem finite_separable_at_y_of_z_algebraic
        Nat.add_le_add (Nat.mul_le_mul hHone (Nat.le_refl _))
          (Nat.mul_le_mul (Nat.le_refl _) hHtwo)
      _=G.degreeOf 1:=by simp
-     _ < p:=hdegree 1
+     _<p:=hdegree 1
  exact finite_separable_at_of_original_coordinate_gate Omega P 0 hY p G H
    hG hGmem hHmem hproper hdegree hmixed
 theorem exists_separableLiteralCoordinate_y_or_z
@@ -115,9 +115,9 @@ theorem exists_separableLiteralCoordinate_y_or_z
    (G T:Poly3 (Omega:=Omega))
    (hG:Irreducible G) (hGmem:G∈P) (hTmem:T∈P)
    (hproper:¬ G∣T)
-   (hdep:0 < G.degreeOf (1:Fin 3))
-   (hdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixedZ:coordinateMixedDegree Omega G T 2 < p)
+   (hdep:0<G.degreeOf (1:Fin 3))
+   (hdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixedZ:coordinateMixedDegree Omega G T 2<p)
    (hYZ:Transcendental Omega (coordinate Omega P 0)∨
      Transcendental Omega (coordinate Omega P 2)):
    ∃ D:SeparableLiteralCoordinate P,
@@ -140,9 +140,9 @@ theorem regularComponent_exists_separableLiteralCoordinate6630
    (p:ℕ) [CharP Omega p]
    (hdiv:G∣surfaceMap phi F)
    (hG:Irreducible G) (hproper:¬ G∣T)
-   (hdep:0 < G.degreeOf (1:Fin 3))
-   (hdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixedZ:coordinateMixedDegree Omega G T 2 < p)
+   (hdep:0<G.degreeOf (1:Fin 3))
+   (hdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixedZ:coordinateMixedDegree Omega G T 2<p)
    (C:RegularComponent Omega G T (regularitySurface phi F)):
    ∃ D:SeparableLiteralCoordinate C.1,
      D.index=0∨D.index=2:=by
@@ -159,9 +159,9 @@ theorem regularComponent_nonempty_separableLiteralCoordinate6630
    (p:ℕ) [CharP Omega p]
    (hdiv:G∣surfaceMap phi F)
    (hG:Irreducible G) (hproper:¬ G∣T)
-   (hdep:0 < G.degreeOf (1:Fin 3))
-   (hdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixedZ:coordinateMixedDegree Omega G T 2 < p)
+   (hdep:0<G.degreeOf (1:Fin 3))
+   (hdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixedZ:coordinateMixedDegree Omega G T 2<p)
    (C:RegularComponent Omega G T (regularitySurface phi F)):
    Nonempty (SeparableLiteralCoordinate C.1):=by
  obtain ⟨D,_⟩:=regularComponent_exists_separableLiteralCoordinate6630

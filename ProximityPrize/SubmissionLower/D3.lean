@@ -40,9 +40,9 @@ def scalarPolynomialMap (K E:Type) [Field K] [Field E] [Algebra K E]:
 theorem comap_le_of_embedding_point {E:Type} [Field E] [Algebra K E]
    (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
    (f:CoordinateField K P →ₐ[K] E) (D:Ideal (MvPolynomial (Fin 3) E))
-   (hD:D ≤ RingHom.ker
+   (hD:D≤RingHom.ker
      (MvPolynomial.aeval (embeddingPoint P f):MvPolynomial (Fin 3) E →ₐ[E] E).toRingHom):
-   D.comap (scalarPolynomialMap K E) ≤ P:=by
+   D.comap (scalarPolynomialMap K E)≤P:=by
  intro A hA
  rw [←embeddingPoint_kernel P f]
  apply RingHom.mem_ker.mpr
@@ -88,7 +88,7 @@ theorem eliminatedCut_not_mem_of_contraction
      (movingEquation (scalarPolynomialMap K E H) (scalarPolynomialMap K E G)
        (scalarPolynomialMap K E Q) (scalarPolynomialMap K E U) t)
      (scalarPolynomialMap K E H*scalarPolynomialMap K E U))
-   (hbelow:D.1.comap (scalarPolynomialMap K E) ≤ C.1):
+   (hbelow:D.1.comap (scalarPolynomialMap K E)≤C.1):
    eliminatedCut k (fun j↦scalarPolynomialMap K E (B j))
      (scalarPolynomialMap K E Q) (scalarPolynomialMap K E U) t∉D.1:=by
  intro hT
@@ -104,7 +104,7 @@ theorem eliminatedCut_not_mem_of_contraction
    rw [map_filteredCut]
    exact original_mem_of_eliminated_mem D.1 k (fun j↦mu (B j))
      (mu H) (mu G) (mu Q) (mu U) t hN hT hU
- have hcut:cutIdeal K F (filteredCut k B H G) ≤ D.1.comap mu:=by
+ have hcut:cutIdeal K F (filteredCut k B H G)≤D.1.comap mu:=by
    apply Ideal.span_le.mpr
    intro A hA
    rcases (by simpa only [Set.mem_insert_iff,Set.mem_singleton_iff] using hA) with rfl | rfl

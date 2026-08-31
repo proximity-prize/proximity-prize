@@ -53,7 +53,7 @@ theorem exists_moving_projection_family (F H G:Poly) (k:ℕ) (B:Fin (k+1) → Po
    (hc:∀ j,c j+(k-j.val) • (⟨a,b+1,s+1⟩:FlagDegree)+
      j.val • (⟨a,b,s+3⟩:FlagDegree)=C0+k • (⟨2*a,2*b+1,2*s+3⟩:FlagDegree))
    (pchar:ℕ) [CharP E pchar]
-   (hmix:2*(p.zOnly+p.yz+p.all)*(a+(b+1)+(s+3)) < pchar):
+   (hmix:2*(p.zOnly+p.yz+p.all)*(a+(b+1)+(s+3))<pchar):
    ∃ J:∀ C:RegularComponent K F (filteredCut k B H G) H,
        SeparableCoordinate K (CoordinateField K C.1),
      (∀ (C:RegularComponent K F (filteredCut k B H G) H)
@@ -77,7 +77,7 @@ theorem exists_moving_projection_family (F H G:Poly) (k:ℕ) (B:Fin (k+1) → Po
  have hj (C:RegularComponent K F (filteredCut k B H G) H):
      algebraMap (RatFunc K) (CoordinateField K C.1) (rationalVariable K)=movingValue C.1 H G Q U:=
    (hJ C).2.1
- have hdeg:p.zOnly+p.yz+p.all < pchar:=by
+ have hdeg:p.zOnly+p.yz+p.all<pchar:=by
    nlinarith
  obtain ⟨hN,hA⟩:=fiber_small_flags (E:=E) a b s k C0 H G Q U B c hH hG hQ hU hB hc
  have hcount:=sum_moving_degrees_le (E:=E) F H G Q U k B hj (fun C↦(hJ C).1)

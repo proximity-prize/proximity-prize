@@ -7,12 +7,12 @@ variable {A B:Type*} [CommRing A] [IsDomain A]
  [Module.Flat A B]
 theorem prime_eq_span_of_le (g:B) (hg:Prime g)
    (Q:Ideal B) [Q.IsPrime] (hQ:Q≠⊥)
-   (hle:Q ≤ Ideal.span {g}):Q=Ideal.span {g}:=by
+   (hle:Q≤Ideal.span {g}):Q=Ideal.span {g}:=by
  let P:Ideal B:=Ideal.span {g}
  haveI:P.IsPrime:=(Ideal.span_singleton_prime hg.ne_zero).mpr hg
- have hheight:P.height ≤ 1:=Ideal.height_span_singleton_le_one hg.not_unit
+ have hheight:P.height≤1:=Ideal.height_span_singleton_le_one hg.not_unit
  by_contra hne
- have hlt:Q < P:=lt_of_le_of_ne hle hne
+ have hlt:Q<P:=lt_of_le_of_ne hle hne
  have hsmall:=(Ideal.height_le_iff (p:=P) (n:=1)).mp hheight Q
    inferInstance hlt
  have hzero:Q.height=0:=Order.lt_one_iff.mp hsmall
@@ -26,7 +26,7 @@ theorem under_prime_factor_eq
  let p:Ideal A:=Ideal.span {F}
  haveI:P.IsPrime:=(Ideal.span_singleton_prime hg.ne_zero).mpr hg
  haveI:p.IsPrime:=(Ideal.span_singleton_prime hF.ne_zero).mpr hF
- have hp:p ≤ P.under A:=by
+ have hp:p≤P.under A:=by
    apply Ideal.span_le.mpr
    intro x hx
    obtain rfl:=Set.mem_singleton_iff.mp hx

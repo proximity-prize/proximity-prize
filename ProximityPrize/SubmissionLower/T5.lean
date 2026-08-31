@@ -110,8 +110,8 @@ def localizationAway:Generators R S Unit where
  aeval_val_σ' s:=by
    rw [map_mul,algHom_C,map_pow,aeval_X]
    simp only [←IsLocalization.Away.sec_spec,map_pow,IsLocalization.Away.invSelf]
-   rw [←IsLocalization.mk'_pow,one_pow, ←IsLocalization.mk'_one (M:=Submonoid.powers r) S r]
-   rw [←IsLocalization.mk'_pow,one_pow,mul_assoc, ←IsLocalization.mk'_mul]
+   rw [←IsLocalization.mk'_pow,one_pow,←IsLocalization.mk'_one (M:=Submonoid.powers r) S r]
+   rw [←IsLocalization.mk'_pow,one_pow,mul_assoc,←IsLocalization.mk'_mul]
    rw [mul_one,one_mul,IsLocalization.mk'_pow]
    simp
 end Localization
@@ -371,7 +371,7 @@ lemma toAlgHom_ofComp_surjective (Q:Generators S T ι') (P:Generators R S ι):
      use MvPolynomial.rename Sum.inr (P.σ a)
      simp only [Hom.toAlgHom,ofComp,Generators.comp,MvPolynomial.aeval_rename,
        Sum.elim_comp_inr]
-     simp_rw [Function.comp_def, ←MvPolynomial.algebraMap_eq, ←IsScalarTower.toAlgHom_apply R,
+     simp_rw [Function.comp_def,←MvPolynomial.algebraMap_eq,←IsScalarTower.toAlgHom_apply R,
        ←MvPolynomial.comp_aeval]
      simp
  | add p q hp hq =>
@@ -439,9 +439,9 @@ lemma ker_ofAlgHom {I:Type*} (f:MvPolynomial I R →ₐ[R] S) (h:Function.Surjec
 @[simp]
 lemma ker_ofAlgEquiv (P:Generators R S ι) {T:Type*} [CommRing T] [Algebra R T] (e:S ≃ₐ[R] T):
    (P.ofAlgEquiv e).ker=P.ker:=by
- rw [ker_eq_ker_aeval_val,ofAlgEquiv_val,Function.comp_def, ←AlgHom.coe_coe,
-   ←MvPolynomial.comp_aeval, ←AlgHom.comap_ker, ←RingHom.ker_coe_toRingHom,
-   AlgHomClass.toRingHom_toAlgHom,AlgHom.ker_coe_equiv, ←RingHom.ker_eq_comap_bot,
+ rw [ker_eq_ker_aeval_val,ofAlgEquiv_val,Function.comp_def,←AlgHom.coe_coe,
+   ←MvPolynomial.comp_aeval,←AlgHom.comap_ker,←RingHom.ker_coe_toRingHom,
+   AlgHomClass.toRingHom_toAlgHom,AlgHom.ker_coe_equiv,←RingHom.ker_eq_comap_bot,
    ←ker_eq_ker_aeval_val]
 lemma map_toComp_ker (Q:Generators S T ι') (P:Generators R S ι):
    P.ker.map (Q.toComp P).toAlgHom=RingHom.ker (Q.ofComp P).toAlgHom:=by
@@ -452,7 +452,7 @@ lemma map_toComp_ker (Q:Generators S T ι') (P:Generators R S ι):
    have:(Q.ofComp P).toAlgHom.comp (Q.toComp P).toAlgHom=IsScalarTower.toAlgHom R _ _:=by
      ext1;simp
    simp only [Ideal.mem_comap,
-     RingHom.mem_ker, ←AlgHom.comp_apply,this,IsScalarTower.toAlgHom_apply]
+     RingHom.mem_ker,←AlgHom.comp_apply,this,IsScalarTower.toAlgHom_apply]
    rw [IsScalarTower.algebraMap_apply P.Ring S,hx,map_zero]
  · rintro x (h₂:(Q.ofComp P).toAlgHom x=0)
    let e:(ι' ⊕ ι →₀ ℕ) ≃+(ι' →₀ ℕ) × (ι →₀ ℕ):=
@@ -475,11 +475,11 @@ lemma map_toComp_ker (Q:Generators S T ι') (P:Generators R S ι):
        toComp_toAlgHom_monomial ..
      simp only [AlgHom.toRingHom_eq_coe,RingHom.coe_coe,
          this]
-     rw [monomial_mul, ←map_add,Prod.mk_add_mk,add_zero,zero_add,one_mul]
+     rw [monomial_mul,←map_add,Prod.mk_add_mk,add_zero,zero_add,one_mul]
    · apply Ideal.mul_mem_left
      refine Ideal.mem_map_of_mem _ ?_
      simp only [ker_eq_ker_aeval_val,AddEquiv.toEquiv_eq_coe,RingHom.mem_ker,map_sum]
-     rw [←coeff_zero i, ←h₂]
+     rw [←coeff_zero i,←h₂]
      clear h₂ hi
      have (x:(Q.comp P).Ring):(Function.support fun a↦if a.1=i then aeval P.val
          (monomial a.2 (coeff (e.symm a) x)) else 0) ⊆ SetLike.coe ((support x).map e):=by
@@ -487,7 +487,7 @@ lemma map_toComp_ker (Q:Generators S T ι') (P:Generators R S ι):
        intro j
        obtain ⟨j,rfl⟩:=e.surjective j
        simp_all
-     rw [Finset.sum_filter, ←finsum_eq_sum_of_support_subset _ (this x)]
+     rw [Finset.sum_filter,←finsum_eq_sum_of_support_subset _ (this x)]
      induction x using MvPolynomial.induction_on' with
      | monomial v a =>
        rw [finsum_eq_sum_of_support_subset _ (this _), ←Finset.sum_filter]
@@ -519,12 +519,12 @@ def kerCompPreimage (Q:Generators S T ι') (P:Generators R S ι) (x:Q.ker):
    refine rename ?_ (P.σ r)*monomial ?_ 1
    exacts [Sum.inr,n.mapDomain Sum.inl]
  · simp only [ker_eq_ker_aeval_val,RingHom.mem_ker]
-   conv_rhs => rw [←aeval_val_eq_zero x.2, ←x.1.support_sum_monomial_coeff]
+   conv_rhs => rw [←aeval_val_eq_zero x.2,←x.1.support_sum_monomial_coeff]
    simp only [Finsupp.sum,map_sum,map_mul,aeval_rename,Function.comp_def,comp_val,
      Sum.elim_inr,aeval_monomial,map_one,Finsupp.prod_mapDomain_index_inj Sum.inl_injective,
      Sum.elim_inl,one_mul]
    congr! with v i
-   simp_rw [←IsScalarTower.toAlgHom_apply R, ←comp_aeval,AlgHom.comp_apply,P.aeval_val_σ,
+   simp_rw [←IsScalarTower.toAlgHom_apply R,←comp_aeval,AlgHom.comp_apply,P.aeval_val_σ,
      coeff]
 lemma ofComp_kerCompPreimage (Q:Generators S T ι') (P:Generators R S ι) (x:Q.ker):
    (Q.ofComp P).toAlgHom (kerCompPreimage Q P x)=x:=by

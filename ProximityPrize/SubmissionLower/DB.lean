@@ -7,8 +7,8 @@ variable {F:Type} [Field F]
 private theorem natDegree_det_le_of_perm_products_le
    {ι:Type} [Fintype ι] [DecidableEq ι]
    (M:Matrix ι ι F[X]) {N:ℕ}
-   (h:∀ σ:Equiv.Perm ι,(∏ i:ι,M (σ i) i).natDegree ≤ N):
-   M.det.natDegree ≤ N:=by
+   (h:∀ σ:Equiv.Perm ι,(∏ i:ι,M (σ i) i).natDegree≤N):
+   M.det.natDegree≤N:=by
  classical
  rw [Matrix.det_apply']
  apply Polynomial.natDegree_sum_le_of_forall_le

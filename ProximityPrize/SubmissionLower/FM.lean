@@ -36,7 +36,7 @@ theorem exists_monic_span_sup_map_eq_compat
  refine ⟨f,monf,?_⟩
  trans Ideal.comap (Polynomial.mapRingHom (Ideal.Quotient.mk q))
    ((Ideal.span {f}).map (Polynomial.mapRingHom (Ideal.Quotient.mk q)))
- · rw [Ideal.map_span,Polynomial.coe_mapRingHom,Set.image_singleton,hf, ←hy,
+ · rw [Ideal.map_span,Polynomial.coe_mapRingHom,Set.image_singleton,hf,←hy,
      Ideal.comap_map_of_surjective' _
        (Polynomial.map_surjective _ Ideal.Quotient.mk_surjective)]
    simpa [Polynomial.ker_mapRingHom,q] using Ideal.map_comap_le
@@ -78,16 +78,16 @@ theorem polynomial_localization_isRegularLocalRing_compat
      ←hspan, ←Submodule.FG.generators_ncard hfg']
    exact (Submodule.spanFinrank_span_le_ncard_of_finite (hfg.image _)).trans
      (Set.ncard_image_le hfg)
- · have hlt:q < p:=lt_of_le_of_ne qle (Ne.symm heq)
+ · have hlt:q<p:=lt_of_le_of_ne qle (Ne.symm heq)
    have hpmax:(p.comap Polynomial.C).IsMaximal:=by
      simpa [hcomap] using maximalIdeal.isMaximal R
    obtain ⟨y,_,hy⟩:=
      exists_monic_span_sup_map_eq_compat R p hpmax (by simpa [hcomap])
    have peq:p=Ideal.span
        (((algebraMap R R[X]) '' (maximalIdeal R).generators) ∪ {y}):=by
-     simp only [Set.union_comm,Ideal.span_union, ←Ideal.map_span,
+     simp only [Set.union_comm,Ideal.span_union,←Ideal.map_span,
        algebraMap_eq,sup_comm]
-     nth_rw 1 [hy,hcomap, ←(maximalIdeal R).span_generators]
+     nth_rw 1 [hy,hcomap,←(maximalIdeal R).span_generators]
    simp only [←Localization.AtPrime.map_eq_maximalIdeal,peq,Ideal.map_span]
    rw [←maximalIdeal_height_eq_ringKrullDim,
      ←IsLocalization.height_under p.primeCompl,
@@ -96,7 +96,7 @@ theorem polynomial_localization_isRegularLocalRing_compat
      (WithBot.coe_le_coe.mpr (Ideal.height_add_one_le_of_lt_of_isPrime hlt))
    apply le_trans _ (WithBot.coe_le_coe.mpr (add_le_add_left ht 1))
    rw [WithBot.coe_add,maximalIdeal_height_eq_ringKrullDim,WithBot.coe_one,
-     ←hreg, ←Nat.cast_one, ←Nat.cast_add,Nat.cast_le]
+     ←hreg,←Nat.cast_one,←Nat.cast_add,Nat.cast_le]
    have hfin:=(hfg.image (algebraMap R R[X])).union (Set.finite_singleton y)
    apply le_trans (Submodule.spanFinrank_span_le_ncard_of_finite (hfin.image _))
    apply le_trans (Set.ncard_image_le hfin) (le_trans (Set.ncard_union_le _ _) _)

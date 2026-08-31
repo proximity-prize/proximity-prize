@@ -20,7 +20,7 @@ theorem primitive_specialization_ne_zero
    (hprimitive _ (inner_linear_C_dvd_of_specialization_eq_zero P alpha hzero))
 theorem irreducible_specialization_ne_zero
    (P:Polynomial (Polynomial K)) (hirreducible:Irreducible P)
-   (hdegree:0 < P.natDegree) (alpha:K):
+   (hdegree:0<P.natDegree) (alpha:K):
    P.map (Polynomial.evalRingHom alpha)≠0:=by
  exact primitive_specialization_ne_zero P
    (hirreducible.isPrimitive (Nat.ne_of_gt hdegree)) alpha
@@ -50,19 +50,19 @@ theorem primitive_irreducible_dvd_of_resultant_eq_zero
  exact hprimitive.dvd_of_fraction_map_dvd_fraction_map hdivF
 theorem irreducible_resultant_ne_zero_of_not_dvd
    (P Q:Polynomial (Polynomial K)) (hirreducible:Irreducible P)
-   (hdegree:0 < P.natDegree) (hproper:¬ P∣Q):
+   (hdegree:0<P.natDegree) (hproper:¬ P∣Q):
    Polynomial.resultant P Q P.natDegree Q.natDegree≠0:=by
  intro hresultant
  exact hproper (primitive_irreducible_dvd_of_resultant_eq_zero P Q
    (hirreducible.isPrimitive (Nat.ne_of_gt hdegree)) hirreducible hresultant)
 theorem irreducible_common_points_card_le_bidegree_bound
    (P Q:Polynomial (Polynomial K)) (points:Finset (K × K))
-   (hirreducible:Irreducible P) (hdegree:0 < P.natDegree)
+   (hirreducible:Irreducible P) (hdegree:0<P.natDegree)
    (hproper:¬ P∣Q)
    (hroots:∀ point∈points,
      (P.map (Polynomial.evalRingHom point.1)).eval point.2=0∧
      (Q.map (Polynomial.evalRingHom point.1)).eval point.2=0):
-   points.card ≤ Q.natDegree*Polynomial.Bivariate.degreeX P+
+   points.card≤Q.natDegree*Polynomial.Bivariate.degreeX P+
      P.natDegree*Polynomial.Bivariate.degreeX Q:=by
  apply RCN363.common_points_card_le_bidegree_bound
    P Q P.natDegree Q.natDegree points le_rfl le_rfl

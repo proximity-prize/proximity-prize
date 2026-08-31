@@ -103,7 +103,7 @@ instance Lex.wellFoundedLT [LT ι] [@Std.Trichotomous ι (· < ·)] [hι:WellFou
    [hα:∀ i,WellFoundedLT (α i)]:
    WellFoundedLT (Lex (Π₀ i,α i)):=
  ⟨Lex.wellFounded' (fun _ _ => not_lt_zero) (fun i => (hα i).wf) hι.wf⟩
-instance Colex.wellFoundedLT [LT ι] [@Std.Trichotomous ι (· < ·)] [WellFoundedLT ι]
+instance Colex.wellFoundedLT [LT ι] [@Std.Trichotomous ι (·<·)] [WellFoundedLT ι]
    [∀ i,AddMonoid (α i)] [∀ i,PartialOrder (α i)] [∀ i,IsBotZeroClass (α i)]
    [∀ i,WellFoundedLT (α i)]:
    WellFoundedLT (Colex (Π₀ i,α i)):=

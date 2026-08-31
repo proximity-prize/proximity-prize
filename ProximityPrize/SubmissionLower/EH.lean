@@ -5,7 +5,7 @@ noncomputable section
 variable (K L:Type*) [Field K] [Field L] [Algebra K L]
  [Algebra (RatFunc K) L] [IsScalarTower K (RatFunc K) L]
  [FiniteDimensional (RatFunc K) L]
-theorem trdeg_le_one_of_functionField:Algebra.trdeg K L ≤ 1:=by
+theorem trdeg_le_one_of_functionField:Algebra.trdeg K L≤1:=by
  classical
  unfold Algebra.trdeg
  refine ciSup_le' fun s↦Cardinal.mk_le_one_iff_set_subsingleton.mpr ?_

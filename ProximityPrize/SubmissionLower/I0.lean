@@ -12,8 +12,8 @@ local instance:DecidableEq k:=Classical.decEq k
 local instance:DecidableEq F:=Classical.decEq F
 theorem polynomial_value_le_one
    (v:Valuation F Γ) (κ:k →+*F)
-   (hκ:∀ c,v (κ c) ≤ 1) (f:F) (hf:v f ≤ 1) (p:k[X]):
-   v (p.eval₂ κ f) ≤ 1:=by
+   (hκ:∀ c,v (κ c)≤1) (f:F) (hf:v f≤1) (p:k[X]):
+   v (p.eval₂ κ f)≤1:=by
  rw [Polynomial.eval₂_eq_sum,Polynomial.sum_def]
  apply v.map_sum_le
  intro i _
@@ -32,7 +32,7 @@ theorem normalize_relation
      have hq:q≠0:=by
        intro hz
        exact hp (by simp [hpq,hz])
-     have hdeg:q.natDegree < n:=by
+     have hdeg:q.natDegree<n:=by
        rw [hpq,Polynomial.natDegree_X_mul hq] at hn
        omega
      have hqeval:q.eval₂ κ u=0:=by
@@ -43,12 +43,12 @@ theorem normalize_relation
 theorem exists_constant_close_of_small_polynomial [IsAlgClosed k]
    (v:Valuation F Γ) (κ:k →+*F)
    (hκ:∀ c,c≠0 → v (κ c)=1)
-   (f:F) (p:k[X]) (hp:p≠0) (hsmall:v (p.eval₂ κ f) < 1):
-   ∃ c:k,v (f-κ c) < 1:=by
+   (f:F) (p:k[X]) (hp:p≠0) (hsmall:v (p.eval₂ κ f)<1):
+   ∃ c:k,v (f-κ c)<1:=by
  classical
  by_contra h
  push_neg at h
- have hge:1 ≤ v (p.eval₂ κ f):=by
+ have hge:1≤v (p.eval₂ κ f):=by
    rw [(IsAlgClosed.splits p).eq_prod_roots,Polynomial.eval₂_mul,
      Polynomial.eval₂_C,map_mul,hκ p.leadingCoeff (Polynomial.leadingCoeff_ne_zero.mpr hp),
      one_mul,Polynomial.eval₂_multiset_prod,map_multiset_prod]
@@ -58,14 +58,14 @@ theorem exists_constant_close_of_small_polynomial [IsAlgClosed k]
  exact (not_lt_of_ge hge) hsmall
 theorem constant_coefficient_value_lt_one
    (v:Valuation F Γ) (κ:k →+*F)
-   (hκ:∀ c,v (κ c) ≤ 1)
-   (u f:F) (hu:v u < 1) (hf:v f ≤ 1)
+   (hκ:∀ c,v (κ c)≤1)
+   (u f:F) (hu:v u<1) (hf:v f≤1)
    (q:Polynomial (Polynomial k))
    (hq:q.eval₂ (Polynomial.eval₂RingHom κ f) u=0):
-   v ((q.coeff 0).eval₂ κ f) < 1:=by
- have hcoeff:∀ p:k[X],v ((Polynomial.eval₂RingHom κ f) p) ≤ 1:=
+   v ((q.coeff 0).eval₂ κ f)<1:=by
+ have hcoeff:∀ p:k[X],v ((Polynomial.eval₂RingHom κ f) p)≤1:=
    fun p => polynomial_value_le_one v κ hκ f hf p
- have htail:v (q.divX.eval₂ (Polynomial.eval₂RingHom κ f) u) ≤ 1:=by
+ have htail:v (q.divX.eval₂ (Polynomial.eval₂RingHom κ f) u)≤1:=by
    rw [Polynomial.eval₂_eq_sum,Polynomial.sum_def]
    apply v.map_sum_le
    intro i _

@@ -10,8 +10,8 @@ noncomputable section
 variable {A:Type} [Field A]
 theorem bivariateEquiv_coeff_natDegree_le_of_support
    (f:MvPolynomial (Fin 2) A) (height:ℕ → ℕ)
-   (hsupport:∀ d∈f.support,d 1 ≤ height (d 0)) (i:ℕ):
-   ((bivariateEquiv A f).coeff i).natDegree ≤ height i:=by
+   (hsupport:∀ d∈f.support,d 1≤height (d 0)) (i:ℕ):
+   ((bivariateEquiv A f).coeff i).natDegree≤height i:=by
  rw [show (bivariateEquiv A f).coeff i=
      MvPolynomial.uniqueAlgEquiv A (Fin 1)
        ((MvPolynomial.finSuccEquiv A 1 f).coeff i) by
@@ -25,20 +25,20 @@ theorem bivariateEquiv_coeff_natDegree_le_of_support
    Finsupp.cons_succ,Finsupp.cons_zero] using hs
 theorem bivariateEquiv_totalDegree_le_of_support
    (f:MvPolynomial (Fin 2) A) (cap:ℕ)
-   (hsupport:∀ d∈f.support,d 0+d 1 ≤ cap):
-   totalDegree (bivariateEquiv A f) ≤ cap:=by
+   (hsupport:∀ d∈f.support,d 0+d 1≤cap):
+   totalDegree (bivariateEquiv A f)≤cap:=by
  classical
- have houter:f.degreeOf 0 ≤ cap:=by
+ have houter:f.degreeOf 0≤cap:=by
    apply MvPolynomial.degreeOf_le_iff.mpr
    intro d hd
    exact (Nat.le_add_right (d 0) (d 1)).trans (hsupport d hd)
  unfold totalDegree
  apply Finset.sup_le
  intro i hi
- have hiCap:i ≤ cap:=by
+ have hiCap:i≤cap:=by
    exact (Polynomial.le_natDegree_of_mem_supp i hi).trans
      ((bivariateEquiv_natDegree A f).trans_le houter)
- have hcoeff:((bivariateEquiv A f).coeff i).natDegree ≤ cap-i:=by
+ have hcoeff:((bivariateEquiv A f).coeff i).natDegree≤cap-i:=by
    apply bivariateEquiv_coeff_natDegree_le_of_support f (fun j => cap-j)
    intro d hd
    have hs:=hsupport d hd
@@ -48,22 +48,22 @@ variable (K:Type) [Field K]
 theorem planeMap_coeff_natDegree_le_of_rational_support
    (order:Fin 3 ≃ Fin 3) (F:Original K) (height:ℕ → ℕ)
    (hsupport:∀ d∈(rationalMap K order F).support,
-     d 1 ≤ height (d 0)) (i:ℕ):
-   ((planeMap K order F).coeff i).natDegree ≤ height i:=by
+     d 1≤height (d 0)) (i:ℕ):
+   ((planeMap K order F).coeff i).natDegree≤height i:=by
  exact bivariateEquiv_coeff_natDegree_le_of_support
    (rationalMap K order F) height hsupport i
 theorem planeMap_totalDegree_le_of_rational_support
    (order:Fin 3 ≃ Fin 3) (F:Original K) (cap:ℕ)
    (hsupport:∀ d∈(rationalMap K order F).support,
-     d 0+d 1 ≤ cap):
-   totalDegree (planeMap K order F) ≤ cap:=by
+     d 0+d 1≤cap):
+   totalDegree (planeMap K order F)≤cap:=by
  exact bivariateEquiv_totalDegree_le_of_support
    (rationalMap K order F) cap hsupport
 theorem rationalMap_joint_support_of_original
    (order:Fin 3 ≃ Fin 3) (F:Original K) (cap:ℕ)
    (hsupport:∀ d∈F.support,
-     d (order 1)+d (order 2) ≤ cap):
-   ∀ e∈(rationalMap K order F).support,e 0+e 1 ≤ cap:=by
+     d (order 1)+d (order 2)≤cap):
+   ∀ e∈(rationalMap K order F).support,e 0+e 1≤cap:=by
  classical
  intro e he
  rw [rationalMap_eq_firstMap] at he
@@ -79,21 +79,21 @@ theorem rationalMap_joint_support_of_original
    show (1:Fin 2).succ=(2:Fin 3) by decide] using hsupport u hu
 theorem original_joint_support_to_rationalMap
    (F:Original K) (cap:ℕ)
-   (hsupport:∀ d∈F.support,d 0+d 2 ≤ cap):
+   (hsupport:∀ d∈F.support,d 0+d 2≤cap):
    ∀ e∈(rationalMap K (Equiv.swap 0 1) F).support,
-     e 0+e 1 ≤ cap:=by
+     e 0+e 1≤cap:=by
  apply rationalMap_joint_support_of_original K (Equiv.swap 0 1) F cap
  intro d hd
  simpa [Equiv.swap_apply_def] using hsupport d hd
 theorem ordinary_resultant_natDegree_le_totalDegree
    (B H:A[X][Y]) (n mCap totalB totalH cap:ℕ)
-   (hHne:H≠0) (hBouter:B.natDegree ≤ n)
-   (hHouter:H.natDegree ≤ mCap)
-   (hBtotal:totalDegree B ≤ totalB)
-   (hHtotal:totalDegree H ≤ totalH)
-   (hbudget:∀ m,m ≤ mCap →
-     m*totalB+n*totalH-m*n ≤ cap):
-   (Polynomial.resultant B H).natDegree ≤ cap:=by
+   (hHne:H≠0) (hBouter:B.natDegree≤n)
+   (hHouter:H.natDegree≤mCap)
+   (hBtotal:totalDegree B≤totalB)
+   (hHtotal:totalDegree H≤totalH)
+   (hbudget:∀ m,m≤mCap →
+     m*totalB+n*totalH-m*n≤cap):
+   (Polynomial.resultant B H).natDegree≤cap:=by
  by_cases hres:Polynomial.resultant B H=0
  · simp [hres]
  · have hfixed:=bivariate_resultant_natDegree_le_totalDegree
@@ -105,7 +105,7 @@ theorem ordinary_resultant_natDegree_le_totalDegree
        (Nat.add_le_add (Nat.mul_le_mul_left H.natDegree hBtotal)
          (Nat.mul_le_mul_left n hHtotal)) _
    have hfixedCap:
-       (Polynomial.resultant B H n H.natDegree).natDegree ≤ cap:=
+       (Polynomial.resultant B H n H.natDegree).natDegree≤cap:=
      hfixed.trans (hdegreeCap.trans (hbudget H.natDegree hHouter))
    have hcoeff:H.coeff H.natDegree≠0:=by
      rw [Polynomial.coeff_natDegree]
@@ -131,20 +131,20 @@ theorem ordinary_resultant_natDegree_le_totalDegree
        rw [Polynomial.natDegree_mul hfactor hres]
        omega
      _=(Polynomial.resultant B H n H.natDegree).natDegree:=by rw [hpad]
-     _ ≤ cap:=hfixedCap
+     _≤cap:=hfixedCap
 theorem planeMap_trapezoid_resultant_natDegree_le
    (order:Fin 3 ≃ Fin 3) (G T:Original K)
    (n mCap totalG totalT cap:ℕ) (hTne:T≠0)
-   (hGouter:(planeMap K order G).natDegree ≤ n)
-   (hTouter:(planeMap K order T).natDegree ≤ mCap)
+   (hGouter:(planeMap K order G).natDegree≤n)
+   (hTouter:(planeMap K order T).natDegree≤mCap)
    (hGsupport:∀ d∈(rationalMap K order G).support,
-     d 0+d 1 ≤ totalG)
+     d 0+d 1≤totalG)
    (hTsupport:∀ d∈(rationalMap K order T).support,
-     d 0+d 1 ≤ totalT)
-   (hbudget:∀ m,m ≤ mCap →
-     m*totalG+n*totalT-m*n ≤ cap):
+     d 0+d 1≤totalT)
+   (hbudget:∀ m,m≤mCap →
+     m*totalG+n*totalT-m*n≤cap):
    (Polynomial.resultant (planeMap K order G)
-     (planeMap K order T)).natDegree ≤ cap:=by
+     (planeMap K order T)).natDegree≤cap:=by
  apply ordinary_resultant_natDegree_le_totalDegree
    (planeMap K order G) (planeMap K order T)
      n mCap totalG totalT cap
@@ -160,14 +160,14 @@ theorem planeMap_trapezoid_resultant_natDegree_le
      K order T totalT hTsupport
  · exact hbudget
 theorem planeMap_corner_resultant_natDegree_le
-   (order:Fin 3 ≃ Fin 3) (G T:Original K) (k:ℕ) (hk:1 ≤ k)
+   (order:Fin 3 ≃ Fin 3) (G T:Original K) (k:ℕ) (hk:1≤k)
    (hTne:T≠0)
-   (hGouter:(planeMap K order G).natDegree ≤ 25)
-   (hTouter:(planeMap K order T).natDegree ≤ 25*k+1)
+   (hGouter:(planeMap K order G).natDegree≤25)
+   (hTouter:(planeMap K order T).natDegree≤25*k+1)
    (hGsupport:∀ d∈(rationalMap K order G).support,
-     d 1 ≤ CornerStaircase.surfaceHeight (d 0))
+     d 1≤CornerStaircase.surfaceHeight (d 0))
    (hTsupport:∀ d∈(rationalMap K order T).support,
-     d 1 ≤ CornerStaircase.tailHeight k (d 0)):
+     d 1≤CornerStaircase.tailHeight k (d 0)):
    (Polynomial.resultant (planeMap K order G) (planeMap K order T)).natDegree ≤
      8127*k+178:=by
  apply CornerStaircase.ordinary_resultant_natDegree_le
@@ -205,10 +205,10 @@ theorem swapped_planeMap_degreeX_le_outer_natDegree
 theorem swapped_resultant_natDegree_le_of_outer_zero
    (order:Fin 3 ≃ Fin 3) (G T:Original K) (gOuter tInner:ℕ)
    (hzero:(planeMap K order G).natDegree=0)
-   (hGouter:(planeMap K (swapOtherOrder order) G).natDegree ≤ gOuter)
-   (hTinner:degreeX (planeMap K (swapOtherOrder order) T) ≤ tInner):
+   (hGouter:(planeMap K (swapOtherOrder order) G).natDegree≤gOuter)
+   (hTinner:degreeX (planeMap K (swapOtherOrder order) T)≤tInner):
    (Polynomial.resultant (planeMap K (swapOtherOrder order) G)
-     (planeMap K (swapOtherOrder order) T)).natDegree ≤ gOuter*tInner:=by
+     (planeMap K (swapOtherOrder order) T)).natDegree≤gOuter*tInner:=by
  have hGinner:degreeX (planeMap K (swapOtherOrder order) G)=0:=by
    apply Nat.eq_zero_of_le_zero
    exact (swapped_planeMap_degreeX_le_outer_natDegree K order G).trans_eq hzero
@@ -225,18 +225,18 @@ theorem exists_positive_joint_characteristic_order
    (hG:Irreducible G) (hGmem:G∈P)
    (ht:Transcendental K (coordinate K P (order 0)))
    (hTne:T≠0)
-   (hGouter:(planeMap K order G).natDegree ≤ n)
-   (hTouter:(planeMap K order T).natDegree ≤ mCap)
+   (hGouter:(planeMap K order G).natDegree≤n)
+   (hTouter:(planeMap K order T).natDegree≤mCap)
    (hGsupport:∀ d∈(rationalMap K order G).support,
-     d 0+d 1 ≤ totalG)
+     d 0+d 1≤totalG)
    (hTsupport:∀ d∈(rationalMap K order T).support,
-     d 0+d 1 ≤ totalT)
-   (hGswapOuter:(planeMap K (swapOtherOrder order) G).natDegree ≤ gOuter)
-   (hTswapInner:degreeX (planeMap K (swapOtherOrder order) T) ≤ tInner)
-   (hnp:n < p) (hgOuterP:gOuter < p)
-   (hcapP:cap < p) (hswapP:gOuter*tInner < p)
-   (hbudget:∀ m,m ≤ mCap →
-     m*totalG+n*totalT-m*n ≤ cap):
+     d 0+d 1≤totalT)
+   (hGswapOuter:(planeMap K (swapOtherOrder order) G).natDegree≤gOuter)
+   (hTswapInner:degreeX (planeMap K (swapOtherOrder order) T)≤tInner)
+   (hnp:n<p) (hgOuterP:gOuter<p)
+   (hcapP:cap<p) (hswapP:gOuter*tInner<p)
+   (hbudget:∀ m,m≤mCap →
+     m*totalG+n*totalT-m*n≤cap):
    ∃ order':Fin 3 ≃ Fin 3,
      (order'=order∨order'=swapOtherOrder order)∧
      order' 0=order 0∧
@@ -255,7 +255,7 @@ theorem exists_positive_joint_characteristic_order
      Nat.eq_zero_of_not_pos hpositive
    obtain ⟨order',hchoice,_hbase,hpos⟩:=
      exists_positive_outer_order K order P G hG hGmem ht
-   have hswapPos:0 < (planeMap K (swapOtherOrder order) G).natDegree:=by
+   have hswapPos:0<(planeMap K (swapOtherOrder order) G).natDegree:=by
      rcases hchoice with hsame | hswap
      · subst order'
        exact (hpositive hpos).elim
@@ -266,57 +266,57 @@ theorem exists_positive_joint_characteristic_order
      hGswapOuter.trans_lt hgOuterP,?_⟩
    exact (swapped_resultant_natDegree_le_of_outer_zero K order G T
      gOuter tInner hzero hGswapOuter hTswapInner).trans_lt hswapP
-theorem first_6463_trapezoid_budget (m:ℕ) (hm:m ≤ 6553601):
-   m*175+25*45875201-m*25 ≤ 2129920175:=by
+theorem first_6463_trapezoid_budget (m:ℕ) (hm:m≤6553601):
+   m*175+25*45875201-m*25≤2129920175:=by
  omega
-theorem agreement_6463_trapezoid_budget (m:ℕ) (hm:m ≤ 6553551):
-   m*175+25*45874851-m*25 ≤ 2129903925:=by
+theorem agreement_6463_trapezoid_budget (m:ℕ) (hm:m≤6553551):
+   m*175+25*45874851-m*25≤2129903925:=by
  omega
 theorem first_6463_trapezoid_cap_below_characteristic:
-   2129920175 < 2130706433:=by norm_num
+   2129920175<2130706433:=by norm_num
 theorem agreement_6463_trapezoid_cap_below_characteristic:
-   2129903925 < 2130706433:=by norm_num
+   2129903925<2130706433:=by norm_num
 theorem swapped_6463_cap_below_characteristic:
-   175*6553601 < 2130706433:=by norm_num
-theorem first_6464_sharpY_trapezoid_budget (m:ℕ) (hm:m ≤ 6422529):
-   m*176+25*46137345-m*25 ≤ 2123235504:=by
+   175*6553601<2130706433:=by norm_num
+theorem first_6464_sharpY_trapezoid_budget (m:ℕ) (hm:m≤6422529):
+   m*176+25*46137345-m*25≤2123235504:=by
  omega
-theorem agreement_6464_sharpY_trapezoid_budget (m:ℕ) (hm:m ≤ 6422480):
-   m*176+25*46136993-m*25 ≤ 2123219305:=by
+theorem agreement_6464_sharpY_trapezoid_budget (m:ℕ) (hm:m≤6422480):
+   m*176+25*46136993-m*25≤2123219305:=by
  omega
 theorem first_6464_sharpY_trapezoid_cap_below_characteristic:
-   2123235504 < 2130706433:=by norm_num
+   2123235504<2130706433:=by norm_num
 theorem agreement_6464_sharpY_trapezoid_cap_below_characteristic:
-   2123219305 < 2130706433:=by norm_num
+   2123219305<2130706433:=by norm_num
 theorem swapped_6464_sharpY_cap_below_characteristic:
-   176*6422529 < 2130706433:=by norm_num
+   176*6422529<2130706433:=by norm_num
 theorem swapped_6464_cap_below_characteristic:
-   178*(25*262144+1) < 2130706433:=by
+   178*(25*262144+1)<2130706433:=by
  norm_num
 theorem exists_positive_sparse_characteristic_order
    (order:Fin 3 ≃ Fin 3) (P:Ideal (Original K)) [P.IsPrime]
    (G T:Original K) (p k gOuter tInner:ℕ)
    (hG:Irreducible G) (hGmem:G∈P)
    (ht:Transcendental K (coordinate K P (order 0)))
-   (hTne:T≠0) (hk:1 ≤ k)
-   (hGouter:(planeMap K order G).natDegree ≤ 25)
-   (hTouter:(planeMap K order T).natDegree ≤ 25*k+1)
+   (hTne:T≠0) (hk:1≤k)
+   (hGouter:(planeMap K order G).natDegree≤25)
+   (hTouter:(planeMap K order T).natDegree≤25*k+1)
    (hGsupport:∀ d∈(rationalMap K order G).support,
-     d 1 ≤ CornerStaircase.surfaceHeight (d 0))
+     d 1≤CornerStaircase.surfaceHeight (d 0))
    (hTsupport:∀ d∈(rationalMap K order T).support,
-     d 1 ≤ CornerStaircase.tailHeight k (d 0))
-   (hGswapOuter:(planeMap K (swapOtherOrder order) G).natDegree ≤ gOuter)
-   (hTswapInner:degreeX (planeMap K (swapOtherOrder order) T) ≤ tInner)
-   (h25p:25 < p) (hgOuterP:gOuter < p)
-   (hcornerP:8127*k+178 < p) (hswapP:gOuter*tInner < p):
+     d 1≤CornerStaircase.tailHeight k (d 0))
+   (hGswapOuter:(planeMap K (swapOtherOrder order) G).natDegree≤gOuter)
+   (hTswapInner:degreeX (planeMap K (swapOtherOrder order) T)≤tInner)
+   (h25p:25<p) (hgOuterP:gOuter<p)
+   (hcornerP:8127*k+178<p) (hswapP:gOuter*tInner<p):
    ∃ order':Fin 3 ≃ Fin 3,
      (order'=order∨order'=swapOtherOrder order)∧
      order' 0=order 0∧
-     0 < (planeMap K order' G).natDegree∧
-     (planeMap K order' G).natDegree < p∧
+     0<(planeMap K order' G).natDegree∧
+     (planeMap K order' G).natDegree<p∧
      (Polynomial.resultant (planeMap K order' G)
-       (planeMap K order' T)).natDegree < p:=by
- by_cases hpositive:0 < (planeMap K order G).natDegree
+       (planeMap K order' T)).natDegree<p:=by
+ by_cases hpositive:0<(planeMap K order G).natDegree
  · refine ⟨order,Or.inl rfl,rfl,hpositive,
      hGouter.trans_lt h25p,?_⟩
    exact (planeMap_corner_resultant_natDegree_le K order G T k hk hTne

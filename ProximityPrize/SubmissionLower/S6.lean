@@ -24,9 +24,9 @@ theorem gameAdd_swap_swap:∀ a b:α × β,GameAdd rβ rα a.swap b.swap ↔ Gam
 theorem gameAdd_swap_swap_mk (a₁ a₂:α) (b₁ b₂:β):
    GameAdd rα rβ (a₁,b₁) (a₂,b₂) ↔ GameAdd rβ rα (b₁,a₁) (b₂,a₂):=
  gameAdd_swap_swap rβ rα (b₁,a₁) (b₂,a₂)
-theorem gameAdd_le_lex:GameAdd rα rβ ≤ Prod.Lex rα rβ:=fun _ _ h =>
+theorem gameAdd_le_lex:GameAdd rα rβ≤Prod.Lex rα rβ:=fun _ _ h =>
  h.rec (Prod.Lex.left _ _) (Prod.Lex.right _)
-theorem rprod_le_transGen_gameAdd:RProd rα rβ ≤ Relation.TransGen (GameAdd rα rβ)
+theorem rprod_le_transGen_gameAdd:RProd rα rβ≤Relation.TransGen (GameAdd rα rβ)
  | _,_,h => h.rec (by
      intro _ _ _ _ hα hβ
      exact Relation.TransGen.tail (Relation.TransGen.single <| GameAdd.fst hα) (GameAdd.snd hβ))

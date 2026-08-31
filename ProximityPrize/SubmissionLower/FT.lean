@@ -39,14 +39,14 @@ abbrev Stage (K I:Type) [Field K]
    (stageSupport:RCN275.ResidualSupportParameters:=fixedSupport):=
  ResidualStage (polynomialEmbedding K) Gamma x p errorCap flag
    RCN326.w stageSupport
-variable {errorCap : ℕ}
-variable {stageSupport : RCN275.ResidualSupportParameters}
+variable {errorCap:ℕ}
+variable {stageSupport:RCN275.ResidualSupportParameters}
 structure OriginalData
    (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S) where
  factor:MvPolynomial (Fin 4) K
  cofactor:MvPolynomial (Fin 4) K
  irreducible:Irreducible factor
- positive:0 < factor.degreeOf 1+factor.degreeOf 2+factor.degreeOf 3
+ positive:0<factor.degreeOf 1+factor.degreeOf 2+factor.degreeOf 3
  product:S.F=factor*cofactor
  factor_dvd:S.G∣surfaceMap (polynomialEmbedding K) factor
  factor_mem:surfaceMap (polynomialEmbedding K) factor∈C.1
@@ -67,7 +67,7 @@ abbrev componentPrime
  contractedPrime (polynomialEmbedding K) C.1
 theorem factorLe
    (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S):
-   factorIdeal (originalData S C).factor ≤ componentPrime S C:=
+   factorIdeal (originalData S C).factor≤componentPrime S C:=
  factorIdeal_le_contractedPrime (polynomialEmbedding K) C.1
    (originalData S C).factor (originalData S C).factor_mem
 abbrev LocalRing
@@ -144,7 +144,7 @@ theorem componentPrime_height_eq_two
  have hproperN:¬ d.factor∣N:=
    original_factor_firstTail_proper S hfirstProper d.factor d.cofactor
      d.product d.factor_dvd
- have hheightC:C.1.height ≤ 2:=
+ have hheightC:C.1.height≤2:=
    component_height_le_two (GenericField K) S.G
      (globalTailCut (polynomialEmbedding K) S.F
        (RCN326.w+1)) C.1
@@ -274,8 +274,8 @@ theorem local_order_tail_dichotomy
    (C:FirstTailComponent S)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
      (RCN326.w+1)):
-   1 ≤ localMultiplicity S L C∧
-     ((∃ delay,1 ≤ delay∧delay ≤ localMultiplicity S L C∧
+   1≤localMultiplicity S L C∧
+     ((∃ delay,1≤delay∧delay≤localMultiplicity S L C∧
        globalTailCut (polynomialEmbedding K) S.F
          (RCN326.w+1+delay)∉C.1)∨
      (∀ delay,globalTailCut (polynomialEmbedding K) S.F
@@ -323,8 +323,8 @@ theorem local_order_tail_dichotomy
      push_cast <;> ring
  have hd:=recurrence_unit_or_persistent D H (D H) coeff N p hp
    hrec hHunit hN0ne hN0nonunit
- change 1 ≤ localMultiplicity S L C∧_
- change 1 ≤ (IsDiscreteValuationRing.addVal R (N 0)).toNat∧_ at hd
+ change 1≤localMultiplicity S L C∧_
+ change 1≤(IsDiscreteValuationRing.addVal R (N 0)).toNat∧_ at hd
  refine ⟨hd.1,?_⟩
  rcases hd.2 with hproper | hpersistent
  · left
@@ -342,7 +342,7 @@ theorem one_le_localMultiplicity
    (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
      (RCN326.w+1)):
-   ∀ C,1 ≤ localMultiplicity S
+   ∀ C,1≤localMultiplicity S
      (canonicalLocalDVRFamily S hfirstProper) C:=by
  intro C
  exact (local_order_tail_dichotomy S

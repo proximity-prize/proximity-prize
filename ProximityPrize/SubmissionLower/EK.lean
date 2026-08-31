@@ -96,8 +96,8 @@ theorem selectedProjection_injective {ι:Type*} (seed:ι → K)
  exact hseed (congrArg Prod.snd hpair)
 theorem initialPoint_all_tail_numerators_zero
    (F:Poly4 K) (P:Polynomial K) (γ:K)
-   (hsolution:specialization K P γ F=0) (w:ℕ) (hdegree:P.natDegree ≤ w):
-   ∀ b,w < b →
+   (hsolution:specialization K P γ F=0) (w:ℕ) (hdegree:P.natDegree≤w):
+   ∀ b,w<b →
      MvPolynomial.eval₂Hom (coefficientEmbedding K) (initialPoint K P γ)
        (numerator K F b)=0:=by
  intro b hb
@@ -107,7 +107,7 @@ theorem global_recovery_at_initialPoint
    (F:Poly4 K) (P:Polynomial K) (γ:K)
    (hsolution:specialization K P γ F=0)
    (hregular:specialization K P γ (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (p w:ℕ) [CharP K p] (hchar:w < p) (hdegree:P.natDegree ≤ w):
+   (p w:ℕ) [CharP K p] (hchar:w<p) (hdegree:P.natDegree≤w):
    globalPolynomial (coefficientEmbedding K) F (initialPoint K P γ)
      (initialPoint_relation K F P γ hsolution)
      ((initialPoint_regular_iff K F P γ).mpr hregular) w=

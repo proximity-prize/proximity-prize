@@ -72,7 +72,7 @@ theorem exp_add_of_commute {a b:A} (h₁:Commute a b) (h₂:IsNilpotent a) (h₃
          and_imp,Prod.forall,Prod.mk.injEq]
        exact fun x y _ _ _↦⟨x+y,x,by lia⟩
      · simp only [mem_sigma,mem_range,implies_true]
- have z₁:∑ ij∈R2N ×ˢ R2N with ¬ ij.1+ij.2 ≤ 2*N,
+ have z₁:∑ ij∈R2N ×ˢ R2N with ¬ ij.1+ij.2≤2*N,
      ((ij.1 !:ℚ)⁻¹*(ij.2 !:ℚ)⁻¹) • (a^ij.1*b^ij.2)=0:=
    sum_eq_zero fun i hi↦by
      rw [mem_filter] at hi
@@ -80,11 +80,11 @@ theorem exp_add_of_commute {a b:A} (h₁:Commute a b) (h₂:IsNilpotent a) (h₃
        | inl h => rw [pow_eq_zero_of_le h h₄,zero_mul,smul_zero]
        | inr _ => rw [pow_eq_zero_of_le (by linarith) h₅,mul_zero,smul_zero]
  have split₁:=sum_filter_add_sum_filter_not (R2N ×ˢ R2N)
-   (fun ij↦ij.1+ij.2 ≤ 2*N)
+   (fun ij↦ij.1+ij.2≤2*N)
    (fun ij↦((ij.1 !:ℚ)⁻¹*(ij.2 !:ℚ)⁻¹) • (a^ij.1*b^ij.2))
  rw [z₁,add_zero] at split₁
  rw [split₁] at s₁
- have z₂:∑ ij∈R2N ×ˢ R2N with ¬ (ij.1 ≤ N∧ij.2 ≤ N),
+ have z₂:∑ ij∈R2N ×ˢ R2N with ¬ (ij.1≤N∧ij.2≤N),
      ((ij.1 !:ℚ)⁻¹*(ij.2 !:ℚ)⁻¹) • (a^ij.1*b^ij.2)=0:=
    sum_eq_zero fun i hi↦by
    simp only [not_and,not_le,mem_filter] at hi
@@ -92,11 +92,11 @@ theorem exp_add_of_commute {a b:A} (h₁:Commute a b) (h₂:IsNilpotent a) (h₃
      | inl h => rw [pow_eq_zero_of_le h h₄,zero_mul,smul_zero]
      | inr h => rw [pow_eq_zero_of_le (hi.2 (Nat.le_of_lt_succ h)) h₅,mul_zero,smul_zero]
  have split₂:=sum_filter_add_sum_filter_not (R2N ×ˢ R2N)
-   (fun ij↦ij.1 ≤ N∧ij.2 ≤ N)
+   (fun ij↦ij.1≤N∧ij.2≤N)
    (fun ij↦((ij.1 !:ℚ)⁻¹*(ij.2 !:ℚ)⁻¹) • (a^ij.1*b^ij.2))
  rw [z₂,add_zero] at split₂
  rw [←split₂] at s₁
- have restrict:∑ ij∈R2N ×ˢ R2N with ij.1 ≤ N∧ij.2 ≤ N,
+ have restrict:∑ ij∈R2N ×ˢ R2N with ij.1≤N∧ij.2≤N,
      ((ij.1 !:ℚ)⁻¹*(ij.2 !:ℚ)⁻¹) • (a^ij.1*b^ij.2)=
        ∑ ij∈RN ×ˢ RN,((ij.1 !:ℚ)⁻¹*(ij.2 !:ℚ)⁻¹) • (a^ij.1*b^ij.2):=by
    apply sum_congr

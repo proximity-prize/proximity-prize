@@ -44,8 +44,8 @@ theorem valuation_shear_bad_coefficient_subsingleton
    (v:RCN345.NormalizedValuation K L)
    (r z:L):
    ∀ {a b:K},
-     v.val (r+a • z) < max (v.val r) (v.val z) →
-     v.val (r+b • z) < max (v.val r) (v.val z) → a=b:=by
+     v.val (r+a • z)<max (v.val r) (v.val z) →
+     v.val (r+b • z)<max (v.val r) (v.val z) → a=b:=by
  intro a b ha hb
  by_contra hab
  have hab0:a-b≠0:=sub_ne_zero.mpr hab
@@ -57,7 +57,7 @@ theorem valuation_shear_bad_coefficient_subsingleton
      Algebra.smul_def,map_mul,
      Valuation.IsTrivialOn.eq_one (a-b) hab0,one_mul]
  rw [hvaldiff] at hdiff
- have hzr:v.val z < v.val r:=by
+ have hzr:v.val z<v.val r:=by
    simpa only [lt_max_iff,lt_self_iff_false,or_false] using hdiff
  have hmax:max (v.val r) (v.val z)=v.val r:=max_eq_left hzr.le
  have ha0:a≠0:=by

@@ -33,7 +33,7 @@ theorem liftedCoefficient_R_degree (F:MvPolynomial (Fin 4) K) (n:ℕ):
 theorem liftedCoefficient_support
    (F:MvPolynomial (Fin 4) K) (n:ℕ) (e:Fin 4 →₀ ℕ)
    (he:e∈(liftedCoefficient F n).support):
-   ∃ d∈F.support,∀ i,e i ≤ d i:=by
+   ∃ d∈F.support,∀ i,e i≤d i:=by
  classical
  have heR:e 2=0:=by
    have hh:=MvPolynomial.monomial_le_degreeOf (2:Fin 4) he
@@ -67,7 +67,7 @@ theorem liftedCoefficient_support
    rw [hindex,Finsupp.optionElim_apply_some] at huv
    exact le_of_eq (hev.trans huv.symm)
 theorem weight_mono_fin4 (weights:Fin 4 → ℕ) (e d:Fin 4 →₀ ℕ)
-   (h:∀ i,e i ≤ d i):Finsupp.weight weights e ≤ Finsupp.weight weights d:=by
+   (h:∀ i,e i≤d i):Finsupp.weight weights e≤Finsupp.weight weights d:=by
  rw [weight_fin4,weight_fin4]
  gcongr <;> exact h _
 theorem liftedCoefficient_weight_le (weights:Fin 4 → ℕ)
@@ -92,7 +92,7 @@ theorem pderiv_weight_le (weights:Fin 4 → ℕ)
  exact hle.trans (MvPolynomial.le_weightedTotalDegree weights hd)
 theorem degreeOf_det_le_uniform (N a:ℕ)
    (M:Matrix (Fin N) (Fin N) (MvPolynomial (Fin 5) K))
-   (hM:∀ i j,(M i j).degreeOf 4 ≤ a):M.det.degreeOf 4 ≤ N*a:=by
+   (hM:∀ i j,(M i j).degreeOf 4≤a):M.det.degreeOf 4≤N*a:=by
  classical
  rw [Matrix.det_apply']
  apply (MvPolynomial.degreeOf_sum_le (4:Fin 5) Finset.univ _).trans

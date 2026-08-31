@@ -71,7 +71,7 @@ theorem sum_relative_finrank_le_sylvester_corank
      RCN361.relationIdeal K (E i)
        (algebraMap (AdjoinRoot mu) (E i) (AdjoinRoot.root mu)) (r i)))
    (P Q:Polynomial (Polynomial K)) (m n:ℕ)
-   (hPcap:P.natDegree ≤ m) (hQcap:Q.natDegree ≤ n)
+   (hPcap:P.natDegree≤m) (hQcap:Q.natDegree≤n)
    (hPne:P.map (AdjoinRoot.mk mu)≠0)
    (hProot:∀ i,Polynomial.aeval (r i) (P.map (AdjoinRoot.mk mu))=0)
    (hQroot:∀ i,Polynomial.aeval (r i) (Q.map (AdjoinRoot.mk mu))=0):
@@ -114,7 +114,7 @@ theorem sum_grouped_weights_le_det_natDegree
      (∑ i with mu i=f,relativeDegree i) ≤
        Fintype.card ι-((AdjoinRoot.mk f).mapMatrix M).rank)
    (hdet:M.det≠0):
-   (∑ i,relativeDegree i*(mu i).natDegree) ≤ M.det.natDegree:=by
+   (∑ i,relativeDegree i*(mu i).natDegree)≤M.det.natDegree:=by
  classical
  let roots:Finset (Polynomial K):=Finset.univ.image mu
  let c:roots → ℕ:=fun f => ∑ i with mu i=f.1,relativeDegree i
@@ -136,7 +136,7 @@ theorem sum_grouped_weights_le_det_natDegree
      (hrootsMonic f) (hrootsMonic g) hassociated
    exact hfg (Subtype.ext heq)
  have hc:∀ f:roots,
-     c f ≤ Fintype.card ι-((AdjoinRoot.mk f.1).mapMatrix M).rank:=by
+     c f≤Fintype.card ι-((AdjoinRoot.mk f.1).mapMatrix M).rank:=by
    intro f
    exact fiberCorank f.1 f.2
  have houter:=sum_irreducible_coranks_le_det_natDegree
@@ -183,7 +183,7 @@ variable (E:I → Type) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
  [∀ i,FiniteDimensional K (E i)]
 theorem sum_finrank_le_resultant_of_relationIdeal_injective
    (P Q:Polynomial (Polynomial K)) (m n:ℕ)
-   (hPcap:P.natDegree ≤ m) (hQcap:Q.natDegree ≤ n)
+   (hPcap:P.natDegree≤m) (hQcap:Q.natDegree≤n)
    (y r:∀ i,E i)
    (hgen:∀ i,IntermediateField.adjoin K
      ({y i,r i}:Set (E i))=⊤)
@@ -279,7 +279,7 @@ theorem sum_finrank_le_resultant_of_relationIdeal_injective
    have hrelative (j:J):relativeDegree j.1=
        Module.finrank (AdjoinRoot f) (E j.1):=by
      change Module.finrank K (E j.1)/(mu j.1).natDegree=_
-     rw [j.property, ←Module.finrank_mul_finrank K (AdjoinRoot f) (E j.1),
+     rw [j.property,←Module.finrank_mul_finrank K (AdjoinRoot f) (E j.1),
        hbase]
      exact Nat.mul_div_cancel_left _ hfIrreducible.natDegree_pos
    have hsum:(∑ i with mu i=f,relativeDegree i)=
@@ -295,7 +295,7 @@ theorem sum_finrank_le_resultant_of_relationIdeal_injective
          intro j _
          exact hrelative j
    rw [hsum]
-   simpa only [Fintype.card_fin, ←Polynomial.sylvester_map_map] using hfixed
+   simpa only [Fintype.card_fin,←Polynomial.sylvester_map_map] using hfixed
  have hdet:(Polynomial.sylvester P Q m n).det≠0:=by
    simpa only [Polynomial.resultant] using hresultant
  have hfiber':∀ f∈(Finset.univ.image mu),
@@ -309,7 +309,7 @@ theorem sum_finrank_le_resultant_of_relationIdeal_injective
  simpa only [Polynomial.resultant,htotal] using houter
 theorem sum_finrank_le_planar_bound_without_separability
    (P Q:Polynomial (Polynomial K))
-   (hP:Irreducible P) (hpositive:0 < P.natDegree)
+   (hP:Irreducible P) (hpositive:0<P.natDegree)
    (hproper:¬ P∣Q)
    (y r:∀ i,E i)
    (hgen:∀ i,IntermediateField.adjoin K

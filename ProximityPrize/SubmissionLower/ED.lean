@@ -57,7 +57,7 @@ def SeparablePrincipalProjection.toPrincipalCycleBudget
    {B:GenericExactPolePolynomial G T H E separator hseparator hproj}
    (P:SeparablePrincipalProjection E separator hseparator hproj B)
    (wholeCap:ℕ)
-   (hsum:(∑ C:RegularComponent Omega G T H,P.cost C) ≤ wholeCap):
+   (hsum:(∑ C:RegularComponent Omega G T H,P.cost C)≤wholeCap):
    PrincipalCycleBudget E separator hseparator hproj B wholeCap where
  cost:=P.cost
  cycle_le:=by
@@ -96,7 +96,7 @@ def SeparablePrincipalProjection.toPrincipalCycleBudget
        apply Finset.sum_congr rfl
        intro v _
        exact P.pole_eq C v
-     _ ≤ (SeparableCoordinate.degree Omega (CoordinateField Omega C.1)
+     _≤(SeparableCoordinate.degree Omega (CoordinateField Omega C.1)
          (P.parameter C):ℤ):=
        SeparableCoordinate.finite_sum_pole_le_degree Omega
          (CoordinateField Omega C.1) (P.parameter C) W
@@ -191,15 +191,15 @@ def principalCycleBudget_of_flag_trapezoid
      (planeMap Omega order (flagAlgHom lam mu nu G)).natDegree)
    (n mCap totalG totalT cap:ℕ) (hTne:T≠0)
    (hGouter:(planeMap Omega order
-     (flagAlgHom lam mu nu G)).natDegree ≤ n)
+     (flagAlgHom lam mu nu G)).natDegree≤n)
    (hTouter:(planeMap Omega order
-     (flagAlgHom lam mu nu T)).natDegree ≤ mCap)
+     (flagAlgHom lam mu nu T)).natDegree≤mCap)
    (hGsupport:∀ d∈(rationalMap Omega order
-     (flagAlgHom lam mu nu G)).support,d 0+d 1 ≤ totalG)
+     (flagAlgHom lam mu nu G)).support,d 0+d 1≤totalG)
    (hTsupport:∀ d∈(rationalMap Omega order
-     (flagAlgHom lam mu nu T)).support,d 0+d 1 ≤ totalT)
-   (hbudget:∀ m,m ≤ mCap →
-     m*totalG+n*totalT-m*n ≤ cap):
+     (flagAlgHom lam mu nu T)).support,d 0+d 1≤totalT)
+   (hbudget:∀ m,m≤mCap →
+     m*totalG+n*totalT-m*n≤cap):
    PrincipalCycleBudget E separator hseparator hproj B cap:=by
  have hinj:Function.Injective
      (fun C:RegularComponent Omega G T H↦C.1):=by
@@ -222,7 +222,7 @@ def principalCycleBudget_of_flag_trapezoid
  apply P.toPrincipalCycleBudget cap
  change (∑ C:RegularComponent Omega G T H,
    SeparableCoordinate.degree Omega (CoordinateField Omega C.1)
-     (flagSeparableCoordinate lam mu nu order ht hfinite hsep C)) ≤ cap
+     (flagSeparableCoordinate lam mu nu order ht hfinite hsep C))≤cap
  convert hfamily.2 using 1
  apply Finset.sum_congr rfl
  intro C _

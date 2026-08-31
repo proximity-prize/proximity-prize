@@ -12,9 +12,9 @@ variable {K Ω:Type} [Field K] [Field Ω]
 theorem selected_globalTailCut_zero_of_lt
    (φ:Polynomial K →+*Ω) (F:MvPolynomial (Fin 4) K)
    (selected:K → Polynomial K) (γ:K) (w d:ℕ)
-   (hdegree:(selected γ).natDegree ≤ w)
+   (hdegree:(selected γ).natDegree≤w)
    (hsolution:RCN319.specialization K (selected γ) γ F=0)
-   (hwd:w < d):
+   (hwd:w<d):
    MvPolynomial.aeval (selectedPoint φ selected γ)
      (globalTailCut φ F d)=0:=by
  rw [globalTailCut_eq,map_mul]
@@ -36,7 +36,7 @@ theorem selected_globalTailCut_zero_of_lt
 theorem selected_secondTail_zero
    (φ:Polynomial K →+*Ω) (F:MvPolynomial (Fin 4) K)
    (selected:K → Polynomial K) (γ:K) (w:ℕ)
-   (hdegree:(selected γ).natDegree ≤ w)
+   (hdegree:(selected γ).natDegree≤w)
    (hsolution:RCN319.specialization K (selected γ) γ F=0):
    MvPolynomial.aeval (selectedPoint φ selected γ)
      (globalTailCut φ F (w+2))=0:=by

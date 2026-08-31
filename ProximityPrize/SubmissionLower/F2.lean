@@ -9,7 +9,7 @@ section InvSubmonoid
 def invSubmonoid:Submonoid S:=
  (M.map (algebraMap R S)).leftInv
 variable [IsLocalization M S]
-theorem submonoid_map_le_is_unit:M.map (algebraMap R S) ≤ IsUnit.submonoid S:=by
+theorem submonoid_map_le_is_unit:M.map (algebraMap R S)≤IsUnit.submonoid S:=by
  rintro _ ⟨a,ha,rfl⟩
  exact IsLocalization.map_units S ⟨_,ha⟩
 noncomputable abbrev equivInvSubmonoid:M.map (algebraMap R S) ≃*invSubmonoid M S:=
@@ -35,7 +35,7 @@ variable {S}
 theorem surj'' (z:S):∃ (r:R) (m:M),z=r • (toInvSubmonoid M S m:S):=by
  rcases IsLocalization.surj M z with ⟨⟨r,m⟩,e:z*_=algebraMap R S r⟩
  refine ⟨r,m,?_⟩
- rw [Algebra.smul_def, ←e,mul_assoc]
+ rw [Algebra.smul_def,←e,mul_assoc]
  simp
 theorem toInvSubmonoid_eq_mk' (x:M):(toInvSubmonoid M S x:S)=mk' S 1 x:=by
  rw [←(IsLocalization.map_units S x).mul_left_inj]

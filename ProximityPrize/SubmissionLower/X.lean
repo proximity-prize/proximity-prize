@@ -109,9 +109,9 @@ theorem finite_zero_points_le_exponentSet_of_literalCoordinate
          (q:ℤ))
    (F:MvPolynomial (Fin 3) Omega) (hFE:F.support ⊆ E) (hF:F∉P)
    (S:Finset (Fin 3 → Omega))
-   (hSP:∀ v∈S,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom)
+   (hSP:∀ v∈S,P≤RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hSF:∀ v∈S,MvPolynomial.aeval v F=0):
-   S.card ≤ q:=by
+   S.card≤q:=by
  classical
  let i0:=D.index
  let htr:=D.transcendental

@@ -14,10 +14,10 @@ structure ResidualSupportParameters where
  s:ℕ
  ys:ℕ
  total:ℕ
- one_le_s:1 ≤ s
- s_le_ys:s ≤ ys
- ys_le_total:ys ≤ total
- two_le_ys:2 ≤ ys
+ one_le_s:1≤s
+ s_le_ys:s≤ys
+ ys_le_total:ys≤total
+ two_le_ys:2≤ys
  deriving DecidableEq
 namespace ResidualSupportParameters
 def agreementDirection (P:ResidualSupportParameters):FlagDegree:=
@@ -86,9 +86,9 @@ end ResidualSupportParameters
 variable {K Omega:Type} [Field K] [Field Omega]
 abbrev Poly4 (K:Type) [Field K]:=MvPolynomial (Fin 4) K
 structure ResidualSupportData (P:ResidualSupportParameters) (F:Poly4 K):Prop where
- s_weight:wt residualSWeights F ≤ P.s
- ys_weight:wt residualYSWeights F ≤ P.ys
- total_weight:wt residualTotalWeights F ≤ P.total
+ s_weight:wt residualSWeights F≤P.s
+ ys_weight:wt residualYSWeights F≤P.ys
+ total_weight:wt residualTotalWeights F≤P.total
 namespace ResidualSupportData
 theorem fixedMeet_of_mem_box
    (F:Poly4 K)
@@ -97,27 +97,27 @@ theorem fixedMeet_of_mem_box
  refine ⟨?_,?_,?_⟩
  · apply (weightedTotalDegree_le_iff residualSWeights F 6).mpr
    intro d hd
-   have hb:d 1+d 3 ≤ 598∧d 2 ≤ 6∧
-       d 0+131071*d 1+(131071-1)*d 2 < 4570175:=hbox hd
+   have hb:d 1+d 3≤598∧d 2≤6∧
+       d 0+131071*d 1+(131071-1)*d 2<4570175:=hbox hd
    rw [RCN081.weight_fin4]
-   change d 0*0+d 1*0+d 2*1+d 3*0 ≤ 6
+   change d 0*0+d 1*0+d 2*1+d 3*0≤6
    norm_num
    exact hb.2.1
  · apply (weightedTotalDegree_le_iff residualYSWeights F 34).mpr
    intro d hd
-   have hb:d 1+d 3 ≤ 598∧d 2 ≤ 6∧
-       d 0+131071*d 1+(131071-1)*d 2 < 4570175:=hbox hd
+   have hb:d 1+d 3≤598∧d 2≤6∧
+       d 0+131071*d 1+(131071-1)*d 2<4570175:=hbox hd
    rw [RCN081.weight_fin4]
-   change d 0*0+d 1*1+d 2*1+d 3*0 ≤ 34
+   change d 0*0+d 1*1+d 2*1+d 3*0≤34
    norm_num
    norm_num at hb
    omega
  · apply (weightedTotalDegree_le_iff residualTotalWeights F 604).mpr
    intro d hd
-   have hb:d 1+d 3 ≤ 598∧d 2 ≤ 6∧
-       d 0+131071*d 1+(131071-1)*d 2 < 4570175:=hbox hd
+   have hb:d 1+d 3≤598∧d 2≤6∧
+       d 0+131071*d 1+(131071-1)*d 2<4570175:=hbox hd
    rw [RCN081.weight_fin4]
-   change d 0*0+d 1*1+d 2*1+d 3*1 ≤ 604
+   change d 0*0+d 1*1+d 2*1+d 3*1≤604
    norm_num
    norm_num at hb
    omega
@@ -137,32 +137,32 @@ theorem globalResidual
 theorem coordinate_bounds
    {P:ResidualSupportParameters} {F:Poly4 K}
    (H:ResidualSupportData P F):
-   F.degreeOf (1:Fin 4) ≤ P.ys∧
-     F.degreeOf (2:Fin 4) ≤ P.s∧
-     F.degreeOf (3:Fin 4) ≤ P.total:=by
- have hR:F.degreeOf (2:Fin 4) ≤ P.s:=by
+   F.degreeOf (1:Fin 4)≤P.ys∧
+     F.degreeOf (2:Fin 4)≤P.s∧
+     F.degreeOf (3:Fin 4)≤P.total:=by
+ have hR:F.degreeOf (2:Fin 4)≤P.s:=by
    have hw:residualSWeights=Pi.single (2:Fin 4) 1:=by
      funext i
      fin_cases i <;> rfl
    have hs:=H.s_weight
    rw [hw,wt,MvPolynomial.weightedTotalDegree_piSingle] at hs
    exact hs
- have hY:F.degreeOf (1:Fin 4) ≤ P.ys:=by
+ have hY:F.degreeOf (1:Fin 4)≤P.ys:=by
    apply MvPolynomial.degreeOf_le_iff.mpr
    intro e he
    have hw:=(MvPolynomial.le_weightedTotalDegree residualYSWeights he).trans
      H.ys_weight
    rw [RCN081.weight_fin4] at hw
-   change e 0*0+e 1*1+e 2*1+e 3*0 ≤ P.ys at hw
+   change e 0*0+e 1*1+e 2*1+e 3*0≤P.ys at hw
    norm_num at hw
    omega
- have hZ:F.degreeOf (3:Fin 4) ≤ P.total:=by
+ have hZ:F.degreeOf (3:Fin 4)≤P.total:=by
    apply MvPolynomial.degreeOf_le_iff.mpr
    intro e he
    have hw:=(MvPolynomial.le_weightedTotalDegree residualTotalWeights he).trans
      H.total_weight
    rw [RCN081.weight_fin4] at hw
-   change e 0*0+e 1*1+e 2*1+e 3*1 ≤ P.total at hw
+   change e 0*0+e 1*1+e 2*1+e 3*1≤P.total at hw
    norm_num at hw
    omega
  exact ⟨hY,hR,hZ⟩
@@ -180,22 +180,22 @@ theorem agreement_weight_bounds
  refine ⟨(agreementNumerator_degree_bounds F P.ys P.s P.total
    P.one_le_s hY hR hZ d coeffs x u0 u1).2.1,?_,?_⟩
  · have h:=agreementNumerator_wt_le_minkowski residualYSWeights rfl
-     F P.ys (by change 1 ≤ P.ys;exact P.one_le_s.trans P.s_le_ys)
-     (by change 2 ≤ P.ys;exact P.two_le_ys)
-     (by change 1 ≤ 1;norm_num) H.ys_weight d coeffs x u0 u1
+     F P.ys (by change 1≤P.ys;exact P.one_le_s.trans P.s_le_ys)
+     (by change 2≤P.ys;exact P.two_le_ys)
+     (by change 1≤1;norm_num) H.ys_weight d coeffs x u0 u1
    have hcoeff:P.ys+(P.ys-1)=2*P.ys-1:=by omega
    apply h.trans_eq
    change max 1 0+d*(P.ys+(P.ys-1))=
      1+d*(2*P.ys-1)
    rw [hcoeff]
    norm_num
- · have htotalTwo:2 ≤ P.total:=P.two_le_ys.trans P.ys_le_total
-   have honeTotal:1 ≤ P.total:=
+ · have htotalTwo:2≤P.total:=P.two_le_ys.trans P.ys_le_total
+   have honeTotal:1≤P.total:=
      le_trans P.one_le_s (le_trans P.s_le_ys P.ys_le_total)
    have h:=agreementNumerator_wt_le_minkowski residualTotalWeights rfl
-     F P.total (by change 1 ≤ P.total;exact honeTotal)
-     (by change 2 ≤ P.total;exact htotalTwo)
-     (by change 1 ≤ 1;norm_num) H.total_weight d coeffs x u0 u1
+     F P.total (by change 1≤P.total;exact honeTotal)
+     (by change 2≤P.total;exact htotalTwo)
+     (by change 1≤1;norm_num) H.total_weight d coeffs x u0 u1
    have hcoeff:P.total+(P.total-1)=2*P.total-1:=by omega
    apply h.trans_eq
    change max 1 1+d*(P.total+(P.total-1))=

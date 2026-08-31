@@ -143,10 +143,10 @@ theorem discr_natDegree_le {F:Type} [Field F] (R:F[X][Y])
  let S:=R.resultant R.derivative d (d-1)
  have hSdeg:S.natDegree ≤ (d-1)*degreeX R+d*degreeX R.derivative:=by
    exact ps_nat_degree_resultant_le R.derivative R (d-1) d
- have hSdeg':S.natDegree ≤ (2*d-1)*degreeX R:=by
+ have hSdeg':S.natDegree≤(2*d-1)*degreeX R:=by
    calc
-     S.natDegree ≤ (d-1)*degreeX R+d*degreeX R.derivative:=hSdeg
-     _ ≤ (d-1)*degreeX R+d*degreeX R:=by
+     S.natDegree≤(d-1)*degreeX R+d*degreeX R.derivative:=hSdeg
+     _≤(d-1)*degreeX R+d*degreeX R:=by
        gcongr
        exact degreeX_derivative_le R
      _=((d-1)+d)*degreeX R:=by ring
@@ -154,7 +154,7 @@ theorem discr_natDegree_le {F:Type} [Field F] (R:F[X][Y])
        congr 1
        dsimp [d]
        omega
- have hdegree:0 < R.degree:=Polynomial.natDegree_pos_iff_degree_pos.mp hpos
+ have hdegree:0<R.degree:=Polynomial.natDegree_pos_iff_degree_pos.mp hpos
  have hrel:=Polynomial.resultant_deriv (f:=R) hdegree
  rw [hmonic.leadingCoeff,mul_one] at hrel
  by_cases hd:R.discr=0

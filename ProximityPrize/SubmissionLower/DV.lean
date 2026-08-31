@@ -12,15 +12,15 @@ def pencilSeeds (seeds:Finset K) (selected:K → Polynomial K)
 def SelectedNoLargePencilBound (domain:ι ↪ K) (w e B:ℕ):Prop:=
  ∀ (U:Fin 2 → ι → K) (seeds:Finset K) (A:K → Finset ι)
    (selected:K → Polynomial K),
-   (∀ γ∈seeds,(selected γ).natDegree ≤ w) →
-   (∀ γ∈seeds,Fintype.card ι-e ≤ (A γ).card) →
+   (∀ γ∈seeds,(selected γ).natDegree≤w) →
+   (∀ γ∈seeds,Fintype.card ι-e≤(A γ).card) →
    (∀ γ∈seeds,∀ i∈A γ,
      (selected γ).eval (domain i)=U 0 i+γ*U 1 i) →
-   (∀ P₀ P₁:Polynomial K,P₀.natDegree ≤ w → P₁.natDegree ≤ w →
-     (pencilSeeds seeds selected P₀ P₁).card ≤ e+1) →
-   seeds.card ≤ B
+   (∀ P₀ P₁:Polynomial K,P₀.natDegree≤w → P₁.natDegree≤w →
+     (pencilSeeds seeds selected P₀ P₁).card≤e+1) →
+   seeds.card≤B
 theorem degree_lt_succ_of_natDegree_le (P:Polynomial K) (w:ℕ)
-   (hdegree:P.natDegree ≤ w):P.degree < ((w+1:ℕ):WithBot ℕ):=by
+   (hdegree:P.natDegree≤w):P.degree<((w+1:ℕ):WithBot ℕ):=by
  rcases eq_or_ne P 0 with hzero | hnonzero
  · simp [hzero]
  · rw [←Polynomial.natDegree_lt_iff_degree_lt hnonzero]
@@ -32,12 +32,12 @@ theorem exists_selected_polynomials
      LinearCode.projectedWord (fun i => U 0 i+γ*U 1 i) (A γ)∈
        LinearCode.projectedCodeSubmod (ReedSolomon.code domain (w+1)) (A γ)):
    ∃ selected:K → Polynomial K,
-     (∀ γ∈seeds,(selected γ).natDegree ≤ w)∧
+     (∀ γ∈seeds,(selected γ).natDegree≤w)∧
      (∀ γ∈seeds,∀ i∈A γ,
        (selected γ).eval (domain i)=U 0 i+γ*U 1 i):=by
  classical
  have hexists (γ:K) (hγ:γ∈seeds):∃ P:Polynomial K,
-     P.natDegree ≤ w∧∀ i∈A γ,P.eval (domain i)=U 0 i+γ*U 1 i:=by
+     P.natDegree≤w∧∀ i∈A γ,P.eval (domain i)=U 0 i+γ*U 1 i:=by
    have hc:=hprojected γ hγ
    rw [LinearCode.mem_projectedCodeSubmod_iff] at hc
    obtain ⟨c,hcode,hvalue⟩:=hc
@@ -47,7 +47,7 @@ theorem exists_selected_polynomials
    refine ⟨P,?_,?_⟩
    · rcases eq_or_ne P 0 with hzero | hnonzero
      · simp [hzero]
-     · have hd:P.natDegree < w+1:=
+     · have hd:P.natDegree<w+1:=
          (Polynomial.natDegree_lt_iff_degree_lt hnonzero).mpr hdegree
        omega
    · intro i hi
@@ -56,7 +56,7 @@ theorem exists_selected_polynomials
  let selected:K → Polynomial K:=fun γ =>
    if hγ:γ∈seeds then Classical.choose (hexists γ hγ) else 0
  have hspec (γ:K) (hγ:γ∈seeds):
-     (selected γ).natDegree ≤ w∧
+     (selected γ).natDegree≤w∧
        ∀ i∈A γ,(selected γ).eval (domain i)=U 0 i+γ*U 1 i:=by
    simpa only [selected,dif_pos hγ] using Classical.choose_spec (hexists γ hγ)
  exact ⟨selected,fun γ hγ => (hspec γ hγ).1,fun γ hγ => (hspec γ hγ).2⟩
@@ -64,16 +64,16 @@ theorem exists_large_pencil_of_selected_count
    (domain:ι ↪ K) (w e B:ℕ)
    (hcount:SelectedNoLargePencilBound domain w e B)
    (U:Fin 2 → ι → K) (seeds:Finset K) (A:K → Finset ι)
-   (selected:K → Polynomial K) (hlarge:B < seeds.card)
-   (hdegree:∀ γ∈seeds,(selected γ).natDegree ≤ w)
-   (hcard:∀ γ∈seeds,Fintype.card ι-e ≤ (A γ).card)
+   (selected:K → Polynomial K) (hlarge:B<seeds.card)
+   (hdegree:∀ γ∈seeds,(selected γ).natDegree≤w)
+   (hcard:∀ γ∈seeds,Fintype.card ι-e≤(A γ).card)
    (hagreement:∀ γ∈seeds,∀ i∈A γ,
      (selected γ).eval (domain i)=U 0 i+γ*U 1 i):
-   ∃ P₀ P₁:Polynomial K,P₀.natDegree ≤ w∧P₁.natDegree ≤ w∧
-     e+1 < (pencilSeeds seeds selected P₀ P₁).card:=by
+   ∃ P₀ P₁:Polynomial K,P₀.natDegree≤w∧P₁.natDegree≤w∧
+     e+1<(pencilSeeds seeds selected P₀ P₁).card:=by
  by_contra hno
- have hsmall:∀ P₀ P₁:Polynomial K,P₀.natDegree ≤ w → P₁.natDegree ≤ w →
-     (pencilSeeds seeds selected P₀ P₁).card ≤ e+1:=by
+ have hsmall:∀ P₀ P₁:Polynomial K,P₀.natDegree≤w → P₁.natDegree≤w →
+     (pencilSeeds seeds selected P₀ P₁).card≤e+1:=by
    intro P₀ P₁ h₀ h₁
    apply Nat.le_of_not_gt
    intro hh
@@ -111,8 +111,8 @@ theorem exists_original_support_of_selected_count
    (domain:ι ↪ K) (w e B:ℕ)
    (hcount:SelectedNoLargePencilBound domain w e B)
    (U:Fin 2 → ι → K) (seeds:Finset K) (A:K → Finset ι)
-   (hlarge:B < seeds.card)
-   (hcard:∀ γ∈seeds,Fintype.card ι-e ≤ (A γ).card)
+   (hlarge:B<seeds.card)
+   (hcard:∀ γ∈seeds,Fintype.card ι-e≤(A γ).card)
    (hprojected:∀ γ∈seeds,
      LinearCode.projectedWord (fun i => U 0 i+γ*U 1 i) (A γ)∈
        LinearCode.projectedCodeSubmod (ReedSolomon.code domain (w+1)) (A γ)):

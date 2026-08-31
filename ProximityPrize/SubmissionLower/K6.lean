@@ -26,16 +26,16 @@ theorem implicit_pair_seed_bound_fixed
    (selected:K → Polynomial K) (Γ:Finset K)
    (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
    (hnodes:nodes.card=n) [CharP K prime]
-   (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
+   (hdegree:∀ γ∈Γ,(selected γ).natDegree≤w)
    (hsolutionA:∀ γ∈Γ,specialization K (selected γ) γ A=0)
    (hsolutionG:∀ γ∈Γ,specialization K (selected γ) γ G=0)
    (hregular:∀ γ∈Γ,
      specialization K (selected γ) γ (MvPolynomial.pderiv (2:Fin 4) G)≠0)
    (hagreement:∀ γ∈Γ,
-     agreements ≤ (nodes.filter (fun i =>
+     agreements≤(nodes.filter (fun i =>
        (selected γ).eval (x i)=u₀ i+γ*u₁ i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Γ w errors):
-   Γ.card*gap ≤ (n-w)*dot liftedAgreement (pairCost A G)+
+   Γ.card*gap≤(n-w)*dot liftedAgreement (pairCost A G)+
      (errors+1)*gap*RCN169.pairZCost ⟨A,G⟩:=by
  classical
  let φ:=polynomialEmbedding K
@@ -72,7 +72,7 @@ theorem implicit_pair_seed_bound_fixed
    obtain ⟨g,hg,hz⟩:=exists_surfaceFactor_zero φ (polynomialEmbedding_injective K)
      G hG.ne_zero (selectedPoint φ selected γ) (hFzero γ hγ)
    exact Finset.mem_biUnion.mpr ⟨g,hg,Finset.mem_filter.mpr ⟨hγ,hz⟩⟩
- have hcard:Γ.card ≤ ∑ g∈factors,(seedsFor g).card:=
+ have hcard:Γ.card≤∑ g∈factors,(seedsFor g).card:=
    (Finset.card_le_card hcover).trans Finset.card_biUnion_le
  have hsingle (g:MvPolynomial (Fin 3) (GenericField K)) (hg:g∈factors):
      (seedsFor g).card*gap ≤
@@ -82,7 +82,7 @@ theorem implicit_pair_seed_bound_fixed
          (errors+1)*gap*
            capAt (RCN170.geometricPairCost A g) 2:=by
    obtain ⟨hgi,hdiv⟩:=surfaceFactors_spec φ G g hg
-   have hfacdegree (i:Fin 3):g.degreeOf i ≤ G.degreeOf i.succ:=
+   have hfacdegree (i:Fin 3):g.degreeOf i≤G.degreeOf i.succ:=
      (coordinate_degree_le_of_dvd i g (surfaceMap φ G) hdiv
        (surfaceMap_ne_zero φ (polynomialEmbedding_injective K) G hG.ne_zero)).trans
          (surfaceMap_degreeOf_le φ G i)
@@ -142,10 +142,10 @@ theorem implicit_pair_seed_bound_fixed
    intro i _
    rw [Finset.mul_sum]
  calc
-   Γ.card*gap ≤ (∑ g∈factors,(seedsFor g).card)*gap:=
+   Γ.card*gap≤(∑ g∈factors,(seedsFor g).card)*gap:=
      Nat.mul_le_mul_right gap hcard
    _=∑ g∈factors,(seedsFor g).card*gap:=by rw [Finset.sum_mul]
-   _ ≤ ∑ g∈factors,((n-w)*(∑ i:Fin 3,
+   _≤∑ g∈factors,((n-w)*(∑ i:Fin 3,
        capAt (legacyVector liftedAgreement) i*
          capAt (RCN170.geometricPairCost A g) i)+
        (errors+1)*gap*
@@ -157,8 +157,8 @@ theorem implicit_pair_seed_bound_fixed
        (errors+1)*gap*
          (∑ g∈factors,
            capAt (RCN170.geometricPairCost A g) 2):=by
-     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,hfubini]
-   _ ≤ (n-w)*(∑ i:Fin 3,capAt (legacyVector liftedAgreement) i*
+     rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.mul_sum,hfubini]
+   _≤(n-w)*(∑ i:Fin 3,capAt (legacyVector liftedAgreement) i*
        capAt (RCN170.pairCost A G) i)+
        (errors+1)*gap*capAt (RCN170.pairCost A G) 2:=
      Nat.add_le_add (Nat.mul_le_mul_left (n-w) (Finset.sum_le_sum

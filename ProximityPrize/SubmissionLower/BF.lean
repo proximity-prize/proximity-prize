@@ -21,7 +21,7 @@ def GlobalCountLtAlignment6600:Prop:=
    ∀ (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
      (seeds:Finset IRSProfile.Field)
      (u0 u1:IRSProfile.Index → IRSProfile.Field),
-     (∀ gamma∈seeds,(selected gamma).natDegree ≤ w) →
+     (∀ gamma∈seeds,(selected gamma).natDegree≤w) →
      (∀ gamma∈seeds,
        specialization IRSProfile.Field (selected gamma) gamma Q=0) →
      (∀ gamma∈seeds,agreements ≤
@@ -29,7 +29,7 @@ def GlobalCountLtAlignment6600:Prop:=
          (selected gamma).eval (IRSProfile.domain i)=
            u0 i+gamma*u1 i)).card) →
      NoLargeSelectedPencil selected seeds w errors →
-     seeds.card < alignmentBudget
+     seeds.card<alignmentBudget
 abbrev InterpolantSelectedCount6600:=GlobalCountLtAlignment6600
 theorem challenge_field_characteristic6600:
    CharP IRSProfile.Field prime:=by

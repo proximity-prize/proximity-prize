@@ -22,7 +22,7 @@ theorem normalizedFactorSet_product_dvd (Q:MvPolynomial σ A) (hQ:Q≠0):
  classical
  exact (normalizedFactors Q).toFinset_prod_dvd_prod.trans (prod_normalizedFactors hQ).dvd
 theorem coordinate_degree_le_of_dvd (i:σ) (F Q:MvPolynomial σ A)
-   (hdiv:F∣Q) (hQ:Q≠0):F.degreeOf i ≤ Q.degreeOf i:=by
+   (hdiv:F∣Q) (hQ:Q≠0):F.degreeOf i≤Q.degreeOf i:=by
  rcases hdiv with ⟨G,rfl⟩
  rcases mul_ne_zero_iff.mp hQ with ⟨hF,hG⟩
  rw [MvPolynomial.degreeOf_mul_eq hF hG]
@@ -30,7 +30,7 @@ theorem coordinate_degree_le_of_dvd (i:σ) (F Q:MvPolynomial σ A)
 theorem sum_coordinate_degrees_le_of_prod_dvd {ι:Type*}
    (I:Finset ι) (f:ι → MvPolynomial σ A) (Q:MvPolynomial σ A)
    (hQ:Q≠0) (hdiv:(∏ j∈I,f j)∣Q) (i:σ):
-   (∑ j∈I,(f j).degreeOf i) ≤ Q.degreeOf i:=by
+   (∑ j∈I,(f j).degreeOf i)≤Q.degreeOf i:=by
  classical
  have hprod:(∏ j∈I,f j)≠0:=by
    intro hz
@@ -41,10 +41,10 @@ theorem sum_coordinate_degrees_le_of_prod_dvd {ι:Type*}
  calc
    (∑ j∈I,(f j).degreeOf i)=(∏ j∈I,f j).degreeOf i:=
      (MvPolynomial.degreeOf_prod_eq (n:=i) I f hf).symm
-   _ ≤ Q.degreeOf i:=coordinate_degree_le_of_dvd i _ Q hdiv hQ
+   _≤Q.degreeOf i:=coordinate_degree_le_of_dvd i _ Q hdiv hQ
 theorem normalizedFactorSet_degree_budget
    (Q:MvPolynomial σ A) (hQ:Q≠0) (i:σ):
-   (∑ F∈normalizedFactorSet Q,F.degreeOf i) ≤ Q.degreeOf i:=
+   (∑ F∈normalizedFactorSet Q,F.degreeOf i)≤Q.degreeOf i:=
  sum_coordinate_degrees_le_of_prod_dvd (normalizedFactorSet Q) id Q hQ
    (normalizedFactorSet_product_dvd Q hQ) i
 theorem exists_normalizedFactorSet_zero
@@ -78,7 +78,7 @@ theorem exists_surfaceFactor_zero
 theorem surfaceFactors_degree_budget
    (φ:Polynomial K →+*L) (hφ:Function.Injective φ)
    (F:MvPolynomial (Fin 4) K) (hF:F≠0) (i:Fin 3):
-   (∑ g∈surfaceFactors φ F,g.degreeOf i) ≤ F.degreeOf i.succ:=
+   (∑ g∈surfaceFactors φ F,g.degreeOf i)≤F.degreeOf i.succ:=
  (normalizedFactorSet_degree_budget (surfaceMap φ F)
    (surfaceMap_ne_zero φ hφ F hF) i).trans (surfaceMap_degreeOf_le φ F i)
 theorem exists_geometric_component_of_surface_zero
@@ -105,23 +105,23 @@ theorem surfaceFactor_family_degree_budget
      apply Finset.sum_le_sum
      intro F hF
      exact surfaceFactors_degree_budget φ hφ F (activeFactors_spec Q F hF).1.ne_zero i
-   _ ≤ Q.degreeOf i.succ:=
+   _≤Q.degreeOf i.succ:=
      sum_coordinate_degrees_le_of_prod_dvd (activeFactors Q) id Q hQ
        (activeFactors_product_dvd Q hQ) i.succ
 theorem surfaceFactor_family_input_budgets
    (φ:Polynomial K →+*L) (hφ:Function.Injective φ)
-   (Q:MvPolynomial (Fin 4) K) (D w zcap s:ℕ) (hw:0 < w) (hQ:Q≠0)
+   (Q:MvPolynomial (Fin 4) K) (D w zcap s:ℕ) (hw:0<w) (hQ:Q≠0)
    (hbox:Q∈globalCoefficientBox K D w zcap s):
-   (∑ F∈activeFactors Q,∑ g∈surfaceFactors φ F,g.degreeOf (0:Fin 3)) ≤ (D-1)/w∧
-   (∑ F∈activeFactors Q,∑ g∈surfaceFactors φ F,g.degreeOf (1:Fin 3)) ≤ s∧
-   (∑ F∈activeFactors Q,∑ g∈surfaceFactors φ F,g.degreeOf (2:Fin 3)) ≤ zcap:=by
+   (∑ F∈activeFactors Q,∑ g∈surfaceFactors φ F,g.degreeOf (0:Fin 3))≤(D-1)/w∧
+   (∑ F∈activeFactors Q,∑ g∈surfaceFactors φ F,g.degreeOf (1:Fin 3))≤s∧
+   (∑ F∈activeFactors Q,∑ g∈surfaceFactors φ F,g.degreeOf (2:Fin 3))≤zcap:=by
  have hc:=RCN081.degree_bounds_of_mem_box Q D w zcap s hw hbox
  exact ⟨(surfaceFactor_family_degree_budget φ hφ Q hQ 0).trans hc.1,
    (surfaceFactor_family_degree_budget φ hφ Q hQ 1).trans hc.2.1,
    (surfaceFactor_family_degree_budget φ hφ Q hQ 2).trans hc.2.2⟩
 theorem irreducible_positive_surface_degree
    (g:MvPolynomial (Fin 3) L) (hg:Irreducible g):
-   0 < g.degreeOf 0+g.degreeOf 1+g.degreeOf 2:=by
+   0<g.degreeOf 0+g.degreeOf 1+g.degreeOf 2:=by
  by_contra h
  have heq:g=MvPolynomial.C (g.coeff 0):=by
    apply eq_C_of_all_degreeOf_zero
@@ -147,7 +147,7 @@ theorem surfaceFactor_card_le_degree_sum
  classical
  calc
    (surfaceFactors φ F).card=∑ _g∈surfaceFactors φ F,(1:ℕ):=by simp
-   _ ≤ _:=Finset.sum_le_sum fun g hg =>
+   _≤_:=Finset.sum_le_sum fun g hg =>
      irreducible_positive_surface_degree g (surfaceFactors_spec φ F g hg).1
 theorem surfaceFactor_family_card_budget
    (φ:Polynomial K →+*L) (hφ:Function.Injective φ)

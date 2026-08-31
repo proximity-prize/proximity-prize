@@ -27,7 +27,7 @@ def derivationToSquareZeroOfLift [IsScalarTower R A B] (hI:I^2=⊥) (f:A →ₐ[
  · intro x y
    let F:=diffToIdealOfQuotientCompEq I f (IsScalarTower.toAlgHom R A B) (by rw [e];ext;rfl)
    have:(f x-algebraMap A B x)*(f y-algebraMap A B y)=0:=by
-     rw [←Ideal.mem_bot, ←hI,pow_two]
+     rw [←Ideal.mem_bot,←hI,pow_two]
      convert! Ideal.mul_mem_mul (F x).2 (F y).2 using 1
    ext
    dsimp only [Submodule.coe_add,Submodule.coe_mk,LinearMap.coe_mk,
@@ -58,7 +58,7 @@ def liftOfDerivationToSquareZero [IsScalarTower R A B] (hI:I^2=⊥) (f:Derivatio
        Submodule.coe_smul_of_tower,Algebra.smul_def,this]
      ring
    commutes':=fun r => by
-     simp only [Derivation.map_algebraMap,zero_add,Submodule.coe_zero, ←
+     simp only [Derivation.map_algebraMap,zero_add,Submodule.coe_zero,←
        IsScalarTower.algebraMap_apply R A B r]
    map_zero':=((I.restrictScalars R).subtype.comp f.toLinearMap+
      (IsScalarTower.toAlgHom R A B).toLinearMap).map_zero}

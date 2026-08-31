@@ -6,8 +6,8 @@ section Multiplicative
 variable {K L σ Γ₀:Type*} [Field K] [Field L] [Fintype σ]
  [LinearOrderedCommGroupWithZero Γ₀]
 theorem valuation_monomial_le (v:Valuation L Γ₀) (coeff:K →+*L)
-   (hcoeff:∀ c:K,v (coeff c) ≤ 1) (x:σ → L)
-   (cap:σ → ℕ) (d:σ →₀ ℕ) (c:K) (hd:∀ i,d i ≤ cap i):
+   (hcoeff:∀ c:K,v (coeff c)≤1) (x:σ → L)
+   (cap:σ → ℕ) (d:σ →₀ ℕ) (c:K) (hd:∀ i,d i≤cap i):
    v (MvPolynomial.eval₂Hom coeff x (MvPolynomial.monomial d c)) ≤
      ∏ i,max 1 (v (x i))^cap i:=by
  classical

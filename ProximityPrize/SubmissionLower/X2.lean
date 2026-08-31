@@ -110,7 +110,7 @@ theorem localized_principal_isPrime_of_component
    (Ideal.span ({collect K order G}:Set (Collected K)))
    (collected_principal_isPrime K order G hG)
    (coefficientDenominators_disjoint_of_component K order P G hmem ht)
- simpa only [Ideal.map_span,Set.image_singleton, ←rationalMap_eq] using hp
+ simpa only [Ideal.map_span,Set.image_singleton,←rationalMap_eq] using hp
 theorem rationalMap_irreducible_of_component
    (G:Original K) (hG:Irreducible G) (hmem:G∈P)
    (ht:Transcendental K (coordinate K P (order 0))):

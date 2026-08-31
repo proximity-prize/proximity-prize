@@ -27,7 +27,7 @@ theorem embeddingPoint_injective (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]:
  intro f g hfg
  have he:f.comp (coordinateEvaluation K P)=
      g.comp (coordinateEvaluation K P):=by
-   rw [←embeddingPoint_aeval, ←embeddingPoint_aeval,hfg]
+   rw [←embeddingPoint_aeval,←embeddingPoint_aeval,hfg]
  apply IsLocalization.algHom_ext (nonZeroDivisors (CoordinateRing K P))
  apply AlgHom.ext
  intro a

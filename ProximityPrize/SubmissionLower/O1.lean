@@ -57,7 +57,7 @@ theorem contactIdeal_le_ker_pointEvaluation
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0):
-   contactIdeal K F ≤ RingHom.ker (pointEvaluation coefficients F v):=by
+   contactIdeal K F≤RingHom.ker (pointEvaluation coefficients F v):=by
  apply Ideal.span_le.mpr
  intro P hP
  change pointEvaluation coefficients F v P=0

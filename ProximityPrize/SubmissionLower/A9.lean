@@ -80,7 +80,7 @@ theorem exists_common_coefficients {K I:Type*} [Field K] [Infinite K] [Finite I]
        obtain ⟨c,hc⟩:=restrictU_surjective (K:=K) d
        intro ht
        have hm:c∈bad (Sum.inr ⟨i,v,false⟩):=by rw [ht];trivial
-       change v.1.val (coefficientEvaluation (x i) linearSupport (restrictU c)) < _ at hm
+       change v.1.val (coefficientEvaluation (x i) linearSupport (restrictU c))<_ at hm
        rw [hc,hd] at hm
        exact lt_irrefl _ hm
      · obtain ⟨c,hc⟩:=exists_exact_support_evaluation_of_downwardClosed (K:=K)
@@ -204,7 +204,7 @@ theorem exists_common_original_projection (F A H G:MvPolynomial (Fin 3) K)
        (polynomialOfSupport movingSupport c)).trans
        (supportPoleWeight_le_exponentSetPoleWeight _ _ _ movingSupport
          (support_polynomialOfSupport_subset _ _))
-     change poleOrder v.val (coefficientEvaluation _ _ c) ≤ _ at hp
+     change poleOrder v.val (coefficientEvaluation _ _ c)≤_ at hp
      rw [hJ C,hz] at hp
      have hp0:=le_antisymm hp (le_max_left _ _)
      simpa [movingPoleTarget,hcoord,hw] using hp0

@@ -74,18 +74,18 @@ theorem coefficient_count_exact:coefficientCount=36613226930:=by
 theorem contact_rank_exact:localContactRank=139668:=by
  norm_num [localContactRank,contactExponent,multiplicity,seedTotalCap,
    slopeCap,Finset.sum_range_succ]
-theorem interpolation_gate:n*localContactRank < coefficientCount:=by
+theorem interpolation_gate:n*localContactRank<coefficientCount:=by
  rw [coefficient_count_exact,contact_rank_exact]
  norm_num [n]
 theorem characteristic_gates:
-   w < weightedCap∧(2*slopeCap-1)*weightedCap < prime∧
-   algebraicCap < prime∧slopeCap < prime:=by
+   w<weightedCap∧(2*slopeCap-1)*weightedCap<prime∧
+   algebraicCap<prime∧slopeCap<prime:=by
  norm_num [w,weightedCap,multiplicity,agreements,slopeCap,prime,
    algebraicCap,seedTotalCap]
 theorem branch_dominance:
-   wholeNumerator unitY ≤ cutNumerator unitY∧
-   wholeNumerator unitR ≤ cutNumerator unitR∧
-   wholeNumerator unitZ ≤ cutNumerator unitZ:=by
+   wholeNumerator unitY≤cutNumerator unitY∧
+   wholeNumerator unitR≤cutNumerator unitR∧
+   wholeNumerator unitZ≤cutNumerator unitZ:=by
  norm_num [wholeNumerator,cutNumerator,unitY,unitR,unitZ,mixed,
    firstTail,lastTail,tailVector,agreementVector,yCap,weightedCap,
    multiplicity,agreements,w,gap,n,errors,slopeCap,seedTotalCap]
@@ -100,15 +100,15 @@ theorem denominator_exact:gap^2=2878215201:=by
  norm_num [gap,agreements,w]
 theorem division_certificate:
    totalNumerator=49864107443840450*gap^2+398176731∧
-   398176731 < gap^2:=by
+   398176731<gap^2:=by
  rw [ledger_numerator_exact,denominator_exact]
  norm_num
-theorem strict_ledger_budget:totalNumerator < alignmentBudget*gap^2:=by
+theorem strict_ledger_budget:totalNumerator<alignmentBudget*gap^2:=by
  rw [ledger_numerator_exact,denominator_exact]
  norm_num [alignmentBudget]
 theorem below_budget_of_scaled_cardinality_bound
-   (cardinality:ℕ) (h:cardinality*gap^2 ≤ totalNumerator):
-   cardinality < alignmentBudget:=by
+   (cardinality:ℕ) (h:cardinality*gap^2≤totalNumerator):
+   cardinality<alignmentBudget:=by
  have hstrict:=h.trans_lt strict_ledger_budget
  rw [denominator_exact] at hstrict
  exact Nat.lt_of_mul_lt_mul_right hstrict

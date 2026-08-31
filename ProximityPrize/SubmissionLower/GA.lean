@@ -31,10 +31,10 @@ theorem finite_model_zero_points_le_exponentSet
    (q:ℕ)
    (hpole:∀ W:Finset (Place K L),
      (∑ v∈W,exponentSetPoleWeight v.val
-       (fun i↦algebraMap A L (x i)) E) ≤ (q:ℤ))
+       (fun i↦algebraMap A L (x i)) E)≤(q:ℤ))
    (S:Finset (A →ₐ[K] K))
    (hS:∀ ψ∈S,ψ (MvPolynomial.eval₂Hom (algebraMap K A) x F)=0):
-   S.card ≤ q:=by
+   S.card≤q:=by
  classical
  have heval:MvPolynomial.eval₂Hom (algebraMap K L)
      (fun i↦algebraMap A L (x i)) F=
@@ -48,7 +48,7 @@ theorem finite_model_zero_points_le_exponentSet
    apply IsFractionRing.injective A L
    simpa only [map_zero] using hz
  let U:=S.image (modelPlace K L A)
- have hU:∀ v∈U,1 ≤ RCN026.order K L v
+ have hU:∀ v∈U,1≤RCN026.order K L v
      (MvPolynomial.eval₂Hom (algebraMap K L)
        (fun i↦algebraMap A L (x i)) F):=by
    intro v hv
@@ -65,16 +65,16 @@ theorem finite_model_zero_points_le_exponentSet
    (fun i↦algebraMap A L (x i)) E F hFE
  have hcard:U.card=S.card:=
    Finset.card_image_of_injective _ (modelPlace_injective K L A)
- have hq:(S.card:ℤ) ≤ q:=by
+ have hq:(S.card:ℤ)≤q:=by
    calc
      (S.card:ℤ)=(U.card:ℤ):=by rw [hcard]
-     _ ≤ ∑ v∈W,RCN346.poleOrder K L v
+     _≤∑ v∈W,RCN346.poleOrder K L v
          (MvPolynomial.eval₂Hom (algebraMap K L)
            (fun i↦algebraMap A L (x i)) F):=hcount
-     _ ≤ ∑ v∈W,exponentSetPoleWeight v.val
+     _≤∑ v∈W,exponentSetPoleWeight v.val
          (fun i↦algebraMap A L (x i)) E:=by
        simpa only [RCN346.poleOrder,Nat.cast_one,one_mul] using hsupport
-     _ ≤ (q:ℤ):=hpole W
+     _≤(q:ℤ):=hpole W
  exact_mod_cast hq
 section ActualCurve
 variable (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
@@ -86,12 +86,12 @@ theorem finite_zero_points_le_exponentSet_of_separator
      letI:Algebra (RatFunc K) (CoordinateField K P):=
        rationalBaseAlgebra K P i₀ hi₀
      ∀ W:Finset (Place K (CoordinateField K P)),
-       (∑ v∈W,exponentSetPoleWeight v.val (coordinate K P) E) ≤ (q:ℤ))
+       (∑ v∈W,exponentSetPoleWeight v.val (coordinate K P) E)≤(q:ℤ))
    (F:MvPolynomial (Fin 3) K) (hFE:F.support ⊆ E) (hF:F∉P)
    (S:Finset (Fin 3 → K))
-   (hSP:∀ v∈S,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom)
+   (hSP:∀ v∈S,P≤RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hSF:∀ v∈S,MvPolynomial.aeval v F=0):
-   S.card ≤ q:=by
+   S.card≤q:=by
  classical
  letI:Algebra (Polynomial K) (CoordinateRing K P):=
    quotientPolynomialAlgebra K P i₀

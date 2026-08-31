@@ -18,17 +18,17 @@ def allPole (ν:DV L) (x:Fin 3 → L):ℤ:=
  max (poleOrder ν (x 1)) (yzPole ν x)
 def movingPole (ν:DV L) (x:Fin 3 → L) (W:L):ℤ:=
  max (2*allPole ν x) (yzPole ν x+poleOrder ν W)
-private theorem pole_nonneg (ν:DV L) (x:L):0 ≤ poleOrder ν x:=
+private theorem pole_nonneg (ν:DV L) (x:L):0≤poleOrder ν x:=
  le_max_left _ _
 private theorem val_le_exp_pole (ν:DV L) (x:L):
-   ν x ≤ WithZero.exp (poleOrder ν x):=by
+   ν x≤WithZero.exp (poleOrder ν x):=by
  have hn:max 1 (ν x)≠0:=ne_of_gt
    (zero_lt_one.trans_le (le_max_left _ _))
- rw [poleOrder, ←log_max_one,WithZero.exp_log hn]
+ rw [poleOrder,←log_max_one,WithZero.exp_log hn]
  exact le_max_right _ _
 private theorem pole_le_of_val_le (ν:DV L) (x:L) (n:ℤ)
-   (hn:0 ≤ n) (h:ν x ≤ WithZero.exp n):poleOrder ν x ≤ n:=by
- have h1:(1:WithZero (Multiplicative ℤ)) ≤ WithZero.exp n:=by
+   (hn:0≤n) (h:ν x≤WithZero.exp n):poleOrder ν x≤n:=by
+ have h1:(1:WithZero (Multiplicative ℤ))≤WithZero.exp n:=by
    rw [←WithZero.exp_zero,WithZero.exp_le_exp]
    exact hn
  have hnz:max 1 (ν x)≠0:=ne_of_gt
@@ -36,19 +36,19 @@ private theorem pole_le_of_val_le (ν:DV L) (x:L) (n:ℤ)
  have hh:=(WithZero.log_le_log hnz WithZero.exp_ne_zero).2 (max_le h1 h)
  simpa only [log_max_one,WithZero.log_exp,poleOrder] using hh
 theorem pole_add_le (ν:DV L) (x y:L):
-   poleOrder ν (x+y) ≤ max (poleOrder ν x) (poleOrder ν y):=by
+   poleOrder ν (x+y)≤max (poleOrder ν x) (poleOrder ν y):=by
  apply pole_le_of_val_le ν _ _ ((pole_nonneg ν x).trans (le_max_left _ _))
  exact (ν.map_add x y).trans (max_le
    ((val_le_exp_pole ν x).trans ((WithZero.exp_le_exp).2 (le_max_left _ _)))
    ((val_le_exp_pole ν y).trans ((WithZero.exp_le_exp).2 (le_max_right _ _))))
 theorem pole_const_le (ν:DV L)
-   (hν:∀ c:K,ν (algebraMap K L c) ≤ 1) (c:K):
-   poleOrder ν (algebraMap K L c) ≤ 0:=by
+   (hν:∀ c:K,ν (algebraMap K L c)≤1) (c:K):
+   poleOrder ν (algebraMap K L c)≤0:=by
  apply pole_le_of_val_le ν _ _ le_rfl
  simpa using hν c
 theorem pole_const_mul_le (ν:DV L)
-   (hν:∀ c:K,ν (algebraMap K L c) ≤ 1) (c:K) (x:L):
-   poleOrder ν (algebraMap K L c*x) ≤ poleOrder ν x:=by
+   (hν:∀ c:K,ν (algebraMap K L c)≤1) (c:K) (x:L):
+   poleOrder ν (algebraMap K L c*x)≤poleOrder ν x:=by
  apply pole_le_of_val_le ν _ _ (pole_nonneg ν x)
  rw [map_mul]
  exact (mul_le_mul' (hν c) (val_le_exp_pole ν x)).trans_eq (one_mul _)
@@ -164,14 +164,14 @@ theorem moving_pole_invariant (ν:DV L)
  rw [hu.2.1,hu.2.2]
  have hab:yzPole ν x ≤ allPole ν x:=le_max_right _ _
  have hn:0 ≤ allPole ν x:=(pole_nonneg ν (x 1)).trans (le_max_left _ _)
- have hw:poleOrder ν W' ≤ max (poleOrder ν W) (poleOrder ν t):=by
+ have hw:poleOrder ν W'≤max (poleOrder ν W) (poleOrder ν t):=by
    rw [hW]
    exact hplus.trans (max_le_max hmul le_rfl)
- change poleOrder ν t ≤ allPole ν x at ht
+ change poleOrder ν t≤allPole ν x at ht
  rw [sub_eq_add_neg] at hback
  omega
 theorem actual_forward_moving_pole_invariant (ν:DV L)
-   (hν:∀ c:K,ν (algebraMap K L c) ≤ 1)
+   (hν:∀ c:K,ν (algebraMap K L c)≤1)
    (aY v bY aS bS cS:K) (hv:v≠0) (x:Fin 3 → L)
    (c:K) (hc:c≠0) (P:MvPolynomial (Fin 3) K)
    (hP:RCN125.PolynomialInFlag unitAllFlag P)

@@ -73,7 +73,7 @@ def TerminalLargeZChargeOfSupport
        D.degree errors (Finset.filter_subset _ _) D.stage.no_large_pencil)
      D.stage.characteristic_bound C
    ∀ E:SC.TerminalDescendant,
-     E.degree < E.stage.identities.card →
+     E.degree<E.stage.identities.card →
        GammaC.card*(aD-D.degree) ≤
          (errors+1)*(aD-D.degree)*B.zCost C
 abbrev TerminalLargeZCharge
@@ -94,12 +94,12 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
    (S:ResidualStage phi Gamma x pchar e flag w support)
    (hnodes:S.nodes.card=n)
    (hagreement:∀ gamma∈Gamma,
-     a ≤ (S.agreementFiber gamma).card)
-   (hwa:w < a) (_han:a ≤ n)
-   (hdegreeGlobal:∀ k ≤ w,
-     (n-k)*(a-w)*(w-k) ≤ U*(a-k))
-   (hunitGlobal:∀ k ≤ w,
-     (n-k)*(a-w) ≤ V*(a-k))
+     a≤(S.agreementFiber gamma).card)
+   (hwa:w<a) (_han:a≤n)
+   (hdegreeGlobal:∀ k≤w,
+     (n-k)*(a-w)*(w-k)≤U*(a-k))
+   (hunitGlobal:∀ k≤w,
+     (n-k)*(a-w)≤V*(a-k))
    (D:S.TerminalDescendant) (i:Iota) (_hi:i∈D.stage.nodes)
    (B:PrimeFlagBudgetFamily
      (G:=D.stage.G)
@@ -110,7 +110,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
    (hallPositive:∀ C:RegularComponent Omega D.stage.G
      (agreementPolynomial phi D.stage.F D.degree
        (x i) (D.stage.u0 i) (D.stage.u1 i))
-     (regularitySurface phi D.stage.F),1 ≤ B.allCost C):
+     (regularitySurface phi D.stage.F),1≤B.allCost C):
    (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*(a-w) ≤
      D.degree*
          ((flagMixed flag support.agreementDirection support.agreementDirection*
@@ -149,7 +149,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
      (D.stage.regular gamma hGamma)
      (x i) (D.stage.u0 i) (D.stage.u1 i)).mpr hagree
  have hinnerAgreement:∀ gamma∈GammaI,
-     aD ≤ (D.stage.nodes.filter (fun j↦
+     aD≤(D.stage.nodes.filter (fun j↦
        (D.stage.selected gamma).eval (x j)=
          D.stage.u0 j+gamma*D.stage.u1 j)).card:=by
    intro gamma hgamma
@@ -159,17 +159,17 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
    exact h0.trans (by
      simpa only [aD,ResidualStage.agreementFiber,
        ResidualStage.Agrees] using D.agreement_card gamma hGamma)
- have hda:D.degree < aD:=by
+ have hda:D.degree<aD:=by
    have hD:=D.degree_le
    dsimp only [aD]
    omega
- have hdegree:∀ k ≤ D.degree,
+ have hdegree:∀ k≤D.degree,
      (D.stage.nodes.card-k)*(aD-D.degree)*(D.degree-k) ≤
        U*(aD-k):=by
    intro k hk
-   have hDle:D.degree ≤ w:=D.degree_le
+   have hDle:D.degree≤w:=D.degree_le
    let total:=(w-D.degree)+k
-   have htotal:total ≤ w:=by
+   have htotal:total≤w:=by
      dsimp only [total]
      omega
    have h:=hdegreeGlobal total htotal
@@ -192,13 +192,13 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
    rw [hgap]
    rw [hn,hw,ha] at h
    exact h
- have hunit:∀ k ≤ D.degree,
+ have hunit:∀ k≤D.degree,
      (D.stage.nodes.card-k)*(aD-D.degree) ≤
        V*(aD-k):=by
    intro k hk
-   have hDle:D.degree ≤ w:=D.degree_le
+   have hDle:D.degree≤w:=D.degree_le
    let total:=(w-D.degree)+k
-   have htotal:total ≤ w:=by
+   have htotal:total≤w:=by
      dsimp only [total]
      omega
    have h:=hunitGlobal total htotal
@@ -248,7 +248,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
    flagMixed_supportResidualAgreement_all] at hbound
  dsimp only [GammaI] at hbound
  calc
-   _ ≤ _:=hbound
+   _≤_:=hbound
    _=_:=by ring
 theorem terminal_outer_fiber_bound_of_prime_flag_budget_of_support
    (hphi:Function.Injective phi)
@@ -256,7 +256,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_of_support
    (S:ResidualStage phi Gamma x pchar errors flag w support)
    (hnodes:S.nodes.card=n)
    (hagreement:∀ gamma∈Gamma,
-     agreements ≤ (S.agreementFiber gamma).card)
+     agreements≤(S.agreementFiber gamma).card)
    (D:S.TerminalDescendant) (i:Iota) (hi:i∈D.stage.nodes)
    (B:PrimeFlagBudgetFamily
      (G:=D.stage.G)
@@ -267,7 +267,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_of_support
    (hallPositive:∀ C:RegularComponent Omega D.stage.G
      (agreementPolynomial phi D.stage.F D.degree
        (x i) (D.stage.u0 i) (D.stage.u1 i))
-     (regularitySurface phi D.stage.F),1 ≤ B.allCost C):
+     (regularitySurface phi D.stage.F),1≤B.allCost C):
    (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*gap ≤
      D.degree*
          ((flagMixed flag support.agreementDirection support.agreementDirection*
@@ -296,7 +296,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget
    (S:ResidualStage phi Gamma x pchar errors flag w)
    (hnodes:S.nodes.card=n)
    (hagreement:∀ gamma∈Gamma,
-     agreements ≤ (S.agreementFiber gamma).card)
+     agreements≤(S.agreementFiber gamma).card)
    (D:S.TerminalDescendant) (i:Iota) (hi:i∈D.stage.nodes)
    (B:PrimeFlagBudgetFamily
      (G:=D.stage.G)
@@ -307,7 +307,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget
    (hallPositive:∀ C:RegularComponent Omega D.stage.G
      (agreementPolynomial phi D.stage.F D.degree
        (x i) (D.stage.u0 i) (D.stage.u1 i))
-     (regularitySurface phi D.stage.F),1 ≤ B.allCost C):
+     (regularitySurface phi D.stage.F),1≤B.allCost C):
    (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*gap ≤
      D.degree*
          ((flagMixed flag agreementDirection6600 agreementDirection6600*
@@ -333,7 +333,7 @@ theorem recursive_scaled_factor_6600_of_prime_flag_budgets_of_support
    (S:ResidualStage phi Gamma x pchar errors flag w support)
    (hnodes:S.nodes.card=n)
    (hagreement:∀ gamma∈Gamma,
-     agreements ≤ (S.agreementFiber gamma).card)
+     agreements≤(S.agreementFiber gamma).card)
    (hbudget:∀ (D:S.TerminalDescendant) (i:Iota),
      i∈D.stage.nodes →
      ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
@@ -347,7 +347,7 @@ theorem recursive_scaled_factor_6600_of_prime_flag_budgets_of_support
        ∀ C:RegularComponent Omega D.stage.G
          (agreementPolynomial phi D.stage.F D.degree
            (x i) (D.stage.u0 i) (D.stage.u1 i))
-         (regularitySurface phi D.stage.F),1 ≤ B.allCost C):
+         (regularitySurface phi D.stage.F),1≤B.allCost C):
    Gamma.card*gap^2 ≤
      factorRegularLedgerFor flag support.agreementDirection:=by
  apply recursive_scaled_factor_with_support_6600 hphi support S flag
@@ -363,7 +363,7 @@ theorem recursive_scaled_factor_6656_of_prime_flag_budgets
      ResidualSupportParameters.fixedMeetSupport)
    (hnodes:S.nodes.card=meetProfile.n)
    (hagreement:∀ gamma∈Gamma,
-     meetProfile.agreements ≤ (S.agreementFiber gamma).card)
+     meetProfile.agreements≤(S.agreementFiber gamma).card)
    (hbudget:∀ (D:S.TerminalDescendant) (i:Iota),
      i∈D.stage.nodes →
      ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
@@ -378,7 +378,7 @@ theorem recursive_scaled_factor_6656_of_prime_flag_budgets
        ∀ C:RegularComponent Omega D.stage.G
          (agreementPolynomial phi D.stage.F D.degree
            (x i) (D.stage.u0 i) (D.stage.u1 i))
-         (regularitySurface phi D.stage.F),1 ≤ B.allCost C):
+         (regularitySurface phi D.stage.F),1≤B.allCost C):
    Gamma.card*meetProfile.gap^2 ≤
      meetProfile.factorRegularLedger flag:=by
  apply recursive_scaled_factor_6656 hphi S flag hnodes hagreement
@@ -396,7 +396,7 @@ theorem recursive_scaled_factor_6600_of_prime_flag_budgets
    (S:ResidualStage phi Gamma x pchar errors flag w)
    (hnodes:S.nodes.card=n)
    (hagreement:∀ gamma∈Gamma,
-     agreements ≤ (S.agreementFiber gamma).card)
+     agreements≤(S.agreementFiber gamma).card)
    (hbudget:∀ (D:S.TerminalDescendant) (i:Iota),
      i∈D.stage.nodes →
      ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
@@ -410,8 +410,8 @@ theorem recursive_scaled_factor_6600_of_prime_flag_budgets
        ∀ C:RegularComponent Omega D.stage.G
          (agreementPolynomial phi D.stage.F D.degree
            (x i) (D.stage.u0 i) (D.stage.u1 i))
-         (regularitySurface phi D.stage.F),1 ≤ B.allCost C):
-   Gamma.card*gap^2 ≤ factorRegularLedger flag:=by
+         (regularitySurface phi D.stage.F),1≤B.allCost C):
+   Gamma.card*gap^2≤factorRegularLedger flag:=by
  have h:=recursive_scaled_factor_6600_of_prime_flag_budgets_of_support
    hphi S hnodes hagreement hbudget
  calc

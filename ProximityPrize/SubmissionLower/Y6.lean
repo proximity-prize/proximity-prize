@@ -48,12 +48,12 @@ theorem globalTailCut_dvd_iff (φ:Polynomial K →+*Ω)
  constructor
  · intro h
    have hh:=h.mul_right (MvPolynomial.C c⁻¹)
-   simpa only [c,mul_assoc, ←map_mul,mul_inv_cancel₀ hc,map_one,mul_one] using hh
+   simpa only [c,mul_assoc,←map_mul,mul_inv_cancel₀ hc,map_one,mul_one] using hh
  · intro h
    exact h.mul_right _
 theorem selected_globalTailCut_zero (φ:Polynomial K →+*Ω)
    (F:MvPolynomial (Fin 4) K) (selected:K → Polynomial K)
-   (γ:K) (w:ℕ) (hdegree:(selected γ).natDegree ≤ w)
+   (γ:K) (w:ℕ) (hdegree:(selected γ).natDegree≤w)
    (hsolution:RCN319.specialization K (selected γ) γ F=0):
    MvPolynomial.aeval (selectedPoint φ selected γ) (globalTailCut φ F (w+1))=0:=by
  rw [globalTailCut_eq,map_mul]
@@ -62,21 +62,21 @@ theorem selected_globalTailCut_zero (φ:Polynomial K →+*Ω)
  rw [hzero,zero_mul]
 theorem globalTailCut_in_sharp_flag (φ:Polynomial K →+*Ω)
    (a b s:ℕ) (F:MvPolynomial (Fin 4) K)
-   (hR:F.degreeOf 2 ≤ s+2)
-   (hYR:wt ![0,1,1,0] F ≤ b+s+3)
-   (hAll:wt ![0,1,1,1] F ≤ a+b+s+3) (d:ℕ):
+   (hR:F.degreeOf 2≤s+2)
+   (hYR:wt ![0,1,1,0] F≤b+s+3)
+   (hAll:wt ![0,1,1,1] F≤a+b+s+3) (d:ℕ):
    PolynomialInFlag
      (RCN287.sharpResidualAgreementFlag (support a b s) d)
      (globalTailCut φ F d):=by
  exact RCN287.surfaceMap_agreement_in_sharp_flag
-   (P:=support a b s) (by change s+2 < b+s+3;omega) φ
+   (P:=support a b s) (by change s+2<b+s+3;omega) φ
    (support_data a b s F hR hYR hAll) d (tailSelector d) 0 0 0
 theorem exists_filtered_certificate (φ:Polynomial K →+*Ω)
    (a b s:ℕ) (F:MvPolynomial (Fin 4) K)
-   (hR:F.degreeOf 2 ≤ s+2)
-   (hYR:wt ![0,1,1,0] F ≤ b+s+3)
-   (hAll:wt ![0,1,1,1] F ≤ a+b+s+3)
-   (d:ℕ) (hd:2 ≤ d) (coeffs:ℕ → K) (x u0 u1:K):
+   (hR:F.degreeOf 2≤s+2)
+   (hYR:wt ![0,1,1,0] F≤b+s+3)
+   (hAll:wt ![0,1,1,1] F≤a+b+s+3)
+   (d:ℕ) (hd:2≤d) (coeffs:ℕ → K) (x u0 u1:K):
    ∃ (B:Fin (d-1+1) → MvPolynomial (Fin 3) Ω)
      (c:Fin (d-1+1) → FlagDegree),
      surfaceMap φ (agreementNumerator F d coeffs x u0 u1)=
@@ -123,10 +123,10 @@ theorem exists_filtered_certificate (φ:Polynomial K →+*Ω)
    simpa only [hk] using class_total a b s (d-1)
 theorem globalTailCut_certificate (φ:Polynomial K →+*Ω)
    (a b s:ℕ) (F:MvPolynomial (Fin 4) K)
-   (hR:F.degreeOf 2 ≤ s+2)
-   (hYR:wt ![0,1,1,0] F ≤ b+s+3)
-   (hAll:wt ![0,1,1,1] F ≤ a+b+s+3)
-   (w:ℕ) (hw:1 ≤ w):
+   (hR:F.degreeOf 2≤s+2)
+   (hYR:wt ![0,1,1,0] F≤b+s+3)
+   (hAll:wt ![0,1,1,1] F≤a+b+s+3)
+   (w:ℕ) (hw:1≤w):
    ∃ (B:Fin (w+1) → MvPolynomial (Fin 3) Ω)
      (c:Fin (w+1) → FlagDegree),
      globalTailCut φ F (w+1)=

@@ -11,12 +11,12 @@ theorem maximalIdeal_pow_succ_lt_pow_of_noetherian_domain
    IsLocalRing.maximalIdeal S^(n+1) <
      IsLocalRing.maximalIdeal S^n:=by
  let m:=IsLocalRing.maximalIdeal S
- have hle:m^(n+1) ≤ m^n:=Ideal.pow_le_pow_right n.le_succ
+ have hle:m^(n+1)≤m^n:=Ideal.pow_le_pow_right n.le_succ
  refine lt_of_le_of_ne hle ?_
  intro heq
  have hfg:(m^n).FG:=IsNoetherian.noetherian _
- have hsmul:m^n ≤ m • (m^n):=by
-   rw [Ideal.smul_eq_mul, ←pow_succ', ←heq]
+ have hsmul:m^n≤m • (m^n):=by
+   rw [Ideal.smul_eq_mul,←pow_succ', ←heq]
  have hzero:m^n=⊥:=
    Submodule.eq_bot_of_le_smul_of_le_jacobson_bot m (m^n) hfg hsmul
      (IsLocalRing.maximalIdeal_le_jacobson ⊥)

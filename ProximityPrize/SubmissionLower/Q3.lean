@@ -7,7 +7,7 @@ open RCN237 RCN066
 open RCN338
 noncomputable section
 set_option autoImplicit false
-variable {Omega Seed : Type} [Field Omega]
+variable {Omega Seed:Type} [Field Omega]
 variable {G T T' T2 H : MvPolynomial (Fin 3) Omega}
 variable {surfaceFlag firstTailFlag secondTailFlag : FlagDegree}
 theorem component_secondTail_card_le_mod
@@ -44,12 +44,12 @@ theorem component_secondTail_card_le_mod
    PrimeFlagBudgetFamily.weightedCost] using hbound
 def transportedMultiplicity
    (h : G ∣ T - T')
-   (multiplicity : RegularComponent Omega G T H → ℕ) :
+   (multiplicity:RegularComponent Omega G T H → ℕ) :
    RegularComponent Omega G T' H → ℕ :=
  fun C => multiplicity ((regularComponentEquiv h).symm C)
 theorem weightedCertificate_of_congruentCut
    (h : G ∣ T - T')
-   (B : PrimeFlagBudgetFamily (G := G) (T := T') (H := H)
+   (B:PrimeFlagBudgetFamily (G:=G) (T:=T') (H := H)
      surfaceFlag firstTailFlag)
    (multiplicity : RegularComponent Omega G T H → ℕ)
    (C : RegularComponentWeightedInertiaResultantCertificate B

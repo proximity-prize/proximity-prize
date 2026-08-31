@@ -6,7 +6,7 @@ lemma Module.finite_of_surjective_of_ker_le_nilradical
    {R S T:Type*} [CommRing R] [CommRing S] [CommRing T]
    [Algebra R S] [Algebra R T]
    [Module.Finite R T] (f:S →ₐ[R] T)
-   (hf₁:Function.Surjective f) (hf₂:RingHom.ker f ≤ nilradical S)
+   (hf₁:Function.Surjective f) (hf₂:RingHom.ker f≤nilradical S)
    (hf₃:(RingHom.ker f).FG):
    Module.Finite R S:=by
  have:Module.Finite R (S ⧸ RingHom.ker f):=

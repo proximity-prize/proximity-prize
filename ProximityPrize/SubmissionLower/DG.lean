@@ -8,7 +8,7 @@ variable (K L:Type*) [Field K] [Field L] [Algebra K L]
 abbrev Place:=RCN345.NormalizedValuation K L
 def order (v:Place K L) (x:L):ℤ:= -(v.val x).log
 def zeroOrder (v:Place K L) (x:L):ℤ:=max 0 (order K L v x)
-theorem zeroOrder_nonneg (v:Place K L) (x:L):0 ≤ zeroOrder K L v x:=
+theorem zeroOrder_nonneg (v:Place K L) (x:L):0≤zeroOrder K L v x:=
  le_max_left _ _
 theorem zeroOrder_sub_poleOrder (v:Place K L) (x:L):
    zeroOrder K L v x-RCN346.poleOrder K L v x=order K L v x:=by

@@ -10,14 +10,14 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq ι:=Classical.decEq ι
 theorem exists_common_affine_nodal_residual_family
    (I:Finset ι) (x u0 u1:ι → K)
-   (w:ℕ) (hIw:I.card ≤ w) (hinj:Set.InjOn x I)
+   (w:ℕ) (hIw:I.card≤w) (hinj:Set.InjOn x I)
    (selected:K → Polynomial K) (Gamma:Finset K)
-   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
+   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤w)
    (hvalues:∀ gamma∈Gamma,∀ i∈I,
      (selected gamma).eval (x i)=u0 i+gamma*u1 i):
    ∃ P0 P1:Polynomial K,∃ residual:K → Polynomial K,
-     P0.natDegree ≤ w∧P1.natDegree ≤ w∧
-     (∀ gamma∈Gamma,(residual gamma).natDegree ≤ w-I.card)∧
+     P0.natDegree≤w∧P1.natDegree≤w∧
+     (∀ gamma∈Gamma,(residual gamma).natDegree≤w-I.card)∧
      ∀ gamma∈Gamma,
        selected gamma=P0+Polynomial.C gamma*P1+
          Lagrange.nodal I x*residual gamma:=by
@@ -27,16 +27,16 @@ theorem exists_common_affine_nodal_residual_family
  let V:Polynomial K:=Lagrange.nodal I x
  let D:K → Polynomial K:=fun gamma↦
    selected gamma-(P0+Polynomial.C gamma*P1)
- have hpredw:I.card-1 ≤ w:=(Nat.sub_le I.card 1).trans hIw
- have hP0:P0.natDegree ≤ w:=by
+ have hpredw:I.card-1≤w:=(Nat.sub_le I.card 1).trans hIw
+ have hP0:P0.natDegree≤w:=by
    apply Polynomial.natDegree_le_of_degree_le
    exact (Lagrange.degree_interpolate_le u0 hinj).trans
      (WithBot.coe_le_coe.mpr hpredw)
- have hP1:P1.natDegree ≤ w:=by
+ have hP1:P1.natDegree≤w:=by
    apply Polynomial.natDegree_le_of_degree_le
    exact (Lagrange.degree_interpolate_le u1 hinj).trans
      (WithBot.coe_le_coe.mpr hpredw)
- have hDdegree:∀ gamma∈Gamma,(D gamma).natDegree ≤ w:=by
+ have hDdegree:∀ gamma∈Gamma,(D gamma).natDegree≤w:=by
    intro gamma hgamma
    apply (Polynomial.natDegree_sub_le _ _).trans
    exact max_le (hdegree gamma hgamma)
@@ -64,7 +64,7 @@ theorem exists_common_affine_nodal_residual_family
    rw [dif_pos hgamma]
    exact (hdvd gamma hgamma).choose_spec
  have hresidualDegree:∀ gamma∈Gamma,
-     (residual gamma).natDegree ≤ w-I.card:=by
+     (residual gamma).natDegree≤w-I.card:=by
    intro gamma hgamma
    by_cases hzero:residual gamma=0
    · simp [hzero]

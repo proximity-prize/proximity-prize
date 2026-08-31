@@ -20,7 +20,7 @@ structure DelayedBranchFlagBudget
  multiplicity:RegularComponent Omega G T1 H → ℕ
  cost:RegularComponent Omega G T1 H → ℕ
  cost_le:∀ C,active C →
-   cost C ≤ multiplicity C*B.weightedCost tailFlag2 C
+   cost C≤multiplicity C*B.weightedCost tailFlag2 C
  divisor_le:
    (∑ C∈delayedComponents active,
      multiplicity C*B.weightedCost tailFlag2 C) ≤
@@ -31,22 +31,22 @@ theorem delayed_component_sum_le_flagMixed
    (D:DelayedBranchFlagBudget (tailFlag2:=tailFlag2) B active)
    (S:Finset Seed) (point:Seed → Fin 3 → Omega)
    (hcomponent:∀ C,active C →
-     (componentSeeds Omega G T1 H S point C).card ≤ D.cost C):
+     (componentSeeds Omega G T1 H S point C).card≤D.cost C):
    (∑ C∈delayedComponents active,
      (componentSeeds Omega G T1 H S point C).card) ≤
        flagMixed flag tailFlag1 tailFlag2:=by
  classical
  calc
-   _ ≤ ∑ C∈delayedComponents active,D.cost C:=by
+   _≤∑ C∈delayedComponents active,D.cost C:=by
      apply Finset.sum_le_sum
      intro C hC
      exact hcomponent C (Finset.mem_filter.mp hC).2
-   _ ≤ ∑ C∈delayedComponents active,
+   _≤∑ C∈delayedComponents active,
        D.multiplicity C*B.weightedCost tailFlag2 C:=by
      apply Finset.sum_le_sum
      intro C hC
      exact D.cost_le C (Finset.mem_filter.mp hC).2
-   _ ≤ flagMixed flag tailFlag1 tailFlag2:=D.divisor_le
+   _≤flagMixed flag tailFlag1 tailFlag2:=D.divisor_le
 theorem delayed_seed_union_card_le_flagMixed
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T1) (H:=H) flag tailFlag1)
    (active:RegularComponent Omega G T1 H → Prop)
@@ -54,7 +54,7 @@ theorem delayed_seed_union_card_le_flagMixed
    [DecidableEq Seed]
    (S:Finset Seed) (point:Seed → Fin 3 → Omega)
    (hcomponent:∀ C,active C →
-     (componentSeeds Omega G T1 H S point C).card ≤ D.cost C):
+     (componentSeeds Omega G T1 H S point C).card≤D.cost C):
    ((delayedComponents active).biUnion
      (componentSeeds Omega G T1 H S point)).card ≤
        flagMixed flag tailFlag1 tailFlag2:=by
@@ -78,7 +78,7 @@ def DelayedBranchFlagBudget.immediate
          ∑ C:RegularComponent Omega G T1 H,
            B.weightedCost tailFlag2 C:=by
        exact Finset.sum_le_sum_of_subset (Finset.filter_subset _ _)
-     _ ≤ flagMixed flag tailFlag1 tailFlag2:=
+     _≤flagMixed flag tailFlag1 tailFlag2:=
        B.sum_weightedCost_le tailFlag2
 end
 end ProximityPrize.SubmissionLower.RCN325

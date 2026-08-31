@@ -54,10 +54,10 @@ theorem implicitVector_budgets
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    [CharP K prime]
    (hbox:Q∈globalCoefficientBox K weightedCap w seedTotalCap slopeCap):
-   (∑ q:ImplicitIndex Q,(implicitVector Q q).y) ≤ algebraicCap∧
+   (∑ q:ImplicitIndex Q,(implicitVector Q q).y)≤algebraicCap∧
      (∑ q:ImplicitIndex Q,(implicitVector Q q).r) ≤
        2*implicitYCap*algebraicCap∧
-     (∑ q:ImplicitIndex Q,(implicitVector Q q).z) ≤ implicitYCap:=by
+     (∑ q:ImplicitIndex Q,(implicitVector Q q).z)≤implicitYCap:=by
  classical
  obtain ⟨hJ,hJbox⟩:=singularAuxiliary_nonzero_mem_box Q
    weightedCap w seedTotalCap slopeCap prime hQ
@@ -98,9 +98,9 @@ theorem implicitSeeds_pair_bound
    (selected:K-> Polynomial K) (Gamma:Finset K)
    (nodes:Finset Iota) (x u0 u1:Iota-> K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
-   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
+   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤w)
    (hagreement:∀ gamma∈Gamma,
-     agreements ≤ (nodes.filter (fun i =>
+     agreements≤(nodes.filter (fun i =>
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma w errors)
    (q:ImplicitIndex Q):
@@ -139,9 +139,9 @@ theorem singularSeeds_gap_bound
    (selected:K-> Polynomial K) (Gamma:Finset K)
    (nodes:Finset Iota) (x u0 u1:Iota-> K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
-   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
+   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤w)
    (hagreement:∀ gamma∈Gamma,
-     agreements ≤ (nodes.filter (fun i =>
+     agreements≤(nodes.filter (fun i =>
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma w errors):
    (singularSeeds Q selected Gamma).card*gap ≤
@@ -165,9 +165,9 @@ theorem singularSeeds_scaled_bound
    (selected:K-> Polynomial K) (Gamma:Finset K)
    (nodes:Finset Iota) (x u0 u1:Iota-> K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
-   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
+   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤w)
    (hagreement:∀ gamma∈Gamma,
-     agreements ≤ (nodes.filter (fun i =>
+     agreements≤(nodes.filter (fun i =>
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma w errors):
    (singularSeeds Q selected Gamma).card*gap^2 ≤
@@ -177,7 +177,7 @@ theorem singularSeeds_scaled_bound
  calc
    (singularSeeds Q selected Gamma).card*gap^2=
        ((singularSeeds Q selected Gamma).card*gap)*gap:=by ring
-   _ ≤ retainedSingularNumerator*gap:=Nat.mul_le_mul_right gap h
+   _≤retainedSingularNumerator*gap:=Nat.mul_le_mul_right gap h
    _=retainedSingularContribution:=by
      simp only [retainedSingularContribution]
      ring

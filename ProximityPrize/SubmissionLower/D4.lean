@@ -42,10 +42,10 @@ theorem factorRegularLedger_surface_exact:
  rfl
 theorem sum_factorRegularLedger_le_flag
    {I:Type} [Fintype I] (p:I → FlagDegree) (cap:FlagDegree)
-   (hz:(∑ i,(p i).zOnly) ≤ cap.zOnly)
-   (hyz:(∑ i,(p i).yz) ≤ cap.yz)
-   (hall:(∑ i,(p i).all) ≤ cap.all):
-   (∑ i,factorRegularLedger (p i)) ≤ factorRegularLedger cap:=by
+   (hz:(∑ i,(p i).zOnly)≤cap.zOnly)
+   (hyz:(∑ i,(p i).yz)≤cap.yz)
+   (hall:(∑ i,(p i).all)≤cap.all):
+   (∑ i,factorRegularLedger (p i))≤factorRegularLedger cap:=by
  classical
  calc
    (∑ i,factorRegularLedger (p i))=
@@ -60,7 +60,7 @@ theorem sum_factorRegularLedger_le_flag
        (∑ i,(p i).yz)*factorRegularLedger unitYZFlag+
        (∑ i,(p i).all)*factorRegularLedger unitAllFlag:=by
      simp only [Finset.sum_add_distrib,Finset.sum_mul]
-   _ ≤ cap.zOnly*factorRegularLedger unitZFlag+
+   _≤cap.zOnly*factorRegularLedger unitZFlag+
        cap.yz*factorRegularLedger unitYZFlag+
        cap.all*factorRegularLedger unitAllFlag:=
      Nat.add_le_add
@@ -72,13 +72,13 @@ theorem sum_factorRegularLedger_le_flag
      (factorRegularLedger_projection_decomposition cap).symm
 theorem sum_factorRegularLedger_le
    {I:Type} [Fintype I] (p:I → FlagDegree)
-   (hz:(∑ i,(p i).zOnly) ≤ surfaceFlag6600.zOnly)
-   (hyz:(∑ i,(p i).yz) ≤ surfaceFlag6600.yz)
-   (hall:(∑ i,(p i).all) ≤ surfaceFlag6600.all):
+   (hz:(∑ i,(p i).zOnly)≤surfaceFlag6600.zOnly)
+   (hyz:(∑ i,(p i).yz)≤surfaceFlag6600.yz)
+   (hall:(∑ i,(p i).all)≤surfaceFlag6600.all):
    (∑ i,factorRegularLedger (p i)) ≤
      stratifiedPrimary+stratifiedZTail+factorAllTail surfaceFlag6600:=by
  calc
-   _ ≤ factorRegularLedger surfaceFlag6600:=
+   _≤factorRegularLedger surfaceFlag6600:=
      sum_factorRegularLedger_le_flag p surfaceFlag6600 hz hyz hall
    _=stratifiedPrimary+stratifiedZTail+factorAllTail surfaceFlag6600:=
      factorRegularLedger_surface_exact
@@ -106,7 +106,7 @@ theorem rectangular_ledger_ceiling_exact:
  norm_num [rectangularLedgerCeiling,rectangular_total_exact,
    gap,agreements,n,errors,w]
 theorem rectangular_strict_budget:
-   rectangularTotalNumerator < alignmentBudget*gap^2:=by
+   rectangularTotalNumerator<alignmentBudget*gap^2:=by
  rw [rectangular_total_exact]
  norm_num [alignmentBudget,gap,agreements,n,errors,w]
 theorem rectangular_budget_slack:
@@ -115,49 +115,49 @@ theorem rectangular_budget_slack:
  norm_num [alignmentBudget]
 theorem sum_factorRegularLedger_rectangular_le
    {I:Type} [Fintype I] (p:I → FlagDegree)
-   (hz:(∑ i,(p i).zOnly) ≤ 495)
-   (hyz:(∑ i,(p i).yz) ≤ 43)
-   (hall:(∑ i,(p i).all) ≤ 8):
-   (∑ i,factorRegularLedger (p i)) ≤ rectangularRegularNumerator:=by
+   (hz:(∑ i,(p i).zOnly)≤495)
+   (hyz:(∑ i,(p i).yz)≤43)
+   (hall:(∑ i,(p i).all)≤8):
+   (∑ i,factorRegularLedger (p i))≤rectangularRegularNumerator:=by
  exact sum_factorRegularLedger_le_flag p rectangularSurfaceFlag6600 hz hyz hall
 theorem sum_factor_counts_le
    {I:Type} [Fintype I] (count:I → ℕ) (p:I → FlagDegree)
-   (hcount:∀ i,count i*gap^2 ≤ factorRegularLedger (p i))
-   (hz:(∑ i,(p i).zOnly) ≤ surfaceFlag6600.zOnly)
-   (hyz:(∑ i,(p i).yz) ≤ surfaceFlag6600.yz)
-   (hall:(∑ i,(p i).all) ≤ surfaceFlag6600.all):
+   (hcount:∀ i,count i*gap^2≤factorRegularLedger (p i))
+   (hz:(∑ i,(p i).zOnly)≤surfaceFlag6600.zOnly)
+   (hyz:(∑ i,(p i).yz)≤surfaceFlag6600.yz)
+   (hall:(∑ i,(p i).all)≤surfaceFlag6600.all):
    (∑ i,count i)*gap^2 ≤
      stratifiedPrimary+stratifiedZTail+factorAllTail surfaceFlag6600:=by
  calc
    (∑ i,count i)*gap^2=∑ i,count i*gap^2:=by
      rw [Finset.sum_mul]
-   _ ≤ ∑ i,factorRegularLedger (p i):=
+   _≤∑ i,factorRegularLedger (p i):=
      Finset.sum_le_sum (fun i _↦hcount i)
-   _ ≤ stratifiedPrimary+stratifiedZTail+factorAllTail surfaceFlag6600:=
+   _≤stratifiedPrimary+stratifiedZTail+factorAllTail surfaceFlag6600:=
      sum_factorRegularLedger_le p hz hyz hall
 theorem sum_factor_counts_rectangular_le
    {I:Type} [Fintype I] (count:I → ℕ) (p:I → FlagDegree)
-   (hcount:∀ i,count i*gap^2 ≤ factorRegularLedger (p i))
-   (hz:(∑ i,(p i).zOnly) ≤ 495)
-   (hyz:(∑ i,(p i).yz) ≤ 43)
-   (hall:(∑ i,(p i).all) ≤ 8):
-   (∑ i,count i)*gap^2 ≤ rectangularRegularNumerator:=by
+   (hcount:∀ i,count i*gap^2≤factorRegularLedger (p i))
+   (hz:(∑ i,(p i).zOnly)≤495)
+   (hyz:(∑ i,(p i).yz)≤43)
+   (hall:(∑ i,(p i).all)≤8):
+   (∑ i,count i)*gap^2≤rectangularRegularNumerator:=by
  calc
    (∑ i,count i)*gap^2=∑ i,count i*gap^2:=by
      rw [Finset.sum_mul]
-   _ ≤ ∑ i,factorRegularLedger (p i):=
+   _≤∑ i,factorRegularLedger (p i):=
      Finset.sum_le_sum (fun i _↦hcount i)
-   _ ≤ rectangularRegularNumerator:=
+   _≤rectangularRegularNumerator:=
      sum_factorRegularLedger_rectangular_le p hz hyz hall
 theorem combined_rectangular_scaled_bound
    (regularCount singularCount:ℕ)
-   (hregular:regularCount*gap^2 ≤ rectangularRegularNumerator)
-   (hsingular:singularCount*gap^2 ≤ retainedSingularContribution):
-   (regularCount+singularCount)*gap^2 ≤ rectangularTotalNumerator:=by
+   (hregular:regularCount*gap^2≤rectangularRegularNumerator)
+   (hsingular:singularCount*gap^2≤retainedSingularContribution):
+   (regularCount+singularCount)*gap^2≤rectangularTotalNumerator:=by
  calc
    (regularCount+singularCount)*gap^2=
        regularCount*gap^2+singularCount*gap^2:=by ring
-   _ ≤ rectangularRegularNumerator+retainedSingularContribution:=
+   _≤rectangularRegularNumerator+retainedSingularContribution:=
      Nat.add_le_add hregular hsingular
    _=rectangularTotalNumerator:=rfl
 end ProximityPrize.SubmissionLower.RCN214

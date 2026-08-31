@@ -33,9 +33,9 @@ local instance:DecidableEq Iota:=Classical.decEq Iota
 theorem degree_bounds_of_polynomialInFlag
    {p:FlagDegree} {F:MvPolynomial (Fin 3) Omega}
    (hF:PolynomialInFlag p F):
-   F.degreeOf 0 ≤ p.yz+p.all∧
-     F.degreeOf 1 ≤ p.all∧
-     F.degreeOf 2 ≤ p.zOnly+p.yz+p.all:=by
+   F.degreeOf 0≤p.yz+p.all∧
+     F.degreeOf 1≤p.all∧
+     F.degreeOf 2≤p.zOnly+p.yz+p.all:=by
  refine ⟨?_,?_,?_⟩
  · apply MvPolynomial.degreeOf_le_iff.mpr
    intro e he
@@ -51,9 +51,9 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
    [CharP Omega prime]
    {flag:FlagDegree}
    (S:ResidualStage phi Gamma x prime errors flag w)
-   (hflagZ:flag.zOnly ≤ 495)
-   (hflagY:flag.yz ≤ 43)
-   (hflagS:flag.all ≤ 8):
+   (hflagZ:flag.zOnly≤495)
+   (hflagY:flag.yz≤43)
+   (hflagS:flag.all≤8):
    TerminalAdaptiveProjectionFamilies S:=by
  classical
  intro D i hi hproper
@@ -69,20 +69,20 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
      (x i) (D.stage.u0 i) (D.stage.u1 i)
  obtain ⟨hGY,hGS,hGZ⟩:=degree_bounds_of_polynomialInFlag hGflag
  obtain ⟨hTY,hTS,hTZ⟩:=degree_bounds_of_polynomialInFlag hTflag
- have hD:D.degree ≤ w:=D.degree_le.trans (Nat.le_refl w)
+ have hD:D.degree≤w:=D.degree_le.trans (Nat.le_refl w)
  have hGY':D.stage.G.degreeOf 0 ≤ 51:=by omega
- have hGS':D.stage.G.degreeOf 1 ≤ 8:=by omega
+ have hGS':D.stage.G.degreeOf 1≤8:=by omega
  have hGZ':D.stage.G.degreeOf 2 ≤ 546:=by omega
- have hTY':T.degreeOf 0 ≤ 1+85*w:=by
+ have hTY':T.degreeOf 0≤1+85*w:=by
    dsimp only [residualAgreementFlag] at hTY
    omega
  have hTS':T.degreeOf 1 ≤ 15*w:=by
    dsimp only [residualAgreementFlag] at hTS
    omega
- have hTZ':T.degreeOf 2 ≤ 1+1005*w:=by
+ have hTZ':T.degreeOf 2≤1+1005*w:=by
    dsimp only [residualAgreementFlag] at hTZ
    omega
- have hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j < prime:=by
+ have hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j<prime:=by
    intro j
    fin_cases j
    · exact hGY'.trans_lt (by norm_num [prime])

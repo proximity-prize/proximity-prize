@@ -36,7 +36,7 @@ theorem exists_frozen_universal_vanishing_interpolant6600
        weightedCap w seedTotalCap slopeCap∧
      ∀ (gamma:IRSProfile.Field) (P:Polynomial IRSProfile.Field)
        (support:Finset IRSProfile.Index),
-       P.natDegree ≤ w → agreements ≤ support.card →
+       P.natDegree≤w → agreements≤support.card →
        (∀ i∈support,
          P.eval (IRSProfile.domain i)=u0 i+gamma*u1 i) →
        specialization IRSProfile.Field P gamma Q=0:=by

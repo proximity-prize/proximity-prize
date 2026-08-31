@@ -16,7 +16,7 @@ variable {Omega:Type} [Field Omega]
 theorem planeSurface_map_adjoinRoot_ne_zero
    (q:Polynomial (RatFunc Omega)) (hq:Irreducible q)
    (surface:PlaneRing Omega) (hirr:Irreducible surface)
-   (hpositive:0 < surface.natDegree):
+   (hpositive:0<surface.natDegree):
    surface.map (AdjoinRoot.mk q)≠0:=by
  letI:Fact (Irreducible q):=⟨hq⟩
  have hcoeff:Polynomial.eval₂RingHom
@@ -37,8 +37,8 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
-variable {errorCap : ℕ}
-variable {stageSupport : RCN275.ResidualSupportParameters}
+variable {errorCap:ℕ}
+variable {stageSupport:RCN275.ResidualSupportParameters}
 variable (S:Stage K I Gamma x p flag errorCap stageSupport) {A:Type} [Fintype A]
 def StageFamilySurfaceSpecializationNonzero
    (F:StageIndexedFlagFamily S A)

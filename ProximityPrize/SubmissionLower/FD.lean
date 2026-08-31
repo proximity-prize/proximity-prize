@@ -25,7 +25,7 @@ theorem shiftExponent_injective:Function.Injective shiftExponent:=by
  intro d e h
  exact liftExponent_injective (add_right_cancel h)
 theorem mem_movingSupport (d:Fin 4 →₀ ℕ):
-   d∈movingSupport ↔ d 0+d 1+d 2+d 3 ≤ 2∧d 3 ≤ 1∧d 1+2*d 3 ≤ 2:=by
+   d∈movingSupport ↔ d 0+d 1+d 2+d 3≤2∧d 3≤1∧d 1+2*d 3≤2:=by
  classical
  constructor
  · intro hd
@@ -154,13 +154,13 @@ theorem exponentSetPoleWeight_moving (v:Valuation L (WithZero (Multiplicative �
  let q:Fin 4 → ℤ:=fun i↦poleOrder v (movingCoordinates x w i)
  let a:=max (q 1) (max (q 0) (q 2))
  let b:=max (q 0) (q 2)
- have hq:∀ i,0 ≤ q i:=fun i↦le_max_left _ _
- have ha0:q 0 ≤ a:=(le_max_left _ _).trans (le_max_right _ _)
- have ha1:q 1 ≤ a:=le_max_left _ _
- have ha2:q 2 ≤ a:=(le_max_right _ _).trans (le_max_right _ _)
- have hb0:q 0 ≤ b:=le_max_left _ _
- have hb2:q 2 ≤ b:=le_max_right _ _
- have ha:0 ≤ a:=(hq 1).trans ha1
+ have hq:∀ i,0≤q i:=fun i↦le_max_left _ _
+ have ha0:q 0≤a:=(le_max_left _ _).trans (le_max_right _ _)
+ have ha1:q 1≤a:=le_max_left _ _
+ have ha2:q 2≤a:=(le_max_right _ _).trans (le_max_right _ _)
+ have hb0:q 0≤b:=le_max_left _ _
+ have hb2:q 2≤b:=le_max_right _ _
+ have ha:0≤a:=(hq 1).trans ha1
  change exponentSetPoleWeight v (movingCoordinates x w) movingSupport=max (2*a) (b+q 3)
  have hweight (d:Fin 4 →₀ ℕ):exponentPoleWeight v (movingCoordinates x w) d=
      (d 0:ℤ)*q 0+(d 1:ℤ)*q 1+(d 2:ℤ)*q 2+(d 3:ℤ)*q 3:=by
@@ -176,7 +176,7 @@ theorem exponentSetPoleWeight_moving (v:Valuation L (WithZero (Multiplicative �
    rw [hweight]
    have hdw:d 3=0∨d 3=1:=by omega
    rcases hdw with hdw | hdw
-   · have ht':(d 0:ℤ)+d 1+d 2 ≤ 2:=by exact_mod_cast (by omega:d 0+d 1+d 2 ≤ 2)
+   · have ht':(d 0:ℤ)+d 1+d 2≤2:=by exact_mod_cast (by omega:d 0+d 1+d 2≤2)
      have h0:=mul_le_mul_of_nonneg_left ha0 (Int.natCast_nonneg (d 0))
      have h1:=mul_le_mul_of_nonneg_left ha1 (Int.natCast_nonneg (d 1))
      have h2:=mul_le_mul_of_nonneg_left ha2 (Int.natCast_nonneg (d 2))
@@ -196,7 +196,7 @@ theorem exponentSetPoleWeight_moving (v:Valuation L (WithZero (Multiplicative �
          exponentSetPoleWeight v (movingCoordinates x w) movingSupport:=by
      apply Finset.le_max'
      exact Finset.mem_insert_of_mem (Finset.mem_image.mpr ⟨d,hd,rfl⟩)
-   have hs (i:Fin 3):2*q i.castSucc ≤ exponentSetPoleWeight v (movingCoordinates x w) movingSupport:=by
+   have hs (i:Fin 3):2*q i.castSucc≤exponentSetPoleWeight v (movingCoordinates x w) movingSupport:=by
      have hm:Finsupp.single i.castSucc 2∈movingSupport:=by fin_cases i <;> simp [mem_movingSupport]
      have hh:=hmem _ hm
      fin_cases i <;> simpa [hweight] using hh
@@ -210,7 +210,7 @@ theorem exponentSetPoleWeight_moving (v:Valuation L (WithZero (Multiplicative �
    have hw0:=hw 0 (Or.inl rfl);have hw2:=hw 2 (Or.inr rfl)
    dsimp [a,b] at*
    omega
-theorem quadratic_max_signed_eq_truncated (a b w:ℤ) (ha:0 ≤ a) (hb:b ≤ a):
+theorem quadratic_max_signed_eq_truncated (a b w:ℤ) (ha:0≤a) (hb:b≤a):
    max (2*a) (b+w)=max (2*a) (b+max 0 w):=by omega
 end
 end ProximityPrize.SubmissionLower.RCN212

@@ -105,21 +105,21 @@ theorem degree_weightedLift (weights:Fin 3 → ℕ) (F:Poly3 K):
 def wt (weights:Fin 3 → ℕ) (F:Poly3 K):ℕ:=
  MvPolynomial.weightedTotalDegree weights F
 theorem wt_mul_le (weights:Fin 3 → ℕ) (F G:Poly3 K):
-   wt weights (F*G) ≤ wt weights F+wt weights G:=by
+   wt weights (F*G)≤wt weights F+wt weights G:=by
  unfold wt
  rw [←degree_weightedLift,map_mul]
  simpa only [degree_weightedLift] using
    MvPolynomial.degreeOf_mul_le (3:Fin 4)
      (weightedLift weights F) (weightedLift weights G)
 theorem wt_sub_le (weights:Fin 3 → ℕ) (F G:Poly3 K):
-   wt weights (F-G) ≤ max (wt weights F) (wt weights G):=by
+   wt weights (F-G)≤max (wt weights F) (wt weights G):=by
  unfold wt
  rw [←degree_weightedLift,map_sub]
  simpa only [degree_weightedLift] using
    MvPolynomial.degreeOf_sub_le (3:Fin 4)
      (weightedLift weights F) (weightedLift weights G)
 theorem wt_pow_le (weights:Fin 3 → ℕ) (F:Poly3 K) (n:ℕ):
-   wt weights (F^n) ≤ n*wt weights F:=by
+   wt weights (F^n)≤n*wt weights F:=by
  unfold wt
  rw [←degree_weightedLift,map_pow]
  simpa only [degree_weightedLift] using
@@ -135,7 +135,7 @@ theorem wt_X (weights:Fin 3 → ℕ) (i:Fin 3):
 def pullWeights (weights:Fin 3 → ℕ):Fin 3 → ℕ:=
  ![weights 0,max (weights 1) (weights 2),weights 2]
 theorem shearImage_wt_le (weights:Fin 3 → ℕ) (a:K) (i:Fin 3):
-   wt weights (shearImage a i) ≤ pullWeights weights i:=by
+   wt weights (shearImage a i)≤pullWeights weights i:=by
  fin_cases i
  · simp [shearImage,pullWeights,wt_X]
  · dsimp [shearImage,pullWeights]
@@ -149,7 +149,7 @@ theorem shearImage_wt_le (weights:Fin 3 → ℕ) (a:K) (i:Fin 3):
  · simp [shearImage,pullWeights,wt_X]
 theorem wt_finset_prod_le_sum {ι:Type*} [DecidableEq ι]
    (weights:Fin 3 → ℕ) (I:Finset ι) (f:ι → Poly3 K):
-   wt weights (∏ i∈I,f i) ≤ ∑ i∈I,wt weights (f i):=by
+   wt weights (∏ i∈I,f i)≤∑ i∈I,wt weights (f i):=by
  induction I using Finset.induction_on with
  | empty => simp [wt,MvPolynomial.weightedTotalDegree]
  | @insert i I hi ih =>
@@ -158,8 +158,8 @@ theorem wt_finset_prod_le_sum {ι:Type*} [DecidableEq ι]
        (Nat.add_le_add le_rfl ih)
 theorem wt_finset_sum_le {ι:Type*} [DecidableEq ι]
    (weights:Fin 3 → ℕ) (I:Finset ι) (f:ι → Poly3 K) (cap:ℕ)
-   (hf:∀ i∈I,wt weights (f i) ≤ cap):
-   wt weights (∑ i∈I,f i) ≤ cap:=by
+   (hf:∀ i∈I,wt weights (f i)≤cap):
+   wt weights (∑ i∈I,f i)≤cap:=by
  unfold wt
  rw [←degree_weightedLift,map_sum]
  apply (MvPolynomial.degreeOf_sum_le (3:Fin 4) I
@@ -186,8 +186,8 @@ theorem shear_monomial_product_wt_le
      simp only [Finsupp.sum,nsmul_eq_mul]
      simp
 theorem shear_wt_le_pulled (weights:Fin 3 → ℕ) (a:K) (F:Poly3 K):
-   wt weights (shearAlgHom a F) ≤ wt (pullWeights weights) F:=by
- change wt weights (MvPolynomial.eval₂ MvPolynomial.C (shearImage a) F) ≤ _
+   wt weights (shearAlgHom a F)≤wt (pullWeights weights) F:=by
+ change wt weights (MvPolynomial.eval₂ MvPolynomial.C (shearImage a) F)≤_
  rw [MvPolynomial.eval₂_eq]
  apply wt_finset_sum_le
  intro d hd
@@ -200,7 +200,7 @@ theorem shear_wt_le_pulled (weights:Fin 3 → ℕ) (a:K) (F:Poly3 K):
  exact hmul.trans (hprod.trans
    (MvPolynomial.le_weightedTotalDegree (pullWeights weights) hd))
 theorem shear_degreeOf_zero_le (a:K) (F:Poly3 K):
-   (shearAlgHom a F).degreeOf 0 ≤ F.degreeOf 0:=by
+   (shearAlgHom a F).degreeOf 0≤F.degreeOf 0:=by
  have h:=shear_wt_le_pulled (Pi.single (0:Fin 3) 1) a F
  have hp:pullWeights (Pi.single (0:Fin 3) 1)=Pi.single 0 1:=by
    funext i
@@ -208,7 +208,7 @@ theorem shear_degreeOf_zero_le (a:K) (F:Poly3 K):
  rw [hp] at h
  simpa [wt] using h
 theorem shear_degreeOf_one_le (a:K) (F:Poly3 K):
-   (shearAlgHom a F).degreeOf 1 ≤ F.degreeOf 1:=by
+   (shearAlgHom a F).degreeOf 1≤F.degreeOf 1:=by
  have h:=shear_wt_le_pulled (Pi.single (1:Fin 3) 1) a F
  have hp:pullWeights (Pi.single (1:Fin 3) 1)=Pi.single 1 1:=by
    funext i
@@ -225,18 +225,18 @@ theorem weight_fin3 (weights:Fin 3 → ℕ) (d:Fin 3 →₀ ℕ):
  rw [hd,map_add,map_add]
  simp [Finsupp.weight_single,Nat.mul_comm]
 theorem two_weight_degree_le (F:Poly3 K):
-   wt (![0,1,1]:Fin 3 → ℕ) F ≤ F.degreeOf 1+F.degreeOf 2:=by
+   wt (![0,1,1]:Fin 3 → ℕ) F≤F.degreeOf 1+F.degreeOf 2:=by
  unfold wt MvPolynomial.weightedTotalDegree
  apply Finset.sup_le
  intro d hd
  rw [weight_fin3]
- change d 0*0+d 1*1+d 2*1 ≤ _
+ change d 0*0+d 1*1+d 2*1≤_
  have h1:=MvPolynomial.le_degreeOf_of_mem_support 1 hd
  have h2:=MvPolynomial.le_degreeOf_of_mem_support 2 hd
  simp only [Nat.mul_zero,Nat.mul_one,Nat.zero_add]
  omega
 theorem shear_degreeOf_two_le (a:K) (F:Poly3 K):
-   (shearAlgHom a F).degreeOf 2 ≤ F.degreeOf 2+F.degreeOf 1:=by
+   (shearAlgHom a F).degreeOf 2≤F.degreeOf 2+F.degreeOf 1:=by
  have h:=shear_wt_le_pulled (Pi.single (2:Fin 3) 1) a F
  have hp:pullWeights (Pi.single (2:Fin 3) 1)=(![0,1,1]:Fin 3 → ℕ):=by
    funext i

@@ -15,7 +15,7 @@ private def familyFiniteSummary {I:Type} [Fintype I]
    (A:∀ i,Algebra (RatFunc K) (CoordinateField K (P i))) (B:ℕ):Prop:=
  letI:=A
  (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i)))∧
-   (∑ i,Module.finrank (RatFunc K) (CoordinateField K (P i))) ≤ B
+   (∑ i,Module.finrank (RatFunc K) (CoordinateField K (P i)))≤B
 theorem rationalBaseAlgebra_congr
    (P:Ideal (Original K)) [P.IsPrime]
    (i j:Fin 3) (hij:i=j)
@@ -43,7 +43,7 @@ theorem actual_finite_sum_finrank_bound_without_separability
    (hinj:Function.Injective P) (G H:Original K)
    (hG:Irreducible G) (hGmem:∀ i,G∈P i)
    (hHmem:∀ i,H∈P i) (hproper:¬ G∣H)
-   (hpositive:0 < (planeMap K order G).natDegree):
+   (hpositive:0<(planeMap K order G).natDegree):
    letI:∀ i,Algebra (RatFunc K) (CoordinateField K (P i)):=
      fun i => rationalBaseAlgebra K (P i) (order 0) (ht i)
    (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i)))∧

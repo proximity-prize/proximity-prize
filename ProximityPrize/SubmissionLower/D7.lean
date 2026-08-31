@@ -14,7 +14,7 @@ def Ideal.mulQuot (a:R) (I:Ideal R):
  Submodule.mapQ _ _ (LinearMap.mul R R a) (Submodule.le_comap_map _ _)
 lemma Ideal.mulQuot_injective {a:R} (I:Ideal R) (ha:a∈nonZeroDivisors R):
    Function.Injective (Ideal.mulQuot a I):=by
- simp only [mulQuot,Submodule.mapQ, ←ker_eq_bot]
+ simp only [mulQuot,Submodule.mapQ,←ker_eq_bot]
  apply Submodule.ker_liftQ_eq_bot'
  apply le_antisymm
  · have:Submodule.map (mul R R a) I=a • I:=rfl

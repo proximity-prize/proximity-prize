@@ -30,7 +30,7 @@ lemma Cotangent.exact:
      ((Extension.Cotangent.map (Q.toComp P).toExtensionHom).liftBaseChange T)
      (Extension.Cotangent.map (Q.ofComp P).toExtensionHom):=by
  apply LinearMap.exact_of_comp_of_mem_range
- · rw [LinearMap.liftBaseChange_comp, ←Extension.Cotangent.map_comp,
+ · rw [LinearMap.liftBaseChange_comp,←Extension.Cotangent.map_comp,
      EmbeddingLike.map_eq_zero_iff]
    ext x
    obtain ⟨⟨x,hx⟩,rfl⟩:=Extension.Cotangent.mk_surjective x
@@ -387,7 +387,7 @@ theorem exact_liftBaseChange_map_of_flat' [Module.Flat S T] (f:Hom W Q) (g:Hom P
  convert! exact_liftBaseChange_map_of_flat Q P
  · change LinearMap.comp
      (Extension.H1Cotangent.map (W.defaultHom (Q.comp P)).toExtensionHom) _=_
-   rw [LinearMap.liftBaseChange_comp, ←Extension.H1Cotangent.map_comp,
+   rw [LinearMap.liftBaseChange_comp,←Extension.H1Cotangent.map_comp,
      Extension.H1Cotangent.map_eq]
  · change LinearMap.comp
      ((Extension.H1Cotangent.map f.toExtensionHom).restrictScalars T)

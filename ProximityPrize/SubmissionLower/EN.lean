@@ -36,9 +36,9 @@ theorem meet_tight_parameter_values:
    Profile.errors,Profile.gap,Profile.implicitYCap,
    Profile.implicitWeightedCap,Profile.algebraicCap]
 theorem meet_characteristic_gates:
-   meetProfile.slopeCap < prime6656∧
-     meetProfile.algebraicCap < prime6656∧
-     meetProfile.implicitWeightedCap < prime6656:=by
+   meetProfile.slopeCap<prime6656∧
+     meetProfile.algebraicCap<prime6656∧
+     meetProfile.implicitWeightedCap<prime6656:=by
  norm_num [meetProfile,prime6656,Profile.algebraicCap,
    Profile.implicitWeightedCap]
 variable {K Iota:Type} [Field K]
@@ -89,11 +89,11 @@ theorem meet_card_le_regular_sum_add_singular
        exact ⟨⟨q,hq⟩,Finset.mem_univ _,
          Finset.mem_filter.mpr ⟨hgamma,himp⟩⟩
  calc
-   Gamma.card ≤ (regularUnion ∪ singularSeeds Q selected Gamma).card:=
+   Gamma.card≤(regularUnion ∪ singularSeeds Q selected Gamma).card:=
      Finset.card_le_card hsub
-   _ ≤ regularUnion.card+(singularSeeds Q selected Gamma).card:=
+   _≤regularUnion.card+(singularSeeds Q selected Gamma).card:=
      Finset.card_union_le _ _
-   _ ≤ (∑ F:RegularIndex Q,(regularSeeds Q selected Gamma F).card)+
+   _≤(∑ F:RegularIndex Q,(regularSeeds Q selected Gamma F).card)+
        (singularSeeds Q selected Gamma).card:=
      Nat.add_le_add_right Finset.card_biUnion_le _
 def meetImplicitCost (Q:MvPolynomial (Fin 4) K)
@@ -181,7 +181,7 @@ theorem meet_singularSeeds_scaled_bound_of_implicit_pairs
          (exceptionalSeeds (singularAuxiliary Q) Gamma selected).card)*
            meetProfile.gap)*meetProfile.gap:=by
      calc
-       _ ≤ ((∑ q:ImplicitIndex Q,
+       _≤((∑ q:ImplicitIndex Q,
              (implicitSeeds Q selected Gamma q).card)+
              (exceptionalSeeds (singularAuxiliary Q) Gamma selected).card)*
              meetProfile.gap^2:=
@@ -190,10 +190,10 @@ theorem meet_singularSeeds_scaled_bound_of_implicit_pairs
              (implicitSeeds Q selected Gamma q).card)+
              (exceptionalSeeds (singularAuxiliary Q) Gamma selected).card)*
                meetProfile.gap)*meetProfile.gap:=by ring
-   _ ≤ meetTightProfile.tightNumerator*meetProfile.gap:=by
+   _≤meetTightProfile.tightNumerator*meetProfile.gap:=by
      rw [←hgap]
      exact Nat.mul_le_mul_right meetTightProfile.gap hsum
-   _ ≤ meetProfile.retainedSingularContribution:=htight
+   _≤meetProfile.retainedSingularContribution:=htight
 theorem meet_global_count_lt_fixed_cost_of_local_counts
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime6656]
    (hbox:Q∈globalCoefficientBox K meetProfile.weightedCap meetProfile.w
@@ -210,7 +210,7 @@ theorem meet_global_count_lt_fixed_cost_of_local_counts
            dot meetTightProfile.agreement (meetImplicitCost Q q)+
          (meetProfile.errors+1)*meetProfile.gap*
            (meetImplicitCost Q q).z):
-   Gamma.card < 95756912943422943:=by
+   Gamma.card<95756912943422943:=by
  have hcover:=meet_card_le_regular_sum_add_singular Q hQ hbox selected
    Gamma hsolution
  have hreg:=sum_factor_counts_rectangular_le meetProfile Q hQ
@@ -230,7 +230,7 @@ theorem meet_global_count_lt_fixed_cost_of_local_counts
      _=(∑ F:RegularIndex Q,
            (regularSeeds Q selected Gamma F).card)*meetProfile.gap^2+
          (singularSeeds Q selected Gamma).card*meetProfile.gap^2:=by ring
-     _ ≤ meetProfile.regularNumerator+
+     _≤meetProfile.regularNumerator+
          meetProfile.retainedSingularContribution:=Nat.add_le_add hreg hsing
      _=meetProfile.totalNumerator:=rfl
  have hstrict:meetProfile.totalNumerator <

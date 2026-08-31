@@ -63,7 +63,7 @@ theorem map_le_pointKernel_iff
    (P:Ideal (Poly3 K)) (q:Fin 3 → K):
    P.map (residualEquiv aY v bY aS bS cS hv).toRingEquiv.toRingHom ≤
        RingHom.ker (MvPolynomial.aeval q).toRingHom ↔
-     P ≤ RingHom.ker
+     P≤RingHom.ker
        (MvPolynomial.aeval
          (forwardResidualPoint aY v bY aS bS cS q)).toRingHom:=by
  rw [Ideal.map_le_iff_le_comap,
@@ -72,7 +72,7 @@ theorem map_le_pointKernel_of_forward_eq
    (aY v bY aS bS cS:K) (hv:v≠0)
    (P:Ideal (Poly3 K)) (q qOld:Fin 3 → K)
    (hforward:forwardResidualPoint aY v bY aS bS cS q=qOld)
-   (hold:P ≤ RingHom.ker (MvPolynomial.aeval qOld).toRingHom):
+   (hold:P≤RingHom.ker (MvPolynomial.aeval qOld).toRingHom):
    P.map (residualEquiv aY v bY aS bS cS hv).toRingEquiv.toRingHom ≤
      RingHom.ker (MvPolynomial.aeval q).toRingHom:=by
  rw [map_le_pointKernel_iff,hforward]

@@ -13,11 +13,11 @@ theorem graphEquation_ne_zero (a b:K):graphEquation K a b≠0:=by
  simp [graphEquation] at hd
 theorem graphEquation_r_degree (a b:K):
    (graphEquation K a b).degreeOf (1:Fin 3)=0:=by
- have hm:(MvPolynomial.X 2*MvPolynomial.C b:MvPolynomial (Fin 3) K).degreeOf 1 ≤ 0:=by
+ have hm:(MvPolynomial.X 2*MvPolynomial.C b:MvPolynomial (Fin 3) K).degreeOf 1≤0:=by
    simpa [MvPolynomial.degreeOf_X] using MvPolynomial.degreeOf_mul_le (1:Fin 3)
      (MvPolynomial.X 2:MvPolynomial (Fin 3) K) (MvPolynomial.C b)
  have ha:(MvPolynomial.C a+MvPolynomial.X 2*MvPolynomial.C b:
-     MvPolynomial (Fin 3) K).degreeOf 1 ≤ 0:=
+     MvPolynomial (Fin 3) K).degreeOf 1≤0:=
    (MvPolynomial.degreeOf_add_le 1 _ _).trans (max_le (by simp) hm)
  apply Nat.eq_zero_of_le_zero
  exact (MvPolynomial.degreeOf_sub_le 1 _ _).trans
@@ -35,7 +35,7 @@ theorem graphEquation_mem_of_affine_coordinate (a b:K)
  exact sub_eq_zero.mpr hy
 theorem not_y_affine_of_r_dependent_principal
    (g:MvPolynomial (Fin 3) K) (hP:P=Ideal.span {g})
-   (hr:0 < g.degreeOf (1:Fin 3)) (a b:K):
+   (hr:0<g.degreeOf (1:Fin 3)) (a b:K):
    coordinate K P 0≠algebraMap K (CoordinateField K P) a+
      coordinate K P 2*algebraMap K (CoordinateField K P) b:=by
  intro hy
@@ -46,7 +46,7 @@ theorem not_y_affine_of_r_dependent_principal
    rw [←hq]
    exact graphEquation_ne_zero K a b
  obtain ⟨hg0,hq0⟩:=mul_ne_zero_iff.mp hprod
- have hle:g.degreeOf 1 ≤ (graphEquation K a b).degreeOf 1:=by
+ have hle:g.degreeOf 1≤(graphEquation K a b).degreeOf 1:=by
    rw [hq,MvPolynomial.degreeOf_mul_eq hg0 hq0]
    exact Nat.le_add_right _ _
  rw [graphEquation_r_degree] at hle

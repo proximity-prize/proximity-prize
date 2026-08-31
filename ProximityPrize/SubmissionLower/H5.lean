@@ -8,57 +8,57 @@ variable {ι A:Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
 variable [DecidableEq A]
 theorem agreement_card_ge_of_closeCodewordsRel
    (C:Set (ι → A)) (y c:ι → A) (δ:ℝ) (e:ℕ)
-   (hcell:δ*(Fintype.card ι:ℝ) < ((e+1:ℕ):ℝ))
+   (hcell:δ*(Fintype.card ι:ℝ)<((e+1:ℕ):ℝ))
    (hc:c∈Code.closeCodewordsRel C y δ):
    Fintype.card ι-e ≤
      (Finset.univ.filter (fun i => c i=y i)).card:=by
  classical
  have hball:=(Code.mem_closeCodewordsRel_iff.mp hc).2
  simp only [Code.relHammingDist_coe] at hball
- have hn:(0:ℝ) < (Fintype.card ι:ℝ):=by
+ have hn:(0:ℝ)<(Fintype.card ι:ℝ):=by
    exact_mod_cast Fintype.card_pos
- have hdistR:(hammingDist y c:ℝ) < ((e+1:ℕ):ℝ):=
+ have hdistR:(hammingDist y c:ℝ)<((e+1:ℕ):ℝ):=
    ((div_le_iff₀ hn).mp hball).trans_lt hcell
- have hdist:hammingDist y c ≤ e:=by
-   have hlt:hammingDist y c < e+1:=by exact_mod_cast hdistR
+ have hdist:hammingDist y c≤e:=by
+   have hlt:hammingDist y c<e+1:=by exact_mod_cast hdistR
    omega
  have hagree:Code.agree c y+hammingDist y c=Fintype.card ι:=by
    rw [hammingDist_comm]
    exact Code.agree_add_hammingDist (u:=c) (v:=y)
- change Fintype.card ι-e ≤ Code.agree c y
+ change Fintype.card ι-e≤Code.agree c y
  omega
 end RadiusCell
 theorem radius_cell_of_floor_le (δ:ℝ) (n e:ℕ)
-   (hfloor:⌊δ*(n:ℝ)⌋₊ ≤ e):
-   δ*(n:ℝ) < ((e+1:ℕ):ℝ):=by
- have hf:(⌊δ*(n:ℝ)⌋₊:ℝ) ≤ (e:ℝ):=by exact_mod_cast hfloor
+   (hfloor:⌊δ*(n:ℝ)⌋₊≤e):
+   δ*(n:ℝ)<((e+1:ℕ):ℝ):=by
+ have hf:(⌊δ*(n:ℝ)⌋₊:ℝ)≤(e:ℝ):=by exact_mod_cast hfloor
  calc
-   δ*(n:ℝ) < (⌊δ*(n:ℝ)⌋₊:ℝ)+1:=Nat.lt_floor_add_one _
-   _ ≤ (e:ℝ)+1:=by linarith
+   δ*(n:ℝ)<(⌊δ*(n:ℝ)⌋₊:ℝ)+1:=Nat.lt_floor_add_one _
+   _≤(e:ℝ)+1:=by linarith
    _=((e+1:ℕ):ℝ):=by simp only [Nat.cast_add,Nat.cast_one]
-theorem rational_radius_cell (num den n e:ℕ) (hden:0 < den)
-   (hcross:num*n < (e+1)*den):
-   ((num:ℝ)/(den:ℝ))*(n:ℝ) < ((e+1:ℕ):ℝ):=by
- have hdenR:(0:ℝ) < (den:ℝ):=by exact_mod_cast hden
+theorem rational_radius_cell (num den n e:ℕ) (hden:0<den)
+   (hcross:num*n<(e+1)*den):
+   ((num:ℝ)/(den:ℝ))*(n:ℝ)<((e+1:ℕ):ℝ):=by
+ have hdenR:(0:ℝ)<(den:ℝ):=by exact_mod_cast hden
  calc
    ((num:ℝ)/(den:ℝ))*(n:ℝ)=
        ((num*n:ℕ):ℝ)/(den:ℝ):=by push_cast;ring
-   _ < ((e+1:ℕ):ℝ):=(div_lt_iff₀ hdenR).mpr (by exact_mod_cast hcross)
+   _<((e+1:ℕ):ℝ):=(div_lt_iff₀ hdenR).mpr (by exact_mod_cast hcross)
 section GenericCode
 variable {ι F:Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
 variable [Field F] [Fintype F] [DecidableEq F]
 theorem interleaved_lambda_le
    (C:LinearCode ι F) (r e w B:ℕ)
    (hzero:RCN020.ZeroCoordinateBound C w)
-   (hgap:w < Fintype.card ι-e)
+   (hgap:w<Fintype.card ι-e)
    (halign:AffineLineAlignmentBound C e B)
-   (hfield:B < Fintype.card F)
-   (hseparation:(r-1)*(B+1).choose 2 < Fintype.card F)
+   (hfield:B<Fintype.card F)
+   (hseparation:(r-1)*(B+1).choose 2<Fintype.card F)
    (δ:ℝ)
-   (hcell:δ*(Fintype.card ι:ℝ) < ((e+1:ℕ):ℝ)):
+   (hcell:δ*(Fintype.card ι:ℝ)<((e+1:ℕ):ℝ)):
    Code.Lambda
      ((C^⋈ (Fin r):ModuleCode ι F (Fin r → F)):Set (ι → Fin r → F))
-     δ ≤ (B:ℕ∞):=by
+     δ≤(B:ℕ∞):=by
  classical
  apply Code.Lambda_le_of_forall_finset_card_le
  intro y T hT
@@ -127,15 +127,15 @@ theorem squared_eight_rows
 theorem squared_eight_lambda_le
    (C:LinearCode ι F) (e w B:ℕ)
    (hzero:RCN020.ZeroCoordinateBound C w)
-   (hgap:w < Fintype.card ι-e)
+   (hgap:w<Fintype.card ι-e)
    (halign:AffineLineAlignmentBound C e B)
-   (hfield:B < Fintype.card F)
-   (hseparation:15*(B+1).choose 2 < Fintype.card F)
+   (hfield:B<Fintype.card F)
+   (hseparation:15*(B+1).choose 2<Fintype.card F)
    (δ:ℝ)
-   (hcell:δ*(Fintype.card ι:ℝ) < ((e+1:ℕ):ℝ)):
+   (hcell:δ*(Fintype.card ι:ℝ)<((e+1:ℕ):ℝ)):
    Code.Lambda
      (((C^⋈ (Fin 8))^⋈ (Fin 2):ModuleCode ι F (Fin 2 → Fin 8 → F)):
-       Set (ι → Fin 2 → Fin 8 → F)) δ ≤ (B:ℕ∞):=by
+       Set (ι → Fin 2 → Fin 8 → F)) δ≤(B:ℕ∞):=by
  classical
  letI:DecidableEq (ι → Fin 2 → Fin 8 → F):=Classical.decEq _
  letI:DecidableEq (ι → Fin 16 → F):=Classical.decEq _
@@ -166,14 +166,14 @@ theorem squared_eight_lambda_le
 theorem squared_eight_lambda_le_of_floor
    (C:LinearCode ι F) (e w B:ℕ)
    (hzero:RCN020.ZeroCoordinateBound C w)
-   (hgap:w < Fintype.card ι-e)
+   (hgap:w<Fintype.card ι-e)
    (halign:AffineLineAlignmentBound C e B)
-   (hfield:B < Fintype.card F)
-   (hseparation:15*(B+1).choose 2 < Fintype.card F)
-   (δ:ℝ) (hfloor:⌊δ*(Fintype.card ι:ℝ)⌋₊ ≤ e):
+   (hfield:B<Fintype.card F)
+   (hseparation:15*(B+1).choose 2<Fintype.card F)
+   (δ:ℝ) (hfloor:⌊δ*(Fintype.card ι:ℝ)⌋₊≤e):
    Code.Lambda
      (((C^⋈ (Fin 8))^⋈ (Fin 2):ModuleCode ι F (Fin 2 → Fin 8 → F)):
-       Set (ι → Fin 2 → Fin 8 → F)) δ ≤ (B:ℕ∞):=
+       Set (ι → Fin 2 → Fin 8 → F)) δ≤(B:ℕ∞):=
  squared_eight_lambda_le C e w B hzero hgap halign hfield hseparation δ
    (radius_cell_of_floor_le δ (Fintype.card ι) e hfloor)
 end GenericCode
@@ -190,8 +190,8 @@ theorem irs_zeroCoordinateBound:
  have hn:Fintype.card IRSProfile.Index=262144:=by
    norm_num [IRSProfile.Index]
  rw [hn] at hagree
- have hz:(Finset.univ.filter (fun i => c i=0)).card ≤ 131071:=by
-   change Code.agree c (0:IRSProfile.Index → IRSProfile.Field) ≤ 131071
+ have hz:(Finset.univ.filter (fun i => c i=0)).card≤131071:=by
+   change Code.agree c (0:IRSProfile.Index → IRSProfile.Field)≤131071
    omega
  exact hz
 theorem irs_code_mem_iff_rows
@@ -221,50 +221,50 @@ theorem irs_squared_carrier_eq:
    exact (irs_code_mem_iff_rows _).mpr (hv a)
 theorem irs_squared_lambda_le
    (e B:ℕ) (δ:ℝ≥0)
-   (hgap:131071 < Fintype.card IRSProfile.Index-e)
+   (hgap:131071<Fintype.card IRSProfile.Index-e)
    (halign:AffineLineAlignmentBound IRSProfile.baseCode e B)
-   (hfield:B < Fintype.card IRSProfile.Field)
-   (hseparation:15*(B+1).choose 2 < Fintype.card IRSProfile.Field)
-   (hcell:(δ:ℝ)*(Fintype.card IRSProfile.Index:ℝ) < ((e+1:ℕ):ℝ)):
+   (hfield:B<Fintype.card IRSProfile.Field)
+   (hseparation:15*(B+1).choose 2<Fintype.card IRSProfile.Field)
+   (hcell:(δ:ℝ)*(Fintype.card IRSProfile.Index:ℝ)<((e+1:ℕ):ℝ)):
    Code.Lambda
      ((IRSProfile.code^⋈ (Fin 2):
        ModuleCode IRSProfile.Index IRSProfile.Field
          (Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field)):
        Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
-     (δ:ℝ) ≤ (B:ℕ∞):=by
+     (δ:ℝ)≤(B:ℕ∞):=by
  classical
  rw [irs_squared_carrier_eq]
  exact squared_eight_lambda_le IRSProfile.baseCode e 131071 B
    irs_zeroCoordinateBound hgap halign hfield hseparation (δ:ℝ) hcell
 theorem irs_squared_claimedRadius_lambda_le
-   (num den e B:ℕ) (hden:0 < den)
-   (hcross:num*Fintype.card IRSProfile.Index < (e+1)*den)
-   (hgap:131071 < Fintype.card IRSProfile.Index-e)
+   (num den e B:ℕ) (hden:0<den)
+   (hcross:num*Fintype.card IRSProfile.Index<(e+1)*den)
+   (hgap:131071<Fintype.card IRSProfile.Index-e)
    (halign:AffineLineAlignmentBound IRSProfile.baseCode e B)
-   (hfield:B < Fintype.card IRSProfile.Field)
-   (hseparation:15*(B+1).choose 2 < Fintype.card IRSProfile.Field):
+   (hfield:B<Fintype.card IRSProfile.Field)
+   (hseparation:15*(B+1).choose 2<Fintype.card IRSProfile.Field):
    Code.Lambda
      ((IRSProfile.code^⋈ (Fin 2):
        ModuleCode IRSProfile.Index IRSProfile.Field
          (Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field)):
        Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
-     (claimedRadius num den:ℝ) ≤ (B:ℕ∞):=by
+     (claimedRadius num den:ℝ)≤(B:ℕ∞):=by
  apply irs_squared_lambda_le e B (claimedRadius num den) hgap halign hfield hseparation
  simpa only [claimedRadius,NNReal.coe_div,NNReal.coe_natCast] using
    rational_radius_cell num den (Fintype.card IRSProfile.Index) e hden hcross
 theorem irs_squared_lambda_toNat_le
    (e B:ℕ) (δ:ℝ≥0)
-   (hgap:131071 < Fintype.card IRSProfile.Index-e)
+   (hgap:131071<Fintype.card IRSProfile.Index-e)
    (halign:AffineLineAlignmentBound IRSProfile.baseCode e B)
-   (hfield:B < Fintype.card IRSProfile.Field)
-   (hseparation:15*(B+1).choose 2 < Fintype.card IRSProfile.Field)
-   (hcell:(δ:ℝ)*(Fintype.card IRSProfile.Index:ℝ) < ((e+1:ℕ):ℝ)):
+   (hfield:B<Fintype.card IRSProfile.Field)
+   (hseparation:15*(B+1).choose 2<Fintype.card IRSProfile.Field)
+   (hcell:(δ:ℝ)*(Fintype.card IRSProfile.Index:ℝ)<((e+1:ℕ):ℝ)):
    (Code.Lambda
      ((IRSProfile.code^⋈ (Fin 2):
        ModuleCode IRSProfile.Index IRSProfile.Field
          (Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field)):
        Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
-     (δ:ℝ)).toNat ≤ B:=
+     (δ:ℝ)).toNat≤B:=
  ENat.toNat_le_of_le_coe
    (irs_squared_lambda_le e B δ hgap halign hfield hseparation hcell)
 end DraftProofs

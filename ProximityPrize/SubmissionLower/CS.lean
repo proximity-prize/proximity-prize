@@ -69,7 +69,7 @@ theorem inertiaDeg'_bot [Nontrivial R] [IsDomain S] [Algebra.IsIntegral R S]
 @[deprecated (since:="2026-07-03")] alias inertiaDeg_bot:=inertiaDeg'_bot
 theorem inertiaDeg'_le_inertiaDeg' {T:Type*} [CommRing T] [Algebra R T] [Algebra S T]
    [IsScalarTower R S T] [Module.Finite R T] (Q:Ideal T) [P.LiesOver p] [Q.LiesOver P]
-   [p.IsPrime]:inertiaDeg' P Q ≤ inertiaDeg' p Q:=by
+   [p.IsPrime]:inertiaDeg' P Q≤inertiaDeg' p Q:=by
  have:Q.LiesOver p:=LiesOver.trans Q P p
  rw [inertiaDeg'_algebraMap,inertiaDeg'_algebraMap]
  have:IsScalarTower (R ⧸ p) (S ⧸ P) (T ⧸ Q):=IsScalarTower.of_algebraMap_eq <| by

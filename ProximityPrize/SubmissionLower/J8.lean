@@ -38,13 +38,13 @@ theorem valuation_le_one_of_poleOrder_eq_zero
    {L:Type*} [Field L]
    (v:Valuation L (WithZero (Multiplicative ℤ))) (x:L)
    (h:poleOrder v x=0):
-   v x ≤ 1:=by
+   v x≤1:=by
  by_cases hx:v x=0
  · simp [hx]
  by_contra hnot
- have hlt:(1:WithZero (Multiplicative ℤ)) < v x:=
+ have hlt:(1:WithZero (Multiplicative ℤ))<v x:=
    lt_of_not_ge hnot
- have hlog:0 < (v x).log:=by
+ have hlog:0<(v x).log:=by
    simpa only [WithZero.log_one] using
      ((WithZero.log_lt_log one_ne_zero hx).2 hlt)
  unfold poleOrder at h
@@ -72,9 +72,9 @@ theorem nested_u_pole
        hseparator hproj C v hv 0
    have hZ:=coordinate_poleOrder_eq_zero_of_not_mem_relevant
        hseparator hproj C v hv 2
-   have hYle:v.val (coordinate Omega C.1 0) ≤ 1:=
+   have hYle:v.val (coordinate Omega C.1 0)≤1:=
      valuation_le_one_of_poleOrder_eq_zero v.val _ hY
-   have hZle:v.val (coordinate Omega C.1 2) ≤ 1:=
+   have hZle:v.val (coordinate Omega C.1 2)≤1:=
      valuation_le_one_of_poleOrder_eq_zero v.val _ hZ
    letI:v.val.IsTrivialOn Omega:=v.property.2
    have hscalar:
@@ -82,7 +82,7 @@ theorem nested_u_pole
          v.val (coordinate Omega C.1 2):=by
      rw [Algebra.smul_def,map_mul,
        Valuation.IsTrivialOn.eq_one D.lam D.lam_ne,one_mul]
-   have hUle:v.val (affineU Omega C.1 D.lam) ≤ 1:=by
+   have hUle:v.val (affineU Omega C.1 D.lam)≤1:=by
      unfold affineU
      exact (v.val.map_add _ _).trans
        (by rw [hscalar];exact max_le hYle hZle)
@@ -121,9 +121,9 @@ theorem nested_v_pole
    have hU:poleOrder v.val (affineU Omega C.1 D.lam)=0:=by
      rw [nested_u_pole D C v,hY,hZ]
      simp
-   have hSle:v.val (coordinate Omega C.1 1) ≤ 1:=
+   have hSle:v.val (coordinate Omega C.1 1)≤1:=
      valuation_le_one_of_poleOrder_eq_zero v.val _ hS
-   have hUle:v.val (affineU Omega C.1 D.lam) ≤ 1:=
+   have hUle:v.val (affineU Omega C.1 D.lam)≤1:=
      valuation_le_one_of_poleOrder_eq_zero v.val _ hU
    letI:v.val.IsTrivialOn Omega:=v.property.2
    have hscalar:v.val (D.mu • affineU Omega C.1 D.lam)=
@@ -131,7 +131,7 @@ theorem nested_v_pole
      rw [Algebra.smul_def,map_mul,
        Valuation.IsTrivialOn.eq_one D.mu D.mu_ne,one_mul]
    have hVle:v.val
-       (coordinate Omega C.1 1+D.mu • affineU Omega C.1 D.lam) ≤ 1:=
+       (coordinate Omega C.1 1+D.mu • affineU Omega C.1 D.lam)≤1:=
      (v.val.map_add _ _).trans
        (by rw [hscalar];exact max_le hSle hUle)
    have hV:poleOrder v.val

@@ -70,7 +70,7 @@ private lemma finite_of_isArtinianRing_of_isLocalRing
  refine Module.finite_of_surjective_of_ker_le_nilradical (Ideal.Quotient.mkₐ R
    ((maximalIdeal R).map (algebraMap R S))) Ideal.Quotient.mk_surjective ?_ ?_
  · refine Ideal.mk_ker.trans_le ?_
-   rw [Ideal.map_le_iff_le_comap, ←Ring.KrullDimLE.nilradical_eq_maximalIdeal]
+   rw [Ideal.map_le_iff_le_comap,←Ring.KrullDimLE.nilradical_eq_maximalIdeal]
    exact fun x hx↦IsNilpotent.map hx _
  · rw [←RingHom.ker_coe_toRingHom,Ideal.Quotient.mkₐ_ker]
    exact Ideal.FG.map (IsNoetherian.noetherian _) _
@@ -245,7 +245,7 @@ lemma of_isIntegral_of_finiteType [Algebra.IsIntegral R S] [Algebra.FiniteType R
    rw [IsLocalization.mk'_eq_iff_eq_mul]
    simp only [map_pow,Algebra.smul_mul_assoc]
    trans (sA • Localization.Away.invSelf sA)^n • (algebraMap S T x)
-   · simp [Algebra.smul_def, -map_pow,Localization.Away.invSelf,Localization.mk_eq_mk']
+   · simp [Algebra.smul_def,-map_pow,Localization.Away.invSelf,Localization.mk_eq_mk']
    · simp only [Algebra.smul_def,map_pow,map_mul,mul_pow,
        ←IsScalarTower.algebraMap_apply,Subalgebra.algebraMap_def,sA]
      ring
@@ -360,7 +360,7 @@ lemma QuasiFiniteAt.exists_basicOpen_eq_singleton
  obtain rfl:q=IsLocalRing.closedPoint _:=Subsingleton.elim _ _
  ext1
  dsimp [-RingEquiv.symm_mk]
- rw [Ideal.comap_comap, ←AlgEquiv.toAlgHom_toRingHom,AlgHom.comp_algebraMap]
+ rw [Ideal.comap_comap,←AlgEquiv.toAlgHom_toRingHom,AlgHom.comp_algebraMap]
  exact IsLocalization.AtPrime.under_maximalIdeal _ _
 lemma QuasiFiniteAt.isClopen_singleton
    (p:PrimeSpectrum S) [IsArtinianRing R] [Algebra.FiniteType R S]
@@ -424,7 +424,7 @@ lemma _root_.Ideal.exists_not_mem_forall_mem_of_ne_of_liesOver
    simp only [PrimeSpectrum.preimageHomeomorphFiber,PrimeSpectrum.preimageOrderIsoFiber,
      Homeomorph.homeomorph_mk_coe,qF,e] at this
    rw [PrimeSpectrum.preimageEquivFiber_apply_asIdeal,
-       ←Ideal.IsPrime.mul_mem_left_iff (x:=algebraMap _ _ s), ←Algebra.smul_def,hsx] at this
+       ←Ideal.IsPrime.mul_mem_left_iff (x:=algebraMap _ _ s),←Algebra.smul_def,hsx] at this
    · simpa using this
    · simpa [IsScalarTower.algebraMap_apply R S q.ResidueField,q.over_def p] using hs
  refine ⟨x,this,fun q' _ hq' _↦not_not.mp fun hxq'↦hq' ?_⟩
@@ -434,7 +434,7 @@ lemma _root_.Ideal.exists_not_mem_forall_mem_of_ne_of_liesOver
    PrimeSpectrum.preimageOrderIsoFiber,Homeomorph.homeomorph_mk_coe,Set.mem_compl_iff,
    PrimeSpectrum.mem_zeroLocus,Set.singleton_subset_iff,SetLike.mem_coe,e]
  rw [PrimeSpectrum.preimageEquivFiber_apply_asIdeal,
-   ←Ideal.IsPrime.mul_mem_left_iff (x:=algebraMap _ _ s), ←Algebra.smul_def,hsx]
+   ←Ideal.IsPrime.mul_mem_left_iff (x:=algebraMap _ _ s),←Algebra.smul_def,hsx]
  · simpa
  · simpa [IsScalarTower.algebraMap_apply R S q'.ResidueField, ←Ideal.mem_comap, ←q'.over_def p]
 lemma _root_.Ideal.Fiber.lift_residueField_surjective [Algebra.FiniteType R S]

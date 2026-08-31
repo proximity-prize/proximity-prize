@@ -22,7 +22,7 @@ noncomputable abbrev minpolyX (A:Type*) [CommRing A] [Algebra K A] [Algebra K[f]
 theorem minpolyX_map (A:Type*) [CommRing A] [Algebra K A] [Algebra (Algebra.adjoin K {f}) A]
    (B:Type*) [CommRing B] [Algebra K B] [Algebra K[f] B] [Algebra A B] [IsScalarTower K A B]
    [IsScalarTower K[f] A B]:(f.minpolyX A).map (algebraMap A B)=f.minpolyX B:=by
- simp [minpolyX,Polynomial.map_map, ←IsScalarTower.algebraMap_eq,
+ simp [minpolyX,Polynomial.map_map,←IsScalarTower.algebraMap_eq,
    ←IsScalarTower.algebraMap_apply]
 @[simp]
 theorem C_minpolyX (x:K):(C x).minpolyX K⟮C x⟯=0:=by
@@ -64,9 +64,9 @@ theorem natDegree_num_le_natDegree_minpolyX (hf:¬∃ c,f=C c):
  simp only [coeff_sub,coeff_map,coeff_natDegree,coeff_C_mul,AddSubgroupClass.coe_sub,
    SubalgebraClass.coe_algebraMap,algebraMap_eq_C,MulMemClass.coe_mul,coe_algebraMap,
    ZeroMemClass.coe_zero] at H
- rw [sub_eq_zero, ←mul_right_inj' (inv_ne_zero f_ne_zero), ←mul_assoc,inv_mul_cancel₀ f_ne_zero,
-   one_mul, ←eq_div_iff <| (_root_.map_ne_zero C).mpr <| Polynomial.leadingCoeff_ne_zero.mpr
-   (num_ne_zero f_ne_zero), ←inv_inj,inv_inv, ←map_div₀, ←map_inv₀] at H
+ rw [sub_eq_zero, ←mul_right_inj' (inv_ne_zero f_ne_zero),←mul_assoc,inv_mul_cancel₀ f_ne_zero,
+   one_mul,←eq_div_iff <| (_root_.map_ne_zero C).mpr <| Polynomial.leadingCoeff_ne_zero.mpr
+   (num_ne_zero f_ne_zero),←inv_inj,inv_inv,←map_div₀,←map_inv₀] at H
  exact hf ⟨_,H⟩
 theorem natDegree_minpolyX:
    (f.minpolyX K⟮f⟯).natDegree=max f.num.natDegree f.denom.natDegree:=by
@@ -74,7 +74,7 @@ theorem natDegree_minpolyX:
  · obtain ⟨c,rfl⟩:=hf
    simp
  apply le_antisymm
- · have:(f.minpolyX K⟮f⟯).natDegree ≤ _:=natDegree_sub_le _ _
+ · have:(f.minpolyX K⟮f⟯).natDegree≤_:=natDegree_sub_le _ _
    rw [natDegree_map,natDegree_C_mul fun H↦hf ⟨0,by simpa [map_zero] using congr($(H).val)⟩,
      natDegree_map] at this
    exact this
@@ -116,7 +116,7 @@ theorem irreducible_minpolyX (hf:¬∃ c,f=C c):Irreducible (f.minpolyX K⟮f⟯
    intro H
    have:=natDegree_map_le (f:=algebraMap K[f] K⟮f⟯) (p:=f.minpolyX K[f])
    rw [f.minpolyX_map K[f] K⟮f⟯,H,nonpos_iff_eq_zero,f.natDegree_minpolyX,
-     Nat.max_eq_zero_iff, ←f.eq_C_iff] at this
+     Nat.max_eq_zero_iff,←f.eq_C_iff] at this
    exact hf this
 theorem finrank_eq_max_natDegree:
    Module.finrank K⟮f⟯ K⟮X⟯=max f.num.natDegree f.denom.natDegree:=by

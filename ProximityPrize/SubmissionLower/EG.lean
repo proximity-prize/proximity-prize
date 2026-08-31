@@ -29,7 +29,7 @@ set_option maxHeartbeats 1000000 in
 theorem baseCoefficientField_trdeg_le_one_of_fresh_proper_relations
    (F T:Poly4 k) (P:Polynomial L) (γ:L)
    (hF:Irreducible F)
-   (hpos:0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
+   (hpos:0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
    (hproper:¬ F∣T)
    (hFsolution:specialization L P γ
      (MvPolynomial.map (algebraMap k L) F)=0)
@@ -38,8 +38,8 @@ theorem baseCoefficientField_trdeg_le_one_of_fresh_proper_relations
    (hreg:specialization L P γ
      (MvPolynomial.pderiv (2:Fin 4)
        (MvPolynomial.map (algebraMap k L) F))≠0)
-   (p w:ℕ) [CharP L p] (hw:w < p) (hP:P.natDegree ≤ w):
-   Algebra.trdeg k (baseCoefficientField (k:=k) P γ) ≤ 1:=by
+   (p w:ℕ) [CharP L p] (hw:w<p) (hP:P.natDegree≤w):
+   Algebra.trdeg k (baseCoefficientField (k:=k) P γ)≤1:=by
  classical
  let E:=jetField (k:=k) P γ
  let full:Fin 4 → E:=freshJet (k:=k) P γ
@@ -60,7 +60,7 @@ theorem baseCoefficientField_trdeg_le_one_of_fresh_proper_relations
    rw [rawEquiv.commutes,elementEmbedding_variable]
  have hfull:IntermediateField.adjoin k (Set.range full)=⊤:=by
    apply IntermediateField.map_injective E.val
-   rw [IntermediateField.adjoin_map, ←AlgHom.fieldRange_eq_map,
+   rw [IntermediateField.adjoin_map,←AlgHom.fieldRange_eq_map,
      IntermediateField.fieldRange_val]
    have himage:E.val '' Set.range full=Set.range (freshPoint P γ):=by
      ext x

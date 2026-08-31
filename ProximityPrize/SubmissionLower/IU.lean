@@ -23,13 +23,13 @@ theorem ramificationIdx_of_not_isPrime (hq:¬ q.IsPrime):q.ramificationIdx R=0:=
  dif_neg hq
 @[deprecated (since:="2026-07-01")] alias ramificationIdx'_of_not_isPrime:=
  ramificationIdx_of_not_isPrime
-theorem ramificationIdx_pos [q.IsPrime] [Module.Finite R S]:0 < q.ramificationIdx R:=by
+theorem ramificationIdx_pos [q.IsPrime] [Module.Finite R S]:0<q.ramificationIdx R:=by
  let p:=q.under R
  let Sq:=Localization.AtPrime q
  rw [ramificationIdx_def]
  apply ENat.toNat_pos
  · rw [←pos_iff_ne_zero,Module.length_pos_iff,Submodule.Quotient.nontrivial_iff,
-     IsScalarTower.algebraMap_eq R S, ←map_map, ←lt_top_iff_ne_top]
+     IsScalarTower.algebraMap_eq R S,←map_map,←lt_top_iff_ne_top]
    grw [map_mono map_comap_le,Localization.AtPrime.map_eq_maximalIdeal]
    exact (IsLocalRing.maximalIdeal.isMaximal _).lt_top
  · let r:=PrimeSpectrum.primesOverOrderIsoFiber R S p (primesOver.mk p q)
@@ -39,7 +39,7 @@ theorem ramificationIdx_pos [q.IsPrime] [Module.Finite R S]:0 < q.ramificationId
    have:IsArtinianRing (Sq ⧸ map (algebraMap R Sq) p):=by
      convert (Fiber.localizationAlgEquivQuotient p r.1).toRingEquiv.isArtinianRing
    rwa [Module.length_eq_of_surjective (R:=Sq ⧸ p.map (algebraMap R Sq)) Quotient.mk_surjective,
-     Module.length_ne_top_iff, ←isArtinianRing_iff_isFiniteLength]
+     Module.length_ne_top_iff,←isArtinianRing_iff_isFiniteLength]
 @[deprecated (since:="2026-07-01")] alias ramificationIdx'_pos:=ramificationIdx_pos
 theorem ramificationIdx_eq_one [q.IsPrime] [Algebra.EssFiniteType R S]
    [Algebra.IsUnramifiedAt R q]:q.ramificationIdx R=1:=by
@@ -59,7 +59,7 @@ theorem ramificationIdx_eq_one_iff [q.IsPrime] [Algebra.EssFiniteType R S]
    q.ramificationIdx R=1 ↔ Algebra.IsUnramifiedAt R q:=by
  refine ⟨fun h↦?_,fun _↦ramificationIdx_eq_one q R⟩
  rw [ramificationIdx_def,ENat.toNat_eq_iff_eq_coe,Nat.cast_one,Module.length_eq_one_iff,
-   isSimpleModule_iff_isCoatom, ←Ideal.isMaximal_def,IsLocalRing.isMaximal_iff] at h
+   isSimpleModule_iff_isCoatom,←Ideal.isMaximal_def,IsLocalRing.isMaximal_iff] at h
  let p:=q.under R
  let Rp:=Localization.AtPrime p
  let Sq:=Localization.AtPrime q
@@ -67,7 +67,7 @@ theorem ramificationIdx_eq_one_iff [q.IsPrime] [Algebra.EssFiniteType R S]
  have:=Algebra.EssFiniteType.of_comp R Rp Sq
  suffices Algebra.FormallyUnramified Rp Sq from Algebra.FormallyUnramified.comp R Rp Sq
  rw [Algebra.FormallyUnramified.iff_map_maximalIdeal_eq,
-   ←Localization.AtPrime.map_eq_maximalIdeal,map_map, ←IsScalarTower.algebraMap_eq]
+   ←Localization.AtPrime.map_eq_maximalIdeal,map_map,←IsScalarTower.algebraMap_eq]
  exact ⟨Algebra.IsAlgebraic.isSeparable_of_perfectField,h⟩
 @[deprecated (since:="2026-07-01")] alias ramificationIdx'_eq_one_iff:=
  ramificationIdx_eq_one_iff
@@ -139,12 +139,12 @@ theorem ramificationIdx_tower' [q.IsPrime] [r.IsPrime] [r.LiesOver q]
    r.ramificationIdx R=q.ramificationIdx R*r.ramificationIdx S:=by
  have:q.LiesOver (r.under R):=LiesOver.tower_bot r q (r.under R)
  let f:=(Ideal.quotientEquivAlgOfEq (Localization.AtPrime r)
-   (by rw [map_map, ←IsScalarTower.algebraMap_eq])).trans
+   (by rw [map_map,←IsScalarTower.algebraMap_eq])).trans
      (Algebra.TensorProduct.quotIdealMapEquivTensorQuot (Localization.AtPrime r)
        ((r.under R).map (algebraMap R (Localization.AtPrime q))))
  rw [ramificationIdx_def,ramificationIdx_eq (r.under R),ramificationIdx_eq q,
    f.toLinearEquiv.length_eq,IsLocalRing.length_baseChange,ENat.toNat_mul,
-   ←Localization.AtPrime.map_eq_maximalIdeal,map_map, ←IsScalarTower.algebraMap_eq]
+   ←Localization.AtPrime.map_eq_maximalIdeal,map_map,←IsScalarTower.algebraMap_eq]
 @[deprecated (since:="2026-07-01")] alias ramificationIdx'_tower':=ramificationIdx_tower'
 theorem ramificationIdx_tower [r.LiesOver q] [Module.Flat S T]:
    r.ramificationIdx R=q.ramificationIdx R*r.ramificationIdx S:=by
@@ -162,7 +162,7 @@ theorem ramificationIdx_below_dvd [r.LiesOver q] [Module.Flat S T]:
 theorem ramificationIdx_above_dvd [r.LiesOver q] [Module.Flat S T]:
    r.ramificationIdx S∣r.ramificationIdx R:=by
  use q.ramificationIdx R
- rw [mul_comm, ←ramificationIdx_tower]
+ rw [mul_comm,←ramificationIdx_tower]
 @[deprecated (since:="2026-07-01")] alias ramificationIdx'_above_dvd:=ramificationIdx_above_dvd
 theorem ramificationIdx_below_le [r.IsPrime] [r.LiesOver q] [Module.Finite R T] [Module.Flat S T]:
    q.ramificationIdx R ≤ r.ramificationIdx R:=
@@ -170,7 +170,7 @@ theorem ramificationIdx_below_le [r.IsPrime] [r.LiesOver q] [Module.Finite R T] 
 @[deprecated (since:="2026-07-01")] alias ramificationIdx'_below_le:=
  ramificationIdx_below_le
 theorem ramificationIdx_above_le [r.IsPrime] [r.LiesOver q] [Module.Finite R T] [Module.Flat S T]:
-   r.ramificationIdx S ≤ r.ramificationIdx R:=
+   r.ramificationIdx S≤r.ramificationIdx R:=
  Nat.le_of_dvd (r.ramificationIdx_pos R) (q.ramificationIdx_above_dvd r)
 @[deprecated (since:="2026-07-01")] alias ramificationIdx'_above_le:=ramificationIdx_above_le
 variable (R) in

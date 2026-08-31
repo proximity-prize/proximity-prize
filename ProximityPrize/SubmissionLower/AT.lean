@@ -62,8 +62,8 @@ noncomputable def Fiber.algEquivAux₁:
    p.Fiber S ≃ₐ[S] Sp ⧸ pS.map (algebraMap S Sp):=
  letI:Algebra S (p.Fiber S):=rightAlgebra
  (Fiber.algEquivQuotient p).trans <| quotientEquivAlgOfEq S <| by
-   rw [←Localization.AtPrime.map_eq_maximalIdeal,map_map, ←IsScalarTower.algebraMap_eq,
-     IsScalarTower.algebraMap_eq R S, ←map_map]
+   rw [←Localization.AtPrime.map_eq_maximalIdeal,map_map,←IsScalarTower.algebraMap_eq,
+     IsScalarTower.algebraMap_eq R S,←map_map]
 noncomputable def Fiber.algEquivAux₂ (q:Ideal (p.Fiber S)) [q.IsPrime]:
    letI r:=q.comap includeRight
    letI Sr:=Localization.AtPrime r
@@ -107,7 +107,7 @@ noncomputable def PrimeSpectrum.preimageEquivFiber (p:PrimeSpectrum R):
    (Ideal.ResidueField.mapₐ p.asIdeal q.1.asIdeal (Algebra.ofId _ _) congr($(q.2.symm).asIdeal))
      (IsScalarTower.toAlgHom _ _ _) fun _ _↦.all _ _).toRingHom,RingHom.ker_isPrime _⟩
  invFun q:=⟨q.comap Algebra.TensorProduct.includeRight.toRingHom,by
-   simp only [AlgHom.toRingHom_eq_coe,Set.mem_preimage, ←comap_comp_apply,
+   simp only [AlgHom.toRingHom_eq_coe,Set.mem_preimage,←comap_comp_apply,
      AlgHom.comp_algebraMap_of_tower]
    exact (residueField_comap _).le ⟨q.comap (algebraMap _ _),rfl⟩⟩
  left_inv q:=by ext x;simp
@@ -116,12 +116,12 @@ noncomputable def PrimeSpectrum.preimageEquivFiber (p:PrimeSpectrum R):
    obtain ⟨r,hr,s,e⟩:=Ideal.Fiber.exists_smul_eq_one_tmul _ x
    have:=@PrimeSpectrum.isPrime
    rw [←Ideal.IsPrime.mul_mem_left_iff (x:=algebraMap _ _ r),iff_comm,
-     ←Ideal.IsPrime.mul_mem_left_iff (x:=algebraMap _ _ r), ←Algebra.smul_def,e]
+     ←Ideal.IsPrime.mul_mem_left_iff (x:=algebraMap _ _ r),←Algebra.smul_def,e]
    · simp
-   · rw [←Ideal.mem_comap, ←PrimeSpectrum.comap_asIdeal]
+   · rw [←Ideal.mem_comap,←PrimeSpectrum.comap_asIdeal]
      convert! hr
      exact (residueField_comap _).le ⟨q.comap (algebraMap _ _),rfl⟩
-   · simpa [-Algebra.algebraMap_self, -AlgHom.commutes, -AlgHom.map_algebraMap,
+   · simpa [-Algebra.algebraMap_self,-AlgHom.commutes,-AlgHom.map_algebraMap,
        -Ideal.ResidueField.map_algebraMap]
 variable (R S) in
 @[simps!]
@@ -135,7 +135,7 @@ noncomputable def PrimeSpectrum.preimageOrderIsoFiber (p:PrimeSpectrum R):
      simpa using! Ideal.comap_mono
    · intro H x hx
      obtain ⟨r,hr,s,e⟩:=Ideal.Fiber.exists_smul_eq_one_tmul _ x
-     rw [←Ideal.IsPrime.mul_mem_left_iff (x:=algebraMap _ _ r), ←Algebra.smul_def,e] at hx ⊢
+     rw [←Ideal.IsPrime.mul_mem_left_iff (x:=algebraMap _ _ r),←Algebra.smul_def,e] at hx ⊢
      · replace hx:s∈q₁.1.asIdeal:=by simpa using! hx
        simpa using! H hx
      · rw [←q₂.2] at hr;simpa [IsScalarTower.algebraMap_apply R S q₂.1.asIdeal.ResidueField]

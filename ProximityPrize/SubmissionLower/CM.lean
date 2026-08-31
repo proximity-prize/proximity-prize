@@ -34,7 +34,7 @@ theorem exists_point_lift
    ∃ psi:S →ₐ[K] K,psi.comp (IsScalarTower.toAlgHom K A S)=phi:=by
  classical
  letI:(RingHom.ker phi.toRingHom).IsMaximal:=pointKernel_isMaximal phi
- have hker:RingHom.ker (algebraMap A S) ≤ RingHom.ker phi.toRingHom:=by
+ have hker:RingHom.ker (algebraMap A S)≤RingHom.ker phi.toRingHom:=by
    rw [(RingHom.injective_iff_ker_eq_bot _).mp hinj]
    exact bot_le
  obtain ⟨N,hNmax,hN⟩:=Ideal.exists_ideal_over_maximal_of_isIntegral

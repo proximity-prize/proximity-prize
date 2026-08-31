@@ -33,7 +33,7 @@ theorem component_secondTail_card_le
  let component:=componentSeeds Omega G T1 H S point C
  let points:=component.image point
  have hpointsPrime:∀ v∈points,
-     C.1 ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom:=by
+     C.1≤RingHom.ker (MvPolynomial.aeval v).toRingHom:=by
    intro v hv
    obtain ⟨gamma,hgamma,rfl⟩:=Finset.mem_image.mp hv
    exact componentSeeds_on_prime Omega G T1 H S point C gamma hgamma
@@ -58,7 +58,7 @@ theorem properSecondTail_component_sum_le
      flagMixed flag tailFlag1 tailFlag2:=by
  classical
  calc
-   _ ≤ ∑ C∈properSecondTailComponents (G:=G) (T1:=T1) (T2:=T2) (H:=H),
+   _≤∑ C∈properSecondTailComponents (G:=G) (T1:=T1) (T2:=T2) (H:=H),
        B.weightedCost tailFlag2 C:=by
      apply Finset.sum_le_sum
      intro C hC
@@ -66,9 +66,9 @@ theorem properSecondTail_component_sum_le
      · exact (Finset.mem_filter.mp hC).2
      · intro gamma hgamma
        exact hzero gamma (componentSeeds_subset Omega G T1 H S point C hgamma)
-   _ ≤ ∑ C:RegularComponent Omega G T1 H,B.weightedCost tailFlag2 C:=by
+   _≤∑ C:RegularComponent Omega G T1 H,B.weightedCost tailFlag2 C:=by
      exact Finset.sum_le_sum_of_subset (Finset.filter_subset _ _)
-   _ ≤ flagMixed flag tailFlag1 tailFlag2:=B.sum_weightedCost_le tailFlag2
+   _≤flagMixed flag tailFlag1 tailFlag2:=B.sum_weightedCost_le tailFlag2
 variable [IsAlgClosed Omega]
 theorem properSecondTail_component_sum_le_flagMixed
    (base:∀ C:RegularComponent Omega G T1 H,

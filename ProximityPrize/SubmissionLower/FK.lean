@@ -76,7 +76,7 @@ theorem pow_sum_dvd_of_sum_le_localized_ord
        (algebraMap (Polynomial K) (Localization.AtPrime p) r)):
    q^(∑ i,multiplicity i)∣r:=by
  rw [ord_algebraMap_eq_normalizedFactors_count p q r hp hq hqMonic hr] at hle
- have hcount:(∑ i,multiplicity i) ≤ (normalizedFactors r).count q:=by
+ have hcount:(∑ i,multiplicity i)≤(normalizedFactors r).count q:=by
    exact_mod_cast hle
  have hem:emultiplicity q r=
      ((normalizedFactors r).count q:ℕ∞):=by

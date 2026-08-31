@@ -20,7 +20,7 @@ theorem exists_original_factor_with_first_tail
    (S:ResidualStage (polynomialEmbedding K) Γ x p e flag w support)
    (hTail:S.G∣surfaceMap (polynomialEmbedding K) (numerator K S.F (w+1))):
    ∃ F0 Q:MvPolynomial (Fin 4) K,
-     Irreducible F0∧0 < F0.degreeOf 1+F0.degreeOf 2+F0.degreeOf 3∧
+     Irreducible F0∧0<F0.degreeOf 1+F0.degreeOf 2+F0.degreeOf 3∧
      S.F=F0*Q∧S.G∣surfaceMap (polynomialEmbedding K) F0∧
      ¬ S.G∣surfaceMap (polynomialEmbedding K) Q∧
      ¬ S.G∣surfaceMap (polynomialEmbedding K) (polyH K F0)∧

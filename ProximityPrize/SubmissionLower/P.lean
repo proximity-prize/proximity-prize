@@ -7,20 +7,20 @@ open RCN095
 noncomputable section
 theorem exponent_weight_le_flag_bound
    (p:FlagDegree) (d:Fin 3 →₀ ℕ) (q:Fin 3 → ℤ)
-   (hd:InFlag p d) (hq:∀ i,0 ≤ q i):
+   (hd:InFlag p d) (hq:∀ i,0≤q i):
    (∑ i,(d i:ℤ)*q i) ≤
      (p.zOnly:ℤ)*q 2+
        (p.yz:ℤ)*max (q 0) (q 2)+
        (p.all:ℤ)*max (q 1) (max (q 0) (q 2)):=by
  let m₁:ℤ:=max (q 0) (q 2)
  let m₂:ℤ:=max (q 1) m₁
- have hq0m₁:q 0 ≤ m₁:=le_max_left _ _
- have hq2m₁:q 2 ≤ m₁:=le_max_right _ _
- have hq1m₂:q 1 ≤ m₂:=le_max_left _ _
- have hm₁m₂:m₁ ≤ m₂:=le_max_right _ _
- have hreplace0:(d 0:ℤ)*q 0 ≤ (d 0:ℤ)*m₁:=
+ have hq0m₁:q 0≤m₁:=le_max_left _ _
+ have hq2m₁:q 2≤m₁:=le_max_right _ _
+ have hq1m₂:q 1≤m₂:=le_max_left _ _
+ have hm₁m₂:m₁≤m₂:=le_max_right _ _
+ have hreplace0:(d 0:ℤ)*q 0≤(d 0:ℤ)*m₁:=
    mul_le_mul_of_nonneg_left hq0m₁ (by positivity)
- have hreplace1:(d 1:ℤ)*q 1 ≤ (d 1:ℤ)*m₂:=
+ have hreplace1:(d 1:ℤ)*q 1≤(d 1:ℤ)*m₂:=
    mul_le_mul_of_nonneg_left hq1m₂ (by positivity)
  have htotal:((d 0+d 1+d 2:ℕ):ℤ) ≤
      ((p.zOnly+p.yz+p.all:ℕ):ℤ):=by
@@ -28,10 +28,10 @@ theorem exponent_weight_le_flag_bound
  have hys:((d 0+d 1:ℕ):ℤ) ≤
      ((p.yz+p.all:ℕ):ℤ):=by
    exact_mod_cast hd.2.1
- have hs:(d 1:ℤ) ≤ (p.all:ℤ):=by
+ have hs:(d 1:ℤ)≤(p.all:ℤ):=by
    exact_mod_cast hd.1
- have hdiff₁:0 ≤ m₁-q 2:=sub_nonneg.mpr hq2m₁
- have hdiff₂:0 ≤ m₂-m₁:=sub_nonneg.mpr hm₁m₂
+ have hdiff₁:0≤m₁-q 2:=sub_nonneg.mpr hq2m₁
+ have hdiff₂:0≤m₂-m₁:=sub_nonneg.mpr hm₁m₂
  have hcap:
      ((d 0+d 1+d 2:ℕ):ℤ)*q 2+
          ((d 0+d 1:ℕ):ℤ)*(m₁-q 2)+
@@ -47,14 +47,14 @@ theorem exponent_weight_le_flag_bound
    (∑ i,(d i:ℤ)*q i)=
        (d 0:ℤ)*q 0+(d 1:ℤ)*q 1+(d 2:ℤ)*q 2:=by
      simp [Fin.sum_univ_three]
-   _ ≤ (d 0:ℤ)*m₁+(d 1:ℤ)*m₂+(d 2:ℤ)*q 2:=
+   _≤(d 0:ℤ)*m₁+(d 1:ℤ)*m₂+(d 2:ℤ)*q 2:=
      add_le_add (add_le_add hreplace0 hreplace1) le_rfl
    _=((d 0+d 1+d 2:ℕ):ℤ)*q 2+
          ((d 0+d 1:ℕ):ℤ)*(m₁-q 2)+
          (d 1:ℤ)*(m₂-m₁):=by
      push_cast
      ring
-   _ ≤ ((p.zOnly+p.yz+p.all:ℕ):ℤ)*q 2+
+   _≤((p.zOnly+p.yz+p.all:ℕ):ℤ)*q 2+
          ((p.yz+p.all:ℕ):ℤ)*(m₁-q 2)+
          (p.all:ℤ)*(m₂-m₁):=hcap
    _=(p.zOnly:ℤ)*q 2+(p.yz:ℤ)*m₁+

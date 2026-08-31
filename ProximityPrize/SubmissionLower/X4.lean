@@ -35,10 +35,10 @@ theorem relationIdeal_eq_actual:
 theorem actual_finite_separable_finrank_bound
    (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:G∈P) (hHmem:H∈P) (hproper:¬ G∣H)
-   (hpositive:0 < (planeMap K order G).natDegree)
-   (hRdegree:(planeMap K order G).natDegree < p)
+   (hpositive:0<(planeMap K order G).natDegree)
+   (hRdegree:(planeMap K order G).natDegree<p)
    (hresultantDegree:(Polynomial.resultant (planeMap K order G) (planeMap K order H)
-     (planeMap K order G).natDegree (planeMap K order H).natDegree).natDegree < p):
+     (planeMap K order G).natDegree (planeMap K order H).natDegree).natDegree<p):
    letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P (order 0) ht
    FiniteDimensional (RatFunc K) (CoordinateField K P)∧
      Algebra.IsSeparable (RatFunc K) (CoordinateField K P)∧
@@ -76,10 +76,10 @@ theorem actual_finite_separable_sum_finrank_bound
    (hinj:Function.Injective P) (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:∀ i,G∈P i) (hHmem:∀ i,H∈P i)
    (hproper:¬ G∣H)
-   (hpositive:0 < (planeMap K order G).natDegree)
-   (hRdegree:(planeMap K order G).natDegree < p)
+   (hpositive:0<(planeMap K order G).natDegree)
+   (hRdegree:(planeMap K order G).natDegree<p)
    (hresultantDegree:(Polynomial.resultant (planeMap K order G) (planeMap K order H)
-     (planeMap K order G).natDegree (planeMap K order H).natDegree).natDegree < p):
+     (planeMap K order G).natDegree (planeMap K order H).natDegree).natDegree<p):
    letI:∀ i,Algebra (RatFunc K) (CoordinateField K (P i)):=
      fun i => rationalBaseAlgebra K (P i) (order 0) (ht i)
    (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i))∧

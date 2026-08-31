@@ -46,7 +46,7 @@ theorem exists_stacked_interpolants_with_recursive_cover
        (27*agreements) w 579299 6∧
      ∀ (gamma:IRSProfile.Field) (P:Polynomial IRSProfile.Field)
        (support:Finset IRSProfile.Index),
-       P.natDegree ≤ w → agreements ≤ support.card →
+       P.natDegree≤w → agreements≤support.card →
        (∀ i∈support,
          P.eval (IRSProfile.domain i)=u0 i+gamma*u1 i) →
        RecursiveSpecializationBranch P gamma QA QB QC:=by

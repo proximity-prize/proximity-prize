@@ -68,26 +68,26 @@ theorem yz_affine (a b s d:ℕ) (p:FlagDegree):
  ring
 section Cumulative
 variable {I:Type*} [Fintype I] (flags:I → FlagDegree) (p:FlagDegree)
-variable (hs:(∑ i,(flags i).all) ≤ p.all)
-variable (hm:(∑ i,((flags i).yz+(flags i).all)) ≤ p.yz+p.all)
-variable (ht:(∑ i,((flags i).zOnly+(flags i).yz+(flags i).all)) ≤ p.zOnly+p.yz+p.all)
+variable (hs:(∑ i,(flags i).all)≤p.all)
+variable (hm:(∑ i,((flags i).yz+(flags i).all))≤p.yz+p.all)
+variable (ht:(∑ i,((flags i).zOnly+(flags i).yz+(flags i).all))≤p.zOnly+p.yz+p.all)
 include hs hm ht
-theorem sum_qeff_le (a b s:ℕ):(∑ i,qeff a b s (flags i)) ≤ qeff a b s p:=by
+theorem sum_qeff_le (a b s:ℕ):(∑ i,qeff a b s (flags i))≤qeff a b s p:=by
  simp only [qeff,Finset.sum_add_distrib]
  exact add_le_add
    (sum_flagMixed_le_of_cumulative flags p (directionFlag a b s) (normalFlag a b s) hs hm ht)
    (sum_flagMixed_le_of_cumulative flags p (fiberFlag a b s) (surfaceFlag a b s) hs hm ht)
-theorem sum_lin_le (a b s:ℕ):(∑ i,lin a b s (flags i)) ≤ lin a b s p:=
+theorem sum_lin_le (a b s:ℕ):(∑ i,lin a b s (flags i))≤lin a b s p:=
  sum_flagMixed_le_of_cumulative flags p (centreFlag a b s) (directionFlag a b s) hs hm ht
-theorem sum_unit_le (a b s:ℕ):(∑ i,unit a b s (flags i)) ≤ unit a b s p:=
+theorem sum_unit_le (a b s:ℕ):(∑ i,unit a b s (flags i))≤unit a b s p:=
  sum_flagMixed_le_of_cumulative flags p (centreFlag a b s) (centreFlag a b s) hs hm ht
-theorem sum_zSlope_le (a b s:ℕ):(∑ i,zSlope a b s (flags i)) ≤ zSlope a b s p:=
+theorem sum_zSlope_le (a b s:ℕ):(∑ i,zSlope a b s (flags i))≤zSlope a b s p:=
  sum_flagMixed_le_of_cumulative flags p (directionFlag a b s) unitZFlag hs hm ht
-theorem sum_zBase_le (a b s:ℕ):(∑ i,zBase a b s (flags i)) ≤ zBase a b s p:=
+theorem sum_zBase_le (a b s:ℕ):(∑ i,zBase a b s (flags i))≤zBase a b s p:=
  sum_flagMixed_le_of_cumulative flags p (centreFlag a b s) unitZFlag hs hm ht
-theorem sum_yzSlope_le (a b s:ℕ):(∑ i,yzSlope a b s (flags i)) ≤ yzSlope a b s p:=
+theorem sum_yzSlope_le (a b s:ℕ):(∑ i,yzSlope a b s (flags i))≤yzSlope a b s p:=
  sum_flagMixed_le_of_cumulative flags p (directionFlag a b s) unitYZFlag hs hm ht
-theorem sum_yzBase_le (a b s:ℕ):(∑ i,yzBase a b s (flags i)) ≤ yzBase a b s p:=
+theorem sum_yzBase_le (a b s:ℕ):(∑ i,yzBase a b s (flags i))≤yzBase a b s p:=
  sum_flagMixed_le_of_cumulative flags p (centreFlag a b s) unitYZFlag hs hm ht
 theorem sum_envelope_le (a b s d:ℕ):
    (∑ i,(weightedMixed (flags i) (centreFlag a b s+d • directionFlag a b s) (normalFlag a b s)+

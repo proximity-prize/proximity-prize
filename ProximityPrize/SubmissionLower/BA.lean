@@ -28,7 +28,7 @@ theorem derivative_planeMap (order:Equiv (Fin 3) (Fin 3)) (F:Poly3 K):
 theorem planeMap_natDegree_pos_of_pderiv_ne_zero
    (order:Equiv (Fin 3) (Fin 3)) (F:Poly3 K)
    (hderiv:MvPolynomial.pderiv (order 1) F≠0):
-   0 < (planeMap K order F).natDegree:=by
+   0<(planeMap K order F).natDegree:=by
  apply Nat.pos_of_ne_zero
  intro hzero
  have hplanezero:Polynomial.derivative (planeMap K order F)=0:=
@@ -64,9 +64,9 @@ theorem pderiv_zero_flagAlgHom_nested (lam mu:K) (F:Poly3 K):
 theorem flag_u_z_outer_positive_of_pderiv
    (lam mu:K) (G:Poly3 K)
    (hderiv:MvPolynomial.pderiv (1:Fin 3) G≠0):
-   0 < (planeMap K uOrder
+   0<(planeMap K uOrder
          (flagAlgHom lam mu (mu*lam) G)).natDegree∧
-     0 < (planeMap K zOrder
+     0<(planeMap K zOrder
          (flagAlgHom lam mu (mu*lam) G)).natDegree:=by
  have hflag:MvPolynomial.pderiv (1:Fin 3)
      (flagAlgHom lam mu (mu*lam) G)≠0:=by
@@ -81,10 +81,10 @@ section Characteristic
 variable (p:ℕ) [CharP K p]
 theorem flag_u_z_outer_positive
    (lam mu:K) (G:Poly3 K)
-   (hSpos:0 < G.degreeOf 1) (hSchar:G.degreeOf 1 < p):
-   0 < (planeMap K uOrder
+   (hSpos:0<G.degreeOf 1) (hSchar:G.degreeOf 1<p):
+   0<(planeMap K uOrder
          (flagAlgHom lam mu (mu*lam) G)).natDegree∧
-     0 < (planeMap K zOrder
+     0<(planeMap K zOrder
          (flagAlgHom lam mu (mu*lam) G)).natDegree:=by
  have hderiv:MvPolynomial.pderiv (1:Fin 3) G≠0:=by
    intro hzero
@@ -96,7 +96,7 @@ theorem flag_v_outer_positive_of_directional
    (lam mu:K) (G:Poly3 K)
    (hdirectional:MvPolynomial.pderiv (0:Fin 3) G-
      MvPolynomial.C mu*MvPolynomial.pderiv (1:Fin 3) G≠0):
-   0 < (planeMap K vOrder
+   0<(planeMap K vOrder
        (flagAlgHom lam mu (mu*lam) G)).natDegree:=by
  apply planeMap_natDegree_pos_of_pderiv_ne_zero vOrder
  simpa [vOrder,Equiv.swap_apply_def,
@@ -114,7 +114,7 @@ variable
      RCN007.ProjectionsFiniteSeparable Omega C.1}
 theorem flagProjectionPositivity_of_degree_directional
    (D:NestedFlagProjectionData hseparator hproj)
-   (hSpos:0 < G.degreeOf 1) (hSchar:G.degreeOf 1 < p)
+   (hSpos:0<G.degreeOf 1) (hSchar:G.degreeOf 1<p)
    (hdirectional:MvPolynomial.pderiv (0:Fin 3) G-
      MvPolynomial.C D.mu*MvPolynomial.pderiv (1:Fin 3) G≠0):
    FlagProjectionPositivity D G:=by

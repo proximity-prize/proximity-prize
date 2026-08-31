@@ -32,10 +32,10 @@ theorem lifted_projection_values:
    unitY,unitR,unitZ,algebraicCap,weightedCap,
    RCN051.multiplicity,agreements,w,slopeCap,seedTotalCap]
 theorem lifted_projection_characteristic_gates:
-   implicitWeightedCap < prime∧
-   mixed liftedSurface implicitCut unitY < prime∧
-   mixed liftedSurface implicitCut unitR < prime∧
-   mixed liftedSurface implicitCut unitZ < prime:=by
+   implicitWeightedCap<prime∧
+   mixed liftedSurface implicitCut unitY<prime∧
+   mixed liftedSurface implicitCut unitR<prime∧
+   mixed liftedSurface implicitCut unitZ<prime:=by
  rcases lifted_projection_values with ⟨hY,hR,hZ⟩
  rw [hY,hR,hZ,lifted_parameter_values.1]
  norm_num [prime]
@@ -54,16 +54,16 @@ theorem lifted_total_numerator_exact:
    w,gap,errors,n,slopeCap,seedTotalCap]
 theorem lifted_division_certificate:
    liftedTotalNumerator=49925776167317549*gap^2+2316504024∧
-   2316504024 < gap^2:=by
+   2316504024<gap^2:=by
  rw [lifted_total_numerator_exact,denominator_exact]
  norm_num
 theorem lifted_ceiling_exact:
-   49925776167317549*gap^2 < liftedTotalNumerator∧
-     liftedTotalNumerator ≤ 49925776167317550*gap^2:=by
+   49925776167317549*gap^2<liftedTotalNumerator∧
+     liftedTotalNumerator≤49925776167317550*gap^2:=by
  rw [lifted_total_numerator_exact,denominator_exact]
  norm_num
 theorem lifted_strict_budget:
-   liftedTotalNumerator < alignmentBudget*gap^2:=by
+   liftedTotalNumerator<alignmentBudget*gap^2:=by
  rw [lifted_total_numerator_exact,denominator_exact]
  norm_num [alignmentBudget]
 end ProximityPrize.SubmissionLower.RCN168

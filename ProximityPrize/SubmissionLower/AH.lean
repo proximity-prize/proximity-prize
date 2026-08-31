@@ -34,7 +34,7 @@ def supportPoleWeight
 theorem supportPoleWeight_nonneg
    (v:Valuation L (WithZero (Multiplicative ℤ)))
    (x:σ → L) (F:MvPolynomial σ K):
-   0 ≤ supportPoleWeight v x F:=by
+   0≤supportPoleWeight v x F:=by
  unfold supportPoleWeight exponentSetPoleWeight
  exact Finset.le_max' _ _ (Finset.mem_insert_self (0:ℤ) _)
 theorem exponentPoleWeight_le_supportPoleWeight
@@ -48,7 +48,7 @@ theorem exponentPoleWeight_le_supportPoleWeight
 theorem exponentSetPoleWeight_mono
    (v:Valuation L (WithZero (Multiplicative ℤ)))
    (x:σ → L) {E D:Finset (σ →₀ ℕ)} (hED:E ⊆ D):
-   exponentSetPoleWeight v x E ≤ exponentSetPoleWeight v x D:=by
+   exponentSetPoleWeight v x E≤exponentSetPoleWeight v x D:=by
  unfold exponentSetPoleWeight
  apply Finset.max'_le
  intro z hz
@@ -167,7 +167,7 @@ theorem supportPoleWeight_le_weightedTotalDegree_naturalPole
    exact_mod_cast MvPolynomial.le_weightedTotalDegree (naturalPoleWeights v x) hd
 theorem valuation_monomial_le_exp_support
    (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (coeff:K →+*L) (hcoeff:∀ c:K,v (coeff c) ≤ 1)
+   (coeff:K →+*L) (hcoeff:∀ c:K,v (coeff c)≤1)
    (x:σ → L) (F:MvPolynomial σ K)
    (d:σ →₀ ℕ) (hd:d∈F.support) (c:K):
    v (MvPolynomial.eval₂Hom coeff x (MvPolynomial.monomial d c)) ≤
@@ -180,7 +180,7 @@ theorem valuation_monomial_le_exp_support
        poleOrder v (MvPolynomial.eval₂Hom coeff x
          (MvPolynomial.monomial d c)):=
      le_max_right _ _
-   _ ≤ exponentPoleWeight v x d:=by
+   _≤exponentPoleWeight v x d:=by
      by_cases hc:c=0
      · subst c
        simp [exponentPoleWeight,poleOrder]
@@ -189,11 +189,11 @@ theorem valuation_monomial_le_exp_support
          (fun i↦d i) (MvPolynomial.monomial d c) (fun i↦by
            rw [MvPolynomial.degreeOf_monomial_eq d i hc])
        simpa only [exponentPoleWeight] using hmono
-   _ ≤ supportPoleWeight v x F:=
+   _≤supportPoleWeight v x F:=
      exponentPoleWeight_le_supportPoleWeight v x F d hd
 theorem valuation_eval_le_exp_support
    (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (coeff:K →+*L) (hcoeff:∀ c:K,v (coeff c) ≤ 1)
+   (coeff:K →+*L) (hcoeff:∀ c:K,v (coeff c)≤1)
    (x:σ → L) (F:MvPolynomial σ K):
    v (MvPolynomial.eval₂Hom coeff x F) ≤
      WithZero.exp (supportPoleWeight v x F):=by
@@ -205,7 +205,7 @@ theorem valuation_eval_le_exp_support
    (F.coeff d)
 theorem valuation_eval_le_exp_exponentSet
    (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (coeff:K →+*L) (hcoeff:∀ c:K,v (coeff c) ≤ 1)
+   (coeff:K →+*L) (hcoeff:∀ c:K,v (coeff c)≤1)
    (x:σ → L) (E:Finset (σ →₀ ℕ)) (F:MvPolynomial σ K)
    (hFE:F.support ⊆ E):
    v (MvPolynomial.eval₂Hom coeff x F) ≤
@@ -215,7 +215,7 @@ theorem valuation_eval_le_exp_exponentSet
      (supportPoleWeight_le_exponentSetPoleWeight v x F E hFE))
 theorem poleOrder_eval_le_support
    (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (coeff:K →+*L) (hcoeff:∀ c:K,v (coeff c) ≤ 1)
+   (coeff:K →+*L) (hcoeff:∀ c:K,v (coeff c)≤1)
    (x:σ → L) (F:MvPolynomial σ K):
    poleOrder v (MvPolynomial.eval₂Hom coeff x F) ≤
      supportPoleWeight v x F:=by
@@ -236,7 +236,7 @@ theorem weighted_poleOrder_eval_le_exponentSet
    {τ:Type*} (S:Finset τ) (weight:τ → ℕ)
    (v:τ → Valuation L (WithZero (Multiplicative ℤ)))
    (coeff:K →+*L)
-   (hcoeff:∀ t∈S,∀ c:K,v t (coeff c) ≤ 1)
+   (hcoeff:∀ t∈S,∀ c:K,v t (coeff c)≤1)
    (x:σ → L) (E:Finset (σ →₀ ℕ)) (F:MvPolynomial σ K)
    (hFE:F.support ⊆ E):
    (∑ t∈S,(weight t:ℤ)*
