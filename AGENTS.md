@@ -15,7 +15,7 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    file, `score.txt`, and the track-specific claim file directly in that root.
    Subdirectories are not allowed.
 3. Stay inside the verifier's size limits. Both tracks admit at most **1000
-   files**, **4 MiB per file**, and **10 MiB across the whole submission root**.
+   files**, **4 MiB per file**, and **4 MiB across the whole submission root**.
    The total is the one to watch: it counts every admitted file together, so
    several generated modules can exhaust it while each stays well inside the
    per-file cap. Nothing in this repository enforces these — the submission is
