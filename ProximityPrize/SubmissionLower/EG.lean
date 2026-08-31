@@ -29,7 +29,7 @@ set_option maxHeartbeats 1000000 in
 theorem baseCoefficientField_trdeg_le_one_of_fresh_proper_relations
    (F T:Poly4 k) (P:Polynomial L) (γ:L)
    (hF:Irreducible F)
-   (hpos:0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
+   (hpos:0< F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
    (hproper:¬ F∣T)
    (hFsolution:specialization L P γ
      (MvPolynomial.map (algebraMap k L) F)=0)
@@ -38,18 +38,18 @@ theorem baseCoefficientField_trdeg_le_one_of_fresh_proper_relations
    (hreg:specialization L P γ
      (MvPolynomial.pderiv (2:Fin 4)
        (MvPolynomial.map (algebraMap k L) F))≠0)
-   (p w:ℕ) [CharP L p] (hw:w < p) (hP:P.natDegree ≤ w):
-   Algebra.trdeg k (baseCoefficientField (k:=k) P γ) ≤ 1:=by
+   (p w:ℕ) [CharP L p] (hw:w< p) (hP:P.natDegree≤ w):
+   Algebra.trdeg k (baseCoefficientField (k:=k) P γ)≤ 1:=by
  classical
  let E:=jetField (k:=k) P γ
- let full:Fin 4 → E:=freshJet (k:=k) P γ
- let v:Fin 3 → E:=freshOtherJet (k:=k) P γ
+ let full:Fin 4→ E:=freshJet (k:=k) P γ
+ let v:Fin 3→ E:=freshOtherJet (k:=k) P γ
  let τ:E:=freshJet (k:=k) P γ 0
  have hτ:Transcendental k τ:=freshTau_transcendental P γ
  let rawEquiv:=FractionRing.algEquiv (Polynomial k) (RatFunc k)
  let coeffEquiv:RationalCoefficients k ≃ₐ[k] RatFunc k:=rawEquiv.restrictScalars k
- let baseRat:RatFunc k →ₐ[k] E:=elementEmbedding k E τ hτ
- let base:RationalCoefficients k →ₐ[k] E:=baseRat.comp coeffEquiv.toAlgHom
+ let baseRat:RatFunc k→ₐ[k] E:=elementEmbedding k E τ hτ
+ let base:RationalCoefficients k→ₐ[k] E:=baseRat.comp coeffEquiv.toAlgHom
  letI:Algebra (RationalCoefficients k) E:=base.toRingHom.toAlgebra
  letI:IsScalarTower k (RationalCoefficients k) E:=
    IsScalarTower.of_algebraMap_eq fun c↦(base.commutes c).symm
@@ -60,7 +60,7 @@ theorem baseCoefficientField_trdeg_le_one_of_fresh_proper_relations
    rw [rawEquiv.commutes,elementEmbedding_variable]
  have hfull:IntermediateField.adjoin k (Set.range full)=⊤:=by
    apply IntermediateField.map_injective E.val
-   rw [IntermediateField.adjoin_map, ←AlgHom.fieldRange_eq_map,
+   rw [IntermediateField.adjoin_map,←AlgHom.fieldRange_eq_map,
      IntermediateField.fieldRange_val]
    have himage:E.val '' Set.range full=Set.range (freshPoint P γ):=by
      ext x
@@ -155,23 +155,23 @@ theorem baseCoefficientField_trdeg_le_one_of_fresh_proper_relations
  have hproperRat:¬ rationalSurfaceMap k F∣rationalSurfaceMap k T:=by
    intro h
    exact hproper ((rationalSurfaceMap_dvd_iff k F T hF hpos).mp h)
- have hrelative:Algebra.trdeg (RationalCoefficients k) E ≤ 1:=
+ have hrelative:Algebra.trdeg (RationalCoefficients k) E≤ 1:=
    trdeg_le_one_of_generated_relations (RationalCoefficients k) E v hgen
      (rationalSurfaceMap k F) (rationalSurfaceMap k T)
      hirr hproperRat hFroot hTroot
- have hbaseRat:Algebra.trdeg k (RatFunc k) ≤ 1:=
+ have hbaseRat:Algebra.trdeg k (RatFunc k)≤ 1:=
    trdeg_le_one_of_functionField k (RatFunc k)
- have hbase:Algebra.trdeg k (RationalCoefficients k) ≤ 1:=by
+ have hbase:Algebra.trdeg k (RationalCoefficients k)≤ 1:=by
    rw [coeffEquiv.trdeg_eq]
    exact hbaseRat
  have hsum:Algebra.trdeg k (RationalCoefficients k)+
      Algebra.trdeg (RationalCoefficients k) E=Algebra.trdeg k E:=
    trdeg_add_eq k (RationalCoefficients k)
- have hjet:Algebra.trdeg k E ≤ 2:=by
+ have hjet:Algebra.trdeg k E≤ 2:=by
    rw [←hsum]
    exact (add_le_add hbase hrelative).trans_eq (by norm_num)
  have hfield:=fresh_jetField_eq_coefficientField F P γ hFsolution hreg p w hw hP
- change Algebra.trdeg k (jetField (k:=k) P γ) ≤ 2 at hjet
+ change Algebra.trdeg k (jetField (k:=k) P γ)≤ 2 at hjet
  rw [hfield] at hjet
  exact baseCoefficientField_trdeg_le_one P γ hjet
 end

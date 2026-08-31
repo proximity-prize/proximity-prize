@@ -15,7 +15,7 @@ variable (primeIdeal:Ideal (Polynomial Base)) [primeIdeal.IsPrime]
 variable (factor:Polynomial Base)
 abbrev LocalBase:=Localization.AtPrime primeIdeal
 theorem grouped_resultant_power_dvd_of_primary_pieces_modMax
-   {J:Type*} [Fintype J] (multiplicity:J → ℕ)
+   {J:Type*} [Fintype J] (multiplicity:J→ ℕ)
    (hprime:primeIdeal=Ideal.span {factor})
    (hfactor:Irreducible factor) (hfactorMonic:factor.Monic)
    (P₀ Q₀:Polynomial (Polynomial Base)) (m n:ℕ)
@@ -24,15 +24,15 @@ theorem grouped_resultant_power_dvd_of_primary_pieces_modMax
      (algebraMap (Polynomial Base) (LocalBase primeIdeal)))
    (hQmap:Q=Q₀.map
      (algebraMap (Polynomial Base) (LocalBase primeIdeal)))
-   (hPcap:P.natDegree ≤ m) (hQcap:Q.natDegree ≤ n)
+   (hPcap:P.natDegree≤ m) (hQcap:Q.natDegree≤ n)
    (hresultant:Polynomial.resultant P₀ Q₀ m n≠0)
    (C:PrimaryPiecesCertificate P Q multiplicity)
    [Module.Finite (LocalBase primeIdeal)
-     (∀ j,Polynomial (LocalBase primeIdeal) ⧸ C.pieces j)]
+     (∀ j,Polynomial (LocalBase primeIdeal)⧸ C.pieces j)]
    (hmod:Function.Surjective
-     (((IsLocalRing.maximalIdeal (LocalBase primeIdeal) •
+     (((IsLocalRing.maximalIdeal (LocalBase primeIdeal)•
          (⊤:Submodule (LocalBase primeIdeal)
-           (∀ j,Polynomial (LocalBase primeIdeal) ⧸ C.pieces j))).mkQ).comp
+           (∀ j,Polynomial (LocalBase primeIdeal)⧸ C.pieces j))).mkQ).comp
        (rawPiecesMap P Q m n C.pieces))):
    factor^(∑ j,multiplicity j)∣
      Polynomial.resultant P₀ Q₀ m n:=by
@@ -56,7 +56,7 @@ theorem grouped_resultant_power_dvd_of_primary_pieces_modMax
      P Q m n hPcap hQcap hmappedNe C.pieces C.contains hmod
        multiplicity C.length_le
  have hlocal':
-     (((∑ j,multiplicity j:ℕ):ℕ∞)) ≤
+     (((∑ j,multiplicity j:ℕ):ℕ∞))≤
        Ring.ord (LocalBase primeIdeal)
          (algebraMap (Polynomial Base) (LocalBase primeIdeal)
            (Polynomial.resultant P₀ Q₀ m n)):=by
@@ -66,7 +66,7 @@ theorem grouped_resultant_power_dvd_of_primary_pieces_modMax
    (Polynomial.resultant P₀ Q₀ m n) hprime hfactor hfactorMonic
      hresultant multiplicity hlocal'
 theorem grouped_resultant_power_dvd_of_primary_pieces_of_surface_mod_ne_zero
-   {J:Type*} [Fintype J] (multiplicity:J → ℕ)
+   {J:Type*} [Fintype J] (multiplicity:J→ ℕ)
    (hprime:primeIdeal=Ideal.span {factor})
    (hfactor:Irreducible factor) (hfactorMonic:factor.Monic)
    (P₀ Q₀:Polynomial (Polynomial Base)) (m n:ℕ)
@@ -75,17 +75,17 @@ theorem grouped_resultant_power_dvd_of_primary_pieces_of_surface_mod_ne_zero
      (algebraMap (Polynomial Base) (LocalBase primeIdeal)))
    (hQmap:Q=Q₀.map
      (algebraMap (Polynomial Base) (LocalBase primeIdeal)))
-   (hPcap:P.natDegree ≤ m) (hQcap:Q.natDegree ≤ n)
+   (hPcap:P.natDegree≤ m) (hQcap:Q.natDegree≤ n)
    (hresultant:Polynomial.resultant P₀ Q₀ m n≠0)
    (hPbar:P.map (IsLocalRing.residue (LocalBase primeIdeal))≠0)
    (C:PrimaryPiecesCertificate P Q multiplicity)
    [Module.Finite (LocalBase primeIdeal)
-     (∀ j,Polynomial (LocalBase primeIdeal) ⧸ C.pieces j)]:
+     (∀ j,Polynomial (LocalBase primeIdeal)⧸ C.pieces j)]:
    factor^(∑ j,multiplicity j)∣
      Polynomial.resultant P₀ Q₀ m n:=by
  obtain ⟨M,hMMonic,hMmem,hMdegreeP⟩:=
    exists_specialized_monic_reducer P hPbar
- have hspan:Ideal.span {P} ≤ intersectionIdeal P Q:=by
+ have hspan:Ideal.span {P}≤ intersectionIdeal P Q:=by
    rw [Ideal.span_le]
    intro x hx
    rw [Set.mem_singleton_iff] at hx
@@ -94,7 +94,7 @@ theorem grouped_resultant_power_dvd_of_primary_pieces_of_surface_mod_ne_zero
  have hMmem':M∈intersectionIdeal P Q ⊔
      coefficientMaxIdeal (R:=LocalBase primeIdeal):=
    (sup_le_sup hspan le_rfl) hMmem
- have hMdegree:M.natDegree ≤ m+n:=
+ have hMdegree:M.natDegree≤ m+n:=
    hMdegreeP.trans (hPcap.trans (Nat.le_add_right m n))
  have hmod:=rawPieces_modMax_surjective_of_monic_mod
    P Q m n C.pieces C.coprime C.contains M hMMonic hMmem' hMdegree

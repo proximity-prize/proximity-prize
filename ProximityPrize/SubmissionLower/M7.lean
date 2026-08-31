@@ -20,28 +20,28 @@ variable [Field E] [IsAlgClosed E] [Algebra Ω E] [Algebra (RatFunc Ω) E]
 variable [IsScalarTower Ω (RatFunc Ω) E]
 def paddedCut (a b s d:ℕ):FlagDegree:=
  RCN206.centreFlag a b s+
-   d • RCN206.directionFlag a b s
+   d• RCN206.directionFlag a b s
 theorem mixed_add_second (p q r t:FlagDegree):
    flagMixed p (q+r) t=flagMixed p q t+flagMixed p r t:=by
  simp only [flagMixed,add_zOnly,add_yz,add_all]
  ring
 theorem mixed_affine_third (p q C R:FlagDegree) (k:ℕ):
-   flagMixed p q (C+k • R)=flagMixed p q C+k*flagMixed p q R:=by
+   flagMixed p q (C+k• R)=flagMixed p q C+k*flagMixed p q R:=by
  simp only [flagMixed,add_zOnly,add_yz,add_all,nsmul_zOnly,nsmul_yz,nsmul_all]
  ring
 theorem mixed_sharp_le_padded (a b s d:ℕ) (p r:FlagDegree):
-   flagMixed p (sharpResidualAgreementFlag (support a b s) d) r ≤
+   flagMixed p (sharpResidualAgreementFlag (support a b s) d) r≤
      flagMixed p (paddedCut a b s d) r:=by
  have he:paddedCut a b s d=
      sharpResidualAgreementFlag (support a b s) d+direction a b s:=by
    rw [sharp_flag_eq]
    change FlagDegree.mk _ _ _=FlagDegree.mk _ _ _
-   congr 1 <;> simp [paddedCut,RCN206.centreFlag,
-     RCN206.directionFlag,direction,unitYZFlag] <;> ring
+   congr 1<;> simp [paddedCut,RCN206.centreFlag,
+     RCN206.directionFlag,direction,unitYZFlag]<;> ring
  rw [he,mixed_add_second]
  exact Nat.le_add_right _ _
 theorem exists_actual_cut_budgets
-   (φ:Polynomial K →+*Ω) (F:MvPolynomial (Fin 4) K)
+   (φ:Polynomial K→+*Ω) (F:MvPolynomial (Fin 4) K)
    (G T:MvPolynomial (Fin 3) Ω) (a b s d:ℕ) (xI u0 u1:K)
    (hT:T=agreementPolynomial φ F d xI u0 u1)
    (hF:ResidualSupportData (support a b s) F) (flag:FlagDegree)
@@ -49,18 +49,18 @@ theorem exists_actual_cut_budgets
    (base:∀ C:RegularComponent Ω G T (regularitySurface φ F),SeparableLiteralCoordinate C.1)
    (unit:AdaptiveUnitProjectionFamily base flag (sharpResidualAgreementFlag (support a b s) d))
    (pchar:ℕ) [CharP E pchar]
-   (hmix:2*(flag.zOnly+flag.yz+flag.all)*(a+b+s+4) < pchar):
+   (hmix:2*(flag.zOnly+flag.yz+flag.all)*(a+b+s+4)< pchar):
    ∃ budget:∀ C:RegularComponent Ω G T (regularitySurface φ F),
      MovingPoleBudget C.1 (regularitySurface φ F) (surfaceMap φ (polyG K F)),
      (∀ C,(budget C).zCost=unit.toPrimeFlagBudgetFamily.zCost C∧
        (budget C).yzCost=unit.toPrimeFlagBudgetFamily.yzCost C∧
        (budget C).allCost=unit.toPrimeFlagBudgetFamily.allCost C)∧
-     (∑ C,(budget C).zCost) ≤ flagMixed flag (paddedCut a b s d) unitZFlag∧
-     (∑ C,(budget C).yzCost) ≤ flagMixed flag (paddedCut a b s d) unitYZFlag∧
-     (∑ C,(budget C).allCost) ≤ flagMixed flag (paddedCut a b s d) unitAllFlag∧
-     (∑ C,(budget C).movingCost) ≤ flagMixed flag
+     (∑ C,(budget C).zCost)≤ flagMixed flag (paddedCut a b s d) unitZFlag∧
+     (∑ C,(budget C).yzCost)≤ flagMixed flag (paddedCut a b s d) unitYZFlag∧
+     (∑ C,(budget C).allCost)≤ flagMixed flag (paddedCut a b s d) unitAllFlag∧
+     (∑ C,(budget C).movingCost)≤ flagMixed flag
        (RCN206.fiberFlag a b s)
-       (center a b s+d • RCN206.surfaceFlag a b s):=by
+       (center a b s+d• RCN206.surfaceFlag a b s):=by
  classical
  obtain ⟨coeffs,cflags,heq,hcoeff,hclass,_⟩:=exists_actual_agreement_certificate
    φ a b s F hF.coordinate_bounds.2.1 hF.ys_weight hF.total_weight d xI u0 u1
@@ -68,7 +68,7 @@ theorem exists_actual_cut_budgets
    φ a b s F hF.coordinate_bounds.2.1 hF.ys_weight hF.total_weight
  have hderiv:regularitySurface φ F∈
      Ideal.span ({G,MvPolynomial.pderiv (1:Fin 3) G}:Set (MvPolynomial (Fin 3) Ω)):=by
-   rw [regularitySurface, ←RCN267.surfaceMap_pderiv_R]
+   rw [regularitySurface,←RCN267.surfaceMap_pderiv_R]
    exact RCN076.pderiv_mem_span_of_dvd G (surfaceMap φ F) hdiv
  have hT':T=filteredCut (d-1) coeffs (surfaceMap φ (polyH K F))
      (surfaceMap φ (polyG K F)):=hT.trans heq
@@ -78,7 +78,7 @@ theorem exists_actual_cut_budgets
    G (regularitySurface φ F) (surfaceMap φ (polyG K F)) (d-1) coeffs
    base flag (sharpResidualAgreementFlag (support a b s) d) unit hG hderiv hGflag
    a b s (center a b s) hHflag hGcontact cflags hcoeff hclass pchar
-   (by convert hmix using 1 <;> ring)
+   (by convert hmix using 1<;> ring)
  refine ⟨budget,hcost,hz.trans (mixed_sharp_le_padded a b s d flag unitZFlag),
    hyz.trans (mixed_sharp_le_padded a b s d flag unitYZFlag),
    ha.trans (mixed_sharp_le_padded a b s d flag unitAllFlag),hm.trans ?_⟩

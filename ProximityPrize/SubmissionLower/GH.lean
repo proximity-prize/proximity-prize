@@ -61,34 +61,34 @@ theorem asymmetric_stage_count_lt_of_regular_factors
    (S:RCN318.TightParameters)
    (Q T:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    (p:ℕ) [CharP K p]
-   (hs:1 ≤ S.s) (hsmall:S.s < p) (hw:1 ≤ S.w)
-   (hchar:S.w < p) (hDw:S.w < S.kappa*S.D)
-   (hj:1 ≤ S.algebraicCap)
-   (hjYSmall:S.implicitYCap < p)
-   (hjZSmall:S.algebraicCap < p)
-   (hmixedSmall:2*S.implicitYCap*S.algebraicCap < p)
-   (hwa:S.w < S.a) (han:S.a ≤ S.n)
+   (hs:1≤ S.s) (hsmall:S.s< p) (hw:1≤ S.w)
+   (hchar:S.w< p) (hDw:S.w< S.kappa*S.D)
+   (hj:1≤ S.algebraicCap)
+   (hjYSmall:S.implicitYCap< p)
+   (hjZSmall:S.algebraicCap< p)
+   (hmixedSmall:2*S.implicitYCap*S.algebraicCap< p)
+   (hwa:S.w< S.a) (han:S.a≤ S.n)
    (hbox:Q∈globalCoefficientBox K S.D S.w S.L S.s)
-   (hgap:0 < P.gap) (_hgapEq:S.gap=P.gap)
-   (hY:(S.D-1)/S.w ≤ P.leftY)
-   (hR:S.s ≤ P.leftR) (hZ:S.L ≤ P.leftZ)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (hgap:0< P.gap) (_hgapEq:S.gap=P.gap)
+   (hY:(S.D-1)/S.w≤ P.leftY)
+   (hR:S.s≤ P.leftR) (hZ:S.L≤ P.leftZ)
+   (selected:K→ Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→ K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=S.n)
-   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ S.w)
+   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤ S.w)
    (hQsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0)
    (hTsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma T=0)
    (hagreement:∀ gamma∈Gamma,
-     S.a ≤ (nodes.filter (fun i =>
+     S.a≤ (nodes.filter (fun i =>
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma S.w S.errors)
    (hregular:∀ F:RCN052.RegularIndex Q,
-     (regularPairSeeds Q T selected Gamma F).card*P.gap ≤
+     (regularPairSeeds Q T selected Gamma F).card*P.gap≤
        (P.n-P.w)*dot P.agreement (regularVector P F.1)+
          (P.errors+1)*P.gap*(regularVector P F.1).z):
-   Gamma.card < P.regularCountCap+S.countCap+1:=by
+   Gamma.card< P.regularCountCap+S.countCap+1:=by
  classical
  have hcover:=card_le_regular_sum_add_singular Q T hQ
    S.D S.w S.L S.s p hs hsmall hw hDw hj hjZSmall hbox
@@ -98,7 +98,7 @@ theorem asymmetric_stage_count_lt_of_regular_factors
    hregular
  have hregularCap:
      (∑ F:RCN052.RegularIndex Q,
-       (regularPairSeeds Q T selected Gamma F).card) ≤ P.regularCountCap:=
+       (regularPairSeeds Q T selected Gamma F).card)≤ P.regularCountCap:=
    P.regular_count_le _ hgap hregularScaled
  have hsingularOld:=
    RCN292.TightParameters.singularSeeds_count_le_countCap
@@ -106,9 +106,9 @@ theorem asymmetric_stage_count_lt_of_regular_factors
      hwa han selected Gamma nodes x u0 u1 hinj hnodes hdegree hagreement
      hnoPencil
  have hsingular:
-     (RCN052.singularSeeds Q selected Gamma).card ≤
+     (RCN052.singularSeeds Q selected Gamma).card≤
        S.countCap:=by
-   change (RCN291.singularSeeds Q selected Gamma).card ≤
+   change (RCN291.singularSeeds Q selected Gamma).card≤
      S.countCap
    exact hsingularOld
  omega
@@ -129,18 +129,18 @@ theorem firstResidualCell_count_lt
      (25*agreements) w 5263 7)
    (hboxB:QB∈globalCoefficientBox IRSProfile.Field
      (47*agreements) w 598 14)
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→ Polynomial IRSProfile.Field)
    (Gamma:Finset IRSProfile.Field)
-   (u0 u1:IRSProfile.Index → IRSProfile.Field)
+   (u0 u1:IRSProfile.Index→ IRSProfile.Field)
    (hcover:∀ gamma∈Gamma,
      RecursiveSpecializationBranch (selected gamma) gamma QA QB QC)
-   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
+   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤ w)
    (hagreement:∀ gamma∈Gamma,
-     agreements ≤ ((Finset.univ:Finset IRSProfile.Index).filter (fun i =>
+     agreements≤ ((Finset.univ:Finset IRSProfile.Index).filter (fun i =>
        (selected gamma).eval (IRSProfile.domain i)=
          u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma w errors):
-   (firstResidualSeeds selected Gamma QA QB).card <
+   (firstResidualSeeds selected Gamma QA QB).card<
      firstResidualQ2Ceiling:=by
  let Delta:=firstResidualSeeds selected Gamma QA QB
  let Q:=quotientB QA QB
@@ -164,11 +164,11 @@ theorem firstResidualCell_count_lt
  have hrel:IsRelPrime Q T:=
    (firstQuotients_isRelPrime hQA).symm
  have hdegreeDelta:∀ gamma∈Delta,
-     (selected gamma).natDegree ≤ firstResidualQ2.w:=by
+     (selected gamma).natDegree≤ firstResidualQ2.w:=by
    intro gamma hgamma
    simpa [firstResidualQ2,w] using hdegree gamma (hsub hgamma)
  have hagreementDelta:∀ gamma∈Delta,
-     firstResidualQ2.a ≤
+     firstResidualQ2.a≤
        ((Finset.univ:Finset IRSProfile.Index).filter (fun i =>
          (selected gamma).eval (IRSProfile.domain i)=
            u0 i+gamma*u1 i)).card:=by
@@ -244,18 +244,18 @@ theorem secondResidualCell_count_lt
      (47*agreements) w 598 14)
    (hboxC:QC∈globalCoefficientBox IRSProfile.Field
      (27*agreements) w 579299 6)
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→ Polynomial IRSProfile.Field)
    (Gamma:Finset IRSProfile.Field)
-   (u0 u1:IRSProfile.Index → IRSProfile.Field)
+   (u0 u1:IRSProfile.Index→ IRSProfile.Field)
    (hcover:∀ gamma∈Gamma,
      RecursiveSpecializationBranch (selected gamma) gamma QA QB QC)
-   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
+   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤ w)
    (hagreement:∀ gamma∈Gamma,
-     agreements ≤ ((Finset.univ:Finset IRSProfile.Index).filter (fun i =>
+     agreements≤ ((Finset.univ:Finset IRSProfile.Index).filter (fun i =>
        (selected gamma).eval (IRSProfile.domain i)=
          u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma w errors):
-   (secondResidualSeeds selected Gamma QA QB QC).card <
+   (secondResidualSeeds selected Gamma QA QB QC).card<
      secondResidualGcd12Ceiling:=by
  let Delta:=secondResidualSeeds selected Gamma QA QB QC
  let Q:=middleQuotient QA QB QC
@@ -279,11 +279,11 @@ theorem secondResidualCell_count_lt
    (by norm_num [w]) hTbox
  have hrel:IsRelPrime Q T:=secondQuotients_isRelPrime hQA
  have hdegreeDelta:∀ gamma∈Delta,
-     (selected gamma).natDegree ≤ secondResidualGcd12.w:=by
+     (selected gamma).natDegree≤ secondResidualGcd12.w:=by
    intro gamma hgamma
    simpa [secondResidualGcd12,w] using hdegree gamma (hsub hgamma)
  have hagreementDelta:∀ gamma∈Delta,
-     secondResidualGcd12.a ≤
+     secondResidualGcd12.a≤
        ((Finset.univ:Finset IRSProfile.Index).filter (fun i =>
          (selected gamma).eval (IRSProfile.domain i)=
            u0 i+gamma*u1 i)).card:=by

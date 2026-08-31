@@ -8,11 +8,11 @@ open RCN057 RCN055
 noncomputable section
 set_option maxHeartbeats 3000000
 variable {K Ω:Type} [Field K] [Field Ω]
-private theorem mapped_flag (φ:Polynomial K →+*Ω)
+private theorem mapped_flag (φ:Polynomial K→+*Ω)
    (Q:MvPolynomial (Fin 4) K) (a b s:ℕ)
-   (hR:wt residualSWeights Q ≤ s)
-   (hM:wt residualYSWeights Q ≤ b+s)
-   (hT:wt residualTotalWeights Q ≤ a+b+s):
+   (hR:wt residualSWeights Q≤ s)
+   (hM:wt residualYSWeights Q≤ b+s)
+   (hT:wt residualTotalWeights Q≤ a+b+s):
    PolynomialInFlag ⟨a,b,s⟩ (surfaceMap φ Q):=by
  intro e he
  obtain ⟨q,hq,rfl⟩:=Finset.mem_image.mp (support_surfaceMap_subset φ Q he)
@@ -23,7 +23,7 @@ private theorem mapped_flag (φ:Polynomial K →+*Ω)
  simp [RCN081.weight_fin4,residualYSWeights] at hm
  simp [RCN081.weight_fin4,residualTotalWeights] at ht
  exact ⟨hr,hm,ht⟩
-private theorem G_weight (w:Fin 4 → ℕ) (t:ℕ)
+private theorem G_weight (w:Fin 4→ ℕ) (t:ℕ)
    (h0:w 0=0) (h1:w 1=t) (h2:w 2=1) (ht:t≤1)
    (F:MvPolynomial (Fin 4) K) (C:ℕ)
    (hC:1≤C) (hF:wt w F≤C):wt w (polyG K F)≤C+1-t:=by
@@ -34,16 +34,16 @@ private theorem G_weight (w:Fin 4 → ℕ) (t:ℕ)
  rcases hg with hz | hb
  · simp [hz,wt,MvPolynomial.weightedTotalDegree]
  · have htc:t≤C+1:=by omega
-   have hb':(wt w (polyG K F):ℤ) ≤ ((C+1-t:ℕ):ℤ):=by
+   have hb':(wt w (polyG K F):ℤ)≤ ((C+1-t:ℕ):ℤ):=by
      rw [Nat.cast_sub htc]
      push_cast
      exact hb
    exact_mod_cast hb'
-theorem surfaceMap_HG_flags (φ:Polynomial K →+*Ω)
+theorem surfaceMap_HG_flags (φ:Polynomial K→+*Ω)
    (a b s:ℕ) (F:MvPolynomial (Fin 4) K)
-   (hR:F.degreeOf 2 ≤ s+2)
-   (hYR:wt ![0,1,1,0] F ≤ b+s+3)
-   (hAll:wt ![0,1,1,1] F ≤ a+b+s+3):
+   (hR:F.degreeOf 2≤ s+2)
+   (hYR:wt ![0,1,1,0] F≤ b+s+3)
+   (hAll:wt ![0,1,1,1] F≤ a+b+s+3):
    PolynomialInFlag ⟨a,b+1,s+1⟩ (surfaceMap φ (polyH K F))∧
    PolynomialInFlag ⟨a,b,s+3⟩ (surfaceMap φ (polyG K F)):=by
  have hS:=support_data a b s F hR hYR hAll
@@ -57,10 +57,10 @@ theorem surfaceMap_HG_flags (φ:Polynomial K →+*Ω)
  · apply mapped_flag φ (polyH K F) a (b+1) (s+1)
    · simpa [residualSWeights] using wt_polyH_le residualSWeights F (s+2) hr
    · have h:=wt_polyH_le residualYSWeights F (b+s+3) hm
-     change wt residualYSWeights (polyH K F) ≤ b+s+3-1 at h
+     change wt residualYSWeights (polyH K F)≤ b+s+3-1 at h
      omega
    · have h:=wt_polyH_le residualTotalWeights F (a+b+s+3) ha
-     change wt residualTotalWeights (polyH K F) ≤ a+b+s+3-1 at h
+     change wt residualTotalWeights (polyH K F)≤ a+b+s+3-1 at h
      omega
  · apply mapped_flag φ (polyG K F) a b (s+3)
    · simpa using G_weight residualSWeights 0 rfl rfl rfl (by omega) F

@@ -13,19 +13,19 @@ variable {K k L:Type} [Field K] [Field k] [Field L]
  [Algebra K k] [Algebra K L] [Algebra k L] [IsScalarTower K k L]
 theorem baseCoefficientField_trdeg_le_one_of_algebraic_constants
    [Algebra.IsAlgebraic K k] (P:Polynomial L) (γ:L)
-   (htr:Algebra.trdeg K (baseCoefficientField (k:=K) P γ) ≤ 1):
-   Algebra.trdeg k (baseCoefficientField (k:=k) P γ) ≤ 1:=by
+   (htr:Algebra.trdeg K (baseCoefficientField (k:=K) P γ)≤ 1):
+   Algebra.trdeg k (baseCoefficientField (k:=k) P γ)≤ 1:=by
  let S:Set L:=insert γ (Set.range (fun j:ℕ => P.coeff j))
  let BK:IntermediateField K L:=baseCoefficientField (k:=K) P γ
  let Bk:IntermediateField k L:=baseCoefficientField (k:=k) P γ
  let BkK:IntermediateField K L:=Bk.restrictScalars K
- have hBK:BK ≤ BkK:=by
-   change IntermediateField.adjoin K S ≤ BkK
+ have hBK:BK≤ BkK:=by
+   change IntermediateField.adjoin K S≤ BkK
    apply IntermediateField.adjoin_le_iff.mpr
    intro z hz
    change z∈Bk
    exact IntermediateField.subset_adjoin k S hz
- let inc:BK →ₐ[K] Bk:={
+ let inc:BK→ₐ[K] Bk:={
    toFun:=fun z => ⟨z,hBK z.2⟩
    map_one':=rfl
    map_mul':=fun _ _ => rfl
@@ -45,7 +45,7 @@ theorem baseCoefficientField_trdeg_le_one_of_algebraic_constants
    exact hcK.tower_top BK
  let ACLk:IntermediateField k L:=
    ACL.toSubfield.toIntermediateField hkACL
- have hBkACL:Bk ≤ ACLk:=by
+ have hBkACL:Bk≤ ACLk:=by
    apply IntermediateField.adjoin_le_iff.mpr
    intro z hz
    change z∈ACL
@@ -60,7 +60,7 @@ theorem baseCoefficientField_trdeg_le_one_of_algebraic_constants
  have hzeroE:Algebra.trdeg BK Bk=0:=trdeg_eq_zero
  have hsumE:Algebra.trdeg K BK+Algebra.trdeg BK Bk=Algebra.trdeg K Bk:=
    trdeg_add_eq K BK
- have hKBk:Algebra.trdeg K Bk ≤ 1:=by
+ have hKBk:Algebra.trdeg K Bk≤ 1:=by
    rw [←hsumE,hzeroE,add_zero]
    exact htr
  have hzerok:Algebra.trdeg K k=0:=trdeg_eq_zero
@@ -71,20 +71,20 @@ theorem baseCoefficientField_trdeg_le_one_of_algebraic_constants
 theorem coefficient_pole_le_of_trdeg_le_one
    {Ω:Type} [Field Ω] [IsAlgClosed k]
    [Algebra k Ω] [Algebra Ω L] [IsScalarTower k Ω L]
-   (P:Polynomial L) (γ:L) (w:ℕ) (hP:P.natDegree ≤ w)
-   (htr:Algebra.trdeg k (baseCoefficientField (k:=k) P γ) ≤ 1)
+   (P:Polynomial L) (γ:L) (w:ℕ) (hP:P.natDegree≤ w)
+   (htr:Algebra.trdeg k (baseCoefficientField (k:=k) P γ)≤ 1)
    (x:Ω) (hx:Transcendental k x) (y:L)
    (hy:P.eval (algebraMap Ω L x)=y)
    (v:RCN346.Place Ω L) (j:ℕ):
-   poleOrder v.val (P.coeff j) ≤ poleOrder v.val y:=by
+   poleOrder v.val (P.coeff j)≤ poleOrder v.val y:=by
  letI:v.val.IsTrivialOn Ω:=v.property.2
  let B:IntermediateField k L:=baseCoefficientField (k:=k) P γ
  have hcoeff (n:ℕ):P.coeff n∈B:=by
    exact IntermediateField.subset_adjoin k _ (Or.inr ⟨n,rfl⟩)
- by_cases hj:j < w+1
+ by_cases hj:j< w+1
  · let i:Fin (w+1):=⟨j,hj⟩
-   let a:Fin (w+1) → B:=fun n => ⟨P.coeff n,hcoeff n⟩
-   let φ:B →+*L:=B.val.toRingHom
+   let a:Fin (w+1)→ B:=fun n => ⟨P.coeff n,hcoeff n⟩
+   let φ:B→+*L:=B.val.toRingHom
    have hcompat:∀ c:k,φ (algebraMap k B c)=
        algebraMap Ω L (algebraMap k Ω c):=by
      intro c
@@ -98,7 +98,7 @@ theorem coefficient_pole_le_of_trdeg_le_one
      rfl
    have hle:=coefficient_pole_le_generic_evaluation_of_trdeg_le_one
      v.val φ hcompat htr x hx a i
-   change poleOrder v.val (P.coeff i) ≤
+   change poleOrder v.val (P.coeff i)≤
      poleOrder v.val (∑ n,φ (a n)*(algebraMap Ω L x)^(n:ℕ)) at hle
    rw [hsum,hy] at hle
    simpa only [i] using hle

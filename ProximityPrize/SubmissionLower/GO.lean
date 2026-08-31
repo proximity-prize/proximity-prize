@@ -22,7 +22,7 @@ set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
 set_option maxRecDepth 30000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K→+*Omega} {Gamma:Finset K} {x:Iota→ K}
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
 local instance:DecidableEq Iota:=Classical.decEq Iota
@@ -43,9 +43,9 @@ def FixedMeetTerminalAdaptiveProjectionFamilies
    (S:ResidualStage phi Gamma x prime meetProfile.errors flag meetProfile.w
      ResidualSupportParameters.fixedMeetSupport):Prop:=
  ∀ (D:S.TerminalDescendant) (i:Iota),
-   i∈D.stage.nodes →
+   i∈D.stage.nodes→
    ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
-       (x i) (D.stage.u0 i) (D.stage.u1 i) →
+       (x i) (D.stage.u0 i) (D.stage.u1 i)→
    ∃ base:∀ C:RegularComponent Omega D.stage.G
        (agreementPolynomial phi D.stage.F D.degree
          (x i) (D.stage.u0 i) (D.stage.u1 i))
@@ -54,50 +54,50 @@ def FixedMeetTerminalAdaptiveProjectionFamilies
      Nonempty (AdaptiveUnitProjectionFamily base flag
        (ResidualSupportParameters.fixedMeetSupport.residualAgreementFlag
          D.degree))
-theorem fixedMeet_cut_coordinate_caps {d:ℕ} (hd:d ≤ 131071):
-   (1+56*d)+11*d ≤ 1+67*131071∧
-     11*d ≤ 11*131071∧
-     1140*d+(1+56*d)+11*d ≤ 1+1207*131071:=by
+theorem fixedMeet_cut_coordinate_caps {d:ℕ} (hd:d≤ 131071):
+   (1+56*d)+11*d≤ 1+67*131071∧
+     11*d≤ 11*131071∧
+     1140*d+(1+56*d)+11*d≤ 1+1207*131071:=by
  refine ⟨?_,Nat.mul_le_mul_left 11 hd,?_⟩
  · calc
      (1+56*d)+11*d=1+67*d:=by ring
-     _ ≤ 1+67*131071:=Nat.add_le_add_left
+     _≤ 1+67*131071:=Nat.add_le_add_left
        (Nat.mul_le_mul_left 67 hd) 1
  · calc
      1140*d+(1+56*d)+11*d=1+1207*d:=by ring
-     _ ≤ 1+1207*131071:=Nat.add_le_add_left
+     _≤ 1+1207*131071:=Nat.add_le_add_left
        (Nat.mul_le_mul_left 1207 hd) 1
 theorem fixedMeet_terminal_mixed_gates:
    (11*131071)*638+6*(1+1207*131071)=1869072466∧
      (1+67*131071)*6+40*(11*131071)=110361788∧
-     1869072466 < prime:=by
+     1869072466< prime:=by
  norm_num [prime]
 theorem literalProjectionGates_of_fixedMeet_caps
    [CharP Omega prime]
    {G T H:MvPolynomial (Fin 3) Omega}
    (hGirreducible:Irreducible G)
    (hproper:¬ G∣T)
-   (hGY:G.degreeOf 0 ≤ 40)
-   (hGS:G.degreeOf 1 ≤ 6)
-   (hGZ:G.degreeOf 2 ≤ 638)
-   (hTY:T.degreeOf 0 ≤ 1+67*131071)
-   (hTS:T.degreeOf 1 ≤ 11*131071)
-   (hTZ:T.degreeOf 2 ≤ 1+1207*131071):
+   (hGY:G.degreeOf 0≤ 40)
+   (hGS:G.degreeOf 1≤ 6)
+   (hGZ:G.degreeOf 2≤ 638)
+   (hTY:T.degreeOf 0≤ 1+67*131071)
+   (hTS:T.degreeOf 1≤ 11*131071)
+   (hTZ:T.degreeOf 2≤ 1+1207*131071):
    (∀ C:RegularComponent Omega G T H,LiteralProjectionGate C 0)∧
      (∀ C:RegularComponent Omega G T H,LiteralProjectionGate C 2):=by
- have hGdegree:∀ j:Fin 3,G.degreeOf j < prime:=by
+ have hGdegree:∀ j:Fin 3,G.degreeOf j< prime:=by
    intro j
    fin_cases j
    · exact hGY.trans_lt (by norm_num [prime])
    · exact hGS.trans_lt (by norm_num [prime])
    · exact hGZ.trans_lt (by norm_num [prime])
- have hmixedY:coordinateMixedDegree Omega G T 0 < prime:=by
+ have hmixedY:coordinateMixedDegree Omega G T 0< prime:=by
    rw [coordinateMixedDegree_zero]
    apply (Nat.add_le_add
      (Nat.mul_le_mul hTS hGZ)
      (Nat.mul_le_mul hGS hTZ)).trans_lt
    norm_num [prime]
- have hmixedZ:coordinateMixedDegree Omega G T 2 < prime:=by
+ have hmixedZ:coordinateMixedDegree Omega G T 2< prime:=by
    rw [coordinateMixedDegree_two]
    apply (Nat.add_le_add
      (Nat.mul_le_mul hTY hGS)
@@ -145,32 +145,32 @@ theorem literalProjectionGates_of_fixedMeet_flags
    (hGflag:PolynomialInFlag flag G)
    (hTflag:PolynomialInFlag
      (ResidualSupportParameters.fixedMeetSupport.residualAgreementFlag d) T)
-   (hd:d ≤ 131071)
-   (hflagZ:flag.zOnly ≤ 598)
-   (hflagY:flag.yz ≤ 34)
-   (hflagS:flag.all ≤ 6):
+   (hd:d≤ 131071)
+   (hflagZ:flag.zOnly≤ 598)
+   (hflagY:flag.yz≤ 34)
+   (hflagS:flag.all≤ 6):
    (∀ C:RegularComponent Omega G T H,LiteralProjectionGate C 0)∧
      (∀ C:RegularComponent Omega G T H,LiteralProjectionGate C 2):=by
  obtain ⟨hGY,hGS,hGZ⟩:=
    _root_.ProximityPrize.SubmissionLower.RCN314.degree_bounds_of_polynomialInFlag hGflag
  obtain ⟨hTY,hTS,hTZ⟩:=
    _root_.ProximityPrize.SubmissionLower.RCN314.degree_bounds_of_polynomialInFlag hTflag
- have hGY':G.degreeOf 0 ≤ 40:=
+ have hGY':G.degreeOf 0≤ 40:=
    hGY.trans (Nat.add_le_add hflagY hflagS)
- have hGS':G.degreeOf 1 ≤ 6:=hGS.trans hflagS
- have hGZ':G.degreeOf 2 ≤ 638:=
+ have hGS':G.degreeOf 1≤ 6:=hGS.trans hflagS
+ have hGZ':G.degreeOf 2≤ 638:=
    hGZ.trans (Nat.add_le_add (Nat.add_le_add hflagZ hflagY) hflagS)
- have hTY':T.degreeOf 0 ≤ 1+67*131071:=by
+ have hTY':T.degreeOf 0≤ 1+67*131071:=by
    apply hTY.trans
-   change (1+56*d)+11*d ≤ 1+67*131071
+   change (1+56*d)+11*d≤ 1+67*131071
    exact (fixedMeet_cut_coordinate_caps hd).1
- have hTS':T.degreeOf 1 ≤ 11*131071:=by
+ have hTS':T.degreeOf 1≤ 11*131071:=by
    apply hTS.trans
-   change 11*d ≤ 11*131071
+   change 11*d≤ 11*131071
    exact (fixedMeet_cut_coordinate_caps hd).2.1
- have hTZ':T.degreeOf 2 ≤ 1+1207*131071:=by
+ have hTZ':T.degreeOf 2≤ 1+1207*131071:=by
    apply hTZ.trans
-   change 1140*d+(1+56*d)+11*d ≤ 1+1207*131071
+   change 1140*d+(1+56*d)+11*d≤ 1+1207*131071
    exact (fixedMeet_cut_coordinate_caps hd).2.2
  exact literalProjectionGates_of_fixedMeet_caps hGirreducible hproper
    hGY' hGS' hGZ' hTY' hTS' hTZ'
@@ -220,9 +220,9 @@ theorem fixedMeetTerminalAdaptiveProjection_at_cut
    {flag:FlagDegree}
    (S:ResidualStage phi Gamma x prime meetProfile.errors flag meetProfile.w
      ResidualSupportParameters.fixedMeetSupport)
-   (hflagZ:flag.zOnly ≤ 598)
-   (hflagY:flag.yz ≤ 34)
-   (hflagS:flag.all ≤ 6)
+   (hflagZ:flag.zOnly≤ 598)
+   (hflagY:flag.yz≤ 34)
+   (hflagS:flag.all≤ 6)
    (D:S.TerminalDescendant) (i:Iota)
    (hi:i∈D.stage.nodes)
    (hproper:¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
@@ -249,9 +249,9 @@ theorem fixedMeetTerminalAdaptiveProjection_at_cut
  have hTflag:PolynomialInFlag
      (ResidualSupportParameters.fixedMeetSupport.residualAgreementFlag D.degree) T:=by
    exact (terminal_proper_cuts_in_residual_flag D.stage D.terminal i hi).2
- have hD:D.degree ≤ meetProfile.w:=
+ have hD:D.degree≤ meetProfile.w:=
    D.degree_le.trans (Nat.le_refl meetProfile.w)
- change D.degree ≤ 131071 at hD
+ change D.degree≤ 131071 at hD
  obtain ⟨hY,hZ⟩:=literalProjectionGates_of_fixedMeet_flags
    D.stage.irreducible_G hproper hGflag hTflag hD hflagZ hflagY hflagS
  exact fixedMeetTerminalAdaptiveProjection_at_cut_of_gates S D i hproper
@@ -261,9 +261,9 @@ theorem fixedMeetTerminalAdaptiveProjectionFamilies_of_rectangular_caps
    {flag:FlagDegree}
    (S:ResidualStage phi Gamma x prime meetProfile.errors flag meetProfile.w
      ResidualSupportParameters.fixedMeetSupport)
-   (hflagZ:flag.zOnly ≤ 598)
-   (hflagY:flag.yz ≤ 34)
-   (hflagS:flag.all ≤ 6):
+   (hflagZ:flag.zOnly≤ 598)
+   (hflagY:flag.yz≤ 34)
+   (hflagS:flag.all≤ 6):
    FixedMeetTerminalAdaptiveProjectionFamilies S:=by
  intro D i hi hproper
  exact fixedMeetTerminalAdaptiveProjection_at_cut S hflagZ hflagY hflagS

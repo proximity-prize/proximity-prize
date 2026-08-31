@@ -13,7 +13,7 @@ set_option autoImplicit false
 set_option maxRecDepth 30000
 set_option maxHeartbeats 3000000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable (phi:Polynomial K →+*Omega)
+variable (phi:Polynomial K→+*Omega)
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
 local instance:DecidableEq Iota:=Classical.decEq Iota
@@ -24,14 +24,14 @@ theorem seedless_proper_cut_bound
    (hG:Irreducible G) (hdiv:G∣surfaceMap phi F)
    (hproper:¬ G∣seedlessCut)
    (Gamma:Finset (Polynomial K))
-   (nodes:Finset Iota) (x u:Iota → K) (hinj:Set.InjOn x nodes)
-   (p w a:ℕ) [CharP Omega p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
-   (hGdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hcutDegree:∀ j k:Fin 3,j≠k →
+   (nodes:Finset Iota) (x u:Iota→ K) (hinj:Set.InjOn x nodes)
+   (p w a:ℕ) [CharP Omega p] (hw:1≤ w) (hchar:w< p)
+   (hwa:w< a) (han:a≤ nodes.card)
+   (hGdegree:∀ j:Fin 3,G.degreeOf j< p)
+   (hcutDegree:∀ j k:Fin 3,j≠k→
      (seedlessCut (Omega:=Omega)).degreeOf j*G.degreeOf k+
-       G.degreeOf j*(seedlessCut (Omega:=Omega)).degreeOf k < p)
-   (hdegree:∀ S∈Gamma,S.natDegree ≤ w)
+       G.degreeOf j*(seedlessCut (Omega:=Omega)).degreeOf k< p)
+   (hdegree:∀ S∈Gamma,S.natDegree≤ w)
    (hsolution:∀ S∈Gamma,specialization K S 0 F=0)
    (hregular:∀ S∈Gamma,MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
      (polynomialPoint (phi.comp Polynomial.C) S 0 (phi Polynomial.X))
@@ -39,11 +39,11 @@ theorem seedless_proper_cut_bound
    (hGpoint:∀ S∈Gamma,
      MvPolynomial.eval (seedlessPoint phi S) G=0)
    (hagreement:∀ S∈Gamma,
-     a ≤ (nodes.filter (fun i => S.eval (x i)=u i)).card)
-   (cap:Fin 3 → ℕ)
+     a≤ (nodes.filter (fun i => S.eval (x i)=u i)).card)
+   (cap:Fin 3→ ℕ)
    (hcap:∀ i∈nodes,∀ j,
-     (agreementPolynomial phi F w (x i) (u i) 0).degreeOf j ≤ cap j):
-   Gamma.card*(a-w) ≤
+     (agreementPolynomial phi F w (x i) (u i) 0).degreeOf j≤ cap j):
+   Gamma.card*(a-w)≤
      (nodes.card-w)*
        (∑ i,cap i*coordinateMixedDegree Omega G seedlessCut i):=by
  classical
@@ -60,11 +60,11 @@ theorem seedless_proper_cut_bound
      (surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F))≠0
    rw [seedlessPoint_surface_evaluation]
    exact hregular S hS
- let degree:RegularComponent Omega G T H → Fin 3 → ℕ:=
+ let degree:RegularComponent Omega G T H→ Fin 3→ ℕ:=
    fun C i => actualCoordinateDegree Omega C.1 i
  have hcomponent:∀ C:RegularComponent Omega G T H,
      (componentSeeds Omega G T H Gamma (seedlessPoint phi) C).card*
-         (a-w) ≤
+         (a-w)≤
        (nodes.card-w)*(∑ i,cap i*degree C i):=by
    intro C
    have hsub:=componentSeeds_subset Omega G T H Gamma (seedlessPoint phi) C
@@ -89,7 +89,7 @@ theorem seedless_proper_cut_bound
      (fun S hS => hagreement S (hsub hS)) cap hcap
  have hbudget:∀ i,
      (∑ C:RegularComponent Omega G T H,
-       actualCoordinateDegree Omega C.1 i) ≤
+       actualCoordinateDegree Omega C.1 i)≤
          coordinateMixedDegree Omega G T i:=
    regularComponents_degree_budget phi F G T p hG hproper hGdegree hcutDegree
  have hagg:=aggregate_component_incidence Omega G T H Gamma

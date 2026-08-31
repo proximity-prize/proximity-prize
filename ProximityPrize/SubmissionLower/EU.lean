@@ -21,7 +21,7 @@ noncomputable section
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 20000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K→+*Omega} {Gamma:Finset K} {x:Iota→ K}
 variable {p e:ℕ} [CharP Omega p]
 variable {surfaceFlag cutFlag:FlagDegree}
 variable {support:ResidualSupportParameters}
@@ -32,40 +32,40 @@ theorem recursive_curve_stratified_incidence_bound
    (hphi:Function.Injective phi) {d a:ℕ}
    (S:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
    (degreeCost unitCost U V zCharge:ℕ)
-   (hda:d < a)
+   (hda:d< a)
    (hagreement:∀ gamma∈Gamma,
-     a ≤ (S.agreementFiber gamma).card)
+     a≤ (S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,
      D.stage.identities=∅ → ∀ i∈D.stage.nodes,
-       (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card ≤
+       (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card≤
          D.degree*degreeCost+unitCost)
    (hlarge:∀ D:S.TerminalDescendant,
-     D.degree < D.stage.identities.card →
-       Gamma.card*(a-d) ≤ (e+1)*(a-d)*zCharge)
-   (hdegree:∀ k ≤ d,
-     (S.nodes.card-k)*(a-d)*(d-k) ≤ U*(a-k))
-   (hunit:∀ k ≤ d,
-     (S.nodes.card-k)*(a-d) ≤ V*(a-k)):
-   Gamma.card*(a-d) ≤
+     D.degree< D.stage.identities.card→
+       Gamma.card*(a-d)≤ (e+1)*(a-d)*zCharge)
+   (hdegree:∀ k≤ d,
+     (S.nodes.card-k)*(a-d)*(d-k)≤ U*(a-k))
+   (hunit:∀ k≤ d,
+     (S.nodes.card-k)*(a-d)≤ V*(a-k)):
+   Gamma.card*(a-d)≤
      U*degreeCost+V*unitCost+(e+1)*(a-d)*zCharge:=by
  classical
  obtain ⟨D⟩:=S.exists_terminal_descendant hphi
  rcases D.terminal with hproper | hpencil
  · let k:=d-D.degree
-   have hk:k ≤ d:=Nat.sub_le d D.degree
-   have hDle:D.degree ≤ d:=D.degree_le
+   have hk:k≤ d:=Nat.sub_le d D.degree
+   have hDle:D.degree≤ d:=D.degree_le
    have hdegreeEq:D.degree=d-k:=by
      dsimp only [k]
      omega
    have hnodeEq:D.stage.nodes.card=S.nodes.card-k:=by
      simpa only [k] using D.nodes_card
    have hterminalAgreement:∀ gamma∈Gamma,
-       a-k ≤ (D.stage.agreementFiber gamma).card:=by
+       a-k≤ (D.stage.agreementFiber gamma).card:=by
      intro gamma hgamma
      exact (Nat.sub_le_sub_right (hagreement gamma hgamma) k).trans
        (by simpa only [k] using D.agreement_card gamma hgamma)
    have hterminalFiber:∀ i∈D.stage.nodes,
-       (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card ≤
+       (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card≤
          D.degree*degreeCost+unitCost:=by
      intro i hi
      exact hfiber D hproper i hi
@@ -76,11 +76,11 @@ theorem recursive_curve_stratified_incidence_bound
      (by simp) hterminalAgreement (by
        intro i hi
        exact hterminalFiber i (by simpa using hi))
-   have hraw:Gamma.card*(a-k) ≤
+   have hraw:Gamma.card*(a-k)≤
        (S.nodes.card-k)*((d-k)*degreeCost+unitCost):=by
      simpa only [Finset.card_empty,Nat.sub_zero,hnodeEq,hdegreeEq] using
        hrawTerminal
-   have hmain:Gamma.card*(a-d) ≤
+   have hmain:Gamma.card*(a-d)≤
        U*degreeCost+V*unitCost:=
      stratified_incidence_linear Gamma.card S.nodes.card a d k
        degreeCost unitCost U V hk hda hraw (hdegree k hk) (hunit k hk)
@@ -91,9 +91,9 @@ theorem recursive_curve_stratified_incidence_of_zero_bounds
    (hphi:Function.Injective phi) {d a:ℕ}
    (S:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
    (degreeCost unitCost U V zCharge:ℕ)
-   (hda:d < a)
+   (hda:d< a)
    (hagreement:∀ gamma∈Gamma,
-     a ≤ (S.agreementFiber gamma).card)
+     a≤ (S.agreementFiber gamma).card)
    (hzero:∀ D:S.TerminalDescendant,
      D.stage.identities=∅ → ∀ i∈D.stage.nodes,
        FiniteZeroSetBound D.stage.primeIdeal
@@ -101,13 +101,13 @@ theorem recursive_curve_stratified_incidence_of_zero_bounds
            (x i) (D.stage.u0 i) (D.stage.u1 i))
          (D.degree*degreeCost+unitCost))
    (hlarge:∀ D:S.TerminalDescendant,
-     D.degree < D.stage.identities.card →
-       Gamma.card*(a-d) ≤ (e+1)*(a-d)*zCharge)
-   (hdegree:∀ k ≤ d,
-     (S.nodes.card-k)*(a-d)*(d-k) ≤ U*(a-k))
-   (hunit:∀ k ≤ d,
-     (S.nodes.card-k)*(a-d) ≤ V*(a-k)):
-   Gamma.card*(a-d) ≤
+     D.degree< D.stage.identities.card→
+       Gamma.card*(a-d)≤ (e+1)*(a-d)*zCharge)
+   (hdegree:∀ k≤ d,
+     (S.nodes.card-k)*(a-d)*(d-k)≤ U*(a-k))
+   (hunit:∀ k≤ d,
+     (S.nodes.card-k)*(a-d)≤ V*(a-k)):
+   Gamma.card*(a-d)≤
      U*degreeCost+V*unitCost+(e+1)*(a-d)*zCharge:=by
  apply recursive_curve_stratified_incidence_bound hphi S
    degreeCost unitCost U V zCharge hda hagreement
@@ -125,31 +125,31 @@ theorem recursive_curve_stratified_incidence_of_zero_bounds
 theorem recursive_curve_stratified_incidence_of_prime_flag_budget
    (hphi:Function.Injective phi) {d a:ℕ}
    (S:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
-   (cost:FlagDegree → ℕ)
+   (cost:FlagDegree→ ℕ)
    (B:PrimeFlagZeroBudget S.primeIdeal cost)
    (degreeCost unitCost U V zCharge:ℕ)
    (hcost:∀ t:ℕ,
      cost (support.residualAgreementFlag t)=t*degreeCost+unitCost)
-   (hda:d < a)
+   (hda:d< a)
    (hagreement:∀ gamma∈Gamma,
-     a ≤ (S.agreementFiber gamma).card)
+     a≤ (S.agreementFiber gamma).card)
    (hlarge:∀ D:S.TerminalDescendant,
-     D.degree < D.stage.identities.card →
-       Gamma.card*(a-d) ≤ (e+1)*(a-d)*zCharge)
-   (hdegree:∀ k ≤ d,
-     (S.nodes.card-k)*(a-d)*(d-k) ≤ U*(a-k))
-   (hunit:∀ k ≤ d,
-     (S.nodes.card-k)*(a-d) ≤ V*(a-k)):
-   Gamma.card*(a-d) ≤
+     D.degree< D.stage.identities.card→
+       Gamma.card*(a-d)≤ (e+1)*(a-d)*zCharge)
+   (hdegree:∀ k≤ d,
+     (S.nodes.card-k)*(a-d)*(d-k)≤ U*(a-k))
+   (hunit:∀ k≤ d,
+     (S.nodes.card-k)*(a-d)≤ V*(a-k)):
+   Gamma.card*(a-d)≤
      U*degreeCost+V*unitCost+(e+1)*(a-d)*zCharge:=by
  classical
  let Inv:∀ n,CurveResidualStage phi Gamma x p e
-     surfaceFlag cutFlag n support → Prop:=
+     surfaceFlag cutFlag n support→ Prop:=
    fun _ A↦PrimeFlagZeroBudget A.primeIdeal cost
  have htransport:∀ {n m}
      {A:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag n support}
      {Anext:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag m support},
-     A.ResidualTransition Anext → Inv n A → Inv m Anext:=by
+     A.ResidualTransition Anext→ Inv n A→ Inv m Anext:=by
    intro n m A Anext htransition hbudget
    obtain ⟨aY,v,bY,aS,bS,cS,hv,_,_,hprime⟩:=htransition
    dsimp only [Inv] at hbudget ⊢
@@ -159,20 +159,20 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
    hphi Inv htransport B
  rcases D.terminal with hproper | hpencil
  · let k:=d-D.degree
-   have hk:k ≤ d:=Nat.sub_le d D.degree
-   have hDle:D.degree ≤ d:=D.degree_le
+   have hk:k≤ d:=Nat.sub_le d D.degree
+   have hDle:D.degree≤ d:=D.degree_le
    have hdegreeEq:D.degree=d-k:=by
      dsimp only [k]
      omega
    have hnodeEq:D.stage.nodes.card=S.nodes.card-k:=by
      simpa only [k] using D.nodes_card
    have hterminalAgreement:∀ gamma∈Gamma,
-       a-k ≤ (D.stage.agreementFiber gamma).card:=by
+       a-k≤ (D.stage.agreementFiber gamma).card:=by
      intro gamma hgamma
      exact (Nat.sub_le_sub_right (hagreement gamma hgamma) k).trans
        (by simpa only [k] using D.agreement_card gamma hgamma)
    have hterminalFiber:∀ i∈D.stage.nodes,
-       (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card ≤
+       (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card≤
          D.degree*degreeCost+unitCost:=by
      intro i hi
      have hflag:PolynomialInFlag (support.residualAgreementFlag D.degree)
@@ -201,11 +201,11 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
      (by simp) hterminalAgreement (by
        intro i hi
        exact hterminalFiber i (by simpa using hi))
-   have hraw:Gamma.card*(a-k) ≤
+   have hraw:Gamma.card*(a-k)≤
        (S.nodes.card-k)*((d-k)*degreeCost+unitCost):=by
      simpa only [Finset.card_empty,Nat.sub_zero,hnodeEq,hdegreeEq] using
        hrawTerminal
-   have hmain:Gamma.card*(a-d) ≤
+   have hmain:Gamma.card*(a-d)≤
        U*degreeCost+V*unitCost:=
      stratified_incidence_linear Gamma.card S.nodes.card a d k
        degreeCost unitCost U V hk hda hraw (hdegree k hk) (hunit k hk)

@@ -11,8 +11,8 @@ variable {K:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 abbrev Ring3 (K:Type) [Field K]:=MvPolynomial (Fin 3) K
 private theorem eval_eq_of_sub_mem (P:Ideal (Ring3 K))
-   {A B:Ring3 K} (h:A-B∈P) (v:Fin 3 → K)
-   (hv:P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom):
+   {A B:Ring3 K} (h:A-B∈P) (v:Fin 3→ K)
+   (hv:P≤ RingHom.ker (MvPolynomial.aeval v).toRingHom):
    MvPolynomial.aeval v A=MvPolynomial.aeval v B:=by
  have hz:=hv h
  change MvPolynomial.aeval v (A-B)=0 at hz
@@ -20,10 +20,10 @@ private theorem eval_eq_of_sub_mem (P:Ideal (Ring3 K))
  exact sub_eq_zero.mp hz
 def FiniteRegularZeroSetBound (P:Ideal (Ring3 K)) (H A:Ring3 K)
    (cost:ℕ):Prop:=
- ∀ points:Finset (Fin 3 → K),
-   (∀ v∈points,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom) →
-   (∀ v∈points,MvPolynomial.aeval v H≠0) →
-   (∀ v∈points,MvPolynomial.aeval v A=0) → points.card ≤ cost
+ ∀ points:Finset (Fin 3→ K),
+   (∀ v∈points,P≤ RingHom.ker (MvPolynomial.aeval v).toRingHom)→
+   (∀ v∈points,MvPolynomial.aeval v H≠0)→
+   (∀ v∈points,MvPolynomial.aeval v A=0)→ points.card≤ cost
 theorem FiniteRegularZeroSetBound.of_all_points
    {P:Ideal (Ring3 K)} {H A:Ring3 K} {cost:ℕ}
    (h:FiniteZeroSetBound P A cost):FiniteRegularZeroSetBound P H A cost:=by
@@ -31,7 +31,7 @@ theorem FiniteRegularZeroSetBound.of_all_points
  exact h points hP hA
 theorem FiniteRegularZeroSetBound.mono
    {P:Ideal (Ring3 K)} {H A:Ring3 K} {cost cost':ℕ}
-   (h:FiniteRegularZeroSetBound P H A cost) (hle:cost ≤ cost'):
+   (h:FiniteRegularZeroSetBound P H A cost) (hle:cost≤ cost'):
    FiniteRegularZeroSetBound P H A cost':=by
  intro points hP hH hA
  exact (h points hP hH hA).trans hle
@@ -112,24 +112,24 @@ open RCN238 RCN243
 variable {Ω:Type} [Field Ω] [IsAlgClosed Ω]
 local instance:DecidableEq Ω:=Classical.decEq Ω
 theorem agreement_fiber_card_le_of_regular_zero_bound
-   (φ:Polynomial K →+*Ω) (P:Ideal (Ring3 Ω))
-   (F:MvPolynomial (Fin 4) K) (selected:K → Polynomial K) (Γ:Finset K)
-   (p w:ℕ) [CharP Ω p] (hchar:w < p)
-   (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
+   (φ:Polynomial K→+*Ω) (P:Ideal (Ring3 Ω))
+   (F:MvPolynomial (Fin 4) K) (selected:K→ Polynomial K) (Γ:Finset K)
+   (p w:ℕ) [CharP Ω p] (hchar:w< p)
+   (hdegree:∀ γ∈Γ,(selected γ).natDegree≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
    (hregular:∀ γ∈Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
      (polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X))
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (hpoint:∀ γ∈Γ,P ≤ RingHom.ker
+   (hpoint:∀ γ∈Γ,P≤ RingHom.ker
      (MvPolynomial.aeval (selectedPoint φ selected γ)).toRingHom)
    (x u₀ u₁:K) (cost:ℕ)
    (hzero:FiniteRegularZeroSetBound P (regularitySurface φ F)
      (agreementPolynomial φ F w x u₀ u₁) cost):
-   (Γ.filter (fun γ↦(selected γ).eval x=u₀+γ*u₁)).card ≤ cost:=by
+   (Γ.filter (fun γ↦(selected γ).eval x=u₀+γ*u₁)).card≤ cost:=by
  classical
  let fiber:=Γ.filter (fun γ↦(selected γ).eval x=u₀+γ*u₁)
  let points:=fiber.image (selectedPoint φ selected)
- have hcount:points.card ≤ cost:=by
+ have hcount:points.card≤ cost:=by
    apply hzero points
    · intro q hq
      obtain ⟨γ,hγ,rfl⟩:=Finset.mem_image.mp hq

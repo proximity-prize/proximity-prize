@@ -6,8 +6,8 @@ open RCN119
 noncomputable section
 variable (K:Type*) [Field K]
 abbrev Poly:=MvPolynomial (Fin 3) K
-def seedlessExponents (M L s:ℕ):Set (Fin 3 →₀ ℕ):=
- {d | d 0 ≤ M∧d 0+d 1 ≤ L∧d 1 ≤ s∧d 2=0}
+def seedlessExponents (M L s:ℕ):Set (Fin 3→₀ ℕ):=
+ {d | d 0≤ M∧d 0+d 1≤ L∧d 1≤ s∧d 2=0}
 def seedlessBox (M L s:ℕ):Submodule K (Poly K):=
  MvPolynomial.restrictSupport K (seedlessExponents M L s)
 theorem seedlessBox_mul
@@ -49,13 +49,13 @@ theorem slopeDifference_pow_mem_seedlessBox (h:ℕ):
      simpa only [pow_succ] using
        seedlessBox_mul K ih (slopeDifference_mem_seedlessBox K)
 theorem slopeDifference_mul_mem_seedlessBox
-   {M L s h:ℕ} (hM:h ≤ M) (hL:h ≤ L) (hs:h ≤ s)
+   {M L s h:ℕ} (hM:h≤ M) (hL:h≤ L) (hs:h≤ s)
    {q:Poly K} (hq:q∈seedlessBox K (M-h) (L-h) (s-h)):
    slopeDifference K^h*q∈seedlessBox K M L s:=by
  have hh:=seedlessBox_mul K (slopeDifference_pow_mem_seedlessBox K h) hq
  simpa only [Nat.add_sub_of_le hM,Nat.add_sub_of_le hL,
    Nat.add_sub_of_le hs] using hh
-private def exponentPair (i j:ℕ):Fin 3 →₀ ℕ:=
+private def exponentPair (i j:ℕ):Fin 3→₀ ℕ:=
  Finsupp.single 0 i+Finsupp.single 1 j
 @[simp] private theorem exponentPair_zero (i j:ℕ):
    exponentPair i j 0=i:=by simp [exponentPair]
@@ -63,10 +63,10 @@ private def exponentPair (i j:ℕ):Fin 3 →₀ ℕ:=
    exponentPair i j 1=j:=by simp [exponentPair]
 @[simp] private theorem exponentPair_two (i j:ℕ):
    exponentPair i j 2=0:=by simp [exponentPair]
-private theorem exponentPair_eta (d:Fin 3 →₀ ℕ) (hd:d 2=0):
+private theorem exponentPair_eta (d:Fin 3→₀ ℕ) (hd:d 2=0):
    exponentPair (d 0) (d 1)=d:=by
  ext i
- fin_cases i <;> simp [hd]
+ fin_cases i<;> simp [hd]
 abbrev SeedlessBoxIndex (M L s:ℕ):=
  (i:Fin (M+1)) × Fin (min (s+1) (L+1-i.val))
 private theorem fin_heq_of_val_eq
@@ -83,7 +83,7 @@ def seedlessExponentsEquivIndex (M L s:ℕ):
        rw [lt_min_iff]
        constructor
        · omega
-       · change d.val 1 < L+1-d.val 0
+       · change d.val 1< L+1-d.val 0
          omega⟩⟩
  invFun q:=
    ⟨exponentPair q.1.val q.2.val,by
@@ -122,18 +122,18 @@ theorem seedlessBox_finrank (M L s:ℕ):
  simp [SeedlessBoxIndex,seedlessInputCount,Fintype.card_sigma,
    Finset.sum_range]
 def seedlessBlockJet (M L s h:ℕ):
-   seedlessBox K M L s →ₗ[K] Poly K:=
+   seedlessBox K M L s→ₗ[K] Poly K:=
  (contactJet K h).comp (seedlessBox K M L s).subtype
 def multiplyIntoSeedlessBox {M L s h:ℕ}
-   (hM:h ≤ M) (hL:h ≤ L) (hs:h ≤ s):
-   seedlessBox K (M-h) (L-h) (s-h) →ₗ[K]
+   (hM:h≤ M) (hL:h≤ L) (hs:h≤ s):
+   seedlessBox K (M-h) (L-h) (s-h)→ₗ[K]
      seedlessBox K M L s where
  toFun q:=⟨slopeDifference K^h*q.val,
    slopeDifference_mul_mem_seedlessBox K hM hL hs q.property⟩
  map_add' q r:=by apply Subtype.ext;simp [mul_add]
  map_smul' c q:=by apply Subtype.ext;simp [mul_smul_comm]
 theorem multiplyIntoSeedlessBox_injective {M L s h:ℕ}
-   (hM:h ≤ M) (hL:h ≤ L) (hs:h ≤ s):
+   (hM:h≤ M) (hL:h≤ L) (hs:h≤ s):
    Function.Injective (multiplyIntoSeedlessBox K hM hL hs):=by
  intro q r heq
  apply Subtype.ext
@@ -141,32 +141,32 @@ theorem multiplyIntoSeedlessBox_injective {M L s h:ℕ}
      slopeDifference K^h*r.val:=congrArg Subtype.val heq
  exact mul_left_cancel₀ (pow_ne_zero h (slopeDifference_ne_zero K)) hh
 def seedlessKernelEmbedding {M L s h:ℕ}
-   (hM:h ≤ M) (hL:h ≤ L) (hs:h ≤ s):
-   seedlessBox K (M-h) (L-h) (s-h) →ₗ[K]
+   (hM:h≤ M) (hL:h≤ L) (hs:h≤ s):
+   seedlessBox K (M-h) (L-h) (s-h)→ₗ[K]
      LinearMap.ker (seedlessBlockJet K M L s h):=
  LinearMap.codRestrict (LinearMap.ker (seedlessBlockJet K M L s h))
    (multiplyIntoSeedlessBox K hM hL hs) (fun q => by
      change contactJet K h (slopeDifference K^h*q.val)=0
      exact contactJet_mul_slopeDifference K h q.val)
 theorem seedlessKernelEmbedding_injective {M L s h:ℕ}
-   (hM:h ≤ M) (hL:h ≤ L) (hs:h ≤ s):
+   (hM:h≤ M) (hL:h≤ L) (hs:h≤ s):
    Function.Injective (seedlessKernelEmbedding K hM hL hs):=by
  intro q r heq
  apply multiplyIntoSeedlessBox_injective K hM hL hs
  exact congrArg Subtype.val heq
 def seedlessKernelLowerBound (M L s h:ℕ):ℕ:=
- if h ≤ M∧h ≤ L∧h ≤ s then
+ if h≤ M∧h≤ L∧h≤ s then
    seedlessInputCount (M-h) (L-h) (s-h)
  else 0
 def seedlessContactRankBound (M L s h:ℕ):ℕ:=
  seedlessInputCount M L s-seedlessKernelLowerBound M L s h
 theorem seedlessBlockJet_rank_le_contactRankBound
-   (M L s h:ℕ) (hML:M ≤ L):
-   Module.finrank K (LinearMap.range (seedlessBlockJet K M L s h)) ≤
+   (M L s h:ℕ) (hML:M≤ L):
+   Module.finrank K (LinearMap.range (seedlessBlockJet K M L s h))≤
      seedlessContactRankBound M L s h:=by
- by_cases hM:h ≤ M
- · by_cases hs:h ≤ s
-   · have hL:h ≤ L:=hM.trans hML
+ by_cases hM:h≤ M
+ · by_cases hs:h≤ s
+   · have hL:h≤ L:=hM.trans hML
      have hker:=LinearMap.finrank_le_finrank_of_injective
        (seedlessKernelEmbedding_injective K hM hL hs)
      have hsum:=(seedlessBlockJet K M L s h).finrank_range_add_finrank_ker
@@ -175,7 +175,7 @@ theorem seedlessBlockJet_rank_le_contactRankBound
      unfold seedlessContactRankBound seedlessKernelLowerBound
      rw [if_pos ⟨hM,hL,hs⟩]
      omega
-   · have hbad:¬ (h ≤ M∧h ≤ L∧h ≤ s):=by
+   · have hbad:¬ (h≤ M∧h≤ L∧h≤ s):=by
        intro hh
        exact hs hh.2.2
      have hinput:=(seedlessBlockJet K M L s h).finrank_range_add_finrank_ker
@@ -183,7 +183,7 @@ theorem seedlessBlockJet_rank_le_contactRankBound
      unfold seedlessContactRankBound seedlessKernelLowerBound
      rw [if_neg hbad,Nat.sub_zero]
      omega
- · have hbad:¬ (h ≤ M∧h ≤ L∧h ≤ s):=by
+ · have hbad:¬ (h≤ M∧h≤ L∧h≤ s):=by
      intro hh
      exact hM hh.1
    have hinput:=(seedlessBlockJet K M L s h).finrank_range_add_finrank_ker

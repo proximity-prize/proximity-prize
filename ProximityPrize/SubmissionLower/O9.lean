@@ -14,15 +14,15 @@ set_option autoImplicit false
 set_option maxRecDepth 30000
 set_option maxHeartbeats 3000000
 variable {K Omega:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable (phi:Polynomial K →+*Omega)
+variable (phi:Polynomial K→+*Omega)
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
-def seedlessPoint (S:Polynomial K):Fin 3 → Omega:=
+def seedlessPoint (S:Polynomial K):Fin 3→ Omega:=
  fun i => polynomialPoint (phi.comp Polynomial.C) S 0 (phi Polynomial.X) i.succ
 theorem seedlessPoint_value (S:Polynomial K):
    seedlessPoint phi S=![phi S,phi S.derivative,0]:=by
  funext i
- fin_cases i <;>
+ fin_cases i<;>
    simp [seedlessPoint,polynomialPoint,polynomial_eval₂_comp_C_X]
 theorem seedlessPoint_injective (hphi:Function.Injective phi):
    Function.Injective (seedlessPoint phi):=by
@@ -39,12 +39,12 @@ theorem seedlessPoint_surface_evaluation (S:Polynomial K)
  have hv:Fin.cases (phi Polynomial.X) (seedlessPoint phi S)=
      polynomialPoint (phi.comp Polynomial.C) S 0 (phi Polynomial.X):=by
    funext i
-   fin_cases i <;> rfl
+   fin_cases i<;> rfl
  rw [hv]
 theorem seedless_agreement_zero_iff
    (F:MvPolynomial (Fin 4) K) (S:Polynomial K)
-   (p w:ℕ) [CharP Omega p] (hchar:w < p)
-   (hdegree:S.natDegree ≤ w)
+   (p w:ℕ) [CharP Omega p] (hchar:w< p)
+   (hdegree:S.natDegree≤ w)
    (hsolution:specialization K S 0 F=0)
    (hregular:MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
      (polynomialPoint (phi.comp Polynomial.C) S 0 (phi Polynomial.X))
@@ -61,26 +61,26 @@ variable (P:Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
 theorem seedless_agreement_fiber_card_le
    (hphi:Function.Injective phi)
    (hproj:ProjectionsFiniteSeparable Omega P)
-   (hnonpoint:∀ v:Fin 3 → Omega,
+   (hnonpoint:∀ v:Fin 3→ Omega,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (F:MvPolynomial (Fin 4) K) (Gamma:Finset (Polynomial K))
-   (p w:ℕ) [CharP Omega p] (hchar:w < p)
-   (hdegree:∀ S∈Gamma,S.natDegree ≤ w)
+   (p w:ℕ) [CharP Omega p] (hchar:w< p)
+   (hdegree:∀ S∈Gamma,S.natDegree≤ w)
    (hsolution:∀ S∈Gamma,specialization K S 0 F=0)
    (hregular:∀ S∈Gamma,MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
      (polynomialPoint (phi.comp Polynomial.C) S 0 (phi Polynomial.X))
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (hpoint:∀ S∈Gamma,P ≤ RingHom.ker
+   (hpoint:∀ S∈Gamma,P≤ RingHom.ker
      (MvPolynomial.aeval (seedlessPoint phi S)).toRingHom)
    (x u:K) (hproper:agreementPolynomial phi F w x u 0∉P)
-   (cap:Fin 3 → ℕ)
-   (hcap:∀ j,(agreementPolynomial phi F w x u 0).degreeOf j ≤ cap j):
-   (Gamma.filter (fun S => S.eval x=u)).card ≤ componentCost P cap:=by
+   (cap:Fin 3→ ℕ)
+   (hcap:∀ j,(agreementPolynomial phi F w x u 0).degreeOf j≤ cap j):
+   (Gamma.filter (fun S => S.eval x=u)).card≤ componentCost P cap:=by
  classical
  let fiber:=Gamma.filter (fun S => S.eval x=u)
  let points:=fiber.image (seedlessPoint phi)
  have hpointsP:∀ v∈points,
-     P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom:=by
+     P≤ RingHom.ker (MvPolynomial.aeval v).toRingHom:=by
    intro v hv
    obtain ⟨S,hS,rfl⟩:=Finset.mem_image.mp hv
    exact hpoint S (Finset.mem_filter.mp hS).1
@@ -110,14 +110,14 @@ theorem identityNodes_card_le_of_seedless_cut
    (hF:surfaceMap phi F∈P)
    (hH:surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F)∉P)
    (hZ:MvPolynomial.X (2:Fin 3)∈P)
-   {Iota:Type} (nodes:Finset Iota) (x u:Iota → K)
-   (w:ℕ) (hw:1 ≤ w) (hinj:Set.InjOn x nodes)
-   (hnonpoint:∀ v:Fin 3 → Omega,
+   {Iota:Type} (nodes:Finset Iota) (x u:Iota→ K)
+   (w:ℕ) (hw:1≤ w) (hinj:Set.InjOn x nodes)
+   (hnonpoint:∀ v:Fin 3→ Omega,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom):
-   (identityNodes phi P F nodes x u (fun _ => 0) w).card ≤ w:=by
+   (identityNodes phi P F nodes x u (fun _ => 0) w).card≤ w:=by
  classical
  by_contra hnot
- have hmany:w < (identityNodes phi P F nodes x u (fun _ => 0) w).card:=
+ have hmany:w< (identityNodes phi P F nodes x u (fun _ => 0) w).card:=
    Nat.lt_of_not_ge hnot
  have htrans:=seed_transcendental_of_many_identities phi P F hF hH
    nodes x u (fun _ => 0) w hw hinj hmany hnonpoint
@@ -129,36 +129,36 @@ local instance:DecidableEq Iota:=Classical.decEq Iota
 theorem seedless_prime_incidence
    (hphi:Function.Injective phi)
    (hproj:ProjectionsFiniteSeparable Omega P)
-   (hnonpoint:∀ v:Fin 3 → Omega,
+   (hnonpoint:∀ v:Fin 3→ Omega,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (F:MvPolynomial (Fin 4) K)
    (hF:surfaceMap phi F∈P)
    (hH:surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F)∉P)
    (hZ:MvPolynomial.X (2:Fin 3)∈P)
    (Gamma:Finset (Polynomial K))
-   (nodes:Finset Iota) (x u:Iota → K) (hinj:Set.InjOn x nodes)
-   (p w a:ℕ) [CharP Omega p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
-   (hdegree:∀ S∈Gamma,S.natDegree ≤ w)
+   (nodes:Finset Iota) (x u:Iota→ K) (hinj:Set.InjOn x nodes)
+   (p w a:ℕ) [CharP Omega p] (hw:1≤ w) (hchar:w< p)
+   (hwa:w< a) (han:a≤ nodes.card)
+   (hdegree:∀ S∈Gamma,S.natDegree≤ w)
    (hsolution:∀ S∈Gamma,specialization K S 0 F=0)
    (hregular:∀ S∈Gamma,MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
      (polynomialPoint (phi.comp Polynomial.C) S 0 (phi Polynomial.X))
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (hpoint:∀ S∈Gamma,P ≤ RingHom.ker
+   (hpoint:∀ S∈Gamma,P≤ RingHom.ker
      (MvPolynomial.aeval (seedlessPoint phi S)).toRingHom)
    (hagreement:∀ S∈Gamma,
-     a ≤ (nodes.filter (fun i => S.eval (x i)=u i)).card)
-   (cap:Fin 3 → ℕ)
+     a≤ (nodes.filter (fun i => S.eval (x i)=u i)).card)
+   (cap:Fin 3→ ℕ)
    (hcap:∀ i∈nodes,∀ j,
-     (agreementPolynomial phi F w (x i) (u i) 0).degreeOf j ≤ cap j):
-   Gamma.card*(a-w) ≤ (nodes.card-w)*componentCost P cap:=by
+     (agreementPolynomial phi F w (x i) (u i) 0).degreeOf j≤ cap j):
+   Gamma.card*(a-w)≤ (nodes.card-w)*componentCost P cap:=by
  classical
  let I:=identityNodes phi P F nodes x u (fun _ => 0) w
- let relation:Polynomial K → Iota → Prop:=fun S i => S.eval (x i)=u i
- have hI:I.card ≤ w:=identityNodes_card_le_of_seedless_cut phi P F hF hH
+ let relation:Polynomial K→ Iota→ Prop:=fun S i => S.eval (x i)=u i
+ have hI:I.card≤ w:=identityNodes_card_le_of_seedless_cut phi P F hF hH
    hZ nodes x u w hw hinj hnonpoint
  have hfiber:∀ i∈nodes \ I,
-     (Gamma.filter (fun S => relation S i)).card ≤ componentCost P cap:=by
+     (Gamma.filter (fun S => relation S i)).card≤ componentCost P cap:=by
    intro i hi
    obtain ⟨hinodes,hnotI⟩:=Finset.mem_sdiff.mp hi
    have hproper:agreementPolynomial phi F w (x i) (u i) 0∉P:=by

@@ -7,27 +7,27 @@ variable {R:Type*} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
 variable [IsLocalRing R]
 @[reducible] def relationResidueAlgebra
    (J:Ideal (Polynomial R))
-   (hcontract:J.comap (Polynomial.C:R →+*Polynomial R)=
+   (hcontract:J.comap (Polynomial.C:R→+*Polynomial R)=
      IsLocalRing.maximalIdeal R):
-   Algebra (IsLocalRing.ResidueField R) (Polynomial R ⧸ J):=
- (Ideal.quotientMap J (Polynomial.C:R →+*Polynomial R) (by
+   Algebra (IsLocalRing.ResidueField R) (Polynomial R⧸ J):=
+ (Ideal.quotientMap J (Polynomial.C:R→+*Polynomial R) (by
    rw [hcontract])).toAlgebra' (fun _ _ => mul_comm _ _)
 theorem exists_monic_mem_maximal_relation
    (J:Ideal (Polynomial R)) [J.IsMaximal]
-   (hcontract:J.comap (Polynomial.C:R →+*Polynomial R)=
+   (hcontract:J.comap (Polynomial.C:R→+*Polynomial R)=
      IsLocalRing.maximalIdeal R)
    (hfinite:
      letI:=relationResidueAlgebra J hcontract
      FiniteDimensional (IsLocalRing.ResidueField R)
-       (Polynomial R ⧸ J)):
+       (Polynomial R⧸ J)):
    ∃ H:Polynomial R,H.Monic∧H∈J:=by
  let k:=IsLocalRing.ResidueField R
- let E:=Polynomial R ⧸ J
- let qR:R →+*k:=Ideal.Quotient.mk (IsLocalRing.maximalIdeal R)
- let qB:Polynomial R →+*E:=Ideal.Quotient.mk J
+ let E:=Polynomial R⧸ J
+ let qR:R→+*k:=Ideal.Quotient.mk (IsLocalRing.maximalIdeal R)
+ let qB:Polynomial R→+*E:=Ideal.Quotient.mk J
  let aResidue:=relationResidueAlgebra J hcontract
  letI:Algebra k E:=aResidue
- let phi:k →+*E:=algebraMap k E
+ let phi:k→+*E:=algebraMap k E
  letI:FiniteDimensional k E:=hfinite
  let y:E:=qB Polynomial.X
  let hbar:Polynomial k:=minpoly k y
@@ -59,15 +59,15 @@ theorem exists_monic_mem_maximal_relation
  exact ⟨H,hHMonic,hHmem⟩
 theorem moduleFinite_primary_piece_of_maximal_relation
    (J:Ideal (Polynomial R)) [J.IsMaximal]
-   (hcontract:J.comap (Polynomial.C:R →+*Polynomial R)=
+   (hcontract:J.comap (Polynomial.C:R→+*Polynomial R)=
      IsLocalRing.maximalIdeal R)
    (hfinite:
      letI:=relationResidueAlgebra J hcontract
      FiniteDimensional (IsLocalRing.ResidueField R)
-       (Polynomial R ⧸ J))
+       (Polynomial R⧸ J))
    (piece:Ideal (Polynomial R)) (mu:ℕ)
-   (hpow:J^mu ≤ piece):
-   Module.Finite R (Polynomial R ⧸ piece):=by
+   (hpow:J^mu≤ piece):
+   Module.Finite R (Polynomial R⧸ piece):=by
  obtain ⟨H,hHMonic,hHJ⟩:=
    exists_monic_mem_maximal_relation J hcontract hfinite
  exact RCN309.moduleFinite_quotient_of_monic_mem

@@ -46,7 +46,7 @@ instance originalPrime_isPrime (P:Ideal (GenericPoly3 K)) [P.IsPrime]:
  Ideal.IsPrime.comap (collectX K).toRingEquiv
 theorem collectedPrime_height_le
    (P:Ideal (GenericPoly3 K)) [P.IsPrime]:
-   (collectedPrime P).height ≤ P.height:=by
+   (collectedPrime P).height≤ P.height:=by
  let p:=collectedPrime P
  letI:p.IsPrime:=inferInstance
  letI:P.LiesOver p:=⟨rfl⟩
@@ -55,15 +55,15 @@ theorem collectedPrime_height_le
  exact le_add_right (le_refl _)
 theorem originalPrime_height_le
    (P:Ideal (GenericPoly3 K)) [P.IsPrime]:
-   (originalPrime P).height ≤ P.height:=by
+   (originalPrime P).height≤ P.height:=by
  calc
    (originalPrime P).height=(collectedPrime P).height:=by
      simpa only [originalPrime] using
        RingEquiv.height_comap (collectX K).toRingEquiv (collectedPrime P)
-   _ ≤ P.height:=collectedPrime_height_le P
+   _≤ P.height:=collectedPrime_height_le P
 theorem originalPrime_height_eq_two
    (P:Ideal (GenericPoly3 K)) [P.IsPrime]
-   (hPheight:P.height ≤ 2)
+   (hPheight:P.height≤ 2)
    (F N:Poly4 K) (hF:Irreducible F)
    (hFmem:surfaceMap (polynomialEmbedding K) F∈P)
    (hNmem:surfaceMap (polynomialEmbedding K) N∈P)
@@ -75,7 +75,7 @@ theorem originalPrime_height_eq_two
  letI:I.IsPrime:=Ideal.isPrime_span_singleton_of_prime hF.prime
  have hFmem':F∈p:=(mem_originalPrime_iff P F).2 hFmem
  have hNmem':N∈p:=(mem_originalPrime_iff P N).2 hNmem
- have hIp:I ≤ p:=by
+ have hIp:I≤ p:=by
    apply Ideal.span_le.2
    simpa using hFmem'
  have hNnot:N∉I:=by
@@ -84,31 +84,31 @@ theorem originalPrime_height_eq_two
  have hIne:I≠p:=by
    intro h
    exact hNnot (h ▸ hNmem')
- have hIlt:I < p:=lt_of_le_of_ne hIp hIne
+ have hIlt:I< p:=lt_of_le_of_ne hIp hIne
  have hIbot:I≠⊥:=by
    intro h
    have hzero:F=0:=by
      have:F∈(⊥:Ideal (Poly4 K)):=h ▸ Ideal.subset_span (by simp)
      simpa using this
    exact hF.ne_zero hzero
- have hbotlt:(⊥:Ideal (Poly4 K)) < I:=
+ have hbotlt:(⊥:Ideal (Poly4 K))< I:=
    lt_of_le_of_ne bot_le hIbot.symm
- have hone:(1:ℕ∞) ≤ I.height:=by
+ have hone:(1:ℕ∞)≤ I.height:=by
    calc
      1=(0:ℕ∞)+1:=by simp
-     _ ≤ (⊥:Ideal (Poly4 K)).height+1:=by gcongr;exact zero_le
-     _ ≤ I.height:=Ideal.height_add_one_le_of_lt_of_isPrime hbotlt
- have htwo:(2:ℕ∞) ≤ p.height:=by
+     _≤ (⊥:Ideal (Poly4 K)).height+1:=by gcongr;exact zero_le
+     _≤ I.height:=Ideal.height_add_one_le_of_lt_of_isPrime hbotlt
+ have htwo:(2:ℕ∞)≤ p.height:=by
    calc
      2=(1:ℕ∞)+1:=by norm_num
-     _ ≤ I.height+1:=by gcongr
-     _ ≤ p.height:=Ideal.height_add_one_le_of_lt_of_isPrime hIlt
+     _≤ I.height+1:=by gcongr
+     _≤ p.height:=Ideal.height_add_one_le_of_lt_of_isPrime hIlt
  exact le_antisymm ((originalPrime_height_le P).trans hPheight) htwo
 abbrev AmbientLocal (P:Ideal (Poly4 K)) [P.IsPrime]:=
  Localization.AtPrime P
 abbrev OriginalFactorLocalRing
    (P:Ideal (Poly4 K)) [P.IsPrime] (F:Poly4 K):=
- AmbientLocal P ⧸ Ideal.span
+ AmbientLocal P⧸ Ideal.span
    {algebraMap (Poly4 K) (AmbientLocal P) F}
 private theorem derivation_sq_mem_maximal
    {A:Type} [CommRing A] [IsLocalRing A]

@@ -25,7 +25,7 @@ def prime:ℕ:=2130706433
 def gap:ℕ:=agreements-w
 def capY:ℕ:=1+2*w*yTotalCap
 def capR:ℕ:=w*(2*slopeCap-1)
-def agreementCap:Fin 3 → ℕ:=![capY,capR,1]
+def agreementCap:Fin 3→ ℕ:=![capY,capR,1]
 def regularListNumerator:ℕ:=
  (n-w)*(capY*slopeCap+capR*yTotalCap)
 def singularListCap:ℕ:=(2*slopeCap-1)*yTotalCap
@@ -37,13 +37,13 @@ theorem numeric_values:
      singularListCap=867∧listNumerator=30666112067781:=by
  norm_num [gap,capY,capR,regularListNumerator,singularListCap,
    listNumerator,agreements,n,errors,w,yTotalCap,slopeCap]
-theorem list_numerator_fits:listNumerator < listBudget*gap:=by
+theorem list_numerator_fits:listNumerator< listBudget*gap:=by
  norm_num [listNumerator,regularListNumerator,singularListCap,listBudget,
    gap,capY,capR,agreements,n,errors,w,yTotalCap,slopeCap]
 theorem list_strict_ceiling_exact:
    listNumerator/gap+1=598865626∧
-     listNumerator < 598865626*gap∧
-     598865626 < listBudget:=by
+     listNumerator< 598865626*gap∧
+     598865626< listBudget:=by
  norm_num [listNumerator,regularListNumerator,singularListCap,listBudget,
    gap,capY,capR,agreements,n,errors,w,yTotalCap,slopeCap]
 variable (K:Type) [Field K]
@@ -53,7 +53,7 @@ theorem seedless_degree_caps
    (Q:MvPolynomial (Fin 4) K)
    (hbox:Q∈RCN279.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap):
-   Q.degreeOf 1 ≤ yTotalCap∧Q.degreeOf 2 ≤ slopeCap∧
+   Q.degreeOf 1≤ yTotalCap∧Q.degreeOf 2≤ slopeCap∧
      Q.degreeOf 3=0:=by
  refine ⟨MvPolynomial.degreeOf_le_iff.mpr ?_,
    MvPolynomial.degreeOf_le_iff.mpr ?_,?_⟩
@@ -66,12 +66,12 @@ theorem seedless_degree_caps
    intro d hd
    exact (hbox hd).2.2.1.le
 theorem agreement_cap
-   (phi:Polynomial K →+*GenericField K)
+   (phi:Polynomial K→+*GenericField K)
    (F:MvPolynomial (Fin 4) K)
-   (hY:F.degreeOf 1 ≤ yTotalCap)
-   (hR:F.degreeOf 2 ≤ slopeCap)
+   (hY:F.degreeOf 1≤ yTotalCap)
+   (hR:F.degreeOf 2≤ slopeCap)
    (hZ:F.degreeOf 3=0) (x u:K):
-   ∀ j,(agreementPolynomial phi F w x u 0).degreeOf j ≤ agreementCap j:=by
+   ∀ j,(agreementPolynomial phi F w x u 0).degreeOf j≤ agreementCap j:=by
  have hb:=agreementNumerator_degree_bounds F yTotalCap slopeCap 0
    (by norm_num [slopeCap]) hY hR hZ.le w
      (fun j => (j.factorial:K)⁻¹) x u 0
@@ -100,7 +100,7 @@ theorem card_le_sum_geometricPolynomials
    (F:MvPolynomial (Fin 4) K) (hF:F≠0)
    (Gamma:Finset (Polynomial K))
    (hsolutions:∀ S∈Gamma,specialization K S 0 F=0):
-   Gamma.card ≤ ∑ g:GeometricFactor K F,
+   Gamma.card≤ ∑ g:GeometricFactor K F,
      (geometricPolynomials K F Gamma g).card:=by
  classical
  have hcover:Gamma ⊆ Finset.univ.biUnion (geometricPolynomials K F Gamma):=by
@@ -118,7 +118,7 @@ theorem card_le_sum_geometricPolynomials
  exact (Finset.card_le_card hcover).trans Finset.card_biUnion_le
 theorem geometric_seedless_cut_proper
    (g:MvPolynomial (Fin 3) (GenericField K))
-   (hR:0 < g.degreeOf 1):
+   (hR:0< g.degreeOf 1):
    ¬ g∣(seedlessCut:MvPolynomial (Fin 3) (GenericField K)):=by
  intro hdvd
  have hle:=coordinate_degree_le_of_dvd 1 g seedlessCut hdvd
@@ -130,30 +130,30 @@ theorem geometric_seedless_cut_proper
 theorem original_regular_seedless_bound
    [CharP K prime]
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (hRpos:0 < F.degreeOf 2)
+   (hRpos:0< F.degreeOf 2)
    (hbox:F∈RCN174.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap)
-   (hY:F.degreeOf 1 ≤ yTotalCap)
-   (hR:F.degreeOf 2 ≤ slopeCap)
+   (hY:F.degreeOf 1≤ yTotalCap)
+   (hR:F.degreeOf 2≤ slopeCap)
    (hZ:F.degreeOf 3=0)
    (Gamma:Finset (Polynomial K))
-   (hdegree:∀ S∈Gamma,S.natDegree ≤ w)
+   (hdegree:∀ S∈Gamma,S.natDegree≤ w)
    (hsolutions:∀ S∈Gamma,specialization K S 0 F=0)
    (hregular:∀ S∈Gamma,
      specialization K S 0 (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    {Iota:Type} [Fintype Iota] [DecidableEq Iota]
-   (nodes:Finset Iota) (x received:Iota → K)
+   (nodes:Finset Iota) (x received:Iota→ K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
-   (hagreement:∀ S∈Gamma,agreements ≤
+   (hagreement:∀ S∈Gamma,agreements≤
      (nodes.filter (fun i => S.eval (x i)=received i)).card):
-   Gamma.card*gap ≤
+   Gamma.card*gap≤
      (n-w)*(capY*F.degreeOf 2+capR*F.degreeOf 1):=by
  classical
  letI:CharP (GenericField K) prime:=genericField_charP K prime
- have hsmall:F.degreeOf 2 < prime:=hR.trans_lt (by
+ have hsmall:F.degreeOf 2< prime:=hR.trans_lt (by
    norm_num [slopeCap,prime])
  have hcount (g:GeometricFactor K F):
-     (geometricPolynomials K F Gamma g).card*gap ≤
+     (geometricPolynomials K F Gamma g).card*gap≤
        (n-w)*(capY*g.1.degreeOf 1+capR*g.1.degreeOf 0):=by
    obtain ⟨hgirred,hgdiv⟩:=
      surfaceFactors_spec (polynomialEmbedding K) F g.1 g.2
@@ -165,22 +165,22 @@ theorem original_regular_seedless_bound
    have hgR:=(geometricFactor_degree_le K F hF.ne_zero g 1).trans hR
    have hgZ:g.1.degreeOf 2=0:=Nat.eq_zero_of_le_zero
      ((geometricFactor_degree_le K F hF.ne_zero g 2).trans_eq hZ)
-   have hGdegree:∀ j:Fin 3,g.1.degreeOf j < prime:=by
+   have hGdegree:∀ j:Fin 3,g.1.degreeOf j< prime:=by
      intro j
      fin_cases j
      · exact hgY.trans_lt (by norm_num [yTotalCap,prime])
      · exact hgR.trans_lt (by norm_num [slopeCap,prime])
      · simp [hgZ,prime]
-   have hcutDegree:∀ j k:Fin 3,j≠k →
+   have hcutDegree:∀ j k:Fin 3,j≠k→
        (seedlessCut:MvPolynomial (Fin 3) (GenericField K)).degreeOf j*
            g.1.degreeOf k+
          g.1.degreeOf j*
-           (seedlessCut:MvPolynomial (Fin 3) (GenericField K)).degreeOf k < prime:=by
+           (seedlessCut:MvPolynomial (Fin 3) (GenericField K)).degreeOf k< prime:=by
      intro j k hjk
      have h0:=hGdegree 0
      have h1:=hGdegree 1
      have h2:=hGdegree 2
-     fin_cases j <;> fin_cases k <;>
+     fin_cases j<;> fin_cases k<;>
        simp [seedlessCut,MvPolynomial.degreeOf_X_of_ne] at hjk ⊢ <;>
        omega
    have hsub:=geometricPolynomials_subset K F Gamma g
@@ -226,11 +226,11 @@ theorem original_regular_seedless_bound
        capY*g.1.degreeOf 1+capR*g.1.degreeOf 0:=by
      simp [Fin.sum_univ_succ,agreementCap,hm0,hm1,hm2]
    rw [hnodes,hcost] at hraw
-   change (geometricPolynomials K F Gamma g).card*(agreements-w) ≤
+   change (geometricPolynomials K F Gamma g).card*(agreements-w)≤
      (n-w)*(capY*g.1.degreeOf 1+capR*g.1.degreeOf 0)
    exact hraw
  calc
-   Gamma.card*gap ≤
+   Gamma.card*gap≤
        (∑ g:GeometricFactor K F,
          (geometricPolynomials K F Gamma g).card)*gap:=
      Nat.mul_le_mul_right _
@@ -238,23 +238,23 @@ theorem original_regular_seedless_bound
    _=∑ g:GeometricFactor K F,
        (geometricPolynomials K F Gamma g).card*gap:=by
      rw [Finset.sum_mul]
-   _ ≤ ∑ g:GeometricFactor K F,
+   _≤ ∑ g:GeometricFactor K F,
        (n-w)*(capY*g.1.degreeOf 1+capR*g.1.degreeOf 0):=
      Finset.sum_le_sum (fun g _ => hcount g)
    _=(n-w)*(capY*(∑ g:GeometricFactor K F,g.1.degreeOf 1)+
        capR*(∑ g:GeometricFactor K F,g.1.degreeOf 0)):=by
      rw [←Finset.mul_sum,Finset.sum_add_distrib,
-       ←Finset.mul_sum, ←Finset.mul_sum]
-   _ ≤ (n-w)*(capY*F.degreeOf 2+capR*F.degreeOf 1):=by
+       ←Finset.mul_sum,←Finset.mul_sum]
+   _≤ (n-w)*(capY*F.degreeOf 2+capR*F.degreeOf 1):=by
      apply Nat.mul_le_mul_left
      exact Nat.add_le_add
        (Nat.mul_le_mul_left capY (geometricFactor_sum_degree_le K F hF.ne_zero 1))
        (Nat.mul_le_mul_left capR (geometricFactor_sum_degree_le K F hF.ne_zero 0))
 def yProjection (T:Type*) [Field T]:
-   MvPolynomial (Fin 3) T →+*Polynomial T:=
+   MvPolynomial (Fin 3) T→+*Polynomial T:=
  MvPolynomial.eval₂Hom Polynomial.C ![Polynomial.X,0,0]
 def yEmbedding (T:Type*) [Field T]:
-   Polynomial T →+*MvPolynomial (Fin 3) T:=
+   Polynomial T→+*MvPolynomial (Fin 3) T:=
  Polynomial.eval₂RingHom MvPolynomial.C (MvPolynomial.X 0)
 theorem y_only_vars {T:Type*} [Field T]
    (S:MvPolynomial (Fin 3) T)
@@ -285,7 +285,7 @@ theorem yProjection_nonzero {T:Type*} [Field T]
  rw [←yProjection_reconstruct S hR hZ,hz,map_zero]
 theorem yProjection_natDegree_le {T:Type*} [Field T]
    (S:MvPolynomial (Fin 3) T):
-   (yProjection T S).natDegree ≤ S.degreeOf 0:=by
+   (yProjection T S).natDegree≤ S.degreeOf 0:=by
  classical
  have hsum:yProjection T S=
      ∑ d∈S.support,yProjection T (MvPolynomial.monomial d (S.coeff d)):=by
@@ -293,23 +293,23 @@ theorem yProjection_natDegree_le {T:Type*} [Field T]
  rw [hsum]
  apply Polynomial.natDegree_sum_le_of_forall_le
  intro d hd
- have hmono:(yProjection T (MvPolynomial.monomial d (S.coeff d))).natDegree ≤
+ have hmono:(yProjection T (MvPolynomial.monomial d (S.coeff d))).natDegree≤
      d 0:=by
    have heq:MvPolynomial.monomial d (S.coeff d)=
        MvPolynomial.C (S.coeff d)*MvPolynomial.X 0^d 0*
          MvPolynomial.X 1^d 1*MvPolynomial.X 2^d 2:=by
      exact RCN080.monomial_fin3 d (S.coeff d)
    rw [heq]
-   by_cases h1:d 1=0 <;> by_cases h2:d 2=0 <;>
+   by_cases h1:d 1=0<;> by_cases h2:d 2=0<;>
      simp [yProjection,h1,h2]
-   have hc:(Polynomial.C (S.coeff d)).natDegree ≤ 0:=by simp
-   have hx:((Polynomial.X:Polynomial T)^d 0).natDegree ≤ d 0:=by simp
+   have hc:(Polynomial.C (S.coeff d)).natDegree≤ 0:=by simp
+   have hx:((Polynomial.X:Polynomial T)^d 0).natDegree≤ d 0:=by simp
    simpa only [Nat.zero_add] using Polynomial.natDegree_mul_le_of_le hc hx
  exact hmono.trans (MvPolynomial.monomial_le_degreeOf 0 hd)
 theorem yProjection_eval {T:Type*} [Field T]
    (S:MvPolynomial (Fin 3) T)
    (hR:S.degreeOf 1=0) (hZ:S.degreeOf 2=0)
-   (v:Fin 3 → T):
+   (v:Fin 3→ T):
    (yProjection T S).eval (v 0)=MvPolynomial.eval v S:=by
  change ((Polynomial.evalRingHom (v 0)).comp (yProjection T)) S=
    (MvPolynomial.eval v) S
@@ -320,17 +320,17 @@ theorem yProjection_eval {T:Type*} [Field T]
    rw [y_only_vars S hR hZ i hi]
    simp [yProjection]
  · rfl
-def yWeights:Fin 4 → ℕ:=![0,1,0,0]
-def zWeights:Fin 4 → ℕ:=![0,0,0,1]
+def yWeights:Fin 4→ ℕ:=![0,1,0,0]
+def zWeights:Fin 4→ ℕ:=![0,0,0,1]
 theorem degreeY_le_yWeight (Q:MvPolynomial (Fin 4) K):
-   Q.degreeOf 1 ≤ MvPolynomial.weightedTotalDegree yWeights Q:=by
+   Q.degreeOf 1≤ MvPolynomial.weightedTotalDegree yWeights Q:=by
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro d hd
  have h:=MvPolynomial.le_weightedTotalDegree yWeights hd
  rw [weight_fin4] at h
  simpa [yWeights] using h
 theorem degreeZ_le_zWeight (Q:MvPolynomial (Fin 4) K):
-   Q.degreeOf 3 ≤ MvPolynomial.weightedTotalDegree zWeights Q:=by
+   Q.degreeOf 3≤ MvPolynomial.weightedTotalDegree zWeights Q:=by
  apply MvPolynomial.degreeOf_le_iff.mpr
  intro d hd
  have h:=MvPolynomial.le_weightedTotalDegree zWeights hd
@@ -344,7 +344,7 @@ theorem singular_seedless_card_le
    (Gamma:Finset (Polynomial K))
    (hsolutions:∀ S∈Gamma,
      specialization K S 0 (singularAuxiliary Q)=0):
-   Gamma.card ≤ singularListCap:=by
+   Gamma.card≤ singularListCap:=by
  classical
  let phi:=polynomialEmbedding K
  let J:=singularAuxiliary Q
@@ -353,13 +353,13 @@ theorem singular_seedless_card_le
    (hcaps.2.1.trans_lt (by norm_num [slopeCap,prime]))
  have hJR:J.degreeOf 2=0:=singularAuxiliary_R_degree Q hQ prime
    (hcaps.2.1.trans_lt (by norm_num [slopeCap,prime]))
- have hQY:MvPolynomial.weightedTotalDegree yWeights Q ≤ yTotalCap:=by
+ have hQY:MvPolynomial.weightedTotalDegree yWeights Q≤ yTotalCap:=by
    apply (weightedTotalDegree_le_iff yWeights Q yTotalCap).mpr
    intro d hd
    have hh:=(hbox hd).1
    rw [weight_fin4]
    simpa [yWeights] using (Nat.le_add_right (d 1) (d 2)).trans hh
- have hQZ:MvPolynomial.weightedTotalDegree zWeights Q ≤ 0:=by
+ have hQZ:MvPolynomial.weightedTotalDegree zWeights Q≤ 0:=by
    apply (weightedTotalDegree_le_iff zWeights Q 0).mpr
    intro d hd
    have hh:=(hbox hd).2.2.1
@@ -369,7 +369,7 @@ theorem singular_seedless_card_le
    (by norm_num [slopeCap]) hcaps.2.1
  have hJZw:=singularAuxiliary_weight_le zWeights Q hQ slopeCap
    (by norm_num [slopeCap]) hcaps.2.1
- have hJY:J.degreeOf 1 ≤ singularListCap:=
+ have hJY:J.degreeOf 1≤ singularListCap:=
    (degreeY_le_yWeight K J).trans (hJYw.trans (by
      unfold singularListCap
      exact Nat.mul_le_mul_left _ hQY))
@@ -400,15 +400,15 @@ theorem singular_seedless_card_le
    Finset.card_image_of_injective _ (polynomialEmbedding_injective K)
  rw [←hcard]
  calc
-   (Gamma.image phi).card ≤ q.roots.toFinset.card:=by
+   (Gamma.image phi).card≤ q.roots.toFinset.card:=by
      apply Finset.card_le_card
      intro z hz
      exact Multiset.mem_toFinset.mpr (hroots z hz)
-   _ ≤ q.roots.card:=Multiset.toFinset_card_le _
-   _ ≤ q.natDegree:=Polynomial.card_roots' q
-   _ ≤ A.degreeOf 0:=yProjection_natDegree_le A
-   _ ≤ J.degreeOf 1:=surfaceMap_degreeOf_le phi J 0
-   _ ≤ singularListCap:=hJY
+   _≤ q.roots.card:=Multiset.toFinset_card_le _
+   _≤ q.natDegree:=Polynomial.card_roots' q
+   _≤ A.degreeOf 0:=yProjection_natDegree_le A
+   _≤ J.degreeOf 1:=surfaceMap_degreeOf_le phi J 0
+   _≤ singularListCap:=hJY
 def singularPolynomials (Q:MvPolynomial (Fin 4) K)
    (Gamma:Finset (Polynomial K)):Finset (Polynomial K):=by
  classical
@@ -422,7 +422,7 @@ theorem seedless_solution_cover
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    (Gamma:Finset (Polynomial K))
    (hsolutions:∀ S∈Gamma,specialization K S 0 Q=0):
-   Gamma.card ≤ (singularPolynomials K Q Gamma).card+
+   Gamma.card≤ (singularPolynomials K Q Gamma).card+
      ∑ F:↥(positiveRFactors Q),(regularPolynomials K Q Gamma F).card:=by
  classical
  let regularUnion:=Finset.univ.biUnion (regularPolynomials K Q Gamma)
@@ -435,11 +435,11 @@ theorem seedless_solution_cover
      apply Finset.mem_biUnion.mpr
      exact ⟨⟨F,hF⟩,Finset.mem_univ _,Finset.mem_filter.mpr ⟨hS,hreg⟩⟩
  calc
-   Gamma.card ≤ (singularPolynomials K Q Gamma ∪ regularUnion).card:=
+   Gamma.card≤ (singularPolynomials K Q Gamma ∪ regularUnion).card:=
      Finset.card_le_card hcover
-   _ ≤ (singularPolynomials K Q Gamma).card+regularUnion.card:=
+   _≤ (singularPolynomials K Q Gamma).card+regularUnion.card:=
      Finset.card_union_le _ _
-   _ ≤ (singularPolynomials K Q Gamma).card+
+   _≤ (singularPolynomials K Q Gamma).card+
        ∑ F:↥(positiveRFactors Q),(regularPolynomials K Q Gamma F).card:=
      Nat.add_le_add_left Finset.card_biUnion_le _
 theorem seedless_list_card_le
@@ -451,20 +451,20 @@ theorem seedless_list_card_le
      weightedCap w yTotalCap slopeCap)
    (Gamma:Finset (Polynomial K))
    {Iota:Type} [Fintype Iota] [DecidableEq Iota]
-   (nodes:Finset Iota) (x received:Iota → K)
+   (nodes:Finset Iota) (x received:Iota→ K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
-   (hdegree:∀ S∈Gamma,S.natDegree ≤ w)
+   (hdegree:∀ S∈Gamma,S.natDegree≤ w)
    (hsolutions:∀ S∈Gamma,specialization K S 0 Q=0)
-   (hagreement:∀ S∈Gamma,agreements ≤
+   (hagreement:∀ S∈Gamma,agreements≤
      (nodes.filter (fun i => S.eval (x i)=received i)).card):
-   Gamma.card ≤ listBudget:=by
+   Gamma.card≤ listBudget:=by
  classical
  have hcaps:=seedless_degree_caps K Q hbox
- have hsing:(singularPolynomials K Q Gamma).card ≤ singularListCap:=
+ have hsing:(singularPolynomials K Q Gamma).card≤ singularListCap:=
    singular_seedless_card_le K Q hQ hbox (singularPolynomials K Q Gamma)
      (fun S hS => (Finset.mem_filter.mp hS).2)
  have hreg (F:↥(positiveRFactors Q)):
-     (regularPolynomials K Q Gamma F).card*gap ≤
+     (regularPolynomials K Q Gamma F).card*gap≤
        (n-w)*(capY*F.1.degreeOf 2+capR*F.1.degreeOf 1):=by
    have hdata:=directFactor_data Q F.1 hQ weightedCap w yTotalCap slopeCap
      hlegacy F.2
@@ -484,47 +484,47 @@ theorem seedless_list_card_le
    (positiveRFactors Q) id Q hQ (positiveRFactors_product_dvd Q hQ) 1
  have hsumR:=sum_coordinate_degrees_le_of_prod_dvd
    (positiveRFactors Q) id Q hQ (positiveRFactors_product_dvd Q hQ) 2
- have hsumY':(∑ F:↥(positiveRFactors Q),F.1.degreeOf 1) ≤ Q.degreeOf 1:=by
+ have hsumY':(∑ F:↥(positiveRFactors Q),F.1.degreeOf 1)≤ Q.degreeOf 1:=by
    simpa only [Finset.sum_coe_sort,id_eq] using hsumY
- have hsumR':(∑ F:↥(positiveRFactors Q),F.1.degreeOf 2) ≤ Q.degreeOf 2:=by
+ have hsumR':(∑ F:↥(positiveRFactors Q),F.1.degreeOf 2)≤ Q.degreeOf 2:=by
    simpa only [Finset.sum_coe_sort,id_eq] using hsumR
  have hregularScaled:
-     (∑ F:↥(positiveRFactors Q),(regularPolynomials K Q Gamma F).card)*gap ≤
+     (∑ F:↥(positiveRFactors Q),(regularPolynomials K Q Gamma F).card)*gap≤
        regularListNumerator:=by
    calc
      _=∑ F:↥(positiveRFactors Q),
          (regularPolynomials K Q Gamma F).card*gap:=by rw [Finset.sum_mul]
-     _ ≤ ∑ F:↥(positiveRFactors Q),
+     _≤ ∑ F:↥(positiveRFactors Q),
          (n-w)*(capY*F.1.degreeOf 2+capR*F.1.degreeOf 1):=
        Finset.sum_le_sum (fun F _ => hreg F)
      _=(n-w)*(capY*(∑ F:↥(positiveRFactors Q),F.1.degreeOf 2)+
          capR*(∑ F:↥(positiveRFactors Q),F.1.degreeOf 1)):=by
        rw [←Finset.mul_sum,Finset.sum_add_distrib,
-         ←Finset.mul_sum, ←Finset.mul_sum]
-     _ ≤ (n-w)*(capY*slopeCap+capR*yTotalCap):=by
+         ←Finset.mul_sum,←Finset.mul_sum]
+     _≤ (n-w)*(capY*slopeCap+capR*yTotalCap):=by
        apply Nat.mul_le_mul_left
        exact Nat.add_le_add (Nat.mul_le_mul_left capY (hsumR'.trans hcaps.2.1))
          (Nat.mul_le_mul_left capR (hsumY'.trans hcaps.1))
      _=regularListNumerator:=rfl
  have hcover:=seedless_solution_cover K Q hQ Gamma hsolutions
  have hscaled:=Nat.mul_le_mul_right gap hcover
- have htotal:Gamma.card*gap ≤ listNumerator:=by
+ have htotal:Gamma.card*gap≤ listNumerator:=by
    calc
-     Gamma.card*gap ≤
+     Gamma.card*gap≤
          ((singularPolynomials K Q Gamma).card+
            ∑ F:↥(positiveRFactors Q),(regularPolynomials K Q Gamma F).card)*gap:=
        hscaled
      _=(singularPolynomials K Q Gamma).card*gap+
          (∑ F:↥(positiveRFactors Q),(regularPolynomials K Q Gamma F).card)*gap:=by
        ring
-     _ ≤ singularListCap*gap+regularListNumerator:=
+     _≤ singularListCap*gap+regularListNumerator:=
        Nat.add_le_add (Nat.mul_le_mul_right gap hsing) hregularScaled
      _=listNumerator:=by simp only [listNumerator];ring
  by_contra hnot
- have hlarge:listBudget < Gamma.card:=Nat.lt_of_not_ge hnot
- have hgap:0 < gap:=by norm_num [gap,agreements,n,errors,w]
+ have hlarge:listBudget< Gamma.card:=Nat.lt_of_not_ge hnot
+ have hgap:0< gap:=by norm_num [gap,agreements,n,errors,w]
  have hmul:=Nat.mul_lt_mul_of_pos_right hlarge hgap
- have hcontra:listBudget*gap < listNumerator:=hmul.trans_le htotal
+ have hcontra:listBudget*gap< listNumerator:=hmul.trans_le htotal
  exact (Nat.not_lt_of_ge hcontra.le) list_numerator_fits
 end
 end ProximityPrize.SubmissionLower.RCN281

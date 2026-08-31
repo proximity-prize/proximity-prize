@@ -19,7 +19,7 @@ variable {K Iota:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Iota:=Classical.decEq Iota
 theorem meet_tight_scaled_le_retained:
-   meetTightProfile.tightNumerator*meetProfile.gap ≤
+   meetTightProfile.tightNumerator*meetProfile.gap≤
      meetProfile.retainedSingularContribution:=by
  norm_num [meetTightProfile,meetProfile,TightParameters.tightNumerator,
    TightParameters.coreNumerator,TightParameters.aggregateCost,
@@ -35,17 +35,17 @@ theorem meet_singularSeeds_tight_gap_bound
    [CharP K prime6656]
    (hbox:Q∈globalCoefficientBox K meetProfile.weightedCap meetProfile.w
      meetProfile.seedTotalCap meetProfile.slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→ Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→ K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=meetProfile.n)
    (hdegree:∀ gamma∈Gamma,
-     (selected gamma).natDegree ≤ meetProfile.w)
+     (selected gamma).natDegree≤ meetProfile.w)
    (hagreement:∀ gamma∈Gamma,
-     meetProfile.agreements ≤ (nodes.filter (fun i =>
+     meetProfile.agreements≤ (nodes.filter (fun i =>
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma meetProfile.w
      meetProfile.errors):
-   (singularSeeds Q selected Gamma).card*meetTightProfile.gap ≤
+   (singularSeeds Q selected Gamma).card*meetTightProfile.gap≤
      meetTightProfile.tightNumerator:=by
  exact
    RCN292.TightParameters.singularSeeds_tight_gap_bound
@@ -77,31 +77,31 @@ theorem meet_singularSeeds_scaled_bound
    [CharP K prime6656]
    (hbox:Q∈globalCoefficientBox K meetProfile.weightedCap meetProfile.w
      meetProfile.seedTotalCap meetProfile.slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→ Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→ K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=meetProfile.n)
    (hdegree:∀ gamma∈Gamma,
-     (selected gamma).natDegree ≤ meetProfile.w)
+     (selected gamma).natDegree≤ meetProfile.w)
    (hagreement:∀ gamma∈Gamma,
-     meetProfile.agreements ≤ (nodes.filter (fun i =>
+     meetProfile.agreements≤ (nodes.filter (fun i =>
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma meetProfile.w
      meetProfile.errors):
-   (singularSeeds Q selected Gamma).card*meetProfile.gap^2 ≤
+   (singularSeeds Q selected Gamma).card*meetProfile.gap^2≤
      meetProfile.retainedSingularContribution:=by
  have hbase:=meet_singularSeeds_tight_gap_bound Q hQ hbox selected Gamma
    nodes x u0 u1 hinj hnodes hdegree hagreement hnoPencil
  have hgap:meetTightProfile.gap=meetProfile.gap:=
    meet_tight_parameter_values.2.1
  have hscaled:
-     (singularSeeds Q selected Gamma).card*meetProfile.gap^2 ≤
+     (singularSeeds Q selected Gamma).card*meetProfile.gap^2≤
        meetTightProfile.tightNumerator*meetProfile.gap:=by
    rw [←hgap]
    calc
      (singularSeeds Q selected Gamma).card*meetTightProfile.gap^2=
          ((singularSeeds Q selected Gamma).card*meetTightProfile.gap)*
            meetTightProfile.gap:=by ring
-     _ ≤ meetTightProfile.tightNumerator*meetTightProfile.gap:=
+     _≤ meetTightProfile.tightNumerator*meetTightProfile.gap:=
        Nat.mul_le_mul_right meetTightProfile.gap hbase
  exact hscaled.trans meet_tight_scaled_le_retained
 theorem meet_global_count_lt_fixedCost_of_regular_factors
@@ -109,22 +109,22 @@ theorem meet_global_count_lt_fixedCost_of_regular_factors
    [CharP K prime6656]
    (hbox:Q∈globalCoefficientBox K meetProfile.weightedCap meetProfile.w
      meetProfile.seedTotalCap meetProfile.slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→ Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→ K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=meetProfile.n)
    (hdegree:∀ gamma∈Gamma,
-     (selected gamma).natDegree ≤ meetProfile.w)
+     (selected gamma).natDegree≤ meetProfile.w)
    (hsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0)
    (hagreement:∀ gamma∈Gamma,
-     meetProfile.agreements ≤ (nodes.filter (fun i =>
+     meetProfile.agreements≤ (nodes.filter (fun i =>
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma meetProfile.w
      meetProfile.errors)
    (hregular:∀ F:RegularIndex Q,
-     (regularSeeds Q selected Gamma F).card*meetProfile.gap^2 ≤
+     (regularSeeds Q selected Gamma F).card*meetProfile.gap^2≤
        meetProfile.factorRegularLedger (regularFlag Q F)):
-   Gamma.card < meetProfile.fixedCost:=by
+   Gamma.card< meetProfile.fixedCost:=by
  have hcover:=meet_card_le_regular_sum_add_singular Q hQ hbox selected
    Gamma hsolution
  have hreg:=sum_factor_counts_rectangular_le meetProfile Q hQ
@@ -133,10 +133,10 @@ theorem meet_global_count_lt_fixedCost_of_regular_factors
    hregular
  have hsing:=meet_singularSeeds_scaled_bound Q hQ hbox selected Gamma
    nodes x u0 u1 hinj hnodes hdegree hagreement hnoPencil
- have hscaled:Gamma.card*meetProfile.gap^2 ≤
+ have hscaled:Gamma.card*meetProfile.gap^2≤
      meetProfile.totalNumerator:=by
    calc
-     Gamma.card*meetProfile.gap^2 ≤
+     Gamma.card*meetProfile.gap^2≤
          ((∑ F:RegularIndex Q,
            (regularSeeds Q selected Gamma F).card)+
            (singularSeeds Q selected Gamma).card)*meetProfile.gap^2:=
@@ -144,10 +144,10 @@ theorem meet_global_count_lt_fixedCost_of_regular_factors
      _=(∑ F:RegularIndex Q,
            (regularSeeds Q selected Gamma F).card)*meetProfile.gap^2+
          (singularSeeds Q selected Gamma).card*meetProfile.gap^2:=by ring
-     _ ≤ meetProfile.regularNumerator+
+     _≤ meetProfile.regularNumerator+
          meetProfile.retainedSingularContribution:=Nat.add_le_add hreg hsing
      _=meetProfile.totalNumerator:=rfl
- have hstrict:meetProfile.totalNumerator <
+ have hstrict:meetProfile.totalNumerator<
      meetProfile.fixedCost*meetProfile.gap^2:=by
    rw [meet_total_numerator_exact,meet_fixed_cost_exact]
    norm_num [meetProfile,Profile.gap]

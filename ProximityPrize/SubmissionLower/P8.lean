@@ -27,17 +27,17 @@ set_option maxRecDepth 100000
 variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
-variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
+variable {Gamma:Finset K} {x:I→ K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
 variable {errorCap:ℕ}
 variable {stageSupport:RCN275.ResidualSupportParameters}
 theorem reducedStage_activeFixedPowers
    (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F
-     (RCN326.w + 1))
+     (RCN326.w+1))
    (Tred:MvPolynomial (Fin 3) (GenericField K))
    (hd:S.G ∣ globalTailCut (polynomialEmbedding K) S.F
-     (RCN326.w + 1) - Tred)
+     (RCN326.w+1)-Tred)
    (base:∀ C:RegularComponent (GenericField K) S.G Tred
      (regularitySurface (polynomialEmbedding K) S.F),
      SeparableLiteralCoordinate C.1)
@@ -45,19 +45,19 @@ theorem reducedStage_activeFixedPowers
      (regularitySurface (polynomialEmbedding K) S.F),
      KaehlerDifferential.D (GenericField K)
          (CoordinateField (GenericField K) C.1)
-         (coordinate (GenericField K) C.1 0) ≠ 0 ∨
+         (coordinate (GenericField K) C.1 0)≠ 0∨
        KaehlerDifferential.D (GenericField K)
          (CoordinateField (GenericField K) C.1)
-         (coordinate (GenericField K) C.1 2) ≠ 0)
+         (coordinate (GenericField K) C.1 2)≠ 0)
    (hZ:∀ C:RegularComponent (GenericField K) S.G Tred
      (regularitySurface (polynomialEmbedding K) S.F),
      LiteralProjectionGate C 2)
-   (hSderiv:MvPolynomial.pderiv (1:Fin 3) S.G ≠ 0)
-   (D:AdaptiveNestedProjectionDataActive base hactive hSderiv) :
+   (hSderiv:MvPolynomial.pderiv (1:Fin 3) S.G≠ 0)
+   (D:AdaptiveNestedProjectionDataActive base hactive hSderiv):
    ActiveNestedFixedPowers base hactive hZ hSderiv D
      (transportedMultiplicity hd
        (localMultiplicity S (canonicalLocalDVRFamily S hfirstProper))):=by
- refine { z:=?_, u:=?_, v:=?_ }
+ refine {z:=?_,u:=?_,v:=?_}
  · intro q hq hqMonic a0
    exact reducedStage_indexedFixedFactor_groupedPowerDvd S hfirstProper Tred hd
      (activeNestedZComponent (G:=S.G) (T:=Tred)
