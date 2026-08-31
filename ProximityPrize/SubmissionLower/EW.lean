@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BN
 import ProximityPrize.SubmissionLower.EV
 import ProximityPrize.SubmissionLower.B8
@@ -28,7 +27,7 @@ noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 40000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 variable {pchar:ℕ} [CharP Omega pchar]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
@@ -73,7 +72,7 @@ def TerminalLargeZChargeOfSupport
        D.degree errors (Finset.filter_subset _ _) D.stage.no_large_pencil)
      D.stage.characteristic_bound C
    ∀ E:SC.TerminalDescendant,
-     E.degree < E.stage.identities.card →
+     E.degree<E.stage.identities.card →
        GammaC.card*(aD-D.degree) ≤
          (errors+1)*(aD-D.degree)*B.zCost C
 abbrev TerminalLargeZCharge
@@ -95,7 +94,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
    (hnodes:S.nodes.card=n)
    (hagreement:∀ gamma∈Gamma,
      a ≤ (S.agreementFiber gamma).card)
-   (hwa:w < a) (_han:a ≤ n)
+   (hwa:w<a) (_han:a ≤ n)
    (hdegreeGlobal:∀ k ≤ w,
      (n-k)*(a-w)*(w-k) ≤ U*(a-k))
    (hunitGlobal:∀ k ≤ w,
@@ -159,7 +158,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile
    exact h0.trans (by
      simpa only [aD,ResidualStage.agreementFiber,
        ResidualStage.Agrees] using D.agreement_card gamma hGamma)
- have hda:D.degree < aD:=by
+ have hda:D.degree<aD:=by
    have hD:=D.degree_le
    dsimp only [aD]
    omega

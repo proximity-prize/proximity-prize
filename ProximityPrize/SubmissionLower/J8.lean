@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y8
 namespace ProximityPrize.SubmissionLower.RCN099
 open scoped Classical WithZero
@@ -42,9 +41,9 @@ theorem valuation_le_one_of_poleOrder_eq_zero
  by_cases hx:v x=0
  · simp [hx]
  by_contra hnot
- have hlt:(1:WithZero (Multiplicative ℤ)) < v x:=
+ have hlt:(1:WithZero (Multiplicative ℤ))<v x:=
    lt_of_not_ge hnot
- have hlog:0 < (v x).log:=by
+ have hlog:0<(v x).log:=by
    simpa only [WithZero.log_one] using
      ((WithZero.log_lt_log one_ne_zero hx).2 hlt)
  unfold poleOrder at h

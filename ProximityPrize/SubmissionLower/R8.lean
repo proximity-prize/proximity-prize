@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CL
 namespace ProximityPrize.SubmissionLower.RCN352
 open scoped Classical WithZero
@@ -19,10 +18,10 @@ def constantMap:K →+*InfinityRing K where
 theorem constantMap_value (c:K):
    (constantMap K c).val=RatFunc.C c:=rfl
 theorem polynomial_quotient_value_lt_one
-   (f g:Polynomial K) (hg:g≠0) (hdeg:f.degree < g.degree):
+   (f g:Polynomial K) (hg:g≠0) (hdeg:f.degree<g.degree):
    RatFunc.inftyValuation K
      (algebraMap (Polynomial K) (RatFunc K) f/
-       algebraMap (Polynomial K) (RatFunc K) g) < 1:=by
+       algebraMap (Polynomial K) (RatFunc K) g)<1:=by
  by_cases hf:f=0
  · simp [hf]
  have hfmap:algebraMap (Polynomial K) (RatFunc K) f≠0:=by
@@ -30,7 +29,7 @@ theorem polynomial_quotient_value_lt_one
  have hgmap:algebraMap (Polynomial K) (RatFunc K) g≠0:=by
    simpa using hg
  have hquot:=div_ne_zero hfmap hgmap
- have hnat:f.natDegree < g.natDegree:=by
+ have hnat:f.natDegree<g.natDegree:=by
    rw [Polynomial.degree_eq_natDegree hf,Polynomial.degree_eq_natDegree hg] at hdeg
    exact_mod_cast hdeg
  rw [RatFunc.inftyValuation_apply,
@@ -40,7 +39,7 @@ theorem polynomial_quotient_value_lt_one
    ←WithZero.exp_zero,WithZero.exp_lt_exp]
  exact sub_neg.mpr (Int.ofNat_lt.mpr hnat)
 theorem exists_constant_difference_lt_one (r:InfinityRing K):
-   ∃ c:K,RatFunc.inftyValuation K (r.val-RatFunc.C c) < 1:=by
+   ∃ c:K,RatFunc.inftyValuation K (r.val-RatFunc.C c)<1:=by
  by_cases hr:r.val=0
  · exact ⟨0,by simp [hr]⟩
  have hf:r.val.num≠0:=RatFunc.num_ne_zero hr
@@ -52,9 +51,9 @@ theorem exists_constant_difference_lt_one (r:InfinityRing K):
      ←WithZero.exp_zero,WithZero.exp_le_exp] at hmem
    dsimp [RatFunc.intDegree] at hmem
    omega
- by_cases hstrict:r.val.num.natDegree < r.val.denom.natDegree
+ by_cases hstrict:r.val.num.natDegree<r.val.denom.natDegree
  · refine ⟨0,?_⟩
-   have hd:r.val.num.degree < r.val.denom.degree:=by
+   have hd:r.val.num.degree<r.val.denom.degree:=by
      rw [Polynomial.degree_eq_natDegree hf,Polynomial.degree_eq_natDegree hg]
      exact_mod_cast hstrict
    have h:=polynomial_quotient_value_lt_one K r.val.num r.val.denom hg hd
@@ -71,7 +70,7 @@ theorem exists_constant_difference_lt_one (r:InfinityRing K):
        (Polynomial.C c*r.val.denom).leadingCoeff:=by
      rw [(RatFunc.monic_denom r.val).leadingCoeff_C_mul]
    have hcancel:
-       (r.val.num-Polynomial.C c*r.val.denom).degree < r.val.denom.degree:=
+       (r.val.num-Polynomial.C c*r.val.denom).degree<r.val.denom.degree:=
      (Polynomial.degree_sub_lt hpc hf hlc).trans_eq hdegfg
    have hgmap:algebraMap (Polynomial K) (RatFunc K) r.val.denom≠0:=by
      simpa using hg

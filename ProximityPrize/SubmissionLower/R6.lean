@@ -12,7 +12,7 @@ theorem prime_eq_span_of_le (g:B) (hg:Prime g)
  haveI:P.IsPrime:=(Ideal.span_singleton_prime hg.ne_zero).mpr hg
  have hheight:P.height ≤ 1:=Ideal.height_span_singleton_le_one hg.not_unit
  by_contra hne
- have hlt:Q < P:=lt_of_le_of_ne hle hne
+ have hlt:Q<P:=lt_of_le_of_ne hle hne
  have hsmall:=(Ideal.height_le_iff (p:=P) (n:=1)).mp hheight Q
    inferInstance hlt
  have hzero:Q.height=0:=Order.lt_one_iff.mp hsmall

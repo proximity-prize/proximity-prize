@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X2
 import ProximityPrize.SubmissionLower.Z
 namespace ProximityPrize.SubmissionLower.RCN011
@@ -60,7 +59,7 @@ theorem planeMap_irreducible_of_component
 include ht in
 theorem planeMap_dvd_iff_of_component
    (G H:Original K) (hG:Irreducible G) (hmem:G∈P):
-   planeMap K order G∣planeMap K order H ↔ G∣H:=by
+   planeMap K order G∣planeMap K order H↔G∣H:=by
  constructor
  · rintro ⟨U,hU⟩
    have hrat:rationalMap K order G∣rationalMap K order H:=by
@@ -127,10 +126,10 @@ theorem actualRelationKernel_contract:
  rw [actualRelationKernel,RingHom.comap_ker,actualPlaneEvaluation_comp_planeMap]
  exact coordinateEvaluation_ker K P
 theorem actualPlane_root_iff (F:Original K):
-   actualPlaneEvaluation K order P ht (planeMap K order F)=0 ↔ F∈P:=by
- change ((actualPlaneEvaluation K order P ht).comp (planeMap K order)) F=0 ↔ F∈P
+   actualPlaneEvaluation K order P ht (planeMap K order F)=0↔F∈P:=by
+ change ((actualPlaneEvaluation K order P ht).comp (planeMap K order)) F=0↔F∈P
  rw [actualPlaneEvaluation_comp_planeMap]
- change F∈RingHom.ker (coordinateEvaluation K P).toRingHom ↔ F∈P
+ change F∈RingHom.ker (coordinateEvaluation K P).toRingHom↔F∈P
  rw [coordinateEvaluation_ker]
 end Component
 theorem prime_eq_of_actualRelationKernel_eq
@@ -142,7 +141,7 @@ theorem prime_eq_of_actualRelationKernel_eq
  have h:=congrArg (Ideal.comap (planeMap K order)) heq
  simpa only [actualRelationKernel_contract] using h
 theorem actualRelationKernel_family_injective
-   (order:Fin 3 ≃ Fin 3) {I:Type} (P:I → Ideal (Original K))
+   (order:Fin 3 ≃ Fin 3) {I:Type} (P:I→Ideal (Original K))
    [∀ i,(P i).IsPrime]
    (ht:∀ i,Transcendental K (coordinate K (P i) (order 0)))
    (hinj:Function.Injective P):

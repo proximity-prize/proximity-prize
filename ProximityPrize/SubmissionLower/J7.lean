@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y8
 namespace ProximityPrize.SubmissionLower.RCN096
 open scoped Classical BigOperators WithZero TensorProduct
@@ -42,14 +41,14 @@ theorem directional_bad_coefficient_subsingleton
 section FiniteFamily
 variable {K:Type*} [Field K] [IsAlgClosed K]
 variable {I:Type*} [Fintype I]
-variable (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+variable (E:I→Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 variable (r z:∀ i,E i)
 variable (W:∀ i,
  Finset (RCN345.NormalizedValuation K (E i)))
 theorem exists_common_exact_finite_separable_shear_avoiding
    {J:Type*} [Finite J]
-   (Extra:J → K → Prop)
-   (hextra:∀ j {a b},Extra j a → Extra j b → a=b)
+   (Extra:J→K→Prop)
+   (hextra:∀ j {a b},Extra j a→Extra j b→a=b)
    (embeddingZ:∀ i,RatFunc K →ₐ[K] E i)
    (hvalueZ:∀ i,embeddingZ i
      (algebraMap (Polynomial K) (RatFunc K) Polynomial.X)=z i)
@@ -78,14 +77,14 @@ theorem exists_common_exact_finite_separable_shear_avoiding
    unfold RCN369.parameterDifferential at h
    rwa [hvalueZ i] at h
  let Q:=J ⊕ (I ⊕ Σ i:I,{v//v∈W i})
- let Bad:Q → K → Prop
+ let Bad:Q→K→Prop
    | Sum.inl j,a => Extra j a
    | Sum.inr (Sum.inl i),a =>
        D K (E i) (r i)+a • D K (E i) (z i)=0
    | Sum.inr (Sum.inr iv),a =>
        iv.2.1.val (r iv.1+a • z iv.1) <
          max (iv.2.1.val (r iv.1)) (iv.2.1.val (z iv.1))
- have hsingle:∀ q {a b},Bad q a → Bad q b → a=b:=by
+ have hsingle:∀ q {a b},Bad q a→Bad q b→a=b:=by
    intro q a b ha hb
    rcases q with j | i | ⟨i,v⟩
    · exact hextra j ha hb
@@ -127,7 +126,7 @@ theorem exists_nestedFlagProjectionData_directional
      MvPolynomial.pderiv (0:Fin 3) G-
        MvPolynomial.C D.mu*MvPolynomial.pderiv (1:Fin 3) G≠0:=by
  classical
- let E:RegularComponent Omega G T H → Type:=
+ let E:RegularComponent Omega G T H→Type:=
    fun C↦CoordinateField Omega C.1
  let rY:∀ C,E C:=fun C↦coordinate Omega C.1 0
  let z:∀ C,E C:=fun C↦coordinate Omega C.1 2
@@ -191,10 +190,10 @@ theorem exists_nestedFlagProjectionData_directional
      letI:Algebra (RatFunc Omega) (E C):=
        (embeddingU C).toRingHom.toAlgebra
      Algebra.IsSeparable (RatFunc Omega) (E C):=fun C↦(hUdata C).2.1
- let Extra:PUnit → Omega → Prop:=fun _ mu↦
+ let Extra:PUnit→Omega→Prop:=fun _ mu↦
    MvPolynomial.pderiv (0:Fin 3) G-
      MvPolynomial.C mu*MvPolynomial.pderiv (1:Fin 3) G=0
- have hextra:∀ j {a b},Extra j a → Extra j b → a=b:=by
+ have hextra:∀ j {a b},Extra j a→Extra j b→a=b:=by
    intro j a b ha hb
    exact directional_bad_coefficient_subsingleton G hSderiv ha hb
  obtain ⟨mu,hmu0,hmudir,hmu⟩:=

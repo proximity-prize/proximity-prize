@@ -12,7 +12,7 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 variable {pchar errors w:ℕ} [CharP Omega pchar]
 variable {flag tailFlag1 tailFlag2:FlagDegree}
 variable {support:RCN275.ResidualSupportParameters}
@@ -25,8 +25,8 @@ structure DelayedTailMultiplicityProvider
  budgetFamily:PrimeFlagBudgetFamily
    (G:=S.G) (T:=globalTailCut phi S.F (w+1))
    (H:=regularitySurface phi S.F) flag tailFlag1
- multiplicity:FirstTailComponent S → ℕ
- cost:FirstTailComponent S → ℕ
+ multiplicity:FirstTailComponent S→ℕ
+ cost:FirstTailComponent S→ℕ
  one_le_multiplicity:∀ C,1 ≤ multiplicity C
  tangentYZGate:errors+1 ≤ tailFlag2.yz
  cost_le:∀ C,

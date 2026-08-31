@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B6
 namespace ProximityPrize.SubmissionLower.RCN049
 open scoped Classical BigOperators
@@ -19,7 +18,7 @@ set_option maxHeartbeats 3500000
 set_option maxRecDepth 40000
 set_option synthInstance.maxHeartbeats 300000
 variable {K Ω I:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
-variable {φ:Polynomial K →+*Ω} {Γ:Finset K} {x:I → K}
+variable {φ:Polynomial K →+*Ω} {Γ:Finset K} {x:I→K}
 variable {p e w a b s:ℕ} [CharP Ω p] {flag:FlagDegree}
 theorem exists_agreement_projection_of_caps
    (S:ResidualStage φ Γ x p e flag w (support a b s))
@@ -37,7 +36,7 @@ theorem exists_agreement_projection_of_caps
  classical
  let T:=agreementPolynomial φ S.F w x0 u0 u1
  let H:=regularitySurface φ S.F
- have hsy:s+2 < b+s+3:=by omega
+ have hsy:s+2<b+s+3:=by omega
  have hTflag:PolynomialInFlag (sharpResidualAgreementFlag (support a b s) w) T:=
    surfaceMap_agreement_in_sharp_flag hsy (phi:=φ)
      ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩

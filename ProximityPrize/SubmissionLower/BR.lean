@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z5
 import ProximityPrize.SubmissionLower.AE
 namespace ProximityPrize.SubmissionLower.RCN165
@@ -110,11 +109,11 @@ theorem finiteZeroSetBound_map_residual_of_inverse
  rw [residual_original_apply aY v bY aS bS cS hv] at h
  exact h
 structure PrimeFlagZeroBudget
-   (P:Ideal (Poly3 K)) (cost:FlagDegree → ℕ) where
+   (P:Ideal (Poly3 K)) (cost:FlagDegree→ℕ) where
  zero_le:∀ (r:FlagDegree) (A:Poly3 K),
-   PolynomialInFlag r A → A∉P → FiniteZeroSetBound P A (cost r)
+   PolynomialInFlag r A→A∉P→FiniteZeroSetBound P A (cost r)
 def PrimeFlagZeroBudget.mapResidual
-   {P:Ideal (Poly3 K)} {cost:FlagDegree → ℕ}
+   {P:Ideal (Poly3 K)} {cost:FlagDegree→ℕ}
    (B:PrimeFlagZeroBudget P cost)
    (aY v bY aS bS cS:K) (hv:v≠0):
    PrimeFlagZeroBudget

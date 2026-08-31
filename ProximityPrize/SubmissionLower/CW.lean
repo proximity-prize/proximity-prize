@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 variable {A B:Type*} [CommRing A] [CommRing B] [Algebra A B]

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I0
 namespace ProximityPrize.SubmissionLower.RCN061
 open scoped BigOperators
@@ -13,7 +12,7 @@ theorem coefficient_pole_le_generic_evaluation_of_trdeg_le_one
      algebraMap Ω L (algebraMap k Ω c))
    (htrdeg:Algebra.trdeg k F ≤ 1)
    (x:Ω) (htrans:Transcendental k x)
-   (a:Fin (w+1) → F) (i:Fin (w+1)):
+   (a:Fin (w+1)→F) (i:Fin (w+1)):
    RCN187.poleOrder v (φ (a i)) ≤
      RCN187.poleOrder v
        (∑ j,φ (a j)*(algebraMap Ω L x)^(j:ℕ)):=by

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W0
 section ProximityFlatProofPort
 open Ideal
@@ -13,7 +12,7 @@ lemma exists_isClosed_singleton_of_isJacobsonRing [IsJacobsonRing R]
  have:=hs'.ne_empty
  contrapose! this
  simp_rw [not_imp_not] at this
- rw [←Set.compl_univ,eq_compl_comm,hI',eq_comm, ←zeroLocus_bot,
+ rw [←Set.compl_univ,eq_compl_comm,hI',eq_comm,←zeroLocus_bot,
    zeroLocus_eq_iff,Ideal.radical_eq_jacobson,Ideal.radical_eq_jacobson]
  refine le_antisymm (le_sInf ?_) (Ideal.jacobson_mono bot_le)
  rintro x ⟨-,hx⟩
@@ -30,7 +29,7 @@ instance [IsJacobsonRing R]:JacobsonSpace (PrimeSpectrum R):=by
  rintro x ⟨hJx,hx⟩
  exact @hS ⟨x,hx.isPrime⟩ ⟨hJx,(isClosed_singleton_iff_isMaximal _).mpr hx⟩
 lemma isJacobsonRing_iff_jacobsonSpace:
-   IsJacobsonRing R ↔ JacobsonSpace (PrimeSpectrum R):=by
+   IsJacobsonRing R↔JacobsonSpace (PrimeSpectrum R):=by
  refine ⟨fun _↦inferInstance,fun H↦⟨fun I hI↦le_antisymm ?_ Ideal.le_jacobson⟩⟩
  rw [←I.isRadical_jacobson.radical]
  conv_rhs => rw [←hI.radical]
@@ -43,27 +42,27 @@ lemma isJacobsonRing_iff_jacobsonSpace:
 lemma isOpen_singleton_tfae_of_isNoetherian_of_isJacobsonRing
    [IsNoetherianRing R] [IsJacobsonRing R] (x:PrimeSpectrum R):
    List.TFAE [IsOpen {x},IsClopen {x},IsClosed {x}∧StableUnderGeneralization {x}]:=by
- tfae_have 1 → 2
+ tfae_have 1→2
  | h => by
    obtain ⟨y,rfl:y=x,h'⟩:=exists_isClosed_singleton_of_isJacobsonRing _ h
      ⟨x,Set.mem_singleton x⟩
    exact ⟨h',h⟩
- tfae_have 2 → 3
+ tfae_have 2→3
  | h => ⟨h.isClosed,h.isOpen.stableUnderGeneralization⟩
- tfae_have 3 → 1
+ tfae_have 3→1
  | ⟨h₁,h₂⟩ => by
-   rw [isClosed_singleton_iff_isMaximal, ←isMax_iff] at h₁
+   rw [isClosed_singleton_iff_isMaximal,←isMax_iff] at h₁
    suffices {x}=(⋃ p∈{ p:PrimeSpectrum R | IsMin p∧p≠x},closure {p})ᶜ by
      rw [this,isOpen_compl_iff]
      refine Set.Finite.isClosed_biUnion ?_ (fun _ _↦isClosed_closure)
      exact (finite_setOf_isMin R).subset fun x h↦h.1
    ext p
    simp only [Set.mem_singleton_iff,ne_eq,Set.mem_setOf_eq,Set.compl_iUnion,Set.mem_iInter,
-     Set.mem_compl_iff,and_imp, ←specializes_iff_mem_closure, ←le_iff_specializes,
+     Set.mem_compl_iff,and_imp,←specializes_iff_mem_closure,←le_iff_specializes,
      not_imp_not]
    constructor
    · rintro rfl _ _
-     rw [stableUnderGeneralization_singleton, ←isMin_iff] at h₂
+     rw [stableUnderGeneralization_singleton,←isMin_iff] at h₂
      exact h₂.eq_of_le
    · intro hp
      apply h₁.eq_of_ge

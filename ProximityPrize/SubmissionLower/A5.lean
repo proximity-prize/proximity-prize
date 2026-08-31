@@ -24,7 +24,7 @@ private theorem numerator_scaling_mod (F Q:Poly4 K) (j:ℕ):
  rw [←Ideal.Quotient.eq_zero_iff_mem,map_sub,map_mul,map_pow,sub_eq_zero] at h
  exact h
 private theorem commonTerm_scaling_mod (F Q:Poly4 K) (w j:ℕ) (hj:j≤w)
-   (c:ℕ → K) (x:K):
+   (c:ℕ→K) (x:K):
    Ideal.Quotient.mk (factorIdeal F) (commonNumeratorTerm (F*Q) w c x j)=
      Ideal.Quotient.mk (factorIdeal F) Q^(2*w)*
        Ideal.Quotient.mk (factorIdeal F) (commonNumeratorTerm F w c x j):=by
@@ -53,7 +53,7 @@ private theorem seed_scaling_mod (F Q:Poly4 K) (w:ℕ) (u0 u1:K):
  rw [H_scaling_mod,mul_pow]
  ring
 theorem agreementNumerator_scaling_mod (F Q:Poly4 K) (w:ℕ)
-   (c:ℕ → K) (x u0 u1:K):
+   (c:ℕ→K) (x u0 u1:K):
    Ideal.Quotient.mk (factorIdeal F) (agreementNumerator (F*Q) w c x u0 u1)=
      Ideal.Quotient.mk (factorIdeal F) Q^(2*w)*
        Ideal.Quotient.mk (factorIdeal F) (agreementNumerator F w c x u0 u1):=by
@@ -70,7 +70,7 @@ theorem agreementNumerator_scaling_mod (F Q:Poly4 K) (w:ℕ)
  rw [map_sub,map_sub,hsum,seed_scaling_mod]
  ring
 theorem factor_dvd_agreement_sub_power (F Q:Poly4 K) (w:ℕ)
-   (c:ℕ → K) (x u0 u1:K):
+   (c:ℕ→K) (x u0 u1:K):
    F∣agreementNumerator (F*Q) w c x u0 u1-
      Q^(2*w)*agreementNumerator F w c x u0 u1:=by
  rw [←Ideal.mem_span_singleton]

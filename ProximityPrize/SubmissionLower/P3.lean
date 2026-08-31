@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AF
 import ProximityPrize.SubmissionLower.FR
 namespace ProximityPrize.SubmissionLower.RCN288
@@ -45,7 +44,7 @@ noncomputable section
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 50000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 variable {pchar:ℕ} [CharP Omega pchar]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
@@ -55,7 +54,7 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget_for_cuts
    {support:ResidualSupportParameters}
    (hphi:Function.Injective phi)
    (S:CurveResidualStage phi Gamma x pchar e surfaceFlag cutFlag d support)
-   (cutAt:ℕ → FlagDegree) (cost:FlagDegree → ℕ)
+   (cutAt:ℕ→FlagDegree) (cost:FlagDegree→ℕ)
    (B:PrimeFlagZeroBudget S.primeIdeal cost)
    (degreeCost unitCost U V zCharge:ℕ)
    (hcost:∀ t:ℕ,cost (cutAt t)=t*degreeCost+unitCost)
@@ -64,10 +63,10 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget_for_cuts
        PolynomialInFlag (cutAt D.degree)
          (agreementPolynomial phi D.stage.F D.degree
            (x i) (D.stage.u0 i) (D.stage.u1 i)))
-   (hda:d < a)
+   (hda:d<a)
    (hagreement:∀ gamma∈Gamma,a ≤ (S.agreementFiber gamma).card)
    (hlarge:∀ D:S.TerminalDescendant,
-     D.degree < D.stage.identities.card →
+     D.degree<D.stage.identities.card →
        Gamma.card*(a-d) ≤ (e+1)*(a-d)*zCharge)
    (hdegree:∀ k ≤ d,
      (S.nodes.card-k)*(a-d)*(d-k) ≤ U*(a-k))
@@ -77,12 +76,12 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget_for_cuts
      U*degreeCost+V*unitCost+(e+1)*(a-d)*zCharge:=by
  classical
  let Inv:∀ n,CurveResidualStage phi Gamma x pchar e
-     surfaceFlag cutFlag n support → Prop:=
+     surfaceFlag cutFlag n support→Prop:=
    fun _ A↦PrimeFlagZeroBudget A.primeIdeal cost
  have htransport:∀ {n m}
      {A:CurveResidualStage phi Gamma x pchar e surfaceFlag cutFlag n support}
      {Anext:CurveResidualStage phi Gamma x pchar e surfaceFlag cutFlag m support},
-     A.ResidualTransition Anext → Inv n A → Inv m Anext:=by
+     A.ResidualTransition Anext→Inv n A→Inv m Anext:=by
    intro n m A Anext htransition hbudget
    obtain ⟨aY,v,bY,aS,bS,cS,hv,_,_,hprime⟩:=htransition
    dsimp only [Inv] at hbudget ⊢
@@ -140,19 +139,19 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget_for_cuts
 theorem recursive_curve_stratified_incidence_of_sharp_prime_flag_budget
    {e d a:ℕ} {surfaceFlag cutFlag:FlagDegree}
    {support:ResidualSupportParameters}
-   (hsy:support.s < support.ys)
+   (hsy:support.s<support.ys)
    (hphi:Function.Injective phi)
    (S:CurveResidualStage phi Gamma x pchar e surfaceFlag cutFlag d support)
-   (cost:FlagDegree → ℕ)
+   (cost:FlagDegree→ℕ)
    (B:PrimeFlagZeroBudget S.primeIdeal cost)
    (degreeCost unitCost U V zCharge:ℕ)
    (hcost:∀ t:ℕ,
      cost (sharpResidualAgreementFlag support t)=
        t*degreeCost+unitCost)
-   (hda:d < a)
+   (hda:d<a)
    (hagreement:∀ gamma∈Gamma,a ≤ (S.agreementFiber gamma).card)
    (hlarge:∀ D:S.TerminalDescendant,
-     D.degree < D.stage.identities.card →
+     D.degree<D.stage.identities.card →
        Gamma.card*(a-d) ≤ (e+1)*(a-d)*zCharge)
    (hdegree:∀ k ≤ d,
      (S.nodes.card-k)*(a-d)*(d-k) ≤ U*(a-k))
@@ -214,12 +213,12 @@ theorem flagMixed_sharpResidualAgreement_z
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_sharp_z_yz
    (hphi:Function.Injective phi)
    (F:MvPolynomial (Fin 4) K) (G T:MvPolynomial (Fin 3) Omega)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (p e d a U V:ℕ) [CharP Omega p]
    (surfaceFlag:FlagDegree)
    (support:ResidualSupportParameters)
-   (hsy:support.s < support.ys)
+   (hsy:support.s<support.ys)
    (hdiv:G∣surfaceMap phi F)
    (hGflag:PolynomialInFlag surfaceFlag G)
    (hTflag:PolynomialInFlag (sharpResidualAgreementFlag support d) T)
@@ -244,7 +243,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_sharp_z_yz
      a ≤ (nodes.filter (fun i↦
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma d e)
-   (hchar:d < p) (hda:d < a)
+   (hchar:d<p) (hda:d<a)
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T)
      (H:=regularitySurface phi F) surfaceFlag
      (sharpResidualAgreementFlag support d))
@@ -273,11 +272,11 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_sharp_z_yz
      (surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F))≠0
    rw [selectedPoint_evaluation]
    exact hregular gamma hgamma
- let degreeCost:RegularComponent Omega G T H → ℕ:=
+ let degreeCost:RegularComponent Omega G T H→ℕ:=
    fun C↦B.weightedCost (sharpAgreementDirection support) C
- let unitCost:RegularComponent Omega G T H → ℕ:=
+ let unitCost:RegularComponent Omega G T H→ℕ:=
    fun C↦B.weightedCost unitYZFlag C
- let largeCost:RegularComponent Omega G T H → ℕ:=
+ let largeCost:RegularComponent Omega G T H→ℕ:=
    fun C↦B.zCost C+B.yzCost C
  have hcomponent:∀ C:RegularComponent Omega G T H,
      (componentSeeds Omega G T H Gamma
@@ -358,10 +357,10 @@ theorem terminalAdaptiveProjectionAtSharpCutYZ_of_active_yz_gates
    (D:S.TerminalDescendant) (i:Iota)
    (hproper:¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
      (x i) (D.stage.u0 i) (D.stage.u1 i))
-   (hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j < pchar)
+   (hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j<pchar)
    (hmixedZ:coordinateMixedDegree Omega D.stage.G
      (agreementPolynomial phi D.stage.F D.degree
-       (x i) (D.stage.u0 i) (D.stage.u1 i)) 2 < pchar)
+       (x i) (D.stage.u0 i) (D.stage.u1 i)) 2<pchar)
    (hGflag:PolynomialInFlag flag D.stage.G)
    (hTflag:PolynomialInFlag (sharpResidualAgreementFlag support D.degree)
      (agreementPolynomial phi D.stage.F D.degree
@@ -418,7 +417,7 @@ theorem terminalAdaptiveProjectionAtSharpCutYZ_of_active_yz_gates
  exact ⟨base,⟨P⟩⟩
 theorem terminalAdaptiveProjectionFamiliesSharpYZ_of_active_yz_caps
    {e w:ℕ} {flag:FlagDegree}
-   (support:ResidualSupportParameters) (hsy:support.s < support.ys)
+   (support:ResidualSupportParameters) (hsy:support.s<support.ys)
    (S:ResidualStage phi Gamma x pchar e flag w support)
    (surfaceY surfaceS surfaceZ cutY cutS:ℕ)
    (hflagY:flag.yz+flag.all ≤ surfaceY)
@@ -426,9 +425,9 @@ theorem terminalAdaptiveProjectionFamiliesSharpYZ_of_active_yz_caps
    (hflagZ:flag.zOnly+flag.yz+flag.all ≤ surfaceZ)
    (hcutY:1+w*(2*support.ys-2) ≤ cutY)
    (hcutS:(2*support.s-1)*w ≤ cutS)
-   (hsurfaceChar:surfaceY < pchar∧surfaceS < pchar∧
-     surfaceZ < pchar)
-   (hmixedZ:cutY*surfaceS+surfaceY*cutS < pchar):
+   (hsurfaceChar:surfaceY<pchar∧surfaceS<pchar∧
+     surfaceZ<pchar)
+   (hmixedZ:cutY*surfaceS+surfaceY*cutS<pchar):
    TerminalAdaptiveProjectionFamiliesSharpYZ support S:=by
  intro D i _hi hproper
  let T:=agreementPolynomial phi D.stage.F D.degree
@@ -470,13 +469,13 @@ theorem terminalAdaptiveProjectionFamiliesSharpYZ_of_active_yz_caps
      _ ≤ (2*support.s-1)*w:=
        Nat.mul_le_mul_left (2*support.s-1) hD
      _ ≤ cutS:=hcutS
- have hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j < pchar:=by
+ have hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j<pchar:=by
    intro j
    fin_cases j
    · exact hGY'.trans_lt hsurfaceChar.1
    · exact hGS'.trans_lt hsurfaceChar.2.1
    · exact hGZ'.trans_lt hsurfaceChar.2.2
- have hmixedZ':coordinateMixedDegree Omega D.stage.G T 2 < pchar:=by
+ have hmixedZ':coordinateMixedDegree Omega D.stage.G T 2<pchar:=by
    rw [coordinateMixedDegree_two]
    exact (Nat.add_le_add
      (Nat.mul_le_mul hTY' hGS')
@@ -486,13 +485,13 @@ theorem terminalAdaptiveProjectionFamiliesSharpYZ_of_active_yz_caps
 theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_sharp_z_yz
    (hphi:Function.Injective phi)
    (p:Profile) (support:ResidualSupportParameters)
-   (hsy:support.s < support.ys)
+   (hsy:support.s<support.ys)
    {flag:FlagDegree}
    (S:ResidualStage phi Gamma x pchar p.errors flag p.w support)
    (hnodes:S.nodes.card=p.n)
    (hagreement:∀ gamma∈Gamma,
      p.agreements ≤ (S.agreementFiber gamma).card)
-   (hwa:p.w < p.agreements) (_han:p.agreements ≤ p.n)
+   (hwa:p.w<p.agreements) (_han:p.agreements ≤ p.n)
    (hdegreeGlobal:∀ k ≤ p.w,
      (p.n-k)*p.gap*(p.w-k) ≤
        p.degreeIncidence*(p.agreements-k))
@@ -545,7 +544,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_sharp_z_yz
    exact h0.trans (by
      simpa only [aD,ResidualStage.agreementFiber,
        ResidualStage.Agrees] using D.agreement_card gamma hGamma)
- have hda:D.degree < aD:=by
+ have hda:D.degree<aD:=by
    have hD:=D.degree_le
    dsimp only [aD]
    omega
@@ -634,13 +633,13 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_sharp_z_yz
 theorem recursive_scaled_factorSharpYZ_of_adaptive_projection_families
    (hphi:Function.Injective phi)
    (p:Profile) (support:ResidualSupportParameters)
-   (hsy:support.s < support.ys)
+   (hsy:support.s<support.ys)
    {flag:FlagDegree}
    (S:ResidualStage phi Gamma x pchar p.errors flag p.w support)
    (hnodes:S.nodes.card=p.n)
    (hagreement:∀ gamma∈Gamma,
      p.agreements ≤ (S.agreementFiber gamma).card)
-   (hwa:p.w < p.agreements) (han:p.agreements ≤ p.n)
+   (hwa:p.w<p.agreements) (han:p.agreements ≤ p.n)
    (hdegreeGlobal:∀ k ≤ p.w,
      (p.n-k)*p.gap*(p.w-k) ≤
        p.degreeIncidence*(p.agreements-k))

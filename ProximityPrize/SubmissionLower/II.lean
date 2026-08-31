@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 universe uM
@@ -79,7 +78,7 @@ theorem LinearMap.split_surjective_of_localization_maximal
      refine ⟨f.comp g,⟨g,rfl⟩,s,?_⟩
      apply ((Module.End.isUnit_iff _).mp <| IsLocalizedModule.map_units
         (LocalizedModule.map I.primeCompl) s).injective
-     simp only [Module.algebraMap_end_apply, ←Submonoid.smul_def,IsLocalizedModule.mk'_cancel',
+     simp only [Module.algebraMap_end_apply,←Submonoid.smul_def,IsLocalizedModule.mk'_cancel',
        ←LinearMap.map_smul_of_tower]
      apply LinearMap.restrictScalars_injective R
      apply IsLocalizedModule.ext I.primeCompl (LocalizedModule.mkLinearMap I.primeCompl N)
@@ -93,7 +92,7 @@ theorem Module.projective_of_localization_maximal (H:∀ (I:Ideal R) (_:I.IsMaxi
  have:Module.Finite R M:=by infer_instance
  obtain ⟨s,hs⟩:=this
  let N:=s →₀ R
- let f:N →ₗ[R] M:=Finsupp.linearCombination R (Subtype.val:s → M)
+ let f:N →ₗ[R] M:=Finsupp.linearCombination R (Subtype.val:s→M)
  have hf:Function.Surjective f:=by
    rw [←LinearMap.range_eq_top,Finsupp.range_linearCombination,Subtype.range_val]
    convert! hs
@@ -134,5 +133,5 @@ theorem Module.projective_of_localization_maximal'
    apply ((Module.End.isUnit_iff _).mp
      (IsLocalizedModule.map_units (LocalizedModule.mkLinearMap P.primeCompl M) s)).1
    dsimp [e]
-   simp only [←map_smul, ←smul_assoc,IsLocalization.smul_mk'_self,algebraMap_smul,
+   simp only [←map_smul,←smul_assoc,IsLocalization.smul_mk'_self,algebraMap_smul,
      IsLocalization.map_id_mk']

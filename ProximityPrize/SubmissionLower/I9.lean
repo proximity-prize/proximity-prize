@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BS
 namespace ProximityPrize.SubmissionLower.RCN079
 open RCN136 RCN082 RCN290
@@ -39,21 +38,21 @@ theorem swapYR_pderiv_Y (F:MvPolynomial (Fin 4) K):
 theorem coordinate_weight_degree (F:MvPolynomial (Fin 4) K) (i:Fin 4):
    MvPolynomial.weightedTotalDegree (Pi.single i 1) F=F.degreeOf i:=by
  rw [MvPolynomial.weightedTotalDegree,MvPolynomial.degreeOf_eq_sup]
- apply congrArg (fun f:(Fin 4 →₀ ℕ) → ℕ => F.support.sup f)
+ apply congrArg (fun f:(Fin 4 →₀ ℕ)→ℕ => F.support.sup f)
  funext d
  exact Finsupp.weight_single_one_apply i d
 def exceptionalAuxiliary (J:MvPolynomial (Fin 4) K):MvPolynomial (Fin 4) K:=
  swapYR K (singularAuxiliary (swapYR K J))
 theorem exceptionalAuxiliary_nonzero
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0) (j p:ℕ) [CharP K p]
-   (hY:J.degreeOf 1 ≤ j) (hsmall:j < p):exceptionalAuxiliary J≠0:=by
+   (hY:J.degreeOf 1 ≤ j) (hsmall:j<p):exceptionalAuxiliary J≠0:=by
  apply swapYR_ne_zero
  apply singularAuxiliary_nonzero (swapYR K J) (swapYR_ne_zero J hJ) p
  rw [swapYR_degree_R]
  exact hY.trans_lt hsmall
 theorem exceptionalAuxiliary_Y_degree_zero
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0) (j p:ℕ) [CharP K p]
-   (hY:J.degreeOf 1 ≤ j) (hsmall:j < p):(exceptionalAuxiliary J).degreeOf 1=0:=by
+   (hY:J.degreeOf 1 ≤ j) (hsmall:j<p):(exceptionalAuxiliary J).degreeOf 1=0:=by
  rw [exceptionalAuxiliary,swapYR_degree_Y]
  apply singularAuxiliary_R_degree (swapYR K J) (swapYR_ne_zero J hJ) p
  rw [swapYR_degree_R]
@@ -79,7 +78,7 @@ theorem exceptionalAuxiliary_Z_degree_le
  exact hb
 theorem exceptionalAuxiliary_data
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0) (hR:J.degreeOf 2=0)
-   (j p:ℕ) [CharP K p] (hj:1 ≤ j) (hsmall:j < p)
+   (j p:ℕ) [CharP K p] (hj:1 ≤ j) (hsmall:j<p)
    (hY:J.degreeOf 1 ≤ j) (hZ:J.degreeOf 3 ≤ j):
    exceptionalAuxiliary J≠0∧(exceptionalAuxiliary J).degreeOf 1=0∧
      (exceptionalAuxiliary J).degreeOf 2=0∧
@@ -97,7 +96,7 @@ def originalImplicitFactors (J:MvPolynomial (Fin 4) K):Finset (MvPolynomial (Fin
  classical
  exact (activeFactors (swapYR K J)).image (swapYR K)
 theorem swapYR_dvd_swapYR_iff (F J:MvPolynomial (Fin 4) K):
-   swapYR K F∣swapYR K J ↔ F∣J:=by
+   swapYR K F∣swapYR K J↔F∣J:=by
  constructor
  · rintro ⟨T,hT⟩
    refine ⟨swapYR K T,?_⟩
@@ -133,12 +132,12 @@ theorem originalImplicitFactors_degree_budgets
  exact ⟨hh 1,hh 3⟩
 section SurfaceCoverage
 variable {T:Type*} [Field T]
-def swapSurfacePoint (v:Fin 3 → T):Fin 3 → T:=![v 1,v 0,v 2]
-@[simp] theorem swapSurfacePoint_twice (v:Fin 3 → T):
+def swapSurfacePoint (v:Fin 3→T):Fin 3→T:=![v 1,v 0,v 2]
+@[simp] theorem swapSurfacePoint_twice (v:Fin 3→T):
    swapSurfacePoint (swapSurfacePoint v)=v:=by
  funext i
  fin_cases i <;> simp [swapSurfacePoint]
-theorem eval_surface_swap (φ:Polynomial K →+*T) (v:Fin 3 → T)
+theorem eval_surface_swap (φ:Polynomial K →+*T) (v:Fin 3→T)
    (F:MvPolynomial (Fin 4) K):
    MvPolynomial.eval v (surfaceMap φ (swapYR K F))=
      MvPolynomial.eval (swapSurfacePoint v) (surfaceMap φ F):=by
@@ -163,10 +162,10 @@ theorem eval_surface_swap (φ:Polynomial K →+*T) (v:Fin 3 → T)
 theorem surface_zero_exceptional_or_implicit_regular
    (φ:Polynomial K →+*T) (hφ:Function.Injective φ)
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0) (hR:J.degreeOf 2=0)
-   (v:Fin 3 → T) (hzero:MvPolynomial.eval v (surfaceMap φ J)=0):
+   (v:Fin 3→T) (hzero:MvPolynomial.eval v (surfaceMap φ J)=0):
    MvPolynomial.eval v (surfaceMap φ (exceptionalAuxiliary J))=0∨
      ∃ A∈originalImplicitFactors J,Irreducible A∧A∣J∧
-       A.degreeOf 2=0∧0 < A.degreeOf 1∧
+       A.degreeOf 2=0∧0<A.degreeOf 1∧
        MvPolynomial.eval v (surfaceMap φ A)=0∧
        MvPolynomial.eval v (surfaceMap φ (MvPolynomial.pderiv (1:Fin 4) A))≠0:=by
  classical
@@ -197,13 +196,13 @@ theorem solution_exceptional_or_implicit_regular
    (P:Polynomial K) (γ:K) (hsolution:specialization K P γ J=0):
    specialization K P γ (exceptionalAuxiliary J)=0∨
      ∃ A∈originalImplicitFactors J,Irreducible A∧A∣J∧
-       A.degreeOf 2=0∧0 < A.degreeOf 1∧specialization K P γ A=0∧
+       A.degreeOf 2=0∧0<A.degreeOf 1∧specialization K P γ A=0∧
        specialization K P γ (MvPolynomial.pderiv (1:Fin 4) A)≠0:=by
  let φ:=RCN135.polynomialEmbedding K
- let v:Fin 3 → RCN135.GenericField K:=
+ let v:Fin 3→RCN135.GenericField K:=
    fun i => RCN135.initialPoint K P γ i.succ
  have heval (F:MvPolynomial (Fin 4) K):
-     MvPolynomial.eval v (surfaceMap φ F)=0 ↔ specialization K P γ F=0:=by
+     MvPolynomial.eval v (surfaceMap φ F)=0↔specialization K P γ F=0:=by
    simpa only [RCN138.canonical_geometricSurfaceMap] using
      (RCN138.actual_generic_initial_zero_iff K P γ F)
  obtain haux | ⟨A,hA,hi,hd,hAR,hAY,hz,hreg⟩:=

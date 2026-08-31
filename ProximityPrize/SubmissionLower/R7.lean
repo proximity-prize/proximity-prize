@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G
 import ProximityPrize.SubmissionLower.X1
 namespace ProximityPrize.SubmissionLower.RCN351
@@ -26,14 +25,14 @@ theorem formallyEtale_of_finite_isSeparable
      (HasQuotient.Quotient B I) x=
      Ideal.Quotient.mk I x:=fun _↦rfl
  have hx':Ideal.Quotient.mk I (aeval x (minpoly F pb.gen))=0:=by
-   rw [←helper, ←aeval_algHom_apply,helper,hx,aeval_algHom_apply,
+   rw [←helper,←aeval_algHom_apply,helper,hx,aeval_algHom_apply,
      minpoly.aeval,map_zero]
  obtain ⟨u,hu⟩:∃ u,
      (aeval x) (derivative (minpoly F pb.gen))*u+1∈I:=by
    have hunit:=(isUnit_iff_ne_zero.mpr
      ((Algebra.IsSeparable.isSeparable F pb.gen).aeval_derivative_ne_zero
        (minpoly.aeval F _))).map f
-   rw [←aeval_algHom_apply, ←hx, ←helper,aeval_algHom_apply,
+   rw [←aeval_algHom_apply,←hx,←helper,aeval_algHom_apply,
      helper] at hunit
    obtain ⟨u,hu⟩:=Ideal.Quotient.mk_surjective
      (-hunit.unit⁻¹:HasQuotient.Quotient B I)
@@ -44,11 +43,11 @@ theorem formallyEtale_of_finite_isSeparable
  · apply pb.algHom_ext
    simp [hx,hx']
  · rw [←eval_map_algebraMap,Polynomial.eval_add_of_sq_eq_zero,
-     derivative_map, ←one_mul (eval x _),eval_map_algebraMap,
-     eval_map_algebraMap, ←mul_assoc, ←add_mul, ←Ideal.mem_bot,
+     derivative_map,←one_mul (eval x _),eval_map_algebraMap,
+     eval_map_algebraMap,←mul_assoc,←add_mul,←Ideal.mem_bot,
      ←h,pow_two,add_comm]
    · exact Ideal.mul_mem_mul hu (Ideal.Quotient.eq_zero_iff_mem.mp hx')
-   rw [←Ideal.mem_bot, ←h]
+   rw [←Ideal.mem_bot,←h]
    apply Ideal.pow_mem_pow
    rw [←Ideal.Quotient.eq_zero_iff_mem,map_mul,hx',mul_zero]
 theorem ratFunc_variableDifferential_ne_zero (K:Type*) [Field K]:
@@ -111,7 +110,7 @@ theorem shear_bad_coefficient_subsingleton
    (r z:L) (hdz:D K L z≠0):
    ∀ {a b:K},
      D K L r+a • D K L z=0 →
-     D K L r+b • D K L z=0 → a=b:=by
+     D K L r+b • D K L z=0→a=b:=by
  intro a b ha hb
  apply smul_left_injective K hdz
  exact (eq_neg_of_add_eq_zero_right ha).trans
@@ -142,7 +141,7 @@ theorem shear_transcendental_finite_separable_of_differential_ne_zero
    intro halg
    obtain ⟨c,hc⟩:=eq_algebraMap_of_isAlgebraic K L _ halg
    apply hdiff
-   rw [←hDs, ←hc]
+   rw [←hDs,←hc]
    exact (D K L).map_algebraMap c
  refine ⟨hs,?_,?_⟩
  · exact finiteDimensional_elementEmbedding K L embeddingZ hfiniteZ
@@ -184,7 +183,7 @@ theorem shear_transcendental_finite_separable_of_differential_ne_zero
    rw [←hb,smul_smul,inv_mul_cancel₀ hb0,one_smul]
 section FiniteFamily
 variable {I:Type*} [Fintype I]
-variable (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+variable (E:I→Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 variable (r z:∀ i,E i)
 theorem exists_common_nonzero_shear_coefficient
    [Infinite K] (hdz:∀ i,D K (E i) (z i)≠0):
@@ -193,9 +192,9 @@ theorem exists_common_nonzero_shear_coefficient
  classical
  letI:DecidableEq K:=Classical.decEq K
  letI:DecidableEq I:=Classical.decEq I
- let Bad:I → K → Prop:=fun i a↦
+ let Bad:I→K→Prop:=fun i a↦
    D K (E i) (r i)+a • D K (E i) (z i)=0
- have hsingle:∀ i {a b},Bad i a → Bad i b → a=b:=by
+ have hsingle:∀ i {a b},Bad i a→Bad i b→a=b:=by
    intro i a b ha hb
    exact shear_bad_coefficient_subsingleton K (E i) (r i) (z i)
      (hdz i) ha hb

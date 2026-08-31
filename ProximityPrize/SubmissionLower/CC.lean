@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.GD
 namespace ProximityPrize.SubmissionLower.RCN304
 open ProximityPrize.Benchmark
@@ -10,35 +9,35 @@ local instance:DecidableEq (Polynomial IRSProfile.Field):=Classical.decEq _
 local instance:GCDMonoid GlobalPoly:=
  UniqueFactorizationMonoid.toGCDMonoid GlobalPoly
 def gcd12Vanishes
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→Polynomial IRSProfile.Field)
    (QA QB:GlobalPoly) (gamma:IRSProfile.Field):Prop:=
  specialization IRSProfile.Field (selected gamma) gamma (gcd12 QA QB)=0
 def gcd123Vanishes
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→Polynomial IRSProfile.Field)
    (QA QB QC:GlobalPoly) (gamma:IRSProfile.Field):Prop:=
  specialization IRSProfile.Field (selected gamma) gamma (gcd123 QA QB QC)=0
 def firstResidualSeeds
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→Polynomial IRSProfile.Field)
    (Gamma:Finset IRSProfile.Field) (QA QB:GlobalPoly):
    Finset IRSProfile.Field:=by
  classical
  exact Gamma.filter (fun gamma↦¬ gcd12Vanishes selected QA QB gamma)
 def secondResidualSeeds
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→Polynomial IRSProfile.Field)
    (Gamma:Finset IRSProfile.Field) (QA QB QC:GlobalPoly):
    Finset IRSProfile.Field:=by
  classical
  exact (Gamma.filter (gcd12Vanishes selected QA QB)).filter
    (fun gamma↦¬ gcd123Vanishes selected QA QB QC gamma)
 def fixedSeeds
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→Polynomial IRSProfile.Field)
    (Gamma:Finset IRSProfile.Field) (QA QB QC:GlobalPoly):
    Finset IRSProfile.Field:=by
  classical
  exact (Gamma.filter (gcd12Vanishes selected QA QB)).filter
    (gcd123Vanishes selected QA QB QC)
 theorem partition_card
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→Polynomial IRSProfile.Field)
    (Gamma:Finset IRSProfile.Field) (QA QB QC:GlobalPoly):
    (firstResidualSeeds selected Gamma QA QB).card+
      (secondResidualSeeds selected Gamma QA QB QC).card+
@@ -58,7 +57,7 @@ theorem partition_card
        (gcd123Vanishes selected QA QB QC)).card=Gamma.card
  omega
 theorem firstResidualSeeds_quotient_vanish
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→Polynomial IRSProfile.Field)
    (Gamma:Finset IRSProfile.Field) (QA QB QC:GlobalPoly)
    (hcover:∀ gamma∈Gamma,
      RecursiveSpecializationBranch (selected gamma) gamma QA QB QC):
@@ -77,7 +76,7 @@ theorem firstResidualSeeds_quotient_vanish
  · exact False.elim (hm.2 hsecond.1)
  · exact False.elim (hm.2 hfixed.2)
 theorem secondResidualSeeds_quotient_vanish
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→Polynomial IRSProfile.Field)
    (Gamma:Finset IRSProfile.Field) (QA QB QC:GlobalPoly)
    (hcover:∀ gamma∈Gamma,
      RecursiveSpecializationBranch (selected gamma) gamma QA QB QC):
@@ -97,7 +96,7 @@ theorem secondResidualSeeds_quotient_vanish
  · exact hsecond.2.2
  · exact False.elim (hmOuter.2 hfixed.1)
 theorem fixedSeeds_vanish
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→Polynomial IRSProfile.Field)
    (Gamma:Finset IRSProfile.Field) (QA QB QC:GlobalPoly):
    ∀ gamma∈fixedSeeds selected Gamma QA QB QC,
      specialization IRSProfile.Field (selected gamma) gamma

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HF
 import ProximityPrize.SubmissionLower.IQ
 section ProximityFlatProofPort

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ET
 import ProximityPrize.SubmissionLower.EY
 import ProximityPrize.SubmissionLower.BR
@@ -21,7 +20,7 @@ noncomputable section
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 20000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 variable {p e:ℕ} [CharP Omega p]
 variable {surfaceFlag cutFlag:FlagDegree}
 variable {support:ResidualSupportParameters}
@@ -32,15 +31,15 @@ theorem recursive_curve_stratified_incidence_bound
    (hphi:Function.Injective phi) {d a:ℕ}
    (S:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
    (degreeCost unitCost U V zCharge:ℕ)
-   (hda:d < a)
+   (hda:d<a)
    (hagreement:∀ gamma∈Gamma,
      a ≤ (S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,
-     D.stage.identities=∅ → ∀ i∈D.stage.nodes,
+     D.stage.identities=∅→∀ i∈D.stage.nodes,
        (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card ≤
          D.degree*degreeCost+unitCost)
    (hlarge:∀ D:S.TerminalDescendant,
-     D.degree < D.stage.identities.card →
+     D.degree<D.stage.identities.card →
        Gamma.card*(a-d) ≤ (e+1)*(a-d)*zCharge)
    (hdegree:∀ k ≤ d,
      (S.nodes.card-k)*(a-d)*(d-k) ≤ U*(a-k))
@@ -91,17 +90,17 @@ theorem recursive_curve_stratified_incidence_of_zero_bounds
    (hphi:Function.Injective phi) {d a:ℕ}
    (S:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
    (degreeCost unitCost U V zCharge:ℕ)
-   (hda:d < a)
+   (hda:d<a)
    (hagreement:∀ gamma∈Gamma,
      a ≤ (S.agreementFiber gamma).card)
    (hzero:∀ D:S.TerminalDescendant,
-     D.stage.identities=∅ → ∀ i∈D.stage.nodes,
+     D.stage.identities=∅→∀ i∈D.stage.nodes,
        FiniteZeroSetBound D.stage.primeIdeal
          (agreementPolynomial phi D.stage.F D.degree
            (x i) (D.stage.u0 i) (D.stage.u1 i))
          (D.degree*degreeCost+unitCost))
    (hlarge:∀ D:S.TerminalDescendant,
-     D.degree < D.stage.identities.card →
+     D.degree<D.stage.identities.card →
        Gamma.card*(a-d) ≤ (e+1)*(a-d)*zCharge)
    (hdegree:∀ k ≤ d,
      (S.nodes.card-k)*(a-d)*(d-k) ≤ U*(a-k))
@@ -125,16 +124,16 @@ theorem recursive_curve_stratified_incidence_of_zero_bounds
 theorem recursive_curve_stratified_incidence_of_prime_flag_budget
    (hphi:Function.Injective phi) {d a:ℕ}
    (S:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
-   (cost:FlagDegree → ℕ)
+   (cost:FlagDegree→ℕ)
    (B:PrimeFlagZeroBudget S.primeIdeal cost)
    (degreeCost unitCost U V zCharge:ℕ)
    (hcost:∀ t:ℕ,
      cost (support.residualAgreementFlag t)=t*degreeCost+unitCost)
-   (hda:d < a)
+   (hda:d<a)
    (hagreement:∀ gamma∈Gamma,
      a ≤ (S.agreementFiber gamma).card)
    (hlarge:∀ D:S.TerminalDescendant,
-     D.degree < D.stage.identities.card →
+     D.degree<D.stage.identities.card →
        Gamma.card*(a-d) ≤ (e+1)*(a-d)*zCharge)
    (hdegree:∀ k ≤ d,
      (S.nodes.card-k)*(a-d)*(d-k) ≤ U*(a-k))
@@ -144,12 +143,12 @@ theorem recursive_curve_stratified_incidence_of_prime_flag_budget
      U*degreeCost+V*unitCost+(e+1)*(a-d)*zCharge:=by
  classical
  let Inv:∀ n,CurveResidualStage phi Gamma x p e
-     surfaceFlag cutFlag n support → Prop:=
+     surfaceFlag cutFlag n support→Prop:=
    fun _ A↦PrimeFlagZeroBudget A.primeIdeal cost
  have htransport:∀ {n m}
      {A:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag n support}
      {Anext:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag m support},
-     A.ResidualTransition Anext → Inv n A → Inv m Anext:=by
+     A.ResidualTransition Anext→Inv n A→Inv m Anext:=by
    intro n m A Anext htransition hbudget
    obtain ⟨aY,v,bY,aS,bS,cS,hv,_,_,hprime⟩:=htransition
    dsimp only [Inv] at hbudget ⊢

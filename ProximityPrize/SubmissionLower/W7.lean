@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G6
 import ProximityPrize.SubmissionLower.G4
 namespace ProximityPrize.SubmissionLower.RCN365
@@ -13,9 +12,9 @@ theorem planeEval_eq_eval₂ (y r:E) (P:Polynomial (Polynomial K)):
  rw [Polynomial.eval_map]
 theorem finite_separable_finrank_le_planar_bound
    (p:ℕ) [CharP K p] (P Q:Polynomial (Polynomial K))
-   (hirreducible:Irreducible P) (hpositive:0 < P.natDegree)
-   (hproper:¬ P∣Q) (hRdegree:P.natDegree < p)
-   (hresultantDegree:(Polynomial.resultant P Q P.natDegree Q.natDegree).natDegree < p)
+   (hirreducible:Irreducible P) (hpositive:0<P.natDegree)
+   (hproper:¬ P∣Q) (hRdegree:P.natDegree<p)
+   (hresultantDegree:(Polynomial.resultant P Q P.natDegree Q.natDegree).natDegree<p)
    (y r:E)
    (hgenerate:IntermediateField.adjoin K ({y,r}:Set E)=⊤)
    (hP:planeEval K E y r P=0) (hQ:planeEval K E y r Q=0):
@@ -40,13 +39,13 @@ theorem finite_separable_finrank_le_planar_bound
 end SingleField
 section FiniteFamily
 variable (K:Type) [Field K]
-variable {I:Type} [Fintype I] (E:I → Type)
+variable {I:Type} [Fintype I] (E:I→Type)
  [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 theorem finite_separable_sum_finrank_le_planar_bound
    (p:ℕ) [CharP K p] (P Q:Polynomial (Polynomial K))
-   (hirreducible:Irreducible P) (hpositive:0 < P.natDegree)
-   (hproper:¬ P∣Q) (hRdegree:P.natDegree < p)
-   (hresultantDegree:(Polynomial.resultant P Q P.natDegree Q.natDegree).natDegree < p)
+   (hirreducible:Irreducible P) (hpositive:0<P.natDegree)
+   (hproper:¬ P∣Q) (hRdegree:P.natDegree<p)
+   (hresultantDegree:(Polynomial.resultant P Q P.natDegree Q.natDegree).natDegree<p)
    (y r:∀ i,E i)
    (hgenerate:∀ i,IntermediateField.adjoin K ({y i,r i}:Set (E i))=⊤)
    (hkernels:Function.Injective (fun i => relationIdeal K (E i) (y i) (r i)))

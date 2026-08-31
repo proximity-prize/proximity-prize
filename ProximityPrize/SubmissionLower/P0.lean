@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.O9
 namespace ProximityPrize.SubmissionLower.RCN283
 open scoped Classical BigOperators
@@ -24,13 +23,13 @@ theorem seedless_proper_cut_bound
    (hG:Irreducible G) (hdiv:G∣surfaceMap phi F)
    (hproper:¬ G∣seedlessCut)
    (Gamma:Finset (Polynomial K))
-   (nodes:Finset Iota) (x u:Iota → K) (hinj:Set.InjOn x nodes)
-   (p w a:ℕ) [CharP Omega p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
-   (hGdegree:∀ j:Fin 3,G.degreeOf j < p)
+   (nodes:Finset Iota) (x u:Iota→K) (hinj:Set.InjOn x nodes)
+   (p w a:ℕ) [CharP Omega p] (hw:1 ≤ w) (hchar:w<p)
+   (hwa:w<a) (han:a ≤ nodes.card)
+   (hGdegree:∀ j:Fin 3,G.degreeOf j<p)
    (hcutDegree:∀ j k:Fin 3,j≠k →
      (seedlessCut (Omega:=Omega)).degreeOf j*G.degreeOf k+
-       G.degreeOf j*(seedlessCut (Omega:=Omega)).degreeOf k < p)
+       G.degreeOf j*(seedlessCut (Omega:=Omega)).degreeOf k<p)
    (hdegree:∀ S∈Gamma,S.natDegree ≤ w)
    (hsolution:∀ S∈Gamma,specialization K S 0 F=0)
    (hregular:∀ S∈Gamma,MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
@@ -40,7 +39,7 @@ theorem seedless_proper_cut_bound
      MvPolynomial.eval (seedlessPoint phi S) G=0)
    (hagreement:∀ S∈Gamma,
      a ≤ (nodes.filter (fun i => S.eval (x i)=u i)).card)
-   (cap:Fin 3 → ℕ)
+   (cap:Fin 3→ℕ)
    (hcap:∀ i∈nodes,∀ j,
      (agreementPolynomial phi F w (x i) (u i) 0).degreeOf j ≤ cap j):
    Gamma.card*(a-w) ≤
@@ -60,7 +59,7 @@ theorem seedless_proper_cut_bound
      (surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F))≠0
    rw [seedlessPoint_surface_evaluation]
    exact hregular S hS
- let degree:RegularComponent Omega G T H → Fin 3 → ℕ:=
+ let degree:RegularComponent Omega G T H→Fin 3→ℕ:=
    fun C i => actualCoordinateDegree Omega C.1 i
  have hcomponent:∀ C:RegularComponent Omega G T H,
      (componentSeeds Omega G T H Gamma (seedlessPoint phi) C).card*

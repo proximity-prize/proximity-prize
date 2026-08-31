@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AE
 import ProximityPrize.SubmissionLower.D6
 namespace ProximityPrize.SubmissionLower.RCN305
@@ -21,16 +20,16 @@ local instance:DecidableEq Iota:=Classical.decEq Iota
 theorem prime_seed_incidence_of_stratified_residual_cost
    (P:Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
    (hproj:ProjectionsFiniteSeparable Omega P)
-   (hnonpoint:∀ v:Fin 3 → Omega,
+   (hnonpoint:∀ v:Fin 3→Omega,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (F:MvPolynomial (Fin 4) K)
    (hF:surfaceMap phi F∈P)
    (hH:surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F)∉P)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes)
-   (p w a e:ℕ) [CharP Omega p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
+   (p w a e:ℕ) [CharP Omega p] (hw:1 ≤ w) (hchar:w<p)
+   (hwa:w<a) (han:a ≤ nodes.card)
    (hdegreeSelected:∀ gamma∈Gamma,
      (selected gamma).natDegree ≤ w)
    (hsolution:∀ gamma∈Gamma,
@@ -62,7 +61,7 @@ theorem prime_seed_incidence_of_stratified_residual_cost
        (e+1)*(a-w)*actualCoordinateDegree Omega P 2:=by
  classical
  let identities:=identityNodes phi P F nodes x u0 u1 w
- let relation:K → Iota → Prop:=fun gamma i↦
+ let relation:K→Iota→Prop:=fun gamma i↦
    (selected gamma).eval (x i)=u0 i+gamma*u1 i
  by_cases hcard:identities.card ≤ w
  · have hmain:=stratified_incidence_bound relation Gamma nodes identities
@@ -74,7 +73,7 @@ theorem prime_seed_incidence_of_stratified_residual_cost
        exact hfiber i (by simpa only [identities] using hi))
      (hdegree identities.card hcard) (hunit identities.card hcard)
    exact hmain.trans (Nat.le_add_right _ _)
- · have hc:w < identities.card:=Nat.lt_of_not_ge hcard
+ · have hc:w<identities.card:=Nat.lt_of_not_ge hcard
    have hvalues:∀ (t:{gamma:K//gamma∈Gamma}) i,
        i∈identities →
        (selected t.1).eval (x i)=u0 i+t.1*u1 i:=by
@@ -108,12 +107,12 @@ theorem prime_seed_incidence_of_stratified_residual_cost
    exact htail.trans (Nat.le_add_left _ _)
 theorem aggregate_component_stratified_incidence
    (G T H:MvPolynomial (Fin 3) Omega)
-   {Seed:Type*} (S:Finset Seed) (v:Seed → Fin 3 → Omega)
+   {Seed:Type*} (S:Finset Seed) (v:Seed→Fin 3→Omega)
    (hG:∀ gamma∈S,MvPolynomial.eval (v gamma) G=0)
    (hT:∀ gamma∈S,MvPolynomial.eval (v gamma) T=0)
    (hH:∀ gamma∈S,MvPolynomial.eval (v gamma) H≠0)
    (gap U V pencil degreeWhole unitWhole zBudget:ℕ)
-   (degreeCost unitCost zDegree:RegularComponent Omega G T H → ℕ)
+   (degreeCost unitCost zDegree:RegularComponent Omega G T H→ℕ)
    (hcomponent:∀ C,
      (componentSeeds Omega G T H S v C).card*gap ≤
        U*degreeCost C+V*unitCost C+
@@ -149,11 +148,11 @@ theorem aggregate_component_stratified_incidence
 theorem proper_cut_seed_bound_of_stratified_component_budgets
    (F:MvPolynomial (Fin 4) K) (G T:MvPolynomial (Fin 3) Omega)
    (hdiv:G∣surfaceMap phi F)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes)
-   (p w a e:ℕ) [CharP Omega p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
+   (p w a e:ℕ) [CharP Omega p] (hw:1 ≤ w) (hchar:w<p)
+   (hwa:w<a) (han:a ≤ nodes.card)
    (hdegreeSelected:∀ gamma∈Gamma,
      (selected gamma).natDegree ≤ w)
    (hsolution:∀ gamma∈Gamma,
@@ -173,7 +172,7 @@ theorem proper_cut_seed_bound_of_stratified_component_budgets
    (hnoPencil:NoLargeSelectedPencil selected Gamma w e)
    (degreeWhole unitWhole zBudget U V:ℕ)
    (degreeCost unitCost:RegularComponent Omega G T
-     (regularitySurface phi F) → ℕ)
+     (regularitySurface phi F)→ℕ)
    (hfiber:∀ C:RegularComponent Omega G T
        (regularitySurface phi F),
      ∀ i∈nodes \
@@ -205,7 +204,7 @@ theorem proper_cut_seed_bound_of_stratified_component_budgets
      (surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F))≠0
    rw [selectedPoint_evaluation]
    exact hregular gamma hgamma
- let zDegree:RegularComponent Omega G T H → ℕ:=
+ let zDegree:RegularComponent Omega G T H→ℕ:=
    fun C↦actualCoordinateDegree Omega C.1 2
  have hcomponent:∀ C:RegularComponent Omega G T H,
      (componentSeeds Omega G T H Gamma

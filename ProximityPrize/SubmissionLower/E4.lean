@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T
 namespace ProximityPrize.SubmissionLower.RCN258
 open RCN077 RCN269 RCN233
@@ -15,7 +14,7 @@ local instance:DecidableEq k:=Classical.decEq k
 local instance:DecidableEq L:=Classical.decEq L
 local instance:DecidableEq M:=Classical.decEq M
 theorem mv_eval_mem (E:Subfield M) (c:k →+*M)
-   (hc:∀ a,c a∈E) (v:Fin 4 → M) (hv:∀ i,v i∈E) (Q:Poly4 k):
+   (hc:∀ a,c a∈E) (v:Fin 4→M) (hv:∀ i,v i∈E) (Q:Poly4 k):
    MvPolynomial.eval₂Hom c v Q∈E:=by
  induction Q using MvPolynomial.induction_on with
  | C a => simpa using hc a
@@ -36,7 +35,7 @@ theorem taylor_coeff_mem (E:Subfield M) (P:Polynomial M)
  simp only [RingHom.id_apply,Polynomial.hasseDeriv_coeff]
  exact E.mul_mem (natCast_mem E _) (hP _)
 theorem globalPolynomial_coeff_mem_of_evaluations
-   (E:Subfield M) (c:k →+*M) (F:Poly4 k) (v:Fin 4 → M)
+   (E:Subfield M) (c:k →+*M) (F:Poly4 k) (v:Fin 4→M)
    (hF:MvPolynomial.eval₂Hom c v F=0)
    (hreg:MvPolynomial.eval₂Hom c v (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (w:ℕ) (hv0:v 0∈E)
@@ -54,7 +53,7 @@ theorem globalPolynomial_coeff_mem_of_evaluations
  · exact E.zero_mem
 theorem globalPolynomial_coeff_mem
    (E:Subfield M) (c:k →+*M) (hc:∀ a,c a∈E)
-   (F:Poly4 k) (v:Fin 4 → M) (hv:∀ i,v i∈E)
+   (F:Poly4 k) (v:Fin 4→M) (hv:∀ i,v i∈E)
    (hF:MvPolynomial.eval₂Hom c v F=0)
    (hreg:MvPolynomial.eval₂Hom c v (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (w j:ℕ):
@@ -74,7 +73,7 @@ theorem map_numerator (c:k →+*L) (F:Poly4 k) (n:ℕ):
  | succ n ih => rw [numerator_succ,map_numeratorStep,ih,numerator_succ]
 theorem mapped_globalPolynomial_coeff_mem
    (E:Subfield M) (c:k →+*L) (φ:L →+*M)
-   (hc:∀ a,φ (c a)∈E) (F:Poly4 k) (v:Fin 4 → M)
+   (hc:∀ a,φ (c a)∈E) (F:Poly4 k) (v:Fin 4→M)
    (hv:∀ i,v i∈E)
    (hF:MvPolynomial.eval₂Hom φ v (MvPolynomial.map c F)=0)
    (hreg:MvPolynomial.eval₂Hom φ v
@@ -96,7 +95,7 @@ theorem solution_coeff_mem_of_regular_point
    (hreg:MvPolynomial.eval₂Hom φ (polynomialPoint φ P γ ξ)
      (MvPolynomial.pderiv (2:Fin 4) (MvPolynomial.map c F))≠0)
    (hv:∀ i,polynomialPoint φ P γ ξ i∈E)
-   (p w:ℕ) [CharP M p] (hw:w < p) (hP:P.natDegree ≤ w) (j:ℕ):
+   (p w:ℕ) [CharP M p] (hw:w<p) (hP:P.natDegree ≤ w) (j:ℕ):
    φ (P.coeff j)∈E:=by
  have hmem:=mapped_globalPolynomial_coeff_mem E c φ hc F
    (polynomialPoint φ P γ ξ) hv

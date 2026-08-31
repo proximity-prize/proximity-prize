@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DD
 namespace ProximityPrize.SubmissionLower.RCN368
 open scoped Classical
@@ -44,8 +43,8 @@ theorem pow_prime_mem_base_of_pure_degree_prime
  · exact ⟨y,by simpa only [pow_one] using hrel.symm⟩
 theorem separating_add_of_differential_criterion
    (K L:Type*) [Field K] [Field L] [Algebra K L]
-   (D:Derivation K L L) (Separating:L → Prop)
-   (hcriterion:∀ f,Separating f ↔ D f≠0)
+   (D:Derivation K L L) (Separating:L→Prop)
+   (hcriterion:∀ f,Separating f↔D f≠0)
    {r z:L} (hr:¬ Separating r) (hz:Separating z):
    Separating (r+z):=by
  rw [hcriterion]

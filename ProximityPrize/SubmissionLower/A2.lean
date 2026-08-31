@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DP
 import ProximityPrize.SubmissionLower.C0
 import ProximityPrize.SubmissionLower.BA
@@ -333,7 +332,7 @@ def adaptiveUnitProjectionFamily_of_active_nested
  · intro C v
    rw [exponentSetPoleWeight_unitAll]
    change _=RCN187.poleOrder v.val _
-   rw [hvValue C, ←D.allValue C]
+   rw [hvValue C,←D.allValue C]
    exact (D.allPole C v).symm
 theorem exists_adaptiveUnitProjectionFamily_of_active_nested
    (p q:FlagDegree)

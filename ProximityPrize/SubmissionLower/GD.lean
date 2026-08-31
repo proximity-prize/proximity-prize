@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AB
 import ProximityPrize.SubmissionLower.GF
 namespace ProximityPrize.SubmissionLower.RCN299
@@ -33,7 +32,7 @@ theorem recursive_branch_of_three_vanishings
  exact recursive_three_branch_cover
    (specialization IRSProfile.Field P gamma).toRingHom QA QB QC hA hB hC
 theorem exists_stacked_interpolants_with_recursive_cover
-   (u0 u1:IRSProfile.Index → IRSProfile.Field):
+   (u0 u1:IRSProfile.Index→IRSProfile.Field):
    ∃ QA QB QC:GlobalPoly,
      QA≠0∧
      QA∈globalCoefficientBox IRSProfile.Field
@@ -46,7 +45,7 @@ theorem exists_stacked_interpolants_with_recursive_cover
        (27*agreements) w 579299 6∧
      ∀ (gamma:IRSProfile.Field) (P:Polynomial IRSProfile.Field)
        (support:Finset IRSProfile.Index),
-       P.natDegree ≤ w → agreements ≤ support.card →
+       P.natDegree ≤ w→agreements ≤ support.card →
        (∀ i∈support,
          P.eval (IRSProfile.domain i)=u0 i+gamma*u1 i) →
        RecursiveSpecializationBranch P gamma QA QB QC:=by

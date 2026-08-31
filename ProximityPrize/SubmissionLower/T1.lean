@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.IR
 section ProximityFlatProofPort
 universe u v w z

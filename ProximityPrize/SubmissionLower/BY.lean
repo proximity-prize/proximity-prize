@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AA
 namespace ProximityPrize.SubmissionLower.RCN179
 open scoped BigOperators
@@ -8,7 +7,7 @@ noncomputable section
 variable {K:Type*} [Field K]
 abbrev Poly4 (K:Type*) [Field K]:=MvPolynomial (Fin 4) K
 theorem wt_polyG_le_of_R_le_Y
-   (weights:Fin 4 → ℕ) (hX:weights 0=0)
+   (weights:Fin 4→ℕ) (hX:weights 0=0)
    (F:Poly4 K) (C:ℕ) (hRY:weights 2 ≤ weights 1)
    (hYC:weights 1 ≤ C) (hF:wt weights F ≤ C):
    wt weights (polyG K F) ≤ C:=by
@@ -24,7 +23,7 @@ theorem wt_polyG_le_of_R_le_Y
  rw [wt_neg]
  exact hsum.trans (max_le (by omega) (by omega))
 theorem numeratorStep_wt_le_equal_weight
-   (weights:Fin 4 → ℕ) (hX:weights 0=0)
+   (weights:Fin 4→ℕ) (hX:weights 0=0)
    (F M:Poly4 K) (b A C:ℕ)
    (hRY:weights 2 ≤ weights 1) (hYC:weights 1 ≤ C)
    (hRR:2*weights 2 ≤ C) (hA:weights 2 ≤ A)
@@ -116,7 +115,7 @@ theorem numeratorStep_wt_le_equal_weight
    (max_le ((wt_add_le weights _ _).trans
      (max_le ((wt_add_le weights _ _).trans (max_le htermX htermY)) htermR)) hlast)
 theorem numerator_wt_le_equal_weight
-   (weights:Fin 4 → ℕ) (hX:weights 0=0)
+   (weights:Fin 4→ℕ) (hX:weights 0=0)
    (F:Poly4 K) (C:ℕ) (hRY:weights 2 ≤ weights 1)
    (hYC:weights 1 ≤ C) (hRR:2*weights 2 ≤ C)
    (hbase:weights 2 ≤ weights 1) (hF:wt weights F ≤ C) (b:ℕ):
@@ -136,11 +135,11 @@ theorem numerator_wt_le_equal_weight
        (hbase.trans (Nat.le_add_right _ _)) hF ih
      convert h using 1 <;> ring
 theorem clearedTaylorNumerator_wt_le_equal_weight
-   (weights:Fin 4 → ℕ) (hX:weights 0=0)
+   (weights:Fin 4→ℕ) (hX:weights 0=0)
    (F:Poly4 K) (C:ℕ) (hRY:weights 2 ≤ weights 1)
    (hYC:weights 1 ≤ C) (hRR:2*weights 2 ≤ C)
    (hbase:weights 2 ≤ weights 1) (hF:wt weights F ≤ C)
-   (w:ℕ) (coeffs:ℕ → K) (x:K):
+   (w:ℕ) (coeffs:ℕ→K) (x:K):
    wt weights (clearedTaylorNumerator F w coeffs x) ≤
      weights 1+w*(2*(C-weights 2)):=by
  unfold clearedTaylorNumerator
@@ -193,11 +192,11 @@ theorem clearedTaylorNumerator_wt_le_equal_weight
            weights 1+(j+(w-j))*(2*(C-weights 2)):=by ring
        _=weights 1+w*(2*(C-weights 2)):=by rw [hjw']
 theorem agreementNumerator_wt_le_equal_weight
-   (weights:Fin 4 → ℕ) (hX:weights 0=0)
+   (weights:Fin 4→ℕ) (hX:weights 0=0)
    (F:Poly4 K) (C:ℕ) (hRY:weights 2 ≤ weights 1)
    (hYC:weights 1 ≤ C) (hRR:2*weights 2 ≤ C)
    (hbase:weights 2 ≤ weights 1) (hF:wt weights F ≤ C)
-   (w:ℕ) (coeffs:ℕ → K) (x u₀ u₁:K):
+   (w:ℕ) (coeffs:ℕ→K) (x u₀ u₁:K):
    wt weights (agreementNumerator F w coeffs x u₀ u₁) ≤
      max (weights 1) (weights 3)+w*(2*(C-weights 2)):=by
  have hTaylor:=clearedTaylorNumerator_wt_le_equal_weight weights hX F C hRY

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.E9
 import ProximityPrize.SubmissionLower.P0
 import ProximityPrize.SubmissionLower.Z9
@@ -25,7 +24,7 @@ def prime:ℕ:=2130706433
 def gap:ℕ:=agreements-w
 def capY:ℕ:=1+2*w*yTotalCap
 def capR:ℕ:=w*(2*slopeCap-1)
-def agreementCap:Fin 3 → ℕ:=![capY,capR,1]
+def agreementCap:Fin 3→ℕ:=![capY,capR,1]
 def regularListNumerator:ℕ:=
  (n-w)*(capY*slopeCap+capR*yTotalCap)
 def singularListCap:ℕ:=(2*slopeCap-1)*yTotalCap
@@ -37,13 +36,13 @@ theorem numeric_values:
      singularListCap=867∧listNumerator=30666112067781:=by
  norm_num [gap,capY,capR,regularListNumerator,singularListCap,
    listNumerator,agreements,n,errors,w,yTotalCap,slopeCap]
-theorem list_numerator_fits:listNumerator < listBudget*gap:=by
+theorem list_numerator_fits:listNumerator<listBudget*gap:=by
  norm_num [listNumerator,regularListNumerator,singularListCap,listBudget,
    gap,capY,capR,agreements,n,errors,w,yTotalCap,slopeCap]
 theorem list_strict_ceiling_exact:
    listNumerator/gap+1=598865626∧
-     listNumerator < 598865626*gap∧
-     598865626 < listBudget:=by
+     listNumerator<598865626*gap∧
+     598865626<listBudget:=by
  norm_num [listNumerator,regularListNumerator,singularListCap,listBudget,
    gap,capY,capR,agreements,n,errors,w,yTotalCap,slopeCap]
 variable (K:Type) [Field K]
@@ -118,7 +117,7 @@ theorem card_le_sum_geometricPolynomials
  exact (Finset.card_le_card hcover).trans Finset.card_biUnion_le
 theorem geometric_seedless_cut_proper
    (g:MvPolynomial (Fin 3) (GenericField K))
-   (hR:0 < g.degreeOf 1):
+   (hR:0<g.degreeOf 1):
    ¬ g∣(seedlessCut:MvPolynomial (Fin 3) (GenericField K)):=by
  intro hdvd
  have hle:=coordinate_degree_le_of_dvd 1 g seedlessCut hdvd
@@ -130,7 +129,7 @@ theorem geometric_seedless_cut_proper
 theorem original_regular_seedless_bound
    [CharP K prime]
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (hRpos:0 < F.degreeOf 2)
+   (hRpos:0<F.degreeOf 2)
    (hbox:F∈RCN174.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap)
    (hY:F.degreeOf 1 ≤ yTotalCap)
@@ -142,7 +141,7 @@ theorem original_regular_seedless_bound
    (hregular:∀ S∈Gamma,
      specialization K S 0 (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    {Iota:Type} [Fintype Iota] [DecidableEq Iota]
-   (nodes:Finset Iota) (x received:Iota → K)
+   (nodes:Finset Iota) (x received:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
    (hagreement:∀ S∈Gamma,agreements ≤
      (nodes.filter (fun i => S.eval (x i)=received i)).card):
@@ -150,7 +149,7 @@ theorem original_regular_seedless_bound
      (n-w)*(capY*F.degreeOf 2+capR*F.degreeOf 1):=by
  classical
  letI:CharP (GenericField K) prime:=genericField_charP K prime
- have hsmall:F.degreeOf 2 < prime:=hR.trans_lt (by
+ have hsmall:F.degreeOf 2<prime:=hR.trans_lt (by
    norm_num [slopeCap,prime])
  have hcount (g:GeometricFactor K F):
      (geometricPolynomials K F Gamma g).card*gap ≤
@@ -165,7 +164,7 @@ theorem original_regular_seedless_bound
    have hgR:=(geometricFactor_degree_le K F hF.ne_zero g 1).trans hR
    have hgZ:g.1.degreeOf 2=0:=Nat.eq_zero_of_le_zero
      ((geometricFactor_degree_le K F hF.ne_zero g 2).trans_eq hZ)
-   have hGdegree:∀ j:Fin 3,g.1.degreeOf j < prime:=by
+   have hGdegree:∀ j:Fin 3,g.1.degreeOf j<prime:=by
      intro j
      fin_cases j
      · exact hgY.trans_lt (by norm_num [yTotalCap,prime])
@@ -175,7 +174,7 @@ theorem original_regular_seedless_bound
        (seedlessCut:MvPolynomial (Fin 3) (GenericField K)).degreeOf j*
            g.1.degreeOf k+
          g.1.degreeOf j*
-           (seedlessCut:MvPolynomial (Fin 3) (GenericField K)).degreeOf k < prime:=by
+           (seedlessCut:MvPolynomial (Fin 3) (GenericField K)).degreeOf k<prime:=by
      intro j k hjk
      have h0:=hGdegree 0
      have h1:=hGdegree 1
@@ -244,7 +243,7 @@ theorem original_regular_seedless_bound
    _=(n-w)*(capY*(∑ g:GeometricFactor K F,g.1.degreeOf 1)+
        capR*(∑ g:GeometricFactor K F,g.1.degreeOf 0)):=by
      rw [←Finset.mul_sum,Finset.sum_add_distrib,
-       ←Finset.mul_sum, ←Finset.mul_sum]
+       ←Finset.mul_sum,←Finset.mul_sum]
    _ ≤ (n-w)*(capY*F.degreeOf 2+capR*F.degreeOf 1):=by
      apply Nat.mul_le_mul_left
      exact Nat.add_le_add
@@ -309,7 +308,7 @@ theorem yProjection_natDegree_le {T:Type*} [Field T]
 theorem yProjection_eval {T:Type*} [Field T]
    (S:MvPolynomial (Fin 3) T)
    (hR:S.degreeOf 1=0) (hZ:S.degreeOf 2=0)
-   (v:Fin 3 → T):
+   (v:Fin 3→T):
    (yProjection T S).eval (v 0)=MvPolynomial.eval v S:=by
  change ((Polynomial.evalRingHom (v 0)).comp (yProjection T)) S=
    (MvPolynomial.eval v) S
@@ -320,8 +319,8 @@ theorem yProjection_eval {T:Type*} [Field T]
    rw [y_only_vars S hR hZ i hi]
    simp [yProjection]
  · rfl
-def yWeights:Fin 4 → ℕ:=![0,1,0,0]
-def zWeights:Fin 4 → ℕ:=![0,0,0,1]
+def yWeights:Fin 4→ℕ:=![0,1,0,0]
+def zWeights:Fin 4→ℕ:=![0,0,0,1]
 theorem degreeY_le_yWeight (Q:MvPolynomial (Fin 4) K):
    Q.degreeOf 1 ≤ MvPolynomial.weightedTotalDegree yWeights Q:=by
  apply MvPolynomial.degreeOf_le_iff.mpr
@@ -451,7 +450,7 @@ theorem seedless_list_card_le
      weightedCap w yTotalCap slopeCap)
    (Gamma:Finset (Polynomial K))
    {Iota:Type} [Fintype Iota] [DecidableEq Iota]
-   (nodes:Finset Iota) (x received:Iota → K)
+   (nodes:Finset Iota) (x received:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
    (hdegree:∀ S∈Gamma,S.natDegree ≤ w)
    (hsolutions:∀ S∈Gamma,specialization K S 0 Q=0)
@@ -500,7 +499,7 @@ theorem seedless_list_card_le
      _=(n-w)*(capY*(∑ F:↥(positiveRFactors Q),F.1.degreeOf 2)+
          capR*(∑ F:↥(positiveRFactors Q),F.1.degreeOf 1)):=by
        rw [←Finset.mul_sum,Finset.sum_add_distrib,
-         ←Finset.mul_sum, ←Finset.mul_sum]
+         ←Finset.mul_sum,←Finset.mul_sum]
      _ ≤ (n-w)*(capY*slopeCap+capR*yTotalCap):=by
        apply Nat.mul_le_mul_left
        exact Nat.add_le_add (Nat.mul_le_mul_left capY (hsumR'.trans hcaps.2.1))
@@ -521,10 +520,10 @@ theorem seedless_list_card_le
        Nat.add_le_add (Nat.mul_le_mul_right gap hsing) hregularScaled
      _=listNumerator:=by simp only [listNumerator];ring
  by_contra hnot
- have hlarge:listBudget < Gamma.card:=Nat.lt_of_not_ge hnot
- have hgap:0 < gap:=by norm_num [gap,agreements,n,errors,w]
+ have hlarge:listBudget<Gamma.card:=Nat.lt_of_not_ge hnot
+ have hgap:0<gap:=by norm_num [gap,agreements,n,errors,w]
  have hmul:=Nat.mul_lt_mul_of_pos_right hlarge hgap
- have hcontra:listBudget*gap < listNumerator:=hmul.trans_le htotal
+ have hcontra:listBudget*gap<listNumerator:=hmul.trans_le htotal
  exact (Nat.not_lt_of_ge hcontra.le) list_numerator_fits
 end
 end ProximityPrize.SubmissionLower.RCN281

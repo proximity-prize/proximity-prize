@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BT
 namespace ProximityPrize.SubmissionLower.RCN070
 open RCN051 RCN168
@@ -7,7 +6,7 @@ def addVector (a b:DegreeVector):DegreeVector:=
  ⟨a.y+b.y,a.r+b.r,a.z+b.z⟩
 def scaleVector (c:ℕ) (v:DegreeVector):DegreeVector:=
  ⟨c*v.y,c*v.r,c*v.z⟩
-def sumVector {I:Type} [Fintype I] (v:I → DegreeVector):DegreeVector:=
+def sumVector {I:Type} [Fintype I] (v:I→DegreeVector):DegreeVector:=
  ⟨∑ i,(v i).y,∑ i,(v i).r,∑ i,(v i).z⟩
 def vectorLE (a b:DegreeVector):Prop:=a.y ≤ b.y∧a.r ≤ b.r∧a.z ≤ b.z
 def dot (a b:DegreeVector):ℕ:=a.y*b.y+a.r*b.r+a.z*b.z
@@ -23,10 +22,10 @@ theorem dot_mono_right (a:DegreeVector) {b c:DegreeVector} (h:vectorLE b c):
    dot a b ≤ dot a c:=by
  rw [dot_comm a b,dot_comm a c]
  exact dot_mono_left a h
-theorem dot_sum_left {I:Type} [Fintype I] (v:I → DegreeVector) (a:DegreeVector):
+theorem dot_sum_left {I:Type} [Fintype I] (v:I→DegreeVector) (a:DegreeVector):
    dot (sumVector v) a=∑ i,dot (v i) a:=by
  simp only [dot,sumVector,Finset.sum_add_distrib,Finset.sum_mul]
-theorem dot_sum_right {I:Type} [Fintype I] (v:I → DegreeVector) (a:DegreeVector):
+theorem dot_sum_right {I:Type} [Fintype I] (v:I→DegreeVector) (a:DegreeVector):
    dot a (sumVector v)=∑ i,dot a (v i):=by
  rw [dot_comm,dot_sum_left]
  apply Finset.sum_congr rfl
@@ -44,7 +43,7 @@ theorem mixed_scale_left (c:ℕ) (v a b:DegreeVector):
    mixed (scaleVector c v) a b=c*mixed v a b:=by
  simp only [mixed,scaleVector]
  ring
-theorem mixed_sum_left {I:Type} [Fintype I] (v:I → DegreeVector) (a b:DegreeVector):
+theorem mixed_sum_left {I:Type} [Fintype I] (v:I→DegreeVector) (a b:DegreeVector):
    mixed (sumVector v) a b=∑ i,mixed (v i) a b:=by
  calc
    _=dot (sumVector v) ⟨mixed unitY a b,mixed unitR a b,mixed unitZ a b⟩:=
@@ -89,13 +88,13 @@ theorem whole_scale (c:ℕ) (v:DegreeVector):
  rw [whole_eq_dot,whole_eq_dot]
  simp only [dot,scaleVector]
  ring
-theorem cut_sum {I:Type} [Fintype I] (v:I → DegreeVector):
+theorem cut_sum {I:Type} [Fintype I] (v:I→DegreeVector):
    cutNumerator (sumVector v)=∑ i,cutNumerator (v i):=by
  rw [cut_eq_dot,dot_sum_left]
  apply Finset.sum_congr rfl
  intro i _
  exact (cut_eq_dot (v i)).symm
-theorem whole_sum {I:Type} [Fintype I] (v:I → DegreeVector):
+theorem whole_sum {I:Type} [Fintype I] (v:I→DegreeVector):
    wholeNumerator (sumVector v)=∑ i,wholeNumerator (v i):=by
  rw [whole_eq_dot,dot_sum_left]
  apply Finset.sum_congr rfl
@@ -112,7 +111,7 @@ theorem max_branch_le_envelope (v:DegreeVector):
  max_le (cut_le_envelope v) (whole_le_envelope v)
 theorem regularNumerator_eq_dot:regularNumerator=dot regularSurface wholeCoefficients:=rfl
 theorem sum_regular_max_bound {I:Type} [Fintype I]
-   (count:I → ℕ) (v:I → DegreeVector)
+   (count:I→ℕ) (v:I→DegreeVector)
    (hy:(∑ i,(v i).y) ≤ yCap) (hr:(∑ i,(v i).r) ≤ slopeCap)
    (hz:(∑ i,(v i).z) ≤ seedTotalCap)
    (hcount:∀ i,count i*gap^2 ≤ wholeNumerator (v i)):
@@ -128,7 +127,7 @@ theorem sum_regular_max_bound {I:Type} [Fintype I]
    _ ≤ dot regularSurface wholeCoefficients:=dot_mono_left _ ⟨hy,hr,hz⟩
    _=regularNumerator:=rfl
 theorem sum_regular_branch_bound {I:Type} [Fintype I]
-   (count:I → ℕ) (v:I → DegreeVector)
+   (count:I→ℕ) (v:I→DegreeVector)
    (hy:(∑ i,(v i).y) ≤ yCap) (hr:(∑ i,(v i).r) ≤ slopeCap)
    (hz:(∑ i,(v i).z) ≤ seedTotalCap)
    (hcount:∀ i,count i*gap^2 ≤ wholeNumerator (v i)):
@@ -136,7 +135,7 @@ theorem sum_regular_branch_bound {I:Type} [Fintype I]
  apply sum_regular_max_bound count v hy hr hz
  exact hcount
 theorem sum_regular_numeric_caps {I:Type} [Fintype I]
-   (count:I → ℕ) (v:I → DegreeVector)
+   (count:I→ℕ) (v:I→DegreeVector)
    (hy:(∑ i,(v i).y) ≤ 25) (hr:(∑ i,(v i).r) ≤ 5)
    (hz:(∑ i,(v i).z) ≤ 176)
    (hcount:∀ i,count i*gap^2 ≤ wholeNumerator (v i)):
@@ -164,7 +163,7 @@ theorem implicit_aggregate_eq_core:
    dot,mixed,liftedSurface,implicitCut,unitZ]
  ring
 theorem sum_implicit_counts_bound {I:Type} [Fintype I]
-   (count:I → ℕ) (cost:I → DegreeVector)
+   (count:I→ℕ) (cost:I→DegreeVector)
    (hy:(∑ i,(cost i).y) ≤ algebraicCap)
    (hr:(∑ i,(cost i).r) ≤ 2*implicitYCap*algebraicCap)
    (hz:(∑ i,(cost i).z) ≤ implicitYCap)
@@ -189,7 +188,7 @@ theorem lifted_singular_padding:
  simp only [liftedSingularNumerator,implicitCoreNumerator]
  ring
 theorem implicit_with_exceptions_bound {I:Type} [Fintype I]
-   (count:I → ℕ) (cost:I → DegreeVector) (exceptions:ℕ)
+   (count:I→ℕ) (cost:I→DegreeVector) (exceptions:ℕ)
    (hy:(∑ i,(cost i).y) ≤ algebraicCap)
    (hr:(∑ i,(cost i).r) ≤ 2*implicitYCap*algebraicCap)
    (hz:(∑ i,(cost i).z) ≤ implicitYCap)
@@ -218,11 +217,11 @@ theorem combined_scaled_bound (regularCount implicitCount exceptions:ℕ)
      simp only [liftedTotalNumerator]
      ring
 theorem below_budget_of_lifted_scaled_bound (cardinality:ℕ)
-   (h:cardinality*gap^2 ≤ liftedTotalNumerator):cardinality < alignmentBudget:=by
+   (h:cardinality*gap^2 ≤ liftedTotalNumerator):cardinality<alignmentBudget:=by
  exact Nat.lt_of_mul_lt_mul_right (h.trans_lt lifted_strict_budget)
 theorem final_family_ledger {I J:Type} [Fintype I] [Fintype J]
-   (regularCount:I → ℕ) (v:I → DegreeVector)
-   (implicitCount:J → ℕ) (cost:J → DegreeVector) (exceptions cardinality:ℕ)
+   (regularCount:I→ℕ) (v:I→DegreeVector)
+   (implicitCount:J→ℕ) (cost:J→DegreeVector) (exceptions cardinality:ℕ)
    (hregularY:(∑ i,(v i).y) ≤ 25) (hregularR:(∑ i,(v i).r) ≤ 5)
    (hregularZ:(∑ i,(v i).z) ≤ 176)
    (hregular:∀ i,regularCount i*gap^2 ≤ wholeNumerator (v i))
@@ -234,7 +233,7 @@ theorem final_family_ledger {I J:Type} [Fintype I] [Fintype J]
        (errors+1)*gap*(cost i).z)
    (hexceptions:exceptions ≤ 2*algebraicCap^2)
    (hcover:cardinality ≤ (∑ i,regularCount i)+(∑ i,implicitCount i)+exceptions):
-   cardinality < alignmentBudget:=by
+   cardinality<alignmentBudget:=by
  have hreg:=sum_regular_numeric_caps regularCount v hregularY hregularR hregularZ hregular
  have himp:=implicit_with_exceptions_bound implicitCount cost exceptions
    hcostY hcostR hcostZ himplicit hexceptions

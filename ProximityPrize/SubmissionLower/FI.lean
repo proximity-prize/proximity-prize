@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.L
 import ProximityPrize.SubmissionLower.AO
 namespace ProximityPrize.SubmissionLower.RCN224
@@ -35,7 +34,7 @@ theorem graphEquation_mem_of_affine_coordinate (a b:K)
  exact sub_eq_zero.mpr hy
 theorem not_y_affine_of_r_dependent_principal
    (g:MvPolynomial (Fin 3) K) (hP:P=Ideal.span {g})
-   (hr:0 < g.degreeOf (1:Fin 3)) (a b:K):
+   (hr:0<g.degreeOf (1:Fin 3)) (a b:K):
    coordinate K P 0≠algebraMap K (CoordinateField K P) a+
      coordinate K P 2*algebraMap K (CoordinateField K P) b:=by
  intro hy
@@ -57,7 +56,7 @@ theorem coordinate_algebraic_of_scalar (i:Fin 3) (c:K)
  refine ⟨Polynomial.X-Polynomial.C c,Polynomial.X_sub_C_ne_zero c,?_⟩
  simp [hc]
 theorem seed_transcendental_of_affine_coordinates [IsAlgClosed K]
-   (hnonpoint:∀ v:Fin 3 → K,
+   (hnonpoint:∀ v:Fin 3→K,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (a b c d:K)
    (hy:coordinate K P 0=algebraMap K (CoordinateField K P) a+

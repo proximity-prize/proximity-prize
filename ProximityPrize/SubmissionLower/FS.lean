@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y2
 namespace ProximityPrize.SubmissionLower.RCN242
 open RCN051
@@ -16,10 +15,10 @@ theorem agreement_cut_projection_values:
  norm_num [mixed,surfaceVector,agreementVector,unitY,unitR,unitZ,
    yCap,weightedCap,RCN051.multiplicity,agreements,w,slopeCap,seedTotalCap]
 theorem non_R_projection_caps_below_characteristic:
-   mixed surfaceVector firstTail unitY < prime∧
-   mixed surfaceVector firstTail unitZ < prime∧
-   mixed surfaceVector agreementVector unitY < prime∧
-   mixed surfaceVector agreementVector unitZ < prime:=by
+   mixed surfaceVector firstTail unitY<prime∧
+   mixed surfaceVector firstTail unitZ<prime∧
+   mixed surfaceVector agreementVector unitY<prime∧
+   mixed surfaceVector agreementVector unitZ<prime:=by
  rcases first_cut_projection_values with ⟨h1,h2,h3⟩
  rcases agreement_cut_projection_values with ⟨h4,h5,h6⟩
  rw [h1,h3,h4,h6]

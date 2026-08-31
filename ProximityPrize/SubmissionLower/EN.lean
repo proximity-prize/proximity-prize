@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.U
 import ProximityPrize.SubmissionLower.Z4
 import ProximityPrize.SubmissionLower.AK
@@ -36,9 +35,9 @@ theorem meet_tight_parameter_values:
    Profile.errors,Profile.gap,Profile.implicitYCap,
    Profile.implicitWeightedCap,Profile.algebraicCap]
 theorem meet_characteristic_gates:
-   meetProfile.slopeCap < prime6656∧
-     meetProfile.algebraicCap < prime6656∧
-     meetProfile.implicitWeightedCap < prime6656:=by
+   meetProfile.slopeCap<prime6656∧
+     meetProfile.algebraicCap<prime6656∧
+     meetProfile.implicitWeightedCap<prime6656:=by
  norm_num [meetProfile,prime6656,Profile.algebraicCap,
    Profile.implicitWeightedCap]
 variable {K Iota:Type} [Field K]
@@ -48,7 +47,7 @@ theorem meet_card_le_regular_sum_add_singular
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime6656]
    (hbox:Q∈globalCoefficientBox K meetProfile.weightedCap meetProfile.w
      meetProfile.seedTotalCap meetProfile.slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0):
    Gamma.card ≤
@@ -103,7 +102,7 @@ theorem meet_singularSeeds_scaled_bound_of_implicit_pairs
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime6656]
    (hbox:Q∈globalCoefficientBox K meetProfile.weightedCap meetProfile.w
      meetProfile.seedTotalCap meetProfile.slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0)
    (hpair:∀ q:ImplicitIndex Q,
@@ -198,7 +197,7 @@ theorem meet_global_count_lt_fixed_cost_of_local_counts
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime6656]
    (hbox:Q∈globalCoefficientBox K meetProfile.weightedCap meetProfile.w
      meetProfile.seedTotalCap meetProfile.slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0)
    (hregular:∀ F:RegularIndex Q,
@@ -210,7 +209,7 @@ theorem meet_global_count_lt_fixed_cost_of_local_counts
            dot meetTightProfile.agreement (meetImplicitCost Q q)+
          (meetProfile.errors+1)*meetProfile.gap*
            (meetImplicitCost Q q).z):
-   Gamma.card < 95756912943422943:=by
+   Gamma.card<95756912943422943:=by
  have hcover:=meet_card_le_regular_sum_add_singular Q hQ hbox selected
    Gamma hsolution
  have hreg:=sum_factor_counts_rectangular_le meetProfile Q hQ

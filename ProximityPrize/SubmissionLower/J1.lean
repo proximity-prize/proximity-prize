@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.C
 import ProximityPrize.SubmissionLower.E
 namespace ProximityPrize.SubmissionLower.RCN082
@@ -10,10 +9,10 @@ local instance:StrongNormalizationMonoid (MvPolynomial (Fin 4) K):=
 def activeFactors (Q:MvPolynomial (Fin 4) K):Finset (MvPolynomial (Fin 4) K):=by
  classical
  exact (normalizedFactors Q).toFinset.filter
-   (fun F => 0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
+   (fun F => 0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3)
 theorem activeFactors_spec (Q F:MvPolynomial (Fin 4) K)
    (hF:F∈activeFactors Q):
-   Irreducible F∧F∣Q∧0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3:=by
+   Irreducible F∧F∣Q∧0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3:=by
  classical
  obtain ⟨hm,hp⟩:=Finset.mem_filter.mp hF
  have hmem:F∈normalizedFactors Q:=Multiset.mem_toFinset.mp hm
@@ -45,7 +44,7 @@ theorem eq_C_of_all_degreeOf_zero (P:MvPolynomial (Fin 3) L)
  simp [hd0]
 theorem pureX_nonvanishing (φ:Polynomial K →+*L) (hφ:Function.Injective φ)
    (F:MvPolynomial (Fin 4) K) (hF:F≠0)
-   (v:Fin 3 → L) (P:Polynomial K)
+   (v:Fin 3→L) (P:Polynomial K)
    (hpure:collectX K F=MvPolynomial.C P):
    MvPolynomial.eval v (surfaceMap φ F)≠0:=by
  have hP:P≠0:=by
@@ -63,9 +62,9 @@ theorem pureX_nonvanishing (φ:Polynomial K →+*L) (hφ:Function.Injective φ)
  exact hφP
 theorem positive_seed_degree_of_surface_zero
    (φ:Polynomial K →+*L) (hφ:Function.Injective φ)
-   (F:MvPolynomial (Fin 4) K) (hF:F≠0) (v:Fin 3 → L)
+   (F:MvPolynomial (Fin 4) K) (hF:F≠0) (v:Fin 3→L)
    (hzero:MvPolynomial.eval v (surfaceMap φ F)=0):
-   0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3:=by
+   0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3:=by
  by_contra hn
  have hy:F.degreeOf 1 ≤ 0:=by omega
  have hr:F.degreeOf 2 ≤ 0:=by omega
@@ -84,7 +83,7 @@ theorem positive_seed_degree_of_surface_zero
  rw [hconst,hvalue,map_zero]
 theorem exists_active_factor_of_surface_zero
    (φ:Polynomial K →+*L) (hφ:Function.Injective φ)
-   (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) (v:Fin 3 → L)
+   (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) (v:Fin 3→L)
    (hzero:MvPolynomial.eval v (surfaceMap φ Q)=0):
    ∃ F∈activeFactors Q,MvPolynomial.eval v (surfaceMap φ F)=0:=by
  classical
@@ -112,7 +111,7 @@ theorem activeFactors_degree_budgets (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0):
  RCN081.separated_degree_budgets_of_prod_dvd (activeFactors Q) id Q hQ
    (activeFactors_product_dvd Q hQ)
 theorem activeFactors_input_budgets (Q:MvPolynomial (Fin 4) K)
-   (D w zcap s:ℕ) (hw:0 < w) (hQ:Q≠0)
+   (D w zcap s:ℕ) (hw:0<w) (hQ:Q≠0)
    (hbox:Q∈globalCoefficientBox K D w zcap s):
    (∑ F∈activeFactors Q,F.degreeOf (1:Fin 4)) ≤ (D-1)/w∧
    (∑ F∈activeFactors Q,F.degreeOf (2:Fin 4)) ≤ s∧
@@ -134,7 +133,7 @@ theorem exists_active_irreducible_box_factor
    (φ:Polynomial K →+*L) (hφ:Function.Injective φ)
    (Q:MvPolynomial (Fin 4) K) (D w zcap s:ℕ) (hQ:Q≠0)
    (hbox:Q∈globalCoefficientBox K D w zcap s)
-   (v:Fin 3 → L) (hzero:MvPolynomial.eval v (surfaceMap φ Q)=0):
+   (v:Fin 3→L) (hzero:MvPolynomial.eval v (surfaceMap φ Q)=0):
    ∃ F∈activeFactors Q,Irreducible F∧F∣Q∧
      F∈globalCoefficientBox K D w zcap s∧
      MvPolynomial.eval v (surfaceMap φ F)=0:=by

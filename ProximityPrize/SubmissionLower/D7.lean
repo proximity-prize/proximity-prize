@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AS
 open LinearMap Pointwise Ideal WithZero
 variable {R:Type*} {M:Type*} [AddCommMonoid M]
@@ -14,7 +13,7 @@ def Ideal.mulQuot (a:R) (I:Ideal R):
  Submodule.mapQ _ _ (LinearMap.mul R R a) (Submodule.le_comap_map _ _)
 lemma Ideal.mulQuot_injective {a:R} (I:Ideal R) (ha:a∈nonZeroDivisors R):
    Function.Injective (Ideal.mulQuot a I):=by
- simp only [mulQuot,Submodule.mapQ, ←ker_eq_bot]
+ simp only [mulQuot,Submodule.mapQ,←ker_eq_bot]
  apply Submodule.ker_liftQ_eq_bot'
  apply le_antisymm
  · have:Submodule.map (mul R R a) I=a • I:=rfl
@@ -39,7 +38,7 @@ lemma Ideal.exact_mulQuot_quotOfMul {a:R} (I:Ideal R):
      Submodule.ker_liftQ,Submodule.ker_mkQ,Submodule.map_span,Submodule.mkQ_apply,
      Quotient.mk_eq_mk,Set.image_singleton,Quotient.smul_top]
  simp [this,Ideal.mulQuot,Submodule.mapQ.eq_1,Submodule.range_liftQ,
-   range_comp,Ideal.Quotient.smul_top, ←Ideal.submodule_span_eq,LinearMap.map_span]
+   range_comp,Ideal.Quotient.smul_top,←Ideal.submodule_span_eq,LinearMap.map_span]
 namespace Ring
 variable (R)
 theorem ord_mul {a b:R} (hb:b∈nonZeroDivisors R):
@@ -49,7 +48,7 @@ theorem ord_mul {a b:R} (hb:b∈nonZeroDivisors R):
      (Ideal.mulQuot_injective (Ideal.span {a}) hb)
      (Ideal.quotOfMul_surjective (Ideal.span {a}))
      (Ideal.exact_mulQuot_quotOfMul (Ideal.span {a}))
- simp only [Ring.ord, ←hlen]
+ simp only [Ring.ord,←hlen]
  have lem:(({b}:Set R) • Ideal.span {a})=Ideal.span {b*a}:=by
    simp [←Ideal.submodule_span_eq,Submodule.set_smul_span]
  have hs:(({b}:Set R) • Ideal.span {a})=b • Ideal.span {a}:=

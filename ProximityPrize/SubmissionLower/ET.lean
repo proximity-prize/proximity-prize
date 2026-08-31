@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B
 import ProximityPrize.SubmissionLower.Z5
 namespace ProximityPrize.SubmissionLower.RCN151
@@ -25,15 +24,15 @@ local instance:DecidableEq Iota:=Classical.decEq Iota
 abbrev Poly3 (Omega:Type) [Field Omega]:=MvPolynomial (Fin 3) Omega
 abbrev Poly4 (K:Type) [Field K]:=MvPolynomial (Fin 4) K
 structure CurveResidualStage
-   (phi:Polynomial K →+*Omega) (Gamma:Finset K) (x:Iota → K)
+   (phi:Polynomial K →+*Omega) (Gamma:Finset K) (x:Iota→K)
    (p e:ℕ) [CharP Omega p]
    (surfaceFlag cutFlag:FlagDegree) (d:ℕ)
    (support:ResidualSupportParameters:=
      ResidualSupportParameters.acceptedSupport) where
  nodes:Finset Iota
- u0:Iota → K
- u1:Iota → K
- selected:K → Polynomial K
+ u0:Iota→K
+ u1:Iota→K
+ selected:K→Polynomial K
  F:Poly4 K
  G:Poly3 Omega
  T:Poly3 Omega
@@ -57,10 +56,10 @@ structure CurveResidualStage
  on_prime:∀ gamma∈Gamma,primeData.ideal ≤ RingHom.ker
    (MvPolynomial.aeval (selectedPoint phi selected gamma)).toRingHom
  no_large_pencil:NoLargeSelectedPencil selected Gamma d e
- characteristic_bound:d < p
+ characteristic_bound:d<p
 namespace CurveResidualStage
 variable {phi:Polynomial K →+*Omega} {Gamma:Finset K}
-variable {x:Iota → K} {p e:ℕ} [CharP Omega p]
+variable {x:Iota→K} {p e:ℕ} [CharP Omega p]
 variable {surfaceFlag cutFlag:FlagDegree} {d:ℕ}
 variable {support:ResidualSupportParameters}
 def primeIdeal
@@ -122,7 +121,7 @@ theorem advance_certified
    (S:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
    (hne:S.identities≠∅)
    (hcard:S.identities.card ≤ d):
-   0 < S.identities.card∧
+   0<S.identities.card∧
      ∃ Snext:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag
          (d-S.identities.card) support,
        ResidualTransition S Snext∧
@@ -130,7 +129,7 @@ theorem advance_certified
        (∀ gamma∈Gamma,∀ i∈S.identities,
          S.Agrees gamma i)∧
        ∀ gamma∈Gamma,∀ i∈Snext.nodes,
-         S.Agrees gamma i → Snext.Agrees gamma i:=by
+         S.Agrees gamma i→Snext.Agrees gamma i:=by
  classical
  let P:=S.primeIdeal
  letI:P.IsPrime:=S.primeIdeal_isPrime
@@ -138,7 +137,7 @@ theorem advance_certified
  have hJsub:J ⊆ S.nodes:=identityNodes_subset
    phi P S.F S.nodes x S.u0 S.u1 d
  have hJcard:J.card ≤ d:=by simpa only [J] using hcard
- have hJpos:0 < J.card:=Finset.card_pos.mpr
+ have hJpos:0<J.card:=Finset.card_pos.mpr
    (Finset.nonempty_iff_ne_empty.mpr (by simpa only [J] using hne))
  have hvalues:∀ gamma∈Gamma,∀ i∈J,
      (S.selected gamma).eval (x i)=S.u0 i+gamma*S.u1 i:=by
@@ -216,8 +215,8 @@ theorem advance_certified
  let hsupport:ResidualSupportData support S.F:=
    ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
  have hsupportRes:=hsupport.globalResidual P0 P1 V
- let u0res:Iota → K:=fun i↦residualReceived J x S.u0 P0 i
- let u1res:Iota → K:=fun i↦residualReceived J x S.u1 P1 i
+ let u0res:Iota→K:=fun i↦residualReceived J x S.u0 P0 i
+ let u1res:Iota→K:=fun i↦residualReceived J x S.u1 P1 i
  let Snext:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag
      (d-J.card) support:={
    nodes:=S.nodes \ J
@@ -281,20 +280,20 @@ theorem advance
    (S:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
    (hne:S.identities≠∅)
    (hcard:S.identities.card ≤ d):
-   0 < S.identities.card∧
+   0<S.identities.card∧
      ∃ Snext:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag
          (d-S.identities.card) support,
        Snext.nodes=S.nodes \ S.identities∧
        (∀ gamma∈Gamma,∀ i∈S.identities,
          S.Agrees gamma i)∧
        ∀ gamma∈Gamma,∀ i∈Snext.nodes,
-         S.Agrees gamma i → Snext.Agrees gamma i:=by
+         S.Agrees gamma i→Snext.Agrees gamma i:=by
  obtain ⟨hpos,Snext,_,hnodes,hid,hremaining⟩:=
    S.advance_certified hphi hne hcard
  exact ⟨hpos,Snext,hnodes,hid,hremaining⟩
 theorem card_le_pencil_of_many_identities
    (S:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
-   (hmany:d < S.identities.card):
+   (hmany:d<S.identities.card):
    Gamma.card ≤ e+1:=by
  classical
  let P:=S.primeIdeal
@@ -409,7 +408,7 @@ structure TerminalDescendant
  degree_le:degree ≤ d
  stage:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag degree support
  terminal:stage.identities=∅∨
-   (degree < stage.identities.card∧Gamma.card ≤ e+1)
+   (degree<stage.identities.card∧Gamma.card ≤ e+1)
  nodes_card:stage.nodes.card=S.nodes.card-(d-degree)
  agreement_card:∀ gamma∈Gamma,
    (S.agreementFiber gamma).card-(d-degree) ≤
@@ -440,11 +439,11 @@ theorem exists_terminal_descendant
          agreement_card:=by simp
        }⟩
      · by_cases hcard:S.identities.card ≤ d
-       · have hkpos:0 < S.identities.card:=Finset.card_pos.mpr
+       · have hkpos:0<S.identities.card:=Finset.card_pos.mpr
            (Finset.nonempty_iff_ne_empty.mpr hempty)
          obtain ⟨Snext,hnodes,hagreements⟩:=
            S.advance_card hphi hempty hcard
-         have hdegree_lt:d-S.identities.card < d:=by omega
+         have hdegree_lt:d-S.identities.card<d:=by omega
          obtain ⟨Dnext⟩:=ih (d-S.identities.card) hdegree_lt Snext
          have hDle:Dnext.degree ≤ d-S.identities.card:=
            Dnext.degree_le
@@ -481,7 +480,7 @@ theorem exists_terminal_descendant
              _ ≤ (Snext.agreementFiber gamma).card-
                    ((d-S.identities.card)-Dnext.degree):=hmono
              _ ≤ (Dnext.stage.agreementFiber gamma).card:=htail
-       · have hmany:d < S.identities.card:=Nat.lt_of_not_ge hcard
+       · have hmany:d<S.identities.card:=Nat.lt_of_not_ge hcard
          exact ⟨{
            degree:=d
            degree_le:=le_rfl
@@ -493,11 +492,11 @@ theorem exists_terminal_descendant
          }⟩
 theorem exists_terminal_descendant_with_invariant
    (hphi:Function.Injective phi)
-   (Inv:∀ n,CurveResidualStage phi Gamma x p e surfaceFlag cutFlag n support → Prop)
+   (Inv:∀ n,CurveResidualStage phi Gamma x p e surfaceFlag cutFlag n support→Prop)
    (htransport:∀ {n m}
      {A:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag n support}
      {B:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag m support},
-     ResidualTransition A B → Inv n A → Inv m B)
+     ResidualTransition A B→Inv n A→Inv m B)
    (S:CurveResidualStage phi Gamma x p e surfaceFlag cutFlag d support)
    (hInv:Inv d S):
    ∃ D:S.TerminalDescendant,Inv D.degree D.stage:=by
@@ -513,11 +512,11 @@ theorem exists_terminal_descendant_with_invariant
          agreement_card:=by simp
        },hInv⟩
      · by_cases hcard:S.identities.card ≤ d
-       · have hkpos:0 < S.identities.card:=Finset.card_pos.mpr
+       · have hkpos:0<S.identities.card:=Finset.card_pos.mpr
            (Finset.nonempty_iff_ne_empty.mpr hempty)
          obtain ⟨Snext,htransition,hnodes,hagreements⟩:=
            S.advance_card_certified hphi hempty hcard
-         have hdegree_lt:d-S.identities.card < d:=by omega
+         have hdegree_lt:d-S.identities.card<d:=by omega
          have hInvNext:=htransport htransition hInv
          obtain ⟨Dnext,hDInv⟩:=
            ih (d-S.identities.card) hdegree_lt Snext hInvNext
@@ -557,7 +556,7 @@ theorem exists_terminal_descendant_with_invariant
                    ((d-S.identities.card)-Dnext.degree):=hmono
              _ ≤ (Dnext.stage.agreementFiber gamma).card:=htail
          · exact hDInv
-       · have hmany:d < S.identities.card:=Nat.lt_of_not_ge hcard
+       · have hmany:d<S.identities.card:=Nat.lt_of_not_ge hcard
          refine ⟨{
            degree:=d
            degree_le:=le_rfl

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AK
 import ProximityPrize.SubmissionLower.F1
 import ProximityPrize.SubmissionLower.BW
@@ -21,7 +20,7 @@ theorem implicitVector_budgets_of_profile
    (P:TightParameters) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    {p:ℕ} [CharP K p]
    (hbox:Q∈globalCoefficientBox K P.D P.w P.L P.s)
-   (hs:1 ≤ P.s) (hsSmall:P.s < p) (hw:1 ≤ P.w):
+   (hs:1 ≤ P.s) (hsSmall:P.s<p) (hw:1 ≤ P.w):
    (∑ q:ImplicitIndex Q,(implicitVector Q q).y) ≤ P.algebraicCap∧
      (∑ q:ImplicitIndex Q,(implicitVector Q q).r) ≤
        2*P.implicitYCap*P.algebraicCap∧
@@ -41,10 +40,10 @@ theorem exceptionalSeeds_bound_of_profile
    (P:TightParameters) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    {p:ℕ} [CharP K p]
    (hbox:Q∈globalCoefficientBox K P.D P.w P.L P.s)
-   (hs:1 ≤ P.s) (hsSmall:P.s < p)
+   (hs:1 ≤ P.s) (hsSmall:P.s<p)
    (hj:1 ≤ P.algebraicCap)
-   (hjSmall:P.algebraicCap < p)
-   (selected:K → Polynomial K) (Gamma:Finset K):
+   (hjSmall:P.algebraicCap<p)
+   (selected:K→Polynomial K) (Gamma:Finset K):
    (exceptionalSeeds (singularAuxiliary Q) Gamma selected).card ≤
      2*P.algebraicCap^2:=by
  classical
@@ -72,15 +71,15 @@ theorem implicitSeeds_pair_bound_of_profile
    (P:TightParameters) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    {p:ℕ} [CharP K p]
    (hbox:Q∈globalCoefficientBox K P.D P.w P.L P.s)
-   (hs:1 ≤ P.s) (hsSmall:P.s < p)
-   (hw:1 ≤ P.w) (hchar:P.w < p)
-   (hDw:P.w < P.kappa*P.D)
-   (hjYSmall:P.implicitYCap < p)
-   (hjZSmall:P.algebraicCap < p)
-   (hmixedSmall:2*P.implicitYCap*P.algebraicCap < p)
-   (hwa:P.w < P.a) (han:P.a ≤ P.n)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (hs:1 ≤ P.s) (hsSmall:P.s<p)
+   (hw:1 ≤ P.w) (hchar:P.w<p)
+   (hDw:P.w<P.kappa*P.D)
+   (hjYSmall:P.implicitYCap<p)
+   (hjZSmall:P.algebraicCap<p)
+   (hmixedSmall:2*P.implicitYCap*P.algebraicCap<p)
+   (hwa:P.w<P.a) (han:P.a ≤ P.n)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=P.n)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ P.w)
    (hagreement:∀ gamma∈Gamma,
@@ -124,16 +123,16 @@ theorem singularSeeds_tight_gap_bound
    (P:TightParameters) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    {p:ℕ} [CharP K p]
    (hbox:Q∈globalCoefficientBox K P.D P.w P.L P.s)
-   (hs:1 ≤ P.s) (hsSmall:P.s < p)
-   (hw:1 ≤ P.w) (hchar:P.w < p)
-   (hDw:P.w < P.kappa*P.D)
+   (hs:1 ≤ P.s) (hsSmall:P.s<p)
+   (hw:1 ≤ P.w) (hchar:P.w<p)
+   (hDw:P.w<P.kappa*P.D)
    (hj:1 ≤ P.algebraicCap)
-   (hjYSmall:P.implicitYCap < p)
-   (hjZSmall:P.algebraicCap < p)
-   (hmixedSmall:2*P.implicitYCap*P.algebraicCap < p)
-   (hwa:P.w < P.a) (han:P.a ≤ P.n)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (hjYSmall:P.implicitYCap<p)
+   (hjZSmall:P.algebraicCap<p)
+   (hmixedSmall:2*P.implicitYCap*P.algebraicCap<p)
+   (hwa:P.w<P.a) (han:P.a ≤ P.n)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=P.n)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ P.w)
    (hagreement:∀ gamma∈Gamma,
@@ -159,16 +158,16 @@ theorem singularSeeds_count_le_countCap
    (P:TightParameters) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    {p:ℕ} [CharP K p]
    (hbox:Q∈globalCoefficientBox K P.D P.w P.L P.s)
-   (hs:1 ≤ P.s) (hsSmall:P.s < p)
-   (hw:1 ≤ P.w) (hchar:P.w < p)
-   (hDw:P.w < P.kappa*P.D)
+   (hs:1 ≤ P.s) (hsSmall:P.s<p)
+   (hw:1 ≤ P.w) (hchar:P.w<p)
+   (hDw:P.w<P.kappa*P.D)
    (hj:1 ≤ P.algebraicCap)
-   (hjYSmall:P.implicitYCap < p)
-   (hjZSmall:P.algebraicCap < p)
-   (hmixedSmall:2*P.implicitYCap*P.algebraicCap < p)
-   (hwa:P.w < P.a) (han:P.a ≤ P.n)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (hjYSmall:P.implicitYCap<p)
+   (hjZSmall:P.algebraicCap<p)
+   (hmixedSmall:2*P.implicitYCap*P.algebraicCap<p)
+   (hwa:P.w<P.a) (han:P.a ≤ P.n)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=P.n)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ P.w)
    (hagreement:∀ gamma∈Gamma,
@@ -203,16 +202,16 @@ theorem optimized_pivot_values:
    TightParameters.algebraicCap,TightParameters.kappa,
    TightParameters.errors,TightParameters.gap,dot]
 theorem optimized_pivot_characteristic_gates:
-   firstResidualQ2.s < 2130706433∧
-     firstResidualQ2.w < 2130706433∧
-     firstResidualQ2.implicitYCap < 2130706433∧
-     firstResidualQ2.algebraicCap < 2130706433∧
-     2*firstResidualQ2.implicitYCap*firstResidualQ2.algebraicCap < 2130706433∧
-     secondResidualGcd12.s < 2130706433∧
-     secondResidualGcd12.w < 2130706433∧
-     secondResidualGcd12.implicitYCap < 2130706433∧
-     secondResidualGcd12.algebraicCap < 2130706433∧
-     2*secondResidualGcd12.implicitYCap*secondResidualGcd12.algebraicCap < 2130706433:=by
+   firstResidualQ2.s<2130706433∧
+     firstResidualQ2.w<2130706433∧
+     firstResidualQ2.implicitYCap<2130706433∧
+     firstResidualQ2.algebraicCap<2130706433∧
+     2*firstResidualQ2.implicitYCap*firstResidualQ2.algebraicCap<2130706433∧
+     secondResidualGcd12.s<2130706433∧
+     secondResidualGcd12.w<2130706433∧
+     secondResidualGcd12.implicitYCap<2130706433∧
+     secondResidualGcd12.algebraicCap<2130706433∧
+     2*secondResidualGcd12.implicitYCap*secondResidualGcd12.algebraicCap<2130706433:=by
  norm_num [firstResidualQ2,secondResidualGcd12,
    TightParameters.implicitYCap,TightParameters.algebraicCap,
    TightParameters.kappa]

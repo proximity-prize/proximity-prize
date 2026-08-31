@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.P
 import ProximityPrize.SubmissionLower.B4
 namespace ProximityPrize.SubmissionLower.RCN118
@@ -25,7 +24,7 @@ structure PrincipalCycleBudget
      ProjectionsFiniteSeparable Ω C.1)
    (B:GenericExactPolePolynomial G T H E separator hseparator hproj)
    (wholeCap:ℕ) where
- cost:RegularComponent Ω G T H → ℕ
+ cost:RegularComponent Ω G T H→ℕ
  cycle_le:∀ C:RegularComponent Ω G T H,
    let htr:=hseparator C
    letI:Algebra (Polynomial Ω) (CoordinateRing Ω C.1):=
@@ -63,9 +62,9 @@ structure FlagProjectionCycleBudget
    (B:GenericExactPolePolynomial G T H (flagSupport p) separator
      hseparator hproj)
    (zCap yzCap allCap:ℕ) where
- zCost:RegularComponent Ω G T H → ℕ
- yzCost:RegularComponent Ω G T H → ℕ
- allCost:RegularComponent Ω G T H → ℕ
+ zCost:RegularComponent Ω G T H→ℕ
+ yzCost:RegularComponent Ω G T H→ℕ
+ allCost:RegularComponent Ω G T H→ℕ
  cycle_le:∀ C:RegularComponent Ω G T H,
    let htr:=hseparator C
    letI:Algebra (Polynomial Ω) (CoordinateRing Ω C.1):=

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G0
 section ProximityFlatProofPort
 open IsLocalRing

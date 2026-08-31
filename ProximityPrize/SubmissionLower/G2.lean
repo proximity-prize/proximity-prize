@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W9
 namespace ProximityPrize.SubmissionLower.RCN356
 open scoped BigOperators nonZeroDivisors
@@ -31,7 +30,7 @@ variable [Algebra.IsSeparable (FractionRing R) (FractionRing S)]
 def primeFiber (v:HeightOneSpectrum R):Finset (Ideal S):=
  IsDedekindDomain.primesOverFinset v.asIdeal S
 theorem mem_primeFiber_iff (v:HeightOneSpectrum R) (P:Ideal S):
-   P∈primeFiber R S v ↔ P.IsPrime∧P.LiesOver v.asIdeal:=
+   P∈primeFiber R S v↔P.IsPrime∧P.LiesOver v.asIdeal:=
  IsDedekindDomain.mem_primesOverFinset_iff v.ne_bot S
 def fiberPlace (v:HeightOneSpectrum R)
    (P:{P:Ideal S//P∈primeFiber R S v}):HeightOneSpectrum S:=
@@ -57,7 +56,7 @@ theorem factorCount_relNorm (v:HeightOneSpectrum R)
      ∑ P∈primeFiber R S v,
        P.inertiaDeg R*(normalizedFactors I).count P:=by
  classical
- let C:Ideal S → Prop:=fun J↦J≠0∧
+ let C:Ideal S→Prop:=fun J↦J≠0∧
    (normalizedFactors (Ideal.relNorm R J)).count v.asIdeal=
      ∑ P∈primeFiber R S v,
        P.inertiaDeg R*(normalizedFactors J).count P

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.O3
 import ProximityPrize.SubmissionLower.X
 namespace ProximityPrize.SubmissionLower.RCN257
@@ -98,7 +97,7 @@ theorem finite_regular_zero_bound_of_separator
  letI:FiniteDimensional (RatFunc K) (CoordinateField K P):=base.finite
  letI:Algebra.IsSeparable (RatFunc K) (CoordinateField K P):=base.separable
  intro S hSP hSH hSF
- let liftPoint:{v:Fin 3 → K//v∈S} → (CoordinateRing K P →ₐ[K] K):=
+ let liftPoint:{v:Fin 3→K//v∈S}→(CoordinateRing K P →ₐ[K] K):=
    fun v↦pointHom K P ⟨v.1,hSP v.1 v.2⟩
  have hinj:Function.Injective liftPoint:=by
    intro v w hvw

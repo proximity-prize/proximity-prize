@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 variable {R:Type*} [CommRing R]
@@ -7,11 +6,11 @@ open UniqueFactorizationMonoid
 open scoped nonZeroDivisors
 theorem Ideal.eq_span_singleton_of_mem_of_notMem_sq_of_notMem_prime_ne {P:Ideal R}
    (hP:P.IsPrime) [IsDedekindDomain R] {x:R} (x_mem:x∈P) (hxP2:x∉P^2)
-   (hxQ:∀ Q:Ideal R,IsPrime Q → Q≠P → x∉Q):P=Ideal.span {x}:=by
+   (hxQ:∀ Q:Ideal R,IsPrime Q→Q≠P→x∉Q):P=Ideal.span {x}:=by
  classical
  by_cases hP0:P=⊥
  · subst hP0
-   rwa [eq_comm,span_singleton_eq_bot, ←mem_bot]
+   rwa [eq_comm,span_singleton_eq_bot,←mem_bot]
  have hspan0:span {x}≠⊥:=mt Ideal.span_singleton_eq_bot.mp (hxP2 <| · ▸ zero_mem _)
  rw [←associated_iff_eq,associated_iff_normalizedFactors_eq_normalizedFactors hP0 hspan0]
  refine Multiset.ext' fun Q↦?_
@@ -35,17 +34,17 @@ theorem FractionalIdeal.isPrincipal_of_unit_of_comap_mul_span_singleton_eq_top {
  have hJ:IsLocalization.coeSubmodule A J=↑I*Submodule.span R {v}:=by
    rw [coe_ext_iff,coe_mul,coe_one] at hinv
    apply Submodule.map_comap_eq_self
-   grw [←Submodule.one_eq_range, ←hinv,(Submodule.span_singleton_le_iff_mem _ _).2 hv]
+   grw [←Submodule.one_eq_range,←hinv,(Submodule.span_singleton_le_iff_mem _ _).2 hv]
  have:(1:A)∈↑I*Submodule.span R {v}:=by
    rw [←hJ,h,IsLocalization.coeSubmodule_top,Submodule.mem_one]
    exact ⟨1,(algebraMap R _).map_one⟩
  obtain ⟨w,hw,hvw⟩:=Submodule.mem_mul_span_singleton.1 this
  refine ⟨⟨w,?_⟩⟩
- rw [←FractionalIdeal.coe_spanSingleton S, ←inv_inv I,eq_comm]
+ rw [←FractionalIdeal.coe_spanSingleton S,←inv_inv I,eq_comm]
  refine congr_arg coeToSubmodule (Units.eq_inv_of_mul_eq_one_left (le_antisymm ?_ ?_))
  · conv_rhs => rw [←hinv,mul_comm]
    grw [FractionalIdeal.spanSingleton_le_iff_mem.mpr hw]
- · rw [FractionalIdeal.one_le, ←hvw,mul_comm]
+ · rw [FractionalIdeal.one_le,←hvw,mul_comm]
    exact FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_spanSingleton_self _ _) hv
 theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A:Type*} [CommRing A]
    [Algebra R A] {S:Submonoid R} [IsLocalization S A] (hS:S ≤ R⁰)
@@ -80,7 +79,7 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A:Type*} [CommRin
  replace hM:=hf.mem_toFinset.2 hM
  have:∀ a∈I,∀ b∈I',∃ c,algebraMap R _ c=a*b:=by
    intro a ha b hb;have hi:=hinv.le
-   obtain ⟨c, -,hc⟩:=hi (Submodule.mul_mem_mul ha hb)
+   obtain ⟨c,-,hc⟩:=hi (Submodule.mul_mem_mul ha hb)
    exact ⟨c,hc⟩
  have hmem:a M*v∈IsLocalization.coeSubmodule A M:=by
    obtain ⟨c,hc⟩:=this _ (ha M hM) v hv
@@ -92,7 +91,7 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A:Type*} [CommRin
  · refine hm M hM ?_
    obtain ⟨c,hc:algebraMap R A c=a M*b M⟩:=this _ (ha M hM) _ (hb M hM)
    rw [←hc] at hmem ⊢
-   rw [Algebra.smul_def, ←map_mul] at hmem
+   rw [Algebra.smul_def,←map_mul] at hmem
    obtain ⟨d,hdM,he⟩:=hmem
    rw [IsLocalization.injective _ hS he] at hdM
    exact Submodule.mem_map_of_mem <|
@@ -100,7 +99,7 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A:Type*} [CommRin
  · refine Submodule.sum_mem _ fun M' hM' => ?_
    rw [Finset.mem_erase] at hM'
    obtain ⟨c,hc⟩:=this _ (ha M hM) _ (hb M' hM'.2)
-   rw [←hc,Algebra.smul_def, ←map_mul]
+   rw [←hc,Algebra.smul_def,←map_mul]
    specialize hu M' hM'.2
    simp_rw [Ideal.mem_iInf,Finset.mem_erase] at hu
    exact Submodule.mem_map_of_mem <| M.mul_mem_right _ <| hu M ⟨hM'.1.symm,hM⟩
@@ -151,10 +150,10 @@ theorem IsLocalization.OverPrime.mem_normalizedFactors_of_isPrime [IsDomain S]
      ⟨algebraMap _ _ x,(IsLocalization.AtPrime.to_map_mem_maximal_iff _ _ _).mpr x_mem,
        IsLocalization.to_map_ne_zero_of_mem_nonZeroDivisors _ p.primeCompl_le_nonZeroDivisors
          (mem_nonZeroDivisors_of_ne_zero x_ne)⟩
- rw [←Multiset.singleton_le, ←normalize_eq P, ←
-   normalizedFactors_irreducible (Ideal.prime_of_isPrime hP0 hP).irreducible, ←
+ rw [←Multiset.singleton_le,←normalize_eq P,←
+   normalizedFactors_irreducible (Ideal.prime_of_isPrime hP0 hP).irreducible,←
    dvd_iff_normalizedFactors_le_normalizedFactors hP0,dvd_iff_le,
-   IsScalarTower.algebraMap_eq R (Localization.AtPrime p) Sₚ, ←Ideal.map_map,
+   IsScalarTower.algebraMap_eq R (Localization.AtPrime p) Sₚ,←Ideal.map_map,
    Localization.AtPrime.map_eq_maximalIdeal,Ideal.map_le_iff_le_comap,
    hpu (IsLocalRing.maximalIdeal _) ⟨this,_⟩,hpu (comap _ _) ⟨_,_⟩]
  · have:Algebra.IsIntegral (Localization.AtPrime p) Sₚ:=⟨isIntegral_localization⟩

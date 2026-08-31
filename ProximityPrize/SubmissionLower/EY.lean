@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B
 import ProximityPrize.SubmissionLower.H
 namespace ProximityPrize.SubmissionLower.RCN158
@@ -6,12 +5,12 @@ open RCN213
 section FiniteAgreement
 variable {Node:Type*} [DecidableEq Node]
 theorem residual_agreement_card
-   (nodes I:Finset Node) (oldRelation residualRelation:Node → Prop)
+   (nodes I:Finset Node) (oldRelation residualRelation:Node→Prop)
    [DecidablePred oldRelation] [DecidablePred residualRelation]
    (a:ℕ)
    (hI:I ⊆ nodes.filter oldRelation)
    (ha:a ≤ (nodes.filter oldRelation).card)
-   (hdescend:∀ i∈nodes \ I,oldRelation i → residualRelation i):
+   (hdescend:∀ i∈nodes \ I,oldRelation i→residualRelation i):
    a-I.card ≤ ((nodes \ I).filter residualRelation).card:=by
  have hsub:(nodes.filter oldRelation) \ I ⊆
      (nodes \ I).filter residualRelation:=by
@@ -31,7 +30,7 @@ theorem residual_agreement_card
 theorem residual_family_agreement_card
    {Seed:Type*} (seeds:Finset Seed)
    (nodes I:Finset Node)
-   (oldRelation residualRelation:Seed → Node → Prop)
+   (oldRelation residualRelation:Seed→Node→Prop)
    [∀ seed,DecidablePred (oldRelation seed)]
    [∀ seed,DecidablePred (residualRelation seed)]
    (a:ℕ)
@@ -39,7 +38,7 @@ theorem residual_family_agreement_card
    (hagreement:∀ seed∈seeds,
      a ≤ (nodes.filter (oldRelation seed)).card)
    (hdescend:∀ seed∈seeds,∀ i∈nodes \ I,
-     oldRelation seed i → residualRelation seed i):
+     oldRelation seed i→residualRelation seed i):
    ∀ seed∈seeds,
      a-I.card ≤ ((nodes \ I).filter (residualRelation seed)).card:=by
  intro seed hseed
@@ -85,8 +84,8 @@ theorem iterated_residual_invariants
      ((n-k)-j)-((w-k)-j)=n-w:=by
  constructor <;> omega
 theorem residual_degree_strictly_decreases
-   (w k j:ℕ) (hk:k ≤ w) (hjpos:0 < j) (hj:j ≤ w-k):
-   (w-k)-j < w-k:=by
+   (w k j:ℕ) (hk:k ≤ w) (hjpos:0<j) (hj:j ≤ w-k):
+   (w-k)-j<w-k:=by
  omega
 theorem score6600_iterated_compression
    (k j:ℕ) (hkj:k+j ≤ w):
@@ -105,7 +104,7 @@ open RCN156
 open RCN275
 noncomputable section
 variable {K Omega Iota:Type} [Field K] [Field Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 variable {p e:ℕ} [CharP Omega p]
 variable {flag:RCN095.FlagDegree}
 variable {support:ResidualSupportParameters}
@@ -147,7 +146,7 @@ theorem surfaceMap_agreement_in_flag_of_support
      residualYSWeights F ≤ support.ys)
    (hTotal:RCN234.wt
      residualTotalWeights F ≤ support.total)
-   (d:ℕ) (coeffs:ℕ → K) (x0 u0 u1:K):
+   (d:ℕ) (coeffs:ℕ→K) (x0 u0 u1:K):
    RCN095.PolynomialInFlag
      (support.residualAgreementFlag d)
      (RCN136.surfaceMap phi
@@ -162,7 +161,7 @@ theorem surfaceMap_agreement_in_flag_of_surface_weights
      residualYSWeights F ≤ 43)
    (hTotal:RCN234.wt
      residualTotalWeights F ≤ 503)
-   (d:ℕ) (coeffs:ℕ → K) (x0 u0 u1:K):
+   (d:ℕ) (coeffs:ℕ→K) (x0 u0 u1:K):
    RCN095.PolynomialInFlag (residualAgreementFlag d)
      (RCN136.surfaceMap phi
        (RCN313.agreementNumerator F d coeffs x0 u0 u1)):=by
@@ -187,7 +186,7 @@ theorem terminal_proper_cuts_in_residual_flag {d:ℕ}
    d (fun j↦(j.factorial:K)⁻¹) (x i) (S.u0 i) (S.u1 i)
 inductive ResidualAdvance:
    (Σ d,ResidualStage phi Gamma x p e flag d support) →
-     (Σ d,ResidualStage phi Gamma x p e flag d support) → Prop
+     (Σ d,ResidualStage phi Gamma x p e flag d support)→Prop
  | step {d:ℕ} (S:ResidualStage phi Gamma x p e flag d support)
      (hne:S.identities≠∅)
      (Snext:ResidualStage phi Gamma x p e flag
@@ -196,21 +195,21 @@ inductive ResidualAdvance:
      (hold:∀ gamma∈Gamma,∀ i∈S.identities,
        S.Agrees gamma i)
      (hdescend:∀ gamma∈Gamma,∀ i∈Snext.nodes,
-       S.Agrees gamma i → Snext.Agrees gamma i):
+       S.Agrees gamma i→Snext.Agrees gamma i):
      ResidualAdvance ⟨d,S⟩ ⟨d-S.identities.card,Snext⟩
 theorem exists_strict_advance
    (hphi:Function.Injective phi) {d:ℕ}
    (S:ResidualStage phi Gamma x p e flag d support)
    (hnot:¬ IsTerminalStage S):
    ∃ T:Σ d',ResidualStage phi Gamma x p e flag d' support,
-     ResidualAdvance ⟨d,S⟩ T∧T.1 < d:=by
+     ResidualAdvance ⟨d,S⟩ T∧T.1<d:=by
  have hne:S.identities≠∅:=hnot
  obtain ⟨hpos,Snext,hnodes,hold,hdescend⟩:=
    S.advance hphi hne
  refine ⟨⟨d-S.identities.card,Snext⟩,
    ResidualAdvance.step S hne Snext hnodes hold hdescend,?_⟩
  have hcap:=S.identities_card_le
- change d-S.identities.card < d
+ change d-S.identities.card<d
  omega
 abbrev ResidualReachable:=Relation.ReflTransGen
  (ResidualAdvance (phi:=phi) (Gamma:=Gamma) (x:=x)
@@ -254,7 +253,7 @@ theorem exists_terminal_with_incidence_data
          S.advance hphi hne
        let k:=S.identities.card
        have hk:k ≤ d:=S.identities_card_le
-       have hlt:d-k < d:=by
+       have hlt:d-k<d:=by
          dsimp only [k]
          omega
        have hdaNext:d-k ≤ a-k:=Nat.sub_le_sub_right hda k

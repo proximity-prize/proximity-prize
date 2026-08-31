@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.O1
 namespace ProximityPrize.SubmissionLower.RCN233
 open RCN347 RCN348
@@ -21,12 +20,12 @@ theorem jetPolynomial_affine_coordinate
  ext j
  cases j with
  | zero =>
-   have hb:0 < bound:=by omega
+   have hb:0<bound:=by omega
    simp [jetPolynomial_coeff,jetCoefficient,hb]
  | succ j =>
    cases j with
    | zero =>
-     have hb:1 < bound:=by omega
+     have hb:1<bound:=by omega
      simp [jetPolynomial_coeff,jetCoefficient,hb,ha]
    | succ j =>
      have hz:jetCoefficient D value a (j+2)=0:=by
@@ -47,7 +46,7 @@ end GeneralTaylorCoordinates
 section ActualRegularPoint
 variable {K L:Type*} [CommRing K] [Field L]
 noncomputable def reconstructedPolynomial
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0) (w:ℕ):Polynomial L:=
@@ -55,24 +54,24 @@ noncomputable def reconstructedPolynomial
    (regularPointValue coefficients F v hF hregular) (w+1)
    (contactCoordinate K F (1:Fin 4))
 noncomputable def reconstructionSubstitution
-   (v:Fin 4 → L) (P:Polynomial L):Fin 4 → Polynomial L:=
+   (v:Fin 4→L) (P:Polynomial L):Fin 4→Polynomial L:=
  ![Polynomial.C (v 0)+Polynomial.X,P,P.derivative,Polynomial.C (v 3)]
 noncomputable def reconstructedEquation
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0) (w:ℕ):Polynomial L:=
  MvPolynomial.eval₂Hom (Polynomial.C.comp coefficients)
    (reconstructionSubstitution v (reconstructedPolynomial coefficients F v hF hregular w)) F
 theorem reconstructedPolynomial_natDegree_le
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0) (w:ℕ):
    (reconstructedPolynomial coefficients F v hF hregular w).natDegree ≤ w:=
  jetPolynomial_natDegree_le _ _ _ _
 theorem reconstructedPolynomial_coeff_zero
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0) (w:ℕ):
@@ -80,22 +79,22 @@ theorem reconstructedPolynomial_coeff_zero
  simp [reconstructedPolynomial,jetPolynomial_coeff,jetCoefficient,
    regularPointValue_coordinate]
 theorem reconstructedPolynomial_coeff_one
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0) (w:ℕ) (hw:1 ≤ w):
    (reconstructedPolynomial coefficients F v hF hregular w).coeff 1=v 2:=by
- have hb:1 < w+1:=by omega
+ have hb:1<w+1:=by omega
  simp [reconstructedPolynomial,jetPolynomial_coeff,jetCoefficient,hb,
    derivation_coordinate_Y,regularPointValue_coordinate]
 theorem coordinate_taylor_eq_reconstruction
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (p bound w:ℕ) [CharP L p] (hw:1 ≤ w)
-   (hshort:w+1 ≤ bound) (hchar:bound < p)
-   (htails:∀ j,w < j → j ≤ bound →
+   (hshort:w+1 ≤ bound) (hchar:bound<p)
+   (htails:∀ j,w<j→j ≤ bound →
      jetCoefficient (contactDerivation K F)
        (regularPointValue coefficients F v hF hregular)
        (contactCoordinate K F (1:Fin 4)) j=0):
@@ -108,7 +107,7 @@ theorem coordinate_taylor_eq_reconstruction
  let D:=contactDerivation K F
  let value:=regularPointValue coefficients F v hF hregular
  let P:=reconstructedPolynomial coefficients F v hF hregular w
- have hbound:0 < bound:=by omega
+ have hbound:0<bound:=by omega
  have hfull:jetPolynomial D value bound (contactCoordinate K F (1:Fin 4))=P:=by
    apply jetPolynomial_eq_shorter_of_tails_zero D value (w+1) bound
      (contactCoordinate K F (1:Fin 4)) hshort
@@ -138,17 +137,17 @@ theorem coordinate_taylor_eq_reconstruction
  · exact hdr
  · exact hz
 theorem polynomiality_of_all_tails
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (p bound w:ℕ) [CharP L p] (hw:1 ≤ w)
-   (hshort:w+1 ≤ bound) (hchar:bound < p)
-   (htails:∀ j,w < j → j ≤ bound →
+   (hshort:w+1 ≤ bound) (hchar:bound<p)
+   (htails:∀ j,w<j→j ≤ bound →
      jetCoefficient (contactDerivation K F)
        (regularPointValue coefficients F v hF hregular)
        (contactCoordinate K F (1:Fin 4)) j=0)
-   (hdegree:(reconstructedEquation coefficients F v hF hregular w).natDegree < bound):
+   (hdegree:(reconstructedEquation coefficients F v hF hregular w).natDegree<bound):
    reconstructedEquation coefficients F v hF hregular w=0:=by
  let D:=contactDerivation K F
  let value:=regularPointValue coefficients F v hF hregular
@@ -160,7 +159,7 @@ theorem polynomiality_of_all_tails
      jetPolynomial D value bound (contactCoordinate K F i)=sigmaPolys i:=
    coordinate_taylor_eq_reconstruction coefficients F v hF hregular p bound w
      hw hshort hchar htails
- have hfactorial:∀ j < bound,(j.factorial:L)≠0:=by
+ have hfactorial:∀ j<bound,(j.factorial:L)≠0:=by
    intro j hj
    exact factorial_cast_ne_zero_below_characteristic p j (hj.trans hchar)
  have hdeg:(MvPolynomial.eval₂Hom

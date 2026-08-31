@@ -10,7 +10,7 @@ variable {R M ι:Type*}
 variable [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
 variable [AddCommGroup M] [Module R M] [Fintype ι] [DecidableEq ι]
 private theorem ord_finset_prod
-   (a:ι → R) (ha:∀ i,a i≠0):
+   (a:ι→R) (ha:∀ i,a i≠0):
    Ring.ord R (∏ i,a i)=∑ i,Ring.ord R (a i):=by
  classical
  let s:Finset ι:=Finset.univ
@@ -32,7 +32,7 @@ theorem associated_det_prod_smithRange
    f.finrank_range_of_inj hinj
  let bM:Basis ι R M:=N.smithNormalFormTopBasis b hrank
  let bN:Basis ι R N:=N.smithNormalFormBotBasis b hrank
- let a:ι → R:=N.smithNormalFormCoeffs b hrank
+ let a:ι→R:=N.smithNormalFormCoeffs b hrank
  let eActual:M ≃ₗ[R] N:=LinearEquiv.ofInjective f hinj
  let eSmith:M ≃ₗ[R] N:=bM.equiv bN (Equiv.refl ι)
  let g:M →ₗ[R] M:=N.subtype.comp eSmith.toLinearMap
@@ -71,7 +71,7 @@ theorem length_coker_eq_ord_det
  let N:Submodule R M:=LinearMap.range f
  let hrank:Module.finrank R N=Module.finrank R M:=
    f.finrank_range_of_inj hinj
- let a:ι → R:=N.smithNormalFormCoeffs b hrank
+ let a:ι→R:=N.smithNormalFormCoeffs b hrank
  have ha:∀ i,a i≠0:=fun i => N.smithNormalFormCoeffs_ne_zero b hrank i
  have hdecomp:Module.length R (M ⧸ N)=
      ∑ i,Module.length R (R ⧸ Ideal.span ({a i}:Set R)):=by
@@ -119,9 +119,9 @@ theorem sum_multiplicities_le_ord_toMatrix_det_of_surjective
    {J:Type*} [Fintype J]
    (bM:Basis ι R M) (bN:Basis ι R N)
    (f:M →ₗ[R] N) (hinj:Function.Injective f)
-   (pieces:J → Type*)
+   (pieces:J→Type*)
    [∀ j,AddCommGroup (pieces j)] [∀ j,Module R (pieces j)]
-   (multiplicity:J → ℕ)
+   (multiplicity:J→ℕ)
    (hlength:∀ j,(multiplicity j:ℕ∞) ≤ Module.length R (pieces j))
    (project:(N ⧸ LinearMap.range f) →ₗ[R] (∀ j,pieces j))
    (hsurj:Function.Surjective project):

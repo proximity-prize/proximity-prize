@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 variable {σ R:Type*} [CommRing R] (M:Submonoid R)
@@ -12,7 +11,7 @@ instance isLocalization:IsLocalization (M.map <| C (σ:=σ)) (MvPolynomial σ S)
 lemma isLocalization_C_mk' (a:R) (m:M):
    C (IsLocalization.mk' S a m)=IsLocalization.mk' (MvPolynomial σ S) (C (σ:=σ) a)
      ⟨C m,Submonoid.mem_map_of_mem C m.property⟩:=by
- simp_rw [IsLocalization.eq_mk'_iff_mul_eq,algebraMap_def,map_C, ←map_mul,
+ simp_rw [IsLocalization.eq_mk'_iff_mul_eq,algebraMap_def,map_C,←map_mul,
    IsLocalization.mk'_spec]
 end MvPolynomial
 namespace IsLocalization.Away
@@ -44,7 +43,7 @@ def auxInv:S →+*(MvPolynomial Unit R) ⧸ Ideal.span { C r*MvPolynomial.X ()-1
    simp only [RingHom.coe_comp,Function.comp_apply,g]
    rw [isUnit_iff_exists_inv]
    use (Ideal.Quotient.mk _ <| MvPolynomial.X ())
-   rw [←map_mul, ←map_one (Ideal.Quotient.mk _),Ideal.Quotient.mk_eq_mk_iff_sub_mem]
+   rw [←map_mul,←map_one (Ideal.Quotient.mk _),Ideal.Quotient.mk_eq_mk_iff_sub_mem]
    exact Ideal.mem_span_singleton_self (C r*MvPolynomial.X ()-1)
 private lemma auxHom_auxInv:(auxHom S r).toRingHom.comp (auxInv S r)=RingHom.id S:=by
  apply IsLocalization.ringHom_ext (Submonoid.powers r)
@@ -58,7 +57,7 @@ private lemma auxInv_auxHom:(auxInv S r).comp (auxHom (S:=S) r).toRingHom=RingHo
      Function.comp_apply,auxHom_mk,aeval_X,RingHomCompTriple.comp_eq,invSelf,Away.lift,
      lift_mk'_spec]
    simp only [map_one]
-   rw [←map_one (Ideal.Quotient.mk _), ←map_mul,Ideal.Quotient.mk_eq_mk_iff_sub_mem,
+   rw [←map_one (Ideal.Quotient.mk _),←map_mul,Ideal.Quotient.mk_eq_mk_iff_sub_mem,
      ←Ideal.neg_mem_iff,neg_sub]
    exact Ideal.mem_span_singleton_self (C r*MvPolynomial.X x-1)
 set_option backward.privateInPublic true in

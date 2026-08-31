@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ES
 import ProximityPrize.SubmissionLower.E1
 import ProximityPrize.SubmissionLower.GP
@@ -27,7 +26,7 @@ noncomputable section
 set_option maxHeartbeats 3500000
 set_option maxRecDepth 40000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 variable {pchar:ℕ} [CharP Omega pchar]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
@@ -40,7 +39,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
    (hnodes:S.nodes.card=p.n)
    (hagreement:∀ gamma∈Gamma,
      p.agreements ≤ (S.agreementFiber gamma).card)
-   (hwa:p.w < p.agreements) (_han:p.agreements ≤ p.n)
+   (hwa:p.w<p.agreements) (_han:p.agreements ≤ p.n)
    (hdegreeGlobal:∀ k ≤ p.w,
      (p.n-k)*p.gap*(p.w-k) ≤
        p.degreeIncidence*(p.agreements-k))
@@ -93,7 +92,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
    exact h0.trans (by
      simpa only [aD,ResidualStage.agreementFiber,
        ResidualStage.Agrees] using D.agreement_card gamma hGamma)
- have hda:D.degree < aD:=by
+ have hda:D.degree<aD:=by
    have hD:=D.degree_le
    dsimp only [aD]
    omega
@@ -192,7 +191,7 @@ theorem recursive_scaled_factorYZ_of_adaptive_projection_families
    (hagreement:∀ gamma∈Gamma,
      p.agreements ≤ (S.agreementFiber gamma).card)
    (halign:support.agreementDirection=p.agreementDirection)
-   (hwa:p.w < p.agreements) (han:p.agreements ≤ p.n)
+   (hwa:p.w<p.agreements) (han:p.agreements ≤ p.n)
    (hdegreeGlobal:∀ k ≤ p.w,
      (p.n-k)*p.gap*(p.w-k) ≤
        p.degreeIncidence*(p.agreements-k))

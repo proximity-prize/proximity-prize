@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W5
 import ProximityPrize.SubmissionLower.R5
 import ProximityPrize.SubmissionLower.S5
@@ -58,13 +57,13 @@ theorem finiteNormalization_le_one (ht:v (parameter K L) ≤ 1)
    v (algebraMap (FiniteNormalization K L) L s) ≤ 1:=by
  exact RCN359.integral_le_one (Polynomial K) L v
    (polynomial_le_one K L v ht) s.property
-theorem polynomial_value_of_parameter_gt_one (ht:1 < v (parameter K L))
+theorem polynomial_value_of_parameter_gt_one (ht:1<v (parameter K L))
    (f:Polynomial K) (hf:f≠0):
    v (algebraMap (Polynomial K) L f)=v (parameter K L)^f.natDegree:=by
  rw [←aeval_parameter K L f]
  exact Polynomial.valuation_aeval_eq_valuation_X_pow_natDegree_of_one_lt_valuation_X
    (v:=v) (parameter K L) ht hf
-theorem infinityBase_le_one (ht:1 < v (parameter K L)) (r:InfinityBase K):
+theorem infinityBase_le_one (ht:1<v (parameter K L)) (r:InfinityBase K):
    v (algebraMap (InfinityBase K) L r) ≤ 1:=by
  change v (algebraMap (RatFunc K) L r.val) ≤ 1
  by_cases hr:r.val=0
@@ -85,7 +84,7 @@ theorem infinityBase_le_one (ht:1 < v (parameter K L)) (r:InfinityBase K):
    hnum,hden]
  apply (div_le_one₀ (pow_pos (zero_lt_one.trans ht) _)).mpr
  exact pow_le_pow_right₀ ht.le hdegree
-theorem infiniteNormalization_le_one (ht:1 < v (parameter K L))
+theorem infiniteNormalization_le_one (ht:1<v (parameter K L))
    (s:InfiniteNormalization K L):
    v (algebraMap (InfiniteNormalization K L) L s) ≤ 1:=by
  exact RCN359.integral_le_one (InfinityBase K) L v
@@ -96,7 +95,7 @@ theorem exists_unique_finite_place (hv:Function.Surjective v)
  RCN359.exists_unique_place (FiniteNormalization K L) L v
    (finiteNormalization_le_one K L v ht) hv
 theorem exists_unique_infinite_place (hv:Function.Surjective v)
-   (ht:1 < v (parameter K L)):
+   (ht:1<v (parameter K L)):
    ∃! q:HeightOneSpectrum (InfiniteNormalization K L),v=q.valuation L:=
  RCN359.exists_unique_place (InfiniteNormalization K L) L v
    (infiniteNormalization_le_one K L v ht) hv
@@ -140,9 +139,9 @@ theorem infinitePlace_parameter_value
  simpa [RCN349.infinityPlace] using h.symm
 theorem infinitePlace_parameter_gt_one
    (q:HeightOneSpectrum (InfiniteNormalization K L)):
-   1 < q.valuation L (parameter K L):=by
+   1<q.valuation L (parameter K L):=by
  letI:=infinitePlace_liesOver K L q
- rw [infinitePlace_parameter_value, ←WithZero.exp_zero,WithZero.exp_lt_exp]
+ rw [infinitePlace_parameter_value,←WithZero.exp_zero,WithZero.exp_lt_exp]
  exact_mod_cast Nat.pos_iff_ne_zero.mpr
    (Ideal.IsDedekindDomain.ramificationIdx'_ne_zero_of_liesOver q.asIdeal
      (RCN349.infinityPlace K).ne_bot)
@@ -174,12 +173,12 @@ theorem infinitePlace_trivial
  rw [RCN349.infinityPlace,RCN353.infinity_valuation_eq] at h
  have hC:RatFunc.inftyValuation K (algebraMap K (RatFunc K) c)=1:=
    RatFunc.inftyValuation.C K hc
- rw [hC,one_pow, ←IsScalarTower.algebraMap_apply K (RatFunc K) L] at h
+ rw [hC,one_pow,←IsScalarTower.algebraMap_apply K (RatFunc K) L] at h
  exact h.symm
 abbrev ChartPlace:=
  Sum (HeightOneSpectrum (FiniteNormalization K L))
    (HeightOneSpectrum (InfiniteNormalization K L))
-def chartValuation:ChartPlace K L → Valuation L ℤᵐ⁰:=
+def chartValuation:ChartPlace K L→Valuation L ℤᵐ⁰:=
  Sum.elim (fun p↦p.valuation L) (fun q↦q.valuation L)
 theorem chartValuation_surjective (p:ChartPlace K L):
    Function.Surjective (chartValuation K L p):=by

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X8
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate Matrix
@@ -17,7 +16,7 @@ private theorem natDegree_det_le_of_perm_products_le
    ((Equiv.Perm.sign σ:ℤ):F) (∏ i:ι,M (σ i) i)).trans (h σ)
 theorem bivariate_resultant_natDegree_le_of_coefficient_heights
    (B H:F[X][Y]) (n m:ℕ)
-   (heightB heightH:ℕ → ℕ) (C:ℕ)
+   (heightB heightH:ℕ→ℕ) (C:ℕ)
    (hB:∀ i,(B.coeff i).natDegree ≤ heightB i)
    (hH:∀ i,(H.coeff i).natDegree ≤ heightH i)
    (hassignment:∀ σ:Equiv.Perm (Fin (n+m)),
@@ -125,11 +124,11 @@ theorem bivariate_resultant_natDegree_le_of_coefficient_heights
      _ ≤ C:=hassignment σ hleft_Icc hright_Icc
 theorem bivariate_resultant_natDegree_le_of_sylvester_dual
    (B H:F[X][Y]) (n m:ℕ)
-   (heightB heightH:ℕ → ℕ) (C:ℕ)
+   (heightB heightH:ℕ→ℕ) (C:ℕ)
    (hB:∀ i,(B.coeff i).natDegree ≤ heightB i)
    (hH:∀ i,(H.coeff i).natDegree ≤ heightH i)
-   (rowPotential:Fin (n+m) → ℤ)
-   (leftPotential:Fin n → ℤ) (rightPotential:Fin m → ℤ)
+   (rowPotential:Fin (n+m)→ℤ)
+   (leftPotential:Fin n→ℤ) (rightPotential:Fin m→ℤ)
    (hleft:∀ (row:Fin (n+m)) (j:Fin n),
      (row:ℕ)∈Set.Icc (j:ℕ) ((j:ℕ)+m) →
      (heightH ((row:ℕ)-(j:ℕ)):ℤ) ≤
@@ -311,7 +310,7 @@ theorem potentialBudget (K:ℕ) (hK:1 ≤ K):
        (∑ i∈Finset.range K,(i:ℤ))+K:=by
    rw [Finset.sum_range_succ]
  unfold rowPotential rowPrice scaledColumnPotential surfaceColumnPotential surfaceColumnPrice
- simp only [Finset.sum_sub_distrib, ←Finset.mul_sum,Finset.sum_add_distrib,
+ simp only [Finset.sum_sub_distrib,←Finset.mul_sum,Finset.sum_add_distrib,
    Finset.sum_const,Finset.card_univ,Fintype.card_fin,nsmul_eq_mul]
  rw [hrowBase,hrowTail,hcolumnBase,hcolumnTail,
    hlongDifference,htailDifference]
@@ -356,7 +355,7 @@ private theorem partialBudget_eq_base_add_pairs (K m:ℕ):
  simp only [Finset.sum_add_distrib]
  ring
 theorem pairPotential_nonnegative (K a:ℕ)
-   (ha:a < 25*K+1):0 ≤ pairPotential K a:=by
+   (ha:a<25*K+1):0 ≤ pairPotential K a:=by
  unfold pairPotential rowPrice surfaceColumnPrice
  push_cast
  omega
@@ -481,11 +480,11 @@ theorem resultant_natDegree_le
 end CornerStaircase
 theorem bivariate_resultant_natDegree_le_of_index_sum_height_bound
    (B H:F[X][Y]) (n m:ℕ)
-   (heightB heightH:ℕ → ℕ) (C:ℕ)
+   (heightB heightH:ℕ→ℕ) (C:ℕ)
    (hB:∀ i,(B.coeff i).natDegree ≤ heightB i)
    (hH:∀ i,(H.coeff i).natDegree ≤ heightH i)
-   (htransport:∀ (lidx:Fin n → ℕ) (ridx:Fin m → ℕ),
-     (∀ j,lidx j ≤ m) → (∀ j,ridx j ≤ n) →
+   (htransport:∀ (lidx:Fin n→ℕ) (ridx:Fin m→ℕ),
+     (∀ j,lidx j ≤ m)→(∀ j,ridx j ≤ n) →
      (∑ j:Fin n,lidx j)+(∑ j:Fin m,ridx j)=m*n →
      (∑ j:Fin n,heightH (lidx j))+
        (∑ j:Fin m,heightB (ridx j)) ≤ C):
@@ -493,9 +492,9 @@ theorem bivariate_resultant_natDegree_le_of_index_sum_height_bound
  apply bivariate_resultant_natDegree_le_of_coefficient_heights
    B H n m heightB heightH C hB hH
  intro σ hleft_Icc hright_Icc
- let lidx:Fin n → ℕ:=fun j =>
+ let lidx:Fin n→ℕ:=fun j =>
    ((σ (Fin.castAdd m j):Fin (n+m)):ℕ)-(j:ℕ)
- let ridx:Fin m → ℕ:=fun j =>
+ let ridx:Fin m→ℕ:=fun j =>
    ((σ (Fin.natAdd n j):Fin (n+m)):ℕ)-(j:ℕ)
  have hleft_le (j:Fin n):lidx j ≤ m:=by
    dsimp [lidx]
@@ -576,13 +575,13 @@ theorem bivariate_resultant_natDegree_le_totalDegree
  · have hne (i:Fin (n+m)):M (σ i) i≠0:=by
      intro hi
      exact hzero ⟨i,hi⟩
-   let lidx:Fin n → ℕ:=fun j =>
+   let lidx:Fin n→ℕ:=fun j =>
      ((σ (Fin.castAdd m j):Fin (n+m)):ℕ)-(j:ℕ)
-   let ridx:Fin m → ℕ:=fun j =>
+   let ridx:Fin m→ℕ:=fun j =>
      ((σ (Fin.natAdd n j):Fin (n+m)):ℕ)-(j:ℕ)
-   let ldeg:Fin n → ℕ:=fun j =>
+   let ldeg:Fin n→ℕ:=fun j =>
      (M (σ (Fin.castAdd m j)) (Fin.castAdd m j)).natDegree
-   let rdeg:Fin m → ℕ:=fun j =>
+   let rdeg:Fin m→ℕ:=fun j =>
      (M (σ (Fin.natAdd n j)) (Fin.natAdd n j)).natDegree
    have hleft_Icc (j:Fin n):
        ((σ (Fin.castAdd m j):Fin (n+m)):ℕ)∈

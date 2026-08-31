@@ -36,7 +36,7 @@ theorem exists_multiplier_mem_sup_pow_of_localized_mem
  have hmprod':q (s*x)∈pbar^n:=by
    simpa only [q,map_mul,hs] using hmprod
  have hmapped:q (s*x)∈Ideal.map q (p^n):=by
-   rw [Ideal.map_pow, ←hpbar]
+   rw [Ideal.map_pow,←hpbar]
    exact hmprod'
  have hcomapPow:s*x∈Ideal.comap q (Ideal.map q (p^n)):=hmapped
  rw [Ideal.comap_map_of_surjective q Ideal.Quotient.mk_surjective,

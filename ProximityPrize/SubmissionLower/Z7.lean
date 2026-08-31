@@ -6,8 +6,8 @@ section Multiplicative
 variable {K L σ Γ₀:Type*} [Field K] [Field L] [Fintype σ]
  [LinearOrderedCommGroupWithZero Γ₀]
 theorem valuation_monomial_le (v:Valuation L Γ₀) (coeff:K →+*L)
-   (hcoeff:∀ c:K,v (coeff c) ≤ 1) (x:σ → L)
-   (cap:σ → ℕ) (d:σ →₀ ℕ) (c:K) (hd:∀ i,d i ≤ cap i):
+   (hcoeff:∀ c:K,v (coeff c) ≤ 1) (x:σ→L)
+   (cap:σ→ℕ) (d:σ →₀ ℕ) (c:K) (hd:∀ i,d i ≤ cap i):
    v (MvPolynomial.eval₂Hom coeff x (MvPolynomial.monomial d c)) ≤
      ∏ i,max 1 (v (x i))^cap i:=by
  classical
@@ -24,8 +24,8 @@ theorem valuation_monomial_le (v:Valuation L Γ₀) (coeff:K →+*L)
        (pow_le_pow_right₀ (le_max_left _ _) (hd i))
    _=_:=one_mul _
 theorem valuation_eval_le_box (v:Valuation L Γ₀) (coeff:K →+*L)
-   (hcoeff:∀ c:K,v (coeff c) ≤ 1) (x:σ → L)
-   (cap:σ → ℕ) (F:MvPolynomial σ K)
+   (hcoeff:∀ c:K,v (coeff c) ≤ 1) (x:σ→L)
+   (cap:σ→ℕ) (F:MvPolynomial σ K)
    (hcap:∀ i,F.degreeOf i ≤ cap i):
    v (MvPolynomial.eval₂Hom coeff x F) ≤
      ∏ i,max 1 (v (x i))^cap i:=by
@@ -37,8 +37,8 @@ theorem valuation_eval_le_box (v:Valuation L Γ₀) (coeff:K →+*L)
  intro i
  exact (MvPolynomial.monomial_le_degreeOf i hd).trans (hcap i)
 theorem max_one_valuation_eval_le_box (v:Valuation L Γ₀) (coeff:K →+*L)
-   (hcoeff:∀ c:K,v (coeff c) ≤ 1) (x:σ → L)
-   (cap:σ → ℕ) (F:MvPolynomial σ K)
+   (hcoeff:∀ c:K,v (coeff c) ≤ 1) (x:σ→L)
+   (cap:σ→ℕ) (F:MvPolynomial σ K)
    (hcap:∀ i,F.degreeOf i ≤ cap i):
    max 1 (v (MvPolynomial.eval₂Hom coeff x F)) ≤
      ∏ i,max 1 (v (x i))^cap i:=by
@@ -63,7 +63,7 @@ theorem log_max_one (z:WithZero (Multiplicative ℤ)):
      simpa using (WithZero.log_le_log hz (by simp)).2 h
    simp only [max_eq_left h,WithZero.log_one,max_eq_left hlog]
 theorem log_prod_of_one_le {ι:Type*} (s:Finset ι)
-   (f:ι → WithZero (Multiplicative ℤ)):
+   (f:ι→WithZero (Multiplicative ℤ)):
    (∀ i∈s,1 ≤ f i) →
      (∏ i∈s,f i).log=∑ i∈s,(f i).log:=by
  classical
@@ -82,8 +82,8 @@ theorem log_prod_of_one_le {ι:Type*} (s:Finset ι)
        Finset.sum_insert hi,ih hfs]
 theorem poleOrder_eval_le_box
    (v:Valuation L (WithZero (Multiplicative ℤ))) (coeff:K →+*L)
-   (hcoeff:∀ c:K,v (coeff c) ≤ 1) (x:σ → L)
-   (cap:σ → ℕ) (F:MvPolynomial σ K)
+   (hcoeff:∀ c:K,v (coeff c) ≤ 1) (x:σ→L)
+   (cap:σ→ℕ) (F:MvPolynomial σ K)
    (hcap:∀ i,F.degreeOf i ≤ cap i):
    poleOrder v (MvPolynomial.eval₂Hom coeff x F) ≤
      ∑ i,(cap i:ℤ)*poleOrder v (x i):=by
@@ -100,9 +100,9 @@ theorem poleOrder_eval_le_box
  rw [log_prod_of_one_le Finset.univ _ hfactor] at hlog
  simpa only [WithZero.log_pow,log_max_one,nsmul_eq_mul,poleOrder] using hlog
 theorem weighted_poleOrder_eval_le_box {τ:Type*} (S:Finset τ)
-   (weight:τ → ℕ) (v:τ → Valuation L (WithZero (Multiplicative ℤ)))
+   (weight:τ→ℕ) (v:τ→Valuation L (WithZero (Multiplicative ℤ)))
    (coeff:K →+*L) (hcoeff:∀ t∈S,∀ c:K,v t (coeff c) ≤ 1)
-   (x:σ → L) (cap:σ → ℕ) (F:MvPolynomial σ K)
+   (x:σ→L) (cap:σ→ℕ) (F:MvPolynomial σ K)
    (hcap:∀ i,F.degreeOf i ≤ cap i):
    (∑ t∈S,(weight t:ℤ)*poleOrder (v t) (MvPolynomial.eval₂Hom coeff x F)) ≤
      ∑ i,(cap i:ℤ)*(∑ t∈S,(weight t:ℤ)*poleOrder (v t) (x i)):=by

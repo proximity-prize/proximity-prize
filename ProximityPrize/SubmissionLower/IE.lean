@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CZ
 section ProximityFlatProofPort
 variable (G A A' B:Type*) [Group G] [CommSemiring A] [Semiring B] [Algebra A B]
@@ -20,12 +19,12 @@ theorem of_mulEquiv [hG:IsGaloisGroup G A B] {H:Type*} [Group H]
 variable {G A B} in
 theorem iff_of_mulEquiv {H:Type*} [Group H] [MulSemiringAction H B]
     (e:H ≃*G) (he:∀ h (x:B),e h • x=h • x):
-    IsGaloisGroup H A B ↔ IsGaloisGroup G A B:=by
+    IsGaloisGroup H A B↔IsGaloisGroup G A B:=by
   refine ⟨fun h↦h.of_mulEquiv e.symm fun g x↦?_,fun h↦h.of_mulEquiv e he⟩
   rw [←he,e.apply_symm_apply]
 variable {G A B} in
 @[simp]
-theorem top_iff:IsGaloisGroup (⊤:Subgroup G) A B ↔ IsGaloisGroup G A B:=
+theorem top_iff:IsGaloisGroup (⊤:Subgroup G) A B↔IsGaloisGroup G A B:=
   iff_of_mulEquiv Subgroup.topEquiv fun _ _↦rfl
 instance [IsGaloisGroup G A B]:IsGaloisGroup (⊤:Subgroup G) A B:=
   IsGaloisGroup.top_iff.mpr ‹_›
@@ -52,7 +51,7 @@ theorem of_ringHom_surjective [hG:IsGaloisGroup G A B] [CommSemiring A']
   commutes:=⟨by
     intro g a' b
     obtain ⟨a,rfl⟩:∃ a,e a=a':=he' a'
-    rw [Algebra.smul_def,Algebra.smul_def,he, ←Algebra.smul_def, ←Algebra.smul_def]
+    rw [Algebra.smul_def,Algebra.smul_def,he,←Algebra.smul_def,←Algebra.smul_def]
     exact hG.commutes.smul_comm g a b⟩
   isInvariant:=⟨by
     intro b h

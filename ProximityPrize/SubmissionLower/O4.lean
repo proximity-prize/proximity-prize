@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.GA
 import ProximityPrize.SubmissionLower.AE
 namespace ProximityPrize.SubmissionLower.RCN273
@@ -13,7 +12,7 @@ variable {Ω:Type} [Field Ω] [IsAlgClosed Ω]
 structure ResidualPoleComponentBudget
    (G T H:MvPolynomial (Fin 3) Ω)
    (E:Finset (Fin 3 →₀ ℕ)) (separator:Fin 3) (wholeCost:ℕ) where
- cost:RegularComponent Ω G T H → ℕ
+ cost:RegularComponent Ω G T H→ℕ
  separator_transcendental:∀ C:RegularComponent Ω G T H,
    Transcendental Ω (coordinate Ω C.1 separator)
  pole_le:∀ C:RegularComponent Ω G T H,

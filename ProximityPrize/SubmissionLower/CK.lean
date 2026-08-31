@@ -6,7 +6,7 @@ set_option maxHeartbeats 400000
 variable {K:Type} [Field K] [DecidableEq K]
 theorem sum_pairwise_power_factor_degrees_le
    {I:Type*} [Fintype I]
-   (R:Polynomial K) (q:I → Polynomial K) (multiplicity:I → ℕ)
+   (R:Polynomial K) (q:I→Polynomial K) (multiplicity:I→ℕ)
    (hR:R≠0)
    (hqMonic:∀ i,(q i).Monic)
    (hqCoprime:Pairwise fun i j↦IsCoprime (q i) (q j))
@@ -31,7 +31,7 @@ theorem sum_pairwise_power_factor_degrees_le
  exact Polynomial.natDegree_le_of_dvd hprodDvd hR
 theorem sum_power_factor_degrees_le
    {I:Type*} [Fintype I]
-   (R:Polynomial K) (q:I → Polynomial K) (multiplicity:I → ℕ)
+   (R:Polynomial K) (q:I→Polynomial K) (multiplicity:I→ℕ)
    (hR:R≠0)
    (hqIrreducible:∀ i,Irreducible (q i))
    (hqMonic:∀ i,(q i).Monic)
@@ -51,7 +51,7 @@ theorem sum_power_factor_degrees_le
 theorem sum_power_factor_degrees_le_resultant_bidegree
    {I:Type*} [Fintype I]
    (P Q:Polynomial (Polynomial K)) (m n:ℕ)
-   (q:I → Polynomial K) (multiplicity:I → ℕ)
+   (q:I→Polynomial K) (multiplicity:I→ℕ)
    (hresultant:Polynomial.resultant P Q m n≠0)
    (hqIrreducible:∀ i,Irreducible (q i))
    (hqMonic:∀ i,(q i).Monic)
@@ -67,7 +67,7 @@ theorem sum_power_factor_degrees_le_resultant_bidegree
    (bivariate_resultant_natDegree_le (F:=K) P Q m n)
 theorem sum_grouped_power_factor_degrees_le
    {I:Type*} [Fintype I]
-   (R:Polynomial K) (q:I → Polynomial K) (multiplicity:I → ℕ)
+   (R:Polynomial K) (q:I→Polynomial K) (multiplicity:I→ℕ)
    (hR:R≠0)
    (hqIrreducible:∀ i,Irreducible (q i))
    (hqMonic:∀ i,(q i).Monic)
@@ -76,7 +76,7 @@ theorem sum_grouped_power_factor_degrees_le
    (∑ i,multiplicity i*(q i).natDegree) ≤ R.natDegree:=by
  classical
  let roots:Finset (Polynomial K):=Finset.univ.image q
- let grouped:roots → ℕ:=fun f↦∑ i with q i=f.1,multiplicity i
+ let grouped:roots→ℕ:=fun f↦∑ i with q i=f.1,multiplicity i
  have hrootsMonic:∀ f:roots,f.1.Monic:=by
    intro f
    obtain ⟨i,_,hi⟩:=Finset.mem_image.mp f.2

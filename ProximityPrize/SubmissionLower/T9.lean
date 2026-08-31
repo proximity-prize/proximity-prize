@@ -1,13 +1,12 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HA
 section ProximityFlatProofPort
 open DirectSum
 variable {ι R A σ:Type*}
 section GradedRing
 variable [DecidableEq ι] [AddMonoid ι] [CommSemiring R] [Semiring A] [Algebra R A]
-variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ)
+variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι→σ)
 open DirectSum
-class GradedRing (𝒜:ι → σ) extends SetLike.GradedMonoid 𝒜,DirectSum.Decomposition 𝒜
+class GradedRing (𝒜:ι→σ) extends SetLike.GradedMonoid 𝒜,DirectSum.Decomposition 𝒜
 variable [GradedRing 𝒜]
 namespace DirectSum
 def decomposeRingEquiv:A ≃+*⨁ i,𝒜 i:=
@@ -40,12 +39,12 @@ theorem GradedRing.proj_recompose (a:⨁ i,𝒜 i) (i:ι):
    GradedRing.proj 𝒜 i ((decompose 𝒜).symm a)=(decompose 𝒜).symm (DirectSum.of _ i (a i)):=by
  rw [GradedRing.proj_apply,decompose_symm_of,Equiv.apply_symm_apply]
 theorem GradedRing.mem_support_iff [∀ (i) (x:𝒜 i),Decidable (x≠0)] (r:A) (i:ι):
-   i∈(decompose 𝒜 r).support ↔ GradedRing.proj 𝒜 i r≠0:=
+   i∈(decompose 𝒜 r).support↔GradedRing.proj 𝒜 i r≠0:=
  DFinsupp.mem_support_iff.trans ZeroMemClass.coe_eq_zero.not.symm
 end GradedRing
 section AddCancelMonoid
 open DirectSum
-variable [DecidableEq ι] [Semiring A] [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ)
+variable [DecidableEq ι] [Semiring A] [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι→σ)
 variable {i j:ι}
 namespace DirectSum
 theorem coe_decompose_mul_add_of_left_mem [AddLeftCancelMonoid ι] [GradedRing 𝒜] {a b:A}
@@ -76,7 +75,7 @@ end DirectSum
 end AddCancelMonoid
 section GradedAlgebra
 variable [DecidableEq ι] [AddMonoid ι] [CommSemiring R] [Semiring A] [Algebra R A]
-variable (𝒜:ι → Submodule R A)
+variable (𝒜:ι→Submodule R A)
 abbrev GradedAlgebra:=
  GradedRing 𝒜
 abbrev GradedAlgebra.ofAlgHom [SetLike.GradedMonoid 𝒜] (decompose:A →ₐ[R] ⨁ i,𝒜 i)
@@ -114,7 +113,7 @@ lemma decompose_symm_algebraMap (r:R):
  (decomposeAlgEquiv 𝒜).symm.commutes r
 end DirectSum
 open DirectSum
-def GradedAlgebra.proj (𝒜:ι → Submodule R A) [GradedAlgebra 𝒜] (i:ι):A →ₗ[R] A:=
+def GradedAlgebra.proj (𝒜:ι→Submodule R A) [GradedAlgebra 𝒜] (i:ι):A →ₗ[R] A:=
  (𝒜 i).subtype.comp <| (DFinsupp.lapply i).comp <| (decomposeAlgEquiv 𝒜).toAlgHom.toLinearMap
 @[simp]
 theorem GradedAlgebra.proj_apply (i:ι) (r:A):
@@ -124,14 +123,14 @@ theorem GradedAlgebra.proj_recompose (a:⨁ i,𝒜 i) (i:ι):
    GradedAlgebra.proj 𝒜 i ((decompose 𝒜).symm a)=(decompose 𝒜).symm (of _ i (a i)):=by
  rw [GradedAlgebra.proj_apply,decompose_symm_of,Equiv.apply_symm_apply]
 theorem GradedAlgebra.mem_support_iff [DecidableEq A] (r:A) (i:ι):
-   i∈(decompose 𝒜 r).support ↔ GradedAlgebra.proj 𝒜 i r≠0:=
+   i∈(decompose 𝒜 r).support↔GradedAlgebra.proj 𝒜 i r≠0:=
  DFinsupp.mem_support_iff.trans Submodule.coe_eq_zero.not.symm
 end GradedAlgebra
 section CanonicalOrder
 open SetLike.GradedMonoid DirectSum
 variable [Semiring A] [DecidableEq ι]
 variable [AddCommMonoid ι] [PartialOrder ι] [CanonicallyOrderedAdd ι]
-variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ) [GradedRing 𝒜]
+variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι→σ) [GradedRing 𝒜]
 @[simps]
 def GradedRing.projZeroRingHom:A →+*A where
  toFun a:=decompose 𝒜 a 0
@@ -204,7 +203,7 @@ end CanonicalOrder
 namespace DirectSum.IsInternal
 variable {R:Type*} [CommSemiring R] {A:Type*} [Semiring A] [Algebra R A]
 variable {ι:Type*} [DecidableEq ι] [AddMonoid ι]
-variable {M:ι → Submodule R A} [SetLike.GradedMonoid M]
+variable {M:ι→Submodule R A} [SetLike.GradedMonoid M]
 noncomputable def coeAlgEquiv (hM:DirectSum.IsInternal M):
    (DirectSum ι fun i => ↥(M i)) ≃ₐ[R] A:=
  { RingEquiv.ofBijective (DirectSum.coeAlgHom M) hM with commutes':=fun r => by simp}

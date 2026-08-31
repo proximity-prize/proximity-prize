@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X
 import ProximityPrize.SubmissionLower.Y8
 namespace ProximityPrize.SubmissionLower.RCN035
@@ -69,7 +68,7 @@ theorem element_transcendental_finite_separable_of_differential_ne_zero
 section FiniteFamily
 variable {K:Type*} [Field K] [IsAlgClosed K]
 variable {I:Type*} [Fintype I]
-variable (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+variable (E:I→Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 variable (r z:∀ i,E i)
 variable (W:∀ i,
  Finset (RCN345.NormalizedValuation K (E i)))
@@ -87,11 +86,11 @@ theorem exists_common_exact_finite_separable_affine_adaptive
        (∀ v∈W i,v.val (r i+a • z i)=
          max (v.val (r i)) (v.val (z i))):=by
  let J:=I ⊕ Sigma fun i:I => {v//v∈W i}
- let Bad:J → K → Prop
+ let Bad:J→K→Prop
    | Sum.inl i,a => D K (E i) (r i)+a • D K (E i) (z i)=0
    | Sum.inr iv,a => iv.2.1.val (r iv.1+a • z iv.1) <
        max (iv.2.1.val (r iv.1)) (iv.2.1.val (z iv.1))
- have hsingle:∀ j {a b},Bad j a → Bad j b → a=b:=by
+ have hsingle:∀ j {a b},Bad j a→Bad j b→a=b:=by
    intro j a b ha hb
    rcases j with i | ⟨i,v⟩
    · by_cases hdz:D K (E i) (z i)=0
@@ -126,8 +125,8 @@ theorem exists_common_exact_finite_separable_affine_adaptive
  rw [haz] at hupper
  exact le_antisymm hupper (le_of_not_gt hnotlt)
 theorem exists_common_exact_finite_separable_affine_adaptive_avoiding_one
-   (Extra:K → Prop)
-   (hextra:∀ {a b},Extra a → Extra b → a=b)
+   (Extra:K→Prop)
+   (hextra:∀ {a b},Extra a→Extra b→a=b)
    (base:∀ i,SeparableCoordinate K (E i))
    (hactive:∀ i,D K (E i) (r i)≠0∨D K (E i) (z i)≠0):
    ∃ a:K,a≠0∧¬ Extra a∧∀ i,
@@ -141,13 +140,13 @@ theorem exists_common_exact_finite_separable_affine_adaptive_avoiding_one
        (∀ v∈W i,v.val (r i+a • z i)=
          max (v.val (r i)) (v.val (z i))):=by
  let J:=Unit ⊕ (I ⊕ Sigma fun i:I => {v//v∈W i})
- let Bad:J → K → Prop
+ let Bad:J→K→Prop
    | Sum.inl _,a => Extra a
    | Sum.inr (Sum.inl i),a =>
        D K (E i) (r i)+a • D K (E i) (z i)=0
    | Sum.inr (Sum.inr iv),a => iv.2.1.val (r iv.1+a • z iv.1) <
        max (iv.2.1.val (r iv.1)) (iv.2.1.val (z iv.1))
- have hsingle:∀ j {a b},Bad j a → Bad j b → a=b:=by
+ have hsingle:∀ j {a b},Bad j a→Bad j b→a=b:=by
    intro j a b ha hb
    rcases j with _ | i | ⟨i,v⟩
    · exact hextra ha hb

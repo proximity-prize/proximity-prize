@@ -71,7 +71,7 @@ theorem actualRelationKernel_isMaximal
  exact actualPlaneEvaluation_surjective K order P ht hfinite
 theorem pairwise_coprime_of_injective_maximal_family
    {A I:Type*} [CommRing A]
-   (J:I → Ideal A) (hmax:∀ i,(J i).IsMaximal)
+   (J:I→Ideal A) (hmax:∀ i,(J i).IsMaximal)
    (hinjective:Function.Injective J):
    Pairwise fun i j↦IsCoprime (J i) (J j):=by
  intro i j hij
@@ -79,14 +79,14 @@ theorem pairwise_coprime_of_injective_maximal_family
  exact (hmax i).coprime_of_ne (hmax j) fun heq↦hij (hinjective heq)
 def mappedPrimaryPiece
    {A B I:Type*} [CommRing A] [CommRing B]
-   (f:A →+*B) (relation:I → Ideal A)
-   (surface:B) (multiplicity:I → ℕ) (i:I):Ideal B:=
+   (f:A →+*B) (relation:I→Ideal A)
+   (surface:B) (multiplicity:I→ℕ) (i:I):Ideal B:=
  Ideal.span {surface} ⊔ (Ideal.map f (relation i))^multiplicity i
 theorem mappedPrimaryPiece_pairwise_coprime
    {A B I:Type*} [CommRing A] [CommRing B]
-   (f:A →+*B) (relation:I → Ideal A)
+   (f:A →+*B) (relation:I→Ideal A)
    (hcoprime:Pairwise fun i j↦IsCoprime (relation i) (relation j))
-   (surface:B) (multiplicity:I → ℕ):
+   (surface:B) (multiplicity:I→ℕ):
    Pairwise fun i j↦IsCoprime
      (mappedPrimaryPiece f relation surface multiplicity i)
      (mappedPrimaryPiece f relation surface multiplicity j):=by
@@ -107,8 +107,8 @@ theorem mappedPrimaryPiece_pairwise_coprime
      mappedPrimaryPiece f relation surface multiplicity j).trans le_sup_right)
 theorem span_pair_le_mappedPrimaryPiece
    {A B I:Type*} [CommRing A] [CommRing B]
-   (f:A →+*B) (relation:I → Ideal A)
-   (surface tail:B) (multiplicity:I → ℕ) (i:I)
+   (f:A →+*B) (relation:I→Ideal A)
+   (surface tail:B) (multiplicity:I→ℕ) (i:I)
    (htail:tail∈mappedPrimaryPiece f relation surface multiplicity i):
    Ideal.span {surface,tail} ≤
      mappedPrimaryPiece f relation surface multiplicity i:=by

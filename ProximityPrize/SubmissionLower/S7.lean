@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 noncomputable section
 namespace Polynomial.Bivariate

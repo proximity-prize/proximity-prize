@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D
 namespace ProximityPrize.SubmissionLower.RCN114
 open scoped Classical BigOperators WithZero
@@ -6,7 +5,7 @@ open RCN187 RCN295
 open RCN095
 noncomputable section
 theorem exponent_weight_le_flag_bound
-   (p:FlagDegree) (d:Fin 3 →₀ ℕ) (q:Fin 3 → ℤ)
+   (p:FlagDegree) (d:Fin 3 →₀ ℕ) (q:Fin 3→ℤ)
    (hd:InFlag p d) (hq:∀ i,0 ≤ q i):
    (∑ i,(d i:ℤ)*q i) ≤
      (p.zOnly:ℤ)*q 2+
@@ -64,7 +63,7 @@ theorem exponent_weight_le_flag_bound
    _=_:=rfl
 variable {L:Type*} [Field L]
 theorem exponentSetPoleWeight_flagSupport_le
-   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3 → L)
+   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3→L)
    (p:FlagDegree):
    exponentSetPoleWeight v x (flagSupport p) ≤
      (p.zOnly:ℤ)*poleOrder v (x 2)+
@@ -90,13 +89,13 @@ theorem exponentSetPoleWeight_flagSupport_le
      ((mem_flagSupport_iff p d).mp hd)
      (fun i↦by unfold poleOrder;exact le_max_left _ _)
 theorem exponentPoleWeight_single
-   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3 → L)
+   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3→L)
    (i:Fin 3):
    exponentPoleWeight v x (Finsupp.single i 1)=poleOrder v (x i):=by
  classical
  fin_cases i <;> simp [exponentPoleWeight,Fin.sum_univ_three]
 private theorem poleOrder_le_support_of_mem
-   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3 → L)
+   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3→L)
    (p:FlagDegree) (i:Fin 3)
    (hi:Finsupp.single i 1∈flagSupport p):
    poleOrder v (x i) ≤ exponentSetPoleWeight v x (flagSupport p):=by
@@ -106,7 +105,7 @@ private theorem poleOrder_le_support_of_mem
  exact Finset.mem_insert_of_mem (Finset.mem_image.mpr
    ⟨Finsupp.single i 1,hi,rfl⟩)
 theorem exponentSetPoleWeight_unitZ
-   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3 → L):
+   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3→L):
    exponentSetPoleWeight v x (flagSupport unitZFlag)=poleOrder v (x 2):=by
  apply le_antisymm
  · simpa [unitZFlag] using exponentSetPoleWeight_flagSupport_le v x unitZFlag
@@ -114,7 +113,7 @@ theorem exponentSetPoleWeight_unitZ
    rw [mem_flagSupport_iff]
    simp [InFlag,unitZFlag]
 theorem exponentSetPoleWeight_unitYZ
-   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3 → L):
+   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3→L):
    exponentSetPoleWeight v x (flagSupport unitYZFlag)=
      max (poleOrder v (x 0)) (poleOrder v (x 2)):=by
  apply le_antisymm
@@ -127,7 +126,7 @@ theorem exponentSetPoleWeight_unitYZ
      rw [mem_flagSupport_iff]
      simp [InFlag,unitYZFlag]
 theorem exponentSetPoleWeight_unitAll
-   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3 → L):
+   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3→L):
    exponentSetPoleWeight v x (flagSupport unitAllFlag)=
      max (poleOrder v (x 1))
        (max (poleOrder v (x 0)) (poleOrder v (x 2))):=by
@@ -145,7 +144,7 @@ theorem exponentSetPoleWeight_unitAll
        rw [mem_flagSupport_iff]
        simp [InFlag,unitAllFlag]
 theorem exponentSetPoleWeight_flagSupport_le_three
-   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3 → L)
+   (v:Valuation L (WithZero (Multiplicative ℤ))) (x:Fin 3→L)
    (p:FlagDegree):
    exponentSetPoleWeight v x (flagSupport p) ≤
      (p.zOnly:ℤ)*exponentSetPoleWeight v x (flagSupport unitZFlag)+

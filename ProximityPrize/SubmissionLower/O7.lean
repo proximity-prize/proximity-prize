@@ -17,7 +17,7 @@ theorem radius6630_cell_cross:
      (errors6630+1)*1048576:=by
  norm_num [IRSProfile.Index,errors6630]
 theorem radius6630_gap:
-   131071 < Fintype.card IRSProfile.Index-errors6630:=by
+   131071<Fintype.card IRSProfile.Index-errors6630:=by
  norm_num [IRSProfile.Index,errors6630]
 theorem radius6630_admissible:
    radius6630∈Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance:=by
@@ -28,7 +28,7 @@ theorem two_rpow_one_tenth_le:
  have hroot:
      ((2:ℝ≥0)^(1:ℕ))^((10:ℝ)⁻¹) ≤
        (134:ℝ≥0)/125:=by
-   rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 10)]
+   rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ)<10)]
    norm_num [NNReal.rpow_natCast,div_pow,le_div_iff₀]
  calc
    (2:ℝ≥0)^((1:ℝ)/10)=

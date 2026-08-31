@@ -29,11 +29,11 @@ set_option maxRecDepth 60000
 variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
-variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
+variable {Gamma:Finset K} {x:I→K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
 abbrev fixedSupport:=support 1206 42 10
 abbrev Stage (K I:Type) [Field K]
-   (Gamma:Finset K) (x:I → K) (p:ℕ) [CharP (GenericField K) p]
+   (Gamma:Finset K) (x:I→K) (p:ℕ) [CharP (GenericField K) p]
    (flag:FlagDegree)
    (errorCap:ℕ:=RCN327.errors)
    (stageSupport:RCN275.ResidualSupportParameters:=fixedSupport):=
@@ -46,7 +46,7 @@ structure OriginalData
  factor:MvPolynomial (Fin 4) K
  cofactor:MvPolynomial (Fin 4) K
  irreducible:Irreducible factor
- positive:0 < factor.degreeOf 1+factor.degreeOf 2+factor.degreeOf 3
+ positive:0<factor.degreeOf 1+factor.degreeOf 2+factor.degreeOf 3
  product:S.F=factor*cofactor
  factor_dvd:S.G∣surfaceMap (polynomialEmbedding K) factor
  factor_mem:surfaceMap (polynomialEmbedding K) factor∈C.1
@@ -286,9 +286,9 @@ theorem local_order_tail_dichotomy
  let R:=LocalRing S C
  let D:=localDerivation S C
  let H:R:=localImage S C (polyH K d.factor)
- let N:ℕ → R:=fun j↦localImage S C
+ let N:ℕ→R:=fun j↦localImage S C
    (numerator K d.factor (RCN326.w+1+j))
- let coeff:ℕ → R:=fun j↦
+ let coeff:ℕ→R:=fun j↦
    (2*(RCN326.w+1+j):R)
  letI:IsDomain R:=L.domain C
  letI:IsDiscreteValuationRing R:=L.dvr C

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Q
 import ProximityPrize.SubmissionLower.R
 namespace ProximityPrize.SubmissionLower.RCN175
@@ -10,8 +9,8 @@ set_option maxRecDepth 20000
 abbrev FrozenCoefficientIndex6600:=
  CoefficientIndex weightedCap w seedTotalCap slopeCap
 theorem exists_frozen_nonzero_contact_array6600
-   (u0 u1:IRSProfile.Index → IRSProfile.Field):
-   ∃ theta:FrozenCoefficientIndex6600 → IRSProfile.Field,theta≠0∧
+   (u0 u1:IRSProfile.Index→IRSProfile.Field):
+   ∃ theta:FrozenCoefficientIndex6600→IRSProfile.Field,theta≠0∧
      ∀ (i:IRSProfile.Index) (r:Fin multiplicity),
        contactJet IRSProfile.Field (multiplicity-r.val)
          ((extractBlock IRSProfile.Field weightedCap w seedTotalCap slopeCap
@@ -30,9 +29,9 @@ theorem exists_frozen_nonzero_contact_array6600
    RCN256.blockInputCount,
    RCN256.blockKernelLowerBound] using interpolation_gate
 theorem exists_frozen_nonzero_polynomial_and_equations6600
-   (u0 u1:IRSProfile.Index → IRSProfile.Field):
+   (u0 u1:IRSProfile.Index→IRSProfile.Field):
    ∃ (Q:MvPolynomial (Fin 4) IRSProfile.Field)
-     (theta:FrozenCoefficientIndex6600 → IRSProfile.Field),
+     (theta:FrozenCoefficientIndex6600→IRSProfile.Field),
      Q≠0∧
      Q∈globalCoefficientBox IRSProfile.Field
        weightedCap w seedTotalCap slopeCap∧

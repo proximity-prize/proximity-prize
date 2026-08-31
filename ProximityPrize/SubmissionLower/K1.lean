@@ -18,7 +18,7 @@ set_option maxHeartbeats 2500000
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H:MvPolynomial (Fin 3) Omega}
 variable {A:Type} [Fintype A]
-variable (component:A → RegularComponent Omega G T H)
+variable (component:A→RegularComponent Omega G T H)
 variable (hcomponent:Function.Injective component)
 variable (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
 variable (ht:∀ a:A,Transcendental Omega
@@ -42,7 +42,7 @@ noncomputable def indexedWeightedFlagPlaneChannel_of_fixedFactors
      (letI:Algebra (RatFunc Omega) (CoordinateField Omega (component a).1):=
          flagBaseAlgebra Omega (component a).1 lam mu nu order hx;
        Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega (component a).1)))
-   (multiplicity:A → ℕ)
+   (multiplicity:A→ℕ)
    (resultant:Polynomial (RatFunc Omega)) (budget:ℕ)
    (hresultant:resultant≠0)
    (hdegree:resultant.natDegree ≤ budget)

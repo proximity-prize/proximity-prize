@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 namespace IsDiscreteValuationRing
@@ -9,7 +8,7 @@ variable (A K:Type*) [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] [Fiel
 def maximalIdeal:HeightOneSpectrum A where
  asIdeal:=IsLocalRing.maximalIdeal A
  isPrime:=Ideal.IsMaximal.isPrime (maximalIdeal.isMaximal A)
- ne_bot:=by simpa [ne_eq, ←isField_iff_maximalIdeal_eq] using not_isField A
+ ne_bot:=by simpa [ne_eq,←isField_iff_maximalIdeal_eq] using not_isField A
 instance isRankOneDiscrete:
    IsRankOneDiscrete ((maximalIdeal A).valuation K):=by
  have:Nontrivial (valueGroup
@@ -43,24 +42,24 @@ theorem exists_lift_of_le_one {x:K} (H:((maximalIdeal A).valuation K) x ≤ (1:�
    replace hb:=(mul_mem_nonZeroDivisors.mp hb).2
    rw [mul_comm (w:A) _,map_mul _ (u:A) _,map_mul _ _ (w:A),div_eq_mul_inv,mul_assoc,
      Valuation.map_mul,Integers.one_of_isUnit' u.isUnit (valuation_le_one _),one_mul,
-     mul_inv, ←mul_assoc,Valuation.map_mul,map_mul,map_inv₀,map_inv₀,
-     Integers.one_of_isUnit' w.isUnit (valuation_le_one _),inv_one,mul_one, ←div_eq_mul_inv,
-     ←map_div₀, ←IsFractionRing.mk'_mk_eq_div hb,
+     mul_inv,←mul_assoc,Valuation.map_mul,map_mul,map_inv₀,map_inv₀,
+     Integers.one_of_isUnit' w.isUnit (valuation_le_one _),inv_one,mul_one,←div_eq_mul_inv,
+     ←map_div₀,←IsFractionRing.mk'_mk_eq_div hb,
      valuation_of_mk',map_pow,map_pow] at H
    have h_mn:m ≤ n:=by
      have v_π_lt_one:=(intValuation_lt_one_iff_dvd (maximalIdeal A) π).mpr
          (dvd_of_eq ((irreducible_iff_uniformizer _).mp hπ))
      have v_π_ne_zero:(maximalIdeal A).intValuation π≠0:=intValuation_ne_zero _ _ hπ.ne_zero
      zify
-     rw [←WithZero.coe_one,div_eq_mul_inv, ←zpow_natCast, ←zpow_natCast, ←ofAdd_zero,
-       ←zpow_neg, ←zpow_add₀ v_π_ne_zero, ←sub_eq_add_neg] at H
-     rwa [←sub_nonneg, ←zpow_le_one_iff_right_of_lt_one₀ (zero_lt_iff.mpr v_π_ne_zero)
+     rw [←WithZero.coe_one,div_eq_mul_inv,←zpow_natCast,←zpow_natCast,←ofAdd_zero,
+       ←zpow_neg,←zpow_add₀ v_π_ne_zero,←sub_eq_add_neg] at H
+     rwa [←sub_nonneg,←zpow_le_one_iff_right_of_lt_one₀ (zero_lt_iff.mpr v_π_ne_zero)
        v_π_lt_one]
    use u*π^(n-m)*w.2
    simp only [←h_frac,Units.inv_eq_val_inv,_root_.map_mul,_root_.map_pow,map_units_inv,
      mul_assoc,mul_div_assoc ((algebraMap A _) ↑u) _ _]
    congr 1
-   rw [div_eq_mul_inv,mul_inv,mul_comm ((algebraMap A _) ↑w)⁻¹ _, ←
+   rw [div_eq_mul_inv,mul_inv,mul_comm ((algebraMap A _) ↑w)⁻¹ _,←
      mul_assoc _ _ ((algebraMap A _) ↑w)⁻¹]
    congr
    rw [pow_sub₀ _ _ h_mn]

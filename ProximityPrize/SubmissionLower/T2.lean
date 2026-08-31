@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.IV
 section ProximityFlatProofPort
 open scoped TensorProduct

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DY
 import ProximityPrize.SubmissionLower.D2
 import ProximityPrize.SubmissionLower.AF
@@ -72,8 +71,8 @@ theorem exists_actual_agreement_certificate (φ:Polynomial K →+*Ω)
    (hYR:wt ![0,1,1,0] F ≤ b+s+3)
    (hAll:wt ![0,1,1,1] F ≤ a+b+s+3)
    (d:ℕ) (x u0 u1:K):
-   ∃ (B:Fin (d-1+1) → MvPolynomial (Fin 3) Ω)
-     (c:Fin (d-1+1) → FlagDegree),
+   ∃ (B:Fin (d-1+1)→MvPolynomial (Fin 3) Ω)
+     (c:Fin (d-1+1)→FlagDegree),
      agreementPolynomial φ F d x u0 u1=
        filteredCut (d-1) B (surfaceMap φ (polyH K F)) (surfaceMap φ (polyG K F))∧
      (∀ j,PolynomialInFlag (c j) (B j))∧
@@ -82,7 +81,7 @@ theorem exists_actual_agreement_certificate (φ:Polynomial K →+*Ω)
          center a b s+(d-1) • direction a b s)∧d-1 ≤ d:=by
  classical
  by_cases hd:2 ≤ d
- · let coeffs:ℕ → K:=fun j => (j.factorial:K)⁻¹
+ · let coeffs:ℕ→K:=fun j => (j.factorial:K)⁻¹
    let B0:=fun j => surfaceMap φ (agreementCoefficients F d coeffs x u0 u1 j)
    refine ⟨(fun j => B0 j.val),(fun j => coefficientFlag a (b+1) (s+2) d j.val),?_,?_,?_,Nat.sub_le _ _⟩
    · change surfaceMap φ (agreementNumerator F d coeffs x u0 u1)=_
@@ -113,7 +112,7 @@ theorem exists_actual_agreement_certificate (φ:Polynomial K →+*Ω)
      have:=j.isLt
      omega
    · intro j
-     have hj:j.val < d:=by have:=j.isLt;omega
+     have hj:j.val<d:=by have:=j.isLt;omega
      have h:=coefficientFlag_add_baseMonomial a (b+1) (s+2) d j.val
        (by omega) (by omega) hj
      rw [(shifted_flags a b s).1,(shifted_flags a b s).2.1,

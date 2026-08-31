@@ -7,8 +7,8 @@ def AffineLineGivenSetsBound
    {ι F:Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
    [Field F] [Fintype F] [DecidableEq F]
    (C:LinearCode ι F) (δ:ℝ) (a:ℕ):Prop:=
- ∀ (U:Fin 2 → ι → F) (S:Finset F) (T:F → Finset ι),
-   a < S.card →
+ ∀ (U:Fin 2→ι→F) (S:Finset F) (T:F→Finset ι),
+   a<S.card →
    (∀ z∈S,(T z).card ≥ (Fintype.card ι:ℝ)*(1-δ)) →
    (∀ z∈S,
      LinearCode.projectedWord (fun i => U 0 i+z*U 1 i) (T z)∈
@@ -32,14 +32,14 @@ theorem mcaError_affineLine_le_of_givenSetsBound
      (Finset.univ.filter (fun z:F =>
        IsMCA (AffineLineGenerator F) C z U δ)).card ≤ a by
      by_contra hnot
-     have hlarge:a < (Finset.univ.filter (fun z:F =>
+     have hlarge:a<(Finset.univ.filter (fun z:F =>
          IsMCA (AffineLineGenerator F) C z U δ)).card:=by omega
      let S:Finset F:=Finset.univ.filter (fun z:F =>
        IsMCA (AffineLineGenerator F) C z U δ)
      have hmem (z:F) (hz:z∈S):
          IsMCA (AffineLineGenerator F) C z U δ:=by
        simpa [S] using hz
-     let T:F → Finset ι:=fun z =>
+     let T:F→Finset ι:=fun z =>
        if hz:z∈S then Classical.choose (hmem z hz) else ∅
      have hTspec (z:F) (hz:z∈S):
          (T z).card ≥ (Fintype.card ι:ℝ)*(1-δ)∧
@@ -62,8 +62,8 @@ open Finset
 variable {ι F:Type} [Fintype ι] [DecidableEq ι]
 variable [Field F] [DecidableEq F]
 theorem exists_common_affine_set
-   (U p:Fin 2 → ι → F) (T:Finset F) (A:F → Finset ι) (e:ℕ)
-   (hT:e+1 < T.card)
+   (U p:Fin 2→ι→F) (T:Finset F) (A:F→Finset ι) (e:ℕ)
+   (hT:e+1<T.card)
    (hAcard:∀ z∈T,Fintype.card ι-e ≤ (A z).card)
    (hEq:∀ z∈T,∀ x∈A z,
      U 0 x+z*U 1 x=p 0 x+z*p 1 x):
@@ -71,7 +71,7 @@ theorem exists_common_affine_set
  classical
  let B:Finset ι:=Finset.univ.filter fun x =>
    U 0 x≠p 0 x∨U 1 x≠p 1 x
- let R:F → Finset ι:=fun z => A z ∩ B
+ let R:F→Finset ι:=fun z => A z ∩ B
  have hRsub (z:F):R z ⊆ B:=by
    intro x hx
    exact (Finset.mem_inter.mp hx).2
@@ -109,7 +109,7 @@ theorem exists_common_affine_set
    omega
  have hB:B.card ≤ e:=by
    by_contra hnot
-   have heB:e < B.card:=Nat.lt_of_not_ge hnot
+   have heB:e<B.card:=Nat.lt_of_not_ge hnot
    have hsumLower:T.card*(B.card-e) ≤ ∑ z∈T,(R z).card:=by
      calc
        T.card*(B.card-e)=∑ z∈T,(B.card-e):=by
@@ -127,15 +127,15 @@ theorem exists_common_affine_set
      Finset.card_biUnion hRpair
    rw [hunionCard] at hunionSub
    have hprod:T.card*(B.card-e) ≤ B.card:=hsumLower.trans hunionSub
-   have hdpos:0 < B.card-e:=Nat.sub_pos_of_lt heB
+   have hdpos:0<B.card-e:=Nat.sub_pos_of_lt heB
    have htlo:e+2 ≤ T.card:=by omega
    have he_mul:e ≤ e*(B.card-e):=
      Nat.le_mul_of_pos_right e hdpos
-   have hstrict:B.card < (e+2)*(B.card-e):=by
+   have hstrict:B.card<(e+2)*(B.card-e):=by
      calc
        B.card=e+(B.card-e):=(Nat.add_sub_of_le heB.le).symm
        _ ≤ e*(B.card-e)+(B.card-e):=Nat.add_le_add_right he_mul _
-       _ < e*(B.card-e)+2*(B.card-e):=by omega
+       _<e*(B.card-e)+2*(B.card-e):=by omega
        _=(e+2)*(B.card-e):=by ring
    have hprodLower:(e+2)*(B.card-e) ≤
        T.card*(B.card-e):=Nat.mul_le_mul_right _ htlo
@@ -167,15 +167,15 @@ def AffineLineAlignmentBound
    {ι F:Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
    [Field F] [Fintype F] [DecidableEq F]
    (C:LinearCode ι F) (e a:ℕ):Prop:=
- ∀ (U:Fin 2 → ι → F) (S:Finset F) (A:F → Finset ι),
-   a < S.card →
+ ∀ (U:Fin 2→ι→F) (S:Finset F) (A:F→Finset ι),
+   a<S.card →
    (∀ z∈S,Fintype.card ι-e ≤ (A z).card) →
    (∀ z∈S,
      LinearCode.projectedWord (fun i => U 0 i+z*U 1 i) (A z)∈
        LinearCode.projectedCodeSubmod C (A z)) →
-   ∃ p:Fin 2 → ι → F,
+   ∃ p:Fin 2→ι→F,
      (∀ j,p j∈C)∧
-     ∃ T:Finset F,T ⊆ S∧e+1 < T.card∧
+     ∃ T:Finset F,T ⊆ S∧e+1<T.card∧
        ∀ z∈T,∀ x∈A z,
          U 0 x+z*U 1 x=p 0 x+z*p 1 x
 theorem givenSetsBound_of_alignmentBound

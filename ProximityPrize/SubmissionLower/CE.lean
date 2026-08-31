@@ -7,8 +7,8 @@ def intersectionIdeal (P Q:Polynomial R):Ideal (Polynomial R):=
  Ideal.span {P,Q}
 structure PrimaryPiecesCertificate
    {J:Type*} [Fintype J]
-   (P Q:Polynomial R) (multiplicity:J → ℕ) where
- pieces:J → Ideal (Polynomial R)
+   (P Q:Polynomial R) (multiplicity:J→ℕ) where
+ pieces:J→Ideal (Polynomial R)
  coprime:Pairwise fun i j↦IsCoprime (pieces i) (pieces j)
  contains:∀ j,intersectionIdeal P Q ≤ pieces j
  length_le:∀ j,(multiplicity j:ℕ∞) ≤

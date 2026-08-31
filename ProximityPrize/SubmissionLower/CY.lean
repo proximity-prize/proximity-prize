@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CZ
 section ProximityFlatProofPort
 open scoped Pointwise
@@ -64,7 +63,7 @@ theorem charpoly_mem_lifts [Fintype G] (b:B):
 theorem isIntegral [Finite G]:Algebra.IsIntegral A B:=by
  cases nonempty_fintype G
  refine ⟨fun b↦?_⟩
- obtain ⟨p,hp1, -,hp2⟩:=Polynomial.lifts_and_natDegree_eq_and_monic
+ obtain ⟨p,hp1,-,hp2⟩:=Polynomial.lifts_and_natDegree_eq_and_monic
    (charpoly_mem_lifts A B G b) (monic_charpoly G b)
  exact ⟨p,hp2,by rw [←eval_map,hp1,eval_charpoly]⟩
 theorem exists_smul_of_under_eq [Finite G] [SMulCommClass G A B]
@@ -78,14 +77,14 @@ theorem exists_smul_of_under_eq [Finite G] [SMulCommClass G A B]
    rw [←Ideal.subset_union_prime 1 1 (fun _ _ _ _↦hP.smul _)]
    intro b hb
    suffices h:∃ g∈Finset.univ,g • b∈P by
-     obtain ⟨g, -,hg⟩:=h
+     obtain ⟨g,-,hg⟩:=h
      apply Set.mem_biUnion (Finset.mem_univ g⁻¹) (Ideal.mem_inv_pointwise_smul_iff.mpr hg)
    obtain ⟨a,ha⟩:=isInvariant (A:=A) (∏ g:G,g • b) (Finset.smul_prod_perm b)
-   rw [←hP.prod_mem_iff, ←ha, ←P.mem_comap, ←P.under_def A,
+   rw [←hP.prod_mem_iff,←ha,←P.mem_comap,←P.under_def A,
      hPQ,Q.mem_comap,ha,hQ.prod_mem_iff]
    exact ⟨1,Finset.mem_univ 1,(one_smul G b).symm ▸ hb⟩
- obtain ⟨g, -,hg⟩:=this P Q hPQ
- obtain ⟨g', -,hg'⟩:=this Q (g • P) ((P.under_smul A g).trans hPQ).symm
+ obtain ⟨g,-,hg⟩:=this P Q hPQ
+ obtain ⟨g',-,hg'⟩:=this Q (g • P) ((P.under_smul A g).trans hPQ).symm
  exact ⟨g,le_antisymm hg (smul_eq_of_le_smul (hg.trans hg') ▸ hg')⟩
 theorem orbit_eq_primesOver [Finite G] [SMulCommClass G A B] (P:Ideal A) (Q:Ideal B)
    [hP:Q.LiesOver P] [hQ:Q.IsPrime]:MulAction.orbit G Q=P.primesOver B:=by
@@ -115,7 +114,7 @@ private theorem fixed_of_fixed1_aux1:
    rintro ⟨g,hg1,hg2⟩
    exact (Finset.mem_filter.mp hg1).2 (smul_eq_of_smul_le hg2)
  obtain ⟨b,hbP,hbQ⟩:=SetLike.not_le_iff_exists.mp h1
- replace hbP:∀ g:G,g • Q≠Q → b∈g • Q:=
+ replace hbP:∀ g:G,g • Q≠Q→b∈g • Q:=
    fun g hg↦(Finset.inf_le (Finset.mem_filter.mpr ⟨Finset.mem_univ g,hg⟩):P ≤ g • Q) hbP
  let f:=MulSemiringAction.charpoly G b
  obtain ⟨q,hq,hq0⟩:=
@@ -134,14 +133,14 @@ private theorem fixed_of_fixed1_aux1:
    · rw [map_zero,eq_comm,Polynomial.coeff_eq_zero_of_natDegree_lt (lt_of_not_ge hn)]
  have hf:f.eval b=0:=MulSemiringAction.eval_charpoly G b
  have hr:r.eval b∈Q:=by
-   rw [←Ideal.Quotient.eq_zero_iff_mem, ←Ideal.Quotient.algebraMap_eq] at hbQ ⊢
+   rw [←Ideal.Quotient.eq_zero_iff_mem,←Ideal.Quotient.algebraMap_eq] at hbQ ⊢
    replace hf:=congrArg (algebraMap B (B ⧸ Q)) hf
-   rw [←Polynomial.eval₂_at_apply, ←Polynomial.eval_map] at hf ⊢
-   rwa [map_zero,hq, ←hr,Polynomial.eval_mul,Polynomial.eval_pow,Polynomial.eval_X,
+   rw [←Polynomial.eval₂_at_apply,←Polynomial.eval_map] at hf ⊢
+   rwa [map_zero,hq,←hr,Polynomial.eval_mul,Polynomial.eval_pow,Polynomial.eval_X,
      mul_eq_zero,or_iff_right (pow_ne_zero _ hbQ)] at hf
  let a:=f.coeff j
  have ha:∀ g:G,g • a=a:=MulSemiringAction.smul_coeff_charpoly b j
- have hr':∀ g:G,g • Q≠Q → a-r.eval b∈g • Q:=by
+ have hr':∀ g:G,g • Q≠Q→a-r.eval b∈g • Q:=by
    intro g hg
    have hr:r=∑ i∈Finset.range (k+1),Polynomial.monomial i (f.coeff (i+j)):=rfl
    rw [←Ideal.neg_mem_iff,neg_sub,hr,Finset.sum_range_succ',Polynomial.eval_add,
@@ -150,9 +149,9 @@ private theorem fixed_of_fixed1_aux1:
    rw [←Finset.sum_mul,Polynomial.eval_mul_X]
    exact Ideal.mul_mem_left (g • Q) _ (hbP g hg)
  refine ⟨a,a-r.eval b,ha,?_,fun h↦?_⟩
- · rwa [←Ideal.Quotient.eq_zero_iff_mem, ←Ideal.Quotient.algebraMap_eq, ←Polynomial.coeff_map,
-     ←zero_add j,hq,Polynomial.coeff_X_pow_mul, ←Polynomial.X_dvd_iff]
- · rw [←sub_eq_zero, ←map_sub,Ideal.Quotient.algebraMap_eq,Ideal.Quotient.eq_zero_iff_mem,
+ · rwa [←Ideal.Quotient.eq_zero_iff_mem,←Ideal.Quotient.algebraMap_eq,←Polynomial.coeff_map,
+     ←zero_add j,hq,Polynomial.coeff_X_pow_mul,←Polynomial.X_dvd_iff]
+ · rw [←sub_eq_zero,←map_sub,Ideal.Quotient.algebraMap_eq,Ideal.Quotient.eq_zero_iff_mem,
      ←Ideal.smul_mem_pointwise_smul_iff (a:=h⁻¹),smul_sub,inv_smul_smul]
    simp only [←eq_inv_smul_iff (g:=h),eq_comm (a:=Q)]
    split_ifs with hh
@@ -160,7 +159,7 @@ private theorem fixed_of_fixed1_aux1:
    · rw [smul_zero,sub_zero]
      exact hr' h⁻¹ hh
 private theorem fixed_of_fixed1_aux2 (b₀:B)
-   (hx:∀ g:G,g • Q=Q → algebraMap B (B ⧸ Q) (g • b₀)=algebraMap B (B ⧸ Q) b₀):
+   (hx:∀ g:G,g • Q=Q→algebraMap B (B ⧸ Q) (g • b₀)=algebraMap B (B ⧸ Q) b₀):
    ∃ a b:B,(∀ g:G,g • a=a)∧a∉Q∧
    (∀ g:G,algebraMap B (B ⧸ Q) (g • b)=
      algebraMap B (B ⧸ Q) (if g • Q=Q then a*b₀ else 0)):=by
@@ -194,7 +193,7 @@ private theorem fixed_of_fixed1 [Module.IsTorsionFree (B ⧸ Q) L] (f:Gal(L/K)) 
  obtain ⟨a,b,ha1,ha2,hb⟩:=fixed_of_fixed1_aux2 G Q b₀ (fun g hg↦hx ⟨g,hg⟩)
  obtain ⟨M,key⟩:=(mem_lifts _).mp (Algebra.IsInvariant.charpoly_mem_lifts A B G b)
  replace key:=congrArg (map (algebraMap B (B ⧸ Q))) key
- rw [map_map, ←algebraMap_eq,algebraMap_eq A (A ⧸ P) (B ⧸ Q),
+ rw [map_map,←algebraMap_eq,algebraMap_eq A (A ⧸ P) (B ⧸ Q),
      ←map_map,MulSemiringAction.charpoly,Polynomial.map_prod] at key
  have key₀:∀ g:G,(Polynomial.X-Polynomial.C (g • b)).map (algebraMap B (B ⧸ Q))=
      if g • Q=Q then Polynomial.X-Polynomial.C (algebraMap B (B ⧸ Q) (a*b₀)) else Polynomial.X:=by
@@ -205,7 +204,7 @@ private theorem fixed_of_fixed1 [Module.IsTorsionFree (B ⧸ Q) L] (f:Gal(L/K)) 
    · rw [map_zero,map_zero,sub_zero]
  simp only [key₀,Finset.prod_ite,Finset.prod_const] at key
  replace key:=congrArg (map (algebraMap (B ⧸ Q) L)) key
- rw [map_map, ←algebraMap_eq,algebraMap_eq (A ⧸ P) K L,
+ rw [map_map,←algebraMap_eq,algebraMap_eq (A ⧸ P) K L,
      ←map_map,Polynomial.map_mul,Polynomial.map_pow,Polynomial.map_pow,Polynomial.map_sub,
      map_X,map_C] at key
  replace key:=fixed_of_fixed1_aux3 key f (Finset.card_ne_zero_of_mem
@@ -246,7 +245,7 @@ private theorem fixed_of_fixed2 (f:Gal(L/K)) (x:L)
  replace h:algebraMap (B ⧸ Q) L x/algebraMap (B ⧸ Q) L y=
      algebraMap (B ⧸ Q) L b/algebraMap (A ⧸ P) L a:=by
    rw [mul_comm,Algebra.smul_def,mul_comm] at h
-   rw [div_eq_div_iff hy ha, ←map_mul, ←h,map_mul, ←algebraMap_apply]
+   rw [div_eq_div_iff hy ha,←map_mul,←h,map_mul,←algebraMap_apply]
  simp only [h,map_div₀,algebraMap_apply (A ⧸ P) K L,AlgEquiv.commutes] at hx ⊢
  simp only [←algebraMap_apply,div_left_inj' ha] at hx ⊢
  exact fixed_of_fixed1 G P Q K L f b (fun g↦IsFractionRing.injective (B ⧸ Q) L
@@ -312,14 +311,14 @@ lemma Ideal.Quotient.exists_algHom_fixedPoint_quotient_under
    (IsScalarTower.algebraMap_apply (A ⧸ P) (B ⧸ Q) k (mk P x))
  obtain ⟨P,hp⟩:=Algebra.IsInvariant.charpoly_mem_lifts A B G x
  have:Polynomial.aeval x P=0:=by
-   rw [Polynomial.aeval_def, ←Polynomial.eval_map,
+   rw [Polynomial.aeval_def,←Polynomial.eval_map,
      ←Polynomial.coe_mapRingHom (R:=A),hp,MulSemiringAction.eval_charpoly]
  have:Polynomial.aeval (σ (algebraMap (B ⧸ Q) k (mk _ x))) P=0:=by
    refine (DFunLike.congr_fun (Polynomial.aeval_algHom ((σ.restrictScalars A).comp
      (IsScalarTower.toAlgHom A (B ⧸ Q) k)) _) P).trans ?_
-   rw [AlgHom.comp_apply, ←algebraMap_eq,Polynomial.aeval_algebraMap_apply,this,
+   rw [AlgHom.comp_apply,←algebraMap_eq,Polynomial.aeval_algebraMap_apply,this,
      map_zero,map_zero]
- rw [←Polynomial.aeval_map_algebraMap B, ←Polynomial.coe_mapRingHom,hp] at this
+ rw [←Polynomial.aeval_map_algebraMap B,←Polynomial.coe_mapRingHom,hp] at this
  obtain ⟨τ,hτ⟩:∃ τ:G,σ (algebraMap _ _ x)=algebraMap _ _ (τ • x):=by
    simpa [MulSemiringAction.charpoly,sub_eq_zero,Finset.prod_eq_zero_iff] using! this
  exact ⟨Ideal.Quotient.mk _ (τ • x),hτ.symm⟩
@@ -339,14 +338,14 @@ lemma Ideal.Quotient.exists_algEquiv_fixedPoint_quotient_under
    apply hf
    dsimp [f] at h₁ h₂ ⊢
    refine .trans ?_ (σ.symm_apply_apply _)
-   rw [←h₁, ←e,h₂]
+   rw [←h₁,←e,h₂]
  · intro x
    obtain ⟨x,rfl⟩:=Ideal.Quotient.mk_surjective x
    obtain ⟨y,e⟩:=Ideal.Quotient.mk_surjective (τ₂ (Ideal.Quotient.mk Q x))
    apply hf
    dsimp [f] at h₁ h₂ ⊢
    refine .trans ?_ (σ.apply_symm_apply _)
-   rw [←h₂, ←e,h₁]
+   rw [←h₂,←e,h₁]
 end normal
 namespace IsFractionRing
 variable (G A B K L:Type*) [Group G] [CommRing A] [CommRing B] [Algebra A B] [Field K] [Field L]
@@ -366,9 +365,9 @@ theorem isInvariant_of_isIntegral [Algebra.IsIntegral A B]:Algebra.IsInvariant K
  replace ha:(algebraMap B L) (algebraMap A B a)≠0:=by simpa [←hc]
  have hxy:algebraMap B L x/algebraMap B L y=
    algebraMap B L b/algebraMap B L (algebraMap A B a):=by
-   rw [div_eq_div_iff hy' ha, ←map_mul,hb,map_mul]
+   rw [div_eq_div_iff hy' ha,←map_mul,hb,map_mul]
  obtain ⟨b,rfl⟩:=hAB.isInvariant b
-   (by simpa [ha,hxy,smul_div₀', ←algebraMap.coe_smul'] using h)
+   (by simpa [ha,hxy,smul_div₀',←algebraMap.coe_smul'] using h)
  use algebraMap A K b/algebraMap A K a
  rw [hxy,map_div₀,hc,hc]
 include A B in

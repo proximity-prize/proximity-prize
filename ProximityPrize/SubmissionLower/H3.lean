@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.H4
 namespace ProximityPrize.SubmissionLower.RCN016
 open IsDedekindDomain
@@ -7,7 +6,7 @@ section Fractions
 variable {S L:Type*} [CommRing S] [IsDedekindDomain S] [Field L]
  [Algebra S L] [IsFractionRing S L]
 theorem base_value_lt_one_iff (p:HeightOneSpectrum S) (a:S):
-   p.valuation L (algebraMap S L a) < 1 ↔ a∈p.asIdeal:=by
+   p.valuation L (algebraMap S L a)<1↔a∈p.asIdeal:=by
  rw [HeightOneSpectrum.valuation_of_algebraMap,
    HeightOneSpectrum.intValuation_lt_one_iff_mem]
 theorem denominator_value_one (p:HeightOneSpectrum S) (b:S)
@@ -40,7 +39,7 @@ variable (p:HeightOneSpectrum S) (Φ:B →+*K)
 variable (hker:RingHom.ker (Φ.comp (algebraMap S B))=p.asIdeal)
 include hker in
 theorem base_point_zero_iff (a:S):
-   Φ (algebraMap S B a)=0 ↔ a∈p.asIdeal:=by
+   Φ (algebraMap S B a)=0↔a∈p.asIdeal:=by
  rw [←hker]
  rfl
 include hinj
@@ -48,7 +47,7 @@ theorem lift_multiplication (x:B) (a b:S)
    (h:algebraMap B L x*algebraMap S L a=algebraMap S L b):
    x*algebraMap S B a=algebraMap S B b:=by
  apply hinj
- simpa only [map_mul, ←IsScalarTower.algebraMap_apply S B L] using h
+ simpa only [map_mul,←IsScalarTower.algebraMap_apply S B L] using h
 theorem inverse_fraction (x:B)
    (hx:1 ≤ p.valuation L (algebraMap B L x)):
    ∃ a b:S,b∉p.asIdeal∧
@@ -63,7 +62,7 @@ theorem inverse_fraction (x:B)
    exact inv_le_one_of_one_le₀ hx
  obtain ⟨a,b,hb,hab⟩:=fraction_of_value_le_one p ((algebraMap B L x)⁻¹) hi
  have hmul:algebraMap B L x*algebraMap S L a=algebraMap S L b:=by
-   rw [←hab, ←mul_assoc,mul_inv_cancel₀ hx0,one_mul]
+   rw [←hab,←mul_assoc,mul_inv_cancel₀ hx0,one_mul]
  have hval:p.valuation L (algebraMap S L a)=
      (p.valuation L (algebraMap B L x))⁻¹:=by
    rw [←hab,map_mul,map_inv₀,denominator_value_one p b hb,mul_one]
@@ -72,7 +71,7 @@ include hker in
 theorem overring_value_le_one (x:B):
    p.valuation L (algebraMap B L x) ≤ 1:=by
  by_contra h
- have hx:1 < p.valuation L (algebraMap B L x):=lt_of_not_ge h
+ have hx:1<p.valuation L (algebraMap B L x):=lt_of_not_ge h
  obtain ⟨a,b,hb,hmul,hval⟩:=inverse_fraction hinj p x hx.le
  have ha:a∈p.asIdeal:=(base_value_lt_one_iff p a).mp (by
    rw [hval]
@@ -85,7 +84,7 @@ theorem overring_value_le_one (x:B):
  exact hnonzero heq.symm
 include hker in
 theorem overring_value_lt_one_of_point_zero (x:B) (hzero:Φ x=0):
-   p.valuation L (algebraMap B L x) < 1:=by
+   p.valuation L (algebraMap B L x)<1:=by
  by_contra h
  obtain ⟨a,b,hb,hmul,_⟩:=inverse_fraction hinj p x (le_of_not_gt h)
  have hnonzero:Φ (algebraMap S B b)≠0:=by
@@ -95,9 +94,9 @@ theorem overring_value_lt_one_of_point_zero (x:B) (hzero:Φ x=0):
  exact hnonzero heq.symm
 include hker in
 theorem point_zero_of_overring_value_lt_one (x:B)
-   (hx:p.valuation L (algebraMap B L x) < 1):Φ x=0:=by
+   (hx:p.valuation L (algebraMap B L x)<1):Φ x=0:=by
  obtain ⟨a,b,hb,hab⟩:=fraction_of_value_le_one p (algebraMap B L x) hx.le
- have hval:p.valuation L (algebraMap S L a) < 1:=by
+ have hval:p.valuation L (algebraMap S L a)<1:=by
    rw [←hab,map_mul,denominator_value_one p b hb,mul_one]
    exact hx
  have ha:=(base_value_lt_one_iff p a).mp hval
@@ -109,7 +108,7 @@ theorem point_zero_of_overring_value_lt_one (x:B)
  exact (mul_eq_zero.mp heq).resolve_right hnonzero
 include hker in
 theorem overring_value_lt_one_iff (x:B):
-   p.valuation L (algebraMap B L x) < 1 ↔ Φ x=0:=
+   p.valuation L (algebraMap B L x)<1↔Φ x=0:=
  ⟨point_zero_of_overring_value_lt_one hinj p Φ hker x,
    overring_value_lt_one_of_point_zero hinj p Φ hker x⟩
 include hker in
@@ -119,7 +118,7 @@ theorem overring_zero_order_ge_one (x:B) (hx:x≠0) (hzero:Φ x=0):
    (Valuation.ne_zero_iff _).mpr (by
      simpa only [map_zero] using hinj.ne hx)
  have hvlt:=overring_value_lt_one_of_point_zero hinj p Φ hker x hzero
- have hlog:(p.valuation L (algebraMap B L x)).log < (0:ℤ):=by
+ have hlog:(p.valuation L (algebraMap B L x)).log<(0:ℤ):=by
    simpa using (WithZero.log_lt_log hv0 (by simp)).2 hvlt
  omega
 end Overring

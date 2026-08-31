@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Q
 import ProximityPrize.SubmissionLower.C6
 namespace ProximityPrize.SubmissionLower.RCN319
@@ -8,7 +7,7 @@ open scoped BigOperators
 noncomputable section
 variable (K:Type*) [Field K]
 abbrev LocalPolynomial:=Polynomial (Poly K)
-def translationVariables (x u₀ u₁:K):Fin 4 → LocalPolynomial K:=
+def translationVariables (x u₀ u₁:K):Fin 4→LocalPolynomial K:=
  ![Polynomial.X+Polynomial.C (MvPolynomial.C x),
    Polynomial.X*Polynomial.C (MvPolynomial.X 0)+
      Polynomial.C (seedAffine K u₀ u₁),
@@ -30,7 +29,7 @@ theorem localMonomial_eq (f j z:ℕ):
    localMonomial K f j z=
      MvPolynomial.X 0^f*MvPolynomial.X 1^j*MvPolynomial.X 2^z:=by
  rw [localMonomial,MvPolynomial.monomial_add_single,
-   MvPolynomial.monomial_add_single, ←MvPolynomial.X_pow_eq_monomial]
+   MvPolynomial.monomial_add_single,←MvPolynomial.X_pow_eq_monomial]
 theorem coeff_shifted_affine_product
    {A:Type*} [CommRing A] (x a y b:A) (e i r:ℕ):
    (((Polynomial.X+Polynomial.C x)^e*
@@ -99,7 +98,7 @@ theorem translation_column_coeff (D w L s:ℕ) (x u₀ u₁:K)
    ring
  · simp
 theorem translation_reconstruct_coeff (D w L s:ℕ) (x u₀ u₁:K)
-   (θ:CoefficientIndex D w L s → K) (r:ℕ):
+   (θ:CoefficientIndex D w L s→K) (r:ℕ):
    (homogenizedTranslation K x u₀ u₁ (reconstruct K D w L s θ)).coeff r=
      ((extractBlock K D w L s x u₀ u₁ r θ):Poly K):=by
  rw [reconstruct,map_sum,Polynomial.finsetSum_coeff]
@@ -111,7 +110,7 @@ theorem translation_reconstruct_coeff (D w L s:ℕ) (x u₀ u₁:K)
          coefficientBox K (min r L) L s):Poly K)
  simp [boundedBlockEntry]
 theorem exists_frozen_translated_contact_interpolant
-   (u₀ u₁:IRSProfile.Index → IRSProfile.Field):
+   (u₀ u₁:IRSProfile.Index→IRSProfile.Field):
    ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
      Q≠0∧Q∈globalCoefficientBox IRSProfile.Field 3324960 131071 176 5∧
      ∀ (i:IRSProfile.Index) (r:ℕ),
@@ -136,7 +135,7 @@ def outerEvaluation (R B:Polynomial K) (γ:K):
 theorem contactEvaluation_seedAffine (R B:Polynomial K) (γ u₀ u₁:K):
    contactEvaluation K R B γ (seedAffine K u₀ u₁)=
      Polynomial.C (u₀+γ*u₁):=by
- rw [seedAffine, ←MvPolynomial.C_mul_X_eq_monomial]
+ rw [seedAffine,←MvPolynomial.C_mul_X_eq_monomial]
  simp [contactEvaluation,Polynomial.algebraMap_eq,mul_comm]
 theorem outerEvaluation_contact_dvd
    (H:LocalPolynomial K) (m:ℕ) (R B:Polynomial K) (γ:K)
@@ -214,11 +213,11 @@ theorem X_pow_dvd_taylor_specialization
 theorem specialization_eq_zero_of_contact_and_degree
    [DecidableEq K] {I:Type*} [DecidableEq I]
    (Q:MvPolynomial (Fin 4) K) (P:Polynomial K) (γ:K)
-   (nodes:I ↪ K) (u₀ u₁:I → K) (support:Finset I) (m:ℕ)
+   (nodes:I ↪ K) (u₀ u₁:I→K) (support:Finset I) (m:ℕ)
    (hcontact:∀ i∈support,∀ r:ℕ,slopeDifference K^(m-r)∣
      (homogenizedTranslation K (nodes i) (u₀ i) (u₁ i) Q).coeff r)
    (hvalues:∀ i∈support,P.eval (nodes i)=u₀ i+γ*u₁ i)
-   (hdegree:(specialization K P γ Q).natDegree < m*support.card):
+   (hdegree:(specialization K P γ Q).natDegree<m*support.card):
    specialization K P γ Q=0:=by
  by_contra hnonzero
  have hmult:∀ i∈support,
@@ -244,7 +243,7 @@ theorem monomial_eq (d:Fin 4 →₀ ℕ) (a:K):
    fin_cases i <;> simp
  conv_lhs => rw [hd]
  rw [MvPolynomial.monomial_add_single,MvPolynomial.monomial_add_single,
-   MvPolynomial.monomial_add_single, ←MvPolynomial.C_mul_X_pow_eq_monomial]
+   MvPolynomial.monomial_add_single,←MvPolynomial.C_mul_X_pow_eq_monomial]
 theorem specialization_monomial
    (P:Polynomial K) (γ:K) (d:Fin 4 →₀ ℕ) (a:K):
    specialization K P γ (MvPolynomial.monomial d a)=
@@ -276,12 +275,12 @@ theorem specialization_monomial_natDegree_le
  simpa only [Nat.zero_add,Nat.add_zero,Nat.mul_comm] using hh
 theorem specialization_natDegree_lt
    (D w L s:ℕ) (Q:MvPolynomial (Fin 4) K) (P:Polynomial K) (γ:K)
-   (hD:0 < D) (hcaps:Q∈globalCoefficientBox K D w L s)
+   (hD:0<D) (hcaps:Q∈globalCoefficientBox K D w L s)
    (hP:P.natDegree ≤ w):
-   (specialization K P γ Q).natDegree < D:=by
+   (specialization K P γ Q).natDegree<D:=by
  classical
  have hsupport:∀ d∈Q.support,
-     d 1+d 3 ≤ L∧d 2 ≤ s∧d 0+w*d 1+(w-1)*d 2 < D:=hcaps
+     d 1+d 3 ≤ L∧d 2 ≤ s∧d 0+w*d 1+(w-1)*d 2<D:=hcaps
  have hterms:∀ d∈Q.support,
      (specialization K P γ (MvPolynomial.monomial d (MvPolynomial.coeff d Q))).natDegree ≤
        D-1:=by
@@ -294,12 +293,12 @@ theorem specialization_natDegree_lt
    (fun d => specialization K P γ (MvPolynomial.monomial d (MvPolynomial.coeff d Q))) hterms
  exact lt_of_le_of_lt hh (by omega)
 theorem exists_frozen_universal_vanishing_interpolant
-   (u₀ u₁:IRSProfile.Index → IRSProfile.Field):
+   (u₀ u₁:IRSProfile.Index→IRSProfile.Field):
    ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
      Q≠0∧Q∈globalCoefficientBox IRSProfile.Field 3324960 131071 176 5∧
      ∀ (γ:IRSProfile.Field) (P:Polynomial IRSProfile.Field)
        (support:Finset IRSProfile.Index),
-       P.natDegree ≤ 131071 → 184720 ≤ support.card →
+       P.natDegree ≤ 131071→184720 ≤ support.card →
        (∀ i∈support,P.eval (IRSProfile.domain i)=u₀ i+γ*u₁ i) →
        specialization IRSProfile.Field P γ Q=0:=by
  classical

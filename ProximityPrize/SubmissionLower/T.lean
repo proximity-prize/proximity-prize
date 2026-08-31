@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D9
 namespace ProximityPrize.SubmissionLower.RCN229
 open RCN077 RCN269 RCN233
@@ -67,20 +66,20 @@ theorem polynomialPoint_jetCoefficient_eq_taylor_coeff
        (contactCoordinate K F (1:Fin 4)) j=
      (Polynomial.taylor ξ (P.map coefficients)).coeff j:=by
  rw [polynomialPoint_jetCoefficient_eq coefficients F P γ ξ hsolution hregular j,
-   Polynomial.eval₂_eq_eval_map, ←Polynomial.iterate_derivative_map]
+   Polynomial.eval₂_eq_eval_map,←Polynomial.iterate_derivative_map]
  exact (taylor_coeff_eq_derivative_div_factorial (P.map coefficients) ξ j hfactorial).symm
 theorem reconstructedPolynomial_eq_taylor_of_solution
    (coefficients:K →+*L) (F:Poly4 K) (P:Polynomial K) (γ:K) (ξ:L)
    (hsolution:specialization K P γ F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients (polynomialPoint coefficients P γ ξ)
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (p w:ℕ) [CharP L p] (hchar:w < p) (hdegree:P.natDegree ≤ w):
+   (p w:ℕ) [CharP L p] (hchar:w<p) (hdegree:P.natDegree ≤ w):
    reconstructedPolynomial coefficients F (polynomialPoint coefficients P γ ξ)
      (polynomialPoint_relation coefficients F P γ ξ hsolution) hregular w=
      Polynomial.taylor ξ (P.map coefficients):=by
  ext j
  simp only [reconstructedPolynomial,jetPolynomial_coeff]
- by_cases hj:j < w+1
+ by_cases hj:j<w+1
  · rw [if_pos hj]
    exact polynomialPoint_jetCoefficient_eq_taylor_coeff coefficients F P γ ξ
      hsolution hregular j
@@ -97,7 +96,7 @@ theorem globalPolynomial_eq_map_of_solution
    (hsolution:specialization K P γ F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients (polynomialPoint coefficients P γ ξ)
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (p w:ℕ) [CharP L p] (hchar:w < p) (hdegree:P.natDegree ≤ w):
+   (p w:ℕ) [CharP L p] (hchar:w<p) (hdegree:P.natDegree ≤ w):
    globalPolynomial coefficients F (polynomialPoint coefficients P γ ξ)
      (polynomialPoint_relation coefficients F P γ ξ hsolution) hregular w=
      P.map coefficients:=by
@@ -112,7 +111,7 @@ theorem factorial_agreement_zero_iff_original_agreement
    (hsolution:specialization K P γ F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients (polynomialPoint coefficients P γ ξ)
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (p w:ℕ) [CharP L p] (hchar:w < p) (hdegree:P.natDegree ≤ w)
+   (p w:ℕ) [CharP L p] (hchar:w<p) (hdegree:P.natDegree ≤ w)
    (x u₀ u₁:K):
    MvPolynomial.eval₂Hom coefficients (polynomialPoint coefficients P γ ξ)
        (agreementNumerator F w (fun j:ℕ => (j.factorial:K)⁻¹) x u₀ u₁)=0 ↔
@@ -127,7 +126,7 @@ theorem factorial_agreement_zero_iff_original_agreement
  have hvalue:(P.map coefficients).eval (coefficients x)=coefficients (P.eval x):=by
    rw [←Polynomial.eval₂_eq_eval_map,Polynomial.eval₂_at_apply]
  have hseed:polynomialPoint coefficients P γ ξ (3:Fin 4)=coefficients γ:=rfl
- rw [hvalue,hseed, ←map_mul, ←map_add] at heq
+ rw [hvalue,hseed,←map_mul,←map_add] at heq
  exact heq.trans coefficients.injective.eq_iff
 end
 end ProximityPrize.SubmissionLower.RCN229

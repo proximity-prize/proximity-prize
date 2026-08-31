@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CN
 import ProximityPrize.SubmissionLower.HI
 section ProximityFlatProofPort
@@ -6,7 +5,7 @@ variable {ι:Type*} [DecidableEq ι]
 namespace DirectSum
 open DirectSum
 section Defs
-variable (A:ι → Type*)
+variable (A:ι→Type*)
 class GNonUnitalNonAssocSemiring [Add ι] [∀ i,AddCommMonoid (A i)] extends
  GradedMonoid.GMul A where
  mul_zero:∀ {i j} (a:A i),mul a (0:A j)=0
@@ -15,25 +14,25 @@ class GNonUnitalNonAssocSemiring [Add ι] [∀ i,AddCommMonoid (A i)] extends
  add_mul:∀ {i j} (a b:A i) (c:A j),mul (a+b) c=mul a c+mul b c
 end Defs
 section Defs
-variable (A:ι → Type*)
+variable (A:ι→Type*)
 class GSemiring [AddMonoid ι] [∀ i,AddCommMonoid (A i)] extends GNonUnitalNonAssocSemiring A,
  GradedMonoid.GMonoid A where
- natCast:ℕ → A 0
+ natCast:ℕ→A 0
  natCast_zero:natCast 0=0
  natCast_succ:∀ n:ℕ,natCast (n+1)=natCast n+GradedMonoid.GOne.one
 class GCommSemiring [AddCommMonoid ι] [∀ i,AddCommMonoid (A i)] extends GSemiring A,
  GradedMonoid.GCommMonoid A
 class GRing [AddMonoid ι] [∀ i,AddCommGroup (A i)] extends GSemiring A where
- intCast:ℤ → A 0
+ intCast:ℤ→A 0
  intCast_ofNat:∀ n:ℕ,intCast n=natCast n
  intCast_negSucc_ofNat:∀ n:ℕ,intCast (Int.negSucc n)= -natCast (n+1:ℕ)
 class GCommRing [AddCommMonoid ι] [∀ i,AddCommGroup (A i)] extends GRing A,GCommSemiring A
 end Defs
-theorem of_eq_of_gradedMonoid_eq {A:ι → Type*} [∀ i:ι,AddCommMonoid (A i)] {i j:ι} {a:A i}
+theorem of_eq_of_gradedMonoid_eq {A:ι→Type*} [∀ i:ι,AddCommMonoid (A i)] {i j:ι} {a:A i}
    {b:A j} (h:GradedMonoid.mk i a=GradedMonoid.mk j b):
    DirectSum.of A i a=DirectSum.of A j b:=
  DFinsupp.single_eq_of_sigma_eq h
-variable (A:ι → Type*)
+variable (A:ι→Type*)
 section One
 variable [Zero ι] [GradedMonoid.GOne A] [∀ i,AddCommMonoid (A i)]
 instance:One (⨁ i,A i) where one:=DirectSum.of A 0 GradedMonoid.GOne.one
@@ -117,16 +116,16 @@ theorem ofPow {i} (a:A i) (n:ℕ):
  | succ n n_ih =>
    rw [pow_succ,n_ih,of_mul_of]
    exact of_eq_of_gradedMonoid_eq (pow_succ (GradedMonoid.mk _ a) n).symm
-theorem ofList_dProd {α} (l:List α) (fι:α → ι) (fA:∀ a,A (fι a)):
+theorem ofList_dProd {α} (l:List α) (fι:α→ι) (fA:∀ a,A (fι a)):
    of A _ (l.dProd fι fA)=(l.map fun a => of A (fι a) (fA a)).prod:=by
  induction l with
  | nil => simp only [List.map_nil,List.prod_nil,List.dProd_nil];rfl
  | cons head tail =>
    rename_i ih
-   simp only [List.map_cons,List.prod_cons,List.dProd_cons, ←ih]
+   simp only [List.map_cons,List.prod_cons,List.dProd_cons,←ih]
    rw [DirectSum.of_mul_of (fA head)]
    rfl
-theorem list_prod_ofFn_of_eq_dProd (n:ℕ) (fι:Fin n → ι) (fA:∀ a,A (fι a)):
+theorem list_prod_ofFn_of_eq_dProd (n:ℕ) (fι:Fin n→ι) (fA:∀ a,A (fι a)):
    (List.ofFn fun a => of A (fι a) (fA a)).prod=of A _ ((List.finRange n).dProd fι fA):=by
  rw [List.ofFn_eq_map,ofList_dProd]
 set_option backward.isDefEq.respectTransparency false in

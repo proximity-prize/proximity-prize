@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 namespace RingHom
@@ -68,11 +67,11 @@ theorem RingHom.finite_ofLocalizationSpan:RingHom.OfLocalizationSpan @RingHom.Fi
      (Localization.Away (r:R)) (s₁ r:Set (Localization.Away (f r))) (algebraMap S _ x)
      (by rw [s₂ r];trivial)
  dsimp only at hn₁
- rw [Submonoid.smul_def,Algebra.smul_def,IsScalarTower.algebraMap_apply R S, ←map_mul] at hn₁
+ rw [Submonoid.smul_def,Algebra.smul_def,IsScalarTower.algebraMap_apply R S,←map_mul] at hn₁
  obtain ⟨⟨_,n₂,rfl⟩,hn₂⟩:=
    IsLocalization.smul_mem_finsetIntegerMultiple_span (Submonoid.powers (r:R))
      (Localization.Away (f r)) _ (s₁ r) hn₁
- rw [Submonoid.smul_def, ←Algebra.smul_def,smul_smul, ←pow_add] at hn₂
+ rw [Submonoid.smul_def,←Algebra.smul_def,smul_smul,←pow_add] at hn₂
  simp_rw [Submonoid.map_powers] at hn₂
  use n₂+n₁
  exact le_iSup (fun x:s => Submodule.span R (sf x:Set S)) r hn₂

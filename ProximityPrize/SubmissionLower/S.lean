@@ -16,7 +16,7 @@ theorem maximalIdeal_pow_succ_lt_pow_of_noetherian_domain
  intro heq
  have hfg:(m^n).FG:=IsNoetherian.noetherian _
  have hsmul:m^n ≤ m • (m^n):=by
-   rw [Ideal.smul_eq_mul, ←pow_succ', ←heq]
+   rw [Ideal.smul_eq_mul,←pow_succ',←heq]
  have hzero:m^n=⊥:=
    Submodule.eq_bot_of_le_smul_of_le_jacobson_bot m (m^n) hfg hsmul
      (IsLocalRing.maximalIdeal_le_jacobson ⊥)
@@ -67,7 +67,7 @@ theorem exponent_mul_residueDegree_le_length_quotient_maximal_pow
          (IsLocalRing.ResidueField L):=Module.length_eq_finrank _ _
  have hweighted:((n*Module.finrank (IsLocalRing.ResidueField R)
      (IsLocalRing.ResidueField L):ℕ):ℕ∞) ≤ Module.length R M:=by
-   rw [Nat.cast_mul, ←hresidue,
+   rw [Nat.cast_mul,←hresidue,
      IsLocalRing.length_restrictScalars R L M]
    exact mul_le_mul_right' hlocal _
  let e:=IsLocalization.AtPrime.equivQuotMaximalIdealPow p L n

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AH
 import ProximityPrize.SubmissionLower.M
 namespace ProximityPrize.SubmissionLower.RCN296
@@ -25,7 +24,7 @@ variable [Algebra (Polynomial K) A]
 variable [IsScalarTower K (Polynomial K) A] [IsScalarTower K A L]
 variable [IsScalarTower (Polynomial K) A L]
 theorem finite_model_zero_points_le_exponentSet
-   (x:σ → A) (E:Finset (σ →₀ ℕ))
+   (x:σ→A) (E:Finset (σ →₀ ℕ))
    (F:MvPolynomial σ K) (hFE:F.support ⊆ E)
    (hF:MvPolynomial.eval₂Hom (algebraMap K A) x F≠0)
    (q:ℕ)
@@ -88,7 +87,7 @@ theorem finite_zero_points_le_exponentSet_of_separator
      ∀ W:Finset (Place K (CoordinateField K P)),
        (∑ v∈W,exponentSetPoleWeight v.val (coordinate K P) E) ≤ (q:ℤ))
    (F:MvPolynomial (Fin 3) K) (hFE:F.support ⊆ E) (hF:F∉P)
-   (S:Finset (Fin 3 → K))
+   (S:Finset (Fin 3→K))
    (hSP:∀ v∈S,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hSF:∀ v∈S,MvPolynomial.aeval v F=0):
    S.card ≤ q:=by
@@ -108,7 +107,7 @@ theorem finite_zero_points_le_exponentSet_of_separator
    (hproj i₀ hi₀).1
  letI:Algebra.IsSeparable (RatFunc K) (CoordinateField K P):=
    (hproj i₀ hi₀).2
- let liftPoint:{v:Fin 3 → K//v∈S} →
+ let liftPoint:{v:Fin 3→K//v∈S} →
      (CoordinateRing K P →ₐ[K] K):=
    fun v↦pointHom K P ⟨v.1,hSP v.1 v.2⟩
  have hinj:Function.Injective liftPoint:=by

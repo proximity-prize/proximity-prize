@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BC
 namespace ProximityPrize.SubmissionLower.RCN285
 open scoped BigOperators Pointwise
@@ -83,7 +82,7 @@ def seedlessExponentsEquivIndex (M L s:ℕ):
        rw [lt_min_iff]
        constructor
        · omega
-       · change d.val 1 < L+1-d.val 0
+       · change d.val 1<L+1-d.val 0
          omega⟩⟩
  invFun q:=
    ⟨exponentPair q.1.val q.2.val,by

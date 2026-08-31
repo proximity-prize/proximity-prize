@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AW
 import ProximityPrize.SubmissionLower.G
 namespace ProximityPrize.SubmissionLower.RCN021
@@ -64,13 +63,13 @@ theorem rationalMap_irreducible_of_evaluation
    (coefficientDenominators_disjoint_of_evaluation K L order e G hroot ht)
  have hp':
      (Ideal.span ({rationalMap K order G}:Set (RationalPolynomials K))).IsPrime:=by
-   simpa only [Ideal.map_span,Set.image_singleton, ←rationalMap_eq] using hp
+   simpa only [Ideal.map_span,Set.image_singleton,←rationalMap_eq] using hp
  exact ((Ideal.span_singleton_prime
    (rationalMap_ne_zero K order G hG.ne_zero)).mp hp').irreducible
 theorem rationalMap_dvd_iff_of_evaluation
    (G H:Original K) (hG:Irreducible G) (hroot:e G=0)
    (ht:Transcendental K (e (MvPolynomial.X (order 0)))):
-   rationalMap K order G∣rationalMap K order H ↔ G∣H:=by
+   rationalMap K order G∣rationalMap K order H↔G∣H:=by
  constructor
  · intro hdiv
    have hm:algebraMap (Collected K) (RationalPolynomials K) (collect K order H)∈
@@ -98,7 +97,7 @@ theorem planeMap_irreducible_of_evaluation
 theorem planeMap_dvd_iff_of_evaluation
    (G H:Original K) (hG:Irreducible G) (hroot:e G=0)
    (ht:Transcendental K (e (MvPolynomial.X (order 0)))):
-   planeMap K order G∣planeMap K order H ↔ G∣H:=by
+   planeMap K order G∣planeMap K order H↔G∣H:=by
  constructor
  · rintro ⟨U,hU⟩
    have hrat:rationalMap K order G∣rationalMap K order H:=by
@@ -180,7 +179,7 @@ theorem relationKernel_contract
 end OneEvaluation
 section FixedFamily
 variable (order:Fin 3 ≃ Fin 3) {I:Type} [Fintype I]
-variable (E:I → Type)
+variable (E:I→Type)
 variable [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 variable (e:∀ i,Original K →ₐ[K] E i)
 theorem finite_sum_finrank_bound
@@ -194,7 +193,7 @@ theorem finite_sum_finrank_bound
    (hkernels:Function.Injective (fun i↦RingHom.ker (e i).toRingHom))
    (G H:Original K) (hG:Irreducible G)
    (hGroot:∀ i,e i G=0) (hHroot:∀ i,e i H=0)
-   (hproper:¬ G∣H) (hpositive:0 < (planeMap K order G).natDegree):
+   (hproper:¬ G∣H) (hpositive:0<(planeMap K order G).natDegree):
    letI:∀ i,Algebra (RatFunc K) (E i):=fun i↦
      (elementEmbedding K (E i) (e i (MvPolynomial.X (order 0))) (ht i)).toRingHom.toAlgebra
    (∀ i,FiniteDimensional (RatFunc K) (E i))∧

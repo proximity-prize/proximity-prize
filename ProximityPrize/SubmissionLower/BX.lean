@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HJ
 namespace ProximityPrize.SubmissionLower.RCN173
 theorem enlarge_exempt_card_bound
@@ -26,7 +25,7 @@ theorem enlarge_exempt_card_bound
    omega
 section FiniteIncidence
 variable {Seed Node:Type*} [DecidableEq Seed] [DecidableEq Node]
-variable (relation:Seed → Node → Prop)
+variable (relation:Seed→Node→Prop)
 variable [∀ seed node,Decidable (relation seed node)]
 theorem incidence_after_exempt_nodes
    (seeds:Finset Seed) (nodes identities:Finset Node) (a M:ℕ)
@@ -62,7 +61,7 @@ theorem incidence_after_exempt_nodes
 theorem sharp_incidence_bound
    (seeds:Finset Seed) (nodes identities:Finset Node) (a w M:ℕ)
    (hidentities:identities ⊆ nodes) (hcard:identities.card ≤ w)
-   (hwa:w < a) (han:a ≤ nodes.card)
+   (hwa:w<a) (han:a ≤ nodes.card)
    (hagreement:∀ seed∈seeds,
      a ≤ (nodes.filter (relation seed)).card)
    (hfiber:∀ node∈nodes \ identities,
@@ -74,7 +73,7 @@ theorem sharp_incidence_bound
 theorem card_le_sharp_incidence_quotient
    (seeds:Finset Seed) (nodes identities:Finset Node) (a w M:ℕ)
    (hidentities:identities ⊆ nodes) (hcard:identities.card ≤ w)
-   (hwa:w < a) (han:a ≤ nodes.card)
+   (hwa:w<a) (han:a ≤ nodes.card)
    (hagreement:∀ seed∈seeds,
      a ≤ (nodes.filter (relation seed)).card)
    (hfiber:∀ node∈nodes \ identities,

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T2
 import ProximityPrize.SubmissionLower.IG
 section ProximityFlatProofPort
@@ -25,7 +24,7 @@ lemma KaehlerDifferential.isBaseChange_of_formallyEtale [Algebra.FormallyEtale S
  change Function.Bijective _
  convert! (tensorKaehlerEquivOfFormallyEtale R S T).bijective using 1
  change _=((tensorKaehlerEquivOfFormallyEtale
-   R S T).toLinearMap.restrictScalars S:T ⊗[S] Ω[S⁄R] → _)
+   R S T).toLinearMap.restrictScalars S:T ⊗[S] Ω[S⁄R]→_)
  congr!
  ext
  simp
@@ -83,7 +82,7 @@ def tensorCotangentSpaceOfFormallyEtale
      ext a
      dsimp
      obtain ⟨x,hx⟩:=(tensorKaehlerEquivOfFormallyEtale R P.Ring _).surjective (D R Q.Ring a)
-     simp only [one_smul, ←hx,LinearEquiv.symm_apply_apply]
+     simp only [one_smul,←hx,LinearEquiv.symm_apply_apply]
      change (LinearMap.comp
        (((CotangentSpace.map f).liftBaseChange T).restrictScalars Q.Ring)
        (LinearMap.liftBaseChange _ _)) x=
@@ -130,8 +129,8 @@ def tensorCotangentInvFun
          LinearMap.coe_restrictScalars,Function.comp_apply,mk_apply,smul_eq_mul,e,
          LinearMap.liftBaseChange_tmul,LinearEquiv.ofBijective_apply]
        have h₂:b.1 • Cotangent.mk d=0:=by ext;simp [Cotangent.smul_eq_zero_of_mem _ b.2]
-       rw [TensorProduct.smul_tmul',mul_smul,f.mapKer_apply_coe, ←halg,
-         algebraMap_smul, ←TensorProduct.tmul_smul,h₂,tmul_zero,smul_zero]
+       rw [TensorProduct.smul_tmul',mul_smul,f.mapKer_apply_coe,←halg,
+         algebraMap_smul,←TensorProduct.tmul_smul,h₂,tmul_zero,smul_zero]
 omit [IsScalarTower R S T] in
 lemma tensorCotangentInvFun_smul_mk
    [alg:Algebra P.Ring Q.Ring] (halg:algebraMap P.Ring Q.Ring=f.toRingHom)
@@ -191,7 +190,7 @@ def tensorH1CotangentOfFormallyEtale [alg:Algebra P.Ring Q.Ring]
    apply Module.Flat.lTensor_preserves_injective_linearMap _ h1Cotangentι_injective
    apply (Extension.tensorCotangent f halg H₂).injective
    simp only [map_zero]
-   rw [←h1Cotangentι.map_zero, ←hx]
+   rw [←h1Cotangentι.map_zero,←hx]
    change ((Cotangent.map f).liftBaseChange T ∘ₗ h1Cotangentι.baseChange T) x=
      (LinearMap.comp h1Cotangentι _) x
    congr 1
@@ -202,7 +201,7 @@ def tensorH1CotangentOfFormallyEtale [alg:Algebra P.Ring Q.Ring]
      Module.Flat.lTensor_exact T (LinearMap.exact_subtype_ker_map _)
    obtain ⟨a,ha⟩:=(this ((Extension.tensorCotangent f halg H₂).symm x.1)).mp (by
      apply (Extension.tensorCotangentSpaceOfFormallyEtale f H₁).injective
-     rw [LinearEquiv.map_zero, ←x.2]
+     rw [LinearEquiv.map_zero,←x.2]
      have:(CotangentSpace.map f).liftBaseChange T ∘ₗ P.cotangentComplex.baseChange T=
          Q.cotangentComplex ∘ₗ (Cotangent.map f).liftBaseChange T:=by
        ext x;obtain ⟨x,rfl⟩:=Cotangent.mk_surjective x;dsimp
@@ -272,10 +271,10 @@ def tensorH1CotangentOfIsLocalization (M:Submonoid S) [IsLocalization M T]:
        mul_zero,fQ]
      have:IsLocalization.mk' (Localization M') x ⟨s,hs⟩=
          IsLocalizedModule.mk' (Algebra.linearMap P.Ring (Localization M')) x ⟨s,hs⟩:=by
-       rw [IsLocalization.mk'_eq_iff_eq_mul,mul_comm, ←Algebra.smul_def, ←Submonoid.smul_def,
+       rw [IsLocalization.mk'_eq_iff_eq_mul,mul_comm,←Algebra.smul_def,←Submonoid.smul_def,
          IsLocalizedModule.mk'_cancel']
        rfl
-     simp [this, ←IsScalarTower.algebraMap_apply]
+     simp [this,←IsScalarTower.algebraMap_apply]
    have:F=((LinearEquiv.ofEq _ _ this).restrictScalars P.Ring).toLinearMap ∘ₗ
      P.ker.toLocalized' (Localization M') M' (Algebra.linearMap P.Ring (Localization M')):=by
      ext;rfl
@@ -319,8 +318,8 @@ lemma tensorH1CotangentOfIsLocalization_toLinearMap
      exact DFunLike.congr_fun this}
  rw [←Extension.H1Cotangent.equivOfFormallySmooth_symm,LinearEquiv.symm_apply_eq,
    @Extension.H1Cotangent.equivOfFormallySmooth_apply (f:=f),
-   Algebra.H1Cotangent.map, ←(Extension.H1Cotangent.map f).coe_restrictScalars S,
-   ←LinearMap.comp_apply, ←Extension.H1Cotangent.map_comp,Extension.H1Cotangent.map_eq]
+   Algebra.H1Cotangent.map,←(Extension.H1Cotangent.map f).coe_restrictScalars S,
+   ←LinearMap.comp_apply,←Extension.H1Cotangent.map_comp,Extension.H1Cotangent.map_eq]
 instance H1Cotangent.isLocalizedModule (M:Submonoid S) [IsLocalization M T]:
    IsLocalizedModule M (Algebra.H1Cotangent.map R R S T):=by
  rw [isLocalizedModule_iff_isBaseChange M T]

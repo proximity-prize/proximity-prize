@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I
 namespace ProximityPrize.SubmissionLower.RCN271
 open scoped Classical
@@ -11,7 +10,7 @@ variable {K:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 abbrev Ring3 (K:Type) [Field K]:=MvPolynomial (Fin 3) K
 private theorem eval_eq_of_sub_mem (P:Ideal (Ring3 K))
-   {A B:Ring3 K} (h:A-B∈P) (v:Fin 3 → K)
+   {A B:Ring3 K} (h:A-B∈P) (v:Fin 3→K)
    (hv:P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom):
    MvPolynomial.aeval v A=MvPolynomial.aeval v B:=by
  have hz:=hv h
@@ -20,10 +19,10 @@ private theorem eval_eq_of_sub_mem (P:Ideal (Ring3 K))
  exact sub_eq_zero.mp hz
 def FiniteRegularZeroSetBound (P:Ideal (Ring3 K)) (H A:Ring3 K)
    (cost:ℕ):Prop:=
- ∀ points:Finset (Fin 3 → K),
+ ∀ points:Finset (Fin 3→K),
    (∀ v∈points,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom) →
    (∀ v∈points,MvPolynomial.aeval v H≠0) →
-   (∀ v∈points,MvPolynomial.aeval v A=0) → points.card ≤ cost
+   (∀ v∈points,MvPolynomial.aeval v A=0)→points.card ≤ cost
 theorem FiniteRegularZeroSetBound.of_all_points
    {P:Ideal (Ring3 K)} {H A:Ring3 K} {cost:ℕ}
    (h:FiniteZeroSetBound P A cost):FiniteRegularZeroSetBound P H A cost:=by
@@ -113,8 +112,8 @@ variable {Ω:Type} [Field Ω] [IsAlgClosed Ω]
 local instance:DecidableEq Ω:=Classical.decEq Ω
 theorem agreement_fiber_card_le_of_regular_zero_bound
    (φ:Polynomial K →+*Ω) (P:Ideal (Ring3 Ω))
-   (F:MvPolynomial (Fin 4) K) (selected:K → Polynomial K) (Γ:Finset K)
-   (p w:ℕ) [CharP Ω p] (hchar:w < p)
+   (F:MvPolynomial (Fin 4) K) (selected:K→Polynomial K) (Γ:Finset K)
+   (p w:ℕ) [CharP Ω p] (hchar:w<p)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
    (hregular:∀ γ∈Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B9
 namespace ProximityPrize.SubmissionLower.RCN162
 open scoped Classical
@@ -10,13 +9,13 @@ variable {K:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 abbrev Poly3 (K:Type) [Field K]:=MvPolynomial (Fin 3) K
 def forwardResidualPoint
-   (aY v bY aS bS cS:K) (q:Fin 3 → K):Fin 3 → K:=
+   (aY v bY aS bS cS:K) (q:Fin 3→K):Fin 3→K:=
  ![aY+v*q 0+bY*q 2,
    aS+v*q 1+bS*q 0+cS*q 2,
    q 2]
 theorem eval_residualEquiv
    (aY v bY aS bS cS:K) (hv:v≠0)
-   (q:Fin 3 → K) (F:Poly3 K):
+   (q:Fin 3→K) (F:Poly3 K):
    MvPolynomial.eval q
        (residualEquiv aY v bY aS bS cS hv F)=
      MvPolynomial.eval (forwardResidualPoint aY v bY aS bS cS q) F:=by
@@ -46,7 +45,7 @@ theorem eval_residualEquiv
    _=_:=by rw [hforward]
 theorem comap_pointKernel_residualEquiv
    (aY v bY aS bS cS:K) (hv:v≠0)
-   (q:Fin 3 → K):
+   (q:Fin 3→K):
    (RingHom.ker (MvPolynomial.aeval q).toRingHom).comap
        (residualEquiv aY v bY aS bS cS hv).toRingEquiv.toRingHom=
      RingHom.ker
@@ -60,7 +59,7 @@ theorem comap_pointKernel_residualEquiv
  rw [eval_residualEquiv]
 theorem map_le_pointKernel_iff
    (aY v bY aS bS cS:K) (hv:v≠0)
-   (P:Ideal (Poly3 K)) (q:Fin 3 → K):
+   (P:Ideal (Poly3 K)) (q:Fin 3→K):
    P.map (residualEquiv aY v bY aS bS cS hv).toRingEquiv.toRingHom ≤
        RingHom.ker (MvPolynomial.aeval q).toRingHom ↔
      P ≤ RingHom.ker
@@ -70,7 +69,7 @@ theorem map_le_pointKernel_iff
    comap_pointKernel_residualEquiv aY v bY aS bS cS hv q]
 theorem map_le_pointKernel_of_forward_eq
    (aY v bY aS bS cS:K) (hv:v≠0)
-   (P:Ideal (Poly3 K)) (q qOld:Fin 3 → K)
+   (P:Ideal (Poly3 K)) (q qOld:Fin 3→K)
    (hforward:forwardResidualPoint aY v bY aS bS cS q=qOld)
    (hold:P ≤ RingHom.ker (MvPolynomial.aeval qOld).toRingHom):
    P.map (residualEquiv aY v bY aS bS cS hv).toRingEquiv.toRingHom ≤
@@ -83,7 +82,7 @@ structure RegularPrimeData (G T H:Poly3 K) where
  G_mem:G∈ideal
  T_mem:T∈ideal
  H_not_mem:H∉ideal
- ne_point:∀ q:Fin 3 → K,
+ ne_point:∀ q:Fin 3→K,
    ideal≠RingHom.ker (MvPolynomial.aeval q).toRingHom
 def RegularPrimeData.mulRegularityUnit
    {G T H:Poly3 K} (D:RegularPrimeData G T H)

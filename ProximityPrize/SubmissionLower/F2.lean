@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HX
 section ProximityFlatProofPort
 variable {R:Type*} [CommRing R] (M:Submonoid R) (S:Type*) [CommRing S]
@@ -35,13 +34,13 @@ variable {S}
 theorem surj'' (z:S):∃ (r:R) (m:M),z=r • (toInvSubmonoid M S m:S):=by
  rcases IsLocalization.surj M z with ⟨⟨r,m⟩,e:z*_=algebraMap R S r⟩
  refine ⟨r,m,?_⟩
- rw [Algebra.smul_def, ←e,mul_assoc]
+ rw [Algebra.smul_def,←e,mul_assoc]
  simp
 theorem toInvSubmonoid_eq_mk' (x:M):(toInvSubmonoid M S x:S)=mk' S 1 x:=by
  rw [←(IsLocalization.map_units S x).mul_left_inj]
  simp
 theorem mem_invSubmonoid_iff_exists_mk' (x:S):
-   x∈invSubmonoid M S ↔ ∃ m:M,mk' S 1 m=x:=by
+   x∈invSubmonoid M S↔∃ m:M,mk' S 1 m=x:=by
  simp_rw [←toInvSubmonoid_eq_mk']
  exact ⟨fun h => ⟨_,congr_arg Subtype.val (toInvSubmonoid_surjective M S ⟨x,h⟩).choose_spec⟩,
    fun h => h.choose_spec ▸ (toInvSubmonoid M S h.choose).prop⟩

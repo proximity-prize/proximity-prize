@@ -2,7 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 namespace ProximityPrize.SubmissionLower.RCN213
 open scoped BigOperators
 theorem identity_degree_weight_cross_le
-   (n a w k:ℕ) (hk:k ≤ w) (hwa:w < a) (han:a ≤ n):
+   (n a w k:ℕ) (hk:k ≤ w) (hwa:w<a) (han:a ≤ n):
    (n-k)*(a-w)*(w-k)*a ≤
      n*(a-w)*w*(a-k):=by
  have hka:k ≤ a:=hk.trans hwa.le
@@ -31,7 +31,7 @@ theorem identity_degree_weight_cross_le
      simp only [hsub]
      ring
 theorem identity_unit_weight_le
-   (n a w k:ℕ) (hk:k ≤ w) (hwa:w < a) (han:a ≤ n):
+   (n a w k:ℕ) (hk:k ≤ w) (hwa:w<a) (han:a ≤ n):
    (n-k)*(a-w) ≤ (n-w)*(a-k):=by
  have hka:k ≤ a:=hk.trans hwa.le
  have hkn:k ≤ n:=hka.trans han
@@ -42,13 +42,13 @@ theorem identity_unit_weight_le
  nlinarith [Nat.zero_le (w-k),Nat.zero_le (a-w),Nat.zero_le (n-w)]
 theorem stratified_incidence_linear
    (q n a w k degreeCost unitCost U V:ℕ)
-   (hk:k ≤ w) (hwa:w < a)
+   (hk:k ≤ w) (hwa:w<a)
    (hraw:q*(a-k) ≤
      (n-k)*((w-k)*degreeCost+unitCost))
    (hdegree:(n-k)*(a-w)*(w-k) ≤ U*(a-k))
    (hunit:(n-k)*(a-w) ≤ V*(a-k)):
    q*(a-w) ≤ U*degreeCost+V*unitCost:=by
- have hak:0 < a-k:=by omega
+ have hak:0<a-k:=by omega
  refine Nat.le_of_mul_le_mul_right ?_ hak
  calc
    q*(a-w)*(a-k)=(q*(a-k))*(a-w):=by ring
@@ -81,7 +81,7 @@ theorem degree_part_bound (k:ℕ) (hk:k ≤ w):
    (by norm_num [agreements,n,errors,w])
    (by norm_num [agreements,n,errors])
  have hceil:=degreeIncidence_is_ceiling.2
- have ha:0 < agreements:=by norm_num [agreements,n,errors]
+ have ha:0<agreements:=by norm_num [agreements,n,errors]
  have hmul:=Nat.mul_le_mul_right (agreements-k) hceil
  have htotal:
      ((n-k)*gap*(w-k))*agreements ≤
@@ -162,7 +162,7 @@ theorem gap_squared_exact:gapSquared=2715973225:=by
  norm_num [gapSquared,gap,agreements,n,errors,w]
 theorem ledger_ceiling_exact:ledgerCeiling=123016040356180749:=by
  norm_num [ledgerCeiling,stratified_total_exact,gap_squared_exact]
-theorem strict_budget:stratifiedTotalNumerator < alignmentBudget*gapSquared:=by
+theorem strict_budget:stratifiedTotalNumerator<alignmentBudget*gapSquared:=by
  rw [stratified_total_exact,gap_squared_exact]
  norm_num [alignmentBudget]
 theorem budget_slack:alignmentBudget-ledgerCeiling=14474323699516794:=by

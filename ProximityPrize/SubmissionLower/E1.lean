@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z6
 import ProximityPrize.SubmissionLower.U
 namespace ProximityPrize.SubmissionLower.RCN240
@@ -52,7 +51,7 @@ theorem factorRegularLedgerYZForDirection_projection_decomposition
  ring
 theorem sum_factorRegularLedgerYZForDirection_le_flag
    {I:Type} [Fintype I] (p:Profile) (direction:FlagDegree)
-   (flag:I → FlagDegree) (cap:FlagDegree)
+   (flag:I→FlagDegree) (cap:FlagDegree)
    (hz:(∑ i,(flag i).zOnly) ≤ cap.zOnly)
    (hyz:(∑ i,(flag i).yz) ≤ cap.yz)
    (hall:(∑ i,(flag i).all) ≤ cap.all):
@@ -90,7 +89,7 @@ theorem factorRegularLedgerYZ_projection_decomposition
    p p.agreementDirection flag
 theorem sum_factorRegularLedgerYZ_le_flag
    {I:Type} [Fintype I] (p:Profile)
-   (flag:I → FlagDegree) (cap:FlagDegree)
+   (flag:I→FlagDegree) (cap:FlagDegree)
    (hz:(∑ i,(flag i).zOnly) ≤ cap.zOnly)
    (hyz:(∑ i,(flag i).yz) ≤ cap.yz)
    (hall:(∑ i,(flag i).all) ≤ cap.all):
@@ -100,16 +99,16 @@ theorem sum_factorRegularLedgerYZ_le_flag
    flag cap hz hyz hall
 noncomputable section
 variable {K Omega Iota:Type} [Field K] [Field Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 variable {pchar:ℕ} [CharP Omega pchar] {flag:FlagDegree}
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Iota:=Classical.decEq Iota
 theorem sum_factor_counts_rectangularYZ_le
    (p:Profile) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
-   (hw:0 < p.w)
+   (hw:0<p.w)
    (hbox:Q∈globalCoefficientBox K p.weightedCap p.w
      p.seedTotalCap p.slopeCap)
-   (count:RegularIndex Q → ℕ)
+   (count:RegularIndex Q→ℕ)
    (hcount:∀ F,count F*p.gap^2 ≤
      factorRegularLedgerYZ p (regularFlag Q F)):
    (∑ F,count F)*p.gap^2 ≤ regularNumeratorYZ p:=by
@@ -153,7 +152,7 @@ theorem recursive_scaled_factorYZ
    (p:Profile) (support:ResidualSupportParameters)
    (direction:FlagDegree)
    (S:ResidualStage phi Gamma x pchar p.errors flag p.w support)
-   (hwa:p.w < p.agreements)
+   (hwa:p.w<p.agreements)
    (hagreement:∀ gamma∈Gamma,
      p.agreements ≤ (S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,

@@ -21,14 +21,14 @@ set_option maxHeartbeats 2500000
 variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
-variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
+variable {Gamma:Finset K} {x:I→K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
 variable {errorCap:ℕ}
 variable {stageSupport:RCN275.ResidualSupportParameters}
 variable {A:Type} [Fintype A]
 theorem indexedStageSurface_mem_relation
    (S:Stage K I Gamma x p flag errorCap stageSupport)
-   (component:A → StageComponent S)
+   (component:A→StageComponent S)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3)
    (ht:∀ a:A,Transcendental (GenericField K)
      (flagEvaluation (GenericField K) (component a).1 lam mu nu
@@ -51,7 +51,7 @@ theorem indexedStageSurface_mem_relation
  exact regularComponent_G_mem (GenericField K) S.G _ _ (component a)
 theorem indexedStageTail_mem_relation
    (S:Stage K I Gamma x p flag errorCap stageSupport)
-   (component:A → StageComponent S)
+   (component:A→StageComponent S)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3)
    (ht:∀ a:A,Transcendental (GenericField K)
      (flagEvaluation (GenericField K) (component a).1 lam mu nu
@@ -75,7 +75,7 @@ theorem indexedStageTail_mem_relation
  rw [coordinateEvaluation_ker]
  exact regularComponent_T_mem (GenericField K) S.G tail _ (component a)
 structure IndexedFiberProjectionData
-   (S:Stage K I Gamma x p flag errorCap stageSupport) (component:A → StageComponent S)
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (component:A→StageComponent S)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3)
    (ht:∀ a:A,Transcendental (GenericField K)
      (flagEvaluation (GenericField K) (component a).1 lam mu nu
@@ -95,7 +95,7 @@ structure IndexedFiberProjectionData
      (numerator K S.F (RCN326.w+1))*
        stageFiberScalar S lam mu nu order q hq
 theorem indexedFiberProjectionData
-   (S:Stage K I Gamma x p flag errorCap stageSupport) (component:A → StageComponent S)
+   (S:Stage K I Gamma x p flag errorCap stageSupport) (component:A→StageComponent S)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3)
    (ht:∀ a:A,Transcendental (GenericField K)
      (flagEvaluation (GenericField K) (component a).1 lam mu nu
@@ -138,7 +138,7 @@ theorem indexedFiberProjectionData
        flagEvaluation_kernel_contract]
    change J.comap ((localize.comp plane).comp (surfaceMap phi))=
      componentPrime S (component a.1)
-   rw [←Ideal.comap_comap, ←Ideal.comap_comap,
+   rw [←Ideal.comap_comap,←Ideal.comap_comap,
      indexedFiberRelation_under,hplane]
    rfl
  · change localize (plane (globalTailCut phi S.F

@@ -21,7 +21,7 @@ set_option maxHeartbeats 4000000
 variable {Omega:Type} [Field Omega]
 variable {G T H:MvPolynomial (Fin 3) Omega}
 variable {A:Type} [Fintype A]
-variable (component:A → RegularComponent Omega G T H)
+variable (component:A→RegularComponent Omega G T H)
 variable (hcomponent:Function.Injective component)
 variable (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
 variable (ht:∀ a:A,Transcendental Omega
@@ -51,7 +51,7 @@ theorem indexedFixedFactor_grouped_resultant_power_dvd
          (indexedFiberRelationBar component lam mu nu order ht q hq surface a)))]
    (hbarne:∀ a:IndexedFactorFiber component lam mu nu order ht q,
      indexedFiberRelationBar component lam mu nu order ht q hq surface a≠⊥)
-   (multiplicity:IndexedFactorFiber component lam mu nu order ht q → ℕ)
+   (multiplicity:IndexedFactorFiber component lam mu nu order ht q→ℕ)
    (htail:∀ a,indexedFiberTail q hq tail∈
      Ideal.span {indexedFiberSurface q hq surface} ⊔
        indexedFiberRelation component lam mu nu order ht q hq a^multiplicity a)
@@ -69,7 +69,7 @@ theorem indexedFixedFactor_grouped_resultant_power_dvd
  letI:DecidableEq (RatFunc Omega):=Classical.decEq _
  letI:(Ideal.span {q}).IsPrime:=
    (PrincipalIdealRing.isMaximal_of_irreducible hq).isPrime
- let weight:IndexedFactorFiber component lam mu nu order ht q → ℕ:=fun a =>
+ let weight:IndexedFactorFiber component lam mu nu order ht q→ℕ:=fun a =>
    Module.finrank (IsLocalRing.ResidueField (FiberCoefficient q hq))
      (IsLocalRing.ResidueField (Localization.AtPrime
        (indexedFiberRelationBar component lam mu nu order ht q hq surface a)))
@@ -109,7 +109,7 @@ theorem indexedFixedFactor_grouped_resultant_power_dvd_of_geometry
        (flagEvaluation Omega (component a.1).1 lam mu nu) (ht a.1))
    (hbarne:∀ a:IndexedFactorFiber component lam mu nu order ht q,
      indexedFiberRelationBar component lam mu nu order ht q hq surface a≠⊥)
-   (multiplicity:IndexedFactorFiber component lam mu nu order ht q → ℕ)
+   (multiplicity:IndexedFactorFiber component lam mu nu order ht q→ℕ)
    (htail:∀ a,indexedFiberTail q hq tail∈
      Ideal.span {indexedFiberSurface q hq surface} ⊔
        indexedFiberRelation component lam mu nu order ht q hq a^multiplicity a)

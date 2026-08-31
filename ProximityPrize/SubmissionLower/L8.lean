@@ -53,7 +53,7 @@ theorem targetPrime_contract
    apply DFunLike.ext _ _
    intro a
    rfl
- rw [hcomp, ←Ideal.comap_comap,
+ rw [hcomp,←Ideal.comap_comap,
    Ideal.comap_map_of_surjective' qB Ideal.Quotient.mk_surjective,
    Ideal.mk_ker,
    sup_eq_left.mpr (map_ideal_le_relation I P J hIP hcontract),

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BF
 import ProximityPrize.SubmissionLower.CC
 import ProximityPrize.SubmissionLower.GC
@@ -61,19 +60,19 @@ theorem asymmetric_stage_count_lt_of_regular_factors
    (S:RCN318.TightParameters)
    (Q T:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    (p:ℕ) [CharP K p]
-   (hs:1 ≤ S.s) (hsmall:S.s < p) (hw:1 ≤ S.w)
-   (hchar:S.w < p) (hDw:S.w < S.kappa*S.D)
+   (hs:1 ≤ S.s) (hsmall:S.s<p) (hw:1 ≤ S.w)
+   (hchar:S.w<p) (hDw:S.w<S.kappa*S.D)
    (hj:1 ≤ S.algebraicCap)
-   (hjYSmall:S.implicitYCap < p)
-   (hjZSmall:S.algebraicCap < p)
-   (hmixedSmall:2*S.implicitYCap*S.algebraicCap < p)
-   (hwa:S.w < S.a) (han:S.a ≤ S.n)
+   (hjYSmall:S.implicitYCap<p)
+   (hjZSmall:S.algebraicCap<p)
+   (hmixedSmall:2*S.implicitYCap*S.algebraicCap<p)
+   (hwa:S.w<S.a) (han:S.a ≤ S.n)
    (hbox:Q∈globalCoefficientBox K S.D S.w S.L S.s)
-   (hgap:0 < P.gap) (_hgapEq:S.gap=P.gap)
+   (hgap:0<P.gap) (_hgapEq:S.gap=P.gap)
    (hY:(S.D-1)/S.w ≤ P.leftY)
    (hR:S.s ≤ P.leftR) (hZ:S.L ≤ P.leftZ)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=S.n)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ S.w)
    (hQsolution:∀ gamma∈Gamma,
@@ -88,7 +87,7 @@ theorem asymmetric_stage_count_lt_of_regular_factors
      (regularPairSeeds Q T selected Gamma F).card*P.gap ≤
        (P.n-P.w)*dot P.agreement (regularVector P F.1)+
          (P.errors+1)*P.gap*(regularVector P F.1).z):
-   Gamma.card < P.regularCountCap+S.countCap+1:=by
+   Gamma.card<P.regularCountCap+S.countCap+1:=by
  classical
  have hcover:=card_le_regular_sum_add_singular Q T hQ
    S.D S.w S.L S.s p hs hsmall hw hDw hj hjZSmall hbox
@@ -129,9 +128,9 @@ theorem firstResidualCell_count_lt
      (25*agreements) w 5263 7)
    (hboxB:QB∈globalCoefficientBox IRSProfile.Field
      (47*agreements) w 598 14)
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→Polynomial IRSProfile.Field)
    (Gamma:Finset IRSProfile.Field)
-   (u0 u1:IRSProfile.Index → IRSProfile.Field)
+   (u0 u1:IRSProfile.Index→IRSProfile.Field)
    (hcover:∀ gamma∈Gamma,
      RecursiveSpecializationBranch (selected gamma) gamma QA QB QC)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
@@ -244,9 +243,9 @@ theorem secondResidualCell_count_lt
      (47*agreements) w 598 14)
    (hboxC:QC∈globalCoefficientBox IRSProfile.Field
      (27*agreements) w 579299 6)
-   (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   (selected:IRSProfile.Field→Polynomial IRSProfile.Field)
    (Gamma:Finset IRSProfile.Field)
-   (u0 u1:IRSProfile.Index → IRSProfile.Field)
+   (u0 u1:IRSProfile.Index→IRSProfile.Field)
    (hcover:∀ gamma∈Gamma,
      RecursiveSpecializationBranch (selected gamma) gamma QA QB QC)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AH
 namespace ProximityPrize.SubmissionLower.RCN095
 open scoped BigOperators
@@ -54,7 +53,7 @@ theorem exponentOfTriple_coordinates (y s z:ℕ):
      exponentOfTriple (y,s,z) 2=z:=by
  simp [exponentOfTriple]
 theorem mem_flagSupport_iff (p:FlagDegree) (d:Fin 3 →₀ ℕ):
-   d∈flagSupport p ↔ InFlag p d:=by
+   d∈flagSupport p↔InFlag p d:=by
  classical
  constructor
  · intro hd
@@ -91,12 +90,12 @@ def PolynomialInFlag {K:Type*} [Field K]
  ∀ d∈A.support,InFlag p d
 theorem support_subset_flagSupport_iff {K:Type*} [Field K]
    (p:FlagDegree) (A:MvPolynomial (Fin 3) K):
-   A.support ⊆ flagSupport p ↔ PolynomialInFlag p A:=by
+   A.support ⊆ flagSupport p↔PolynomialInFlag p A:=by
  simp only [PolynomialInFlag,Finset.subset_iff,mem_flagSupport_iff]
-def flagSWeights:Fin 3 → ℕ:=![0,1,0]
-def flagYSWeights:Fin 3 → ℕ:=![1,1,0]
-def flagTotalWeights:Fin 3 → ℕ:=![1,1,1]
-theorem flag_weight_fin3 (weights:Fin 3 → ℕ) (d:Fin 3 →₀ ℕ):
+def flagSWeights:Fin 3→ℕ:=![0,1,0]
+def flagYSWeights:Fin 3→ℕ:=![1,1,0]
+def flagTotalWeights:Fin 3→ℕ:=![1,1,1]
+theorem flag_weight_fin3 (weights:Fin 3→ℕ) (d:Fin 3 →₀ ℕ):
    Finsupp.weight weights d=
      d 0*weights 0+d 1*weights 1+d 2*weights 2:=by
  have hd:d=Finsupp.single 0 (d 0)+Finsupp.single 1 (d 1)+
@@ -218,7 +217,7 @@ theorem flag_budget_slack:
  rw [flag_ledger_ceiling_exact]
  norm_num [legacyAlignmentBudget]
 theorem flag_strict_budget:
-   flagTotalNumerator < legacyAlignmentBudget*legacyGapSquared:=by
+   flagTotalNumerator<legacyAlignmentBudget*legacyGapSquared:=by
  rw [flag_total_numerator_exact]
  norm_num [legacyAlignmentBudget,legacyGapSquared,legacyGap,
    legacyAgreements,legacyN,legacyErrors,legacyW]

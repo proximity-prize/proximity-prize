@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.C
 import ProximityPrize.SubmissionLower.W
 namespace ProximityPrize.SubmissionLower.RCN289
@@ -8,7 +7,7 @@ noncomputable section
 variable {K:Type*} [Field K]
 abbrev Poly4 (K:Type*) [Field K]:=MvPolynomial (Fin 4) K
 theorem polyH_Y_degree_pred_of_mem_box
-   (F:Poly4 K) (D w L s c:ℕ) (hw:0 < w)
+   (F:Poly4 K) (D w L s c:ℕ) (hw:0<w)
    (hD:D ≤ w*c+(w-1))
    (hbox:F∈globalCoefficientBox K D w L s):
    (polyH K F).degreeOf (1:Fin 4) ≤ c-1:=by
@@ -19,22 +18,22 @@ theorem polyH_Y_degree_pred_of_mem_box
  let e:Fin 4 →₀ ℕ:=d+Finsupp.single (2:Fin 4) 1
  have he:e=d+Finsupp.single (2:Fin 4) 1:=rfl
  change e∈F.support at hs
- change e 0+w*e 1+(w-1)*e 2 < D at hc
+ change e 0+w*e 1+(w-1)*e 2<D at hc
  have h0:e (0:Fin 4)=d 0:=by simp [he]
  have h1:e (1:Fin 4)=d 1:=by simp [he]
  have h2:e (2:Fin 4)=d 2+1:=by simp [he]
  rw [h0,h1,h2] at hc
- have hcontact:w*d 1+(w-1) < D:=by
+ have hcontact:w*d 1+(w-1)<D:=by
    have hr:(w-1)*1 ≤ (w-1)*(d 2+1):=
      Nat.mul_le_mul_left (w-1) (by omega)
    calc
      w*d 1+(w-1) ≤
          d 0+w*d 1+(w-1)*(d 2+1):=by omega
-     _ < D:=hc
- have hadd:w*d 1+(w-1) < w*c+(w-1):=
+     _<D:=hc
+ have hadd:w*d 1+(w-1)<w*c+(w-1):=
    hcontact.trans_le hD
- have hmul:w*d 1 < w*c:=Nat.add_lt_add_iff_right.mp hadd
- have hlt:d 1 < c:=(Nat.mul_lt_mul_left hw).mp hmul
+ have hmul:w*d 1<w*c:=Nat.add_lt_add_iff_right.mp hadd
+ have hlt:d 1<c:=(Nat.mul_lt_mul_left hw).mp hmul
  omega
 theorem numeratorStep_Y_degree_bound
    (F M:Poly4 K) (b a c:ℕ) (hc:1 ≤ c)
@@ -120,7 +119,7 @@ theorem commonNumeratorTerm_Y_degree_bound
    (F:Poly4 K) (c:ℕ) (hc:1 ≤ c)
    (hF:F.degreeOf (1:Fin 4) ≤ c)
    (hH:(polyH K F).degreeOf (1:Fin 4) ≤ c-1)
-   (w j:ℕ) (hj:j ≤ w) (coeffs:ℕ → K) (x:K):
+   (w j:ℕ) (hj:j ≤ w) (coeffs:ℕ→K) (x:K):
    (commonNumeratorTerm F w coeffs x j).degreeOf (1:Fin 4) ≤
      1+w*(2*c-1):=by
  have hM:=numerator_Y_degree_bound F c hc hF hH j
@@ -150,7 +149,7 @@ theorem clearedTaylorNumerator_Y_degree_bound
    (F:Poly4 K) (c:ℕ) (hc:1 ≤ c)
    (hF:F.degreeOf (1:Fin 4) ≤ c)
    (hH:(polyH K F).degreeOf (1:Fin 4) ≤ c-1)
-   (w:ℕ) (coeffs:ℕ → K) (x:K):
+   (w:ℕ) (coeffs:ℕ→K) (x:K):
    (clearedTaylorNumerator F w coeffs x).degreeOf (1:Fin 4) ≤
      1+w*(2*c-1):=by
  unfold clearedTaylorNumerator
@@ -162,7 +161,7 @@ theorem agreementNumerator_Y_degree_bound
    (F:Poly4 K) (c:ℕ) (hc:1 ≤ c)
    (hF:F.degreeOf (1:Fin 4) ≤ c)
    (hH:(polyH K F).degreeOf (1:Fin 4) ≤ c-1)
-   (w:ℕ) (coeffs:ℕ → K) (x u₀ u₁:K):
+   (w:ℕ) (coeffs:ℕ→K) (x u₀ u₁:K):
    (agreementNumerator F w coeffs x u₀ u₁).degreeOf (1:Fin 4) ≤
      1+w*(2*c-1):=by
  unfold agreementNumerator
@@ -179,10 +178,10 @@ theorem agreementNumerator_Y_degree_bound
      0+2*w*(c-1) ≤ 1+2*w*(c-1)+w:=by omega
      _=1+w*(2*(c-1)+1):=by ring
 theorem sharp_Y_bounds_of_mem_box
-   (F:Poly4 K) (D w L s c:ℕ) (hw:0 < w) (hc:1 ≤ c)
+   (F:Poly4 K) (D w L s c:ℕ) (hw:0<w) (hc:1 ≤ c)
    (hD:D ≤ w*c+(w-1))
    (hbox:F∈globalCoefficientBox K D w L s)
-   (b t:ℕ) (coeffs:ℕ → K) (x u₀ u₁:K):
+   (b t:ℕ) (coeffs:ℕ→K) (x u₀ u₁:K):
    (numerator K F b).degreeOf (1:Fin 4) ≤ 1+b*(2*c-1)∧
      (agreementNumerator F t coeffs x u₀ u₁).degreeOf (1:Fin 4) ≤
        1+t*(2*c-1):=by
@@ -191,11 +190,11 @@ theorem sharp_Y_bounds_of_mem_box
    apply hY.trans
    apply Nat.le_of_lt_succ
    apply (Nat.div_lt_iff_lt_mul hw).mpr
-   have hwsub:w-1 < w:=Nat.sub_lt hw (by norm_num)
+   have hwsub:w-1<w:=Nat.sub_lt hw (by norm_num)
    calc
      D-1 ≤ D:=Nat.sub_le D 1
      _ ≤ w*c+(w-1):=hD
-     _ < w*c+w:=Nat.add_lt_add_left hwsub _
+     _<w*c+w:=Nat.add_lt_add_left hwsub _
      _=(c+1)*w:=by ring
  have hH:=polyH_Y_degree_pred_of_mem_box F D w L s c hw hD hbox
  exact ⟨numerator_Y_degree_bound F c hc hcapped hH b,

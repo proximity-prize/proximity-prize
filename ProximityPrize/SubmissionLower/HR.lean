@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 open IntermediateField
@@ -49,7 +48,7 @@ instance:OrderBot (FiniteGaloisIntermediateField k K) where
  bot_le _:=bot_le (α:=IntermediateField _ _)
 @[simp]
 lemma le_iff (L₁ L₂:FiniteGaloisIntermediateField k K):
-   L₁ ≤ L₂ ↔ L₁.toIntermediateField ≤ L₂.toIntermediateField:=
+   L₁ ≤ L₂↔L₁.toIntermediateField ≤ L₂.toIntermediateField:=
  Iff.rfl
 variable (k) in
 noncomputable def adjoin [IsGalois k K] (s:Set K) [Finite s]:
@@ -71,7 +70,7 @@ lemma subset_adjoin [IsGalois k K] (s:Set K) [Finite s]:
    s ⊆ (adjoin k s).toIntermediateField:=
  (IntermediateField.subset_adjoin k s).trans (IntermediateField.le_normalClosure _)
 theorem adjoin_simple_le_iff [IsGalois k K] {x:K} {L:FiniteGaloisIntermediateField k K}:
-   adjoin k {x} ≤ L ↔ x∈L.toIntermediateField:=by
+   adjoin k {x} ≤ L↔x∈L.toIntermediateField:=by
  simp only [le_iff,adjoin_val,IntermediateField.normalClosure_le_iff_of_normal,
    IntermediateField.adjoin_le_iff,Set.singleton_subset_iff,SetLike.mem_coe]
 @[simp]
@@ -88,7 +87,7 @@ theorem adjoin_simple_map_algEquiv [IsGalois k K] (f:Gal(K/k)) (x:K):
    adjoin k {f x}=adjoin k {x}:=
  adjoin_simple_map_algHom (f:K →ₐ[k] K) x
 nonrec lemma mem_fixingSubgroup_iff (α:Gal(K/k)) (L:FiniteGaloisIntermediateField k K):
-   α∈L.fixingSubgroup ↔ α.restrictNormalHom L=1:=by
+   α∈L.fixingSubgroup↔α.restrictNormalHom L=1:=by
  simp [IntermediateField.fixingSubgroup,mem_fixingSubgroup_iff,AlgEquiv.ext_iff,Subtype.ext_iff,
    AlgEquiv.restrictNormalHom_apply]
 end FiniteGaloisIntermediateField

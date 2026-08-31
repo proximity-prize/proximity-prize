@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CR
 section ProximityFlatProofPort
 variable {R S:Type*} [CommSemiring R] [CommSemiring S] [Algebra R S]
@@ -14,7 +13,7 @@ lemma prodMap {M N M' N':Type*}
  intro p
  simp [equiv_tmul]
 lemma pi {ι:Type*} [Finite ι]
-   {M M':ι → Type*} [∀ i,AddCommMonoid (M i)] [∀ i,AddCommMonoid (M' i)]
+   {M M':ι→Type*} [∀ i,AddCommMonoid (M i)] [∀ i,AddCommMonoid (M' i)]
    [∀ i,Module R (M i)] [∀ i,Module R (M' i)] [∀ i,Module S (M' i)]
    [∀ i,IsScalarTower R S (M' i)]
    (f:∀ i,M i →ₗ[R] M' i) (hf:∀ i,IsBaseChange S (f i)):
@@ -51,7 +50,7 @@ instance prodMap {M N M' N':Type*}
  · rw [←isLocalizedModule_iff_isBaseChange S]
    infer_instance
 instance pi {ι:Type*} [Finite ι]
-   {M M':ι → Type*} [∀ i,AddCommMonoid (M i)] [∀ i,AddCommMonoid (M' i)]
+   {M M':ι→Type*} [∀ i,AddCommMonoid (M i)] [∀ i,AddCommMonoid (M' i)]
    [∀ i,Module R (M i)] [∀ i,Module R (M' i)]
    (f:∀ i,M i →ₗ[R] M' i) [∀ i,IsLocalizedModule S (f i)]:
    IsLocalizedModule S (.pi fun i↦f i ∘ₗ .proj i):=by
@@ -66,10 +65,10 @@ namespace IsBaseChange
 section DirectSum
 open TensorProduct LinearMap DirectSum
 variable {ι:Type*}
-   {N:ι → Type*} [(i:ι) → AddCommMonoid (N i)] [(i:ι) → Module R (N i)]
-   {P:ι → Type*} [∀ i,AddCommMonoid (P i)] [∀ i,Module R (P i)]
+   {N:ι→Type*} [(i:ι)→AddCommMonoid (N i)] [(i:ι)→Module R (N i)]
+   {P:ι→Type*} [∀ i,AddCommMonoid (P i)] [∀ i,Module R (P i)]
    [∀ i,Module S (P i)] [∀ i,IsScalarTower R S (P i)]
-   {ε:(i:ι) → N i →ₗ[R] P i}
+   {ε:(i:ι)→N i →ₗ[R] P i}
 theorem directSum (ibc:∀ i,IsBaseChange S (ε i)):
    IsBaseChange S (lmap ε):=by
  classical

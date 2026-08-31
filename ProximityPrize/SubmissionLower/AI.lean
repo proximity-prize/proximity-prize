@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Q
 namespace ProximityPrize.SubmissionLower.RCN301
 open RCN174 RCN256
@@ -117,24 +116,24 @@ theorem profileC_values:
    profileC_localRank_exact]
  norm_num [n]
 theorem interpolation_gates:
-     profileA.totalRank < profileA.coefficients∧
-     profileB.totalRank < profileB.coefficients∧
-     profileC.totalRank < profileC.coefficients:=by
+     profileA.totalRank<profileA.coefficients∧
+     profileB.totalRank<profileB.coefficients∧
+     profileC.totalRank<profileC.coefficients:=by
  simp only [Profile.totalRank]
  rw [profileA_coefficients_exact,profileA_localRank_exact,
    profileB_coefficients_exact,profileB_localRank_exact,
    profileC_coefficients_exact,profileC_localRank_exact]
  norm_num [n]
 theorem characteristic_gates:
-   profileA.characteristicCap < prime∧
-     (2*profileA.slopeCap-1)*profileA.seedCap < prime∧
-     profileA.slopeCap < prime∧
-   profileB.characteristicCap < prime∧
-     (2*profileB.slopeCap-1)*profileB.seedCap < prime∧
-     profileB.slopeCap < prime∧
-   profileC.characteristicCap < prime∧
-     (2*profileC.slopeCap-1)*profileC.seedCap < prime∧
-     profileC.slopeCap < prime:=by
+   profileA.characteristicCap<prime∧
+     (2*profileA.slopeCap-1)*profileA.seedCap<prime∧
+     profileA.slopeCap<prime∧
+   profileB.characteristicCap<prime∧
+     (2*profileB.slopeCap-1)*profileB.seedCap<prime∧
+     profileB.slopeCap<prime∧
+   profileC.characteristicCap<prime∧
+     (2*profileC.slopeCap-1)*profileC.seedCap<prime∧
+     profileC.slopeCap<prime:=by
  norm_num [Profile.characteristicCap,Profile.weightedCap,profileA,profileB,
    profileC,agreements,prime]
 theorem meet_caps:

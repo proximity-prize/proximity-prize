@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BV
 import ProximityPrize.SubmissionLower.I3
 import ProximityPrize.SubmissionLower.CB
@@ -23,8 +22,8 @@ theorem implicit_pair_seed_bound_fixed
    (hGR:G.degreeOf 2=1) (hproper:¬ G∣A)
    (hAbox:A∈globalCoefficientBox K implicitWeightedCap w algebraicCap 0)
    (hGbox:G∈globalCoefficientBox K implicitWeightedCap w algebraicCap 1)
-   (selected:K → Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
    (hnodes:nodes.card=n) [CharP K prime]
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolutionA:∀ γ∈Γ,specialization K (selected γ) γ A=0)
@@ -157,7 +156,7 @@ theorem implicit_pair_seed_bound_fixed
        (errors+1)*gap*
          (∑ g∈factors,
            capAt (RCN170.geometricPairCost A g) 2):=by
-     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,hfubini]
+     rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.mul_sum,hfubini]
    _ ≤ (n-w)*(∑ i:Fin 3,capAt (legacyVector liftedAgreement) i*
        capAt (RCN170.pairCost A G) i)+
        (errors+1)*gap*capAt (RCN170.pairCost A G) 2:=

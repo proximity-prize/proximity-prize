@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z9
 import ProximityPrize.SubmissionLower.AC
 import ProximityPrize.SubmissionLower.B
@@ -48,7 +47,7 @@ theorem residual_surface_weights_of_box
  · apply (weightedTotalDegree_le_iff residualSWeights F 8).mpr
    intro d hd
    have hb:d 1+d 3 ≤ seedTotalCap∧d 2 ≤ slopeCap∧
-       d 0+w*d 1+(w-1)*d 2 < weightedCap:=hbox hd
+       d 0+w*d 1+(w-1)*d 2<weightedCap:=hbox hd
    rw [weight_fin4]
    rw [show residualSWeights 0=0 by rfl,
      show residualSWeights 1=0 by rfl,
@@ -60,7 +59,7 @@ theorem residual_surface_weights_of_box
    · apply (weightedTotalDegree_le_iff residualYSWeights F 43).mpr
      intro d hd
      have hb:d 1+d 3 ≤ seedTotalCap∧d 2 ≤ slopeCap∧
-         d 0+w*d 1+(w-1)*d 2 < weightedCap:=hbox hd
+         d 0+w*d 1+(w-1)*d 2<weightedCap:=hbox hd
      rw [weight_fin4]
      rw [show residualYSWeights 0=0 by rfl,
        show residualYSWeights 1=1 by rfl,
@@ -73,7 +72,7 @@ theorem residual_surface_weights_of_box
    · apply (weightedTotalDegree_le_iff residualTotalWeights F 503).mpr
      intro d hd
      have hb:d 1+d 3 ≤ seedTotalCap∧d 2 ≤ slopeCap∧
-         d 0+w*d 1+(w-1)*d 2 < weightedCap:=hbox hd
+         d 0+w*d 1+(w-1)*d 2<weightedCap:=hbox hd
      rw [weight_fin4]
      rw [show residualTotalWeights 0=0 by rfl,
        show residualTotalWeights 1=1 by rfl,
@@ -88,11 +87,11 @@ def geometricResidualStageOfSupport
    (support:ResidualSupportParameters)
    {pchar errorCap degree:ℕ} [CharP K pchar]
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (hRpos:0 < F.degreeOf (2:Fin 4))
-   (hRsmall:F.degreeOf (2:Fin 4) < pchar)
+   (hRpos:0<F.degreeOf (2:Fin 4))
+   (hRsmall:F.degreeOf (2:Fin 4)<pchar)
    (hsupport:ResidualSupportData support F)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ degree)
    (hsolutions:∀ gamma∈Gamma,
@@ -101,7 +100,7 @@ def geometricResidualStageOfSupport
      specialization K (selected gamma) gamma
        (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (hnoPencil:NoLargeSelectedPencil selected Gamma degree errorCap)
-   (hdegreeChar:degree < pchar)
+   (hdegreeChar:degree<pchar)
    (g:GeometricFactor K F):
    letI:CharP (GenericField K) pchar:=genericField_charP K pchar
    ResidualStage (polynomialEmbedding K)
@@ -146,10 +145,10 @@ def geometricResidualStageOfSupport
 def geometricResidualStage
    [CharP K prime]
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (hRpos:0 < F.degreeOf (2:Fin 4))
+   (hRpos:0<F.degreeOf (2:Fin 4))
    (hbox:F∈globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
    (hsolutions:∀ gamma∈Gamma,
@@ -163,7 +162,7 @@ def geometricResidualStage
    ResidualStage (polynomialEmbedding K)
      (geometricSeeds K F selected Gamma g) x prime errors
      (geometricFlag K g) w:=by
- have hRsmall:F.degreeOf (2:Fin 4) < prime:=
+ have hRsmall:F.degreeOf (2:Fin 4)<prime:=
    (degreeOf_R_le_of_mem_box F weightedCap w seedTotalCap slopeCap hbox).trans_lt
      (by norm_num [slopeCap,prime])
  have hsupport:=residual_surface_weights_of_box K F hbox
@@ -185,7 +184,7 @@ theorem geometricFlag_budgets
    geometricFactor_sum_degree_le K F hF 1⟩
 theorem original_regular_seed_bound_of_geometric_factor_counts
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hsolutions:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma F=0)
    (hcount:∀ g:GeometricFactor K F,

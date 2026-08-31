@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DO
 import ProximityPrize.SubmissionLower.Y
 namespace ProximityPrize.SubmissionLower.RCN341
@@ -108,7 +107,7 @@ theorem finite_zero_points_le_exponentSet_of_literalCoordinate
        (∑ v∈W,exponentSetPoleWeight v.val (coordinate Omega P) E) ≤
          (q:ℤ))
    (F:MvPolynomial (Fin 3) Omega) (hFE:F.support ⊆ E) (hF:F∉P)
-   (S:Finset (Fin 3 → Omega))
+   (S:Finset (Fin 3→Omega))
    (hSP:∀ v∈S,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hSF:∀ v∈S,MvPolynomial.aeval v F=0):
    S.card ≤ q:=by
@@ -130,7 +129,7 @@ theorem finite_zero_points_le_exponentSet_of_literalCoordinate
    D.finite
  letI:Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega P):=
    D.separable
- let liftPoint:{v:Fin 3 → Omega//v∈S} →
+ let liftPoint:{v:Fin 3→Omega//v∈S} →
      (CoordinateRing Omega P →ₐ[Omega] Omega):=
    fun v↦pointHom Omega P ⟨v.1,hSP v.1 v.2⟩
  have hinj:Function.Injective liftPoint:=by
@@ -162,7 +161,7 @@ theorem finite_zero_points_le_exponentSet_of_literalCoordinate
  rwa [hcard] at hcount
 theorem exists_separableLiteralCoordinate_of_YZ_gates
    (P:Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
-   (hnonpoint:∀ v:Fin 3 → Omega,
+   (hnonpoint:∀ v:Fin 3→Omega,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hY:∀ h:Transcendental Omega (coordinate Omega P 0),
      letI:Algebra (RatFunc Omega) (CoordinateField Omega P):=

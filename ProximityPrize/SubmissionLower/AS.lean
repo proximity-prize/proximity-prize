@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 open IsLocalRing LinearMap Module Submodule TensorProduct AlgebraTensorModule
@@ -11,7 +10,7 @@ theorem CovBy.length_restrictScalars {p q:Submodule B M} (h:p ⋖ q):
    length A q=Module.length A p+Module.length (ResidueField A) (ResidueField B):=by
  let f:p →ₗ[B] q:=inclusion h.le
  have key:IsSimpleModule B (q ⧸ f.range):=by
-   rwa [range_inclusion, ←covBy_iff_quot_is_simple h.le]
+   rwa [range_inclusion,←covBy_iff_quot_is_simple h.le]
  obtain ⟨m,hm,⟨e⟩⟩:=isSimpleModule_iff_quot_maximal.mp key
  rw [eq_maximalIdeal hm] at e
  let g:q →ₗ[B] ResidueField B:=e.comp f.range.mkQ
@@ -28,7 +27,7 @@ theorem IsLocalRing.length_restrictScalars:
  · obtain ⟨s,hs_bot,hs_top⟩:=isFiniteLength_iff_exists_compositionSeries.mp h
    rw [←length_compositionSeries s hs_bot hs_top]
    suffices ∀ k,length A (s k)=k*Module.length (ResidueField A) (ResidueField B) by
-     rw [←Fin.val_last s.length, ←this, ←RelSeries.last,hs_top]
+     rw [←Fin.val_last s.length,←this,←RelSeries.last,hs_top]
      exact length_top.symm
    intro k
    induction k using Fin.induction with
@@ -53,10 +52,10 @@ theorem CovBy.length_baseChange {p q:Submodule A M} (h:p ⋖ q):
    (toBaseChange.toLinearEquiv B p).length_eq
  have hq:length B (B ⊗[A] q)=length B (q.baseChange B):=
    (toBaseChange.toLinearEquiv B q).length_eq
- rw [←hp, ←hq]
+ rw [←hp,←hq]
  let f:p →ₗ[A] q:=inclusion h.le
  have key:IsSimpleModule A (q ⧸ f.range):=by
-   rwa [range_inclusion, ←covBy_iff_quot_is_simple h.le]
+   rwa [range_inclusion,←covBy_iff_quot_is_simple h.le]
  obtain ⟨m,hm,⟨e⟩⟩:=isSimpleModule_iff_quot_maximal.mp key
  obtain rfl:=eq_maximalIdeal hm
  let g:=e.comp f.range.mkQ
@@ -74,7 +73,7 @@ theorem IsLocalRing.length_baseChange:
    rw [←length_compositionSeries s hs_bot hs_top]
    suffices ∀ k,length B ((s k).baseChange B)=
        k*length B (B ⧸ (maximalIdeal A).map (algebraMap A B)) by
-     rw [←Fin.val_last s.length, ←this, ←RelSeries.last,hs_top,baseChange_top,length_top]
+     rw [←Fin.val_last s.length,←this,←RelSeries.last,hs_top,baseChange_top,length_top]
    intro k
    induction k using Fin.induction with
    | zero => rw [←RelSeries.head,hs_bot,baseChange_bot];simp

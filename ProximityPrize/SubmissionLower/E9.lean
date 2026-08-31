@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.P2
 import ProximityPrize.SubmissionLower.BD
 import ProximityPrize.SubmissionLower.K
@@ -55,7 +54,7 @@ theorem columnExponent_injective (D w L s:ℕ):
  rfl
 def globalExponents (D w L s:ℕ):Set (Fin 4 →₀ ℕ):=
  {d | d 1+d 2 ≤ L∧d 2 ≤ s∧d 3=0∧
-   d 0+w*d 1+(w-1)*d 2 < D}
+   d 0+w*d 1+(w-1)*d 2<D}
 def globalCoefficientBox (D w L s:ℕ):Submodule K (Poly4 K):=
  MvPolynomial.restrictSupport K (globalExponents D w L s)
 theorem columnMonomial_mem (D w L s:ℕ)
@@ -69,28 +68,28 @@ theorem columnMonomial_mem (D w L s:ℕ)
  have ht:=c.2.2.1.isLt
  have he:=c.2.2.2.isLt
  have htri:c.1.val+c.2.1.val ≤ L:=by
-   have hminpos:0 < min 1 (L+1-c.1.val-c.2.1.val):=by
+   have hminpos:0<min 1 (L+1-c.1.val-c.2.1.val):=by
      omega
-   have hpos:0 < L+1-c.1.val-c.2.1.val:=
+   have hpos:0<L+1-c.1.val-c.2.1.val:=
      hminpos.trans_le (min_le_right _ _)
    omega
  unfold globalExponents
  simp only [Set.mem_setOf_eq,columnExponent_x,columnExponent_y,
    columnExponent_r,columnExponent_z]
  exact ⟨htri,by omega,by simp,by omega⟩
-def reconstruct (D w L s:ℕ) (theta:CoefficientIndex D w L s → K):
+def reconstruct (D w L s:ℕ) (theta:CoefficientIndex D w L s→K):
    Poly4 K:=
  ∑ c:CoefficientIndex D w L s,
    MvPolynomial.monomial (columnExponent c) (theta c)
 theorem reconstruct_coeff (D w L s:ℕ)
-   (theta:CoefficientIndex D w L s → K) (c:CoefficientIndex D w L s):
+   (theta:CoefficientIndex D w L s→K) (c:CoefficientIndex D w L s):
    MvPolynomial.coeff (columnExponent c) (reconstruct K D w L s theta)=
      theta c:=by
  classical
  simp [reconstruct,MvPolynomial.coeff_sum,
    (columnExponent_injective D w L s).eq_iff]
 @[simp] theorem reconstruct_zero (D w L s:ℕ):
-   reconstruct K D w L s (0:CoefficientIndex D w L s → K)=0:=by
+   reconstruct K D w L s (0:CoefficientIndex D w L s→K)=0:=by
  simp [reconstruct]
 theorem reconstruct_injective (D w L s:ℕ):
    Function.Injective (reconstruct K D w L s):=by
@@ -99,14 +98,14 @@ theorem reconstruct_injective (D w L s:ℕ):
  have hh:=congrArg (MvPolynomial.coeff (columnExponent c)) h
  simpa only [reconstruct_coeff] using hh
 theorem reconstruct_ne_zero (D w L s:ℕ)
-   (theta:CoefficientIndex D w L s → K) (htheta:theta≠0):
+   (theta:CoefficientIndex D w L s→K) (htheta:theta≠0):
    reconstruct K D w L s theta≠0:=by
  intro hz
  apply htheta
  apply reconstruct_injective K D w L s
  simpa only [reconstruct_zero] using hz
 theorem reconstruct_mem_box (D w L s:ℕ)
-   (theta:CoefficientIndex D w L s → K):
+   (theta:CoefficientIndex D w L s→K):
    reconstruct K D w L s theta∈globalCoefficientBox K D w L s:=by
  classical
  unfold reconstruct
@@ -156,9 +155,9 @@ theorem blockEntry_mem (D w L s:ℕ) (x u:K)
    have ht:=c.2.2.1.isLt
    have hfi:=f.isLt
    have htri:c.1.val+c.2.1.val ≤ L:=by
-     have hminpos:0 < min 1 (L+1-c.1.val-c.2.1.val):=by
+     have hminpos:0<min 1 (L+1-c.1.val-c.2.1.val):=by
        omega
-     have hpos:0 < L+1-c.1.val-c.2.1.val:=
+     have hpos:0<L+1-c.1.val-c.2.1.val:=
        hminpos.trans_le (min_le_right _ _)
      omega
    exact ⟨hd0.trans (by omega),by omega,hd1.trans (by omega),hd2⟩
@@ -168,7 +167,7 @@ def boundedBlockEntry (D w L s:ℕ) (x u:K)
    seedlessBox K (min r L) L s:=
  ⟨blockEntry K D w L s x u c r,blockEntry_mem K D w L s x u c r⟩
 def extractBlock (D w L s:ℕ) (x u:K) (r:ℕ):
-   (CoefficientIndex D w L s → K) →ₗ[K]
+   (CoefficientIndex D w L s→K) →ₗ[K]
      seedlessBox K (min r L) L s where
  toFun theta:=∑ c:CoefficientIndex D w L s,
    theta c • boundedBlockEntry K D w L s x u c r
@@ -181,11 +180,11 @@ def localRankBound (m L s:ℕ):ℕ:=
  ∑ r∈Finset.range m,
    seedlessContactRankBound (min r L) L s (m-r)
 abbrev LocalTarget (m L s:ℕ):=
- (r:Fin m) → LinearMap.range
+ (r:Fin m)→LinearMap.range
    (seedlessBlockJet K (min r.val L) L s (m-r.val))
 theorem localTarget_finrank_le (m L s:ℕ):
    Module.finrank K (LocalTarget K m L s) ≤ localRankBound m L s:=by
- change Module.finrank K ((r:Fin m) → LinearMap.range
+ change Module.finrank K ((r:Fin m)→LinearMap.range
    (seedlessBlockJet K (min r.val L) L s (m-r.val))) ≤ _
  rw [Module.finrank_pi_fintype]
  unfold localRankBound
@@ -194,18 +193,18 @@ theorem localTarget_finrank_le (m L s:ℕ):
  intro r hr
  exact seedlessBlockJet_rank_le_contactRankBound K (min r.val L) L s
    (m-r.val) (min_le_right r.val L)
-abbrev GlobalTarget (I:Type*) (m L s:ℕ):=I → LocalTarget K m L s
+abbrev GlobalTarget (I:Type*) (m L s:ℕ):=I→LocalTarget K m L s
 def constraintMap {I:Type*} [Fintype I]
-   (D w L s m:ℕ) (nodes received:I → K):
-   (CoefficientIndex D w L s → K) →ₗ[K] GlobalTarget K I m L s:=
+   (D w L s m:ℕ) (nodes received:I→K):
+   (CoefficientIndex D w L s→K) →ₗ[K] GlobalTarget K I m L s:=
  LinearMap.pi fun i => LinearMap.pi fun r =>
    (seedlessBlockJet K (min r.val L) L s (m-r.val)).rangeRestrict.comp
      (extractBlock K D w L s (nodes i) (received i) r.val)
 theorem exists_nonzero_kernel_array {I:Type*} [Fintype I]
-   (D w L s m:ℕ) (nodes received:I → K)
+   (D w L s m:ℕ) (nodes received:I→K)
    (hgate:Fintype.card I*localRankBound m L s <
      coefficientCount D w L s):
-   ∃ theta:CoefficientIndex D w L s → K,theta≠0∧
+   ∃ theta:CoefficientIndex D w L s→K,theta≠0∧
      constraintMap K D w L s m nodes received theta=0:=by
  classical
  by_contra hnone
@@ -220,7 +219,7 @@ theorem exists_nonzero_kernel_array {I:Type*} [Fintype I]
  rw [Module.finrank_fintype_fun_eq_card,coefficient_index_card] at hdim
  have htarget:Module.finrank K (GlobalTarget K I m L s) ≤
      Fintype.card I*localRankBound m L s:=by
-   change Module.finrank K (I → LocalTarget K m L s) ≤ _
+   change Module.finrank K (I→LocalTarget K m L s) ≤ _
    rw [Module.finrank_pi_fintype]
    calc
      (∑ _i:I,Module.finrank K (LocalTarget K m L s)) ≤
@@ -231,13 +230,13 @@ theorem exists_nonzero_kernel_array {I:Type*} [Fintype I]
      _=Fintype.card I*localRankBound m L s:=by simp
  exact (Nat.not_le_of_gt hgate) (hdim.trans htarget)
 theorem all_blocks_divisible_of_kernel {I:Type*} [Fintype I]
-   (D w L s m:ℕ) (nodes received:I → K)
-   (theta:CoefficientIndex D w L s → K)
+   (D w L s m:ℕ) (nodes received:I→K)
+   (theta:CoefficientIndex D w L s→K)
    (hzero:constraintMap K D w L s m nodes received theta=0):
    ∀ i:I,∀ r:ℕ,slopeDifference K^(m-r)∣
      ((extractBlock K D w L s (nodes i) (received i) r theta):LocalPoly K):=by
  intro i r
- by_cases hr:r < m
+ by_cases hr:r<m
  · have hh:=congrArg
      (fun t:GlobalTarget K I m L s => ((t i ⟨r,hr⟩):LocalPoly K)) hzero
    change contactJet K (m-r)
@@ -292,7 +291,7 @@ theorem translation_column_coeff (D w L s:ℕ) (x u:K)
    ring
  · simp
 theorem translation_reconstruct_coeff (D w L s:ℕ) (x u:K)
-   (theta:CoefficientIndex D w L s → K) (r:ℕ):
+   (theta:CoefficientIndex D w L s→K) (r:ℕ):
    (homogenizedTranslation K x u (reconstruct K D w L s theta)).coeff r=
      ((extractBlock K D w L s x u r theta):LocalPoly K):=by
  rw [reconstruct,map_sum,Polynomial.finsetSum_coeff]
@@ -331,7 +330,7 @@ theorem interpolation_gate:
  rw [coefficient_count_exact,local_rank_exact]
  norm_num [n]
 theorem exists_frozen_seedless_interpolant
-   (received:IRSProfile.Index → IRSProfile.Field):
+   (received:IRSProfile.Index→IRSProfile.Field):
    ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
      Q≠0∧
      Q∈globalCoefficientBox IRSProfile.Field
@@ -365,7 +364,7 @@ theorem seedlessBox_le_legacy:
  rcases hd with ⟨hYR,hR,hZ,hweighted⟩
  exact ⟨by omega,hR,hweighted⟩
 theorem exists_frozen_seedless_vanishing_interpolant
-   (received:IRSProfile.Index → IRSProfile.Field):
+   (received:IRSProfile.Index→IRSProfile.Field):
    ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
      Q≠0∧
      Q∈globalCoefficientBox IRSProfile.Field
@@ -374,7 +373,7 @@ theorem exists_frozen_seedless_vanishing_interpolant
        weightedCap w yTotalCap slopeCap∧
      ∀ (P:Polynomial IRSProfile.Field)
        (support:Finset IRSProfile.Index),
-       P.natDegree ≤ w → agreements ≤ support.card →
+       P.natDegree ≤ w→agreements ≤ support.card →
        (∀ i∈support,P.eval (IRSProfile.domain i)=received i) →
        RCN319.specialization IRSProfile.Field P 0 Q=0:=by
  classical

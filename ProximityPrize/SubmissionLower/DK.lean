@@ -7,12 +7,12 @@ noncomputable section
 set_option autoImplicit false
 theorem sum_mul_eq_active_subtype
    {I:Type*} [Fintype I]
-   (active:I → Prop) [DecidablePred active]
-   (multiplicity cost:I → ℕ)
-   (hzero:∀ i,¬ active i → cost i=0):
+   (active:I→Prop) [DecidablePred active]
+   (multiplicity cost:I→ℕ)
+   (hzero:∀ i,¬ active i→cost i=0):
    (∑ i,multiplicity i*cost i)=
      ∑ i:{i//active i},multiplicity i.1*cost i.1:=by
- let f:I → ℕ:=fun i↦multiplicity i*cost i
+ let f:I→ℕ:=fun i↦multiplicity i*cost i
  calc
    (∑ i,multiplicity i*cost i)=
        ∑ i∈(Finset.univ.filter active),f i:=by
@@ -28,7 +28,7 @@ theorem sum_mul_eq_active_subtype
 theorem sum_mul_coordinateOfGate_eq_active
    {K:Type} [Field K] [IsAlgClosed K]
    {I:Type*} [Fintype I]
-   (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+   (E:I→Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
    (x:∀ i,E i)
    (hgate:∀ i,∀ hx:Transcendental K (x i),
      (letI:Algebra (RatFunc K) (E i):=
@@ -37,7 +37,7 @@ theorem sum_mul_coordinateOfGate_eq_active
      (letI:Algebra (RatFunc K) (E i):=
          (elementEmbedding K (E i) (x i) hx).toRingHom.toAlgebra;
        Algebra.IsSeparable (RatFunc K) (E i)))
-   (multiplicity:I → ℕ):
+   (multiplicity:I→ℕ):
    (∑ i,multiplicity i*coordinateDegree K (E i)
      (coordinateOfGate (K:=K) (L:=E i) (x i) (hgate i)))=
    ∑ i:{i//Transcendental K (x i)},

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DR
 import ProximityPrize.SubmissionLower.Y0
 import ProximityPrize.SubmissionLower.O5
@@ -26,7 +25,7 @@ set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
 set_option maxRecDepth 30000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
 local instance:DecidableEq Iota:=Classical.decEq Iota
@@ -82,21 +81,21 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
  have hTZ':T.degreeOf 2 ≤ 1+1005*w:=by
    dsimp only [residualAgreementFlag] at hTZ
    omega
- have hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j < prime:=by
+ have hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j<prime:=by
    intro j
    fin_cases j
    · exact hGY'.trans_lt (by norm_num [prime])
    · exact hGS'.trans_lt (by norm_num [prime])
    · exact hGZ'.trans_lt (by norm_num [prime])
  have hmixedY:
-     coordinateMixedDegree Omega D.stage.G T 0 < prime:=by
+     coordinateMixedDegree Omega D.stage.G T 0<prime:=by
    rw [coordinateMixedDegree_zero]
    apply (Nat.add_le_add
      (Nat.mul_le_mul hTS' hGZ')
      (Nat.mul_le_mul hGS' hTZ')).trans_lt
    norm_num [w,prime]
  have hmixedZ:
-     coordinateMixedDegree Omega D.stage.G T 2 < prime:=by
+     coordinateMixedDegree Omega D.stage.G T 2<prime:=by
    rw [coordinateMixedDegree_two]
    apply (Nat.add_le_add
      (Nat.mul_le_mul hTY' hGS')

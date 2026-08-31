@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.U0
 section ProximityFlatProofPort
 noncomputable section
@@ -10,23 +9,23 @@ section AddCommMonoid
 variable [AddCommMonoid M]
 section SemilatticeSup
 variable [SemilatticeSup M]
-def weightedTotalDegree' (w:σ → M) (p:MvPolynomial σ R):WithBot M:=
+def weightedTotalDegree' (w:σ→M) (p:MvPolynomial σ R):WithBot M:=
  p.support.sup fun s => weight w s
-theorem weightedTotalDegree'_eq_bot_iff (w:σ → M) (p:MvPolynomial σ R):
-   weightedTotalDegree' w p=⊥ ↔ p=0:=by
+theorem weightedTotalDegree'_eq_bot_iff (w:σ→M) (p:MvPolynomial σ R):
+   weightedTotalDegree' w p=⊥↔p=0:=by
  simp only [weightedTotalDegree',Finset.sup_eq_bot_iff,mem_support_iff,WithBot.coe_ne_bot,
    MvPolynomial.eq_zero_iff]
  exact forall_congr' fun _ => Classical.not_not
-theorem weightedTotalDegree'_zero (w:σ → M):
+theorem weightedTotalDegree'_zero (w:σ→M):
    weightedTotalDegree' w (0:MvPolynomial σ R)=⊥:=by
  simp only [weightedTotalDegree',support_zero,Finset.sup_empty]
 section OrderBot
 variable [OrderBot M]
-def weightedTotalDegree (w:σ → M) (p:MvPolynomial σ R):M:=
+def weightedTotalDegree (w:σ→M) (p:MvPolynomial σ R):M:=
  p.support.sup fun s => weight w s
-theorem weightedTotalDegree_coe (w:σ → M) (p:MvPolynomial σ R) (hp:p≠0):
+theorem weightedTotalDegree_coe (w:σ→M) (p:MvPolynomial σ R) (hp:p≠0):
    weightedTotalDegree' w p=↑(weightedTotalDegree w p):=by
- rw [Ne, ←weightedTotalDegree'_eq_bot_iff w p, ←Ne,WithBot.ne_bot_iff_exists] at hp
+ rw [Ne,←weightedTotalDegree'_eq_bot_iff w p,←Ne,WithBot.ne_bot_iff_exists] at hp
  obtain ⟨m,hm⟩:=hp
  apply le_antisymm
  · simp only [weightedTotalDegree,weightedTotalDegree',Finset.sup_le_iff,WithBot.coe_le_coe]
@@ -36,19 +35,19 @@ theorem weightedTotalDegree_coe (w:σ → M) (p:MvPolynomial σ R) (hp:p≠0):
    have hm':weightedTotalDegree' w p ≤ m:=le_of_eq hm.symm
    rw [←hm]
    simpa [weightedTotalDegree'] using hm'
-theorem weightedTotalDegree_zero (w:σ → M):
+theorem weightedTotalDegree_zero (w:σ→M):
    weightedTotalDegree w (0:MvPolynomial σ R)=⊥:=by
  simp only [weightedTotalDegree,support_zero,Finset.sup_empty]
-theorem le_weightedTotalDegree (w:σ → M) {φ:MvPolynomial σ R} {d:σ →₀ ℕ}
+theorem le_weightedTotalDegree (w:σ→M) {φ:MvPolynomial σ R} {d:σ →₀ ℕ}
    (hd:d∈φ.support):weight w d ≤ φ.weightedTotalDegree w:=
  le_sup hd
 end OrderBot
 end SemilatticeSup
-def IsWeightedHomogeneous (w:σ → M) (φ:MvPolynomial σ R) (m:M):Prop:=
- ∀ ⦃d⦄,coeff d φ≠0 → weight w d=m
+def IsWeightedHomogeneous (w:σ→M) (φ:MvPolynomial σ R) (m:M):Prop:=
+ ∀ ⦃d⦄,coeff d φ≠0→weight w d=m
 variable (R)
 set_option backward.isDefEq.respectTransparency false in
-def weightedHomogeneousSubmodule (w:σ → M) (m:M):Submodule R (MvPolynomial σ R) where
+def weightedHomogeneousSubmodule (w:σ→M) (m:M):Submodule R (MvPolynomial σ R) where
  carrier:={ x | x.IsWeightedHomogeneous w m}
  smul_mem' r a ha c hc:=by
    rw [coeff_smul] at hc
@@ -62,23 +61,23 @@ def weightedHomogeneousSubmodule (w:σ → M) (m:M):Submodule R (MvPolynomial σ
    · exact ha h
    · exact hb h
 @[simp]
-theorem mem_weightedHomogeneousSubmodule (w:σ → M) (m:M) (p:MvPolynomial σ R):
-   p∈weightedHomogeneousSubmodule R w m ↔ p.IsWeightedHomogeneous w m:=
+theorem mem_weightedHomogeneousSubmodule (w:σ→M) (m:M) (p:MvPolynomial σ R):
+   p∈weightedHomogeneousSubmodule R w m↔p.IsWeightedHomogeneous w m:=
  Iff.rfl
 set_option backward.isDefEq.respectTransparency false in
-theorem weightedHomogeneousSubmodule_eq_finsupp_supported (w:σ → M) (m:M):
+theorem weightedHomogeneousSubmodule_eq_finsupp_supported (w:σ→M) (m:M):
    weightedHomogeneousSubmodule R w m=AddMonoidAlgebra.supported R R {d | weight w d=m}:=by
  ext x
  simp [IsWeightedHomogeneous]
  simp [AddMonoidAlgebra.mem_supported,Set.subset_def,MvPolynomial,coeff]
-lemma weightedHomogeneousSubmodule_fg [Finite σ] (w:σ → ℕ) (hw:∀ (x:σ),w x≠0) (n:ℕ):
+lemma weightedHomogeneousSubmodule_fg [Finite σ] (w:σ→ℕ) (hw:∀ (x:σ),w x≠0) (n:ℕ):
    (weightedHomogeneousSubmodule R w n).FG:=by
- rw [weightedHomogeneousSubmodule_eq_finsupp_supported, ←Module.Finite.iff_fg]
+ rw [weightedHomogeneousSubmodule_eq_finsupp_supported,←Module.Finite.iff_fg]
  have:=(Finsupp.finite_of_nat_weight_eq w hw n).to_subtype
  exact Module.Finite.of_basis (basisRestrictSupport R {d | Finsupp.weight w d=n})
 variable {R}
 set_option backward.isDefEq.respectTransparency false in
-theorem weightedHomogeneousSubmodule_mul (w:σ → M) (m n:M):
+theorem weightedHomogeneousSubmodule_mul (w:σ→M) (m n:M):
    weightedHomogeneousSubmodule R w m*weightedHomogeneousSubmodule R w n ≤
      weightedHomogeneousSubmodule R w (m+n):=by
  classical
@@ -92,8 +91,8 @@ theorem weightedHomogeneousSubmodule_mul (w:σ → M) (m n:M):
    contrapose! H
    by_cases h:coeff d φ=0 <;>
      simp_all only [Ne,not_false_iff,zero_mul,mul_zero]
- rw [←mem_antidiagonal.mp hde, ←hφ aux.1, ←hψ aux.2,map_add]
-theorem isWeightedHomogeneous_monomial (w:σ → M) (d:σ →₀ ℕ) (r:R) {m:M}
+ rw [←mem_antidiagonal.mp hde,←hφ aux.1,←hψ aux.2,map_add]
+theorem isWeightedHomogeneous_monomial (w:σ→M) (d:σ →₀ ℕ) (r:R) {m:M}
    (hm:weight w d=m):IsWeightedHomogeneous w (monomial d r) m:=by
  classical
  letI:DecidableEq σ:=Classical.decEq σ
@@ -103,62 +102,62 @@ theorem isWeightedHomogeneous_monomial (w:σ → M) (d:σ →₀ ℕ) (r:R) {m:M
  · subst c
    exact hm
  · contradiction
-theorem isWeightedHomogeneous_of_total_degree_zero [SemilatticeSup M] [OrderBot M] (w:σ → M)
+theorem isWeightedHomogeneous_of_total_degree_zero [SemilatticeSup M] [OrderBot M] (w:σ→M)
    {p:MvPolynomial σ R} (hp:weightedTotalDegree w p=(⊥:M)):
    IsWeightedHomogeneous w p (⊥:M):=by
  intro d hd
  have h:=weightedTotalDegree_coe w p (MvPolynomial.ne_zero_iff.mpr ⟨d,hd⟩)
  simp only [weightedTotalDegree',hp] at h
- rw [eq_bot_iff, ←WithBot.coe_le_coe, ←h]
+ rw [eq_bot_iff,←WithBot.coe_le_coe,←h]
  apply Finset.le_sup (mem_support_iff.mpr hd)
-theorem isWeightedHomogeneous_C (w:σ → M) (r:R):
+theorem isWeightedHomogeneous_C (w:σ→M) (r:R):
    IsWeightedHomogeneous w (C r:MvPolynomial σ R) 0:=
  isWeightedHomogeneous_monomial _ _ _ (map_zero _)
 variable (R)
-theorem isWeightedHomogeneous_zero (w:σ → M) (m:M):
+theorem isWeightedHomogeneous_zero (w:σ→M) (m:M):
    IsWeightedHomogeneous w (0:MvPolynomial σ R) m:=
  (weightedHomogeneousSubmodule R w m).zero_mem
-theorem isWeightedHomogeneous_one (w:σ → M):IsWeightedHomogeneous w (1:MvPolynomial σ R) 0:=
+theorem isWeightedHomogeneous_one (w:σ→M):IsWeightedHomogeneous w (1:MvPolynomial σ R) 0:=
  isWeightedHomogeneous_C _ _
-lemma isWeightedHomogeneous_of_isEmpty [IsEmpty σ] (w:σ → M) (f:MvPolynomial σ R):
+lemma isWeightedHomogeneous_of_isEmpty [IsEmpty σ] (w:σ→M) (f:MvPolynomial σ R):
    IsWeightedHomogeneous w f 0:=by
  rw [eq_C_of_isEmpty f]
  exact isWeightedHomogeneous_C _ _
-theorem isWeightedHomogeneous_X (w:σ → M) (i:σ):
+theorem isWeightedHomogeneous_X (w:σ→M) (i:σ):
    IsWeightedHomogeneous w (_root_.MvPolynomial.X i:MvPolynomial σ R) (w i):=by
  apply isWeightedHomogeneous_monomial
  simp only [weight,LinearMap.toAddMonoidHom_coe,linearCombination_single,one_nsmul]
 namespace IsWeightedHomogeneous
 variable {R}
 variable {φ ψ:MvPolynomial σ R} {m n:M}
-theorem coeff_eq_zero {w:σ → M} (hφ:IsWeightedHomogeneous w φ n) (d:σ →₀ ℕ)
+theorem coeff_eq_zero {w:σ→M} (hφ:IsWeightedHomogeneous w φ n) (d:σ →₀ ℕ)
    (hd:weight w d≠n):coeff d φ=0:=by
  have aux:=mt (@hφ d) hd
  rwa [Classical.not_not] at aux
-theorem inj_right {w:σ → M} (hφ:φ≠0) (hm:IsWeightedHomogeneous w φ m)
+theorem inj_right {w:σ→M} (hφ:φ≠0) (hm:IsWeightedHomogeneous w φ m)
    (hn:IsWeightedHomogeneous w φ n):m=n:=by
  obtain ⟨d,hd⟩:∃ d,coeff d φ≠0:=exists_coeff_ne_zero hφ
- rw [←hm hd, ←hn hd]
-theorem add {w:σ → M} (hφ:IsWeightedHomogeneous w φ n) (hψ:IsWeightedHomogeneous w ψ n):
+ rw [←hm hd,←hn hd]
+theorem add {w:σ→M} (hφ:IsWeightedHomogeneous w φ n) (hψ:IsWeightedHomogeneous w ψ n):
    IsWeightedHomogeneous w (φ+ψ) n:=
  (weightedHomogeneousSubmodule R w n).add_mem hφ hψ
-theorem sum {ι:Type*} (s:Finset ι) (φ:ι → MvPolynomial σ R) (n:M) {w:σ → M}
+theorem sum {ι:Type*} (s:Finset ι) (φ:ι→MvPolynomial σ R) (n:M) {w:σ→M}
    (h:∀ i∈s,IsWeightedHomogeneous w (φ i) n):IsWeightedHomogeneous w (∑ i∈s,φ i) n:=
  (weightedHomogeneousSubmodule R w n).sum_mem h
 set_option backward.isDefEq.respectTransparency false in
-theorem mul {w:σ → M} (hφ:IsWeightedHomogeneous w φ m) (hψ:IsWeightedHomogeneous w ψ n):
+theorem mul {w:σ→M} (hφ:IsWeightedHomogeneous w φ m) (hψ:IsWeightedHomogeneous w ψ n):
    IsWeightedHomogeneous w (φ*ψ) (m+n):=
  weightedHomogeneousSubmodule_mul w m n <| Submodule.mul_mem_mul hφ hψ
-lemma C_mul {w:σ → M} (hφ:IsWeightedHomogeneous w φ m) (r:R):
+lemma C_mul {w:σ→M} (hφ:IsWeightedHomogeneous w φ m) (r:R):
    IsWeightedHomogeneous w (C r*φ) m:=by
  rw [←zero_add m]
  exact (isWeightedHomogeneous_C w r).mul hφ
-theorem pow {w:σ → M} (hφ:IsWeightedHomogeneous w φ m) (n:ℕ):
+theorem pow {w:σ→M} (hφ:IsWeightedHomogeneous w φ m) (n:ℕ):
    IsWeightedHomogeneous w (φ^n) (n • m):=by
  induction n with
  | zero => rw [pow_zero,zero_smul];exact isWeightedHomogeneous_one R w
  | succ n ih => rw [pow_succ,succ_nsmul];exact ih.mul hφ
-theorem prod {ι:Type*} (s:Finset ι) (φ:ι → MvPolynomial σ R) (n:ι → M) {w:σ → M}:
+theorem prod {ι:Type*} (s:Finset ι) (φ:ι→MvPolynomial σ R) (n:ι→M) {w:σ→M}:
    (∀ i∈s,IsWeightedHomogeneous w (φ i) (n i)) →
      IsWeightedHomogeneous w (∏ i∈s,φ i) (∑ i∈s,n i):=by
  classical
@@ -171,7 +170,7 @@ theorem prod {ι:Type*} (s:Finset ι) (φ:ι → MvPolynomial σ R) (n:ι → M)
    apply (h i (Finset.mem_insert_self _ _)).mul (IH _)
    intro j hjs
    exact h j (Finset.mem_insert_of_mem hjs)
-theorem weighted_total_degree [SemilatticeSup M] {w:σ → M} (hφ:IsWeightedHomogeneous w φ n)
+theorem weighted_total_degree [SemilatticeSup M] {w:σ→M} (hφ:IsWeightedHomogeneous w φ n)
    (h:φ≠0):weightedTotalDegree' w φ=n:=by
  simp only [weightedTotalDegree']
  apply le_antisymm
@@ -182,10 +181,10 @@ theorem weighted_total_degree [SemilatticeSup M] {w:σ → M} (hφ:IsWeightedHom
    replace hd:=Finsupp.mem_support_iff.mpr hd
    apply Finset.le_sup hd
 set_option backward.isDefEq.respectTransparency false in
-lemma induction_on {w:σ → M} {m:M}
-   {motive:(p:MvPolynomial σ R) → p.IsWeightedHomogeneous w m → Prop}
+lemma induction_on {w:σ→M} {m:M}
+   {motive:(p:MvPolynomial σ R)→p.IsWeightedHomogeneous w m→Prop}
    (zero:motive 0 (isWeightedHomogeneous_zero R w m))
-   (add:∀ p q hp hq,motive p hp → motive q hq → motive (p+q) (hp.add hq))
+   (add:∀ p q hp hq,motive p hp→motive q hq→motive (p+q) (hp.add hq))
    (monomial:∀ (d:σ →₀ ℕ) (r:R) (hr:Finsupp.weight w d=m),
      motive ((monomial d) r) (isWeightedHomogeneous_monomial w d r hr))
    {p:MvPolynomial σ R} (hp:p.IsWeightedHomogeneous w m):
@@ -197,7 +196,7 @@ lemma induction_on {w:σ → M} {m:M}
        ⟨.add ‹_› ‹_›,fun a↦by simp [mul_add,add _ _ _ _ (hx a) (hy a)]⟩
      zero_mem':=⟨isWeightedHomogeneous_zero R w m,by simp [zero]⟩
      smul_mem':=fun a x ⟨_,hx⟩↦⟨by simp [Algebra.smul_def,C_mul ‹_› a],fun a↦by
-       simp_rw [Algebra.smul_def,algebraMap_eq, ←mul_assoc, ←map_mul]
+       simp_rw [Algebra.smul_def,algebraMap_eq,←mul_assoc,←map_mul]
        apply hx⟩}
  rw [←mem_weightedHomogeneousSubmodule,weightedHomogeneousSubmodule_eq_finsupp_supported,
    AddMonoidAlgebra.supported_eq_span_single] at hp
@@ -207,19 +206,19 @@ lemma induction_on {w:σ → M} {m:M}
  simp only [MvPolynomial,Submodule.coe_set_mk,AddSubmonoid.coe_set_mk,
    AddSubsemigroup.coe_set_mk,preimage_setOf_eq,mem_setOf_eq,A]
  refine ⟨isWeightedHomogeneous_monomial w d 1 hd,fun a↦?_⟩
- simpa only [single_eq_monomial, ←MvPolynomial.C_mul_monomial] using monomial _ (a*1) hd
+ simpa only [single_eq_monomial,←MvPolynomial.C_mul_monomial] using monomial _ (a*1) hd
 end IsWeightedHomogeneous
 variable {R}
-lemma WeightedHomogeneousSubmodule.gradedMonoid {w:σ → M}:
+lemma WeightedHomogeneousSubmodule.gradedMonoid {w:σ→M}:
    SetLike.GradedMonoid (weightedHomogeneousSubmodule R w) where
  one_mem:=isWeightedHomogeneous_one R w
  mul_mem _ _ _ _:=IsWeightedHomogeneous.mul
-def weightedHomogeneousComponent (w:σ → M) (n:M):MvPolynomial σ R →ₗ[R] MvPolynomial σ R:=
+def weightedHomogeneousComponent (w:σ→M) (n:M):MvPolynomial σ R →ₗ[R] MvPolynomial σ R:=
  letI:=Classical.decEq M
  (coeffLinearEquiv _).symm.toLinearMap ∘ₗ Submodule.subtype _ ∘ₗ
    Finsupp.restrictDom _ _ {d | weight w d=n} ∘ₗ (coeffLinearEquiv _).toLinearMap
 section WeightedHomogeneousComponent
-variable {w:σ → M} (n:M) (φ ψ:MvPolynomial σ R)
+variable {w:σ→M} (n:M) (φ ψ:MvPolynomial σ R)
 set_option backward.isDefEq.respectTransparency false in
 theorem coeff_weightedHomogeneousComponent [DecidableEq M] (d:σ →₀ ℕ):
    coeff d (weightedHomogeneousComponent w n φ)=
@@ -238,7 +237,7 @@ theorem weightedHomogeneousComponent_isWeightedHomogeneous:
  intro d hd
  contrapose! hd
  rw [coeff_weightedHomogeneousComponent,if_neg hd]
-theorem weightedHomogeneousComponent_mem (w:σ → M) (φ:MvPolynomial σ R) (m:M):
+theorem weightedHomogeneousComponent_mem (w:σ→M) (φ:MvPolynomial σ R) (m:M):
    weightedHomogeneousComponent w m φ∈weightedHomogeneousSubmodule R w m:=by
  rw [mem_weightedHomogeneousSubmodule]
  exact weightedHomogeneousComponent_isWeightedHomogeneous m φ
@@ -247,7 +246,7 @@ theorem weightedHomogeneousComponent_C_mul (n:M) (r:R):
    weightedHomogeneousComponent w n (C r*φ)=C r*weightedHomogeneousComponent w n φ:=by
  simp only [C_mul',map_smul]
 theorem weightedHomogeneousComponent_eq_zero'
-   (h:∀ d:σ →₀ ℕ,d∈φ.support → weight w d≠n):
+   (h:∀ d:σ →₀ ℕ,d∈φ.support→weight w d≠n):
    weightedHomogeneousComponent w n φ=0:=by
  classical
  letI:DecidableEq M:=Classical.decEq M
@@ -255,7 +254,7 @@ theorem weightedHomogeneousComponent_eq_zero'
  intro d hd;rw [mem_filter] at hd
  exfalso;exact h _ hd.1 hd.2
 theorem weightedHomogeneousComponent_eq_zero [SemilatticeSup M] [OrderBot M]
-   (h:weightedTotalDegree w φ < n):weightedHomogeneousComponent w n φ=0:=by
+   (h:weightedTotalDegree w φ<n):weightedHomogeneousComponent w n φ=0:=by
  classical
  letI:DecidableEq M:=Classical.decEq M
  rw [weightedHomogeneousComponent_apply,sum_eq_zero]
@@ -309,7 +308,7 @@ theorem IsWeightedHomogeneous.weightedHomogeneousComponent_same {m:M} {p:MvPolyn
  · rw [hp zero_coeff,if_pos rfl]
 theorem IsWeightedHomogeneous.weightedHomogeneousComponent_ne {m:M} (n:M)
    {p:MvPolynomial σ R} (hp:IsWeightedHomogeneous w p m):
-   n≠m → weightedHomogeneousComponent w n p=0:=by
+   n≠m→weightedHomogeneousComponent w n p=0:=by
  classical
  letI:DecidableEq M:=Classical.decEq M
  letI:DecidableEq R:=Classical.decEq R
@@ -332,7 +331,7 @@ theorem weightedHomogeneousComponent_of_mem [DecidableEq M] {m n:M}
  · split_ifs <;>
    simp only [zero_coeff,coeff_zero]
  · rw [h zero_coeff]
-   simp only [show n=m ↔ m=n from eq_comm]
+   simp only [show n=m↔m=n from eq_comm]
    split_ifs with h1
    · rfl
    · simp only [coeff_zero]
@@ -380,7 +379,7 @@ end WeightedHomogeneousComponent
 end AddCommMonoid
 section OrderedAddCommMonoid
 variable [AddCommMonoid M] [PartialOrder M]
- {w:σ → M} (φ:MvPolynomial σ R)
+ {w:σ→M} (φ:MvPolynomial σ R)
 @[simp]
 theorem weightedHomogeneousComponent_zero [CanonicallyOrderedAdd M] [IsAddTorsionFree M]
    (hw:∀ i:σ,w i≠0):
@@ -398,15 +397,15 @@ theorem weightedHomogeneousComponent_zero [CanonicallyOrderedAdd M] [IsAddTorsio
    simp only [DFunLike.ext_iff,Finsupp.coe_zero,Pi.zero_apply,not_forall] at hd
    obtain ⟨i,hi⟩:=hd
    exact ⟨i,hi,hw i⟩
-def NonTorsionWeight (w:σ → M):=
- ∀ n x,n • w x=(0:M) → n=0
+def NonTorsionWeight (w:σ→M):=
+ ∀ n x,n • w x=(0:M)→n=0
 omit [PartialOrder M] in
 theorem nonTorsionWeight_of [IsAddTorsionFree M] (hw:∀ i:σ,w i≠0):
    NonTorsionWeight w:=
  fun _ x hnx => (smul_eq_zero_iff_left (hw x)).mp hnx
 theorem weightedDegree_eq_zero_iff [CanonicallyOrderedAdd M]
    (hw:NonTorsionWeight w) {m:σ →₀ ℕ}:
-   weight w m=0 ↔ ∀ x:σ,m x=0:=by
+   weight w m=0↔∀ x:σ,m x=0:=by
  simp only [weight,Finsupp.linearCombination,LinearMap.toAddMonoidHom_coe,coe_lsum,
    LinearMap.coe_smulRight,LinearMap.id_coe,id_eq]
  rw [Finsupp.sum,Finset.sum_eq_zero_iff]
@@ -421,15 +420,15 @@ theorem weightedDegree_eq_zero_iff [CanonicallyOrderedAdd M]
 end OrderedAddCommMonoid
 section LinearOrderedAddCommMonoid
 variable [AddCommMonoid M] [LinearOrder M] [OrderBot M] [CanonicallyOrderedAdd M]
- {w:σ → M} (φ:MvPolynomial σ R)
+ {w:σ→M} (φ:MvPolynomial σ R)
 theorem isWeightedHomogeneous_zero_iff_weightedTotalDegree_eq_zero {p:MvPolynomial σ R}:
-   IsWeightedHomogeneous w p 0 ↔ p.weightedTotalDegree w=0:=by
- rw [weightedTotalDegree, ←bot_eq_zero,Finset.sup_eq_bot_iff,bot_eq_zero,IsWeightedHomogeneous]
+   IsWeightedHomogeneous w p 0↔p.weightedTotalDegree w=0:=by
+ rw [weightedTotalDegree,←bot_eq_zero,Finset.sup_eq_bot_iff,bot_eq_zero,IsWeightedHomogeneous]
  apply forall_congr'
  intro m
  rw [mem_support_iff]
 theorem weightedTotalDegree_eq_zero_iff (hw:NonTorsionWeight w) (p:MvPolynomial σ R):
-   p.weightedTotalDegree w=0 ↔ ∀ (m:σ →₀ ℕ) (_:m∈p.support) (x:σ),m x=0:=by
+   p.weightedTotalDegree w=0↔∀ (m:σ →₀ ℕ) (_:m∈p.support) (x:σ),m x=0:=by
  rw [←isWeightedHomogeneous_zero_iff_weightedTotalDegree_eq_zero,IsWeightedHomogeneous]
  apply forall_congr'
  intro m
@@ -439,7 +438,7 @@ theorem weightedTotalDegree_eq_zero_iff (hw:NonTorsionWeight w) (p:MvPolynomial 
  exact weightedDegree_eq_zero_iff hw
 end LinearOrderedAddCommMonoid
 section GradedAlgebra
-variable (w:σ → M) [AddCommMonoid M]
+variable (w:σ→M) [AddCommMonoid M]
 theorem weightedHomogeneousComponent_eq_zero_of_notMem [DecidableEq M]
    (φ:MvPolynomial σ R) (i:M) (hi:i∉Finset.image (weight w) φ.support):
    weightedHomogeneousComponent w i φ=0:=by
@@ -499,7 +498,7 @@ theorem weightedDecomposition.decompose'_apply [DecidableEq M]
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
 lemma mem_iff_weightedHomogeneousComponent_mem [DecidableEq M] {I:Ideal (MvPolynomial σ R)}
    (h:I.IsHomogeneous (weightedHomogeneousSubmodule R w)) (p:MvPolynomial σ R):
-   p∈I ↔ ∀ m:M,(weightedHomogeneousComponent w m p)∈I:=by
+   p∈I↔∀ m:M,(weightedHomogeneousComponent w m p)∈I:=by
  simp_rw [←weightedDecomposition.decompose'_apply]
  exact h.mem_iff
 lemma weightedHomogeneousComponent_mem_of_mem [DecidableEq M] {I:Ideal (MvPolynomial σ R)}

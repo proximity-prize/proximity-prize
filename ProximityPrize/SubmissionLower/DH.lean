@@ -35,7 +35,7 @@ variable (D:AdaptiveNestedProjectionDataActive base hactive hSderiv)
 variable (hG:Irreducible G) (hproper:¬ G∣T)
 variable (hGsupport:G.support ⊆ flagSupport surfaceFlag)
 variable (hTsupport:T.support ⊆ flagSupport tailFlag)
-variable (multiplicity:RegularComponent Omega G T H → ℕ)
+variable (multiplicity:RegularComponent Omega G T H→ℕ)
 variable (powers:ActiveNestedFixedPowers base hactive hZ hSderiv D multiplicity)
 noncomputable def activeNestedWeightedCertificate:
    let U:=activeNestedUnitFamily base hactive hZ hSderiv D hG hproper

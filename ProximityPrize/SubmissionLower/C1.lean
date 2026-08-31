@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BC
 namespace ProximityPrize.SubmissionLower.RCN100
 open RCN119
@@ -79,7 +78,7 @@ theorem columnExponent_injective (D w L s:ℕ):
  rfl
 def globalExponents (D w L s:ℕ):Set (Fin 4 →₀ ℕ):=
  {d | d 1+d 2+d 3 ≤ L∧d 2 ≤ s∧
-   d 0+w*d 1+(w-1)*d 2 < D}
+   d 0+w*d 1+(w-1)*d 2<D}
 def globalCoefficientBox (D w L s:ℕ):
    Submodule K (MvPolynomial (Fin 4) K):=
  MvPolynomial.restrictSupport K (globalExponents D w L s)
@@ -96,18 +95,18 @@ theorem columnMonomial_mem (D w L s:ℕ)
  simp only [globalExponents,Set.mem_setOf_eq,columnExponent_x,
    columnExponent_y,columnExponent_r,columnExponent_z]
  omega
-def reconstruct (D w L s:ℕ) (θ:CoefficientIndex D w L s → K):
+def reconstruct (D w L s:ℕ) (θ:CoefficientIndex D w L s→K):
    MvPolynomial (Fin 4) K:=
  ∑ c:CoefficientIndex D w L s,
    MvPolynomial.monomial (columnExponent c) (θ c)
 theorem reconstruct_coeff (D w L s:ℕ)
-   (θ:CoefficientIndex D w L s → K) (c:CoefficientIndex D w L s):
+   (θ:CoefficientIndex D w L s→K) (c:CoefficientIndex D w L s):
    MvPolynomial.coeff (columnExponent c) (reconstruct K D w L s θ)=θ c:=by
  classical
  simp [reconstruct,MvPolynomial.coeff_sum,
    (columnExponent_injective D w L s).eq_iff]
 @[simp] theorem reconstruct_zero (D w L s:ℕ):
-   reconstruct K D w L s (0:CoefficientIndex D w L s → K)=0:=by
+   reconstruct K D w L s (0:CoefficientIndex D w L s→K)=0:=by
  simp [reconstruct]
 theorem reconstruct_injective (D w L s:ℕ):
    Function.Injective (reconstruct K D w L s):=by
@@ -116,14 +115,14 @@ theorem reconstruct_injective (D w L s:ℕ):
  have hh:=congrArg (MvPolynomial.coeff (columnExponent c)) h
  simpa only [reconstruct_coeff] using hh
 theorem reconstruct_ne_zero (D w L s:ℕ)
-   (θ:CoefficientIndex D w L s → K) (hθ:θ≠0):
+   (θ:CoefficientIndex D w L s→K) (hθ:θ≠0):
    reconstruct K D w L s θ≠0:=by
  intro hzero
  apply hθ
  apply reconstruct_injective K D w L s
  simpa only [reconstruct_zero] using hzero
 theorem reconstruct_mem_globalCoefficientBox (D w L s:ℕ)
-   (θ:CoefficientIndex D w L s → K):
+   (θ:CoefficientIndex D w L s→K):
    reconstruct K D w L s θ∈globalCoefficientBox K D w L s:=by
  classical
  unfold reconstruct
@@ -131,10 +130,10 @@ theorem reconstruct_mem_globalCoefficientBox (D w L s:ℕ)
  intro c hc
  exact columnMonomial_mem K D w L s c (θ c)
 theorem reconstruct_support_caps (D w L s:ℕ)
-   (θ:CoefficientIndex D w L s → K):
+   (θ:CoefficientIndex D w L s→K):
    ∀ d∈(reconstruct K D w L s θ).support,
      d 1+d 2+d 3 ≤ L∧d 2 ≤ s∧
-       d 0+w*d 1+(w-1)*d 2 < D:=
+       d 0+w*d 1+(w-1)*d 2<D:=
  reconstruct_mem_globalCoefficientBox K D w L s θ
 def coefficientCount (D w L s:ℕ):ℕ:=
  ∑ i∈Finset.range (L+1),
@@ -182,7 +181,7 @@ def boundedBlockEntry (D w L s:ℕ) (x u₀ u₁:K)
  ⟨blockEntry K D w L s x u₀ u₁ c r,
    blockEntry_mem K D w L s x u₀ u₁ c r⟩
 def extractBlock (D w L s:ℕ) (x u₀ u₁:K) (r:ℕ):
-   (CoefficientIndex D w L s → K) →ₗ[K]
+   (CoefficientIndex D w L s→K) →ₗ[K]
      coefficientBox K (min r L) L s where
  toFun θ:=∑ c:CoefficientIndex D w L s,
    θ c • boundedBlockEntry K D w L s x u₀ u₁ c r
@@ -202,11 +201,11 @@ theorem full_contactRankBound_eq (r m L s:ℕ):
  · have h':m-r ≤ r+1:=by omega
    rw [Nat.min_eq_right h']
 abbrev LocalTarget (m L s:ℕ):=
- (r:Fin m) → LinearMap.range
+ (r:Fin m)→LinearMap.range
    (blockJet K (min r.val L) L s (m-r.val))
 theorem localTarget_finrank_le (m L s:ℕ):
    Module.finrank K (LocalTarget K m L s) ≤ localRankBound m L s:=by
- change Module.finrank K ((r:Fin m) → LinearMap.range
+ change Module.finrank K ((r:Fin m)→LinearMap.range
    (blockJet K (min r.val L) L s (m-r.val))) ≤ _
  rw [Module.finrank_pi_fintype]
  unfold localRankBound
@@ -217,11 +216,11 @@ theorem localTarget_finrank_le (m L s:ℕ):
    (min_le_right r.val L)
  rw [full_contactRankBound_eq] at hh
  exact hh
-abbrev GlobalTarget (I:Type*) (m L s:ℕ):=I → LocalTarget K m L s
+abbrev GlobalTarget (I:Type*) (m L s:ℕ):=I→LocalTarget K m L s
 theorem globalTarget_finrank_le {I:Type*} [Fintype I] (m L s:ℕ):
    Module.finrank K (GlobalTarget K I m L s) ≤
      Fintype.card I*localRankBound m L s:=by
- change Module.finrank K (I → LocalTarget K m L s) ≤ _
+ change Module.finrank K (I→LocalTarget K m L s) ≤ _
  rw [Module.finrank_pi_fintype]
  calc
    (∑ _i:I,Module.finrank K (LocalTarget K m L s)) ≤
@@ -231,21 +230,21 @@ theorem globalTarget_finrank_le {I:Type*} [Fintype I] (m L s:ℕ):
      exact localTarget_finrank_le K m L s
    _=Fintype.card I*localRankBound m L s:=by simp
 def constraintMap {I:Type*} [Fintype I]
-   (D w L s m:ℕ) (nodes u₀ u₁:I → K):
-   (CoefficientIndex D w L s → K) →ₗ[K] GlobalTarget K I m L s:=
+   (D w L s m:ℕ) (nodes u₀ u₁:I→K):
+   (CoefficientIndex D w L s→K) →ₗ[K] GlobalTarget K I m L s:=
  LinearMap.pi fun i => LinearMap.pi fun r =>
    (blockJet K (min r.val L) L s (m-r.val)).rangeRestrict.comp
      (extractBlock K D w L s (nodes i) (u₀ i) (u₁ i) r.val)
 theorem constraintMap_apply {I:Type*} [Fintype I]
-   (D w L s m:ℕ) (nodes u₀ u₁:I → K)
-   (θ:CoefficientIndex D w L s → K) (i:I) (r:Fin m):
+   (D w L s m:ℕ) (nodes u₀ u₁:I→K)
+   (θ:CoefficientIndex D w L s→K) (i:I) (r:Fin m):
    ((constraintMap K D w L s m nodes u₀ u₁ θ i r):Poly K)=
      contactJet K (m-r.val)
        ((extractBlock K D w L s (nodes i) (u₀ i) (u₁ i) r.val θ):Poly K):=rfl
 theorem exists_nonzero_kernel_array {I:Type*} [Fintype I]
-   (D w L s m:ℕ) (nodes u₀ u₁:I → K)
-   (hgate:Fintype.card I*localRankBound m L s < coefficientCount D w L s):
-   ∃ θ:CoefficientIndex D w L s → K,
+   (D w L s m:ℕ) (nodes u₀ u₁:I→K)
+   (hgate:Fintype.card I*localRankBound m L s<coefficientCount D w L s):
+   ∃ θ:CoefficientIndex D w L s→K,
      θ≠0∧constraintMap K D w L s m nodes u₀ u₁ θ=0:=by
  classical
  by_contra hnone
@@ -260,9 +259,9 @@ theorem exists_nonzero_kernel_array {I:Type*} [Fintype I]
  have hupper:=globalTarget_finrank_le K (I:=I) m L s
  exact (Nat.not_le_of_gt hgate) (hdim.trans hupper)
 theorem exists_nonzero_block_equations {I:Type*} [Fintype I]
-   (D w L s m:ℕ) (nodes u₀ u₁:I → K)
-   (hgate:Fintype.card I*localRankBound m L s < coefficientCount D w L s):
-   ∃ θ:CoefficientIndex D w L s → K,θ≠0∧
+   (D w L s m:ℕ) (nodes u₀ u₁:I→K)
+   (hgate:Fintype.card I*localRankBound m L s<coefficientCount D w L s):
+   ∃ θ:CoefficientIndex D w L s→K,θ≠0∧
      ∀ (i:I) (r:Fin m),
        contactJet K (m-r.val)
          ((extractBlock K D w L s (nodes i) (u₀ i) (u₁ i) r.val θ):Poly K)=0:=by
@@ -275,13 +274,13 @@ theorem exists_nonzero_block_equations {I:Type*} [Fintype I]
  exact hh
 theorem all_blocks_divisible_of_equations
    (D w L s m:ℕ) (x u₀ u₁:K)
-   (θ:CoefficientIndex D w L s → K)
+   (θ:CoefficientIndex D w L s→K)
    (h:∀ r:Fin m,contactJet K (m-r.val)
      ((extractBlock K D w L s x u₀ u₁ r.val θ):Poly K)=0):
    ∀ r:ℕ,slopeDifference K^(m-r)∣
      ((extractBlock K D w L s x u₀ u₁ r θ):Poly K):=by
  intro r
- by_cases hr:r < m
+ by_cases hr:r<m
  · exact (contactJet_eq_zero_iff K (m-r) _).mp (h ⟨r,hr⟩)
  · have hm:m-r=0:=by omega
    simp only [hm,pow_zero,one_dvd]

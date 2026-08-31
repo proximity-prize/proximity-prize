@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A7
 import ProximityPrize.SubmissionLower.I1
 import ProximityPrize.SubmissionLower.D0
@@ -81,9 +80,9 @@ theorem coefficient_pole_le_of_trdeg_le_one
  let B:IntermediateField k L:=baseCoefficientField (k:=k) P γ
  have hcoeff (n:ℕ):P.coeff n∈B:=by
    exact IntermediateField.subset_adjoin k _ (Or.inr ⟨n,rfl⟩)
- by_cases hj:j < w+1
+ by_cases hj:j<w+1
  · let i:Fin (w+1):=⟨j,hj⟩
-   let a:Fin (w+1) → B:=fun n => ⟨P.coeff n,hcoeff n⟩
+   let a:Fin (w+1)→B:=fun n => ⟨P.coeff n,hcoeff n⟩
    let φ:B →+*L:=B.val.toRingHom
    have hcompat:∀ c:k,φ (algebraMap k B c)=
        algebraMap Ω L (algebraMap k Ω c):=by

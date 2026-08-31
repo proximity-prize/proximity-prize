@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AO
 namespace ProximityPrize.SubmissionLower.RCN256
 open scoped BigOperators Pointwise
@@ -53,7 +52,7 @@ def contactJet (h:ℕ):Poly K →ₗ[K] Poly K:=
 theorem contactJet_apply (h:ℕ) (f:Poly K):
    contactJet K h f=(shiftPlus K f).modMonomial (Finsupp.single 0 h):=rfl
 theorem contactJet_eq_zero_iff (h:ℕ) (f:Poly K):
-   contactJet K h f=0 ↔ slopeDifference K^h∣f:=by
+   contactJet K h f=0↔slopeDifference K^h∣f:=by
  rw [contactJet_apply,
    ←MvPolynomial.monomial_one_dvd_iff_modMonomial_eq_zero,
    ←MvPolynomial.X_pow_eq_monomial]
@@ -69,7 +68,7 @@ theorem contactJet_mul_slopeDifference (h:ℕ) (q:Poly K):
  (contactJet_eq_zero_iff K h _).2 ⟨q,rfl⟩
 theorem contactJet_eq_zero_iff_coeff (h:ℕ) (f:Poly K):
    contactJet K h f=0 ↔
-     ∀ d:Fin 3 →₀ ℕ,d 0 < h → MvPolynomial.coeff d (shiftPlus K f)=0:=by
+     ∀ d:Fin 3 →₀ ℕ,d 0<h→MvPolynomial.coeff d (shiftPlus K f)=0:=by
  constructor
  · intro hf d hd
    have hnot:¬ Finsupp.single (0:Fin 3) h ≤ d:=by
@@ -83,7 +82,7 @@ theorem contactJet_eq_zero_iff_coeff (h:ℕ) (f:Poly K):
    ext d
    by_cases hle:Finsupp.single (0:Fin 3) h ≤ d
    · simp [contactJet_apply,MvPolynomial.coeff_modMonomial_of_le _ hle]
-   · have hd:d 0 < h:=by
+   · have hd:d 0<h:=by
        by_contra hnot
        apply hle
        intro i
@@ -178,7 +177,7 @@ def boxExponentsEquivIndex (M L s:ℕ):
          rcases d.property with ⟨hM,hL,hs⟩
          omega⟩,
        ⟨d.val 2,by
-         change d.val 2 < L-d.val 0+1
+         change d.val 2<L-d.val 0+1
          rcases d.property with ⟨hM,hL,hs⟩
          omega⟩⟩⟩
  invFun q:=

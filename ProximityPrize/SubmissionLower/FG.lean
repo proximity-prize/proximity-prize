@@ -84,14 +84,14 @@ theorem originalPrime_height_eq_two
  have hIne:I≠p:=by
    intro h
    exact hNnot (h ▸ hNmem')
- have hIlt:I < p:=lt_of_le_of_ne hIp hIne
+ have hIlt:I<p:=lt_of_le_of_ne hIp hIne
  have hIbot:I≠⊥:=by
    intro h
    have hzero:F=0:=by
      have:F∈(⊥:Ideal (Poly4 K)):=h ▸ Ideal.subset_span (by simp)
      simpa using this
    exact hF.ne_zero hzero
- have hbotlt:(⊥:Ideal (Poly4 K)) < I:=
+ have hbotlt:(⊥:Ideal (Poly4 K))<I:=
    lt_of_le_of_ne bot_le hIbot.symm
  have hone:(1:ℕ∞) ≤ I.height:=by
    calc

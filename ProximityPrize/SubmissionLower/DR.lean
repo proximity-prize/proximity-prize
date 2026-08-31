@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EW
 import ProximityPrize.SubmissionLower.A3
 namespace ProximityPrize.SubmissionLower.RCN043
@@ -19,7 +18,7 @@ noncomputable section
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 variable {pchar:ℕ} [CharP Omega pchar]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A3
 import ProximityPrize.SubmissionLower.DS
 import ProximityPrize.SubmissionLower.J7
@@ -134,7 +133,7 @@ theorem exists_adaptiveNestedProjectionData
  let ActiveU:={C:RegularComponent Omega G T H//
    D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 0)≠0∨
      D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 2)≠0}
- let EU:ActiveU → Type:=fun C => CoordinateField Omega C.1.1
+ let EU:ActiveU→Type:=fun C => CoordinateField Omega C.1.1
  let rY:∀ C:ActiveU,EU C:=fun C => coordinate Omega C.1.1 0
  let z:∀ C:ActiveU,EU C:=fun C => coordinate Omega C.1.1 2
  let WU:∀ C:ActiveU,Finset (Place Omega (EU C)):=
@@ -250,17 +249,17 @@ theorem exists_adaptiveNestedProjectionData
      · exact (hb (not_ne_iff.mp hzero.1)).elim
      · exact Or.inl hb
      · exact (hb (not_ne_iff.mp hzero.2)).elim
- let EC:RegularComponent Omega G T H → Type:=
+ let EC:RegularComponent Omega G T H→Type:=
    fun C => CoordinateField Omega C.1
  let rS:∀ C,EC C:=fun C => coordinate Omega C.1 1
  let W:∀ C,Finset (Place Omega (EC C)):=
    fun C => literalRelevantPlaces (base C)
  let baseC:∀ C,SeparableCoordinate Omega (EC C):=
    fun C => literalToSeparableCoordinate (base C)
- let Extra:Omega → Prop:=fun mu =>
+ let Extra:Omega→Prop:=fun mu =>
    MvPolynomial.pderiv (0:Fin 3) G-
      MvPolynomial.C mu*MvPolynomial.pderiv (1:Fin 3) G=0
- have hextra:∀ {a b},Extra a → Extra b → a=b:=by
+ have hextra:∀ {a b},Extra a→Extra b→a=b:=by
    exact directional_bad_coefficient_subsingleton G hSderiv
  obtain ⟨mu,hmu0,hmudir,hmu⟩:=
    exists_common_exact_finite_separable_affine_adaptive_avoiding_one

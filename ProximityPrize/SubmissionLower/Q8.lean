@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X
 import ProximityPrize.SubmissionLower.P
 import ProximityPrize.SubmissionLower.I
@@ -47,9 +46,9 @@ structure AdaptiveUnitPoleBudget
    (base:∀ C:RegularComponent Omega G T H,
      SeparableLiteralCoordinate C.1)
    (p q:FlagDegree) where
- zCost:RegularComponent Omega G T H → ℕ
- yzCost:RegularComponent Omega G T H → ℕ
- allCost:RegularComponent Omega G T H → ℕ
+ zCost:RegularComponent Omega G T H→ℕ
+ yzCost:RegularComponent Omega G T H→ℕ
+ allCost:RegularComponent Omega G T H→ℕ
  zPole:∀ C:RegularComponent Omega G T H,
    LiteralSupportPoleBound (base C) (flagSupport unitZFlag) (zCost C)
  yzPole:∀ C:RegularComponent Omega G T H,

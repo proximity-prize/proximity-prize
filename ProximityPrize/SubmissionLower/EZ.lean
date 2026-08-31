@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.K4
 import ProximityPrize.SubmissionLower.J
 namespace ProximityPrize.SubmissionLower.RCN160
@@ -8,7 +7,7 @@ variable {K ι:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq ι:=Classical.decEq ι
 theorem nodal_eval_ne_zero_of_mem_sdiff
-   (I nodes:Finset ι) (x:ι → K)
+   (I nodes:Finset ι) (x:ι→K)
    (hsub:I ⊆ nodes) (hinj:Set.InjOn x nodes)
    {j:ι} (hj:j∈nodes \ I):
    (Lagrange.nodal I x).eval (x j)≠0:=by
@@ -17,10 +16,10 @@ theorem nodal_eval_ne_zero_of_mem_sdiff
  have hji':j=i:=hinj (Finset.mem_sdiff.mp hj).1 (hsub hi) hji
  exact (Finset.mem_sdiff.mp hj).2 (hji' ▸ hi)
 def residualReceived
-   (I:Finset ι) (x u:ι → K) (P:Polynomial K) (j:ι):K:=
+   (I:Finset ι) (x u:ι→K) (P:Polynomial K) (j:ι):K:=
  (u j-P.eval (x j))/(Lagrange.nodal I x).eval (x j)
 theorem residual_agreement_of_original
-   (I nodes:Finset ι) (x u0 u1:ι → K)
+   (I nodes:Finset ι) (x u0 u1:ι→K)
    (hsub:I ⊆ nodes) (hinj:Set.InjOn x nodes)
    (P0 P1 C S:Polynomial K) (gamma:K)
    (hnormal:S=P0+Polynomial.C gamma*P1+Lagrange.nodal I x*C)
@@ -35,8 +34,8 @@ theorem residual_agreement_of_original
  field_simp [hV]
  linear_combination hagree-heval
 theorem noLargeSelectedPencil_residual
-   (I:Finset ι) (x:ι → K) (w e:ℕ) (hIw:I.card ≤ w)
-   (selected residual:K → Polynomial K) (Gamma:Finset K)
+   (I:Finset ι) (x:ι→K) (w e:ℕ) (hIw:I.card ≤ w)
+   (selected residual:K→Polynomial K) (Gamma:Finset K)
    (P0 P1:Polynomial K) (hP0:P0.natDegree ≤ w)
    (hP1:P1.natDegree ≤ w)
    (hnormal:∀ gamma∈Gamma,

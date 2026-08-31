@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 universe u v w
@@ -27,6 +26,6 @@ def toNonUnitalAlgHom (f:L →ₗ⁅R⁆ L₂):CommutatorRing L →ₙₐ[R] Com
    map_zero':=f.toLinearMap.map_zero
    map_mul':=f.map_lie}
 theorem toNonUnitalAlgHom_injective:
-   Function.Injective (toNonUnitalAlgHom:_ → CommutatorRing L →ₙₐ[R] CommutatorRing L₂):=
+   Function.Injective (toNonUnitalAlgHom:_→CommutatorRing L →ₙₐ[R] CommutatorRing L₂):=
  fun _ _ h => ext <| NonUnitalAlgHom.congr_fun h
 end LieHom

@@ -23,7 +23,7 @@ theorem flagPlaneResultant_ne
    (C:RegularComponent Omega G T H)
    (ht:Transcendental Omega
      (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (order 0))))
-   (hpositive:0 < (planeMap Omega order (flagAlgHom lam mu nu G)).natDegree):
+   (hpositive:0<(planeMap Omega order (flagAlgHom lam mu nu G)).natDegree):
    flagPlaneResultant lam mu nu order G T≠0:=by
  exact RCN362.irreducible_resultant_ne_zero_of_not_dvd
    (planeMap Omega order (flagAlgHom lam mu nu G))

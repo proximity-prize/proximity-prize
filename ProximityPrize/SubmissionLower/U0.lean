@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.U1
 section ProximityFlatProofPort
 open SetLike DirectSum Set

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B5
 namespace ProximityPrize.SubmissionLower.RCN313
 open RCN077 RCN347
@@ -67,7 +66,7 @@ theorem contactG_eq_lift (F:Poly4 K):
    castSucc_two]
 def polyImage (F:Poly4 K):Poly4 K →+*ContactRing K F:=
  (Ideal.Quotient.mk (contactIdeal K F)).comp
-   (MvPolynomial.rename (R:=K) (Fin.castSucc:Fin 4 → Fin 5)).toRingHom
+   (MvPolynomial.rename (R:=K) (Fin.castSucc:Fin 4→Fin 5)).toRingHom
 theorem polyImage_apply (F P:Poly4 K):
    polyImage K F P=Ideal.Quotient.mk (contactIdeal K F) (liftFour K P):=rfl
 @[simp] theorem polyImage_X (F:Poly4 K) (i:Fin 4):
@@ -118,7 +117,7 @@ def numeratorStep (F:Poly4 K) (b:ℕ) (M:Poly4 K):Poly4 K:=
    (MvPolynomial.pderiv (0:Fin 4) (polyH K F))
    (MvPolynomial.pderiv (1:Fin 4) (polyH K F))
    (MvPolynomial.pderiv (2:Fin 4) (polyH K F))
-def numerator (F:Poly4 K):ℕ → Poly4 K
+def numerator (F:Poly4 K):ℕ→Poly4 K
  | 0 => MvPolynomial.X (1:Fin 4)
  | b+1 => numeratorStep K F b (numerator F b)
 @[simp] theorem numerator_zero (F:Poly4 K):
@@ -362,16 +361,16 @@ theorem numerator_degree_bounds
 end DegreeBounds
 section AgreementNumerators
 variable {K:Type*} [Field K]
-def commonNumeratorTerm (F:Poly4 K) (w:ℕ) (c:ℕ → K) (x:K) (j:ℕ):
+def commonNumeratorTerm (F:Poly4 K) (w:ℕ) (c:ℕ→K) (x:K) (j:ℕ):
    Poly4 K:=
  MvPolynomial.C (c j)*numerator K F j*
    polyH K F^(2*(w-j))*
      (MvPolynomial.C x-MvPolynomial.X (0:Fin 4))^j
-def clearedTaylorNumerator (F:Poly4 K) (w:ℕ) (c:ℕ → K) (x:K):Poly4 K:=
+def clearedTaylorNumerator (F:Poly4 K) (w:ℕ) (c:ℕ→K) (x:K):Poly4 K:=
  ∑ j∈Finset.range (w+1),commonNumeratorTerm F w c x j
 def affineSeedPolynomial (u₀ u₁:K):Poly4 K:=
  MvPolynomial.C u₀+MvPolynomial.X (3:Fin 4)*MvPolynomial.C u₁
-def agreementNumerator (F:Poly4 K) (w:ℕ) (c:ℕ → K) (x u₀ u₁:K):
+def agreementNumerator (F:Poly4 K) (w:ℕ) (c:ℕ→K) (x u₀ u₁:K):
    Poly4 K:=
  clearedTaylorNumerator F w c x-affineSeedPolynomial u₀ u₁*polyH K F^(2*w)
 theorem shiftedX_degree_bound (i:Fin 4) (hi:i≠0) (x:K):
@@ -379,7 +378,7 @@ theorem shiftedX_degree_bound (i:Fin 4) (hi:i≠0) (x:K):
  apply degree_sub_bound i
  · simp only [MvPolynomial.degreeOf_C,le_refl]
  · simp only [MvPolynomial.degreeOf_X_of_ne hi,le_refl]
-theorem degree_sum_bound (i:Fin 4) (I:Finset ℕ) (f:ℕ → Poly4 K) (a:ℕ)
+theorem degree_sum_bound (i:Fin 4) (I:Finset ℕ) (f:ℕ→Poly4 K) (a:ℕ)
    (hf:∀ j∈I,(f j).degreeOf i ≤ a):
    (∑ j∈I,f j).degreeOf i ≤ a:=
  (MvPolynomial.degreeOf_sum_le i I f).trans (Finset.sup_le hf)
@@ -387,7 +386,7 @@ theorem commonNumeratorTerm_nonR_degree_bound
    (i:Fin 4) (hi₀:i≠0) (hi₂:i≠2)
    (F:Poly4 K) (cap a₀:ℕ) (hF:F.degreeOf i ≤ cap)
    (hbase:(MvPolynomial.X (1:Fin 4):Poly4 K).degreeOf i ≤ a₀)
-   (w j:ℕ) (hj:j ≤ w) (c:ℕ → K) (x:K):
+   (w j:ℕ) (hj:j ≤ w) (c:ℕ→K) (x:K):
    (commonNumeratorTerm F w c x j).degreeOf i ≤ a₀+2*w*cap:=by
  have hM:=numerator_nonR_degree_bound i hi₂ F cap a₀ hF hbase j
  have hCM:(MvPolynomial.C (c j)*numerator K F j).degreeOf i ≤ a₀+2*j*cap:=
@@ -406,7 +405,7 @@ theorem commonNumeratorTerm_nonR_degree_bound
  exact hterm.trans (le_of_eq heq)
 theorem commonNumeratorTerm_R_degree_bound
    (F:Poly4 K) (s:ℕ) (hs:1 ≤ s) (hF:F.degreeOf (2:Fin 4) ≤ s)
-   (w j:ℕ) (hj:j ≤ w) (c:ℕ → K) (x:K):
+   (w j:ℕ) (hj:j ≤ w) (c:ℕ→K) (x:K):
    (commonNumeratorTerm F w c x j).degreeOf (2:Fin 4) ≤ w*(2*s-1):=by
  have hM:=numerator_R_degree_bound F s hs hF j
  have hCM:(MvPolynomial.C (c j)*numerator K F j).degreeOf (2:Fin 4) ≤ j*(2*s-1):=
@@ -436,7 +435,7 @@ theorem clearedTaylorNumerator_nonR_degree_bound
    (i:Fin 4) (hi₀:i≠0) (hi₂:i≠2)
    (F:Poly4 K) (cap a₀:ℕ) (hF:F.degreeOf i ≤ cap)
    (hbase:(MvPolynomial.X (1:Fin 4):Poly4 K).degreeOf i ≤ a₀)
-   (w:ℕ) (c:ℕ → K) (x:K):
+   (w:ℕ) (c:ℕ→K) (x:K):
    (clearedTaylorNumerator F w c x).degreeOf i ≤ a₀+2*w*cap:=by
  unfold clearedTaylorNumerator
  apply degree_sum_bound i
@@ -445,7 +444,7 @@ theorem clearedTaylorNumerator_nonR_degree_bound
    (by have hh:=Finset.mem_range.mp hj;omega) c x
 theorem clearedTaylorNumerator_R_degree_bound
    (F:Poly4 K) (s:ℕ) (hs:1 ≤ s) (hF:F.degreeOf (2:Fin 4) ≤ s)
-   (w:ℕ) (c:ℕ → K) (x:K):
+   (w:ℕ) (c:ℕ→K) (x:K):
    (clearedTaylorNumerator F w c x).degreeOf (2:Fin 4) ≤ w*(2*s-1):=by
  unfold clearedTaylorNumerator
  apply degree_sum_bound (2:Fin 4)
@@ -466,7 +465,7 @@ theorem agreementNumerator_degree_bounds
    (hY:F.degreeOf (1:Fin 4) ≤ ell)
    (hR:F.degreeOf (2:Fin 4) ≤ s)
    (hZ:F.degreeOf (3:Fin 4) ≤ L)
-   (w:ℕ) (c:ℕ → K) (x u₀ u₁:K):
+   (w:ℕ) (c:ℕ→K) (x u₀ u₁:K):
    (agreementNumerator F w c x u₀ u₁).degreeOf (1:Fin 4) ≤ 1+2*w*ell∧
    (agreementNumerator F w c x u₀ u₁).degreeOf (2:Fin 4) ≤ w*(2*s-1)∧
    (agreementNumerator F w c x u₀ u₁).degreeOf (3:Fin 4) ≤ 2*w*L+1:=by

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BM
 namespace ProximityPrize.SubmissionLower.RCN161
 noncomputable section
@@ -7,7 +6,7 @@ set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 1000000
 variable {K:Type*} [Field K]
 theorem nodal_dvd_of_eval_eq_zero
-   {ι:Type*} (I:Finset ι) (x:ι → K)
+   {ι:Type*} (I:Finset ι) (x:ι→K)
    (hinj:Set.InjOn x I) (P:Polynomial K)
    (hzero:∀ i∈I,P.eval (x i)=0):
    Lagrange.nodal I x∣P:=by
@@ -21,7 +20,7 @@ theorem nodal_dvd_of_eval_eq_zero
    rw [Polynomial.dvd_iff_isRoot,Polynomial.IsRoot]
    exact hzero i hi
 theorem exists_affine_nodal_residual
-   {ι:Type*} (I:Finset ι) (x u0 u1:ι → K)
+   {ι:Type*} (I:Finset ι) (x u0 u1:ι→K)
    (w:ℕ) (hIw:I.card ≤ w) (hinj:Set.InjOn x I)
    (gamma:K) (S:Polynomial K) (hS:S.natDegree ≤ w)
    (hvalues:∀ i∈I,S.eval (x i)=u0 i+gamma*u1 i):
@@ -74,7 +73,7 @@ theorem exists_affine_nodal_residual
  linear_combination hC
 variable {L:Type*} [Field L]
 theorem map_nodal (coefficients:K →+*L)
-   {ι:Type*} (I:Finset ι) (x:ι → K):
+   {ι:Type*} (I:Finset ι) (x:ι→K):
    (Lagrange.nodal I x).map coefficients=
      Lagrange.nodal I (fun i↦coefficients (x i)):=by
  classical
@@ -82,7 +81,7 @@ theorem map_nodal (coefficients:K →+*L)
    Polynomial.map_X,Polynomial.map_C]
 theorem exists_basefield_affine_nodal_residual
    (coefficients:K →+*L)
-   {ι:Type*} (I:Finset ι) (x u0 u1:ι → K)
+   {ι:Type*} (I:Finset ι) (x u0 u1:ι→K)
    (w:ℕ) (hIw:I.card ≤ w) (hinj:Set.InjOn x I)
    (gamma:L) (S:Polynomial L) (hS:S.natDegree ≤ w)
    (hvalues:∀ i∈I,

@@ -69,9 +69,9 @@ lemma X_dvd_comp_sub_C_eval {F:Type*} [Field F]
 lemma X_pow_dvd_mul_pow_of_total_coeff_zero {F:Type*} [Field F]
    {A U:Polynomial F} {m b:Nat}
    (hU:Polynomial.X∣U)
-   (hzero:∀ a,a+b < m → A.coeff a=0):
+   (hzero:∀ a,a+b<m→A.coeff a=0):
    Polynomial.X^m∣A*U^b:=by
- by_cases hb:b < m
+ by_cases hb:b<m
  · have hA:Polynomial.X^(m-b)∣A:=by
      rw [Polynomial.X_pow_dvd_iff]
      intro d hd
@@ -93,7 +93,7 @@ lemma X_pow_dvd_mul_pow_of_total_coeff_zero {F:Type*} [Field F]
 lemma X_pow_dvd_eval_of_total_coeff_zero {F:Type*} [Field F]
    {B:Polynomial (Polynomial F)} {U:Polynomial F} {m:Nat}
    (hU:Polynomial.X∣U)
-   (hzero:∀ a b,a+b < m → (B.coeff b).coeff a=0):
+   (hzero:∀ a b,a+b<m→(B.coeff b).coeff a=0):
    Polynomial.X^m∣Polynomial.eval U B:=by
  rw [Polynomial.eval_eq_sum]
  apply Finset.dvd_sum
@@ -103,9 +103,9 @@ lemma X_pow_dvd_eval_of_total_coeff_zero {F:Type*} [Field F]
 lemma specialize_shift_total_coeff_zero {F:Type*} [Field F]
    (Q:Polynomial (Polynomial (Polynomial F))) (ω z:F) (yZ:Polynomial F)
    (m:Nat)
-   (hvan:∀ s t h,s+t < m →
+   (hvan:∀ s t h,s+t<m →
      ((((Polynomial.Bivariate.shift Q (Polynomial.C ω) yZ).coeff t).coeff s).coeff h)=0):
-   ∀ s t,s+t < m →
+   ∀ s t,s+t<m →
      (((Polynomial.Bivariate.shift (specializeZ Q z) ω (Polynomial.eval z yZ)).coeff t).coeff s)=0:=by
  intro s t hst
  have hpoly:
@@ -121,7 +121,7 @@ theorem rootMultiplicity_triEval_ge_of_shift_coeff_zero
    {F:Type*} [Field F]
    (Q:Polynomial (Polynomial (Polynomial F))) (ω z:F)
    (yZ P:Polynomial F) (m:Nat)
-   (hvan:∀ s t h,s+t < m →
+   (hvan:∀ s t h,s+t<m →
      ((((Polynomial.Bivariate.shift Q (Polynomial.C ω) yZ).coeff t).coeff s).coeff h)=0)
    (hmatch:Polynomial.eval ω P=Polynomial.eval z yZ)
    (hne:triEval Q z P≠0):
@@ -129,7 +129,7 @@ theorem rootMultiplicity_triEval_ge_of_shift_coeff_zero
  let y:=Polynomial.eval z yZ
  let B:=specializeZ Q z
  let U:=P.comp (Polynomial.X+Polynomial.C ω)-Polynomial.C y
- have hzero:∀ a b,a+b < m →
+ have hzero:∀ a b,a+b<m →
      (((Polynomial.Bivariate.shift B ω y).coeff b).coeff a)=0:=by
    exact specialize_shift_total_coeff_zero Q ω z yZ m hvan
  have hU:Polynomial.X∣U:=
@@ -181,12 +181,12 @@ theorem triEval_eq_zero_of_many_shift_vanishing
    {F ι:Type*} [Field F] [DecidableEq F] [DecidableEq ι]
    (Q:Polynomial (Polynomial (Polynomial F))) (z:F)
    (P:Polynomial F) (ω:ι ↪ F) (A:Finset ι)
-   (yZ:ι → Polynomial F) (m DX:Nat)
-   (hvan:∀ i∈A,∀ s t h,s+t < m →
+   (yZ:ι→Polynomial F) (m DX:Nat)
+   (hvan:∀ i∈A,∀ s t h,s+t<m →
      ((((Polynomial.Bivariate.shift Q (Polynomial.C (ω i)) (yZ i)).coeff t).coeff s).coeff h)=0)
    (hmatch:∀ i∈A,Polynomial.eval (ω i) P=Polynomial.eval z (yZ i))
    (hdegree:(triEval Q z P).natDegree ≤ DX)
-   (hmany:DX < m*A.card):
+   (hmany:DX<m*A.card):
    triEval Q z P=0:=by
  by_contra hne
  have hmult:∀ i∈A,m ≤ (triEval Q z P).rootMultiplicity (ω i):=by
@@ -200,7 +200,7 @@ theorem triEval_natDegree_le_of_weighted_X_cap
    {F:Type*} [Field F]
    (Q:Polynomial (Polynomial (Polynomial F))) (z:F) (P:Polynomial F)
    (k DX:Nat) (hP:P.natDegree ≤ k)
-   (hcap:∀ j a,((Q.coeff j).coeff a)≠0 → a+k*j ≤ DX):
+   (hcap:∀ j a,((Q.coeff j).coeff a)≠0→a+k*j ≤ DX):
    (triEval Q z P).natDegree ≤ DX:=by
  rw [triEval,Polynomial.eval_eq_sum]
  apply Polynomial.natDegree_sum_le_of_forall_le
@@ -235,13 +235,13 @@ theorem triEval_eq_zero_of_many_shift_vanishing_of_weighted_X_cap
    {F ι:Type*} [Field F] [DecidableEq F] [DecidableEq ι]
    (Q:Polynomial (Polynomial (Polynomial F))) (z:F)
    (P:Polynomial F) (ω:ι ↪ F) (A:Finset ι)
-   (yZ:ι → Polynomial F) (m k DX:Nat)
-   (hvan:∀ i∈A,∀ s t h,s+t < m →
+   (yZ:ι→Polynomial F) (m k DX:Nat)
+   (hvan:∀ i∈A,∀ s t h,s+t<m →
      ((((Polynomial.Bivariate.shift Q (Polynomial.C (ω i)) (yZ i)).coeff t).coeff s).coeff h)=0)
    (hmatch:∀ i∈A,Polynomial.eval (ω i) P=Polynomial.eval z (yZ i))
    (hP:P.natDegree ≤ k)
-   (hcap:∀ j a,((Q.coeff j).coeff a)≠0 → a+k*j ≤ DX)
-   (hmany:DX < m*A.card):
+   (hcap:∀ j a,((Q.coeff j).coeff a)≠0→a+k*j ≤ DX)
+   (hmany:DX<m*A.card):
    triEval Q z P=0:=by
  apply triEval_eq_zero_of_many_shift_vanishing Q z P ω A yZ m DX
    hvan hmatch (triEval_natDegree_le_of_weighted_X_cap Q z P k DX hP hcap) hmany

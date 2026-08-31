@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z3
 import ProximityPrize.SubmissionLower.EE
 namespace ProximityPrize.SubmissionLower.RCN093
@@ -50,7 +49,7 @@ theorem flagEvaluation_flag (lam μ ν:K)
    eval₂Hom_flag_at_affine]
  rw [coordinateEvaluation_eq_aeval]
  have hx:(![coordinate K P 0,coordinate K P 1,coordinate K P 2]:
-     Fin 3 → CoordinateField K P)=coordinate K P:=by
+     Fin 3→CoordinateField K P)=coordinate K P:=by
    funext i
    fin_cases i <;> rfl
  rw [hx]
@@ -203,7 +202,7 @@ theorem flag_generators_z (lam μ ν:K)
  exact top_of_affine_flag_mem K P lam μ ν L hU hV hZmem
 section Family
 variable {I:Type} [Fintype I]
-variable (Q:I → Ideal (MvPolynomial (Fin 3) K)) [∀ i,(Q i).IsPrime]
+variable (Q:I→Ideal (MvPolynomial (Fin 3) K)) [∀ i,(Q i).IsPrime]
 theorem flagEvaluation_kernel_family_injective
    (hinj:Function.Injective Q) (lam μ ν:K):
    Function.Injective (fun i↦

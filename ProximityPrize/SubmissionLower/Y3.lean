@@ -64,7 +64,7 @@ theorem numerator_two (F:Poly4 K):
    baseDerivation_R,Derivation.leibniz_pow]
  simp only [smul_eq_mul,nsmul_eq_mul,Nat.reduceSub,Nat.cast_ofNat]
  ring
-def baseNumerator (F:Poly4 K):ℕ → Poly4 K
+def baseNumerator (F:Poly4 K):ℕ→Poly4 K
  | 0 => polyG K F
  | n+1 => polyH K F*baseDerivation F (baseNumerator F n)-
      (2*n+1:ℕ)*baseNumerator F n*baseDerivation F (polyH K F)
@@ -109,7 +109,7 @@ end Algebra
 section Agreement
 variable {K:Type*} [Field K]
 theorem commonNumeratorTerm_mem_pow (F:Poly4 K) (d j:ℕ)
-   (hd:2 ≤ d) (hj:j ≤ d) (c:ℕ → K) (x:K):
+   (hd:2 ≤ d) (hj:j ≤ d) (c:ℕ→K) (x:K):
    commonNumeratorTerm F d c x j∈baseIdeal F^(d+2):=by
  unfold commonNumeratorTerm
  apply (baseIdeal F^(d+2)).mul_mem_right
@@ -135,7 +135,7 @@ theorem commonNumeratorTerm_mem_pow (F:Poly4 K) (d j:ℕ)
      rw [←hpow,pow_add]
      ring
 theorem agreementNumerator_mem_pow (F:Poly4 K) (d:ℕ) (hd:2 ≤ d)
-   (c:ℕ → K) (x u₀ u₁:K):
+   (c:ℕ→K) (x u₀ u₁:K):
    agreementNumerator F d c x u₀ u₁∈baseIdeal F^(d+2):=by
  unfold agreementNumerator clearedTaylorNumerator
  apply (baseIdeal F^(d+2)).sub_mem

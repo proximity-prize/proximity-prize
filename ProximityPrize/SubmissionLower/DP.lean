@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X9
 namespace ProximityPrize.SubmissionLower.RCN038
 open scoped Classical WithZero TensorProduct
@@ -100,7 +99,7 @@ theorem exists_adaptiveNestedProjectionDataActive
    (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0):
    Nonempty (AdaptiveNestedProjectionDataActive base hactive hSderiv):=by
  classical
- let E:RegularComponent Omega G T H → Type:=
+ let E:RegularComponent Omega G T H→Type:=
    fun C => CoordinateField Omega C.1
  let rY:∀ C,E C:=fun C => coordinate Omega C.1 0
  let z:∀ C,E C:=fun C => coordinate Omega C.1 2
@@ -170,10 +169,10 @@ theorem exists_adaptiveNestedProjectionDataActive
    obtain ⟨hs,hfinite,hsep,_⟩:=hlam C
    exact Or.inr (differential_ne_zero_of_gate _ hs ⟨hfinite,hsep⟩)
  let rS:∀ C,E C:=fun C => coordinate Omega C.1 1
- let Extra:Omega → Prop:=fun mu =>
+ let Extra:Omega→Prop:=fun mu =>
    MvPolynomial.pderiv (0:Fin 3) G-
      MvPolynomial.C mu*MvPolynomial.pderiv (1:Fin 3) G=0
- have hextra:∀ {a b},Extra a → Extra b → a=b:=by
+ have hextra:∀ {a b},Extra a→Extra b→a=b:=by
    exact directional_bad_coefficient_subsingleton G hSderiv
  obtain ⟨mu,hmu0,hmudir,hmu⟩:=
    exists_common_exact_finite_separable_affine_adaptive_avoiding_one

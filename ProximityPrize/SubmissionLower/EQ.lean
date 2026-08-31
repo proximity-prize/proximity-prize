@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J4
 import ProximityPrize.SubmissionLower.DU
 import ProximityPrize.SubmissionLower.BK
@@ -39,7 +38,7 @@ theorem mixed_padded_le_succ (flag:FlagDegree) (a b s d:ℕ) (r:FlagDegree):
      add_zOnly,add_yz,add_all,nsmul_zOnly,nsmul_yz,nsmul_all] <;> ring
  rw [he,mixed_add_second]
  exact Nat.le_add_right _ _
-variable {Γ:Finset K} {x:I → K} {p e a b s:ℕ} [CharP (Ω K) p]
+variable {Γ:Finset K} {x:I→K} {p e a b s:ℕ} [CharP (Ω K) p]
 variable {flag:FlagDegree} {w:ℕ}
 theorem actual_identityCurveCountProvider
    (S:ResidualStage (polynomialEmbedding K) Γ x p e flag w (support a b s))

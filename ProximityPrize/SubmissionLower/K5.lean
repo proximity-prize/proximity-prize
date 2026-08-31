@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B0
 namespace ProximityPrize.SubmissionLower.RCN166
 open RCN002 RCN136 RCN224
@@ -35,13 +34,13 @@ theorem coordinate_y_affine_of_basefield_pencil
 include hF hH in
 theorem identityNodes_card_le_of_r_dependent_principal_zero_safe
    {iota:Type} [DecidableEq iota]
-   (nodes:Finset iota) (x u0 u1:iota → K) (w:ℕ)
+   (nodes:Finset iota) (x u0 u1:iota→K) (w:ℕ)
    (hinj:Set.InjOn x nodes)
    (g:MvPolynomial (Fin 3) Omega) (hP:P=Ideal.span {g})
-   (hr:0 < g.degreeOf 1):
+   (hr:0<g.degreeOf 1):
    (identityNodes phi P F nodes x u0 u1 w).card ≤ w:=by
  by_contra h
- have hc:w < (identityNodes phi P F nodes x u0 u1 w).card:=
+ have hc:w<(identityNodes phi P F nodes x u0 u1 w).card:=
    Nat.lt_of_not_ge h
  obtain ⟨P0,P1,_,_,hp,_⟩:=
    exists_common_pencil_of_many_identities phi P F hF hH

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 namespace IsNilpotent
@@ -23,11 +22,11 @@ theorem exp_smul_eq_sum {M:Type*} [AddCommGroup M] [Module A M] [Module ℚ M] {
    exp a • m=∑ i∈range k,(i.factorial:ℚ)⁻¹ • (a^i) • m:=by
  rcases le_or_gt (nilpotencyClass a) k with h₀ | h₀
  · simp_rw [exp_eq_sum (pow_eq_zero_of_le h₀ (pow_nilpotencyClass hn)),sum_smul,smul_assoc]
- rw [exp,sum_smul, ←sum_range_add_sum_Ico _ (Nat.le_of_succ_le h₀)]
+ rw [exp,sum_smul,←sum_range_add_sum_Ico _ (Nat.le_of_succ_le h₀)]
  suffices ∑ i∈Ico k (nilpotencyClass a),((i.factorial:ℚ)⁻¹ • (a^i)) • m=0 by
    simp_rw [this,add_zero,smul_assoc]
  refine sum_eq_zero fun r h₂↦?_
- rw [smul_assoc, ←pow_sub_mul_pow a (mem_Ico.1 h₂).1,mul_smul,h,smul_zero,smul_zero]
+ rw [smul_assoc,←pow_sub_mul_pow a (mem_Ico.1 h₂).1,mul_smul,h,smul_zero,smul_zero]
 theorem exp_add_of_commute {a b:A} (h₁:Commute a b) (h₂:IsNilpotent a) (h₃:IsNilpotent b):
    exp (a+b)=exp a*exp b:=by
  obtain ⟨n₁,hn₁⟩:=h₂
@@ -54,8 +53,8 @@ theorem exp_add_of_commute {a b:A} (h₁:Commute a b) (h₂:IsNilpotent a) (h₃
      simp only [mem_range] at hi hj
      replace hj:=Nat.le_of_lt_succ hj
      suffices (i !:ℚ)⁻¹*(i.choose j)=((j !:ℚ)⁻¹*((i-j)!:ℚ)⁻¹) by
-       rw [←Nat.cast_commute (i.choose j), ←this, ←mul_smul_comm, ←nsmul_eq_mul,
-         mul_smul, ←smul_assoc,smul_comm,smul_assoc]
+       rw [←Nat.cast_commute (i.choose j),←this,←mul_smul_comm,←nsmul_eq_mul,
+         mul_smul,←smul_assoc,smul_comm,smul_assoc]
        norm_cast
      rw [Nat.choose_eq_factorial_div_factorial hj,
        Nat.cast_div (Nat.factorial_mul_factorial_dvd_factorial hj) (by positivity)]
@@ -145,7 +144,7 @@ theorem exp_smul {G:Type*} [Monoid G] [MulSemiringAction G A]
 set_option linter.flexible false in
 theorem isNilpotent_exp_sub_one {a:A} (ha:IsNilpotent a):IsNilpotent (exp a-1):=by
  nontriviality A
- rw [exp, ←Nat.sub_add_cancel (pos_nilpotencyClass_iff.2 ha),Finset.sum_range_succ']
+ rw [exp,←Nat.sub_add_cancel (pos_nilpotencyClass_iff.2 ha),Finset.sum_range_succ']
  simp
  apply Commute.isNilpotent_sum fun _ _↦smul (pow_of_pos ha <| by positivity) _
  simp [Nat.factorial_ne_zero]

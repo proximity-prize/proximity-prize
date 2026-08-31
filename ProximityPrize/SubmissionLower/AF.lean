@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BY
 import ProximityPrize.SubmissionLower.B8
 import ProximityPrize.SubmissionLower.GQ
@@ -31,7 +30,7 @@ def sharpResidualAgreementFlag
    1+(sharpAgreementDirection P).yz*d,
    (sharpAgreementDirection P).all*d⟩
 theorem sharpResidualAgreementFlag_ys
-   (P:ResidualSupportParameters) (hsy:P.s < P.ys) (d:ℕ):
+   (P:ResidualSupportParameters) (hsy:P.s<P.ys) (d:ℕ):
    (sharpResidualAgreementFlag P d).yz+
        (sharpResidualAgreementFlag P d).all=
      1+d*(2*P.ys-2):=by
@@ -53,7 +52,7 @@ theorem sharpResidualAgreementFlag_ys
  rw [←hcoeff]
  ring
 theorem sharpResidualAgreementFlag_total
-   (P:ResidualSupportParameters) (hsy:P.s < P.ys) (d:ℕ):
+   (P:ResidualSupportParameters) (hsy:P.s<P.ys) (d:ℕ):
    (sharpResidualAgreementFlag P d).zOnly+
        (sharpResidualAgreementFlag P d).yz+
        (sharpResidualAgreementFlag P d).all=
@@ -106,7 +105,7 @@ variable {K Omega:Type} [Field K] [Field Omega]
 theorem sharp_agreement_weight_bounds
    {P:ResidualSupportParameters} {F:MvPolynomial (Fin 4) K}
    (H:ResidualSupportData P F)
-   (d:ℕ) (coeffs:ℕ → K) (x u0 u1:K):
+   (d:ℕ) (coeffs:ℕ→K) (x u0 u1:K):
    (agreementNumerator F d coeffs x u0 u1).degreeOf (2:Fin 4) ≤
        d*(2*P.s-1)∧
      wt residualYSWeights (agreementNumerator F d coeffs x u0 u1) ≤
@@ -142,10 +141,10 @@ theorem sharp_agreement_weight_bounds
    rw [hcoeff]
    norm_num
 theorem surfaceMap_agreement_in_sharp_flag
-   {P:ResidualSupportParameters} (hsy:P.s < P.ys)
+   {P:ResidualSupportParameters} (hsy:P.s<P.ys)
    (phi:Polynomial K →+*Omega) {F:MvPolynomial (Fin 4) K}
    (H:ResidualSupportData P F)
-   (d:ℕ) (coeffs:ℕ → K) (x u0 u1:K):
+   (d:ℕ) (coeffs:ℕ→K) (x u0 u1:K):
    PolynomialInFlag (sharpResidualAgreementFlag P d)
      (surfaceMap phi (agreementNumerator F d coeffs x u0 u1)):=by
  intro e he
@@ -207,7 +206,7 @@ theorem factorRegularLedgerForDirection_projection_decomposition
  ring
 theorem sum_factorRegularLedgerForDirection_le_flag
    {I:Type} [Fintype I] (p:Profile) (direction:FlagDegree)
-   (flag:I → FlagDegree) (cap:FlagDegree)
+   (flag:I→FlagDegree) (cap:FlagDegree)
    (hz:(∑ i,(flag i).zOnly) ≤ cap.zOnly)
    (hyz:(∑ i,(flag i).yz) ≤ cap.yz)
    (hall:(∑ i,(flag i).all) ≤ cap.all):
@@ -244,16 +243,16 @@ theorem sum_factorRegularLedgerForDirection_le_flag
      (factorRegularLedgerForDirection_projection_decomposition
        p direction cap).symm
 variable {K Omega Iota:Type} [Field K] [Field Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 variable {pchar:ℕ} [CharP Omega pchar]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Iota:=Classical.decEq Iota
 theorem sum_factor_counts_rectangular_sharp_le
    (p:Profile) (support:ResidualSupportParameters)
-   (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) (hw:0 < p.w)
+   (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) (hw:0<p.w)
    (hbox:Q∈globalCoefficientBox K p.weightedCap p.w
      p.seedTotalCap p.slopeCap)
-   (count:RegularIndex Q → ℕ)
+   (count:RegularIndex Q→ℕ)
    (hcount:∀ F,count F*p.gap^2 ≤
      factorRegularLedgerForDirection p (sharpAgreementDirection support)
        (regularFlag Q F)):

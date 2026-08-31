@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.S0
 import ProximityPrize.SubmissionLower.HY
 import ProximityPrize.SubmissionLower.HZ
@@ -25,7 +24,7 @@ theorem cardQuot_top:cardQuot (⊤:Submodule R M)=1:=
  AddSubgroup.index_top
 variable {R M}
 @[simp]
-theorem cardQuot_eq_one_iff {P:Submodule R M}:cardQuot P=1 ↔ P=⊤:=
+theorem cardQuot_eq_one_iff {P:Submodule R M}:cardQuot P=1↔P=⊤:=
  AddSubgroup.index_eq_one.trans (by simp [SetLike.ext_iff])
 end
 end Submodule
@@ -64,7 +63,7 @@ theorem Ideal.exists_mul_add_mem_pow_succ [IsDedekindDomain S] (hP:P≠⊥)
 theorem Ideal.mem_prime_of_mul_mem_pow [IsDedekindDomain S] {P:Ideal S} [P_prime:P.IsPrime]
    (hP:P≠⊥) {i:ℕ} {a b:S} (a_notMem:a∉P^(i+1)) (ab_mem:a*b∈P^(i+1)):
    b∈P:=by
- simp only [←Ideal.span_singleton_le_iff_mem, ←Ideal.dvd_iff_le,pow_succ, ←
+ simp only [←Ideal.span_singleton_le_iff_mem,←Ideal.dvd_iff_le,pow_succ,←
    Ideal.span_singleton_mul_span_singleton] at a_notMem ab_mem ⊢
  exact (prime_pow_succ_dvd_mul (Ideal.prime_of_isPrime hP P_prime) ab_mem).resolve_left a_notMem
 theorem Ideal.mul_add_mem_pow_succ_unique [IsDedekindDomain S] (hP:P≠⊥)
@@ -80,9 +79,9 @@ theorem cardQuot_pow_of_prime [IsDedekindDomain S] (hP:P≠⊥) {i:ℕ}:
  induction i with
  | zero => simp
  | succ i ih => ?_
- have:P^(i+1) < P^i:=Ideal.pow_succ_lt_pow hP i
+ have:P^(i+1)<P^i:=Ideal.pow_succ_lt_pow hP i
  suffices hquot:map (P^i.succ).mkQ (P^i) ≃ S ⧸ P by
-   rw [pow_succ' (cardQuot P), ←ih,cardQuot_apply (P^i.succ), ←
+   rw [pow_succ' (cardQuot P),←ih,cardQuot_apply (P^i.succ),←
      card_quotient_mul_card_quotient (P^i) (P^i.succ) this.le,cardQuot_apply (P^i),
      cardQuot_apply P,Nat.card_congr hquot]
  choose a a_mem a_notMem using SetLike.exists_of_lt this
@@ -92,8 +91,8 @@ theorem cardQuot_pow_of_prime [IsDedekindDomain S] (hP:P≠⊥) {i:ℕ}:
    Submodule.mem_map.mp hc'
  refine Equiv.ofBijective (fun c' => Quotient.mk'' (f (k c' c'.prop) (hk_mem c' c'.prop))) ⟨?_,?_⟩
  · rintro ⟨c₁',hc₁'⟩ ⟨c₂',hc₂'⟩ h
-   rw [Subtype.mk_eq_mk, ←hk_eq _ hc₁', ←hk_eq _ hc₂',mkQ_apply,mkQ_apply,
-     Submodule.Quotient.eq, ←hf _ (hk_mem _ hc₁'), ←hf _ (hk_mem _ hc₂')]
+   rw [Subtype.mk_eq_mk,←hk_eq _ hc₁',←hk_eq _ hc₂',mkQ_apply,mkQ_apply,
+     Submodule.Quotient.eq,←hf _ (hk_mem _ hc₁'),←hf _ (hk_mem _ hc₂')]
    refine Ideal.mul_add_mem_pow_succ_inj _ _ _ _ _ _ a_mem (hg _ _) (hg _ _) ?_
    simpa only [Submodule.Quotient.mk''_eq_mk,Submodule.Quotient.mk''_eq_mk,
      Submodule.Quotient.eq] using h
@@ -136,9 +135,9 @@ theorem absNorm_bot:absNorm (⊥:Ideal S)=0:=by rw [←Ideal.zero_eq_bot,map_zer
 @[simp]
 theorem absNorm_top:absNorm (⊤:Ideal S)=1:=by rw [←Ideal.one_eq_top,map_one]
 @[simp]
-theorem absNorm_eq_one_iff {I:Ideal S}:absNorm I=1 ↔ I=⊤:=by
+theorem absNorm_eq_one_iff {I:Ideal S}:absNorm I=1↔I=⊤:=by
  rw [absNorm_apply,cardQuot_eq_one_iff]
-theorem absNorm_ne_zero_iff (I:Ideal S):Ideal.absNorm I≠0 ↔ Finite (S ⧸ I):=
+theorem absNorm_ne_zero_iff (I:Ideal S):Ideal.absNorm I≠0↔Finite (S ⧸ I):=
  ⟨fun h => Nat.finite_of_card_ne_zero h,fun h =>
    (@AddSubgroup.finiteIndex_of_finite_quotient _ _ _ h).index_ne_zero⟩
 theorem absNorm_dvd_absNorm_of_le {I J:Ideal S} (h:J ≤ I):Ideal.absNorm I∣Ideal.absNorm J:=
@@ -160,14 +159,14 @@ theorem prime_of_irreducible_absNorm_span {a:S} (ha:a≠0)
    (hI:Irreducible (Ideal.absNorm (Ideal.span ({a}:Set S)))):Prime a:=
  (Ideal.span_singleton_prime ha).mp (isPrime_of_irreducible_absNorm hI)
 theorem absNorm_mem (I:Ideal S):↑(Ideal.absNorm I)∈I:=by
- rw [absNorm_apply,cardQuot, ←Ideal.Quotient.eq_zero_iff_mem,map_natCast,
+ rw [absNorm_apply,cardQuot,←Ideal.Quotient.eq_zero_iff_mem,map_natCast,
    Quotient.index_eq_zero]
 theorem span_singleton_absNorm_le (I:Ideal S):Ideal.span {(Ideal.absNorm I:S)} ≤ I:=by
  simp only [Ideal.span_le,Set.singleton_subset_iff,SetLike.mem_coe,Ideal.absNorm_mem I]
 theorem span_singleton_absNorm {I:Ideal S} (hI:(Ideal.absNorm I).Prime):
    Ideal.span (singleton (Ideal.absNorm I:ℤ))=I.comap (algebraMap ℤ S):=by
  have:Ideal.IsPrime (Ideal.span (singleton (Ideal.absNorm I:ℤ))):=by
-   rwa [Ideal.span_singleton_prime (Int.ofNat_ne_zero.mpr hI.ne_zero), ←Nat.prime_iff_prime_int]
+   rwa [Ideal.span_singleton_prime (Int.ofNat_ne_zero.mpr hI.ne_zero),←Nat.prime_iff_prime_int]
  apply (this.isMaximal _).eq_of_le
  · exact ((isPrime_of_irreducible_absNorm
      ((Nat.irreducible_iff_nat_prime _).mpr hI)).comap (algebraMap ℤ S)).ne_top
@@ -207,7 +206,7 @@ lemma absNorm_span_natCast (n:ℕ):(span {(n:S)}).absNorm=n^Module.finrank ℤ S
  simp [absNorm_span_singleton,Algebra.norm_natCast]
 theorem absNorm_dvd_norm_of_mem {I:Ideal S} {x:S} (h:x∈I):
    ↑(Ideal.absNorm I)∣Algebra.norm ℤ x:=by
- rw [←Int.dvd_natAbs, ←absNorm_span_singleton x,Int.natCast_dvd_natCast]
+ rw [←Int.dvd_natAbs,←absNorm_span_singleton x,Int.natCast_dvd_natCast]
  exact absNorm_dvd_absNorm_of_le ((span_singleton_le_iff_mem _).mpr h)
 @[simp]
 theorem absNorm_span_insert (r:S) (s:Set S):
@@ -217,36 +216,36 @@ theorem absNorm_span_insert (r:S) (s:Set S):
      _root_.trans
        (absNorm_dvd_absNorm_of_le (span_mono (Set.singleton_subset_iff.mpr (Set.mem_insert _ _))))
        (by rw [absNorm_span_singleton])⟩
-theorem absNorm_eq_zero_iff {I:Ideal S}:Ideal.absNorm I=0 ↔ I=⊥:=by
+theorem absNorm_eq_zero_iff {I:Ideal S}:Ideal.absNorm I=0↔I=⊥:=by
  constructor
  · intro hI
    rw [←le_bot_iff]
    intro x hx
-   rw [mem_bot, ←Algebra.norm_eq_zero_iff (R:=ℤ), ←Int.natAbs_eq_zero,
-     ←Ideal.absNorm_span_singleton, ←zero_dvd_iff, ←hI]
+   rw [mem_bot,←Algebra.norm_eq_zero_iff (R:=ℤ),←Int.natAbs_eq_zero,
+     ←Ideal.absNorm_span_singleton,←zero_dvd_iff,←hI]
    apply Ideal.absNorm_dvd_absNorm_of_le
    rwa [Ideal.span_singleton_le_iff_mem]
  · rintro rfl
    exact absNorm_bot
 theorem absNorm_ne_zero_iff_mem_nonZeroDivisors {I:Ideal S}:
-   absNorm I≠0 ↔ I∈(Ideal S)⁰:=by
+   absNorm I≠0↔I∈(Ideal S)⁰:=by
  simp_rw [ne_eq,Ideal.absNorm_eq_zero_iff,mem_nonZeroDivisors_iff_ne_zero,Submodule.zero_eq_bot]
 theorem absNorm_pos_iff_mem_nonZeroDivisors {I:Ideal S}:
-   0 < absNorm I ↔ I∈(Ideal S)⁰:=by
+   0<absNorm I↔I∈(Ideal S)⁰:=by
  rw [←absNorm_ne_zero_iff_mem_nonZeroDivisors,Nat.pos_iff_ne_zero]
 theorem absNorm_ne_zero_of_nonZeroDivisors (I:(Ideal S)⁰):absNorm (I:Ideal S)≠0:=
  absNorm_ne_zero_iff_mem_nonZeroDivisors.mpr (SetLike.coe_mem I)
-theorem absNorm_pos_of_nonZeroDivisors (I:(Ideal S)⁰):0 < absNorm (I:Ideal S):=
+theorem absNorm_pos_of_nonZeroDivisors (I:(Ideal S)⁰):0<absNorm (I:Ideal S):=
  absNorm_pos_iff_mem_nonZeroDivisors.mpr (SetLike.coe_mem I)
 lemma finiteIndex {I:Ideal S} (hI:I≠⊥):I.toAddSubgroup.FiniteIndex:=by
- rwa [AddSubgroup.finiteIndex_iff, ←absNorm_eq_index,Ne,absNorm_eq_zero_iff]
+ rwa [AddSubgroup.finiteIndex_iff,←absNorm_eq_index,Ne,absNorm_eq_zero_iff]
 open AddSubgroup in
 lemma isFiniteRelIndex {I:Ideal S} (hI:I≠⊥) (J:Ideal S):
    I.toAddSubgroup.IsFiniteRelIndex J.toAddSubgroup:=by
  have:=finiteIndex hI
  exact isFiniteRelIndex_of_finiteIndex
 lemma exists_prime_and_absNorm_eq_pow (P:Ideal S) [P.IsMaximal]:
-   ∃ p n,0 < n∧↑p∈P∧p.Prime∧P.absNorm=p^n:=by
+   ∃ p n,0<n∧↑p∈P∧p.Prime∧P.absNorm=p^n:=by
  have:IsAddTorsionFree S:=.of_isTorsionFree ℤ _
  have:=CharZero.of_isAddTorsionFree S S
  have:Finite (S ⧸ P):=Submodule.finiteQuotientOfFreeOfRankEq (P.restrictScalars ℤ)
@@ -258,7 +257,7 @@ lemma exists_prime_and_absNorm_eq_pow (P:Ideal S) [P.IsMaximal]:
  obtain ⟨n,hp,e⟩:=FiniteField.card (S ⧸ P) p
  have hP:P.absNorm=p^(n:ℕ):=(Nat.card_eq_fintype_card.trans e:)
  refine ⟨p,n,n.2,?_,hp,hP⟩
- rw [←Ideal.IsPrime.pow_mem_iff_mem (I:=P) inferInstance _ n.pos, ←Nat.cast_pow, ←hP]
+ rw [←Ideal.IsPrime.pow_mem_iff_mem (I:=P) inferInstance _ n.pos,←Nat.cast_pow,←hP]
  exact P.absNorm_mem
 lemma exists_isMaximal_dvd_of_dvd_absNorm
    {p:ℤ} (hp:Prime p) (I:Ideal S) (hI:p∣I.absNorm):
@@ -302,15 +301,15 @@ theorem finite_setOf_absNorm_eq [CharZero S] (n:ℕ):
  · let f:=fun I:Ideal S => Ideal.map (Ideal.Quotient.mk (@Ideal.span S _ {↑n})) I
    refine Set.Finite.of_finite_image (f:=f) ?_ ?_
    · suffices Finite (S ⧸ @Ideal.span S _ {↑n}) by
-       let g:=((↑):Ideal (S ⧸ @Ideal.span S _ {↑n}) → Set (S ⧸ @Ideal.span S _ {↑n}))
+       let g:=((↑):Ideal (S ⧸ @Ideal.span S _ {↑n})→Set (S ⧸ @Ideal.span S _ {↑n}))
        refine Set.Finite.of_finite_image (f:=g) ?_ SetLike.coe_injective.injOn
        exact Set.Finite.subset Set.finite_univ (Set.subset_univ _)
      rw [←absNorm_ne_zero_iff,absNorm_span_singleton]
      simpa only [Ne,Int.natAbs_eq_zero,Algebra.norm_eq_zero_iff,Nat.cast_eq_zero] using
        ne_of_gt hn
    · intro I hI J hJ h
-     rw [←comap_map_mk (span_singleton_absNorm_le I), ←hI.symm, ←
-       comap_map_mk (span_singleton_absNorm_le J), ←hJ.symm]
+     rw [←comap_map_mk (span_singleton_absNorm_le I),←hI.symm,←
+       comap_map_mk (span_singleton_absNorm_le J),←hJ.symm]
      congr
 theorem finite_setOf_absNorm_le [CharZero S] (n:ℕ):
    {I:Ideal S | Ideal.absNorm I ≤ n}.Finite:=by
@@ -345,11 +344,11 @@ theorem card_norm_le_eq_card_norm_le_add_one (n:ℕ) [CharZero S]:
      (fun h↦by rw [h];exact Nat.zero_le n),absNorm_eq_zero_iff]
  rw [Nat.card_unique]
 theorem norm_dvd_iff {x:S} (hx:Prime (Algebra.norm ℤ x)) {y:ℤ}:
-   Algebra.norm ℤ x∣y ↔ x∣y:=by
- rw [←Ideal.mem_span_singleton (y:=x), ←eq_intCast (algebraMap ℤ S), ←Ideal.mem_comap,
+   Algebra.norm ℤ x∣y↔x∣y:=by
+ rw [←Ideal.mem_span_singleton (y:=x),←eq_intCast (algebraMap ℤ S),←Ideal.mem_comap,
    ←Ideal.span_singleton_absNorm,Ideal.mem_span_singleton,Ideal.absNorm_span_singleton,
    Int.natAbs_dvd]
- rwa [Ideal.absNorm_span_singleton, ←Int.prime_iff_natAbs_prime]
+ rwa [Ideal.absNorm_span_singleton,←Int.prime_iff_natAbs_prime]
 end Ideal
 end RingOfIntegers
 section Int
@@ -361,7 +360,7 @@ theorem Int.ideal_span_absNorm_eq_self (J:Ideal ℤ):
  simp
 @[simp]
 theorem Int.prime_absNorm (J:Ideal ℤ):
-   (absNorm J).Prime ↔ Prime J:=by
+   (absNorm J).Prime↔Prime J:=by
  obtain ⟨g,rfl⟩:=IsPrincipalIdealRing.principal J
  simp [prime_span_singleton_iff,prime_iff_natAbs_prime]
 end Int

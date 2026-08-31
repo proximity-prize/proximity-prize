@@ -15,10 +15,10 @@ variable {surfaceFlag firstTailFlag:FlagDegree}
 theorem regularComponentWeightedInertiaCertificate_of_active_channels
    (B:PrimeFlagBudgetFamily
      (G:=G) (T:=T) (H:=H) surfaceFlag firstTailFlag)
-   (multiplicity:RegularComponent Omega G T H → ℕ)
+   (multiplicity:RegularComponent Omega G T H→ℕ)
    {zIndex uIndex:Type*} [Fintype zIndex] [Fintype uIndex]
-   (zComponent:zIndex → RegularComponent Omega G T H)
-   (uComponent:uIndex → RegularComponent Omega G T H)
+   (zComponent:zIndex→RegularComponent Omega G T H)
+   (uComponent:uIndex→RegularComponent Omega G T H)
    (zRewrite:(∑ C,multiplicity C*B.zCost C)=
      ∑ a:zIndex,multiplicity (zComponent a)*B.zCost (zComponent a))
    (uRewrite:(∑ C,multiplicity C*B.yzCost C)=

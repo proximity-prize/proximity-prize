@@ -29,21 +29,21 @@ theorem resultant_fixed_degree_eq_zero_of_common_root_of_monic_right
  have hstd:Polynomial.resultant p q=0:=
    resultant_eq_zero_of_common_root (Or.inr hqmonic.ne_zero) hp hq
  have hm:p.natDegree+(m-p.natDegree)=m:=Nat.add_sub_of_le hpdeg
- rw [←hm, ←hqdeg]
+ rw [←hm,←hqdeg]
  rw [Polynomial.resultant_add_left_deg]
  · simp [hstd]
  · exact le_rfl
 theorem resultant_fixed_degree_eq_zero_of_common_root
    {p q:F[X]} {m n:ℕ} {t:F}
    (hpdeg:p.natDegree ≤ m) (hqdeg:q.natDegree ≤ n)
-   (hsize:0 < m+n) (hp:p.eval t=0) (hq:q.eval t=0):
+   (hsize:0<m+n) (hp:p.eval t=0) (hq:q.eval t=0):
    Polynomial.resultant p q m n=0:=by
  by_cases hne:p≠0∨q≠0
  · have hstd:Polynomial.resultant p q=0:=
      resultant_eq_zero_of_common_root hne hp hq
    have hm:p.natDegree+(m-p.natDegree)=m:=Nat.add_sub_of_le hpdeg
    have hn:q.natDegree+(n-q.natDegree)=n:=Nat.add_sub_of_le hqdeg
-   rw [←hm, ←hn]
+   rw [←hm,←hn]
    rw [Polynomial.resultant_add_left_deg]
    · rw [Polynomial.resultant_add_right_deg]
      · simp [hstd]
@@ -56,7 +56,7 @@ theorem bivariate_resultant_eval_eq_zero_of_common_root
    (B H:F[X][Y]) (n m:ℕ) (z t:F)
    (hBdeg:(B.map (Polynomial.evalRingHom z)).natDegree ≤ n)
    (hHdeg:(H.map (Polynomial.evalRingHom z)).natDegree ≤ m)
-   (hsize:0 < n+m)
+   (hsize:0<n+m)
    (hBroot:(B.map (Polynomial.evalRingHom z)).eval t=0)
    (hHroot:(H.map (Polynomial.evalRingHom z)).eval t=0):
    (Polynomial.resultant B H n m).eval z=0:=by
@@ -64,7 +64,7 @@ theorem bivariate_resultant_eval_eq_zero_of_common_root
  exact resultant_fixed_degree_eq_zero_of_common_root hBdeg hHdeg hsize hBroot hHroot
 theorem bivariate_resultant_eval_eq_zero_of_common_root_original_degrees
    (B H:F[X][Y]) (z t:F)
-   (hsize:0 < B.natDegree+H.natDegree)
+   (hsize:0<B.natDegree+H.natDegree)
    (hBroot:(B.map (Polynomial.evalRingHom z)).eval t=0)
    (hHroot:(H.map (Polynomial.evalRingHom z)).eval t=0):
    (Polynomial.resultant B H).eval z=0:=by
@@ -108,10 +108,10 @@ theorem irreducible_dvd_of_resultant_eq_zero
      hnotCoprime hc.symm
  exact hHmonic.isPrimitive.dvd_of_fraction_map_dvd_fraction_map hdvdK
 theorem irreducible_dvd_of_many_bivariate_common_roots
-   (B H:F[X][Y]) (n m:ℕ) (S:Finset F) (t:F → F)
+   (B H:F[X][Y]) (n m:ℕ) (S:Finset F) (t:F→F)
    (hBY:B.natDegree=n) (hHY:H.natDegree=m)
    (hHmonic:H.Monic) (hHirreducible:Irreducible H)
-   (hmany:m*degreeX B+n*degreeX H < S.card)
+   (hmany:m*degreeX B+n*degreeX H<S.card)
    (hroots:∀ z∈S,
      (B.map (Polynomial.evalRingHom z)).eval (t z)=0∧
      (H.map (Polynomial.evalRingHom z)).eval (t z)=0):
@@ -133,10 +133,10 @@ theorem irreducible_dvd_of_many_bivariate_common_roots
  apply irreducible_dvd_of_resultant_eq_zero B H hHmonic hHirreducible
  simpa only [R,hBY,hHY] using hRzero
 theorem quotient_mk_eq_zero_of_many_bivariate_common_roots
-   (B H:F[X][Y]) (n m:ℕ) (S:Finset F) (t:F → F)
+   (B H:F[X][Y]) (n m:ℕ) (S:Finset F) (t:F→F)
    (hBY:B.natDegree=n) (hHY:H.natDegree=m)
    (hHmonic:H.Monic) (hHirreducible:Irreducible H)
-   (hmany:m*degreeX B+n*degreeX H < S.card)
+   (hmany:m*degreeX B+n*degreeX H<S.card)
    (hroots:∀ z∈S,
      (B.map (Polynomial.evalRingHom z)).eval (t z)=0∧
      (H.map (Polynomial.evalRingHom z)).eval (t z)=0):
@@ -146,9 +146,9 @@ theorem quotient_mk_eq_zero_of_many_bivariate_common_roots
    hHmonic hHirreducible hmany hroots
 theorem exists_common_specialization_eval_C_ne_zero
    [Fintype F] {ρ:Type} [DecidableEq ρ]
-   (S:Finset ρ) (p:ρ → F[X][Y])
+   (S:Finset ρ) (p:ρ→F[X][Y])
    (hp:∀ r∈S,p r≠0)
-   (hdeg:(∑ r∈S,(p r).natDegree) < Fintype.card F):
+   (hdeg:(∑ r∈S,(p r).natDegree)<Fintype.card F):
    ∃ x₀:F,∀ r∈S,Polynomial.eval (Polynomial.C x₀) (p r)≠0:=by
  classical
  let P:F[X][Y]:=∏ r∈S,p r
@@ -156,7 +156,7 @@ theorem exists_common_specialization_eval_C_ne_zero
    change (∏ r∈S,p r)≠0
    rw [Finset.prod_ne_zero_iff]
    exact hp
- have hPdeg:P.natDegree < Fintype.card F:=by
+ have hPdeg:P.natDegree<Fintype.card F:=by
    exact (Polynomial.natDegree_prod_le S p).trans_lt hdeg
  by_contra hgood
  push Not at hgood
@@ -172,8 +172,8 @@ theorem exists_common_specialization_eval_C_ne_zero
  exact hPne hPzero
 theorem exists_common_specialization_eval_C_ne_zero_univ
    [Fintype F] {ρ:Type} [Fintype ρ] [DecidableEq ρ]
-   (p:ρ → F[X][Y]) (hp:∀ r,p r≠0)
-   (hdeg:(∑ r,(p r).natDegree) < Fintype.card F):
+   (p:ρ→F[X][Y]) (hp:∀ r,p r≠0)
+   (hdeg:(∑ r,(p r).natDegree)<Fintype.card F):
    ∃ x₀:F,∀ r,Polynomial.eval (Polynomial.C x₀) (p r)≠0:=by
  simpa only [Finset.mem_univ,forall_const] using
    exists_common_specialization_eval_C_ne_zero (F:=F) Finset.univ p

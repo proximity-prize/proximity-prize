@@ -15,7 +15,7 @@ variable (primeIdeal:Ideal (Polynomial Base)) [primeIdeal.IsPrime]
 variable (factor:Polynomial Base)
 abbrev LocalBase:=Localization.AtPrime primeIdeal
 theorem grouped_resultant_power_dvd_of_primary_pieces_modMax
-   {J:Type*} [Fintype J] (multiplicity:J → ℕ)
+   {J:Type*} [Fintype J] (multiplicity:J→ℕ)
    (hprime:primeIdeal=Ideal.span {factor})
    (hfactor:Irreducible factor) (hfactorMonic:factor.Monic)
    (P₀ Q₀:Polynomial (Polynomial Base)) (m n:ℕ)
@@ -66,7 +66,7 @@ theorem grouped_resultant_power_dvd_of_primary_pieces_modMax
    (Polynomial.resultant P₀ Q₀ m n) hprime hfactor hfactorMonic
      hresultant multiplicity hlocal'
 theorem grouped_resultant_power_dvd_of_primary_pieces_of_surface_mod_ne_zero
-   {J:Type*} [Fintype J] (multiplicity:J → ℕ)
+   {J:Type*} [Fintype J] (multiplicity:J→ℕ)
    (hprime:primeIdeal=Ideal.span {factor})
    (hfactor:Irreducible factor) (hfactorMonic:factor.Monic)
    (P₀ Q₀:Polynomial (Polynomial Base)) (m n:ℕ)

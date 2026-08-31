@@ -1,11 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CR
 section ProximityFlatProofPort
 open TensorProduct
 namespace Algebra.TensorProduct
 variable (R S A:Type*) [CommSemiring R] [CommSemiring S] [Algebra R S] [Semiring A]
  [Algebra R A] [Algebra S A] [IsScalarTower R S A]
-variable {ι:Type*} (B:ι → Type*) [∀ i,Semiring (B i)] [∀ i,Algebra R (B i)]
+variable {ι:Type*} (B:ι→Type*) [∀ i,Semiring (B i)] [∀ i,Algebra R (B i)]
 @[simp]
 lemma piRightHom_one:piRightHom R S A B 1=1:=rfl
 variable {R S A B} in
@@ -29,14 +28,14 @@ def piRight:A ⊗[R] (∀ i,B i) ≃ₐ[S] ∀ i,A ⊗[R] B i:=
 lemma piRight_tmul (x:A) (f:∀ i,B i):
    piRight R S A B (x ⊗ₜ f)=(fun j↦x ⊗ₜ f j):=rfl
 variable (ι) in
-def piScalarRight:A ⊗[R] (ι → R) ≃ₐ[S] ι → A:=
+def piScalarRight:A ⊗[R] (ι→R) ≃ₐ[S] ι→A:=
  (piRight R S A (fun _:ι↦R)).trans <|
    AlgEquiv.piCongrRight (fun _↦Algebra.TensorProduct.rid R S A)
-lemma piScalarRight_tmul (x:A) (y:ι → R):
+lemma piScalarRight_tmul (x:A) (y:ι→R):
    piScalarRight R S A ι (x ⊗ₜ y)=fun i↦y i • x:=
  rfl
 @[simp]
-lemma piScalarRight_tmul_apply (x:A) (y:ι → R) (i:ι):
+lemma piScalarRight_tmul_apply (x:A) (y:ι→R) (i:ι):
    piScalarRight R S A ι (x ⊗ₜ y) i=y i • x:=
  rfl
 section
@@ -64,7 +63,7 @@ theorem TensorProduct.piScalarRight_symm_algebraMap
    (R:Type*) [CommSemiring R] (S:Type*) [CommSemiring S] [Algebra R S]
    (ι:Type*) [Fintype ι] [DecidableEq ι]
    {N:Type*} [Semiring N] [Algebra R N] [Module S N] [IsScalarTower R S N]
-   (x:ι → R):
+   (x:ι→R):
    (TensorProduct.piScalarRight R S N ι).symm (algebraMap _ _ x)=1 ⊗ₜ[R] x:=by
  simp [Algebra.algebraMap_eq_smul_one,Pi.smul_def',LinearEquiv.symm_apply_eq,
    piScalarRight_apply,piScalarRightHom_tmul]

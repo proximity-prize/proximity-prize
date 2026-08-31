@@ -26,7 +26,7 @@ variable (hactive:∀ C:RegularComponent Omega G T H,
 variable (hZ:∀ C:RegularComponent Omega G T H,LiteralProjectionGate C 2)
 variable (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0)
 variable (D:AdaptiveNestedProjectionDataActive base hactive hSderiv)
-variable (multiplicity:RegularComponent Omega G T H → ℕ)
+variable (multiplicity:RegularComponent Omega G T H→ℕ)
 def ActiveNestedZFixedPowers:Prop:=
  ∀ q (hq:Irreducible q) (hm:q.Monic)
    (a₀:IndexedFactorFiber

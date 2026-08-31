@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 open Module
@@ -22,13 +21,13 @@ theorem basisSpanSingleton_apply (b:Basis ι R S) {x:S} (hx:x≠0) (i:ι):
 @[simp]
 theorem constr_basisSpanSingleton {N:Type*} [Semiring N] [Module N S] [SMulCommClass R N S]
    (b:Basis ι R S) {x:S} (hx:x≠0):
-   (b.constr N).toFun (((↑):_ → S) ∘ (basisSpanSingleton b hx))=Algebra.lmul R S x:=
+   (b.constr N).toFun (((↑):_→S) ∘ (basisSpanSingleton b hx))=Algebra.lmul R S x:=
  b.ext fun i => by simp
 end Ideal
 theorem Basis.mem_ideal_iff {ι R S:Type*} [CommSemiring R] [Semiring S] [Algebra R S]
    {I:Ideal S} (b:Basis ι R I) {x:S}:
-   x∈I ↔ ∃ c:ι →₀ R,x=Finsupp.sum c fun i x => x • (b i:S):=
+   x∈I↔∃ c:ι →₀ R,x=Finsupp.sum c fun i x => x • (b i:S):=
  (b.map ((I.restrictScalarsEquiv R _ _).restrictScalars R).symm).mem_submodule_iff
 theorem Basis.mem_ideal_iff' {ι R S:Type*} [Fintype ι] [CommSemiring R] [Semiring S] [Algebra R S]
-   {I:Ideal S} (b:Basis ι R I) {x:S}:x∈I ↔ ∃ c:ι → R,x=∑ i,c i • (b i:S):=
+   {I:Ideal S} (b:Basis ι R I) {x:S}:x∈I↔∃ c:ι→R,x=∑ i,c i • (b i:S):=
  (b.map ((I.restrictScalarsEquiv R _ _).restrictScalars R).symm).mem_submodule_iff'

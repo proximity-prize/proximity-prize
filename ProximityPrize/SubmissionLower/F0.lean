@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.O8
 import ProximityPrize.SubmissionLower.H5
 namespace ProximityPrize.SubmissionLower.RCN280
@@ -17,16 +16,16 @@ local instance:CharP IRSProfile.Field prime:=by
  change CharP KoalaBear.Ext6 2130706433
  exact charP_of_injective_algebraMap' KoalaBear.Field 2130706433
 theorem irs_scalar_finite_list_card_le
-   (received:IRSProfile.Index → IRSProfile.Field)
-   (L:Finset (IRSProfile.Index → IRSProfile.Field))
+   (received:IRSProfile.Index→IRSProfile.Field)
+   (L:Finset (IRSProfile.Index→IRSProfile.Field))
    (hcode:∀ c∈L,c∈IRSProfile.baseCode)
    (hclose:∀ c∈L,agreements ≤
      (Finset.univ.filter (fun i => c i=received i)).card):
    L.card ≤ listBudget:=by
  classical
  let D:=↥L
- let codeword:D → IRSProfile.baseCode:=fun c => ⟨c.1,hcode c.1 c.2⟩
- let selected:D → Polynomial IRSProfile.Field:=fun c => ReedSolomon.toPolynomial (codeword c)
+ let codeword:D→IRSProfile.baseCode:=fun c => ⟨c.1,hcode c.1 c.2⟩
+ let selected:D→Polynomial IRSProfile.Field:=fun c => ReedSolomon.toPolynomial (codeword c)
  let Gamma:Finset (Polynomial IRSProfile.Field):=Finset.univ.image selected
  have hselected:Function.Injective selected:=by
    intro c d h
@@ -45,7 +44,7 @@ theorem irs_scalar_finite_list_card_le
    intro P hP
    obtain ⟨c,hc,rfl⟩:=Finset.mem_image.mp hP
    have hp:=ReedSolomon.toPolynomial_mem_lt_deg (codeword c)
-   have hdeg:(selected c).degree < ((w+1:ℕ):WithBot ℕ):=by
+   have hdeg:(selected c).degree<((w+1:ℕ):WithBot ℕ):=by
      have hh:=Polynomial.mem_degreeLT.mp hp
      change (selected c).degree <
        ((IRSProfile.baseDimension:ℕ):WithBot ℕ) at hh
@@ -85,8 +84,8 @@ theorem irs_scalar_finite_list_card_le
  rwa [hcard] at hbound
 theorem irs_interleaved_finite_list_card_le
    {r:ℕ}
-   (received:IRSProfile.Index → Fin r → IRSProfile.Field)
-   (L:Finset (IRSProfile.Index → Fin r → IRSProfile.Field))
+   (received:IRSProfile.Index→Fin r→IRSProfile.Field)
+   (L:Finset (IRSProfile.Index→Fin r→IRSProfile.Field))
    (hrows:∀ v∈L,∀ j:Fin r,
      (fun i => v i j)∈IRSProfile.baseCode)
    (hclose:∀ v∈L,agreements ≤
@@ -95,16 +94,16 @@ theorem irs_interleaved_finite_list_card_le
      Fintype.card IRSProfile.Field):
    L.card ≤ listBudget:=by
  classical
- letI:DecidableEq (IRSProfile.Index → Fin r → IRSProfile.Field):=Classical.decEq _
- letI:DecidableEq (IRSProfile.Index → IRSProfile.Field):=Classical.decEq _
+ letI:DecidableEq (IRSProfile.Index→Fin r→IRSProfile.Field):=Classical.decEq _
+ letI:DecidableEq (IRSProfile.Index→IRSProfile.Field):=Classical.decEq _
  by_contra hnot
  obtain ⟨D,hDL,hDcard⟩:=
    Finset.exists_subset_card_eq (show listBudget+1 ≤ L.card by omega)
- have hsepD:(r-1)*D.card.choose 2 < Fintype.card IRSProfile.Field:=by
+ have hsepD:(r-1)*D.card.choose 2<Fintype.card IRSProfile.Field:=by
    rw [hDcard]
    exact hseparation
  obtain ⟨t,ht⟩:=exists_separating_moment_parameter D hsepD
- let projected:Finset (IRSProfile.Index → IRSProfile.Field):=
+ let projected:Finset (IRSProfile.Index→IRSProfile.Field):=
    D.image (momentProjection (ι:=IRSProfile.Index) (r:=r) t)
  have hprojcard:projected.card=D.card:=Finset.card_image_of_injOn ht
  have hcode:∀ c∈projected,c∈IRSProfile.baseCode:=by
@@ -122,7 +121,7 @@ theorem irs_interleaved_finite_list_card_le
  rw [hprojcard,hDcard] at hbound
  omega
 theorem sixteen_row_separation:
-   15*(listBudget+1).choose 2 < Fintype.card IRSProfile.Field:=by
+   15*(listBudget+1).choose 2<Fintype.card IRSProfile.Field:=by
  rw [show Fintype.card IRSProfile.Field=(2130706433:ℕ)^6 by
    norm_num [IRSProfile.Field,KoalaBear.Ext6,KoalaBear.fieldSize],
    Nat.choose_eq_descFactorial_div_factorial]
@@ -131,24 +130,24 @@ theorem squared_eight_lambda_le_of_interleaved_list
    {ι F:Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
    [Field F] [Fintype F] [DecidableEq F]
    (C:LinearCode ι F) (e B:ℕ)
-   (hfinite:∀ (received:ι → Fin 16 → F)
-       (L:Finset (ι → Fin 16 → F)),
+   (hfinite:∀ (received:ι→Fin 16→F)
+       (L:Finset (ι→Fin 16→F)),
      (∀ v∈L,∀ j:Fin 16,(fun i => v i j)∈C) →
      (∀ v∈L,Fintype.card ι-e ≤
        (Finset.univ.filter (fun i => v i=received i)).card) →
      L.card ≤ B)
    (delta:ℝ)
-   (hcell:delta*(Fintype.card ι:ℝ) < ((e+1:ℕ):ℝ)):
+   (hcell:delta*(Fintype.card ι:ℝ)<((e+1:ℕ):ℝ)):
    Code.Lambda
-     (((C^⋈ (Fin 8))^⋈ (Fin 2):ModuleCode ι F (Fin 2 → Fin 8 → F)):
-       Set (ι → Fin 2 → Fin 8 → F)) delta ≤ (B:ℕ∞):=by
+     (((C^⋈ (Fin 8))^⋈ (Fin 2):ModuleCode ι F (Fin 2→Fin 8→F)):
+       Set (ι→Fin 2→Fin 8→F)) delta ≤ (B:ℕ∞):=by
  classical
- letI:DecidableEq (ι → Fin 2 → Fin 8 → F):=Classical.decEq _
- letI:DecidableEq (ι → Fin 16 → F):=Classical.decEq _
+ letI:DecidableEq (ι→Fin 2→Fin 8→F):=Classical.decEq _
+ letI:DecidableEq (ι→Fin 16→F):=Classical.decEq _
  apply Code.Lambda_le_of_forall_finset_card_le
  intro received L hL
- let projected:Finset (ι → Fin 16 → F):=L.image flattenWord
- have hinj:Set.InjOn flattenWord (L:Set (ι → Fin 2 → Fin 8 → F)):=
+ let projected:Finset (ι→Fin 16→F):=L.image flattenWord
+ have hinj:Set.InjOn flattenWord (L:Set (ι→Fin 2→Fin 8→F)):=
    fun _ _ _ _ hh => flattenWord_injective hh
  have hcard:projected.card=L.card:=Finset.card_image_of_injOn hinj
  have hrows:∀ v∈projected,∀ j:Fin 16,(fun i => v i j)∈C:=by
@@ -173,8 +172,8 @@ theorem squared_eight_lambda_seedless
    Code.Lambda
      (((IRSProfile.baseCode^⋈ (Fin 8))^⋈ (Fin 2):
        ModuleCode IRSProfile.Index IRSProfile.Field
-         (Fin 2 → Fin 8 → IRSProfile.Field)):
-       Set (IRSProfile.Index → Fin 2 → Fin 8 → IRSProfile.Field))
+         (Fin 2→Fin 8→IRSProfile.Field)):
+       Set (IRSProfile.Index→Fin 2→Fin 8→IRSProfile.Field))
      delta ≤ (listBudget:ℕ∞):=by
  apply squared_eight_lambda_le_of_interleaved_list
    IRSProfile.baseCode errors listBudget ?_ delta hcell
@@ -184,16 +183,16 @@ theorem squared_eight_lambda_seedless
    intro v hv
    simpa [agreements,n,errors,IRSProfile.Index] using hclose v hv
  classical
- letI:DecidableEq (IRSProfile.Index → Fin 16 → IRSProfile.Field):=Classical.decEq _
- letI:DecidableEq (IRSProfile.Index → IRSProfile.Field):=Classical.decEq _
+ letI:DecidableEq (IRSProfile.Index→Fin 16→IRSProfile.Field):=Classical.decEq _
+ letI:DecidableEq (IRSProfile.Index→IRSProfile.Field):=Classical.decEq _
  by_contra hnot
  obtain ⟨D,hDL,hDcard⟩:=
    Finset.exists_subset_card_eq (show listBudget+1 ≤ L.card by omega)
- have hsepD:15*D.card.choose 2 < Fintype.card IRSProfile.Field:=by
+ have hsepD:15*D.card.choose 2<Fintype.card IRSProfile.Field:=by
    rw [hDcard]
    exact sixteen_row_separation
  obtain ⟨t,ht⟩:=exists_separating_moment_parameter D hsepD
- let projected:Finset (IRSProfile.Index → IRSProfile.Field):=
+ let projected:Finset (IRSProfile.Index→IRSProfile.Field):=
    D.image (momentProjection (ι:=IRSProfile.Index) (r:=16) t)
  have hprojcard:projected.card=D.card:=Finset.card_image_of_injOn ht
  have hcode:∀ c∈projected,c∈IRSProfile.baseCode:=by
@@ -217,8 +216,8 @@ theorem irs_squared_lambda_seedless
    Code.Lambda
      ((IRSProfile.code^⋈ (Fin 2):
        ModuleCode IRSProfile.Index IRSProfile.Field
-         (Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field)):
-       Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
+         (Fin 2→Fin IRSProfile.interleaving→IRSProfile.Field)):
+       Set (IRSProfile.Index→Fin 2→Fin IRSProfile.interleaving→IRSProfile.Field))
      (delta:ℝ) ≤ (listBudget:ℕ∞):=by
  rw [irs_squared_carrier_eq]
  exact squared_eight_lambda_seedless (delta:ℝ) hcell

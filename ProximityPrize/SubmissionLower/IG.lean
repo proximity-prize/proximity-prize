@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CU
 import ProximityPrize.SubmissionLower.HG
 section ProximityFlatProofPort
@@ -30,7 +29,7 @@ lemma Cotangent.exact:
      ((Extension.Cotangent.map (Q.toComp P).toExtensionHom).liftBaseChange T)
      (Extension.Cotangent.map (Q.ofComp P).toExtensionHom):=by
  apply LinearMap.exact_of_comp_of_mem_range
- · rw [LinearMap.liftBaseChange_comp, ←Extension.Cotangent.map_comp,
+ · rw [LinearMap.liftBaseChange_comp,←Extension.Cotangent.map_comp,
      EmbeddingLike.map_eq_zero_iff]
    ext x
    obtain ⟨⟨x,hx⟩,rfl⟩:=Extension.Cotangent.mk_surjective x
@@ -46,18 +45,18 @@ lemma Cotangent.exact:
    obtain ⟨⟨x:(Q.comp P).Ring,hx'⟩,rfl⟩:=Extension.Cotangent.mk_surjective x
    replace hx:(Q.ofComp P).toAlgHom x∈Q.ker^2:=by
      simpa only [map_mk,val_mk,val_zero,Ideal.toCotangent_eq_zero] using! congr(($hx).val)
-   rw [pow_two, ←map_ofComp_ker (P:=P), ←Ideal.map_mul,Ideal.mem_map_iff_of_surjective
+   rw [pow_two,←map_ofComp_ker (P:=P),←Ideal.map_mul,Ideal.mem_map_iff_of_surjective
      _ (toAlgHom_ofComp_surjective Q P)] at hx
    obtain ⟨y,hy,e⟩:=hx
-   rw [eq_comm, ←sub_eq_zero, ←map_sub, ←RingHom.mem_ker, ←map_toComp_ker] at e
+   rw [eq_comm,←sub_eq_zero,←map_sub,←RingHom.mem_ker,←map_toComp_ker] at e
    rw [LinearMap.range_liftBaseChange]
    let z:(Q.comp P).ker:=⟨x-y,Ideal.sub_mem _ hx' (Ideal.mul_le_left hy)⟩
    have hz:z.1∈P.ker.map (Q.toComp P).toAlgHom.toRingHom:=e
    have:Extension.Cotangent.mk (P:=(Q.comp P).toExtension) ⟨x,hx'⟩=
      Extension.Cotangent.mk z:=by
      ext;simpa only [val_mk,Ideal.toCotangent_eq,sub_sub_cancel,pow_two,z]
-   rw [this, ←Submodule.restrictScalars_mem (Q.comp P).Ring, ←Submodule.mem_comap,
-     ←Submodule.span_singleton_le_iff_mem, ←Submodule.map_le_map_iff_of_injective
+   rw [this,←Submodule.restrictScalars_mem (Q.comp P).Ring,←Submodule.mem_comap,
+     ←Submodule.span_singleton_le_iff_mem,←Submodule.map_le_map_iff_of_injective
      (f:=Submodule.subtype _) Subtype.val_injective,Submodule.map_subtype_span_singleton,
      Submodule.span_singleton_le_iff_mem]
    refine (show Ideal.map (Q.toComp P).toAlgHom.toRingHom P.ker ≤ _ from ?_) hz
@@ -137,7 +136,7 @@ lemma CotangentSpace.map_ofComp_surjective:
 lemma CotangentSpace.exact:
    Function.Exact ((Extension.CotangentSpace.map (Q.toComp P).toExtensionHom).liftBaseChange T)
      (Extension.CotangentSpace.map (Q.ofComp P).toExtensionHom):=by
- rw [←fst_compEquiv, ←compEquiv_symm_inr]
+ rw [←fst_compEquiv,←compEquiv_symm_inr]
  conv_rhs => rw [←LinearEquiv.symm_symm (compEquiv Q P)]
  rw [LinearEquiv.conj_exact_iff_exact]
  exact Function.Exact.inr_fst
@@ -189,7 +188,7 @@ lemma δAux_toAlgHom (f:Hom Q Q') (x):
      RingHom.id_apply,coe_eval₂Hom,IH,Hom.aeval_val,smul_add,map_aeval,tmul_add,tmul_smul,
      ←@IsScalarTower.algebraMap_smul Q.Ring T,smul_zero,aeval_X,zero_add,Derivation.leibniz,
      Basis.repr_self,map_add,one_smul,map_smul,Finsupp.linearCombination_single,
-     RingHomCompTriple.comp_eq,Function.comp_apply, ←cotangentSpaceBasis_apply]
+     RingHomCompTriple.comp_eq,Function.comp_apply,←cotangentSpaceBasis_apply]
    rw [add_left_comm]
    rfl
 set_option backward.isDefEq.respectTransparency false in
@@ -209,7 +208,7 @@ lemma δAux_ofComp (x:(Q.comp P).Ring):
    simp only [map_mul,Hom.toAlgHom_X,ofComp_val,δAux_mul,
      ←@IsScalarTower.algebraMap_smul Q.Ring T,algebraMap_apply,Hom.algebraMap_toAlgHom,
      algebraMap_self,map_aeval,RingHomCompTriple.comp_eq,comp_val,RingHom.id_apply,
-     IH,Derivation.leibniz,tmul_add,tmul_smul, ←cotangentSpaceBasis_apply,coe_eval₂Hom,
+     IH,Derivation.leibniz,tmul_add,tmul_smul,←cotangentSpaceBasis_apply,coe_eval₂Hom,
      ←@IsScalarTower.algebraMap_smul (Q.comp P).Ring T,aeval_X,map_smul,Prod.snd_add,
      Prod.smul_snd,map_add]
    obtain (n | n):=n
@@ -371,9 +370,9 @@ theorem exact_liftBaseChange_map_of_flat [Module.Flat S T]:
    simpa [←Extension.h1Cotangentι_injective.eq_iff] using hx
  rw [←mem_ker,(Cotangent.exact Q P).linearMap_ker_eq] at hx
  rcases hx with ⟨x,rfl⟩
- rw [mem_ker, ←comp_apply, ←map_comp_cotangentComplex_baseChange,comp_apply,
+ rw [mem_ker,←comp_apply,←map_comp_cotangentComplex_baseChange,comp_apply,
    ←mem_ker,ker_eq_bot.mpr (CotangentSpace.map_toComp_injective Q P),Submodule.mem_bot,
-   baseChange_eq_ltensor, ←mem_ker,(Module.Flat.lTensor_exact T
+   baseChange_eq_ltensor,←mem_ker,(Module.Flat.lTensor_exact T
      P.toExtension.exact_hCotangentι_cotangentComplex).linearMap_ker_eq] at x_in
  rcases x_in with ⟨x,rfl⟩
  use x;induction x with
@@ -387,7 +386,7 @@ theorem exact_liftBaseChange_map_of_flat' [Module.Flat S T] (f:Hom W Q) (g:Hom P
  convert! exact_liftBaseChange_map_of_flat Q P
  · change LinearMap.comp
      (Extension.H1Cotangent.map (W.defaultHom (Q.comp P)).toExtensionHom) _=_
-   rw [LinearMap.liftBaseChange_comp, ←Extension.H1Cotangent.map_comp,
+   rw [LinearMap.liftBaseChange_comp,←Extension.H1Cotangent.map_comp,
      Extension.H1Cotangent.map_eq]
  · change LinearMap.comp
      ((Extension.H1Cotangent.map f.toExtensionHom).restrictScalars T)

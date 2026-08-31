@@ -50,7 +50,7 @@ theorem quotient_isLocalization
    let mbar:M.map qA:=⟨qA m,⟨m,hmM,rfl⟩⟩
    refine ⟨mbar,?_⟩
    change qA m*qA a=qA m*qA b
-   rw [←map_mul, ←map_mul, ←sub_eq_zero, ←map_sub,
+   rw [←map_mul,←map_mul,←sub_eq_zero,←map_sub,
      Ideal.Quotient.eq_zero_iff_mem]
    simpa only [mul_sub] using hmI
 end

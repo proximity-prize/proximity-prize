@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BG
 import ProximityPrize.SubmissionLower.E1
 namespace ProximityPrize.SubmissionLower.RCN131
@@ -53,12 +52,12 @@ theorem linear_cost_cumulative (cz cy ca:ℕ) (f:FlagDegree)
          f.all*(cz+(cy-cz)+(ca-cy)):=by rw [ha,hy]
    _=_:=by ring
 theorem sum_linear_cost_cumulative_le
-   {I:Type} [Fintype I] (cost:FlagDegree → ℕ)
+   {I:Type} [Fintype I] (cost:FlagDegree→ℕ)
    (hlinear:∀ f,cost f=f.zOnly*cost unitZFlag+
      f.yz*cost unitYZFlag+f.all*cost unitAllFlag)
    (hzy:cost unitZFlag ≤ cost unitYZFlag)
    (hya:cost unitYZFlag ≤ cost unitAllFlag)
-   (flag:I → FlagDegree) (cap:FlagDegree)
+   (flag:I→FlagDegree) (cap:FlagDegree)
    (hi:(∑ i,(flag i).all) ≤ cap.all)
    (hm:(∑ i,((flag i).yz+(flag i).all)) ≤ cap.yz+cap.all)
    (ht:(∑ i,((flag i).zOnly+(flag i).yz+(flag i).all)) ≤
@@ -71,13 +70,13 @@ theorem sum_linear_cost_cumulative_le
    rw [hlinear f]
    exact linear_cost_cumulative _ _ _ f hzy hya
  rw [Finset.sum_congr rfl (fun i _↦heq (flag i)),heq cap]
- simp only [Finset.sum_add_distrib, ←Finset.mul_sum]
+ simp only [Finset.sum_add_distrib,←Finset.mul_sum]
  simpa only [Finset.sum_add_distrib] using Nat.add_le_add
    (Nat.add_le_add (Nat.mul_le_mul_left _ ht) (Nat.mul_le_mul_left _ hm))
    (Nat.mul_le_mul_left _ hi)
 theorem sum_ledger_cumulative_le
    {I:Type} [Fintype I] (p:Profile) (direction:FlagDegree)
-   (flag:I → FlagDegree) (cap:FlagDegree)
+   (flag:I→FlagDegree) (cap:FlagDegree)
    (hi:(∑ i,(flag i).all) ≤ cap.all)
    (hm:(∑ i,((flag i).yz+(flag i).all)) ≤ cap.yz+cap.all)
    (ht:(∑ i,((flag i).zOnly+(flag i).yz+(flag i).all)) ≤
@@ -93,7 +92,7 @@ theorem sum_regular_counts_cumulative_le
    (p:Profile) (direction:FlagDegree)
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    {P:ResidualSupportParameters} (H:ResidualSupportData P Q)
-   (count:RegularIndex Q → ℕ)
+   (count:RegularIndex Q→ℕ)
    (hcount:∀ R,count R*p.gap^2 ≤
      factorRegularLedgerYZForDirection p direction (regularCumulativeFlag Q R)):
    (∑ R,count R)*p.gap^2 ≤
@@ -113,7 +112,7 @@ theorem sum_regular_counts_cumulative_le
 theorem geometric_seed_counts_cumulative_le
    (p:Profile) (direction:FlagDegree)
    (F:MvPolynomial (Fin 4) K) (hF:F≠0)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hsolutions:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma F=0)
    (hcount:∀ g:GeometricFactor K F,

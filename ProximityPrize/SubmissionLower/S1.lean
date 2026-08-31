@@ -1,11 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HB
 section ProximityFlatProofPort
 universe uι uR uA uB
 variable {ι:Type uι}
 namespace DirectSum
 open DirectSum
-variable (R:Type uR) (A:ι → Type uA) {B:Type uB}
+variable (R:Type uR) (A:ι→Type uA) {B:Type uB}
 variable [CommSemiring R] [∀ i,AddCommMonoid (A i)] [∀ i,Module R (A i)]
 variable [AddMonoid ι] [GSemiring A]
 section
@@ -22,12 +21,12 @@ instance _root_.GradedMonoid.smulCommClass_right:
    SMulCommClass R (GradedMonoid A) (GradedMonoid A) where
  smul_comm s x y:=by
    dsimp
-   rw [GAlgebra.smul_def,GAlgebra.smul_def, ←mul_assoc,GAlgebra.commutes,mul_assoc]
+   rw [GAlgebra.smul_def,GAlgebra.smul_def,←mul_assoc,GAlgebra.commutes,mul_assoc]
 instance _root_.GradedMonoid.isScalarTower_right:
    IsScalarTower R (GradedMonoid A) (GradedMonoid A) where
  smul_assoc s x y:=by
    dsimp
-   rw [GAlgebra.smul_def,GAlgebra.smul_def, ←mul_assoc]
+   rw [GAlgebra.smul_def,GAlgebra.smul_def,←mul_assoc]
 variable [DecidableEq ι]
 set_option backward.defeqAttrib.useBackward true in
 instance:Algebra R (⨁ i,A i) where
@@ -53,7 +52,7 @@ instance:Algebra R (⨁ i,A i) where
    ext i xi:2
    dsimp only [AddMonoidHom.comp_apply,DistribSMul.toAddMonoidHom_apply,
      AddMonoidHom.mul_apply]
-   rw [DirectSum.of_mul_of, ←of_smul]
+   rw [DirectSum.of_mul_of,←of_smul]
    apply DFinsupp.single_eq_of_sigma_eq (GAlgebra.smul_def r ⟨i,xi⟩)
 theorem algebraMap_apply (r:R):
    algebraMap R (⨁ i,A i) r=DirectSum.of A 0 (GAlgebra.toFun r):=

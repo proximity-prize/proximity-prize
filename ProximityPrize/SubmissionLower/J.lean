@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.M
 import ProximityPrize.SubmissionLower.B0
 import ProximityPrize.SubmissionLower.BX
@@ -12,11 +11,11 @@ variable {K Ω:Type} [Field K] [Field Ω]
 variable (φ:Polynomial K →+*Ω)
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Ω:=Classical.decEq Ω
-def selectedPoint (selected:K → Polynomial K) (γ:K):Fin 3 → Ω:=
+def selectedPoint (selected:K→Polynomial K) (γ:K):Fin 3→Ω:=
  fun i↦polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X) i.succ
-theorem selectedPoint_seed (selected:K → Polynomial K) (γ:K):
+theorem selectedPoint_seed (selected:K→Polynomial K) (γ:K):
    selectedPoint φ selected γ (2:Fin 3)=(φ.comp Polynomial.C) γ:=rfl
-theorem selectedPoint_injective (selected:K → Polynomial K):
+theorem selectedPoint_injective (selected:K→Polynomial K):
    Function.Injective (selectedPoint φ selected):=by
  intro γ η h
  apply (φ.comp Polynomial.C).injective
@@ -25,8 +24,8 @@ def agreementPolynomial (F:MvPolynomial (Fin 4) K) (w:ℕ) (x u₀ u₁:K):
    MvPolynomial (Fin 3) Ω:=
  surfaceMap φ (agreementNumerator F w (fun j↦(j.factorial:K)⁻¹) x u₀ u₁)
 theorem selected_agreement_zero_iff
-   (F:MvPolynomial (Fin 4) K) (selected:K → Polynomial K)
-   (p w:ℕ) [CharP Ω p] (hchar:w < p)
+   (F:MvPolynomial (Fin 4) K) (selected:K→Polynomial K)
+   (p w:ℕ) [CharP Ω p] (hchar:w<p)
    (γ:K) (hdegree:(selected γ).natDegree ≤ w)
    (hsolution:specialization K (selected γ) γ F=0)
    (hregular:MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
@@ -37,7 +36,7 @@ theorem selected_agreement_zero_iff
      (agreementPolynomial φ F w x u₀ u₁)=0 ↔
        (selected γ).eval x=u₀+γ*u₁:=by
  change MvPolynomial.eval (selectedPoint φ selected γ)
-   (surfaceMap φ (agreementNumerator F w (fun j↦(j.factorial:K)⁻¹) x u₀ u₁))=0 ↔ _
+   (surfaceMap φ (agreementNumerator F w (fun j↦(j.factorial:K)⁻¹) x u₀ u₁))=0↔_
  rw [eval_surfaceMap]
  have hv:Fin.cases (φ Polynomial.X) (selectedPoint φ selected γ)=
      polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X):=by
@@ -48,14 +47,14 @@ theorem selected_agreement_zero_iff
    (selected γ) γ (φ Polynomial.X) hsolution hregular p w hchar hdegree x u₀ u₁
 variable [IsAlgClosed Ω]
 variable (P:Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
-def componentCost (cap:Fin 3 → ℕ):ℕ:=
+def componentCost (cap:Fin 3→ℕ):ℕ:=
  ∑ j,cap j*actualCoordinateDegree Ω P j
 theorem agreement_fiber_card_le
    (hproj:ProjectionsFiniteSeparable Ω P)
-   (hnonpoint:∀ v:Fin 3 → Ω,
+   (hnonpoint:∀ v:Fin 3→Ω,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
-   (F:MvPolynomial (Fin 4) K) (selected:K → Polynomial K) (Γ:Finset K)
-   (p w:ℕ) [CharP Ω p] (hchar:w < p)
+   (F:MvPolynomial (Fin 4) K) (selected:K→Polynomial K) (Γ:Finset K)
+   (p w:ℕ) [CharP Ω p] (hchar:w<p)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
    (hregular:∀ γ∈Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
@@ -64,7 +63,7 @@ theorem agreement_fiber_card_le
    (hpoint:∀ γ∈Γ,P ≤ RingHom.ker
      (MvPolynomial.aeval (selectedPoint φ selected γ)).toRingHom)
    (x u₀ u₁:K) (hproper:agreementPolynomial φ F w x u₀ u₁∉P)
-   (cap:Fin 3 → ℕ)
+   (cap:Fin 3→ℕ)
    (hcap:∀ j,(agreementPolynomial φ F w x u₀ u₁).degreeOf j ≤ cap j):
    (Γ.filter (fun γ↦(selected γ).eval x=u₀+γ*u₁)).card ≤ componentCost P cap:=by
  classical
@@ -96,22 +95,22 @@ theorem coordinateDegree_pos_of_transcendental
  letI:FiniteDimensional (RatFunc Ω) (CoordinateField Ω P):=(hproj j hj).1
  rw [actualCoordinateDegree_of_transcendental Ω P j hj]
  exact Module.finrank_pos
-def NoLargeSelectedPencil (selected:K → Polynomial K) (Γ:Finset K) (w e:ℕ):Prop:=
- ∀ P₀ P₁:Polynomial K,P₀.natDegree ≤ w → P₁.natDegree ≤ w →
+def NoLargeSelectedPencil (selected:K→Polynomial K) (Γ:Finset K) (w e:ℕ):Prop:=
+ ∀ P₀ P₁:Polynomial K,P₀.natDegree ≤ w→P₁.natDegree ≤ w →
    (Γ.filter (fun γ↦selected γ=P₀+Polynomial.C γ*P₁)).card ≤ e+1
 variable {ι:Type*}
 local instance:DecidableEq ι:=Classical.decEq ι
 theorem prime_seed_incidence_sharp
    (hproj:ProjectionsFiniteSeparable Ω P)
-   (hnonpoint:∀ v:Fin 3 → Ω,
+   (hnonpoint:∀ v:Fin 3→Ω,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (F:MvPolynomial (Fin 4) K)
    (hF:surfaceMap φ F∈P)
    (hH:surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F)∉P)
-   (selected:K → Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
-   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
+   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w<p)
+   (hwa:w<a) (han:a ≤ nodes.card)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
    (hregular:∀ γ∈Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
@@ -122,14 +121,14 @@ theorem prime_seed_incidence_sharp
    (hagreement:∀ γ∈Γ,
      a ≤ (nodes.filter (fun i↦(selected γ).eval (x i)=u₀ i+γ*u₁ i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Γ w e)
-   (cap:Fin 3 → ℕ)
+   (cap:Fin 3→ℕ)
    (hcap:∀ i∈nodes,∀ j,
      (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j ≤ cap j):
    Γ.card*(a-w) ≤ (nodes.card-w)*componentCost P cap+
      (e+1)*(a-w)*actualCoordinateDegree Ω P 2:=by
  classical
  let I:=identityNodes φ P F nodes x u₀ u₁ w
- let relation:K → ι → Prop:=fun γ i↦(selected γ).eval (x i)=u₀ i+γ*u₁ i
+ let relation:K→ι→Prop:=fun γ i↦(selected γ).eval (x i)=u₀ i+γ*u₁ i
  by_cases hI:I.card ≤ w
  · have hfiber:∀ i∈nodes \ I,(Γ.filter (fun γ↦relation γ i)).card ≤ componentCost P cap:=by
      intro i hi
@@ -144,7 +143,7 @@ theorem prime_seed_incidence_sharp
      (componentCost P cap) (identityNodes_subset φ P F nodes x u₀ u₁ w) hI hwa han
      hagreement hfiber
    omega
- · have hc:w < I.card:=Nat.lt_of_not_ge hI
+ · have hc:w<I.card:=Nat.lt_of_not_ge hI
    have hvalues:∀ (t:{γ:K//γ∈Γ}) i,i∈I →
        (selected t.1).eval (x i)=u₀ i+t.1*u₁ i:=by
      intro t
@@ -172,15 +171,15 @@ theorem prime_seed_incidence_sharp
    omega
 theorem prime_seed_incidence
    (hproj:ProjectionsFiniteSeparable Ω P)
-   (hnonpoint:∀ v:Fin 3 → Ω,
+   (hnonpoint:∀ v:Fin 3→Ω,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (F:MvPolynomial (Fin 4) K)
    (hF:surfaceMap φ F∈P)
    (hH:surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F)∉P)
-   (selected:K → Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
-   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
+   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w<p)
+   (hwa:w<a) (han:a ≤ nodes.card)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
    (hregular:∀ γ∈Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
@@ -191,7 +190,7 @@ theorem prime_seed_incidence
    (hagreement:∀ γ∈Γ,
      a ≤ (nodes.filter (fun i↦(selected γ).eval (x i)=u₀ i+γ*u₁ i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Γ w e)
-   (cap:Fin 3 → ℕ)
+   (cap:Fin 3→ℕ)
    (hcap:∀ i∈nodes,∀ j,
      (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j ≤ cap j):
    Γ.card*(a-w) ≤ nodes.card*componentCost P cap+

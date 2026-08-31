@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BZ
 import ProximityPrize.SubmissionLower.GU
 namespace ProximityPrize.SubmissionLower.RCN075
@@ -140,7 +139,7 @@ def dependentBadSubmodule
    (hproj:∀ C:RegularComponent Ω G T H,
      ProjectionsFiniteSeparable Ω C.1)
    (E:Finset (Fin 3 →₀ ℕ)):
-   DependentGenericityIndex hseparator hproj → Submodule Ω (E → Ω)
+   DependentGenericityIndex hseparator hproj→Submodule Ω (E→Ω)
  | Sum.inl C => LinearMap.ker (coefficientEvaluation (coordinate Ω C.1) E)
  | Sum.inr ⟨C,v⟩ => cancellationSubmodule v.1.val
      (fun a↦constant_value_le_one Ω (CoordinateField Ω C.1) v.1 a)
@@ -160,7 +159,7 @@ theorem dependentBadSubmodule_ne_top
  rcases j with C | ⟨C,v⟩
  · intro htop
    let e0:E:=⟨0,hzero⟩
-   let c0:E → Ω:=deltaCoefficient E e0
+   let c0:E→Ω:=deltaCoefficient E e0
    have hc0:c0∈dependentBadSubmodule hseparator hproj E (Sum.inl C):=by
      rw [htop]
      trivial
@@ -305,7 +304,7 @@ def GenericExactPolePolynomial.toGenericSparseBKKWitness
    {hproj:∀ C:RegularComponent Ω G T H,
      ProjectionsFiniteSeparable Ω C.1}
    (B:GenericExactPolePolynomial G T H E separator hseparator hproj)
-   (cost:RegularComponent Ω G T H → ℕ)
+   (cost:RegularComponent Ω G T H→ℕ)
    (cycle_le:∀ C:RegularComponent Ω G T H,
      let htr:=hseparator C
      letI:Algebra (Polynomial Ω) (CoordinateRing Ω C.1):=

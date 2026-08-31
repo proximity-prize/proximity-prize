@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.V2
 import ProximityPrize.SubmissionLower.V4
 section ProximityFlatProofPort
@@ -40,7 +39,7 @@ theorem bijective_of_isAlgClosed_of_isLocalRing
  have hf:LinearMap.comp
      (Algebra.ofId A (A ⧸ IsLocalRing.maximalIdeal A)).toLinearMap f=LinearMap.id:=by
    dsimp [f]
-   rw [←LinearMap.comp_assoc, ←comp_sec K A]
+   rw [←LinearMap.comp_assoc,←comp_sec K A]
    congr 1
    apply LinearMap.restrictScalars_injective K
    apply _root_.TensorProduct.ext'
@@ -53,22 +52,22 @@ theorem bijective_of_isAlgClosed_of_isLocalRing
    rw [←algebraMap_eq_smul_one]
    exact LinearMap.congr_fun hf 1
  have hf₂:1-f 1∈IsLocalRing.maximalIdeal A:=by
-   rw [←Ideal.Quotient.eq_zero_iff_mem,map_sub,map_one, ←Ideal.Quotient.algebraMap_eq,
+   rw [←Ideal.Quotient.eq_zero_iff_mem,map_sub,map_one,←Ideal.Quotient.algebraMap_eq,
     algebraMap_eq_smul_one,hf₁,sub_self]
  have hf₃:IsIdempotentElem (1-f 1):=by
    apply IsIdempotentElem.one_sub
-   rw [IsIdempotentElem, ←smul_eq_mul, ←map_smul,hf₁]
+   rw [IsIdempotentElem,←smul_eq_mul,←map_smul,hf₁]
  have hf₄:f 1=1:=by
    obtain ⟨n,hn⟩:=hA
    have:(1-f 1)^n=0:=by
-     rw [←Ideal.mem_bot, ←Ideal.zero_eq_bot, ←hn]
+     rw [←Ideal.mem_bot,←Ideal.zero_eq_bot,←hn]
      exact Ideal.pow_mem_pow hf₂ n
-   rw [eq_comm, ←sub_eq_zero, ←hf₃.pow_succ_eq n,pow_succ,this,zero_mul]
+   rw [eq_comm,←sub_eq_zero,←hf₃.pow_succ_eq n,pow_succ,this,zero_mul]
  refine Equiv.bijective ⟨algebraMap K A,⇑e.symm ∘ ⇑(algebraMap A _),fun x↦by simp,fun x↦?_⟩
  have:⇑(algebraMap K A)=⇑f ∘ ⇑e:=by
    ext k
-   conv_rhs => rw [←mul_one k, ←smul_eq_mul,Function.comp_apply,map_smul,
-     LinearMap.map_smul_of_tower,map_one,hf₄, ←algebraMap_eq_smul_one]
+   conv_rhs => rw [←mul_one k,←smul_eq_mul,Function.comp_apply,map_smul,
+     LinearMap.map_smul_of_tower,map_one,hf₄,←algebraMap_eq_smul_one]
  rw [this]
  simp only [Function.comp_apply,AlgEquiv.apply_symm_apply,algebraMap_eq_smul_one,
    map_smul,hf₄,smul_eq_mul,mul_one]
@@ -123,7 +122,7 @@ theorem range_eq_top_of_isPurelyInseparable
    [IsPurelyInseparable K L]:(algebraMap K L).range=⊤:=by
  classical
  have:Nontrivial (L ⊗[K] L):=by
-   rw [←not_subsingleton_iff_nontrivial, ←rank_zero_iff (R:=K),rank_tensorProduct',
+   rw [←not_subsingleton_iff_nontrivial,←rank_zero_iff (R:=K),rank_tensorProduct',
      mul_eq_zero,or_self,rank_zero_iff,not_subsingleton_iff_nontrivial]
    infer_instance
  rw [←top_le_iff]
@@ -150,7 +149,7 @@ theorem range_eq_top_of_isPurelyInseparable
      exact ⟨1,map_one _⟩
    have:=DFunLike.congr_fun
      (DFunLike.congr_arg ((Basis.extend h).tensorProduct (Basis.extend h)).repr H) (a,b)
-   simp only [Basis.tensorProduct_repr_tmul_apply, ←ha, ←hb,Basis.repr_self,smul_eq_mul,
+   simp only [Basis.tensorProduct_repr_tmul_apply,←ha,←hb,Basis.repr_self,smul_eq_mul,
      Finsupp.single_apply,e,Ne.symm e,↓reduceIte,mul_one,mul_zero,one_ne_zero] at this
  · rw [LinearIndependent.pair_iff] at h'
    simp only [not_forall,not_and,exists_prop] at h'
@@ -158,11 +157,11 @@ theorem range_eq_top_of_isPurelyInseparable
    have:IsUnit b:=by
      rw [isUnit_iff_ne_zero]
      rintro rfl
-     rw [zero_smul, ←algebraMap_eq_smul_one,add_zero,
+     rw [zero_smul,←algebraMap_eq_smul_one,add_zero,
        (injective_iff_map_eq_zero' _).mp (algebraMap K L).injective] at e
      cases hab e rfl
    use (-this.unit⁻¹*a)
-   rw [map_mul, ←Algebra.smul_def,algebraMap_eq_smul_one,eq_neg_iff_add_eq_zero.mpr e,
+   rw [map_mul,←Algebra.smul_def,algebraMap_eq_smul_one,eq_neg_iff_add_eq_zero.mpr e,
      smul_neg,neg_smul,neg_neg,smul_smul,this.val_inv_mul,one_smul]
 theorem isSeparable:Algebra.IsSeparable K L:=by
  have:=finite_of_free (R:=K) (S:=L)
@@ -170,11 +169,11 @@ theorem isSeparable:Algebra.IsSeparable K L:=by
  have:=of_restrictScalars K (separableClosure K L) L
  have:=EssFiniteType.of_comp K (separableClosure K L) L
  ext
- change _ ↔ _∈(⊤:Subring _)
+ change _↔_∈(⊤:Subring _)
  rw [←range_eq_top_of_isPurelyInseparable (separableClosure K L) L]
  simp
 theorem iff_isSeparable (L:Type u) [Field L] [Algebra K L] [EssFiniteType K L]:
-   FormallyUnramified K L ↔ Algebra.IsSeparable K L:=
+   FormallyUnramified K L↔Algebra.IsSeparable K L:=
  ⟨fun _↦isSeparable K L,fun _↦of_isSeparable K L⟩
 end Algebra.FormallyUnramified
 variable {K A} in
@@ -193,10 +192,10 @@ theorem Algebra.IsUnramifiedAt.not_minpoly_sq_dvd
  set q:=minpoly K (algebraMap A Q.ResidueField x)
  have:algebraMap A (Localization.AtPrime Q) (aeval x q)=0:=by
    apply (algebraMap (Localization.AtPrime Q) Q.ResidueField).injective
-   rw [←IsScalarTower.algebraMap_apply, ←aeval_algebraMap_apply,minpoly.aeval,map_zero]
+   rw [←IsScalarTower.algebraMap_apply,←aeval_algebraMap_apply,minpoly.aeval,map_zero]
  obtain ⟨⟨m,hm⟩,hm'⟩:=(IsLocalization.map_eq_zero_iff Q.primeCompl _ _).mp this
  obtain ⟨m,rfl⟩:=hp₂ m
- simp_rw [←map_mul, ←AlgHom.coe_toRingHom, ←AlgHom.toRingHom_eq_coe, ←RingHom.mem_ker,
+ simp_rw [←map_mul,←AlgHom.coe_toRingHom,←AlgHom.toRingHom_eq_coe,←RingHom.mem_ker,
    ←hp₁,Ideal.mem_span_singleton] at hm'
  rw [pow_two]
  rintro H

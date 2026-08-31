@@ -3,21 +3,21 @@ namespace ProximityPrize.SubmissionLower.RCN072
 noncomputable section
 variable (K:Type) [Field K]
 abbrev Poly3:=MvPolynomial (Fin 3) K
-def freezeCoordinates (v:Fin 3 → K) (n:ℕ):Poly3 K →ₐ[K] Poly3 K:=
- MvPolynomial.aeval (fun i => if i.val < n then MvPolynomial.C (v i) else MvPolynomial.X i)
-def freezeKernel (v:Fin 3 → K) (n:ℕ):Ideal (Poly3 K):=
+def freezeCoordinates (v:Fin 3→K) (n:ℕ):Poly3 K →ₐ[K] Poly3 K:=
+ MvPolynomial.aeval (fun i => if i.val<n then MvPolynomial.C (v i) else MvPolynomial.X i)
+def freezeKernel (v:Fin 3→K) (n:ℕ):Ideal (Poly3 K):=
  RingHom.ker (freezeCoordinates K v n).toRingHom
-instance freezeKernel_isPrime (v:Fin 3 → K) (n:ℕ):
+instance freezeKernel_isPrime (v:Fin 3→K) (n:ℕ):
    (freezeKernel K v n).IsPrime:=
  RingHom.ker_isPrime (freezeCoordinates K v n).toRingHom
-theorem freeze_comp (v:Fin 3 → K) (n m:ℕ) (hnm:n ≤ m):
+theorem freeze_comp (v:Fin 3→K) (n m:ℕ) (hnm:n ≤ m):
    (freezeCoordinates K v m).comp (freezeCoordinates K v n)=
      freezeCoordinates K v m:=by
  ext i
- by_cases hi:i.val < n
+ by_cases hi:i.val<n
  · simp [freezeCoordinates,hi,lt_of_lt_of_le hi hnm]
  · simp [freezeCoordinates,hi]
-theorem freezeKernel_mono (v:Fin 3 → K) (n m:ℕ) (hnm:n ≤ m):
+theorem freezeKernel_mono (v:Fin 3→K) (n m:ℕ) (hnm:n ≤ m):
    freezeKernel K v n ≤ freezeKernel K v m:=by
  intro F hF
  change freezeCoordinates K v n F=0 at hF
@@ -32,8 +32,8 @@ theorem coordinate_difference_ne_zero (i:Fin 3) (a:K):
  intro h
  have h':=congrArg (MvPolynomial.pderiv i) h
  simp at h'
-theorem freezeKernel_lt_succ (v:Fin 3 → K) (n:ℕ) (hn:n < 3):
-   freezeKernel K v n < freezeKernel K v (n+1):=by
+theorem freezeKernel_lt_succ (v:Fin 3→K) (n:ℕ) (hn:n<3):
+   freezeKernel K v n<freezeKernel K v (n+1):=by
  classical
  let i:Fin 3:=⟨n,hn⟩
  let F:Poly3 K:=MvPolynomial.X i-MvPolynomial.C (v i)
@@ -46,11 +46,11 @@ theorem freezeKernel_lt_succ (v:Fin 3 → K) (n:ℕ) (hn:n < 3):
  apply lt_of_le_of_ne (freezeKernel_mono K v n (n+1) (Nat.le_succ n))
  intro heq
  exact hnot (heq.symm ▸ hmem)
-def pointKernel (v:Fin 3 → K):Ideal (Poly3 K):=
+def pointKernel (v:Fin 3→K):Ideal (Poly3 K):=
  RingHom.ker (MvPolynomial.aeval v).toRingHom
-instance pointKernel_isPrime (v:Fin 3 → K):(pointKernel K v).IsPrime:=
+instance pointKernel_isPrime (v:Fin 3→K):(pointKernel K v).IsPrime:=
  RingHom.ker_isPrime (MvPolynomial.aeval v).toRingHom
-theorem freezeKernel_three (v:Fin 3 → K):
+theorem freezeKernel_three (v:Fin 3→K):
    freezeKernel K v 3=pointKernel K v:=by
  have h:freezeCoordinates K v 3=
      (Algebra.ofId K (Poly3 K)).comp (MvPolynomial.aeval v):=by
@@ -58,11 +58,11 @@ theorem freezeKernel_three (v:Fin 3 → K):
    simp [freezeCoordinates]
  apply Ideal.ext
  intro F
- change freezeCoordinates K v 3 F=0 ↔ MvPolynomial.aeval v F=0
+ change freezeCoordinates K v 3 F=0↔MvPolynomial.aeval v F=0
  rw [h]
- change MvPolynomial.C (MvPolynomial.aeval v F)=0 ↔ _
+ change MvPolynomial.C (MvPolynomial.aeval v F)=0↔_
  simp
-theorem pointKernel_height_ge_three (v:Fin 3 → K):
+theorem pointKernel_height_ge_three (v:Fin 3→K):
    (3:ℕ∞) ≤ (pointKernel K v).height:=by
  have h01:=Ideal.height_add_one_le_of_lt_of_isPrime
    (freezeKernel_lt_succ K v 0 (by decide))
@@ -93,7 +93,7 @@ theorem componentSet_finite (F T:Poly3 K):(componentSet K F T).Finite:=
 def componentFamily (F T:Poly3 K):Finset (Ideal (Poly3 K)):=
  (componentSet_finite K F T).toFinset
 @[simp] theorem mem_componentFamily (F T:Poly3 K) (P:Ideal (Poly3 K)):
-   P∈componentFamily K F T ↔ P∈(cutIdeal K F T).minimalPrimes:=
+   P∈componentFamily K F T↔P∈(cutIdeal K F T).minimalPrimes:=
  Set.Finite.mem_toFinset _
 theorem component_isPrime (F T:Poly3 K) (P:Ideal (Poly3 K))
    (hP:P∈componentFamily K F T):P.IsPrime:=
@@ -112,7 +112,7 @@ theorem component_height_le_two (F T:Poly3 K) (P:Ideal (Poly3 K))
    (Finset.card_insert_le F {T}).trans (by simp)
  exact hh.trans (by exact_mod_cast hc)
 theorem exists_component_of_common_point
-   (F T:Poly3 K) (v:Fin 3 → K)
+   (F T:Poly3 K) (v:Fin 3→K)
    (hF:MvPolynomial.eval v F=0) (hT:MvPolynomial.eval v T=0):
    ∃ P∈componentFamily K F T,P ≤ pointKernel K v:=by
  have hcut:cutIdeal K F T ≤ pointKernel K v:=by
@@ -126,7 +126,7 @@ theorem exists_component_of_common_point
  exact ⟨P,(mem_componentFamily K F T P).mpr hP,hle⟩
 theorem component_ne_pointKernel
    (F T:Poly3 K) (P:Ideal (Poly3 K))
-   (hP:P∈componentFamily K F T) (v:Fin 3 → K):
+   (hP:P∈componentFamily K F T) (v:Fin 3→K):
    P≠pointKernel K v:=by
  intro heq
  have hle:=component_height_le_two K F T P hP

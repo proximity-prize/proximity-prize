@@ -1,13 +1,12 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 import ProximityPrize.SubmissionLower.CN
 section ProximityFlatProofPort
 variable {ιA ιB ιM:Type*}
 namespace GradedMonoid
 section Defs
-variable (A:ιA → Type*) (M:ιM → Type*)
+variable (A:ιA→Type*) (M:ιM→Type*)
 class GSMul [VAdd ιA ιM] where
- smul {i j}:A i → M j → M (i+ᵥ j)
+ smul {i j}:A i→M j→M (i+ᵥ j)
 instance GMul.toGSMul [Add ιA] [GMul A]:GSMul A A where smul:=GMul.mul
 instance GSMul.toSMul [VAdd ιA ιM] [GSMul A M]:SMul (GradedMonoid A) (GradedMonoid M):=
  ⟨fun x y↦⟨_,GSMul.smul x.snd y.snd⟩⟩
@@ -30,26 +29,26 @@ end GradedMonoid
 section Subobjects
 variable {R:Type*}
 class SetLike.GradedSMul {S R N M:Type*} [SetLike S R] [SetLike N M] [SMul R M] [VAdd ιA ιB]
- (A:ιA → S) (B:ιB → N):Prop where
- smul_mem:∀ ⦃i:ιA⦄ ⦃j:ιB⦄ {ai bj},ai∈A i → bj∈B j → ai • bj∈B (i+ᵥ j)
+ (A:ιA→S) (B:ιB→N):Prop where
+ smul_mem:∀ ⦃i:ιA⦄ ⦃j:ιB⦄ {ai bj},ai∈A i→bj∈B j→ai • bj∈B (i+ᵥ j)
 instance SetLike.toGSMul {S R N M:Type*} [SetLike S R] [SetLike N M] [SMul R M] [VAdd ιA ιB]
-   (A:ιA → S) (B:ιB → N) [SetLike.GradedSMul A B]:
+   (A:ιA→S) (B:ιB→N) [SetLike.GradedSMul A B]:
    GradedMonoid.GSMul (fun i↦A i) fun i↦B i where
  smul a b:=⟨a.1 • b.1,SetLike.GradedSMul.smul_mem a.2 b.2⟩
 @[simp]
 theorem SetLike.coe_GSMul {S R N M:Type*} [SetLike S R] [SetLike N M] [SMul R M] [VAdd ιA ιB]
-   (A:ιA → S) (B:ιB → N) [SetLike.GradedSMul A B] {i:ιA} {j:ιB} (x:A i) (y:B j):
+   (A:ιA→S) (B:ιB→N) [SetLike.GradedSMul A B] {i:ιA} {j:ιB} (x:A i) (y:B j):
    (@GradedMonoid.GSMul.smul ιA ιB (fun i↦A i) (fun i↦B i) _ _ i j x y:M)=x.1 • y.1:=
  rfl
 instance SetLike.GradedMul.toGradedSMul [AddMonoid ιA] [Monoid R] {S:Type*} [SetLike S R]
-   (A:ιA → S) [SetLike.GradedMonoid A]:SetLike.GradedSMul A A where
+   (A:ιA→S) [SetLike.GradedMonoid A]:SetLike.GradedSMul A A where
  smul_mem _ _ _ _ hi hj:=SetLike.GradedMonoid.toGradedMul.mul_mem hi hj
 end Subobjects
 section HomogeneousElements
 variable {S R N M:Type*} [SetLike S R] [SetLike N M]
-theorem SetLike.IsHomogeneousElem.graded_smul [VAdd ιA ιB] [SMul R M] {A:ιA → S} {B:ιB → N}
+theorem SetLike.IsHomogeneousElem.graded_smul [VAdd ιA ιB] [SMul R M] {A:ιA→S} {B:ιB→N}
    [SetLike.GradedSMul A B] {a:R} {b:M}:
-   SetLike.IsHomogeneousElem A a → SetLike.IsHomogeneousElem B b →
+   SetLike.IsHomogeneousElem A a→SetLike.IsHomogeneousElem B b →
    SetLike.IsHomogeneousElem B (a • b)
  | ⟨i,hi⟩,⟨j,hj⟩ => ⟨i+ᵥ j,SetLike.GradedSMul.smul_mem hi hj⟩
 end HomogeneousElements

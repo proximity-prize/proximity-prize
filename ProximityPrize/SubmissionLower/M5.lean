@@ -23,7 +23,7 @@ private theorem mapped_flag (φ:Polynomial K →+*Ω)
  simp [RCN081.weight_fin4,residualYSWeights] at hm
  simp [RCN081.weight_fin4,residualTotalWeights] at ht
  exact ⟨hr,hm,ht⟩
-private theorem G_weight (w:Fin 4 → ℕ) (t:ℕ)
+private theorem G_weight (w:Fin 4→ℕ) (t:ℕ)
    (h0:w 0=0) (h1:w 1=t) (h2:w 2=1) (ht:t≤1)
    (F:MvPolynomial (Fin 4) K) (C:ℕ)
    (hC:1≤C) (hF:wt w F≤C):wt w (polyG K F)≤C+1-t:=by

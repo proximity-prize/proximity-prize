@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I4
 import ProximityPrize.SubmissionLower.D8
 namespace ProximityPrize.SubmissionLower.RCN130
@@ -222,7 +221,7 @@ theorem originalCumulativeFlag_all (F:MvPolynomial (Fin 4) K):
  rw [hw,MvPolynomial.weightedTotalDegree_piSingle]
 theorem regularCumulativeFlag_positive
    (Q:MvPolynomial (Fin 4) K) (R:RegularIndex Q):
-   0 < (regularCumulativeFlag Q R).all:=by
+   0<(regularCumulativeFlag Q R).all:=by
  rw [originalCumulativeFlag_all]
  exact (positiveRFactors_spec Q R.1 R.2).2.2
 theorem surfaceCumulativeFlag_all (G:MvPolynomial (Fin 3) L):
@@ -233,7 +232,7 @@ theorem surfaceCumulativeFlag_all (G:MvPolynomial (Fin 3) L):
    fin_cases i <;> simp [sWeight]
  rw [hw,MvPolynomial.weightedTotalDegree_piSingle]
 def reflagResidualStage {Iota:Type} {phi:Polynomial K →+*L}
-   {Gamma:Finset K} {x:Iota → K} {p e d:ℕ} [CharP L p]
+   {Gamma:Finset K} {x:Iota→K} {p e d:ℕ} [CharP L p]
    {oldFlag newFlag:FlagDegree} {support:ResidualSupportParameters}
    (S:ResidualStage phi Gamma x p e oldFlag d support)
    (hflag:PolynomialInFlag newFlag S.G):

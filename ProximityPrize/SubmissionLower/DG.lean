@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R2
 namespace ProximityPrize.SubmissionLower.RCN026
 open scoped Classical BigOperators WithZero
@@ -71,7 +70,7 @@ theorem finitePlace_injective:Function.Injective (finitePlace K L s hs):=by
 abbrev InfinityIndex:=
  {Q:Ideal (InfiniteNormalization K L)//Q∈RCN346.infinityFiber K L}
 abbrev FamilyIndex:=FiniteIndex K L s hs ⊕ InfinityIndex K L
-def familyChart:FamilyIndex K L s hs → RCN345.ChartPlace K L:=
+def familyChart:FamilyIndex K L s hs→RCN345.ChartPlace K L:=
  Sum.elim (fun i↦Sum.inl (finitePlace K L s hs i))
    (fun Q↦Sum.inr (RCN346.infinityPlace K L Q))
 def familyValuation (i:FamilyIndex K L s hs):Place K L:=
@@ -134,7 +133,7 @@ theorem sum_family_order_eq_contributions (x:L):
    (∑ Q:InfinityIndex K L,
      RCN357.fieldOrder (InfiniteNormalization K L) L
        (RCN346.infinityPlace K L Q) x)=_
- rw [←finiteContribution_eq_sum K L s hs x, ←infinityContribution_eq_sum K L x]
+ rw [←finiteContribution_eq_sum K L s hs x,←infinityContribution_eq_sum K L x]
 def familyValues:Finset (Place K L):=
  Finset.univ.image (familyValuation K L s hs)
 theorem sum_familyValues_order_eq_contributions (x:L):

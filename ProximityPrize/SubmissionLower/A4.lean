@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W
 import ProximityPrize.SubmissionLower.E0
 namespace ProximityPrize.SubmissionLower.RCN047
@@ -11,7 +10,7 @@ theorem common_denominator_power (h u:A) (hHU:h*u=1)
    (w j:ℕ) (hj:j ≤ w):
    h^(2*w)*u^(2*j)=h^(2*(w-j)):=by
  have hexp:2*w=2*(w-j)+2*j:=by omega
- rw [hexp,pow_add,mul_assoc, ←mul_pow,hHU,one_pow,mul_one]
+ rw [hexp,pow_add,mul_assoc,←mul_pow,hHU,one_pow,mul_one]
 theorem common_denominator_term (h u:A) (hHU:h*u=1)
    (w j:ℕ) (hj:j ≤ w) (c m z:A):
    c*m*h^(2*(w-j))*z^j=
@@ -19,7 +18,7 @@ theorem common_denominator_term (h u:A) (hHU:h*u=1)
  rw [←common_denominator_power h u hHU w j hj]
  ring
 theorem common_denominator_sum (h u:A) (hHU:h*u=1)
-   (w:ℕ) (c m:ℕ → A) (z a:A):
+   (w:ℕ) (c m:ℕ→A) (z a:A):
    (∑ j∈Finset.range (w+1),c j*m j*h^(2*(w-j))*z^j)-
        a*h^(2*w)=
      h^(2*w)*
@@ -42,7 +41,7 @@ end ScalarClearing
 section PolynomialClearing
 variable {K A:Type*} [Field K] [CommRing A]
 theorem map_agreementNumerator
-   (φ:Poly4 K →+*A) (F:Poly4 K) (w:ℕ) (c:ℕ → K) (x u₀ u₁:K)
+   (φ:Poly4 K →+*A) (F:Poly4 K) (w:ℕ) (c:ℕ→K) (x u₀ u₁:K)
    (u:A) (hHU:φ (polyH K F)*u=1):
    φ (agreementNumerator F w c x u₀ u₁)=
      φ (polyH K F)^(2*w)*
@@ -65,7 +64,7 @@ theorem polyImage_eq_coordinate (F:Poly4 K) (i:Fin 4):
    polyImage K F (MvPolynomial.X i)=contactCoordinate K F i:=
  polyImage_X K F i
 theorem regularPointValue_polyImage
-   (coefficients:K →+*L) (F P:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F P:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0):
@@ -73,7 +72,7 @@ theorem regularPointValue_polyImage
      MvPolynomial.eval₂Hom coefficients v P:=by
  rw [polyImage_apply,regularPointValue_mk,pointEvaluation_liftFour]
 theorem regularPointValue_inverseCoordinate
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0):
@@ -82,7 +81,7 @@ theorem regularPointValue_inverseCoordinate
  rw [inverseCoordinate,regularPointValue_mk]
  exact pointEvaluation_U coefficients F v
 theorem evaluated_iterate_Y
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0) (b:ℕ):
@@ -93,7 +92,7 @@ theorem evaluated_iterate_Y
  rw [←polyImage_eq_coordinate F (1:Fin 4),iterate_Y_eq_numerator,
    map_mul,map_pow,regularPointValue_polyImage,regularPointValue_inverseCoordinate]
 theorem jetCoefficient_eq_evaluated_numerator
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0) (b:ℕ):
@@ -105,7 +104,7 @@ theorem jetCoefficient_eq_evaluated_numerator
          (b.factorial:L):=by
  rw [jetCoefficient,evaluated_iterate_Y]
 theorem numerator_eval_zero_iff_jetCoefficient_zero
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
@@ -121,11 +120,11 @@ theorem numerator_eval_zero_iff_jetCoefficient_zero
  rw [jetCoefficient_eq_evaluated_numerator]
  simp only [div_eq_mul_inv,mul_eq_zero,hU,hfac,or_false]
 theorem numerator_eval_zero_iff_jetCoefficient_zero_of_char
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (p b:ℕ) [CharP L p] (hb:b < p):
+   (p b:ℕ) [CharP L p] (hb:b<p):
    MvPolynomial.eval₂Hom coefficients v (numerator K F b)=0 ↔
      jetCoefficient (contactDerivation K F)
        (regularPointValue coefficients F v hF hregular)
@@ -133,14 +132,14 @@ theorem numerator_eval_zero_iff_jetCoefficient_zero_of_char
  numerator_eval_zero_iff_jetCoefficient_zero coefficients F v hF hregular b
    (factorial_cast_ne_zero_below_characteristic p b hb)
 theorem all_tail_numerators_iff_all_tail_jets
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (p bound w:ℕ) [CharP L p] (hchar:bound < p):
-   (∀ b,w < b → b ≤ bound →
+   (p bound w:ℕ) [CharP L p] (hchar:bound<p):
+   (∀ b,w<b→b ≤ bound →
      MvPolynomial.eval₂Hom coefficients v (numerator K F b)=0) ↔
-   (∀ b,w < b → b ≤ bound →
+   (∀ b,w<b→b ≤ bound →
      jetCoefficient (contactDerivation K F)
        (regularPointValue coefficients F v hF hregular)
        (contactCoordinate K F (1:Fin 4)) b=0):=by
@@ -152,7 +151,7 @@ theorem all_tail_numerators_iff_all_tail_jets
    exact (numerator_eval_zero_iff_jetCoefficient_zero_of_char
      coefficients F v hF hregular p b (hbb.trans_lt hchar)).mpr (h b hwb hbb)
 theorem reconstructedPolynomial_eval
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0) (w:ℕ) (z:L):
@@ -164,10 +163,10 @@ theorem reconstructedPolynomial_eval
  simp only [reconstructedPolynomial,jetPolynomial,Polynomial.eval_finsetSum,
    Polynomial.eval_monomial]
 theorem eval_agreementNumerator_clearing
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (w:ℕ) (c:ℕ → K) (x u₀ u₁:K):
+   (w:ℕ) (c:ℕ→K) (x u₀ u₁:K):
    MvPolynomial.eval₂Hom coefficients v (agreementNumerator F w c x u₀ u₁)=
      MvPolynomial.eval₂Hom coefficients v (polyH K F)^(2*w)*
        ((∑ j∈Finset.range (w+1),
@@ -180,7 +179,7 @@ theorem eval_agreementNumerator_clearing
    map_agreementNumerator (MvPolynomial.eval₂Hom coefficients v) F w c x u₀ u₁
      (MvPolynomial.eval₂Hom coefficients v (polyH K F))⁻¹ (mul_inv_cancel₀ hH)
 theorem eval_factorial_agreementNumerator
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
@@ -208,7 +207,7 @@ theorem eval_factorial_agreementNumerator
  rw [hsum]
  ring
 theorem factorial_agreement_zero_iff_actual_agreement
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hregular:MvPolynomial.eval₂Hom coefficients v
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)

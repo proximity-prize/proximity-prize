@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.O4
 namespace ProximityPrize.SubmissionLower.RCN323
 open scoped Classical BigOperators WithZero
@@ -22,12 +21,12 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq (Place K L):=Classical.decEq _
 theorem exponentSetPoleWeight_nonneg
    (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (x:σ → L) (E:Finset (σ →₀ ℕ)):
+   (x:σ→L) (E:Finset (σ →₀ ℕ)):
    0 ≤ exponentSetPoleWeight v x E:=by
  unfold exponentSetPoleWeight
  exact Finset.le_max' _ _ (Finset.mem_insert_self (0:ℤ) _)
 theorem support_sum_le_principal_poleMass_of_exact
-   (x:σ → L) (E:Finset (σ →₀ ℕ)) (b:L) (hb:b≠0)
+   (x:σ→L) (E:Finset (σ →₀ ℕ)) (b:L) (hb:b≠0)
    (hexact:∀ v:Place K L,
      RCN187.poleOrder v.val b=
        exponentSetPoleWeight v.val x E)
@@ -84,7 +83,7 @@ structure GenericSparseBKKWitness
  polynomial:MvPolynomial (Fin 3) Ω
  support_subset:polynomial.support ⊆ E
  proper:∀ C:RegularComponent Ω G T H,polynomial∉C.1
- cost:RegularComponent Ω G T H → ℕ
+ cost:RegularComponent Ω G T H→ℕ
  exact_pole:∀ C:RegularComponent Ω G T H,
    let htr:=hseparator C
    letI:Algebra (Polynomial Ω) (CoordinateRing Ω C.1):=

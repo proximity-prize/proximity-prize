@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.H
 namespace ProximityPrize.SubmissionLower.RCN223
 open Finset
@@ -79,12 +78,12 @@ theorem total_contact_rank_exact:totalContactRank=453846761472:=by
 theorem rank_margin_exact:rankMargin=490218:=by
  rw [show rankMargin=coefficientCount-totalContactRank by rfl,
    coefficient_count_exact,total_contact_rank_exact]
-theorem interpolation_gate:totalContactRank < coefficientCount:=by
+theorem interpolation_gate:totalContactRank<coefficientCount:=by
  rw [coefficient_count_exact,total_contact_rank_exact]
  norm_num
 theorem characteristic_gates:
-   weightedCap < prime∧implicitWeightedCap < prime∧
-     algebraicCap < prime∧slopeCap < prime:=by
+   weightedCap<prime∧implicitWeightedCap<prime∧
+     algebraicCap<prime∧slopeCap<prime:=by
  norm_num [weightedCap,multiplicity,agreements,n,errors,
    implicitWeightedCap,algebraicCap,slopeCap,seedTotalCap,prime]
 theorem retained_singular_numerator_exact:

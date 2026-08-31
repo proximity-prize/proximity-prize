@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BX
 import ProximityPrize.SubmissionLower.H
 namespace ProximityPrize.SubmissionLower.RCN216
@@ -6,11 +5,11 @@ open RCN173
 open RCN213
 theorem stratified_incidence_bound
    {Seed Node:Type*} [DecidableEq Seed] [DecidableEq Node]
-   (relation:Seed → Node → Prop) [∀ seed node,Decidable (relation seed node)]
+   (relation:Seed→Node→Prop) [∀ seed node,Decidable (relation seed node)]
    (seeds:Finset Seed) (nodes identities:Finset Node)
    (a w degreeCost unitCost U V:ℕ)
    (hidentities:identities ⊆ nodes) (hcard:identities.card ≤ w)
-   (hwa:w < a)
+   (hwa:w<a)
    (hagreement:∀ seed∈seeds,
      a ≤ (nodes.filter (relation seed)).card)
    (hfiber:∀ node∈nodes \ identities,
@@ -30,11 +29,11 @@ theorem stratified_incidence_bound
    degreeCost unitCost U V hcard hwa hraw hdegree hunit
 theorem scaled_stratified_incidence_bound
    {Seed Node:Type*} [DecidableEq Seed] [DecidableEq Node]
-   (relation:Seed → Node → Prop) [∀ seed node,Decidable (relation seed node)]
+   (relation:Seed→Node→Prop) [∀ seed node,Decidable (relation seed node)]
    (seeds:Finset Seed) (nodes identities:Finset Node)
    (a w degreeCost unitCost U V:ℕ)
    (hidentities:identities ⊆ nodes) (hcard:identities.card ≤ w)
-   (hwa:w < a)
+   (hwa:w<a)
    (hagreement:∀ seed∈seeds,
      a ≤ (nodes.filter (relation seed)).card)
    (hfiber:∀ node∈nodes \ identities,
@@ -48,7 +47,7 @@ theorem scaled_stratified_incidence_bound
        V*(a-identities.card)):
    seeds.card*(a-w)^2 ≤ U*degreeCost+V*unitCost:=by
  let geometricCost:=(w-identities.card)*degreeCost+unitCost
- have hgap:0 < a-w:=Nat.sub_pos_of_lt hwa
+ have hgap:0<a-w:=Nat.sub_pos_of_lt hwa
  have hfiberDiv:∀ node∈nodes \ identities,
      (seeds.filter (fun seed↦relation seed node)).card ≤
        geometricCost/(a-w):=by

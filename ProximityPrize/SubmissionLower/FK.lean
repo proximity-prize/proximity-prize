@@ -70,7 +70,7 @@ theorem pow_sum_dvd_of_sum_le_localized_ord
    (p:Ideal (Polynomial K)) [p.IsPrime]
    (q r:Polynomial K) (hp:p=Ideal.span {q})
    (hq:Irreducible q) (hqMonic:q.Monic) (hr:r≠0)
-   (multiplicity:I → ℕ)
+   (multiplicity:I→ℕ)
    (hle:((∑ i,multiplicity i:ℕ):ℕ∞) ≤
      Ring.ord (Localization.AtPrime p)
        (algebraMap (Polynomial K) (Localization.AtPrime p) r)):

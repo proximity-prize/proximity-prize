@@ -79,7 +79,7 @@ theorem isUnit_of_isUnit_fst [CommRing R] {x:DualNumber R} (hx:IsUnit x.1):
  subst a
  refine ⟨{
    val:=((u:R),b)
-   inv:=((↑u⁻¹:R), -((↑u⁻¹:R)*b*(↑u⁻¹:R)))
+   inv:=((↑u⁻¹:R),-((↑u⁻¹:R)*b*(↑u⁻¹:R)))
    val_inv:=?_
    inv_val:=?_},rfl⟩
  · ext <;> simp [mul_assoc]

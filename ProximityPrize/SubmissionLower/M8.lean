@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A9
 namespace ProximityPrize.SubmissionLower.RCN204
 open scoped Classical BigOperators WithZero
@@ -14,7 +13,7 @@ private theorem flag_eq {p q:FlagDegree} (hx:p.zOnly=q.zOnly)
    (hy:p.yz=q.yz) (hz:p.all=q.all):p=q:=by
  cases p;cases q;simp_all
 theorem coefficient_flag_eq (a b s k:ℕ) (C:FlagDegree)
-   (c:Fin (k+1) → FlagDegree)
+   (c:Fin (k+1)→FlagDegree)
    (hc:∀ j,c j+(k-j.val) • (⟨a,b+1,s+1⟩:FlagDegree)+
      j.val • (⟨a,b,s+3⟩:FlagDegree)=C+k • (⟨2*a,2*b+1,2*s+3⟩:FlagDegree))
    (j:Fin (k+1)):
@@ -28,41 +27,41 @@ theorem coefficient_flag_eq (a b s k:ℕ) (C:FlagDegree)
    unitAllFlag,unitYZFlag] at*
  all_goals nlinarith
 variable {K L:Type*} [Field K] [Field L]
-theorem filteredCut_div_pow (k:ℕ) (B:Fin (k+1) → L) (H G:L) (hH:H≠0):
+theorem filteredCut_div_pow (k:ℕ) (B:Fin (k+1)→L) (H G:L) (hH:H≠0):
    filteredCut k B H G/H^k=∑ j,B j*(G/H)^j.val:=by
  apply (div_eq_iff (pow_ne_zero k hH)).mpr
  have hrel:H*(G/H)=(1:L)*G:=by field_simp
  have h:=binary_clearing k B H G 1 (G/H) hrel
  simpa [filteredCut,mul_comm,mul_left_comm,mul_assoc] using h.symm
 def flagPole (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (x:Fin 3 → L) (p:FlagDegree):ℤ:=
+   (x:Fin 3→L) (p:FlagDegree):ℤ:=
  (p.zOnly:ℤ)*poleOrder v (x 2)+
  (p.yz:ℤ)*max (poleOrder v (x 0)) (poleOrder v (x 2))+
  (p.all:ℤ)*max (poleOrder v (x 1)) (max (poleOrder v (x 0)) (poleOrder v (x 2)))
 theorem flagPole_nonneg (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (x:Fin 3 → L) (p:FlagDegree):0 ≤ flagPole v x p:=by
+   (x:Fin 3→L) (p:FlagDegree):0 ≤ flagPole v x p:=by
  unfold flagPole poleOrder
  positivity
 @[simp] theorem flagPole_add (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (x:Fin 3 → L) (p q:FlagDegree):
+   (x:Fin 3→L) (p q:FlagDegree):
    flagPole v x (p+q)=flagPole v x p+flagPole v x q:=by
  simp only [flagPole,add_zOnly,add_yz,add_all,Nat.cast_add]
  ring
 @[simp] theorem flagPole_nsmul (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (x:Fin 3 → L) (k:ℕ) (p:FlagDegree):
+   (x:Fin 3→L) (k:ℕ) (p:FlagDegree):
    flagPole v x (k • p)=(k:ℤ)*flagPole v x p:=by
  simp only [flagPole,nsmul_zOnly,nsmul_yz,nsmul_all,Nat.cast_mul]
  ring
 @[simp] theorem flagPole_unitAll (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (x:Fin 3 → L):flagPole v x unitAllFlag=
+   (x:Fin 3→L):flagPole v x unitAllFlag=
      max (poleOrder v (x 1)) (max (poleOrder v (x 0)) (poleOrder v (x 2))):=by
  simp [flagPole,unitAllFlag]
 @[simp] theorem flagPole_unitYZ (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (x:Fin 3 → L):flagPole v x unitYZFlag=
+   (x:Fin 3→L):flagPole v x unitYZFlag=
      max (poleOrder v (x 0)) (poleOrder v (x 2)):=by
  simp [flagPole,unitYZFlag]
 theorem valuation_eval_le_flag (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (coeff:K →+*L) (hcoeff:∀ a,v (coeff a) ≤ 1) (x:Fin 3 → L)
+   (coeff:K →+*L) (hcoeff:∀ a,v (coeff a) ≤ 1) (x:Fin 3→L)
    (p:FlagDegree) (B:MvPolynomial (Fin 3) K) (hB:PolynomialInFlag p B):
    v (MvPolynomial.eval₂Hom coeff x B) ≤ WithZero.exp (flagPole v x p):=
  (valuation_eval_le_exp_exponentSet v coeff hcoeff x (flagSupport p) B
@@ -77,8 +76,8 @@ private theorem mixed_weight_le (r j k:ℕ) (h:r+j=k) (A B:ℤ):
    _=((r+j:ℕ):ℤ)*max A B:=by push_cast;ring
    _=_:=by rw [h]
 theorem valuation_polynomialInW_le (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (coeff:K →+*L) (hcoeff:∀ a,v (coeff a) ≤ 1) (x:Fin 3 → L)
-   (w:L) (k:ℕ) (C N:FlagDegree) (B:Fin (k+1) → MvPolynomial (Fin 3) K)
+   (coeff:K →+*L) (hcoeff:∀ a,v (coeff a) ≤ 1) (x:Fin 3→L)
+   (w:L) (k:ℕ) (C N:FlagDegree) (B:Fin (k+1)→MvPolynomial (Fin 3) K)
    (hB:∀ j,PolynomialInFlag
      (C+k • N+(k-j.val) • (2 • unitAllFlag)+j.val • unitYZFlag) (B j)):
    v (∑ j,MvPolynomial.eval₂Hom coeff x (B j)*w^j.val) ≤
@@ -114,9 +113,9 @@ private theorem poleOrder_le_of_value_le_exp (v:Valuation L (WithZero (Multiplic
  · simpa [hv] using hq
  · simpa only [WithZero.log_exp] using (WithZero.log_le_log hv WithZero.exp_ne_zero).mpr hz
 theorem poleOrder_filteredCut_div_le (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (coeff:K →+*L) (hcoeff:∀ a,v (coeff a) ≤ 1) (x:Fin 3 → L)
-   (a b s k:ℕ) (C:FlagDegree) (B:Fin (k+1) → MvPolynomial (Fin 3) K)
-   (H G:MvPolynomial (Fin 3) K) (c:Fin (k+1) → FlagDegree)
+   (coeff:K →+*L) (hcoeff:∀ a,v (coeff a) ≤ 1) (x:Fin 3→L)
+   (a b s k:ℕ) (C:FlagDegree) (B:Fin (k+1)→MvPolynomial (Fin 3) K)
+   (H G:MvPolynomial (Fin 3) K) (c:Fin (k+1)→FlagDegree)
    (hH:MvPolynomial.eval₂Hom coeff x H≠0)
    (hB:∀ j,PolynomialInFlag (c j) (B j))
    (hc:∀ j,c j+(k-j.val) • (⟨a,b+1,s+1⟩:FlagDegree)+
@@ -142,8 +141,8 @@ theorem poleOrder_filteredCut_div_le (v:Valuation L (WithZero (Multiplicative �
 theorem coordinate_filteredCut_pole_le {Ω:Type} [Field Ω]
    (P:Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
    (v:Place Ω (CoordinateField Ω P)) (a b s k:ℕ) (C:FlagDegree)
-   (B:Fin (k+1) → MvPolynomial (Fin 3) Ω) (H G:MvPolynomial (Fin 3) Ω)
-   (c:Fin (k+1) → FlagDegree) (hH:coordinateEvaluation Ω P H≠0)
+   (B:Fin (k+1)→MvPolynomial (Fin 3) Ω) (H G:MvPolynomial (Fin 3) Ω)
+   (c:Fin (k+1)→FlagDegree) (hH:coordinateEvaluation Ω P H≠0)
    (hB:∀ j,PolynomialInFlag (c j) (B j))
    (hc:∀ j,c j+(k-j.val) • (⟨a,b+1,s+1⟩:FlagDegree)+
      j.val • (⟨a,b,s+3⟩:FlagDegree)=C+k • (⟨2*a,2*b+1,2*s+3⟩:FlagDegree)):

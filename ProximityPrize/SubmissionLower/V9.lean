@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 section
@@ -17,7 +16,7 @@ variable (G:Type u) [Group G] [TopologicalSpace G]
 variable {G} in
 @[to_additive]
 theorem toSubgroup_injective:Function.Injective
-   (ClosedSubgroup.toSubgroup:ClosedSubgroup G → Subgroup G):=
+   (ClosedSubgroup.toSubgroup:ClosedSubgroup G→Subgroup G):=
  fun A B h↦by
  ext
  rw [h]

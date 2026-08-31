@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z4
 import ProximityPrize.SubmissionLower.D8
 namespace ProximityPrize.SubmissionLower.RCN268
@@ -23,17 +22,17 @@ def regularGeometricResidualStageOfSupport
    (support:ResidualSupportParameters)
    {pchar errorCap degree:ℕ} [CharP K pchar]
    (Q:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ degree)
    (hnoPencil:NoLargeSelectedPencil selected Gamma degree errorCap)
    (R:RCN266.RegularIndex Q)
    (hRirred:Irreducible R.1)
-   (hRpos:0 < R.1.degreeOf (2:Fin 4))
-   (hRsmall:R.1.degreeOf (2:Fin 4) < pchar)
+   (hRpos:0<R.1.degreeOf (2:Fin 4))
+   (hRsmall:R.1.degreeOf (2:Fin 4)<pchar)
    (hRsupport:ResidualSupportData support R.1)
-   (hdegreeChar:degree < pchar)
+   (hdegreeChar:degree<pchar)
    (g:GeometricFactor K R.1):
    letI:CharP (GenericField K) pchar:=genericField_charP K pchar
    ResidualStage (polynomialEmbedding K)
@@ -51,8 +50,8 @@ def regularGeometricResidualStageOfSupport
 def regularGeometricResidualStage
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime]
    (hbox:Q∈globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
    (hnoPencil:NoLargeSelectedPencil selected Gamma w errors)
@@ -64,7 +63,7 @@ def regularGeometricResidualStage
      x prime errors (geometricFlag K g) w:=by
  have hRdata:=
    directFactor_data Q R.1 hQ weightedCap w seedTotalCap slopeCap hbox R.2
- have hRsmall:R.1.degreeOf (2:Fin 4) < prime:=
+ have hRsmall:R.1.degreeOf (2:Fin 4)<prime:=
    (degreeOf_R_le_of_mem_box R.1 weightedCap w seedTotalCap slopeCap
      hRdata.2.2).trans_lt (by norm_num [slopeCap,prime])
  have hsupport:=residual_surface_weights_of_box K R.1 hRdata.2.2
@@ -76,7 +75,7 @@ def regularGeometricResidualStage
 theorem regular_factor_seed_bound_of_geometric_counts
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    (hbox:Q∈globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (R:RCN266.RegularIndex Q)
    (hcount:∀ g:GeometricFactor K R.1,
      (geometricSeeds K R.1 selected (regularSeeds Q selected Gamma R) g).card*

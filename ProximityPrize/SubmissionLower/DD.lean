@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.M
 namespace ProximityPrize.SubmissionLower.RCN023
 open scoped Classical BigOperators
@@ -75,7 +74,7 @@ theorem char_le_actualCoordinateDegree_of_not_isSeparable
 theorem isSeparable_of_actualCoordinateDegree_lt_char
    (hfinite:ProjectionsFinite K P) (p:ℕ) [CharP K p] (hp:p≠0)
    (i:Fin 3) (hi:Transcendental K (coordinate K P i))
-   (hdegree:actualCoordinateDegree K P i < p):
+   (hdegree:actualCoordinateDegree K P i<p):
    letI:Algebra (RatFunc K) (CoordinateField K P):=
      rationalBaseAlgebra K P i hi
    Algebra.IsSeparable (RatFunc K) (CoordinateField K P):=by
@@ -87,10 +86,10 @@ theorem isSeparable_of_actualCoordinateDegree_lt_char
      K P hfinite p hp i hi hsep)) hdegree
 theorem family_coordinate_isSeparable_of_sum_degree_lt_char
    {I:Type} [Fintype I]
-   (Q:I → Ideal (MvPolynomial (Fin 3) K)) [∀ i,(Q i).IsPrime]
+   (Q:I→Ideal (MvPolynomial (Fin 3) K)) [∀ i,(Q i).IsPrime]
    (hfinite:∀ i,ProjectionsFinite K (Q i))
    (p:ℕ) [CharP K p] (hp:p≠0) (j:Fin 3)
-   (hsum:(∑ i,actualCoordinateDegree K (Q i) j) < p)
+   (hsum:(∑ i,actualCoordinateDegree K (Q i) j)<p)
    (i:I) (hi:Transcendental K (coordinate K (Q i) j)):
    letI:Algebra (RatFunc K) (CoordinateField K (Q i)):=
      rationalBaseAlgebra K (Q i) j hi
@@ -104,12 +103,12 @@ theorem family_coordinate_isSeparable_of_sum_degree_lt_char
 theorem finite_zero_points_le_box_of_finite_or_inseparable
    (hfinite:ProjectionsFinite K P)
    (p:ℕ) [CharP K p] (hp:p≠0)
-   (hnonpoint:∀ v:Fin 3 → K,
+   (hnonpoint:∀ v:Fin 3→K,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (F:MvPolynomial (Fin 3) K) (hF:F∉P)
-   (cap:Fin 3 → ℕ) (hcap:∀ i,F.degreeOf i ≤ cap i)
+   (cap:Fin 3→ℕ) (hcap:∀ i,F.degreeOf i ≤ cap i)
    (hcap_pos:∀ i,1 ≤ cap i)
-   (S:Finset (Fin 3 → K)) (hS_card:S.card ≤ p)
+   (S:Finset (Fin 3→K)) (hS_card:S.card ≤ p)
    (hSP:∀ v∈S,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hSF:∀ v∈S,MvPolynomial.aeval v F=0):
    S.card ≤ ∑ i,cap i*actualCoordinateDegree K P i:=by

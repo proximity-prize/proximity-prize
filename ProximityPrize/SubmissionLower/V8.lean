@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 theorem ZMod.ker_intCastRingHom (n:ℕ):
@@ -12,10 +11,10 @@ theorem ZMod.ringHom_eq_of_ker_eq {n:ℕ} {R:Type*} [Ring R] (f g:R →+*ZMod n)
  rw [Subtype.coe_mk] at this
  rw [←this,RingHom.ext_zmod (f.liftOfRightInverse _ _ ⟨g,_⟩) _,RingHom.id_comp]
 @[simp]
-theorem isReduced_zmod {n:ℕ}:IsReduced (ZMod n) ↔ Squarefree n∨n=0:=by
+theorem isReduced_zmod {n:ℕ}:IsReduced (ZMod n)↔Squarefree n∨n=0:=by
  rw [←RingHom.ker_isRadical_iff_reduced_of_surjective
      (ZMod.ringHom_surjective <| Int.castRingHom <| ZMod n),
-     ZMod.ker_intCastRingHom, ←isRadical_iff_span_singleton,isRadical_iff_squarefree_or_zero,
+     ZMod.ker_intCastRingHom,←isRadical_iff_span_singleton,isRadical_iff_squarefree_or_zero,
      Int.squarefree_natCast,Nat.cast_eq_zero]
 instance {n:ℕ} [Fact <| Squarefree n]:IsReduced (ZMod n):=
  isReduced_zmod.2 <| Or.inl <| Fact.out

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z3
 namespace ProximityPrize.SubmissionLower.RCN094
 open scoped Classical BigOperators
@@ -93,13 +92,13 @@ def residualEquiv (aY v bY aS bS cS:K) (hv:v≠0):
      residualAlgHom aY v bY aS bS cS F:=rfl
 theorem residual_irreducible_iff
    (aY v bY aS bS cS:K) (hv:v≠0) (F:Poly3 K):
-   Irreducible (residualAlgHom aY v bY aS bS cS F) ↔ Irreducible F:=by
+   Irreducible (residualAlgHom aY v bY aS bS cS F)↔Irreducible F:=by
  simpa only [residualEquiv_apply] using
    (MulEquiv.irreducible_iff (residualEquiv aY v bY aS bS cS hv))
 theorem residual_dvd_iff
    (aY v bY aS bS cS:K) (hv:v≠0) (F G:Poly3 K):
    residualAlgHom aY v bY aS bS cS F∣
-       residualAlgHom aY v bY aS bS cS G ↔ F∣G:=by
+       residualAlgHom aY v bY aS bS cS G↔F∣G:=by
  simpa only [residualEquiv_apply] using
    (map_dvd_iff (residualEquiv aY v bY aS bS cS hv))
 theorem residual_ne_zero
@@ -147,7 +146,7 @@ theorem pderiv_residual
      fin_cases i <;>
        simp [residualImage,hP,Derivation.leibniz] <;> ring
 theorem wt_add_le_residual
-   (weights:Fin 3 → ℕ) (F G:Poly3 K):
+   (weights:Fin 3→ℕ) (F G:Poly3 K):
    wt weights (F+G) ≤ max (wt weights F) (wt weights G):=by
  unfold wt
  rw [←degree_weightedLift,map_add]
@@ -155,7 +154,7 @@ theorem wt_add_le_residual
    MvPolynomial.degreeOf_add_le (3:Fin 4)
      (weightedLift weights F) (weightedLift weights G)
 theorem residualImage_wt_le
-   (weights:Fin 3 → ℕ) (aY v bY aS bS cS:K) (i:Fin 3):
+   (weights:Fin 3→ℕ) (aY v bY aS bS cS:K) (i:Fin 3):
    wt weights (residualImage aY v bY aS bS cS i) ≤
      RCN125.flagPullWeights weights i:=by
  fin_cases i
@@ -196,7 +195,7 @@ theorem residualImage_wt_le
  · simp [residualImage,
      RCN125.flagPullWeights,wt_X]
 theorem residual_monomial_product_wt_le
-   (weights:Fin 3 → ℕ) (aY v bY aS bS cS:K)
+   (weights:Fin 3→ℕ) (aY v bY aS bS cS:K)
    (d:Fin 3 →₀ ℕ):
    wt weights
        (∏ i∈d.support,residualImage aY v bY aS bS cS i^d i) ≤
@@ -220,7 +219,7 @@ theorem residual_monomial_product_wt_le
      simp only [Finsupp.sum,nsmul_eq_mul]
      simp
 theorem residualAlgHom_wt_le_pulled
-   (weights:Fin 3 → ℕ) (aY v bY aS bS cS:K) (F:Poly3 K):
+   (weights:Fin 3→ℕ) (aY v bY aS bS cS:K) (F:Poly3 K):
    wt weights (residualAlgHom aY v bY aS bS cS F) ≤
      wt (RCN125.flagPullWeights weights) F:=by
  change wt weights

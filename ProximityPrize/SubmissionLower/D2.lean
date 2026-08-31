@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D
 namespace ProximityPrize.SubmissionLower.RCN207
 open scoped Classical BigOperators Pointwise

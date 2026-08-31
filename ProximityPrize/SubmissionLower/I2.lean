@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J
 namespace ProximityPrize.SubmissionLower.RCN067
 open scoped Classical
@@ -13,7 +12,7 @@ local instance:DecidableEq Ω:=Classical.decEq Ω
 theorem point_coordinate_eq_scalar
    (i:Fin 3) (c:Ω)
    (hc:algebraMap Ω (CoordinateField Ω P) c=coordinate Ω P i)
-   (v:Fin 3 → Ω)
+   (v:Fin 3→Ω)
    (hv:P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom):
    v i=c:=by
  let Q:MvPolynomial (Fin 3) Ω:=MvPolynomial.X i-MvPolynomial.C c
@@ -27,7 +26,7 @@ theorem point_coordinate_eq_scalar
  simpa only [Q,map_sub,MvPolynomial.aeval_X,MvPolynomial.aeval_C,
    sub_eq_zero,Algebra.algebraMap_self_apply] using hz
 theorem selected_seed_set_card_le_one_of_seedCoordinate_isAlgebraic
-   (selected:K → Polynomial K) (Γ:Finset K)
+   (selected:K→Polynomial K) (Γ:Finset K)
    (hpoint:∀ γ∈Γ,
      P ≤ RingHom.ker
        (MvPolynomial.aeval (selectedPoint φ selected γ)).toRingHom)

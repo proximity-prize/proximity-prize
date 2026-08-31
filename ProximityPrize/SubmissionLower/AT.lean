@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.IZ
 section ProximityFlatProofPort
 open Algebra TensorProduct nonZeroDivisors

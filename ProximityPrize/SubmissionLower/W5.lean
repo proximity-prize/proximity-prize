@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G1
 import ProximityPrize.SubmissionLower.V6
 namespace ProximityPrize.SubmissionLower.RCN359
@@ -8,12 +7,12 @@ noncomputable section
 section NormalizedEquality
 variable {L:Type*} [Field L]
 local instance:DecidableEq L:=Classical.decEq L
-theorem value_le_exp_neg_one {z:ℤᵐ⁰} (hz:z < 1):
+theorem value_le_exp_neg_one {z:ℤᵐ⁰} (hz:z<1):
    z ≤ WithZero.exp (-1:ℤ):=by
  by_cases hz0:z=0
  · simp [hz0]
- have hlog:z.log < 0:=by
-   have h:WithZero.exp z.log < WithZero.exp (0:ℤ):=by
+ have hlog:z.log<0:=by
+   have h:WithZero.exp z.log<WithZero.exp (0:ℤ):=by
      simpa only [WithZero.exp_log hz0,WithZero.exp_zero] using hz
    exact WithZero.exp_lt_exp.mp h
  calc
@@ -22,16 +21,16 @@ theorem value_le_exp_neg_one {z:ℤᵐ⁰} (hz:z < 1):
 theorem eq_of_equiv_surjective (v w:Valuation L ℤᵐ⁰)
    (hv:Function.Surjective v) (hw:Function.Surjective w)
    (h:v.IsEquiv w):v=w:=by
- have hneg:WithZero.exp (-1:ℤ) < 1:=by
+ have hneg:WithZero.exp (-1:ℤ)<1:=by
    rw [←WithZero.exp_zero,WithZero.exp_lt_exp]
    norm_num
  obtain ⟨π,hπ⟩:=hv (WithZero.exp (-1:ℤ))
- have hvπlt:v π < 1:=hπ ▸ hneg
- have hwπlt:w π < 1:=h.lt_one_iff_lt_one.mp hvπlt
+ have hvπlt:v π<1:=hπ ▸ hneg
+ have hwπlt:w π<1:=h.lt_one_iff_lt_one.mp hvπlt
  have hlower:WithZero.exp (-1:ℤ) ≤ w π:=by
    obtain ⟨a,ha⟩:=hw (WithZero.exp (-1:ℤ))
-   have haw:w a < 1:=ha ▸ hneg
-   have hav:v a < 1:=h.lt_one_iff_lt_one.mpr haw
+   have haw:w a<1:=ha ▸ hneg
+   have hav:v a<1:=h.lt_one_iff_lt_one.mpr haw
    have hal:v a ≤ v π:=hπ ▸ value_le_exp_neg_one hav
    have hal':w a ≤ w π:=(h a π).mp hal
    simpa only [ha] using hal'
@@ -69,8 +68,8 @@ instance centerIdeal_isPrime:(centerIdeal R L v hR).IsPrime:=by
  unfold centerIdeal
  infer_instance
 theorem mem_centerIdeal (r:R):
-   r∈centerIdeal R L v hR ↔ v (algebraMap R L r) < 1:=by
- change unitBallMap R L v hR r∈IsLocalRing.maximalIdeal v.valuationSubring ↔ _
+   r∈centerIdeal R L v hR↔v (algebraMap R L r)<1:=by
+ change unitBallMap R L v hR r∈IsLocalRing.maximalIdeal v.valuationSubring↔_
  exact Valuation.mem_maximalIdeal_iff L v
 end UnitBall
 section Center
@@ -93,10 +92,10 @@ theorem centerIdeal_ne_bot (hv:Function.Surjective v):
  have hvb0:v (algebraMap S L b)≠0:=
    (Valuation.ne_zero_iff v).mpr (by
      simpa only [map_zero] using (IsFractionRing.injective S L).ne hb0)
- have hfraclt:v (algebraMap S L a)/v (algebraMap S L b) < 1:=by
-   rw [←map_div₀,hfrac,hπ, ←WithZero.exp_zero,WithZero.exp_lt_exp]
+ have hfraclt:v (algebraMap S L a)/v (algebraMap S L b)<1:=by
+   rw [←map_div₀,hfrac,hπ,←WithZero.exp_zero,WithZero.exp_lt_exp]
    norm_num
- have halt:v (algebraMap S L a) < 1:=
+ have halt:v (algebraMap S L a)<1:=
    ((div_lt_one₀ (zero_lt_iff.mpr hvb0)).mp hfraclt).trans_le (hS b)
  intro hbot
  have ha:=(mem_centerIdeal S L v hS a).mpr halt
@@ -105,7 +104,7 @@ def centerPlace (hv:Function.Surjective v):HeightOneSpectrum S:=
  ⟨centerIdeal S L v hS,inferInstance,centerIdeal_ne_bot S L v hS hv⟩
 theorem centerPlace_membership (hv:Function.Surjective v) (s:S):
    s∈(centerPlace S L v hS hv).asIdeal ↔
-     v (algebraMap S L s) < 1:=
+     v (algebraMap S L s)<1:=
  mem_centerIdeal S L v hS s
 open scoped algebraMap in
 theorem center_localization_le (hv:Function.Surjective v):

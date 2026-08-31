@@ -22,7 +22,7 @@ theorem moduleFinite_quotient_of_monic_mem
 def rawPiecesMap
    {J:Type*} [Fintype J]
    (P Q:Polynomial R) (m n:ℕ)
-   (pieces:J → Ideal (Polynomial R)):
+   (pieces:J→Ideal (Polynomial R)):
    Polynomial.degreeLT R (m+n) →ₗ[R]
      (∀ j,Polynomial R ⧸ pieces j):=
  LinearMap.pi fun j↦
@@ -32,7 +32,7 @@ theorem range_sylvesterMap_le_ker_rawPiecesMap
    {J:Type*} [Fintype J]
    (P Q:Polynomial R) (m n:ℕ)
    (hPcap:P.natDegree ≤ m) (hQcap:Q.natDegree ≤ n)
-   (pieces:J → Ideal (Polynomial R))
+   (pieces:J→Ideal (Polynomial R))
    (hcontains:∀ j,intersectionIdeal P Q ≤ pieces j):
    LinearMap.range (Polynomial.sylvesterMap P Q hPcap hQcap) ≤
      LinearMap.ker (rawPiecesMap P Q m n pieces):=by
@@ -52,7 +52,7 @@ def cokerToPieces
    {J:Type*} [Fintype J]
    (P Q:Polynomial R) (m n:ℕ)
    (hPcap:P.natDegree ≤ m) (hQcap:Q.natDegree ≤ n)
-   (pieces:J → Ideal (Polynomial R))
+   (pieces:J→Ideal (Polynomial R))
    (hcontains:∀ j,intersectionIdeal P Q ≤ pieces j):
    (Polynomial.degreeLT R (m+n) ⧸
      LinearMap.range (Polynomial.sylvesterMap P Q hPcap hQcap)) →ₗ[R]
@@ -66,7 +66,7 @@ theorem cokerToPieces_surjective_of_modMax
    {J:Type*} [Fintype J]
    (P Q:Polynomial R) (m n:ℕ)
    (hPcap:P.natDegree ≤ m) (hQcap:Q.natDegree ≤ n)
-   (pieces:J → Ideal (Polynomial R))
+   (pieces:J→Ideal (Polynomial R))
    (hcontains:∀ j,intersectionIdeal P Q ≤ pieces j)
    [Module.Finite R (∀ j,Polynomial R ⧸ pieces j)]
    (hmod:Function.Surjective

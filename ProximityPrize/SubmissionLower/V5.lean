@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.V7
 section ProximityFlatProofPort
 namespace Valuation.IsRankOneDiscrete
@@ -22,7 +21,7 @@ lemma valueGroup₀_equiv_withZeroMulInt_apply_zpow (k:ℤ):
    valueGroup₀_equiv_withZeroMulInt v (hv.generator'^k)=WithZero.exp (-k):=by
  simp only [map_zpow₀,valueGroup₀_equiv_withZeroMulInt_apply,WithZero.map'_coe,
    MonoidHom.coe_coe]
- rw [←WithZero.coe_zpow,WithZero.exp,WithZero.coe_inj, ←map_zpow]
+ rw [←WithZero.coe_zpow,WithZero.exp,WithZero.coe_inj,←map_zpow]
  simp [←mulintEquivOfZPowersEqTop_symm_apply_zpow
    (Subgroup.zpowers_inv (g:=hv.generator') ▸ hv.generator'_zpowers_eq_top)]
 lemma valueGroup₀_equiv_withZeroMulInt_strictMono:
@@ -32,7 +31,7 @@ lemma valueGroup₀_equiv_withZeroMulInt_strictMono:
    (Subgroup.zpowers_inv (g:=hv.generator') ▸ hv.generator'_zpowers_eq_top)
    (Left.one_lt_inv_iff.mpr hv.generator'_lt_one)))).lt_iff_lt]
 @[implicit_reducible]
-noncomputable def rankOne {e:ℝ≥0} (he:1 < e):v.RankOne where
+noncomputable def rankOne {e:ℝ≥0} (he:1<e):v.RankOne where
  hom':=(toNNReal (ne_of_gt (lt_trans zero_lt_one he))).comp
      (.ofClass (valueGroup₀_equiv_withZeroMulInt v))
  strictMono':=(toNNReal_strictMono he).comp (valueGroup₀_equiv_withZeroMulInt_strictMono v)
@@ -49,7 +48,7 @@ lemma valueGroup₀_equiv_withZeroMulInt_restrict_apply_of_surjective (hsurj:Fun
  · simp [h0]
  · simp only [WithZero.map'_coe,MonoidHom.coe_coe]
    conv_rhs => rw [←coe_unzero h0]
-   rw [WithZero.coe_inj, ←(MulEquiv.injective (intEquivOfZPowersEqTop _
+   rw [WithZero.coe_inj,←(MulEquiv.injective (intEquivOfZPowersEqTop _
      (Subgroup.zpowers_inv (g:=hv.generator') ▸ hv.generator'_zpowers_eq_top))).eq_iff,
      MulEquiv.apply_symm_apply]
    ext
@@ -58,9 +57,9 @@ lemma valueGroup₀_equiv_withZeroMulInt_restrict_apply_of_surjective (hsurj:Fun
    have hg:hv.generator=Units.mk0 (WithZero.exp (-1:ℤ):ℤᵐ⁰) (by simp):=
      generator_eq_exp_neg_one_of_surjective hsurj
    rw [hg]
-   conv_lhs => rw [MonoidWithZeroHom.coe_ofClass, ←coe_unzero h0]
+   conv_lhs => rw [MonoidWithZeroHom.coe_ofClass,←coe_unzero h0]
    simp only [coe_unzero,Int.reduceNeg,exp_neg,zpow_neg,Units.val_inv_eq_inv_val,
-     Units.val_zpow_eq_zpow_val,Units.val_mk0,inv_zpow', ←exp_zsmul,Int.zsmul_eq_mul,mul_one,
+     Units.val_zpow_eq_zpow_val,Units.val_mk0,inv_zpow',←exp_zsmul,Int.zsmul_eq_mul,mul_one,
      inv_inv]
    simp [WithZero.exp]
 end WithZeroMulInt

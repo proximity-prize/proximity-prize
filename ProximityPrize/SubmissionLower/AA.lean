@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BS
 namespace ProximityPrize.SubmissionLower.RCN234
 open scoped BigOperators
@@ -6,45 +5,45 @@ open RCN081 RCN167 RCN313
 noncomputable section
 variable {K:Type*} [Field K]
 abbrev Poly4 (K:Type*) [Field K]:=MvPolynomial (Fin 4) K
-def wt (weights:Fin 4 → ℕ) (P:Poly4 K):ℕ:=
+def wt (weights:Fin 4→ℕ) (P:Poly4 K):ℕ:=
  MvPolynomial.weightedTotalDegree weights P
-theorem wt_mul_le (weights:Fin 4 → ℕ) (P Q:Poly4 K):
+theorem wt_mul_le (weights:Fin 4→ℕ) (P Q:Poly4 K):
    wt weights (P*Q) ≤ wt weights P+wt weights Q:=
  weighted_mul_le weights P Q
-theorem wt_add_le (weights:Fin 4 → ℕ) (P Q:Poly4 K):
+theorem wt_add_le (weights:Fin 4→ℕ) (P Q:Poly4 K):
    wt weights (P+Q) ≤ max (wt weights P) (wt weights Q):=
  weighted_add_le weights P Q
-theorem wt_sub_le (weights:Fin 4 → ℕ) (P Q:Poly4 K):
+theorem wt_sub_le (weights:Fin 4→ℕ) (P Q:Poly4 K):
    wt weights (P-Q) ≤ max (wt weights P) (wt weights Q):=by
  unfold wt
  rw [←degree_weightedLift,map_sub]
  simpa only [degree_weightedLift] using
    MvPolynomial.degreeOf_sub_le (4:Fin 5)
      (weightedLift K weights P) (weightedLift K weights Q)
-theorem wt_neg (weights:Fin 4 → ℕ) (P:Poly4 K):
+theorem wt_neg (weights:Fin 4→ℕ) (P:Poly4 K):
    wt weights (-P)=wt weights P:=by
  unfold wt
  rw [←degree_weightedLift,map_neg,MvPolynomial.degreeOf_neg,
    degree_weightedLift]
-theorem wt_pow_le (weights:Fin 4 → ℕ) (P:Poly4 K) (n:ℕ):
+theorem wt_pow_le (weights:Fin 4→ℕ) (P:Poly4 K) (n:ℕ):
    wt weights (P^n) ≤ n*wt weights P:=by
  unfold wt
  rw [←degree_weightedLift,map_pow]
  simpa only [degree_weightedLift] using
    MvPolynomial.degreeOf_pow_le (4:Fin 5) (weightedLift K weights P) n
-theorem wt_C (weights:Fin 4 → ℕ) (c:K):
+theorem wt_C (weights:Fin 4→ℕ) (c:K):
    wt weights (MvPolynomial.C c:Poly4 K)=0:=by
  unfold wt MvPolynomial.weightedTotalDegree
  simp
-theorem wt_X (weights:Fin 4 → ℕ) (i:Fin 4):
+theorem wt_X (weights:Fin 4→ℕ) (i:Fin 4):
    wt weights (MvPolynomial.X i:Poly4 K)=weights i:=by
  unfold wt
  exact weighted_X weights i
-theorem wt_natCast (weights:Fin 4 → ℕ) (n:ℕ):
+theorem wt_natCast (weights:Fin 4→ℕ) (n:ℕ):
    wt weights (n:Poly4 K)=0:=by
  rw [←map_natCast (MvPolynomial.C:K →+*Poly4 K),wt_C]
-theorem wt_sum_le (weights:Fin 4 → ℕ) (I:Finset ℕ)
-   (f:ℕ → Poly4 K) (a:ℕ) (hf:∀ i∈I,wt weights (f i) ≤ a):
+theorem wt_sum_le (weights:Fin 4→ℕ) (I:Finset ℕ)
+   (f:ℕ→Poly4 K) (a:ℕ) (hf:∀ i∈I,wt weights (f i) ≤ a):
    wt weights (∑ i∈I,f i) ≤ a:=by
  unfold wt
  rw [←degree_weightedLift,map_sum]
@@ -54,15 +53,15 @@ theorem wt_sum_le (weights:Fin 4 → ℕ) (I:Finset ℕ)
  intro i hi
  rw [degree_weightedLift]
  exact hf i hi
-theorem wt_pderiv_le (weights:Fin 4 → ℕ) (P:Poly4 K)
+theorem wt_pderiv_le (weights:Fin 4→ℕ) (P:Poly4 K)
    (i:Fin 4) (A:ℕ) (hP:wt weights P ≤ A):
    wt weights (MvPolynomial.pderiv i P) ≤ A-weights i:=
  pderiv_weight_sub_bound weights P i A hP
-theorem wt_polyH_le (weights:Fin 4 → ℕ) (F:Poly4 K)
+theorem wt_polyH_le (weights:Fin 4→ℕ) (F:Poly4 K)
    (C:ℕ) (hF:wt weights F ≤ C):
    wt weights (polyH K F) ≤ C-weights 2:=
  wt_pderiv_le weights F 2 C hF
-theorem wt_polyG_le (weights:Fin 4 → ℕ) (hX:weights 0=0)
+theorem wt_polyG_le (weights:Fin 4→ℕ) (hX:weights 0=0)
    (F:Poly4 K) (C:ℕ) (hF:wt weights F ≤ C):
    wt weights (polyG K F) ≤ C+weights 2:=by
  have hx:=wt_pderiv_le weights F 0 C hF
@@ -77,7 +76,7 @@ theorem wt_polyG_le (weights:Fin 4 → ℕ) (hX:weights 0=0)
  rw [wt_neg]
  exact hsum.trans (max_le (by omega) (by omega))
 theorem numeratorStep_wt_le_minkowski
-   (weights:Fin 4 → ℕ) (hX:weights 0=0)
+   (weights:Fin 4→ℕ) (hX:weights 0=0)
    (F M:Poly4 K) (b A C:ℕ) (hR:weights 2 ≤ C)
    (hRR:2*weights 2 ≤ C) (hA:weights 2 ≤ A)
    (hF:wt weights F ≤ C) (hM:wt weights M ≤ A):
@@ -167,7 +166,7 @@ theorem numeratorStep_wt_le_minkowski
    (max_le ((wt_add_le weights _ _).trans
      (max_le ((wt_add_le weights _ _).trans (max_le htermX htermY)) htermR)) hlast)
 theorem numerator_wt_le_minkowski
-   (weights:Fin 4 → ℕ) (hX:weights 0=0)
+   (weights:Fin 4→ℕ) (hX:weights 0=0)
    (F:Poly4 K) (C:ℕ) (hR:weights 2 ≤ C)
    (hRR:2*weights 2 ≤ C) (hbase:weights 2 ≤ weights 1)
    (hF:wt weights F ≤ C) (b:ℕ):
@@ -185,14 +184,14 @@ theorem numerator_wt_le_minkowski
        (weights 1+b*(C+(C-weights 2))) C hR hRR
        (hbase.trans (Nat.le_add_right _ _)) hF ih
      convert h using 1 <;> ring
-theorem shiftedX_wt_eq_zero (weights:Fin 4 → ℕ) (hX:weights 0=0)
+theorem shiftedX_wt_eq_zero (weights:Fin 4→ℕ) (hX:weights 0=0)
    (x:K):
    wt weights (MvPolynomial.C x-MvPolynomial.X (0:Fin 4):Poly4 K)=0:=by
  apply Nat.eq_zero_of_le_zero
  apply (wt_sub_le weights _ _).trans
  rw [wt_C,wt_X,hX]
  simp
-theorem affineSeedPolynomial_wt_le (weights:Fin 4 → ℕ) (u₀ u₁:K):
+theorem affineSeedPolynomial_wt_le (weights:Fin 4→ℕ) (u₀ u₁:K):
    wt weights (affineSeedPolynomial u₀ u₁) ≤ weights 3:=by
  unfold affineSeedPolynomial
  apply (wt_add_le weights _ _).trans
@@ -204,11 +203,11 @@ theorem affineSeedPolynomial_wt_le (weights:Fin 4 → ℕ) (u₀ u₁:K):
    rw [wt_X,wt_C,Nat.add_zero] at hm
    exact hm
 theorem commonNumeratorTerm_wt_le_minkowski
-   (weights:Fin 4 → ℕ) (hX:weights 0=0)
+   (weights:Fin 4→ℕ) (hX:weights 0=0)
    (F:Poly4 K) (C:ℕ) (hR:weights 2 ≤ C)
    (hRR:2*weights 2 ≤ C) (hbase:weights 2 ≤ weights 1)
    (hF:wt weights F ≤ C) (w j:ℕ) (hj:j ≤ w)
-   (coeffs:ℕ → K) (x:K):
+   (coeffs:ℕ→K) (x:K):
    wt weights (commonNumeratorTerm F w coeffs x j) ≤
      weights 1+w*(C+(C-weights 2)):=by
  let Hcap:=C-weights 2
@@ -259,10 +258,10 @@ theorem commonNumeratorTerm_wt_le_minkowski
    _=weights 1+(j+(w-j))*Qcap:=by ring
    _=weights 1+w*Qcap:=by rw [hwj]
 theorem clearedTaylorNumerator_wt_le_minkowski
-   (weights:Fin 4 → ℕ) (hX:weights 0=0)
+   (weights:Fin 4→ℕ) (hX:weights 0=0)
    (F:Poly4 K) (C:ℕ) (hR:weights 2 ≤ C)
    (hRR:2*weights 2 ≤ C) (hbase:weights 2 ≤ weights 1)
-   (hF:wt weights F ≤ C) (w:ℕ) (coeffs:ℕ → K) (x:K):
+   (hF:wt weights F ≤ C) (w:ℕ) (coeffs:ℕ→K) (x:K):
    wt weights (clearedTaylorNumerator F w coeffs x) ≤
      weights 1+w*(C+(C-weights 2)):=by
  unfold clearedTaylorNumerator
@@ -272,10 +271,10 @@ theorem clearedTaylorNumerator_wt_le_minkowski
  have:=Finset.mem_range.mp hj
  omega
 theorem agreementNumerator_wt_le_minkowski
-   (weights:Fin 4 → ℕ) (hX:weights 0=0)
+   (weights:Fin 4→ℕ) (hX:weights 0=0)
    (F:Poly4 K) (C:ℕ) (hR:weights 2 ≤ C)
    (hRR:2*weights 2 ≤ C) (hbase:weights 2 ≤ weights 1)
-   (hF:wt weights F ≤ C) (w:ℕ) (coeffs:ℕ → K)
+   (hF:wt weights F ≤ C) (w:ℕ) (coeffs:ℕ→K)
    (x u₀ u₁:K):
    wt weights (agreementNumerator F w coeffs x u₀ u₁) ≤
      max (weights 1) (weights 3)+w*(C+(C-weights 2)):=by

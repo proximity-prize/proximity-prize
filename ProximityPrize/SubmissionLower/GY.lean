@@ -22,7 +22,7 @@ def properSecondTailComponents:
 theorem component_secondTail_card_le
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T1) (H:=H) flag tailFlag1)
    (C:RegularComponent Omega G T1 H)
-   (S:Finset Seed) (point:Seed → Fin 3 → Omega)
+   (S:Finset Seed) (point:Seed→Fin 3→Omega)
    (hpoint_injective:Function.Injective point)
    (hT2flag:PolynomialInFlag tailFlag2 T2) (hproper:T2∉C.1)
    (hzero:∀ gamma∈componentSeeds Omega G T1 H S point C,
@@ -49,7 +49,7 @@ theorem component_secondTail_card_le
    PrimeFlagBudgetFamily.weightedCost] using hbound
 theorem properSecondTail_component_sum_le
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T1) (H:=H) flag tailFlag1)
-   (S:Finset Seed) (point:Seed → Fin 3 → Omega)
+   (S:Finset Seed) (point:Seed→Fin 3→Omega)
    (hpoint_injective:Function.Injective point)
    (hT2flag:PolynomialInFlag tailFlag2 T2)
    (hzero:∀ gamma∈S,MvPolynomial.aeval (point gamma) T2=0):
@@ -80,7 +80,7 @@ theorem properSecondTail_component_sum_le_flagMixed
    (hGflag:PolynomialInFlag flag G)
    (hT1flag:PolynomialInFlag tailFlag1 T1)
    (hT2flag:PolynomialInFlag tailFlag2 T2)
-   (S:Finset Seed) (point:Seed → Fin 3 → Omega)
+   (S:Finset Seed) (point:Seed→Fin 3→Omega)
    (hpoint_injective:Function.Injective point)
    (hzero:∀ gamma∈S,MvPolynomial.aeval (point gamma) T2=0):
    (∑ C∈properSecondTailComponents (G:=G) (T1:=T1) (T2:=T2) (H:=H),

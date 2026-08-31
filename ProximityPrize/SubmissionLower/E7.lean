@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y0
 import ProximityPrize.SubmissionLower.EO
 namespace ProximityPrize.SubmissionLower.RCN265
@@ -16,7 +15,7 @@ open RCN093
 open RCN095
 noncomputable section
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
-def verticalPoint (y z:Omega):Fin 3 → Polynomial Omega:=
+def verticalPoint (y z:Omega):Fin 3→Polynomial Omega:=
  ![Polynomial.C y,Polynomial.X,Polynomial.C z]
 def verticalPolynomial (y z:Omega):
    MvPolynomial (Fin 3) Omega →ₐ[Omega] Polynomial Omega:=
@@ -53,7 +52,7 @@ theorem y_or_z_transcendental_of_regular_polynomial
    (F:MvPolynomial (Fin 3) Omega)
    (hF:F∈P)
    (hFR:MvPolynomial.pderiv (1:Fin 3) F∉P)
-   (hnonpoint:∀ v:Fin 3 → Omega,
+   (hnonpoint:∀ v:Fin 3→Omega,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom):
    Transcendental Omega (coordinate Omega P 0)∨
      Transcendental Omega (coordinate Omega P 2):=by

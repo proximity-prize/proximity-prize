@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T
 import ProximityPrize.SubmissionLower.CG
 namespace ProximityPrize.SubmissionLower.RCN228
@@ -15,7 +14,7 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq L:=Classical.decEq L
 local instance:DecidableEq M:=Classical.decEq M
 theorem map_reconstructedPolynomial
-   (coefficients:K →+*L) (ψ:L →+*M) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (ψ:L →+*M) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hreg:MvPolynomial.eval₂Hom coefficients v (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (hF':MvPolynomial.eval₂Hom (ψ.comp coefficients) (fun i => ψ (v i)) F=0)
@@ -32,7 +31,7 @@ theorem map_reconstructedPolynomial
      MvPolynomial.map_eval₂Hom]
  · simp only [if_neg hj,map_zero]
 theorem map_globalPolynomial
-   (coefficients:K →+*L) (ψ:L →+*M) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (ψ:L →+*M) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hreg:MvPolynomial.eval₂Hom coefficients v (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (hF':MvPolynomial.eval₂Hom (ψ.comp coefficients) (fun i => ψ (v i)) F=0)
@@ -44,7 +43,7 @@ theorem map_globalPolynomial
  rw [Polynomial.map_taylor,
    map_reconstructedPolynomial coefficients ψ F v hF hreg hF' hreg' w,map_neg]
 theorem globalPolynomial_congr_point
-   (coefficients:K →+*L) (F:Poly4 K) {v v':Fin 4 → L} (hv:v=v')
+   (coefficients:K →+*L) (F:Poly4 K) {v v':Fin 4→L} (hv:v=v')
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hreg:MvPolynomial.eval₂Hom coefficients v (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (hF':MvPolynomial.eval₂Hom coefficients v' F=0)
@@ -73,7 +72,7 @@ theorem derivative_values_of_same_regular_jet
  rw [←hv] at hq
  exact mul_left_cancel₀ (pow_ne_zero (2*j) hreg) (hp.symm.trans hq)
 theorem canonical_polynomiality_of_first_tail
-   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4 → L)
+   (coefficients:K →+*L) (F:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom coefficients v F=0)
    (hreg:MvPolynomial.eval₂Hom coefficients v (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (p bound w seedCap slopeCap:ℕ) [CharP L p]

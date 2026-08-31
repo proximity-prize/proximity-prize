@@ -22,7 +22,7 @@ set_option maxHeartbeats 3500000
 variable {Omega:Type} [Field Omega]
 variable {G T H:MvPolynomial (Fin 3) Omega}
 variable {A:Type} [Fintype A]
-variable (component:A → RegularComponent Omega G T H)
+variable (component:A→RegularComponent Omega G T H)
 variable (hcomponent:Function.Injective component)
 variable (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
 variable (ht:∀ a:A,Transcendental Omega
@@ -130,7 +130,7 @@ noncomputable def indexedWeightedFiberPrimaryPieces
      (indexedFiberRelationBar component lam mu nu order ht q hq surface a).IsMaximal]
    (hbarne:∀ a,indexedFiberRelationBar component lam mu nu order ht
      q hq surface a≠⊥)
-   (multiplicity:IndexedFactorFiber component lam mu nu order ht q → ℕ)
+   (multiplicity:IndexedFactorFiber component lam mu nu order ht q→ℕ)
    (htail:∀ a,indexedFiberTail q hq tail∈
      Ideal.span {indexedFiberSurface q hq surface} ⊔
        indexedFiberRelation component lam mu nu order ht q hq a^multiplicity a)

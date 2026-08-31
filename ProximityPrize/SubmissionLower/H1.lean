@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AX
 import ProximityPrize.SubmissionLower.X8
 namespace ProximityPrize.SubmissionLower.RCN009
@@ -122,11 +121,11 @@ theorem planeMap_resultant_natDegree_le (order:Fin 3 ≃ Fin 3) (G H:Original K)
        (Nat.mul_le_mul (planeMap_natDegree_le K order H) (planeMap_degreeX_le K order G))
        (Nat.mul_le_mul (planeMap_natDegree_le K order G) (planeMap_degreeX_le K order H)))
 theorem original_characteristic_gates (order:Fin 3 ≃ Fin 3) (G H:Original K) (p:ℕ)
-   (houter:G.degreeOf (order 1) < p)
+   (houter:G.degreeOf (order 1)<p)
    (hmixed:H.degreeOf (order 1)*G.degreeOf (order 2)+
-     G.degreeOf (order 1)*H.degreeOf (order 2) < p):
-   (planeMap K order G).natDegree < p∧
-     (Polynomial.resultant (planeMap K order G) (planeMap K order H)).natDegree < p:=
+     G.degreeOf (order 1)*H.degreeOf (order 2)<p):
+   (planeMap K order G).natDegree<p∧
+     (Polynomial.resultant (planeMap K order G) (planeMap K order H)).natDegree<p:=
  ⟨(planeMap_natDegree_le K order G).trans_lt houter,
    (planeMap_resultant_natDegree_le K order G H).trans_lt hmixed⟩
 end

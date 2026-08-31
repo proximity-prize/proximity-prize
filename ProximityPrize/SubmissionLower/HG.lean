@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 open LinearMap hiding id
@@ -10,7 +9,7 @@ variable {R:Type*} [CommRing R] {M₁ M₂ M₃ N₁ N₂ N₃:Type*}
  (f₁:M₁ →ₗ[R] M₂) (f₂:M₂ →ₗ[R] M₃) (hf:Exact f₁ f₂)
  (g₁:N₁ →ₗ[R] N₂) (g₂:N₂ →ₗ[R] N₃) (hg:Exact g₁ g₂)
  (h₁:g₁.comp i₁=i₂.comp f₁) (h₂:g₂.comp i₂=i₃.comp f₂)
- (σ:M₃ → M₂) (hσ:f₂ ∘ σ=id) (ρ:N₂ → N₁) (hρ:ρ ∘ g₁=id)
+ (σ:M₃→M₂) (hσ:f₂ ∘ σ=id) (ρ:N₂→N₁) (hρ:ρ ∘ g₁=id)
  {K₂ K₃ C₁ C₂:Type*} [AddCommGroup K₂] [Module R K₂] [AddCommGroup K₃] [Module R K₃]
  [AddCommGroup C₁] [Module R C₁] [AddCommGroup C₂] [Module R C₂]
  (ι₂:K₂ →ₗ[R] M₂) (hι₂:Exact ι₂ i₂) (ι₃:K₃ →ₗ[R] M₃) (hι₃:Exact ι₃ i₃)
@@ -19,9 +18,9 @@ include hg hρ h₂ hσ hι₃ in
 lemma SnakeLemma.δ_aux (x:K₃):g₁ (ρ (i₂ (σ (ι₃ x))))=i₂ (σ (ι₃ x)):=by
  obtain ⟨d,hd⟩:i₂ (σ (ι₃ x))∈range g₁:=by
    rw [←hg.linearMap_ker_eq,mem_ker,show g₂ (i₂ _)=i₃ (f₂ _) from DFunLike.congr_fun h₂ _,
-     ←@comp_apply _ _ _ f₂ σ,hσ,id_eq, ←i₃.comp_apply,
+     ←@comp_apply _ _ _ f₂ σ,hσ,id_eq,←i₃.comp_apply,
      hι₃.linearMap_comp_eq_zero,LinearMap.zero_apply]
- rw [←hd, ←ρ.comp_apply,hρ,id_eq]
+ rw [←hd,←ρ.comp_apply,hρ,id_eq]
 include hf h₁ hρ hπ₁ in
 lemma SnakeLemma.eq_of_eq (x:K₃)
    (y₁) (hy₁:f₂ y₁=ι₃ x) (z₁) (hz₁:g₁ z₁=i₂ y₁)
@@ -29,10 +28,10 @@ lemma SnakeLemma.eq_of_eq (x:K₃)
  have:=sub_eq_zero.mpr (hy₁.trans hy₂.symm)
  rw [←map_sub,hf] at this
  obtain ⟨d,hd⟩:=this
- rw [←eq_sub_iff_add_eq.mp hd,map_add, ←hz₂, ←sub_eq_iff_eq_add, ←map_sub,
-   ←i₂.comp_apply, ←h₁,LinearMap.comp_apply,
+ rw [←eq_sub_iff_add_eq.mp hd,map_add,←hz₂,←sub_eq_iff_eq_add,←map_sub,
+   ←i₂.comp_apply,←h₁,LinearMap.comp_apply,
    (HasLeftInverse.injective ⟨ρ,congr_fun hρ⟩).eq_iff] at hz₁
- rw [←sub_eq_zero, ←map_sub,hz₁,hπ₁]
+ rw [←sub_eq_zero,←map_sub,hz₁,hπ₁]
  exact ⟨_,rfl⟩
 def SnakeLemma.δ:K₃ →ₗ[R] C₁:=
  haveI H₁:∀ x,f₂ (σ x)=x:=congr_fun hσ
@@ -61,9 +60,9 @@ lemma SnakeLemma.exact_δ_right (F:K₂ →ₗ[R] K₃) (hF:f₂.comp ι₂=ι�
  · intro H
    obtain ⟨y,hy⟩:=(hπ₁ _).mp H
    obtain ⟨k,hk⟩:σ (ι₃ x)-f₁ y∈Set.range ι₂:=by
-     rw [←hι₂,map_sub, ←H₂, ←hy,sub_eq_zero];exact congr($h₁ y)
+     rw [←hι₂,map_sub,←H₂,←hy,sub_eq_zero];exact congr($h₁ y)
    refine ⟨k,h ?_⟩
-   rw [←ι₃.comp_apply, ←hF,f₂.comp_apply,hk,map_sub,H₁,hf.apply_apply_eq_zero,sub_zero]
+   rw [←ι₃.comp_apply,←hF,f₂.comp_apply,hk,map_sub,H₁,hf.apply_apply_eq_zero,sub_zero]
  · rintro ⟨y,rfl⟩
    exact (δ_eq i₁ i₂ i₃ f₁ f₂ hf g₁ g₂ hg h₁ h₂ σ hσ ρ hρ ι₃ hι₃ π₁ hπ₁ _ (ι₂ y) congr($hF y)
      _ (by rw [map_zero,hι₂.apply_apply_eq_zero])).trans π₁.map_zero
@@ -76,7 +75,7 @@ lemma SnakeLemma.exact_δ_left (G:C₁ →ₗ[R] C₂) (hF:G.comp π₁=π₂.co
  · intro H
    obtain ⟨x,rfl⟩:=h x
    obtain ⟨y,hy⟩:=(hπ₂ (g₁ x)).mp (by simpa only [←LinearMap.comp_apply,hF] using H)
-   obtain ⟨z,hz⟩:f₂ y∈range ι₃:=(hι₃ (f₂ y)).mp (by rw [←i₃.comp_apply, ←h₂,
+   obtain ⟨z,hz⟩:f₂ y∈range ι₃:=(hι₃ (f₂ y)).mp (by rw [←i₃.comp_apply,←h₂,
      g₂.comp_apply,hy,hg.apply_apply_eq_zero])
    exact ⟨z,δ_eq i₁ i₂ i₃ f₁ f₂ hf g₁ g₂ hg h₁ h₂ σ hσ ρ hρ ι₃ hι₃ π₁ hπ₁ _ _ hz.symm _ hy.symm⟩
  · rintro ⟨x,rfl⟩

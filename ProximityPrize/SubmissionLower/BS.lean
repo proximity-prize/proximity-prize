@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CA
 namespace ProximityPrize.SubmissionLower.RCN167
 open RCN081 RCN082 RCN293
@@ -54,22 +53,22 @@ theorem implicitLift_solution (A:MvPolynomial (Fin 4) K)
        P.derivative*specialization K P γ (MvPolynomial.pderiv (1:Fin 4) A):=by
    simp [implicitLift,specialization]
  exact hspec.trans hchain.symm
-theorem weighted_mul_le (weights:Fin 4 → ℕ) (P Q:MvPolynomial (Fin 4) K):
+theorem weighted_mul_le (weights:Fin 4→ℕ) (P Q:MvPolynomial (Fin 4) K):
    MvPolynomial.weightedTotalDegree weights (P*Q) ≤
      MvPolynomial.weightedTotalDegree weights P+MvPolynomial.weightedTotalDegree weights Q:=by
  rw [←degree_weightedLift,map_mul]
  simpa only [degree_weightedLift] using
    (MvPolynomial.degreeOf_mul_le (4:Fin 5) (weightedLift K weights P) (weightedLift K weights Q))
-theorem weighted_add_le (weights:Fin 4 → ℕ) (P Q:MvPolynomial (Fin 4) K):
+theorem weighted_add_le (weights:Fin 4→ℕ) (P Q:MvPolynomial (Fin 4) K):
    MvPolynomial.weightedTotalDegree weights (P+Q) ≤
      max (MvPolynomial.weightedTotalDegree weights P) (MvPolynomial.weightedTotalDegree weights Q):=by
  rw [←degree_weightedLift,map_add]
  simpa only [degree_weightedLift] using
    (MvPolynomial.degreeOf_add_le (4:Fin 5) (weightedLift K weights P) (weightedLift K weights Q))
-theorem weighted_X (weights:Fin 4 → ℕ) (i:Fin 4):
+theorem weighted_X (weights:Fin 4→ℕ) (i:Fin 4):
    MvPolynomial.weightedTotalDegree weights (MvPolynomial.X i:MvPolynomial (Fin 4) K)=weights i:=by
  simp [MvPolynomial.weightedTotalDegree,MvPolynomial.support_X,Finsupp.weight_single]
-theorem pderiv_weight_sub_bound (weights:Fin 4 → ℕ)
+theorem pderiv_weight_sub_bound (weights:Fin 4→ℕ)
    (A:MvPolynomial (Fin 4) K) (i:Fin 4) (B:ℕ)
    (hA:MvPolynomial.weightedTotalDegree weights A ≤ B):
    MvPolynomial.weightedTotalDegree weights (MvPolynomial.pderiv i A) ≤ B-weights i:=by
@@ -92,7 +91,7 @@ theorem implicitLift_seed_weight_le (A:MvPolynomial (Fin 4) K):
  rw [hvar,zero_add] at hm
  exact (weighted_add_le seedWeights _ _).trans (max_le hX (hm.trans hY))
 theorem implicitLift_contact_weight_le
-   (A:MvPolynomial (Fin 4) K) (D w:ℕ) (hw:1 ≤ w) (hDw:w < D)
+   (A:MvPolynomial (Fin 4) K) (D w:ℕ) (hw:1 ≤ w) (hDw:w<D)
    (hA:MvPolynomial.weightedTotalDegree (contactWeights w) A ≤ D-1):
    MvPolynomial.weightedTotalDegree (contactWeights w) (implicitLift A) ≤ D-2:=by
  have hX:=pderiv_weight_sub_bound (contactWeights w) A 0 (D-1) hA
@@ -114,10 +113,10 @@ theorem implicitLift_contact_weight_le
      (MvPolynomial.X (2:Fin 4)*MvPolynomial.pderiv (1:Fin 4) A) ≤ D-2:=by omega
  exact (weighted_add_le (contactWeights w) _ _).trans (max_le hx hm')
 theorem implicitLift_mem_box
-   (A:MvPolynomial (Fin 4) K) (D w L:ℕ) (hw:1 ≤ w) (hDw:w < D)
+   (A:MvPolynomial (Fin 4) K) (D w L:ℕ) (hw:1 ≤ w) (hDw:w<D)
    (hbox:A∈RCN174.globalCoefficientBox K D w L 0):
    implicitLift A∈RCN174.globalCoefficientBox K D w L 1:=by
- have hD:0 < D:=by omega
+ have hD:0<D:=by omega
  have hcaps:=(mem_globalCoefficientBox_iff A D w L 0 hD).mp hbox
  have hR:A.degreeOf 2=0:=by
    apply Nat.eq_zero_of_le_zero
@@ -136,9 +135,9 @@ theorem implicitLift_mem_box
  exact ⟨hseed,hslope,by omega⟩
 def positiveRFactors (F:MvPolynomial (Fin 4) K):Finset (MvPolynomial (Fin 4) K):=by
  classical
- exact (activeFactors F).filter (fun G => 0 < G.degreeOf 2)
+ exact (activeFactors F).filter (fun G => 0<G.degreeOf 2)
 theorem positiveRFactors_spec (F G:MvPolynomial (Fin 4) K)
-   (hG:G∈positiveRFactors F):Irreducible G∧G∣F∧0 < G.degreeOf 2:=by
+   (hG:G∈positiveRFactors F):Irreducible G∧G∣F∧0<G.degreeOf 2:=by
  classical
  obtain ⟨hmem,hpos⟩:=Finset.mem_filter.mp hG
  have hh:=activeFactors_spec F G hmem
@@ -185,7 +184,7 @@ variable {T:Type*} [Field T]
 theorem exists_regular_lift_factor_at_surface
    (φ:Polynomial K →+*T) (hφ:Function.Injective φ)
    (A:MvPolynomial (Fin 4) K) (hA:A≠0) (hR:A.degreeOf 2=0)
-   (v:Fin 3 → T) (hzero:MvPolynomial.eval v (surfaceMap φ (implicitLift A))=0)
+   (v:Fin 3→T) (hzero:MvPolynomial.eval v (surfaceMap φ (implicitLift A))=0)
    (hregular:MvPolynomial.eval v (surfaceMap φ (MvPolynomial.pderiv (1:Fin 4) A))≠0):
    ∃ G∈positiveRFactors (implicitLift A),Irreducible G∧G∣implicitLift A∧
      G.degreeOf 2=1∧MvPolynomial.eval v (surfaceMap φ G)=0∧
@@ -203,7 +202,7 @@ theorem exists_regular_lift_factor_at_surface
    rw [implicitLift_R_derivative A hR]
    exact hregular
  have hGreg:=factor_derivative_regular_at_zero ψ (implicitLift A) G hspec.2.1 hz hFregular
- have hpos:0 < G.degreeOf 2:=by
+ have hpos:0<G.degreeOf 2:=by
    apply Nat.pos_of_ne_zero
    intro hn
    apply hGreg
@@ -220,7 +219,7 @@ theorem exists_regular_lift_factor_at_surface
 end SurfacePoints
 theorem exists_regular_lift_factor_of_solution
    (A:MvPolynomial (Fin 4) K) (hA:A≠0) (P:Polynomial K) (γ:K)
-   (D w L:ℕ) (hw:1 ≤ w) (hDw:w < D)
+   (D w L:ℕ) (hw:1 ≤ w) (hDw:w<D)
    (hbox:A∈RCN174.globalCoefficientBox K D w L 0)
    (hsolution:specialization K P γ A=0)
    (hregular:specialization K P γ (MvPolynomial.pderiv (1:Fin 4) A)≠0):
@@ -235,7 +234,7 @@ theorem exists_regular_lift_factor_of_solution
    exact (hbox hd).2.1
  have hFsolution:=implicitLift_solution A hR P γ hsolution
  let φ:=RCN135.polynomialEmbedding K
- let v:Fin 3 → RCN135.GenericField K:=
+ let v:Fin 3→RCN135.GenericField K:=
    fun i => RCN135.initialPoint K P γ i.succ
  have hzero:MvPolynomial.eval v (surfaceMap φ (implicitLift A))=0:=by
    have hh:=(RCN138.actual_generic_initial_zero_iff K P γ (implicitLift A)).mpr hFsolution

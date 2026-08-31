@@ -26,7 +26,7 @@ set_option maxRecDepth 60000
 variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
-variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
+variable {Gamma:Finset K} {x:I→K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
 variable {errorCap:ℕ}
 variable {stageSupport:RCN275.ResidualSupportParameters}

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EU
 import ProximityPrize.SubmissionLower.I
 import ProximityPrize.SubmissionLower.GJ
@@ -28,8 +27,8 @@ local instance:DecidableEq Iota:=Classical.decEq Iota
 def regularComponentCurveStageOfSupport
    (support:ResidualSupportParameters)
    (F:MvPolynomial (Fin 4) K) (G T:MvPolynomial (Fin 3) Omega)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (p e d:ℕ) [CharP Omega p] (surfaceFlag cutFlag:FlagDegree)
    (hdiv:G∣surfaceMap phi F)
    (hGflag:PolynomialInFlag surfaceFlag G)
@@ -47,7 +46,7 @@ def regularComponentCurveStageOfSupport
          (phi Polynomial.X))
        (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (hnoPencil:NoLargeSelectedPencil selected Gamma d e)
-   (hchar:d < p)
+   (hchar:d<p)
    (C:RegularComponent Omega G T (regularitySurface phi F)):
    CurveResidualStage phi
      (componentSeeds Omega G T (regularitySurface phi F) Gamma
@@ -102,8 +101,8 @@ def activeDifferentialSupport:ResidualSupportParameters where
  two_le_ys:=by norm_num
 def regularComponentCurveStageActive
    (F:MvPolynomial (Fin 4) K) (G T:MvPolynomial (Fin 3) Omega)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (p e d:ℕ) [CharP Omega p] (surfaceFlag cutFlag:FlagDegree)
    (hdiv:G∣surfaceMap phi F)
    (hGflag:PolynomialInFlag surfaceFlag G)
@@ -121,7 +120,7 @@ def regularComponentCurveStageActive
          (phi Polynomial.X))
        (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (hnoPencil:NoLargeSelectedPencil selected Gamma d e)
-   (hchar:d < p)
+   (hchar:d<p)
    (C:RegularComponent Omega G T (regularitySurface phi F)):
    CurveResidualStage phi
      (componentSeeds Omega G T (regularitySurface phi F) Gamma
@@ -132,8 +131,8 @@ def regularComponentCurveStageActive
    hTflag hFs hFys hFtotal hinj hdegree hsolution hregular hnoPencil hchar C
 def regularComponentCurveStage
    (F:MvPolynomial (Fin 4) K) (G T:MvPolynomial (Fin 3) Omega)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (p e d:ℕ) [CharP Omega p] (surfaceFlag cutFlag:FlagDegree)
    (hdiv:G∣surfaceMap phi F)
    (hGflag:PolynomialInFlag surfaceFlag G)
@@ -151,7 +150,7 @@ def regularComponentCurveStage
          (phi Polynomial.X))
        (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (hnoPencil:NoLargeSelectedPencil selected Gamma d e)
-   (hchar:d < p)
+   (hchar:d<p)
    (C:RegularComponent Omega G T (regularitySurface phi F)):
    CurveResidualStage phi
      (componentSeeds Omega G T (regularitySurface phi F) Gamma
@@ -163,8 +162,8 @@ def regularComponentCurveStage
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
    (hphi:Function.Injective phi)
    (F:MvPolynomial (Fin 4) K) (G T:MvPolynomial (Fin 3) Omega)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (p e d a U V:ℕ) [CharP Omega p]
    (surfaceFlag cutFlag:FlagDegree)
    (hdiv:G∣surfaceMap phi F)
@@ -191,7 +190,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
      a ≤ (nodes.filter (fun i↦
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma d e)
-   (hchar:d < p) (hda:d < a)
+   (hchar:d<p) (hda:d<a)
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T)
      (H:=regularitySurface phi F) surfaceFlag cutFlag)
    (hlarge:∀ C:RegularComponent Omega G T (regularitySurface phi F),
@@ -201,7 +200,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
        p e d surfaceFlag cutFlag hdiv hGflag hTflag hFs hFys hFtotal hinj
        hdegreeSelected hsolution hregular hnoPencil hchar C
      ∀ D:S.TerminalDescendant,
-       D.degree < D.stage.identities.card →
+       D.degree<D.stage.identities.card →
          GammaC.card*(a-d) ≤ (e+1)*(a-d)*B.zCost C)
    (hdegree:∀ k ≤ d,
      (nodes.card-k)*(a-d)*(d-k) ≤ U*(a-k))
@@ -220,9 +219,9 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget
      (surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F))≠0
    rw [selectedPoint_evaluation]
    exact hregular gamma hgamma
- let degreeCost:RegularComponent Omega G T H → ℕ:=
+ let degreeCost:RegularComponent Omega G T H→ℕ:=
    fun C↦B.weightedCost activeDifferentialSupport.agreementDirection C
- let unitCost:RegularComponent Omega G T H → ℕ:=
+ let unitCost:RegularComponent Omega G T H→ℕ:=
    fun C↦B.weightedCost unitYZFlag C
  have hcomponent:∀ C:RegularComponent Omega G T H,
      (componentSeeds Omega G T H Gamma

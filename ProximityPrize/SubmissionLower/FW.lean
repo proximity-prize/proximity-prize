@@ -18,7 +18,7 @@ set_option maxHeartbeats 5000000
 variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
-variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
+variable {Gamma:Finset K} {x:I→K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
 variable {errorCap:ℕ}
 variable {stageSupport:RCN275.ResidualSupportParameters}
@@ -27,7 +27,7 @@ theorem indexedFiberTail_mem_primary
    (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
      (RCN326.w+1))
-   (component:A → StageComponent S)
+   (component:A→StageComponent S)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3)
    (ht:∀ a:A,Transcendental (GenericField K)
      (flagEvaluation (GenericField K) (component a).1 lam mu nu

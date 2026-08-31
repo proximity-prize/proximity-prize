@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 open TensorProduct
@@ -35,7 +34,7 @@ lemma Module.finite_of_surjective_of_ker_le_nilradical
      let ψ:(S ⧸ I) ⊗[S] ↑(I^n) →ₗ[S] (S ⧸ I^(n+1)):=by
        refine ?_ ∘ₗ (TensorProduct.quotTensorEquivQuotSMul _ I).toLinearMap
        refine Submodule.liftQ _ ((Submodule.mkQ _).comp (I^n).subtype) ?_
-       rw [LinearMap.ker_comp, ←Submodule.map_le_map_iff_of_injective (I^n).subtype_injective,
+       rw [LinearMap.ker_comp,←Submodule.map_le_map_iff_of_injective (I^n).subtype_injective,
          Submodule.map_smul'',Submodule.map_comap_eq]
        simpa [pow_succ'] using Ideal.mul_le_left (I:=I) (J:=I^n)
      convert! Module.Finite.fg_top.map (ψ.restrictScalars R) using 1

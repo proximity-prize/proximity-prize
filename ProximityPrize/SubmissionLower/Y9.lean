@@ -17,7 +17,7 @@ set_option maxHeartbeats 2500000
 variable {Omega:Type} [Field Omega]
 variable {G T H:MvPolynomial (Fin 3) Omega}
 variable {A:Type} [Fintype A]
-variable (component:A → RegularComponent Omega G T H)
+variable (component:A→RegularComponent Omega G T H)
 variable (hcomponent:Function.Injective component)
 variable (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
 variable (ht:∀ a:A,Transcendental Omega

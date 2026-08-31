@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.U
 import ProximityPrize.SubmissionLower.Z4
 import ProximityPrize.SubmissionLower.AG
@@ -45,12 +44,12 @@ theorem card_le_regular_sum_add_singular
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime]
    (hbox:Q∈globalCoefficientBox K p.weightedCap p.w
      p.seedTotalCap p.slopeCap)
-   (hs:1 ≤ p.slopeCap) (hsSmall:p.slopeCap < prime)
+   (hs:1 ≤ p.slopeCap) (hsSmall:p.slopeCap<prime)
    (hw:1 ≤ p.w)
-   (hDw:p.w < (2*p.slopeCap-1)*p.weightedCap)
+   (hDw:p.w<(2*p.slopeCap-1)*p.weightedCap)
    (hj:1 ≤ (2*p.slopeCap-1)*p.seedTotalCap)
-   (hjSmall:(2*p.slopeCap-1)*p.seedTotalCap < prime)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (hjSmall:(2*p.slopeCap-1)*p.seedTotalCap<prime)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0):
    Gamma.card ≤
@@ -101,16 +100,16 @@ theorem global_count_le_regular_div_add_tight_countCap
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime]
    (hbox:Q∈globalCoefficientBox K p.weightedCap p.w
      p.seedTotalCap p.slopeCap)
-   (hs:1 ≤ p.slopeCap) (hsSmall:p.slopeCap < prime)
-   (hw:1 ≤ p.w) (hchar:p.w < prime)
-   (hDw:p.w < (2*p.slopeCap-1)*p.weightedCap)
+   (hs:1 ≤ p.slopeCap) (hsSmall:p.slopeCap<prime)
+   (hw:1 ≤ p.w) (hchar:p.w<prime)
+   (hDw:p.w<(2*p.slopeCap-1)*p.weightedCap)
    (hj:1 ≤ (2*p.slopeCap-1)*p.seedTotalCap)
-   (hjSmall:(2*p.slopeCap-1)*p.seedTotalCap < prime)
-   (hjYSmall:t.implicitYCap < prime)
-   (hmixedSmall:2*t.implicitYCap*t.algebraicCap < prime)
-   (hwa:p.w < p.agreements) (han:p.agreements ≤ p.n)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (hjSmall:(2*p.slopeCap-1)*p.seedTotalCap<prime)
+   (hjYSmall:t.implicitYCap<prime)
+   (hmixedSmall:2*t.implicitYCap*t.algebraicCap<prime)
+   (hwa:p.w<p.agreements) (han:p.agreements ≤ p.n)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=p.n)
    (hdegree:∀ gamma∈Gamma,
      (selected gamma).natDegree ≤ p.w)
@@ -120,10 +119,10 @@ theorem global_count_le_regular_div_add_tight_countCap
      p.agreements ≤ (nodes.filter (fun i↦
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma p.w p.errors)
-   (regularFlagFor:RegularIndex Q → FlagDegree)
-   (regularLedger:FlagDegree → ℕ)
+   (regularFlagFor:RegularIndex Q→FlagDegree)
+   (regularLedger:FlagDegree→ℕ)
    (hregularAggregate:
-     ∀ count:RegularIndex Q → ℕ,
+     ∀ count:RegularIndex Q→ℕ,
        (∀ F,count F*p.gap^2 ≤ regularLedger (regularFlagFor F)) →
        (∑ F,count F)*p.gap^2 ≤ regularNumerator)
    (hregular:∀ F:RegularIndex Q,
@@ -165,9 +164,9 @@ theorem global_count_le_regular_div_add_tight_countCap
    (by simpa only [A.w] using hdegree)
    (by simpa only [A.agreements] using hagreement)
    (by simpa only [A.w,A.errors] using hnoPencil)
- have hpgap:0 < p.gap:=by
+ have hpgap:0<p.gap:=by
    simpa only [Profile.gap] using Nat.sub_pos_of_lt hwa
- have htgap:0 < t.gap:=by simpa only [A.gap] using hpgap
+ have htgap:0<t.gap:=by simpa only [A.gap] using hpgap
  have hregCount:
      (∑ F:RegularIndex Q,(regularSeeds Q selected Gamma F).card) ≤
        regularNumerator/p.gap^2:=

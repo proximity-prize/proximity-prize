@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.C
 import ProximityPrize.SubmissionLower.W
 import ProximityPrize.SubmissionLower.E
@@ -62,7 +61,7 @@ theorem seedDegree_pderiv_le (P:Poly4 K) (i:Fin 4):
    rw [map_add]
    exact Nat.le_add_right _ _
  exact hmono.trans (MvPolynomial.le_weightedTotalDegree seedWeights hd)
-theorem seedDegree_sum_le (I:Finset ℕ) (f:ℕ → Poly4 K) (a:ℕ)
+theorem seedDegree_sum_le (I:Finset ℕ) (f:ℕ→Poly4 K) (a:ℕ)
    (hf:∀ i∈I,seedDegree (f i) ≤ a):
    seedDegree (∑ i∈I,f i) ≤ a:=by
  unfold seedDegree
@@ -193,7 +192,7 @@ theorem shiftedX_seedDegree_le (x:K):
    (by simp [seedDegree_X,seedWeights]))
 theorem commonNumeratorTerm_seedDegree_le
    (F:Poly4 K) (L w j:ℕ) (hj:j ≤ w)
-   (hF:seedDegree F ≤ L) (c:ℕ → K) (x:K):
+   (hF:seedDegree F ≤ L) (c:ℕ→K) (x:K):
    seedDegree (commonNumeratorTerm F w c x j) ≤ 1+2*w*L:=by
  have hM:=numerator_seedDegree_le F L hF j
  have hC:seedDegree (MvPolynomial.C (c j):Poly4 K) ≤ 0:=by
@@ -230,7 +229,7 @@ theorem commonNumeratorTerm_seedDegree_le
    _=1+2*w*L:=by rw [hw]
 theorem clearedTaylorNumerator_seedDegree_le
    (F:Poly4 K) (L w:ℕ) (hF:seedDegree F ≤ L)
-   (c:ℕ → K) (x:K):
+   (c:ℕ→K) (x:K):
    seedDegree (clearedTaylorNumerator F w c x) ≤ 1+2*w*L:=by
  unfold clearedTaylorNumerator
  apply seedDegree_sum_le
@@ -249,7 +248,7 @@ theorem affineSeedPolynomial_seedDegree_le (u₀ u₁:K):
  exact (seedDegree_add_le _ _).trans (max_le (hC0.trans (by omega)) (by omega))
 theorem agreementNumerator_seedDegree_le
    (F:Poly4 K) (L w:ℕ) (hF:seedDegree F ≤ L)
-   (c:ℕ → K) (x u₀ u₁:K):
+   (c:ℕ→K) (x u₀ u₁:K):
    seedDegree (agreementNumerator F w c x u₀ u₁) ≤ 1+2*w*L:=by
  unfold agreementNumerator
  have ht:=clearedTaylorNumerator_seedDegree_le F L w hF c x
@@ -261,7 +260,7 @@ theorem agreementNumerator_seedDegree_le
  exact (seedDegree_sub_le _ _).trans (max_le ht (by omega))
 theorem agreementNumerator_joint_seed_cap
    (F:Poly4 K) (L w:ℕ) (hF:seedDegree F ≤ L)
-   (c:ℕ → K) (x u₀ u₁:K):
+   (c:ℕ→K) (x u₀ u₁:K):
    ∀ d∈(agreementNumerator F w c x u₀ u₁).support,
      d 1+d 3 ≤ 1+2*w*L:=by
  intro d hd
@@ -270,7 +269,7 @@ theorem agreementNumerator_joint_seed_cap
    (agreementNumerator_seedDegree_le F L w hF c x u₀ u₁)
 theorem surfaceMap_agreement_joint_seed_cap
    (φ:Polynomial K →+*Ω) (F:Poly4 K) (L w:ℕ)
-   (hF:seedDegree F ≤ L) (c:ℕ → K) (x u₀ u₁:K):
+   (hF:seedDegree F ≤ L) (c:ℕ→K) (x u₀ u₁:K):
    ∀ d∈(surfaceMap φ (agreementNumerator F w c x u₀ u₁)).support,
      d 0+d 2 ≤ 1+2*w*L:=
  surfaceMap_joint_seed_cap φ _ _

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DE
 import ProximityPrize.SubmissionLower.X4
 namespace ProximityPrize.SubmissionLower.RCN025
@@ -60,7 +59,7 @@ variable {K:Type} [Field K] [DecidableEq K]
 variable {I:Type*} [Fintype I]
 theorem sum_relative_finrank_le_sylvester_corank
    (mu:Polynomial K) [Fact (Irreducible mu)]
-   (E:I → Type) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+   (E:I→Type) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
    [∀ i,Algebra (AdjoinRoot mu) (E i)]
    [∀ i,IsScalarTower K (AdjoinRoot mu) (E i)]
    [∀ i,FiniteDimensional (AdjoinRoot mu) (E i)]
@@ -79,7 +78,7 @@ theorem sum_relative_finrank_le_sylvester_corank
      m+n-(Polynomial.sylvester
        (P.map (AdjoinRoot.mk mu)) (Q.map (AdjoinRoot.mk mu)) m n).rank:=by
  classical
- let D:I → Polynomial (AdjoinRoot mu):=
+ let D:I→Polynomial (AdjoinRoot mu):=
    fun i => minpoly (AdjoinRoot mu) (r i)
  have hmonic:∀ i,(D i).Monic:=fun i =>
    minpoly.monic (IsIntegral.of_finite (AdjoinRoot mu) (r i))
@@ -107,7 +106,7 @@ variable {ι:Type*} [Fintype ι] [DecidableEq ι]
 variable {I:Type*} [Fintype I]
 theorem sum_grouped_weights_le_det_natDegree
    (M:Matrix ι ι (Polynomial K))
-   (mu:I → Polynomial K) (relativeDegree:I → ℕ)
+   (mu:I→Polynomial K) (relativeDegree:I→ℕ)
    (hmonic:∀ i,(mu i).Monic)
    (hirreducible:∀ i,Irreducible (mu i))
    (fiberCorank:∀ f∈(Finset.univ.image mu),
@@ -117,7 +116,7 @@ theorem sum_grouped_weights_le_det_natDegree
    (∑ i,relativeDegree i*(mu i).natDegree) ≤ M.det.natDegree:=by
  classical
  let roots:Finset (Polynomial K):=Finset.univ.image mu
- let c:roots → ℕ:=fun f => ∑ i with mu i=f.1,relativeDegree i
+ let c:roots→ℕ:=fun f => ∑ i with mu i=f.1,relativeDegree i
  have hrootsMonic:∀ f:roots,(f.1).Monic:=by
    intro f
    obtain ⟨i,_,hi⟩:=Finset.mem_image.mp f.2
@@ -179,7 +178,7 @@ end MinpolyGrouping
 section FinitePlaneFamily
 variable {K:Type} [Field K] [DecidableEq K]
 variable {I:Type*} [Fintype I]
-variable (E:I → Type) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+variable (E:I→Type) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
  [∀ i,FiniteDimensional K (E i)]
 theorem sum_finrank_le_resultant_of_relationIdeal_injective
    (P Q:Polynomial (Polynomial K)) (m n:ℕ)
@@ -200,8 +199,8 @@ theorem sum_finrank_le_resultant_of_relationIdeal_injective
    (∑ i,Module.finrank K (E i)) ≤
      (Polynomial.resultant P Q m n).natDegree:=by
  classical
- let mu:I → Polynomial K:=fun i => minpoly K (y i)
- let relativeDegree:I → ℕ:=fun i =>
+ let mu:I→Polynomial K:=fun i => minpoly K (y i)
+ let relativeDegree:I→ℕ:=fun i =>
    Module.finrank K (E i)/(mu i).natDegree
  have hmuMonic:∀ i,(mu i).Monic:=fun i =>
    minpoly.monic (IsIntegral.of_finite K (y i))
@@ -279,7 +278,7 @@ theorem sum_finrank_le_resultant_of_relationIdeal_injective
    have hrelative (j:J):relativeDegree j.1=
        Module.finrank (AdjoinRoot f) (E j.1):=by
      change Module.finrank K (E j.1)/(mu j.1).natDegree=_
-     rw [j.property, ←Module.finrank_mul_finrank K (AdjoinRoot f) (E j.1),
+     rw [j.property,←Module.finrank_mul_finrank K (AdjoinRoot f) (E j.1),
        hbase]
      exact Nat.mul_div_cancel_left _ hfIrreducible.natDegree_pos
    have hsum:(∑ i with mu i=f,relativeDegree i)=
@@ -295,7 +294,7 @@ theorem sum_finrank_le_resultant_of_relationIdeal_injective
          intro j _
          exact hrelative j
    rw [hsum]
-   simpa only [Fintype.card_fin, ←Polynomial.sylvester_map_map] using hfixed
+   simpa only [Fintype.card_fin,←Polynomial.sylvester_map_map] using hfixed
  have hdet:(Polynomial.sylvester P Q m n).det≠0:=by
    simpa only [Polynomial.resultant] using hresultant
  have hfiber':∀ f∈(Finset.univ.image mu),
@@ -309,7 +308,7 @@ theorem sum_finrank_le_resultant_of_relationIdeal_injective
  simpa only [Polynomial.resultant,htotal] using houter
 theorem sum_finrank_le_planar_bound_without_separability
    (P Q:Polynomial (Polynomial K))
-   (hP:Irreducible P) (hpositive:0 < P.natDegree)
+   (hP:Irreducible P) (hpositive:0<P.natDegree)
    (hproper:¬ P∣Q)
    (y r:∀ i,E i)
    (hgen:∀ i,IntermediateField.adjoin K

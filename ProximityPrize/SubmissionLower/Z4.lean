@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AC
 import ProximityPrize.SubmissionLower.F1
 namespace ProximityPrize.SubmissionLower.RCN140
@@ -16,18 +15,18 @@ set_option maxRecDepth 30000
 variable {K:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 def regularSeeds (Q:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (F:RCN266.RegularIndex Q):Finset K:=
  Gamma.filter (fun gamma↦RegularSolution F.1 (selected gamma) gamma)
 theorem regularSeeds_subset (Q:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (F:RCN266.RegularIndex Q):
    regularSeeds Q selected Gamma F ⊆ Gamma:=
  Finset.filter_subset _ _
 theorem card_le_regular_sum_add_singular
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime]
    (hbox:Q∈globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0):
    Gamma.card ≤
@@ -79,7 +78,7 @@ theorem card_le_regular_sum_add_singular
 theorem regularSeeds_scaled_rectangular_bound
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    (hbox:Q∈globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hregular:∀ F:RCN266.RegularIndex Q,
      (regularSeeds Q selected Gamma F).card*gap^2 ≤
        factorRegularLedger (regularFlag Q F)):
@@ -95,8 +94,8 @@ theorem global_scaled_bound_of_regular_factors
    {Iota:Type} [DecidableEq Iota]
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime]
    (hbox:Q∈globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
    (hsolution:∀ gamma∈Gamma,
@@ -131,8 +130,8 @@ theorem global_count_lt_alignment_of_regular_factors
    {Iota:Type} [DecidableEq Iota]
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime]
    (hbox:Q∈globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
    (hsolution:∀ gamma∈Gamma,
@@ -144,11 +143,11 @@ theorem global_count_lt_alignment_of_regular_factors
    (hregular:∀ F:RCN266.RegularIndex Q,
      (regularSeeds Q selected Gamma F).card*gap^2 ≤
        factorRegularLedger (regularFlag Q F)):
-   Gamma.card < alignmentBudget:=by
+   Gamma.card<alignmentBudget:=by
  have hscaled:=global_scaled_bound_of_regular_factors Q hQ hbox selected
    Gamma nodes x u0 u1 hinj hnodes hdegree hsolution hagreement hnoPencil
    hregular
- have hlt:Gamma.card*gap^2 < alignmentBudget*gap^2:=
+ have hlt:Gamma.card*gap^2<alignmentBudget*gap^2:=
    hscaled.trans_lt rectangular_strict_budget
  exact Nat.lt_of_mul_lt_mul_right hlt
 end

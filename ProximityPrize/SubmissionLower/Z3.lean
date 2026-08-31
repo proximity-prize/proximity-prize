@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D
 import ProximityPrize.SubmissionLower.X3
 import ProximityPrize.SubmissionLower.Y
@@ -57,11 +56,11 @@ def flagEquiv (lam μ ν:K):Poly3 K ≃ₐ[K] Poly3 K:=
 @[simp] theorem flagEquiv_apply (lam μ ν:K) (F:Poly3 K):
    flagEquiv lam μ ν F=flagAlgHom lam μ ν F:=rfl
 theorem flag_irreducible_iff (lam μ ν:K) (F:Poly3 K):
-   Irreducible (flagAlgHom lam μ ν F) ↔ Irreducible F:=by
+   Irreducible (flagAlgHom lam μ ν F)↔Irreducible F:=by
  simpa only [flagEquiv_apply] using
    (MulEquiv.irreducible_iff (flagEquiv lam μ ν))
 theorem flag_dvd_iff (lam μ ν:K) (F G:Poly3 K):
-   flagAlgHom lam μ ν F∣flagAlgHom lam μ ν G ↔ F∣G:=by
+   flagAlgHom lam μ ν F∣flagAlgHom lam μ ν G↔F∣G:=by
  simpa only [flagEquiv_apply] using
    (map_dvd_iff (flagEquiv lam μ ν))
 theorem flag_ne_zero (lam μ ν:K) {F:Poly3 K} (hF:F≠0):
@@ -104,11 +103,11 @@ theorem eval₂Hom_flag_at_affine
  congr 2
  funext i
  fin_cases i <;> simp <;> ring
-def flagPullWeights (weights:Fin 3 → ℕ):Fin 3 → ℕ:=
+def flagPullWeights (weights:Fin 3→ℕ):Fin 3→ℕ:=
  ![max (weights 0) (weights 2),
    max (weights 1) (max (weights 0) (weights 2)),
    weights 2]
-theorem flagImage_wt_le (weights:Fin 3 → ℕ) (lam μ ν:K) (i:Fin 3):
+theorem flagImage_wt_le (weights:Fin 3→ℕ) (lam μ ν:K) (i:Fin 3):
    wt weights (flagImage lam μ ν i) ≤ flagPullWeights weights i:=by
  fin_cases i
  · dsimp [flagImage,flagPullWeights]
@@ -134,7 +133,7 @@ theorem flagImage_wt_le (weights:Fin 3 → ℕ) (lam μ ν:K) (i:Fin 3):
      (hinner.trans (max_le_max hμ hν)))
  · simp [flagImage,flagPullWeights,wt_X]
 theorem flag_monomial_product_wt_le
-   (weights:Fin 3 → ℕ) (lam μ ν:K) (d:Fin 3 →₀ ℕ):
+   (weights:Fin 3→ℕ) (lam μ ν:K) (d:Fin 3 →₀ ℕ):
    wt weights (∏ i∈d.support,flagImage lam μ ν i^d i) ≤
      Finsupp.weight (flagPullWeights weights) d:=by
  apply (wt_finset_prod_le_sum weights d.support
@@ -151,7 +150,7 @@ theorem flag_monomial_product_wt_le
      simp only [Finsupp.sum,nsmul_eq_mul]
      simp
 theorem flagAlgHom_wt_le_pulled
-   (weights:Fin 3 → ℕ) (lam μ ν:K) (F:Poly3 K):
+   (weights:Fin 3→ℕ) (lam μ ν:K) (F:Poly3 K):
    wt weights (flagAlgHom lam μ ν F) ≤ wt (flagPullWeights weights) F:=by
  change wt weights
      (MvPolynomial.eval₂ MvPolynomial.C (flagImage lam μ ν) F) ≤ _
@@ -166,9 +165,9 @@ theorem flagAlgHom_wt_le_pulled
  rw [hcoeff,Nat.zero_add] at hmul
  exact hmul.trans (hprod.trans
    (MvPolynomial.le_weightedTotalDegree (flagPullWeights weights) hd))
-def sWeight:Fin 3 → ℕ:=![0,1,0]
-def ysWeight:Fin 3 → ℕ:=![1,1,0]
-def totalWeight:Fin 3 → ℕ:=![1,1,1]
+def sWeight:Fin 3→ℕ:=![0,1,0]
+def ysWeight:Fin 3→ℕ:=![1,1,0]
+def totalWeight:Fin 3→ℕ:=![1,1,1]
 @[simp] theorem flagPullWeights_sWeight:flagPullWeights sWeight=sWeight:=by
  funext i
  fin_cases i <;> simp [flagPullWeights,sWeight]
@@ -260,8 +259,8 @@ theorem flag_jointOrderCertificate_of_projection_data
      (RCN011.planeMap K
        (RCN013.swapOtherOrder order)
        (flagAlgHom lam μ ν H)) ≤ hInner)
-   (hnp:n < p) (hgOuterP:gOuter < p) (hcapP:cap < p)
-   (hswapP:gOuter*hInner < p)
+   (hnp:n<p) (hgOuterP:gOuter<p) (hcapP:cap<p)
+   (hswapP:gOuter*hInner<p)
    (hbudget:∀ m,m ≤ mCap →
      m*totalG+n*totalH-m*n ≤ cap):
    JointOrderCertificate K order

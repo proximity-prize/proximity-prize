@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B
 import ProximityPrize.SubmissionLower.H
 namespace ProximityPrize.SubmissionLower.RCN164
@@ -12,7 +11,7 @@ open RCN095
 open RCN275
 noncomputable section
 variable {K Omega Iota:Type} [Field K] [Field Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 variable {p e:ℕ} [CharP Omega p] {flag:FlagDegree}
 variable {support:ResidualSupportParameters}
 local instance:DecidableEq K:=Classical.decEq K
@@ -22,7 +21,7 @@ theorem recursive_stratified_incidence_bound
    (hphi:Function.Injective phi) {w a:ℕ}
    (S:ResidualStage phi Gamma x p e flag w support)
    (degreeCost unitCost U V:ℕ)
-   (hwa:w < a)
+   (hwa:w<a)
    (hagreement:∀ gamma∈Gamma,
      a ≤ (S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,
@@ -73,7 +72,7 @@ theorem recursive_scaled_stratified_incidence_bound
    (hphi:Function.Injective phi) {w a:ℕ}
    (S:ResidualStage phi Gamma x p e flag w support)
    (degreeCost unitCost U V:ℕ)
-   (hwa:w < a)
+   (hwa:w<a)
    (hagreement:∀ gamma∈Gamma,
      a ≤ (S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,
@@ -102,7 +101,7 @@ theorem recursive_scaled_stratified_incidence_bound
    exact (Nat.sub_le_sub_right (hagreement gamma hgamma) k).trans
      (by simpa only [k] using D.agreement_card gamma hgamma)
  let geometricCost:=D.degree*degreeCost+unitCost
- have hgap:0 < a-w:=Nat.sub_pos_of_lt hwa
+ have hgap:0<a-w:=Nat.sub_pos_of_lt hwa
  have hterminalFiberDiv:∀ i∈D.stage.nodes,
      (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card ≤
        geometricCost/(a-w):=by

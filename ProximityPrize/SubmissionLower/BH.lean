@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J1
 import ProximityPrize.SubmissionLower.AU
 namespace ProximityPrize.SubmissionLower.RCN132
@@ -27,7 +26,7 @@ theorem xLift_monomial (n:ℕ) (a:K):
    xLift K (Polynomial.monomial n a)=
      MvPolynomial.C a*MvPolynomial.X (0:Fin 4)^n:=by
  apply (collectX K).injective
- simp [xLift, ←Polynomial.C_mul_X_pow_eq_monomial]
+ simp [xLift,←Polynomial.C_mul_X_pow_eq_monomial]
 theorem xLift_ne_zero (P:Polynomial K) (hP:P≠0):xLift K P≠0:=by
  intro h
  have hh:=congrArg (collectX K) h
@@ -57,15 +56,15 @@ theorem xLift_degreeOf_succ (P:Polynomial K) (i:Fin 3):
      exact Nat.eq_zero_of_le_zero (hm.trans hp)
 theorem not_dvd_xLift_of_positive_degree
    (F:MvPolynomial (Fin 4) K) (P:Polynomial K) (hP:P≠0)
-   (hpos:0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3):
+   (hpos:0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3):
    ¬ F∣xLift K P:=by
  intro hdiv
- have hi:∃ i:Fin 3,0 < F.degreeOf i.succ:=by
-   by_cases hy:0 < F.degreeOf 1
+ have hi:∃ i:Fin 3,0<F.degreeOf i.succ:=by
+   by_cases hy:0<F.degreeOf 1
    · exact ⟨0,hy⟩
-   by_cases hr:0 < F.degreeOf 2
+   by_cases hr:0<F.degreeOf 2
    · exact ⟨1,hr⟩
-   exact ⟨2,by change 0 < F.degreeOf (3:Fin 4);omega⟩
+   exact ⟨2,by change 0<F.degreeOf (3:Fin 4);omega⟩
  obtain ⟨i,hi⟩:=hi
  have hb:=RCN081.degreeOf_le_of_dvd i.succ F (xLift K P)
    hdiv (xLift_ne_zero K P hP)
@@ -76,7 +75,7 @@ theorem collected_principal_isPrime (F:MvPolynomial (Fin 4) K) (hF:Irreducible F
  have hi:Irreducible (collectX K F):=(MulEquiv.irreducible_iff (collectX K)).mpr hF
  exact Ideal.isPrime_span_singleton_of_prime hi.prime
 theorem coefficientDenominators_disjoint (F:MvPolynomial (Fin 4) K)
-   (hpos:0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3):
+   (hpos:0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3):
    Disjoint (coefficientDenominators K:Set (Collected K))
      (Ideal.span ({collectX K F}:Set (Collected K)):Set (Collected K)):=by
  rw [Set.disjoint_left]
@@ -90,15 +89,15 @@ theorem coefficientDenominators_disjoint (F:MvPolynomial (Fin 4) K)
    simpa only [xLift,AlgEquiv.apply_symm_apply,map_mul] using hG
  exact not_dvd_xLift_of_positive_degree K F P hP0 hpos hdiv
 theorem localized_principal_isPrime (F:MvPolynomial (Fin 4) K)
-   (hF:Irreducible F) (hpos:0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3):
+   (hF:Irreducible F) (hpos:0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3):
    (Ideal.span ({rationalSurfaceMap K F}:Set (RationalPolynomials K))).IsPrime:=by
  have hp:=IsLocalization.isPrime_of_isPrime_disjoint
    (coefficientDenominators K) (RationalPolynomials K)
    (Ideal.span ({collectX K F}:Set (Collected K)))
    (collected_principal_isPrime K F hF) (coefficientDenominators_disjoint K F hpos)
- simpa only [Ideal.map_span,Set.image_singleton, ←rationalSurfaceMap_eq] using hp
+ simpa only [Ideal.map_span,Set.image_singleton,←rationalSurfaceMap_eq] using hp
 theorem rationalSurfaceMap_irreducible (F:MvPolynomial (Fin 4) K)
-   (hF:Irreducible F) (hpos:0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3):
+   (hF:Irreducible F) (hpos:0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3):
    Irreducible (rationalSurfaceMap K F):=by
  have hne:rationalSurfaceMap K F≠0:=
    surfaceMap_ne_zero (algebraMap (Polynomial K) (RationalCoefficients K))
@@ -107,8 +106,8 @@ theorem rationalSurfaceMap_irreducible (F:MvPolynomial (Fin 4) K)
    (localized_principal_isPrime K F hF hpos)).irreducible
 theorem rationalSurfaceMap_dvd_iff
    (F M:MvPolynomial (Fin 4) K) (hF:Irreducible F)
-   (hpos:0 < F.degreeOf 1+F.degreeOf 2+F.degreeOf 3):
-   rationalSurfaceMap K F∣rationalSurfaceMap K M ↔ F∣M:=by
+   (hpos:0<F.degreeOf 1+F.degreeOf 2+F.degreeOf 3):
+   rationalSurfaceMap K F∣rationalSurfaceMap K M↔F∣M:=by
  constructor
  · intro hdiv
    have hm:algebraMap (Collected K) (RationalPolynomials K) (collectX K M)∈
@@ -135,7 +134,7 @@ theorem activeFactor_rational_irreducible
  exact rationalSurfaceMap_irreducible K F hs.1 hs.2.2
 theorem activeFactor_rational_dvd_iff
    (Q F M:MvPolynomial (Fin 4) K) (hF:F∈activeFactors Q):
-   rationalSurfaceMap K F∣rationalSurfaceMap K M ↔ F∣M:=by
+   rationalSurfaceMap K F∣rationalSurfaceMap K M↔F∣M:=by
  have hs:=activeFactors_spec Q F hF
  exact rationalSurfaceMap_dvd_iff K F M hs.1 hs.2.2
 end

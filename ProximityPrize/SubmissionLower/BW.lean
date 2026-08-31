@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BV
 namespace ProximityPrize.SubmissionLower.RCN172
 open scoped Classical BigOperators
@@ -19,12 +18,12 @@ theorem implicit_pair_seed_bound
    (hAbox:A∈globalCoefficientBox K implicitD w jZ 0)
    (hGbox:G∈globalCoefficientBox K implicitD w jZ 1)
    (hjY:(implicitD-1)/w=jY)
-   (selected:K → Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
    (hnodes:nodes.card=n) [CharP K p]
-   (hw:1 ≤ w) (hchar:w < p) (hwa:w < a) (han:a ≤ n)
-   (hjYsmall:jY < p) (hjZsmall:jZ < p)
-   (hmixedSmall:2*jY*jZ < p)
+   (hw:1 ≤ w) (hchar:w<p) (hwa:w<a) (han:a ≤ n)
+   (hjYsmall:jY<p) (hjZsmall:jZ<p)
+   (hmixedSmall:2*jY*jZ<p)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolutionA:∀ γ∈Γ,specialization K (selected γ) γ A=0)
    (hsolutionG:∀ γ∈Γ,specialization K (selected γ) γ G=0)
@@ -97,7 +96,7 @@ theorem implicit_pair_seed_bound
      · exact (hfacdegree 0).trans hGY
      · exact (hfacdegree 1).trans hGGcaps.2.1
      · exact (hfacdegree 2).trans hGGcaps.2.2
-   have hsurfaceSmall:∀ j,capAt surfaceCap j < p:=by
+   have hsurfaceSmall:∀ j,capAt surfaceCap j<p:=by
      intro j
      fin_cases j
      · simpa [surfaceCap,capAt] using hjYsmall
@@ -181,7 +180,7 @@ theorem implicit_pair_seed_bound
        (e+1)*(a-w)*
          (∑ g∈factors,
            capAt (RCN170.geometricPairCost A g) 2):=by
-     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,hfubini]
+     rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.mul_sum,hfubini]
    _ ≤ (n-w)*(∑ i:Fin 3,capAt agreementCap i*
        capAt (RCN170.pairCost A G) i)+
        (e+1)*(a-w)*

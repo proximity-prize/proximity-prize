@@ -40,14 +40,14 @@ set_option maxRecDepth 80000
 variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
-variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
+variable {Gamma:Finset K} {x:I→K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
 variable {errorCap:ℕ}
 variable {stageSupport:RCN275.ResidualSupportParameters}
 theorem finiteDimensional_coordinateField_congr
    {Omega:Type} [Field Omega]
    {P Q:Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime] [Q.IsPrime]
-   (hPQ:P = Q) (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
+   (hPQ:P=Q) (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
    (htP:Transcendental Omega
      (flagEvaluation Omega P lam mu nu (MvPolynomial.X (order 0))))
    (htQ:Transcendental Omega
@@ -61,7 +61,7 @@ theorem finiteDimensional_coordinateField_congr
 theorem flagGenerators_congr
    {Omega:Type} [Field Omega]
    {P Q:Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime] [Q.IsPrime]
-   (hPQ:P = Q) (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
+   (hPQ:P=Q) (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
    (htP:Transcendental Omega
      (flagEvaluation Omega P lam mu nu (MvPolynomial.X (order 0))))
    (htQ:Transcendental Omega
@@ -70,18 +70,18 @@ theorem flagGenerators_congr
      IntermediateField.adjoin (RatFunc Omega)
        ({flagEvaluation Omega P lam mu nu (MvPolynomial.X (order 2)),
          flagEvaluation Omega P lam mu nu (MvPolynomial.X (order 1))} :
-         Set (CoordinateField Omega P)) = ⊤) :
+         Set (CoordinateField Omega P))=⊤) :
    letI:=flagBaseAlgebra Omega Q lam mu nu order htQ
    IntermediateField.adjoin (RatFunc Omega)
      ({flagEvaluation Omega Q lam mu nu (MvPolynomial.X (order 2)),
        flagEvaluation Omega Q lam mu nu (MvPolynomial.X (order 1))} :
-       Set (CoordinateField Omega Q)) = ⊤:=by
+       Set (CoordinateField Omega Q))=⊤:=by
  subst Q
  exact hgen
 theorem indexedComponentFactor_congr
    {Omega:Type} [Field Omega]
    {P Q:Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime] [Q.IsPrime]
-   (hPQ:P = Q) (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
+   (hPQ:P=Q) (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
    (htP:Transcendental Omega
      (flagEvaluation Omega P lam mu nu (MvPolynomial.X (order 0))))
    (htQ:Transcendental Omega
@@ -95,7 +95,7 @@ theorem indexedComponentFactor_congr
 theorem relationKernel_congr
    {Omega:Type} [Field Omega]
    {P Q:Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime] [Q.IsPrime]
-   (hPQ:P = Q) (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
+   (hPQ:P=Q) (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
    (htP:Transcendental Omega
      (flagEvaluation Omega P lam mu nu (MvPolynomial.X (order 0))))
    (htQ:Transcendental Omega
@@ -118,9 +118,9 @@ theorem flagPlaneMap_mem_relation
        (flagEvaluation Omega P lam mu nu) ht:=by
  change planeEvaluation Omega (CoordinateField Omega P) order
    (flagEvaluation Omega P lam mu nu) ht
-     (planeMap Omega order (flagAlgHom lam mu nu A)) = 0
+     (planeMap Omega order (flagAlgHom lam mu nu A))=0
  rw [← RingHom.comp_apply,planeEvaluation_comp_planeMap]
- change flagEvaluation Omega P lam mu nu (flagAlgHom lam mu nu A) = 0
+ change flagEvaluation Omega P lam mu nu (flagAlgHom lam mu nu A)=0
  rw [flagEvaluation_flag]
  change A ∈ RingHom.ker (coordinateEvaluation Omega P).toRingHom
  rw [coordinateEvaluation_ker]
@@ -143,7 +143,7 @@ theorem reducedStage_indexedFixedFactor_groupedPowerDvd
    (hd:S.G ∣ globalTailCut (polynomialEmbedding K) S.F
      (RCN326.w+1) - Tred)
    {A:Type} [Fintype A]
-   (component:A → RegularComponent (GenericField K) S.G Tred
+   (component:A→RegularComponent (GenericField K) S.G Tred
      (regularitySurface (polynomialEmbedding K) S.F))
    (hcomponent:Function.Injective component)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3)
@@ -163,8 +163,8 @@ theorem reducedStage_indexedFixedFactor_groupedPowerDvd
            (MvPolynomial.X (order 2)),
          flagEvaluation (GenericField K) (component a).1 lam mu nu
            (MvPolynomial.X (order 1))} :
-         Set (CoordinateField (GenericField K) (component a).1)) = ⊤)
-   (positive:0 < (stageSurfacePlane S lam mu nu order).natDegree)
+         Set (CoordinateField (GenericField K) (component a).1))=⊤)
+   (positive:0<(stageSurfacePlane S lam mu nu order).natDegree)
    (q:Polynomial (RatFunc (GenericField K))) (hq:Irreducible q)
    (hqMonic:q.Monic)
    (a0:IndexedFactorFiber component lam mu nu order ht q) :
@@ -176,8 +176,8 @@ theorem reducedStage_indexedFixedFactor_groupedPowerDvd
      flagPlaneResultant lam mu nu order S.G Tred:=by
  let e:=regularComponentEquiv
    (H:=regularitySurface (polynomialEmbedding K) S.F) hd
- let oldComponent:A → StageComponent S:=fun a => e.symm (component a)
- have oldComponent_val (a:A):(oldComponent a).1 = (component a).1 :=
+ let oldComponent:A→StageComponent S:=fun a => e.symm (component a)
+ have oldComponent_val (a:A):(oldComponent a).1=(component a).1 :=
    regularComponentEquiv_symm_val hd (component a)
  have holdInjective:Function.Injective oldComponent :=
    e.symm.injective.comp hcomponent
@@ -203,7 +203,7 @@ theorem reducedStage_indexedFixedFactor_groupedPowerDvd
            (MvPolynomial.X (order 2)),
          flagEvaluation (GenericField K) (oldComponent a).1 lam mu nu
            (MvPolynomial.X (order 1))} :
-         Set (CoordinateField (GenericField K) (oldComponent a).1)) = ⊤:=by
+         Set (CoordinateField (GenericField K) (oldComponent a).1))=⊤:=by
    intro a
    exact flagGenerators_congr (oldComponent_val a).symm lam mu nu order
      (ht a) (htold a) (hgen a)
@@ -263,16 +263,16 @@ theorem reducedStage_indexedFixedFactor_groupedPowerDvd
    have hfactorOld:q =
        indexedComponentFactor oldComponent lam mu nu order htold a.1:=by
      calc
-       q = indexedComponentFactor component lam mu nu order ht a.1:=a.2
-       _ = indexedComponentFactor oldComponent lam mu nu order htold a.1:=by
+       q=indexedComponentFactor component lam mu nu order ht a.1:=a.2
+       _=indexedComponentFactor oldComponent lam mu nu order htold a.1:=by
          exact indexedComponentFactor_congr (oldComponent_val a.1).symm
            lam mu nu order (ht a.1) (htold a.1)
    let aold:IndexedFactorFiber oldComponent lam mu nu order htold q :=
      ⟨a.1,hfactorOld⟩
    have hold:=indexedFiberTail_mem_primary S hfirstProper oldComponent
      lam mu nu order htold hfiniteold hgenold q hq aold
-   have aold_val:aold.1 = a.1:=rfl
-   have hcomponentVal:(oldComponent aold.1).1 = (component a.1).1:=by
+   have aold_val:aold.1=a.1:=rfl
+   have hcomponentVal:(oldComponent aold.1).1=(component a.1).1:=by
      rw [aold_val,oldComponent_val]
    have hrel:indexedFiberRelation oldComponent lam mu nu order htold q hq aold =
        indexedFiberRelation component lam mu nu order ht q hq a:=by
@@ -314,8 +314,8 @@ theorem reducedStage_indexedFixedFactor_groupedPowerDvd
    have hfactorA0old:q =
        indexedComponentFactor oldComponent lam mu nu order htold a0.1:=by
      calc
-       q = indexedComponentFactor component lam mu nu order ht a0.1:=a0.2
-       _ = indexedComponentFactor oldComponent lam mu nu order htold a0.1:=by
+       q=indexedComponentFactor component lam mu nu order ht a0.1:=a0.2
+       _=indexedComponentFactor oldComponent lam mu nu order htold a0.1:=by
          exact indexedComponentFactor_congr (oldComponent_val a0.1).symm
            lam mu nu order (ht a0.1) (htold a0.1)
    let F:StageIndexedFlagFamily S A:={
@@ -332,7 +332,7 @@ theorem reducedStage_indexedFixedFactor_groupedPowerDvd
    let a0old:IndexedFactorFiber F.component F.lam F.mu F.nu F.order F.ht q :=
      ⟨a0.1,hfactorA0old⟩
    let W:StageIndexedFactor S A F :=
-     { q:=q, irreducible:=hq, monic:=hqMonic, witness:=a0old }
+     { q:=q,irreducible:=hq,monic:=hqMonic,witness:=a0old }
    have hPbar0:=stageFamily_surface_mod_ne S F W
    change (indexedFiberSurface q hq
      (stageSurfacePlane S lam mu nu order)).map

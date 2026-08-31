@@ -15,7 +15,7 @@ variable {surfaceFlag firstTailFlag secondTailFlag:FlagDegree}
 structure RegularComponentWeightedInertiaResultantCertificate
    (B:PrimeFlagBudgetFamily
      (G:=G) (T:=T) (H:=H) surfaceFlag firstTailFlag)
-   (multiplicity:RegularComponent Omega G T H → ℕ) where
+   (multiplicity:RegularComponent Omega G T H→ℕ) where
  z:(∑ C,multiplicity C*B.zCost C) ≤
    flagMixed surfaceFlag firstTailFlag unitZFlag
  yz:(∑ C,multiplicity C*B.yzCost C) ≤
@@ -25,7 +25,7 @@ structure RegularComponentWeightedInertiaResultantCertificate
 theorem RegularComponentWeightedInertiaResultantCertificate.divisor_le
    (B:PrimeFlagBudgetFamily
      (G:=G) (T:=T) (H:=H) surfaceFlag firstTailFlag)
-   (multiplicity:RegularComponent Omega G T H → ℕ)
+   (multiplicity:RegularComponent Omega G T H→ℕ)
    (C:RegularComponentWeightedInertiaResultantCertificate B multiplicity):
    (∑ component,
      multiplicity component*B.weightedCost secondTailFlag component) ≤

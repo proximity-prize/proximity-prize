@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G3
 namespace ProximityPrize.SubmissionLower.RCN361
 open RCN360
@@ -59,7 +58,7 @@ theorem relationIdeal_eq_of_embedding_pairs_eq
    relationIdeal K E y r=relationIdeal K E' y' r':=by
  apply Ideal.ext
  intro P
- change planeEval K E y r P=0 ↔ planeEval K E' y' r' P=0
+ change planeEval K E y r P=0↔planeEval K E' y' r' P=0
  have heq:φ (planeEval K E y r P)=ψ (planeEval K E' y' r' P):=by
    rw [algHom_planeEval,algHom_planeEval,hy,hr]
  constructor
@@ -75,7 +74,7 @@ variable (K E:Type) [Field K] [Field E] [Algebra K E]
  [FiniteDimensional K E] [Algebra.IsSeparable K E]
 theorem finrank_le_planar_bound
    (P Q:Polynomial (Polynomial K))
-   (hP:Irreducible P) (hdeg:0 < P.natDegree) (hproper:¬ P∣Q)
+   (hP:Irreducible P) (hdeg:0<P.natDegree) (hproper:¬ P∣Q)
    (y r:E) (hgen:IntermediateField.adjoin K ({y,r}:Set E)=⊤)
    (hPy:planeEval K E y r P=0) (hQy:planeEval K E y r Q=0):
    Module.finrank K E ≤ Q.natDegree*Polynomial.Bivariate.degreeX P+
@@ -100,12 +99,12 @@ theorem finrank_le_planar_bound
 end SingleField
 section FiniteFamily
 variable (K:Type) [Field K]
-variable {I:Type} [Fintype I] (E:I → Type)
+variable {I:Type} [Fintype I] (E:I→Type)
  [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
  [∀ i,FiniteDimensional K (E i)] [∀ i,Algebra.IsSeparable K (E i)]
 theorem sum_finrank_le_planar_bound
    (P Q:Polynomial (Polynomial K))
-   (hP:Irreducible P) (hdeg:0 < P.natDegree) (hproper:¬ P∣Q)
+   (hP:Irreducible P) (hdeg:0<P.natDegree) (hproper:¬ P∣Q)
    (y r:∀ i,E i)
    (hgen:∀ i,IntermediateField.adjoin K ({y i,r i}:Set (E i))=⊤)
    (hkernels:Function.Injective (fun i => relationIdeal K (E i) (y i) (r i)))
@@ -117,7 +116,7 @@ theorem sum_finrank_le_planar_bound
  classical
  let Ω:=AlgebraicClosure K
  letI:∀ i,Fintype (E i →ₐ[K] Ω):=fun i => Fintype.ofFinite _
- let pair:(Σ i,E i →ₐ[K] Ω) → Ω × Ω:=
+ let pair:(Σ i,E i →ₐ[K] Ω)→Ω × Ω:=
    fun a => (a.2 (y a.1),a.2 (r a.1))
  have hinj:Function.Injective pair:=by
    rintro ⟨i,φ⟩ ⟨j,ψ⟩ h
@@ -144,8 +143,8 @@ theorem sum_finrank_le_planar_bound
    ((bimap (algebraMap K Ω) P).map (Polynomial.evalRingHom (φ (y i)))).eval (φ (r i))=0∧
    ((bimap (algebraMap K Ω) Q).map (Polynomial.evalRingHom (φ (y i)))).eval (φ (r i))=0
  constructor
- · rw [←planeEval_eq, ←algHom_planeEval K (E i) Ω φ (y i) (r i) P,hPy i,map_zero]
- · rw [←planeEval_eq, ←algHom_planeEval K (E i) Ω φ (y i) (r i) Q,hQy i,map_zero]
+ · rw [←planeEval_eq,←algHom_planeEval K (E i) Ω φ (y i) (r i) P,hPy i,map_zero]
+ · rw [←planeEval_eq,←algHom_planeEval K (E i) Ω φ (y i) (r i) Q,hQy i,map_zero]
 end FiniteFamily
 end
 end ProximityPrize.SubmissionLower.RCN361

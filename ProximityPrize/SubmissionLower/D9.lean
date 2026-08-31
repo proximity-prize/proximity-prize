@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A4
 import ProximityPrize.SubmissionLower.BJ
 namespace ProximityPrize.SubmissionLower.RCN231
@@ -52,7 +51,7 @@ theorem specialization_numeratorStep
    map_pow,map_natCast]
  have hR:specialization K P γ (MvPolynomial.X (2:Fin 4))=P.derivative:=by
    simp [specialization]
- rw [hR, ←solution_slope_identity K F P γ hsolution,
+ rw [hR,←solution_slope_identity K F P γ hsolution,
    derivative_specialization K P γ M,
    derivative_specialization K P γ (polyH K F)]
  push_cast
@@ -85,7 +84,7 @@ theorem specialization_numerator_eq
          (Polynomial.derivative^[b] P) (2*b)
 theorem specialization_numerator_zero_of_degree
    (F:Poly4 K) (P:Polynomial K) (γ:K)
-   (hsolution:specialization K P γ F=0) (b:ℕ) (hb:P.natDegree < b):
+   (hsolution:specialization K P γ F=0) (b:ℕ) (hb:P.natDegree<b):
    specialization K P γ (numerator K F b)=0:=by
  rw [specialization_numerator_eq K F P γ hsolution b,
    Polynomial.iterate_derivative_eq_zero hb,mul_zero]
@@ -93,7 +92,7 @@ end PolynomialIdentities
 section ActualPoints
 variable {K L:Type*} [Field K] [Field L]
 def polynomialPoint (coefficients:K →+*L) (P:Polynomial K) (γ:K) (ξ:L):
-   Fin 4 → L:=
+   Fin 4→L:=
  ![ξ,P.eval₂ coefficients ξ,P.derivative.eval₂ coefficients ξ,coefficients γ]
 theorem eval_polynomialPoint_eq_specialization
    (coefficients:K →+*L) (P:Polynomial K) (γ:K) (ξ:L) (Q:Poly4 K):
@@ -116,7 +115,7 @@ theorem polynomialPoint_relation
  simp
 theorem polynomialPoint_numerator_zero
    (coefficients:K →+*L) (F:Poly4 K) (P:Polynomial K) (γ:K) (ξ:L)
-   (hsolution:specialization K P γ F=0) (b:ℕ) (hb:P.natDegree < b):
+   (hsolution:specialization K P γ F=0) (b:ℕ) (hb:P.natDegree<b):
    MvPolynomial.eval₂Hom coefficients (polynomialPoint coefficients P γ ξ)
      (numerator K F b)=0:=by
  rw [eval_polynomialPoint_eq_specialization,
@@ -128,7 +127,7 @@ theorem polynomialPoint_all_tail_jets_zero
    (hregular:MvPolynomial.eval₂Hom coefficients (polynomialPoint coefficients P γ ξ)
      (MvPolynomial.pderiv (2:Fin 4) F)≠0)
    (w:ℕ) (hdegree:P.natDegree ≤ w):
-   ∀ b,w < b →
+   ∀ b,w<b →
      jetCoefficient (contactDerivation K F)
        (regularPointValue coefficients F (polynomialPoint coefficients P γ ξ)
          (polynomialPoint_relation coefficients F P γ ξ hsolution) hregular)

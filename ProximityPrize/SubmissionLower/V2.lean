@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F9
 section ProximityFlatProofPort
 open Algebra Module
@@ -7,24 +6,24 @@ variable {R S:Type*} [CommRing R] [CommRing S] [Algebra R S]
 variable (M:Type*) [AddCommGroup M] [Module R M] [Module S M] [IsScalarTower R S M]
 namespace Algebra.FormallyUnramified
 theorem iff_exists_tensorProduct [EssFiniteType R S]:
-   FormallyUnramified R S ↔ ∃ t:S ⊗[R] S,
+   FormallyUnramified R S↔∃ t:S ⊗[R] S,
      (∀ s,((1:S) ⊗ₜ[R] s-s ⊗ₜ[R] (1:S))*t=0)∧TensorProduct.lmul' R t=1:=by
  rw [formallyUnramified_iff,KaehlerDifferential,
    Ideal.cotangent_subsingleton_iff,Ideal.isIdempotentElem_iff_of_fg _
      (KaehlerDifferential.ideal_fg R S)]
- have:∀ t:S ⊗[R] S,TensorProduct.lmul' R t=1 ↔ 1-t∈KaehlerDifferential.ideal R S:=by
+ have:∀ t:S ⊗[R] S,TensorProduct.lmul' R t=1↔1-t∈KaehlerDifferential.ideal R S:=by
    intro t
    simp only [KaehlerDifferential.ideal,RingHom.mem_ker,map_sub,map_one,
      sub_eq_zero,@eq_comm S 1]
- simp_rw [this, ←KaehlerDifferential.span_range_eq_ideal]
+ simp_rw [this,←KaehlerDifferential.span_range_eq_ideal]
  constructor
  · rintro ⟨e,he₁,he₂:_=Ideal.span _⟩
    refine ⟨1-e,?_,?_⟩
    · intro s
      obtain ⟨x,hx⟩:e∣1 ⊗ₜ[R] s-s ⊗ₜ[R] 1:=by
-       rw [←Ideal.mem_span_singleton, ←he₂]
+       rw [←Ideal.mem_span_singleton,←he₂]
        exact Ideal.subset_span ⟨s,rfl⟩
-     rw [hx,mul_comm, ←mul_assoc,sub_mul,one_mul,he₁.eq,sub_self,zero_mul]
+     rw [hx,mul_comm,←mul_assoc,sub_mul,one_mul,he₁.eq,sub_self,zero_mul]
    · rw [sub_sub_cancel,he₂,Ideal.mem_span_singleton]
  · rintro ⟨t,ht₁,ht₂⟩
    use 1-t
@@ -41,7 +40,7 @@ theorem iff_exists_tensorProduct [EssFiniteType R S]:
      use 1 ⊗ₜ[R] s-s ⊗ₜ[R] 1
      linear_combination ht₁ s
 lemma finite_of_free_aux (I) [DecidableEq I] (b:Basis I R S)
-   (f:I →₀ S) (x:S) (a:I → I →₀ R) (ha:a=fun i↦b.repr (b i*x)):
+   (f:I →₀ S) (x:S) (a:I→I →₀ R) (ha:a=fun i↦b.repr (b i*x)):
    (1 ⊗ₜ[R] x*Finsupp.sum f fun i y↦y ⊗ₜ[R] b i)=
      Finset.sum (f.support.biUnion fun i↦(a i).support) fun k↦
      Finsupp.sum (b.repr (f.sum fun i y↦a i k • y)) fun j c↦c • b j ⊗ₜ[R] b k:=by
@@ -63,7 +62,7 @@ lemma finite_of_free_aux (I) [DecidableEq I] (b:Basis I R S)
    · congr
      ext j s
      rw [Finsupp.sum_smul_index]
-     · simp only [mul_smul,Finsupp.sum, ←Finset.smul_sum]
+     · simp only [mul_smul,Finsupp.sum,←Finset.smul_sum]
      intro;simp only [zero_smul]
    · intro;simp only [zero_smul]
    · intros;simp only [add_smul]
@@ -71,7 +70,7 @@ lemma finite_of_free_aux (I) [DecidableEq I] (b:Basis I R S)
    simpa only [Finsupp.linearCombination_apply,Finsupp.sum] using b.linearCombination_repr
  simp only [a] at h₁
  simp_rw [map_finsuppSum,map_smul,h₁,Finsupp.sum,Finset.sum_comm (t:=f.support),
-   TensorProduct.smul_tmul', ←TensorProduct.sum_tmul, ←Finset.smul_sum,h₂]
+   TensorProduct.smul_tmul',←TensorProduct.sum_tmul,←Finset.smul_sum,h₂]
  apply Finset.sum_congr rfl
  intro i hi
  apply Finset.sum_subset_zero_on_sdiff
@@ -90,7 +89,7 @@ lemma one_tmul_sub_tmul_one_mul_elem
  (iff_exists_tensorProduct.mp inferInstance).choose_spec.1 s
 lemma one_tmul_mul_elem
    (s:S):(1 ⊗ₜ s)*elem R S=(s ⊗ₜ 1)*elem R S:=by
- rw [←sub_eq_zero, ←sub_mul,one_tmul_sub_tmul_one_mul_elem]
+ rw [←sub_eq_zero,←sub_mul,one_tmul_sub_tmul_one_mul_elem]
 lemma lmul_elem:
    TensorProduct.lmul' R (elem R S)=1:=
  (iff_exists_tensorProduct.mp inferInstance).choose_spec.2
@@ -110,7 +109,7 @@ lemma finite_of_free [Module.Free R S]:Module.Finite R S:=by
  use Finset.image₂ (fun i j↦f i*b j) f.support f.support
  rw [←top_le_iff]
  rintro x-
- let a:I → I →₀ R:=fun i↦b.repr (b i*x)
+ let a:I→I →₀ R:=fun i↦b.repr (b i*x)
  let F:I →₀ I →₀ R:=Finsupp.onFinset f.support (fun j↦b.repr (x*f j))
    (fun j↦not_imp_comm.mp fun hj↦by simp [Finsupp.notMem_support_iff.mp hj])
  have hG:∀ j∉(Finset.biUnion f.support fun i↦(a i).support),
@@ -137,7 +136,7 @@ lemma finite_of_free [Module.Free R S]:Module.Finite R S:=by
      simpa [Finsupp.linearCombination_apply,Finsupp.sum_uncurry_index]
    have:∀ i,((b.repr (x*f i)).sum fun j k↦k • b j ⊗ₜ[R] b i)=(x*f i) ⊗ₜ[R] b i:=by
      intro i
-     simp_rw [Finsupp.sum,TensorProduct.smul_tmul', ←TensorProduct.sum_tmul]
+     simp_rw [Finsupp.sum,TensorProduct.smul_tmul',←TensorProduct.sum_tmul]
      congr 1
      exact b.linearCombination_repr _
    rw [Finsupp.onFinset_sum,Finsupp.onFinset_sum]
@@ -151,8 +150,8 @@ lemma finite_of_free [Module.Free R S]:Module.Finite R S:=by
    intro j
    apply b.repr.injective
    exact DFunLike.congr_fun this j
- rw [←mul_one x, ←@lmul_elem R,hf,map_finsuppSum,Finsupp.sum,Finset.mul_sum]
- simp only [TensorProduct.lmul'_apply_tmul,Finset.coe_image₂, ←mul_assoc,this,
+ rw [←mul_one x,←@lmul_elem R,hf,map_finsuppSum,Finsupp.sum,Finset.mul_sum]
+ simp only [TensorProduct.lmul'_apply_tmul,Finset.coe_image₂,←mul_assoc,this,
    Finsupp.sum,Finset.sum_mul,smul_mul_assoc]
  apply Submodule.sum_mem;intro i hi
  apply Submodule.sum_mem;intro j hj

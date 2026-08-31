@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EZ
 namespace ProximityPrize.SubmissionLower.RCN155
 open RCN238
@@ -9,13 +8,13 @@ variable {K ι:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq ι:=Classical.decEq ι
 theorem exists_common_affine_nodal_residual_family
-   (I:Finset ι) (x u0 u1:ι → K)
+   (I:Finset ι) (x u0 u1:ι→K)
    (w:ℕ) (hIw:I.card ≤ w) (hinj:Set.InjOn x I)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
    (hvalues:∀ gamma∈Gamma,∀ i∈I,
      (selected gamma).eval (x i)=u0 i+gamma*u1 i):
-   ∃ P0 P1:Polynomial K,∃ residual:K → Polynomial K,
+   ∃ P0 P1:Polynomial K,∃ residual:K→Polynomial K,
      P0.natDegree ≤ w∧P1.natDegree ≤ w∧
      (∀ gamma∈Gamma,(residual gamma).natDegree ≤ w-I.card)∧
      ∀ gamma∈Gamma,
@@ -25,7 +24,7 @@ theorem exists_common_affine_nodal_residual_family
  let P0:Polynomial K:=Lagrange.interpolate I x u0
  let P1:Polynomial K:=Lagrange.interpolate I x u1
  let V:Polynomial K:=Lagrange.nodal I x
- let D:K → Polynomial K:=fun gamma↦
+ let D:K→Polynomial K:=fun gamma↦
    selected gamma-(P0+Polynomial.C gamma*P1)
  have hpredw:I.card-1 ≤ w:=(Nat.sub_le I.card 1).trans hIw
  have hP0:P0.natDegree ≤ w:=by
@@ -51,11 +50,11 @@ theorem exists_common_affine_nodal_residual_family
      Lagrange.eval_interpolate_at_node u1 hinj hi,
      hvalues gamma hgamma i hi]
    ring
- have hdvd:∀ gamma,gamma∈Gamma → V∣D gamma:=by
+ have hdvd:∀ gamma,gamma∈Gamma→V∣D gamma:=by
    intro gamma hgamma
    exact nodal_dvd_of_eval_eq_zero I x hinj (D gamma)
      (hDeval gamma hgamma)
- let residual:K → Polynomial K:=fun gamma↦
+ let residual:K→Polynomial K:=fun gamma↦
    if hgamma:gamma∈Gamma then (hdvd gamma hgamma).choose else 0
  have hfactor:∀ gamma∈Gamma,
      D gamma=V*residual gamma:=by
@@ -85,15 +84,15 @@ theorem exists_common_affine_nodal_residual_family
    V*residual gamma at hf
  linear_combination hf
 theorem exists_residual_family_with_incidence_data
-   (I nodes:Finset ι) (x u0 u1:ι → K)
+   (I nodes:Finset ι) (x u0 u1:ι→K)
    (w e:ℕ) (hsub:I ⊆ nodes) (hIw:I.card ≤ w)
    (hinj:Set.InjOn x nodes)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
    (hvalues:∀ gamma∈Gamma,∀ i∈I,
      (selected gamma).eval (x i)=u0 i+gamma*u1 i)
    (hno:NoLargeSelectedPencil selected Gamma w e):
-   ∃ P0 P1:Polynomial K,∃ residual:K → Polynomial K,
+   ∃ P0 P1:Polynomial K,∃ residual:K→Polynomial K,
      P0.natDegree ≤ w∧P1.natDegree ≤ w∧
      (∀ gamma∈Gamma,(residual gamma).natDegree ≤ w-I.card)∧
      NoLargeSelectedPencil residual Gamma (w-I.card) e∧

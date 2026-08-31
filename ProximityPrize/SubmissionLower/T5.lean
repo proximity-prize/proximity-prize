@@ -1,12 +1,11 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T4
 section ProximityFlatProofPort
 universe w u v
 open TensorProduct MvPolynomial
 variable (R:Type u) (S:Type v) (ι:Type w) [CommRing R] [CommRing S] [Algebra R S]
 structure Algebra.Generators where
- val:ι → S
- σ':S → MvPolynomial ι R
+ val:ι→S
+ σ':S→MvPolynomial ι R
  aeval_val_σ':∀ s,aeval val (σ' s)=s
  algebra:Algebra (MvPolynomial ι R) S:=(aeval val).toAlgebra
  algebraMap_eq:
@@ -19,9 +18,9 @@ set_option linter.unusedVariables false in
 protected
 abbrev Ring (P:Generators R S ι):Type (max w u):=MvPolynomial ι R
 instance:Algebra P.Ring S:=P.algebra
-def σ:S → P.Ring:=P.σ'
-def Simps.σ:S → P.Ring:=P.σ
-initialize_simps_projections Algebra.Generators (σ' → σ)
+def σ:S→P.Ring:=P.σ'
+def Simps.σ:S→P.Ring:=P.σ
+initialize_simps_projections Algebra.Generators (σ'→σ)
 @[simp]
 lemma aeval_val_σ (s):aeval P.val (P.σ s)=s:=P.aeval_val_σ' s
 noncomputable instance {R₀} [CommRing R₀] [Algebra R₀ R] [Algebra R₀ S] [IsScalarTower R₀ R S]:
@@ -35,7 +34,7 @@ lemma σ_smul (x y):P.σ x • y=x*y:=by
  rw [Algebra.smul_def,algebraMap_apply,aeval_val_σ]
 lemma σ_injective:P.σ.Injective:=by
  intro x y e
- rw [←P.aeval_val_σ x, ←P.aeval_val_σ y,e]
+ rw [←P.aeval_val_σ x,←P.aeval_val_σ y,e]
 lemma aeval_val_surjective:Function.Surjective (aeval (R:=R) P.val):=
  fun x↦⟨P.σ x,by simp⟩
 lemma algebraMap_surjective:Function.Surjective (algebraMap P.Ring S):=
@@ -43,7 +42,7 @@ lemma algebraMap_surjective:Function.Surjective (algebraMap P.Ring S):=
 section Construction
 @[simps val]
 noncomputable
-def ofSurjective (val:ι → S) (h:Function.Surjective (aeval (R:=R) val)):
+def ofSurjective (val:ι→S) (h:Function.Surjective (aeval (R:=R) val)):
    Generators R S ι where
  val:=val
  σ' x:=(h x).choose
@@ -68,8 +67,8 @@ def ofAlgHom {I:Type*} (f:MvPolynomial I R →ₐ[R] S) (h:Function.Surjective f
  ofSurjective (f ∘ MvPolynomial.X) (by rwa [show aeval (f ∘ MvPolynomial.X)=f by ext;simp])
 noncomputable
 def ofSet {s:Set S} (hs:Algebra.adjoin R s=⊤):Generators R S s:=by
- refine ofSurjective (Subtype.val:s → S) ?_
- rwa [←AlgHom.range_eq_top, ←Algebra.adjoin_range_eq_range_aeval,
+ refine ofSurjective (Subtype.val:s→S) ?_
+ rwa [←AlgHom.range_eq_top,←Algebra.adjoin_range_eq_range_aeval,
    Subtype.range_coe_subtype,Set.setOf_mem_eq]
 variable (R S) in
 @[simps]
@@ -90,7 +89,7 @@ noncomputable def ofAlgEquiv
  val:=e ∘ P.val
  σ':=P.σ ∘ e.symm
  aeval_val_σ' t:=by
-   rw [Function.comp_def, ←AlgHom.coe_coe e, ←MvPolynomial.comp_aeval_apply]
+   rw [Function.comp_def,←AlgHom.coe_coe e,←MvPolynomial.comp_aeval_apply]
    simp
 @[simp]
 lemma ofAlgEquiv_val (P:Generators R S ι) {T:Type*} [CommRing T] [Algebra R T] (e:S ≃ₐ[R] T):
@@ -110,8 +109,8 @@ def localizationAway:Generators R S Unit where
  aeval_val_σ' s:=by
    rw [map_mul,algHom_C,map_pow,aeval_X]
    simp only [←IsLocalization.Away.sec_spec,map_pow,IsLocalization.Away.invSelf]
-   rw [←IsLocalization.mk'_pow,one_pow, ←IsLocalization.mk'_one (M:=Submonoid.powers r) S r]
-   rw [←IsLocalization.mk'_pow,one_pow,mul_assoc, ←IsLocalization.mk'_mul]
+   rw [←IsLocalization.mk'_pow,one_pow,←IsLocalization.mk'_one (M:=Submonoid.powers r) S r]
+   rw [←IsLocalization.mk'_pow,one_pow,mul_assoc,←IsLocalization.mk'_mul]
    rw [mul_one,one_mul,IsLocalization.mk'_pow]
    simp
 end Localization
@@ -125,7 +124,7 @@ def comp [Algebra S T] [IsScalarTower R S T]
    rename .inr (P.σ r)*monomial (n.mapDomain .inl) 1
  aeval_val_σ' s:=by
    have (x:P.Ring):aeval (algebraMap S T ∘ P.val) x=algebraMap S T (aeval P.val x):=by
-     rw [map_aeval,aeval_def,coe_eval₂Hom, ←IsScalarTower.algebraMap_eq,Function.comp_def]
+     rw [map_aeval,aeval_def,coe_eval₂Hom,←IsScalarTower.algebraMap_eq,Function.comp_def]
    conv_rhs => rw [←Q.aeval_val_σ s,(Q.σ s).as_sum]
    simp [aeval_rename,this,aeval_monomial,Finsupp.prod_mapDomain_index_inj Sum.inl_injective,
      Finsupp.sum,MvPolynomial.finsupp_support_eq_support,MvPolynomial.coeff]
@@ -136,7 +135,7 @@ def extendScalars [Algebra S T] [IsScalarTower R S T] (P:Generators R T ι):
    Generators S T ι where
  val:=P.val
  σ' x:=map (algebraMap R S) (P.σ x)
- aeval_val_σ' s:=by simp [@aeval_def S, ←IsScalarTower.algebraMap_eq, ←@aeval_def R]
+ aeval_val_σ' s:=by simp [@aeval_def S,←IsScalarTower.algebraMap_eq,←@aeval_def R]
 @[simps! val]
 noncomputable
 def baseChange (T) [CommRing T] [Algebra R T] (P:Generators R S ι):
@@ -193,15 +192,15 @@ lemma baseChangeToBaseChange_apply (x:(baseChange T P).toExtension.Ring):
    dsimp% (P.baseChangeToBaseChange T).toRingHom x=
      (MvPolynomial.algebraTensorAlgEquiv R T).symm x:=
  rfl
-noncomputable def extend (P:Generators R S ι) (b:ι' → S):Generators R S (ι ⊕ ι'):=
+noncomputable def extend (P:Generators R S ι) (b:ι'→S):Generators R S (ι ⊕ ι'):=
  .ofSurjective (Sum.elim P.val b) fun s↦by
    use rename Sum.inl (P.σ s)
    simp [aeval_rename]
 @[simp]
-lemma extend_val_inl (P:Generators R S ι) (b:ι' → S) (i:ι):
+lemma extend_val_inl (P:Generators R S ι) (b:ι'→S) (i:ι):
    (P.extend b).val (.inl i)=P.val i:=rfl
 @[simp]
-lemma extend_val_inr (P:Generators R S ι) (b:ι' → S) (i:ι'):
+lemma extend_val_inr (P:Generators R S ι) (b:ι'→S) (i:ι'):
    (P.extend b).val (.inr i)=b i:=rfl
 noncomputable def reindex (P:Generators R S ι') (e:ι ≃ ι'):
    Generators R S ι where
@@ -216,18 +215,18 @@ lemma reindex_val (P:Generators R S ι') (e:ι ≃ ι'):
  rfl
 section
 variable {σ:Type*} {I:Ideal (MvPolynomial σ R)}
- (s:MvPolynomial σ R ⧸ I → MvPolynomial σ R)
+ (s:MvPolynomial σ R ⧸ I→MvPolynomial σ R)
  (hs:∀ x,Ideal.Quotient.mk _ (s x)=x)
 @[simps val]
 noncomputable
-def naive (s:MvPolynomial σ R ⧸ I → MvPolynomial σ R:=
+def naive (s:MvPolynomial σ R ⧸ I→MvPolynomial σ R:=
      Function.surjInv Ideal.Quotient.mk_surjective)
    (hs:∀ x,Ideal.Quotient.mk _ (s x)=x:=by apply Function.surjInv_eq):
    Generators R (MvPolynomial σ R ⧸ I) σ where
  val i:=Ideal.Quotient.mk _ (MvPolynomial.X i)
  σ':=s
  aeval_val_σ' x:=by
-   conv_rhs => rw [←hs x, ←Ideal.Quotient.mkₐ_eq_mk R,aeval_unique (Ideal.Quotient.mkₐ _ I)]
+   conv_rhs => rw [←hs x,←Ideal.Quotient.mkₐ_eq_mk R,aeval_unique (Ideal.Quotient.mkₐ _ I)]
    simp [Function.comp_def]
  algebra:=inferInstance
  algebraMap_eq:=by ext x <;> simp [IsScalarTower.algebraMap_apply R (MvPolynomial σ R)]
@@ -236,7 +235,7 @@ end
 lemma finiteType {α:Type*} [Finite α] (P:Generators R S α):FiniteType R S:=
  .of_surjective (IsScalarTower.toAlgHom R P.Ring S) P.algebraMap_surjective
 lemma _root_.Algebra.FiniteType.iff_exists_generators:
-   FiniteType R S ↔ ∃ (n:ℕ),Nonempty (Generators R S (Fin n)):=by
+   FiniteType R S↔∃ (n:ℕ),Nonempty (Generators R S (Fin n)):=by
  refine ⟨fun h↦?_,fun ⟨n,⟨P⟩⟩↦P.finiteType⟩
  obtain ⟨n,f,hf⟩:=Algebra.FiniteType.iff_quotient_mvPolynomial''.mp h
  exact ⟨n,⟨.ofSurjective (fun i↦f (MvPolynomial.X i)) <| by rwa [aeval_unique f] at hf⟩⟩
@@ -250,7 +249,7 @@ variable [Algebra R R'] [Algebra R' R''] [Algebra R' S'']
 variable [Algebra S S'] [Algebra S' S''] [Algebra S S'']
 @[ext]
 structure Hom where
- val:ι → P'.Ring
+ val:ι→P'.Ring
  aeval_val:∀ i,aeval P'.val (val i)=algebraMap S S' (P.val i)
 attribute [simp] Hom.aeval_val
 variable {P P'}
@@ -302,7 +301,7 @@ noncomputable def Hom.comp [IsScalarTower R' R'' S''] [IsScalarTower R' S' S'']
    [IsScalarTower S S' S''] (f:Hom P' P'') (g:Hom P P'):Hom P P'' where
  val x:=aeval f.val (g.val x)
  aeval_val x:=by
-   rw [IsScalarTower.algebraMap_apply S S' S'', ←g.aeval_val]
+   rw [IsScalarTower.algebraMap_apply S S' S'',←g.aeval_val]
    induction g.val x using MvPolynomial.induction_on with
    | C r => simp [←IsScalarTower.algebraMap_apply]
    | add x y hx hy => simp only [map_add,hx,hy]
@@ -345,7 +344,7 @@ lemma ofComp_toAlgHom_monomial_sumElim (Q:Generators S T ι') (P:Generators R S 
  rw [Hom.toAlgHom_monomial,monomial_eq]
  simp only [ofComp_val,aeval_monomial]
  rw [Finsupp.prod_sumElim]
- simp only [Function.comp_def,Sum.elim_inl,Sum.elim_inr, ←map_pow, ←map_finsuppProd,
+ simp only [Function.comp_def,Sum.elim_inl,Sum.elim_inr,←map_pow,←map_finsuppProd,
    C_mul,Algebra.smul_def,MvPolynomial.algebraMap_apply,mul_assoc]
  nth_rw 2 [mul_comm]
 lemma toComp_toAlgHom_monomial (Q:Generators S T ι') (P:Generators R S ι) (j a):
@@ -371,7 +370,7 @@ lemma toAlgHom_ofComp_surjective (Q:Generators S T ι') (P:Generators R S ι):
      use MvPolynomial.rename Sum.inr (P.σ a)
      simp only [Hom.toAlgHom,ofComp,Generators.comp,MvPolynomial.aeval_rename,
        Sum.elim_comp_inr]
-     simp_rw [Function.comp_def, ←MvPolynomial.algebraMap_eq, ←IsScalarTower.toAlgHom_apply R,
+     simp_rw [Function.comp_def,←MvPolynomial.algebraMap_eq,←IsScalarTower.toAlgHom_apply R,
        ←MvPolynomial.comp_aeval]
      simp
  | add p q hp hq =>
@@ -425,7 +424,7 @@ lemma ker_mvPolynomial:(mvPolynomial R ι).ker=⊥:=by
 variable {P} in
 lemma aeval_val_eq_zero {x} (hx:x∈P.ker):aeval P.val x=0:=by rwa [←algebraMap_apply]
 lemma ker_naive {σ:Type*} {I:Ideal (MvPolynomial σ R)}
-   (s:MvPolynomial σ R ⧸ I → MvPolynomial σ R) (hs:∀ x,Ideal.Quotient.mk _ (s x)=x):
+   (s:MvPolynomial σ R ⧸ I→MvPolynomial σ R) (hs:∀ x,Ideal.Quotient.mk _ (s x)=x):
    (Generators.naive s hs).ker=I:=
  I.mk_ker
 set_option backward.defeqAttrib.useBackward true in
@@ -439,9 +438,9 @@ lemma ker_ofAlgHom {I:Type*} (f:MvPolynomial I R →ₐ[R] S) (h:Function.Surjec
 @[simp]
 lemma ker_ofAlgEquiv (P:Generators R S ι) {T:Type*} [CommRing T] [Algebra R T] (e:S ≃ₐ[R] T):
    (P.ofAlgEquiv e).ker=P.ker:=by
- rw [ker_eq_ker_aeval_val,ofAlgEquiv_val,Function.comp_def, ←AlgHom.coe_coe,
-   ←MvPolynomial.comp_aeval, ←AlgHom.comap_ker, ←RingHom.ker_coe_toRingHom,
-   AlgHomClass.toRingHom_toAlgHom,AlgHom.ker_coe_equiv, ←RingHom.ker_eq_comap_bot,
+ rw [ker_eq_ker_aeval_val,ofAlgEquiv_val,Function.comp_def,←AlgHom.coe_coe,
+   ←MvPolynomial.comp_aeval,←AlgHom.comap_ker,←RingHom.ker_coe_toRingHom,
+   AlgHomClass.toRingHom_toAlgHom,AlgHom.ker_coe_equiv,←RingHom.ker_eq_comap_bot,
    ←ker_eq_ker_aeval_val]
 lemma map_toComp_ker (Q:Generators S T ι') (P:Generators R S ι):
    P.ker.map (Q.toComp P).toAlgHom=RingHom.ker (Q.ofComp P).toAlgHom:=by
@@ -452,7 +451,7 @@ lemma map_toComp_ker (Q:Generators S T ι') (P:Generators R S ι):
    have:(Q.ofComp P).toAlgHom.comp (Q.toComp P).toAlgHom=IsScalarTower.toAlgHom R _ _:=by
      ext1;simp
    simp only [Ideal.mem_comap,
-     RingHom.mem_ker, ←AlgHom.comp_apply,this,IsScalarTower.toAlgHom_apply]
+     RingHom.mem_ker,←AlgHom.comp_apply,this,IsScalarTower.toAlgHom_apply]
    rw [IsScalarTower.algebraMap_apply P.Ring S,hx,map_zero]
  · rintro x (h₂:(Q.ofComp P).toAlgHom x=0)
    let e:(ι' ⊕ ι →₀ ℕ) ≃+(ι' →₀ ℕ) × (ι →₀ ℕ):=
@@ -475,11 +474,11 @@ lemma map_toComp_ker (Q:Generators S T ι') (P:Generators R S ι):
        toComp_toAlgHom_monomial ..
      simp only [AlgHom.toRingHom_eq_coe,RingHom.coe_coe,
          this]
-     rw [monomial_mul, ←map_add,Prod.mk_add_mk,add_zero,zero_add,one_mul]
+     rw [monomial_mul,←map_add,Prod.mk_add_mk,add_zero,zero_add,one_mul]
    · apply Ideal.mul_mem_left
      refine Ideal.mem_map_of_mem _ ?_
      simp only [ker_eq_ker_aeval_val,AddEquiv.toEquiv_eq_coe,RingHom.mem_ker,map_sum]
-     rw [←coeff_zero i, ←h₂]
+     rw [←coeff_zero i,←h₂]
      clear h₂ hi
      have (x:(Q.comp P).Ring):(Function.support fun a↦if a.1=i then aeval P.val
          (monomial a.2 (coeff (e.symm a) x)) else 0) ⊆ SetLike.coe ((support x).map e):=by
@@ -487,16 +486,16 @@ lemma map_toComp_ker (Q:Generators S T ι') (P:Generators R S ι):
        intro j
        obtain ⟨j,rfl⟩:=e.surjective j
        simp_all
-     rw [Finset.sum_filter, ←finsum_eq_sum_of_support_subset _ (this x)]
+     rw [Finset.sum_filter,←finsum_eq_sum_of_support_subset _ (this x)]
      induction x using MvPolynomial.induction_on' with
      | monomial v a =>
-       rw [finsum_eq_sum_of_support_subset _ (this _), ←Finset.sum_filter]
+       rw [finsum_eq_sum_of_support_subset _ (this _),←Finset.sum_filter]
        obtain ⟨v,rfl⟩:=e.symm.surjective v
        conv_rhs => simp only [e,Finsupp.sumFinsuppAddEquivProdFinsupp,
          Finsupp.sumFinsuppEquivProdFinsupp,AddEquiv.symm_mk,AddEquiv.coe_mk,
          Equiv.coe_fn_symm_mk,ofComp_toAlgHom_monomial_sumElim]
        classical
-       simp only [coeff_monomial, ←e.injective.eq_iff,
+       simp only [coeff_monomial,←e.injective.eq_iff,
          map_zero,AddEquiv.apply_symm_apply,apply_ite]
        rw [←apply_ite,Finset.sum_ite_eq]
        simp only [Finset.mem_filter,Finset.mem_map_equiv,AddEquiv.coe_toEquiv_symm,
@@ -519,12 +518,12 @@ def kerCompPreimage (Q:Generators S T ι') (P:Generators R S ι) (x:Q.ker):
    refine rename ?_ (P.σ r)*monomial ?_ 1
    exacts [Sum.inr,n.mapDomain Sum.inl]
  · simp only [ker_eq_ker_aeval_val,RingHom.mem_ker]
-   conv_rhs => rw [←aeval_val_eq_zero x.2, ←x.1.support_sum_monomial_coeff]
+   conv_rhs => rw [←aeval_val_eq_zero x.2,←x.1.support_sum_monomial_coeff]
    simp only [Finsupp.sum,map_sum,map_mul,aeval_rename,Function.comp_def,comp_val,
      Sum.elim_inr,aeval_monomial,map_one,Finsupp.prod_mapDomain_index_inj Sum.inl_injective,
      Sum.elim_inl,one_mul]
    congr! with v i
-   simp_rw [←IsScalarTower.toAlgHom_apply R, ←comp_aeval,AlgHom.comp_apply,P.aeval_val_σ,
+   simp_rw [←IsScalarTower.toAlgHom_apply R,←comp_aeval,AlgHom.comp_apply,P.aeval_val_σ,
      coeff]
 lemma ofComp_kerCompPreimage (Q:Generators S T ι') (P:Generators R S ι) (x:Q.ker):
    (Q.ofComp P).toAlgHom (kerCompPreimage Q P x)=x:=by
@@ -533,12 +532,12 @@ lemma ofComp_kerCompPreimage (Q:Generators S T ι') (P:Generators R S ι) (x:Q.k
  refine Finset.sum_congr rfl fun j _↦?_
  simp only [map_mul,Hom.toAlgHom_monomial]
  rw [one_smul,Finsupp.prod_mapDomain_index_inj Sum.inl_injective]
- rw [rename_eq_aeval, ←AlgHom.comp_apply,comp_aeval]
+ rw [rename_eq_aeval,←AlgHom.comp_apply,comp_aeval]
  simp only [ofComp_val,Sum.elim_inr,Function.comp_apply,
    Sum.elim_inl,monomial_eq,Hom.toAlgHom_X]
  congr 1
- rw [aeval_def,IsScalarTower.algebraMap_eq R S, ←MvPolynomial.algebraMap_eq,
-   ←coe_eval₂Hom, ←map_aeval,P.aeval_val_σ]
+ rw [aeval_def,IsScalarTower.algebraMap_eq R S,←MvPolynomial.algebraMap_eq,
+   ←coe_eval₂Hom,←map_aeval,P.aeval_val_σ]
  simp [coeff]
 lemma map_ofComp_ker (Q:Generators S T ι') (P:Generators R S ι):
    Ideal.map (Q.ofComp P).toAlgHom (Q.comp P).ker=Q.ker:=by
@@ -556,7 +555,7 @@ lemma ker_comp_eq_sup (Q:Generators S T ι') (P:Generators R S ι):
      Ideal.map (Q.toComp P).toAlgHom P.ker ⊔ Ideal.comap (Q.ofComp P).toAlgHom Q.ker:=by
  rw [←map_ofComp_ker Q P,
    Ideal.comap_map_of_surjective _ (toAlgHom_ofComp_surjective Q P)]
- rw [←sup_assoc,Algebra.Generators.map_toComp_ker, ←RingHom.ker_eq_comap_bot]
+ rw [←sup_assoc,Algebra.Generators.map_toComp_ker,←RingHom.ker_eq_comap_bot]
  apply le_antisymm (le_trans le_sup_right le_sup_left)
  simp only [le_sup_left,sup_of_le_left,sup_le_iff,le_refl,and_true]
  intro x hx

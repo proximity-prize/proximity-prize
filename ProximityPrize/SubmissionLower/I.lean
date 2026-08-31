@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BR
 import ProximityPrize.SubmissionLower.Z2
 import ProximityPrize.SubmissionLower.D5
@@ -17,9 +16,9 @@ noncomputable section
 variable {Omega:Type} [Field Omega]
 variable {G T H:MvPolynomial (Fin 3) Omega}
 structure PrimeFlagBudgetFamily (p q:FlagDegree) where
- zCost:RegularComponent Omega G T H → ℕ
- yzCost:RegularComponent Omega G T H → ℕ
- allCost:RegularComponent Omega G T H → ℕ
+ zCost:RegularComponent Omega G T H→ℕ
+ yzCost:RegularComponent Omega G T H→ℕ
+ allCost:RegularComponent Omega G T H→ℕ
  primeBudget:∀ C:RegularComponent Omega G T H,
    PrimeFlagZeroBudget C.1 (fun r↦
      r.zOnly*zCost C+r.yz*yzCost C+r.all*allCost C)

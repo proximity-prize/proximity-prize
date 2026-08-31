@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F8
 import ProximityPrize.SubmissionLower.IM
 section ProximityFlatProofPort
@@ -56,7 +55,7 @@ def galLift (σ:B →ₐ[A] B₂):L →ₐ[K] L₂:=
  haveI H_eq:(IsLocalization.lift (S:=L) H).comp (algebraMap K L)=(algebraMap K L₂):=by
    apply IsLocalization.ringHom_ext A⁰
    ext
-   simp only [RingHom.coe_comp,Function.comp_apply, ←IsScalarTower.algebraMap_apply A K L,
+   simp only [RingHom.coe_comp,Function.comp_apply,←IsScalarTower.algebraMap_apply A K L,
      ←IsScalarTower.algebraMap_apply A K L₂,
      IsScalarTower.algebraMap_apply A B L,IsScalarTower.algebraMap_apply A B₂ L₂,
      IsLocalization.lift_eq,RingHom.coe_coe,AlgHom.commutes]
@@ -259,9 +258,9 @@ lemma Algebra.intTrace_eq_of_isLocalization
    apply IsScalarTower.of_algebraMap_eq'
    apply IsLocalization.ringHom_ext M
    rw [RingHom.algebraMap_toAlgebra,RingHom.algebraMap_toAlgebra (R:=Bₘ),RingHom.comp_assoc,
-     RingHom.comp_assoc, ←IsScalarTower.algebraMap_eq,IsScalarTower.algebraMap_eq A B Bₘ,
-     IsLocalization.map_comp,RingHom.comp_id, ←RingHom.comp_assoc,IsLocalization.map_comp,
-     RingHom.comp_id, ←IsScalarTower.algebraMap_eq, ←IsScalarTower.algebraMap_eq]
+     RingHom.comp_assoc,←IsScalarTower.algebraMap_eq,IsScalarTower.algebraMap_eq A B Bₘ,
+     IsLocalization.map_comp,RingHom.comp_id,←RingHom.comp_assoc,IsLocalization.map_comp,
+     RingHom.comp_id,←IsScalarTower.algebraMap_eq,←IsScalarTower.algebraMap_eq]
  letI:=IsFractionRing.isFractionRing_of_isDomain_of_isLocalization
    (algebraMapSubmonoid B M) Bₘ L
  have:FiniteDimensional K L:=.of_isLocalization A B A⁰
@@ -269,7 +268,7 @@ lemma Algebra.intTrace_eq_of_isLocalization
    IsIntegralClosure.of_isIntegrallyClosed _ _ _
  apply IsFractionRing.injective Aₘ K
  rw [←IsScalarTower.algebraMap_apply,Algebra.algebraMap_intTrace_fractionRing,
-   Algebra.algebraMap_intTrace (L:=L), ←IsScalarTower.algebraMap_apply]
+   Algebra.algebraMap_intTrace (L:=L),←IsScalarTower.algebraMap_apply]
 end trace
 section norm
 variable [IsIntegrallyClosed A]
@@ -343,12 +342,12 @@ theorem Algebra.intNorm_map_algEquiv [IsDomain B₂] [IsIntegrallyClosed B₂] [
    ←galLiftEquiv_algebraMap_apply (FractionRing A) (FractionRing B),norm_eq_of_algEquiv]
 @[simp]
 lemma Algebra.intNorm_eq_zero [FiniteDimensional (FractionRing A) (FractionRing B)] {x:B}:
-   Algebra.intNorm A B x=0 ↔ x=0:=by
+   Algebra.intNorm A B x=0↔x=0:=by
  rw [←(IsFractionRing.injective A (FractionRing A)).eq_iff,
    ←(IsFractionRing.injective B (FractionRing B)).eq_iff]
  simp only [algebraMap_intNorm_fractionRing,map_zero,norm_eq_zero_iff]
 lemma Algebra.intNorm_ne_zero [FiniteDimensional (FractionRing A) (FractionRing B)] {x:B}:
-   Algebra.intNorm A B x≠0 ↔ x≠0:=by simp
+   Algebra.intNorm A B x≠0↔x≠0:=by simp
 variable [IsDomain Aₘ] [IsIntegrallyClosed Aₘ] [IsDomain Bₘ] [IsIntegrallyClosed Bₘ]
 variable [IsTorsionFree Aₘ Bₘ] [Algebra.IsIntegral Aₘ Bₘ]
 include M in
@@ -377,16 +376,16 @@ lemma Algebra.intNorm_eq_of_isLocalization [FiniteDimensional (FractionRing A) (
    apply IsScalarTower.of_algebraMap_eq'
    apply IsLocalization.ringHom_ext M
    rw [RingHom.algebraMap_toAlgebra,RingHom.algebraMap_toAlgebra (R:=Bₘ),RingHom.comp_assoc,
-     RingHom.comp_assoc, ←IsScalarTower.algebraMap_eq,IsScalarTower.algebraMap_eq A B Bₘ,
-     IsLocalization.map_comp,RingHom.comp_id, ←RingHom.comp_assoc,IsLocalization.map_comp,
-     RingHom.comp_id, ←IsScalarTower.algebraMap_eq, ←IsScalarTower.algebraMap_eq]
+     RingHom.comp_assoc,←IsScalarTower.algebraMap_eq,IsScalarTower.algebraMap_eq A B Bₘ,
+     IsLocalization.map_comp,RingHom.comp_id,←RingHom.comp_assoc,IsLocalization.map_comp,
+     RingHom.comp_id,←IsScalarTower.algebraMap_eq,←IsScalarTower.algebraMap_eq]
  letI:=IsFractionRing.isFractionRing_of_isDomain_of_isLocalization
    (algebraMapSubmonoid B M) Bₘ L
  have:IsIntegralClosure Bₘ Aₘ L:=
    IsIntegralClosure.of_isIntegrallyClosed _ _ _
  apply IsFractionRing.injective Aₘ K
  rw [←IsScalarTower.algebraMap_apply,Algebra.algebraMap_intNorm_fractionRing,
-   Algebra.algebraMap_intNorm (L:=L), ←IsScalarTower.algebraMap_apply]
+   Algebra.algebraMap_intNorm (L:=L),←IsScalarTower.algebraMap_apply]
 end norm
 variable [IsDomain A] [IsIntegrallyClosed A] [IsDomain B] [IsIntegrallyClosed B]
  [Module.Finite A B] [IsTorsionFree A B]
@@ -415,11 +414,11 @@ theorem Algebra.dvd_algebraMap_intNorm_self (x:B):x∣algebraMap A B (intNorm A 
    exact (map_ne_zero_iff _ (FaithfulSMul.algebraMap_injective B L)).mpr hx
  rw [←isIntegral_algHom_iff (toAlgHom A L E)
    (FaithfulSMul.algebraMap_injective L E),coe_toAlgHom',map_mul,map_inv₀,
-   algebraMap_apply A K L,algebraMap_intNorm (L:=L), ←algebraMap_apply, ←algebraMap_apply,
-   norm_eq_prod_roots _ (IsAlgClosed.splits _), ←Multiset.prod_erase
+   algebraMap_apply A K L,algebraMap_intNorm (L:=L),←algebraMap_apply,←algebraMap_apply,
+   norm_eq_prod_roots _ (IsAlgClosed.splits _),←Multiset.prod_erase
    (a:=algebraMap B E x)]
  · have:=IsTorsionFree.trans_faithfulSMul B L E
-   rw [mul_pow, ←mul_pow_sub_one (Nat.pos_iff_ne_zero.1 Module.finrank_pos) (algebraMap B E x),
+   rw [mul_pow,←mul_pow_sub_one (Nat.pos_iff_ne_zero.1 Module.finrank_pos) (algebraMap B E x),
      mul_assoc,inv_mul_cancel_left₀]
    · refine IsIntegral.mul (IsIntegral.pow ?_ _)
        (IsIntegral.pow (IsIntegral.multiset_prod (fun a ha↦⟨minpoly A x,minpoly.monic

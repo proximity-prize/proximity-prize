@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.N5
 import ProximityPrize.SubmissionLower.V
 import ProximityPrize.SubmissionLower.BW
@@ -24,41 +23,41 @@ abbrev RegularIndex (Q:MvPolynomial (Fin 4) K):=
 abbrev ImplicitIndex (Q:MvPolynomial (Fin 4) K):=
  ↥(implicitPairSet (singularAuxiliary Q))
 def regularPairSeeds (Q T:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (F:RegularIndex Q):Finset K:=
  Gamma.filter fun gamma↦
    RegularSolution F.1 (selected gamma) gamma∧
      specialization K (selected gamma) gamma T=0
 def implicitSeeds (Q:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (q:ImplicitIndex Q):Finset K:=
  Gamma.filter fun gamma↦LiftedSolutionPair q.1 (selected gamma) gamma
 def singularSeeds (Q:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K):Finset K:=
+   (selected:K→Polynomial K) (Gamma:Finset K):Finset K:=
  Finset.univ.biUnion (implicitSeeds Q selected Gamma) ∪
    exceptionalSeeds (singularAuxiliary Q) Gamma selected
 theorem regularPairSeeds_subset (Q T:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K) (F:RegularIndex Q):
+   (selected:K→Polynomial K) (Gamma:Finset K) (F:RegularIndex Q):
    regularPairSeeds Q T selected Gamma F ⊆ Gamma:=
  Finset.filter_subset _ _
 theorem implicitSeeds_subset (Q:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K) (q:ImplicitIndex Q):
+   (selected:K→Polynomial K) (Gamma:Finset K) (q:ImplicitIndex Q):
    implicitSeeds Q selected Gamma q ⊆ Gamma:=
  Finset.filter_subset _ _
 theorem regularPairSeeds_data (Q T:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K) (F:RegularIndex Q)
+   (selected:K→Polynomial K) (Gamma:Finset K) (F:RegularIndex Q)
    (gamma:K) (hgamma:gamma∈regularPairSeeds Q T selected Gamma F):
    RegularSolution F.1 (selected gamma) gamma∧
      specialization K (selected gamma) gamma T=0:=
  (Finset.mem_filter.mp hgamma).2
 theorem implicitSeeds_data (Q:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K) (q:ImplicitIndex Q)
+   (selected:K→Polynomial K) (Gamma:Finset K) (q:ImplicitIndex Q)
    (gamma:K) (hgamma:gamma∈implicitSeeds Q selected Gamma q):
    LiftedSolutionPair q.1 (selected gamma) gamma:=
  (Finset.mem_filter.mp hgamma).2
 theorem singularSeeds_card_le_sum
    (Q:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K):
+   (selected:K→Polynomial K) (Gamma:Finset K):
    (singularSeeds Q selected Gamma).card ≤
      (∑ q:ImplicitIndex Q,(implicitSeeds Q selected Gamma q).card)+
        (exceptionalSeeds (singularAuxiliary Q) Gamma selected).card:=by
@@ -67,11 +66,11 @@ theorem singularSeeds_card_le_sum
 theorem card_le_regular_sum_add_singular
    (Q T:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    (D w L s p:ℕ) [CharP K p]
-   (hs:1 ≤ s) (hsmall:s < p) (hw:1 ≤ w)
-   (hDw:w < (2*s-1)*D)
-   (hj:1 ≤ (2*s-1)*L) (hjSmall:(2*s-1)*L < p)
+   (hs:1 ≤ s) (hsmall:s<p) (hw:1 ≤ w)
+   (hDw:w<(2*s-1)*D)
+   (hj:1 ≤ (2*s-1)*L) (hjSmall:(2*s-1)*L<p)
    (hbox:Q∈globalCoefficientBox K D w L s)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hQsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0)
    (hTsolution:∀ gamma∈Gamma,
@@ -119,7 +118,7 @@ theorem geometricFactor_not_dvd_second
  obtain ⟨hFirr,_hFdiv,hFRpos⟩:=positiveRFactors_spec Q F.1 F.2
  obtain ⟨hgirred,hgdiv⟩:=
    surfaceFactors_spec (polynomialEmbedding K) F.1 g hg
- have hpos:0 < F.1.degreeOf 1+F.1.degreeOf 2+F.1.degreeOf 3:=by
+ have hpos:0<F.1.degreeOf 1+F.1.degreeOf 2+F.1.degreeOf 3:=by
    omega
  have hgeo:g∣geometricSurfaceMap K (GenericField K) F.1:=by
    simpa only [canonical_geometricSurfaceMap] using hgdiv
@@ -133,7 +132,7 @@ def regularVector (P:UnequalParameters)
  ⟨F.degreeOf 2*P.rightZ+F.degreeOf 3*P.rightR,
    F.degreeOf 1*P.rightZ+F.degreeOf 3*P.rightY,
    F.degreeOf 1*P.rightR+F.degreeOf 2*P.rightY⟩
-def regularCapAt (v:RCN223.DegreeVector):Fin 3 → ℕ:=
+def regularCapAt (v:RCN223.DegreeVector):Fin 3→ℕ:=
  ![v.y,v.r,v.z]
 theorem sum_coordinateMixedDegree_geometricFactors_le
    (P:UnequalParameters) (F T:MvPolynomial (Fin 4) K) (hF:F≠0)
@@ -167,7 +166,7 @@ theorem sum_coordinateMixedDegree_geometricFactors_le
        ((surfaceMap (polynomialEmbedding K) T).degreeOf 1*geom.1.degreeOf 2+
          geom.1.degreeOf 1*(surfaceMap (polynomialEmbedding K) T).degreeOf 2)) ≤
        F.degreeOf 2*P.rightZ+F.degreeOf 3*P.rightR
-   rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.sum_mul]
+   rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.sum_mul]
    simpa only [Nat.add_comm,Nat.mul_comm] using
      Nat.add_le_add (Nat.mul_le_mul hT1 hsum2)
        (Nat.mul_le_mul hsum1 hT2)
@@ -175,7 +174,7 @@ theorem sum_coordinateMixedDegree_geometricFactors_le
        ((surfaceMap (polynomialEmbedding K) T).degreeOf 0*geom.1.degreeOf 2+
          geom.1.degreeOf 0*(surfaceMap (polynomialEmbedding K) T).degreeOf 2)) ≤
        F.degreeOf 1*P.rightZ+F.degreeOf 3*P.rightY
-   rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.sum_mul]
+   rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.sum_mul]
    simpa only [Nat.add_comm,Nat.mul_comm] using
      Nat.add_le_add (Nat.mul_le_mul hT0 hsum2)
        (Nat.mul_le_mul hsum0 hT2)
@@ -185,7 +184,7 @@ theorem sum_coordinateMixedDegree_geometricFactors_le
        ((surfaceMap (polynomialEmbedding K) T).degreeOf 0*geom.1.degreeOf 1+
          geom.1.degreeOf 0*(surfaceMap (polynomialEmbedding K) T).degreeOf 1)) ≤
        F.degreeOf 1*P.rightR+F.degreeOf 2*P.rightY
-   rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.sum_mul]
+   rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.sum_mul]
    simpa only [Nat.add_comm,Nat.mul_comm] using
      Nat.add_le_add (Nat.mul_le_mul hT0 hsum1)
        (Nat.mul_le_mul hsum0 hT1)
@@ -202,15 +201,15 @@ theorem regularPairSeeds_bound
    (hTR:T.degreeOf 2 ≤ P.rightR)
    (hTZ:T.degreeOf 3 ≤ P.rightZ)
    (hleftR:1 ≤ P.leftR)
-   (hleftYSmall:P.leftY < p) (hleftRSmall:P.leftR < p)
-   (hleftZSmall:P.leftZ < p)
-   (hmixedYSmall:P.mixedCost.y < p)
-   (hmixedRSmall:P.mixedCost.r < p)
-   (hmixedZSmall:P.mixedCost.z < p)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
+   (hleftYSmall:P.leftY<p) (hleftRSmall:P.leftR<p)
+   (hleftZSmall:P.leftZ<p)
+   (hmixedYSmall:P.mixedCost.y<p)
+   (hmixedRSmall:P.mixedCost.r<p)
+   (hmixedZSmall:P.mixedCost.z<p)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
    (hnodes:nodes.card=P.n)
-   (hw:1 ≤ P.w) (hchar:P.w < p) (hwa:P.w < P.a)
+   (hw:1 ≤ P.w) (hchar:P.w<p) (hwa:P.w<P.a)
    (han:P.a ≤ P.n)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ P.w)
    (hagreement:∀ gamma∈Gamma,
@@ -261,7 +260,7 @@ theorem regularPairSeeds_bound
      · exact (surfaceMap_degreeOf_le phi T 0).trans hTY
      · exact (surfaceMap_degreeOf_le phi T 1).trans hTR
      · exact (surfaceMap_degreeOf_le phi T 2).trans hTZ
-   have hcarrierSmall:∀ i,capAt carrierCap i < p:=by
+   have hcarrierSmall:∀ i,capAt carrierCap i<p:=by
      intro i
      fin_cases i
      · exact hleftYSmall
@@ -359,7 +358,7 @@ theorem regularPairSeeds_bound
        (P.errors+1)*P.gap*
          (∑ g:GeometricFactor K F.1,
            coordinateMixedDegree (GenericField K) g.1 (surfaceMap phi T) 2):=by
-     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,hfubini]
+     rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.mul_sum,hfubini]
    _ ≤ (P.n-P.w)*(∑ i:Fin 3,
          regularCapAt P.agreement i*regularCapAt (regularVector P F.1) i)+
        (P.errors+1)*P.gap*regularCapAt (regularVector P F.1) 2:=
@@ -381,15 +380,15 @@ theorem all_regularPairSeeds_bound
    (hTR:T.degreeOf 2 ≤ P.rightR)
    (hTZ:T.degreeOf 3 ≤ P.rightZ)
    (hleftR:1 ≤ P.leftR)
-   (hleftYSmall:P.leftY < p) (hleftRSmall:P.leftR < p)
-   (hleftZSmall:P.leftZ < p)
-   (hmixedYSmall:P.mixedCost.y < p)
-   (hmixedRSmall:P.mixedCost.r < p)
-   (hmixedZSmall:P.mixedCost.z < p)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
+   (hleftYSmall:P.leftY<p) (hleftRSmall:P.leftR<p)
+   (hleftZSmall:P.leftZ<p)
+   (hmixedYSmall:P.mixedCost.y<p)
+   (hmixedRSmall:P.mixedCost.r<p)
+   (hmixedZSmall:P.mixedCost.z<p)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
    (hnodes:nodes.card=P.n)
-   (hw:1 ≤ P.w) (hchar:P.w < p) (hwa:P.w < P.a)
+   (hw:1 ≤ P.w) (hchar:P.w<p) (hwa:P.w<P.a)
    (han:P.a ≤ P.n)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ P.w)
    (hagreement:∀ gamma∈Gamma,
@@ -414,7 +413,7 @@ def implicitVector (q:(_:MvPolynomial (Fin 4) K) × MvPolynomial (Fin 4) K):
  ⟨pairYCost (K:=K) q,pairRCost (K:=K) q,pairZCost (K:=K) q⟩
 theorem regularVector_budgets
    (P:UnequalParameters) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
-   (D w L s:ℕ) (hw:0 < w)
+   (D w L s:ℕ) (hw:0<w)
    (hbox:Q∈globalCoefficientBox K D w L s)
    (hY:(D-1)/w ≤ P.leftY)
    (hR:s ≤ P.leftR) (hZ:L ≤ P.leftZ):
@@ -434,21 +433,21 @@ theorem regularVector_budgets
    exact hb.2.2
  simp only [regularVector,Finset.sum_add_distrib]
  constructor
- · rw [←Finset.sum_mul, ←Finset.sum_mul]
+ · rw [←Finset.sum_mul,←Finset.sum_mul]
    exact Nat.add_le_add
      (Nat.mul_le_mul_right P.rightZ (hbR.trans hR))
      (Nat.mul_le_mul_right P.rightR (hbZ.trans hZ))
  constructor
- · rw [←Finset.sum_mul, ←Finset.sum_mul]
+ · rw [←Finset.sum_mul,←Finset.sum_mul]
    exact Nat.add_le_add
      (Nat.mul_le_mul_right P.rightZ (hbY.trans hY))
      (Nat.mul_le_mul_right P.rightY (hbZ.trans hZ))
- · rw [←Finset.sum_mul, ←Finset.sum_mul]
+ · rw [←Finset.sum_mul,←Finset.sum_mul]
    exact Nat.add_le_add
      (Nat.mul_le_mul_right P.rightR (hbY.trans hY))
      (Nat.mul_le_mul_right P.rightY (hbR.trans hR))
 theorem dot_sum_right {I:Type} [Fintype I]
-   (v:I → RCN223.DegreeVector)
+   (v:I→RCN223.DegreeVector)
    (a:RCN223.DegreeVector):
    dot a (RCN294.sumVector v)=∑ i,dot a (v i):=by
  calc
@@ -464,7 +463,7 @@ theorem dot_sum_right {I:Type} [Fintype I]
      ring
 theorem sum_regular_counts_bound
    (P:UnequalParameters) (Q T:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hcost:
      (∑ F:RegularIndex Q,(regularVector P F.1).y) ≤ P.mixedCost.y∧
      (∑ F:RegularIndex Q,(regularVector P F.1).r) ≤ P.mixedCost.r∧
@@ -489,7 +488,7 @@ theorem sum_regular_counts_bound
        (P.errors+1)*P.gap*
          (RCN294.sumVector fun F:RegularIndex Q↦
            regularVector P F.1).z:=by
-     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,
+     rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.mul_sum,
        ←dot_sum_right]
      simp only [RCN294.sumVector]
    _ ≤ (P.n-P.w)*dot P.agreement P.mixedCost+
@@ -506,15 +505,15 @@ theorem asymmetric_stage_count_lt
    (P:UnequalParameters) (S:TightParameters)
    (Q T:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    (p:ℕ) [CharP K p]
-   (hs:1 ≤ S.s) (hsmall:S.s < p) (hw:1 ≤ S.w)
-   (hDw:S.w < (2*S.s-1)*S.D)
+   (hs:1 ≤ S.s) (hsmall:S.s<p) (hw:1 ≤ S.w)
+   (hDw:S.w<(2*S.s-1)*S.D)
    (hj:1 ≤ (2*S.s-1)*S.L)
-   (hjSmall:(2*S.s-1)*S.L < p)
+   (hjSmall:(2*S.s-1)*S.L<p)
    (hbox:Q∈globalCoefficientBox K S.D S.w S.L S.s)
-   (hgap:0 < P.gap) (hgapEq:S.gap=P.gap)
+   (hgap:0<P.gap) (hgapEq:S.gap=P.gap)
    (hY:(S.D-1)/S.w ≤ P.leftY)
    (hR:S.s ≤ P.leftR) (hZ:S.L ≤ P.leftZ)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hQsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0)
    (hTsolution:∀ gamma∈Gamma,
@@ -527,7 +526,7 @@ theorem asymmetric_stage_count_lt
      (implicitSeeds Q selected Gamma q).card*S.gap ≤
        (S.n-S.w)*dot S.agreement (implicitVector q.1)+
          (S.errors+1)*S.gap*(implicitVector q.1).z):
-   Gamma.card < P.regularCountCap+S.countCap+1:=by
+   Gamma.card<P.regularCountCap+S.countCap+1:=by
  classical
  have hcover:=card_le_regular_sum_add_singular Q T hQ S.D S.w S.L S.s p
    hs hsmall hw hDw hj hjSmall hbox selected Gamma hQsolution hTsolution
@@ -576,7 +575,7 @@ theorem asymmetric_stage_count_lt
      (singularSeeds Q selected Gamma).card*S.gap ≤ S.tightNumerator:=
    (Nat.mul_le_mul_right S.gap
      (singularSeeds_card_le_sum Q selected Gamma)).trans hsingularScaled
- have hSgap:0 < S.gap:=by simpa [hgapEq] using hgap
+ have hSgap:0<S.gap:=by simpa [hgapEq] using hgap
  have hsingularCap:(singularSeeds Q selected Gamma).card ≤ S.countCap:=
    S.count_le_countCap _ hSgap hsingularUnionScaled
  omega

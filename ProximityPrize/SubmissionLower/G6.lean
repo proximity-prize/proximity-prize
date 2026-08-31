@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DA
 import ProximityPrize.SubmissionLower.G3
 namespace ProximityPrize.SubmissionLower.RCN364
@@ -8,7 +7,7 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq L:=Classical.decEq L
 theorem integral_and_separable_of_small_annihilator
    (p:ℕ) [CharP K p] (f:Polynomial K) (x:L)
-   (hf:f≠0) (hx:Polynomial.aeval x f=0) (hdegree:f.natDegree < p):
+   (hf:f≠0) (hx:Polynomial.aeval x f=0) (hdegree:f.natDegree<p):
    IsIntegral K x∧IsSeparable K x:=by
  have hint:IsIntegral K x:=IsAlgebraic.isIntegral ⟨f,hf,hx⟩
  have hmin:(minpoly K x).natDegree ≤ f.natDegree:=
@@ -53,9 +52,9 @@ theorem finite_separable_of_two_generators (y r:L)
  exact ⟨hfinite,(IntermediateField.isSeparable_top (F:=K) (E:=L)).mp hsepTop⟩
 theorem finite_separable_of_proper_plane_roots
    (p:ℕ) [CharP K p] (P Q:Polynomial (Polynomial K))
-   (hirreducible:Irreducible P) (hpositive:0 < P.natDegree)
-   (hproper:¬ P∣Q) (hRdegree:P.natDegree < p)
-   (hresultantDegree:(Polynomial.resultant P Q P.natDegree Q.natDegree).natDegree < p)
+   (hirreducible:Irreducible P) (hpositive:0<P.natDegree)
+   (hproper:¬ P∣Q) (hRdegree:P.natDegree<p)
+   (hresultantDegree:(Polynomial.resultant P Q P.natDegree Q.natDegree).natDegree<p)
    (y r:L)
    (hP:Polynomial.eval₂ (Polynomial.eval₂RingHom (algebraMap K L) y) r P=0)
    (hQ:Polynomial.eval₂ (Polynomial.eval₂RingHom (algebraMap K L) y) r Q=0)
@@ -79,7 +78,7 @@ theorem finite_separable_of_proper_plane_roots
      (algebraMap K S) P (hirreducible.isPrimitive (Nat.ne_of_gt hpositive)) yS
    rw [RCN360.bimap_specialization] at h
    exact h
- have hPydegree:Py.natDegree < p:=Polynomial.natDegree_map_le.trans_lt hRdegree
+ have hPydegree:Py.natDegree<p:=Polynomial.natDegree_map_le.trans_lt hRdegree
  have hcoefficient:(algebraMap S L).comp g=
      Polynomial.eval₂RingHom (algebraMap K L) y:=by
    apply Polynomial.ringHom_ext

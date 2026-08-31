@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HQ
 import ProximityPrize.SubmissionLower.S2
 section ProximityFlatProofPort
@@ -16,10 +15,10 @@ noncomputable def quotientEquivPiSpan (N:Submodule R M) (b:Basis ι R M)
  let b':=smithNormalFormTopBasis b h
  let ab:=smithNormalFormBotBasis b h
  have ab_eq:=smithNormalFormBotBasis_def b h
- have mem_I_iff:∀ x,x∈N ↔ ∀ i,a i∣b'.repr x i:=by
+ have mem_I_iff:∀ x,x∈N↔∀ i,a i∣b'.repr x i:=by
    intro x
    simp_rw [ab.mem_submodule_iff',ab,ab_eq]
-   have:∀ (c:ι → R) (i),b'.repr (∑ j:ι,c j • a j • b' j) i=a i*c i:=by
+   have:∀ (c:ι→R) (i),b'.repr (∑ j:ι,c j • a j • b' j) i=a i*c i:=by
      intro c i
      simp only [←mul_smul,b'.repr_sum_self,mul_comm]
    constructor
@@ -28,8 +27,8 @@ noncomputable def quotientEquivPiSpan (N:Submodule R M) (b:Basis ι R M)
    · rintro ha
      choose c hc using ha
      exact ⟨c,b'.ext_elem fun i => Eq.trans (hc i) (this c i).symm⟩
- let N':Submodule R (ι → R):=Submodule.pi Set.univ fun i => span R ({a i}:Set R)
- have:Submodule.map (b'.equivFun:M →ₗ[R] ι → R) N=N':=by
+ let N':Submodule R (ι→R):=Submodule.pi Set.univ fun i => span R ({a i}:Set R)
+ have:Submodule.map (b'.equivFun:M →ₗ[R] ι→R) N=N':=by
    ext x
    simp only [N',Submodule.mem_map,Submodule.mem_pi,mem_span_singleton,Set.mem_univ,
      mem_I_iff,smul_eq_mul,forall_true_left,LinearEquiv.coe_coe,
@@ -43,7 +42,7 @@ noncomputable def quotientEquivPiSpan (N:Submodule R M) (b:Basis ι R M)
  refine (Submodule.Quotient.equiv N N' b'.equivFun this).trans (re₂₃:=inferInstance)
    (re₃₂:=inferInstance) ?_
  classical
- exact Submodule.quotientPi (show _ → Submodule R R from fun i => span R ({a i}:Set R))
+ exact Submodule.quotientPi (show _→Submodule R R from fun i => span R ({a i}:Set R))
 noncomputable def quotientEquivPiZMod (N:Submodule ℤ M) (b:Basis ι ℤ M)
    (h:Module.finrank ℤ N=Module.finrank ℤ M):
    M ⧸ N ≃+Π i,ZMod (smithNormalFormCoeffs b h i).natAbs:=
@@ -61,7 +60,7 @@ theorem finiteQuotientOfFreeOfRankEq [Module.Free ℤ M] [Module.Finite ℤ M]
    ⟨Int.natAbs_ne_zero.mpr (smithNormalFormCoeffs_ne_zero b h i)⟩
  exact Finite.of_equiv (Π i,ZMod (a i).natAbs) e.symm
 theorem finiteQuotient_iff [Module.Free ℤ M] [Module.Finite ℤ M] (N:Submodule ℤ M):
-   Finite (M ⧸ N) ↔ Module.finrank ℤ N=Module.finrank ℤ M:=by
+   Finite (M ⧸ N)↔Module.finrank ℤ N=Module.finrank ℤ M:=by
  refine ⟨fun h↦le_antisymm (finrank_le N) <|
    ((LinearMap.lsmul ℤ M (Nat.card (M ⧸ N))).codRestrict N
      fun x↦?_).finrank_le_finrank_of_injective ?_,fun h↦finiteQuotientOfFreeOfRankEq N h⟩

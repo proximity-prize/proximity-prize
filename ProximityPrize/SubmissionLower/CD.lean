@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F
 import ProximityPrize.SubmissionLower.Y4
 namespace ProximityPrize.SubmissionLower.RCN306
@@ -10,7 +9,7 @@ noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Ω:=Classical.decEq Ω
-def unitAt:Fin 3 → DegreeVector:=![unitY,unitR,unitZ]
+def unitAt:Fin 3→DegreeVector:=![unitY,unitR,unitZ]
 def degreeVector (G:MvPolynomial (Fin 3) Ω):DegreeVector:=
  ⟨G.degreeOf 0,G.degreeOf 1,G.degreeOf 2⟩
 theorem degreeVector_hasCaps (G:MvPolynomial (Fin 3) Ω):
@@ -36,10 +35,10 @@ def fiberNumerator (n w a e:ℕ) (g E:DegreeVector):ℕ:=
  (n-w)*mixed g E E+(e+1)*(a-w)*mixed g E unitZ
 theorem scaled_sharp_incidence_bound
    {Seed Node:Type*} [DecidableEq Seed] [DecidableEq Node]
-   (relation:Seed → Node → Prop) [∀ seed node,Decidable (relation seed node)]
+   (relation:Seed→Node→Prop) [∀ seed node,Decidable (relation seed node)]
    (seeds:Finset Seed) (nodes identities:Finset Node) (a w M:ℕ)
    (hidentities:identities ⊆ nodes) (hcard:identities.card ≤ w)
-   (hwa:w < a) (han:a ≤ nodes.card)
+   (hwa:w<a) (han:a ≤ nodes.card)
    (hagreement:∀ seed∈seeds,a ≤ (nodes.filter (relation seed)).card)
    (hfiber:∀ node∈nodes \ identities,
      (seeds.filter (fun seed => relation seed node)).card*(a-w) ≤ M):
@@ -62,16 +61,16 @@ local instance:DecidableEq ι:=Classical.decEq ι
 theorem whole_surface_seed_bound
    (F:MvPolynomial (Fin 4) K) (G:MvPolynomial (Fin 3) Ω)
    (hG:Irreducible G) (hdiv:G∣surfaceMap φ F)
-   (hr:0 < G.degreeOf 1)
+   (hr:0<G.degreeOf 1)
    (hHproper:¬ G∣surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F))
-   (selected:K → Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
-   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
-   (hGdegree:∀ j:Fin 3,G.degreeOf j < p)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
+   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w<p)
+   (hwa:w<a) (han:a ≤ nodes.card)
+   (hGdegree:∀ j:Fin 3,G.degreeOf j<p)
    (hcutDegree:∀ i∈nodes,∀ j k:Fin 3,j≠k →
      (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j*G.degreeOf k+
-       G.degreeOf j*(agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf k < p)
+       G.degreeOf j*(agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf k<p)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
    (hregular:∀ γ∈Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)

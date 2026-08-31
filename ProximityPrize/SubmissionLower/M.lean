@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R0
 import ProximityPrize.SubmissionLower.H0
 namespace ProximityPrize.SubmissionLower.RCN007
@@ -8,7 +7,7 @@ noncomputable section
 variable (K:Type) [Field K]
 variable (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
 abbrev PointOn:=
- {v:Fin 3 → K//P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom}
+ {v:Fin 3→K//P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom}
 def pointHom (v:PointOn K P):CoordinateRing K P →ₐ[K] K:=
  Ideal.Quotient.liftₐ P (MvPolynomial.aeval v.1) (fun F hF↦v.2 hF)
 theorem pointHom_mk (v:PointOn K P) (F:MvPolynomial (Fin 3) K):
@@ -38,8 +37,8 @@ theorem quotient_eval_ne_zero_of_not_mem (F:MvPolynomial (Fin 3) K) (hF:F∉P):
  intro hzero
  exact hF (Ideal.Quotient.eq_zero_iff_mem.mp hzero)
 theorem field_eval_ne_zero_iff (F:MvPolynomial (Fin 3) K):
-   MvPolynomial.aeval (coordinate K P) F≠0 ↔ F∉P:=by
- change ¬ F∈RingHom.ker (MvPolynomial.aeval (coordinate K P)).toRingHom ↔ F∉P
+   MvPolynomial.aeval (coordinate K P) F≠0↔F∉P:=by
+ change ¬ F∈RingHom.ker (MvPolynomial.aeval (coordinate K P)).toRingHom↔F∉P
  rw [aeval_coordinate_ker]
 def ProjectionsFiniteSeparable:Prop:=
  ∀ (i:Fin 3) (hi:Transcendental K (coordinate K P i)),
@@ -86,8 +85,8 @@ theorem finite_zero_points_le_box_of_separator
    (hproj:ProjectionsFiniteSeparable K P)
    (i₀:Fin 3) (hi₀:Transcendental K (coordinate K P i₀))
    (F:MvPolynomial (Fin 3) K) (hF:F∉P)
-   (cap:Fin 3 → ℕ) (hcap:∀ i,F.degreeOf i ≤ cap i)
-   (S:Finset (Fin 3 → K))
+   (cap:Fin 3→ℕ) (hcap:∀ i,F.degreeOf i ≤ cap i)
+   (S:Finset (Fin 3→K))
    (hSP:∀ v∈S,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hSF:∀ v∈S,MvPolynomial.aeval v F=0):
    (S.card:ℤ) ≤ ∑ i,(cap i:ℤ)*(actualCoordinateDegree K P i:ℤ):=by
@@ -108,7 +107,7 @@ theorem finite_zero_points_le_box_of_separator
    intro i
    rw [quotientCoordinate_fraction]
    exact coordinateData_value K P hproj i
- let liftPoint:{v:Fin 3 → K//v∈S} → (CoordinateRing K P →ₐ[K] K):=
+ let liftPoint:{v:Fin 3→K//v∈S}→(CoordinateRing K P →ₐ[K] K):=
    fun v↦pointHom K P ⟨v.1,hSP v.1 v.2⟩
  have hinj:Function.Injective liftPoint:=by
    intro v w h
@@ -132,11 +131,11 @@ theorem finite_zero_points_le_box_of_separator
  simpa only [c,coordinateData_degree] using hcount
 theorem finite_zero_points_le_box
    (hproj:ProjectionsFiniteSeparable K P)
-   (hnonpoint:∀ v:Fin 3 → K,
+   (hnonpoint:∀ v:Fin 3→K,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (F:MvPolynomial (Fin 3) K) (hF:F∉P)
-   (cap:Fin 3 → ℕ) (hcap:∀ i,F.degreeOf i ≤ cap i)
-   (S:Finset (Fin 3 → K))
+   (cap:Fin 3→ℕ) (hcap:∀ i,F.degreeOf i ≤ cap i)
+   (S:Finset (Fin 3→K))
    (hSP:∀ v∈S,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hSF:∀ v∈S,MvPolynomial.aeval v F=0):
    (S.card:ℤ) ≤ ∑ i,(cap i:ℤ)*(actualCoordinateDegree K P i:ℤ):=by

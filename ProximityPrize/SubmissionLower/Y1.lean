@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DN
 namespace ProximityPrize.SubmissionLower.RCN042
 open scoped Classical TensorProduct
@@ -78,7 +77,7 @@ theorem one_le_coordinateDegree_of_transcendental_value
    exact Module.finrank_pos
 section FiniteFamily
 variable {I:Type*} [Fintype I]
-variable (E:I → Type) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+variable (E:I→Type) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 theorem sum_coordinateOfGate_degree_eq
    (x:∀ i,E i)
    (hgate:∀ i,∀ hx:Transcendental K (x i),
@@ -95,7 +94,7 @@ theorem sum_coordinateOfGate_degree_eq
         Module.finrank (RatFunc K) (E i.1)):=by
  classical
  let s:Set I:={i | Transcendental K (x i)}
- let degree:s → ℕ:=fun i =>
+ let degree:s→ℕ:=fun i =>
    letI:Algebra (RatFunc K) (E i.1):=
      (elementEmbedding K (E i.1) (x i.1) i.2).toRingHom.toAlgebra
    Module.finrank (RatFunc K) (E i.1)

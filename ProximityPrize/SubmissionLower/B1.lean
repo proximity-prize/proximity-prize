@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I
 namespace ProximityPrize.SubmissionLower.RCN066
 open scoped Classical BigOperators
@@ -11,7 +10,7 @@ noncomputable section
 variable {K:Type} [Field K]
 abbrev Poly3:=MvPolynomial (Fin 3) K
 theorem mem_iff_of_sub_mem (P:Ideal (Poly3 (K:=K)))
-   {A B:Poly3 (K:=K)} (h:A - B ∈ P):A ∈ P ↔ B ∈ P:=by
+   {A B:Poly3 (K:=K)} (h:A - B ∈ P):A ∈ P↔B ∈ P:=by
  constructor
  · intro hA
    simpa only [sub_sub_cancel] using P.sub_mem hA h
@@ -24,7 +23,7 @@ theorem sub_mem_of_dvd (P:Ideal (Poly3 (K:=K)))
  rw [hQ]
  exact P.mul_mem_right Q hG
 theorem cutIdeal_eq_of_dvd_sub {G T T':Poly3 (K:=K)}
-   (h:G ∣ T - T'):cutIdeal K G T = cutIdeal K G T':=by
+   (h:G ∣ T - T'):cutIdeal K G T=cutIdeal K G T':=by
  have hG:G ∈ cutIdeal K G T:=Ideal.subset_span (by simp)
  have hG':G ∈ cutIdeal K G T':=Ideal.subset_span (by simp)
  have hT:T ∈ cutIdeal K G T:=Ideal.subset_span (by simp)
@@ -46,7 +45,7 @@ theorem cutIdeal_eq_of_dvd_sub {G T T':Poly3 (K:=K)}
    · exact (mem_iff_of_sub_mem _ hd).mp hT
 theorem regularComponents_eq_of_dvd_sub {G T T' H:Poly3 (K:=K)}
    (h:G ∣ T - T') :
-   regularComponents K G T H = regularComponents K G T' H:=by
+   regularComponents K G T H=regularComponents K G T' H:=by
  classical
  ext P
  simp only [regularComponents,Finset.mem_filter,mem_componentFamily,
@@ -60,16 +59,16 @@ def regularComponentEquiv {G T T' H:Poly3 (K:=K)}
  right_inv C:=by rfl
 @[simp] theorem regularComponentEquiv_val {G T T' H:Poly3 (K:=K)}
    (h:G ∣ T - T') (C:RegularComponent K G T H) :
-   (regularComponentEquiv h C).1 = C.1:=rfl
+   (regularComponentEquiv h C).1=C.1:=rfl
 @[simp] theorem regularComponentEquiv_symm_val {G T T' H:Poly3 (K:=K)}
    (h:G ∣ T - T') (C:RegularComponent K G T' H) :
-   ((regularComponentEquiv h).symm C).1 = C.1:=rfl
+   ((regularComponentEquiv h).symm C).1=C.1:=rfl
 theorem eval_eq_of_sub_mem (P:Ideal (Poly3 (K:=K)))
-   {A B:Poly3 (K:=K)} (h:A - B ∈ P) (v:Fin 3 → K)
+   {A B:Poly3 (K:=K)} (h:A - B ∈ P) (v:Fin 3→K)
    (hv:P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom) :
-   MvPolynomial.aeval v A = MvPolynomial.aeval v B:=by
+   MvPolynomial.aeval v A=MvPolynomial.aeval v B:=by
  have hz:=hv h
- change MvPolynomial.aeval v (A - B) = 0 at hz
+ change MvPolynomial.aeval v (A - B)=0 at hz
  rw [map_sub] at hz
  exact sub_eq_zero.mp hz
 theorem finiteZeroSetBound_of_sub_mem (P:Ideal (Poly3 (K:=K)))
@@ -83,7 +82,7 @@ theorem finiteZeroSetBound_of_sub_mem (P:Ideal (Poly3 (K:=K)))
  exact hpointsA v hv
 def PolynomialInFlagMod (P:Ideal (Poly3 (K:=K)))
    (r:FlagDegree) (A:Poly3 (K:=K)):Prop :=
- ∃ B,PolynomialInFlag r B ∧ A - B ∈ P
+ ∃ B,PolynomialInFlag r B∧A - B ∈ P
 theorem PolynomialInFlagMod.mono {P Q:Ideal (Poly3 (K:=K))}
    {r:FlagDegree} {A:Poly3 (K:=K)} (hPQ:P ≤ Q)
    (h:PolynomialInFlagMod P r A):PolynomialInFlagMod Q r A:=by
@@ -101,7 +100,7 @@ theorem PolynomialInFlagMod.of_surface_mem
  rcases Set.mem_singleton_iff.mp hB with rfl
  exact hG
 theorem PrimeFlagZeroBudget.zero_le_congr
-   {P:Ideal (Poly3 (K:=K))} {cost:FlagDegree → ℕ}
+   {P:Ideal (Poly3 (K:=K))} {cost:FlagDegree→ℕ}
    (B:PrimeFlagZeroBudget P cost) (r:FlagDegree)
    (A:Poly3 (K:=K)) (hA:PolynomialInFlagMod P r A)
    (hproper:A ∉ P):FiniteZeroSetBound P A (cost r):=by
@@ -129,7 +128,7 @@ theorem PrimeFlagBudgetFamily.ofCongruentCut_positive
    {G T T' H:Poly3 (K:=K)} {p q:FlagDegree}
    (h:G ∣ T - T')
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T') (H:=H) p q)
-   (hpos:∀ C,1 ≤ B.zCost C + B.yzCost C) :
+   (hpos:∀ C,1 ≤ B.zCost C+B.yzCost C) :
    ∀ C,1 ≤ (PrimeFlagBudgetFamily.ofCongruentCut h B).zCost C +
      (PrimeFlagBudgetFamily.ofCongruentCut h B).yzCost C:=by
  intro C
@@ -140,7 +139,7 @@ theorem PrimeFlagBudgetFamily.ofCongruentCut_z_positive
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T') (H:=H) p q)
    (i:Fin 3)
    (hpos:∀ C,Transcendental K
-     (RCN002.coordinate K C.1 i) → 1 ≤ B.zCost C) :
+     (RCN002.coordinate K C.1 i)→1 ≤ B.zCost C) :
    ∀ C,Transcendental K
      (RCN002.coordinate K C.1 i) →
      1 ≤ (PrimeFlagBudgetFamily.ofCongruentCut h B).zCost C:=by
@@ -152,7 +151,7 @@ theorem PrimeFlagBudgetFamily.ofCongruentCut_yz_positive
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T') (H:=H) p q)
    (i:Fin 3)
    (hpos:∀ C,¬ Transcendental K
-     (RCN002.coordinate K C.1 i) → 1 ≤ B.yzCost C) :
+     (RCN002.coordinate K C.1 i)→1 ≤ B.yzCost C) :
    ∀ C,¬ Transcendental K
      (RCN002.coordinate K C.1 i) →
      1 ≤ (PrimeFlagBudgetFamily.ofCongruentCut h B).yzCost C:=by

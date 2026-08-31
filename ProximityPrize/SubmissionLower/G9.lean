@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X4
 import ProximityPrize.SubmissionLower.X5
 namespace ProximityPrize.SubmissionLower.RCN004
@@ -25,7 +24,7 @@ private def fieldsSummary (P:Ideal (Original K)) [P.IsPrime]
  letI:=A
  FiniteDimensional (RatFunc K) (CoordinateField K P)∧
    Algebra.IsSeparable (RatFunc K) (CoordinateField K P)
-private def familySummary {I:Type} [Fintype I] (P:I → Ideal (Original K))
+private def familySummary {I:Type} [Fintype I] (P:I→Ideal (Original K))
    [∀ i,(P i).IsPrime]
    (A:∀ i,Algebra (RatFunc K) (CoordinateField K (P i))) (B:ℕ):Prop:=
  letI:=A
@@ -45,8 +44,8 @@ variable (ht:Transcendental K (coordinate K P (order 0)))
 theorem original_finite_separable_finrank_bound
    (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:G∈P) (hHmem:H∈P) (hproper:¬ G∣H)
-   (h1:G.degreeOf (order 1) < p) (h2:G.degreeOf (order 2) < p)
-   (hmixed:originalMixedDegree K order G H < p):
+   (h1:G.degreeOf (order 1)<p) (h2:G.degreeOf (order 2)<p)
+   (hmixed:originalMixedDegree K order G H<p):
    letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P (order 0) ht
    FiniteDimensional (RatFunc K) (CoordinateField K P)∧
      Algebra.IsSeparable (RatFunc K) (CoordinateField K P)∧
@@ -71,14 +70,14 @@ theorem original_finite_separable_finrank_bound
 end Single
 section Family
 variable (order:Fin 3 ≃ Fin 3) {I:Type} [Fintype I]
-variable (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
+variable (P:I→Ideal (Original K)) [∀ i,(P i).IsPrime]
 theorem original_finite_separable_sum_finrank_bound
    (ht:∀ i,Transcendental K (coordinate K (P i) (order 0)))
    (hinj:Function.Injective P) (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:∀ i,G∈P i) (hHmem:∀ i,H∈P i)
    (hproper:¬ G∣H)
-   (h1:G.degreeOf (order 1) < p) (h2:G.degreeOf (order 2) < p)
-   (hmixed:originalMixedDegree K order G H < p):
+   (h1:G.degreeOf (order 1)<p) (h2:G.degreeOf (order 2)<p)
+   (hmixed:originalMixedDegree K order G H<p):
    letI:∀ i,Algebra (RatFunc K) (CoordinateField K (P i)):=
      fun i => rationalBaseAlgebra K (P i) (order 0) (ht i)
    (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i))∧
@@ -123,9 +122,9 @@ end Family
 theorem all_transcendental_coordinates_finite_separable
    (P:Ideal (Original K)) [P.IsPrime] (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:G∈P) (hHmem:H∈P) (hproper:¬ G∣H)
-   (hdegree:∀ j:Fin 3,G.degreeOf j < p)
+   (hdegree:∀ j:Fin 3,G.degreeOf j<p)
    (hmixed:∀ j k:Fin 3,j≠k →
-     H.degreeOf j*G.degreeOf k+G.degreeOf j*H.degreeOf k < p):
+     H.degreeOf j*G.degreeOf k+G.degreeOf j*H.degreeOf k<p):
    ∀ (i:Fin 3) (hi:Transcendental K (coordinate K P i)),
      letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P i hi
      FiniteDimensional (RatFunc K) (CoordinateField K P)∧
@@ -139,7 +138,7 @@ theorem all_transcendental_coordinates_finite_separable
    intro h
    have heq:=order.injective h
    exact (by decide:(1:Fin 3)≠2) heq
- have hbudget:originalMixedDegree K order G H < p:=
+ have hbudget:originalMixedDegree K order G H<p:=
    hmixed (order 1) (order 2) hneq
  have hresult:
      letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P (order 0) ht

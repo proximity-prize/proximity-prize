@@ -1,11 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W2
 namespace ProximityPrize.SubmissionLower.RCN363
 open scoped BigOperators
 noncomputable section
 variable {K:Type} [Field K] [DecidableEq K]
 def evaluationOn (N:ℕ) (roots:Finset K):
-   Polynomial.degreeLT K N →ₗ[K] (roots → K) where
+   Polynomial.degreeLT K N →ₗ[K] (roots→K) where
  toFun P x:=(P:Polynomial K).eval (x:K)
  map_add' _ _:=funext fun _ => Polynomial.eval_add
  map_smul' _ _:=funext <| by simp
@@ -15,9 +14,9 @@ theorem evaluationOn_surjective (N:ℕ) (roots:Finset K)
    (Set.injOn_id (roots:Set K))
  intro values
  let small:=E.symm values
- have hsmall:(small:Polynomial K).degree < (roots.card:WithBot ℕ):=
+ have hsmall:(small:Polynomial K).degree<(roots.card:WithBot ℕ):=
    Polynomial.mem_degreeLT.mp small.property
- have hlarge:(small:Polynomial K).degree < (N:WithBot ℕ):=
+ have hlarge:(small:Polynomial K).degree<(N:WithBot ℕ):=
    hsmall.trans_le (by exact_mod_cast hcard)
  refine ⟨⟨(small:Polynomial K),Polynomial.mem_degreeLT.mpr hlarge⟩,?_⟩
  change E small=values
@@ -102,7 +101,7 @@ theorem common_fiber_card_le_sylvester_corank
  · exact hroots
 theorem sum_common_fiber_cards_le_resultant_natDegree
    (P Q:Polynomial (Polynomial K)) (m n:ℕ)
-   (points:Finset K) (fibers:K → Finset K)
+   (points:Finset K) (fibers:K→Finset K)
    (hP:P.natDegree ≤ m) (hQ:Q.natDegree ≤ n)
    (hresultant:Polynomial.resultant P Q m n≠0)
    (hnonzero:∀ alpha∈points,
@@ -125,7 +124,7 @@ theorem sum_common_fiber_cards_le_resultant_natDegree
      P Q m n points hresultant
 theorem sum_common_fiber_cards_le_bidegree_bound
    (P Q:Polynomial (Polynomial K)) (m n:ℕ)
-   (points:Finset K) (fibers:K → Finset K)
+   (points:Finset K) (fibers:K→Finset K)
    (hP:P.natDegree ≤ m) (hQ:Q.natDegree ≤ n)
    (hresultant:Polynomial.resultant P Q m n≠0)
    (hnonzero:∀ alpha∈points,

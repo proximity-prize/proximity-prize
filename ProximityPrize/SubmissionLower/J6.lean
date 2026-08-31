@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EN
 import ProximityPrize.SubmissionLower.AG
 namespace ProximityPrize.SubmissionLower.RCN092
@@ -35,8 +34,8 @@ theorem meet_singularSeeds_tight_gap_bound
    [CharP K prime6656]
    (hbox:Q∈globalCoefficientBox K meetProfile.weightedCap meetProfile.w
      meetProfile.seedTotalCap meetProfile.slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=meetProfile.n)
    (hdegree:∀ gamma∈Gamma,
      (selected gamma).natDegree ≤ meetProfile.w)
@@ -77,8 +76,8 @@ theorem meet_singularSeeds_scaled_bound
    [CharP K prime6656]
    (hbox:Q∈globalCoefficientBox K meetProfile.weightedCap meetProfile.w
      meetProfile.seedTotalCap meetProfile.slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=meetProfile.n)
    (hdegree:∀ gamma∈Gamma,
      (selected gamma).natDegree ≤ meetProfile.w)
@@ -109,8 +108,8 @@ theorem meet_global_count_lt_fixedCost_of_regular_factors
    [CharP K prime6656]
    (hbox:Q∈globalCoefficientBox K meetProfile.weightedCap meetProfile.w
      meetProfile.seedTotalCap meetProfile.slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=meetProfile.n)
    (hdegree:∀ gamma∈Gamma,
      (selected gamma).natDegree ≤ meetProfile.w)
@@ -124,7 +123,7 @@ theorem meet_global_count_lt_fixedCost_of_regular_factors
    (hregular:∀ F:RegularIndex Q,
      (regularSeeds Q selected Gamma F).card*meetProfile.gap^2 ≤
        meetProfile.factorRegularLedger (regularFlag Q F)):
-   Gamma.card < meetProfile.fixedCost:=by
+   Gamma.card<meetProfile.fixedCost:=by
  have hcover:=meet_card_le_regular_sum_add_singular Q hQ hbox selected
    Gamma hsolution
  have hreg:=sum_factor_counts_rectangular_le meetProfile Q hQ

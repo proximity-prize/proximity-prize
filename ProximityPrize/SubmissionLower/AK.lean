@@ -1,11 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CB
 namespace ProximityPrize.SubmissionLower.RCN318
 open scoped BigOperators
 open RCN223
 open RCN294
 theorem implicit_with_exceptions_tight_bound {I:Type} [Fintype I]
-   (count:I → ℕ) (cost:I → DegreeVector) (exceptions:ℕ)
+   (count:I→ℕ) (cost:I→DegreeVector) (exceptions:ℕ)
    (hy:(∑ i,(cost i).y) ≤ algebraicCap)
    (hr:(∑ i,(cost i).r) ≤ 2*implicitYCap*algebraicCap)
    (hz:(∑ i,(cost i).z) ≤ implicitYCap)
@@ -21,7 +20,7 @@ theorem implicit_with_exceptions_tight_bound {I:Type} [Fintype I]
    _ ≤ implicitCoreNumerator+2*algebraicCap^2*gap:=
      Nat.add_le_add hmain (Nat.mul_le_mul_right gap hexceptions)
 theorem implicit_with_exceptions_tight_scaled_bound {I:Type} [Fintype I]
-   (count:I → ℕ) (cost:I → DegreeVector) (exceptions:ℕ)
+   (count:I→ℕ) (cost:I→DegreeVector) (exceptions:ℕ)
    (hy:(∑ i,(cost i).y) ≤ algebraicCap)
    (hr:(∑ i,(cost i).r) ≤ 2*implicitYCap*algebraicCap)
    (hz:(∑ i,(cost i).z) ≤ implicitYCap)
@@ -81,7 +80,7 @@ theorem aggregate_eq_core (P:TightParameters):
  simp only [aggregateCost,coefficients,coreNumerator,dot]
  ring
 theorem sum_counts_bound (P:TightParameters) {I:Type} [Fintype I]
-   (count:I → ℕ) (cost:I → DegreeVector)
+   (count:I→ℕ) (cost:I→DegreeVector)
    (hy:(∑ i,(cost i).y) ≤ P.algebraicCap)
    (hr:(∑ i,(cost i).r) ≤ 2*P.implicitYCap*P.algebraicCap)
    (hz:(∑ i,(cost i).z) ≤ P.implicitYCap)
@@ -102,7 +101,7 @@ theorem sum_counts_bound (P:TightParameters) {I:Type} [Fintype I]
      dot_mono_left P.coefficients ⟨hy,hr,hz⟩
    _=P.coreNumerator:=P.aggregate_eq_core
 theorem with_exceptions_bound (P:TightParameters) {I:Type} [Fintype I]
-   (count:I → ℕ) (cost:I → DegreeVector) (exceptions:ℕ)
+   (count:I→ℕ) (cost:I→DegreeVector) (exceptions:ℕ)
    (hy:(∑ i,(cost i).y) ≤ P.algebraicCap)
    (hr:(∑ i,(cost i).r) ≤ 2*P.implicitYCap*P.algebraicCap)
    (hz:(∑ i,(cost i).z) ≤ P.implicitYCap)
@@ -118,7 +117,7 @@ theorem with_exceptions_bound (P:TightParameters) {I:Type} [Fintype I]
      Nat.add_le_add hmain (Nat.mul_le_mul_right P.gap hexceptions)
    _=P.tightNumerator:=rfl
 theorem count_le_countCap (P:TightParameters) (count:ℕ)
-   (hgap:0 < P.gap) (hcount:count*P.gap ≤ P.tightNumerator):
+   (hgap:0<P.gap) (hcount:count*P.gap ≤ P.tightNumerator):
    count ≤ P.countCap:=by
  exact (Nat.le_div_iff_mul_le hgap).mpr hcount
 end TightParameters
@@ -143,7 +142,7 @@ theorem maximal_residual_count_caps:
    TightParameters.kappa,TightParameters.errors,TightParameters.gap,dot]
 theorem maximal_residual_total_below_budget:
    96129765351580058+maximalResidualQA.countCap+
-       maximalResidualH.countCap < 100000000000000000:=by
+       maximalResidualH.countCap<100000000000000000:=by
  rw [maximal_residual_count_caps.1,maximal_residual_count_caps.2]
  norm_num
 end ProximityPrize.SubmissionLower.RCN318

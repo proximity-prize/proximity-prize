@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F
 import ProximityPrize.SubmissionLower.Y4
 import ProximityPrize.SubmissionLower.BU
@@ -55,16 +54,16 @@ theorem sum_geometricPairCost_le
  have hR:=surfaceFactors_degree_budget φ hφ G hG (1:Fin 3)
  have hZ:=surfaceFactors_degree_budget φ hφ G hG (2:Fin 3)
  fin_cases i
- · simpa [capAt,geometricPairCost,pairCost,pairYCost, ←Finset.sum_mul] using
+ · simpa [capAt,geometricPairCost,pairCost,pairYCost,←Finset.sum_mul] using
      Nat.mul_le_mul_right (A.degreeOf 3) hR
  · simpa [capAt,geometricPairCost,pairCost,pairRCost,
-     Finset.sum_add_distrib, ←Finset.sum_mul] using
+     Finset.sum_add_distrib,←Finset.sum_mul] using
      Nat.add_le_add (Nat.mul_le_mul_right (A.degreeOf 3) hY)
        (Nat.mul_le_mul_right (A.degreeOf 1) hZ)
- · simpa [capAt,geometricPairCost,pairCost,pairZCost, ←Finset.sum_mul] using
+ · simpa [capAt,geometricPairCost,pairCost,pairZCost,←Finset.sum_mul] using
      Nat.mul_le_mul_right (A.degreeOf 1) hR
 theorem canonical_selectedPoint_surface_evaluation
-   (selected:K → Polynomial K) (γ:K) (F:MvPolynomial (Fin 4) K):
+   (selected:K→Polynomial K) (γ:K) (F:MvPolynomial (Fin 4) K):
    MvPolynomial.eval (selectedPoint (polynomialEmbedding K) selected γ)
      (surfaceMap (polynomialEmbedding K) F)=
        polynomialEmbedding K (specialization K (selected γ) γ F):=by
@@ -77,7 +76,7 @@ theorem geometric_factor_proper_cut
    (hg:g∈surfaceFactors (polynomialEmbedding K) G):
    ¬ g∣surfaceMap (polynomialEmbedding K) A:=by
  obtain ⟨hgi,hdiv⟩:=surfaceFactors_spec (polynomialEmbedding K) G g hg
- have hpos:0 < G.degreeOf 1+G.degreeOf 2+G.degreeOf 3:=by omega
+ have hpos:0<G.degreeOf 1+G.degreeOf 2+G.degreeOf 3:=by omega
  have hgeo:g∣geometricSurfaceMap K (GenericField K) G:=by
    simpa only [canonical_geometricSurfaceMap] using hdiv
  intro h
@@ -91,8 +90,8 @@ theorem implicit_pair_seed_bound_fixed
    (hGR:G.degreeOf 2=1) (hproper:¬ G∣A)
    (hAbox:A∈globalCoefficientBox K implicitWeightedCap w algebraicCap 0)
    (hGbox:G∈globalCoefficientBox K implicitWeightedCap w algebraicCap 1)
-   (selected:K → Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
    (hnodes:nodes.card=n) [CharP K prime]
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolutionA:∀ γ∈Γ,specialization K (selected γ) γ A=0)
@@ -200,7 +199,7 @@ theorem implicit_pair_seed_bound_fixed
    _=(n-w)*(∑ i:Fin 3,capAt liftedAgreement i*
        (∑ g∈factors,capAt (geometricPairCost A g) i))+
          (errors+1)*gap*(∑ g∈factors,capAt (geometricPairCost A g) 2):=by
-     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,hfubini]
+     rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.mul_sum,hfubini]
    _ ≤ (n-w)*
        (∑ i:Fin 3,capAt liftedAgreement i*capAt (pairCost A G) i)+
        (errors+1)*gap*capAt (pairCost A G) 2:=

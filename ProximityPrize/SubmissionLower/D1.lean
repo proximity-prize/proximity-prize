@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y5
 namespace ProximityPrize.SubmissionLower.RCN206
 open scoped Classical BigOperators
@@ -67,7 +66,7 @@ theorem yz_affine (a b s d:ℕ) (p:FlagDegree):
  simp only [yzSlope,yzBase,flagMixed,add_zOnly,add_yz,add_all,nsmul_zOnly,nsmul_yz,nsmul_all]
  ring
 section Cumulative
-variable {I:Type*} [Fintype I] (flags:I → FlagDegree) (p:FlagDegree)
+variable {I:Type*} [Fintype I] (flags:I→FlagDegree) (p:FlagDegree)
 variable (hs:(∑ i,(flags i).all) ≤ p.all)
 variable (hm:(∑ i,((flags i).yz+(flags i).all)) ≤ p.yz+p.all)
 variable (ht:(∑ i,((flags i).zOnly+(flags i).yz+(flags i).all)) ≤ p.zOnly+p.yz+p.all)

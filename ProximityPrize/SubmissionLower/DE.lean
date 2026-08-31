@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G4
 import ProximityPrize.SubmissionLower.G6
 namespace ProximityPrize.SubmissionLower.RCN024
@@ -37,7 +36,7 @@ theorem irreducible_pow_corank_dvd_det
      Matrix ι ι (AdjoinRoot mu):=(AdjoinRoot.mk mu).mapMatrix
  let reduced:Matrix ι ι (AdjoinRoot mu):=reduceMatrix M
  obtain ⟨V,U,e,hV,hU,hnormal⟩:=Matrix.exists_rank_normal_form reduced
- let liftEntry:AdjoinRoot mu → Polynomial K:=
+ let liftEntry:AdjoinRoot mu→Polynomial K:=
    Function.surjInv (AdjoinRoot.mk_surjective (g:=mu))
  have hliftEntry (x:AdjoinRoot mu):AdjoinRoot.mk mu (liftEntry x)=x:=by
    exact Function.surjInv_eq (AdjoinRoot.mk_surjective (g:=mu)) x
@@ -111,7 +110,7 @@ def remainderOn (D:Polynomial F) (N:ℕ) (hD:D.Monic):
 theorem remainderOn_surjective (D:Polynomial F) (N:ℕ) (hD:D.Monic)
    (hdegree:D.natDegree ≤ N):Function.Surjective (remainderOn D N hD):=by
  intro q
- have hqN:(q:Polynomial F).degree < (N:WithBot ℕ):=
+ have hqN:(q:Polynomial F).degree<(N:WithBot ℕ):=
    (Polynomial.mem_degreeLT.mp q.property).trans_le (by exact_mod_cast hdegree)
  refine ⟨⟨q,Polynomial.mem_degreeLT.mpr hqN⟩,?_⟩
  apply Subtype.ext
@@ -166,7 +165,7 @@ theorem common_divisor_natDegree_le_sylvester_corank
  omega
 theorem sum_common_divisor_natDegrees_le_sylvester_corank
    {I:Type*} [Fintype I]
-   (p q:Polynomial F) (D:I → Polynomial F) (m n:ℕ)
+   (p q:Polynomial F) (D:I→Polynomial F) (m n:ℕ)
    (hp:p.natDegree ≤ m) (hq:q.natDegree ≤ n) (hpne:p≠0)
    (hmonic:∀ i,(D i).Monic)
    (hcoprime:Pairwise fun i j => IsCoprime (D i) (D j))
@@ -199,7 +198,7 @@ end SylvesterCorank
 section IrreducibleAggregation
 theorem sum_irreducible_coranks_le_det_natDegree
    {I:Type*} [Fintype I]
-   (M:Matrix ι ι (Polynomial K)) (mu:I → Polynomial K) (c:I → ℕ)
+   (M:Matrix ι ι (Polynomial K)) (mu:I→Polynomial K) (c:I→ℕ)
    (hmonic:∀ i,(mu i).Monic)
    (hirreducible:∀ i,Irreducible (mu i))
    (hcoprime:Pairwise fun i j => IsCoprime (mu i) (mu j))
@@ -277,7 +276,7 @@ theorem mem_relationIdeal_quotientRoot_iff_minpoly_dvd_map
        (algebraMap (AdjoinRoot mu) E₁ (AdjoinRoot.root mu)) r ↔
      minpoly (AdjoinRoot mu) r∣P.map (AdjoinRoot.mk mu):=by
  change RCN361.planeEval K₀ E₁
-     (algebraMap (AdjoinRoot mu) E₁ (AdjoinRoot.root mu)) r P=0 ↔ _
+     (algebraMap (AdjoinRoot mu) E₁ (AdjoinRoot.root mu)) r P=0↔_
  rw [planeEval_quotientRoot_eq_aeval_map]
  exact minpoly.dvd_iff.symm
 theorem relationIdeal_eq_of_adjoinRoot_minpoly_eq
@@ -297,7 +296,7 @@ theorem relationIdeal_eq_of_adjoinRoot_minpoly_eq
 theorem relative_minpolys_pairwise_coprime_of_relationIdeal_injective
    {I:Type*} [Fintype I]
    (mu:Polynomial K₀) [Fact (Irreducible mu)]
-   (E:I → Type) [∀ i,Field (E i)]
+   (E:I→Type) [∀ i,Field (E i)]
    [∀ i,Algebra K₀ (E i)]
    [∀ i,Algebra (AdjoinRoot mu) (E i)]
    [∀ i,IsScalarTower K₀ (AdjoinRoot mu) (E i)]
@@ -376,7 +375,7 @@ theorem finrank_le_resultant_natDegree_of_adjoinRoot_component
    change Module.finrank K (Polynomial K ⧸ Ideal.span {mu})=mu.natDegree
    exact finrank_quotient_span_eq_natDegree
  have htotal:Module.finrank K E=mu.natDegree*D.natDegree:=by
-   rw [←Module.finrank_mul_finrank K (AdjoinRoot mu) E,hbase, ←hrelative]
+   rw [←Module.finrank_mul_finrank K (AdjoinRoot mu) E,hbase,←hrelative]
  rw [htotal]
  calc
    mu.natDegree*D.natDegree ≤
@@ -412,7 +411,7 @@ variable {K₀ E₀:Type} [Field K₀] [DecidableEq K₀]
  [Field E₀] [Algebra K₀ E₀] [FiniteDimensional K₀ E₀]
 theorem finrank_le_planar_bound_without_separability
    (P Q:Polynomial (Polynomial K₀))
-   (hP:Irreducible P) (hpositive:0 < P.natDegree) (hproper:¬P∣Q)
+   (hP:Irreducible P) (hpositive:0<P.natDegree) (hproper:¬P∣Q)
    (y r:E₀)
    (hgen:IntermediateField.adjoin K₀ ({y,r}:Set E₀)=⊤)
    (hPy:RCN361.planeEval K₀ E₀ y r P=0)
@@ -507,7 +506,7 @@ theorem finiteDimensional_of_integral_generating_pair
    (IntermediateField.topEquiv (F:=K₀) (E:=E₀)).surjective
 theorem finite_of_proper_plane_roots
    (P Q:Polynomial (Polynomial K₀))
-   (hirreducible:Irreducible P) (hpositive:0 < P.natDegree)
+   (hirreducible:Irreducible P) (hpositive:0<P.natDegree)
    (hproper:¬P∣Q) (y r:E₀)
    (hP:Polynomial.eval₂ (Polynomial.eval₂RingHom (algebraMap K₀ E₀) y) r P=0)
    (hQ:Polynomial.eval₂ (Polynomial.eval₂RingHom (algebraMap K₀ E₀) y) r Q=0)
@@ -559,7 +558,7 @@ theorem finite_of_proper_plane_roots
  exact finiteDimensional_of_integral_generating_pair y r hyIntegral hrIntegral hgen
 theorem finrank_le_planar_bound_from_proper_roots
    (P Q:Polynomial (Polynomial K₀))
-   (hirreducible:Irreducible P) (hpositive:0 < P.natDegree)
+   (hirreducible:Irreducible P) (hpositive:0<P.natDegree)
    (hproper:¬P∣Q) (y r:E₀)
    (hP:Polynomial.eval₂ (Polynomial.eval₂RingHom (algebraMap K₀ E₀) y) r P=0)
    (hQ:Polynomial.eval₂ (Polynomial.eval₂RingHom (algebraMap K₀ E₀) y) r Q=0)

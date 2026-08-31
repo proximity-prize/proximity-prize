@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z8
 namespace ProximityPrize.SubmissionLower.RCN086
 open scoped Classical BigOperators
@@ -41,18 +40,18 @@ theorem tail_scalar_ne_zero (φ:Polynomial K →+*Ω)
 theorem globalTailCut_dvd_iff (φ:Polynomial K →+*Ω)
    (hφ:Function.Injective φ) (F:MvPolynomial (Fin 4) K) (d:ℕ)
    (G:MvPolynomial (Fin 3) Ω):
-   G∣globalTailCut φ F d ↔ G∣surfaceMap φ (numerator K F d):=by
+   G∣globalTailCut φ F d↔G∣surfaceMap φ (numerator K F d):=by
  rw [globalTailCut_eq]
  let c:Ω:=(-φ Polynomial.X)^d
  have hc:c≠0:=tail_scalar_ne_zero φ hφ d
  constructor
  · intro h
    have hh:=h.mul_right (MvPolynomial.C c⁻¹)
-   simpa only [c,mul_assoc, ←map_mul,mul_inv_cancel₀ hc,map_one,mul_one] using hh
+   simpa only [c,mul_assoc,←map_mul,mul_inv_cancel₀ hc,map_one,mul_one] using hh
  · intro h
    exact h.mul_right _
 theorem selected_globalTailCut_zero (φ:Polynomial K →+*Ω)
-   (F:MvPolynomial (Fin 4) K) (selected:K → Polynomial K)
+   (F:MvPolynomial (Fin 4) K) (selected:K→Polynomial K)
    (γ:K) (w:ℕ) (hdegree:(selected γ).natDegree ≤ w)
    (hsolution:RCN319.specialization K (selected γ) γ F=0):
    MvPolynomial.aeval (selectedPoint φ selected γ) (globalTailCut φ F (w+1))=0:=by
@@ -69,16 +68,16 @@ theorem globalTailCut_in_sharp_flag (φ:Polynomial K →+*Ω)
      (RCN287.sharpResidualAgreementFlag (support a b s) d)
      (globalTailCut φ F d):=by
  exact RCN287.surfaceMap_agreement_in_sharp_flag
-   (P:=support a b s) (by change s+2 < b+s+3;omega) φ
+   (P:=support a b s) (by change s+2<b+s+3;omega) φ
    (support_data a b s F hR hYR hAll) d (tailSelector d) 0 0 0
 theorem exists_filtered_certificate (φ:Polynomial K →+*Ω)
    (a b s:ℕ) (F:MvPolynomial (Fin 4) K)
    (hR:F.degreeOf 2 ≤ s+2)
    (hYR:wt ![0,1,1,0] F ≤ b+s+3)
    (hAll:wt ![0,1,1,1] F ≤ a+b+s+3)
-   (d:ℕ) (hd:2 ≤ d) (coeffs:ℕ → K) (x u0 u1:K):
-   ∃ (B:Fin (d-1+1) → MvPolynomial (Fin 3) Ω)
-     (c:Fin (d-1+1) → FlagDegree),
+   (d:ℕ) (hd:2 ≤ d) (coeffs:ℕ→K) (x u0 u1:K):
+   ∃ (B:Fin (d-1+1)→MvPolynomial (Fin 3) Ω)
+     (c:Fin (d-1+1)→FlagDegree),
      surfaceMap φ (agreementNumerator F d coeffs x u0 u1)=
        filteredCut (d-1) B (surfaceMap φ (polyH K F)) (surfaceMap φ (polyG K F))∧
      (∀ j,PolynomialInFlag (c j) (B j))∧
@@ -127,8 +126,8 @@ theorem globalTailCut_certificate (φ:Polynomial K →+*Ω)
    (hYR:wt ![0,1,1,0] F ≤ b+s+3)
    (hAll:wt ![0,1,1,1] F ≤ a+b+s+3)
    (w:ℕ) (hw:1 ≤ w):
-   ∃ (B:Fin (w+1) → MvPolynomial (Fin 3) Ω)
-     (c:Fin (w+1) → FlagDegree),
+   ∃ (B:Fin (w+1)→MvPolynomial (Fin 3) Ω)
+     (c:Fin (w+1)→FlagDegree),
      globalTailCut φ F (w+1)=
        filteredCut w B (surfaceMap φ (polyH K F)) (surfaceMap φ (polyG K F))∧
      (∀ j,PolynomialInFlag (c j) (B j))∧

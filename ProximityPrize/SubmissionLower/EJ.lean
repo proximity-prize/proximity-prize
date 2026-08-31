@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.L
 namespace ProximityPrize.SubmissionLower.RCN134
 open scoped BigOperators
@@ -6,7 +5,7 @@ open RCN002
 noncomputable section
 variable {K L:Type} [Field K] [Field L] [Algebra K L]
 def embeddingPoint (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
-   (f:CoordinateField K P →ₐ[K] L):Fin 3 → L:=
+   (f:CoordinateField K P →ₐ[K] L):Fin 3→L:=
  fun i => f (coordinate K P i)
 theorem embeddingPoint_aeval (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
    (f:CoordinateField K P →ₐ[K] L):
@@ -27,16 +26,16 @@ theorem embeddingPoint_injective (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]:
  intro f g hfg
  have he:f.comp (coordinateEvaluation K P)=
      g.comp (coordinateEvaluation K P):=by
-   rw [←embeddingPoint_aeval, ←embeddingPoint_aeval,hfg]
+   rw [←embeddingPoint_aeval,←embeddingPoint_aeval,hfg]
  apply IsLocalization.algHom_ext (nonZeroDivisors (CoordinateRing K P))
  apply AlgHom.ext
  intro a
  obtain ⟨A,rfl⟩:=Ideal.Quotient.mk_surjective a
  exact AlgHom.congr_fun he A
-variable {I:Type} (P:I → Ideal (MvPolynomial (Fin 3) K))
+variable {I:Type} (P:I→Ideal (MvPolynomial (Fin 3) K))
 variable [∀ i,(P i).IsPrime]
 def familyEmbeddingPoint
-   (z:Σ i,CoordinateField K (P i) →ₐ[K] L):Fin 3 → L:=
+   (z:Σ i,CoordinateField K (P i) →ₐ[K] L):Fin 3→L:=
  embeddingPoint (P z.1) z.2
 theorem familyEmbeddingPoint_injective (hP:Function.Injective P):
    Function.Injective (familyEmbeddingPoint (L:=L) P):=by
@@ -44,7 +43,7 @@ theorem familyEmbeddingPoint_injective (hP:Function.Injective P):
  have hij:P i=P j:=by
    rw [←embeddingPoint_kernel (P i) f,
      ←embeddingPoint_kernel (P j) g]
-   exact congrArg (fun v:Fin 3 → L =>
+   exact congrArg (fun v:Fin 3→L =>
      RingHom.ker (MvPolynomial.aeval v).toRingHom) hfg
  obtain rfl:=hP hij
  have hf:f=g:=embeddingPoint_injective (P i) hfg
@@ -56,7 +55,7 @@ variable [IsScalarTower K B L]
 variable [∀ i,Algebra B (CoordinateField K (P i))]
 variable [∀ i,IsScalarTower K B (CoordinateField K (P i))]
 def commonBaseEmbeddingPoint
-   (z:Σ i,CoordinateField K (P i) →ₐ[B] L):Fin 3 → L:=
+   (z:Σ i,CoordinateField K (P i) →ₐ[B] L):Fin 3→L:=
  embeddingPoint (P z.1) (z.2.restrictScalars K)
 theorem commonBaseEmbeddingPoint_injective (hP:Function.Injective P):
    Function.Injective (commonBaseEmbeddingPoint (B:=B) (L:=L) P):=by
@@ -64,7 +63,7 @@ theorem commonBaseEmbeddingPoint_injective (hP:Function.Injective P):
  have hij:P i=P j:=by
    rw [←embeddingPoint_kernel (P i) (f.restrictScalars K),
      ←embeddingPoint_kernel (P j) (g.restrictScalars K)]
-   exact congrArg (fun v:Fin 3 → L =>
+   exact congrArg (fun v:Fin 3→L =>
      RingHom.ker (MvPolynomial.aeval v).toRingHom) hfg
  obtain rfl:=hP hij
  have hr:f.restrictScalars K=g.restrictScalars K:=
@@ -78,7 +77,7 @@ theorem commonBaseEmbeddingPoint_injective (hP:Function.Injective P):
 variable [Fintype I] [IsAlgClosed L]
 variable [∀ i,FiniteDimensional B (CoordinateField K (P i))]
 variable [∀ i,Algebra.IsSeparable B (CoordinateField K (P i))]
-def genericFiberPoints:Finset (Fin 3 → L):=by
+def genericFiberPoints:Finset (Fin 3→L):=by
  classical
  exact Finset.univ.image (commonBaseEmbeddingPoint (B:=B) (L:=L) P)
 theorem genericFiberPoints_card (hP:Function.Injective P):

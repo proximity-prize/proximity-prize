@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F
 import ProximityPrize.SubmissionLower.Y
 namespace ProximityPrize.SubmissionLower.RCN176
@@ -21,13 +20,13 @@ def JointRProvider (G T:MvPolynomial (Fin 3) Ω) (p:ℕ):Prop:=
 theorem proper_cut_seed_bound_of_projection_sum_joint_R
    (F:MvPolynomial (Fin 4) K) (G T:MvPolynomial (Fin 3) Ω)
    (hG:Irreducible G) (hdiv:G∣surfaceMap φ F) (hproper:¬ G∣T)
-   (selected:K → Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
-   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
-   (hGdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixedY:coordinateMixedDegree Ω G T 0 < p)
-   (hmixedZ:coordinateMixedDegree Ω G T 2 < p)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
+   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w<p)
+   (hwa:w<a) (han:a ≤ nodes.card)
+   (hGdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixedY:coordinateMixedDegree Ω G T 0<p)
+   (hmixedZ:coordinateMixedDegree Ω G T 2<p)
    (hjoint:JointRProvider G T p)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
@@ -39,7 +38,7 @@ theorem proper_cut_seed_bound_of_projection_sum_joint_R
    (hagreement:∀ γ∈Γ,
      a ≤ (nodes.filter (fun i => (selected γ).eval (x i)=u₀ i+γ*u₁ i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Γ w e)
-   (cap budget:Fin 3 → ℕ)
+   (cap budget:Fin 3→ℕ)
    (hcap:∀ i∈nodes,∀ j,
      (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j ≤ cap j)
    (hbudget:∀ i,
@@ -55,7 +54,7 @@ theorem proper_cut_seed_bound_of_projection_sum_joint_R
      (surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F))≠0
    rw [selectedPoint_evaluation]
    exact hregular γ hγ
- let degree:RegularComponent Ω G T H → Fin 3 → ℕ:=
+ let degree:RegularComponent Ω G T H→Fin 3→ℕ:=
    fun C i => actualCoordinateDegree Ω C.1 i
  have hcomponent:∀ C:RegularComponent Ω G T H,
      (componentSeeds Ω G T H Γ (selectedPoint φ selected) C).card*(a-w) ≤
@@ -89,9 +88,9 @@ theorem proper_cut_seed_bound_of_projection_sum_joint_R
 theorem regularComponents_degree_budget_joint_R
    (F:MvPolynomial (Fin 4) K) (G T:MvPolynomial (Fin 3) Ω)
    (p:ℕ) [CharP Ω p] (hG:Irreducible G) (hproper:¬ G∣T)
-   (hGdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixedY:coordinateMixedDegree Ω G T 0 < p)
-   (hmixedZ:coordinateMixedDegree Ω G T 2 < p)
+   (hGdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixedY:coordinateMixedDegree Ω G T 0<p)
+   (hmixedZ:coordinateMixedDegree Ω G T 2<p)
    (hjoint:JointRProvider G T p):
    ∀ i,(∑ C:RegularComponent Ω G T (regularitySurface φ F),
      actualCoordinateDegree Ω C.1 i) ≤ coordinateMixedDegree Ω G T i:=by
@@ -108,13 +107,13 @@ theorem regularComponents_degree_budget_joint_R
 theorem proper_cut_seed_bound_joint_R
    (F:MvPolynomial (Fin 4) K) (G T:MvPolynomial (Fin 3) Ω)
    (hG:Irreducible G) (hdiv:G∣surfaceMap φ F) (hproper:¬ G∣T)
-   (selected:K → Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
-   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
-   (hGdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixedY:coordinateMixedDegree Ω G T 0 < p)
-   (hmixedZ:coordinateMixedDegree Ω G T 2 < p)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
+   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w<p)
+   (hwa:w<a) (han:a ≤ nodes.card)
+   (hGdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixedY:coordinateMixedDegree Ω G T 0<p)
+   (hmixedZ:coordinateMixedDegree Ω G T 2<p)
    (hjoint:JointRProvider G T p)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
@@ -126,7 +125,7 @@ theorem proper_cut_seed_bound_joint_R
    (hagreement:∀ γ∈Γ,
      a ≤ (nodes.filter (fun i => (selected γ).eval (x i)=u₀ i+γ*u₁ i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Γ w e)
-   (cap:Fin 3 → ℕ)
+   (cap:Fin 3→ℕ)
    (hcap:∀ i∈nodes,∀ j,
      (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)).degreeOf j ≤ cap j):
    Γ.card*(a-w) ≤

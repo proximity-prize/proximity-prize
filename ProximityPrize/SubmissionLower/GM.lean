@@ -31,7 +31,7 @@ variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 abbrev Omega (K:Type) [Field K]:=GenericField K
-variable {Gamma:Finset K} {x:I → K} {p errors w:ℕ}
+variable {Gamma:Finset K} {x:I→K} {p errors w:ℕ}
 variable [CharP (Omega K) p]
 variable {flag tailFlag1:FlagDegree}
 variable {support:RCN275.ResidualSupportParameters}
@@ -52,7 +52,7 @@ theorem exists_original_factor_of_firstTailComponent
    (S:ResidualStage (polynomialEmbedding K) Gamma x p errors flag w support)
    (C:FirstTailComponent S):
    ∃ F0 Q:MvPolynomial (Fin 4) K,
-     Irreducible F0∧0 < F0.degreeOf 1+F0.degreeOf 2+F0.degreeOf 3∧
+     Irreducible F0∧0<F0.degreeOf 1+F0.degreeOf 2+F0.degreeOf 3∧
      S.F=F0*Q∧
      S.G∣surfaceMap (polynomialEmbedding K) F0∧
      surfaceMap (polynomialEmbedding K) F0∈C.1∧
@@ -64,7 +64,7 @@ theorem exists_original_factor_of_firstTailComponent
  let L:=CoordinateField (Omega K) Pcurve
  let phiC:Polynomial K →+*L:=
    (algebraMap (Omega K) L).comp phi
- let vC:Fin 3 → L:=fun i => componentPoint phi Pcurve i.succ
+ let vC:Fin 3→L:=fun i => componentPoint phi Pcurve i.succ
  have hSne:S.F≠0:=by
    intro hzero
    apply S.regular_proper
@@ -106,7 +106,7 @@ theorem exists_original_factor_of_firstTailComponent
  have hH0not:surfaceMap phi (polyH K F0)∉Pcurve:=
    fun h => hHQnot (Pcurve.mul_mem_right _ h)
  have hGprod:S.G∣surfaceMap phi F0*surfaceMap phi Q:=by
-   simpa only [←map_mul, ←hprod] using S.G_dvd_surface
+   simpa only [←map_mul,←hprod] using S.G_dvd_surface
  have hGsplit:=S.irreducible_G.prime.dvd_or_dvd hGprod
  have hGQfalse:¬ S.G∣surfaceMap phi Q:=by
    intro hGQ
@@ -144,7 +144,7 @@ theorem tangent_truncatedPolynomial_solution
    (S:ResidualStage (polynomialEmbedding K) Gamma x p errors flag w support)
    (C:FirstTailComponent S)
    (bound seedCap slopeCap:ℕ) (hw:1 ≤ w)
-   (hshort:w+1 ≤ bound) (hchar:bound < p)
+   (hshort:w+1 ≤ bound) (hchar:bound<p)
    (hbox:S.F∈globalCoefficientBox K bound w seedCap slopeCap)
    (hallTails:∀ delay,
      globalTailCut (polynomialEmbedding K) S.F (w+1+delay)∈C.1):
@@ -184,7 +184,7 @@ theorem coefficientPoleProfile_of_tangent_firstTail
    (hfirstProper:¬ S.G∣
      globalTailCut (polynomialEmbedding K) S.F (w+1))
    (bound seedCap slopeCap cost:ℕ) (hw:1 ≤ w)
-   (hshort:w+1 ≤ bound) (hchar:bound < p)
+   (hshort:w+1 ≤ bound) (hchar:bound<p)
    (hbox:S.F∈globalCoefficientBox K bound w seedCap slopeCap)
    (hallTails:∀ delay,
      globalTailCut (polynomialEmbedding K) S.F (w+1+delay)∈C.1)
@@ -200,7 +200,7 @@ theorem coefficientPoleProfile_of_tangent_firstTail
  let Pcurve:=C.1
  let L:=CoordinateField (Omega K) Pcurve
  let kappa:K →+*L:=componentCoefficients phi Pcurve
- let v0:Fin 4 → L:=componentPoint phi Pcurve
+ let v0:Fin 4→L:=componentPoint phi Pcurve
  let hFC:=firstTailComponent_surface_mem S C
  let hHC:=firstTailComponent_regularity_not_mem S C
  let P0:Polynomial L:=truncatedPolynomial phi Pcurve S.F hFC hHC w
@@ -299,8 +299,8 @@ theorem tangent_component_card_le
    (hnodes:S.nodes.card=agreements+errors)
    (hagreement:∀ gamma∈Gamma,
      agreements ≤ (S.agreementFiber gamma).card)
-   (hwa:w < agreements) (hw:1 ≤ w)
-   (hshort:w+1 ≤ bound) (hchar:bound < p)
+   (hwa:w<agreements) (hw:1 ≤ w)
+   (hshort:w+1 ≤ bound) (hchar:bound<p)
    (hbox:S.F∈globalCoefficientBox K bound w seedCap slopeCap)
    (B:PrimeFlagBudgetFamily
      (G:=S.G) (T:=globalTailCut (polynomialEmbedding K) S.F (w+1))

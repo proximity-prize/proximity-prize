@@ -7,8 +7,8 @@ set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 200000
 variable {ι K M:Type*} [Field K] [AddCommGroup M] [Module K M]
 theorem finite_iUnion_ssubset
-   (s:Finset ι) (p:ι → Submodule K M)
-   (h₁:∀ i,p i≠⊤) (h₂:s.card < ENat.card K):
+   (s:Finset ι) (p:ι→Submodule K M)
+   (h₁:∀ i,p i≠⊤) (h₂:s.card<ENat.card K):
    ⋃ i∈s,(p i:Set M) ⊂ univ:=by
  letI:DecidableEq ι:=Classical.decEq ι
  letI:DecidableEq K:=Classical.decEq K
@@ -18,7 +18,7 @@ theorem finite_iUnion_ssubset
    simp only [ssubset_univ_iff] at hj' ⊢
    rcases s.eq_empty_or_nonempty with rfl | hs
    · simpa using! h₁ j
-   replace h₂:s.card+1 < ENat.card K:=by simpa [Finset.card_insert_of_notMem hj] using! h₂
+   replace h₂:s.card+1<ENat.card K:=by simpa [Finset.card_insert_of_notMem hj] using! h₂
    specialize hj' (lt_trans ENat.natCast_lt_succ h₂)
    contrapose hj'
    replace hj':(p j:Set M) ∪ (⋃ i∈s,p i)=univ:=by
@@ -39,7 +39,7 @@ theorem finite_iUnion_ssubset
    obtain ⟨k,hk,t₁,t₂,ht,ht₁,ht₂⟩:∃ᵉ (k∈s) (t₁:K) (t₂:K),
        t₁≠t₂∧x+t₁ • y∈p k∧x+t₂ • y∈p k:=by
      suffices ∃ᵉ (k∈s) (z₁∈sxy) (z₂∈sxy),z₁≠z₂∧z₁∈p k∧z₂∈p k by
-       obtain ⟨k,hk, -,⟨t₁, -,rfl⟩, -,⟨t₂, -,rfl⟩,htne,ht₁,ht₂⟩:=this
+       obtain ⟨k,hk,-,⟨t₁,-,rfl⟩,-,⟨t₂,-,rfl⟩,htne,ht₁,ht₂⟩:=this
        exact ⟨k,hk,t₁,t₂,by aesop,ht₁,ht₂⟩
      choose f hf using fun z:sxy↦mem_iUnion.mp (hsxy z.property)
      have hf':MapsTo f univ s:=fun z _↦by specialize hf z;aesop
@@ -47,13 +47,13 @@ theorem finite_iUnion_ssubset
        obtain ⟨z₁,z₂,hne,heq⟩:=this
        exact ⟨f z₁,hf' (mem_univ _),z₁,z₁.property,z₂,z₂.property,
          Subtype.coe_ne_coe.mpr hne,by specialize hf z₁;simp_all,by specialize hf z₂;aesop⟩
-     have key:s.card < sxy.encard:=by
+     have key:s.card<sxy.encard:=by
        refine lt_of_add_lt_add_right <| lt_of_lt_of_le h₂ ?_
        have:Injective (fun t:K↦x+t • y):=
          fun t₁ t₂ ht↦smul_left_injective K hy₀ <| by simpa using! ht
        have aux:sxy=((fun t:K↦x+t • y) '' {t | t≠0}):=by ext;simp [sxy]
        rw [aux,this.encard_image,encard_ne_add_one]
-     obtain ⟨z₁, -,z₂, -,h⟩:=exists_ne_map_eq_of_encard_lt_of_maps_to (by simpa) hf'
+     obtain ⟨z₁,-,z₂,-,h⟩:=exists_ne_map_eq_of_encard_lt_of_maps_to (by simpa) hf'
      exact ⟨z₁,z₂,h⟩
    replace ht:y∈p k:=by
      have:(t₁-t₂) • y∈p k:=by convert sub_mem ht₁ ht₂;module
@@ -63,7 +63,7 @@ theorem finite_iUnion_ssubset
    simpa using! ⟨k,hk,ht⟩
 theorem exists_avoiding_finite_proper_submodules
    [Finite ι] [Infinite K]
-   (p:ι → Submodule K M) (hproper:∀ i,p i≠⊤):
+   (p:ι→Submodule K M) (hproper:∀ i,p i≠⊤):
    ∃ x,∀ i,x∉p i:=by
  let _i:Fintype ι:=Fintype.ofFinite ι
  suffices ⋃ i,(p i:Set M) ⊂ univ by
@@ -72,9 +72,9 @@ theorem exists_avoiding_finite_proper_submodules
 variable {N:Type*} [AddCommGroup N] [Module K N]
 theorem exists_simultaneous_noncancellation
    [Finite ι] [Infinite K]
-   (lead:ι → M →ₗ[K] N) (hlead:∀ i,lead i≠0):
+   (lead:ι→M →ₗ[K] N) (hlead:∀ i,lead i≠0):
    ∃ x:M,∀ i,lead i x≠0:=by
- let bad:ι → Submodule K M:=fun i↦LinearMap.ker (lead i)
+ let bad:ι→Submodule K M:=fun i↦LinearMap.ker (lead i)
  have hproper:∀ i,bad i≠⊤:=by
    intro i htop
    apply hlead i
@@ -85,11 +85,11 @@ theorem exists_simultaneous_noncancellation
  refine ⟨x,fun i hi↦?_⟩
  exact hx i (by simpa [bad,LinearMap.mem_ker] using hi)
 variable {σ:Type*} [DecidableEq σ]
-def polynomialOfSupport (E:Finset (σ →₀ ℕ)) (c:E → K):
+def polynomialOfSupport (E:Finset (σ →₀ ℕ)) (c:E→K):
    MvPolynomial σ K:=
  ∑ d:E,MvPolynomial.monomial d.1 (c d)
 @[simp] theorem coeff_polynomialOfSupport
-   (E:Finset (σ →₀ ℕ)) (c:E → K) (d:σ →₀ ℕ):
+   (E:Finset (σ →₀ ℕ)) (c:E→K) (d:σ →₀ ℕ):
    MvPolynomial.coeff d (polynomialOfSupport E c)=
      if hd:d∈E then c ⟨d,hd⟩ else 0:=by
  classical
@@ -119,7 +119,7 @@ def polynomialOfSupport (E:Finset (σ →₀ ℕ)) (c:E → K):
      exact e.2
    rw [if_neg hval]
 theorem support_polynomialOfSupport_subset
-   (E:Finset (σ →₀ ℕ)) (c:E → K):
+   (E:Finset (σ →₀ ℕ)) (c:E→K):
    (polynomialOfSupport E c).support ⊆ E:=by
  intro d hd
  by_contra hnot
@@ -129,8 +129,8 @@ theorem support_polynomialOfSupport_subset
 theorem exists_supportedPolynomial_simultaneous_noncancellation
    {τ:Type*} [Finite τ] [Infinite K]
    (E:Finset (σ →₀ ℕ))
-   (lead:τ → (E → K) →ₗ[K] K) (hlead:∀ t,lead t≠0):
-   ∃ c:E → K,
+   (lead:τ→(E→K) →ₗ[K] K) (hlead:∀ t,lead t≠0):
+   ∃ c:E→K,
      (polynomialOfSupport E c).support ⊆ E∧
        ∀ t,lead t c≠0:=by
  obtain ⟨c,hc⟩:=exists_simultaneous_noncancellation lead hlead

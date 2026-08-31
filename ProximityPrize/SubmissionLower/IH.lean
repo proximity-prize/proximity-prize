@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CO
 section ProximityFlatProofPort
 open Algebra Module
@@ -60,7 +59,7 @@ lemma KaehlerDifferential.mvPolynomialBasis_repr_apply (σ) (x) (i):
  simp [Finsupp.single_apply,Pi.single_apply]
 lemma KaehlerDifferential.mvPolynomialBasis_repr_symm_single (σ) (i) (x):
    (mvPolynomialBasis R σ).repr.symm (Finsupp.single i x)=x • D R (MvPolynomial σ R) (.X i):=by
- apply (mvPolynomialBasis R σ).repr.injective;simp [LinearEquiv.map_smul, -map_smul]
+ apply (mvPolynomialBasis R σ).repr.injective;simp [LinearEquiv.map_smul,-map_smul]
 @[simp]
 lemma KaehlerDifferential.mvPolynomialBasis_apply (σ) (i):
    mvPolynomialBasis R σ i=D R (MvPolynomial σ R) (.X i):=

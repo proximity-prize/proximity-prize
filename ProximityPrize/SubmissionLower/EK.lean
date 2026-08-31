@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T
 namespace ProximityPrize.SubmissionLower.RCN135
 open RCN077 RCN269 RCN233
@@ -35,7 +34,7 @@ theorem generic_eval_eq (P:Polynomial K):
    · simp [initialCoordinate]
  exact DFunLike.congr_fun hhom P
 @[simp] theorem polynomialEmbedding_eq_zero_iff (P:Polynomial K):
-   polynomialEmbedding K P=0 ↔ P=0:=by
+   polynomialEmbedding K P=0↔P=0:=by
  constructor
  · intro h
    apply polynomialEmbedding_injective K
@@ -43,12 +42,12 @@ theorem generic_eval_eq (P:Polynomial K):
  · rintro rfl
    exact map_zero _
 theorem generic_eval_eq_zero_iff (P:Polynomial K):
-   P.eval₂ (coefficientEmbedding K) (initialCoordinate K)=0 ↔ P=0:=by
+   P.eval₂ (coefficientEmbedding K) (initialCoordinate K)=0↔P=0:=by
  rw [generic_eval_eq,polynomialEmbedding_eq_zero_iff]
 theorem generic_eval_ne_zero (P:Polynomial K) (hP:P≠0):
    P.eval₂ (coefficientEmbedding K) (initialCoordinate K)≠0:=
  (generic_eval_eq_zero_iff K P).not.mpr hP
-def initialPoint (P:Polynomial K) (γ:K):Fin 4 → GenericField K:=
+def initialPoint (P:Polynomial K) (γ:K):Fin 4→GenericField K:=
  polynomialPoint (coefficientEmbedding K) P γ (initialCoordinate K)
 @[simp] theorem initialPoint_X (P:Polynomial K) (γ:K):
    initialPoint K P γ 0=initialCoordinate K:=rfl
@@ -88,8 +87,8 @@ theorem initialPoint_injective:
  intro a b hab
  apply valueSeedProjection_injective K
  exact Prod.ext (congrFun hab 1) (congrFun hab 3)
-theorem selectedProjection_injective {ι:Type*} (seed:ι → K)
-   (hseed:Function.Injective seed) (P:ι → Polynomial K):
+theorem selectedProjection_injective {ι:Type*} (seed:ι→K)
+   (hseed:Function.Injective seed) (P:ι→Polynomial K):
    Function.Injective (fun i => valueSeedProjection K (P i,seed i)):=by
  intro a b hab
  have hpair:=valueSeedProjection_injective K hab
@@ -97,7 +96,7 @@ theorem selectedProjection_injective {ι:Type*} (seed:ι → K)
 theorem initialPoint_all_tail_numerators_zero
    (F:Poly4 K) (P:Polynomial K) (γ:K)
    (hsolution:specialization K P γ F=0) (w:ℕ) (hdegree:P.natDegree ≤ w):
-   ∀ b,w < b →
+   ∀ b,w<b →
      MvPolynomial.eval₂Hom (coefficientEmbedding K) (initialPoint K P γ)
        (numerator K F b)=0:=by
  intro b hb
@@ -107,7 +106,7 @@ theorem global_recovery_at_initialPoint
    (F:Poly4 K) (P:Polynomial K) (γ:K)
    (hsolution:specialization K P γ F=0)
    (hregular:specialization K P γ (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-   (p w:ℕ) [CharP K p] (hchar:w < p) (hdegree:P.natDegree ≤ w):
+   (p w:ℕ) [CharP K p] (hchar:w<p) (hdegree:P.natDegree ≤ w):
    globalPolynomial (coefficientEmbedding K) F (initialPoint K P γ)
      (initialPoint_relation K F P γ hsolution)
      ((initialPoint_regular_iff K F P γ).mpr hregular) w=

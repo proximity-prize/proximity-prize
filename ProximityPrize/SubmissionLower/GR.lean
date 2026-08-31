@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.K
 import ProximityPrize.SubmissionLower.K7
 namespace ProximityPrize.SubmissionLower.RCN320
@@ -9,7 +8,7 @@ noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
 theorem exists_frozen_translated_contact_interpolant6600
-   (u0 u1:IRSProfile.Index → IRSProfile.Field):
+   (u0 u1:IRSProfile.Index→IRSProfile.Field):
    ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
      Q≠0∧
      Q∈globalCoefficientBox IRSProfile.Field
@@ -29,14 +28,14 @@ theorem exists_frozen_translated_contact_interpolant6600
    weightedCap w seedTotalCap slopeCap multiplicity
    (IRSProfile.domain i) (u0 i) (u1 i) theta (hequations i) r
 theorem exists_frozen_universal_vanishing_interpolant6600
-   (u0 u1:IRSProfile.Index → IRSProfile.Field):
+   (u0 u1:IRSProfile.Index→IRSProfile.Field):
    ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
      Q≠0∧
      Q∈globalCoefficientBox IRSProfile.Field
        weightedCap w seedTotalCap slopeCap∧
      ∀ (gamma:IRSProfile.Field) (P:Polynomial IRSProfile.Field)
        (support:Finset IRSProfile.Index),
-       P.natDegree ≤ w → agreements ≤ support.card →
+       P.natDegree ≤ w→agreements ≤ support.card →
        (∀ i∈support,
          P.eval (IRSProfile.domain i)=u0 i+gamma*u1 i) →
        specialization IRSProfile.Field P gamma Q=0:=by

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R7
 import ProximityPrize.SubmissionLower.Y7
 import ProximityPrize.SubmissionLower.BB
@@ -16,14 +15,14 @@ set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
 theorem exists_nonzero_avoiding_finite_subsingleton
    {K ι:Type*} [Field K] [Infinite K] [Finite ι]
-   (Bad:ι → K → Prop)
-   (hsingle:∀ i {a b},Bad i a → Bad i b → a=b):
+   (Bad:ι→K→Prop)
+   (hsingle:∀ i {a b},Bad i a→Bad i b→a=b):
    ∃ a:K,a≠0∧∀ i,¬ Bad i a:=by
  classical
  letI:DecidableEq K:=Classical.decEq K
  letI:DecidableEq ι:=Classical.decEq ι
  letI:Fintype ι:=Fintype.ofFinite ι
- let representative:ι → K:=fun i↦
+ let representative:ι→K:=fun i↦
    if h:∃ a,Bad i a then Classical.choose h else 0
  let forbidden:Finset K:=Finset.univ.image representative
  obtain ⟨a,ha⟩:=Infinite.exists_notMem_finset (insert 0 forbidden)
@@ -44,8 +43,8 @@ theorem valuation_shear_bad_coefficient_subsingleton
    (v:RCN345.NormalizedValuation K L)
    (r z:L):
    ∀ {a b:K},
-     v.val (r+a • z) < max (v.val r) (v.val z) →
-     v.val (r+b • z) < max (v.val r) (v.val z) → a=b:=by
+     v.val (r+a • z)<max (v.val r) (v.val z) →
+     v.val (r+b • z)<max (v.val r) (v.val z)→a=b:=by
  intro a b ha hb
  by_contra hab
  have hab0:a-b≠0:=sub_ne_zero.mpr hab
@@ -57,7 +56,7 @@ theorem valuation_shear_bad_coefficient_subsingleton
      Algebra.smul_def,map_mul,
      Valuation.IsTrivialOn.eq_one (a-b) hab0,one_mul]
  rw [hvaldiff] at hdiff
- have hzr:v.val z < v.val r:=by
+ have hzr:v.val z<v.val r:=by
    simpa only [lt_max_iff,lt_self_iff_false,or_false] using hdiff
  have hmax:max (v.val r) (v.val z)=v.val r:=max_eq_left hzr.le
  have ha0:a≠0:=by
@@ -75,7 +74,7 @@ theorem valuation_shear_bad_coefficient_subsingleton
 section FiniteFamily
 variable {K:Type*} [Field K] [IsAlgClosed K]
 variable {I:Type*} [Fintype I]
-variable (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+variable (E:I→Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 variable (r z:∀ i,E i)
 variable (W:∀ i,
  Finset (RCN345.NormalizedValuation K (E i)))
@@ -108,11 +107,11 @@ theorem exists_common_exact_finite_separable_shear
    unfold RCN369.parameterDifferential at h
    rwa [hvalueZ i] at h
  let J:=I ⊕ Σ i:I,{v//v∈W i}
- let Bad:J → K → Prop
+ let Bad:J→K→Prop
    | Sum.inl i,a => D K (E i) (r i)+a • D K (E i) (z i)=0
    | Sum.inr iv,a => iv.2.1.val (r iv.1+a • z iv.1) <
        max (iv.2.1.val (r iv.1)) (iv.2.1.val (z iv.1))
- have hsingle:∀ j {a b},Bad j a → Bad j b → a=b:=by
+ have hsingle:∀ j {a b},Bad j a→Bad j b→a=b:=by
    intro j a b ha hb
    rcases j with i | ⟨i,v⟩
    · exact shear_bad_coefficient_subsingleton K (E i) (r i) (z i)
@@ -205,7 +204,7 @@ theorem exists_nestedFlagProjectionData
      ProjectionsFiniteSeparable Ω C.1):
    Nonempty (NestedFlagProjectionData hseparator hproj):=by
  classical
- let E:RegularComponent Ω G T H → Type:=
+ let E:RegularComponent Ω G T H→Type:=
    fun C↦CoordinateField Ω C.1
  let rY:∀ C,E C:=fun C↦coordinate Ω C.1 0
  let z:∀ C,E C:=fun C↦coordinate Ω C.1 2

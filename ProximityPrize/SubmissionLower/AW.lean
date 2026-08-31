@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DF
 import ProximityPrize.SubmissionLower.X5
 namespace ProximityPrize.SubmissionLower.RCN008
@@ -11,7 +10,7 @@ open RCN002 RCN005
 noncomputable section
 variable (K:Type) [Field K]
 private def familyFiniteSummary {I:Type} [Fintype I]
-   (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
+   (P:I→Ideal (Original K)) [∀ i,(P i).IsPrime]
    (A:∀ i,Algebra (RatFunc K) (CoordinateField K (P i))) (B:ℕ):Prop:=
  letI:=A
  (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i)))∧
@@ -37,13 +36,13 @@ theorem plane_budget_le_original (order:Fin 3 ≃ Fin 3) (G H:Original K):
      (planeMap_degreeX_le K order H))
 section FixedOrder
 variable (order:Fin 3 ≃ Fin 3) {I:Type} [Fintype I]
-variable (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
+variable (P:I→Ideal (Original K)) [∀ i,(P i).IsPrime]
 theorem actual_finite_sum_finrank_bound_without_separability
    (ht:∀ i,Transcendental K (coordinate K (P i) (order 0)))
    (hinj:Function.Injective P) (G H:Original K)
    (hG:Irreducible G) (hGmem:∀ i,G∈P i)
    (hHmem:∀ i,H∈P i) (hproper:¬ G∣H)
-   (hpositive:0 < (planeMap K order G).natDegree):
+   (hpositive:0<(planeMap K order G).natDegree):
    letI:∀ i,Algebra (RatFunc K) (CoordinateField K (P i)):=
      fun i => rationalBaseAlgebra K (P i) (order 0) (ht i)
    (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i)))∧
@@ -136,7 +135,7 @@ theorem actual_finite_sum_finrank_bound_without_separability
 end FixedOrder
 section OriginalOrder
 variable (order:Fin 3 ≃ Fin 3) {I:Type} [Fintype I]
-variable (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
+variable (P:I→Ideal (Original K)) [∀ i,(P i).IsPrime]
 theorem original_finite_sum_finrank_bound_without_separability
    (ht:∀ i,Transcendental K (coordinate K (P i) (order 0)))
    (hinj:Function.Injective P) (G H:Original K)

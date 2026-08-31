@@ -72,7 +72,7 @@ theorem chosenPointLift_spec (hinj:Function.Injective (algebraMap A S))
    (chosenPointLift hinj phi).comp (IsScalarTower.toAlgHom K A S)=phi:=
  Classical.choose_spec (exists_point_lift hinj phi)
 theorem chosenPointLift_injective (hinj:Function.Injective (algebraMap A S)):
-   Function.Injective (chosenPointLift hinj:(A →ₐ[K] K) → (S →ₐ[K] K)):=by
+   Function.Injective (chosenPointLift hinj:(A →ₐ[K] K)→(S →ₐ[K] K)):=by
  intro phi theta h
  have hrestrict:=congrArg
    (fun psi:S →ₐ[K] K => psi.comp (IsScalarTower.toAlgHom K A S)) h

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CD
 import ProximityPrize.SubmissionLower.K8
 import ProximityPrize.SubmissionLower.K9
@@ -46,19 +45,19 @@ local instance:DecidableEq ι:=Classical.decEq ι
 theorem whole_surface_seed_bound_joint_R
    (F:MvPolynomial (Fin 4) K) (G:MvPolynomial (Fin 3) Ω)
    (hG:Irreducible G) (hdiv:G∣surfaceMap φ F)
-   (hr:0 < G.degreeOf 1)
+   (hr:0<G.degreeOf 1)
    (hHproper:¬ G∣surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F))
-   (selected:K → Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
-   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
-   (hGdegree:∀ j:Fin 3,G.degreeOf j < p)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
+   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w<p)
+   (hwa:w<a) (han:a ≤ nodes.card)
+   (hGdegree:∀ j:Fin 3,G.degreeOf j<p)
    (hmixedY:∀ i∈nodes,
      coordinateMixedDegree Ω G
-       (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)) 0 < p)
+       (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)) 0<p)
    (hmixedZ:∀ i∈nodes,
      coordinateMixedDegree Ω G
-       (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)) 2 < p)
+       (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)) 2<p)
    (hjoint:∀ i∈nodes,
      ¬ G∣agreementPolynomial φ F w (x i) (u₀ i) (u₁ i) →
      JointRProvider G (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)) p)
@@ -134,7 +133,7 @@ theorem whole_surface_seed_bound_joint_R
 theorem whole_surface_seed_bound_fixed_joint_R
    (F:MvPolynomial (Fin 4) K) (G:MvPolynomial (Fin 3) Ω)
    (hG:Irreducible G) (hdiv:G∣surfaceMap φ F)
-   (hr:0 < G.degreeOf 1)
+   (hr:0<G.degreeOf 1)
    (hHproper:¬ G∣surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F))
    (hbox:F∈globalCoefficientBox K weightedCap w seedTotalCap slopeCap)
    (hGcaps:HasCaps G RCN242.surfaceVector)
@@ -143,8 +142,8 @@ theorem whole_surface_seed_bound_fixed_joint_R
    (hFseed:seedDegree F ≤ seedTotalCap)
    (hY:F.degreeOf 1 ≤ yCap) (hR:F.degreeOf 2 ≤ slopeCap)
    (hZ:F.degreeOf 3 ≤ seedTotalCap)
-   (selected:K → Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
    (hnodes:nodes.card=n) [CharP Ω prime]
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
@@ -160,14 +159,14 @@ theorem whole_surface_seed_bound_fixed_joint_R
  have hcap (i:ι):
      HasCaps (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)) agreementVector:=
    fixed_agreement_caps φ F hbox hY hR hZ (x i) (u₀ i) (u₁ i)
- have hGdegree:∀ j:Fin 3,G.degreeOf j < prime:=
+ have hGdegree:∀ j:Fin 3,G.degreeOf j<prime:=
    fun j => (hGcaps j).trans_lt (fixed_surface_caps_below_characteristic j)
  have hmixedY (i:ι):coordinateMixedDegree Ω G
-     (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)) 0 < prime:=by
+     (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)) 0<prime:=by
    simpa only [coordinateMixedDegree_zero] using
      (fixed_agreement_nonR_characteristic_gates G _ hGcaps (hcap i)).2.1
  have hmixedZ (i:ι):coordinateMixedDegree Ω G
-     (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)) 2 < prime:=by
+     (agreementPolynomial φ F w (x i) (u₀ i) (u₁ i)) 2<prime:=by
    simpa only [coordinateMixedDegree_two] using
      (fixed_agreement_nonR_characteristic_gates G _ hGcaps (hcap i)).2.2
  have hjoint (i:ι)

@@ -6,13 +6,13 @@ theorem channelCount_mono {T T' YS YS' S S':ℕ}
     channelCount T YS S ≤ channelCount T' YS' S':=by
   unfold channelCount
   calc
-    _ ≤ ∑ y ∈ Finset.range (min T YS + 1),
-        ∑ r ∈ Finset.range (min S' (min (T' - y) (YS' - y)) + 1),
-          (T' + 1 - y - r):=by
+    _ ≤ ∑ y ∈ Finset.range (min T YS+1),
+        ∑ r ∈ Finset.range (min S' (min (T' - y) (YS' - y))+1),
+          (T'+1 - y - r):=by
       apply Finset.sum_le_sum
       intro y _
-      have hin:Finset.range (min S (min (T-y) (YS-y)) + 1) ⊆
-          Finset.range (min S' (min (T'-y) (YS'-y)) + 1):=by
+      have hin:Finset.range (min S (min (T-y) (YS-y))+1) ⊆
+          Finset.range (min S' (min (T'-y) (YS'-y))+1):=by
         apply Finset.range_mono
         have h:=min_le_min hs
           (min_le_min (Nat.sub_le_sub_right ht y) (Nat.sub_le_sub_right hy y))
@@ -32,6 +32,6 @@ theorem nestedCoefficientBox_mono
     P ∈ nestedCoefficientBox K D' w T' YS' S':=by
   intro d hd
   have h:=hP hd
-  exact ⟨h.1.trans hT, h.2.1.trans hYS, h.2.2.1.trans hS,
+  exact ⟨h.1.trans hT,h.2.1.trans hYS,h.2.2.1.trans hS,
     h.2.2.2.trans_le hD⟩
 end ProximityPrize.SubmissionLower.LocatorLowQuotient

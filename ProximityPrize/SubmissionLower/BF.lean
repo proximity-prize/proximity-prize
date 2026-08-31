@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DV
 import ProximityPrize.SubmissionLower.J
 import ProximityPrize.SubmissionLower.GR
@@ -18,9 +17,9 @@ def GlobalCountLtAlignment6600:Prop:=
    Q≠0 →
    Q∈globalCoefficientBox IRSProfile.Field
      weightedCap w seedTotalCap slopeCap →
-   ∀ (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
+   ∀ (selected:IRSProfile.Field→Polynomial IRSProfile.Field)
      (seeds:Finset IRSProfile.Field)
-     (u0 u1:IRSProfile.Index → IRSProfile.Field),
+     (u0 u1:IRSProfile.Index→IRSProfile.Field),
      (∀ gamma∈seeds,(selected gamma).natDegree ≤ w) →
      (∀ gamma∈seeds,
        specialization IRSProfile.Field (selected gamma) gamma Q=0) →
@@ -29,14 +28,14 @@ def GlobalCountLtAlignment6600:Prop:=
          (selected gamma).eval (IRSProfile.domain i)=
            u0 i+gamma*u1 i)).card) →
      NoLargeSelectedPencil selected seeds w errors →
-     seeds.card < alignmentBudget
+     seeds.card<alignmentBudget
 abbrev InterpolantSelectedCount6600:=GlobalCountLtAlignment6600
 theorem challenge_field_characteristic6600:
    CharP IRSProfile.Field prime:=by
  change CharP KoalaBear.Ext6 2130706433
  exact charP_of_injective_algebraMap' KoalaBear.Field 2130706433
 theorem original_support_card6600
-   (A:IRSProfile.Field → Finset IRSProfile.Index)
+   (A:IRSProfile.Field→Finset IRSProfile.Index)
    (seeds:Finset IRSProfile.Field)
    (hcard:∀ gamma∈seeds,
      Fintype.card IRSProfile.Index-errors ≤ (A gamma).card):

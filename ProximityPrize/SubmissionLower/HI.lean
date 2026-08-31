@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 variable {R:Type*}
@@ -7,7 +6,7 @@ variable [NonUnitalNonAssocRing R]
 def associator (x y z:R):R:=(x*y)*z-x*(y*z)
 theorem associator_apply (x y z:R):associator x y z=(x*y)*z-x*(y*z):=rfl
 theorem associator_eq_zero_iff_associative:
-   associator (R:=R)=0 ↔ Std.Associative (fun (x y:R)↦x*y) where
+   associator (R:=R)=0↔Std.Associative (fun (x y:R)↦x*y) where
  mp h:=⟨fun x y z↦sub_eq_zero.mp <| congr_fun₃ h x y z⟩
  mpr h:=by ext x y z;simp [associator,Std.Associative.assoc]
 theorem associator_cocycle (a b c d:R):
@@ -19,7 +18,7 @@ open MulOpposite in
 @[simp]
 lemma associator_op (x y z:Rᵐᵒᵖ):
    associator x y z= -op (associator (unop z) (unop y) (unop x)):=by
- simp only [associator_apply, ←unop_mul, ←unop_sub,op_unop,neg_sub]
+ simp only [associator_apply,←unop_mul,←unop_sub,op_unop,neg_sub]
 end NonUnitalNonAssocRing
 section NonUnitalRing
 variable [NonUnitalRing R]
@@ -43,8 +42,8 @@ def mulRight₃:R →+R →+R →+R where
 @[simp]
 theorem mulRight₃_apply (x y z:R):mulRight₃ x y z=x*(y*z):=rfl
 theorem mulLeft₃_eq_mulRight₃_iff_associative:
-   mulLeft₃ (R:=R)=mulRight₃ ↔ Std.Associative (fun (x y:R)↦x*y) where
- mp h:=⟨fun x y z↦by rw [←mulLeft₃_apply, ←mulRight₃_apply,h]⟩
+   mulLeft₃ (R:=R)=mulRight₃↔Std.Associative (fun (x y:R)↦x*y) where
+ mp h:=⟨fun x y z↦by rw [←mulLeft₃_apply,←mulRight₃_apply,h]⟩
  mpr h:=by ext x y z;simp [Std.Associative.assoc]
 end NonUnitalNonAssocSemiring
 section NonUnitalSemiring
@@ -58,7 +57,7 @@ def associator:R →+R →+R →+R:=mulLeft₃-mulRight₃
 @[simp]
 theorem associator_apply:associator a b c=_root_.associator a b c:=rfl
 theorem associator_eq_zero_iff_associative:
-   associator (R:=R)=0 ↔ Std.Associative (fun (x y:R)↦x*y):=by
+   associator (R:=R)=0↔Std.Associative (fun (x y:R)↦x*y):=by
  simp [mulLeft₃_eq_mulRight₃_iff_associative,associator,sub_eq_zero]
 end NonUnitalNonAssocRing
 section NonUnitalRing

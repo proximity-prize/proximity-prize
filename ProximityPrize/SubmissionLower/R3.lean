@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HE
 namespace ProximityPrize.SubmissionLower.RCN347
 open Finset
@@ -46,7 +45,7 @@ end Derivation
 section NormalizedCoefficients
 variable {K A L:Type*} [CommRing K] [CommRing A] [Algebra K A] [Field L]
 theorem factorial_cast_ne_zero_below_characteristic
-   (p:ℕ) [CharP L p]:∀ n:ℕ,n < p → (n.factorial:L)≠0:=by
+   (p:ℕ) [CharP L p]:∀ n:ℕ,n<p→(n.factorial:L)≠0:=by
  intro n
  induction n with
  | zero =>
@@ -116,7 +115,7 @@ noncomputable def jetPolynomial
 theorem jetPolynomial_coeff
    (D:Derivation K A A) (value:A →+*L) (bound:ℕ) (a:A) (j:ℕ):
    (jetPolynomial D value bound a).coeff j=
-     if j < bound then jetCoefficient D value a j else 0:=by
+     if j<bound then jetCoefficient D value a j else 0:=by
  classical
  simp [jetPolynomial,Polynomial.coeff_monomial]
 theorem jetPolynomial_zero
@@ -125,7 +124,7 @@ theorem jetPolynomial_zero
  ext j
  simp [jetPolynomial_coeff,jetCoefficient_zero]
 theorem jetPolynomial_one
-   (D:Derivation K A A) (value:A →+*L) (bound:ℕ) (hbound:0 < bound):
+   (D:Derivation K A A) (value:A →+*L) (bound:ℕ) (hbound:0<bound):
    jetPolynomial D value bound 1=1:=by
  ext j
  by_cases hj:j=0
@@ -137,11 +136,11 @@ theorem jetPolynomial_add
    jetPolynomial D value bound (a+b)=
      jetPolynomial D value bound a+jetPolynomial D value bound b:=by
  ext j
- by_cases hj:j < bound <;>
+ by_cases hj:j<bound <;>
    simp [jetPolynomial_coeff,jetCoefficient_add,hj]
 theorem X_pow_dvd_jetPolynomial_product_error
    (D:Derivation K A A) (value:A →+*L) (bound:ℕ) (a b:A)
-   (hfactorial:∀ j < bound,(j.factorial:L)≠0):
+   (hfactorial:∀ j<bound,(j.factorial:L)≠0):
    (Polynomial.X:Polynomial L)^bound∣
      jetPolynomial D value bound (a*b)-
        jetPolynomial D value bound a*jetPolynomial D value bound b:=by
@@ -155,8 +154,8 @@ theorem X_pow_dvd_jetPolynomial_product_error
  apply Finset.sum_congr rfl
  intro ij hij
  have hsum:ij.1+ij.2=j:=mem_antidiagonal.mp hij
- have hi:ij.1 < bound:=by omega
- have hk:ij.2 < bound:=by omega
+ have hi:ij.1<bound:=by omega
+ have hk:ij.2<bound:=by omega
  rw [jetPolynomial_coeff,if_pos hi,jetPolynomial_coeff,if_pos hk]
 theorem X_pow_dvd_jetPolynomial_product_error_of_char
    (D:Derivation K A A) (value:A →+*L) (p bound:ℕ) [CharP L p]

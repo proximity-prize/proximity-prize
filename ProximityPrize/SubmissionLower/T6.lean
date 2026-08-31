@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T5
 import ProximityPrize.SubmissionLower.AU
 section ProximityFlatProofPort
@@ -6,7 +5,7 @@ universe t w u v
 open TensorProduct MvPolynomial
 variable (R:Type u) (S:Type v) (ι:Type w) (σ:Type t) [CommRing R] [CommRing S] [Algebra R S]
 structure Algebra.Presentation extends Algebra.Generators R S ι where
- relation:σ → toGenerators.Ring
+ relation:σ→toGenerators.Ring
  span_range_relation_eq_ker:
    Ideal.span (Set.range relation)=toGenerators.ker
 namespace Algebra.Presentation
@@ -14,7 +13,7 @@ variable {R S ι σ}
 variable (P:Presentation R S ι σ)
 @[simp]
 lemma aeval_val_relation (i):aeval P.val (P.relation i)=0:=by
- rw [←RingHom.mem_ker, ←P.ker_eq_ker_aeval_val, ←P.span_range_relation_eq_ker]
+ rw [←RingHom.mem_ker,←P.ker_eq_ker_aeval_val,←P.span_range_relation_eq_ker]
  exact Ideal.subset_span ⟨i,rfl⟩
 lemma relation_mem_ker (i):P.relation i∈P.ker:=by
  rw [←P.span_range_relation_eq_ker]
@@ -52,7 +51,7 @@ lemma exists_presentation_fin [FinitePresentation R S]:
  haveI hf':(RingHom.ker f).FG:=H.choose_spec.choose_spec.2
  letI H':=Submodule.fg_iff_exists_fin_generating_family.mp hf'
  let m:ℕ:=H'.choose
- let v:Fin m → MvPolynomial (Fin n) R:=H'.choose_spec.choose
+ let v:Fin m→MvPolynomial (Fin n) R:=H'.choose_spec.choose
  have hv:Ideal.span (Set.range v)=RingHom.ker f:=H'.choose_spec.choose_spec
  ⟨n,m,
    ⟨{__:=Generators.ofSurjective (fun x↦f (.X x)) (by convert! hf;ext;simp)
@@ -115,11 +114,11 @@ lemma _root_.Algebra.Generators.ker_localizationAway:
    simp only [aeval_X,Generators.localizationAway_val,AlgHom.coe_comp,
      AlgEquiv.coe_toAlgHom,Ideal.Quotient.mkₐ_eq_mk,Function.comp_apply]
    rw [IsLocalization.Away.mvPolynomialQuotientEquiv_apply,aeval_X]
- rw [Generators.ker_eq_ker_aeval_val,this, ←RingHom.ker_coe_toRingHom,AlgHom.comp_toRingHom,
+ rw [Generators.ker_eq_ker_aeval_val,this,←RingHom.ker_coe_toRingHom,AlgHom.comp_toRingHom,
    ←RingHom.comap_ker]
  simp only [AlgEquiv.toAlgHom_toRingHom]
  change Ideal.comap _ (RingHom.ker (mvPolynomialQuotientEquiv S r))=Ideal.span {C r*_root_.MvPolynomial.X ()-1}
- simp [RingHom.ker_equiv, ←RingHom.ker_eq_comap_bot]
+ simp [RingHom.ker_equiv,←RingHom.ker_eq_comap_bot]
 variable (S) in
 @[simps relation]
 noncomputable def localizationAway:Presentation R S Unit Unit where
@@ -146,7 +145,7 @@ lemma span_range_relation_eq_ker_baseChange:
    have «Z»:=aeval_val_relation P y
    apply_fun TensorProduct.includeRight (R:=R) (A:=T) at «Z»
    rw [map_zero] at «Z»
-   simp only [SetLike.mem_coe,RingHom.mem_ker, ←«Z», ←hy,
+   simp only [SetLike.mem_coe,RingHom.mem_ker,←«Z»,←hy,
      TensorProduct.includeRight_apply]
    rw [aeval_map_algebraMap T (P.baseChange T).val (P.relation y)]
    change _=TensorProduct.includeRight.toRingHom _
@@ -160,7 +159,7 @@ lemma span_range_relation_eq_ker_baseChange:
    let e:=MvPolynomial.algebraTensorAlgEquiv (R:=R) (σ:=ι) (A:=T)
    have H':e.symm x∈RingHom.ker (TensorProduct.map (AlgHom.id R T)
        (IsScalarTower.toAlgHom R P.Ring S)):=by
-     rw [RingHom.mem_ker, ←hx]
+     rw [RingHom.mem_ker,←hx]
      clear hx
      induction x using MvPolynomial.induction_on with
      | C a =>
@@ -173,10 +172,10 @@ lemma span_range_relation_eq_ker_baseChange:
      | mul_X p i hp => simp [hp,e]
    rw [H] at H'
    replace H':e.symm x∈Ideal.map TensorProduct.includeRight P.ker:=H'
-   rw [←P.span_range_relation_eq_ker, ←Ideal.mem_comap, ←Ideal.comap_coe,
+   rw [←P.span_range_relation_eq_ker,←Ideal.mem_comap,←Ideal.comap_coe,
      ←AlgEquiv.toRingEquiv_toRingHom,Ideal.comap_coe,AlgEquiv.symm_toRingEquiv,
-     Ideal.comap_symm, ←Ideal.map_coe, ←Ideal.map_coe _ (Ideal.span _),Ideal.map_map,
-     Ideal.map_span, ←Set.range_comp,AlgEquiv.toRingEquiv_toRingHom,RingHom.coe_comp,
+     Ideal.comap_symm,←Ideal.map_coe,←Ideal.map_coe _ (Ideal.span _),Ideal.map_map,
+     Ideal.map_span,←Set.range_comp,AlgEquiv.toRingEquiv_toRingHom,RingHom.coe_comp,
      RingHom.coe_coe] at H'
    convert! H'
    simp [e]
@@ -211,7 +210,7 @@ private lemma compRelationAux_map (r:σ'):
  ext u s m
  simp only [aeval,AlgHom.coe_mk,coe_eval₂Hom,map_one,one_mul,AddMonoidAlgebra.ofCoeff_single,
    single_eq_monomial]
- rw [monomial_eq,IsScalarTower.algebraMap_eq R S,algebraMap_eq, ←eval₂_comp_left, ←aeval_def]
+ rw [monomial_eq,IsScalarTower.algebraMap_eq R S,algebraMap_eq,←eval₂_comp_left,←aeval_def]
  simp [Finsupp.prod_mapDomain_index_inj (Sum.inl_injective)]
 private lemma aux_surjective:Function.Surjective (Q.aux P):=fun p↦by
  induction p using MvPolynomial.induction_on with
@@ -240,9 +239,9 @@ private lemma aux_eq_comp:Q.aux P=
  cases i <;> simp
 private lemma aux_ker:
    RingHom.ker (Q.aux P)=Ideal.map (rename Sum.inr) (RingHom.ker (aeval P.val)):=by
- rw [aux_eq_comp, ←AlgHom.comap_ker,MvPolynomial.ker_mapAlgHom]
+ rw [aux_eq_comp,←AlgHom.comap_ker,MvPolynomial.ker_mapAlgHom]
  change Ideal.comap _ (Ideal.map (IsScalarTower.toAlgHom R (MvPolynomial ι R) _) _)=_
- rw [←sumAlgEquiv_comp_rename_inr, ←Ideal.map_mapₐ,Ideal.comap_map_of_bijective]
+ rw [←sumAlgEquiv_comp_rename_inr,←Ideal.map_mapₐ,Ideal.comap_map_of_bijective]
  simpa using AlgEquiv.bijective (sumAlgEquiv R ι' ι)
 variable [Algebra R T] [IsScalarTower R S T]
 private lemma aeval_comp_val_eq:
@@ -254,11 +253,11 @@ private lemma aeval_comp_val_eq:
 lemma span_range_relation_eq_ker_comp:Ideal.span
    (Set.range (Sum.elim (Algebra.Presentation.compRelationAux Q P)
      fun rp↦(rename Sum.inr) (P.relation rp)))=(Q.comp P.toGenerators).ker:=by
- rw [Generators.ker_eq_ker_aeval_val,Q.aeval_comp_val_eq, ←AlgHom.comap_ker]
+ rw [Generators.ker_eq_ker_aeval_val,Q.aeval_comp_val_eq,←AlgHom.comap_ker]
  change _=Ideal.comap _ (RingHom.ker (aeval Q.val))
- rw [←Q.ker_eq_ker_aeval_val, ←Q.span_range_relation_eq_ker, ←Q.aux_image_relation P,
+ rw [←Q.ker_eq_ker_aeval_val,←Q.span_range_relation_eq_ker,←Q.aux_image_relation P,
    ←Ideal.map_span,Ideal.comap_map_of_surjective' _ (Q.aux_surjective P)]
- rw [Set.Sum.elim_range,Ideal.span_union,Q.aux_ker, ←P.ker_eq_ker_aeval_val,
+ rw [Set.Sum.elim_range,Ideal.span_union,Q.aux_ker,←P.ker_eq_ker_aeval_val,
    ←P.span_range_relation_eq_ker,Ideal.map_span]
  congr
  ext
@@ -287,11 +286,11 @@ lemma relation_comp_localizationAway_inl (P:Presentation R S ι σ)
  classical
  simp only [Presentation.comp,Sum.elim_inl,Presentation.compRelationAux,
    Presentation.localizationAway_relation,sub_eq_add_neg,C_mul_X_eq_monomial,
-   ←map_one C, ←map_neg C]
+   ←map_one C,←map_neg C]
  refine (Finsupp.sum_single_add_single (Finsupp.single () 1) 0 g (-1:S) _ ?_ ?_).trans ?_
  · simp
  · simp [h0]
- · simp [h1, ←X_pow_eq_monomial]
+ · simp [h1,←X_pow_eq_monomial]
 end Composition
 @[simps toGenerators]
 noncomputable def reindex (P:Presentation R S ι σ)
@@ -300,8 +299,8 @@ noncomputable def reindex (P:Presentation R S ι σ)
  __:=P.toGenerators.reindex e
  relation:=rename e.symm ∘ P.relation ∘ f
  span_range_relation_eq_ker:=by
-   rw [Generators.ker_eq_ker_aeval_val,Generators.reindex_val, ←aeval_comp_rename,
-     ←AlgHom.comap_ker, ←P.ker_eq_ker_aeval_val, ←P.span_range_relation_eq_ker,
+   rw [Generators.ker_eq_ker_aeval_val,Generators.reindex_val,←aeval_comp_rename,
+     ←AlgHom.comap_ker,←P.ker_eq_ker_aeval_val,←P.span_range_relation_eq_ker,
      Set.range_comp,Set.range_comp,Equiv.range_eq_univ,Set.image_univ,
      ←Ideal.map_span (rename ⇑e.symm)]
    have hf:Function.Bijective (MvPolynomial.rename e.symm):=(renameEquiv R e.symm).bijective
@@ -313,13 +312,13 @@ lemma dimension_reindex (P:Presentation R S ι σ) {ι' σ':Type*} (e:ι' ≃ ι
    (P.reindex e f).dimension=P.dimension:=by
  simp [dimension,Nat.card_congr e,Nat.card_congr f]
 section
-variable {v:ι → MvPolynomial σ R}
- (s:MvPolynomial σ R ⧸ (Ideal.span <| Set.range v) → MvPolynomial σ R)
+variable {v:ι→MvPolynomial σ R}
+ (s:MvPolynomial σ R ⧸ (Ideal.span <| Set.range v)→MvPolynomial σ R)
  (hs:∀ x,Ideal.Quotient.mk _ (s x)=x)
 @[simps! toGenerators]
 noncomputable
-def naive {v:ι → MvPolynomial σ R}
-   (s:MvPolynomial σ R ⧸ (Ideal.span <| Set.range v) → MvPolynomial σ R:=
+def naive {v:ι→MvPolynomial σ R}
+   (s:MvPolynomial σ R ⧸ (Ideal.span <| Set.range v)→MvPolynomial σ R:=
      Function.surjInv Ideal.Quotient.mk_surjective)
    (hs:∀ x,Ideal.Quotient.mk _ (s x)=x:=by apply Function.surjInv_eq):
    Presentation R (MvPolynomial σ R ⧸ (Ideal.span <| Set.range v)) σ ι where

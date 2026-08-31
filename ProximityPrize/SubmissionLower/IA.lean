@@ -1,12 +1,11 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 namespace Int
-theorem isCoprime_iff_nat_coprime {a b:ℤ}:IsCoprime a b ↔ Nat.Coprime a.natAbs b.natAbs:=by
+theorem isCoprime_iff_nat_coprime {a b:ℤ}:IsCoprime a b↔Nat.Coprime a.natAbs b.natAbs:=by
  rw [isCoprime_iff_gcd_eq_one,Nat.coprime_iff_gcd_eq_one,gcd_eq_natAbs]
 theorem gcd_ne_one_iff_gcd_mul_right_ne_one {a:ℤ} {m n:ℕ}:
-   a.gcd (m*n)≠1 ↔ a.gcd m≠1∨a.gcd n≠1:=by
- simp only [←isCoprime_iff_gcd_eq_one, ←not_and_or,not_iff_not,IsCoprime.mul_right_iff]
+   a.gcd (m*n)≠1↔a.gcd m≠1∨a.gcd n≠1:=by
+ simp only [←isCoprime_iff_gcd_eq_one,←not_and_or,not_iff_not,IsCoprime.mul_right_iff]
 theorem sq_of_gcd_eq_one {a b c:ℤ} (h:Int.gcd a b=1) (heq:a*b=c^2):
    ∃ a0:ℤ,a=a0^2∨a= -a0^2:=by
  have h':IsUnit (GCDMonoid.gcd a b):=by
@@ -31,7 +30,7 @@ theorem natAbs_euclideanDomain_gcd (a b:ℤ):
 end Int
 theorem Int.Prime.dvd_mul {m n:ℤ} {p:ℕ} (hp:Nat.Prime p) (h:(p:ℤ)∣m*n):
    p∣m.natAbs∨p∣n.natAbs:=by
- rwa [←hp.dvd_mul, ←Int.natAbs_mul, ←Int.natCast_dvd]
+ rwa [←hp.dvd_mul,←Int.natAbs_mul,←Int.natCast_dvd]
 theorem Int.Prime.dvd_mul' {m n:ℤ} {p:ℕ} (hp:Nat.Prime p) (h:(p:ℤ)∣m*n):
    (p:ℤ)∣m∨(p:ℤ)∣n:=by
  rw [Int.natCast_dvd,Int.natCast_dvd]
@@ -56,26 +55,26 @@ namespace Int
 theorem exists_prime_and_dvd {n:ℤ} (hn:n.natAbs≠1):∃ p,Prime p∧p∣n:=by
  obtain ⟨p,pp,pd⟩:=Nat.exists_prime_and_dvd hn
  exact ⟨p,Nat.prime_iff_prime_int.mp pp,Int.natCast_dvd.mpr pd⟩
-theorem prime_iff_natAbs_prime {k:ℤ}:Prime k ↔ Nat.Prime k.natAbs:=
+theorem prime_iff_natAbs_prime {k:ℤ}:Prime k↔Nat.Prime k.natAbs:=
  (Int.associated_natAbs k).prime_iff.trans Nat.prime_iff_prime_int.symm
-instance instDecidablePredPrime:DecidablePred (Prime:ℤ → Prop):=fun m↦
+instance instDecidablePredPrime:DecidablePred (Prime:ℤ→Prop):=fun m↦
  decidable_of_iff (Nat.Prime m.natAbs) prime_iff_natAbs_prime.symm
-instance (priority:=100):DecidablePred (Irreducible:ℤ → Prop):=fun m↦
+instance (priority:=100):DecidablePred (Irreducible:ℤ→Prop):=fun m↦
  decidable_of_iff (Prime m) irreducible_iff_prime.symm
 theorem span_natAbs (a:ℤ):Ideal.span ({(a.natAbs:ℤ)}:Set ℤ)=Ideal.span {a}:=by
  rw [Ideal.span_singleton_eq_span_singleton]
  exact (associated_natAbs _).symm
 @[simp]
-theorem isCoprime_two_left {m:ℤ}:IsCoprime 2 m ↔ Odd m:=by
+theorem isCoprime_two_left {m:ℤ}:IsCoprime 2 m↔Odd m:=by
  simp [isCoprime_iff_nat_coprime]
 @[simp]
-theorem isCoprime_two_right {m:ℤ}:IsCoprime m 2 ↔ Odd m:=by
+theorem isCoprime_two_right {m:ℤ}:IsCoprime m 2↔Odd m:=by
  simp [isCoprime_iff_nat_coprime]
 theorem eq_pow_of_mul_eq_pow_odd_left {a b c:ℤ} (hab:IsCoprime a b) {k:ℕ} (hk:Odd k)
    (h:a*b=c^k):∃ d,a=d^k:=by
  obtain ⟨d,hd⟩:=exists_associated_pow_of_mul_eq_pow' hab h
  replace hd:=hd.symm
- rw [associated_iff_natAbs,natAbs_eq_natAbs_iff, ←hk.neg_pow] at hd
+ rw [associated_iff_natAbs,natAbs_eq_natAbs_iff,←hk.neg_pow] at hd
  obtain rfl | rfl:=hd <;> exact ⟨_,rfl⟩
 theorem eq_pow_of_mul_eq_pow_odd_right {a b c:ℤ} (hab:IsCoprime a b) {k:ℕ} (hk:Odd k)
    (h:a*b=c^k):∃ d,b=d^k:=

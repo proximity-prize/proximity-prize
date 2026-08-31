@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W4
 import ProximityPrize.SubmissionLower.Z7
 import ProximityPrize.SubmissionLower.S3
@@ -99,7 +98,7 @@ theorem poleOrder_eq_zero_of_not_mem_infinity (v:Place K L)
    (hv:v∉infinityValues K L):
    poleOrder K L v (RCN345.parameter K L)=0:=by
  by_contra hnonzero
- have ht:1 < v.val (RCN345.parameter K L):=
+ have ht:1<v.val (RCN345.parameter K L):=
    lt_of_not_ge fun hle↦hnonzero (poleOrder_eq_zero_of_le_one K L v _ hle)
  letI:v.val.IsTrivialOn K:=v.property.2
  obtain ⟨q,hq,_⟩:=
@@ -143,7 +142,7 @@ theorem finite_sum_pole_le_finrank (W:Finset (Place K L)):
      exact poleOrder_nonneg K L v _
    _=(Module.finrank (RatFunc K) L:ℤ):=sum_poles_infinityValues_eq_finrank K L
 theorem finite_indexed_sum_pole_le_finrank
-   {ι:Type*} [DecidableEq ι] (s:Finset ι) (v:ι → Place K L)
+   {ι:Type*} [DecidableEq ι] (s:Finset ι) (v:ι→Place K L)
    (hv:Set.InjOn v (s:Set ι)):
    (∑ i∈s,poleOrder K L (v i) (RCN345.parameter K L)) ≤
      (Module.finrank (RatFunc K) L:ℤ):=by

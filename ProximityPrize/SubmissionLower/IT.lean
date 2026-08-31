@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 namespace Polynomial
@@ -10,7 +9,7 @@ theorem contentIdeal_def:p.contentIdeal=span (p.coeffs:Set R):=rfl
 theorem contentIdeal_zero:(0:R[X]).contentIdeal=⊥:=by
  simp [contentIdeal_def]
 @[simp]
-theorem contentIdeal_eq_bot_iff:p.contentIdeal=⊥ ↔ p=0:=by
+theorem contentIdeal_eq_bot_iff:p.contentIdeal=⊥↔p=0:=by
  simp only [contentIdeal_def,span_eq_bot]
  refine ⟨?_,fun h↦by simp [h]⟩
  contrapose!
@@ -33,7 +32,7 @@ theorem contentIdeal_C (r:R):(C r).contentIdeal=span {r}:=by
  exact contentIdeal_monomial 0 r
 @[simp]
 theorem contentIdeal_one:(1:R[X]).contentIdeal=⊤:=by
- rw [←span_singleton_one, ←contentIdeal_C 1,C_1]
+ rw [←span_singleton_one,←contentIdeal_C 1,C_1]
 theorem contentIdeal_FG:p.contentIdeal.FG:=⟨p.coeffs,rfl⟩
 theorem contentIdeal_map_eq_map_contentIdeal (f:R →+*S):
    (p.map f).contentIdeal=p.contentIdeal.map f:=by
@@ -68,7 +67,7 @@ theorem _root_.Submodule.IsPrincipal.contentIdeal_generator_dvd
  exact fun i↦h_prin.contentIdeal_generator_dvd_coeff i
 theorem _root_.Submodule.IsPrincipal.contentIdeal_le_span_iff_dvd
    (h_prin:p.contentIdeal.IsPrincipal) (r:R):
-   p.contentIdeal ≤ span {r} ↔ C r∣p:=by
+   p.contentIdeal ≤ span {r}↔C r∣p:=by
  constructor
  · rw [←p.contentIdeal.span_singleton_generator]
    intro _
@@ -86,7 +85,7 @@ theorem isPrimitive_of_contentIdeal_eq_top (h:p.contentIdeal=⊤):p.IsPrimitive:
  intro r
  simp [←h_prin.contentIdeal_le_span_iff_dvd r,h]
 theorem _root_.Submodule.IsPrincipal.isPrimitive_iff_contentIdeal_eq_top
-   (h_prin:p.contentIdeal.IsPrincipal):p.IsPrimitive ↔ p.contentIdeal=⊤:=by
+   (h_prin:p.contentIdeal.IsPrincipal):p.IsPrimitive↔p.contentIdeal=⊤:=by
  refine ⟨?_,fun h↦isPrimitive_of_contentIdeal_eq_top h⟩
  contrapose!
  simp only [IsPrimitive,not_forall]
@@ -109,7 +108,7 @@ theorem mul_contentIdeal_le_radical_contentIdeal_mul:
  intro P ⟨hpq,hPprime⟩
  rw [hPprime.mul_le]
  rw [←Ideal.mk_ker (I:=P)] at hpq ⊢
- simpa only [←map_eq_bot_iff_le_ker, ←contentIdeal_map_eq_map_contentIdeal,Polynomial.map_mul,
+ simpa only [←map_eq_bot_iff_le_ker,←contentIdeal_map_eq_map_contentIdeal,Polynomial.map_mul,
    contentIdeal_eq_bot_iff,mul_eq_zero] using hpq
 theorem contentIdeal_mul_eq_top_of_contentIdeal_eq_top (hp:p.contentIdeal=⊤)
    (hq:q.contentIdeal=⊤):(p*q).contentIdeal=⊤:=by
@@ -137,7 +136,7 @@ theorem _root_.Submodule.IsPrincipal.contentIdeal_eq_span_content_of_isPrincipal
 end NormalizedGCDMonoid
 section IsBezout
 variable {R:Type*} [CommSemiring R] [IsBezout R] (p:R[X])
-theorem isPrimitive_iff_contentIdeal_eq_top:p.IsPrimitive ↔ p.contentIdeal=⊤:=
+theorem isPrimitive_iff_contentIdeal_eq_top:p.IsPrimitive↔p.contentIdeal=⊤:=
  (IsBezout.isPrincipal_of_FG _ p.contentIdeal_FG).isPrimitive_iff_contentIdeal_eq_top
 end IsBezout
 end Polynomial

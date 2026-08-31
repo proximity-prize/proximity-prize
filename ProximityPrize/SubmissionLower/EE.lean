@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X7
 import ProximityPrize.SubmissionLower.AY
 namespace ProximityPrize.SubmissionLower.RCN124
@@ -12,10 +11,10 @@ open RCN371 RCN011
 noncomputable section
 theorem sum_finrank_le_ordinary_resultant_without_separability
    {F:Type} [Field F] {I:Type*} [Fintype I]
-   (E:I → Type) [∀ i,Field (E i)] [∀ i,Algebra F (E i)]
+   (E:I→Type) [∀ i,Field (E i)] [∀ i,Algebra F (E i)]
    [∀ i,FiniteDimensional F (E i)]
    (P Q:Polynomial (Polynomial F))
-   (hP:Irreducible P) (hpositive:0 < P.natDegree)
+   (hP:Irreducible P) (hpositive:0<P.natDegree)
    (hproper:¬ P∣Q)
    (y r:∀ i,E i)
    (hgen:∀ i,IntermediateField.adjoin F
@@ -63,7 +62,7 @@ theorem sum_finrank_le_ordinary_resultant_without_separability
 variable (K:Type) [Field K]
 theorem finite_sum_finrank_bound_trapezoid
    (order:Fin 3 ≃ Fin 3) {I:Type} [Fintype I]
-   (E:I → Type)
+   (E:I→Type)
    [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
    (e:∀ i,Original K →ₐ[K] E i)
    (ht:∀ i,Transcendental K (e i (MvPolynomial.X (order 0))))
@@ -77,7 +76,7 @@ theorem finite_sum_finrank_bound_trapezoid
    (hkernels:Function.Injective (fun i↦RingHom.ker (e i).toRingHom))
    (G H:Original K) (hG:Irreducible G)
    (hGroot:∀ i,e i G=0) (hHroot:∀ i,e i H=0)
-   (hproper:¬ G∣H) (hpositive:0 < (planeMap K order G).natDegree)
+   (hproper:¬ G∣H) (hpositive:0<(planeMap K order G).natDegree)
    (n mCap totalG totalH cap:ℕ) (hHne:H≠0)
    (hGouter:(planeMap K order G).natDegree ≤ n)
    (hHouter:(planeMap K order H).natDegree ≤ mCap)

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F
 namespace ProximityPrize.SubmissionLower.RCN272
 open scoped Classical BigOperators
@@ -14,22 +13,22 @@ local instance:DecidableEq Ω:=Classical.decEq Ω
 def FiniteZeroSetBound
    (P:Ideal (MvPolynomial (Fin 3) Ω))
    (A:MvPolynomial (Fin 3) Ω) (cost:ℕ):Prop:=
- ∀ points:Finset (Fin 3 → Ω),
+ ∀ points:Finset (Fin 3→Ω),
    (∀ v∈points,P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom) →
    (∀ v∈points,MvPolynomial.aeval v A=0) →
    points.card ≤ cost
 structure ResidualComponentBudget
    (G T H:MvPolynomial (Fin 3) Ω)
-   (Admissible:MvPolynomial (Fin 3) Ω → Prop) (wholeCost:ℕ) where
- cost:RegularComponent Ω G T H → ℕ
+   (Admissible:MvPolynomial (Fin 3) Ω→Prop) (wholeCost:ℕ) where
+ cost:RegularComponent Ω G T H→ℕ
  zero_le:∀ (C:RegularComponent Ω G T H)
      (A:MvPolynomial (Fin 3) Ω),
-   Admissible A → A∉C.1 → FiniteZeroSetBound C.1 A (cost C)
+   Admissible A→A∉C.1→FiniteZeroSetBound C.1 A (cost C)
  sum_cost_le:(∑ C:RegularComponent Ω G T H,cost C) ≤ wholeCost
 theorem agreement_fiber_card_le_of_zero_bound
    (P:Ideal (MvPolynomial (Fin 3) Ω))
-   (F:MvPolynomial (Fin 4) K) (selected:K → Polynomial K) (Γ:Finset K)
-   (p w:ℕ) [CharP Ω p] (hchar:w < p)
+   (F:MvPolynomial (Fin 4) K) (selected:K→Polynomial K) (Γ:Finset K)
+   (p w:ℕ) [CharP Ω p] (hchar:w<p)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
    (hregular:∀ γ∈Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
@@ -65,15 +64,15 @@ local instance:DecidableEq ι:=Classical.decEq ι
 theorem prime_seed_incidence_sharp_of_residual_cost
    (P:Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
    (hproj:ProjectionsFiniteSeparable Ω P)
-   (hnonpoint:∀ v:Fin 3 → Ω,
+   (hnonpoint:∀ v:Fin 3→Ω,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (F:MvPolynomial (Fin 4) K)
    (hF:surfaceMap φ F∈P)
    (hH:surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F)∉P)
-   (selected:K → Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
-   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
+   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w<p)
+   (hwa:w<a) (han:a ≤ nodes.card)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
    (hregular:∀ γ∈Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
@@ -94,7 +93,7 @@ theorem prime_seed_incidence_sharp_of_residual_cost
      (e+1)*(a-w)*actualCoordinateDegree Ω P 2:=by
  classical
  let I:=identityNodes φ P F nodes x u₀ u₁ w
- let relation:K → ι → Prop:=fun γ i↦
+ let relation:K→ι→Prop:=fun γ i↦
    (selected γ).eval (x i)=u₀ i+γ*u₁ i
  by_cases hI:I.card ≤ w
  · have hfiber:∀ i∈nodes \ I,
@@ -112,7 +111,7 @@ theorem prime_seed_incidence_sharp_of_residual_cost
      cost (identityNodes_subset φ P F nodes x u₀ u₁ w) hI hwa han
      hagreement hfiber
    omega
- · have hc:w < I.card:=Nat.lt_of_not_ge hI
+ · have hc:w<I.card:=Nat.lt_of_not_ge hI
    have hvalues:∀ (t:{γ:K//γ∈Γ}) i,i∈I →
        (selected t.1).eval (x i)=u₀ i+t.1*u₁ i:=by
      intro t
@@ -142,12 +141,12 @@ theorem prime_seed_incidence_sharp_of_residual_cost
    omega
 theorem aggregate_component_residual_incidence
    (G T H:MvPolynomial (Fin 3) Ω)
-   {Seed:Type*} (S:Finset Seed) (v:Seed → Fin 3 → Ω)
+   {Seed:Type*} (S:Finset Seed) (v:Seed→Fin 3→Ω)
    (hG:∀ γ∈S,MvPolynomial.eval (v γ) G=0)
    (hT:∀ γ∈S,MvPolynomial.eval (v γ) T=0)
    (hH:∀ γ∈S,MvPolynomial.eval (v γ) H≠0)
    (gap nodes pencil wholeCost zBudget:ℕ)
-   (cost zDegree:RegularComponent Ω G T H → ℕ)
+   (cost zDegree:RegularComponent Ω G T H→ℕ)
    (hcomponent:∀ C,
      (componentSeeds Ω G T H S v C).card*gap ≤
        nodes*cost C+pencil*gap*zDegree C)
@@ -168,17 +167,17 @@ theorem aggregate_component_residual_incidence
      Finset.sum_le_sum (fun C _↦hcomponent C)
    _=nodes*(∑ C:RegularComponent Ω G T H,cost C)+
        pencil*gap*(∑ C:RegularComponent Ω G T H,zDegree C):=by
-     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum]
+     rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.mul_sum]
    _ ≤ nodes*wholeCost+pencil*gap*zBudget:=
      Nat.add_le_add (Nat.mul_le_mul_left nodes hcost)
        (Nat.mul_le_mul_left (pencil*gap) hz)
 theorem proper_cut_seed_bound_of_residual_component_budget
    (F:MvPolynomial (Fin 4) K) (G T:MvPolynomial (Fin 3) Ω)
    (hdiv:G∣surfaceMap φ F)
-   (selected:K → Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
-   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w < p)
-   (hwa:w < a) (han:a ≤ nodes.card)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (hinj:Set.InjOn x nodes)
+   (p w a e:ℕ) [CharP Ω p] (hw:1 ≤ w) (hchar:w<p)
+   (hwa:w<a) (han:a ≤ nodes.card)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
    (hregular:∀ γ∈Γ,MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
@@ -192,7 +191,7 @@ theorem proper_cut_seed_bound_of_residual_component_budget
      a ≤ (nodes.filter (fun i↦
        (selected γ).eval (x i)=u₀ i+γ*u₁ i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Γ w e)
-   (Admissible:MvPolynomial (Fin 3) Ω → Prop)
+   (Admissible:MvPolynomial (Fin 3) Ω→Prop)
    (wholeCost zBudget:ℕ)
    (hsparse:ResidualComponentBudget G T (regularitySurface φ F)
      Admissible wholeCost)
@@ -213,7 +212,7 @@ theorem proper_cut_seed_bound_of_residual_component_budget
      (surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F))≠0
    rw [selectedPoint_evaluation]
    exact hregular γ hγ
- let zDegree:RegularComponent Ω G T H → ℕ:=
+ let zDegree:RegularComponent Ω G T H→ℕ:=
    fun C↦actualCoordinateDegree Ω C.1 2
  have hcomponent:∀ C:RegularComponent Ω G T H,
      (componentSeeds Ω G T H Γ (selectedPoint φ selected) C).card*

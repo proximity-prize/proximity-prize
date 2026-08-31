@@ -6,8 +6,8 @@ open RCN056 RCN234
 noncomputable section
 variable {K:Type*} [Field K]
 abbrev Poly (K:Type*) [Field K]:=MvPolynomial (Fin 4) K
-private theorem pderiv_eq_zero_of_wt_lt (weights:Fin 4 → ℕ) (P:Poly K) (i:Fin 4)
-   (hP:wt weights P < weights i):MvPolynomial.pderiv i P=0:=by
+private theorem pderiv_eq_zero_of_wt_lt (weights:Fin 4→ℕ) (P:Poly K) (i:Fin 4)
+   (hP:wt weights P<weights i):MvPolynomial.pderiv i P=0:=by
  apply MvPolynomial.support_eq_empty.mp
  apply Finset.eq_empty_iff_forall_notMem.mpr
  intro d hd
@@ -15,10 +15,10 @@ private theorem pderiv_eq_zero_of_wt_lt (weights:Fin 4 → ℕ) (P:Poly K) (i:Fi
  simp only [map_add,Finsupp.weight_single,one_nsmul] at hh
  change Finsupp.weight weights d+weights i ≤ wt weights P at hh
  omega
-def WeightBound (w:Fin 4 → ℕ) (P:Poly K) (c:ℤ):Prop:=
+def WeightBound (w:Fin 4→ℕ) (P:Poly K) (c:ℤ):Prop:=
  P=0∨(wt w P:ℤ) ≤ c
 namespace WeightBound
-variable {w:Fin 4 → ℕ} {P Q:Poly K} {a b:ℤ}
+variable {w:Fin 4→ℕ} {P Q:Poly K} {a b:ℤ}
 theorem mono (h:WeightBound w P a) (hab:a ≤ b):WeightBound w P b:=
  h.imp_right (fun hp => hp.trans hab)
 theorem add (hP:WeightBound w P a) (hQ:WeightBound w Q a):
@@ -83,7 +83,7 @@ theorem horizontal (hP:WeightBound w P a) (t:ℕ)
  simpa only [horizontalDerivation,Derivation.add_apply,Derivation.smul_apply,
    smul_eq_mul] using (hx.mono (by linarith)).add hxy
 end WeightBound
-theorem contribution_bounds (w:Fin 4 → ℕ) (t:ℕ)
+theorem contribution_bounds (w:Fin 4→ℕ) (t:ℕ)
    (hX:w 0=0) (hY:w 1=t) (hR:w 2=1) (ht:t ≤ 1)
    (F P:Poly K) (C a:ℤ) (hF:WeightBound w F C) (hP:WeightBound w P a)
    (n j:ℕ):
@@ -115,7 +115,7 @@ theorem contribution_bounds (w:Fin 4 → ℕ) (t:ℕ)
    apply WeightBound.sub
    · convert hH.mul hPR using 1;ring
    · convert (hP.scale (n+j)).mul hHR using 1;ring
-theorem baseCoefficients_weightBound (w:Fin 4 → ℕ) (t:ℕ)
+theorem baseCoefficients_weightBound (w:Fin 4→ℕ) (t:ℕ)
    (hX:w 0=0) (hY:w 1=t) (hR:w 2=1) (ht:t ≤ 1)
    (F:Poly K) (C:ℤ) (hF:WeightBound w F C) (n j:ℕ):
    WeightBound w (baseCoefficients F n j)
@@ -147,7 +147,7 @@ theorem baseCoefficients_weightBound (w:Fin 4 → ℕ) (t:ℕ)
          using 1
        simp only [Nat.cast_sub hj1,Nat.cast_one,Nat.cast_add]
        ring
-theorem baseCoefficients_cumulative_wt_le (w:Fin 4 → ℕ)
+theorem baseCoefficients_cumulative_wt_le (w:Fin 4→ℕ)
    (hX:w 0=0) (hY:w 1=1) (hR:w 2=1)
    (F:Poly K) (C:ℕ) (hC:1 ≤ C) (hF:wt w F ≤ C) (n j:ℕ):
    wt w (baseCoefficients F n j) ≤ 1+n*(C-1)-j:=by
@@ -161,7 +161,7 @@ theorem baseCoefficients_cumulative_wt_le (w:Fin 4 → ℕ)
      linarith
    have hn:wt w (baseCoefficients F n j)+j ≤ 1+n*(C-1):=by exact_mod_cast hi
    omega
-theorem baseCoefficients_R_wt_le (w:Fin 4 → ℕ)
+theorem baseCoefficients_R_wt_le (w:Fin 4→ℕ)
    (hX:w 0=0) (hY:w 1=0) (hR:w 2=1)
    (F:Poly K) (s:ℕ) (hF:wt w F ≤ s) (n j:ℕ):
    wt w (baseCoefficients F n j) ≤ n*s+2-2*j:=by
@@ -177,7 +177,7 @@ theorem baseCoefficients_R_wt_le (w:Fin 4 → ℕ)
 private theorem wt_coordinate (P:Poly K) (i:Fin 4):
    wt (Pi.single i 1) P=P.degreeOf i:=by
  rw [wt,MvPolynomial.weightedTotalDegree,MvPolynomial.degreeOf_eq_sup]
- apply congrArg (fun f:(Fin 4 →₀ ℕ) → ℕ => P.support.sup f)
+ apply congrArg (fun f:(Fin 4 →₀ ℕ)→ℕ => P.support.sup f)
  funext d
  exact Finsupp.weight_single_one_apply i d
 theorem baseCoefficients_R_degree_le (F:Poly K) (s:ℕ)

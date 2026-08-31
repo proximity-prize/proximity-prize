@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AQ
 namespace ProximityPrize.SubmissionLower.RCN017
 open IsDedekindDomain
@@ -7,7 +6,7 @@ section PointKernels
 variable {K S:Type*} [Field K] [CommRing S] [Algebra K S]
 def pointKernel (phi:S →ₐ[K] K):Ideal S:=RingHom.ker phi.toRingHom
 @[simp] theorem mem_pointKernel (phi:S →ₐ[K] K) (s:S):
-   s∈pointKernel phi ↔ phi s=0:=Iff.rfl
+   s∈pointKernel phi↔phi s=0:=Iff.rfl
 theorem point_surjective (phi:S →ₐ[K] K):Function.Surjective phi:=by
  intro c
  exact ⟨algebraMap K S c,by simpa using phi.commutes c⟩
@@ -16,7 +15,7 @@ theorem pointKernel_isPrime (phi:S →ₐ[K] K):(pointKernel phi).IsPrime:=
 theorem pointKernel_isMaximal (phi:S →ₐ[K] K):(pointKernel phi).IsMaximal:=
  RingHom.ker_isMaximal_of_surjective phi.toRingHom (point_surjective phi)
 theorem pointKernel_injective:
-   Function.Injective (pointKernel:(S →ₐ[K] K) → Ideal S):=by
+   Function.Injective (pointKernel:(S →ₐ[K] K)→Ideal S):=by
  intro phi psi hker
  apply AlgHom.ext
  intro s
@@ -61,7 +60,7 @@ def pointPlace (hinj:Function.Injective (algebraMap (Polynomial K) S))
    (phi:S →ₐ[K] K):(pointPlace hinj phi).asIdeal=pointKernel phi:=rfl
 theorem pointPlace_injective
    (hinj:Function.Injective (algebraMap (Polynomial K) S)):
-   Function.Injective (pointPlace hinj:(S →ₐ[K] K) → HeightOneSpectrum S):=by
+   Function.Injective (pointPlace hinj:(S →ₐ[K] K)→HeightOneSpectrum S):=by
  intro phi psi h
  apply pointKernel_injective
  exact congrArg HeightOneSpectrum.asIdeal h
@@ -69,7 +68,7 @@ variable [Field L] [Algebra S L] [IsFractionRing S L]
 theorem point_valuation_lt_one_iff
    (hinj:Function.Injective (algebraMap (Polynomial K) S))
    (phi:S →ₐ[K] K) (h:S):
-   (pointPlace hinj phi).valuation L (algebraMap S L h) < 1 ↔ phi h=0:=by
+   (pointPlace hinj phi).valuation L (algebraMap S L h)<1↔phi h=0:=by
  rw [HeightOneSpectrum.valuation_of_algebraMap]
  rw [HeightOneSpectrum.intValuation_lt_one_iff_mem]
  exact mem_pointKernel phi h
@@ -79,9 +78,9 @@ theorem point_zero_order_ge_one
    1 ≤-((pointPlace hinj phi).valuation L (algebraMap S L h)).log:=by
  rw [HeightOneSpectrum.valuation_of_algebraMap]
  have hv0:=(pointPlace hinj phi).intValuation_ne_zero h hne
- have hvlt:(pointPlace hinj phi).intValuation h < 1:=
+ have hvlt:(pointPlace hinj phi).intValuation h<1:=
    ((pointPlace hinj phi).intValuation_lt_one_iff_mem h).2 hzero
- have hlog:((pointPlace hinj phi).intValuation h).log < (0:ℤ):=by
+ have hlog:((pointPlace hinj phi).intValuation h).log<(0:ℤ):=by
    simpa using (WithZero.log_lt_log hv0 (by simp)).2 hvlt
  omega
 end ActualPlaces

@@ -6,7 +6,7 @@ noncomputable section
 set_option autoImplicit false
 variable {Base:Type} [Field Base] [DecidableEq Base]
 noncomputable def recost
-   {I:Type*} [Fintype I] {multiplicity oldCost newCost:I → ℕ}
+   {I:Type*} [Fintype I] {multiplicity oldCost newCost:I→ℕ}
    {budget:ℕ}
    (C:WeightedGroupedResultantChannel (Base:=Base)
      multiplicity oldCost budget)
@@ -24,7 +24,7 @@ noncomputable def recost
  resultant_degree_le:=C.resultant_degree_le
 noncomputable def emptyChannel
    {I:Type*} [Fintype I] [IsEmpty I]
-   (multiplicity cost:I → ℕ) (budget:ℕ):
+   (multiplicity cost:I→ℕ) (budget:ℕ):
    WeightedGroupedResultantChannel (Base:=Base) multiplicity cost budget where
  resultant:=1
  factor i:=isEmptyElim i

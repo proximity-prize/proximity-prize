@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BO
 namespace ProximityPrize.SubmissionLower.RCN275
 open RCN136 RCN313
@@ -98,7 +97,7 @@ theorem fixedMeet_of_mem_box
  · apply (weightedTotalDegree_le_iff residualSWeights F 6).mpr
    intro d hd
    have hb:d 1+d 3 ≤ 598∧d 2 ≤ 6∧
-       d 0+131071*d 1+(131071-1)*d 2 < 4570175:=hbox hd
+       d 0+131071*d 1+(131071-1)*d 2<4570175:=hbox hd
    rw [RCN081.weight_fin4]
    change d 0*0+d 1*0+d 2*1+d 3*0 ≤ 6
    norm_num
@@ -106,7 +105,7 @@ theorem fixedMeet_of_mem_box
  · apply (weightedTotalDegree_le_iff residualYSWeights F 34).mpr
    intro d hd
    have hb:d 1+d 3 ≤ 598∧d 2 ≤ 6∧
-       d 0+131071*d 1+(131071-1)*d 2 < 4570175:=hbox hd
+       d 0+131071*d 1+(131071-1)*d 2<4570175:=hbox hd
    rw [RCN081.weight_fin4]
    change d 0*0+d 1*1+d 2*1+d 3*0 ≤ 34
    norm_num
@@ -115,7 +114,7 @@ theorem fixedMeet_of_mem_box
  · apply (weightedTotalDegree_le_iff residualTotalWeights F 604).mpr
    intro d hd
    have hb:d 1+d 3 ≤ 598∧d 2 ≤ 6∧
-       d 0+131071*d 1+(131071-1)*d 2 < 4570175:=hbox hd
+       d 0+131071*d 1+(131071-1)*d 2<4570175:=hbox hd
    rw [RCN081.weight_fin4]
    change d 0*0+d 1*1+d 2*1+d 3*1 ≤ 604
    norm_num
@@ -169,7 +168,7 @@ theorem coordinate_bounds
 theorem agreement_weight_bounds
    {P:ResidualSupportParameters} {F:Poly4 K}
    (H:ResidualSupportData P F)
-   (d:ℕ) (coeffs:ℕ → K) (x u0 u1:K):
+   (d:ℕ) (coeffs:ℕ→K) (x u0 u1:K):
    (agreementNumerator F d coeffs x u0 u1).degreeOf (2:Fin 4) ≤
        d*(2*P.s-1)∧
      wt residualYSWeights (agreementNumerator F d coeffs x u0 u1) ≤
@@ -206,7 +205,7 @@ theorem surfaceMap_agreement_in_flag
    {P:ResidualSupportParameters}
    (phi:Polynomial K →+*Omega) {F:Poly4 K}
    (H:ResidualSupportData P F)
-   (d:ℕ) (coeffs:ℕ → K) (x u0 u1:K):
+   (d:ℕ) (coeffs:ℕ→K) (x u0 u1:K):
    PolynomialInFlag (P.residualAgreementFlag d)
      (surfaceMap phi (agreementNumerator F d coeffs x u0 u1)):=by
  intro e he
@@ -243,7 +242,7 @@ theorem globalResidual_and_agreement_in_flag
    (H:ResidualSupportData P F)
    (phi:Polynomial K →+*Omega)
    (P0 P1 V:Polynomial K)
-   (d:ℕ) (coeffs:ℕ → K) (x u0 u1:K):
+   (d:ℕ) (coeffs:ℕ→K) (x u0 u1:K):
    let Fres:=globalResidualHom P0 P1 V F
    ResidualSupportData P Fres∧
      PolynomialInFlag (P.residualAgreementFlag d)

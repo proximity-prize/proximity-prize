@@ -36,7 +36,7 @@ private theorem exists_pair_generator_of_not_mem_sq
      have hrm:r∈m:=(IsLocalRing.mem_maximalIdeal r).mpr hr
      have hsm:s∈m:=(IsLocalRing.mem_maximalIdeal s).mpr hs
      apply hf2
-     rw [pow_two, ←hrs]
+     rw [pow_two,←hrs]
      exact (m*m).add_mem (Ideal.mul_mem_mul hrm ha) (Ideal.mul_mem_mul hsm hb)
  rcases hunit with hr | hs
  · refine ⟨b,hb,le_antisymm ?_ ?_⟩

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J6
 namespace ProximityPrize.SubmissionLower.RCN317
 open scoped Classical BigOperators
@@ -23,7 +22,7 @@ def tightFixedCountCap (p:Profile) (t:TightParameters):ℕ:=
  tightRegularCountCap p+t.countCap
 theorem combined_tight_count_bound
    (p:Profile) (t:TightParameters) (regularCount singularCount:ℕ)
-   (hpgap:0 < p.gap) (htgap:0 < t.gap)
+   (hpgap:0<p.gap) (htgap:0<t.gap)
    (hregular:regularCount*p.gap^2 ≤ p.regularNumerator)
    (hsingular:singularCount*t.gap ≤ t.tightNumerator):
    regularCount+singularCount ≤ tightFixedCountCap p t:=by
@@ -62,8 +61,8 @@ theorem meet_global_count_le_tightFixedCountCap_of_regular_factors
    [CharP K prime6656]
    (hbox:Q∈globalCoefficientBox K meetProfile.weightedCap meetProfile.w
      meetProfile.seedTotalCap meetProfile.slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=meetProfile.n)
    (hdegree:∀ gamma∈Gamma,
      (selected gamma).natDegree ≤ meetProfile.w)
@@ -97,8 +96,8 @@ theorem meet_global_count_lt_tightFixedCost_of_regular_factors
    [CharP K prime6656]
    (hbox:Q∈globalCoefficientBox K meetProfile.weightedCap meetProfile.w
      meetProfile.seedTotalCap meetProfile.slopeCap)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=meetProfile.n)
    (hdegree:∀ gamma∈Gamma,
      (selected gamma).natDegree ≤ meetProfile.w)
@@ -112,7 +111,7 @@ theorem meet_global_count_lt_tightFixedCost_of_regular_factors
    (hregular:∀ F:RegularIndex Q,
      (regularSeeds Q selected Gamma F).card*meetProfile.gap^2 ≤
        meetProfile.factorRegularLedger (regularFlag Q F)):
-   Gamma.card < meetTightFixedCost:=by
+   Gamma.card<meetTightFixedCost:=by
  exact (meet_global_count_le_tightFixedCountCap_of_regular_factors Q hQ hbox
    selected Gamma nodes x u0 u1 hinj hnodes hdegree hsolution hagreement
    hnoPencil hregular).trans_lt (Nat.lt_succ_self _)

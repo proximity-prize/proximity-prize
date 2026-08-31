@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HP
 section ProximityFlatProofPort
 noncomputable section
@@ -12,7 +11,7 @@ class RankLeOne (v:Valuation R Γ₀) where
 class RankOne (v:Valuation R Γ₀) extends RankLeOne v,Valuation.IsNontrivial v
 open WithZero
 lemma nonempty_rankOne_iff_mulArchimedean {v:Valuation R Γ₀} [v.IsNontrivial]:
-   Nonempty v.RankOne ↔ MulArchimedean (ValueGroup₀ (.ofClass v)):=by
+   Nonempty v.RankOne↔MulArchimedean (ValueGroup₀ (.ofClass v)):=by
  letI:DecidableEq ℝ≥0:=Classical.decEq ℝ≥0
  constructor
  · intro h
@@ -35,7 +34,7 @@ lemma nonempty_rankOne_iff_mulArchimedean {v:Valuation R Γ₀} [v.IsNontrivial]
    have H:StrictMono (map' (rf.comp e)):=by
      refine map'_strictMono ?_
      intro a b h
-     simpa [←Units.val_lt_val, ←NNReal.coe_lt_coe,rf] using he h
+     simpa [←Units.val_lt_val,←NNReal.coe_lt_coe,rf] using he h
    exact ⟨{
      hom':=withZeroUnitsEquiv.toMonoidWithZeroHom.comp <| (map' (rf.comp e)).comp
        withZeroUnitsEquiv.symm.toMonoidWithZeroHom
@@ -52,12 +51,12 @@ theorem zero_of_hom_zero {x:ValueGroup₀ (.ofClass v)} (hx:hom v x=0):x=0:=by
  have hs:=strictMono v h_lt
  rw [map_zero,hx] at hs
  exact hs.false
-theorem hom_eq_zero_iff {x:ValueGroup₀ (.ofClass v)}:hom v x=0 ↔ x=0:=
+theorem hom_eq_zero_iff {x:ValueGroup₀ (.ofClass v)}:hom v x=0↔x=0:=
  ⟨fun h↦zero_of_hom_zero v h,fun h↦by rw [h,map_zero]⟩
 def unit:Γ₀ˣ:=
  Units.mk0 (v (nontrivial v).choose) ((nontrivial v).choose_spec).1
 theorem unit_ne_one:unit v≠1:=by
- rw [Ne, ←Units.val_inj,Units.val_one]
+ rw [Ne,←Units.val_inj,Units.val_one]
  exact ((nontrivial v).choose_spec).2
 instance:IsNontrivial v where
  exists_val_nontrivial:=RankOne.nontrivial v
@@ -75,8 +74,8 @@ lemma restrict_RankOne_hom_eq:
  RankOne.hom v.restrict=(RankOne.hom v).comp embedding:=rfl
 set_option backward.defeqAttrib.useBackward true in
 variable {K} in
-theorem exists_val_lt {γ:ℝ≥0} (hγ:γ≠0):∃ x≠0,RankOne.hom v (v.restrict x) < γ:=by
- have hγ_pos:0 < γ:=pos_iff_ne_zero.mpr hγ
+theorem exists_val_lt {γ:ℝ≥0} (hγ:γ≠0):∃ x≠0,RankOne.hom v (v.restrict x)<γ:=by
+ have hγ_pos:0<γ:=pos_iff_ne_zero.mpr hγ
  obtain ⟨x,h⟩:=NNReal.exists_lt_of_strictMono (RankOne.strictMono v.restrict) hγ_pos
  obtain ⟨k,hk⟩:=ValueGroup₀.restrict₀_surjective _ x.val
  refine ⟨k,?_,?_⟩
@@ -86,7 +85,7 @@ theorem exists_val_lt {γ:ℝ≥0} (hγ:γ≠0):∃ x≠0,RankOne.hom v (v.restr
    rw [dif_pos (by rw [dif_pos ((zero_iff v).mpr h0)]),eq_comm] at hk
    simp at hk
  · convert! h
-   simp only [restrict_RankOne_hom_eq,coe_comp,Function.comp_apply, ←hk]
+   simp only [restrict_RankOne_hom_eq,coe_comp,Function.comp_apply,←hk]
    congr 1
    exact (embedding_restrict₀ k).symm
 end Restrict
@@ -121,7 +120,7 @@ def rankOne_of_nontrivial (H:Nontrivial (ValueGroup₀ (.ofClass v))ˣ):RankOne 
    exact h1 (H' k h0)
 theorem exists_val_lt {K:Type*} [DivisionRing K] (v:Valuation K Γ₀) [RankLeOne v]:
    Subsingleton ((ValueGroup₀ (.ofClass v))ˣ)∨
-     ∀ {γ:ℝ≥0} (_:γ≠0),∃ (x:K),x≠0∧(RankLeOne.hom' v) (v.restrict x) < γ:=by
+     ∀ {γ:ℝ≥0} (_:γ≠0),∃ (x:K),x≠0∧(RankLeOne.hom' v) (v.restrict x)<γ:=by
  simp only [ne_eq,or_iff_not_imp_left,not_subsingleton_iff_nontrivial]
  exact fun H↦(rankOne_of_nontrivial v H).exists_val_lt
 end RankLeOne
@@ -148,7 +147,7 @@ lemma ValuativeRel.isNontrivial_of_rankOne [h:(valuation R).RankOne]:
  (isNontrivial_iff_isNontrivial _).mpr h.toIsNontrivial
 open WithZero
 lemma ValuativeRel.isRankLeOne_iff_mulArchimedean:
-   IsRankLeOne R ↔ MulArchimedean (ValueGroupWithZero R):=by
+   IsRankLeOne R↔MulArchimedean (ValueGroupWithZero R):=by
  letI:DecidableEq (ValueGroupWithZero R):=Classical.decEq (ValueGroupWithZero R)
  letI:Decidable (IsNontrivial R):=Classical.propDecidable _
  constructor

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z5
 import ProximityPrize.SubmissionLower.P
 namespace ProximityPrize.SubmissionLower.RCN205
@@ -11,12 +10,12 @@ set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
 variable {K L:Type} [Field K] [Field L] [Algebra K L]
 abbrev DV (L:Type) [Field L]:=Valuation L (WithZero (Multiplicative ℤ))
-def zPole (ν:DV L) (x:Fin 3 → L):ℤ:=poleOrder ν (x 2)
-def yzPole (ν:DV L) (x:Fin 3 → L):ℤ:=
+def zPole (ν:DV L) (x:Fin 3→L):ℤ:=poleOrder ν (x 2)
+def yzPole (ν:DV L) (x:Fin 3→L):ℤ:=
  max (poleOrder ν (x 0)) (poleOrder ν (x 2))
-def allPole (ν:DV L) (x:Fin 3 → L):ℤ:=
+def allPole (ν:DV L) (x:Fin 3→L):ℤ:=
  max (poleOrder ν (x 1)) (yzPole ν x)
-def movingPole (ν:DV L) (x:Fin 3 → L) (W:L):ℤ:=
+def movingPole (ν:DV L) (x:Fin 3→L) (W:L):ℤ:=
  max (2*allPole ν x) (yzPole ν x+poleOrder ν W)
 private theorem pole_nonneg (ν:DV L) (x:L):0 ≤ poleOrder ν x:=
  le_max_left _ _
@@ -24,7 +23,7 @@ private theorem val_le_exp_pole (ν:DV L) (x:L):
    ν x ≤ WithZero.exp (poleOrder ν x):=by
  have hn:max 1 (ν x)≠0:=ne_of_gt
    (zero_lt_one.trans_le (le_max_left _ _))
- rw [poleOrder, ←log_max_one,WithZero.exp_log hn]
+ rw [poleOrder,←log_max_one,WithZero.exp_log hn]
  exact le_max_right _ _
 private theorem pole_le_of_val_le (ν:DV L) (x:L) (n:ℤ)
    (hn:0 ≤ n) (h:ν x ≤ WithZero.exp n):poleOrder ν x ≤ n:=by
@@ -54,13 +53,13 @@ theorem pole_const_mul_le (ν:DV L)
  exact (mul_le_mul' (hν c) (val_le_exp_pole ν x)).trans_eq (one_mul _)
 theorem pole_neg (ν:DV L) (x:L):poleOrder ν (-x)=poleOrder ν x:=by
  simp [poleOrder]
-def forward (aY v bY aS bS cS:K) (x:Fin 3 → L):Fin 3 → L:=
+def forward (aY v bY aS bS cS:K) (x:Fin 3→L):Fin 3→L:=
  forwardResidualPoint (algebraMap K L aY) (algebraMap K L v)
    (algebraMap K L bY) (algebraMap K L aS) (algebraMap K L bS)
    (algebraMap K L cS) x
 theorem forward_unit_le (ν:DV L)
    (hν:∀ c:K,ν (algebraMap K L c) ≤ 1)
-   (aY v bY aS bS cS:K) (x:Fin 3 → L):
+   (aY v bY aS bS cS:K) (x:Fin 3→L):
    zPole ν (forward aY v bY aS bS cS x)=zPole ν x∧
    yzPole ν (forward aY v bY aS bS cS x) ≤ yzPole ν x∧
    allPole ν (forward aY v bY aS bS cS x) ≤ allPole ν x:=by
@@ -97,7 +96,7 @@ theorem forward_unit_le (ν:DV L)
        (poleOrder ν (x 2))) ≤ allPole ν x
    exact max_le hS ((max_le hY (le_max_right _ _)).trans (le_max_right _ _))
 theorem forward_inverse (aY v bY aS bS cS:K) (hv:v≠0)
-   (x:Fin 3 → L):
+   (x:Fin 3→L):
    forward (-v⁻¹*aY) v⁻¹ (-v⁻¹*bY)
      (-v⁻¹*aS+v⁻¹*bS*v⁻¹*aY) (-v⁻¹*bS*v⁻¹)
      (v⁻¹*bS*v⁻¹*bY-v⁻¹*cS) (forward aY v bY aS bS cS x)=x:=by
@@ -107,7 +106,7 @@ theorem forward_inverse (aY v bY aS bS cS:K) (hv:v≠0)
    field_simp [hvL] <;> ring
 theorem forward_unit_invariant (ν:DV L)
    (hν:∀ c:K,ν (algebraMap K L c) ≤ 1)
-   (aY v bY aS bS cS:K) (hv:v≠0) (x:Fin 3 → L):
+   (aY v bY aS bS cS:K) (hv:v≠0) (x:Fin 3→L):
    zPole ν (forward aY v bY aS bS cS x)=zPole ν x∧
    yzPole ν (forward aY v bY aS bS cS x)=yzPole ν x∧
    allPole ν (forward aY v bY aS bS cS x)=allPole ν x:=by
@@ -119,7 +118,7 @@ theorem forward_unit_invariant (ν:DV L)
  exact ⟨h.1,le_antisymm h.2.1 hi.2.1,le_antisymm h.2.2 hi.2.2⟩
 theorem unitAll_eval_pole_le (ν:DV L)
    (hν:∀ c:K,ν (algebraMap K L c) ≤ 1)
-   (x:Fin 3 → L) (P:MvPolynomial (Fin 3) K)
+   (x:Fin 3→L) (P:MvPolynomial (Fin 3) K)
    (hP:RCN125.PolynomialInFlag unitAllFlag P):
    poleOrder ν (MvPolynomial.eval₂Hom (algebraMap K L) x P) ≤ allPole ν x:=by
  have h:=(poleOrder_eval_le_support ν (algebraMap K L) hν x P).trans
@@ -128,7 +127,7 @@ theorem unitAll_eval_pole_le (ν:DV L)
  simpa only [exponentSetPoleWeight_unitAll,allPole,yzPole] using h
 theorem unit_flag_poles_invariant (ν:DV L)
    (hν:∀ c:K,ν (algebraMap K L c) ≤ 1)
-   (aY v bY aS bS cS:K) (hv:v≠0) (x:Fin 3 → L):
+   (aY v bY aS bS cS:K) (hv:v≠0) (x:Fin 3→L):
    exponentSetPoleWeight ν (forward aY v bY aS bS cS x) (flagSupport unitZFlag)=
      exponentSetPoleWeight ν x (flagSupport unitZFlag)∧
    exponentSetPoleWeight ν (forward aY v bY aS bS cS x) (flagSupport unitYZFlag)=
@@ -140,7 +139,7 @@ theorem unit_flag_poles_invariant (ν:DV L)
    forward_unit_invariant ν hν aY v bY aS bS cS hv x
 theorem moving_pole_invariant (ν:DV L)
    (hν:∀ c:K,ν (algebraMap K L c) ≤ 1)
-   (aY v bY aS bS cS:K) (hv:v≠0) (x:Fin 3 → L)
+   (aY v bY aS bS cS:K) (hv:v≠0) (x:Fin 3→L)
    (c:K) (hc:c≠0) (P:MvPolynomial (Fin 3) K)
    (hP:RCN125.PolynomialInFlag unitAllFlag P)
    (W W':L)
@@ -172,7 +171,7 @@ theorem moving_pole_invariant (ν:DV L)
  omega
 theorem actual_forward_moving_pole_invariant (ν:DV L)
    (hν:∀ c:K,ν (algebraMap K L c) ≤ 1)
-   (aY v bY aS bS cS:K) (hv:v≠0) (x:Fin 3 → L)
+   (aY v bY aS bS cS:K) (hv:v≠0) (x:Fin 3→L)
    (c:K) (hc:c≠0) (P:MvPolynomial (Fin 3) K)
    (hP:RCN125.PolynomialInFlag unitAllFlag P)
    (W W':L)

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X5
 import ProximityPrize.SubmissionLower.DB
 namespace ProximityPrize.SubmissionLower.RCN012
@@ -9,7 +8,7 @@ open RCN013
 noncomputable section
 variable {A:Type} [Field A]
 theorem bivariateEquiv_coeff_natDegree_le_of_support
-   (f:MvPolynomial (Fin 2) A) (height:ℕ → ℕ)
+   (f:MvPolynomial (Fin 2) A) (height:ℕ→ℕ)
    (hsupport:∀ d∈f.support,d 1 ≤ height (d 0)) (i:ℕ):
    ((bivariateEquiv A f).coeff i).natDegree ≤ height i:=by
  rw [show (bivariateEquiv A f).coeff i=
@@ -46,7 +45,7 @@ theorem bivariateEquiv_totalDegree_le_of_support
  omega
 variable (K:Type) [Field K]
 theorem planeMap_coeff_natDegree_le_of_rational_support
-   (order:Fin 3 ≃ Fin 3) (F:Original K) (height:ℕ → ℕ)
+   (order:Fin 3 ≃ Fin 3) (F:Original K) (height:ℕ→ℕ)
    (hsupport:∀ d∈(rationalMap K order F).support,
      d 1 ≤ height (d 0)) (i:ℕ):
    ((planeMap K order F).coeff i).natDegree ≤ height i:=by
@@ -233,19 +232,19 @@ theorem exists_positive_joint_characteristic_order
      d 0+d 1 ≤ totalT)
    (hGswapOuter:(planeMap K (swapOtherOrder order) G).natDegree ≤ gOuter)
    (hTswapInner:degreeX (planeMap K (swapOtherOrder order) T) ≤ tInner)
-   (hnp:n < p) (hgOuterP:gOuter < p)
-   (hcapP:cap < p) (hswapP:gOuter*tInner < p)
+   (hnp:n<p) (hgOuterP:gOuter<p)
+   (hcapP:cap<p) (hswapP:gOuter*tInner<p)
    (hbudget:∀ m,m ≤ mCap →
      m*totalG+n*totalT-m*n ≤ cap):
    ∃ order':Fin 3 ≃ Fin 3,
      (order'=order∨order'=swapOtherOrder order)∧
      order' 0=order 0∧
      originalMixedDegree K order' G T=originalMixedDegree K order G T∧
-     0 < (planeMap K order' G).natDegree∧
-     (planeMap K order' G).natDegree < p∧
+     0<(planeMap K order' G).natDegree∧
+     (planeMap K order' G).natDegree<p∧
      (Polynomial.resultant (planeMap K order' G)
-       (planeMap K order' T)).natDegree < p:=by
- by_cases hpositive:0 < (planeMap K order G).natDegree
+       (planeMap K order' T)).natDegree<p:=by
+ by_cases hpositive:0<(planeMap K order G).natDegree
  · refine ⟨order,Or.inl rfl,rfl,rfl,hpositive,
      hGouter.trans_lt hnp,?_⟩
    exact (planeMap_trapezoid_resultant_natDegree_le K order G T
@@ -255,7 +254,7 @@ theorem exists_positive_joint_characteristic_order
      Nat.eq_zero_of_not_pos hpositive
    obtain ⟨order',hchoice,_hbase,hpos⟩:=
      exists_positive_outer_order K order P G hG hGmem ht
-   have hswapPos:0 < (planeMap K (swapOtherOrder order) G).natDegree:=by
+   have hswapPos:0<(planeMap K (swapOtherOrder order) G).natDegree:=by
      rcases hchoice with hsame | hswap
      · subst order'
        exact (hpositive hpos).elim
@@ -273,11 +272,11 @@ theorem agreement_6463_trapezoid_budget (m:ℕ) (hm:m ≤ 6553551):
    m*175+25*45874851-m*25 ≤ 2129903925:=by
  omega
 theorem first_6463_trapezoid_cap_below_characteristic:
-   2129920175 < 2130706433:=by norm_num
+   2129920175<2130706433:=by norm_num
 theorem agreement_6463_trapezoid_cap_below_characteristic:
-   2129903925 < 2130706433:=by norm_num
+   2129903925<2130706433:=by norm_num
 theorem swapped_6463_cap_below_characteristic:
-   175*6553601 < 2130706433:=by norm_num
+   175*6553601<2130706433:=by norm_num
 theorem first_6464_sharpY_trapezoid_budget (m:ℕ) (hm:m ≤ 6422529):
    m*176+25*46137345-m*25 ≤ 2123235504:=by
  omega
@@ -285,13 +284,13 @@ theorem agreement_6464_sharpY_trapezoid_budget (m:ℕ) (hm:m ≤ 6422480):
    m*176+25*46136993-m*25 ≤ 2123219305:=by
  omega
 theorem first_6464_sharpY_trapezoid_cap_below_characteristic:
-   2123235504 < 2130706433:=by norm_num
+   2123235504<2130706433:=by norm_num
 theorem agreement_6464_sharpY_trapezoid_cap_below_characteristic:
-   2123219305 < 2130706433:=by norm_num
+   2123219305<2130706433:=by norm_num
 theorem swapped_6464_sharpY_cap_below_characteristic:
-   176*6422529 < 2130706433:=by norm_num
+   176*6422529<2130706433:=by norm_num
 theorem swapped_6464_cap_below_characteristic:
-   178*(25*262144+1) < 2130706433:=by
+   178*(25*262144+1)<2130706433:=by
  norm_num
 theorem exists_positive_sparse_characteristic_order
    (order:Fin 3 ≃ Fin 3) (P:Ideal (Original K)) [P.IsPrime]
@@ -307,16 +306,16 @@ theorem exists_positive_sparse_characteristic_order
      d 1 ≤ CornerStaircase.tailHeight k (d 0))
    (hGswapOuter:(planeMap K (swapOtherOrder order) G).natDegree ≤ gOuter)
    (hTswapInner:degreeX (planeMap K (swapOtherOrder order) T) ≤ tInner)
-   (h25p:25 < p) (hgOuterP:gOuter < p)
-   (hcornerP:8127*k+178 < p) (hswapP:gOuter*tInner < p):
+   (h25p:25<p) (hgOuterP:gOuter<p)
+   (hcornerP:8127*k+178<p) (hswapP:gOuter*tInner<p):
    ∃ order':Fin 3 ≃ Fin 3,
      (order'=order∨order'=swapOtherOrder order)∧
      order' 0=order 0∧
-     0 < (planeMap K order' G).natDegree∧
-     (planeMap K order' G).natDegree < p∧
+     0<(planeMap K order' G).natDegree∧
+     (planeMap K order' G).natDegree<p∧
      (Polynomial.resultant (planeMap K order' G)
-       (planeMap K order' T)).natDegree < p:=by
- by_cases hpositive:0 < (planeMap K order G).natDegree
+       (planeMap K order' T)).natDegree<p:=by
+ by_cases hpositive:0<(planeMap K order G).natDegree
  · refine ⟨order,Or.inl rfl,rfl,hpositive,
      hGouter.trans_lt h25p,?_⟩
    exact (planeMap_corner_resultant_natDegree_le K order G T k hk hTne
@@ -325,7 +324,7 @@ theorem exists_positive_sparse_characteristic_order
      Nat.eq_zero_of_not_pos hpositive
    obtain ⟨order',hchoice,hbase,hpos⟩:=
      exists_positive_outer_order K order P G hG hGmem ht
-   have hswapPos:0 < (planeMap K (swapOtherOrder order) G).natDegree:=by
+   have hswapPos:0<(planeMap K (swapOtherOrder order) G).natDegree:=by
      rcases hchoice with hsame | hswap
      · subst order'
        exact (hpositive hpos).elim

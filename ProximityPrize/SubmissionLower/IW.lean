@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CU
 section ProximityFlatProofPort
 universe u
@@ -24,13 +23,13 @@ def derivationOfSectionOfKerSqZero (f:P →ₐ[R] S) (hf':(RingHom.ker f)^2=⊥)
    Submodule.mk_eq_zero]
  leibniz' a b:=by
    have:(a-g (f a))*(b-g (f b))=0:=by
-     rw [←Ideal.mem_bot, ←hf',pow_two]
+     rw [←Ideal.mem_bot,←hf',pow_two]
      apply Ideal.mul_mem_mul
      · simpa [RingHom.mem_ker,sub_eq_zero] using AlgHom.congr_fun hg.symm (f a)
      · simpa [RingHom.mem_ker,sub_eq_zero] using AlgHom.congr_fun hg.symm (f b)
    ext
    rw [←sub_eq_zero]
-   conv_rhs => rw [←neg_zero, ←this]
+   conv_rhs => rw [←neg_zero,←this]
    simp only [LinearMap.coe_mk,AddHom.coe_mk,map_mul,SetLike.mk_smul_mk,smul_eq_mul,mul_sub,
      AddMemClass.mk_add_mk,sub_mul,neg_sub]
    ring
@@ -46,7 +45,7 @@ lemma isScalarTower_of_section_of_ker_sqZero:
  change g (p • s)*m=p*(g s*m)
  simp only [Algebra.smul_def,map_mul,mul_assoc,mul_left_comm _ (g s)]
  congr 1
- rw [←sub_eq_zero, ←Ideal.mem_bot, ←hf',pow_two, ←sub_mul]
+ rw [←sub_eq_zero,←Ideal.mem_bot,←hf',pow_two,←sub_mul]
  refine Ideal.mul_mem_mul ?_ m.2
  simpa [RingHom.mem_ker,sub_eq_zero] using AlgHom.congr_fun hg (algebraMap P S p)
 noncomputable
@@ -74,11 +73,11 @@ section ofRetraction
 variable (l:S ⊗[P] Ω[P⁄R] →ₗ[P] RingHom.ker (algebraMap P S))
 variable (hl:l.comp (kerToTensor R P S)=LinearMap.id)
 include hl
-variable (σ:S → P) (hσ:∀ x,algebraMap P S (σ x)=x)
+variable (σ:S→P) (hσ:∀ x,algebraMap P S (σ x)=x)
 lemma sectionOfRetractionKerToTensorAux_prop (x y) (h:algebraMap P S x=algebraMap P S y):
    x-l (1 ⊗ₜ .D _ _ x)=y-l (1 ⊗ₜ .D _ _ y):=by
- rw [sub_eq_iff_eq_add,sub_add_comm, ←sub_eq_iff_eq_add, ←Submodule.coe_sub,
-   ←map_sub, ←tmul_sub, ←map_sub]
+ rw [sub_eq_iff_eq_add,sub_add_comm,←sub_eq_iff_eq_add,←Submodule.coe_sub,
+   ←map_sub,←tmul_sub,←map_sub]
  exact congr_arg Subtype.val (LinearMap.congr_fun hl.symm ⟨x-y,by simp [RingHom.mem_ker,h]⟩)
 variable [Algebra R S] [IsScalarTower R P S]
 variable (hf':(RingHom.ker (algebraMap P S))^2=⊥)
@@ -89,7 +88,7 @@ def sectionOfRetractionKerToTensorAux:S →ₐ[R] P where
  map_one':=by simp [sectionOfRetractionKerToTensorAux_prop l hl (σ 1) 1 (by simp [hσ])]
  map_mul' a b:=by
    have (x y:_):(l x).1*(l y).1=0:=by
-     rw [←Ideal.mem_bot, ←hf',pow_two];exact Ideal.mul_mem_mul (l x).2 (l y).2
+     rw [←Ideal.mem_bot,←hf',pow_two];exact Ideal.mul_mem_mul (l x).2 (l y).2
    simp only [sectionOfRetractionKerToTensorAux_prop l hl (σ (a*b)) (σ a*σ b) (by simp [hσ]),
      Derivation.leibniz,tmul_add,tmul_smul,map_add,map_smul,Submodule.coe_add,
      SetLike.val_smul,smul_eq_mul,mul_sub,sub_mul,this,sub_zero]
@@ -100,7 +99,7 @@ def sectionOfRetractionKerToTensorAux:S →ₐ[R] P where
  map_zero':=by simp [sectionOfRetractionKerToTensorAux_prop l hl (σ 0) 0 (by simp [hσ])]
  commutes' r:=by
    simp [sectionOfRetractionKerToTensorAux_prop l hl
-     (σ (algebraMap R S r)) (algebraMap R P r) (by simp [hσ, ←IsScalarTower.algebraMap_apply])]
+     (σ (algebraMap R S r)) (algebraMap R P r) (by simp [hσ,←IsScalarTower.algebraMap_apply])]
 lemma sectionOfRetractionKerToTensorAux_algebraMap (x:P):
    sectionOfRetractionKerToTensorAux l hl σ hσ hf' (algebraMap P S x)=x-l (1 ⊗ₜ .D _ _ x):=
  sectionOfRetractionKerToTensorAux_prop l hl _ x (by simp [hσ])
@@ -136,13 +135,13 @@ def retractionKerToTensorEquivSection:
    ext s p
    obtain ⟨s,rfl⟩:=hf s
    have (x y:_):(l.1 x).1*(l.1 y).1=0:=by
-     rw [←Ideal.mem_bot, ←hf',pow_two];exact Ideal.mul_mem_mul (l.1 x).2 (l.1 y).2
+     rw [←Ideal.mem_bot,←hf',pow_two];exact Ideal.mul_mem_mul (l.1 x).2 (l.1 y).2
    simp only [AlgebraTensorModule.curry_apply,
      Derivation.coe_comp,LinearMap.coe_comp,LinearMap.coe_restrictScalars,Derivation.coeFn_coe,
      Function.comp_apply,curry_apply,retractionOfSectionOfKerSqZero_tmul_D,
-     sectionOfRetractionKerToTensor_algebraMap, ←mul_sub,sub_sub_cancel]
+     sectionOfRetractionKerToTensor_algebraMap,←mul_sub,sub_sub_cancel]
    rw [sub_mul]
-   simp only [this,Algebra.algebraMap_eq_smul_one, ←smul_tmul',LinearMapClass.map_smul,
+   simp only [this,Algebra.algebraMap_eq_smul_one,←smul_tmul',LinearMapClass.map_smul,
      SetLike.val_smul,smul_eq_mul,sub_zero]
  right_inv g:=by ext s;obtain ⟨s,rfl⟩:=hf s;simp
 variable (R P S) in
@@ -158,7 +157,7 @@ def derivationQuotKerSq:
      Derivation.coeFn_coe,Function.comp_apply,mk_apply]
    refine Submodule.smul_induction_on hx ?_ ?_
    · intro x hx y hy
-     simp only [smul_eq_mul,Derivation.leibniz,tmul_add, ←smul_tmul,Algebra.smul_def,
+     simp only [smul_eq_mul,Derivation.leibniz,tmul_add,←smul_tmul,Algebra.smul_def,
        mul_one,RingHom.mem_ker.mp hx,RingHom.mem_ker.mp hy,zero_tmul,zero_add]
    · intro x y hx hy;simp only [map_add,hx,hy,tmul_add,zero_add]
  · change (1:S) ⊗ₜ[P] KaehlerDifferential.D R P 1=0;simp
@@ -230,7 +229,7 @@ def retractionKerCotangentToTensorEquivSection:
    fun ⟨l,hl⟩↦⟨e₁.symm.toLinearMap ∘ₗ l.restrictScalars P ∘ₗ e₂.symm.toLinearMap,?_⟩,?_,?_⟩
  · rintro x y
    obtain ⟨x,rfl⟩:=Ideal.Quotient.mk_surjective x
-   simp only [P', ←Ideal.Quotient.algebraMap_eq,IsScalarTower.algebraMap_smul]
+   simp only [P',←Ideal.Quotient.algebraMap_eq,IsScalarTower.algebraMap_smul]
    exact (e₁.toLinearMap ∘ₗ l ∘ₗ e₂.toLinearMap).map_smul x y
  · ext1 x
    rw [H] at hl

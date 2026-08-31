@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DT
 namespace ProximityPrize.SubmissionLower.RCN142
 open RCN002 RCN007
@@ -18,12 +17,12 @@ theorem transcendental_add_smul_of_transcendental_isAlgebraic
  simpa using hsub
 theorem globalShearCost_pos_of_seedCoordinate_isAlgebraic
    (hfinite:ProjectionsFinite K P)
-   (hnonpoint:∀ v:Fin 3 → K,
+   (hnonpoint:∀ v:Fin 3→K,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hZ:IsAlgebraic K (coordinate K P 2))
-   (a:K) (dS:ℕ) (cap:Fin 3 → ℕ)
+   (a:K) (dS:ℕ) (cap:Fin 3→ℕ)
    (hSdegree:Transcendental K
-       (coordinate K P 1+a • coordinate K P 2) → 1 ≤ dS)
+       (coordinate K P 1+a • coordinate K P 2)→1 ≤ dS)
    (hcapY:1 ≤ cap 0) (hcapS:1 ≤ cap 1):
    1 ≤ globalShearCost P dS cap:=by
  obtain ⟨j,hj⟩:=

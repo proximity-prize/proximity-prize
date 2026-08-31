@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B4
 namespace ProximityPrize.SubmissionLower.RCN036
 open scoped Classical BigOperators WithZero
@@ -135,7 +134,7 @@ def adaptiveBadSubmodule
    (hproj:forall C:RegularComponent Omega G T H,
      ProjectionsFiniteSeparable Omega C.1)
    (E:Finset (Fin 3 →₀ ℕ)):
-   AdaptiveGenericityIndex hproj → Submodule Omega (E → Omega)
+   AdaptiveGenericityIndex hproj→Submodule Omega (E→Omega)
  | Sum.inl C => LinearMap.ker (coefficientEvaluation (coordinate Omega C.1) E)
  | Sum.inr ⟨C,v⟩ => cancellationSubmodule v.1.val
      (fun a => constant_value_le_one Omega (CoordinateField Omega C.1) v.1 a)
@@ -152,7 +151,7 @@ theorem adaptiveBadSubmodule_ne_top
  rcases j with C | ⟨C,v⟩
  · intro htop
    let e0:E:=⟨0,hzero⟩
-   let c0:E → Omega:=deltaCoefficient E e0
+   let c0:E→Omega:=deltaCoefficient E e0
    have hc0:c0∈adaptiveBadSubmodule hproj E (Sum.inl C):=by
      rw [htop]
      trivial
@@ -285,7 +284,7 @@ def AdaptiveGenericExactPolePolynomial.toResidualComponentBudget
    {hproj:forall C:RegularComponent Omega G T H,
      ProjectionsFiniteSeparable Omega C.1}
    (B:AdaptiveGenericExactPolePolynomial G T H E hproj)
-   (cost:RegularComponent Omega G T H → ℕ)
+   (cost:RegularComponent Omega G T H→ℕ)
    (cycle_le:forall C:RegularComponent Omega G T H,
      let i0:=componentSeparator C
      let htr:=componentSeparator_transcendental C

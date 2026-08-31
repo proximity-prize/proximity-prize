@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T3
 import ProximityPrize.SubmissionLower.AT
 import ProximityPrize.SubmissionLower.F2
@@ -49,7 +48,7 @@ end
 section IsUnramifiedIn
 variable {R:Type*} [CommRing R]
 def IsUnramifiedIn (A:Type*) [CommRing A] [Algebra R A] (𝔭:Ideal R):Prop:=
- ∀ (𝔓:Ideal A) (_:𝔓.IsPrime),𝔓.LiesOver 𝔭 → Algebra.IsUnramifiedAt R 𝔓
+ ∀ (𝔓:Ideal A) (_:𝔓.IsPrime),𝔓.LiesOver 𝔭→Algebra.IsUnramifiedAt R 𝔓
 variable (A:Type*) [CommRing A] [Algebra R A]
 theorem isUnramifiedIn_top:IsUnramifiedIn A (⊤:Ideal R):=
  fun P hP _↦(hP.ne_top ((Ideal.eq_top_iff_of_liesOver P (⊤:Ideal R)).mpr rfl)).elim
@@ -72,14 +71,14 @@ lemma basicOpen_subset_unramifiedLocus_iff {f:A}:
  exact (IsLocalizedModule.iso (.powers f)
    (KaehlerDifferential.map R R A (Localization.Away f))).subsingleton_congr
 lemma unramifiedLocus_eq_univ_iff:
-   unramifiedLocus R A=Set.univ ↔ Algebra.FormallyUnramified R A:=by
+   unramifiedLocus R A=Set.univ↔Algebra.FormallyUnramified R A:=by
  rw [unramifiedLocus_eq_compl_support,compl_eq_comm,Set.compl_univ,eq_comm,
    Module.support_eq_empty_iff,Algebra.formallyUnramified_iff]
 theorem formallyUnramified_iff_forall:
-   FormallyUnramified R A ↔ ∀ q:PrimeSpectrum A,IsUnramifiedAt R q.1:=
+   FormallyUnramified R A↔∀ q:PrimeSpectrum A,IsUnramifiedAt R q.1:=
  unramifiedLocus_eq_univ_iff.symm.trans Set.eq_univ_iff_forall
 theorem unramified_iff_forall [FiniteType R A]:
-   Unramified R A ↔ ∀ q:PrimeSpectrum A,IsUnramifiedAt R q.1:=
+   Unramified R A↔∀ q:PrimeSpectrum A,IsUnramifiedAt R q.1:=
  .trans ⟨fun h↦h.formallyUnramified,fun h↦⟨h,inferInstance⟩⟩ formallyUnramified_iff_forall
 lemma isOpen_unramifiedLocus [EssFiniteType R A]:IsOpen (unramifiedLocus R A):=by
  rw [unramifiedLocus_eq_compl_support,Module.support_eq_zeroLocus]

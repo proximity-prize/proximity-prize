@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A8
 namespace ProximityPrize.SubmissionLower.RCN145
 open scoped Classical BigOperators
@@ -19,10 +18,10 @@ variable (hF:surfaceMap φ F∈P)
 variable (hH:surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F)∉P)
 theorem prime_curve_card_le_of_coefficientPoleProfile
    (base:SeparableLiteralCoordinate P) (p w a e cost:ℕ) [CharP Ω p]
-   (hchar:w < p) (hwa:w < a) (hcost:1 ≤ cost)
+   (hchar:w<p) (hwa:w<a) (hcost:1 ≤ cost)
    (hprofile:CoefficientPoleProfile φ P F hF hH w cost)
-   (selected:K → Polynomial K) (Γ:Finset K)
-   {ι:Type*} (nodes:Finset ι) (x u0 u1:ι → K) (hinj:Set.InjOn x nodes)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   {ι:Type*} (nodes:Finset ι) (x u0 u1:ι→K) (hinj:Set.InjOn x nodes)
    (hsize:nodes.card=a+e)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)
@@ -36,7 +35,7 @@ theorem prime_curve_card_le_of_coefficientPoleProfile
  classical
  letI:DecidableEq ι:=Classical.decEq ι
  let I:=identityNodes φ P F nodes x u0 u1 w
- let relation:K → ι → Prop:=fun γ i↦(selected γ).eval (x i)=u0 i+γ*u1 i
+ let relation:K→ι→Prop:=fun γ i↦(selected γ).eval (x i)=u0 i+γ*u1 i
  by_cases hI:I.card ≤ w
  · have hfiber:∀ i∈nodes \ I,(Γ.filter (fun γ↦relation γ i)).card ≤ cost:=by
      intro i hi
@@ -50,7 +49,7 @@ theorem prime_curve_card_le_of_coefficientPoleProfile
        (agreement_regular_zero_le φ P F hF hH base w cost hprofile _ _ _ hproper)
    have hcount:=RCN173.sharp_incidence_bound relation Γ nodes I a w cost
      (identityNodes_subset φ P F nodes x u0 u1 w) hI hwa (by omega) hagreement hfiber
-   have hg:0 < a-w:=Nat.sub_pos_of_lt hwa
+   have hg:0<a-w:=Nat.sub_pos_of_lt hwa
    have hu:nodes.card-w ≤ (e+1)*(a-w):=by
      have he:=Nat.mul_le_mul_left e (show 1 ≤ a-w by omega)
      calc
@@ -63,7 +62,7 @@ theorem prime_curve_card_le_of_coefficientPoleProfile
        _ ≤ ((e+1)*(a-w))*cost:=Nat.mul_le_mul_right cost hu
        _=_:=by ring
    exact Nat.le_of_mul_le_mul_right hscaled hg
- · have hi:w < I.card:=Nat.lt_of_not_ge hI
+ · have hi:w<I.card:=Nat.lt_of_not_ge hI
    have hvalues:∀ (t:{γ:K//γ∈Γ}) i,i∈I →
        (selected t.1).eval (x i)=u0 i+t.1*u1 i:=by
      intro t
@@ -81,11 +80,11 @@ theorem prime_curve_card_le_of_coefficientPoleProfile
    exact hsmall.trans (by simpa only [Nat.mul_one] using Nat.mul_le_mul_left (e+1) hcost)
 theorem prime_curve_card_le_projection_degree
    (base:SeparableLiteralCoordinate P) (J:SeparableCoordinate Ω (CoordinateField Ω P))
-   (p w a e:ℕ) [CharP Ω p] (hchar:w < p) (hwa:w < a)
+   (p w a e:ℕ) [CharP Ω p] (hchar:w<p) (hwa:w<a)
    (hprofile:CoefficientPoleProfile φ P F hF hH w
      (SeparableCoordinate.degree Ω (CoordinateField Ω P) J))
-   (selected:K → Polynomial K) (Γ:Finset K)
-   {ι:Type*} (nodes:Finset ι) (x u0 u1:ι → K) (hinj:Set.InjOn x nodes)
+   (selected:K→Polynomial K) (Γ:Finset K)
+   {ι:Type*} (nodes:Finset ι) (x u0 u1:ι→K) (hinj:Set.InjOn x nodes)
    (hsize:nodes.card=a+e)
    (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolution:∀ γ∈Γ,specialization K (selected γ) γ F=0)

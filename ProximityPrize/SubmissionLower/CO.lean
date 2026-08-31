@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CT
 section ProximityFlatProofPort
 suppress_compilation

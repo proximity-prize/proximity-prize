@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.GN
 namespace ProximityPrize.SubmissionLower.RCN315
 open scoped Classical
@@ -22,7 +21,7 @@ set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
 set_option maxRecDepth 30000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
 local instance:DecidableEq Iota:=Classical.decEq Iota
@@ -70,7 +69,7 @@ theorem fixedMeet_cut_coordinate_caps {d:ℕ} (hd:d ≤ 131071):
 theorem fixedMeet_terminal_mixed_gates:
    (11*131071)*638+6*(1+1207*131071)=1869072466∧
      (1+67*131071)*6+40*(11*131071)=110361788∧
-     1869072466 < prime:=by
+     1869072466<prime:=by
  norm_num [prime]
 theorem literalProjectionGates_of_fixedMeet_caps
    [CharP Omega prime]
@@ -85,19 +84,19 @@ theorem literalProjectionGates_of_fixedMeet_caps
    (hTZ:T.degreeOf 2 ≤ 1+1207*131071):
    (∀ C:RegularComponent Omega G T H,LiteralProjectionGate C 0)∧
      (∀ C:RegularComponent Omega G T H,LiteralProjectionGate C 2):=by
- have hGdegree:∀ j:Fin 3,G.degreeOf j < prime:=by
+ have hGdegree:∀ j:Fin 3,G.degreeOf j<prime:=by
    intro j
    fin_cases j
    · exact hGY.trans_lt (by norm_num [prime])
    · exact hGS.trans_lt (by norm_num [prime])
    · exact hGZ.trans_lt (by norm_num [prime])
- have hmixedY:coordinateMixedDegree Omega G T 0 < prime:=by
+ have hmixedY:coordinateMixedDegree Omega G T 0<prime:=by
    rw [coordinateMixedDegree_zero]
    apply (Nat.add_le_add
      (Nat.mul_le_mul hTS hGZ)
      (Nat.mul_le_mul hGS hTZ)).trans_lt
    norm_num [prime]
- have hmixedZ:coordinateMixedDegree Omega G T 2 < prime:=by
+ have hmixedZ:coordinateMixedDegree Omega G T 2<prime:=by
    rw [coordinateMixedDegree_two]
    apply (Nat.add_le_add
      (Nat.mul_le_mul hTY hGS)

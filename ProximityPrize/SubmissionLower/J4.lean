@@ -10,7 +10,7 @@ noncomputable section
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 25000
 variable {K Ω I:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
-variable {φ:Polynomial K →+*Ω} {Γ:Finset K} {x:I → K}
+variable {φ:Polynomial K →+*Ω} {Γ:Finset K} {x:I→K}
 variable {p e:ℕ} [CharP Ω p]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Ω:=Classical.decEq Ω
@@ -66,7 +66,7 @@ theorem identity_surface_seed_bound
    (a identityDegree:ℕ)
    (hprovider:IdentityCurveCountProvider S identityDegree)
    (hagreement:∀ γ∈Γ,a≤(S.agreementFiber γ).card)
-   (hwa:w < a) (han:a ≤ S.nodes.card) (hdegreePos:1 ≤ identityDegree):
+   (hwa:w<a) (han:a ≤ S.nodes.card) (hdegreePos:1 ≤ identityDegree):
    Γ.card*(a-w)≤(S.nodes.card-w)*(e+1)*identityDegree:=by
  classical
  letI:S.componentIdeal.IsPrime:=S.componentIdeal_isPrime
@@ -85,7 +85,7 @@ theorem identity_surface_seed_bound
      identities a w ((e+1)*identityDegree)
      (identityNodes_subset φ S.componentIdeal S.F S.nodes x S.u0 S.u1 w)
      hI hwa han hagreement hfiber
- · have hi:w < identities.card:=Nat.lt_of_not_ge hI
+ · have hi:w<identities.card:=Nat.lt_of_not_ge hI
    have hvalues:∀ (t:{γ:K//γ∈Γ}) i,i∈identities→
        (S.selected t.1).eval (x i)=S.u0 i+t.1*S.u1 i:=by
      intro t

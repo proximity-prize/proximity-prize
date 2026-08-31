@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 universe w u v
@@ -10,7 +9,7 @@ structure Algebra.Extension where
  [algebra₁:Algebra R Ring]
  [algebra₂:Algebra Ring S]
  [isScalarTower:IsScalarTower R Ring S]
- σ:S → Ring
+ σ:S→Ring
  algebraMap_σ:∀ x,algebraMap Ring S (σ x)=x
 namespace Algebra.Extension
 variable {R S}
@@ -27,17 +26,17 @@ instance {R₀} [CommRing R₀] [Algebra R₀ R] [Algebra R₀ S] [IsScalarTower
    [Algebra R₀ R₁] [IsScalarTower R₀ R₁ R]:
    IsScalarTower R₀ R₁ P.Ring:=IsScalarTower.of_algebraMap_eq' <| by
  rw [IsScalarTower.algebraMap_eq R₀ R,IsScalarTower.algebraMap_eq R₁ R,
-   RingHom.comp_assoc, ←IsScalarTower.algebraMap_eq R₀ R₁ R]
+   RingHom.comp_assoc,←IsScalarTower.algebraMap_eq R₀ R₁ R]
 instance {R₀} [CommRing R₀] [Algebra R₀ R] [Algebra R₀ S] [IsScalarTower R₀ R S]:
    IsScalarTower R₀ P.Ring S:=IsScalarTower.of_algebraMap_eq' <| by
- rw [IsScalarTower.algebraMap_eq R₀ R P.Ring, ←RingHom.comp_assoc,
-   ←IsScalarTower.algebraMap_eq, ←IsScalarTower.algebraMap_eq]
+ rw [IsScalarTower.algebraMap_eq R₀ R P.Ring,←RingHom.comp_assoc,
+   ←IsScalarTower.algebraMap_eq,←IsScalarTower.algebraMap_eq]
 @[simp]
 lemma σ_smul (x y):P.σ x • y=x*y:=by
  rw [Algebra.smul_def,algebraMap_σ]
 lemma σ_injective:P.σ.Injective:=by
  intro x y e
- rw [←P.algebraMap_σ x, ←P.algebraMap_σ y,e]
+ rw [←P.algebraMap_σ x,←P.algebraMap_σ y,e]
 lemma algebraMap_surjective:Function.Surjective (algebraMap P.Ring S):=(⟨_,P.algebraMap_σ ·⟩)
 section Construction
 @[simps-isSimp Ring σ]
@@ -74,7 +73,7 @@ def localization (P:Extension.{w} R S):Extension R S' where
    apply IsScalarTower.of_algebraMap_eq'
    rw [RingHom.algebraMap_toAlgebra,IsScalarTower.algebraMap_eq R P.Ring (Localization _),
      ←RingHom.comp_assoc,IsLocalization.lift_comp,RingHom.comp_assoc,
-     ←IsScalarTower.algebraMap_eq, ←IsScalarTower.algebraMap_eq]
+     ←IsScalarTower.algebraMap_eq,←IsScalarTower.algebraMap_eq]
  σ s:=Localization.mk (P.σ (IsLocalization.sec M s).1) ⟨P.σ (IsLocalization.sec M s).2,by simp⟩
  algebraMap_σ s:=by
    simp [RingHom.algebraMap_toAlgebra,Localization.mk_eq_mk',IsLocalization.lift_mk',
@@ -163,7 +162,7 @@ def Hom.mapKer (f:P.Hom P')
    P.ker →ₗ[P.Ring] P'.ker where
  toFun x:=⟨f.toRingHom x,by simp [show algebraMap P.Ring S x=0 from x.2]⟩
  map_add' _ _:=Subtype.ext (map_add _ _ _)
- map_smul':=by simp [Algebra.smul_def, ←halg]
+ map_smul':=by simp [Algebra.smul_def,←halg]
 set_option backward.isDefEq.respectTransparency false in
 attribute [local instance] Algebra.TensorProduct.rightAlgebra in
 @[simps]
@@ -239,14 +238,14 @@ instance {R₁ R₂} [CommRing R₁] [CommRing R₂] [Algebra R₁ S] [Algebra R
  constructor
  intro r s m
  change algebraMap R₂ S (r • s) • m=(algebraMap _ S r) • (algebraMap _ S s) • m
- rw [Algebra.smul_def,map_mul,mul_smul, ←IsScalarTower.algebraMap_apply]
+ rw [Algebra.smul_def,map_mul,mul_smul,←IsScalarTower.algebraMap_apply]
 lemma Cotangent.val_smul''' {R₀} [CommRing R₀] [Algebra R₀ S] (r:R₀) (x:P.Cotangent):
    (r • x).val=P.σ (algebraMap R₀ S r) • x.val:=rfl
 @[simp]
 lemma Cotangent.val_smul (r:S) (x:P.Cotangent):(r • x).val=P.σ r • x.val:=rfl
 @[simp]
 lemma Cotangent.val_smul' (r:P.Ring) (x:P.Cotangent):(r • x).val=r • x.val:=by
- rw [val_smul''', ←sub_eq_zero, ←sub_smul]
+ rw [val_smul''',←sub_eq_zero,←sub_smul]
  exact Cotangent.smul_eq_zero_of_mem _ (by simp) _
 @[simp]
 lemma Cotangent.val_smul'' (r:R) (x:P.Cotangent):(r • x).val=r • x.val:=by
@@ -266,21 +265,21 @@ lemma Cotangent.val_mk (x:P.ker):(mk x).val=Ideal.toCotangent _ x:=rfl
 lemma Cotangent.mk_surjective:Function.Surjective (mk (P:=P)):=
  fun x↦Ideal.toCotangent_surjective P.ker x.val
 lemma Cotangent.mk_eq_zero_iff {P:Extension R S} (x:P.ker):
-   Cotangent.mk x=0 ↔ x.val∈P.ker^2:=by
+   Cotangent.mk x=0↔x.val∈P.ker^2:=by
  simp [Cotangent.ext_iff,Ideal.toCotangent_eq_zero]
 lemma Cotangent.mk_eq_mk_iff_sub_mem (x y:P.ker):
-   mk x=mk y ↔ x.val-y.val∈P.ker^2:=by
+   mk x=mk y↔x.val-y.val∈P.ker^2:=by
  simp [Extension.Cotangent.ext_iff,Ideal.toCotangent_eq]
 variable (P) in
 lemma Cotangent.ker_mk:LinearMap.ker (mk (P:=P))=P.ker • ⊤:=by
  ext ⟨x,hx⟩
  simp [LinearMap.mem_ker,mk_eq_zero_iff,Submodule.mem_smul_top_iff,sq]
-lemma Cotangent.span_eq_top_of_span_eq_ker {ι:Type*} (s:ι → P.Ring)
+lemma Cotangent.span_eq_top_of_span_eq_ker {ι:Type*} (s:ι→P.Ring)
    (hs:Ideal.span (Set.range s)=P.ker):
    Submodule.span S (.range (fun i↦mk ⟨s i,hs.le (Ideal.subset_span ⟨i,rfl⟩)⟩))=⊤:=by
- rw [Ideal.span, ←Submodule.span_range_subtype_eq_top_iff] at hs
+ rw [Ideal.span,←Submodule.span_range_subtype_eq_top_iff] at hs
  · apply Submodule.span_eq_top_of_span_eq_top (R:=P.Ring)
-   rw [←Function.comp_def,Set.range_comp, ←Submodule.map_span,hs,Submodule.map_top,
+   rw [←Function.comp_def,Set.range_comp,←Submodule.map_span,hs,Submodule.map_top,
      LinearMap.range_eq_top_of_surjective _ mk_surjective]
  · simp [←hs,Ideal.mem_span_range_self]
 variable {P'}
@@ -297,9 +296,9 @@ def Cotangent.map (f:Hom P P'):P.Cotangent →ₗ[S] P'.Cotangent where
    obtain ⟨x,rfl⟩:=Cotangent.mk_surjective x
    obtain ⟨r,rfl⟩:=P.algebraMap_surjective r
    simp only [algebraMap_smul,val_smul',val_mk,val_of,Ideal.mapCotangent_toCotangent,
-     RingHomCompTriple.comp_apply, ←(Ideal.toCotangent _).map_smul]
-   conv_rhs => rw [←algebraMap_smul S', ←f.algebraMap_toRingHom,algebraMap_smul,val_smul',
-     val_of, ←(Ideal.toCotangent _).map_smul]
+     RingHomCompTriple.comp_apply,←(Ideal.toCotangent _).map_smul]
+   conv_rhs => rw [←algebraMap_smul S',←f.algebraMap_toRingHom,algebraMap_smul,val_smul',
+     val_of,←(Ideal.toCotangent _).map_smul]
    congr 1
    ext1
    simp only [SetLike.val_smul,smul_eq_mul,map_mul,Hom.toAlgHom_apply]
@@ -326,7 +325,7 @@ lemma Cotangent.map_comp (f:Hom P P') (g:Hom P' P''):
 lemma Cotangent.finite (hP:P.ker.FG):
    Module.Finite S P.Cotangent:=by
  refine ⟨.of_restrictScalars (R:=P.Ring) ?_⟩
- rw [Submodule.restrictScalars_top, ←LinearMap.range_eq_top.mpr Extension.Cotangent.mk_surjective,
+ rw [Submodule.restrictScalars_top,←LinearMap.range_eq_top.mpr Extension.Cotangent.mk_surjective,
    ←Submodule.map_top]
  exact ((Submodule.fg_top P.ker).mpr hP).map _
 lemma Cotangent.map_surjective_of_comap_eq {P P':Extension R S} {f:P.Hom P'}
@@ -344,7 +343,7 @@ lemma Cotangent.map_ker_of_surjective {P P':Extension R S} {f:P.Hom P'}
  · obtain ⟨x,rfl⟩:=Cotangent.mk_surjective x
    simp only [Submodule.restrictScalars_mem,LinearMap.mem_ker,map_mk,Hom.toAlgHom_apply,
      mk_eq_zero_iff] at hx
-   rw [eq_map, ←Ideal.map_pow, ←Ideal.mem_comap,
+   rw [eq_map,←Ideal.map_pow,←Ideal.mem_comap,
      Ideal.comap_map_of_surjective' f.toRingHom h,Submodule.mem_sup] at hx
    rcases hx with ⟨y,y_in,z,z_in,hyz⟩
    suffices ∃ a,a∈RingHom.ker f.toRingHom∧a∈P.ker∧a-x∈P.ker^2 by
@@ -356,7 +355,7 @@ lemma Cotangent.map_ker_of_surjective {P P':Extension R S} {f:P.Hom P'}
    obtain ⟨y,y_in,y_in',hy⟩:∃ a∈RingHom.ker f.toRingHom,a∈P.ker∧
      a-x∈P.ker^2:=by simpa [mk_eq_mk_iff_sub_mem] using hx
    suffices f.toRingHom x∈P'.ker^2 by simpa [mk_eq_zero_iff]
-   rw [eq_map, ←Ideal.map_pow, ←Ideal.mem_comap,
+   rw [eq_map,←Ideal.map_pow,←Ideal.mem_comap,
      Ideal.comap_map_of_surjective' f.toRingHom h,Submodule.mem_sup]
    exact ⟨x-y,by rwa [←Submodule.neg_mem_iff,neg_sub],y,y_in,by ring⟩
 variable (P) in

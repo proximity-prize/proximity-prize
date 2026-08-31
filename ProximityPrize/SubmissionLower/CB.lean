@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R
 namespace ProximityPrize.SubmissionLower.RCN294
 open scoped BigOperators

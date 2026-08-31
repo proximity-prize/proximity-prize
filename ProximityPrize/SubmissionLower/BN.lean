@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ER
 namespace ProximityPrize.SubmissionLower.RCN149
 open scoped Classical BigOperators
@@ -27,8 +26,8 @@ local instance:DecidableEq Iota:=Classical.decEq Iota
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
    (hphi:Function.Injective phi)
    (F:MvPolynomial (Fin 4) K) (G T:MvPolynomial (Fin 3) Omega)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (p e d a U V:ℕ) [CharP Omega p]
    (surfaceFlag cutFlag:FlagDegree)
    (support:ResidualSupportParameters)
@@ -56,7 +55,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
      a ≤ (nodes.filter (fun i↦
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma d e)
-   (hchar:d < p) (hda:d < a)
+   (hchar:d<p) (hda:d<a)
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T)
      (H:=regularitySurface phi F) surfaceFlag cutFlag)
    (hallPositive:∀ C:RegularComponent Omega G T
@@ -80,11 +79,11 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
      (surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F))≠0
    rw [selectedPoint_evaluation]
    exact hregular gamma hgamma
- let degreeCost:RegularComponent Omega G T H → ℕ:=
+ let degreeCost:RegularComponent Omega G T H→ℕ:=
    fun C↦B.weightedCost support.agreementDirection C
- let unitCost:RegularComponent Omega G T H → ℕ:=
+ let unitCost:RegularComponent Omega G T H→ℕ:=
    fun C↦B.weightedCost unitYZFlag C
- let largeCost:RegularComponent Omega G T H → ℕ:=
+ let largeCost:RegularComponent Omega G T H→ℕ:=
    fun C↦B.zCost C+B.allCost C
  have hcomponent:∀ C:RegularComponent Omega G T H,
      (componentSeeds Omega G T H Gamma
@@ -149,8 +148,8 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all_of_support
 theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
    (hphi:Function.Injective phi)
    (F:MvPolynomial (Fin 4) K) (G T:MvPolynomial (Fin 3) Omega)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota → K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota→K)
    (p e d a U V:ℕ) [CharP Omega p]
    (surfaceFlag cutFlag:FlagDegree)
    (hdiv:G∣surfaceMap phi F)
@@ -177,7 +176,7 @@ theorem proper_cut_seed_bound_of_recursive_prime_flag_budget_z_all
      a ≤ (nodes.filter (fun i↦
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma d e)
-   (hchar:d < p) (hda:d < a)
+   (hchar:d<p) (hda:d<a)
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T)
      (H:=regularitySurface phi F) surfaceFlag cutFlag)
    (hallPositive:∀ C:RegularComponent Omega G T

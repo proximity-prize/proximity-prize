@@ -10,15 +10,15 @@ variable {Omega Seed:Type} [Field Omega]
 variable {G T1 H:MvPolynomial (Fin 3) Omega}
 variable {flag tailFlag1 tailFlag2:FlagDegree}
 def delayedComponents
-   (active:RegularComponent Omega G T1 H → Prop):
+   (active:RegularComponent Omega G T1 H→Prop):
    Finset (RegularComponent Omega G T1 H):=by
  classical
  exact Finset.univ.filter active
 structure DelayedBranchFlagBudget
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T1) (H:=H) flag tailFlag1)
-   (active:RegularComponent Omega G T1 H → Prop) where
- multiplicity:RegularComponent Omega G T1 H → ℕ
- cost:RegularComponent Omega G T1 H → ℕ
+   (active:RegularComponent Omega G T1 H→Prop) where
+ multiplicity:RegularComponent Omega G T1 H→ℕ
+ cost:RegularComponent Omega G T1 H→ℕ
  cost_le:∀ C,active C →
    cost C ≤ multiplicity C*B.weightedCost tailFlag2 C
  divisor_le:
@@ -27,9 +27,9 @@ structure DelayedBranchFlagBudget
        flagMixed flag tailFlag1 tailFlag2
 theorem delayed_component_sum_le_flagMixed
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T1) (H:=H) flag tailFlag1)
-   (active:RegularComponent Omega G T1 H → Prop)
+   (active:RegularComponent Omega G T1 H→Prop)
    (D:DelayedBranchFlagBudget (tailFlag2:=tailFlag2) B active)
-   (S:Finset Seed) (point:Seed → Fin 3 → Omega)
+   (S:Finset Seed) (point:Seed→Fin 3→Omega)
    (hcomponent:∀ C,active C →
      (componentSeeds Omega G T1 H S point C).card ≤ D.cost C):
    (∑ C∈delayedComponents active,
@@ -49,10 +49,10 @@ theorem delayed_component_sum_le_flagMixed
    _ ≤ flagMixed flag tailFlag1 tailFlag2:=D.divisor_le
 theorem delayed_seed_union_card_le_flagMixed
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T1) (H:=H) flag tailFlag1)
-   (active:RegularComponent Omega G T1 H → Prop)
+   (active:RegularComponent Omega G T1 H→Prop)
    (D:DelayedBranchFlagBudget (tailFlag2:=tailFlag2) B active)
    [DecidableEq Seed]
-   (S:Finset Seed) (point:Seed → Fin 3 → Omega)
+   (S:Finset Seed) (point:Seed→Fin 3→Omega)
    (hcomponent:∀ C,active C →
      (componentSeeds Omega G T1 H S point C).card ≤ D.cost C):
    ((delayedComponents active).biUnion
@@ -63,7 +63,7 @@ theorem delayed_seed_union_card_le_flagMixed
    (delayed_component_sum_le_flagMixed B active D S point hcomponent)
 def DelayedBranchFlagBudget.immediate
    (B:PrimeFlagBudgetFamily (G:=G) (T:=T1) (H:=H) flag tailFlag1)
-   (active:RegularComponent Omega G T1 H → Prop):
+   (active:RegularComponent Omega G T1 H→Prop):
    DelayedBranchFlagBudget (tailFlag2:=tailFlag2) B active where
  multiplicity:=fun _ => 1
  cost:=fun C => B.weightedCost tailFlag2 C

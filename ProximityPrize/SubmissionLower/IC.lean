@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CY
 import ProximityPrize.SubmissionLower.IB
 section ProximityFlatProofPort
@@ -25,12 +24,12 @@ theorem Algebra.isInvariant_of_isGalois [FiniteDimensional K L] [h:IsGalois K L]
  letI:=IsIntegralClosure.MulSemiringAction A K L B
  refine ⟨fun b hb↦?_⟩
  replace hb:algebraMap B L b∈IntermediateField.fixedField (⊤:Subgroup Gal(L/K)):=by
-   rintro ⟨g, -⟩
+   rintro ⟨g,-⟩
    exact (algebraMap_galRestrict_apply A g b).symm.trans (congrArg (algebraMap B L) (hb g))
  rw [h,IntermediateField.mem_bot] at hb
  obtain ⟨k,hk⟩:=hb
  have hb:IsIntegral A b:=IsIntegralClosure.isIntegral A L b
- rw [←isIntegral_algebraMap_iff (FaithfulSMul.algebraMap_injective B L), ←hk,
+ rw [←isIntegral_algebraMap_iff (FaithfulSMul.algebraMap_injective B L),←hk,
    isIntegral_algebraMap_iff (FaithfulSMul.algebraMap_injective K L)] at hb
  obtain ⟨a,rfl⟩:=IsIntegrallyClosed.algebraMap_eq_of_integral hb
  rw [←IsScalarTower.algebraMap_apply,IsScalarTower.algebraMap_apply A B L,
@@ -61,7 +60,7 @@ lemma normal:Normal K L:=by
  obtain ⟨b,rfl⟩:=Quotient.mk_surjective b
  simp_rw [←Quotient.algebraMap_eq] at*
  cases nonempty_fintype G
- obtain ⟨p,hp, -,h_monic⟩:=lifts_and_natDegree_eq_and_monic
+ obtain ⟨p,hp,-,h_monic⟩:=lifts_and_natDegree_eq_and_monic
    (Algebra.IsInvariant.charpoly_mem_lifts A B G b) (MulSemiringAction.monic_charpoly ..)
  have h_eval:p.aeval b=0:=by
    rw [←eval_map_algebraMap,hp,MulSemiringAction.eval_charpoly]
@@ -75,7 +74,7 @@ lemma normal:Normal K L:=by
    simp_rw [←IsScalarTower.algebraMap_eq]
  replace h_eval:((q.map (algebraMap A (A ⧸ P))).map (algebraMap (A ⧸ P) K)).aeval d=0:=by
    simp_rw [q,map_comp,Polynomial.map_mul,map_C,map_X,aeval_comp,aeval_mul,aeval_C,aeval_X,
-     ←RingHom.comp_apply, ←RingHom.comp_assoc,comm₁,RingHom.comp_apply,d,mul_div, ←map_mul]
+     ←RingHom.comp_apply,←RingHom.comp_assoc,comm₁,RingHom.comp_apply,d,mul_div,←map_mul]
    rw [←Algebra.smul_def,h,map_mul,mul_div_cancel_left₀ _ (by simpa using hy),
      aeval_map_algebraMap,aeval_algebraMap_apply,aeval_map_algebraMap,aeval_algebraMap_apply,
      h_eval,map_zero,map_zero]
@@ -86,7 +85,7 @@ lemma normal:Normal K L:=by
  · simp_rw [q,map_comp,Polynomial.map_mul,map_C,map_X]
    refine .comp_of_degree_le_one ?_ (degree_C_mul_X_le _)
    rw [Polynomial.map_map,Polynomial.map_map,comm₁,RingHom.comp_assoc,comm₂,
-     ←RingHom.comp_assoc, ←Polynomial.map_map]
+     ←RingHom.comp_assoc,←Polynomial.map_map]
    apply h_splits.map
  · simp_rw [q,map_comp,Polynomial.map_mul,map_C,map_X,Polynomial.map_map]
    exact mt (comp_C_mul_X_eq_zero_iff (by simpa)).mp (map_monic_ne_zero h_monic)

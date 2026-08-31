@@ -7,14 +7,14 @@ theorem trdeg_le_one_of_tower
    (hE:Algebra.trdeg k E ≤ 2) (htrans:Algebra.Transcendental B E):
    Algebra.trdeg k B ≤ 1:=by
  letI:Algebra.Transcendental B E:=htrans
- have hb:0 < Algebra.trdeg B E:=trdeg_pos B E
+ have hb:0<Algebra.trdeg B E:=trdeg_pos B E
  have hsum:Algebra.trdeg k B+Algebra.trdeg B E=Algebra.trdeg k E:=
    trdeg_add_eq k B
  have hab:Algebra.trdeg k B+Algebra.trdeg B E ≤ 2:=by
    rw [hsum]
    exact hE
  by_contra hnot
- have ha:(1:Cardinal) < Algebra.trdeg k B:=lt_of_not_ge hnot
+ have ha:(1:Cardinal)<Algebra.trdeg k B:=lt_of_not_ge hnot
  have htwo:(2:Cardinal) ≤ Algebra.trdeg k B:=by
    have h:=Cardinal.add_one_le_of_lt ha
    norm_num at h

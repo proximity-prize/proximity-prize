@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D2
 import ProximityPrize.SubmissionLower.G
 import ProximityPrize.SubmissionLower.E6
@@ -17,7 +16,7 @@ variable {K L:Type} [Field K] [Field L]
 def coordinateFieldMap (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
    (ev:MvPolynomial (Fin 3) K →+*L) (hker:RingHom.ker ev=P):
    CoordinateField K P →+*L:=
- let hz:∀ A,A∈P → ev A=0:=fun A hA↦by
+ let hz:∀ A,A∈P→ev A=0:=fun A hA↦by
    exact RingHom.mem_ker.mp (hker.symm ▸ hA)
  IsFractionRing.lift (K:=CoordinateField K P)
    (RingHom.lift_injective_of_ker_le_ideal P hz hker.le)
@@ -76,7 +75,7 @@ private theorem rational_base_diagram {E M:Type} [Field E] [Field M]
 theorem eliminatedCut_not_mem_of_contraction
    {E:Type} [Field E] [IsAlgClosed E] [Algebra K E]
    (F H G Q U:MvPolynomial (Fin 3) K)
-   (k:ℕ) (B:Fin (k+1) → MvPolynomial (Fin 3) K)
+   (k:ℕ) (B:Fin (k+1)→MvPolynomial (Fin 3) K)
    (C:RegularComponent K F (filteredCut k B H G) H)
    (hj:Transcendental K (movingValue C.1 H G Q U))
    (hfinite:

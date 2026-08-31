@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T1
 section ProximityFlatProofPort
 open Module
@@ -15,7 +14,7 @@ theorem Algebra.map_leftMulMatrix_localization {ι:Type*} [Fintype ι] [Decidabl
    (algebraMap R Rₘ).mapMatrix (leftMulMatrix b a)=
    leftMulMatrix (b.localizationLocalization Rₘ M Sₘ) (algebraMap S Sₘ a):=by
  ext i j
- simp only [Matrix.map_apply,RingHom.mapMatrix_apply,leftMulMatrix_eq_repr_mul, ←map_mul,
+ simp only [Matrix.map_apply,RingHom.mapMatrix_apply,leftMulMatrix_eq_repr_mul,←map_mul,
    Basis.localizationLocalization_apply,Basis.localizationLocalization_repr_algebraMap]
 theorem Algebra.norm_localization [Module.Free R S] [Module.Finite R S] (a:S):
    Algebra.norm Rₘ (algebraMap S Sₘ a)=algebraMap R Rₘ (Algebra.norm R a):=by
@@ -25,7 +24,7 @@ theorem Algebra.norm_localization [Module.Free R S] [Module.Finite R S] (a:S):
  let b:=Module.Free.chooseBasis R S
  letI:=Classical.decEq (Module.Free.ChooseBasisIndex R S)
  rw [Algebra.norm_eq_matrix_det (b.localizationLocalization Rₘ M Sₘ),
-   Algebra.norm_eq_matrix_det b,RingHom.map_det, ←Algebra.map_leftMulMatrix_localization]
+   Algebra.norm_eq_matrix_det b,RingHom.map_det,←Algebra.map_leftMulMatrix_localization]
 variable {M} in
 lemma Algebra.norm_eq_iff [Module.Free R S] [Module.Finite R S] {a:S} {b:R}
    (hM:M ≤ nonZeroDivisors R):Algebra.norm R a=b ↔
@@ -40,7 +39,7 @@ theorem Algebra.trace_localization [Module.Free R S] [Module.Finite R S] (a:S):
  let b:=Module.Free.chooseBasis R S
  letI:=Classical.decEq (Module.Free.ChooseBasisIndex R S)
  rw [Algebra.trace_eq_matrix_trace (b.localizationLocalization Rₘ M Sₘ),
-   Algebra.trace_eq_matrix_trace b, ←Algebra.map_leftMulMatrix_localization]
+   Algebra.trace_eq_matrix_trace b,←Algebra.map_leftMulMatrix_localization]
  exact (AddMonoidHom.map_trace (algebraMap R Rₘ).toAddMonoidHom _).symm
 section LocalizationLocalization
 variable (Sₘ:Type*) [CommRing Sₘ] [Algebra S Sₘ] [Algebra Rₘ Sₘ] [Algebra R Sₘ]
@@ -54,7 +53,7 @@ theorem Algebra.traceMatrix_localizationLocalization (b:Basis ι R S):
  have:Module.Free R S:=Module.Free.of_basis b
  ext i j:2
  simp_rw [RingHom.mapMatrix_apply,Matrix.map_apply,traceMatrix_apply,traceForm_apply,
-   Basis.localizationLocalization_apply, ←map_mul]
+   Basis.localizationLocalization_apply,←map_mul]
  exact Algebra.trace_localization R M _
 theorem Algebra.discr_localizationLocalization (b:Basis ι R S):
    Algebra.discr Rₘ (b.localizationLocalization Rₘ M Sₘ)=

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.L
 import ProximityPrize.SubmissionLower.AU
 namespace ProximityPrize.SubmissionLower.RCN371
@@ -110,7 +109,7 @@ theorem localized_principal_isPrime_of_component
    (Ideal.span ({collect K order G}:Set (Collected K)))
    (collected_principal_isPrime K order G hG)
    (coefficientDenominators_disjoint_of_component K order P G hmem ht)
- simpa only [Ideal.map_span,Set.image_singleton, ←rationalMap_eq] using hp
+ simpa only [Ideal.map_span,Set.image_singleton,←rationalMap_eq] using hp
 theorem rationalMap_irreducible_of_component
    (G:Original K) (hG:Irreducible G) (hmem:G∈P)
    (ht:Transcendental K (coordinate K P (order 0))):
@@ -120,7 +119,7 @@ theorem rationalMap_irreducible_of_component
 theorem rationalMap_dvd_iff_of_component
    (G H:Original K) (hG:Irreducible G) (hmem:G∈P)
    (ht:Transcendental K (coordinate K P (order 0))):
-   rationalMap K order G∣rationalMap K order H ↔ G∣H:=by
+   rationalMap K order G∣rationalMap K order H↔G∣H:=by
  constructor
  · intro hdiv
    have hm:algebraMap (Collected K) (RationalPolynomials K) (collect K order H)∈

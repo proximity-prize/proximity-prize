@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.P5
 namespace ProximityPrize.SubmissionLower.RCN293
 open RCN290 RCN081 RCN082
@@ -66,11 +65,11 @@ theorem liftedCoefficient_support
      simp [Equiv.optionSubtypeNe_symm_apply,hi]
    rw [hindex,Finsupp.optionElim_apply_some] at huv
    exact le_of_eq (hev.trans huv.symm)
-theorem weight_mono_fin4 (weights:Fin 4 → ℕ) (e d:Fin 4 →₀ ℕ)
+theorem weight_mono_fin4 (weights:Fin 4→ℕ) (e d:Fin 4 →₀ ℕ)
    (h:∀ i,e i ≤ d i):Finsupp.weight weights e ≤ Finsupp.weight weights d:=by
  rw [weight_fin4,weight_fin4]
  gcongr <;> exact h _
-theorem liftedCoefficient_weight_le (weights:Fin 4 → ℕ)
+theorem liftedCoefficient_weight_le (weights:Fin 4→ℕ)
    (F:MvPolynomial (Fin 4) K) (n:ℕ):
    MvPolynomial.weightedTotalDegree weights (liftedCoefficient F n) ≤
      MvPolynomial.weightedTotalDegree weights F:=by
@@ -78,7 +77,7 @@ theorem liftedCoefficient_weight_le (weights:Fin 4 → ℕ)
  intro e he
  obtain ⟨d,hd,hed⟩:=liftedCoefficient_support F n e he
  exact (weight_mono_fin4 weights e d hed).trans (MvPolynomial.le_weightedTotalDegree weights hd)
-theorem pderiv_weight_le (weights:Fin 4 → ℕ)
+theorem pderiv_weight_le (weights:Fin 4→ℕ)
    (F:MvPolynomial (Fin 4) K) (i:Fin 4):
    MvPolynomial.weightedTotalDegree weights (MvPolynomial.pderiv i F) ≤
      MvPolynomial.weightedTotalDegree weights F:=by
@@ -109,17 +108,17 @@ theorem degreeOf_det_le_uniform (N a:ℕ)
      (MvPolynomial.degreeOf_C (((Equiv.Perm.sign σ:ℤ):K)) (4:Fin 5)).le
  exact (MvPolynomial.degreeOf_mul_le (4:Fin 5) _ _).trans
    ((Nat.add_le_add hsign hprod).trans_eq (zero_add _))
-def weightedCoefficientEmbedding (K:Type*) [Field K] (weights:Fin 4 → ℕ):
+def weightedCoefficientEmbedding (K:Type*) [Field K] (weights:Fin 4→ℕ):
    CoefficientRing K →+*MvPolynomial (Fin 5) K:=
  (weightedLift K weights).comp (embedCoefficients K)
-theorem degree_weightedCoefficient (weights:Fin 4 → ℕ)
+theorem degree_weightedCoefficient (weights:Fin 4→ℕ)
    (F:MvPolynomial (Fin 4) K) (n:ℕ):
    (weightedCoefficientEmbedding K weights ((collectR K F).coeff n)).degreeOf 4 ≤
      MvPolynomial.weightedTotalDegree weights F:=by
  change (weightedLift K weights (liftedCoefficient F n)).degreeOf 4 ≤ _
  rw [degree_weightedLift]
  exact liftedCoefficient_weight_le weights F n
-theorem eliminateR_weight_le (weights:Fin 4 → ℕ)
+theorem eliminateR_weight_le (weights:Fin 4→ℕ)
    (F G:MvPolynomial (Fin 4) K) (a:ℕ)
    (hF:MvPolynomial.weightedTotalDegree weights F ≤ a)
    (hG:MvPolynomial.weightedTotalDegree weights G ≤ a):
@@ -149,15 +148,15 @@ theorem eliminateR_weight_le (weights:Fin 4 → ℕ)
  change (weightedLift K weights (eliminateR F G)).degreeOf 4 ≤ _ at hdet
  rw [degree_weightedLift,collectR_natDegree,collectR_natDegree] at hdet
  exact hdet
-theorem weightedTotalDegree_prod_le {ι:Type*} (weights:Fin 4 → ℕ)
-   (I:Finset ι) (f:ι → MvPolynomial (Fin 4) K):
+theorem weightedTotalDegree_prod_le {ι:Type*} (weights:Fin 4→ℕ)
+   (I:Finset ι) (f:ι→MvPolynomial (Fin 4) K):
    MvPolynomial.weightedTotalDegree weights (∏ i∈I,f i) ≤
      ∑ i∈I,MvPolynomial.weightedTotalDegree weights (f i):=by
  rw [←degree_weightedLift,map_prod]
  simpa only [degree_weightedLift] using
    (MvPolynomial.degreeOf_prod_le (4:Fin 5) I (fun i => weightedLift K weights (f i)))
-theorem sum_weighted_degrees_le_of_prod_dvd {ι:Type*} (weights:Fin 4 → ℕ)
-   (I:Finset ι) (f:ι → MvPolynomial (Fin 4) K) (Q:MvPolynomial (Fin 4) K)
+theorem sum_weighted_degrees_le_of_prod_dvd {ι:Type*} (weights:Fin 4→ℕ)
+   (I:Finset ι) (f:ι→MvPolynomial (Fin 4) K) (Q:MvPolynomial (Fin 4) K)
    (hQ:Q≠0) (hdiv:(∏ i∈I,f i)∣Q):
    (∑ i∈I,MvPolynomial.weightedTotalDegree weights (f i)) ≤
      MvPolynomial.weightedTotalDegree weights Q:=by
@@ -182,7 +181,7 @@ theorem sum_weighted_degrees_le_of_prod_dvd {ι:Type*} (weights:Fin 4 → ℕ)
      RCN137.coordinate_degree_le_of_dvd (4:Fin 5) _ _ hmap
        (weightedLift_ne_zero weights Q hQ)
    _=MvPolynomial.weightedTotalDegree weights Q:=degree_weightedLift weights Q
-theorem singularContribution_weight_le (weights:Fin 4 → ℕ)
+theorem singularContribution_weight_le (weights:Fin 4→ℕ)
    (F:MvPolynomial (Fin 4) K) (s:ℕ) (hs:1 ≤ s) (hR:F.degreeOf 2 ≤ s):
    MvPolynomial.weightedTotalDegree weights (singularContribution F) ≤
      (2*s-1)*MvPolynomial.weightedTotalDegree weights F:=by
@@ -191,14 +190,14 @@ theorem singularContribution_weight_le (weights:Fin 4 → ℕ)
  · have hfactor:1 ≤ 2*s-1:=by omega
    simpa only [one_mul] using
      (Nat.mul_le_mul_right (MvPolynomial.weightedTotalDegree weights F) hfactor)
- · have hpos:0 < F.degreeOf 2:=Nat.pos_of_ne_zero h
+ · have hpos:0<F.degreeOf 2:=Nat.pos_of_ne_zero h
    have hder:=RCN267.R_derivative_degree_lt F hpos
    have hfactor:F.degreeOf 2+(MvPolynomial.pderiv (2:Fin 4) F).degreeOf 2 ≤
        2*s-1:=by omega
    exact (eliminateR_weight_le weights F (MvPolynomial.pderiv (2:Fin 4) F)
      (MvPolynomial.weightedTotalDegree weights F) le_rfl (pderiv_weight_le weights F 2)).trans
      (Nat.mul_le_mul_right _ hfactor)
-theorem singularAuxiliary_weight_le (weights:Fin 4 → ℕ)
+theorem singularAuxiliary_weight_le (weights:Fin 4→ℕ)
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    (s:ℕ) (hs:1 ≤ s) (hR:Q.degreeOf 2 ≤ s):
    MvPolynomial.weightedTotalDegree weights (singularAuxiliary Q) ≤
@@ -227,7 +226,7 @@ theorem singularAuxiliary_input_caps
    MvPolynomial.weightedTotalDegree seedWeights (singularAuxiliary Q) ≤ (2*s-1)*L∧
      MvPolynomial.weightedTotalDegree (contactWeights w) (singularAuxiliary Q) <
        (2*s-1)*D:=by
- have hD:0 < D:=by
+ have hD:0<D:=by
    obtain ⟨d,hd⟩:=MvPolynomial.support_nonempty.mpr hQ
    have hh:=(hbox hd).2.2
    omega
@@ -236,15 +235,15 @@ theorem singularAuxiliary_input_caps
    apply MvPolynomial.degreeOf_le_iff.mpr
    intro d hd
    exact (hbox hd).2.1
- have hpositive:0 < 2*s-1:=by omega
+ have hpositive:0<2*s-1:=by omega
  refine ⟨(singularAuxiliary_weight_le seedWeights Q hQ s hs hR).trans
    (Nat.mul_le_mul_left _ hcaps.1),?_⟩
  have hle:=(singularAuxiliary_weight_le (contactWeights w) Q hQ s hs hR).trans
    (Nat.mul_le_mul_left _ hcaps.2.2)
- exact hle.trans_lt (Nat.mul_lt_mul_of_pos_left (by omega:D-1 < D) hpositive)
+ exact hle.trans_lt (Nat.mul_lt_mul_of_pos_left (by omega:D-1<D) hpositive)
 theorem singularAuxiliary_nonzero_mem_box
    (Q:MvPolynomial (Fin 4) K) (D w L s p:ℕ) [CharP K p]
-   (hQ:Q≠0) (hs:1 ≤ s) (hsmall:s < p)
+   (hQ:Q≠0) (hs:1 ≤ s) (hsmall:s<p)
    (hbox:Q∈RCN174.globalCoefficientBox K D w L s):
    singularAuxiliary Q≠0∧
      singularAuxiliary Q∈RCN174.globalCoefficientBox K

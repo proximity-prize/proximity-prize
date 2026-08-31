@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A5
 import ProximityPrize.SubmissionLower.B
 namespace ProximityPrize.SubmissionLower.RCN220
@@ -15,12 +14,12 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 abbrev Ω (K:Type) [Field K]:=GenericField K
 theorem exists_original_factor_with_first_tail
-   {Γ:Finset K} {x:I → K} {p e:ℕ} [CharP (Ω K) p]
+   {Γ:Finset K} {x:I→K} {p e:ℕ} [CharP (Ω K) p]
    {flag:FlagDegree} {w:ℕ} {support:ResidualSupportParameters}
    (S:ResidualStage (polynomialEmbedding K) Γ x p e flag w support)
    (hTail:S.G∣surfaceMap (polynomialEmbedding K) (numerator K S.F (w+1))):
    ∃ F0 Q:MvPolynomial (Fin 4) K,
-     Irreducible F0∧0 < F0.degreeOf 1+F0.degreeOf 2+F0.degreeOf 3∧
+     Irreducible F0∧0<F0.degreeOf 1+F0.degreeOf 2+F0.degreeOf 3∧
      S.F=F0*Q∧S.G∣surfaceMap (polynomialEmbedding K) F0∧
      ¬ S.G∣surfaceMap (polynomialEmbedding K) Q∧
      ¬ S.G∣surfaceMap (polynomialEmbedding K) (polyH K F0)∧
@@ -35,7 +34,7 @@ theorem exists_original_factor_with_first_tail
    simp [polyH]
  let φC:Polynomial K →+*CoordinateField (Ω K) P:=
    (algebraMap (Ω K) (CoordinateField (Ω K) P)).comp (polynomialEmbedding K)
- let vC:Fin 3 → CoordinateField (Ω K) P:=
+ let vC:Fin 3→CoordinateField (Ω K) P:=
    fun i => componentPoint (polynomialEmbedding K) P i.succ
  have hsurfaceZero:MvPolynomial.eval vC (surfaceMap φC S.F)=0:=by
    rw [eval_surfaceMap]
@@ -103,7 +102,7 @@ theorem original_factor_agreement_proper
    (φ:Polynomial K →+*Ω K) (F0 Q:MvPolynomial (Fin 4) K)
    (G:MvPolynomial (Fin 3) (Ω K))
    (hGdivF0:G∣surfaceMap φ F0)
-   (w:ℕ) (c:ℕ → K) (x0 u0 u1:K)
+   (w:ℕ) (c:ℕ→K) (x0 u0 u1:K)
    (hproper:¬G∣surfaceMap φ (agreementNumerator (F0*Q) w c x0 u0 u1)):
    ¬F0∣agreementNumerator F0 w c x0 u0 u1:=by
  intro hF0cut

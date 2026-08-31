@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R3
 namespace ProximityPrize.SubmissionLower.RCN348
 open RCN347
@@ -12,8 +11,8 @@ abbrev TruncatedPolynomials (L:Type*) [Field L] (bound:ℕ):=
  Polynomial L ⧸ truncationIdeal L bound
 noncomputable def taylorHom
    (D:Derivation K A A) (value:A →+*L) (bound:ℕ)
-   (hbound:0 < bound)
-   (hfactorial:∀ j < bound,(j.factorial:L)≠0):
+   (hbound:0<bound)
+   (hfactorial:∀ j<bound,(j.factorial:L)≠0):
    A →+*TruncatedPolynomials L bound where
  toFun a:=Ideal.Quotient.mk (truncationIdeal L bound)
    (jetPolynomial D value bound a)
@@ -27,8 +26,8 @@ noncomputable def taylorHom
    exact X_pow_dvd_jetPolynomial_product_error D value bound a b hfactorial
 theorem taylorHom_apply
    (D:Derivation K A A) (value:A →+*L) (bound:ℕ)
-   (hbound:0 < bound)
-   (hfactorial:∀ j < bound,(j.factorial:L)≠0) (a:A):
+   (hbound:0<bound)
+   (hfactorial:∀ j<bound,(j.factorial:L)≠0) (a:A):
    taylorHom D value bound hbound hfactorial a=
      Ideal.Quotient.mk (truncationIdeal L bound) (jetPolynomial D value bound a):=
  rfl
@@ -42,7 +41,7 @@ theorem iterate_eq_zero_of_derivation_eq_zero
    exact iterate_zero D n
 theorem jetPolynomial_of_derivation_eq_zero
    (D:Derivation K A A) (value:A →+*L) (bound:ℕ)
-   (hbound:0 < bound) (a:A) (ha:D a=0):
+   (hbound:0<bound) (a:A) (ha:D a=0):
    jetPolynomial D value bound a=Polynomial.C (value a):=by
  ext j
  by_cases hj:j=0
@@ -52,7 +51,7 @@ theorem jetPolynomial_of_derivation_eq_zero
    simp [jetPolynomial_coeff,jetCoefficient,hiter,Polynomial.coeff_C,hj]
 theorem jetPolynomial_algebraMap
    (D:Derivation K A A) (value:A →+*L) (bound:ℕ)
-   (hbound:0 < bound) (c:K):
+   (hbound:0<bound) (c:K):
    jetPolynomial D value bound (algebraMap K A c)=
      Polynomial.C (value (algebraMap K A c)):=
  jetPolynomial_of_derivation_eq_zero D value bound hbound _ (D.map_algebraMap c)
@@ -77,18 +76,18 @@ theorem jetPolynomial_derivation_eq_derivative
      (jetPolynomial D value bound a).derivative:=by
  ext j
  rw [Polynomial.coeff_derivative,jetPolynomial_coeff,jetPolynomial_coeff]
- by_cases hj:j < bound
+ by_cases hj:j<bound
  · rw [if_pos hj,jetCoefficient_derivation D value a j
      (hfactorial j hj.le) (hfactorial (j+1) (by omega))]
-   by_cases hnext:j+1 < bound
+   by_cases hnext:j+1<bound
    · rw [if_pos hnext]
    · have heq:j+1=bound:=by omega
      simp [heq,hlast]
- · have hnext:¬j+1 < bound:=by omega
+ · have hnext:¬j+1<bound:=by omega
    rw [if_neg hj,if_neg hnext,zero_mul]
 theorem jetPolynomial_derivation_eq_derivative_of_char
    (D:Derivation K A A) (value:A →+*L) (p bound:ℕ) [CharP L p]
-   (hbound:bound < p) (a:A)
+   (hbound:bound<p) (a:A)
    (hlast:jetCoefficient D value a bound=0):
    jetPolynomial D value bound (D a)=
      (jetPolynomial D value bound a).derivative:=by
@@ -99,18 +98,18 @@ theorem jetPolynomial_derivation_eq_derivative_of_char
 theorem jetPolynomial_eq_shorter_of_tails_zero
    (D:Derivation K A A) (value:A →+*L) (small bound:ℕ) (a:A)
    (hsmall:small ≤ bound)
-   (htails:∀ j,small ≤ j → j < bound → jetCoefficient D value a j=0):
+   (htails:∀ j,small ≤ j→j<bound→jetCoefficient D value a j=0):
    jetPolynomial D value bound a=jetPolynomial D value small a:=by
  ext j
  rw [jetPolynomial_coeff,jetPolynomial_coeff]
- by_cases hj:j < small
+ by_cases hj:j<small
  · rw [if_pos hj,if_pos (lt_of_lt_of_le hj hsmall)]
  · rw [if_neg hj]
-   by_cases hb:j < bound
+   by_cases hb:j<bound
    · rw [if_pos hb,htails j (by omega) hb]
    · rw [if_neg hb]
 theorem eq_zero_of_quotient_eq_zero_of_natDegree_lt
-   (bound:ℕ) (Q:Polynomial L) (hdegree:Q.natDegree < bound)
+   (bound:ℕ) (Q:Polynomial L) (hdegree:Q.natDegree<bound)
    (hzero:Ideal.Quotient.mk (truncationIdeal L bound) Q=0):Q=0:=by
  have hmem:=Ideal.Quotient.eq_zero_iff_mem.mp hzero
  have hdvd:(Polynomial.X:Polynomial L)^bound∣Q:=
@@ -118,7 +117,7 @@ theorem eq_zero_of_quotient_eq_zero_of_natDegree_lt
  have hcoeff:=Polynomial.X_pow_dvd_iff.mp hdvd
  ext j
  rw [Polynomial.coeff_zero]
- by_cases hj:j < bound
+ by_cases hj:j<bound
  · exact hcoeff j hj
  · exact Polynomial.coeff_eq_zero_of_natDegree_lt (lt_of_lt_of_le hdegree (by omega))
 end TaylorMap
@@ -126,15 +125,15 @@ section PolynomialRelation
 variable {K A L σ:Type*} [CommRing K] [CommRing A] [Algebra K A] [Field L]
 theorem polynomial_relation_of_taylor_substitution
    (D:Derivation K A A) (value:A →+*L) (bound:ℕ)
-   (hbound:0 < bound)
-   (hfactorial:∀ j < bound,(j.factorial:L)≠0)
-   (coordinates:σ → A) (polynomials:σ → Polynomial L)
+   (hbound:0<bound)
+   (hfactorial:∀ j<bound,(j.factorial:L)≠0)
+   (coordinates:σ→A) (polynomials:σ→Polynomial L)
    (hcoordinates:∀ i,
      jetPolynomial D value bound (coordinates i)=polynomials i)
    (F:MvPolynomial σ K)
    (hrelation:MvPolynomial.eval₂Hom (algebraMap K A) coordinates F=0)
    (hdegree:(MvPolynomial.eval₂Hom
-     (Polynomial.C.comp (value.comp (algebraMap K A))) polynomials F).natDegree < bound):
+     (Polynomial.C.comp (value.comp (algebraMap K A))) polynomials F).natDegree<bound):
    MvPolynomial.eval₂Hom
      (Polynomial.C.comp (value.comp (algebraMap K A))) polynomials F=0:=by
  let τ:=taylorHom D value bound hbound hfactorial

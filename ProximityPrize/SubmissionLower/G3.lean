@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W6
 import ProximityPrize.SubmissionLower.IT
 namespace ProximityPrize.SubmissionLower.RCN360
@@ -64,7 +63,7 @@ theorem bimap_specialization_ne_zero (f:K →+*L)
    (bimap f P) (bimap_primitive f P hP) x
 theorem common_points_card_le_after_extension (f:K →+*L)
    (P Q:Polynomial (Polynomial K)) (points:Finset (L × L))
-   (hP:Irreducible P) (hdeg:0 < P.natDegree) (hproper:¬ P∣Q)
+   (hP:Irreducible P) (hdeg:0<P.natDegree) (hproper:¬ P∣Q)
    (hroots:∀ point∈points,
      ((bimap f P).map (Polynomial.evalRingHom point.1)).eval point.2=0∧
      ((bimap f Q).map (Polynomial.evalRingHom point.1)).eval point.2=0):

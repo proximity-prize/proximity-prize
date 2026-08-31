@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.FH
 import ProximityPrize.SubmissionLower.J2
 import ProximityPrize.SubmissionLower.EG
@@ -27,7 +26,7 @@ variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 abbrev Ω (K:Type) [Field K]:=GenericField K
-variable {Γ:Finset K} {x:I → K} {p e:ℕ} [CharP (Ω K) p]
+variable {Γ:Finset K} {x:I→K} {p e:ℕ} [CharP (Ω K) p]
 variable {flag:FlagDegree} {w:ℕ} {support:ResidualSupportParameters}
 theorem stage_surface_mem
    (S:ResidualStage (polynomialEmbedding K) Γ x p e flag w support)
@@ -70,7 +69,7 @@ theorem coefficientPoleProfile_of_regular_agreement_curve
  let Pcurve:=C.1
  let L:=CoordinateField (Ω K) Pcurve
  let κ:K →+*L:=componentCoefficients φ Pcurve
- let v0:Fin 4 → L:=componentPoint φ Pcurve
+ let v0:Fin 4→L:=componentPoint φ Pcurve
  letI:CharP L p:=
    charP_of_injective_algebraMap (algebraMap (Ω K) L).injective p
  have hFC:=stage_surface_mem S x0 u0 u1 C

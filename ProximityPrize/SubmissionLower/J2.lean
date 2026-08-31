@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.FL
 import ProximityPrize.SubmissionLower.A5
 import ProximityPrize.SubmissionLower.E
@@ -15,7 +14,7 @@ set_option maxHeartbeats 1500000
 set_option maxRecDepth 15000
 variable {K L Ω:Type} [Field K] [Field L] [Field Ω]
 theorem map_agreementNumerator_base
-   (c:K →+*L) (F:Poly4 K) (w:ℕ) (a:ℕ → K) (x u0 u1:K):
+   (c:K →+*L) (F:Poly4 K) (w:ℕ) (a:ℕ→K) (x u0 u1:K):
    MvPolynomial.map c (agreementNumerator F w a x u0 u1)=
      agreementNumerator (MvPolynomial.map c F) w (fun j => c (a j))
        (c x) (c u0) (c u1):=by
@@ -23,7 +22,7 @@ theorem map_agreementNumerator_base
    affineSeedPolynomial,map_sub,map_sum,map_add,map_mul,map_pow,MvPolynomial.map_C,
    MvPolynomial.map_X,map_numerator,polyH,MvPolynomial.pderiv_map]
 theorem globalPolynomial_mul_factor
-   (c:K →+*L) (F Q:Poly4 K) (v:Fin 4 → L)
+   (c:K →+*L) (F Q:Poly4 K) (v:Fin 4→L)
    (hF:MvPolynomial.eval₂Hom c v F=0)
    (hQ:MvPolynomial.eval₂Hom c v Q≠0)
    (hregF:MvPolynomial.eval₂Hom c v (polyH K F)≠0)
@@ -73,7 +72,7 @@ theorem original_factor_agreement_proper
    (φ:Polynomial K →+*Ω) (F Q:Poly4 K)
    (G:MvPolynomial (Fin 3) Ω)
    (hGF:G∣surfaceMap φ F)
-   (w:ℕ) (c:ℕ → K) (x u0 u1:K)
+   (w:ℕ) (c:ℕ→K) (x u0 u1:K)
    (hproper:¬G∣surfaceMap φ
      (agreementNumerator (F*Q) w c x u0 u1)):
    ¬F∣agreementNumerator F w c x u0 u1:=by

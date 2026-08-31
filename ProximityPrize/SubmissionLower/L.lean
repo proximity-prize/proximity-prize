@@ -59,7 +59,7 @@ theorem coordinate_eq_scalar_of_isAlgebraic (i:Fin 3)
    IntermediateField.coe_algebraMap_apply] using hcast
 theorem eq_point_kernel_of_coordinates_algebraic
    (h:∀ i,IsAlgebraic K (coordinate K P i)):
-   ∃ v:Fin 3 → K,P=RingHom.ker (MvPolynomial.aeval v).toRingHom:=by
+   ∃ v:Fin 3→K,P=RingHom.ker (MvPolynomial.aeval v).toRingHom:=by
  classical
  choose v hv using fun i => coordinate_eq_scalar_of_isAlgebraic K P i (h i)
  have heval:coordinateEvaluation K P=
@@ -78,7 +78,7 @@ theorem eq_point_kernel_of_coordinates_algebraic
    _=RingHom.ker (MvPolynomial.aeval v).toRingHom:=
      RingHom.ker_comp_of_injective _ (algebraMap K (CoordinateField K P)).injective
 theorem exists_transcendental_coordinate_of_ne_point_kernel
-   (hnonpoint:∀ v:Fin 3 → K,
+   (hnonpoint:∀ v:Fin 3→K,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom):
    ∃ i:Fin 3,Transcendental K (coordinate K P i):=by
  classical

@@ -1,9 +1,8 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 namespace Ideal
 theorem isIdempotentElem_iff_of_fg {R:Type*} [CommRing R] (I:Ideal R) (h:I.FG):
-   IsIdempotentElem I ↔ ∃ e:R,IsIdempotentElem e∧I=R ∙ e:=by
+   IsIdempotentElem I↔∃ e:R,IsIdempotentElem e∧I=R ∙ e:=by
  constructor
  · intro e
    obtain ⟨r,hr,hr'⟩:=
@@ -19,7 +18,7 @@ theorem isIdempotentElem_iff_of_fg {R:Type*} [CommRing R] (I:Ideal R) (h:I.FG):
  · rintro ⟨e,he,rfl⟩
    simp [IsIdempotentElem,Ideal.span_singleton_mul_span_singleton,he.eq]
 theorem isIdempotentElem_iff_eq_bot_or_top {R:Type*} [CommRing R] [IsDomain R] (I:Ideal R)
-   (h:I.FG):IsIdempotentElem I ↔ I=⊥∨I=⊤:=by
+   (h:I.FG):IsIdempotentElem I↔I=⊥∨I=⊤:=by
  constructor
  · intro H
    obtain ⟨e,he,rfl⟩:=(I.isIdempotentElem_iff_of_fg h).mp H

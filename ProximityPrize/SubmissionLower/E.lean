@@ -46,7 +46,7 @@ theorem surfaceMap_eq_eval₂Hom (φ:Polynomial K →+*L):
  · intro i
    refine Fin.cases ?_ (fun j => ?_) i <;> simp
 theorem eval_surfaceMap (φ:Polynomial K →+*L)
-   (v:Fin 3 → L) (Q:MvPolynomial (Fin 4) K):
+   (v:Fin 3→L) (Q:MvPolynomial (Fin 4) K):
    MvPolynomial.eval v (surfaceMap φ Q)=
      MvPolynomial.eval₂Hom (φ.comp Polynomial.C) (Fin.cases (φ Polynomial.X) v) Q:=by
  have hhom:(MvPolynomial.eval v).comp (surfaceMap φ)=

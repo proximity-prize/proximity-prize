@@ -30,7 +30,7 @@ instance contractedPrime_isPrime {Omega:Type*} [Field Omega]
 theorem mem_contractedPrime_iff {Omega:Type*} [Field Omega]
    (phi:Polynomial K →+*Omega) (C:Ideal (MvPolynomial (Fin 3) Omega))
    (A:Poly (K:=K)):
-   A∈contractedPrime phi C ↔ surfaceMap phi A∈C:=
+   A∈contractedPrime phi C↔surfaceMap phi A∈C:=
  Iff.rfl
 theorem factorIdeal_le_contractedPrime {Omega:Type*} [Field Omega]
    (phi:Polynomial K →+*Omega) (C:Ideal (MvPolynomial (Fin 3) Omega))
@@ -134,7 +134,7 @@ theorem quotientPrime_height_eq_one
    have:I.height=p.height:=congrArg Ideal.height heq
    rw [hIheight,hheight] at this
    norm_num at this
- have hIlt:I < p:=lt_of_le_of_ne hFp hIpne
+ have hIlt:I<p:=lt_of_le_of_ne hFp hIpne
  obtain ⟨x,hxp,hxI⟩:=SetLike.exists_of_lt hIlt
  have hmin:p∈(I ⊔ Ideal.span {x}).minimalPrimes:=by
    refine ⟨⟨inferInstance,sup_le hFp (Ideal.span_le.2 (by simpa))⟩,?_⟩
@@ -148,11 +148,11 @@ theorem quotientPrime_height_eq_one
      rw [heq]
      exact hJr ((show Ideal.span {x} ≤ I ⊔ Ideal.span {x} from le_sup_right)
        (Ideal.mem_span_singleton_self x))
-   have hIrlt:I < r:=lt_of_le_of_ne hIr hIrne
+   have hIrlt:I<r:=lt_of_le_of_ne hIr hIrne
    have hrpEq:r=p:=by
      apply le_antisymm hrp
      by_contra hnot
-     have hrlt:r < p:=lt_of_le_of_ne hrp (Ne.symm (ne_of_not_le hnot))
+     have hrlt:r<p:=lt_of_le_of_ne hrp (Ne.symm (ne_of_not_le hnot))
      have h1:=Ideal.height_add_one_le_of_lt_of_isPrime hIrlt
      have h2:=Ideal.height_add_one_le_of_lt_of_isPrime hrlt
      have hbad:(3:ℕ∞) ≤ p.height:=by

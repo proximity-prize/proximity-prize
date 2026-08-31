@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AV
 import ProximityPrize.SubmissionLower.AY
 namespace ProximityPrize.SubmissionLower.RCN003
@@ -14,10 +13,10 @@ def JointOrderCertificate (order:Fin 3 ≃ Fin 3)
  ∃ order':Fin 3 ≃ Fin 3,
    order' 0=order 0∧
    originalMixedDegree K order' G H=originalMixedDegree K order G H∧
-   0 < (planeMap K order' G).natDegree∧
-   (planeMap K order' G).natDegree < p∧
+   0<(planeMap K order' G).natDegree∧
+   (planeMap K order' G).natDegree<p∧
    (Polynomial.resultant (planeMap K order' G)
-     (planeMap K order' H)).natDegree < p
+     (planeMap K order' H)).natDegree<p
 theorem jointOrderCertificate_of_projection_data
    (order:Fin 3 ≃ Fin 3) (P:Ideal (Original K)) [P.IsPrime]
    (G T:Original K) (p n mCap totalG totalT cap gOuter tInner:ℕ)
@@ -33,8 +32,8 @@ theorem jointOrderCertificate_of_projection_data
    (hGswapOuter:(planeMap K (swapOtherOrder order) G).natDegree ≤ gOuter)
    (hTswapInner:Polynomial.Bivariate.degreeX
      (planeMap K (swapOtherOrder order) T) ≤ tInner)
-   (hnp:n < p) (hgOuterP:gOuter < p)
-   (hcapP:cap < p) (hswapP:gOuter*tInner < p)
+   (hnp:n<p) (hgOuterP:gOuter<p)
+   (hcapP:cap<p) (hswapP:gOuter*tInner<p)
    (hbudget:∀ m,m ≤ mCap →
      m*totalG+n*totalT-m*n ≤ cap):
    JointOrderCertificate K order G T p:=by
@@ -56,7 +55,7 @@ private def fieldsSummary (P:Ideal (Original K)) [P.IsPrime]
  FiniteDimensional (RatFunc K) (CoordinateField K P)∧
    Algebra.IsSeparable (RatFunc K) (CoordinateField K P)
 private def familySummary {I:Type} [Fintype I]
-   (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
+   (P:I→Ideal (Original K)) [∀ i,(P i).IsPrime]
    (A:∀ i,Algebra (RatFunc K) (CoordinateField K (P i))) (B:ℕ):Prop:=
  letI:=A
  (∀ i,FiniteDimensional (RatFunc K) (CoordinateField K (P i))∧
@@ -97,7 +96,7 @@ theorem finite_separable_finrank_bound_of_joint_certificate
  exact hresult
 theorem finite_separable_sum_finrank_bound_of_joint_certificate
    (order:Fin 3 ≃ Fin 3) {I:Type} [Fintype I]
-   (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
+   (P:I→Ideal (Original K)) [∀ i,(P i).IsPrime]
    (ht:∀ i,Transcendental K (coordinate K (P i) (order 0)))
    (hinj:Function.Injective P) (p:ℕ) [CharP K p]
    (G H:Original K) (hG:Irreducible G)
@@ -139,7 +138,7 @@ theorem finite_separable_sum_finrank_bound_of_joint_certificate
  rw [halg,hbudget] at hresult
  exact hresult
 theorem sum_actualCoordinateDegree_le_of_joint_certificate
-   {I:Type} [Fintype I] (P:I → Ideal (Original K))
+   {I:Type} [Fintype I] (P:I→Ideal (Original K))
    [∀ i,(P i).IsPrime] (order:Fin 3 ≃ Fin 3)
    (hinj:Function.Injective P) (p:ℕ) [CharP K p]
    (G H:Original K) (hG:Irreducible G)
@@ -150,7 +149,7 @@ theorem sum_actualCoordinateDegree_le_of_joint_certificate
      originalMixedDegree K order G H:=by
  classical
  let s:Set I:={i | Transcendental K (coordinate K (P i) (order 0))}
- let D:s → ℕ:=fun i =>
+ let D:s→ℕ:=fun i =>
    letI:Algebra (RatFunc K) (CoordinateField K (P i)):=
      rationalBaseAlgebra K (P i) (order 0) i.2
    Module.finrank (RatFunc K) (CoordinateField K (P i))
@@ -178,8 +177,8 @@ theorem finite_separable_at_of_original_coordinate_gate
    (hi:Transcendental K (coordinate K P i))
    (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:G∈P) (hHmem:H∈P)
-   (hproper:¬ G∣H) (hdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixed:coordinateMixedDegree K G H i < p):
+   (hproper:¬ G∣H) (hdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixed:coordinateMixedDegree K G H i<p):
    letI:Algebra (RatFunc K) (CoordinateField K P):=
      rationalBaseAlgebra K P i hi
    FiniteDimensional (RatFunc K) (CoordinateField K P)∧
@@ -206,9 +205,9 @@ theorem projectionsFiniteSeparable_of_joint_R
    (P:Ideal (Original K)) [P.IsPrime] (p:ℕ) [CharP K p]
    (G H:Original K) (hG:Irreducible G)
    (hGmem:G∈P) (hHmem:H∈P) (hproper:¬ G∣H)
-   (hdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixedY:coordinateMixedDegree K G H 0 < p)
-   (hmixedZ:coordinateMixedDegree K G H 2 < p)
+   (hdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixedY:coordinateMixedDegree K G H 0<p)
+   (hmixedZ:coordinateMixedDegree K G H 2<p)
    (hjoint:JointOrderCertificate K (Equiv.swap 0 1) G H p):
    ProjectionsFiniteSeparable K P:=by
  intro i hi
@@ -233,9 +232,9 @@ theorem projectionsFiniteSeparable_of_joint_R_provider
    (P:Ideal (Original K)) [P.IsPrime] (p:ℕ) [CharP K p]
    (G H:Original K) (hG:Irreducible G)
    (hGmem:G∈P) (hHmem:H∈P) (hproper:¬ G∣H)
-   (hdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixedY:coordinateMixedDegree K G H 0 < p)
-   (hmixedZ:coordinateMixedDegree K G H 2 < p)
+   (hdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixedY:coordinateMixedDegree K G H 0<p)
+   (hmixedZ:coordinateMixedDegree K G H 2<p)
    (hjoint:Transcendental K (coordinate K P 1) →
      JointOrderCertificate K (Equiv.swap 0 1) G H p):
    ProjectionsFiniteSeparable K P:=by
@@ -252,7 +251,7 @@ theorem projectionsFiniteSeparable_of_joint_R_provider
    · exact finite_separable_at_of_original_coordinate_gate K P 2 hi p G H
        hG hGmem hHmem hproper hdegree hmixedZ
 theorem sum_actualCoordinateDegree_at_R_le_of_joint_certificate
-   {I:Type} [Fintype I] (P:I → Ideal (Original K))
+   {I:Type} [Fintype I] (P:I→Ideal (Original K))
    [∀ i,(P i).IsPrime] (hinj:Function.Injective P)
    (p:ℕ) [CharP K p] (G H:Original K) (hG:Irreducible G)
    (hGmem:∀ i,G∈P i) (hHmem:∀ i,H∈P i)
@@ -264,7 +263,7 @@ theorem sum_actualCoordinateDegree_at_R_le_of_joint_certificate
    (sum_actualCoordinateDegree_le_of_joint_certificate K P
      (Equiv.swap (0:Fin 3) 1) hinj p G H hG hGmem hHmem hproper hjoint)
 theorem sum_actualCoordinateDegree_at_R_le_of_joint_provider
-   {I:Type} [Fintype I] (P:I → Ideal (Original K))
+   {I:Type} [Fintype I] (P:I→Ideal (Original K))
    [∀ i,(P i).IsPrime] (hinj:Function.Injective P)
    (p:ℕ) [CharP K p] (G H:Original K) (hG:Irreducible G)
    (hGmem:∀ i,G∈P i) (hHmem:∀ i,H∈P i)
@@ -275,7 +274,7 @@ theorem sum_actualCoordinateDegree_at_R_le_of_joint_provider
      coordinateMixedDegree K G H 1:=by
  classical
  let s:Set I:={i | Transcendental K (coordinate K (P i) 1)}
- let D:s → ℕ:=fun i =>
+ let D:s→ℕ:=fun i =>
    letI:Algebra (RatFunc K) (CoordinateField K (P i)):=
      rationalBaseAlgebra K (P i) 1 i.2
    Module.finrank (RatFunc K) (CoordinateField K (P i))
@@ -310,13 +309,13 @@ theorem sum_actualCoordinateDegree_at_R_le_of_joint_provider
  · letI:IsEmpty s:=⟨fun i => hs ⟨i⟩⟩
    simp
 theorem sum_actualCoordinateDegree_at_le_of_joint_R
-   {I:Type} [Fintype I] (P:I → Ideal (Original K))
+   {I:Type} [Fintype I] (P:I→Ideal (Original K))
    [∀ i,(P i).IsPrime] (hinj:Function.Injective P)
    (p:ℕ) [CharP K p] (G H:Original K) (hG:Irreducible G)
    (hGmem:∀ i,G∈P i) (hHmem:∀ i,H∈P i)
-   (hproper:¬ G∣H) (hdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixedY:coordinateMixedDegree K G H 0 < p)
-   (hmixedZ:coordinateMixedDegree K G H 2 < p)
+   (hproper:¬ G∣H) (hdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixedY:coordinateMixedDegree K G H 0<p)
+   (hmixedZ:coordinateMixedDegree K G H 2<p)
    (hjoint:JointOrderCertificate K (Equiv.swap 0 1) G H p):
    ∀ j,(∑ i,actualCoordinateDegree K (P i) j) ≤
      coordinateMixedDegree K G H j:=by
@@ -329,13 +328,13 @@ theorem sum_actualCoordinateDegree_at_le_of_joint_R
  · exact sum_actualCoordinateDegree_at_le K P hinj 2 p G H hG hGmem hHmem
      hproper hdegree hmixedZ
 theorem sum_actualCoordinateDegree_at_le_of_joint_R_provider
-   {I:Type} [Fintype I] (P:I → Ideal (Original K))
+   {I:Type} [Fintype I] (P:I→Ideal (Original K))
    [∀ i,(P i).IsPrime] (hinj:Function.Injective P)
    (p:ℕ) [CharP K p] (G H:Original K) (hG:Irreducible G)
    (hGmem:∀ i,G∈P i) (hHmem:∀ i,H∈P i)
-   (hproper:¬ G∣H) (hdegree:∀ j:Fin 3,G.degreeOf j < p)
-   (hmixedY:coordinateMixedDegree K G H 0 < p)
-   (hmixedZ:coordinateMixedDegree K G H 2 < p)
+   (hproper:¬ G∣H) (hdegree:∀ j:Fin 3,G.degreeOf j<p)
+   (hmixedY:coordinateMixedDegree K G H 0<p)
+   (hmixedZ:coordinateMixedDegree K G H 2<p)
    (hjoint:∀ i,Transcendental K (coordinate K (P i) 1) →
      JointOrderCertificate K (Equiv.swap 0 1) G H p):
    ∀ j,(∑ i,actualCoordinateDegree K (P i) j) ≤

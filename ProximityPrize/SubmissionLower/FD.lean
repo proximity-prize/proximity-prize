@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BZ
 import ProximityPrize.SubmissionLower.P
 namespace ProximityPrize.SubmissionLower.RCN212
@@ -25,7 +24,7 @@ theorem shiftExponent_injective:Function.Injective shiftExponent:=by
  intro d e h
  exact liftExponent_injective (add_right_cancel h)
 theorem mem_movingSupport (d:Fin 4 →₀ ℕ):
-   d∈movingSupport ↔ d 0+d 1+d 2+d 3 ≤ 2∧d 3 ≤ 1∧d 1+2*d 3 ≤ 2:=by
+   d∈movingSupport↔d 0+d 1+d 2+d 3 ≤ 2∧d 3 ≤ 1∧d 1+2*d 3 ≤ 2:=by
  classical
  constructor
  · intro hd
@@ -72,7 +71,7 @@ theorem quadraticIndex_injective:Function.Injective quadraticIndex:=
  fun _ _ h↦Subtype.ext (liftExponent_injective (congrArg Subtype.val h))
 theorem linearIndex_injective:Function.Injective linearIndex:=
  fun _ _ h↦Subtype.ext (shiftExponent_injective (congrArg Subtype.val h))
-def supportIndex:quadraticSupport ⊕ linearSupport → movingSupport:=
+def supportIndex:quadraticSupport ⊕ linearSupport→movingSupport:=
  Sum.elim quadraticIndex linearIndex
 theorem supportIndex_bijective:Function.Bijective supportIndex:=by
  constructor
@@ -95,36 +94,36 @@ theorem supportIndex_bijective:Function.Bijective supportIndex:=by
    · obtain ⟨e,he,h⟩:=Finset.mem_image.mp hd
      exact ⟨Sum.inr ⟨e,he⟩,Subtype.ext h⟩
 variable {K L:Type*} [Field K] [Field L] [Algebra K L]
-def restrictQ:(movingSupport → K) →ₗ[K] (quadraticSupport → K):=
+def restrictQ:(movingSupport→K) →ₗ[K] (quadraticSupport→K):=
  LinearMap.funLeft K K quadraticIndex
-def restrictU:(movingSupport → K) →ₗ[K] (linearSupport → K):=
+def restrictU:(movingSupport→K) →ₗ[K] (linearSupport→K):=
  LinearMap.funLeft K K linearIndex
 theorem restrictQ_surjective:Function.Surjective (restrictQ (K:=K)):=
  LinearMap.funLeft_surjective_of_injective K K _ quadraticIndex_injective
 theorem restrictU_surjective:Function.Surjective (restrictU (K:=K)):=
  LinearMap.funLeft_surjective_of_injective K K _ linearIndex_injective
-def quadraticPolynomial (c:movingSupport → K):=polynomialOfSupport quadraticSupport (restrictQ c)
-def linearPolynomial (c:movingSupport → K):=polynomialOfSupport linearSupport (restrictU c)
-theorem quadraticPolynomial_inFlag (c:movingSupport → K):
+def quadraticPolynomial (c:movingSupport→K):=polynomialOfSupport quadraticSupport (restrictQ c)
+def linearPolynomial (c:movingSupport→K):=polynomialOfSupport linearSupport (restrictU c)
+theorem quadraticPolynomial_inFlag (c:movingSupport→K):
    PolynomialInFlag (2 • unitAllFlag) (quadraticPolynomial c):=
  (support_subset_flagSupport_iff _ _).mp (support_polynomialOfSupport_subset _ _)
-theorem linearPolynomial_inFlag (c:movingSupport → K):
+theorem linearPolynomial_inFlag (c:movingSupport→K):
    PolynomialInFlag unitYZFlag (linearPolynomial c):=
  (support_subset_flagSupport_iff _ _).mp (support_polynomialOfSupport_subset _ _)
-def movingCoordinates (x:Fin 3 → L) (w:L):Fin 4 → L:=![x 0,x 1,x 2,w]
-theorem evaluation_lift (x:Fin 3 → L) (w:L) (d:Fin 3 →₀ ℕ) (a:K):
+def movingCoordinates (x:Fin 3→L) (w:L):Fin 4→L:=![x 0,x 1,x 2,w]
+theorem evaluation_lift (x:Fin 3→L) (w:L) (d:Fin 3 →₀ ℕ) (a:K):
    MvPolynomial.eval₂Hom (algebraMap K L) (movingCoordinates x w)
      (MvPolynomial.monomial (liftExponent d) a)=
    MvPolynomial.eval₂Hom (algebraMap K L) x (MvPolynomial.monomial d a):=by
  simp [MvPolynomial.eval₂Hom_monomial,Finsupp.prod_fintype,Fin.prod_univ_four,
    Fin.prod_univ_three,liftExponent,movingCoordinates]
-theorem evaluation_shift (x:Fin 3 → L) (w:L) (d:Fin 3 →₀ ℕ) (a:K):
+theorem evaluation_shift (x:Fin 3→L) (w:L) (d:Fin 3 →₀ ℕ) (a:K):
    MvPolynomial.eval₂Hom (algebraMap K L) (movingCoordinates x w)
      (MvPolynomial.monomial (shiftExponent d) a)=
    MvPolynomial.eval₂Hom (algebraMap K L) x (MvPolynomial.monomial d a)*w:=by
  simp [MvPolynomial.eval₂Hom_monomial,Finsupp.prod_fintype,Fin.prod_univ_four,
    Fin.prod_univ_three,shiftExponent,liftExponent,movingCoordinates,mul_assoc]
-theorem coefficientEvaluation_eq (x:Fin 3 → L) (w:L) (c:movingSupport → K):
+theorem coefficientEvaluation_eq (x:Fin 3→L) (w:L) (c:movingSupport→K):
    coefficientEvaluation (movingCoordinates x w) movingSupport c=
      MvPolynomial.eval₂Hom (algebraMap K L) x (quadraticPolynomial c)+
      MvPolynomial.eval₂Hom (algebraMap K L) x (linearPolynomial c)*w:=by
@@ -139,19 +138,19 @@ theorem coefficientEvaluation_eq (x:Fin 3 → L) (w:L) (c:movingSupport → K):
    Finset.sum_mul,restrictQ,restrictU,LinearMap.funLeft,quadraticIndex,linearIndex]
 theorem coordinate_mem (i:Fin 3):Finsupp.single i.castSucc 1∈movingSupport:=by
  fin_cases i <;> simp [mem_movingSupport]
-theorem exists_coordinate_evaluation (x:Fin 3 → L) (w:L) (i:Fin 3):
-   ∃ c:movingSupport → K,
+theorem exists_coordinate_evaluation (x:Fin 3→L) (w:L) (i:Fin 3):
+   ∃ c:movingSupport→K,
      coefficientEvaluation (movingCoordinates x w) movingSupport c=x i:=by
  refine ⟨deltaCoefficient movingSupport ⟨Finsupp.single i.castSucc 1,coordinate_mem i⟩,?_⟩
  change MvPolynomial.eval₂Hom _ _ (polynomialOfSupport _ _)=_
  rw [polynomialOfSupport_deltaCoefficient]
  fin_cases i <;> simp [MvPolynomial.eval₂Hom_monomial,movingCoordinates]
 theorem exponentSetPoleWeight_moving (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (x:Fin 3 → L) (w:L):
+   (x:Fin 3→L) (w:L):
    exponentSetPoleWeight v (movingCoordinates x w) movingSupport=
      max (2*max (poleOrder v (x 1)) (max (poleOrder v (x 0)) (poleOrder v (x 2))))
        (max (poleOrder v (x 0)) (poleOrder v (x 2))+poleOrder v w):=by
- let q:Fin 4 → ℤ:=fun i↦poleOrder v (movingCoordinates x w i)
+ let q:Fin 4→ℤ:=fun i↦poleOrder v (movingCoordinates x w i)
  let a:=max (q 1) (max (q 0) (q 2))
  let b:=max (q 0) (q 2)
  have hq:∀ i,0 ≤ q i:=fun i↦le_max_left _ _

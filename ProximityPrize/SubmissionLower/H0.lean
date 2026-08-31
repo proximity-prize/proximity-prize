@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z
 namespace ProximityPrize.SubmissionLower.RCN006
 open RCN002 RCN005
@@ -86,7 +85,7 @@ theorem quotientBase_injective (i:Fin 3)
  letI:Algebra (Polynomial K) (CoordinateRing K P):=quotientPolynomialAlgebra K P i
  intro f g hfg
  apply transcendental_iff_injective.mp hi
- rw [←quotient_polynomial_fraction K P i f, ←quotient_polynomial_fraction K P i g]
+ rw [←quotient_polynomial_fraction K P i f,←quotient_polynomial_fraction K P i g]
  exact congrArg (algebraMap (CoordinateRing K P) (CoordinateField K P)) hfg
 end
 end ProximityPrize.SubmissionLower.RCN006

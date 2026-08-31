@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X7
 import ProximityPrize.SubmissionLower.EH
 namespace ProximityPrize.SubmissionLower.RCN322
@@ -11,7 +10,7 @@ noncomputable section
 variable (K L:Type) [Field K] [Field L] [Algebra K L]
 set_option maxHeartbeats 1000000
 theorem trdeg_le_one_of_generated_relations
-   (v:Fin 3 → L)
+   (v:Fin 3→L)
    (hgen:IntermediateField.adjoin K (Set.range v)=⊤)
    (F T:MvPolynomial (Fin 3) K)
    (hF:Irreducible F) (hproper:¬ F∣T)
@@ -36,11 +35,11 @@ theorem trdeg_le_one_of_generated_relations
    simpa [e,hi0] using (show Transcendental K (v i) from hi)
  have hex:∃ order:Fin 3 ≃ Fin 3,
      Transcendental K (e (MvPolynomial.X (order 0)))∧
-     0 < (planeMap K order F).natDegree:=by
+     0<(planeMap K order F).natDegree:=by
    have hirr:=rationalMap_irreducible_of_evaluation K L initial e F hF hFzero ht0
    rcases positive_degree_of_irreducible (rationalMap K initial F) hirr with h0 | h1
    · refine ⟨initial,ht0,?_⟩
-     change 0 < (bivariateEquiv (RatFunc K) (rationalMap K initial F)).natDegree
+     change 0<(bivariateEquiv (RatFunc K) (rationalMap K initial F)).natDegree
      rwa [bivariateEquiv_natDegree]
    · exact ⟨swapOtherOrder initial,by simpa only [swapOtherOrder_zero] using ht0,
        by rwa [swapped_outer_degree]⟩
@@ -90,17 +89,17 @@ theorem trdeg_le_one_of_generated_relations
    (hroot F hFzero) (hroot T hTzero) hpair
  exact trdeg_le_one_of_functionField K L
 theorem trdeg_adjoin_le_one_of_irreducible_proper_relations
-   (v:Fin 3 → L) (F T:MvPolynomial (Fin 3) K)
+   (v:Fin 3→L) (F T:MvPolynomial (Fin 3) K)
    (hF:Irreducible F) (hproper:¬ F∣T)
    (hFzero:MvPolynomial.aeval v F=0)
    (hTzero:MvPolynomial.aeval v T=0):
    Algebra.trdeg K (IntermediateField.adjoin K (Set.range v)) ≤ 1:=by
  classical
  let E:=IntermediateField.adjoin K (Set.range v)
- let vE:Fin 3 → E:=fun i↦⟨v i,IntermediateField.subset_adjoin K _ ⟨i,rfl⟩⟩
+ let vE:Fin 3→E:=fun i↦⟨v i,IntermediateField.subset_adjoin K _ ⟨i,rfl⟩⟩
  have hgen:IntermediateField.adjoin K (Set.range vE)=⊤:=by
    apply IntermediateField.map_injective E.val
-   rw [IntermediateField.adjoin_map, ←AlgHom.fieldRange_eq_map,
+   rw [IntermediateField.adjoin_map,←AlgHom.fieldRange_eq_map,
      IntermediateField.fieldRange_val]
    have himage:E.val '' Set.range vE=Set.range v:=by
      ext x

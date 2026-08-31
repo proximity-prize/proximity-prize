@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.FI
 import ProximityPrize.SubmissionLower.BM
 import ProximityPrize.SubmissionLower.E
@@ -14,7 +13,7 @@ variable (φ:Polynomial K →+*Ω)
 variable (P:Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
 def componentCoefficients:K →+*CoordinateField Ω P:=
  (algebraMap Ω (CoordinateField Ω P)).comp (φ.comp Polynomial.C)
-def componentPoint:Fin 4 → CoordinateField Ω P:=
+def componentPoint:Fin 4→CoordinateField Ω P:=
  Fin.cases (algebraMap Ω (CoordinateField Ω P) (φ Polynomial.X)) (coordinate Ω P)
 theorem component_evaluation (F:MvPolynomial (Fin 4) K):
    MvPolynomial.eval₂Hom (componentCoefficients φ P) (componentPoint φ P) F=
@@ -34,7 +33,7 @@ theorem component_evaluation_zero_iff (F:MvPolynomial (Fin 4) K):
    MvPolynomial.eval₂Hom (componentCoefficients φ P) (componentPoint φ P) F=0 ↔
      surfaceMap φ F∈P:=by
  rw [component_evaluation]
- change surfaceMap φ F∈RingHom.ker (coordinateEvaluation Ω P).toRingHom ↔ _
+ change surfaceMap φ F∈RingHom.ker (coordinateEvaluation Ω P).toRingHom↔_
  rw [coordinateEvaluation_ker]
 variable (F:MvPolynomial (Fin 4) K)
 variable (hF:surfaceMap φ F∈P)
@@ -73,20 +72,20 @@ theorem agreement_mem_iff_truncated_value (w:ℕ) (x u₀ u₁:K):
    (componentPoint φ P) (component_relation φ P F hF) (component_regular φ P F hH)]
  rw [←globalPolynomial_eval]
  rfl
-def identityNodes {ι:Type*} (nodes:Finset ι) (x u₀ u₁:ι → K) (w:ℕ):Finset ι:=by
+def identityNodes {ι:Type*} (nodes:Finset ι) (x u₀ u₁:ι→K) (w:ℕ):Finset ι:=by
  classical
  exact nodes.filter (fun i => surfaceMap φ
    (agreementNumerator F w (fun j => (j.factorial:K)⁻¹) (x i) (u₀ i) (u₁ i))∈P)
 theorem identityNodes_subset {ι:Type*}
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (w:ℕ):
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (w:ℕ):
    identityNodes φ P F nodes x u₀ u₁ w ⊆ nodes:=by
  classical
  exact Finset.filter_subset _ _
 theorem exists_common_pencil_of_many_identities {ι τ:Type*}
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (w:ℕ)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (w:ℕ)
    (hinj:Set.InjOn x nodes)
-   (hcard:w < (identityNodes φ P F nodes x u₀ u₁ w).card)
-   (seed:τ → K) (selected:τ → Polynomial K)
+   (hcard:w<(identityNodes φ P F nodes x u₀ u₁ w).card)
+   (seed:τ→K) (selected:τ→Polynomial K)
    (hdegree:∀ t,(selected t).natDegree ≤ w)
    (hvalues:∀ t i,i∈identityNodes φ P F nodes x u₀ u₁ w →
      (selected t).eval (x i)=u₀ i+seed t*u₁ i):
@@ -97,10 +96,10 @@ theorem exists_common_pencil_of_many_identities {ι τ:Type*}
      ∀ t,selected t=P₀+Polynomial.C (seed t)*P₁:=by
  classical
  let I:=identityNodes φ P F nodes x u₀ u₁ w
- let seeds:Option τ → CoordinateField Ω P:=fun
+ let seeds:Option τ→CoordinateField Ω P:=fun
    | none => coordinate Ω P 2
    | some t => componentCoefficients φ P (seed t)
- let polys:Option τ → Polynomial (CoordinateField Ω P):=fun
+ let polys:Option τ→Polynomial (CoordinateField Ω P):=fun
    | none => truncatedPolynomial φ P F hF hH w
    | some t => (selected t).map (componentCoefficients φ P)
  have hI:Set.InjOn x I:=hinj.mono (identityNodes_subset φ P F nodes x u₀ u₁ w)
@@ -109,7 +108,7 @@ theorem exists_common_pencil_of_many_identities {ι τ:Type*}
    cases t with
    | none => exact truncatedPolynomial_natDegree_le φ P F hF hH w
    | some t => exact Polynomial.natDegree_map_le.trans (hdegree t)
- have hv:∀ t i,i∈I → (polys t).eval (componentCoefficients φ P (x i))=
+ have hv:∀ t i,i∈I→(polys t).eval (componentCoefficients φ P (x i))=
      componentCoefficients φ P (u₀ i)+seeds t*componentCoefficients φ P (u₁ i):=by
    intro t i hi
    cases t with
@@ -147,12 +146,12 @@ theorem coordinates_affine_of_basefield_pencil (w:ℕ) (hw:1 ≤ w)
  · exact truncatedPolynomial_initial_slope φ P F hF hH w hw
 include hF hH in
 theorem identityNodes_card_le_of_r_dependent_principal {ι:Type*}
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (w:ℕ) (hw:1 ≤ w)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (w:ℕ) (hw:1 ≤ w)
    (hinj:Set.InjOn x nodes)
-   (g:MvPolynomial (Fin 3) Ω) (hP:P=Ideal.span {g}) (hr:0 < g.degreeOf 1):
+   (g:MvPolynomial (Fin 3) Ω) (hP:P=Ideal.span {g}) (hr:0<g.degreeOf 1):
    (identityNodes φ P F nodes x u₀ u₁ w).card ≤ w:=by
  by_contra h
- have hc:w < (identityNodes φ P F nodes x u₀ u₁ w).card:=Nat.lt_of_not_ge h
+ have hc:w<(identityNodes φ P F nodes x u₀ u₁ w).card:=Nat.lt_of_not_ge h
  obtain ⟨P₀,P₁,_,_,hp,_⟩:=
    exists_common_pencil_of_many_identities φ P F hF hH nodes x u₀ u₁ w hinj hc
      (fun t:Empty => t.elim) (fun t:Empty => t.elim)
@@ -161,10 +160,10 @@ theorem identityNodes_card_le_of_r_dependent_principal {ι:Type*}
  exact not_y_affine_of_r_dependent_principal Ω P g hP hr _ _ hy
 include hF hH in
 theorem seed_transcendental_of_many_identities {ι:Type*} [IsAlgClosed Ω]
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (w:ℕ) (hw:1 ≤ w)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (w:ℕ) (hw:1 ≤ w)
    (hinj:Set.InjOn x nodes)
-   (hcard:w < (identityNodes φ P F nodes x u₀ u₁ w).card)
-   (hnonpoint:∀ v:Fin 3 → Ω,P≠RingHom.ker (MvPolynomial.aeval v).toRingHom):
+   (hcard:w<(identityNodes φ P F nodes x u₀ u₁ w).card)
+   (hnonpoint:∀ v:Fin 3→Ω,P≠RingHom.ker (MvPolynomial.aeval v).toRingHom):
    Transcendental Ω (coordinate Ω P 2):=by
  obtain ⟨P₀,P₁,_,_,hp,_⟩:=
    exists_common_pencil_of_many_identities φ P F hF hH nodes x u₀ u₁ w hinj hcard
@@ -173,8 +172,8 @@ theorem seed_transcendental_of_many_identities {ι:Type*} [IsAlgClosed Ω]
  obtain ⟨hy,hr⟩:=coordinates_affine_of_basefield_pencil φ P F hF hH w hw P₀ P₁ hp
  exact seed_transcendental_of_affine_coordinates Ω P hnonpoint _ _ _ _ hy hr
 theorem selected_agrees_on_identity_nodes {ι:Type*}
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (p w:ℕ) [CharP Ω p]
-   (hw:w < p) (S:Polynomial K) (γ:K) (hdegree:S.natDegree ≤ w)
+   (nodes:Finset ι) (x u₀ u₁:ι→K) (p w:ℕ) [CharP Ω p]
+   (hw:w<p) (S:Polynomial K) (γ:K) (hdegree:S.natDegree ≤ w)
    (hsolution:specialization K S γ F=0)
    (hregular:MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
      (polynomialPoint (φ.comp Polynomial.C) S γ (φ Polynomial.X))

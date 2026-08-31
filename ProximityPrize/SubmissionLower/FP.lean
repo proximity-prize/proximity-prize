@@ -14,8 +14,8 @@ noncomputable def primaryPiecesCertificateOfMembershipWeighted
    [IsLocalRing R]
    (surface tail:Polynomial R)
    [hSurfacePrime:(Ideal.span {surface}).IsPrime]
-   (relation:J → Ideal (Polynomial R))
-   (relationBar:J → Ideal (SurfaceQuotient surface))
+   (relation:J→Ideal (Polynomial R))
+   (relationBar:J→Ideal (SurfaceQuotient surface))
    [∀ j,(relationBar j).IsMaximal]
    [IsNoetherianRing (SurfaceQuotient surface)]
    (hrelationBar:∀ j,relationBar j=
@@ -25,7 +25,7 @@ noncomputable def primaryPiecesCertificateOfMembershipWeighted
      (algebraMap R (Localization.AtPrime (relationBar j)))]
    [∀ j,FiniteDimensional (IsLocalRing.ResidueField R)
      (IsLocalRing.ResidueField (Localization.AtPrime (relationBar j)))]
-   (mu:J → ℕ)
+   (mu:J→ℕ)
    (htail:∀ j,tail∈Ideal.span {surface} ⊔ relation j^mu j)
    (hcoprime:Pairwise fun i j↦IsCoprime (relation i) (relation j)):
    PrimaryPiecesCertificate surface tail (fun j↦

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R4
 namespace ProximityPrize.SubmissionLower.RCN077
 open RCN347
@@ -69,7 +68,7 @@ theorem partial_extra_liftFour (F:Poly4 K):
 theorem partial_liftFour (F:Poly4 K) (i:Fin 4):
    MvPolynomial.pderiv i.castSucc (liftFour K F)=
      liftFour K (MvPolynomial.pderiv i F):=by
- have hinj:Function.Injective (Fin.castSucc:Fin 4 → Fin 5):=by
+ have hinj:Function.Injective (Fin.castSucc:Fin 4→Fin 5):=by
    intro i j hij
    apply Fin.ext
    exact congrArg (fun x:Fin 5 => x.val) hij

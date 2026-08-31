@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.H3
 import ProximityPrize.SubmissionLower.CM
 namespace ProximityPrize.SubmissionLower.RCN015
@@ -74,7 +73,7 @@ theorem model_value_le_one
 theorem model_value_lt_one_iff
    (hS:Function.Injective (algebraMap (Polynomial K) S))
    (hA:Function.Injective (algebraMap A L)) (φ:A →ₐ[K] K) (a:A):
-   (modelPointPlace hS hA φ).valuation L (algebraMap A L a) < 1 ↔ φ a=0:=by
+   (modelPointPlace hS hA φ).valuation L (algebraMap A L a)<1↔φ a=0:=by
  letI:Algebra S (ModelClosure A L):=
    (inclusionToModelClosure (K:=K) (S:=S) (A:=A) (L:=L)).toRingHom.toAlgebra
  letI:IsScalarTower S (ModelClosure A L) L:=
@@ -87,13 +86,13 @@ theorem model_value_lt_one_iff
 theorem modelPointPlace_injective
    (hS:Function.Injective (algebraMap (Polynomial K) S))
    (hA:Function.Injective (algebraMap A L)):
-   Function.Injective (modelPointPlace hS hA:(A →ₐ[K] K) → HeightOneSpectrum S):=by
+   Function.Injective (modelPointPlace hS hA:(A →ₐ[K] K)→HeightOneSpectrum S):=by
  intro φ ψ h
  apply RCN017.pointKernel_injective
  apply Ideal.ext
  intro a
- change φ a=0 ↔ ψ a=0
- rw [←model_value_lt_one_iff hS hA φ a, ←model_value_lt_one_iff hS hA ψ a,h]
+ change φ a=0↔ψ a=0
+ rw [←model_value_lt_one_iff hS hA φ a,←model_value_lt_one_iff hS hA ψ a,h]
 theorem model_zero_order_ge_one
    (hS:Function.Injective (algebraMap (Polynomial K) S))
    (hA:Function.Injective (algebraMap A L)) (φ:A →ₐ[K] K)
@@ -102,7 +101,7 @@ theorem model_zero_order_ge_one
  have hv0:(modelPointPlace hS hA φ).valuation L (algebraMap A L a)≠0:=
    (Valuation.ne_zero_iff _).mpr (by simpa only [map_zero] using hA.ne ha)
  have hvlt:=(model_value_lt_one_iff hS hA φ a).mpr hzero
- have hlog:((modelPointPlace hS hA φ).valuation L (algebraMap A L a)).log < (0:ℤ):=by
+ have hlog:((modelPointPlace hS hA φ).valuation L (algebraMap A L a)).log<(0:ℤ):=by
    simpa using (WithZero.log_lt_log hv0 (by simp)).2 hvlt
  omega
 end Construction

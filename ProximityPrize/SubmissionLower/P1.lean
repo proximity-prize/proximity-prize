@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F0
 import ProximityPrize.SubmissionLower.O7
 namespace ProximityPrize.SubmissionLower.RCN284
@@ -19,12 +18,12 @@ theorem irs_code_eq_base_interleaved:
    IRSProfile.code=
      (IRSProfile.baseCode^⋈ (Fin IRSProfile.interleaving):
        ModuleCode IRSProfile.Index IRSProfile.Field
-         (Fin IRSProfile.interleaving → IRSProfile.Field)):=by
+         (Fin IRSProfile.interleaving→IRSProfile.Field)):=by
  ext v
  change v∈IRSProfile.code ↔
    ∀ b:Fin IRSProfile.interleaving,(fun i => v i b)∈IRSProfile.baseCode
  exact RCN018.irs_code_mem_iff_rows v
-theorem nat_div_le_inv_pow {m q t:ℕ} (hm:0 < m)
+theorem nat_div_le_inv_pow {m q t:ℕ} (hm:0<m)
    (hq:m*2^t ≤ q):
    (m:ENNReal)/(q:ENNReal) ≤ 1/2^t:=by
  have hm0:(m:ENNReal)≠0:=by exact_mod_cast hm.ne'
@@ -104,8 +103,8 @@ theorem lambda_le:
    Code.Lambda
      ((IRSProfile.code^⋈ (Fin 2):
        ModuleCode IRSProfile.Index IRSProfile.Field
-         (Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field)):
-       Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving →
+         (Fin 2→Fin IRSProfile.interleaving→IRSProfile.Field)):
+       Set (IRSProfile.Index→Fin 2→Fin IRSProfile.interleaving →
          IRSProfile.Field))
      (radius:ℝ) ≤
        (RCN281.listBudget:ℕ∞):=by
@@ -123,8 +122,8 @@ theorem certifiedGammaError_le_of_alignment
      ((Code.Lambda
        ((IRSProfile.code^⋈ (Fin 2):
          ModuleCode IRSProfile.Index IRSProfile.Field
-           (Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field)):
-         Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving →
+           (Fin 2→Fin IRSProfile.interleaving→IRSProfile.Field)):
+         Set (IRSProfile.Index→Fin 2→Fin IRSProfile.interleaving →
            IRSProfile.Field))
        (radius:ℝ)).toNat:ENNReal)/
          (Fintype.card IRSProfile.Field:ENNReal) ≤

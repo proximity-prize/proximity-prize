@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HT
 import ProximityPrize.SubmissionLower.T8
 import ProximityPrize.SubmissionLower.F7
@@ -14,7 +13,7 @@ theorem sum_ramification_inertia_eq_finrank_fiber
    ∑ q:p.primesOver S,q.1.ramificationIdx R*q.1.inertiaDeg R=
      finrank p.ResidueField (p.Fiber S):=by
  let:=Fintype.ofFinite (PrimeSpectrum (p.Fiber S))
- rw [IsArtinianRing.finrank_eq_sum_primeSpectrum, ←(primesOverOrderIsoFiber R S p).symm.sum_comp]
+ rw [IsArtinianRing.finrank_eq_sum_primeSpectrum,←(primesOverOrderIsoFiber R S p).symm.sum_comp]
  apply Finset.sum_congr rfl
  intro q _
  simp_rw [toEquiv_symm,coe_symm_toEquiv,coe_primesOverOrderIsoFiber_symm_apply]

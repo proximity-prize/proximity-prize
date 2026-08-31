@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.IN
 import ProximityPrize.SubmissionLower.HH
 section ProximityFlatProofPort
@@ -16,9 +15,9 @@ lemma degreeOf_mul_eq (hp:p≠0) (hq:q≠0):
    degreeOf n (p*q)=degreeOf n p+degreeOf n q:=by
  classical
  letI:DecidableEq σ:=Classical.decEq σ
- simp_rw [degreeOf_eq_natDegree,map_mul, ←renameEquiv_apply]
+ simp_rw [degreeOf_eq_natDegree,map_mul,←renameEquiv_apply]
  rw [Polynomial.natDegree_mul] <;> simpa [-renameEquiv_apply,EmbeddingLike.map_eq_zero_iff]
-lemma degreeOf_prod_eq {ι:Type*} (s:Finset ι) (f:ι → MvPolynomial σ R)
+lemma degreeOf_prod_eq {ι:Type*} (s:Finset ι) (f:ι→MvPolynomial σ R)
    (h:∀ i∈s,f i≠0):
    degreeOf n (∏ i∈s,f i)=∑ i∈s,degreeOf n (f i):=by
  rcases subsingleton_or_nontrivial (MvPolynomial σ R) with nontrivial | nontrivial
@@ -43,7 +42,7 @@ lemma degrees_mul_eq (hp:p≠0) (hq:q≠0):
  classical
  letI:DecidableEq σ:=Classical.decEq σ
  ext s
- simp_rw [Multiset.count_add, ←degreeOf_def,degreeOf_mul_eq hp hq]
+ simp_rw [Multiset.count_add,←degreeOf_def,degreeOf_mul_eq hp hq]
 end Degrees
 theorem totalDegree_mul_of_isDomain {f g:MvPolynomial σ R}
    (hf:f≠0) (hg:g≠0):
@@ -57,7 +56,7 @@ theorem totalDegree_le_of_dvd_of_isDomain {f g:MvPolynomial σ R}
  rw [totalDegree_mul_of_isDomain (by aesop) (by aesop)]
  lia
 theorem dvd_C_iff_exists {f:MvPolynomial σ R} {a:R} (ha:a≠0):
-   f∣C a ↔ ∃ b,b∣a∧f=C b:=by
+   f∣C a↔∃ b,b∣a∧f=C b:=by
  constructor
  · intro hf
    use coeff 0 f
@@ -78,7 +77,7 @@ theorem degreeOf_C_mul (j:σ) (c:R) (hc:c∈R⁰):degreeOf j (C c*p)=degreeOf j 
  · simp [hp]
  classical
  letI:DecidableEq σ:=Classical.decEq σ
- simp_rw [degreeOf_eq_natDegree,map_mul, ←renameEquiv_apply]
+ simp_rw [degreeOf_eq_natDegree,map_mul,←renameEquiv_apply]
  rw [Polynomial.natDegree_mul']
  · simp
  · have hp':(optionEquivLeft R _ ((rename (optionSubtypeNe j).symm) p)).leadingCoeff≠0:=by
@@ -95,7 +94,7 @@ end CommSemiring
 section CommRing
 variable [CommRing R] [NoZeroDivisors R] {p q r:MvPolynomial σ R}
 theorem dvd_monomial_iff_exists {n:σ →₀ ℕ} {a:R} (ha:a≠0):
-   p∣monomial n a ↔ ∃ m b,m ≤ n∧b∣a∧p=monomial m b:=by
+   p∣monomial n a↔∃ m b,m ≤ n∧b∣a∧p=monomial m b:=by
  rw [show monomial n a=monomial n 1*C a by rw [mul_comm,C_mul_monomial,mul_one],
    dvd_monomial_mul_iff_exists]
  apply exists_congr
@@ -110,7 +109,7 @@ theorem dvd_monomial_iff_exists {n:σ →₀ ℕ} {a:R} (ha:a≠0):
    use C b,hmn,map_dvd C hb
    rwa [mul_comm,C_mul_monomial,mul_one]
 theorem dvd_monomial_one_iff_exists {n:σ →₀ ℕ}:
-   p∣monomial n 1 ↔ ∃ m u,m ≤ n∧IsUnit u∧p=monomial m u:=by
+   p∣monomial n 1↔∃ m u,m ≤ n∧IsUnit u∧p=monomial m u:=by
  rcases subsingleton_or_nontrivial R with hR | hR
  · suffices ∃ m,m ≤ n by simpa [Subsingleton.elim _ p]
    use n
@@ -119,7 +118,7 @@ theorem dvd_monomial_one_iff_exists {n:σ →₀ ℕ}:
  intro m
  simp_rw [isUnit_iff_dvd_one]
 theorem dvd_smul_X_iff_exists {i:σ} {r:R} (hr:r≠0):
-   p∣r • MvPolynomial.X i ↔ ∃ s,s∣r∧(p=C s∨p=s • MvPolynomial.X i):=by
+   p∣r • MvPolynomial.X i↔∃ s,s∣r∧(p=C s∨p=s • MvPolynomial.X i):=by
  classical
  letI:DecidableEq σ:=Classical.decEq σ
  rw [MvPolynomial.X,smul_monomial,smul_eq_mul,mul_one,dvd_monomial_iff_exists hr,exists_comm]
@@ -133,7 +132,7 @@ theorem dvd_smul_X_iff_exists {i:σ} {r:R} (hr:r≠0):
    by_cases hm:m i=0
    · left
      ext j
-     simp only [Finsupp.coe_zero,Pi.zero_apply, ←Nat.le_zero]
+     simp only [Finsupp.coe_zero,Pi.zero_apply,←Nat.le_zero]
      by_cases hj:j=i
      · rw [←hm,hj]
      · exact (hmn j).trans (Finsupp.single_eq_of_ne hj).le
@@ -148,7 +147,7 @@ theorem dvd_smul_X_iff_exists {i:σ} {r:R} (hr:r≠0):
    · use Finsupp.single i 1,le_rfl,hb
      simp [hp,smul_monomial]
 theorem dvd_X_iff_exists {i:σ}:
-   p∣MvPolynomial.X i ↔ ∃ r,IsUnit r∧(p=C r∨p=r • MvPolynomial.X i):=by
+   p∣MvPolynomial.X i↔∃ r,IsUnit r∧(p=C r∨p=r • MvPolynomial.X i):=by
  classical
  letI:DecidableEq σ:=Classical.decEq σ
  nontriviality R

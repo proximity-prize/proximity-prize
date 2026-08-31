@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BQ
 import ProximityPrize.SubmissionLower.K5
 import ProximityPrize.SubmissionLower.E8
@@ -26,19 +25,19 @@ local instance:DecidableEq Iota:=Classical.decEq Iota
 abbrev Poly3 (Omega:Type) [Field Omega]:=MvPolynomial (Fin 3) Omega
 abbrev Poly4 (K:Type) [Field K]:=MvPolynomial (Fin 4) K
 structure ResidualStage
-   (phi:Polynomial K →+*Omega) (Gamma:Finset K) (x:Iota → K)
+   (phi:Polynomial K →+*Omega) (Gamma:Finset K) (x:Iota→K)
    (p e:ℕ) [CharP Omega p] (flag:FlagDegree) (d:ℕ)
    (support:ResidualSupportParameters:=
      ResidualSupportParameters.acceptedSupport) where
  nodes:Finset Iota
- u0:Iota → K
- u1:Iota → K
- selected:K → Polynomial K
+ u0:Iota→K
+ u1:Iota→K
+ selected:K→Polynomial K
  F:Poly4 K
  G:Poly3 Omega
  irreducible_G:Irreducible G
  G_dvd_surface:G∣surfaceMap phi F
- y_dependent:0 < G.degreeOf 1
+ y_dependent:0<G.degreeOf 1
  regular_proper:¬ G∣surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F)
  flag_support:RCN095.PolynomialInFlag flag G
  surface_s_weight:wt residualSWeights F ≤ support.s
@@ -56,9 +55,9 @@ structure ResidualStage
  on_component:∀ gamma∈Gamma,
    MvPolynomial.eval (selectedPoint phi selected gamma) G=0
  no_large_pencil:NoLargeSelectedPencil selected Gamma d e
- characteristic_bound:d < p
+ characteristic_bound:d<p
 namespace ResidualStage
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota→K}
 variable {p e:ℕ} [CharP Omega p] {flag:FlagDegree} {d:ℕ}
 variable {support:ResidualSupportParameters}
 def componentIdeal (S:ResidualStage phi Gamma x p e flag d support):
@@ -121,14 +120,14 @@ theorem advance
    (hphi:Function.Injective phi)
    (S:ResidualStage phi Gamma x p e flag d support)
    (hne:S.identities≠∅):
-   0 < S.identities.card∧
+   0<S.identities.card∧
      ∃ Snext:ResidualStage phi Gamma x p e flag
          (d-S.identities.card) support,
        Snext.nodes=S.nodes \ S.identities∧
        (∀ gamma∈Gamma,∀ i∈S.identities,
          S.Agrees gamma i)∧
        ∀ gamma∈Gamma,∀ i∈Snext.nodes,
-         S.Agrees gamma i → Snext.Agrees gamma i:=by
+         S.Agrees gamma i→Snext.Agrees gamma i:=by
  classical
  let P:=S.componentIdeal
  letI:P.IsPrime:=S.componentIdeal_isPrime
@@ -136,7 +135,7 @@ theorem advance
  have hJsub:J ⊆ S.nodes:=identityNodes_subset
    phi P S.F S.nodes x S.u0 S.u1 d
  have hJcard:J.card ≤ d:=S.identities_card_le
- have hJpos:0 < J.card:=Finset.card_pos.mpr
+ have hJpos:0<J.card:=Finset.card_pos.mpr
    (Finset.nonempty_iff_ne_empty.mpr (by simpa only [J] using hne))
  have hvalues:∀ gamma∈Gamma,∀ i∈J,
      (S.selected gamma).eval (x i)=S.u0 i+gamma*S.u1 i:=by
@@ -161,8 +160,8 @@ theorem advance
  let hsupport:ResidualSupportData support S.F:=
    ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
  have hsupportRes:=hsupport.globalResidual P0 P1 V
- let u0res:Iota → K:=fun i↦residualReceived J x S.u0 P0 i
- let u1res:Iota → K:=fun i↦residualReceived J x S.u1 P1 i
+ let u0res:Iota→K:=fun i↦residualReceived J x S.u0 P0 i
+ let u1res:Iota→K:=fun i↦residualReceived J x S.u1 P1 i
  let Snext:ResidualStage phi Gamma x p e flag (d-J.card) support:={
    nodes:=S.nodes \ J
    u0:=u0res
@@ -278,11 +277,11 @@ theorem exists_terminal_descendant
          agreement_card:=by simp
        }⟩
      · have hk:S.identities.card ≤ d:=S.identities_card_le
-       have hkpos:0 < S.identities.card:=Finset.card_pos.mpr
+       have hkpos:0<S.identities.card:=Finset.card_pos.mpr
          (Finset.nonempty_iff_ne_empty.mpr hterminal)
        obtain ⟨Snext,hnodes,hagreements⟩:=
          S.advance_card hphi hterminal
-       have hdegree_lt:d-S.identities.card < d:=by omega
+       have hdegree_lt:d-S.identities.card<d:=by omega
        obtain ⟨Dnext⟩:=ih (d-S.identities.card) hdegree_lt Snext
        have hDle:Dnext.degree ≤ d-S.identities.card:=
          Dnext.degree_le

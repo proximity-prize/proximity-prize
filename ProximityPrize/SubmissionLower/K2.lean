@@ -16,7 +16,7 @@ set_option maxHeartbeats 2000000
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
 variable {G T H:MvPolynomial (Fin 3) Omega}
 variable {A:Type}
-variable (component:A → RegularComponent Omega G T H)
+variable (component:A→RegularComponent Omega G T H)
 variable (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
 variable (ht:∀ a:A,Transcendental Omega
  (flagEvaluation Omega (component a).1 lam mu nu (MvPolynomial.X (order 0))))

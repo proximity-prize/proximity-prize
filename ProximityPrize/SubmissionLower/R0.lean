@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DG
 import ProximityPrize.SubmissionLower.G8
 namespace ProximityPrize.SubmissionLower.RCN344
@@ -42,9 +41,9 @@ theorem finite_sum_pole_le_degree (c:SeparableCoordinate K L)
  exact RCN346.finite_sum_pole_le_finrank K L W
 end SeparableCoordinate
 abbrev Coordinate:=K ⊕ SeparableCoordinate K L
-def coordinateValue:Coordinate K L → L:=
+def coordinateValue:Coordinate K L→L:=
  Sum.elim (algebraMap K L) (SeparableCoordinate.value K L)
-def coordinateDegree:Coordinate K L → ℕ:=
+def coordinateDegree:Coordinate K L→ℕ:=
  Sum.elim (fun _↦0) (SeparableCoordinate.degree K L)
 theorem constant_value_le_one (v:Place K L) (c:K):
    v.val (algebraMap K L c) ≤ 1:=by
@@ -65,7 +64,7 @@ theorem finite_sum_coordinate_pole_le_degree (c:Coordinate K L)
  · exact SeparableCoordinate.finite_sum_pole_le_degree K L c W
 variable {σ:Type*} [Fintype σ]
 theorem finite_sum_polynomial_pole_le_box (W:Finset (Place K L))
-   (c:σ → Coordinate K L) (cap:σ → ℕ) (F:MvPolynomial σ K)
+   (c:σ→Coordinate K L) (cap:σ→ℕ) (F:MvPolynomial σ K)
    (hcap:∀ i,F.degreeOf i ≤ cap i):
    (∑ v∈W,RCN346.poleOrder K L v
      (MvPolynomial.eval₂Hom (algebraMap K L) (fun i↦coordinateValue K L (c i)) F)) ≤
@@ -90,8 +89,8 @@ variable [IsScalarTower (Polynomial K) (RatFunc K) L]
 variable [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq (Place K L):=Classical.decEq _
-theorem finite_zero_places_le_box (c:σ → Coordinate K L)
-   (cap:σ → ℕ) (F:MvPolynomial σ K) (hcap:∀ i,F.degreeOf i ≤ cap i)
+theorem finite_zero_places_le_box (c:σ→Coordinate K L)
+   (cap:σ→ℕ) (F:MvPolynomial σ K) (hcap:∀ i,F.degreeOf i ≤ cap i)
    (hF:MvPolynomial.eval₂Hom (algebraMap K L) (fun i↦coordinateValue K L (c i)) F≠0)
    (U:Finset (Place K L))
    (hU:∀ v∈U,1 ≤ RCN026.order K L v
@@ -112,7 +111,7 @@ theorem modelPlace_injective:Function.Injective (modelPlace K L A):=by
  intro φ ψ h
  have hchart:=(RCN345.chartMap_bijective K L).1 h
  exact RCN000.actualPointPlace_injective K A L (Sum.inl.inj hchart)
-theorem map_model_eval (x:σ → A) (F:MvPolynomial σ K):
+theorem map_model_eval (x:σ→A) (F:MvPolynomial σ K):
    algebraMap A L (MvPolynomial.eval₂Hom (algebraMap K A) x F)=
      MvPolynomial.eval₂Hom (algebraMap K L) (fun i↦algebraMap A L (x i)) F:=by
  have hhom:(algebraMap A L).comp (MvPolynomial.eval₂Hom (algebraMap K A) x)=
@@ -123,9 +122,9 @@ theorem map_model_eval (x:σ → A) (F:MvPolynomial σ K):
    · simp only [RingHom.comp_apply,MvPolynomial.eval₂Hom_X']
  exact DFunLike.congr_fun hhom F
 theorem finite_model_zero_points_le_box
-   (x:σ → A) (c:σ → Coordinate K L)
+   (x:σ→A) (c:σ→Coordinate K L)
    (hc:∀ i,coordinateValue K L (c i)=algebraMap A L (x i))
-   (cap:σ → ℕ) (F:MvPolynomial σ K) (hcap:∀ i,F.degreeOf i ≤ cap i)
+   (cap:σ→ℕ) (F:MvPolynomial σ K) (hcap:∀ i,F.degreeOf i ≤ cap i)
    (hF:MvPolynomial.eval₂Hom (algebraMap K A) x F≠0)
    (S:Finset (A →ₐ[K] K))
    (hS:∀ φ∈S,φ (MvPolynomial.eval₂Hom (algebraMap K A) x F)=0):

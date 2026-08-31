@@ -23,7 +23,7 @@ variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 abbrev Omega (K:Type) [Field K]:=GenericField K
-variable {Gamma:Finset K} {x:I → K} {p:ℕ}
+variable {Gamma:Finset K} {x:I→K} {p:ℕ}
 variable [CharP (Omega K) p] {flag:FlagDegree}
 variable {support:RCN275.ResidualSupportParameters}
 abbrev FixedStage
@@ -40,7 +40,7 @@ structure ProperDelayedTailCertificate
      (H:=regularitySurface (polynomialEmbedding K) S.F) flag
      (RCN326.tailFlag
        (RCN326.w+1)))
-   (multiplicity:FirstTailComponent S → ℕ) where
+   (multiplicity:FirstTailComponent S→ℕ) where
  branch:∀ C:FirstTailComponent S,
    (∃ delay,1 ≤ delay∧delay ≤ multiplicity C∧
      globalTailCut (polynomialEmbedding K) S.F
@@ -75,10 +75,10 @@ theorem delayedTailMultiplicityProvider_of_certificates
      RCN326.agreements ≤
        (S.agreementFiber gamma).card)
    (hshort:RCN326.w+1 ≤ bound)
-   (hchar:bound < p)
+   (hchar:bound<p)
    (hbox:S.F∈globalCoefficientBox K bound
      RCN326.w seedCap slopeCap)
-   (multiplicity:FirstTailComponent S → ℕ)
+   (multiplicity:FirstTailComponent S→ℕ)
    (hone:∀ C,1 ≤ multiplicity C)
    (proper:ProperDelayedTailCertificate S U.toPrimeFlagBudgetFamily multiplicity)
    (resultants:RegularComponentWeightedInertiaResultantCertificate
@@ -91,7 +91,7 @@ theorem delayedTailMultiplicityProvider_of_certificates
  let B:=U.toPrimeFlagBudgetFamily
  let secondTail:=RCN326.tailFlag
    (RCN326.w+2)
- let cost:FirstTailComponent S → ℕ:=
+ let cost:FirstTailComponent S→ℕ:=
    fun C => multiplicity C*B.weightedCost secondTail C
  have hyzPositive (C:FirstTailComponent S):1 ≤ B.yzCost C:=by
    change 1 ≤ coordinateDegree (Omega K) (CoordinateField (Omega K) C.1)

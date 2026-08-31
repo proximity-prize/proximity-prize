@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I5
 namespace ProximityPrize.SubmissionLower.RCN264
 open RCN072
@@ -26,10 +25,10 @@ theorem regularComponent_G_mem (C:RegularComponent K G T H):G∈C.1:=
 theorem regularComponent_T_mem (C:RegularComponent K G T H):T∈C.1:=
  cutIdeal_le_component K G T C.1 (regularComponent_mem K G T H C)
    (Ideal.subset_span (Set.mem_insert_of_mem G (Set.mem_singleton T)))
-theorem regularComponent_ne_point (C:RegularComponent K G T H) (v:Fin 3 → K):
+theorem regularComponent_ne_point (C:RegularComponent K G T H) (v:Fin 3→K):
    C.1≠RingHom.ker (MvPolynomial.aeval v).toRingHom:=
  component_ne_pointKernel K G T C.1 (regularComponent_mem K G T H C) v
-theorem exists_regular_component (v:Fin 3 → K)
+theorem exists_regular_component (v:Fin 3→K)
    (hG:MvPolynomial.eval v G=0) (hT:MvPolynomial.eval v T=0)
    (hH:MvPolynomial.eval v H≠0):
    ∃ C:RegularComponent K G T H,
@@ -40,23 +39,23 @@ theorem exists_regular_component (v:Fin 3 → K)
    intro h
    exact hH (hv h)
  exact ⟨⟨P,Finset.mem_filter.mpr ⟨hP,hnot⟩⟩,hv⟩
-def componentSeeds {Seed:Type*} (S:Finset Seed) (v:Seed → Fin 3 → K)
+def componentSeeds {Seed:Type*} (S:Finset Seed) (v:Seed→Fin 3→K)
    (C:RegularComponent K G T H):Finset Seed:=by
  classical
  exact S.filter (fun γ => C.1 ≤ RingHom.ker (MvPolynomial.aeval (v γ)).toRingHom)
 theorem componentSeeds_subset {Seed:Type*}
-   (S:Finset Seed) (v:Seed → Fin 3 → K) (C:RegularComponent K G T H):
+   (S:Finset Seed) (v:Seed→Fin 3→K) (C:RegularComponent K G T H):
    componentSeeds K G T H S v C ⊆ S:=by
  classical
  exact Finset.filter_subset _ _
 theorem componentSeeds_on_prime {Seed:Type*}
-   (S:Finset Seed) (v:Seed → Fin 3 → K) (C:RegularComponent K G T H)
+   (S:Finset Seed) (v:Seed→Fin 3→K) (C:RegularComponent K G T H)
    (γ:Seed) (hγ:γ∈componentSeeds K G T H S v C):
    C.1 ≤ RingHom.ker (MvPolynomial.aeval (v γ)).toRingHom:=by
  classical
  exact (Finset.mem_filter.mp hγ).2
 theorem card_le_sum_componentSeeds {Seed:Type*}
-   (S:Finset Seed) (v:Seed → Fin 3 → K)
+   (S:Finset Seed) (v:Seed→Fin 3→K)
    (hG:∀ γ∈S,MvPolynomial.eval (v γ) G=0)
    (hT:∀ γ∈S,MvPolynomial.eval (v γ) T=0)
    (hH:∀ γ∈S,MvPolynomial.eval (v γ) H≠0):
@@ -70,12 +69,12 @@ theorem card_le_sum_componentSeeds {Seed:Type*}
    exact ⟨C,Finset.mem_univ C,Finset.mem_filter.mpr ⟨hγ,hC⟩⟩
  exact (Finset.card_le_card hcover).trans (Finset.card_biUnion_le)
 theorem aggregate_component_incidence {Seed:Type*}
-   (S:Finset Seed) (v:Seed → Fin 3 → K)
+   (S:Finset Seed) (v:Seed→Fin 3→K)
    (hG:∀ γ∈S,MvPolynomial.eval (v γ) G=0)
    (hT:∀ γ∈S,MvPolynomial.eval (v γ) T=0)
    (hH:∀ γ∈S,MvPolynomial.eval (v γ) H≠0)
-   (gap nodes pencil:ℕ) (cap budget:Fin 3 → ℕ)
-   (degree:RegularComponent K G T H → Fin 3 → ℕ)
+   (gap nodes pencil:ℕ) (cap budget:Fin 3→ℕ)
+   (degree:RegularComponent K G T H→Fin 3→ℕ)
    (hcomponent:∀ C,
      (componentSeeds K G T H S v C).card*gap ≤
        nodes*(∑ i,cap i*degree C i)+pencil*gap*degree C 2)
@@ -99,7 +98,7 @@ theorem aggregate_component_incidence {Seed:Type*}
      Finset.sum_le_sum (fun C _ => hcomponent C)
    _=nodes*(∑ i:Fin 3,cap i*(∑ C:RegularComponent K G T H,degree C i))+
        pencil*gap*(∑ C:RegularComponent K G T H,degree C 2):=by
-     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,hfubini]
+     rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.mul_sum,hfubini]
    _ ≤ nodes*(∑ i,cap i*budget i)+pencil*gap*budget 2:=
      Nat.add_le_add
        (Nat.mul_le_mul_left nodes (Finset.sum_le_sum

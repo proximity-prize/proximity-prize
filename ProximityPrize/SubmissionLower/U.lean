@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AC
 namespace ProximityPrize.SubmissionLower.RCN276
 open scoped BigOperators
@@ -101,7 +100,7 @@ theorem factorRegularLedger_projection_decomposition
  ring
 theorem sum_factorRegularLedger_le_flag
    {I:Type} [Fintype I] (p:Profile)
-   (flag:I → FlagDegree) (cap:FlagDegree)
+   (flag:I→FlagDegree) (cap:FlagDegree)
    (hz:(∑ i,(flag i).zOnly) ≤ cap.zOnly)
    (hyz:(∑ i,(flag i).yz) ≤ cap.yz)
    (hall:(∑ i,(flag i).all) ≤ cap.all):
@@ -133,7 +132,7 @@ noncomputable section
 variable {K:Type} [Field K]
 theorem regularFlag_budgets
    (p:Profile) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
-   (hw:0 < p.w)
+   (hw:0<p.w)
    (hbox:Q∈globalCoefficientBox K p.weightedCap p.w
      p.seedTotalCap p.slopeCap):
    (∑ F:RegularIndex Q,(regularFlag Q F).zOnly) ≤ p.seedTotalCap∧
@@ -146,10 +145,10 @@ theorem regularFlag_budgets
  exact ⟨hb.2.2,hb.1,hb.2.1⟩
 theorem sum_factor_counts_rectangular_le
    (p:Profile) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
-   (hw:0 < p.w)
+   (hw:0<p.w)
    (hbox:Q∈globalCoefficientBox K p.weightedCap p.w
      p.seedTotalCap p.slopeCap)
-   (count:RegularIndex Q → ℕ)
+   (count:RegularIndex Q→ℕ)
    (hcount:∀ F,count F*p.gap^2 ≤
      p.factorRegularLedger (regularFlag Q F)):
    (∑ F,count F)*p.gap^2 ≤ p.regularNumerator:=by
@@ -223,7 +222,7 @@ theorem meet_fixed_cost_exact:
    meet_total_numerator_exact]
  norm_num [Profile.gap,meetProfile]
 theorem meet_fixed_cost_lt_budget:
-   meetProfile.fixedCost < 100000000000000000:=by
+   meetProfile.fixedCost<100000000000000000:=by
  rw [meet_fixed_cost_exact]
  norm_num
 end ProximityPrize.SubmissionLower.RCN276

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B9
 import ProximityPrize.SubmissionLower.EX
 import ProximityPrize.SubmissionLower.BP
@@ -62,8 +61,8 @@ theorem residual_degreeOf_one_eq
    simpa only [hback] using h
 theorem residual_degreeOf_one_pos_iff
    (aY v bY aS bS cS:Omega) (hv:v≠0) (F:Poly3 Omega):
-   0 < (residualAlgHom aY v bY aS bS cS F).degreeOf 1 ↔
-     0 < F.degreeOf 1:=by
+   0<(residualAlgHom aY v bY aS bS cS F).degreeOf 1 ↔
+     0<F.degreeOf 1:=by
  rw [residual_degreeOf_one_eq aY v bY aS bS cS hv F]
 theorem componentResidualHom_eq_residualAlgHom
    (aY v bY aS bS cS:Omega):
@@ -194,7 +193,7 @@ theorem residual_component_transport
    (F:Poly4 K) (G:Poly3 Omega)
    (hG:Irreducible G)
    (hdiv:G∣RCN136.surfaceMap phi F)
-   (hr:0 < G.degreeOf 1)
+   (hr:0<G.degreeOf 1)
    (hproper:¬ G∣RCN136.surfaceMap phi
      (MvPolynomial.pderiv (2:Fin 4) F))
    (p:RCN095.FlagDegree)
@@ -204,7 +203,7 @@ theorem residual_component_transport
    Irreducible Gres∧
      Gres∣RCN136.surfaceMap phi
        (globalResidualHom P0 P1 V F)∧
-     0 < Gres.degreeOf 1∧
+     0<Gres.degreeOf 1∧
      ¬ Gres∣RCN136.surfaceMap phi
        (MvPolynomial.pderiv (2:Fin 4)
          (globalResidualHom P0 P1 V F))∧
@@ -267,15 +266,15 @@ theorem eval_residualComponent_selectedPoint
    fin_cases i <;>
      simp [hnormal,RingHom.comp_apply] <;> ring
  simpa using congrArg
-   (fun q:Fin 3 → Omega↦
+   (fun q:Fin 3→Omega↦
      MvPolynomial.eval₂Hom (algebraMap Omega Omega) q G) hcoords
 theorem exists_residual_family_with_surface_data
    {iota:Type} [DecidableEq iota]
    (phi:Polynomial K →+*Omega) (hphi:Function.Injective phi)
-   (I nodes:Finset iota) (x u0 u1:iota → K)
+   (I nodes:Finset iota) (x u0 u1:iota→K)
    (w e:ℕ) (hsub:I ⊆ nodes) (hIw:I.card ≤ w)
    (hinj:Set.InjOn x nodes)
-   (selected:K → Polynomial K) (Gamma:Finset K)
+   (selected:K→Polynomial K) (Gamma:Finset K)
    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ w)
    (hvalues:∀ gamma∈Gamma,∀ i∈I,
      (selected gamma).eval (x i)=u0 i+gamma*u1 i)
@@ -288,7 +287,7 @@ theorem exists_residual_family_with_surface_data
        (RCN231.polynomialPoint
          (phi.comp Polynomial.C) (selected gamma) gamma (phi Polynomial.X))
        (MvPolynomial.pderiv (2:Fin 4) F)≠0):
-   ∃ P0 P1:Polynomial K,∃ residual:K → Polynomial K,
+   ∃ P0 P1:Polynomial K,∃ residual:K→Polynomial K,
      P0.natDegree ≤ w∧P1.natDegree ≤ w∧
      (∀ gamma∈Gamma,
        (residual gamma).natDegree ≤ w-I.card)∧

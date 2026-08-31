@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EM
 namespace ProximityPrize.SubmissionLower.RCN137
 open UniqueFactorizationMonoid RCN136 RCN082
@@ -28,7 +27,7 @@ theorem coordinate_degree_le_of_dvd (i:σ) (F Q:MvPolynomial σ A)
  rw [MvPolynomial.degreeOf_mul_eq hF hG]
  exact Nat.le_add_right _ _
 theorem sum_coordinate_degrees_le_of_prod_dvd {ι:Type*}
-   (I:Finset ι) (f:ι → MvPolynomial σ A) (Q:MvPolynomial σ A)
+   (I:Finset ι) (f:ι→MvPolynomial σ A) (Q:MvPolynomial σ A)
    (hQ:Q≠0) (hdiv:(∏ j∈I,f j)∣Q) (i:σ):
    (∑ j∈I,(f j).degreeOf i) ≤ Q.degreeOf i:=by
  classical
@@ -70,7 +69,7 @@ theorem surfaceFactors_spec (φ:Polynomial K →+*L)
  normalizedFactorSet_spec (surfaceMap φ F) g hg
 theorem exists_surfaceFactor_zero
    (φ:Polynomial K →+*L) (hφ:Function.Injective φ)
-   (F:MvPolynomial (Fin 4) K) (hF:F≠0) (v:Fin 3 → L)
+   (F:MvPolynomial (Fin 4) K) (hF:F≠0) (v:Fin 3→L)
    (hzero:MvPolynomial.eval v (surfaceMap φ F)=0):
    ∃ g∈surfaceFactors φ F,MvPolynomial.eval v g=0:=
  exists_normalizedFactorSet_zero (MvPolynomial.eval v) (surfaceMap φ F)
@@ -83,7 +82,7 @@ theorem surfaceFactors_degree_budget
    (surfaceMap_ne_zero φ hφ F hF) i).trans (surfaceMap_degreeOf_le φ F i)
 theorem exists_geometric_component_of_surface_zero
    (φ:Polynomial K →+*L) (hφ:Function.Injective φ)
-   (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) (v:Fin 3 → L)
+   (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) (v:Fin 3→L)
    (hzero:MvPolynomial.eval v (surfaceMap φ Q)=0):
    ∃ F∈activeFactors Q,∃ g∈surfaceFactors φ F,
      Irreducible F∧Irreducible g∧F∣Q∧g∣surfaceMap φ F∧
@@ -110,7 +109,7 @@ theorem surfaceFactor_family_degree_budget
        (activeFactors_product_dvd Q hQ) i.succ
 theorem surfaceFactor_family_input_budgets
    (φ:Polynomial K →+*L) (hφ:Function.Injective φ)
-   (Q:MvPolynomial (Fin 4) K) (D w zcap s:ℕ) (hw:0 < w) (hQ:Q≠0)
+   (Q:MvPolynomial (Fin 4) K) (D w zcap s:ℕ) (hw:0<w) (hQ:Q≠0)
    (hbox:Q∈globalCoefficientBox K D w zcap s):
    (∑ F∈activeFactors Q,∑ g∈surfaceFactors φ F,g.degreeOf (0:Fin 3)) ≤ (D-1)/w∧
    (∑ F∈activeFactors Q,∑ g∈surfaceFactors φ F,g.degreeOf (1:Fin 3)) ≤ s∧
@@ -121,7 +120,7 @@ theorem surfaceFactor_family_input_budgets
    (surfaceFactor_family_degree_budget φ hφ Q hQ 2).trans hc.2.2⟩
 theorem irreducible_positive_surface_degree
    (g:MvPolynomial (Fin 3) L) (hg:Irreducible g):
-   0 < g.degreeOf 0+g.degreeOf 1+g.degreeOf 2:=by
+   0<g.degreeOf 0+g.degreeOf 1+g.degreeOf 2:=by
  by_contra h
  have heq:g=MvPolynomial.C (g.coeff 0):=by
    apply eq_C_of_all_degreeOf_zero

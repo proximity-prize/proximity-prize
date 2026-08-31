@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J0
 namespace ProximityPrize.SubmissionLower.RCN169
 open RCN079 RCN167
@@ -57,7 +56,7 @@ theorem implicitPair_spec (J A G:MvPolynomial (Fin 4) K)
  intro hd
  have hh:=RCN081.degreeOf_le_of_dvd (2:Fin 4) G A hd hiA.ne_zero
  omega
-theorem sum_products_le_product_sums {ι:Type*} (I:Finset ι) (f g:ι → ℕ):
+theorem sum_products_le_product_sums {ι:Type*} (I:Finset ι) (f g:ι→ℕ):
    (∑ i∈I,f i*g i) ≤ (∑ i∈I,f i)*(∑ i∈I,g i):=by
  calc
    _ ≤ ∑ i∈I,f i*(∑ j∈I,g j):=by
@@ -114,7 +113,7 @@ theorem implicitPair_degree_budgets
    intro A hA
    change (∑ G∈positiveRFactors (implicitLift A),
      (G.degreeOf 1*A.degreeOf 3+G.degreeOf 3*A.degreeOf 1)) ≤ _
-   rw [Finset.sum_add_distrib, ←Finset.sum_mul, ←Finset.sum_mul]
+   rw [Finset.sum_add_distrib,←Finset.sum_mul,←Finset.sum_mul]
    calc
      _ ≤ A.degreeOf 1*A.degreeOf 3+A.degreeOf 3*A.degreeOf 1:=
        Nat.add_le_add (Nat.mul_le_mul_right _ (hlocal A hA).2.1)
@@ -130,7 +129,7 @@ theorem implicitPair_degree_budgets
    _=_:=by ring
 theorem implicitPair_input_budgets
    (J:MvPolynomial (Fin 4) K) (hJ:J≠0)
-   (D w j:ℕ) (hw:0 < w) (hbox:J∈globalCoefficientBox K D w j 0):
+   (D w j:ℕ) (hw:0<w) (hbox:J∈globalCoefficientBox K D w j 0):
    (∑ q∈implicitPairSet J,pairYCost q) ≤ j∧
      (∑ q∈implicitPairSet J,pairRCost q) ≤ 2*((D-1)/w)*j∧
      (∑ q∈implicitPairSet J,pairZCost q) ≤ (D-1)/w:=by

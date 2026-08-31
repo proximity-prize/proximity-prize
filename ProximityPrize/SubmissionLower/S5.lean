@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AR
 import ProximityPrize.SubmissionLower.V5
 section ProximityFlatProofPort
@@ -18,8 +17,8 @@ theorem intValuation_liesOver (x:A):
  rcases eq_or_ne x 0 with rfl | hx
  · simp [ramificationIdx'_ne_zero_of_liesOver w.asIdeal v.ne_bot]
  rw [intValuation_eq_exp_neg_multiplicity v hx,intValuation_eq_exp_neg_multiplicity w (by simpa),
-   ←Set.image_singleton, ←Ideal.map_span,exp_neg,exp_neg,inv_pow, ←exp_nsmul,
-   Int.nsmul_eq_mul,inv_inj,exp_inj, ←Nat.cast_mul,Nat.cast_inj]
+   ←Set.image_singleton,←Ideal.map_span,exp_neg,exp_neg,inv_pow,←exp_nsmul,
+   Int.nsmul_eq_mul,inv_inj,exp_inj,←Nat.cast_mul,Nat.cast_inj]
  refine multiplicity_eq_of_emultiplicity_eq_some ?_ |>.symm
  replace hx:Ideal.span {x}≠⊥:=by simp [hx]
  rw [emultiplicity_map_eq_ramificationIdx'_mul hx v.irreducible w.irreducible w.ne_bot,
@@ -28,7 +27,7 @@ theorem valuation_liesOver (x:K):
    v.valuation K x^v.asIdeal.ramificationIdx' w.asIdeal=
      w.valuation L (algebraMap K L x):=by
  obtain ⟨x,y,hy,rfl⟩:=IsFractionRing.div_surjective (A:=A) x
- simp [valuation_of_algebraMap,div_pow, ←IsScalarTower.algebraMap_apply A K L,
+ simp [valuation_of_algebraMap,div_pow,←IsScalarTower.algebraMap_apply A K L,
    IsScalarTower.algebraMap_apply A B L,intValuation_liesOver v w]
 variable (K)
 theorem uniformContinuous_algebraMap_liesOver:
@@ -56,11 +55,11 @@ theorem uniformContinuous_algebraMap_liesOver:
    ←Valuation.restrict_def,WithVal.valueGroupOrderIso₀_restrict,
    valueGroup₀_equiv_withZeroMulInt_restrict_apply_of_surjective (v.valuation_surjective K),
    ←log_lt_log (by simp_all) (by simp)] at hx
- rw [←σwV.strictMono.lt_iff_lt, ←σL.strictMono.lt_iff_lt,
-   ValuativeRel.ValueGroupWithZero.orderMonoidIso_valuation_eq_restrict₀, ←Valuation.restrict_def,
-   WithVal.valueGroupOrderIso₀_restrict, ←σw.strictMono.lt_iff_lt,
+ rw [←σwV.strictMono.lt_iff_lt,←σL.strictMono.lt_iff_lt,
+   ValuativeRel.ValueGroupWithZero.orderMonoidIso_valuation_eq_restrict₀,←Valuation.restrict_def,
+   WithVal.valueGroupOrderIso₀_restrict,←σw.strictMono.lt_iff_lt,
    valueGroup₀_equiv_withZeroMulInt_restrict_apply_of_surjective (w.valuation_surjective L),
-   WithVal.algebraMap_left_apply,WithVal.algebraMap_right_apply, ←valuation_liesOver L v,
+   WithVal.algebraMap_left_apply,WithVal.algebraMap_right_apply,←valuation_liesOver L v,
    ←log_lt_log (by simp_all) (by simp [EmbeddingLike.map_eq_zero_iff (f:=σwV)]),log_pow,
    nsmul_eq_mul,mul_comm]
  exact Int.mul_lt_of_lt_ediv
