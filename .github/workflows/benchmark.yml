@@ -78,6 +78,10 @@ jobs:
           COMMIT: ${{ github.sha }}
         run: python3 scripts/submit.py > verifier-result.json
 
+      - name: Withdraw the submission if this job is cancelled
+        if: cancelled()
+        run: python3 scripts/cancel.py
+
       - name: Check the verifier's verdict
         run: python3 scripts/verdict-gate.py verifier-result.json
 
