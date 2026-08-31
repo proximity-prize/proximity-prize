@@ -9,7 +9,7 @@ open RCN081 RCN100 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN238 RCN266
 open RCN260 LocatorFactorAggregate LocatorLowQuotient
 noncomputable section
 set_option autoImplicit false
-set_option maxRecDepth 10000
+set_option maxRecDepth 100000
 set_option maxHeartbeats 1500000
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index
@@ -66,14 +66,14 @@ theorem factor_weights_of_cell (H:P4) (F:RegularIndex H)
 private theorem source95_count
     (u0 u1:I → K) (H:P4) (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma, 181776 ≤
+    (hagreement:∀ gamma ∈ Gamma, 181756 ≤
       ((Finset.univ:Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80368)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80388)
     (F:RegularIndex H) (hF:F.1 ≠ 0)
-    (hdiv:∀ v:ConstraintKernel (K:=K) 18541152 131071 2800 31 102
+    (hdiv:∀ v:ConstraintKernel (K:=K) 17266820 131071 3200 29 95
       IRSProfile.domain u0 u1,
-      F.1 ∣ reconstruct K 18541152 131071 2800 31 v.1)
+      F.1 ∣ reconstruct K 17266820 131071 3200 29 v.1)
     (c:LocatorReplacementGrid.Cell)
     (hcell:LocatorReplacementGrid.InCell (regularCumulativeFlag H F) c)
     (hfit:LocatorReplacementData.Pair95Fits c) :
@@ -81,33 +81,33 @@ private theorem source95_count
   classical
   obtain ⟨hr, hylo, hyhi, htlo, hthi, hc⟩ :=
     factor_weights_of_cell H F c hcell
-  have hqT:2800 - wt residualTotalWeights F.1 ≤
+  have hqT:3200 - wt residualTotalWeights F.1 ≤
       LocatorReplacementData.quotient95T c:=by
     simpa only [LocatorReplacementData.quotient95T] using
-      Nat.sub_le_sub_left htlo 2800
-  have hqY:141 - wt residualYSWeights F.1 ≤
+      Nat.sub_le_sub_left htlo 3200
+  have hqY:131 - wt residualYSWeights F.1 ≤
       LocatorReplacementData.quotient95YS c:=by
     simpa only [LocatorReplacementData.quotient95YS] using
-      Nat.sub_le_sub_left hylo 141
-  have hqS:31 - wt residualSWeights F.1 ≤
+      Nat.sub_le_sub_left hylo 131
+  have hqS:29 - wt residualSWeights F.1 ≤
       LocatorReplacementData.quotient95S c:=by
     rw [hr]
     exact Nat.le_refl _
-  have hqD:18541152 - 50706 - wt (contactWeights 131071) F.1 ≤
+  have hqD:17266820 - 50686 - wt (contactWeights 131071) F.1 ≤
       LocatorReplacementData.quotient95D c:=by
     dsimp [LocatorReplacementData.quotient95D]
     omega
   have hchannels:=channelCount_mono hqT hqY hqS
-  have hsource:50706 * channelCount (2800 - wt residualTotalWeights F.1)
-      (141 - wt residualYSWeights F.1) (31 - wt residualSWeights F.1) <
-      coefficientCount 18541152 131071 2800 31 -
-        Fintype.card I * localRankBound 102 2800 31:=by
+  have hsource:50686 * channelCount (3200 - wt residualTotalWeights F.1)
+      (131 - wt residualYSWeights F.1) (29 - wt residualSWeights F.1) <
+      coefficientCount 17266820 131071 3200 29 -
+        Fintype.card I * localRankBound 95 3200 29:=by
     rw [show Fintype.card I = 262144 by norm_num [I, IRSProfile.Index],
       LocatorAuxiliaryArithmetic.auxiliary95_nullity]
-    exact (Nat.mul_le_mul_left 50706 hchannels).trans_lt hfit.1
+    exact (Nat.mul_le_mul_left 50686 hchannels).trans_lt hfit.1
   obtain ⟨v, Q, _hv, hQ, _heq, hqbox, _hparent, hproduct⟩ :=
     exists_fixed_quotient_with_derivative_vanishing (K:=K) (I:=I)
-      18541152 131071 2800 31 102 141 50706 181776
+      17266820 131071 3200 29 95 131 50686 181756
       IRSProfile.domain u0 u1 F.1 hF hdiv
       (by decide) LocatorAuxiliaryArithmetic.auxiliary95_shape hsource
       LocatorAuxiliaryArithmetic.auxiliary95_capacity selected Gamma hdegree hagreement
@@ -123,15 +123,15 @@ private theorem source95_count
     have hirr:=(RCN167.positiveRFactors_spec H F.1 F.2).1
     rcases hfit.2.1 with hT | hY | hR
     · apply LocatorCoprimeQuotient.isRelPrime_of_weight_sub_bound
-        residualTotalWeights F.1 Q hirr hQ 2800 hwActual.1
+        residualTotalWeights F.1 Q hirr hQ 3200 hwActual.1
       dsimp [LocatorReplacementData.quotient95T] at hT
       omega
     · apply LocatorCoprimeQuotient.isRelPrime_of_weight_sub_bound
-        residualYSWeights F.1 Q hirr hQ 141 hwActual.2.1
+        residualYSWeights F.1 Q hirr hQ 131 hwActual.2.1
       dsimp [LocatorReplacementData.quotient95YS] at hY
       omega
     · apply LocatorCoprimeQuotient.isRelPrime_of_weight_sub_bound
-        residualSWeights F.1 Q hirr hQ 31 hwActual.2.2.1
+        residualSWeights F.1 Q hirr hQ 29 hwActual.2.2.1
       dsimp [LocatorReplacementData.quotient95S] at hR
       omega
   have hFY:F.1.degreeOf 1 ≤ (LocatorReplacementData.pair95 c).leftY:=by
@@ -168,10 +168,10 @@ private theorem source95_count
         (show 131071 < 2130706433 by decide))
     (by
       simpa only [LocatorReplacementData.pair95] using
-        (show 131071 < 181776 by decide))
+        (show 131071 < 181756 by decide))
     (by
       simpa only [LocatorReplacementData.pair95] using
-        (show 181776 ≤ 262144 by decide))
+        (show 181756 ≤ 262144 by decide))
     hdegree hagreement
     (by
       simpa only [LocatorReplacementData.pair95, UnequalParameters.errors,
@@ -182,14 +182,14 @@ private theorem source95_count
 private theorem source72_count
     (u0 u1:I → K) (H:P4) (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma, 181776 ≤
+    (hagreement:∀ gamma ∈ Gamma, 181756 ≤
       ((Finset.univ:Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80368)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80388)
     (F:RegularIndex H) (hF:F.1 ≠ 0)
-    (hdiv:∀ v:ConstraintKernel (K:=K) 13087872 131071 12000 21 72
+    (hdiv:∀ v:ConstraintKernel (K:=K) 13086432 131071 24000 21 72
       IRSProfile.domain u0 u1,
-      F.1 ∣ reconstruct K 13087872 131071 12000 21 v.1)
+      F.1 ∣ reconstruct K 13086432 131071 24000 21 v.1)
     (c:LocatorReplacementGrid.Cell)
     (hcell:LocatorReplacementGrid.InCell (regularCumulativeFlag H F) c)
     (hfit:LocatorReplacementData.Pair72Fits c) :
@@ -197,10 +197,10 @@ private theorem source72_count
   classical
   obtain ⟨hr, hylo, hyhi, htlo, hthi, hc⟩ :=
     factor_weights_of_cell H F c hcell
-  have hqT:12000 - wt residualTotalWeights F.1 ≤
+  have hqT:24000 - wt residualTotalWeights F.1 ≤
       LocatorReplacementData.quotient72T c:=by
     simpa only [LocatorReplacementData.quotient72T] using
-      Nat.sub_le_sub_left htlo 12000
+      Nat.sub_le_sub_left htlo 24000
   have hqY:99 - wt residualYSWeights F.1 ≤
       LocatorReplacementData.quotient72YS c:=by
     simpa only [LocatorReplacementData.quotient72YS] using
@@ -209,21 +209,21 @@ private theorem source72_count
       LocatorReplacementData.quotient72S c:=by
     rw [hr]
     exact Nat.le_refl _
-  have hqD:13087872 - 50706 - wt (contactWeights 131071) F.1 ≤
+  have hqD:13086432 - 50686 - wt (contactWeights 131071) F.1 ≤
       LocatorReplacementData.quotient72D c:=by
     dsimp [LocatorReplacementData.quotient72D]
     omega
   have hchannels:=channelCount_mono hqT hqY hqS
-  have hsource:50706 * channelCount (12000 - wt residualTotalWeights F.1)
+  have hsource:50686 * channelCount (24000 - wt residualTotalWeights F.1)
       (99 - wt residualYSWeights F.1) (21 - wt residualSWeights F.1) <
-      coefficientCount 13087872 131071 12000 21 -
-        Fintype.card I * localRankBound 72 12000 21:=by
+      coefficientCount 13086432 131071 24000 21 -
+        Fintype.card I * localRankBound 72 24000 21:=by
     rw [show Fintype.card I = 262144 by norm_num [I, IRSProfile.Index],
       LocatorAuxiliaryArithmetic.auxiliary72_nullity]
-    exact (Nat.mul_le_mul_left 50706 hchannels).trans_lt hfit.1
+    exact (Nat.mul_le_mul_left 50686 hchannels).trans_lt hfit.1
   obtain ⟨v, Q, _hv, hQ, _heq, hqbox, _hparent, hproduct⟩ :=
     exists_fixed_quotient_with_derivative_vanishing (K:=K) (I:=I)
-      13087872 131071 12000 21 72 99 50706 181776
+      13086432 131071 24000 21 72 99 50686 181756
       IRSProfile.domain u0 u1 F.1 hF hdiv
       (by decide) LocatorAuxiliaryArithmetic.auxiliary72_shape hsource
       LocatorAuxiliaryArithmetic.auxiliary72_capacity selected Gamma hdegree hagreement
@@ -239,7 +239,7 @@ private theorem source72_count
     have hirr:=(RCN167.positiveRFactors_spec H F.1 F.2).1
     rcases hfit.2.1 with hT | hY | hR
     · apply LocatorCoprimeQuotient.isRelPrime_of_weight_sub_bound
-        residualTotalWeights F.1 Q hirr hQ 12000 hwActual.1
+        residualTotalWeights F.1 Q hirr hQ 24000 hwActual.1
       dsimp [LocatorReplacementData.quotient72T] at hT
       omega
     · apply LocatorCoprimeQuotient.isRelPrime_of_weight_sub_bound
@@ -284,10 +284,10 @@ private theorem source72_count
         (show 131071 < 2130706433 by decide))
     (by
       simpa only [LocatorReplacementData.pair72] using
-        (show 131071 < 181776 by decide))
+        (show 131071 < 181756 by decide))
     (by
       simpa only [LocatorReplacementData.pair72] using
-        (show 181776 ≤ 262144 by decide))
+        (show 181756 ≤ 262144 by decide))
     hdegree hagreement
     (by
       simpa only [LocatorReplacementData.pair72, UnequalParameters.errors,
@@ -295,24 +295,145 @@ private theorem source72_count
     (fun gamma hgamma => hproduct gamma
       (regularSeeds_subset H selected Gamma F hgamma))
   simpa only [LocatorReplacementData.pair72Cost] using hcount
+private theorem source126_count
+    (u0 u1:I → K) (H:P4) (selected:K → Polynomial K) (Gamma:Finset K)
+    (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement:∀ gamma ∈ Gamma, 181756 ≤
+      ((Finset.univ:Finset I).filter (fun i =>
+        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80388)
+    (F:RegularIndex H) (hF:F.1 ≠ 0)
+    (hdiv:∀ v:ConstraintKernel (K:=K) 22901256 131071 2814 39 126
+      IRSProfile.domain u0 u1,
+      F.1 ∣ reconstruct K 22901256 131071 2814 39 v.1)
+    (c:LocatorReplacementGrid.Cell)
+    (hcell:LocatorReplacementGrid.InCell (regularCumulativeFlag H F) c)
+    (hfit:LocatorReplacementData.Pair126Fits c) :
+    (regularSeeds H selected Gamma F).card ≤
+      LocatorReplacementData.pair126Cost c:=by
+  classical
+  obtain ⟨hr, hylo, hyhi, htlo, hthi, hc⟩ :=
+    factor_weights_of_cell H F c hcell
+  have hqT:2814 - wt residualTotalWeights F.1 ≤
+      LocatorReplacementData.quotient126T c:=by
+    simpa only [LocatorReplacementData.quotient126T] using
+      Nat.sub_le_sub_left htlo 2814
+  have hqY:174 - wt residualYSWeights F.1 ≤
+      LocatorReplacementData.quotient126YS c:=by
+    simpa only [LocatorReplacementData.quotient126YS] using
+      Nat.sub_le_sub_left hylo 174
+  have hqS:39 - wt residualSWeights F.1 ≤
+      LocatorReplacementData.quotient126S c:=by
+    rw [hr]
+    exact Nat.le_refl _
+  have hqD:22901256 - 50686 - wt (contactWeights 131071) F.1 ≤
+      LocatorReplacementData.quotient126D c:=by
+    dsimp [LocatorReplacementData.quotient126D]
+    omega
+  have hchannels:=channelCount_mono hqT hqY hqS
+  have hsource:50686 * channelCount (2814 - wt residualTotalWeights F.1)
+      (174 - wt residualYSWeights F.1) (39 - wt residualSWeights F.1) <
+      coefficientCount 22901256 131071 2814 39 -
+        Fintype.card I * localRankBound 126 2814 39:=by
+    rw [show Fintype.card I = 262144 by norm_num [I, IRSProfile.Index],
+      LocatorAuxiliaryArithmetic.auxiliary126_nullity]
+    exact (Nat.mul_le_mul_left 50686 hchannels).trans_lt hfit.1
+  obtain ⟨v, Q, _hv, hQ, _heq, hqbox, _hparent, hproduct⟩ :=
+    exists_fixed_quotient_with_derivative_vanishing (K:=K) (I:=I)
+      22901256 131071 2814 39 126 174 50686 181756
+      IRSProfile.domain u0 u1 F.1 hF hdiv
+      (by decide) LocatorAuxiliaryArithmetic.auxiliary126_shape hsource
+      LocatorAuxiliaryArithmetic.auxiliary126_capacity selected Gamma hdegree hagreement
+  have hbox:Q ∈ nestedCoefficientBox K
+      (LocatorReplacementData.quotient126D c) 131071
+      (LocatorReplacementData.quotient126T c)
+      (LocatorReplacementData.quotient126YS c)
+      (LocatorReplacementData.quotient126S c) :=
+    nestedCoefficientBox_mono hqD hqT hqY hqS hqbox
+  have hwActual:=nested_mem_weights hqbox hQ
+  have hwCell:=nested_mem_weights hbox hQ
+  have hrel:IsRelPrime F.1 Q:=by
+    have hirr:=(RCN167.positiveRFactors_spec H F.1 F.2).1
+    rcases hfit.2.1 with hT | hY | hR
+    · apply LocatorCoprimeQuotient.isRelPrime_of_weight_sub_bound
+        residualTotalWeights F.1 Q hirr hQ 2814 hwActual.1
+      dsimp [LocatorReplacementData.quotient126T] at hT
+      omega
+    · apply LocatorCoprimeQuotient.isRelPrime_of_weight_sub_bound
+        residualYSWeights F.1 Q hirr hQ 174 hwActual.2.1
+      dsimp [LocatorReplacementData.quotient126YS] at hY
+      omega
+    · apply LocatorCoprimeQuotient.isRelPrime_of_weight_sub_bound
+        residualSWeights F.1 Q hirr hQ 39 hwActual.2.2.1
+      dsimp [LocatorReplacementData.quotient126S] at hR
+      omega
+  have hFY:F.1.degreeOf 1 ≤ (LocatorReplacementData.pair126 c).leftY:=by
+    exact (degreeY_le_ysWeight F.1).trans hyhi
+  have hFR:F.1.degreeOf 2 ≤ (LocatorReplacementData.pair126 c).leftR:=by
+    simpa only [LocatorReplacementData.pair126, LocatorContact.slope_weight_eq_degreeR]
+      using hr.le
+  have hFZ:F.1.degreeOf 3 ≤ (LocatorReplacementData.pair126 c).leftZ:=by
+    exact (degreeZ_le_totalWeight F.1).trans hthi
+  have hQY:Q.degreeOf 1 ≤ (LocatorReplacementData.pair126 c).rightY :=
+    (degreeY_le_ysWeight Q).trans hwCell.2.1
+  have hQR:Q.degreeOf 2 ≤ (LocatorReplacementData.pair126 c).rightR:=by
+    simpa only [LocatorReplacementData.pair126, LocatorContact.slope_weight_eq_degreeR]
+      using hwCell.2.2.1
+  have hQZ:Q.degreeOf 3 ≤ (LocatorReplacementData.pair126 c).rightZ :=
+    (degreeZ_le_totalWeight Q).trans hwCell.1
+  rcases hfit.2.2.1 with
+    ⟨hleftR, hleftYSmall, hleftRSmall, hleftZSmall,
+      hmixedYSmall, hmixedRSmall, hmixedZSmall⟩
+  have hcount:=LocatorCoprimeQuotient.regularSeeds_count_le_intersection_of_product
+    (LocatorReplacementData.pair126 c) H Q F hrel 2130706433
+    hFY hFR hFZ hQY hQR hQZ hleftR hleftYSmall hleftRSmall hleftZSmall
+    hmixedYSmall hmixedRSmall hmixedZSmall selected Gamma
+    (Finset.univ:Finset I) IRSProfile.domain u0 u1 IRSProfile.domain.injective.injOn
+    (by
+      change (Finset.univ:Finset I).card = 262144
+      rw [Finset.card_univ]
+      norm_num [I, IRSProfile.Index])
+    (by
+      simpa only [LocatorReplacementData.pair126] using
+        (show 1 ≤ 131071 by decide))
+    (by
+      simpa only [LocatorReplacementData.pair126] using
+        (show 131071 < 2130706433 by decide))
+    (by
+      simpa only [LocatorReplacementData.pair126] using
+        (show 131071 < 181756 by decide))
+    (by
+      simpa only [LocatorReplacementData.pair126] using
+        (show 181756 ≤ 262144 by decide))
+    hdegree hagreement
+    (by
+      simpa only [LocatorReplacementData.pair126, UnequalParameters.errors,
+        Nat.reduceSub] using hno)
+    (fun gamma hgamma => hproduct gamma
+      (regularSeeds_subset H selected Gamma F hgamma))
+  simpa only [LocatorReplacementData.pair126Cost] using hcount
 theorem regularSeeds_count_le_chosen
     (u0 u1:I → K) (H:P4) (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma, 181776 ≤
+    (hagreement:∀ gamma ∈ Gamma, 181756 ≤
       ((Finset.univ:Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80368)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80388)
     (F:RegularIndex H) (hF:F.1 ≠ 0)
-    (hdiv95:∀ v:ConstraintKernel (K:=K) 18541152 131071 2800 31 102
+    (hdiv95:∀ v:ConstraintKernel (K:=K) 17266820 131071 3200 29 95
       IRSProfile.domain u0 u1,
-      F.1 ∣ reconstruct K 18541152 131071 2800 31 v.1)
-    (hdiv72:∀ v:ConstraintKernel (K:=K) 13087872 131071 12000 21 72
+      F.1 ∣ reconstruct K 17266820 131071 3200 29 v.1)
+    (hdiv72:∀ v:ConstraintKernel (K:=K) 13086432 131071 24000 21 72
       IRSProfile.domain u0 u1,
-      F.1 ∣ reconstruct K 13087872 131071 12000 21 v.1)
+      F.1 ∣ reconstruct K 13086432 131071 24000 21 v.1)
+    (hdiv126:∀ v:ConstraintKernel (K:=K) 22901256 131071 2814 39 126
+      IRSProfile.domain u0 u1,
+      F.1 ∣ reconstruct K 22901256 131071 2814 39 v.1)
     (c:LocatorReplacementGrid.Cell)
     (hcell:LocatorReplacementGrid.InCell (regularCumulativeFlag H F) c)
-    (hbad:LocatorFactorReplacement.Bad 2080 131072 131073
-      272036573261625803 (regularCumulativeFlag H F))
+    (hspecial:¬ LocatorReplacementData.Special c)
+    (hbad:LocatorFactorReplacement.Bad 2184 131072 131073
+      271423674026155232 (regularCumulativeFlag H F))
     (hown:(regularSeeds H selected Gamma F).card ≤
       paddedCost 131072 131073 (regularCumulativeFlag H F)) :
     (regularSeeds H selected Gamma F).card ≤ LocatorReplacementData.chosenCost c:=by
@@ -326,8 +447,8 @@ theorem regularSeeds_count_le_chosen
   have hnr:¬ LocatorReplacementData.RateFits c:=by
     intro hrate
     have hglobal:=LocatorRateCover.global_rate_of_endpoints
-      (regularCumulativeFlag H F) 2080 (LocatorReplacementGrid.yhi c)
-      (LocatorReplacementGrid.r c) 272036573261625803
+      (regularCumulativeFlag H F) 2184 (LocatorReplacementGrid.yhi c)
+      (LocatorReplacementGrid.r c) 271423674026155232
       (by dsimp [LocatorReplacementGrid.r]; omega)
       hcell.all_eq hcell.middle_le_yhi
       (by dsimp [LocatorReplacementGrid.yhi]; omega)
@@ -338,9 +459,17 @@ theorem regularSeeds_count_le_chosen
   · have h:=source95_count u0 u1 H selected Gamma hdegree hagreement hno
       F hF hdiv95 c hcell h95
     simpa only [LocatorReplacementData.chosenCost, if_neg ho, if_pos h95] using h
-  · have h72:=hpairs.resolve_left h95
-    have h:=source72_count u0 u1 H selected Gamma hdegree hagreement hno
-      F hF hdiv72 c hcell h72
-    simpa only [LocatorReplacementData.chosenCost, if_neg ho, if_neg h95] using h
+  · have hpairs':=hpairs.resolve_left h95
+    by_cases h72:LocatorReplacementData.Pair72Fits c
+    · have h:=source72_count u0 u1 H selected Gamma hdegree hagreement hno
+        F hF hdiv72 c hcell h72
+      simpa only [LocatorReplacementData.chosenCost, if_neg ho, if_neg h95,
+        if_pos h72] using h
+    · have h126:LocatorReplacementData.Pair126Fits c :=
+        ((hpairs'.resolve_left h72).resolve_right hspecial)
+      have h:=source126_count u0 u1 H selected Gamma hdegree hagreement hno
+        F hF hdiv126 c hcell h126
+      simpa only [LocatorReplacementData.chosenCost, if_neg ho, if_neg h95,
+        if_neg h72] using h
 end
 end ProximityPrize.SubmissionLower.LocatorQuotientReplacement

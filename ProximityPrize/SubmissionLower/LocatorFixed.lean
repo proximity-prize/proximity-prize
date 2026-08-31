@@ -93,28 +93,28 @@ theorem factor_support {P:ResidualSupportParameters} (Q:P4) (hQ:Q ≠ 0)
     (weightedTotalDegree_le_of_dvd residualYSWeights R.1 Q hd hQ).trans HQ.ys_weight,
     (weightedTotalDegree_le_of_dvd residualTotalWeights R.1 Q hd hQ).trans HQ.total_weight⟩
 theorem own_parameter_caps (p:FlagDegree)
-    (hs:p.all ≤ 16) (hy:middle p ≤ 72) (ht:total p ≤ 2080) :
-    padSlope p + 2 ≤ 16 ∧ padB p + padSlope p + 3 ≤ 72 ∧
-      padA p + padB p + padSlope p + 3 ≤ 2080:=by
+    (hs:p.all ≤ 16) (hy:middle p ≤ 73) (ht:total p ≤ 2184) :
+    padSlope p + 2 ≤ 16 ∧ padB p + padSlope p + 3 ≤ 73 ∧
+      padA p + padB p + padSlope p + 3 ≤ 2184:=by
   have hp:=pad_sums p
   have hps:padS p ≤ 16:=max_le hs (by decide)
-  have hpy:padY p ≤ 72:=max_le hy (by omega)
-  have hpt:padT p ≤ 2080:=max_le ht (by omega)
+  have hpy:padY p ≤ 73:=max_le hy (by omega)
+  have hpt:padT p ≤ 2184:=max_le ht (by omega)
   rw [hp.1, hp.2.1, hp.2.2]
   exact ⟨hps, hpy, hpt⟩
 theorem regular_factor_count
     (D:ℕ) (P:ResidualSupportParameters)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 9815904)
-    (hS:P.s ≤ 16) (hY:P.ys ≤ 72) (hT:P.total ≤ 2080)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 9996580)
+    (hS:P.s ≤ 16) (hY:P.ys ≤ 73) (hT:P.total ≤ 2184)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma, 181776 ≤
+    (hagreement:∀ gamma ∈ Gamma, 181756 ≤
       ((Finset.univ:Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80368)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80388)
     (R:RegularIndex Q) :
     (regularSeeds Q selected Gamma R).card ≤
       paddedCost 131072 131073 (regularCumulativeFlag Q R):=by
@@ -131,7 +131,7 @@ theorem regular_factor_count
   have hRsupport:=own_support R.1
   have hRwhole:=factor_support Q hQ HQ R
   have hc:=originalCumulativeFlag_cumulative R.1
-  have hparam:s + 2 ≤ 16 ∧ b + s + 3 ≤ 72 ∧ a + b + s + 3 ≤ 2080:=by
+  have hparam:s + 2 ≤ 16 ∧ b + s + 3 ≤ 73 ∧ a + b + s + 3 ≤ 2184:=by
     apply own_parameter_caps p
     · exact hRwhole.s_weight.trans hS
     · simpa only [p, middle, regularCumulativeFlag, hc.2.1] using
@@ -156,11 +156,11 @@ theorem regular_factor_count
     have hsub:geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g ⊆ Gamma :=
       (geometricSeeds_subset K R.1 selected _ g).trans (regularSeeds_subset Q selected Gamma R)
-    have hnodes:S.nodes.card = 181776 + 80368:=by
+    have hnodes:S.nodes.card = 181756 + 80388:=by
       change (Finset.univ:Finset I).card = _
       norm_num [I, IRSProfile.Index]
     have hag:∀ gamma ∈ geometricSeeds K R.1 selected
-        (regularSeeds Q selected Gamma R) g, 181776 ≤ (S.agreementFiber gamma).card:=by
+        (regularSeeds Q selected Gamma R) g, 181756 ≤ (S.agreementFiber gamma).card:=by
       intro gamma hgamma
       simpa [S, S0, ResidualStage.agreementFiber, ResidualStage.Agrees,
         reflagResidualStage, regularGeometricResidualStageOfSupport,
@@ -186,17 +186,17 @@ def regularCost (T YS S:ℕ):ℕ :=
   paddedCost 131072 131073 (cap T YS S)
 theorem regular_sum_count
     (D:ℕ) (P:ResidualSupportParameters)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 9815904)
-    (hS:P.s ≤ 16) (hY:P.ys ≤ 72) (hT:P.total ≤ 2080)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 9996580)
+    (hS:P.s ≤ 16) (hY:P.ys ≤ 73) (hT:P.total ≤ 2184)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma, 181776 ≤
+    (hagreement:∀ gamma ∈ Gamma, 181756 ≤
       ((Finset.univ:Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80368) :
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80388) :
     (∑ R:RegularIndex Q, (regularSeeds Q selected Gamma R).card) ≤
       regularCost P.total P.ys P.s:=by
   have hb:=regularCumulativeFlag_budgets Q hQ HQ
@@ -210,9 +210,9 @@ theorem regular_sum_count
     regular_factor_count D P hDlow hDhigh hS hY hT Q hQ hbox HQ selected Gamma u0 u1
       hdegree hagreement hno R)).trans hcost
 def profile (D T S:ℕ):RCN276.Profile :=
-  ⟨262144, 131071, 181776, D, T, S⟩
+  ⟨262144, 131071, 181756, D, T, S⟩
 def singularProfile (D T S:ℕ):RCN318.TightParameters :=
-  ⟨262144, 131071, 181776, D, T, S⟩
+  ⟨262144, 131071, 181756, D, T, S⟩
 def equationCost (D T YS S:ℕ):ℕ :=
   regularCost T YS S + (singularProfile D T S).countCap
 structure SingularGates (P:RCN318.TightParameters):Prop where
@@ -228,23 +228,23 @@ structure SingularGates (P:RCN318.TightParameters):Prop where
   wa:P.w < P.a
   an:P.a ≤ P.n
 theorem singular_gates (D T S:ℕ)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 9815904)
-    (hTpos:1 ≤ T) (hT:T ≤ 2080)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 9996580)
+    (hTpos:1 ≤ T) (hT:T ≤ 2184)
     (hSpos:1 ≤ S) (hS:S ≤ 16) :
     SingularGates (singularProfile D T S):=by
   have hkpos:1 ≤ 2*S-1:=by omega
   have hk:2*S-1 ≤ 31:=by omega
   have hDle:D ≤ (2*S-1)*D:=by
     simpa only [Nat.one_mul] using Nat.mul_le_mul_right D hkpos
-  have hnum:(2*S-1)*D-1 ≤ 304293023:=by
+  have hnum:(2*S-1)*D-1 ≤ 309893979:=by
     have hp:=Nat.mul_le_mul hk hDhigh
     norm_num at hp
     omega
-  have hiy:((2*S-1)*D-1)/131071 ≤ 2321 :=
+  have hiy:((2*S-1)*D-1)/131071 ≤ 2364 :=
     (Nat.div_le_div_right hnum).trans (by decide)
   have halgpos:1 ≤ (2*S-1)*T:=by
     simpa only [Nat.one_mul] using Nat.mul_le_mul hkpos hTpos
-  have halg:(2*S-1)*T ≤ 64480:=by
+  have halg:(2*S-1)*T ≤ 67704:=by
     have hp:=Nat.mul_le_mul hk hT
     norm_num at hp
     exact hp
@@ -252,7 +252,7 @@ theorem singular_gates (D T S:ℕ)
     (Nat.mul_le_mul (Nat.mul_le_mul_left 2 hiy) halg).trans_lt (by decide)
   refine ⟨hSpos, ?_, by change 1 ≤ 131071; decide,
     by change 131071 < 2130706433; decide, ?_, halgpos, ?_, ?_, hmix,
-    by change 131071 < 181776; decide, by change 181776 ≤ 262144; decide⟩
+    by change 131071 < 181756; decide, by change 181756 ≤ 262144; decide⟩
   · exact hS.trans_lt (by decide)
   · change 131071 < (2*S-1)*D
     omega
@@ -260,18 +260,18 @@ theorem singular_gates (D T S:ℕ)
   · exact halg.trans_lt (by decide)
 theorem fixed_count_le
     (D:ℕ) (P:ResidualSupportParameters)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 9815904)
-    (hS:P.s ≤ 16) (hY:P.ys ≤ 72) (hT:P.total ≤ 2080)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 9996580)
+    (hS:P.s ≤ 16) (hY:P.ys ≤ 73) (hT:P.total ≤ 2184)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hsolution:∀ gamma ∈ Gamma, specialization K (selected gamma) gamma Q = 0)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma, 181776 ≤
+    (hagreement:∀ gamma ∈ Gamma, 181756 ≤
       ((Finset.univ:Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80368) :
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80388) :
     Gamma.card ≤ equationCost D P.total P.ys P.s:=by
   have hg:=singular_gates D P.total P.s hDlow hDhigh
     (P.one_le_s.trans (P.s_le_ys.trans P.ys_le_total)) hT P.one_le_s hS
@@ -296,9 +296,9 @@ theorem fixed_count_le
           Nat.reduceSub] using hno)
   exact hcover.trans (Nat.add_le_add hreg hsing)
 theorem whole_equation_count (D T YS S:ℕ)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 9815904)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 9996580)
     (hSpos:1 ≤ S) (hSY:S ≤ YS) (hYT:YS ≤ T) (hYpos:2 ≤ YS)
-    (hS:S ≤ 16) (hY:YS ≤ 72) (hT:T ≤ 2080)
+    (hS:S ≤ 16) (hY:YS ≤ 73) (hT:T ≤ 2184)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 T S)
     (hcaps:wt residualSWeights Q ≤ S ∧ wt residualYSWeights Q ≤ YS ∧
@@ -306,10 +306,10 @@ theorem whole_equation_count (D T YS S:ℕ)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hsolution:∀ gamma ∈ Gamma, specialization K (selected gamma) gamma Q = 0)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma, 181776 ≤
+    (hagreement:∀ gamma ∈ Gamma, 181756 ≤
       ((Finset.univ:Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80368) :
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80388) :
     Gamma.card ≤ equationCost D T YS S:=by
   let P:ResidualSupportParameters:=⟨S, YS, T, hSpos, hSY, hYT, hYpos⟩
   exact fixed_count_le D P hDlow hDhigh hS hY hT Q hQ hbox
