@@ -39,8 +39,8 @@ abbrev Stage (K I:Type) [Field K]
    (stageSupport:RCN275.ResidualSupportParameters:=fixedSupport):=
  ResidualStage (polynomialEmbedding K) Gamma x p errorCap flag
    RCN326.w stageSupport
-variable {errorCap:ℕ}
-variable {stageSupport:RCN275.ResidualSupportParameters}
+variable {errorCap : ℕ}
+variable {stageSupport : RCN275.ResidualSupportParameters}
 structure OriginalData
    (S:Stage K I Gamma x p flag errorCap stageSupport) (C:FirstTailComponent S) where
  factor:MvPolynomial (Fin 4) K

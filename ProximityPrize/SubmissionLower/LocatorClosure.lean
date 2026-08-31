@@ -19,27 +19,27 @@ local instance:CharP K 2130706433:=by
 theorem selected_pair_count
     (u0 u1:I → K) (S:SelectedPair u0 u1)
     (selected:K → Polynomial K) (seeds:Finset K)
-    (hdegree:∀ gamma ∈ seeds, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ seeds, 181786 ≤
+    (hdegree:∀ gamma ∈ seeds,(selected gamma).natDegree≤131071)
+    (hagreement:∀ gamma ∈ seeds,181776 ≤
       ((Finset.univ:Finset I).filter (fun i =>
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected seeds 131071 80358) :
-    seeds.card < LocatorArithmetic.budget:=by
+        (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
+    (hno:NoLargeSelectedPencil selected seeds 131071 80368) :
+    seeds.card<LocatorArithmetic.budget:=by
   have hnoResidual:NoLargeSelectedPencil selected seeds LocatorArithmetic.w
       (LocatorArithmetic.n - LocatorArithmetic.agreements):=by
-    simpa only [LocatorArithmetic.w, LocatorArithmetic.n,
-      LocatorArithmetic.agreements, Nat.reduceSub] using hno
+    simpa only [LocatorArithmetic.w,LocatorArithmetic.n,
+      LocatorArithmetic.agreements,Nat.reduceSub] using hno
   let phi:=fun gamma => (specialization K (selected gamma) gamma).toRingHom
   have hparents (gamma:K) (hg:gamma ∈ seeds) :
-      specialization K (selected gamma) gamma S.QA = 0 ∧
-      specialization K (selected gamma) gamma S.QB = 0:=by
+      specialization K (selected gamma) gamma S.QA=0 ∧
+      specialization K (selected gamma) gamma S.QB=0:=by
     exact S.universal_vanishing gamma (selected gamma)
       ((Finset.univ:Finset I).filter (fun i =>
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i))
+        (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i))
       (hdegree gamma hg) (hagreement gamma hg)
       (fun _ hi => (Finset.mem_filter.mp hi).2)
-  have hnodes:(Finset.univ:Finset I).card = LocatorArithmetic.n:=by
-    norm_num [I, IRSProfile.Index, LocatorArithmetic.n]
+  have hnodes:(Finset.univ:Finset I).card=LocatorArithmetic.n:=by
+    norm_num [I,IRSProfile.Index,LocatorArithmetic.n]
   have hfixed:=LocatorFixedBridge.gcd_fixed_count_le u0 u1 S
     selected seeds hdegree hagreement hno
   have hresidual:=LocatorResidual.gcd_residual_count_lt
@@ -53,37 +53,37 @@ theorem selected_pair_count
   have hledger:=LocatorArithmetic.ledger_lt
   unfold LocatorArithmetic.ledger LocatorArithmetic.fixedRegularCap at hledger
   omega
-theorem selectedNoLargePencilBound6760 :
-    SelectedNoLargePencilBound IRSProfile.domain 131071 80358
+theorem selectedNoLargePencilBound6761 :
+    SelectedNoLargePencilBound IRSProfile.domain 131071 80368
       LocatorArithmetic.budget:=by
   intro U seeds A selected hdegree hcard hvalues hno
   obtain ⟨S⟩:=exists_selected_pair (U 0) (U 1)
-  have hA:∀ gamma ∈ seeds, 181786 ≤ (A gamma).card:=by
+  have hA:∀ gamma ∈ seeds,181776≤(A gamma).card:=by
     intro gamma hg
     have hc:=hcard gamma hg
-    simpa [I, IRSProfile.Index] using hc
-  have hagreement:∀ gamma ∈ seeds, 181786 ≤
+    simpa [I,IRSProfile.Index] using hc
+  have hagreement:∀ gamma ∈ seeds,181776 ≤
       ((Finset.univ:Finset I).filter (fun i =>
-        (selected gamma).eval (IRSProfile.domain i) = U 0 i + gamma * U 1 i)).card:=by
+        (selected gamma).eval (IRSProfile.domain i)=U 0 i+gamma*U 1 i)).card:=by
     intro gamma hg
     apply (hA gamma hg).trans
     apply Finset.card_le_card
     intro i hi
-    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, hvalues gamma hg i hi⟩
-  have hno':NoLargeSelectedPencil selected seeds 131071 80358:=by
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _,hvalues gamma hg i hi⟩
+  have hno' : NoLargeSelectedPencil selected seeds 131071 80368 := by
     intro P0 P1 h0 h1
     simpa only [pencilSeeds] using hno P0 P1 h0 h1
   exact Nat.le_of_lt (selected_pair_count (U 0) (U 1) S selected seeds
     hdegree hagreement hno')
-theorem alignmentBound6760 :
+theorem alignmentBound6761 :
     AffineLineAlignmentBound IRSProfile.baseCode
       LocatorProtocol.errors LocatorProtocol.mcaBudget:=by
-  have h:=alignmentBound_of_selected_count IRSProfile.domain 131071 80358
-    LocatorArithmetic.budget selectedNoLargePencilBound6760
-  simpa [IRSProfile.baseCode, IRSProfile.baseDimension,
-    LocatorArithmetic.budget, LocatorProtocol.errors,
+  have h:=alignmentBound_of_selected_count IRSProfile.domain 131071 80368
+    LocatorArithmetic.budget selectedNoLargePencilBound6761
+  simpa [IRSProfile.baseCode,IRSProfile.baseDimension,
+    LocatorArithmetic.budget,LocatorProtocol.errors,
     LocatorProtocol.mcaBudget] using h
-theorem protocolClaim6760:ProtocolClaim 6760 10285930 33554432 :=
-  LocatorProtocol.protocolClaim6760_of_alignment alignmentBound6760
+theorem protocolClaim6761:ProtocolClaim 6761 10287231 33554432 :=
+  LocatorProtocol.protocolClaim6761_of_alignment alignmentBound6761
 end
 end ProximityPrize.SubmissionLower.LocatorClosure
