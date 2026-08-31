@@ -4,7 +4,7 @@ import ProximityPrize.SubmissionLower.BG
 import ProximityPrize.SubmissionLower.O0
 import ProximityPrize.SubmissionLower.FQ
 
-/- Whole-equation counting for the 80270-error row.  Each regular factor uses
+/- Whole-equation counting for the 80289-error row.  Each regular factor uses
    its own padded tail support; the first flag and its sum budgets stay actual.
    The singular part of the whole equation is counted separately. -/
 namespace ProximityPrize.SubmissionLower.LocatorFixed
@@ -123,10 +123,10 @@ theorem regular_factor_count
     (HQ : ResidualSupportData P Q)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181874 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181855 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80270)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80289)
     (R : RegularIndex Q) :
     (regularSeeds Q selected Gamma R).card ≤
       paddedCost 131072 131073 (regularCumulativeFlag Q R) := by
@@ -168,11 +168,11 @@ theorem regular_factor_count
     have hsub : geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g ⊆ Gamma :=
       (geometricSeeds_subset K R.1 selected _ g).trans (regularSeeds_subset Q selected Gamma R)
-    have hnodes : S.nodes.card = 181874 + 80270 := by
+    have hnodes : S.nodes.card = 181855 + 80289 := by
       change (Finset.univ : Finset I).card = _
       norm_num [I, IRSProfile.Index]
     have hag : ∀ gamma ∈ geometricSeeds K R.1 selected
-        (regularSeeds Q selected Gamma R) g, 181874 ≤ (S.agreementFiber gamma).card := by
+        (regularSeeds Q selected Gamma R) g, 181855 ≤ (S.agreementFiber gamma).card := by
       intro gamma hgamma
       simpa [S, S0, ResidualStage.agreementFiber, ResidualStage.Agrees,
         reflagResidualStage, regularGeometricResidualStageOfSupport,
@@ -210,10 +210,10 @@ theorem regular_sum_count
     (HQ : ResidualSupportData P Q)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181874 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181855 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80270) :
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80289) :
     (∑ R : RegularIndex Q, (regularSeeds Q selected Gamma R).card) ≤
       regularCost P.total P.ys P.s := by
   have hb := regularCumulativeFlag_budgets Q hQ HQ
@@ -228,9 +228,9 @@ theorem regular_sum_count
       hdegree hagreement hno R)).trans hcost
 
 def profile (D T S : ℕ) : RCN276.Profile :=
-  ⟨262144, 131071, 181874, D, T, S⟩
+  ⟨262144, 131071, 181855, D, T, S⟩
 def singularProfile (D T S : ℕ) : RCN318.TightParameters :=
-  ⟨262144, 131071, 181874, D, T, S⟩
+  ⟨262144, 131071, 181855, D, T, S⟩
 def equationCost (D T YS S : ℕ) : ℕ :=
   regularCost T YS S + (singularProfile D T S).countCap
 
@@ -274,7 +274,7 @@ theorem singular_gates (D T S : ℕ)
     (Nat.mul_le_mul (Nat.mul_le_mul_left 2 hiy) halg).trans_lt (by decide)
   refine ⟨hSpos, ?_, by change 1 ≤ 131071; decide,
     by change 131071 < 2130706433; decide, ?_, halgpos, ?_, ?_, hmix,
-    by change 131071 < 181874; decide, by change 181874 ≤ 262144; decide⟩
+    by change 131071 < 181855; decide, by change 181855 ≤ 262144; decide⟩
   · exact hS.trans_lt (by decide)
   · change 131071 < (2*S-1)*D
     omega
@@ -293,10 +293,10 @@ theorem fixed_count_le
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hsolution : ∀ gamma ∈ Gamma, specialization K (selected gamma) gamma Q = 0)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181874 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181855 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80270) :
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80289) :
     Gamma.card ≤ equationCost D P.total P.ys P.s := by
   have hg := singular_gates D P.total P.s hDlow hDhigh
     (P.one_le_s.trans (P.s_le_ys.trans P.ys_le_total)) hT P.one_le_s hS
@@ -333,10 +333,10 @@ theorem whole_equation_count (D T YS S : ℕ)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hsolution : ∀ gamma ∈ Gamma, specialization K (selected gamma) gamma Q = 0)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181874 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181855 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80270) :
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80289) :
     Gamma.card ≤ equationCost D T YS S := by
   let P : ResidualSupportParameters := ⟨S, YS, T, hSpos, hSY, hYT, hYpos⟩
   exact fixed_count_le D P hDlow hDhigh hS hY hT Q hQ hbox

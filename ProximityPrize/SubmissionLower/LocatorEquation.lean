@@ -69,10 +69,10 @@ theorem regularSeeds_count_le_equation
       wt residualTotalWeights Q ≤ T)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181874 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181855 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80270)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80289)
     (F : RegularIndex H)
     (hproduct : ∀ gamma ∈ regularSeeds H selected Gamma F,
       specialization K (selected gamma) gamma
@@ -85,7 +85,7 @@ theorem regularSeeds_count_le_equation
     (regularSeeds_quotient_equation H Q selected Gamma F hproduct)
     (fun gamma hgamma => hdegree gamma (hsub hgamma))
     (fun gamma hgamma => hagreement gamma (hsub hgamma))
-    (RCN243.noLargeSelectedPencil_mono selected Gamma _ 131071 80270 hsub hno)
+    (RCN243.noLargeSelectedPencil_mono selected Gamma _ 131071 80289 hsub hno)
 
 /-- A compositional minimum bridge when the original factor's already-proved
 own-support count is available to the caller. -/
@@ -100,10 +100,10 @@ theorem regularSeeds_count_le_min
       wt residualTotalWeights Q ≤ T)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181874 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181855 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80270)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80289)
     (F : RegularIndex H)
     (hproduct : ∀ gamma ∈ regularSeeds H selected Gamma F,
       specialization K (selected gamma) gamma
@@ -137,10 +137,10 @@ theorem regular_factor_count_le_min_equation
       wt residualTotalWeights Q ≤ T)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181874 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181855 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80270)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80289)
     (F : RegularIndex H)
     (hproduct : ∀ gamma ∈ regularSeeds H selected Gamma F,
       specialization K (selected gamma) gamma

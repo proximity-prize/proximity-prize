@@ -3,7 +3,7 @@ import ProximityPrize.SubmissionLower.BF
 import ProximityPrize.SubmissionLower.Q2
 import ProximityPrize.SubmissionLower.EQ
 
-/- Factor-adapted stage count for the 80270-error row.
+/- Factor-adapted stage count for the 80289-error row.
    Both counting branches below use existing counting theorems; no independent
    seed-count assumption or ProtocolClaim is introduced.  The weighted cutoff
    is a parameter; only the two tail supports are padded. -/
@@ -26,10 +26,12 @@ set_option maxHeartbeats 5000000
 
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 80270
-def agreements : ℕ := 181874
-def gap : ℕ := 50803
+def errors : ℕ := 80289
+def agreements : ℕ := 181855
+def gap : ℕ := 50784
 def prime : ℕ := 2130706433
+/- Generic quotient equations retain the accepted ceiling; the selected
+   ambient source itself uses the smaller cutoff 12366140. -/
 def weightedCap : ℕ := 12367432
 
 abbrev K := IRSProfile.Field
@@ -48,7 +50,7 @@ def secondTail (a b s : ℕ) : FlagDegree :=
 
 theorem row_values :
     agreements + errors = n ∧ agreements - w = gap ∧
-    weightedCap = 68 * agreements ∧ w < agreements ∧
+    68 * agreements ≤ weightedCap ∧ w < agreements ∧
     w + 1 ≤ weightedCap ∧ weightedCap < prime := by
   norm_num [agreements, errors, n, w, gap, weightedCap, prime]
 
@@ -75,17 +77,17 @@ theorem identityDegree_linear (flag : FlagDegree) (a b s : ℕ) :
   ring
 
 def identitySlackZ (b s : ℕ) : ℕ :=
-  6336374305841209 + 6982364424044544 * b + 11206622839773640 * s +
-    3491182212022272 * s ^ 2 + 6982364424044544 * b * s
+  6331477988335578 + 6979753064005632 * b + 11200747264743804 * s +
+    3489876532002816 * s ^ 2 + 6979753064005632 * b * s
 def identitySlackYZ (a b s : ℕ) : ℕ :=
-  2199175340110732 + 6982364424044544 * a + 6982364424044544 * b +
-    8448490195953322 * s + 3491182212022272 * s ^ 2 +
-    6982364424044544 * a * s + 6982364424044544 * b * s
+  2193299755119348 + 6979753064005632 * a + 6979753064005632 * b +
+    8441961775932984 * s + 3489876532002816 * s ^ 2 +
+    6979753064005632 * a * s + 6979753064005632 * b * s
 def identitySlackAll (a b s : ℕ) : ℕ :=
-  2932230501146793 + 11206622839773640 * a + 8448490195953322 * b +
-    3491182212022272 * b ^ 2 + 8448490195953322 * s +
-    3491182212022272 * s ^ 2 + 6982364424044544 * a * b +
-    6982364424044544 * a * s + 6982364424044544 * b * s
+  2924396376203148 + 11200747264743804 * a + 8441961775932984 * b +
+    3489876532002816 * b ^ 2 + 8441961775932984 * s +
+    3489876532002816 * s ^ 2 + 6979753064005632 * a * b +
+    6979753064005632 * a * s + 6979753064005632 * b * s
 def identitySlack (flag : FlagDegree) (a b s : ℕ) : ℕ :=
   flag.zOnly * identitySlackZ b s + flag.yz * identitySlackYZ a b s +
     flag.all * identitySlackAll a b s

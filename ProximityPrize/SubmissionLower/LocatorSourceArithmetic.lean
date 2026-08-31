@@ -9,10 +9,10 @@ theorem kernelAmbient_rank : localRankBound 68 109000 20 = 4125214002 := by
   decide
 
 theorem kernelAmbient_nullity :
-    coefficientCount 12367432 131071 109000 20 -
-      262144 * localRankBound 68 109000 20 = 3915744547617 := by
+    coefficientCount 12366140 131071 109000 20 -
+      262144 * localRankBound 68 109000 20 = 3664483687417 := by
   rw [kernelAmbient_rank, coefficientCount_eq_sum_range_of_weighted_cutoff
-    12367432 131071 109000 20 95 (by decide) (by decide)]
+    12366140 131071 109000 20 95 (by decide) (by decide)]
   decide
 
 end ProximityPrize.SubmissionLower.LocatorSourceArithmetic
