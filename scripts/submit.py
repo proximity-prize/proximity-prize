@@ -110,6 +110,19 @@ def _call(url: str, tokens: TokenSource, payload: dict | None = None,
         raise SystemExit(f"{url} -> HTTP {exc.code}: {body}") from exc
 
 
+def _publish_submission_id(submission_id: str) -> None:
+    """Hand the id to later steps, before the wait that may be cancelled."""
+
+    path = os.environ.get("GITHUB_ENV")
+    if not path:
+        return
+    try:
+        with open(path, "a", encoding="utf-8") as handle:
+            handle.write(f"SUBMISSION_ID={submission_id}\n")
+    except OSError as exc:
+        print(f"could not publish the submission id: {exc}", file=sys.stderr)
+
+
 def main() -> None:
     base = os.environ["BASE"].rstrip("/")
     repository = os.environ["REPOSITORY"]
@@ -139,6 +152,7 @@ def main() -> None:
         idempotency_key=key,
     )
     submission_id = created["id"]
+    _publish_submission_id(submission_id)
     if created.get("idempotent_replay"):
         print("replaying an earlier submission of these bytes", file=sys.stderr)
     print(f"submission {submission_id} for {commit[:12]}", file=sys.stderr)
