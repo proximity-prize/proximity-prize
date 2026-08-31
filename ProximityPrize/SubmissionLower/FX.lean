@@ -20,8 +20,8 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
 variable [CharP (GenericField K) p]
-variable {errorCap : ℕ}
-variable {stageSupport : RCN275.ResidualSupportParameters}
+variable {errorCap:ℕ}
+variable {stageSupport:RCN275.ResidualSupportParameters}
 theorem exists_original_multiplier_for_localMultiplicity
    (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
