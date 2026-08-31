@@ -98,16 +98,16 @@ local instance:DecidableEq I:=Classical.decEq I
 local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
 theorem common_divides_A95_small {u0 u1:I → K}
     (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 40000) :
-    ∀ a:ConstraintKernel (K:=K) 17269670 131071 L 29 95
+    ∀ a:ConstraintKernel (K:=K) 18541152 131071 L 31 102
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 17269670 131071 L 29 a.1:=by
+      gcd S.QA S.QB ∣ reconstruct K 18541152 131071 L 31 a.1:=by
   exact full_kernel_divisor_small (E:=K) (Lmax:=40000) hL
     IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_C
 theorem common_divides_A72_small {u0 u1:I → K}
     (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 40000) :
-    ∀ a:ConstraintKernel (K:=K) 13088592 131071 L 21 72
+    ∀ a:ConstraintKernel (K:=K) 13087872 131071 L 21 72
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 13088592 131071 L 21 a.1:=by
+      gcd S.QA S.QB ∣ reconstruct K 13087872 131071 L 21 a.1:=by
   exact full_kernel_divisor_small (E:=K) (Lmax:=40000) hL
     IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_Aux
 end Selected

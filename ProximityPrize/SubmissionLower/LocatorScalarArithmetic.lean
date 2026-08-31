@@ -9,12 +9,12 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80358
+def errors:ℕ:=80368
 def agreements:ℕ:=n - errors
 def gap:ℕ:=agreements - w
 def prime:ℕ:=2130706433
-def multiplicity:ℕ:=53
-def yTotalCap:ℕ:=73
+def multiplicity:ℕ:=54
+def yTotalCap:ℕ:=74
 def slopeCap:ℕ:=15
 def weightedCap:ℕ:=multiplicity * agreements
 def listBudget:ℕ:=1500000000
@@ -27,25 +27,25 @@ private def coefficientRow (i:ℕ):ℕ :=
  ∑ j ∈ Finset.range (slopeCap + 1),
    min 1 (yTotalCap + 1 - i - j) * (weightedCap - w*i - (w-1)*j)
 private theorem coefficient_0 :
- (∑ i ∈ Finset.range 10, coefficientRow i) = 1289890160:=by decide
+ (∑ i ∈ Finset.range 10, coefficientRow i) = 1318889520:=by decide
 private theorem coefficient_10 :
- (∑ i ∈ Finset.range 10, coefficientRow (10+i)) = 1080176560:=by decide
+ (∑ i ∈ Finset.range 10, coefficientRow (10+i)) = 1109175920:=by decide
 private theorem coefficient_20 :
- (∑ i ∈ Finset.range 10, coefficientRow (20+i)) = 870462960:=by decide
+ (∑ i ∈ Finset.range 10, coefficientRow (20+i)) = 899462320:=by decide
 private theorem coefficient_30 :
- (∑ i ∈ Finset.range 10, coefficientRow (30+i)) = 660749360:=by decide
+ (∑ i ∈ Finset.range 10, coefficientRow (30+i)) = 689748720:=by decide
 private theorem coefficient_40 :
- (∑ i ∈ Finset.range 10, coefficientRow (40+i)) = 451035760:=by decide
+ (∑ i ∈ Finset.range 10, coefficientRow (40+i)) = 480035120:=by decide
 private theorem coefficient_50 :
- (∑ i ∈ Finset.range 10, coefficientRow (50+i)) = 241386741:=by decide
+ (∑ i ∈ Finset.range 10, coefficientRow (50+i)) = 270321520:=by decide
 private theorem coefficient_60 :
- (∑ i ∈ Finset.range 10, coefficientRow (60+i)) = 64642165:=by decide
+ (∑ i ∈ Finset.range 10, coefficientRow (60+i)) = 83027130:=by decide
 private theorem coefficient_70 :
- (∑ i ∈ Finset.range 4, coefficientRow (70+i)) = 1975470:=by decide
+ (∑ i ∈ Finset.range 5, coefficientRow (70+i)) = 4371190:=by decide
 theorem coefficient_count_exact :
-   coefficientCount weightedCap w yTotalCap slopeCap = 4660319176:=by
- change (∑ i ∈ Finset.range 74, coefficientRow i) = _
- rw [Finset.sum_range_add coefficientRow 70 4,
+   coefficientCount weightedCap w yTotalCap slopeCap = 4855031440:=by
+ change (∑ i ∈ Finset.range 75, coefficientRow i) = _
+ rw [Finset.sum_range_add coefficientRow 70 5,
    Finset.sum_range_add coefficientRow 60 10,
    Finset.sum_range_add coefficientRow 50 10,
    Finset.sum_range_add coefficientRow 40 10,
@@ -66,15 +66,15 @@ private theorem rank_16 :
 private theorem rank_24 :
  (∑ i ∈ Finset.range 8, rankRow (24+i)) = 3648:=by decide
 private theorem rank_32 :
- (∑ i ∈ Finset.range 8, rankRow (32+i)) = 4596:=by decide
+ (∑ i ∈ Finset.range 8, rankRow (32+i)) = 4647:=by decide
 private theorem rank_40 :
- (∑ i ∈ Finset.range 8, rankRow (40+i)) = 3792:=by decide
+ (∑ i ∈ Finset.range 8, rankRow (40+i)) = 4116:=by decide
 private theorem rank_48 :
- (∑ i ∈ Finset.range 5, rankRow (48+i)) = 940:=by decide
+ (∑ i ∈ Finset.range 6, rankRow (48+i)) = 1309:=by decide
 theorem local_rank_exact :
-   localRankBound multiplicity yTotalCap slopeCap = 17776:=by
- change (∑ i ∈ Finset.range 53, rankRow i) = _
- rw [Finset.sum_range_add rankRow 48 5,
+   localRankBound multiplicity yTotalCap slopeCap = 18520:=by
+ change (∑ i ∈ Finset.range 54, rankRow i) = _
+ rw [Finset.sum_range_add rankRow 48 6,
    Finset.sum_range_add rankRow 40 8,
    Finset.sum_range_add rankRow 32 8,
    Finset.sum_range_add rankRow 24 8,
@@ -83,7 +83,7 @@ theorem local_rank_exact :
    rank_0, rank_8, rank_16, rank_24, rank_32, rank_40, rank_48] <;> norm_num
 theorem nullity_exact :
    coefficientCount weightedCap w yTotalCap slopeCap -
-     n*localRankBound multiplicity yTotalCap slopeCap = 447432:=by
+     n*localRankBound multiplicity yTotalCap slopeCap = 124560:=by
  rw [coefficient_count_exact, local_rank_exact]
  decide
 theorem interpolation_gate :
@@ -92,10 +92,10 @@ theorem interpolation_gate :
  rw [coefficient_count_exact, local_rank_exact]
  decide
 theorem list_numeric_values :
-   agreements=181786 ∧ gap=50715 ∧ weightedCap=9634658 ∧
-   singularListCap=2117 ∧ listNumerator=73993805900931 ∧
-   listNumerator/gap+1=1459012243 ∧
-   listNumerator<1459012243*gap ∧ 1459012243<listBudget:=by decide
+   agreements=181776 ∧ gap=50705 ∧ weightedCap=9815904 ∧
+   singularListCap=2146 ∧ listNumerator=75007419632003 ∧
+   listNumerator/gap+1=1479290399 ∧
+   listNumerator<1479290399*gap ∧ 1479290399<listBudget:=by decide
 theorem list_numerator_fits:listNumerator < listBudget*gap:=by decide
 theorem characteristic_gates:0 < slopeCap ∧ slopeCap < prime ∧ yTotalCap < prime ∧
    (2*slopeCap - 1)*weightedCap < prime ∧ singularListCap < prime:=by decide
