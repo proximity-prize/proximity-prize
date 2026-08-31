@@ -1,9 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y4
 import ProximityPrize.SubmissionLower.R
 namespace ProximityPrize.SubmissionLower.RCN069
-open RCN223 RCN174 RCN136
-open RCN068 RCN238
+open RCN223 RCN174 RCN136 RCN068 RCN238
 noncomputable section
 def legacyVector (v:RCN223.DegreeVector):
    RCN051.DegreeVector:=⟨v.y,v.r,v.z⟩

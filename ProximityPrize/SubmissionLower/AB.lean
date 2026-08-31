@@ -67,7 +67,7 @@ theorem gcd123_normalized (a b c:A):
 end Normalization
 section ThreeBranchCover
 variable {A B:Type*} [CommRing A] [GCDMonoid A]
-variable [CommRing B] [IsDomain B]
+ [CommRing B] [IsDomain B]
 theorem recursive_three_branch_cover
    (phi:A →+*B) (a b c:A)
    (ha:phi a=0) (hb:phi b=0) (hc:phi c=0):

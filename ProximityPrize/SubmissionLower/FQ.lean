@@ -1,19 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.U
 import ProximityPrize.SubmissionLower.Z4
 import ProximityPrize.SubmissionLower.AG
 namespace ProximityPrize.SubmissionLower.RCN239
 open scoped Classical BigOperators
-open RCN174 RCN319 RCN286
-open RCN167 RCN169
-open RCN290 RCN238
-open RCN266
-open RCN095
-open RCN140
-open RCN291
-open RCN318
-open RCN292
-open RCN276
+open RCN174 RCN319 RCN286 RCN167 RCN169 RCN290 RCN238 RCN266 RCN095 RCN140 RCN291 RCN318 RCN292 RCN276
 noncomputable section
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 40000
@@ -45,15 +35,15 @@ theorem card_le_regular_sum_add_singular
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime]
    (hbox:Q∈globalCoefficientBox K p.weightedCap p.w
      p.seedTotalCap p.slopeCap)
-   (hs:1≤ p.slopeCap) (hsSmall:p.slopeCap< prime)
-   (hw:1≤ p.w)
-   (hDw:p.w< (2*p.slopeCap-1)*p.weightedCap)
-   (hj:1≤ (2*p.slopeCap-1)*p.seedTotalCap)
-   (hjSmall:(2*p.slopeCap-1)*p.seedTotalCap< prime)
-   (selected:K→ Polynomial K) (Gamma:Finset K)
+   (hs:1 ≤ p.slopeCap) (hsSmall:p.slopeCap < prime)
+   (hw:1 ≤ p.w)
+   (hDw:p.w < (2*p.slopeCap-1)*p.weightedCap)
+   (hj:1 ≤ (2*p.slopeCap-1)*p.seedTotalCap)
+   (hjSmall:(2*p.slopeCap-1)*p.seedTotalCap < prime)
+   (selected:K → Polynomial K) (Gamma:Finset K)
    (hsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0):
-   Gamma.card≤
+   Gamma.card ≤
      (∑ F:RegularIndex Q,(regularSeeds Q selected Gamma F).card)+
        (singularSeeds Q selected Gamma).card:=by
  classical
@@ -85,11 +75,11 @@ theorem card_le_regular_sum_add_singular
        exact ⟨⟨q,hq⟩,Finset.mem_univ _,
          Finset.mem_filter.mpr ⟨hgamma,himp⟩⟩
  calc
-   Gamma.card≤ (regularUnion ∪ singularSeeds Q selected Gamma).card:=
+   Gamma.card ≤ (regularUnion ∪ singularSeeds Q selected Gamma).card:=
      Finset.card_le_card hsub
-   _≤ regularUnion.card+(singularSeeds Q selected Gamma).card:=
+   _ ≤ regularUnion.card+(singularSeeds Q selected Gamma).card:=
      Finset.card_union_le _ _
-   _≤ (∑ F:RegularIndex Q,
+   _ ≤ (∑ F:RegularIndex Q,
          (regularSeeds Q selected Gamma F).card)+
        (singularSeeds Q selected Gamma).card:=
      Nat.add_le_add_right Finset.card_biUnion_le _
@@ -101,35 +91,35 @@ theorem global_count_le_regular_div_add_tight_countCap
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) [CharP K prime]
    (hbox:Q∈globalCoefficientBox K p.weightedCap p.w
      p.seedTotalCap p.slopeCap)
-   (hs:1≤ p.slopeCap) (hsSmall:p.slopeCap< prime)
-   (hw:1≤ p.w) (hchar:p.w< prime)
-   (hDw:p.w< (2*p.slopeCap-1)*p.weightedCap)
-   (hj:1≤ (2*p.slopeCap-1)*p.seedTotalCap)
-   (hjSmall:(2*p.slopeCap-1)*p.seedTotalCap< prime)
-   (hjYSmall:t.implicitYCap< prime)
-   (hmixedSmall:2*t.implicitYCap*t.algebraicCap< prime)
-   (hwa:p.w< p.agreements) (han:p.agreements≤ p.n)
-   (selected:K→ Polynomial K) (Gamma:Finset K)
-   (nodes:Finset Iota) (x u0 u1:Iota→ K)
+   (hs:1 ≤ p.slopeCap) (hsSmall:p.slopeCap < prime)
+   (hw:1 ≤ p.w) (hchar:p.w < prime)
+   (hDw:p.w < (2*p.slopeCap-1)*p.weightedCap)
+   (hj:1 ≤ (2*p.slopeCap-1)*p.seedTotalCap)
+   (hjSmall:(2*p.slopeCap-1)*p.seedTotalCap < prime)
+   (hjYSmall:t.implicitYCap < prime)
+   (hmixedSmall:2*t.implicitYCap*t.algebraicCap < prime)
+   (hwa:p.w < p.agreements) (han:p.agreements ≤ p.n)
+   (selected:K → Polynomial K) (Gamma:Finset K)
+   (nodes:Finset Iota) (x u0 u1:Iota → K)
    (hinj:Set.InjOn x nodes) (hnodes:nodes.card=p.n)
    (hdegree:∀ gamma∈Gamma,
-     (selected gamma).natDegree≤ p.w)
+     (selected gamma).natDegree ≤ p.w)
    (hsolution:∀ gamma∈Gamma,
      specialization K (selected gamma) gamma Q=0)
    (hagreement:∀ gamma∈Gamma,
-     p.agreements≤ (nodes.filter (fun i↦
+     p.agreements ≤ (nodes.filter (fun i↦
        (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Gamma p.w p.errors)
-   (regularFlagFor:RegularIndex Q→ FlagDegree)
-   (regularLedger:FlagDegree→ ℕ)
+   (regularFlagFor:RegularIndex Q → FlagDegree)
+   (regularLedger:FlagDegree → ℕ)
    (hregularAggregate:
-     ∀ count:RegularIndex Q→ ℕ,
-       (∀ F,count F*p.gap^2≤ regularLedger (regularFlagFor F))→
-       (∑ F,count F)*p.gap^2≤ regularNumerator)
+     ∀ count:RegularIndex Q → ℕ,
+       (∀ F,count F*p.gap^2 ≤ regularLedger (regularFlagFor F)) →
+       (∑ F,count F)*p.gap^2 ≤ regularNumerator)
    (hregular:∀ F:RegularIndex Q,
-     (regularSeeds Q selected Gamma F).card*p.gap^2≤
+     (regularSeeds Q selected Gamma F).card*p.gap^2 ≤
        regularLedger (regularFlagFor F)):
-   Gamma.card≤ regularNumerator/p.gap^2+t.countCap:=by
+   Gamma.card ≤ regularNumerator/p.gap^2+t.countCap:=by
  have hcover:=card_le_regular_sum_add_singular p Q hQ hbox
    hs hsSmall hw hDw hj hjSmall selected Gamma hsolution
  have hreg:=hregularAggregate
@@ -165,14 +155,14 @@ theorem global_count_le_regular_div_add_tight_countCap
    (by simpa only [A.w] using hdegree)
    (by simpa only [A.agreements] using hagreement)
    (by simpa only [A.w,A.errors] using hnoPencil)
- have hpgap:0< p.gap:=by
+ have hpgap:0 < p.gap:=by
    simpa only [Profile.gap] using Nat.sub_pos_of_lt hwa
- have htgap:0< t.gap:=by simpa only [A.gap] using hpgap
+ have htgap:0 < t.gap:=by simpa only [A.gap] using hpgap
  have hregCount:
-     (∑ F:RegularIndex Q,(regularSeeds Q selected Gamma F).card)≤
+     (∑ F:RegularIndex Q,(regularSeeds Q selected Gamma F).card) ≤
        regularNumerator/p.gap^2:=
    (Nat.le_div_iff_mul_le (pow_pos hpgap 2)).2 hreg
- have hsingCount:(singularSeeds Q selected Gamma).card≤ t.countCap:=
+ have hsingCount:(singularSeeds Q selected Gamma).card ≤ t.countCap:=
    t.count_le_countCap _ htgap hsing
  exact hcover.trans (Nat.add_le_add hregCount hsingCount)
 end

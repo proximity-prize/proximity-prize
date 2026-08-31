@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.IN
 import ProximityPrize.SubmissionLower.HH
 section ProximityFlatProofPort
@@ -8,7 +7,7 @@ namespace MvPolynomial
 variable {σ:Type*} {a a' a₁ a₂:R} {e:ℕ} {n m:σ} {s:σ →₀ ℕ}
 section CommSemiring
 variable [CommSemiring R]
-variable {p q:MvPolynomial σ R}
+ {p q:MvPolynomial σ R}
 section NoZeroDivisors
 variable [NoZeroDivisors R]
 section DegreeOf

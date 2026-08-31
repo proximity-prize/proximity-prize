@@ -1,9 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D
 namespace ProximityPrize.SubmissionLower.RCN114
 open scoped Classical BigOperators WithZero
-open RCN187 RCN295
-open RCN095
+open RCN187 RCN295 RCN095
 noncomputable section
 theorem exponent_weight_le_flag_bound
    (p:FlagDegree) (d:Fin 3 →₀ ℕ) (q:Fin 3 → ℤ)

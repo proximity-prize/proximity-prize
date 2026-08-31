@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.V2
 import ProximityPrize.SubmissionLower.V4
 section ProximityFlatProofPort
@@ -21,7 +20,7 @@ theorem of_isSeparable [Algebra.IsSeparable K L]:FormallyUnramified K L:=by
    ((Algebra.IsSeparable.isSeparable K x).aeval_derivative_ne_zero
      (minpoly.aeval K x))).map f₂).mul_right_eq_zero,sub_eq_zero] at this
 variable [FormallyUnramified K A] [EssFiniteType K A]
-variable [FormallyUnramified K L] [EssFiniteType K L]
+ [FormallyUnramified K L] [EssFiniteType K L]
 theorem bijective_of_isAlgClosed_of_isLocalRing
    [IsAlgClosed K] [IsLocalRing A]:
    Function.Bijective (algebraMap K A):=by

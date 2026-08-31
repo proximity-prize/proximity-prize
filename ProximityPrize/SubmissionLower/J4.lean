@@ -2,16 +2,13 @@ import ProximityPrize.SubmissionLower.BL
 import ProximityPrize.SubmissionLower.B
 namespace ProximityPrize.SubmissionLower.RCN087
 open scoped Classical BigOperators
-open RCN136 RCN231 RCN319
-open RCN238 RCN065 RCN243
-open RCN264 RCN159
-open RCN095 RCN275
+open RCN136 RCN231 RCN319 RCN238 RCN065 RCN243 RCN264 RCN159 RCN095 RCN275
 noncomputable section
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 25000
 variable {K Ω I:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
-variable {φ:Polynomial K →+*Ω} {Γ:Finset K} {x:I → K}
-variable {p e:ℕ} [CharP Ω p]
+ {φ:Polynomial K →+*Ω} {Γ:Finset K} {x:I → K}
+ {p e:ℕ} [CharP Ω p]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Ω:=Classical.decEq Ω
 local instance:DecidableEq I:=Classical.decEq I

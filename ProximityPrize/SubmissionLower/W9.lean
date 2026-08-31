@@ -1,10 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.U6
 namespace ProximityPrize.SubmissionLower.RCN367
 noncomputable section
 section Fields
 variable (F E Ω:Type*) [Field F] [Field E] [Field Ω]
-variable [Algebra F E] [Algebra F Ω] [Algebra.IsSeparable F E]
+ [Algebra F E] [Algebra F Ω] [Algebra.IsSeparable F E]
 theorem normalClosure_isSeparable:
    Algebra.IsSeparable F (IntermediateField.normalClosure F E Ω):=by
  letI:∀ σ:E →ₐ[F] Ω,Algebra.IsSeparable F σ.fieldRange:=
@@ -15,7 +14,7 @@ theorem normalClosure_isSeparable:
 end Fields
 section Domains
 variable (R S:Type*) [CommRing R] [CommRing S] [IsDomain R] [IsDomain S]
-variable [Algebra R S] [Module.IsTorsionFree R S]
+ [Algebra R S] [Module.IsTorsionFree R S]
 local instance:Algebra (FractionRing R) (FractionRing S):=
  FractionRing.liftAlgebra _ _
 local notation3 "K" => FractionRing R
@@ -39,7 +38,7 @@ local instance:FaithfulSMul S E:=
    (FaithfulSMul.algebraMap_injective L E).comp
      (FaithfulSMul.algebraMap_injective S L)
 variable [Module.Finite R S]
-variable [Algebra.IsSeparable (FractionRing R) (FractionRing S)]
+ [Algebra.IsSeparable (FractionRing R) (FractionRing S)]
 local instance:FiniteDimensional L E:=Module.Finite.right K L E
 local instance:IsFractionRing T E:=
  integralClosure.isFractionRing_of_finite_extension L E

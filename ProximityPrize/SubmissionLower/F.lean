@@ -1,15 +1,11 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.E6
 import ProximityPrize.SubmissionLower.J
 import ProximityPrize.SubmissionLower.AV
 namespace ProximityPrize.SubmissionLower.RCN243
-open RCN002 RCN007 RCN004
-open RCN001 RCN013
-open RCN136 RCN231 RCN319
-open RCN238 RCN264
+open RCN002 RCN007 RCN004 RCN001 RCN013 RCN136 RCN231 RCN319 RCN238 RCN264
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
-variable (φ:Polynomial K →+*Ω)
+ (φ:Polynomial K →+*Ω)
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Ω:=Classical.decEq Ω
 def regularitySurface (F:MvPolynomial (Fin 4) K):MvPolynomial (Fin 3) Ω:=

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G6
 import ProximityPrize.SubmissionLower.G4
 namespace ProximityPrize.SubmissionLower.RCN365
@@ -40,7 +39,7 @@ theorem finite_separable_finrank_le_planar_bound
 end SingleField
 section FiniteFamily
 variable (K:Type) [Field K]
-variable {I:Type} [Fintype I] (E:I → Type)
+ {I:Type} [Fintype I] (E:I → Type)
  [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 theorem finite_separable_sum_finrank_le_planar_bound
    (p:ℕ) [CharP K p] (P Q:Polynomial (Polynomial K))

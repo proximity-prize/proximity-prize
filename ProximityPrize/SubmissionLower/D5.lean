@@ -1,10 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BO
 import ProximityPrize.SubmissionLower.H
 namespace ProximityPrize.SubmissionLower.RCN215
-open RCN095
-open RCN156
-open RCN213
+open RCN095 RCN156 RCN213
 def surfaceFlag6600:FlagDegree:=⟨460,35,8⟩
 def derivativeFlag6600:FlagDegree:=⟨460,35,7⟩
 def agreementDirection6600:FlagDegree:=⟨920,70,15⟩

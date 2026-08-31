@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 noncomputable section
 namespace Polynomial.Bivariate
@@ -19,7 +18,7 @@ theorem Transcendental.algEquivAdjoin_swap_eq_aeval (hx:Transcendental R x) (p:R
 end Ring
 section CommRing
 variable [CommRing A] [Algebra R A]
-variable {B:Type*} [CommRing B] [Algebra A B] [Algebra R B] [IsScalarTower R A B]
+ {B:Type*} [CommRing B] [Algebra A B] [Algebra R B] [IsScalarTower R A B]
 attribute [local instance] Polynomial.algebra in
 theorem aeval_aeval_eq_aeval_algEquivAdjoin {x:A} (y:B)
    (hx:Transcendental R x) (p:R[X][Y]):

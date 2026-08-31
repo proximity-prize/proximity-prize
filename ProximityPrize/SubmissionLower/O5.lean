@@ -1,13 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B
 namespace ProximityPrize.SubmissionLower.RCN274
-open RCN136 RCN267
-open RCN159
-open RCN095
+open RCN136 RCN267 RCN159 RCN095
 noncomputable section
 variable {K Omega Iota:Type} [Field K] [Field Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
-variable {p e d:ℕ} [CharP Omega p] {flag:FlagDegree}
+ {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+ {p e d:ℕ} [CharP Omega p] {flag:FlagDegree}
 theorem residualStage_pderiv_one_ne_zero
    (S:ResidualStage phi Gamma x p e flag d):
    MvPolynomial.pderiv (1:Fin 3) S.G≠0:=by

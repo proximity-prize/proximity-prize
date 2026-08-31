@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.IV
 section ProximityFlatProofPort
 open scoped TensorProduct
@@ -87,10 +86,10 @@ instance [FormallyEtale R A]:FormallyEtale B (B ⊗[R] A):=
 end BaseChange
 section Localization
 variable {R S Rₘ Sₘ:Type*} [CommRing R] [CommRing S] [CommRing Rₘ] [CommRing Sₘ]
-variable (M:Submonoid R)
-variable [Algebra R S] [Algebra R Sₘ] [Algebra S Sₘ] [Algebra R Rₘ] [Algebra Rₘ Sₘ]
-variable [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
-variable [IsLocalization M Rₘ] [IsLocalization (M.map (algebraMap R S)) Sₘ]
+ (M:Submonoid R)
+ [Algebra R S] [Algebra R Sₘ] [Algebra S Sₘ] [Algebra R Rₘ] [Algebra Rₘ Sₘ]
+ [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
+ [IsLocalization M Rₘ] [IsLocalization (M.map (algebraMap R S)) Sₘ]
 include M
 theorem of_isLocalization:FormallyEtale R Rₘ:=
  FormallyEtale.iff_formallyUnramified_and_formallySmooth.mpr

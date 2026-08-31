@@ -1,11 +1,7 @@
 import ProximityPrize.SubmissionLower.EC
 import ProximityPrize.SubmissionLower.Y1
 namespace ProximityPrize.SubmissionLower.RCN120
-open RCN002 RCN011
-open RCN371 RCN021
-open RCN022
-open RCN125
-open RCN093
+open RCN002 RCN011 RCN371 RCN021 RCN022 RCN125 RCN093
 noncomputable section
 set_option autoImplicit false
 @[reducible] def residueAlgebra

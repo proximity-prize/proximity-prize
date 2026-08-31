@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HQ
 import ProximityPrize.SubmissionLower.S2
 section ProximityFlatProofPort
@@ -6,7 +5,7 @@ open Module
 open scoped DirectSum
 namespace Submodule
 variable {ι R M:Type*} [CommRing R] [AddCommGroup M] [Module R M]
-variable [IsDomain R] [IsPrincipalIdealRing R] [Finite ι]
+ [IsDomain R] [IsPrincipalIdealRing R] [Finite ι]
 noncomputable def quotientEquivPiSpan (N:Submodule R M) (b:Basis ι R M)
    (h:Module.finrank R N=Module.finrank R M):
    (M ⧸ N) ≃ₗ[R] Π i,R ⧸ Ideal.span ({smithNormalFormCoeffs b h i}:Set R):=by

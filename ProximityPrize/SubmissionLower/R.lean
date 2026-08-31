@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.H
 namespace ProximityPrize.SubmissionLower.RCN223
 open Finset

@@ -1,28 +1,15 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A2
 import ProximityPrize.SubmissionLower.E7
 namespace ProximityPrize.SubmissionLower.RCN041
 open scoped Classical
-open Polynomial KaehlerDifferential
-open RCN002 RCN005
-open RCN344 RCN264
-open RCN341
-open RCN042
-open RCN035
-open RCN093
-open RCN037
-open RCN038
-open RCN040
-open RCN046
-open RCN265
-open RCN095
+open Polynomial KaehlerDifferential RCN002 RCN005 RCN344 RCN264 RCN341 RCN042 RCN035 RCN093 RCN037 RCN038 RCN040 RCN046 RCN265 RCN095
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option synthInstance.maxHeartbeats 400000
 set_option maxRecDepth 30000
 set_option autoImplicit false
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
+ {G T H:MvPolynomial (Fin 3) Omega}
 def adaptiveUnitProjectionFamilyYZ_of_active_nested
    (p q:FlagDegree)
    (base:∀ C:RegularComponent Omega G T H,

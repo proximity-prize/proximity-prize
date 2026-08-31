@@ -1,12 +1,8 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z5
 import ProximityPrize.SubmissionLower.AE
 namespace ProximityPrize.SubmissionLower.RCN165
 open scoped Classical
-open RCN095
-open RCN094
-open RCN162
-open RCN272
+open RCN095 RCN094 RCN162 RCN272
 noncomputable section
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 20000

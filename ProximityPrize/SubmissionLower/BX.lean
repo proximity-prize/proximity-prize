@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HJ
 namespace ProximityPrize.SubmissionLower.RCN173
 theorem enlarge_exempt_card_bound
@@ -26,8 +25,8 @@ theorem enlarge_exempt_card_bound
    omega
 section FiniteIncidence
 variable {Seed Node:Type*} [DecidableEq Seed] [DecidableEq Node]
-variable (relation:Seed → Node → Prop)
-variable [∀ seed node,Decidable (relation seed node)]
+ (relation:Seed → Node → Prop)
+ [∀ seed node,Decidable (relation seed node)]
 theorem incidence_after_exempt_nodes
    (seeds:Finset Seed) (nodes identities:Finset Node) (a M:ℕ)
    (hidentities:identities ⊆ nodes)

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HW
 import ProximityPrize.SubmissionLower.S7
 import ProximityPrize.SubmissionLower.AP
@@ -149,7 +148,7 @@ end AdjoinTranscendental
 section constantExtension
 open RatFunc
 variable {F}
-variable [Algebra F[X] K] [FaithfulSMul F[X] K] [FunctionField F K]
+ [Algebra F[X] K] [FaithfulSMul F[X] K] [FunctionField F K]
 attribute [local instance] Polynomial.algebra
 section Unbundled
 open Polynomial

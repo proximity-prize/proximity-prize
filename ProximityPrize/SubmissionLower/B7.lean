@@ -1,13 +1,7 @@
 import ProximityPrize.SubmissionLower.Y6
 import ProximityPrize.SubmissionLower.E5
 namespace ProximityPrize.SubmissionLower.RCN089
-open RCN136 RCN313 RCN238
-open RCN275
-open RCN095
-open RCN198
-open RCN086
-open RCN262
-open RCN263
+open RCN136 RCN313 RCN238 RCN275 RCN095 RCN198 RCN086 RCN262 RCN263
 noncomputable section
 variable {K Omega:Type} [Field K] [Field Omega]
 def reducedGlobalTailCut (phi:Polynomial K →+* Omega)

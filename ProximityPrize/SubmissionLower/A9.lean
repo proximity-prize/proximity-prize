@@ -1,26 +1,16 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.FD
 import ProximityPrize.SubmissionLower.X9
 import ProximityPrize.SubmissionLower.D3
 namespace ProximityPrize.SubmissionLower.RCN064
 open scoped Classical BigOperators WithZero
-open RCN212 RCN184
-open RCN133 RCN295
-open RCN095 RCN114
-open RCN187 RCN344
-open RCN002 RCN005 RCN006
-open RCN341 RCN044
-open RCN037 RCN207
-open RCN208
-open RCN264 RCN042
-open RCN035 RCN022
+open RCN212 RCN184 RCN133 RCN295 RCN095 RCN114 RCN187 RCN344 RCN002 RCN005 RCN006 RCN341 RCN044 RCN037 RCN207 RCN208 RCN264 RCN042 RCN035 RCN022
 noncomputable section
 set_option maxHeartbeats 1500000
 set_option synthInstance.maxHeartbeats 250000
 private theorem exact_of_avoids {K L σ:Type*} [Field K] [Field L]
    [Algebra K L] [Fintype σ] [DecidableEq σ]
-   (v:RCN345.NormalizedValuation K L) (x:σ→ L)
-   (E:Finset (σ→₀ ℕ)) (c:E→ K)
+   (v:RCN345.NormalizedValuation K L) (x:σ → L)
+   (E:Finset (σ →₀ ℕ)) (c:E → K)
    (hc:c∉cancellationSubmodule v.val (constant_value_le_one K L v) x E):
    v.val (coefficientEvaluation x E c)=WithZero.exp (exponentSetPoleWeight v.val x E):=by
  apply le_antisymm
@@ -28,11 +18,11 @@ private theorem exact_of_avoids {K L σ:Type*} [Field K] [Field L]
      (constant_value_le_one K L v) x E _ (support_polynomialOfSupport_subset _ _)
  · exact le_of_not_gt hc
 theorem exists_common_coefficients {K I:Type*} [Field K] [Infinite K] [Finite I]
-   (L:I→ Type*) [∀ i,Field (L i)] [∀ i,Algebra K (L i)]
-   (x:∀ i,Fin 3→ L i) (w:∀ i,L i) (index:I→ Fin 3)
+   (L:I → Type*) [∀ i,Field (L i)] [∀ i,Algebra K (L i)]
+   (x:∀ i,Fin 3 → L i) (w:∀ i,L i) (index:I → Fin 3)
    (hd:∀ i,KaehlerDifferential.D K (L i) (x i (index i))≠0)
    (V:∀ i,Finset (RCN345.NormalizedValuation K (L i))):
-   ∃ c:movingSupport→ K,∀ i,
+   ∃ c:movingSupport → K,∀ i,
      coefficientEvaluation (x i) linearSupport (restrictU c)≠0∧
      KaehlerDifferential.D K (L i)
        (coefficientEvaluation (movingCoordinates (x i) (w i)) movingSupport c)≠0∧
@@ -48,7 +38,7 @@ theorem exists_common_coefficients {K I:Type*} [Field K] [Infinite K] [Finite I]
  let evU i:=(coefficientEvaluation (K:=K) (x i) linearSupport).comp restrictU
  let Extra:=I × Bool
  let Pole:=Sigma fun i:I↦{v//v∈V i} × Bool
- let bad:Extra ⊕ Pole→ Submodule K (movingSupport→ K)
+ let bad:Extra ⊕ Pole → Submodule K (movingSupport → K)
    | Sum.inl (i,false) => LinearMap.ker (evU i)
    | Sum.inl (i,true) => LinearMap.ker ((KaehlerDifferential.D K (L i)).toLinearMap.comp (evJ i))
    | Sum.inr ⟨i,v,false⟩ => (cancellationSubmodule v.1.val
@@ -80,7 +70,7 @@ theorem exists_common_coefficients {K I:Type*} [Field K] [Infinite K] [Finite I]
        obtain ⟨c,hc⟩:=restrictU_surjective (K:=K) d
        intro ht
        have hm:c∈bad (Sum.inr ⟨i,v,false⟩):=by rw [ht];trivial
-       change v.1.val (coefficientEvaluation (x i) linearSupport (restrictU c))< _ at hm
+       change v.1.val (coefficientEvaluation (x i) linearSupport (restrictU c)) < _ at hm
        rw [hc,hd] at hm
        exact lt_irrefl _ hm
      · obtain ⟨c,hc⟩:=exists_exact_support_evaluation_of_downwardClosed (K:=K)
@@ -154,7 +144,7 @@ private theorem field_eval (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
 theorem exists_common_original_projection (F A H G:MvPolynomial (Fin 3) K)
    (base:∀ C:RegularComponent K F A H,SeparableLiteralCoordinate C.1):
    ∃ Q U:MvPolynomial (Fin 3) K,
-     PolynomialInFlag (2• unitAllFlag) Q∧PolynomialInFlag unitYZFlag U∧
+     PolynomialInFlag (2 • unitAllFlag) Q∧PolynomialInFlag unitYZFlag U∧
      ∀ C:RegularComponent K F A H,
        U∉C.1∧KaehlerDifferential.D K (CoordinateField K C.1)
          (movingValue C.1 H G Q U)≠0∧
@@ -204,7 +194,7 @@ theorem exists_common_original_projection (F A H G:MvPolynomial (Fin 3) K)
        (polynomialOfSupport movingSupport c)).trans
        (supportPoleWeight_le_exponentSetPoleWeight _ _ _ movingSupport
          (support_polynomialOfSupport_subset _ _))
-     change poleOrder v.val (coefficientEvaluation _ _ c)≤ _ at hp
+     change poleOrder v.val (coefficientEvaluation _ _ c) ≤ _ at hp
      rw [hJ C,hz] at hp
      have hp0:=le_antisymm hp (le_max_left _ _)
      simpa [movingPoleTarget,hcoord,hw] using hp0

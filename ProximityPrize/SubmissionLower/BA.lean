@@ -1,13 +1,8 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z0
 import ProximityPrize.SubmissionLower.AD
 namespace ProximityPrize.SubmissionLower.RCN117
 open scoped Classical
-open RCN267
-open RCN125
-open RCN097
-open RCN116
-open RCN011
+open RCN267 RCN125 RCN097 RCN116 RCN011
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 20000
@@ -103,7 +98,7 @@ theorem flag_v_outer_positive_of_directional
    pderiv_zero_flagAlgHom_nested] using
    (flagEquiv lam mu (mu*lam)).injective.ne hdirectional
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega] [CharP Omega p]
-variable {G T H:MvPolynomial (Fin 3) Omega}
+ {G T H:MvPolynomial (Fin 3) Omega}
 variable
    {hseparator:∀ C:RCN264.RegularComponent
        Omega G T H,

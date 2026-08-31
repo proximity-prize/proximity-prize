@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CT
 section ProximityFlatProofPort
 suppress_compilation
@@ -13,7 +12,7 @@ variable {S}
 theorem KaehlerDifferential.one_smul_sub_smul_one_mem_ideal (a:S):
    (1:S) ⊗ₜ[R] a-a ⊗ₜ[R] (1:S)∈KaehlerDifferential.ideal R S:=by simp [RingHom.mem_ker]
 variable {R}
-variable {M:Type*} [AddCommGroup M] [Module R M] [Module S M] [IsScalarTower R S M]
+ {M:Type*} [AddCommGroup M] [Module R M] [Module S M] [IsScalarTower R S M]
 def Derivation.tensorProductTo (D:Derivation R S M):S ⊗[R] S →ₗ[S] M:=
  TensorProduct.AlgebraTensorModule.lift ((LinearMap.lsmul S (S →ₗ[R] M)).flip D.toLinearMap)
 theorem Derivation.tensorProductTo_tmul (D:Derivation R S M) (s t:S):
@@ -414,7 +413,7 @@ theorem KaehlerDifferential.quotKerTotalEquiv_symm_comp_D:
 end Presentation
 section ExactSequence
 variable (A B:Type*) [CommRing A] [CommRing B] [Algebra R A]
-variable [Algebra A B] [Algebra S B]
+ [Algebra A B] [Algebra S B]
 theorem KaehlerDifferential.kerTotal_map [Algebra R B] [IsScalarTower R A B] [IsScalarTower R S B]
    (h:Function.Surjective (algebraMap A B)):
    (KaehlerDifferential.kerTotal R A).map ((Finsupp.mapRange.linearMap (Algebra.linearMap A B)).comp (Finsupp.lmapDomain A A (algebraMap A B))) ⊔

@@ -1,24 +1,17 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X
 import ProximityPrize.SubmissionLower.P
 import ProximityPrize.SubmissionLower.I
 namespace ProximityPrize.SubmissionLower.RCN340
 open scoped Classical BigOperators WithZero
-open IsDedekindDomain
-open RCN002 RCN005
+open IsDedekindDomain RCN002 RCN005
  RCN006
-open RCN344 RCN264
-open RCN095 RCN114
-open RCN295
-open RCN341
-open RCN237
-open RCN165
+open RCN344 RCN264 RCN095 RCN114 RCN295 RCN341 RCN237 RCN165
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 300000
 set_option maxRecDepth 20000
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
+ {G T H:MvPolynomial (Fin 3) Omega}
 def LiteralSupportPoleBound
    {P:Ideal (MvPolynomial (Fin 3) Omega)} [P.IsPrime]
    (D:SeparableLiteralCoordinate P)

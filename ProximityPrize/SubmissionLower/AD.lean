@@ -1,8 +1,6 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EL
 namespace ProximityPrize.SubmissionLower.RCN267
-open RCN136 RCN313 RCN138
-open RCN132 RCN137
+open RCN136 RCN313 RCN138 RCN132 RCN137
 noncomputable section
 section PartialDerivatives
 variable {σ K:Type*} [Field K]

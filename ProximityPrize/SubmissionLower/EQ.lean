@@ -1,21 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J4
 import ProximityPrize.SubmissionLower.DU
 import ProximityPrize.SubmissionLower.BK
 namespace ProximityPrize.SubmissionLower.RCN146
 open scoped Classical BigOperators
-open RCN135 RCN136 RCN231 RCN319
-open RCN313 RCN174
-open RCN238 RCN065 RCN243
-open RCN264 RCN159
-open RCN095 RCN275
-open RCN198 RCN203
-open RCN287
-open RCN049 RCN144
-open RCN063 RCN145
-open RCN087
-open RCN046 RCN265
-open RCN295 RCN344 RCN002
+open RCN135 RCN136 RCN231 RCN319 RCN313 RCN174 RCN238 RCN065 RCN243 RCN264 RCN159 RCN095 RCN275 RCN198 RCN203 RCN287 RCN049 RCN144 RCN063 RCN145 RCN087 RCN046 RCN265 RCN295 RCN344 RCN002
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 45000
@@ -40,7 +28,7 @@ theorem mixed_padded_le_succ (flag:FlagDegree) (a b s d:ℕ) (r:FlagDegree):
  rw [he,mixed_add_second]
  exact Nat.le_add_right _ _
 variable {Γ:Finset K} {x:I → K} {p e a b s:ℕ} [CharP (Ω K) p]
-variable {flag:FlagDegree} {w:ℕ}
+ {flag:FlagDegree} {w:ℕ}
 theorem actual_identityCurveCountProvider
    (S:ResidualStage (polynomialEmbedding K) Γ x p e flag w (support a b s))
    (agreements:ℕ) (hnodes:S.nodes.card=agreements+e)

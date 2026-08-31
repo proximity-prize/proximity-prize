@@ -5,7 +5,7 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
 variable {A B:Type*} [CommRing A] [CommRing B]
-variable (M:Submonoid A) [Algebra A B] [IsLocalization M B]
+ (M:Submonoid A) [Algebra A B] [IsLocalization M B]
 def surfaceMap (I:Ideal A):
    (A ⧸ I) →+*(B ⧸ I.map (algebraMap A B)):=
  Ideal.quotientMap (I.map (algebraMap A B)) (algebraMap A B)

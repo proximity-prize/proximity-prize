@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 universe u v w
@@ -19,7 +18,7 @@ instance smulCommClass:SMulCommClass R (CommutatorRing L) (CommutatorRing L):=
 end LieAlgebra
 namespace LieHom
 variable {R L}
-variable {L₂:Type w} [LieRing L₂] [LieAlgebra R L₂]
+ {L₂:Type w} [LieRing L₂] [LieAlgebra R L₂]
 @[simps toFun]
 def toNonUnitalAlgHom (f:L →ₗ⁅R⁆ L₂):CommutatorRing L →ₙₐ[R] CommutatorRing L₂:=
  { f with

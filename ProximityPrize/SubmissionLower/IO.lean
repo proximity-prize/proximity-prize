@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CP
 import ProximityPrize.SubmissionLower.F3
 section ProximityFlatProofPort
@@ -6,7 +5,7 @@ namespace MonomialOrder
 open MvPolynomial
 open scoped MonomialOrder
 variable {sigma:Type*} {m:MonomialOrder sigma}
-variable {R:Type*} [CommSemiring R]
+ {R:Type*} [CommSemiring R]
 variable (m) in
 noncomputable def degree (f:MvPolynomial sigma R):sigma →₀ ℕ:=
  m.toSyn.symm (f.support.sup m.toSyn)

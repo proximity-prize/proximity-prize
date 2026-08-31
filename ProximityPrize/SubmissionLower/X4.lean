@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AX
 import ProximityPrize.SubmissionLower.W7
 namespace ProximityPrize.SubmissionLower.RCN010
@@ -15,7 +14,7 @@ theorem order_cover (order:Fin 3 ≃ Fin 3) (l:Fin 3):
 variable (K:Type) [Field K]
 section Component
 variable (order:Fin 3 ≃ Fin 3) (P:Ideal (Original K)) [P.IsPrime]
-variable (ht:Transcendental K (coordinate K P (order 0)))
+ (ht:Transcendental K (coordinate K P (order 0)))
 theorem actual_generators:
    letI:Algebra (RatFunc K) (CoordinateField K P):=rationalBaseAlgebra K P (order 0) ht
    IntermediateField.adjoin (RatFunc K)
@@ -70,7 +69,7 @@ theorem actual_finite_separable_finrank_bound
 end Component
 section FiniteFamily
 variable (order:Fin 3 ≃ Fin 3) {I:Type} [Fintype I]
-variable (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
+ (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
 theorem actual_finite_separable_sum_finrank_bound
    (ht:∀ i,Transcendental K (coordinate K (P i) (order 0)))
    (hinj:Function.Injective P) (p:ℕ) [CharP K p] (G H:Original K)

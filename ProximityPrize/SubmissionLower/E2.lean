@@ -4,21 +4,7 @@ import ProximityPrize.SubmissionLower.EA
 import ProximityPrize.SubmissionLower.M1
 namespace ProximityPrize.SubmissionLower.RCN251
 open scoped Classical BigOperators
-open RCN135 RCN136 RCN086
-open RCN244 RCN074
-open RCN245 RCN246
-open RCN247
-open RCN249
-open RCN102 RCN103
-open RCN106
-open RCN107
-open RCN108
-open RCN109
-open RCN195
-open RCN120
-open RCN093 RCN095
-open RCN002 RCN011
-open RCN021
+open RCN135 RCN136 RCN086 RCN244 RCN074 RCN245 RCN246 RCN247 RCN249 RCN102 RCN103 RCN106 RCN107 RCN108 RCN109 RCN195 RCN120 RCN093 RCN095 RCN002 RCN011 RCN021
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -27,11 +13,11 @@ variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
-variable [CharP (GenericField K) p]
-variable {errorCap:ℕ}
-variable {stageSupport:RCN275.ResidualSupportParameters}
-variable (S:Stage K I Gamma x p flag errorCap stageSupport) {A:Type} [Fintype A]
-variable (F:StageIndexedFlagFamily S A) (W:StageIndexedFactor S A F)
+ [CharP (GenericField K) p]
+ {errorCap:ℕ}
+ {stageSupport:RCN275.ResidualSupportParameters}
+ (S:Stage K I Gamma x p flag errorCap stageSupport) {A:Type} [Fintype A]
+ (F:StageIndexedFlagFamily S A) (W:StageIndexedFactor S A F)
 theorem stageFamily_surfacePrime:
    (Ideal.span {indexedFiberSurface W.q W.irreducible
      (stageSurfacePlane S F.lam F.mu F.nu F.order)}).IsPrime:=by

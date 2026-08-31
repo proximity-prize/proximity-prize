@@ -1,29 +1,24 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AH
 import ProximityPrize.SubmissionLower.M
 namespace ProximityPrize.SubmissionLower.RCN296
 open scoped Classical BigOperators WithZero
-open IsDedekindDomain
-open RCN295
-open RCN344
-open RCN002 RCN005 RCN006
-open RCN007
+open IsDedekindDomain RCN295 RCN344 RCN002 RCN005 RCN006 RCN007
 noncomputable section
 variable {K L σ:Type} [Field K] [Field L] [Fintype σ]
-variable [Algebra K L] [IsAlgClosed K]
-variable [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
-variable [IsScalarTower K (Polynomial K) L]
-variable [IsScalarTower K (RatFunc K) L]
-variable [IsScalarTower (Polynomial K) (RatFunc K) L]
-variable [FiniteDimensional (RatFunc K) L]
-variable [Algebra.IsSeparable (RatFunc K) L]
+ [Algebra K L] [IsAlgClosed K]
+ [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
+ [IsScalarTower K (Polynomial K) L]
+ [IsScalarTower K (RatFunc K) L]
+ [IsScalarTower (Polynomial K) (RatFunc K) L]
+ [FiniteDimensional (RatFunc K) L]
+ [Algebra.IsSeparable (RatFunc K) L]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq (Place K L):=Classical.decEq _
 variable (A:Type) [CommRing A] [IsDomain A]
-variable [Algebra K A] [Algebra A L] [IsFractionRing A L]
-variable [Algebra (Polynomial K) A]
-variable [IsScalarTower K (Polynomial K) A] [IsScalarTower K A L]
-variable [IsScalarTower (Polynomial K) A L]
+ [Algebra K A] [Algebra A L] [IsFractionRing A L]
+ [Algebra (Polynomial K) A]
+ [IsScalarTower K (Polynomial K) A] [IsScalarTower K A L]
+ [IsScalarTower (Polynomial K) A L]
 theorem finite_model_zero_points_le_exponentSet
    (x:σ → A) (E:Finset (σ →₀ ℕ))
    (F:MvPolynomial σ K) (hFE:F.support ⊆ E)

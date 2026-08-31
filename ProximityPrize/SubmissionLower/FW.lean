@@ -1,17 +1,6 @@
 import ProximityPrize.SubmissionLower.FV
 namespace ProximityPrize.SubmissionLower.RCN247
-open RCN244 RCN248
-open RCN074
-open RCN106
-open RCN107
-open RCN102
-open RCN245
-open RCN246
-open RCN120
-open RCN086 RCN218
-open RCN135 RCN313
-open RCN095 RCN093
-open RCN002 RCN021
+open RCN244 RCN248 RCN074 RCN106 RCN107 RCN102 RCN245 RCN246 RCN120 RCN086 RCN218 RCN135 RCN313 RCN095 RCN093 RCN002 RCN021
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 5000000
@@ -19,10 +8,10 @@ variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
-variable [CharP (GenericField K) p]
-variable {errorCap:ℕ}
-variable {stageSupport:RCN275.ResidualSupportParameters}
-variable {A:Type} [Fintype A]
+ [CharP (GenericField K) p]
+ {errorCap:ℕ}
+ {stageSupport:RCN275.ResidualSupportParameters}
+ {A:Type} [Fintype A]
 theorem indexedFiberTail_mem_primary
    (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F

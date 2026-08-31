@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.U5
 section ProximityFlatProofPort
 open Function (Injective Surjective)

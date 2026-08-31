@@ -1,11 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G0
 section ProximityFlatProofPort
 open IsLocalRing
 namespace Algebra
 section IsLocalRing
 variable {R S:Type*} [CommRing R] [CommRing S] [Algebra R S]
-variable [IsLocalRing R] [IsLocalRing S] [IsLocalHom (algebraMap R S)]
+ [IsLocalRing R] [IsLocalRing S] [IsLocalHom (algebraMap R S)]
 instance:FormallyUnramified S (ResidueField S):=.quotient _
 instance [FormallyUnramified R S]:
    FormallyUnramified (ResidueField R) (ResidueField S):=

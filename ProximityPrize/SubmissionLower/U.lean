@@ -1,10 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AC
 namespace ProximityPrize.SubmissionLower.RCN276
 open scoped BigOperators
-open RCN174 RCN286
-open RCN095
-open RCN266
+open RCN174 RCN286 RCN095 RCN266
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 30000
 structure Profile where

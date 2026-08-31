@@ -3,8 +3,8 @@ import ProximityPrize.SubmissionLower.I8
 namespace ProximityPrize.SubmissionLower.RCN188
 open RCN078
 variable {K R S:Type*} [CommRing K] [CommRing R] [CommRing S]
-variable [Algebra K R] [Algebra K S] [Algebra R S] [IsScalarTower K R S]
-variable (M:Submonoid R) [IsLocalization M S]
+ [Algebra K R] [Algebra K S] [Algebra R S] [IsScalarTower K R S]
+ (M:Submonoid R) [IsLocalization M S]
 def derivationDualAlgHom (D:Derivation K R R):R →ₐ[K] DualNumber S where
  toFun r:=(algebraMap R S r,algebraMap R S (D r))
  map_one':=by

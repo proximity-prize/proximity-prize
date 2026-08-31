@@ -1,11 +1,6 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BU
 namespace ProximityPrize.SubmissionLower.RCN286
-open RCN169 RCN167
-open RCN079 RCN080
-open RCN290 RCN293
-open RCN135 RCN136 RCN138
-open RCN082 RCN081 RCN174 RCN319
+open RCN169 RCN167 RCN079 RCN080 RCN290 RCN293 RCN135 RCN136 RCN138 RCN082 RCN081 RCN174 RCN319
 noncomputable section
 variable {K:Type*} [Field K]
 def RegularSolution (F:MvPolynomial (Fin 4) K) (P:Polynomial K) (γ:K):Prop:=

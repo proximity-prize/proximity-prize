@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 namespace RingHom
@@ -21,8 +20,8 @@ end RingHom
 open scoped Pointwise
 universe u
 variable {R S:Type*} [CommRing R] [CommRing S] (M:Submonoid R) (f:R →+*S)
-variable (R' S':Type*) [CommRing R'] [CommRing S']
-variable [Algebra R R'] [Algebra S S']
+ (R' S':Type*) [CommRing R'] [CommRing S']
+ [Algebra R R'] [Algebra S S']
 theorem RingHom.finite_localizationPreserves:RingHom.LocalizationPreserves @RingHom.Finite:=by
  introv R hf
  letI:=f.toAlgebra

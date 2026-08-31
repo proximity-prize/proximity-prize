@@ -1,9 +1,7 @@
 import ProximityPrize.SubmissionLower.D
 import ProximityPrize.SubmissionLower.AJ
 namespace ProximityPrize.SubmissionLower.RCN326
-open ProximityPrize.Benchmark
-open RCN095
-open RCN100 RCN119
+open ProximityPrize.Benchmark RCN095 RCN100 RCN119
 open scoped NNReal
 noncomputable section
 set_option maxHeartbeats 5000000
@@ -45,7 +43,7 @@ def fixedFlag:FlagDegree:=
    finalMeet.slopeCap⟩
 def direction:FlagDegree:=
  ⟨2*fixedFlag.zOnly,2*fixedFlag.yz-1,2*fixedFlag.all-1⟩
-def tailFlag (d:ℕ):FlagDegree:=unitYZFlag+(d+1)• direction
+def tailFlag (d:ℕ):FlagDegree:=unitYZFlag+(d+1) • direction
 def fixedRegularCost:ℕ:=flagMixed fixedFlag (tailFlag (w+1)) (tailFlag (w+2))
 def fixedSingularCost:ℕ:=63020462332448
 def firstResidualRegularCost:ℕ:=112248424128199
@@ -67,7 +65,7 @@ def capacity:ℕ:=prime^6/2^128
 def mcaBudget:ℕ:=capacity-seedlessListCeiling
 def slack:ℕ:=mcaBudget-totalCost
 abbrev scoreGate (e:ℕ):Prop:=
- (radiusDenominator-(128*e+127))^12800*2^score≤
+ (radiusDenominator-(128*e+127))^12800*2^score ≤
    radiusDenominator^12800
 theorem radius_row_exact:
    errors=80092∧agreements=182052∧gap=50981∧
@@ -111,43 +109,43 @@ theorem profileC_rank_exact:
    localRankBound profileC.multiplicity profileC.totalCap profileC.slopeCap=
      profileC.rank:=by decide
 theorem interpolation_gates:
-   profileA.totalRank< profileA.coefficients∧
-     profileB.totalRank< profileB.coefficients∧
-     profileC.totalRank< profileC.coefficients:=by
+   profileA.totalRank < profileA.coefficients∧
+     profileB.totalRank < profileB.coefficients∧
+     profileC.totalRank < profileC.coefficients:=by
  decide
 theorem interpolation_gateA_exact:
-   n*localRankBound profileA.multiplicity profileA.totalCap profileA.slopeCap<
+   n*localRankBound profileA.multiplicity profileA.totalCap profileA.slopeCap <
      coefficientCount profileA.weightedCap w profileA.totalCap profileA.slopeCap:=by
  rw [profileA_coefficients_exact,profileA_rank_exact]
  decide
 theorem interpolation_gateB_exact:
-   n*localRankBound profileB.multiplicity profileB.totalCap profileB.slopeCap<
+   n*localRankBound profileB.multiplicity profileB.totalCap profileB.slopeCap <
      coefficientCount profileB.weightedCap w profileB.totalCap profileB.slopeCap:=by
  rw [profileB_coefficients_exact,profileB_rank_exact]
  decide
 theorem interpolation_gateC_exact:
-   n*localRankBound profileC.multiplicity profileC.totalCap profileC.slopeCap<
+   n*localRankBound profileC.multiplicity profileC.totalCap profileC.slopeCap <
      coefficientCount profileC.weightedCap w profileC.totalCap profileC.slopeCap:=by
  rw [profileC_coefficients_exact,profileC_rank_exact]
  decide
 theorem profile_gates:
-   profileA.characteristicCap< prime∧
-     profileB.characteristicCap< prime∧
-     profileC.characteristicCap< prime∧
-     profileA.weightedCap+profileA.slopeCap≤ w*(profileA.yCap+1)∧
-     profileB.weightedCap+profileB.slopeCap≤ w*(profileB.yCap+1)∧
-     profileC.weightedCap+profileC.slopeCap≤ w*(profileC.yCap+1)∧
-     profileA.multiplicity-1+profileA.slopeCap≤ profileA.yCap∧
-     profileB.multiplicity-1+profileB.slopeCap≤ profileB.yCap∧
-     profileC.multiplicity-1+profileC.slopeCap≤ profileC.yCap:=by
+   profileA.characteristicCap < prime∧
+     profileB.characteristicCap < prime∧
+     profileC.characteristicCap < prime∧
+     profileA.weightedCap+profileA.slopeCap ≤ w*(profileA.yCap+1)∧
+     profileB.weightedCap+profileB.slopeCap ≤ w*(profileB.yCap+1)∧
+     profileC.weightedCap+profileC.slopeCap ≤ w*(profileC.yCap+1)∧
+     profileA.multiplicity-1+profileA.slopeCap ≤ profileA.yCap∧
+     profileB.multiplicity-1+profileB.slopeCap ≤ profileB.yCap∧
+     profileC.multiplicity-1+profileC.slopeCap ≤ profileC.yCap:=by
  decide
 theorem profile_small_gates:
-   (2*profileA.slopeCap-1)*profileA.totalCap< prime∧
-     profileA.slopeCap< prime∧
-     (2*profileB.slopeCap-1)*profileB.totalCap< prime∧
-     profileB.slopeCap< prime∧
-     (2*profileC.slopeCap-1)*profileC.totalCap< prime∧
-     profileC.slopeCap< prime:=by
+   (2*profileA.slopeCap-1)*profileA.totalCap < prime∧
+     profileA.slopeCap < prime∧
+     (2*profileB.slopeCap-1)*profileB.totalCap < prime∧
+     profileB.slopeCap < prime∧
+     (2*profileC.slopeCap-1)*profileC.totalCap < prime∧
+     profileC.slopeCap < prime:=by
  decide
 theorem fixed_flag_values:
    fixedFlag=⟨1186,45,11⟩∧direction=⟨2372,89,21⟩∧
@@ -167,10 +165,10 @@ theorem budget_and_slack_exact:
      capacity=274980728111395087∧
      totalCost=268364156037929808∧
      mcaBudget=274980727256461038∧
-     slack=6616571218531230∧totalCost< mcaBudget:=by
+     slack=6616571218531230∧totalCost < mcaBudget:=by
  decide
 theorem cell_budget_strict:
-   fixedCost+firstResidualCeiling+secondResidualCeiling< mcaBudget:=by
+   fixedCost+firstResidualCeiling+secondResidualCeiling < mcaBudget:=by
  decide
 end
 end ProximityPrize.SubmissionLower.RCN326

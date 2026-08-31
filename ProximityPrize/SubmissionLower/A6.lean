@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.Y3
 namespace ProximityPrize.SubmissionLower.RCN056
-open RCN077 RCN313 RCN347
-open RCN055
+open RCN077 RCN313 RCN347 RCN055
 noncomputable section
 variable {K:Type*} [CommRing K]
 def sameContribution (F:Poly4 K) (n j:ℕ) (P:Poly4 K):Poly4 K:=

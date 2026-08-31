@@ -1,21 +1,13 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BR
 import ProximityPrize.SubmissionLower.Z2
 import ProximityPrize.SubmissionLower.D5
 import ProximityPrize.SubmissionLower.E8
 namespace ProximityPrize.SubmissionLower.RCN237
 open scoped Classical BigOperators
-open RCN264
-open RCN095
-open RCN121
-open RCN165
-open RCN156
-open RCN213
-open RCN215
-open RCN275
+open RCN264 RCN095 RCN121 RCN165 RCN156 RCN213 RCN215 RCN275
 noncomputable section
 variable {Omega:Type} [Field Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
+ {G T H:MvPolynomial (Fin 3) Omega}
 structure PrimeFlagBudgetFamily (p q:FlagDegree) where
  zCost:RegularComponent Omega G T H → ℕ
  yzCost:RegularComponent Omega G T H → ℕ

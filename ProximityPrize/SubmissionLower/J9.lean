@@ -1,22 +1,13 @@
 import ProximityPrize.SubmissionLower.N
 namespace ProximityPrize.SubmissionLower.RCN102
 open scoped Classical BigOperators
-open RCN011 RCN021
-open RCN002 RCN022
-open RCN264
-open RCN125 RCN093
-open RCN226
-open RCN191
-open RCN120
-open RCN113
-open RCN225
-open RCN014
+open RCN011 RCN021 RCN002 RCN022 RCN264 RCN125 RCN093 RCN226 RCN191 RCN120 RCN113 RCN225 RCN014
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2500000
 variable {Omega:Type} [Field Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
-variable (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
+ {G T H:MvPolynomial (Fin 3) Omega}
+ (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
 variable (ht:∀ C:RegularComponent Omega G T H,
  Transcendental Omega
    (flagEvaluation Omega C.1 lam mu nu (MvPolynomial.X (order 0))))

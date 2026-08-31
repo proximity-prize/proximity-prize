@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.U0
 section ProximityFlatProofPort
 noncomputable section
@@ -130,7 +129,7 @@ theorem isWeightedHomogeneous_X (w:σ → M) (i:σ):
  simp only [weight,LinearMap.toAddMonoidHom_coe,linearCombination_single,one_nsmul]
 namespace IsWeightedHomogeneous
 variable {R}
-variable {φ ψ:MvPolynomial σ R} {m n:M}
+ {φ ψ:MvPolynomial σ R} {m n:M}
 theorem coeff_eq_zero {w:σ → M} (hφ:IsWeightedHomogeneous w φ n) (d:σ →₀ ℕ)
    (hd:weight w d≠n):coeff d φ=0:=by
  have aux:=mt (@hφ d) hd

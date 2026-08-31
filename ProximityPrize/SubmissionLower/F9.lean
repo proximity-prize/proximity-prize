@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CV
 import ProximityPrize.SubmissionLower.U3
 import ProximityPrize.SubmissionLower.U7
@@ -19,8 +18,8 @@ end
 namespace FormallyUnramified
 section
 variable {R:Type v} [CommRing R]
-variable {A:Type u} [CommRing A] [Algebra R A]
-variable {B:Type w} [CommRing B] [Algebra R B] (I:Ideal B)
+ {A:Type u} [CommRing A] [Algebra R A]
+ {B:Type w} [CommRing B] [Algebra R B] (I:Ideal B)
 theorem comp_injective [FormallyUnramified R A] (hI:I^2=⊥):
    Function.Injective ((Ideal.Quotient.mkₐ R I).comp:(A →ₐ[R] B) → A →ₐ[R] B ⧸ I):=by
  intro f₁ f₂ e
@@ -132,7 +131,7 @@ instance {R:Type u} [CommRing R]:FormallyUnramified R R:=by
  exact Subsingleton.elim _ _
 section OfEquiv
 variable {R:Type*} [CommRing R]
-variable {A B:Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
+ {A B:Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
 theorem of_equiv [FormallyUnramified R A] (e:A ≃ₐ[R] B):
    FormallyUnramified R B:=by
  rw [iff_comp_injective]
@@ -144,8 +143,8 @@ theorem of_equiv [FormallyUnramified R A] (e:A ≃ₐ[R] B):
 end OfEquiv
 section Comp
 variable (R:Type*) [CommRing R]
-variable (A:Type*) [CommRing A] [Algebra R A]
-variable (B:Type*) [CommRing B] [Algebra R B] [Algebra A B] [IsScalarTower R A B]
+ (A:Type*) [CommRing A] [Algebra R A]
+ (B:Type*) [CommRing B] [Algebra R B] [Algebra A B] [IsScalarTower R A B]
 theorem comp [FormallyUnramified R A] [FormallyUnramified A B]:
    FormallyUnramified R B:=by
  rw [iff_comp_injective]
@@ -172,7 +171,7 @@ theorem of_restrictScalars [FormallyUnramified R B]:FormallyUnramified A B:=by
 end Comp
 section of_surjective
 variable {R:Type*} [CommRing R]
-variable {A B:Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
+ {A B:Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
 theorem of_surjective [FormallyUnramified R A] (f:A →ₐ[R] B) (H:Function.Surjective f):
    FormallyUnramified R B:=by
  rw [iff_comp_injective]
@@ -192,8 +191,8 @@ end of_surjective
 section BaseChange
 open scoped TensorProduct
 variable {R:Type*} [CommRing R]
-variable {A:Type*} [CommRing A] [Algebra R A]
-variable (B:Type*) [CommRing B] [Algebra R B]
+ {A:Type*} [CommRing A] [Algebra R A]
+ (B:Type*) [CommRing B] [Algebra R B]
 instance base_change [FormallyUnramified R A]:
    FormallyUnramified B (B ⊗[R] A):=by
  rw [iff_comp_injective]
@@ -208,10 +207,10 @@ instance quotient_map [FormallyUnramified R B] (p:Ideal R):
 end BaseChange
 section Localization
 variable {R S Rₘ Sₘ:Type*} [CommRing R] [CommRing S] [CommRing Rₘ] [CommRing Sₘ]
-variable (M:Submonoid R)
-variable [Algebra R S] [Algebra R Sₘ] [Algebra S Sₘ] [Algebra R Rₘ] [Algebra Rₘ Sₘ]
-variable [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
-variable [IsLocalization (M.map (algebraMap R S)) Sₘ]
+ (M:Submonoid R)
+ [Algebra R S] [Algebra R Sₘ] [Algebra S Sₘ] [Algebra R Rₘ] [Algebra Rₘ Sₘ]
+ [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
+ [IsLocalization (M.map (algebraMap R S)) Sₘ]
 include M
 theorem of_isLocalization [IsLocalization M Rₘ]:FormallyUnramified R Rₘ:=by
  rw [iff_comp_injective]
@@ -250,7 +249,7 @@ lemma exists_algEquiv_prod (R S:Type u) [CommRing R] [CommRing S]
 end FormallyUnramified
 section
 variable (R:Type*) [CommRing R]
-variable (A:Type*) [CommRing A] [Algebra R A]
+ (A:Type*) [CommRing A] [Algebra R A]
 @[stacks 00UT "Note that the Stacks project has a different definition of unramified, and tag
 <https://stacks.math.columbia.edu/tag/00UU> shows that their definition is the same as this one."]
 class Unramified:Prop where
@@ -260,7 +259,7 @@ end
 namespace Unramified
 attribute [instance] formallyUnramified finiteType
 variable {R:Type*} [CommRing R]
-variable {A B:Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
+ {A B:Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
 theorem of_equiv [Unramified R A] (e:A ≃ₐ[R] B):Unramified R B where
  formallyUnramified:=FormallyUnramified.of_equiv e
  finiteType:=FiniteType.equiv Unramified.finiteType e

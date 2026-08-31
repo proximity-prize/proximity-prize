@@ -7,8 +7,8 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 variable {R M ι:Type*}
-variable [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
-variable [AddCommGroup M] [Module R M] [Fintype ι] [DecidableEq ι]
+ [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
+ [AddCommGroup M] [Module R M] [Fintype ι] [DecidableEq ι]
 private theorem ord_finset_prod
    (a:ι → R) (ha:∀ i,a i≠0):
    Ring.ord R (∏ i,a i)=∑ i,Ring.ord R (a i):=by

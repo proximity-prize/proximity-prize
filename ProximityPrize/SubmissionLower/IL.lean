@@ -1,10 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 variable {R M N N'} [CommRing R] [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N]
-variable (S:Submonoid R) [AddCommGroup N'] [Module R N']
-variable {M':Type*} [AddCommGroup M'] [Module R M'] (f:M →ₗ[R] M') [IsLocalizedModule S f]
-variable {N':Type*} [AddCommGroup N'] [Module R N'] (g:N →ₗ[R] N') [IsLocalizedModule S g]
+ (S:Submonoid R) [AddCommGroup N'] [Module R N']
+ {M':Type*} [AddCommGroup M'] [Module R M'] (f:M →ₗ[R] M') [IsLocalizedModule S f]
+ {N':Type*} [AddCommGroup N'] [Module R N'] (g:N →ₗ[R] N') [IsLocalizedModule S g]
 include f in
 lemma Module.FinitePresentation.exists_basis_localizedModule_powers
    (Rₛ) [CommRing Rₛ] [Algebra R Rₛ] [Module Rₛ M'] [IsScalarTower R Rₛ M']

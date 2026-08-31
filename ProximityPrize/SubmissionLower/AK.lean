@@ -1,42 +1,40 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CB
 namespace ProximityPrize.SubmissionLower.RCN318
 open scoped BigOperators
-open RCN223
-open RCN294
+open RCN223 RCN294
 theorem implicit_with_exceptions_tight_bound {I:Type} [Fintype I]
-   (count:I→ ℕ) (cost:I→ DegreeVector) (exceptions:ℕ)
-   (hy:(∑ i,(cost i).y)≤ algebraicCap)
-   (hr:(∑ i,(cost i).r)≤ 2*implicitYCap*algebraicCap)
-   (hz:(∑ i,(cost i).z)≤ implicitYCap)
-   (hcount:∀ i,count i*gap≤
+   (count:I → ℕ) (cost:I → DegreeVector) (exceptions:ℕ)
+   (hy:(∑ i,(cost i).y) ≤ algebraicCap)
+   (hr:(∑ i,(cost i).r) ≤ 2*implicitYCap*algebraicCap)
+   (hz:(∑ i,(cost i).z) ≤ implicitYCap)
+   (hcount:∀ i,count i*gap ≤
      (n-w)*dot liftedAgreement (cost i)+
        (errors+1)*gap*(cost i).z)
-   (hexceptions:exceptions≤ 2*algebraicCap^2):
-   ((∑ i,count i)+exceptions)*gap≤
+   (hexceptions:exceptions ≤ 2*algebraicCap^2):
+   ((∑ i,count i)+exceptions)*gap ≤
      implicitCoreNumerator+2*algebraicCap^2*gap:=by
  have hmain:=sum_implicit_counts_bound count cost hy hr hz hcount
  calc
    _=(∑ i,count i)*gap+exceptions*gap:=Nat.add_mul _ _ _
-   _≤ implicitCoreNumerator+2*algebraicCap^2*gap:=
+   _ ≤ implicitCoreNumerator+2*algebraicCap^2*gap:=
      Nat.add_le_add hmain (Nat.mul_le_mul_right gap hexceptions)
 theorem implicit_with_exceptions_tight_scaled_bound {I:Type} [Fintype I]
-   (count:I→ ℕ) (cost:I→ DegreeVector) (exceptions:ℕ)
-   (hy:(∑ i,(cost i).y)≤ algebraicCap)
-   (hr:(∑ i,(cost i).r)≤ 2*implicitYCap*algebraicCap)
-   (hz:(∑ i,(cost i).z)≤ implicitYCap)
-   (hcount:∀ i,count i*gap≤
+   (count:I → ℕ) (cost:I → DegreeVector) (exceptions:ℕ)
+   (hy:(∑ i,(cost i).y) ≤ algebraicCap)
+   (hr:(∑ i,(cost i).r) ≤ 2*implicitYCap*algebraicCap)
+   (hz:(∑ i,(cost i).z) ≤ implicitYCap)
+   (hcount:∀ i,count i*gap ≤
      (n-w)*dot liftedAgreement (cost i)+
        (errors+1)*gap*(cost i).z)
-   (hexceptions:exceptions≤ 2*algebraicCap^2):
-   ((∑ i,count i)+exceptions)*gap^2≤
+   (hexceptions:exceptions ≤ 2*algebraicCap^2):
+   ((∑ i,count i)+exceptions)*gap^2 ≤
      (implicitCoreNumerator+2*algebraicCap^2*gap)*gap:=by
  have h:=implicit_with_exceptions_tight_bound count cost exceptions
    hy hr hz hcount hexceptions
  calc
    ((∑ i,count i)+exceptions)*gap^2=
        (((∑ i,count i)+exceptions)*gap)*gap:=by ring
-   _≤ (implicitCoreNumerator+2*algebraicCap^2*gap)*gap:=
+   _ ≤ (implicitCoreNumerator+2*algebraicCap^2*gap)*gap:=
      Nat.mul_le_mul_right gap h
 structure TightParameters where
  n:ℕ
@@ -81,45 +79,45 @@ theorem aggregate_eq_core (P:TightParameters):
  simp only [aggregateCost,coefficients,coreNumerator,dot]
  ring
 theorem sum_counts_bound (P:TightParameters) {I:Type} [Fintype I]
-   (count:I→ ℕ) (cost:I→ DegreeVector)
-   (hy:(∑ i,(cost i).y)≤ P.algebraicCap)
-   (hr:(∑ i,(cost i).r)≤ 2*P.implicitYCap*P.algebraicCap)
-   (hz:(∑ i,(cost i).z)≤ P.implicitYCap)
-   (hcount:∀ i,count i*P.gap≤
+   (count:I → ℕ) (cost:I → DegreeVector)
+   (hy:(∑ i,(cost i).y) ≤ P.algebraicCap)
+   (hr:(∑ i,(cost i).r) ≤ 2*P.implicitYCap*P.algebraicCap)
+   (hz:(∑ i,(cost i).z) ≤ P.implicitYCap)
+   (hcount:∀ i,count i*P.gap ≤
      (P.n-P.w)*dot P.agreement (cost i)+
        (P.errors+1)*P.gap*(cost i).z):
-   (∑ i,count i)*P.gap≤ P.coreNumerator:=by
+   (∑ i,count i)*P.gap ≤ P.coreNumerator:=by
  calc
    _=∑ i,count i*P.gap:=Finset.sum_mul _ _ _
-   _≤ ∑ i,dot (cost i) P.coefficients:=by
+   _ ≤ ∑ i,dot (cost i) P.coefficients:=by
      apply Finset.sum_le_sum
      intro i _
      rw [←P.bound_eq_dot]
      exact hcount i
    _=dot (sumVector cost) P.coefficients:=
      (dot_sum_left cost P.coefficients).symm
-   _≤ dot P.aggregateCost P.coefficients:=
+   _ ≤ dot P.aggregateCost P.coefficients:=
      dot_mono_left P.coefficients ⟨hy,hr,hz⟩
    _=P.coreNumerator:=P.aggregate_eq_core
 theorem with_exceptions_bound (P:TightParameters) {I:Type} [Fintype I]
-   (count:I→ ℕ) (cost:I→ DegreeVector) (exceptions:ℕ)
-   (hy:(∑ i,(cost i).y)≤ P.algebraicCap)
-   (hr:(∑ i,(cost i).r)≤ 2*P.implicitYCap*P.algebraicCap)
-   (hz:(∑ i,(cost i).z)≤ P.implicitYCap)
-   (hcount:∀ i,count i*P.gap≤
+   (count:I → ℕ) (cost:I → DegreeVector) (exceptions:ℕ)
+   (hy:(∑ i,(cost i).y) ≤ P.algebraicCap)
+   (hr:(∑ i,(cost i).r) ≤ 2*P.implicitYCap*P.algebraicCap)
+   (hz:(∑ i,(cost i).z) ≤ P.implicitYCap)
+   (hcount:∀ i,count i*P.gap ≤
      (P.n-P.w)*dot P.agreement (cost i)+
        (P.errors+1)*P.gap*(cost i).z)
-   (hexceptions:exceptions≤ 2*P.algebraicCap^2):
-   ((∑ i,count i)+exceptions)*P.gap≤ P.tightNumerator:=by
+   (hexceptions:exceptions ≤ 2*P.algebraicCap^2):
+   ((∑ i,count i)+exceptions)*P.gap ≤ P.tightNumerator:=by
  have hmain:=P.sum_counts_bound count cost hy hr hz hcount
  calc
    _=(∑ i,count i)*P.gap+exceptions*P.gap:=Nat.add_mul _ _ _
-   _≤ P.coreNumerator+2*P.algebraicCap^2*P.gap:=
+   _ ≤ P.coreNumerator+2*P.algebraicCap^2*P.gap:=
      Nat.add_le_add hmain (Nat.mul_le_mul_right P.gap hexceptions)
    _=P.tightNumerator:=rfl
 theorem count_le_countCap (P:TightParameters) (count:ℕ)
-   (hgap:0< P.gap) (hcount:count*P.gap≤ P.tightNumerator):
-   count≤ P.countCap:=by
+   (hgap:0 < P.gap) (hcount:count*P.gap ≤ P.tightNumerator):
+   count ≤ P.countCap:=by
  exact (Nat.le_div_iff_mul_le hgap).mpr hcount
 end TightParameters
 def maximalResidualQA:TightParameters:=
@@ -143,7 +141,7 @@ theorem maximal_residual_count_caps:
    TightParameters.kappa,TightParameters.errors,TightParameters.gap,dot]
 theorem maximal_residual_total_below_budget:
    96129765351580058+maximalResidualQA.countCap+
-       maximalResidualH.countCap< 100000000000000000:=by
+       maximalResidualH.countCap < 100000000000000000:=by
  rw [maximal_residual_count_caps.1,maximal_residual_count_caps.2]
  norm_num
 end ProximityPrize.SubmissionLower.RCN318

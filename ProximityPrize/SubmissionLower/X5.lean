@@ -1,8 +1,6 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.H1
 namespace ProximityPrize.SubmissionLower.RCN013
-open RCN002 RCN371
-open RCN011 RCN009
+open RCN002 RCN371 RCN011 RCN009
 noncomputable section
 variable (K:Type) [Field K]
 def swapOtherOrder (order:Fin 3 ≃ Fin 3):Fin 3 ≃ Fin 3:=

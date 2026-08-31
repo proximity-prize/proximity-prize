@@ -1,19 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BB
 import ProximityPrize.SubmissionLower.Y7
 namespace ProximityPrize.SubmissionLower.RCN115
 open scoped Classical BigOperators
-open IsDedekindDomain
-open RCN002 RCN005
+open IsDedekindDomain RCN002 RCN005
  RCN006 RCN007
-open RCN344
-open RCN264
-open RCN075
-open RCN323
-open RCN118
-open RCN093
-open RCN125
-open RCN371 RCN011
+open RCN344 RCN264 RCN075 RCN323 RCN118 RCN093 RCN125 RCN371 RCN011
  RCN022
 noncomputable section
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]

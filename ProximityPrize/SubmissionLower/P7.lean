@@ -1,10 +1,7 @@
 import ProximityPrize.SubmissionLower.Y6
 namespace ProximityPrize.SubmissionLower.RCN330
 open scoped Classical
-open RCN313 RCN231 RCN136
-open RCN238 RCN086
-open RCN055 RCN264
-open RCN243
+open RCN313 RCN231 RCN136 RCN238 RCN086 RCN055 RCN264 RCN243
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 30000

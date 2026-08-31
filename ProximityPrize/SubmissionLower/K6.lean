@@ -1,14 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BV
 import ProximityPrize.SubmissionLower.I3
 import ProximityPrize.SubmissionLower.CB
 namespace ProximityPrize.SubmissionLower.RCN171
 open scoped Classical BigOperators
-open RCN223 RCN294 RCN069
-open RCN068 RCN136 RCN135
-open RCN138 RCN137
-open RCN238 RCN243 RCN081
-open RCN174 RCN319 RCN001
+open RCN223 RCN294 RCN069 RCN068 RCN136 RCN135 RCN138 RCN137 RCN238 RCN243 RCN081 RCN174 RCN319 RCN001
 noncomputable section
 variable {K:Type} [Field K]
 def pairCost (A G:MvPolynomial (Fin 4) K):RCN223.DegreeVector:=

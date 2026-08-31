@@ -1,21 +1,12 @@
 import ProximityPrize.SubmissionLower.A1
 namespace ProximityPrize.SubmissionLower.RCN030
-open RCN002 RCN264
-open RCN341
-open RCN042 RCN344
-open RCN037
-open RCN038
-open RCN040
-open RCN046 RCN237
-open RCN095 RCN093
-open RCN125 RCN116
-open RCN022 RCN031
+open RCN002 RCN264 RCN341 RCN042 RCN344 RCN037 RCN038 RCN040 RCN046 RCN237 RCN095 RCN093 RCN125 RCN116 RCN022 RCN031
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
-variable {surfaceFlag tailFlag:FlagDegree}
+ {G T H:MvPolynomial (Fin 3) Omega}
+ {surfaceFlag tailFlag:FlagDegree}
 variable (base:∀ C:RegularComponent Omega G T H,
  SeparableLiteralCoordinate C.1)
 variable (hactive:∀ C:RegularComponent Omega G T H,
@@ -24,11 +15,11 @@ variable (hactive:∀ C:RegularComponent Omega G T H,
    KaehlerDifferential.D Omega (CoordinateField Omega C.1)
      (coordinate Omega C.1 2)≠0)
 variable (hZ:∀ C:RegularComponent Omega G T H,LiteralProjectionGate C 2)
-variable (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0)
-variable (D:AdaptiveNestedProjectionDataActive base hactive hSderiv)
-variable (hG:Irreducible G) (hproper:¬ G∣T)
-variable (hGsupport:G.support ⊆ flagSupport surfaceFlag)
-variable (hTsupport:T.support ⊆ flagSupport tailFlag)
+ (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0)
+ (D:AdaptiveNestedProjectionDataActive base hactive hSderiv)
+ (hG:Irreducible G) (hproper:¬ G∣T)
+ (hGsupport:G.support ⊆ flagSupport surfaceFlag)
+ (hTsupport:T.support ⊆ flagSupport tailFlag)
 noncomputable def activeNestedUnitFamily:
    AdaptiveUnitProjectionFamily base surfaceFlag tailFlag:=
  adaptiveUnitProjectionFamily_of_active_nested surfaceFlag tailFlag base hactive

@@ -2,20 +2,15 @@ import ProximityPrize.SubmissionLower.GX
 import ProximityPrize.SubmissionLower.P7
 namespace ProximityPrize.SubmissionLower.RCN074
 open scoped Classical BigOperators
-open RCN159 RCN136
-open RCN238 RCN264
-open RCN243
-open RCN086
-open RCN095 RCN237
-open RCN325
+open RCN159 RCN136 RCN238 RCN264 RCN243 RCN086 RCN095 RCN237 RCN325
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
-variable {pchar errors w:ℕ} [CharP Omega pchar]
-variable {flag tailFlag1 tailFlag2:FlagDegree}
-variable {support:RCN275.ResidualSupportParameters}
+ {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+ {pchar errors w:ℕ} [CharP Omega pchar]
+ {flag tailFlag1 tailFlag2:FlagDegree}
+ {support:RCN275.ResidualSupportParameters}
 abbrev FirstTailComponent
    (S:ResidualStage phi Gamma x pchar errors flag w support):=
  RegularComponent Omega S.G (globalTailCut phi S.F (w+1))

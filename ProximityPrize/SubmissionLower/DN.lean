@@ -1,14 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X
 import ProximityPrize.SubmissionLower.Y8
 namespace ProximityPrize.SubmissionLower.RCN035
 open scoped Classical BigOperators WithZero TensorProduct
-open Polynomial KaehlerDifferential
-open RCN344
-open RCN369 RCN370
+open Polynomial KaehlerDifferential RCN344 RCN369 RCN370
  RCN351
-open RCN022
-open RCN097
+open RCN022 RCN097
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 300000
@@ -68,9 +64,9 @@ theorem element_transcendental_finite_separable_of_differential_ne_zero
  rw [←hb,smul_smul,inv_mul_cancel₀ hb0,one_smul]
 section FiniteFamily
 variable {K:Type*} [Field K] [IsAlgClosed K]
-variable {I:Type*} [Fintype I]
-variable (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
-variable (r z:∀ i,E i)
+ {I:Type*} [Fintype I]
+ (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+ (r z:∀ i,E i)
 variable (W:∀ i,
  Finset (RCN345.NormalizedValuation K (E i)))
 theorem exists_common_exact_finite_separable_affine_adaptive

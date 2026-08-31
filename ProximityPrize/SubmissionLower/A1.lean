@@ -1,18 +1,12 @@
 import ProximityPrize.SubmissionLower.A2
 import ProximityPrize.SubmissionLower.Z1
 namespace ProximityPrize.SubmissionLower.RCN031
-open RCN002 RCN264
-open RCN341
-open RCN037
-open RCN038
-open RCN093 RCN125
-open RCN116 RCN120
-open RCN021 RCN022
+open RCN002 RCN264 RCN341 RCN037 RCN038 RCN093 RCN125 RCN116 RCN120 RCN021 RCN022
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2500000
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
+ {G T H:MvPolynomial (Fin 3) Omega}
 variable (base:∀ C:RegularComponent Omega G T H,
  SeparableLiteralCoordinate C.1)
 variable (hactive:∀ C:RegularComponent Omega G T H,
@@ -21,8 +15,8 @@ variable (hactive:∀ C:RegularComponent Omega G T H,
    KaehlerDifferential.D Omega (CoordinateField Omega C.1)
      (coordinate Omega C.1 2)≠0)
 variable (hZ:∀ C:RegularComponent Omega G T H,LiteralProjectionGate C 2)
-variable (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0)
-variable (D:AdaptiveNestedProjectionDataActive base hactive hSderiv)
+ (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0)
+ (D:AdaptiveNestedProjectionDataActive base hactive hSderiv)
 abbrev ActiveNestedZIndex:={C:RegularComponent Omega G T H//
  Transcendental Omega (coordinate Omega C.1 2)}
 def activeNestedZComponent:ActiveNestedZIndex (G:=G) (T:=T) (H:=H) →

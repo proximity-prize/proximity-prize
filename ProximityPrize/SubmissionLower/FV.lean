@@ -1,20 +1,7 @@
 import ProximityPrize.SubmissionLower.C3
 import ProximityPrize.SubmissionLower.FU
 namespace ProximityPrize.SubmissionLower.RCN246
-open RCN244 RCN248
-open RCN135 RCN136 RCN095
-open RCN074
-open RCN106
-open RCN107
-open RCN102
-open RCN245
-open RCN113
-open RCN120
-open RCN086 RCN264
-open RCN218 RCN313
-open RCN002 RCN011
-open RCN021 RCN125
-open RCN093
+open RCN244 RCN248 RCN135 RCN136 RCN095 RCN074 RCN106 RCN107 RCN102 RCN245 RCN113 RCN120 RCN086 RCN264 RCN218 RCN313 RCN002 RCN011 RCN021 RCN125 RCN093
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2500000
@@ -22,10 +9,10 @@ variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
-variable [CharP (GenericField K) p]
-variable {errorCap:ℕ}
-variable {stageSupport:RCN275.ResidualSupportParameters}
-variable {A:Type} [Fintype A]
+ [CharP (GenericField K) p]
+ {errorCap:ℕ}
+ {stageSupport:RCN275.ResidualSupportParameters}
+ {A:Type} [Fintype A]
 theorem indexedStageSurface_mem_relation
    (S:Stage K I Gamma x p flag errorCap stageSupport)
    (component:A → StageComponent S)

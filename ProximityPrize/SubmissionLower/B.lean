@@ -1,21 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BQ
 import ProximityPrize.SubmissionLower.K5
 import ProximityPrize.SubmissionLower.E8
 namespace ProximityPrize.SubmissionLower.RCN159
 open scoped Classical
-open RCN136 RCN231 RCN319
-open RCN313 RCN065 RCN238
-open RCN160
-open RCN157
-open RCN163
-open RCN166
-open RCN156
-open RCN275
-open RCN234
-open RCN094
-open RCN095
-open RCN125
+open RCN136 RCN231 RCN319 RCN313 RCN065 RCN238 RCN160 RCN157 RCN163 RCN166 RCN156 RCN275 RCN234 RCN094 RCN095 RCN125
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
@@ -59,8 +47,8 @@ structure ResidualStage
  characteristic_bound:d < p
 namespace ResidualStage
 variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
-variable {p e:ℕ} [CharP Omega p] {flag:FlagDegree} {d:ℕ}
-variable {support:ResidualSupportParameters}
+ {p e:ℕ} [CharP Omega p] {flag:FlagDegree} {d:ℕ}
+ {support:ResidualSupportParameters}
 def componentIdeal (S:ResidualStage phi Gamma x p e flag d support):
    Ideal (Poly3 Omega):=Ideal.span {S.G}
 def identities (S:ResidualStage phi Gamma x p e flag d support):Finset Iota:=

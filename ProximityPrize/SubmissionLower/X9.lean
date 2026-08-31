@@ -1,32 +1,17 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A3
 import ProximityPrize.SubmissionLower.DS
 import ProximityPrize.SubmissionLower.J7
 import ProximityPrize.SubmissionLower.Z0
 namespace ProximityPrize.SubmissionLower.RCN037
 open scoped Classical WithZero TensorProduct
-open Polynomial KaehlerDifferential
-open RCN002 RCN005
-open RCN344 RCN264
-open RCN341
-open RCN042
-open RCN035
-open RCN044
-open RCN093
-open RCN099
-open RCN096
-open RCN114
-open RCN116
-open RCN295
-open RCN022
-open RCN369 RCN370
+open Polynomial KaehlerDifferential RCN002 RCN005 RCN344 RCN264 RCN341 RCN042 RCN035 RCN044 RCN093 RCN099 RCN096 RCN114 RCN116 RCN295 RCN022 RCN369 RCN370
  RCN351
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option synthInstance.maxHeartbeats 400000
 set_option maxRecDepth 30000
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
+ {G T H:MvPolynomial (Fin 3) Omega}
 def LiteralProjectionGate
    (C:RegularComponent Omega G T H) (j:Fin 3):Prop:=
  ∀ hj:Transcendental Omega (coordinate Omega C.1 j),

@@ -1,12 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F
 import ProximityPrize.SubmissionLower.AI
 import ProximityPrize.SubmissionLower.AK
 namespace ProximityPrize.SubmissionLower.RCN260
 open scoped BigOperators
-open RCN318
-open RCN223
-open RCN294
+open RCN318 RCN223 RCN294
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
 structure UnequalParameters where
@@ -44,34 +41,34 @@ def regularNumerator (P:UnequalParameters):ℕ:=
    (P.errors+1)*P.gap*P.mixedCost.z
 def regularCountCap (P:UnequalParameters):ℕ:=P.regularNumerator/P.gap
 theorem regular_count_le (P:UnequalParameters) (count:ℕ)
-   (hgap:0< P.gap) (hcount:count*P.gap≤ P.regularNumerator):
-   count≤ P.regularCountCap:=
+   (hgap:0 < P.gap) (hcount:count*P.gap ≤ P.regularNumerator):
+   count ≤ P.regularCountCap:=
  (Nat.le_div_iff_mul_le hgap).mpr hcount
 end UnequalParameters
 theorem complete_stage_count_lt
    (R:UnequalParameters) (S:TightParameters)
-   (hgap:0< R.gap) (hgapEq:S.gap=R.gap)
+   (hgap:0 < R.gap) (hgapEq:S.gap=R.gap)
    {I:Type} [Fintype I]
-   (total regular exceptions:ℕ) (count:I→ ℕ)
-   (cost:I→ RCN223.DegreeVector)
-   (hcover:total≤ regular+((∑ i,count i)+exceptions))
-   (hregular:regular*R.gap≤ R.regularNumerator)
-   (hy:(∑ i,(cost i).y)≤ S.algebraicCap)
-   (hr:(∑ i,(cost i).r)≤ 2*S.implicitYCap*S.algebraicCap)
-   (hz:(∑ i,(cost i).z)≤ S.implicitYCap)
-   (hcount:∀ i,count i*S.gap≤
+   (total regular exceptions:ℕ) (count:I → ℕ)
+   (cost:I → RCN223.DegreeVector)
+   (hcover:total ≤ regular+((∑ i,count i)+exceptions))
+   (hregular:regular*R.gap ≤ R.regularNumerator)
+   (hy:(∑ i,(cost i).y) ≤ S.algebraicCap)
+   (hr:(∑ i,(cost i).r) ≤ 2*S.implicitYCap*S.algebraicCap)
+   (hz:(∑ i,(cost i).z) ≤ S.implicitYCap)
+   (hcount:∀ i,count i*S.gap ≤
      (S.n-S.w)*dot S.agreement (cost i)+
        (S.errors+1)*S.gap*(cost i).z)
-   (hexceptions:exceptions≤ 2*S.algebraicCap^2):
-   total< R.regularCountCap+S.countCap+1:=by
- have hregularCap:regular≤ R.regularCountCap:=
+   (hexceptions:exceptions ≤ 2*S.algebraicCap^2):
+   total < R.regularCountCap+S.countCap+1:=by
+ have hregularCap:regular ≤ R.regularCountCap:=
    R.regular_count_le regular hgap hregular
  have hsingularScaled:=
    S.with_exceptions_bound count cost exceptions hy hr hz hcount hexceptions
- have hsingularGap:0< S.gap:=by
+ have hsingularGap:0 < S.gap:=by
    rw [hgapEq]
    exact hgap
- have hsingularCap:(∑ i,count i)+exceptions≤ S.countCap:=by
+ have hsingularCap:(∑ i,count i)+exceptions ≤ S.countCap:=by
    exact S.count_le_countCap _ hsingularGap hsingularScaled
  omega
 def residualStageOne:UnequalParameters:=
@@ -100,20 +97,20 @@ theorem residual_stage_ceilings:
  norm_num
 theorem residual_stage_one_count_lt
    {I:Type} [Fintype I]
-   (total regular exceptions:ℕ) (count:I→ ℕ)
-   (cost:I→ RCN223.DegreeVector)
-   (hcover:total≤ regular+((∑ i,count i)+exceptions))
-   (hregular:regular*residualStageOne.gap≤ residualStageOne.regularNumerator)
-   (hy:(∑ i,(cost i).y)≤ maximalResidualQA.algebraicCap)
-   (hr:(∑ i,(cost i).r)≤
+   (total regular exceptions:ℕ) (count:I → ℕ)
+   (cost:I → RCN223.DegreeVector)
+   (hcover:total ≤ regular+((∑ i,count i)+exceptions))
+   (hregular:regular*residualStageOne.gap ≤ residualStageOne.regularNumerator)
+   (hy:(∑ i,(cost i).y) ≤ maximalResidualQA.algebraicCap)
+   (hr:(∑ i,(cost i).r) ≤
      2*maximalResidualQA.implicitYCap*maximalResidualQA.algebraicCap)
-   (hz:(∑ i,(cost i).z)≤ maximalResidualQA.implicitYCap)
-   (hcount:∀ i,count i*maximalResidualQA.gap≤
+   (hz:(∑ i,(cost i).z) ≤ maximalResidualQA.implicitYCap)
+   (hcount:∀ i,count i*maximalResidualQA.gap ≤
      (maximalResidualQA.n-maximalResidualQA.w)*
          dot maximalResidualQA.agreement (cost i)+
        (maximalResidualQA.errors+1)*maximalResidualQA.gap*(cost i).z)
-   (hexceptions:exceptions≤ 2*maximalResidualQA.algebraicCap^2):
-   total< 9865174615710+61761704341774:=by
+   (hexceptions:exceptions ≤ 2*maximalResidualQA.algebraicCap^2):
+   total < 9865174615710+61761704341774:=by
  have h:=complete_stage_count_lt residualStageOne maximalResidualQA
    (by norm_num [residualStageOne,UnequalParameters.gap])
    (by norm_num [residualStageOne,maximalResidualQA,UnequalParameters.gap,
@@ -123,20 +120,20 @@ theorem residual_stage_one_count_lt
  exact h
 theorem residual_stage_two_count_lt
    {I:Type} [Fintype I]
-   (total regular exceptions:ℕ) (count:I→ ℕ)
-   (cost:I→ RCN223.DegreeVector)
-   (hcover:total≤ regular+((∑ i,count i)+exceptions))
-   (hregular:regular*residualStageTwo.gap≤ residualStageTwo.regularNumerator)
-   (hy:(∑ i,(cost i).y)≤ maximalResidualH.algebraicCap)
-   (hr:(∑ i,(cost i).r)≤
+   (total regular exceptions:ℕ) (count:I → ℕ)
+   (cost:I → RCN223.DegreeVector)
+   (hcover:total ≤ regular+((∑ i,count i)+exceptions))
+   (hregular:regular*residualStageTwo.gap ≤ residualStageTwo.regularNumerator)
+   (hy:(∑ i,(cost i).y) ≤ maximalResidualH.algebraicCap)
+   (hr:(∑ i,(cost i).r) ≤
      2*maximalResidualH.implicitYCap*maximalResidualH.algebraicCap)
-   (hz:(∑ i,(cost i).z)≤ maximalResidualH.implicitYCap)
-   (hcount:∀ i,count i*maximalResidualH.gap≤
+   (hz:(∑ i,(cost i).z) ≤ maximalResidualH.implicitYCap)
+   (hcount:∀ i,count i*maximalResidualH.gap ≤
      (maximalResidualH.n-maximalResidualH.w)*
          dot maximalResidualH.agreement (cost i)+
        (maximalResidualH.errors+1)*maximalResidualH.gap*(cost i).z)
-   (hexceptions:exceptions≤ 2*maximalResidualH.algebraicCap^2):
-   total< 362987233541405+7016664323607:=by
+   (hexceptions:exceptions ≤ 2*maximalResidualH.algebraicCap^2):
+   total < 362987233541405+7016664323607:=by
  have h:=complete_stage_count_lt residualStageTwo maximalResidualH
    (by norm_num [residualStageTwo,UnequalParameters.gap])
    (by norm_num [residualStageTwo,maximalResidualH,UnequalParameters.gap,

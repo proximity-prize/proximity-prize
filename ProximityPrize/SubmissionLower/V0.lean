@@ -1,11 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 variable {α:Type*}
 local infixl:50 " ~ᵤ " => Associated
 section Finsupp
 variable [CommMonoidWithZero α] [UniqueFactorizationMonoid α]
-variable [NormalizationMonoid α] [DecidableEq α]
+ [NormalizationMonoid α] [DecidableEq α]
 open UniqueFactorizationMonoid
 noncomputable def factorization (n:α):α →₀ ℕ:=
  Multiset.toFinsupp (normalizedFactors n)

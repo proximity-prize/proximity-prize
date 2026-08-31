@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.S6
 section ProximityFlatProofPort
 variable {ι:Type*} {α:ι → Type*}

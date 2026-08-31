@@ -1,16 +1,7 @@
 import ProximityPrize.SubmissionLower.FT
 import ProximityPrize.SubmissionLower.GL
 namespace ProximityPrize.SubmissionLower.RCN248
-open RCN244
-open RCN135
-open RCN095
-open RCN074
-open RCN218
-open RCN186
-open RCN310
-open RCN313
-open RCN086
-open RCN217
+open RCN244 RCN135 RCN095 RCN074 RCN218 RCN186 RCN310 RCN313 RCN086 RCN217
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2500000
@@ -19,9 +10,9 @@ variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
-variable [CharP (GenericField K) p]
-variable {errorCap:ℕ}
-variable {stageSupport:RCN275.ResidualSupportParameters}
+ [CharP (GenericField K) p]
+ {errorCap:ℕ}
+ {stageSupport:RCN275.ResidualSupportParameters}
 theorem exists_original_multiplier_for_localMultiplicity
    (S:Stage K I Gamma x p flag errorCap stageSupport)
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F

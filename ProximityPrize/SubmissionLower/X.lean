@@ -1,12 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DO
 import ProximityPrize.SubmissionLower.Y
 namespace ProximityPrize.SubmissionLower.RCN341
 open scoped Classical
 open RCN002 RCN005
  RCN006 RCN007
-open RCN344 RCN264
-open RCN295 RCN296
+open RCN344 RCN264 RCN295 RCN296
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 300000

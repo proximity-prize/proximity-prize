@@ -1,8 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HX
 section ProximityFlatProofPort
 variable {R:Type*} [CommRing R] (M:Submonoid R) (S:Type*) [CommRing S]
-variable [Algebra R S]
+ [Algebra R S]
 open Function
 namespace IsLocalization
 section InvSubmonoid

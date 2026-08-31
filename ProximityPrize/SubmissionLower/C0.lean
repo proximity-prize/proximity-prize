@@ -1,32 +1,17 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z0
 import ProximityPrize.SubmissionLower.Z2
 namespace ProximityPrize.SubmissionLower.RCN098
 open scoped Classical BigOperators WithZero
-open IsDedekindDomain
-open RCN002 RCN005
+open IsDedekindDomain RCN002 RCN005
  RCN006 RCN007
-open RCN344 RCN264
-open RCN187 RCN075
-open RCN095 RCN114
-open RCN125
-open RCN093
-open RCN097
-open RCN099
-open RCN115
-open RCN118
-open RCN123
-open RCN116
-open RCN121
-open RCN272
-open RCN371 RCN011
+open RCN344 RCN264 RCN187 RCN075 RCN095 RCN114 RCN125 RCN093 RCN097 RCN099 RCN115 RCN118 RCN123 RCN116 RCN121 RCN272 RCN371 RCN011
  RCN022
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
 set_option maxRecDepth 20000
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
+ {G T H:MvPolynomial (Fin 3) Omega}
 variable {hseparator:∀ C:RegularComponent Omega G T H,
  Transcendental Omega (coordinate Omega C.1 2)}
 variable {hproj:∀ C:RegularComponent Omega G T H,

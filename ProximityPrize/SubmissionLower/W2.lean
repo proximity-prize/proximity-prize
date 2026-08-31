@@ -1,10 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X8
 namespace ProximityPrize.SubmissionLower.RCN355
 open scoped BigOperators
 noncomputable section
 variable {K:Type*} [Field K] [DecidableEq K]
-variable {ι:Type*} [Fintype ι] [DecidableEq ι]
+ {ι:Type*} [Fintype ι] [DecidableEq ι]
 theorem pow_card_dvd_det_of_eval_columns_eq_zero
    (M:Matrix ι ι (Polynomial K)) (alpha:K) (columns:Finset ι)
    (hzero:∀ j∈columns,∀ i,(M i j).eval alpha=0):

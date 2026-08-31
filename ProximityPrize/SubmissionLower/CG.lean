@@ -1,11 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A4
 import ProximityPrize.SubmissionLower.BJ
 namespace ProximityPrize.SubmissionLower.RCN311
-open RCN077 RCN313 RCN047
-open RCN269 RCN233 RCN139
-open RCN347
-open RCN174 RCN319
+open RCN077 RCN313 RCN047 RCN269 RCN233 RCN139 RCN347 RCN174 RCN319
 noncomputable section
 variable (K:Type*) [CommRing K]
 theorem cleared_vector_field_annihilates (F:Poly4 K):

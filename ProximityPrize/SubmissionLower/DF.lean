@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DE
 import ProximityPrize.SubmissionLower.X4
 namespace ProximityPrize.SubmissionLower.RCN025
@@ -57,7 +56,7 @@ theorem minpoly_natDegree_dvd_finrank (y:E):
 end MinpolyTower
 section FixedResiduePolynomial
 variable {K:Type} [Field K] [DecidableEq K]
-variable {I:Type*} [Fintype I]
+ {I:Type*} [Fintype I]
 theorem sum_relative_finrank_le_sylvester_corank
    (mu:Polynomial K) [Fact (Irreducible mu)]
    (E:I → Type) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
@@ -103,8 +102,8 @@ theorem sum_relative_finrank_le_sylvester_corank
 end FixedResiduePolynomial
 section MinpolyGrouping
 variable {K:Type} [Field K] [DecidableEq K]
-variable {ι:Type*} [Fintype ι] [DecidableEq ι]
-variable {I:Type*} [Fintype I]
+ {ι:Type*} [Fintype ι] [DecidableEq ι]
+ {I:Type*} [Fintype I]
 theorem sum_grouped_weights_le_det_natDegree
    (M:Matrix ι ι (Polynomial K))
    (mu:I → Polynomial K) (relativeDegree:I → ℕ)
@@ -178,8 +177,8 @@ theorem sum_grouped_weights_le_det_natDegree
 end MinpolyGrouping
 section FinitePlaneFamily
 variable {K:Type} [Field K] [DecidableEq K]
-variable {I:Type*} [Fintype I]
-variable (E:I → Type) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+ {I:Type*} [Fintype I]
+ (E:I → Type) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
  [∀ i,FiniteDimensional K (E i)]
 theorem sum_finrank_le_resultant_of_relationIdeal_injective
    (P Q:Polynomial (Polynomial K)) (m n:ℕ)

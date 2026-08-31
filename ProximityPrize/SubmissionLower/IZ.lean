@@ -1,8 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 variable (R S T:Type*) [CommRing R] [CommRing S] [Algebra R S]
-variable [CommRing T] [Algebra R T]
+ [CommRing T] [Algebra R T]
 open TensorProduct Topology
 noncomputable
 def PrimeSpectrum.tensorProductTo (x:PrimeSpectrum (S ⊗[R] T)):

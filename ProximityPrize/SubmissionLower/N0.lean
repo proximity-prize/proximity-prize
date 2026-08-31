@@ -1,22 +1,7 @@
 import ProximityPrize.SubmissionLower.N3
 import ProximityPrize.SubmissionLower.FZ
 namespace ProximityPrize.SubmissionLower.RCN252
-open RCN135 RCN136
-open RCN074
-open RCN244
-open RCN249
-open RCN245
-open RCN106
-open RCN107
-open RCN108
-open RCN103
-open RCN102
-open RCN195
-open RCN255
-open RCN250
-open RCN093 RCN095
-open RCN002 RCN011
-open RCN021
+open RCN135 RCN136 RCN074 RCN244 RCN249 RCN245 RCN106 RCN107 RCN108 RCN103 RCN102 RCN195 RCN255 RCN250 RCN093 RCN095 RCN002 RCN011 RCN021
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -25,10 +10,10 @@ variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
-variable [CharP (GenericField K) p]
-variable {errorCap:ℕ}
-variable {stageSupport:RCN275.ResidualSupportParameters}
-variable (S:Stage K I Gamma x p flag errorCap stageSupport) {A:Type} [Fintype A]
+ [CharP (GenericField K) p]
+ {errorCap:ℕ}
+ {stageSupport:RCN275.ResidualSupportParameters}
+ (S:Stage K I Gamma x p flag errorCap stageSupport) {A:Type} [Fintype A]
 theorem stageFamily_surface_mod_ne
    (F:StageIndexedFlagFamily S A) (W:StageIndexedFactor S A F):
    StageFamilySurfaceModNonzero S F W:=by

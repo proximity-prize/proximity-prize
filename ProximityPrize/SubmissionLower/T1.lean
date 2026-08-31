@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.IR
 section ProximityFlatProofPort
 universe u v w z
@@ -6,7 +5,7 @@ open scoped Matrix
 open Matrix Module Fintype Polynomial Finset IntermediateField
 namespace Algebra
 variable (A:Type u) {B:Type v} (C:Type z) {ι:Type w} [DecidableEq ι]
-variable [CommRing A] [CommRing B] [Algebra A B] [CommRing C] [Algebra A C]
+ [CommRing A] [CommRing B] [Algebra A B] [CommRing C] [Algebra A C]
 section Discr
 noncomputable def discr (A:Type u) {B:Type v} [CommRing A] [CommRing B] [Algebra A B]
    [Fintype ι] (b:ι → B):=(traceMatrix A b).det
@@ -47,8 +46,8 @@ theorem discr_of_matrix_mulVec (b:ι → B) (P:Matrix ι ι A):
 end Basic
 section Field
 variable (K:Type u) {L:Type v} (E:Type z) [Field K] [Field L] [Field E]
-variable [Algebra K L] [Algebra K E]
-variable [Module.Finite K L] [IsAlgClosed E]
+ [Algebra K L] [Algebra K E]
+ [Module.Finite K L] [IsAlgClosed E]
 theorem discr_not_zero_of_basis [Algebra.IsSeparable K L] (b:Basis ι K L):
    discr K b≠0:=by
  rw [discr_def,traceMatrix_of_basis, ←LinearMap.BilinForm.nondegenerate_iff_det_ne_zero]

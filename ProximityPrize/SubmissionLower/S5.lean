@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AR
 import ProximityPrize.SubmissionLower.V5
 section ProximityFlatProofPort
@@ -6,12 +5,12 @@ namespace IsDedekindDomain.HeightOneSpectrum
 open WithZero Ideal.IsDedekindDomain Valuation.IsRankOneDiscrete
 section AKLB
 variable {A K:Type*} (L:Type*) {B:Type*}
-variable [CommRing A] [IsDedekindDomain A] [CommRing B] [IsDedekindDomain B] [Algebra A B]
+ [CommRing A] [IsDedekindDomain A] [CommRing B] [IsDedekindDomain B] [Algebra A B]
  [Module.IsTorsionFree A B]
 variable [Field K] [Field L] [Algebra K L]
-variable [Algebra A K] [IsFractionRing A K] [Algebra A L] [IsScalarTower A K L]
-variable [Algebra B L] [IsFractionRing B L] [IsScalarTower A B L]
-variable (v:HeightOneSpectrum A) (w:HeightOneSpectrum B) [w.asIdeal.LiesOver v.asIdeal]
+ [Algebra A K] [IsFractionRing A K] [Algebra A L] [IsScalarTower A K L]
+ [Algebra B L] [IsFractionRing B L] [IsScalarTower A B L]
+ (v:HeightOneSpectrum A) (w:HeightOneSpectrum B) [w.asIdeal.LiesOver v.asIdeal]
 theorem intValuation_liesOver (x:A):
    v.intValuation x^(v.asIdeal.ramificationIdx' w.asIdeal)=
      w.intValuation (algebraMap A B x):=by

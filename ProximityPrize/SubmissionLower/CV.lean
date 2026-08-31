@@ -1,11 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 open scoped TensorProduct
 universe w₁ w₂ w₃
 variable {R:Type w₁} [CommRing R]
-variable {A:Type w₂} [CommRing A] [Algebra R A]
-variable (B:Type w₃) [CommRing B] [Algebra R B]
+ {A:Type w₂} [CommRing A] [Algebra R A]
+ (B:Type w₃) [CommRing B] [Algebra R B]
 namespace Algebra
 namespace FiniteType
 theorem baseChangeAux_surj {σ:Type*} {f:MvPolynomial σ R →ₐ[R] A} (hf:Function.Surjective f):

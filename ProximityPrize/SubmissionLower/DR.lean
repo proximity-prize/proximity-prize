@@ -1,26 +1,14 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EW
 import ProximityPrize.SubmissionLower.A3
 namespace ProximityPrize.SubmissionLower.RCN043
 open scoped Classical
-open RCN213 RCN231
-open RCN238 RCN264
-open RCN243 RCN095
-open RCN159
-open RCN151
-open RCN156
-open RCN154
-open RCN237
-open RCN215
-open RCN214
-open RCN341
-open RCN046
+open RCN213 RCN231 RCN238 RCN264 RCN243 RCN095 RCN159 RCN151 RCN156 RCN154 RCN237 RCN215 RCN214 RCN341 RCN046
 noncomputable section
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
-variable {pchar:ℕ} [CharP Omega pchar]
+ {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+ {pchar:ℕ} [CharP Omega pchar]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
 local instance:DecidableEq Iota:=Classical.decEq Iota

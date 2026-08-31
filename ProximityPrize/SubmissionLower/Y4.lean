@@ -1,13 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J
 import ProximityPrize.SubmissionLower.FS
 import ProximityPrize.SubmissionLower.BT
 import ProximityPrize.SubmissionLower.P4
 namespace ProximityPrize.SubmissionLower.RCN068
 open scoped Classical
-open RCN051 RCN313 RCN136 RCN174
-open RCN231 RCN238
-open RCN289
+open RCN051 RCN313 RCN136 RCN174 RCN231 RCN238 RCN289
 noncomputable section
 def capAt (v:DegreeVector):Fin 3 → ℕ:=![v.y,v.r,v.z]
 def numeratorCaps (ell s L b:ℕ):DegreeVector:=

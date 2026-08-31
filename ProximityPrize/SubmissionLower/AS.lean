@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 open IsLocalRing LinearMap Module Submodule TensorProduct AlgebraTensorModule

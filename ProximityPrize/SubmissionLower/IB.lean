@@ -1,19 +1,18 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F8
 import ProximityPrize.SubmissionLower.IM
 section ProximityFlatProofPort
 open Module nonZeroDivisors
 variable (A K L L₂ L₃ B B₂ B₃:Type*)
-variable [CommRing A] [CommRing B] [CommRing B₂] [CommRing B₃]
-variable [Algebra A B] [Algebra A B₂] [Algebra A B₃]
-variable [Field K] [Field L] [Field L₂] [Field L₃]
-variable [Algebra A K] [IsFractionRing A K]
-variable [Algebra K L] [Algebra A L] [IsScalarTower A K L]
-variable [Algebra K L₂] [Algebra A L₂] [IsScalarTower A K L₂]
-variable [Algebra K L₃] [Algebra A L₃] [IsScalarTower A K L₃]
-variable [Algebra B L] [IsScalarTower A B L] [IsIntegralClosure B A L]
-variable [Algebra B₂ L₂] [IsScalarTower A B₂ L₂] [IsIntegralClosure B₂ A L₂]
-variable [Algebra B₃ L₃] [IsScalarTower A B₃ L₃] [IsIntegralClosure B₃ A L₃]
+ [CommRing A] [CommRing B] [CommRing B₂] [CommRing B₃]
+ [Algebra A B] [Algebra A B₂] [Algebra A B₃]
+ [Field K] [Field L] [Field L₂] [Field L₃]
+ [Algebra A K] [IsFractionRing A K]
+ [Algebra K L] [Algebra A L] [IsScalarTower A K L]
+ [Algebra K L₂] [Algebra A L₂] [IsScalarTower A K L₂]
+ [Algebra K L₃] [Algebra A L₃] [IsScalarTower A K L₃]
+ [Algebra B L] [IsScalarTower A B L] [IsIntegralClosure B A L]
+ [Algebra B₂ L₂] [IsScalarTower A B₂ L₂] [IsIntegralClosure B₂ A L₂]
+ [Algebra B₃ L₃] [IsScalarTower A B₃ L₃] [IsIntegralClosure B₃ A L₃]
 section galois
 section galRestrict'
 variable {K L L₂ L₃}
@@ -155,9 +154,9 @@ instance (priority:=900) [IsDomain A] [IsDomain B] [IsIntegrallyClosed B]
  haveI:FiniteDimensional (FractionRing A) (FractionRing B):=.of_isLocalization A B A⁰
  Fintype.ofEquiv _ (galRestrict A (FractionRing A) (FractionRing B) B).toEquiv
 variable {Aₘ Bₘ} [CommRing Aₘ] [CommRing Bₘ] [Algebra Aₘ Bₘ] [Algebra A Aₘ] [Algebra B Bₘ]
-variable [Algebra A Bₘ] [IsScalarTower A Aₘ Bₘ] [IsScalarTower A B Bₘ]
-variable (M:Submonoid A) [IsLocalization M Aₘ]
-variable [IsLocalization (Algebra.algebraMapSubmonoid B M) Bₘ]
+ [Algebra A Bₘ] [IsScalarTower A Aₘ Bₘ] [IsScalarTower A B Bₘ]
+ (M:Submonoid A) [IsLocalization M Aₘ]
+ [IsLocalization (Algebra.algebraMapSubmonoid B M) Bₘ]
 section trace
 noncomputable
 def Algebra.intTraceAux [IsIntegrallyClosed A]:
@@ -172,8 +171,8 @@ lemma Algebra.map_intTraceAux [IsIntegrallyClosed A] (x:B):
    algebraMap A K (Algebra.intTraceAux A K L B x)=Algebra.trace K L (algebraMap B L x):=
  IsIntegralClosure.algebraMap_equiv A (integralClosure A K) K A _
 variable (A B)
-variable [IsDomain A] [IsIntegrallyClosed A] [IsDomain B] [IsIntegrallyClosed B]
-variable [Module.Finite A B] [IsTorsionFree A B]
+ [IsDomain A] [IsIntegrallyClosed A] [IsDomain B] [IsIntegrallyClosed B]
+ [Module.Finite A B] [IsTorsionFree A B]
 noncomputable
 def Algebra.intTrace:B →ₗ[A] A:=
  haveI:IsIntegralClosure B A (FractionRing B):=
@@ -226,7 +225,7 @@ lemma Algebra.intTrace_eq_trace [Module.Free A B]:Algebra.intTrace A B=Algebra.t
  rw [Algebra.algebraMap_intTrace_fractionRing,Algebra.trace_localization A A⁰]
 open nonZeroDivisors
 variable [IsDomain Aₘ] [IsIntegrallyClosed Aₘ] [IsDomain Bₘ] [IsIntegrallyClosed Bₘ]
-variable [IsTorsionFree Aₘ Bₘ] [Module.Finite Aₘ Bₘ]
+ [IsTorsionFree Aₘ Bₘ] [Module.Finite Aₘ Bₘ]
 include M in
 lemma Algebra.intTrace_eq_of_isLocalization
    (x:B):
@@ -288,7 +287,7 @@ lemma Algebra.map_intNormAux (x:B):
  dsimp [Algebra.intNormAux]
  exact IsIntegralClosure.algebraMap_mk' _ _ _
 variable (A B)
-variable [IsDomain A] [IsDomain B] [IsIntegrallyClosed B] [Algebra.IsIntegral A B]
+ [IsDomain A] [IsDomain B] [IsIntegrallyClosed B] [Algebra.IsIntegral A B]
  [IsTorsionFree A B]
 noncomputable
 def Algebra.intNorm:B →*A:=Algebra.intNormAux A (FractionRing A) (FractionRing B) B
@@ -350,7 +349,7 @@ lemma Algebra.intNorm_eq_zero [FiniteDimensional (FractionRing A) (FractionRing 
 lemma Algebra.intNorm_ne_zero [FiniteDimensional (FractionRing A) (FractionRing B)] {x:B}:
    Algebra.intNorm A B x≠0 ↔ x≠0:=by simp
 variable [IsDomain Aₘ] [IsIntegrallyClosed Aₘ] [IsDomain Bₘ] [IsIntegrallyClosed Bₘ]
-variable [IsTorsionFree Aₘ Bₘ] [Algebra.IsIntegral Aₘ Bₘ]
+ [IsTorsionFree Aₘ Bₘ] [Algebra.IsIntegral Aₘ Bₘ]
 include M in
 lemma Algebra.intNorm_eq_of_isLocalization [FiniteDimensional (FractionRing A) (FractionRing B)]
    (x:B):

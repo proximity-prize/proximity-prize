@@ -1,11 +1,8 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BI
 import ProximityPrize.SubmissionLower.AH
 namespace ProximityPrize.SubmissionLower.RCN184
 open scoped Classical BigOperators WithZero
-open RCN187
-open RCN133
-open RCN295
+open RCN187 RCN133 RCN295
 noncomputable section
 variable {K L σ:Type*} [Field K] [Field L] [Fintype σ]
  [DecidableEq σ] [Algebra K L]

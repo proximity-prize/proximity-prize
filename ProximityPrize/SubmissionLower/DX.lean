@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.A6
 namespace ProximityPrize.SubmissionLower.RCN053
-open RCN077 RCN313
-open RCN055 RCN056
+open RCN077 RCN313 RCN055 RCN056
 noncomputable section
 variable {K:Type*} [Field K]
 def agreementLow (c:ℕ → K) (x u₀ u₁:K):Poly4 K:=

@@ -1,16 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y8
 namespace ProximityPrize.SubmissionLower.RCN099
 open scoped Classical WithZero
-open IsDedekindDomain
-open RCN187
-open RCN344
-open RCN264
-open RCN075
-open RCN093
-open RCN097
-open RCN002 RCN005 RCN007
-open RCN022
+open IsDedekindDomain RCN187 RCN344 RCN264 RCN075 RCN093 RCN097 RCN002 RCN005 RCN007 RCN022
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
@@ -52,7 +43,7 @@ theorem valuation_le_one_of_poleOrder_eq_zero
  omega
 section RegularComponents
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
+ {G T H:MvPolynomial (Fin 3) Omega}
 variable
    {hseparator:∀ C:RegularComponent Omega G T H,
      Transcendental Omega (coordinate Omega C.1 2)}

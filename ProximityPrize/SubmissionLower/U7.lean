@@ -1,9 +1,8 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 section Semiring
 variable {R S:Type*} [Semiring R] [Semiring S] (f:R →+*S)
-variable {I:Type*} (e:I → R)
+ {I:Type*} (e:I → R)
 @[mk_iff]
 structure OrthogonalIdempotents:Prop where
  idem:∀ i,IsIdempotentElem (e i)

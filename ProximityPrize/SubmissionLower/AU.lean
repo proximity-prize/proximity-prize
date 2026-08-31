@@ -1,8 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 variable {σ R:Type*} [CommRing R] (M:Submonoid R)
-variable (S:Type*) [CommRing S] [Algebra R S]
+ (S:Type*) [CommRing S] [Algebra R S]
 namespace MvPolynomial
 variable [IsLocalization M S]
 attribute [local instance] algebraMvPolynomial

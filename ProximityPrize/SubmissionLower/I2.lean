@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J
 namespace ProximityPrize.SubmissionLower.RCN067
 open scoped Classical
@@ -6,7 +5,7 @@ open RCN002 RCN007
  RCN238
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
-variable (φ:Polynomial K →+*Ω)
+ (φ:Polynomial K →+*Ω)
 variable (P:Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Ω:=Classical.decEq Ω

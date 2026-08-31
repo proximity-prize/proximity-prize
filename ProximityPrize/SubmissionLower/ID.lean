@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CY
 import ProximityPrize.SubmissionLower.IE
 section ProximityFlatProofPort
@@ -103,7 +102,7 @@ instance (R S:Type*) [CommRing R] [CommRing S] [Algebra R S]
 section Quotient
 section Semiring
 variable (A B C:Type*) [CommSemiring A] [Semiring C] [Algebra A C] [MulSemiringAction G C]
-variable (N:Subgroup G) [CommSemiring B] [Algebra B C]
+ (N:Subgroup G) [CommSemiring B] [Algebra B C]
 @[implicit_reducible]
 noncomputable def smulOfNormal [N.Normal] [IsGaloisGroup N B C]:SMul G B where
  smul g x:=(smul_mem_of_normal G C N g x).choose

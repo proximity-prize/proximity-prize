@@ -1,12 +1,10 @@
 import ProximityPrize.SubmissionLower.N
 namespace ProximityPrize.SubmissionLower.RCN103
-open RCN002 RCN011
-open RCN021 RCN264
-open RCN125 RCN093
+open RCN002 RCN011 RCN021 RCN264 RCN125 RCN093
 noncomputable section
 set_option autoImplicit false
 variable {Omega:Type} [Field Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
+ {G T H:MvPolynomial (Fin 3) Omega}
 theorem transformedSurface_irreducible
    (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
    (hG:Irreducible G)

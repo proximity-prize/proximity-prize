@@ -2,28 +2,16 @@ import ProximityPrize.SubmissionLower.EP
 import ProximityPrize.SubmissionLower.EB
 namespace ProximityPrize.SubmissionLower.RCN109
 open scoped Classical BigOperators
-open RCN011 RCN021
-open RCN002 RCN264
-open RCN093
-open RCN102
-open RCN106
-open RCN107
-open RCN143
-open RCN307
-open RCN014
-open RCN120
-open RCN236
-open RCN110
-open RCN111
+open RCN011 RCN021 RCN002 RCN264 RCN093 RCN102 RCN106 RCN107 RCN143 RCN307 RCN014 RCN120 RCN236 RCN110 RCN111
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 4000000
 variable {Omega:Type} [Field Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
-variable {A:Type} [Fintype A]
-variable (component:A→ RegularComponent Omega G T H)
-variable (hcomponent:Function.Injective component)
-variable (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
+ {G T H:MvPolynomial (Fin 3) Omega}
+ {A:Type} [Fintype A]
+ (component:A → RegularComponent Omega G T H)
+ (hcomponent:Function.Injective component)
+ (lam mu nu:Omega) (order:Fin 3 ≃ Fin 3)
 variable (ht:∀ a:A,Transcendental Omega
  (flagEvaluation Omega (component a).1 lam mu nu (MvPolynomial.X (order 0))))
 variable (hfinite:∀ a:A,
@@ -51,12 +39,12 @@ theorem indexedFixedFactor_grouped_resultant_power_dvd
          (indexedFiberRelationBar component lam mu nu order ht q hq surface a)))]
    (hbarne:∀ a:IndexedFactorFiber component lam mu nu order ht q,
      indexedFiberRelationBar component lam mu nu order ht q hq surface a≠⊥)
-   (multiplicity:IndexedFactorFiber component lam mu nu order ht q→ ℕ)
+   (multiplicity:IndexedFactorFiber component lam mu nu order ht q → ℕ)
    (htail:∀ a,indexedFiberTail q hq tail∈
      Ideal.span {indexedFiberSurface q hq surface} ⊔
        indexedFiberRelation component lam mu nu order ht q hq a^multiplicity a)
-   (hPcap:(indexedFiberSurface q hq surface).natDegree≤ m)
-   (hQcap:(indexedFiberTail q hq tail).natDegree≤ n)
+   (hPcap:(indexedFiberSurface q hq surface).natDegree ≤ m)
+   (hQcap:(indexedFiberTail q hq tail).natDegree ≤ n)
    (hresultant:Polynomial.resultant surface tail m n≠0)
    (hPbar:(indexedFiberSurface q hq surface).map
      (IsLocalRing.residue (FiberCoefficient q hq))≠0):
@@ -69,7 +57,7 @@ theorem indexedFixedFactor_grouped_resultant_power_dvd
  letI:DecidableEq (RatFunc Omega):=Classical.decEq _
  letI:(Ideal.span {q}).IsPrime:=
    (PrincipalIdealRing.isMaximal_of_irreducible hq).isPrime
- let weight:IndexedFactorFiber component lam mu nu order ht q→ ℕ:=fun a =>
+ let weight:IndexedFactorFiber component lam mu nu order ht q → ℕ:=fun a =>
    Module.finrank (IsLocalRing.ResidueField (FiberCoefficient q hq))
      (IsLocalRing.ResidueField (Localization.AtPrime
        (indexedFiberRelationBar component lam mu nu order ht q hq surface a)))
@@ -78,7 +66,7 @@ theorem indexedFixedFactor_grouped_resultant_power_dvd
      (hlocal:=hlocal) (hresfinite:=hresfinite)
  letI:∀ a:IndexedFactorFiber component lam mu nu order ht q,
      Module.Finite (FiberCoefficient q hq)
-       (Polynomial (FiberCoefficient q hq)⧸ cert.pieces a):=fun a => by
+       (Polynomial (FiberCoefficient q hq) ⧸ cert.pieces a):=fun a => by
    obtain ⟨M,hMmonic,hMmem⟩:=exists_monic_mem_indexedFiberRelation
      component lam mu nu order ht hfinite hgen q hq a
    apply RCN309.moduleFinite_quotient_of_monic_mem
@@ -86,14 +74,14 @@ theorem indexedFixedFactor_grouped_resultant_power_dvd
    have hpow:M^multiplicity a∈
        Ideal.span {indexedFiberSurface q hq surface} ⊔
          indexedFiberRelation component lam mu nu order ht q hq a^multiplicity a:=
-     (show indexedFiberRelation component lam mu nu order ht q hq a^multiplicity a≤
+     (show indexedFiberRelation component lam mu nu order ht q hq a^multiplicity a ≤
          Ideal.span {indexedFiberSurface q hq surface} ⊔
            indexedFiberRelation component lam mu nu order ht q hq a^multiplicity a
        from le_sup_right) (Ideal.pow_mem_pow hMmem (multiplicity a))
    simpa [cert,indexedWeightedFiberPrimaryPieces,
      primaryPiecesCertificateOfMembershipWeighted,mappedPrimaryPiece] using hpow
  letI:Module.Finite (FiberCoefficient q hq)
-     (∀ a,Polynomial (FiberCoefficient q hq)⧸ cert.pieces a):=inferInstance
+     (∀ a,Polynomial (FiberCoefficient q hq) ⧸ cert.pieces a):=inferInstance
  exact grouped_resultant_power_dvd_of_primary_pieces_of_surface_mod_ne_zero
    (Ideal.span {q}) q (fun a => multiplicity a*weight a)
      rfl hq hqMonic surface tail m n
@@ -109,12 +97,12 @@ theorem indexedFixedFactor_grouped_resultant_power_dvd_of_geometry
        (flagEvaluation Omega (component a.1).1 lam mu nu) (ht a.1))
    (hbarne:∀ a:IndexedFactorFiber component lam mu nu order ht q,
      indexedFiberRelationBar component lam mu nu order ht q hq surface a≠⊥)
-   (multiplicity:IndexedFactorFiber component lam mu nu order ht q→ ℕ)
+   (multiplicity:IndexedFactorFiber component lam mu nu order ht q → ℕ)
    (htail:∀ a,indexedFiberTail q hq tail∈
      Ideal.span {indexedFiberSurface q hq surface} ⊔
        indexedFiberRelation component lam mu nu order ht q hq a^multiplicity a)
-   (hPcap:(indexedFiberSurface q hq surface).natDegree≤ m)
-   (hQcap:(indexedFiberTail q hq tail).natDegree≤ n)
+   (hPcap:(indexedFiberSurface q hq surface).natDegree ≤ m)
+   (hQcap:(indexedFiberTail q hq tail).natDegree ≤ n)
    (hresultant:Polynomial.resultant surface tail m n≠0)
    (hPbar:(indexedFiberSurface q hq surface).map
      (IsLocalRing.residue (FiberCoefficient q hq))≠0):

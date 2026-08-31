@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CX
 section ProximityFlatProofPort
 theorem Int.card_ideal_quot (n:ℕ):Nat.card (ℤ ⧸ (Ideal.span {(n:ℤ)}))=n:=by

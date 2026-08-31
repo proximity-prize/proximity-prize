@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.S4
 import ProximityPrize.SubmissionLower.S8
 import ProximityPrize.SubmissionLower.S9
@@ -11,8 +10,8 @@ section SpanNorm
 namespace Ideal
 open Submodule
 variable (R S:Type*) [CommRing R] [IsDomain R] {S:Type*} [CommRing S] [IsDomain S]
-variable [IsIntegrallyClosed R] [IsIntegrallyClosed S] [Algebra R S] [Module.Finite R S]
-variable [IsTorsionFree R S]
+ [IsIntegrallyClosed R] [IsIntegrallyClosed S] [Algebra R S] [Module.Finite R S]
+ [IsTorsionFree R S]
 attribute [local instance] FractionRing.liftAlgebra
 noncomputable def spanNorm (I:Ideal S):Ideal R:=
  Ideal.map (Algebra.intNorm R S) I

@@ -1,15 +1,13 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CW
 import ProximityPrize.SubmissionLower.CX
 section ProximityFlatProofPort
 namespace Ideal
 universe u v
 variable {R:Type u} [CommRing R]
-variable {S:Type v} [CommRing S] [Algebra R S]
-variable (p:Ideal R) (P:Ideal S)
+ {S:Type v} [CommRing S] [Algebra R S]
+ (p:Ideal R) (P:Ideal S)
 local notation "f" => algebraMap R S
-open Module
-open UniqueFactorizationMonoid
+open Module UniqueFactorizationMonoid
 attribute [local instance] Ideal.Quotient.field
 section DecEq
 variable {S₁:Type*} [CommRing S₁] [Algebra R S₁]
@@ -100,7 +98,7 @@ lemma absNorm_eq_pow_inertiaDeg' [IsDedekindDomain R] [Module.Free ℤ R] [Modul
 end absNorm
 section tower
 variable {R S T:Type*} [CommRing R] [CommRing S] [CommRing T]
-variable [Algebra R S] [Algebra S T] [Algebra R T] [IsScalarTower R S T]
+ [Algebra R S] [Algebra S T] [Algebra R T] [IsScalarTower R S T]
 theorem inertiaDeg'_algebra_tower (p:Ideal R) (P:Ideal S) (I:Ideal T) [p.IsMaximal]
    [P.IsMaximal] [P.LiesOver p] [I.LiesOver P]:inertiaDeg' p I=
    inertiaDeg' p P*inertiaDeg' P I:=by

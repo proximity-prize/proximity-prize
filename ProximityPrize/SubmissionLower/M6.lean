@@ -1,27 +1,21 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y5
 import ProximityPrize.SubmissionLower.I7
 namespace ProximityPrize.SubmissionLower.RCN202
 open scoped Classical BigOperators
-open RCN002 RCN072 RCN264
-open RCN207 RCN208
-open RCN134 RCN084
-open RCN095 RCN341
-open RCN037
-open RCN076
+open RCN002 RCN072 RCN264 RCN207 RCN208 RCN134 RCN084 RCN095 RCN341 RCN037 RCN076
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
 set_option synthInstance.maxHeartbeats 300000
 variable {K E:Type} [Field K] [Field E] [IsAlgClosed E]
-variable [Algebra K E] [Algebra (RatFunc K) E] [IsScalarTower K (RatFunc K) E]
+ [Algebra K E] [Algebra (RatFunc K) E] [IsScalarTower K (RatFunc K) E]
 local notation "Poly" => MvPolynomial (Fin 3) K
 local notation "PE" => MvPolynomial (Fin 3) E
 def rationalVariable (K:Type) [Field K]:RatFunc K:=
  algebraMap (Polynomial K) (RatFunc K) Polynomial.X
 theorem eliminated_not_mem_nonpoint
-   (F H G Q U:Poly) (k:ℕ) (B:Fin (k+1)→ Poly)
+   (F H G Q U:Poly) (k:ℕ) (B:Fin (k+1) → Poly)
    (C:RegularComponent K F (filteredCut k B H G) H)
    [Algebra (RatFunc K) (CoordinateField K C.1)]
    [IsScalarTower K (RatFunc K) (CoordinateField K C.1)]
@@ -29,13 +23,13 @@ theorem eliminated_not_mem_nonpoint
    (hj:algebraMap (RatFunc K) (CoordinateField K C.1) (rationalVariable K)=
      movingValue C.1 H G Q U)
    (D:Ideal PE) [D.IsPrime]
-   (hnonpoint:∀ v:Fin 3→ E,D≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
+   (hnonpoint:∀ v:Fin 3 → E,D≠RingHom.ker (MvPolynomial.aeval v).toRingHom)
    (hF:scalarPolynomialMap K E F∈D)
    (hN:movingEquation (scalarPolynomialMap K E H) (scalarPolynomialMap K E G)
      (scalarPolynomialMap K E Q) (scalarPolynomialMap K E U)
      (algebraMap (RatFunc K) E (rationalVariable K))∈D)
    (hH:scalarPolynomialMap K E H∉D) (hU:scalarPolynomialMap K E U∉D)
-   (hbelow:D.comap (scalarPolynomialMap K E)≤ C.1):
+   (hbelow:D.comap (scalarPolynomialMap K E) ≤ C.1):
    eliminatedCut k (fun j↦scalarPolynomialMap K E (B j))
      (scalarPolynomialMap K E Q) (scalarPolynomialMap K E U)
      (algebraMap (RatFunc K) E (rationalVariable K))∉D:=by
@@ -48,7 +42,7 @@ theorem eliminated_not_mem_nonpoint
    rw [map_filteredCut]
    exact original_mem_of_eliminated_mem D k (fun j↦mu (B j))
      (mu H) (mu G) (mu Q) (mu U) t hN hA hU
- have hcut:cutIdeal K F (filteredCut k B H G)≤ D.comap mu:=by
+ have hcut:cutIdeal K F (filteredCut k B H G) ≤ D.comap mu:=by
    apply Ideal.span_le.mpr
    intro A hA
    rcases (by simpa only [Set.mem_insert_iff,Set.mem_singleton_iff] using hA) with rfl | rfl
@@ -120,14 +114,14 @@ theorem eliminated_not_mem_nonpoint
  obtain ⟨v,hv⟩:=eq_point_kernel_of_coordinates_algebraic E D halg
  exact hnonpoint v hv
 theorem embedding_point_certificate
-   (F H G Q U:Poly) (k:ℕ) (B:Fin (k+1)→ Poly)
+   (F H G Q U:Poly) (k:ℕ) (B:Fin (k+1) → Poly)
    (C:RegularComponent K F (filteredCut k B H G) H)
    [Algebra (RatFunc K) (CoordinateField K C.1)]
    [IsScalarTower K (RatFunc K) (CoordinateField K C.1)]
    [FiniteDimensional (RatFunc K) (CoordinateField K C.1)]
    (hj:algebraMap (RatFunc K) (CoordinateField K C.1) (rationalVariable K)=
      movingValue C.1 H G Q U) (hU:U∉C.1)
-   (f:CoordinateField K C.1→ₐ[RatFunc K] E):
+   (f:CoordinateField K C.1 →ₐ[RatFunc K] E):
    let mu:=scalarPolynomialMap K E
    let t:=algebraMap (RatFunc K) E (rationalVariable K)
    let v:=embeddingPoint C.1 (f.restrictScalars K)
@@ -188,12 +182,12 @@ abbrev fiberEquation (H G Q U:Poly):PE:=
  movingEquation (scalarPolynomialMap K E H) (scalarPolynomialMap K E G)
    (scalarPolynomialMap K E Q) (scalarPolynomialMap K E U)
    (algebraMap (RatFunc K) E (rationalVariable K))
-abbrev fiberCut (k:ℕ) (B:Fin (k+1)→ Poly) (Q U:Poly):PE:=
+abbrev fiberCut (k:ℕ) (B:Fin (k+1) → Poly) (Q U:Poly):PE:=
  eliminatedCut k (fun j↦scalarPolynomialMap K E (B j))
    (scalarPolynomialMap K E Q) (scalarPolynomialMap K E U)
    (algebraMap (RatFunc K) E (rationalVariable K))
 theorem sum_moving_degrees_le
-   (F H G Q U:Poly) (k:ℕ) (B:Fin (k+1)→ Poly)
+   (F H G Q U:Poly) (k:ℕ) (B:Fin (k+1) → Poly)
    [∀ C:RegularComponent K F (filteredCut k B H G) H,
      Algebra (RatFunc K) (CoordinateField K C.1)]
    [∀ C:RegularComponent K F (filteredCut k B H G) H,
@@ -210,10 +204,10 @@ theorem sum_moving_degrees_le
    (p q r:FlagDegree) (hFp:PolynomialInFlag p F)
    (hNq:PolynomialInFlag q (fiberEquation (E:=E) H G Q U))
    (hAr:PolynomialInFlag r (fiberCut (E:=E) k B Q U))
-   (c:ℕ) [CharP E c] (hdeg:p.zOnly+p.yz+p.all< c)
-   (hmix:2*(p.zOnly+p.yz+p.all)*(q.zOnly+q.yz+q.all)< c):
+   (c:ℕ) [CharP E c] (hdeg:p.zOnly+p.yz+p.all < c)
+   (hmix:2*(p.zOnly+p.yz+p.all)*(q.zOnly+q.yz+q.all) < c):
    (∑ C:RegularComponent K F (filteredCut k B H G) H,
-     Module.finrank (RatFunc K) (CoordinateField K C.1))≤ flagMixed p q r:=by
+     Module.finrank (RatFunc K) (CoordinateField K C.1)) ≤ flagMixed p q r:=by
  classical
  let mu:=scalarPolynomialMap K E
  let N:=fiberEquation (E:=E) H G Q U
@@ -251,14 +245,14 @@ theorem sum_moving_degrees_le
    exact (hc v hv).2.2.2.2 C.1 inferInstance (regularComponent_ne_point E g.1 N R C)
      hp hCF (regularComponent_T_mem E g.1 N R C)
 theorem fiber_small_flags (a b s k:ℕ) (C:FlagDegree)
-   (H G Q U:Poly) (B:Fin (k+1)→ Poly) (c:Fin (k+1)→ FlagDegree)
+   (H G Q U:Poly) (B:Fin (k+1) → Poly) (c:Fin (k+1) → FlagDegree)
    (hH:PolynomialInFlag ⟨a,b+1,s+1⟩ H) (hG:PolynomialInFlag ⟨a,b,s+3⟩ G)
-   (hQ:PolynomialInFlag (2• unitAllFlag) Q) (hU:PolynomialInFlag unitYZFlag U)
+   (hQ:PolynomialInFlag (2 • unitAllFlag) Q) (hU:PolynomialInFlag unitYZFlag U)
    (hB:∀ j,PolynomialInFlag (c j) (B j))
-   (hc:∀ j,c j+(k-j.val)• (⟨a,b+1,s+1⟩:FlagDegree)+
-     j.val• (⟨a,b,s+3⟩:FlagDegree)=C+k• (⟨2*a,2*b+1,2*s+3⟩:FlagDegree)):
+   (hc:∀ j,c j+(k-j.val) • (⟨a,b+1,s+1⟩:FlagDegree)+
+     j.val • (⟨a,b,s+3⟩:FlagDegree)=C+k • (⟨2*a,2*b+1,2*s+3⟩:FlagDegree)):
    PolynomialInFlag ⟨a,b+1,s+3⟩ (fiberEquation (E:=E) H G Q U)∧
-   PolynomialInFlag (C+k• (⟨a,b+1,s+2⟩:FlagDegree)) (fiberCut (E:=E) k B Q U):=by
+   PolynomialInFlag (C+k • (⟨a,b+1,s+2⟩:FlagDegree)) (fiberCut (E:=E) k B Q U):=by
  constructor
  · exact movingEquation_inFlag a b s _ _ _ _ _
      (inFlag_map (algebraMap K E) hH) (inFlag_map (algebraMap K E) hG)

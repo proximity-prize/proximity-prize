@@ -1,13 +1,12 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T1
 section ProximityFlatProofPort
 open Module
 open scoped nonZeroDivisors
 variable (R:Type*) {S:Type*} [CommRing R] [CommRing S] [Algebra R S]
-variable {Rₘ Sₘ:Type*} [CommRing Rₘ] [Algebra R Rₘ] [CommRing Sₘ] [Algebra S Sₘ]
-variable (M:Submonoid R)
-variable [IsLocalization M Rₘ] [IsLocalization (Algebra.algebraMapSubmonoid S M) Sₘ]
-variable [Algebra Rₘ Sₘ] [Algebra R Sₘ] [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
+ {Rₘ Sₘ:Type*} [CommRing Rₘ] [Algebra R Rₘ] [CommRing Sₘ] [Algebra S Sₘ]
+ (M:Submonoid R)
+ [IsLocalization M Rₘ] [IsLocalization (Algebra.algebraMapSubmonoid S M) Sₘ]
+ [Algebra Rₘ Sₘ] [Algebra R Sₘ] [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
 include M
 open Algebra
 theorem Algebra.map_leftMulMatrix_localization {ι:Type*} [Fintype ι] [DecidableEq ι]
@@ -44,9 +43,9 @@ theorem Algebra.trace_localization [Module.Free R S] [Module.Finite R S] (a:S):
  exact (AddMonoidHom.map_trace (algebraMap R Rₘ).toAddMonoidHom _).symm
 section LocalizationLocalization
 variable (Sₘ:Type*) [CommRing Sₘ] [Algebra S Sₘ] [Algebra Rₘ Sₘ] [Algebra R Sₘ]
-variable [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
-variable [IsLocalization (Algebra.algebraMapSubmonoid S M) Sₘ]
-variable {ι:Type*} [Fintype ι] [DecidableEq ι]
+ [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
+ [IsLocalization (Algebra.algebraMapSubmonoid S M) Sₘ]
+ {ι:Type*} [Fintype ι] [DecidableEq ι]
 theorem Algebra.traceMatrix_localizationLocalization (b:Basis ι R S):
    Algebra.traceMatrix Rₘ (b.localizationLocalization Rₘ M Sₘ)=
      (algebraMap R Rₘ).mapMatrix (Algebra.traceMatrix R b):=by

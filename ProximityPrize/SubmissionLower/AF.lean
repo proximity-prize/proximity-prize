@@ -1,25 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BY
 import ProximityPrize.SubmissionLower.B8
 import ProximityPrize.SubmissionLower.GQ
 namespace ProximityPrize.SubmissionLower.RCN287
 open scoped Classical BigOperators
-open RCN081 RCN313 RCN136
-open RCN234
-open RCN179
-open RCN095
-open RCN275
-open RCN275.ResidualSupportParameters
-open RCN156
-open RCN174 RCN238
-open RCN266
-open RCN159
-open RCN164
-open RCN091
-open RCN276
-open RCN318
-open RCN141
-open RCN317
+open RCN081 RCN313 RCN136 RCN234 RCN179 RCN095 RCN275 RCN275.ResidualSupportParameters RCN156 RCN174 RCN238 RCN266 RCN159 RCN164 RCN091 RCN276 RCN318 RCN141 RCN317
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 35000
@@ -31,17 +15,17 @@ def sharpResidualAgreementFlag
    1+(sharpAgreementDirection P).yz*d,
    (sharpAgreementDirection P).all*d⟩
 theorem sharpResidualAgreementFlag_ys
-   (P:ResidualSupportParameters) (hsy:P.s< P.ys) (d:ℕ):
+   (P:ResidualSupportParameters) (hsy:P.s < P.ys) (d:ℕ):
    (sharpResidualAgreementFlag P d).yz+
        (sharpResidualAgreementFlag P d).all=
      1+d*(2*P.ys-2):=by
  have hcoeff:
      (2*(P.ys-P.s)-1)+(2*P.s-1)=2*P.ys-2:=by
-   have hleft:1≤ 2*(P.ys-P.s):=by
-     have:1≤ P.ys-P.s:=Nat.sub_pos_of_lt hsy
+   have hleft:1 ≤ 2*(P.ys-P.s):=by
+     have:1 ≤ P.ys-P.s:=Nat.sub_pos_of_lt hsy
      omega
-   have hright:1≤ 2*P.s:=by
-     have:1≤ P.s:=P.one_le_s
+   have hright:1 ≤ 2*P.s:=by
+     have:1 ≤ P.s:=P.one_le_s
      omega
    rw [tsub_add_tsub_comm hleft hright]
    have hsum:2*(P.ys-P.s)+2*P.s=2*P.ys:=by
@@ -53,7 +37,7 @@ theorem sharpResidualAgreementFlag_ys
  rw [←hcoeff]
  ring
 theorem sharpResidualAgreementFlag_total
-   (P:ResidualSupportParameters) (hsy:P.s< P.ys) (d:ℕ):
+   (P:ResidualSupportParameters) (hsy:P.s < P.ys) (d:ℕ):
    (sharpResidualAgreementFlag P d).zOnly+
        (sharpResidualAgreementFlag P d).yz+
        (sharpResidualAgreementFlag P d).all=
@@ -64,11 +48,11 @@ theorem sharpResidualAgreementFlag_total
    have hmiddle:
        (2*(P.ys-P.s)-1)+(2*P.s-1)=
          2*P.ys-2:=by
-     have hleft:1≤ 2*(P.ys-P.s):=by
-       have:1≤ P.ys-P.s:=Nat.sub_pos_of_lt hsy
+     have hleft:1 ≤ 2*(P.ys-P.s):=by
+       have:1 ≤ P.ys-P.s:=Nat.sub_pos_of_lt hsy
        omega
-     have hright:1≤ 2*P.s:=by
-       have:1≤ P.s:=P.one_le_s
+     have hright:1 ≤ 2*P.s:=by
+       have:1 ≤ P.s:=P.one_le_s
        omega
      rw [tsub_add_tsub_comm hleft hright]
      have hsum:2*(P.ys-P.s)+2*P.s=2*P.ys:=by
@@ -78,8 +62,8 @@ theorem sharpResidualAgreementFlag_total
          _=2*P.ys:=by rw [Nat.sub_add_cancel (Nat.le_of_lt hsy)]
      rw [hsum]
    rw [Nat.add_assoc,hmiddle]
-   have htwo:2≤ 2*P.ys:=by
-     have:1≤ P.ys:=P.one_le_s.trans P.s_le_ys
+   have htwo:2 ≤ 2*P.ys:=by
+     have:1 ≤ P.ys:=P.one_le_s.trans P.s_le_ys
      omega
    rw [←Nat.add_sub_assoc htwo]
    have hsum:2*(P.total-P.ys)+2*P.ys=2*P.total:=by
@@ -106,35 +90,35 @@ variable {K Omega:Type} [Field K] [Field Omega]
 theorem sharp_agreement_weight_bounds
    {P:ResidualSupportParameters} {F:MvPolynomial (Fin 4) K}
    (H:ResidualSupportData P F)
-   (d:ℕ) (coeffs:ℕ→ K) (x u0 u1:K):
-   (agreementNumerator F d coeffs x u0 u1).degreeOf (2:Fin 4)≤
+   (d:ℕ) (coeffs:ℕ → K) (x u0 u1:K):
+   (agreementNumerator F d coeffs x u0 u1).degreeOf (2:Fin 4) ≤
        d*(2*P.s-1)∧
-     wt residualYSWeights (agreementNumerator F d coeffs x u0 u1)≤
+     wt residualYSWeights (agreementNumerator F d coeffs x u0 u1) ≤
        1+d*(2*P.ys-2)∧
-     wt residualTotalWeights (agreementNumerator F d coeffs x u0 u1)≤
+     wt residualTotalWeights (agreementNumerator F d coeffs x u0 u1) ≤
        1+d*(2*P.total-2):=by
  obtain ⟨hY,hR,hZ⟩:=H.coordinate_bounds
  refine ⟨(agreementNumerator_degree_bounds F P.ys P.s P.total
    P.one_le_s hY hR hZ d coeffs x u0 u1).2.1,?_,?_⟩
  · have h:=agreementNumerator_wt_le_equal_weight residualYSWeights rfl
-     F P.ys (by change 1≤ 1;norm_num)
-     (by change 1≤ P.ys;exact P.one_le_s.trans P.s_le_ys)
-     (by change 2*1≤ P.ys;simpa using P.two_le_ys)
-     (by change 1≤ 1;norm_num) H.ys_weight d coeffs x u0 u1
+     F P.ys (by change 1 ≤ 1;norm_num)
+     (by change 1 ≤ P.ys;exact P.one_le_s.trans P.s_le_ys)
+     (by change 2*1 ≤ P.ys;simpa using P.two_le_ys)
+     (by change 1 ≤ 1;norm_num) H.ys_weight d coeffs x u0 u1
    have hcoeff:2*(P.ys-1)=2*P.ys-2:=by omega
    apply h.trans_eq
    change max 1 0+d*(2*(P.ys-1))=
      1+d*(2*P.ys-2)
    rw [hcoeff]
    norm_num
- · have htotalTwo:2≤ P.total:=P.two_le_ys.trans P.ys_le_total
-   have honeTotal:1≤ P.total:=
+ · have htotalTwo:2 ≤ P.total:=P.two_le_ys.trans P.ys_le_total
+   have honeTotal:1 ≤ P.total:=
      P.one_le_s.trans (P.s_le_ys.trans P.ys_le_total)
    have h:=agreementNumerator_wt_le_equal_weight residualTotalWeights rfl
-     F P.total (by change 1≤ 1;norm_num)
-     (by change 1≤ P.total;exact honeTotal)
-     (by change 2*1≤ P.total;simpa using htotalTwo)
-     (by change 1≤ 1;norm_num) H.total_weight d coeffs x u0 u1
+     F P.total (by change 1 ≤ 1;norm_num)
+     (by change 1 ≤ P.total;exact honeTotal)
+     (by change 2*1 ≤ P.total;simpa using htotalTwo)
+     (by change 1 ≤ 1;norm_num) H.total_weight d coeffs x u0 u1
    have hcoeff:2*(P.total-1)=2*P.total-2:=by omega
    apply h.trans_eq
    change max 1 1+d*(2*(P.total-1))=
@@ -142,10 +126,10 @@ theorem sharp_agreement_weight_bounds
    rw [hcoeff]
    norm_num
 theorem surfaceMap_agreement_in_sharp_flag
-   {P:ResidualSupportParameters} (hsy:P.s< P.ys)
-   (phi:Polynomial K→+*Omega) {F:MvPolynomial (Fin 4) K}
+   {P:ResidualSupportParameters} (hsy:P.s < P.ys)
+   (phi:Polynomial K →+*Omega) {F:MvPolynomial (Fin 4) K}
    (H:ResidualSupportData P F)
-   (d:ℕ) (coeffs:ℕ→ K) (x u0 u1:K):
+   (d:ℕ) (coeffs:ℕ → K) (x u0 u1:K):
    PolynomialInFlag (sharpResidualAgreementFlag P d)
      (surfaceMap phi (agreementNumerator F d coeffs x u0 u1)):=by
  intro e he
@@ -159,19 +143,19 @@ theorem surfaceMap_agreement_in_sharp_flag
  have hqTotal:=
    (MvPolynomial.le_weightedTotalDegree residualTotalWeights hq).trans hTotal
  rw [RCN081.weight_fin4] at hqYS hqTotal
- change q 0*0+q 1*1+q 2*1+q 3*0≤
+ change q 0*0+q 1*1+q 2*1+q 3*0 ≤
    1+d*(2*P.ys-2) at hqYS
- change q 0*0+q 1*1+q 2*1+q 3*1≤
+ change q 0*0+q 1*1+q 2*1+q 3*1 ≤
    1+d*(2*P.total-2) at hqTotal
  norm_num at hqYS hqTotal
- have hqR':q 2≤ (sharpResidualAgreementFlag P d).all:=by
-   change q 2≤ (2*P.s-1)*d
+ have hqR':q 2 ≤ (sharpResidualAgreementFlag P d).all:=by
+   change q 2 ≤ (2*P.s-1)*d
    rw [Nat.mul_comm]
    exact hqR
- change q 2≤ (sharpResidualAgreementFlag P d).all∧
-   q 1+q 2≤ (sharpResidualAgreementFlag P d).yz+
+ change q 2 ≤ (sharpResidualAgreementFlag P d).all∧
+   q 1+q 2 ≤ (sharpResidualAgreementFlag P d).yz+
      (sharpResidualAgreementFlag P d).all∧
-   q 1+q 2+q 3≤ (sharpResidualAgreementFlag P d).zOnly+
+   q 1+q 2+q 3 ≤ (sharpResidualAgreementFlag P d).zOnly+
      (sharpResidualAgreementFlag P d).yz+
      (sharpResidualAgreementFlag P d).all
  refine ⟨hqR',?_,?_⟩
@@ -207,11 +191,11 @@ theorem factorRegularLedgerForDirection_projection_decomposition
  ring
 theorem sum_factorRegularLedgerForDirection_le_flag
    {I:Type} [Fintype I] (p:Profile) (direction:FlagDegree)
-   (flag:I→ FlagDegree) (cap:FlagDegree)
-   (hz:(∑ i,(flag i).zOnly)≤ cap.zOnly)
-   (hyz:(∑ i,(flag i).yz)≤ cap.yz)
-   (hall:(∑ i,(flag i).all)≤ cap.all):
-   (∑ i,factorRegularLedgerForDirection p direction (flag i))≤
+   (flag:I → FlagDegree) (cap:FlagDegree)
+   (hz:(∑ i,(flag i).zOnly) ≤ cap.zOnly)
+   (hyz:(∑ i,(flag i).yz) ≤ cap.yz)
+   (hall:(∑ i,(flag i).all) ≤ cap.all):
+   (∑ i,factorRegularLedgerForDirection p direction (flag i)) ≤
      factorRegularLedgerForDirection p direction cap:=by
  classical
  calc
@@ -233,7 +217,7 @@ theorem sum_factorRegularLedgerForDirection_le_flag
        (∑ i,(flag i).all)*
          factorRegularLedgerForDirection p direction unitAllFlag:=by
      simp only [Finset.sum_add_distrib,Finset.sum_mul]
-   _≤ cap.zOnly*factorRegularLedgerForDirection p direction unitZFlag+
+   _ ≤ cap.zOnly*factorRegularLedgerForDirection p direction unitZFlag+
        cap.yz*factorRegularLedgerForDirection p direction unitYZFlag+
        cap.all*factorRegularLedgerForDirection p direction unitAllFlag:=
      Nat.add_le_add
@@ -244,28 +228,28 @@ theorem sum_factorRegularLedgerForDirection_le_flag
      (factorRegularLedgerForDirection_projection_decomposition
        p direction cap).symm
 variable {K Omega Iota:Type} [Field K] [Field Omega]
-variable {phi:Polynomial K→+*Omega} {Gamma:Finset K} {x:Iota→ K}
-variable {pchar:ℕ} [CharP Omega pchar]
+ {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+ {pchar:ℕ} [CharP Omega pchar]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Iota:=Classical.decEq Iota
 theorem sum_factor_counts_rectangular_sharp_le
    (p:Profile) (support:ResidualSupportParameters)
-   (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) (hw:0< p.w)
+   (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0) (hw:0 < p.w)
    (hbox:Q∈globalCoefficientBox K p.weightedCap p.w
      p.seedTotalCap p.slopeCap)
-   (count:RegularIndex Q→ ℕ)
-   (hcount:∀ F,count F*p.gap^2≤
+   (count:RegularIndex Q → ℕ)
+   (hcount:∀ F,count F*p.gap^2 ≤
      factorRegularLedgerForDirection p (sharpAgreementDirection support)
        (regularFlag Q F)):
-   (∑ F,count F)*p.gap^2≤ sharpRegularNumerator p support:=by
+   (∑ F,count F)*p.gap^2 ≤ sharpRegularNumerator p support:=by
  have hcaps:=regularFlag_budgets p Q hQ hw hbox
  calc
    (∑ F,count F)*p.gap^2=∑ F,count F*p.gap^2:=by
      rw [Finset.sum_mul]
-   _≤ ∑ F,factorRegularLedgerForDirection p
+   _ ≤ ∑ F,factorRegularLedgerForDirection p
        (sharpAgreementDirection support) (regularFlag Q F):=
      Finset.sum_le_sum (fun F _↦hcount F)
-   _≤ factorRegularLedgerForDirection p (sharpAgreementDirection support)
+   _ ≤ factorRegularLedgerForDirection p (sharpAgreementDirection support)
        p.rectangularSurfaceFlag:=
      sum_factorRegularLedgerForDirection_le_flag p
        (sharpAgreementDirection support) (regularFlag Q)
@@ -302,15 +286,15 @@ theorem recursive_scaled_factor_sharp_6656
      fixedMeetSupport)
    (hnodes:S.nodes.card=meetProfile.n)
    (hagreement:∀ gamma∈Gamma,
-     meetProfile.agreements≤ (S.agreementFiber gamma).card)
+     meetProfile.agreements ≤ (S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,
      ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
-         (x i) (D.stage.u0 i) (D.stage.u1 i)→
+         (x i) (D.stage.u0 i) (D.stage.u1 i) →
      (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*
-         meetProfile.gap≤
+         meetProfile.gap ≤
        D.degree*meetSharpFactorDegreeCost flag+
          meetSharpFactorUnitCost flag):
-   Gamma.card*meetProfile.gap^2≤
+   Gamma.card*meetProfile.gap^2 ≤
      factorRegularLedgerForDirection meetProfile
        (sharpAgreementDirection fixedMeetSupport) flag:=by
  have h:=recursive_scaled_stratified_incidence_bound
@@ -326,7 +310,7 @@ theorem recursive_scaled_factor_sharp_6656
        rw [hnodes]
        exact meet_unit_part_bound k hk)
  calc
-   Gamma.card*meetProfile.gap^2≤
+   Gamma.card*meetProfile.gap^2 ≤
        meetProfile.degreeIncidence*meetSharpFactorDegreeCost flag+
          meetProfile.unitIncidence*meetSharpFactorUnitCost flag:=by
      simpa only [Profile.gap] using h

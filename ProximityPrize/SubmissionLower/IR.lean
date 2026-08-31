@@ -1,8 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F4
 section ProximityFlatProofPort
 variable {R S A n m:Type*} [CommRing R] [CommRing S]
-variable (M:Matrix m m S) [DecidableEq m] [DecidableEq n] (k:m)
+ (M:Matrix m m S) [DecidableEq m] [DecidableEq n] (k:m)
 open Matrix Polynomial
 namespace Algebra.Norm.Transitivity
 def auxMat:Matrix m m S:=

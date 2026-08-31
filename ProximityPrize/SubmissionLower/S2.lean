@@ -1,12 +1,11 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 namespace Submodule
 open LinearMap
 variable {ι R:Type*} [CommRing R]
-variable {Ms:ι → Type*} [∀ i,AddCommGroup (Ms i)] [∀ i,Module R (Ms i)]
-variable {N:Type*} [AddCommGroup N] [Module R N]
-variable {Ns:ι → Type*} [∀ i,AddCommGroup (Ns i)] [∀ i,Module R (Ns i)]
+ {Ms:ι → Type*} [∀ i,AddCommGroup (Ms i)] [∀ i,Module R (Ms i)]
+ {N:Type*} [AddCommGroup N] [Module R N]
+ {Ns:ι → Type*} [∀ i,AddCommGroup (Ns i)] [∀ i,Module R (Ns i)]
 def piQuotientLift [Fintype ι] [DecidableEq ι] (p:∀ i,Submodule R (Ms i)) (q:Submodule R N)
    (f:∀ i,Ms i →ₗ[R] N) (hf:∀ i,p i ≤ q.comap (f i)):(∀ i,Ms i ⧸ p i) →ₗ[R] N ⧸ q:=
  lsum R (fun i => Ms i ⧸ p i) R fun i => (p i).mapQ q (f i) (hf i)

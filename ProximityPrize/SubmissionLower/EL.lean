@@ -1,9 +1,6 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.EM
 namespace ProximityPrize.SubmissionLower.RCN137
-open UniqueFactorizationMonoid RCN136 RCN082
-open RCN135 RCN138
-open RCN174 RCN319
+open UniqueFactorizationMonoid RCN136 RCN082 RCN135 RCN138 RCN174 RCN319
 noncomputable section
 section ArbitraryVariables
 variable {σ A:Type*} [Field A]

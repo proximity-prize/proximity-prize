@@ -1,19 +1,11 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Q8
 import ProximityPrize.SubmissionLower.Y1
 namespace ProximityPrize.SubmissionLower.RCN046
 open scoped Classical BigOperators WithZero
-open RCN002
-open RCN344 RCN264
-open RCN095
-open RCN341
-open RCN340
-open RCN237
-open RCN295
-open RCN042
+open RCN002 RCN344 RCN264 RCN095 RCN341 RCN340 RCN237 RCN295 RCN042
 noncomputable section
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
+ {G T H:MvPolynomial (Fin 3) Omega}
 structure AdaptiveUnitProjectionFamily
    (base:∀ C:RegularComponent Omega G T H,
      SeparableLiteralCoordinate C.1)

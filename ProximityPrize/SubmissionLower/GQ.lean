@@ -1,16 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J6
 namespace ProximityPrize.SubmissionLower.RCN317
 open scoped Classical BigOperators
-open RCN174 RCN319 RCN238
-open RCN266
-open RCN140
-open RCN291
-open RCN294
-open RCN318
-open RCN276
-open RCN141
-open RCN092
+open RCN174 RCN319 RCN238 RCN266 RCN140 RCN291 RCN294 RCN318 RCN276 RCN141 RCN092
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 35000

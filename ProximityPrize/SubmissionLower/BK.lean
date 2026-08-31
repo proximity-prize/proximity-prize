@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.FH
 import ProximityPrize.SubmissionLower.J2
 import ProximityPrize.SubmissionLower.EG
@@ -6,19 +5,7 @@ import ProximityPrize.SubmissionLower.H8
 import ProximityPrize.SubmissionLower.A8
 namespace ProximityPrize.SubmissionLower.RCN144
 open scoped Classical BigOperators
-open RCN135 RCN136 RCN313
-open RCN159 RCN220
-open RCN083 RCN228
-open RCN127
-open RCN058 RCN063
-open RCN065 RCN238 RCN243
-open RCN264 RCN231 RCN229
-open RCN126 RCN062
-open RCN047 RCN139 RCN174
-open RCN114 RCN295
-open RCN095 RCN275
-open RCN319
-open RCN002
+open RCN135 RCN136 RCN313 RCN159 RCN220 RCN083 RCN228 RCN127 RCN058 RCN063 RCN065 RCN238 RCN243 RCN264 RCN231 RCN229 RCN126 RCN062 RCN047 RCN139 RCN174 RCN114 RCN295 RCN095 RCN275 RCN319 RCN002
 noncomputable section
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
@@ -28,7 +15,7 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 abbrev Ω (K:Type) [Field K]:=GenericField K
 variable {Γ:Finset K} {x:I → K} {p e:ℕ} [CharP (Ω K) p]
-variable {flag:FlagDegree} {w:ℕ} {support:ResidualSupportParameters}
+ {flag:FlagDegree} {w:ℕ} {support:ResidualSupportParameters}
 theorem stage_surface_mem
    (S:ResidualStage (polynomialEmbedding K) Γ x p e flag w support)
    (x0 u0 u1:K)

@@ -1,15 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BV
 namespace ProximityPrize.SubmissionLower.RCN172
 open scoped Classical BigOperators
-open RCN169 RCN136 RCN135
-open RCN138 RCN137
-open RCN238 RCN243 RCN081
-open RCN174 RCN319 RCN001
-open RCN068
+open RCN169 RCN136 RCN135 RCN138 RCN137 RCN238 RCN243 RCN081 RCN174 RCN319 RCN001 RCN068
 noncomputable section
 variable {K:Type} [Field K]
-variable {ι:Type*}
+ {ι:Type*}
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq ι:=Classical.decEq ι
 theorem implicit_pair_seed_bound
@@ -19,22 +14,22 @@ theorem implicit_pair_seed_bound
    (hAbox:A∈globalCoefficientBox K implicitD w jZ 0)
    (hGbox:G∈globalCoefficientBox K implicitD w jZ 1)
    (hjY:(implicitD-1)/w=jY)
-   (selected:K→ Polynomial K) (Γ:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι→ K) (hinj:Set.InjOn x nodes)
+   (selected:K → Polynomial K) (Γ:Finset K)
+   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
    (hnodes:nodes.card=n) [CharP K p]
-   (hw:1≤ w) (hchar:w< p) (hwa:w< a) (han:a≤ n)
-   (hjYsmall:jY< p) (hjZsmall:jZ< p)
-   (hmixedSmall:2*jY*jZ< p)
-   (hdegree:∀ γ∈Γ,(selected γ).natDegree≤ w)
+   (hw:1 ≤ w) (hchar:w < p) (hwa:w < a) (han:a ≤ n)
+   (hjYsmall:jY < p) (hjZsmall:jZ < p)
+   (hmixedSmall:2*jY*jZ < p)
+   (hdegree:∀ γ∈Γ,(selected γ).natDegree ≤ w)
    (hsolutionA:∀ γ∈Γ,specialization K (selected γ) γ A=0)
    (hsolutionG:∀ γ∈Γ,specialization K (selected γ) γ G=0)
    (hregular:∀ γ∈Γ,
      specialization K (selected γ) γ (MvPolynomial.pderiv (2:Fin 4) G)≠0)
    (hagreement:∀ γ∈Γ,
-     a≤ (nodes.filter (fun i =>
+     a ≤ (nodes.filter (fun i =>
        (selected γ).eval (x i)=u₀ i+γ*u₁ i)).card)
    (hnoPencil:NoLargeSelectedPencil selected Γ w e):
-   Γ.card*(a-w)≤
+   Γ.card*(a-w) ≤
      (n-w)*
        ((1+2*w*jY)*pairYCost ⟨A,G⟩+
          w*pairRCost ⟨A,G⟩+
@@ -52,8 +47,8 @@ theorem implicit_pair_seed_bound
  have hsub (g):seedsFor g ⊆ Γ:=Finset.filter_subset _ _
  have hAGcaps:=degree_bounds_of_mem_box A implicitD w jZ 0 hw hAbox
  have hGGcaps:=degree_bounds_of_mem_box G implicitD w jZ 1 hw hGbox
- have hAY:A.degreeOf 1≤ jY:=hAGcaps.1.trans_eq hjY
- have hGY:G.degreeOf 1≤ jY:=hGGcaps.1.trans_eq hjY
+ have hAY:A.degreeOf 1 ≤ jY:=hAGcaps.1.trans_eq hjY
+ have hGY:G.degreeOf 1 ≤ jY:=hGGcaps.1.trans_eq hjY
  have hAR:A.degreeOf 2=0:=Nat.eq_zero_of_le_zero hAGcaps.2.1
  have hAcaps:HasCaps (surfaceMap φ A) cutCap:=by
    intro i
@@ -77,17 +72,17 @@ theorem implicit_pair_seed_bound
      (polynomialEmbedding_injective K) G hG.ne_zero
      (selectedPoint φ selected γ) (hFzero γ hγ)
    exact Finset.mem_biUnion.mpr ⟨g,hg,Finset.mem_filter.mpr ⟨hγ,hz⟩⟩
- have hcard:Γ.card≤ ∑ g∈factors,(seedsFor g).card:=
+ have hcard:Γ.card ≤ ∑ g∈factors,(seedsFor g).card:=
    (Finset.card_le_card hcover).trans Finset.card_biUnion_le
  have hsingle (g:MvPolynomial (Fin 3) (GenericField K)) (hg:g∈factors):
-     (seedsFor g).card*(a-w)≤
+     (seedsFor g).card*(a-w) ≤
        (n-w)*(∑ i:Fin 3,
          capAt agreementCap i*
            capAt (RCN170.geometricPairCost A g) i)+
          (e+1)*(a-w)*
            capAt (RCN170.geometricPairCost A g) 2:=by
    obtain ⟨hgi,hdiv⟩:=surfaceFactors_spec φ G g hg
-   have hfacdegree (i:Fin 3):g.degreeOf i≤ G.degreeOf i.succ:=
+   have hfacdegree (i:Fin 3):g.degreeOf i ≤ G.degreeOf i.succ:=
      (coordinate_degree_le_of_dvd i g (surfaceMap φ G) hdiv
        (surfaceMap_ne_zero φ (polynomialEmbedding_injective K) G hG.ne_zero)).trans
          (surfaceMap_degreeOf_le φ G i)
@@ -97,7 +92,7 @@ theorem implicit_pair_seed_bound
      · exact (hfacdegree 0).trans hGY
      · exact (hfacdegree 1).trans hGGcaps.2.1
      · exact (hfacdegree 2).trans hGGcaps.2.2
-   have hsurfaceSmall:∀ j,capAt surfaceCap j< p:=by
+   have hsurfaceSmall:∀ j,capAt surfaceCap j < p:=by
      intro j
      fin_cases j
      · simpa [surfaceCap,capAt] using hjYsmall
@@ -150,7 +145,7 @@ theorem implicit_pair_seed_bound
      (Nat.mul_le_mul_left ((e+1)*(a-w)) (hδ 2)))
  have hbudget (i:Fin 3):
      (∑ g∈factors,
-       capAt (RCN170.geometricPairCost A g) i)≤
+       capAt (RCN170.geometricPairCost A g) i) ≤
          capAt (RCN170.pairCost A G) i:=
    RCN170.sum_geometricPairCost_le φ
      (polynomialEmbedding_injective K) A G hG.ne_zero i
@@ -165,11 +160,11 @@ theorem implicit_pair_seed_bound
    intro i _
    rw [Finset.mul_sum]
  calc
-   Γ.card*(a-w)≤ (∑ g∈factors,(seedsFor g).card)*(a-w):=
+   Γ.card*(a-w) ≤ (∑ g∈factors,(seedsFor g).card)*(a-w):=
      Nat.mul_le_mul_right (a-w) hcard
    _=∑ g∈factors,(seedsFor g).card*(a-w):=by
      rw [Finset.sum_mul]
-   _≤ ∑ g∈factors,((n-w)*(∑ i:Fin 3,
+   _ ≤ ∑ g∈factors,((n-w)*(∑ i:Fin 3,
        capAt agreementCap i*
          capAt (RCN170.geometricPairCost A g) i)+
        (e+1)*(a-w)*
@@ -181,8 +176,8 @@ theorem implicit_pair_seed_bound
        (e+1)*(a-w)*
          (∑ g∈factors,
            capAt (RCN170.geometricPairCost A g) 2):=by
-     rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.mul_sum,hfubini]
-   _≤ (n-w)*(∑ i:Fin 3,capAt agreementCap i*
+     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,hfubini]
+   _ ≤ (n-w)*(∑ i:Fin 3,capAt agreementCap i*
        capAt (RCN170.pairCost A G) i)+
        (e+1)*(a-w)*
          capAt (RCN170.pairCost A G) 2:=

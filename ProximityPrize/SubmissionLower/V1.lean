@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 variable {α:Type*}
@@ -6,7 +5,7 @@ namespace UniqueFactorizationMonoid
 variable {R:Type*} [CommMonoidWithZero R] [UniqueFactorizationMonoid R]
 section Multiplicative
 variable [CommMonoidWithZero α] [UniqueFactorizationMonoid α]
-variable {β:Type*} [CommMonoidWithZero β]
+ {β:Type*} [CommMonoidWithZero β]
 theorem prime_pow_coprime_prod_of_coprime_insert [DecidableEq α] {s:Finset α} (i:α → ℕ) (p:α)
    (hps:p∉s) (is_prime:∀ q∈insert p s,Prime q)
    (is_coprime:∀ᵉ (q∈insert p s) (q'∈insert p s),q∣q' → q=q'):

@@ -1,20 +1,13 @@
 import ProximityPrize.SubmissionLower.Y5
 namespace ProximityPrize.SubmissionLower.RCN328
 open scoped Classical BigOperators
-open RCN264 RCN095
-open RCN272
-open RCN237
-open RCN039
-open RCN046
-open RCN037
-open RCN341
-open RCN121
+open RCN264 RCN095 RCN272 RCN237 RCN039 RCN046 RCN037 RCN341 RCN121
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
 variable {Omega Seed:Type} [Field Omega]
-variable {G T1 T2 H:MvPolynomial (Fin 3) Omega}
-variable {flag tailFlag1 tailFlag2:FlagDegree}
+ {G T1 T2 H:MvPolynomial (Fin 3) Omega}
+ {flag tailFlag1 tailFlag2:FlagDegree}
 def properSecondTailComponents:
    Finset (RegularComponent Omega G T1 H):=by
  classical

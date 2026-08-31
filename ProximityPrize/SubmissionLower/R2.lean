@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W4
 import ProximityPrize.SubmissionLower.Z7
 import ProximityPrize.SubmissionLower.S3
@@ -17,10 +16,10 @@ theorem poleOrder_eq_zero_of_le_one (v:Place K L) (x:L) (h:v.val x ≤ 1):
  change max 0 (v.val x).log=0
  rw [←RCN187.log_max_one,max_eq_left h,WithZero.log_one]
 variable [IsAlgClosed K]
-variable [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
-variable [IsScalarTower K (Polynomial K) L] [IsScalarTower K (RatFunc K) L]
-variable [IsScalarTower (Polynomial K) (RatFunc K) L]
-variable [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
+ [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
+ [IsScalarTower K (Polynomial K) L] [IsScalarTower K (RatFunc K) L]
+ [IsScalarTower (Polynomial K) (RatFunc K) L]
+ [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq (Place K L):=Classical.decEq _
 abbrev InfinityBase:=RCN349.InfinityBase K

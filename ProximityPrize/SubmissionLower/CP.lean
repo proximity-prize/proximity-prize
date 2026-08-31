@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HM
 section ProximityFlatProofPort
 structure MonomialOrder (σ:Type*) where

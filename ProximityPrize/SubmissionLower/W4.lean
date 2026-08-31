@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.JA
 import ProximityPrize.SubmissionLower.R8
 import ProximityPrize.SubmissionLower.R1
@@ -55,10 +54,10 @@ theorem finiteBase_exists_point (p:HeightOneSpectrum (Polynomial K)):
  refine ⟨phi,?_⟩
  exact ((p.isPrime.isMaximal p.ne_bot).eq_of_le hkermax.ne_top hle).symm
 variable (L:Type*) [Field L]
-variable [Algebra K L] [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
-variable [IsScalarTower K (Polynomial K) L] [IsScalarTower K (RatFunc K) L]
-variable [IsScalarTower (Polynomial K) (RatFunc K) L]
-variable [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
+ [Algebra K L] [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
+ [IsScalarTower K (Polynomial K) L] [IsScalarTower K (RatFunc K) L]
+ [IsScalarTower (Polynomial K) (RatFunc K) L]
+ [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 abbrev FiniteNormalization:=RCN349.FiniteNormalization K L
 local instance:IsFractionRing (InfinityBase K) (RatFunc K):=
  RCN353.infinityRing_isFractionRing K

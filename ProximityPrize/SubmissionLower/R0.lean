@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DG
 import ProximityPrize.SubmissionLower.G8
 namespace ProximityPrize.SubmissionLower.RCN344
@@ -85,9 +84,9 @@ theorem finite_sum_polynomial_pole_le_box (W:Finset (Place K L))
        (finite_sum_coordinate_pole_le_degree K L (c i) W) (Int.natCast_nonneg _)
 section FixedSeparator
 variable [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
-variable [IsScalarTower K (Polynomial K) L] [IsScalarTower K (RatFunc K) L]
-variable [IsScalarTower (Polynomial K) (RatFunc K) L]
-variable [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
+ [IsScalarTower K (Polynomial K) L] [IsScalarTower K (RatFunc K) L]
+ [IsScalarTower (Polynomial K) (RatFunc K) L]
+ [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq (Place K L):=Classical.decEq _
 theorem finite_zero_places_le_box (c:σ → Coordinate K L)
@@ -101,10 +100,10 @@ theorem finite_zero_places_le_box (c:σ → Coordinate K L)
    (finite_sum_polynomial_pole_le_box K L _ c cap F hcap)
 section AffineModel
 variable (A:Type*) [CommRing A] [IsDomain A]
-variable [Algebra K A] [Algebra A L] [IsFractionRing A L]
-variable [Algebra (Polynomial K) A]
-variable [IsScalarTower K (Polynomial K) A] [IsScalarTower K A L]
-variable [IsScalarTower (Polynomial K) A L]
+ [Algebra K A] [Algebra A L] [IsFractionRing A L]
+ [Algebra (Polynomial K) A]
+ [IsScalarTower K (Polynomial K) A] [IsScalarTower K A L]
+ [IsScalarTower (Polynomial K) A L]
 def modelPlace (φ:A →ₐ[K] K):Place K L:=
  RCN345.chartMap K L
    (Sum.inl (RCN000.actualPointPlace K A L φ))

@@ -1,25 +1,14 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y0
 import ProximityPrize.SubmissionLower.EO
 namespace ProximityPrize.SubmissionLower.RCN265
 open scoped Classical
-open RCN002 RCN136 RCN243
-open RCN264 RCN267
-open RCN344
-open RCN341
-open RCN042
-open RCN037
-open RCN039
-open RCN046
-open RCN142
-open RCN093
-open RCN095
+open RCN002 RCN136 RCN243 RCN264 RCN267 RCN344 RCN341 RCN042 RCN037 RCN039 RCN046 RCN142 RCN093 RCN095
 noncomputable section
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
-def verticalPoint (y z:Omega):Fin 3→ Polynomial Omega:=
+def verticalPoint (y z:Omega):Fin 3 → Polynomial Omega:=
  ![Polynomial.C y,Polynomial.X,Polynomial.C z]
 def verticalPolynomial (y z:Omega):
-   MvPolynomial (Fin 3) Omega→ₐ[Omega] Polynomial Omega:=
+   MvPolynomial (Fin 3) Omega →ₐ[Omega] Polynomial Omega:=
  MvPolynomial.aeval (verticalPoint y z)
 theorem verticalPolynomial_derivative (y z:Omega)
    (F:MvPolynomial (Fin 3) Omega):
@@ -29,9 +18,9 @@ theorem verticalPolynomial_derivative (y z:Omega)
  | C a => simp [verticalPolynomial]
  | add P Q hP hQ => simp only [map_add,Polynomial.derivative_add,hP,hQ]
  | mul_X P i hP =>
-     fin_cases i<;>
+     fin_cases i <;>
        simp [verticalPolynomial,verticalPoint,Polynomial.derivative_mul] at hP ⊢ <;>
-       rw [hP]<;> ring
+       rw [hP] <;> ring
 theorem aeval_verticalPolynomial_eq_coordinateEvaluation
    (P:Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
    (y z:Omega)
@@ -40,12 +29,12 @@ theorem aeval_verticalPolynomial_eq_coordinateEvaluation
    (F:MvPolynomial (Fin 3) Omega):
    Polynomial.aeval (coordinate Omega P 1) (verticalPolynomial y z F)=
      coordinateEvaluation Omega P F:=by
- let lhs:MvPolynomial (Fin 3) Omega→ₐ[Omega] CoordinateField Omega P:=
+ let lhs:MvPolynomial (Fin 3) Omega →ₐ[Omega] CoordinateField Omega P:=
    (Polynomial.aeval (coordinate Omega P 1)).comp (verticalPolynomial y z)
  have hlhs:lhs=coordinateEvaluation Omega P:=by
    apply MvPolynomial.algHom_ext
    intro i
-   fin_cases i<;>
+   fin_cases i <;>
      simp [lhs,verticalPolynomial,verticalPoint,coordinate,hy,hz]
  exact AlgHom.congr_fun hlhs F
 theorem y_or_z_transcendental_of_regular_polynomial
@@ -53,7 +42,7 @@ theorem y_or_z_transcendental_of_regular_polynomial
    (F:MvPolynomial (Fin 3) Omega)
    (hF:F∈P)
    (hFR:MvPolynomial.pderiv (1:Fin 3) F∉P)
-   (hnonpoint:∀ v:Fin 3→ Omega,
+   (hnonpoint:∀ v:Fin 3 → Omega,
      P≠RingHom.ker (MvPolynomial.aeval v).toRingHom):
    Transcendental Omega (coordinate Omega P 0)∨
      Transcendental Omega (coordinate Omega P 2):=by
@@ -66,7 +55,7 @@ theorem y_or_z_transcendental_of_regular_polynomial
  obtain ⟨i,hi⟩:=
    exists_transcendental_coordinate_of_ne_point_kernel Omega P hnonpoint
  have hiR:i=(1:Fin 3):=by
-   fin_cases i<;> simp_all
+   fin_cases i <;> simp_all
  subst i
  let Q:=verticalPolynomial y z F
  have hQeval:Polynomial.aeval (coordinate Omega P 1) Q=0:=by
@@ -90,7 +79,7 @@ theorem y_or_z_transcendental_of_regular_polynomial
  exact hFReval
 variable {K:Type} [Field K]
 theorem regularComponent_y_or_z_transcendental
-   (phi:Polynomial K→+*Omega)
+   (phi:Polynomial K →+*Omega)
    (F:MvPolynomial (Fin 4) K)
    (G T:MvPolynomial (Fin 3) Omega)
    (hdiv:G∣surfaceMap phi F)
@@ -144,17 +133,17 @@ theorem AdaptiveUnitProjectionFamilyYZ.one_le_zCost_add_yzCost
      SeparableLiteralCoordinate C.1}
    {p q:FlagDegree}
    (P:AdaptiveUnitProjectionFamilyYZ base p q)
-   (phi:Polynomial K→+*Omega)
+   (phi:Polynomial K →+*Omega)
    (F:MvPolynomial (Fin 4) K)
    (hH:H=regularitySurface phi F)
    (hdiv:G∣surfaceMap phi F)
    (C:RegularComponent Omega G T H):
-   1≤ P.family.toPrimeFlagBudgetFamily.zCost C+
+   1 ≤ P.family.toPrimeFlagBudgetFamily.zCost C+
      P.family.toPrimeFlagBudgetFamily.yzCost C:=by
  subst H
  have hYZ:=regularComponent_y_or_z_transcendental phi F G T hdiv C
  by_cases hZ:Transcendental Omega (coordinate Omega C.1 2)
- · have hzpos:1≤ P.family.toPrimeFlagBudgetFamily.zCost C:=
+ · have hzpos:1 ≤ P.family.toPrimeFlagBudgetFamily.zCost C:=
      P.family.one_le_toPrimeFlagBudgetFamily_zCost C hZ
    omega
  · have hZalg:IsAlgebraic Omega (coordinate Omega C.1 2):=
@@ -167,7 +156,7 @@ theorem AdaptiveUnitProjectionFamilyYZ.one_le_zCost_add_yzCost
      exact transcendental_add_smul_of_transcendental_isAlgebraic
        Omega C.1 (coordinate Omega C.1 0) (coordinate Omega C.1 2)
          P.lam hY hZalg
-   have hyzpos:1≤ P.family.toPrimeFlagBudgetFamily.yzCost C:=by
+   have hyzpos:1 ≤ P.family.toPrimeFlagBudgetFamily.yzCost C:=by
      apply one_le_coordinateDegree_of_transcendental_value
      rw [P.yzValue C]
      exact hU

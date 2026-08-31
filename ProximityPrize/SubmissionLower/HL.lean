@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CP
 section ProximityFlatProofPort
 def DegLex (α:Type*):=α

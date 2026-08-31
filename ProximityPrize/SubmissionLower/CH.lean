@@ -2,15 +2,15 @@ import ProximityPrize.Benchmark.TargetLower
 namespace ProximityPrize.SubmissionLower.RCN324
 open IsLocalRing
 variable {K R:Type*} [CommRing K] [CommRing R] [Algebra K R]
-private theorem prime_dvd_factorial:∀ {n p:ℕ},p.Prime→ (p∣n.factorial ↔ p≤ n)
+private theorem prime_dvd_factorial:∀ {n p:ℕ},p.Prime → (p∣n.factorial ↔ p ≤ n)
  | 0,_,hp => iff_of_false hp.not_dvd_one (not_le_of_gt hp.pos)
  | n+1,p,hp => by
      rw [Nat.factorial_succ,hp.dvd_mul,prime_dvd_factorial hp]
      exact ⟨fun h => h.elim (Nat.le_of_dvd (Nat.succ_pos _)) Nat.le_succ_of_le,
        fun h => (_root_.lt_or_eq_of_le h).elim
-         (Or.inr ∘ Nat.le_of_lt_succ) fun h => Or.inl<| by rw [h]⟩
+         (Or.inr ∘ Nat.le_of_lt_succ) fun h => Or.inl <| by rw [h]⟩
 theorem derivation_pow_mul (D:Derivation K R R) (pi u:R) (mu:ℕ)
-   (hmu:1≤ mu):
+   (hmu:1 ≤ mu):
    D (pi^mu*u)=
      pi^(mu-1)*((mu:R)*u*D pi+pi*D u):=by
  rw [D.leibniz,Derivation.leibniz_pow]
@@ -21,7 +21,7 @@ theorem derivation_pow_mul (D:Derivation K R R) (pi u:R) (mu:ℕ)
  rw [hpow]
  ring
 theorem tangent_pow_mul (D:Derivation K R R) (pi u a:R) (mu:ℕ)
-   (hmu:1≤ mu) (htangent:D pi=pi*a):
+   (hmu:1 ≤ mu) (htangent:D pi=pi*a):
    D (pi^mu*u)=pi^mu*((mu:R)*a*u+D u):=by
  rw [derivation_pow_mul D pi u mu hmu,htangent]
  have hpow:pi^mu=pi^(mu-1)*pi:=by
@@ -30,15 +30,15 @@ theorem tangent_pow_mul (D:Derivation K R R) (pi u a:R) (mu:ℕ)
  rw [hpow]
  ring
 theorem tangent_preserves_divisibility (D:Derivation K R R) (pi a:R) (mu:ℕ)
-   (hmu:1≤ mu) (htangent:D pi=pi*a) (f:R) (hf:pi^mu∣f):
+   (hmu:1 ≤ mu) (htangent:D pi=pi*a) (f:R) (hf:pi^mu∣f):
    pi^mu∣D f:=by
  obtain ⟨u,rfl⟩:=hf
  rw [tangent_pow_mul D pi u a mu hmu htangent]
  exact dvd_mul_right _ _
 theorem tangent_iterate_preserves_divisibility
    (D:Derivation K R R) (pi a:R) (mu:ℕ)
-   (hmu:1≤ mu) (htangent:D pi=pi*a) (f:R) (hf:pi^mu∣f):
-   ∀ r,pi^mu∣(D:R→ R)^[r] f:=by
+   (hmu:1 ≤ mu) (htangent:D pi=pi*a) (f:R) (hf:pi^mu∣f):
+   ∀ r,pi^mu∣(D:R → R)^[r] f:=by
  intro r
  induction r with
  | zero => simpa using hf
@@ -46,9 +46,9 @@ theorem tangent_iterate_preserves_divisibility
      rw [Function.iterate_succ_apply']
      exact tangent_preserves_divisibility D pi a mu hmu htangent _ ih
 theorem iterate_pow_mul_expansion (D:Derivation K R R) (pi u:R)
-   (mu r:ℕ) (hr:r≤ mu):
+   (mu r:ℕ) (hr:r ≤ mu):
    ∃ error:R,
-     (D:R→ R)^[r] (pi^mu*u)=
+     (D:R → R)^[r] (pi^mu*u)=
        (mu.descFactorial r:R)*pi^(mu-r)*u*(D pi)^r+
          pi^(mu-r+1)*error:=by
  induction r with
@@ -56,10 +56,10 @@ theorem iterate_pow_mul_expansion (D:Derivation K R R) (pi u:R)
      refine ⟨0,?_⟩
      simp
  | succ r ih =>
-     have hr0:r≤ mu:=le_trans (Nat.le_succ r) hr
+     have hr0:r ≤ mu:=le_trans (Nat.le_succ r) hr
      obtain ⟨error,herror⟩:=ih hr0
      obtain ⟨k,hk⟩:∃ k,mu-r=k+1:=by
-       have hpos:0< mu-r:=Nat.sub_pos_of_lt (Nat.lt_of_succ_le hr)
+       have hpos:0 < mu-r:=Nat.sub_pos_of_lt (Nat.lt_of_succ_le hr)
        exact Nat.exists_eq_succ_of_ne_zero hpos.ne'
      have hnext:mu-(r+1)=k:=by omega
      let q:=D pi
@@ -87,9 +87,9 @@ section DVR
 variable [IsDomain R] [IsDiscreteValuationRing R]
 theorem addVal_iterate_eq_sub_of_transverse
    (D:Derivation K R R) (pi u:R) (mu r p:ℕ)
-   [CharP R p] (hp:p.Prime) (hmu:mu< p) (hr:r≤ mu)
+   [CharP R p] (hp:p.Prime) (hmu:mu < p) (hr:r ≤ mu)
    (hpi:Irreducible pi) (hu:IsUnit u) (htrans:IsUnit (D pi)):
-   IsDiscreteValuationRing.addVal R ((D:R→ R)^[r] (pi^mu*u))=mu-r:=by
+   IsDiscreteValuationRing.addVal R ((D:R → R)^[r] (pi^mu*u))=mu-r:=by
  obtain ⟨error,herror⟩:=iterate_pow_mul_expansion D pi u mu r hr
  have hdescDvd:mu.descFactorial r∣mu.factorial:=by
    refine ⟨(mu-r).factorial,?_⟩
@@ -109,7 +109,7 @@ theorem addVal_iterate_eq_sub_of_transverse
  have hbracket:IsUnit (lead+pi*error):=
    isUnit_add_of_isUnit_of_not_isUnit hlead hpiError
  have hfactor:
-     (D:R→ R)^[r] (pi^mu*u)=pi^(mu-r)*(lead+pi*error):=by
+     (D:R → R)^[r] (pi^mu*u)=pi^(mu-r)*(lead+pi*error):=by
    rw [herror]
    simp only [lead]
    ring

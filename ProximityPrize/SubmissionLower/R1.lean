@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W5
 import ProximityPrize.SubmissionLower.R5
 import ProximityPrize.SubmissionLower.S5
@@ -7,11 +6,11 @@ open scoped Classical BigOperators WithZero
 open IsDedekindDomain
 noncomputable section
 variable (K L:Type*) [Field K] [Field L]
-variable [Algebra K L] [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
-variable [IsScalarTower K (Polynomial K) L]
-variable [IsScalarTower K (RatFunc K) L]
-variable [IsScalarTower (Polynomial K) (RatFunc K) L]
-variable [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
+ [Algebra K L] [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
+ [IsScalarTower K (Polynomial K) L]
+ [IsScalarTower K (RatFunc K) L]
+ [IsScalarTower (Polynomial K) (RatFunc K) L]
+ [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq L:=Classical.decEq L
 abbrev FiniteNormalization:=RCN349.FiniteNormalization K L

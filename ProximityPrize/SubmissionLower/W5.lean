@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G1
 import ProximityPrize.SubmissionLower.V6
 namespace ProximityPrize.SubmissionLower.RCN359
@@ -49,7 +48,7 @@ theorem eq_of_equiv_surjective (v w:Valuation L ℤᵐ⁰)
 end NormalizedEquality
 section UnitBall
 variable (R L:Type*) [CommRing R] [Field L] [Algebra R L]
-variable (v:Valuation L ℤᵐ⁰) (hR:∀ r:R,v (algebraMap R L r) ≤ 1)
+ (v:Valuation L ℤᵐ⁰) (hR:∀ r:R,v (algebraMap R L r) ≤ 1)
 def unitBallMap:R →+*v.valuationSubring where
  toFun r:=⟨algebraMap R L r,hR r⟩
  map_zero':=Subtype.ext (map_zero _)
@@ -75,8 +74,8 @@ theorem mem_centerIdeal (r:R):
 end UnitBall
 section Center
 variable (S L:Type*) [CommRing S] [IsDedekindDomain S] [Field L]
-variable [Algebra S L] [IsFractionRing S L]
-variable (v:Valuation L ℤᵐ⁰) (hS:∀ s:S,v (algebraMap S L s) ≤ 1)
+ [Algebra S L] [IsFractionRing S L]
+ (v:Valuation L ℤᵐ⁰) (hS:∀ s:S,v (algebraMap S L s) ≤ 1)
 theorem centerIdeal_ne_bot (hv:Function.Surjective v):
    centerIdeal S L v hS≠⊥:=by
  obtain ⟨π,hπ⟩:=hv (WithZero.exp (-1:ℤ))

@@ -1,11 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DN
 namespace ProximityPrize.SubmissionLower.RCN042
 open scoped Classical TensorProduct
-open Polynomial KaehlerDifferential
-open RCN344
-open RCN022
-open RCN369 RCN370
+open Polynomial KaehlerDifferential RCN344 RCN022 RCN369 RCN370
  RCN351
 open RCN341
 noncomputable section
@@ -78,7 +74,7 @@ theorem one_le_coordinateDegree_of_transcendental_value
    exact Module.finrank_pos
 section FiniteFamily
 variable {I:Type*} [Fintype I]
-variable (E:I → Type) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+ (E:I → Type) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
 theorem sum_coordinateOfGate_degree_eq
    (x:∀ i,E i)
    (hgate:∀ i,∀ hx:Transcendental K (x i),

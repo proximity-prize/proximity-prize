@@ -52,7 +52,7 @@ theorem mk_mul_mk [Add ι] [GMul A] {i j} (a:A i) (b:A j):
  rfl
 namespace GMonoid
 variable {A}
-variable [AddMonoid ι] [GMul A] [GOne A]
+ [AddMonoid ι] [GMul A] [GOne A]
 def gnpowRec:∀ (n:ℕ) {i},A i → A (n • i)
  | 0,i,_ => cast (congr_arg A (zero_nsmul i).symm) GOne.one
  | n+1,i,a => cast (congr_arg A (succ_nsmul i n).symm) (GMul.mul (gnpowRec _ a) a)
@@ -243,7 +243,7 @@ class SetLike.GradedMonoid {S:Type*} [SetLike S R] [Monoid R] [AddMonoid ι] (A:
    extends SetLike.GradedOne A,SetLike.GradedMul A
 namespace SetLike
 variable {S:Type*} [SetLike S R] [Monoid R] [AddMonoid ι]
-variable {A:ι → S} [SetLike.GradedMonoid A]
+ {A:ι → S} [SetLike.GradedMonoid A]
 namespace GradeZero
 variable (A) in
 @[simps]
@@ -349,8 +349,8 @@ end HomogeneousElements
 section CommMonoid
 namespace SetLike
 variable {ι R S:Type*} [SetLike S R] [CommMonoid R] [AddCommMonoid ι]
-variable (A:ι → S) [SetLike.GradedMonoid A]
-variable {κ:Type*} (i:κ → ι) (g:κ → R) {F:Finset κ}
+ (A:ι → S) [SetLike.GradedMonoid A]
+ {κ:Type*} (i:κ → ι) (g:κ → R) {F:Finset κ}
 theorem prod_mem_graded (hF:∀ k∈F,g k∈A (i k)):∏ k∈F,g k∈A (∑ k∈F,i k):=by
  classical
  letI:DecidableEq κ:=Classical.decEq κ

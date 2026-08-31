@@ -1,11 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G4
 import ProximityPrize.SubmissionLower.G6
 namespace ProximityPrize.SubmissionLower.RCN024
 open scoped BigOperators
 noncomputable section
 variable {K:Type*} [Field K] [DecidableEq K]
-variable {ι:Type*} [Fintype ι] [DecidableEq ι]
+ {ι:Type*} [Fintype ι] [DecidableEq ι]
 theorem pow_card_dvd_det_of_dvd_columns
    (M:Matrix ι ι (Polynomial K)) (a:Polynomial K) (columns:Finset ι)
    (hdiv:∀ j∈columns,∀ i,a∣M i j):

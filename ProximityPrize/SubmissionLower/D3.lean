@@ -1,13 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D2
 import ProximityPrize.SubmissionLower.G
 import ProximityPrize.SubmissionLower.E6
 import ProximityPrize.SubmissionLower.EJ
 namespace ProximityPrize.SubmissionLower.RCN208
 open scoped Classical
-open RCN002 RCN072 RCN264
-open RCN022 RCN207
-open RCN134
+open RCN002 RCN072 RCN264 RCN022 RCN207 RCN134
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 20000

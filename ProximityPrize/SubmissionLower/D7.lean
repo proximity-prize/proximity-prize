@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AS
 open LinearMap Pointwise Ideal WithZero
 variable {R:Type*} {M:Type*} [AddCommMonoid M]

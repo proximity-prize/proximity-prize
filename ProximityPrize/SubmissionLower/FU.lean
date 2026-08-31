@@ -1,24 +1,14 @@
 import ProximityPrize.SubmissionLower.N
 import ProximityPrize.SubmissionLower.FX
 namespace ProximityPrize.SubmissionLower.RCN245
-open RCN244
-open RCN135 RCN136
-open RCN074
-open RCN095
-open RCN102
-open RCN113
-open RCN120
-open RCN086
-open RCN313
-open RCN002 RCN011
-open RCN125
+open RCN244 RCN135 RCN136 RCN074 RCN095 RCN102 RCN113 RCN120 RCN086 RCN313 RCN002 RCN011 RCN125
 noncomputable section
 set_option autoImplicit false
 variable {K I:Type} [Field K]
-variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
-variable [CharP (GenericField K) p]
-variable {errorCap:ℕ}
-variable {stageSupport:RCN275.ResidualSupportParameters}
+ {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
+ [CharP (GenericField K) p]
+ {errorCap:ℕ}
+ {stageSupport:RCN275.ResidualSupportParameters}
 abbrev StageComponent (S:Stage K I Gamma x p flag errorCap stageSupport):=FirstTailComponent S
 def stageSurfacePlane (S:Stage K I Gamma x p flag errorCap stageSupport)
    (lam mu nu:GenericField K) (order:Fin 3 ≃ Fin 3):

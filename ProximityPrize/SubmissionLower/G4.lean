@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G3
 namespace ProximityPrize.SubmissionLower.RCN361
 open RCN360
@@ -100,7 +99,7 @@ theorem finrank_le_planar_bound
 end SingleField
 section FiniteFamily
 variable (K:Type) [Field K]
-variable {I:Type} [Fintype I] (E:I → Type)
+ {I:Type} [Fintype I] (E:I → Type)
  [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
  [∀ i,FiniteDimensional K (E i)] [∀ i,Algebra.IsSeparable K (E i)]
 theorem sum_finrank_le_planar_bound

@@ -1,8 +1,7 @@
 import ProximityPrize.SubmissionLower.FE
 namespace ProximityPrize.SubmissionLower.RCN048
 open scoped BigOperators
-open RCN077 RCN313
-open RCN217
+open RCN077 RCN313 RCN217
 noncomputable section
 variable {K:Type*} [Field K]
 private abbrev factorIdeal (F:Poly4 K):Ideal (Poly4 K):=Ideal.span {F}

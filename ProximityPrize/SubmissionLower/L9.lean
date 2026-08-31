@@ -1,21 +1,14 @@
 import ProximityPrize.SubmissionLower.M0
 import ProximityPrize.SubmissionLower.C9
 namespace ProximityPrize.SubmissionLower.RCN192
-open RCN011 RCN021
-open RCN022
-open RCN226
-open RCN191
-open RCN193
-open RCN120
-open RCN014
-open RCN197
+open RCN011 RCN021 RCN022 RCN226 RCN191 RCN193 RCN120 RCN014 RCN197
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2500000
 variable (K L:Type) [Field K] [Field L] [Algebra K L]
-variable (order:Fin 3 ≃ Fin 3)
-variable (e:MvPolynomial (Fin 3) K→ₐ[K] L)
-variable (ht:Transcendental K (e (MvPolynomial.X (order 0))))
+ (order:Fin 3 ≃ Fin 3)
+ (e:MvPolynomial (Fin 3) K →ₐ[K] L)
+ (ht:Transcendental K (e (MvPolynomial.X (order 0))))
 theorem localizedRelation_comap_C_eq_maximalIdeal
    (hfinite:
      letI:Algebra (RatFunc K) L:=
@@ -48,18 +41,18 @@ theorem localizedRelationResidue_finite
      K L order e ht hfinite
    let a:=relationResidueAlgebra JP hcontract
    letI:Algebra (IsLocalRing.ResidueField Rp)
-       (LocalizedPlane K L order e ht hfinite⧸ JP):=a
+       (LocalizedPlane K L order e ht hfinite ⧸ JP):=a
    letI:SMul (IsLocalRing.ResidueField Rp)
-       (LocalizedPlane K L order e ht hfinite⧸ JP):=a.toSMul
+       (LocalizedPlane K L order e ht hfinite ⧸ JP):=a.toSMul
    let targetSemiring:Semiring
-       (LocalizedPlane K L order e ht hfinite⧸ JP):=inferInstance
+       (LocalizedPlane K L order e ht hfinite ⧸ JP):=inferInstance
    letI:AddCommMonoid
-       (LocalizedPlane K L order e ht hfinite⧸ JP):=
+       (LocalizedPlane K L order e ht hfinite ⧸ JP):=
      targetSemiring.toAddCommMonoid
    letI:Module (IsLocalRing.ResidueField Rp)
-       (LocalizedPlane K L order e ht hfinite⧸ JP):=Algebra.toModule
+       (LocalizedPlane K L order e ht hfinite ⧸ JP):=Algebra.toModule
    FiniteDimensional (IsLocalRing.ResidueField Rp)
-     (LocalizedPlane K L order e ht hfinite⧸ JP):=by
+     (LocalizedPlane K L order e ht hfinite ⧸ JP):=by
  let F:=RatFunc K
  let q:=projectedFactor K L order e ht
  let J:=relationKernel K L order e ht
@@ -70,12 +63,12 @@ theorem localizedRelationResidue_finite
  letI:FiniteDimensional F L:=hfinite
  letI:J.IsMaximal:=relationKernel_isMaximal K L order e ht hfinite hgen
  let a0:=residueAlgebra q J (relationKernel_comap_C K L order e ht)
- letI:Algebra (AdjoinRoot q) (PlaneRing K⧸ J):=a0
- letI:SMul (AdjoinRoot q) (PlaneRing K⧸ J):=a0.toSMul
- let quotientSemiring:Semiring (PlaneRing K⧸ J):=inferInstance
- letI:AddCommMonoid (PlaneRing K⧸ J):=quotientSemiring.toAddCommMonoid
- letI:Module (AdjoinRoot q) (PlaneRing K⧸ J):=Algebra.toModule
- let phi:PlaneRing K→ₐ[F] L:={
+ letI:Algebra (AdjoinRoot q) (PlaneRing K ⧸ J):=a0
+ letI:SMul (AdjoinRoot q) (PlaneRing K ⧸ J):=a0.toSMul
+ let quotientSemiring:Semiring (PlaneRing K ⧸ J):=inferInstance
+ letI:AddCommMonoid (PlaneRing K ⧸ J):=quotientSemiring.toAddCommMonoid
+ letI:Module (AdjoinRoot q) (PlaneRing K ⧸ J):=Algebra.toModule
+ let phi:PlaneRing K →ₐ[F] L:={
    toRingHom:=planeEvaluation K L order e ht
    commutes':=fun a => by
      change planeEvaluation K L order e ht
@@ -88,37 +81,37 @@ theorem localizedRelationResidue_finite
        (e (MvPolynomial.X (order 2))) (e (MvPolynomial.X (order 1))))
    exact planeEvaluation_surjective_of_finite_generatingPair
      (e (MvPolynomial.X (order 2))) (e (MvPolynomial.X (order 1))) hgen
- let eqv0:(PlaneRing K⧸ J) ≃ₐ[F] L:=by
-   change (PlaneRing K⧸ RingHom.ker phi) ≃ₐ[F] L
+ let eqv0:(PlaneRing K ⧸ J) ≃ₐ[F] L:=by
+   change (PlaneRing K ⧸ RingHom.ker phi) ≃ₐ[F] L
    exact Ideal.quotientKerAlgEquivOfSurjective hsurj
- letI:Module.Finite F (PlaneRing K⧸ J):=
+ letI:Module.Finite F (PlaneRing K ⧸ J):=
    Module.Finite.equiv eqv0.toLinearEquiv.symm
- letI:IsScalarTower F (AdjoinRoot q) (PlaneRing K⧸ J):=
+ letI:IsScalarTower F (AdjoinRoot q) (PlaneRing K ⧸ J):=
    IsScalarTower.of_algebraMap_eq fun c => by
      change Ideal.Quotient.mk J (Polynomial.C (Polynomial.C c))=
        Ideal.Quotient.mk J (Polynomial.C (Polynomial.C c))
      rfl
- letI:Module.Finite (AdjoinRoot q) (PlaneRing K⧸ J):=
+ letI:Module.Finite (AdjoinRoot q) (PlaneRing K ⧸ J):=
    Module.Finite.of_restrictScalars_finite F _ _
  have hcontract:=localizedRelation_comap_C_eq_maximalIdeal
    K L order e ht hfinite
  let a1:=relationResidueAlgebra JP hcontract
  letI:Algebra (IsLocalRing.ResidueField Rp)
-     (LocalizedPlane K L order e ht hfinite⧸ JP):=a1
+     (LocalizedPlane K L order e ht hfinite ⧸ JP):=a1
  letI:SMul (IsLocalRing.ResidueField Rp)
-     (LocalizedPlane K L order e ht hfinite⧸ JP):=a1.toSMul
+     (LocalizedPlane K L order e ht hfinite ⧸ JP):=a1.toSMul
  let targetSemiring:Semiring
-     (LocalizedPlane K L order e ht hfinite⧸ JP):=inferInstance
- letI:AddCommMonoid (LocalizedPlane K L order e ht hfinite⧸ JP):=
+     (LocalizedPlane K L order e ht hfinite ⧸ JP):=inferInstance
+ letI:AddCommMonoid (LocalizedPlane K L order e ht hfinite ⧸ JP):=
    targetSemiring.toAddCommMonoid
  letI:Module (IsLocalRing.ResidueField Rp)
-     (LocalizedPlane K L order e ht hfinite⧸ JP):=Algebra.toModule
+     (LocalizedPlane K L order e ht hfinite ⧸ JP):=Algebra.toModule
  let e1:=coefficientResidueEquiv K L order e ht hfinite
  let e2:=planeResidueEquiv K L order e ht hfinite hgen
  refine Module.Finite.of_equiv_equiv
-   (A₁:=AdjoinRoot q) (B₁:=PlaneRing K⧸ J)
+   (A₁:=AdjoinRoot q) (B₁:=PlaneRing K ⧸ J)
    (A₂:=IsLocalRing.ResidueField Rp)
-   (B₂:=LocalizedPlane K L order e ht hfinite⧸ JP) e1 e2 ?_
+   (B₂:=LocalizedPlane K L order e ht hfinite ⧸ JP) e1 e2 ?_
  apply RingHom.ext
  intro x
  obtain ⟨x,rfl⟩:=AdjoinRoot.mk_surjective x
@@ -147,54 +140,54 @@ theorem localizedRelationResidue_finrank_eq_unlocalized
    let hcontract:=localizedRelation_comap_C_eq_maximalIdeal
      K L order e ht hfinite
    let a0:=residueAlgebra q J (relationKernel_comap_C K L order e ht)
-   letI:Algebra (AdjoinRoot q) (PlaneRing K⧸ J):=a0
-   letI:SMul (AdjoinRoot q) (PlaneRing K⧸ J):=a0.toSMul
-   let sourceSemiring:Semiring (PlaneRing K⧸ J):=inferInstance
-   letI:AddCommMonoid (PlaneRing K⧸ J):=sourceSemiring.toAddCommMonoid
-   letI:Module (AdjoinRoot q) (PlaneRing K⧸ J):=Algebra.toModule
+   letI:Algebra (AdjoinRoot q) (PlaneRing K ⧸ J):=a0
+   letI:SMul (AdjoinRoot q) (PlaneRing K ⧸ J):=a0.toSMul
+   let sourceSemiring:Semiring (PlaneRing K ⧸ J):=inferInstance
+   letI:AddCommMonoid (PlaneRing K ⧸ J):=sourceSemiring.toAddCommMonoid
+   letI:Module (AdjoinRoot q) (PlaneRing K ⧸ J):=Algebra.toModule
    let a1:=relationResidueAlgebra JP hcontract
    letI:Algebra (IsLocalRing.ResidueField Rp)
-       (LocalizedPlane K L order e ht hfinite⧸ JP):=a1
+       (LocalizedPlane K L order e ht hfinite ⧸ JP):=a1
    letI:SMul (IsLocalRing.ResidueField Rp)
-       (LocalizedPlane K L order e ht hfinite⧸ JP):=a1.toSMul
+       (LocalizedPlane K L order e ht hfinite ⧸ JP):=a1.toSMul
    let targetSemiring:Semiring
-       (LocalizedPlane K L order e ht hfinite⧸ JP):=inferInstance
+       (LocalizedPlane K L order e ht hfinite ⧸ JP):=inferInstance
    letI:AddCommMonoid
-       (LocalizedPlane K L order e ht hfinite⧸ JP):=targetSemiring.toAddCommMonoid
+       (LocalizedPlane K L order e ht hfinite ⧸ JP):=targetSemiring.toAddCommMonoid
    letI:Module (IsLocalRing.ResidueField Rp)
-       (LocalizedPlane K L order e ht hfinite⧸ JP):=Algebra.toModule
+       (LocalizedPlane K L order e ht hfinite ⧸ JP):=Algebra.toModule
    Module.finrank (IsLocalRing.ResidueField Rp)
-       (LocalizedPlane K L order e ht hfinite⧸ JP)=
-     Module.finrank (AdjoinRoot q) (PlaneRing K⧸ J):=by
+       (LocalizedPlane K L order e ht hfinite ⧸ JP)=
+     Module.finrank (AdjoinRoot q) (PlaneRing K ⧸ J):=by
  let q:=projectedFactor K L order e ht
  let J:=relationKernel K L order e ht
  let Rp:=LocalCoefficient K L order e ht hfinite
  let JP:=localizedRelation K L order e ht hfinite
  letI:J.IsMaximal:=relationKernel_isMaximal K L order e ht hfinite hgen
  let a0:=residueAlgebra q J (relationKernel_comap_C K L order e ht)
- letI:Algebra (AdjoinRoot q) (PlaneRing K⧸ J):=a0
- letI:SMul (AdjoinRoot q) (PlaneRing K⧸ J):=a0.toSMul
- let sourceSemiring:Semiring (PlaneRing K⧸ J):=inferInstance
- letI:AddCommMonoid (PlaneRing K⧸ J):=sourceSemiring.toAddCommMonoid
- letI:Module (AdjoinRoot q) (PlaneRing K⧸ J):=Algebra.toModule
+ letI:Algebra (AdjoinRoot q) (PlaneRing K ⧸ J):=a0
+ letI:SMul (AdjoinRoot q) (PlaneRing K ⧸ J):=a0.toSMul
+ let sourceSemiring:Semiring (PlaneRing K ⧸ J):=inferInstance
+ letI:AddCommMonoid (PlaneRing K ⧸ J):=sourceSemiring.toAddCommMonoid
+ letI:Module (AdjoinRoot q) (PlaneRing K ⧸ J):=Algebra.toModule
  have hcontract:=localizedRelation_comap_C_eq_maximalIdeal
    K L order e ht hfinite
  let a1:=relationResidueAlgebra JP hcontract
  letI:Algebra (IsLocalRing.ResidueField Rp)
-     (LocalizedPlane K L order e ht hfinite⧸ JP):=a1
+     (LocalizedPlane K L order e ht hfinite ⧸ JP):=a1
  letI:SMul (IsLocalRing.ResidueField Rp)
-     (LocalizedPlane K L order e ht hfinite⧸ JP):=a1.toSMul
+     (LocalizedPlane K L order e ht hfinite ⧸ JP):=a1.toSMul
  let targetSemiring:Semiring
-     (LocalizedPlane K L order e ht hfinite⧸ JP):=inferInstance
- letI:AddCommMonoid (LocalizedPlane K L order e ht hfinite⧸ JP):=
+     (LocalizedPlane K L order e ht hfinite ⧸ JP):=inferInstance
+ letI:AddCommMonoid (LocalizedPlane K L order e ht hfinite ⧸ JP):=
    targetSemiring.toAddCommMonoid
  letI:Module (IsLocalRing.ResidueField Rp)
-     (LocalizedPlane K L order e ht hfinite⧸ JP):=Algebra.toModule
+     (LocalizedPlane K L order e ht hfinite ⧸ JP):=Algebra.toModule
  let e1:=coefficientResidueEquiv K L order e ht hfinite
  let e2:=planeResidueEquiv K L order e ht hfinite hgen
  have hcompat:(algebraMap (IsLocalRing.ResidueField Rp)
-     (LocalizedPlane K L order e ht hfinite⧸ JP)).comp e1.toRingHom=
-     e2.toRingHom.comp (algebraMap (AdjoinRoot q) (PlaneRing K⧸ J)):=by
+     (LocalizedPlane K L order e ht hfinite ⧸ JP)).comp e1.toRingHom=
+     e2.toRingHom.comp (algebraMap (AdjoinRoot q) (PlaneRing K ⧸ J)):=by
    apply RingHom.ext
    intro x
    obtain ⟨x,rfl⟩:=AdjoinRoot.mk_surjective x

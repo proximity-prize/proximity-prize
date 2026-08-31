@@ -1,19 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BZ
 import ProximityPrize.SubmissionLower.GU
 namespace ProximityPrize.SubmissionLower.RCN075
 open scoped Classical BigOperators WithZero
-open IsDedekindDomain
-open RCN187
-open RCN133
-open RCN184
-open RCN295
-open RCN002 RCN005
+open IsDedekindDomain RCN187 RCN133 RCN184 RCN295 RCN002 RCN005
  RCN006 RCN007
-open RCN344
-open RCN264
-open RCN273
-open RCN323
+open RCN344 RCN264 RCN273 RCN323
 noncomputable section
 variable {Ω:Type} [Field Ω] [IsAlgClosed Ω]
 def componentRelevantPlaces

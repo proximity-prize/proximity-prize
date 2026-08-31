@@ -1,15 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I4
 import ProximityPrize.SubmissionLower.D8
 namespace ProximityPrize.SubmissionLower.RCN130
 open scoped Classical BigOperators
-open RCN081 RCN136 RCN135
-open RCN137 RCN222
-open RCN266 RCN167
-open RCN156 RCN095
+open RCN081 RCN136 RCN135 RCN137 RCN222 RCN266 RCN167 RCN156 RCN095
 open RCN125 (sWeight ysWeight totalWeight)
-open RCN071 RCN234
-open RCN275 RCN159
+open RCN071 RCN234 RCN275 RCN159
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 30000
@@ -17,7 +12,7 @@ variable {K L:Type} [Field K] [Field L]
 def flagFromCaps (total middle inner:ℕ):FlagDegree:=
  ⟨total-middle,middle-inner,inner⟩
 theorem flagFromCaps_cumulative (total middle inner:ℕ)
-   (hi:inner≤ middle) (hm:middle≤ total):
+   (hi:inner ≤ middle) (hm:middle ≤ total):
    (flagFromCaps total middle inner).all=inner∧
      (flagFromCaps total middle inner).yz+
        (flagFromCaps total middle inner).all=middle∧
@@ -27,8 +22,8 @@ theorem flagFromCaps_cumulative (total middle inner:ℕ)
  dsimp [flagFromCaps]
  omega
 theorem residual_weight_nested (F:MvPolynomial (Fin 4) K):
-   wt residualSWeights F≤ wt residualYSWeights F∧
-     wt residualYSWeights F≤ wt residualTotalWeights F:=by
+   wt residualSWeights F ≤ wt residualYSWeights F∧
+     wt residualYSWeights F ≤ wt residualTotalWeights F:=by
  constructor
  · apply (weightedTotalDegree_le_iff residualSWeights F _).mpr
    intro d hd
@@ -43,21 +38,21 @@ theorem residual_weight_nested (F:MvPolynomial (Fin 4) K):
    simp [wt,residualYSWeights,residualTotalWeights] at h ⊢
    omega
 theorem surface_weight_nested (G:MvPolynomial (Fin 3) L):
-   MvPolynomial.weightedTotalDegree sWeight G≤
+   MvPolynomial.weightedTotalDegree sWeight G ≤
        MvPolynomial.weightedTotalDegree ysWeight G∧
-     MvPolynomial.weightedTotalDegree ysWeight G≤
+     MvPolynomial.weightedTotalDegree ysWeight G ≤
        MvPolynomial.weightedTotalDegree totalWeight G:=by
  constructor
  · unfold MvPolynomial.weightedTotalDegree
    apply Finset.sup_le
    intro d hd
-   exact (show Finsupp.weight sWeight d≤ Finsupp.weight ysWeight d by
+   exact (show Finsupp.weight sWeight d ≤ Finsupp.weight ysWeight d by
      rw [RCN372.weight_fin3,RCN372.weight_fin3]
      simp [sWeight,ysWeight]).trans (Finset.le_sup hd)
  · unfold MvPolynomial.weightedTotalDegree
    apply Finset.sup_le
    intro d hd
-   exact (show Finsupp.weight ysWeight d≤ Finsupp.weight totalWeight d by
+   exact (show Finsupp.weight ysWeight d ≤ Finsupp.weight totalWeight d by
      rw [RCN372.weight_fin3,RCN372.weight_fin3]
      simp [ysWeight,totalWeight]).trans (Finset.le_sup hd)
 def originalCumulativeFlag (F:MvPolynomial (Fin 4) K):FlagDegree:=
@@ -99,19 +94,19 @@ theorem polynomialIn_surfaceCumulativeFlag (G:MvPolynomial (Fin 3) L):
  rw [RCN372.weight_fin3] at hs hm ht
  simp [sWeight,ysWeight,totalWeight] at hs hm ht
  have hc:=surfaceCumulativeFlag_cumulative G
- change d 1≤ (surfaceCumulativeFlag G).all∧
-   d 0+d 1≤ (surfaceCumulativeFlag G).yz+(surfaceCumulativeFlag G).all∧
-   d 0+d 1+d 2≤ (surfaceCumulativeFlag G).zOnly+
+ change d 1 ≤ (surfaceCumulativeFlag G).all∧
+   d 0+d 1 ≤ (surfaceCumulativeFlag G).yz+(surfaceCumulativeFlag G).all∧
+   d 0+d 1+d 2 ≤ (surfaceCumulativeFlag G).zOnly+
      (surfaceCumulativeFlag G).yz+(surfaceCumulativeFlag G).all
  rw [hc.2.2,hc.2.1,hc.1]
  exact ⟨hs,hm,ht⟩
-theorem surfaceMap_nested_weights_le (phi:Polynomial K→+*L)
+theorem surfaceMap_nested_weights_le (phi:Polynomial K →+*L)
    (F:MvPolynomial (Fin 4) K):
-   MvPolynomial.weightedTotalDegree sWeight (surfaceMap phi F)≤
+   MvPolynomial.weightedTotalDegree sWeight (surfaceMap phi F) ≤
        wt residualSWeights F∧
-     MvPolynomial.weightedTotalDegree ysWeight (surfaceMap phi F)≤
+     MvPolynomial.weightedTotalDegree ysWeight (surfaceMap phi F) ≤
        wt residualYSWeights F∧
-     MvPolynomial.weightedTotalDegree totalWeight (surfaceMap phi F)≤
+     MvPolynomial.weightedTotalDegree totalWeight (surfaceMap phi F) ≤
        wt residualTotalWeights F:=by
  refine ⟨?_,?_,?_⟩
  all_goals
@@ -129,7 +124,7 @@ theorem surfaceMap_nested_weights_le (phi:Polynomial K→+*L)
  · have h:=MvPolynomial.le_weightedTotalDegree residualTotalWeights hd
    rw [weight_fin4] at h
    simpa [wt,totalWeight,residualTotalWeights,Finsupp.tail_apply] using h
-theorem surfaceMap_in_originalCumulativeFlag (phi:Polynomial K→+*L)
+theorem surfaceMap_in_originalCumulativeFlag (phi:Polynomial K →+*L)
    (F:MvPolynomial (Fin 4) K):
    PolynomialInFlag (originalCumulativeFlag F) (surfaceMap phi F):=by
  have hm:=surfaceMap_nested_weights_le phi F
@@ -142,11 +137,11 @@ theorem surfaceMap_in_originalCumulativeFlag (phi:Polynomial K→+*L)
 theorem regularCumulativeFlag_budgets
    (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
    {P:ResidualSupportParameters} (H:ResidualSupportData P Q):
-   (∑ R:RegularIndex Q,(regularCumulativeFlag Q R).all)≤ P.s∧
+   (∑ R:RegularIndex Q,(regularCumulativeFlag Q R).all) ≤ P.s∧
      (∑ R:RegularIndex Q,((regularCumulativeFlag Q R).yz+
-       (regularCumulativeFlag Q R).all))≤ P.ys∧
+       (regularCumulativeFlag Q R).all)) ≤ P.ys∧
      (∑ R:RegularIndex Q,((regularCumulativeFlag Q R).zOnly+
-       (regularCumulativeFlag Q R).yz+(regularCumulativeFlag Q R).all))≤ P.total:=by
+       (regularCumulativeFlag Q R).yz+(regularCumulativeFlag Q R).all)) ≤ P.total:=by
  have hp:=positiveRFactors_product_dvd Q hQ
  have hs:=sum_weightedTotalDegree_le_of_prod_dvd residualSWeights
    (positiveRFactors Q) id Q hQ hp
@@ -165,13 +160,13 @@ theorem regularCumulativeFlag_budgets
      Finset.sum_coe_sort]
    exact ht.trans H.total_weight
 theorem geometricCumulativeFlag_budgets (F:MvPolynomial (Fin 4) K) (hF:F≠0):
-   (∑ g:GeometricFactor K F,(geometricCumulativeFlag K g).all)≤
+   (∑ g:GeometricFactor K F,(geometricCumulativeFlag K g).all) ≤
        (originalCumulativeFlag F).all∧
      (∑ g:GeometricFactor K F,((geometricCumulativeFlag K g).yz+
-       (geometricCumulativeFlag K g).all))≤
+       (geometricCumulativeFlag K g).all)) ≤
        (originalCumulativeFlag F).yz+(originalCumulativeFlag F).all∧
      (∑ g:GeometricFactor K F,((geometricCumulativeFlag K g).zOnly+
-       (geometricCumulativeFlag K g).yz+(geometricCumulativeFlag K g).all))≤
+       (geometricCumulativeFlag K g).yz+(geometricCumulativeFlag K g).all)) ≤
        (originalCumulativeFlag F).zOnly+(originalCumulativeFlag F).yz+
          (originalCumulativeFlag F).all:=by
  let phi:=polynomialEmbedding K
@@ -199,10 +194,10 @@ theorem geometricCumulativeFlag_le_support
    (F:MvPolynomial (Fin 4) K) (hF:F≠0)
    {P:ResidualSupportParameters} (H:ResidualSupportData P F)
    (g:GeometricFactor K F):
-   (geometricCumulativeFlag K g).all≤ P.s∧
-     (geometricCumulativeFlag K g).yz+(geometricCumulativeFlag K g).all≤ P.ys∧
+   (geometricCumulativeFlag K g).all ≤ P.s∧
+     (geometricCumulativeFlag K g).yz+(geometricCumulativeFlag K g).all ≤ P.ys∧
      (geometricCumulativeFlag K g).zOnly+(geometricCumulativeFlag K g).yz+
-       (geometricCumulativeFlag K g).all≤ P.total:=by
+       (geometricCumulativeFlag K g).all ≤ P.total:=by
  have hb:=geometricCumulativeFlag_budgets F hF
  have hc:=originalCumulativeFlag_cumulative F
  rw [hc.2.2,hc.2.1,hc.1] at hb
@@ -218,11 +213,11 @@ theorem originalCumulativeFlag_all (F:MvPolynomial (Fin 4) K):
  change MvPolynomial.weightedTotalDegree residualSWeights F=_
  have hw:residualSWeights=Pi.single (2:Fin 4) 1:=by
    funext i
-   fin_cases i<;> simp [residualSWeights]
+   fin_cases i <;> simp [residualSWeights]
  rw [hw,MvPolynomial.weightedTotalDegree_piSingle]
 theorem regularCumulativeFlag_positive
    (Q:MvPolynomial (Fin 4) K) (R:RegularIndex Q):
-   0< (regularCumulativeFlag Q R).all:=by
+   0 < (regularCumulativeFlag Q R).all:=by
  rw [originalCumulativeFlag_all]
  exact (positiveRFactors_spec Q R.1 R.2).2.2
 theorem surfaceCumulativeFlag_all (G:MvPolynomial (Fin 3) L):
@@ -230,14 +225,14 @@ theorem surfaceCumulativeFlag_all (G:MvPolynomial (Fin 3) L):
  change MvPolynomial.weightedTotalDegree sWeight G=_
  have hw:sWeight=Pi.single (1:Fin 3) 1:=by
    funext i
-   fin_cases i<;> simp [sWeight]
+   fin_cases i <;> simp [sWeight]
  rw [hw,MvPolynomial.weightedTotalDegree_piSingle]
-def reflagResidualStage {Iota:Type} {phi:Polynomial K→+*L}
-   {Gamma:Finset K} {x:Iota→ K} {p e d:ℕ} [CharP L p]
+def reflagResidualStage {Iota:Type} {phi:Polynomial K →+*L}
+   {Gamma:Finset K} {x:Iota → K} {p e d:ℕ} [CharP L p]
    {oldFlag newFlag:FlagDegree} {support:ResidualSupportParameters}
    (S:ResidualStage phi Gamma x p e oldFlag d support)
    (hflag:PolynomialInFlag newFlag S.G):
    ResidualStage phi Gamma x p e newFlag d support:=
- {S with flag_support:=hflag}
+ { S with flag_support:=hflag}
 end
 end ProximityPrize.SubmissionLower.RCN130

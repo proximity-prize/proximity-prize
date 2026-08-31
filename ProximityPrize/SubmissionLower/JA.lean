@@ -1,12 +1,11 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CM
 import ProximityPrize.SubmissionLower.F7
 namespace ProximityPrize.SubmissionLower.RCN373
 open scoped Classical
 noncomputable section
 variable {K R S:Type*} [Field K] [CommRing R] [CommRing S]
-variable [Algebra K R] [Algebra K S] [Algebra R S] [IsScalarTower K R S]
-variable [Algebra.IsIntegral R S]
+ [Algebra K R] [Algebra K S] [Algebra R S] [IsScalarTower K R S]
+ [Algebra.IsIntegral R S]
 theorem pointFiber_quotient_integral (phi:R →ₐ[K] K) (P:Ideal S)
    (hP:P.comap (algebraMap R S)=RingHom.ker phi.toRingHom):
    Algebra.IsIntegral K (S ⧸ P):=by

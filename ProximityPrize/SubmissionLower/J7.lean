@@ -1,15 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Y8
 namespace ProximityPrize.SubmissionLower.RCN096
 open scoped Classical BigOperators WithZero TensorProduct
-open Polynomial KaehlerDifferential IsDedekindDomain
-open RCN022 RCN351
-open RCN344 RCN295
-open RCN075
-open RCN002 RCN005 RCN007
-open RCN264
-open RCN093
-open RCN097
+open Polynomial KaehlerDifferential IsDedekindDomain RCN022 RCN351 RCN344 RCN295 RCN075 RCN002 RCN005 RCN007 RCN264 RCN093 RCN097
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
@@ -41,9 +33,9 @@ theorem directional_bad_coefficient_subsingleton
  exact sub_eq_zero.mp hCsub
 section FiniteFamily
 variable {K:Type*} [Field K] [IsAlgClosed K]
-variable {I:Type*} [Fintype I]
-variable (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
-variable (r z:∀ i,E i)
+ {I:Type*} [Fintype I]
+ (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+ (r z:∀ i,E i)
 variable (W:∀ i,
  Finset (RCN345.NormalizedValuation K (E i)))
 theorem exists_common_exact_finite_separable_shear_avoiding
@@ -116,7 +108,7 @@ theorem exists_common_exact_finite_separable_shear_avoiding
 end FiniteFamily
 section RegularComponents
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
+ {G T H:MvPolynomial (Fin 3) Omega}
 theorem exists_nestedFlagProjectionData_directional
    (hseparator:∀ C:RegularComponent Omega G T H,
      Transcendental Omega (coordinate Omega C.1 2))

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.I5
 namespace ProximityPrize.SubmissionLower.RCN264
 open RCN072

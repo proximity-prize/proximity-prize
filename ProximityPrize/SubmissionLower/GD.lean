@@ -1,12 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AB
 import ProximityPrize.SubmissionLower.GF
 namespace ProximityPrize.SubmissionLower.RCN299
-open ProximityPrize.Benchmark
-open RCN174 RCN319
-open RCN259
-open RCN301
-open RCN300
+open ProximityPrize.Benchmark RCN174 RCN319 RCN259 RCN301 RCN300
 noncomputable section
 abbrev GlobalPoly:=MvPolynomial (Fin 4) IRSProfile.Field
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _

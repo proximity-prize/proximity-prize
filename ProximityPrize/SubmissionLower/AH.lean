@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z7
 import ProximityPrize.SubmissionLower.C
 namespace ProximityPrize.SubmissionLower.RCN295

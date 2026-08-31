@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.U1
 section ProximityFlatProofPort
 open SetLike DirectSum Set
@@ -6,9 +5,9 @@ open scoped Pointwise
 variable {ι σ A:Type*}
 section HomogeneousDef
 variable [Semiring A]
-variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ)
-variable [DecidableEq ι] [AddMonoid ι] [GradedRing 𝒜]
-variable (I:Ideal A)
+ [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ)
+ [DecidableEq ι] [AddMonoid ι] [GradedRing 𝒜]
+ (I:Ideal A)
 abbrev Ideal.IsHomogeneous:Prop:=Submodule.IsHomogeneous I 𝒜
 theorem Ideal.IsHomogeneous.mem_iff {I} (hI:Ideal.IsHomogeneous 𝒜 I) {x}:
    x∈I ↔ ∀ i,(decompose 𝒜 x i:A)∈I:=
@@ -39,8 +38,8 @@ theorem HomogeneousIdeal.mem_iff {I:HomogeneousIdeal 𝒜} {x:A}:x∈I.toIdeal �
 end HomogeneousDef
 section HomogeneousCore
 variable [Semiring A]
-variable [SetLike σ A] (𝒜:ι → σ)
-variable (I:Ideal A)
+ [SetLike σ A] (𝒜:ι → σ)
+ (I:Ideal A)
 def Ideal.homogeneousCore' (I:Ideal A):Ideal A:=
  Ideal.span ((↑) '' (((↑):Subtype (SetLike.IsHomogeneousElem 𝒜) → A) ⁻¹' I))
 theorem Ideal.homogeneousCore'_mono:Monotone (Ideal.homogeneousCore' 𝒜):=
@@ -50,9 +49,9 @@ theorem Ideal.homogeneousCore'_le:I.homogeneousCore' 𝒜 ≤ I:=
 end HomogeneousCore
 section IsHomogeneousIdealDefs
 variable [Semiring A]
-variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ)
-variable [DecidableEq ι] [AddMonoid ι] [GradedRing 𝒜]
-variable (I:Ideal A)
+ [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ)
+ [DecidableEq ι] [AddMonoid ι] [GradedRing 𝒜]
+ (I:Ideal A)
 theorem Ideal.isHomogeneous_iff_forall_subset:
    I.IsHomogeneous 𝒜 ↔ ∀ i,(I:Set A) ⊆ GradedRing.proj 𝒜 i ⁻¹' I:=
  Iff.rfl
@@ -125,7 +124,7 @@ end IsHomogeneousIdealDefs
 section Operations
 section Semiring
 variable [Semiring A] [DecidableEq ι] [AddMonoid ι]
-variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ) [GradedRing 𝒜]
+ [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ) [GradedRing 𝒜]
 namespace Ideal.IsHomogeneous
 theorem bot:Ideal.IsHomogeneous 𝒜 ⊥:=fun i r hr => by
  simp only [Ideal.mem_bot] at hr
@@ -248,9 +247,9 @@ end HomogeneousIdeal
 end Semiring
 section CommSemiring
 variable [CommSemiring A]
-variable [DecidableEq ι] [AddMonoid ι]
-variable [SetLike σ A] [AddSubmonoidClass σ A] {𝒜:ι → σ} [GradedRing 𝒜]
-variable (I:Ideal A)
+ [DecidableEq ι] [AddMonoid ι]
+ [SetLike σ A] [AddSubmonoidClass σ A] {𝒜:ι → σ} [GradedRing 𝒜]
+ (I:Ideal A)
 theorem Ideal.IsHomogeneous.mul {I J:Ideal A} (HI:I.IsHomogeneous 𝒜) (HJ:J.IsHomogeneous 𝒜):
    (I*J).IsHomogeneous 𝒜:=by
  rw [Ideal.IsHomogeneous.iff_exists] at HI HJ ⊢
@@ -268,8 +267,8 @@ end Operations
 section homogeneousCore
 open HomogeneousIdeal
 variable [Semiring A] [DecidableEq ι] [AddMonoid ι]
-variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ) [GradedRing 𝒜]
-variable (I:Ideal A)
+ [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ) [GradedRing 𝒜]
+ (I:Ideal A)
 theorem Ideal.homogeneousCore.gc:GaloisConnection toIdeal (Ideal.homogeneousCore 𝒜):=fun I _ =>
  ⟨fun H => I.toIdeal_homogeneousCore_eq_self ▸ Ideal.homogeneousCore_mono 𝒜 H,
    fun H => le_trans H (Ideal.homogeneousCore'_le _ _)⟩
@@ -297,8 +296,8 @@ end homogeneousCore
 section HomogeneousHull
 open HomogeneousIdeal
 variable [Semiring A] [DecidableEq ι] [AddMonoid ι]
-variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ) [GradedRing 𝒜]
-variable (I:Ideal A)
+ [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ) [GradedRing 𝒜]
+ (I:Ideal A)
 def Ideal.homogeneousHull:HomogeneousIdeal 𝒜:=
  ⟨Ideal.span { r:A | ∃ (i:ι) (x:I),(DirectSum.decompose 𝒜 (x:A) i:A)=r},by
    refine Ideal.homogeneous_span _ _ fun x hx => ?_
@@ -347,7 +346,7 @@ end HomogeneousHull
 section GaloisConnection
 open HomogeneousIdeal
 variable [Semiring A] [DecidableEq ι] [AddMonoid ι]
-variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ) [GradedRing 𝒜]
+ [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ) [GradedRing 𝒜]
 theorem Ideal.homogeneousHull.gc:GaloisConnection (Ideal.homogeneousHull 𝒜) toIdeal:=fun _ J =>
  ⟨le_trans (Ideal.le_toIdeal_homogeneousHull _ _),
    fun H => J.homogeneousHull_toIdeal_eq_self ▸ Ideal.homogeneousHull_mono 𝒜 H⟩
@@ -363,9 +362,9 @@ end GaloisConnection
 section IrrelevantIdeal
 namespace HomogeneousIdeal
 variable [Semiring A]
-variable [DecidableEq ι]
-variable [AddCommMonoid ι] [PartialOrder ι] [CanonicallyOrderedAdd ι]
-variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ) [GradedRing 𝒜]
+ [DecidableEq ι]
+ [AddCommMonoid ι] [PartialOrder ι] [CanonicallyOrderedAdd ι]
+ [SetLike σ A] [AddSubmonoidClass σ A] (𝒜:ι → σ) [GradedRing 𝒜]
 open GradedRing SetLike.GradedMonoid DirectSum
 def irrelevant:HomogeneousIdeal 𝒜:=
  ⟨RingHom.ker (GradedRing.projZeroRingHom 𝒜),fun i r (hr:(decompose 𝒜 r 0:A)=0) => by

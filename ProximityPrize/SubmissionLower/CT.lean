@@ -1,10 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 section ToSquareZero
 universe u v w
 variable {R:Type u} {A:Type v} {B:Type w} [CommSemiring R] [CommSemiring A] [CommRing B]
-variable [Algebra R A] [Algebra R B] (I:Ideal B)
+ [Algebra R A] [Algebra R B] (I:Ideal B)
 def diffToIdealOfQuotientCompEq (f₁ f₂:A →ₐ[R] B)
    (e:(Ideal.Quotient.mkₐ R I).comp f₁=(Ideal.Quotient.mkₐ R I).comp f₂):A →ₗ[R] I:=
  LinearMap.codRestrict (I.restrictScalars _) (f₁.toLinearMap-f₂.toLinearMap)

@@ -2,24 +2,14 @@ import ProximityPrize.SubmissionLower.J3
 import ProximityPrize.SubmissionLower.P3
 namespace ProximityPrize.SubmissionLower.RCN088
 open scoped Classical BigOperators
-open Polynomial KaehlerDifferential
-open RCN002 RCN005 RCN003
-open RCN001 RCN136 RCN231 RCN319
-open RCN238 RCN264 RCN243
-open RCN095 RCN159
-open RCN275 RCN287
-open RCN341 RCN277
-open RCN037 RCN038
-open RCN040 RCN041
-open RCN265 RCN274
-open RCN086
+open Polynomial KaehlerDifferential RCN002 RCN005 RCN003 RCN001 RCN136 RCN231 RCN319 RCN238 RCN264 RCN243 RCN095 RCN159 RCN275 RCN287 RCN341 RCN277 RCN037 RCN038 RCN040 RCN041 RCN265 RCN274 RCN086
 noncomputable section
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 50000
 set_option synthInstance.maxHeartbeats 300000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K→+*Omega} {Gamma:Finset K} {x:Iota→ K}
-variable {pchar e w a b s:ℕ} [CharP Omega pchar] {flag:FlagDegree}
+ {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+ {pchar e w a b s:ℕ} [CharP Omega pchar] {flag:FlagDegree}
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
 local instance:DecidableEq Iota:=Classical.decEq Iota
@@ -38,8 +28,8 @@ theorem exists_firstTail_projection
    (S:ResidualStage phi Gamma x pchar e flag w
      (RCN198.support a b s))
    (hproper:¬ S.G∣globalTailCut phi S.F (w+1))
-   (hGdegree:∀ j:Fin 3,S.G.degreeOf j< pchar)
-   (hmixedZ:coordinateMixedDegree Omega S.G (globalTailCut phi S.F (w+1)) 2< pchar):
+   (hGdegree:∀ j:Fin 3,S.G.degreeOf j < pchar)
+   (hmixedZ:coordinateMixedDegree Omega S.G (globalTailCut phi S.F (w+1)) 2 < pchar):
    ∃ base:∀ C:RegularComponent Omega S.G
        (globalTailCut phi S.F (w+1)) (regularitySurface phi S.F),
        SeparableLiteralCoordinate C.1,
@@ -93,10 +83,10 @@ theorem exists_firstTail_projection_of_caps
    (S:ResidualStage phi Gamma x pchar e flag w
      (RCN198.support a b s))
    (hproper:¬ S.G∣globalTailCut phi S.F (w+1))
-   (hflagChar:flag.yz+flag.all< pchar∧flag.all< pchar∧
-     flag.zOnly+flag.yz+flag.all< pchar)
+   (hflagChar:flag.yz+flag.all < pchar∧flag.all < pchar∧
+     flag.zOnly+flag.yz+flag.all < pchar)
    (hmixed:(1+(w+1)*(2*(b+s+3)-2))*flag.all+
-     (flag.yz+flag.all)*((2*(s+2)-1)*(w+1))< pchar):
+     (flag.yz+flag.all)*((2*(s+2)-1)*(w+1)) < pchar):
    ∃ base:∀ C:RegularComponent Omega S.G
        (globalTailCut phi S.F (w+1)) (regularitySurface phi S.F),
        SeparableLiteralCoordinate C.1,
@@ -104,8 +94,8 @@ theorem exists_firstTail_projection_of_caps
        (sharpResidualAgreementFlag (RCN198.support a b s) (w+1))):=by
  let T:=globalTailCut phi S.F (w+1)
  let supp:=RCN198.support a b s
- have hsy:supp.s< supp.ys:=by
-   change s+2< b+s+3
+ have hsy:supp.s < supp.ys:=by
+   change s+2 < b+s+3
    omega
  have hTflag:PolynomialInFlag (sharpResidualAgreementFlag supp (w+1)) T:=
    firstTail_in_sharp_flag S
@@ -113,20 +103,20 @@ theorem exists_firstTail_projection_of_caps
    RCN314.degree_bounds_of_polynomialInFlag S.flag_support
  obtain ⟨hTY,hTS,_⟩:=
    RCN314.degree_bounds_of_polynomialInFlag hTflag
- have hTY':T.degreeOf 0≤ 1+(w+1)*(2*(b+s+3)-2):=by
+ have hTY':T.degreeOf 0 ≤ 1+(w+1)*(2*(b+s+3)-2):=by
    apply hTY.trans_eq
    exact sharpResidualAgreementFlag_ys supp hsy (w+1)
- have hTS':T.degreeOf 1≤ (2*(s+2)-1)*(w+1):=by
+ have hTS':T.degreeOf 1 ≤ (2*(s+2)-1)*(w+1):=by
    apply hTS.trans_eq
    simp only [sharpResidualAgreementFlag,sharpAgreementDirection,supp,
      RCN198.support]
- have hGdegree:∀ j:Fin 3,S.G.degreeOf j< pchar:=by
+ have hGdegree:∀ j:Fin 3,S.G.degreeOf j < pchar:=by
    intro j
    fin_cases j
    · exact hGY.trans_lt hflagChar.1
    · exact hGS.trans_lt hflagChar.2.1
    · exact hGZ.trans_lt hflagChar.2.2
- have hmixZ:coordinateMixedDegree Omega S.G T 2< pchar:=by
+ have hmixZ:coordinateMixedDegree Omega S.G T 2 < pchar:=by
    rw [coordinateMixedDegree_two]
    exact (Nat.add_le_add (Nat.mul_le_mul hTY' hGS)
      (Nat.mul_le_mul hGY hTS')).trans_lt hmixed

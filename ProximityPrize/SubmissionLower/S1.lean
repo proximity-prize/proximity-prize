@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HB
 section ProximityFlatProofPort
 universe uι uR uA uB
@@ -6,8 +5,8 @@ variable {ι:Type uι}
 namespace DirectSum
 open DirectSum
 variable (R:Type uR) (A:ι → Type uA) {B:Type uB}
-variable [CommSemiring R] [∀ i,AddCommMonoid (A i)] [∀ i,Module R (A i)]
-variable [AddMonoid ι] [GSemiring A]
+ [CommSemiring R] [∀ i,AddCommMonoid (A i)] [∀ i,Module R (A i)]
+ [AddMonoid ι] [GSemiring A]
 section
 class GAlgebra where
  toFun:R →+A 0

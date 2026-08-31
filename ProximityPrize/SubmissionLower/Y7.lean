@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z3
 import ProximityPrize.SubmissionLower.EE
 namespace ProximityPrize.SubmissionLower.RCN093
@@ -6,8 +5,7 @@ open scoped Classical BigOperators
 open RCN002 RCN005
  RCN022 RCN011
  RCN371
-open RCN125
-open RCN124
+open RCN125 RCN124
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option synthInstance.maxHeartbeats 200000
@@ -203,7 +201,7 @@ theorem flag_generators_z (lam μ ν:K)
  exact top_of_affine_flag_mem K P lam μ ν L hU hV hZmem
 section Family
 variable {I:Type} [Fintype I]
-variable (Q:I → Ideal (MvPolynomial (Fin 3) K)) [∀ i,(Q i).IsPrime]
+ (Q:I → Ideal (MvPolynomial (Fin 3) K)) [∀ i,(Q i).IsPrime]
 theorem flagEvaluation_kernel_family_injective
    (hinj:Function.Injective Q) (lam μ ν:K):
    Function.Injective (fun i↦

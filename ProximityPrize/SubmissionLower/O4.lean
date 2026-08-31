@@ -1,13 +1,8 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.GA
 import ProximityPrize.SubmissionLower.AE
 namespace ProximityPrize.SubmissionLower.RCN273
 open scoped Classical BigOperators WithZero
-open RCN002 RCN007
-open RCN264 RCN243
-open RCN295 RCN296
-open RCN272
-open RCN344
+open RCN002 RCN007 RCN264 RCN243 RCN295 RCN296 RCN272 RCN344
 noncomputable section
 variable {Ω:Type} [Field Ω] [IsAlgClosed Ω]
 structure ResidualPoleComponentBudget

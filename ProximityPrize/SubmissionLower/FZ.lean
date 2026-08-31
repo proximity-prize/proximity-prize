@@ -1,18 +1,7 @@
 import ProximityPrize.SubmissionLower.N2
 namespace ProximityPrize.SubmissionLower.RCN250
 open scoped Classical BigOperators
-open RCN135 RCN086
-open RCN244
-open RCN245
-open RCN249
-open RCN251
-open RCN254
-open RCN102
-open RCN106
-open RCN107
-open RCN109
-open RCN120
-open RCN095
+open RCN135 RCN086 RCN244 RCN245 RCN249 RCN251 RCN254 RCN102 RCN106 RCN107 RCN109 RCN120 RCN095
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -21,10 +10,10 @@ variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
-variable [CharP (GenericField K) p]
-variable {errorCap:ℕ}
-variable {stageSupport:RCN275.ResidualSupportParameters}
-variable {A:Type} [Fintype A]
+ [CharP (GenericField K) p]
+ {errorCap:ℕ}
+ {stageSupport:RCN275.ResidualSupportParameters}
+ {A:Type} [Fintype A]
 def StageFamilySurfaceModNonzero
    (S:Stage K I Gamma x p flag errorCap stageSupport) (F:StageIndexedFlagFamily S A)
    (W:StageIndexedFactor S A F):Prop:=

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.H9
 namespace ProximityPrize.SubmissionLower.RCN060
 open scoped BigOperators
@@ -11,16 +10,16 @@ variable {k F Γ:Type*} [Field k] [Field F] [Algebra k F]
 local instance:DecidableEq k:=Classical.decEq k
 local instance:DecidableEq F:=Classical.decEq F
 theorem polynomial_value_le_one
-   (v:Valuation F Γ) (κ:k→+*F)
-   (hκ:∀ c,v (κ c)≤ 1) (f:F) (hf:v f≤ 1) (p:k[X]):
-   v (p.eval₂ κ f)≤ 1:=by
+   (v:Valuation F Γ) (κ:k →+*F)
+   (hκ:∀ c,v (κ c) ≤ 1) (f:F) (hf:v f ≤ 1) (p:k[X]):
+   v (p.eval₂ κ f) ≤ 1:=by
  rw [Polynomial.eval₂_eq_sum,Polynomial.sum_def]
  apply v.map_sum_le
  intro i _
  rw [map_mul,map_pow]
  exact mul_le_one₀ (hκ _) zero_le (pow_le_one₀ zero_le hf)
 theorem normalize_relation
-   {R:Type*} [CommRing R] [IsDomain R] (κ:R→+*F)
+   {R:Type*} [CommRing R] [IsDomain R] (κ:R →+*F)
    (u:F) (hu:u≠0) (p:R[X]) (hp:p≠0)
    (hev:p.eval₂ κ u=0):
    ∃ q:R[X],q.coeff 0≠0∧q.eval₂ κ u=0:=by
@@ -32,7 +31,7 @@ theorem normalize_relation
      have hq:q≠0:=by
        intro hz
        exact hp (by simp [hpq,hz])
-     have hdeg:q.natDegree< n:=by
+     have hdeg:q.natDegree < n:=by
        rw [hpq,Polynomial.natDegree_X_mul hq] at hn
        omega
      have hqeval:q.eval₂ κ u=0:=by
@@ -41,14 +40,14 @@ theorem normalize_relation
      exact ih q.natDegree hdeg q hq hqeval rfl
    · exact ⟨p,hzero,hev⟩
 theorem exists_constant_close_of_small_polynomial [IsAlgClosed k]
-   (v:Valuation F Γ) (κ:k→+*F)
-   (hκ:∀ c,c≠0→ v (κ c)=1)
-   (f:F) (p:k[X]) (hp:p≠0) (hsmall:v (p.eval₂ κ f)< 1):
-   ∃ c:k,v (f-κ c)< 1:=by
+   (v:Valuation F Γ) (κ:k →+*F)
+   (hκ:∀ c,c≠0 → v (κ c)=1)
+   (f:F) (p:k[X]) (hp:p≠0) (hsmall:v (p.eval₂ κ f) < 1):
+   ∃ c:k,v (f-κ c) < 1:=by
  classical
  by_contra h
  push_neg at h
- have hge:1≤ v (p.eval₂ κ f):=by
+ have hge:1 ≤ v (p.eval₂ κ f):=by
    rw [(IsAlgClosed.splits p).eq_prod_roots,Polynomial.eval₂_mul,
      Polynomial.eval₂_C,map_mul,hκ p.leadingCoeff (Polynomial.leadingCoeff_ne_zero.mpr hp),
      one_mul,Polynomial.eval₂_multiset_prod,map_multiset_prod]
@@ -57,15 +56,15 @@ theorem exists_constant_close_of_small_polynomial [IsAlgClosed k]
    exact Multiset.one_le_prod_map (fun c _ => h c)
  exact (not_lt_of_ge hge) hsmall
 theorem constant_coefficient_value_lt_one
-   (v:Valuation F Γ) (κ:k→+*F)
-   (hκ:∀ c,v (κ c)≤ 1)
-   (u f:F) (hu:v u< 1) (hf:v f≤ 1)
+   (v:Valuation F Γ) (κ:k →+*F)
+   (hκ:∀ c,v (κ c) ≤ 1)
+   (u f:F) (hu:v u < 1) (hf:v f ≤ 1)
    (q:Polynomial (Polynomial k))
    (hq:q.eval₂ (Polynomial.eval₂RingHom κ f) u=0):
-   v ((q.coeff 0).eval₂ κ f)< 1:=by
- have hcoeff:∀ p:k[X],v ((Polynomial.eval₂RingHom κ f) p)≤ 1:=
+   v ((q.coeff 0).eval₂ κ f) < 1:=by
+ have hcoeff:∀ p:k[X],v ((Polynomial.eval₂RingHom κ f) p) ≤ 1:=
    fun p => polynomial_value_le_one v κ hκ f hf p
- have htail:v (q.divX.eval₂ (Polynomial.eval₂RingHom κ f) u)≤ 1:=by
+ have htail:v (q.divX.eval₂ (Polynomial.eval₂RingHom κ f) u) ≤ 1:=by
    rw [Polynomial.eval₂_eq_sum,Polynomial.sum_def]
    apply v.map_sum_le
    intro i _
@@ -105,12 +104,12 @@ theorem exists_bivariate_relation_of_trdeg_one
      (Polynomial.aevalAeval (R:=k) f u).comp e.symm.toAlgHom=
        MvPolynomial.aeval ![f,u]:=by
    ext i
-   fin_cases i<;> simp [e,Polynomial.aevalAeval_C,
+   fin_cases i <;> simp [e,Polynomial.aevalAeval_C,
      Polynomial.aevalAeval_X,Polynomial.aevalAeval_Y]
  have hev:
      Polynomial.eval₂RingHom (Polynomial.eval₂RingHom (algebraMap k F) f) u=
        (Polynomial.aevalAeval (R:=k) f u).toRingHom:=by
-   ext<;> simp [Polynomial.aevalAeval_C,Polynomial.aevalAeval_X,
+   ext <;> simp [Polynomial.aevalAeval_C,Polynomial.aevalAeval_X,
      Polynomial.aevalAeval_Y]
  refine ⟨q,hq,?_⟩
  change (Polynomial.eval₂RingHom (Polynomial.eval₂RingHom (algebraMap k F) f) u) q=0
@@ -121,10 +120,10 @@ theorem exists_bivariate_relation_of_trdeg_one
 theorem exists_constant_approx_of_trdeg_one [IsAlgClosed k]
    (v:Valuation F Γ) [v.IsTrivialOn k]
    (htrdeg:Algebra.trdeg k F=1)
-   (u:F) (hu0:u≠0) (hu:v u< 1)
-   (f:F) (hf:v f≤ 1):
-   ∃ c:k,v (f-algebraMap k F c)< 1:=by
- have hκ:∀ c:k,v (algebraMap k F c)≤ 1:=by
+   (u:F) (hu0:u≠0) (hu:v u < 1)
+   (f:F) (hf:v f ≤ 1):
+   ∃ c:k,v (f-algebraMap k F c) < 1:=by
+ have hκ:∀ c:k,v (algebraMap k F c) ≤ 1:=by
    intro c
    by_cases hc:c=0
    · simp [hc]
@@ -136,34 +135,33 @@ theorem exists_constant_approx_of_trdeg_one [IsAlgClosed k]
    (fun c hc => Valuation.IsTrivialOn.eq_one c hc) f (q.coeff 0) hq0
    (constant_coefficient_value_lt_one v (algebraMap k F) hκ u f hu hf q hqval)
 variable {L:Type*} [Field L]
-open ProximityPrize.SubmissionLower
-open RCN059
+open ProximityPrize.SubmissionLower RCN059
 theorem residueApprox_of_trdeg_one [IsAlgClosed k]
-   (v:Valuation L Γ) (φ:F→+*L)
-   (hconst:∀ c:k,c≠0→ v (φ (algebraMap k F c))=1)
+   (v:Valuation L Γ) (φ:F →+*L)
+   (hconst:∀ c:k,c≠0 → v (φ (algebraMap k F c))=1)
    (htrdeg:Algebra.trdeg k F=1)
-   (u:F) (hu0:u≠0) (hu:v (φ u)< 1):
+   (u:F) (hu0:u≠0) (hu:v (φ u) < 1):
    ResidueApprox v φ (algebraMap k F):=by
  let vF:Valuation F Γ:=v.comap φ
  letI:vF.IsTrivialOn k:=⟨hconst⟩
  intro f hf
  exact exists_constant_approx_of_trdeg_one vF htrdeg u hu0 hu f hf
 theorem coefficient_pole_le_of_trdeg_one [IsAlgClosed k] {w:ℕ}
-   (v:Valuation L (WithZero (Multiplicative ℤ))) (φ:F→+*L)
-   (hconst:∀ c:k,c≠0→ v (φ (algebraMap k F c))=1)
+   (v:Valuation L (WithZero (Multiplicative ℤ))) (φ:F →+*L)
+   (hconst:∀ c:k,c≠0 → v (φ (algebraMap k F c))=1)
    (htrdeg:Algebra.trdeg k F=1)
    (x:L) (hx:v x=1)
    (hunit:ConstantPolynomialUnit v φ (algebraMap k F) x w)
-   (a:Fin (w+1)→ F) (i:Fin (w+1)):
-   RCN187.poleOrder v (φ (a i))≤
+   (a:Fin (w+1) → F) (i:Fin (w+1)):
+   RCN187.poleOrder v (φ (a i)) ≤
      RCN187.poleOrder v (∑ j,φ (a j)*x^(j:ℕ)):=by
- by_cases hi:v (φ (a i))≤ 1
+ by_cases hi:v (φ (a i)) ≤ 1
  · have hz:RCN187.poleOrder v (φ (a i))=0:=by
      change max 0 (v (φ (a i))).log=0
      rw [←RCN187.log_max_one,max_eq_left hi,WithZero.log_one]
    rw [hz]
    exact le_max_left _ _
- have hbig:1< v (φ (a i)):=lt_of_not_ge hi
+ have hbig:1 < v (φ (a i)):=lt_of_not_ge hi
  let vF:Valuation F (WithZero (Multiplicative ℤ)):=v.comap φ
  haveI:vF.IsNontrivial:=
    ⟨a i,ne_of_gt (zero_lt_one.trans hbig),hbig.ne'⟩
@@ -172,7 +170,7 @@ theorem coefficient_pole_le_of_trdeg_one [IsAlgClosed k] {w:ℕ}
    x hx (residueApprox_of_trdeg_one v φ hconst htrdeg u hu0 hu) hunit a i
 theorem constantPolynomialUnit_of_base_constants
    {Ω:Type*} [Field Ω] [Algebra k Ω] [Algebra Ω L] {w:ℕ}
-   (v:Valuation L Γ) [v.IsTrivialOn Ω] (φ:F→+*L)
+   (v:Valuation L Γ) [v.IsTrivialOn Ω] (φ:F →+*L)
    (hcompat:∀ c:k,φ (algebraMap k F c)=
      algebraMap Ω L (algebraMap k Ω c))
    (x:Ω) (htrans:Transcendental k x):
@@ -206,16 +204,16 @@ theorem constantPolynomialUnit_of_base_constants
 theorem coefficient_pole_le_generic_evaluation
    {Ω:Type*} [Field Ω] [Algebra k Ω] [Algebra Ω L] [IsAlgClosed k] {w:ℕ}
    (v:Valuation L (WithZero (Multiplicative ℤ))) [v.IsTrivialOn Ω]
-   (φ:F→+*L)
+   (φ:F →+*L)
    (hcompat:∀ c:k,φ (algebraMap k F c)=
      algebraMap Ω L (algebraMap k Ω c))
    (htrdeg:Algebra.trdeg k F=1)
    (x:Ω) (htrans:Transcendental k x)
-   (a:Fin (w+1)→ F) (i:Fin (w+1)):
-   RCN187.poleOrder v (φ (a i))≤
+   (a:Fin (w+1) → F) (i:Fin (w+1)):
+   RCN187.poleOrder v (φ (a i)) ≤
      RCN187.poleOrder v
        (∑ j,φ (a j)*(algebraMap Ω L x)^(j:ℕ)):=by
- have hconst:∀ c:k,c≠0→ v (φ (algebraMap k F c))=1:=by
+ have hconst:∀ c:k,c≠0 → v (φ (algebraMap k F c))=1:=by
    intro c hc
    rw [hcompat]
    apply Valuation.IsTrivialOn.eq_one

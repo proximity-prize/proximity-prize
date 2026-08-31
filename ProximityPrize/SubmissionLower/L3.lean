@@ -1,8 +1,6 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.K
 namespace ProximityPrize.SubmissionLower.RCN182
-open ProximityPrize.Benchmark
-open RCN174 RCN256 RCN319
+open ProximityPrize.Benchmark RCN174 RCN256 RCN319
 noncomputable section
 variable (K:Type*) [Field K]
 theorem block_equations_of_mem_ker

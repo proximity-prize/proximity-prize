@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.IH
 import ProximityPrize.SubmissionLower.T6
 section ProximityFlatProofPort
@@ -62,14 +61,14 @@ lemma lTensor_cotangentComplex_eq_cotangentComplexBaseChange:
 end baseChange
 universe w' u' v'
 variable {R':Type u'} {S':Type v'} [CommRing R'] [CommRing S'] [Algebra R' S']
-variable (P':Extension.{w'} R' S')
-variable [Algebra R R'] [Algebra S S'] [Algebra R S'] [IsScalarTower R R' S']
+ (P':Extension.{w'} R' S')
+ [Algebra R R'] [Algebra S S'] [Algebra R S'] [IsScalarTower R R' S']
 attribute [local instance] SMulCommClass.of_commMonoid
 variable {P P'}
 universe w'' u'' v''
 variable {R'':Type u''} {S'':Type v''} [CommRing R''] [CommRing S''] [Algebra R'' S'']
-variable {P'':Extension.{w''} R'' S''}
-variable [Algebra R R''] [Algebra S S''] [Algebra R S'']
+ {P'':Extension.{w''} R'' S''}
+ [Algebra R R''] [Algebra S S''] [Algebra R S'']
  [IsScalarTower R R'' S'']
 variable [Algebra R' R''] [Algebra S' S''] [Algebra R' S'']
  [IsScalarTower R' R'' S'']
@@ -356,8 +355,8 @@ lemma cotangentRestrict_mk {σ:Type*} {u:σ → ι} (hu:Function.Injective u) (x
  simp only [toExtension_Ring,P.cotangentSpaceBasis_repr_tmul,one_mul]
 universe w' u' v'
 variable {R':Type u'} {S':Type v'} {ι':Type w'} [CommRing R'] [CommRing S'] [Algebra R' S']
-variable (P':Generators R' S' ι')
-variable [Algebra R R'] [Algebra S S'] [Algebra R S'] [IsScalarTower R R' S'] [IsScalarTower R S S']
+ (P':Generators R' S' ι')
+ [Algebra R R'] [Algebra S S'] [Algebra R S'] [IsScalarTower R R' S'] [IsScalarTower R S S']
 attribute [local instance] SMulCommClass.of_commMonoid
 variable {P P'}
 universe w'' u'' v''
@@ -409,8 +408,8 @@ def Generators.H1Cotangent.equiv (P:Generators R S ι) (P':Generators R S ι'):
  Extension.H1Cotangent.equiv
    (Generators.defaultHom P P').toExtensionHom (Generators.defaultHom P' P).toExtensionHom
 variable {S':Type*} [CommRing S'] [Algebra R S']
-variable {T:Type w} [CommRing T] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
-variable [Algebra S' T] [IsScalarTower R S' T]
+ {T:Type w} [CommRing T] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
+ [Algebra S' T] [IsScalarTower R S' T]
 variable (R S S' T)
 abbrev H1Cotangent:Type _:=(Generators.self R S).toExtension.H1Cotangent
 noncomputable

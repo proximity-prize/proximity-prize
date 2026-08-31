@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T4
 section ProximityFlatProofPort
 universe w u v
@@ -13,7 +12,7 @@ structure Algebra.Generators where
    algebraMap (MvPolynomial ι R) S=aeval (R:=R) val:=by rfl
 namespace Algebra.Generators
 variable {R S ι}
-variable (P:Generators R S ι)
+ (P:Generators R S ι)
 set_option linter.unusedVariables false in
 @[nolint unusedArguments]
 protected
@@ -242,12 +241,12 @@ lemma _root_.Algebra.FiniteType.iff_exists_generators:
  exact ⟨n,⟨.ofSurjective (fun i↦f (MvPolynomial.X i)) <| by rwa [aeval_unique f] at hf⟩⟩
 end Construction
 variable {R' S' ι':Type*} [CommRing R'] [CommRing S'] [Algebra R' S'] (P':Generators R' S' ι')
-variable {R'' S'' ι'':Type*} [CommRing R''] [CommRing S''] [Algebra R'' S'']
+ {R'' S'' ι'':Type*} [CommRing R''] [CommRing S''] [Algebra R'' S'']
  (P'':Generators R'' S'' ι'')
 section Hom
 section
 variable [Algebra R R'] [Algebra R' R''] [Algebra R' S'']
-variable [Algebra S S'] [Algebra S' S''] [Algebra S S'']
+ [Algebra S S'] [Algebra S' S''] [Algebra S S'']
 @[ext]
 structure Hom where
  val:ι → P'.Ring
@@ -315,7 +314,7 @@ end
 lemma Hom.id_comp [Algebra S S'] (f:Hom P P'):(Hom.id P').comp f=f:=by
  ext;simp [Hom.id,aeval_X_left]
 variable [Algebra R R'] [Algebra R' R''] [Algebra R' S'']
-variable [Algebra S S'] [Algebra S' S''] [Algebra S S'']
+ [Algebra S S'] [Algebra S' S''] [Algebra S S'']
 @[simp]
 lemma Hom.toAlgHom_comp_apply
    [Algebra R R''] [IsScalarTower R R' R''] [IsScalarTower R' R'' S'']

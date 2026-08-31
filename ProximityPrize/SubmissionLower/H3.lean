@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.H4
 namespace ProximityPrize.SubmissionLower.RCN016
 open IsDedekindDomain
@@ -36,8 +35,8 @@ variable {K S B L:Type*} [Field K] [CommRing S] [IsDedekindDomain S]
  [Algebra S B] [Algebra S L] [Algebra B L] [IsScalarTower S B L]
  [IsFractionRing S L]
 variable (hinj:Function.Injective (algebraMap B L))
-variable (p:HeightOneSpectrum S) (Φ:B →+*K)
-variable (hker:RingHom.ker (Φ.comp (algebraMap S B))=p.asIdeal)
+ (p:HeightOneSpectrum S) (Φ:B →+*K)
+ (hker:RingHom.ker (Φ.comp (algebraMap S B))=p.asIdeal)
 include hker in
 theorem base_point_zero_iff (a:S):
    Φ (algebraMap S B a)=0 ↔ a∈p.asIdeal:=by

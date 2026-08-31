@@ -1,13 +1,8 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A9
 import ProximityPrize.SubmissionLower.M6
 namespace ProximityPrize.SubmissionLower.RCN209
 open scoped Classical BigOperators WithZero
-open RCN002 RCN264 RCN344
-open RCN341 RCN022
-open RCN207 RCN208
-open RCN064 RCN202
-open RCN095 RCN187
+open RCN002 RCN264 RCN344 RCN341 RCN022 RCN207 RCN208 RCN064 RCN202 RCN095 RCN187
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -17,7 +12,7 @@ local notation "Poly" => MvPolynomial (Fin 3) K
 theorem exists_separable_moving_coordinates (F A H G:Poly)
    (base:∀ C:RegularComponent K F A H,SeparableLiteralCoordinate C.1):
    ∃ (Q U:Poly) (J:∀ C:RegularComponent K F A H,SeparableCoordinate K (CoordinateField K C.1)),
-     PolynomialInFlag (2• unitAllFlag) Q∧PolynomialInFlag unitYZFlag U∧
+     PolynomialInFlag (2 • unitAllFlag) Q∧PolynomialInFlag unitYZFlag U∧
      ∀ C:RegularComponent K F A H,
        U∉C.1∧SeparableCoordinate.value K (CoordinateField K C.1) (J C)=movingValue C.1 H G Q U∧
        (∀ v:Place K (CoordinateField K C.1),
@@ -41,19 +36,19 @@ theorem exists_separable_moving_coordinates (F A H G:Poly)
  rw [hv C]
  exact (h C).2.2.1 v
 variable {E:Type} [Field E] [IsAlgClosed E]
-variable [Algebra K E] [Algebra (RatFunc K) E] [IsScalarTower K (RatFunc K) E]
-theorem exists_moving_projection_family (F H G:Poly) (k:ℕ) (B:Fin (k+1)→ Poly)
+ [Algebra K E] [Algebra (RatFunc K) E] [IsScalarTower K (RatFunc K) E]
+theorem exists_moving_projection_family (F H G:Poly) (k:ℕ) (B:Fin (k+1) → Poly)
    (base:∀ C:RegularComponent K F (filteredCut k B H G) H,SeparableLiteralCoordinate C.1)
    (hF:F≠0)
    (hderiv:H∈Ideal.span ({F,MvPolynomial.pderiv (1:Fin 3) F}:Set Poly))
    (p:FlagDegree) (hFp:PolynomialInFlag p F) (a b s:ℕ) (C0:FlagDegree)
    (hH:PolynomialInFlag (⟨a,b+1,s+1⟩:FlagDegree) H)
    (hG:PolynomialInFlag (⟨a,b,s+3⟩:FlagDegree) G)
-   (c:Fin (k+1)→ FlagDegree) (hB:∀ j,PolynomialInFlag (c j) (B j))
-   (hc:∀ j,c j+(k-j.val)• (⟨a,b+1,s+1⟩:FlagDegree)+
-     j.val• (⟨a,b,s+3⟩:FlagDegree)=C0+k• (⟨2*a,2*b+1,2*s+3⟩:FlagDegree))
+   (c:Fin (k+1) → FlagDegree) (hB:∀ j,PolynomialInFlag (c j) (B j))
+   (hc:∀ j,c j+(k-j.val) • (⟨a,b+1,s+1⟩:FlagDegree)+
+     j.val • (⟨a,b,s+3⟩:FlagDegree)=C0+k • (⟨2*a,2*b+1,2*s+3⟩:FlagDegree))
    (pchar:ℕ) [CharP E pchar]
-   (hmix:2*(p.zOnly+p.yz+p.all)*(a+(b+1)+(s+3))< pchar):
+   (hmix:2*(p.zOnly+p.yz+p.all)*(a+(b+1)+(s+3)) < pchar):
    ∃ J:∀ C:RegularComponent K F (filteredCut k B H G) H,
        SeparableCoordinate K (CoordinateField K C.1),
      (∀ (C:RegularComponent K F (filteredCut k B H G) H)
@@ -61,8 +56,8 @@ theorem exists_moving_projection_family (F H G:Poly) (k:ℕ) (B:Fin (k+1)→ Pol
        poleOrder v.val (SeparableCoordinate.value K (CoordinateField K C.1) (J C))=
          movingPoleTarget C.1 H G v)∧
      (∑ C:RegularComponent K F (filteredCut k B H G) H,
-       SeparableCoordinate.degree K (CoordinateField K C.1) (J C))≤
-       flagMixed p (⟨a,b+1,s+3⟩:FlagDegree) (C0+k• (⟨a,b+1,s+2⟩:FlagDegree)):=by
+       SeparableCoordinate.degree K (CoordinateField K C.1) (J C)) ≤
+       flagMixed p (⟨a,b+1,s+3⟩:FlagDegree) (C0+k • (⟨a,b+1,s+2⟩:FlagDegree)):=by
  classical
  obtain ⟨Q,U,J,hQ,hU,hJ⟩:=exists_separable_moving_coordinates F (filteredCut k B H G) H G base
  letI:∀ C:RegularComponent K F (filteredCut k B H G) H,
@@ -77,11 +72,11 @@ theorem exists_moving_projection_family (F H G:Poly) (k:ℕ) (B:Fin (k+1)→ Pol
  have hj (C:RegularComponent K F (filteredCut k B H G) H):
      algebraMap (RatFunc K) (CoordinateField K C.1) (rationalVariable K)=movingValue C.1 H G Q U:=
    (hJ C).2.1
- have hdeg:p.zOnly+p.yz+p.all< pchar:=by
+ have hdeg:p.zOnly+p.yz+p.all < pchar:=by
    nlinarith
  obtain ⟨hN,hA⟩:=fiber_small_flags (E:=E) a b s k C0 H G Q U B c hH hG hQ hU hB hc
  have hcount:=sum_moving_degrees_le (E:=E) F H G Q U k B hj (fun C↦(hJ C).1)
-   hF hderiv p (⟨a,b+1,s+3⟩:FlagDegree) (C0+k• (⟨a,b+1,s+2⟩:FlagDegree))
+   hF hderiv p (⟨a,b+1,s+3⟩:FlagDegree) (C0+k • (⟨a,b+1,s+2⟩:FlagDegree))
    hFp hN hA pchar hdeg hmix
  refine ⟨J,fun C v↦(hJ C).2.2.1 v,?_⟩
  simpa only [SeparableCoordinate.degree] using hcount

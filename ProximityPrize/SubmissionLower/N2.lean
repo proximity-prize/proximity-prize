@@ -1,16 +1,7 @@
 import ProximityPrize.SubmissionLower.E2
 import ProximityPrize.SubmissionLower.C4
 namespace ProximityPrize.SubmissionLower.RCN254
-open RCN135 RCN136
-open RCN086
-open RCN244
-open RCN245
-open RCN249
-open RCN112
-open RCN103
-open RCN113
-open RCN093 RCN095
-open RCN011
+open RCN135 RCN136 RCN086 RCN244 RCN245 RCN249 RCN112 RCN103 RCN113 RCN093 RCN095 RCN011
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -18,10 +9,10 @@ variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
-variable [CharP (GenericField K) p]
-variable {errorCap:ℕ}
-variable {stageSupport:RCN275.ResidualSupportParameters}
-variable (S:Stage K I Gamma x p flag errorCap stageSupport) {A:Type} [Fintype A]
+ [CharP (GenericField K) p]
+ {errorCap:ℕ}
+ {stageSupport:RCN275.ResidualSupportParameters}
+ (S:Stage K I Gamma x p flag errorCap stageSupport) {A:Type} [Fintype A]
 theorem stageFamily_resultant_ne
    (hfirstProper:¬ S.G∣globalTailCut (polynomialEmbedding K) S.F
      (RCN326.w+1))

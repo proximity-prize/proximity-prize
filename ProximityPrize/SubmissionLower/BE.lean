@@ -1,10 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z3
 namespace ProximityPrize.SubmissionLower.RCN123
 open scoped Classical
-open RCN095
-open RCN125
-open RCN371 RCN011
+open RCN095 RCN125 RCN371 RCN011
  RCN009 RCN012
 noncomputable section
 variable {K:Type} [Field K]

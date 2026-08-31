@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AW
 import ProximityPrize.SubmissionLower.G
 namespace ProximityPrize.SubmissionLower.RCN021
@@ -17,7 +16,7 @@ local instance:IsLocalization (coefficientDenominators K)
  MvPolynomial.isLocalization (nonZeroDivisors (Polynomial K)) (RatFunc K)
 section OneEvaluation
 variable (L:Type) [Field L] [Algebra K L]
-variable (order:Fin 3 ≃ Fin 3) (e:Original K →ₐ[K] L)
+ (order:Fin 3 ≃ Fin 3) (e:Original K →ₐ[K] L)
 def collectedEvaluation:Collected K →+*L:=
  e.toRingHom.comp (collect K order).symm.toRingHom
 @[simp] theorem collectedEvaluation_collect (F:Original K):
@@ -180,9 +179,9 @@ theorem relationKernel_contract
 end OneEvaluation
 section FixedFamily
 variable (order:Fin 3 ≃ Fin 3) {I:Type} [Fintype I]
-variable (E:I → Type)
-variable [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
-variable (e:∀ i,Original K →ₐ[K] E i)
+ (E:I → Type)
+ [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+ (e:∀ i,Original K →ₐ[K] E i)
 theorem finite_sum_finrank_bound
    (ht:∀ i,Transcendental K (e i (MvPolynomial.X (order 0))))
    (hgen:∀ i,

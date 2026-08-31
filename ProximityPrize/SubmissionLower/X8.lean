@@ -1,7 +1,6 @@
 import ProximityPrize.Benchmark.TargetLower
 namespace ProximityPrize.SubmissionLower
-open Polynomial
-open Polynomial.Bivariate
+open Polynomial Polynomial.Bivariate
 variable {F:Type} [Field F]
 theorem bivariate_resultant_eval (B H:F[X][Y]) (n m:ℕ) (z:F):
    (Polynomial.resultant B H n m).eval z=

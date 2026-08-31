@@ -1,17 +1,13 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B0
 namespace ProximityPrize.SubmissionLower.RCN166
-open RCN002 RCN136 RCN224
-open RCN139 RCN233 RCN231
-open RCN229 RCN313 RCN047
-open RCN147 RCN319 RCN065
+open RCN002 RCN136 RCN224 RCN139 RCN233 RCN231 RCN229 RCN313 RCN047 RCN147 RCN319 RCN065
 noncomputable section
 variable {K Omega:Type} [Field K] [Field Omega]
-variable (phi:Polynomial K →+*Omega)
+ (phi:Polynomial K →+*Omega)
 variable (P:Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
-variable (F:MvPolynomial (Fin 4) K)
-variable (hF:surfaceMap phi F∈P)
-variable (hH:surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F)∉P)
+ (F:MvPolynomial (Fin 4) K)
+ (hF:surfaceMap phi F∈P)
+ (hH:surfaceMap phi (MvPolynomial.pderiv (2:Fin 4) F)∉P)
 theorem coordinate_y_affine_of_basefield_pencil
    (w:ℕ) (P0 P1:Polynomial K)
    (hp:truncatedPolynomial phi P F hF hH w=

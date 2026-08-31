@@ -1,19 +1,12 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.P
 import ProximityPrize.SubmissionLower.B4
 namespace ProximityPrize.SubmissionLower.RCN118
 open scoped Classical BigOperators WithZero
-open IsDedekindDomain
-open RCN002 RCN005
+open IsDedekindDomain RCN002 RCN005
  RCN006 RCN007
-open RCN344 RCN264
-open RCN272
+open RCN344 RCN264 RCN272
  RCN273
-open RCN323
-open RCN075
-open RCN095
-open RCN114
-open RCN187 RCN295
+open RCN323 RCN075 RCN095 RCN114 RCN187 RCN295
 noncomputable section
 variable {Ω:Type} [Field Ω] [IsAlgClosed Ω]
 structure PrincipalCycleBudget

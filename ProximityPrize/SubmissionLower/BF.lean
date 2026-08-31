@@ -1,12 +1,8 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DV
 import ProximityPrize.SubmissionLower.J
 import ProximityPrize.SubmissionLower.GR
 namespace ProximityPrize.SubmissionLower.RCN128
-open ProximityPrize.Benchmark
-open RCN050 RCN174 RCN319
-open RCN320 RCN238
-open RCN223
+open ProximityPrize.Benchmark RCN050 RCN174 RCN319 RCN320 RCN238 RCN223
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 20000
@@ -15,32 +11,32 @@ def SelectedNoLargePencilBound6600:Prop:=
  SelectedNoLargePencilBound IRSProfile.domain w errors alignmentBudget
 def GlobalCountLtAlignment6600:Prop:=
  ∀ (Q:MvPolynomial (Fin 4) IRSProfile.Field),
-   Q≠0→
+   Q≠0 →
    Q∈globalCoefficientBox IRSProfile.Field
-     weightedCap w seedTotalCap slopeCap→
-   ∀ (selected:IRSProfile.Field→ Polynomial IRSProfile.Field)
+     weightedCap w seedTotalCap slopeCap →
+   ∀ (selected:IRSProfile.Field → Polynomial IRSProfile.Field)
      (seeds:Finset IRSProfile.Field)
-     (u0 u1:IRSProfile.Index→ IRSProfile.Field),
-     (∀ gamma∈seeds,(selected gamma).natDegree≤ w)→
+     (u0 u1:IRSProfile.Index → IRSProfile.Field),
+     (∀ gamma∈seeds,(selected gamma).natDegree ≤ w) →
      (∀ gamma∈seeds,
-       specialization IRSProfile.Field (selected gamma) gamma Q=0)→
-     (∀ gamma∈seeds,agreements≤
+       specialization IRSProfile.Field (selected gamma) gamma Q=0) →
+     (∀ gamma∈seeds,agreements ≤
        (Finset.univ.filter (fun i:IRSProfile.Index↦
          (selected gamma).eval (IRSProfile.domain i)=
-           u0 i+gamma*u1 i)).card)→
-     NoLargeSelectedPencil selected seeds w errors→
-     seeds.card< alignmentBudget
+           u0 i+gamma*u1 i)).card) →
+     NoLargeSelectedPencil selected seeds w errors →
+     seeds.card < alignmentBudget
 abbrev InterpolantSelectedCount6600:=GlobalCountLtAlignment6600
 theorem challenge_field_characteristic6600:
    CharP IRSProfile.Field prime:=by
  change CharP KoalaBear.Ext6 2130706433
  exact charP_of_injective_algebraMap' KoalaBear.Field 2130706433
 theorem original_support_card6600
-   (A:IRSProfile.Field→ Finset IRSProfile.Index)
+   (A:IRSProfile.Field → Finset IRSProfile.Index)
    (seeds:Finset IRSProfile.Field)
    (hcard:∀ gamma∈seeds,
-     Fintype.card IRSProfile.Index-errors≤ (A gamma).card):
-   ∀ gamma∈seeds,agreements≤ (A gamma).card:=by
+     Fintype.card IRSProfile.Index-errors ≤ (A gamma).card):
+   ∀ gamma∈seeds,agreements ≤ (A gamma).card:=by
  intro gamma hgamma
  have h:=hcard gamma hgamma
  simpa [IRSProfile.Index,agreements,n,errors] using h
@@ -57,7 +53,7 @@ theorem selected_count_of_global_count_lt_alignment6600
    intro gamma hgamma
    exact hvanish gamma (selected gamma) (A gamma)
      (hdegree gamma hgamma) (hcard' gamma hgamma) (hvalues gamma hgamma)
- have hagreement:∀ gamma∈seeds,agreements≤
+ have hagreement:∀ gamma∈seeds,agreements ≤
      (Finset.univ.filter (fun i:IRSProfile.Index↦
        (selected gamma).eval (IRSProfile.domain i)=
          U 0 i+gamma*U 1 i)).card:=by

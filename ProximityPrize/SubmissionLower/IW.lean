@@ -1,14 +1,13 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CU
 section ProximityFlatProofPort
 universe u
 open TensorProduct KaehlerDifferential
 open Function (Surjective)
 variable {R P S:Type*} [CommRing R] [CommRing P] [CommRing S]
-variable [Algebra R P] [Algebra P S]
+ [Algebra R P] [Algebra P S]
 section ofSection
 variable [Algebra R S] [IsScalarTower R P S]
-variable (g:S →ₐ[R] P)
+ (g:S →ₐ[R] P)
 @[simps]
 def derivationOfSectionOfKerSqZero (f:P →ₐ[R] S) (hf':(RingHom.ker f)^2=⊥) (g:S →ₐ[R] P)
    (hg:f.comp g=AlgHom.id R S):Derivation R P (RingHom.ker f) where
@@ -72,7 +71,7 @@ lemma retractionOfSectionOfKerSqZero_comp_kerToTensor:
 end ofSection
 section ofRetraction
 variable (l:S ⊗[P] Ω[P⁄R] →ₗ[P] RingHom.ker (algebraMap P S))
-variable (hl:l.comp (kerToTensor R P S)=LinearMap.id)
+ (hl:l.comp (kerToTensor R P S)=LinearMap.id)
 include hl
 variable (σ:S → P) (hσ:∀ x,algebraMap P S (σ x)=x)
 lemma sectionOfRetractionKerToTensorAux_prop (x y) (h:algebraMap P S x=algebraMap P S y):
@@ -81,7 +80,7 @@ lemma sectionOfRetractionKerToTensorAux_prop (x y) (h:algebraMap P S x=algebraMa
    ←map_sub, ←tmul_sub, ←map_sub]
  exact congr_arg Subtype.val (LinearMap.congr_fun hl.symm ⟨x-y,by simp [RingHom.mem_ker,h]⟩)
 variable [Algebra R S] [IsScalarTower R P S]
-variable (hf':(RingHom.ker (algebraMap P S))^2=⊥)
+ (hf':(RingHom.ker (algebraMap P S))^2=⊥)
 include hf'
 noncomputable
 def sectionOfRetractionKerToTensorAux:S →ₐ[R] P where
@@ -125,7 +124,7 @@ lemma toAlgHom_comp_sectionOfRetractionKerToTensor:
  toAlgHom_comp_sectionOfRetractionKerToTensorAux (hf:=hf) ..
 end ofRetraction
 variable [Algebra R S] [IsScalarTower R P S]
-variable (hf':(RingHom.ker (algebraMap P S))^2=⊥) (hf:Surjective (algebraMap P S))
+ (hf':(RingHom.ker (algebraMap P S))^2=⊥) (hf:Surjective (algebraMap P S))
 noncomputable
 def retractionKerToTensorEquivSection:
    { l//LinearMap.comp l (kerToTensor R P S)=LinearMap.id} ≃

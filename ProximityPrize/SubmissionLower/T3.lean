@@ -1,10 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T2
 import ProximityPrize.SubmissionLower.IG
 section ProximityFlatProofPort
 universe u
 variable (R S T:Type*) [CommRing R] [CommRing S] [CommRing T]
-variable [Algebra R S] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
+ [Algebra R S] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
 open TensorProduct
 @[simps! apply] noncomputable
 def KaehlerDifferential.tensorKaehlerEquivOfFormallyEtale [Algebra.FormallyEtale S T]:
@@ -44,7 +43,7 @@ namespace Algebra.Extension
 open KaehlerDifferential
 attribute [local instance] SMulCommClass.of_commMonoid
 variable {R S T}
-variable {P:Extension.{u} R S} {Q:Extension.{u} R T} (f:P.Hom Q)
+ {P:Extension.{u} R S} {Q:Extension.{u} R T} (f:P.Hom Q)
 set_option backward.defeqAttrib.useBackward true in
 noncomputable
 def tensorCotangentSpaceOfFormallyEtale

@@ -1,16 +1,12 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.FI
 import ProximityPrize.SubmissionLower.BM
 import ProximityPrize.SubmissionLower.E
 import ProximityPrize.SubmissionLower.T
 namespace ProximityPrize.SubmissionLower.RCN065
-open RCN002 RCN136 RCN224
-open RCN139 RCN233 RCN231
-open RCN229 RCN313 RCN047
-open RCN147 RCN319
+open RCN002 RCN136 RCN224 RCN139 RCN233 RCN231 RCN229 RCN313 RCN047 RCN147 RCN319
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
-variable (φ:Polynomial K →+*Ω)
+ (φ:Polynomial K →+*Ω)
 variable (P:Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
 def componentCoefficients:K →+*CoordinateField Ω P:=
  (algebraMap Ω (CoordinateField Ω P)).comp (φ.comp Polynomial.C)
@@ -37,8 +33,8 @@ theorem component_evaluation_zero_iff (F:MvPolynomial (Fin 4) K):
  change surfaceMap φ F∈RingHom.ker (coordinateEvaluation Ω P).toRingHom ↔ _
  rw [coordinateEvaluation_ker]
 variable (F:MvPolynomial (Fin 4) K)
-variable (hF:surfaceMap φ F∈P)
-variable (hH:surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F)∉P)
+ (hF:surfaceMap φ F∈P)
+ (hH:surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F)∉P)
 include hF in
 theorem component_relation:
    MvPolynomial.eval₂Hom (componentCoefficients φ P) (componentPoint φ P) F=0:=

@@ -1,16 +1,14 @@
 import ProximityPrize.SubmissionLower.X6
 import ProximityPrize.SubmissionLower.X7
 namespace ProximityPrize.SubmissionLower.RCN226
-open RCN011 RCN021
-open RCN022
-open RCN014
+open RCN011 RCN021 RCN022 RCN014
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
 variable (K L:Type) [Field K] [Field L] [Algebra K L]
-variable (order:Fin 3 ≃ Fin 3)
-variable (e:MvPolynomial (Fin 3) K →ₐ[K] L)
-variable (ht:Transcendental K (e (MvPolynomial.X (order 0))))
+ (order:Fin 3 ≃ Fin 3)
+ (e:MvPolynomial (Fin 3) K →ₐ[K] L)
+ (ht:Transcendental K (e (MvPolynomial.X (order 0))))
 abbrev CoefficientRing:=Polynomial (RatFunc K)
 def projectedFactor:Polynomial (RatFunc K):=
  letI:Algebra (RatFunc K) L:=

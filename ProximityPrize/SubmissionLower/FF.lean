@@ -5,14 +5,7 @@ import ProximityPrize.SubmissionLower.CH
 import ProximityPrize.SubmissionLower.E
 import ProximityPrize.SubmissionLower.FM
 namespace ProximityPrize.SubmissionLower.RCN218
-open RCN313 RCN077
-open RCN136
-open RCN055
-open RCN188
-open RCN270
-open RCN186
-open RCN230
-open IsLocalRing
+open RCN313 RCN077 RCN136 RCN055 RCN188 RCN270 RCN186 RCN230 IsLocalRing
 variable {K:Type*} [Field K]
 abbrev Poly:=MvPolynomial (Fin 4) K
 noncomputable def factorIdeal (F:Poly (K:=K)):Ideal (Poly (K:=K)):=Ideal.span {F}
@@ -20,28 +13,28 @@ theorem factorIdeal_isPrime (F:Poly (K:=K)) (hF:Irreducible F):
    (factorIdeal F).IsPrime:=by
  exact (Ideal.span_singleton_prime hF.ne_zero).mpr hF.prime
 noncomputable def contractedPrime {Omega:Type*} [Field Omega]
-   (phi:Polynomial K→+*Omega) (C:Ideal (MvPolynomial (Fin 3) Omega)):
+   (phi:Polynomial K →+*Omega) (C:Ideal (MvPolynomial (Fin 3) Omega)):
    Ideal (Poly (K:=K)):=
  C.comap (surfaceMap phi)
 instance contractedPrime_isPrime {Omega:Type*} [Field Omega]
-   (phi:Polynomial K→+*Omega) (C:Ideal (MvPolynomial (Fin 3) Omega)) [C.IsPrime]:
+   (phi:Polynomial K →+*Omega) (C:Ideal (MvPolynomial (Fin 3) Omega)) [C.IsPrime]:
    (contractedPrime phi C).IsPrime:=by
  exact Ideal.comap_isPrime (surfaceMap phi) C
 theorem mem_contractedPrime_iff {Omega:Type*} [Field Omega]
-   (phi:Polynomial K→+*Omega) (C:Ideal (MvPolynomial (Fin 3) Omega))
+   (phi:Polynomial K →+*Omega) (C:Ideal (MvPolynomial (Fin 3) Omega))
    (A:Poly (K:=K)):
    A∈contractedPrime phi C ↔ surfaceMap phi A∈C:=
  Iff.rfl
 theorem factorIdeal_le_contractedPrime {Omega:Type*} [Field Omega]
-   (phi:Polynomial K→+*Omega) (C:Ideal (MvPolynomial (Fin 3) Omega))
+   (phi:Polynomial K →+*Omega) (C:Ideal (MvPolynomial (Fin 3) Omega))
    (F:Poly (K:=K)) (hF:surfaceMap phi F∈C):
-   factorIdeal F≤ contractedPrime phi C:=by
+   factorIdeal F ≤ contractedPrime phi C:=by
  apply Ideal.span_le.2
  intro A hA
  simpa only [Set.mem_singleton_iff] using hA ▸ hF
 noncomputable abbrev FactorLocal
    (F:Poly (K:=K)) (p:Ideal (Poly (K:=K))) [p.IsPrime]
-   (hFp:factorIdeal F≤ p):Type _:=
+   (hFp:factorIdeal F ≤ p):Type _:=
  LocalizedQuotient (factorIdeal F) p hFp
 theorem derivation_mem_maximal_of_mem_sq
    {A:Type*} [CommRing A] [Algebra K A] [IsLocalRing A]
@@ -59,8 +52,8 @@ theorem derivation_mem_maximal_of_mem_sq
 noncomputable def factorAmbientQuotientEquiv
    (F:Poly (K:=K)) (p:Ideal (Poly (K:=K))) [p.IsPrime]
    [hquotientPrime:(quotientPrime (factorIdeal F) p).IsPrime]
-   (hFp:factorIdeal F≤ p):
-   (Localization.AtPrime p⧸ Ideal.span {
+   (hFp:factorIdeal F ≤ p):
+   (Localization.AtPrime p ⧸ Ideal.span {
      algebraMap (Poly (K:=K)) (Localization.AtPrime p) F}) ≃+*
      FactorLocal F p hFp:=
  (Ideal.quotEquivOfEq (by
@@ -70,7 +63,7 @@ theorem factorLocal_isRegularLocalRing
    (F:Poly (K:=K)) (p:Ideal (Poly (K:=K))) [p.IsPrime]
    [hfactorPrime:(factorIdeal F).IsPrime]
    [hquotientPrime:(quotientPrime (factorIdeal F) p).IsPrime]
-   (hFp:factorIdeal F≤ p) (hheight:p.height=2)
+   (hFp:factorIdeal F ≤ p) (hheight:p.height=2)
    (hH:polyH K F∉p)
    (hdimFactor:ringKrullDim (FactorLocal F p hFp)=1):
    IsRegularLocalRing (FactorLocal F p hFp):=by
@@ -94,24 +87,24 @@ theorem factorLocal_isRegularLocalRing
    rw [hD] at hDmem
    exact hH ((IsLocalization.AtPrime.to_map_mem_maximal_iff A p (polyH K F)).mp hDmem)
  haveI hsource:IsRegularLocalRing
-     (Localization.AtPrime p⧸ Ideal.span {
+     (Localization.AtPrime p ⧸ Ideal.span {
        algebraMap (Poly (K:=K)) (Localization.AtPrime p) F}):=by
-   change IsRegularLocalRing (A⧸ Ideal.span {f})
+   change IsRegularLocalRing (A ⧸ Ideal.span {f})
    apply quotient_span_singleton_isRegularLocalRing f hf hf2 hdim
    calc
-     ringKrullDim (A⧸ Ideal.span {f})=
+     ringKrullDim (A ⧸ Ideal.span {f})=
          ringKrullDim (FactorLocal F p hFp):=
        ringKrullDim_eq_of_ringEquiv (factorAmbientQuotientEquiv F p hFp)
      _=1:=hdimFactor
  exact IsRegularLocalRing.of_ringEquiv (R:=
-   Localization.AtPrime p⧸ Ideal.span {
+   Localization.AtPrime p ⧸ Ideal.span {
      algebraMap (Poly (K:=K)) (Localization.AtPrime p) F})
    (factorAmbientQuotientEquiv F p hFp)
 theorem quotientPrime_height_eq_one
    (F:Poly (K:=K)) (p:Ideal (Poly (K:=K))) [p.IsPrime]
    [hfactorPrime:(factorIdeal F).IsPrime]
    [hquotientPrime:(quotientPrime (factorIdeal F) p).IsPrime]
-   (hFp:factorIdeal F≤ p) (hheight:p.height=2)
+   (hFp:factorIdeal F ≤ p) (hheight:p.height=2)
    (hH:polyH K F∉p):
    (quotientPrime (factorIdeal F) p).height=1:=by
  let I:=factorIdeal F
@@ -134,33 +127,33 @@ theorem quotientPrime_height_eq_one
    have:I.height=p.height:=congrArg Ideal.height heq
    rw [hIheight,hheight] at this
    norm_num at this
- have hIlt:I< p:=lt_of_le_of_ne hFp hIpne
+ have hIlt:I < p:=lt_of_le_of_ne hFp hIpne
  obtain ⟨x,hxp,hxI⟩:=SetLike.exists_of_lt hIlt
  have hmin:p∈(I ⊔ Ideal.span {x}).minimalPrimes:=by
    refine ⟨⟨inferInstance,sup_le hFp (Ideal.span_le.2 (by simpa))⟩,?_⟩
    intro r hr hrp
    rcases hr with ⟨hrprime,hJr⟩
    letI:r.IsPrime:=hrprime
-   have hIr:I≤ r:=le_sup_left.trans hJr
+   have hIr:I ≤ r:=le_sup_left.trans hJr
    have hIrne:I≠r:=by
      intro heq
      apply hxI
      rw [heq]
-     exact hJr ((show Ideal.span {x}≤ I ⊔ Ideal.span {x} from le_sup_right)
+     exact hJr ((show Ideal.span {x} ≤ I ⊔ Ideal.span {x} from le_sup_right)
        (Ideal.mem_span_singleton_self x))
-   have hIrlt:I< r:=lt_of_le_of_ne hIr hIrne
+   have hIrlt:I < r:=lt_of_le_of_ne hIr hIrne
    have hrpEq:r=p:=by
      apply le_antisymm hrp
      by_contra hnot
-     have hrlt:r< p:=lt_of_le_of_ne hrp (Ne.symm (ne_of_not_le hnot))
+     have hrlt:r < p:=lt_of_le_of_ne hrp (Ne.symm (ne_of_not_le hnot))
      have h1:=Ideal.height_add_one_le_of_lt_of_isPrime hIrlt
      have h2:=Ideal.height_add_one_le_of_lt_of_isPrime hrlt
-     have hbad:(3:ℕ∞)≤ p.height:=by
+     have hbad:(3:ℕ∞) ≤ p.height:=by
        calc
          3=I.height+1+1:=by rw [hIheight];norm_num
-         _≤ r.height+1:=by
+         _ ≤ r.height+1:=by
            simpa [add_comm,add_left_comm,add_assoc] using add_le_add_left h1 1
-         _≤ p.height:=h2
+         _ ≤ p.height:=h2
      rw [hheight] at hbad
      norm_num at hbad
    exact hrpEq.ge
@@ -180,7 +173,7 @@ theorem factorLocal_isDiscreteValuationRing
    (F:Poly (K:=K)) (p:Ideal (Poly (K:=K))) [p.IsPrime]
    [hfactorPrime:(factorIdeal F).IsPrime]
    [hquotientPrime:(quotientPrime (factorIdeal F) p).IsPrime]
-   (hFp:factorIdeal F≤ p) (hheight:p.height=2)
+   (hFp:factorIdeal F ≤ p) (hheight:p.height=2)
    (hH:polyH K F∉p):
    IsDiscreteValuationRing (FactorLocal F p hFp):=by
  have hdim:ringKrullDim (FactorLocal F p hFp)=1:=by
@@ -203,42 +196,42 @@ private theorem baseDerivation_stable_factor (F:Poly (K:=K)):
  rw [(baseDerivation F).leibniz,baseDerivation_self]
  simp
 noncomputable def factorDerivation (F:Poly (K:=K)):
-   Derivation K (Poly (K:=K)⧸ factorIdeal F) (Poly (K:=K)⧸ factorIdeal F):=
+   Derivation K (Poly (K:=K) ⧸ factorIdeal F) (Poly (K:=K) ⧸ factorIdeal F):=
  quotientDerivation (baseDerivation F) (factorIdeal F) (baseDerivation_stable_factor F)
 noncomputable def factorLocalDerivation
    (F:Poly (K:=K)) (p:Ideal (Poly (K:=K))) [p.IsPrime]
    [hquotientPrime:(quotientPrime (factorIdeal F) p).IsPrime]
-   (hFp:factorIdeal F≤ p):
+   (hFp:factorIdeal F ≤ p):
    Derivation K (FactorLocal F p hFp) (FactorLocal F p hFp):=
  localizationDerivation (K:=K)
-   (R:=Poly (K:=K)⧸ factorIdeal F) (S:=FactorLocal F p hFp)
+   (R:=Poly (K:=K) ⧸ factorIdeal F) (S:=FactorLocal F p hFp)
    (quotientPrime (factorIdeal F) p).primeCompl (factorDerivation F)
 theorem factorLocalDerivation_mk
    (F P:Poly (K:=K)) (p:Ideal (Poly (K:=K))) [p.IsPrime]
    [hquotientPrime:(quotientPrime (factorIdeal F) p).IsPrime]
-   (hFp:factorIdeal F≤ p):
+   (hFp:factorIdeal F ≤ p):
    factorLocalDerivation F p hFp
-       (algebraMap (Poly (K:=K)⧸ factorIdeal F) (FactorLocal F p hFp)
+       (algebraMap (Poly (K:=K) ⧸ factorIdeal F) (FactorLocal F p hFp)
          (Ideal.Quotient.mk (factorIdeal F) P))=
-     algebraMap (Poly (K:=K)⧸ factorIdeal F) (FactorLocal F p hFp)
+     algebraMap (Poly (K:=K) ⧸ factorIdeal F) (FactorLocal F p hFp)
        (Ideal.Quotient.mk (factorIdeal F) (baseDerivation F P)):=by
  rw [factorLocalDerivation,localizationDerivation_algebraMap]
  have hq:=RCN077.quotientDerivation_mk
    (K:=K) (A:=Poly (K:=K)) (baseDerivation F) (factorIdeal F)
      (baseDerivation_stable_factor F) P
  exact congrArg
-   (algebraMap (Poly (K:=K)⧸ factorIdeal F) (FactorLocal F p hFp))
+   (algebraMap (Poly (K:=K) ⧸ factorIdeal F) (FactorLocal F p hFp))
    (by simpa only [factorDerivation] using hq)
 noncomputable def factorLocalImage
    (F:Poly (K:=K)) (p:Ideal (Poly (K:=K))) [p.IsPrime]
    [hquotientPrime:(quotientPrime (factorIdeal F) p).IsPrime]
-   (hFp:factorIdeal F≤ p) (P:Poly (K:=K)):FactorLocal F p hFp:=
- algebraMap (Poly (K:=K)⧸ factorIdeal F) (FactorLocal F p hFp)
+   (hFp:factorIdeal F ≤ p) (P:Poly (K:=K)):FactorLocal F p hFp:=
+ algebraMap (Poly (K:=K) ⧸ factorIdeal F) (FactorLocal F p hFp)
    (Ideal.Quotient.mk (factorIdeal F) P)
 theorem factorLocal_numerator_succ
    (F:Poly (K:=K)) (p:Ideal (Poly (K:=K))) [p.IsPrime]
    [hquotientPrime:(quotientPrime (factorIdeal F) p).IsPrime]
-   (hFp:factorIdeal F≤ p) (b:ℕ):
+   (hFp:factorIdeal F ≤ p) (b:ℕ):
    factorLocalImage F p hFp (numerator K F (b+1))=
      factorLocalImage F p hFp (polyH K F)*
          factorLocalDerivation F p hFp
@@ -256,8 +249,8 @@ theorem factorLocal_numerator_succ
 theorem factorLocal_image_isUnit_of_not_mem
    (F A:Poly (K:=K)) (p:Ideal (Poly (K:=K))) [p.IsPrime]
    [hquotientPrime:(quotientPrime (factorIdeal F) p).IsPrime]
-   (hFp:factorIdeal F≤ p) (hA:A∉p):
-   IsUnit (algebraMap (Poly (K:=K)⧸ factorIdeal F) (FactorLocal F p hFp)
+   (hFp:factorIdeal F ≤ p) (hA:A∉p):
+   IsUnit (algebraMap (Poly (K:=K) ⧸ factorIdeal F) (FactorLocal F p hFp)
      (Ideal.Quotient.mk (factorIdeal F) A)):=by
  apply (IsLocalization.AtPrime.isUnit_to_map_iff (FactorLocal F p hFp)
    (quotientPrime (factorIdeal F) p) _).mpr

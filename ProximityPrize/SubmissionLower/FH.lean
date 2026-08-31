@@ -1,14 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A5
 import ProximityPrize.SubmissionLower.B
 namespace ProximityPrize.SubmissionLower.RCN220
-open RCN136 RCN135 RCN138
-open RCN137 RCN082 RCN350
-open RCN313 RCN159
-open RCN217 RCN002
-open RCN048
-open RCN095 RCN275
-open RCN065
+open RCN136 RCN135 RCN138 RCN137 RCN082 RCN350 RCN313 RCN159 RCN217 RCN002 RCN048 RCN095 RCN275 RCN065
 noncomputable section
 variable {K I:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K

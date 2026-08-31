@@ -3,19 +3,11 @@ import ProximityPrize.SubmissionLower.O
 import ProximityPrize.SubmissionLower.C4
 namespace ProximityPrize.SubmissionLower.RCN029
 open scoped Classical BigOperators
-open RCN264 RCN002
-open RCN341
-open RCN037
-open RCN038
-open RCN125
-open RCN031
-open RCN106
-open RCN111
-open RCN112
+open RCN264 RCN002 RCN341 RCN037 RCN038 RCN125 RCN031 RCN106 RCN111 RCN112
 noncomputable section
 set_option autoImplicit false
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
+ {G T H:MvPolynomial (Fin 3) Omega}
 variable (base:∀ C:RegularComponent Omega G T H,
  SeparableLiteralCoordinate C.1)
 variable (hactive:∀ C:RegularComponent Omega G T H,
@@ -24,9 +16,9 @@ variable (hactive:∀ C:RegularComponent Omega G T H,
    KaehlerDifferential.D Omega (CoordinateField Omega C.1)
      (coordinate Omega C.1 2)≠0)
 variable (hZ:∀ C:RegularComponent Omega G T H,LiteralProjectionGate C 2)
-variable (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0)
-variable (D:AdaptiveNestedProjectionDataActive base hactive hSderiv)
-variable (multiplicity:RegularComponent Omega G T H → ℕ)
+ (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0)
+ (D:AdaptiveNestedProjectionDataActive base hactive hSderiv)
+ (multiplicity:RegularComponent Omega G T H → ℕ)
 def ActiveNestedZFixedPowers:Prop:=
  ∀ q (hq:Irreducible q) (hm:q.Monic)
    (a₀:IndexedFactorFiber

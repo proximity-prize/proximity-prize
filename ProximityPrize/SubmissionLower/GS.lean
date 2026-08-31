@@ -2,7 +2,7 @@ import ProximityPrize.Benchmark.TargetLower
 namespace ProximityPrize.SubmissionLower.RCN321
 noncomputable section
 variable {k B E:Type} [Field k] [Field B] [Field E]
-variable [Algebra k B] [Algebra B E] [Algebra k E] [IsScalarTower k B E]
+ [Algebra k B] [Algebra B E] [Algebra k E] [IsScalarTower k B E]
 theorem trdeg_le_one_of_tower
    (hE:Algebra.trdeg k E ≤ 2) (htrans:Algebra.Transcendental B E):
    Algebra.trdeg k B ≤ 1:=by

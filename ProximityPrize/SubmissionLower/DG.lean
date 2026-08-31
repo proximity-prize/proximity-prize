@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R2
 namespace ProximityPrize.SubmissionLower.RCN026
 open scoped Classical BigOperators WithZero
@@ -15,10 +14,10 @@ theorem zeroOrder_sub_poleOrder (v:Place K L) (x:L):
  unfold zeroOrder order RCN346.poleOrder RCN187.poleOrder
  omega
 variable [IsAlgClosed K]
-variable [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
-variable [IsScalarTower K (Polynomial K) L] [IsScalarTower K (RatFunc K) L]
-variable [IsScalarTower (Polynomial K) (RatFunc K) L]
-variable [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
+ [Algebra (Polynomial K) L] [Algebra (RatFunc K) L]
+ [IsScalarTower K (Polynomial K) L] [IsScalarTower K (RatFunc K) L]
+ [IsScalarTower (Polynomial K) (RatFunc K) L]
+ [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq (Place K L):=Classical.decEq _
 abbrev FiniteNormalization:=RCN349.FiniteNormalization K L

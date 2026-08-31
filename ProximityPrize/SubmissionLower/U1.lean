@@ -1,10 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T9
 import ProximityPrize.SubmissionLower.HC
 section ProximityFlatProofPort
 open SetLike DirectSum Pointwise Set
 variable {ιA ιM σA σM A M:Type*}
-variable [Semiring A] [AddCommMonoid M] [Module A M]
+ [Semiring A] [AddCommMonoid M] [Module A M]
 section HomogeneousDef
 def Submodule.IsHomogeneous (p:Submodule A M) (ℳ:ιM → σM)
    [DecidableEq ιM] [SetLike σM M] [AddSubmonoidClass σM M] [Decomposition ℳ]:Prop:=
@@ -22,9 +21,9 @@ structure HomogeneousSubmodule (𝒜:ιA → σA) (ℳ:ιM → σM)
    extends Submodule A M where
  is_homogeneous':toSubmodule.IsHomogeneous ℳ
 variable (𝒜:ιA → σA) (ℳ:ιM → σM)
-variable [DecidableEq ιA] [AddMonoid ιA] [SetLike σA A] [AddSubmonoidClass σA A] [GradedRing 𝒜]
-variable [DecidableEq ιM] [SetLike σM M] [AddSubmonoidClass σM M] [Decomposition ℳ]
-variable [VAdd ιA ιM] [GradedSMul 𝒜 ℳ]
+ [DecidableEq ιA] [AddMonoid ιA] [SetLike σA A] [AddSubmonoidClass σA A] [GradedRing 𝒜]
+ [DecidableEq ιM] [SetLike σM M] [AddSubmonoidClass σM M] [Decomposition ℳ]
+ [VAdd ιA ιM] [GradedSMul 𝒜 ℳ]
 instance:SetLike (HomogeneousSubmodule 𝒜 ℳ) M where
  coe «X»:=«X».toSubmodule
  coe_injective:=by

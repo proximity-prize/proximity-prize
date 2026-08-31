@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CU
 import ProximityPrize.SubmissionLower.HG
 section ProximityFlatProofPort
@@ -6,10 +5,10 @@ open KaehlerDifferential Module MvPolynomial TensorProduct
 namespace Algebra
 universe w₁ w₂ w₃ w₄ w₅ u₁ u₂ u₃
 variable {R:Type u₁} {S:Type u₂} [CommRing R] [CommRing S] [Algebra R S]
-variable {T:Type u₃} [CommRing T] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
-variable {ι:Type w₁} {ι':Type w₃} {σ:Type w₂} {σ':Type w₄} {τ:Type w₅}
-variable (Q:Generators S T ι) (P:Generators R S σ)
-variable (Q':Generators S T ι') (P':Generators R S σ') (W:Generators R T τ)
+ {T:Type u₃} [CommRing T] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
+ {ι:Type w₁} {ι':Type w₃} {σ:Type w₂} {σ':Type w₄} {τ:Type w₅}
+ (Q:Generators S T ι) (P:Generators R S σ)
+ (Q':Generators S T ι') (P':Generators R S σ') (W:Generators R T τ)
 attribute [local instance] SMulCommClass.of_commMonoid
 namespace Generators
 set_option backward.isDefEq.respectTransparency false in

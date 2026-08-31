@@ -1,15 +1,12 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 universe u v w
 variable {R S T:Type*} [CommRing R] [Ring S]
-variable [Algebra R S]
-variable {K L F:Type*} [Field K] [Field L] [Field F]
-variable [Algebra K L] [Algebra K F]
-variable {ι:Type w}
-open Module
-open LinearMap
-open Matrix Polynomial
+ [Algebra R S]
+ {K L F:Type*} [Field K] [Field L] [Field F]
+ [Algebra K L] [Algebra K F]
+ {ι:Type w}
+open Module LinearMap Matrix Polynomial
 open scoped Matrix
 namespace Algebra
 section EqProdRoots

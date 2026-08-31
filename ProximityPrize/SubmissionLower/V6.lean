@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 universe u v w
@@ -6,7 +5,7 @@ namespace Valuation
 namespace Integers
 section CommRing
 variable {R:Type u} {Γ₀:Type v} [CommRing R] [LinearOrderedCommGroupWithZero Γ₀]
-variable {v:Valuation R Γ₀} {O:Type w} [CommRing O] [Algebra O R] (hv:Integers v O)
+ {v:Valuation R Γ₀} {O:Type w} [CommRing O] [Algebra O R] (hv:Integers v O)
 include hv
 open Polynomial
 lemma isIntegral_iff_v_le_one {x:R}:
@@ -41,9 +40,9 @@ protected theorem integralClosure:integralClosure O R=⊥:=
 end CommRing
 section FractionField
 variable {K:Type u} {Γ₀:Type v} [Field K] [LinearOrderedCommGroupWithZero Γ₀]
-variable {v:Valuation K Γ₀} {O:Type w} [CommRing O]
-variable [Algebra O K]
-variable (hv:Integers v O)
+ {v:Valuation K Γ₀} {O:Type w} [CommRing O]
+ [Algebra O K]
+ (hv:Integers v O)
 include hv in
 theorem isIntegrallyClosed:IsIntegrallyClosed O:=by
  have:IsFractionRing O K:=hv.isFractionRing

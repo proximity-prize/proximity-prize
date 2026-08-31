@@ -1,8 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 variable {M:Type*}
-variable [AddCommGroup M] [LinearOrder M] [IsOrderedAddMonoid M] [One M]
+ [AddCommGroup M] [LinearOrder M] [IsOrderedAddMonoid M] [One M]
 theorem mul_smul_one_lt_iff {num:ℤ} {n den:ℕ} (hn:0 < n) {x:M}:
    (num*n) • 1 < (n*den:ℤ) • x ↔ num • 1 < den • x:=by
  rw [mul_comm num,mul_smul,mul_smul,natCast_zsmul x den]

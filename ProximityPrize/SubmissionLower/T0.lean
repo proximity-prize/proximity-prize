@@ -1,9 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 variable {R:Type*} [CommRing R]
-open Ideal
-open UniqueFactorizationMonoid
+open Ideal UniqueFactorizationMonoid
 open scoped nonZeroDivisors
 theorem Ideal.eq_span_singleton_of_mem_of_notMem_sq_of_notMem_prime_ne {P:Ideal R}
    (hP:P.IsPrime) [IsDedekindDomain R] {x:R} (x_mem:x∈P) (hxP2:x∉P^2)
@@ -121,12 +119,12 @@ theorem IsPrincipalIdealRing.of_finite_primes [IsDedekindDomain R]
  IsPrincipalIdealRing.of_finite_maximals <| h.subset fun _ hi↦hi.isPrime
 section
 variable [IsDedekindDomain R]
-variable (S:Type*) [CommRing S]
-variable [Algebra R S] [Module.IsTorsionFree R S] [Module.Finite R S]
-variable (p:Ideal R) (hp0:p≠⊥) [IsPrime p]
-variable {Sₚ:Type*} [CommRing Sₚ] [Algebra S Sₚ]
-variable [IsLocalization (Algebra.algebraMapSubmonoid S p.primeCompl) Sₚ]
-variable [Algebra R Sₚ] [IsScalarTower R S Sₚ]
+ (S:Type*) [CommRing S]
+ [Algebra R S] [Module.IsTorsionFree R S] [Module.Finite R S]
+ (p:Ideal R) (hp0:p≠⊥) [IsPrime p]
+ {Sₚ:Type*} [CommRing Sₚ] [Algebra S Sₚ]
+ [IsLocalization (Algebra.algebraMapSubmonoid S p.primeCompl) Sₚ]
+ [Algebra R Sₚ] [IsScalarTower R S Sₚ]
 include hp0
 variable [IsDedekindDomain Sₚ]
 theorem IsLocalization.OverPrime.mem_normalizedFactors_of_isPrime [IsDomain S]

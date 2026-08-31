@@ -1,22 +1,14 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z6
 import ProximityPrize.SubmissionLower.D4
 namespace ProximityPrize.SubmissionLower.RCN153
 open scoped Classical
-open RCN159
-open RCN164
-open RCN213
-open RCN215
-open RCN214
-open RCN238
-open RCN095
-open RCN275
+open RCN159 RCN164 RCN213 RCN215 RCN214 RCN238 RCN095 RCN275
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 50000
 variable {K Omega Iota:Type} [Field K] [Field Omega]
-variable {phi:Polynomial K→+*Omega} {Gamma:Finset K} {x:Iota→ K}
-variable {pchar:ℕ} [CharP Omega pchar] {flag:FlagDegree}
+ {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+ {pchar:ℕ} [CharP Omega pchar] {flag:FlagDegree}
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Iota:=Classical.decEq Iota
 def factorRegularLedgerFor (p direction:FlagDegree):ℕ:=
@@ -39,11 +31,11 @@ theorem recursive_scaled_factor_with_support_6600
    (p:FlagDegree)
    (hnodes:S.nodes.card=n)
    (hagreement:∀ gamma∈Gamma,
-     agreements≤ (S.agreementFiber gamma).card)
+     agreements ≤ (S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,
      ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
-         (x i) (D.stage.u0 i) (D.stage.u1 i)→
-     (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*gap≤
+         (x i) (D.stage.u0 i) (D.stage.u1 i) →
+     (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*gap ≤
        D.degree*
            ((flagMixed p support.agreementDirection support.agreementDirection*
                degreeIncidence+
@@ -58,7 +50,7 @@ theorem recursive_scaled_factor_with_support_6600
            (errors+1)*gap*
              (flagMixed p unitYZFlag unitZFlag+
                flagMixed p unitYZFlag unitAllFlag))):
-   Gamma.card*gap^2≤
+   Gamma.card*gap^2 ≤
      factorRegularLedgerFor p support.agreementDirection:=by
  have h:=recursive_scaled_stratified_incidence_bound
    hphi S
@@ -85,7 +77,7 @@ theorem recursive_scaled_factor_with_support_6600
      rw [hnodes]
      exact unit_part_bound k hk)
  calc
-   Gamma.card*gap^2≤
+   Gamma.card*gap^2 ≤
        degreeIncidence*
            ((flagMixed p support.agreementDirection support.agreementDirection*
                  degreeIncidence+
@@ -109,11 +101,11 @@ theorem recursive_scaled_factor_6600
    (p:FlagDegree)
    (hnodes:S.nodes.card=n)
    (hagreement:∀ gamma∈Gamma,
-     agreements≤ (S.agreementFiber gamma).card)
+     agreements ≤ (S.agreementFiber gamma).card)
    (hfiber:∀ D:S.TerminalDescendant,∀ i∈D.stage.nodes,
      ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
-         (x i) (D.stage.u0 i) (D.stage.u1 i)→
-     (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*gap≤
+         (x i) (D.stage.u0 i) (D.stage.u1 i) →
+     (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*gap ≤
        D.degree*
            ((flagMixed p agreementDirection6600 agreementDirection6600*
                degreeIncidence+
@@ -128,7 +120,7 @@ theorem recursive_scaled_factor_6600
            (errors+1)*gap*
              (flagMixed p unitYZFlag unitZFlag+
                flagMixed p unitYZFlag unitAllFlag))):
-   Gamma.card*gap^2≤ factorRegularLedger p:=by
+   Gamma.card*gap^2 ≤ factorRegularLedger p:=by
  have h:=recursive_scaled_factor_with_support_6600 hphi
    ResidualSupportParameters.acceptedSupport S p hnodes hagreement
      (by
@@ -136,7 +128,7 @@ theorem recursive_scaled_factor_6600
          ResidualSupportParameters.agreementDirection,
          agreementDirection6600] using hfiber)
  calc
-   Gamma.card*gap^2≤
+   Gamma.card*gap^2 ≤
        factorRegularLedgerFor p
          ResidualSupportParameters.acceptedSupport.agreementDirection:=h
    _=factorRegularLedger p:=by

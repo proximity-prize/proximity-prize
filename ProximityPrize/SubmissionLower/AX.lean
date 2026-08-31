@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X2
 import ProximityPrize.SubmissionLower.Z
 namespace ProximityPrize.SubmissionLower.RCN011
@@ -50,7 +49,7 @@ theorem planeMap_injective (order:Fin 3 ≃ Fin 3):
  (bivariateEquiv (RatFunc K)).injective.comp (rationalMap_injective K order)
 section Component
 variable (order:Fin 3 ≃ Fin 3) (P:Ideal (Original K)) [P.IsPrime]
-variable (ht:Transcendental K (coordinate K P (order 0)))
+ (ht:Transcendental K (coordinate K P (order 0)))
 include ht in
 theorem planeMap_irreducible_of_component
    (G:Original K) (hG:Irreducible G) (hmem:G∈P):

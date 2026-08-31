@@ -1,15 +1,12 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.M
 import ProximityPrize.SubmissionLower.B0
 import ProximityPrize.SubmissionLower.BX
 namespace ProximityPrize.SubmissionLower.RCN238
 open scoped Classical BigOperators
-open RCN002 RCN005 RCN007
-open RCN136 RCN231 RCN229
-open RCN313 RCN065 RCN319
+open RCN002 RCN005 RCN007 RCN136 RCN231 RCN229 RCN313 RCN065 RCN319
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
-variable (φ:Polynomial K →+*Ω)
+ (φ:Polynomial K →+*Ω)
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Ω:=Classical.decEq Ω
 def selectedPoint (selected:K → Polynomial K) (γ:K):Fin 3 → Ω:=

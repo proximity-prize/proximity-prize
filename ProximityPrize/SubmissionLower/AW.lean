@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DF
 import ProximityPrize.SubmissionLower.X5
 namespace ProximityPrize.SubmissionLower.RCN008
@@ -37,7 +36,7 @@ theorem plane_budget_le_original (order:Fin 3 ≃ Fin 3) (G H:Original K):
      (planeMap_degreeX_le K order H))
 section FixedOrder
 variable (order:Fin 3 ≃ Fin 3) {I:Type} [Fintype I]
-variable (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
+ (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
 theorem actual_finite_sum_finrank_bound_without_separability
    (ht:∀ i,Transcendental K (coordinate K (P i) (order 0)))
    (hinj:Function.Injective P) (G H:Original K)
@@ -136,7 +135,7 @@ theorem actual_finite_sum_finrank_bound_without_separability
 end FixedOrder
 section OriginalOrder
 variable (order:Fin 3 ≃ Fin 3) {I:Type} [Fintype I]
-variable (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
+ (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
 theorem original_finite_sum_finrank_bound_without_separability
    (ht:∀ i,Transcendental K (coordinate K (P i) (order 0)))
    (hinj:Function.Injective P) (G H:Original K)

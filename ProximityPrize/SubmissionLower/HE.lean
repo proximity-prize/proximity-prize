@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HF
 import ProximityPrize.SubmissionLower.IQ
 section ProximityFlatProofPort
@@ -135,8 +134,8 @@ class SMulBracketCommClass (S L α:Type*) [SMul S α] [LieRing L] [AddCommGroup 
    [LieRingModule L α]:Prop where
  smul_bracket_comm:∀ (s:S) (l:L) (a:α),s • ⁅l,a⁆=⁅l,s • a⁆
 variable {S T:Type*}
-variable [Monoid S] [DistribMulAction S M] [SMulCommClass R S M] [SMulBracketCommClass S L M]
-variable [Monoid T] [DistribMulAction T M] [SMulCommClass R T M] [SMulBracketCommClass T L M]
+ [Monoid S] [DistribMulAction S M] [SMulCommClass R S M] [SMulBracketCommClass S L M]
+ [Monoid T] [DistribMulAction T M] [SMulCommClass R T M] [SMulBracketCommClass T L M]
 instance instSMul:SMul S (LieDerivation R L M) where
  smul r D:=
    { toLinearMap:=r • D

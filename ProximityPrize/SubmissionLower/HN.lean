@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 theorem Int.natAbs_eq_iff_associated {a b:ℤ}:a.natAbs=b.natAbs ↔ Associated a b:=by

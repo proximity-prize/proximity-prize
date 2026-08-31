@@ -1,9 +1,8 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 universe uM
 variable {R N N':Type*} {M:Type uM} [CommRing R] [AddCommGroup M] [Module R M] [AddCommGroup N]
-variable [Module R N] [AddCommGroup N'] [Module R N'] (S:Submonoid R)
+ [Module R N] [AddCommGroup N'] [Module R N'] (S:Submonoid R)
 theorem Module.free_of_isLocalizedModule {Rₛ Mₛ} [AddCommGroup Mₛ] [Module R Mₛ]
    [CommRing Rₛ] [Algebra R Rₛ] [Module Rₛ Mₛ] [IsScalarTower R Rₛ Mₛ]
    (S) (f:M →ₗ[R] Mₛ) [IsLocalization S Rₛ] [IsLocalizedModule S f] [Module.Free R M]:

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F6
 import ProximityPrize.SubmissionLower.V0
 section ProximityFlatProofPort
@@ -6,7 +5,7 @@ noncomputable section
 open scoped nonZeroDivisors
 open Set Function UniqueFactorizationMonoid IsDedekindDomain IsDedekindDomain.HeightOneSpectrum
 variable {R:Type*} [CommRing R] {K:Type*} [Field K] [Algebra R K] [IsFractionRing R K]
-variable [IsDedekindDomain R] (v:HeightOneSpectrum R)
+ [IsDedekindDomain R] (v:HeightOneSpectrum R)
 def IsDedekindDomain.HeightOneSpectrum.maxPowDividing (I:Ideal R):Ideal R:=
  v.asIdeal^(Associates.mk v.asIdeal).count (Associates.mk I).factors
 open Associates in

@@ -1,14 +1,12 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HD
 section ProximityFlatProofPort
 namespace Ideal
 universe u v
 variable {R:Type u} [CommRing R]
-variable {S:Type v} [CommRing S] [Algebra R S]
-variable (p:Ideal R) (P:Ideal S)
+ {S:Type v} [CommRing S] [Algebra R S]
+ (p:Ideal R) (P:Ideal S)
 local notation "f" => algebraMap R S
-open Module
-open UniqueFactorizationMonoid
+open Module UniqueFactorizationMonoid
 attribute [local instance] Ideal.Quotient.field
 section DecEq
 noncomputable def ramificationIdx':ℕ:=sSup {n | map f p ≤ P^n}
@@ -268,7 +266,7 @@ end IsDedekindDomain
 end DecEq
 section tower
 variable {R S T:Type*} [CommRing R] [CommRing S] [CommRing T]
-variable [Algebra R S] [Algebra S T] [Algebra R T] [IsScalarTower R S T]
+ [Algebra R S] [Algebra S T] [Algebra R T] [IsScalarTower R S T]
 theorem ramificationIdx'_algebra_tower [IsDedekindDomain S] [IsDedekindDomain T]
    {p:Ideal R} {P:Ideal S} {Q:Ideal T} [hpm:P.IsPrime] [hqm:Q.IsPrime]
    (hg0:map (algebraMap S T) P≠⊥)

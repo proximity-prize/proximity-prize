@@ -1,11 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X5
 import ProximityPrize.SubmissionLower.DB
 namespace ProximityPrize.SubmissionLower.RCN012
-open Polynomial Polynomial.Bivariate
-open RCN002 RCN005 RCN371
-open RCN011 RCN009
-open RCN013
+open Polynomial Polynomial.Bivariate RCN002 RCN005 RCN371 RCN011 RCN009 RCN013
 noncomputable section
 variable {A:Type} [Field A]
 theorem bivariateEquiv_coeff_natDegree_le_of_support

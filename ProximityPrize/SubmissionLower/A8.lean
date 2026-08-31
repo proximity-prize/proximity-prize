@@ -1,15 +1,8 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.E3
 import ProximityPrize.SubmissionLower.D0
 namespace ProximityPrize.SubmissionLower.RCN063
 open scoped Classical BigOperators WithZero
-open RCN187 RCN205
-open RCN344 RCN002
-open RCN065 RCN136 RCN139
-open RCN047 RCN313 RCN233
-open RCN238 RCN341
-open RCN271 RCN257
-open RCN095 RCN114 RCN295
+open RCN187 RCN205 RCN344 RCN002 RCN065 RCN136 RCN139 RCN047 RCN313 RCN233 RCN238 RCN341 RCN271 RCN257 RCN095 RCN114 RCN295
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -21,61 +14,61 @@ def coefficientPoleWeight (v:Valuation L (WithZero (Multiplicative ℤ)))
    (T.support.image (fun j↦poleOrder v (T.coeff j))))).max'
    ⟨0,Finset.mem_insert_self _ _⟩
 theorem coefficientPoleWeight_nonneg (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (T:Polynomial L) (z:L):0≤ coefficientPoleWeight v T z:=
+   (T:Polynomial L) (z:L):0 ≤ coefficientPoleWeight v T z:=
  Finset.le_max' _ _ (Finset.mem_insert_self _ _)
 theorem seedPole_le (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (T:Polynomial L) (z:L):poleOrder v z≤ coefficientPoleWeight v T z:=
+   (T:Polynomial L) (z:L):poleOrder v z ≤ coefficientPoleWeight v T z:=
  Finset.le_max' _ _ (Finset.mem_insert_of_mem (Finset.mem_insert_self _ _))
 theorem coeffPole_le (v:Valuation L (WithZero (Multiplicative ℤ)))
    (T:Polynomial L) (z:L) (j:ℕ) (hj:j∈T.support):
-   poleOrder v (T.coeff j)≤ coefficientPoleWeight v T z:=by
+   poleOrder v (T.coeff j) ≤ coefficientPoleWeight v T z:=by
  unfold coefficientPoleWeight
  apply Finset.le_max'
  exact Finset.mem_insert_of_mem (Finset.mem_insert_of_mem (Finset.mem_image.mpr ⟨j,hj,rfl⟩))
 private theorem pole_le_of_exp (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (x:L) (q:ℤ) (hq:0≤ q) (hx:v x≤ WithZero.exp q):poleOrder v x≤ q:=by
+   (x:L) (q:ℤ) (hq:0 ≤ q) (hx:v x ≤ WithZero.exp q):poleOrder v x ≤ q:=by
  apply max_le hq
  by_cases hzero:v x=0
  · simpa [hzero] using hq
  · simpa only [WithZero.log_exp] using (WithZero.log_le_log hzero WithZero.exp_ne_zero).mpr hx
 theorem eval_pole_le (v:Valuation L (WithZero (Multiplicative ℤ)))
-   (T:Polynomial L) (z a:L) (ha:v a≤ 1):
-   poleOrder v (T.eval a)≤ coefficientPoleWeight v T z:=by
+   (T:Polynomial L) (z a:L) (ha:v a ≤ 1):
+   poleOrder v (T.eval a) ≤ coefficientPoleWeight v T z:=by
  apply pole_le_of_exp _ _ _ (coefficientPoleWeight_nonneg v T z)
  rw [Polynomial.eval_eq_sum,Polynomial.sum_def]
  apply v.map_sum_le
  intro j hj
  rw [map_mul,map_pow]
- have hc:v (T.coeff j)≤ WithZero.exp (coefficientPoleWeight v T z):=
+ have hc:v (T.coeff j) ≤ WithZero.exp (coefficientPoleWeight v T z):=
    WithZero.le_exp_of_log_le ((le_max_right _ _).trans (coeffPole_le v T z j hj))
- have hp:v a^j≤ 1:=pow_le_one₀ zero_le ha
+ have hp:v a^j ≤ 1:=pow_le_one₀ zero_le ha
  simpa only [mul_one] using mul_le_mul' hc hp
 theorem affine_eval_pole_le {Ω:Type} [Field Ω] [Algebra Ω L]
    (v:Place Ω L) (T:Polynomial L) (z:L) (a u0 u1:Ω):
-   poleOrder v.val (T.eval (algebraMap Ω L a)-algebraMap Ω L u0-z*algebraMap Ω L u1)≤
+   poleOrder v.val (T.eval (algebraMap Ω L a)-algebraMap Ω L u0-z*algebraMap Ω L u1) ≤
      coefficientPoleWeight v.val T z:=by
  have ht:=eval_pole_le v.val T z _ (constant_value_le_one Ω L v a)
  have h0:=pole_const_le v.val (constant_value_le_one Ω L v) u0
  have hz:=pole_const_mul_le v.val (constant_value_le_one Ω L v) u1 z
  have hseed:=seedPole_le v.val T z
  have hn:=coefficientPoleWeight_nonneg v.val T z
- have hsub (x y:L):poleOrder v.val (x-y)≤ max (poleOrder v.val x) (poleOrder v.val y):=by
+ have hsub (x y:L):poleOrder v.val (x-y) ≤ max (poleOrder v.val x) (poleOrder v.val y):=by
    simpa only [sub_eq_add_neg,pole_neg] using pole_add_le v.val x (-y)
  exact (hsub _ _).trans (max_le ((hsub _ _).trans (max_le ht (h0.trans hn)))
    (by simpa only [mul_comm] using hz.trans hseed))
 variable {K Ω:Type} [Field K] [Field Ω]
-variable (φ:Polynomial K→+*Ω) (P:Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
-variable (F:MvPolynomial (Fin 4) K)
-variable (hF:surfaceMap φ F∈P)
-variable (hH:surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F)∉P)
+variable (φ:Polynomial K →+*Ω) (P:Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
+ (F:MvPolynomial (Fin 4) K)
+ (hF:surfaceMap φ F∈P)
+ (hH:surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F)∉P)
 def CoefficientPoleProfile (w cost:ℕ):Prop:=
  ∀ W:Finset (Place Ω (CoordinateField Ω P)),
    (∑ v∈W,coefficientPoleWeight v.val (truncatedPolynomial φ P F hF hH w)
-     (coordinate Ω P 2))≤ (cost:ℤ)
+     (coordinate Ω P 2)) ≤ (cost:ℤ)
 theorem coefficientPoleProfile_of_coordinate [IsAlgClosed Ω] (w:ℕ)
    (J:Coordinate Ω (CoordinateField Ω P))
    (hprofile:∀ v:Place Ω (CoordinateField Ω P),
-     coefficientPoleWeight v.val (truncatedPolynomial φ P F hF hH w) (coordinate Ω P 2)≤
+     coefficientPoleWeight v.val (truncatedPolynomial φ P F hF hH w) (coordinate Ω P 2) ≤
        RCN346.poleOrder Ω (CoordinateField Ω P) v
          (coordinateValue Ω (CoordinateField Ω P) J)):
    CoefficientPoleProfile φ P F hF hH w (coordinateDegree Ω (CoordinateField Ω P) J):=by
@@ -84,13 +77,13 @@ theorem coefficientPoleProfile_of_coordinate [IsAlgClosed Ω] (w:ℕ)
    (finite_sum_coordinate_pole_le_degree Ω (CoordinateField Ω P) J W)
 theorem coefficientPoleProfile_of_unitYZ_bound (w cost:ℕ)
    (hcoeff:∀ (v:Place Ω (CoordinateField Ω P)) (j:ℕ),
-     poleOrder v.val ((truncatedPolynomial φ P F hF hH w).coeff j)≤
+     poleOrder v.val ((truncatedPolynomial φ P F hF hH w).coeff j) ≤
        poleOrder v.val (coordinate Ω P 0))
    (hyz:∀ W:Finset (Place Ω (CoordinateField Ω P)),
-     (∑ v∈W,exponentSetPoleWeight v.val (coordinate Ω P) (flagSupport unitYZFlag))≤ (cost:ℤ)):
+     (∑ v∈W,exponentSetPoleWeight v.val (coordinate Ω P) (flagSupport unitYZFlag)) ≤ (cost:ℤ)):
    CoefficientPoleProfile φ P F hF hH w cost:=by
  have hp (v:Place Ω (CoordinateField Ω P)):
-     coefficientPoleWeight v.val (truncatedPolynomial φ P F hF hH w) (coordinate Ω P 2)≤
+     coefficientPoleWeight v.val (truncatedPolynomial φ P F hF hH w) (coordinate Ω P 2) ≤
        max (poleOrder v.val (coordinate Ω P 0)) (poleOrder v.val (coordinate Ω P 2)):=by
    unfold coefficientPoleWeight
    apply Finset.max'_le
@@ -154,7 +147,7 @@ theorem agreement_regular_zero_le [IsAlgClosed Ω] (base:SeparableLiteralCoordin
  intro W
  have hlocal (v:Place Ω (CoordinateField Ω P)):
      poleOrder v.val (coordinateEvaluation Ω P (agreementPolynomial φ F w x u0 u1)/
-       (coordinateEvaluation Ω P (surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F)))^(2*w))≤
+       (coordinateEvaluation Ω P (surfaceMap φ (MvPolynomial.pderiv (2:Fin 4) F)))^(2*w)) ≤
      coefficientPoleWeight v.val (truncatedPolynomial φ P F hF hH w) (coordinate Ω P 2):=by
    rw [normalized_agreement_eq φ P F hF hH]
    exact affine_eval_pole_le v _ _ (φ (Polynomial.C x)) (φ (Polynomial.C u0)) (φ (Polynomial.C u1))

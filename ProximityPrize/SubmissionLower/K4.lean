@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BM
 namespace ProximityPrize.SubmissionLower.RCN161
 noncomputable section

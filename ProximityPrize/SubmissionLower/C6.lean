@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DC
 namespace ProximityPrize.SubmissionLower.RCN185
 open Polynomial

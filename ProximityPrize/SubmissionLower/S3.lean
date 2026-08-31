@@ -1,24 +1,22 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CS
 import ProximityPrize.SubmissionLower.AR
 section ProximityFlatProofPort
 namespace Ideal
 universe u v
 variable {R:Type u} [CommRing R]
-variable {S:Type v} [CommRing S] [Algebra R S]
-variable (p:Ideal R) (P:Ideal S)
+ {S:Type v} [CommRing S] [Algebra R S]
+ (p:Ideal R) (P:Ideal S)
 local notation "f" => algebraMap R S
-open Module
-open UniqueFactorizationMonoid
+open Module UniqueFactorizationMonoid
 attribute [local instance] Ideal.Quotient.field
 section FinrankQuotientMap
 open scoped nonZeroDivisors
 variable {K:Type*} [Field K] [Algebra R K]
-variable {L:Type*} [Field L] [Algebra S L] [IsFractionRing S L]
-variable {V V' V'':Type*}
-variable [AddCommGroup V] [Module R V] [Module K V] [IsScalarTower R K V]
-variable [AddCommGroup V'] [Module R V'] [Module S V'] [IsScalarTower R S V']
-variable [AddCommGroup V''] [Module R V'']
+ {L:Type*} [Field L] [Algebra S L] [IsFractionRing S L]
+ {V V' V'':Type*}
+ [AddCommGroup V] [Module R V] [Module K V] [IsScalarTower R K V]
+ [AddCommGroup V'] [Module R V'] [Module S V'] [IsScalarTower R S V']
+ [AddCommGroup V''] [Module R V'']
 variable (K)
 open scoped Matrix
 variable {K} in

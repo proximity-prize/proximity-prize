@@ -1,15 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F
 import ProximityPrize.SubmissionLower.Y4
 import ProximityPrize.SubmissionLower.BU
 import ProximityPrize.SubmissionLower.B2
 namespace ProximityPrize.SubmissionLower.RCN170
 open scoped Classical BigOperators
-open RCN051 RCN168 RCN068
-open RCN070 RCN169 RCN136
-open RCN135 RCN138 RCN137
-open RCN238 RCN243 RCN081
-open RCN174 RCN319 RCN001
+open RCN051 RCN168 RCN068 RCN070 RCN169 RCN136 RCN135 RCN138 RCN137 RCN238 RCN243 RCN081 RCN174 RCN319 RCN001
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
 local instance:DecidableEq K:=Classical.decEq K

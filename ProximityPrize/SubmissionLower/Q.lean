@@ -1,9 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.N4
 import ProximityPrize.SubmissionLower.Y2
 namespace ProximityPrize.SubmissionLower.RCN174
-open RCN256
-open ProximityPrize.Benchmark
+open RCN256 ProximityPrize.Benchmark
 open scoped BigOperators
 noncomputable section
 variable (K:Type*) [Field K]

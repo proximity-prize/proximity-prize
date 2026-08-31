@@ -1,35 +1,15 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DQ
 import ProximityPrize.SubmissionLower.O6
 import ProximityPrize.SubmissionLower.GO
 namespace ProximityPrize.SubmissionLower.RCN316
 open scoped Classical
-open Polynomial KaehlerDifferential
-open RCN002 RCN005
-open RCN003 RCN001
-open RCN223 RCN238
-open RCN136 RCN243 RCN264
-open RCN095
-open RCN159
-open RCN158
-open RCN037
-open RCN038
-open RCN040
-open RCN041
-open RCN046
-open RCN265
-open RCN341
-open RCN277
-open RCN274
-open RCN275
-open RCN276
-open RCN315
+open Polynomial KaehlerDifferential RCN002 RCN005 RCN003 RCN001 RCN223 RCN238 RCN136 RCN243 RCN264 RCN095 RCN159 RCN158 RCN037 RCN038 RCN040 RCN041 RCN046 RCN265 RCN341 RCN277 RCN274 RCN275 RCN276 RCN315
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
 set_option maxRecDepth 30000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K→+*Omega} {Gamma:Finset K} {x:Iota→ K}
+ {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
 local instance:DecidableEq Iota:=Classical.decEq Iota
@@ -39,9 +19,9 @@ def TerminalAdaptiveProjectionFamiliesOfSupport
    (support:ResidualSupportParameters)
    (S:ResidualStage phi Gamma x pchar e flag w support):Prop:=
  ∀ (D:S.TerminalDescendant) (i:Iota),
-   i∈D.stage.nodes→
+   i∈D.stage.nodes →
    ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
-       (x i) (D.stage.u0 i) (D.stage.u1 i)→
+       (x i) (D.stage.u0 i) (D.stage.u1 i) →
    ∃ base:∀ C:RegularComponent Omega D.stage.G
        (agreementPolynomial phi D.stage.F D.degree
          (x i) (D.stage.u0 i) (D.stage.u1 i))
@@ -55,9 +35,9 @@ def TerminalAdaptiveProjectionFamiliesYZOfSupport
    (support:ResidualSupportParameters)
    (S:ResidualStage phi Gamma x pchar e flag w support):Prop:=
  ∀ (D:S.TerminalDescendant) (i:Iota),
-   i∈D.stage.nodes→
+   i∈D.stage.nodes →
    ¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
-       (x i) (D.stage.u0 i) (D.stage.u1 i)→
+       (x i) (D.stage.u0 i) (D.stage.u1 i) →
    ∃ base:∀ C:RegularComponent Omega D.stage.G
        (agreementPolynomial phi D.stage.F D.degree
          (x i) (D.stage.u0 i) (D.stage.u1 i))
@@ -72,10 +52,10 @@ theorem terminalAdaptiveProjectionAtCutYZ_of_active_yz_gates
    (D:S.TerminalDescendant) (i:Iota)
    (hproper:¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
      (x i) (D.stage.u0 i) (D.stage.u1 i))
-   (hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j< pchar)
+   (hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j < pchar)
    (hmixedZ:coordinateMixedDegree Omega D.stage.G
      (agreementPolynomial phi D.stage.F D.degree
-       (x i) (D.stage.u0 i) (D.stage.u1 i)) 2< pchar)
+       (x i) (D.stage.u0 i) (D.stage.u1 i)) 2 < pchar)
    (hGflag:PolynomialInFlag flag D.stage.G)
    (hTflag:PolynomialInFlag (support.residualAgreementFlag D.degree)
      (agreementPolynomial phi D.stage.F D.degree
@@ -137,10 +117,10 @@ theorem terminalAdaptiveProjectionAtCut_of_active_yz_gates
    (D:S.TerminalDescendant) (i:Iota)
    (hproper:¬ D.stage.G∣agreementPolynomial phi D.stage.F D.degree
      (x i) (D.stage.u0 i) (D.stage.u1 i))
-   (hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j< pchar)
+   (hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j < pchar)
    (hmixedZ:coordinateMixedDegree Omega D.stage.G
      (agreementPolynomial phi D.stage.F D.degree
-       (x i) (D.stage.u0 i) (D.stage.u1 i)) 2< pchar)
+       (x i) (D.stage.u0 i) (D.stage.u1 i)) 2 < pchar)
    (hGflag:PolynomialInFlag flag D.stage.G)
    (hTflag:PolynomialInFlag (support.residualAgreementFlag D.degree)
      (agreementPolynomial phi D.stage.F D.degree
@@ -161,14 +141,14 @@ theorem terminalAdaptiveProjectionFamiliesYZOfSupport_of_active_yz_caps
    (support:ResidualSupportParameters)
    (S:ResidualStage phi Gamma x pchar e flag w support)
    (surfaceY surfaceS surfaceZ cutY cutS:ℕ)
-   (hflagY:flag.yz+flag.all≤ surfaceY)
-   (hflagS:flag.all≤ surfaceS)
-   (hflagZ:flag.zOnly+flag.yz+flag.all≤ surfaceZ)
-   (hcutY:1+w*(2*support.ys-1)≤ cutY)
-   (hcutS:(2*support.s-1)*w≤ cutS)
-   (hsurfaceChar:surfaceY< pchar∧surfaceS< pchar∧
-     surfaceZ< pchar)
-   (hmixedZ:cutY*surfaceS+surfaceY*cutS< pchar):
+   (hflagY:flag.yz+flag.all ≤ surfaceY)
+   (hflagS:flag.all ≤ surfaceS)
+   (hflagZ:flag.zOnly+flag.yz+flag.all ≤ surfaceZ)
+   (hcutY:1+w*(2*support.ys-1) ≤ cutY)
+   (hcutS:(2*support.s-1)*w ≤ cutS)
+   (hsurfaceChar:surfaceY < pchar∧surfaceS < pchar∧
+     surfaceZ < pchar)
+   (hmixedZ:cutY*surfaceS+surfaceY*cutS < pchar):
    TerminalAdaptiveProjectionFamiliesYZOfSupport support S:=by
  intro D i hi hproper
  let T:=agreementPolynomial phi D.stage.F D.degree
@@ -182,37 +162,37 @@ theorem terminalAdaptiveProjectionFamiliesYZOfSupport_of_active_yz_caps
  obtain ⟨hTY,hTS,_hTZ⟩:=
    RCN314.degree_bounds_of_polynomialInFlag
      hTflag
- have hD:D.degree≤ w:=D.degree_le.trans (Nat.le_refl w)
- have hGY':D.stage.G.degreeOf 0≤ surfaceY:=hGY.trans hflagY
- have hGS':D.stage.G.degreeOf 1≤ surfaceS:=hGS.trans hflagS
- have hGZ':D.stage.G.degreeOf 2≤ surfaceZ:=hGZ.trans hflagZ
- have hTY':T.degreeOf 0≤ cutY:=by
+ have hD:D.degree ≤ w:=D.degree_le.trans (Nat.le_refl w)
+ have hGY':D.stage.G.degreeOf 0 ≤ surfaceY:=hGY.trans hflagY
+ have hGS':D.stage.G.degreeOf 1 ≤ surfaceS:=hGS.trans hflagS
+ have hGZ':D.stage.G.degreeOf 2 ≤ surfaceZ:=hGZ.trans hflagZ
+ have hTY':T.degreeOf 0 ≤ cutY:=by
    calc
-     T.degreeOf 0≤
+     T.degreeOf 0 ≤
          (support.residualAgreementFlag D.degree).yz+
            (support.residualAgreementFlag D.degree).all:=hTY
      _=1+D.degree*(2*support.ys-1):=
        support.residualAgreementFlag_ys D.degree
-     _≤ 1+w*(2*support.ys-1):=
+     _ ≤ 1+w*(2*support.ys-1):=
        Nat.add_le_add_left
          (Nat.mul_le_mul_right (2*support.ys-1) hD) 1
-     _≤ cutY:=hcutY
- have hTS':T.degreeOf 1≤ cutS:=by
+     _ ≤ cutY:=hcutY
+ have hTS':T.degreeOf 1 ≤ cutS:=by
    calc
-     T.degreeOf 1≤ (support.residualAgreementFlag D.degree).all:=hTS
+     T.degreeOf 1 ≤ (support.residualAgreementFlag D.degree).all:=hTS
      _=(2*support.s-1)*D.degree:=by
        simp only [ResidualSupportParameters.residualAgreementFlag,
          ResidualSupportParameters.agreementDirection]
-     _≤ (2*support.s-1)*w:=
+     _ ≤ (2*support.s-1)*w:=
        Nat.mul_le_mul_left (2*support.s-1) hD
-     _≤ cutS:=hcutS
- have hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j< pchar:=by
+     _ ≤ cutS:=hcutS
+ have hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j < pchar:=by
    intro j
    fin_cases j
    · exact hGY'.trans_lt hsurfaceChar.1
    · exact hGS'.trans_lt hsurfaceChar.2.1
    · exact hGZ'.trans_lt hsurfaceChar.2.2
- have hmixedZ':coordinateMixedDegree Omega D.stage.G T 2< pchar:=by
+ have hmixedZ':coordinateMixedDegree Omega D.stage.G T 2 < pchar:=by
    rw [coordinateMixedDegree_two]
    exact (Nat.add_le_add
      (Nat.mul_le_mul hTY' hGS')
@@ -225,14 +205,14 @@ theorem terminalAdaptiveProjectionFamiliesOfSupport_of_active_yz_caps
    (support:ResidualSupportParameters)
    (S:ResidualStage phi Gamma x pchar e flag w support)
    (surfaceY surfaceS surfaceZ cutY cutS:ℕ)
-   (hflagY:flag.yz+flag.all≤ surfaceY)
-   (hflagS:flag.all≤ surfaceS)
-   (hflagZ:flag.zOnly+flag.yz+flag.all≤ surfaceZ)
-   (hcutY:1+w*(2*support.ys-1)≤ cutY)
-   (hcutS:(2*support.s-1)*w≤ cutS)
-   (hsurfaceChar:surfaceY< pchar∧surfaceS< pchar∧
-     surfaceZ< pchar)
-   (hmixedZ:cutY*surfaceS+surfaceY*cutS< pchar):
+   (hflagY:flag.yz+flag.all ≤ surfaceY)
+   (hflagS:flag.all ≤ surfaceS)
+   (hflagZ:flag.zOnly+flag.yz+flag.all ≤ surfaceZ)
+   (hcutY:1+w*(2*support.ys-1) ≤ cutY)
+   (hcutS:(2*support.s-1)*w ≤ cutS)
+   (hsurfaceChar:surfaceY < pchar∧surfaceS < pchar∧
+     surfaceZ < pchar)
+   (hmixedZ:cutY*surfaceS+surfaceY*cutS < pchar):
    TerminalAdaptiveProjectionFamiliesOfSupport support S:=by
  intro D i hi hproper
  obtain ⟨base,⟨P⟩⟩:=
@@ -245,9 +225,9 @@ theorem fixedMeetTerminalAdaptiveProjectionFamilies_of_active_yz
    {flag:FlagDegree}
    (S:ResidualStage phi Gamma x prime meetProfile.errors flag meetProfile.w
      ResidualSupportParameters.fixedMeetSupport)
-   (hflagZ:flag.zOnly≤ 598)
-   (hflagY:flag.yz≤ 34)
-   (hflagS:flag.all≤ 6):
+   (hflagZ:flag.zOnly ≤ 598)
+   (hflagY:flag.yz ≤ 34)
+   (hflagS:flag.all ≤ 6):
    FixedMeetTerminalAdaptiveProjectionFamilies S:=by
  intro D i hi hproper
  apply (terminalAdaptiveProjectionFamiliesOfSupport_of_active_yz_caps
@@ -275,9 +255,9 @@ theorem frontierMeet182688TerminalAdaptiveProjectionFamilies_of_active_yz
    {e:ℕ} {flag:FlagDegree}
    (S:ResidualStage phi Gamma x prime e flag 131071
      frontierMeetSupport182688)
-   (hflagZ:flag.zOnly≤ 676)
-   (hflagY:flag.yz≤ 36)
-   (hflagS:flag.all≤ 7):
+   (hflagZ:flag.zOnly ≤ 676)
+   (hflagY:flag.yz ≤ 36)
+   (hflagS:flag.all ≤ 7):
    TerminalAdaptiveProjectionFamiliesOfSupport frontierMeetSupport182688 S:=by
  apply terminalAdaptiveProjectionFamiliesOfSupport_of_active_yz_caps
    frontierMeetSupport182688 S
@@ -294,9 +274,9 @@ theorem frontierMeet182688TerminalAdaptiveProjectionFamiliesYZ_of_active_yz
    {e:ℕ} {flag:FlagDegree}
    (S:ResidualStage phi Gamma x prime e flag 131071
      frontierMeetSupport182688)
-   (hflagZ:flag.zOnly≤ 676)
-   (hflagY:flag.yz≤ 36)
-   (hflagS:flag.all≤ 7):
+   (hflagZ:flag.zOnly ≤ 676)
+   (hflagY:flag.yz ≤ 36)
+   (hflagS:flag.all ≤ 7):
    TerminalAdaptiveProjectionFamiliesYZOfSupport frontierMeetSupport182688 S:=by
  apply terminalAdaptiveProjectionFamiliesYZOfSupport_of_active_yz_caps
    frontierMeetSupport182688 S

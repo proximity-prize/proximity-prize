@@ -1,26 +1,14 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B6
 namespace ProximityPrize.SubmissionLower.RCN049
 open scoped Classical BigOperators
-open Polynomial KaehlerDifferential
-open RCN002 RCN005 RCN003
-open RCN001 RCN136
-open RCN238 RCN264 RCN243
-open RCN095 RCN159
-open RCN275 RCN287
-open RCN341 RCN277
-open RCN037 RCN038
-open RCN039
-open RCN040 RCN041
-open RCN265 RCN274
-open RCN198
+open Polynomial KaehlerDifferential RCN002 RCN005 RCN003 RCN001 RCN136 RCN238 RCN264 RCN243 RCN095 RCN159 RCN275 RCN287 RCN341 RCN277 RCN037 RCN038 RCN039 RCN040 RCN041 RCN265 RCN274 RCN198
 noncomputable section
 set_option maxHeartbeats 3500000
 set_option maxRecDepth 40000
 set_option synthInstance.maxHeartbeats 300000
 variable {K Ω I:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
-variable {φ:Polynomial K →+*Ω} {Γ:Finset K} {x:I → K}
-variable {p e w a b s:ℕ} [CharP Ω p] {flag:FlagDegree}
+ {φ:Polynomial K →+*Ω} {Γ:Finset K} {x:I → K}
+ {p e w a b s:ℕ} [CharP Ω p] {flag:FlagDegree}
 theorem exists_agreement_projection_of_caps
    (S:ResidualStage φ Γ x p e flag w (support a b s))
    (x0 u0 u1:K)

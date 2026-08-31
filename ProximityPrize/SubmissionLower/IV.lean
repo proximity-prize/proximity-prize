@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.IW
 import ProximityPrize.SubmissionLower.F9
 section ProximityFlatProofPort
@@ -6,7 +5,7 @@ open scoped TensorProduct
 open Algebra.Extension KaehlerDifferential MvPolynomial
 universe u v w
 variable {R:Type u} {A:Type v} [CommRing R] [CommRing A] [Algebra R A]
-variable {B P C:Type*} [CommRing B] [Algebra R B] [CommRing C] [Algebra R C]
+ {B P C:Type*} [CommRing B] [Algebra R B] [CommRing C] [Algebra R C]
  [CommRing P] [Algebra R P]
 namespace Algebra
 section
@@ -254,7 +253,7 @@ theorem iff_comp_surjective:
 end iff_split
 section OfEquiv
 variable {R:Type*} [CommRing R]
-variable {A B:Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
+ {A B:Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
 theorem of_equiv [FormallySmooth R A] (e:A ≃ₐ[R] B):FormallySmooth R B:=
  (iff_split_surjection e.toAlgHom e.surjective).mpr
    ⟨(Ideal.Quotient.mkₐ _ _).comp e.symm,AlgHom.ext e.apply_symm_apply⟩
@@ -269,8 +268,8 @@ instance:FormallySmooth R R:=.of_equiv (MvPolynomial.isEmptyAlgEquiv R Empty)
 end Polynomial
 section Comp
 variable (R:Type*) [CommRing R]
-variable (A:Type*) [CommRing A] [Algebra R A]
-variable (B:Type*) [CommRing B] [Algebra R B] [Algebra A B] [IsScalarTower R A B]
+ (A:Type*) [CommRing A] [Algebra R A]
+ (B:Type*) [CommRing B] [Algebra R B] [Algebra A B] [IsScalarTower R A B]
 theorem comp [FormallySmooth R A] [FormallySmooth A B]:FormallySmooth R B:=by
  refine .of_comp_surjective fun C _ _ I hI f↦?_
  obtain ⟨f',e⟩:=FormallySmooth.comp_surjective _ _ I hI (f.comp (IsScalarTower.toAlgHom R A B))
@@ -291,8 +290,8 @@ lemma of_restrictScalars [FormallyUnramified R A] [FormallySmooth R B]:
 end Comp
 section surjective
 variable {R:Type*} [CommRing R]
-variable {P A:Type*} [CommRing A] [Algebra R A] [CommRing P] [Algebra R P]
-variable (f:P →ₐ[R] A)
+ {P A:Type*} [CommRing A] [Algebra R A] [CommRing P] [Algebra R P]
+ (f:P →ₐ[R] A)
 lemma iff_of_surjective (h:Function.Surjective (algebraMap R A)):
    Algebra.FormallySmooth R A ↔ IsIdempotentElem (RingHom.ker (algebraMap R A)):=by
  rw [Algebra.FormallySmooth.iff_split_surjection (Algebra.ofId R A) h]
@@ -310,8 +309,8 @@ end surjective
 section BaseChange
 open scoped TensorProduct
 variable {R:Type*} [CommRing R]
-variable {A:Type*} [CommRing A] [Algebra R A]
-variable (B:Type*) [CommRing B] [Algebra R B]
+ {A:Type*} [CommRing A] [Algebra R A]
+ (B:Type*) [CommRing B] [Algebra R B]
 instance [FormallySmooth R A]:FormallySmooth B (B ⊗[R] A):=by
  refine .of_comp_surjective fun C _ _ I hI f↦?_
  letI:=((algebraMap B C).comp (algebraMap R B)).toAlgebra
@@ -326,10 +325,10 @@ instance [FormallySmooth R A]:FormallySmooth B (B ⊗[R] A):=by
 end BaseChange
 section Localization
 variable {R A Rₘ Sₘ:Type*} [CommRing R] [CommRing A] [CommRing Rₘ] [CommRing Sₘ]
-variable (M:Submonoid R)
-variable [Algebra R A] [Algebra R Sₘ] [Algebra A Sₘ] [Algebra R Rₘ] [Algebra Rₘ Sₘ]
-variable [IsScalarTower R Rₘ Sₘ] [IsScalarTower R A Sₘ]
-variable [IsLocalization M Rₘ] [IsLocalization (M.map (algebraMap R A)) Sₘ]
+ (M:Submonoid R)
+ [Algebra R A] [Algebra R Sₘ] [Algebra A Sₘ] [Algebra R Rₘ] [Algebra Rₘ Sₘ]
+ [IsScalarTower R Rₘ Sₘ] [IsScalarTower R A Sₘ]
+ [IsLocalization M Rₘ] [IsLocalization (M.map (algebraMap R A)) Sₘ]
 include M
 theorem of_isLocalization:FormallySmooth R Rₘ:=by
  refine .of_comp_surjective fun Q _ _ I e f↦?_
@@ -375,7 +374,7 @@ end Localization
 end FormallySmooth
 section
 variable (R:Type*) [CommRing R]
-variable (A:Type*) [CommRing A] [Algebra R A]
+ (A:Type*) [CommRing A] [Algebra R A]
 @[stacks 00T2 "In the stacks project, the definition of smooth is completely different, and tag
 <https://stacks.math.columbia.edu/tag/00TN> proves that their definition is equivalent to this.",
 mk_iff]
@@ -386,7 +385,7 @@ end
 namespace Smooth
 attribute [instance] formallySmooth finitePresentation
 variable {R:Type*} [CommRing R]
-variable {A B:Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
+ {A B:Type*} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
 theorem of_equiv [Smooth R A] (e:A ≃ₐ[R] B):Smooth R B where
  formallySmooth:=FormallySmooth.of_equiv e
  finitePresentation:=FinitePresentation.equiv e

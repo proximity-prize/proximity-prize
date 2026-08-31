@@ -1,8 +1,6 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.J0
 namespace ProximityPrize.SubmissionLower.RCN169
-open RCN079 RCN167
-open RCN081 RCN267 RCN174
+open RCN079 RCN167 RCN081 RCN267 RCN174
 noncomputable section
 variable {K:Type*} [Field K]
 def implicitBaseFactors (J:MvPolynomial (Fin 4) K):

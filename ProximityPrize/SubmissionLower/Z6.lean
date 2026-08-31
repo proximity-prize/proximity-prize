@@ -1,20 +1,13 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.B
 import ProximityPrize.SubmissionLower.H
 namespace ProximityPrize.SubmissionLower.RCN164
 open scoped Classical
-open RCN159
-open RCN159.ResidualStage
-open RCN213
-open RCN173
-open RCN238
-open RCN095
-open RCN275
+open RCN159 RCN159.ResidualStage RCN213 RCN173 RCN238 RCN095 RCN275
 noncomputable section
 variable {K Omega Iota:Type} [Field K] [Field Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
-variable {p e:ℕ} [CharP Omega p] {flag:FlagDegree}
-variable {support:ResidualSupportParameters}
+ {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+ {p e:ℕ} [CharP Omega p] {flag:FlagDegree}
+ {support:ResidualSupportParameters}
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
 local instance:DecidableEq Iota:=Classical.decEq Iota

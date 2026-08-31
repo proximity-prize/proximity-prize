@@ -4,7 +4,7 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 variable {A B:Type*} [CommRing A] [CommRing B]
-variable (M:Submonoid A) [Algebra A B] [IsLocalization M B]
+ (M:Submonoid A) [Algebra A B] [IsLocalization M B]
 @[reducible] def quotientAlgebra
    (I:Ideal A) (J:Ideal B) (hIJ:I ≤ J.comap (algebraMap A B)):
    Algebra (A ⧸ I) (B ⧸ J):=

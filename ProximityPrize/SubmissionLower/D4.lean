@@ -1,10 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.D5
 namespace ProximityPrize.SubmissionLower.RCN214
 open scoped BigOperators
-open RCN095
-open RCN213
-open RCN215
+open RCN095 RCN213 RCN215
 set_option maxHeartbeats 1000000
 def factorPrimary (p:FlagDegree):ℕ:=
  flagMixed p agreementDirection6600 agreementDirection6600*degreeIncidence^2+

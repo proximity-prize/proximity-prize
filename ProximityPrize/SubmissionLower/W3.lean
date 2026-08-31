@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G2
 namespace ProximityPrize.SubmissionLower.RCN357
 open scoped BigOperators Classical
@@ -6,7 +5,7 @@ open IsDedekindDomain
 noncomputable section
 section OneRing
 variable (A F:Type*) [CommRing A] [IsDedekindDomain A] [Field F]
-variable [Algebra A F] [IsFractionRing A F]
+ [Algebra A F] [IsFractionRing A F]
 def fieldOrder (v:HeightOneSpectrum A) (x:F):ℤ:=
  -(v.valuation F x).log
 theorem valuation_transport (v:HeightOneSpectrum A) (x:F):
@@ -23,8 +22,8 @@ theorem fieldOrder_transport (v:HeightOneSpectrum A) (x:F):
 end OneRing
 section TwoRings
 variable (R S:Type*) [CommRing R] [CommRing S]
-variable [IsDedekindDomain R] [IsDedekindDomain S]
-variable [Algebra R S] [Module.Finite R S] [Module.IsTorsionFree R S]
+ [IsDedekindDomain R] [IsDedekindDomain S]
+ [Algebra R S] [Module.Finite R S] [Module.IsTorsionFree R S]
 local instance:Algebra (FractionRing R) (FractionRing S):=
  FractionRing.liftAlgebra _ _
 def placeAbove (v:HeightOneSpectrum R)
@@ -34,10 +33,10 @@ def placeAbove (v:HeightOneSpectrum R)
    Ideal.ne_bot_of_mem_primesOver v.ne_bot
      ((IsDedekindDomain.mem_primesOverFinset_iff v.ne_bot S).mp P.2)⟩
 variable (F L:Type*) [Field F] [Field L]
-variable [Algebra R F] [IsFractionRing R F]
-variable [Algebra S L] [IsFractionRing S L]
-variable [Algebra F L] [Algebra R L]
-variable [IsScalarTower R F L] [IsScalarTower R S L]
+ [Algebra R F] [IsFractionRing R F]
+ [Algebra S L] [IsFractionRing S L]
+ [Algebra F L] [Algebra R L]
+ [IsScalarTower R F L] [IsScalarTower R S L]
 theorem norm_transport (x:L):
    Algebra.norm (FractionRing R) ((FractionRing.algEquiv S L).symm x)=
      (FractionRing.algEquiv R F).symm (Algebra.norm F x):=by

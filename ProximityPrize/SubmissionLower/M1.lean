@@ -1,17 +1,13 @@
 import ProximityPrize.SubmissionLower.C8
 namespace ProximityPrize.SubmissionLower.RCN195
-open RCN011 RCN021
-open RCN022
-open RCN226
-open RCN191
-open RCN193
+open RCN011 RCN021 RCN022 RCN226 RCN191 RCN193
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 variable (K L:Type) [Field K] [Field L] [Algebra K L]
-variable (order:Fin 3 ≃ Fin 3)
-variable (e:MvPolynomial (Fin 3) K →ₐ[K] L)
-variable (ht:Transcendental K (e (MvPolynomial.X (order 0))))
+ (order:Fin 3 ≃ Fin 3)
+ (e:MvPolynomial (Fin 3) K →ₐ[K] L)
+ (ht:Transcendental K (e (MvPolynomial.X (order 0))))
 theorem localized_surface_residue_ne_zero
    (hfinite:
      letI:Algebra (RatFunc K) L:=

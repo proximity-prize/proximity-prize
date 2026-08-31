@@ -1,21 +1,14 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Z6
 import ProximityPrize.SubmissionLower.U
 namespace ProximityPrize.SubmissionLower.RCN091
 open scoped Classical
-open RCN159
-open RCN164
-open RCN213
-open RCN275
-open RCN276
-open RCN238
-open RCN095
+open RCN159 RCN164 RCN213 RCN275 RCN276 RCN238 RCN095
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 50000
 variable {K Omega Iota:Type} [Field K] [Field Omega]
-variable {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
-variable {pchar:ℕ} [CharP Omega pchar] {flag:FlagDegree}
+ {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+ {pchar:ℕ} [CharP Omega pchar] {flag:FlagDegree}
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Iota:=Classical.decEq Iota
 theorem fixedMeet_agreementDirection_eq:

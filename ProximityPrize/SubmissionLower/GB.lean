@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.GK
 namespace ProximityPrize.SubmissionLower.RCN297
-open RCN307
-open RCN308
+open RCN307 RCN308
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T3
 import ProximityPrize.SubmissionLower.AT
 import ProximityPrize.SubmissionLower.F2

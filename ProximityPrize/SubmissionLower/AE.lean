@@ -1,14 +1,10 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F
 namespace ProximityPrize.SubmissionLower.RCN272
 open scoped Classical BigOperators
-open RCN002 RCN007
-open RCN136 RCN231 RCN319
-open RCN238 RCN264
-open RCN243 RCN065
+open RCN002 RCN007 RCN136 RCN231 RCN319 RCN238 RCN264 RCN243 RCN065
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
-variable (φ:Polynomial K →+*Ω)
+ (φ:Polynomial K →+*Ω)
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Ω:=Classical.decEq Ω
 def FiniteZeroSetBound

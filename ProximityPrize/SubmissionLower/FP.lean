@@ -2,14 +2,12 @@ import ProximityPrize.SubmissionLower.X6
 import ProximityPrize.SubmissionLower.S
 import ProximityPrize.SubmissionLower.CE
 namespace ProximityPrize.SubmissionLower.RCN236
-open RCN014
-open RCN225
-open RCN307
+open RCN014 RCN225 RCN307
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
 variable {R:Type*} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
-variable {J:Type*} [Fintype J]
+ {J:Type*} [Fintype J]
 noncomputable def primaryPiecesCertificateOfMembershipWeighted
    [IsLocalRing R]
    (surface tail:Polynomial R)

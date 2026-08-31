@@ -1,41 +1,24 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.DR
 import ProximityPrize.SubmissionLower.Y0
 import ProximityPrize.SubmissionLower.O5
 namespace ProximityPrize.SubmissionLower.RCN314
 open scoped Classical
-open RCN002 RCN005
-open RCN003
-open RCN001
-open RCN223
-open RCN238
-open RCN136
-open RCN243
-open RCN264
-open RCN095
-open RCN159
-open RCN158
-open RCN156
-open RCN037
-open RCN039
-open RCN043
-open RCN341
-open RCN274
+open RCN002 RCN005 RCN003 RCN001 RCN223 RCN238 RCN136 RCN243 RCN264 RCN095 RCN159 RCN158 RCN156 RCN037 RCN039 RCN043 RCN341 RCN274
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
 set_option maxRecDepth 30000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K→+*Omega} {Gamma:Finset K} {x:Iota→ K}
+ {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
 local instance:DecidableEq Iota:=Classical.decEq Iota
 theorem degree_bounds_of_polynomialInFlag
    {p:FlagDegree} {F:MvPolynomial (Fin 3) Omega}
    (hF:PolynomialInFlag p F):
-   F.degreeOf 0≤ p.yz+p.all∧
-     F.degreeOf 1≤ p.all∧
-     F.degreeOf 2≤ p.zOnly+p.yz+p.all:=by
+   F.degreeOf 0 ≤ p.yz+p.all∧
+     F.degreeOf 1 ≤ p.all∧
+     F.degreeOf 2 ≤ p.zOnly+p.yz+p.all:=by
  refine ⟨?_,?_,?_⟩
  · apply MvPolynomial.degreeOf_le_iff.mpr
    intro e he
@@ -51,9 +34,9 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
    [CharP Omega prime]
    {flag:FlagDegree}
    (S:ResidualStage phi Gamma x prime errors flag w)
-   (hflagZ:flag.zOnly≤ 495)
-   (hflagY:flag.yz≤ 43)
-   (hflagS:flag.all≤ 8):
+   (hflagZ:flag.zOnly ≤ 495)
+   (hflagY:flag.yz ≤ 43)
+   (hflagS:flag.all ≤ 8):
    TerminalAdaptiveProjectionFamilies S:=by
  classical
  intro D i hi hproper
@@ -69,34 +52,34 @@ theorem terminalAdaptiveProjectionFamilies_of_rectangular_caps
      (x i) (D.stage.u0 i) (D.stage.u1 i)
  obtain ⟨hGY,hGS,hGZ⟩:=degree_bounds_of_polynomialInFlag hGflag
  obtain ⟨hTY,hTS,hTZ⟩:=degree_bounds_of_polynomialInFlag hTflag
- have hD:D.degree≤ w:=D.degree_le.trans (Nat.le_refl w)
- have hGY':D.stage.G.degreeOf 0≤ 51:=by omega
- have hGS':D.stage.G.degreeOf 1≤ 8:=by omega
- have hGZ':D.stage.G.degreeOf 2≤ 546:=by omega
- have hTY':T.degreeOf 0≤ 1+85*w:=by
+ have hD:D.degree ≤ w:=D.degree_le.trans (Nat.le_refl w)
+ have hGY':D.stage.G.degreeOf 0 ≤ 51:=by omega
+ have hGS':D.stage.G.degreeOf 1 ≤ 8:=by omega
+ have hGZ':D.stage.G.degreeOf 2 ≤ 546:=by omega
+ have hTY':T.degreeOf 0 ≤ 1+85*w:=by
    dsimp only [residualAgreementFlag] at hTY
    omega
- have hTS':T.degreeOf 1≤ 15*w:=by
+ have hTS':T.degreeOf 1 ≤ 15*w:=by
    dsimp only [residualAgreementFlag] at hTS
    omega
- have hTZ':T.degreeOf 2≤ 1+1005*w:=by
+ have hTZ':T.degreeOf 2 ≤ 1+1005*w:=by
    dsimp only [residualAgreementFlag] at hTZ
    omega
- have hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j< prime:=by
+ have hGdegree:∀ j:Fin 3,D.stage.G.degreeOf j < prime:=by
    intro j
    fin_cases j
    · exact hGY'.trans_lt (by norm_num [prime])
    · exact hGS'.trans_lt (by norm_num [prime])
    · exact hGZ'.trans_lt (by norm_num [prime])
  have hmixedY:
-     coordinateMixedDegree Omega D.stage.G T 0< prime:=by
+     coordinateMixedDegree Omega D.stage.G T 0 < prime:=by
    rw [coordinateMixedDegree_zero]
    apply (Nat.add_le_add
      (Nat.mul_le_mul hTS' hGZ')
      (Nat.mul_le_mul hGS' hTZ')).trans_lt
    norm_num [w,prime]
  have hmixedZ:
-     coordinateMixedDegree Omega D.stage.G T 2< prime:=by
+     coordinateMixedDegree Omega D.stage.G T 2 < prime:=by
    rw [coordinateMixedDegree_two]
    apply (Nat.add_le_add
      (Nat.mul_le_mul hTY' hGS')

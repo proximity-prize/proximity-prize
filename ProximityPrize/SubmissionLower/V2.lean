@@ -1,10 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.F9
 section ProximityFlatProofPort
 open Algebra Module
 open scoped TensorProduct
 variable {R S:Type*} [CommRing R] [CommRing S] [Algebra R S]
-variable (M:Type*) [AddCommGroup M] [Module R M] [Module S M] [IsScalarTower R S M]
+ (M:Type*) [AddCommGroup M] [Module R M] [Module S M] [IsScalarTower R S M]
 namespace Algebra.FormallyUnramified
 theorem iff_exists_tensorProduct [EssFiniteType R S]:
    FormallyUnramified R S ↔ ∃ t:S ⊗[R] S,

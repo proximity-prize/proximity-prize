@@ -1,9 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W
 import ProximityPrize.SubmissionLower.E0
 namespace ProximityPrize.SubmissionLower.RCN047
-open RCN077 RCN269 RCN233
-open RCN313 RCN347
+open RCN077 RCN269 RCN233 RCN313 RCN347
 noncomputable section
 section ScalarClearing
 variable {A:Type*} [CommRing A]

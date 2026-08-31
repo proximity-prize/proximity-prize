@@ -1,12 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BH
 import ProximityPrize.SubmissionLower.R6
 import ProximityPrize.SubmissionLower.CG
 import ProximityPrize.SubmissionLower.EK
 namespace ProximityPrize.SubmissionLower.RCN138
-open RCN136 RCN132 RCN313
-open RCN311 RCN174 RCN319
-open RCN135
+open RCN136 RCN132 RCN313 RCN311 RCN174 RCN319 RCN135
 noncomputable section
 variable (K L:Type*) [Field K] [Field L] [Algebra (RationalCoefficients K) L]
 def geometricPolynomialEmbedding:Polynomial K →+*L:=

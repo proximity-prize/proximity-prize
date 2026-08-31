@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.L
 namespace ProximityPrize.SubmissionLower.RCN134
 open scoped BigOperators
@@ -34,7 +33,7 @@ theorem embeddingPoint_injective (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]:
  obtain ⟨A,rfl⟩:=Ideal.Quotient.mk_surjective a
  exact AlgHom.congr_fun he A
 variable {I:Type} (P:I → Ideal (MvPolynomial (Fin 3) K))
-variable [∀ i,(P i).IsPrime]
+ [∀ i,(P i).IsPrime]
 def familyEmbeddingPoint
    (z:Σ i,CoordinateField K (P i) →ₐ[K] L):Fin 3 → L:=
  embeddingPoint (P z.1) z.2
@@ -52,9 +51,9 @@ theorem familyEmbeddingPoint_injective (hP:Function.Injective P):
  rfl
 section CommonBase
 variable {B:Type} [Field B] [Algebra K B] [Algebra B L]
-variable [IsScalarTower K B L]
-variable [∀ i,Algebra B (CoordinateField K (P i))]
-variable [∀ i,IsScalarTower K B (CoordinateField K (P i))]
+ [IsScalarTower K B L]
+ [∀ i,Algebra B (CoordinateField K (P i))]
+ [∀ i,IsScalarTower K B (CoordinateField K (P i))]
 def commonBaseEmbeddingPoint
    (z:Σ i,CoordinateField K (P i) →ₐ[B] L):Fin 3 → L:=
  embeddingPoint (P z.1) (z.2.restrictScalars K)
@@ -76,8 +75,8 @@ theorem commonBaseEmbeddingPoint_injective (hP:Function.Injective P):
  cases hf
  rfl
 variable [Fintype I] [IsAlgClosed L]
-variable [∀ i,FiniteDimensional B (CoordinateField K (P i))]
-variable [∀ i,Algebra.IsSeparable B (CoordinateField K (P i))]
+ [∀ i,FiniteDimensional B (CoordinateField K (P i))]
+ [∀ i,Algebra.IsSeparable B (CoordinateField K (P i))]
 def genericFiberPoints:Finset (Fin 3 → L):=by
  classical
  exact Finset.univ.image (commonBaseEmbeddingPoint (B:=B) (L:=L) P)

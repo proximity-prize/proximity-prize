@@ -1,8 +1,7 @@
 import ProximityPrize.SubmissionLower.S
 import ProximityPrize.SubmissionLower.C9
 namespace ProximityPrize.SubmissionLower.RCN232
-open RCN225
-open RCN197
+open RCN225 RCN197
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -17,7 +16,7 @@ def polynomialRelationBar (surface:Polynomial R)
  (((algebraMap (SurfaceQuotient surface)
      (Localization.AtPrime (polynomialRelationBar surface relation))).comp
    (Ideal.Quotient.mk (Ideal.span {surface}))).comp
-     (Polynomial.C:R→+*Polynomial R)).toAlgebra' (fun _ _ => mul_comm _ _)
+     (Polynomial.C:R →+*Polynomial R)).toAlgebra' (fun _ _ => mul_comm _ _)
 theorem polynomialSurfaceAtPrimeAlgebra_eq_natural
    (surface:Polynomial R) (relation:Ideal (Polynomial R))
    [hbarMax:(polynomialRelationBar surface relation).IsMaximal]:
@@ -29,7 +28,7 @@ theorem polynomialSurfaceAtPrimeAlgebra_eq_natural
  rfl
 theorem polynomialSurfaceAtPrimeAlgebra_isLocalHom
    (surface:Polynomial R) (relation:Ideal (Polynomial R))
-   (hcontract:relation.comap (Polynomial.C:R→+*Polynomial R)=
+   (hcontract:relation.comap (Polynomial.C:R →+*Polynomial R)=
      IsLocalRing.maximalIdeal R)
    [hbarMax:(polynomialRelationBar surface relation).IsMaximal]:
    letI:=polynomialSurfaceAtPrimeAlgebra surface relation
@@ -39,14 +38,14 @@ theorem polynomialSurfaceAtPrimeAlgebra_isLocalHom
  let S:=SurfaceQuotient surface
  let bar:=polynomialRelationBar surface relation
  let L:=Localization.AtPrime bar
- let quotientMap:Polynomial R→+*S:=Ideal.Quotient.mk I
+ let quotientMap:Polynomial R →+*S:=Ideal.Quotient.mk I
  letI:=polynomialSurfaceAtPrimeAlgebra surface relation
  refine ⟨fun r hrUnit => ?_⟩
  by_contra hrNonunit
  have hrMax:r∈IsLocalRing.maximalIdeal R:=
    (IsLocalRing.mem_maximalIdeal r).2 hrNonunit
  have hrRelation:Polynomial.C r∈relation:=by
-   have:r∈relation.comap (Polynomial.C:R→+*Polynomial R):=
+   have:r∈relation.comap (Polynomial.C:R →+*Polynomial R):=
      hcontract.symm ▸ hrMax
    exact this
  have hrBar:quotientMap (Polynomial.C r)∈bar:=
@@ -61,7 +60,7 @@ theorem polynomialSurfaceAtPrimeAlgebra_isLocalHom
  exact (IsLocalRing.mem_maximalIdeal (algebraMap R L r)).mp this hrUnit
 theorem polynomialSurfaceAtPrimeNatural_isLocalHom
    (surface:Polynomial R) (relation:Ideal (Polynomial R))
-   (hcontract:relation.comap (Polynomial.C:R→+*Polynomial R)=
+   (hcontract:relation.comap (Polynomial.C:R →+*Polynomial R)=
      IsLocalRing.maximalIdeal R)
    [hbarMax:(polynomialRelationBar surface relation).IsMaximal]:
    IsLocalHom (algebraMap R
@@ -83,24 +82,24 @@ noncomputable def polynomialSurfaceResidueEquiv
    (surface:Polynomial R) (relation:Ideal (Polynomial R))
    (hsurface:surface∈relation)
    [hbarMax:(polynomialRelationBar surface relation).IsMaximal]:
-   (Polynomial R⧸ relation) ≃+*
+   (Polynomial R ⧸ relation) ≃+*
      IsLocalRing.ResidueField
        (Localization.AtPrime (polynomialRelationBar surface relation)):=by
  let I:Ideal (Polynomial R):=Ideal.span {surface}
  let bar:=polynomialRelationBar surface relation
  let L:=Localization.AtPrime bar
- have hIJ:I≤ relation:=Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hsurface)
+ have hIJ:I ≤ relation:=Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hsurface)
  exact (DoubleQuot.quotQuotEquivQuotOfLE hIJ).symm.trans
    (IsLocalization.AtPrime.equivQuotMaximalIdeal bar L)
 theorem polynomialSurfaceResidueEquiv_compatible
    (surface:Polynomial R) (relation:Ideal (Polynomial R))
-   (hcontract:relation.comap (Polynomial.C:R→+*Polynomial R)=
+   (hcontract:relation.comap (Polynomial.C:R →+*Polynomial R)=
      IsLocalRing.maximalIdeal R)
    (hsurface:surface∈relation)
    [hbarMax:(polynomialRelationBar surface relation).IsMaximal]:
    let aRelation:=relationResidueAlgebra relation hcontract
    letI:Algebra (IsLocalRing.ResidueField R)
-       (Polynomial R⧸ relation):=aRelation
+       (Polynomial R ⧸ relation):=aRelation
    letI:IsLocalHom (algebraMap R
        (Localization.AtPrime (polynomialRelationBar surface relation))):=
      polynomialSurfaceAtPrimeNatural_isLocalHom surface relation hcontract
@@ -109,12 +108,12 @@ theorem polynomialSurfaceResidueEquiv_compatible
        (Localization.AtPrime (polynomialRelationBar surface relation)))).comp
        (RingEquiv.refl (IsLocalRing.ResidueField R)).toRingHom=
      (polynomialSurfaceResidueEquiv surface relation hsurface).toRingHom.comp
-       (algebraMap (IsLocalRing.ResidueField R) (Polynomial R⧸ relation)):=by
+       (algebraMap (IsLocalRing.ResidueField R) (Polynomial R ⧸ relation)):=by
  let I:Ideal (Polynomial R):=Ideal.span {surface}
  let S:=SurfaceQuotient surface
  let bar:=polynomialRelationBar surface relation
  let L:=Localization.AtPrime bar
- letI:Algebra (IsLocalRing.ResidueField R) (Polynomial R⧸ relation):=
+ letI:Algebra (IsLocalRing.ResidueField R) (Polynomial R ⧸ relation):=
    relationResidueAlgebra relation hcontract
  letI:IsLocalHom (algebraMap R L):=
    polynomialSurfaceAtPrimeNatural_isLocalHom surface relation hcontract
@@ -125,13 +124,13 @@ theorem polynomialSurfaceResidueEquiv_compatible
      (IsLocalRing.ResidueField L) (IsLocalRing.residue R r)=
    polynomialSurfaceResidueEquiv surface relation hsurface
      (algebraMap (IsLocalRing.ResidueField R)
-       (Polynomial R⧸ relation) (IsLocalRing.residue R r))
+       (Polynomial R ⧸ relation) (IsLocalRing.residue R r))
  rw [IsLocalRing.ResidueField.algebraMap_residue]
- have hIJ:I≤ relation:=
+ have hIJ:I ≤ relation:=
    Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hsurface)
- let eDouble:(S⧸ bar) ≃+*(Polynomial R⧸ relation):=
+ let eDouble:(S ⧸ bar) ≃+*(Polynomial R ⧸ relation):=
    DoubleQuot.quotQuotEquivQuotOfLE hIJ
- let eLocal:(S⧸ bar) ≃+*IsLocalRing.ResidueField L:=
+ let eLocal:(S ⧸ bar) ≃+*IsLocalRing.ResidueField L:=
    IsLocalization.AtPrime.equivQuotMaximalIdeal bar L
  change IsLocalRing.residue L (algebraMap R L r)=
    eLocal (eDouble.symm (Ideal.Quotient.mk relation (Polynomial.C r)))
@@ -145,24 +144,24 @@ theorem polynomialSurfaceResidueEquiv_compatible
  rfl
 theorem polynomialSurfaceResidue_finite
    (surface:Polynomial R) (relation:Ideal (Polynomial R))
-   (hcontract:relation.comap (Polynomial.C:R→+*Polynomial R)=
+   (hcontract:relation.comap (Polynomial.C:R →+*Polynomial R)=
      IsLocalRing.maximalIdeal R)
    (hsurface:surface∈relation)
    [hbarMax:(polynomialRelationBar surface relation).IsMaximal]
    (hfinite:
      letI:=relationResidueAlgebra relation hcontract
      FiniteDimensional (IsLocalRing.ResidueField R)
-       (Polynomial R⧸ relation)):
+       (Polynomial R ⧸ relation)):
    letI:IsLocalHom (algebraMap R
        (Localization.AtPrime (polynomialRelationBar surface relation))):=
      polynomialSurfaceAtPrimeNatural_isLocalHom surface relation hcontract
    FiniteDimensional (IsLocalRing.ResidueField R)
      (IsLocalRing.ResidueField
        (Localization.AtPrime (polynomialRelationBar surface relation))):=by
- letI:Algebra (IsLocalRing.ResidueField R) (Polynomial R⧸ relation):=
+ letI:Algebra (IsLocalRing.ResidueField R) (Polynomial R ⧸ relation):=
    relationResidueAlgebra relation hcontract
  letI:FiniteDimensional (IsLocalRing.ResidueField R)
-     (Polynomial R⧸ relation):=hfinite
+     (Polynomial R ⧸ relation):=hfinite
  letI:IsLocalHom (algebraMap R
      (Localization.AtPrime (polynomialRelationBar surface relation))):=
    polynomialSurfaceAtPrimeNatural_isLocalHom surface relation hcontract
@@ -172,11 +171,11 @@ theorem polynomialSurfaceResidue_finite
        surface relation hcontract hsurface)
 theorem polynomialSurfaceResidue_finrank_eq_relation
    (surface:Polynomial R) (relation:Ideal (Polynomial R))
-   (hcontract:relation.comap (Polynomial.C:R→+*Polynomial R)=
+   (hcontract:relation.comap (Polynomial.C:R →+*Polynomial R)=
      IsLocalRing.maximalIdeal R)
    (hsurface:surface∈relation)
    [hbarMax:(polynomialRelationBar surface relation).IsMaximal]:
-   letI:Algebra (IsLocalRing.ResidueField R) (Polynomial R⧸ relation):=
+   letI:Algebra (IsLocalRing.ResidueField R) (Polynomial R ⧸ relation):=
      relationResidueAlgebra relation hcontract
    letI:IsLocalHom (algebraMap R
        (Localization.AtPrime (polynomialRelationBar surface relation))):=
@@ -184,8 +183,8 @@ theorem polynomialSurfaceResidue_finrank_eq_relation
    Module.finrank (IsLocalRing.ResidueField R)
        (IsLocalRing.ResidueField
          (Localization.AtPrime (polynomialRelationBar surface relation)))=
-     Module.finrank (IsLocalRing.ResidueField R) (Polynomial R⧸ relation):=by
- letI:Algebra (IsLocalRing.ResidueField R) (Polynomial R⧸ relation):=
+     Module.finrank (IsLocalRing.ResidueField R) (Polynomial R ⧸ relation):=by
+ letI:Algebra (IsLocalRing.ResidueField R) (Polynomial R ⧸ relation):=
    relationResidueAlgebra relation hcontract
  letI:IsLocalHom (algebraMap R
      (Localization.AtPrime (polynomialRelationBar surface relation))):=

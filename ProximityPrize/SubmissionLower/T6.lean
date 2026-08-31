@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.T5
 import ProximityPrize.SubmissionLower.AU
 section ProximityFlatProofPort
@@ -11,7 +10,7 @@ structure Algebra.Presentation extends Algebra.Generators R S ι where
    Ideal.span (Set.range relation)=toGenerators.ker
 namespace Algebra.Presentation
 variable {R S ι σ}
-variable (P:Presentation R S ι σ)
+ (P:Presentation R S ι σ)
 @[simp]
 lemma aeval_val_relation (i):aeval P.val (P.relation i)=0:=by
  rw [←RingHom.mem_ker, ←P.ker_eq_ker_aeval_val, ←P.span_range_relation_eq_ker]
@@ -190,7 +189,7 @@ lemma baseChange_toGenerators:(P.baseChange T).toGenerators=P.toGenerators.baseC
 end BaseChange
 section Composition
 variable {ι' σ' T:Type*} [CommRing T] [Algebra S T]
-variable (Q:Presentation S T ι' σ') (P:Presentation R S ι σ)
+ (Q:Presentation S T ι' σ') (P:Presentation R S ι σ)
 private noncomputable def aux (_Q:Presentation S T ι' σ') (P:Presentation R S ι σ):
    MvPolynomial (ι' ⊕ ι) R →ₐ[R] MvPolynomial ι' S:=
  aeval (Sum.elim _root_.MvPolynomial.X (MvPolynomial.C ∘ P.val))

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.W9
 namespace ProximityPrize.SubmissionLower.RCN356
 open scoped BigOperators nonZeroDivisors
@@ -23,8 +22,8 @@ theorem orderAt_div (v:HeightOneSpectrum A) (x y:FractionRing A)
 end Orders
 section FixedExtension
 variable (R S:Type*) [CommRing R] [CommRing S]
-variable [IsDedekindDomain R] [IsDedekindDomain S]
-variable [Algebra R S] [Module.Finite R S] [Module.IsTorsionFree R S]
+ [IsDedekindDomain R] [IsDedekindDomain S]
+ [Algebra R S] [Module.Finite R S] [Module.IsTorsionFree R S]
 local instance:Algebra (FractionRing R) (FractionRing S):=
  FractionRing.liftAlgebra _ _
 variable [Algebra.IsSeparable (FractionRing R) (FractionRing S)]

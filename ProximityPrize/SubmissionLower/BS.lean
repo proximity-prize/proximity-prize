@@ -1,9 +1,6 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CA
 namespace ProximityPrize.SubmissionLower.RCN167
-open RCN081 RCN082 RCN293
-open RCN267 RCN313 RCN136
-open RCN319 RCN231
+open RCN081 RCN082 RCN293 RCN267 RCN313 RCN136 RCN319 RCN231
 noncomputable section
 variable {K:Type*} [Field K]
 def implicitLift (A:MvPolynomial (Fin 4) K):MvPolynomial (Fin 4) K:=

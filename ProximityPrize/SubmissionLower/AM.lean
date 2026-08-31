@@ -2,16 +2,13 @@ import ProximityPrize.SubmissionLower.CK
 import ProximityPrize.SubmissionLower.B3
 namespace ProximityPrize.SubmissionLower.RCN338
 open scoped Classical BigOperators
-open RCN095 RCN264
-open RCN237
-open RCN121
-open RCN337
+open RCN095 RCN264 RCN237 RCN121 RCN337
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 variable {Omega:Type} [Field Omega]
-variable {G T H:MvPolynomial (Fin 3) Omega}
-variable {surfaceFlag firstTailFlag secondTailFlag:FlagDegree}
+ {G T H:MvPolynomial (Fin 3) Omega}
+ {surfaceFlag firstTailFlag secondTailFlag:FlagDegree}
 structure RegularComponentWeightedInertiaResultantCertificate
    (B:PrimeFlagBudgetFamily
      (G:=G) (T:=T) (H:=H) surfaceFlag firstTailFlag)

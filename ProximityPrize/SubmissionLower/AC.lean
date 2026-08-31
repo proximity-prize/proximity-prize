@@ -1,13 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R
 import ProximityPrize.SubmissionLower.V
 import ProximityPrize.SubmissionLower.D4
 namespace ProximityPrize.SubmissionLower.RCN266
 open scoped BigOperators
-open RCN223
-open RCN286 RCN167
-open RCN174 RCN136
-open RCN095
+open RCN223 RCN286 RCN167 RCN174 RCN136 RCN095
 noncomputable section
 variable {K Omega:Type} [Field K] [Field Omega]
 abbrev RegularIndex (Q:MvPolynomial (Fin 4) K):=

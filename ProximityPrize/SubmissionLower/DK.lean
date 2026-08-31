@@ -1,8 +1,7 @@
 import ProximityPrize.SubmissionLower.Y1
 namespace ProximityPrize.SubmissionLower.RCN032
 open scoped Classical BigOperators
-open RCN042
-open RCN344 RCN022
+open RCN042 RCN344 RCN022
 noncomputable section
 set_option autoImplicit false
 theorem sum_mul_eq_active_subtype

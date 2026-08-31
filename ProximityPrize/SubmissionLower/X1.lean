@@ -1,9 +1,7 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G7
 namespace ProximityPrize.SubmissionLower.RCN370
 open scoped Classical
-open KaehlerDifferential
-open RCN369
+open KaehlerDifferential RCN369
 noncomputable section
 set_option maxHeartbeats 2000000
 variable (K L:Type*) [Field K] [Field L] [Algebra K L]

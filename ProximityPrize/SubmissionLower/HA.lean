@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.S1
 section ProximityFlatProofPort
 open DirectSum
@@ -127,7 +126,7 @@ theorem coe_mul_of_apply_of_mem_zero [AddMonoid ι] [SetLike.GradedMonoid A] (r:
 end coe
 section CanonicallyOrderedAddCommMonoid
 variable [Semiring R] [SetLike σ R] [AddSubmonoidClass σ R] (A:ι → σ)
-variable [AddCommMonoid ι] [PartialOrder ι] [CanonicallyOrderedAdd ι] [SetLike.GradedMonoid A]
+ [AddCommMonoid ι] [PartialOrder ι] [CanonicallyOrderedAdd ι] [SetLike.GradedMonoid A]
 theorem coe_of_mul_apply_of_not_le {i:ι} (r:A i) (r':⨁ i,A i) (n:ι) (h:¬i ≤ n):
    ((of (fun i => A i) i r*r') n:R)=0:=by
  classical
@@ -204,7 +203,7 @@ end DirectSum
 namespace SetLike.GradeZero
 section Semiring
 variable [Semiring R] [AddMonoid ι] [SetLike σ R] [AddSubmonoidClass σ R]
-variable (A:ι → σ) [SetLike.GradedMonoid A]
+ (A:ι → σ) [SetLike.GradedMonoid A]
 def subsemiring:Subsemiring R where
  __:=submonoid A
  add_mem':=add_mem
@@ -216,7 +215,7 @@ instance instSemiring:Semiring (A 0):=inferInstanceAs <| Semiring (subsemiring A
 end Semiring
 section CommSemiring
 variable [CommSemiring R] [AddMonoid ι] [SetLike σ R] [AddSubmonoidClass σ R]
-variable (A:ι → σ) [SetLike.GradedMonoid A]
+ (A:ι → σ) [SetLike.GradedMonoid A]
 instance instCommSemiring:CommSemiring (A 0):=inferInstanceAs <| CommSemiring (subsemiring A)
 instance:Algebra (A 0) R:=
  inferInstanceAs <| Algebra (SetLike.GradeZero.subsemiring A) R
@@ -224,7 +223,7 @@ instance:Algebra (A 0) R:=
 end CommSemiring
 section Ring
 variable [Ring R] [AddMonoid ι] [SetLike σ R] [AddSubgroupClass σ R]
-variable (A:ι → σ) [SetLike.GradedMonoid A]
+ (A:ι → σ) [SetLike.GradedMonoid A]
 def subring:Subring R where
  __:=subsemiring A
  neg_mem':=neg_mem
@@ -233,12 +232,12 @@ theorem coe_intCast (z:ℤ):(z:A 0)=(z:R):=rfl
 end Ring
 section CommRing
 variable [CommRing R] [AddCommMonoid ι] [SetLike σ R] [AddSubgroupClass σ R]
-variable (A:ι → σ) [SetLike.GradedMonoid A]
+ (A:ι → σ) [SetLike.GradedMonoid A]
 instance instCommRing:CommRing (A 0):=inferInstanceAs <| CommRing (subring A)
 end CommRing
 section Algebra
 variable [CommSemiring S] [Semiring R] [Algebra S R] [AddMonoid ι]
-variable (A:ι → Submodule S R) [SetLike.GradedMonoid A]
+ (A:ι → Submodule S R) [SetLike.GradedMonoid A]
 def subalgebra:Subalgebra S R where
  __:=subsemiring A
  algebraMap_mem':=algebraMap_mem_graded A
@@ -260,7 +259,7 @@ section LinearOrderedAddCommMonoid
 variable [AddCommMonoid ι] [LinearOrder ι] [IsOrderedAddMonoid ι] [DecidableEq ι]
 section Semiring
 variable [Semiring R] [SetLike σ R] [AddSubmonoidClass σ R]
-variable {A:ι → σ} [SetLike.GradedMonoid A]
+ {A:ι → σ} [SetLike.GradedMonoid A]
 theorem mul_apply_eq_zero {r r':⨁ i,A i} {m n:ι}
    (hr:∀ i < m,r i=0) (hr':∀ i < n,r' i=0) ⦃k:ι⦄ (hk:k < m+n):
    (r*r') k=0:=by
@@ -295,7 +294,7 @@ end Semiring
 variable [CanonicallyOrderedAdd ι]
 section CommSemiring
 variable [CommSemiring R] [SetLike σ R] [AddSubmonoidClass σ R]
-variable {A:ι → σ} [SetLike.GradedMonoid A]
+ {A:ι → σ} [SetLike.GradedMonoid A]
 theorem multisetProd_apply_eq_zero' {s:Multiset ((⨁ i,A i) × ι)}
    (hs:∀ xn∈s,∀ k < xn.2,xn.1 k=0) ⦃n:ι⦄ (hn:n < (s.map Prod.snd).sum):
    (s.map Prod.fst).prod n=0:=by

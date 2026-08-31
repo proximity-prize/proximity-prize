@@ -1,10 +1,9 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CZ
 section ProximityFlatProofPort
 open scoped Pointwise
 section Quotient
 variable {A B:Type*} [CommRing A] [CommRing B] [Algebra A B]
-variable {G:Type*} [Group G] [MulSemiringAction G B] [SMulCommClass G A B]
+ {G:Type*} [Group G] [MulSemiringAction G B] [SMulCommClass G A B]
 instance (H:Subgroup G) [H.Normal]:
    MulSemiringAction (G ⧸ H) (FixedPoints.subring B H) where
  smul:=Quotient.lift (fun g x↦⟨g • x,fun h↦by

@@ -1,8 +1,6 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.O1
 namespace ProximityPrize.SubmissionLower.RCN233
-open RCN347 RCN348
-open RCN077 RCN269
+open RCN347 RCN348 RCN077 RCN269
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
 section GeneralTaylorCoordinates

@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.IP
 section ProximityFlatProofPort
 namespace MvPolynomial

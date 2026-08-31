@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.X4
 import ProximityPrize.SubmissionLower.X5
 namespace ProximityPrize.SubmissionLower.RCN004
@@ -41,7 +40,7 @@ theorem plane_budget_le_original (order:Fin 3 ≃ Fin 3) (G H:Original K):
    (Nat.mul_le_mul (planeMap_natDegree_le K order G) (planeMap_degreeX_le K order H))
 section Single
 variable (order:Fin 3 ≃ Fin 3) (P:Ideal (Original K)) [P.IsPrime]
-variable (ht:Transcendental K (coordinate K P (order 0)))
+ (ht:Transcendental K (coordinate K P (order 0)))
 theorem original_finite_separable_finrank_bound
    (p:ℕ) [CharP K p] (G H:Original K)
    (hG:Irreducible G) (hGmem:G∈P) (hHmem:H∈P) (hproper:¬ G∣H)
@@ -71,7 +70,7 @@ theorem original_finite_separable_finrank_bound
 end Single
 section Family
 variable (order:Fin 3 ≃ Fin 3) {I:Type} [Fintype I]
-variable (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
+ (P:I → Ideal (Original K)) [∀ i,(P i).IsPrime]
 theorem original_finite_separable_sum_finrank_bound
    (ht:∀ i,Transcendental K (coordinate K (P i) (order 0)))
    (hinj:Function.Injective P) (p:ℕ) [CharP K p] (G H:Original K)

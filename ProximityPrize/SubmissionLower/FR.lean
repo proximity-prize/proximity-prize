@@ -1,34 +1,15 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.ES
 import ProximityPrize.SubmissionLower.E1
 import ProximityPrize.SubmissionLower.GP
 namespace ProximityPrize.SubmissionLower.RCN241
 open scoped Classical
-open RCN136 RCN231 RCN319
-open RCN238 RCN264
-open RCN243 RCN065
-open RCN095
-open RCN159
-open RCN151
-open RCN148
-open RCN150
-open RCN156
-open RCN158
-open RCN154
-open RCN237
-open RCN234
-open RCN275
-open RCN276
-open RCN240
-open RCN046
-open RCN265
-open RCN316
+open RCN136 RCN231 RCN319 RCN238 RCN264 RCN243 RCN065 RCN095 RCN159 RCN151 RCN148 RCN150 RCN156 RCN158 RCN154 RCN237 RCN234 RCN275 RCN276 RCN240 RCN046 RCN265 RCN316
 noncomputable section
 set_option maxHeartbeats 3500000
 set_option maxRecDepth 40000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
-variable {phi:Polynomial K→+*Omega} {Gamma:Finset K} {x:Iota→ K}
-variable {pchar:ℕ} [CharP Omega pchar]
+ {phi:Polynomial K →+*Omega} {Gamma:Finset K} {x:Iota → K}
+ {pchar:ℕ} [CharP Omega pchar]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq Omega:=Classical.decEq Omega
 local instance:DecidableEq Iota:=Classical.decEq Iota
@@ -39,13 +20,13 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
    (S:ResidualStage phi Gamma x pchar p.errors flag p.w support)
    (hnodes:S.nodes.card=p.n)
    (hagreement:∀ gamma∈Gamma,
-     p.agreements≤ (S.agreementFiber gamma).card)
-   (hwa:p.w< p.agreements) (_han:p.agreements≤ p.n)
-   (hdegreeGlobal:∀ k≤ p.w,
-     (p.n-k)*p.gap*(p.w-k)≤
+     p.agreements ≤ (S.agreementFiber gamma).card)
+   (hwa:p.w < p.agreements) (_han:p.agreements ≤ p.n)
+   (hdegreeGlobal:∀ k ≤ p.w,
+     (p.n-k)*p.gap*(p.w-k) ≤
        p.degreeIncidence*(p.agreements-k))
-   (hunitGlobal:∀ k≤ p.w,
-     (p.n-k)*p.gap≤ p.unitIncidence*(p.agreements-k))
+   (hunitGlobal:∀ k ≤ p.w,
+     (p.n-k)*p.gap ≤ p.unitIncidence*(p.agreements-k))
    (D:S.TerminalDescendant) (i:Iota) (_hi:i∈D.stage.nodes)
    (B:PrimeFlagBudgetFamily
      (G:=D.stage.G)
@@ -56,8 +37,8 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
    (hzyzPositive:∀ C:RegularComponent Omega D.stage.G
      (agreementPolynomial phi D.stage.F D.degree
        (x i) (D.stage.u0 i) (D.stage.u1 i))
-     (regularitySurface phi D.stage.F),1≤ B.zCost C+B.yzCost C):
-   (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*p.gap≤
+     (regularitySurface phi D.stage.F),1 ≤ B.zCost C+B.yzCost C):
+   (Gamma.filter (fun gamma↦D.stage.Agrees gamma i)).card*p.gap ≤
      D.degree*factorDegreeCostYZ p support.agreementDirection flag+
        factorUnitCostYZ p support.agreementDirection flag:=by
  classical
@@ -83,7 +64,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
      (D.stage.regular gamma hGamma)
      (x i) (D.stage.u0 i) (D.stage.u1 i)).mpr hagree
  have hinnerAgreement:∀ gamma∈GammaI,
-     aD≤ (D.stage.nodes.filter (fun j↦
+     aD ≤ (D.stage.nodes.filter (fun j↦
        (D.stage.selected gamma).eval (x j)=
          D.stage.u0 j+gamma*D.stage.u1 j)).card:=by
    intro gamma hgamma
@@ -93,17 +74,17 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
    exact h0.trans (by
      simpa only [aD,ResidualStage.agreementFiber,
        ResidualStage.Agrees] using D.agreement_card gamma hGamma)
- have hda:D.degree< aD:=by
+ have hda:D.degree < aD:=by
    have hD:=D.degree_le
    dsimp only [aD]
    omega
- have hdegree:∀ k≤ D.degree,
-     (D.stage.nodes.card-k)*(aD-D.degree)*(D.degree-k)≤
+ have hdegree:∀ k ≤ D.degree,
+     (D.stage.nodes.card-k)*(aD-D.degree)*(D.degree-k) ≤
        p.degreeIncidence*(aD-k):=by
    intro k hk
-   have hDle:D.degree≤ p.w:=D.degree_le
+   have hDle:D.degree ≤ p.w:=D.degree_le
    let total:=(p.w-D.degree)+k
-   have htotal:total≤ p.w:=by
+   have htotal:total ≤ p.w:=by
      dsimp only [total]
      omega
    have h:=hdegreeGlobal total htotal
@@ -125,13 +106,13 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
    rw [hgap]
    rw [hn,hw,ha] at h
    exact h
- have hunit:∀ k≤ D.degree,
-     (D.stage.nodes.card-k)*(aD-D.degree)≤
+ have hunit:∀ k ≤ D.degree,
+     (D.stage.nodes.card-k)*(aD-D.degree) ≤
        p.unitIncidence*(aD-k):=by
    intro k hk
-   have hDle:D.degree≤ p.w:=D.degree_le
+   have hDle:D.degree ≤ p.w:=D.degree_le
    let total:=(p.w-D.degree)+k
-   have htotal:total≤ p.w:=by
+   have htotal:total ≤ p.w:=by
      dsimp only [total]
      omega
    have h:=hunitGlobal total htotal
@@ -181,7 +162,7 @@ theorem terminal_outer_fiber_bound_of_prime_flag_budget_profile_z_yz
  dsimp only [GammaI] at hbound
  simp only [factorDegreeCostYZ,factorUnitCostYZ]
  calc
-   _≤ _:=hbound
+   _ ≤ _:=hbound
    _=_:=by ring
 theorem recursive_scaled_factorYZ_of_adaptive_projection_families
    (hphi:Function.Injective phi)
@@ -190,17 +171,17 @@ theorem recursive_scaled_factorYZ_of_adaptive_projection_families
    (S:ResidualStage phi Gamma x pchar p.errors flag p.w support)
    (hnodes:S.nodes.card=p.n)
    (hagreement:∀ gamma∈Gamma,
-     p.agreements≤ (S.agreementFiber gamma).card)
+     p.agreements ≤ (S.agreementFiber gamma).card)
    (halign:support.agreementDirection=p.agreementDirection)
-   (hwa:p.w< p.agreements) (han:p.agreements≤ p.n)
-   (hdegreeGlobal:∀ k≤ p.w,
-     (p.n-k)*p.gap*(p.w-k)≤
+   (hwa:p.w < p.agreements) (han:p.agreements ≤ p.n)
+   (hdegreeGlobal:∀ k ≤ p.w,
+     (p.n-k)*p.gap*(p.w-k) ≤
        p.degreeIncidence*(p.agreements-k))
-   (hunitGlobal:∀ k≤ p.w,
-     (p.n-k)*p.gap≤ p.unitIncidence*(p.agreements-k))
+   (hunitGlobal:∀ k ≤ p.w,
+     (p.n-k)*p.gap ≤ p.unitIncidence*(p.agreements-k))
    (hprojection:TerminalAdaptiveProjectionFamiliesYZOfSupport support S):
-   Gamma.card*p.gap^2≤ factorRegularLedgerYZ p flag:=by
- change Gamma.card*p.gap^2≤
+   Gamma.card*p.gap^2 ≤ factorRegularLedgerYZ p flag:=by
+ change Gamma.card*p.gap^2 ≤
    factorRegularLedgerYZForDirection p p.agreementDirection flag
  rw [←halign]
  apply recursive_scaled_factorYZ hphi p support support.agreementDirection S

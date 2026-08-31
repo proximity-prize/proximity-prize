@@ -1,9 +1,6 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.GD
 namespace ProximityPrize.SubmissionLower.RCN304
-open ProximityPrize.Benchmark
-open RCN319 RCN259
-open RCN299
+open ProximityPrize.Benchmark RCN319 RCN259 RCN299
 noncomputable section
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
 local instance:DecidableEq (Polynomial IRSProfile.Field):=Classical.decEq _

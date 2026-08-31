@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.CL
 namespace ProximityPrize.SubmissionLower.RCN352
 open scoped Classical WithZero

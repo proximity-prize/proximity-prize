@@ -1,8 +1,6 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.BS
 namespace ProximityPrize.SubmissionLower.RCN079
-open RCN136 RCN082 RCN290
-open RCN293 RCN081 RCN319
+open RCN136 RCN082 RCN290 RCN293 RCN081 RCN319
 noncomputable section
 variable {K:Type*} [Field K]
 def swapYR (K:Type*) [Field K]:MvPolynomial (Fin 4) K ≃ₐ[K] MvPolynomial (Fin 4) K:=

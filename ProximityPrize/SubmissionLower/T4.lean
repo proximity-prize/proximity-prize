@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A
 section ProximityFlatProofPort
 universe w u v
@@ -14,7 +13,7 @@ structure Algebra.Extension where
  algebraMap_σ:∀ x,algebraMap Ring S (σ x)=x
 namespace Algebra.Extension
 variable {R S}
-variable (P:Extension.{w} R S)
+ (P:Extension.{w} R S)
 attribute [instance] commRing algebra₁ algebra₂ isScalarTower
 attribute [simp] algebraMap_σ
 @[nolint unusedArguments]
@@ -59,7 +58,7 @@ def self:Extension R S where
 abbrev ker:Ideal P.Ring:=RingHom.ker (algebraMap P.Ring S)
 section Localization
 variable (M:Submonoid S) {S':Type*} [CommRing S'] [Algebra S S'] [IsLocalization M S']
-variable [Algebra R S'] [IsScalarTower R S S']
+ [Algebra R S'] [IsScalarTower R S S']
 noncomputable
 def localization (P:Extension.{w} R S):Extension R S' where
  Ring:=Localization (M.comap (algebraMap P.Ring S))
@@ -106,7 +105,7 @@ variable {R'' S''} [CommRing R''] [CommRing S''] [Algebra R'' S''] (P'':Extensio
 section Hom
 section
 variable [Algebra R R'] [Algebra R' R''] [Algebra R R'']
-variable [Algebra S S'] [Algebra S' S''] [Algebra S S'']
+ [Algebra S S'] [Algebra S' S''] [Algebra S S'']
 @[ext]
 structure Hom where
  toRingHom:P.Ring →+*P'.Ring
@@ -284,9 +283,9 @@ lemma Cotangent.span_eq_top_of_span_eq_ker {ι:Type*} (s:ι → P.Ring)
      LinearMap.range_eq_top_of_surjective _ mk_surjective]
  · simp [←hs,Ideal.mem_span_range_self]
 variable {P'}
-variable [Algebra R R'] [Algebra R' R''] [Algebra R' S'']
-variable [Algebra S S'] [Algebra S' S''] [Algebra S S'']
-variable [Algebra R S'] [IsScalarTower R R' S']
+ [Algebra R R'] [Algebra R' R''] [Algebra R' S'']
+ [Algebra S S'] [Algebra S' S''] [Algebra S S'']
+ [Algebra R S'] [IsScalarTower R R' S']
 noncomputable
 def Cotangent.map (f:Hom P P'):P.Cotangent →ₗ[S] P'.Cotangent where
  toFun x:=.of (Ideal.mapCotangent (R:=R) _ _ f.toAlgHom

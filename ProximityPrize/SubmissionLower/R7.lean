@@ -1,12 +1,8 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G
 import ProximityPrize.SubmissionLower.X1
 namespace ProximityPrize.SubmissionLower.RCN351
 open scoped Classical TensorProduct
-open Polynomial KaehlerDifferential
-open RCN369
-open RCN370
-open RCN022
+open Polynomial KaehlerDifferential RCN369 RCN370 RCN022
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 200000
@@ -184,8 +180,8 @@ theorem shear_transcendental_finite_separable_of_differential_ne_zero
    rw [←hb,smul_smul,inv_mul_cancel₀ hb0,one_smul]
 section FiniteFamily
 variable {I:Type*} [Fintype I]
-variable (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
-variable (r z:∀ i,E i)
+ (E:I → Type*) [∀ i,Field (E i)] [∀ i,Algebra K (E i)]
+ (r z:∀ i,E i)
 theorem exists_common_nonzero_shear_coefficient
    [Infinite K] (hdz:∀ i,D K (E i) (z i)≠0):
    ∃ a:K,a≠0∧∀ i,

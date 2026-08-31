@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.X4
 namespace ProximityPrize.SubmissionLower.RCN014
-open RCN002 RCN005
-open RCN011 RCN010
+open RCN002 RCN005 RCN011 RCN010
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -45,9 +44,9 @@ theorem planeEvaluation_surjective_of_finite_generatingPair
  change x∈A at hxL
  exact hxL
 variable (K:Type) [Field K]
-variable (order:Fin 3 ≃ Fin 3)
+ (order:Fin 3 ≃ Fin 3)
 variable (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
-variable (ht:Transcendental K (coordinate K P (order 0)))
+ (ht:Transcendental K (coordinate K P (order 0)))
 theorem actualPlaneEvaluation_surjective
    (hfinite:
      letI:Algebra (RatFunc K) (CoordinateField K P):=

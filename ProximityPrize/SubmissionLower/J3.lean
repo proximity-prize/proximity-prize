@@ -2,21 +2,14 @@ import ProximityPrize.SubmissionLower.Y6
 import ProximityPrize.SubmissionLower.M7
 namespace ProximityPrize.SubmissionLower.RCN085
 open scoped Classical BigOperators
-open RCN136 RCN313 RCN238
-open RCN243 RCN264
-open RCN341 RCN046
-open RCN095 RCN199
-open RCN200 RCN207
-open RCN198 RCN203
-open RCN201 RCN275
-open RCN287 RCN086
+open RCN136 RCN313 RCN238 RCN243 RCN264 RCN341 RCN046 RCN095 RCN199 RCN200 RCN207 RCN198 RCN203 RCN201 RCN275 RCN287 RCN086
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 50000
 set_option synthInstance.maxHeartbeats 300000
 variable {K Ω E:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
-variable [Field E] [IsAlgClosed E] [Algebra Ω E] [Algebra (RatFunc Ω) E]
-variable [IsScalarTower Ω (RatFunc Ω) E]
+ [Field E] [IsAlgClosed E] [Algebra Ω E] [Algebra (RatFunc Ω) E]
+ [IsScalarTower Ω (RatFunc Ω) E]
 theorem exists_firstTail_cut_budgets
    (φ:Polynomial K →+*Ω) (F:MvPolynomial (Fin 4) K)
    (G T:MvPolynomial (Fin 3) Ω) (a b s w:ℕ) (hw:1 ≤ w)

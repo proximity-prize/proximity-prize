@@ -2,16 +2,13 @@ import ProximityPrize.SubmissionLower.AN
 import ProximityPrize.SubmissionLower.AM
 namespace ProximityPrize.SubmissionLower.RCN033
 open scoped Classical BigOperators
-open RCN264 RCN095
-open RCN237
-open RCN343
-open RCN338
+open RCN264 RCN095 RCN237 RCN343 RCN338
 noncomputable section
 set_option autoImplicit false
 variable {Base Omega:Type} [Field Base] [Field Omega]
 local instance:DecidableEq Base:=Classical.decEq Base
 variable {G T H:MvPolynomial (Fin 3) Omega}
-variable {surfaceFlag firstTailFlag:FlagDegree}
+ {surfaceFlag firstTailFlag:FlagDegree}
 theorem regularComponentWeightedInertiaCertificate_of_active_channels
    (B:PrimeFlagBudgetFamily
      (G:=G) (T:=T) (H:=H) surfaceFlag firstTailFlag)

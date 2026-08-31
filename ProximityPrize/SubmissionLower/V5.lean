@@ -1,4 +1,3 @@
-import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.V7
 section ProximityFlatProofPort
 namespace Valuation.IsRankOneDiscrete
