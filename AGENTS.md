@@ -15,12 +15,12 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    file, `score.txt`, and the track-specific claim file directly in that root.
    Subdirectories are not allowed.
 3. Stay inside the verifier's size limits. Both tracks admit at most **1000
-   files**, **4 MiB per file**, and **4 MiB across the whole submission root**.
-   The total is the limit that bites first: it is the same 4 MiB as the
-   per-file one, so a few large generated modules can exhaust it even though
-   each is individually fine. Nothing in this repository enforces these — the
-   submission is refused at the fetch stage, before anything is compiled, and
-   the claim is not scored.
+   files**, **4 MiB per file**, and **10 MiB across the whole submission root**.
+   The total is the one to watch: it counts every admitted file together, so
+   several generated modules can exhaust it while each stays well inside the
+   per-file cap. Nothing in this repository enforces these — the submission is
+   refused at the fetch stage, before anything is compiled, and the claim is
+   not scored.
 4. Do not use the submission as an archive. Only `.lean` files plus `score.txt`
    and the track claim file (`radius.txt` for lower, `unsafe-index.txt` for
    upper) are admitted at all, and files that no import reaches still count
