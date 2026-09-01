@@ -1,0 +1,4 @@
+import ProximityPrize.SubmissionLower.LocatorReplacementReceiptCoarse12
+import ProximityPrize.SubmissionLower.LocatorReplacementReceiptCoarse13
+import ProximityPrize.SubmissionLower.LocatorReplacementReceiptCoarse14
+import ProximityPrize.SubmissionLower.LocatorReplacementReceiptCoarse15

@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.LocatorQuotientMonotone
-import ProximityPrize.SubmissionLower.LocatorReplacementData
+import ProximityPrize.SubmissionLower.LocatorReplacementReceipts
 import ProximityPrize.SubmissionLower.LocatorCoprimeQuotient
 import ProximityPrize.SubmissionLower.LocatorDoubleSquareAvoidance
 import ProximityPrize.SubmissionLower.LocatorAuxiliaryArithmetic
