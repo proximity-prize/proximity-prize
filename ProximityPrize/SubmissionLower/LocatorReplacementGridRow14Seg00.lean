@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow12
+import ProximityPrize.SubmissionLower.LocatorReplacementGridRow11
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 

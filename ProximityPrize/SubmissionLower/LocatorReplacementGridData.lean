@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow18
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow17
+import ProximityPrize.SubmissionLower.LocatorReplacementGridRow16
+import ProximityPrize.SubmissionLower.LocatorReplacementGridRow00
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
@@ -62,8 +64,7 @@ def chosenCost (c : Cell) : ℕ :=
   else if RouteFits sourceC 3 b then routeCost sourceC b 3
   else if RouteFits sourceC 4 b then routeCost sourceC b 4
   else if RouteFits sourceC 5 b then routeCost sourceC b 5
-  else if RouteFits sourceC 6 b then routeCost sourceC b 6
-  else routeCost sourceC b 7
+  else routeCost sourceC b 6
 
 theorem chosenCost_rate (c : Cell) (hv : Valid c) :
     totalCap * chosenCost c ≤ bound * (box c).factorT := by
@@ -96,12 +97,8 @@ theorem chosenCost_rate (c : Cell) (hv : Valid c) :
               by_cases hC5 : RouteFits sourceC 5 (box c)
               · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
                   if_pos, if_false] using hC5.2.2.2.2.2.2.2.2
-              · have hroutes := hroutes.resolve_left hC5
-                by_cases hC6 : RouteFits sourceC 6 (box c)
-                · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
-                    hC6, if_pos, if_false] using hC6.2.2.2.2.2.2.2.2
-                · have hC7 := hroutes.resolve_left hC6
-                  simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
-                    hC6, if_pos, if_false] using hC7.2.2.2.2.2.2.2.2
+              · have hC6 := hroutes.resolve_left hC5
+                simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
+                  if_pos, if_false] using hC6.2.2.2.2.2.2.2.2
 
 end ProximityPrize.SubmissionLower.LocatorReplacementGridData
