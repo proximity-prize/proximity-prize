@@ -72,17 +72,20 @@ private theorem rank_32:
 private theorem rank_40:
  (∑ i ∈ Finset.range 8,rankRow (40+i)) =5345:=by decide
 private theorem rank_48:
- (∑ i ∈ Finset.range 10,rankRow (48+i)) =3410:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (48+i)) =3192:=by decide
+private theorem rank_56:
+ (∑ i ∈ Finset.range 2,rankRow (56+i)) =218:=by decide
 theorem local_rank_exact:
    localRankBound multiplicity yTotalCap slopeCap=22695:=by
  change (∑ i ∈ Finset.range 58,rankRow i) =_
- rw [Finset.sum_range_add rankRow 48 10,
+ rw [Finset.sum_range_add rankRow 56 2,
+   Finset.sum_range_add rankRow 48 8,
    Finset.sum_range_add rankRow 40 8,
    Finset.sum_range_add rankRow 32 8,
    Finset.sum_range_add rankRow 24 8,
    Finset.sum_range_add rankRow 16 8,
    Finset.sum_range_add rankRow 8 8,
-   rank_0,rank_8,rank_16,rank_24,rank_32,rank_40,rank_48] <;> norm_num
+   rank_0,rank_8,rank_16,rank_24,rank_32,rank_40,rank_48,rank_56] <;> norm_num
 theorem interpolation_gate:
    n*localRankBound multiplicity yTotalCap slopeCap <
      coefficientCount weightedCap w yTotalCap slopeCap:=by

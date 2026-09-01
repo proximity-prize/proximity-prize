@@ -19,26 +19,19 @@ def gap:ℕ:=50646
 def prime:ℕ:=2130706433
 def budget:ℕ:=274980726401750329
 def LA:ℕ:=52091
-def LB:ℕ:=2452
+def LB:ℕ:=2451
 def weightedA:ℕ:=10539586
 def weightedC:ℕ:=22896342
 abbrev weightedAmbient:=weightedC
 def weightedB:ℕ:=17081398
-def fixedRegularCap:ℕ:=271696008548359000
+def fixedRegularCap:ℕ:=271696879461797498
 theorem kernelA_rank:localRankBound 58 52091 17=1234448256:=by decide
-theorem kernelThin_rank:localRankBound 58 52091 17=1234448256:=by decide
 theorem kernelC_rank:localRankBound 126 52091 39=12608265660:=by decide
-theorem kernelB_rank:localRankBound 94 2452 29=245009385:=by decide
+theorem kernelB_rank:localRankBound 94 2451 29=244907770:=by decide
 theorem kernelA_nullity:
     coefficientCount 10539586 131071 52091 17 -
       262144 * localRankBound 58 52091 17=59324346036:=by
   rw [kernelA_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
-    10539586 131071 52091 17 81 (by decide) (by decide)]
-  decide
-theorem kernelThin_nullity:
-    coefficientCount 10539586 131071 52091 17 -
-      262144 * localRankBound 58 52091 17=59324346036:=by
-  rw [kernelThin_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
     10539586 131071 52091 17 81 (by decide) (by decide)]
   decide
 theorem kernelC_nullity:
@@ -48,10 +41,10 @@ theorem kernelC_nullity:
     22896342 131071 52091 39 175 (by decide) (by decide)]
   decide
 theorem kernelB_nullity:
-    coefficientCount 17081398 131071 2452 29 -
-      262144 * localRankBound 94 2452 29=147311280:=by
+    coefficientCount 17081398 131071 2451 29 -
+      262144 * localRankBound 94 2451 29=35478090:=by
   rw [kernelB_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
-    17081398 131071 2452 29 131 (by decide) (by decide)]
+    17081398 131071 2451 29 131 (by decide) (by decide)]
   decide
 theorem A_ys78_quotient_upper:
     coefficientCount 316065 131071 52013 17=44098128031:=by
@@ -59,17 +52,17 @@ theorem A_ys78_quotient_upper:
     316065 131071 52013 17 3 (by decide) (by decide)]
   decide
 theorem kernelB_total_quotient_lt:
-    coefficientCount 17081398 131071 1 29 <
-    coefficientCount 17081398 131071 2452 29 -
-      262144 * localRankBound 94 2452 29:=by
+    coefficientCount 17081398 131071 0 29 <
+    coefficientCount 17081398 131071 2451 29 -
+      262144 * localRankBound 94 2451 29:=by
   rw [kernelB_nullity]
   decide
 def fixedSingular:TightParameters:=⟨n,w,agreements,weightedA,2450,17⟩
 def residualStage:UnequalParameters:=⟨n,w,agreements,130,29,LB,174,39,LA⟩
 def residualSingular:TightParameters:=⟨n,w,agreements,weightedB,LB,29⟩
 theorem fixedSingular_exact:fixedSingular.countCap=436572569041217:=by decide
-theorem residualStage_exact:residualStage.regularCountCap=735136407288493:=by decide
-theorem residualSingular_exact:residualSingular.countCap=2113008877061618:=by decide
+theorem residualStage_exact:residualStage.regularCountCap=735127258667141:=by decide
+theorem residualSingular_exact:residualSingular.countCap=2112147112244472:=by decide
 structure SingularGates (P:TightParameters):Prop where
   s_pos:1 ≤ P.s
   s_small:P.s < prime
@@ -113,12 +106,12 @@ theorem radius_admissible:
     radius ∈ Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance:=by
   constructor <;> norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
     IRSProfile.minRelativeDistance]
-theorem score_root_integer:(2:ℕ)^67 * 1000000000^100 ≤ 1591072968^100:=by decide
+theorem score_root_integer:(2:ℕ)^67 * 829^100 ≤ 1319^100:=by decide
 theorem score_radius_integer:
-    (23259683:ℕ)^128 * (2^67 * 1591072968) ≤ 1000000000 * 33554432^128:=by decide
+    (23259683:ℕ)^128 * (2^67 * 1319) ≤ 829 * 33554432^128:=by decide
 theorem two_rpow_fraction_le:
-    (2:ℝ≥0)^((67:ℝ)/100) ≤ (1591072968:ℝ≥0)/1000000000:=by
-  have hroot:((2:ℝ≥0)^(67:ℕ))^((100:ℝ)⁻¹) ≤ (1591072968:ℝ≥0)/1000000000:=by
+    (2:ℝ≥0)^((67:ℝ)/100) ≤ (1319:ℝ≥0)/829:=by
+  have hroot:((2:ℝ≥0)^(67:ℕ))^((100:ℝ)⁻¹) ≤ (1319:ℝ≥0)/829:=by
     rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 100)]
     rw [NNReal.rpow_ofNat,div_pow,le_div_iff₀ (by positivity)]
     exact_mod_cast score_root_integer
@@ -129,7 +122,7 @@ theorem two_rpow_fraction_le:
     _ ≤ _:=hroot
 theorem radius_power_bound:
     (1 - radius)^IRSProfile.repetitions ≤
-      ((1:ℝ≥0)/2^(67:ℕ)) * (1000000000/1591072968):=by
+      ((1:ℝ≥0)/2^(67:ℕ)) * (829/1319):=by
   have hsub:(1 - radius:ℝ≥0) =23259683/33554432:=by
     have hr:radius ≤ 1:=by
       rw [← NNReal.coe_le_coe]
@@ -137,21 +130,21 @@ theorem radius_power_bound:
     apply NNReal.coe_injective
     rw [NNReal.coe_sub hr]
     norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
-  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(67:ℕ)) * (1000000000/1591072968)
+  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(67:ℕ)) * (829/1319)
   rw [hsub,div_pow,div_mul_div_comm,one_mul,
     div_le_div_iff₀ (by positivity) (by positivity)]
   exact_mod_cast score_radius_integer
 theorem score_target_le:
     (1 - radius)^IRSProfile.repetitions ≤ claimedError 6767:=by
-  have hscale:(1000000000:ℝ≥0)/1591072968 ≤ (2:ℝ≥0)^(-((67:ℝ)/100)):=by
+  have hscale:(829:ℝ≥0)/1319 ≤ (2:ℝ≥0)^(-((67:ℝ)/100)):=by
     calc
-      (1000000000:ℝ≥0)/1591072968=1/((1591072968:ℝ≥0)/1000000000):=by norm_num
+      (829:ℝ≥0)/1319=1/((1319:ℝ≥0)/829):=by norm_num
       _ ≤ 1/((2:ℝ≥0)^((67:ℝ)/100)) :=
         one_div_le_one_div_of_le (by positivity) two_rpow_fraction_le
       _=_:=by rw [one_div,NNReal.rpow_neg]
   calc
     (1 - radius)^IRSProfile.repetitions ≤
-        ((1:ℝ≥0)/2^(67:ℕ)) * (1000000000/1591072968):=radius_power_bound
+        ((1:ℝ≥0)/2^(67:ℕ)) * (829/1319):=radius_power_bound
     _ ≤ ((1:ℝ≥0)/2^(67:ℕ)) * (2:ℝ≥0)^(-((67:ℝ)/100)) :=
       mul_le_mul_of_nonneg_left hscale (by positivity)
     _=claimedError 6767:=by

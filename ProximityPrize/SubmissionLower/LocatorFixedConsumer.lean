@@ -32,14 +32,14 @@ theorem regular_sum_count
     (hno:NoLargeSelectedPencil selected Gamma 131071 80427)
     (qCost:RegularIndex H → ℕ)
     (hqCost:∀ R,LocatorFactorReplacement.Bad 2450 131072 131073
-      271696008548359000 (regularCumulativeFlag H R) →
+      271696879461797498 (regularCumulativeFlag H R) →
       (regularSeeds H selected Gamma R).card ≤ qCost R)
     (hcell:∀ R,LocatorFactorReplacement.Bad 2450 131072 131073
-      271696008548359000 (regularCumulativeFlag H R) →
+      271696879461797498 (regularCumulativeFlag H R) →
       LocatorFactorReplacement.cellCost 2450 77 17 131072 131073
-        (regularCumulativeFlag H R) (qCost R) ≤ 271696008548359000) :
+        (regularCumulativeFlag H R) (qCost R) ≤ 271696879461797498) :
     (∑ R:RegularIndex H, (regularSeeds H selected Gamma R).card) ≤
-      271696008548359000:=by
+      271696879461797498:=by
   have hb:=regularCumulativeFlag_budgets H hH hSupport
   have hs:(∑ R:RegularIndex H, (regularCumulativeFlag H R).all) ≤ 17:=by
     simpa only [wholeSupport] using hb.1
@@ -59,7 +59,7 @@ theorem regular_sum_count
     omega
   exact LocatorFactorReplacement.aggregate_of_bad_cells (regularCumulativeFlag H)
     (fun R=> (regularSeeds H selected Gamma R).card) qCost
-    2450 77 17 131072 131073 271696008548359000 (by decide)
+    2450 77 17 131072 131073 271696879461797498 (by decide)
     hs hy ht hstage hzero hqCost hcell
 theorem fixed_count_le
     (H:P4) (hH:H ≠ 0)
@@ -74,13 +74,13 @@ theorem fixed_count_le
     (hno:NoLargeSelectedPencil selected Gamma 131071 80427)
     (qCost:RegularIndex H → ℕ)
     (hqCost:∀ R,LocatorFactorReplacement.Bad 2450 131072 131073
-      271696008548359000 (regularCumulativeFlag H R) →
+      271696879461797498 (regularCumulativeFlag H R) →
       (regularSeeds H selected Gamma R).card ≤ qCost R)
     (hcell:∀ R,LocatorFactorReplacement.Bad 2450 131072 131073
-      271696008548359000 (regularCumulativeFlag H R) →
+      271696879461797498 (regularCumulativeFlag H R) →
       LocatorFactorReplacement.cellCost 2450 77 17 131072 131073
-        (regularCumulativeFlag H R) (qCost R) ≤ 271696008548359000) :
-    Gamma.card ≤ 271696008548359000 + LocatorArithmetic.fixedSingular.countCap:=by
+        (regularCumulativeFlag H R) (qCost R) ≤ 271696879461797498) :
+    Gamma.card ≤ 271696879461797498 + LocatorArithmetic.fixedSingular.countCap:=by
   have hg:=LocatorFixed.singular_gates 10539586 2450 17
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
   have hcover:=RCN239.card_le_regular_sum_add_singular
