@@ -13,10 +13,24 @@ namespace ProximityPrize.Benchmark.Upper
 -- `2 ^ 218787 <= 139775 ^ 12800` is
 -- `2 ^ (-11613/100) <= (139775/262144) ^ 128`
 -- after clearing denominators and raising to the hundredth power.
-set_option maxHeartbeats 1000000 in
-set_option maxRecDepth 4000000 in
-set_option exponentiation.threshold 300000 in
-theorem score_nat : (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 := by decide
+--
+-- Checking the full powers with one `decide` needs several gigabytes.  The
+-- two small exact blocks below prove the same inequality while keeping the
+-- largest normalized numeral below 4300 bits.
+set_option exponentiation.threshold 5000 in
+theorem score_block_248 : (2 : ℕ) ^ 4239 ≤ 139775 ^ 248 := by norm_num
+
+set_option exponentiation.threshold 5000 in
+theorem score_block_152 : (2 : ℕ) ^ 2598 ≤ 139775 ^ 152 := by norm_num
+
+theorem score_nat : (2 : ℕ) ^ 218787 ≤ 139775 ^ 12800 := by
+  calc
+    (2 : ℕ) ^ 218787 = (2 ^ 4239) ^ 51 * 2 ^ 2598 := by
+      rw [← pow_mul, ← pow_add]
+    _ ≤ (139775 ^ 248) ^ 51 * 139775 ^ 152 :=
+      Nat.mul_le_mul (Nat.pow_le_pow_left score_block_248 51) score_block_152
+    _ = 139775 ^ 12800 := by
+      rw [← pow_mul, ← pow_add]
 
 theorem claimedUnsafeRadius_122369_eq :
     claimedUnsafeRadius 122369 = (122369 / 262144 : ℝ≥0) := by
