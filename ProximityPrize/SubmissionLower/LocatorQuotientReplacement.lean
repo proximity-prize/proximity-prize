@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.LocatorReplacementGridData
 import ProximityPrize.SubmissionLower.LocatorAuxiliaryArithmetic
 import ProximityPrize.SubmissionLower.LocatorSixthPowerAvoidance
-import ProximityPrize.SubmissionLower.LocatorSeventhPowerAvoidance
 import ProximityPrize.SubmissionLower.LocatorQuotientMonotone
 import ProximityPrize.SubmissionLower.LocatorSourceCGap
 import ProximityPrize.SubmissionLower.BF
@@ -106,11 +105,11 @@ private theorem count_le_stageCost
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (c : Cell)
     (hcell : InCell (regularCumulativeFlag H F) c)
     (src : Source) (j : ℕ) (Q : P4) (_hQ : Q ≠ 0)
@@ -149,8 +148,8 @@ private theorem count_le_stageCost
       norm_num [I, IRSProfile.Index])
     (by simpa only [stagePair] using (show 1 ≤ 131071 by decide))
     (by simpa only [stagePair] using (show 131071 < 2130706433 by decide))
-    (by simpa only [stagePair] using (show 131071 < 181628 by decide))
-    (by simpa only [stagePair] using (show 181628 ≤ 262144 by decide))
+    (by simpa only [stagePair] using (show 131071 < 181638 by decide))
+    (by simpa only [stagePair] using (show 181638 ≤ 262144 by decide))
     hdegree hagreement
     (by simpa only [stagePair, UnequalParameters.errors, Nat.reduceSub] using hno)
     hQzero
@@ -178,22 +177,22 @@ private theorem terminal_relPrime
 private theorem source_one_count
     (D s m Ysrc gap : ℕ) (src : Source)
     (hsrcY : src.y = Ysrc) (hsrcR : src.r = s) (hsrcGap : src.gap = gap)
-    (hgap : coefficientCount D 131071 169536 s -
-      262144 * localRankBound m 169536 s = gap)
+    (hgap : coefficientCount D 131071 127295 s -
+      262144 * localRankBound m 127295 s = gap)
     (hshape : D + s ≤ 131071 * (Ysrc + 1))
-    (hcapacity : D - 50558 ≤ (m - 1) * 181628 + (131071 - 1))
+    (hcapacity : D - 50568 ≤ (m - 1) * 181638 + (131071 - 1))
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
-    (hdiv : ∀ v : ConstraintKernel (K := K) D 131071 169536 s m
+    (hdiv : ∀ v : ConstraintKernel (K := K) D 131071 127295 s m
       IRSProfile.domain u0 u1,
-      F.1 ∣ reconstruct K D 131071 169536 s v.1)
+      F.1 ∣ reconstruct K D 131071 127295 s v.1)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (hfit : RouteFits src 1 (box c)) :
     (regularSeeds H selected Gamma F).card ≤ routeCost src (box c) 1 := by
@@ -201,26 +200,26 @@ private theorem source_one_count
   obtain ⟨_hkpos, _hkcap, _hyroom, _hrroom, _hshapeRoute, hband,
     hterminal, hgates, _hrate⟩ := hfit
   obtain ⟨hr, hylo, _hyhi, htlo, _hthi⟩ := factor_bounds_of_cell H F c hcell
-  have hqT : 169536 - wt residualTotalWeights F.1 ≤ stageT (box c) 1 := by
-    simpa only [stageT, Nat.one_mul] using Nat.sub_le_sub_left htlo 169536
+  have hqT : 127295 - wt residualTotalWeights F.1 ≤ stageT (box c) 1 := by
+    simpa only [stageT, Nat.one_mul] using Nat.sub_le_sub_left htlo 127295
   have hqY : Ysrc - wt residualYSWeights F.1 ≤ stageY src (box c) 1 := by
     rw [stageY, Nat.one_mul, hsrcY]
     exact Nat.sub_le_sub_left hylo Ysrc
   have hqR : s - wt residualSWeights F.1 ≤ stageR src (box c) 1 := by
     rw [stageR, Nat.one_mul, hsrcR, hr]
   have hchannels := channelCount_mono hqT hqY hqR
-  have hsource : 50558 * channelCount
-      (169536 - wt residualTotalWeights F.1)
+  have hsource : 50568 * channelCount
+      (127295 - wt residualTotalWeights F.1)
       (Ysrc - wt residualYSWeights F.1)
       (s - wt residualSWeights F.1) <
-      coefficientCount D 131071 169536 s -
-        Fintype.card I * localRankBound m 169536 s := by
+      coefficientCount D 131071 127295 s -
+        Fintype.card I * localRankBound m 127295 s := by
     rw [show Fintype.card I = 262144 by norm_num [I, IRSProfile.Index], hgap]
-    exact (Nat.mul_le_mul_left 50558 hchannels).trans_lt (by
+    exact (Nat.mul_le_mul_left 50568 hchannels).trans_lt (by
       simpa only [bandSum, stageBand, hsrcGap] using hband)
   obtain ⟨_v, Q, _hv, hQ, _heq, hQbox, _hparent, hproduct⟩ :=
     exists_fixed_quotient_with_derivative_vanishing (K := K) (I := I)
-      D 131071 169536 s m Ysrc 50558 181628 IRSProfile.domain u0 u1
+      D 131071 127295 s m Ysrc 50568 181638 IRSProfile.domain u0 u1
       F.1 hF hdiv (by decide) hshape hsource hcapacity
       selected Gamma hdegree hagreement
   have hwQ := nested_mem_weights hQbox hQ
@@ -266,50 +265,50 @@ private theorem reconstruct_mem_low_of_power
   omega
 
 private theorem sourceC_power_count
-    (j : ℕ) (hjpos : 1 ≤ j) (hjcap : j ≤ 7)
+    (j : ℕ) (hjpos : 1 ≤ j) (hjcap : j ≤ 6)
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
-    (v : ConstraintKernel (K := K) 39050020 131071 169536 63 215
+    (v : ConstraintKernel (K := K) 33784668 131071 127295 55 186
       IRSProfile.domain u0 u1)
     (Q : P4) (hQ : Q ≠ 0)
-    (heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ j * Q)
+    (heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ j * Q)
     (hcQ : wt (contactWeights 131071) Q <
-      39050020 - j * 50558 - j * wt (contactWeights 131071) F.1)
+      33784668 - j * 50568 - j * wt (contactWeights 131071) F.1)
     (htQ : wt residualTotalWeights Q ≤
-      169536 - j * wt residualTotalWeights F.1)
+      127295 - j * wt residualTotalWeights F.1)
     (hyQ : wt residualYSWeights Q ≤
-      297 - j * wt residualYSWeights F.1)
+      257 - j * wt residualYSWeights F.1)
     (hrQ : wt residualSWeights Q ≤
-      63 - j * wt residualSWeights F.1)
+      55 - j * wt residualSWeights F.1)
     (hrel : IsRelPrime F.1 Q)
     (hgate : PairGates (stagePair sourceC (box c) j)) :
     (regularSeeds H selected Gamma F).card ≤ stageCost sourceC (box c) j := by
   classical
-  have hlow : reconstruct K 39050020 131071 169536 63 v.1 ∈
-      globalCoefficientBox K (39050020 - j * 50558) 131071 169536 63 :=
+  have hlow : reconstruct K 33784668 131071 127295 55 v.1 ∈
+      globalCoefficientBox K (33784668 - j * 50568) 131071 127295 55 :=
     reconstruct_mem_low_of_power IRSProfile.domain u0 u1 v F.1 Q heq
       (by decide) (by omega) hcQ
   obtain ⟨hr, hylo, _hyhi, htlo, _hthi⟩ := factor_bounds_of_cell H F c hcell
   have hQT : wt residualTotalWeights Q ≤ stageT (box c) j := by
     apply htQ.trans
-    change 169536 - j * wt residualTotalWeights F.1 ≤
-      169536 - j * (box c).factorT
-    exact Nat.sub_le_sub_left (Nat.mul_le_mul_left j htlo) 169536
+    change 127295 - j * wt residualTotalWeights F.1 ≤
+      127295 - j * (box c).factorT
+    exact Nat.sub_le_sub_left (Nat.mul_le_mul_left j htlo) 127295
   have hQY : wt residualYSWeights Q ≤ stageY sourceC (box c) j := by
     apply hyQ.trans
-    change 297 - j * wt residualYSWeights F.1 ≤ 297 - j * (box c).ylo
-    exact Nat.sub_le_sub_left (Nat.mul_le_mul_left j hylo) 297
+    change 257 - j * wt residualYSWeights F.1 ≤ 257 - j * (box c).ylo
+    exact Nat.sub_le_sub_left (Nat.mul_le_mul_left j hylo) 257
   have hQR : wt residualSWeights Q ≤ stageR sourceC (box c) j := by
     apply hrQ.trans
-    change 63 - j * wt residualSWeights F.1 ≤ 63 - j * (box c).r
+    change 55 - j * wt residualSWeights F.1 ≤ 55 - j * (box c).r
     rw [hr]
   have htwo : (2 : K) ≠ 0 := by
     intro hz
@@ -336,11 +335,6 @@ private theorem sourceC_power_count
     have hdvd : 2130706433 ∣ 720 :=
       (CharP.cast_eq_zero_iff K 2130706433 720).mp hz
     norm_num at hdvd
-  have h5040 : (5040 : K) ≠ 0 := by
-    intro hz
-    have hdvd : 2130706433 ∣ 5040 :=
-      (CharP.cast_eq_zero_iff K 2130706433 5040).mp hz
-    norm_num at hdvd
   interval_cases j
   · have hQzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
         RCN319.specialization K (selected gamma) gamma Q = 0 := by
@@ -348,17 +342,17 @@ private theorem sourceC_power_count
       have hgammaG := regularSeeds_subset H selected Gamma F hgamma
       let support := (Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181628 ≤ support.card := hagreement gamma hgammaG
-      have hcap : 39050020 - 50558 ≤
-          (215 - 1) * support.card + (131071 - 1) :=
+      have hcard : 181638 ≤ support.card := hagreement gamma hgammaG
+      have hcap : 33784668 - 50568 ≤
+          (186 - 1) * support.card + (131071 - 1) :=
         LocatorAuxiliaryArithmetic.auxiliary176_capacity.trans
-          (Nat.add_le_add_right (Nat.mul_le_mul_left (215 - 1) hcard) _)
+          (Nat.add_le_add_right (Nat.mul_le_mul_left (186 - 1) hcard) _)
       have hvalues : ∀ i ∈ support,
           (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i := by
         intro i hi
         exact (Finset.mem_filter.mp hi).2
       have hder := specialization_pderiv_R_eq_zero_of_kernel_low_box
-        39050020 (39050020 - 50558) 131071 169536 63 215
+        33784668 (33784668 - 50568) 131071 127295 55 186
         IRSProfile.domain u0 u1 v hlow (selected gamma) gamma support
         (by decide) (hdegree gamma hgammaG) hcap hvalues
       obtain ⟨hFzero, hregular⟩ := (Finset.mem_filter.mp hgamma).2
@@ -378,20 +372,20 @@ private theorem sourceC_power_count
       have hgammaG := regularSeeds_subset H selected Gamma F hgamma
       let support := (Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181628 ≤ support.card := hagreement gamma hgammaG
-      have hcap : 39050020 - 2 * 50558 ≤
-          (215 - 2) * support.card + 2 * (131071 - 1) :=
+      have hcard : 181638 ≤ support.card := hagreement gamma hgammaG
+      have hcap : 33784668 - 2 * 50568 ≤
+          (186 - 2) * support.card + 2 * (131071 - 1) :=
         LocatorAuxiliaryArithmetic.auxiliary176_double_capacity.trans
-          (Nat.add_le_add_right (Nat.mul_le_mul_left (215 - 2) hcard) _)
+          (Nat.add_le_add_right (Nat.mul_le_mul_left (186 - 2) hcard) _)
       have hvalues : ∀ i ∈ support,
           (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i := by
         intro i hi
         exact (Finset.mem_filter.mp hi).2
       have hder := LocatorDoubleSquareAvoidance.specialization_pderiv_R2_eq_zero_of_kernel_low_box
-        39050020 (39050020 - 2 * 50558) 131071 169536 63 215
+        33784668 (33784668 - 2 * 50568) 131071 127295 55 186
         IRSProfile.domain u0 u1 v hlow (selected gamma) gamma support
         (by decide) (hdegree gamma hgammaG) hcap hvalues
-      have heq' : reconstruct K 39050020 131071 169536 63 v.1 =
+      have heq' : reconstruct K 33784668 131071 127295 55 v.1 =
           F.1 * (F.1 * Q) := by rw [heq]; ring
       rw [heq'] at hder
       obtain ⟨hFzero, hregular⟩ := (Finset.mem_filter.mp hgamma).2
@@ -405,21 +399,21 @@ private theorem sourceC_power_count
       have hgammaG := regularSeeds_subset H selected Gamma F hgamma
       let support := (Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181628 ≤ support.card := hagreement gamma hgammaG
-      have hcap : 39050020 - 3 * 50558 ≤
-          (215 - 3) * support.card + 3 * (131071 - 1) := by
-        apply (show 39050020 - 3 * 50558 ≤
-          (215 - 3) * 181628 + 3 * (131071 - 1) by decide).trans
-        exact Nat.add_le_add_right (Nat.mul_le_mul_left (215 - 3) hcard) _
+      have hcard : 181638 ≤ support.card := hagreement gamma hgammaG
+      have hcap : 33784668 - 3 * 50568 ≤
+          (186 - 3) * support.card + 3 * (131071 - 1) := by
+        apply (show 33784668 - 3 * 50568 ≤
+          (186 - 3) * 181638 + 3 * (131071 - 1) by decide).trans
+        exact Nat.add_le_add_right (Nat.mul_le_mul_left (186 - 3) hcard) _
       have hvalues : ∀ i ∈ support,
           (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i := by
         intro i hi
         exact (Finset.mem_filter.mp hi).2
       have hder := LocatorTripleCubeAvoidance.specialization_pderiv_R3_eq_zero_of_kernel_low_box
-        39050020 (39050020 - 3 * 50558) 131071 169536 63 215
+        33784668 (33784668 - 3 * 50568) 131071 127295 55 186
         IRSProfile.domain u0 u1 v hlow (selected gamma) gamma support
         (by decide) (hdegree gamma hgammaG) hcap hvalues
-      have heq' : reconstruct K 39050020 131071 169536 63 v.1 =
+      have heq' : reconstruct K 33784668 131071 127295 55 v.1 =
           F.1 * (F.1 * (F.1 * Q)) := by rw [heq]; ring
       rw [heq'] at hder
       obtain ⟨hFzero, hregular⟩ := (Finset.mem_filter.mp hgamma).2
@@ -433,21 +427,21 @@ private theorem sourceC_power_count
       have hgammaG := regularSeeds_subset H selected Gamma F hgamma
       let support := (Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181628 ≤ support.card := hagreement gamma hgammaG
-      have hcap : 39050020 - 4 * 50558 ≤
-          (215 - 4) * support.card + 4 * (131071 - 1) := by
-        apply (show 39050020 - 4 * 50558 ≤
-          (215 - 4) * 181628 + 4 * (131071 - 1) by decide).trans
-        exact Nat.add_le_add_right (Nat.mul_le_mul_left (215 - 4) hcard) _
+      have hcard : 181638 ≤ support.card := hagreement gamma hgammaG
+      have hcap : 33784668 - 4 * 50568 ≤
+          (186 - 4) * support.card + 4 * (131071 - 1) := by
+        apply (show 33784668 - 4 * 50568 ≤
+          (186 - 4) * 181638 + 4 * (131071 - 1) by decide).trans
+        exact Nat.add_le_add_right (Nat.mul_le_mul_left (186 - 4) hcard) _
       have hvalues : ∀ i ∈ support,
           (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i := by
         intro i hi
         exact (Finset.mem_filter.mp hi).2
       have hder := LocatorFourthPowerAvoidance.specialization_pderiv_R4_eq_zero_of_kernel_low_box
-        39050020 (39050020 - 4 * 50558) 131071 169536 63 215
+        33784668 (33784668 - 4 * 50568) 131071 127295 55 186
         IRSProfile.domain u0 u1 v hlow (selected gamma) gamma support
         (by decide) (hdegree gamma hgammaG) hcap hvalues
-      have heq' : reconstruct K 39050020 131071 169536 63 v.1 =
+      have heq' : reconstruct K 33784668 131071 127295 55 v.1 =
           F.1 * (F.1 * (F.1 * (F.1 * Q))) := by rw [heq]; ring
       rw [heq'] at hder
       obtain ⟨hFzero, hregular⟩ := (Finset.mem_filter.mp hgamma).2
@@ -461,21 +455,21 @@ private theorem sourceC_power_count
       have hgammaG := regularSeeds_subset H selected Gamma F hgamma
       let support := (Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181628 ≤ support.card := hagreement gamma hgammaG
-      have hcap : 39050020 - 5 * 50558 ≤
-          (215 - 5) * support.card + 5 * (131071 - 1) := by
-        apply (show 39050020 - 5 * 50558 ≤
-          (215 - 5) * 181628 + 5 * (131071 - 1) by decide).trans
-        exact Nat.add_le_add_right (Nat.mul_le_mul_left (215 - 5) hcard) _
+      have hcard : 181638 ≤ support.card := hagreement gamma hgammaG
+      have hcap : 33784668 - 5 * 50568 ≤
+          (186 - 5) * support.card + 5 * (131071 - 1) := by
+        apply (show 33784668 - 5 * 50568 ≤
+          (186 - 5) * 181638 + 5 * (131071 - 1) by decide).trans
+        exact Nat.add_le_add_right (Nat.mul_le_mul_left (186 - 5) hcard) _
       have hvalues : ∀ i ∈ support,
           (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i := by
         intro i hi
         exact (Finset.mem_filter.mp hi).2
       have hder := LocatorFifthPowerAvoidance.specialization_pderiv_R5_eq_zero_of_kernel_low_box
-        39050020 (39050020 - 5 * 50558) 131071 169536 63 215
+        33784668 (33784668 - 5 * 50568) 131071 127295 55 186
         IRSProfile.domain u0 u1 v hlow (selected gamma) gamma support
         (by decide) (hdegree gamma hgammaG) hcap hvalues
-      have heq' : reconstruct K 39050020 131071 169536 63 v.1 =
+      have heq' : reconstruct K 33784668 131071 127295 55 v.1 =
           F.1 * (F.1 * (F.1 * (F.1 * (F.1 * Q)))) := by rw [heq]; ring
       rw [heq'] at hder
       obtain ⟨hFzero, hregular⟩ := (Finset.mem_filter.mp hgamma).2
@@ -489,21 +483,21 @@ private theorem sourceC_power_count
       have hgammaG := regularSeeds_subset H selected Gamma F hgamma
       let support := (Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181628 ≤ support.card := hagreement gamma hgammaG
-      have hcap : 39050020 - 6 * 50558 ≤
-          (215 - 6) * support.card + 6 * (131071 - 1) := by
-        apply (show 39050020 - 6 * 50558 ≤
-          (215 - 6) * 181628 + 6 * (131071 - 1) by decide).trans
-        exact Nat.add_le_add_right (Nat.mul_le_mul_left (215 - 6) hcard) _
+      have hcard : 181638 ≤ support.card := hagreement gamma hgammaG
+      have hcap : 33784668 - 6 * 50568 ≤
+          (186 - 6) * support.card + 6 * (131071 - 1) := by
+        apply (show 33784668 - 6 * 50568 ≤
+          (186 - 6) * 181638 + 6 * (131071 - 1) by decide).trans
+        exact Nat.add_le_add_right (Nat.mul_le_mul_left (186 - 6) hcard) _
       have hvalues : ∀ i ∈ support,
           (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i := by
         intro i hi
         exact (Finset.mem_filter.mp hi).2
       have hder := LocatorSixthPowerAvoidance.specialization_pderiv_R6_eq_zero_of_kernel_low_box
-        39050020 (39050020 - 6 * 50558) 131071 169536 63 215
+        33784668 (33784668 - 6 * 50568) 131071 127295 55 186
         IRSProfile.domain u0 u1 v hlow (selected gamma) gamma support
         (by decide) (hdegree gamma hgammaG) hcap hvalues
-      have heq' : reconstruct K 39050020 131071 169536 63 v.1 =
+      have heq' : reconstruct K 33784668 131071 127295 55 v.1 =
           F.1 * (F.1 * (F.1 * (F.1 * (F.1 * (F.1 * Q))))) := by rw [heq]; ring
       rw [heq'] at hder
       obtain ⟨hFzero, hregular⟩ := (Finset.mem_filter.mp hgamma).2
@@ -511,41 +505,9 @@ private theorem sourceC_power_count
         (selected gamma) gamma F.1 Q h720 hFzero hregular hder
     exact count_le_stageCost u0 u1 H selected Gamma hdegree hagreement hno
       F c hcell sourceC 6 Q hQ hQT hQY hQR hrel hgate hQzero
-  · have hQzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
-        RCN319.specialization K (selected gamma) gamma Q = 0 := by
-      intro gamma hgamma
-      have hgammaG := regularSeeds_subset H selected Gamma F hgamma
-      let support := (Finset.univ : Finset I).filter (fun i =>
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181628 ≤ support.card := hagreement gamma hgammaG
-      have hcap : 39050020 - 7 * 50558 ≤
-          (215 - 7) * support.card + 7 * (131071 - 1) := by
-        apply (show 39050020 - 7 * 50558 ≤
-          (215 - 7) * 181628 + 7 * (131071 - 1) by decide).trans
-        exact Nat.add_le_add_right (Nat.mul_le_mul_left (215 - 7) hcard) _
-      have hvalues : ∀ i ∈ support,
-          (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i := by
-        intro i hi
-        exact (Finset.mem_filter.mp hi).2
-      have hder :=
-        LocatorSeventhPowerAvoidance.specialization_pderiv_R7_eq_zero_of_kernel_low_box
-          39050020 (39050020 - 7 * 50558) 131071 169536 63 215
-          IRSProfile.domain u0 u1 v hlow (selected gamma) gamma support
-          (by decide) (hdegree gamma hgammaG) hcap hvalues
-      have heq' : reconstruct K 39050020 131071 169536 63 v.1 =
-          F.1 * (F.1 * (F.1 * (F.1 * (F.1 * (F.1 * (F.1 * Q)))))) := by
-        rw [heq]
-        ring
-      rw [heq'] at hder
-      obtain ⟨hFzero, hregular⟩ := (Finset.mem_filter.mp hgamma).2
-      exact
-        LocatorSeventhPowerAvoidance.specialization_eq_zero_of_pderiv_R7_seventh_product
-          (selected gamma) gamma F.1 Q h5040 hFzero hregular hder
-    exact count_le_stageCost u0 u1 H selected Gamma hdegree hagreement hno
-      F c hcell sourceC 7 Q hQ hQT hQY hQR hrel hgate hQzero
 
 private abbrev KernelC (u0 u1 : I → K) :=
-  ConstraintKernel (K := K) 39050020 131071 169536 63 215
+  ConstraintKernel (K := K) 33784668 131071 127295 55 186
     IRSProfile.domain u0 u1
 
 private theorem sub_two_mul (a b : ℕ) : a - 2 * b = a - b - b := by omega
@@ -553,70 +515,69 @@ private theorem sub_three_mul (a b : ℕ) : a - 3 * b = a - b - 2 * b := by omeg
 private theorem sub_four_mul (a b : ℕ) : a - 4 * b = a - b - 3 * b := by omega
 private theorem sub_five_mul (a b : ℕ) : a - 5 * b = a - b - 4 * b := by omega
 private theorem sub_six_mul (a b : ℕ) : a - 6 * b = a - b - 5 * b := by omega
-private theorem sub_seven_mul (a b : ℕ) : a - 7 * b = a - b - 6 * b := by omega
 
 private theorem sourceC_count_k2_core
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (q : KernelC u0 u1 →ₗ[K] P4) (hqinj : Function.Injective q)
-    (hprod : ∀ v, reconstruct K 39050020 131071 169536 63 v.1 = F.1 * q v)
+    (hprod : ∀ v, reconstruct K 33784668 131071 127295 55 v.1 = F.1 * q v)
     (hqNested : ∀ v, q v ∈ nestedCoefficientBox K
-      (39050020 - wt (contactWeights 131071) F.1) 131071
-      (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1)
-      (63 - wt residualSWeights F.1))
-    (hTstage : ∀ j, 169536 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j)
-    (hYstage : ∀ j, 297 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j)
-    (hRstage : ∀ j, 63 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j)
-    (hbandLe : ∀ j, 50558 * channelCount
-      (169536 - j * wt residualTotalWeights F.1)
-      (297 - j * wt residualYSWeights F.1)
-      (63 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j)
-    (hgapLe : 325815967324336 ≤ Module.finrank K
-      (ConstraintKernel (K := K) 39050020 131071 169536 63 215
+      (33784668 - wt (contactWeights 131071) F.1) 131071
+      (127295 - wt residualTotalWeights F.1)
+      (257 - wt residualYSWeights F.1)
+      (55 - wt residualSWeights F.1))
+    (hTstage : ∀ j, 127295 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j)
+    (hYstage : ∀ j, 257 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j)
+    (hRstage : ∀ j, 55 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j)
+    (hbandLe : ∀ j, 50568 * channelCount
+      (127295 - j * wt residualTotalWeights F.1)
+      (257 - j * wt residualYSWeights F.1)
+      (55 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j)
+    (hgapLe : 153048067600638 ≤ Module.finrank K
+      (ConstraintKernel (K := K) 33784668 131071 127295 55 186
         IRSProfile.domain u0 u1))
-    (hwidth : 39050020 - wt (contactWeights 131071) F.1 ≤
-      (39050020 - 50558 - wt (contactWeights 131071) F.1) + 50558)
+    (hwidth : 33784668 - wt (contactWeights 131071) F.1 ≤
+      (33784668 - 50568 - wt (contactWeights 131071) F.1) + 50568)
     (hfit : RouteFits sourceC 2 (box c)) :
     (regularSeeds H selected Gamma F).card ≤ routeCost sourceC (box c) 2 := by
   classical
   obtain ⟨_hkpos, _hkcap, _hyroom, _hrroom, _hshapeRoute, hband,
     hterminal, hgates, _hrate⟩ := hfit
   have hsource :
-      50558 * channelCount
-          (169536 - wt residualTotalWeights F.1)
-          (297 - wt residualYSWeights F.1)
-          (63 - wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 2 * wt residualTotalWeights F.1)
-          (297 - 2 * wt residualYSWeights F.1)
-          (63 - 2 * wt residualSWeights F.1) <
+      50568 * channelCount
+          (127295 - wt residualTotalWeights F.1)
+          (257 - wt residualYSWeights F.1)
+          (55 - wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 2 * wt residualTotalWeights F.1)
+          (257 - 2 * wt residualYSWeights F.1)
+          (55 - 2 * wt residualSWeights F.1) <
       Module.finrank K (ConstraintKernel (K := K)
-        39050020 131071 169536 63 215 IRSProfile.domain u0 u1) := by
+        33784668 131071 127295 55 186 IRSProfile.domain u0 u1) := by
     apply (Nat.add_le_add
       (by simpa only [Nat.one_mul] using hbandLe 1) (hbandLe 2)).trans_lt
     have hstages : stageBand sourceC (box c) 1 +
-        stageBand sourceC (box c) 2 < 325815967324336 := by
+        stageBand sourceC (box c) 2 < 153048067600638 := by
       simpa only [bandSum, sourceC] using hband
     exact hstages.trans_le hgapLe
   rcases LocatorDoubleSquareAvoidance.exists_first_low_not_dvd_or_second_low
-      (39050020 - wt (contactWeights 131071) F.1)
-      (39050020 - 50558 - wt (contactWeights 131071) F.1)
-      131071 50558 (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1) (63 - wt residualSWeights F.1)
+      (33784668 - wt (contactWeights 131071) F.1)
+      (33784668 - 50568 - wt (contactWeights 131071) F.1)
+      131071 50568 (127295 - wt residualTotalWeights F.1)
+      (257 - wt residualYSWeights F.1) (55 - wt residualSWeights F.1)
       hwidth q hqinj hqNested F.1 hF
         (by simpa only [sub_two_mul] using hsource) with hfirst | hsecond
   · obtain ⟨v, _hv, hQ, hQbox, hnot⟩ := hfirst
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 =
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 =
         F.1 ^ 1 * q v := by simpa only [pow_one] using hprod v
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
       |>.isRelPrime_iff_not_dvd.mpr hnot
@@ -626,7 +587,7 @@ private theorem sourceC_count_k2_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hQbox⟩ := hsecond
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 2 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 2 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := terminal_relPrime H F c sourceC 2 Q hQ hcell
@@ -642,71 +603,71 @@ private theorem sourceC_count_k3_core
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (q : KernelC u0 u1 →ₗ[K] P4) (hqinj : Function.Injective q)
-    (hprod : ∀ v, reconstruct K 39050020 131071 169536 63 v.1 = F.1 * q v)
+    (hprod : ∀ v, reconstruct K 33784668 131071 127295 55 v.1 = F.1 * q v)
     (hqNested : ∀ v, q v ∈ nestedCoefficientBox K
-      (39050020 - wt (contactWeights 131071) F.1) 131071
-      (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1)
-      (63 - wt residualSWeights F.1))
-    (hTstage : ∀ j, 169536 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j)
-    (hYstage : ∀ j, 297 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j)
-    (hRstage : ∀ j, 63 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j)
-    (hbandLe : ∀ j, 50558 * channelCount
-      (169536 - j * wt residualTotalWeights F.1)
-      (297 - j * wt residualYSWeights F.1)
-      (63 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j)
-    (hgapLe : 325815967324336 ≤ Module.finrank K
-      (ConstraintKernel (K := K) 39050020 131071 169536 63 215
+      (33784668 - wt (contactWeights 131071) F.1) 131071
+      (127295 - wt residualTotalWeights F.1)
+      (257 - wt residualYSWeights F.1)
+      (55 - wt residualSWeights F.1))
+    (hTstage : ∀ j, 127295 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j)
+    (hYstage : ∀ j, 257 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j)
+    (hRstage : ∀ j, 55 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j)
+    (hbandLe : ∀ j, 50568 * channelCount
+      (127295 - j * wt residualTotalWeights F.1)
+      (257 - j * wt residualYSWeights F.1)
+      (55 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j)
+    (hgapLe : 153048067600638 ≤ Module.finrank K
+      (ConstraintKernel (K := K) 33784668 131071 127295 55 186
         IRSProfile.domain u0 u1))
-    (hwidth : 39050020 - wt (contactWeights 131071) F.1 ≤
-      (39050020 - 50558 - wt (contactWeights 131071) F.1) + 50558)
+    (hwidth : 33784668 - wt (contactWeights 131071) F.1 ≤
+      (33784668 - 50568 - wt (contactWeights 131071) F.1) + 50568)
     (hfit : RouteFits sourceC 3 (box c)) :
     (regularSeeds H selected Gamma F).card ≤ routeCost sourceC (box c) 3 := by
   classical
   obtain ⟨_hkpos, _hkcap, _hyroom, _hrroom, _hshapeRoute, hband,
     hterminal, hgates, _hrate⟩ := hfit
   have hsource :
-      50558 * channelCount
-          (169536 - wt residualTotalWeights F.1)
-          (297 - wt residualYSWeights F.1)
-          (63 - wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 2 * wt residualTotalWeights F.1)
-          (297 - 2 * wt residualYSWeights F.1)
-          (63 - 2 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 3 * wt residualTotalWeights F.1)
-          (297 - 3 * wt residualYSWeights F.1)
-          (63 - 3 * wt residualSWeights F.1) <
+      50568 * channelCount
+          (127295 - wt residualTotalWeights F.1)
+          (257 - wt residualYSWeights F.1)
+          (55 - wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 2 * wt residualTotalWeights F.1)
+          (257 - 2 * wt residualYSWeights F.1)
+          (55 - 2 * wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 3 * wt residualTotalWeights F.1)
+          (257 - 3 * wt residualYSWeights F.1)
+          (55 - 3 * wt residualSWeights F.1) <
       Module.finrank K (ConstraintKernel (K := K)
-        39050020 131071 169536 63 215 IRSProfile.domain u0 u1) := by
+        33784668 131071 127295 55 186 IRSProfile.domain u0 u1) := by
     apply (Nat.add_le_add (Nat.add_le_add
       (by simpa only [Nat.one_mul] using hbandLe 1) (hbandLe 2))
       (hbandLe 3)).trans_lt
     have hstages : stageBand sourceC (box c) 1 +
           stageBand sourceC (box c) 2 + stageBand sourceC (box c) 3 <
-        325815967324336 := by
+        153048067600638 := by
       simpa only [bandSum, sourceC] using hband
     exact hstages.trans_le hgapLe
   rcases LocatorTripleCubeAvoidance.exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low
-      (39050020 - wt (contactWeights 131071) F.1)
-      (39050020 - 50558 - wt (contactWeights 131071) F.1)
-      131071 50558 (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1) (63 - wt residualSWeights F.1)
+      (33784668 - wt (contactWeights 131071) F.1)
+      (33784668 - 50568 - wt (contactWeights 131071) F.1)
+      131071 50568 (127295 - wt residualTotalWeights F.1)
+      (257 - wt residualYSWeights F.1) (55 - wt residualSWeights F.1)
       hwidth q hqinj hqNested F.1 hF
         (by simpa only [sub_two_mul, sub_three_mul] using hsource) with
       hfirst | hsecond | hthird
   · obtain ⟨v, _hv, hQ, hQbox, hnot⟩ := hfirst
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 =
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 =
         F.1 ^ 1 * q v := by simpa only [pow_one] using hprod v
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
       |>.isRelPrime_iff_not_dvd.mpr hnot
@@ -716,7 +677,7 @@ private theorem sourceC_count_k3_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hsecond
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 2 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 2 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
@@ -727,7 +688,7 @@ private theorem sourceC_count_k3_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hQbox⟩ := hthird
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 3 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 3 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := terminal_relPrime H F c sourceC 3 Q hQ hcell
@@ -743,76 +704,76 @@ private theorem sourceC_count_k4_core
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (q : KernelC u0 u1 →ₗ[K] P4) (hqinj : Function.Injective q)
-    (hprod : ∀ v, reconstruct K 39050020 131071 169536 63 v.1 = F.1 * q v)
+    (hprod : ∀ v, reconstruct K 33784668 131071 127295 55 v.1 = F.1 * q v)
     (hqNested : ∀ v, q v ∈ nestedCoefficientBox K
-      (39050020 - wt (contactWeights 131071) F.1) 131071
-      (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1)
-      (63 - wt residualSWeights F.1))
-    (hTstage : ∀ j, 169536 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j)
-    (hYstage : ∀ j, 297 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j)
-    (hRstage : ∀ j, 63 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j)
-    (hbandLe : ∀ j, 50558 * channelCount
-      (169536 - j * wt residualTotalWeights F.1)
-      (297 - j * wt residualYSWeights F.1)
-      (63 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j)
-    (hgapLe : 325815967324336 ≤ Module.finrank K
-      (ConstraintKernel (K := K) 39050020 131071 169536 63 215
+      (33784668 - wt (contactWeights 131071) F.1) 131071
+      (127295 - wt residualTotalWeights F.1)
+      (257 - wt residualYSWeights F.1)
+      (55 - wt residualSWeights F.1))
+    (hTstage : ∀ j, 127295 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j)
+    (hYstage : ∀ j, 257 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j)
+    (hRstage : ∀ j, 55 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j)
+    (hbandLe : ∀ j, 50568 * channelCount
+      (127295 - j * wt residualTotalWeights F.1)
+      (257 - j * wt residualYSWeights F.1)
+      (55 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j)
+    (hgapLe : 153048067600638 ≤ Module.finrank K
+      (ConstraintKernel (K := K) 33784668 131071 127295 55 186
         IRSProfile.domain u0 u1))
-    (hwidth : 39050020 - wt (contactWeights 131071) F.1 ≤
-      (39050020 - 50558 - wt (contactWeights 131071) F.1) + 50558)
+    (hwidth : 33784668 - wt (contactWeights 131071) F.1 ≤
+      (33784668 - 50568 - wt (contactWeights 131071) F.1) + 50568)
     (hfit : RouteFits sourceC 4 (box c)) :
     (regularSeeds H selected Gamma F).card ≤ routeCost sourceC (box c) 4 := by
   classical
   obtain ⟨_hkpos, _hkcap, _hyroom, _hrroom, _hshapeRoute, hband,
     hterminal, hgates, _hrate⟩ := hfit
   have hsource :
-      50558 * channelCount
-          (169536 - wt residualTotalWeights F.1)
-          (297 - wt residualYSWeights F.1)
-          (63 - wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 2 * wt residualTotalWeights F.1)
-          (297 - 2 * wt residualYSWeights F.1)
-          (63 - 2 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 3 * wt residualTotalWeights F.1)
-          (297 - 3 * wt residualYSWeights F.1)
-          (63 - 3 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 4 * wt residualTotalWeights F.1)
-          (297 - 4 * wt residualYSWeights F.1)
-          (63 - 4 * wt residualSWeights F.1) <
+      50568 * channelCount
+          (127295 - wt residualTotalWeights F.1)
+          (257 - wt residualYSWeights F.1)
+          (55 - wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 2 * wt residualTotalWeights F.1)
+          (257 - 2 * wt residualYSWeights F.1)
+          (55 - 2 * wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 3 * wt residualTotalWeights F.1)
+          (257 - 3 * wt residualYSWeights F.1)
+          (55 - 3 * wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 4 * wt residualTotalWeights F.1)
+          (257 - 4 * wt residualYSWeights F.1)
+          (55 - 4 * wt residualSWeights F.1) <
       Module.finrank K (ConstraintKernel (K := K)
-        39050020 131071 169536 63 215 IRSProfile.domain u0 u1) := by
+        33784668 131071 127295 55 186 IRSProfile.domain u0 u1) := by
     apply (Nat.add_le_add
       (Nat.add_le_add (Nat.add_le_add
         (by simpa only [Nat.one_mul] using hbandLe 1) (hbandLe 2)) (hbandLe 3))
       (hbandLe 4)).trans_lt
     have hstages : stageBand sourceC (box c) 1 +
             stageBand sourceC (box c) 2 + stageBand sourceC (box c) 3 +
-          stageBand sourceC (box c) 4 < 325815967324336 := by
+          stageBand sourceC (box c) 4 < 153048067600638 := by
       simpa only [bandSum, sourceC] using hband
     exact hstages.trans_le hgapLe
   rcases LocatorFourthPowerAvoidance.exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_fourth_low
-      (39050020 - wt (contactWeights 131071) F.1)
-      (39050020 - 50558 - wt (contactWeights 131071) F.1)
-      131071 50558 (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1) (63 - wt residualSWeights F.1)
+      (33784668 - wt (contactWeights 131071) F.1)
+      (33784668 - 50568 - wt (contactWeights 131071) F.1)
+      131071 50568 (127295 - wt residualTotalWeights F.1)
+      (257 - wt residualYSWeights F.1) (55 - wt residualSWeights F.1)
       hwidth q hqinj hqNested F.1 hF
         (by simpa only [sub_two_mul, sub_three_mul, sub_four_mul] using hsource) with
     hfirst | hsecond | hthird | hfourth
   · obtain ⟨v, _hv, hQ, hQbox, hnot⟩ := hfirst
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 =
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 =
         F.1 ^ 1 * q v := by simpa only [pow_one] using hprod v
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
       |>.isRelPrime_iff_not_dvd.mpr hnot
@@ -822,7 +783,7 @@ private theorem sourceC_count_k4_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hsecond
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 2 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 2 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
@@ -833,7 +794,7 @@ private theorem sourceC_count_k4_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hthird
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 3 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 3 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
@@ -844,7 +805,7 @@ private theorem sourceC_count_k4_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hQbox⟩ := hfourth
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 4 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 4 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := terminal_relPrime H F c sourceC 4 Q hQ hcell
@@ -860,60 +821,60 @@ private theorem sourceC_count_k5_core
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (q : KernelC u0 u1 →ₗ[K] P4) (hqinj : Function.Injective q)
-    (hprod : ∀ v, reconstruct K 39050020 131071 169536 63 v.1 = F.1 * q v)
+    (hprod : ∀ v, reconstruct K 33784668 131071 127295 55 v.1 = F.1 * q v)
     (hqNested : ∀ v, q v ∈ nestedCoefficientBox K
-      (39050020 - wt (contactWeights 131071) F.1) 131071
-      (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1)
-      (63 - wt residualSWeights F.1))
-    (hTstage : ∀ j, 169536 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j)
-    (hYstage : ∀ j, 297 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j)
-    (hRstage : ∀ j, 63 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j)
-    (hbandLe : ∀ j, 50558 * channelCount
-      (169536 - j * wt residualTotalWeights F.1)
-      (297 - j * wt residualYSWeights F.1)
-      (63 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j)
-    (hgapLe : 325815967324336 ≤ Module.finrank K
-      (ConstraintKernel (K := K) 39050020 131071 169536 63 215
+      (33784668 - wt (contactWeights 131071) F.1) 131071
+      (127295 - wt residualTotalWeights F.1)
+      (257 - wt residualYSWeights F.1)
+      (55 - wt residualSWeights F.1))
+    (hTstage : ∀ j, 127295 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j)
+    (hYstage : ∀ j, 257 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j)
+    (hRstage : ∀ j, 55 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j)
+    (hbandLe : ∀ j, 50568 * channelCount
+      (127295 - j * wt residualTotalWeights F.1)
+      (257 - j * wt residualYSWeights F.1)
+      (55 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j)
+    (hgapLe : 153048067600638 ≤ Module.finrank K
+      (ConstraintKernel (K := K) 33784668 131071 127295 55 186
         IRSProfile.domain u0 u1))
-    (hwidth : 39050020 - wt (contactWeights 131071) F.1 ≤
-      (39050020 - 50558 - wt (contactWeights 131071) F.1) + 50558)
+    (hwidth : 33784668 - wt (contactWeights 131071) F.1 ≤
+      (33784668 - 50568 - wt (contactWeights 131071) F.1) + 50568)
     (hfit : RouteFits sourceC 5 (box c)) :
     (regularSeeds H selected Gamma F).card ≤ routeCost sourceC (box c) 5 := by
   classical
   obtain ⟨_hkpos, _hkcap, _hyroom, _hrroom, _hshapeRoute, hband,
     hterminal, hgates, _hrate⟩ := hfit
   have hsource :
-      50558 * channelCount
-          (169536 - wt residualTotalWeights F.1)
-          (297 - wt residualYSWeights F.1)
-          (63 - wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 2 * wt residualTotalWeights F.1)
-          (297 - 2 * wt residualYSWeights F.1)
-          (63 - 2 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 3 * wt residualTotalWeights F.1)
-          (297 - 3 * wt residualYSWeights F.1)
-          (63 - 3 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 4 * wt residualTotalWeights F.1)
-          (297 - 4 * wt residualYSWeights F.1)
-          (63 - 4 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 5 * wt residualTotalWeights F.1)
-          (297 - 5 * wt residualYSWeights F.1)
-          (63 - 5 * wt residualSWeights F.1) <
+      50568 * channelCount
+          (127295 - wt residualTotalWeights F.1)
+          (257 - wt residualYSWeights F.1)
+          (55 - wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 2 * wt residualTotalWeights F.1)
+          (257 - 2 * wt residualYSWeights F.1)
+          (55 - 2 * wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 3 * wt residualTotalWeights F.1)
+          (257 - 3 * wt residualYSWeights F.1)
+          (55 - 3 * wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 4 * wt residualTotalWeights F.1)
+          (257 - 4 * wt residualYSWeights F.1)
+          (55 - 4 * wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 5 * wt residualTotalWeights F.1)
+          (257 - 5 * wt residualYSWeights F.1)
+          (55 - 5 * wt residualSWeights F.1) <
       Module.finrank K (ConstraintKernel (K := K)
-        39050020 131071 169536 63 215 IRSProfile.domain u0 u1) := by
+        33784668 131071 127295 55 186 IRSProfile.domain u0 u1) := by
     apply (Nat.add_le_add
       (Nat.add_le_add
         (Nat.add_le_add (Nat.add_le_add
@@ -922,21 +883,21 @@ private theorem sourceC_count_k5_core
     have hstages : stageBand sourceC (box c) 1 +
               stageBand sourceC (box c) 2 + stageBand sourceC (box c) 3 +
             stageBand sourceC (box c) 4 + stageBand sourceC (box c) 5 <
-        325815967324336 := by
+        153048067600638 := by
       simpa only [bandSum, sourceC] using hband
     exact hstages.trans_le hgapLe
   rcases LocatorFifthPowerAvoidance.exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_fourth_low_not_dvd_or_fifth_low
-      (39050020 - wt (contactWeights 131071) F.1)
-      (39050020 - 50558 - wt (contactWeights 131071) F.1)
-      131071 50558 (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1) (63 - wt residualSWeights F.1)
+      (33784668 - wt (contactWeights 131071) F.1)
+      (33784668 - 50568 - wt (contactWeights 131071) F.1)
+      131071 50568 (127295 - wt residualTotalWeights F.1)
+      (257 - wt residualYSWeights F.1) (55 - wt residualSWeights F.1)
       hwidth q hqinj hqNested F.1 hF
         (by simpa only [sub_two_mul, sub_three_mul, sub_four_mul, sub_five_mul]
           using hsource) with
     hfirst | hsecond | hthird | hfourth | hfifth
   · obtain ⟨v, _hv, hQ, hQbox, hnot⟩ := hfirst
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 =
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 =
         F.1 ^ 1 * q v := by simpa only [pow_one] using hprod v
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
       |>.isRelPrime_iff_not_dvd.mpr hnot
@@ -946,7 +907,7 @@ private theorem sourceC_count_k5_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hsecond
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 2 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 2 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
@@ -957,7 +918,7 @@ private theorem sourceC_count_k5_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hthird
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 3 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 3 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
@@ -968,7 +929,7 @@ private theorem sourceC_count_k5_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hfourth
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 4 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 4 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
@@ -979,7 +940,7 @@ private theorem sourceC_count_k5_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hQbox⟩ := hfifth
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 5 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 5 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := terminal_relPrime H F c sourceC 5 Q hQ hcell
@@ -995,64 +956,64 @@ private theorem sourceC_count_k6_core
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (q : KernelC u0 u1 →ₗ[K] P4) (hqinj : Function.Injective q)
-    (hprod : ∀ v, reconstruct K 39050020 131071 169536 63 v.1 = F.1 * q v)
+    (hprod : ∀ v, reconstruct K 33784668 131071 127295 55 v.1 = F.1 * q v)
     (hqNested : ∀ v, q v ∈ nestedCoefficientBox K
-      (39050020 - wt (contactWeights 131071) F.1) 131071
-      (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1)
-      (63 - wt residualSWeights F.1))
-    (hTstage : ∀ j, 169536 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j)
-    (hYstage : ∀ j, 297 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j)
-    (hRstage : ∀ j, 63 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j)
-    (hbandLe : ∀ j, 50558 * channelCount
-      (169536 - j * wt residualTotalWeights F.1)
-      (297 - j * wt residualYSWeights F.1)
-      (63 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j)
-    (hgapLe : 325815967324336 ≤ Module.finrank K
-      (ConstraintKernel (K := K) 39050020 131071 169536 63 215
+      (33784668 - wt (contactWeights 131071) F.1) 131071
+      (127295 - wt residualTotalWeights F.1)
+      (257 - wt residualYSWeights F.1)
+      (55 - wt residualSWeights F.1))
+    (hTstage : ∀ j, 127295 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j)
+    (hYstage : ∀ j, 257 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j)
+    (hRstage : ∀ j, 55 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j)
+    (hbandLe : ∀ j, 50568 * channelCount
+      (127295 - j * wt residualTotalWeights F.1)
+      (257 - j * wt residualYSWeights F.1)
+      (55 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j)
+    (hgapLe : 153048067600638 ≤ Module.finrank K
+      (ConstraintKernel (K := K) 33784668 131071 127295 55 186
         IRSProfile.domain u0 u1))
-    (hwidth : 39050020 - wt (contactWeights 131071) F.1 ≤
-      (39050020 - 50558 - wt (contactWeights 131071) F.1) + 50558)
+    (hwidth : 33784668 - wt (contactWeights 131071) F.1 ≤
+      (33784668 - 50568 - wt (contactWeights 131071) F.1) + 50568)
     (hfit : RouteFits sourceC 6 (box c)) :
     (regularSeeds H selected Gamma F).card ≤ routeCost sourceC (box c) 6 := by
   classical
   obtain ⟨_hkpos, _hkcap, _hyroom, _hrroom, _hshapeRoute, hband,
     hterminal, hgates, _hrate⟩ := hfit
   have hsource :
-      50558 * channelCount
-          (169536 - wt residualTotalWeights F.1)
-          (297 - wt residualYSWeights F.1)
-          (63 - wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 2 * wt residualTotalWeights F.1)
-          (297 - 2 * wt residualYSWeights F.1)
-          (63 - 2 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 3 * wt residualTotalWeights F.1)
-          (297 - 3 * wt residualYSWeights F.1)
-          (63 - 3 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 4 * wt residualTotalWeights F.1)
-          (297 - 4 * wt residualYSWeights F.1)
-          (63 - 4 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 5 * wt residualTotalWeights F.1)
-          (297 - 5 * wt residualYSWeights F.1)
-          (63 - 5 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 6 * wt residualTotalWeights F.1)
-          (297 - 6 * wt residualYSWeights F.1)
-          (63 - 6 * wt residualSWeights F.1) <
+      50568 * channelCount
+          (127295 - wt residualTotalWeights F.1)
+          (257 - wt residualYSWeights F.1)
+          (55 - wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 2 * wt residualTotalWeights F.1)
+          (257 - 2 * wt residualYSWeights F.1)
+          (55 - 2 * wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 3 * wt residualTotalWeights F.1)
+          (257 - 3 * wt residualYSWeights F.1)
+          (55 - 3 * wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 4 * wt residualTotalWeights F.1)
+          (257 - 4 * wt residualYSWeights F.1)
+          (55 - 4 * wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 5 * wt residualTotalWeights F.1)
+          (257 - 5 * wt residualYSWeights F.1)
+          (55 - 5 * wt residualSWeights F.1) +
+        50568 * channelCount
+          (127295 - 6 * wt residualTotalWeights F.1)
+          (257 - 6 * wt residualYSWeights F.1)
+          (55 - 6 * wt residualSWeights F.1) <
       Module.finrank K (ConstraintKernel (K := K)
-        39050020 131071 169536 63 215 IRSProfile.domain u0 u1) := by
+        33784668 131071 127295 55 186 IRSProfile.domain u0 u1) := by
     apply (Nat.add_le_add
       (Nat.add_le_add
         (Nat.add_le_add
@@ -1063,14 +1024,14 @@ private theorem sourceC_count_k6_core
               stageBand sourceC (box c) 2 + stageBand sourceC (box c) 3 +
             stageBand sourceC (box c) 4 + stageBand sourceC (box c) 5 +
               stageBand sourceC (box c) 6 <
-        325815967324336 := by
+        153048067600638 := by
       simpa only [bandSum, sourceC] using hband
     exact hstages.trans_le hgapLe
   rcases LocatorSixthPowerAvoidance.exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_fourth_low_not_dvd_or_fifth_low_not_dvd_or_sixth_low
-      (39050020 - wt (contactWeights 131071) F.1)
-      (39050020 - 50558 - wt (contactWeights 131071) F.1)
-      131071 50558 (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1) (63 - wt residualSWeights F.1)
+      (33784668 - wt (contactWeights 131071) F.1)
+      (33784668 - 50568 - wt (contactWeights 131071) F.1)
+      131071 50568 (127295 - wt residualTotalWeights F.1)
+      (257 - wt residualYSWeights F.1) (55 - wt residualSWeights F.1)
       hwidth q hqinj hqNested F.1 hF
         (by simpa only [sub_two_mul, sub_three_mul, sub_four_mul, sub_five_mul,
           sub_six_mul]
@@ -1078,7 +1039,7 @@ private theorem sourceC_count_k6_core
     hfirst | hsecond | hthird | hfourth | hfifth | hsixth
   · obtain ⟨v, _hv, hQ, hQbox, hnot⟩ := hfirst
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 =
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 =
         F.1 ^ 1 * q v := by simpa only [pow_one] using hprod v
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
       |>.isRelPrime_iff_not_dvd.mpr hnot
@@ -1086,10 +1047,9 @@ private theorem sourceC_count_k6_core
       selected Gamma hdegree hagreement hno F c hcell v (q v) hQ heq
       (by omega) (by omega) (by omega) (by omega) hrel hgates.1
     exact hcount.trans (by simp [routeCost])
-
   · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hsecond
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 2 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 2 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
@@ -1100,7 +1060,7 @@ private theorem sourceC_count_k6_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hthird
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 3 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 3 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
@@ -1111,7 +1071,7 @@ private theorem sourceC_count_k6_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hfourth
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 4 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 4 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
@@ -1122,7 +1082,7 @@ private theorem sourceC_count_k6_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hfifth
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 5 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 5 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
@@ -1133,7 +1093,7 @@ private theorem sourceC_count_k6_core
     exact hcount.trans (by simp [routeCost])
   · obtain ⟨v, Q, _hv, hQ, hFQ, hQbox⟩ := hsixth
     have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 6 * Q := by
+    have heq : reconstruct K 33784668 131071 127295 55 v.1 = F.1 ^ 6 * Q := by
       rw [hprod v, ← hFQ]
       ring
     have hrel := terminal_relPrime H F c sourceC 6 Q hQ hcell
@@ -1145,197 +1105,22 @@ private theorem sourceC_count_k6_core
       (by omega) (by omega) (by omega) (by omega) hrel hgates.2.2.2.2.2
     exact hcount.trans (by simp [routeCost])
 
-private theorem sourceC_count_k7_core
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
-      ((Finset.univ : Finset I).filter (fun i =>
-        (selected gamma).eval (IRSProfile.domain i) =
-          u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
-    (F : RegularIndex H) (hF : F.1 ≠ 0)
-    (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
-    (q : KernelC u0 u1 →ₗ[K] P4) (hqinj : Function.Injective q)
-    (hprod : ∀ v, reconstruct K 39050020 131071 169536 63 v.1 = F.1 * q v)
-    (hqNested : ∀ v, q v ∈ nestedCoefficientBox K
-      (39050020 - wt (contactWeights 131071) F.1) 131071
-      (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1)
-      (63 - wt residualSWeights F.1))
-    (hTstage : ∀ j, 169536 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j)
-    (hYstage : ∀ j, 297 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j)
-    (hRstage : ∀ j, 63 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j)
-    (hbandLe : ∀ j, 50558 * channelCount
-      (169536 - j * wt residualTotalWeights F.1)
-      (297 - j * wt residualYSWeights F.1)
-      (63 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j)
-    (hgapLe : 325815967324336 ≤ Module.finrank K
-      (ConstraintKernel (K := K) 39050020 131071 169536 63 215
-        IRSProfile.domain u0 u1))
-    (hwidth : 39050020 - wt (contactWeights 131071) F.1 ≤
-      (39050020 - 50558 - wt (contactWeights 131071) F.1) + 50558)
-    (hfit : RouteFits sourceC 7 (box c)) :
-    (regularSeeds H selected Gamma F).card ≤ routeCost sourceC (box c) 7 := by
-  classical
-  obtain ⟨_hkpos, _hkcap, _hyroom, _hrroom, _hshapeRoute, hband,
-    hterminal, hgates, _hrate⟩ := hfit
-  have hsource :
-      50558 * channelCount
-          (169536 - wt residualTotalWeights F.1)
-          (297 - wt residualYSWeights F.1)
-          (63 - wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 2 * wt residualTotalWeights F.1)
-          (297 - 2 * wt residualYSWeights F.1)
-          (63 - 2 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 3 * wt residualTotalWeights F.1)
-          (297 - 3 * wt residualYSWeights F.1)
-          (63 - 3 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 4 * wt residualTotalWeights F.1)
-          (297 - 4 * wt residualYSWeights F.1)
-          (63 - 4 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 5 * wt residualTotalWeights F.1)
-          (297 - 5 * wt residualYSWeights F.1)
-          (63 - 5 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 6 * wt residualTotalWeights F.1)
-          (297 - 6 * wt residualYSWeights F.1)
-          (63 - 6 * wt residualSWeights F.1) +
-        50558 * channelCount
-          (169536 - 7 * wt residualTotalWeights F.1)
-          (297 - 7 * wt residualYSWeights F.1)
-          (63 - 7 * wt residualSWeights F.1) <
-      Module.finrank K (ConstraintKernel (K := K)
-        39050020 131071 169536 63 215 IRSProfile.domain u0 u1) := by
-    apply (Nat.add_le_add
-      (Nat.add_le_add
-        (Nat.add_le_add
-          (Nat.add_le_add
-            (Nat.add_le_add
-              (Nat.add_le_add
-                (by simpa only [Nat.one_mul] using hbandLe 1)
-                (hbandLe 2))
-              (hbandLe 3))
-            (hbandLe 4))
-          (hbandLe 5))
-        (hbandLe 6))
-      (hbandLe 7)).trans_lt
-    have hstages : stageBand sourceC (box c) 1 +
-              stageBand sourceC (box c) 2 + stageBand sourceC (box c) 3 +
-            stageBand sourceC (box c) 4 + stageBand sourceC (box c) 5 +
-          stageBand sourceC (box c) 6 + stageBand sourceC (box c) 7 <
-        325815967324336 := by
-      simpa only [bandSum, sourceC] using hband
-    exact hstages.trans_le hgapLe
-  rcases
-    LocatorSeventhPowerAvoidance.exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_fourth_low_not_dvd_or_fifth_low_not_dvd_or_sixth_low_not_dvd_or_seventh_low
-      (39050020 - wt (contactWeights 131071) F.1)
-      (39050020 - 50558 - wt (contactWeights 131071) F.1)
-      131071 50558 (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1) (63 - wt residualSWeights F.1)
-      hwidth q hqinj hqNested F.1 hF
-        (by simpa only [sub_two_mul, sub_three_mul, sub_four_mul, sub_five_mul,
-          sub_six_mul, sub_seven_mul]
-          using hsource) with
-    hfirst | hsecond | hthird | hfourth | hfifth | hsixth | hseventh
-  · obtain ⟨v, _hv, hQ, hQbox, hnot⟩ := hfirst
-    have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 =
-        F.1 ^ 1 * q v := by simpa only [pow_one] using hprod v
-    have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
-      |>.isRelPrime_iff_not_dvd.mpr hnot
-    have hcount := sourceC_power_count 1 (by decide) (by decide) u0 u1 H
-      selected Gamma hdegree hagreement hno F c hcell v (q v) hQ heq
-      (by omega) (by omega) (by omega) (by omega) hrel hgates.1
-    exact hcount.trans (by simp [routeCost])
-  · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hsecond
-    have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 2 * Q := by
-      rw [hprod v, ← hFQ]
-      ring
-    have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
-      |>.isRelPrime_iff_not_dvd.mpr hnot
-    have hcount := sourceC_power_count 2 (by decide) (by decide) u0 u1 H
-      selected Gamma hdegree hagreement hno F c hcell v Q hQ heq
-      (by omega) (by omega) (by omega) (by omega) hrel hgates.2.1
-    exact hcount.trans (by simp [routeCost])
-  · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hthird
-    have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 3 * Q := by
-      rw [hprod v, ← hFQ]
-      ring
-    have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
-      |>.isRelPrime_iff_not_dvd.mpr hnot
-    have hcount := sourceC_power_count 3 (by decide) (by decide) u0 u1 H
-      selected Gamma hdegree hagreement hno F c hcell v Q hQ heq
-      (by omega) (by omega) (by omega) (by omega) hrel hgates.2.2.1
-    exact hcount.trans (by simp [routeCost])
-  · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hfourth
-    have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 4 * Q := by
-      rw [hprod v, ← hFQ]
-      ring
-    have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
-      |>.isRelPrime_iff_not_dvd.mpr hnot
-    have hcount := sourceC_power_count 4 (by decide) (by decide) u0 u1 H
-      selected Gamma hdegree hagreement hno F c hcell v Q hQ heq
-      (by omega) (by omega) (by omega) (by omega) hrel hgates.2.2.2.1
-    exact hcount.trans (by simp [routeCost])
-  · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hfifth
-    have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 5 * Q := by
-      rw [hprod v, ← hFQ]
-      ring
-    have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
-      |>.isRelPrime_iff_not_dvd.mpr hnot
-    have hcount := sourceC_power_count 5 (by decide) (by decide) u0 u1 H
-      selected Gamma hdegree hagreement hno F c hcell v Q hQ heq
-      (by omega) (by omega) (by omega) (by omega) hrel hgates.2.2.2.2.1
-    exact hcount.trans (by simp [routeCost])
-  · obtain ⟨v, Q, _hv, hQ, hFQ, hnot, hQbox⟩ := hsixth
-    have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 6 * Q := by
-      rw [hprod v, ← hFQ]
-      ring
-    have hrel := (RCN167.positiveRFactors_spec H F.1 F.2).1
-      |>.isRelPrime_iff_not_dvd.mpr hnot
-    have hcount := sourceC_power_count 6 (by decide) (by decide) u0 u1 H
-      selected Gamma hdegree hagreement hno F c hcell v Q hQ heq
-      (by omega) (by omega) (by omega) (by omega) hrel hgates.2.2.2.2.2.1
-    exact hcount.trans (by simp [routeCost])
-  · obtain ⟨v, Q, _hv, hQ, hFQ, hQbox⟩ := hseventh
-    have hw := nested_mem_weights hQbox hQ
-    have heq : reconstruct K 39050020 131071 169536 63 v.1 = F.1 ^ 7 * Q := by
-      rw [hprod v, ← hFQ]
-      ring
-    have hrel := terminal_relPrime H F c sourceC 7 Q hQ hcell
-      (by have h := hTstage 7; omega)
-      (by have h := hYstage 7; omega)
-      (by have h := hRstage 7; omega) hterminal
-    have hcount := sourceC_power_count 7 (by decide) (by decide) u0 u1 H
-      selected Gamma hdegree hagreement hno F c hcell v Q hQ heq
-      (by omega) (by omega) (by omega) (by omega) hrel hgates.2.2.2.2.2.2
-    exact hcount.trans (by simp [routeCost])
 private theorem sourceC_quotient_nested
     (u0 u1 : I → K) (H : P4) (F : RegularIndex H) (hF : F.1 ≠ 0)
     (q : KernelC u0 u1 →ₗ[K] P4) (hqinj : Function.Injective q)
-    (hprod : ∀ v, reconstruct K 39050020 131071 169536 63 v.1 = F.1 * q v)
+    (hprod : ∀ v, reconstruct K 33784668 131071 127295 55 v.1 = F.1 * q v)
     (hqbox : ∀ v, q v ∈ globalCoefficientBox K
-      (39050020 - wt (contactWeights 131071) F.1) 131071
-      (169536 - wt residualTotalWeights F.1)
-      (63 - wt residualSWeights F.1)) :
+      (33784668 - wt (contactWeights 131071) F.1) 131071
+      (127295 - wt residualTotalWeights F.1)
+      (55 - wt residualSWeights F.1)) :
     ∀ v, q v ∈ nestedCoefficientBox K
-      (39050020 - wt (contactWeights 131071) F.1) 131071
-      (169536 - wt residualTotalWeights F.1)
-      (297 - wt residualYSWeights F.1)
-      (63 - wt residualSWeights F.1) := by
+      (33784668 - wt (contactWeights 131071) F.1) 131071
+      (127295 - wt residualTotalWeights F.1)
+      (257 - wt residualYSWeights F.1)
+      (55 - wt residualSWeights F.1) := by
   intro v
   have hqYS : wt residualYSWeights (q v) ≤
-      297 - wt residualYSWeights F.1 := by
+      257 - wt residualYSWeights F.1 := by
     by_cases hv : v = 0
     · subst v
       simp [wt, MvPolynomial.weightedTotalDegree]
@@ -1345,11 +1130,11 @@ private theorem sourceC_quotient_nested
         apply hqinj
         simpa only [map_zero] using hz
       have hsrc : wt residualYSWeights
-          (reconstruct K 39050020 131071 169536 63 v.1) ≤ 297 := by
-        apply flag_box_ys_bound 39050020 131071 169536 63 297
+          (reconstruct K 33784668 131071 127295 55 v.1) ≤ 257 := by
+        apply flag_box_ys_bound 33784668 131071 127295 55 257
           (by decide) LocatorAuxiliaryArithmetic.auxiliary176_shape
         exact reconstruct_mem_globalCoefficientBox K
-          39050020 131071 169536 63 v.1
+          33784668 131071 127295 55 v.1
       have hmul := weightedTotalDegree_mul residualYSWeights F.1 (q v) hF hqv
       rw [← hprod v] at hmul
       simp only [wt] at hsrc ⊢
@@ -1365,36 +1150,36 @@ private theorem sourceC_quotient_nested
 private theorem exists_sourceC_quotient
     (u0 u1 : I → K) (H : P4) (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : KernelC u0 u1,
-      F.1 ∣ reconstruct K 39050020 131071 169536 63 v.1) :
+      F.1 ∣ reconstruct K 33784668 131071 127295 55 v.1) :
     ∃ q : KernelC u0 u1 →ₗ[K] P4,
       Function.Injective q ∧
-      (∀ v, reconstruct K 39050020 131071 169536 63 v.1 = F.1 * q v) ∧
+      (∀ v, reconstruct K 33784668 131071 127295 55 v.1 = F.1 * q v) ∧
       (∀ v, q v ∈ nestedCoefficientBox K
-        (39050020 - wt (contactWeights 131071) F.1) 131071
-        (169536 - wt residualTotalWeights F.1)
-        (297 - wt residualYSWeights F.1)
-        (63 - wt residualSWeights F.1)) := by
-  let recon := kernelReconstructLinear (K := K) 39050020 131071 169536 63 215
+        (33784668 - wt (contactWeights 131071) F.1) 131071
+        (127295 - wt residualTotalWeights F.1)
+        (257 - wt residualYSWeights F.1)
+        (55 - wt residualSWeights F.1)) := by
+  let recon := kernelReconstructLinear (K := K) 33784668 131071 127295 55 186
     IRSProfile.domain u0 u1
   have hdivK : ∀ v : KernelC u0 u1, F.1 ∣ recon v := by
     intro v
     simpa only [recon, kernelReconstructLinear_apply] using hdiv v
   let q := quotientLinear recon F.1 hF hdivK
   have hqinj : Function.Injective q := quotientLinear_injective recon
-    (kernelReconstructLinear_injective (K := K) 39050020 131071 169536 63 215
+    (kernelReconstructLinear_injective (K := K) 33784668 131071 127295 55 186
       IRSProfile.domain u0 u1) F.1 hF hdivK
   have hprod (v : KernelC u0 u1) : recon v = F.1 * q v :=
     recon_eq_mul_quotientPolynomial recon F.1 hdivK v
-  have hproduct : ∀ v, reconstruct K 39050020 131071 169536 63 v.1 =
+  have hproduct : ∀ v, reconstruct K 33784668 131071 127295 55 v.1 =
       F.1 * q v := by
     intro v
     simpa only [recon, kernelReconstructLinear_apply] using hprod v
   have hqbox : ∀ v : KernelC u0 u1,
       q v ∈ globalCoefficientBox K
-        (39050020 - wt (contactWeights 131071) F.1) 131071
-        (169536 - wt residualTotalWeights F.1)
-        (63 - wt residualSWeights F.1) :=
-    quotient_box_of_full_divisor 39050020 131071 169536 63 215
+        (33784668 - wt (contactWeights 131071) F.1) 131071
+        (127295 - wt residualTotalWeights F.1)
+        (55 - wt residualSWeights F.1) :=
+    quotient_box_of_full_divisor 33784668 131071 127295 55 186
       (wt (contactWeights 131071) F.1) (wt residualTotalWeights F.1)
       (wt residualSWeights F.1) IRSProfile.domain u0 u1 F.1 hF hdivK
       le_rfl le_rfl le_rfl
@@ -1403,60 +1188,60 @@ private theorem exists_sourceC_quotient
 
 private theorem sourceC_tstage (H : P4) (F : RegularIndex H) (c : Cell)
     (hcell : InCell (regularCumulativeFlag H F) c) (j : ℕ) :
-    169536 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j := by
+    127295 - j * wt residualTotalWeights F.1 ≤ stageT (box c) j := by
   obtain ⟨_hr, _hylo, _hyhi, htlo, _hthi⟩ := factor_bounds_of_cell H F c hcell
-  change 169536 - j * wt residualTotalWeights F.1 ≤
-    169536 - j * (box c).factorT
-  exact Nat.sub_le_sub_left (Nat.mul_le_mul_left j htlo) 169536
+  change 127295 - j * wt residualTotalWeights F.1 ≤
+    127295 - j * (box c).factorT
+  exact Nat.sub_le_sub_left (Nat.mul_le_mul_left j htlo) 127295
 
 private theorem sourceC_ystage (H : P4) (F : RegularIndex H) (c : Cell)
     (hcell : InCell (regularCumulativeFlag H F) c) (j : ℕ) :
-    297 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j := by
+    257 - j * wt residualYSWeights F.1 ≤ stageY sourceC (box c) j := by
   obtain ⟨_hr, hylo, _hyhi, _htlo, _hthi⟩ := factor_bounds_of_cell H F c hcell
-  change 297 - j * wt residualYSWeights F.1 ≤ 297 - j * (box c).ylo
-  exact Nat.sub_le_sub_left (Nat.mul_le_mul_left j hylo) 297
+  change 257 - j * wt residualYSWeights F.1 ≤ 257 - j * (box c).ylo
+  exact Nat.sub_le_sub_left (Nat.mul_le_mul_left j hylo) 257
 
 private theorem sourceC_rstage (H : P4) (F : RegularIndex H) (c : Cell)
     (hcell : InCell (regularCumulativeFlag H F) c) (j : ℕ) :
-    63 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j := by
+    55 - j * wt residualSWeights F.1 ≤ stageR sourceC (box c) j := by
   obtain ⟨hr, _hylo, _hyhi, _htlo, _hthi⟩ := factor_bounds_of_cell H F c hcell
-  change 63 - j * wt residualSWeights F.1 ≤ 63 - j * (box c).r
+  change 55 - j * wt residualSWeights F.1 ≤ 55 - j * (box c).r
   rw [hr]
 
 private theorem sourceC_bandLe (H : P4) (F : RegularIndex H) (c : Cell)
     (hcell : InCell (regularCumulativeFlag H F) c) (j : ℕ) :
-    50558 * channelCount
-      (169536 - j * wt residualTotalWeights F.1)
-      (297 - j * wt residualYSWeights F.1)
-      (63 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j := by
-  change 50558 * channelCount _ _ _ ≤ 50558 * channelCount _ _ _
-  exact Nat.mul_le_mul_left 50558 (channelCount_mono
+    50568 * channelCount
+      (127295 - j * wt residualTotalWeights F.1)
+      (257 - j * wt residualYSWeights F.1)
+      (55 - j * wt residualSWeights F.1) ≤ stageBand sourceC (box c) j := by
+  change 50568 * channelCount _ _ _ ≤ 50568 * channelCount _ _ _
+  exact Nat.mul_le_mul_left 50568 (channelCount_mono
     (sourceC_tstage H F c hcell j) (sourceC_ystage H F c hcell j)
     (sourceC_rstage H F c hcell j))
 
 private theorem sourceC_gapLe (u0 u1 : I → K) :
-    325815967324336 ≤ Module.finrank K
-      (ConstraintKernel (K := K) 39050020 131071 169536 63 215
+    153048067600638 ≤ Module.finrank K
+      (ConstraintKernel (K := K) 33784668 131071 127295 55 186
         IRSProfile.domain u0 u1) :=
   LocatorSourceCGap.finrank_lower_bound u0 u1
 
 private theorem sourceC_width (H : P4) (F : RegularIndex H) :
-    39050020 - wt (contactWeights 131071) F.1 ≤
-      (39050020 - 50558 - wt (contactWeights 131071) F.1) + 50558 := by
+    33784668 - wt (contactWeights 131071) F.1 ≤
+      (33784668 - 50568 - wt (contactWeights 131071) F.1) + 50568 := by
   omega
 
 private theorem sourceC_count_k2
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : KernelC u0 u1,
-      F.1 ∣ reconstruct K 39050020 131071 169536 63 v.1)
+      F.1 ∣ reconstruct K 33784668 131071 127295 55 v.1)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (hfit : RouteFits sourceC 2 (box c)) :
     (regularSeeds H selected Gamma F).card ≤ routeCost sourceC (box c) 2 := by
@@ -1471,14 +1256,14 @@ private theorem sourceC_count_k3
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : KernelC u0 u1,
-      F.1 ∣ reconstruct K 39050020 131071 169536 63 v.1)
+      F.1 ∣ reconstruct K 33784668 131071 127295 55 v.1)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (hfit : RouteFits sourceC 3 (box c)) :
     (regularSeeds H selected Gamma F).card ≤ routeCost sourceC (box c) 3 := by
@@ -1493,14 +1278,14 @@ private theorem sourceC_count_k4
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : KernelC u0 u1,
-      F.1 ∣ reconstruct K 39050020 131071 169536 63 v.1)
+      F.1 ∣ reconstruct K 33784668 131071 127295 55 v.1)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (hfit : RouteFits sourceC 4 (box c)) :
     (regularSeeds H selected Gamma F).card ≤ routeCost sourceC (box c) 4 := by
@@ -1515,14 +1300,14 @@ private theorem sourceC_count_k5
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : KernelC u0 u1,
-      F.1 ∣ reconstruct K 39050020 131071 169536 63 v.1)
+      F.1 ∣ reconstruct K 33784668 131071 127295 55 v.1)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (hfit : RouteFits sourceC 5 (box c)) :
     (regularSeeds H selected Gamma F).card ≤ routeCost sourceC (box c) 5 := by
@@ -1537,14 +1322,14 @@ private theorem sourceC_count_k6
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : KernelC u0 u1,
-      F.1 ∣ reconstruct K 39050020 131071 169536 63 v.1)
+      F.1 ∣ reconstruct K 33784668 131071 127295 55 v.1)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (hfit : RouteFits sourceC 6 (box c)) :
     (regularSeeds H selected Gamma F).card ≤ routeCost sourceC (box c) 6 := by
@@ -1555,47 +1340,25 @@ private theorem sourceC_count_k6
     (sourceC_ystage H F c hcell) (sourceC_rstage H F c hcell)
     (sourceC_bandLe H F c hcell) (sourceC_gapLe u0 u1) (sourceC_width H F) hfit
 
-private theorem sourceC_count_k7
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
-      ((Finset.univ : Finset I).filter (fun i =>
-        (selected gamma).eval (IRSProfile.domain i) =
-          u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
-    (F : RegularIndex H) (hF : F.1 ≠ 0)
-    (hdiv : ∀ v : KernelC u0 u1,
-      F.1 ∣ reconstruct K 39050020 131071 169536 63 v.1)
-    (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : RouteFits sourceC 7 (box c)) :
-    (regularSeeds H selected Gamma F).card ≤ routeCost sourceC (box c) 7 := by
-  obtain ⟨q, hqinj, hproduct, hqNested⟩ :=
-    exists_sourceC_quotient u0 u1 H F hF hdiv
-  exact sourceC_count_k7_core u0 u1 H selected Gamma hdegree hagreement hno
-    F hF c hcell q hqinj hproduct hqNested (sourceC_tstage H F c hcell)
-    (sourceC_ystage H F c hcell) (sourceC_rstage H F c hcell)
-    (sourceC_bandLe H F c hcell) (sourceC_gapLe u0 u1) (sourceC_width H F) hfit
-
 theorem regularSeeds_count_le_chosen
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181628 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80516)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
-    (hdivA : ∀ v : ConstraintKernel (K := K) 11624192 131071 169536 19 64
+    (hdivA : ∀ v : ConstraintKernel (K := K) 11443194 131071 127295 19 63
       IRSProfile.domain u0 u1,
-      F.1 ∣ reconstruct K 11624192 131071 169536 19 v.1)
-    (hdivAux : ∀ v : ConstraintKernel (K := K) 13077216 131071 169536 21 72
+      F.1 ∣ reconstruct K 11443194 131071 127295 19 v.1)
+    (hdivAux : ∀ v : ConstraintKernel (K := K) 13077936 131071 127295 21 72
       IRSProfile.domain u0 u1,
-      F.1 ∣ reconstruct K 13077216 131071 169536 21 v.1)
-    (hdivC : ∀ v : ConstraintKernel (K := K) 39050020 131071 169536 63 215
+      F.1 ∣ reconstruct K 13077936 131071 127295 21 v.1)
+    (hdivC : ∀ v : ConstraintKernel (K := K) 33784668 131071 127295 55 186
       IRSProfile.domain u0 u1,
-      F.1 ∣ reconstruct K 39050020 131071 169536 63 v.1)
+      F.1 ∣ reconstruct K 33784668 131071 127295 55 v.1)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (hv : Valid c)
     (hown : (regularSeeds H selected Gamma F).card ≤
@@ -1607,13 +1370,13 @@ theorem regularSeeds_count_le_chosen
     simpa only [chosenCost, ho, if_pos] using h
   have hroutes := (receipt c hv).resolve_left ho
   by_cases hA : RouteFits sourceA 1 (box c)
-  · have h := source_one_count 11624192 19 64 88 180306218025 sourceA
+  · have h := source_one_count 11443194 19 63 87 95004605885 sourceA
       rfl rfl rfl LocatorArithmetic.kernelA_nullity (by decide) (by decide)
       u0 u1 H selected Gamma hdegree hagreement hno F hF hdivA c hcell hA
     simpa only [chosenCost, ho, hA, if_pos, if_false] using h
   have hroutes := hroutes.resolve_left hA
   by_cases hAux : RouteFits sourceAux 1 (box c)
-  · have h := source_one_count 13077216 21 72 99 2142222243722 sourceAux
+  · have h := source_one_count 13077936 21 72 99 1765947352829 sourceAux
       rfl rfl rfl LocatorAuxiliaryArithmetic.auxiliary72_nullity
       LocatorAuxiliaryArithmetic.auxiliary72_shape
       LocatorAuxiliaryArithmetic.auxiliary72_capacity
@@ -1642,16 +1405,10 @@ theorem regularSeeds_count_le_chosen
       hagreement hno F hF hdivC c hcell hC5
     simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
       if_pos, if_false] using h
-  have hroutes := hroutes.resolve_left hC5
-  by_cases hC6 : RouteFits sourceC 6 (box c)
-  · have h := sourceC_count_k6 u0 u1 H selected Gamma hdegree
-      hagreement hno F hF hdivC c hcell hC6
-    simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5, hC6,
-      if_pos, if_false] using h
-  have hC7 := hroutes.resolve_left hC6
-  have h := sourceC_count_k7 u0 u1 H selected Gamma hdegree
-    hagreement hno F hF hdivC c hcell hC7
-  simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5, hC6,
+  have hC6 := hroutes.resolve_left hC5
+  have h := sourceC_count_k6 u0 u1 H selected Gamma hdegree
+    hagreement hno F hF hdivC c hcell hC6
+  simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
     if_pos, if_false] using h
 
 end
