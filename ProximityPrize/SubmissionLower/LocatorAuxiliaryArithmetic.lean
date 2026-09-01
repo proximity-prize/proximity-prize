@@ -126,79 +126,76 @@ private theorem coefficientCount_succ_large (D w L s t:ℕ)
         (L+1-i-j)*(D-w*i-(w-1)*j))+
       ∑ i∈Finset.range t,∑ j∈Finset.range (s+1),
         (D-w*i-(w-1)*j):=by simp only [Finset.sum_add_distrib]
-
-theorem smallBox_coefficientCount (L s:ℕ):
-    RCN100.coefficientCount 50647 131071 L s=(L+1)*50647:=by
-  rw [RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
-    50647 131071 L s 1 (by omega) (by decide)]
-  rw [show Finset.range 1={0} by decide]
-  simp only [Finset.sum_singleton,Nat.sub_zero]
-  apply Finset.sum_eq_single 0
-  · intro j hj hj0
-    have hj1:1≤j:=Nat.one_le_iff_ne_zero.mpr hj0
-    have hz:50647-131070*j=0:=Nat.sub_eq_zero_of_le (by omega)
-    simp only [hz,Nat.mul_zero]
-  · simp
-
-private theorem rankStep93:rankStep 93 27=94164:=by decide
-private theorem coefficientStep93:
-    coefficientStep 16899681 131071 27 129=24783577854:=by decide
-private theorem baseRank93:RCN119.localRankBound 93 2600 27=241087952:=by decide
-private theorem baseGap93:
-    RCN100.coefficientCount 16899681 131071 2600 27-
-      262144*RCN119.localRankBound 93 2600 27=874400709:=by
-  rw [baseRank93,RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
-    16899681 131071 2600 27 129 (by decide) (by decide)]
+private theorem rankStep72:rankStep 72 21=44495:=by decide
+private theorem coefficientStep72:
+    coefficientStep 13085712 131071 21 100=11694004157:=by decide
+private theorem baseRank72:RCN119.localRankBound 72 3106 21=136844851:=by decide
+private theorem baseGap72:
+    RCN100.coefficientCount 13085712 131071 3106 21-
+      262144*RCN119.localRankBound 72 3106 21=29301140:=by
+  rw [baseRank72,RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
+    13085712 131071 3106 21 100 (by decide) (by decide)]
   decide
-theorem source93_gap_affine (L:ℕ) (hL:2600≤L):
-    RCN100.coefficientCount 16899681 131071 L 27-
-      262144*RCN119.localRankBound 93 L 27=
-        99050238*L-256656218091:=by
+theorem auxiliary72_gap_affine (L:ℕ) (hL:3106≤L):
+    RCN100.coefficientCount 13085712 131071 L 21-
+      262144*RCN119.localRankBound 72 L 21=29906877*L-92861458822:=by
   obtain ⟨d,rfl⟩:=Nat.exists_eq_add_of_le hL
   induction d with
-  | zero=>simpa using baseGap93
+  | zero=>simpa using baseGap72
   | succ d ih=>
-    have hc:=coefficientCount_succ_large 16899681 131071 (2600+d) 27 129
+    have hc:=coefficientCount_succ_large 13085712 131071 (3106+d) 21 100
       (by omega) (by decide) (by omega)
-    have hr:=localRankBound_succ_large 93 (2600+d) 27 (by omega)
-    rw [coefficientStep93] at hc
-    rw [rankStep93] at hr
+    have hr:=localRankBound_succ_large 72 (3106+d) 21 (by omega)
+    rw [coefficientStep72] at hc
+    rw [rankStep72] at hr
     rw [Nat.add_succ,hc,hr]
     omega
-theorem source93_shape:16899681+27≤131071*(128+1):=by decide
-theorem source93_capacity_one:
-    16899681-50647≤(93-1)*181717+(131071-1):=by decide
-theorem source93_capacity_two:
-    16899681-2*50647≤(93-2)*181717+2*(131071-1):=by decide
-
 private theorem rankStep126:rankStep 126 39=242300:=by decide
 private theorem coefficientStep126:
-    coefficientStep 22896342 131071 39 175=63888105680:=by decide
-private theorem baseRank126:RCN119.localRankBound 126 2600 39=616596360:=by decide
+    coefficientStep 22899996 131071 39 175=63910833560:=by decide
+private theorem baseRank126:RCN119.localRankBound 126 2255 39=533002860:=by decide
 private theorem baseGap126:
-    RCN100.coefficientCount 22896342 131071 2600 39-
-      262144*RCN119.localRankBound 126 2600 39=78993675370:=by
+    RCN100.coefficientCount 22899996 131071 2255 39-
+      262144*RCN119.localRankBound 126 2255 39=216592570:=by
   rw [baseRank126,RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
-    22896342 131071 2600 39 175 (by decide) (by decide)]
+    22899996 131071 2255 39 175 (by decide) (by decide)]
   decide
-theorem source126_gap_affine (L:ℕ) (hL:2600≤L):
-    RCN100.coefficientCount 22896342 131071 L 39-
-      262144*RCN119.localRankBound 126 L 39=
-        370614480*L-884603972630:=by
+theorem auxiliary126_gap_affine (L:ℕ) (hL:2255≤L):
+    RCN100.coefficientCount 22899996 131071 L 39-
+      262144*RCN119.localRankBound 126 L 39=393342360*L-886770429230:=by
   obtain ⟨d,rfl⟩:=Nat.exists_eq_add_of_le hL
   induction d with
   | zero=>simpa using baseGap126
   | succ d ih=>
-    have hc:=coefficientCount_succ_large 22896342 131071 (2600+d) 39 175
+    have hc:=coefficientCount_succ_large 22899996 131071 (2255+d) 39 175
       (by omega) (by decide) (by omega)
-    have hr:=localRankBound_succ_large 126 (2600+d) 39 (by omega)
+    have hr:=localRankBound_succ_large 126 (2255+d) 39 (by omega)
     rw [coefficientStep126] at hc
     rw [rankStep126] at hr
     rw [Nat.add_succ,hc,hr]
     omega
-theorem source126_shape:22896342+39≤131071*(174+1):=by decide
-theorem source126_capacity_one:
-    22896342-50647≤(126-1)*181717+(131071-1):=by decide
-theorem source126_capacity_two:
-    22896342-2*50647≤(126-2)*181717+2*(131071-1):=by decide
+theorem auxiliary72_shape:13085712 + 21 ≤ 131071 * (99 + 1):=by decide
+theorem auxiliary72_capacity:
+    13085712 - 50676 ≤ (72 - 1) * 181746 + (131071 - 1):=by decide
+theorem square72_rank:localRankBound 72 27001 21=1200052876:=by decide
+theorem square72_nullity:
+    coefficientCount 13085712 131071 27001 21 -
+      262144 * localRankBound 72 27001 21=714654127055:=by
+  rw [square72_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
+    13085712 131071 27001 21 100 (by decide) (by decide)]
+  decide
+theorem square72_shape:13085712 + 21 ≤ 131071 * (99 + 1):=by decide
+theorem square72_band:
+    50676 * LocatorLowQuotient.channelCount 25586 50 11=
+      707204965272:=by decide
+theorem square72_box:
+    coefficientCount 190098 131071 24171 1=7448556261:=by
+  rw [coefficientCount_eq_sum_range_of_weighted_cutoff
+    190098 131071 24171 1 2 (by decide) (by decide)]
+  decide
+theorem square72_strict_margin:
+    707204965272 + 7448556261 < 714654127055:=by decide
+theorem auxiliary126_shape:22899996 + 39 ≤ 131071 * (174 + 1):=by decide
+theorem auxiliary126_capacity:
+    22899996 - 50676 ≤ (126 - 1) * 181746 + (131071 - 1):=by decide
 end ProximityPrize.SubmissionLower.LocatorAuxiliaryArithmetic
