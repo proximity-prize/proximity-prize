@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.T3
+import Mathlib.RingTheory.Etale.Kaehler
 import ProximityPrize.SubmissionLower.AT
 import ProximityPrize.SubmissionLower.F2
 section ProximityFlatProofPort
