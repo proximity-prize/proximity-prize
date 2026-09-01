@@ -4,7 +4,7 @@ open scoped BigOperators
 theorem channelCount_mono {T T' YS YS' S S':ℕ}
     (ht:T ≤ T') (hy:YS ≤ YS') (hs:S ≤ S') :
     channelCount T YS S ≤ channelCount T' YS' S':=by
-  unfold channelCount
+  rw [channelCount_eq, channelCount_eq]
   calc
     _ ≤ ∑ y ∈ Finset.range (min T YS + 1),
         ∑ r ∈ Finset.range (min S' (min (T' - y) (YS' - y)) + 1),
