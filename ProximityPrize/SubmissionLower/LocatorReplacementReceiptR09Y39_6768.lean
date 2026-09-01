@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.LocatorReplacementData
+import ProximityPrize.SubmissionLower.LocatorReplacementReceiptR09Y38_6768
 namespace ProximityPrize.SubmissionLower.LocatorReplacementData
 open LocatorReplacementGrid
 set_option maxRecDepth 1000000
