@@ -596,7 +596,7 @@ theorem cpoly_eval (U : Finset Small) (j : Idx) :
   rw [cpoly, Polynomial.eval_mul, Polynomial.eval_comp, zpoly, Polynomial.eval_pow,
     Polynomial.eval_X, zval]
 
-theorem scalar_agree_core {U : Finset Small} (hU : U ∈ Sel) (a : Small) (ha : a ∈ coreA) :
+theorem scalar_agree_core {U : Finset Small} (_hU : U ∈ Sel) (a : Small) (ha : a ∈ coreA) :
     f1scalar (idx a 0) + gamma U * f2scalar (idx a 0) =
       (cpoly U).eval (IRSProfile.domain (idx a 0)) := by
   rw [f1scalar, f2scalar, cpoly_eval, RF_eval_core a ha]
@@ -685,13 +685,13 @@ theorem f2_far (δ : ℝ≥0) (hδ : δ < (122641 / 262144 : ℝ≥0)) :
   let A : Polynomial FF := (Polynomial.X : Polynomial FF)^512 - Polynomial.C alpha
   let P : Polynomial FF := A * q + RF
   have hAnd : A.natDegree = 512 := by
-    simp [A, Polynomial.natDegree_X_pow_sub_C]
+    simp [A]
+  have hmul : (A * q).natDegree ≤ 131583 := by
+    calc
+      (A * q).natDegree ≤ A.natDegree + q.natDegree := Polynomial.natDegree_mul_le
+      _ ≤ 512 + 131071 := by rw [hAnd]; exact Nat.add_le_add_left hqnat 512
+      _ = 131583 := by norm_num
   have hPdeg : P.natDegree ≤ 131583 := by
-    have hmul : (A * q).natDegree ≤ 131583 := by
-      calc
-        (A * q).natDegree ≤ A.natDegree + q.natDegree := Polynomial.natDegree_mul_le
-        _ ≤ 512 + 131071 := by rw [hAnd]; exact Nat.add_le_add_left hqnat 512
-        _ = 131583 := by norm_num
     calc
       P.natDegree ≤ max (A * q).natDegree RF.natDegree := by
         change (A * q + RF).natDegree ≤ _
