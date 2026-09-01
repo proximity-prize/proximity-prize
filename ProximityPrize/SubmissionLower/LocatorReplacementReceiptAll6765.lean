@@ -43,8 +43,8 @@ theorem receipt (c:Cell):Receipt c:=by
   · exact receipt_r17_full y b
 
 theorem chosenCost_with_rest (c:Cell) (hv:Valid c) (hnr:¬noBadFits c):
-    chosenCost c+exactRest c≤271800583557655343:=by
-  have routes:ordinaryFits c∨sourceFits c∨sourceFits126 c∨hybridFits c:=
+    chosenCost c+exactRest c≤271696008548359000:=by
+  have routes:ordinaryFits c∨sourceFits c∨sourceFits126 c:=
     (receipt c hv).resolve_left hnr
   by_cases ho:ordinaryFits c
   · rw [chosenCost,if_pos ho]
@@ -53,12 +53,8 @@ theorem chosenCost_with_rest (c:Cell) (hv:Valid c) (hnr:¬noBadFits c):
     by_cases h93:sourceFits c
     · rw [chosenCost,if_neg ho,if_pos h93]
       exact h93.2.2.2.2.2.2.2.2
-    · have htail:=hsources.resolve_left h93
-      by_cases h126:sourceFits126 c
-      · rw [chosenCost,if_neg ho,if_neg h93,if_pos h126]
-        exact h126.2.2.2.2.2.2.2.2
-      · rw [chosenCost,if_neg ho,if_neg h93,if_neg h126]
-        exact (htail.resolve_left h126).2.2.2.2.2.2.2.2
+    · rw [chosenCost,if_neg ho,if_neg h93]
+      exact (hsources.resolve_left h93).2.2.2.2.2.2.2.2
 
 end ProximityPrize.SubmissionLower.LocatorReplacementData
 #print axioms ProximityPrize.SubmissionLower.LocatorReplacementData.receipt

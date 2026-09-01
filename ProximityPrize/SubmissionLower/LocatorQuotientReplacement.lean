@@ -81,13 +81,13 @@ theorem factor_weights_of_cell (H:P4) (F:RegularIndex H) (c:Cell)
 theorem regularSeeds_count_le_source93
     (u0 u1:I→K) (H:P4) (selected:K→Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤131071)
-    (hagreement:∀ gamma∈Gamma,181707≤((Finset.univ:Finset I).filter
+    (hagreement:∀ gamma∈Gamma,181717≤((Finset.univ:Finset I).filter
       (fun i=>(selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80437)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80427)
     (F:RegularIndex H) (hF:F.1≠0)
-    (hdiv:∀ L,L≤52091→∀ v:ConstraintKernel (K:=K) 16898751 131071 L 27 93
-      IRSProfile.domain u0 u1,F.1∣reconstruct K 16898751 131071 L 27 v.1)
-    (hcontact:wt (contactWeights 131071) F.1<10539006)
+    (hdiv:∀ L,L≤52091→∀ v:ConstraintKernel (K:=K) 16899681 131071 L 27 93
+      IRSProfile.domain u0 u1,F.1∣reconstruct K 16899681 131071 L 27 v.1)
+    (hcontact:wt (contactWeights 131071) F.1<10539586)
     (c:Cell) (hcell:InCell (regularCumulativeFlag H F) c)
     (hfit:sourceFits c):
     (regularSeeds H selected Gamma F).card≤sourceCost c:=by
@@ -95,11 +95,11 @@ theorem regularSeeds_count_le_source93
   obtain ⟨hLmin,hLmax,h2t,hbands,hsmall,hcop,hqGates,hcGates,hcost⟩:=hfit
   obtain ⟨hr,hy,htlo,hthi⟩:=factor_weights_of_cell H F c hcell
   let L:=sourceLength c
-  have hdivL:∀ v:ConstraintKernel (K:=K) 16898751 131071 L 27 93
+  have hdivL:∀ v:ConstraintKernel (K:=K) 16899681 131071 L 27 93
       IRSProfile.domain u0 u1,
-      F.1∣reconstruct K 16898751 131071 L 27 v.1:=hdiv L hLmax
+      F.1∣reconstruct K 16899681 131071 L 27 v.1:=hdiv L hLmax
   have hnull:
-      coefficientCount 16898751 131071 L 27-
+      coefficientCount 16899681 131071 L 27-
         Fintype.card I*localRankBound 93 L 27=sourceNullity c:=by
     rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index],
       LocatorAuxiliaryArithmetic.source93_gap_affine L hLmin]
@@ -133,40 +133,40 @@ theorem regularSeeds_count_le_source93
     (channelCount_mono hcT hcY.le hcS.le).trans
       (channelCount_le_channelUpper _ _ _)
   have hsource:
-      50637*channelCount (L-wt residualTotalWeights F.1)
+      50647*channelCount (L-wt residualTotalWeights F.1)
           (128-wt residualYSWeights F.1) (27-wt residualSWeights F.1)+
-        50637*channelCount
+        50647*channelCount
           (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
           (128-wt residualYSWeights F.1-wt residualYSWeights F.1)
           (27-wt residualSWeights F.1-wt residualSWeights F.1)<
-        coefficientCount 16898751 131071 L 27-
+        coefficientCount 16899681 131071 L 27-
           Fintype.card I*localRankBound 93 L 27:=by
     rw [hnull]
-    exact (Nat.add_le_add (Nat.mul_le_mul_left 50637 hqChannel)
-      (Nat.mul_le_mul_left 50637 hcChannel)).trans_lt hbands
+    exact (Nat.add_le_add (Nat.mul_le_mul_left 50647 hqChannel)
+      (Nat.mul_le_mul_left 50647 hcChannel)).trans_lt hbands
   have hsmallBox:
-      coefficientCount 50637 131071
+      coefficientCount 50647 131071
         (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
         (27-wt residualSWeights F.1-wt residualSWeights F.1)≤
-      (cofactorT c+1)*50637:=by
+      (cofactorT c+1)*50647:=by
     calc
-      _≤coefficientCount 50637 131071 (cofactorT c) (cofactorS c):=
+      _≤coefficientCount 50647 131071 (cofactorT c) (cofactorS c):=
         coefficientCount_mono_L_s hcT hcS.le
-      _=(cofactorT c+1)*50637:=
+      _=(cofactorT c+1)*50647:=
         LocatorAuxiliaryArithmetic.smallBox_coefficientCount _ _
   have hsourceSmall:
-      50637*channelCount (L-wt residualTotalWeights F.1)
+      50647*channelCount (L-wt residualTotalWeights F.1)
           (128-wt residualYSWeights F.1) (27-wt residualSWeights F.1)+
-        coefficientCount 50637 131071
+        coefficientCount 50647 131071
           (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
           (27-wt residualSWeights F.1-wt residualSWeights F.1)<
-        coefficientCount 16898751 131071 L 27-
+        coefficientCount 16899681 131071 L 27-
           Fintype.card I*localRankBound 93 L 27:=by
     rw [hnull]
-    exact (Nat.add_le_add (Nat.mul_le_mul_left 50637 hqChannel)
+    exact (Nat.add_le_add (Nat.mul_le_mul_left 50647 hqChannel)
       hsmallBox).trans_lt hsmall
-  have hwidth:16898751-wt (contactWeights 131071) F.1≤
-      16898751-50637-wt (contactWeights 131071) F.1+50637:=by omega
+  have hwidth:16899681-wt (contactWeights 131071) F.1≤
+      16899681-50647-wt (contactWeights 131071) F.1+50647:=by omega
   have hcofactor:
       L-wt residualTotalWeights F.1-wt residualTotalWeights F.1<
           wt residualTotalWeights F.1 ∨
@@ -191,7 +191,7 @@ theorem regularSeeds_count_le_source93
     have hdvd:2130706433∣2:=(CharP.cast_eq_zero_iff K 2130706433 2).mp hz
     norm_num at hdvd
   obtain hQ|hC:=exists_coprime_quotient_or_small_cofactor
-    16898751 131071 L 27 93 128 50637 181707 IRSProfile.domain u0 u1
+    16899681 131071 L 27 93 128 50647 181717 IRSProfile.domain u0 u1
     F.1 hF (RCN167.positiveRFactors_spec H F.1 F.2).1 hdivL (by decide)
     LocatorAuxiliaryArithmetic.source93_shape hsource hsourceSmall hwidth
     LocatorAuxiliaryArithmetic.source93_capacity_one
@@ -287,13 +287,13 @@ theorem regularSeeds_count_le_source93
 theorem regularSeeds_count_le_source126
     (u0 u1:I→K) (H:P4) (selected:K→Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤131071)
-    (hagreement:∀ gamma∈Gamma,181707≤((Finset.univ:Finset I).filter
+    (hagreement:∀ gamma∈Gamma,181717≤((Finset.univ:Finset I).filter
       (fun i=>(selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80437)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80427)
     (F:RegularIndex H) (hF:F.1≠0)
-    (hdiv:∀ L,L≤52091→∀ v:ConstraintKernel (K:=K) 22895082 131071 L 39 126
-      IRSProfile.domain u0 u1,F.1∣reconstruct K 22895082 131071 L 39 v.1)
-    (hcontact:wt (contactWeights 131071) F.1<10539006)
+    (hdiv:∀ L,L≤52091→∀ v:ConstraintKernel (K:=K) 22896342 131071 L 39 126
+      IRSProfile.domain u0 u1,F.1∣reconstruct K 22896342 131071 L 39 v.1)
+    (hcontact:wt (contactWeights 131071) F.1<10539586)
     (c:Cell) (hcell:InCell (regularCumulativeFlag H F) c)
     (hfit:sourceFits126 c):
     (regularSeeds H selected Gamma F).card≤sourceCost126 c:=by
@@ -301,11 +301,11 @@ theorem regularSeeds_count_le_source126
   obtain ⟨hLmin,hLmax,h2t,hbands,hsmall,hcop,hqGates,hcGates,hcost⟩:=hfit
   obtain ⟨hr,hy,htlo,hthi⟩:=factor_weights_of_cell H F c hcell
   let L:=sourceLength126 c
-  have hdivL:∀ v:ConstraintKernel (K:=K) 22895082 131071 L 39 126
+  have hdivL:∀ v:ConstraintKernel (K:=K) 22896342 131071 L 39 126
       IRSProfile.domain u0 u1,
-      F.1∣reconstruct K 22895082 131071 L 39 v.1:=hdiv L hLmax
+      F.1∣reconstruct K 22896342 131071 L 39 v.1:=hdiv L hLmax
   have hnull:
-      coefficientCount 22895082 131071 L 39-
+      coefficientCount 22896342 131071 L 39-
         Fintype.card I*localRankBound 126 L 39=sourceNullity126 c:=by
     rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index],
       LocatorAuxiliaryArithmetic.source126_gap_affine L hLmin]
@@ -339,40 +339,40 @@ theorem regularSeeds_count_le_source126
     (channelCount_mono hcT hcY.le hcS.le).trans
       (channelCount_le_channelUpper _ _ _)
   have hsource:
-      50637*channelCount (L-wt residualTotalWeights F.1)
+      50647*channelCount (L-wt residualTotalWeights F.1)
           (174-wt residualYSWeights F.1) (39-wt residualSWeights F.1)+
-        50637*channelCount
+        50647*channelCount
           (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
           (174-wt residualYSWeights F.1-wt residualYSWeights F.1)
           (39-wt residualSWeights F.1-wt residualSWeights F.1)<
-        coefficientCount 22895082 131071 L 39-
+        coefficientCount 22896342 131071 L 39-
           Fintype.card I*localRankBound 126 L 39:=by
     rw [hnull]
-    exact (Nat.add_le_add (Nat.mul_le_mul_left 50637 hqChannel)
-      (Nat.mul_le_mul_left 50637 hcChannel)).trans_lt hbands
+    exact (Nat.add_le_add (Nat.mul_le_mul_left 50647 hqChannel)
+      (Nat.mul_le_mul_left 50647 hcChannel)).trans_lt hbands
   have hsmallBox:
-      coefficientCount 50637 131071
+      coefficientCount 50647 131071
         (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
         (39-wt residualSWeights F.1-wt residualSWeights F.1)≤
-      (cofactorT126 c+1)*50637:=by
+      (cofactorT126 c+1)*50647:=by
     calc
-      _≤coefficientCount 50637 131071 (cofactorT126 c) (cofactorS126 c):=
+      _≤coefficientCount 50647 131071 (cofactorT126 c) (cofactorS126 c):=
         coefficientCount_mono_L_s hcT hcS.le
-      _=(cofactorT126 c+1)*50637:=
+      _=(cofactorT126 c+1)*50647:=
         LocatorAuxiliaryArithmetic.smallBox_coefficientCount _ _
   have hsourceSmall:
-      50637*channelCount (L-wt residualTotalWeights F.1)
+      50647*channelCount (L-wt residualTotalWeights F.1)
           (174-wt residualYSWeights F.1) (39-wt residualSWeights F.1)+
-        coefficientCount 50637 131071
+        coefficientCount 50647 131071
           (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
           (39-wt residualSWeights F.1-wt residualSWeights F.1)<
-        coefficientCount 22895082 131071 L 39-
+        coefficientCount 22896342 131071 L 39-
           Fintype.card I*localRankBound 126 L 39:=by
     rw [hnull]
-    exact (Nat.add_le_add (Nat.mul_le_mul_left 50637 hqChannel)
+    exact (Nat.add_le_add (Nat.mul_le_mul_left 50647 hqChannel)
       hsmallBox).trans_lt hsmall
-  have hwidth:22895082-wt (contactWeights 131071) F.1≤
-      22895082-50637-wt (contactWeights 131071) F.1+50637:=by omega
+  have hwidth:22896342-wt (contactWeights 131071) F.1≤
+      22896342-50647-wt (contactWeights 131071) F.1+50647:=by omega
   have hcofactor:
       L-wt residualTotalWeights F.1-wt residualTotalWeights F.1<
           wt residualTotalWeights F.1 ∨
@@ -397,7 +397,7 @@ theorem regularSeeds_count_le_source126
     have hdvd:2130706433∣2:=(CharP.cast_eq_zero_iff K 2130706433 2).mp hz
     norm_num at hdvd
   obtain hQ|hC:=exists_coprime_quotient_or_small_cofactor
-    22895082 131071 L 39 126 174 50637 181707 IRSProfile.domain u0 u1
+    22896342 131071 L 39 126 174 50647 181717 IRSProfile.domain u0 u1
     F.1 hF (RCN167.positiveRFactors_spec H F.1 F.2).1 hdivL (by decide)
     LocatorAuxiliaryArithmetic.source126_shape hsource hsourceSmall hwidth
     LocatorAuxiliaryArithmetic.source126_capacity_one
