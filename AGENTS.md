@@ -33,13 +33,20 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    as your own proof.
 5. Stay inside the verifier's **memory** budget. Both tracks currently allow
    **24 GiB** for the whole build. Exceeding it fails the submission without
-   scoring it and without a useful message about the proof.
+   scoring it, and reports `candidate_out_of_memory`.
 
    `decide` and `native_decide` over a large finite computation are the usual
    way to exceed it, and the cost is not visible in the source — a single
    `decide` over a few hundred terms of large naturals can want tens of
    gigabytes. Prefer a proof to an evaluation, and split a large `decide` into
    lemmas the kernel can check separately.
+
+   A `decide` never runs `simp`, so no lemma can make one cheaper — only the
+   definition it unfolds can. `submission-helpers/` holds an optional file you
+   may copy into your submission root for the case this bites hardest: a
+   `Finset.range` sum, which the kernel walks as a `List` where a `Nat`
+   recursion would be one addition. It is not part of the challenge; copy, edit
+   or ignore it.
 6. Stay inside the verifier's **time** budget. Both tracks currently allow
    **80 minutes** for the whole build, and a submission that runs past it is
    failed unscored, exactly like the memory ceiling. This repository's own
