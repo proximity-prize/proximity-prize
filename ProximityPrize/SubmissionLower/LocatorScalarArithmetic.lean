@@ -7,15 +7,15 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80427
+def errors:ℕ:=80486
 def agreements:ℕ:=n - errors
 def gap:ℕ:=agreements - w
 def prime:ℕ:=2130706433
-def multiplicity:ℕ:=58
-def yTotalCap:ℕ:=80
-def slopeCap:ℕ:=16
+def multiplicity:ℕ:=61
+def yTotalCap:ℕ:=84
+def slopeCap:ℕ:=18
 def weightedCap:ℕ:=multiplicity * agreements
-def listBudget:ℕ:=1709644758
+def listBudget:ℕ:=2025439163
 def capY:ℕ:=1 + 2*w*yTotalCap
 def capR:ℕ:=w*(2*slopeCap - 1)
 def regularListNumerator:ℕ:=(n-w)*(capY*slopeCap + capR*yTotalCap)
@@ -25,27 +25,27 @@ private def coefficientRow (i:ℕ):ℕ:=
  ∑ j ∈ Finset.range (slopeCap + 1),
    min 1 (yTotalCap + 1 - i - j) * (weightedCap - w*i - (w-1)*j)
 private theorem coefficient_0:
- (∑ i ∈ Finset.range 10,coefficientRow i) =1513205105:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow i) =1769220815:=by decide
 private theorem coefficient_10:
- (∑ i ∈ Finset.range 10,coefficientRow (10+i)) =1290384405:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (10+i)) =1520185915:=by decide
 private theorem coefficient_20:
- (∑ i ∈ Finset.range 10,coefficientRow (20+i)) =1067563705:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (20+i)) =1271151015:=by decide
 private theorem coefficient_30:
- (∑ i ∈ Finset.range 10,coefficientRow (30+i)) =844743005:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (30+i)) =1022116115:=by decide
 private theorem coefficient_40:
- (∑ i ∈ Finset.range 10,coefficientRow (40+i)) =621922305:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (40+i)) =773081215:=by decide
 private theorem coefficient_50:
- (∑ i ∈ Finset.range 10,coefficientRow (50+i)) =399101605:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (50+i)) =524046315:=by decide
 private theorem coefficient_60:
- (∑ i ∈ Finset.range 10,coefficientRow (60+i)) =180059580:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (60+i)) =275894977:=by decide
 private theorem coefficient_70:
- (∑ i ∈ Finset.range 10,coefficientRow (70+i)) =32339730:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (70+i)) =78252150:=by decide
 private theorem coefficient_80:
- (∑ i ∈ Finset.range 1,coefficientRow (80+i)) =53906:=by decide
+ (∑ i ∈ Finset.range 5,coefficientRow (80+i)) =3689050:=by decide
 theorem coefficient_count_exact:
-   coefficientCount weightedCap w yTotalCap slopeCap=5949373346:=by
- change (∑ i ∈ Finset.range 81,coefficientRow i) =_
- rw [Finset.sum_range_add coefficientRow 80 1,
+   coefficientCount weightedCap w yTotalCap slopeCap=7237637567:=by
+ change (∑ i ∈ Finset.range 85,coefficientRow i) =_
+ rw [Finset.sum_range_add coefficientRow 80 5,
    Finset.sum_range_add coefficientRow 70 10,
    Finset.sum_range_add coefficientRow 60 10,
    Finset.sum_range_add coefficientRow 50 10,
@@ -60,29 +60,32 @@ private def rankRow (r:ℕ):ℕ:=
  RCN285.seedlessContactRankBound (min r yTotalCap) yTotalCap slopeCap
    (multiplicity-r)
 private theorem rank_0:
- (∑ i ∈ Finset.range 8,rankRow i) =612:=by decide
+ (∑ i ∈ Finset.range 8,rankRow i) =684:=by decide
 private theorem rank_8:
- (∑ i ∈ Finset.range 8,rankRow (8+i)) =1700:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (8+i)) =1900:=by decide
 private theorem rank_16:
- (∑ i ∈ Finset.range 8,rankRow (16+i)) =2788:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (16+i)) =3116:=by decide
 private theorem rank_24:
- (∑ i ∈ Finset.range 8,rankRow (24+i)) =3876:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (24+i)) =4332:=by decide
 private theorem rank_32:
- (∑ i ∈ Finset.range 8,rankRow (32+i)) =4964:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (32+i)) =5548:=by decide
 private theorem rank_40:
- (∑ i ∈ Finset.range 8,rankRow (40+i)) =5345:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (40+i)) =6294:=by decide
 private theorem rank_48:
- (∑ i ∈ Finset.range 10,rankRow (48+i)) =3410:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (48+i)) =4628:=by decide
+private theorem rank_56:
+ (∑ i ∈ Finset.range 5,rankRow (56+i)) =1105:=by decide
 theorem local_rank_exact:
-   localRankBound multiplicity yTotalCap slopeCap=22695:=by
- change (∑ i ∈ Finset.range 58,rankRow i) =_
- rw [Finset.sum_range_add rankRow 48 10,
+   localRankBound multiplicity yTotalCap slopeCap=27607:=by
+ change (∑ i ∈ Finset.range 61,rankRow i) =_
+ rw [Finset.sum_range_add rankRow 56 5,
+   Finset.sum_range_add rankRow 48 8,
    Finset.sum_range_add rankRow 40 8,
    Finset.sum_range_add rankRow 32 8,
    Finset.sum_range_add rankRow 24 8,
    Finset.sum_range_add rankRow 16 8,
    Finset.sum_range_add rankRow 8 8,
-   rank_0,rank_8,rank_16,rank_24,rank_32,rank_40,rank_48] <;> norm_num
+   rank_0,rank_8,rank_16,rank_24,rank_32,rank_40,rank_48,rank_56] <;> norm_num
 theorem interpolation_gate:
    n*localRankBound multiplicity yTotalCap slopeCap <
      coefficientCount weightedCap w yTotalCap slopeCap:=by
