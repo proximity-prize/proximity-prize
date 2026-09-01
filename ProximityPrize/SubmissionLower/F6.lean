@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.HT
+import Mathlib.FieldTheory.Galois.IsGaloisGroup
 import ProximityPrize.SubmissionLower.T8
 import ProximityPrize.SubmissionLower.F7
 import ProximityPrize.SubmissionLower.IU
