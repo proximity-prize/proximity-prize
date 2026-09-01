@@ -190,7 +190,7 @@ theorem numeric_fact2 :
 theorem key_counting :
     (2 ^ 31 - 2 ^ 24 + 1) ^ 8431 * 2 ^ 59 < Nat.choose 262144 139503 := by
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   have hshift : Nat.choose 262144 139503 * (∏ i ∈ Finset.range 8431, (131072 + 1 + i))
       = Nat.choose 262144 131072 * (∏ i ∈ Finset.range 8431, (262144 - 131072 - i)) := by
     have h := choose_shift 262144 131072 8431
@@ -211,7 +211,7 @@ theorem pigeonhole {α β : Type} [Fintype β] [DecidableEq β]
     (hn : Fintype.card β * n < s.card) :
     ∃ y : β, n < (s.filter (fun x => f x = y)).card := by
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   have hsum : s.card
       = ∑ y ∈ (Finset.univ : Finset β), (s.filter (fun x => f x = y)).card :=
     Finset.card_eq_sum_card_fiberwise (fun a _ => Finset.mem_univ _)
@@ -416,7 +416,7 @@ theorem word_agree (a : Carrier) (j : Idx) (hj : j ∈ a.val) :
   rw [word, pmsg_spec]
   by_cases hrow : row = 0
   · subst hrow
-    simp only [if_pos rfl]
+    simp only [if_true]
     rw [cpoly, Polynomial.eval_sub, (gF_eval_zero_iff a.val j).mpr hj, sub_zero]
   · simp only [if_neg hrow]
 
