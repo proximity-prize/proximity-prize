@@ -34,7 +34,7 @@ theorem gates:Gates:=by
 theorem residual_count_lt
     (valid:Gates)
     (Q T:MvPolynomial (Fin 4) K) (hQ:Q ≠ 0) (hrel:IsRelPrime Q T)
-    (hbox:Q ∈ globalCoefficientBox K weightedB w LB 29)
+    (hbox:Q ∈ globalCoefficientBox K weightedB w LB 28)
     (hTcaps:T.degreeOf 1 ≤ 174 ∧ T.degreeOf 2 ≤ 39 ∧ T.degreeOf 3 ≤ LA)
     (selected:K → Polynomial K) (seeds:Finset K)
     (nodes:Finset I) (x u0 u1:I → K)
@@ -50,32 +50,32 @@ theorem residual_count_lt
   classical
   apply asymmetric_stage_count_lt_of_regular_factors
     residualStage residualSingular Q T hQ 2130706433
-    (by change 1 ≤ 29; decide) (by change 29 < 2130706433; decide)
+    (by change 1 ≤ 28; decide) (by change 28 < 2130706433; decide)
     (by change 1 ≤ 131071; decide) (by change 131071 < 2130706433; decide) valid.kD
     valid.algebraic_pos valid.implicit_small valid.algebraic_small valid.mixed_small
-    (by change 131071 < 181717; decide) (by change 181717 ≤ 262144; decide)
+    (by change 131071 < 181707; decide) (by change 181707 ≤ 262144; decide)
     hbox (by norm_num only [residualStage,UnequalParameters.gap,agreements,w])
     (by simp only [residualSingular,residualStage,TightParameters.gap,
       UnequalParameters.gap])
-    valid.qY (by change 29 ≤ 29; decide) (by exact Nat.le_refl _)
+    valid.qY (by change 28 ≤ 28; decide) (by exact Nat.le_refl _)
     selected seeds nodes x u0 u1 hinj hnodes hdegree hQsolution hTsolution hagreement
     (by simpa only [residualSingular,TightParameters.errors] using hno)
   exact all_regularPairSeeds_bound residualStage Q T hQ hrel
-    weightedB w LB 29 2130706433 hbox (by decide)
-    valid.qY (by change 29 ≤ 29; decide) (by exact Nat.le_refl _)
-    hTcaps.1 hTcaps.2.1 hTcaps.2.2 (by change 1 ≤ 29; decide)
-    (by change 130 < 2130706433; decide) (by change 29 < 2130706433; decide)
+    weightedB w LB 28 2130706433 hbox (by decide)
+    valid.qY (by change 28 ≤ 28; decide) (by exact Nat.le_refl _)
+    hTcaps.1 hTcaps.2.1 hTcaps.2.2 (by change 1 ≤ 28; decide)
+    (by change 127 < 2130706433; decide) (by change 28 < 2130706433; decide)
     valid.leftZ_small valid.mixedY_small valid.mixedR_small valid.mixedZ_small
     selected seeds nodes x u0 u1 hinj hnodes
     (by change 1 ≤ 131071; decide) (by change 131071 < 2130706433; decide)
-    (by change 131071 < 181717; decide) (by change 181717 ≤ 262144; decide)
+    (by change 131071 < 181707; decide) (by change 181707 ≤ 262144; decide)
     hdegree hagreement
     (by simpa only [residualStage,UnequalParameters.errors] using hno)
 theorem gcd_residual_count_lt
     [GCDMonoid (MvPolynomial (Fin 4) K)]
     (QA QB:MvPolynomial (Fin 4) K) (hQA:QA ≠ 0) (hQB:QB ≠ 0)
     (hboxA:QA ∈ RCN100.globalCoefficientBox K weightedC w LA 39)
-    (hboxB:QB ∈ RCN100.globalCoefficientBox K weightedB w LB 29)
+    (hboxB:QB ∈ RCN100.globalCoefficientBox K weightedB w LB 28)
     (selected:K → Polynomial K) (seeds:Finset K)
     (nodes:Finset I) (x u0 u1:I → K)
     (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
@@ -105,14 +105,14 @@ theorem gcd_residual_count_lt
     intro hz
     exact hQA (by rw [hTeq,hz,mul_zero])
   have hQflag:=quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-    QB H Q weightedB w LB 29 0 0 0 hQB hH hQ hboxB hQeq
+    QB H Q weightedB w LB 28 0 0 0 hQB hH hQ hboxB hQeq
     (Nat.zero_le _) (Nat.zero_le _) (Nat.zero_le _)
   have hTflag:=quotient_mem_flagGlobalCoefficientBox_of_mul_eq
     QA H T weightedC w LA 39 0 0 0 hQA hH hT hboxA hTeq
     (Nat.zero_le _) (Nat.zero_le _) (Nat.zero_le _)
-  have hQbox:Q ∈ globalCoefficientBox K weightedB w LB 29:=
+  have hQbox:Q ∈ globalCoefficientBox K weightedB w LB 28:=
     RCN101.flag_box_to_ordinary K
-      weightedB w LB 29 Q (by simpa only [Nat.sub_zero] using hQflag)
+      weightedB w LB 28 Q (by simpa only [Nat.sub_zero] using hQflag)
   have hTbox:T ∈ globalCoefficientBox K weightedC w LA 39:=
     RCN101.flag_box_to_ordinary K
       weightedC w LA 39 T (by simpa only [Nat.sub_zero] using hTflag)
