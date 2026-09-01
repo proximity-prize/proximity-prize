@@ -128,59 +128,59 @@ private theorem coefficientCount_succ_large (D w L s t:ℕ)
         (D-w*i-(w-1)*j):=by simp only [Finset.sum_add_distrib]
 private theorem rankStep72:rankStep 72 21=44495:=by decide
 private theorem coefficientStep72:
-    coefficientStep 13084344 131071 21 100=11691310565:=by decide
-private theorem baseRank72:RCN119.localRankBound 72 3408 21=150282341:=by decide
+    coefficientStep 13083624 131071 21 100=11689892885:=by decide
+private theorem baseRank72:RCN119.localRankBound 72 3592 21=158469421:=by decide
 private theorem baseGap72:
-    RCN100.coefficientCount 13084344 131071 3408 21-
-      262144*RCN119.localRankBound 72 3408 21=25591346:=by
+    RCN100.coefficientCount 13083624 131071 3592 21-
+      262144*RCN119.localRankBound 72 3592 21=16410746:=by
   rw [baseRank72,RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
-    13084344 131071 3408 21 100 (by decide) (by decide)]
+    13083624 131071 3592 21 100 (by decide) (by decide)]
   decide
-theorem auxiliary72_gap_affine (L:ℕ) (hL:3408≤L):
-    RCN100.coefficientCount 13084344 131071 L 21-
-      262144*RCN119.localRankBound 72 L 21=27213285*L-92717283934:=by
+theorem auxiliary72_gap_affine (L:ℕ) (hL:3592≤L):
+    RCN100.coefficientCount 13083624 131071 L 21-
+      262144*RCN119.localRankBound 72 L 21=25795605*L-92641402414:=by
   obtain ⟨d,rfl⟩:=Nat.exists_eq_add_of_le hL
   induction d with
   | zero=>simpa using baseGap72
   | succ d ih=>
-    have hc:=coefficientCount_succ_large 13084344 131071 (3408+d) 21 100
+    have hc:=coefficientCount_succ_large 13083624 131071 (3592+d) 21 100
       (by omega) (by decide) (by omega)
-    have hr:=localRankBound_succ_large 72 (3408+d) 21 (by omega)
+    have hr:=localRankBound_succ_large 72 (3592+d) 21 (by omega)
     rw [coefficientStep72] at hc
     rw [rankStep72] at hr
     rw [Nat.add_succ,hc,hr]
     omega
 private theorem rankStep126:rankStep 126 39=242300:=by decide
 private theorem coefficientStep126:
-    coefficientStep 22897602 131071 39 175=63895942880:=by decide
-private theorem baseRank126:RCN119.localRankBound 126 2340 39=553598360:=by decide
+    coefficientStep 22896342 131071 39 175=63888105680:=by decide
+private theorem baseRank126:RCN119.localRankBound 126 2387 39=564986460:=by decide
 private theorem baseGap126:
-    RCN100.coefficientCount 22897602 131071 2340 39-
-      262144*RCN119.localRankBound 126 2340 39=225904570:=by
+    RCN100.coefficientCount 22896342 131071 2387 39-
+      262144*RCN119.localRankBound 126 2387 39=52791130:=by
   rw [baseRank126,RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
-    22897602 131071 2340 39 175 (by decide) (by decide)]
+    22896342 131071 2387 39 175 (by decide) (by decide)]
   decide
-theorem auxiliary126_gap_affine (L:ℕ) (hL:2340≤L):
-    RCN100.coefficientCount 22897602 131071 L 39-
-      262144*RCN119.localRankBound 126 L 39=378451680*L-885351026630:=by
+theorem auxiliary126_gap_affine (L:ℕ) (hL:2387≤L):
+    RCN100.coefficientCount 22896342 131071 L 39-
+      262144*RCN119.localRankBound 126 L 39=370614480*L-884603972630:=by
   obtain ⟨d,rfl⟩:=Nat.exists_eq_add_of_le hL
   induction d with
   | zero=>simpa using baseGap126
   | succ d ih=>
-    have hc:=coefficientCount_succ_large 22897602 131071 (2340+d) 39 175
+    have hc:=coefficientCount_succ_large 22896342 131071 (2387+d) 39 175
       (by omega) (by decide) (by omega)
-    have hr:=localRankBound_succ_large 126 (2340+d) 39 (by omega)
+    have hr:=localRankBound_succ_large 126 (2387+d) 39 (by omega)
     rw [coefficientStep126] at hc
     rw [rankStep126] at hr
     rw [Nat.add_succ,hc,hr]
     omega
-theorem auxiliary72_shape:13084344 + 21 ≤ 131071 * (99 + 1):=by decide
+theorem auxiliary72_shape:13083624 + 21 ≤ 131071 * (99 + 1):=by decide
 theorem auxiliary72_capacity:
-    13084344 - 50657 ≤ (72 - 1) * 181727 + (131071 - 1):=by decide
-theorem auxiliary126_shape:22897602 + 39 ≤ 131071 * (174 + 1):=by decide
+    13083624 - 50647 ≤ (72 - 1) * 181717 + (131071 - 1):=by decide
+theorem auxiliary126_shape:22896342 + 39 ≤ 131071 * (174 + 1):=by decide
 theorem auxiliary126_capacity:
-    22897602 - 50657 ≤ (126 - 1) * 181727 + (131071 - 1):=by decide
+    22896342 - 50647 ≤ (126 - 1) * 181717 + (131071 - 1):=by decide
 theorem auxiliary126_double_capacity:
-    22897602 - 2 * 50657 ≤
-      (126 - 2) * 181727 + 2 * (131071 - 1):=by decide
+    22896342 - 2 * 50647 ≤
+      (126 - 2) * 181717 + 2 * (131071 - 1):=by decide
 end ProximityPrize.SubmissionLower.LocatorAuxiliaryArithmetic
