@@ -3,7 +3,7 @@ namespace ProximityPrize.SubmissionLower.LocatorSourceArithmetic
 open RCN100 RCN119 RCN302
 set_option maxRecDepth 100000
 theorem kernelAmbient_nullity:
-    coefficientCount 39050020 131071 169536 63 -
-      262144 * localRankBound 215 169536 63=325815967324336:=
+    coefficientCount 47947152 131071 149307 80 -
+      262144 * localRankBound 264 149307 80=583914549944061:=
   LocatorArithmetic.kernelC_nullity
 end ProximityPrize.SubmissionLower.LocatorSourceArithmetic

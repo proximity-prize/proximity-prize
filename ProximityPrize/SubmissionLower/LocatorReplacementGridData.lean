@@ -63,7 +63,10 @@ def chosenCost (c : Cell) : ℕ :=
   else if RouteFits sourceC 4 b then routeCost sourceC b 4
   else if RouteFits sourceC 5 b then routeCost sourceC b 5
   else if RouteFits sourceC 6 b then routeCost sourceC b 6
-  else routeCost sourceC b 7
+  else if RouteFits sourceC 7 b then routeCost sourceC b 7
+  else if RouteFits sourceC 8 b then routeCost sourceC b 8
+  else if RouteFits sourceC 9 b then routeCost sourceC b 9
+  else routeCost sourceC b 10
 
 theorem chosenCost_rate (c : Cell) (hv : Valid c) :
     totalCap * chosenCost c ≤ bound * (box c).factorT := by
@@ -100,8 +103,22 @@ theorem chosenCost_rate (c : Cell) (hv : Valid c) :
                 by_cases hC6 : RouteFits sourceC 6 (box c)
                 · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
                     hC6, if_pos, if_false] using hC6.2.2.2.2.2.2.2.2
-                · have hC7 := hroutes.resolve_left hC6
-                  simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
-                    hC6, if_pos, if_false] using hC7.2.2.2.2.2.2.2.2
+                · have hroutes := hroutes.resolve_left hC6
+                  by_cases hC7 : RouteFits sourceC 7 (box c)
+                  · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
+                      hC6, hC7, if_pos, if_false] using hC7.2.2.2.2.2.2.2.2
+                  · have hroutes := hroutes.resolve_left hC7
+                    by_cases hC8 : RouteFits sourceC 8 (box c)
+                    · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
+                        hC6, hC7, hC8, if_pos, if_false] using hC8.2.2.2.2.2.2.2.2
+                    · have hroutes := hroutes.resolve_left hC8
+                      by_cases hC9 : RouteFits sourceC 9 (box c)
+                      · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
+                          hC6, hC7, hC8, hC9, if_pos, if_false] using
+                          hC9.2.2.2.2.2.2.2.2
+                      · have hC10 := hroutes.resolve_left hC9
+                        simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
+                          hC6, hC7, hC8, hC9, if_pos, if_false] using
+                          hC10.2.2.2.2.2.2.2.2
 
 end ProximityPrize.SubmissionLower.LocatorReplacementGridData

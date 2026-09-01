@@ -7,7 +7,7 @@ set_option maxHeartbeats 30000000
 
 theorem receipt_row_08_band_04_t_04 : RowTileReceipt 8 6 7 8 15 := by decide +kernel
 
-theorem receipt_row_08_band_04_t_05 : RowTileReceipt 8 6 7 15 23 := by decide +kernel
+theorem receipt_row_08_band_04_t_05 : RowTileReceipt 8 6 7 15 24 := by decide +kernel
 
 theorem receipt_row_08_band_04 : RowBandReceipt 8 6 7 := by
   intro cy hylo hyhi ct

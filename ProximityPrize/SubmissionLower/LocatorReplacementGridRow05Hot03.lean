@@ -14,13 +14,13 @@ theorem receipt_row_05_band_04 : RowBandReceipt 5 12 15 := by
   · exact receipt_row_05_band_04_c cy (by omega) hyhi
 
 private theorem receipt_row_05_band_05_y_15_fixed :
-    FixedYReceipt 5 ⟨15, by decide⟩ 0 23 := by decide +kernel
+    FixedYReceipt 5 ⟨15, by decide⟩ 0 24 := by decide +kernel
 
 theorem receipt_row_05_band_05_y_15 : RowBandReceipt 5 15 16 :=
   fixedYReceipt_to_rowBand 5 ⟨15, by decide⟩ receipt_row_05_band_05_y_15_fixed
 
 private theorem receipt_row_05_band_05_y_16_fixed :
-    FixedYReceipt 5 ⟨16, by decide⟩ 0 23 := by decide +kernel
+    FixedYReceipt 5 ⟨16, by decide⟩ 0 24 := by decide +kernel
 
 theorem receipt_row_05_band_05_y_16 : RowBandReceipt 5 16 17 :=
   fixedYReceipt_to_rowBand 5 ⟨16, by decide⟩ receipt_row_05_band_05_y_16_fixed
