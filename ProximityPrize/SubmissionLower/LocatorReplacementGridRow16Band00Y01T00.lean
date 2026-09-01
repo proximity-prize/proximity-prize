@@ -1,0 +1,6 @@
+import ProximityPrize.SubmissionLower.LocatorReplacementGridRow16Band00Y00
+namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
+set_option maxRecDepth 100000
+set_option maxHeartbeats 30000000
+theorem receipt_row_16_band_00_y_01_t_00 : RowTileReceipt 16 1 2 0 11 := by decide +kernel
+end ProximityPrize.SubmissionLower.LocatorReplacementGridData
