@@ -10,11 +10,11 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
 
 private abbrev prime : ℕ := 2130706433
-abbrev bound : ℕ := 266990962477160602
+abbrev bound : ℕ := 135101317857843592
 abbrev totalCap : ℕ := 2992
 private abbrev ysCap : ℕ := 87
 private abbrev slopeCap : ℕ := 19
-private abbrev delta : ℕ := 50548
+private abbrev delta : ℕ := 50519
 
 /-- A rectangular cumulative-degree box for one irreducible factor. -/
 structure Box where
@@ -82,7 +82,7 @@ def bandSum (src : Source) (b : Box) : ℕ → ℕ
   | _ => 0
 
 def stagePair (src : Source) (b : Box) (j : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181618, b.factorY, b.r, b.thi,
+  ⟨262144, 131071, 181589, b.factorY, b.r, b.thi,
     stageY src b j, stageR src b j, stageT src b j⟩
 
 def PairGates (P : UnequalParameters) : Prop :=
@@ -201,7 +201,7 @@ theorem fastRouteFits_iff (src : Source) (k : ℕ) (b : Box) :
     exact ⟨hkpos, hkcap, hy, hr, hlen, hterminal, hband, hgates, hcost⟩
 
 def helperPair (b : Box) : UnequalParameters :=
-  ⟨262144, 131071, 181618, b.factorY, b.r, b.thi, 333, 71, 457347⟩
+  ⟨262144, 131071, 181589, b.factorY, b.r, b.thi, 333, 71, 457347⟩
 
 def helperPairCost (b : Box) : ℕ := (helperPair b).regularCountCap
 def HelperPairGates (b : Box) : Prop := PairGates (helperPair b)
