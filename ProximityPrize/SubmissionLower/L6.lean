@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.CT
+import Mathlib.RingTheory.Derivation.ToSquareZero
 import ProximityPrize.SubmissionLower.I8
 namespace ProximityPrize.SubmissionLower.RCN188
 open RCN078
