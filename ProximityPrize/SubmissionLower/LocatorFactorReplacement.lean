@@ -165,6 +165,30 @@ theorem aggregate_of_bad_cells {I:Type*} [Fintype I]
         _ ≤ bound * T:=Nat.mul_le_mul_left bound ht
         _ = T * bound:=by ring
     exact Nat.le_of_mul_le_mul_left hscaled hT
+theorem aggregate_of_rate_replacements {I:Type*} [Fintype I]
+    (p:I → FlagDegree) (count q:I → ℕ) (T d e bound:ℕ)
+    (hT:0 < T)
+    (ht:(∑ i, total (p i)) ≤ T)
+    (hstage:∀ i, count i ≤ paddedCost d e (p i))
+    (hrepl:∀ i, Bad T d e bound (p i) → count i ≤ q i)
+    (hqrate:∀ i, Bad T d e bound (p i) →
+      T * q i ≤ bound * total (p i)) :
+    (∑ i, count i) ≤ bound:=by
+  have hone (i:I):T * count i ≤ bound * total (p i):=by
+    by_cases hbad:Bad T d e bound (p i)
+    · exact (Nat.mul_le_mul_left T (hrepl i hbad)).trans (hqrate i hbad)
+    · have hordinary:T * paddedCost d e (p i) ≤ bound * total (p i):=by
+        unfold Bad at hbad
+        omega
+      exact (Nat.mul_le_mul_left T (hstage i)).trans hordinary
+  have hscaled:T * (∑ i, count i) ≤ T * bound:=by
+    calc
+      _ = ∑ i, T * count i:=by rw [Finset.mul_sum]
+      _ ≤ ∑ i, bound * total (p i):=Finset.sum_le_sum (fun i _ => hone i)
+      _ = bound * (∑ i, total (p i)):=by rw [Finset.mul_sum]
+      _ ≤ bound * T:=Nat.mul_le_mul_left bound ht
+      _ = T * bound:=by ring
+  exact Nat.le_of_mul_le_mul_left hscaled hT
 theorem aggregate_6751 {I:Type*} [Fintype I]
     (p:I → FlagDegree) (count q:I → ℕ)
     (hs:(∑ i, (p i).all) ≤ 14)

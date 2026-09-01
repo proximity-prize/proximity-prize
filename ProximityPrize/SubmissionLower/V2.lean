@@ -1,4 +1,5 @@
-import ProximityPrize.SubmissionLower.F9
+import Mathlib.RingTheory.Unramified.Basic
+import Mathlib.RingTheory.Flat.Basic
 section ProximityFlatProofPort
 open Algebra Module
 open scoped TensorProduct
