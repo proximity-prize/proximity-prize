@@ -38,6 +38,26 @@ VERDICTS = {
     "resource outcome, not a judgement on the proof.",
 }
 
+# Some failures carry their cause in the code, and the status is too coarse to
+# describe them. `failed` means "no verdict was reached", which is true of a
+# broken verifier and equally true of a candidate that outgrew a published
+# ceiling -- and only one of those is ours. Without this the headline told an
+# author their submission was an infrastructure fault while the two lines under
+# it named the ceiling they had exceeded.
+#
+# Keyed on the code rather than a new status because the status is what every
+# caller, poller and terminal-state set already agrees on; this is a better
+# sentence in front of it, not a new state to roll out.
+CODE_VERDICTS = {
+    # Points at AGENTS.md and nothing else. The manifest that sets the ceiling
+    # lives in a private repository and no endpoint publishes it, so naming it
+    # sent an author to a door they cannot open. The rule in their own checkout
+    # carries the same number and says what to do about it.
+    "candidate_out_of_memory": "The submission exceeded the memory the challenge "
+    "allows. This is a resource outcome, not a judgement on the proof -- see the "
+    "memory rule in AGENTS.md, which gives the budget and the usual cause.",
+}
+
 
 def main() -> int:
     if len(sys.argv) != 2:
@@ -61,7 +81,9 @@ def main() -> int:
     detail = failure if isinstance(failure, dict) else {}
     code = detail.get("code") or "unknown"
     message = detail.get("message") or ""
-    headline = VERDICTS.get(state, f"The submission ended in state {state!r}.")
+    headline = CODE_VERDICTS.get(code) or VERDICTS.get(
+        state, f"The submission ended in state {state!r}."
+    )
 
     # stderr so it lands in the step's own log, where the link in Yukon's
     # comment points.
@@ -73,7 +95,12 @@ def main() -> int:
 
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:
-        title = "Proof refused" if state == "rejected" else "Verification did not complete"
+        if state == "rejected":
+            title = "Proof refused"
+        elif code in CODE_VERDICTS:
+            title = "Submission exceeded a challenge limit"
+        else:
+            title = "Verification did not complete"
         with open(summary, "a", encoding="utf-8") as handle:
             handle.write(f"## {title}\n\n{headline}\n\n")
             handle.write(f"- **status**: `{state}`\n- **code**: `{code}`\n")
