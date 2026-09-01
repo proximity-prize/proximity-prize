@@ -105,11 +105,11 @@ private theorem count_le_stageCost
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (c : Cell)
     (hcell : InCell (regularCumulativeFlag H F) c)
     (src : Source) (j : ℕ) (Q : P4) (_hQ : Q ≠ 0)
@@ -148,8 +148,8 @@ private theorem count_le_stageCost
       norm_num [I, IRSProfile.Index])
     (by simpa only [stagePair] using (show 1 ≤ 131071 by decide))
     (by simpa only [stagePair] using (show 131071 < 2130706433 by decide))
-    (by simpa only [stagePair] using (show 131071 < 181638 by decide))
-    (by simpa only [stagePair] using (show 181638 ≤ 262144 by decide))
+    (by simpa only [stagePair] using (show 131071 < 181589 by decide))
+    (by simpa only [stagePair] using (show 181589 ≤ 262144 by decide))
     hdegree hagreement
     (by simpa only [stagePair, UnequalParameters.errors, Nat.reduceSub] using hno)
     hQzero
@@ -180,15 +180,15 @@ private theorem source_one_count
     (hgap : coefficientCount D 131071 127295 s -
       262144 * localRankBound m 127295 s = gap)
     (hshape : D + s ≤ 131071 * (Ysrc + 1))
-    (hcapacity : D - 50568 ≤ (m - 1) * 181638 + (131071 - 1))
+    (hcapacity : D - 50568 ≤ (m - 1) * 181589 + (131071 - 1))
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : ConstraintKernel (K := K) D 131071 127295 s m
       IRSProfile.domain u0 u1,
@@ -219,7 +219,7 @@ private theorem source_one_count
       simpa only [bandSum, stageBand, hsrcGap] using hband)
   obtain ⟨_v, Q, _hv, hQ, _heq, hQbox, _hparent, hproduct⟩ :=
     exists_fixed_quotient_with_derivative_vanishing (K := K) (I := I)
-      D 131071 127295 s m Ysrc 50568 181638 IRSProfile.domain u0 u1
+      D 131071 127295 s m Ysrc 50568 181589 IRSProfile.domain u0 u1
       F.1 hF hdiv (by decide) hshape hsource hcapacity
       selected Gamma hdegree hagreement
   have hwQ := nested_mem_weights hQbox hQ
@@ -269,11 +269,11 @@ private theorem sourceC_power_count
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (v : ConstraintKernel (K := K) 33784668 131071 127295 55 186
@@ -342,7 +342,7 @@ private theorem sourceC_power_count
       have hgammaG := regularSeeds_subset H selected Gamma F hgamma
       let support := (Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181638 ≤ support.card := hagreement gamma hgammaG
+      have hcard : 181589 ≤ support.card := hagreement gamma hgammaG
       have hcap : 33784668 - 50568 ≤
           (186 - 1) * support.card + (131071 - 1) :=
         LocatorAuxiliaryArithmetic.auxiliary176_capacity.trans
@@ -372,7 +372,7 @@ private theorem sourceC_power_count
       have hgammaG := regularSeeds_subset H selected Gamma F hgamma
       let support := (Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181638 ≤ support.card := hagreement gamma hgammaG
+      have hcard : 181589 ≤ support.card := hagreement gamma hgammaG
       have hcap : 33784668 - 2 * 50568 ≤
           (186 - 2) * support.card + 2 * (131071 - 1) :=
         LocatorAuxiliaryArithmetic.auxiliary176_double_capacity.trans
@@ -399,11 +399,11 @@ private theorem sourceC_power_count
       have hgammaG := regularSeeds_subset H selected Gamma F hgamma
       let support := (Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181638 ≤ support.card := hagreement gamma hgammaG
+      have hcard : 181589 ≤ support.card := hagreement gamma hgammaG
       have hcap : 33784668 - 3 * 50568 ≤
           (186 - 3) * support.card + 3 * (131071 - 1) := by
         apply (show 33784668 - 3 * 50568 ≤
-          (186 - 3) * 181638 + 3 * (131071 - 1) by decide).trans
+          (186 - 3) * 181589 + 3 * (131071 - 1) by decide).trans
         exact Nat.add_le_add_right (Nat.mul_le_mul_left (186 - 3) hcard) _
       have hvalues : ∀ i ∈ support,
           (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i := by
@@ -427,11 +427,11 @@ private theorem sourceC_power_count
       have hgammaG := regularSeeds_subset H selected Gamma F hgamma
       let support := (Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181638 ≤ support.card := hagreement gamma hgammaG
+      have hcard : 181589 ≤ support.card := hagreement gamma hgammaG
       have hcap : 33784668 - 4 * 50568 ≤
           (186 - 4) * support.card + 4 * (131071 - 1) := by
         apply (show 33784668 - 4 * 50568 ≤
-          (186 - 4) * 181638 + 4 * (131071 - 1) by decide).trans
+          (186 - 4) * 181589 + 4 * (131071 - 1) by decide).trans
         exact Nat.add_le_add_right (Nat.mul_le_mul_left (186 - 4) hcard) _
       have hvalues : ∀ i ∈ support,
           (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i := by
@@ -455,11 +455,11 @@ private theorem sourceC_power_count
       have hgammaG := regularSeeds_subset H selected Gamma F hgamma
       let support := (Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181638 ≤ support.card := hagreement gamma hgammaG
+      have hcard : 181589 ≤ support.card := hagreement gamma hgammaG
       have hcap : 33784668 - 5 * 50568 ≤
           (186 - 5) * support.card + 5 * (131071 - 1) := by
         apply (show 33784668 - 5 * 50568 ≤
-          (186 - 5) * 181638 + 5 * (131071 - 1) by decide).trans
+          (186 - 5) * 181589 + 5 * (131071 - 1) by decide).trans
         exact Nat.add_le_add_right (Nat.mul_le_mul_left (186 - 5) hcard) _
       have hvalues : ∀ i ∈ support,
           (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i := by
@@ -483,11 +483,11 @@ private theorem sourceC_power_count
       have hgammaG := regularSeeds_subset H selected Gamma F hgamma
       let support := (Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)
-      have hcard : 181638 ≤ support.card := hagreement gamma hgammaG
+      have hcard : 181589 ≤ support.card := hagreement gamma hgammaG
       have hcap : 33784668 - 6 * 50568 ≤
           (186 - 6) * support.card + 6 * (131071 - 1) := by
         apply (show 33784668 - 6 * 50568 ≤
-          (186 - 6) * 181638 + 6 * (131071 - 1) by decide).trans
+          (186 - 6) * 181589 + 6 * (131071 - 1) by decide).trans
         exact Nat.add_le_add_right (Nat.mul_le_mul_left (186 - 6) hcard) _
       have hvalues : ∀ i ∈ support,
           (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i := by
@@ -520,11 +520,11 @@ private theorem sourceC_count_k2_core
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (q : KernelC u0 u1 →ₗ[K] P4) (hqinj : Function.Injective q)
@@ -603,11 +603,11 @@ private theorem sourceC_count_k3_core
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (q : KernelC u0 u1 →ₗ[K] P4) (hqinj : Function.Injective q)
@@ -704,11 +704,11 @@ private theorem sourceC_count_k4_core
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (q : KernelC u0 u1 →ₗ[K] P4) (hqinj : Function.Injective q)
@@ -821,11 +821,11 @@ private theorem sourceC_count_k5_core
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (q : KernelC u0 u1 →ₗ[K] P4) (hqinj : Function.Injective q)
@@ -956,11 +956,11 @@ private theorem sourceC_count_k6_core
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (q : KernelC u0 u1 →ₗ[K] P4) (hqinj : Function.Injective q)
@@ -1234,11 +1234,11 @@ private theorem sourceC_count_k2
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : KernelC u0 u1,
       F.1 ∣ reconstruct K 33784668 131071 127295 55 v.1)
@@ -1256,11 +1256,11 @@ private theorem sourceC_count_k3
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : KernelC u0 u1,
       F.1 ∣ reconstruct K 33784668 131071 127295 55 v.1)
@@ -1278,11 +1278,11 @@ private theorem sourceC_count_k4
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : KernelC u0 u1,
       F.1 ∣ reconstruct K 33784668 131071 127295 55 v.1)
@@ -1300,11 +1300,11 @@ private theorem sourceC_count_k5
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : KernelC u0 u1,
       F.1 ∣ reconstruct K 33784668 131071 127295 55 v.1)
@@ -1322,11 +1322,11 @@ private theorem sourceC_count_k6
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : KernelC u0 u1,
       F.1 ∣ reconstruct K 33784668 131071 127295 55 v.1)
@@ -1344,11 +1344,11 @@ theorem regularSeeds_count_le_chosen
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181638 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdivA : ∀ v : ConstraintKernel (K := K) 11443194 131071 127295 19 63
       IRSProfile.domain u0 u1,

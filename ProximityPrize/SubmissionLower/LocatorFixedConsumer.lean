@@ -26,10 +26,10 @@ theorem regular_sum_count
     (hSupport:ResidualSupportData wholeSupport H)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181638 ≤
+    (hagreement:∀ gamma ∈ Gamma,181589 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80555)
     (qCost:RegularIndex H → ℕ)
     (hqCost:∀ R,LocatorFactorReplacement.Bad 2844 131072 131073
       270202635715687185 (regularCumulativeFlag H R) →
@@ -61,10 +61,10 @@ theorem fixed_count_le
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hsolution:∀ gamma ∈ Gamma,specialization K (selected gamma) gamma H=0)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181638 ≤
+    (hagreement:∀ gamma ∈ Gamma,181589 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80506)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80555)
     (qCost:RegularIndex H → ℕ)
     (hqCost:∀ R,LocatorFactorReplacement.Bad 2844 131072 131073
       270202635715687185 (regularCumulativeFlag H R) →

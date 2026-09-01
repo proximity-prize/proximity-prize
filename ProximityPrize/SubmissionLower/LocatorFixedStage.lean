@@ -11,8 +11,8 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80506
-def agreements:ℕ:=181638
+def errors:ℕ:=80555
+def agreements:ℕ:=181589
 def gap:ℕ:=50567
 def prime:ℕ:=2130706433
 def weightedCap:ℕ:=11443194

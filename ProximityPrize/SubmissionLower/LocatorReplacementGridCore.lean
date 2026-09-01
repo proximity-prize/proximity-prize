@@ -75,7 +75,7 @@ def bandSum (src : Source) (b : Box) : ℕ → ℕ
   | _ => 0
 
 def stagePair (src : Source) (b : Box) (j : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181638, b.factorY, b.r, b.thi,
+  ⟨262144, 131071, 181589, b.factorY, b.r, b.thi,
     stageY src b j, stageR src b j, stageT b j⟩
 
 def PairGates (P : UnequalParameters) : Prop :=

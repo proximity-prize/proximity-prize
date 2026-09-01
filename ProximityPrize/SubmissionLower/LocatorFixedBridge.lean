@@ -19,10 +19,10 @@ theorem gcd_fixed_count_le
     (u0 u1:I → K) (S:SelectedPair u0 u1)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181638 ≤
+    (hagreement:∀ gamma ∈ Gamma,181589 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80506) :
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80555) :
     (LocatorCover.fixed
       (fun gamma=> (specialization K (selected gamma) gamma).toRingHom)
       Gamma S.QA S.QB).card ≤
@@ -56,12 +56,12 @@ theorem gcd_fixed_count_le
     exact LocatorCover.fixed_vanish phi Gamma S.QA S.QB gamma hg
   have hdegreeD:∀ gamma ∈ Delta, (selected gamma).natDegree ≤ 131071:=
     fun gamma hg=> hdegree gamma (hsub hg)
-  have hagreementD:∀ gamma ∈ Delta,181638 ≤
+  have hagreementD:∀ gamma ∈ Delta,181589 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card:=
     fun gamma hg=> hagreement gamma (hsub hg)
-  have hnoD:NoLargeSelectedPencil selected Delta 131071 80506:=
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80506 hsub hno
+  have hnoD:NoLargeSelectedPencil selected Delta 131071 80555:=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80555 hsub hno
   let p:=regularCumulativeFlag H
   have hfcaps (F:RegularIndex H) :
       (p F).all ≤ 19 ∧ middle (p F) ≤ 85 ∧ total (p F) ≤ 2844:=by
