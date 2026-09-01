@@ -11,17 +11,61 @@ def nestedExponents (D w T YS S:ℕ):Set (Fin 4 →₀ ℕ) :=
 def nestedCoefficientBox (K:Type*) [Field K] (D w T YS S:ℕ) :
     Submodule K (MvPolynomial (Fin 4) K) :=
   MvPolynomial.restrictSupport K (nestedExponents D w T YS S)
+
+/-- A range sum defined by primitive recursion on its upper bound. -/
+def kernelSumRange (f : ℕ → ℕ) : ℕ → ℕ
+  | 0 => 0
+  | n + 1 => kernelSumRange f n + f n
+
+theorem kernelSumRange_eq (f : ℕ → ℕ) (n : ℕ) :
+    kernelSumRange f n = ∑ i ∈ Finset.range n, f i := by
+  induction n with
+  | zero => simp [kernelSumRange]
+  | succ k ih => rw [kernelSumRange, ih, Finset.sum_range_succ]
+
+theorem finset_sum_range_sub (a m : ℕ) (h : m ≤ a) :
+    ∑ r ∈ Finset.range (m + 1), (a - r) =
+      (m + 1) * a - (m + 1) * m / 2 := by
+  have hadd :
+      (∑ r ∈ Finset.range (m + 1), (a - r)) +
+          (∑ r ∈ Finset.range (m + 1), r) = (m + 1) * a := by
+    rw [← Finset.sum_add_distrib]
+    have hpt : ∀ r ∈ Finset.range (m + 1), (a - r) + r = a := by
+      intro r hr
+      have hrm : r ≤ m := Nat.lt_succ_iff.mp (Finset.mem_range.mp hr)
+      omega
+    rw [Finset.sum_congr rfl hpt, Finset.sum_const, Finset.card_range,
+      Nat.nsmul_eq_mul]
+  have hgauss : (∑ r ∈ Finset.range (m + 1), r) * 2 = (m + 1) * m :=
+    Finset.sum_range_id_mul_two (m + 1)
+  omega
+
 def channelCount (T YS S:ℕ):ℕ :=
-  ∑ y ∈ Finset.range (min T YS + 1),
-    ∑ r ∈ Finset.range (min S (min (T - y) (YS - y)) + 1),
-      (T + 1 - y - r)
+  kernelSumRange (fun y =>
+    let M := min S (min (T - y) (YS - y))
+    (M + 1) * (T + 1 - y) - (M + 1) * M / 2) (min T YS + 1)
+
+theorem channelCount_eq (T YS S : ℕ) :
+    channelCount T YS S =
+      ∑ y ∈ Finset.range (min T YS + 1),
+        ∑ r ∈ Finset.range (min S (min (T - y) (YS - y)) + 1),
+          (T + 1 - y - r) := by
+  rw [channelCount, kernelSumRange_eq]
+  refine Finset.sum_congr rfl (fun y _ => ?_)
+  let M := min S (min (T - y) (YS - y))
+  have hM : M ≤ T + 1 - y := by
+    have hMT : M ≤ T - y := by
+      exact (Nat.min_le_right _ _).trans (Nat.min_le_left _ _)
+    omega
+  simpa [M] using (finset_sum_range_sub (T + 1 - y) M hM).symm
 abbrev HighBandIndex (delta T YS S:ℕ) :=
   (y:Fin (min T YS + 1)) ×
     (r:Fin (min S (min (T - y.val) (YS - y.val)) + 1)) ×
       (Fin (T + 1 - y.val - r.val) × Fin delta)
 theorem highBandIndex_card (delta T YS S:ℕ) :
     Fintype.card (HighBandIndex delta T YS S) = delta * channelCount T YS S:=by
-  simp [HighBandIndex, channelCount, Fintype.card_sigma,
+  rw [channelCount_eq]
+  simp [HighBandIndex, Fintype.card_sigma,
     Finset.sum_range, Finset.mul_sum, Nat.mul_comm]
 def highBandExponent (w Dlow:ℕ) {delta T YS S:ℕ}
     (c:HighBandIndex delta T YS S):Fin 4 →₀ ℕ :=

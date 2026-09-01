@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.J1
-import ProximityPrize.SubmissionLower.AU
+import Mathlib.RingTheory.MvPolynomial.Localization
 namespace ProximityPrize.SubmissionLower.RCN132
 open RCN136 RCN082
 noncomputable section
