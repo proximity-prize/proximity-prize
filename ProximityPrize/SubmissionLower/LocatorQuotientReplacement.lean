@@ -1,17 +1,20 @@
-import ProximityPrize.SubmissionLower.LocatorQuotientMonotone
 import ProximityPrize.SubmissionLower.LocatorReplacementData
+import ProximityPrize.SubmissionLower.LocatorFactorSwitchApplication6768
 import ProximityPrize.SubmissionLower.LocatorCoprimeQuotient
-import ProximityPrize.SubmissionLower.LocatorDoubleSquareAvoidance
 import ProximityPrize.SubmissionLower.LocatorAuxiliaryArithmetic
+import ProximityPrize.SubmissionLower.LocatorQuotientMonotone
 import ProximityPrize.SubmissionLower.BF
 namespace ProximityPrize.SubmissionLower.LocatorQuotientReplacement
 open ProximityPrize.Benchmark
-open scoped BigOperators
-open RCN081 RCN100 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN238 RCN266 RCN260 LocatorFactorAggregate LocatorLowQuotient LocatorReplacementData LocatorReplacementGrid LocatorAuxiliaryArithmetic LocatorCoprimeQuotient
+open RCN081 RCN100 RCN119 RCN122 RCN128 RCN130 RCN140 RCN156 RCN180 RCN234
+open RCN238 RCN266
+open RCN260 LocatorFactorAggregate LocatorLowQuotient
+open LocatorReplacementData LocatorReplacementGrid
+open LocatorChannelUpper6765 LocatorFactorSwitchApplication6768
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
+set_option maxHeartbeats 10000000
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index
 abbrev P4:=MvPolynomial (Fin 4) K
@@ -20,7 +23,8 @@ local instance:DecidableEq I:=Classical.decEq I
 local instance:CharP K 2130706433:=by
   simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
 
-theorem degreeY_le_ysWeight (Q:P4) :Q.degreeOf (1:Fin 4) ≤ wt residualYSWeights Q:=by
+theorem degreeY_le_ysWeight (Q:P4):
+    Q.degreeOf (1:Fin 4)≤wt residualYSWeights Q:=by
   apply MvPolynomial.degreeOf_le_iff.mpr
   intro d hd
   have h:=MvPolynomial.le_weightedTotalDegree residualYSWeights hd
@@ -28,7 +32,8 @@ theorem degreeY_le_ysWeight (Q:P4) :Q.degreeOf (1:Fin 4) ≤ wt residualYSWeight
   change d 0*0+d 1*1+d 2*1+d 3*0≤wt residualYSWeights Q at h
   omega
 
-theorem degreeZ_le_totalWeight (Q:P4) :Q.degreeOf (3:Fin 4) ≤ wt residualTotalWeights Q:=by
+theorem degreeZ_le_totalWeight (Q:P4):
+    Q.degreeOf (3:Fin 4)≤wt residualTotalWeights Q:=by
   apply MvPolynomial.degreeOf_le_iff.mpr
   intro d hd
   have h:=MvPolynomial.le_weightedTotalDegree residualTotalWeights hd
@@ -36,616 +41,453 @@ theorem degreeZ_le_totalWeight (Q:P4) :Q.degreeOf (3:Fin 4) ≤ wt residualTotal
   change d 0*0+d 1*1+d 2*1+d 3*1≤wt residualTotalWeights Q at h
   omega
 
-theorem factor_weights_of_cell (H:P4) (F:RegularIndex H)
-    (c:Cell)
-    (hcell:InCell (regularCumulativeFlag H F) c) :
-    wt residualSWeights F.1=r c ∧
-      ylo c≤wt residualYSWeights F.1 ∧
-      wt residualYSWeights F.1≤min (yhi c)
-        (thi c) ∧
-      tlo c≤wt residualTotalWeights F.1 ∧
-      wt residualTotalWeights F.1≤thi c ∧
-      131071*ylo c-r c≤
-        wt (contactWeights 131071) F.1:=by
-  have hc:=originalCumulativeFlag_cumulative F.1
-  have hr:wt residualSWeights F.1=r c:=by
-    simpa only [regularCumulativeFlag,hc.1] using hcell.all_eq
-  have hylo:ylo c≤wt residualYSWeights F.1:=by
-    simpa only [middle,regularCumulativeFlag,hc.2.1] using hcell.ylo_le
-  have hyhi:wt residualYSWeights F.1≤yhi c:=by
-    simpa only [middle,regularCumulativeFlag,hc.2.1] using hcell.middle_le_yhi
-  have hyT:wt residualYSWeights F.1≤thi c:=by
-    simpa only [middle,total,regularCumulativeFlag,hc.2.1,hc.2.2] using
-      (middle_le_total (regularCumulativeFlag H F)).trans hcell.total_le_thi
-  have htlo:tlo c≤wt residualTotalWeights F.1:=by
-    simpa only [total,regularCumulativeFlag,hc.2.2] using hcell.tlo_le
-  have hthi:wt residualTotalWeights F.1≤thi c:=by
-    simpa only [total,regularCumulativeFlag,hc.2.2] using hcell.total_le_thi
-  have hmul:=Nat.mul_le_mul_left 131071 hylo
-  have hweight:=residualYS_mul_le_contact_add_slope F.1 131071 (by decide)
-  rw [hr] at hweight
-  exact ⟨hr,hylo,le_min hyhi hyT,htlo,hthi,by omega⟩
-
-private theorem coefficientCount_mono_D_L_s {D D' w L L' s s':ℕ}
-    (hD:D≤D') (hL:L≤L') (hs:s≤s') :
-    coefficientCount D w L s≤coefficientCount D' w L' s':=by
+private theorem coefficientCount_mono_L_s {D w L L' s s':ℕ}
+    (hL:L≤L') (hs:s≤s'):
+    coefficientCount D w L s≤coefficientCount D w L' s':=by
   unfold coefficientCount
   calc
     (∑ i∈Finset.range (L+1),∑ j∈Finset.range (s+1),
       (L+1-i-j)*(D-w*i-(w-1)*j))≤
         ∑ i∈Finset.range (L+1),∑ j∈Finset.range (s+1),
-          (L'+1-i-j)*(D'-w*i-(w-1)*j):=by
+          (L'+1-i-j)*(D-w*i-(w-1)*j):=by
             apply Finset.sum_le_sum
             intro i _
             apply Finset.sum_le_sum
             intro j _
             gcongr
     _≤∑ i∈Finset.range (L+1),∑ j∈Finset.range (s'+1),
-          (L'+1-i-j)*(D'-w*i-(w-1)*j):=by
+          (L'+1-i-j)*(D-w*i-(w-1)*j):=by
             apply Finset.sum_le_sum
             intro i _
             exact Finset.sum_le_sum_of_subset_of_nonneg
               (Finset.range_mono (Nat.succ_le_succ hs)) (by simp)
     _≤∑ i∈Finset.range (L'+1),∑ j∈Finset.range (s'+1),
-          (L'+1-i-j)*(D'-w*i-(w-1)*j):=
+          (L'+1-i-j)*(D-w*i-(w-1)*j):=
             Finset.sum_le_sum_of_subset_of_nonneg
               (Finset.range_mono (Nat.succ_le_succ hL)) (by simp)
 
-private theorem source72_count
-    (u0 u1:I→K) (H:P4) (selected:K→Polynomial K) (Gamma:Finset K)
-    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤131071)
-    (hagreement:∀ gamma∈Gamma,181727≤((Finset.univ:Finset I).filter
-      (fun i=> (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80417)
-    (F:RegularIndex H) (hF:F.1≠0)
-    (hdiv:∀ L,L≤52091→∀ v:ConstraintKernel (K:=K) 13084344 131071 L 21 72
-      IRSProfile.domain u0 u1,F.1∣reconstruct K 13084344 131071 L 21 v.1)
-    (c:Cell)
-    (hcell:InCell (regularCumulativeFlag H F) c)
-    (hfit:Pair72Fits c):
-    (regularSeeds H selected Gamma F).card≤pair72Cost c:=by
-  classical
-  obtain ⟨hr,hylo,hyhi,htlo,hthi,hc⟩:=factor_weights_of_cell H F c hcell
-  have hqT:length72 c-wt residualTotalWeights F.1≤
-      quotient72T c:=by
-    simpa only [quotient72T] using
-      Nat.sub_le_sub_left htlo (length72 c)
-  have hqY:99-wt residualYSWeights F.1≤quotient72YS c:=by
-    simpa only [quotient72YS] using Nat.sub_le_sub_left hylo 99
-  have hqS:21-wt residualSWeights F.1≤quotient72S c:=by
-    simp only [quotient72S,hr]
-    exact le_rfl
-  have hqD:13084344-50657-wt (contactWeights 131071) F.1≤
-      quotient72D c:=by
-    change 13084344-50657-wt (contactWeights 131071) F.1≤
-      13084344-(131071*ylo c-r c)-50657
-    calc
-      _≤13084344-50657-(131071*ylo c-
-          r c):=Nat.sub_le_sub_left hc _
-      _=_:=by omega
-  have hchannels:=channelCount_mono hqT hqY hqS
-  have hLmin:3408≤length72 c:=by
-    simp only [length72,suggestedLength]
-    split <;> omega
-  have hsource:50657*channelCount
-      (length72 c-wt residualTotalWeights F.1)
-      (99-wt residualYSWeights F.1) (21-wt residualSWeights F.1)<
-      coefficientCount 13084344 131071 (length72 c) 21-
-        Fintype.card I*localRankBound 72 (length72 c) 21:=by
-    rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index],
-      auxiliary72_gap_affine
-        (length72 c) hLmin]
-    exact (Nat.mul_le_mul_left 50657 hchannels).trans_lt hfit.2.1
-  obtain ⟨v,Q,_hv,hQ,_heq,hqbox,_hparent,hproduct⟩:=
-    exists_fixed_quotient_with_derivative_vanishing (K:=K) (I:=I)
-      13084344 131071 (length72 c) 21 72 99 50657 181727
-      IRSProfile.domain u0 u1 F.1 hF
-      (hdiv (length72 c) hfit.1) (by decide)
-      auxiliary72_shape hsource
-      auxiliary72_capacity selected Gamma hdegree hagreement
-  have hbox:Q∈nestedCoefficientBox K (quotient72D c) 131071
-      (quotient72T c) (quotient72YS c)
-      (quotient72S c):=
-    nestedCoefficientBox_mono hqD hqT hqY hqS hqbox
-  have hwActual:=nested_mem_weights hqbox hQ
-  have hwCell:=nested_mem_weights hbox hQ
-  have hrel:IsRelPrime F.1 Q:=by
-    have hirr:=(RCN167.positiveRFactors_spec H F.1 F.2).1
-    rcases hfit.2.2.1 with hT|hY|hR
-    · apply isRelPrime_of_weight_sub_bound residualTotalWeights
-        F.1 Q hirr hQ (length72 c) hwActual.1
-      dsimp [quotient72T] at hT;omega
-    · apply isRelPrime_of_weight_sub_bound residualYSWeights
-        F.1 Q hirr hQ 99 hwActual.2.1
-      dsimp [quotient72YS] at hY;omega
-    · apply isRelPrime_of_weight_sub_bound residualSWeights
-        F.1 Q hirr hQ 21 hwActual.2.2.1
-      dsimp [quotient72S] at hR;omega
-  have hFY:F.1.degreeOf 1≤(pair72 c).leftY:=
-    (degreeY_le_ysWeight F.1).trans hyhi
-  have hFR:F.1.degreeOf 2≤(pair72 c).leftR:=by
-    simpa only [pair72,LocatorContact.slope_weight_eq_degreeR]
-      using hr.le
-  have hFZ:F.1.degreeOf 3≤(pair72 c).leftZ:=
-    (degreeZ_le_totalWeight F.1).trans hthi
-  have hQY:Q.degreeOf 1≤(pair72 c).rightY:=
-    (degreeY_le_ysWeight Q).trans hwCell.2.1
-  have hQR:Q.degreeOf 2≤(pair72 c).rightR:=by
-    simpa only [pair72,LocatorContact.slope_weight_eq_degreeR]
-      using hwCell.2.2.1
-  have hQZ:Q.degreeOf 3≤(pair72 c).rightZ:=
-    (degreeZ_le_totalWeight Q).trans hwCell.1
-  rcases hfit.2.2.2.1 with ⟨hleftR,hleftYSmall,hleftRSmall,hleftZSmall,
-    hmixedYSmall,hmixedRSmall,hmixedZSmall⟩
-  have hcount:=regularSeeds_count_le_intersection_of_product
-    (pair72 c) H Q F hrel 2130706433 hFY hFR hFZ hQY hQR hQZ
-    hleftR hleftYSmall hleftRSmall hleftZSmall hmixedYSmall hmixedRSmall hmixedZSmall
-    selected Gamma (Finset.univ:Finset I) IRSProfile.domain u0 u1
-    IRSProfile.domain.injective.injOn
-    (by change (Finset.univ:Finset I).card=262144;rw [Finset.card_univ];norm_num [I,IRSProfile.Index])
-    (by simpa only [pair72] using (show 1≤131071 by decide))
-    (by simpa only [pair72] using (show 131071<2130706433 by decide))
-    (by simpa only [pair72] using (show 131071<181727 by decide))
-    (by simpa only [pair72] using (show 181727≤262144 by decide))
-    hdegree hagreement
-    (by simpa only [pair72,UnequalParameters.errors,Nat.reduceSub] using hno)
-    (fun gamma hgamma=> hproduct gamma (regularSeeds_subset H selected Gamma F hgamma))
-  simpa only [pair72Cost] using hcount
+theorem factor_weights_of_cell (H:P4) (F:RegularIndex H) (c:Cell)
+    (hcell:InCell (regularCumulativeFlag H F) c):
+    wt residualSWeights F.1=r c ∧
+      wt residualYSWeights F.1=y c ∧
+      tlo c≤wt residualTotalWeights F.1 ∧
+      wt residualTotalWeights F.1≤thi c:=by
+  have hc:=originalCumulativeFlag_cumulative F.1
+  exact ⟨by simpa only [regularCumulativeFlag,hc.1] using hcell.all_eq,
+    by simpa only [middle,regularCumulativeFlag,hc.2.1] using hcell.middle_eq,
+    by simpa only [total,regularCumulativeFlag,hc.2.2] using hcell.tlo_le,
+    by simpa only [total,regularCumulativeFlag,hc.2.2] using hcell.total_le_thi⟩
 
-private theorem source126_count
+theorem regularSeeds_count_le_source93
     (u0 u1:I→K) (H:P4) (selected:K→Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤131071)
-    (hagreement:∀ gamma∈Gamma,181727≤((Finset.univ:Finset I).filter
-      (fun i=> (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80417)
+    (hagreement:∀ gamma∈Gamma,181717≤((Finset.univ:Finset I).filter
+      (fun i=>(selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80427)
     (F:RegularIndex H) (hF:F.1≠0)
-    (hdiv:∀ L,L≤52091→∀ v:ConstraintKernel (K:=K) 22897602 131071 L 39 126
-      IRSProfile.domain u0 u1,F.1∣reconstruct K 22897602 131071 L 39 v.1)
-    (c:Cell)
-    (hcell:InCell (regularCumulativeFlag H F) c)
-    (hfit:Pair126Fits c):
-    (regularSeeds H selected Gamma F).card≤pair126Cost c:=by
+    (hdiv:∀ L,L≤52091→∀ v:ConstraintKernel (K:=K) 16899681 131071 L 27 93
+      IRSProfile.domain u0 u1,F.1∣reconstruct K 16899681 131071 L 27 v.1)
+    (hcontact:wt (contactWeights 131071) F.1<10539586)
+    (c:Cell) (hcell:InCell (regularCumulativeFlag H F) c)
+    (hfit:sourceFits c):
+    (regularSeeds H selected Gamma F).card≤sourceCost c:=by
   classical
-  obtain ⟨hr,hylo,hyhi,htlo,hthi,hc⟩:=factor_weights_of_cell H F c hcell
-  have hqT:length126 c-wt residualTotalWeights F.1≤
-      quotient126T c:=by
-    simpa only [quotient126T] using
-      Nat.sub_le_sub_left htlo (length126 c)
-  have hqY:174-wt residualYSWeights F.1≤quotient126YS c:=by
-    simpa only [quotient126YS] using Nat.sub_le_sub_left hylo 174
-  have hqS:39-wt residualSWeights F.1≤quotient126S c:=by
-    simp only [quotient126S,hr]
-    exact le_rfl
-  have hqD:22897602-50657-wt (contactWeights 131071) F.1≤
-      quotient126D c:=by
-    change 22897602-50657-wt (contactWeights 131071) F.1≤
-      22897602-(131071*ylo c-r c)-50657
-    calc
-      _≤22897602-50657-(131071*ylo c-
-          r c):=Nat.sub_le_sub_left hc _
-      _=_:=by omega
-  have hchannels:=channelCount_mono hqT hqY hqS
-  have hLmin:2340≤length126 c:=by
-    simp only [length126,suggestedLength]
-    split <;> omega
-  have hsource:50657*channelCount
-      (length126 c-wt residualTotalWeights F.1)
-      (174-wt residualYSWeights F.1) (39-wt residualSWeights F.1)<
-      coefficientCount 22897602 131071 (length126 c) 39-
-        Fintype.card I*localRankBound 126 (length126 c) 39:=by
+  obtain ⟨hLmin,hLmax,h2t,hbands,hsmall,hcop,hqGates,hcGates,hcost⟩:=hfit
+  obtain ⟨hr,hy,htlo,hthi⟩:=factor_weights_of_cell H F c hcell
+  let L:=sourceLength c
+  have hdivL:∀ v:ConstraintKernel (K:=K) 16899681 131071 L 27 93
+      IRSProfile.domain u0 u1,
+      F.1∣reconstruct K 16899681 131071 L 27 v.1:=hdiv L hLmax
+  have hnull:
+      coefficientCount 16899681 131071 L 27-
+        Fintype.card I*localRankBound 93 L 27=sourceNullity c:=by
     rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index],
-      auxiliary126_gap_affine
-        (length126 c) hLmin]
-    exact (Nat.mul_le_mul_left 50657 hchannels).trans_lt hfit.2.1
-  obtain ⟨v,Q,_hv,hQ,_heq,hqbox,_hparent,hproduct⟩:=
-    exists_fixed_quotient_with_derivative_vanishing (K:=K) (I:=I)
-      22897602 131071 (length126 c) 39 126 174 50657 181727
-      IRSProfile.domain u0 u1 F.1 hF
-      (hdiv (length126 c) hfit.1) (by decide)
-      auxiliary126_shape hsource
-      auxiliary126_capacity selected Gamma hdegree hagreement
-  have hbox:Q∈nestedCoefficientBox K (quotient126D c) 131071
-      (quotient126T c) (quotient126YS c)
-      (quotient126S c):=
-    nestedCoefficientBox_mono hqD hqT hqY hqS hqbox
-  have hwActual:=nested_mem_weights hqbox hQ
-  have hwCell:=nested_mem_weights hbox hQ
-  have hrel:IsRelPrime F.1 Q:=by
-    have hirr:=(RCN167.positiveRFactors_spec H F.1 F.2).1
-    rcases hfit.2.2.1 with hT|hY|hR
-    · apply isRelPrime_of_weight_sub_bound residualTotalWeights
-        F.1 Q hirr hQ (length126 c) hwActual.1
-      dsimp [quotient126T] at hT;omega
-    · apply isRelPrime_of_weight_sub_bound residualYSWeights
-        F.1 Q hirr hQ 174 hwActual.2.1
-      dsimp [quotient126YS] at hY;omega
-    · apply isRelPrime_of_weight_sub_bound residualSWeights
-        F.1 Q hirr hQ 39 hwActual.2.2.1
-      dsimp [quotient126S] at hR;omega
-  have hFY:F.1.degreeOf 1≤(pair126 c).leftY:=
-    (degreeY_le_ysWeight F.1).trans hyhi
-  have hFR:F.1.degreeOf 2≤(pair126 c).leftR:=by
-    simpa only [pair126,LocatorContact.slope_weight_eq_degreeR]
-      using hr.le
-  have hFZ:F.1.degreeOf 3≤(pair126 c).leftZ:=
-    (degreeZ_le_totalWeight F.1).trans hthi
-  have hQY:Q.degreeOf 1≤(pair126 c).rightY:=
-    (degreeY_le_ysWeight Q).trans hwCell.2.1
-  have hQR:Q.degreeOf 2≤(pair126 c).rightR:=by
-    simpa only [pair126,LocatorContact.slope_weight_eq_degreeR]
-      using hwCell.2.2.1
-  have hQZ:Q.degreeOf 3≤(pair126 c).rightZ:=
-    (degreeZ_le_totalWeight Q).trans hwCell.1
-  rcases hfit.2.2.2.1 with ⟨hleftR,hleftYSmall,hleftRSmall,hleftZSmall,
-    hmixedYSmall,hmixedRSmall,hmixedZSmall⟩
-  have hcount:=regularSeeds_count_le_intersection_of_product
-    (pair126 c) H Q F hrel 2130706433 hFY hFR hFZ hQY hQR hQZ
-    hleftR hleftYSmall hleftRSmall hleftZSmall hmixedYSmall hmixedRSmall hmixedZSmall
-    selected Gamma (Finset.univ:Finset I) IRSProfile.domain u0 u1
-    IRSProfile.domain.injective.injOn
-    (by change (Finset.univ:Finset I).card=262144;rw [Finset.card_univ];norm_num [I,IRSProfile.Index])
-    (by simpa only [pair126] using (show 1≤131071 by decide))
-    (by simpa only [pair126] using (show 131071<2130706433 by decide))
-    (by simpa only [pair126] using (show 131071<181727 by decide))
-    (by simpa only [pair126] using (show 181727≤262144 by decide))
-    hdegree hagreement
-    (by simpa only [pair126,UnequalParameters.errors,Nat.reduceSub] using hno)
-    (fun gamma hgamma=> hproduct gamma (regularSeeds_subset H selected Gamma F hgamma))
-  simpa only [pair126Cost] using hcount
+      LocatorAuxiliaryArithmetic.source93_gap_affine L hLmin]
+    rfl
+  have hqT:L-wt residualTotalWeights F.1≤quotientT c:=by
+    simpa only [quotientT,L] using
+      Nat.sub_le_sub_left htlo L
+  have hqY:128-wt residualYSWeights F.1=quotientY c:=by
+    simp only [hy,quotientY]
+  have hqS:27-wt residualSWeights F.1=quotientS c:=by
+    simp only [hr,quotientS]
+  have hcT:L-wt residualTotalWeights F.1-wt residualTotalWeights F.1≤
+      cofactorT c:=by
+    dsimp only [cofactorT,L]
+    omega
+  have hcY:128-wt residualYSWeights F.1-wt residualYSWeights F.1=
+      cofactorY c:=by simp only [hy,cofactorY]
+  have hcS:27-wt residualSWeights F.1-wt residualSWeights F.1=
+      cofactorS c:=by simp only [hr,cofactorS]
+  have hqChannel:
+      channelCount (L-wt residualTotalWeights F.1)
+        (128-wt residualYSWeights F.1) (27-wt residualSWeights F.1)≤
+      channelUpper (quotientT c) (quotientY c) (quotientS c):=
+    (channelCount_mono hqT hqY.le hqS.le).trans
+      (channelCount_le_channelUpper _ _ _)
+  have hcChannel:
+      channelCount (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
+        (128-wt residualYSWeights F.1-wt residualYSWeights F.1)
+        (27-wt residualSWeights F.1-wt residualSWeights F.1)≤
+      channelUpper (cofactorT c) (cofactorY c) (cofactorS c):=
+    (channelCount_mono hcT hcY.le hcS.le).trans
+      (channelCount_le_channelUpper _ _ _)
+  have hsource:
+      50647*channelCount (L-wt residualTotalWeights F.1)
+          (128-wt residualYSWeights F.1) (27-wt residualSWeights F.1)+
+        50647*channelCount
+          (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
+          (128-wt residualYSWeights F.1-wt residualYSWeights F.1)
+          (27-wt residualSWeights F.1-wt residualSWeights F.1)<
+        coefficientCount 16899681 131071 L 27-
+          Fintype.card I*localRankBound 93 L 27:=by
+    rw [hnull]
+    exact (Nat.add_le_add (Nat.mul_le_mul_left 50647 hqChannel)
+      (Nat.mul_le_mul_left 50647 hcChannel)).trans_lt hbands
+  have hsmallBox:
+      coefficientCount 50647 131071
+        (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
+        (27-wt residualSWeights F.1-wt residualSWeights F.1)≤
+      (cofactorT c+1)*50647:=by
+    calc
+      _≤coefficientCount 50647 131071 (cofactorT c) (cofactorS c):=
+        coefficientCount_mono_L_s hcT hcS.le
+      _=(cofactorT c+1)*50647:=
+        LocatorAuxiliaryArithmetic.smallBox_coefficientCount _ _
+  have hsourceSmall:
+      50647*channelCount (L-wt residualTotalWeights F.1)
+          (128-wt residualYSWeights F.1) (27-wt residualSWeights F.1)+
+        coefficientCount 50647 131071
+          (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
+          (27-wt residualSWeights F.1-wt residualSWeights F.1)<
+        coefficientCount 16899681 131071 L 27-
+          Fintype.card I*localRankBound 93 L 27:=by
+    rw [hnull]
+    exact (Nat.add_le_add (Nat.mul_le_mul_left 50647 hqChannel)
+      hsmallBox).trans_lt hsmall
+  have hwidth:16899681-wt (contactWeights 131071) F.1≤
+      16899681-50647-wt (contactWeights 131071) F.1+50647:=by omega
+  have hcofactor:
+      L-wt residualTotalWeights F.1-wt residualTotalWeights F.1<
+          wt residualTotalWeights F.1 ∨
+        128-wt residualYSWeights F.1-wt residualYSWeights F.1<
+          wt residualYSWeights F.1 ∨
+        27-wt residualSWeights F.1-wt residualSWeights F.1<
+          wt residualSWeights F.1:=by
+    rcases hcop with hT|hY|hS
+    · exact Or.inl (hcT.trans_lt (hT.trans_le htlo))
+    · exact Or.inr (Or.inl (by simpa only [cofactorY,hy] using hY))
+    · exact Or.inr (Or.inr (by simpa only [cofactorS,hr] using hS))
+  let seeds:=regularSeeds H selected Gamma F
+  have hsub:seeds⊆Gamma:=regularSeeds_subset H selected Gamma F
+  have hroot:∀ gamma∈seeds,specialization K (selected gamma) gamma F.1=0:=
+    fun _ hg=>(Finset.mem_filter.mp hg).2.1
+  have hregular:∀ gamma∈seeds,
+      specialization K (selected gamma) gamma
+        (MvPolynomial.pderiv (2:Fin 4) F.1)≠0:=
+    fun _ hg=>(Finset.mem_filter.mp hg).2.2
+  have htwo:(2:K)≠0:=by
+    intro hz
+    have hdvd:2130706433∣2:=(CharP.cast_eq_zero_iff K 2130706433 2).mp hz
+    norm_num at hdvd
+  obtain hQ|hC:=exists_coprime_quotient_or_small_cofactor
+    16899681 131071 L 27 93 128 50647 181717 IRSProfile.domain u0 u1
+    F.1 hF (RCN167.positiveRFactors_spec H F.1 F.2).1 hdivL (by decide)
+    LocatorAuxiliaryArithmetic.source93_shape hsource hsourceSmall hwidth
+    LocatorAuxiliaryArithmetic.source93_capacity_one
+    LocatorAuxiliaryArithmetic.source93_capacity_two hcofactor htwo
+    selected seeds (fun g hg=>hdegree g (hsub hg))
+    (fun g hg=>hagreement g (hsub hg)) hroot hregular
+  · obtain ⟨v,Q,hv,hQne,hrel,heq,hQbox,hparent,hproduct⟩:=hQ
+    have hw:=nested_mem_weights hQbox hQne
+    have hQYweight:wt residualYSWeights Q≤quotientY c:=by
+      rw [←hqY]
+      exact hw.2.1
+    have hQRweight:wt residualSWeights Q≤quotientS c:=by
+      rw [←hqS]
+      exact hw.2.2.1
+    have hQY:Q.degreeOf 1≤(quotientPair c).rightY:=
+      (degreeY_le_ysWeight Q).trans (by simpa only [quotientPair] using hQYweight)
+    have hQR:Q.degreeOf 2≤(quotientPair c).rightR:=by
+      simpa only [quotientPair,LocatorContact.slope_weight_eq_degreeR]
+        using hQRweight
+    have hQZ:Q.degreeOf 3≤(quotientPair c).rightZ:=by
+      simpa only [quotientPair] using
+        (degreeZ_le_totalWeight Q).trans (hw.1.trans hqT)
+    have hFY:F.1.degreeOf 1≤(quotientPair c).leftY:=by
+      simpa only [quotientPair] using
+        (degreeY_le_ysWeight F.1).trans hy.le
+    have hFR:F.1.degreeOf 2≤(quotientPair c).leftR:=by
+      simpa only [quotientPair,LocatorContact.slope_weight_eq_degreeR] using hr.le
+    have hFZ:F.1.degreeOf 3≤(quotientPair c).leftZ:=by
+      simpa only [quotientPair] using (degreeZ_le_totalWeight F.1).trans hthi
+    rcases hqGates with ⟨hlr,hly,hlr',hlz,hmy,hmr,hmz⟩
+    have hp:∀ gamma∈regularSeeds H selected Gamma F,
+        specialization K (selected gamma) gamma
+          (MvPolynomial.pderiv (2:Fin 4) (F.1*Q))=0:=by
+      intro gamma hg
+      have hh:=hproduct gamma (by simpa only [seeds] using hg)
+      rw [heq] at hh
+      exact hh
+    have hcount:=LocatorCoprimeQuotient.regularSeeds_count_le_intersection_of_product
+      (quotientPair c) H Q F hrel 2130706433
+      hFY hFR hFZ
+      hQY hQR hQZ hlr hly hlr' hlz hmy hmr hmz
+      selected Gamma (Finset.univ:Finset I) IRSProfile.domain u0 u1
+      IRSProfile.domain.injective.injOn
+      (by norm_num [quotientPair,I,IRSProfile.Index])
+      (by simp [quotientPair]) (by simp [quotientPair])
+      (by simp [quotientPair]) (by simp [quotientPair])
+      hdegree hagreement
+      (by simpa only [quotientPair,UnequalParameters.errors,Nat.reduceSub] using hno)
+      hp
+    exact hcount.trans (Nat.le_max_left _ _)
+  · obtain ⟨v,C,hv,hCne,hrel,heq,hCbox,hparent,hCroot⟩:=hC
+    have hw:=nested_mem_weights hCbox hCne
+    have hCYweight:wt residualYSWeights C≤cofactorY c:=by
+      rw [←hcY]
+      exact hw.2.1
+    have hCRweight:wt residualSWeights C≤cofactorS c:=by
+      rw [←hcS]
+      exact hw.2.2.1
+    have hCY:C.degreeOf 1≤(cofactorPair c).rightY:=
+      (degreeY_le_ysWeight C).trans (by simpa only [cofactorPair] using hCYweight)
+    have hCR:C.degreeOf 2≤(cofactorPair c).rightR:=by
+      simpa only [cofactorPair,LocatorContact.slope_weight_eq_degreeR]
+        using hCRweight
+    have hCZ:C.degreeOf 3≤(cofactorPair c).rightZ:=by
+      simpa only [cofactorPair] using
+        (degreeZ_le_totalWeight C).trans (hw.1.trans hcT)
+    have hFY:F.1.degreeOf 1≤(cofactorPair c).leftY:=by
+      simpa only [cofactorPair] using
+        (degreeY_le_ysWeight F.1).trans hy.le
+    have hFR:F.1.degreeOf 2≤(cofactorPair c).leftR:=by
+      simpa only [cofactorPair,LocatorContact.slope_weight_eq_degreeR] using hr.le
+    have hFZ:F.1.degreeOf 3≤(cofactorPair c).leftZ:=by
+      simpa only [cofactorPair] using (degreeZ_le_totalWeight F.1).trans hthi
+    rcases hcGates with ⟨hlr,hly,hlr',hlz,hmy,hmr,hmz⟩
+    have hrootC:∀ gamma∈regularSeeds H selected Gamma F,
+        specialization K (selected gamma) gamma C=0:=by
+      intro gamma hg
+      exact hCroot gamma (by simpa only [seeds] using hg)
+    have hcount:=LocatorCoprimeQuotient.regularSeeds_count_le_intersection
+      (cofactorPair c) H C F hrel 2130706433
+      hFY hFR hFZ
+      hCY hCR hCZ hlr hly hlr' hlz hmy hmr hmz
+      selected Gamma (Finset.univ:Finset I) IRSProfile.domain u0 u1
+      IRSProfile.domain.injective.injOn
+      (by norm_num [cofactorPair,I,IRSProfile.Index])
+      (by simp [cofactorPair]) (by simp [cofactorPair])
+      (by simp [cofactorPair]) (by simp [cofactorPair])
+      hdegree hagreement
+      (by simpa only [cofactorPair,UnequalParameters.errors,Nat.reduceSub] using hno)
+      hrootC
+    exact hcount.trans (Nat.le_max_right _ _)
 
-private theorem double126_count
+theorem regularSeeds_count_le_source126
     (u0 u1:I→K) (H:P4) (selected:K→Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤131071)
-    (hagreement:∀ gamma∈Gamma,181727≤((Finset.univ:Finset I).filter
-      (fun i=> (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80417)
+    (hagreement:∀ gamma∈Gamma,181717≤((Finset.univ:Finset I).filter
+      (fun i=>(selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80427)
     (F:RegularIndex H) (hF:F.1≠0)
-    (hdiv:∀ L,L≤52091→∀ v:ConstraintKernel (K:=K) 22897602 131071 L 39 126
-      IRSProfile.domain u0 u1,F.1∣reconstruct K 22897602 131071 L 39 v.1)
-    (c:Cell)
-    (hcell:InCell (regularCumulativeFlag H F) c)
-    (hfit:Double126Fits c):
-    (regularSeeds H selected Gamma F).card≤doubleCost c:=by
+    (hdiv:∀ L,L≤52091→∀ v:ConstraintKernel (K:=K) 22896342 131071 L 39 126
+      IRSProfile.domain u0 u1,F.1∣reconstruct K 22896342 131071 L 39 v.1)
+    (hcontact:wt (contactWeights 131071) F.1<10539586)
+    (c:Cell) (hcell:InCell (regularCumulativeFlag H F) c)
+    (hfit:sourceFits126 c):
+    (regularSeeds H selected Gamma F).card≤sourceCost126 c:=by
   classical
-  obtain ⟨hr,hylo,hyhi,htlo,hthi,hc⟩:=factor_weights_of_cell H F c hcell
-  have hqT:lengthDouble126 c-wt residualTotalWeights F.1≤quotientDoubleT c:=by
-    simpa only [quotientDoubleT] using
-      Nat.sub_le_sub_left htlo (lengthDouble126 c)
-  have hqY:174-wt residualYSWeights F.1≤quotientDoubleYS c:=by
-    simpa only [quotientDoubleYS] using Nat.sub_le_sub_left hylo 174
-  have hqS:39-wt residualSWeights F.1≤quotientDoubleS c:=by
-    simpa only [quotientDoubleS,hr] using Nat.le_refl (39-r c)
-  have hhT:lengthDouble126 c-wt residualTotalWeights F.1-
-      wt residualTotalWeights F.1≤secondDoubleT c:=by
-    dsimp [secondDoubleT]
+  obtain ⟨hLmin,hLmax,h2t,hbands,hsmall,hcop,hqGates,hcGates,hcost⟩:=hfit
+  obtain ⟨hr,hy,htlo,hthi⟩:=factor_weights_of_cell H F c hcell
+  let L:=sourceLength126 c
+  have hdivL:∀ v:ConstraintKernel (K:=K) 22896342 131071 L 39 126
+      IRSProfile.domain u0 u1,
+      F.1∣reconstruct K 22896342 131071 L 39 v.1:=hdiv L hLmax
+  have hnull:
+      coefficientCount 22896342 131071 L 39-
+        Fintype.card I*localRankBound 126 L 39=sourceNullity126 c:=by
+    rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index],
+      LocatorAuxiliaryArithmetic.source126_gap_affine L hLmin]
+    rfl
+  have hqT:L-wt residualTotalWeights F.1≤quotientT126 c:=by
+    simpa only [quotientT126,L] using
+      Nat.sub_le_sub_left htlo L
+  have hqY:174-wt residualYSWeights F.1=quotientY126 c:=by
+    simp only [hy,quotientY126]
+  have hqS:39-wt residualSWeights F.1=quotientS126 c:=by
+    simp only [hr,quotientS126]
+  have hcT:L-wt residualTotalWeights F.1-wt residualTotalWeights F.1≤
+      cofactorT126 c:=by
+    dsimp only [cofactorT126,L]
     omega
-  have hhY:174-wt residualYSWeights F.1-wt residualYSWeights F.1≤
-      secondDoubleYS c:=by
-    dsimp [secondDoubleYS]
-    omega
-  have hhS:39-wt residualSWeights F.1-wt residualSWeights F.1≤
-      secondDoubleS c:=by
-    simp only [secondDoubleS,hr]
-    omega
-  let recon:=kernelReconstructLinear (K:=K) 22897602 131071
-    (lengthDouble126 c) 39 126 IRSProfile.domain u0 u1
-  have hdivK:∀ v:ConstraintKernel (K:=K) 22897602 131071
-      (lengthDouble126 c) 39 126 IRSProfile.domain u0 u1,F.1∣recon v:=by
-    intro v
-    simpa only [recon,kernelReconstructLinear_apply] using
-      hdiv (lengthDouble126 c) hfit.2.1 v
-  let q:=quotientLinear recon F.1 hF hdivK
-  have hqinj:Function.Injective q:=
-    quotientLinear_injective recon
-      (kernelReconstructLinear_injective (K:=K) 22897602 131071
-        (lengthDouble126 c) 39 126 IRSProfile.domain u0 u1)
-      F.1 hF hdivK
-  have hprod (v:ConstraintKernel (K:=K) 22897602 131071
-      (lengthDouble126 c) 39 126 IRSProfile.domain u0 u1):
-      recon v=F.1*q v:=recon_eq_mul_quotientPolynomial recon F.1 hdivK v
-  have hqbox:∀ v:ConstraintKernel (K:=K) 22897602 131071
-      (lengthDouble126 c) 39 126 IRSProfile.domain u0 u1,
-      q v∈globalCoefficientBox K
-        (22897602-wt (contactWeights 131071) F.1) 131071
-        (lengthDouble126 c-wt residualTotalWeights F.1)
-        (39-wt residualSWeights F.1):=
-    quotient_box_of_full_divisor 22897602 131071 (lengthDouble126 c) 39 126
-      (wt (contactWeights 131071) F.1) (wt residualTotalWeights F.1)
-      (wt residualSWeights F.1) IRSProfile.domain u0 u1 F.1 hF hdivK
-      le_rfl le_rfl le_rfl
-  have hqYS (v:ConstraintKernel (K:=K) 22897602 131071
-      (lengthDouble126 c) 39 126 IRSProfile.domain u0 u1):
-      wt residualYSWeights (q v)≤174-wt residualYSWeights F.1:=by
-    by_cases hv:v=0
-    · subst v
-      simp [wt,MvPolynomial.weightedTotalDegree]
-    · have hqv:q v≠0:=by
-        intro hz
-        apply hv
-        apply hqinj
-        simpa only [map_zero] using hz
-      have hsrc:wt residualYSWeights (recon v)≤174:=by
-        apply flag_box_ys_bound 22897602 131071 (lengthDouble126 c) 39 174
-          (by decide) auxiliary126_shape
-        change reconstruct K 22897602 131071 (lengthDouble126 c) 39 v.1∈
-          globalCoefficientBox K 22897602 131071 (lengthDouble126 c) 39
-        exact reconstruct_mem_globalCoefficientBox K 22897602 131071
-          (lengthDouble126 c) 39 v.1
-      have hmul:=weightedTotalDegree_mul residualYSWeights F.1 (q v) hF hqv
-      rw [← hprod v] at hmul
-      simp only [wt] at hsrc ⊢
-      omega
-  have hqNested:∀ v:ConstraintKernel (K:=K) 22897602 131071
-      (lengthDouble126 c) 39 126 IRSProfile.domain u0 u1,
-      q v∈nestedCoefficientBox K
-        (22897602-wt (contactWeights 131071) F.1) 131071
-        (lengthDouble126 c-wt residualTotalWeights F.1)
-        (174-wt residualYSWeights F.1) (39-wt residualSWeights F.1):=by
-    intro v d hd
-    have hb:=hqbox v hd
-    have hy:=(MvPolynomial.le_weightedTotalDegree residualYSWeights hd).trans (hqYS v)
-    rw [weight_fin4] at hy
-    simp only [residualYSWeights] at hy
-    refine ⟨hb.1,?_,hb.2.1,hb.2.2⟩
-    simpa [residualYSWeights] using hy
-  have hchannelsFirst:=channelCount_mono hqT hqY hqS
-  have hchannelsSecond:=channelCount_mono hhT hhY hhS
-  have hsourceCoeff:50657*channelCount
-      (lengthDouble126 c-wt residualTotalWeights F.1)
-      (174-wt residualYSWeights F.1) (39-wt residualSWeights F.1)+
-      50657*channelCount
-        (lengthDouble126 c-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
+  have hcY:174-wt residualYSWeights F.1-wt residualYSWeights F.1=
+      cofactorY126 c:=by simp only [hy,cofactorY126]
+  have hcS:39-wt residualSWeights F.1-wt residualSWeights F.1=
+      cofactorS126 c:=by simp only [hr,cofactorS126]
+  have hqChannel:
+      channelCount (L-wt residualTotalWeights F.1)
+        (174-wt residualYSWeights F.1) (39-wt residualSWeights F.1)≤
+      channelUpper (quotientT126 c) (quotientY126 c) (quotientS126 c):=
+    (channelCount_mono hqT hqY.le hqS.le).trans
+      (channelCount_le_channelUpper _ _ _)
+  have hcChannel:
+      channelCount (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
         (174-wt residualYSWeights F.1-wt residualYSWeights F.1)
-        (39-wt residualSWeights F.1-wt residualSWeights F.1)<
-      coefficientCount 22897602 131071 (lengthDouble126 c) 39-
-        Fintype.card I*localRankBound 126 (lengthDouble126 c) 39:=by
-    rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index],
-      auxiliary126_gap_affine (lengthDouble126 c) hfit.1]
-    exact (Nat.add_le_add (Nat.mul_le_mul_left 50657 hchannelsFirst)
-      (Nat.mul_le_mul_left 50657 hchannelsSecond)).trans_lt
-        (by simpa only [bandDoubleFirst,bandDoubleSecond,sourceGapDouble126]
-          using hfit.2.2.2.1)
-  have hsource:=hsourceCoeff.trans_le
-    (constraintKernel_finrank_lower_bound 22897602 131071
-      (lengthDouble126 c) 39 126 IRSProfile.domain u0 u1)
-  have hwidth:22897602-wt (contactWeights 131071) F.1≤
-      (22897602-50657-wt (contactWeights 131071) F.1)+50657:=by omega
-  rcases LocatorDoubleSquareAvoidance.exists_first_low_not_dvd_or_second_low
-      (22897602-wt (contactWeights 131071) F.1)
-      (22897602-50657-wt (contactWeights 131071) F.1)
-      131071 50657
-      (lengthDouble126 c-wt residualTotalWeights F.1)
-      (174-wt residualYSWeights F.1) (39-wt residualSWeights F.1)
-      hwidth q hqinj hqNested F.1 hF hsource with hfirst|hsecond
-  · obtain ⟨v,hv,hQ,hQbox,hnot⟩:=hfirst
-    have heq:F.1*q v=reconstruct K 22897602 131071
-        (lengthDouble126 c) 39 v.1:=by
-      simpa only [recon,kernelReconstructLinear_apply] using (hprod v).symm
-    have hlow:reconstruct K 22897602 131071 (lengthDouble126 c) 39 v.1∈
-        globalCoefficientBox K (22897602-50657) 131071
-          (lengthDouble126 c) 39:=by
-      rw [← heq]
-      have hsourceBox:F.1*q v∈globalCoefficientBox K 22897602 131071
-          (lengthDouble126 c) 39:=by
-        rw [heq]
-        exact reconstruct_mem_globalCoefficientBox K 22897602 131071
-          (lengthDouble126 c) 39 v.1
-      have hsrc:=(mem_flagGlobalCoefficientBox_iff (F.1*q v) 22897602
-        131071 (lengthDouble126 c) 39 (by decide)).mp hsourceBox
-      have hqc:=(nested_mem_weights hQbox hQ).2.2.2
-      have hmul:=weightedTotalDegree_mul (contactWeights 131071) F.1 (q v) hF hQ
-      apply (mem_flagGlobalCoefficientBox_iff (F.1*q v) (22897602-50657)
-        131071 (lengthDouble126 c) 39 (by decide)).mpr
-      refine ⟨hsrc.1,hsrc.2.1,?_⟩
-      simp only [wt] at hqc ⊢
-      omega
-    have hrel:IsRelPrime F.1 (q v):=
-      (RCN167.positiveRFactors_spec H F.1 F.2).1.isRelPrime_iff_not_dvd.mpr hnot
-    have hwQ:=nested_mem_weights hQbox hQ
-    have hFY:F.1.degreeOf 1≤(pairDoubleFirst c).leftY:=
-      (degreeY_le_ysWeight F.1).trans hyhi
-    have hFR:F.1.degreeOf 2≤(pairDoubleFirst c).leftR:=by
-      simpa only [pairDoubleFirst,LocatorContact.slope_weight_eq_degreeR]
-        using hr.le
-    have hFZ:F.1.degreeOf 3≤(pairDoubleFirst c).leftZ:=
-      (degreeZ_le_totalWeight F.1).trans hthi
-    have hQY:(q v).degreeOf 1≤(pairDoubleFirst c).rightY:=by
-      simpa only [pairDoubleFirst] using (degreeY_le_ysWeight (q v)).trans
-        (hwQ.2.1.trans hqY)
-    have hQR:(q v).degreeOf 2≤(pairDoubleFirst c).rightR:=by
-      simpa only [pairDoubleFirst,LocatorContact.slope_weight_eq_degreeR]
-        using hwQ.2.2.1.trans hqS
-    have hQZ:(q v).degreeOf 3≤(pairDoubleFirst c).rightZ:=by
-      simpa only [pairDoubleFirst] using (degreeZ_le_totalWeight (q v)).trans
-        (hwQ.1.trans hqT)
-    rcases hfit.2.2.2.2.1 with ⟨hleftR,hleftYSmall,hleftRSmall,hleftZSmall,
-      hmixedYSmall,hmixedRSmall,hmixedZSmall⟩
-    have hproduct:∀ gamma∈regularSeeds H selected Gamma F,
-        RCN319.specialization K (selected gamma) gamma
-          (MvPolynomial.pderiv (2:Fin 4) (F.1*q v))=0:=by
-      intro gamma hgamma
-      have hgammaG:gamma∈Gamma:=(Finset.mem_filter.mp hgamma).1
-      let support:=(Finset.univ:Finset I).filter (fun i=>
-        (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)
-      have hcard:181727≤support.card:=hagreement gamma hgammaG
-      have hcap:22897602-50657≤(126-1)*support.card+(131071-1):=
-        auxiliary126_capacity.trans
-          (Nat.add_le_add_right (Nat.mul_le_mul_left (126-1) hcard) _)
-      have hvalues:∀ i∈support,(selected gamma).eval (IRSProfile.domain i)=
-          u0 i+gamma*u1 i:=by
-        intro i hi
-        exact (Finset.mem_filter.mp hi).2
-      rw [heq]
-      exact specialization_pderiv_R_eq_zero_of_kernel_low_box
-        22897602 (22897602-50657) 131071 (lengthDouble126 c) 39 126
-        IRSProfile.domain u0 u1 v hlow (selected gamma) gamma support
-        (by decide) (hdegree gamma hgammaG) hcap hvalues
-    have hcount:=regularSeeds_count_le_intersection_of_product
-      (pairDoubleFirst c) H (q v) F hrel 2130706433
-      hFY hFR hFZ hQY hQR hQZ hleftR hleftYSmall hleftRSmall hleftZSmall
-      hmixedYSmall hmixedRSmall hmixedZSmall selected Gamma
-      (Finset.univ:Finset I) IRSProfile.domain u0 u1 IRSProfile.domain.injective.injOn
-      (by change (Finset.univ:Finset I).card=262144
-          rw [Finset.card_univ];norm_num [I,IRSProfile.Index])
-      (by simpa only [pairDoubleFirst] using (show 1≤131071 by decide))
-      (by simpa only [pairDoubleFirst] using (show 131071<2130706433 by decide))
-      (by simpa only [pairDoubleFirst] using (show 131071<181727 by decide))
-      (by simpa only [pairDoubleFirst] using (show 181727≤262144 by decide))
+        (39-wt residualSWeights F.1-wt residualSWeights F.1)≤
+      channelUpper (cofactorT126 c) (cofactorY126 c) (cofactorS126 c):=
+    (channelCount_mono hcT hcY.le hcS.le).trans
+      (channelCount_le_channelUpper _ _ _)
+  have hsource:
+      50647*channelCount (L-wt residualTotalWeights F.1)
+          (174-wt residualYSWeights F.1) (39-wt residualSWeights F.1)+
+        50647*channelCount
+          (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
+          (174-wt residualYSWeights F.1-wt residualYSWeights F.1)
+          (39-wt residualSWeights F.1-wt residualSWeights F.1)<
+        coefficientCount 22896342 131071 L 39-
+          Fintype.card I*localRankBound 126 L 39:=by
+    rw [hnull]
+    exact (Nat.add_le_add (Nat.mul_le_mul_left 50647 hqChannel)
+      (Nat.mul_le_mul_left 50647 hcChannel)).trans_lt hbands
+  have hsmallBox:
+      coefficientCount 50647 131071
+        (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
+        (39-wt residualSWeights F.1-wt residualSWeights F.1)≤
+      (cofactorT126 c+1)*50647:=by
+    calc
+      _≤coefficientCount 50647 131071 (cofactorT126 c) (cofactorS126 c):=
+        coefficientCount_mono_L_s hcT hcS.le
+      _=(cofactorT126 c+1)*50647:=
+        LocatorAuxiliaryArithmetic.smallBox_coefficientCount _ _
+  have hsourceSmall:
+      50647*channelCount (L-wt residualTotalWeights F.1)
+          (174-wt residualYSWeights F.1) (39-wt residualSWeights F.1)+
+        coefficientCount 50647 131071
+          (L-wt residualTotalWeights F.1-wt residualTotalWeights F.1)
+          (39-wt residualSWeights F.1-wt residualSWeights F.1)<
+        coefficientCount 22896342 131071 L 39-
+          Fintype.card I*localRankBound 126 L 39:=by
+    rw [hnull]
+    exact (Nat.add_le_add (Nat.mul_le_mul_left 50647 hqChannel)
+      hsmallBox).trans_lt hsmall
+  have hwidth:22896342-wt (contactWeights 131071) F.1≤
+      22896342-50647-wt (contactWeights 131071) F.1+50647:=by omega
+  have hcofactor:
+      L-wt residualTotalWeights F.1-wt residualTotalWeights F.1<
+          wt residualTotalWeights F.1 ∨
+        174-wt residualYSWeights F.1-wt residualYSWeights F.1<
+          wt residualYSWeights F.1 ∨
+        39-wt residualSWeights F.1-wt residualSWeights F.1<
+          wt residualSWeights F.1:=by
+    rcases hcop with hT|hY|hS
+    · exact Or.inl (hcT.trans_lt (hT.trans_le htlo))
+    · exact Or.inr (Or.inl (by simpa only [cofactorY126,hy] using hY))
+    · exact Or.inr (Or.inr (by simpa only [cofactorS126,hr] using hS))
+  let seeds:=regularSeeds H selected Gamma F
+  have hsub:seeds⊆Gamma:=regularSeeds_subset H selected Gamma F
+  have hroot:∀ gamma∈seeds,specialization K (selected gamma) gamma F.1=0:=
+    fun _ hg=>(Finset.mem_filter.mp hg).2.1
+  have hregular:∀ gamma∈seeds,
+      specialization K (selected gamma) gamma
+        (MvPolynomial.pderiv (2:Fin 4) F.1)≠0:=
+    fun _ hg=>(Finset.mem_filter.mp hg).2.2
+  have htwo:(2:K)≠0:=by
+    intro hz
+    have hdvd:2130706433∣2:=(CharP.cast_eq_zero_iff K 2130706433 2).mp hz
+    norm_num at hdvd
+  obtain hQ|hC:=exists_coprime_quotient_or_small_cofactor
+    22896342 131071 L 39 126 174 50647 181717 IRSProfile.domain u0 u1
+    F.1 hF (RCN167.positiveRFactors_spec H F.1 F.2).1 hdivL (by decide)
+    LocatorAuxiliaryArithmetic.source126_shape hsource hsourceSmall hwidth
+    LocatorAuxiliaryArithmetic.source126_capacity_one
+    LocatorAuxiliaryArithmetic.source126_capacity_two hcofactor htwo
+    selected seeds (fun g hg=>hdegree g (hsub hg))
+    (fun g hg=>hagreement g (hsub hg)) hroot hregular
+  · obtain ⟨v,Q,hv,hQne,hrel,heq,hQbox,hparent,hproduct⟩:=hQ
+    have hw:=nested_mem_weights hQbox hQne
+    have hQYweight:wt residualYSWeights Q≤quotientY126 c:=by
+      rw [←hqY]
+      exact hw.2.1
+    have hQRweight:wt residualSWeights Q≤quotientS126 c:=by
+      rw [←hqS]
+      exact hw.2.2.1
+    have hQY:Q.degreeOf 1≤(quotientPair126 c).rightY:=
+      (degreeY_le_ysWeight Q).trans (by simpa only [quotientPair126] using hQYweight)
+    have hQR:Q.degreeOf 2≤(quotientPair126 c).rightR:=by
+      simpa only [quotientPair126,LocatorContact.slope_weight_eq_degreeR]
+        using hQRweight
+    have hQZ:Q.degreeOf 3≤(quotientPair126 c).rightZ:=by
+      simpa only [quotientPair126] using
+        (degreeZ_le_totalWeight Q).trans (hw.1.trans hqT)
+    have hFY:F.1.degreeOf 1≤(quotientPair126 c).leftY:=by
+      simpa only [quotientPair126] using
+        (degreeY_le_ysWeight F.1).trans hy.le
+    have hFR:F.1.degreeOf 2≤(quotientPair126 c).leftR:=by
+      simpa only [quotientPair126,LocatorContact.slope_weight_eq_degreeR] using hr.le
+    have hFZ:F.1.degreeOf 3≤(quotientPair126 c).leftZ:=by
+      simpa only [quotientPair126] using (degreeZ_le_totalWeight F.1).trans hthi
+    rcases hqGates with ⟨hlr,hly,hlr',hlz,hmy,hmr,hmz⟩
+    have hp:∀ gamma∈regularSeeds H selected Gamma F,
+        specialization K (selected gamma) gamma
+          (MvPolynomial.pderiv (2:Fin 4) (F.1*Q))=0:=by
+      intro gamma hg
+      have hh:=hproduct gamma (by simpa only [seeds] using hg)
+      rw [heq] at hh
+      exact hh
+    have hcount:=LocatorCoprimeQuotient.regularSeeds_count_le_intersection_of_product
+      (quotientPair126 c) H Q F hrel 2130706433
+      hFY hFR hFZ
+      hQY hQR hQZ hlr hly hlr' hlz hmy hmr hmz
+      selected Gamma (Finset.univ:Finset I) IRSProfile.domain u0 u1
+      IRSProfile.domain.injective.injOn
+      (by norm_num [quotientPair126,I,IRSProfile.Index])
+      (by simp [quotientPair126]) (by simp [quotientPair126])
+      (by simp [quotientPair126]) (by simp [quotientPair126])
       hdegree hagreement
-      (by simpa only [pairDoubleFirst,UnequalParameters.errors,Nat.reduceSub] using hno)
-      hproduct
-    exact hcount.trans (by simp only [doubleCost];exact Nat.le_max_left _ _)
-  · obtain ⟨v,Q,hv,hQ,hFQ,hQbox⟩:=hsecond
-    have heq:reconstruct K 22897602 131071 (lengthDouble126 c) 39 v.1=
-        F.1*(F.1*Q):=by
-      calc
-        _=recon v:=by rfl
-        _=F.1*q v:=hprod v
-        _=F.1*(F.1*Q):=congrArg (fun W=>F.1*W) hFQ.symm
-    have hwQ:=nested_mem_weights hQbox hQ
-    have hrel:IsRelPrime F.1 Q:=by
-      apply isRelPrime_of_weight_lt residualTotalWeights F.1 Q
-        (RCN167.positiveRFactors_spec H F.1 F.2).1 hQ
-      have h:=hwQ.1
-      have hlen3:lengthDouble126 c<3*tlo c:=hfit.2.2.1
-      omega
-    have hlow:reconstruct K 22897602 131071 (lengthDouble126 c) 39 v.1∈
-        globalCoefficientBox K (22897602-2*50657) 131071
-          (lengthDouble126 c) 39:=by
-      rw [heq]
-      have hsourceBox:F.1*(F.1*Q)∈globalCoefficientBox K 22897602 131071
-          (lengthDouble126 c) 39:=by
-        rw [← heq]
-        exact reconstruct_mem_globalCoefficientBox K 22897602 131071
-          (lengthDouble126 c) 39 v.1
-      have hsrc:=(mem_flagGlobalCoefficientBox_iff (F.1*(F.1*Q)) 22897602
-        131071 (lengthDouble126 c) 39 (by decide)).mp hsourceBox
-      have hqc:=hwQ.2.2.2
-      have hmulInner:=weightedTotalDegree_mul (contactWeights 131071) F.1 Q hF hQ
-      have hmulOuter:=weightedTotalDegree_mul (contactWeights 131071) F.1
-        (F.1*Q) hF (mul_ne_zero hF hQ)
-      apply (mem_flagGlobalCoefficientBox_iff (F.1*(F.1*Q))
-        (22897602-2*50657) 131071 (lengthDouble126 c) 39 (by decide)).mpr
-      refine ⟨hsrc.1,hsrc.2.1,?_⟩
-      simp only [wt] at hqc ⊢
-      omega
-    have hFY:F.1.degreeOf 1≤(pairDoubleSecond c).leftY:=
-      (degreeY_le_ysWeight F.1).trans hyhi
-    have hFR:F.1.degreeOf 2≤(pairDoubleSecond c).leftR:=by
-      simpa only [pairDoubleSecond,LocatorContact.slope_weight_eq_degreeR]
-        using hr.le
-    have hFZ:F.1.degreeOf 3≤(pairDoubleSecond c).leftZ:=
-      (degreeZ_le_totalWeight F.1).trans hthi
-    have hQY:Q.degreeOf 1≤(pairDoubleSecond c).rightY:=by
-      simpa only [pairDoubleSecond] using (degreeY_le_ysWeight Q).trans
-        (hwQ.2.1.trans hhY)
-    have hQR:Q.degreeOf 2≤(pairDoubleSecond c).rightR:=by
-      simpa only [pairDoubleSecond,LocatorContact.slope_weight_eq_degreeR]
-        using hwQ.2.2.1.trans hhS
-    have hQZ:Q.degreeOf 3≤(pairDoubleSecond c).rightZ:=by
-      simpa only [pairDoubleSecond] using (degreeZ_le_totalWeight Q).trans
-        (hwQ.1.trans hhT)
-    rcases hfit.2.2.2.2.2.1 with ⟨hleftR,hleftYSmall,hleftRSmall,hleftZSmall,
-      hmixedYSmall,hmixedRSmall,hmixedZSmall⟩
-    have htwo:(2:K)≠0:=by
-      intro hz
-      have hdvd:2130706433∣2:=(CharP.cast_eq_zero_iff K 2130706433 2).mp hz
-      norm_num at hdvd
-    have hproduct:∀ gamma∈regularSeeds H selected Gamma F,
-        RCN319.specialization K (selected gamma) gamma
-          (MvPolynomial.pderiv (2:Fin 4)
-            (MvPolynomial.pderiv (2:Fin 4) (F.1*(F.1*Q))))=0:=by
-      intro gamma hgamma
-      have hgammaG:gamma∈Gamma:=(Finset.mem_filter.mp hgamma).1
-      let support:=(Finset.univ:Finset I).filter (fun i=>
-        (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)
-      have hcard:181727≤support.card:=hagreement gamma hgammaG
-      have hcap:22897602-2*50657≤(126-2)*support.card+2*(131071-1):=
-        auxiliary126_double_capacity.trans
-          (Nat.add_le_add_right (Nat.mul_le_mul_left (126-2) hcard) _)
-      have hvalues:∀ i∈support,(selected gamma).eval (IRSProfile.domain i)=
-          u0 i+gamma*u1 i:=by
-        intro i hi
-        exact (Finset.mem_filter.mp hi).2
-      rw [← heq]
-      exact LocatorDoubleSquareAvoidance.specialization_pderiv_R2_eq_zero_of_kernel_low_box
-        22897602 (22897602-2*50657) 131071 (lengthDouble126 c) 39 126
-        IRSProfile.domain u0 u1 v hlow (selected gamma) gamma support
-        (by decide) (hdegree gamma hgammaG) hcap hvalues
-    have hQzero:∀ gamma∈regularSeeds H selected Gamma F,
-        RCN319.specialization K (selected gamma) gamma Q=0:=by
-      intro gamma hgamma
-      obtain ⟨hFzero,hregular⟩:=(Finset.mem_filter.mp hgamma).2
-      exact LocatorDoubleSquareAvoidance.specialization_eq_zero_of_pderiv_R2_square_product
-        (selected gamma) gamma F.1 Q htwo hFzero hregular
-          (hproduct gamma hgamma)
-    have hcount:=regularSeeds_count_le_intersection
-      (pairDoubleSecond c) H Q F hrel 2130706433
-      hFY hFR hFZ hQY hQR hQZ hleftR hleftYSmall hleftRSmall hleftZSmall
-      hmixedYSmall hmixedRSmall hmixedZSmall selected Gamma
-      (Finset.univ:Finset I) IRSProfile.domain u0 u1 IRSProfile.domain.injective.injOn
-      (by change (Finset.univ:Finset I).card=262144
-          rw [Finset.card_univ];norm_num [I,IRSProfile.Index])
-      (by simpa only [pairDoubleSecond] using (show 1≤131071 by decide))
-      (by simpa only [pairDoubleSecond] using (show 131071<2130706433 by decide))
-      (by simpa only [pairDoubleSecond] using (show 131071<181727 by decide))
-      (by simpa only [pairDoubleSecond] using (show 181727≤262144 by decide))
+      (by simpa only [quotientPair126,UnequalParameters.errors,Nat.reduceSub] using hno)
+      hp
+    exact hcount.trans (Nat.le_max_left _ _)
+  · obtain ⟨v,C,hv,hCne,hrel,heq,hCbox,hparent,hCroot⟩:=hC
+    have hw:=nested_mem_weights hCbox hCne
+    have hCYweight:wt residualYSWeights C≤cofactorY126 c:=by
+      rw [←hcY]
+      exact hw.2.1
+    have hCRweight:wt residualSWeights C≤cofactorS126 c:=by
+      rw [←hcS]
+      exact hw.2.2.1
+    have hCY:C.degreeOf 1≤(cofactorPair126 c).rightY:=
+      (degreeY_le_ysWeight C).trans (by simpa only [cofactorPair126] using hCYweight)
+    have hCR:C.degreeOf 2≤(cofactorPair126 c).rightR:=by
+      simpa only [cofactorPair126,LocatorContact.slope_weight_eq_degreeR]
+        using hCRweight
+    have hCZ:C.degreeOf 3≤(cofactorPair126 c).rightZ:=by
+      simpa only [cofactorPair126] using
+        (degreeZ_le_totalWeight C).trans (hw.1.trans hcT)
+    have hFY:F.1.degreeOf 1≤(cofactorPair126 c).leftY:=by
+      simpa only [cofactorPair126] using
+        (degreeY_le_ysWeight F.1).trans hy.le
+    have hFR:F.1.degreeOf 2≤(cofactorPair126 c).leftR:=by
+      simpa only [cofactorPair126,LocatorContact.slope_weight_eq_degreeR] using hr.le
+    have hFZ:F.1.degreeOf 3≤(cofactorPair126 c).leftZ:=by
+      simpa only [cofactorPair126] using (degreeZ_le_totalWeight F.1).trans hthi
+    rcases hcGates with ⟨hlr,hly,hlr',hlz,hmy,hmr,hmz⟩
+    have hrootC:∀ gamma∈regularSeeds H selected Gamma F,
+        specialization K (selected gamma) gamma C=0:=by
+      intro gamma hg
+      exact hCroot gamma (by simpa only [seeds] using hg)
+    have hcount:=LocatorCoprimeQuotient.regularSeeds_count_le_intersection
+      (cofactorPair126 c) H C F hrel 2130706433
+      hFY hFR hFZ
+      hCY hCR hCZ hlr hly hlr' hlz hmy hmr hmz
+      selected Gamma (Finset.univ:Finset I) IRSProfile.domain u0 u1
+      IRSProfile.domain.injective.injOn
+      (by norm_num [cofactorPair126,I,IRSProfile.Index])
+      (by simp [cofactorPair126]) (by simp [cofactorPair126])
+      (by simp [cofactorPair126]) (by simp [cofactorPair126])
       hdegree hagreement
-      (by simpa only [pairDoubleSecond,UnequalParameters.errors,Nat.reduceSub] using hno)
-      hQzero
-    exact hcount.trans (by simp only [doubleCost];exact Nat.le_max_right _ _)
-
-theorem regularSeeds_count_le_chosen
-    (u0 u1:I→K) (H:P4) (selected:K→Polynomial K) (Gamma:Finset K)
-    (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree≤131071)
-    (hagreement:∀ gamma∈Gamma,181727≤((Finset.univ:Finset I).filter
-      (fun i=> (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80417)
-    (F:RegularIndex H) (hF:F.1≠0)
-    (hdiv72:∀ L,L≤52091→∀ v:ConstraintKernel (K:=K) 13084344 131071 L 21 72
-      IRSProfile.domain u0 u1,F.1∣reconstruct K 13084344 131071 L 21 v.1)
-    (hdiv126:∀ L,L≤52091→∀ v:ConstraintKernel (K:=K) 22897602 131071 L 39 126
-      IRSProfile.domain u0 u1,F.1∣reconstruct K 22897602 131071 L 39 v.1)
-    (c:Cell)
-    (hcell:InCell (regularCumulativeFlag H F) c)
-    (hbad:LocatorFactorReplacement.Bad 2382 131072 131073 271823484960074903
-      (regularCumulativeFlag H F))
-    (hown:(regularSeeds H selected Gamma F).card≤
-      paddedCost 131072 131073 (regularCumulativeFlag H F)):
-    (regularSeeds H selected Gamma F).card≤chosenCost c:=by
-  classical
-  by_cases ho:OrdinaryFits c
-  · simpa only [chosenCost,if_pos ho] using
-      count_le_ordinaryCost (regularCumulativeFlag H F) c
-        (regularSeeds H selected Gamma F).card hcell hown
-  have hv:=valid_of_inCell (regularCumulativeFlag H F) c hcell
-  have hnr:¬RateFits c:=by
-    intro hrate
-    have hrpos:1≤r c:=by
-      have hp:0<r c:=by
-        simpa only [hcell.all_eq] using regularCumulativeFlag_positive H F
-      exact Nat.succ_le_iff.mpr hp
-    have hglobal:=LocatorRateCover.global_rate_of_endpoints
-      (regularCumulativeFlag H F) 2382 (yhi c)
-      (r c) 271823484960074903
-      hrpos hcell.all_eq hcell.middle_le_yhi
-      ((yhi_le_76 c).trans (by decide))
-      (hcell.total_le_thi.trans (thi_le_2319 c))
-      hrate.1 hrate.2
-    exact (not_lt_of_ge hglobal) hbad
-  have hroutes:=((receipt c hv).resolve_left hnr).resolve_left ho
-  by_cases h72:Pair72Fits c
-  · have h:=source72_count u0 u1 H selected Gamma hdegree hagreement hno F hF
-      hdiv72 c hcell h72
-    simpa only [chosenCost,if_neg ho,if_pos h72] using h
-  have hroutes':=hroutes.resolve_left h72
-  by_cases h126:Pair126Fits c
-  · have h:=source126_count u0 u1 H selected Gamma hdegree hagreement hno F hF
-      hdiv126 c hcell h126
-    simpa only [chosenCost,if_neg ho,if_neg h72,if_pos h126] using h
-  have hdouble:Double126Fits c:=hroutes'.resolve_left h126
-  have h:=double126_count u0 u1 H selected Gamma hdegree hagreement hno F hF
-    hdiv126 c hcell hdouble
-  simpa only [chosenCost,if_neg ho,if_neg h72,if_neg h126] using h
+      (by simpa only [cofactorPair126,UnequalParameters.errors,Nat.reduceSub] using hno)
+      hrootC
+    exact hcount.trans (Nat.le_max_right _ _)
 end
-end LocatorQuotientReplacement
+end ProximityPrize.SubmissionLower.LocatorQuotientReplacement

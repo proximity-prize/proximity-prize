@@ -83,18 +83,18 @@ abbrev P4:=MvPolynomial (Fin 4) K
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
-theorem common_divides_A72_small {u0 u1:I → K}
+theorem common_divides_A93_small {u0 u1:I → K}
     (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 52091) :
-    ∀ a:ConstraintKernel (K:=K) 13084344 131071 L 21 72
+    ∀ a:ConstraintKernel (K:=K) 16899681 131071 L 27 93
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 13084344 131071 L 21 a.1:=by
+      gcd S.QA S.QB ∣ reconstruct K 16899681 131071 L 27 a.1:=by
   exact full_kernel_divisor_small (E:=K) (Lmax:=52091) hL
     IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_Aux
 theorem common_divides_A126_small {u0 u1:I → K}
     (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 52091) :
-    ∀ a:ConstraintKernel (K:=K) 22897602 131071 L 39 126
+    ∀ a:ConstraintKernel (K:=K) 22896342 131071 L 39 126
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 22897602 131071 L 39 a.1:=by
+      gcd S.QA S.QB ∣ reconstruct K 22896342 131071 L 39 a.1:=by
   exact full_kernel_divisor_small (E:=K) (Lmax:=52091) hL
     IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_C
 end Selected
