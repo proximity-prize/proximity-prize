@@ -10,7 +10,7 @@ set_option maxHeartbeats 5000000
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
 local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
 def n:ℕ:=262144
-def errors:ℕ:=80506
+def errors:ℕ:=80555
 def agreements:ℕ:=n-errors
 def listBudget:ℕ:=2098605974
 def mcaBudget:ℕ:=274980726012789113
@@ -163,17 +163,17 @@ theorem certifiedGammaError_le_of_alignment
      apply RCN284.nat_div_le_inv_pow
      · norm_num [mcaBudget,listBudget]
      · simpa only [Nat.mul_comm] using field_capacity_split
-theorem protocolClaim6775_of_alignment
-   (halign:AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-   ProtocolClaim 6775 10304823 33554432 where
- admissible:=LocatorArithmetic.radius_admissible
- reduction:=by
-   change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
-   simpa [reductionTarget,ProximityGap.prizeThreshold] using
-     certifiedGammaError_le_of_alignment halign
- score:=by
-   change (1 - LocatorArithmetic.radius) ^
-     IRSProfile.repetitions ≤ claimedError 6775
-   exact LocatorArithmetic.score_target_le
+theorem protocolClaim6780_of_alignment
+    (halign:AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
+    ProtocolClaim 6780 10311167 33554432 where
+  admissible:=LocatorArithmetic.radius_admissible
+  reduction:=by
+    change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
+    simpa [reductionTarget,ProximityGap.prizeThreshold] using
+      certifiedGammaError_le_of_alignment halign
+  score:=by
+    change (1 - LocatorArithmetic.radius) ^
+      IRSProfile.repetitions ≤ claimedError 6780
+    exact LocatorArithmetic.score_target_le
 end
 end ProximityPrize.SubmissionLower.LocatorProtocol
