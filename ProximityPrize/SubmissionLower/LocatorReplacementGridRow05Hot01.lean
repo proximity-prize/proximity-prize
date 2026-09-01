@@ -6,13 +6,13 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
 
 private theorem receipt_row_05_band_03_b_fixed :
-    FixedYReceipt 5 ⟨10, by decide⟩ 0 23 := by decide +kernel
+    FixedYReceipt 5 ⟨10, by decide⟩ 0 24 := by decide +kernel
 
 theorem receipt_row_05_band_03_b : RowBandReceipt 5 10 11 :=
   fixedYReceipt_to_rowBand 5 ⟨10, by decide⟩ receipt_row_05_band_03_b_fixed
 
 private theorem receipt_row_05_band_03_c_fixed :
-    FixedYReceipt 5 ⟨11, by decide⟩ 0 23 := by decide +kernel
+    FixedYReceipt 5 ⟨11, by decide⟩ 0 24 := by decide +kernel
 
 theorem receipt_row_05_band_03_c : RowBandReceipt 5 11 12 :=
   fixedYReceipt_to_rowBand 5 ⟨11, by decide⟩ receipt_row_05_band_03_c_fixed

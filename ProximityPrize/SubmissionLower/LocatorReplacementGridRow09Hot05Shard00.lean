@@ -5,9 +5,9 @@ namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
 
-private theorem receipt_row_09_band_07_t_05_fixed : FixedYReceipt 9 ⟨9, by decide⟩ 20 23 := by decide +kernel
-theorem receipt_row_09_band_07_t_05 : RowTileReceipt 9 9 10 20 23 :=
-  fixedYReceipt_to_rowTile 9 ⟨9, by decide⟩ 20 23 receipt_row_09_band_07_t_05_fixed
+private theorem receipt_row_09_band_07_t_05_fixed : FixedYReceipt 9 ⟨9, by decide⟩ 20 24 := by decide +kernel
+theorem receipt_row_09_band_07_t_05 : RowTileReceipt 9 9 10 20 24 :=
+  fixedYReceipt_to_rowTile 9 ⟨9, by decide⟩ 20 24 receipt_row_09_band_07_t_05_fixed
 
 theorem receipt_row_09_band_07 : RowBandReceipt 9 9 10 := by
   intro cy hylo hyhi ct

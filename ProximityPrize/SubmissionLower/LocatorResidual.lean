@@ -15,8 +15,6 @@ structure Gates:Prop where
   algebraic_pos:1 ≤ residualSingular.algebraicCap
   implicit_small:residualSingular.implicitYCap < 2130706433
   algebraic_small:residualSingular.algebraicCap < 2130706433
-  mixed_small:2 * residualSingular.implicitYCap *
-    residualSingular.algebraicCap < 2130706433
   qY:(residualSingular.D - 1) / w ≤ residualStage.leftY
   leftZ_small:residualStage.leftZ < 2130706433
   mixedY_small:residualStage.mixedCost.y < 2130706433
@@ -27,7 +25,6 @@ theorem gates:Gates:=by
     residual_singular_gates.algebraic_pos,
     residual_singular_gates.implicit_small,
     residual_singular_gates.algebraic_small,
-    residual_singular_gates.mixed_small,
     residual_gates.qY,residual_gates.leftZ_small,
     residual_gates.mixedY_small,residual_gates.mixedR_small,
     residual_gates.mixedZ_small⟩
@@ -35,7 +32,7 @@ theorem residual_count_lt
     (valid:Gates)
     (Q T:MvPolynomial (Fin 4) K) (hQ:Q ≠ 0) (hrel:IsRelPrime Q T)
     (hbox:Q ∈ globalCoefficientBox K weightedB w LB 23)
-    (hTcaps:T.degreeOf 1 ≤ 297 ∧ T.degreeOf 2 ≤ 63 ∧ T.degreeOf 3 ≤ LA)
+    (hTcaps:T.degreeOf 1 ≤ 333 ∧ T.degreeOf 2 ≤ 71 ∧ T.degreeOf 3 ≤ LA)
     (selected:K → Polynomial K) (seeds:Finset K)
     (nodes:Finset I) (x u0 u1:I → K)
     (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
@@ -52,8 +49,8 @@ theorem residual_count_lt
     residualStage residualSingular Q T hQ 2130706433
     (by change 1 ≤ 23; decide) (by change 23 < 2130706433; decide)
     (by change 1 ≤ 131071; decide) (by change 131071 < 2130706433; decide) valid.kD
-    valid.algebraic_pos valid.implicit_small valid.algebraic_small valid.mixed_small
-    (by change 131071 < 181628; decide) (by change 181628 ≤ 262144; decide)
+    valid.algebraic_pos valid.implicit_small valid.algebraic_small
+    (by change 131071 < 181618; decide) (by change 181618 ≤ 262144; decide)
     hbox (by norm_num only [residualStage,UnequalParameters.gap,agreements,w])
     (by simp only [residualSingular,residualStage,TightParameters.gap,
       UnequalParameters.gap])
@@ -64,17 +61,17 @@ theorem residual_count_lt
     weightedB w LB 23 2130706433 hbox (by decide)
     valid.qY (by change 23 ≤ 23; decide) (by exact Nat.le_refl _)
     hTcaps.1 hTcaps.2.1 hTcaps.2.2 (by change 1 ≤ 23; decide)
-    (by change 106 < 2130706433; decide) (by change 23 < 2130706433; decide)
+    (by change 109 < 2130706433; decide) (by change 23 < 2130706433; decide)
     valid.leftZ_small valid.mixedY_small valid.mixedR_small valid.mixedZ_small
     selected seeds nodes x u0 u1 hinj hnodes
     (by change 1 ≤ 131071; decide) (by change 131071 < 2130706433; decide)
-    (by change 131071 < 181628; decide) (by change 181628 ≤ 262144; decide)
+    (by change 131071 < 181618; decide) (by change 181618 ≤ 262144; decide)
     hdegree hagreement
     (by simpa only [residualStage,UnequalParameters.errors] using hno)
 theorem gcd_residual_count_lt
     [GCDMonoid (MvPolynomial (Fin 4) K)]
     (QA QB:MvPolynomial (Fin 4) K) (hQA:QA ≠ 0) (hQB:QB ≠ 0)
-    (hboxA:QA ∈ RCN100.globalCoefficientBox K weightedC w LA 63)
+    (hboxA:QA ∈ RCN100.globalCoefficientBox K weightedC w LA 71)
     (hboxB:QB ∈ RCN100.globalCoefficientBox K weightedB w LB 23)
     (selected:K → Polynomial K) (seeds:Finset K)
     (nodes:Finset I) (x u0 u1:I → K)
@@ -108,17 +105,17 @@ theorem gcd_residual_count_lt
     QB H Q weightedB w LB 23 0 0 0 hQB hH hQ hboxB hQeq
     (Nat.zero_le _) (Nat.zero_le _) (Nat.zero_le _)
   have hTflag:=quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-    QA H T weightedC w LA 63 0 0 0 hQA hH hT hboxA hTeq
+    QA H T weightedC w LA 71 0 0 0 hQA hH hT hboxA hTeq
     (Nat.zero_le _) (Nat.zero_le _) (Nat.zero_le _)
   have hQbox:Q ∈ globalCoefficientBox K weightedB w LB 23:=
     RCN101.flag_box_to_ordinary K
       weightedB w LB 23 Q (by simpa only [Nat.sub_zero] using hQflag)
-  have hTbox:T ∈ globalCoefficientBox K weightedC w LA 63:=
+  have hTbox:T ∈ globalCoefficientBox K weightedC w LA 71:=
     RCN101.flag_box_to_ordinary K
-      weightedC w LA 63 T (by simpa only [Nat.sub_zero] using hTflag)
+      weightedC w LA 71 T (by simpa only [Nat.sub_zero] using hTflag)
   have hTcaps:=RCN081.degree_bounds_of_mem_box
-    T weightedC w LA 63 (by decide) hTbox
-  rw [show (weightedC - 1) / w=297 by decide] at hTcaps
+    T weightedC w LA 71 (by decide) hTbox
+  rw [show (weightedC - 1) / w=333 by decide] at hTcaps
   have hsub:Delta ⊆ seeds:=by
     intro gamma hg
     have hm:gamma ∈ seeds ∧ (phi gamma) (gcd12 QA QB) ≠ 0:=by

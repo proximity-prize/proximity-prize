@@ -9,9 +9,9 @@ private theorem receipt_row_09_band_03_t_04_fixed : FixedYReceipt 9 ⟨5, by dec
 theorem receipt_row_09_band_03_t_04 : RowTileReceipt 9 5 6 16 20 :=
   fixedYReceipt_to_rowTile 9 ⟨5, by decide⟩ 16 20 receipt_row_09_band_03_t_04_fixed
 
-private theorem receipt_row_09_band_03_t_05_fixed : FixedYReceipt 9 ⟨5, by decide⟩ 20 23 := by decide +kernel
-theorem receipt_row_09_band_03_t_05 : RowTileReceipt 9 5 6 20 23 :=
-  fixedYReceipt_to_rowTile 9 ⟨5, by decide⟩ 20 23 receipt_row_09_band_03_t_05_fixed
+private theorem receipt_row_09_band_03_t_05_fixed : FixedYReceipt 9 ⟨5, by decide⟩ 20 24 := by decide +kernel
+theorem receipt_row_09_band_03_t_05 : RowTileReceipt 9 5 6 20 24 :=
+  fixedYReceipt_to_rowTile 9 ⟨5, by decide⟩ 20 24 receipt_row_09_band_03_t_05_fixed
 
 theorem receipt_row_09_band_03 : RowBandReceipt 9 5 6 := by
   intro cy hylo hyhi ct
