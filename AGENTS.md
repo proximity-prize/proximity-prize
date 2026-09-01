@@ -33,7 +33,7 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    as your own proof.
 5. Stay inside the verifier's **memory** budget. Both tracks currently allow
    **24 GiB** for the whole build. Exceeding it fails the submission without
-   scoring it, and reports `candidate_out_of_memory`.
+   scoring it and without a useful message about the proof.
 
    `decide` and `native_decide` over a large finite computation are the usual
    way to exceed it, and the cost is not visible in the source — a single

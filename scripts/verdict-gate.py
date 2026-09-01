@@ -49,9 +49,13 @@ VERDICTS = {
 # caller, poller and terminal-state set already agrees on; this is a better
 # sentence in front of it, not a new state to roll out.
 CODE_VERDICTS = {
+    # Points at AGENTS.md and nothing else. The manifest that sets the ceiling
+    # lives in a private repository and no endpoint publishes it, so naming it
+    # sent an author to a door they cannot open. The rule in their own checkout
+    # carries the same number and says what to do about it.
     "candidate_out_of_memory": "The submission exceeded the memory the challenge "
-    "allows. This is a resource outcome, not a judgement on the proof: see "
-    "`memory_bytes` in the challenge manifest, and the memory rule in AGENTS.md.",
+    "allows. This is a resource outcome, not a judgement on the proof -- see the "
+    "memory rule in AGENTS.md, which gives the budget and the usual cause.",
 }
 
 
