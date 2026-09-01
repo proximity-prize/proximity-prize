@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.CY
+import Mathlib.RingTheory.Invariant.Basic
 import ProximityPrize.SubmissionLower.IB
 section ProximityFlatProofPort
 open scoped Pointwise
