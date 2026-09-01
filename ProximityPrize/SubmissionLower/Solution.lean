@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.LocatorClosure
 namespace ProximityPrize.Benchmark
-theorem candidate:ProtocolClaim 6775 10304823 33554432:=
- ProximityPrize.SubmissionLower.LocatorClosure.protocolClaim6775
+theorem candidate:ProtocolClaim 6776 10306082 33554432:=
+ ProximityPrize.SubmissionLower.LocatorClosure.protocolClaim6776
 end ProximityPrize.Benchmark

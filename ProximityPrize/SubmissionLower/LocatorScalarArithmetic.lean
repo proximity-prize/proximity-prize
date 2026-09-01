@@ -7,15 +7,15 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80506
+def errors:ℕ:=80516
 def agreements:ℕ:=n - errors
 def gap:ℕ:=agreements - w
 def prime:ℕ:=2130706433
 def multiplicity:ℕ:=63
 def yTotalCap:ℕ:=87
-def slopeCap:ℕ:=18
+def slopeCap:ℕ:=19
 def weightedCap:ℕ:=multiplicity * agreements
-def listBudget:ℕ:=2098605974
+def listBudget:ℕ:=2217275781
 def capY:ℕ:=1 + 2*w*yTotalCap
 def capR:ℕ:=w*(2*slopeCap - 1)
 def regularListNumerator:ℕ:=(n-w)*(capY*slopeCap + capR*yTotalCap)
@@ -25,25 +25,25 @@ private def coefficientRow (i:ℕ):ℕ:=
  ∑ j ∈ Finset.range (slopeCap + 1),
    min 1 (yTotalCap + 1 - i - j) * (weightedCap - w*i - (w-1)*j)
 private theorem coefficient_0:
- (∑ i ∈ Finset.range 10,coefficientRow i) =1838011455:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow i) =1921515900:=by decide
 private theorem coefficient_10:
- (∑ i ∈ Finset.range 10,coefficientRow (10+i)) =1588976555:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (10+i)) =1659373900:=by decide
 private theorem coefficient_20:
- (∑ i ∈ Finset.range 10,coefficientRow (20+i)) =1339941655:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (20+i)) =1397231900:=by decide
 private theorem coefficient_30:
- (∑ i ∈ Finset.range 10,coefficientRow (30+i)) =1090906755:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (30+i)) =1135089900:=by decide
 private theorem coefficient_40:
- (∑ i ∈ Finset.range 10,coefficientRow (40+i)) =841871855:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (40+i)) =872947900:=by decide
 private theorem coefficient_50:
- (∑ i ∈ Finset.range 10,coefficientRow (50+i)) =592836955:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (50+i)) =610805900:=by decide
 private theorem coefficient_60:
- (∑ i ∈ Finset.range 10,coefficientRow (60+i)) =343802055:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (60+i)) =348755565:=by decide
 private theorem coefficient_70:
- (∑ i ∈ Finset.range 10,coefficientRow (70+i)) =121401015:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (70+i)) =121315965:=by decide
 private theorem coefficient_80:
- (∑ i ∈ Finset.range 8,coefficientRow (80+i)) =12450660:=by decide
+ (∑ i ∈ Finset.range 8,coefficientRow (80+i)) =12427980:=by decide
 theorem coefficient_count_exact:
-   coefficientCount weightedCap w yTotalCap slopeCap=7770198960:=by
+   coefficientCount weightedCap w yTotalCap slopeCap=8079464910:=by
  change (∑ i ∈ Finset.range 88,coefficientRow i) =_
  rw [Finset.sum_range_add coefficientRow 80 8,
    Finset.sum_range_add coefficientRow 70 10,
@@ -60,23 +60,23 @@ private def rankRow (r:ℕ):ℕ:=
  RCN285.seedlessContactRankBound (min r yTotalCap) yTotalCap slopeCap
    (multiplicity-r)
 private theorem rank_0:
- (∑ i ∈ Finset.range 8,rankRow i) =684:=by decide
+ (∑ i ∈ Finset.range 8,rankRow i) =720:=by decide
 private theorem rank_8:
- (∑ i ∈ Finset.range 8,rankRow (8+i)) =1900:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (8+i)) =2000:=by decide
 private theorem rank_16:
- (∑ i ∈ Finset.range 8,rankRow (16+i)) =3116:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (16+i)) =3280:=by decide
 private theorem rank_24:
- (∑ i ∈ Finset.range 8,rankRow (24+i)) =4332:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (24+i)) =4560:=by decide
 private theorem rank_32:
- (∑ i ∈ Finset.range 8,rankRow (32+i)) =5548:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (32+i)) =5840:=by decide
 private theorem rank_40:
- (∑ i ∈ Finset.range 8,rankRow (40+i)) =6580:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (40+i)) =6820:=by decide
 private theorem rank_48:
- (∑ i ∈ Finset.range 8,rankRow (48+i)) =5436:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (48+i)) =5528:=by decide
 private theorem rank_56:
- (∑ i ∈ Finset.range 7,rankRow (56+i)) =2044:=by decide
+ (∑ i ∈ Finset.range 7,rankRow (56+i)) =2072:=by decide
 theorem local_rank_exact:
-   localRankBound multiplicity yTotalCap slopeCap=29640:=by
+   localRankBound multiplicity yTotalCap slopeCap=30820:=by
  change (∑ i ∈ Finset.range 63,rankRow i) =_
  rw [Finset.sum_range_add rankRow 56 7,
    Finset.sum_range_add rankRow 48 8,

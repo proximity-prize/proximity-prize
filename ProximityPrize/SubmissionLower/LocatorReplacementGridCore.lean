@@ -10,12 +10,12 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
 
 private abbrev prime : ℕ := 2130706433
-abbrev bound : ℕ := 270202635715687185
-abbrev totalCap : ℕ := 2844
+abbrev bound : ℕ := 268872673633727229
+abbrev totalCap : ℕ := 2916
 private abbrev ysCap : ℕ := 85
 private abbrev slopeCap : ℕ := 19
-private abbrev sourceLength : ℕ := 127295
-private abbrev delta : ℕ := 50568
+private abbrev sourceLength : ℕ := 169536
+private abbrev delta : ℕ := 50558
 
 /-- A rectangular cumulative-degree box for one irreducible factor. -/
 structure Box where
@@ -50,9 +50,9 @@ structure Source where
   gap : ℕ
   deriving DecidableEq
 
-def sourceA : Source := ⟨87, 19, 95004605885⟩
-def sourceAux : Source := ⟨99, 21, 1765947352829⟩
-def sourceC : Source := ⟨257, 55, 153048067600638⟩
+def sourceA : Source := ⟨88, 19, 180306218025⟩
+def sourceAux : Source := ⟨99, 21, 2142222243722⟩
+def sourceC : Source := ⟨297, 63, 325815967324336⟩
 
 def stageT (b : Box) (j : ℕ) : ℕ := sourceLength - j * b.factorT
 def stageY (src : Source) (b : Box) (j : ℕ) : ℕ := src.y - j * b.ylo
@@ -72,10 +72,13 @@ def bandSum (src : Source) (b : Box) : ℕ → ℕ
       stageBand src b 4 + stageBand src b 5
   | 6 => stageBand src b 1 + stageBand src b 2 + stageBand src b 3 +
       stageBand src b 4 + stageBand src b 5 + stageBand src b 6
+  | 7 => stageBand src b 1 + stageBand src b 2 + stageBand src b 3 +
+      stageBand src b 4 + stageBand src b 5 + stageBand src b 6 +
+      stageBand src b 7
   | _ => 0
 
 def stagePair (src : Source) (b : Box) (j : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181638, b.factorY, b.r, b.thi,
+  ⟨262144, 131071, 181628, b.factorY, b.r, b.thi,
     stageY src b j, stageR src b j, stageT b j⟩
 
 def PairGates (P : UnequalParameters) : Prop :=
@@ -101,6 +104,9 @@ def routeCost (src : Source) (b : Box) : ℕ → ℕ
   | 6 => max (max (max (max (max (stageCost src b 1) (stageCost src b 2))
       (stageCost src b 3)) (stageCost src b 4)) (stageCost src b 5))
       (stageCost src b 6)
+  | 7 => max (max (max (max (max (max (stageCost src b 1) (stageCost src b 2))
+      (stageCost src b 3)) (stageCost src b 4)) (stageCost src b 5))
+      (stageCost src b 6)) (stageCost src b 7)
   | _ => 0
 
 def pairGatesThrough (src : Source) (b : Box) : ℕ → Prop
@@ -117,6 +123,10 @@ def pairGatesThrough (src : Source) (b : Box) : ℕ → Prop
   | 6 => PairGates (stagePair src b 1) ∧ PairGates (stagePair src b 2) ∧
       PairGates (stagePair src b 3) ∧ PairGates (stagePair src b 4) ∧
       PairGates (stagePair src b 5) ∧ PairGates (stagePair src b 6)
+  | 7 => PairGates (stagePair src b 1) ∧ PairGates (stagePair src b 2) ∧
+      PairGates (stagePair src b 3) ∧ PairGates (stagePair src b 4) ∧
+      PairGates (stagePair src b 5) ∧ PairGates (stagePair src b 6) ∧
+      PairGates (stagePair src b 7)
   | _ => False
 
 instance (src : Source) (b : Box) (k : ℕ) : Decidable (pairGatesThrough src b k) := by
@@ -134,7 +144,9 @@ instance (src : Source) (b : Box) (k : ℕ) : Decidable (pairGatesThrough src b 
             · simp only [pairGatesThrough]; infer_instance
             · rcases k with _ | k
               · simp only [pairGatesThrough]; infer_instance
-              · simp only [pairGatesThrough]; infer_instance
+              · rcases k with _ | k
+                · simp only [pairGatesThrough]; infer_instance
+                · simp only [pairGatesThrough]; infer_instance
 
 def terminalCoprime (src : Source) (b : Box) (k : ℕ) : Prop :=
   stageT b k < b.factorT ∨ stageY src b k < b.ylo ∨ stageR src b k < b.r
@@ -144,7 +156,7 @@ instance (src : Source) (b : Box) (k : ℕ) :
   unfold terminalCoprime; infer_instance
 
 def RouteFits (src : Source) (k : ℕ) (b : Box) : Prop :=
-  1 ≤ k ∧ k ≤ 6 ∧
+  1 ≤ k ∧ k ≤ 7 ∧
     k * b.ylo ≤ src.y ∧ k * b.r ≤ src.r ∧
     k * b.factorT + stageY src b k ≤ sourceLength ∧
     bandSum src b k < src.gap ∧ terminalCoprime src b k ∧
@@ -156,7 +168,7 @@ instance (src : Source) (k : ℕ) (b : Box) : Decidable (RouteFits src k b) := b
 
 /-- A receipt-local propositionally equivalent presentation of `RouteFits`. -/
 def FastRouteFits (src : Source) (k : ℕ) (b : Box) : Prop :=
-  1 ≤ k ∧ k ≤ 6 ∧
+  1 ≤ k ∧ k ≤ 7 ∧
     k * b.ylo ≤ src.y ∧ k * b.r ≤ src.r ∧
     k * b.factorT + stageY src b k ≤ sourceLength ∧
     terminalCoprime src b k ∧ bandSum src b k < src.gap ∧
@@ -177,14 +189,16 @@ theorem fastRouteFits_iff (src : Source) (k : ℕ) (b : Box) :
 def Fits (b : Box) : Prop :=
   b.ordinaryFits ∨ RouteFits sourceA 1 b ∨ RouteFits sourceAux 1 b ∨
     RouteFits sourceC 2 b ∨ RouteFits sourceC 3 b ∨
-    RouteFits sourceC 4 b ∨ RouteFits sourceC 5 b ∨ RouteFits sourceC 6 b
+    RouteFits sourceC 4 b ∨ RouteFits sourceC 5 b ∨ RouteFits sourceC 6 b ∨
+    RouteFits sourceC 7 b
 
 instance (b : Box) : Decidable (Fits b) := by unfold Fits; infer_instance
 
 def FastFits (b : Box) : Prop :=
   b.ordinaryFits ∨ FastRouteFits sourceAux 1 b ∨ FastRouteFits sourceC 3 b ∨
     FastRouteFits sourceC 4 b ∨ FastRouteFits sourceC 5 b ∨
-    FastRouteFits sourceC 6 b ∨ FastRouteFits sourceA 1 b ∨
+    FastRouteFits sourceC 6 b ∨ FastRouteFits sourceC 7 b ∨
+    FastRouteFits sourceA 1 b ∨
     FastRouteFits sourceC 2 b
 
 instance (b : Box) : Decidable (FastFits b) := by unfold FastFits; infer_instance
@@ -193,7 +207,7 @@ theorem fastFits_to_fits (b : Box) : FastFits b → Fits b := by
   intro h
   unfold FastFits at h
   unfold Fits
-  rcases h with h | h | h | h | h | h | h | h
+  rcases h with h | h | h | h | h | h | h | h | h
   · exact Or.inl h
   · exact Or.inr (Or.inr (Or.inl ((fastRouteFits_iff sourceAux 1 b).mp h)))
   · exact Or.inr (Or.inr (Or.inr (Or.inr
@@ -203,7 +217,9 @@ theorem fastFits_to_fits (b : Box) : FastFits b → Fits b := by
   · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr
       (Or.inl ((fastRouteFits_iff sourceC 5 b).mp h)))))))
   · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr
-      ((fastRouteFits_iff sourceC 6 b).mp h)))))))
+      (Or.inl ((fastRouteFits_iff sourceC 6 b).mp h))))))))
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr
+      (Or.inr ((fastRouteFits_iff sourceC 7 b).mp h))))))))
   · exact Or.inr (Or.inl ((fastRouteFits_iff sourceA 1 b).mp h))
   · exact Or.inr (Or.inr (Or.inr
       (Or.inl ((fastRouteFits_iff sourceC 2 b).mp h))))
@@ -313,7 +329,7 @@ def coarseCellOf (p : FlagDegree) (hslo : 1 ≤ p.all) (hshi : p.all ≤ slopeCa
       change middle p ≤ 85 at hy
       omega⟩,
     ⟨total p / 128, by
-      change total p ≤ 2844 at ht
+      change total p ≤ 2916 at ht
       omega⟩)
 
 theorem coarseCellOf_bounds (p : FlagDegree) (hslo : 1 ≤ p.all)
