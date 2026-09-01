@@ -280,20 +280,18 @@ theorem projected_union_card_le : (projected ∪ {0}).card ≤ 513 := by
   calc (projected ∪ {0}).card ≤ projected.card + ({0} : Finset FF).card := Finset.card_union_le _ _
     _ = 513 := by rw [projected_card]; simp
 
-theorem collision_arith : 513 + Sel.offDiag.card * 257 ≤ NN^2 * 272 + 513 := by
+theorem collision_arith : 513 + Sel.offDiag.card * 257 ≤ NN^2 * 257 + 513 := by
   rw [offdiag_card]
   have h1 : NN * (NN - 1) ≤ NN * NN :=
     Nat.mul_le_mul_left NN (Nat.sub_le NN 1)
   have h2 : NN * (NN - 1) * 257 ≤ NN^2 * 257 := by
     simpa [pow_two] using Nat.mul_le_mul_right 257 h1
-  have h3 : NN^2 * 257 ≤ NN^2 * 272 := Nat.mul_le_mul_left _ (by norm_num)
   calc
     513 + NN * (NN - 1) * 257 ≤ 513 + NN^2 * 257 := Nat.add_le_add_left h2 513
-    _ ≤ 513 + NN^2 * 272 := Nat.add_le_add_left h3 513
-    _ = NN^2 * 272 + 513 := Nat.add_comm _ _
+    _ = NN^2 * 257 + 513 := Nat.add_comm _ _
 
 set_option maxRecDepth 10000 in
-theorem bad_card_le : bad.card ≤ NN^2 * 272 + 513 := by
+theorem bad_card_le : bad.card ≤ NN^2 * 257 + 513 := by
   have hcoll := collision_union_card_le
   have hp := projected_union_card_le
   rw [bad]
@@ -302,12 +300,12 @@ theorem bad_card_le : bad.card ≤ NN^2 * 272 + 513 := by
         (projected ∪ {0}).card + (Sel.offDiag.biUnion collisionRoots).card :=
       Finset.card_union_le _ _
     _ ≤ 513 + Sel.offDiag.card * 257 := Nat.add_le_add hp hcoll
-    _ ≤ NN^2 * 272 + 513 := collision_arith
+    _ ≤ NN^2 * 257 + 513 := collision_arith
 
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 1000000 in
 set_option exponentiation.threshold 100000 in
-theorem alpha_count : NN^2 * 272 + 513 < (2 ^ 31 - 2 ^ 24 + 1)^6 := by
+theorem alpha_count : NN^2 * 257 + 513 < (2 ^ 31 - 2 ^ 24 + 1)^6 := by
   dsimp [NN]
   decide
 
@@ -317,12 +315,11 @@ theorem bad_lt_univ : bad.card < (Finset.univ : Finset FF).card := by
 
 theorem exists_alpha : ∃ a : FF, a ∉ bad := by
   by_contra h
-  push_neg at h
+  push Not at h
   have : bad = Finset.univ := by ext a; simp [h a]
   have hlt := bad_lt_univ
   rw [this] at hlt
   exact (lt_irrefl _) hlt
-
 noncomputable def alpha : FF := Classical.choose exists_alpha
 theorem alpha_not_bad : alpha ∉ bad := Classical.choose_spec exists_alpha
 
@@ -596,12 +593,11 @@ theorem cpoly_eval (U : Finset Small) (j : Idx) :
   rw [cpoly, Polynomial.eval_mul, Polynomial.eval_comp, zpoly, Polynomial.eval_pow,
     Polynomial.eval_X, zval]
 
-theorem scalar_agree_core {U : Finset Small} (hU : U ∈ Sel) (a : Small) (ha : a ∈ coreA) :
+theorem scalar_agree_core {U : Finset Small} (_hU : U ∈ Sel) (a : Small) (ha : a ∈ coreA) :
     f1scalar (idx a 0) + gamma U * f2scalar (idx a 0) =
       (cpoly U).eval (IRSProfile.domain (idx a 0)) := by
   rw [f1scalar, f2scalar, cpoly_eval, RF_eval_core a ha]
   simp
-
 theorem scalar_agree_block {U : Finset Small} (hU : U ∈ Sel)
     (a b : Small) (hb : b ∈ U) :
     f1scalar (idx a b) + gamma U * f2scalar (idx a b) =
@@ -685,13 +681,13 @@ theorem f2_far (δ : ℝ≥0) (hδ : δ < (122641 / 262144 : ℝ≥0)) :
   let A : Polynomial FF := (Polynomial.X : Polynomial FF)^512 - Polynomial.C alpha
   let P : Polynomial FF := A * q + RF
   have hAnd : A.natDegree = 512 := by
-    simp [A, Polynomial.natDegree_X_pow_sub_C]
+    simp [A]
+  have hmul : (A * q).natDegree ≤ 131583 := by
+    calc
+      (A * q).natDegree ≤ A.natDegree + q.natDegree := Polynomial.natDegree_mul_le
+      _ ≤ 512 + 131071 := by rw [hAnd]; exact Nat.add_le_add_left hqnat 512
+      _ = 131583 := by norm_num
   have hPdeg : P.natDegree ≤ 131583 := by
-    have hmul : (A * q).natDegree ≤ 131583 := by
-      calc
-        (A * q).natDegree ≤ A.natDegree + q.natDegree := Polynomial.natDegree_mul_le
-        _ ≤ 512 + 131071 := by rw [hAnd]; exact Nat.add_le_add_left hqnat 512
-        _ = 131583 := by norm_num
     calc
       P.natDegree ≤ max (A * q).natDegree RF.natDegree := by
         change (A * q + RF).natDegree ≤ _
