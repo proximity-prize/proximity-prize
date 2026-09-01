@@ -1,4 +1,5 @@
-import ProximityPrize.SubmissionLower.HB
+import ProximityPrize.Benchmark.TargetLower
+import Mathlib.Algebra.DirectSum.Ring
 section ProximityFlatProofPort
 universe uι uR uA uB
 variable {ι:Type uι}

@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.T9
-import ProximityPrize.SubmissionLower.HC
+import Mathlib.Algebra.GradedMulAction
 section ProximityFlatProofPort
 open SetLike DirectSum Pointwise Set
 variable {ιA ιM σA σM A M:Type*}
