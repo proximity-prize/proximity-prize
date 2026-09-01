@@ -50,7 +50,7 @@ theorem residual_count_lt
     (by change 1 ≤ 23; decide) (by change 23 < 2130706433; decide)
     (by change 1 ≤ 131071; decide) (by change 131071 < 2130706433; decide) valid.kD
     valid.algebraic_pos valid.implicit_small valid.algebraic_small
-    (by change 131071 < 181618; decide) (by change 181618 ≤ 262144; decide)
+    (by change 131071 < 181484; decide) (by change 181484 ≤ 262144; decide)
     hbox (by norm_num only [residualStage,UnequalParameters.gap,agreements,w])
     (by simp only [residualSingular,residualStage,TightParameters.gap,
       UnequalParameters.gap])
@@ -65,7 +65,7 @@ theorem residual_count_lt
     valid.leftZ_small valid.mixedY_small valid.mixedR_small valid.mixedZ_small
     selected seeds nodes x u0 u1 hinj hnodes
     (by change 1 ≤ 131071; decide) (by change 131071 < 2130706433; decide)
-    (by change 131071 < 181618; decide) (by change 181618 ≤ 262144; decide)
+    (by change 131071 < 181484; decide) (by change 181484 ≤ 262144; decide)
     hdegree hagreement
     (by simpa only [residualStage,UnequalParameters.errors] using hno)
 theorem gcd_residual_count_lt

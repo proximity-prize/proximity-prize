@@ -21,7 +21,7 @@ theorem auxiliary72_shape :
     13076496 + 21 ≤ 131071 * (99 + 1) := by decide
 
 theorem auxiliary72_capacity :
-    13076496 - 50548 ≤ (72 - 1) * 181618 + (131071 - 1) := by decide
+    13076496 - 50519 ≤ (72 - 1) * 181484 + (131071 - 1) := by decide
 
 /-- These historical names are retained to minimize invalidation; their
     witness is the retuned multiplicity-241 base C source. -/
@@ -29,10 +29,10 @@ theorem auxiliary176_shape :
     43769938 + 71 ≤ 131071 * (333 + 1) := by decide
 
 theorem auxiliary176_capacity :
-    43769938 - 50548 ≤ (241 - 1) * 181618 + (131071 - 1) := by decide
+    43769938 - 50519 ≤ (241 - 1) * 181484 + (131071 - 1) := by decide
 
 theorem auxiliary176_double_capacity :
-    43769938 - 2 * 50548 ≤
-      (241 - 2) * 181618 + 2 * (131071 - 1) := by decide
+    43769938 - 2 * 50519 ≤
+      (241 - 2) * 181484 + 2 * (131071 - 1) := by decide
 
 end ProximityPrize.SubmissionLower.LocatorAuxiliaryArithmetic

@@ -34,7 +34,7 @@ abbrev LongKernel (u₀ u₁ : I → K) :=
 /-- Unequal-pair parameters for a factor with the long helper polynomial on
 the right. -/
 def helperPair (leftY leftR leftZ : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181618, leftY, leftR, leftZ, 333, 71, 457347⟩
+  ⟨262144, 131071, 181589, leftY, leftR, leftZ, 333, 71, 457347⟩
 
 /-- The characteristic hypotheses required by the unequal-pair theorem,
 kept independent of the replacement-grid module to avoid an import cycle. -/
@@ -82,11 +82,11 @@ theorem long_divisor_or_helper_count
     {u₀ u₁ : I → K} {H : P4}
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181618 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u₀ i + gamma * u₁ i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80526)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (leftY leftR leftZ : ℕ)
     (hFY : F.1.degreeOf 1 ≤ leftY)
     (hFR : F.1.degreeOf 2 ≤ leftR)
@@ -141,7 +141,7 @@ theorem long_divisor_or_helper_count
     intro gamma hgamma
     dsimp only [Q]
     apply specialization_eq_zero_of_agreements K
-      43769938 131071 457347 71 241 181618 IRSProfile.domain u₀ u₁
+      43769938 131071 457347 71 241 181589 IRSProfile.domain u₀ u₁
       v.1 v.2 (by decide) (by decide) (selected gamma) gamma
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =

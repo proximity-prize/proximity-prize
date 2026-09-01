@@ -190,7 +190,7 @@ def includeTCap (u0 u1:I → K) (v:TCapKernel u0 u1):JoinedKernel u0 u1:=
     simp only [joinedMap_apply,ZeroMemClass.coe_zero,map_zero,zero_add,add_zero]⟩⟩
 theorem joined_universal (u0 u1:I → K) (v:JoinedKernel u0 u1)
     (gamma:K) (P:Polynomial K) (points:Finset I)
-    (hP:P.natDegree ≤ 131071) (hcard:181618 ≤ points.card)
+    (hP:P.natDegree ≤ 131071) (hcard:181484 ≤ points.card)
     (hvalues:∀ i ∈ points,
       P.eval (IRSProfile.domain i) =u0 i + gamma * u1 i) :
     RCN319.specialization K P gamma
@@ -198,16 +198,16 @@ theorem joined_universal (u0 u1:I → K) (v:JoinedKernel u0 u1)
   obtain ⟨z,hz⟩:=v.2
   rw [← hz,reconstruct_joinedMap,map_add,map_add,map_add]
   have hc:=specialization_eq_zero_of_agreements K
-    43769938 131071 230000 71 241 181618 IRSProfile.domain u0 u1
+    43769938 131071 230000 71 241 181484 IRSProfile.domain u0 u1
     z.1.1 z.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have ha:=specialization_eq_zero_of_agreements K
-    11623552 131071 230000 19 64 181618 IRSProfile.domain u0 u1
+    11623552 131071 230000 19 64 181484 IRSProfile.domain u0 u1
     z.2.1.1 z.2.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have haux:=specialization_eq_zero_of_agreements K
-    13076496 131071 230000 21 72 181618 IRSProfile.domain u0 u1
+    13076496 131071 230000 21 72 181484 IRSProfile.domain u0 u1
     z.2.2.1.1 z.2.2.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have htcap:=specialization_eq_zero_of_agreements K
-    22883868 131071 2994 39 126 181618 IRSProfile.domain u0 u1
+    22883868 131071 2994 39 126 181484 IRSProfile.domain u0 u1
     z.2.2.2.1 z.2.2.2.2 (by decide) (by decide) P gamma points hP hcard hvalues
   rw [specialization_eq_ordinary] at ha haux hc htcap
   rw [hc,ha,haux,htcap,zero_add,zero_add,zero_add]
@@ -250,7 +250,7 @@ structure SelectedPair (u0 u1:I → K) where
     gcd QA QB ∣ reconstruct K 14347822 131071 5047 23 v.1
   universal_vanishing:
     ∀ (gamma:K) (P:Polynomial K) (points:Finset I),
-      P.natDegree ≤ 131071 → 181618 ≤ points.card →
+      P.natDegree ≤ 131071 → 181484 ≤ points.card →
       (∀ i ∈ points,P.eval (IRSProfile.domain i) =u0 i + gamma * u1 i) →
       RCN319.specialization K P gamma QA=0 ∧
         RCN319.specialization K P gamma QB=0
@@ -364,7 +364,7 @@ theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
     · dsimp only [QB]
       rw [submoduleReconstructLinear_apply]
       exact specialization_eq_zero_of_agreements K
-        14347822 131071 5047 23 79 181618 IRSProfile.domain u0 u1
+        14347822 131071 5047 23 79 181484 IRSProfile.domain u0 u1
         vB.1 vB.2 (by decide) (by decide) P gamma points hP hcard hvalues
 end
 end ProximityPrize.SubmissionLower.LocatorSelection

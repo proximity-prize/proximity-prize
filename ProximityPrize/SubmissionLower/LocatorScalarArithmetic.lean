@@ -7,7 +7,7 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80526
+def errors:ℕ:=80660
 def agreements:ℕ:=n - errors
 def gap:ℕ:=agreements - w
 def prime:ℕ:=2130706433
