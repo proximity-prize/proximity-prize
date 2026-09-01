@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow11Seg10
+import ProximityPrize.SubmissionLower.LocatorReplacementGridY22
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
@@ -49,7 +50,9 @@ private theorem receipt_row_11_fast : FastRowReceipt 11 := by
   · exact receipt_row_11_y_19 cy (by omega) h_20
   by_cases h_21 : cy.val < 21
   · exact receipt_row_11_y_20 cy (by omega) h_21
-  · exact receipt_row_11_y_21 cy (by omega) (by omega)
+  by_cases h_22 : cy.val < 22
+  · exact receipt_row_11_y_21 cy (by omega) h_22
+  · exact receipt_y_22 11 cy (by omega) (by simpa [coarseYCells, ysCap] using cy.isLt)
 
 theorem receipt_row_11 : RowReceipt 11 :=
   fastRowReceipt_to_rowReceipt 11 receipt_row_11_fast

@@ -65,7 +65,11 @@ def chosenCost (c : Cell) : ℕ :=
   else if RouteFits sourceC 6 b then routeCost sourceC b 6
   else if RouteFits sourceC 7 b then routeCost sourceC b 7
   else if RouteFits sourceC 8 b then routeCost sourceC b 8
-  else max (routeCost sourceCLong b 8) (helperPairCost b)
+  else if RouteFits sourceC 9 b then routeCost sourceC b 9
+  else if RouteFits sourceC 10 b then routeCost sourceC b 10
+  else if HelperH10Fits b then
+    max (routeCost sourceH b 10) (helperPairCost b)
+  else max (routeCost sourceH b 9) (helperPairCost b)
 
 theorem chosenCost_rate (c : Cell) (hv : Valid c) :
     totalCap * chosenCost c ≤ bound * (box c).factorT := by
@@ -104,16 +108,30 @@ theorem chosenCost_rate (c : Cell) (hv : Valid c) :
                     hC6, if_pos, if_false] using hC6.2.2.2.2.2.2.2.2
                 · have hroutes := hroutes.resolve_left hC6
                   by_cases hC7 : RouteFits sourceC 7 (box c)
-                  · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4,
-                      hC5, hC6, hC7, if_pos, if_false] using
-                      hC7.2.2.2.2.2.2.2.2
+                  · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
+                      hC6, hC7, if_pos, if_false] using hC7.2.2.2.2.2.2.2.2
                   · have hroutes := hroutes.resolve_left hC7
                     by_cases hC8 : RouteFits sourceC 8 (box c)
-                    · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4,
-                        hC5, hC6, hC7, hC8, if_pos, if_false] using
-                        hC8.2.2.2.2.2.2.2.2
-                    · have hhelper := hroutes.resolve_left hC8
-                      simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4,
-                        hC5, hC6, hC7, hC8, if_pos, if_false] using hhelper.2.2
+                    · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
+                        hC6, hC7, hC8, if_pos, if_false] using hC8.2.2.2.2.2.2.2.2
+                    · have hroutes := hroutes.resolve_left hC8
+                      by_cases hC9 : RouteFits sourceC 9 (box c)
+                      · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4, hC5,
+                          hC6, hC7, hC8, hC9, if_pos, if_false] using
+                          hC9.2.2.2.2.2.2.2.2
+                      · have hroutes := hroutes.resolve_left hC9
+                        by_cases hC10 : RouteFits sourceC 10 (box c)
+                        · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4,
+                            hC5, hC6, hC7, hC8, hC9, hC10, if_pos, if_false] using
+                            hC10.2.2.2.2.2.2.2.2
+                        · have hroutes := hroutes.resolve_left hC10
+                          by_cases hH10 : HelperH10Fits (box c)
+                          · simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4,
+                              hC5, hC6, hC7, hC8, hC9, hC10, hH10, if_pos,
+                              if_false] using hH10.2.2
+                          · have hH9 := hroutes.resolve_left hH10
+                            simpa only [chosenCost, ho, hA, hAux, hC2, hC3, hC4,
+                              hC5, hC6, hC7, hC8, hC9, hC10, hH10, if_pos,
+                              if_false] using hH9.2.2
 
 end ProximityPrize.SubmissionLower.LocatorReplacementGridData

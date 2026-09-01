@@ -97,6 +97,7 @@ theorem global_count_le_regular_div_add_tight_countCap
    (hj:1 ≤ (2*p.slopeCap-1)*p.seedTotalCap)
    (hjSmall:(2*p.slopeCap-1)*p.seedTotalCap < prime)
    (hjYSmall:t.implicitYCap < prime)
+   (hmixedSmall:2*t.implicitYCap*t.algebraicCap < prime)
    (hwa:p.w < p.agreements) (han:p.agreements ≤ p.n)
    (selected:K → Polynomial K) (Gamma:Finset K)
    (nodes:Finset Iota) (x u0 u1:Iota → K)
@@ -146,6 +147,7 @@ theorem global_count_le_regular_div_add_tight_countCap
      [RCN318.TightParameters.algebraicCap,
        RCN318.TightParameters.kappa,
        A.seedTotalCap,A.slopeCap] using hjSmall)
+   hmixedSmall
    (by simpa only [A.w,A.agreements] using hwa)
    (by simpa only [A.agreements,A.n] using han)
    selected Gamma nodes x u0 u1 hinj

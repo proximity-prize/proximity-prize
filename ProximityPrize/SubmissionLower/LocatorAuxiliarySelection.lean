@@ -84,25 +84,25 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
 theorem common_divides_A61_small {u0 u1:I → K}
-    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 230000) :
-    ∀ a:ConstraintKernel (K:=K) 11623552 131071 L 19 64
+    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 149307) :
+    ∀ a:ConstraintKernel (K:=K) 11986194 131071 L 19 66
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 11623552 131071 L 19 a.1:=by
-  exact full_kernel_divisor_small (E:=K) (Lmax:=230000) hL
+      gcd S.QA S.QB ∣ reconstruct K 11986194 131071 L 19 a.1:=by
+  exact full_kernel_divisor_small (E:=K) (Lmax:=149307) hL
     IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_A
 theorem common_divides_A72_small {u0 u1:I → K}
-    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 230000) :
-    ∀ a:ConstraintKernel (K:=K) 13076496 131071 L 21 72
+    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 149307) :
+    ∀ a:ConstraintKernel (K:=K) 13075848 131071 L 21 72
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 13076496 131071 L 21 a.1:=by
-  exact full_kernel_divisor_small (E:=K) (Lmax:=230000) hL
+      gcd S.QA S.QB ∣ reconstruct K 13075848 131071 L 21 a.1:=by
+  exact full_kernel_divisor_small (E:=K) (Lmax:=149307) hL
     IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_Aux
 theorem common_divides_A150_small {u0 u1:I → K}
-    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 230000) :
-    ∀ a:ConstraintKernel (K:=K) 43769938 131071 L 71 241
+    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 149307) :
+    ∀ a:ConstraintKernel (K:=K) 47944776 131071 L 80 264
       IRSProfile.domain u0 u1,
-      gcd S.QA S.QB ∣ reconstruct K 43769938 131071 L 71 a.1:=by
-  exact full_kernel_divisor_small (E:=K) (Lmax:=230000) hL
+      gcd S.QA S.QB ∣ reconstruct K 47944776 131071 L 80 a.1:=by
+  exact full_kernel_divisor_small (E:=K) (Lmax:=149307) hL
     IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_C
 end Selected
 end
