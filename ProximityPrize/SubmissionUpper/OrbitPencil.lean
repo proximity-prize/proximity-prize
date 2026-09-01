@@ -317,12 +317,14 @@ theorem bad_lt_univ : bad.card < (Finset.univ : Finset FF).card := by
 
 theorem exists_alpha : ∃ a : FF, a ∉ bad := by
   by_contra h
-  push_neg at h
-  have : bad = Finset.univ := by ext a; simp [h a]
+  have hbad : bad = Finset.univ := by
+    ext a
+    simp only [Finset.mem_univ, iff_true]
+    by_contra ha
+    exact h ⟨a, ha⟩
   have hlt := bad_lt_univ
-  rw [this] at hlt
+  rw [hbad] at hlt
   exact (lt_irrefl _) hlt
-
 noncomputable def alpha : FF := Classical.choose exists_alpha
 theorem alpha_not_bad : alpha ∉ bad := Classical.choose_spec exists_alpha
 
@@ -596,7 +598,7 @@ theorem cpoly_eval (U : Finset Small) (j : Idx) :
   rw [cpoly, Polynomial.eval_mul, Polynomial.eval_comp, zpoly, Polynomial.eval_pow,
     Polynomial.eval_X, zval]
 
-theorem scalar_agree_core {U : Finset Small} (hU : U ∈ Sel) (a : Small) (ha : a ∈ coreA) :
+theorem scalar_agree_core {U : Finset Small} (_hU : U ∈ Sel) (a : Small) (ha : a ∈ coreA) :
     f1scalar (idx a 0) + gamma U * f2scalar (idx a 0) =
       (cpoly U).eval (IRSProfile.domain (idx a 0)) := by
   rw [f1scalar, f2scalar, cpoly_eval, RF_eval_core a ha]
@@ -685,7 +687,7 @@ theorem f2_far (δ : ℝ≥0) (hδ : δ < (122641 / 262144 : ℝ≥0)) :
   let A : Polynomial FF := (Polynomial.X : Polynomial FF)^512 - Polynomial.C alpha
   let P : Polynomial FF := A * q + RF
   have hAnd : A.natDegree = 512 := by
-    simp [A, Polynomial.natDegree_X_pow_sub_C]
+    simp [A]
   have hPdeg : P.natDegree ≤ 131583 := by
     have hmul : (A * q).natDegree ≤ 131583 := by
       calc
