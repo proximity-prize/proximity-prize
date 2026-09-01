@@ -1,130 +1,192 @@
 import ProximityPrize.SubmissionLower.LocatorReplacementGrid
-import ProximityPrize.SubmissionLower.LocatorChannelUpper6765
-import ProximityPrize.SubmissionLower.LocatorAuxiliaryArithmetic
+import ProximityPrize.SubmissionLower.LocatorRateCover
+import ProximityPrize.SubmissionLower.LocatorLowQuotient
+import ProximityPrize.SubmissionLower.N5
 namespace ProximityPrize.SubmissionLower.LocatorReplacementData
-open RCN100 RCN260 LocatorFactorAggregate LocatorFactorReplacement
-open LocatorReplacementGrid LocatorChannelUpper6765
-set_option autoImplicit false
+open scoped BigOperators
+open LocatorReplacementGrid RCN260 RCN302 RCN180
 set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
-
 private abbrev prime:ℕ:=2130706433
-private abbrev bound:ℕ:=271696008548359000
-private abbrev delta:ℕ:=50647
-private abbrev sourceSlopeBase:ℕ:=99050238
-private abbrev sourceDebtBase:ℕ:=256656218091
-private abbrev sourceY:ℕ:=128
-private abbrev sourceS:ℕ:=27
-private abbrev sourceSlopeBase126:ℕ:=370614480
-private abbrev sourceDebtBase126:ℕ:=884603972630
-private abbrev sourceY126:ℕ:=174
-private abbrev sourceS126:ℕ:=39
-private abbrev sourceMaxL:ℕ:=52091
+private abbrev bound:ℕ:=271873949264936910
+private abbrev delta:ℕ:=50666
+abbrev GridCell:=LocatorReplacementGrid.Cell
 
-def quotientY (c:Cell):ℕ:=sourceY-y c
-def quotientS (c:Cell):ℕ:=sourceS-r c
-def cofactorY (c:Cell):ℕ:=sourceY-y c-y c
-def cofactorS (c:Cell):ℕ:=sourceS-r c-r c
-def sourceSlots (c:Cell):ℕ:=
-  slotCount (quotientY c) (quotientS c)+
-    slotCount (cofactorY c) (cofactorS c)
-def sourceSlope (c:Cell):ℕ:=sourceSlopeBase-delta*sourceSlots c
-def sourceDebt (c:Cell):ℕ:=
-  sourceDebtBase-delta*sourceSlots c*(tlo c-1)
-def rawLength (c:Cell):ℕ:=
-  max (2*tlo c) (sourceDebt c/sourceSlope c+1)
-def sourceLength (c:Cell):ℕ:=
-  if cofactorY c<y c ∨ cofactorS c<r c then rawLength c
-  else min (rawLength c) (3*tlo c-1)
-def quotientT (c:Cell):ℕ:=sourceLength c-tlo c
-def cofactorT (c:Cell):ℕ:=sourceLength c-tlo c-tlo c
-def sourceNullity (c:Cell):ℕ:=
-  sourceSlopeBase*sourceLength c-sourceDebtBase
+def channelMultiplicity (ys ss:ℕ):ℕ:=
+  ∑ u ∈ Finset.range (ys+1), (min ss u+1)
+def channelMoment (ys ss:ℕ):ℕ:=
+  ∑ u ∈ Finset.range (ys+1),u*(min ss u+1)
+def suggestedLength (a debt minimumL Ysrc sourceS:ℕ) (c:GridCell):ℕ:=
+  let ft:=max (tlo c) (ylo c)
+  let qY:=Ysrc-ylo c
+  let qR:=min (sourceS-r c) qY
+  let channels:=channelMultiplicity qY qR
+  let moment:=channelMoment qY qR
+  let slope:=a-delta*channels
+  let rhs:=debt-delta*((ft-1)*channels+moment)
+  let base:=max minimumL (max (ft+qY) (ft+1))
+  if slope=0 then base else max base (rhs/slope+1)
 
-def quotientPair (c:Cell):UnequalParameters:=
-  ⟨262144,131071,181717,y c,r c,thi c,
-    quotientY c,quotientS c,quotientT c⟩
-def cofactorPair (c:Cell):UnequalParameters:=
-  ⟨262144,131071,181717,y c,r c,thi c,
-    cofactorY c,cofactorS c,cofactorT c⟩
-def sourceCost (c:Cell):ℕ:=
-  max (quotientPair c).regularCountCap (cofactorPair c).regularCountCap
-
-def quotientY126 (c:Cell):ℕ:=sourceY126-y c
-def quotientS126 (c:Cell):ℕ:=sourceS126-r c
-def cofactorY126 (c:Cell):ℕ:=sourceY126-y c-y c
-def cofactorS126 (c:Cell):ℕ:=sourceS126-r c-r c
-def sourceSlots126 (c:Cell):ℕ:=
-  slotCount (quotientY126 c) (quotientS126 c)+
-    slotCount (cofactorY126 c) (cofactorS126 c)
-def sourceSlope126 (c:Cell):ℕ:=sourceSlopeBase126-delta*sourceSlots126 c
-def sourceDebt126 (c:Cell):ℕ:=
-  sourceDebtBase126-delta*sourceSlots126 c*(tlo c-1)
-def rawLength126 (c:Cell):ℕ:=
-  max (2*tlo c) (sourceDebt126 c/sourceSlope126 c+1)
-def sourceLength126 (c:Cell):ℕ:=
-  if cofactorY126 c<y c ∨ cofactorS126 c<r c then rawLength126 c
-  else min (rawLength126 c) (3*tlo c-1)
-def quotientT126 (c:Cell):ℕ:=sourceLength126 c-tlo c
-def cofactorT126 (c:Cell):ℕ:=sourceLength126 c-tlo c-tlo c
-def sourceNullity126 (c:Cell):ℕ:=
-  sourceSlopeBase126*sourceLength126 c-sourceDebtBase126
-def quotientPair126 (c:Cell):UnequalParameters:=
-  ⟨262144,131071,181717,y c,r c,thi c,
-    quotientY126 c,quotientS126 c,quotientT126 c⟩
-def cofactorPair126 (c:Cell):UnequalParameters:=
-  ⟨262144,131071,181717,y c,r c,thi c,
-    cofactorY126 c,cofactorS126 c,cofactorT126 c⟩
-def sourceCost126 (c:Cell):ℕ:=
-  max (quotientPair126 c).regularCountCap (cofactorPair126 c).regularCountCap
-
-def exactRest (c:Cell):ℕ:=
-  remainingCost 2450 77 17 131072 131073 (cap (tlo c) (y c) (r c))
-def noBadFits (c:Cell):Prop:=
-  2450*paddedCost 131072 131073 (cap (thi c) (y c) (r c))≤
-    bound*tlo c
-def ordinaryFits (c:Cell):Prop:=
-  paddedCost 131072 131073 (cap (thi c) (y c) (r c))+exactRest c≤bound
+def length72 (c:GridCell):ℕ:=suggestedLength 28489197 92785577302 3257 99 21 c
+def length126 (c:GridCell):ℕ:=suggestedLength 385505160 886023375230 2299 174 39 c
+def lengthDouble126 (c:GridCell):ℕ:=2*tlo c+500
+def quotient72D (c:GridCell):ℕ:=13084992-(131071*ylo c-r c)-delta
+def quotient72T (c:GridCell):ℕ:=length72 c-tlo c
+def quotient72YS (c:GridCell):ℕ:=99-ylo c
+def quotient72S (c:GridCell):ℕ:=21-r c
+def quotient126D (c:GridCell):ℕ:=22898736-(131071*ylo c-r c)-delta
+def quotient126T (c:GridCell):ℕ:=length126 c-tlo c
+def quotient126YS (c:GridCell):ℕ:=174-ylo c
+def quotient126S (c:GridCell):ℕ:=39-r c
+def quotientDoubleT (c:GridCell):ℕ:=lengthDouble126 c-tlo c
+def quotientDoubleYS (c:GridCell):ℕ:=174-ylo c
+def quotientDoubleS (c:GridCell):ℕ:=39-r c
+def secondDoubleT (c:GridCell):ℕ:=lengthDouble126 c-2*tlo c
+def secondDoubleYS (c:GridCell):ℕ:=174-2*ylo c
+def secondDoubleS (c:GridCell):ℕ:=39-2*r c
+def band72 (c:GridCell):ℕ:=delta*LocatorLowQuotient.channelCount
+  (quotient72T c) (quotient72YS c) (quotient72S c)
+def band126 (c:GridCell):ℕ:=delta*LocatorLowQuotient.channelCount
+  (quotient126T c) (quotient126YS c) (quotient126S c)
+def bandDoubleFirst (c:GridCell):ℕ:=delta*LocatorLowQuotient.channelCount
+  (quotientDoubleT c) (quotientDoubleYS c) (quotientDoubleS c)
+def bandDoubleSecond (c:GridCell):ℕ:=delta*LocatorLowQuotient.channelCount
+  (secondDoubleT c) (secondDoubleYS c) (secondDoubleS c)
+def sourceGap72 (c:GridCell):ℕ:=
+  28489197*length72 c-92785577302
+def sourceGap126 (c:GridCell):ℕ:=
+  385505160*length126 c-886023375230
+def sourceGapDouble126 (c:GridCell):ℕ:=
+  385505160*lengthDouble126 c-886023375230
+def pair72 (c:GridCell):UnequalParameters:=
+  ⟨262144,131071,181736,min (yhi c) (thi c),r c,thi c,
+    quotient72YS c,quotient72S c,quotient72T c⟩
+def pair126 (c:GridCell):UnequalParameters:=
+  ⟨262144,131071,181736,min (yhi c) (thi c),r c,thi c,
+    quotient126YS c,quotient126S c,quotient126T c⟩
+def pairDoubleFirst (c:GridCell):UnequalParameters:=
+  ⟨262144,131071,181736,min (yhi c) (thi c),r c,thi c,
+    quotientDoubleYS c,quotientDoubleS c,quotientDoubleT c⟩
+def pairDoubleSecond (c:GridCell):UnequalParameters:=
+  ⟨262144,131071,181736,min (yhi c) (thi c),r c,thi c,
+    secondDoubleYS c,secondDoubleS c,secondDoubleT c⟩
+def pair72Cost (c:GridCell):ℕ:=(pair72 c).regularCountCap
+def pair126Cost (c:GridCell):ℕ:=(pair126 c).regularCountCap
+def doubleCost (c:GridCell):ℕ:=max (pairDoubleFirst c).regularCountCap
+  (pairDoubleSecond c).regularCountCap
+def RateFits (c:GridCell):Prop:=
+  2319*LocatorFactorAggregate.paddedCost 131072 131073
+      (LocatorFactorAggregate.cap (r c) (r c) (r c))≤bound*r c ∧
+    LocatorFactorAggregate.paddedCost 131072 131073
+      (LocatorFactorAggregate.cap 2319 (yhi c) (r c))≤bound
+instance (c:GridCell):Decidable (RateFits c):=by unfold RateFits;infer_instance
+def OrdinaryFits (c:GridCell):Prop:=ordinaryCost c+gridRestCost c≤bound
+instance (c:GridCell):Decidable (OrdinaryFits c):=by unfold OrdinaryFits;infer_instance
+def Coprime72 (c:GridCell):Prop:=
+  quotient72T c<tlo c ∨ quotient72YS c<ylo c ∨ quotient72S c<r c
+instance (c:GridCell):Decidable (Coprime72 c):=by unfold Coprime72;infer_instance
+def Coprime126 (c:GridCell):Prop:=
+  quotient126T c<tlo c ∨ quotient126YS c<ylo c ∨ quotient126S c<r c
+instance (c:GridCell):Decidable (Coprime126 c):=by unfold Coprime126;infer_instance
 def PairGates (P:UnequalParameters):Prop:=
   1≤P.leftR ∧ P.leftY<prime ∧ P.leftR<prime ∧ P.leftZ<prime ∧
     P.mixedCost.y<prime ∧ P.mixedCost.r<prime ∧ P.mixedCost.z<prime
-def sourceFits (c:Cell):Prop:=
-  2600≤sourceLength c ∧ sourceLength c≤sourceMaxL ∧
-    2*tlo c≤sourceLength c ∧
-    delta*channelUpper (quotientT c) (quotientY c) (quotientS c)+
-      delta*channelUpper (cofactorT c) (cofactorY c) (cofactorS c)<
-        sourceNullity c ∧
-    delta*channelUpper (quotientT c) (quotientY c) (quotientS c)+
-      (cofactorT c+1)*delta<
-        sourceNullity c ∧
-    (cofactorT c<tlo c ∨ cofactorY c<y c ∨ cofactorS c<r c) ∧
-    PairGates (quotientPair c) ∧ PairGates (cofactorPair c) ∧
-    sourceCost c+exactRest c≤bound
-def sourceFits126 (c:Cell):Prop:=
-  2600≤sourceLength126 c ∧ sourceLength126 c≤sourceMaxL ∧
-    2*tlo c≤sourceLength126 c ∧
-    delta*channelUpper (quotientT126 c) (quotientY126 c) (quotientS126 c)+
-      delta*channelUpper (cofactorT126 c) (cofactorY126 c) (cofactorS126 c)<
-        sourceNullity126 c ∧
-    delta*channelUpper (quotientT126 c) (quotientY126 c) (quotientS126 c)+
-      (cofactorT126 c+1)*delta<sourceNullity126 c ∧
-    (cofactorT126 c<tlo c ∨ cofactorY126 c<y c ∨ cofactorS126 c<r c) ∧
-    PairGates (quotientPair126 c) ∧ PairGates (cofactorPair126 c) ∧
-    sourceCost126 c+exactRest c≤bound
-
-instance (c:Cell):Decidable (noBadFits c):=by unfold noBadFits;infer_instance
-instance (c:Cell):Decidable (ordinaryFits c):=by unfold ordinaryFits;infer_instance
 instance (P:UnequalParameters):Decidable (PairGates P):=by unfold PairGates;infer_instance
-instance (c:Cell):Decidable (sourceFits c):=by unfold sourceFits;infer_instance
-instance (c:Cell):Decidable (sourceFits126 c):=by unfold sourceFits126;infer_instance
+def Pair72Fits (c:GridCell):Prop:=
+  length72 c≤51967 ∧ band72 c<sourceGap72 c ∧ Coprime72 c ∧
+    PairGates (pair72 c) ∧ pair72Cost c+gridRestCost c≤bound
+instance (c:GridCell):Decidable (Pair72Fits c):=by unfold Pair72Fits;infer_instance
+def Pair126Fits (c:GridCell):Prop:=
+  length126 c≤51967 ∧ band126 c<sourceGap126 c ∧ Coprime126 c ∧
+    PairGates (pair126 c) ∧ pair126Cost c+gridRestCost c≤bound
+instance (c:GridCell):Decidable (Pair126Fits c):=by unfold Pair126Fits;infer_instance
+def Double126Fits (c:GridCell):Prop:=
+  2299≤lengthDouble126 c ∧ lengthDouble126 c≤51967 ∧
+    lengthDouble126 c<3*tlo c ∧
+    bandDoubleFirst c+bandDoubleSecond c<sourceGapDouble126 c ∧
+    PairGates (pairDoubleFirst c) ∧ PairGates (pairDoubleSecond c) ∧
+    doubleCost c+gridRestCost c≤bound
+instance (c:GridCell):Decidable (Double126Fits c):=by
+  unfold Double126Fits;infer_instance
+def Receipt (c:GridCell):Prop:=Valid c→RateFits c∨OrdinaryFits c∨Pair72Fits c∨
+  Pair126Fits c∨Double126Fits c
+instance (c:GridCell):Decidable (Receipt c):=by unfold Receipt;infer_instance
 
-def Receipt (c:Cell):Prop:=
-  Valid c→noBadFits c∨ordinaryFits c∨sourceFits c∨sourceFits126 c
-instance (c:Cell):Decidable (Receipt c):=by unfold Receipt;infer_instance
-
-def chosenCost (c:Cell):ℕ:=
-  if ordinaryFits c then
-    paddedCost 131072 131073 (cap (thi c) (y c) (r c))
-  else if sourceFits c then sourceCost c else sourceCost126 c
-
+theorem receipt_coarse_0:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((0:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_1:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((1:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_2:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((2:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_3:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((3:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_4:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((4:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_5:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((5:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_6:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((6:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_7:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((7:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_8:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((8:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_9:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((9:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_10:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((10:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_11:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((11:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_12:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((12:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_13:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((13:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_14:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((14:Fin 16),(yi,ti))):=by decide
+theorem receipt_coarse_15:∀ yi:Fin 19,∀ ti:Fin 19,
+    Receipt (Sum.inl ((15:Fin 16),(yi,ti))):=by decide
+theorem receipt_fine:∀ c:FineCell,Receipt (Sum.inr (Sum.inl c)):=by decide
+theorem receipt_unit:∀ c:UnitCell,Receipt (Sum.inr (Sum.inr c)):=by decide
+theorem receipt (c:GridCell):Receipt c:=by
+  rcases c with c|c
+  · rcases c with ⟨ri,yi,ti⟩
+    fin_cases ri
+    · exact receipt_coarse_0 yi ti
+    · exact receipt_coarse_1 yi ti
+    · exact receipt_coarse_2 yi ti
+    · exact receipt_coarse_3 yi ti
+    · exact receipt_coarse_4 yi ti
+    · exact receipt_coarse_5 yi ti
+    · exact receipt_coarse_6 yi ti
+    · exact receipt_coarse_7 yi ti
+    · exact receipt_coarse_8 yi ti
+    · exact receipt_coarse_9 yi ti
+    · exact receipt_coarse_10 yi ti
+    · exact receipt_coarse_11 yi ti
+    · exact receipt_coarse_12 yi ti
+    · exact receipt_coarse_13 yi ti
+    · exact receipt_coarse_14 yi ti
+    · exact receipt_coarse_15 yi ti
+  · rcases c with c|c
+    · exact receipt_fine c
+    · exact receipt_unit c
+def chosenCost (c:GridCell):ℕ:=
+  if OrdinaryFits c then ordinaryCost c else if Pair72Fits c then pair72Cost c
+  else if Pair126Fits c then pair126Cost c else doubleCost c
+theorem chosenCost_with_rest (c:GridCell) (hv:Valid c) (hnr:¬RateFits c):
+    chosenCost c+gridRestCost c≤bound:=by
+  have hroutes:=(receipt c hv).resolve_left hnr
+  by_cases ho:OrdinaryFits c
+  · rw [chosenCost,if_pos ho]
+    exact ho
+  · have hpairs:=hroutes.resolve_left ho
+    by_cases h72:Pair72Fits c
+    · rw [chosenCost,if_neg ho,if_pos h72]
+      exact h72.2.2.2.2
+    · have hpairs':=hpairs.resolve_left h72
+      by_cases h126:Pair126Fits c
+      · rw [chosenCost,if_neg ho,if_neg h72,if_pos h126]
+        exact h126.2.2.2.2
+      · have hdouble:Double126Fits c:=(hpairs'.resolve_left h126)
+        rw [chosenCost,if_neg ho,if_neg h72,if_neg h126]
+        exact hdouble.2.2.2.2.2.2
 end ProximityPrize.SubmissionLower.LocatorReplacementData
