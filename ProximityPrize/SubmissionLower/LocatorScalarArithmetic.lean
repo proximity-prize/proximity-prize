@@ -56,7 +56,9 @@ theorem coefficient_count_exact:
    Finset.sum_range_add coefficientRow 30 10,
    Finset.sum_range_add coefficientRow 20 10,
    Finset.sum_range_add coefficientRow 10 10,
-   coefficient_0,coefficient_10,coefficient_20,coefficient_30,coefficient_40,coefficient_50,coefficient_60,coefficient_70,coefficient_80,coefficient_90] <;> norm_num
+   coefficient_0,coefficient_10,coefficient_20,coefficient_30,
+   coefficient_40,coefficient_50,coefficient_60,coefficient_70,
+   coefficient_80,coefficient_90] <;> norm_num
 private def rankRow (r:ℕ):ℕ:=
  RCN285.seedlessContactRankBound (min r yTotalCap) yTotalCap slopeCap
    (multiplicity-r)
@@ -89,7 +91,8 @@ theorem local_rank_exact:
    Finset.sum_range_add rankRow 24 8,
    Finset.sum_range_add rankRow 16 8,
    Finset.sum_range_add rankRow 8 8,
-   rank_0,rank_8,rank_16,rank_24,rank_32,rank_40,rank_48,rank_56,rank_64] <;> norm_num
+   rank_0,rank_8,rank_16,rank_24,rank_32,rank_40,rank_48,rank_56,
+   rank_64] <;> norm_num
 theorem interpolation_gate:
    n*localRankBound multiplicity yTotalCap slopeCap <
      coefficientCount weightedCap w yTotalCap slopeCap:=by

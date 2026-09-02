@@ -7,7 +7,7 @@ open scoped Classical BigOperators
 open RCN135 RCN136 RCN174 RCN159 RCN086 RCN095 RCN275 RCN198 RCN263 RCN146 RCN087 RCN203 RCN084 RCN313 RCN074 RCN335
 noncomputable section
 set_option autoImplicit false
-set_option maxRecDepth 100000
+set_option maxRecDepth 4000000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
@@ -15,7 +15,7 @@ def errors:ℕ:=80604
 def agreements:ℕ:=181540
 def gap:ℕ:=50469
 def prime:ℕ:=2130706433
-def weightedCap:ℕ:=13433960
+def weightedCap:ℕ:=13070880
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index
 local instance:DecidableEq K:=Classical.decEq K

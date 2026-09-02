@@ -43,7 +43,7 @@ theorem selected_pair_count
   change (LocatorCover.fixed
       (fun gamma=> (specialization K (selected gamma) gamma).toRingHom)
       seeds S.QA S.QB).card ≤
-    265877011283886055 + LocatorArithmetic.fixedSingular.countCap at hfixed
+    267849562833990691 + LocatorArithmetic.fixedSingular.countCap at hfixed
   have hresidual:=LocatorResidual.gcd_residual_count_lt
     S.QA S.QB S.QA_ne S.QB_ne S.QA_flag S.QB_flag
     selected seeds (Finset.univ:Finset I) IRSProfile.domain u0 u1

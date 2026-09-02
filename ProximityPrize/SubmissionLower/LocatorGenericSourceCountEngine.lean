@@ -1,10 +1,5 @@
-/-
-Ported verbatim from the public proximity-prize repository, PR #471,
-commit db5c259 (submission 8aab1b73-c3cb-4cd9-a382-f1ed2c2dadc2, score 6784),
-authored by jieyilong.  Row-independent: no constants of that row appear here.
--/
 import ProximityPrize.SubmissionLower.LocatorGenericSourceCount
-import ProximityPrize.SubmissionLower.LocatorHelperArithmeticGeneric
+import ProximityPrize.SubmissionLower.LocatorHelperArithmetic6784
 import ProximityPrize.SubmissionLower.LocatorQuotientMonotone
 namespace ProximityPrize.SubmissionLower.LocatorGenericSourceCountEngine
 open ProximityPrize.Benchmark
@@ -104,24 +99,21 @@ theorem exists_source_quotient
     source_quotient_nested D L s m Ysrc hshape
       u0 u1 H F hF q hqinj hproduct hqbox⟩
 theorem source_count_of_divisor
-    (D L s m Ysrc delta k agree : ℕ) (src : Source)
-    (hpair : ∀ b j, (stagePair src b j).a = agree)
-    (hpairE : ∀ b j, (stagePair src b j).errors = 262144 - agree)
+    (D L s m Ysrc delta k : ℕ) (src : Source)
     (hsrcLength : src.length = L) (hsrcY : src.y = Ysrc)
-    (hsrcR : src.r = s)
-    (hdelta : delta = LocatorReplacementGridData.delta)
+    (hsrcR : src.r = s) (hdelta : delta = 50470)
     (hD : 0 < D) (hshape : D + s ≤ 131071 * (Ysrc + 1))
     (hcapacity : ∀ j, 1 ≤ j → j ≤ k →
-      D - j * delta ≤ (m - j) * agree + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181540 + j * (131071 - 1))
     (hlowpos : ∀ j, 1 ≤ j → j ≤ k → 0 < D - j * delta)
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, agree ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181540 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 (262144 - agree))
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80604)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (hdiv : ∀ v : SourceKernel D L s m u0 u1,
       F.1 ∣ reconstruct K D 131071 L s v.1)
@@ -130,7 +122,7 @@ theorem source_count_of_divisor
     (hfit : RouteFits src k (box c)) :
     (regularSeeds H selected Gamma F).card ≤ routeCost src (box c) k := by
   classical
-  obtain ⟨hkpos, hk30, _hyroom, _hrroom, _hshapeRoute, hband,
+  obtain ⟨hkpos, hk45, _hyroom, _hrroom, _hshapeRoute, hband,
     hterminal, hgates, _hrate⟩ := hfit
   obtain ⟨hr, hylo, _hyhi, htlo, _hthi⟩ :=
     factor_bounds_of_cell H F c hcell
@@ -150,11 +142,9 @@ theorem source_count_of_divisor
         (L - j * wt residualTotalWeights F.1)
         (Ysrc - j * wt residualYSWeights F.1)
         (s - j * wt residualSWeights F.1) ≤ stageBand src (box c) j := by
-    rw [stageBand_eq]
-    change delta * channelCount _ _ _ ≤
-      LocatorReplacementGridData.delta * channelCount _ _ _
+    rw [stageBand_eq]; change delta * channelCount _ _ _ ≤ 50470 * channelCount _ _ _
     rw [hdelta]
-    exact Nat.mul_le_mul_left LocatorReplacementGridData.delta
+    exact Nat.mul_le_mul_left 50470
       (channelCount_mono (hTstage j) (hYstage j) (hRstage j))
   have hbudget : sourcePowerBudget delta
       (L - wt residualTotalWeights F.1)
@@ -296,16 +286,15 @@ theorem source_count_of_divisor
     · intro gamma _ i hi
       exact (Finset.mem_filter.mp hi).2
     · exact heq
-    · exact LocatorHelperArithmeticGeneric.factorial_cast_ne_zero_of_le_thirty
-        j (hjle.trans hk30)
+    · exact LocatorHelperArithmetic6784.factorial_cast_ne_zero_of_le_fortyfive
+        j (hjle.trans hk45)
     · intro gamma hgamma
       exact (Finset.mem_filter.mp hgamma).2.1
     · intro gamma hgamma
       exact (Finset.mem_filter.mp hgamma).2.2
   have hgate := pairGatesThrough_get src (box c) hjpos hjle hgates
-  exact (count_le_stageCost u0 u1 H selected Gamma agree src hpair hpairE
-    F c hcell j hdegree hagreement hno
-    e.quotient e.quotient_ne hQT hQY hQR hrel hgate hQzero).trans
+  exact (count_le_stageCost u0 u1 H selected Gamma hdegree hagreement hno
+    F c hcell src j e.quotient e.quotient_ne hQT hQY hQR hrel hgate hQzero).trans
       (stageCost_le_routeCost src (box c) hjpos hjle)
 end
 end ProximityPrize.SubmissionLower.LocatorGenericSourceCountEngine

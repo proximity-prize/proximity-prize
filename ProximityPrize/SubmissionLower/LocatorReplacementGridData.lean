@@ -22,7 +22,7 @@ import ProximityPrize.SubmissionLower.LocatorReplacementGridRow20
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
-private theorem receipt_rows (ri : Fin slopeRows) : RowReceipt ri := by
+private theorem receipt_rows (ri : Fin 21) : RowReceipt ri := by
   fin_cases ri
   · exact receipt_row_00
   · exact receipt_row_01
@@ -86,12 +86,21 @@ def chosenCost (c : Cell) : ℕ :=
   else if H2Fits b then
     max (routeCost sourceH2 b (helperDepthH2 b))
       (helperPair sourceH2 b).regularCountCap
-  else
+  else if H3Fits b then
     max (routeCost sourceH3 b (helperDepthH3 b))
       (helperPair sourceH3 b).regularCountCap
+  else if H4Fits b then
+    max (routeCost sourceH4 b (helperDepthH4 b))
+      (helperPair sourceH4 b).regularCountCap
+  else if H5Fits b then
+    max (routeCost sourceH5 b (helperDepthH5 b))
+      (helperPair sourceH5 b).regularCountCap
+  else
+    max (routeCost sourceH6 b (helperDepthH6 b))
+      (helperPair sourceH6 b).regularCountCap
 
 theorem chosenCost_rate (c : Cell) (hv : Valid c) :
-    capSum * chosenCost c ≤ bound * (box c).weight := by
+    totalCap * chosenCost c ≤ bound * (box c).factorT := by
   have h := receipt c hv
   simp only [Fits] at h
   by_cases ho : (box c).ordinaryFits
@@ -113,16 +122,31 @@ theorem chosenCost_rate (c : Cell) (hv : Valid c) :
         · have hroutes := hroutes.resolve_left hC
           by_cases hH1 : H1Fits (box c)
           · have hfit := helperDepthH1_spec (box c) hH1
-            simpa only [chosenCost, ho, hA, hAux, hC, hH1, if_pos,
-              if_false] using hfit.2.2
+            simpa only [chosenCost, ho, hA, hAux, hC, hH1,
+              if_pos, if_false] using hfit.2.2
           · have hroutes := hroutes.resolve_left hH1
             by_cases hH2 : H2Fits (box c)
             · have hfit := helperDepthH2_spec (box c) hH2
-              simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2, if_pos,
-                if_false] using hfit.2.2
-            · have hH3 := hroutes.resolve_left hH2
-              have hfit := helperDepthH3_spec (box c) hH3
-              simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2, if_pos,
-                if_false] using hfit.2.2
+              simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2,
+                if_pos, if_false] using hfit.2.2
+            · have hroutes := hroutes.resolve_left hH2
+              by_cases hH3 : H3Fits (box c)
+              · have hfit := helperDepthH3_spec (box c) hH3
+                simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2, hH3,
+                  if_pos, if_false] using hfit.2.2
+              · have hroutes := hroutes.resolve_left hH3
+                by_cases hH4 : H4Fits (box c)
+                · have hfit := helperDepthH4_spec (box c) hH4
+                  simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2, hH3,
+                    hH4, if_pos, if_false] using hfit.2.2
+                · have hroutes := hroutes.resolve_left hH4
+                  by_cases hH5 : H5Fits (box c)
+                  · have hfit := helperDepthH5_spec (box c) hH5
+                    simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2, hH3,
+                      hH4, hH5, if_pos, if_false] using hfit.2.2
+                  · have hH6 : H6Fits (box c) := hroutes.resolve_left hH5
+                    have hfit := helperDepthH6_spec (box c) hH6
+                    simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2, hH3,
+                      hH4, hH5, if_pos, if_false] using hfit.2.2
 
 end ProximityPrize.SubmissionLower.LocatorReplacementGridData

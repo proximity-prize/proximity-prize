@@ -93,7 +93,7 @@ theorem own_parameter_caps (p:FlagDegree)
   exact ⟨hps,hpy,hpt⟩
 theorem regular_factor_count
     (D:ℕ) (P:ResidualSupportParameters)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 13433960)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 13070880)
     (hS:P.s ≤ 21) (hY:P.ys ≤ 99) (hT:P.total ≤ 3697)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
@@ -175,7 +175,7 @@ def regularCost (T YS S:ℕ):ℕ:=
   paddedCost 131072 131073 (cap T YS S)
 theorem regular_sum_count
     (D:ℕ) (P:ResidualSupportParameters)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 13433960)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 13070880)
     (hS:P.s ≤ 21) (hY:P.ys ≤ 99) (hT:P.total ≤ 3697)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
@@ -217,7 +217,7 @@ structure SingularGates (P:RCN318.TightParameters):Prop where
   wa:P.w < P.a
   an:P.a ≤ P.n
 theorem singular_gates (D T S:ℕ)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 13433960)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 13070880)
     (hTpos:1 ≤ T) (hT:T ≤ 3697)
     (hSpos:1 ≤ S) (hS:S ≤ 21) :
     SingularGates (singularProfile D T S):=by
@@ -225,11 +225,11 @@ theorem singular_gates (D T S:ℕ)
   have hk:2*S-1 ≤ 41:=by omega
   have hDle:D ≤ (2*S-1)*D:=by
     simpa only [Nat.one_mul] using Nat.mul_le_mul_right D hkpos
-  have hnum:(2*S-1)*D-1 ≤ 550792359:=by
+  have hnum:(2*S-1)*D-1 ≤ 535935599:=by
     have hp:=Nat.mul_le_mul hk hDhigh
     norm_num at hp
     omega
-  have hiy:((2*S-1)*D-1)/131071 ≤ 4202:=
+  have hiy:((2*S-1)*D-1)/131071 ≤ 4088:=
     (Nat.div_le_div_right hnum).trans (by decide)
   have halgpos:1 ≤ (2*S-1)*T:=by
     simpa only [Nat.one_mul] using Nat.mul_le_mul hkpos hTpos
@@ -237,7 +237,7 @@ theorem singular_gates (D T S:ℕ)
     have hp:=Nat.mul_le_mul hk hT
     norm_num at hp
     exact hp
-  have hmix_le:2*(((2*S-1)*D-1)/131071)*((2*S-1)*T) ≤ 1273853108:=
+  have hmix_le:2*(((2*S-1)*D-1)/131071)*((2*S-1)*T) ≤ 1239293552:=
     (Nat.mul_le_mul (Nat.mul_le_mul_left 2 hiy) halg).trans (by decide)
   have hmix:2*(((2*S-1)*D-1)/131071)*((2*S-1)*T) < 2130706433:=
     hmix_le.trans_lt (by decide)
@@ -251,7 +251,7 @@ theorem singular_gates (D T S:ℕ)
   · exact halg.trans_lt (by decide)
 theorem fixed_count_le
     (D:ℕ) (P:ResidualSupportParameters)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 13433960)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 13070880)
     (hS:P.s ≤ 21) (hY:P.ys ≤ 99) (hT:P.total ≤ 3697)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
