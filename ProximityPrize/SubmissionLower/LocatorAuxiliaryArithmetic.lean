@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.LocatorArithmetic
+import ProximityPrize.SubmissionLower.LocatorRankClosed
 
 namespace ProximityPrize.SubmissionLower.LocatorAuxiliaryArithmetic
 
@@ -8,37 +9,39 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
 private theorem auxiliary72_rank :
-    localRankBound 72 130000 21 = 5782993381 := by decide
+    localRankBound 73 130000 22 = 6166888547 := by
+  rw [LocatorRankClosed.localRankBound_eq_fast 73 130000 22 (by decide)]
+  decide +kernel
 
 theorem auxiliary72_nullity :
-    coefficientCount 13072968 131071 130000 21 -
-      262144 * localRankBound 72 130000 21 = 534293974082 := by
+    coefficientCount 13253150 131071 130000 22 -
+      262144 * localRankBound 73 130000 22 = 441366390587 := by
   rw [auxiliary72_rank, coefficientCount_eq_sum_range_of_weighted_cutoff
-    13072968 131071 130000 21 100 (by decide) (by decide)]
+    13253150 131071 130000 22 102 (by decide) (by decide)]
   decide
 
 theorem auxiliary72_shape :
-    13072968 + 21 ≤ 131071 * (99 + 1) := by decide
+    13253150 + 22 ≤ 131071 * (101 + 1) := by decide
 
 theorem auxiliary72_capacity :
-    13072968 - 50499 ≤ (72 - 1) * 181569 + (131071 - 1) := by decide
+    13253150 - 50480 ≤ (73 - 1) * 181550 + (131071 - 1) := by decide
 
 /-- These names are retained to minimize invalidation in the replacement
-    proof; their witness is the retuned multiplicity-400 C source. -/
+    proof; their witness is the retuned multiplicity-285 C source. -/
 theorem auxiliary176_shape :
-    72627600 + 120 ≤ 131071 * (554 + 1) := by decide
+    51741750 + 85 ≤ 131071 * (394 + 1) := by decide
 
 theorem auxiliary176_capacity :
-    72627600 - 50499 ≤ (400 - 1) * 181569 + (131071 - 1) := by decide
+    51741750 - 50480 ≤ (285 - 1) * 181550 + (131071 - 1) := by decide
 
 theorem auxiliary176_double_capacity :
-    72627600 - 2 * 50499 ≤
-      (400 - 2) * 181569 + 2 * (131071 - 1) := by decide
+    51741750 - 2 * 50480 ≤
+      (285 - 2) * 181550 + 2 * (131071 - 1) := by decide
 
 /-- The stage-`j` capacity identity of the C source holds with equality for
-    every `j ≤ 400`, because `181569 - (131071 - 1) = 50499`. -/
-theorem auxiliary176_stage_capacity (j : ℕ) (hj : j ≤ 400) :
-    72627600 - j * 50499 ≤ (400 - j) * 181569 + j * (131071 - 1) := by
+    every `j ≤ 285`, because `181550 - (131071 - 1) = 50480`. -/
+theorem auxiliary176_stage_capacity (j : ℕ) (hj : j ≤ 285) :
+    51741750 - j * 50480 ≤ (285 - j) * 181550 + j * (131071 - 1) := by
   omega
 
 /-- Route-depth capacity chain.  If the ambient weighted degree fits inside

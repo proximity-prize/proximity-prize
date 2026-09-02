@@ -24,7 +24,7 @@ local instance:CharP K 2130706433:=by
   simpa [RCN223.prime] using
     RCN128.challenge_field_characteristic6600
 
-theorem realization:Realization 12528261:=by
+theorem realization:Realization 13071600:=by
   intro p hS hY hT hhyb
   letI:CharP (GenericField K) 2130706433:=genericField_charP K 2130706433
   unfold ProviderHyp
@@ -46,11 +46,11 @@ theorem realization:Realization 12528261:=by
         (globalTailCut (polynomialEmbedding K) S.F (RCN327.w + 1))
         (regularitySurface (polynomialEmbedding K) S.F) Gamma
         (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
-          (80575 + 1) * (sharpBudgetFamily S hTail hflagChar hmixedSharp).yzCost C:=by
+          (80594 + 1) * (sharpBudgetFamily S hTail hflagChar hmixedSharp).yzCost C:=by
     intro C hall
     exact tangent_component_card_le S C hTail
       ((sharpActiveGeometry S hTail hflagChar hmixedSharp).base C)
-      181569 12528261 (padT p) (padS p) hnodes hagreement
+      181550 13071600 (padT p) (padS p) hnodes hagreement
       (by norm_num [RCN327.w]) (by norm_num [RCN327.w]) (by norm_num [RCN327.w]) (by norm_num)
       hbox (sharpBudgetFamily S hTail hflagChar hmixedSharp)
       (sharpUnitFamily_one_le_yzCost S hTail hflagChar hmixedSharp C) hall

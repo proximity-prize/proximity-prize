@@ -79,7 +79,16 @@ def chosenCost (c : Cell) : ℕ :=
   if b.ordinaryFits then b.ordinaryCost
   else if RouteFits sourceA 1 b then routeCost sourceA b 1
   else if RouteFits sourceAux 1 b then routeCost sourceAux b 1
-  else routeCost sourceC b (routeDepth sourceC b)
+  else if CFits b then routeCost sourceC b (routeDepth sourceC b)
+  else if H1Fits b then
+    max (routeCost sourceH1 b (helperDepthH1 b))
+      (helperPair sourceH1 b).regularCountCap
+  else if H2Fits b then
+    max (routeCost sourceH2 b (helperDepthH2 b))
+      (helperPair sourceH2 b).regularCountCap
+  else
+    max (routeCost sourceH3 b (helperDepthH3 b))
+      (helperPair sourceH3 b).regularCountCap
 
 theorem chosenCost_rate (c : Cell) (hv : Valid c) :
     totalCap * chosenCost c ≤ bound * (box c).factorT := by
@@ -96,9 +105,24 @@ theorem chosenCost_rate (c : Cell) (hv : Valid c) :
       by_cases hAux : RouteFits sourceAux 1 (box c)
       · simpa only [chosenCost, ho, hA, hAux, if_pos, if_false] using
           hAux.2.2.2.2.2.2.2.2
-      · have hC : CFits (box c) := hroutes.resolve_left hAux
-        have hfit := routeDepth_spec sourceC (box c) hC
-        simpa only [chosenCost, ho, hA, hAux, if_pos, if_false] using
-          hfit.2.2.2.2.2.2.2.2
+      · have hroutes := hroutes.resolve_left hAux
+        by_cases hC : CFits (box c)
+        · have hfit := routeDepth_spec sourceC (box c) hC
+          simpa only [chosenCost, ho, hA, hAux, hC, if_pos, if_false] using
+            hfit.2.2.2.2.2.2.2.2
+        · have hroutes := hroutes.resolve_left hC
+          by_cases hH1 : H1Fits (box c)
+          · have hfit := helperDepthH1_spec (box c) hH1
+            simpa only [chosenCost, ho, hA, hAux, hC, hH1,
+              if_pos, if_false] using hfit.2.2
+          · have hroutes := hroutes.resolve_left hH1
+            by_cases hH2 : H2Fits (box c)
+            · have hfit := helperDepthH2_spec (box c) hH2
+              simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2,
+                if_pos, if_false] using hfit.2.2
+            · have hH3 : H3Fits (box c) := hroutes.resolve_left hH2
+              have hfit := helperDepthH3_spec (box c) hH3
+              simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2,
+                if_pos, if_false] using hfit.2.2
 
 end ProximityPrize.SubmissionLower.LocatorReplacementGridData
