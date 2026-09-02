@@ -242,16 +242,17 @@ theorem aggregate_of_rate_replacements_cost {I:Type*} [Fintype I]
       _ ≤ bound * T:=Nat.mul_le_mul_left bound ht
       _ = T * bound:=by ring
   exact Nat.le_of_mul_le_mul_left hscaled hT
-/-- Ordinary-route badness charged against an arbitrary weight `wgt` instead of
-`total`.  With `wgt := total` this is definitionally `BadCost`. -/
+
+/-- Ordinary-route badness charged against an arbitrary nonnegative weight. -/
 def BadCostW (T:ℕ) (cost:FlagDegree → ℕ) (bound:ℕ) (wgt:FlagDegree → ℕ)
     (p:FlagDegree):Prop :=
   bound * wgt p < T * cost p
+
 theorem badCostW_total (T:ℕ) (cost:FlagDegree → ℕ) (bound:ℕ) (p:FlagDegree) :
     BadCostW T cost bound total p ↔ BadCost T cost bound p:=Iff.rfl
-/-- Weighted charging.  Identical to `aggregate_of_rate_replacements_cost`
-except that every factor is charged against `wgt` rather than `total`, so the
-budget `T` may be a weighted cap sum rather than the plain total cap. -/
+
+/-- Weighted charging.  This is the ordinary rate-replacement aggregation with
+each factor charged against `wgt` rather than only its total degree. -/
 theorem aggregate_of_rate_replacements_weighted {I:Type*} [Fintype I]
     (p:I → FlagDegree) (count q:I → ℕ) (T:ℕ) (cost wgt:FlagDegree → ℕ) (bound:ℕ)
     (hT:0 < T)
