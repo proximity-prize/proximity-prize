@@ -1,9 +1,4 @@
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow10S00
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow10S01
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow10S02
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow10S03
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow10S04
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow10S05
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
@@ -30,9 +25,9 @@ theorem receipt_row_10_band_01_02 : RowBandReceipt 10 1 2 :=
 
 theorem receipt_row_10_y02_full : RowTileReceipt 10 2 3 0 26 := by
   intro cy hylo hyhi ct htlo hthi
-  by_cases h0 : ct.val < 8
-  · exact receipt_row_10_y02_t00_08 cy hylo hyhi ct (by omega) h0
-  · exact receipt_row_10_y02_t08_26 cy hylo hyhi ct (by omega) hthi
+  by_cases h0 : ct.val < 24
+  · exact receipt_row_10_y02_t00_24 cy hylo hyhi ct (by omega) h0
+  · exact receipt_row_10_y02_t24_26 cy hylo hyhi ct (by omega) hthi
 
 theorem receipt_row_10_band_02_03 : RowBandReceipt 10 2 3 :=
   rowTileFull_to_rowBand 10 2 receipt_row_10_y02_full

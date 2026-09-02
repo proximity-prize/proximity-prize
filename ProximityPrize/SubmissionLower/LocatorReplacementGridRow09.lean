@@ -1,11 +1,4 @@
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow09S00
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow09S01
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow09S02
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow09S03
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow09S04
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow09S05
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow09S06
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow09S07
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
@@ -52,13 +45,13 @@ theorem receipt_row_09_band_03_04 : RowBandReceipt 9 3 4 :=
 
 theorem receipt_row_09_y04_full : RowTileReceipt 9 4 5 0 26 := by
   intro cy hylo hyhi ct htlo hthi
-  by_cases h0 : ct.val < 1
-  · exact receipt_row_09_y04_t00_01 cy hylo hyhi ct (by omega) h0
-  by_cases h1 : ct.val < 3
-  · exact receipt_row_09_y04_t01_03 cy hylo hyhi ct (by omega) h1
-  by_cases h2 : ct.val < 5
-  · exact receipt_row_09_y04_t03_05 cy hylo hyhi ct (by omega) h2
-  · exact receipt_row_09_y04_t05_26 cy hylo hyhi ct (by omega) hthi
+  by_cases h0 : ct.val < 2
+  · exact receipt_row_09_y04_t00_02 cy hylo hyhi ct (by omega) h0
+  by_cases h1 : ct.val < 4
+  · exact receipt_row_09_y04_t02_04 cy hylo hyhi ct (by omega) h1
+  by_cases h2 : ct.val < 12
+  · exact receipt_row_09_y04_t04_12 cy hylo hyhi ct (by omega) h2
+  · exact receipt_row_09_y04_t12_26 cy hylo hyhi ct (by omega) hthi
 
 theorem receipt_row_09_band_04_05 : RowBandReceipt 9 4 5 :=
   rowTileFull_to_rowBand 9 4 receipt_row_09_y04_full

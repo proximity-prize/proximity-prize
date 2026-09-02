@@ -29,5 +29,37 @@ private theorem receipt_row_01_y01_t24_26_fixed :
 theorem receipt_row_01_y01_t24_26 : RowTileReceipt 1 1 2 24 26 :=
   fixedYReceipt_to_rowTile 1 ⟨1, by decide⟩ 24 26 receipt_row_01_y01_t24_26_fixed
 
+private theorem receipt_row_01_y02_t00_24_fixed :
+    FixedYReceipt 1 ⟨2, by decide⟩ 0 24 := by decide +kernel
+
+theorem receipt_row_01_y02_t00_24 : RowTileReceipt 1 2 3 0 24 :=
+  fixedYReceipt_to_rowTile 1 ⟨2, by decide⟩ 0 24 receipt_row_01_y02_t00_24_fixed
+
+private theorem receipt_row_01_y02_t24_26_fixed :
+    FixedYReceipt 1 ⟨2, by decide⟩ 24 26 := by decide +kernel
+
+theorem receipt_row_01_y02_t24_26 : RowTileReceipt 1 2 3 24 26 :=
+  fixedYReceipt_to_rowTile 1 ⟨2, by decide⟩ 24 26 receipt_row_01_y02_t24_26_fixed
+
+theorem receipt_row_01_band_03_05 : RowBandReceipt 1 3 5 := by decide +kernel
+
+theorem receipt_row_01_band_05_07 : RowBandReceipt 1 5 7 := by decide +kernel
+
+theorem receipt_row_01_band_07_09 : RowBandReceipt 1 7 9 := by decide +kernel
+
+theorem receipt_row_01_band_09_11 : RowBandReceipt 1 9 11 := by decide +kernel
+
+theorem receipt_row_01_band_11_13 : RowBandReceipt 1 11 13 := by decide +kernel
+
+theorem receipt_row_01_band_13_15 : RowBandReceipt 1 13 15 := by decide +kernel
+
+theorem receipt_row_01_band_15_17 : RowBandReceipt 1 15 17 := by decide +kernel
+
+theorem receipt_row_01_band_17_19 : RowBandReceipt 1 17 19 := by decide +kernel
+
+theorem receipt_row_01_band_19_21 : RowBandReceipt 1 19 21 := by decide +kernel
+
+theorem receipt_row_01_band_21_23 : RowBandReceipt 1 21 23 := by decide +kernel
+
 
 end ProximityPrize.SubmissionLower.LocatorReplacementGridData

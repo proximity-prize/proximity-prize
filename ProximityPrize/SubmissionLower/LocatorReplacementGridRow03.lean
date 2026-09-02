@@ -1,11 +1,4 @@
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow03S00
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow03S01
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow03S02
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow03S03
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow03S04
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow03S05
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow03S06
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow03S07
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
@@ -84,7 +77,9 @@ theorem receipt_row_03_band_07_08 : RowBandReceipt 3 7 8 :=
 
 theorem receipt_row_03_y08_full : RowTileReceipt 3 8 9 0 26 := by
   intro cy hylo hyhi ct htlo hthi
-  · exact receipt_row_03_y08_t00_26 cy hylo hyhi ct (by omega) hthi
+  by_cases h0 : ct.val < 12
+  · exact receipt_row_03_y08_t00_12 cy hylo hyhi ct (by omega) h0
+  · exact receipt_row_03_y08_t12_26 cy hylo hyhi ct (by omega) hthi
 
 theorem receipt_row_03_band_08_09 : RowBandReceipt 3 8 9 :=
   rowTileFull_to_rowBand 3 8 receipt_row_03_y08_full

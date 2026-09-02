@@ -1,13 +1,5 @@
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow05S00
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow05S01
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow05S02
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow05S03
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow05S04
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow05S05
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow05S06
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow05S07
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow05S08
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow05S09
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
@@ -90,9 +82,9 @@ theorem receipt_row_05_y08_full : RowTileReceipt 5 8 9 0 26 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 2
   · exact receipt_row_05_y08_t00_02 cy hylo hyhi ct (by omega) h0
-  by_cases h1 : ct.val < 10
-  · exact receipt_row_05_y08_t02_10 cy hylo hyhi ct (by omega) h1
-  · exact receipt_row_05_y08_t10_26 cy hylo hyhi ct (by omega) hthi
+  by_cases h1 : ct.val < 4
+  · exact receipt_row_05_y08_t02_04 cy hylo hyhi ct (by omega) h1
+  · exact receipt_row_05_y08_t04_26 cy hylo hyhi ct (by omega) hthi
 
 theorem receipt_row_05_band_08_09 : RowBandReceipt 5 8 9 :=
   rowTileFull_to_rowBand 5 8 receipt_row_05_y08_full
@@ -107,7 +99,13 @@ theorem receipt_row_05_y09_full : RowTileReceipt 5 9 10 0 26 := by
   · exact receipt_row_05_y09_t04_06 cy hylo hyhi ct (by omega) h2
   by_cases h3 : ct.val < 8
   · exact receipt_row_05_y09_t06_08 cy hylo hyhi ct (by omega) h3
-  · exact receipt_row_05_y09_t08_26 cy hylo hyhi ct (by omega) hthi
+  by_cases h4 : ct.val < 10
+  · exact receipt_row_05_y09_t08_10 cy hylo hyhi ct (by omega) h4
+  by_cases h5 : ct.val < 12
+  · exact receipt_row_05_y09_t10_12 cy hylo hyhi ct (by omega) h5
+  by_cases h6 : ct.val < 14
+  · exact receipt_row_05_y09_t12_14 cy hylo hyhi ct (by omega) h6
+  · exact receipt_row_05_y09_t14_26 cy hylo hyhi ct (by omega) hthi
 
 theorem receipt_row_05_band_09_10 : RowBandReceipt 5 9 10 :=
   rowTileFull_to_rowBand 5 9 receipt_row_05_y09_full

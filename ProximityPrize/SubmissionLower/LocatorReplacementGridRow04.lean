@@ -1,12 +1,4 @@
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow04S00
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow04S01
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow04S02
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow04S03
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow04S04
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow04S05
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow04S06
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow04S07
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow04S08
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
@@ -69,9 +61,9 @@ theorem receipt_row_04_band_05_06 : RowBandReceipt 4 5 6 :=
 
 theorem receipt_row_04_y06_full : RowTileReceipt 4 6 7 0 26 := by
   intro cy hylo hyhi ct htlo hthi
-  by_cases h0 : ct.val < 25
-  · exact receipt_row_04_y06_t00_25 cy hylo hyhi ct (by omega) h0
-  · exact receipt_row_04_y06_t25_26 cy hylo hyhi ct (by omega) hthi
+  by_cases h0 : ct.val < 9
+  · exact receipt_row_04_y06_t00_09 cy hylo hyhi ct (by omega) h0
+  · exact receipt_row_04_y06_t09_26 cy hylo hyhi ct (by omega) hthi
 
 theorem receipt_row_04_band_06_07 : RowBandReceipt 4 6 7 :=
   rowTileFull_to_rowBand 4 6 receipt_row_04_y06_full
@@ -103,6 +95,15 @@ theorem receipt_row_04_y09_full : RowTileReceipt 4 9 10 0 26 := by
 theorem receipt_row_04_band_09_10 : RowBandReceipt 4 9 10 :=
   rowTileFull_to_rowBand 4 9 receipt_row_04_y09_full
 
+theorem receipt_row_04_y10_full : RowTileReceipt 4 10 11 0 26 := by
+  intro cy hylo hyhi ct htlo hthi
+  by_cases h0 : ct.val < 2
+  · exact receipt_row_04_y10_t00_02 cy hylo hyhi ct (by omega) h0
+  · exact receipt_row_04_y10_t02_26 cy hylo hyhi ct (by omega) hthi
+
+theorem receipt_row_04_band_10_11 : RowBandReceipt 4 10 11 :=
+  rowTileFull_to_rowBand 4 10 receipt_row_04_y10_full
+
 private theorem receipt_row_04_fast : FastRowReceipt 4 := by
   intro cy
   by_cases h_1 : cy.val < 1
@@ -125,17 +126,19 @@ private theorem receipt_row_04_fast : FastRowReceipt 4 := by
   · exact receipt_row_04_band_08_09 cy (by omega) h_9
   by_cases h_10 : cy.val < 10
   · exact receipt_row_04_band_09_10 cy (by omega) h_10
-  by_cases h_12 : cy.val < 12
-  · exact receipt_row_04_band_10_12 cy (by omega) h_12
-  by_cases h_14 : cy.val < 14
-  · exact receipt_row_04_band_12_14 cy (by omega) h_14
-  by_cases h_16 : cy.val < 16
-  · exact receipt_row_04_band_14_16 cy (by omega) h_16
-  by_cases h_18 : cy.val < 18
-  · exact receipt_row_04_band_16_18 cy (by omega) h_18
-  by_cases h_20 : cy.val < 20
-  · exact receipt_row_04_band_18_20 cy (by omega) h_20
-  · exact receipt_row_04_band_20_23 cy (by omega) (by omega)
+  by_cases h_11 : cy.val < 11
+  · exact receipt_row_04_band_10_11 cy (by omega) h_11
+  by_cases h_13 : cy.val < 13
+  · exact receipt_row_04_band_11_13 cy (by omega) h_13
+  by_cases h_15 : cy.val < 15
+  · exact receipt_row_04_band_13_15 cy (by omega) h_15
+  by_cases h_17 : cy.val < 17
+  · exact receipt_row_04_band_15_17 cy (by omega) h_17
+  by_cases h_19 : cy.val < 19
+  · exact receipt_row_04_band_17_19 cy (by omega) h_19
+  by_cases h_21 : cy.val < 21
+  · exact receipt_row_04_band_19_21 cy (by omega) h_21
+  · exact receipt_row_04_band_21_23 cy (by omega) (by omega)
 
 theorem receipt_row_04 : RowReceipt 4 :=
   fastRowReceipt_to_rowReceipt 4 receipt_row_04_fast
