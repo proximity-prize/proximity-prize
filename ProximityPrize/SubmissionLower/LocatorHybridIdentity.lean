@@ -57,7 +57,7 @@ theorem hybridCost_eq_abs (p : FlagDegree) (flag : FlagDegree) :
   rw [h.1, h.2.1, h.2.2.1, h.2.2.2]
   rfl
 
-/-- Slack polynomials for `errors = 80555` (`b = b' + 1`). -/
+/-- Slack polynomials for `errors = 80565` (`b = b' + 1`). -/
 def hybridSlackZ (a b s : ℕ) : ℕ :=
   21451332007010302 + 15458111287399764 * s + 9546957997211648 * b +
     2603717623283712 * s ^ 2 + 5207435246567424 * b * s

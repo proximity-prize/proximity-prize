@@ -11,12 +11,12 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
 
 private abbrev prime : ℕ := 2130706433
-abbrev bound : ℕ := 269261573992217880
-abbrev totalCap : ℕ := 3232
-private abbrev ysCap : ℕ := 91
+abbrev bound : ℕ := 269054786381233708
+abbrev totalCap : ℕ := 3321
+private abbrev ysCap : ℕ := 93
 private abbrev slopeCap : ℕ := 20
 private abbrev sourceLength : ℕ := 130000
-private abbrev delta : ℕ := 50519
+private abbrev delta : ℕ := 50509
 
 /-- A rectangular cumulative-degree box for one irreducible factor. -/
 structure Box where
@@ -52,9 +52,9 @@ structure Source where
   gap : ℕ
   deriving DecidableEq
 
-def sourceA : Source := ⟨92, 20, 47331553234⟩
-def sourceAux : Source := ⟨99, 21, 902739011042⟩
-def sourceC : Source := ⟨374, 81, 510383952435595⟩
+def sourceA : Source := ⟨94, 20, 31493057617⟩
+def sourceAux : Source := ⟨99, 21, 718516492562⟩
+def sourceC : Source := ⟨374, 81, 500771585940295⟩
 
 def stageT (b : Box) (j : ℕ) : ℕ := sourceLength - j * b.factorT
 def stageY (src : Source) (b : Box) (j : ℕ) : ℕ := src.y - j * b.ylo
@@ -86,7 +86,7 @@ def bandSum (src : Source) (b : Box) : ℕ → ℕ
   | _ => 0
 
 def stagePair (src : Source) (b : Box) (j : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181589, b.factorY, b.r, b.thi,
+  ⟨262144, 131071, 181579, b.factorY, b.r, b.thi,
     stageY src b j, stageR src b j, stageT b j⟩
 
 def PairGates (P : UnequalParameters) : Prop :=
@@ -248,7 +248,7 @@ theorem fastFits_to_fits (b : Box) : FastFits b → Fits b := by
   · exact Or.inr (Or.inl ((fastRouteFits_iff sourceA 1 b).mp h))
   · exact Or.inr (Or.inr (Or.inr (Or.inl ((fastRouteFits_iff sourceC 2 b).mp h))))
 
-abbrev CoarseCell := Fin 20 × Fin 23 × Fin 26
+abbrev CoarseCell := Fin 20 × Fin 24 × Fin 26
 def coarseR (c : CoarseCell) : ℕ := c.1.val + 1
 def coarseYlo (c : CoarseCell) : ℕ := coarseR c + 4 * c.2.1.val
 def coarseYhi (c : CoarseCell) : ℕ := min ysCap (coarseYlo c + 3)
@@ -291,6 +291,45 @@ def unitTlo (c : UnitCell) : ℕ := fineTlo c.parent.1 + 8 * c.ti.val
 def unitThi (c : UnitCell) : ℕ := min (fineThi c.parent.1) (unitTlo c + 7)
 def unitBox (c : UnitCell) : Box :=
   ⟨unitR c, unitY c, unitY c, unitTlo c, unitThi c⟩
+def HardUnit (c : UnitCell) : Prop := (unitBox c).valid ∧ ¬ Fits (unitBox c)
+instance (c : UnitCell) : Decidable (HardUnit c) := by
+  unfold HardUnit; infer_instance
+
+def FastHardUnit (c : UnitCell) : Prop :=
+  (unitBox c).valid ∧ ¬ FastFits (unitBox c)
+instance (c : UnitCell) : Decidable (FastHardUnit c) := by
+  unfold FastHardUnit; infer_instance
+
+structure SubunitCell where
+  parent : {c : UnitCell // HardUnit c}
+  ti : Fin 4
+  deriving DecidableEq, Fintype
+
+def subunitR (c : SubunitCell) : ℕ := unitR c.parent.1
+def subunitY (c : SubunitCell) : ℕ := unitY c.parent.1
+def subunitTlo (c : SubunitCell) : ℕ := unitTlo c.parent.1 + 2 * c.ti.val
+def subunitThi (c : SubunitCell) : ℕ := min (unitThi c.parent.1) (subunitTlo c + 1)
+def subunitBox (c : SubunitCell) : Box :=
+  ⟨subunitR c, subunitY c, subunitY c, subunitTlo c, subunitThi c⟩
+
+/-- A literal width-two terminal box used by the generated receipts. -/
+def subunitLiteralBox (r y tlo thi : ℕ) (ti : Fin 4) : Box :=
+  ⟨r, y, y, tlo + 2 * ti.val, min thi (tlo + 2 * ti.val + 1)⟩
+
+/-- The four proof-irrelevant coordinates identifying one width-eight parent. -/
+def UnitAddress (c : UnitCell) (r y tlo thi : ℕ) : Prop :=
+  unitR c = r ∧ unitY c = y ∧ unitTlo c = tlo ∧ unitThi c = thi
+
+instance (c : UnitCell) (r y tlo thi : ℕ) : Decidable (UnitAddress c r y tlo thi) := by
+  unfold UnitAddress
+  infer_instance
+
+theorem subunitBox_eq_literal (c : SubunitCell) (r y tlo thi : ℕ)
+    (h : UnitAddress c.parent.1 r y tlo thi) :
+    subunitBox c = subunitLiteralBox r y tlo thi c.ti := by
+  rcases h with ⟨hr, hy, htlo, hthi⟩
+  simp only [subunitBox, subunitLiteralBox, subunitR, subunitY,
+    subunitTlo, subunitThi, hr, hy, htlo, hthi]
 
 /-- Proof-irrelevant presentation of a fine box, used to split the finite
 receipt into independent rows without repeatedly enumerating nested
@@ -307,6 +346,10 @@ def unitBoxAt (c : CoarseCell) (yi ti ui : Fin 4) : Box :=
     min (min (coarseThi c) (coarseTlo c + 32 * ti.val + 31))
       ((coarseTlo c + 32 * ti.val) + 8 * ui.val + 7)⟩
 
+def subunitBoxAt (c : CoarseCell) (yi ti ui si : Fin 4) : Box :=
+  let u := unitBoxAt c yi ti ui
+  ⟨u.r, u.ylo, u.yhi, u.tlo + 2 * si.val, min u.thi (u.tlo + 2 * si.val + 1)⟩
+
 theorem fineBox_eq_fineBoxAt (c : FineCell) :
     fineBox c = fineBoxAt c.parent.1 c.yi c.ti := rfl
 
@@ -314,24 +357,32 @@ theorem unitBox_eq_unitBoxAt (c : UnitCell) :
     unitBox c = unitBoxAt c.parent.1.parent.1
       c.parent.1.yi c.parent.1.ti c.ti := rfl
 
-abbrev Cell := CoarseCell ⊕ (FineCell ⊕ UnitCell)
+theorem subunitBox_eq_subunitBoxAt (c : SubunitCell) :
+    subunitBox c = subunitBoxAt c.parent.1.parent.1.parent.1
+      c.parent.1.parent.1.yi c.parent.1.parent.1.ti c.parent.1.ti c.ti := rfl
+
+abbrev Cell := CoarseCell ⊕ (FineCell ⊕ (UnitCell ⊕ SubunitCell))
 
 def box : Cell → Box
   | .inl c => coarseBox c
   | .inr (.inl c) => fineBox c
-  | .inr (.inr c) => unitBox c
+  | .inr (.inr (.inl c)) => unitBox c
+  | .inr (.inr (.inr c)) => subunitBox c
 
 def Leaf : Cell → Prop
   | .inl c => ¬ HardCoarse c
   | .inr (.inl c) => ¬ HardFine c
-  | .inr (.inr _) => True
+  | .inr (.inr (.inl c)) => ¬ HardUnit c
+  | .inr (.inr (.inr _)) => True
 
 instance (c : Cell) : Decidable (Leaf c) := by
   rcases c with c | c
   · simp only [Leaf]; infer_instance
   · rcases c with c | c
     · simp only [Leaf]; infer_instance
-    · simp only [Leaf]; infer_instance
+    · rcases c with c | c
+      · simp only [Leaf]; infer_instance
+      · simp only [Leaf]; infer_instance
 
 def Valid (c : Cell) : Prop := (box c).valid ∧ Leaf c
 instance (c : Cell) : Decidable (Valid c) := by unfold Valid; infer_instance
@@ -350,10 +401,10 @@ def coarseCellOf (p : FlagDegree) (hslo : 1 ≤ p.all) (hshi : p.all ≤ slopeCa
       change p.all ≤ 20 at hshi
       omega⟩,
     ⟨(middle p - p.all) / 4, by
-      change middle p ≤ 91 at hy
+      change middle p ≤ 93 at hy
       omega⟩,
     ⟨total p / 128, by
-      change total p ≤ 3232 at ht
+      change total p ≤ 3321 at ht
       omega⟩)
 
 theorem coarseCellOf_bounds (p : FlagDegree) (hslo : 1 ≤ p.all)
@@ -418,6 +469,24 @@ theorem unitCellOf_bounds (p : FlagDegree) (c : FineCell) (hc : HardFine c)
     simp only [unitTlo, unitCellOf]
     omega
 
+def subunitCellOf (p : FlagDegree) (c : UnitCell) (hc : HardUnit c)
+    (htlo : unitTlo c ≤ total p) (hthi : total p ≤ unitThi c) : SubunitCell :=
+  ⟨⟨c, hc⟩, ⟨(total p - unitTlo c) / 2, by
+      have hcap : unitThi c ≤ unitTlo c + 7 := Nat.min_le_right _ _
+      omega⟩⟩
+
+theorem subunitCellOf_bounds (p : FlagDegree) (c : UnitCell) (hc : HardUnit c)
+    (htlo : unitTlo c ≤ total p) (hthi : total p ≤ unitThi c) :
+    subunitTlo (subunitCellOf p c hc htlo hthi) ≤ total p ∧
+      total p ≤ subunitThi (subunitCellOf p c hc htlo hthi) := by
+  constructor
+  · simp only [subunitTlo, subunitCellOf]
+    omega
+  · simp only [subunitThi]
+    apply le_min hthi
+    simp only [subunitTlo, subunitCellOf]
+    omega
+
 def cellOf (p : FlagDegree) (hslo : 1 ≤ p.all) (hshi : p.all ≤ slopeCap)
     (hy : middle p ≤ ysCap) (ht : total p ≤ totalCap) : Cell :=
   let c := coarseCellOf p hslo hshi hy ht
@@ -427,7 +496,11 @@ def cellOf (p : FlagDegree) (hslo : 1 ≤ p.all) (hshi : p.all ≤ slopeCap)
     if hf : HardFine f then
       let hfb := fineCellOf_bounds p c hc hb.2.1 hb.2.2.1 hb.2.2.2.1
         hb.2.2.2.2 hb.1
-      .inr (.inr (unitCellOf p f hf hfb.2.2.1 hfb.2.2.2))
+      let u := unitCellOf p f hf hfb.2.2.1 hfb.2.2.2
+      if hu : HardUnit u then
+        let hub := unitCellOf_bounds p f hf hfb.2.2.1 hfb.2.2.2
+        .inr (.inr (.inr (subunitCellOf p u hu hub.1 hub.2)))
+      else .inr (.inr (.inl u))
     else .inr (.inl f)
   else .inl c
 
@@ -441,13 +514,15 @@ theorem cellOf_bounds (p : FlagDegree) (hslo : 1 ≤ p.all)
     have hfb := fineCellOf_bounds p c hc hb.2.1 hb.2.2.1 hb.2.2.2.1
       hb.2.2.2.2 hb.1
     by_cases hf : HardFine f
-    · have hu := unitCellOf_bounds p f hf hfb.2.2.1 hfb.2.2.2
-      simp only [cellOf, c, hc, dite_true, f, hf]
-      refine ⟨hfb.1, hfb.2.1.le, hfb.2.1.symm.le, ?_, ?_, trivial⟩
-      · change unitTlo (unitCellOf p f hf hfb.2.2.1 hfb.2.2.2) ≤ total p
-        exact hu.1
-      · change total p ≤ unitThi (unitCellOf p f hf hfb.2.2.1 hfb.2.2.2)
-        exact hu.2
+    · let u := unitCellOf p f hf hfb.2.2.1 hfb.2.2.2
+      have hub := unitCellOf_bounds p f hf hfb.2.2.1 hfb.2.2.2
+      by_cases hu : HardUnit u
+      · have hsub := subunitCellOf_bounds p u hu hub.1 hub.2
+        simp only [cellOf, c, hc, dite_true, f, hf, u, hu]
+        refine ⟨hfb.1, hfb.2.1.le, hfb.2.1.symm.le, hsub.1, hsub.2, trivial⟩
+      · simp only [cellOf, c, hc, dite_true, f, hf, u, hu]
+        refine ⟨hfb.1, hfb.2.1.le, hfb.2.1.symm.le, hub.1, hub.2, ?_⟩
+        simpa only [Leaf]
     · simp only [cellOf, c, hc, dite_true, f, hf]
       exact ⟨hfb.1, hfb.2.1.le, hfb.2.1.symm.le, hfb.2.2.1,
         hfb.2.2.2, by simpa only [Leaf]⟩
@@ -464,13 +539,18 @@ theorem valid_of_inCell (p : FlagDegree) (c : Cell)
     · simp [box, coarseBox, coarseR]
     · rcases c with c | c
       · simp [box, fineBox, fineR, coarseR]
-      · simp [box, unitBox, unitR, fineR, coarseR]
+      · rcases c with c | c
+        · simp [box, unitBox, unitR, fineR, coarseR]
+        · simp [box, subunitBox, subunitR, unitR, fineR, coarseR]
   have hry : (box c).r ≤ (box c).ylo := by
     rcases c with c | c
     · simp [box, coarseBox, coarseR, coarseYlo]
     · rcases c with c | c
       · simp [box, fineBox, fineR, fineY, coarseR, coarseYlo] <;> omega
-      · simp [box, unitBox, unitR, unitY, fineR, fineY, coarseR, coarseYlo] <;> omega
+      · rcases c with c | c
+        · simp [box, unitBox, unitR, unitY, fineR, fineY, coarseR, coarseYlo] <;> omega
+        · simp [box, subunitBox, subunitR, subunitY, unitR, unitY,
+            fineR, fineY, coarseR, coarseYlo] <;> omega
   have hycap : (box c).yhi ≤ ysCap := by
     rcases c with c | c
     · simp [box, coarseBox, coarseYhi]
@@ -481,20 +561,31 @@ theorem valid_of_inCell (p : FlagDegree) (c : Cell)
         change middle p ≤ fineY c at hhi
         change fineY c ≤ ysCap
         omega
-      · have hlo := h.ylo_le
-        have hhi := h.middle_le_yhi
-        change unitY c ≤ middle p at hlo
-        change middle p ≤ unitY c at hhi
-        change unitY c ≤ ysCap
-        omega
+      · rcases c with c | c
+        · have hlo := h.ylo_le
+          have hhi := h.middle_le_yhi
+          change unitY c ≤ middle p at hlo
+          change middle p ≤ unitY c at hhi
+          change unitY c ≤ ysCap
+          omega
+        · have hlo := h.ylo_le
+          have hhi := h.middle_le_yhi
+          change subunitY c ≤ middle p at hlo
+          change middle p ≤ subunitY c at hhi
+          change subunitY c ≤ ysCap
+          omega
   have htcap : (box c).thi ≤ totalCap := by
     rcases c with c | c
     · simp [box, coarseBox, coarseThi]
     · rcases c with c | c
       · exact (Nat.min_le_left _ _).trans (by simp [coarseThi])
-      · change unitThi c ≤ totalCap
-        exact (Nat.min_le_left _ _).trans
-          ((Nat.min_le_left _ _).trans (by simp [coarseThi]))
+      · rcases c with c | c
+        · change unitThi c ≤ totalCap
+          exact (Nat.min_le_left _ _).trans
+            ((Nat.min_le_left _ _).trans (by simp [coarseThi]))
+        · change subunitThi c ≤ totalCap
+          exact (Nat.min_le_left _ _).trans ((Nat.min_le_left _ _).trans
+            ((Nat.min_le_left _ _).trans (by simp [coarseThi])))
   refine ⟨?_, h.leaf⟩
   exact ⟨hrpos, hry, h.ylo_le.trans h.middle_le_yhi, hycap,
     h.ylo_le.trans (hmid.trans h.total_le_thi),
@@ -502,7 +593,7 @@ theorem valid_of_inCell (p : FlagDegree) (c : Cell)
 
 /-- The part of a slope-row receipt in a half-open coarse-Y interval. -/
 def RowBandReceipt (ri : Fin 20) (lo hi : ℕ) : Prop :=
-  ∀ (cy : Fin 23), lo ≤ cy.val → cy.val < hi → ∀ (ct : Fin 26),
+  ∀ (cy : Fin 24), lo ≤ cy.val → cy.val < hi → ∀ (ct : Fin 26),
     let coarse : CoarseCell := (ri, cy, ct)
     FastHardCoarse coarse →
       ∀ (yi ti : Fin 4),
@@ -516,7 +607,7 @@ instance (ri : Fin 20) (lo hi : ℕ) : Decidable (RowBandReceipt ri lo hi) := by
 
 /-- A rectangular coarse-Y/coarse-T part of a slope-row receipt. -/
 def RowTileReceipt (ri : Fin 20) (ylo yhi tlo thi : ℕ) : Prop :=
-  ∀ (cy : Fin 23), ylo ≤ cy.val → cy.val < yhi →
+  ∀ (cy : Fin 24), ylo ≤ cy.val → cy.val < yhi →
     ∀ (ct : Fin 26), tlo ≤ ct.val → ct.val < thi →
       let coarse : CoarseCell := (ri, cy, ct)
       FastHardCoarse coarse →
@@ -533,7 +624,7 @@ instance (ri : Fin 20) (ylo yhi tlo thi : ℕ) :
 /-- A receipt for one fixed coarse-Y cell and a half-open range of coarse-T
 cells.  Unlike `RowTileReceipt`, its decision procedure does not enumerate
 the other twenty-five values of `Fin 26`. -/
-def FixedYReceipt (ri : Fin 20) (cy : Fin 23) (tlo thi : ℕ) : Prop :=
+def FixedYReceipt (ri : Fin 20) (cy : Fin 24) (tlo thi : ℕ) : Prop :=
   ∀ (ct : Fin 26), tlo ≤ ct.val → ct.val < thi →
     let coarse : CoarseCell := (ri, cy, ct)
     FastHardCoarse coarse →
@@ -542,13 +633,13 @@ def FixedYReceipt (ri : Fin 20) (cy : Fin 23) (tlo thi : ℕ) : Prop :=
           ∀ ui : Fin 4, (unitBoxAt coarse yi ti ui).valid →
             FastFits (unitBoxAt coarse yi ti ui)
 
-instance (ri : Fin 20) (cy : Fin 23) (tlo thi : ℕ) :
+instance (ri : Fin 20) (cy : Fin 24) (tlo thi : ℕ) :
     Decidable (FixedYReceipt ri cy tlo thi) := by
   unfold FixedYReceipt
   infer_instance
 
 /-- Adapt a fixed-Y receipt to the existing singleton-Y tile interface. -/
-theorem fixedYReceipt_to_rowTile (ri : Fin 20) (cy : Fin 23) (tlo thi : ℕ)
+theorem fixedYReceipt_to_rowTile (ri : Fin 20) (cy : Fin 24) (tlo thi : ℕ)
     (h : FixedYReceipt ri cy tlo thi) :
     RowTileReceipt ri cy.val (cy.val + 1) tlo thi := by
   intro cy' hylo hyhi ct htlo hthi
@@ -560,7 +651,7 @@ theorem fixedYReceipt_to_rowTile (ri : Fin 20) (cy : Fin 23) (tlo thi : ℕ)
 
 /-- Adapt a full-total-range fixed-Y receipt to the existing singleton-Y band
 interface. -/
-theorem fixedYReceipt_to_rowBand (ri : Fin 20) (cy : Fin 23)
+theorem fixedYReceipt_to_rowBand (ri : Fin 20) (cy : Fin 24)
     (h : FixedYReceipt ri cy 0 26) :
     RowBandReceipt ri cy.val (cy.val + 1) := by
   intro cy' hylo hyhi ct
@@ -579,7 +670,7 @@ theorem rowTileFull_to_rowBand (ri : Fin 20) (cy : ℕ)
 this level: each auxiliary lemma evaluates one twentieth of the adaptive
 grid and is cached before the next row starts. -/
 def RowReceipt (ri : Fin 20) : Prop :=
-  ∀ (cy : Fin 23) (ct : Fin 26),
+  ∀ (cy : Fin 24) (ct : Fin 26),
     let coarse : CoarseCell := (ri, cy, ct)
     HardCoarse coarse →
       ∀ (yi ti : Fin 4),
@@ -593,7 +684,7 @@ instance (ri : Fin 20) : Decidable (RowReceipt ri) := by
 
 /-- A receipt-local propositionally equivalent row presentation. -/
 def FastRowReceipt (ri : Fin 20) : Prop :=
-  ∀ (cy : Fin 23) (ct : Fin 26),
+  ∀ (cy : Fin 24) (ct : Fin 26),
     let coarse : CoarseCell := (ri, cy, ct)
     FastHardCoarse coarse →
       ∀ (yi ti : Fin 4),
