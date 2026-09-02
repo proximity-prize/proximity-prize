@@ -5,7 +5,6 @@ namespace ProximityPrize.SubmissionLower.LocatorSourceKernelN3
 open ProximityPrize.Benchmark RCN100 RCN119
 set_option maxRecDepth 100000
 set_option maxHeartbeats 400000000
-set_option Elab.async false
 /-! Source kernel N3 = (4600, 400000, 1400) at agreements 181520: rank through the closed form of
 `LocatorRankClosed`, nullity through the row closed form of `LocatorRowClosed`. -/
 theorem rank_eq : localRankBound 4600 400000 1400 = 4469050310913300 := by
