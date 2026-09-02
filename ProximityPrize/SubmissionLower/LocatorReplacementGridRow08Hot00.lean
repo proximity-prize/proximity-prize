@@ -1,8 +1,0 @@
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow08Hot00Part02
-
-namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
-
-set_option maxRecDepth 100000
-set_option maxHeartbeats 30000000
-
-end ProximityPrize.SubmissionLower.LocatorReplacementGridData

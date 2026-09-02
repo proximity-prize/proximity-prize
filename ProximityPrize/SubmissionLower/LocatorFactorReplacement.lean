@@ -215,4 +215,32 @@ theorem aggregate_6751 {I:Type*} [Fintype I]
     exact hrepl i (by omega)
   · intro i hi
     exact hcell i (by omega)
+/-- Ordinary-route badness for an arbitrary ordinary cost function. -/
+def BadCost (T:ℕ) (cost:FlagDegree → ℕ) (bound:ℕ) (p:FlagDegree):Prop :=
+  bound * total p < T * cost p
+theorem aggregate_of_rate_replacements_cost {I:Type*} [Fintype I]
+    (p:I → FlagDegree) (count q:I → ℕ) (T:ℕ) (cost:FlagDegree → ℕ) (bound:ℕ)
+    (hT:0 < T)
+    (ht:(∑ i, total (p i)) ≤ T)
+    (hstage:∀ i, count i ≤ cost (p i))
+    (hrepl:∀ i, BadCost T cost bound (p i) → count i ≤ q i)
+    (hqrate:∀ i, BadCost T cost bound (p i) →
+      T * q i ≤ bound * total (p i)) :
+    (∑ i, count i) ≤ bound:=by
+  have hone (i:I):T * count i ≤ bound * total (p i):=by
+    by_cases hbad:BadCost T cost bound (p i)
+    · exact (Nat.mul_le_mul_left T (hrepl i hbad)).trans (hqrate i hbad)
+    · have hordinary:T * cost (p i) ≤ bound * total (p i):=by
+        unfold BadCost at hbad
+        omega
+      exact (Nat.mul_le_mul_left T (hstage i)).trans hordinary
+  have hscaled:T * (∑ i, count i) ≤ T * bound:=by
+    calc
+      _ = ∑ i, T * count i:=by rw [Finset.mul_sum]
+      _ ≤ ∑ i, bound * total (p i):=Finset.sum_le_sum (fun i _ => hone i)
+      _ = bound * (∑ i, total (p i)):=by rw [Finset.mul_sum]
+      _ ≤ bound * T:=Nat.mul_le_mul_left bound ht
+      _ = T * bound:=by ring
+  exact Nat.le_of_mul_le_mul_left hscaled hT
+
 end ProximityPrize.SubmissionLower.LocatorFactorReplacement

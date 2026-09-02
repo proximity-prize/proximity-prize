@@ -5,13 +5,15 @@ namespace ProximityPrize.SubmissionLower.LocatorNinthPowerAvoidance
 open scoped BigOperators
 open RCN081 RCN100 RCN119 RCN130 RCN156 RCN180 RCN234 RCN260
 open LocatorLowQuotient LocatorCoprimeQuotient
-open LocatorDoubleSquareAvoidance LocatorTripleCubeAvoidance LocatorFourthPowerAvoidance LocatorFifthPowerAvoidance LocatorSixthPowerAvoidance LocatorSeventhPowerAvoidance LocatorEighthPowerAvoidance
+open LocatorDoubleSquareAvoidance LocatorTripleCubeAvoidance
+open LocatorFourthPowerAvoidance LocatorFifthPowerAvoidance LocatorSixthPowerAvoidance
+open LocatorSeventhPowerAvoidance LocatorEighthPowerAvoidance
 
 noncomputable section
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
-set_option maxHeartbeats 2000000
+set_option maxHeartbeats 1200000
 
 variable {K V I : Type*} [Field K]
 local instance : DecidableEq K := Classical.decEq K
@@ -20,8 +22,8 @@ section LinearDichotomy
 
 variable [AddCommGroup V] [Module K V] [FiniteDimensional K V]
 
-/-- Ninth successive high-band projections, obtained by applying the
-eighth-stage extractor to the quotient after one outer projection. -/
+/-- Nine successive high-band projections, obtained by applying the
+eight-stage extractor to the quotient after one outer projection. -/
 theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_fourth_low_not_dvd_or_fifth_low_not_dvd_or_sixth_low_not_dvd_or_seventh_low_not_dvd_or_eighth_low_not_dvd_or_ninth_low
     (Dhigh Dlow w delta T YS S : ℕ)
     (hwidth : Dhigh ≤ Dlow + delta)
@@ -31,8 +33,7 @@ theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_f
     (hsource :
       delta * channelCount T YS S +
           delta * channelCount
-            (T - wt residualTotalWeights F)
-              (YS - wt residualYSWeights F)
+            (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
               (S - wt residualSWeights F) +
           delta * channelCount
             (T - 2 * wt residualTotalWeights F)
@@ -65,57 +66,56 @@ theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_f
         Module.finrank K V) :
     (∃ v : V, v ≠ 0 ∧ q v ≠ 0 ∧
       q v ∈ nestedCoefficientBox K Dlow w T YS S ∧ ¬ F ∣ q v) ∨
-    (∃ (v : V) (J : MvPolynomial (Fin 4) K),
-      v ≠ 0 ∧ J ≠ 0 ∧ F * (J) = q v ∧ ¬ F ∣ J ∧
-      J ∈ nestedCoefficientBox K
+    (∃ (v : V) (H : MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ H ≠ 0 ∧ F * H = q v ∧ ¬ F ∣ H ∧
+      H ∈ nestedCoefficientBox K
         (Dlow - delta - wt (contactWeights w) F) w
-        (T - wt residualTotalWeights F)
-          (YS - wt residualYSWeights F)
+        (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
           (S - wt residualSWeights F)) ∨
     (∃ (v : V) (J : MvPolynomial (Fin 4) K),
-      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (J)) = q v ∧ ¬ F ∣ J ∧
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * J) = q v ∧ ¬ F ∣ J ∧
       J ∈ nestedCoefficientBox K
         (Dlow - 2 * delta - 2 * wt (contactWeights w) F) w
         (T - 2 * wt residualTotalWeights F)
           (YS - 2 * wt residualYSWeights F)
           (S - 2 * wt residualSWeights F)) ∨
     (∃ (v : V) (J : MvPolynomial (Fin 4) K),
-      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * (J))) = q v ∧ ¬ F ∣ J ∧
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * J)) = q v ∧ ¬ F ∣ J ∧
       J ∈ nestedCoefficientBox K
         (Dlow - 3 * delta - 3 * wt (contactWeights w) F) w
         (T - 3 * wt residualTotalWeights F)
           (YS - 3 * wt residualYSWeights F)
           (S - 3 * wt residualSWeights F)) ∨
     (∃ (v : V) (J : MvPolynomial (Fin 4) K),
-      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * (F * (J)))) = q v ∧ ¬ F ∣ J ∧
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * (F * J))) = q v ∧ ¬ F ∣ J ∧
       J ∈ nestedCoefficientBox K
         (Dlow - 4 * delta - 4 * wt (contactWeights w) F) w
         (T - 4 * wt residualTotalWeights F)
           (YS - 4 * wt residualYSWeights F)
           (S - 4 * wt residualSWeights F)) ∨
     (∃ (v : V) (J : MvPolynomial (Fin 4) K),
-      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * (F * (F * (J))))) = q v ∧ ¬ F ∣ J ∧
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * (F * (F * J)))) = q v ∧ ¬ F ∣ J ∧
       J ∈ nestedCoefficientBox K
         (Dlow - 5 * delta - 5 * wt (contactWeights w) F) w
         (T - 5 * wt residualTotalWeights F)
           (YS - 5 * wt residualYSWeights F)
           (S - 5 * wt residualSWeights F)) ∨
     (∃ (v : V) (J : MvPolynomial (Fin 4) K),
-      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * (F * (F * (F * (J)))))) = q v ∧ ¬ F ∣ J ∧
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * (F * (F * (F * J))))) = q v ∧ ¬ F ∣ J ∧
       J ∈ nestedCoefficientBox K
         (Dlow - 6 * delta - 6 * wt (contactWeights w) F) w
         (T - 6 * wt residualTotalWeights F)
           (YS - 6 * wt residualYSWeights F)
           (S - 6 * wt residualSWeights F)) ∨
     (∃ (v : V) (J : MvPolynomial (Fin 4) K),
-      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * (F * (F * (F * (F * (J))))))) = q v ∧ ¬ F ∣ J ∧
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * (F * (F * (F * (F * J)))))) = q v ∧ ¬ F ∣ J ∧
       J ∈ nestedCoefficientBox K
         (Dlow - 7 * delta - 7 * wt (contactWeights w) F) w
         (T - 7 * wt residualTotalWeights F)
           (YS - 7 * wt residualYSWeights F)
           (S - 7 * wt residualSWeights F)) ∨
     (∃ (v : V) (J : MvPolynomial (Fin 4) K),
-      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * (F * (F * (F * (F * (F * (J)))))))) = q v ∧
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * (F * (F * (F * (F * (F * J))))))) = q v ∧
       J ∈ nestedCoefficientBox K
         (Dlow - 8 * delta - 8 * wt (contactWeights w) F) w
         (T - 8 * wt residualTotalWeights F)
@@ -134,8 +134,7 @@ theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_f
         rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card]
   have hlowOneRank :
       delta * channelCount
-          (T - wt residualTotalWeights F)
-            (YS - wt residualYSWeights F)
+          (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
             (S - wt residualSWeights F) +
         delta * channelCount
           (T - 2 * wt residualTotalWeights F)
@@ -297,7 +296,9 @@ theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_f
           YS - 8 * wt residualYSWeights F := by omega
       have hS8 : S - wt residualSWeights F - 7 * wt residualSWeights F =
           S - 8 * wt residualSWeights F := by omega
-      simpa only [hT2, hY2, hS2, hT3, hY3, hS3, hT4, hY4, hS4, hT5, hY5, hS5, hT6, hY6, hS6, hT7, hY7, hS7, hT8, hY8, hS8]
+      simpa only [hT2, hY2, hS2, hT3, hY3, hS3, hT4, hY4, hS4,
+        hT5, hY5, hS5, hT6, hY6, hS6, hT7, hY7, hS7,
+        hT8, hY8, hS8]
         using hlowOneRank
     rcases
       LocatorEighthPowerAvoidance.exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_fourth_low_not_dvd_or_fifth_low_not_dvd_or_sixth_low_not_dvd_or_seventh_low_not_dvd_or_eighth_low
@@ -327,7 +328,7 @@ theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_f
       left
       refine ⟨v.1, J, hv', hJ, ?_, hndvd, ?_⟩
       · calc
-          F * (F * (J)) = F * qTwo v := by rw [heq]
+          F * (F * J) = F * qTwo v := by rw [heq]
           _ = qOne v :=
             (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
           _ = q v.1 := rfl
@@ -353,7 +354,7 @@ theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_f
       left
       refine ⟨v.1, J, hv', hJ, ?_, hndvd, ?_⟩
       · calc
-          F * (F * (F * (J))) = F * qTwo v := by rw [heq]
+          F * (F * (F * J)) = F * qTwo v := by rw [heq]
           _ = qOne v :=
             (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
           _ = q v.1 := rfl
@@ -380,7 +381,7 @@ theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_f
       left
       refine ⟨v.1, J, hv', hJ, ?_, hndvd, ?_⟩
       · calc
-          F * (F * (F * (F * (J)))) = F * qTwo v := by rw [heq]
+          F * (F * (F * (F * J))) = F * qTwo v := by rw [heq]
           _ = qOne v :=
             (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
           _ = q v.1 := rfl
@@ -408,7 +409,7 @@ theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_f
       left
       refine ⟨v.1, J, hv', hJ, ?_, hndvd, ?_⟩
       · calc
-          F * (F * (F * (F * (F * (J))))) = F * qTwo v := by rw [heq]
+          F * (F * (F * (F * (F * J)))) = F * qTwo v := by rw [heq]
           _ = qOne v :=
             (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
           _ = q v.1 := rfl
@@ -437,7 +438,7 @@ theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_f
       left
       refine ⟨v.1, J, hv', hJ, ?_, hndvd, ?_⟩
       · calc
-          F * (F * (F * (F * (F * (F * (J)))))) = F * qTwo v := by rw [heq]
+          F * (F * (F * (F * (F * (F * J))))) = F * qTwo v := by rw [heq]
           _ = qOne v :=
             (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
           _ = q v.1 := rfl
@@ -467,7 +468,7 @@ theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_f
       left
       refine ⟨v.1, J, hv', hJ, ?_, hndvd, ?_⟩
       · calc
-          F * (F * (F * (F * (F * (F * (F * (J))))))) = F * qTwo v := by rw [heq]
+          F * (F * (F * (F * (F * (F * (F * J)))))) = F * qTwo v := by rw [heq]
           _ = qOne v :=
             (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
           _ = q v.1 := rfl
@@ -497,7 +498,7 @@ theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_f
       right
       refine ⟨v.1, J, hv', hJ, ?_, ?_⟩
       · calc
-          F * (F * (F * (F * (F * (F * (F * (F * (J)))))))) = F * qTwo v := by rw [heq]
+          F * (F * (F * (F * (F * (F * (F * (F * J))))))) = F * qTwo v := by rw [heq]
           _ = qOne v :=
             (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
           _ = q v.1 := rfl
@@ -545,33 +546,71 @@ theorem specialization_pderiv_R9_eq_zero_of_kernel_low_box
     (hw : 1 ≤ w) (hP : P.natDegree ≤ w)
     (hcapacity : Dlow ≤ (m - 9) * support.card + 9 * (w - 1))
     (hvalues : ∀ i ∈ support, P.eval (nodes i) = u0 i + gamma * u1 i) :
-    RCN319.specialization K P gamma (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (reconstruct K D w L s v.1)))))))))) = 0 := by
+    RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4)
+                    (MvPolynomial.pderiv (2 : Fin 4)
+                      (MvPolynomial.pderiv (2 : Fin 4)
+                        (reconstruct K D w L s v.1)))))))))) = 0 := by
   classical
   let H := reconstruct K D w L s v.1
   by_contra hne
-  have hder8 : MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))))))) ≠ 0 := by
+  have hder8 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4) H))))))) ≠ 0 := by
     intro hz
     apply hne
-    simpa only [H, hz, map_zero]
-  have hder7 : MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))))) ≠ 0 := by
+    simp only [H, hz, map_zero]
+  have hder7 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4) H)))))) ≠ 0 := by
     intro hz
     exact hder8 (by rw [hz, map_zero])
-  have hder6 : MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))))) ≠ 0 := by
+  have hder6 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4) H))))) ≠ 0 := by
     intro hz
     exact hder7 (by rw [hz, map_zero])
-  have hder5 : MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))) ≠ 0 := by
+  have hder5 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) H)))) ≠ 0 := by
     intro hz
     exact hder6 (by rw [hz, map_zero])
-  have hder4 : MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))) ≠ 0 := by
+  have hder4 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H))) ≠ 0 := by
     intro hz
     exact hder5 (by rw [hz, map_zero])
-  have hder3 : MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))) ≠ 0 := by
+  have hder3 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)) ≠ 0 := by
     intro hz
     exact hder4 (by rw [hz, map_zero])
-  have hder2 : MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)) ≠ 0 := by
+  have hder2 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4) H) ≠ 0 := by
     intro hz
     exact hder3 (by rw [hz, map_zero])
-  have hder1 : MvPolynomial.pderiv (2 : Fin 4) (H) ≠ 0 := by
+  have hder1 : MvPolynomial.pderiv (2 : Fin 4) H ≠ 0 := by
     intro hz
     exact hder2 (by rw [hz, map_zero])
   have hH : H ≠ 0 := by
@@ -582,47 +621,141 @@ theorem specialization_pderiv_R9_eq_zero_of_kernel_low_box
     have h := (hlow hd).2.2
     omega
   have hweight1 := LocatorContact.pderiv_R_weight_add_le
-    (contactWeights w) (H) hder1
+    (contactWeights w) H hder1
   have hweight2 := LocatorContact.pderiv_R_weight_add_le
-    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (H)) hder2
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) hder2
   have hweight3 := LocatorContact.pderiv_R_weight_add_le
-    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))) hder3
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4) H)) hder3
   have hweight4 := LocatorContact.pderiv_R_weight_add_le
-    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))) hder4
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H))) hder4
   have hweight5 := LocatorContact.pderiv_R_weight_add_le
-    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))) hder5
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H)))) hder5
   have hweight6 := LocatorContact.pderiv_R_weight_add_le
-    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))))) hder6
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) H))))) hder6
   have hweight7 := LocatorContact.pderiv_R_weight_add_le
-    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))))) hder7
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4) H)))))) hder7
   have hweight8 := LocatorContact.pderiv_R_weight_add_le
-    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))))))) hder8
-  have hder8weight : wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))))))) ≤
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4) H))))))) hder8
+  have hder8weight : wt (contactWeights w)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4)
+                    (MvPolynomial.pderiv (2 : Fin 4) H)))))))) ≤
         Dlow - 1 - 8 * (w - 1) := by
     have hHweight : wt (contactWeights w) H ≤ Dlow - 1 :=
       ((mem_flagGlobalCoefficientBox_iff H Dlow w L s hDlow).mp hlow).2.2
-    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (H)) + (w - 1) ≤
-      wt (contactWeights w) (H) at hweight1
-    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))) + (w - 1) ≤
-      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (H)) at hweight2
-    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))) + (w - 1) ≤
-      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))) at hweight3
-    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))) + (w - 1) ≤
-      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))) at hweight4
-    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))))) + (w - 1) ≤
-      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))) at hweight5
-    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))))) + (w - 1) ≤
-      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))))) at hweight6
-    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))))))) + (w - 1) ≤
-      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))))) at hweight7
-    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))))))) + (w - 1) ≤
-      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))))))) at hweight8
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) +
+      (w - 1) ≤ wt (contactWeights w) H at hweight1
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4) H)) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) at hweight2
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H))) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)) at hweight3
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H)))) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H))) at hweight4
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) H))))) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) H)))) at hweight5
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4) H)))))) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4) H))))) at hweight6
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4) H))))))) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4) H)))))) at hweight7
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4) H)))))))) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4) H))))))) at hweight8
     omega
   have hdegree := ContactOrderBridge.specialized_R_derivative_degree K
-    (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))))))) P gamma w
+    (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4) H)))))))) P gamma w
     (Dlow - 1 - 8 * (w - 1)) hP hder8weight hne
   have hdegreeStrict :
-      (RCN122.specialization K P gamma (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))))))))).natDegree <
+      (RCN122.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4)
+                    (MvPolynomial.pderiv (2 : Fin 4)
+                      (MvPolynomial.pderiv (2 : Fin 4)
+                        (MvPolynomial.pderiv (2 : Fin 4) H)))))))))).natDegree <
         (m - 9) * support.card := by
     rw [RCN101.specialization_eq_ordinary]
     rw [RCN101.specialization_eq_ordinary] at hdegree
@@ -630,41 +763,85 @@ theorem specialization_pderiv_R9_eq_zero_of_kernel_low_box
   have hcontact : ∀ i ∈ support, ∀ r : ℕ,
       slopeDifference K ^ (m - 9 - r) ∣
         (RCN122.homogenizedTranslation K (nodes i) (u0 i) (u1 i)
-          (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))))))))).coeff r := by
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4)
+                    (MvPolynomial.pderiv (2 : Fin 4)
+                      (MvPolynomial.pderiv (2 : Fin 4)
+                        (MvPolynomial.pderiv (2 : Fin 4)
+                          (MvPolynomial.pderiv (2 : Fin 4) H)))))))))).coeff r := by
     intro i _
     apply (ContactOrderBridge.contactAtLeast_iff_block_divisibility
       K (nodes i) (u0 i) (u1 i) (m - 9) _).mp
     have h1 := ContactOrderBridge.contactAtLeast_pderiv_R
-      K (nodes i) (u0 i) (u1 i) (m - 0)
-      (H) (ContactOrderBridge.contactAtLeast_of_mem_kernel
+      K (nodes i) (u0 i) (u1 i) m H
+      (ContactOrderBridge.contactAtLeast_of_mem_kernel
         K D w L s m nodes u0 u1 v.1 v.2 i)
     have h2 := ContactOrderBridge.contactAtLeast_pderiv_R
       K (nodes i) (u0 i) (u1 i) (m - 1)
-      (MvPolynomial.pderiv (2 : Fin 4) (H)) h1
+      (MvPolynomial.pderiv (2 : Fin 4) H) h1
     have h3 := ContactOrderBridge.contactAtLeast_pderiv_R
       K (nodes i) (u0 i) (u1 i) (m - 2)
-      (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))) h2
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)) h2
     have h4 := ContactOrderBridge.contactAtLeast_pderiv_R
       K (nodes i) (u0 i) (u1 i) (m - 3)
-      (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))) h3
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H))) h3
     have h5 := ContactOrderBridge.contactAtLeast_pderiv_R
       K (nodes i) (u0 i) (u1 i) (m - 4)
-      (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))) h4
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) H)))) h4
     have h6 := ContactOrderBridge.contactAtLeast_pderiv_R
       K (nodes i) (u0 i) (u1 i) (m - 5)
-      (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))))) h5
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4) H))))) h5
     have h7 := ContactOrderBridge.contactAtLeast_pderiv_R
       K (nodes i) (u0 i) (u1 i) (m - 6)
-      (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))))) h6
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4) H)))))) h6
     have h8 := ContactOrderBridge.contactAtLeast_pderiv_R
       K (nodes i) (u0 i) (u1 i) (m - 7)
-      (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H)))))))) h7
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4) H))))))) h7
     have h9 := ContactOrderBridge.contactAtLeast_pderiv_R
       K (nodes i) (u0 i) (u1 i) (m - 8)
-      (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))))))) h8
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4)
+                    (MvPolynomial.pderiv (2 : Fin 4) H)))))))) h8
     simpa only [Nat.sub_sub] using h9
   have hz := RCN122.specialization_eq_zero_of_contact_and_degree K
-    (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (H))))))))))
+    (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4)
+                    (MvPolynomial.pderiv (2 : Fin 4) H)))))))))
     P gamma nodes u0 u1 support (m - 9) hcontact hvalues hdegreeStrict
   apply hne
   simpa only [H, RCN101.specialization_eq_ordinary] using hz
@@ -675,133 +852,332 @@ theorem specialization_eq_zero_of_pderiv_R9_ninth_product
     (hFzero : RCN319.specialization K P gamma F = 0)
     (hregular : RCN319.specialization K P gamma
       (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hpower : RCN319.specialization K P gamma
-      ((MvPolynomial.pderiv (2 : Fin 4))^[9] (F * (F * (F * (F * (F * (F * (F * (F * (F * (Q))))))))))) = 0) :
+    (hninth : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4)
+                    (MvPolynomial.pderiv (2 : Fin 4)
+                      (MvPolynomial.pderiv (2 : Fin 4)
+                        (F * (F * (F * (F * (F * (F * (F * (F * (F * Q)))))))))))))))))) = 0) :
     RCN319.specialization K P gamma Q = 0 := by
-  have h5040 : (5040 : K) ≠ 0 := by
+  have hfactorialPoly : (362880 : Polynomial K) ≠ 0 := by
     intro hz
     apply hfactorial
-    calc
-      (362880 : K) = (72 : K) * (5040 : K) := by norm_num
-      _ = 0 := by rw [hz, mul_zero]
-  have height : (8 : K) ≠ 0 := by
-    intro hz
-    apply hfactorial
-    calc
-      (362880 : K) = (45360 : K) * (8 : K) := by norm_num
-      _ = 0 := by rw [hz, mul_zero]
-  have hn : (9 : K) ≠ 0 := by
-    intro hz
-    apply hfactorial
-    calc
-      (362880 : K) = (40320 : K) * (9 : K) := by norm_num
-      _ = 0 := by rw [hz, mul_zero]
-  have hnPoly : (9 : Polynomial K) ≠ 0 := by
-    intro hz
-    apply hn
     have heval := congrArg (Polynomial.eval 0) hz
     simpa using heval
-  let dR : MvPolynomial (Fin 4) K → MvPolynomial (Fin 4) K :=
-    MvPolynomial.pderiv (2 : Fin 4)
-  let G : MvPolynomial (Fin 4) K := F ^ 8 * Q
-  have hG0 : RCN319.specialization K P gamma (dR^[0] G) = 0 := by
-    simp (config := { maxSteps := 1200000 }) only [dR, G,
-      Function.iterate_zero_apply, MvPolynomial.pderiv_mul, MvPolynomial.pderiv_pow,
-      map_add, map_mul, map_pow, map_natCast, hFzero,
-      zero_pow (show (8 : Nat) ≠ 0 by decide),
-      zero_mul, mul_zero, zero_add, add_zero, mul_add]
-
-  have hG1 : RCN319.specialization K P gamma (dR^[1] G) = 0 := by
-    simp (config := { maxSteps := 1200000 }) only [dR, G,
-      Function.iterate_one, MvPolynomial.pderiv_mul, MvPolynomial.pderiv_pow,
-      map_add, map_mul, map_pow, map_natCast, hFzero,
-      zero_pow (show (8 : Nat) ≠ 0 by decide),
-      zero_mul, mul_zero, zero_add, add_zero, mul_add]
-    norm_num
-  have hG2 : RCN319.specialization K P gamma (dR^[2] G) = 0 := by
-    simp (config := { maxSteps := 1200000 }) only [dR, G,
-      Function.iterate_succ_apply', Function.iterate_zero_apply,
-      Function.iterate_one, MvPolynomial.pderiv_mul, MvPolynomial.pderiv_pow,
-      map_add, map_mul, map_pow, map_natCast, hFzero,
-      zero_pow (show (8 : Nat) ≠ 0 by decide),
-      zero_mul, mul_zero, zero_add, add_zero, mul_add]
+  let G1 : MvPolynomial (Fin 4) K := F * Q
+  have hG1_0 : RCN319.specialization K P gamma G1 = 0 := by
+    simp only [G1, map_mul, hFzero, zero_mul]
+  have hG1_1 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) G1) =
+      (1 : Polynomial K) *
+        (RCN319.specialization K P gamma
+          (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 1 *
+        RCN319.specialization K P gamma Q := by
+    simp only [G1, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      zero_mul, add_zero]
     ring
-  have hG3 : RCN319.specialization K P gamma (dR^[3] G) = 0 := by
-    simp (config := { maxSteps := 1200000 }) only [dR, G,
-      Function.iterate_succ_apply', Function.iterate_zero_apply,
-      Function.iterate_one, MvPolynomial.pderiv_mul, MvPolynomial.pderiv_pow,
-      map_add, map_mul, map_pow, map_natCast, hFzero,
-      zero_pow (show (8 : Nat) ≠ 0 by decide),
-      zero_mul, mul_zero, zero_add, add_zero, mul_add]
+  let G2 : MvPolynomial (Fin 4) K := F * G1
+  have hG2_0 : RCN319.specialization K P gamma G2 = 0 := by
+    simp only [G2, map_mul, hFzero, zero_mul]
+  have hG2_1 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) G2) = 0 := by
+    simp only [G2, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG1_0, zero_mul, mul_zero, add_zero]
+  have hG2_2 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) G2)) =
+      (2 : Polynomial K) *
+        (RCN319.specialization K P gamma
+          (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 2 *
+        RCN319.specialization K P gamma Q := by
+    simp only [G2, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG1_0, hG1_1, zero_mul, mul_zero, add_zero]
     ring
-  have hG4 : RCN319.specialization K P gamma (dR^[4] G) = 0 := by
-    simp (config := { maxSteps := 1200000 }) only [dR, G,
-      Function.iterate_succ_apply', Function.iterate_zero_apply,
-      Function.iterate_one, MvPolynomial.pderiv_mul, MvPolynomial.pderiv_pow,
-      map_add, map_mul, map_pow, map_natCast, hFzero,
-      zero_pow (show (8 : Nat) ≠ 0 by decide),
-      zero_mul, mul_zero, zero_add, add_zero, mul_add]
+  let G3 : MvPolynomial (Fin 4) K := F * G2
+  have hG3_0 : RCN319.specialization K P gamma G3 = 0 := by
+    simp only [G3, map_mul, hFzero, zero_mul]
+  have hG3_1 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) G3) = 0 := by
+    simp only [G3, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG2_0, zero_mul, mul_zero, add_zero]
+  have hG3_2 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) G3)) = 0 := by
+    simp only [G3, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG2_0, hG2_1, zero_mul, mul_zero, add_zero]
+  have hG3_3 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) G3))) =
+      (6 : Polynomial K) *
+        (RCN319.specialization K P gamma
+          (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 3 *
+        RCN319.specialization K P gamma Q := by
+    simp only [G3, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG2_0, hG2_1, hG2_2, zero_mul, mul_zero, add_zero]
     ring
-  have hG5 : RCN319.specialization K P gamma (dR^[5] G) = 0 := by
-    simp (config := { maxSteps := 1200000 }) only [dR, G,
-      Function.iterate_succ_apply', Function.iterate_zero_apply,
-      Function.iterate_one, MvPolynomial.pderiv_mul, MvPolynomial.pderiv_pow,
-      map_add, map_mul, map_pow, map_natCast, hFzero,
-      zero_pow (show (8 : Nat) ≠ 0 by decide),
-      zero_mul, mul_zero, zero_add, add_zero, mul_add]
+  let G4 : MvPolynomial (Fin 4) K := F * G3
+  have hG4_0 : RCN319.specialization K P gamma G4 = 0 := by
+    simp only [G4, map_mul, hFzero, zero_mul]
+  have hG4_1 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) G4) = 0 := by
+    simp only [G4, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG3_0, zero_mul, mul_zero, add_zero]
+  have hG4_2 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) G4)) = 0 := by
+    simp only [G4, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG3_0, hG3_1, zero_mul, mul_zero, add_zero]
+  have hG4_3 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) G4))) = 0 := by
+    simp only [G4, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG3_0, hG3_1, hG3_2, zero_mul, mul_zero, add_zero]
+  have hG4_4 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) G4)))) =
+      (24 : Polynomial K) *
+        (RCN319.specialization K P gamma
+          (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 4 *
+        RCN319.specialization K P gamma Q := by
+    simp only [G4, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG3_0, hG3_1, hG3_2, hG3_3, zero_mul, mul_zero, add_zero]
     ring
-  have hG6 : RCN319.specialization K P gamma (dR^[6] G) = 0 := by
-    simp (config := { maxSteps := 1200000 }) only [dR, G,
-      Function.iterate_succ_apply', Function.iterate_zero_apply,
-      Function.iterate_one, MvPolynomial.pderiv_mul, MvPolynomial.pderiv_pow,
-      map_add, map_mul, map_pow, map_natCast, hFzero,
-      zero_pow (show (8 : Nat) ≠ 0 by decide),
-      zero_mul, mul_zero, zero_add, add_zero, mul_add]
+  let G5 : MvPolynomial (Fin 4) K := F * G4
+  have hG5_0 : RCN319.specialization K P gamma G5 = 0 := by
+    simp only [G5, map_mul, hFzero, zero_mul]
+  have hG5_1 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) G5) = 0 := by
+    simp only [G5, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG4_0, zero_mul, mul_zero, add_zero]
+  have hG5_2 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) G5)) = 0 := by
+    simp only [G5, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG4_0, hG4_1, zero_mul, mul_zero, add_zero]
+  have hG5_3 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) G5))) = 0 := by
+    simp only [G5, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG4_0, hG4_1, hG4_2, zero_mul, mul_zero, add_zero]
+  have hG5_4 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) G5)))) = 0 := by
+    simp only [G5, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG4_0, hG4_1, hG4_2, hG4_3, zero_mul, mul_zero, add_zero]
+  have hG5_5 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4) G5))))) =
+      (120 : Polynomial K) *
+        (RCN319.specialization K P gamma
+          (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 5 *
+        RCN319.specialization K P gamma Q := by
+    simp only [G5, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG4_0, hG4_1, hG4_2, hG4_3, hG4_4, zero_mul, mul_zero, add_zero]
     ring
-  have hG7 : RCN319.specialization K P gamma (dR^[7] G) = 0 := by
-    simp (config := { maxSteps := 1200000 }) only [dR, G,
-      Function.iterate_succ_apply', Function.iterate_zero_apply,
-      Function.iterate_one, MvPolynomial.pderiv_mul, MvPolynomial.pderiv_pow,
-      map_add, map_mul, map_pow, map_natCast, hFzero,
-      zero_pow (show (8 : Nat) ≠ 0 by decide),
-      zero_mul, mul_zero, zero_add, add_zero, mul_add]
+  let G6 : MvPolynomial (Fin 4) K := F * G5
+  have hG6_0 : RCN319.specialization K P gamma G6 = 0 := by
+    simp only [G6, map_mul, hFzero, zero_mul]
+  have hG6_1 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) G6) = 0 := by
+    simp only [G6, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG5_0, zero_mul, mul_zero, add_zero]
+  have hG6_2 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) G6)) = 0 := by
+    simp only [G6, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG5_0, hG5_1, zero_mul, mul_zero, add_zero]
+  have hG6_3 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) G6))) = 0 := by
+    simp only [G6, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG5_0, hG5_1, hG5_2, zero_mul, mul_zero, add_zero]
+  have hG6_4 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) G6)))) = 0 := by
+    simp only [G6, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG5_0, hG5_1, hG5_2, hG5_3, zero_mul, mul_zero, add_zero]
+  have hG6_5 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4) G6))))) = 0 := by
+    simp only [G6, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG5_0, hG5_1, hG5_2, hG5_3, hG5_4, zero_mul, mul_zero, add_zero]
+  have hG6_6 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4) G6)))))) =
+      (720 : Polynomial K) *
+        (RCN319.specialization K P gamma
+          (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 6 *
+        RCN319.specialization K P gamma Q := by
+    simp only [G6, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG5_0, hG5_1, hG5_2, hG5_3, hG5_4, hG5_5, zero_mul, mul_zero, add_zero]
     ring
-  change RCN319.specialization K P gamma (G) = 0 at hG0
-  change RCN319.specialization K P gamma (MvPolynomial.pderiv (2 : Fin 4) (G)) = 0 at hG1
-  change RCN319.specialization K P gamma (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (G))) = 0 at hG2
-  change RCN319.specialization K P gamma (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (G)))) = 0 at hG3
-  change RCN319.specialization K P gamma (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (G))))) = 0 at hG4
-  change RCN319.specialization K P gamma (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (G)))))) = 0 at hG5
-  change RCN319.specialization K P gamma (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (G))))))) = 0 at hG6
-  change RCN319.specialization K P gamma (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) (G)))))))) = 0 at hG7
-  have hprod : F * (F * (F * (F * (F * (F * (F * (F * (F * (Q))))))))) = F * G := by
-    simp only [G]
+  let G7 : MvPolynomial (Fin 4) K := F * G6
+  have hG7_0 : RCN319.specialization K P gamma G7 = 0 := by
+    simp only [G7, map_mul, hFzero, zero_mul]
+  have hG7_1 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) G7) = 0 := by
+    simp only [G7, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG6_0, zero_mul, mul_zero, add_zero]
+  have hG7_2 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) G7)) = 0 := by
+    simp only [G7, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG6_0, hG6_1, zero_mul, mul_zero, add_zero]
+  have hG7_3 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) G7))) = 0 := by
+    simp only [G7, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG6_0, hG6_1, hG6_2, zero_mul, mul_zero, add_zero]
+  have hG7_4 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) G7)))) = 0 := by
+    simp only [G7, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG6_0, hG6_1, hG6_2, hG6_3, zero_mul, mul_zero, add_zero]
+  have hG7_5 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4) G7))))) = 0 := by
+    simp only [G7, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG6_0, hG6_1, hG6_2, hG6_3, hG6_4, zero_mul, mul_zero, add_zero]
+  have hG7_6 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4) G7)))))) = 0 := by
+    simp only [G7, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG6_0, hG6_1, hG6_2, hG6_3, hG6_4, hG6_5, zero_mul, mul_zero, add_zero]
+  have hG7_7 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4) G7))))))) =
+      (5040 : Polynomial K) *
+        (RCN319.specialization K P gamma
+          (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 7 *
+        RCN319.specialization K P gamma Q := by
+    simp only [G7, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG6_0, hG6_1, hG6_2, hG6_3, hG6_4, hG6_5, hG6_6, zero_mul, mul_zero, add_zero]
     ring
-  rw [hprod] at hpower
-  change RCN319.specialization K P gamma (dR^[9] (F * G)) = 0 at hpower
-  have hmul : (9 : Polynomial K) *
-      RCN319.specialization K P gamma (dR F) *
-      RCN319.specialization K P gamma (dR^[8] G) = 0 := by
-    simp (config := { maxSteps := 1200000 }) only [dR,
-      Function.iterate_succ_apply', Function.iterate_zero_apply,
-      Function.iterate_one, MvPolynomial.pderiv_mul,
-      map_add, map_mul, hFzero, hG0, hG1, hG2, hG3, hG4, hG5, hG6, hG7,
-      zero_mul, mul_zero, zero_add, add_zero] at hpower
-    ring_nf at hpower ⊢
-    exact hpower
-  have hcoef : (9 : Polynomial K) *
-      RCN319.specialization K P gamma (dR F) ≠ 0 :=
-    mul_ne_zero hnPoly hregular
-  have hG8 : RCN319.specialization K P gamma (dR^[8] G) = 0 :=
-    (mul_eq_zero.mp hmul).resolve_left hcoef
-  apply LocatorEighthPowerAvoidance.specialization_eq_zero_of_pderiv_R8_eighth_product
-    P gamma F Q h5040 height hFzero hregular
-  have hprevPower : F * (F * (F * (F * (F * (F * (F * (F * (Q)))))))) = G := by
-    simp only [G]
+  let G8 : MvPolynomial (Fin 4) K := F * G7
+  have hG8_0 : RCN319.specialization K P gamma G8 = 0 := by
+    simp only [G8, map_mul, hFzero, zero_mul]
+  have hG8_1 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) G8) = 0 := by
+    simp only [G8, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG7_0, zero_mul, mul_zero, add_zero]
+  have hG8_2 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) G8)) = 0 := by
+    simp only [G8, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG7_0, hG7_1, zero_mul, mul_zero, add_zero]
+  have hG8_3 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) G8))) = 0 := by
+    simp only [G8, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG7_0, hG7_1, hG7_2, zero_mul, mul_zero, add_zero]
+  have hG8_4 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) G8)))) = 0 := by
+    simp only [G8, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG7_0, hG7_1, hG7_2, hG7_3, zero_mul, mul_zero, add_zero]
+  have hG8_5 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4) G8))))) = 0 := by
+    simp only [G8, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG7_0, hG7_1, hG7_2, hG7_3, hG7_4, zero_mul, mul_zero, add_zero]
+  have hG8_6 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4) G8)))))) = 0 := by
+    simp only [G8, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG7_0, hG7_1, hG7_2, hG7_3, hG7_4, hG7_5, zero_mul, mul_zero, add_zero]
+  have hG8_7 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4) G8))))))) = 0 := by
+    simp only [G8, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG7_0, hG7_1, hG7_2, hG7_3, hG7_4, hG7_5, hG7_6, zero_mul, mul_zero, add_zero]
+  have hG8_8 : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4)
+                    (MvPolynomial.pderiv (2 : Fin 4) G8)))))))) =
+      (40320 : Polynomial K) *
+        (RCN319.specialization K P gamma
+          (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 8 *
+        RCN319.specialization K P gamma Q := by
+    simp only [G8, MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG7_0, hG7_1, hG7_2, hG7_3, hG7_4, hG7_5, hG7_6, hG7_7, zero_mul, mul_zero, add_zero]
     ring
-  rw [hprevPower]
-  change RCN319.specialization K P gamma (dR^[8] G) = 0
-  exact hG8
+  have hprod : F * (F * (F * (F * (F * (F * (F * (F * (F * Q)))))))) = F * G8 := by
+    simp only [G1, G2, G3, G4, G5, G6, G7, G8]
+  rw [hprod] at hninth
+  have hmul : (362880 : Polynomial K) *
+      (RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 9 *
+      RCN319.specialization K P gamma Q = 0 := by
+    simp only [MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      hG8_0, hG8_1, hG8_2, hG8_3, hG8_4, hG8_5, hG8_6, hG8_7, hG8_8,
+      zero_mul, mul_zero, add_zero] at hninth
+    ring_nf at hninth ⊢
+    exact hninth
+  have hcoef : (362880 : Polynomial K) *
+      (RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 9 ≠ 0 :=
+    mul_ne_zero hfactorialPoly (pow_ne_zero 9 hregular)
+  exact (mul_eq_zero.mp hmul).resolve_left hcoef
 
 end NinthDerivative
 
