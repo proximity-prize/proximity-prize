@@ -19,10 +19,10 @@ theorem gcd_fixed_count_le
     (u0 u1:I → K) (S:SelectedPair u0 u1)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181618 ≤
+    (hagreement:∀ gamma ∈ Gamma,181589 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80526) :
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80555) :
     (LocatorCover.fixed
       (fun gamma=> (specialization K (selected gamma) gamma).toRingHom)
       Gamma S.QA S.QB).card ≤
@@ -33,17 +33,17 @@ theorem gcd_fixed_count_le
     fun gamma=> (specialization K (selected gamma) gamma).toRingHom
   let Delta:Finset K:=LocatorCover.fixed phi Gamma S.QA S.QB
   have hH:H ≠ 0:=gcd_ne_zero_of_left S.QA_ne
-  have hHflagA:H ∈ RCN100.globalCoefficientBox K 11623552 131071 230000 19:=
+  have hHflagA:H ∈ RCN100.globalCoefficientBox K 11621696 131071 230000 19:=
     LocatorCaps.full_A_divisor_mem_box u0 u1 H hH S.common_divides_A
   have hHcapsA:=(mem_flagGlobalCoefficientBox_iff H
-    11623552 131071 230000 19 (by decide)).mp hHflagA
+    11621696 131071 230000 19 (by decide)).mp hHflagA
   have hT:wt residualTotalWeights H ≤ 2992:=S.common_total_le
   have hYS:wt residualYSWeights H ≤ 87:=S.common_ys_le
   have hS:wt residualSWeights H ≤ 19:=S.common_slope_le
-  have hflag:H ∈ RCN100.globalCoefficientBox K 11623552 131071 2992 19:=
-    (mem_flagGlobalCoefficientBox_iff H 11623552 131071 2992 19 (by decide)).mpr
+  have hflag:H ∈ RCN100.globalCoefficientBox K 11621696 131071 2992 19:=
+    (mem_flagGlobalCoefficientBox_iff H 11621696 131071 2992 19 (by decide)).mpr
       ⟨hT,hS,hHcapsA.2.2⟩
-  have hbox:=flag_box_to_ordinary K 11623552 131071 2992 19 H hflag
+  have hbox:=flag_box_to_ordinary K 11621696 131071 2992 19 H hflag
   have hsupport:ResidualSupportData LocatorFixedConsumer.wholeSupport H:=
     ⟨hS,hYS,hT⟩
   have hsub:Delta ⊆ Gamma:=by
@@ -56,12 +56,12 @@ theorem gcd_fixed_count_le
     exact LocatorCover.fixed_vanish phi Gamma S.QA S.QB gamma hg
   have hdegreeD:∀ gamma ∈ Delta, (selected gamma).natDegree ≤ 131071:=
     fun gamma hg=> hdegree gamma (hsub hg)
-  have hagreementD:∀ gamma ∈ Delta,181618 ≤
+  have hagreementD:∀ gamma ∈ Delta,181589 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card:=
     fun gamma hg=> hagreement gamma (hsub hg)
-  have hnoD:NoLargeSelectedPencil selected Delta 131071 80526:=
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80526 hsub hno
+  have hnoD:NoLargeSelectedPencil selected Delta 131071 80555:=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80555 hsub hno
   let p:=regularCumulativeFlag H
   have hfcaps (F:RegularIndex H) :
       (p F).all ≤ 19 ∧ middle (p F) ≤ 87 ∧ total (p F) ≤ 2992:=by
@@ -90,26 +90,26 @@ theorem gcd_fixed_count_le
         (hfcaps F).2.1 (hfcaps F).2.2
     have hv:Valid c:=valid_of_inCell (p F) c
       (hfcaps F).2.1 (hfcaps F).2.2 hc
-    have hown:=LocatorFixed.regular_factor_count 11623552
+    have hown:=LocatorFixed.regular_factor_count 11621696
       LocatorFixedConsumer.wholeSupport (by decide) (by decide)
       (by decide) (by decide) (by decide)
       H hH hbox hsupport selected Delta u0 u1 hdegreeD hagreementD hnoD F
     have hf:=RCN167.positiveRFactors_spec H F.1 F.2
     have hdivA : ∀ v:RCN180.ConstraintKernel (K:=K)
-        11623552 131071 230000 19 64 IRSProfile.domain u0 u1,
-        F.1 ∣ RCN100.reconstruct K 11623552 131071 230000 19 v.1:=by
+        11621696 131071 230000 19 64 IRSProfile.domain u0 u1,
+        F.1 ∣ RCN100.reconstruct K 11621696 131071 230000 19 v.1:=by
       intro v
       exact hf.2.1.trans
         (LocatorAuxiliarySelection.common_divides_A61_small S 230000 (by decide) v)
     have hdivAux : ∀ v:RCN180.ConstraintKernel (K:=K)
-        13076496 131071 230000 21 72 IRSProfile.domain u0 u1,
-        F.1 ∣ RCN100.reconstruct K 13076496 131071 230000 21 v.1:=by
+        13074408 131071 230000 21 72 IRSProfile.domain u0 u1,
+        F.1 ∣ RCN100.reconstruct K 13074408 131071 230000 21 v.1:=by
       intro v
       exact hf.2.1.trans
         (LocatorAuxiliarySelection.common_divides_A72_small S 230000 (by decide) v)
     have hdivC : ∀ v:RCN180.ConstraintKernel (K:=K)
-        43769938 131071 230000 71 241 IRSProfile.domain u0 u1,
-        F.1 ∣ RCN100.reconstruct K 43769938 131071 230000 71 v.1:=by
+        43762949 131071 230000 71 241 IRSProfile.domain u0 u1,
+        F.1 ∣ RCN100.reconstruct K 43762949 131071 230000 71 v.1:=by
       intro v
       exact hf.2.1.trans
         (LocatorAuxiliarySelection.common_divides_A150_small S 230000 (by decide) v)

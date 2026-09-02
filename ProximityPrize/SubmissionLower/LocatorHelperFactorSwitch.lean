@@ -28,13 +28,13 @@ local instance : CharP K 2130706433 := by
 /-- The score-67.77 long interpolation source used only by the local factor
 switch. -/
 abbrev LongKernel (u₀ u₁ : I → K) :=
-  ConstraintKernel (K := K) 43769938 131071 457347 71 241
+  ConstraintKernel (K := K) 43762949 131071 457347 71 241
     IRSProfile.domain u₀ u₁
 
 /-- Unequal-pair parameters for a factor with the long helper polynomial on
 the right. -/
 def helperPair (leftY leftR leftZ : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181618, leftY, leftR, leftZ, 333, 71, 457347⟩
+  ⟨262144, 131071, 181589, leftY, leftR, leftZ, 333, 71, 457347⟩
 
 /-- The characteristic hypotheses required by the unequal-pair theorem,
 kept independent of the replacement-grid module to avoid an import cycle. -/
@@ -82,38 +82,38 @@ theorem long_divisor_or_helper_count
     {u₀ u₁ : I → K} {H : P4}
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181618 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181589 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u₀ i + gamma * u₁ i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80526)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80555)
     (F : RegularIndex H) (leftY leftR leftZ : ℕ)
     (hFY : F.1.degreeOf 1 ≤ leftY)
     (hFR : F.1.degreeOf 2 ≤ leftR)
     (hFZ : F.1.degreeOf 3 ≤ leftZ)
     (hgates : HelperPairGates leftY leftR leftZ) :
     (∀ v : LongKernel u₀ u₁,
-      F.1 ∣ reconstruct K 43769938 131071 457347 71 v.1) ∨
+      F.1 ∣ reconstruct K 43762949 131071 457347 71 v.1) ∨
       (regularSeeds H selected Gamma F).card ≤
         (helperPair leftY leftR leftZ).regularCountCap := by
   classical
   by_cases hdiv : ∀ v : LongKernel u₀ u₁,
-      F.1 ∣ reconstruct K 43769938 131071 457347 71 v.1
+      F.1 ∣ reconstruct K 43762949 131071 457347 71 v.1
   · exact Or.inl hdiv
   · right
     push Not at hdiv
     obtain ⟨v, hv⟩ := hdiv
-    let Q := reconstruct K 43769938 131071 457347 71 v.1
+    let Q := reconstruct K 43762949 131071 457347 71 v.1
     have hF := RCN167.positiveRFactors_spec H F.1 F.2
     have hrel : IsRelPrime F.1 Q :=
       hF.1.isRelPrime_iff_not_dvd.mpr hv
-    have hQbox : Q ∈ globalCoefficientBox K 43769938 131071 457347 71 :=
-      reconstruct_mem_globalCoefficientBox K 43769938 131071 457347 71 v.1
+    have hQbox : Q ∈ globalCoefficientBox K 43762949 131071 457347 71 :=
+      reconstruct_mem_globalCoefficientBox K 43762949 131071 457347 71 v.1
     have hQYS : wt residualYSWeights Q ≤ 333 := by
-      apply flag_box_ys_bound 43769938 131071 457347 71 333
+      apply flag_box_ys_bound 43762949 131071 457347 71 333
         (by decide) (by decide) Q hQbox
     have hweights := (mem_flagGlobalCoefficientBox_iff Q
-      43769938 131071 457347 71 (by decide)).mp hQbox
+      43762949 131071 457347 71 (by decide)).mp hQbox
     have hQY : Q.degreeOf 1 ≤ 333 :=
       (degreeY_le_ysWeight Q).trans hQYS
     have hQR : Q.degreeOf 2 ≤ 71 :=
@@ -141,7 +141,7 @@ theorem long_divisor_or_helper_count
     intro gamma hgamma
     dsimp only [Q]
     apply specialization_eq_zero_of_agreements K
-      43769938 131071 457347 71 241 181618 IRSProfile.domain u₀ u₁
+      43762949 131071 457347 71 241 181589 IRSProfile.domain u₀ u₁
       v.1 v.2 (by decide) (by decide) (selected gamma) gamma
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =

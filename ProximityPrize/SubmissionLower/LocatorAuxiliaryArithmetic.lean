@@ -11,28 +11,28 @@ private theorem auxiliary72_rank :
     localRankBound 72 230000 21 = 10232493381 := by decide
 
 theorem auxiliary72_nullity :
-    coefficientCount 13076496 131071 230000 21 -
-      262144 * localRankBound 72 230000 21 = 2613041614634 := by
+    coefficientCount 13074408 131071 230000 21 -
+      262144 * localRankBound 72 230000 21 = 2587242818908418 := by
   rw [auxiliary72_rank, coefficientCount_eq_sum_range_of_weighted_cutoff
-    13076496 131071 230000 21 100 (by decide) (by decide)]
+    13074408 131071 230000 21 100 (by decide) (by decide)]
   decide
 
 theorem auxiliary72_shape :
-    13076496 + 21 ≤ 131071 * (99 + 1) := by decide
+    13074408 + 21 ≤ 131071 * (99 + 1) := by decide
 
 theorem auxiliary72_capacity :
-    13076496 - 50548 ≤ (72 - 1) * 181618 + (131071 - 1) := by decide
+    13074408 - 50519 ≤ (72 - 1) * 181589 + (131071 - 1) := by decide
 
 /-- These historical names are retained to minimize invalidation; their
     witness is the retuned multiplicity-241 base C source. -/
 theorem auxiliary176_shape :
-    43769938 + 71 ≤ 131071 * (333 + 1) := by decide
+    43762949 + 71 ≤ 131071 * (333 + 1) := by decide
 
 theorem auxiliary176_capacity :
-    43769938 - 50548 ≤ (241 - 1) * 181618 + (131071 - 1) := by decide
+    43762949 - 50519 ≤ (241 - 1) * 181589 + (131071 - 1) := by decide
 
 theorem auxiliary176_double_capacity :
-    43769938 - 2 * 50548 ≤
-      (241 - 2) * 181618 + 2 * (131071 - 1) := by decide
+    43762949 - 2 * 50519 ≤
+      (241 - 2) * 181589 + 2 * (131071 - 1) := by decide
 
 end ProximityPrize.SubmissionLower.LocatorAuxiliaryArithmetic

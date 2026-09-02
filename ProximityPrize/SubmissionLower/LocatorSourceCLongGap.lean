@@ -1,9 +1,9 @@
-import ProximityPrize.SubmissionLower.LocatorLargeSourceArithmetic6777
+import ProximityPrize.SubmissionLower.LocatorLargeSourceArithmetic6780
 
 namespace ProximityPrize.SubmissionLower.LocatorSourceCLongGap
 
 open ProximityPrize.Benchmark
-open LocatorLargeSourceArithmetic6777
+open LocatorLargeSourceArithmetic6780
 open RCN100 RCN119 RCN180
 
 noncomputable section
@@ -17,7 +17,7 @@ abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
 
 theorem finrank_lower_bound (u0 u1 : I → K) :
-    1296392225018202 ≤ Module.finrank K
+    191571608363612394 ≤ Module.finrank K
       (ConstraintKernel (K := K) helperWeighted 131071 helperLength
         helperSlope helperMultiplicity IRSProfile.domain u0 u1) := by
   have hcard : Fintype.card I = 262144 := by

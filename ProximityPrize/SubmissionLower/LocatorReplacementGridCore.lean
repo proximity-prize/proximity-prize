@@ -14,7 +14,7 @@ abbrev bound : ℕ := 266990962477160602
 abbrev totalCap : ℕ := 2992
 private abbrev ysCap : ℕ := 87
 private abbrev slopeCap : ℕ := 19
-private abbrev delta : ℕ := 50548
+private abbrev delta : ℕ := 50519
 
 /-- A rectangular cumulative-degree box for one irreducible factor. -/
 structure Box where
@@ -50,10 +50,10 @@ structure Source where
   gap : ℕ
   deriving DecidableEq
 
-def sourceA : Source := ⟨230000, 88, 19, 31252469225⟩
-def sourceAux : Source := ⟨230000, 99, 21, 2613041614634⟩
-def sourceC : Source := ⟨230000, 333, 71, 646245243669294⟩
-def sourceCLong : Source := ⟨457347, 333, 71, 1296392225018202⟩
+def sourceA : Source := ⟨230000, 88, 19, 1844712187971945⟩
+def sourceAux : Source := ⟨230000, 99, 21, 2587242818908418⟩
+def sourceC : Source := ⟨230000, 333, 71, 96314062520372778⟩
+def sourceCLong : Source := ⟨457347, 333, 71, 191571608363612394⟩
 
 def stageT (src : Source) (b : Box) (j : ℕ) : ℕ := src.length - j * b.factorT
 def stageY (src : Source) (b : Box) (j : ℕ) : ℕ := src.y - j * b.ylo
@@ -82,7 +82,7 @@ def bandSum (src : Source) (b : Box) : ℕ → ℕ
   | _ => 0
 
 def stagePair (src : Source) (b : Box) (j : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181618, b.factorY, b.r, b.thi,
+  ⟨262144, 131071, 181589, b.factorY, b.r, b.thi,
     stageY src b j, stageR src b j, stageT src b j⟩
 
 def PairGates (P : UnequalParameters) : Prop :=
@@ -201,7 +201,7 @@ theorem fastRouteFits_iff (src : Source) (k : ℕ) (b : Box) :
     exact ⟨hkpos, hkcap, hy, hr, hlen, hterminal, hband, hgates, hcost⟩
 
 def helperPair (b : Box) : UnequalParameters :=
-  ⟨262144, 131071, 181618, b.factorY, b.r, b.thi, 333, 71, 457347⟩
+  ⟨262144, 131071, 181589, b.factorY, b.r, b.thi, 333, 71, 457347⟩
 
 def helperPairCost (b : Box) : ℕ := (helperPair b).regularCountCap
 def HelperPairGates (b : Box) : Prop := PairGates (helperPair b)
