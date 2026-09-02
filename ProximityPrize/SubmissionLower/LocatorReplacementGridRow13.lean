@@ -1,13 +1,52 @@
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow13S00
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow13S01
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow13S02
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow13S03
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow13S04
+import ProximityPrize.SubmissionLower.LocatorReplacementGridCore
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
+
+
+
+
+theorem receipt_row_13_band_00_02 : RowBandReceipt 13 0 2 := by decide +kernel
+
+theorem receipt_row_13_band_02_04 : RowBandReceipt 13 2 4 := by decide +kernel
+
+
+
+
+
+theorem receipt_row_13_band_04_06 : RowBandReceipt 13 4 6 := by decide +kernel
+
+theorem receipt_row_13_band_06_08 : RowBandReceipt 13 6 8 := by decide +kernel
+
+
+
+
+
+theorem receipt_row_13_band_08_10 : RowBandReceipt 13 8 10 := by decide +kernel
+
+theorem receipt_row_13_band_10_12 : RowBandReceipt 13 10 12 := by decide +kernel
+
+
+
+
+
+theorem receipt_row_13_band_12_14 : RowBandReceipt 13 12 14 := by decide +kernel
+
+theorem receipt_row_13_band_14_16 : RowBandReceipt 13 14 16 := by decide +kernel
+
+
+
+
+
+theorem receipt_row_13_band_16_18 : RowBandReceipt 13 16 18 := by decide +kernel
+
+theorem receipt_row_13_band_18_23 : RowBandReceipt 13 18 23 := by decide +kernel
+
+
+
+
 
 private theorem receipt_row_13_fast : FastRowReceipt 13 := by
   intro cy

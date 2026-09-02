@@ -1,15 +1,86 @@
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow01S00
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow01S01
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow01S02
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow01S03
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow01S04
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow01S05
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow01S06
+import ProximityPrize.SubmissionLower.LocatorReplacementGridCore
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
+
+
+
+
+private theorem receipt_row_01_y00_t00_24_fixed :
+    FixedYReceipt 1 ⟨0, by decide⟩ 0 24 := by decide +kernel
+
+theorem receipt_row_01_y00_t00_24 : RowTileReceipt 1 0 1 0 24 :=
+  fixedYReceipt_to_rowTile 1 ⟨0, by decide⟩ 0 24 receipt_row_01_y00_t00_24_fixed
+
+private theorem receipt_row_01_y00_t24_26_fixed :
+    FixedYReceipt 1 ⟨0, by decide⟩ 24 26 := by decide +kernel
+
+theorem receipt_row_01_y00_t24_26 : RowTileReceipt 1 0 1 24 26 :=
+  fixedYReceipt_to_rowTile 1 ⟨0, by decide⟩ 24 26 receipt_row_01_y00_t24_26_fixed
+
+private theorem receipt_row_01_y01_t00_24_fixed :
+    FixedYReceipt 1 ⟨1, by decide⟩ 0 24 := by decide +kernel
+
+theorem receipt_row_01_y01_t00_24 : RowTileReceipt 1 1 2 0 24 :=
+  fixedYReceipt_to_rowTile 1 ⟨1, by decide⟩ 0 24 receipt_row_01_y01_t00_24_fixed
+
+private theorem receipt_row_01_y01_t24_26_fixed :
+    FixedYReceipt 1 ⟨1, by decide⟩ 24 26 := by decide +kernel
+
+theorem receipt_row_01_y01_t24_26 : RowTileReceipt 1 1 2 24 26 :=
+  fixedYReceipt_to_rowTile 1 ⟨1, by decide⟩ 24 26 receipt_row_01_y01_t24_26_fixed
+
+
+
+
+
+theorem receipt_row_01_band_02_04 : RowBandReceipt 1 2 4 := by decide +kernel
+
+theorem receipt_row_01_band_04_06 : RowBandReceipt 1 4 6 := by decide +kernel
+
+
+
+
+
+theorem receipt_row_01_band_06_08 : RowBandReceipt 1 6 8 := by decide +kernel
+
+theorem receipt_row_01_band_08_10 : RowBandReceipt 1 8 10 := by decide +kernel
+
+
+
+
+
+theorem receipt_row_01_band_10_12 : RowBandReceipt 1 10 12 := by decide +kernel
+
+theorem receipt_row_01_band_12_14 : RowBandReceipt 1 12 14 := by decide +kernel
+
+
+
+
+
+theorem receipt_row_01_band_14_16 : RowBandReceipt 1 14 16 := by decide +kernel
+
+theorem receipt_row_01_band_16_18 : RowBandReceipt 1 16 18 := by decide +kernel
+
+
+
+
+
+theorem receipt_row_01_band_18_20 : RowBandReceipt 1 18 20 := by decide +kernel
+
+theorem receipt_row_01_band_20_22 : RowBandReceipt 1 20 22 := by decide +kernel
+
+
+
+
+
+theorem receipt_row_01_band_22_23 : RowBandReceipt 1 22 23 := by decide +kernel
+
+
+
+
 
 theorem receipt_row_01_y00_full : RowTileReceipt 1 0 1 0 26 := by
   intro cy hylo hyhi ct htlo hthi

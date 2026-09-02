@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.LocatorFactorAggregate
+import ProximityPrize.SubmissionLower.LocatorHybridCostDefs
 
 /-!
 # Hybrid second-surface cost
@@ -19,31 +19,6 @@ open RCN095 LocatorFactorAggregate
 
 set_option maxRecDepth 4096
 set_option maxHeartbeats 400000
-
-/-- Sharp first tail `⟨2a·d, 1+(2b+1)·d, (2s+3)·d⟩` at `d = 131072`, with
-`a = padT - padY`, `b = padY - padS - 1`, `s = padS - 2`. -/
-def sharpTail (p : FlagDegree) : FlagDegree :=
-  ⟨2 * (padT p - padY p) * 131072,
-    1 + (2 * (padY p - padS p) - 1) * 131072,
-    (2 * padS p - 1) * 131072⟩
-
-def rationalFlag (p : FlagDegree) : FlagDegree :=
-  ⟨131072 * (padT p - padY p) + 2 * (padT p - padY p),
-    131072 * (padY p - padS p - 1) + 2 * (padY p - padS p - 1) + 2,
-    131072 * (padS p - 2) + 2 * (padS p - 2) + 3⟩
-
-def hybridCoordinate (p : FlagDegree) : FlagDegree :=
-  rationalFlag p + ⟨0, 65536, 196608⟩
-
-def movingFiber (p : FlagDegree) : FlagDegree :=
-  ⟨padT p - padY p, padY p - padS p, padS p + 1⟩
-
-def movingCut (p : FlagDegree) : FlagDegree :=
-  rationalFlag p + ⟨0, 131072, 262144⟩
-
-def hybridCost (p : FlagDegree) : ℕ :=
-  flagMixed p (sharpTail p) (hybridCoordinate p) +
-    131072 * flagMixed p (movingFiber p) (movingCut p)
 
 /-- The hybrid branch applies when the slope is at least `2` and the middle
 exceeds the slope by at least `2`. -/

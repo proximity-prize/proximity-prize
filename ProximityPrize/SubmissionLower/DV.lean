@@ -133,13 +133,13 @@ theorem exists_original_support_of_selected_count
  · exact h₀
  · exact h₁
 def SelectedNoLargePencilBound6400:Prop:=
- SelectedNoLargePencilBound IRSProfile.domain 131071 76780 274980728111352763
+ SelectedNoLargePencilBound IRSProfile.domain 131071 76781 274980728111352763
 theorem alignmentBound6400_of_selected_count
    (hcount:SelectedNoLargePencilBound6400):
-   AffineLineAlignmentBound IRSProfile.baseCode 76780 274980728111352763:=by
+   AffineLineAlignmentBound IRSProfile.baseCode 76781 274980728111352763:=by
  change AffineLineAlignmentBound (ReedSolomon.code IRSProfile.domain (131071+1))
-   76780 274980728111352763
- exact alignmentBound_of_selected_count IRSProfile.domain 131071 76780
+   76781 274980728111352763
+ exact alignmentBound_of_selected_count IRSProfile.domain 131071 76781
    274980728111352763 hcount
 end
 end ProximityPrize.SubmissionLower.RCN050

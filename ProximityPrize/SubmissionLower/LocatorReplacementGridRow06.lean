@@ -1,20 +1,242 @@
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow06S00
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow06S01
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow06S02
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow06S03
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow06S04
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow06S05
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow06S06
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow06S07
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow06S08
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow06S09
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow06S10
-import ProximityPrize.SubmissionLower.LocatorReplacementGridRow06S11
+import ProximityPrize.SubmissionLower.LocatorReplacementGridCore
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
+
+
+
+
+private theorem receipt_row_06_y00_t00_24_fixed :
+    FixedYReceipt 6 ⟨0, by decide⟩ 0 24 := by decide +kernel
+
+theorem receipt_row_06_y00_t00_24 : RowTileReceipt 6 0 1 0 24 :=
+  fixedYReceipt_to_rowTile 6 ⟨0, by decide⟩ 0 24 receipt_row_06_y00_t00_24_fixed
+
+private theorem receipt_row_06_y00_t24_26_fixed :
+    FixedYReceipt 6 ⟨0, by decide⟩ 24 26 := by decide +kernel
+
+theorem receipt_row_06_y00_t24_26 : RowTileReceipt 6 0 1 24 26 :=
+  fixedYReceipt_to_rowTile 6 ⟨0, by decide⟩ 24 26 receipt_row_06_y00_t24_26_fixed
+
+private theorem receipt_row_06_y01_t00_24_fixed :
+    FixedYReceipt 6 ⟨1, by decide⟩ 0 24 := by decide +kernel
+
+theorem receipt_row_06_y01_t00_24 : RowTileReceipt 6 1 2 0 24 :=
+  fixedYReceipt_to_rowTile 6 ⟨1, by decide⟩ 0 24 receipt_row_06_y01_t00_24_fixed
+
+private theorem receipt_row_06_y01_t24_26_fixed :
+    FixedYReceipt 6 ⟨1, by decide⟩ 24 26 := by decide +kernel
+
+theorem receipt_row_06_y01_t24_26 : RowTileReceipt 6 1 2 24 26 :=
+  fixedYReceipt_to_rowTile 6 ⟨1, by decide⟩ 24 26 receipt_row_06_y01_t24_26_fixed
+
+
+
+
+
+private theorem receipt_row_06_y02_t00_24_fixed :
+    FixedYReceipt 6 ⟨2, by decide⟩ 0 24 := by decide +kernel
+
+theorem receipt_row_06_y02_t00_24 : RowTileReceipt 6 2 3 0 24 :=
+  fixedYReceipt_to_rowTile 6 ⟨2, by decide⟩ 0 24 receipt_row_06_y02_t00_24_fixed
+
+private theorem receipt_row_06_y02_t24_26_fixed :
+    FixedYReceipt 6 ⟨2, by decide⟩ 24 26 := by decide +kernel
+
+theorem receipt_row_06_y02_t24_26 : RowTileReceipt 6 2 3 24 26 :=
+  fixedYReceipt_to_rowTile 6 ⟨2, by decide⟩ 24 26 receipt_row_06_y02_t24_26_fixed
+
+private theorem receipt_row_06_y03_t00_24_fixed :
+    FixedYReceipt 6 ⟨3, by decide⟩ 0 24 := by decide +kernel
+
+theorem receipt_row_06_y03_t00_24 : RowTileReceipt 6 3 4 0 24 :=
+  fixedYReceipt_to_rowTile 6 ⟨3, by decide⟩ 0 24 receipt_row_06_y03_t00_24_fixed
+
+private theorem receipt_row_06_y03_t24_26_fixed :
+    FixedYReceipt 6 ⟨3, by decide⟩ 24 26 := by decide +kernel
+
+theorem receipt_row_06_y03_t24_26 : RowTileReceipt 6 3 4 24 26 :=
+  fixedYReceipt_to_rowTile 6 ⟨3, by decide⟩ 24 26 receipt_row_06_y03_t24_26_fixed
+
+
+
+
+
+private theorem receipt_row_06_y04_t00_08_fixed :
+    FixedYReceipt 6 ⟨4, by decide⟩ 0 8 := by decide +kernel
+
+theorem receipt_row_06_y04_t00_08 : RowTileReceipt 6 4 5 0 8 :=
+  fixedYReceipt_to_rowTile 6 ⟨4, by decide⟩ 0 8 receipt_row_06_y04_t00_08_fixed
+
+private theorem receipt_row_06_y04_t08_26_fixed :
+    FixedYReceipt 6 ⟨4, by decide⟩ 8 26 := by decide +kernel
+
+theorem receipt_row_06_y04_t08_26 : RowTileReceipt 6 4 5 8 26 :=
+  fixedYReceipt_to_rowTile 6 ⟨4, by decide⟩ 8 26 receipt_row_06_y04_t08_26_fixed
+
+private theorem receipt_row_06_y05_t00_08_fixed :
+    FixedYReceipt 6 ⟨5, by decide⟩ 0 8 := by decide +kernel
+
+theorem receipt_row_06_y05_t00_08 : RowTileReceipt 6 5 6 0 8 :=
+  fixedYReceipt_to_rowTile 6 ⟨5, by decide⟩ 0 8 receipt_row_06_y05_t00_08_fixed
+
+private theorem receipt_row_06_y05_t08_26_fixed :
+    FixedYReceipt 6 ⟨5, by decide⟩ 8 26 := by decide +kernel
+
+theorem receipt_row_06_y05_t08_26 : RowTileReceipt 6 5 6 8 26 :=
+  fixedYReceipt_to_rowTile 6 ⟨5, by decide⟩ 8 26 receipt_row_06_y05_t08_26_fixed
+
+
+
+
+
+private theorem receipt_row_06_y06_t00_01_fixed :
+    FixedYReceipt 6 ⟨6, by decide⟩ 0 1 := by decide +kernel
+
+theorem receipt_row_06_y06_t00_01 : RowTileReceipt 6 6 7 0 1 :=
+  fixedYReceipt_to_rowTile 6 ⟨6, by decide⟩ 0 1 receipt_row_06_y06_t00_01_fixed
+
+private theorem receipt_row_06_y06_t01_09_fixed :
+    FixedYReceipt 6 ⟨6, by decide⟩ 1 9 := by decide +kernel
+
+theorem receipt_row_06_y06_t01_09 : RowTileReceipt 6 6 7 1 9 :=
+  fixedYReceipt_to_rowTile 6 ⟨6, by decide⟩ 1 9 receipt_row_06_y06_t01_09_fixed
+
+private theorem receipt_row_06_y06_t09_26_fixed :
+    FixedYReceipt 6 ⟨6, by decide⟩ 9 26 := by decide +kernel
+
+theorem receipt_row_06_y06_t09_26 : RowTileReceipt 6 6 7 9 26 :=
+  fixedYReceipt_to_rowTile 6 ⟨6, by decide⟩ 9 26 receipt_row_06_y06_t09_26_fixed
+
+private theorem receipt_row_06_y07_t00_02_fixed :
+    FixedYReceipt 6 ⟨7, by decide⟩ 0 2 := by decide +kernel
+
+theorem receipt_row_06_y07_t00_02 : RowTileReceipt 6 7 8 0 2 :=
+  fixedYReceipt_to_rowTile 6 ⟨7, by decide⟩ 0 2 receipt_row_06_y07_t00_02_fixed
+
+
+
+
+
+private theorem receipt_row_06_y07_t02_04_fixed :
+    FixedYReceipt 6 ⟨7, by decide⟩ 2 4 := by decide +kernel
+
+theorem receipt_row_06_y07_t02_04 : RowTileReceipt 6 7 8 2 4 :=
+  fixedYReceipt_to_rowTile 6 ⟨7, by decide⟩ 2 4 receipt_row_06_y07_t02_04_fixed
+
+private theorem receipt_row_06_y07_t04_12_fixed :
+    FixedYReceipt 6 ⟨7, by decide⟩ 4 12 := by decide +kernel
+
+theorem receipt_row_06_y07_t04_12 : RowTileReceipt 6 7 8 4 12 :=
+  fixedYReceipt_to_rowTile 6 ⟨7, by decide⟩ 4 12 receipt_row_06_y07_t04_12_fixed
+
+private theorem receipt_row_06_y07_t12_26_fixed :
+    FixedYReceipt 6 ⟨7, by decide⟩ 12 26 := by decide +kernel
+
+theorem receipt_row_06_y07_t12_26 : RowTileReceipt 6 7 8 12 26 :=
+  fixedYReceipt_to_rowTile 6 ⟨7, by decide⟩ 12 26 receipt_row_06_y07_t12_26_fixed
+
+
+
+
+
+private theorem receipt_row_06_y08_t00_01_fixed :
+    FixedYReceipt 6 ⟨8, by decide⟩ 0 1 := by decide +kernel
+
+theorem receipt_row_06_y08_t00_01 : RowTileReceipt 6 8 9 0 1 :=
+  fixedYReceipt_to_rowTile 6 ⟨8, by decide⟩ 0 1 receipt_row_06_y08_t00_01_fixed
+
+private theorem receipt_row_06_y08_t01_03_fixed :
+    FixedYReceipt 6 ⟨8, by decide⟩ 1 3 := by decide +kernel
+
+theorem receipt_row_06_y08_t01_03 : RowTileReceipt 6 8 9 1 3 :=
+  fixedYReceipt_to_rowTile 6 ⟨8, by decide⟩ 1 3 receipt_row_06_y08_t01_03_fixed
+
+private theorem receipt_row_06_y08_t03_05_fixed :
+    FixedYReceipt 6 ⟨8, by decide⟩ 3 5 := by decide +kernel
+
+theorem receipt_row_06_y08_t03_05 : RowTileReceipt 6 8 9 3 5 :=
+  fixedYReceipt_to_rowTile 6 ⟨8, by decide⟩ 3 5 receipt_row_06_y08_t03_05_fixed
+
+
+
+
+
+private theorem receipt_row_06_y08_t05_07_fixed :
+    FixedYReceipt 6 ⟨8, by decide⟩ 5 7 := by decide +kernel
+
+theorem receipt_row_06_y08_t05_07 : RowTileReceipt 6 8 9 5 7 :=
+  fixedYReceipt_to_rowTile 6 ⟨8, by decide⟩ 5 7 receipt_row_06_y08_t05_07_fixed
+
+private theorem receipt_row_06_y08_t07_09_fixed :
+    FixedYReceipt 6 ⟨8, by decide⟩ 7 9 := by decide +kernel
+
+theorem receipt_row_06_y08_t07_09 : RowTileReceipt 6 8 9 7 9 :=
+  fixedYReceipt_to_rowTile 6 ⟨8, by decide⟩ 7 9 receipt_row_06_y08_t07_09_fixed
+
+private theorem receipt_row_06_y08_t09_11_fixed :
+    FixedYReceipt 6 ⟨8, by decide⟩ 9 11 := by decide +kernel
+
+theorem receipt_row_06_y08_t09_11 : RowTileReceipt 6 8 9 9 11 :=
+  fixedYReceipt_to_rowTile 6 ⟨8, by decide⟩ 9 11 receipt_row_06_y08_t09_11_fixed
+
+
+
+
+
+private theorem receipt_row_06_y08_t11_13_fixed :
+    FixedYReceipt 6 ⟨8, by decide⟩ 11 13 := by decide +kernel
+
+theorem receipt_row_06_y08_t11_13 : RowTileReceipt 6 8 9 11 13 :=
+  fixedYReceipt_to_rowTile 6 ⟨8, by decide⟩ 11 13 receipt_row_06_y08_t11_13_fixed
+
+private theorem receipt_row_06_y08_t13_21_fixed :
+    FixedYReceipt 6 ⟨8, by decide⟩ 13 21 := by decide +kernel
+
+theorem receipt_row_06_y08_t13_21 : RowTileReceipt 6 8 9 13 21 :=
+  fixedYReceipt_to_rowTile 6 ⟨8, by decide⟩ 13 21 receipt_row_06_y08_t13_21_fixed
+
+private theorem receipt_row_06_y08_t21_26_fixed :
+    FixedYReceipt 6 ⟨8, by decide⟩ 21 26 := by decide +kernel
+
+theorem receipt_row_06_y08_t21_26 : RowTileReceipt 6 8 9 21 26 :=
+  fixedYReceipt_to_rowTile 6 ⟨8, by decide⟩ 21 26 receipt_row_06_y08_t21_26_fixed
+
+
+
+
+
+theorem receipt_row_06_band_09_11 : RowBandReceipt 6 9 11 := by decide +kernel
+
+theorem receipt_row_06_band_11_13 : RowBandReceipt 6 11 13 := by decide +kernel
+
+
+
+
+
+theorem receipt_row_06_band_13_15 : RowBandReceipt 6 13 15 := by decide +kernel
+
+theorem receipt_row_06_band_15_17 : RowBandReceipt 6 15 17 := by decide +kernel
+
+
+
+
+
+theorem receipt_row_06_band_17_19 : RowBandReceipt 6 17 19 := by decide +kernel
+
+theorem receipt_row_06_band_19_21 : RowBandReceipt 6 19 21 := by decide +kernel
+
+
+
+
+
+theorem receipt_row_06_band_21_23 : RowBandReceipt 6 21 23 := by decide +kernel
+
+
+
+
 
 theorem receipt_row_06_y00_full : RowTileReceipt 6 0 1 0 26 := by
   intro cy hylo hyhi ct htlo hthi
