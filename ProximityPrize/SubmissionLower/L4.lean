@@ -12,39 +12,39 @@ local instance:StrongNormalizationMonoid GlobalPoly :=
  UniqueFactorizationMonoid.strongNormalizationMonoid
 local instance:NormalizedGCDMonoid GlobalPoly :=
  UniqueFactorizationMonoid.toNormalizedGCDMonoid GlobalPoly
-def agreements6733:ℕ:=182042
+def agreements6733:ℕ:=181994
 abbrev AKernel (u₀ u₁:IRSProfile.Index → IRSProfile.Field) :=
  ConstraintKernel (K:=IRSProfile.Field)
-   7645764 131071 84439 12 42 IRSProfile.domain u₀ u₁
+   8007736 131071 84442 13 44 IRSProfile.domain u₀ u₁
 abbrev BKernel (u₀ u₁:IRSProfile.Index → IRSProfile.Field) :=
  ConstraintKernel (K:=IRSProfile.Field)
-   14745402 131071 1262 25 81 IRSProfile.domain u₀ u₁
+   14741514 131071 1379 25 81 IRSProfile.domain u₀ u₁
 abbrev CKernel (u₀ u₁:IRSProfile.Index → IRSProfile.Field) :=
  ConstraintKernel (K:=IRSProfile.Field)
-   7463722 131071 41787 12 41 IRSProfile.domain u₀ u₁
+   7825742 131071 41790 13 43 IRSProfile.domain u₀ u₁
 theorem gateA :
-   Fintype.card IRSProfile.Index * localRankBound 42 84439 12 <
-     coefficientCount 7645764 131071 84439 12:=by
+   Fintype.card IRSProfile.Index * localRankBound 44 84442 13 <
+     coefficientCount 8007736 131071 84442 13:=by
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]]
  rw [RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
-   7645764 131071 84439 12 59 (by decide) (by decide)]
+   8007736 131071 84442 13 62 (by decide) (by decide)]
  decide
 theorem gateB :
-   Fintype.card IRSProfile.Index * localRankBound 81 1262 25 <
-     coefficientCount 14745402 131071 1262 25:=by
+   Fintype.card IRSProfile.Index * localRankBound 81 1379 25 <
+     coefficientCount 14741514 131071 1379 25:=by
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]]
  rw [RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
-   14745402 131071 1262 25 113 (by decide) (by decide)]
+   14741514 131071 1379 25 113 (by decide) (by decide)]
  decide
 theorem gateC :
-   Fintype.card IRSProfile.Index * localRankBound 41 41787 12 <
-     coefficientCount 7463722 131071 41787 12:=by
+   Fintype.card IRSProfile.Index * localRankBound 43 41790 13 <
+     coefficientCount 7825742 131071 41790 13:=by
  rw [show Fintype.card IRSProfile.Index = 262144 by
    norm_num [IRSProfile.Index]]
  rw [RCN302.coefficientCount_eq_sum_range_of_weighted_cutoff
-   7463722 131071 41787 12 57 (by decide) (by decide)]
+   7825742 131071 41790 13 60 (by decide) (by decide)]
  decide
 theorem field_cardinality :
    Fintype.card IRSProfile.Field = (2130706433:ℕ) ^ 6:=by

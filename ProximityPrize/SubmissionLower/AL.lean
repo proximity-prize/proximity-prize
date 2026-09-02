@@ -12,11 +12,11 @@ set_option exponentiation.threshold 20000
 def n:ℕ:=262144
 def w:ℕ:=131071
 def prime:ℕ:=2130706433
-def score:ℕ:=6734
-def errors:ℕ:=80102
+def score:ℕ:=6738
+def errors:ℕ:=80150
 def agreements:ℕ:=n - errors
 def gap:ℕ:=agreements - w
-def radiusNumerator:ℕ:=10253183
+def radiusNumerator:ℕ:=10259200
 def radiusDenominator:ℕ:=33554432
 def radius:ℝ≥0:=claimedRadius radiusNumerator radiusDenominator
 structure Profile where
@@ -28,9 +28,9 @@ structure Profile where
 namespace Profile
 def weightedCap (P:Profile):ℕ:=P.multiplicity * agreements
 end Profile
-def profileA:Profile:=⟨42,84439,12,58⟩
-def profileB:Profile:=⟨81,1262,25,112⟩
-def profileC:Profile:=⟨41,41787,12,56⟩
+def profileA:Profile:=⟨44,84442,13,61⟩
+def profileB:Profile:=⟨81,1379,25,112⟩
+def profileC:Profile:=⟨43,41790,13,59⟩
 def profileH:Profile:=⟨42,1261,12,55⟩
 def supportYS:ResidualSupportParameters :=
  RCN198.support 1207 41 10
@@ -72,10 +72,10 @@ def capacity:ℕ:=prime ^ 6 / 2 ^ 128
 def listBudget:ℕ:=1000000000
 def mcaBudget:ℕ:=capacity - listBudget
 theorem basic_values :
-   agreements = 182042 ∧ gap = 50971 ∧
-     profileA.weightedCap = 7645764 ∧
-     profileB.weightedCap = 14745402 ∧
-     profileC.weightedCap = 7463722:=by
+   agreements = 181994 ∧ gap = 50923 ∧
+     profileA.weightedCap = 8007736 ∧
+     profileB.weightedCap = 14741514 ∧
+     profileC.weightedCap = 7825742:=by
  decide
 theorem support_values :
    supportYS.s = 12 ∧ supportYS.ys = 54 ∧ supportYS.total = 1261 ∧
@@ -105,59 +105,59 @@ theorem radius_admissible :
  constructor <;>
    norm_num [radius, claimedRadius, radiusNumerator, radiusDenominator,
      IRSProfile.minRelativeDistance]
-theorem score_root_integer:(2:ℕ) ^ 17 * 598 ^ 50 ≤ 757 ^ 50:=by
+theorem score_root_integer:(2:ℕ) ^ 38 * 521 ^ 100 ≤ 678 ^ 100:=by
  decide
 theorem score_radius_integer :
-   (23301249:ℕ) ^ 128 * (2 ^ 67 * 757) ≤ 598 * 33554432 ^ 128:=by
+   (23295232:ℕ) ^ 128 * (2 ^ 67 * 678) ≤ 521 * 33554432 ^ 128:=by
  decide
 theorem two_rpow_score_fraction_le :
-   (2:ℝ≥0) ^ ((17:ℝ) / 50) ≤ (757:ℝ≥0) / 598:=by
- have hroot:((2:ℝ≥0) ^ (17:ℕ)) ^ ((50:ℝ)⁻¹) ≤
-     (757:ℝ≥0) / 598:=by
-   rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 50)]
+   (2:ℝ≥0) ^ ((38:ℝ) / 100) ≤ (678:ℝ≥0) / 521:=by
+ have hroot:((2:ℝ≥0) ^ (38:ℕ)) ^ ((100:ℝ)⁻¹) ≤
+     (678:ℝ≥0) / 521:=by
+   rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 100)]
    rw [NNReal.rpow_ofNat, div_pow, le_div_iff₀ (by positivity)]
    exact_mod_cast score_root_integer
  calc
-   (2:ℝ≥0) ^ ((17:ℝ) / 50) =
-       ((2:ℝ≥0) ^ (17:ℕ)) ^ ((50:ℝ)⁻¹):=by
+   (2:ℝ≥0) ^ ((38:ℝ) / 100) =
+       ((2:ℝ≥0) ^ (38:ℕ)) ^ ((100:ℝ)⁻¹):=by
      rw [← NNReal.rpow_natCast_mul]
      norm_num [div_eq_mul_inv]
-   _ ≤ (757:ℝ≥0) / 598:=hroot
+   _ ≤ (678:ℝ≥0) / 521:=hroot
 theorem radius_power_rational_bound :
    (1 - radius) ^ IRSProfile.repetitions ≤
-     ((1:ℝ≥0) / 2 ^ (67:ℕ)) * (598 / 757):=by
- have hsub:(1 - radius:ℝ≥0) = 23301249 / 33554432:=by
+     ((1:ℝ≥0) / 2 ^ (67:ℕ)) * (521 / 678):=by
+ have hsub:(1 - radius:ℝ≥0) = 23295232 / 33554432:=by
    have hr:radius ≤ 1:=by
      rw [← NNReal.coe_le_coe]
      norm_num [radius, claimedRadius, radiusNumerator, radiusDenominator]
    apply NNReal.coe_injective
    rw [NNReal.coe_sub hr]
    norm_num [radius, claimedRadius, radiusNumerator, radiusDenominator]
- change (1 - radius) ^ 128 ≤ ((1:ℝ≥0) / 2 ^ (67:ℕ)) * (598 / 757)
+ change (1 - radius) ^ 128 ≤ ((1:ℝ≥0) / 2 ^ (67:ℕ)) * (521 / 678)
  rw [hsub, div_pow, div_mul_div_comm, one_mul,
    div_le_div_iff₀ (by positivity) (by positivity)]
  exact_mod_cast score_radius_integer
 theorem score_target_le :
    (1 - radius) ^ IRSProfile.repetitions ≤ claimedError score:=by
- have hscale:(598:ℝ≥0) / 757 ≤
-     (2:ℝ≥0) ^ (-((17:ℝ) / 50)):=by
+ have hscale:(521:ℝ≥0) / 678 ≤
+     (2:ℝ≥0) ^ (-((38:ℝ) / 100)):=by
    calc
-     (598:ℝ≥0) / 757 = 1 / ((757:ℝ≥0) / 598):=by norm_num
-     _ ≤ 1 / ((2:ℝ≥0) ^ ((17:ℝ) / 50)) :=
+     (521:ℝ≥0) / 678 = 1 / ((678:ℝ≥0) / 521):=by norm_num
+     _ ≤ 1 / ((2:ℝ≥0) ^ ((38:ℝ) / 100)) :=
        one_div_le_one_div_of_le (by positivity) two_rpow_score_fraction_le
-     _ = (2:ℝ≥0) ^ (-((17:ℝ) / 50)):=by
+     _ = (2:ℝ≥0) ^ (-((38:ℝ) / 100)):=by
        rw [one_div, NNReal.rpow_neg]
  calc
    (1 - radius) ^ IRSProfile.repetitions ≤
-       ((1:ℝ≥0) / 2 ^ (67:ℕ)) * (598 / 757) :=
+       ((1:ℝ≥0) / 2 ^ (67:ℕ)) * (521 / 678) :=
      radius_power_rational_bound
    _ ≤ ((1:ℝ≥0) / 2 ^ (67:ℕ)) *
-       (2:ℝ≥0) ^ (-((17:ℝ) / 50)) :=
+       (2:ℝ≥0) ^ (-((38:ℝ) / 100)) :=
      mul_le_mul_of_nonneg_left hscale (by positivity)
    _ = claimedError score:=by
      unfold claimedError score
-     rw [show -((((6734:ℕ):ℝ) / 100)) =
-         -((67:ℕ):ℝ) + -((17:ℝ) / 50) by norm_num,
+     rw [show -((((6738:ℕ):ℝ) / 100)) =
+         -((67:ℕ):ℝ) + -((38:ℝ) / 100) by norm_num,
        NNReal.rpow_add (by norm_num:(2:ℝ≥0) ≠ 0)]
      simp only [NNReal.rpow_neg, NNReal.rpow_natCast, one_div]
 end
