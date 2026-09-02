@@ -17,75 +17,75 @@ local instance:DecidableEq I:=Classical.decEq I
 local instance:CharP K 2130706433:=by
   simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
 def wholeSupport:ResidualSupportParameters:=
-  ⟨19,89,3063,by decide,by decide,by decide,by decide⟩
+  ⟨19,87,2992,by decide,by decide,by decide,by decide⟩
 theorem singularProfile_eq:
-    LocatorFixed.singularProfile 11986194 3063 19=LocatorArithmetic.fixedSingular:=rfl
+    LocatorFixed.singularProfile 11623552 2992 19=LocatorArithmetic.fixedSingular:=rfl
 theorem regular_sum_count
     (H:P4) (hH:H ≠ 0)
-    (hbox:H ∈ RCN174.globalCoefficientBox K 11986194 131071 3063 19)
+    (hbox:H ∈ RCN174.globalCoefficientBox K 11623552 131071 2992 19)
     (hSupport:ResidualSupportData wholeSupport H)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181609 ≤
+    (hagreement:∀ gamma ∈ Gamma,181484 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80535)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80660)
     (qCost:RegularIndex H → ℕ)
-    (hqCost:∀ R,LocatorFactorReplacement.Bad 3063 131072 131073
-      268081069281891082 (regularCumulativeFlag H R) →
+    (hqCost:∀ R,LocatorFactorReplacement.Bad 2992 131072 131073
+      135101317857843592 (regularCumulativeFlag H R) →
       (regularSeeds H selected Gamma R).card ≤ qCost R)
-    (hqRate:∀ R,LocatorFactorReplacement.Bad 3063 131072 131073
-      268081069281891082 (regularCumulativeFlag H R) →
-      3063 * qCost R ≤
-        268081069281891082 * total (regularCumulativeFlag H R)) :
+    (hqRate:∀ R,LocatorFactorReplacement.Bad 2992 131072 131073
+      135101317857843592 (regularCumulativeFlag H R) →
+      2992 * qCost R ≤
+        135101317857843592 * total (regularCumulativeFlag H R)) :
     (∑ R:RegularIndex H, (regularSeeds H selected Gamma R).card) ≤
-      268081069281891082:=by
+      135101317857843592:=by
   have hb:=regularCumulativeFlag_budgets H hH hSupport
-  have ht:(∑ R:RegularIndex H,total (regularCumulativeFlag H R)) ≤ 3063:=by
+  have ht:(∑ R:RegularIndex H,total (regularCumulativeFlag H R)) ≤ 2992:=by
     simpa only [wholeSupport,total] using hb.2.2
   have hstage (R:RegularIndex H) :
       (regularSeeds H selected Gamma R).card ≤
         paddedCost 131072 131073 (regularCumulativeFlag H R) :=
-    LocatorFixed.regular_factor_count 11986194 wholeSupport
+    LocatorFixed.regular_factor_count 11623552 wholeSupport
       (by decide) (by decide) (by decide) (by decide) (by decide)
       H hH hbox hSupport selected Gamma u0 u1 hdegree hagreement hno R
   exact LocatorFactorReplacement.aggregate_of_rate_replacements
     (regularCumulativeFlag H)
     (fun R=> (regularSeeds H selected Gamma R).card) qCost
-    3063 131072 131073 268081069281891082 (by decide)
+    2992 131072 131073 135101317857843592 (by decide)
     ht hstage hqCost hqRate
 theorem fixed_count_le
     (H:P4) (hH:H ≠ 0)
-    (hbox:H ∈ RCN174.globalCoefficientBox K 11986194 131071 3063 19)
+    (hbox:H ∈ RCN174.globalCoefficientBox K 11623552 131071 2992 19)
     (hSupport:ResidualSupportData wholeSupport H)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hsolution:∀ gamma ∈ Gamma,specialization K (selected gamma) gamma H=0)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181609 ≤
+    (hagreement:∀ gamma ∈ Gamma,181484 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80535)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80660)
     (qCost:RegularIndex H → ℕ)
-    (hqCost:∀ R,LocatorFactorReplacement.Bad 3063 131072 131073
-      268081069281891082 (regularCumulativeFlag H R) →
+    (hqCost:∀ R,LocatorFactorReplacement.Bad 2992 131072 131073
+      135101317857843592 (regularCumulativeFlag H R) →
       (regularSeeds H selected Gamma R).card ≤ qCost R)
-    (hqRate:∀ R,LocatorFactorReplacement.Bad 3063 131072 131073
-      268081069281891082 (regularCumulativeFlag H R) →
-      3063 * qCost R ≤
-        268081069281891082 * total (regularCumulativeFlag H R)) :
-    Gamma.card ≤ 268081069281891082 + LocatorArithmetic.fixedSingular.countCap:=by
-  have hg:=LocatorFixed.singular_gates 11986194 3063 19
+    (hqRate:∀ R,LocatorFactorReplacement.Bad 2992 131072 131073
+      135101317857843592 (regularCumulativeFlag H R) →
+      2992 * qCost R ≤
+        135101317857843592 * total (regularCumulativeFlag H R)) :
+    Gamma.card ≤ 135101317857843592 + LocatorArithmetic.fixedSingular.countCap:=by
+  have hg:=LocatorFixed.singular_gates 11623552 2992 19
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
   have hcover:=RCN239.card_le_regular_sum_add_singular
-    (LocatorFixed.profile 11986194 3063 19) H hH hbox
+    (LocatorFixed.profile 11623552 2992 19) H hH hbox
     hg.s_pos hg.s_small hg.w_pos hg.kD hg.algebraic_pos hg.algebraic_small
     selected Gamma hsolution
   have hreg:=regular_sum_count H hH hbox hSupport selected Gamma u0 u1
     hdegree hagreement hno qCost hqCost hqRate
   have hsing:=RCN292.TightParameters.singularSeeds_count_le_countCap
-    (LocatorFixed.singularProfile 11986194 3063 19) H hH hbox
+    (LocatorFixed.singularProfile 11623552 2992 19) H hH hbox
     hg.s_pos hg.s_small hg.w_pos hg.w_small hg.kD hg.algebraic_pos
-    hg.implicit_small hg.algebraic_small hg.mixed_small hg.wa hg.an
+    hg.implicit_small hg.algebraic_small hg.wa hg.an
     selected Gamma (Finset.univ:Finset I) IRSProfile.domain u0 u1
     IRSProfile.domain.injective.injOn
     (by
