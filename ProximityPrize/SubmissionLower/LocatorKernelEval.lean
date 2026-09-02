@@ -1,16 +1,11 @@
 /-
 Proof-preserving kernel evaluation helpers for the locator arithmetic.
 
-Provenance.  The primitive-recursion pattern is adapted from the benchmark
-maintainer's `submission-helpers/KernelEval.lean` (protected-main PR #437).
-The packaging below follows the public submissions of `jieyilong` (PR #451)
-and `i34-9` (PR #456), which expose the same helper under the name
-`LocatorKernelEval`.
-
-The two domain-specific evaluators keep the public `RCN100.coefficientCount`
-and `RCN119.localRankBound` definitions unchanged and expose equality lemmas
-back to those definitions, so nothing downstream needs to trust the fast
-form.
+The primitive-recursion pattern is adapted from the benchmark maintainer's
+`submission-helpers/KernelEval.lean` (protected-main PR #437).  The two
+domain-specific evaluators below keep the public `coefficientCount` and
+`localRankBound` definitions unchanged and expose equality lemmas back to
+those definitions.
 -/
 
 import ProximityPrize.SubmissionLower.L1
@@ -18,9 +13,6 @@ import ProximityPrize.SubmissionLower.L1
 namespace ProximityPrize.SubmissionLower.LocatorKernelEval
 
 open scoped BigOperators
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
 
 /-- `Finset.range` summation represented by primitive recursion on `Nat`. -/
 def sumRange (f : ℕ → ℕ) : ℕ → ℕ

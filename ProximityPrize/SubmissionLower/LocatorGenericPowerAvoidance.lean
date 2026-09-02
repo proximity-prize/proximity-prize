@@ -1,8 +1,3 @@
-/-
-Ported verbatim from the public proximity-prize repository, PR #471,
-commit db5c259 (submission 8aab1b73-c3cb-4cd9-a382-f1ed2c2dadc2, score 6784),
-authored by jieyilong.  Row-independent: no constants of that row appear here.
--/
 import ProximityPrize.SubmissionLower.LocatorIteratedPowerProduct
 
 namespace ProximityPrize.SubmissionLower.LocatorGenericPowerAvoidance

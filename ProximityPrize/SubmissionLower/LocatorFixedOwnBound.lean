@@ -1,0 +1,41 @@
+import ProximityPrize.SubmissionLower.LocatorHybridRealize
+
+/-! Per-factor bounds on the fixed stage: padded always, hybrid when it applies. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorFixedOwnBound
+open ProximityPrize.Benchmark
+open scoped Classical BigOperators
+open RCN174 RCN275 RCN238 RCN243 RCN266 RCN140 RCN130 RCN156 RCN234 RCN159 RCN137 RCN198 RCN095
+open LocatorFactorAggregate LocatorHybridCost LocatorFixed LocatorFixedHybrid
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+set_option maxRecDepth 100000
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:CharP K 2130706433:=by
+  simpa [RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
+
+/-- Both per-factor bounds: padded always, hybrid when it applies. -/
+theorem regular_factor_own_bound
+    (D:ℕ) (P:ResidualSupportParameters)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 13433220)
+    (hS:P.s ≤ 21) (hY:P.ys ≤ 99) (hT:P.total ≤ 3806)
+    (Q:P4) (hQ:Q ≠ 0)
+    (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
+    (HQ:ResidualSupportData P Q)
+    (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
+    (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement:∀ gamma ∈ Gamma,181530 ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80614)
+    (R:RegularIndex Q) (hreal:Realization D) :
+    OwnBound (regularSeeds Q selected Gamma R).card (regularCumulativeFlag Q R):=
+  ⟨regular_factor_count D P hDlow hDhigh hS hY hT Q hQ hbox HQ selected Gamma u0 u1
+      hdegree hagreement hno R,
+    fun hhyb=> regular_factor_count_hybrid D P hDlow hDhigh hS hY hT Q hQ hbox HQ
+      selected Gamma u0 u1 hdegree hagreement hno R hhyb hreal⟩
+end
+end ProximityPrize.SubmissionLower.LocatorFixedOwnBound
