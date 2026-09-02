@@ -1,7 +1,11 @@
-import ProximityPrize.SubmissionLower.LocatorEighthPowerAvoidance
+/-
+Level-generic power avoidance.
 
-/-!
-# Level-generic power avoidance
+Provenance.  This file is adapted from the public submission of `BitWonka`
+(PR #465 in `proximity-prize/proximity-prize`), which builds on an earlier
+revision of this tree, so the `RCN*` and `Locator*` names it refers to are
+unchanged here.
+
 
 `LocatorSecondPowerAvoidance` … `LocatorEighthPowerAvoidance` each unroll one
 extra stage of the same three ingredients.  This file proves all three at an
@@ -19,6 +23,8 @@ are needed.
 * `exists_low_not_dvd_iter` — the level-`n` repeated-projection dichotomy,
   replacing `exists_low_not_dvd_before_*_or_*_low`.
 -/
+
+import ProximityPrize.SubmissionLower.LocatorEighthPowerAvoidance
 
 namespace ProximityPrize.SubmissionLower.LocatorIteratedPowerAvoidance
 

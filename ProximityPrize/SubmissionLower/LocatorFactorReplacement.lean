@@ -242,5 +242,39 @@ theorem aggregate_of_rate_replacements_cost {I:Type*} [Fintype I]
       _ ≤ bound * T:=Nat.mul_le_mul_left bound ht
       _ = T * bound:=by ring
   exact Nat.le_of_mul_le_mul_left hscaled hT
+/-- Ordinary-route badness charged against an arbitrary weight `wgt` instead of
+`total`.  With `wgt := total` this is definitionally `BadCost`. -/
+def BadCostW (T:ℕ) (cost:FlagDegree → ℕ) (bound:ℕ) (wgt:FlagDegree → ℕ)
+    (p:FlagDegree):Prop :=
+  bound * wgt p < T * cost p
+theorem badCostW_total (T:ℕ) (cost:FlagDegree → ℕ) (bound:ℕ) (p:FlagDegree) :
+    BadCostW T cost bound total p ↔ BadCost T cost bound p:=Iff.rfl
+/-- Weighted charging.  Identical to `aggregate_of_rate_replacements_cost`
+except that every factor is charged against `wgt` rather than `total`, so the
+budget `T` may be a weighted cap sum rather than the plain total cap. -/
+theorem aggregate_of_rate_replacements_weighted {I:Type*} [Fintype I]
+    (p:I → FlagDegree) (count q:I → ℕ) (T:ℕ) (cost wgt:FlagDegree → ℕ) (bound:ℕ)
+    (hT:0 < T)
+    (hw:(∑ i, wgt (p i)) ≤ T)
+    (hstage:∀ i, count i ≤ cost (p i))
+    (hrepl:∀ i, BadCostW T cost bound wgt (p i) → count i ≤ q i)
+    (hqrate:∀ i, BadCostW T cost bound wgt (p i) →
+      T * q i ≤ bound * wgt (p i)) :
+    (∑ i, count i) ≤ bound:=by
+  have hone (i:I):T * count i ≤ bound * wgt (p i):=by
+    by_cases hbad:BadCostW T cost bound wgt (p i)
+    · exact (Nat.mul_le_mul_left T (hrepl i hbad)).trans (hqrate i hbad)
+    · have hordinary:T * cost (p i) ≤ bound * wgt (p i):=by
+        unfold BadCostW at hbad
+        omega
+      exact (Nat.mul_le_mul_left T (hstage i)).trans hordinary
+  have hscaled:T * (∑ i, count i) ≤ T * bound:=by
+    calc
+      _ = ∑ i, T * count i:=by rw [Finset.mul_sum]
+      _ ≤ ∑ i, bound * wgt (p i):=Finset.sum_le_sum (fun i _ => hone i)
+      _ = bound * (∑ i, wgt (p i)):=by rw [Finset.mul_sum]
+      _ ≤ bound * T:=Nat.mul_le_mul_left bound hw
+      _ = T * bound:=by ring
+  exact Nat.le_of_mul_le_mul_left hscaled hT
 
 end ProximityPrize.SubmissionLower.LocatorFactorReplacement

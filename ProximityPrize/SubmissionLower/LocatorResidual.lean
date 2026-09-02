@@ -19,7 +19,7 @@ tails, all with linear characteristic gates only. -/
 theorem residual_count_lt
     (Q T:MvPolynomial (Fin 4) K) (hQ:Q ≠ 0) (hrel:IsRelPrime Q T)
     (hbox:Q ∈ globalCoefficientBox K weightedB w LB sB)
-    (hTcaps:T.degreeOf 1 ≤ yC ∧ T.degreeOf 2 ≤ sC ∧ T.degreeOf 3 ≤ LA)
+    (hTcaps:T.degreeOf 1 ≤ yC ∧ T.degreeOf 2 ≤ sC ∧ T.degreeOf 3 ≤ LC)
     (selected:K → Polynomial K) (seeds:Finset K)
     (nodes:Finset I) (x u0 u1:I → K)
     (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
@@ -39,13 +39,13 @@ theorem residual_count_lt
     (by norm_num [residualStage, weightedB, w, yB]) (by norm_num [residualStage, sB])
     (by norm_num [residualStage, LB])
     (by simpa [residualStage, yC] using hTcaps.1) (by simpa [residualStage, sC] using hTcaps.2.1)
-    (by simpa [residualStage, LA] using hTcaps.2.2)
+    (by simpa [residualStage, LC] using hTcaps.2.2)
     (by norm_num [residualStage, sB]) (by norm_num [residualStage, yB])
     (by norm_num [residualStage, sB])
     (by norm_num [residualStage, LB])
-    (by norm_num [residualStage, UnequalParameters.mixedCost, LA, LB, yB, yC, sB, sC])
-    (by norm_num [residualStage, UnequalParameters.mixedCost, LA, LB, yB, yC, sB, sC])
-    (by norm_num [residualStage, UnequalParameters.mixedCost, LA, LB, yB, yC, sB, sC])
+    (by norm_num [residualStage, UnequalParameters.mixedCost, LC, LB, yB, yC, sB, sC])
+    (by norm_num [residualStage, UnequalParameters.mixedCost, LC, LB, yB, yC, sB, sC])
+    (by norm_num [residualStage, UnequalParameters.mixedCost, LC, LB, yB, yC, sB, sC])
     (by norm_num [chainStage, UnequalParameters.gap, agreements, w])
     (by norm_num [chainStage, weightedB, w, yB]) (by norm_num [chainStage, sB])
     (by norm_num [chainStage, LB])
@@ -85,7 +85,7 @@ theorem residual_count_lt
 theorem gcd_residual_count_lt
     [GCDMonoid (MvPolynomial (Fin 4) K)]
     (QA QB:MvPolynomial (Fin 4) K) (hQA:QA ≠ 0) (hQB:QB ≠ 0)
-    (hboxA:QA ∈ RCN100.globalCoefficientBox K weightedC w LA sC)
+    (hboxA:QA ∈ RCN100.globalCoefficientBox K weightedC w LC sC)
     (hboxB:QB ∈ RCN100.globalCoefficientBox K weightedB w LB sB)
     (selected:K → Polynomial K) (seeds:Finset K)
     (nodes:Finset I) (x u0 u1:I → K)
@@ -119,16 +119,16 @@ theorem gcd_residual_count_lt
     QB H Q weightedB w LB sB 0 0 0 hQB hH hQ hboxB hQeq
     (Nat.zero_le _) (Nat.zero_le _) (Nat.zero_le _)
   have hTflag:=quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-    QA H T weightedC w LA sC 0 0 0 hQA hH hT hboxA hTeq
+    QA H T weightedC w LC sC 0 0 0 hQA hH hT hboxA hTeq
     (Nat.zero_le _) (Nat.zero_le _) (Nat.zero_le _)
   have hQbox:Q ∈ globalCoefficientBox K weightedB w LB sB:=
     RCN101.flag_box_to_ordinary K
       weightedB w LB sB Q (by simpa only [Nat.sub_zero] using hQflag)
-  have hTbox:T ∈ globalCoefficientBox K weightedC w LA sC:=
+  have hTbox:T ∈ globalCoefficientBox K weightedC w LC sC:=
     RCN101.flag_box_to_ordinary K
-      weightedC w LA sC T (by simpa only [Nat.sub_zero] using hTflag)
+      weightedC w LC sC T (by simpa only [Nat.sub_zero] using hTflag)
   have hTcaps:=RCN081.degree_bounds_of_mem_box
-    T weightedC w LA sC (by decide) hTbox
+    T weightedC w LC sC (by decide) hTbox
   rw [show (weightedC - 1) / w=yC by decide] at hTcaps
   have hsub:Delta ⊆ seeds:=by
     intro gamma hg

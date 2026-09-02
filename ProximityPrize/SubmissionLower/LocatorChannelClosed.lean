@@ -1,7 +1,10 @@
-import ProximityPrize.SubmissionLower.LocatorNestedProjection
+/-
+Closed form for the channel count.
 
-/-!
-# Closed form for the channel count
+Provenance.  This file is adapted from the public submission of `BitWonka`
+(PR #465 in `proximity-prize/proximity-prize`), which builds on an earlier
+revision of this tree, so the `LocatorLowQuotient` names it refers to are
+unchanged here.
 
 `channelCount T YS S` is a `min T YS + 1` step loop, and every route stage in
 the replacement grid evaluates it; a single grid row costs over a million
@@ -11,7 +14,12 @@ Reflecting the loop (`y ↦ YS - y`) turns the summand into a function of the
 index alone, and the resulting sum splits at `min S YS` into two polynomial
 pieces.  This file proves the closed form, so a stage costs a constant number
 of operations instead of `min T YS + 1`.
+
+The public `LocatorLowQuotient.channelCount` definition is left untouched; the
+fast form is exposed through `channelCount_eq_fast`.
 -/
+
+import ProximityPrize.SubmissionLower.LocatorNestedProjection
 
 namespace ProximityPrize.SubmissionLower.LocatorChannelClosed
 
@@ -110,7 +118,8 @@ theorem six_sum (D S : ℕ) :
         have hstep : 6 * term D S (n + 1) = 3 * (n + 2) * (2 * D + n + 3) := by
           rw [six_term, hk']
           have e : 6 * ((n + 1 + 1) * (D + 1 + (n + 1)))
-              = 3 * (n + 2) * (2 * D + n + 3) + 3 * ((n + 1) * (n + 1 + 1)) := by ring
+              = 3 * (n + 2) * (2 * D + n + 3) + 3 * ((n + 1) * (n + 1 + 1)) := by
+            ring
           rw [e, Nat.add_sub_cancel]
         rw [hstep]
         simp only [fastSix, hk, hk', Nat.sub_self]
@@ -123,7 +132,8 @@ theorem six_sum (D S : ℕ) :
             = 3 * (S + 1) * (2 * D + S + 2 * j + 4) := by
           rw [six_term, hk']
           have e : 6 * ((S + 1) * (D + 1 + (S + j + 1)))
-              = 3 * (S + 1) * (2 * D + S + 2 * j + 4) + 3 * (S * (S + 1)) := by ring
+              = 3 * (S + 1) * (2 * D + S + 2 * j + 4) + 3 * (S * (S + 1)) := by
+            ring
           rw [e, Nat.add_sub_cancel]
         rw [hstep]
         simp only [fastSix, hk, hk']

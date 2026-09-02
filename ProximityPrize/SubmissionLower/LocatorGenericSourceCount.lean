@@ -1,3 +1,8 @@
+/-
+Ported verbatim from the public proximity-prize repository, PR #471,
+commit db5c259 (submission 8aab1b73-c3cb-4cd9-a382-f1ed2c2dadc2, score 6784),
+authored by jieyilong.  Row-independent: no constants of that row appear here.
+-/
 import ProximityPrize.SubmissionLower.LocatorReplacementGridCore
 import ProximityPrize.SubmissionLower.LocatorGenericPowerAvoidance
 import ProximityPrize.SubmissionLower.BF
@@ -124,18 +129,26 @@ theorem factor_bounds_of_cell (H : P4) (F : RegularIndex H)
       middle_le_total (regularCumulativeFlag H F)
   exact ⟨hr, hylo, le_min hyhi hyT, max_le htlo (hylo.trans hysTotal), hthi⟩
 
+/-- Row-agnostic form.  Their version hard-codes the agreement threshold and the
+error count of the 6784 row; we read both off the grid's own `stagePair`, so this
+file never carries a second copy of a constant that `LocatorReplacementGridCore`
+already owns. -/
 theorem count_le_stageCost
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
+    (agree : ℕ) (src : Source)
+    (hpair : ∀ b j, (stagePair src b j).a = agree)
+    (hpairE : ∀ b j, (stagePair src b j).errors = 262144 - agree)
+    (F : RegularIndex H) (c : Cell)
+    (hcell : InCell (regularCumulativeFlag H F) c)
+    (j : ℕ)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181550 ≤
+    (hagreement : ∀ gamma ∈ Gamma, agree ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80594)
-    (F : RegularIndex H) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (src : Source) (j : ℕ) (Q : P4) (_hQ : Q ≠ 0)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 (262144 - agree))
+    (Q : P4) (_hQ : Q ≠ 0)
     (hQT : wt residualTotalWeights Q ≤ stageT src (box c) j)
     (hQY : wt residualYSWeights Q ≤ stageY src (box c) j)
     (hQR : wt residualSWeights Q ≤ stageR src (box c) j)
@@ -173,8 +186,8 @@ theorem count_le_stageCost
     (by norm_num [stagePair]) (by norm_num [stagePair])
     (by norm_num [stagePair]) (by norm_num [stagePair])
     (by simpa only [stagePair] using hdegree)
-    (by simpa only [stagePair] using hagreement)
-    (by simpa only [stagePair, UnequalParameters.errors] using hno)
+    (by simp only [hpair]; exact hagreement)
+    (by simp only [hpairE]; exact hno)
     hQzero
   simpa only [stageCost] using hcount
 
