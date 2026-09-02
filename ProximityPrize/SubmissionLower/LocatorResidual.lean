@@ -119,16 +119,16 @@ theorem gcd_residual_count_lt
     QB H Q weightedB w LB sB 0 0 0 hQB hH hQ hboxB hQeq
     (Nat.zero_le _) (Nat.zero_le _) (Nat.zero_le _)
   have hTflag:=quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-    QA H T weightedC w LC sC 0 0 0 hQA hH hT hboxA hTeq
+    QA H T weightedC w LA sC 0 0 0 hQA hH hT hboxA hTeq
     (Nat.zero_le _) (Nat.zero_le _) (Nat.zero_le _)
   have hQbox:Q ∈ globalCoefficientBox K weightedB w LB sB:=
     RCN101.flag_box_to_ordinary K
       weightedB w LB sB Q (by simpa only [Nat.sub_zero] using hQflag)
-  have hTbox:T ∈ globalCoefficientBox K weightedC w LC sC:=
+  have hTbox:T ∈ globalCoefficientBox K weightedC w LA sC:=
     RCN101.flag_box_to_ordinary K
-      weightedC w LC sC T (by simpa only [Nat.sub_zero] using hTflag)
+      weightedC w LA sC T (by simpa only [Nat.sub_zero] using hTflag)
   have hTcaps:=RCN081.degree_bounds_of_mem_box
-    T weightedC w LC sC (by decide) hTbox
+    T weightedC w LA sC (by decide) hTbox
   rw [show (weightedC - 1) / w=yC by decide] at hTcaps
   have hsub:Delta ⊆ seeds:=by
     intro gamma hg

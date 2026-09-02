@@ -1,9 +1,7 @@
-/-
-Closed form for the block input count.
+import ProximityPrize.SubmissionLower.BC
 
-Provenance.  This file is adapted from the public submission of `BitWonka`
-(PR #465 in `proximity-prize/proximity-prize`), which builds on an earlier
-revision of this tree, so the `RCN119` names it refers to are unchanged here.
+/-!
+# Closed form for the block input count
 
 `blockInputCount M L s` is a nested sum over `(M+1) * (s+1)` terms, so
 `localRankBound m L s` costs `O(m^2 * s)` kernel steps.  At the multiplicities
@@ -13,13 +11,7 @@ memory before it finishes.
 Whenever `M + s ≤ L` no truncation happens in `L + 1 - i - j`, and the sum is a
 pair of Gauss sums.  This file proves the resulting closed form, so the count
 becomes a constant-time expression and `localRankBound` becomes `O(m)`.
-
-The public `RCN119.localRankBound` definition is left untouched; the fast form
-is exposed through the equality lemma `localRankBound_eq_fast`, so nothing
-downstream has to trust it.
 -/
-
-import ProximityPrize.SubmissionLower.BC
 
 namespace ProximityPrize.SubmissionLower.LocatorRankClosed
 
