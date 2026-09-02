@@ -21,7 +21,6 @@ noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 2000000
-set_option Elab.async false
 
 abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
@@ -124,11 +123,11 @@ theorem regularSeeds_count_le_chosen
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181530 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181520 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80614)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80624)
     (F : RegularIndex H) (hF : F.1 ≠ 0)
     (c : Cell) (hcell : InCell (regularCumulativeFlag H F) c)
     (hv : Valid c)
@@ -157,64 +156,157 @@ theorem regularSeeds_count_le_chosen
       hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hC.2
     simpa only [chosenCost, ho, hA, hAux, hC, if_pos, if_false] using h
   have hroutes := hroutes.resolve_left hC
-  by_cases hH1 : H1Fits (box c)
-  · have hfit := helperDepthH1_spec (box c) hH1
-    have hk := (helperDepthH1_bounds (box c) hH1).2
-    have h := LocatorGenericSourceCountC2.sourceH1_count
-      (helperDepthH1 (box c)) hk u0 u1 H selected Gamma hdegree
+  by_cases hS2 : S2Fits (box c)
+  · have hfit := helperDepthS2_spec (box c) hS2
+    have hk := (helperDepthS2_bounds (box c) hS2).2
+    have h := LocatorGenericSourceCountC2.sourceS2_count
+      (helperDepthS2 (box c)) hk u0 u1 H selected Gamma hdegree
       hagreement hno F hF c hcell hfit
-    simpa only [chosenCost, ho, hA, hAux, hC, hH1, if_pos, if_false] using h
-  have hroutes := hroutes.resolve_left hH1
-  by_cases hH2 : H2Fits (box c)
-  · have hfit := helperDepthH2_spec (box c) hH2
-    have hk := (helperDepthH2_bounds (box c) hH2).2
-    have h := LocatorGenericSourceCountC2.sourceH2_count
-      (helperDepthH2 (box c)) hk u0 u1 H selected Gamma hdegree
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hS2
+  by_cases hS3 : S3Fits (box c)
+  · have hfit := helperDepthS3_spec (box c) hS3
+    have hk := (helperDepthS3_bounds (box c) hS3).2
+    have h := LocatorGenericSourceCountC2.sourceS3_count
+      (helperDepthS3 (box c)) hk u0 u1 H selected Gamma hdegree
       hagreement hno F hF c hcell hfit
-    simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2, if_pos, if_false] using h
-  have hroutes := hroutes.resolve_left hH2
-  by_cases hH3 : H3Fits (box c)
-  · have hfit := helperDepthH3_spec (box c) hH3
-    have hk := (helperDepthH3_bounds (box c) hH3).2
-    have h := LocatorGenericSourceCountC2.sourceH3_count
-      (helperDepthH3 (box c)) hk u0 u1 H selected Gamma hdegree
-      hagreement hno F hF c hcell hfit
-    simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2, hH3, if_pos, if_false] using h
-  have hroutes := hroutes.resolve_left hH3
-  by_cases hCb : CbigFits (box c)
-  · have hfit := helperDepthCbig_spec (box c) hCb
-    have hk := (helperDepthCbig_bounds (box c) hCb).2
-    have h := LocatorGenericSourceCountC2.sourceCbig_count
-      (helperDepthCbig (box c)) hk u0 u1 H selected Gamma hdegree
-      hagreement hno F hF c hcell hfit
-    simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2, hH3, hCb, if_pos,
-      if_false] using h
-  have hroutes := hroutes.resolve_left hCb
-  by_cases hX : H3XFits (box c)
-  · have hfit := helperDepthH3X_spec (box c) hX
-    have hk := (helperDepthH3X_bounds (box c) hX).2
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hS3
+  by_cases hH3X : H3XFits (box c)
+  · have hfit := helperDepthH3X_spec (box c) hH3X
+    have hk := (helperDepthH3X_bounds (box c) hH3X).2
     have h := LocatorGenericSourceCountC2.sourceH3X_count
       (helperDepthH3X (box c)) hk u0 u1 H selected Gamma hdegree
       hagreement hno F hF c hcell hfit
-    simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2, hH3, hCb, hX, if_pos,
-      if_false] using h
-  have hroutes := hroutes.resolve_left hX
-  by_cases hT2 : T20kFits (box c)
-  · have hfit := helperDepthT20k_spec (box c) hT2
-    have hk := (helperDepthT20k_bounds (box c) hT2).2
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hH3X
+  by_cases hH4 : H4Fits (box c)
+  · have hfit := helperDepthH4_spec (box c) hH4
+    have hk := (helperDepthH4_bounds (box c) hH4).2
+    have h := LocatorGenericSourceCountC2.sourceH4_count
+      (helperDepthH4 (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hH4
+  by_cases hT10k : T10kFits (box c)
+  · have hfit := helperDepthT10k_spec (box c) hT10k
+    have hk := (helperDepthT10k_bounds (box c) hT10k).2
+    have h := LocatorGenericSourceCountC2.sourceT10k_count
+      (helperDepthT10k (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hT10k
+  by_cases hT15k : T15kFits (box c)
+  · have hfit := helperDepthT15k_spec (box c) hT15k
+    have hk := (helperDepthT15k_bounds (box c) hT15k).2
+    have h := LocatorGenericSourceCountC2.sourceT15k_count
+      (helperDepthT15k (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hT15k
+  by_cases hT20k : T20kFits (box c)
+  · have hfit := helperDepthT20k_spec (box c) hT20k
+    have hk := (helperDepthT20k_bounds (box c) hT20k).2
     have h := LocatorGenericSourceCountC2.sourceT20k_count
       (helperDepthT20k (box c)) hk u0 u1 H selected Gamma hdegree
       hagreement hno F hF c hcell hfit
-    simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2, hH3, hCb, hX, hT2, if_pos,
-      if_false] using h
-  have hT3 := hroutes.resolve_left hT2
-  have hfit := helperDepthT30k_spec (box c) hT3
-  have hk := (helperDepthT30k_bounds (box c) hT3).2
-  have h := LocatorGenericSourceCountC2.sourceT30k_count
-    (helperDepthT30k (box c)) hk u0 u1 H selected Gamma hdegree
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hT20k
+  by_cases hT30k : T30kFits (box c)
+  · have hfit := helperDepthT30k_spec (box c) hT30k
+    have hk := (helperDepthT30k_bounds (box c) hT30k).2
+    have h := LocatorGenericSourceCountC2.sourceT30k_count
+      (helperDepthT30k (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, hT30k, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hT30k
+  by_cases hL1 : L1Fits (box c)
+  · have hfit := helperDepthL1_spec (box c) hL1
+    have hk := (helperDepthL1_bounds (box c) hL1).2
+    have h := LocatorGenericSourceCountC2.sourceL1_count
+      (helperDepthL1 (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, hT30k, hL1, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hL1
+  by_cases hL2 : L2Fits (box c)
+  · have hfit := helperDepthL2_spec (box c) hL2
+    have hk := (helperDepthL2_bounds (box c) hL2).2
+    have h := LocatorGenericSourceCountC2.sourceL2_count
+      (helperDepthL2 (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, hT30k, hL1, hL2, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hL2
+  by_cases hL3 : L3Fits (box c)
+  · have hfit := helperDepthL3_spec (box c) hL3
+    have hk := (helperDepthL3_bounds (box c) hL3).2
+    have h := LocatorGenericSourceCountC2.sourceL3_count
+      (helperDepthL3 (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, hT30k, hL1, hL2, hL3, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hL3
+  by_cases hL4 : L4Fits (box c)
+  · have hfit := helperDepthL4_spec (box c) hL4
+    have hk := (helperDepthL4_bounds (box c) hL4).2
+    have h := LocatorGenericSourceCountC2.sourceL4_count
+      (helperDepthL4 (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, hT30k, hL1, hL2, hL3, hL4, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hL4
+  by_cases hL5 : L5Fits (box c)
+  · have hfit := helperDepthL5_spec (box c) hL5
+    have hk := (helperDepthL5_bounds (box c) hL5).2
+    have h := LocatorGenericSourceCountC2.sourceL5_count
+      (helperDepthL5 (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, hT30k, hL1, hL2, hL3, hL4, hL5, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hL5
+  by_cases hL6 : L6Fits (box c)
+  · have hfit := helperDepthL6_spec (box c) hL6
+    have hk := (helperDepthL6_bounds (box c) hL6).2
+    have h := LocatorGenericSourceCountC2.sourceL6_count
+      (helperDepthL6 (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, hT30k, hL1, hL2, hL3, hL4, hL5, hL6, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hL6
+  by_cases hM1 : M1Fits (box c)
+  · have hfit := helperDepthM1_spec (box c) hM1
+    have hk := (helperDepthM1_bounds (box c) hM1).2
+    have h := LocatorGenericSourceCountC2.sourceM1_count
+      (helperDepthM1 (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, hT30k, hL1, hL2, hL3, hL4, hL5, hL6, hM1, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hM1
+  by_cases hM3 : M3Fits (box c)
+  · have hfit := helperDepthM3_spec (box c) hM3
+    have hk := (helperDepthM3_bounds (box c) hM3).2
+    have h := LocatorGenericSourceCountC2.sourceM3_count
+      (helperDepthM3 (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, hT30k, hL1, hL2, hL3, hL4, hL5, hL6, hM1, hM3, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hM3
+  by_cases hN1 : N1Fits (box c)
+  · have hfit := helperDepthN1_spec (box c) hN1
+    have hk := (helperDepthN1_bounds (box c) hN1).2
+    have h := LocatorGenericSourceCountC2.sourceN1_count
+      (helperDepthN1 (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, hT30k, hL1, hL2, hL3, hL4, hL5, hL6, hM1, hM3, hN1, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hN1
+  by_cases hN3 : N3Fits (box c)
+  · have hfit := helperDepthN3_spec (box c) hN3
+    have hk := (helperDepthN3_bounds (box c) hN3).2
+    have h := LocatorGenericSourceCountC2.sourceN3_count
+      (helperDepthN3 (box c)) hk u0 u1 H selected Gamma hdegree
+      hagreement hno F hF c hcell hfit
+    simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, hT30k, hL1, hL2, hL3, hL4, hL5, hL6, hM1, hM3, hN1, hN3, if_pos, if_false] using h
+  have hroutes := hroutes.resolve_left hN3
+  have hN4 := hroutes
+  have hfit := helperDepthN4_spec (box c) hN4
+  have hk := (helperDepthN4_bounds (box c) hN4).2
+  have h := LocatorGenericSourceCountC2.sourceN4_count
+    (helperDepthN4 (box c)) hk u0 u1 H selected Gamma hdegree
     hagreement hno F hF c hcell hfit
-  simpa only [chosenCost, ho, hA, hAux, hC, hH1, hH2, hH3, hCb, hX, hT2, if_pos,
-    if_false] using h
+  simpa only [chosenCost, ho, hA, hAux, hC, hS2, hS3, hH3X, hH4, hT10k, hT15k, hT20k, hT30k, hL1, hL2, hL3, hL4, hL5, hL6, hM1, hM3, hN1, hN3, if_pos, if_false] using h
 
 end
 

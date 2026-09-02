@@ -71,16 +71,16 @@ local instance:NormalizedGCDMonoid P4:=
   UniqueFactorizationMonoid.toNormalizedGCDMonoid P4
 local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
 abbrev TCapKernel (u0 u1:I → K) :=
-  ConstraintKernel (K:=K) 25777260 131071 3809 44 142 IRSProfile.domain u0 u1
+  ConstraintKernel (K:=K) 26320400 131071 3923 45 145 IRSProfile.domain u0 u1
 abbrev BKernel (u0 u1:I → K) :=
-  ConstraintKernel (K:=K) 14885460 131071 9600 24 82 IRSProfile.domain u0 u1
-theorem gateTCap:Fintype.card I * localRankBound 142 3809 44 <
-    coefficientCount 25777260 131071 3809 44:=by
+  ConstraintKernel (K:=K) 14521600 131071 16000 23 80 IRSProfile.domain u0 u1
+theorem gateTCap:Fintype.card I * localRankBound 145 3923 45 <
+    coefficientCount 26320400 131071 3923 45:=by
   rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
   have h:=LocatorArithmetic.kernelTCap_nullity
   omega
-theorem gateB:Fintype.card I * localRankBound 82 9600 24 <
-    coefficientCount 14885460 131071 9600 24:=by
+theorem gateB:Fintype.card I * localRankBound 80 16000 23 <
+    coefficientCount 14521600 131071 16000 23:=by
   rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
   have h:=LocatorArithmetic.kernelB_nullity
   omega
@@ -113,24 +113,24 @@ structure SelectedPair (u0 u1:I → K) where
   QB:P4
   QA_ne:QA ≠ 0
   QB_ne:QB ≠ 0
-  QA_flag:QA ∈ globalCoefficientBox K 25777260 131071 3809 44
-  QB_flag:QB ∈ globalCoefficientBox K 14885460 131071 9600 24
+  QA_flag:QA ∈ globalCoefficientBox K 26320400 131071 3923 45
+  QB_flag:QB ∈ globalCoefficientBox K 14521600 131071 16000 23
   common_divides_TCap:∀ v:TCapKernel u0 u1,
-    gcd QA QB ∣ reconstruct K 25777260 131071 3809 44 v.1
+    gcd QA QB ∣ reconstruct K 26320400 131071 3923 45 v.1
   common_divides_B:∀ v:BKernel u0 u1,
-    gcd QA QB ∣ reconstruct K 14885460 131071 9600 24 v.1
+    gcd QA QB ∣ reconstruct K 14521600 131071 16000 23 v.1
   universal_vanishing:
     ∀ (gamma:K) (P:Polynomial K) (points:Finset I),
-      P.natDegree ≤ 131071 → 181530 ≤ points.card →
+      P.natDegree ≤ 131071 → 181520 ≤ points.card →
       (∀ i ∈ points,P.eval (IRSProfile.domain i) =u0 i + gamma * u1 i) →
       RCN319.specialization K P gamma QA=0 ∧
         RCN319.specialization K P gamma QB=0
 theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
   classical
   obtain ⟨thetaT,htT,hkT⟩:=exists_nonzero_kernel_array (I:=I)
-    K 25777260 131071 3809 44 142 IRSProfile.domain u0 u1 gateTCap
+    K 26320400 131071 3923 45 145 IRSProfile.domain u0 u1 gateTCap
   obtain ⟨thetaB,htB,hkB⟩:=exists_nonzero_kernel_array (I:=I)
-    K 14885460 131071 9600 24 82 IRSProfile.domain u0 u1 gateB
+    K 14521600 131071 16000 23 80 IRSProfile.domain u0 u1 gateB
   let vT0:TCapKernel u0 u1:=⟨thetaT,LinearMap.mem_ker.mpr hkT⟩
   let vB0:BKernel u0 u1:=⟨thetaB,LinearMap.mem_ker.mpr hkB⟩
   letI:Nontrivial (TCapKernel u0 u1):=⟨⟨vT0,0,by
@@ -153,10 +153,10 @@ theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
   let HB:=commonGCD (BKernel u0 u1) bB
   have hHT:HT ≠ 0:=commonGCD_ne_zero (TCapKernel u0 u1) bT
   have hHB:HB ≠ 0:=commonGCD_ne_zero (BKernel u0 u1) bB
-  have hHBbox:HB ∈ globalCoefficientBox K 14885460 131071 9600 24:=
+  have hHBbox:HB ∈ globalCoefficientBox K 14521600 131071 16000 23:=
     commonGCD_mem_flagBox (BKernel u0 u1) bB
   have hcardHB:(normalizedFactorSet HB).card < ENat.card K:=
-    normalizedFactorSet_card_lt_field_of_mem_flagBox HB 14885460 9600 24
+    normalizedFactorSet_card_lt_field_of_mem_flagBox HB 14521600 16000 23
       hHB hHBbox (by norm_num)
   obtain ⟨vA,hvA,hcopA⟩:=exists_common_quotient_isRelPrime
     (TCapKernel u0 u1) bT hHT HB hHB hcardHB
@@ -170,12 +170,12 @@ theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
     apply hvA
     apply submoduleReconstructLinear_injective (TCapKernel u0 u1)
     simpa only [map_zero,QA] using hz
-  have hQAbox:QA ∈ globalCoefficientBox K 25777260 131071 3809 44:=by
+  have hQAbox:QA ∈ globalCoefficientBox K 26320400 131071 3923 45:=by
     dsimp only [QA]
     rw [submoduleReconstructLinear_apply]
-    exact reconstruct_mem_globalCoefficientBox K 25777260 131071 3809 44 vA.1
+    exact reconstruct_mem_globalCoefficientBox K 26320400 131071 3923 45 vA.1
   have hcardQA:(normalizedFactorSet QA).card < ENat.card K:=
-    normalizedFactorSet_card_lt_field_of_mem_flagBox QA 25777260 3809 44
+    normalizedFactorSet_card_lt_field_of_mem_flagBox QA 26320400 3923 45
       hQA hQAbox (by norm_num)
   obtain ⟨vB,hvB,hcopB⟩:=exists_common_quotient_isRelPrime
     (BKernel u0 u1) bB hHB QA hQA hcardQA
@@ -189,10 +189,10 @@ theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
     apply hvB
     apply submoduleReconstructLinear_injective (BKernel u0 u1)
     simpa only [map_zero,QB] using hz
-  have hQBbox:QB ∈ globalCoefficientBox K 14885460 131071 9600 24:=by
+  have hQBbox:QB ∈ globalCoefficientBox K 14521600 131071 16000 23:=by
     dsimp only [QB]
     rw [submoduleReconstructLinear_apply]
-    exact reconstruct_mem_globalCoefficientBox K 14885460 131071 9600 24 vB.1
+    exact reconstruct_mem_globalCoefficientBox K 14521600 131071 16000 23 vB.1
   have hAssocA:Associated (gcd QA HB) (gcd HT HB):=by
     rw [hQAeq]
     exact gcd_mul_left_plain_associated HT qA HB hcopA
@@ -218,12 +218,12 @@ theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
     · dsimp only [QA]
       rw [submoduleReconstructLinear_apply]
       exact specialization_eq_zero_of_agreements K
-        25777260 131071 3809 44 142 181530 IRSProfile.domain u0 u1
+        26320400 131071 3923 45 145 181520 IRSProfile.domain u0 u1
         vA.1 vA.2 (by decide) (by decide) P gamma points hP hcard hvalues
     · dsimp only [QB]
       rw [submoduleReconstructLinear_apply]
       exact specialization_eq_zero_of_agreements K
-        14885460 131071 9600 24 82 181530 IRSProfile.domain u0 u1
+        14521600 131071 16000 23 80 181520 IRSProfile.domain u0 u1
         vB.1 vB.2 (by decide) (by decide) P gamma points hP hcard hvalues
 end
 end ProximityPrize.SubmissionLower.LocatorSelection
