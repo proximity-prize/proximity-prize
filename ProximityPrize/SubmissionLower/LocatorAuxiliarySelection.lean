@@ -75,6 +75,35 @@ theorem full_kernel_divisor_small {D w L Lmax s m:ℕ} (hL:L ≤ Lmax)
   have h:=hdiv (zeroExtendConstraintKernel hL nodes u0 u1 a)
   simpa only [reconstruct_zeroExtendConstraintKernel] using h
 end Generic
-
+section Selected
+open ProximityPrize.Benchmark
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+abbrev P4:=MvPolynomial (Fin 4) K
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
+theorem common_divides_A61_small {u0 u1:I → K}
+    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 230000) :
+    ∀ a:ConstraintKernel (K:=K) 11621696 131071 L 19 64
+      IRSProfile.domain u0 u1,
+      gcd S.QA S.QB ∣ reconstruct K 11621696 131071 L 19 a.1:=by
+  exact full_kernel_divisor_small (E:=K) (Lmax:=230000) hL
+    IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_A
+theorem common_divides_A72_small {u0 u1:I → K}
+    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 230000) :
+    ∀ a:ConstraintKernel (K:=K) 13074408 131071 L 21 72
+      IRSProfile.domain u0 u1,
+      gcd S.QA S.QB ∣ reconstruct K 13074408 131071 L 21 a.1:=by
+  exact full_kernel_divisor_small (E:=K) (Lmax:=230000) hL
+    IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_Aux
+theorem common_divides_A150_small {u0 u1:I → K}
+    (S:LocatorSelection.SelectedPair u0 u1) (L:ℕ) (hL:L ≤ 230000) :
+    ∀ a:ConstraintKernel (K:=K) 43762949 131071 L 71 241
+      IRSProfile.domain u0 u1,
+      gcd S.QA S.QB ∣ reconstruct K 43762949 131071 L 71 a.1:=by
+  exact full_kernel_divisor_small (E:=K) (Lmax:=230000) hL
+    IRSProfile.domain u0 u1 (gcd S.QA S.QB) S.common_divides_C
+end Selected
 end
 end ProximityPrize.SubmissionLower.LocatorAuxiliarySelection

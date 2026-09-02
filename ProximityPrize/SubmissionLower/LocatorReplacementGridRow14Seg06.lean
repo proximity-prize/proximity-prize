@@ -1,0 +1,20 @@
+import ProximityPrize.SubmissionLower.LocatorReplacementGridRow14Seg05
+
+namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
+
+set_option maxRecDepth 100000
+set_option maxHeartbeats 30000000
+
+private theorem receipt_row_14_y_12_fixed :
+    FixedYReceipt 14 ⟨12, by decide⟩ 0 24 := by decide +kernel
+
+theorem receipt_row_14_y_12 : RowBandReceipt 14 12 13 :=
+  fixedYReceipt_to_rowBand 14 ⟨12, by decide⟩ receipt_row_14_y_12_fixed
+
+private theorem receipt_row_14_y_13_fixed :
+    FixedYReceipt 14 ⟨13, by decide⟩ 0 24 := by decide +kernel
+
+theorem receipt_row_14_y_13 : RowBandReceipt 14 13 14 :=
+  fixedYReceipt_to_rowBand 14 ⟨13, by decide⟩ receipt_row_14_y_13_fixed
+
+end ProximityPrize.SubmissionLower.LocatorReplacementGridData

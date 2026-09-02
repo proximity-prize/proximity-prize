@@ -52,9 +52,6 @@ theorem meet_singularSeeds_tight_gap_bound
        TightParameters.implicitYCap,TightParameters.kappa])
      (by norm_num [meetTightProfile,meetProfile,prime6656,
        TightParameters.algebraicCap,TightParameters.kappa])
-     (by norm_num [meetTightProfile,meetProfile,prime6656,
-       TightParameters.implicitYCap,TightParameters.algebraicCap,
-       TightParameters.kappa])
      (by norm_num [meetTightProfile,meetProfile])
      (by norm_num [meetTightProfile,meetProfile])
      selected Gamma nodes x u0 u1 hinj

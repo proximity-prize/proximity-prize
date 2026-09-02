@@ -53,7 +53,6 @@ theorem asymmetric_stage_count_lt_of_regular_factors
    (hj:1 ≤ S.algebraicCap)
    (hjYSmall:S.implicitYCap < p)
    (hjZSmall:S.algebraicCap < p)
-   (hmixedSmall:2*S.implicitYCap*S.algebraicCap < p)
    (hwa:S.w < S.a) (han:S.a ≤ S.n)
    (hbox:Q∈globalCoefficientBox K S.D S.w S.L S.s)
    (hgap:0 < P.gap) (_hgapEq:S.gap=P.gap)
@@ -89,7 +88,7 @@ theorem asymmetric_stage_count_lt_of_regular_factors
    P.regular_count_le _ hgap hregularScaled
  have hsingularOld:=
    RCN292.TightParameters.singularSeeds_count_le_countCap
-     S Q hQ hbox hs hsmall hw hchar hDw hj hjYSmall hjZSmall hmixedSmall
+     S Q hQ hbox hs hsmall hw hchar hDw hj hjYSmall hjZSmall
      hwa han selected Gamma nodes x u0 u1 hinj hnodes hdegree hagreement
      hnoPencil
  have hsingular:
@@ -178,8 +177,6 @@ theorem firstResidualCell_count_lt
      TightParameters.kappa])
    (by norm_num [firstResidualQ2,prime,TightParameters.algebraicCap,
      TightParameters.kappa])
-   (by norm_num [firstResidualQ2,prime,TightParameters.implicitYCap,
-     TightParameters.algebraicCap,TightParameters.kappa])
    (by norm_num [firstResidualQ2])
    (by norm_num [firstResidualQ2])
    hQbox
@@ -293,8 +290,6 @@ theorem secondResidualCell_count_lt
      TightParameters.kappa])
    (by norm_num [secondResidualGcd12,prime,TightParameters.algebraicCap,
      TightParameters.kappa])
-   (by norm_num [secondResidualGcd12,prime,TightParameters.implicitYCap,
-     TightParameters.algebraicCap,TightParameters.kappa])
    (by norm_num [secondResidualGcd12])
    (by norm_num [secondResidualGcd12])
    hQbox

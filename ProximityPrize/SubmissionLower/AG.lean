@@ -1,6 +1,7 @@
 import ProximityPrize.SubmissionLower.AK
 import ProximityPrize.SubmissionLower.F1
 import ProximityPrize.SubmissionLower.BW
+import ProximityPrize.SubmissionLower.ImplicitPairLinearR
 namespace ProximityPrize.SubmissionLower.RCN292
 open scoped Classical BigOperators
 open RCN286 RCN169 RCN167 RCN290 RCN293 RCN174 RCN319 RCN081 RCN238 RCN243 RCN291 RCN318 RCN172 RCN294
@@ -69,7 +70,6 @@ theorem implicitSeeds_pair_bound_of_profile
    (hDw:P.w < P.kappa*P.D)
    (hjYSmall:P.implicitYCap < p)
    (hjZSmall:P.algebraicCap < p)
-   (hmixedSmall:2*P.implicitYCap*P.algebraicCap < p)
    (hwa:P.w < P.a) (han:P.a ≤ P.n)
    (selected:K → Polynomial K) (Gamma:Finset K)
    (nodes:Finset Iota) (x u0 u1:Iota → K)
@@ -90,18 +90,21 @@ theorem implicitSeeds_pair_bound_of_profile
      globalCoefficientBox K (P.kappa*P.D) P.w P.algebraicCap 0:=by
    simpa [RCN318.TightParameters.kappa,
      RCN318.TightParameters.algebraicCap] using hJboxRaw
- obtain ⟨_hA,hG,hGR,hAbox,hGbox,hproper⟩:=
+ obtain ⟨hA,hG,hGR,hAbox,hGbox,hproper⟩:=
    implicitPair_data (singularAuxiliary Q) hJ
      (P.kappa*P.D) P.w P.algebraicCap hw hDw hJbox q.1 q.2
  have hsub:=implicitSeeds_subset Q selected Gamma q
- have hpair:=implicit_pair_seed_bound q.1.1 q.1.2 hG hGR hproper
+ have hpair:=RCN374.implicit_pair_seed_bound_linearR
+   q.1.1 q.1.2 hA hG hGR hproper
    (P.kappa*P.D) P.w P.implicitYCap P.algebraicCap
    p P.n P.a P.errors hAbox hGbox rfl selected
    (implicitSeeds Q selected Gamma q) nodes x u0 u1 hinj hnodes
-   hw hchar hwa han hjYSmall hjZSmall hmixedSmall
+   hw hchar hwa han
    (fun gamma hgamma => hdegree gamma (hsub hgamma))
    (fun gamma hgamma =>
      (implicitSeeds_solution Q selected Gamma q gamma hgamma).1)
+   (fun gamma hgamma =>
+     (implicitSeeds_solution Q selected Gamma q gamma hgamma).2.1)
    (fun gamma hgamma =>
      (implicitSeeds_solution Q selected Gamma q gamma hgamma).2.2.1)
    (fun gamma hgamma =>
@@ -122,7 +125,6 @@ theorem singularSeeds_tight_gap_bound
    (hj:1 ≤ P.algebraicCap)
    (hjYSmall:P.implicitYCap < p)
    (hjZSmall:P.algebraicCap < p)
-   (hmixedSmall:2*P.implicitYCap*P.algebraicCap < p)
    (hwa:P.w < P.a) (han:P.a ≤ P.n)
    (selected:K → Polynomial K) (Gamma:Finset K)
    (nodes:Finset Iota) (x u0 u1:Iota → K)
@@ -142,7 +144,7 @@ theorem singularSeeds_tight_gap_bound
    (exceptionalSeeds (singularAuxiliary Q) Gamma selected).card
    hcaps.1 hcaps.2.1 hcaps.2.2
    (P.implicitSeeds_pair_bound_of_profile Q hQ hbox hs hsSmall hw hchar
-     hDw hjYSmall hjZSmall hmixedSmall hwa han selected Gamma nodes x u0 u1
+     hDw hjYSmall hjZSmall hwa han selected Gamma nodes x u0 u1
      hinj hnodes hdegree hagreement hnoPencil)
    hexc
  exact (Nat.mul_le_mul_right P.gap
@@ -157,7 +159,6 @@ theorem singularSeeds_count_le_countCap
    (hj:1 ≤ P.algebraicCap)
    (hjYSmall:P.implicitYCap < p)
    (hjZSmall:P.algebraicCap < p)
-   (hmixedSmall:2*P.implicitYCap*P.algebraicCap < p)
    (hwa:P.w < P.a) (han:P.a ≤ P.n)
    (selected:K → Polynomial K) (Gamma:Finset K)
    (nodes:Finset Iota) (x u0 u1:Iota → K)
@@ -172,7 +173,7 @@ theorem singularSeeds_count_le_countCap
    simpa [RCN318.TightParameters.gap] using
      Nat.sub_pos_of_lt hwa)
  exact P.singularSeeds_tight_gap_bound Q hQ hbox hs hsSmall hw hchar hDw
-   hj hjYSmall hjZSmall hmixedSmall hwa han selected Gamma nodes x u0 u1
+   hj hjYSmall hjZSmall hwa han selected Gamma nodes x u0 u1
    hinj hnodes hdegree hagreement hnoPencil
 end TightParameters
 def firstResidualQ2:TightParameters:=

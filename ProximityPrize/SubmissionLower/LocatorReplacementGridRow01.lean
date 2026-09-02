@@ -3,7 +3,7 @@ import ProximityPrize.SubmissionLower.LocatorReplacementGridCore
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
 set_option maxRecDepth 100000
-set_option maxHeartbeats 400000000
+set_option maxHeartbeats 30000000
 
 private theorem receipt_row_01_fast : FastRowReceipt 1 := by decide +kernel
 
