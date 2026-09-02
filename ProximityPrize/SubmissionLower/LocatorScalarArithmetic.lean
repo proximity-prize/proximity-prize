@@ -7,15 +7,15 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80555
+def errors:ℕ:=80565
 def agreements:ℕ:=n - errors
 def gap:ℕ:=agreements - w
 def prime:ℕ:=2130706433
-def multiplicity:ℕ:=67
-def yTotalCap:ℕ:=92
+def multiplicity:ℕ:=68
+def yTotalCap:ℕ:=93
 def slopeCap:ℕ:=20
 def weightedCap:ℕ:=multiplicity * agreements
-def listBudget:ℕ:=2471663034
+def listBudget:ℕ:=2499023615
 def capY:ℕ:=1 + 2*w*yTotalCap
 def capR:ℕ:=w*(2*slopeCap - 1)
 def regularListNumerator:ℕ:=(n-w)*(capY*slopeCap + capR*yTotalCap)
@@ -25,29 +25,29 @@ private def coefficientRow (i:ℕ):ℕ:=
  ∑ j ∈ Finset.range (slopeCap + 1),
    min 1 (yTotalCap + 1 - i - j) * (weightedCap - w*i - (w-1)*j)
 private theorem coefficient_0:
- (∑ i ∈ Finset.range 10,coefficientRow i) =2155848135:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow i) =2193839025:=by decide
 private theorem coefficient_10:
- (∑ i ∈ Finset.range 10,coefficientRow (10+i)) =1880599035:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (10+i)) =1918589925:=by decide
 private theorem coefficient_20:
- (∑ i ∈ Finset.range 10,coefficientRow (20+i)) =1605349935:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (20+i)) =1643340825:=by decide
 private theorem coefficient_30:
- (∑ i ∈ Finset.range 10,coefficientRow (30+i)) =1330100835:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (30+i)) =1368091725:=by decide
 private theorem coefficient_40:
- (∑ i ∈ Finset.range 10,coefficientRow (40+i)) =1054851735:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (40+i)) =1092842625:=by decide
 private theorem coefficient_50:
- (∑ i ∈ Finset.range 10,coefficientRow (50+i)) =779602635:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (50+i)) =817593525:=by decide
 private theorem coefficient_60:
- (∑ i ∈ Finset.range 10,coefficientRow (60+i)) =504353535:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (60+i)) =542344425:=by decide
 private theorem coefficient_70:
- (∑ i ∈ Finset.range 10,coefficientRow (70+i)) =237091827:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (70+i)) =271121767:=by decide
 private theorem coefficient_80:
- (∑ i ∈ Finset.range 10,coefficientRow (80+i)) =56360055:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (80+i)) =73315095:=by decide
 private theorem coefficient_90:
- (∑ i ∈ Finset.range 3,coefficientRow (90+i)) =1171874:=by decide
+ (∑ i ∈ Finset.range 4,coefficientRow (90+i)) =2888410:=by decide
 theorem coefficient_count_exact:
-   coefficientCount weightedCap w yTotalCap slopeCap=9605329601:=by
- change (∑ i ∈ Finset.range 93,coefficientRow i) =_
- rw [Finset.sum_range_add coefficientRow 90 3,
+   coefficientCount weightedCap w yTotalCap slopeCap=9923967347:=by
+ change (∑ i ∈ Finset.range 94,coefficientRow i) =_
+ rw [Finset.sum_range_add coefficientRow 90 4,
    Finset.sum_range_add coefficientRow 80 10,
    Finset.sum_range_add coefficientRow 70 10,
    Finset.sum_range_add coefficientRow 60 10,
@@ -73,17 +73,17 @@ private theorem rank_24:
 private theorem rank_32:
  (∑ i ∈ Finset.range 8,rankRow (32+i)) =6132:=by decide
 private theorem rank_40:
- (∑ i ∈ Finset.range 8,rankRow (40+i)) =7448:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (40+i)) =7476:=by decide
 private theorem rank_48:
- (∑ i ∈ Finset.range 8,rankRow (48+i)) =7108:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (48+i)) =7440:=by decide
 private theorem rank_56:
- (∑ i ∈ Finset.range 8,rankRow (56+i)) =4356:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (56+i)) =4880:=by decide
 private theorem rank_64:
- (∑ i ∈ Finset.range 3,rankRow (64+i)) =506:=by decide
+ (∑ i ∈ Finset.range 4,rankRow (64+i)) =840:=by decide
 theorem local_rank_exact:
-   localRankBound multiplicity yTotalCap slopeCap=36638:=by
- change (∑ i ∈ Finset.range 67,rankRow i) =_
- rw [Finset.sum_range_add rankRow 64 3,
+   localRankBound multiplicity yTotalCap slopeCap=37856:=by
+ change (∑ i ∈ Finset.range 68,rankRow i) =_
+ rw [Finset.sum_range_add rankRow 64 4,
    Finset.sum_range_add rankRow 56 8,
    Finset.sum_range_add rankRow 48 8,
    Finset.sum_range_add rankRow 40 8,
