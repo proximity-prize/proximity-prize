@@ -1,16 +1,16 @@
 /-
-HYBRID SECOND-SURFACE BOUND FOR A REGULAR FACTOR — C2 / 6783 ROW.
+HYBRID SECOND-SURFACE BOUND FOR A REGULAR FACTOR — C2 / 6786 ROW.
 
-Mirror of `LocatorFixedHybrid` against the C2 cost and the 6783 constants:
+Mirror of `LocatorFixedHybrid` against the C2 cost and the 6786 constants:
 
-  agreements 181540, errors 80604, gap 50469, weightedCap D ≤ 13433960,
-  caps slope ≤ 21, ys ≤ 99, total ≤ 3697, prime 2130706433.
+  agreements 181530, errors 80614, gap 50459, weightedCap D ≤ 14885460,
+  caps slope ≤ 24, ys ≤ 113, total ≤ 3808, prime 2130706433.
 
 The hybrid branch additionally requires `3 ≤ padS p`, which is what lets the
 coordinate be the bare rational flag; the moving factor is `131076 = w + 5`.
 
 The identity branch goes through `LocatorHybridIdentityC2.identity_le_hybridC2`
-(self-contained in the 6783 row constants) and the two gates restated at the new
+(self-contained in the 6786 row constants) and the two gates restated at the new
 caps in `LocatorHybridGatesC2`; the proper-first-tail branch goes through the
 C2 provider.
 -/
@@ -97,9 +97,9 @@ def ProviderHypC2 (D : ℕ) (p : FlagDegree) : Prop :=
   letI : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
   ∀ {Gamma : Finset K} {flag : FlagDegree}
     (S : ResidualStage (polynomialEmbedding K) Gamma IRSProfile.domain
-      2130706433 80604 flag 131071 (cellSupport (padT p) (padY p) (padS p))),
-    S.nodes.card = 181540 + 80604 →
-    (∀ gamma ∈ Gamma, 181540 ≤ (S.agreementFiber gamma).card) →
+      2130706433 80614 flag 131071 (cellSupport (padT p) (padY p) (padS p))),
+    S.nodes.card = 181530 + 80614 →
+    (∀ gamma ∈ Gamma, 181530 ≤ (S.agreementFiber gamma).card) →
     S.F ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p) →
     (flag.all ≤ padS p ∧ flag.yz + flag.all ≤ padY p ∧
       flag.zOnly + flag.yz + flag.all ≤ padT p) →
@@ -116,28 +116,28 @@ def ProviderHypC2 (D : ℕ) (p : FlagDegree) : Prop :=
 /-- The realization: C2 providers exist on every admissible hybrid cell.  Note
 the extra `3 ≤ padS p`, the C2 branch condition. -/
 def RealizationC2 (D : ℕ) : Prop :=
-  ∀ p : FlagDegree, padS p ≤ 21 → padY p ≤ 99 → padT p ≤ 3697 →
+  ∀ p : FlagDegree, padS p ≤ 24 → padY p ≤ 113 → padT p ≤ 3808 →
     3 ≤ padS p → padS p + 2 ≤ padY p → ProviderHypC2 D p
 
 theorem hybridStageBoundC2 (D : ℕ) (p : FlagDegree)
-    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 13433960)
-    (hS : padS p ≤ 21) (hY : padY p ≤ 99) (hT : padT p ≤ 3697)
+    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 14885460)
+    (hS : padS p ≤ 24) (hY : padY p ≤ 113) (hT : padT p ≤ 3808)
     (hS3 : 3 ≤ padS p) (hhyb : padS p + 2 ≤ padY p)
     (hprov : ProviderHypC2 D p)
     {Gamma : Finset K} {flag : FlagDegree}
     (S : ResidualStage (polynomialEmbedding K) Gamma IRSProfile.domain
-      2130706433 80604 flag 131071 (cellSupport (padT p) (padY p) (padS p)))
-    (hnodes : S.nodes.card = 181540 + 80604)
-    (hagreement : ∀ gamma ∈ Gamma, 181540 ≤ (S.agreementFiber gamma).card)
+      2130706433 80614 flag 131071 (cellSupport (padT p) (padY p) (padS p)))
+    (hnodes : S.nodes.card = 181530 + 80614)
+    (hagreement : ∀ gamma ∈ Gamma, 181530 ≤ (S.agreementFiber gamma).card)
     (hbox : S.F ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p))
     (hflag : flag.all ≤ padS p ∧ flag.yz + flag.all ≤ padY p ∧
       flag.zOnly + flag.yz + flag.all ≤ padT p) :
     Gamma.card ≤ hybridBoundC2 flag p := by
   letI : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
   have hps := pad_sums p
-  have hS' : padSlope p + 2 ≤ 21 := by omega
-  have hY' : padB p + padSlope p + 3 ≤ 99 := by omega
-  have hT' : padA p + padB p + padSlope p + 3 ≤ 3697 := by omega
+  have hS' : padSlope p + 2 ≤ 24 := by omega
+  have hY' : padB p + padSlope p + 3 ≤ 113 := by omega
+  have hT' : padA p + padB p + padSlope p + 3 ≤ 3808 := by omega
   have hb1 : 1 ≤ padB p := by omega
   have hDchar : D < 2130706433 := by omega
   have hflag' : flag.all ≤ padSlope p + 2 ∧
@@ -155,7 +155,7 @@ theorem hybridStageBoundC2 (D : ℕ) (p : FlagDegree)
         (padA p + padB p + padSlope p + 3) (padSlope p + 2) := by
       rw [hps.2.2, hps.1]; exact hbox
     have hprovider := actual_identityCurveCountProvider
-      (a := padA p) (b := padB p) (s := padSlope p) S 181540 hnodes hagreement
+      (a := padA p) (b := padB p) (s := padSlope p) S 181530 hnodes hagreement
       (by norm_num) hTailNumerator D (padA p + padB p + padSlope p + 3)
       (padSlope p + 2)
       (by norm_num) hDlow hDchar hbox' hflagChar
@@ -167,24 +167,24 @@ theorem hybridStageBoundC2 (D : ℕ) (p : FlagDegree)
       have hy : 0 < S.G.degreeOf 1 := S.y_dependent
       have hdeg := degreeOf_le_flag_total S.G flag S.flag_support 1
       omega
-    have hinc := identity_surface_seed_bound S 181540
+    have hinc := identity_surface_seed_bound S 181530
       (identityCurveDegree flag (padA p) (padB p) (padSlope p) 131071)
       hprovider hagreement
       (by norm_num) (by rw [hnodes]; norm_num) hpositive
-    have hscaled : Gamma.card * 50469 ≤
-        50469 * hybridCostABSC2 flag (padA p) (padB p) (padSlope p) := by
+    have hscaled : Gamma.card * 50459 ≤
+        50459 * hybridCostABSC2 flag (padA p) (padB p) (padSlope p) := by
       calc
-        Gamma.card * 50469 = Gamma.card * (181540 - 131071) := rfl
-        _ ≤ (S.nodes.card - 131071) * (80604 + 1) *
+        Gamma.card * 50459 = Gamma.card * (181530 - 131071) := rfl
+        _ ≤ (S.nodes.card - 131071) * (80614 + 1) *
             identityCurveDegree flag (padA p) (padB p) (padSlope p) 131071 :=
           hinc
-        _ = (262144 - 131071) * (80604 + 1) *
+        _ = (262144 - 131071) * (80614 + 1) *
             identityCurveDegree flag (padA p) (padB p) (padSlope p) 131071 := by
           rw [hnodes]
-        _ ≤ 50469 * hybridCostABSC2 flag (padA p) (padB p) (padSlope p) :=
+        _ ≤ 50459 * hybridCostABSC2 flag (padA p) (padB p) (padSlope p) :=
           identity_le_hybridC2 flag (padA p) (padB p) (padSlope p) hb1
     rw [hybridBoundC2_eq_abs]
-    apply Nat.le_of_mul_le_mul_right ?_ (by norm_num : 0 < 50469)
+    apply Nat.le_of_mul_le_mul_right ?_ (by norm_num : 0 < 50459)
     simpa only [Nat.mul_comm] using hscaled
   · obtain ⟨P⟩ := hprov S hnodes hagreement hbox hflag hTail
     have h := stage_card_le_divisorBound S P
@@ -194,17 +194,17 @@ theorem hybridStageBoundC2 (D : ℕ) (p : FlagDegree)
 
 theorem regular_factor_count_hybridC2
     (D : ℕ) (P : ResidualSupportParameters)
-    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 13433960)
-    (hS : P.s ≤ 21) (hY : P.ys ≤ 99) (hT : P.total ≤ 3697)
+    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 14885460)
+    (hS : P.s ≤ 24) (hY : P.ys ≤ 113) (hT : P.total ≤ 3808)
     (Q : P4) (hQ : Q ≠ 0)
     (hbox : Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ : ResidualSupportData P Q)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181540 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181530 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80604)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80614)
     (R : RegularIndex Q)
     (hhyb : HybridAppliesC2 (regularCumulativeFlag Q R))
     (hreal : RealizationC2 D) :
@@ -227,16 +227,16 @@ theorem regular_factor_count_hybridC2
   have hps := pad_sums p
   have hRbox : R.1 ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p) := by
     rw [← hps.2.2, ← hps.1]; exact hRbox0
-  have h1 : p.all ≤ 21 := hRwhole.s_weight.trans hS
-  have h2 : middle p ≤ 99 := by
+  have h1 : p.all ≤ 24 := hRwhole.s_weight.trans hS
+  have h2 : middle p ≤ 113 := by
     simpa only [hp, middle, regularCumulativeFlag, hc.2.1] using
       hRwhole.ys_weight.trans hY
-  have h3 : total p ≤ 3697 := by
+  have h3 : total p ≤ 3808 := by
     simpa only [hp, total, regularCumulativeFlag, hc.2.2] using
       hRwhole.total_weight.trans hT
-  have hpS : padS p ≤ 21 := max_le h1 (by decide)
-  have hpY : padY p ≤ 99 := max_le h2 (by omega)
-  have hpT : padT p ≤ 3697 := max_le h3 (by omega)
+  have hpS : padS p ≤ 24 := max_le h1 (by decide)
+  have hpY : padY p ≤ 113 := max_le h2 (by omega)
+  have hpT : padT p ≤ 3808 := max_le h3 (by omega)
   have hp3 : 3 ≤ p.all := hhyb.1
   have hpSeq : padS p = p.all := max_eq_left (by omega : 2 ≤ p.all)
   have hpYeq : padY p = middle p :=
@@ -263,12 +263,12 @@ theorem regular_factor_count_hybridC2
         (regularSeeds Q selected Gamma R) g ⊆ Gamma :=
       (geometricSeeds_subset K R.1 selected _ g).trans
         (regularSeeds_subset Q selected Gamma R)
-    have hnodes : S.nodes.card = 181540 + 80604 := by
+    have hnodes : S.nodes.card = 181530 + 80614 := by
       change (Finset.univ : Finset I).card = _
       norm_num [I, IRSProfile.Index]
     have hag : ∀ gamma ∈ geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g,
-        181540 ≤ (S.agreementFiber gamma).card := by
+        181530 ≤ (S.agreementFiber gamma).card := by
       intro gamma hgamma
       simpa [S, S0, ResidualStage.agreementFiber, ResidualStage.Agrees,
         reflagResidualStage, regularGeometricResidualStageOfSupport,

@@ -1,15 +1,15 @@
 /-
-THE IDENTITY BRANCH IS DOMINATED BY THE C2 HYBRID COST — 6785 ROW.
+THE IDENTITY BRANCH IS DOMINATED BY THE C2 HYBRID COST — 6786 ROW.
 
-Self-contained in its row constants (errors 80604, agreements 181540,
-gap 50469), so it does not inherit whatever `LocatorFixedStage` currently
+Self-contained in its row constants (errors 80614, agreements 181530,
+gap 50459), so it does not inherit whatever `LocatorFixedStage` currently
 carries.
 
 C2 tails: first tail `reducedABS` (the reduced agreement flag at `w + 1`,
 equal to `paddedTail p 131072`), coordinate `rationalABS`, moving factor
 `131076 = w + 5`.
 
-The slack polynomials were regenerated for errors = 80604 against the C2 cost
+The slack polynomials were regenerated for errors = 80614 against the C2 cost
 and are subtraction-free, so `identity_le_hybridC2` is `Nat.le_add_right`.
 -/
 import ProximityPrize.SubmissionLower.LocatorHybridCostC2
@@ -23,13 +23,13 @@ open LocatorHybridCostC1 LocatorHybridCostC2 RCN198
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
-/-! ### Row constants for 6785 -/
+/-! ### Row constants for 6786 -/
 
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 80604
-def agreements : ℕ := 181540
-def gap : ℕ := 50469
+def errors : ℕ := 80614
+def agreements : ℕ := 181530
+def gap : ℕ := 50459
 
 theorem row_arithmetic : n - errors = agreements ∧ agreements - w = gap := by
   refine ⟨?_, ?_⟩ <;> norm_num [n, errors, agreements, w, gap]
@@ -90,34 +90,34 @@ theorem hybridCostC2_eq_abs (p : FlagDegree) (flag : FlagDegree) :
   rw [h.1, h.2.1, h.2.2.1, h.2.2.2]
   rfl
 
-/-! ### Slack polynomials for `errors = 80604` (regenerated for the C2 cost) -/
+/-! ### Slack polynomials for `errors = 80614` (regenerated for the C2 cost) -/
 
 def hybridSlackZC2 (b s : ℕ) : ℕ :=
-  11453275233045108 +
-    11970784141210212 * s +
-    2601218604673320 * s ^ 2 +
-    6069613714585908 * b +
-    5202437209346640 * b * s
+  11449667299296768 +
+    11967519855964052 * s +
+    2600703195490520 * s ^ 2 +
+    6068411072624588 * b +
+    5201406390981040 * b * s
 
 def hybridSlackYZC2 (a b s : ℕ) : ℕ :=
-  7298861775722973 +
-    9201175169662122 * s +
-    2601218604673320 * s ^ 2 +
-    6069613714585908 * b +
-    5202437209346640 * b * s +
-    6069613714585908 * a +
-    5202437209346640 * a * s
+  7294738438034763 +
+    9197567281789382 * s +
+    2600703195490520 * s ^ 2 +
+    6068411072624588 * b +
+    5201406390981040 * b * s +
+    6068411072624588 * a +
+    5201406390981040 * a * s
 
 def hybridSlackAllC2 (a b s : ℕ) : ℕ :=
-  5926691493379113 +
-    9201175169662122 * s +
-    2601218604673320 * s ^ 2 +
-    9201175169662122 * b +
-    5202437209346640 * b * s +
-    2601218604673320 * b ^ 2 +
-    11970784141210212 * a +
-    5202437209346640 * a * s +
-    5202437209346640 * a * b
+  5920162901915103 +
+    9197567281789382 * s +
+    2600703195490520 * s ^ 2 +
+    9197567281789382 * b +
+    5201406390981040 * b * s +
+    2600703195490520 * b ^ 2 +
+    11967519855964052 * a +
+    5201406390981040 * a * s +
+    5201406390981040 * a * b
 
 def hybridSlackC2 (flag : FlagDegree) (a b s : ℕ) : ℕ :=
   flag.zOnly * hybridSlackZC2 b s + flag.yz * hybridSlackYZC2 a b s +

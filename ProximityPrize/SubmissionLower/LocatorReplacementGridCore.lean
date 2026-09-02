@@ -24,27 +24,32 @@ abbrev selectedDegree : ℕ := 131071
 /-- Field characteristic. -/
 abbrev prime : ℕ := 2130706433
 /-- Agreement threshold, shared by every stage and helper pair. -/
-abbrev agreements : ℕ := 181540
+abbrev agreements : ℕ := 181530
 /-- Error budget, forced as `262144 - agreements`. -/
-abbrev errors : ℕ := 80604
+abbrev errors : ℕ := 80614
 /-- Contact-band width, `agreements - selectedDegree + 1`. -/
-abbrev delta : ℕ := 50470
-abbrev bound : ℕ := 265877011283886055
-abbrev totalCap : ℕ := 3697
+abbrev delta : ℕ := 50460
+abbrev bound : ℕ := 270344084085901085
+abbrev totalCap : ℕ := 3808
+/-- Caps of the factors that divide every A reconstruction (the narrow grid). -/
 abbrev ysCap : ℕ := 99
-abbrev slopeCap : ℕ := 21
+abbrev slopeCap : ℕ := 22
+/-- Caps of the whole common divisor, from the B box: every factor lies below
+them, and the weighted budget is charged against them. -/
+abbrev wholeSlopeCap : ℕ := 24
+abbrev wholeYsCap : ℕ := 113
 
-/-- Nonnegative linear weights for the aggregate charge.  Final for the 6785
-row: chosen by the pointwise sweep over all valid point boxes with the real
-arm set, which put `(0, 5)` at +4.020% against +3.818% for `(3, 0)`.  These
-are the values the receipts were generated at. -/
+/-- Nonnegative linear weights for the aggregate charge.  Row 6786: the
+weighted-sum sweep of the exact model closes the grid at `(0, 12)` (the last
+hard unit cells sit at slope `8`, ys `36`, and a heavier slope charge moves the
+budget there).  These are the values the receipts were generated at. -/
 abbrev wY : ℕ := 0
-abbrev wS : ℕ := 5
+abbrev wS : ℕ := 12
 
-/-- Total weight budget.  The fixed support caps bound the three sums
-`∑ total ≤ totalCap`, `∑ middle ≤ ysCap` and `∑ all ≤ slopeCap`, so the
-weighted sum over the factors is bounded by this. -/
-abbrev capSum : ℕ := totalCap + wY * ysCap + wS * slopeCap
+/-- Total weight budget.  The whole-divisor support caps bound the three sums
+`∑ total ≤ totalCap`, `∑ middle ≤ wholeYsCap` and `∑ all ≤ wholeSlopeCap`, so
+the weighted sum over the factors is bounded by this. -/
+abbrev capSum : ℕ := totalCap + wY * wholeYsCap + wS * wholeSlopeCap
 
 /-- Maximum admissible repeated-projection depth for the accepted source-C
 route, which is the only route driven by `routeDepth`. -/
@@ -52,13 +57,13 @@ abbrev routeCap : ℕ := 14
 
 /-- Maximum admissible depth for any route, including the helper sources whose
 windows run deeper than the C route. -/
-abbrev depthCap : ℕ := 30
+abbrev depthCap : ℕ := 34
 
 /-- Grid dimensions.  A cap change means the matching band count changes here:
 `yBands * 4` must cover `ysCap` and `tBands * 128` must cover `totalCap`. -/
-abbrev slopeRows : ℕ := 21
+abbrev slopeRows : ℕ := 22
 abbrev yBands : ℕ := 25
-abbrev tBands : ℕ := 29
+abbrev tBands : ℕ := 30
 
 /-- A rectangular cumulative-degree box for one irreducible factor. -/
 structure Box where
@@ -103,15 +108,18 @@ structure Source where
   gap : ℕ
   deriving DecidableEq
 
-def sourceA : Source := ⟨130000, 102, 21, 141959952266⟩
-def sourceAux : Source := ⟨130000, 102, 22, 446532549318⟩
-def sourceC : Source := ⟨130000, 554, 120, 1653647654042340⟩
+def sourceA : Source := ⟨130000, 103, 22, 351572585294⟩
+def sourceAux : Source := ⟨130000, 103, 23, 396080340478⟩
+def sourceC : Source := ⟨130000, 553, 120, 1622595225055178⟩
 
-/-- Nullities of the three helper kernels.  Placeholders carrying jieyilong's
-values for the 6785 row. -/
-abbrev gapH1 : ℕ := 3070668257066075
-abbrev gapH2 : ℕ := 27032429632837297
-abbrev gapH3 : ℕ := 41542667661965689
+/-- Nullities of the helper kernels at row 6786 (`LocatorHelperArithmeticGeneric`). -/
+abbrev gapH1 : ℕ := 3012828511088025
+abbrev gapH2 : ℕ := 26566017386262297
+abbrev gapH3 : ℕ := 40851803364289489
+abbrev gapH3X : ℕ := 240339549990589489
+abbrev gapCbig : ℕ := 13064567220685178
+abbrev gapT20k : ℕ := 440799821601495
+abbrev gapT30k : ℕ := 845803391069760
 
 /-- Larger auxiliary sources used only by the local divisor-or-helper switch.
 Each is searched over its own short depth window, deliberately separate from
@@ -119,6 +127,12 @@ the accepted source-C route. -/
 def sourceH1 : Source := ⟨350000, 491, 105, gapH1⟩
 def sourceH2 : Source := ⟨1000000, 692, 150, gapH2⟩
 def sourceH3 : Source := ⟨350000, 1121, 243, gapH3⟩
+/-- The long H3 box (`L = 2000000`), the long C box (`L = 1000000`), and two
+short total-exhaustion sources (`L = 20000`, `30000`, slope `170`). -/
+def sourceH3X : Source := ⟨2000000, 1121, 243, gapH3X⟩
+def sourceCbig : Source := ⟨1000000, 553, 120, gapCbig⟩
+def sourceT20k : Source := ⟨20000, 775, 170, gapT20k⟩
+def sourceT30k : Source := ⟨30000, 789, 170, gapT30k⟩
 
 def stageT (src : Source) (b : Box) (j : ℕ) : ℕ := src.length - j * b.factorT
 def stageY (src : Source) (b : Box) (j : ℕ) : ℕ := src.y - j * b.ylo
@@ -343,6 +357,30 @@ theorem fastHelperFits_iff (src : Source) (k : ℕ) (b : Box) :
     FastHelperFits src k b ↔ HelperFits src k b := by
   simp only [FastHelperFits, HelperFits, fastRouteFits_iff]
 
+/-- The A, Aux and C sources are no longer selected kernels: like the helpers
+they are consumed through the per-factor divisor-or-helper switch, so each of
+their arms carries the direct-pair charge as well as the route. -/
+def AFits (b : Box) : Prop := HelperFits sourceA 1 b
+def AuxFits (b : Box) : Prop := HelperFits sourceAux 1 b
+def CHFits (b : Box) : Prop :=
+  CFits b ∧ HelperFits sourceC (routeDepth sourceC b) b
+def FastAFits (b : Box) : Prop := FastHelperFits sourceA 1 b
+def FastAuxFits (b : Box) : Prop := FastHelperFits sourceAux 1 b
+def FastCHFits (b : Box) : Prop :=
+  CFits b ∧ FastHelperFits sourceC (routeDepth sourceC b) b
+
+instance (b : Box) : Decidable (AFits b) := by unfold AFits; infer_instance
+instance (b : Box) : Decidable (AuxFits b) := by unfold AuxFits; infer_instance
+instance (b : Box) : Decidable (CHFits b) := by unfold CHFits; infer_instance
+instance (b : Box) : Decidable (FastAFits b) := by unfold FastAFits; infer_instance
+instance (b : Box) : Decidable (FastAuxFits b) := by unfold FastAuxFits; infer_instance
+instance (b : Box) : Decidable (FastCHFits b) := by unfold FastCHFits; infer_instance
+
+theorem fastAFits_iff (b : Box) : FastAFits b ↔ AFits b := fastHelperFits_iff _ _ _
+theorem fastAuxFits_iff (b : Box) : FastAuxFits b ↔ AuxFits b := fastHelperFits_iff _ _ _
+theorem fastCHFits_iff (b : Box) : FastCHFits b ↔ CHFits b := by
+  simp only [FastCHFits, CHFits, fastHelperFits_iff]
+
 /-- Scan one short explicit depth window and accept the first depth at which
 the helper arm passes both its route and its direct-pair charge.  Unlike
 `routeDepthAux` there is no terminal-coprimality gate: the window is chosen
@@ -388,14 +426,26 @@ theorem helperDepthAux_bounds (src : Source) (b : Box) (n : ℕ) :
 def helperDepthH1 (b : Box) : ℕ := helperDepthAux sourceH1 b 10 4
 def helperDepthH2 (b : Box) : ℕ := helperDepthAux sourceH2 b 14 5
 def helperDepthH3 (b : Box) : ℕ := helperDepthAux sourceH3 b 26 5
+def helperDepthCbig (b : Box) : ℕ := helperDepthAux sourceCbig b 8 10
+def helperDepthH3X (b : Box) : ℕ := helperDepthAux sourceH3X b 26 8
+def helperDepthT20k (b : Box) : ℕ := helperDepthAux sourceT20k b 1 10
+def helperDepthT30k (b : Box) : ℕ := helperDepthAux sourceT30k b 1 12
 
 def H1Fits (b : Box) : Prop := helperDepthH1 b ≠ 0
 def H2Fits (b : Box) : Prop := helperDepthH2 b ≠ 0
 def H3Fits (b : Box) : Prop := helperDepthH3 b ≠ 0
+def CbigFits (b : Box) : Prop := helperDepthCbig b ≠ 0
+def H3XFits (b : Box) : Prop := helperDepthH3X b ≠ 0
+def T20kFits (b : Box) : Prop := helperDepthT20k b ≠ 0
+def T30kFits (b : Box) : Prop := helperDepthT30k b ≠ 0
 
 instance (b : Box) : Decidable (H1Fits b) := by unfold H1Fits; infer_instance
 instance (b : Box) : Decidable (H2Fits b) := by unfold H2Fits; infer_instance
 instance (b : Box) : Decidable (H3Fits b) := by unfold H3Fits; infer_instance
+instance (b : Box) : Decidable (CbigFits b) := by unfold CbigFits; infer_instance
+instance (b : Box) : Decidable (H3XFits b) := by unfold H3XFits; infer_instance
+instance (b : Box) : Decidable (T20kFits b) := by unfold T20kFits; infer_instance
+instance (b : Box) : Decidable (T30kFits b) := by unfold T30kFits; infer_instance
 
 theorem helperDepthH1_spec (b : Box) (h : H1Fits b) :
     HelperFits sourceH1 (helperDepthH1 b) b :=
@@ -430,22 +480,68 @@ theorem helperDepthH3_bounds (b : Box) (h : H3Fits b) :
     helperDepthAux sourceH3 b 26 5 ≤ 30
   omega
 
+theorem helperDepthCbig_spec (b : Box) (h : CbigFits b) :
+    HelperFits sourceCbig (helperDepthCbig b) b :=
+  helperDepthAux_spec sourceCbig b 10 8 h
+
+theorem helperDepthH3X_spec (b : Box) (h : H3XFits b) :
+    HelperFits sourceH3X (helperDepthH3X b) b :=
+  helperDepthAux_spec sourceH3X b 8 26 h
+
+theorem helperDepthT20k_spec (b : Box) (h : T20kFits b) :
+    HelperFits sourceT20k (helperDepthT20k b) b :=
+  helperDepthAux_spec sourceT20k b 10 1 h
+
+theorem helperDepthT30k_spec (b : Box) (h : T30kFits b) :
+    HelperFits sourceT30k (helperDepthT30k b) b :=
+  helperDepthAux_spec sourceT30k b 12 1 h
+
+theorem helperDepthCbig_bounds (b : Box) (h : CbigFits b) :
+    8 ≤ helperDepthCbig b ∧ helperDepthCbig b ≤ 17 := by
+  have hb := helperDepthAux_bounds sourceCbig b 10 8 h
+  change 8 ≤ helperDepthAux sourceCbig b 8 10 ∧
+    helperDepthAux sourceCbig b 8 10 ≤ 17
+  omega
+
+theorem helperDepthH3X_bounds (b : Box) (h : H3XFits b) :
+    26 ≤ helperDepthH3X b ∧ helperDepthH3X b ≤ 33 := by
+  have hb := helperDepthAux_bounds sourceH3X b 8 26 h
+  change 26 ≤ helperDepthAux sourceH3X b 26 8 ∧
+    helperDepthAux sourceH3X b 26 8 ≤ 33
+  omega
+
+theorem helperDepthT20k_bounds (b : Box) (h : T20kFits b) :
+    1 ≤ helperDepthT20k b ∧ helperDepthT20k b ≤ 10 := by
+  have hb := helperDepthAux_bounds sourceT20k b 10 1 h
+  change 1 ≤ helperDepthAux sourceT20k b 1 10 ∧
+    helperDepthAux sourceT20k b 1 10 ≤ 10
+  omega
+
+theorem helperDepthT30k_bounds (b : Box) (h : T30kFits b) :
+    1 ≤ helperDepthT30k b ∧ helperDepthT30k b ≤ 12 := by
+  have hb := helperDepthAux_bounds sourceT30k b 12 1 h
+  change 1 ≤ helperDepthAux sourceT30k b 1 12 ∧
+    helperDepthAux sourceT30k b 1 12 ≤ 12
+  omega
+
 def Fits (b : Box) : Prop :=
-  b.ordinaryFits ∨ RouteFits sourceA 1 b ∨ RouteFits sourceAux 1 b ∨
-    CFits b ∨ H1Fits b ∨ H2Fits b ∨ H3Fits b
+  b.ordinaryFits ∨ AFits b ∨ AuxFits b ∨ CHFits b ∨
+    H1Fits b ∨ H2Fits b ∨ H3Fits b ∨ CbigFits b ∨ H3XFits b ∨
+    T20kFits b ∨ T30kFits b
 
 instance (b : Box) : Decidable (Fits b) := by unfold Fits; infer_instance
 
 def FastFits (b : Box) : Prop :=
-  b.ordinaryFits ∨ FastRouteFits sourceAux 1 b ∨
-    FastRouteFits sourceA 1 b ∨ CFits b ∨ H1Fits b ∨ H2Fits b ∨ H3Fits b
+  b.ordinaryFits ∨ FastAFits b ∨ FastAuxFits b ∨ FastCHFits b ∨
+    H1Fits b ∨ H2Fits b ∨ H3Fits b ∨ CbigFits b ∨ H3XFits b ∨
+    T20kFits b ∨ T30kFits b
 
 instance (b : Box) : Decidable (FastFits b) := by unfold FastFits; infer_instance
 
 theorem fastFits_to_fits (b : Box) : FastFits b → Fits b := by
   intro h
-  simp only [FastFits, Fits, fastRouteFits_iff] at h ⊢
-  tauto
+  simp only [FastFits, Fits, fastAFits_iff, fastAuxFits_iff, fastCHFits_iff] at h ⊢
+  exact h
 
 abbrev CoarseCell := Fin slopeRows × Fin yBands × Fin tBands
 def coarseR (c : CoarseCell) : ℕ := c.1.val + 1
@@ -549,16 +645,16 @@ structure InCell (p : FlagDegree) (c : Cell) : Prop where
 def coarseCellOf (p : FlagDegree) (hslo : 1 ≤ p.all) (hshi : p.all ≤ slopeCap)
     (hy : middle p ≤ ysCap) (ht : total p ≤ totalCap) : CoarseCell :=
   (⟨p.all - 1, by
-      change p.all ≤ 21 at hshi
-      show p.all - 1 < 21
+      change p.all ≤ 22 at hshi
+      show p.all - 1 < 22
       omega⟩,
     ⟨(middle p - p.all) / 4, by
       change middle p ≤ 99 at hy
       show (middle p - p.all) / 4 < 25
       omega⟩,
     ⟨total p / 128, by
-      change total p ≤ 3697 at ht
-      show total p / 128 < 29
+      change total p ≤ 3808 at ht
+      show total p / 128 < 30
       omega⟩)
 
 theorem coarseCellOf_bounds (p : FlagDegree) (hslo : 1 ≤ p.all)

@@ -1,10 +1,10 @@
+import ProximityPrize.SubmissionLower.LocatorRankClosed
+import ProximityPrize.SubmissionLower.LocatorKernelEval
 import ProximityPrize.SubmissionLower.L1
 import ProximityPrize.SubmissionLower.N5
 import ProximityPrize.SubmissionLower.E5
 import ProximityPrize.SubmissionLower.Z8
 import ProximityPrize.SubmissionLower.D1
-import ProximityPrize.SubmissionLower.LocatorKernelEval
-import ProximityPrize.SubmissionLower.LocatorRankClosed
 namespace ProximityPrize.SubmissionLower.LocatorArithmetic
 open ProximityPrize.Benchmark
 open scoped BigOperators NNReal
@@ -13,86 +13,103 @@ noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
+/-! Row 6786: errors 80614, agreements 181530.  The selected pair is drawn from
+the total-cap kernel `TCap = (142, 3809, 44)` and the B kernel `(82, 9600, 24)`;
+the A kernel `(75, 130000, 22)` only supplies the per-factor ys/slope caps of the
+narrow grid, and the C kernel `(400, 130000, 120)` is a route source. -/
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80604
-def agreements:ℕ:=181540
-def gap:ℕ:=50469
+def errors:ℕ:=80614
+def agreements:ℕ:=181530
+def gap:ℕ:=50459
 def prime:ℕ:=2130706433
-def budget:ℕ:=274980725314288096
+def budget:ℕ:=274980725090043428
 def LA:ℕ:=130000
-def LAux:ℕ:=130000
-def LB:ℕ:=8400
+def LB:ℕ:=9600
 def LC:ℕ:=130000
-def LCap:ℕ:=3700
-def yAux:ℕ:=102
-def sAux:ℕ:=22
-def yB:ℕ:=116
+def LCap:ℕ:=3809
+def yA:ℕ:=103
+def sA:ℕ:=22
+def yB:ℕ:=113
 def sB:ℕ:=24
-def yC:ℕ:=554
+def yC:ℕ:=553
 def sC:ℕ:=120
-def weightedA:ℕ:=13433960
-def weightedAux:ℕ:=13433960
-def weightedC:ℕ:=72616000
+def yT:ℕ:=196
+def sT:ℕ:=44
+def weightedA:ℕ:=13614750
+def weightedC:ℕ:=72612000
 abbrev weightedAmbient:=weightedC
-def weightedB:ℕ:=15249360
-def weightedTCap:ℕ:=25778680
-def fixedRegularCap:ℕ:=265877011283886055
-theorem kernelA_rank:localRankBound 74 130000 21=6143238453:=by
-  rw [← LocatorKernelEval.localRankBound_eq 74 130000 21 (by decide)]
-  decide
+def weightedB:ℕ:=14885460
+def weightedTCap:ℕ:=25777260
+def fixedRegularCap:ℕ:=270344084085901085
+theorem kernelA_rank:localRankBound 75 130000 22=6546495014:=by
+  rw [LocatorRankClosed.localRankBound_eq_fast 75 130000 22 (by decide)]
+  decide +kernel
+theorem kernelAux_rank:localRankBound 75 130000 23=6761440848:=by
+  rw [LocatorRankClosed.localRankBound_eq_fast 75 130000 23 (by decide)]
+  decide +kernel
 theorem kernelC_rank:localRankBound 400 130000 120=958541142020:=by
   rw [LocatorRankClosed.localRankBound_eq_fast 400 130000 120 (by decide)]
-  decide
-theorem kernelB_rank:localRankBound 84 8400 24=576726900:=by
-  rw [← LocatorKernelEval.localRankBound_eq 84 8400 24 (by decide)]
-  decide
-theorem kernelTCap_rank:localRankBound 142 3700 44=1257416820:=by
-  rw [← LocatorKernelEval.localRankBound_eq 142 3700 44 (by decide)]
-  decide
+  decide +kernel
+theorem kernelB_rank:localRankBound 82 9600 24=625316150:=by
+  rw [LocatorRankClosed.localRankBound_eq_fast 82 9600 24 (by decide)]
+  decide +kernel
+theorem kernelTCap_rank:localRankBound 142 3809 44=1295095395:=by
+  rw [LocatorRankClosed.localRankBound_eq_fast 142 3809 44 (by decide)]
+  decide +kernel
 theorem kernelA_nullity:
-    coefficientCount 13433960 131071 130000 21 -
-      262144 * localRankBound 74 130000 21=141959952266:=by
+    coefficientCount 13614750 131071 130000 22 -
+      262144 * localRankBound 75 130000 22=351572585294:=by
   rw [kernelA_rank,LocatorKernelEval.coefficientCount_eq_cutoff
-    13433960 131071 130000 21 103 (by decide) (by decide)]
+    13614750 131071 130000 22 104 (by decide) (by decide)]
+  decide
+theorem kernelAux_nullity:
+    coefficientCount 13614750 131071 130000 23 -
+      262144 * localRankBound 75 130000 23=396080340478:=by
+  rw [kernelAux_rank,LocatorKernelEval.coefficientCount_eq_cutoff
+    13614750 131071 130000 23 104 (by decide) (by decide)]
   decide
 theorem kernelC_nullity:
-    coefficientCount 72616000 131071 130000 120 -
-      262144 * localRankBound 400 130000 120=1653647654042340:=by
+    coefficientCount 72612000 131071 130000 120 -
+      262144 * localRankBound 400 130000 120=1622595225055178:=by
   rw [kernelC_rank,LocatorKernelEval.coefficientCount_eq_cutoff
-    72616000 131071 130000 120 555 (by decide) (by decide)]
+    72612000 131071 130000 120 554 (by decide) (by decide)]
   decide
 theorem kernelB_nullity:
-    coefficientCount 15249360 131071 8400 24 -
-      262144 * localRankBound 84 8400 24=903742550:=by
+    coefficientCount 14885460 131071 9600 24 -
+      262144 * localRankBound 82 9600 24=556469350:=by
   rw [kernelB_rank,LocatorKernelEval.coefficientCount_eq_cutoff
-    15249360 131071 8400 24 117 (by decide) (by decide)]
+    14885460 131071 9600 24 114 (by decide) (by decide)]
   decide
 theorem kernelTCap_nullity:
-    coefficientCount 25778680 131071 3700 44 -
-      262144 * localRankBound 142 3700 44=360692415:=by
+    coefficientCount 25777260 131071 3809 44 -
+      262144 * localRankBound 142 3809 44=387593535:=by
   rw [kernelTCap_rank,LocatorKernelEval.coefficientCount_eq_cutoff
-    25778680 131071 3700 44 197 (by decide) (by decide)]
+    25777260 131071 3809 44 197 (by decide) (by decide)]
   decide
-theorem A_ys95_quotient_upper:
-    coefficientCount 326881 131071 129900 21=118562720461:=by
+/-- The quotient box of an A-kernel reconstruction by a divisor of ys weight at
+least `100`: contact weight at most `13614750 - 13107078 = 507672`, length
+`129900`, slope `22`.  Its dimension is below the A nullity, so no divisor of
+ys weight `100` or more divides every reconstruction. -/
+theorem A_ys99_quotient_upper:
+    coefficientCount 507672 131071 129900 22=318943624395:=by
   rw [LocatorKernelEval.coefficientCount_eq_cutoff
-    326881 131071 129900 21 3 (by decide) (by decide)]
+    507672 131071 129900 22 4 (by decide) (by decide)]
   decide
 theorem kernelTCap_total_quotient_lt:
-    coefficientCount 25778680 131071 2 44 <
-    coefficientCount 25778680 131071 3700 44 -
-      262144 * localRankBound 142 3700 44:=by
+    coefficientCount 25777260 131071 0 44 <
+    coefficientCount 25777260 131071 3809 44 -
+      262144 * localRankBound 142 3809 44:=by
   rw [kernelTCap_nullity]
   decide
-def fixedSingular:TightParameters:=⟨n,w,agreements,weightedA,3697,21⟩
-def residualStage:UnequalParameters:=⟨n,w,agreements,yB,sB,LB,yC,sC,LC⟩
+def fixedSingular:TightParameters:=⟨n,w,agreements,weightedB,3808,sB⟩
+def residualStage:UnequalParameters:=⟨n,w,agreements,yB,sB,LB,yT,sT,LCap⟩
 def chainStage:UnequalParameters:=⟨n,w,agreements,yB,sB,LB,yB,sB,LB⟩
 def tailSingular:TightParameters:=⟨n,w,agreements,weightedB,LB,1⟩
-theorem fixedSingular_exact:fixedSingular.countCap=1300921862639790:=by decide
-theorem residualStage_exact:residualStage.regularCountCap=5571167482229417:=by decide
-theorem chainStage_exact:chainStage.regularCountCap=94863800761446:=by decide
-theorem tailSingular_exact:tailSingular.countCap=1990290720783:=by decide
+theorem fixedSingular_exact:fixedSingular.countCap=1951366380128901:=by decide
+theorem residualStage_exact:residualStage.regularCountCap=200314178430427:=by decide
+theorem chainStage_exact:chainStage.regularCountCap=105632783889043:=by decide
+theorem tailSingular_exact:tailSingular.countCap=2216256645401:=by decide
 structure SingularGates (P:TightParameters):Prop where
   s_pos:1 ≤ P.s
   s_small:P.s < prime
@@ -125,11 +142,11 @@ theorem chain_gates:ChainGates:=by constructor <;> decide
 def ledger:ℕ:=fixedRegularCap + fixedSingular.countCap +
   residualStage.regularCountCap +
   (sB - 1) * chainStage.regularCountCap + (sB + 1) * tailSingular.countCap
-theorem ledger_exact:ledger=274980725314288095:=by
+theorem ledger_exact:ledger=274980725090043427:=by
   norm_num [ledger,fixedRegularCap,fixedSingular_exact,
     residualStage_exact,chainStage_exact,tailSingular_exact,sB]
 theorem ledger_lt:ledger < budget:=by rw [ledger_exact]; decide
-def radiusNumerator:ℕ:=10317410
+def radiusNumerator:ℕ:=10318719
 def radiusDenominator:ℕ:=33554432
 def radius:ℝ≥0:=claimedRadius radiusNumerator radiusDenominator
 theorem radius_floor:
@@ -140,51 +157,51 @@ theorem radius_admissible:
     radius ∈ Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance:=by
   constructor <;> norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
     IRSProfile.minRelativeDistance]
-theorem score_root_integer:(2:ℕ)^17 * 719^20 ≤ 1296^20:=by decide
+theorem score_root_integer:(2:ℕ)^86 * 65^100 ≤ 118^100:=by decide
 theorem score_radius_integer:
-    (23237022:ℕ)^128 * (2^67 * 1296) ≤ 719 * 33554432^128:=by decide
+    (23235713:ℕ)^128 * (2^67 * 118) ≤ 65 * 33554432^128:=by decide
 theorem two_rpow_fraction_le:
-    (2:ℝ≥0)^((17:ℝ)/20) ≤ (1296:ℝ≥0)/719:=by
-  have hroot:((2:ℝ≥0)^(17:ℕ))^((20:ℝ)⁻¹) ≤ (1296:ℝ≥0)/719:=by
-    rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 20)]
+    (2:ℝ≥0)^((86:ℝ)/100) ≤ (118:ℝ≥0)/65:=by
+  have hroot:((2:ℝ≥0)^(86:ℕ))^((100:ℝ)⁻¹) ≤ (118:ℝ≥0)/65:=by
+    rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 100)]
     rw [NNReal.rpow_ofNat,div_pow,le_div_iff₀ (by positivity)]
     exact_mod_cast score_root_integer
   calc
-    (2:ℝ≥0)^((17:ℝ)/20) = ((2:ℝ≥0)^(17:ℕ))^((20:ℝ)⁻¹):=by
+    (2:ℝ≥0)^((86:ℝ)/100) = ((2:ℝ≥0)^(86:ℕ))^((100:ℝ)⁻¹):=by
       rw [← NNReal.rpow_natCast_mul]
       norm_num [div_eq_mul_inv]
     _ ≤ _:=hroot
 theorem radius_power_bound:
     (1 - radius)^IRSProfile.repetitions ≤
-      ((1:ℝ≥0)/2^(67:ℕ)) * (719/1296):=by
-  have hsub:(1 - radius:ℝ≥0) =23237022/33554432:=by
+      ((1:ℝ≥0)/2^(67:ℕ)) * (65/118):=by
+  have hsub:(1 - radius:ℝ≥0) =23235713/33554432:=by
     have hr:radius ≤ 1:=by
       rw [← NNReal.coe_le_coe]
       norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
     apply NNReal.coe_injective
     rw [NNReal.coe_sub hr]
     norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
-  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(67:ℕ)) * (719/1296)
+  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(67:ℕ)) * (65/118)
   rw [hsub,div_pow,div_mul_div_comm,one_mul,
     div_le_div_iff₀ (by positivity) (by positivity)]
   exact_mod_cast score_radius_integer
 theorem score_target_le:
-    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6785:=by
-  have hscale:(719:ℝ≥0)/1296 ≤ (2:ℝ≥0)^(-((17:ℝ)/20)):=by
+    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6786:=by
+  have hscale:(65:ℝ≥0)/118 ≤ (2:ℝ≥0)^(-((86:ℝ)/100)):=by
     calc
-      (719:ℝ≥0)/1296=1/((1296:ℝ≥0)/719):=by norm_num
-      _ ≤ 1/((2:ℝ≥0)^((17:ℝ)/20)) :=
+      (65:ℝ≥0)/118=1/((118:ℝ≥0)/65):=by norm_num
+      _ ≤ 1/((2:ℝ≥0)^((86:ℝ)/100)) :=
         one_div_le_one_div_of_le (by positivity) two_rpow_fraction_le
       _=_:=by rw [one_div,NNReal.rpow_neg]
   calc
     (1 - radius)^IRSProfile.repetitions ≤
-        ((1:ℝ≥0)/2^(67:ℕ)) * (719/1296):=radius_power_bound
-    _ ≤ ((1:ℝ≥0)/2^(67:ℕ)) * (2:ℝ≥0)^(-((17:ℝ)/20)) :=
+        ((1:ℝ≥0)/2^(67:ℕ)) * (65/118):=radius_power_bound
+    _ ≤ ((1:ℝ≥0)/2^(67:ℕ)) * (2:ℝ≥0)^(-((86:ℝ)/100)) :=
       mul_le_mul_of_nonneg_left hscale (by positivity)
-    _=claimedError 6785:=by
+    _=claimedError 6786:=by
       unfold claimedError
-      rw [show -((((6785:ℕ):ℝ)/100)) =
-          -((67:ℕ):ℝ) + -((17:ℝ)/20) by norm_num,
+      rw [show -((((6786:ℕ):ℝ)/100)) =
+          -((67:ℕ):ℝ) + -((86:ℝ)/100) by norm_num,
         NNReal.rpow_add (by norm_num:(2:ℝ≥0) ≠ 0)]
       simp only [NNReal.rpow_neg,NNReal.rpow_natCast,one_div]
 end
