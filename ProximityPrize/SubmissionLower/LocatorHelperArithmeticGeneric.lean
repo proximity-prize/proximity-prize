@@ -30,7 +30,7 @@ kernels are
   S2 = (m 500, L 1000000, s 150)
   S3 = (m 810, L 350000, s 243)
 
-at `agreements = 181540` (row 6785).  For each kernel `S = (m, L, s)`:
+at `agreements = 181530` (row 6786).  For each kernel `S = (m, L, s)`:
 
   D       = m * agreements                      weighted degree
   y       = (D - 1) / w                         source `y` field
@@ -68,19 +68,19 @@ abbrev n : ℕ := 262144
 /-- Selected-polynomial degree cap. -/
 abbrev w : ℕ := 131071
 /-- Agreement threshold of the row. -/
-abbrev agreements : ℕ := 181540
+abbrev agreements : ℕ := 181530
 /-- Stage step, `agreements - w + 1`. -/
-abbrev delta : ℕ := 50470
+abbrev delta : ℕ := 50460
 
 /-! ### Helper kernel S1 -/
 
 abbrev mS1 : ℕ := 355
 abbrev LS1 : ℕ := 350000
 abbrev sS1 : ℕ := 105
-abbrev DS1 : ℕ := 64446700
+abbrev DS1 : ℕ := 64443150
 abbrev yS1 : ℕ := 491
 abbrev rankS1 : ℕ := 1789092129575
-abbrev nullityS1 : ℕ := 3070668257066075
+abbrev nullityS1 : ℕ := 3012828511088025
 abbrev depthS1 : ℕ := 13
 
 /-! ### Helper kernel S2 -/
@@ -88,10 +88,10 @@ abbrev depthS1 : ℕ := 13
 abbrev mS2 : ℕ := 500
 abbrev LS2 : ℕ := 1000000
 abbrev sS2 : ℕ := 150
-abbrev DS2 : ℕ := 90770000
+abbrev DS2 : ℕ := 90765000
 abbrev yS2 : ℕ := 692
 abbrev rankS2 : ℕ := 14383345717650
-abbrev nullityS2 : ℕ := 27032429632837297
+abbrev nullityS2 : ℕ := 26566017386262297
 abbrev depthS2 : ℕ := 18
 
 /-! ### Helper kernel S3 -/
@@ -99,10 +99,10 @@ abbrev depthS2 : ℕ := 18
 abbrev mS3 : ℕ := 810
 abbrev LS3 : ℕ := 350000
 abbrev sS3 : ℕ := 243
-abbrev DS3 : ℕ := 147047400
+abbrev DS3 : ℕ := 147039300
 abbrev yS3 : ℕ := 1121
 abbrev rankS3 : ℕ := 21307937367528
-abbrev nullityS3 : ℕ := 41542667661965689
+abbrev nullityS3 : ℕ := 40851803364289489
 abbrev depthS3 : ℕ := 30
 
 /-! ### Weighted degrees -/

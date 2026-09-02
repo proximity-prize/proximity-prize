@@ -19,10 +19,10 @@ theorem gcd_fixed_count_le
     (u0 u1:I → K) (S:SelectedPair u0 u1)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181540 ≤
+    (hagreement:∀ gamma ∈ Gamma,181530 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80604) :
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80614) :
     (LocatorCover.fixed
       (fun gamma=> (specialization K (selected gamma) gamma).toRingHom)
       Gamma S.QA S.QB).card ≤
@@ -33,17 +33,17 @@ theorem gcd_fixed_count_le
     fun gamma=> (specialization K (selected gamma) gamma).toRingHom
   let Delta:Finset K:=LocatorCover.fixed phi Gamma S.QA S.QB
   have hH:H ≠ 0:=gcd_ne_zero_of_left S.QA_ne
-  have hHflagA:H ∈ RCN100.globalCoefficientBox K 13433960 131071 130000 21:=
+  have hHflagA:H ∈ RCN100.globalCoefficientBox K 13433220 131071 130000 22:=
     LocatorCaps.full_A_divisor_mem_box u0 u1 H hH S.common_divides_A
   have hHcapsA:=(mem_flagGlobalCoefficientBox_iff H
-    13433960 131071 130000 21 (by decide)).mp hHflagA
-  have hT:wt residualTotalWeights H ≤ 3697:=S.common_total_le
+    13433220 131071 130000 22 (by decide)).mp hHflagA
+  have hT:wt residualTotalWeights H ≤ 3806:=S.common_total_le
   have hYS:wt residualYSWeights H ≤ 99:=S.common_ys_le
-  have hS:wt residualSWeights H ≤ 21:=S.common_slope_le
-  have hflag:H ∈ RCN100.globalCoefficientBox K 13433960 131071 3697 21:=
-    (mem_flagGlobalCoefficientBox_iff H 13433960 131071 3697 21 (by decide)).mpr
+  have hS:wt residualSWeights H ≤ 22:=S.common_slope_le
+  have hflag:H ∈ RCN100.globalCoefficientBox K 13433220 131071 3806 22:=
+    (mem_flagGlobalCoefficientBox_iff H 13433220 131071 3806 22 (by decide)).mpr
       ⟨hT,hS,hHcapsA.2.2⟩
-  have hbox:=flag_box_to_ordinary K 13433960 131071 3697 21 H hflag
+  have hbox:=flag_box_to_ordinary K 13433220 131071 3806 22 H hflag
   have hsupport:ResidualSupportData LocatorFixedConsumer.wholeSupport H:=
     ⟨hS,hYS,hT⟩
   have hsub:Delta ⊆ Gamma:=by
@@ -56,15 +56,15 @@ theorem gcd_fixed_count_le
     exact LocatorCover.fixed_vanish phi Gamma S.QA S.QB gamma hg
   have hdegreeD:∀ gamma ∈ Delta, (selected gamma).natDegree ≤ 131071:=
     fun gamma hg=> hdegree gamma (hsub hg)
-  have hagreementD:∀ gamma ∈ Delta,181540 ≤
+  have hagreementD:∀ gamma ∈ Delta,181530 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card:=
     fun gamma hg=> hagreement gamma (hsub hg)
-  have hnoD:NoLargeSelectedPencil selected Delta 131071 80604:=
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80604 hsub hno
+  have hnoD:NoLargeSelectedPencil selected Delta 131071 80614:=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80614 hsub hno
   let p:=regularCumulativeFlag H
   have hfcaps (F:RegularIndex H) :
-      (p F).all ≤ 21 ∧ middle (p F) ≤ 99 ∧ total (p F) ≤ 3697:=by
+      (p F).all ≤ 22 ∧ middle (p F) ≤ 99 ∧ total (p F) ≤ 3806:=by
     have hf:=LocatorFixed.factor_support H hH hsupport F
     have hc:=originalCumulativeFlag_cumulative F.1
     refine ⟨?_, ?_, ?_⟩
@@ -83,7 +83,7 @@ theorem gcd_fixed_count_le
     chosenCost c
   have hown (F:RegularIndex H) :
       LocatorHybridCostC2.OwnBoundC2 (regularSeeds H selected Delta F).card (p F):=
-    LocatorFixedOwnBoundC2.regular_factor_own_bound 13433960
+    LocatorFixedOwnBoundC2.regular_factor_own_bound 13433220
       LocatorFixedConsumer.wholeSupport (by decide) (by decide)
       (by decide) (by decide) (by decide)
       H hH hbox hsupport selected Delta u0 u1 hdegreeD hagreementD hnoD F
@@ -100,20 +100,20 @@ theorem gcd_fixed_count_le
       (hfcaps F).2.1 (hfcaps F).2.2 hc
     have hf:=RCN167.positiveRFactors_spec H F.1 F.2
     have hdivA : ∀ v:RCN180.ConstraintKernel (K:=K)
-        13433960 131071 130000 21 74 IRSProfile.domain u0 u1,
-        F.1 ∣ RCN100.reconstruct K 13433960 131071 130000 21 v.1:=by
+        13433220 131071 130000 22 74 IRSProfile.domain u0 u1,
+        F.1 ∣ RCN100.reconstruct K 13433220 131071 130000 22 v.1:=by
       intro v
       exact hf.2.1.trans
         (LocatorAuxiliarySelection.common_divides_A61_small S 130000 (by decide) v)
     have hdivAux : ∀ v:RCN180.ConstraintKernel (K:=K)
-        13433960 131071 130000 22 74 IRSProfile.domain u0 u1,
-        F.1 ∣ RCN100.reconstruct K 13433960 131071 130000 22 v.1:=by
+        13433220 131071 130000 23 74 IRSProfile.domain u0 u1,
+        F.1 ∣ RCN100.reconstruct K 13433220 131071 130000 23 v.1:=by
       intro v
       exact hf.2.1.trans
         (LocatorAuxiliarySelection.common_divides_A72_small S 130000 (by decide) v)
     have hdivC : ∀ v:RCN180.ConstraintKernel (K:=K)
-        72616000 131071 130000 120 400 IRSProfile.domain u0 u1,
-        F.1 ∣ RCN100.reconstruct K 72616000 131071 130000 120 v.1:=by
+        72612000 131071 130000 120 400 IRSProfile.domain u0 u1,
+        F.1 ∣ RCN100.reconstruct K 72612000 131071 130000 120 v.1:=by
       intro v
       exact hf.2.1.trans
         (LocatorAuxiliarySelection.common_divides_A150_small S 130000 (by decide) v)
@@ -135,10 +135,14 @@ theorem gcd_fixed_count_le
       unfold Box.factorT
       exact max_le hc.tlo_le (hc.ylo_le.trans (middle_le_total (p F)))
     have hweight:(box c).weight ≤ LocatorFixedConsumer.wgt (p F):=by
-      unfold Box.weight LocatorFixedConsumer.wgt
+      unfold Box.weight LocatorFixedConsumer.wgt LocatorNonlinearCharge.charge
+        LocatorNonlinearCharge.nonlinearCharge
       exact Nat.add_le_add
-        (Nat.add_le_add hfactorT (Nat.mul_le_mul_left wY hc.ylo_le))
-        (Nat.mul_le_mul_left wS (le_of_eq hc.all_eq.symm))
+        (Nat.add_le_add (Nat.mul_le_mul_left wT hfactorT)
+          (Nat.mul_le_mul_left wY hc.ylo_le))
+        (Nat.add_le_add
+          (le_of_eq (congrArg slopeCharge hc.all_eq.symm))
+          (Nat.mul_le_mul_left wFloor (Nat.div_le_div_right hfactorT)))
     have hrate' : capSum * qCost F ≤ bound * (box c).weight := by
       simpa only [qCost,c] using hrate
     exact hrate'.trans (Nat.mul_le_mul_left bound hweight)

@@ -5,7 +5,7 @@ namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
 
-theorem receipt_row_04_y04_full : RowTileReceipt 4 4 5 0 29 := by
+theorem receipt_row_04_y04_full : RowTileReceipt 4 4 5 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 24
   · exact receipt_row_04_y04_t00_24 cy hylo hyhi ct (by omega) h0
@@ -14,7 +14,7 @@ theorem receipt_row_04_y04_full : RowTileReceipt 4 4 5 0 29 := by
 theorem receipt_row_04_band_04_05 : RowBandReceipt 4 4 5 :=
   rowTileFull_to_rowBand 4 4 receipt_row_04_y04_full
 
-theorem receipt_row_04_y05_full : RowTileReceipt 4 5 6 0 29 := by
+theorem receipt_row_04_y05_full : RowTileReceipt 4 5 6 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 24
   · exact receipt_row_04_y05_t00_24 cy hylo hyhi ct (by omega) h0
@@ -23,7 +23,7 @@ theorem receipt_row_04_y05_full : RowTileReceipt 4 5 6 0 29 := by
 theorem receipt_row_04_band_05_06 : RowBandReceipt 4 5 6 :=
   rowTileFull_to_rowBand 4 5 receipt_row_04_y05_full
 
-theorem receipt_row_04_y06_full : RowTileReceipt 4 6 7 0 29 := by
+theorem receipt_row_04_y06_full : RowTileReceipt 4 6 7 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 25
   · exact receipt_row_04_y06_t00_25 cy hylo hyhi ct (by omega) h0
@@ -32,7 +32,7 @@ theorem receipt_row_04_y06_full : RowTileReceipt 4 6 7 0 29 := by
 theorem receipt_row_04_band_06_07 : RowBandReceipt 4 6 7 :=
   rowTileFull_to_rowBand 4 6 receipt_row_04_y06_full
 
-theorem receipt_row_04_y07_full : RowTileReceipt 4 7 8 0 29 := by
+theorem receipt_row_04_y07_full : RowTileReceipt 4 7 8 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 28
   · exact receipt_row_04_y07_t00_28 cy hylo hyhi ct (by omega) h0
@@ -41,7 +41,7 @@ theorem receipt_row_04_y07_full : RowTileReceipt 4 7 8 0 29 := by
 theorem receipt_row_04_band_07_08 : RowBandReceipt 4 7 8 :=
   rowTileFull_to_rowBand 4 7 receipt_row_04_y07_full
 
-theorem receipt_row_04_y08_full : RowTileReceipt 4 8 9 0 29 := by
+theorem receipt_row_04_y08_full : RowTileReceipt 4 8 9 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 12
   · exact receipt_row_04_y08_t00_12 cy hylo hyhi ct (by omega) h0
@@ -50,7 +50,7 @@ theorem receipt_row_04_y08_full : RowTileReceipt 4 8 9 0 29 := by
 theorem receipt_row_04_band_08_09 : RowBandReceipt 4 8 9 :=
   rowTileFull_to_rowBand 4 8 receipt_row_04_y08_full
 
-theorem receipt_row_04_y09_full : RowTileReceipt 4 9 10 0 29 := by
+theorem receipt_row_04_y09_full : RowTileReceipt 4 9 10 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 2
   · exact receipt_row_04_y09_t00_02 cy hylo hyhi ct (by omega) h0
@@ -61,7 +61,7 @@ theorem receipt_row_04_y09_full : RowTileReceipt 4 9 10 0 29 := by
 theorem receipt_row_04_band_09_10 : RowBandReceipt 4 9 10 :=
   rowTileFull_to_rowBand 4 9 receipt_row_04_y09_full
 
-theorem receipt_row_04_y10_full : RowTileReceipt 4 10 11 0 29 := by
+theorem receipt_row_04_y10_full : RowTileReceipt 4 10 11 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 12
   · exact receipt_row_04_y10_t00_12 cy hylo hyhi ct (by omega) h0

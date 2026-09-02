@@ -17,13 +17,13 @@ abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
 
 theorem finrank_lower_bound (u0 u1 : I → K) :
-    1653647654042340 ≤ Module.finrank K
-      (ConstraintKernel (K := K) 72616000 131071 130000 120 400
+    1622595225055178 ≤ Module.finrank K
+      (ConstraintKernel (K := K) 72612000 131071 130000 120 400
         IRSProfile.domain u0 u1) := by
   have hcard : Fintype.card I = 262144 := by
     norm_num [I, IRSProfile.Index]
   have hlo := constraintKernel_finrank_lower_bound
-    72616000 131071 130000 120 400 IRSProfile.domain u0 u1
+    72612000 131071 130000 120 400 IRSProfile.domain u0 u1
   have hlo' := hcard ▸ hlo
   exact LocatorArithmetic.kernelC_nullity ▸ hlo'
 

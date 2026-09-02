@@ -14,10 +14,10 @@ theorem receipt_row_10_y02_t00_24 : RowTileReceipt 10 2 3 0 24 :=
   fixedYReceipt_to_rowTile 10 ⟨2, by decide⟩ 0 24 receipt_row_10_y02_t00_24_fixed
 
 private theorem receipt_row_10_y02_t24_29_fixed :
-    FixedYReceipt 10 ⟨2, by decide⟩ 24 29 := by decide +kernel
+    FixedYReceipt 10 ⟨2, by decide⟩ 24 30 := by decide +kernel
 
-theorem receipt_row_10_y02_t24_29 : RowTileReceipt 10 2 3 24 29 :=
-  fixedYReceipt_to_rowTile 10 ⟨2, by decide⟩ 24 29 receipt_row_10_y02_t24_29_fixed
+theorem receipt_row_10_y02_t24_29 : RowTileReceipt 10 2 3 24 30 :=
+  fixedYReceipt_to_rowTile 10 ⟨2, by decide⟩ 24 30 receipt_row_10_y02_t24_29_fixed
 
 private theorem receipt_row_10_y03_t00_02_fixed :
     FixedYReceipt 10 ⟨3, by decide⟩ 0 2 := by decide +kernel
@@ -38,10 +38,10 @@ theorem receipt_row_10_y03_t04_28 : RowTileReceipt 10 3 4 4 28 :=
   fixedYReceipt_to_rowTile 10 ⟨3, by decide⟩ 4 28 receipt_row_10_y03_t04_28_fixed
 
 private theorem receipt_row_10_y03_t28_29_fixed :
-    FixedYReceipt 10 ⟨3, by decide⟩ 28 29 := by decide +kernel
+    FixedYReceipt 10 ⟨3, by decide⟩ 28 30 := by decide +kernel
 
-theorem receipt_row_10_y03_t28_29 : RowTileReceipt 10 3 4 28 29 :=
-  fixedYReceipt_to_rowTile 10 ⟨3, by decide⟩ 28 29 receipt_row_10_y03_t28_29_fixed
+theorem receipt_row_10_y03_t28_29 : RowTileReceipt 10 3 4 28 30 :=
+  fixedYReceipt_to_rowTile 10 ⟨3, by decide⟩ 28 30 receipt_row_10_y03_t28_29_fixed
 
 theorem receipt_row_10_band_04_06 : RowBandReceipt 10 4 6 := by decide +kernel
 

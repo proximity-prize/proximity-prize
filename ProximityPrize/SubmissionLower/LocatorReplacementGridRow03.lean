@@ -5,7 +5,7 @@ namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
 
-theorem receipt_row_03_y07_full : RowTileReceipt 3 7 8 0 29 := by
+theorem receipt_row_03_y07_full : RowTileReceipt 3 7 8 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 28
   · exact receipt_row_03_y07_t00_28 cy hylo hyhi ct (by omega) h0
@@ -14,7 +14,7 @@ theorem receipt_row_03_y07_full : RowTileReceipt 3 7 8 0 29 := by
 theorem receipt_row_03_band_07_08 : RowBandReceipt 3 7 8 :=
   rowTileFull_to_rowBand 3 7 receipt_row_03_y07_full
 
-theorem receipt_row_03_y08_full : RowTileReceipt 3 8 9 0 29 := by
+theorem receipt_row_03_y08_full : RowTileReceipt 3 8 9 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 28
   · exact receipt_row_03_y08_t00_28 cy hylo hyhi ct (by omega) h0
@@ -23,7 +23,7 @@ theorem receipt_row_03_y08_full : RowTileReceipt 3 8 9 0 29 := by
 theorem receipt_row_03_band_08_09 : RowBandReceipt 3 8 9 :=
   rowTileFull_to_rowBand 3 8 receipt_row_03_y08_full
 
-theorem receipt_row_03_y09_full : RowTileReceipt 3 9 10 0 29 := by
+theorem receipt_row_03_y09_full : RowTileReceipt 3 9 10 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 28
   · exact receipt_row_03_y09_t00_28 cy hylo hyhi ct (by omega) h0
@@ -32,7 +32,7 @@ theorem receipt_row_03_y09_full : RowTileReceipt 3 9 10 0 29 := by
 theorem receipt_row_03_band_09_10 : RowBandReceipt 3 9 10 :=
   rowTileFull_to_rowBand 3 9 receipt_row_03_y09_full
 
-theorem receipt_row_03_y10_full : RowTileReceipt 3 10 11 0 29 := by
+theorem receipt_row_03_y10_full : RowTileReceipt 3 10 11 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 12
   · exact receipt_row_03_y10_t00_12 cy hylo hyhi ct (by omega) h0

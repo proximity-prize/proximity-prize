@@ -4,6 +4,7 @@ import ProximityPrize.SubmissionLower.LocatorChannelClosed
 import ProximityPrize.SubmissionLower.N5
 import ProximityPrize.SubmissionLower.LocatorHybridCost
 import ProximityPrize.SubmissionLower.LocatorHybridCostC2
+import ProximityPrize.SubmissionLower.LocatorNonlinearCharge
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
@@ -24,27 +25,28 @@ abbrev selectedDegree : ℕ := 131071
 /-- Field characteristic. -/
 abbrev prime : ℕ := 2130706433
 /-- Agreement threshold, shared by every stage and helper pair. -/
-abbrev agreements : ℕ := 181540
+abbrev agreements : ℕ := 181530
 /-- Error budget, forced as `262144 - agreements`. -/
-abbrev errors : ℕ := 80604
+abbrev errors : ℕ := 80614
 /-- Contact-band width, `agreements - selectedDegree + 1`. -/
-abbrev delta : ℕ := 50470
-abbrev bound : ℕ := 265877011283886055
-abbrev totalCap : ℕ := 3697
+abbrev delta : ℕ := 50460
+abbrev bound : ℕ := 265897592825664280
+abbrev totalCap : ℕ := 3806
 abbrev ysCap : ℕ := 99
-abbrev slopeCap : ℕ := 21
+abbrev slopeCap : ℕ := 22
 
-/-- Nonnegative linear weights for the aggregate charge.  Final for the 6785
-row: chosen by the pointwise sweep over all valid point boxes with the real
-arm set, which put `(0, 5)` at +4.020% against +3.818% for `(3, 0)`.  These
-are the values the receipts were generated at. -/
-abbrev wY : ℕ := 0
-abbrev wS : ℕ := 5
+/-- Integer weights from the exact minimax scan.  Besides total and middle
+degree, the charge uses one floor-total feature and a nonlinear slope table. -/
+abbrev wT : ℕ := LocatorNonlinearCharge.wT
+abbrev wY : ℕ := LocatorNonlinearCharge.wY
+abbrev floorStep : ℕ := LocatorNonlinearCharge.q
+abbrev wFloor : ℕ := LocatorNonlinearCharge.wFloor
+abbrev slopeCharge : ℕ → ℕ := LocatorNonlinearCharge.slopeBonus
+abbrev slopeBudget : ℕ := LocatorNonlinearCharge.slopeKnapsackCap
+abbrev floorBudget : ℕ := totalCap / floorStep
 
-/-- Total weight budget.  The fixed support caps bound the three sums
-`∑ total ≤ totalCap`, `∑ middle ≤ ysCap` and `∑ all ≤ slopeCap`, so the
-weighted sum over the factors is bounded by this. -/
-abbrev capSum : ℕ := totalCap + wY * ysCap + wS * slopeCap
+/-- Total charge available across all fixed factors. -/
+abbrev capSum : ℕ := LocatorNonlinearCharge.capSum
 
 /-- Maximum admissible repeated-projection depth for the accepted source-C
 route, which is the only route driven by `routeDepth`. -/
@@ -56,9 +58,9 @@ abbrev depthCap : ℕ := 30
 
 /-- Grid dimensions.  A cap change means the matching band count changes here:
 `yBands * 4` must cover `ysCap` and `tBands * 128` must cover `totalCap`. -/
-abbrev slopeRows : ℕ := 21
+abbrev slopeRows : ℕ := 22
 abbrev yBands : ℕ := 25
-abbrev tBands : ℕ := 29
+abbrev tBands : ℕ := 30
 
 /-- A rectangular cumulative-degree box for one irreducible factor. -/
 structure Box where
@@ -86,8 +88,12 @@ def Box.ordinaryCost (b : Box) : ℕ :=
 /-- The least weighted charge any flag in the box can carry.  For `p` in the
 box, `all p = b.r`, `middle p ≥ b.ylo`, and `total p ≥ max b.tlo b.ylo`
 because `total p ≥ b.tlo` and `total p ≥ middle p ≥ b.ylo`, so
-`total p + wY * middle p + wS * all p ≥ b.weight`. -/
-def Box.weight (b : Box) : ℕ := b.factorT + wY * b.ylo + wS * b.r
+`wT * total p + wY * middle p + wFloor * (total p / floorStep) +
+  slopeCharge (all p)
+≥ b.weight`. -/
+def Box.weight (b : Box) : ℕ :=
+  wT * b.factorT + wY * b.ylo +
+    (slopeCharge b.r + wFloor * (b.factorT / floorStep))
 
 def Box.ordinaryFits (b : Box) : Prop :=
   capSum * b.ordinaryCost ≤ bound * b.weight
@@ -103,15 +109,15 @@ structure Source where
   gap : ℕ
   deriving DecidableEq
 
-def sourceA : Source := ⟨130000, 102, 21, 141959952266⟩
-def sourceAux : Source := ⟨130000, 102, 22, 446532549318⟩
-def sourceC : Source := ⟨130000, 554, 120, 1653647654042340⟩
+def sourceA : Source := ⟨130000, 102, 22, 243059878998⟩
+def sourceAux : Source := ⟨130000, 102, 23, 157054229278⟩
+def sourceC : Source := ⟨130000, 554, 120, 1622595225055178⟩
 
 /-- Nullities of the three helper kernels.  Placeholders carrying jieyilong's
 values for the 6785 row. -/
-abbrev gapH1 : ℕ := 3070668257066075
-abbrev gapH2 : ℕ := 27032429632837297
-abbrev gapH3 : ℕ := 41542667661965689
+abbrev gapH1 : ℕ := 3012828511088025
+abbrev gapH2 : ℕ := 26566017386262297
+abbrev gapH3 : ℕ := 40851803364289489
 
 /-- Larger auxiliary sources used only by the local divisor-or-helper switch.
 Each is searched over its own short depth window, deliberately separate from
@@ -549,16 +555,16 @@ structure InCell (p : FlagDegree) (c : Cell) : Prop where
 def coarseCellOf (p : FlagDegree) (hslo : 1 ≤ p.all) (hshi : p.all ≤ slopeCap)
     (hy : middle p ≤ ysCap) (ht : total p ≤ totalCap) : CoarseCell :=
   (⟨p.all - 1, by
-      change p.all ≤ 21 at hshi
-      show p.all - 1 < 21
+      change p.all ≤ 22 at hshi
+      show p.all - 1 < 22
       omega⟩,
     ⟨(middle p - p.all) / 4, by
       change middle p ≤ 99 at hy
       show (middle p - p.all) / 4 < 25
       omega⟩,
     ⟨total p / 128, by
-      change total p ≤ 3697 at ht
-      show total p / 128 < 29
+      change total p ≤ 3806 at ht
+      show total p / 128 < 30
       omega⟩)
 
 theorem coarseCellOf_bounds (p : FlagDegree) (hslo : 1 ≤ p.all)

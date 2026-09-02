@@ -19,6 +19,7 @@ import ProximityPrize.SubmissionLower.LocatorReplacementGridRow17
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow18
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow19
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow20
+import ProximityPrize.SubmissionLower.LocatorReplacementGridRow21
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
@@ -45,6 +46,7 @@ private theorem receipt_rows (ri : Fin slopeRows) : RowReceipt ri := by
   · exact receipt_row_18
   · exact receipt_row_19
   · exact receipt_row_20
+  · exact receipt_row_21
 
 theorem receipt_unit (c : UnitCell) (hv : (unitBox c).valid) : Fits (unitBox c) := by
   let f := c.parent.1

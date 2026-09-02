@@ -5,7 +5,7 @@ namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
 
-theorem receipt_row_10_y02_full : RowTileReceipt 10 2 3 0 29 := by
+theorem receipt_row_10_y02_full : RowTileReceipt 10 2 3 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 24
   · exact receipt_row_10_y02_t00_24 cy hylo hyhi ct (by omega) h0
@@ -14,7 +14,7 @@ theorem receipt_row_10_y02_full : RowTileReceipt 10 2 3 0 29 := by
 theorem receipt_row_10_band_02_03 : RowBandReceipt 10 2 3 :=
   rowTileFull_to_rowBand 10 2 receipt_row_10_y02_full
 
-theorem receipt_row_10_y03_full : RowTileReceipt 10 3 4 0 29 := by
+theorem receipt_row_10_y03_full : RowTileReceipt 10 3 4 0 30 := by
   intro cy hylo hyhi ct htlo hthi
   by_cases h0 : ct.val < 2
   · exact receipt_row_10_y03_t00_02 cy hylo hyhi ct (by omega) h0
