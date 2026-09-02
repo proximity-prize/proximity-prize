@@ -20,17 +20,17 @@ local instance:CharP K 2130706433:=by
 /-- Both per-factor bounds: padded always, hybrid when it applies. -/
 theorem regular_factor_own_bound
     (D:ℕ) (P:ResidualSupportParameters)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 12528261)
-    (hS:P.s ≤ 21) (hY:P.ys ≤ 93) (hT:P.total ≤ 3411)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 12709130)
+    (hS:P.s ≤ 21) (hY:P.ys ≤ 95) (hT:P.total ≤ 3504)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181569 ≤
+    (hagreement:∀ gamma ∈ Gamma,181559 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80575)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80585)
     (R:RegularIndex Q) (hreal:Realization D) :
     OwnBound (regularSeeds Q selected Gamma R).card (regularCumulativeFlag Q R):=
   ⟨regular_factor_count D P hDlow hDhigh hS hY hT Q hQ hbox HQ selected Gamma u0 u1

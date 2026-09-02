@@ -12,14 +12,11 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 30000000
 
 private abbrev prime : ℕ := 2130706433
-abbrev bound : ℕ := 266840751749716902
-abbrev totalCap : ℕ := 3411
-private abbrev ysCap : ℕ := 93
+abbrev bound : ℕ := 268330452984175476
+abbrev totalCap : ℕ := 3504
+private abbrev ysCap : ℕ := 95
 private abbrev slopeCap : ℕ := 21
-private abbrev sourceLength : ℕ := 130000
-private abbrev delta : ℕ := 50499
-/-- Maximum admissible repeated-projection depth for a source route. -/
-abbrev routeCap : ℕ := 14
+private abbrev delta : ℕ := 50489
 
 /-- A rectangular cumulative-degree box for one irreducible factor. -/
 structure Box where
@@ -50,31 +47,35 @@ instance (b : Box) : Decidable b.ordinaryFits := by
 
 /-- Arithmetic data for a kernel source embedded in the common ambient box. -/
 structure Source where
+  length : ℕ
   y : ℕ
   r : ℕ
   gap : ℕ
   deriving DecidableEq
 
-def sourceA : Source := ⟨95, 21, 68264678009⟩
-def sourceAux : Source := ⟨99, 21, 534293974082⟩
-def sourceC : Source := ⟨554, 120, 1743757566946340⟩
+def sourceA : Source := ⟨130000, 96, 21, 44259914061⟩
+def sourceAux : Source := ⟨130000, 99, 21, 350071455602⟩
+def sourceC : Source := ⟨130000, 394, 85, 570817620937055⟩
+def sourceH1 : Source := ⟨350000, 491, 105, 3180563774424370⟩
+def sourceH2 : Source := ⟨1000000, 692, 150, 27918612901329797⟩
 
-def stageT (b : Box) (j : ℕ) : ℕ := sourceLength - j * b.factorT
+def stageT (src : Source) (b : Box) (j : ℕ) : ℕ :=
+  src.length - j * b.factorT
 def stageY (src : Source) (b : Box) (j : ℕ) : ℕ := src.y - j * b.ylo
 def stageR (src : Source) (b : Box) (j : ℕ) : ℕ := src.r - j * b.r
 
 def stageBand (src : Source) (b : Box) (j : ℕ) : ℕ :=
-  delta * (if stageY src b j ≤ stageT b j then
-      LocatorChannelClosed.fastChannel (stageT b j) (stageY src b j) (stageR src b j)
-    else channelCount (stageT b j) (stageY src b j) (stageR src b j))
+  delta * (if stageY src b j ≤ stageT src b j then
+      LocatorChannelClosed.fastChannel
+        (stageT src b j) (stageY src b j) (stageR src b j)
+    else channelCount (stageT src b j) (stageY src b j) (stageR src b j))
 
-/-- The fast branch is the same number: every grid stage has `stageY ≤ stageT`,
-and off that branch the definition is the loop itself. -/
 theorem stageBand_eq (src : Source) (b : Box) (j : ℕ) :
-    stageBand src b j
-      = delta * channelCount (stageT b j) (stageY src b j) (stageR src b j) := by
+    stageBand src b j =
+      delta * channelCount
+        (stageT src b j) (stageY src b j) (stageR src b j) := by
   unfold stageBand
-  by_cases h : stageY src b j ≤ stageT b j
+  by_cases h : stageY src b j ≤ stageT src b j
   · rw [if_pos h, ← LocatorChannelClosed.channelCount_eq_fast _ _ _ h]
   · rw [if_neg h]
 
@@ -83,8 +84,8 @@ def bandSum (src : Source) (b : Box) : ℕ → ℕ
   | k + 1 => bandSum src b k + stageBand src b (k + 1)
 
 def stagePair (src : Source) (b : Box) (j : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181569, b.factorY, b.r, b.thi,
-    stageY src b j, stageR src b j, stageT b j⟩
+  ⟨262144, 131071, 181559, b.factorY, b.r, b.thi,
+    stageY src b j, stageR src b j, stageT src b j⟩
 
 def PairGates (P : UnequalParameters) : Prop :=
   1 ≤ P.leftR ∧ P.leftY < prime ∧ P.leftR < prime ∧ P.leftZ < prime ∧
@@ -100,52 +101,28 @@ def routeCost (src : Source) (b : Box) : ℕ → ℕ
   | 0 => 0
   | k + 1 => max (routeCost src b k) (stageCost src b (k + 1))
 
-theorem stageCost_le_routeCost (src : Source) (b : Box) (j k : ℕ)
-    (hj : 1 ≤ j) (hjk : j ≤ k) : stageCost src b j ≤ routeCost src b k := by
-  induction k with
-  | zero => omega
-  | succ k ih =>
-      rcases Nat.lt_or_ge j (k + 1) with hlt | hge
-      · exact (ih (by omega)).trans (Nat.le_max_left _ _)
-      · have : j = k + 1 := by omega
-        subst this
-        exact Nat.le_max_right _ _
-
 def pairGatesThrough (src : Source) (b : Box) : ℕ → Prop
   | 0 => True
   | k + 1 => pairGatesThrough src b k ∧ PairGates (stagePair src b (k + 1))
 
-instance (src : Source) (b : Box) : ∀ k : ℕ, Decidable (pairGatesThrough src b k)
-  | 0 => by unfold pairGatesThrough; infer_instance
-  | k + 1 => by
-      have := instDecidablePairGatesThrough src b k
-      unfold pairGatesThrough
-      infer_instance
-
-theorem pairGates_of_pairGatesThrough (src : Source) (b : Box) (j k : ℕ)
-    (hj : 1 ≤ j) (hjk : j ≤ k) (h : pairGatesThrough src b k) :
-    PairGates (stagePair src b j) := by
+instance (src : Source) (b : Box) (k : ℕ) :
+    Decidable (pairGatesThrough src b k) := by
   induction k with
-  | zero => omega
-  | succ k ih =>
-      obtain ⟨hprev, hlast⟩ := h
-      rcases Nat.lt_or_ge j (k + 1) with hlt | hge
-      · exact ih (by omega) hprev
-      · have : j = k + 1 := by omega
-        subst this
-        exact hlast
+  | zero => simp only [pairGatesThrough]; infer_instance
+  | succ k ih => simp only [pairGatesThrough]; infer_instance
 
 def terminalCoprime (src : Source) (b : Box) (k : ℕ) : Prop :=
-  stageT b k < b.factorT ∨ stageY src b k < b.ylo ∨ stageR src b k < b.r
+  stageT src b k < b.factorT ∨
+    stageY src b k < b.ylo ∨ stageR src b k < b.r
 
 instance (src : Source) (b : Box) (k : ℕ) :
     Decidable (terminalCoprime src b k) := by
   unfold terminalCoprime; infer_instance
 
 def RouteFits (src : Source) (k : ℕ) (b : Box) : Prop :=
-  1 ≤ k ∧ k ≤ 14 ∧
+  1 ≤ k ∧ k ≤ 18 ∧
     k * b.ylo ≤ src.y ∧ k * b.r ≤ src.r ∧
-    k * b.factorT + stageY src b k ≤ sourceLength ∧
+    k * b.factorT + stageY src b k ≤ src.length ∧
     bandSum src b k < src.gap ∧ terminalCoprime src b k ∧
     pairGatesThrough src b k ∧
     totalCap * routeCost src b k ≤ bound * b.factorT
@@ -155,9 +132,9 @@ instance (src : Source) (k : ℕ) (b : Box) : Decidable (RouteFits src k b) := b
 
 /-- A receipt-local propositionally equivalent presentation of `RouteFits`. -/
 def FastRouteFits (src : Source) (k : ℕ) (b : Box) : Prop :=
-  1 ≤ k ∧ k ≤ 14 ∧
+  1 ≤ k ∧ k ≤ 18 ∧
     k * b.ylo ≤ src.y ∧ k * b.r ≤ src.r ∧
-    k * b.factorT + stageY src b k ≤ sourceLength ∧
+    k * b.factorT + stageY src b k ≤ src.length ∧
     terminalCoprime src b k ∧ bandSum src b k < src.gap ∧
     pairGatesThrough src b k ∧
     totalCap * routeCost src b k ≤ bound * b.factorT
@@ -173,71 +150,61 @@ theorem fastRouteFits_iff (src : Source) (k : ℕ) (b : Box) :
   · rintro ⟨hkpos, hkcap, hy, hr, hlen, hband, hterminal, hgates, hcost⟩
     exact ⟨hkpos, hkcap, hy, hr, hlen, hterminal, hband, hgates, hcost⟩
 
-/-- Walk up to the first depth at which the route terminates, and accept it
-only there.  Beyond that depth every ingredient of `RouteFits` moves the wrong
-way -- the band sum grows, the stage cost is a max over more stages, and the
-gate chain is a longer conjunction -- so a deeper terminal depth can never fit
-when the first one does not.  Only soundness is proved here; completeness is
-what the row receipts witness. -/
-def routeDepthAux (src : Source) (b : Box) : ℕ → ℕ → ℕ
-  | _, 0 => 0
-  | k, n + 1 =>
-      if terminalCoprime src b k then
-        (if FastRouteFits src k b then k else 0)
-      else routeDepthAux src b (k + 1) n
+/-- The direct coprime-helper pair attached to a helper source. -/
+def helperPair (src : Source) (b : Box) : UnequalParameters :=
+  ⟨262144, 131071, 181559, b.factorY, b.r, b.thi,
+    src.y, src.r, src.length⟩
 
-def routeDepth (src : Source) (b : Box) : ℕ := routeDepthAux src b 1 routeCap
+def HelperFits (src : Source) (k : ℕ) (b : Box) : Prop :=
+  RouteFits src k b ∧ PairGates (helperPair src b) ∧
+    totalCap * max (routeCost src b k) (helperPair src b).regularCountCap ≤
+      bound * b.factorT
 
-theorem routeDepthAux_spec (src : Source) (b : Box) (n : ℕ) :
-    ∀ k, routeDepthAux src b k n ≠ 0 →
-      RouteFits src (routeDepthAux src b k n) b := by
-  induction n with
-  | zero =>
-      intro k h
-      simp only [routeDepthAux, ne_eq, not_true_eq_false] at h
-  | succ n ih =>
-      intro k h
-      simp only [routeDepthAux] at h ⊢
-      by_cases hterm : terminalCoprime src b k
-      · rw [if_pos hterm] at h ⊢
-        by_cases hfit : FastRouteFits src k b
-        · rw [if_pos hfit]
-          exact (fastRouteFits_iff src k b).mp hfit
-        · rw [if_neg hfit] at h
-          exact absurd rfl h
-      · rw [if_neg hterm] at h ⊢
-        exact ih (k + 1) h
+instance (src : Source) (k : ℕ) (b : Box) : Decidable (HelperFits src k b) := by
+  unfold HelperFits; infer_instance
 
-theorem routeDepth_spec (src : Source) (b : Box) (h : routeDepth src b ≠ 0) :
-    RouteFits src (routeDepth src b) b :=
-  routeDepthAux_spec src b routeCap 1 h
+def FastHelperFits (src : Source) (k : ℕ) (b : Box) : Prop :=
+  FastRouteFits src k b ∧ PairGates (helperPair src b) ∧
+    totalCap * max (routeCost src b k) (helperPair src b).regularCountCap ≤
+      bound * b.factorT
 
-def CFits (b : Box) : Prop := routeDepth sourceC b ≠ 0
+instance (src : Source) (k : ℕ) (b : Box) :
+    Decidable (FastHelperFits src k b) := by
+  unfold FastHelperFits; infer_instance
 
-instance (b : Box) : Decidable (CFits b) := by unfold CFits; infer_instance
+theorem fastHelperFits_iff (src : Source) (k : ℕ) (b : Box) :
+    FastHelperFits src k b ↔ HelperFits src k b := by
+  simp only [FastHelperFits, HelperFits, fastRouteFits_iff]
 
 def Fits (b : Box) : Prop :=
-  b.ordinaryFits ∨ RouteFits sourceA 1 b ∨ RouteFits sourceAux 1 b ∨ CFits b
+  b.ordinaryFits ∨ RouteFits sourceA 1 b ∨ RouteFits sourceAux 1 b ∨
+    RouteFits sourceC 2 b ∨ RouteFits sourceC 3 b ∨
+    RouteFits sourceC 4 b ∨ RouteFits sourceC 5 b ∨ RouteFits sourceC 6 b ∨
+    RouteFits sourceC 7 b ∨ RouteFits sourceC 8 b ∨ RouteFits sourceC 9 b ∨
+    HelperFits sourceH1 10 b ∨ HelperFits sourceH1 11 b ∨
+    HelperFits sourceH1 12 b ∨ HelperFits sourceH1 13 b ∨
+    HelperFits sourceH2 18 b
 
 instance (b : Box) : Decidable (Fits b) := by unfold Fits; infer_instance
 
 def FastFits (b : Box) : Prop :=
-  b.ordinaryFits ∨ FastRouteFits sourceAux 1 b ∨
-    FastRouteFits sourceA 1 b ∨ CFits b
+  b.ordinaryFits ∨ FastRouteFits sourceAux 1 b ∨ FastRouteFits sourceC 3 b ∨
+    FastRouteFits sourceC 4 b ∨ FastRouteFits sourceC 5 b ∨
+    FastRouteFits sourceC 6 b ∨ FastRouteFits sourceC 7 b ∨
+    FastRouteFits sourceC 8 b ∨ FastRouteFits sourceC 9 b ∨
+    FastRouteFits sourceA 1 b ∨ FastRouteFits sourceC 2 b ∨
+    FastHelperFits sourceH1 10 b ∨ FastHelperFits sourceH1 11 b ∨
+    FastHelperFits sourceH1 12 b ∨ FastHelperFits sourceH1 13 b ∨
+    FastHelperFits sourceH2 18 b
 
 instance (b : Box) : Decidable (FastFits b) := by unfold FastFits; infer_instance
 
 theorem fastFits_to_fits (b : Box) : FastFits b → Fits b := by
   intro h
-  unfold FastFits at h
-  unfold Fits
-  rcases h with h | h | h | h
-  · exact Or.inl h
-  · exact Or.inr (Or.inr (Or.inl ((fastRouteFits_iff sourceAux 1 b).mp h)))
-  · exact Or.inr (Or.inl ((fastRouteFits_iff sourceA 1 b).mp h))
-  · exact Or.inr (Or.inr (Or.inr h))
+  simp only [FastFits, Fits, fastRouteFits_iff, fastHelperFits_iff] at h ⊢
+  tauto
 
-abbrev CoarseCell := Fin 21 × Fin 24 × Fin 27
+abbrev CoarseCell := Fin 21 × Fin 24 × Fin 28
 def coarseR (c : CoarseCell) : ℕ := c.1.val + 1
 def coarseYlo (c : CoarseCell) : ℕ := coarseR c + 4 * c.2.1.val
 def coarseYhi (c : CoarseCell) : ℕ := min ysCap (coarseYlo c + 3)
@@ -339,10 +306,10 @@ def coarseCellOf (p : FlagDegree) (hslo : 1 ≤ p.all) (hshi : p.all ≤ slopeCa
       change p.all ≤ 21 at hshi
       omega⟩,
     ⟨(middle p - p.all) / 4, by
-      change middle p ≤ 93 at hy
+      change middle p ≤ 95 at hy
       omega⟩,
     ⟨total p / 128, by
-      change total p ≤ 3411 at ht
+      change total p ≤ 3504 at ht
       omega⟩)
 
 theorem coarseCellOf_bounds (p : FlagDegree) (hslo : 1 ≤ p.all)
@@ -491,7 +458,7 @@ theorem valid_of_inCell (p : FlagDegree) (c : Cell)
 
 /-- The part of a slope-row receipt in a half-open coarse-Y interval. -/
 def RowBandReceipt (ri : Fin 21) (lo hi : ℕ) : Prop :=
-  ∀ (cy : Fin 24), lo ≤ cy.val → cy.val < hi → ∀ (ct : Fin 27),
+  ∀ (cy : Fin 24), lo ≤ cy.val → cy.val < hi → ∀ (ct : Fin 28),
     let coarse : CoarseCell := (ri, cy, ct)
     FastHardCoarse coarse →
       ∀ (yi ti : Fin 4),
@@ -503,10 +470,88 @@ instance (ri : Fin 21) (lo hi : ℕ) : Decidable (RowBandReceipt ri lo hi) := by
   unfold RowBandReceipt
   infer_instance
 
+/-- A coarse-only route certificate.  It avoids reducing the complete
+adaptive leaf predicate when the coarse cell is already known to fit. -/
+def CoarseRouteReceipt (ri : Fin 21) (lo hi : ℕ)
+    (src : Source) (k : ℕ) : Prop :=
+  ∀ (cy : Fin 24), lo ≤ cy.val → cy.val < hi → ∀ (ct : Fin 28),
+    (coarseBox (ri, cy, ct)).valid →
+      FastRouteFits src k (coarseBox (ri, cy, ct))
+
+instance (ri : Fin 21) (lo hi : ℕ) (src : Source) (k : ℕ) :
+    Decidable (CoarseRouteReceipt ri lo hi src k) := by
+  unfold CoarseRouteReceipt
+  infer_instance
+
+def CoarseInvalidReceipt (ri : Fin 21) (lo hi : ℕ) : Prop :=
+  ∀ (cy : Fin 24), lo ≤ cy.val → cy.val < hi → ∀ (ct : Fin 28),
+    ¬ (coarseBox (ri, cy, ct)).valid
+
+instance (ri : Fin 21) (lo hi : ℕ) :
+    Decidable (CoarseInvalidReceipt ri lo hi) := by
+  unfold CoarseInvalidReceipt
+  infer_instance
+
+theorem coarseRouteReceipt_to_rowBand (ri : Fin 21) (lo hi : ℕ)
+    (src : Source) (k : ℕ) (h : CoarseRouteReceipt ri lo hi src k)
+    (hfits : ∀ b, FastRouteFits src k b → FastFits b) :
+    RowBandReceipt ri lo hi := by
+  intro cy hlo hhi ct
+  dsimp only
+  intro hhard
+  exact (hhard.2 (hfits _ (h cy hlo hhi ct hhard.1))).elim
+
+theorem fastFits_of_sourceA {b : Box} : FastRouteFits sourceA 1 b → FastFits b := by
+  simp only [FastFits]
+  tauto
+
+theorem fastFits_of_sourceAux {b : Box} : FastRouteFits sourceAux 1 b → FastFits b := by
+  simp only [FastFits]
+  tauto
+
+theorem fastFits_of_sourceC4 {b : Box} : FastRouteFits sourceC 4 b → FastFits b := by
+  simp only [FastFits]
+  tauto
+
+theorem fastFits_of_sourceC5 {b : Box} : FastRouteFits sourceC 5 b → FastFits b := by
+  simp only [FastFits]
+  tauto
+
+theorem fastFits_of_sourceC6 {b : Box} : FastRouteFits sourceC 6 b → FastFits b := by
+  simp only [FastFits]
+  tauto
+
+theorem fastFits_of_sourceC7 {b : Box} : FastRouteFits sourceC 7 b → FastFits b := by
+  simp only [FastFits]
+  tauto
+
+theorem fastFits_of_sourceC8 {b : Box} : FastRouteFits sourceC 8 b → FastFits b := by
+  simp only [FastFits]
+  tauto
+
+theorem fastFits_of_sourceC9 {b : Box} : FastRouteFits sourceC 9 b → FastFits b := by
+  simp only [FastFits]
+  tauto
+
+theorem coarseInvalidReceipt_to_rowBand (ri : Fin 21) (lo hi : ℕ)
+    (h : CoarseInvalidReceipt ri lo hi) : RowBandReceipt ri lo hi := by
+  intro cy hlo hhi ct
+  dsimp only
+  intro hhard
+  exact (h cy hlo hhi ct hhard.1).elim
+
+theorem rowBandReceipt_append (ri : Fin 21) (lo mid hi : ℕ)
+    (h₁ : RowBandReceipt ri lo mid) (h₂ : RowBandReceipt ri mid hi) :
+    RowBandReceipt ri lo hi := by
+  intro cy hlo hhi
+  by_cases hm : cy.val < mid
+  · exact h₁ cy hlo hm
+  · exact h₂ cy (by omega) hhi
+
 /-- A rectangular coarse-Y/coarse-T part of a slope-row receipt. -/
 def RowTileReceipt (ri : Fin 21) (ylo yhi tlo thi : ℕ) : Prop :=
   ∀ (cy : Fin 24), ylo ≤ cy.val → cy.val < yhi →
-    ∀ (ct : Fin 27), tlo ≤ ct.val → ct.val < thi →
+    ∀ (ct : Fin 28), tlo ≤ ct.val → ct.val < thi →
       let coarse : CoarseCell := (ri, cy, ct)
       FastHardCoarse coarse →
         ∀ (yi ti : Fin 4),
@@ -521,9 +566,9 @@ instance (ri : Fin 21) (ylo yhi tlo thi : ℕ) :
 
 /-- A receipt for one fixed coarse-Y cell and a half-open range of coarse-T
 cells.  Unlike `RowTileReceipt`, its decision procedure does not enumerate
-the other twenty-five values of `Fin 27`. -/
+the other twenty-seven values of `Fin 28`. -/
 def FixedYReceipt (ri : Fin 21) (cy : Fin 24) (tlo thi : ℕ) : Prop :=
-  ∀ (ct : Fin 27), tlo ≤ ct.val → ct.val < thi →
+  ∀ (ct : Fin 28), tlo ≤ ct.val → ct.val < thi →
     let coarse : CoarseCell := (ri, cy, ct)
     FastHardCoarse coarse →
       ∀ (yi ti : Fin 4),
@@ -550,7 +595,7 @@ theorem fixedYReceipt_to_rowTile (ri : Fin 21) (cy : Fin 24) (tlo thi : ℕ)
 /-- Adapt a full-total-range fixed-Y receipt to the existing singleton-Y band
 interface. -/
 theorem fixedYReceipt_to_rowBand (ri : Fin 21) (cy : Fin 24)
-    (h : FixedYReceipt ri cy 0 27) :
+    (h : FixedYReceipt ri cy 0 28) :
     RowBandReceipt ri cy.val (cy.val + 1) := by
   intro cy' hylo hyhi ct
   have hcy : cy' = cy := by
@@ -560,7 +605,7 @@ theorem fixedYReceipt_to_rowBand (ri : Fin 21) (cy : Fin 24)
   exact h ct (Nat.zero_le _) ct.isLt
 
 theorem rowTileFull_to_rowBand (ri : Fin 21) (cy : ℕ)
-    (h : RowTileReceipt ri cy (cy + 1) 0 27) : RowBandReceipt ri cy (cy + 1) := by
+    (h : RowTileReceipt ri cy (cy + 1) 0 28) : RowBandReceipt ri cy (cy + 1) := by
   intro cy' hylo hyhi ct
   exact h cy' hylo hyhi ct (Nat.zero_le _) ct.isLt
 
@@ -568,7 +613,7 @@ theorem rowTileFull_to_rowBand (ri : Fin 21) (cy : ℕ)
 this level: each auxiliary lemma evaluates one twentieth of the adaptive
 grid and is cached before the next row starts. -/
 def RowReceipt (ri : Fin 21) : Prop :=
-  ∀ (cy : Fin 24) (ct : Fin 27),
+  ∀ (cy : Fin 24) (ct : Fin 28),
     let coarse : CoarseCell := (ri, cy, ct)
     HardCoarse coarse →
       ∀ (yi ti : Fin 4),
@@ -582,7 +627,7 @@ instance (ri : Fin 21) : Decidable (RowReceipt ri) := by
 
 /-- A receipt-local propositionally equivalent row presentation. -/
 def FastRowReceipt (ri : Fin 21) : Prop :=
-  ∀ (cy : Fin 24) (ct : Fin 27),
+  ∀ (cy : Fin 24) (ct : Fin 28),
     let coarse : CoarseCell := (ri, cy, ct)
     FastHardCoarse coarse →
       ∀ (yi ti : Fin 4),
