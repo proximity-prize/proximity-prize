@@ -4,7 +4,7 @@ namespace ProximityPrize.SubmissionLower.LocatorCaps
 open ProximityPrize.Benchmark RCN100 RCN119 RCN180 RCN081 RCN234 RCN156 RCN130
 noncomputable section
 set_option autoImplicit false
-set_option maxRecDepth 100000
+set_option maxRecDepth 3000
 set_option maxHeartbeats 600000
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index
@@ -12,16 +12,16 @@ abbrev P4:=MvPolynomial (Fin 4) K
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 abbrev AKernel (u0 u1:I → K) :=
-  ConstraintKernel (K:=K) 13071600 131071 130000 21 72 IRSProfile.domain u0 u1
+  ConstraintKernel (K:=K) 13433960 131071 130000 21 74 IRSProfile.domain u0 u1
 abbrev TCapKernel (u0 u1:I → K) :=
-  ConstraintKernel (K:=K) 25780100 131071 3650 44 142 IRSProfile.domain u0 u1
-theorem gateA:Fintype.card I * localRankBound 72 130000 21 <
-    coefficientCount 13071600 131071 130000 21:=by
+  ConstraintKernel (K:=K) 25778680 131071 3700 44 142 IRSProfile.domain u0 u1
+theorem gateA:Fintype.card I * localRankBound 74 130000 21 <
+    coefficientCount 13433960 131071 130000 21:=by
   rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
   have h:=LocatorArithmetic.kernelA_nullity
   omega
-theorem gateTCap:Fintype.card I * localRankBound 142 3650 44 <
-    coefficientCount 25780100 131071 3650 44:=by
+theorem gateTCap:Fintype.card I * localRankBound 142 3700 44 <
+    coefficientCount 25778680 131071 3700 44:=by
   rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
   have h:=LocatorArithmetic.kernelTCap_nullity
   omega
@@ -40,76 +40,76 @@ theorem full_divisor_mem_box (D w L s m:ℕ)
   exact mem_flagGlobalCoefficientBox_of_dvd F (reconstruct K D w L s a)
     D w L s hQ (hdiv v) (reconstruct_mem_globalCoefficientBox K D w L s a)
 theorem full_A_divisor_mem_box (u0 u1:I → K) (F:P4) (_hF:F ≠ 0)
-    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 13071600 131071 130000 21 v.1) :
-    F ∈ globalCoefficientBox K 13071600 131071 130000 21:=
-  full_divisor_mem_box 13071600 131071 130000 21 72 gateA u0 u1 F hdiv
+    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 13433960 131071 130000 21 v.1) :
+    F ∈ globalCoefficientBox K 13433960 131071 130000 21:=
+  full_divisor_mem_box 13433960 131071 130000 21 74 gateA u0 u1 F hdiv
 theorem full_TCap_divisor_mem_box (u0 u1:I → K) (F:P4) (_hF:F ≠ 0)
-    (hdiv:∀ v:TCapKernel u0 u1,F ∣ reconstruct K 25780100 131071 3650 44 v.1) :
-    F ∈ globalCoefficientBox K 25780100 131071 3650 44:=
-  full_divisor_mem_box 25780100 131071 3650 44 142 gateTCap u0 u1 F hdiv
+    (hdiv:∀ v:TCapKernel u0 u1,F ∣ reconstruct K 25778680 131071 3700 44 v.1) :
+    F ∈ globalCoefficientBox K 25778680 131071 3700 44:=
+  full_divisor_mem_box 25778680 131071 3700 44 142 gateTCap u0 u1 F hdiv
 theorem common_A_ys_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
-    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 13071600 131071 130000 21 v.1) :
-    wt residualYSWeights F ≤ 96:=by
+    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 13433960 131071 130000 21 v.1) :
+    wt residualYSWeights F ≤ 99:=by
   have hbox:=full_A_divisor_mem_box u0 u1 F hF hdiv
   by_contra hnot
-  have hy:97 ≤ wt residualYSWeights F:=by omega
+  have hy:100 ≤ wt residualYSWeights F:=by omega
   have hcaps:=(mem_flagGlobalCoefficientBox_iff F
-    13071600 131071 130000 21 (by decide)).mp hbox
+    13433960 131071 130000 21 (by decide)).mp hbox
   have hr:wt residualSWeights F ≤ 21:=hcaps.2.1
   have hw:=residualYS_mul_le_contact_add_slope F 131071 (by decide)
-  have hc:12713866 ≤ wt (contactWeights 131071) F:=by omega
-  have ht:97 ≤ wt residualTotalWeights F:=
+  have hc:13107079 ≤ wt (contactWeights 131071) F:=by omega
+  have ht:100 ≤ wt residualTotalWeights F:=
     hy.trans (residual_weight_nested F).2
   have hdivK:∀ v:AKernel u0 u1,
       F ∣ kernelReconstructLinear (K:=K)
-        13071600 131071 130000 21 72 IRSProfile.domain u0 u1 v:=by
+        13433960 131071 130000 21 74 IRSProfile.domain u0 u1 v:=by
     intro v
     simpa only [kernelReconstructLinear_apply] using hdiv v
   have hq:∀ v:AKernel u0 u1,
       quotientPolynomial
         (kernelReconstructLinear (K:=K) (I:=I)
-          13071600 131071 130000 21 72 IRSProfile.domain u0 u1)
-        F hdivK v ∈ globalCoefficientBox K 357734 131071 129903 21:=by
+          13433960 131071 130000 21 74 IRSProfile.domain u0 u1)
+        F hdivK v ∈ globalCoefficientBox K 326881 131071 129900 21:=by
     have h:=LocatorLowQuotient.quotient_box_of_full_divisor (K:=K) (I:=I)
-      13071600 131071 130000 21 72 12713866 97 0
+      13433960 131071 130000 21 74 13107079 100 0
       IRSProfile.domain u0 u1 F hF hdivK hc ht (Nat.zero_le _)
     intro v
-    simpa only [show 13071600 - 12713866=357734 by decide,
-      show 130000 - 97=129903 by decide,Nat.sub_zero] using h v
+    simpa only [show 13433960 - 13107079=326881 by decide,
+      show 130000 - 100=129900 by decide,Nat.sub_zero] using h v
   have hobs:=common_divisor_dimension_obstruction (K:=K) (I:=I)
-    13071600 131071 130000 21 72 357734 129903 21
+    13433960 131071 130000 21 74 326881 129900 21
     IRSProfile.domain u0 u1 F hF hdivK hq
   simp only [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index],
     LocatorArithmetic.kernelA_nullity,
-    LocatorArithmetic.A_ys96_quotient_upper] at hobs
+    LocatorArithmetic.A_ys95_quotient_upper] at hobs
   omega
 theorem common_A_slope_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
-    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 13071600 131071 130000 21 v.1) :
+    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 13433960 131071 130000 21 v.1) :
     wt residualSWeights F ≤ 21:=
-  ((mem_flagGlobalCoefficientBox_iff F 13071600 131071 130000 21 (by decide)).mp
+  ((mem_flagGlobalCoefficientBox_iff F 13433960 131071 130000 21 (by decide)).mp
     (full_A_divisor_mem_box u0 u1 F hF hdiv)).2.1
 theorem common_TCap_total_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
-    (hdiv:∀ v:TCapKernel u0 u1,F ∣ reconstruct K 25780100 131071 3650 44 v.1) :
-    wt residualTotalWeights F ≤ 3634:=by
+    (hdiv:∀ v:TCapKernel u0 u1,F ∣ reconstruct K 25778680 131071 3700 44 v.1) :
+    wt residualTotalWeights F ≤ 3697:=by
   by_contra hnot
-  have ht:3635 ≤ wt residualTotalWeights F:=by omega
+  have ht:3698 ≤ wt residualTotalWeights F:=by omega
   have hdivK:∀ v:TCapKernel u0 u1,
       F ∣ kernelReconstructLinear (K:=K)
-        25780100 131071 3650 44 142 IRSProfile.domain u0 u1 v:=by
+        25778680 131071 3700 44 142 IRSProfile.domain u0 u1 v:=by
     intro v
     simpa only [kernelReconstructLinear_apply] using hdiv v
   have hq:∀ v:TCapKernel u0 u1,
       quotientPolynomial
         (kernelReconstructLinear (K:=K) (I:=I)
-          25780100 131071 3650 44 142 IRSProfile.domain u0 u1)
-        F hdivK v ∈ globalCoefficientBox K 25780100 131071 15 44:=by
+          25778680 131071 3700 44 142 IRSProfile.domain u0 u1)
+        F hdivK v ∈ globalCoefficientBox K 25778680 131071 2 44:=by
     have h:=LocatorLowQuotient.quotient_box_of_full_divisor (K:=K) (I:=I)
-      25780100 131071 3650 44 142 0 3635 0
+      25778680 131071 3700 44 142 0 3698 0
       IRSProfile.domain u0 u1 F hF hdivK (Nat.zero_le _) ht (Nat.zero_le _)
     intro v
-    simpa only [Nat.sub_zero,show 3650 - 3635=15 by decide] using h v
+    simpa only [Nat.sub_zero,show 3700 - 3698=2 by decide] using h v
   have hobs:=common_divisor_dimension_obstruction (K:=K) (I:=I)
-    25780100 131071 3650 44 142 25780100 15 44
+    25778680 131071 3700 44 142 25778680 2 44
     IRSProfile.domain u0 u1 F hF hdivK hq
   rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]] at hobs
   exact (not_lt_of_ge hobs) LocatorArithmetic.kernelTCap_total_quotient_lt
