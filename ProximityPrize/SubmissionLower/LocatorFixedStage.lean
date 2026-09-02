@@ -11,11 +11,11 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80526
-def agreements:ℕ:=181618
-def gap:ℕ:=50547
+def errors:ℕ:=80555
+def agreements:ℕ:=181589
+def gap:ℕ:=50518
 def prime:ℕ:=2130706433
-def weightedCap:ℕ:=11623552
+def weightedCap:ℕ:=11621696
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index
 local instance:DecidableEq K:=Classical.decEq K
