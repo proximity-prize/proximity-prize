@@ -7,15 +7,15 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80614
+def errors:ℕ:=80624
 def agreements:ℕ:=n - errors
 def gap:ℕ:=agreements - w
 def prime:ℕ:=2130706433
-def multiplicity:ℕ:=75
-def yTotalCap:ℕ:=102
+def multiplicity:ℕ:=76
+def yTotalCap:ℕ:=104
 def slopeCap:ℕ:=22
 def weightedCap:ℕ:=multiplicity * agreements
-def listBudget:ℕ:=3021351659
+def listBudget:ℕ:=3081204481
 def capY:ℕ:=1 + 2*w*yTotalCap
 def capR:ℕ:=w*(2*slopeCap - 1)
 def regularListNumerator:ℕ:=(n-w)*(capY*slopeCap + capR*yTotalCap)
@@ -25,31 +25,31 @@ private def coefficientRow (i:ℕ):ℕ:=
  ∑ j ∈ Finset.range (slopeCap + 1),
    min 1 (yTotalCap + 1 - i - j) * (weightedCap - w*i - (w-1)*j)
 private theorem coefficient_0:
- (∑ i ∈ Finset.range 10,coefficientRow i) =2664126915:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow i) =2705704015:=by decide
 private theorem coefficient_10:
- (∑ i ∈ Finset.range 10,coefficientRow (10+i)) =2362663615:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (10+i)) =2404240715:=by decide
 private theorem coefficient_20:
- (∑ i ∈ Finset.range 10,coefficientRow (20+i)) =2061200315:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (20+i)) =2102777415:=by decide
 private theorem coefficient_30:
- (∑ i ∈ Finset.range 10,coefficientRow (30+i)) =1759737015:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (30+i)) =1801314115:=by decide
 private theorem coefficient_40:
- (∑ i ∈ Finset.range 10,coefficientRow (40+i)) =1458273715:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (40+i)) =1499850815:=by decide
 private theorem coefficient_50:
- (∑ i ∈ Finset.range 10,coefficientRow (50+i)) =1156810415:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (50+i)) =1198387515:=by decide
 private theorem coefficient_60:
- (∑ i ∈ Finset.range 10,coefficientRow (60+i)) =855347115:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (60+i)) =896924215:=by decide
 private theorem coefficient_70:
- (∑ i ∈ Finset.range 10,coefficientRow (70+i)) =553883815:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (70+i)) =595460915:=by decide
 private theorem coefficient_80:
- (∑ i ∈ Finset.range 10,coefficientRow (80+i)) =262998500:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (80+i)) =300411211:=by decide
 private theorem coefficient_90:
- (∑ i ∈ Finset.range 10,coefficientRow (90+i)) =68054100:=by decide
+ (∑ i ∈ Finset.range 10,coefficientRow (90+i)) =88013160:=by decide
 private theorem coefficient_100:
- (∑ i ∈ Finset.range 3,coefficientRow (100+i)) =1997336:=by decide
+ (∑ i ∈ Finset.range 5,coefficientRow (100+i)) =5083480:=by decide
 theorem coefficient_count_exact:
-   coefficientCount weightedCap w yTotalCap slopeCap=13205092856:=by
- change (∑ i ∈ Finset.range 103,coefficientRow i) =_
- rw [Finset.sum_range_add coefficientRow 100 3,
+   coefficientCount weightedCap w yTotalCap slopeCap=13598167571:=by
+ change (∑ i ∈ Finset.range 105,coefficientRow i) =_
+ rw [Finset.sum_range_add coefficientRow 100 5,
    Finset.sum_range_add coefficientRow 90 10,
    Finset.sum_range_add coefficientRow 80 10,
    Finset.sum_range_add coefficientRow 70 10,
@@ -76,17 +76,17 @@ private theorem rank_32:
 private theorem rank_40:
  (∑ i ∈ Finset.range 8,rankRow (40+i)) =8188:=by decide
 private theorem rank_48:
- (∑ i ∈ Finset.range 8,rankRow (48+i)) =9452:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (48+i)) =9557:=by decide
 private theorem rank_56:
- (∑ i ∈ Finset.range 8,rankRow (56+i)) =8348:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (56+i)) =8760:=by decide
 private theorem rank_64:
- (∑ i ∈ Finset.range 8,rankRow (64+i)) =4956:=by decide
+ (∑ i ∈ Finset.range 8,rankRow (64+i)) =5560:=by decide
 private theorem rank_72:
- (∑ i ∈ Finset.range 3,rankRow (72+i)) =566:=by decide
+ (∑ i ∈ Finset.range 4,rankRow (72+i)) =940:=by decide
 theorem local_rank_exact:
-   localRankBound multiplicity yTotalCap slopeCap=50370:=by
- change (∑ i ∈ Finset.range 75,rankRow i) =_
- rw [Finset.sum_range_add rankRow 72 3,
+   localRankBound multiplicity yTotalCap slopeCap=51865:=by
+ change (∑ i ∈ Finset.range 76,rankRow i) =_
+ rw [Finset.sum_range_add rankRow 72 4,
    Finset.sum_range_add rankRow 64 8,
    Finset.sum_range_add rankRow 56 8,
    Finset.sum_range_add rankRow 48 8,

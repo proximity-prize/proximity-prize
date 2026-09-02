@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.LocatorHybridRealizeC2
 
-/-! Per-factor bounds on the fixed stage — C2 / 6786 row: padded always, the C2
+/-! Per-factor bounds on the fixed stage — C2 / 6787 row: padded always, the C2
 hybrid one when the C2 branch applies (`3 ≤ p.all` and `p.all + 2 ≤ middle p`). -/
 
 namespace ProximityPrize.SubmissionLower.LocatorFixedOwnBoundC2
@@ -21,17 +21,17 @@ local instance:CharP K 2130706433:=by
 /-- Both per-factor bounds: padded always, C2 hybrid when it applies. -/
 theorem regular_factor_own_bound
     (D:ℕ) (P:ResidualSupportParameters)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 14885460)
-    (hS:P.s ≤ 24) (hY:P.ys ≤ 113) (hT:P.total ≤ 3808)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 14521600)
+    (hS:P.s ≤ 23) (hY:P.ys ≤ 110) (hT:P.total ≤ 3922)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181530 ≤
+    (hagreement:∀ gamma ∈ Gamma,181520 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80614)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80624)
     (R:RegularIndex Q) (hreal:RealizationC2 D) :
     OwnBoundC2 (regularSeeds Q selected Gamma R).card (regularCumulativeFlag Q R):=
   ⟨regular_factor_count D P hDlow hDhigh hS hY hT Q hQ hbox HQ selected Gamma u0 u1
