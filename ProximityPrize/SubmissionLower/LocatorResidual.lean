@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.GH
 import ProximityPrize.SubmissionLower.LocatorArithmetic
 import ProximityPrize.SubmissionLower.LocatorCover
-import ProximityPrize.SubmissionLower.CommonShearStagePrototype
 namespace ProximityPrize.SubmissionLower.LocatorResidual
 open scoped Classical
 open LocatorArithmetic RCN174 RCN319 RCN260 RCN318 RCN238 RCN243 RCN052 RCN303 RCN259 RCN180 RCN156 RCN234
@@ -33,7 +32,7 @@ theorem residual_count_lt
     (valid:Gates)
     (Q T:MvPolynomial (Fin 4) K) (hQ:Q ≠ 0) (hrel:IsRelPrime Q T)
     (hbox:Q ∈ globalCoefficientBox K weightedB w LB 23)
-    (hTcaps:T.degreeOf 1 ≤ 365 ∧ T.degreeOf 2 ≤ 80 ∧ T.degreeOf 3 ≤ LA)
+    (hTcaps:T.degreeOf 1 ≤ 333 ∧ T.degreeOf 2 ≤ 71 ∧ T.degreeOf 3 ≤ LA)
     (selected:K → Polynomial K) (seeds:Finset K)
     (nodes:Finset I) (x u0 u1:I → K)
     (hinj:Set.InjOn x nodes) (hnodes:nodes.card=n)
@@ -44,14 +43,14 @@ theorem residual_count_lt
       (nodes.filter (fun i=> (selected gamma).eval (x i) =u0 i + gamma * u1 i)).card)
     (hno:NoLargeSelectedPencil selected seeds w (n - agreements)) :
     seeds.card < residualStage.regularCountCap +
-      CommonShearTightPrototype.countCap residualSingular + 1:=by
+      residualSingular.countCap + 1:=by
   classical
-  apply CommonShearStagePrototype.asymmetric_stage_count_lt_of_regular_factors
+  apply asymmetric_stage_count_lt_of_regular_factors
     residualStage residualSingular Q T hQ 2130706433
     (by change 1 ≤ 23; decide) (by change 23 < 2130706433; decide)
     (by change 1 ≤ 131071; decide) (by change 131071 < 2130706433; decide) valid.kD
     valid.algebraic_pos valid.implicit_small valid.algebraic_small
-    (by change 131071 < 181609; decide) (by change 181609 ≤ 262144; decide)
+    (by change 131071 < 181589; decide) (by change 181589 ≤ 262144; decide)
     hbox (by norm_num only [residualStage,UnequalParameters.gap,agreements,w])
     (by simp only [residualSingular,residualStage,TightParameters.gap,
       UnequalParameters.gap])
@@ -66,13 +65,13 @@ theorem residual_count_lt
     valid.leftZ_small valid.mixedY_small valid.mixedR_small valid.mixedZ_small
     selected seeds nodes x u0 u1 hinj hnodes
     (by change 1 ≤ 131071; decide) (by change 131071 < 2130706433; decide)
-    (by change 131071 < 181609; decide) (by change 181609 ≤ 262144; decide)
+    (by change 131071 < 181589; decide) (by change 181589 ≤ 262144; decide)
     hdegree hagreement
     (by simpa only [residualStage,UnequalParameters.errors] using hno)
 theorem gcd_residual_count_lt
     [GCDMonoid (MvPolynomial (Fin 4) K)]
     (QA QB:MvPolynomial (Fin 4) K) (hQA:QA ≠ 0) (hQB:QB ≠ 0)
-    (hboxA:QA ∈ RCN100.globalCoefficientBox K weightedC w LA 80)
+    (hboxA:QA ∈ RCN100.globalCoefficientBox K weightedC w LA 71)
     (hboxB:QB ∈ RCN100.globalCoefficientBox K weightedB w LB 23)
     (selected:K → Polynomial K) (seeds:Finset K)
     (nodes:Finset I) (x u0 u1:I → K)
@@ -86,7 +85,7 @@ theorem gcd_residual_count_lt
     (LocatorCover.residual
       (fun gamma=> (specialization K (selected gamma) gamma).toRingHom)
       seeds QA QB).card < residualStage.regularCountCap +
-        CommonShearTightPrototype.countCap residualSingular + 1:=by
+        residualSingular.countCap + 1:=by
   classical
   let phi:=fun gamma=> (specialization K (selected gamma) gamma).toRingHom
   let Delta:=LocatorCover.residual phi seeds QA QB
@@ -106,17 +105,17 @@ theorem gcd_residual_count_lt
     QB H Q weightedB w LB 23 0 0 0 hQB hH hQ hboxB hQeq
     (Nat.zero_le _) (Nat.zero_le _) (Nat.zero_le _)
   have hTflag:=quotient_mem_flagGlobalCoefficientBox_of_mul_eq
-    QA H T weightedC w LA 80 0 0 0 hQA hH hT hboxA hTeq
+    QA H T weightedC w LA 71 0 0 0 hQA hH hT hboxA hTeq
     (Nat.zero_le _) (Nat.zero_le _) (Nat.zero_le _)
   have hQbox:Q ∈ globalCoefficientBox K weightedB w LB 23:=
     RCN101.flag_box_to_ordinary K
       weightedB w LB 23 Q (by simpa only [Nat.sub_zero] using hQflag)
-  have hTbox:T ∈ globalCoefficientBox K weightedC w LA 80:=
+  have hTbox:T ∈ globalCoefficientBox K weightedC w LA 71:=
     RCN101.flag_box_to_ordinary K
-      weightedC w LA 80 T (by simpa only [Nat.sub_zero] using hTflag)
+      weightedC w LA 71 T (by simpa only [Nat.sub_zero] using hTflag)
   have hTcaps:=RCN081.degree_bounds_of_mem_box
-    T weightedC w LA 80 (by decide) hTbox
-  rw [show (weightedC - 1) / w=365 by decide] at hTcaps
+    T weightedC w LA 71 (by decide) hTbox
+  rw [show (weightedC - 1) / w=333 by decide] at hTcaps
   have hsub:Delta ⊆ seeds:=by
     intro gamma hg
     have hm:gamma ∈ seeds ∧ (phi gamma) (gcd12 QA QB) ≠ 0:=by
