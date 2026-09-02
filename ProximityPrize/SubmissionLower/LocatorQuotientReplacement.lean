@@ -21,7 +21,6 @@ noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 2000000
-set_option Elab.async false
 
 abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
