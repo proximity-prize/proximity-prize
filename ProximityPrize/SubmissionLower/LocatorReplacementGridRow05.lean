@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.LocatorReplacementGridRow05Hot04
-import ProximityPrize.SubmissionLower.LocatorReplacementGridY22
 
 namespace ProximityPrize.SubmissionLower.LocatorReplacementGridData
 
@@ -20,9 +19,7 @@ private theorem receipt_row_05_fast : FastRowReceipt 5 := by
   · exact receipt_row_05_band_04 cy (by omega) h₄
   by_cases h₅ : cy.val < 18
   · exact receipt_row_05_band_05 cy (by omega) h₅
-  by_cases h₆ : cy.val < 22
-  · exact receipt_row_05_band_06 cy (by omega) h₆
-  · exact receipt_y_22 5 cy (by omega) (by simpa [coarseYCells, ysCap] using cy.isLt)
+  · exact receipt_row_05_band_06 cy (by omega) (by omega)
 
 theorem receipt_row_05 : RowReceipt 5 :=
   fastRowReceipt_to_rowReceipt 5 receipt_row_05_fast

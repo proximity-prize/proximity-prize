@@ -20,6 +20,12 @@ theorem isRelPrime_of_weight_lt (weights:Fin 4 → ℕ)
   apply hF.isRelPrime_iff_not_dvd.mpr
   intro hdiv
   exact (not_lt_of_ge (weightedTotalDegree_le_of_dvd weights F Q hdiv hQ)) hlt
+theorem isRelPrime_of_weight_sub_bound (weights:Fin 4 → ℕ)
+    (F Q:MvPolynomial (Fin 4) K) (hF:Irreducible F) (hQ:Q ≠ 0)
+    (B:ℕ) (hbound:wt weights Q ≤ B - wt weights F)
+    (hhalf:B < 2 * wt weights F):IsRelPrime F Q:=by
+  apply isRelPrime_of_weight_lt weights F Q hF hQ
+  omega
 private theorem regular_mem_normalizedFactors
     (H:MvPolynomial (Fin 4) K) (F:RCN266.RegularIndex H) :
     F.1 ∈ normalizedFactors H:=by
@@ -105,6 +111,43 @@ theorem regularSeeds_count_le_intersection
   apply P.regular_count_le _ (by unfold UnequalParameters.gap; omega)
   exact hcount.trans (Nat.add_le_add (Nat.mul_le_mul_left (P.n - P.w) hdot)
     (Nat.mul_le_mul_left ((P.errors + 1) * P.gap) hv.2.2))
+theorem regularSeeds_count_le_intersection_of_product
+    (P:UnequalParameters) (H Q:MvPolynomial (Fin 4) K)
+    (F:RCN266.RegularIndex H) (hrel:IsRelPrime F.1 Q)
+    (p:ℕ) [CharP K p]
+    (hFY:F.1.degreeOf 1 ≤ P.leftY) (hFR:F.1.degreeOf 2 ≤ P.leftR)
+    (hFZ:F.1.degreeOf 3 ≤ P.leftZ)
+    (hQY:Q.degreeOf 1 ≤ P.rightY) (hQR:Q.degreeOf 2 ≤ P.rightR)
+    (hQZ:Q.degreeOf 3 ≤ P.rightZ)
+    (hleftR:1 ≤ P.leftR)
+    (hleftYSmall:P.leftY < p) (hleftRSmall:P.leftR < p)
+    (hleftZSmall:P.leftZ < p)
+    (hmixedYSmall:P.mixedCost.y < p) (hmixedRSmall:P.mixedCost.r < p)
+    (hmixedZSmall:P.mixedCost.z < p)
+    (selected:K → Polynomial K) (Gamma:Finset K)
+    (nodes:Finset I) (x u0 u1:I → K) (hinj:Set.InjOn x nodes)
+    (hnodes:nodes.card = P.n)
+    (hw:1 ≤ P.w) (hchar:P.w < p) (hwa:P.w < P.a) (han:P.a ≤ P.n)
+    (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ P.w)
+    (hagreement:∀ gamma ∈ Gamma, P.a ≤
+      (nodes.filter (fun i => (selected gamma).eval (x i) = u0 i + gamma * u1 i)).card)
+    (hno:RCN238.NoLargeSelectedPencil selected Gamma P.w P.errors)
+    (hproduct:∀ gamma ∈ RCN140.regularSeeds H selected Gamma F,
+      RCN319.specialization K (selected gamma) gamma
+        (MvPolynomial.pderiv (2:Fin 4) (F.1 * Q)) = 0) :
+    (RCN140.regularSeeds H selected Gamma F).card ≤ P.regularCountCap:=by
+  apply regularSeeds_count_le_intersection P H Q F hrel p
+    hFY hFR hFZ hQY hQR hQZ hleftR hleftYSmall hleftRSmall hleftZSmall
+    hmixedYSmall hmixedRSmall hmixedZSmall
+    selected Gamma nodes x u0 u1 hinj hnodes hw hchar hwa han hdegree hagreement hno
+  intro gamma hgamma
+  obtain ⟨hFzero, hregular⟩:=(Finset.mem_filter.mp hgamma).2
+  have hmul :
+      RCN319.specialization K (selected gamma) gamma (MvPolynomial.pderiv (2:Fin 4) F.1) *
+        RCN319.specialization K (selected gamma) gamma Q = 0:=by
+    simpa only [MvPolynomial.pderiv_mul, map_add, map_mul,
+      hFzero, zero_mul, add_zero] using hproduct gamma hgamma
+  exact (mul_eq_zero.mp hmul).resolve_left hregular
 end
 end ProximityPrize.SubmissionLower.LocatorCoprimeQuotient
 
