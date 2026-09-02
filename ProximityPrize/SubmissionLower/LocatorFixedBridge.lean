@@ -15,21 +15,21 @@ set_option maxRecDepth 1000000
 local instance:DecidableEq K:=Classical.decEq _
 local instance:DecidableEq I:=Classical.decEq _
 local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
-/-! Row 6786.  The common divisor `H` of the selected pair divides every B and
-total-cap reconstruction, so it lies in the B box (slope `24`, ys `113`) with
-total at most `3808`.  Each regular factor is charged by one of two grids:
+/-! Row 6787.  The common divisor `H` of the selected pair divides every B and
+total-cap reconstruction, so it lies in the B box (slope `23`, ys `110`) with
+total at most `3922`.  Each regular factor is charged by one of two grids:
 if it divides every A reconstruction it lies in the narrow box (slope `22`,
-ys `99`) and the adaptive receipt grid applies; otherwise the generic
+ys `101`) and the adaptive receipt grid applies; otherwise the generic
 divisor-or-helper switch counts it by a direct coprime pair with an A
 reconstruction, and the wide coarse pair grid certifies that rate. -/
 theorem gcd_fixed_count_le
     (u0 u1:I → K) (S:SelectedPair u0 u1)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181530 ≤
+    (hagreement:∀ gamma ∈ Gamma,181520 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80614) :
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80624) :
     (LocatorCover.fixed
       (fun gamma=> (specialization K (selected gamma) gamma).toRingHom)
       Gamma S.QA S.QB).card ≤
@@ -40,17 +40,17 @@ theorem gcd_fixed_count_le
     fun gamma=> (specialization K (selected gamma) gamma).toRingHom
   let Delta:Finset K:=LocatorCover.fixed phi Gamma S.QA S.QB
   have hH:H ≠ 0:=gcd_ne_zero_of_left S.QA_ne
-  have hHflagB:H ∈ RCN100.globalCoefficientBox K 14885460 131071 9600 24:=
+  have hHflagB:H ∈ RCN100.globalCoefficientBox K 14521600 131071 16000 23:=
     LocatorCaps.full_B_divisor_mem_box u0 u1 H hH S.common_divides_B
   have hHcapsB:=(mem_flagGlobalCoefficientBox_iff H
-    14885460 131071 9600 24 (by decide)).mp hHflagB
-  have hT:wt residualTotalWeights H ≤ 3808:=S.common_total_le
-  have hYS:wt residualYSWeights H ≤ 113:=S.common_ys_le
-  have hS:wt residualSWeights H ≤ 24:=S.common_slope_le
-  have hflag:H ∈ RCN100.globalCoefficientBox K 14885460 131071 3808 24:=
-    (mem_flagGlobalCoefficientBox_iff H 14885460 131071 3808 24 (by decide)).mpr
+    14521600 131071 16000 23 (by decide)).mp hHflagB
+  have hT:wt residualTotalWeights H ≤ 3922:=S.common_total_le
+  have hYS:wt residualYSWeights H ≤ 110:=S.common_ys_le
+  have hS:wt residualSWeights H ≤ 23:=S.common_slope_le
+  have hflag:H ∈ RCN100.globalCoefficientBox K 14521600 131071 3922 23:=
+    (mem_flagGlobalCoefficientBox_iff H 14521600 131071 3922 23 (by decide)).mpr
       ⟨hT,hS,hHcapsB.2.2⟩
-  have hbox:=flag_box_to_ordinary K 14885460 131071 3808 24 H hflag
+  have hbox:=flag_box_to_ordinary K 14521600 131071 3922 23 H hflag
   have hsupport:ResidualSupportData LocatorFixedConsumer.wholeSupport H:=
     ⟨hS,hYS,hT⟩
   have hsub:Delta ⊆ Gamma:=by
@@ -63,15 +63,15 @@ theorem gcd_fixed_count_le
     exact LocatorCover.fixed_vanish phi Gamma S.QA S.QB gamma hg
   have hdegreeD:∀ gamma ∈ Delta, (selected gamma).natDegree ≤ 131071:=
     fun gamma hg=> hdegree gamma (hsub hg)
-  have hagreementD:∀ gamma ∈ Delta,181530 ≤
+  have hagreementD:∀ gamma ∈ Delta,181520 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card:=
     fun gamma hg=> hagreement gamma (hsub hg)
-  have hnoD:NoLargeSelectedPencil selected Delta 131071 80614:=
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80614 hsub hno
+  have hnoD:NoLargeSelectedPencil selected Delta 131071 80624:=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80624 hsub hno
   let p:=regularCumulativeFlag H
   have hfcaps (F:RegularIndex H) :
-      (p F).all ≤ 24 ∧ middle (p F) ≤ 113 ∧ total (p F) ≤ 3808:=by
+      (p F).all ≤ 23 ∧ middle (p F) ≤ 110 ∧ total (p F) ≤ 3922:=by
     have hf:=LocatorFixed.factor_support H hH hsupport F
     have hc:=originalCumulativeFlag_cumulative F.1
     refine ⟨?_, ?_, ?_⟩
@@ -87,7 +87,7 @@ theorem gcd_fixed_count_le
     simpa only [p] using Nat.one_le_iff_ne_zero.mpr hne
   have hown (F:RegularIndex H) :
       LocatorHybridCostC2.OwnBoundC2 (regularSeeds H selected Delta F).card (p F):=
-    LocatorFixedOwnBoundC2.regular_factor_own_bound 14885460
+    LocatorFixedOwnBoundC2.regular_factor_own_bound 14521600
       LocatorFixedConsumer.wholeSupport (by decide) (by decide)
       (by decide) (by decide) (by decide)
       H hH hbox hsupport selected Delta u0 u1 hdegreeD hagreementD hnoD F
@@ -106,10 +106,10 @@ theorem gcd_fixed_count_le
       simp only [p,regularCumulativeFlag,middle,hc.2.1]
     have htot:wt residualTotalWeights F.1=total (p F):=by
       simp only [p,regularCumulativeFlag,total,hc.2.2]
-    by_cases hA:∀ v:ConstraintKernel (K:=K) 13614750 131071 130000 22 75
+    by_cases hA:∀ v:ConstraintKernel (K:=K) 13795520 131071 130000 22 76
         IRSProfile.domain u0 u1,
-        F.1 ∣ reconstruct K 13614750 131071 130000 22 v.1
-    · have hys:middle (p F) ≤ 99:=by
+        F.1 ∣ reconstruct K 13795520 131071 130000 22 v.1
+    · have hys:middle (p F) ≤ 101:=by
         have h:=LocatorCaps.common_A_ys_le u0 u1 F.1 hF hA
         simpa only [p,regularCumulativeFlag,middle,hc.2.1] using h
       have hsl:(p F).all ≤ 22:=by
@@ -128,7 +128,7 @@ theorem gcd_fixed_count_le
         have hweight:(box c).weight ≤ LocatorFixedConsumer.wgt (p F):=by
           unfold Box.weight LocatorFixedConsumer.wgt
           exact Nat.add_le_add
-            (Nat.add_le_add hfactorT (Nat.mul_le_mul_left wY hcell.ylo_le))
+            (Nat.add_le_add (Nat.mul_le_mul_left wT hfactorT) (Nat.mul_le_mul_left wY hcell.ylo_le))
             (Nat.mul_le_mul_left wS (le_of_eq hcell.all_eq.symm))
         exact hrate.trans (Nat.mul_le_mul_left bound hweight)
     · let e:=LocatorPairGrid.extCellOf (p F) (hfpos F) (hfcaps F).1
@@ -150,13 +150,13 @@ theorem gcd_fixed_count_le
         rw [htot]
         exact hb.2.2.2.2
       have hgates:LocatorHelperFactorSwitchGenericC2.HelperPairGates
-          103 22 130000 b.factorY b.r b.thi:=by
+          105 22 130000 b.factorY b.r b.thi:=by
         simpa only [LocatorHelperFactorSwitchGenericC2.HelperPairGates,
           LocatorHelperFactorSwitchGenericC2.helperPair,
           LocatorReplacementGridData.helperPair,LocatorPairGrid.PairFits,
           PairGates,sourceA] using hpair.1
       rcases LocatorHelperFactorSwitchGenericC2.divisor_or_helper_count
-          13614750 130000 22 75 103 (by decide) (by decide)
+          13795520 130000 22 76 105 (by decide) (by decide)
           LocatorHelperArithmeticGeneric.sourceA_shape
           selected Delta hdegreeD hagreementD hnoD F b.factorY b.r b.thi
           hFY hFR hFZ hgates with hdiv | hcount
@@ -170,7 +170,7 @@ theorem gcd_fixed_count_le
           have hweight:b.weight ≤ LocatorFixedConsumer.wgt (p F):=by
             unfold Box.weight LocatorFixedConsumer.wgt
             exact Nat.add_le_add
-              (Nat.add_le_add hfactorT (Nat.mul_le_mul_left wY hb.2.1))
+              (Nat.add_le_add (Nat.mul_le_mul_left wT hfactorT) (Nat.mul_le_mul_left wY hb.2.1))
               (Nat.mul_le_mul_left wS (le_of_eq hb.1.symm))
           exact hpair.2.trans (Nat.mul_le_mul_left bound hweight)
   let qCost:RegularIndex H → ℕ:=fun F=>

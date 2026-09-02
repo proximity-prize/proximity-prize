@@ -24,32 +24,34 @@ abbrev selectedDegree : ℕ := 131071
 /-- Field characteristic. -/
 abbrev prime : ℕ := 2130706433
 /-- Agreement threshold, shared by every stage and helper pair. -/
-abbrev agreements : ℕ := 181530
+abbrev agreements : ℕ := 181520
 /-- Error budget, forced as `262144 - agreements`. -/
-abbrev errors : ℕ := 80614
+abbrev errors : ℕ := 80624
 /-- Contact-band width, `agreements - selectedDegree + 1`. -/
-abbrev delta : ℕ := 50460
-abbrev bound : ℕ := 270344084085901085
-abbrev totalCap : ℕ := 3808
+abbrev delta : ℕ := 50450
+abbrev bound : ℕ := 269159312872668139
+abbrev totalCap : ℕ := 3922
 /-- Caps of the factors that divide every A reconstruction (the narrow grid). -/
-abbrev ysCap : ℕ := 99
+abbrev ysCap : ℕ := 101
 abbrev slopeCap : ℕ := 22
 /-- Caps of the whole common divisor, from the B box: every factor lies below
 them, and the weighted budget is charged against them. -/
-abbrev wholeSlopeCap : ℕ := 24
-abbrev wholeYsCap : ℕ := 113
+abbrev wholeSlopeCap : ℕ := 23
+abbrev wholeYsCap : ℕ := 110
 
-/-- Nonnegative linear weights for the aggregate charge.  Row 6786: the
-weighted-sum sweep of the exact model closes the grid at `(0, 12)` (the last
-hard unit cells sit at slope `8`, ys `36`, and a heavier slope charge moves the
-budget there).  These are the values the receipts were generated at. -/
+/-- Nonnegative linear weights for the aggregate charge, `wT * total + wY * middle
++ wS * slope`.  Row 6787: the exact model closes the grid at `(3, 0, 260)`: a factor
+is charged mostly by its share of the whole divisor's slope (a slope-8 factor is a
+third of slope 23), which is where the last hard cells sit.  These are the values
+the receipts were generated at. -/
+abbrev wT : ℕ := 3
 abbrev wY : ℕ := 0
-abbrev wS : ℕ := 12
+abbrev wS : ℕ := 260
 
 /-- Total weight budget.  The whole-divisor support caps bound the three sums
 `∑ total ≤ totalCap`, `∑ middle ≤ wholeYsCap` and `∑ all ≤ wholeSlopeCap`, so
 the weighted sum over the factors is bounded by this. -/
-abbrev capSum : ℕ := totalCap + wY * wholeYsCap + wS * wholeSlopeCap
+abbrev capSum : ℕ := wT * totalCap + wY * wholeYsCap + wS * wholeSlopeCap
 
 /-- Maximum admissible repeated-projection depth for the accepted source-C
 route, which is the only route driven by `routeDepth`. -/
@@ -57,13 +59,13 @@ abbrev routeCap : ℕ := 14
 
 /-- Maximum admissible depth for any route, including the helper sources whose
 windows run deeper than the C route. -/
-abbrev depthCap : ℕ := 34
+abbrev depthCap : ℕ := 200
 
 /-- Grid dimensions.  A cap change means the matching band count changes here:
 `yBands * 4` must cover `ysCap` and `tBands * 128` must cover `totalCap`. -/
 abbrev slopeRows : ℕ := 22
-abbrev yBands : ℕ := 25
-abbrev tBands : ℕ := 30
+abbrev yBands : ℕ := 26
+abbrev tBands : ℕ := 31
 
 /-- A rectangular cumulative-degree box for one irreducible factor. -/
 structure Box where
@@ -92,7 +94,7 @@ def Box.ordinaryCost (b : Box) : ℕ :=
 box, `all p = b.r`, `middle p ≥ b.ylo`, and `total p ≥ max b.tlo b.ylo`
 because `total p ≥ b.tlo` and `total p ≥ middle p ≥ b.ylo`, so
 `total p + wY * middle p + wS * all p ≥ b.weight`. -/
-def Box.weight (b : Box) : ℕ := b.factorT + wY * b.ylo + wS * b.r
+def Box.weight (b : Box) : ℕ := wT * b.factorT + wY * b.ylo + wS * b.r
 
 def Box.ordinaryFits (b : Box) : Prop :=
   capSum * b.ordinaryCost ≤ bound * b.weight
@@ -108,31 +110,31 @@ structure Source where
   gap : ℕ
   deriving DecidableEq
 
-def sourceA : Source := ⟨130000, 103, 22, 351572585294⟩
-def sourceAux : Source := ⟨130000, 103, 23, 396080340478⟩
-def sourceC : Source := ⟨130000, 553, 120, 1622595225055178⟩
-
-/-- Nullities of the helper kernels at row 6786 (`LocatorHelperArithmeticGeneric`). -/
-abbrev gapH1 : ℕ := 3012828511088025
-abbrev gapH2 : ℕ := 26566017386262297
-abbrev gapH3 : ℕ := 40851803364289489
-abbrev gapH3X : ℕ := 240339549990589489
-abbrev gapCbig : ℕ := 13064567220685178
-abbrev gapT20k : ℕ := 440799821601495
-abbrev gapT30k : ℕ := 845803391069760
-
-/-- Larger auxiliary sources used only by the local divisor-or-helper switch.
-Each is searched over its own short depth window, deliberately separate from
-the accepted source-C route. -/
-def sourceH1 : Source := ⟨350000, 491, 105, gapH1⟩
-def sourceH2 : Source := ⟨1000000, 692, 150, gapH2⟩
-def sourceH3 : Source := ⟨350000, 1121, 243, gapH3⟩
-/-- The long H3 box (`L = 2000000`), the long C box (`L = 1000000`), and two
-short total-exhaustion sources (`L = 20000`, `30000`, slope `170`). -/
-def sourceH3X : Source := ⟨2000000, 1121, 243, gapH3X⟩
-def sourceCbig : Source := ⟨1000000, 553, 120, gapCbig⟩
-def sourceT20k : Source := ⟨20000, 775, 170, gapT20k⟩
-def sourceT30k : Source := ⟨30000, 789, 170, gapT30k⟩
+/-- Row 6787 sources: the A, Aux and C kernels and the helper kernels (nullities
+from `LocatorHelperArithmeticGeneric`); the long ones exhaust their ys degree in
+40..200 stages. -/
+def sourceA : Source := ⟨130000, 105, 22, 255124945551⟩
+def sourceAux : Source := ⟨130000, 105, 23, 422421820346⟩
+def sourceC : Source := ⟨130000, 553, 120, 1591585493643178⟩
+def sourceS2 : Source := ⟨1000000, 692, 150, 26099605139687297⟩
+def sourceS3 : Source := ⟨350000, 1121, 243, 40160939066613289⟩
+def sourceH3X : Source := ⟨2000000, 1121, 243, 236385995162913289⟩
+def sourceH4 : Source := ⟨2000000, 1384, 300, 452270055375521215⟩
+def sourceT10k : Source := ⟨10000, 747, 170, 56736169045377⟩
+def sourceT15k : Source := ⟨15000, 761, 170, 236413037510670⟩
+def sourceT20k : Source := ⟨20000, 775, 170, 427848492911895⟩
+def sourceT30k : Source := ⟨30000, 789, 170, 825486901846260⟩
+def sourceL1 : Source := ⟨100000, 1661, 360, 32824016747150030⟩
+def sourceL2 : Source := ⟨100000, 2437, 540, 98869741656154847⟩
+def sourceL3 : Source := ⟨100000, 3212, 720, 208366000154703552⟩
+def sourceL4 : Source := ⟨200000, 2215, 480, 169689309551713640⟩
+def sourceL5 : Source := ⟨200000, 4320, 960, 1173917541318584880⟩
+def sourceL6 : Source := ⟨200000, 5401, 1200, 2147605378029326500⟩
+def sourceM1 : Source := ⟨300000, 3600, 800, 1138451951765615400⟩
+def sourceM3 : Source := ⟨300000, 4293, 950, 1879915212902702273⟩
+def sourceN1 : Source := ⟨400000, 3600, 800, 1570210864625615400⟩
+def sourceN3 : Source := ⟨400000, 6370, 1400, 8038176207758867660⟩
+def sourceN4 : Source := ⟨400000, 7201, 1600, 11500069849226062000⟩
 
 def stageT (src : Source) (b : Box) (j : ℕ) : ℕ := src.length - j * b.factorT
 def stageY (src : Source) (b : Box) (j : ℕ) : ℕ := src.y - j * b.ylo
@@ -423,118 +425,262 @@ theorem helperDepthAux_bounds (src : Source) (b : Box) (n : ℕ) :
         have hb := ih (k + 1) h
         omega
 
-def helperDepthH1 (b : Box) : ℕ := helperDepthAux sourceH1 b 10 4
-def helperDepthH2 (b : Box) : ℕ := helperDepthAux sourceH2 b 14 5
-def helperDepthH3 (b : Box) : ℕ := helperDepthAux sourceH3 b 26 5
-def helperDepthCbig (b : Box) : ℕ := helperDepthAux sourceCbig b 8 10
-def helperDepthH3X (b : Box) : ℕ := helperDepthAux sourceH3X b 26 8
-def helperDepthT20k (b : Box) : ℕ := helperDepthAux sourceT20k b 1 10
-def helperDepthT30k (b : Box) : ℕ := helperDepthAux sourceT30k b 1 12
+def helperDepthS2 (b : Box) : ℕ := helperDepthAux sourceS2 b 14 5
+def S2Fits (b : Box) : Prop := helperDepthS2 b ≠ 0
+instance (b : Box) : Decidable (S2Fits b) := by unfold S2Fits; infer_instance
+theorem helperDepthS2_spec (b : Box) (h : S2Fits b) :
+    HelperFits sourceS2 (helperDepthS2 b) b :=
+  helperDepthAux_spec sourceS2 b 5 14 h
+theorem helperDepthS2_bounds (b : Box) (h : S2Fits b) :
+    14 ≤ helperDepthS2 b ∧ helperDepthS2 b ≤ 18 := by
+  have hb := helperDepthAux_bounds sourceS2 b 5 14 h
+  change 14 ≤ helperDepthAux sourceS2 b 14 5 ∧
+    helperDepthAux sourceS2 b 14 5 ≤ 18
+  omega
 
-def H1Fits (b : Box) : Prop := helperDepthH1 b ≠ 0
-def H2Fits (b : Box) : Prop := helperDepthH2 b ≠ 0
-def H3Fits (b : Box) : Prop := helperDepthH3 b ≠ 0
-def CbigFits (b : Box) : Prop := helperDepthCbig b ≠ 0
+def helperDepthS3 (b : Box) : ℕ := helperDepthAux sourceS3 b 26 5
+def S3Fits (b : Box) : Prop := helperDepthS3 b ≠ 0
+instance (b : Box) : Decidable (S3Fits b) := by unfold S3Fits; infer_instance
+theorem helperDepthS3_spec (b : Box) (h : S3Fits b) :
+    HelperFits sourceS3 (helperDepthS3 b) b :=
+  helperDepthAux_spec sourceS3 b 5 26 h
+theorem helperDepthS3_bounds (b : Box) (h : S3Fits b) :
+    26 ≤ helperDepthS3 b ∧ helperDepthS3 b ≤ 30 := by
+  have hb := helperDepthAux_bounds sourceS3 b 5 26 h
+  change 26 ≤ helperDepthAux sourceS3 b 26 5 ∧
+    helperDepthAux sourceS3 b 26 5 ≤ 30
+  omega
+
+def helperDepthH3X (b : Box) : ℕ := helperDepthAux sourceH3X b 24 9
 def H3XFits (b : Box) : Prop := helperDepthH3X b ≠ 0
-def T20kFits (b : Box) : Prop := helperDepthT20k b ≠ 0
-def T30kFits (b : Box) : Prop := helperDepthT30k b ≠ 0
-
-instance (b : Box) : Decidable (H1Fits b) := by unfold H1Fits; infer_instance
-instance (b : Box) : Decidable (H2Fits b) := by unfold H2Fits; infer_instance
-instance (b : Box) : Decidable (H3Fits b) := by unfold H3Fits; infer_instance
-instance (b : Box) : Decidable (CbigFits b) := by unfold CbigFits; infer_instance
 instance (b : Box) : Decidable (H3XFits b) := by unfold H3XFits; infer_instance
-instance (b : Box) : Decidable (T20kFits b) := by unfold T20kFits; infer_instance
-instance (b : Box) : Decidable (T30kFits b) := by unfold T30kFits; infer_instance
-
-theorem helperDepthH1_spec (b : Box) (h : H1Fits b) :
-    HelperFits sourceH1 (helperDepthH1 b) b :=
-  helperDepthAux_spec sourceH1 b 4 10 h
-
-theorem helperDepthH2_spec (b : Box) (h : H2Fits b) :
-    HelperFits sourceH2 (helperDepthH2 b) b :=
-  helperDepthAux_spec sourceH2 b 5 14 h
-
-theorem helperDepthH3_spec (b : Box) (h : H3Fits b) :
-    HelperFits sourceH3 (helperDepthH3 b) b :=
-  helperDepthAux_spec sourceH3 b 5 26 h
-
-theorem helperDepthH1_bounds (b : Box) (h : H1Fits b) :
-    10 ≤ helperDepthH1 b ∧ helperDepthH1 b ≤ 13 := by
-  have hb := helperDepthAux_bounds sourceH1 b 4 10 h
-  change 10 ≤ helperDepthAux sourceH1 b 10 4 ∧
-    helperDepthAux sourceH1 b 10 4 ≤ 13
-  omega
-
-theorem helperDepthH2_bounds (b : Box) (h : H2Fits b) :
-    14 ≤ helperDepthH2 b ∧ helperDepthH2 b ≤ 18 := by
-  have hb := helperDepthAux_bounds sourceH2 b 5 14 h
-  change 14 ≤ helperDepthAux sourceH2 b 14 5 ∧
-    helperDepthAux sourceH2 b 14 5 ≤ 18
-  omega
-
-theorem helperDepthH3_bounds (b : Box) (h : H3Fits b) :
-    26 ≤ helperDepthH3 b ∧ helperDepthH3 b ≤ 30 := by
-  have hb := helperDepthAux_bounds sourceH3 b 5 26 h
-  change 26 ≤ helperDepthAux sourceH3 b 26 5 ∧
-    helperDepthAux sourceH3 b 26 5 ≤ 30
-  omega
-
-theorem helperDepthCbig_spec (b : Box) (h : CbigFits b) :
-    HelperFits sourceCbig (helperDepthCbig b) b :=
-  helperDepthAux_spec sourceCbig b 10 8 h
-
 theorem helperDepthH3X_spec (b : Box) (h : H3XFits b) :
     HelperFits sourceH3X (helperDepthH3X b) b :=
-  helperDepthAux_spec sourceH3X b 8 26 h
+  helperDepthAux_spec sourceH3X b 9 24 h
+theorem helperDepthH3X_bounds (b : Box) (h : H3XFits b) :
+    24 ≤ helperDepthH3X b ∧ helperDepthH3X b ≤ 32 := by
+  have hb := helperDepthAux_bounds sourceH3X b 9 24 h
+  change 24 ≤ helperDepthAux sourceH3X b 24 9 ∧
+    helperDepthAux sourceH3X b 24 9 ≤ 32
+  omega
 
+def helperDepthH4 (b : Box) : ℕ := helperDepthAux sourceH4 b 30 7
+def H4Fits (b : Box) : Prop := helperDepthH4 b ≠ 0
+instance (b : Box) : Decidable (H4Fits b) := by unfold H4Fits; infer_instance
+theorem helperDepthH4_spec (b : Box) (h : H4Fits b) :
+    HelperFits sourceH4 (helperDepthH4 b) b :=
+  helperDepthAux_spec sourceH4 b 7 30 h
+theorem helperDepthH4_bounds (b : Box) (h : H4Fits b) :
+    30 ≤ helperDepthH4 b ∧ helperDepthH4 b ≤ 36 := by
+  have hb := helperDepthAux_bounds sourceH4 b 7 30 h
+  change 30 ≤ helperDepthAux sourceH4 b 30 7 ∧
+    helperDepthAux sourceH4 b 30 7 ≤ 36
+  omega
+
+def helperDepthT10k (b : Box) : ℕ := helperDepthAux sourceT10k b 1 8
+def T10kFits (b : Box) : Prop := helperDepthT10k b ≠ 0
+instance (b : Box) : Decidable (T10kFits b) := by unfold T10kFits; infer_instance
+theorem helperDepthT10k_spec (b : Box) (h : T10kFits b) :
+    HelperFits sourceT10k (helperDepthT10k b) b :=
+  helperDepthAux_spec sourceT10k b 8 1 h
+theorem helperDepthT10k_bounds (b : Box) (h : T10kFits b) :
+    1 ≤ helperDepthT10k b ∧ helperDepthT10k b ≤ 8 := by
+  have hb := helperDepthAux_bounds sourceT10k b 8 1 h
+  change 1 ≤ helperDepthAux sourceT10k b 1 8 ∧
+    helperDepthAux sourceT10k b 1 8 ≤ 8
+  omega
+
+def helperDepthT15k (b : Box) : ℕ := helperDepthAux sourceT15k b 2 11
+def T15kFits (b : Box) : Prop := helperDepthT15k b ≠ 0
+instance (b : Box) : Decidable (T15kFits b) := by unfold T15kFits; infer_instance
+theorem helperDepthT15k_spec (b : Box) (h : T15kFits b) :
+    HelperFits sourceT15k (helperDepthT15k b) b :=
+  helperDepthAux_spec sourceT15k b 11 2 h
+theorem helperDepthT15k_bounds (b : Box) (h : T15kFits b) :
+    2 ≤ helperDepthT15k b ∧ helperDepthT15k b ≤ 12 := by
+  have hb := helperDepthAux_bounds sourceT15k b 11 2 h
+  change 2 ≤ helperDepthAux sourceT15k b 2 11 ∧
+    helperDepthAux sourceT15k b 2 11 ≤ 12
+  omega
+
+def helperDepthT20k (b : Box) : ℕ := helperDepthAux sourceT20k b 4 11
+def T20kFits (b : Box) : Prop := helperDepthT20k b ≠ 0
+instance (b : Box) : Decidable (T20kFits b) := by unfold T20kFits; infer_instance
 theorem helperDepthT20k_spec (b : Box) (h : T20kFits b) :
     HelperFits sourceT20k (helperDepthT20k b) b :=
-  helperDepthAux_spec sourceT20k b 10 1 h
+  helperDepthAux_spec sourceT20k b 11 4 h
+theorem helperDepthT20k_bounds (b : Box) (h : T20kFits b) :
+    4 ≤ helperDepthT20k b ∧ helperDepthT20k b ≤ 14 := by
+  have hb := helperDepthAux_bounds sourceT20k b 11 4 h
+  change 4 ≤ helperDepthAux sourceT20k b 4 11 ∧
+    helperDepthAux sourceT20k b 4 11 ≤ 14
+  omega
 
+def helperDepthT30k (b : Box) : ℕ := helperDepthAux sourceT30k b 8 15
+def T30kFits (b : Box) : Prop := helperDepthT30k b ≠ 0
+instance (b : Box) : Decidable (T30kFits b) := by unfold T30kFits; infer_instance
 theorem helperDepthT30k_spec (b : Box) (h : T30kFits b) :
     HelperFits sourceT30k (helperDepthT30k b) b :=
-  helperDepthAux_spec sourceT30k b 12 1 h
-
-theorem helperDepthCbig_bounds (b : Box) (h : CbigFits b) :
-    8 ≤ helperDepthCbig b ∧ helperDepthCbig b ≤ 17 := by
-  have hb := helperDepthAux_bounds sourceCbig b 10 8 h
-  change 8 ≤ helperDepthAux sourceCbig b 8 10 ∧
-    helperDepthAux sourceCbig b 8 10 ≤ 17
-  omega
-
-theorem helperDepthH3X_bounds (b : Box) (h : H3XFits b) :
-    26 ≤ helperDepthH3X b ∧ helperDepthH3X b ≤ 33 := by
-  have hb := helperDepthAux_bounds sourceH3X b 8 26 h
-  change 26 ≤ helperDepthAux sourceH3X b 26 8 ∧
-    helperDepthAux sourceH3X b 26 8 ≤ 33
-  omega
-
-theorem helperDepthT20k_bounds (b : Box) (h : T20kFits b) :
-    1 ≤ helperDepthT20k b ∧ helperDepthT20k b ≤ 10 := by
-  have hb := helperDepthAux_bounds sourceT20k b 10 1 h
-  change 1 ≤ helperDepthAux sourceT20k b 1 10 ∧
-    helperDepthAux sourceT20k b 1 10 ≤ 10
-  omega
-
+  helperDepthAux_spec sourceT30k b 15 8 h
 theorem helperDepthT30k_bounds (b : Box) (h : T30kFits b) :
-    1 ≤ helperDepthT30k b ∧ helperDepthT30k b ≤ 12 := by
-  have hb := helperDepthAux_bounds sourceT30k b 12 1 h
-  change 1 ≤ helperDepthAux sourceT30k b 1 12 ∧
-    helperDepthAux sourceT30k b 1 12 ≤ 12
+    8 ≤ helperDepthT30k b ∧ helperDepthT30k b ≤ 22 := by
+  have hb := helperDepthAux_bounds sourceT30k b 15 8 h
+  change 8 ≤ helperDepthAux sourceT30k b 8 15 ∧
+    helperDepthAux sourceT30k b 8 15 ≤ 22
+  omega
+
+def helperDepthL1 (b : Box) : ℕ := helperDepthAux sourceL1 b 32 19
+def L1Fits (b : Box) : Prop := helperDepthL1 b ≠ 0
+instance (b : Box) : Decidable (L1Fits b) := by unfold L1Fits; infer_instance
+theorem helperDepthL1_spec (b : Box) (h : L1Fits b) :
+    HelperFits sourceL1 (helperDepthL1 b) b :=
+  helperDepthAux_spec sourceL1 b 19 32 h
+theorem helperDepthL1_bounds (b : Box) (h : L1Fits b) :
+    32 ≤ helperDepthL1 b ∧ helperDepthL1 b ≤ 50 := by
+  have hb := helperDepthAux_bounds sourceL1 b 19 32 h
+  change 32 ≤ helperDepthAux sourceL1 b 32 19 ∧
+    helperDepthAux sourceL1 b 32 19 ≤ 50
+  omega
+
+def helperDepthL2 (b : Box) : ℕ := helperDepthAux sourceL2 b 50 23
+def L2Fits (b : Box) : Prop := helperDepthL2 b ≠ 0
+instance (b : Box) : Decidable (L2Fits b) := by unfold L2Fits; infer_instance
+theorem helperDepthL2_spec (b : Box) (h : L2Fits b) :
+    HelperFits sourceL2 (helperDepthL2 b) b :=
+  helperDepthAux_spec sourceL2 b 23 50 h
+theorem helperDepthL2_bounds (b : Box) (h : L2Fits b) :
+    50 ≤ helperDepthL2 b ∧ helperDepthL2 b ≤ 72 := by
+  have hb := helperDepthAux_bounds sourceL2 b 23 50 h
+  change 50 ≤ helperDepthAux sourceL2 b 50 23 ∧
+    helperDepthAux sourceL2 b 50 23 ≤ 72
+  omega
+
+def helperDepthL3 (b : Box) : ℕ := helperDepthAux sourceL3 b 62 19
+def L3Fits (b : Box) : Prop := helperDepthL3 b ≠ 0
+instance (b : Box) : Decidable (L3Fits b) := by unfold L3Fits; infer_instance
+theorem helperDepthL3_spec (b : Box) (h : L3Fits b) :
+    HelperFits sourceL3 (helperDepthL3 b) b :=
+  helperDepthAux_spec sourceL3 b 19 62 h
+theorem helperDepthL3_bounds (b : Box) (h : L3Fits b) :
+    62 ≤ helperDepthL3 b ∧ helperDepthL3 b ≤ 80 := by
+  have hb := helperDepthAux_bounds sourceL3 b 19 62 h
+  change 62 ≤ helperDepthAux sourceL3 b 62 19 ∧
+    helperDepthAux sourceL3 b 62 19 ≤ 80
+  omega
+
+def helperDepthL4 (b : Box) : ℕ := helperDepthAux sourceL4 b 44 13
+def L4Fits (b : Box) : Prop := helperDepthL4 b ≠ 0
+instance (b : Box) : Decidable (L4Fits b) := by unfold L4Fits; infer_instance
+theorem helperDepthL4_spec (b : Box) (h : L4Fits b) :
+    HelperFits sourceL4 (helperDepthL4 b) b :=
+  helperDepthAux_spec sourceL4 b 13 44 h
+theorem helperDepthL4_bounds (b : Box) (h : L4Fits b) :
+    44 ≤ helperDepthL4 b ∧ helperDepthL4 b ≤ 56 := by
+  have hb := helperDepthAux_bounds sourceL4 b 13 44 h
+  change 44 ≤ helperDepthAux sourceL4 b 44 13 ∧
+    helperDepthAux sourceL4 b 44 13 ≤ 56
+  omega
+
+def helperDepthL5 (b : Box) : ℕ := helperDepthAux sourceL5 b 100 29
+def L5Fits (b : Box) : Prop := helperDepthL5 b ≠ 0
+instance (b : Box) : Decidable (L5Fits b) := by unfold L5Fits; infer_instance
+theorem helperDepthL5_spec (b : Box) (h : L5Fits b) :
+    HelperFits sourceL5 (helperDepthL5 b) b :=
+  helperDepthAux_spec sourceL5 b 29 100 h
+theorem helperDepthL5_bounds (b : Box) (h : L5Fits b) :
+    100 ≤ helperDepthL5 b ∧ helperDepthL5 b ≤ 128 := by
+  have hb := helperDepthAux_bounds sourceL5 b 29 100 h
+  change 100 ≤ helperDepthAux sourceL5 b 100 29 ∧
+    helperDepthAux sourceL5 b 100 29 ≤ 128
+  omega
+
+def helperDepthL6 (b : Box) : ℕ := helperDepthAux sourceL6 b 128 23
+def L6Fits (b : Box) : Prop := helperDepthL6 b ≠ 0
+instance (b : Box) : Decidable (L6Fits b) := by unfold L6Fits; infer_instance
+theorem helperDepthL6_spec (b : Box) (h : L6Fits b) :
+    HelperFits sourceL6 (helperDepthL6 b) b :=
+  helperDepthAux_spec sourceL6 b 23 128 h
+theorem helperDepthL6_bounds (b : Box) (h : L6Fits b) :
+    128 ≤ helperDepthL6 b ∧ helperDepthL6 b ≤ 150 := by
+  have hb := helperDepthAux_bounds sourceL6 b 23 128 h
+  change 128 ≤ helperDepthAux sourceL6 b 128 23 ∧
+    helperDepthAux sourceL6 b 128 23 ≤ 150
+  omega
+
+def helperDepthM1 (b : Box) : ℕ := helperDepthAux sourceM1 b 76 27
+def M1Fits (b : Box) : Prop := helperDepthM1 b ≠ 0
+instance (b : Box) : Decidable (M1Fits b) := by unfold M1Fits; infer_instance
+theorem helperDepthM1_spec (b : Box) (h : M1Fits b) :
+    HelperFits sourceM1 (helperDepthM1 b) b :=
+  helperDepthAux_spec sourceM1 b 27 76 h
+theorem helperDepthM1_bounds (b : Box) (h : M1Fits b) :
+    76 ≤ helperDepthM1 b ∧ helperDepthM1 b ≤ 102 := by
+  have hb := helperDepthAux_bounds sourceM1 b 27 76 h
+  change 76 ≤ helperDepthAux sourceM1 b 76 27 ∧
+    helperDepthAux sourceM1 b 76 27 ≤ 102
+  omega
+
+def helperDepthM3 (b : Box) : ℕ := helperDepthAux sourceM3 b 110 15
+def M3Fits (b : Box) : Prop := helperDepthM3 b ≠ 0
+instance (b : Box) : Decidable (M3Fits b) := by unfold M3Fits; infer_instance
+theorem helperDepthM3_spec (b : Box) (h : M3Fits b) :
+    HelperFits sourceM3 (helperDepthM3 b) b :=
+  helperDepthAux_spec sourceM3 b 15 110 h
+theorem helperDepthM3_bounds (b : Box) (h : M3Fits b) :
+    110 ≤ helperDepthM3 b ∧ helperDepthM3 b ≤ 124 := by
+  have hb := helperDepthAux_bounds sourceM3 b 15 110 h
+  change 110 ≤ helperDepthAux sourceM3 b 110 15 ∧
+    helperDepthAux sourceM3 b 110 15 ≤ 124
+  omega
+
+def helperDepthN1 (b : Box) : ℕ := helperDepthAux sourceN1 b 88 17
+def N1Fits (b : Box) : Prop := helperDepthN1 b ≠ 0
+instance (b : Box) : Decidable (N1Fits b) := by unfold N1Fits; infer_instance
+theorem helperDepthN1_spec (b : Box) (h : N1Fits b) :
+    HelperFits sourceN1 (helperDepthN1 b) b :=
+  helperDepthAux_spec sourceN1 b 17 88 h
+theorem helperDepthN1_bounds (b : Box) (h : N1Fits b) :
+    88 ≤ helperDepthN1 b ∧ helperDepthN1 b ≤ 104 := by
+  have hb := helperDepthAux_bounds sourceN1 b 17 88 h
+  change 88 ≤ helperDepthAux sourceN1 b 88 17 ∧
+    helperDepthAux sourceN1 b 88 17 ≤ 104
+  omega
+
+def helperDepthN3 (b : Box) : ℕ := helperDepthAux sourceN3 b 160 21
+def N3Fits (b : Box) : Prop := helperDepthN3 b ≠ 0
+instance (b : Box) : Decidable (N3Fits b) := by unfold N3Fits; infer_instance
+theorem helperDepthN3_spec (b : Box) (h : N3Fits b) :
+    HelperFits sourceN3 (helperDepthN3 b) b :=
+  helperDepthAux_spec sourceN3 b 21 160 h
+theorem helperDepthN3_bounds (b : Box) (h : N3Fits b) :
+    160 ≤ helperDepthN3 b ∧ helperDepthN3 b ≤ 180 := by
+  have hb := helperDepthAux_bounds sourceN3 b 21 160 h
+  change 160 ≤ helperDepthAux sourceN3 b 160 21 ∧
+    helperDepthAux sourceN3 b 160 21 ≤ 180
+  omega
+
+def helperDepthN4 (b : Box) : ℕ := helperDepthAux sourceN4 b 184 17
+def N4Fits (b : Box) : Prop := helperDepthN4 b ≠ 0
+instance (b : Box) : Decidable (N4Fits b) := by unfold N4Fits; infer_instance
+theorem helperDepthN4_spec (b : Box) (h : N4Fits b) :
+    HelperFits sourceN4 (helperDepthN4 b) b :=
+  helperDepthAux_spec sourceN4 b 17 184 h
+theorem helperDepthN4_bounds (b : Box) (h : N4Fits b) :
+    184 ≤ helperDepthN4 b ∧ helperDepthN4 b ≤ 200 := by
+  have hb := helperDepthAux_bounds sourceN4 b 17 184 h
+  change 184 ≤ helperDepthAux sourceN4 b 184 17 ∧
+    helperDepthAux sourceN4 b 184 17 ≤ 200
   omega
 
 def Fits (b : Box) : Prop :=
   b.ordinaryFits ∨ AFits b ∨ AuxFits b ∨ CHFits b ∨
-    H1Fits b ∨ H2Fits b ∨ H3Fits b ∨ CbigFits b ∨ H3XFits b ∨
-    T20kFits b ∨ T30kFits b
+    S2Fits b ∨ S3Fits b ∨ H3XFits b ∨ H4Fits b ∨ T10kFits b ∨ T15kFits b ∨ T20kFits b ∨ T30kFits b ∨ L1Fits b ∨ L2Fits b ∨ L3Fits b ∨ L4Fits b ∨ L5Fits b ∨ L6Fits b ∨ M1Fits b ∨ M3Fits b ∨ N1Fits b ∨ N3Fits b ∨ N4Fits b
 
 instance (b : Box) : Decidable (Fits b) := by unfold Fits; infer_instance
 
 def FastFits (b : Box) : Prop :=
   b.ordinaryFits ∨ FastAFits b ∨ FastAuxFits b ∨ FastCHFits b ∨
-    H1Fits b ∨ H2Fits b ∨ H3Fits b ∨ CbigFits b ∨ H3XFits b ∨
-    T20kFits b ∨ T30kFits b
+    S2Fits b ∨ S3Fits b ∨ H3XFits b ∨ H4Fits b ∨ T10kFits b ∨ T15kFits b ∨ T20kFits b ∨ T30kFits b ∨ L1Fits b ∨ L2Fits b ∨ L3Fits b ∨ L4Fits b ∨ L5Fits b ∨ L6Fits b ∨ M1Fits b ∨ M3Fits b ∨ N1Fits b ∨ N3Fits b ∨ N4Fits b
 
 instance (b : Box) : Decidable (FastFits b) := by unfold FastFits; infer_instance
 
@@ -649,12 +795,12 @@ def coarseCellOf (p : FlagDegree) (hslo : 1 ≤ p.all) (hshi : p.all ≤ slopeCa
       show p.all - 1 < 22
       omega⟩,
     ⟨(middle p - p.all) / 4, by
-      change middle p ≤ 99 at hy
-      show (middle p - p.all) / 4 < 25
+      change middle p ≤ 101 at hy
+      show (middle p - p.all) / 4 < 26
       omega⟩,
     ⟨total p / 128, by
-      change total p ≤ 3808 at ht
-      show total p / 128 < 30
+      change total p ≤ 3922 at ht
+      show total p / 128 < 31
       omega⟩)
 
 theorem coarseCellOf_bounds (p : FlagDegree) (hslo : 1 ≤ p.all)
