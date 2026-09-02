@@ -52,17 +52,19 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    failed unscored, exactly like the memory ceiling. This repository's own
    benchmark job allows 180, so a submission can build green here and still be
    cut off there; a local build that takes over an hour is already close.
-7. Stay inside the verifier's **disk** budget. The build writes to a **2 GiB**
-   working filesystem, and filling it fails the submission unscored and reports
-   `candidate_out_of_disk`.
+7. Stay inside the verifier's **disk** budget. The build writes to a **32 GiB**
+   filesystem of its own, and filling it fails the submission unscored and
+   reports `candidate_out_of_disk`.
 
-   This one is about the *number* of modules rather than the cost of any one of
-   them, because what fills the disk is compiled output: a few thousand small
-   modules can exhaust it while every individual proof stays cheap. Splitting
-   one expensive declaration into many files is the usual fix for the memory
-   ceiling and the usual way to reach this one, so the two pull against each
-   other — if a split is what keeps you under the memory ceiling, keep the
-   pieces few and large rather than many and small.
+   What fills it is compiled output, so it is about the number of modules rather
+   than the cost of any one of them. It is a disk and not RAM, so that output
+   does not also count against the memory budget in rule 5.
+
+   Module count still reaches rule 5 by another route: every module built at
+   once loads the challenge's import closure, which is about 3 GiB before any of
+   your own code. A wide build is a memory cost even when each proof in it is
+   cheap. Importing one heavy module from the next makes them build in sequence
+   instead.
 
 Keep these rules aligned with `scripts/check-submission-imports.sh` and with
 the independent verifier's source policy, which is the authority: `source:` in
