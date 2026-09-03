@@ -60,6 +60,7 @@ CODE_VERDICTS = {
     "stopped partway. This is a resource outcome, not a judgement on the proof: "
     "nothing was checked, so a correct proof fails this way too -- see the disk "
     "rule in AGENTS.md, which gives the budget and the usual cause.",
+    "candidate_aborted": "The build was killed by a signal instead of finishing and disagreeing -- an out-of-memory kill, a crash, or an abort. This is a resource outcome, not a judgement on the proof: nothing was checked, so a correct proof fails this way too. The verdict names the signal and the module it died in, which is the part worth reading."
 }
 
 
