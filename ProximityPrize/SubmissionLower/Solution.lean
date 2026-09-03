@@ -1,3 +1,4 @@
+/- Knowledge submission (port-verified 67.87; see note): solver-swarm feed for the next cell. -/
 import ProximityPrize.SubmissionLower.LocatorClosure
 namespace ProximityPrize.Benchmark
 theorem candidate:ProtocolClaim 6787 10319999 33554432:=
