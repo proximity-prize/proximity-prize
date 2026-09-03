@@ -242,39 +242,45 @@ theorem aggregate_of_rate_replacements_cost {I:Type*} [Fintype I]
       _ ≤ bound * T:=Nat.mul_le_mul_left bound ht
       _ = T * bound:=by ring
   exact Nat.le_of_mul_le_mul_left hscaled hT
-/-- Ordinary-route badness charged against an arbitrary weight `wgt` instead of
-`total`.  With `wgt := total` this is definitionally `BadCost`. -/
-def BadCostW (T:ℕ) (cost:FlagDegree → ℕ) (bound:ℕ) (wgt:FlagDegree → ℕ)
-    (p:FlagDegree):Prop :=
-  bound * wgt p < T * cost p
-theorem badCostW_total (T:ℕ) (cost:FlagDegree → ℕ) (bound:ℕ) (p:FlagDegree) :
-    BadCostW T cost bound total p ↔ BadCost T cost bound p:=Iff.rfl
-/-- Weighted charging.  Identical to `aggregate_of_rate_replacements_cost`
-except that every factor is charged against `wgt` rather than `total`, so the
-budget `T` may be a weighted cap sum rather than the plain total cap. -/
-theorem aggregate_of_rate_replacements_weighted {I:Type*} [Fintype I]
-    (p:I → FlagDegree) (count q:I → ℕ) (T:ℕ) (cost wgt:FlagDegree → ℕ) (bound:ℕ)
-    (hT:0 < T)
-    (hw:(∑ i, wgt (p i)) ≤ T)
-    (hstage:∀ i, count i ≤ cost (p i))
-    (hrepl:∀ i, BadCostW T cost bound wgt (p i) → count i ≤ q i)
-    (hqrate:∀ i, BadCostW T cost bound wgt (p i) →
-      T * q i ≤ bound * wgt (p i)) :
-    (∑ i, count i) ≤ bound:=by
-  have hone (i:I):T * count i ≤ bound * wgt (p i):=by
-    by_cases hbad:BadCostW T cost bound wgt (p i)
-    · exact (Nat.mul_le_mul_left T (hrepl i hbad)).trans (hqrate i hbad)
-    · have hordinary:T * cost (p i) ≤ bound * wgt (p i):=by
-        unfold BadCostW at hbad
-        omega
-      exact (Nat.mul_le_mul_left T (hstage i)).trans hordinary
-  have hscaled:T * (∑ i, count i) ≤ T * bound:=by
-    calc
-      _ = ∑ i, T * count i:=by rw [Finset.mul_sum]
-      _ ≤ ∑ i, bound * wgt (p i):=Finset.sum_le_sum (fun i _ => hone i)
-      _ = bound * (∑ i, wgt (p i)):=by rw [Finset.mul_sum]
-      _ ≤ bound * T:=Nat.mul_le_mul_left bound hw
-      _ = T * bound:=by ring
-  exact Nat.le_of_mul_le_mul_left hscaled hT
+
+/-! A multiresource replacement ledger.  The scalar rate above charges every
+factor only against its total-degree contribution.  For a strongly anisotropic
+factor this can discard nearly all of the global middle- and slope-degree
+information.  The potential below charges against all three additive degree
+budgets, so a costly factor with large middle degree is automatically scarce. -/
+
+def degreePotential (aT aY aS : ℕ) (p : FlagDegree) : ℕ :=
+  aT * total p + aY * middle p + aS * p.all
+
+def BadPotential (aT aY aS : ℕ) (cost : FlagDegree → ℕ)
+    (p : FlagDegree) : Prop :=
+  degreePotential aT aY aS p < cost p
+
+theorem aggregate_of_potential_replacements_cost {I : Type*} [Fintype I]
+    (p : I → FlagDegree) (count q : I → ℕ)
+    (T YS S aT aY aS : ℕ) (cost : FlagDegree → ℕ)
+    (hs : (∑ i, (p i).all) ≤ S)
+    (hy : (∑ i, middle (p i)) ≤ YS)
+    (ht : (∑ i, total (p i)) ≤ T)
+    (hstage : ∀ i, count i ≤ cost (p i))
+    (hrepl : ∀ i, BadPotential aT aY aS cost (p i) → count i ≤ q i)
+    (hqpotential : ∀ i, BadPotential aT aY aS cost (p i) →
+      q i ≤ degreePotential aT aY aS (p i)) :
+    (∑ i, count i) ≤ aT * T + aY * YS + aS * S := by
+  have hone (i : I) : count i ≤ degreePotential aT aY aS (p i) := by
+    by_cases hbad : BadPotential aT aY aS cost (p i)
+    · exact (hrepl i hbad).trans (hqpotential i hbad)
+    · exact (hstage i).trans (by
+        unfold BadPotential at hbad
+        omega)
+  calc
+    (∑ i, count i) ≤ ∑ i, degreePotential aT aY aS (p i) :=
+      Finset.sum_le_sum (fun i _ => hone i)
+    _ = aT * (∑ i, total (p i)) +
+        aY * (∑ i, middle (p i)) + aS * (∑ i, (p i).all) := by
+      simp only [degreePotential, Finset.sum_add_distrib, Finset.mul_sum]
+    _ ≤ aT * T + aY * YS + aS * S :=
+      Nat.add_le_add (Nat.add_le_add (Nat.mul_le_mul_left aT ht)
+        (Nat.mul_le_mul_left aY hy)) (Nat.mul_le_mul_left aS hs)
 
 end ProximityPrize.SubmissionLower.LocatorFactorReplacement

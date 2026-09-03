@@ -69,6 +69,17 @@ theorem dR_mem_box (j : ℕ) (Q : MvPolynomial (Fin 4) K) (D w L s : ℕ)
       rw [dR_succ]
       exact pderiv_R_mem_box _ D w L s ih
 
+/-- Tighten only the `R`-slope coordinate of a coefficient box from an
+independent bound on the polynomial's actual `R`-degree. -/
+theorem mem_box_of_R_degree_le (Q : MvPolynomial (Fin 4) K) (D w L s s' : ℕ)
+    (hbox : Q ∈ globalCoefficientBox K D w L s) (hR : Q.degreeOf 2 ≤ s') :
+    Q ∈ globalCoefficientBox K D w L s' := by
+  intro d hd
+  obtain ⟨ht, _, hz⟩ := hbox hd
+  have hdR : d 2 ≤ Q.degreeOf 2 :=
+    MvPolynomial.monomial_le_degreeOf (2 : Fin 4) hd
+  exact ⟨ht, hdR.trans hR, hz⟩
+
 theorem dR_R_degree_le (j : ℕ) (F : MvPolynomial (Fin 4) K) :
     (dR j F).degreeOf 2 ≤ F.degreeOf 2 - j := by
   induction j with
@@ -345,7 +356,7 @@ theorem chainSeeds_card_le
     (D w L s p : ℕ) [CharP K p] (hsmall : s < p) (hw : 1 ≤ w)
     (hbox : Q ∈ globalCoefficientBox K D w L s)
     (hcgap : 0 < Pc.gap)
-    (hcY : (D - 1) / w ≤ Pc.leftY) (hcR : s ≤ Pc.leftR) (hcZ : L ≤ Pc.leftZ)
+    (hcY : (D - 1) / w ≤ Pc.leftY) (hcR : s - 1 ≤ Pc.leftR) (hcZ : L ≤ Pc.leftZ)
     (hcY' : (D - 1) / w ≤ Pc.rightY) (hcR' : s ≤ Pc.rightR) (hcZ' : L ≤ Pc.rightZ)
     (hleftR : 1 ≤ Pc.leftR)
     (hleftYSmall : Pc.leftY < p) (hleftRSmall : Pc.leftR < p) (hleftZSmall : Pc.leftZ < p)
@@ -367,15 +378,21 @@ theorem chainSeeds_card_le
     omega
   have hne : dR j F ≠ 0 := dR_ne_zero F hFirr.ne_zero p hFsmall j hj
   have hrel : IsRelPrime (dR j F) F := isRelPrime_dR F hFirr p hFpos hFsmall j hj1 hj
-  have hbox' : dR j F ∈ globalCoefficientBox K D w L s := dR_mem_box j F D w L s hFbox
+  have hdR : (dR j F).degreeOf 2 ≤ s - 1 := by
+    have hderiv := dR_R_degree_le j F
+    have hFdegree := degreeOf_R_le_of_mem_box F D w L s hFbox
+    omega
+  have hbox' : dR j F ∈ globalCoefficientBox K D w L (s - 1) :=
+    mem_box_of_R_degree_le (dR j F) D w L s (s - 1)
+      (dR_mem_box j F D w L s hFbox) hdR
   have hFcaps := degree_bounds_of_mem_box F D w L s (by omega) hFbox
   have hsub := chainSeeds_subset_regularPairSeeds F j hne selected Gamma
-  have hcount := all_regularPairSeeds_bound Pc (dR j F) F hne hrel D w L s p hbox' hw
+  have hcount := all_regularPairSeeds_bound Pc (dR j F) F hne hrel D w L (s - 1) p hbox' hw
     hcY hcR hcZ (hFcaps.1.trans hcY') (hFcaps.2.1.trans hcR') (hFcaps.2.2.trans hcZ')
     hleftR hleftYSmall hleftRSmall hleftZSmall hmixedYSmall hmixedRSmall hmixedZSmall
     selected Gamma nodes x u0 u1 hinj hnodes hPw hchar hwa han hdegree hagreement hnoPencil
   have hsum := sum_regular_counts_bound Pc (dR j F) F selected Gamma
-    (regularVector_budgets Pc (dR j F) hne D w L s (by omega) hbox' hcY hcR hcZ) hcount
+    (regularVector_budgets Pc (dR j F) hne D w L (s - 1) (by omega) hbox' hcY hcR hcZ) hcount
   have hcap : (∑ F' : RegularIndex (dR j F),
       (regularPairSeeds (dR j F) F selected Gamma F').card) ≤ Pc.regularCountCap :=
     Pc.regular_count_le _ hcgap hsum
@@ -475,7 +492,7 @@ theorem residual_chain_count_le
     (hleftR : 1 ≤ P.leftR) (hleftYSmall : P.leftY < p) (hleftRSmall : P.leftR < p)
     (hleftZSmall : P.leftZ < p) (hmixedYSmall : P.mixedCost.y < p)
     (hmixedRSmall : P.mixedCost.r < p) (hmixedZSmall : P.mixedCost.z < p)
-    (hcgap : 0 < Pc.gap) (hcY : (D - 1) / w ≤ Pc.leftY) (hcR : s ≤ Pc.leftR) (hcZ : L ≤ Pc.leftZ)
+    (hcgap : 0 < Pc.gap) (hcY : (D - 1) / w ≤ Pc.leftY) (hcR : s - 1 ≤ Pc.leftR) (hcZ : L ≤ Pc.leftZ)
     (hcY' : (D - 1) / w ≤ Pc.rightY) (hcR' : s ≤ Pc.rightR) (hcZ' : L ≤ Pc.rightZ)
     (hcleftR : 1 ≤ Pc.leftR) (hcleftYSmall : Pc.leftY < p) (hcleftRSmall : Pc.leftR < p)
     (hcleftZSmall : Pc.leftZ < p) (hcmixedYSmall : Pc.mixedCost.y < p)

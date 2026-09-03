@@ -10,10 +10,10 @@ set_option maxHeartbeats 5000000
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
 local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
 def n:ℕ:=262144
-def errors:ℕ:=80624
+def errors:ℕ:=80752
 def agreements:ℕ:=n-errors
-def listBudget:ℕ:=3081204481
-def mcaBudget:ℕ:=274980725030190606
+def listBudget:ℕ:=4639366956
+def mcaBudget:ℕ:=274980723472028131
 def radius:ℝ≥0:=LocatorArithmetic.radius
 theorem sixteen_row_separation:
    15 * (listBudget + 1).choose 2 < Fintype.card IRSProfile.Field:=by
@@ -163,9 +163,9 @@ theorem certifiedGammaError_le_of_alignment
      apply RCN284.nat_div_le_inv_pow
      · norm_num [mcaBudget,listBudget]
      · simpa only [Nat.mul_comm] using field_capacity_split
-theorem protocolClaim6787_of_alignment
+theorem protocolClaim6800_of_alignment
    (halign:AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-   ProtocolClaim 6787 10319999 33554432 where
+   ProtocolClaim 6800 10336383 33554432 where
  admissible:=LocatorArithmetic.radius_admissible
  reduction:=by
    change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
@@ -173,7 +173,7 @@ theorem protocolClaim6787_of_alignment
      certifiedGammaError_le_of_alignment halign
  score:=by
    change (1 - LocatorArithmetic.radius) ^
-     IRSProfile.repetitions ≤ claimedError 6787
+     IRSProfile.repetitions ≤ claimedError 6800
    exact LocatorArithmetic.score_target_le
 end
 end ProximityPrize.SubmissionLower.LocatorProtocol

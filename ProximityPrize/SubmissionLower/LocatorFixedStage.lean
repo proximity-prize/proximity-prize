@@ -11,11 +11,11 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80624
-def agreements:ℕ:=181520
-def gap:ℕ:=50449
+def errors:ℕ:=80752
+def agreements:ℕ:=181392
+def gap:ℕ:=50321
 def prime:ℕ:=2130706433
-def weightedCap:ℕ:=14521600
+def weightedCap:ℕ:=16688064
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index
 local instance:DecidableEq K:=Classical.decEq K
@@ -48,17 +48,17 @@ theorem identityDegree_linear (flag:FlagDegree) (a b s:ℕ) :
     nsmul_zOnly,nsmul_yz,nsmul_all,w]
   ring
 def identitySlackZ (b s:ℕ):ℕ:=
-  6245148179683663 + 6933710663319552 * b + 11097151599744064 * s +
-    3466855331659776 * s ^ 2 + 6933710663319552 * b * s
+  6212162461750991 + 6916118343057408 * b + 11057568778490432 * s +
+    3458059171528704 * s ^ 2 + 6916118343057408 * b * s
 def identitySlackYZ (a b s:ℕ):ℕ:=
-  2089703914481788 + 6933710663319552 * a + 6933710663319552 * b +
-    8326855422942814 * s + 3466855331659776 * s ^ 2 +
-    6933710663319552 * a * s + 6933710663319552 * b * s
+  2050121026118780 + 6916118343057408 * a + 6916118343057408 * b +
+    8282874488068958 * s + 3458059171528704 * s ^ 2 +
+    6916118343057408 * a * s + 6916118343057408 * b * s
 def identitySlackAll (a b s:ℕ):ℕ:=
-  2786268383775723 + 11097151599744064 * a + 8326855422942814 * b +
-    3466855331659776 * b ^ 2 + 8326855422942814 * s +
-    3466855331659776 * s ^ 2 + 6933710663319552 * a * b +
-    6933710663319552 * a * s + 6933710663319552 * b * s
+  2733491120997483 + 11057568778490432 * a + 8282874488068958 * b +
+    3458059171528704 * b ^ 2 + 8282874488068958 * s +
+    3458059171528704 * s ^ 2 + 6916118343057408 * a * b +
+    6916118343057408 * a * s + 6916118343057408 * b * s
 def identitySlack (flag:FlagDegree) (a b s:ℕ):ℕ:=
   flag.zOnly * identitySlackZ b s + flag.yz * identitySlackYZ a b s +
     flag.all * identitySlackAll a b s
@@ -98,7 +98,7 @@ theorem tangent_gate (a b s:ℕ) :
   exact (by norm_num [errors,w]:errors + 1 ≤ 1 + 2 * (w + 2)).trans
     (Nat.add_le_add_left hb 1)
 theorem flag_characteristic (a b s:ℕ) (flag:FlagDegree)
-    (hS:s + 2 ≤ 23) (hY:b + s + 3 ≤ 110) (hT:a + b + s + 3 ≤ 3922)
+    (hS:s + 2 ≤ 28) (hY:b + s + 3 ≤ 127) (hT:a + b + s + 3 ≤ 5964)
     (hflag:flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
       flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) :
     flag.yz + flag.all < prime ∧ flag.all < prime ∧
@@ -106,31 +106,31 @@ theorem flag_characteristic (a b s:ℕ) (flag:FlagDegree)
   dsimp [prime]
   omega
 theorem identity_mixed_gate (b s:ℕ) (flag:FlagDegree)
-    (hS:s + 2 ≤ 23) (hY:b + s + 3 ≤ 110)
+    (hS:s + 2 ≤ 28) (hY:b + s + 3 ≤ 127)
     (hfs:flag.all ≤ s + 2) (hfy:flag.yz + flag.all ≤ b + s + 3) :
     (1 + w * (2 * (b + s + 3) - 2)) * flag.all +
       (flag.yz + flag.all) * ((2 * (s + 2) - 1) * w) < prime:=by
-  have hy:2 * (b + s + 3) - 2 ≤ 218:=by omega
-  have hs:2 * (s + 2) - 1 ≤ 45:=by omega
-  have hfS:flag.all ≤ 23:=hfs.trans hS
-  have hfY:flag.yz + flag.all ≤ 110:=hfy.trans hY
+  have hy:2 * (b + s + 3) - 2 ≤ 252:=by omega
+  have hs:2 * (s + 2) - 1 ≤ 55:=by omega
+  have hfS:flag.all ≤ 28:=hfs.trans hS
+  have hfY:flag.yz + flag.all ≤ 127:=hfy.trans hY
   calc
-    _ ≤ (1 + w * 218) * 23 + 110 * (45 * w) :=
+    _ ≤ (1 + w * 252) * 28 + 127 * (55 * w) :=
       Nat.add_le_add
         (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left w hy) 1) hfS)
         (Nat.mul_le_mul hfY (Nat.mul_le_mul_right w hs))
     _ < prime:=by norm_num [w,prime]
 theorem provider_mixed_gate (b s:ℕ) (flag:FlagDegree)
-    (hS:s + 2 ≤ 23) (hY:b + s + 3 ≤ 110)
+    (hS:s + 2 ≤ 28) (hY:b + s + 3 ≤ 127)
     (hfs:flag.all ≤ s + 2) (hfy:flag.yz + flag.all ≤ b + s + 3) :
     (1 + (w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
       (flag.yz + flag.all) * ((2 * (s + 2) - 2) * (w + 1)) < prime:=by
-  have hy:2 * (b + s + 3) - 2 ≤ 218:=by omega
-  have hs:2 * (s + 2) - 2 ≤ 44:=by omega
-  have hfS:flag.all ≤ 23:=hfs.trans hS
-  have hfY:flag.yz + flag.all ≤ 110:=hfy.trans hY
+  have hy:2 * (b + s + 3) - 2 ≤ 252:=by omega
+  have hs:2 * (s + 2) - 2 ≤ 54:=by omega
+  have hfS:flag.all ≤ 28:=hfs.trans hS
+  have hfY:flag.yz + flag.all ≤ 127:=hfy.trans hY
   calc
-    _ ≤ (1 + (w + 1) * 218) * 23 + 110 * (44 * (w + 1)) :=
+    _ ≤ (1 + (w + 1) * 252) * 28 + 127 * (54 * (w + 1)) :=
       Nat.add_le_add
         (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left (w + 1) hy) 1) hfS)
         (Nat.mul_le_mul hfY (Nat.mul_le_mul_right (w + 1) hs))
@@ -147,7 +147,7 @@ def FixedStageBound (D a b s:ℕ):Prop:=
     Gamma.card ≤ flagMixed flag (firstTail a b s) (secondTail a b s)
 theorem fixedStageBound (D a b s:ℕ)
     (hDlow:w + 1 ≤ D) (hDhigh:D ≤ weightedCap)
-    (hS:s + 2 ≤ 23) (hY:b + s + 3 ≤ 110) (hT:a + b + s + 3 ≤ 3922) :
+    (hS:s + 2 ≤ 28) (hY:b + s + 3 ≤ 127) (hT:a + b + s + 3 ≤ 5964) :
     FixedStageBound D a b s:=by
   intro Gamma flag S hnodes hagreement hbox hflag
   have hDchar:D < prime:=hDhigh.trans_lt (by norm_num [weightedCap,prime])

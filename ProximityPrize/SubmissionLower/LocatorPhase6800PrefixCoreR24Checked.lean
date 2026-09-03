@@ -1,0 +1,20 @@
+import ProximityPrize.SubmissionLower.LocatorPhase6800PrefixCoreR12Checked
+import ProximityPrize.SubmissionLower.LocatorPhase6800FastChannelCount
+import ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData24
+import ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData25
+
+namespace ProximityPrize.SubmissionLower.LocatorPhase6800PrefixCoreR24Checked
+
+open LocatorPhase6800Oracle LocatorPhase6800ReceiptCellCore ThresholdFastProof
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 4000000
+
+theorem checked : PrefixCoreRIndexedOf LocatorPhase6800ReceiptRowData24.prefixData
+    LocatorPhase6800ReceiptRowData25.prefixData 24 103 := by
+  decide +kernel
+
+#print axioms checked
+
+end ProximityPrize.SubmissionLower.LocatorPhase6800PrefixCoreR24Checked
