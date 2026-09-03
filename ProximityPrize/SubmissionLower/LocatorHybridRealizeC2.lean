@@ -1,10 +1,10 @@
 /-
-THE C2 HYBRID PROVIDER EXISTS ON EVERY ADMISSIBLE CELL — 6787 ROW.
+THE C2 HYBRID PROVIDER EXISTS ON EVERY ADMISSIBLE CELL — 6786 ROW.
 
-`RealizationC2 14521600`: the weighted cap of the 6787 row is
-`B.m * agreements = 74 * 181520 = 14521600`.
+`RealizationC2 14885460`: the weighted cap of the 6786 row is
+`B.m * agreements = 74 * 181530 = 14885460`.
 
-Gates come from `LocatorHybridGatesC2` (caps 23 / 110 / 3922, errors 80624).  The
+Gates come from `LocatorHybridGatesC2` (caps 24 / 113 / 3808, errors 80614).  The
 tangent count is `tangent_component_card_le` against the REDUCED budget family,
 exactly as `RCN335` does it for the delayed provider.
 -/
@@ -33,7 +33,7 @@ local instance : CharP K 2130706433 := by
   simpa [RCN223.prime] using
     RCN128.challenge_field_characteristic6600
 
-theorem realizationC2 : RealizationC2 14521600 := by
+theorem realizationC2 : RealizationC2 14885460 := by
   intro p hS hY hT hS3 hhyb
   letI : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
   unfold ProviderHypC2
@@ -56,12 +56,12 @@ theorem realizationC2 : RealizationC2 14521600 := by
         (globalTailCut (polynomialEmbedding K) S.F (RCN327.w + 1))
         (regularitySurface (polynomialEmbedding K) S.F) Gamma
         (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
-          (80624 + 1) *
+          (80614 + 1) *
             (reducedBudgetFamily S hTail hflagChar hmixedRed).yzCost C := by
     intro C hall
     exact tangent_component_card_le S C hTail
       (reducedBaseOrd S hTail hflagChar hmixedRed C)
-      181520 14521600 (padT p) (padS p) hnodes hagreement
+      181530 14885460 (padT p) (padS p) hnodes hagreement
       (by norm_num [RCN327.w]) (by norm_num [RCN327.w])
       (by norm_num [RCN327.w]) (by norm_num)
       hbox (reducedBudgetFamily S hTail hflagChar hmixedRed)

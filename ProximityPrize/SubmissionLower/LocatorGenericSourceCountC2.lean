@@ -127,7 +127,6 @@ theorem source_count
     hsrcLength hsrcY hsrcR rfl hD hDa hshape hcapacity hlowpos
     u0 u1 H selected Gamma hdegree hagreement hno F hF (hfin u0 u1) c hcell hfit
 
-
 theorem sourceA_count
     (k : ℕ) (hk : k ≤ 1)
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
@@ -197,7 +196,30 @@ theorem sourceC_count
       simpa only [sourceC, SourceKernel] using LocatorHelperArithmeticGeneric.sourceC_finrank_lower_bound u0 u1)
     k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
 
-theorem sourceS2_count
+theorem sourceH1_count
+    (k : ℕ) (hk : k ≤ 13)
+    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
+    (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
+    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
+      (262144 - agreements))
+    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
+    (hcell : InCell (regularCumulativeFlag H F) c)
+    (hfit : HelperFits sourceH1 k (box c)) :
+    (regularSeeds H selected Gamma F).card ≤
+      max (routeCost sourceH1 (box c) k)
+        (helperPair sourceH1 (box c)).regularCountCap :=
+  source_count LocatorHelperArithmeticGeneric.DS1 LocatorHelperArithmeticGeneric.LS1 LocatorHelperArithmeticGeneric.sS1 LocatorHelperArithmeticGeneric.mS1 LocatorHelperArithmeticGeneric.yS1 LocatorHelperArithmeticGeneric.depthS1
+    sourceH1 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceS1_shape
+    LocatorHelperArithmeticGeneric.sourceS1_stage_capacity LocatorHelperArithmeticGeneric.sourceS1_low_positive
+    (fun u0 u1 => by
+      simpa only [sourceH1, SourceKernel] using LocatorHelperArithmeticGeneric.sourceS1_finrank_lower_bound u0 u1)
+    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
+
+theorem sourceH2_count
     (k : ℕ) (hk : k ≤ 18)
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
@@ -209,18 +231,18 @@ theorem sourceS2_count
       (262144 - agreements))
     (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
     (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceS2 k (box c)) :
+    (hfit : HelperFits sourceH2 k (box c)) :
     (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceS2 (box c) k)
-        (helperPair sourceS2 (box c)).regularCountCap :=
+      max (routeCost sourceH2 (box c) k)
+        (helperPair sourceH2 (box c)).regularCountCap :=
   source_count LocatorHelperArithmeticGeneric.DS2 LocatorHelperArithmeticGeneric.LS2 LocatorHelperArithmeticGeneric.sS2 LocatorHelperArithmeticGeneric.mS2 LocatorHelperArithmeticGeneric.yS2 LocatorHelperArithmeticGeneric.depthS2
-    sourceS2 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceS2_shape
+    sourceH2 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceS2_shape
     LocatorHelperArithmeticGeneric.sourceS2_stage_capacity LocatorHelperArithmeticGeneric.sourceS2_low_positive
     (fun u0 u1 => by
-      simpa only [sourceS2, SourceKernel] using LocatorHelperArithmeticGeneric.sourceS2_finrank_lower_bound u0 u1)
+      simpa only [sourceH2, SourceKernel] using LocatorHelperArithmeticGeneric.sourceS2_finrank_lower_bound u0 u1)
     k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
 
-theorem sourceS3_count
+theorem sourceH3_count
     (k : ℕ) (hk : k ≤ 30)
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
@@ -232,19 +254,19 @@ theorem sourceS3_count
       (262144 - agreements))
     (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
     (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceS3 k (box c)) :
+    (hfit : HelperFits sourceH3 k (box c)) :
     (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceS3 (box c) k)
-        (helperPair sourceS3 (box c)).regularCountCap :=
+      max (routeCost sourceH3 (box c) k)
+        (helperPair sourceH3 (box c)).regularCountCap :=
   source_count LocatorHelperArithmeticGeneric.DS3 LocatorHelperArithmeticGeneric.LS3 LocatorHelperArithmeticGeneric.sS3 LocatorHelperArithmeticGeneric.mS3 LocatorHelperArithmeticGeneric.yS3 LocatorHelperArithmeticGeneric.depthS3
-    sourceS3 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceS3_shape
+    sourceH3 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceS3_shape
     LocatorHelperArithmeticGeneric.sourceS3_stage_capacity LocatorHelperArithmeticGeneric.sourceS3_low_positive
     (fun u0 u1 => by
-      simpa only [sourceS3, SourceKernel] using LocatorHelperArithmeticGeneric.sourceS3_finrank_lower_bound u0 u1)
+      simpa only [sourceH3, SourceKernel] using LocatorHelperArithmeticGeneric.sourceS3_finrank_lower_bound u0 u1)
     k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
 
 theorem sourceH3X_count
-    (k : ℕ) (hk : k ≤ 32)
+    (k : ℕ) (hk : k ≤ 33)
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
@@ -259,15 +281,15 @@ theorem sourceH3X_count
     (regularSeeds H selected Gamma F).card ≤
       max (routeCost sourceH3X (box c) k)
         (helperPair sourceH3X (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DH3X LocatorHelperArithmeticGeneric.LH3X LocatorHelperArithmeticGeneric.sH3X LocatorHelperArithmeticGeneric.mH3X LocatorHelperArithmeticGeneric.yH3X LocatorHelperArithmeticGeneric.depthH3X
-    sourceH3X rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceH3X_shape
-    LocatorHelperArithmeticGeneric.sourceH3X_stage_capacity LocatorHelperArithmeticGeneric.sourceH3X_low_positive
+  source_count LocatorHelperArithmeticGeneric.DS4 LocatorHelperArithmeticGeneric.LS4 LocatorHelperArithmeticGeneric.sS4 LocatorHelperArithmeticGeneric.mS4 LocatorHelperArithmeticGeneric.yS4 LocatorHelperArithmeticGeneric.depthS4
+    sourceH3X rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceS4_shape
+    LocatorHelperArithmeticGeneric.sourceS4_stage_capacity LocatorHelperArithmeticGeneric.sourceS4_low_positive
     (fun u0 u1 => by
-      simpa only [sourceH3X, SourceKernel] using LocatorHelperArithmeticGeneric.sourceH3X_finrank_lower_bound u0 u1)
+      simpa only [sourceH3X, SourceKernel] using LocatorHelperArithmeticGeneric.sourceS4_finrank_lower_bound u0 u1)
     k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
 
-theorem sourceH4_count
-    (k : ℕ) (hk : k ≤ 36)
+theorem sourceCbig_count
+    (k : ℕ) (hk : k ≤ 17)
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
@@ -278,65 +300,19 @@ theorem sourceH4_count
       (262144 - agreements))
     (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
     (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceH4 k (box c)) :
+    (hfit : HelperFits sourceCbig k (box c)) :
     (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceH4 (box c) k)
-        (helperPair sourceH4 (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DH4 LocatorHelperArithmeticGeneric.LH4 LocatorHelperArithmeticGeneric.sH4 LocatorHelperArithmeticGeneric.mH4 LocatorHelperArithmeticGeneric.yH4 LocatorHelperArithmeticGeneric.depthH4
-    sourceH4 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceH4_shape
-    LocatorHelperArithmeticGeneric.sourceH4_stage_capacity LocatorHelperArithmeticGeneric.sourceH4_low_positive
+      max (routeCost sourceCbig (box c) k)
+        (helperPair sourceCbig (box c)).regularCountCap :=
+  source_count LocatorHelperArithmeticGeneric.DS5 LocatorHelperArithmeticGeneric.LS5 LocatorHelperArithmeticGeneric.sS5 LocatorHelperArithmeticGeneric.mS5 LocatorHelperArithmeticGeneric.yS5 LocatorHelperArithmeticGeneric.depthS5
+    sourceCbig rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceS5_shape
+    LocatorHelperArithmeticGeneric.sourceS5_stage_capacity LocatorHelperArithmeticGeneric.sourceS5_low_positive
     (fun u0 u1 => by
-      simpa only [sourceH4, SourceKernel] using LocatorHelperArithmeticGeneric.sourceH4_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceT10k_count
-    (k : ℕ) (hk : k ≤ 8)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceT10k k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceT10k (box c) k)
-        (helperPair sourceT10k (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DT10k LocatorHelperArithmeticGeneric.LT10k LocatorHelperArithmeticGeneric.sT10k LocatorHelperArithmeticGeneric.mT10k LocatorHelperArithmeticGeneric.yT10k LocatorHelperArithmeticGeneric.depthT10k
-    sourceT10k rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceT10k_shape
-    LocatorHelperArithmeticGeneric.sourceT10k_stage_capacity LocatorHelperArithmeticGeneric.sourceT10k_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceT10k, SourceKernel] using LocatorHelperArithmeticGeneric.sourceT10k_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceT15k_count
-    (k : ℕ) (hk : k ≤ 12)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceT15k k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceT15k (box c) k)
-        (helperPair sourceT15k (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DT15k LocatorHelperArithmeticGeneric.LT15k LocatorHelperArithmeticGeneric.sT15k LocatorHelperArithmeticGeneric.mT15k LocatorHelperArithmeticGeneric.yT15k LocatorHelperArithmeticGeneric.depthT15k
-    sourceT15k rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceT15k_shape
-    LocatorHelperArithmeticGeneric.sourceT15k_stage_capacity LocatorHelperArithmeticGeneric.sourceT15k_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceT15k, SourceKernel] using LocatorHelperArithmeticGeneric.sourceT15k_finrank_lower_bound u0 u1)
+      simpa only [sourceCbig, SourceKernel] using LocatorHelperArithmeticGeneric.sourceS5_finrank_lower_bound u0 u1)
     k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
 
 theorem sourceT20k_count
-    (k : ℕ) (hk : k ≤ 14)
+    (k : ℕ) (hk : k ≤ 10)
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
@@ -351,15 +327,15 @@ theorem sourceT20k_count
     (regularSeeds H selected Gamma F).card ≤
       max (routeCost sourceT20k (box c) k)
         (helperPair sourceT20k (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DT20k LocatorHelperArithmeticGeneric.LT20k LocatorHelperArithmeticGeneric.sT20k LocatorHelperArithmeticGeneric.mT20k LocatorHelperArithmeticGeneric.yT20k LocatorHelperArithmeticGeneric.depthT20k
-    sourceT20k rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceT20k_shape
-    LocatorHelperArithmeticGeneric.sourceT20k_stage_capacity LocatorHelperArithmeticGeneric.sourceT20k_low_positive
+  source_count LocatorHelperArithmeticGeneric.DS6 LocatorHelperArithmeticGeneric.LS6 LocatorHelperArithmeticGeneric.sS6 LocatorHelperArithmeticGeneric.mS6 LocatorHelperArithmeticGeneric.yS6 LocatorHelperArithmeticGeneric.depthS6
+    sourceT20k rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceS6_shape
+    LocatorHelperArithmeticGeneric.sourceS6_stage_capacity LocatorHelperArithmeticGeneric.sourceS6_low_positive
     (fun u0 u1 => by
-      simpa only [sourceT20k, SourceKernel] using LocatorHelperArithmeticGeneric.sourceT20k_finrank_lower_bound u0 u1)
+      simpa only [sourceT20k, SourceKernel] using LocatorHelperArithmeticGeneric.sourceS6_finrank_lower_bound u0 u1)
     k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
 
 theorem sourceT30k_count
-    (k : ℕ) (hk : k ≤ 22)
+    (k : ℕ) (hk : k ≤ 12)
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
@@ -374,264 +350,11 @@ theorem sourceT30k_count
     (regularSeeds H selected Gamma F).card ≤
       max (routeCost sourceT30k (box c) k)
         (helperPair sourceT30k (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DT30k LocatorHelperArithmeticGeneric.LT30k LocatorHelperArithmeticGeneric.sT30k LocatorHelperArithmeticGeneric.mT30k LocatorHelperArithmeticGeneric.yT30k LocatorHelperArithmeticGeneric.depthT30k
-    sourceT30k rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceT30k_shape
-    LocatorHelperArithmeticGeneric.sourceT30k_stage_capacity LocatorHelperArithmeticGeneric.sourceT30k_low_positive
+  source_count LocatorHelperArithmeticGeneric.DS7 LocatorHelperArithmeticGeneric.LS7 LocatorHelperArithmeticGeneric.sS7 LocatorHelperArithmeticGeneric.mS7 LocatorHelperArithmeticGeneric.yS7 LocatorHelperArithmeticGeneric.depthS7
+    sourceT30k rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceS7_shape
+    LocatorHelperArithmeticGeneric.sourceS7_stage_capacity LocatorHelperArithmeticGeneric.sourceS7_low_positive
     (fun u0 u1 => by
-      simpa only [sourceT30k, SourceKernel] using LocatorHelperArithmeticGeneric.sourceT30k_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceL1_count
-    (k : ℕ) (hk : k ≤ 50)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceL1 k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceL1 (box c) k)
-        (helperPair sourceL1 (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DL1 LocatorHelperArithmeticGeneric.LL1 LocatorHelperArithmeticGeneric.sL1 LocatorHelperArithmeticGeneric.mL1 LocatorHelperArithmeticGeneric.yL1 LocatorHelperArithmeticGeneric.depthL1
-    sourceL1 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceL1_shape
-    LocatorHelperArithmeticGeneric.sourceL1_stage_capacity LocatorHelperArithmeticGeneric.sourceL1_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceL1, SourceKernel] using LocatorHelperArithmeticGeneric.sourceL1_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceL2_count
-    (k : ℕ) (hk : k ≤ 72)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceL2 k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceL2 (box c) k)
-        (helperPair sourceL2 (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DL2 LocatorHelperArithmeticGeneric.LL2 LocatorHelperArithmeticGeneric.sL2 LocatorHelperArithmeticGeneric.mL2 LocatorHelperArithmeticGeneric.yL2 LocatorHelperArithmeticGeneric.depthL2
-    sourceL2 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceL2_shape
-    LocatorHelperArithmeticGeneric.sourceL2_stage_capacity LocatorHelperArithmeticGeneric.sourceL2_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceL2, SourceKernel] using LocatorHelperArithmeticGeneric.sourceL2_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceL3_count
-    (k : ℕ) (hk : k ≤ 80)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceL3 k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceL3 (box c) k)
-        (helperPair sourceL3 (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DL3 LocatorHelperArithmeticGeneric.LL3 LocatorHelperArithmeticGeneric.sL3 LocatorHelperArithmeticGeneric.mL3 LocatorHelperArithmeticGeneric.yL3 LocatorHelperArithmeticGeneric.depthL3
-    sourceL3 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceL3_shape
-    LocatorHelperArithmeticGeneric.sourceL3_stage_capacity LocatorHelperArithmeticGeneric.sourceL3_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceL3, SourceKernel] using LocatorHelperArithmeticGeneric.sourceL3_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceL4_count
-    (k : ℕ) (hk : k ≤ 56)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceL4 k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceL4 (box c) k)
-        (helperPair sourceL4 (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DL4 LocatorHelperArithmeticGeneric.LL4 LocatorHelperArithmeticGeneric.sL4 LocatorHelperArithmeticGeneric.mL4 LocatorHelperArithmeticGeneric.yL4 LocatorHelperArithmeticGeneric.depthL4
-    sourceL4 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceL4_shape
-    LocatorHelperArithmeticGeneric.sourceL4_stage_capacity LocatorHelperArithmeticGeneric.sourceL4_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceL4, SourceKernel] using LocatorHelperArithmeticGeneric.sourceL4_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceL5_count
-    (k : ℕ) (hk : k ≤ 128)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceL5 k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceL5 (box c) k)
-        (helperPair sourceL5 (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DL5 LocatorHelperArithmeticGeneric.LL5 LocatorHelperArithmeticGeneric.sL5 LocatorHelperArithmeticGeneric.mL5 LocatorHelperArithmeticGeneric.yL5 LocatorHelperArithmeticGeneric.depthL5
-    sourceL5 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceL5_shape
-    LocatorHelperArithmeticGeneric.sourceL5_stage_capacity LocatorHelperArithmeticGeneric.sourceL5_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceL5, SourceKernel] using LocatorHelperArithmeticGeneric.sourceL5_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceL6_count
-    (k : ℕ) (hk : k ≤ 150)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceL6 k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceL6 (box c) k)
-        (helperPair sourceL6 (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DL6 LocatorHelperArithmeticGeneric.LL6 LocatorHelperArithmeticGeneric.sL6 LocatorHelperArithmeticGeneric.mL6 LocatorHelperArithmeticGeneric.yL6 LocatorHelperArithmeticGeneric.depthL6
-    sourceL6 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceL6_shape
-    LocatorHelperArithmeticGeneric.sourceL6_stage_capacity LocatorHelperArithmeticGeneric.sourceL6_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceL6, SourceKernel] using LocatorHelperArithmeticGeneric.sourceL6_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceM1_count
-    (k : ℕ) (hk : k ≤ 102)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceM1 k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceM1 (box c) k)
-        (helperPair sourceM1 (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DM1 LocatorHelperArithmeticGeneric.LM1 LocatorHelperArithmeticGeneric.sM1 LocatorHelperArithmeticGeneric.mM1 LocatorHelperArithmeticGeneric.yM1 LocatorHelperArithmeticGeneric.depthM1
-    sourceM1 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceM1_shape
-    LocatorHelperArithmeticGeneric.sourceM1_stage_capacity LocatorHelperArithmeticGeneric.sourceM1_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceM1, SourceKernel] using LocatorHelperArithmeticGeneric.sourceM1_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceM3_count
-    (k : ℕ) (hk : k ≤ 124)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceM3 k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceM3 (box c) k)
-        (helperPair sourceM3 (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DM3 LocatorHelperArithmeticGeneric.LM3 LocatorHelperArithmeticGeneric.sM3 LocatorHelperArithmeticGeneric.mM3 LocatorHelperArithmeticGeneric.yM3 LocatorHelperArithmeticGeneric.depthM3
-    sourceM3 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceM3_shape
-    LocatorHelperArithmeticGeneric.sourceM3_stage_capacity LocatorHelperArithmeticGeneric.sourceM3_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceM3, SourceKernel] using LocatorHelperArithmeticGeneric.sourceM3_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceN1_count
-    (k : ℕ) (hk : k ≤ 104)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceN1 k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceN1 (box c) k)
-        (helperPair sourceN1 (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DN1 LocatorHelperArithmeticGeneric.LN1 LocatorHelperArithmeticGeneric.sN1 LocatorHelperArithmeticGeneric.mN1 LocatorHelperArithmeticGeneric.yN1 LocatorHelperArithmeticGeneric.depthN1
-    sourceN1 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceN1_shape
-    LocatorHelperArithmeticGeneric.sourceN1_stage_capacity LocatorHelperArithmeticGeneric.sourceN1_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceN1, SourceKernel] using LocatorHelperArithmeticGeneric.sourceN1_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceN3_count
-    (k : ℕ) (hk : k ≤ 180)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceN3 k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceN3 (box c) k)
-        (helperPair sourceN3 (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DN3 LocatorHelperArithmeticGeneric.LN3 LocatorHelperArithmeticGeneric.sN3 LocatorHelperArithmeticGeneric.mN3 LocatorHelperArithmeticGeneric.yN3 LocatorHelperArithmeticGeneric.depthN3
-    sourceN3 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceN3_shape
-    LocatorHelperArithmeticGeneric.sourceN3_stage_capacity LocatorHelperArithmeticGeneric.sourceN3_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceN3, SourceKernel] using LocatorHelperArithmeticGeneric.sourceN3_finrank_lower_bound u0 u1)
-    k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
-
-theorem sourceN4_count
-    (k : ℕ) (hk : k ≤ 200)
-    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
-    (Gamma : Finset K)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ selectedDegree)
-    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
-      ((Finset.univ : Finset I).filter (fun i ↦
-        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma selectedDegree
-      (262144 - agreements))
-    (F : RegularIndex H) (hF : F.1 ≠ 0) (c : Cell)
-    (hcell : InCell (regularCumulativeFlag H F) c)
-    (hfit : HelperFits sourceN4 k (box c)) :
-    (regularSeeds H selected Gamma F).card ≤
-      max (routeCost sourceN4 (box c) k)
-        (helperPair sourceN4 (box c)).regularCountCap :=
-  source_count LocatorHelperArithmeticGeneric.DN4 LocatorHelperArithmeticGeneric.LN4 LocatorHelperArithmeticGeneric.sN4 LocatorHelperArithmeticGeneric.mN4 LocatorHelperArithmeticGeneric.yN4 LocatorHelperArithmeticGeneric.depthN4
-    sourceN4 rfl rfl rfl (by decide) (by decide) LocatorHelperArithmeticGeneric.sourceN4_shape
-    LocatorHelperArithmeticGeneric.sourceN4_stage_capacity LocatorHelperArithmeticGeneric.sourceN4_low_positive
-    (fun u0 u1 => by
-      simpa only [sourceN4, SourceKernel] using LocatorHelperArithmeticGeneric.sourceN4_finrank_lower_bound u0 u1)
+      simpa only [sourceT30k, SourceKernel] using LocatorHelperArithmeticGeneric.sourceS7_finrank_lower_bound u0 u1)
     k hk u0 u1 H selected Gamma hdegree hagreement hno F hF c hcell hfit
 
 end
