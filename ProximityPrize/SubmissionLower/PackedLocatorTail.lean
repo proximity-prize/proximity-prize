@@ -5994,7 +5994,7 @@ local instance : CharP K 2130706433 := by
 source.  Keeping the source parameters explicit lets all external locator
 profiles share one factor-switch proof. -/
 def helperPair (L YS S leftY leftR leftZ : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181392, leftY, leftR, leftZ, YS, S, L⟩
+  ⟨262144, 131071, 181373, leftY, leftR, leftZ, YS, S, L⟩
 
 def HelperPairGates (L YS S leftY leftR leftZ : ℕ) : Prop :=
   let P := helperPair L YS S leftY leftR leftZ
@@ -6036,16 +6036,16 @@ private theorem degreeZ_le_totalWeight (Q : P4) :
 kernel or one source witness is coprime to it and supplies the unequal-pair
 count. -/
 theorem divisor_or_helper_count
-    (D L S m YS : ℕ) (hD : 0 < D) (hDa : D ≤ m * 181392)
+    (D L S m YS : ℕ) (hD : 0 < D) (hDa : D ≤ m * 181373)
     (hshape : D + S ≤ 131071 * (YS + 1))
     {u0 u1 : I → K} {H : P4}
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181392 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
     (F : RegularIndex H) (leftY leftR leftZ : ℕ)
     (hFY : F.1.degreeOf 1 ≤ leftY)
     (hFR : F.1.degreeOf 2 ≤ leftR)
@@ -6241,11 +6241,11 @@ theorem regularSeeds_count_le_stageCost
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181392 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
     (F : RegularIndex H)
     (hFY : F.1.degreeOf 1 ≤ b.yHi)
     (hFR : F.1.degreeOf 2 ≤ b.rHi)
@@ -6399,13 +6399,13 @@ ladder.  The source arithmetic appears only in `hband`, `hgapLe`, capacity,
 and positivity receipts. -/
 theorem regularSeeds_count_le_arbitraryPowerRoute
     (D L S m YS gap delta k : ℕ) (b : PowerRouteBox)
-    (hD : 0 < D) (hDa : D ≤ m * 181392)
+    (hD : 0 < D) (hDa : D ≤ m * 181373)
     (hshape : D + S ≤ 131071 * (YS + 1))
     (hk : 1 ≤ k) (hkchar : k < 2130706433)
     (hband : powerBandBudget delta b.tLo b.yLo b.rLo
       (L - b.tLo) (YS - b.yLo) (S - b.rLo) k < gap)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ k →
-      D - j * delta ≤ (m - j) * 181392 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181373 + j * (131071 - 1))
     (hlowpos : ∀ j, 1 ≤ j → j ≤ k → 0 < D - j * delta)
     (hterminal : L - k * b.tLo < b.tLo ∨
       YS - k * b.yLo < b.yLo ∨ S - k * b.rLo < b.rLo)
@@ -6415,11 +6415,11 @@ theorem regularSeeds_count_le_arbitraryPowerRoute
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181392 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
     (F : RegularIndex H)
     (hFT : b.tLo ≤ wt residualTotalWeights F.1 ∧
       wt residualTotalWeights F.1 ≤ b.tHi)
@@ -6545,7 +6545,7 @@ theorem regularSeeds_count_le_arbitraryPowerRoute
         let support := (Finset.univ : Finset I).filter (fun i ↦
           (selected gamma).eval (IRSProfile.domain i) =
             u0 i + gamma * u1 i)
-        have hcard : 181392 ≤ support.card := hagreement gamma hgammaG
+        have hcard : 181373 ≤ support.card := hagreement gamma hgammaG
         have hcap : D - j * delta ≤
             (m - j) * support.card + j * (131071 - 1) :=
           (hcapacity j hjpos hjle).trans
@@ -8664,16 +8664,16 @@ theorem counts_of_batchExitStage
     (hD : 0 < D) (hfuelChar : fuel < 2130706433)
     (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
-      D - j * delta ≤ (m - j) * 181392 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181373 + j * (131071 - 1))
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181392 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
     (A : Finset (RegularIndex H))
     (q : ConstraintKernel (K := K) D 131071 L S m
         IRSProfile.domain u0 u1 →ₗ[K] P4)
@@ -8768,7 +8768,7 @@ theorem counts_of_batchExitStage
   have hQzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
       specialization K (selected gamma) gamma QF = 0 := by
     exact batch_helper_zero_on_regularSeeds j D (D - j * delta) 131071
-      L S m 181392 2130706433
+      L S m 181373 2130706433
       (CharP.char_prime_of_ne_zero (R := K) (by norm_num))
       IRSProfile.domain u0 u1 H A F hFA selected Gamma v J hj hjchar
       (by decide) hdegree hagreement (hcapacity j hj hjle) hlow
@@ -8791,21 +8791,21 @@ later strict exit.  `hcharge` is the sole interface to the additive numerical
 potential used by a phase receipt. -/
 theorem exists_strict_helper_split_of_batch_source
     (D L S m YS gap delta fuel : ℕ)
-    (hD : 0 < D) (hDa : D ≤ m * 181392)
+    (hD : 0 < D) (hDa : D ≤ m * 181373)
     (hshape : D + S ≤ 131071 * (YS + 1))
     (hfuel : 1 ≤ fuel) (hfuelChar : fuel < 2130706433)
     (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
-      D - j * delta ≤ (m - j) * 181392 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181373 + j * (131071 - 1))
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181392 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
     (A : Finset (RegularIndex H)) (hA : A.Nonempty)
     (hband : powerBandBudget delta
       (wt residualTotalWeights (regularProduct H A))
@@ -9930,7 +9930,7 @@ abbrev Kernel (u0 u1 : I → K) :=
   ConstraintKernel (K := K) 217670400 131071 82100 370 1200
     IRSProfile.domain u0 u1
 
-theorem weighted_exact : 1200 * 181392 = 217670400 := by
+theorem weighted_exact : 1200 * 181373 = 217670400 := by
   decide
 
 theorem shape : 217670400 + 370 ≤ 131071 * (1660 + 1) := by
@@ -9972,7 +9972,7 @@ open RCN260
 has `R`-degree at most `32`, while the original factor on the right may still
 have `R`-degree `33`. -/
 def chainStage : UnequalParameters :=
-  ⟨262144, 131071, 181392, 153, 32, 10381, 153, 33, 10381⟩
+  ⟨262144, 131071, 181373, 153, 32, 10381, 153, 33, 10381⟩
 
 theorem chainStage_exact : chainStage.regularCountCap = 211479108682951 := by
   decide
@@ -9997,8 +9997,8 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80752
-def agreements:ℕ:=181392
+def errors:ℕ:=80771
+def agreements:ℕ:=181373
 def gap:ℕ:=50321
 def prime:ℕ:=2130706433
 def budget:ℕ:=274980723472028131
@@ -10108,7 +10108,7 @@ theorem ledger_exact:ledger=274979372324893271:=by
   norm_num [ledger,fixedRegularCap,fixedSingular_exact,
     residualStage_exact,chainStage_exact,tailSingular_exact,sB]
 theorem ledger_lt:ledger < budget:=by rw [ledger_exact]; decide
-def radiusNumerator:ℕ:=10336383
+def radiusNumerator:ℕ:=10338815
 def radiusDenominator:ℕ:=33554432
 def radius:ℝ≥0:=claimedRadius radiusNumerator radiusDenominator
 theorem radius_floor:
@@ -10119,28 +10119,53 @@ theorem radius_admissible:
     radius ∈ Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance:=by
   constructor <;> norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
     IRSProfile.minRelativeDistance]
+theorem score_root_integer:(2:ℕ)^1 * 575^100 ≤ 579^100:=by decide
 theorem score_radius_integer:
-    (23218049:ℕ)^128 * 2^68 ≤ 33554432^128:=by decide
+    (23215617:ℕ)^128 * (2^68 * 579) ≤ 575 * 33554432^128:=by decide
+theorem two_rpow_fraction_le:
+    (2:ℝ≥0)^((1:ℝ)/100) ≤ (579:ℝ≥0)/575:=by
+  have hroot:((2:ℝ≥0)^(1:ℕ))^((100:ℝ)⁻¹) ≤ (579:ℝ≥0)/575:=by
+    rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 100)]
+    rw [NNReal.rpow_ofNat,div_pow,le_div_iff₀ (by positivity)]
+    exact_mod_cast score_root_integer
+  calc
+    (2:ℝ≥0)^((1:ℝ)/100) = ((2:ℝ≥0)^(1:ℕ))^((100:ℝ)⁻¹):=by
+      rw [← NNReal.rpow_natCast_mul]
+      norm_num [div_eq_mul_inv]
+    _ ≤ _:=hroot
 theorem radius_power_bound:
     (1 - radius)^IRSProfile.repetitions ≤
-      (1:ℝ≥0)/2^(68:ℕ):=by
-  have hsub:(1 - radius:ℝ≥0) =23218049/33554432:=by
+      ((1:ℝ≥0)/2^(68:ℕ)) * (575/579):=by
+  have hsub:(1 - radius:ℝ≥0) =23215617/33554432:=by
     have hr:radius ≤ 1:=by
       rw [← NNReal.coe_le_coe]
       norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
     apply NNReal.coe_injective
     rw [NNReal.coe_sub hr]
     norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
-  change (1 - radius)^128 ≤ (1:ℝ≥0)/2^(68:ℕ)
-  rw [hsub,div_pow,div_le_div_iff₀ (by positivity) (by positivity)]
+  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (575/579)
+  rw [hsub,div_pow,div_mul_div_comm,one_mul,
+    div_le_div_iff₀ (by positivity) (by positivity)]
   exact_mod_cast score_radius_integer
 theorem score_target_le:
-    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6800:=by
+    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6802:=by
+  have hscale:(575:ℝ≥0)/579 ≤ (2:ℝ≥0)^(-((1:ℝ)/100)):=by
+    calc
+      (575:ℝ≥0)/579=1/((579:ℝ≥0)/575):=by norm_num
+      _ ≤ 1/((2:ℝ≥0)^((1:ℝ)/100)) :=
+        one_div_le_one_div_of_le (by positivity) two_rpow_fraction_le
+      _=_:=by rw [one_div,NNReal.rpow_neg]
   calc
-    (1 - radius)^IRSProfile.repetitions ≤ (1:ℝ≥0)/2^(68:ℕ):=radius_power_bound
-    _=claimedError 6800:=by
+    (1 - radius)^IRSProfile.repetitions ≤
+        ((1:ℝ≥0)/2^(68:ℕ)) * (575/579):=radius_power_bound
+    _ ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (2:ℝ≥0)^(-((1:ℝ)/100)) :=
+      mul_le_mul_of_nonneg_left hscale (by positivity)
+    _=claimedError 6802:=by
       unfold claimedError
-      norm_num [NNReal.rpow_neg, NNReal.rpow_natCast]
+      rw [show -((((6802:ℕ):ℝ)/100)) =
+          -((68:ℕ):ℝ) + -((1:ℝ)/100) by norm_num,
+        NNReal.rpow_add (by norm_num:(2:ℝ≥0) ≠ 0)]
+      simp only [NNReal.rpow_neg,NNReal.rpow_natCast,one_div]
 end
 end LocatorArithmetic
 end ProximityPrize.SubmissionLower
@@ -10390,7 +10415,7 @@ abbrev Kernel (u0 u1 : I → K) :=
   ConstraintKernel (K := K) 90696000 131071 21000 155 500
     IRSProfile.domain u0 u1
 
-theorem weighted_exact : 500 * 181392 = 90696000 := by
+theorem weighted_exact : 500 * 181373 = 90696000 := by
   decide
 
 theorem shape : 90696000 + 155 ≤ 131071 * (691 + 1) := by
@@ -10613,7 +10638,7 @@ abbrev Kernel (u0 u1 : I → K) :=
   ConstraintKernel (K := K) 70742880 131071 19500 120 390
     IRSProfile.domain u0 u1
 
-theorem weighted_exact : 390 * 181392 = 70742880 := by
+theorem weighted_exact : 390 * 181373 = 70742880 := by
   decide
 
 theorem shape : 70742880 + 120 ≤ 131071 * (539 + 1) := by
@@ -10814,7 +10839,7 @@ private theorem sourceFuel_terminal (s : SourceNumbers) (p : FlagDegree)
 split required by the phase recursion. -/
 theorem routeable_exists_strict_helper_split
     (sound : PhaseSourceSound) (D m : ℕ)
-    (hweighted : D = m * 181392)
+    (hweighted : D = m * 181373)
     (hshape : D + sound.source.slopeCap ≤
       131071 * (sound.source.middleCap + 1))
     (hslopeM : sound.source.slopeCap ≤ m)
@@ -10823,11 +10848,11 @@ theorem routeable_exists_strict_helper_split
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181392 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
     (hgap : sound.source.gap ≤ Module.finrank K
       (ConstraintKernel (K := K) D 131071 sound.source.totalCap
         sound.source.slopeCap m IRSProfile.domain u0 u1))
@@ -10868,7 +10893,7 @@ theorem routeable_exists_strict_helper_split
     omega
   have hcapacity : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
       D - j * 50322 ≤
-        (m - j) * 181392 + j * (131071 - 1) := by
+        (m - j) * 181373 + j * (131071 - 1) := by
     intro j _hj hjfuel
     have hjm : j ≤ m := hjfuel.trans hfuelM
     rw [hweighted]
@@ -10985,7 +11010,7 @@ theorem routeable_exists_strict_helper_split
   have hDpos : 0 < D := by
     rw [hweighted]
     exact Nat.mul_pos hmpos (by decide)
-  have hDa : D ≤ m * 181392 := hweighted.le
+  have hDa : D ≤ m * 181373 := hweighted.le
   apply exists_strict_helper_split_of_batch_source D
     sound.source.totalCap sound.source.slopeCap m sound.source.middleCap
     sound.source.gap 50322 (sound.source.fuel p)
@@ -11116,7 +11141,7 @@ structure PhaseKernelRealization (sound : PhaseSourceSound)
     (u0 u1 : I → K) where
   D : ℕ
   m : ℕ
-  weighted : D = m * 181392
+  weighted : D = m * 181373
   shape : D + sound.source.slopeCap ≤
     131071 * (sound.source.middleCap + 1)
   slope_le_m : sound.source.slopeCap ≤ m
@@ -11135,11 +11160,11 @@ theorem stateLocalRegularBoundOn_onePhase
     (ambient : Finset (RegularIndex H))
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181392 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
     (previousCap nextCap defect : FlagDegree → ℕ)
     (hprevious : StateLocalRegularBoundOn H selected Gamma ambient previousCap)
     (hdefect : PhaseDefectSound previousCap sound.source
@@ -11209,11 +11234,11 @@ theorem stateLocalRegularBound_onePhase
     (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181392 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
     (previousCap nextCap defect : FlagDegree → ℕ)
     (hprevious : StateLocalRegularBound H selected Gamma previousCap)
     (hdefect : PhaseDefectSound previousCap sound.source
@@ -11786,11 +11811,11 @@ theorem stateLocalRegularBoundOn_fourPhases
     (ambient : Finset (RegularIndex H))
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181392 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
     (baseCap rCap cCap f500Cap s390Cap : FlagDegree → ℕ)
     (rDefect cDefect f500Defect s390Defect : FlagDegree → ℕ)
     (hown : ∀ F ∈ ambient, LocatorHybridCost.OwnBound
@@ -11875,8 +11900,8 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80752
-def agreements:ℕ:=181392
+def errors:ℕ:=80771
+def agreements:ℕ:=181373
 def gap:ℕ:=50321
 def prime:ℕ:=2130706433
 def weightedCap:ℕ:=16688064
@@ -12164,10 +12189,10 @@ theorem regular_factor_count
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181392 ≤
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
     (R:RegularIndex Q) :
     (regularSeeds Q selected Gamma R).card ≤
       paddedCost 131072 131073 (regularCumulativeFlag Q R):=by
@@ -12209,11 +12234,11 @@ theorem regular_factor_count
     have hsub:geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g ⊆ Gamma:=
       (geometricSeeds_subset K R.1 selected _ g).trans (regularSeeds_subset Q selected Gamma R)
-    have hnodes:S.nodes.card=181392 + 80752:=by
+    have hnodes:S.nodes.card=181373 + 80771:=by
       change (Finset.univ:Finset I).card=_
       norm_num [I,IRSProfile.Index]
     have hag:∀ gamma ∈ geometricSeeds K R.1 selected
-        (regularSeeds Q selected Gamma R) g,181392 ≤ (S.agreementFiber gamma).card:=by
+        (regularSeeds Q selected Gamma R) g,181373 ≤ (S.agreementFiber gamma).card:=by
       intro gamma hgamma
       simpa [S,S0,ResidualStage.agreementFiber,ResidualStage.Agrees,
         reflagResidualStage,regularGeometricResidualStageOfSupport,
@@ -12246,10 +12271,10 @@ theorem regular_sum_count
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181392 ≤
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80752) :
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771) :
     (∑ R:RegularIndex Q, (regularSeeds Q selected Gamma R).card) ≤
       regularCost P.total P.ys P.s:=by
   have hb:=regularCumulativeFlag_budgets Q hQ HQ
@@ -12263,9 +12288,9 @@ theorem regular_sum_count
     regular_factor_count D P hDlow hDhigh hS hY hT Q hQ hbox HQ selected Gamma u0 u1
       hdegree hagreement hno R)).trans hcost
 def profile (D T S:ℕ):RCN276.Profile:=
-  ⟨262144,131071,181392,D,T,S⟩
+  ⟨262144,131071,181373,D,T,S⟩
 def singularProfile (D T S:ℕ):RCN318.TightParameters:=
-  ⟨262144,131071,181392,D,T,S⟩
+  ⟨262144,131071,181373,D,T,S⟩
 def equationCost (D T YS S:ℕ):ℕ:=
   regularCost T YS S + CommonShearTightPrototype.countCap (singularProfile D T S)
 structure SingularGates (P:RCN318.TightParameters):Prop where
@@ -12302,7 +12327,7 @@ theorem singular_gates (D T S:ℕ)
     exact hp
   refine ⟨hSpos, ?_,by change 1 ≤ 131071; decide,
     by change 131071 < 2130706433; decide, ?_,halgpos, ?_, ?_,
-    by change 131071 < 181392; decide,by change 181392 ≤ 262144; decide⟩
+    by change 131071 < 181373; decide,by change 181373 ≤ 262144; decide⟩
   · exact hS.trans_lt (by decide)
   · change 131071 < (2*S-1)*D
     omega
@@ -12318,10 +12343,10 @@ theorem fixed_count_le
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hsolution:∀ gamma ∈ Gamma,specialization K (selected gamma) gamma Q=0)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181392 ≤
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80752) :
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771) :
     Gamma.card ≤ equationCost D P.total P.ys P.s:=by
   have hg:=singular_gates D P.total P.s hDlow hDhigh
     (P.one_le_s.trans (P.s_le_ys.trans P.ys_le_total)) hT P.one_le_s hS
@@ -12413,7 +12438,7 @@ theorem hybridCost_eq_abs (p : FlagDegree) (flag : FlagDegree) :
   rw [h.1, h.2.1, h.2.2.1, h.2.2.2]
   rfl
 
-/-- Slack polynomials for `errors = 80752` (`b = b' + 1`). -/
+/-- Slack polynomials for `errors = 80771` (`b = b' + 1`). -/
 def hybridSlackZ (a b s : ℕ) : ℕ :=
   21341336229092192 + 15380268060709440 * s + 9509728678445056 * b +
     2593564165668864 * s ^ 2 + 5187128331337728 * b * s
@@ -13428,9 +13453,9 @@ def ProviderHyp (D:ℕ) (p:FlagDegree):Prop:=
   letI:CharP (GenericField K) 2130706433:=genericField_charP K 2130706433
   ∀ {Gamma:Finset K} {flag:FlagDegree}
     (S:ResidualStage (polynomialEmbedding K) Gamma IRSProfile.domain
-      2130706433 80752 flag 131071 (cellSupport (padT p) (padY p) (padS p))),
-    S.nodes.card=181392 + 80752 →
-    (∀ gamma ∈ Gamma,181392 ≤ (S.agreementFiber gamma).card) →
+      2130706433 80771 flag 131071 (cellSupport (padT p) (padY p) (padS p))),
+    S.nodes.card=181373 + 80771 →
+    (∀ gamma ∈ Gamma,181373 ≤ (S.agreementFiber gamma).card) →
     S.F ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p) →
     (flag.all ≤ padS p ∧ flag.yz + flag.all ≤ padY p ∧
       flag.zOnly + flag.yz + flag.all ≤ padT p) →
@@ -13455,9 +13480,9 @@ theorem hybridStageBound (D:ℕ) (p:FlagDegree)
     (hprov:ProviderHyp D p)
     {Gamma:Finset K} {flag:FlagDegree}
     (S:ResidualStage (polynomialEmbedding K) Gamma IRSProfile.domain
-      2130706433 80752 flag 131071 (cellSupport (padT p) (padY p) (padS p)))
-    (hnodes:S.nodes.card=181392 + 80752)
-    (hagreement:∀ gamma ∈ Gamma,181392 ≤ (S.agreementFiber gamma).card)
+      2130706433 80771 flag 131071 (cellSupport (padT p) (padY p) (padS p)))
+    (hnodes:S.nodes.card=181373 + 80771)
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤ (S.agreementFiber gamma).card)
     (hbox:S.F ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p))
     (hflag:flag.all ≤ padS p ∧ flag.yz + flag.all ≤ padY p ∧
       flag.zOnly + flag.yz + flag.all ≤ padT p) :
@@ -13484,7 +13509,7 @@ theorem hybridStageBound (D:ℕ) (p:FlagDegree)
         (padA p + padB p + padSlope p + 3) (padSlope p + 2):=by
       rw [hps.2.2,hps.1]; exact hbox
     have hprovider:=actual_identityCurveCountProvider
-      (a:=padA p) (b:=padB p) (s:=padSlope p) S 181392 hnodes hagreement
+      (a:=padA p) (b:=padB p) (s:=padSlope p) S 181373 hnodes hagreement
       (by norm_num) hTailNumerator D (padA p + padB p + padSlope p + 3) (padSlope p + 2)
       (by norm_num) hDlow hDchar hbox' hflagChar
       (LocatorFixedStage.identity_mixed_gate (padB p) (padSlope p) flag hS' hY'
@@ -13494,16 +13519,16 @@ theorem hybridStageBound (D:ℕ) (p:FlagDegree)
       have hy:0 < S.G.degreeOf 1:=S.y_dependent
       have hdeg:=degreeOf_le_flag_total S.G flag S.flag_support 1
       omega
-    have hinc:=identity_surface_seed_bound S 181392
+    have hinc:=identity_surface_seed_bound S 181373
       (identityCurveDegree flag (padA p) (padB p) (padSlope p) 131071) hprovider hagreement
       (by norm_num) (by rw [hnodes]; norm_num) hpositive
     have hscaled:Gamma.card * 50321 ≤
         50321 * hybridCostABS flag (padA p) (padB p) (padSlope p):=by
       calc
-        Gamma.card * 50321=Gamma.card * (181392 - 131071):=rfl
-        _ ≤ (S.nodes.card - 131071) * (80752 + 1) *
+        Gamma.card * 50321=Gamma.card * (181373 - 131071):=rfl
+        _ ≤ (S.nodes.card - 131071) * (80771 + 1) *
             identityCurveDegree flag (padA p) (padB p) (padSlope p) 131071:=hinc
-        _= (262144 - 131071) * (80752 + 1) *
+        _= (262144 - 131071) * (80771 + 1) *
             identityCurveDegree flag (padA p) (padB p) (padSlope p) 131071:=by
           rw [hnodes]
         _ ≤ 50321 * hybridCostABS flag (padA p) (padB p) (padSlope p):=
@@ -13526,10 +13551,10 @@ theorem regular_factor_count_hybrid
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181392 ≤
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
     (R:RegularIndex Q)
     (hhyb:HybridApplies (regularCumulativeFlag Q R))
     (hreal:Realization D) :
@@ -13580,11 +13605,11 @@ theorem regular_factor_count_hybrid
     have hsub:geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g ⊆ Gamma:=
       (geometricSeeds_subset K R.1 selected _ g).trans (regularSeeds_subset Q selected Gamma R)
-    have hnodes:S.nodes.card=181392 + 80752:=by
+    have hnodes:S.nodes.card=181373 + 80771:=by
       change (Finset.univ:Finset I).card=_
       norm_num [I,IRSProfile.Index]
     have hag:∀ gamma ∈ geometricSeeds K R.1 selected
-        (regularSeeds Q selected Gamma R) g,181392 ≤ (S.agreementFiber gamma).card:=by
+        (regularSeeds Q selected Gamma R) g,181373 ≤ (S.agreementFiber gamma).card:=by
       intro gamma hgamma
       simpa [S,S0,ResidualStage.agreementFiber,ResidualStage.Agrees,
         reflagResidualStage,regularGeometricResidualStageOfSupport,
@@ -13988,10 +14013,10 @@ theorem wide_fixed_count_le
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hsolution:∀ gamma ∈ Gamma,specialization K (selected gamma) gamma H=0)
     (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181392 ≤
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
     (hregular:(∑ F:RegularIndex H,
       (regularSeeds H selected Gamma F).card) ≤ initialRegularCap) :
     Gamma.card ≤ initialRegularCap+LocatorArithmetic.fixedSingularCap:=by
@@ -14501,8 +14526,8 @@ theorem product_gate (a b s:ℕ) (flag:FlagDegree)
     _ < 2130706433:=by norm_num
 
 theorem rational_gate (t y r:ℕ) (hb:r + 2 ≤ y) :
-    80752 + 1 ≤ (cellRational t y r).yz:=
-  rationalGate_of_le t y r 80752 hb (by norm_num)
+    80771 + 1 ≤ (cellRational t y r).yz:=
+  rationalGate_of_le t y r 80771 hb (by norm_num)
 
 end ProximityPrize.SubmissionLower.LocatorHybridGates
 end PackedLocator_LocatorHybridGates
@@ -14559,11 +14584,11 @@ theorem realization:Realization 16688064:=by
         (globalTailCut (polynomialEmbedding K) S.F (RCN327.w + 1))
         (regularitySurface (polynomialEmbedding K) S.F) Gamma
         (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
-          (80752 + 1) * (sharpBudgetFamily S hTail hflagChar hmixedSharp).yzCost C:=by
+          (80771 + 1) * (sharpBudgetFamily S hTail hflagChar hmixedSharp).yzCost C:=by
     intro C hall
     exact tangent_component_card_le S C hTail
       ((sharpActiveGeometry S hTail hflagChar hmixedSharp).base C)
-      181392 16688064 (padT p) (padS p) hnodes hagreement
+      181373 16688064 (padT p) (padS p) hnodes hagreement
       (by norm_num [RCN327.w]) (by norm_num [RCN327.w]) (by norm_num [RCN327.w]) (by norm_num)
       hbox (sharpBudgetFamily S hTail hflagChar hmixedSharp)
       (sharpUnitFamily_one_le_yzCost S hTail hflagChar hmixedSharp C) hall
@@ -14609,10 +14634,10 @@ theorem regular_factor_own_bound
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181392 ≤
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
     (R:RegularIndex Q) (hreal:Realization D) :
     OwnBound (regularSeeds Q selected Gamma R).card (regularCumulativeFlag Q R):=
   ⟨regular_factor_count D P hDlow hDhigh hS hY hT Q hQ hbox HQ selected Gamma u0 u1
@@ -14678,7 +14703,7 @@ abbrev Kernel (u0 u1 : I → K) :=
   ConstraintKernel (K := K) 27752976 131071 7289 47 153
     IRSProfile.domain u0 u1
 
-theorem weighted_exact : 153 * 181392 = 27752976 := by
+theorem weighted_exact : 153 * 181373 = 27752976 := by
   decide
 
 theorem shape : 27752976 + 47 ≤ 131071 * (211 + 1) := by
@@ -14996,7 +15021,7 @@ def includeS (u0 u1:I → K) (v:SKernel u0 u1):JoinedKernel u0 u1:=
       zero_add,add_zero]⟩⟩
 theorem joined_universal (u0 u1:I → K) (v:JoinedKernel u0 u1)
     (gamma:K) (P:Polynomial K) (points:Finset I)
-    (hP:P.natDegree ≤ 131071) (hcard:181392 ≤ points.card)
+    (hP:P.natDegree ≤ 131071) (hcard:181373 ≤ points.card)
     (hvalues:∀ i ∈ points,
       P.eval (IRSProfile.domain i) =u0 i + gamma * u1 i) :
     RCN319.specialization K P gamma
@@ -15004,19 +15029,19 @@ theorem joined_universal (u0 u1:I → K) (v:JoinedKernel u0 u1)
   obtain ⟨z,hz⟩:=v.2
   rw [← hz,reconstruct_joinedMap,map_add,map_add,map_add,map_add]
   have hc:=specialization_eq_zero_of_agreements K
-    48975840 131071 130000 81 270 181392 IRSProfile.domain u0 u1
+    48975840 131071 130000 81 270 181373 IRSProfile.domain u0 u1
     z.1.1.1 z.1.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have ha:=specialization_eq_zero_of_agreements K
-    16688064 131071 130000 28 92 181392 IRSProfile.domain u0 u1
+    16688064 131071 130000 28 92 181373 IRSProfile.domain u0 u1
     z.1.2.1.1 z.1.2.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have haux:=specialization_eq_zero_of_agreements K
-    17413632 131071 130000 29 96 181392 IRSProfile.domain u0 u1
+    17413632 131071 130000 29 96 181373 IRSProfile.domain u0 u1
     z.1.2.2.1.1 z.1.2.2.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have htcap:=specialization_eq_zero_of_agreements K
-    32831952 131071 5968 56 181 181392 IRSProfile.domain u0 u1
+    32831952 131071 5968 56 181 181373 IRSProfile.domain u0 u1
     z.1.2.2.2.1 z.1.2.2.2.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have hs:=specialization_eq_zero_of_agreements K
-    27752976 131071 7289 47 153 181392 IRSProfile.domain u0 u1
+    27752976 131071 7289 47 153 181373 IRSProfile.domain u0 u1
     z.2.1 z.2.2 (by decide) (by decide) P gamma points hP hcard hvalues
   rw [specialization_eq_ordinary] at ha haux hc htcap hs
   simp only [hc,ha,haux,htcap,hs,zero_add]
@@ -15053,7 +15078,7 @@ structure SelectedPair (u0 u1:I → K) where
     gcd QA QB ∣ reconstruct K 20134512 131071 10381 33 v.1
   universal_vanishing:
     ∀ (gamma:K) (P:Polynomial K) (points:Finset I),
-      P.natDegree ≤ 131071 → 181392 ≤ points.card →
+      P.natDegree ≤ 131071 → 181373 ≤ points.card →
       (∀ i ∈ points,P.eval (IRSProfile.domain i) =u0 i + gamma * u1 i) →
       RCN319.specialization K P gamma QA=0 ∧
         RCN319.specialization K P gamma QB=0
@@ -15150,12 +15175,12 @@ theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
     · dsimp only [QA]
       rw [submoduleReconstructLinear_apply]
       exact specialization_eq_zero_of_agreements K
-        32831952 131071 5968 56 181 181392 IRSProfile.domain u0 u1
+        32831952 131071 5968 56 181 181373 IRSProfile.domain u0 u1
         vA.1 vA.2 (by decide) (by decide) P gamma points hP hcard hvalues
     · dsimp only [QB]
       rw [submoduleReconstructLinear_apply]
       exact specialization_eq_zero_of_agreements K
-        20134512 131071 10381 33 111 181392 IRSProfile.domain u0 u1
+        20134512 131071 10381 33 111 181373 IRSProfile.domain u0 u1
         vB.1 vB.2 (by decide) (by decide) P gamma points hP hcard hvalues
 end
 end ProximityPrize.SubmissionLower.LocatorSelection
@@ -15478,10 +15503,10 @@ theorem initialA_nonuniversal_count
     (hwide:ResidualSupportData LocatorFixedConsumer.wideSupport H)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181392 ≤
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
     (F:RegularIndex H) (hFU:F ∉ initialAUniversalFactors u0 u1 H):
     (regularSeeds H selected Gamma F).card ≤
       initialAHelperCap (regularCumulativeFlag H F):=by
@@ -15524,10 +15549,10 @@ theorem initialA_universal_ownBound
     (hTotal:wt residualTotalWeights H ≤ 5964)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181392 ≤
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
     (F:RegularIndex H) (hFU:F ∈ initialAUniversalFactors u0 u1 H):
     LocatorHybridCost.OwnBound (regularSeeds H selected Gamma F).card
       (regularCumulativeFlag H F):=by
@@ -15570,10 +15595,10 @@ theorem gcd_fixed_count_le_of_initial_phase
     (u0 u1:I → K) (S:SelectedPair u0 u1)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181392 ≤
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
     (phaseCap:ℕ)
     (hphase:
       let H:P4:=gcd12 S.QA S.QB
@@ -15624,12 +15649,12 @@ theorem gcd_fixed_count_le_of_initial_phase
     exact LocatorCover.fixed_vanish phi Gamma S.QA S.QB gamma hg
   have hdegreeD:∀ gamma ∈ Delta,(selected gamma).natDegree ≤ 131071:=
     fun gamma hg=>hdegree gamma (hsub hg)
-  have hagreementD:∀ gamma ∈ Delta,181392 ≤
+  have hagreementD:∀ gamma ∈ Delta,181373 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card:=
     fun gamma hg=>hagreement gamma (hsub hg)
-  have hnoD:NoLargeSelectedPencil selected Delta 131071 80752:=
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80752 hsub hno
+  have hnoD:NoLargeSelectedPencil selected Delta 131071 80771:=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80771 hsub hno
   have hN:∀ F ∈ (Finset.univ:Finset (RegularIndex H)) \ U,
       (regularSeeds H selected Delta F).card ≤
         initialAHelperCap (regularCumulativeFlag H F):=by
@@ -15731,11 +15756,11 @@ theorem gcd_fixed_count_le_of_stateLocalPhase
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181392 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
     (phaseCap : FlagDegree → ℕ)
     (hphase :
       let H : P4 := gcd12 S.QA S.QB
@@ -15976,11 +16001,11 @@ theorem PhasePrefixCertificate.stateLocalBoundOn
     (ambient : Finset (RegularIndex H))
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181392 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80752)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
     (hown : ∀ F ∈ ambient, LocatorHybridCost.OwnBound
       (regularSeeds H selected Gamma F).card
       (regularCumulativeFlag H F)) :
@@ -16028,11 +16053,11 @@ theorem gcd_fixed_count_le_of_certificate
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181392 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80752) :
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771) :
     (LocatorCover.fixed
       (fun gamma ↦ (specialization K (selected gamma) gamma).toRingHom)
       Gamma S.QA S.QB).card ≤
@@ -16055,13 +16080,13 @@ theorem gcd_fixed_count_le_of_certificate
   have hdegreeD : ∀ gamma ∈ Delta,
       (selected gamma).natDegree ≤ 131071 :=
     fun gamma hgamma ↦ hdegree gamma (hsub hgamma)
-  have hagreementD : ∀ gamma ∈ Delta, 181392 ≤
+  have hagreementD : ∀ gamma ∈ Delta, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card :=
     fun gamma hgamma ↦ hagreement gamma (hsub hgamma)
-  have hnoD : NoLargeSelectedPencil selected Delta 131071 80752 :=
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80752 hsub hno
+  have hnoD : NoLargeSelectedPencil selected Delta 131071 80771 :=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80771 hsub hno
   have hown : ∀ F ∈ U, LocatorHybridCost.OwnBound
       (regularSeeds H selected Delta F).card
       (regularCumulativeFlag H F) := by
@@ -66808,7 +66833,7 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80752
+def errors:ℕ:=80771
 def agreements:ℕ:=n - errors
 def gap:ℕ:=agreements - w
 def prime:ℕ:=2130706433
@@ -67388,7 +67413,7 @@ set_option maxHeartbeats 5000000
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
 local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
 def n:ℕ:=262144
-def errors:ℕ:=80752
+def errors:ℕ:=80771
 def agreements:ℕ:=n-errors
 def listBudget:ℕ:=4639366956
 def mcaBudget:ℕ:=274980723472028131
@@ -67543,7 +67568,7 @@ theorem certifiedGammaError_le_of_alignment
      · simpa only [Nat.mul_comm] using field_capacity_split
 theorem protocolClaim6800_of_alignment
    (halign:AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-   ProtocolClaim 6800 10336383 33554432 where
+   ProtocolClaim 6802 10338815 33554432 where
  admissible:=LocatorArithmetic.radius_admissible
  reduction:=by
    change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
@@ -67551,7 +67576,7 @@ theorem protocolClaim6800_of_alignment
      certifiedGammaError_le_of_alignment halign
  score:=by
    change (1 - LocatorArithmetic.radius) ^
-     IRSProfile.repetitions ≤ claimedError 6800
+     IRSProfile.repetitions ≤ claimedError 6802
    exact LocatorArithmetic.score_target_le
 end
 end ProximityPrize.SubmissionLower.LocatorProtocol
@@ -67601,11 +67626,11 @@ theorem selected_pair_count_of_certificate
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ gamma ∈ seeds,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ seeds, 181392 ≤
+    (hagreement : ∀ gamma ∈ seeds, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected seeds 131071 80752) :
+    (hno : NoLargeSelectedPencil selected seeds 131071 80771) :
     seeds.card < LocatorArithmetic.budget := by
   have hnoResidual : NoLargeSelectedPencil selected seeds LocatorArithmetic.w
       (LocatorArithmetic.n - LocatorArithmetic.agreements) := by
@@ -67654,15 +67679,15 @@ theorem selected_pair_count_of_certificate
 
 theorem selectedNoLargePencilBound6800_of_certificate
     (cert : LocatorPhase6800Composition.PhasePrefixCertificate) :
-    SelectedNoLargePencilBound IRSProfile.domain 131071 80752
+    SelectedNoLargePencilBound IRSProfile.domain 131071 80771
       LocatorArithmetic.budget := by
   intro U seeds A selected hdegree hcard hvalues hno
   obtain ⟨S⟩ := exists_selected_pair (U 0) (U 1)
-  have hA : ∀ gamma ∈ seeds, 181392 ≤ (A gamma).card := by
+  have hA : ∀ gamma ∈ seeds, 181373 ≤ (A gamma).card := by
     intro gamma hg
     have hc := hcard gamma hg
     simpa [I, IRSProfile.Index] using hc
-  have hagreement : ∀ gamma ∈ seeds, 181392 ≤
+  have hagreement : ∀ gamma ∈ seeds, 181373 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           U 0 i + gamma * U 1 i)).card := by
@@ -67672,7 +67697,7 @@ theorem selectedNoLargePencilBound6800_of_certificate
     intro i hi
     exact Finset.mem_filter.mpr
       ⟨Finset.mem_univ _, hvalues gamma hg i hi⟩
-  have hno' : NoLargeSelectedPencil selected seeds 131071 80752 := by
+  have hno' : NoLargeSelectedPencil selected seeds 131071 80771 := by
     intro P0 P1 h0 h1
     simpa only [pencilSeeds] using hno P0 P1 h0 h1
   exact Nat.le_of_lt
@@ -67683,7 +67708,7 @@ theorem alignmentBound6800_of_certificate
     (cert : LocatorPhase6800Composition.PhasePrefixCertificate) :
     AffineLineAlignmentBound IRSProfile.baseCode
       LocatorProtocol.errors LocatorProtocol.mcaBudget := by
-  have h := alignmentBound_of_selected_count IRSProfile.domain 131071 80752
+  have h := alignmentBound_of_selected_count IRSProfile.domain 131071 80771
     LocatorArithmetic.budget
     (selectedNoLargePencilBound6800_of_certificate cert)
   simpa [IRSProfile.baseCode, IRSProfile.baseDimension,
@@ -67692,12 +67717,12 @@ theorem alignmentBound6800_of_certificate
 
 theorem protocolClaim6800_of_certificate
     (cert : LocatorPhase6800Composition.PhasePrefixCertificate) :
-    ProtocolClaim 6800 10336383 33554432 :=
+    ProtocolClaim 6802 10338815 33554432 :=
   LocatorProtocol.protocolClaim6800_of_alignment
     (alignmentBound6800_of_certificate cert)
 
 /-- The non-parameterized benchmark claim obtained from the checked receipt. -/
-theorem protocolClaim6800 : ProtocolClaim 6800 10336383 33554432 :=
+theorem protocolClaim6800 : ProtocolClaim 6802 10338815 33554432 :=
   protocolClaim6800_of_certificate LocatorPhase6800Certificate.certificate
 
 end
