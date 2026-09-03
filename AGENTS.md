@@ -52,7 +52,7 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    failed unscored, exactly like the memory ceiling. This repository's own
    benchmark job allows 180, so a submission can build green here and still be
    cut off there; a local build that takes over an hour is already close.
-7. Stay inside the verifier's **disk** budget. The build writes to a **32 GiB**
+7. Stay inside the verifier's **disk** budget. The build writes to a **31.9 GiB**
    filesystem of its own, and filling it fails the submission unscored and
    reports `candidate_out_of_disk`.
 
