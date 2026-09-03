@@ -8,7 +8,7 @@ import ProximityPrize.SubmissionUpper.PrescribedTop
 # A rational pencil on the 512-by-512 NTT grid
 
 The size-`2^18` NTT domain is partitioned into 512 fibres by `x ↦ x^512`.
-We use 272 whole fibres together with a fixed 511-point core.  Prescribing 14
+We use 273 whole fibres together with a fixed 511-point core.  Prescribing 15
 top coefficients and the product of the selected fibre labels leaves more than
 `2^59` choices while forcing pairwise differences to have the two roots needed
 to fit under the row-degree budget.
@@ -80,9 +80,9 @@ noncomputable def outer : Finset Small := Finset.univ.erase 0
 theorem outer_card : outer.card = 511 := by simp [outer]
 
 noncomputable def Candidates : Finset (Finset Small) :=
-  Finset.powersetCard 272 outer
+  Finset.powersetCard 273 outer
 
-theorem candidates_card : Candidates.card = Nat.choose 511 272 := by
+theorem candidates_card : Candidates.card = Nat.choose 511 273 := by
   rw [Candidates, Finset.card_powersetCard, outer_card]
 
 noncomputable def V (U : Finset Small) : Polynomial K :=
@@ -116,31 +116,31 @@ theorem V_injective : Function.Injective V := by
   ext b
   rw [← V_eval_zero_iff U b, ← V_eval_zero_iff W b, h]
 
-noncomputable def topKey (U : Finset Small) : Fin 14 → K :=
-  fun i => (V U).coeff (271 - i.val)
+noncomputable def topKey (U : Finset Small) : Fin 15 → K :=
+  fun i => (V U).coeff (272 - i.val)
 
 noncomputable def productKey (U : Finset Small) : Small :=
   ⟨(∑ b ∈ U, b.val) % 512, Nat.mod_lt _ (by norm_num)⟩
 
-noncomputable def key (U : Finset Small) : (Fin 14 → K) × Small :=
+noncomputable def key (U : Finset Small) : (Fin 15 → K) × Small :=
   (topKey U, productKey U)
 
-theorem card_keys : Fintype.card ((Fin 14 → K) × Small) =
-    (2 ^ 31 - 2 ^ 24 + 1) ^ 14 * 512 := by
+theorem card_keys : Fintype.card ((Fin 15 → K) × Small) =
+    (2 ^ 31 - 2 ^ 24 + 1) ^ 15 * 512 := by
   rw [Fintype.card_prod, Fintype.card_fun, PrescribedTop.card_K]
   norm_num
 
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 1000000 in
-set_option exponentiation.threshold 100000 in
+set_option exponentiation.threshold 300000 in
 theorem orbit_count :
-    ((2 ^ 31 - 2 ^ 24 + 1)^14 * 512) * 2^59 < Nat.choose 511 272 := by
+    ((2 ^ 31 - 2 ^ 24 + 1)^15 * 512) * 2^30 < Nat.choose 511 273 := by
   rw [Nat.choose_eq_fast_choose]
   decide
 
 theorem exists_big_fiber :
-    ∃ σ : (Fin 14 → K) × Small,
-      2^59 < (Candidates.filter fun U => key U = σ).card := by
+    ∃ σ : (Fin 15 → K) × Small,
+      2^30 < (Candidates.filter fun U => key U = σ).card := by
   refine PrescribedTop.pigeonhole Candidates key _ ?_
   rw [card_keys, candidates_card]
   exact orbit_count
@@ -148,9 +148,9 @@ theorem exists_big_fiber :
 noncomputable def sigma0 := Classical.choose exists_big_fiber
 noncomputable def Fam : Finset (Finset Small) := Candidates.filter fun U => key U = sigma0
 
-theorem Fam_card_gt : 2^59 < Fam.card := Classical.choose_spec exists_big_fiber
+theorem Fam_card_gt : 2^30 < Fam.card := Classical.choose_spec exists_big_fiber
 
-theorem Fam_mem {U : Finset Small} (hU : U ∈ Fam) : U ⊆ outer ∧ U.card = 272 := by
+theorem Fam_mem {U : Finset Small} (hU : U ∈ Fam) : U ⊆ outer ∧ U.card = 273 := by
   exact Finset.mem_powersetCard.mp (Finset.mem_filter.mp hU).1
 
 theorem Fam_key {U : Finset Small} (hU : U ∈ Fam) : key U = sigma0 :=
@@ -162,7 +162,7 @@ theorem omega_pow_sum_eq_of_mod_eq {a b : ℕ} (h : a % 512 = b % 512) :
   change (512 * a) % 262144 = (512 * b) % 262144
   omega
 
-theorem V_eval_zero {U : Finset Small} (hcard : U.card = 272) :
+theorem V_eval_zero {U : Finset Small} (hcard : U.card = 273) :
     (V U).eval 0 = omega ^ (512 * ∑ b ∈ U, b.val) := by
   rw [V, Polynomial.eval_prod]
   simp only [Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C, zero_sub]
@@ -181,23 +181,23 @@ theorem V_eval_zero_eq_of_key {U W : Finset Small}
   have hk := congrArg Prod.snd ((Fam_key hU).trans (Fam_key hW).symm)
   exact congrArg Fin.val hk
 
-theorem V_coeff_top {U : Finset Small} (hU : U ∈ Fam) : (V U).coeff 272 = 1 := by
+theorem V_coeff_top {U : Finset Small} (hU : U ∈ Fam) : (V U).coeff 273 = 1 := by
   have hm := V_monic U
   rw [Polynomial.Monic, Polynomial.leadingCoeff, V_natDegree, (Fam_mem hU).2] at hm
   exact hm
 
-theorem V_coeff_gt {U : Finset Small} (hU : U ∈ Fam) {d : ℕ} (hd : 272 < d) :
+theorem V_coeff_gt {U : Finset Small} (hU : U ∈ Fam) {d : ℕ} (hd : 273 < d) :
     (V U).coeff d = 0 := by
   refine Polynomial.coeff_eq_zero_of_natDegree_lt ?_
   rw [V_natDegree, (Fam_mem hU).2]
   exact hd
 
 theorem top_coeff_eq {U W : Finset Small} (hU : U ∈ Fam) (hW : W ∈ Fam)
-    {d : ℕ} (hlo : 258 ≤ d) (hhi : d ≤ 271) : (V U).coeff d = (V W).coeff d := by
+    {d : ℕ} (hlo : 258 ≤ d) (hhi : d ≤ 272) : (V U).coeff d = (V W).coeff d := by
   have hk := congrArg Prod.fst ((Fam_key hU).trans (Fam_key hW).symm)
-  have hi : 271 - d < 14 := by omega
+  have hi : 272 - d < 15 := by omega
   have hc := congrFun hk ⟨271 - d, hi⟩
-  simpa only [key, topKey, show 271 - (271 - d) = d by omega] using hc
+  simpa only [key, topKey, show 272 - (272 - d) = d by omega] using hc
 
 theorem V_sub_degree_lt {U W : Finset Small} (hU : U ∈ Fam) (hW : W ∈ Fam) :
     (V U - V W).degree < (258 : ℕ) := by
@@ -205,14 +205,14 @@ theorem V_sub_degree_lt {U W : Finset Small} (hU : U ∈ Fam) (hW : W ∈ Fam) :
   intro d hd
   have hd258 : 258 ≤ d := by exact_mod_cast hd
   rw [Polynomial.coeff_sub]
-  rcases lt_trichotomy d 272 with hlt | heq | hgt
+  rcases lt_trichotomy d 273 with hlt | heq | hgt
   · have hle : d ≤ 271 := by omega
     rw [top_coeff_eq hU hW hd258 hle, sub_self]
   · subst d
     rw [V_coeff_top hU, V_coeff_top hW, sub_self]
   · rw [V_coeff_gt hU hgt, V_coeff_gt hW hgt, sub_self]
 
-abbrev NN : ℕ := 2^59 + 1
+abbrev NN : ℕ := 2^30 + 1
 
 theorem exists_selected : ∃ S : Finset (Finset Small), S ⊆ Fam ∧ S.card = NN := by
   obtain ⟨S, hsub, hcard⟩ := Finset.exists_subset_card_eq (s := Fam)
@@ -280,20 +280,20 @@ theorem projected_union_card_le : (projected ∪ {0}).card ≤ 513 := by
   calc (projected ∪ {0}).card ≤ projected.card + ({0} : Finset FF).card := Finset.card_union_le _ _
     _ = 513 := by rw [projected_card]; simp
 
-theorem collision_arith : 513 + Sel.offDiag.card * 257 ≤ NN^2 * 272 + 513 := by
+theorem collision_arith : 513 + Sel.offDiag.card * 257 ≤ NN^2 * 273 + 513 := by
   rw [offdiag_card]
   have h1 : NN * (NN - 1) ≤ NN * NN :=
     Nat.mul_le_mul_left NN (Nat.sub_le NN 1)
   have h2 : NN * (NN - 1) * 257 ≤ NN^2 * 257 := by
     simpa [pow_two] using Nat.mul_le_mul_right 257 h1
-  have h3 : NN^2 * 257 ≤ NN^2 * 272 := Nat.mul_le_mul_left _ (by norm_num)
+  have h3 : NN^2 * 257 ≤ NN^2 * 273 := Nat.mul_le_mul_left _ (by norm_num)
   calc
     513 + NN * (NN - 1) * 257 ≤ 513 + NN^2 * 257 := Nat.add_le_add_left h2 513
-    _ ≤ 513 + NN^2 * 272 := Nat.add_le_add_left h3 513
-    _ = NN^2 * 272 + 513 := Nat.add_comm _ _
+    _ ≤ 513 + NN^2 * 273 := Nat.add_le_add_left h3 513
+    _ = NN^2 * 273 + 513 := Nat.add_comm _ _
 
 set_option maxRecDepth 10000 in
-theorem bad_card_le : bad.card ≤ NN^2 * 272 + 513 := by
+theorem bad_card_le : bad.card ≤ NN^2 * 273 + 513 := by
   have hcoll := collision_union_card_le
   have hp := projected_union_card_le
   rw [bad]
@@ -302,12 +302,12 @@ theorem bad_card_le : bad.card ≤ NN^2 * 272 + 513 := by
         (projected ∪ {0}).card + (Sel.offDiag.biUnion collisionRoots).card :=
       Finset.card_union_le _ _
     _ ≤ 513 + Sel.offDiag.card * 257 := Nat.add_le_add hp hcoll
-    _ ≤ NN^2 * 272 + 513 := collision_arith
+    _ ≤ NN^2 * 273 + 513 := collision_arith
 
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 1000000 in
-set_option exponentiation.threshold 100000 in
-theorem alpha_count : NN^2 * 272 + 513 < (2 ^ 31 - 2 ^ 24 + 1)^6 := by
+set_option exponentiation.threshold 300000 in
+theorem alpha_count : NN^2 * 273 + 513 < (2 ^ 31 - 2 ^ 24 + 1)^6 := by
   dsimp [NN]
   decide
 
@@ -548,7 +548,7 @@ theorem pair_disjoint {U : Finset Small} (hU : U ∈ Sel) :
   rw [heq] at hb
   exact hb0 hb.2
 
-theorem T_card {U : Finset Small} (hU : U ∈ Sel) : (T U).card = 139775 := by
+theorem T_card {U : Finset Small} (hU : U ∈ Sel) : (T U).card = 140287 := by
   rw [T, Finset.card_image_of_injective _ idx_injective, pairSet,
     Finset.card_union_of_disjoint (pair_disjoint hU)]
   simp [corePairs, blockPairs, coreA_card, (Fam_mem (Sel_mem hU)).2]
@@ -777,12 +777,12 @@ noncomputable def attack (δ : ℝ≥0) (hhi : δ < (122641 / 262144 : ℝ≥0))
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 10000 in
 theorem winningSetDensity_gt_epsilon_window (δ : ℝ≥0)
-    (hlo : (122369 / 262144 : ℝ≥0) ≤ δ)
+    (hlo : (121857 / 262144 : ℝ≥0) ≤ δ)
     (hhi : δ < (122641 / 262144 : ℝ≥0)) :
     ProximityPrize.Benchmark.Upper.epsilonStar < winningSetDensity IRSProfile.encoder δ := by
   classical
-  have hdlo : (122369 / 262144 : ℝ) ≤ (δ : ℝ) := by exact_mod_cast hlo
-  have hagree : (1 - (δ : ℝ)) * 262144 ≤ (139775 : ℝ) := by nlinarith
+  have hdlo : (121857 / 262144 : ℝ) ≤ (δ : ℝ) := by exact_mod_cast hlo
+  have hagree : (1 - (δ : ℝ)) * 262144 ≤ (140287 : ℝ) := by nlinarith
   let x := attack δ hhi
   have himg : (Sel.image gamma : Set FF) ⊆
       winningSetFor IRSProfile.encoder δ x.v x.μ₁ x.μ₂ x.f₁ x.f₂ := by
