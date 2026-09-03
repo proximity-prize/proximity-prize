@@ -61,8 +61,10 @@ theorem candidate_score :
   rw [show ((12800 : ℕ) : ℝ) * (1 / 100) = ((128 : ℕ) : ℝ) by push_cast; norm_num] at hmono
   rwa [NNReal.rpow_natCast] at hmono
 
-/-- The 512-fibre rational pencil certifies the new narrow window, then hands
-off to the prescribed-top attack, giving a `116.13`-bit upper certificate. -/
+/-- The 512-fibre rational pencil certifies
+`[122369 / 262144, 122641 / 262144)`.  The prescribed-top attack covers the
+remaining interval up to `IRSProfile.minRelativeDistance`, giving the
+`116.13`-bit upper certificate. -/
 theorem candidate : ProtocolClaimUpper 11613 122369 where
   admissible := by
     rw [claimedUnsafeRadius_122369_eq]
