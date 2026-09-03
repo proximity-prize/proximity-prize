@@ -125,8 +125,8 @@ verifier to accept the exact commit and return the matching score plus exact
 radius or unsafe index. The repository-side identities are:
 
 ```text
-proximity-prize-reduction-lower @ irs-reduction-threshold-v3
-proximity-prize-reduction-upper @ irs-reduction-threshold-v3
+proximity-prize-reduction-lower @ irs-reduction-threshold-v10
+proximity-prize-reduction-upper @ irs-reduction-threshold-v10
 ```
 
 Those verifier profiles must be registered before either workflow can issue an
