@@ -56,6 +56,10 @@ CODE_VERDICTS = {
     "candidate_out_of_memory": "The submission exceeded the memory the challenge "
     "allows. This is a resource outcome, not a judgement on the proof -- see the "
     "memory rule in AGENTS.md, which gives the budget and the usual cause.",
+    "candidate_out_of_disk": "The build filled the disk the challenge allows and "
+    "stopped partway. This is a resource outcome, not a judgement on the proof: "
+    "nothing was checked, so a correct proof fails this way too -- see the disk "
+    "rule in AGENTS.md, which gives the budget and the usual cause.",
 }
 
 
