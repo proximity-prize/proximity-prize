@@ -1,0 +1,20778 @@
+import ProximityPrize.SubmissionLower.PackedLegacy
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorNestedProjection. -/
+section PackedLocator_LocatorNestedProjection
+namespace ProximityPrize.SubmissionLower.LocatorLowQuotient
+open scoped BigOperators
+open RCN081 RCN156 RCN180 RCN234
+noncomputable section
+variable {K:Type*} [Field K]
+local instance:DecidableEq K:=Classical.decEq K
+def nestedExponents (D w T YS S:ℕ):Set (Fin 4 →₀ ℕ) :=
+  {d | d 1 + d 2 + d 3 ≤ T ∧ d 1 + d 2 ≤ YS ∧ d 2 ≤ S ∧
+    d 0 + w * d 1 + (w - 1) * d 2 < D}
+def nestedCoefficientBox (K:Type*) [Field K] (D w T YS S:ℕ) :
+    Submodule K (MvPolynomial (Fin 4) K) :=
+  MvPolynomial.restrictSupport K (nestedExponents D w T YS S)
+
+/-- The PR #437 kernel-cheap range sum. -/
+def kernelSumRange (f : ℕ → ℕ) : ℕ → ℕ := KernelEval.sumRange f
+
+theorem kernelSumRange_succ (f : ℕ → ℕ) (n : ℕ) :
+    kernelSumRange f (n + 1) = kernelSumRange f n + f n := by
+  exact KernelEval.sumRange_succ f n
+
+theorem kernelSumRange_eq (f : ℕ → ℕ) (n : ℕ) :
+    kernelSumRange f n = ∑ i ∈ Finset.range n, f i := by
+  exact KernelEval.sumRange_eq f n
+
+theorem finset_sum_range_sub (a m : ℕ) (h : m ≤ a) :
+    ∑ r ∈ Finset.range (m + 1), (a - r) =
+      (m + 1) * a - (m + 1) * m / 2 := by
+  exact KernelEval.sum_range_sub a m h
+
+def channelCount (T YS S:ℕ):ℕ :=
+  kernelSumRange (fun y =>
+    let M := min S (min (T - y) (YS - y))
+    (M + 1) * (T + 1 - y) - (M + 1) * M / 2) (min T YS + 1)
+
+theorem channelCount_eq (T YS S : ℕ) :
+    channelCount T YS S =
+      ∑ y ∈ Finset.range (min T YS + 1),
+        ∑ r ∈ Finset.range (min S (min (T - y) (YS - y)) + 1),
+          (T + 1 - y - r) := by
+  rw [channelCount, kernelSumRange_eq]
+  refine Finset.sum_congr rfl (fun y _ => ?_)
+  let M := min S (min (T - y) (YS - y))
+  have hM : M ≤ T + 1 - y := by
+    have hMT : M ≤ T - y := by
+      exact (Nat.min_le_right _ _).trans (Nat.min_le_left _ _)
+    omega
+  simpa [M] using (finset_sum_range_sub (T + 1 - y) M hM).symm
+abbrev HighBandIndex (delta T YS S:ℕ) :=
+  (y:Fin (min T YS + 1)) ×
+    (r:Fin (min S (min (T - y.val) (YS - y.val)) + 1)) ×
+      (Fin (T + 1 - y.val - r.val) × Fin delta)
+theorem highBandIndex_card (delta T YS S:ℕ) :
+    Fintype.card (HighBandIndex delta T YS S) = delta * channelCount T YS S:=by
+  rw [channelCount_eq]
+  simp [HighBandIndex, Fintype.card_sigma,
+    Finset.sum_range, Finset.mul_sum, Nat.mul_comm]
+def highBandExponent (w Dlow:ℕ) {delta T YS S:ℕ}
+    (c:HighBandIndex delta T YS S):Fin 4 →₀ ℕ :=
+  Finsupp.single 0 (Dlow - w * c.1.val - (w - 1) * c.2.1.val + c.2.2.2.val) +
+    Finsupp.single 1 c.1.val + Finsupp.single 2 c.2.1.val +
+      Finsupp.single 3 c.2.2.1.val
+def highBandMap (w Dlow delta T YS S:ℕ) :
+    MvPolynomial (Fin 4) K →ₗ[K] (HighBandIndex delta T YS S → K) :=
+  LinearMap.pi (fun c => MvPolynomial.lcoeff K (highBandExponent w Dlow c))
+@[simp] theorem highBandMap_apply (w Dlow delta T YS S:ℕ)
+    (P:MvPolynomial (Fin 4) K) (c:HighBandIndex delta T YS S) :
+    highBandMap w Dlow delta T YS S P c =
+      MvPolynomial.coeff (highBandExponent w Dlow c) P:=rfl
+theorem mem_low_of_highBandMap_eq_zero
+    (Dhigh Dlow w delta T YS S:ℕ)
+    (hwidth:Dhigh ≤ Dlow + delta) (P:MvPolynomial (Fin 4) K)
+    (hP:P ∈ nestedCoefficientBox K Dhigh w T YS S)
+    (hzero:highBandMap w Dlow delta T YS S P = 0) :
+    P ∈ nestedCoefficientBox K Dlow w T YS S:=by
+  intro d hd
+  rcases hP hd with ⟨hT, hYS, hS, hD⟩
+  refine ⟨hT, hYS, hS, ?_⟩
+  by_contra hnot
+  have hy:d 1 < min T YS + 1:=by omega
+  have hr:d 2 < min S (min (T - d 1) (YS - d 1)) + 1:=by omega
+  have hz:d 3 < T + 1 - d 1 - d 2:=by omega
+  have hstart:Dlow - w * d 1 - (w - 1) * d 2 ≤ d 0:=by omega
+  have hx:d 0 - (Dlow - w * d 1 - (w - 1) * d 2) < delta:=by omega
+  let c:HighBandIndex delta T YS S :=
+    ⟨⟨d 1, hy⟩, ⟨⟨d 2, hr⟩,
+      ⟨⟨d 3, hz⟩, ⟨d 0 - (Dlow - w * d 1 - (w - 1) * d 2), hx⟩⟩⟩⟩
+  have he:highBandExponent w Dlow c = d:=by
+    ext i
+    fin_cases i <;> simp [highBandExponent, c] <;> omega
+  have hc:=congrFun hzero c
+  have hcoeff:MvPolynomial.coeff d P = 0:=by
+    simpa only [highBandMap_apply, he, Pi.zero_apply] using hc
+  exact (MvPolynomial.mem_support_iff.mp hd) hcoeff
+theorem nested_mem_global {D w T YS S:ℕ} {P:MvPolynomial (Fin 4) K}
+    (hP:P ∈ nestedCoefficientBox K D w T YS S) :
+    P ∈ RCN100.globalCoefficientBox K D w T S:=by
+  intro d hd
+  have h:=hP hd
+  exact ⟨h.1, h.2.2.1, h.2.2.2⟩
+theorem nested_mem_weights {D w T YS S:ℕ} {P:MvPolynomial (Fin 4) K}
+    (hP:P ∈ nestedCoefficientBox K D w T YS S) (hne:P ≠ 0) :
+    wt residualTotalWeights P ≤ T ∧ wt residualYSWeights P ≤ YS ∧
+      wt residualSWeights P ≤ S ∧ wt (contactWeights w) P < D:=by
+  have hD:0 < D:=by
+    obtain ⟨d, hd⟩:=MvPolynomial.support_nonempty.mpr hne
+    have h:=(hP hd).2.2.2
+    omega
+  have h:=(mem_flagGlobalCoefficientBox_iff P D w T S hD).mp
+    (nested_mem_global hP)
+  refine ⟨h.1, ?_, h.2.1, by omega⟩
+  apply (weightedTotalDegree_le_iff residualYSWeights P YS).mpr
+  intro d hd
+  have hdYS:=(hP hd).2.1
+  rw [weight_fin4]
+  simpa [residualYSWeights] using hdYS
+theorem flag_box_ys_bound (D w L s YS:ℕ) (hw:1 ≤ w)
+    (hshape:D + s ≤ w * (YS + 1)) (P:MvPolynomial (Fin 4) K)
+    (hP:P ∈ RCN100.globalCoefficientBox K D w L s) :
+    wt residualYSWeights P ≤ YS:=by
+  apply (weightedTotalDegree_le_iff residualYSWeights P YS).mpr
+  intro d hd
+  have hs:=(hP hd).2.1
+  have hc:=(hP hd).2.2
+  have hwr:w * d 2 = (w - 1) * d 2 + d 2:=by
+    calc
+      w * d 2 = ((w - 1) + 1) * d 2:=by rw [Nat.sub_add_cancel hw]
+      _ = (w - 1) * d 2 + d 2:=by ring
+  have hm:w * (d 1 + d 2) < w * (YS + 1):=by
+    rw [Nat.mul_add, hwr]
+    omega
+  have hlt:d 1 + d 2 < YS + 1 :=
+    (Nat.mul_lt_mul_left (by omega:0 < w)).mp hm
+  rw [weight_fin4]
+  simpa [residualYSWeights] using (Nat.le_of_lt_succ hlt)
+section LinearSelection
+variable {V:Type*} [AddCommGroup V] [Module K V]
+theorem exists_nonzero_image_mem_low
+    (Dhigh Dlow w delta T YS S:ℕ)
+    (hwidth:Dhigh ≤ Dlow + delta)
+    (q:V →ₗ[K] MvPolynomial (Fin 4) K) (hq:Function.Injective q)
+    (hmem:∀ v, q v ∈ nestedCoefficientBox K Dhigh w T YS S)
+    (hsource:delta * channelCount T YS S < Module.finrank K V) :
+    ∃ v:V, v ≠ 0 ∧ q v ≠ 0 ∧ q v ∈ nestedCoefficientBox K Dlow w T YS S:=by
+  classical
+  let band:=(highBandMap (K:=K) w Dlow delta T YS S).comp q
+  have hex:∃ v:V, v ≠ 0 ∧ band v = 0:=by
+    by_contra hn
+    have hzero:∀ v:V, band v = 0 → v = 0:=by
+      intro v hv
+      by_contra hv0
+      exact hn ⟨v, hv0, hv⟩
+    have hinj:Function.Injective band:=by
+      intro v u h
+      have hz:band (v - u) = 0:=by rw [map_sub, h, sub_self]
+      exact sub_eq_zero.mp (hzero (v - u) hz)
+    have hle:=LinearMap.finrank_le_finrank_of_injective hinj
+    rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card] at hle
+    exact (not_lt_of_ge hle) hsource
+  obtain ⟨v, hv, hband⟩:=hex
+  have hqv:q v ≠ 0:=by
+    intro hz
+    apply hv
+    apply hq
+    simpa only [map_zero] using hz
+  refine ⟨v, hv, hqv, ?_⟩
+  exact mem_low_of_highBandMap_eq_zero Dhigh Dlow w delta T YS S hwidth
+    (q v) (hmem v) hband
+end LinearSelection
+end
+end ProximityPrize.SubmissionLower.LocatorLowQuotient
+end PackedLocator_LocatorNestedProjection
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier01 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorContact. -/
+section PackedLocator_LocatorContact
+namespace ProximityPrize.SubmissionLower.LocatorContact
+open scoped BigOperators
+open RCN081 RCN100 RCN119 RCN122 RCN156 RCN180 RCN234 RCN313 ContactOrderBridge
+noncomputable section
+variable {K I:Type*} [Field K] [Fintype I]
+local instance:DecidableEq K:=Classical.decEq _
+local instance:DecidableEq I:=Classical.decEq _
+abbrev P4 (K:Type*) [Field K]:=MvPolynomial (Fin 4) K
+theorem mem_kernel_of_contactAtLeast
+    (D w L s m:ℕ) (nodes u0 u1:I → K)
+    (a:CoefficientIndex D w L s → K)
+    (ha:∀ i:I, ContactAtLeast K (nodes i) (u0 i) (u1 i) m
+      (reconstruct K D w L s a)) :
+    a ∈ LinearMap.ker (constraintMap K D w L s m nodes u0 u1):=by
+  classical
+  apply LinearMap.mem_ker.mpr
+  funext i r
+  apply Subtype.ext
+  change contactJet K (m - r.val)
+    ((extractBlock K D w L s (nodes i) (u0 i) (u1 i) r.val a):Poly K) = 0
+  apply (contactJet_eq_zero_iff K (m - r.val) _).mpr
+  rw [← translation_reconstruct_coeff K D w L s (nodes i) (u0 i) (u1 i) a r.val]
+  exact (contactAtLeast_iff_block_divisibility K (nodes i) (u0 i) (u1 i) m
+    (reconstruct K D w L s a)).mp (ha i) r.val
+theorem mem_kernel_iff_contactAtLeast
+    (D w L s m:ℕ) (nodes u0 u1:I → K)
+    (a:CoefficientIndex D w L s → K) :
+    a ∈ LinearMap.ker (constraintMap K D w L s m nodes u0 u1) ↔
+      ∀ i:I, ContactAtLeast K (nodes i) (u0 i) (u1 i) m
+        (reconstruct K D w L s a):=by
+  constructor
+  · intro ha i
+    exact contactAtLeast_of_mem_kernel K D w L s m nodes u0 u1 a ha i
+  · exact mem_kernel_of_contactAtLeast D w L s m nodes u0 u1 a
+theorem exists_kernel_array_of_box_of_contact
+    (D w L s m:ℕ) (nodes u0 u1:I → K) (Q:P4 K)
+    (hbox:Q ∈ globalCoefficientBox K D w L s)
+    (hcontact:∀ i:I, ContactAtLeast K (nodes i) (u0 i) (u1 i) m Q) :
+    ∃ a:CoefficientIndex D w L s → K,
+      a ∈ LinearMap.ker (constraintMap K D w L s m nodes u0 u1) ∧
+        reconstruct K D w L s a = Q:=by
+  let qbox:globalCoefficientBox K D w L s:=⟨Q, hbox⟩
+  let a:CoefficientIndex D w L s → K:=encodeBox qbox
+  have heq:reconstruct K D w L s a = Q:=reconstruct_encodeBox qbox
+  refine ⟨a, ?_, heq⟩
+  apply mem_kernel_of_contactAtLeast D w L s m nodes u0 u1 a
+  intro i
+  rw [heq]
+  exact hcontact i
+def nodeFactor (x:K):P4 K:=MvPolynomial.X 0 - MvPolynomial.C x
+def locator (nodes:I → K):P4 K:=∏ i:I, nodeFactor (nodes i)
+theorem nodeFactor_ne_zero (x:K):nodeFactor x ≠ 0:=by
+  classical
+  intro hz
+  have hsingle:(Finsupp.single (0:Fin 4) 1:Fin 4 →₀ ℕ) ≠ 0:=by
+    intro hs
+    have h:=congrArg (fun d:Fin 4 →₀ ℕ => d 0) hs
+    simpa using h
+  have h:=congrArg (MvPolynomial.coeff (Finsupp.single (0:Fin 4) 1)) hz
+  simpa [nodeFactor, MvPolynomial.coeff_C, hsingle.symm] using h
+theorem locator_ne_zero (nodes:I → K):locator nodes ≠ 0:=by
+  classical
+  apply Finset.prod_ne_zero_iff.mpr
+  intro i hi
+  exact nodeFactor_ne_zero (nodes i)
+theorem nodeFactor_wt_le (weights:Fin 4 → ℕ) (x:K) :
+    wt weights (nodeFactor x) ≤ weights 0:=by
+  have h:=wt_sub_le weights (MvPolynomial.X (0:Fin 4):P4 K)
+    (MvPolynomial.C x)
+  simpa only [nodeFactor, wt_X, wt_C, Nat.max_zero] using h
+private theorem wt_prod_le_sum (weights:Fin 4 → ℕ) (J:Finset I)
+    (f:I → P4 K) :
+    wt weights (∏ i ∈ J, f i) ≤ ∑ i ∈ J, wt weights (f i):=by
+  classical
+  induction J using Finset.induction_on with
+  | empty =>
+      simp only [Finset.prod_empty, Finset.sum_empty]
+      simpa only [Nat.cast_one] using (wt_natCast (K:=K) weights 1).le
+  | @insert i J hi ih =>
+      rw [Finset.prod_insert hi, Finset.sum_insert hi]
+      exact (wt_mul_le weights (f i) (∏ j ∈ J, f j)).trans
+        (Nat.add_le_add_left ih _)
+theorem locator_wt_le (weights:Fin 4 → ℕ) (nodes:I → K) :
+    wt weights (locator nodes) ≤ Fintype.card I * weights 0:=by
+  classical
+  calc
+    wt weights (locator nodes) ≤ ∑ i:I, wt weights (nodeFactor (nodes i)) :=
+      wt_prod_le_sum weights Finset.univ (fun i => nodeFactor (nodes i))
+    _ ≤ ∑ _i:I, weights 0 :=
+      Finset.sum_le_sum (fun i _ => nodeFactor_wt_le weights (nodes i))
+    _ = Fintype.card I * weights 0:=by simp
+theorem locator_contact_weight_le (nodes:I → K) (w:ℕ) :
+    wt (contactWeights w) (locator nodes) ≤ Fintype.card I:=by
+  simpa [contactWeights] using locator_wt_le (contactWeights w) nodes
+theorem locator_total_weight_zero (nodes:I → K) :
+    wt residualTotalWeights (locator nodes) = 0:=by
+  apply Nat.eq_zero_of_le_zero
+  simpa [residualTotalWeights] using locator_wt_le residualTotalWeights nodes
+theorem locator_slope_weight_zero (nodes:I → K) :
+    wt residualSWeights (locator nodes) = 0:=by
+  apply Nat.eq_zero_of_le_zero
+  simpa [residualSWeights] using locator_wt_le residualSWeights nodes
+theorem slope_weight_eq_degreeR (Q:P4 K) :
+    wt residualSWeights Q = Q.degreeOf (2:Fin 4):=by
+  change Q.support.sup (Finsupp.weight residualSWeights) = Q.degreeOf (2:Fin 4)
+  rw [MvPolynomial.degreeOf_eq_sup]
+  apply congrArg (fun f:(Fin 4 →₀ ℕ) → ℕ => Q.support.sup f)
+  funext d
+  rw [weight_fin4]
+  simp [residualSWeights]
+theorem locator_degreeR (nodes:I → K) :
+    (locator nodes).degreeOf (2:Fin 4) = 0:=by
+  rw [← slope_weight_eq_degreeR]
+  exact locator_slope_weight_zero nodes
+theorem nodeFactor_contactAtLeast_one (x u0 u1:K) :
+    ContactAtLeast K x u0 u1 1 (nodeFactor x):=by
+  change AtLeast localWeights 1 (localize K x u0 u1 (nodeFactor x))
+  have heq:localize K x u0 u1 (nodeFactor x) = MvPolynomial.X 0:=by
+    simp [nodeFactor, localize, localVariables]
+  rw [heq]
+  exact atLeast_X localWeights (0:Fin 4)
+theorem locator_contactAtLeast_one (nodes:I → K) (u0 u1:K) (i:I) :
+    ContactAtLeast K (nodes i) u0 u1 1 (locator nodes):=by
+  classical
+  have hdiv:nodeFactor (nodes i) ∣ locator nodes :=
+    Finset.dvd_prod_of_mem (fun j => nodeFactor (nodes j)) (Finset.mem_univ i)
+  obtain ⟨Q, hQ⟩:=hdiv
+  rw [hQ]
+  change AtLeast localWeights 1
+    (localize K (nodes i) u0 u1 (nodeFactor (nodes i) * Q))
+  rw [map_mul]
+  have hfactor:AtLeast localWeights 1
+      (localize K (nodes i) u0 u1 (nodeFactor (nodes i))) :=
+    nodeFactor_contactAtLeast_one (nodes i) u0 u1
+  have hrest:=atLeast_zero localWeights (localize K (nodes i) u0 u1 Q)
+  simpa only [Nat.add_zero] using atLeast_mul localWeights hfactor hrest
+theorem locator_pderiv_contactAtLeast
+    (nodes u0 u1:I → K) (m:ℕ) (Q:P4 K) (hm:1 ≤ m)
+    (hQ:∀ i:I, ContactAtLeast K (nodes i) (u0 i) (u1 i) m Q) :
+    ∀ i:I, ContactAtLeast K (nodes i) (u0 i) (u1 i) m
+      (locator nodes * MvPolynomial.pderiv (2:Fin 4) Q):=by
+  intro i
+  have hloc:AtLeast localWeights 1
+      (localize K (nodes i) (u0 i) (u1 i) (locator nodes)) :=
+    locator_contactAtLeast_one nodes (u0 i) (u1 i) i
+  have hder:AtLeast localWeights (m - 1)
+      (localize K (nodes i) (u0 i) (u1 i)
+        (MvPolynomial.pderiv (2:Fin 4) Q)) :=
+    contactAtLeast_pderiv_R K (nodes i) (u0 i) (u1 i) m Q (hQ i)
+  change AtLeast localWeights m (localize K (nodes i) (u0 i) (u1 i)
+    (locator nodes * MvPolynomial.pderiv (2:Fin 4) Q))
+  rw [map_mul]
+  have horder:1 + (m - 1) = m:=by omega
+  simpa only [horder] using atLeast_mul localWeights hloc hder
+theorem pderiv_R_weight_add_le (weights:Fin 4 → ℕ) (Q:P4 K)
+    (hder:MvPolynomial.pderiv (2:Fin 4) Q ≠ 0) :
+    wt weights (MvPolynomial.pderiv (2:Fin 4) Q) + weights 2 ≤ wt weights Q:=by
+  classical
+  obtain ⟨d, hd, heq⟩:=Finset.exists_mem_eq_sup
+    (MvPolynomial.pderiv (2:Fin 4) Q).support
+    (MvPolynomial.support_nonempty.mpr hder) (Finsupp.weight weights)
+  have hbefore:=support_before_pderiv (2:Fin 4) Q d hd
+  have hbound:=MvPolynomial.le_weightedTotalDegree weights hbefore
+  change wt weights (MvPolynomial.pderiv (2:Fin 4) Q) =
+    Finsupp.weight weights d at heq
+  rw [heq]
+  simpa only [wt, map_add, Finsupp.weight_single, one_nsmul] using hbound
+theorem locator_pderiv_mem_box
+    (nodes:I → K) (Q:P4 K) (D w L s:ℕ)
+    (hQ:Q ∈ globalCoefficientBox K D w L s)
+    (hmargin:wt (contactWeights w) Q + Fintype.card I < D + (w - 1)) :
+    locator nodes * MvPolynomial.pderiv (2:Fin 4) Q ∈
+      globalCoefficientBox K D w L s:=by
+  classical
+  by_cases hder:MvPolynomial.pderiv (2:Fin 4) Q = 0
+  · rw [hder, mul_zero]
+    exact (globalCoefficientBox K D w L s).zero_mem
+  have hC:=pderiv_R_weight_add_le (contactWeights w) Q hder
+  change wt (contactWeights w) (MvPolynomial.pderiv (2:Fin 4) Q) +
+    (w - 1) ≤ wt (contactWeights w) Q at hC
+  have hD:0 < D:=by omega
+  have hcaps:=(mem_flagGlobalCoefficientBox_iff Q D w L s hD).mp hQ
+  apply (mem_flagGlobalCoefficientBox_iff
+    (locator nodes * MvPolynomial.pderiv (2:Fin 4) Q) D w L s hD).mpr
+  have hT:=pderiv_R_weight_add_le residualTotalWeights Q hder
+  change wt residualTotalWeights (MvPolynomial.pderiv (2:Fin 4) Q) + 1 ≤
+    wt residualTotalWeights Q at hT
+  have hS:=pderiv_R_weight_add_le residualSWeights Q hder
+  change wt residualSWeights (MvPolynomial.pderiv (2:Fin 4) Q) + 1 ≤
+    wt residualSWeights Q at hS
+  have hmulT:=wt_mul_le residualTotalWeights (locator nodes)
+    (MvPolynomial.pderiv (2:Fin 4) Q)
+  have hmulS:=wt_mul_le residualSWeights (locator nodes)
+    (MvPolynomial.pderiv (2:Fin 4) Q)
+  have hmulC:=wt_mul_le (contactWeights w) (locator nodes)
+    (MvPolynomial.pderiv (2:Fin 4) Q)
+  rw [locator_total_weight_zero, Nat.zero_add] at hmulT
+  rw [locator_slope_weight_zero, Nat.zero_add] at hmulS
+  have hN:=locator_contact_weight_le nodes w
+  exact ⟨by omega, by omega, by omega⟩
+theorem locator_pderiv_degreeR_le (nodes:I → K) (Q:P4 K) (s:ℕ)
+    (hQ:Q.degreeOf (2:Fin 4) ≤ s) :
+    (locator nodes * MvPolynomial.pderiv (2:Fin 4) Q).degreeOf (2:Fin 4) ≤ s - 1:=by
+  have hmul:=MvPolynomial.degreeOf_mul_le (2:Fin 4) (locator nodes)
+    (MvPolynomial.pderiv (2:Fin 4) Q)
+  rw [locator_degreeR, Nat.zero_add] at hmul
+  exact hmul.trans (pderiv_same_degree_bound (2:Fin 4) Q s hQ)
+theorem pderiv_R_ne_zero_of_degree_lt_char (Q:P4 K) (p:ℕ) [CharP K p]
+    (hpos:0 < Q.degreeOf (2:Fin 4)) (hlt:Q.degreeOf (2:Fin 4) < p) :
+    MvPolynomial.pderiv (2:Fin 4) Q ≠ 0:=by
+  classical
+  intro hz
+  have hzero:Q.degreeOf (2:Fin 4) ≤ 0:=by
+    apply MvPolynomial.degreeOf_le_iff.mpr
+    intro d hd
+    by_contra hnot
+    have hdpos:0 < d 2:=by omega
+    have hdlt:d 2 < p :=
+      (MvPolynomial.le_degreeOf_of_mem_support (2:Fin 4) hd).trans_lt hlt
+    let e:Fin 4 →₀ ℕ:=d - Finsupp.single (2:Fin 4) 1
+    have hsingle:Finsupp.single (2:Fin 4) 1 ≤ d :=
+      Finsupp.single_le_iff.mpr (by omega)
+    have heq:e + Finsupp.single (2:Fin 4) 1 = d:=tsub_add_cancel_of_le hsingle
+    have hr:e 2 + 1 = d 2:=by
+      have h:=congrArg (fun f:Fin 4 →₀ ℕ => f 2) heq
+      simpa only [Finsupp.add_apply, Finsupp.single_eq_same] using h
+    have hcast:(d 2:K) ≠ 0:=by
+      intro hc
+      exact (Nat.not_dvd_of_pos_of_lt hdpos hdlt)
+        ((CharP.cast_eq_zero_iff K p (d 2)).mp hc)
+    have hscalar:(e 2:K) + 1 = (d 2:K):=by
+      simpa only [Nat.cast_add, Nat.cast_one] using congrArg (fun n:ℕ => (n:K)) hr
+    have hc:=congrArg (MvPolynomial.coeff e) hz
+    rw [MvPolynomial.coeff_pderiv, heq, MvPolynomial.coeff_zero, hscalar] at hc
+    exact (mul_ne_zero (MvPolynomial.mem_support_iff.mp hd) hcast) hc
+  omega
+theorem locator_pderiv_ne_zero_of_degree_lt_char
+    (nodes:I → K) (Q:P4 K) (p:ℕ) [CharP K p]
+    (hpos:0 < Q.degreeOf (2:Fin 4)) (hlt:Q.degreeOf (2:Fin 4) < p) :
+    locator nodes * MvPolynomial.pderiv (2:Fin 4) Q ≠ 0 :=
+  mul_ne_zero (locator_ne_zero nodes) (pderiv_R_ne_zero_of_degree_lt_char Q p hpos hlt)
+theorem locator_pderiv_ne_zero_of_degree_lt_ringChar
+    (nodes:I → K) (Q:P4 K)
+    (hpos:0 < Q.degreeOf (2:Fin 4))
+    (hlt:Q.degreeOf (2:Fin 4) < ringChar K) :
+    locator nodes * MvPolynomial.pderiv (2:Fin 4) Q ≠ 0 :=
+  locator_pderiv_ne_zero_of_degree_lt_char nodes Q (ringChar K) hpos hlt
+theorem exists_kernel_array_locator_pderiv
+    (D w L s m:ℕ) (nodes u0 u1:I → K)
+    (a:CoefficientIndex D w L s → K)
+    (ha:a ∈ LinearMap.ker (constraintMap K D w L s m nodes u0 u1))
+    (hm:1 ≤ m)
+    (hmargin:wt (contactWeights w) (reconstruct K D w L s a) + Fintype.card I <
+      D + (w - 1)) :
+    ∃ b:CoefficientIndex D w L s → K,
+      b ∈ LinearMap.ker (constraintMap K D w L s m nodes u0 u1) ∧
+        reconstruct K D w L s b =
+          locator nodes * MvPolynomial.pderiv (2:Fin 4) (reconstruct K D w L s a):=by
+  have hcontact:∀ i:I, ContactAtLeast K (nodes i) (u0 i) (u1 i) m
+      (reconstruct K D w L s a) :=
+    fun i => contactAtLeast_of_mem_kernel K D w L s m nodes u0 u1 a ha i
+  exact exists_kernel_array_of_box_of_contact D w L s m nodes u0 u1
+    (locator nodes * MvPolynomial.pderiv (2:Fin 4) (reconstruct K D w L s a))
+    (locator_pderiv_mem_box nodes (reconstruct K D w L s a) D w L s
+      (reconstruct_mem_globalCoefficientBox K D w L s a) hmargin)
+    (locator_pderiv_contactAtLeast nodes u0 u1 m (reconstruct K D w L s a) hm hcontact)
+end
+end ProximityPrize.SubmissionLower.LocatorContact
+end PackedLocator_LocatorContact
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier02 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorLowQuotient. -/
+section PackedLocator_LocatorLowQuotient
+namespace ProximityPrize.SubmissionLower.LocatorLowQuotient
+open scoped BigOperators
+open RCN081 RCN100 RCN119 RCN130 RCN156 RCN180 RCN234
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 3000
+set_option maxHeartbeats 600000
+variable {K I:Type*} [Field K] [Fintype I]
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+theorem quotient_box_of_full_divisor
+    (D w L s m c t r:ℕ) (nodes u0 u1:I → K)
+    (F:MvPolynomial (Fin 4) K) (hF:F ≠ 0)
+    (hdiv:∀ v:ConstraintKernel (K:=K) D w L s m nodes u0 u1,
+      F ∣ kernelReconstructLinear (K:=K) D w L s m nodes u0 u1 v)
+    (hc:c ≤ wt (contactWeights w) F)
+    (ht:t ≤ wt residualTotalWeights F) (hr:r ≤ wt residualSWeights F) :
+    ∀ v:ConstraintKernel (K:=K) D w L s m nodes u0 u1,
+      quotientPolynomial (kernelReconstructLinear (K:=K) D w L s m nodes u0 u1)
+        F hdiv v ∈ globalCoefficientBox K (D - c) w (L - t) (s - r):=by
+  let recon:=kernelReconstructLinear (K:=K) D w L s m nodes u0 u1
+  intro v
+  by_cases hv:v = 0
+  · subst v
+    have hz:quotientPolynomial recon F hdiv 0 = 0 :=
+      (quotientLinear recon F hF hdiv).map_zero
+    rw [hz]
+    exact (globalCoefficientBox K _ _ _ _).zero_mem
+  · have hQ:recon v ≠ 0:=by
+      intro hz
+      apply hv
+      apply kernelReconstructLinear_injective (K:=K) D w L s m nodes u0 u1
+      simpa only [map_zero] using hz
+    have heq:=recon_eq_mul_quotientPolynomial recon F hdiv v
+    have hq:quotientPolynomial recon F hdiv v ≠ 0:=by
+      intro hz
+      exact hQ (by rw [heq, hz, mul_zero])
+    have hReconBox:recon v ∈ globalCoefficientBox K D w L s:=by
+      change reconstruct K D w L s v.1 ∈ globalCoefficientBox K D w L s
+      exact reconstruct_mem_globalCoefficientBox K D w L s v.1
+    exact quotient_mem_flagGlobalCoefficientBox_of_mul_eq
+      (recon v) F (quotientPolynomial recon F hdiv v)
+      D w L s c t r hQ hF hq hReconBox heq hc ht hr
+theorem exists_fixed_low_quotient_finrank
+    (D w L s m Ysrc delta:ℕ) (nodes u0 u1:I → K)
+    (F:MvPolynomial (Fin 4) K) (hF:F ≠ 0)
+    (hdiv:∀ v:ConstraintKernel (K:=K) D w L s m nodes u0 u1,
+      F ∣ reconstruct K D w L s v.1)
+    (hw:1 ≤ w) (hshape:D + s ≤ w * (Ysrc + 1))
+    (hsource:delta * channelCount
+        (L - wt residualTotalWeights F) (Ysrc - wt residualYSWeights F)
+          (s - wt residualSWeights F) <
+      Module.finrank K (ConstraintKernel (K:=K) D w L s m nodes u0 u1)) :
+    ∃ (v:ConstraintKernel (K:=K) D w L s m nodes u0 u1)
+      (Q:MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ Q ≠ 0 ∧ F * Q = reconstruct K D w L s v.1 ∧
+      Q ∈ nestedCoefficientBox K (D - delta - wt (contactWeights w) F) w
+        (L - wt residualTotalWeights F) (Ysrc - wt residualYSWeights F)
+          (s - wt residualSWeights F) ∧
+      F * Q ∈ globalCoefficientBox K (D - delta) w L s:=by
+  classical
+  let recon:=kernelReconstructLinear (K:=K) D w L s m nodes u0 u1
+  have hdivK:∀ v:ConstraintKernel (K:=K) D w L s m nodes u0 u1,
+      F ∣ recon v:=by
+    intro v
+    simpa only [recon, kernelReconstructLinear_apply] using hdiv v
+  let q:=quotientLinear recon F hF hdivK
+  have hqinj:Function.Injective q :=
+    quotientLinear_injective recon
+      (kernelReconstructLinear_injective (K:=K) D w L s m nodes u0 u1)
+      F hF hdivK
+  have hprod (v:ConstraintKernel (K:=K) D w L s m nodes u0 u1) :
+      recon v = F * q v:=recon_eq_mul_quotientPolynomial recon F hdivK v
+  have hqbox:∀ v:ConstraintKernel (K:=K) D w L s m nodes u0 u1,
+      q v ∈ globalCoefficientBox K (D - wt (contactWeights w) F) w
+        (L - wt residualTotalWeights F) (s - wt residualSWeights F) :=
+    quotient_box_of_full_divisor D w L s m
+      (wt (contactWeights w) F) (wt residualTotalWeights F) (wt residualSWeights F)
+      nodes u0 u1 F hF hdivK le_rfl le_rfl le_rfl
+  have hqYS (v:ConstraintKernel (K:=K) D w L s m nodes u0 u1) :
+      wt residualYSWeights (q v) ≤ Ysrc - wt residualYSWeights F:=by
+    by_cases hv:v = 0
+    · subst v
+      simp [wt, MvPolynomial.weightedTotalDegree]
+    · have hqv:q v ≠ 0:=by
+        intro hz
+        apply hv
+        apply hqinj
+        simpa only [map_zero] using hz
+      have hsrc:wt residualYSWeights (recon v) ≤ Ysrc:=by
+        apply flag_box_ys_bound D w L s Ysrc hw hshape
+        change reconstruct K D w L s v.1 ∈ globalCoefficientBox K D w L s
+        exact reconstruct_mem_globalCoefficientBox K D w L s v.1
+      have hmul:=weightedTotalDegree_mul residualYSWeights F (q v) hF hqv
+      rw [← hprod v] at hmul
+      simp only [wt] at hsrc ⊢
+      omega
+  have hqNested:∀ v:ConstraintKernel (K:=K) D w L s m nodes u0 u1,
+      q v ∈ nestedCoefficientBox K (D - wt (contactWeights w) F) w
+        (L - wt residualTotalWeights F) (Ysrc - wt residualYSWeights F)
+          (s - wt residualSWeights F):=by
+    intro v d hd
+    have hb:=hqbox v hd
+    have hy:=(MvPolynomial.le_weightedTotalDegree residualYSWeights hd).trans (hqYS v)
+    rw [weight_fin4] at hy
+    simp only [residualYSWeights] at hy
+    refine ⟨hb.1, ?_, hb.2.1, hb.2.2⟩
+    simpa [residualYSWeights] using hy
+  have hwidth:D - wt (contactWeights w) F ≤
+      (D - delta - wt (contactWeights w) F) + delta:=by omega
+  obtain ⟨v, hv, hQ, hlow⟩:=exists_nonzero_image_mem_low
+    (D - wt (contactWeights w) F) (D - delta - wt (contactWeights w) F)
+    w delta (L - wt residualTotalWeights F) (Ysrc - wt residualYSWeights F)
+      (s - wt residualSWeights F) hwidth q hqinj hqNested hsource
+  have heq:F * q v = reconstruct K D w L s v.1:=by
+    simpa only [recon, kernelReconstructLinear_apply] using (hprod v).symm
+  refine ⟨v, q v, hv, hQ, heq, hlow, ?_⟩
+  have hsourceBox:F * q v ∈ globalCoefficientBox K D w L s:=by
+    rw [heq]
+    exact reconstruct_mem_globalCoefficientBox K D w L s v.1
+  have hparent:0 < D - delta:=by
+    have h:=(nested_mem_weights hlow hQ).2.2.2
+    omega
+  have hD:0 < D:=by omega
+  have hsrc:=(mem_flagGlobalCoefficientBox_iff (F * q v) D w L s hD).mp hsourceBox
+  have hqc:=(nested_mem_weights hlow hQ).2.2.2
+  have hmul:=weightedTotalDegree_mul (contactWeights w) F (q v) hF hQ
+  apply (mem_flagGlobalCoefficientBox_iff (F * q v) (D - delta) w L s hparent).mpr
+  refine ⟨hsrc.1, hsrc.2.1, ?_⟩
+  simp only [wt] at hqc ⊢
+  omega
+theorem exists_fixed_low_quotient
+    (D w L s m Ysrc delta:ℕ) (nodes u0 u1:I → K)
+    (F:MvPolynomial (Fin 4) K) (hF:F ≠ 0)
+    (hdiv:∀ v:ConstraintKernel (K:=K) D w L s m nodes u0 u1,
+      F ∣ reconstruct K D w L s v.1)
+    (hw:1 ≤ w) (hshape:D + s ≤ w * (Ysrc + 1))
+    (hsource:delta * channelCount
+        (L - wt residualTotalWeights F) (Ysrc - wt residualYSWeights F)
+          (s - wt residualSWeights F) <
+      coefficientCount D w L s - Fintype.card I * localRankBound m L s) :
+    ∃ (v:ConstraintKernel (K:=K) D w L s m nodes u0 u1)
+      (Q:MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ Q ≠ 0 ∧ F * Q = reconstruct K D w L s v.1 ∧
+      Q ∈ nestedCoefficientBox K (D - delta - wt (contactWeights w) F) w
+        (L - wt residualTotalWeights F) (Ysrc - wt residualYSWeights F)
+          (s - wt residualSWeights F) ∧
+      F * Q ∈ globalCoefficientBox K (D - delta) w L s :=
+  exists_fixed_low_quotient_finrank D w L s m Ysrc delta nodes u0 u1 F hF hdiv hw hshape
+    (hsource.trans_le (constraintKernel_finrank_lower_bound D w L s m nodes u0 u1))
+theorem specialization_pderiv_R_eq_zero_of_kernel_low_box
+    (D Dlow w L s m:ℕ) (nodes:I ↪ K) (u0 u1:I → K)
+    (v:ConstraintKernel (K:=K) D w L s m nodes u0 u1)
+    (hlow:reconstruct K D w L s v.1 ∈ globalCoefficientBox K Dlow w L s)
+    (P:Polynomial K) (gamma:K) (support:Finset I)
+    (hw:1 ≤ w) (hP:P.natDegree ≤ w)
+    (hcapacity:Dlow ≤ (m - 1) * support.card + (w - 1))
+    (hvalues:∀ i ∈ support, P.eval (nodes i) = u0 i + gamma * u1 i) :
+    RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2:Fin 4) (reconstruct K D w L s v.1)) = 0:=by
+  classical
+  let H:=reconstruct K D w L s v.1
+  by_contra hne
+  have hH:H ≠ 0:=by
+    intro hz
+    apply hne
+    change RCN319.specialization K P gamma (MvPolynomial.pderiv (2:Fin 4) H) = 0
+    simp only [hz, map_zero]
+  have hDlow:0 < Dlow:=by
+    obtain ⟨d, hd⟩:=MvPolynomial.support_nonempty.mpr hH
+    have h:=(hlow hd).2.2
+    omega
+  have hcaps:=(mem_flagGlobalCoefficientBox_iff H Dlow w L s hDlow).mp hlow
+  have hdegree:=ContactOrderBridge.specialized_R_derivative_degree
+    K H P gamma w (Dlow - 1) hP hcaps.2.2 hne
+  rw [RCN101.specialization_eq_ordinary] at hdegree
+  have hdegreeStrict :
+      (RCN122.specialization K P gamma (MvPolynomial.pderiv (2:Fin 4) H)).natDegree <
+        (m - 1) * support.card:=by
+    rw [RCN101.specialization_eq_ordinary]
+    omega
+  have hcontact:∀ i ∈ support, ∀ r:ℕ,
+      slopeDifference K ^ (m - 1 - r) ∣
+        (RCN122.homogenizedTranslation K (nodes i) (u0 i) (u1 i)
+          (MvPolynomial.pderiv (2:Fin 4) H)).coeff r:=by
+    intro i _
+    apply (ContactOrderBridge.contactAtLeast_iff_block_divisibility
+      K (nodes i) (u0 i) (u1 i) (m - 1) _).mp
+    apply ContactOrderBridge.contactAtLeast_pderiv_R K (nodes i) (u0 i) (u1 i) m H
+    exact ContactOrderBridge.contactAtLeast_of_mem_kernel
+      K D w L s m nodes u0 u1 v.1 v.2 i
+  have hz:=RCN122.specialization_eq_zero_of_contact_and_degree K
+    (MvPolynomial.pderiv (2:Fin 4) H) P gamma nodes u0 u1 support (m - 1)
+    hcontact hvalues hdegreeStrict
+  apply hne
+  simpa only [H, RCN101.specialization_eq_ordinary] using hz
+theorem exists_fixed_quotient_with_derivative_vanishing
+    (D w L s m Ysrc delta agreements:ℕ) (nodes:I ↪ K) (u0 u1:I → K)
+    (F:MvPolynomial (Fin 4) K) (hF:F ≠ 0)
+    (hdiv:∀ v:ConstraintKernel (K:=K) D w L s m nodes u0 u1,
+      F ∣ reconstruct K D w L s v.1)
+    (hw:1 ≤ w) (hshape:D + s ≤ w * (Ysrc + 1))
+    (hsource:delta * channelCount
+        (L - wt residualTotalWeights F) (Ysrc - wt residualYSWeights F)
+          (s - wt residualSWeights F) <
+      coefficientCount D w L s - Fintype.card I * localRankBound m L s)
+    (hcapacity:D - delta ≤ (m - 1) * agreements + (w - 1))
+    (selected:K → Polynomial K) (Gamma:Finset K)
+    (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
+    (hagreement:∀ gamma ∈ Gamma, agreements ≤
+      ((Finset.univ:Finset I).filter (fun i =>
+        (selected gamma).eval (nodes i) = u0 i + gamma * u1 i)).card) :
+    ∃ (v:ConstraintKernel (K:=K) D w L s m nodes u0 u1)
+      (Q:MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ Q ≠ 0 ∧ F * Q = reconstruct K D w L s v.1 ∧
+      Q ∈ nestedCoefficientBox K (D - delta - wt (contactWeights w) F) w
+        (L - wt residualTotalWeights F) (Ysrc - wt residualYSWeights F)
+          (s - wt residualSWeights F) ∧
+      F * Q ∈ globalCoefficientBox K (D - delta) w L s ∧
+      ∀ gamma ∈ Gamma, RCN319.specialization K (selected gamma) gamma
+        (MvPolynomial.pderiv (2:Fin 4) (F * Q)) = 0:=by
+  obtain ⟨v, Q, hv, hQ, heq, hbox, hprod⟩ :=
+    exists_fixed_low_quotient D w L s m Ysrc delta nodes u0 u1
+      F hF hdiv hw hshape hsource
+  refine ⟨v, Q, hv, hQ, heq, hbox, hprod, ?_⟩
+  intro gamma hgamma
+  let support:=(Finset.univ:Finset I).filter (fun i =>
+    (selected gamma).eval (nodes i) = u0 i + gamma * u1 i)
+  have hcard:agreements ≤ support.card:=hagreement gamma hgamma
+  have hcap:D - delta ≤ (m - 1) * support.card + (w - 1) :=
+    hcapacity.trans (Nat.add_le_add_right (Nat.mul_le_mul_left (m - 1) hcard) _)
+  have hvalues:∀ i ∈ support,
+      (selected gamma).eval (nodes i) = u0 i + gamma * u1 i:=by
+    intro i hi
+    exact (Finset.mem_filter.mp hi).2
+  have hvbox:reconstruct K D w L s v.1 ∈ globalCoefficientBox K (D - delta) w L s:=by
+    rw [← heq]
+    exact hprod
+  rw [heq]
+  exact specialization_pderiv_R_eq_zero_of_kernel_low_box
+    D (D - delta) w L s m nodes u0 u1 v hvbox (selected gamma) gamma support
+    hw (hdegree gamma hgamma) hcap hvalues
+end
+end ProximityPrize.SubmissionLower.LocatorLowQuotient
+end PackedLocator_LocatorLowQuotient
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier03 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorFifthPowerAvoidance. -/
+section PackedLocator_LocatorFifthPowerAvoidance
+
+namespace ProximityPrize.SubmissionLower.LocatorCoprimeQuotient
+open scoped Classical BigOperators
+open UniqueFactorizationMonoid RCN081 RCN156 RCN234 RCN260
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 20000
+set_option maxHeartbeats 1500000
+variable {K I:Type} [Field K]
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
+  UniqueFactorizationMonoid.strongNormalizationMonoid
+theorem isRelPrime_of_weight_lt (weights:Fin 4 → ℕ)
+    (F Q:MvPolynomial (Fin 4) K) (hF:Irreducible F) (hQ:Q ≠ 0)
+    (hlt:wt weights Q < wt weights F):IsRelPrime F Q:=by
+  apply hF.isRelPrime_iff_not_dvd.mpr
+  intro hdiv
+  exact (not_lt_of_ge (weightedTotalDegree_le_of_dvd weights F Q hdiv hQ)) hlt
+theorem isRelPrime_of_weight_sub_bound (weights:Fin 4 → ℕ)
+    (F Q:MvPolynomial (Fin 4) K) (hF:Irreducible F) (hQ:Q ≠ 0)
+    (B:ℕ) (hbound:wt weights Q ≤ B - wt weights F)
+    (hhalf:B < 2 * wt weights F):IsRelPrime F Q:=by
+  apply isRelPrime_of_weight_lt weights F Q hF hQ
+  omega
+private theorem regular_mem_normalizedFactors
+    (H:MvPolynomial (Fin 4) K) (F:RCN266.RegularIndex H) :
+    F.1 ∈ normalizedFactors H:=by
+  have hactive:F.1 ∈ RCN082.activeFactors H :=
+    (Finset.mem_filter.mp F.2).1
+  have hnf:F.1 ∈ (normalizedFactors H).toFinset :=
+    (Finset.mem_filter.mp hactive).1
+  exact Multiset.mem_toFinset.mp hnf
+def regularIndexSelf (H:MvPolynomial (Fin 4) K)
+    (F:RCN266.RegularIndex H):RCN052.RegularIndex F.1:=by
+  have hF:=RCN167.positiveRFactors_spec H F.1 F.2
+  refine ⟨F.1, ?_⟩
+  change F.1 ∈ (RCN082.activeFactors F.1).filter (fun G => 0 < G.degreeOf 2)
+  refine Finset.mem_filter.mpr ⟨?_, hF.2.2⟩
+  change F.1 ∈ (normalizedFactors F.1).toFinset.filter
+    (fun G => 0 < G.degreeOf 1 + G.degreeOf 2 + G.degreeOf 3)
+  refine Finset.mem_filter.mpr ⟨?_, by omega⟩
+  apply Multiset.mem_toFinset.mpr
+  rw [normalizedFactors_irreducible hF.1,
+    normalize_normalized_factor F.1 (regular_mem_normalizedFactors H F)]
+  exact Multiset.mem_singleton_self _
+@[simp] theorem regularIndexSelf_val (H:MvPolynomial (Fin 4) K)
+    (F:RCN266.RegularIndex H):(regularIndexSelf H F).1 = F.1:=rfl
+theorem regularVector_le_mixedCost (P:UnequalParameters)
+    (F:MvPolynomial (Fin 4) K)
+    (hY:F.degreeOf 1 ≤ P.leftY) (hR:F.degreeOf 2 ≤ P.leftR)
+    (hZ:F.degreeOf 3 ≤ P.leftZ) :
+    (RCN052.regularVector P F).y ≤ P.mixedCost.y ∧
+      (RCN052.regularVector P F).r ≤ P.mixedCost.r ∧
+      (RCN052.regularVector P F).z ≤ P.mixedCost.z:=by
+  exact ⟨Nat.add_le_add (Nat.mul_le_mul_right P.rightZ hR)
+      (Nat.mul_le_mul_right P.rightR hZ),
+    Nat.add_le_add (Nat.mul_le_mul_right P.rightZ hY)
+      (Nat.mul_le_mul_right P.rightY hZ),
+    Nat.add_le_add (Nat.mul_le_mul_right P.rightR hY)
+      (Nat.mul_le_mul_right P.rightY hR)⟩
+theorem regularSeeds_count_le_intersection
+    (P:UnequalParameters) (H Q:MvPolynomial (Fin 4) K)
+    (F:RCN266.RegularIndex H) (hrel:IsRelPrime F.1 Q)
+    (p:ℕ) [CharP K p]
+    (hFY:F.1.degreeOf 1 ≤ P.leftY) (hFR:F.1.degreeOf 2 ≤ P.leftR)
+    (hFZ:F.1.degreeOf 3 ≤ P.leftZ)
+    (hQY:Q.degreeOf 1 ≤ P.rightY) (hQR:Q.degreeOf 2 ≤ P.rightR)
+    (hQZ:Q.degreeOf 3 ≤ P.rightZ)
+    (hleftR:1 ≤ P.leftR)
+    (hleftYSmall:P.leftY < p) (hleftRSmall:P.leftR < p)
+    (hleftZSmall:P.leftZ < p)
+    (hmixedYSmall:P.mixedCost.y < p) (hmixedRSmall:P.mixedCost.r < p)
+    (hmixedZSmall:P.mixedCost.z < p)
+    (selected:K → Polynomial K) (Gamma:Finset K)
+    (nodes:Finset I) (x u0 u1:I → K) (hinj:Set.InjOn x nodes)
+    (hnodes:nodes.card = P.n)
+    (hw:1 ≤ P.w) (hchar:P.w < p) (hwa:P.w < P.a) (han:P.a ≤ P.n)
+    (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ P.w)
+    (hagreement:∀ gamma ∈ Gamma, P.a ≤
+      (nodes.filter (fun i => (selected gamma).eval (x i) = u0 i + gamma * u1 i)).card)
+    (hno:RCN238.NoLargeSelectedPencil selected Gamma P.w P.errors)
+    (hQzero:∀ gamma ∈ RCN140.regularSeeds H selected Gamma F,
+      RCN319.specialization K (selected gamma) gamma Q = 0) :
+    (RCN140.regularSeeds H selected Gamma F).card ≤ P.regularCountCap:=by
+  let Fself:=regularIndexSelf H F
+  have hcount:=RCN052.regularPairSeeds_bound P F.1 Q hrel Fself p
+    hFY hFR hFZ hQY hQR hQZ hleftR hleftYSmall hleftRSmall hleftZSmall
+    hmixedYSmall hmixedRSmall hmixedZSmall
+    selected Gamma nodes x u0 u1 hinj hnodes hw hchar hwa han hdegree hagreement hno
+  have heq:RCN052.regularPairSeeds F.1 Q selected Gamma Fself =
+      RCN140.regularSeeds H selected Gamma F:=by
+    ext gamma
+    simp only [RCN052.regularPairSeeds, RCN140.regularSeeds, Finset.mem_filter]
+    constructor
+    · intro h
+      exact ⟨h.1, h.2.1⟩
+    · intro h
+      exact ⟨h.1, h.2, hQzero gamma (Finset.mem_filter.mpr h)⟩
+  rw [heq] at hcount
+  have hv:=regularVector_le_mixedCost P F.1 hFY hFR hFZ
+  have hdot:RCN294.dot P.agreement (RCN052.regularVector P F.1) ≤
+      RCN294.dot P.agreement P.mixedCost :=
+    Nat.add_le_add
+      (Nat.add_le_add (Nat.mul_le_mul_left P.agreement.y hv.1)
+        (Nat.mul_le_mul_left P.agreement.r hv.2.1))
+      (Nat.mul_le_mul_left P.agreement.z hv.2.2)
+  apply P.regular_count_le _ (by unfold UnequalParameters.gap; omega)
+  exact hcount.trans (Nat.add_le_add (Nat.mul_le_mul_left (P.n - P.w) hdot)
+    (Nat.mul_le_mul_left ((P.errors + 1) * P.gap) hv.2.2))
+theorem regularSeeds_count_le_intersection_of_product
+    (P:UnequalParameters) (H Q:MvPolynomial (Fin 4) K)
+    (F:RCN266.RegularIndex H) (hrel:IsRelPrime F.1 Q)
+    (p:ℕ) [CharP K p]
+    (hFY:F.1.degreeOf 1 ≤ P.leftY) (hFR:F.1.degreeOf 2 ≤ P.leftR)
+    (hFZ:F.1.degreeOf 3 ≤ P.leftZ)
+    (hQY:Q.degreeOf 1 ≤ P.rightY) (hQR:Q.degreeOf 2 ≤ P.rightR)
+    (hQZ:Q.degreeOf 3 ≤ P.rightZ)
+    (hleftR:1 ≤ P.leftR)
+    (hleftYSmall:P.leftY < p) (hleftRSmall:P.leftR < p)
+    (hleftZSmall:P.leftZ < p)
+    (hmixedYSmall:P.mixedCost.y < p) (hmixedRSmall:P.mixedCost.r < p)
+    (hmixedZSmall:P.mixedCost.z < p)
+    (selected:K → Polynomial K) (Gamma:Finset K)
+    (nodes:Finset I) (x u0 u1:I → K) (hinj:Set.InjOn x nodes)
+    (hnodes:nodes.card = P.n)
+    (hw:1 ≤ P.w) (hchar:P.w < p) (hwa:P.w < P.a) (han:P.a ≤ P.n)
+    (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ P.w)
+    (hagreement:∀ gamma ∈ Gamma, P.a ≤
+      (nodes.filter (fun i => (selected gamma).eval (x i) = u0 i + gamma * u1 i)).card)
+    (hno:RCN238.NoLargeSelectedPencil selected Gamma P.w P.errors)
+    (hproduct:∀ gamma ∈ RCN140.regularSeeds H selected Gamma F,
+      RCN319.specialization K (selected gamma) gamma
+        (MvPolynomial.pderiv (2:Fin 4) (F.1 * Q)) = 0) :
+    (RCN140.regularSeeds H selected Gamma F).card ≤ P.regularCountCap:=by
+  apply regularSeeds_count_le_intersection P H Q F hrel p
+    hFY hFR hFZ hQY hQR hQZ hleftR hleftYSmall hleftRSmall hleftZSmall
+    hmixedYSmall hmixedRSmall hmixedZSmall
+    selected Gamma nodes x u0 u1 hinj hnodes hw hchar hwa han hdegree hagreement hno
+  intro gamma hgamma
+  obtain ⟨hFzero, hregular⟩:=(Finset.mem_filter.mp hgamma).2
+  have hmul :
+      RCN319.specialization K (selected gamma) gamma (MvPolynomial.pderiv (2:Fin 4) F.1) *
+        RCN319.specialization K (selected gamma) gamma Q = 0:=by
+    simpa only [MvPolynomial.pderiv_mul, map_add, map_mul,
+      hFzero, zero_mul, add_zero] using hproduct gamma hgamma
+  exact (mul_eq_zero.mp hmul).resolve_left hregular
+end
+end ProximityPrize.SubmissionLower.LocatorCoprimeQuotient
+
+namespace ProximityPrize.SubmissionLower.LocatorDoubleSquareAvoidance
+
+open scoped BigOperators
+open RCN081 RCN100 RCN119 RCN130 RCN156 RCN180 RCN234 RCN260
+open LocatorLowQuotient LocatorCoprimeQuotient
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 20000
+set_option maxHeartbeats 400000
+
+variable {K V I : Type*} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+
+theorem quotient_mem_nestedCoefficientBox_of_mul_eq
+    (P F Q : MvPolynomial (Fin 4) K) (D w T YS S : ℕ)
+    (hP : P ≠ 0) (hF : F ≠ 0) (hQ : Q ≠ 0)
+    (hbox : P ∈ nestedCoefficientBox K D w T YS S)
+    (heq : P = F * Q) :
+    Q ∈ nestedCoefficientBox K
+      (D - wt (contactWeights w) F) w
+      (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+      (S - wt residualSWeights F) := by
+  have hglobal :
+      Q ∈ globalCoefficientBox K
+        (D - wt (contactWeights w) F) w
+        (T - wt residualTotalWeights F) (S - wt residualSWeights F) :=
+    quotient_mem_flagGlobalCoefficientBox_of_mul_eq P F Q D w T S
+      (wt (contactWeights w) F) (wt residualTotalWeights F)
+      (wt residualSWeights F) hP hF hQ (nested_mem_global hbox) heq
+      le_rfl le_rfl le_rfl
+  have hPYS : wt residualYSWeights P ≤ YS :=
+    (nested_mem_weights hbox hP).2.1
+  have hmul := weightedTotalDegree_mul residualYSWeights F Q hF hQ
+  have hsum : wt residualYSWeights F + wt residualYSWeights Q ≤ YS := by
+    change MvPolynomial.weightedTotalDegree residualYSWeights F +
+      MvPolynomial.weightedTotalDegree residualYSWeights Q ≤ YS
+    rw [← hmul, ← heq]
+    exact hPYS
+  have hQYS : wt residualYSWeights Q ≤ YS - wt residualYSWeights F := by
+    omega
+  intro d hd
+  have hb := hglobal hd
+  have hy := MvPolynomial.le_weightedTotalDegree residualYSWeights hd
+  rw [weight_fin4] at hy
+  simp only [wt] at hQYS
+  simp only [residualYSWeights] at hy ⊢
+  refine ⟨hb.1, ?_, hb.2.1, hb.2.2⟩
+  change d 1 + d 2 ≤ YS -
+    MvPolynomial.weightedTotalDegree residualYSWeights F
+  simpa [residualYSWeights] using hy.trans hQYS
+
+section LinearDichotomy
+
+variable [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+
+/-- Apply the contact high-band projection to `q` and, only if every first-low
+quotient is still divisible by `F`, divide once more and apply a second
+high-band projection.  The second branch therefore pays for a second band,
+not for the entire square-divisible coefficient box. -/
+theorem exists_first_low_not_dvd_or_second_low
+    (Dhigh Dlow w delta T YS S : ℕ)
+    (hwidth : Dhigh ≤ Dlow + delta)
+    (q : V →ₗ[K] MvPolynomial (Fin 4) K) (hq : Function.Injective q)
+    (hmem : ∀ v, q v ∈ nestedCoefficientBox K Dhigh w T YS S)
+    (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0)
+    (hsource :
+      delta * channelCount T YS S +
+          delta * channelCount
+            (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+              (S - wt residualSWeights F) <
+        Module.finrank K V) :
+    (∃ v : V, v ≠ 0 ∧ q v ≠ 0 ∧
+      q v ∈ nestedCoefficientBox K Dlow w T YS S ∧ ¬ F ∣ q v) ∨
+    (∃ (v : V) (H : MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ H ≠ 0 ∧ F * H = q v ∧
+      H ∈ nestedCoefficientBox K (Dlow - delta - wt (contactWeights w) F) w
+        (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+          (S - wt residualSWeights F)) := by
+  classical
+  let band := (highBandMap (K := K) w Dlow delta T YS S).comp q
+  let low := LinearMap.ker band
+  have hrange : Module.finrank K band.range ≤ delta * channelCount T YS S := by
+    calc
+      Module.finrank K band.range ≤
+          Module.finrank K (HighBandIndex delta T YS S → K) :=
+        band.range.finrank_le
+      _ = delta * channelCount T YS S := by
+        rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card]
+  have hlowrank :
+      delta * channelCount
+          (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+            (S - wt residualSWeights F) <
+        Module.finrank K low := by
+    have hsum := band.finrank_range_add_finrank_ker
+    change Module.finrank K band.range + Module.finrank K low =
+      Module.finrank K V at hsum
+    omega
+  let qlow : low →ₗ[K] MvPolynomial (Fin 4) K := q.comp low.subtype
+  have hqlow : Function.Injective qlow := by
+    intro a b hab
+    apply Subtype.ext
+    apply hq
+    simpa only [qlow, LinearMap.comp_apply, Submodule.coe_subtype] using hab
+  by_cases hdiv : ∀ v : low, F ∣ qlow v
+  · let qtwo := quotientLinear qlow F hF hdiv
+    have hqtwo : Function.Injective qtwo :=
+      quotientLinear_injective qlow hqlow F hF hdiv
+    have hqbox : ∀ v : low,
+        qlow v ∈ nestedCoefficientBox K Dlow w T YS S := by
+      intro v
+      have hhigh : q v.1 ∈ nestedCoefficientBox K Dhigh w T YS S := hmem v.1
+      have hzero : highBandMap w Dlow delta T YS S (q v.1) = 0 := by
+        have hv := v.2
+        change band v.1 = 0 at hv
+        simpa only [band, qlow, LinearMap.comp_apply, Submodule.coe_subtype] using hv
+      simpa only [qlow, LinearMap.comp_apply, Submodule.coe_subtype] using
+        mem_low_of_highBandMap_eq_zero Dhigh Dlow w delta T YS S hwidth
+          (q v.1) hhigh hzero
+    have htwoBox : ∀ v : low,
+        qtwo v ∈ nestedCoefficientBox K (Dlow - wt (contactWeights w) F) w
+          (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+            (S - wt residualSWeights F) := by
+      intro v
+      by_cases hv : v = 0
+      · subst v
+        rw [map_zero]
+        exact (nestedCoefficientBox K _ _ _ _ _).zero_mem
+      · have hqlowv : qlow v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hqlow
+          simpa only [map_zero] using hz
+        have hqtwoV : qtwo v ≠ 0 := by
+          intro hz
+          apply hqlowv
+          rw [recon_eq_mul_quotientPolynomial qlow F hdiv v]
+          change F * qtwo v = 0
+          rw [hz, mul_zero]
+        exact quotient_mem_nestedCoefficientBox_of_mul_eq
+          (qlow v) F (qtwo v) Dlow w T YS S hqlowv hF hqtwoV (hqbox v)
+            (recon_eq_mul_quotientPolynomial qlow F hdiv v)
+    have hwidthTwo : Dlow - wt (contactWeights w) F ≤
+        (Dlow - delta - wt (contactWeights w) F) + delta := by omega
+    obtain ⟨v, hv, hH, hHbox⟩ := exists_nonzero_image_mem_low
+      (Dlow - wt (contactWeights w) F)
+      (Dlow - delta - wt (contactWeights w) F) w delta
+      (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+      (S - wt residualSWeights F) hwidthTwo qtwo hqtwo htwoBox hlowrank
+    right
+    refine ⟨v.1, qtwo v, ?_, hH, ?_, hHbox⟩
+    · intro hz
+      apply hv
+      exact Subtype.ext hz
+    · change F * quotientPolynomial qlow F hdiv v = qlow v
+      exact (recon_eq_mul_quotientPolynomial qlow F hdiv v).symm
+  · push Not at hdiv
+    obtain ⟨v, hvdiv⟩ := hdiv
+    have hv : v.1 ≠ 0 := by
+      intro hz
+      apply hvdiv
+      have hvzero : v = 0 := Subtype.ext hz
+      rw [hvzero]
+      simp only [map_zero]
+      exact dvd_zero F
+    have hqv : q v.1 ≠ 0 := by
+      intro hz
+      apply hv
+      apply hq
+      simpa only [map_zero] using hz
+    have hhigh : q v.1 ∈ nestedCoefficientBox K Dhigh w T YS S := hmem v.1
+    have hzero : highBandMap w Dlow delta T YS S (q v.1) = 0 := by
+      have hvker := v.2
+      change band v.1 = 0 at hvker
+      simpa only [band, LinearMap.comp_apply, Submodule.coe_subtype] using hvker
+    left
+    refine ⟨v.1, hv, hqv,
+      mem_low_of_highBandMap_eq_zero Dhigh Dlow w delta T YS S hwidth
+        (q v.1) hhigh hzero, ?_⟩
+    simpa only [qlow, LinearMap.comp_apply, Submodule.coe_subtype] using hvdiv
+
+end LinearDichotomy
+
+section SecondDerivative
+
+variable [Fintype I]
+local instance : DecidableEq I := Classical.decEq I
+
+theorem specialization_pderiv_R2_eq_zero_of_kernel_low_box
+    (D Dlow w L s m : ℕ) (nodes : I ↪ K) (u0 u1 : I → K)
+    (v : ConstraintKernel (K := K) D w L s m nodes u0 u1)
+    (hlow : reconstruct K D w L s v.1 ∈ globalCoefficientBox K Dlow w L s)
+    (P : Polynomial K) (gamma : K) (support : Finset I)
+    (hw : 1 ≤ w) (hP : P.natDegree ≤ w)
+    (hcapacity : Dlow ≤ (m - 2) * support.card + 2 * (w - 1))
+    (hvalues : ∀ i ∈ support, P.eval (nodes i) = u0 i + gamma * u1 i) :
+    RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) (reconstruct K D w L s v.1))) = 0 := by
+  classical
+  let H := reconstruct K D w L s v.1
+  by_contra hne
+  have hder2 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4) H) ≠ 0 := by
+    intro hz
+    apply hne
+    change RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) H)) = 0
+    rw [hz, map_zero]
+  have hder1 : MvPolynomial.pderiv (2 : Fin 4) H ≠ 0 := by
+    intro hz
+    exact hder2 (by rw [hz, map_zero])
+  have hH : H ≠ 0 := by
+    intro hz
+    exact hder1 (by rw [hz, map_zero])
+  have hDlow : 0 < Dlow := by
+    obtain ⟨d, hd⟩ := MvPolynomial.support_nonempty.mpr hH
+    have h := (hlow hd).2.2
+    omega
+  have hcaps := (mem_flagGlobalCoefficientBox_iff H Dlow w L s hDlow).mp hlow
+  have hweight := LocatorContact.pderiv_R_weight_add_le
+    (contactWeights w) H hder1
+  have hder1weight : wt (contactWeights w)
+      (MvPolynomial.pderiv (2 : Fin 4) H) ≤ Dlow - 1 - (w - 1) := by
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) +
+      (w - 1) ≤ wt (contactWeights w) H at hweight
+    omega
+  have hdegree := ContactOrderBridge.specialized_R_derivative_degree K
+    (MvPolynomial.pderiv (2 : Fin 4) H) P gamma w (Dlow - 1 - (w - 1))
+    hP hder1weight hne
+  have hdegreeStrict :
+      (RCN122.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) H))).natDegree <
+        (m - 2) * support.card := by
+    rw [RCN101.specialization_eq_ordinary]
+    rw [RCN101.specialization_eq_ordinary] at hdegree
+    omega
+  have hcontact : ∀ i ∈ support, ∀ r : ℕ,
+      slopeDifference K ^ (m - 2 - r) ∣
+        (RCN122.homogenizedTranslation K (nodes i) (u0 i) (u1 i)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) H))).coeff r := by
+    intro i _
+    apply (ContactOrderBridge.contactAtLeast_iff_block_divisibility
+      K (nodes i) (u0 i) (u1 i) (m - 2) _).mp
+    have hfirst := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) m H
+      (ContactOrderBridge.contactAtLeast_of_mem_kernel
+        K D w L s m nodes u0 u1 v.1 v.2 i)
+    have hsecond := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) (m - 1)
+      (MvPolynomial.pderiv (2 : Fin 4) H) hfirst
+    simpa only [Nat.sub_sub] using hsecond
+  have hz := RCN122.specialization_eq_zero_of_contact_and_degree K
+    (MvPolynomial.pderiv (2 : Fin 4) (MvPolynomial.pderiv (2 : Fin 4) H))
+    P gamma nodes u0 u1 support (m - 2) hcontact hvalues hdegreeStrict
+  apply hne
+  simpa only [H, RCN101.specialization_eq_ordinary] using hz
+
+theorem specialization_eq_zero_of_pderiv_R2_square_product
+    (P : Polynomial K) (gamma : K) (F Q : MvPolynomial (Fin 4) K)
+    (htwo : (2 : K) ≠ 0)
+    (hFzero : RCN319.specialization K P gamma F = 0)
+    (hregular : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
+    (hsecond : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) (F * (F * Q)))) = 0) :
+    RCN319.specialization K P gamma Q = 0 := by
+  have htwoPoly : (2 : Polynomial K) ≠ 0 := by
+    intro hz
+    apply htwo
+    have heval := congrArg (Polynomial.eval 0) hz
+    simpa using heval
+  have hmul : (2 : Polynomial K) *
+      (RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F) *
+      RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F)) *
+      RCN319.specialization K P gamma Q = 0 := by
+    simpa only [MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      zero_mul, mul_zero, zero_add, add_zero, two_mul, add_mul, mul_assoc] using hsecond
+  have hcoef : (2 : Polynomial K) *
+      (RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F) *
+      RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F)) ≠ 0 :=
+    mul_ne_zero htwoPoly (mul_ne_zero hregular hregular)
+  exact (mul_eq_zero.mp hmul).resolve_left hcoef
+
+end SecondDerivative
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorDoubleSquareAvoidance
+
+namespace ProximityPrize.SubmissionLower.LocatorTripleCubeAvoidance
+
+open scoped BigOperators
+open RCN081 RCN100 RCN119 RCN130 RCN156 RCN180 RCN234 RCN260
+open LocatorLowQuotient LocatorCoprimeQuotient
+open LocatorDoubleSquareAvoidance
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 20000
+set_option maxHeartbeats 800000
+
+variable {K V I : Type*} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+
+section LinearDichotomy
+
+variable [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+
+/-- Three successive high-band projections.  The first two quotient stages
+expose a coprime branch when possible; if both quotient families remain
+divisible by `F`, the last branch writes the original low source as
+`F * (F * J)` and places `J` below the third high band. -/
+theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low
+    (Dhigh Dlow w delta T YS S : ℕ)
+    (hwidth : Dhigh ≤ Dlow + delta)
+    (q : V →ₗ[K] MvPolynomial (Fin 4) K) (hq : Function.Injective q)
+    (hmem : ∀ v, q v ∈ nestedCoefficientBox K Dhigh w T YS S)
+    (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0)
+    (hsource :
+      delta * channelCount T YS S +
+          delta * channelCount
+            (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+              (S - wt residualSWeights F) +
+          delta * channelCount
+            (T - 2 * wt residualTotalWeights F)
+              (YS - 2 * wt residualYSWeights F)
+              (S - 2 * wt residualSWeights F) <
+        Module.finrank K V) :
+    (∃ v : V, v ≠ 0 ∧ q v ≠ 0 ∧
+      q v ∈ nestedCoefficientBox K Dlow w T YS S ∧ ¬ F ∣ q v) ∨
+    (∃ (v : V) (H : MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ H ≠ 0 ∧ F * H = q v ∧ ¬ F ∣ H ∧
+      H ∈ nestedCoefficientBox K
+        (Dlow - delta - wt (contactWeights w) F) w
+        (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+          (S - wt residualSWeights F)) ∨
+    (∃ (v : V) (J : MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * J) = q v ∧
+      J ∈ nestedCoefficientBox K
+        (Dlow - 2 * delta - 2 * wt (contactWeights w) F) w
+        (T - 2 * wt residualTotalWeights F)
+          (YS - 2 * wt residualYSWeights F)
+          (S - 2 * wt residualSWeights F)) := by
+  classical
+  let bandOne := (highBandMap (K := K) w Dlow delta T YS S).comp q
+  let lowOne := LinearMap.ker bandOne
+  have hrangeOne : Module.finrank K bandOne.range ≤
+      delta * channelCount T YS S := by
+    calc
+      Module.finrank K bandOne.range ≤
+          Module.finrank K (HighBandIndex delta T YS S → K) :=
+        bandOne.range.finrank_le
+      _ = delta * channelCount T YS S := by
+        rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card]
+  have hlowOneRank :
+      delta * channelCount
+          (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+            (S - wt residualSWeights F) +
+        delta * channelCount
+          (T - 2 * wt residualTotalWeights F)
+            (YS - 2 * wt residualYSWeights F)
+            (S - 2 * wt residualSWeights F) <
+        Module.finrank K lowOne := by
+    have hsum := bandOne.finrank_range_add_finrank_ker
+    change Module.finrank K bandOne.range + Module.finrank K lowOne =
+      Module.finrank K V at hsum
+    omega
+  let qOne : lowOne →ₗ[K] MvPolynomial (Fin 4) K := q.comp lowOne.subtype
+  have hqOne : Function.Injective qOne := by
+    intro a b hab
+    apply Subtype.ext
+    apply hq
+    simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hab
+  have hqOneBox : ∀ v : lowOne,
+      qOne v ∈ nestedCoefficientBox K Dlow w T YS S := by
+    intro v
+    have hhigh := hmem v.1
+    have hzero : highBandMap w Dlow delta T YS S (q v.1) = 0 := by
+      have hv := v.2
+      change bandOne v.1 = 0 at hv
+      simpa only [bandOne, qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hv
+    simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using
+      mem_low_of_highBandMap_eq_zero Dhigh Dlow w delta T YS S hwidth
+        (q v.1) hhigh hzero
+  by_cases hdivOne : ∀ v : lowOne, F ∣ qOne v
+  · let qTwo := quotientLinear qOne F hF hdivOne
+    have hqTwo : Function.Injective qTwo :=
+      quotientLinear_injective qOne hqOne F hF hdivOne
+    have hqTwoBox : ∀ v : lowOne,
+        qTwo v ∈ nestedCoefficientBox K
+          (Dlow - wt (contactWeights w) F) w
+          (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+            (S - wt residualSWeights F) := by
+      intro v
+      by_cases hv : v = 0
+      · subst v
+        rw [map_zero]
+        exact (nestedCoefficientBox K _ _ _ _ _).zero_mem
+      · have hqOneV : qOne v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hqOne
+          simpa only [map_zero] using hz
+        have hqTwoV : qTwo v ≠ 0 := by
+          intro hz
+          apply hqOneV
+          rw [recon_eq_mul_quotientPolynomial qOne F hdivOne v]
+          change F * qTwo v = 0
+          rw [hz, mul_zero]
+        exact quotient_mem_nestedCoefficientBox_of_mul_eq
+          (qOne v) F (qTwo v) Dlow w T YS S hqOneV hF hqTwoV
+            (hqOneBox v) (recon_eq_mul_quotientPolynomial qOne F hdivOne v)
+    let TOne := T - wt residualTotalWeights F
+    let YOne := YS - wt residualYSWeights F
+    let SOne := S - wt residualSWeights F
+    let DOneHigh := Dlow - wt (contactWeights w) F
+    let DOneLow := Dlow - delta - wt (contactWeights w) F
+    have hwidthTwo : DOneHigh ≤ DOneLow + delta := by
+      simp only [DOneHigh, DOneLow]
+      omega
+    let bandTwo :=
+      (highBandMap (K := K) w DOneLow delta TOne YOne SOne).comp qTwo
+    let lowTwo := LinearMap.ker bandTwo
+    have hrangeTwo : Module.finrank K bandTwo.range ≤
+        delta * channelCount TOne YOne SOne := by
+      calc
+        Module.finrank K bandTwo.range ≤
+            Module.finrank K (HighBandIndex delta TOne YOne SOne → K) :=
+          bandTwo.range.finrank_le
+        _ = delta * channelCount TOne YOne SOne := by
+          rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card]
+    have hlowTwoRank :
+        delta * channelCount
+          (T - 2 * wt residualTotalWeights F)
+            (YS - 2 * wt residualYSWeights F)
+            (S - 2 * wt residualSWeights F) <
+          Module.finrank K lowTwo := by
+      have hsum := bandTwo.finrank_range_add_finrank_ker
+      change Module.finrank K bandTwo.range + Module.finrank K lowTwo =
+        Module.finrank K lowOne at hsum
+      have hrangeTwo' : Module.finrank K bandTwo.range ≤
+          delta * channelCount
+            (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+              (S - wt residualSWeights F) := by
+        simpa only [TOne, YOne, SOne] using hrangeTwo
+      omega
+    let qTwoLow : lowTwo →ₗ[K] MvPolynomial (Fin 4) K :=
+      qTwo.comp lowTwo.subtype
+    have hqTwoLow : Function.Injective qTwoLow := by
+      intro a b hab
+      apply Subtype.ext
+      apply hqTwo
+      simpa only [qTwoLow, LinearMap.comp_apply, Submodule.coe_subtype] using hab
+    have hqTwoLowBox : ∀ v : lowTwo,
+        qTwoLow v ∈ nestedCoefficientBox K DOneLow w TOne YOne SOne := by
+      intro v
+      have hhigh := hqTwoBox v.1
+      have hzero : highBandMap w DOneLow delta TOne YOne SOne
+          (qTwo v.1) = 0 := by
+        have hv := v.2
+        change bandTwo v.1 = 0 at hv
+        simpa only [bandTwo, qTwoLow, LinearMap.comp_apply,
+          Submodule.coe_subtype] using hv
+      exact mem_low_of_highBandMap_eq_zero DOneHigh DOneLow w delta
+        TOne YOne SOne hwidthTwo (qTwo v.1) hhigh hzero
+    by_cases hdivTwo : ∀ v : lowTwo, F ∣ qTwoLow v
+    · let qThree := quotientLinear qTwoLow F hF hdivTwo
+      have hqThree : Function.Injective qThree :=
+        quotientLinear_injective qTwoLow hqTwoLow F hF hdivTwo
+      have hqThreeBox : ∀ v : lowTwo,
+          qThree v ∈ nestedCoefficientBox K
+            (DOneLow - wt (contactWeights w) F) w
+            (TOne - wt residualTotalWeights F)
+            (YOne - wt residualYSWeights F)
+            (SOne - wt residualSWeights F) := by
+        intro v
+        by_cases hv : v = 0
+        · subst v
+          rw [map_zero]
+          exact (nestedCoefficientBox K _ _ _ _ _).zero_mem
+        · have hqTwoV : qTwoLow v ≠ 0 := by
+            intro hz
+            apply hv
+            apply hqTwoLow
+            simpa only [map_zero] using hz
+          have hqThreeV : qThree v ≠ 0 := by
+            intro hz
+            apply hqTwoV
+            rw [recon_eq_mul_quotientPolynomial qTwoLow F hdivTwo v]
+            change F * qThree v = 0
+            rw [hz, mul_zero]
+          exact quotient_mem_nestedCoefficientBox_of_mul_eq
+            (qTwoLow v) F (qThree v) DOneLow w TOne YOne SOne
+              hqTwoV hF hqThreeV (hqTwoLowBox v)
+              (recon_eq_mul_quotientPolynomial qTwoLow F hdivTwo v)
+      let TTwo := T - 2 * wt residualTotalWeights F
+      let YTwo := YS - 2 * wt residualYSWeights F
+      let STwo := S - 2 * wt residualSWeights F
+      let DTwoHigh := Dlow - delta - 2 * wt (contactWeights w) F
+      let DTwoLow := Dlow - 2 * delta - 2 * wt (contactWeights w) F
+      have hwidthThree : DTwoHigh ≤ DTwoLow + delta := by
+        simp only [DTwoHigh, DTwoLow]
+        omega
+      have hqThreeBox' : ∀ v : lowTwo,
+          qThree v ∈ nestedCoefficientBox K DTwoHigh w TTwo YTwo STwo := by
+        intro v
+        have hD : DOneLow - wt (contactWeights w) F = DTwoHigh := by
+          simp only [DOneLow, DTwoHigh]
+          omega
+        have hT : TOne - wt residualTotalWeights F = TTwo := by
+          simp only [TOne, TTwo]
+          omega
+        have hY : YOne - wt residualYSWeights F = YTwo := by
+          simp only [YOne, YTwo]
+          omega
+        have hS : SOne - wt residualSWeights F = STwo := by
+          simp only [SOne, STwo]
+          omega
+        simpa only [hD, hT, hY, hS] using hqThreeBox v
+      obtain ⟨v, hv, hJ, hJbox⟩ := exists_nonzero_image_mem_low
+        DTwoHigh DTwoLow w delta TTwo YTwo STwo hwidthThree qThree hqThree
+        hqThreeBox' hlowTwoRank
+      right
+      right
+      refine ⟨v.1.1, qThree v, ?_, hJ, ?_, ?_⟩
+      · intro hz
+        apply hv
+        apply Subtype.ext
+        exact Subtype.ext hz
+      · calc
+          F * (F * qThree v) = F * qTwoLow v := by
+            congr 1
+            exact (recon_eq_mul_quotientPolynomial qTwoLow F hdivTwo v).symm
+          _ = qOne v.1 := by
+            exact (recon_eq_mul_quotientPolynomial qOne F hdivOne v.1).symm
+          _ = q v.1.1 := rfl
+      · simpa only [DTwoLow, TTwo, YTwo, STwo] using hJbox
+    · push Not at hdivTwo
+      obtain ⟨v, hvdiv⟩ := hdivTwo
+      have hv : v.1.1 ≠ 0 := by
+        intro hz
+        apply hvdiv
+        have hvzero : v = 0 := by
+          apply Subtype.ext
+          exact Subtype.ext hz
+        rw [hvzero]
+        simp only [map_zero]
+        exact dvd_zero F
+      have hH : qTwoLow v ≠ 0 := by
+        intro hz
+        apply hvdiv
+        rw [hz]
+        exact dvd_zero F
+      right
+      left
+      refine ⟨v.1.1, qTwoLow v, hv, hH, ?_, hvdiv, ?_⟩
+      · calc
+          F * qTwoLow v = qOne v.1 :=
+            (recon_eq_mul_quotientPolynomial qOne F hdivOne v.1).symm
+          _ = q v.1.1 := rfl
+      · simpa only [DOneLow, TOne, YOne, SOne] using hqTwoLowBox v
+  · push Not at hdivOne
+    obtain ⟨v, hvdiv⟩ := hdivOne
+    have hv : v.1 ≠ 0 := by
+      intro hz
+      apply hvdiv
+      have hvzero : v = 0 := Subtype.ext hz
+      rw [hvzero]
+      simp only [map_zero]
+      exact dvd_zero F
+    have hqv : q v.1 ≠ 0 := by
+      intro hz
+      apply hv
+      apply hq
+      simpa only [map_zero] using hz
+    left
+    refine ⟨v.1, hv, hqv, hqOneBox v, ?_⟩
+    simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hvdiv
+
+end LinearDichotomy
+
+section ThirdDerivative
+
+variable [Fintype I]
+local instance : DecidableEq I := Classical.decEq I
+
+/-- A third `R`-derivative of a low kernel reconstruction specializes to zero
+once the residual contact order and the global weighted-degree cap leave room
+for the usual root-counting argument. -/
+theorem specialization_pderiv_R3_eq_zero_of_kernel_low_box
+    (D Dlow w L s m : ℕ) (nodes : I ↪ K) (u0 u1 : I → K)
+    (v : ConstraintKernel (K := K) D w L s m nodes u0 u1)
+    (hlow : reconstruct K D w L s v.1 ∈ globalCoefficientBox K Dlow w L s)
+    (P : Polynomial K) (gamma : K) (support : Finset I)
+    (hw : 1 ≤ w) (hP : P.natDegree ≤ w)
+    (hcapacity : Dlow ≤ (m - 3) * support.card + 3 * (w - 1))
+    (hvalues : ∀ i ∈ support, P.eval (nodes i) = u0 i + gamma * u1 i) :
+    RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (reconstruct K D w L s v.1)))) = 0 := by
+  classical
+  let H := reconstruct K D w L s v.1
+  by_contra hne
+  have hder3 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)) ≠ 0 := by
+    intro hz
+    apply hne
+    change RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H))) = 0
+    rw [hz, map_zero]
+  have hder2 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4) H) ≠ 0 := by
+    intro hz
+    exact hder3 (by rw [hz, map_zero])
+  have hder1 : MvPolynomial.pderiv (2 : Fin 4) H ≠ 0 := by
+    intro hz
+    exact hder2 (by rw [hz, map_zero])
+  have hH : H ≠ 0 := by
+    intro hz
+    exact hder1 (by rw [hz, map_zero])
+  have hDlow : 0 < Dlow := by
+    obtain ⟨d, hd⟩ := MvPolynomial.support_nonempty.mpr hH
+    have h := (hlow hd).2.2
+    omega
+  have hcaps := (mem_flagGlobalCoefficientBox_iff H Dlow w L s hDlow).mp hlow
+  have hweight1 := LocatorContact.pderiv_R_weight_add_le
+    (contactWeights w) H hder1
+  have hder1weight : wt (contactWeights w)
+      (MvPolynomial.pderiv (2 : Fin 4) H) ≤ Dlow - 1 - (w - 1) := by
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) +
+      (w - 1) ≤ wt (contactWeights w) H at hweight1
+    omega
+  have hweight2 := LocatorContact.pderiv_R_weight_add_le
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) hder2
+  have hder2weight : wt (contactWeights w)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)) ≤
+        Dlow - 1 - 2 * (w - 1) := by
+    change wt (contactWeights w)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H)) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) at hweight2
+    omega
+  have hdegree := ContactOrderBridge.specialized_R_derivative_degree K
+    (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4) H)) P gamma w
+    (Dlow - 1 - 2 * (w - 1)) hP hder2weight hne
+  have hdegreeStrict :
+      (RCN122.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) H)))).natDegree <
+        (m - 3) * support.card := by
+    rw [RCN101.specialization_eq_ordinary]
+    rw [RCN101.specialization_eq_ordinary] at hdegree
+    omega
+  have hcontact : ∀ i ∈ support, ∀ r : ℕ,
+      slopeDifference K ^ (m - 3 - r) ∣
+        (RCN122.homogenizedTranslation K (nodes i) (u0 i) (u1 i)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4) H)))).coeff r := by
+    intro i _
+    apply (ContactOrderBridge.contactAtLeast_iff_block_divisibility
+      K (nodes i) (u0 i) (u1 i) (m - 3) _).mp
+    have hfirst := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) m H
+      (ContactOrderBridge.contactAtLeast_of_mem_kernel
+        K D w L s m nodes u0 u1 v.1 v.2 i)
+    have hsecond := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) (m - 1)
+      (MvPolynomial.pderiv (2 : Fin 4) H) hfirst
+    have hthird := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) (m - 2)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)) hsecond
+    simpa only [Nat.sub_sub] using hthird
+  have hz := RCN122.specialization_eq_zero_of_contact_and_degree K
+    (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)))
+    P gamma nodes u0 u1 support (m - 3) hcontact hvalues hdegreeStrict
+  apply hne
+  simpa only [H, RCN101.specialization_eq_ordinary] using hz
+
+/-- On the specialization where `F` itself vanishes, the third product-rule
+derivative of `F³ Q` is `6 * (∂ᴿ F)³ * Q`.  Thus regularity of the
+chosen factor and nonvanishing of `6` force the specialization of `Q` to
+vanish. -/
+theorem specialization_eq_zero_of_pderiv_R3_cube_product
+    (P : Polynomial K) (gamma : K) (F Q : MvPolynomial (Fin 4) K)
+    (hsix : (6 : K) ≠ 0)
+    (hFzero : RCN319.specialization K P gamma F = 0)
+    (hregular : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
+    (hthird : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) (F * (F * (F * Q)))))) = 0) :
+    RCN319.specialization K P gamma Q = 0 := by
+  have hsixPoly : (6 : Polynomial K) ≠ 0 := by
+    intro hz
+    apply hsix
+    have heval := congrArg (Polynomial.eval 0) hz
+    simpa using heval
+  have hmul : (6 : Polynomial K) *
+      (RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F) *
+      RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F) *
+      RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F)) *
+      RCN319.specialization K P gamma Q = 0 := by
+    simp only [MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      zero_mul, mul_zero, zero_add, add_zero, mul_add] at hthird
+    ring_nf at hthird ⊢
+    exact hthird
+  have hcoef : (6 : Polynomial K) *
+      (RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F) *
+      RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F) *
+      RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F)) ≠ 0 :=
+    mul_ne_zero hsixPoly
+      (mul_ne_zero (mul_ne_zero hregular hregular) hregular)
+  exact (mul_eq_zero.mp hmul).resolve_left hcoef
+
+end ThirdDerivative
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorTripleCubeAvoidance
+
+namespace ProximityPrize.SubmissionLower.LocatorFourthPowerAvoidance
+
+open scoped BigOperators
+open RCN081 RCN100 RCN119 RCN130 RCN156 RCN180 RCN234 RCN260
+open LocatorLowQuotient LocatorCoprimeQuotient
+open LocatorDoubleSquareAvoidance LocatorTripleCubeAvoidance
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 20000
+set_option maxHeartbeats 1000000
+
+variable {K V I : Type*} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+
+section LinearDichotomy
+
+variable [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+
+/-- Four successive high-band projections.  This is one outer projection and
+the cubic extractor applied to its first quotient. -/
+theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_fourth_low
+    (Dhigh Dlow w delta T YS S : ℕ)
+    (hwidth : Dhigh ≤ Dlow + delta)
+    (q : V →ₗ[K] MvPolynomial (Fin 4) K) (hq : Function.Injective q)
+    (hmem : ∀ v, q v ∈ nestedCoefficientBox K Dhigh w T YS S)
+    (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0)
+    (hsource :
+      delta * channelCount T YS S +
+          delta * channelCount
+            (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+              (S - wt residualSWeights F) +
+          delta * channelCount
+            (T - 2 * wt residualTotalWeights F)
+              (YS - 2 * wt residualYSWeights F)
+              (S - 2 * wt residualSWeights F) +
+          delta * channelCount
+            (T - 3 * wt residualTotalWeights F)
+              (YS - 3 * wt residualYSWeights F)
+              (S - 3 * wt residualSWeights F) <
+        Module.finrank K V) :
+    (∃ v : V, v ≠ 0 ∧ q v ≠ 0 ∧
+      q v ∈ nestedCoefficientBox K Dlow w T YS S ∧ ¬ F ∣ q v) ∨
+    (∃ (v : V) (H : MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ H ≠ 0 ∧ F * H = q v ∧ ¬ F ∣ H ∧
+      H ∈ nestedCoefficientBox K
+        (Dlow - delta - wt (contactWeights w) F) w
+        (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+          (S - wt residualSWeights F)) ∨
+    (∃ (v : V) (J : MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * J) = q v ∧ ¬ F ∣ J ∧
+      J ∈ nestedCoefficientBox K
+        (Dlow - 2 * delta - 2 * wt (contactWeights w) F) w
+        (T - 2 * wt residualTotalWeights F)
+          (YS - 2 * wt residualYSWeights F)
+          (S - 2 * wt residualSWeights F)) ∨
+    (∃ (v : V) (J : MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * J)) = q v ∧
+      J ∈ nestedCoefficientBox K
+        (Dlow - 3 * delta - 3 * wt (contactWeights w) F) w
+        (T - 3 * wt residualTotalWeights F)
+          (YS - 3 * wt residualYSWeights F)
+          (S - 3 * wt residualSWeights F)) := by
+  classical
+  let bandOne := (highBandMap (K := K) w Dlow delta T YS S).comp q
+  let lowOne := LinearMap.ker bandOne
+  have hrangeOne : Module.finrank K bandOne.range ≤
+      delta * channelCount T YS S := by
+    calc
+      Module.finrank K bandOne.range ≤
+          Module.finrank K (HighBandIndex delta T YS S → K) :=
+        bandOne.range.finrank_le
+      _ = delta * channelCount T YS S := by
+        rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card]
+  have hlowOneRank :
+      delta * channelCount
+          (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+            (S - wt residualSWeights F) +
+        delta * channelCount
+          (T - 2 * wt residualTotalWeights F)
+            (YS - 2 * wt residualYSWeights F)
+            (S - 2 * wt residualSWeights F) +
+        delta * channelCount
+          (T - 3 * wt residualTotalWeights F)
+            (YS - 3 * wt residualYSWeights F)
+            (S - 3 * wt residualSWeights F) <
+        Module.finrank K lowOne := by
+    have hsum := bandOne.finrank_range_add_finrank_ker
+    change Module.finrank K bandOne.range + Module.finrank K lowOne =
+      Module.finrank K V at hsum
+    omega
+  let qOne : lowOne →ₗ[K] MvPolynomial (Fin 4) K := q.comp lowOne.subtype
+  have hqOne : Function.Injective qOne := by
+    intro a b hab
+    apply Subtype.ext
+    apply hq
+    simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hab
+  have hqOneBox : ∀ v : lowOne,
+      qOne v ∈ nestedCoefficientBox K Dlow w T YS S := by
+    intro v
+    have hzero : highBandMap w Dlow delta T YS S (q v.1) = 0 := by
+      have hv := v.2
+      change bandOne v.1 = 0 at hv
+      simpa only [bandOne, qOne, LinearMap.comp_apply, Submodule.coe_subtype]
+        using hv
+    simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using
+      mem_low_of_highBandMap_eq_zero Dhigh Dlow w delta T YS S hwidth
+        (q v.1) (hmem v.1) hzero
+  by_cases hdivOne : ∀ v : lowOne, F ∣ qOne v
+  · let qTwo := quotientLinear qOne F hF hdivOne
+    have hqTwo : Function.Injective qTwo :=
+      quotientLinear_injective qOne hqOne F hF hdivOne
+    have hqTwoBox : ∀ v : lowOne,
+        qTwo v ∈ nestedCoefficientBox K
+          (Dlow - wt (contactWeights w) F) w
+          (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+            (S - wt residualSWeights F) := by
+      intro v
+      by_cases hv : v = 0
+      · subst v
+        rw [map_zero]
+        exact (nestedCoefficientBox K _ _ _ _ _).zero_mem
+      · have hqOneV : qOne v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hqOne
+          simpa only [map_zero] using hz
+        have hqTwoV : qTwo v ≠ 0 := by
+          intro hz
+          apply hqOneV
+          rw [recon_eq_mul_quotientPolynomial qOne F hdivOne v]
+          change F * qTwo v = 0
+          rw [hz, mul_zero]
+        exact quotient_mem_nestedCoefficientBox_of_mul_eq
+          (qOne v) F (qTwo v) Dlow w T YS S hqOneV hF hqTwoV
+            (hqOneBox v) (recon_eq_mul_quotientPolynomial qOne F hdivOne v)
+    let TOne := T - wt residualTotalWeights F
+    let YOne := YS - wt residualYSWeights F
+    let SOne := S - wt residualSWeights F
+    let DOneHigh := Dlow - wt (contactWeights w) F
+    let DOneLow := Dlow - delta - wt (contactWeights w) F
+    have hwidthRest : DOneHigh ≤ DOneLow + delta := by
+      simp only [DOneHigh, DOneLow]
+      omega
+    have hsourceRest :
+        delta * channelCount TOne YOne SOne +
+            delta * channelCount
+              (TOne - wt residualTotalWeights F)
+                (YOne - wt residualYSWeights F)
+                (SOne - wt residualSWeights F) +
+            delta * channelCount
+              (TOne - 2 * wt residualTotalWeights F)
+                (YOne - 2 * wt residualYSWeights F)
+                (SOne - 2 * wt residualSWeights F) <
+          Module.finrank K lowOne := by
+      simp only [TOne, YOne, SOne]
+      have hT2 : T - wt residualTotalWeights F - wt residualTotalWeights F =
+          T - 2 * wt residualTotalWeights F := by omega
+      have hY2 : YS - wt residualYSWeights F - wt residualYSWeights F =
+          YS - 2 * wt residualYSWeights F := by omega
+      have hS2 : S - wt residualSWeights F - wt residualSWeights F =
+          S - 2 * wt residualSWeights F := by omega
+      have hT3 : T - wt residualTotalWeights F - 2 * wt residualTotalWeights F =
+          T - 3 * wt residualTotalWeights F := by omega
+      have hY3 : YS - wt residualYSWeights F - 2 * wt residualYSWeights F =
+          YS - 3 * wt residualYSWeights F := by omega
+      have hS3 : S - wt residualSWeights F - 2 * wt residualSWeights F =
+          S - 3 * wt residualSWeights F := by omega
+      simpa only [hT2, hY2, hS2, hT3, hY3, hS3] using hlowOneRank
+    rcases exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low
+      DOneHigh DOneLow w delta TOne YOne SOne hwidthRest qTwo hqTwo
+        hqTwoBox F hF hsourceRest with hfirst | hsecond | hthird
+    · obtain ⟨v, hv, hH, hbox, hndvd⟩ := hfirst
+      have hv' : v.1 ≠ 0 := by
+        intro hz
+        apply hv
+        exact Subtype.ext hz
+      right
+      left
+      refine ⟨v.1, qTwo v, hv', hH, ?_, hndvd, ?_⟩
+      · calc
+          F * qTwo v = qOne v :=
+            (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
+          _ = q v.1 := rfl
+      · simpa only [DOneLow, TOne, YOne, SOne] using hbox
+    · obtain ⟨v, J, hv, hJ, heq, hndvd, hbox⟩ := hsecond
+      have hv' : v.1 ≠ 0 := by
+        intro hz
+        apply hv
+        exact Subtype.ext hz
+      right
+      right
+      left
+      refine ⟨v.1, J, hv', hJ, ?_, hndvd, ?_⟩
+      · calc
+          F * (F * J) = F * qTwo v := by rw [heq]
+          _ = qOne v :=
+            (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
+          _ = q v.1 := rfl
+      · have hD : DOneLow - delta - wt (contactWeights w) F =
+            Dlow - 2 * delta - 2 * wt (contactWeights w) F := by
+          simp only [DOneLow]
+          omega
+        have hT : TOne - wt residualTotalWeights F =
+            T - 2 * wt residualTotalWeights F := by
+          simp only [TOne]
+          omega
+        have hY : YOne - wt residualYSWeights F =
+            YS - 2 * wt residualYSWeights F := by
+          simp only [YOne]
+          omega
+        have hS : SOne - wt residualSWeights F =
+            S - 2 * wt residualSWeights F := by
+          simp only [SOne]
+          omega
+        simpa only [hD, hT, hY, hS] using hbox
+    · obtain ⟨v, J, hv, hJ, heq, hbox⟩ := hthird
+      have hv' : v.1 ≠ 0 := by
+        intro hz
+        apply hv
+        exact Subtype.ext hz
+      right
+      right
+      right
+      refine ⟨v.1, J, hv', hJ, ?_, ?_⟩
+      · calc
+          F * (F * (F * J)) = F * qTwo v := by rw [heq]
+          _ = qOne v :=
+            (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
+          _ = q v.1 := rfl
+      · have hD : DOneLow - 2 * delta - 2 * wt (contactWeights w) F =
+            Dlow - 3 * delta - 3 * wt (contactWeights w) F := by
+          simp only [DOneLow]
+          omega
+        have hT : TOne - 2 * wt residualTotalWeights F =
+            T - 3 * wt residualTotalWeights F := by
+          simp only [TOne]
+          omega
+        have hY : YOne - 2 * wt residualYSWeights F =
+            YS - 3 * wt residualYSWeights F := by
+          simp only [YOne]
+          omega
+        have hS : SOne - 2 * wt residualSWeights F =
+            S - 3 * wt residualSWeights F := by
+          simp only [SOne]
+          omega
+        simpa only [hD, hT, hY, hS] using hbox
+  · push Not at hdivOne
+    obtain ⟨v, hvdiv⟩ := hdivOne
+    have hv : v.1 ≠ 0 := by
+      intro hz
+      apply hvdiv
+      have hvzero : v = 0 := Subtype.ext hz
+      rw [hvzero]
+      simp only [map_zero]
+      exact dvd_zero F
+    have hqv : q v.1 ≠ 0 := by
+      intro hz
+      apply hv
+      apply hq
+      simpa only [map_zero] using hz
+    left
+    refine ⟨v.1, hv, hqv, hqOneBox v, ?_⟩
+    simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hvdiv
+
+end LinearDichotomy
+
+section FourthDerivative
+
+variable [Fintype I]
+local instance : DecidableEq I := Classical.decEq I
+
+theorem specialization_pderiv_R4_eq_zero_of_kernel_low_box
+    (D Dlow w L s m : ℕ) (nodes : I ↪ K) (u0 u1 : I → K)
+    (v : ConstraintKernel (K := K) D w L s m nodes u0 u1)
+    (hlow : reconstruct K D w L s v.1 ∈ globalCoefficientBox K Dlow w L s)
+    (P : Polynomial K) (gamma : K) (support : Finset I)
+    (hw : 1 ≤ w) (hP : P.natDegree ≤ w)
+    (hcapacity : Dlow ≤ (m - 4) * support.card + 4 * (w - 1))
+    (hvalues : ∀ i ∈ support, P.eval (nodes i) = u0 i + gamma * u1 i) :
+    RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (reconstruct K D w L s v.1))))) = 0 := by
+  classical
+  let H := reconstruct K D w L s v.1
+  by_contra hne
+  have hder4 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H))) ≠ 0 := by
+    intro hz
+    apply hne
+    rw [hz, map_zero]
+  have hder3 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)) ≠ 0 := by
+    intro hz
+    exact hder4 (by rw [hz, map_zero])
+  have hder2 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4) H) ≠ 0 := by
+    intro hz
+    exact hder3 (by rw [hz, map_zero])
+  have hder1 : MvPolynomial.pderiv (2 : Fin 4) H ≠ 0 := by
+    intro hz
+    exact hder2 (by rw [hz, map_zero])
+  have hH : H ≠ 0 := by
+    intro hz
+    exact hder1 (by rw [hz, map_zero])
+  have hDlow : 0 < Dlow := by
+    obtain ⟨d, hd⟩ := MvPolynomial.support_nonempty.mpr hH
+    have h := (hlow hd).2.2
+    omega
+  have hweight1 := LocatorContact.pderiv_R_weight_add_le
+    (contactWeights w) H hder1
+  have hweight2 := LocatorContact.pderiv_R_weight_add_le
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) hder2
+  have hweight3 := LocatorContact.pderiv_R_weight_add_le
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4) H)) hder3
+  have hder3weight : wt (contactWeights w)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H))) ≤
+        Dlow - 1 - 3 * (w - 1) := by
+    have hHweight : wt (contactWeights w) H ≤ Dlow - 1 :=
+      ((mem_flagGlobalCoefficientBox_iff H Dlow w L s hDlow).mp hlow).2.2
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) +
+      (w - 1) ≤ wt (contactWeights w) H at hweight1
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4) H)) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) at hweight2
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H))) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)) at hweight3
+    omega
+  have hdegree := ContactOrderBridge.specialized_R_derivative_degree K
+    (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H))) P gamma w
+    (Dlow - 1 - 3 * (w - 1)) hP hder3weight hne
+  have hdegreeStrict :
+      (RCN122.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4) H))))).natDegree <
+        (m - 4) * support.card := by
+    rw [RCN101.specialization_eq_ordinary]
+    rw [RCN101.specialization_eq_ordinary] at hdegree
+    omega
+  have hcontact : ∀ i ∈ support, ∀ r : ℕ,
+      slopeDifference K ^ (m - 4 - r) ∣
+        (RCN122.homogenizedTranslation K (nodes i) (u0 i) (u1 i)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4) H))))).coeff r := by
+    intro i _
+    apply (ContactOrderBridge.contactAtLeast_iff_block_divisibility
+      K (nodes i) (u0 i) (u1 i) (m - 4) _).mp
+    have h1 := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) m H
+      (ContactOrderBridge.contactAtLeast_of_mem_kernel
+        K D w L s m nodes u0 u1 v.1 v.2 i)
+    have h2 := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) (m - 1)
+      (MvPolynomial.pderiv (2 : Fin 4) H) h1
+    have h3 := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) (m - 2)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)) h2
+    have h4 := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) (m - 3)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H))) h3
+    simpa only [Nat.sub_sub] using h4
+  have hz := RCN122.specialization_eq_zero_of_contact_and_degree K
+    (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H))))
+    P gamma nodes u0 u1 support (m - 4) hcontact hvalues hdegreeStrict
+  apply hne
+  simpa only [H, RCN101.specialization_eq_ordinary] using hz
+
+theorem specialization_eq_zero_of_pderiv_R4_fourth_product
+    (P : Polynomial K) (gamma : K) (F Q : MvPolynomial (Fin 4) K)
+    (hfactorial : (24 : K) ≠ 0)
+    (hFzero : RCN319.specialization K P gamma F = 0)
+    (hregular : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
+    (hfourth : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (F * (F * (F * (F * Q)))))))) = 0) :
+    RCN319.specialization K P gamma Q = 0 := by
+  have hfactorialPoly : (24 : Polynomial K) ≠ 0 := by
+    intro hz
+    apply hfactorial
+    have heval := congrArg (Polynomial.eval 0) hz
+    simpa using heval
+  have hmul : (24 : Polynomial K) *
+      (RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 4 *
+      RCN319.specialization K P gamma Q = 0 := by
+    simp only [MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      zero_mul, mul_zero, zero_add, add_zero, mul_add] at hfourth
+    ring_nf at hfourth ⊢
+    exact hfourth
+  have hcoef : (24 : Polynomial K) *
+      (RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 4 ≠ 0 :=
+    mul_ne_zero hfactorialPoly (pow_ne_zero 4 hregular)
+  exact (mul_eq_zero.mp hmul).resolve_left hcoef
+
+end FourthDerivative
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorFourthPowerAvoidance
+
+namespace ProximityPrize.SubmissionLower.LocatorFifthPowerAvoidance
+
+open scoped BigOperators
+open RCN081 RCN100 RCN119 RCN130 RCN156 RCN180 RCN234 RCN260
+open LocatorLowQuotient LocatorCoprimeQuotient
+open LocatorDoubleSquareAvoidance LocatorTripleCubeAvoidance
+open LocatorFourthPowerAvoidance
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 20000
+set_option maxHeartbeats 1200000
+
+variable {K V I : Type*} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+
+section LinearDichotomy
+
+variable [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+
+/-- Five successive high-band projections, obtained by applying the
+four-stage extractor to the quotient after one outer projection. -/
+theorem exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_fourth_low_not_dvd_or_fifth_low
+    (Dhigh Dlow w delta T YS S : ℕ)
+    (hwidth : Dhigh ≤ Dlow + delta)
+    (q : V →ₗ[K] MvPolynomial (Fin 4) K) (hq : Function.Injective q)
+    (hmem : ∀ v, q v ∈ nestedCoefficientBox K Dhigh w T YS S)
+    (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0)
+    (hsource :
+      delta * channelCount T YS S +
+          delta * channelCount
+            (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+              (S - wt residualSWeights F) +
+          delta * channelCount
+            (T - 2 * wt residualTotalWeights F)
+              (YS - 2 * wt residualYSWeights F)
+              (S - 2 * wt residualSWeights F) +
+          delta * channelCount
+            (T - 3 * wt residualTotalWeights F)
+              (YS - 3 * wt residualYSWeights F)
+              (S - 3 * wt residualSWeights F) +
+          delta * channelCount
+            (T - 4 * wt residualTotalWeights F)
+              (YS - 4 * wt residualYSWeights F)
+              (S - 4 * wt residualSWeights F) <
+        Module.finrank K V) :
+    (∃ v : V, v ≠ 0 ∧ q v ≠ 0 ∧
+      q v ∈ nestedCoefficientBox K Dlow w T YS S ∧ ¬ F ∣ q v) ∨
+    (∃ (v : V) (H : MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ H ≠ 0 ∧ F * H = q v ∧ ¬ F ∣ H ∧
+      H ∈ nestedCoefficientBox K
+        (Dlow - delta - wt (contactWeights w) F) w
+        (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+          (S - wt residualSWeights F)) ∨
+    (∃ (v : V) (J : MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * J) = q v ∧ ¬ F ∣ J ∧
+      J ∈ nestedCoefficientBox K
+        (Dlow - 2 * delta - 2 * wt (contactWeights w) F) w
+        (T - 2 * wt residualTotalWeights F)
+          (YS - 2 * wt residualYSWeights F)
+          (S - 2 * wt residualSWeights F)) ∨
+    (∃ (v : V) (J : MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * J)) = q v ∧ ¬ F ∣ J ∧
+      J ∈ nestedCoefficientBox K
+        (Dlow - 3 * delta - 3 * wt (contactWeights w) F) w
+        (T - 3 * wt residualTotalWeights F)
+          (YS - 3 * wt residualYSWeights F)
+          (S - 3 * wt residualSWeights F)) ∨
+    (∃ (v : V) (J : MvPolynomial (Fin 4) K),
+      v ≠ 0 ∧ J ≠ 0 ∧ F * (F * (F * (F * J))) = q v ∧
+      J ∈ nestedCoefficientBox K
+        (Dlow - 4 * delta - 4 * wt (contactWeights w) F) w
+        (T - 4 * wt residualTotalWeights F)
+          (YS - 4 * wt residualYSWeights F)
+          (S - 4 * wt residualSWeights F)) := by
+  classical
+  let bandOne := (highBandMap (K := K) w Dlow delta T YS S).comp q
+  let lowOne := LinearMap.ker bandOne
+  have hrangeOne : Module.finrank K bandOne.range ≤
+      delta * channelCount T YS S := by
+    calc
+      Module.finrank K bandOne.range ≤
+          Module.finrank K (HighBandIndex delta T YS S → K) :=
+        bandOne.range.finrank_le
+      _ = delta * channelCount T YS S := by
+        rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card]
+  have hlowOneRank :
+      delta * channelCount
+          (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+            (S - wt residualSWeights F) +
+        delta * channelCount
+          (T - 2 * wt residualTotalWeights F)
+            (YS - 2 * wt residualYSWeights F)
+            (S - 2 * wt residualSWeights F) +
+        delta * channelCount
+          (T - 3 * wt residualTotalWeights F)
+            (YS - 3 * wt residualYSWeights F)
+            (S - 3 * wt residualSWeights F) +
+        delta * channelCount
+          (T - 4 * wt residualTotalWeights F)
+            (YS - 4 * wt residualYSWeights F)
+            (S - 4 * wt residualSWeights F) <
+        Module.finrank K lowOne := by
+    have hsum := bandOne.finrank_range_add_finrank_ker
+    change Module.finrank K bandOne.range + Module.finrank K lowOne =
+      Module.finrank K V at hsum
+    omega
+  let qOne : lowOne →ₗ[K] MvPolynomial (Fin 4) K := q.comp lowOne.subtype
+  have hqOne : Function.Injective qOne := by
+    intro a b hab
+    apply Subtype.ext
+    apply hq
+    simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hab
+  have hqOneBox : ∀ v : lowOne,
+      qOne v ∈ nestedCoefficientBox K Dlow w T YS S := by
+    intro v
+    have hzero : highBandMap w Dlow delta T YS S (q v.1) = 0 := by
+      have hv := v.2
+      change bandOne v.1 = 0 at hv
+      simpa only [bandOne, qOne, LinearMap.comp_apply, Submodule.coe_subtype]
+        using hv
+    simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using
+      mem_low_of_highBandMap_eq_zero Dhigh Dlow w delta T YS S hwidth
+        (q v.1) (hmem v.1) hzero
+  by_cases hdivOne : ∀ v : lowOne, F ∣ qOne v
+  · let qTwo := quotientLinear qOne F hF hdivOne
+    have hqTwo : Function.Injective qTwo :=
+      quotientLinear_injective qOne hqOne F hF hdivOne
+    have hqTwoBox : ∀ v : lowOne,
+        qTwo v ∈ nestedCoefficientBox K
+          (Dlow - wt (contactWeights w) F) w
+          (T - wt residualTotalWeights F) (YS - wt residualYSWeights F)
+            (S - wt residualSWeights F) := by
+      intro v
+      by_cases hv : v = 0
+      · subst v
+        rw [map_zero]
+        exact (nestedCoefficientBox K _ _ _ _ _).zero_mem
+      · have hqOneV : qOne v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hqOne
+          simpa only [map_zero] using hz
+        have hqTwoV : qTwo v ≠ 0 := by
+          intro hz
+          apply hqOneV
+          rw [recon_eq_mul_quotientPolynomial qOne F hdivOne v]
+          change F * qTwo v = 0
+          rw [hz, mul_zero]
+        exact quotient_mem_nestedCoefficientBox_of_mul_eq
+          (qOne v) F (qTwo v) Dlow w T YS S hqOneV hF hqTwoV
+            (hqOneBox v) (recon_eq_mul_quotientPolynomial qOne F hdivOne v)
+    let TOne := T - wt residualTotalWeights F
+    let YOne := YS - wt residualYSWeights F
+    let SOne := S - wt residualSWeights F
+    let DOneHigh := Dlow - wt (contactWeights w) F
+    let DOneLow := Dlow - delta - wt (contactWeights w) F
+    have hwidthRest : DOneHigh ≤ DOneLow + delta := by
+      simp only [DOneHigh, DOneLow]
+      omega
+    have hsourceRest :
+        delta * channelCount TOne YOne SOne +
+            delta * channelCount
+              (TOne - wt residualTotalWeights F)
+                (YOne - wt residualYSWeights F)
+                (SOne - wt residualSWeights F) +
+            delta * channelCount
+              (TOne - 2 * wt residualTotalWeights F)
+                (YOne - 2 * wt residualYSWeights F)
+                (SOne - 2 * wt residualSWeights F) +
+            delta * channelCount
+              (TOne - 3 * wt residualTotalWeights F)
+                (YOne - 3 * wt residualYSWeights F)
+                (SOne - 3 * wt residualSWeights F) <
+          Module.finrank K lowOne := by
+      simp only [TOne, YOne, SOne]
+      have hT2 : T - wt residualTotalWeights F - wt residualTotalWeights F =
+          T - 2 * wt residualTotalWeights F := by omega
+      have hY2 : YS - wt residualYSWeights F - wt residualYSWeights F =
+          YS - 2 * wt residualYSWeights F := by omega
+      have hS2 : S - wt residualSWeights F - wt residualSWeights F =
+          S - 2 * wt residualSWeights F := by omega
+      have hT3 : T - wt residualTotalWeights F - 2 * wt residualTotalWeights F =
+          T - 3 * wt residualTotalWeights F := by omega
+      have hY3 : YS - wt residualYSWeights F - 2 * wt residualYSWeights F =
+          YS - 3 * wt residualYSWeights F := by omega
+      have hS3 : S - wt residualSWeights F - 2 * wt residualSWeights F =
+          S - 3 * wt residualSWeights F := by omega
+      have hT4 : T - wt residualTotalWeights F - 3 * wt residualTotalWeights F =
+          T - 4 * wt residualTotalWeights F := by omega
+      have hY4 : YS - wt residualYSWeights F - 3 * wt residualYSWeights F =
+          YS - 4 * wt residualYSWeights F := by omega
+      have hS4 : S - wt residualSWeights F - 3 * wt residualSWeights F =
+          S - 4 * wt residualSWeights F := by omega
+      simpa only [hT2, hY2, hS2, hT3, hY3, hS3, hT4, hY4, hS4]
+        using hlowOneRank
+    rcases
+      exists_first_low_not_dvd_or_second_low_not_dvd_or_third_low_not_dvd_or_fourth_low
+        DOneHigh DOneLow w delta TOne YOne SOne hwidthRest qTwo hqTwo
+          hqTwoBox F hF hsourceRest with hfirst | hsecond | hthird | hfourth
+    · obtain ⟨v, hv, hH, hbox, hndvd⟩ := hfirst
+      have hv' : v.1 ≠ 0 := by
+        intro hz
+        apply hv
+        exact Subtype.ext hz
+      right
+      left
+      refine ⟨v.1, qTwo v, hv', hH, ?_, hndvd, ?_⟩
+      · calc
+          F * qTwo v = qOne v :=
+            (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
+          _ = q v.1 := rfl
+      · simpa only [DOneLow, TOne, YOne, SOne] using hbox
+    · obtain ⟨v, J, hv, hJ, heq, hndvd, hbox⟩ := hsecond
+      have hv' : v.1 ≠ 0 := by
+        intro hz
+        apply hv
+        exact Subtype.ext hz
+      right
+      right
+      left
+      refine ⟨v.1, J, hv', hJ, ?_, hndvd, ?_⟩
+      · calc
+          F * (F * J) = F * qTwo v := by rw [heq]
+          _ = qOne v :=
+            (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
+          _ = q v.1 := rfl
+      · have hD : DOneLow - delta - wt (contactWeights w) F =
+            Dlow - 2 * delta - 2 * wt (contactWeights w) F := by
+          simp only [DOneLow]
+          omega
+        have hT : TOne - wt residualTotalWeights F =
+            T - 2 * wt residualTotalWeights F := by simp only [TOne]; omega
+        have hY : YOne - wt residualYSWeights F =
+            YS - 2 * wt residualYSWeights F := by simp only [YOne]; omega
+        have hS : SOne - wt residualSWeights F =
+            S - 2 * wt residualSWeights F := by simp only [SOne]; omega
+        simpa only [hD, hT, hY, hS] using hbox
+    · obtain ⟨v, J, hv, hJ, heq, hndvd, hbox⟩ := hthird
+      have hv' : v.1 ≠ 0 := by
+        intro hz
+        apply hv
+        exact Subtype.ext hz
+      right
+      right
+      right
+      left
+      refine ⟨v.1, J, hv', hJ, ?_, hndvd, ?_⟩
+      · calc
+          F * (F * (F * J)) = F * qTwo v := by rw [heq]
+          _ = qOne v :=
+            (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
+          _ = q v.1 := rfl
+      · have hD : DOneLow - 2 * delta - 2 * wt (contactWeights w) F =
+            Dlow - 3 * delta - 3 * wt (contactWeights w) F := by
+          simp only [DOneLow]
+          omega
+        have hT : TOne - 2 * wt residualTotalWeights F =
+            T - 3 * wt residualTotalWeights F := by simp only [TOne]; omega
+        have hY : YOne - 2 * wt residualYSWeights F =
+            YS - 3 * wt residualYSWeights F := by simp only [YOne]; omega
+        have hS : SOne - 2 * wt residualSWeights F =
+            S - 3 * wt residualSWeights F := by simp only [SOne]; omega
+        simpa only [hD, hT, hY, hS] using hbox
+    · obtain ⟨v, J, hv, hJ, heq, hbox⟩ := hfourth
+      have hv' : v.1 ≠ 0 := by
+        intro hz
+        apply hv
+        exact Subtype.ext hz
+      right
+      right
+      right
+      right
+      refine ⟨v.1, J, hv', hJ, ?_, ?_⟩
+      · calc
+          F * (F * (F * (F * J))) = F * qTwo v := by rw [heq]
+          _ = qOne v :=
+            (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
+          _ = q v.1 := rfl
+      · have hD : DOneLow - 3 * delta - 3 * wt (contactWeights w) F =
+            Dlow - 4 * delta - 4 * wt (contactWeights w) F := by
+          simp only [DOneLow]
+          omega
+        have hT : TOne - 3 * wt residualTotalWeights F =
+            T - 4 * wt residualTotalWeights F := by simp only [TOne]; omega
+        have hY : YOne - 3 * wt residualYSWeights F =
+            YS - 4 * wt residualYSWeights F := by simp only [YOne]; omega
+        have hS : SOne - 3 * wt residualSWeights F =
+            S - 4 * wt residualSWeights F := by simp only [SOne]; omega
+        simpa only [hD, hT, hY, hS] using hbox
+  · push Not at hdivOne
+    obtain ⟨v, hvdiv⟩ := hdivOne
+    have hv : v.1 ≠ 0 := by
+      intro hz
+      apply hvdiv
+      have hvzero : v = 0 := Subtype.ext hz
+      rw [hvzero]
+      simp only [map_zero]
+      exact dvd_zero F
+    have hqv : q v.1 ≠ 0 := by
+      intro hz
+      apply hv
+      apply hq
+      simpa only [map_zero] using hz
+    left
+    refine ⟨v.1, hv, hqv, hqOneBox v, ?_⟩
+    simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hvdiv
+
+end LinearDichotomy
+
+section FifthDerivative
+
+variable [Fintype I]
+local instance : DecidableEq I := Classical.decEq I
+
+theorem specialization_pderiv_R5_eq_zero_of_kernel_low_box
+    (D Dlow w L s m : ℕ) (nodes : I ↪ K) (u0 u1 : I → K)
+    (v : ConstraintKernel (K := K) D w L s m nodes u0 u1)
+    (hlow : reconstruct K D w L s v.1 ∈ globalCoefficientBox K Dlow w L s)
+    (P : Polynomial K) (gamma : K) (support : Finset I)
+    (hw : 1 ≤ w) (hP : P.natDegree ≤ w)
+    (hcapacity : Dlow ≤ (m - 5) * support.card + 5 * (w - 1))
+    (hvalues : ∀ i ∈ support, P.eval (nodes i) = u0 i + gamma * u1 i) :
+    RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (reconstruct K D w L s v.1)))))) = 0 := by
+  classical
+  let H := reconstruct K D w L s v.1
+  by_contra hne
+  have hder5 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) H)))) ≠ 0 := by
+    intro hz
+    apply hne
+    rw [hz, map_zero]
+  have hder4 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H))) ≠ 0 := by
+    intro hz
+    exact hder5 (by rw [hz, map_zero])
+  have hder3 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)) ≠ 0 := by
+    intro hz
+    exact hder4 (by rw [hz, map_zero])
+  have hder2 : MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4) H) ≠ 0 := by
+    intro hz
+    exact hder3 (by rw [hz, map_zero])
+  have hder1 : MvPolynomial.pderiv (2 : Fin 4) H ≠ 0 := by
+    intro hz
+    exact hder2 (by rw [hz, map_zero])
+  have hH : H ≠ 0 := by
+    intro hz
+    exact hder1 (by rw [hz, map_zero])
+  have hDlow : 0 < Dlow := by
+    obtain ⟨d, hd⟩ := MvPolynomial.support_nonempty.mpr hH
+    have h := (hlow hd).2.2
+    omega
+  have hweight1 := LocatorContact.pderiv_R_weight_add_le
+    (contactWeights w) H hder1
+  have hweight2 := LocatorContact.pderiv_R_weight_add_le
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) hder2
+  have hweight3 := LocatorContact.pderiv_R_weight_add_le
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4) H)) hder3
+  have hweight4 := LocatorContact.pderiv_R_weight_add_le
+    (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H))) hder4
+  have hder4weight : wt (contactWeights w)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) H)))) ≤
+        Dlow - 1 - 4 * (w - 1) := by
+    have hHweight : wt (contactWeights w) H ≤ Dlow - 1 :=
+      ((mem_flagGlobalCoefficientBox_iff H Dlow w L s hDlow).mp hlow).2.2
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) +
+      (w - 1) ≤ wt (contactWeights w) H at hweight1
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4) H)) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4) H) at hweight2
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H))) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)) at hweight3
+    change wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H)))) + (w - 1) ≤
+      wt (contactWeights w) (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H))) at hweight4
+    omega
+  have hdegree := ContactOrderBridge.specialized_R_derivative_degree K
+    (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H)))) P gamma w
+    (Dlow - 1 - 4 * (w - 1)) hP hder4weight hne
+  have hdegreeStrict :
+      (RCN122.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4) H)))))).natDegree <
+        (m - 5) * support.card := by
+    rw [RCN101.specialization_eq_ordinary]
+    rw [RCN101.specialization_eq_ordinary] at hdegree
+    omega
+  have hcontact : ∀ i ∈ support, ∀ r : ℕ,
+      slopeDifference K ^ (m - 5 - r) ∣
+        (RCN122.homogenizedTranslation K (nodes i) (u0 i) (u1 i)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (MvPolynomial.pderiv (2 : Fin 4)
+                  (MvPolynomial.pderiv (2 : Fin 4) H)))))).coeff r := by
+    intro i _
+    apply (ContactOrderBridge.contactAtLeast_iff_block_divisibility
+      K (nodes i) (u0 i) (u1 i) (m - 5) _).mp
+    have h1 := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) m H
+      (ContactOrderBridge.contactAtLeast_of_mem_kernel
+        K D w L s m nodes u0 u1 v.1 v.2 i)
+    have h2 := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) (m - 1)
+      (MvPolynomial.pderiv (2 : Fin 4) H) h1
+    have h3 := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) (m - 2)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4) H)) h2
+    have h4 := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) (m - 3)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4) H))) h3
+    have h5 := ContactOrderBridge.contactAtLeast_pderiv_R
+      K (nodes i) (u0 i) (u1 i) (m - 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) H)))) h4
+    simpa only [Nat.sub_sub] using h5
+  have hz := RCN122.specialization_eq_zero_of_contact_and_degree K
+    (MvPolynomial.pderiv (2 : Fin 4)
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4) H)))))
+    P gamma nodes u0 u1 support (m - 5) hcontact hvalues hdegreeStrict
+  apply hne
+  simpa only [H, RCN101.specialization_eq_ordinary] using hz
+
+theorem specialization_eq_zero_of_pderiv_R5_fifth_product
+    (P : Polynomial K) (gamma : K) (F Q : MvPolynomial (Fin 4) K)
+    (hfactorial : (120 : K) ≠ 0)
+    (hFzero : RCN319.specialization K P gamma F = 0)
+    (hregular : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
+    (hfifth : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4)
+        (MvPolynomial.pderiv (2 : Fin 4)
+          (MvPolynomial.pderiv (2 : Fin 4)
+            (MvPolynomial.pderiv (2 : Fin 4)
+              (MvPolynomial.pderiv (2 : Fin 4)
+                (F * (F * (F * (F * (F * Q)))))))))) = 0) :
+    RCN319.specialization K P gamma Q = 0 := by
+  have hfactorialPoly : (120 : Polynomial K) ≠ 0 := by
+    intro hz
+    apply hfactorial
+    have heval := congrArg (Polynomial.eval 0) hz
+    simpa using heval
+  have hmul : (120 : Polynomial K) *
+      (RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 5 *
+      RCN319.specialization K P gamma Q = 0 := by
+    simp only [MvPolynomial.pderiv_mul, map_add, map_mul, hFzero,
+      zero_mul, mul_zero, zero_add, add_zero, mul_add] at hfifth
+    ring_nf at hfifth ⊢
+    exact hfifth
+  have hcoef : (120 : Polynomial K) *
+      (RCN319.specialization K P gamma
+        (MvPolynomial.pderiv (2 : Fin 4) F)) ^ 5 ≠ 0 :=
+    mul_ne_zero hfactorialPoly (pow_ne_zero 5 hregular)
+  exact (mul_eq_zero.mp hmul).resolve_left hcoef
+
+end FifthDerivative
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorFifthPowerAvoidance
+end PackedLocator_LocatorFifthPowerAvoidance
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier04 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorQuotientMonotone. -/
+section PackedLocator_LocatorQuotientMonotone
+namespace ProximityPrize.SubmissionLower.LocatorLowQuotient
+open scoped BigOperators
+theorem channelCount_mono {T T' YS YS' S S':ℕ}
+    (ht:T ≤ T') (hy:YS ≤ YS') (hs:S ≤ S') :
+    channelCount T YS S ≤ channelCount T' YS' S':=by
+  rw [channelCount_eq, channelCount_eq]
+  calc
+    _ ≤ ∑ y ∈ Finset.range (min T YS + 1),
+        ∑ r ∈ Finset.range (min S' (min (T' - y) (YS' - y)) + 1),
+          (T' + 1 - y - r):=by
+      apply Finset.sum_le_sum
+      intro y _
+      have hin:Finset.range (min S (min (T-y) (YS-y)) + 1) ⊆
+          Finset.range (min S' (min (T'-y) (YS'-y)) + 1):=by
+        apply Finset.range_mono
+        have h:=min_le_min hs
+          (min_le_min (Nat.sub_le_sub_right ht y) (Nat.sub_le_sub_right hy y))
+        omega
+      exact (Finset.sum_le_sum (fun r _ => by omega)).trans
+        (Finset.sum_le_sum_of_subset_of_nonneg hin (fun _ _ _ => Nat.zero_le _))
+    _ ≤ _:=by
+      apply Finset.sum_le_sum_of_subset_of_nonneg
+      · exact Finset.range_mono (Nat.add_le_add_right (min_le_min ht hy) 1)
+      · intro _ _ _
+        exact Nat.zero_le _
+theorem nestedCoefficientBox_mono
+    {K:Type*} [Field K] {D D' w T T' YS YS' S S':ℕ}
+    (hD:D ≤ D') (hT:T ≤ T') (hYS:YS ≤ YS') (hS:S ≤ S')
+    {P:MvPolynomial (Fin 4) K}
+    (hP:P ∈ nestedCoefficientBox K D w T YS S) :
+    P ∈ nestedCoefficientBox K D' w T' YS' S':=by
+  intro d hd
+  have h:=hP hd
+  exact ⟨h.1.trans hT, h.2.1.trans hYS, h.2.2.1.trans hS,
+    h.2.2.2.trans_le hD⟩
+end ProximityPrize.SubmissionLower.LocatorLowQuotient
+end PackedLocator_LocatorQuotientMonotone
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier05 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorArbitraryPowerAvoidance. -/
+section PackedLocator_LocatorArbitraryPowerAvoidance
+
+/-!
+# Arbitrarily many successive locator quotient projections
+
+This is the recursive form of the explicitly unrolled second-through-ninth
+power-avoidance lemmas.  It deliberately concerns only the linear high-band
+selection.  Contact-order vanishing and extraction of the terminal quotient
+from an iterated derivative are independent consumers of the witness returned
+here.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorArbitraryPowerAvoidance
+
+open scoped BigOperators
+open RCN081 RCN100 RCN119 RCN130 RCN156 RCN180 RCN234 RCN260
+open LocatorLowQuotient LocatorCoprimeQuotient
+  LocatorDoubleSquareAvoidance
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 2000000
+
+variable {K V : Type*} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+
+abbrev P4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
+
+/-- The exact cumulative cost of `k` successive high-band projections.
+The decrement form is chosen so that removing the first projection is
+definitionally the same budget at the shifted quotient box. -/
+def powerBandBudget
+    (delta dT dY dS T YS S : ℕ) : ℕ → ℕ
+  | 0 => 0
+  | k + 1 =>
+      delta * channelCount T YS S +
+        powerBandBudget delta dT dY dS
+          (T - dT) (YS - dY) (S - dS) k
+
+/-- Enlarging the current box and decreasing its per-stage losses can only
+increase the cumulative high-band budget. -/
+theorem powerBandBudget_mono
+    (delta dT₁ dY₁ dS₁ T₁ Y₁ S₁ dT₂ dY₂ dS₂ T₂ Y₂ S₂ k : ℕ)
+    (hT : T₁ ≤ T₂) (hY : Y₁ ≤ Y₂) (hS : S₁ ≤ S₂)
+    (hdT : dT₂ ≤ dT₁) (hdY : dY₂ ≤ dY₁)
+    (hdS : dS₂ ≤ dS₁) :
+    powerBandBudget delta dT₁ dY₁ dS₁ T₁ Y₁ S₁ k ≤
+      powerBandBudget delta dT₂ dY₂ dS₂ T₂ Y₂ S₂ k := by
+  induction k generalizing T₁ Y₁ S₁ T₂ Y₂ S₂ with
+  | zero =>
+      simp only [powerBandBudget]
+      exact Nat.zero_le _
+  | succ k ih =>
+      simp only [powerBandBudget]
+      apply Nat.add_le_add
+      · exact Nat.mul_le_mul_left delta (channelCount_mono hT hY hS)
+      · apply ih
+        · omega
+        · omega
+        · omega
+
+/-- After `steps + 1` high-band projections, some nonzero member of the
+source family has an `F`-adic stage `j`.  A nonterminal stage is coprime to
+`F`; the last stage is allowed to remain divisible because the consumer uses
+its terminal weight inequality instead.
+
+The stage is represented by `j : Fin (steps + 1)`.  Thus the returned source
+identity is `F ^ j * J = q v`, while the corresponding original reconstructed
+row (which already has one outer factor `F`) is `F ^ (j+1) * J`.
+-/
+theorem exists_power_stage_of_bandBudget_succ
+    [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+    (steps Dhigh Dlow w delta T YS S : ℕ)
+    (hwidth : Dhigh ≤ Dlow + delta)
+    (q : V →ₗ[K] P4 K) (hq : Function.Injective q)
+    (hmem : ∀ v, q v ∈ nestedCoefficientBox K Dhigh w T YS S)
+    (F : P4 K) (hF : F ≠ 0)
+    (hsource :
+      powerBandBudget delta
+          (wt residualTotalWeights F) (wt residualYSWeights F)
+          (wt residualSWeights F) T YS S (steps + 1) <
+        Module.finrank K V) :
+    ∃ (j : Fin (steps + 1)) (v : V) (J : P4 K),
+      v ≠ 0 ∧ J ≠ 0 ∧ F ^ j.val * J = q v ∧
+      J ∈ nestedCoefficientBox K
+        (Dlow - j.val * delta - j.val * wt (contactWeights w) F) w
+        (T - j.val * wt residualTotalWeights F)
+        (YS - j.val * wt residualYSWeights F)
+        (S - j.val * wt residualSWeights F) ∧
+      (j.val + 1 < steps + 1 → ¬ F ∣ J) := by
+  classical
+  induction steps generalizing V Dhigh Dlow T YS S with
+  | zero =>
+      have hfirst : delta * channelCount T YS S < Module.finrank K V := by
+        simpa only [powerBandBudget, Nat.add_zero] using hsource
+      obtain ⟨v, hv, hqv, hlow⟩ :=
+        exists_nonzero_image_mem_low Dhigh Dlow w delta T YS S hwidth
+          q hq hmem hfirst
+      refine ⟨⟨0, by omega⟩, v, q v, hv, hqv, ?_, ?_, ?_⟩
+      · simp
+      · simpa only [Fin.val_zero, zero_mul, Nat.zero_mul, Nat.sub_zero]
+          using hlow
+      · intro hlt
+        omega
+  | succ steps ih =>
+      let bandOne := (highBandMap (K := K) w Dlow delta T YS S).comp q
+      let lowOne := LinearMap.ker bandOne
+      have hrangeOne : Module.finrank K bandOne.range ≤
+          delta * channelCount T YS S := by
+        calc
+          Module.finrank K bandOne.range ≤
+              Module.finrank K (HighBandIndex delta T YS S → K) :=
+            bandOne.range.finrank_le
+          _ = delta * channelCount T YS S := by
+            rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card]
+      have hlowOneRank :
+          powerBandBudget delta
+              (wt residualTotalWeights F) (wt residualYSWeights F)
+              (wt residualSWeights F)
+              (T - wt residualTotalWeights F)
+              (YS - wt residualYSWeights F)
+              (S - wt residualSWeights F) (steps + 1) <
+            Module.finrank K lowOne := by
+        have hsum := bandOne.finrank_range_add_finrank_ker
+        change Module.finrank K bandOne.range + Module.finrank K lowOne =
+          Module.finrank K V at hsum
+        have hbudget :
+            delta * channelCount T YS S +
+                powerBandBudget delta
+                  (wt residualTotalWeights F) (wt residualYSWeights F)
+                  (wt residualSWeights F)
+                  (T - wt residualTotalWeights F)
+                  (YS - wt residualYSWeights F)
+                  (S - wt residualSWeights F) (steps + 1) <
+              Module.finrank K V := by
+          simpa only [powerBandBudget, Nat.succ_eq_add_one,
+            Nat.add_assoc] using hsource
+        omega
+      let qOne : lowOne →ₗ[K] P4 K := q.comp lowOne.subtype
+      have hqOne : Function.Injective qOne := by
+        intro a b hab
+        apply Subtype.ext
+        apply hq
+        simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hab
+      have hqOneBox : ∀ v : lowOne,
+          qOne v ∈ nestedCoefficientBox K Dlow w T YS S := by
+        intro v
+        have hzero : highBandMap w Dlow delta T YS S (q v.1) = 0 := by
+          have hv := v.2
+          change bandOne v.1 = 0 at hv
+          simpa only [bandOne, qOne, LinearMap.comp_apply,
+            Submodule.coe_subtype] using hv
+        simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using
+          mem_low_of_highBandMap_eq_zero Dhigh Dlow w delta T YS S hwidth
+            (q v.1) (hmem v.1) hzero
+      by_cases hdivOne : ∀ v : lowOne, F ∣ qOne v
+      · let qTwo := quotientLinear qOne F hF hdivOne
+        have hqTwo : Function.Injective qTwo :=
+          quotientLinear_injective qOne hqOne F hF hdivOne
+        have hqTwoBox : ∀ v : lowOne,
+            qTwo v ∈ nestedCoefficientBox K
+              (Dlow - wt (contactWeights w) F) w
+              (T - wt residualTotalWeights F)
+              (YS - wt residualYSWeights F)
+              (S - wt residualSWeights F) := by
+          intro v
+          by_cases hv : v = 0
+          · subst v
+            rw [map_zero]
+            exact (nestedCoefficientBox K _ _ _ _ _).zero_mem
+          · have hqOneV : qOne v ≠ 0 := by
+              intro hz
+              apply hv
+              apply hqOne
+              simpa only [map_zero] using hz
+            have hqTwoV : qTwo v ≠ 0 := by
+              intro hz
+              apply hqOneV
+              rw [recon_eq_mul_quotientPolynomial qOne F hdivOne v]
+              change F * qTwo v = 0
+              rw [hz, mul_zero]
+            exact quotient_mem_nestedCoefficientBox_of_mul_eq
+              (qOne v) F (qTwo v) Dlow w T YS S hqOneV hF hqTwoV
+                (hqOneBox v)
+                (recon_eq_mul_quotientPolynomial qOne F hdivOne v)
+        let DOneHigh := Dlow - wt (contactWeights w) F
+        let DOneLow := Dlow - delta - wt (contactWeights w) F
+        let TOne := T - wt residualTotalWeights F
+        let YOne := YS - wt residualYSWeights F
+        let SOne := S - wt residualSWeights F
+        have hwidthRest : DOneHigh ≤ DOneLow + delta := by
+          simp only [DOneHigh, DOneLow]
+          omega
+        obtain ⟨j, v, J, hv, hJ, heq, hbox, hterminal⟩ :=
+          ih DOneHigh DOneLow TOne YOne SOne hwidthRest qTwo hqTwo
+            (by simpa only [DOneHigh, TOne, YOne, SOne] using hqTwoBox)
+            (by simpa only [TOne, YOne, SOne] using hlowOneRank)
+        let jUp : Fin (Nat.succ steps + 1) := ⟨j.val + 1, by omega⟩
+        refine ⟨jUp, v.1, J, ?_, hJ, ?_, ?_, ?_⟩
+        · intro hz
+          apply hv
+          exact Subtype.ext hz
+        · change F ^ (j.val + 1) * J = q v.1
+          calc
+            F ^ (j.val + 1) * J = F * (F ^ j.val * J) := by
+              rw [pow_succ']
+              ring
+            _ = F * qTwo v := by rw [heq]
+            _ = qOne v :=
+              (recon_eq_mul_quotientPolynomial qOne F hdivOne v).symm
+            _ = q v.1 := rfl
+        · have hD :
+              DOneLow - j.val * delta -
+                  j.val * wt (contactWeights w) F =
+                Dlow - (j.val + 1) * delta -
+                  (j.val + 1) * wt (contactWeights w) F := by
+              simp only [DOneLow, Nat.sub_sub, Nat.add_mul, one_mul]
+              congr 1
+              omega
+          have hT : TOne - j.val * wt residualTotalWeights F =
+              T - (j.val + 1) * wt residualTotalWeights F := by
+            simp only [TOne, Nat.sub_sub, Nat.add_mul, one_mul]
+            congr 1
+            omega
+          have hY : YOne - j.val * wt residualYSWeights F =
+              YS - (j.val + 1) * wt residualYSWeights F := by
+            simp only [YOne, Nat.sub_sub, Nat.add_mul, one_mul]
+            congr 1
+            omega
+          have hS : SOne - j.val * wt residualSWeights F =
+              S - (j.val + 1) * wt residualSWeights F := by
+            simp only [SOne, Nat.sub_sub, Nat.add_mul, one_mul]
+            congr 1
+            omega
+          simpa only [jUp, hD, hT, hY, hS] using hbox
+        · intro hlt
+          apply hterminal
+          change j.val + 1 < steps + 1
+          change j.val + 1 + 1 < Nat.succ steps + 1 at hlt
+          omega
+      · push Not at hdivOne
+        obtain ⟨v, hvdiv⟩ := hdivOne
+        have hv : v.1 ≠ 0 := by
+          intro hz
+          apply hvdiv
+          have hvzero : v = 0 := Subtype.ext hz
+          rw [hvzero]
+          simp only [map_zero]
+          exact dvd_zero F
+        have hqv : q v.1 ≠ 0 := by
+          intro hz
+          apply hv
+          apply hq
+          simpa only [map_zero] using hz
+        let jZero : Fin (Nat.succ steps + 1) := ⟨0, by omega⟩
+        refine ⟨jZero, v.1, q v.1, hv, hqv, ?_, ?_, ?_⟩
+        · simp only [jZero, Fin.val_zero, pow_zero, one_mul]
+        · simpa only [jZero, Fin.val_zero, zero_mul, Nat.zero_mul,
+            Nat.sub_zero, qOne, LinearMap.comp_apply, Submodule.coe_subtype]
+            using hqOneBox v
+        · intro _hlt
+          simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype]
+            using hvdiv
+
+
+/-! ## Contact-thinned band (lever S1)
+
+The band map reads coefficients at `highBandExponent w Dlow c`, `c : HighBandIndex`.  Every
+monomial of the `Dhigh` box has `w * d1 + (w-1) * d2 ≤ Dhigh - 1` and `d2 ≤ S`, hence
+`d1 + d2 ≤ (Dhigh + S - 1) / w`: index rows above that cut carry no monomial of the box, so
+the band map built on the cut index set keeps its kernel inside the `Dlow` box, and its
+rank bound is `delta * channelCount` of the cut caps.  The contact cap drops by
+`delta + wt_c F` per level, so the cut sharpens with the depth. -/
+
+/-- Largest `d 1 + d 2` a monomial of the `Dhigh` box (slope cap `S`) can have. -/
+def thinTop (w Dhigh S : ℕ) : ℕ := (Dhigh + S - 1) / w
+
+theorem thinTop_mono {w D D' S S' : ℕ} (hD : D ≤ D') (hS : S ≤ S') :
+    thinTop w D S ≤ thinTop w D' S' :=
+  Nat.div_le_div_right (by omega)
+
+theorem ys_le_thinTop (Dhigh w T YS S : ℕ) (hw : 1 ≤ w) (d : Fin 4 →₀ ℕ)
+    (hd : d ∈ nestedExponents Dhigh w T YS S) :
+    d 1 + d 2 ≤ thinTop w Dhigh S := by
+  rcases hd with ⟨_, _, hS, hD⟩
+  have hwr : w * d 2 = (w - 1) * d 2 + d 2 := by
+    calc
+      w * d 2 = ((w - 1) + 1) * d 2 := by rw [Nat.sub_add_cancel hw]
+      _ = (w - 1) * d 2 + d 2 := by ring
+  have hmul : (d 1 + d 2) * w ≤ Dhigh + S - 1 := by
+    rw [Nat.mul_comm, Nat.mul_add, hwr]
+    omega
+  exact (Nat.le_div_iff_mul_le (by omega)).mpr hmul
+
+/-- `mem_low_of_highBandMap_eq_zero` for the band map built on the cut index set. -/
+theorem mem_low_of_highBandMap_cut_eq_zero
+    (Dhigh Dlow w delta T YS S : ℕ) (hw : 1 ≤ w)
+    (hwidth : Dhigh ≤ Dlow + delta) (P : MvPolynomial (Fin 4) K)
+    (hP : P ∈ nestedCoefficientBox K Dhigh w T YS S)
+    (hzero : highBandMap w Dlow delta T (min YS (thinTop w Dhigh S)) S P = 0) :
+    P ∈ nestedCoefficientBox K Dlow w T YS S := by
+  intro d hd
+  rcases hP hd with ⟨hT, hYS, hS, hD⟩
+  have htop := ys_le_thinTop Dhigh w T YS S hw d ⟨hT, hYS, hS, hD⟩
+  refine ⟨hT, hYS, hS, ?_⟩
+  by_contra hnot
+  have hy : d 1 < min T (min YS (thinTop w Dhigh S)) + 1 := by omega
+  have hr : d 2 < min S (min (T - d 1) (min YS (thinTop w Dhigh S) - d 1)) + 1 := by
+    omega
+  have hz : d 3 < T + 1 - d 1 - d 2 := by omega
+  have hstart : Dlow - w * d 1 - (w - 1) * d 2 ≤ d 0 := by omega
+  have hx : d 0 - (Dlow - w * d 1 - (w - 1) * d 2) < delta := by omega
+  let c : HighBandIndex delta T (min YS (thinTop w Dhigh S)) S :=
+    ⟨⟨d 1, hy⟩, ⟨⟨d 2, hr⟩,
+      ⟨⟨d 3, hz⟩, ⟨d 0 - (Dlow - w * d 1 - (w - 1) * d 2), hx⟩⟩⟩⟩
+  have he : highBandExponent w Dlow c = d := by
+    ext i
+    fin_cases i <;> simp [highBandExponent, c] <;> omega
+  have hc := congrFun hzero c
+  have hcoeff : MvPolynomial.coeff d P = 0 := by
+    simpa only [highBandMap_apply, he, Pi.zero_apply] using hc
+  exact (MvPolynomial.mem_support_iff.mp hd) hcoeff
+
+/-- The cell-side lower bound on the contact weight: the monomial attaining the
+`YS` weight has slope exponent at most `wt_S F`. -/
+theorem contact_ge_ys (w : ℕ) (hw : 1 ≤ w) (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0) :
+    w * wt residualYSWeights F - wt residualSWeights F ≤
+      wt (contactWeights w) F := by
+  obtain ⟨d, hd, hsup⟩ := Finset.exists_mem_eq_sup F.support
+    (MvPolynomial.support_nonempty.mpr hF) (Finsupp.weight residualYSWeights)
+  have hys : wt residualYSWeights F = d 1 + d 2 := by
+    change MvPolynomial.weightedTotalDegree residualYSWeights F = d 1 + d 2
+    rw [MvPolynomial.weightedTotalDegree, hsup, weight_fin4]
+    simp [residualYSWeights]
+  have hs : d 2 ≤ wt residualSWeights F := by
+    have h := MvPolynomial.le_weightedTotalDegree residualSWeights hd
+    rw [weight_fin4] at h
+    change d 0 * 0 + d 1 * 0 + d 2 * 1 + d 3 * 0 ≤ wt residualSWeights F at h
+    omega
+  have hc : d 0 + w * d 1 + (w - 1) * d 2 ≤ wt (contactWeights w) F := by
+    have h := MvPolynomial.le_weightedTotalDegree (contactWeights w) hd
+    rw [contact_weight] at h
+    exact h
+  have hwr : w * d 2 = (w - 1) * d 2 + d 2 := by
+    calc
+      w * d 2 = ((w - 1) + 1) * d 2 := by rw [Nat.sub_add_cancel hw]
+      _ = (w - 1) * d 2 + d 2 := by ring
+  rw [hys, Nat.mul_add, hwr]
+  omega
+
+/-- The contact-aware budget: level `k+1` charges the cut band at contact cap `Dh` and
+recurses with the cap lowered by `delta + dc` (`dc` a lower bound on `wt_c F`). -/
+def powerBandBudgetThin
+    (w Dh delta dc dT dY dS T YS S : ℕ) : ℕ → ℕ
+  | 0 => 0
+  | k + 1 =>
+      delta * channelCount T (min YS (thinTop w Dh S)) S +
+        powerBandBudgetThin w (Dh - delta - dc) delta dc dT dY dS
+          (T - dT) (YS - dY) (S - dS) k
+
+theorem powerBandBudgetThin_le (w delta dc dT dY dS : ℕ) :
+    ∀ (k Dh T YS S : ℕ),
+      powerBandBudgetThin w Dh delta dc dT dY dS T YS S k ≤
+        powerBandBudget delta dT dY dS T YS S k := by
+  intro k
+  induction k with
+  | zero => intro _ _ _ _; simp [powerBandBudgetThin, powerBandBudget]
+  | succ k ih =>
+      intro Dh T YS S
+      simp only [powerBandBudgetThin, powerBandBudget]
+      exact Nat.add_le_add
+        (Nat.mul_le_mul_left delta
+          (channelCount_mono le_rfl (Nat.min_le_left _ _) le_rfl))
+        (ih _ _ _ _)
+
+/-- Monotone: a larger cap, a smaller contact decrement, a larger box and smaller
+per-stage losses can only increase the thin budget. -/
+theorem powerBandBudgetThin_mono (w delta : ℕ) :
+    ∀ (k Dh₁ dc₁ dT₁ dY₁ dS₁ T₁ Y₁ S₁ Dh₂ dc₂ dT₂ dY₂ dS₂ T₂ Y₂ S₂ : ℕ),
+      Dh₁ ≤ Dh₂ → dc₂ ≤ dc₁ → T₁ ≤ T₂ → Y₁ ≤ Y₂ → S₁ ≤ S₂ →
+      dT₂ ≤ dT₁ → dY₂ ≤ dY₁ → dS₂ ≤ dS₁ →
+      powerBandBudgetThin w Dh₁ delta dc₁ dT₁ dY₁ dS₁ T₁ Y₁ S₁ k ≤
+        powerBandBudgetThin w Dh₂ delta dc₂ dT₂ dY₂ dS₂ T₂ Y₂ S₂ k := by
+  intro k
+  induction k with
+  | zero =>
+      intro _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+      simp [powerBandBudgetThin]
+  | succ k ih =>
+      intro Dh₁ dc₁ dT₁ dY₁ dS₁ T₁ Y₁ S₁ Dh₂ dc₂ dT₂ dY₂ dS₂ T₂ Y₂ S₂
+        hD hdc hT hY hS hdT hdY hdS
+      simp only [powerBandBudgetThin]
+      apply Nat.add_le_add
+      · exact Nat.mul_le_mul_left delta
+          (channelCount_mono hT (min_le_min hY (thinTop_mono hD hS)) hS)
+      · apply ih
+        · omega
+        · exact hdc
+        · omega
+        · omega
+        · omega
+        · exact hdT
+        · exact hdY
+        · exact hdS
+
+theorem powerBandBudgetThin_le_succ
+    (w Dh delta dc dT dY dS T YS S k : ℕ) :
+    powerBandBudgetThin w Dh delta dc dT dY dS T YS S k ≤
+      powerBandBudgetThin w Dh delta dc dT dY dS T YS S (k + 1) := by
+  induction k generalizing Dh T YS S with
+  | zero =>
+      simp only [powerBandBudgetThin]
+      exact Nat.zero_le _
+  | succ k ih =>
+      simp only [powerBandBudgetThin]
+      exact Nat.add_le_add_left (ih _ _ _ _) _
+
+theorem powerBandBudgetThin_mono_fuel
+    (w Dh delta dc dT dY dS T YS S : ℕ) {k₁ k₂ : ℕ} (hk : k₁ ≤ k₂) :
+    powerBandBudgetThin w Dh delta dc dT dY dS T YS S k₁ ≤
+      powerBandBudgetThin w Dh delta dc dT dY dS T YS S k₂ := by
+  obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hk
+  induction d with
+  | zero => simp
+  | succ d ih =>
+      calc
+        powerBandBudgetThin w Dh delta dc dT dY dS T YS S k₁ ≤
+            powerBandBudgetThin w Dh delta dc dT dY dS T YS S (k₁ + d) :=
+          ih (Nat.le_add_right _ _)
+        _ ≤ powerBandBudgetThin w Dh delta dc dT dY dS T YS S ((k₁ + d) + 1) :=
+          powerBandBudgetThin_le_succ w Dh delta dc dT dY dS T YS S (k₁ + d)
+        _ = powerBandBudgetThin w Dh delta dc dT dY dS T YS S (k₁ + d.succ) := by
+          congr 1
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorArbitraryPowerAvoidance
+end PackedLocator_LocatorArbitraryPowerAvoidance
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier06 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorArbitraryPowerContact. -/
+section PackedLocator_LocatorArbitraryPowerContact
+
+/-!
+# Arbitrary-order locator contact and power extraction
+
+This module is the order-independent consumer for
+`LocatorArbitraryPowerAvoidance`.  It replaces the explicitly unrolled
+second-through-tenth derivative arguments by three reusable facts:
+
+* an `R`-derivative lowers contact order by at most one;
+* a nonzero `j`-fold `R`-derivative loses at least `j` times the `R` weight;
+* at derivative order `j`, the surviving term of `dR^[j] (F^j * Q)` is
+  `j! * Q * (dR F)^j` after specializing on `F = 0`.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorArbitraryPowerContact
+
+open scoped BigOperators
+open RCN081 RCN100 RCN119 RCN130 RCN156 RCN180 RCN234 RCN260
+open LocatorLowQuotient
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 2000000
+
+variable {K I : Type*} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+
+abbrev P4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
+
+/-- The `j`-fold derivative in the received-coordinate variable. -/
+def iteratePderivR (j : ℕ) (Q : P4 K) : P4 K :=
+  (fun H : P4 K => MvPolynomial.pderiv (2 : Fin 4) H)^[j] Q
+
+@[simp] theorem iteratePderivR_zero (Q : P4 K) :
+    iteratePderivR 0 Q = Q := rfl
+
+theorem iteratePderivR_succ (j : ℕ) (Q : P4 K) :
+    iteratePderivR (j + 1) Q =
+      MvPolynomial.pderiv (2 : Fin 4) (iteratePderivR j Q) := by
+  simp only [iteratePderivR, Function.iterate_succ_apply']
+
+@[simp] theorem iteratePderivR_zero_poly (j : ℕ) :
+    iteratePderivR (K := K) j 0 = 0 := by
+  induction j with
+  | zero => rfl
+  | succ j ih =>
+      rw [iteratePderivR_succ, ih, map_zero]
+
+/-- Contact order falls by at most one at every received-coordinate
+derivative, uniformly in the number of iterations. -/
+theorem contactAtLeast_iteratePderivR
+    (x u0 u1 : K) (m j : ℕ) (Q : P4 K)
+    (hQ : ContactOrderBridge.ContactAtLeast K x u0 u1 m Q) :
+    ContactOrderBridge.ContactAtLeast K x u0 u1 (m - j)
+      (iteratePderivR j Q) := by
+  induction j with
+  | zero => simpa only [iteratePderivR_zero, Nat.sub_zero] using hQ
+  | succ j ih =>
+      rw [iteratePderivR_succ]
+      have hnext := ContactOrderBridge.contactAtLeast_pderiv_R
+        K x u0 u1 (m - j) (iteratePderivR j Q) ih
+      simpa only [Nat.sub_sub] using hnext
+
+/-- If a successor iterate is nonzero, its immediate predecessor is nonzero. -/
+theorem iteratePderivR_ne_zero_of_succ
+    (Q : P4 K) (j : ℕ)
+    (hne : iteratePderivR (j + 1) Q ≠ 0) :
+    iteratePderivR j Q ≠ 0 := by
+  intro hz
+  apply hne
+  rw [iteratePderivR_succ, hz, map_zero]
+
+/-- A nonzero `j`-fold received-coordinate derivative pays `j` copies of
+the received-coordinate weight.  This is the generic replacement for all
+manually chained `pderiv_R_weight_add_le` calculations. -/
+theorem iteratePderivR_weight_add_le
+    (weights : Fin 4 → ℕ) (Q : P4 K) (j : ℕ)
+    (hne : iteratePderivR j Q ≠ 0) :
+    wt weights (iteratePderivR j Q) + j * weights 2 ≤ wt weights Q := by
+  induction j with
+  | zero =>
+      simp only [iteratePderivR_zero, Nat.zero_mul, Nat.add_zero]
+      exact le_rfl
+  | succ j ih =>
+      have hprev : iteratePderivR j Q ≠ 0 :=
+        iteratePderivR_ne_zero_of_succ Q j (by
+          simpa only [Nat.succ_eq_add_one] using hne)
+      have hstepNe :
+          MvPolynomial.pderiv (2 : Fin 4) (iteratePderivR j Q) ≠ 0 := by
+        simpa only [Nat.succ_eq_add_one, iteratePderivR_succ] using hne
+      have hstep := LocatorContact.pderiv_R_weight_add_le
+        weights (iteratePderivR j Q) hstepNe
+      calc
+        wt weights (iteratePderivR (Nat.succ j) Q) +
+              Nat.succ j * weights 2 =
+            (wt weights (MvPolynomial.pderiv (2 : Fin 4)
+              (iteratePderivR j Q)) + weights 2) + j * weights 2 := by
+              simp only [Nat.succ_eq_add_one, iteratePderivR_succ,
+                Nat.add_mul, one_mul]
+              ac_rfl
+        _ ≤ wt weights (iteratePderivR j Q) + j * weights 2 :=
+          Nat.add_le_add_right hstep _
+        _ ≤ wt weights Q := ih hprev
+
+theorem iteratePderivR_weight_le_sub
+    (weights : Fin 4 → ℕ) (Q : P4 K) (j d : ℕ)
+    (hne : iteratePderivR j Q ≠ 0)
+    (hQ : wt weights Q ≤ d) :
+    wt weights (iteratePderivR j Q) ≤ d - j * weights 2 := by
+  exact Nat.le_sub_of_add_le
+    ((iteratePderivR_weight_add_le weights Q j hne).trans hQ)
+
+section KernelVanishing
+
+variable [Fintype I]
+local instance : DecidableEq I := Classical.decEq I
+
+/-- The generic contact/degree vanishing theorem at derivative order `j`.
+The capacity hypothesis is exactly the one used by each previously unrolled
+fixed-order theorem. -/
+theorem specialization_iteratePderivR_eq_zero_of_kernel_low_box
+    (j D Dlow w L s m : ℕ) (nodes : I ↪ K) (u0 u1 : I → K)
+    (v : ConstraintKernel (K := K) D w L s m nodes u0 u1)
+    (hlow : reconstruct K D w L s v.1 ∈
+      globalCoefficientBox K Dlow w L s)
+    (P : Polynomial K) (gamma : K) (support : Finset I)
+    (hj : 1 ≤ j) (hw : 1 ≤ w) (hP : P.natDegree ≤ w)
+    (hcapacity : Dlow ≤ (m - j) * support.card + j * (w - 1))
+    (hvalues : ∀ i ∈ support,
+      P.eval (nodes i) = u0 i + gamma * u1 i) :
+    RCN319.specialization K P gamma
+      (iteratePderivR j (reconstruct K D w L s v.1)) = 0 := by
+  classical
+  cases j with
+  | zero => omega
+  | succ k =>
+      let H := reconstruct K D w L s v.1
+      by_contra hne
+      have hfinal : iteratePderivR (Nat.succ k) H ≠ 0 := by
+        intro hz
+        apply hne
+        rw [hz, map_zero]
+      have hprev : iteratePderivR k H ≠ 0 := by
+        apply iteratePderivR_ne_zero_of_succ H k
+        simpa only [Nat.succ_eq_add_one] using hfinal
+      have hH : H ≠ 0 := by
+        intro hz
+        apply hfinal
+        rw [hz, iteratePderivR_zero_poly]
+      have hDlow : 0 < Dlow := by
+        obtain ⟨d, hd⟩ := MvPolynomial.support_nonempty.mpr hH
+        have h := (hlow hd).2.2
+        omega
+      have hHweight : wt (contactWeights w) H ≤ Dlow - 1 :=
+        ((mem_flagGlobalCoefficientBox_iff H Dlow w L s hDlow).mp hlow).2.2
+      have hprevWeight :
+          wt (contactWeights w) (iteratePderivR k H) ≤
+            Dlow - 1 - k * (w - 1) := by
+        have hbound := iteratePderivR_weight_le_sub
+          (contactWeights w) H k (Dlow - 1) hprev hHweight
+        change wt (contactWeights w) (iteratePderivR k H) ≤
+          Dlow - 1 - k * (w - 1) at hbound
+        exact hbound
+      have hregular : RCN319.specialization K P gamma
+          (MvPolynomial.pderiv (2 : Fin 4) (iteratePderivR k H)) ≠ 0 := by
+        simpa only [Nat.succ_eq_add_one, iteratePderivR_succ] using hne
+      have hdegree := ContactOrderBridge.specialized_R_derivative_degree K
+        (iteratePderivR k H) P gamma w
+        (Dlow - 1 - k * (w - 1)) hP hprevWeight hregular
+      have hdegreeStrict :
+          (RCN122.specialization K P gamma
+            (iteratePderivR (Nat.succ k) H)).natDegree <
+              (m - Nat.succ k) * support.card := by
+        rw [Nat.succ_eq_add_one, iteratePderivR_succ]
+        rw [RCN101.specialization_eq_ordinary]
+        rw [RCN101.specialization_eq_ordinary] at hdegree
+        have hkc : k * (w - 1) ≤ Dlow - 1 := by
+          by_contra hnot
+          have hlt : Dlow - 1 < k * (w - 1) := Nat.lt_of_not_ge hnot
+          have hzero : Dlow - 1 - k * (w - 1) = 0 :=
+            Nat.sub_eq_zero_of_le (Nat.le_of_lt hlt)
+          rw [hzero] at hdegree
+          have hwOne : w - 1 = 0 := by omega
+          rw [hwOne, Nat.mul_zero] at hlt
+          omega
+        have hsplit :
+            (Dlow - 1 - k * (w - 1)) + k * (w - 1) = Dlow - 1 :=
+          Nat.sub_add_cancel hkc
+        have hwSplit : w - 1 + 1 = w := Nat.sub_add_cancel hw
+        simp only [Nat.succ_eq_add_one, Nat.add_mul, one_mul] at hcapacity
+        omega
+      have hcontact : ∀ i ∈ support, ∀ r : ℕ,
+          slopeDifference K ^ (m - Nat.succ k - r) ∣
+            (RCN122.homogenizedTranslation K (nodes i) (u0 i) (u1 i)
+              (iteratePderivR (Nat.succ k) H)).coeff r := by
+        intro i _hi
+        apply (ContactOrderBridge.contactAtLeast_iff_block_divisibility
+          K (nodes i) (u0 i) (u1 i) (m - Nat.succ k) _).mp
+        exact contactAtLeast_iteratePderivR
+          (nodes i) (u0 i) (u1 i) m (Nat.succ k) H
+          (ContactOrderBridge.contactAtLeast_of_mem_kernel
+            K D w L s m nodes u0 u1 v.1 v.2 i)
+      have hz := RCN122.specialization_eq_zero_of_contact_and_degree K
+        (iteratePderivR (Nat.succ k) H) P gamma nodes u0 u1 support
+        (m - Nat.succ k) hcontact hvalues hdegreeStrict
+      apply hne
+      simpa only [H, RCN101.specialization_eq_ordinary] using hz
+
+end KernelVanishing
+
+/-- Local factorial divisibility criterion, kept here because `CH`'s
+corresponding helper is intentionally private. -/
+private theorem prime_dvd_factorial_local : ∀ {n p : ℕ},
+    p.Prime → (p ∣ n.factorial ↔ p ≤ n)
+  | 0, _, hp => iff_of_false hp.not_dvd_one (not_le_of_gt hp.pos)
+  | n + 1, p, hp => by
+      rw [Nat.factorial_succ, hp.dvd_mul, prime_dvd_factorial_local hp]
+      exact ⟨fun h => h.elim (Nat.le_of_dvd (Nat.succ_pos _)) Nat.le_succ_of_le,
+        fun h => (_root_.lt_or_eq_of_le h).elim
+          (Or.inr ∘ Nat.le_of_lt_succ) fun h => Or.inl <| by rw [h]⟩
+
+/-- A prime characteristic larger than `j` does not annihilate `j!`. -/
+theorem factorial_ne_zero_of_lt_char
+    (p j : ℕ) [CharP K p] (hp : p.Prime) (hj : j < p) :
+    (j.factorial : K) ≠ 0 := by
+  intro hz
+  have hdvd : p ∣ j.factorial :=
+    (CharP.cast_eq_zero_iff K p j.factorial).mp hz
+  exact (not_le_of_gt hj) ((prime_dvd_factorial_local hp).mp hdvd)
+
+/-- Generic extraction of the terminal quotient from a `j`th derivative.
+After specializing on `F = 0`, `RCN324.iterate_pow_mul_expansion` kills its
+error term and leaves `j! * Q * (dR F)^j`. -/
+theorem specialization_eq_zero_of_iteratePderivR_power_product
+    (j : ℕ) (P : Polynomial K) (gamma : K) (F Q : P4 K)
+    (hfactorial : (j.factorial : K) ≠ 0)
+    (hFzero : RCN319.specialization K P gamma F = 0)
+    (hregular : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
+    (hpower : RCN319.specialization K P gamma
+      (iteratePderivR j (F ^ j * Q)) = 0) :
+    RCN319.specialization K P gamma Q = 0 := by
+  obtain ⟨error, herror⟩ := RCN324.iterate_pow_mul_expansion
+    (MvPolynomial.pderiv (2 : Fin 4)) F Q j j le_rfl
+  have hexpansion :
+      iteratePderivR j (F ^ j * Q) =
+        (j.descFactorial j : P4 K) * F ^ (j - j) * Q *
+            (MvPolynomial.pderiv (2 : Fin 4) F) ^ j +
+          F ^ (j - j + 1) * error := by
+    simpa only [iteratePderivR] using herror
+  rw [hexpansion] at hpower
+  have hmul :
+      (j.factorial : Polynomial K) *
+          RCN319.specialization K P gamma Q *
+            (RCN319.specialization K P gamma
+              (MvPolynomial.pderiv (2 : Fin 4) F)) ^ j = 0 := by
+    simpa only [Nat.descFactorial_self, Nat.sub_self, pow_zero, one_mul, mul_one,
+      zero_add, pow_one, map_add, map_mul, map_pow, map_natCast,
+      map_one, hFzero, zero_mul, add_zero] using hpower
+  have hfactorialPoly : (j.factorial : Polynomial K) ≠ 0 := by
+    intro hz
+    apply hfactorial
+    have heval := congrArg (Polynomial.eval 0) hz
+    simpa using heval
+  have hcoef :
+      (j.factorial : Polynomial K) *
+          (RCN319.specialization K P gamma
+            (MvPolynomial.pderiv (2 : Fin 4) F)) ^ j ≠ 0 :=
+    mul_ne_zero hfactorialPoly (pow_ne_zero j hregular)
+  have hmul' :
+      ((j.factorial : Polynomial K) *
+          (RCN319.specialization K P gamma
+            (MvPolynomial.pderiv (2 : Fin 4) F)) ^ j) *
+        RCN319.specialization K P gamma Q = 0 := by
+    calc
+      _ = (j.factorial : Polynomial K) *
+          RCN319.specialization K P gamma Q *
+            (RCN319.specialization K P gamma
+              (MvPolynomial.pderiv (2 : Fin 4) F)) ^ j := by ring
+      _ = 0 := hmul
+  exact (mul_eq_zero.mp hmul').resolve_left hcoef
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorArbitraryPowerContact
+end PackedLocator_LocatorArbitraryPowerContact
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier07 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorTwoFactorAvoidance. -/
+section PackedLocator_LocatorTwoFactorAvoidance
+
+/-!
+# A shared high-band route for two regular factors
+
+The one-factor power route pays for a high-band projection independently for
+every regular factor.  For two factors the projection can be shared.  On the
+resulting low subspace there are only four cases: neither divisibility
+condition is universal, exactly one is universal, or both are universal.  In
+the first case one vector avoids both divisors; in a one-universal case the
+other factor is finished and the universal factor continues through the
+one-factor route; in the both-universal case the product is divided out and
+the shared route continues.
+
+This file contains the linear-algebraic core.  It intentionally returns
+weight bounds rather than coefficient-box membership: those are precisely
+the data consumed by the derivative and unequal-pair arguments, and they are
+stable when the other factor is multiplied back into a recursively produced
+helper.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorTwoFactorAvoidance
+
+open scoped BigOperators
+open UniqueFactorizationMonoid
+open RCN081 RCN100 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN260
+open LocatorLowQuotient LocatorCoprimeQuotient
+  LocatorDoubleSquareAvoidance LocatorArbitraryPowerAvoidance
+  LocatorArbitraryPowerContact
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+variable {K V : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
+  UniqueFactorizationMonoid.strongNormalizationMonoid
+
+abbrev P4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
+
+/-- The budget for a shared two-factor route.  After the current common band
+there are three possible continuations: only `F`, only `G`, or both.  Taking
+their maximum is sound because the divisibility case split chooses only one
+continuation. -/
+def twoFactorBandBudget
+    (delta fT fY fS gT gY gS T YS S : ℕ) : ℕ → ℕ
+  | 0 => 0
+  | n + 1 =>
+      delta * channelCount T YS S +
+        max
+          (powerBandBudget delta fT fY fS
+            (T - fT) (YS - fY) (S - fS) n)
+          (max
+            (powerBandBudget delta gT gY gS
+              (T - gT) (YS - gY) (S - gS) n)
+            (twoFactorBandBudget delta fT fY fS gT gY gS
+              (T - fT - gT) (YS - fY - gY) (S - fS - gS) n))
+
+/-- A stage for one target factor.  `j` records how many copies have been
+removed from the input family.  At a nonterminal stage the helper is coprime
+to the target irreducible; at the last stage the consumer may instead use a
+terminal weight inequality. -/
+def HasFactorStage [AddCommMonoid V] [Module K V]
+    (fuel Dlow w delta T YS S : ℕ)
+    (q : V →ₗ[K] P4 K) (F : P4 K) : Prop :=
+  ∃ (j : Fin fuel) (v : V) (J : P4 K),
+    v ≠ 0 ∧ J ≠ 0 ∧ F ^ j.val * J = q v ∧
+    wt residualTotalWeights J ≤ T - j.val * wt residualTotalWeights F ∧
+    wt residualYSWeights J ≤ YS - j.val * wt residualYSWeights F ∧
+    wt residualSWeights J ≤ S - j.val * wt residualSWeights F ∧
+    wt (contactWeights w) J <
+      Dlow - j.val * delta - j.val * wt (contactWeights w) F ∧
+    (j.val + 1 < fuel → ¬ F ∣ J)
+
+/-- Two proper divisibility subspaces cannot cover a vector space.  For two
+subspaces this has a particularly cheap constructive proof: in the crossed
+case `x + y` avoids both divisors. -/
+theorem exists_not_dvd_both
+    [AddCommGroup V] [Module K V]
+    (q : V →ₗ[K] P4 K) (F G : P4 K)
+    (hF : ¬ ∀ v, F ∣ q v) (hG : ¬ ∀ v, G ∣ q v) :
+    ∃ v, ¬ F ∣ q v ∧ ¬ G ∣ q v := by
+  classical
+  push_neg at hF hG
+  obtain ⟨x, hxF⟩ := hF
+  obtain ⟨y, hyG⟩ := hG
+  by_cases hxG : G ∣ q x
+  · by_cases hyF : F ∣ q y
+    · refine ⟨x + y, ?_, ?_⟩
+      · intro hsum
+        apply hxF
+        have hd : F ∣ q (x + y) - q y := dvd_sub hsum hyF
+        simpa only [map_add, add_sub_cancel_right] using hd
+      · intro hsum
+        apply hyG
+        have hd : G ∣ q (x + y) - q x := dvd_sub hsum hxG
+        simpa only [map_add, add_sub_cancel_left] using hd
+    · exact ⟨y, hyF, hyG⟩
+  · exact ⟨x, hxF, hxG⟩
+
+/-- Package the four cases used by the shared recursion. -/
+theorem two_divisor_cases
+    [AddCommGroup V] [Module K V]
+    (q : V →ₗ[K] P4 K) (F G : P4 K) :
+    ((∀ v, F ∣ q v) ∧ (∀ v, G ∣ q v)) ∨
+      ((∀ v, F ∣ q v) ∧ ∃ v, ¬ G ∣ q v) ∨
+      ((∃ v, ¬ F ∣ q v) ∧ ∀ v, G ∣ q v) ∨
+      ∃ v, ¬ F ∣ q v ∧ ¬ G ∣ q v := by
+  classical
+  by_cases hF : ∀ v, F ∣ q v
+  · by_cases hG : ∀ v, G ∣ q v
+    · exact Or.inl ⟨hF, hG⟩
+    · right; left
+      push_neg at hG
+      exact ⟨hF, hG⟩
+  · by_cases hG : ∀ v, G ∣ q v
+    · right; right; left
+      push_neg at hF
+      exact ⟨hF, hG⟩
+    · right; right; right
+      exact exists_not_dvd_both q F G hF hG
+
+private theorem regular_mem_normalizedFactors
+    (H : P4 K) (F : RCN266.RegularIndex H) :
+    F.1 ∈ normalizedFactors H := by
+  have hactive : F.1 ∈ RCN082.activeFactors H :=
+    (Finset.mem_filter.mp F.2).1
+  have hnf : F.1 ∈ (normalizedFactors H).toFinset :=
+    (Finset.mem_filter.mp hactive).1
+  exact Multiset.mem_toFinset.mp hnf
+
+/-- Distinct regular indices are represented by distinct normalized prime
+factors, hence are relatively prime. -/
+theorem regularIndex_isRelPrime_of_ne
+    (H : P4 K) (F G : RCN266.RegularIndex H) (hne : F.1 ≠ G.1) :
+    IsRelPrime F.1 G.1 := by
+  have hFs := RCN167.positiveRFactors_spec H F.1 F.2
+  have hGs := RCN167.positiveRFactors_spec H G.1 G.2
+  apply hFs.1.isRelPrime_iff_not_dvd.mpr
+  intro hd
+  apply hne
+  apply UniqueFactorizationMonoid.mem_normalizedFactors_eq_of_associated
+    (regular_mem_normalizedFactors H F) (regular_mem_normalizedFactors H G)
+  exact (hFs.1.dvd_irreducible_iff_associated hGs.1).mp hd
+
+/-- Universal divisibility by two relatively-prime factors is universal
+divisibility by their product.  This is the entry point for quotienting an
+`FG`-divisible source family before starting the shared bands. -/
+theorem product_dvd_of_two_universal
+    [AddCommGroup V] [Module K V]
+    (q : V →ₗ[K] P4 K) (F G : P4 K) (hrel : IsRelPrime F G)
+    (hF : ∀ v, F ∣ q v) (hG : ∀ v, G ∣ q v) :
+    ∀ v, F * G ∣ q v := by
+  intro v
+  exact hrel.mul_dvd (hF v) (hG v)
+
+/-- Dividing an injective nested-box family by a universal divisor preserves
+injectivity and subtracts the four factor weights. -/
+theorem quotientLinear_nested_data
+    [AddCommGroup V] [Module K V]
+    (D w T YS S : ℕ) (q : V →ₗ[K] P4 K)
+    (hq : Function.Injective q)
+    (hmem : ∀ v, q v ∈ nestedCoefficientBox K D w T YS S)
+    (F : P4 K) (hF : F ≠ 0) (hdiv : ∀ v, F ∣ q v) :
+    Function.Injective (quotientLinear q F hF hdiv) ∧
+      (∀ v, q v = F * quotientLinear q F hF hdiv v) ∧
+      ∀ v, quotientLinear q F hF hdiv v ∈ nestedCoefficientBox K
+        (D - wt (contactWeights w) F) w
+        (T - wt residualTotalWeights F)
+        (YS - wt residualYSWeights F)
+        (S - wt residualSWeights F) := by
+  classical
+  let qF := quotientLinear q F hF hdiv
+  have hqF : Function.Injective qF :=
+    quotientLinear_injective q hq F hF hdiv
+  have hprod (v : V) : q v = F * qF v :=
+    recon_eq_mul_quotientPolynomial q F hdiv v
+  refine ⟨hqF, hprod, ?_⟩
+  intro v
+  by_cases hv : v = 0
+  · subst v
+    rw [map_zero]
+    exact (nestedCoefficientBox K _ _ _ _ _).zero_mem
+  · have hqv : q v ≠ 0 := by
+      intro hz
+      apply hv
+      apply hq
+      simpa only [map_zero] using hz
+    have hqFv : qF v ≠ 0 := by
+      intro hz
+      apply hqv
+      rw [hprod v, hz, mul_zero]
+    exact quotient_mem_nestedCoefficientBox_of_mul_eq
+      (q v) F (qF v) D w T YS S hqv hF hqFv (hmem v) (hprod v)
+
+/-- Quotient an `FG`-divisible source family by both factors while retaining
+the separated weight decrements needed by the pair budget. -/
+theorem exists_twoFactor_quotient_nested_data
+    [AddCommGroup V] [Module K V]
+    (D w T YS S : ℕ) (q : V →ₗ[K] P4 K)
+    (hq : Function.Injective q)
+    (hmem : ∀ v, q v ∈ nestedCoefficientBox K D w T YS S)
+    (F G : P4 K) (hF : F ≠ 0) (hG : G ≠ 0)
+    (hrel : IsRelPrime F G)
+    (hdivF : ∀ v, F ∣ q v) (hdivG : ∀ v, G ∣ q v) :
+    ∃ qFG : V →ₗ[K] P4 K,
+      Function.Injective qFG ∧
+      (∀ v, q v = F * (G * qFG v)) ∧
+      ∀ v, qFG v ∈ nestedCoefficientBox K
+        (D - wt (contactWeights w) F - wt (contactWeights w) G) w
+        (T - wt residualTotalWeights F - wt residualTotalWeights G)
+        (YS - wt residualYSWeights F - wt residualYSWeights G)
+        (S - wt residualSWeights F - wt residualSWeights G) := by
+  let qF := quotientLinear q F hF hdivF
+  have hdataF := quotientLinear_nested_data D w T YS S q hq hmem F hF hdivF
+  have hqF : Function.Injective qF := by
+    simpa only [qF] using hdataF.1
+  have hprodF : ∀ v, q v = F * qF v := by
+    simpa only [qF] using hdataF.2.1
+  have hqFBox : ∀ v, qF v ∈ nestedCoefficientBox K
+      (D - wt (contactWeights w) F) w
+      (T - wt residualTotalWeights F)
+      (YS - wt residualYSWeights F)
+      (S - wt residualSWeights F) := by
+    simpa only [qF] using hdataF.2.2
+  have hdivG' : ∀ v, G ∣ qF v := by
+    intro v
+    apply hrel.symm.dvd_of_dvd_mul_left
+    rw [← hprodF v]
+    exact hdivG v
+  let qFG := quotientLinear qF G hG hdivG'
+  have hdataG := quotientLinear_nested_data
+    (D - wt (contactWeights w) F) w
+    (T - wt residualTotalWeights F)
+    (YS - wt residualYSWeights F)
+    (S - wt residualSWeights F)
+    qF hqF hqFBox G hG hdivG'
+  refine ⟨qFG, ?_, ?_, ?_⟩
+  · simpa only [qFG] using hdataG.1
+  · intro v
+    calc
+      q v = F * qF v := hprodF v
+      _ = F * (G * qFG v) := by
+        rw [hdataG.2.1 v]
+  · simpa only [qFG] using hdataG.2.2
+
+/-- Exact weighted degree of a nonzero power. -/
+theorem wt_pow_eq (weights : Fin 4 → ℕ) (F : P4 K) (hF : F ≠ 0)
+    (j : ℕ) : wt weights (F ^ j) = j * wt weights F := by
+  unfold wt
+  induction j with
+  | zero => simp [pow_zero, MvPolynomial.weightedTotalDegree]
+  | succ j ih =>
+      rw [pow_succ', weightedTotalDegree_mul weights F (F ^ j) hF
+        (pow_ne_zero j hF), ih]
+      simp only [Nat.succ_eq_add_one, Nat.add_mul, one_mul]
+      omega
+
+/-- If a boxed polynomial is `F^j * J`, the three residual weights of `J`
+are the ambient weights minus the corresponding factor weights. -/
+theorem residual_bounds_of_power_identity
+    (D w T YS S j : ℕ) (P F J : P4 K)
+    (hP : P ≠ 0) (hF : F ≠ 0) (hJ : J ≠ 0)
+    (hbox : P ∈ nestedCoefficientBox K D w T YS S)
+    (heq : F ^ j * J = P) :
+    wt residualTotalWeights J ≤ T - j * wt residualTotalWeights F ∧
+      wt residualYSWeights J ≤ YS - j * wt residualYSWeights F ∧
+      wt residualSWeights J ≤ S - j * wt residualSWeights F := by
+  have hb := nested_mem_weights hbox hP
+  have one (weights : Fin 4 → ℕ) (B : ℕ)
+      (hPB : wt weights P ≤ B) :
+      wt weights J ≤ B - j * wt weights F := by
+    have hm := weightedTotalDegree_mul weights (F ^ j) J
+      (pow_ne_zero j hF) hJ
+    have hp := wt_pow_eq weights F hF j
+    unfold wt at hPB ⊢ hp
+    rw [hp, heq] at hm
+    omega
+  exact ⟨one residualTotalWeights T hb.1,
+    one residualYSWeights YS hb.2.1,
+    one residualSWeights S hb.2.2.1⟩
+
+private theorem sub_one_then_mul (a b j : ℕ) :
+    a - b - j * b = a - (j + 1) * b := by
+  simp only [Nat.sub_sub, Nat.add_mul, one_mul]
+  congr 1
+  omega
+
+private theorem sub_pair_then_mul (a x y j : ℕ) :
+    a - x - y - j * x - j * y =
+      a - (j + 1) * x - (j + 1) * y := by
+  simp only [Nat.sub_sub, Nat.add_mul, one_mul]
+  congr 1
+  omega
+
+/-- Arithmetic used when a recursively produced helper for one factor is
+multiplied by the other factor.  Expanding `(j+1) * _` first keeps the proof
+inside Presburger arithmetic. -/
+private theorem cross_contact_lt
+    (a delta cSelf cOther j x : ℕ)
+    (h : x < a - delta - cSelf - cOther - j * delta - j * cSelf) :
+    cOther + x < a - (j + 1) * delta - (j + 1) * cSelf := by
+  simp only [Nat.add_mul, one_mul]
+  omega
+
+/-- A single high-band chain simultaneously supplies helpers for two coprime
+factors.  Relative to two independent invocations, the first band is always
+paid once; whenever both divisibility conditions remain universal, all later
+bands are shared as well. -/
+theorem exists_two_factor_stages_of_bandBudget_succ
+    [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+    (steps Dhigh Dlow w delta T YS S : ℕ)
+    (hwidth : Dhigh ≤ Dlow + delta)
+    (q : V →ₗ[K] P4 K) (hq : Function.Injective q)
+    (hmem : ∀ v, q v ∈ nestedCoefficientBox K Dhigh w T YS S)
+    (F G : P4 K) (hF : F ≠ 0) (hG : G ≠ 0)
+    (hrel : IsRelPrime F G)
+    (hsource :
+      twoFactorBandBudget delta
+          (wt residualTotalWeights F) (wt residualYSWeights F)
+          (wt residualSWeights F)
+          (wt residualTotalWeights G) (wt residualYSWeights G)
+          (wt residualSWeights G) T YS S (steps + 1) <
+        Module.finrank K V) :
+    HasFactorStage (steps + 1) Dlow w delta T YS S q F ∧
+      HasFactorStage (steps + 1) Dlow w delta T YS S q G := by
+  classical
+  induction steps generalizing V Dhigh Dlow T YS S with
+  | zero =>
+      have hfirst : delta * channelCount T YS S < Module.finrank K V := by
+        simpa [twoFactorBandBudget, powerBandBudget] using hsource
+      obtain ⟨v, hv, hqv, hlow⟩ :=
+        exists_nonzero_image_mem_low Dhigh Dlow w delta T YS S hwidth
+          q hq hmem hfirst
+      have hb := nested_mem_weights hlow hqv
+      let j0 : Fin (0 + 1) := ⟨0, by omega⟩
+      have one (A : P4 K) :
+          HasFactorStage (0 + 1) Dlow w delta T YS S q A := by
+        refine ⟨j0, v, q v, hv, hqv, ?_, ?_, ?_, ?_, ?_, ?_⟩
+        · simp only [j0, Fin.val_zero, pow_zero, one_mul]
+        · simpa only [j0, Fin.val_zero, zero_mul, Nat.sub_zero] using hb.1
+        · simpa only [j0, Fin.val_zero, zero_mul, Nat.sub_zero] using hb.2.1
+        · simpa only [j0, Fin.val_zero, zero_mul, Nat.sub_zero] using hb.2.2.1
+        · simpa only [j0, Fin.val_zero, zero_mul, Nat.sub_zero] using hb.2.2.2
+        · intro hlt
+          omega
+      exact ⟨one F, one G⟩
+  | succ steps ih =>
+      let bandOne := (highBandMap (K := K) w Dlow delta T YS S).comp q
+      let lowOne := LinearMap.ker bandOne
+      have hrangeOne : Module.finrank K bandOne.range ≤
+          delta * channelCount T YS S := by
+        calc
+          Module.finrank K bandOne.range ≤
+              Module.finrank K (HighBandIndex delta T YS S → K) :=
+            bandOne.range.finrank_le
+          _ = delta * channelCount T YS S := by
+            rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card]
+      have htail :
+          max
+            (powerBandBudget delta
+              (wt residualTotalWeights F) (wt residualYSWeights F)
+              (wt residualSWeights F)
+              (T - wt residualTotalWeights F)
+              (YS - wt residualYSWeights F)
+              (S - wt residualSWeights F) (steps + 1))
+            (max
+              (powerBandBudget delta
+                (wt residualTotalWeights G) (wt residualYSWeights G)
+                (wt residualSWeights G)
+                (T - wt residualTotalWeights G)
+                (YS - wt residualYSWeights G)
+                (S - wt residualSWeights G) (steps + 1))
+              (twoFactorBandBudget delta
+                (wt residualTotalWeights F) (wt residualYSWeights F)
+                (wt residualSWeights F)
+                (wt residualTotalWeights G) (wt residualYSWeights G)
+                (wt residualSWeights G)
+                (T - wt residualTotalWeights F - wt residualTotalWeights G)
+                (YS - wt residualYSWeights F - wt residualYSWeights G)
+                (S - wt residualSWeights F - wt residualSWeights G)
+                (steps + 1))) < Module.finrank K lowOne := by
+        have hsum := bandOne.finrank_range_add_finrank_ker
+        change Module.finrank K bandOne.range + Module.finrank K lowOne =
+          Module.finrank K V at hsum
+        have hbudget := hsource
+        rw [twoFactorBandBudget] at hbudget
+        have hrangeTail : Module.finrank K bandOne.range +
+            max
+              (powerBandBudget delta
+                (wt residualTotalWeights F) (wt residualYSWeights F)
+                (wt residualSWeights F)
+                (T - wt residualTotalWeights F)
+                (YS - wt residualYSWeights F)
+                (S - wt residualSWeights F) (steps + 1))
+              (max
+                (powerBandBudget delta
+                  (wt residualTotalWeights G) (wt residualYSWeights G)
+                  (wt residualSWeights G)
+                  (T - wt residualTotalWeights G)
+                  (YS - wt residualYSWeights G)
+                  (S - wt residualSWeights G) (steps + 1))
+                (twoFactorBandBudget delta
+                  (wt residualTotalWeights F) (wt residualYSWeights F)
+                  (wt residualSWeights F)
+                  (wt residualTotalWeights G) (wt residualYSWeights G)
+                  (wt residualSWeights G)
+                  (T - wt residualTotalWeights F - wt residualTotalWeights G)
+                  (YS - wt residualYSWeights F - wt residualYSWeights G)
+                  (S - wt residualSWeights F - wt residualSWeights G)
+                  (steps + 1))) < Module.finrank K V := by
+          exact (Nat.add_le_add_right hrangeOne _).trans_lt (by
+            simpa only [Nat.succ_eq_add_one] using hbudget)
+        rw [← hsum] at hrangeTail
+        exact Nat.lt_of_add_lt_add_left hrangeTail
+      have hsourceF :
+          powerBandBudget delta
+              (wt residualTotalWeights F) (wt residualYSWeights F)
+              (wt residualSWeights F)
+              (T - wt residualTotalWeights F)
+              (YS - wt residualYSWeights F)
+              (S - wt residualSWeights F) (steps + 1) <
+            Module.finrank K lowOne :=
+        (Nat.le_max_left _ _).trans_lt htail
+      have hsourceG :
+          powerBandBudget delta
+              (wt residualTotalWeights G) (wt residualYSWeights G)
+              (wt residualSWeights G)
+              (T - wt residualTotalWeights G)
+              (YS - wt residualYSWeights G)
+              (S - wt residualSWeights G) (steps + 1) <
+            Module.finrank K lowOne :=
+        ((Nat.le_max_left _ _).trans (Nat.le_max_right _ _)).trans_lt htail
+      have hsourceBoth :
+          twoFactorBandBudget delta
+              (wt residualTotalWeights F) (wt residualYSWeights F)
+              (wt residualSWeights F)
+              (wt residualTotalWeights G) (wt residualYSWeights G)
+              (wt residualSWeights G)
+              (T - wt residualTotalWeights F - wt residualTotalWeights G)
+              (YS - wt residualYSWeights F - wt residualYSWeights G)
+              (S - wt residualSWeights F - wt residualSWeights G)
+              (steps + 1) < Module.finrank K lowOne :=
+        ((Nat.le_max_right _ _).trans (Nat.le_max_right _ _)).trans_lt htail
+      let qOne : lowOne →ₗ[K] P4 K := q.comp lowOne.subtype
+      have hqOne : Function.Injective qOne := by
+        intro a b hab
+        apply Subtype.ext
+        apply hq
+        simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hab
+      have hqOneBox : ∀ v : lowOne,
+          qOne v ∈ nestedCoefficientBox K Dlow w T YS S := by
+        intro v
+        have hzero : highBandMap w Dlow delta T YS S (q v.1) = 0 := by
+          have hv := v.2
+          change bandOne v.1 = 0 at hv
+          simpa only [bandOne, qOne, LinearMap.comp_apply,
+            Submodule.coe_subtype] using hv
+        simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using
+          mem_low_of_highBandMap_eq_zero Dhigh Dlow w delta T YS S hwidth
+            (q v.1) (hmem v.1) hzero
+      have immediate (A : P4 K) (v : lowOne) (hnot : ¬ A ∣ qOne v) :
+          HasFactorStage (Nat.succ steps + 1) Dlow w delta T YS S q A := by
+        have hv : v.1 ≠ 0 := by
+          intro hz
+          apply hnot
+          have hvzero : v = 0 := Subtype.ext hz
+          rw [hvzero]
+          simp only [map_zero]
+          exact dvd_zero A
+        have hqv : qOne v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hq
+          simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype,
+            map_zero] using hz
+        have hb := nested_mem_weights (hqOneBox v) hqv
+        let j0 : Fin (Nat.succ steps + 1) := ⟨0, by omega⟩
+        refine ⟨j0, v.1, qOne v, hv, hqv, ?_, ?_, ?_, ?_, ?_, ?_⟩
+        · simp only [j0, Fin.val_zero, pow_zero, one_mul, qOne,
+            LinearMap.comp_apply, Submodule.coe_subtype]
+        · simpa only [j0, Fin.val_zero, zero_mul, Nat.sub_zero] using hb.1
+        · simpa only [j0, Fin.val_zero, zero_mul, Nat.sub_zero] using hb.2.1
+        · simpa only [j0, Fin.val_zero, zero_mul, Nat.sub_zero] using hb.2.2.1
+        · simpa only [j0, Fin.val_zero, zero_mul, Nat.sub_zero] using hb.2.2.2
+        · intro _hlt
+          exact hnot
+      rcases two_divisor_cases qOne F G with hboth | honeF | honeG | hneither
+      · rcases hboth with ⟨hdivF, hdivG⟩
+        let qF := quotientLinear qOne F hF hdivF
+        have hdataF := quotientLinear_nested_data Dlow w T YS S qOne hqOne
+          hqOneBox F hF hdivF
+        have hqF : Function.Injective qF := by
+          simpa only [qF] using hdataF.1
+        have hprodF : ∀ v, qOne v = F * qF v := by
+          simpa only [qF] using hdataF.2.1
+        have hqFBox : ∀ v, qF v ∈ nestedCoefficientBox K
+            (Dlow - wt (contactWeights w) F) w
+            (T - wt residualTotalWeights F)
+            (YS - wt residualYSWeights F)
+            (S - wt residualSWeights F) := by
+          simpa only [qF] using hdataF.2.2
+        have hdivG' : ∀ v, G ∣ qF v := by
+          intro v
+          apply hrel.symm.dvd_of_dvd_mul_left
+          rw [← hprodF v]
+          exact hdivG v
+        let qFG := quotientLinear qF G hG hdivG'
+        have hdataG := quotientLinear_nested_data
+          (Dlow - wt (contactWeights w) F) w
+          (T - wt residualTotalWeights F)
+          (YS - wt residualYSWeights F)
+          (S - wt residualSWeights F)
+          qF hqF hqFBox G hG hdivG'
+        have hqFG : Function.Injective qFG := by
+          simpa only [qFG] using hdataG.1
+        have hprodG : ∀ v, qF v = G * qFG v := by
+          simpa only [qFG] using hdataG.2.1
+        have hqFGBox : ∀ v, qFG v ∈ nestedCoefficientBox K
+            (Dlow - wt (contactWeights w) F - wt (contactWeights w) G) w
+            (T - wt residualTotalWeights F - wt residualTotalWeights G)
+            (YS - wt residualYSWeights F - wt residualYSWeights G)
+            (S - wt residualSWeights F - wt residualSWeights G) := by
+          simpa only [qFG] using hdataG.2.2
+        have hwidthRest :
+            Dlow - wt (contactWeights w) F - wt (contactWeights w) G ≤
+              (Dlow - delta - wt (contactWeights w) F -
+                wt (contactWeights w) G) + delta := by
+          omega
+        obtain ⟨stageF, stageG⟩ := ih
+          (Dlow - wt (contactWeights w) F - wt (contactWeights w) G)
+          (Dlow - delta - wt (contactWeights w) F -
+            wt (contactWeights w) G)
+          (T - wt residualTotalWeights F - wt residualTotalWeights G)
+          (YS - wt residualYSWeights F - wt residualYSWeights G)
+          (S - wt residualSWeights F - wt residualSWeights G)
+          hwidthRest qFG hqFG hqFGBox hsourceBoth
+        have liftF :
+            HasFactorStage (Nat.succ steps + 1) Dlow w delta T YS S q F := by
+          rcases stageF with
+            ⟨j, v, J, hv, hJ, heq, _hT, _hY, _hS, hC, hterminal⟩
+          let jUp : Fin (Nat.succ steps + 1) := ⟨j.val + 1, by omega⟩
+          let JUp := G * J
+          have hJUp : JUp ≠ 0 := mul_ne_zero hG hJ
+          have hv' : v.1 ≠ 0 := by
+            intro hz
+            apply hv
+            exact Subtype.ext hz
+          have heqOne : F ^ (j.val + 1) * JUp = qOne v := by
+            calc
+              F ^ (j.val + 1) * JUp = F * (G * (F ^ j.val * J)) := by
+                simp only [JUp, pow_succ']
+                ring
+              _ = F * (G * qFG v) := by rw [heq]
+              _ = F * qF v := by rw [← hprodG v]
+              _ = qOne v := (hprodF v).symm
+          have hqOneV : qOne v ≠ 0 := by
+            intro hz
+            apply hv
+            apply hqOne
+            simpa only [map_zero] using hz
+          have hb := residual_bounds_of_power_identity Dlow w T YS S
+            (j.val + 1) (qOne v) F JUp hqOneV hF hJUp
+            (hqOneBox v) heqOne
+          refine ⟨jUp, v.1, JUp, hv', hJUp, ?_, hb.1, hb.2.1,
+            hb.2.2, ?_, ?_⟩
+          · simpa only [jUp, qOne, LinearMap.comp_apply,
+              Submodule.coe_subtype] using heqOne
+          · have hm : wt (contactWeights w) JUp ≤
+                wt (contactWeights w) G + wt (contactWeights w) J := by
+              simpa only [JUp] using wt_mul_le (contactWeights w) G J
+            exact hm.trans_lt (by
+              simpa only [jUp] using cross_contact_lt Dlow delta
+                (wt (contactWeights w) F) (wt (contactWeights w) G)
+                j.val (wt (contactWeights w) J) hC)
+          · intro hlt
+            have hn : ¬ F ∣ J := by
+              apply hterminal
+              change j.val + 1 < steps + 1
+              change j.val + 1 + 1 < Nat.succ steps + 1 at hlt
+              omega
+            intro hd
+            exact hn (hrel.dvd_of_dvd_mul_left hd)
+        have liftG :
+            HasFactorStage (Nat.succ steps + 1) Dlow w delta T YS S q G := by
+          rcases stageG with
+            ⟨j, v, J, hv, hJ, heq, _hT, _hY, _hS, hC, hterminal⟩
+          let jUp : Fin (Nat.succ steps + 1) := ⟨j.val + 1, by omega⟩
+          let JUp := F * J
+          have hJUp : JUp ≠ 0 := mul_ne_zero hF hJ
+          have hv' : v.1 ≠ 0 := by
+            intro hz
+            apply hv
+            exact Subtype.ext hz
+          have heqOne : G ^ (j.val + 1) * JUp = qOne v := by
+            calc
+              G ^ (j.val + 1) * JUp = F * (G * (G ^ j.val * J)) := by
+                simp only [JUp, pow_succ']
+                ring
+              _ = F * (G * qFG v) := by rw [heq]
+              _ = F * qF v := by rw [← hprodG v]
+              _ = qOne v := (hprodF v).symm
+          have hqOneV : qOne v ≠ 0 := by
+            intro hz
+            apply hv
+            apply hqOne
+            simpa only [map_zero] using hz
+          have hb := residual_bounds_of_power_identity Dlow w T YS S
+            (j.val + 1) (qOne v) G JUp hqOneV hG hJUp
+            (hqOneBox v) heqOne
+          refine ⟨jUp, v.1, JUp, hv', hJUp, ?_, hb.1, hb.2.1,
+            hb.2.2, ?_, ?_⟩
+          · simpa only [jUp, qOne, LinearMap.comp_apply,
+              Submodule.coe_subtype] using heqOne
+          · have hm : wt (contactWeights w) JUp ≤
+                wt (contactWeights w) F + wt (contactWeights w) J := by
+              simpa only [JUp] using wt_mul_le (contactWeights w) F J
+            have hC' : wt (contactWeights w) J <
+                Dlow - delta - wt (contactWeights w) G -
+                  wt (contactWeights w) F - j.val * delta -
+                    j.val * wt (contactWeights w) G := by
+              simpa only [Nat.sub_sub, Nat.add_comm, Nat.add_left_comm,
+                Nat.add_assoc] using hC
+            exact hm.trans_lt (by
+              simpa only [jUp] using cross_contact_lt Dlow delta
+                (wt (contactWeights w) G) (wt (contactWeights w) F)
+                j.val (wt (contactWeights w) J) hC')
+          · intro hlt
+            have hn : ¬ G ∣ J := by
+              apply hterminal
+              change j.val + 1 < steps + 1
+              change j.val + 1 + 1 < Nat.succ steps + 1 at hlt
+              omega
+            intro hd
+            exact hn (hrel.symm.dvd_of_dvd_mul_left hd)
+        exact ⟨liftF, liftG⟩
+      · rcases honeF with ⟨hdivF, ⟨vG, hvG⟩⟩
+        let qF := quotientLinear qOne F hF hdivF
+        have hdataF := quotientLinear_nested_data Dlow w T YS S qOne hqOne
+          hqOneBox F hF hdivF
+        have hqF : Function.Injective qF := by
+          simpa only [qF] using hdataF.1
+        have hprodF : ∀ v, qOne v = F * qF v := by
+          simpa only [qF] using hdataF.2.1
+        have hqFBox : ∀ v, qF v ∈ nestedCoefficientBox K
+            (Dlow - wt (contactWeights w) F) w
+            (T - wt residualTotalWeights F)
+            (YS - wt residualYSWeights F)
+            (S - wt residualSWeights F) := by
+          simpa only [qF] using hdataF.2.2
+        have hwidthRest : Dlow - wt (contactWeights w) F ≤
+            (Dlow - delta - wt (contactWeights w) F) + delta := by
+          omega
+        obtain ⟨j, v, J, hv, hJ, heq, hbox, hterminal⟩ :=
+          exists_power_stage_of_bandBudget_succ steps
+            (Dlow - wt (contactWeights w) F)
+            (Dlow - delta - wt (contactWeights w) F)
+            w delta
+            (T - wt residualTotalWeights F)
+            (YS - wt residualYSWeights F)
+            (S - wt residualSWeights F)
+            hwidthRest qF hqF hqFBox F hF hsourceF
+        have hwts := nested_mem_weights hbox hJ
+        let jUp : Fin (Nat.succ steps + 1) := ⟨j.val + 1, by omega⟩
+        have hv' : v.1 ≠ 0 := by
+          intro hz
+          apply hv
+          exact Subtype.ext hz
+        have stageF :
+            HasFactorStage (Nat.succ steps + 1) Dlow w delta T YS S q F := by
+          refine ⟨jUp, v.1, J, hv', hJ, ?_, ?_, ?_, ?_, ?_, ?_⟩
+          · change F ^ (j.val + 1) * J = q v.1
+            calc
+              F ^ (j.val + 1) * J = F * (F ^ j.val * J) := by
+                rw [pow_succ']
+                ring
+              _ = F * qF v := by rw [heq]
+              _ = qOne v := (hprodF v).symm
+              _ = q v.1 := rfl
+          · simpa only [jUp, sub_one_then_mul] using hwts.1
+          · simpa only [jUp, sub_one_then_mul] using hwts.2.1
+          · simpa only [jUp, sub_one_then_mul] using hwts.2.2.1
+          · simpa only [jUp, sub_pair_then_mul] using hwts.2.2.2
+          · intro hlt
+            apply hterminal
+            change j.val + 1 < steps + 1
+            change j.val + 1 + 1 < Nat.succ steps + 1 at hlt
+            omega
+        exact ⟨stageF, immediate G vG hvG⟩
+      · rcases honeG with ⟨⟨vF, hvF⟩, hdivG⟩
+        let qG := quotientLinear qOne G hG hdivG
+        have hdataG := quotientLinear_nested_data Dlow w T YS S qOne hqOne
+          hqOneBox G hG hdivG
+        have hqG : Function.Injective qG := by
+          simpa only [qG] using hdataG.1
+        have hprodG : ∀ v, qOne v = G * qG v := by
+          simpa only [qG] using hdataG.2.1
+        have hqGBox : ∀ v, qG v ∈ nestedCoefficientBox K
+            (Dlow - wt (contactWeights w) G) w
+            (T - wt residualTotalWeights G)
+            (YS - wt residualYSWeights G)
+            (S - wt residualSWeights G) := by
+          simpa only [qG] using hdataG.2.2
+        have hwidthRest : Dlow - wt (contactWeights w) G ≤
+            (Dlow - delta - wt (contactWeights w) G) + delta := by
+          omega
+        obtain ⟨j, v, J, hv, hJ, heq, hbox, hterminal⟩ :=
+          exists_power_stage_of_bandBudget_succ steps
+            (Dlow - wt (contactWeights w) G)
+            (Dlow - delta - wt (contactWeights w) G)
+            w delta
+            (T - wt residualTotalWeights G)
+            (YS - wt residualYSWeights G)
+            (S - wt residualSWeights G)
+            hwidthRest qG hqG hqGBox G hG hsourceG
+        have hwts := nested_mem_weights hbox hJ
+        let jUp : Fin (Nat.succ steps + 1) := ⟨j.val + 1, by omega⟩
+        have hv' : v.1 ≠ 0 := by
+          intro hz
+          apply hv
+          exact Subtype.ext hz
+        have stageG :
+            HasFactorStage (Nat.succ steps + 1) Dlow w delta T YS S q G := by
+          refine ⟨jUp, v.1, J, hv', hJ, ?_, ?_, ?_, ?_, ?_, ?_⟩
+          · change G ^ (j.val + 1) * J = q v.1
+            calc
+              G ^ (j.val + 1) * J = G * (G ^ j.val * J) := by
+                rw [pow_succ']
+                ring
+              _ = G * qG v := by rw [heq]
+              _ = qOne v := (hprodG v).symm
+              _ = q v.1 := rfl
+          · simpa only [jUp, sub_one_then_mul] using hwts.1
+          · simpa only [jUp, sub_one_then_mul] using hwts.2.1
+          · simpa only [jUp, sub_one_then_mul] using hwts.2.2.1
+          · simpa only [jUp, sub_pair_then_mul] using hwts.2.2.2
+          · intro hlt
+            apply hterminal
+            change j.val + 1 < steps + 1
+            change j.val + 1 + 1 < Nat.succ steps + 1 at hlt
+            omega
+        exact ⟨immediate F vF hvF, stageG⟩
+      · obtain ⟨v, hvF, hvG⟩ := hneither
+        exact ⟨immediate F v hvF, immediate G v hvG⟩
+
+/-- A directed helper after removing one outer copy of each factor.  For the
+`F` direction the original source is `F^(j+1) * (G * J)`.  Consequently the
+derivative argument makes `J` vanish on the `F`-regular seeds away from the
+collision locus `G = 0`; the collision locus itself can use `G` as its cut.
+-/
+def HasDirectedOuterStage [AddCommMonoid V] [Module K V]
+    (fuel D w delta T YS S : ℕ)
+    (q : V →ₗ[K] P4 K) (F G : P4 K) : Prop :=
+  ∃ (j : Fin fuel) (v : V) (J : P4 K),
+    v ≠ 0 ∧ J ≠ 0 ∧ F ^ (j.val + 1) * (G * J) = q v ∧
+    wt residualTotalWeights J ≤
+      T - wt residualTotalWeights F - wt residualTotalWeights G -
+        j.val * wt residualTotalWeights F ∧
+    wt residualYSWeights J ≤
+      YS - wt residualYSWeights F - wt residualYSWeights G -
+        j.val * wt residualYSWeights F ∧
+    wt residualSWeights J ≤
+      S - wt residualSWeights F - wt residualSWeights G -
+        j.val * wt residualSWeights F ∧
+    wt (contactWeights w) J <
+      D - delta - wt (contactWeights w) F - wt (contactWeights w) G -
+        j.val * delta - j.val * wt (contactWeights w) F ∧
+    (j.val + 1 < fuel → ¬ F ∣ J)
+
+/-- Entry point from an original source family universally divisible by both
+regular factors.  It exposes the residual directed helper `J`, not `G * J`,
+so the consumer can split into the off-collision (`J`) and collision (`G`)
+seed classes without inflating the common helper caps. -/
+theorem exists_directed_outer_stages_of_bandBudget_succ
+    [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+    (steps D w delta T YS S : ℕ)
+    (q : V →ₗ[K] P4 K) (hq : Function.Injective q)
+    (hmem : ∀ v, q v ∈ nestedCoefficientBox K D w T YS S)
+    (F G : P4 K) (hF : F ≠ 0) (hG : G ≠ 0)
+    (hrel : IsRelPrime F G)
+    (hdivF : ∀ v, F ∣ q v) (hdivG : ∀ v, G ∣ q v)
+    (hsource :
+      twoFactorBandBudget delta
+          (wt residualTotalWeights F) (wt residualYSWeights F)
+          (wt residualSWeights F)
+          (wt residualTotalWeights G) (wt residualYSWeights G)
+          (wt residualSWeights G)
+          (T - wt residualTotalWeights F - wt residualTotalWeights G)
+          (YS - wt residualYSWeights F - wt residualYSWeights G)
+          (S - wt residualSWeights F - wt residualSWeights G)
+          (steps + 1) < Module.finrank K V) :
+    HasDirectedOuterStage (steps + 1) D w delta T YS S q F G ∧
+      HasDirectedOuterStage (steps + 1) D w delta T YS S q G F := by
+  classical
+  obtain ⟨qFG, hqFG, hprod, hqFGBox⟩ :=
+    exists_twoFactor_quotient_nested_data D w T YS S q hq hmem
+      F G hF hG hrel hdivF hdivG
+  have hwidth :
+      D - wt (contactWeights w) F - wt (contactWeights w) G ≤
+        (D - delta - wt (contactWeights w) F -
+          wt (contactWeights w) G) + delta := by
+    omega
+  obtain ⟨stageF, stageG⟩ :=
+    exists_two_factor_stages_of_bandBudget_succ steps
+      (D - wt (contactWeights w) F - wt (contactWeights w) G)
+      (D - delta - wt (contactWeights w) F - wt (contactWeights w) G)
+      w delta
+      (T - wt residualTotalWeights F - wt residualTotalWeights G)
+      (YS - wt residualYSWeights F - wt residualYSWeights G)
+      (S - wt residualSWeights F - wt residualSWeights G)
+      hwidth qFG hqFG hqFGBox F G hF hG hrel hsource
+  have directedF :
+      HasDirectedOuterStage (steps + 1) D w delta T YS S q F G := by
+    rcases stageF with
+      ⟨j, v, J, hv, hJ, heq, hT, hY, hS, hC, hterminal⟩
+    refine ⟨j, v, J, hv, hJ, ?_, hT, hY, hS, hC, hterminal⟩
+    calc
+      F ^ (j.val + 1) * (G * J) = F * (G * (F ^ j.val * J)) := by
+        rw [pow_succ']
+        ring
+      _ = F * (G * qFG v) := by rw [heq]
+      _ = q v := (hprod v).symm
+  have directedG :
+      HasDirectedOuterStage (steps + 1) D w delta T YS S q G F := by
+    rcases stageG with
+      ⟨j, v, J, hv, hJ, heq, hT, hY, hS, hC, hterminal⟩
+    refine ⟨j, v, J, hv, hJ, ?_, ?_, ?_, ?_, ?_, hterminal⟩
+    · calc
+        G ^ (j.val + 1) * (F * J) = F * (G * (G ^ j.val * J)) := by
+          rw [pow_succ']
+          ring
+        _ = F * (G * qFG v) := by rw [heq]
+        _ = q v := (hprod v).symm
+    · simpa only [Nat.sub_sub, Nat.add_comm, Nat.add_left_comm,
+        Nat.add_assoc] using hT
+    · simpa only [Nat.sub_sub, Nat.add_comm, Nat.add_left_comm,
+        Nat.add_assoc] using hY
+    · simpa only [Nat.sub_sub, Nat.add_comm, Nat.add_left_comm,
+        Nat.add_assoc] using hS
+    · simpa only [Nat.sub_sub, Nat.add_comm, Nat.add_left_comm,
+        Nat.add_assoc] using hC
+  exact ⟨directedF, directedG⟩
+
+/-- After extracting the `F`-power term, the residual helper vanishes away
+from the collision with `G`.  This is the exact soundness interface needed by
+the directed consumer: collision seeds are charged using `G`, and every other
+`F`-regular seed is charged using `J`. -/
+theorem specialization_eq_zero_of_iteratePderivR_twoFactor_offCollision
+    (j : ℕ) (P : Polynomial K) (gamma : K) (F G J : P4 K)
+    (hfactorial : (j.factorial : K) ≠ 0)
+    (hFzero : RCN319.specialization K P gamma F = 0)
+    (hregular : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
+    (hGnonzero : RCN319.specialization K P gamma G ≠ 0)
+    (hpower : RCN319.specialization K P gamma
+      (iteratePderivR j (F ^ j * (G * J))) = 0) :
+    RCN319.specialization K P gamma J = 0 := by
+  have hGJ := specialization_eq_zero_of_iteratePderivR_power_product
+    j P gamma F (G * J) hfactorial hFzero hregular hpower
+  have hmul : RCN319.specialization K P gamma G *
+      RCN319.specialization K P gamma J = 0 := by
+    simpa only [map_mul] using hGJ
+  exact (mul_eq_zero.mp hmul).resolve_left hGnonzero
+
+private theorem reconstruct_mem_low_of_directed_power
+    {I : Type} [Fintype I]
+    (D w L S m delta j : ℕ) (nodes : I → K) (u0 u1 : I → K)
+    (v : ConstraintKernel (K := K) D w L S m nodes u0 u1)
+    (F G J : P4 K)
+    (heq : F ^ (j + 1) * (G * J) =
+      reconstruct K D w L S v.1)
+    (hD : 0 < D) (hlowpos : 0 < D - (j + 1) * delta)
+    (hcontact : wt (contactWeights w) J <
+      D - delta - wt (contactWeights w) F - wt (contactWeights w) G -
+        j * delta - j * wt (contactWeights w) F) :
+    reconstruct K D w L S v.1 ∈
+      globalCoefficientBox K (D - (j + 1) * delta) w L S := by
+  have hsource := (mem_flagGlobalCoefficientBox_iff
+    (reconstruct K D w L S v.1) D w L S hD).mp
+      (reconstruct_mem_globalCoefficientBox K D w L S v.1)
+  apply (mem_flagGlobalCoefficientBox_iff
+    (reconstruct K D w L S v.1) (D - (j + 1) * delta) w L S
+      hlowpos).mpr
+  refine ⟨hsource.1, hsource.2.1, ?_⟩
+  rw [← heq]
+  have houter := wt_mul_le (contactWeights w) (F ^ (j + 1)) (G * J)
+  have hpow := wt_pow_le (contactWeights w) F (j + 1)
+  have hinner := wt_mul_le (contactWeights w) G J
+  simp only [Nat.add_mul, one_mul] at hpow ⊢
+  omega
+
+/-- Turn one directed outer stage into a concrete helper vanishing on every
+`F`-regular seed outside the `F/G` collision locus.  The returned derivative
+order is `j+1`, while the low contact cutoff is `D-(j+1)*delta`; keeping these
+two quantities together avoids the common off-by-one error in the outer-FG
+route. -/
+theorem exists_directed_helper_zero_offCollision
+    {I : Type} [Fintype I] [DecidableEq I]
+    (fuel D w L S m delta T YS agreements p : ℕ)
+    [CharP K p] (hp : p.Prime)
+    (nodes : I ↪ K) (u0 u1 : I → K)
+    (H : P4 K) (F G : RCN266.RegularIndex H)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hD : 0 < D) (hw : 1 ≤ w) (hfuelChar : fuel < p)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
+    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (nodes i) = u0 i + gamma * u1 i)).card)
+    (hcapacity : ∀ a, 1 ≤ a → a ≤ fuel →
+      D - a * delta ≤ (m - a) * agreements + a * (w - 1))
+    (hlowpos : ∀ a, 1 ≤ a → a ≤ fuel → 0 < D - a * delta)
+    (hstage : HasDirectedOuterStage fuel D w delta T YS S
+      (kernelReconstructLinear (K := K) D w L S m nodes u0 u1)
+      F.1 G.1) :
+    ∃ (j : Fin fuel)
+        (v : ConstraintKernel (K := K) D w L S m nodes u0 u1)
+        (J : P4 K),
+      v ≠ 0 ∧ J ≠ 0 ∧
+      F.1 ^ (j.val + 1) * (G.1 * J) = reconstruct K D w L S v.1 ∧
+      wt residualTotalWeights J ≤
+        T - wt residualTotalWeights F.1 - wt residualTotalWeights G.1 -
+          j.val * wt residualTotalWeights F.1 ∧
+      wt residualYSWeights J ≤
+        YS - wt residualYSWeights F.1 - wt residualYSWeights G.1 -
+          j.val * wt residualYSWeights F.1 ∧
+      wt residualSWeights J ≤
+        S - wt residualSWeights F.1 - wt residualSWeights G.1 -
+          j.val * wt residualSWeights F.1 ∧
+      (j.val + 1 < fuel → ¬ F.1 ∣ J) ∧
+      ∀ gamma ∈ regularSeeds H selected Gamma F,
+        RCN319.specialization K (selected gamma) gamma G.1 ≠ 0 →
+          RCN319.specialization K (selected gamma) gamma J = 0 := by
+  classical
+  rcases hstage with
+    ⟨j, v, J, hv, hJ, heq, hT, hY, hS, hcontact, hterminal⟩
+  have heq' : F.1 ^ (j.val + 1) * (G.1 * J) =
+      reconstruct K D w L S v.1 := by
+    simpa only [kernelReconstructLinear_apply] using heq
+  have hjpos : 1 ≤ j.val + 1 := by omega
+  have hjle : j.val + 1 ≤ fuel := by omega
+  have hlow : reconstruct K D w L S v.1 ∈
+      globalCoefficientBox K (D - (j.val + 1) * delta) w L S :=
+    reconstruct_mem_low_of_directed_power D w L S m delta j.val
+      nodes u0 u1 v F.1 G.1 J heq' hD (hlowpos _ hjpos hjle) hcontact
+  refine ⟨j, v, J, hv, hJ, heq', hT, hY, hS, hterminal, ?_⟩
+  intro gamma hgamma hGnonzero
+  have hgammaG := regularSeeds_subset H selected Gamma F hgamma
+  let support := (Finset.univ : Finset I).filter (fun i ↦
+    (selected gamma).eval (nodes i) = u0 i + gamma * u1 i)
+  have hcard : agreements ≤ support.card := hagreement gamma hgammaG
+  have hcap : D - (j.val + 1) * delta ≤
+      (m - (j.val + 1)) * support.card + (j.val + 1) * (w - 1) :=
+    (hcapacity _ hjpos hjle).trans
+      (Nat.add_le_add_right
+        (Nat.mul_le_mul_left (m - (j.val + 1)) hcard) _)
+  have hvalues : ∀ i ∈ support,
+      (selected gamma).eval (nodes i) = u0 i + gamma * u1 i := by
+    intro i hi
+    exact (Finset.mem_filter.mp hi).2
+  have hder := specialization_iteratePderivR_eq_zero_of_kernel_low_box
+    (j.val + 1) D (D - (j.val + 1) * delta) w L S m
+    nodes u0 u1 v hlow (selected gamma) gamma support hjpos
+    hw (hdegree gamma hgammaG) hcap hvalues
+  rw [← heq'] at hder
+  obtain ⟨hFzero, hregular⟩ := (Finset.mem_filter.mp hgamma).2
+  exact specialization_eq_zero_of_iteratePderivR_twoFactor_offCollision
+    (j.val + 1) (selected gamma) gamma F.1 G.1 J
+    (factorial_ne_zero_of_lt_char p (j.val + 1) hp
+      (hjle.trans_lt hfuelChar))
+    hFzero hregular hGnonzero hder
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorTwoFactorAvoidance
+end PackedLocator_LocatorTwoFactorAvoidance
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier08 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorFactorAggregate. -/
+section PackedLocator_LocatorFactorAggregate
+namespace ProximityPrize.SubmissionLower.LocatorFactorAggregate
+open scoped BigOperators
+open RCN095
+set_option maxRecDepth 2048
+set_option maxHeartbeats 300000
+def middle (p:FlagDegree):ℕ:=p.yz + p.all
+def total (p:FlagDegree):ℕ:=p.zOnly + p.yz + p.all
+def Below (p q:FlagDegree):Prop :=
+  p.all ≤ q.all ∧ middle p ≤ middle q ∧ total p ≤ total q
+def cap (t y s:ℕ):FlagDegree:=⟨t - y, y - s, s⟩
+theorem cap_cumulative (t y s:ℕ) (hsy:s ≤ y) (hyt:y ≤ t) :
+    (cap t y s).all = s ∧ middle (cap t y s) = y ∧ total (cap t y s) = t:=by
+  dsimp [cap, middle, total]
+  omega
+theorem mixed_expansion (p q r:FlagDegree) :
+    flagMixed p q r =
+      (q.all * r.all + q.yz * r.all + q.all * r.yz) * total p +
+      (q.zOnly * r.all + q.all * r.zOnly) * middle p +
+      (q.yz * r.yz + q.zOnly * r.yz + q.yz * r.zOnly) * p.all:=by
+  simp only [flagMixed, middle, total]
+  ring
+theorem mixed_mono_first {p P:FlagDegree} (h:Below p P) (q r:FlagDegree) :
+    flagMixed p q r ≤ flagMixed P q r:=by
+  rw [mixed_expansion p q r, mixed_expansion P q r]
+  exact Nat.add_le_add
+    (Nat.add_le_add (Nat.mul_le_mul_left _ h.2.2) (Nat.mul_le_mul_left _ h.2.1))
+    (Nat.mul_le_mul_left _ h.1)
+theorem mixed_mono_second (p:FlagDegree) {q Q:FlagDegree}
+    (h:Below q Q) (r:FlagDegree):flagMixed p q r ≤ flagMixed p Q r:=by
+  calc
+    flagMixed p q r = flagMixed q p r:=by unfold flagMixed; ring
+    _ ≤ flagMixed Q p r:=mixed_mono_first h p r
+    _ = flagMixed p Q r:=by unfold flagMixed; ring
+theorem mixed_mono_third (p q:FlagDegree) {r R:FlagDegree}
+    (h:Below r R):flagMixed p q r ≤ flagMixed p q R:=by
+  calc
+    flagMixed p q r = flagMixed r q p:=by unfold flagMixed; ring
+    _ ≤ flagMixed R q p:=mixed_mono_first h q p
+    _ = flagMixed p q R:=by unfold flagMixed; ring
+theorem mixed_mono_tails (p:FlagDegree) {q Q r R:FlagDegree}
+    (hq:Below q Q) (hr:Below r R):flagMixed p q r ≤ flagMixed p Q R :=
+  (mixed_mono_second p hq r).trans (mixed_mono_third p Q hr)
+theorem sum_mixed_le {I:Type*} [Fintype I]
+    (p:I → FlagDegree) (P q r:FlagDegree)
+    (hs:(∑ i, (p i).all) ≤ P.all)
+    (hy:(∑ i, middle (p i)) ≤ middle P)
+    (ht:(∑ i, total (p i)) ≤ total P) :
+    (∑ i, flagMixed (p i) q r) ≤ flagMixed P q r:=by
+  rw [Finset.sum_congr rfl (fun i _ => mixed_expansion (p i) q r),
+    mixed_expansion P q r]
+  simp only [Finset.sum_add_distrib, ← Finset.mul_sum]
+  exact Nat.add_le_add
+    (Nat.add_le_add (Nat.mul_le_mul_left _ ht) (Nat.mul_le_mul_left _ hy))
+    (Nat.mul_le_mul_left _ hs)
+def padS (p:FlagDegree):ℕ:=max p.all 2
+def padY (p:FlagDegree):ℕ:=max (middle p) (padS p + 1)
+def padT (p:FlagDegree):ℕ:=max (total p) (padY p)
+def paddedTail (p:FlagDegree) (d:ℕ):FlagDegree :=
+  ⟨2 * (padT p - padY p) * d,
+    1 + 2 * (padY p - padS p) * d,
+    2 * (padS p - 1) * d⟩
+def paddedCost (d e:ℕ) (p:FlagDegree):ℕ :=
+  flagMixed p (paddedTail p d) (paddedTail p e)
+theorem paddedTail_cumulative (p:FlagDegree) (d:ℕ) :
+    (paddedTail p d).all = 2 * (padS p - 1) * d ∧
+    middle (paddedTail p d) = 1 + 2 * (padY p - 1) * d ∧
+    total (paddedTail p d) = 1 + 2 * (padT p - 1) * d:=by
+  have hs:1 ≤ padS p:=by
+    have h:2 ≤ padS p:=le_max_right _ _
+    omega
+  have hy:padS p + 1 ≤ padY p:=le_max_right _ _
+  have ht:padY p ≤ padT p:=le_max_right _ _
+  have hyadd:padY p - padS p + (padS p - 1) = padY p - 1:=by omega
+  have htadd:padT p - padY p + (padY p - padS p) + (padS p - 1) =
+      padT p - 1:=by omega
+  refine ⟨rfl, ?_, ?_⟩
+  · change (1 + 2 * (padY p - padS p) * d) + 2 * (padS p - 1) * d = _
+    calc
+      _ = 1 + 2 * (padY p - padS p + (padS p - 1)) * d:=by ring
+      _ = _:=by rw [hyadd]
+  · change (2 * (padT p - padY p) * d +
+      (1 + 2 * (padY p - padS p) * d)) + 2 * (padS p - 1) * d = _
+    calc
+      _ = 1 + 2 * (padT p - padY p + (padY p - padS p) +
+        (padS p - 1)) * d:=by ring
+      _ = _:=by rw [htadd]
+theorem padding_mono {p q:FlagDegree} (h:Below p q) :
+    padS p ≤ padS q ∧ padY p ≤ padY q ∧ padT p ≤ padT q:=by
+  have hs:padS p ≤ padS q:=max_le_max h.1 (Nat.le_refl 2)
+  have hy:padY p ≤ padY q:=max_le_max h.2.1 (Nat.add_le_add_right hs 1)
+  have ht:padT p ≤ padT q:=max_le_max h.2.2 hy
+  exact ⟨hs, hy, ht⟩
+theorem paddedTail_mono (d:ℕ) {p q:FlagDegree} (h:Below p q) :
+    Below (paddedTail p d) (paddedTail q d):=by
+  have hp:=paddedTail_cumulative p d
+  have hq:=paddedTail_cumulative q d
+  have hc:=padding_mono h
+  have hm {a b:ℕ} (hab:a ≤ b):2 * (a - 1) * d ≤ 2 * (b - 1) * d :=
+    Nat.mul_le_mul_right d (Nat.mul_le_mul_left 2 (Nat.sub_le_sub_right hab 1))
+  unfold Below
+  rw [hp.1, hp.2.1, hp.2.2, hq.1, hq.2.1, hq.2.2]
+  exact ⟨hm hc.1, Nat.add_le_add_left (hm hc.2.1) 1,
+    Nat.add_le_add_left (hm hc.2.2) 1⟩
+theorem paddedCost_mono (d e:ℕ) {p q:FlagDegree} (h:Below p q) :
+    paddedCost d e p ≤ paddedCost d e q:=by
+  exact (mixed_mono_first h _ _).trans
+    (mixed_mono_tails q (paddedTail_mono d h) (paddedTail_mono e h))
+theorem merge_padded_costs {I:Type*} [Fintype I]
+    (d e:ℕ) (p:I → FlagDegree) (P:FlagDegree)
+    (hs:(∑ i, (p i).all) ≤ P.all)
+    (hy:(∑ i, middle (p i)) ≤ middle P)
+    (ht:(∑ i, total (p i)) ≤ total P) :
+    (∑ i, paddedCost d e (p i)) ≤ paddedCost d e P:=by
+  classical
+  have hi (i:I):Below (p i) P:=by
+    exact ⟨(Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)).trans hs,
+      (Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)).trans hy,
+      (Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)).trans ht⟩
+  calc
+    (∑ i, paddedCost d e (p i)) ≤
+        ∑ i, flagMixed (p i) (paddedTail P d) (paddedTail P e) :=
+      Finset.sum_le_sum (fun i _ =>
+        mixed_mono_tails (p i) (paddedTail_mono d (hi i)) (paddedTail_mono e (hi i)))
+    _ ≤ paddedCost d e P:=sum_mixed_le p P _ _ hs hy ht
+theorem sum_mixed_le_finset {I:Type*} (s:Finset I)
+    (p:I → FlagDegree) (P q r:FlagDegree)
+    (hs:(∑ i ∈ s, (p i).all) ≤ P.all)
+    (hy:(∑ i ∈ s, middle (p i)) ≤ middle P)
+    (ht:(∑ i ∈ s, total (p i)) ≤ total P) :
+    (∑ i ∈ s, flagMixed (p i) q r) ≤ flagMixed P q r:=by
+  rw [Finset.sum_congr rfl (fun i _ => mixed_expansion (p i) q r),
+    mixed_expansion P q r]
+  simp only [Finset.sum_add_distrib, ← Finset.mul_sum]
+  exact Nat.add_le_add
+    (Nat.add_le_add (Nat.mul_le_mul_left _ ht) (Nat.mul_le_mul_left _ hy))
+    (Nat.mul_le_mul_left _ hs)
+theorem merge_padded_costs_finset {I:Type*} (s:Finset I)
+    (d e:ℕ) (p:I → FlagDegree) (P:FlagDegree)
+    (hs:(∑ i ∈ s, (p i).all) ≤ P.all)
+    (hy:(∑ i ∈ s, middle (p i)) ≤ middle P)
+    (ht:(∑ i ∈ s, total (p i)) ≤ total P) :
+    (∑ i ∈ s, paddedCost d e (p i)) ≤ paddedCost d e P:=by
+  classical
+  have hi (i:I) (h:i ∈ s):Below (p i) P:=by
+    exact ⟨(Finset.single_le_sum (fun _ _ => Nat.zero_le _) h).trans hs,
+      (Finset.single_le_sum (fun _ _ => Nat.zero_le _) h).trans hy,
+      (Finset.single_le_sum (fun _ _ => Nat.zero_le _) h).trans ht⟩
+  calc
+    (∑ i ∈ s, paddedCost d e (p i)) ≤
+        ∑ i ∈ s, flagMixed (p i) (paddedTail P d) (paddedTail P e) :=
+      Finset.sum_le_sum (fun i h => mixed_mono_tails (p i)
+        (paddedTail_mono d (hi i h)) (paddedTail_mono e (hi i h)))
+    _ ≤ paddedCost d e P:=sum_mixed_le_finset s p P _ _ hs hy ht
+theorem paddedTail_cap (t y s d:ℕ)
+    (hs:2 ≤ s) (hy:s + 1 ≤ y) (ht:y ≤ t) :
+    paddedTail (cap t y s) d =
+      ⟨2 * (t - y) * d, 1 + 2 * (y - s) * d, 2 * (s - 1) * d⟩:=by
+  have hc:=cap_cumulative t y s (by omega) ht
+  have hps:padS (cap t y s) = s:=by
+    change max s 2 = s
+    exact max_eq_left hs
+  have hpy:padY (cap t y s) = y:=by
+    unfold padY
+    rw [hc.2.1, hps, max_eq_left hy]
+  have hpt:padT (cap t y s) = t:=by
+    unfold padT
+    rw [hc.2.2, hpy, max_eq_left ht]
+  simp only [paddedTail, hps, hpy, hpt]
+private abbrev lowCap6751:ℕ:=261420997282933785
+theorem all_le_middle (p:FlagDegree):p.all ≤ middle p:=by
+  dsimp [middle]
+  omega
+theorem middle_le_total (p:FlagDegree):middle p ≤ total p:=by
+  dsimp [middle, total]
+  omega
+theorem all_le_total (p:FlagDegree):p.all ≤ total p :=
+  (all_le_middle p).trans (middle_le_total p)
+theorem below_cap_of_bounds (p:FlagDegree) (t y s:ℕ)
+    (hsy:s ≤ y) (hyt:y ≤ t)
+    (hs:p.all ≤ s) (hy:middle p ≤ y) (ht:total p ≤ t) :
+    Below p (cap t y s):=by
+  have hc:=cap_cumulative t y s hsy hyt
+  unfold Below
+  rw [hc.1, hc.2.1, hc.2.2]
+  exact ⟨hs, hy, ht⟩
+private theorem below_total_flag (p:FlagDegree) :
+    Below p ⟨0, 0, total p⟩:=by
+  unfold Below
+  refine ⟨all_le_total p, ?_, ?_⟩
+  · simpa only [middle, Nat.zero_add] using middle_le_total p
+  · simp only [total, Nat.zero_add, le_refl]
+private def diagonalRate (u s:ℕ):ℕ :=
+  flagMixed ⟨0, 0, 1⟩
+    (paddedTail (cap u u s) 131072)
+    (paddedTail (cap u u s) 131073)
+private theorem cost_le_diagonal_rate (p:FlagDegree) (u s:ℕ)
+    (h:Below p (cap u u s)) :
+    paddedCost 131072 131073 p ≤ diagonalRate u s * total p:=by
+  calc
+    _ ≤ flagMixed p (paddedTail (cap u u s) 131072)
+        (paddedTail (cap u u s) 131073) :=
+      mixed_mono_tails p (paddedTail_mono 131072 h) (paddedTail_mono 131073 h)
+    _ ≤ flagMixed ⟨0, 0, total p⟩ (paddedTail (cap u u s) 131072)
+        (paddedTail (cap u u s) 131073) :=
+      mixed_mono_first (below_total_flag p) _ _
+    _ = diagonalRate u s * total p:=by
+      simp only [diagonalRate, flagMixed]
+      ring
+private theorem affine64 (t:ℕ) (ht:64 ≤ t) :
+    paddedCost 131072 131073 (cap t 64 7) + 5324494425030747 =
+      157093929156634 * t:=by
+  have hsub:t - 64 + 64 = t:=Nat.sub_add_cancel ht
+  unfold paddedCost
+  rw [paddedTail_cap t 64 7 131072 (by decide) (by decide) ht,
+    paddedTail_cap t 64 7 131073 (by decide) (by decide) ht]
+  simp only [cap, flagMixed]
+  ring_nf
+  omega
+private theorem rate_of_affine {t c top alpha deficit:ℕ}
+    (ht:t ≤ 1698) (hc:c + deficit = alpha * t)
+    (hTop:top + deficit = alpha * 1698) (hbound:top ≤ lowCap6751) :
+    1698 * c ≤ lowCap6751 * t:=by
+  have hscaled:1698 * c + deficit * t ≤ top * t + deficit * t:=by
+    calc
+      _ ≤ 1698 * c + deficit * 1698 :=
+        Nat.add_le_add_left (Nat.mul_le_mul_left deficit ht) _
+      _ = (c + deficit) * 1698:=by ring
+      _ = (alpha * t) * 1698:=by rw [hc]
+      _ = (alpha * 1698) * t:=by ring
+      _ = (top + deficit) * t:=by rw [← hTop]
+      _ = top * t + deficit * t:=by ring
+  exact (Nat.le_of_add_le_add_right hscaled).trans
+    (Nat.mul_le_mul_right t hbound)
+private theorem large_rate64 (t:ℕ) (hlo:64 ≤ t) (hhi:t ≤ 1698) :
+    1698 * paddedCost 131072 131073 (cap t 64 7) ≤ lowCap6751 * t:=by
+  have htop:=affine64 1698 (by decide)
+  have hb:paddedCost 131072 131073 (cap 1698 64 7) ≤ lowCap6751:=by
+    unfold lowCap6751
+    omega
+  exact rate_of_affine hhi (affine64 t hlo) htop hb
+private theorem middle_tail_formula64 (p:FlagDegree) :
+    flagMixed p (paddedTail (cap 64 64 7) 131072)
+        (paddedTail (cap 64 64 7) 131073) =
+      49478403883020 * total p + 223271313211507 * p.all:=by
+  norm_num [paddedTail, padT, padY, padS, cap, total, middle, flagMixed]
+  ring
+private theorem middle_rate64 (t:ℕ) (ht:15 ≤ t) :
+    1698 * (49478403883020 * t + 223271313211507 * 7) ≤ lowCap6751 * t:=by
+  unfold lowCap6751
+  omega
+theorem rate_bound_6751_low (p:FlagDegree)
+    (hs:p.all ≤ 7) (hy:middle p ≤ 64) (ht:total p ≤ 1698) :
+    1698 * paddedCost 131072 131073 p ≤ 261420997282933785 * total p:=by
+  have hn:=middle_le_total p
+  by_cases ht15:total p ≤ 15
+  · have hb:=below_cap_of_bounds p 15 15 7 (by decide) (by decide)
+      hs (hn.trans ht15) ht15
+    have hc:=cost_le_diagonal_rate p 15 7 hb
+    have hk:1698 * diagonalRate 15 7 ≤ 261420997282933785:=by decide
+    calc
+      _ ≤ 1698 * (diagonalRate 15 7 * total p):=Nat.mul_le_mul_left 1698 hc
+      _ = (1698 * diagonalRate 15 7) * total p:=by ring
+      _ ≤ _:=Nat.mul_le_mul_right (total p) hk
+  · by_cases ht64:total p ≤ 64
+    · have hb:=below_cap_of_bounds p 64 64 7 (by decide) (by decide) hs hy ht64
+      have hc:paddedCost 131072 131073 p ≤
+          49478403883020 * total p + 223271313211507 * 7:=by
+        calc
+          _ ≤ flagMixed p (paddedTail (cap 64 64 7) 131072)
+              (paddedTail (cap 64 64 7) 131073) :=
+            mixed_mono_tails p (paddedTail_mono 131072 hb) (paddedTail_mono 131073 hb)
+          _ = 49478403883020 * total p + 223271313211507 * p.all :=
+            middle_tail_formula64 p
+          _ ≤ _:=Nat.add_le_add_left (Nat.mul_le_mul_left _ hs) _
+      exact (Nat.mul_le_mul_left 1698 hc).trans (middle_rate64 (total p) (by omega))
+    · have hlo:64 ≤ total p:=by omega
+      have hb:=below_cap_of_bounds p (total p) 64 7 (by decide) hlo hs hy (le_refl _)
+      exact (Nat.mul_le_mul_left 1698 (paddedCost_mono 131072 131073 hb)).trans
+        (large_rate64 (total p) hlo ht)
+theorem aggregate_6751_low {I:Type*} [Fintype I] (p:I → FlagDegree)
+    (hs:∀ i, (p i).all ≤ 7) (hy:∀ i, middle (p i) ≤ 64)
+    (htsum:(∑ i, total (p i)) ≤ 1698) :
+    (∑ i, paddedCost 131072 131073 (p i)) ≤ 261420997282933785:=by
+  classical
+  have hti (i:I):total (p i) ≤ 1698 :=
+    (Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)).trans htsum
+  have hscaled:1698 * (∑ i, paddedCost 131072 131073 (p i)) ≤
+      1698 * 261420997282933785:=by
+    calc
+      _ = ∑ i, 1698 * paddedCost 131072 131073 (p i):=by rw [Finset.mul_sum]
+      _ ≤ ∑ i, 261420997282933785 * total (p i) :=
+        Finset.sum_le_sum (fun i _ => rate_bound_6751_low (p i) (hs i) (hy i) (hti i))
+      _ = 261420997282933785 * (∑ i, total (p i)):=by rw [Finset.mul_sum]
+      _ ≤ 261420997282933785 * 1698:=Nat.mul_le_mul_left _ htsum
+      _ = 1698 * 261420997282933785:=by ring
+  exact Nat.le_of_mul_le_mul_left hscaled (by decide)
+end ProximityPrize.SubmissionLower.LocatorFactorAggregate
+end PackedLocator_LocatorFactorAggregate
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier09 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridCost. -/
+section PackedLocator_LocatorHybridCost
+
+/-!
+# Hybrid second-surface cost
+
+The ordinary cost of a regular factor with cumulative flag `p` is the padded
+two-tail Bezout count `paddedCost 131072 131073 p`.  When the padded slope is at
+least `2` and the padded middle exceeds the padded slope by at least `2`, the
+delayed second tail can be replaced by the hybrid coordinate surface, giving
+`hybridCost p`, which is smaller by roughly a fifth on the binding cells.  All
+tail flags are monotone in the padded cumulative degrees, so the cost is
+monotone under `Below`, exactly like `paddedCost`.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorHybridCost
+
+open scoped BigOperators
+open RCN095 LocatorFactorAggregate
+
+set_option maxRecDepth 4096
+set_option maxHeartbeats 400000
+
+/-- Sharp first tail `⟨2a·d, 1+(2b+1)·d, (2s+3)·d⟩` at `d = 131072`, with
+`a = padT - padY`, `b = padY - padS - 1`, `s = padS - 2`. -/
+def sharpTail (p : FlagDegree) : FlagDegree :=
+  ⟨2 * (padT p - padY p) * 131072,
+    1 + (2 * (padY p - padS p) - 1) * 131072,
+    (2 * padS p - 1) * 131072⟩
+
+def rationalFlag (p : FlagDegree) : FlagDegree :=
+  ⟨131072 * (padT p - padY p) + 2 * (padT p - padY p),
+    131072 * (padY p - padS p - 1) + 2 * (padY p - padS p - 1) + 2,
+    131072 * (padS p - 2) + 2 * (padS p - 2) + 3⟩
+
+def hybridCoordinate (p : FlagDegree) : FlagDegree :=
+  rationalFlag p + ⟨0, 65536, 196608⟩
+
+def movingFiber (p : FlagDegree) : FlagDegree :=
+  ⟨padT p - padY p, padY p - padS p, padS p + 1⟩
+
+def movingCut (p : FlagDegree) : FlagDegree :=
+  rationalFlag p + ⟨0, 131072, 262144⟩
+
+def hybridCost (p : FlagDegree) : ℕ :=
+  flagMixed p (sharpTail p) (hybridCoordinate p) +
+    131072 * flagMixed p (movingFiber p) (movingCut p)
+
+/-- The hybrid branch applies when the slope is at least `2` and the middle
+exceeds the slope by at least `2`. -/
+def HybridApplies (p : FlagDegree) : Prop := 2 ≤ p.all ∧ p.all + 2 ≤ middle p
+
+instance (p : FlagDegree) : Decidable (HybridApplies p) := by
+  unfold HybridApplies; infer_instance
+
+theorem pad_bounds (p : FlagDegree) :
+    2 ≤ padS p ∧ padS p + 1 ≤ padY p ∧ padY p ≤ padT p :=
+  ⟨le_max_right _ _, le_max_right _ _, le_max_right _ _⟩
+
+theorem sharpTail_cumulative (p : FlagDegree) :
+    (sharpTail p).all = (2 * padS p - 1) * 131072 ∧
+      middle (sharpTail p) = 1 + 2 * (padY p - 1) * 131072 ∧
+      total (sharpTail p) = 1 + 2 * (padT p - 1) * 131072 := by
+  have h := pad_bounds p
+  dsimp only [sharpTail, middle, total]
+  refine ⟨?_, ?_, ?_⟩ <;> omega
+
+theorem hybridCoordinate_cumulative (p : FlagDegree) :
+    (hybridCoordinate p).all = 131074 * (padS p - 2) + 196611 ∧
+      middle (hybridCoordinate p) = 131074 * (padY p - 3) + 262149 ∧
+      total (hybridCoordinate p) = 131074 * (padT p - 3) + 262149 := by
+  have h := pad_bounds p
+  dsimp only [hybridCoordinate, rationalFlag, middle, total, add_zOnly, add_yz, add_all]
+  refine ⟨?_, ?_, ?_⟩ <;> omega
+
+theorem movingFiber_cumulative (p : FlagDegree) :
+    (movingFiber p).all = padS p + 1 ∧
+      middle (movingFiber p) = padY p + 1 ∧
+      total (movingFiber p) = padT p + 1 := by
+  have h := pad_bounds p
+  dsimp only [movingFiber, middle, total]
+  refine ⟨?_, ?_, ?_⟩ <;> omega
+
+theorem movingCut_cumulative (p : FlagDegree) :
+    (movingCut p).all = 131074 * (padS p - 2) + 262147 ∧
+      middle (movingCut p) = 131074 * (padY p - 3) + 393221 ∧
+      total (movingCut p) = 131074 * (padT p - 3) + 393221 := by
+  have h := pad_bounds p
+  dsimp only [movingCut, rationalFlag, middle, total, add_zOnly, add_yz, add_all]
+  refine ⟨?_, ?_, ?_⟩ <;> omega
+
+theorem sharpTail_mono {p q : FlagDegree} (h : Below p q) :
+    Below (sharpTail p) (sharpTail q) := by
+  have hp := sharpTail_cumulative p
+  have hq := sharpTail_cumulative q
+  have hc := padding_mono h
+  unfold Below
+  rw [hp.1, hp.2.1, hp.2.2, hq.1, hq.2.1, hq.2.2]
+  omega
+
+theorem hybridCoordinate_mono {p q : FlagDegree} (h : Below p q) :
+    Below (hybridCoordinate p) (hybridCoordinate q) := by
+  have hp := hybridCoordinate_cumulative p
+  have hq := hybridCoordinate_cumulative q
+  have hc := padding_mono h
+  have hb := pad_bounds p
+  have hb' := pad_bounds q
+  unfold Below
+  rw [hp.1, hp.2.1, hp.2.2, hq.1, hq.2.1, hq.2.2]
+  omega
+
+theorem movingFiber_mono {p q : FlagDegree} (h : Below p q) :
+    Below (movingFiber p) (movingFiber q) := by
+  have hp := movingFiber_cumulative p
+  have hq := movingFiber_cumulative q
+  have hc := padding_mono h
+  unfold Below
+  rw [hp.1, hp.2.1, hp.2.2, hq.1, hq.2.1, hq.2.2]
+  omega
+
+theorem movingCut_mono {p q : FlagDegree} (h : Below p q) :
+    Below (movingCut p) (movingCut q) := by
+  have hp := movingCut_cumulative p
+  have hq := movingCut_cumulative q
+  have hc := padding_mono h
+  have hb := pad_bounds p
+  have hb' := pad_bounds q
+  unfold Below
+  rw [hp.1, hp.2.1, hp.2.2, hq.1, hq.2.1, hq.2.2]
+  omega
+
+theorem hybridCost_mono {p q : FlagDegree} (h : Below p q) :
+    hybridCost p ≤ hybridCost q := by
+  unfold hybridCost
+  apply Nat.add_le_add
+  · exact (mixed_mono_first h _ _).trans
+      (mixed_mono_tails q (sharpTail_mono h) (hybridCoordinate_mono h))
+  · apply Nat.mul_le_mul_left
+    exact (mixed_mono_first h _ _).trans
+      (mixed_mono_tails q (movingFiber_mono h) (movingCut_mono h))
+
+/-- Per-factor hybrid bounds at the factor's own padded tails merge into the
+hybrid cost of the cumulative flag. -/
+theorem merge_hybrid_costs {I : Type*} [Fintype I]
+    (p : I → FlagDegree) (P : FlagDegree)
+    (hs : (∑ i, (p i).all) ≤ P.all)
+    (hy : (∑ i, middle (p i)) ≤ middle P)
+    (ht : (∑ i, total (p i)) ≤ total P) :
+    (∑ i, (flagMixed (p i) (sharpTail P) (hybridCoordinate P) +
+      131072 * flagMixed (p i) (movingFiber P) (movingCut P))) ≤ hybridCost P := by
+  classical
+  rw [Finset.sum_add_distrib, ← Finset.mul_sum]
+  unfold hybridCost
+  apply Nat.add_le_add
+  · exact sum_mixed_le p P _ _ hs hy ht
+  · exact Nat.mul_le_mul_left _ (sum_mixed_le p P _ _ hs hy ht)
+
+theorem hybridApplies_of_below {p q : FlagDegree} (hall : p.all = q.all)
+    (hpq : Below p q) (hp : HybridApplies p) : HybridApplies q := by
+  obtain ⟨h1, h2⟩ := hp
+  exact ⟨hall ▸ h1, by have := hpq.2.1; omega⟩
+
+/-! `ordinaryCostOf` and `OwnBound` are defined by `LocatorHybridCostSelect` (C2). -/
+
+end ProximityPrize.SubmissionLower.LocatorHybridCost
+end PackedLocator_LocatorHybridCost
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridCostC1. -/
+section PackedLocator_LocatorHybridCostC1
+/-
+HYBRID SECOND-SURFACE COST — C1 VARIANT (flag level).
+
+Differences from `LocatorHybridCost`:
+  * the hybrid coordinate is the bare `rationalFlag` (the half-tail offset
+    `⟨0, 65536, 196608⟩` is gone);
+  * the moving term's outer factor is `131076 = w + 5` instead of `131072`;
+  * `HybridApplies` requires `3 ≤ p.all` (i.e. `r ≥ 3`) rather than `2 ≤ p.all`;
+  * `ordinaryCostOf` takes the MINIMUM of the hybrid and padded costs on the
+    hybrid branch, so a cell can never be made worse by the branch.
+
+`sharpTail`, `rationalFlag`, `movingFiber` and `movingCut` are reused verbatim
+from `LocatorHybridCost`, together with their cumulative and monotonicity lemmas.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorHybridCostC1
+
+open scoped BigOperators
+open RCN095 LocatorFactorAggregate LocatorHybridCost
+
+set_option maxRecDepth 4096
+set_option maxHeartbeats 400000
+
+/-- C1: the hybrid coordinate is the rational coordinate. -/
+def hybridCoordinateC1 (p : FlagDegree) : FlagDegree := rationalFlag p
+
+/-- The C1 hybrid cost.  `131076 = w + 5`. -/
+def hybridCostC1 (p : FlagDegree) : ℕ :=
+  flagMixed p (sharpTail p) (hybridCoordinateC1 p) +
+    131076 * flagMixed p (movingFiber p) (movingCut p)
+
+/-- The hybrid branch now needs slope at least `3`. -/
+def HybridAppliesC1 (p : FlagDegree) : Prop := 3 ≤ p.all ∧ p.all + 2 ≤ middle p
+
+instance (p : FlagDegree) : Decidable (HybridAppliesC1 p) := by
+  unfold HybridAppliesC1; infer_instance
+
+/-- On the hybrid branch we may always fall back to the padded cost. -/
+def ordinaryCostOfC1 (p : FlagDegree) : ℕ :=
+  if HybridAppliesC1 p then
+    min (hybridCostC1 p) (paddedCost 131072 131073 p)
+  else paddedCost 131072 131073 p
+
+theorem rationalFlag_cumulative (p : FlagDegree) :
+    (rationalFlag p).all = 131074 * (padS p - 2) + 3 ∧
+      middle (rationalFlag p) = 131074 * (padY p - 3) + 5 ∧
+      total (rationalFlag p) = 131074 * (padT p - 3) + 5 := by
+  have h := pad_bounds p
+  dsimp only [rationalFlag, middle, total]
+  refine ⟨?_, ?_, ?_⟩ <;> omega
+
+theorem hybridCoordinateC1_cumulative (p : FlagDegree) :
+    (hybridCoordinateC1 p).all = 131074 * (padS p - 2) + 3 ∧
+      middle (hybridCoordinateC1 p) = 131074 * (padY p - 3) + 5 ∧
+      total (hybridCoordinateC1 p) = 131074 * (padT p - 3) + 5 :=
+  rationalFlag_cumulative p
+
+theorem hybridCoordinateC1_mono {p q : FlagDegree} (h : Below p q) :
+    Below (hybridCoordinateC1 p) (hybridCoordinateC1 q) := by
+  have hp := hybridCoordinateC1_cumulative p
+  have hq := hybridCoordinateC1_cumulative q
+  have hc := padding_mono h
+  have hb := pad_bounds p
+  have hb' := pad_bounds q
+  unfold Below
+  rw [hp.1, hp.2.1, hp.2.2, hq.1, hq.2.1, hq.2.2]
+  omega
+
+theorem hybridCostC1_mono {p q : FlagDegree} (h : Below p q) :
+    hybridCostC1 p ≤ hybridCostC1 q := by
+  unfold hybridCostC1
+  apply Nat.add_le_add
+  · exact (mixed_mono_first h _ _).trans
+      (mixed_mono_tails q (sharpTail_mono h) (hybridCoordinateC1_mono h))
+  · apply Nat.mul_le_mul_left
+    exact (mixed_mono_first h _ _).trans
+      (mixed_mono_tails q (movingFiber_mono h) (movingCut_mono h))
+
+/-- Per-factor C1 hybrid bounds at the factor's own padded tails merge into the
+C1 hybrid cost of the cumulative flag. -/
+theorem merge_hybrid_costsC1 {I : Type*} [Fintype I]
+    (p : I → FlagDegree) (P : FlagDegree)
+    (hs : (∑ i, (p i).all) ≤ P.all)
+    (hy : (∑ i, middle (p i)) ≤ middle P)
+    (ht : (∑ i, total (p i)) ≤ total P) :
+    (∑ i, (flagMixed (p i) (sharpTail P) (hybridCoordinateC1 P) +
+      131076 * flagMixed (p i) (movingFiber P) (movingCut P))) ≤
+      hybridCostC1 P := by
+  classical
+  rw [Finset.sum_add_distrib, ← Finset.mul_sum]
+  unfold hybridCostC1
+  apply Nat.add_le_add
+  · exact sum_mixed_le p P _ _ hs hy ht
+  · exact Nat.mul_le_mul_left _ (sum_mixed_le p P _ _ hs hy ht)
+
+theorem hybridAppliesC1_of_below {p q : FlagDegree} (hall : p.all = q.all)
+    (hpq : Below p q) (hp : HybridAppliesC1 p) : HybridAppliesC1 q := by
+  obtain ⟨h1, h2⟩ := hp
+  exact ⟨hall ▸ h1, by have := hpq.2.1; omega⟩
+
+theorem ordinaryCostOfC1_of_hybrid (p : FlagDegree) (hp : HybridAppliesC1 p) :
+    ordinaryCostOfC1 p = min (hybridCostC1 p) (paddedCost 131072 131073 p) := by
+  unfold ordinaryCostOfC1
+  rw [if_pos hp]
+
+theorem ordinaryCostOfC1_of_padded (p : FlagDegree) (hp : ¬ HybridAppliesC1 p) :
+    ordinaryCostOfC1 p = paddedCost 131072 131073 p := by
+  unfold ordinaryCostOfC1
+  rw [if_neg hp]
+
+theorem ordinaryCostOfC1_le_padded (p : FlagDegree) :
+    ordinaryCostOfC1 p ≤ paddedCost 131072 131073 p := by
+  unfold ordinaryCostOfC1
+  split_ifs
+  · exact min_le_right _ _
+  · exact le_rfl
+
+/-- Both per-factor bounds: the padded one always, the C1 hybrid one when it
+applies. -/
+def OwnBoundC1 (count : ℕ) (p : FlagDegree) : Prop :=
+  count ≤ paddedCost 131072 131073 p ∧
+    (HybridAppliesC1 p → count ≤ hybridCostC1 p)
+
+theorem ownBound_le_ordinaryCostOfC1 {count : ℕ} {p : FlagDegree}
+    (h : OwnBoundC1 count p) : count ≤ ordinaryCostOfC1 p := by
+  unfold ordinaryCostOfC1
+  split_ifs with hp
+  · exact le_min (h.2 hp) h.1
+  · exact h.1
+
+/-- The padded half of an `OwnBoundC1` transports along `Below`; the hybrid half
+is transported by the consumer with `hybridCostC1_mono`, exactly as
+`LocatorQuotientReplacement` does today (there is no monotonicity of
+`ordinaryCostOf` itself across the branch boundary). -/
+theorem ownBoundC1_padded_mono {count : ℕ} {p q : FlagDegree}
+    (h : Below p q) (hown : OwnBoundC1 count p) :
+    count ≤ paddedCost 131072 131073 q :=
+  hown.1.trans (paddedCost_mono 131072 131073 h)
+
+end ProximityPrize.SubmissionLower.LocatorHybridCostC1
+end PackedLocator_LocatorHybridCostC1
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridCostC2. -/
+section PackedLocator_LocatorHybridCostC2
+/-
+HYBRID SECOND-SURFACE COST — C2 VARIANT (flag level).
+
+C2 = C1 plus the REDUCED first tail.  The first tail flag drops from
+
+  sharpTail p   = ⟨2(padT-padY)·d, 1+(2(padY-padS)-1)·d, (2padS-1)·d⟩
+to
+  reducedTail p = ⟨2(padT-padY)·d, 1+2(padY-padS)·d, 2(padS-1)·d⟩ = paddedTail p d
+
+with `d = 131072`.  The two agree on `yz + all` and on the total, and the
+reduced one is smaller by `d` in the `all` column, so it is strictly `Below` the
+sharp one and `flagMixed` drops.  Worth about 1.29% on the binding cells.
+
+Everything else is inherited from C1: the coordinate is `rationalFlag`, the
+moving factor is `131076 = w + 5`, the branch needs `3 ≤ p.all`, and
+`ordinaryCostOf` takes the minimum against the padded two-tail cost.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorHybridCostC2
+
+open scoped BigOperators
+open RCN095 LocatorFactorAggregate LocatorHybridCost LocatorHybridCostC1
+
+set_option maxRecDepth 4096
+set_option maxHeartbeats 400000
+
+/-- The reduced first tail at `d = 131072`; it is literally `paddedTail p 131072`. -/
+def reducedTail (p : FlagDegree) : FlagDegree := paddedTail p 131072
+
+theorem reducedTail_cumulative (p : FlagDegree) :
+    (reducedTail p).all = 2 * (padS p - 1) * 131072 ∧
+      middle (reducedTail p) = 1 + 2 * (padY p - 1) * 131072 ∧
+      total (reducedTail p) = 1 + 2 * (padT p - 1) * 131072 :=
+  paddedTail_cumulative p 131072
+
+/-- The reduced tail is `Below` the sharp tail: same middle and total, smaller
+`all` by exactly `131072`. -/
+theorem reducedTail_le_sharpTail (p : FlagDegree) :
+    Below (reducedTail p) (sharpTail p) := by
+  have hp := reducedTail_cumulative p
+  have hq := sharpTail_cumulative p
+  have hb := pad_bounds p
+  unfold Below
+  rw [hp.1, hp.2.1, hp.2.2, hq.1, hq.2.1, hq.2.2]
+  omega
+
+theorem reducedTail_mono {p q : FlagDegree} (h : Below p q) :
+    Below (reducedTail p) (reducedTail q) := by
+  have hp := reducedTail_cumulative p
+  have hq := reducedTail_cumulative q
+  have hc := padding_mono h
+  have hb := pad_bounds p
+  have hb' := pad_bounds q
+  unfold Below
+  rw [hp.1, hp.2.1, hp.2.2, hq.1, hq.2.1, hq.2.2]
+  omega
+
+/-- The C2 hybrid cost. -/
+def hybridCostC2 (p : FlagDegree) : ℕ :=
+  flagMixed p (reducedTail p) (hybridCoordinateC1 p) +
+    131076 * flagMixed p (movingFiber p) (movingCut p)
+
+/-- C2 never costs more than C1. -/
+theorem hybridCostC2_le_hybridCostC1 (p : FlagDegree) :
+    hybridCostC2 p ≤ hybridCostC1 p := by
+  unfold hybridCostC2 hybridCostC1
+  exact Nat.add_le_add_right
+    (mixed_mono_tails p (reducedTail_le_sharpTail p)
+      (⟨le_rfl, le_rfl, le_rfl⟩ : Below (hybridCoordinateC1 p)
+        (hybridCoordinateC1 p))) _
+
+/-- The hybrid branch condition, unchanged from C1. -/
+def HybridAppliesC2 (p : FlagDegree) : Prop := 3 ≤ p.all ∧ p.all + 2 ≤ middle p
+
+instance (p : FlagDegree) : Decidable (HybridAppliesC2 p) := by
+  unfold HybridAppliesC2; infer_instance
+
+def ordinaryCostOfC2 (p : FlagDegree) : ℕ :=
+  if HybridAppliesC2 p then
+    min (hybridCostC2 p) (paddedCost 131072 131073 p)
+  else paddedCost 131072 131073 p
+
+theorem hybridCostC2_mono {p q : FlagDegree} (h : Below p q) :
+    hybridCostC2 p ≤ hybridCostC2 q := by
+  unfold hybridCostC2
+  apply Nat.add_le_add
+  · exact (mixed_mono_first h _ _).trans
+      (mixed_mono_tails q (reducedTail_mono h) (hybridCoordinateC1_mono h))
+  · apply Nat.mul_le_mul_left
+    exact (mixed_mono_first h _ _).trans
+      (mixed_mono_tails q (movingFiber_mono h) (movingCut_mono h))
+
+theorem merge_hybrid_costsC2 {I : Type*} [Fintype I]
+    (p : I → FlagDegree) (P : FlagDegree)
+    (hs : (∑ i, (p i).all) ≤ P.all)
+    (hy : (∑ i, middle (p i)) ≤ middle P)
+    (ht : (∑ i, total (p i)) ≤ total P) :
+    (∑ i, (flagMixed (p i) (reducedTail P) (hybridCoordinateC1 P) +
+      131076 * flagMixed (p i) (movingFiber P) (movingCut P))) ≤
+      hybridCostC2 P := by
+  classical
+  rw [Finset.sum_add_distrib, ← Finset.mul_sum]
+  unfold hybridCostC2
+  apply Nat.add_le_add
+  · exact sum_mixed_le p P _ _ hs hy ht
+  · exact Nat.mul_le_mul_left _ (sum_mixed_le p P _ _ hs hy ht)
+
+theorem hybridAppliesC2_of_below {p q : FlagDegree} (hall : p.all = q.all)
+    (hpq : Below p q) (hp : HybridAppliesC2 p) : HybridAppliesC2 q := by
+  obtain ⟨h1, h2⟩ := hp
+  exact ⟨hall ▸ h1, by have := hpq.2.1; omega⟩
+
+theorem ordinaryCostOfC2_le_padded (p : FlagDegree) :
+    ordinaryCostOfC2 p ≤ paddedCost 131072 131073 p := by
+  unfold ordinaryCostOfC2
+  split_ifs
+  · exact min_le_right _ _
+  · exact le_rfl
+
+def OwnBoundC2 (count : ℕ) (p : FlagDegree) : Prop :=
+  count ≤ paddedCost 131072 131073 p ∧
+    (HybridAppliesC2 p → count ≤ hybridCostC2 p)
+
+theorem ownBound_le_ordinaryCostOfC2 {count : ℕ} {p : FlagDegree}
+    (h : OwnBoundC2 count p) : count ≤ ordinaryCostOfC2 p := by
+  unfold ordinaryCostOfC2
+  split_ifs with hp
+  · exact le_min (h.2 hp) h.1
+  · exact h.1
+
+theorem ownBoundC2_padded_mono {count : ℕ} {p q : FlagDegree}
+    (h : Below p q) (hown : OwnBoundC2 count p) :
+    count ≤ paddedCost 131072 131073 q :=
+  hown.1.trans (paddedCost_mono 131072 131073 h)
+
+end ProximityPrize.SubmissionLower.LocatorHybridCostC2
+end PackedLocator_LocatorHybridCostC2
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridCostSelect. -/
+section PackedLocator_LocatorHybridCostSelect
+/-!
+# The ordinary cost of the 6800 certificate (C2 selection)
+
+`LocatorHybridCost.ordinaryCostOf` is the C2 hybrid cost on the C2 branch
+(`3 ≤ slope` and `slope + 2 ≤ middle`) and the padded two-tail cost otherwise.
+There is deliberately no `min` against the padded cost: on the narrow box
+`hybridCostC2 ≤ paddedCost 131072 131073` holds pointwise, and the `if` shape
+is what `LocatorOrdinaryZConvex` needs (affine in `z`, not merely concave).
+`OwnBound` is `OwnBoundC2`, produced by `LocatorFixedOwnBoundC2`.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorHybridCost
+
+open RCN095 LocatorFactorAggregate LocatorHybridCostC2
+
+def ordinaryCostOf (p : FlagDegree) : ℕ :=
+  if HybridAppliesC2 p then hybridCostC2 p else paddedCost 131072 131073 p
+
+theorem ordinaryCostOf_of_hybrid (p : FlagDegree) (hp : HybridAppliesC2 p) :
+    ordinaryCostOf p = hybridCostC2 p := by
+  unfold ordinaryCostOf
+  rw [if_pos hp]
+
+theorem ordinaryCostOf_of_padded (p : FlagDegree) (hp : ¬ HybridAppliesC2 p) :
+    ordinaryCostOf p = paddedCost 131072 131073 p := by
+  unfold ordinaryCostOf
+  rw [if_neg hp]
+
+/-- The per-factor own bound consumed by the batch and bridge modules. -/
+abbrev OwnBound (count : ℕ) (p : FlagDegree) : Prop := OwnBoundC2 count p
+
+theorem ownBound_le_ordinaryCostOf {count : ℕ} {p : FlagDegree} (h : OwnBound count p) :
+    count ≤ ordinaryCostOf p := by
+  unfold ordinaryCostOf
+  split_ifs with hp
+  · exact h.2 hp
+  · exact h.1
+
+end ProximityPrize.SubmissionLower.LocatorHybridCost
+end PackedLocator_LocatorHybridCostSelect
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier10 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorBatchProductRoute. -/
+section PackedLocator_LocatorBatchProductRoute
+/-!
+# Collision-free extraction from a batch of regular factors
+
+Let `A` be a finite set of distinct regular factors and let `P` be their
+product.  Suppose a shared power route has reached a quotient family `q` at
+depth `j`, so an original row has the form `P^j * q v`.  At the first stage
+where not every factor divides every value of `q`, the nonuniversal
+divisibility conditions are proper submodules.  A finite-union argument
+chooses one `v` avoiding all of them simultaneously.
+
+For `F ∈ A` put `G_F = ∏ (A.erase F)` and retain the cofactor in the
+helper:
+
+`Q_F = G_F^j * q v`.
+
+Then `P^j * q v = F^j * Q_F`.  Consequently the order-`j` derivative
+extraction makes `Q_F` vanish on every `F`-regular seed, including seeds at
+which another factor vanishes.  There is no internal-collision error term or
+collision charge.  Pairwise coprimality also gives `IsRelPrime F Q_F`, and
+the cofactor exactly restores all residual weight lost to the other factors.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorBatchProductRoute
+
+open scoped BigOperators
+open UniqueFactorizationMonoid
+open RCN081 RCN100 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN260
+open LocatorLowQuotient LocatorCoprimeQuotient
+  LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact
+  LocatorTwoFactorAvoidance
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+variable {K V : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
+  UniqueFactorizationMonoid.strongNormalizationMonoid
+
+abbrev P4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
+
+/-! ## Divisibility subspaces and simultaneous avoidance -/
+
+/-- The preimage under a linear polynomial family of the principal ideal
+generated by `F`. -/
+def dvdSubmodule [AddCommGroup V] [Module K V]
+    (q : V →ₗ[K] P4 K) (F : P4 K) : Submodule K V where
+  carrier := {v | F ∣ q v}
+  zero_mem' := by simp
+  add_mem' := by
+    intro x y hx hy
+    change F ∣ q x at hx
+    change F ∣ q y at hy
+    change F ∣ q (x + y)
+    rw [map_add]
+    exact dvd_add hx hy
+  smul_mem' := by
+    intro a x hx
+    change F ∣ q x at hx
+    change F ∣ q (a • x)
+    rw [map_smul, MvPolynomial.smul_eq_C_mul]
+    exact dvd_mul_of_dvd_right hx _
+
+@[simp] theorem mem_dvdSubmodule [AddCommGroup V] [Module K V]
+    (q : V →ₗ[K] P4 K) (F : P4 K) (v : V) :
+    v ∈ dvdSubmodule q F ↔ F ∣ q v := Iff.rfl
+
+theorem dvdSubmodule_ne_top_of_not_universal
+    [AddCommGroup V] [Module K V]
+    (q : V →ₗ[K] P4 K) (F : P4 K)
+    (h : ¬ ∀ v, F ∣ q v) :
+    dvdSubmodule q F ≠ ⊤ := by
+  intro htop
+  apply h
+  intro v
+  have hv : v ∈ dvdSubmodule q F := by rw [htop]; trivial
+  exact hv
+
+/-- A field with more elements than the number of nonuniversal factors
+contains one vector avoiding every corresponding divisibility subspace.
+The vector is automatically nonzero when the factor set is nonempty. -/
+theorem exists_avoiding_nonuniversal_factors
+    [AddCommGroup V] [Module K V]
+    {A : Type} [DecidableEq A] (s : Finset A) (hs : s.Nonempty)
+    (q : V →ₗ[K] P4 K) (factor : A → P4 K)
+    (hnonuniversal : ∀ a ∈ s, ¬ ∀ v, factor a ∣ q v)
+    (hcard : s.card < ENat.card K) :
+    ∃ v, v ≠ 0 ∧ ∀ a ∈ s, ¬ factor a ∣ q v := by
+  classical
+  let bad : s → Submodule K V := fun a => dvdSubmodule q (factor a.1)
+  have hproper : ∀ a : s, bad a ≠ ⊤ := by
+    intro a
+    exact dvdSubmodule_ne_top_of_not_universal q (factor a.1)
+      (hnonuniversal a.1 a.2)
+  have hsmall : (Finset.univ : Finset s).card < ENat.card K := by
+    simpa using hcard
+  have hss := RCN133.finite_iUnion_ssubset
+    (Finset.univ : Finset s) bad hproper hsmall
+  obtain ⟨v, hv⟩ := Set.ssubset_univ_iff_nonempty_compl.mp hss
+  have havoid : ∀ a : s, v ∉ bad a := by
+    intro a hmem
+    apply hv
+    simp only [Set.mem_iUnion, Finset.mem_univ, true_and]
+    exact ⟨a, trivial, hmem⟩
+  have hv0 : v ≠ 0 := by
+    intro hz
+    obtain ⟨a, ha⟩ := hs
+    have hnot := havoid ⟨a, ha⟩
+    apply hnot
+    subst v
+    change factor a ∣ q 0
+    simp
+  refine ⟨v, hv0, ?_⟩
+  intro a ha
+  simpa only [bad, mem_dvdSubmodule] using havoid ⟨a, ha⟩
+
+/-! ## Products of distinct regular factors -/
+
+/-- The squarefree product represented by a finite set of regular indices. -/
+def regularProduct (H : P4 K) (A : Finset (RCN266.RegularIndex H)) : P4 K :=
+  ∏ F ∈ A, F.1
+
+/-- The complementary product after removing one regular index. -/
+def regularCofactor (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (F : RCN266.RegularIndex H) : P4 K :=
+  ∏ G ∈ A.erase F, G.1
+
+theorem regularFactor_ne_zero (H : P4 K) (F : RCN266.RegularIndex H) :
+    F.1 ≠ 0 :=
+  (RCN167.positiveRFactors_spec H F.1 F.2).1.ne_zero
+
+theorem regularProduct_ne_zero (H : P4 K)
+    (A : Finset (RCN266.RegularIndex H)) : regularProduct H A ≠ 0 := by
+  classical
+  unfold regularProduct
+  apply Finset.prod_ne_zero_iff.mpr
+  intro F hF
+  exact regularFactor_ne_zero H F
+
+theorem regularCofactor_ne_zero (H : P4 K)
+    (A : Finset (RCN266.RegularIndex H)) (F : RCN266.RegularIndex H) :
+    regularCofactor H A F ≠ 0 := by
+  classical
+  unfold regularCofactor
+  apply Finset.prod_ne_zero_iff.mpr
+  intro G hG
+  exact regularFactor_ne_zero H G
+
+/-- Exact factor/cofactor decomposition of the batch product. -/
+theorem regularFactor_mul_cofactor
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (F : RCN266.RegularIndex H) (hFA : F ∈ A) :
+    F.1 * regularCofactor H A F = regularProduct H A := by
+  classical
+  simpa only [regularProduct, regularCofactor] using
+    Finset.mul_prod_erase A (fun G => G.1) hFA
+
+/-- A regular factor is coprime to the product of all the other regular
+factors in the same finite set. -/
+theorem regularFactor_isRelPrime_cofactor
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (F : RCN266.RegularIndex H) (hFA : F ∈ A) :
+    IsRelPrime F.1 (regularCofactor H A F) := by
+  classical
+  unfold regularCofactor
+  apply IsRelPrime.prod_right
+  intro G hG
+  have hGe := Finset.mem_erase.mp hG
+  apply regularIndex_isRelPrime_of_ne H F G
+  intro heq
+  apply hGe.1
+  exact Subtype.ext heq.symm
+
+/-- Splitting a batch power around one selected factor. -/
+theorem regularProduct_power_split
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (F : RCN266.RegularIndex H) (hFA : F ∈ A)
+    (j : ℕ) (J : P4 K) :
+    regularProduct H A ^ j * J =
+      F.1 ^ j * (regularCofactor H A F ^ j * J) := by
+  rw [← regularFactor_mul_cofactor H A F hFA, mul_pow]
+  ring
+
+/-- Avoiding `F` in the common residual witness makes the cofactor-retaining
+helper coprime to `F`. -/
+theorem regularFactor_isRelPrime_liftedHelper
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (F : RCN266.RegularIndex H) (hFA : F ∈ A)
+    (j : ℕ) (J : P4 K) (hnot : ¬ F.1 ∣ J) :
+    IsRelPrime F.1 (regularCofactor H A F ^ j * J) := by
+  have hFirred := (RCN167.positiveRFactors_spec H F.1 F.2).1
+  apply hFirred.isRelPrime_iff_not_dvd.mpr
+  intro hd
+  apply hnot
+  exact ((regularFactor_isRelPrime_cofactor H A F hFA).pow_right)
+    |>.dvd_of_dvd_mul_left hd
+
+/-! ## Exact restoration of residual weights -/
+
+/-- Multiplying the common residual witness by the complementary product
+restores precisely the weight spent on all factors other than `F`. -/
+theorem cofactor_power_mul_weight_le_sub
+    (weights : Fin 4 → ℕ) (B j : ℕ) (F C J : P4 K)
+    (hF : F ≠ 0) (hC : C ≠ 0) (hJ : J ≠ 0)
+    (hfeasible : j * wt weights (F * C) ≤ B)
+    (hbound : wt weights J ≤ B - j * wt weights (F * C)) :
+    wt weights (C ^ j * J) ≤ B - j * wt weights F := by
+  have hFC := weightedTotalDegree_mul weights F C hF hC
+  have hCJ := weightedTotalDegree_mul weights (C ^ j) J
+    (pow_ne_zero j hC) hJ
+  have hCp := wt_pow_eq weights C hC j
+  unfold wt at hfeasible hbound hFC hCJ hCp ⊢
+  rw [hFC, Nat.mul_add] at hfeasible hbound
+  rw [hCp] at hCJ
+  rw [hCJ]
+  let f := MvPolynomial.weightedTotalDegree weights F
+  let c := MvPolynomial.weightedTotalDegree weights C
+  let x := MvPolynomial.weightedTotalDegree weights J
+  change j * f + j * c ≤ B at hfeasible
+  change x ≤ B - (j * f + j * c) at hbound
+  change j * c + x ≤ B - j * f
+  have htotal : j * f + (j * c + x) ≤ B := by
+    calc
+      j * f + (j * c + x) = (j * f + j * c) + x := by omega
+      _ ≤ (j * f + j * c) + (B - (j * f + j * c)) :=
+        Nat.add_le_add_left hbound _
+      _ = B := Nat.add_sub_of_le hfeasible
+  have htotal' : (j * c + x) + j * f ≤ B := by
+    simpa only [Nat.add_comm] using htotal
+  exact Nat.le_sub_of_add_le htotal'
+
+/-- The three residual bounds for every lifted helper. -/
+theorem liftedHelper_residual_bounds
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (F : RCN266.RegularIndex H) (hFA : F ∈ A)
+    (T YS S j : ℕ) (J : P4 K) (hJ : J ≠ 0)
+    (hT : wt residualTotalWeights J ≤
+      T - j * wt residualTotalWeights (regularProduct H A))
+    (hY : wt residualYSWeights J ≤
+      YS - j * wt residualYSWeights (regularProduct H A))
+    (hS : wt residualSWeights J ≤
+      S - j * wt residualSWeights (regularProduct H A))
+    (hTfeasible : j * wt residualTotalWeights (regularProduct H A) ≤ T)
+    (hYfeasible : j * wt residualYSWeights (regularProduct H A) ≤ YS)
+    (hSfeasible : j * wt residualSWeights (regularProduct H A) ≤ S) :
+    wt residualTotalWeights (regularCofactor H A F ^ j * J) ≤
+        T - j * wt residualTotalWeights F.1 ∧
+      wt residualYSWeights (regularCofactor H A F ^ j * J) ≤
+        YS - j * wt residualYSWeights F.1 ∧
+      wt residualSWeights (regularCofactor H A F ^ j * J) ≤
+        S - j * wt residualSWeights F.1 := by
+  have hfactor := regularFactor_mul_cofactor H A F hFA
+  have hF0 := regularFactor_ne_zero H F
+  have hC0 := regularCofactor_ne_zero H A F
+  rw [← hfactor] at hT hY hS hTfeasible hYfeasible hSfeasible
+  exact ⟨
+    cofactor_power_mul_weight_le_sub residualTotalWeights T j F.1
+      (regularCofactor H A F) J hF0 hC0 hJ hTfeasible hT,
+    cofactor_power_mul_weight_le_sub residualYSWeights YS j F.1
+      (regularCofactor H A F) J hF0 hC0 hJ hYfeasible hY,
+    cofactor_power_mul_weight_le_sub residualSWeights S j F.1
+      (regularCofactor H A F) J hF0 hC0 hJ hSfeasible hS⟩
+
+/-! ## One common witness and all collision-free helpers -/
+
+/-- At a nonuniversal batch stage, one vector gives coprime helpers for every
+nonuniversal factor, with the sharp per-factor residual caps.
+
+Crucially, `hnonuniversal` concerns the displayed current family `q`.  It must
+be established again after every high-band projection; nonuniversality on an
+earlier ambient family does not survive restriction to a kernel. -/
+theorem exists_collisionFree_batch_helpers
+    [AddCommGroup V] [Module K V]
+    (H : P4 K) (A N : Finset (RCN266.RegularIndex H))
+    (hNA : N ⊆ A) (hN : N.Nonempty)
+    (q : V →ₗ[K] P4 K) (hq : Function.Injective q)
+    (j Dq w T YS S : ℕ)
+    (hbox : ∀ v, q v ∈ nestedCoefficientBox K Dq w
+      (T - j * wt residualTotalWeights (regularProduct H A))
+      (YS - j * wt residualYSWeights (regularProduct H A))
+      (S - j * wt residualSWeights (regularProduct H A)))
+    (hfeasible :
+      j * wt residualTotalWeights (regularProduct H A) ≤ T ∧
+      j * wt residualYSWeights (regularProduct H A) ≤ YS ∧
+      j * wt residualSWeights (regularProduct H A) ≤ S)
+    (hnonuniversal : ∀ F ∈ N, ¬ ∀ v, F.1 ∣ q v)
+    (hcard : N.card < ENat.card K) :
+    ∃ (v : V) (J : P4 K),
+      v ≠ 0 ∧ J = q v ∧ J ≠ 0 ∧
+      ∀ F ∈ N,
+        let QF := regularCofactor H A F ^ j * J
+        QF ≠ 0 ∧ IsRelPrime F.1 QF ∧
+          regularProduct H A ^ j * J = F.1 ^ j * QF ∧
+          wt residualTotalWeights QF ≤
+            T - j * wt residualTotalWeights F.1 ∧
+          wt residualYSWeights QF ≤
+            YS - j * wt residualYSWeights F.1 ∧
+          wt residualSWeights QF ≤
+            S - j * wt residualSWeights F.1 := by
+  classical
+  obtain ⟨v, hv, havoid⟩ := exists_avoiding_nonuniversal_factors
+    N hN q (fun F => F.1) hnonuniversal hcard
+  let J := q v
+  have hJ : J ≠ 0 := by
+    intro hz
+    apply hv
+    apply hq
+    simpa only [J, map_zero] using hz
+  have hweights := nested_mem_weights (hbox v) hJ
+  refine ⟨v, J, hv, rfl, hJ, ?_⟩
+  intro F hFN
+  have hFA := hNA hFN
+  let QF := regularCofactor H A F ^ j * J
+  have hQF : QF ≠ 0 :=
+    mul_ne_zero (pow_ne_zero j (regularCofactor_ne_zero H A F)) hJ
+  have hrel : IsRelPrime F.1 QF := by
+    exact regularFactor_isRelPrime_liftedHelper H A F hFA j J
+      (havoid F hFN)
+  have heq := regularProduct_power_split H A F hFA j J
+  have hb := liftedHelper_residual_bounds H A F hFA T YS S j J hJ
+    hweights.1 hweights.2.1 hweights.2.2.1
+    hfeasible.1 hfeasible.2.1 hfeasible.2.2
+  exact ⟨hQF, hrel, heq, hb⟩
+
+/-! ## The current post-projection split -/
+
+/-- Factors whose divisibility subspace is the whole *current* domain. -/
+noncomputable def universalFactors
+    [AddCommGroup V] [Module K V]
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (q : V →ₗ[K] P4 K) : Finset (RCN266.RegularIndex H) := by
+  classical
+  exact A.filter fun F => ∀ v, F.1 ∣ q v
+
+@[simp] theorem mem_universalFactors
+    [AddCommGroup V] [Module K V]
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (q : V →ₗ[K] P4 K) (F : RCN266.RegularIndex H) :
+    F ∈ universalFactors H A q ↔ F ∈ A ∧ ∀ v, F.1 ∣ q v := by
+  classical
+  simp only [universalFactors, Finset.mem_filter]
+
+theorem universalFactors_subset
+    [AddCommGroup V] [Module K V]
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (q : V →ₗ[K] P4 K) : universalFactors H A q ⊆ A := by
+  intro F hF
+  exact (mem_universalFactors H A q F).mp hF |>.1
+
+/-- Individual universal divisibility combines to divisibility by the entire
+squarefree regular product. -/
+theorem regularProduct_dvd_of_each
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H)) (Q : P4 K)
+    (hdiv : ∀ F ∈ A, F.1 ∣ Q) : regularProduct H A ∣ Q := by
+  classical
+  induction A using Finset.induction_on with
+  | empty => simp only [regularProduct, Finset.notMem_empty,
+      Finset.prod_empty, one_dvd]
+  | @insert F A hFA ih =>
+      have hFdiv : F.1 ∣ Q := hdiv F (Finset.mem_insert_self F A)
+      have hAdiv : regularProduct H A ∣ Q := by
+        apply ih
+        intro G hGA
+        exact hdiv G (Finset.mem_insert_of_mem hGA)
+      have hrel : IsRelPrime F.1 (regularProduct H A) := by
+        unfold regularProduct
+        apply IsRelPrime.prod_right
+        intro G hGA
+        apply regularIndex_isRelPrime_of_ne H F G
+        intro heq
+        apply hFA
+        have hFG : F = G := Subtype.ext heq
+        rwa [hFG]
+      have hprod : regularProduct H (insert F A) =
+          F.1 * regularProduct H A := by
+        simp only [regularProduct, Finset.prod_insert hFA]
+      rw [hprod]
+      exact hrel.mul_dvd hFdiv hAdiv
+
+/-- The squarefree product of any set of regular indices divides the
+ambient carrier polynomial.  This is the bridge used after a universal
+source split: the source controls the product's narrow coordinates, while
+the selected carrier still controls its total coordinate. -/
+theorem regularProduct_dvd_carrier
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H)) :
+    regularProduct H A ∣ H := by
+  apply regularProduct_dvd_of_each
+  intro F _hFA
+  exact (RCN167.positiveRFactors_spec H F.1 F.2).2.1
+
+/-- The product of the current universal subset divides every value of the
+current family. -/
+theorem universalProduct_dvd
+    [AddCommGroup V] [Module K V]
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (q : V →ₗ[K] P4 K) :
+    ∀ v, regularProduct H (universalFactors H A q) ∣ q v := by
+  intro v
+  apply regularProduct_dvd_of_each
+  intro F hF
+  exact (mem_universalFactors H A q F).mp hF |>.2 v
+
+/-- Packaged conclusion of `exists_collisionFree_batch_helpers`. -/
+def HasCollisionFreeBatchHelpers
+    [AddCommGroup V] [Module K V]
+    (H : P4 K) (A N : Finset (RCN266.RegularIndex H))
+    (q : V →ₗ[K] P4 K) (j T YS S : ℕ) : Prop :=
+  ∃ (v : V) (J : P4 K),
+    v ≠ 0 ∧ J = q v ∧ J ≠ 0 ∧
+    ∀ F ∈ N,
+      let QF := regularCofactor H A F ^ j * J
+      QF ≠ 0 ∧ IsRelPrime F.1 QF ∧
+        regularProduct H A ^ j * J = F.1 ^ j * QF ∧
+        wt residualTotalWeights QF ≤
+          T - j * wt residualTotalWeights F.1 ∧
+        wt residualYSWeights QF ≤
+          YS - j * wt residualYSWeights F.1 ∧
+        wt residualSWeights QF ≤
+          S - j * wt residualSWeights F.1
+
+/-- One explicit adapter from a current post-projection family to the U/N
+case split used by the abstract phase recursion.
+
+If every factor is universal, the first component supplies divisibility by
+the whole product for the next shared quotient round.  Otherwise `U` is a
+strict subset and one common witness supplies all helpers for `N = A \ U`.
+The recursive child on `U` should normally be built from a fresh source; this
+theorem intentionally does not claim that restricting or quotienting the
+current family preserves nonuniversality. -/
+theorem currentPostProjection_split
+    [AddCommGroup V] [Module K V]
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (q : V →ₗ[K] P4 K) (hq : Function.Injective q)
+    (j Dq w T YS S : ℕ)
+    (hbox : ∀ v, q v ∈ nestedCoefficientBox K Dq w
+      (T - j * wt residualTotalWeights (regularProduct H A))
+      (YS - j * wt residualYSWeights (regularProduct H A))
+      (S - j * wt residualSWeights (regularProduct H A)))
+    (hfeasible :
+      j * wt residualTotalWeights (regularProduct H A) ≤ T ∧
+      j * wt residualYSWeights (regularProduct H A) ≤ YS ∧
+      j * wt residualSWeights (regularProduct H A) ≤ S)
+    (hfield : ∀ B : Finset (RCN266.RegularIndex H), B ⊆ A →
+      B.card < ENat.card K) :
+    let U := universalFactors H A q
+    (∀ v, regularProduct H U ∣ q v) ∧
+      (U = A ∨
+        U ⊂ A ∧ HasCollisionFreeBatchHelpers H A (A \ U) q j T YS S) := by
+  classical
+  let U := universalFactors H A q
+  have hUsub : U ⊆ A := universalFactors_subset H A q
+  have hprod : ∀ v, regularProduct H U ∣ q v :=
+    universalProduct_dvd H A q
+  refine ⟨hprod, ?_⟩
+  by_cases hall : U = A
+  · exact Or.inl hall
+  · right
+    have hproper : U ⊂ A :=
+      (_root_.ssubset_iff_subset_ne).mpr ⟨hUsub, hall⟩
+    have hN : (A \ U).Nonempty := by
+      apply Finset.sdiff_nonempty.mpr
+      intro hAU
+      exact hall (Finset.Subset.antisymm hUsub hAU)
+    have hnonuniversal : ∀ F ∈ A \ U, ¬ ∀ v, F.1 ∣ q v := by
+      intro F hFN hdiv
+      have hparts := Finset.mem_sdiff.mp hFN
+      apply hparts.2
+      exact (mem_universalFactors H A q F).mpr ⟨hparts.1, hdiv⟩
+    refine ⟨hproper, ?_⟩
+    exact exists_collisionFree_batch_helpers H A (A \ U)
+      Finset.sdiff_subset hN q hq j Dq w T YS S hbox hfeasible
+      hnonuniversal (hfield (A \ U) Finset.sdiff_subset)
+
+/-! ## Quotienting a fully universal batch -/
+
+private theorem sub_mul_then_one (a b j:ℕ):
+    a-j*b-b=a-(j+1)*b:=by
+  rw [Nat.sub_sub,Nat.add_mul,one_mul]
+
+/-- A raw constraint-kernel reconstruction lies in the nested source box as
+soon as the usual contact/slope shape inequality supplies its YS cap. -/
+theorem kernelReconstruct_mem_nested
+    {I:Type} [Fintype I]
+    (D w L S m YS:ℕ) (nodes u0 u1:I → K)
+    (hw:1 ≤ w) (hshape:D+S ≤ w*(YS+1)):
+    ∀ v:ConstraintKernel (K:=K) D w L S m nodes u0 u1,
+      kernelReconstructLinear (K:=K) D w L S m nodes u0 u1 v ∈
+        nestedCoefficientBox K D w L YS S:=by
+  intro v d hd
+  have hglobal:=reconstruct_mem_globalCoefficientBox K D w L S v.1
+  have hb:=hglobal hd
+  have hYS:=flag_box_ys_bound D w L S YS hw hshape
+    (reconstruct K D w L S v.1) hglobal
+  have hy:=(MvPolynomial.le_weightedTotalDegree residualYSWeights hd).trans hYS
+  rw [weight_fin4] at hy
+  simp only [residualYSWeights] at hy
+  refine ⟨hb.1,?_,hb.2.1,hb.2.2⟩
+  simpa [residualYSWeights] using hy
+
+/-- Source-entry adapter for a universally divisible squarefree regular
+product.  This is the batch analogue of the single-factor private
+`quotient_nested` construction: it builds the injective quotient family and
+subtracts the product's four weights exactly once. -/
+theorem kernelQuotient_regularProduct_nested
+    {I:Type} [Fintype I]
+    (D w L S m YS:ℕ) (nodes u0 u1:I → K)
+    (hw:1 ≤ w) (hshape:D+S ≤ w*(YS+1))
+    (H:P4 K) (A:Finset (RCN266.RegularIndex H))
+    (hdiv:∀ v:ConstraintKernel (K:=K) D w L S m nodes u0 u1,
+      regularProduct H A ∣ reconstruct K D w L S v.1):
+    ∃ q:ConstraintKernel (K:=K) D w L S m nodes u0 u1 →ₗ[K] P4 K,
+      Function.Injective q ∧
+      (∀ v,reconstruct K D w L S v.1=regularProduct H A*q v) ∧
+      ∀ v,q v ∈ nestedCoefficientBox K
+        (D-wt (contactWeights w) (regularProduct H A)) w
+        (L-wt residualTotalWeights (regularProduct H A))
+        (YS-wt residualYSWeights (regularProduct H A))
+        (S-wt residualSWeights (regularProduct H A)):=by
+  let recon:=kernelReconstructLinear (K:=K) D w L S m nodes u0 u1
+  have hdiv':∀ v,regularProduct H A ∣ recon v:=by
+    intro v
+    simpa only [recon,kernelReconstructLinear_apply] using hdiv v
+  obtain ⟨hq,hprod,hbox⟩:=quotientLinear_nested_data D w L YS S recon
+    (kernelReconstructLinear_injective (K:=K) D w L S m nodes u0 u1)
+    (kernelReconstruct_mem_nested D w L S m YS nodes u0 u1 hw hshape)
+    (regularProduct H A) (regularProduct_ne_zero H A) hdiv'
+  let q:=quotientLinear recon (regularProduct H A)
+    (regularProduct_ne_zero H A) hdiv'
+  refine ⟨q,hq,?_,?_⟩
+  · intro v
+    simpa only [recon,kernelReconstructLinear_apply,q] using hprod v
+  · exact hbox
+
+/-- If the entire current batch product divides an injective family, divide
+by that product in one operation.  The family remains injective, the product
+power advances from `j` to `j+1`, and all four residual coordinates are
+normalized to the new exponent. -/
+theorem quotient_by_universal_regularProduct
+    [AddCommGroup V] [Module K V]
+    (H:P4 K) (A:Finset (RCN266.RegularIndex H))
+    (q:V →ₗ[K] P4 K) (hq:Function.Injective q)
+    (j Dq w T YS S:ℕ)
+    (hmem:∀ v,q v ∈ nestedCoefficientBox K Dq w
+      (T-j*wt residualTotalWeights (regularProduct H A))
+      (YS-j*wt residualYSWeights (regularProduct H A))
+      (S-j*wt residualSWeights (regularProduct H A)))
+    (hdiv:∀ v,regularProduct H A ∣ q v):
+    ∃ qNext:V →ₗ[K] P4 K,
+      Function.Injective qNext ∧
+      (∀ v,regularProduct H A^j*q v=
+        regularProduct H A^(j+1)*qNext v) ∧
+      ∀ v,qNext v ∈ nestedCoefficientBox K
+        (Dq-wt (contactWeights w) (regularProduct H A)) w
+        (T-(j+1)*wt residualTotalWeights (regularProduct H A))
+        (YS-(j+1)*wt residualYSWeights (regularProduct H A))
+        (S-(j+1)*wt residualSWeights (regularProduct H A)):=by
+  classical
+  let P:=regularProduct H A
+  let qNext:=quotientLinear q P (regularProduct_ne_zero H A) hdiv
+  obtain ⟨hqNext,hprod,hnext⟩:=quotientLinear_nested_data
+    Dq w
+      (T-j*wt residualTotalWeights P)
+      (YS-j*wt residualYSWeights P)
+      (S-j*wt residualSWeights P)
+      q hq hmem P (regularProduct_ne_zero H A) hdiv
+  refine ⟨qNext,hqNext,?_,?_⟩
+  · intro v
+    change P^j*q v=P^(j+1)*qNext v
+    rw [hprod v,pow_succ]
+    ring
+  · intro v
+    have hv:=hnext v
+    simpa only [P,sub_mul_then_one] using hv
+
+/-- Complete current-stage adapter.  It first partitions factors using the
+displayed post-projection family.  A proper universal child emits simultaneous
+helpers for its complement.  If every factor is universal, it additionally
+constructs the next injective quotient family and advances the common product
+power.  Thus a consumer never has to infer post-projection properness from an
+earlier source stage. -/
+theorem currentPostProjection_split_or_advance
+    [AddCommGroup V] [Module K V]
+    (H:P4 K) (A:Finset (RCN266.RegularIndex H))
+    (q:V →ₗ[K] P4 K) (hq:Function.Injective q)
+    (j Dq w T YS S:ℕ)
+    (hbox:∀ v,q v ∈ nestedCoefficientBox K Dq w
+      (T-j*wt residualTotalWeights (regularProduct H A))
+      (YS-j*wt residualYSWeights (regularProduct H A))
+      (S-j*wt residualSWeights (regularProduct H A)))
+    (hfeasible:
+      j*wt residualTotalWeights (regularProduct H A) ≤ T ∧
+      j*wt residualYSWeights (regularProduct H A) ≤ YS ∧
+      j*wt residualSWeights (regularProduct H A) ≤ S)
+    (hfield:∀ B:Finset (RCN266.RegularIndex H),B ⊆ A →
+      B.card < ENat.card K):
+    let U:=universalFactors H A q
+    (∀ v,regularProduct H U ∣ q v) ∧
+      ((U ⊂ A ∧ HasCollisionFreeBatchHelpers H A (A\U) q j T YS S) ∨
+        (U=A ∧ ∃ qNext:V →ₗ[K] P4 K,
+          Function.Injective qNext ∧
+          (∀ v,regularProduct H A^j*q v=
+            regularProduct H A^(j+1)*qNext v) ∧
+          ∀ v,qNext v ∈ nestedCoefficientBox K
+            (Dq-wt (contactWeights w) (regularProduct H A)) w
+            (T-(j+1)*wt residualTotalWeights (regularProduct H A))
+            (YS-(j+1)*wt residualYSWeights (regularProduct H A))
+            (S-(j+1)*wt residualSWeights (regularProduct H A)))):=by
+  classical
+  let U:=universalFactors H A q
+  obtain ⟨hprod,hcase⟩:=currentPostProjection_split H A q hq
+    j Dq w T YS S hbox hfeasible hfield
+  refine ⟨hprod,?_⟩
+  rcases hcase with hall | hproper
+  · right
+    refine ⟨hall,?_⟩
+    have hdivA:∀ v,regularProduct H A ∣ q v:=by
+      intro v
+      rw [← hall]
+      exact hprod v
+    exact quotient_by_universal_regularProduct H A q hq
+      j Dq w T YS S hbox hdivA
+  · exact Or.inl hproper
+
+/-! ## First strict exit in a shared product-power chain -/
+
+/-- A shared band chain exits when the post-projection universal factors form
+a strict subset `U` of the current batch.  The index `j` counts additional
+whole-product quotients after the displayed input family `q`; thus a source
+which was quotiented once before calling this interface has original power
+`j+1` at the exit. -/
+def HasBatchExitStage
+    [AddCommGroup V] [Module K V]
+    (fuel Dlow w delta T YS S : ℕ)
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (q : V →ₗ[K] P4 K) : Prop :=
+  ∃ (j : Fin fuel) (U : Finset (RCN266.RegularIndex H)) (v : V) (J : P4 K),
+    U ⊂ A ∧ v ≠ 0 ∧ J ≠ 0 ∧
+      regularProduct H A ^ j.val * J = q v ∧
+      J ∈ nestedCoefficientBox K
+        (Dlow - j.val * delta -
+          j.val * wt (contactWeights w) (regularProduct H A)) w
+        (T - j.val * wt residualTotalWeights (regularProduct H A))
+        (YS - j.val * wt residualYSWeights (regularProduct H A))
+        (S - j.val * wt residualSWeights (regularProduct H A)) ∧
+      ∀ F ∈ A \ U, ¬ F.1 ∣ J
+
+/-- The batch analogue of `exists_power_stage_of_bandBudget_succ`.  At each
+band the universal subset is recomputed on the projected family.  A proper
+subset exits immediately; an all-universal stage quotients the entire
+squarefree product and continues.  The terminal residual inequality rules
+out an all-universal final stage.
+
+This theorem is deliberately only the linear-algebraic stage selector.  Its
+consumer multiplies the retained cofactor back into `J`, performs derivative
+extraction, and applies the desired helper-count cap. -/
+theorem exists_batchExitStage_of_bandBudget_succ
+    [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+    (steps Dhigh Dlow w delta T YS S : ℕ)
+    (hwidth : Dhigh ≤ Dlow + delta)
+    (q : V →ₗ[K] P4 K) (hq : Function.Injective q)
+    (hmem : ∀ v, q v ∈ nestedCoefficientBox K Dhigh w T YS S)
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H)) (hA : A.Nonempty)
+    (hsource :
+      powerBandBudget delta
+          (wt residualTotalWeights (regularProduct H A))
+          (wt residualYSWeights (regularProduct H A))
+          (wt residualSWeights (regularProduct H A))
+          T YS S (steps + 1) < Module.finrank K V)
+    (hterminal :
+      T - steps * wt residualTotalWeights (regularProduct H A) <
+          wt residualTotalWeights (regularProduct H A) ∨
+      YS - steps * wt residualYSWeights (regularProduct H A) <
+          wt residualYSWeights (regularProduct H A) ∨
+      S - steps * wt residualSWeights (regularProduct H A) <
+          wt residualSWeights (regularProduct H A))
+    (hfield : A.card < ENat.card K) :
+    HasBatchExitStage (steps + 1) Dlow w delta T YS S H A q := by
+  classical
+  let P := regularProduct H A
+  have hP : P ≠ 0 := by
+    simpa only [P] using regularProduct_ne_zero H A
+  change powerBandBudget delta
+      (wt residualTotalWeights P) (wt residualYSWeights P)
+      (wt residualSWeights P) T YS S (steps + 1) <
+    Module.finrank K V at hsource
+  change
+    T - steps * wt residualTotalWeights P < wt residualTotalWeights P ∨
+    YS - steps * wt residualYSWeights P < wt residualYSWeights P ∨
+    S - steps * wt residualSWeights P < wt residualSWeights P at hterminal
+  induction steps generalizing V Dhigh Dlow T YS S with
+  | zero =>
+      let bandOne := (highBandMap (K := K) w Dlow delta T YS S).comp q
+      let lowOne := LinearMap.ker bandOne
+      have hrangeOne : Module.finrank K bandOne.range ≤
+          delta * channelCount T YS S := by
+        calc
+          Module.finrank K bandOne.range ≤
+              Module.finrank K (HighBandIndex delta T YS S → K) :=
+            bandOne.range.finrank_le
+          _ = delta * channelCount T YS S := by
+            rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card]
+      have hlowOneRank : 0 < Module.finrank K lowOne := by
+        have hsum := bandOne.finrank_range_add_finrank_ker
+        change Module.finrank K bandOne.range + Module.finrank K lowOne =
+          Module.finrank K V at hsum
+        have hfirst : delta * channelCount T YS S < Module.finrank K V := by
+          simpa only [powerBandBudget, Nat.add_zero] using hsource
+        omega
+      let qOne : lowOne →ₗ[K] P4 K := q.comp lowOne.subtype
+      have hqOne : Function.Injective qOne := by
+        intro a b hab
+        apply Subtype.ext
+        apply hq
+        simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hab
+      have hqOneBox : ∀ v : lowOne,
+          qOne v ∈ nestedCoefficientBox K Dlow w T YS S := by
+        intro v
+        have hzero : highBandMap w Dlow delta T YS S (q v.1) = 0 := by
+          have hv := v.2
+          change bandOne v.1 = 0 at hv
+          simpa only [bandOne, qOne, LinearMap.comp_apply,
+            Submodule.coe_subtype] using hv
+        simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using
+          mem_low_of_highBandMap_eq_zero Dhigh Dlow w delta T YS S hwidth
+            (q v.1) (hmem v.1) hzero
+      let U := universalFactors H A qOne
+      have hUsub : U ⊆ A := universalFactors_subset H A qOne
+      by_cases hall : U = A
+      · have hdivP : ∀ v : lowOne, P ∣ qOne v := by
+          intro v
+          have hv := universalProduct_dvd H A qOne v
+          change regularProduct H U ∣ qOne v at hv
+          rw [hall] at hv
+          simpa only [P] using hv
+        exfalso
+        obtain ⟨v, hv⟩ :=
+          Module.finrank_pos_iff_exists_ne_zero.mp hlowOneRank
+        have hqv : qOne v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hqOne
+          simpa only [map_zero] using hz
+        have hb := nested_mem_weights (hqOneBox v) hqv
+        have hdivT : wt residualTotalWeights P ≤
+            wt residualTotalWeights (qOne v) := by
+          simpa only [wt] using
+            weightedTotalDegree_le_of_dvd residualTotalWeights P
+              (qOne v) (hdivP v) hqv
+        have hdivY : wt residualYSWeights P ≤
+            wt residualYSWeights (qOne v) := by
+          simpa only [wt] using
+            weightedTotalDegree_le_of_dvd residualYSWeights P
+              (qOne v) (hdivP v) hqv
+        have hdivS : wt residualSWeights P ≤
+            wt residualSWeights (qOne v) := by
+          simpa only [wt] using
+            weightedTotalDegree_le_of_dvd residualSWeights P
+              (qOne v) (hdivP v) hqv
+        rcases hterminal with ht | hy | hs
+        · apply (not_lt_of_ge (hdivT.trans hb.1))
+          simpa only [Nat.zero_mul, Nat.sub_zero] using ht
+        · apply (not_lt_of_ge (hdivY.trans hb.2.1))
+          simpa only [Nat.zero_mul, Nat.sub_zero] using hy
+        · apply (not_lt_of_ge (hdivS.trans hb.2.2.1))
+          simpa only [Nat.zero_mul, Nat.sub_zero] using hs
+      · have hproper : U ⊂ A :=
+          (_root_.ssubset_iff_subset_ne).mpr ⟨hUsub, hall⟩
+        have hN : (A \ U).Nonempty := by
+          apply Finset.sdiff_nonempty.mpr
+          intro hAU
+          exact hall (Finset.Subset.antisymm hUsub hAU)
+        have hnon : ∀ F ∈ A \ U, ¬ ∀ v, F.1 ∣ qOne v := by
+          intro F hFN hdiv
+          have hp := Finset.mem_sdiff.mp hFN
+          apply hp.2
+          exact (mem_universalFactors H A qOne F).mpr ⟨hp.1, hdiv⟩
+        have hNcard : (A \ U).card < ENat.card K := by
+          calc
+            ((A \ U).card : ENat) ≤ (A.card : ENat) := by
+              exact_mod_cast (Finset.card_le_card Finset.sdiff_subset)
+            _ < ENat.card K := hfield
+        obtain ⟨v, hv, havoid⟩ := exists_avoiding_nonuniversal_factors
+          (A \ U) hN qOne (fun F => F.1) hnon hNcard
+        have hqv : qOne v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hqOne
+          simpa only [map_zero] using hz
+        refine ⟨⟨0, by omega⟩, U, v.1, qOne v, hproper, ?_, hqv, ?_, ?_, ?_⟩
+        · intro hz
+          apply hv
+          exact Subtype.ext hz
+        · simp only [Fin.val_zero, pow_zero, one_mul, qOne,
+            LinearMap.comp_apply, Submodule.coe_subtype]
+        · simpa only [Fin.val_zero, zero_mul, Nat.sub_zero] using hqOneBox v
+        · exact havoid
+  | succ steps ih =>
+      let bandOne := (highBandMap (K := K) w Dlow delta T YS S).comp q
+      let lowOne := LinearMap.ker bandOne
+      have hrangeOne : Module.finrank K bandOne.range ≤
+          delta * channelCount T YS S := by
+        calc
+          Module.finrank K bandOne.range ≤
+              Module.finrank K (HighBandIndex delta T YS S → K) :=
+            bandOne.range.finrank_le
+          _ = delta * channelCount T YS S := by
+            rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card]
+      have hlowOneRank :
+          powerBandBudget delta
+              (wt residualTotalWeights P) (wt residualYSWeights P)
+              (wt residualSWeights P)
+              (T - wt residualTotalWeights P)
+              (YS - wt residualYSWeights P)
+              (S - wt residualSWeights P) (steps + 1) <
+            Module.finrank K lowOne := by
+        have hsum := bandOne.finrank_range_add_finrank_ker
+        change Module.finrank K bandOne.range + Module.finrank K lowOne =
+          Module.finrank K V at hsum
+        have hbudget :
+            delta * channelCount T YS S +
+                powerBandBudget delta
+                  (wt residualTotalWeights P) (wt residualYSWeights P)
+                  (wt residualSWeights P)
+                  (T - wt residualTotalWeights P)
+                  (YS - wt residualYSWeights P)
+                  (S - wt residualSWeights P) (steps + 1) <
+              Module.finrank K V := by
+          simpa only [powerBandBudget, Nat.succ_eq_add_one,
+            Nat.add_assoc] using hsource
+        omega
+      let qOne : lowOne →ₗ[K] P4 K := q.comp lowOne.subtype
+      have hqOne : Function.Injective qOne := by
+        intro a b hab
+        apply Subtype.ext
+        apply hq
+        simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hab
+      have hqOneBox : ∀ v : lowOne,
+          qOne v ∈ nestedCoefficientBox K Dlow w T YS S := by
+        intro v
+        have hzero : highBandMap w Dlow delta T YS S (q v.1) = 0 := by
+          have hv := v.2
+          change bandOne v.1 = 0 at hv
+          simpa only [bandOne, qOne, LinearMap.comp_apply,
+            Submodule.coe_subtype] using hv
+        simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using
+          mem_low_of_highBandMap_eq_zero Dhigh Dlow w delta T YS S hwidth
+            (q v.1) (hmem v.1) hzero
+      let U := universalFactors H A qOne
+      have hUsub : U ⊆ A := universalFactors_subset H A qOne
+      by_cases hall : U = A
+      · have hdivP : ∀ v : lowOne, P ∣ qOne v := by
+          intro v
+          have hv := universalProduct_dvd H A qOne v
+          change regularProduct H U ∣ qOne v at hv
+          rw [hall] at hv
+          simpa only [P] using hv
+        let qTwo := quotientLinear qOne P hP hdivP
+        obtain ⟨hqTwo, _hprodTwo, hqTwoBox⟩ :=
+          quotientLinear_nested_data Dlow w T YS S qOne hqOne hqOneBox
+            P hP hdivP
+        let DOneHigh := Dlow - wt (contactWeights w) P
+        let DOneLow := Dlow - delta - wt (contactWeights w) P
+        let TOne := T - wt residualTotalWeights P
+        let YOne := YS - wt residualYSWeights P
+        let SOne := S - wt residualSWeights P
+        have hwidthRest : DOneHigh ≤ DOneLow + delta := by
+          simp only [DOneHigh, DOneLow]
+          omega
+        have hterminalRest :
+            TOne - steps * wt residualTotalWeights P <
+                wt residualTotalWeights P ∨
+            YOne - steps * wt residualYSWeights P <
+                wt residualYSWeights P ∨
+            SOne - steps * wt residualSWeights P <
+                wt residualSWeights P := by
+          rcases hterminal with ht | hy | hs
+          · left
+            simpa only [TOne, Nat.sub_sub, Nat.add_mul, one_mul,
+              Nat.succ_eq_add_one, Nat.add_comm] using ht
+          · right; left
+            simpa only [YOne, Nat.sub_sub, Nat.add_mul, one_mul,
+              Nat.succ_eq_add_one, Nat.add_comm] using hy
+          · right; right
+            simpa only [SOne, Nat.sub_sub, Nat.add_mul, one_mul,
+              Nat.succ_eq_add_one, Nat.add_comm] using hs
+        obtain ⟨j, child, v, J, hchild, hv, hJ, heq, hbox, havoid⟩ :=
+          ih DOneHigh DOneLow TOne YOne SOne hwidthRest qTwo hqTwo
+            (by simpa only [qTwo, DOneHigh, TOne, YOne, SOne] using hqTwoBox)
+            (by simpa only [TOne, YOne, SOne] using hlowOneRank)
+            hterminalRest
+        let jUp : Fin (Nat.succ steps + 1) := ⟨j.val + 1, by omega⟩
+        refine ⟨jUp, child, v.1, J, hchild, ?_, hJ, ?_, ?_, havoid⟩
+        · intro hz
+          apply hv
+          exact Subtype.ext hz
+        · change P ^ (j.val + 1) * J = q v.1
+          calc
+            P ^ (j.val + 1) * J = P * (P ^ j.val * J) := by
+              rw [pow_succ']
+              ring
+            _ = P * qTwo v := by rw [heq]
+            _ = qOne v :=
+              (recon_eq_mul_quotientPolynomial qOne P hdivP v).symm
+            _ = q v.1 := rfl
+        · have hD :
+              DOneLow - j.val * delta -
+                  j.val * wt (contactWeights w) P =
+                Dlow - (j.val + 1) * delta -
+                  (j.val + 1) * wt (contactWeights w) P := by
+              simp only [DOneLow, Nat.sub_sub, Nat.add_mul, one_mul]
+              congr 1
+              omega
+          have hT : TOne - j.val * wt residualTotalWeights P =
+              T - (j.val + 1) * wt residualTotalWeights P := by
+            simp only [TOne, Nat.sub_sub, Nat.add_mul, one_mul]
+            congr 1
+            omega
+          have hY : YOne - j.val * wt residualYSWeights P =
+              YS - (j.val + 1) * wt residualYSWeights P := by
+            simp only [YOne, Nat.sub_sub, Nat.add_mul, one_mul]
+            congr 1
+            omega
+          have hS : SOne - j.val * wt residualSWeights P =
+              S - (j.val + 1) * wt residualSWeights P := by
+            simp only [SOne, Nat.sub_sub, Nat.add_mul, one_mul]
+            congr 1
+            omega
+          change J ∈ nestedCoefficientBox K
+            (DOneLow - j.val * delta -
+              j.val * wt (contactWeights w) P) w
+            (TOne - j.val * wt residualTotalWeights P)
+            (YOne - j.val * wt residualYSWeights P)
+            (SOne - j.val * wt residualSWeights P) at hbox
+          change J ∈ nestedCoefficientBox K
+            (Dlow - (j.val + 1) * delta -
+              (j.val + 1) * wt (contactWeights w) P) w
+            (T - (j.val + 1) * wt residualTotalWeights P)
+            (YS - (j.val + 1) * wt residualYSWeights P)
+            (S - (j.val + 1) * wt residualSWeights P)
+          rw [hD, hT, hY, hS] at hbox
+          exact hbox
+      · have hproper : U ⊂ A :=
+          (_root_.ssubset_iff_subset_ne).mpr ⟨hUsub, hall⟩
+        have hN : (A \ U).Nonempty := by
+          apply Finset.sdiff_nonempty.mpr
+          intro hAU
+          exact hall (Finset.Subset.antisymm hUsub hAU)
+        have hnon : ∀ F ∈ A \ U, ¬ ∀ v, F.1 ∣ qOne v := by
+          intro F hFN hdiv
+          have hp := Finset.mem_sdiff.mp hFN
+          apply hp.2
+          exact (mem_universalFactors H A qOne F).mpr ⟨hp.1, hdiv⟩
+        have hNcard : (A \ U).card < ENat.card K := by
+          calc
+            ((A \ U).card : ENat) ≤ (A.card : ENat) := by
+              exact_mod_cast (Finset.card_le_card Finset.sdiff_subset)
+            _ < ENat.card K := hfield
+        obtain ⟨v, hv, havoid⟩ := exists_avoiding_nonuniversal_factors
+          (A \ U) hN qOne (fun F => F.1) hnon hNcard
+        have hqv : qOne v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hqOne
+          simpa only [map_zero] using hz
+        refine ⟨⟨0, by omega⟩, U, v.1, qOne v, hproper, ?_, hqv, ?_, ?_, ?_⟩
+        · intro hz
+          apply hv
+          exact Subtype.ext hz
+        · simp only [Fin.val_zero, pow_zero, one_mul, qOne,
+            LinearMap.comp_apply, Submodule.coe_subtype]
+        · simpa only [Fin.val_zero, zero_mul, Nat.sub_zero] using hqOneBox v
+        · exact havoid
+
+
+/-! ## Contact-thinned batch selector (lever S1) -/
+
+
+theorem exists_batchExitStage_of_bandBudgetThin_succ
+    [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+    (steps Dhigh Dlow w delta T YS S : ℕ)
+    (hw : 1 ≤ w) (hDlow : Dlow = Dhigh - delta)
+    (q : V →ₗ[K] P4 K) (hq : Function.Injective q)
+    (hmem : ∀ v, q v ∈ nestedCoefficientBox K Dhigh w T YS S)
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H)) (hA : A.Nonempty)
+    (hsource :
+      LocatorArbitraryPowerAvoidance.powerBandBudgetThin w Dhigh delta
+          (wt (contactWeights w) (regularProduct H A))
+          (wt residualTotalWeights (regularProduct H A))
+          (wt residualYSWeights (regularProduct H A))
+          (wt residualSWeights (regularProduct H A))
+          T YS S (steps + 1) < Module.finrank K V)
+    (hterminal :
+      T - steps * wt residualTotalWeights (regularProduct H A) <
+          wt residualTotalWeights (regularProduct H A) ∨
+      YS - steps * wt residualYSWeights (regularProduct H A) <
+          wt residualYSWeights (regularProduct H A) ∨
+      S - steps * wt residualSWeights (regularProduct H A) <
+          wt residualSWeights (regularProduct H A))
+    (hfield : A.card < ENat.card K) :
+    HasBatchExitStage (steps + 1) Dlow w delta T YS S H A q := by
+  classical
+  let P := regularProduct H A
+  have hP : P ≠ 0 := by
+    simpa only [P] using regularProduct_ne_zero H A
+  change LocatorArbitraryPowerAvoidance.powerBandBudgetThin w Dhigh delta
+      (wt (contactWeights w) P)
+      (wt residualTotalWeights P) (wt residualYSWeights P)
+      (wt residualSWeights P) T YS S (steps + 1) <
+    Module.finrank K V at hsource
+  change
+    T - steps * wt residualTotalWeights P < wt residualTotalWeights P ∨
+    YS - steps * wt residualYSWeights P < wt residualYSWeights P ∨
+    S - steps * wt residualSWeights P < wt residualSWeights P at hterminal
+  induction steps generalizing V Dhigh Dlow T YS S with
+  | zero =>
+      let bandOne := (highBandMap (K := K) w Dlow delta T
+        (min YS (LocatorArbitraryPowerAvoidance.thinTop w Dhigh S)) S).comp q
+      let lowOne := LinearMap.ker bandOne
+      have hwidth : Dhigh ≤ Dlow + delta := by omega
+      have hrangeOne : Module.finrank K bandOne.range ≤
+          delta * channelCount T
+            (min YS (LocatorArbitraryPowerAvoidance.thinTop w Dhigh S)) S := by
+        calc
+          Module.finrank K bandOne.range ≤
+              Module.finrank K (HighBandIndex delta T
+                (min YS (LocatorArbitraryPowerAvoidance.thinTop w Dhigh S)) S → K) :=
+            bandOne.range.finrank_le
+          _ = delta * channelCount T
+              (min YS (LocatorArbitraryPowerAvoidance.thinTop w Dhigh S)) S := by
+            rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card]
+      have hlowOneRank : 0 < Module.finrank K lowOne := by
+        have hsum := bandOne.finrank_range_add_finrank_ker
+        change Module.finrank K bandOne.range + Module.finrank K lowOne =
+          Module.finrank K V at hsum
+        have hfirst : delta * channelCount T
+            (min YS (LocatorArbitraryPowerAvoidance.thinTop w Dhigh S)) S <
+              Module.finrank K V := by
+          simpa only [LocatorArbitraryPowerAvoidance.powerBandBudgetThin,
+            Nat.add_zero] using hsource
+        omega
+      let qOne : lowOne →ₗ[K] P4 K := q.comp lowOne.subtype
+      have hqOne : Function.Injective qOne := by
+        intro a b hab
+        apply Subtype.ext
+        apply hq
+        simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hab
+      have hqOneBox : ∀ v : lowOne,
+          qOne v ∈ nestedCoefficientBox K Dlow w T YS S := by
+        intro v
+        have hzero : highBandMap w Dlow delta T
+            (min YS (LocatorArbitraryPowerAvoidance.thinTop w Dhigh S)) S (q v.1) = 0 := by
+          have hv := v.2
+          change bandOne v.1 = 0 at hv
+          simpa only [bandOne, qOne, LinearMap.comp_apply,
+            Submodule.coe_subtype] using hv
+        simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using
+          LocatorArbitraryPowerAvoidance.mem_low_of_highBandMap_cut_eq_zero
+            Dhigh Dlow w delta T YS S hw hwidth (q v.1) (hmem v.1) hzero
+      let U := universalFactors H A qOne
+      have hUsub : U ⊆ A := universalFactors_subset H A qOne
+      by_cases hall : U = A
+      · have hdivP : ∀ v : lowOne, P ∣ qOne v := by
+          intro v
+          have hv := universalProduct_dvd H A qOne v
+          change regularProduct H U ∣ qOne v at hv
+          rw [hall] at hv
+          simpa only [P] using hv
+        exfalso
+        obtain ⟨v, hv⟩ :=
+          Module.finrank_pos_iff_exists_ne_zero.mp hlowOneRank
+        have hqv : qOne v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hqOne
+          simpa only [map_zero] using hz
+        have hb := nested_mem_weights (hqOneBox v) hqv
+        have hdivT : wt residualTotalWeights P ≤
+            wt residualTotalWeights (qOne v) := by
+          simpa only [wt] using
+            weightedTotalDegree_le_of_dvd residualTotalWeights P
+              (qOne v) (hdivP v) hqv
+        have hdivY : wt residualYSWeights P ≤
+            wt residualYSWeights (qOne v) := by
+          simpa only [wt] using
+            weightedTotalDegree_le_of_dvd residualYSWeights P
+              (qOne v) (hdivP v) hqv
+        have hdivS : wt residualSWeights P ≤
+            wt residualSWeights (qOne v) := by
+          simpa only [wt] using
+            weightedTotalDegree_le_of_dvd residualSWeights P
+              (qOne v) (hdivP v) hqv
+        rcases hterminal with ht | hy | hs
+        · apply (not_lt_of_ge (hdivT.trans hb.1))
+          simpa only [Nat.zero_mul, Nat.sub_zero] using ht
+        · apply (not_lt_of_ge (hdivY.trans hb.2.1))
+          simpa only [Nat.zero_mul, Nat.sub_zero] using hy
+        · apply (not_lt_of_ge (hdivS.trans hb.2.2.1))
+          simpa only [Nat.zero_mul, Nat.sub_zero] using hs
+      · have hproper : U ⊂ A :=
+          (_root_.ssubset_iff_subset_ne).mpr ⟨hUsub, hall⟩
+        have hN : (A \ U).Nonempty := by
+          apply Finset.sdiff_nonempty.mpr
+          intro hAU
+          exact hall (Finset.Subset.antisymm hUsub hAU)
+        have hnon : ∀ F ∈ A \ U, ¬ ∀ v, F.1 ∣ qOne v := by
+          intro F hFN hdiv
+          have hp := Finset.mem_sdiff.mp hFN
+          apply hp.2
+          exact (mem_universalFactors H A qOne F).mpr ⟨hp.1, hdiv⟩
+        have hNcard : (A \ U).card < ENat.card K := by
+          calc
+            ((A \ U).card : ENat) ≤ (A.card : ENat) := by
+              exact_mod_cast (Finset.card_le_card Finset.sdiff_subset)
+            _ < ENat.card K := hfield
+        obtain ⟨v, hv, havoid⟩ := exists_avoiding_nonuniversal_factors
+          (A \ U) hN qOne (fun F => F.1) hnon hNcard
+        have hqv : qOne v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hqOne
+          simpa only [map_zero] using hz
+        refine ⟨⟨0, by omega⟩, U, v.1, qOne v, hproper, ?_, hqv, ?_, ?_, ?_⟩
+        · intro hz
+          apply hv
+          exact Subtype.ext hz
+        · simp only [Fin.val_zero, pow_zero, one_mul, qOne,
+            LinearMap.comp_apply, Submodule.coe_subtype]
+        · simpa only [Fin.val_zero, zero_mul, Nat.sub_zero] using hqOneBox v
+        · exact havoid
+  | succ steps ih =>
+      let bandOne := (highBandMap (K := K) w Dlow delta T
+        (min YS (LocatorArbitraryPowerAvoidance.thinTop w Dhigh S)) S).comp q
+      let lowOne := LinearMap.ker bandOne
+      have hwidth : Dhigh ≤ Dlow + delta := by omega
+      have hrangeOne : Module.finrank K bandOne.range ≤
+          delta * channelCount T
+            (min YS (LocatorArbitraryPowerAvoidance.thinTop w Dhigh S)) S := by
+        calc
+          Module.finrank K bandOne.range ≤
+              Module.finrank K (HighBandIndex delta T
+                (min YS (LocatorArbitraryPowerAvoidance.thinTop w Dhigh S)) S → K) :=
+            bandOne.range.finrank_le
+          _ = delta * channelCount T
+              (min YS (LocatorArbitraryPowerAvoidance.thinTop w Dhigh S)) S := by
+            rw [Module.finrank_fintype_fun_eq_card, highBandIndex_card]
+      have hlowOneRank :
+          LocatorArbitraryPowerAvoidance.powerBandBudgetThin w
+              (Dhigh - delta - wt (contactWeights w) P) delta
+              (wt (contactWeights w) P)
+              (wt residualTotalWeights P) (wt residualYSWeights P)
+              (wt residualSWeights P)
+              (T - wt residualTotalWeights P)
+              (YS - wt residualYSWeights P)
+              (S - wt residualSWeights P) (steps + 1) <
+            Module.finrank K lowOne := by
+        have hsum := bandOne.finrank_range_add_finrank_ker
+        change Module.finrank K bandOne.range + Module.finrank K lowOne =
+          Module.finrank K V at hsum
+        have hbudget :
+            delta * channelCount T
+                (min YS (LocatorArbitraryPowerAvoidance.thinTop w Dhigh S)) S +
+                LocatorArbitraryPowerAvoidance.powerBandBudgetThin w
+                  (Dhigh - delta - wt (contactWeights w) P) delta
+                  (wt (contactWeights w) P)
+                  (wt residualTotalWeights P) (wt residualYSWeights P)
+                  (wt residualSWeights P)
+                  (T - wt residualTotalWeights P)
+                  (YS - wt residualYSWeights P)
+                  (S - wt residualSWeights P) (steps + 1) <
+              Module.finrank K V := by
+          simpa only [LocatorArbitraryPowerAvoidance.powerBandBudgetThin,
+            Nat.succ_eq_add_one, Nat.add_assoc] using hsource
+        omega
+      let qOne : lowOne →ₗ[K] P4 K := q.comp lowOne.subtype
+      have hqOne : Function.Injective qOne := by
+        intro a b hab
+        apply Subtype.ext
+        apply hq
+        simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using hab
+      have hqOneBox : ∀ v : lowOne,
+          qOne v ∈ nestedCoefficientBox K Dlow w T YS S := by
+        intro v
+        have hzero : highBandMap w Dlow delta T
+            (min YS (LocatorArbitraryPowerAvoidance.thinTop w Dhigh S)) S (q v.1) = 0 := by
+          have hv := v.2
+          change bandOne v.1 = 0 at hv
+          simpa only [bandOne, qOne, LinearMap.comp_apply,
+            Submodule.coe_subtype] using hv
+        simpa only [qOne, LinearMap.comp_apply, Submodule.coe_subtype] using
+          LocatorArbitraryPowerAvoidance.mem_low_of_highBandMap_cut_eq_zero
+            Dhigh Dlow w delta T YS S hw hwidth (q v.1) (hmem v.1) hzero
+      let U := universalFactors H A qOne
+      have hUsub : U ⊆ A := universalFactors_subset H A qOne
+      by_cases hall : U = A
+      · have hdivP : ∀ v : lowOne, P ∣ qOne v := by
+          intro v
+          have hv := universalProduct_dvd H A qOne v
+          change regularProduct H U ∣ qOne v at hv
+          rw [hall] at hv
+          simpa only [P] using hv
+        let qTwo := quotientLinear qOne P hP hdivP
+        obtain ⟨hqTwo, _hprodTwo, hqTwoBox⟩ :=
+          quotientLinear_nested_data Dlow w T YS S qOne hqOne hqOneBox
+            P hP hdivP
+        let DOneHigh := Dlow - wt (contactWeights w) P
+        let DOneLow := Dlow - delta - wt (contactWeights w) P
+        let TOne := T - wt residualTotalWeights P
+        let YOne := YS - wt residualYSWeights P
+        let SOne := S - wt residualSWeights P
+        have hDlowRest : DOneLow = DOneHigh - delta := by
+          simp only [DOneHigh, DOneLow]
+          omega
+        have hterminalRest :
+            TOne - steps * wt residualTotalWeights P <
+                wt residualTotalWeights P ∨
+            YOne - steps * wt residualYSWeights P <
+                wt residualYSWeights P ∨
+            SOne - steps * wt residualSWeights P <
+                wt residualSWeights P := by
+          rcases hterminal with ht | hy | hs
+          · left
+            simpa only [TOne, Nat.sub_sub, Nat.add_mul, one_mul,
+              Nat.succ_eq_add_one, Nat.add_comm] using ht
+          · right; left
+            simpa only [YOne, Nat.sub_sub, Nat.add_mul, one_mul,
+              Nat.succ_eq_add_one, Nat.add_comm] using hy
+          · right; right
+            simpa only [SOne, Nat.sub_sub, Nat.add_mul, one_mul,
+              Nat.succ_eq_add_one, Nat.add_comm] using hs
+        obtain ⟨j, child, v, J, hchild, hv, hJ, heq, hbox, havoid⟩ :=
+          ih DOneHigh DOneLow TOne YOne SOne hDlowRest qTwo hqTwo
+            (by simpa only [qTwo, DOneHigh, TOne, YOne, SOne] using hqTwoBox)
+            (by simpa only [DOneHigh, TOne, YOne, SOne, hDlow] using hlowOneRank)
+            hterminalRest
+        let jUp : Fin (Nat.succ steps + 1) := ⟨j.val + 1, by omega⟩
+        refine ⟨jUp, child, v.1, J, hchild, ?_, hJ, ?_, ?_, havoid⟩
+        · intro hz
+          apply hv
+          exact Subtype.ext hz
+        · change P ^ (j.val + 1) * J = q v.1
+          calc
+            P ^ (j.val + 1) * J = P * (P ^ j.val * J) := by
+              rw [pow_succ']
+              ring
+            _ = P * qTwo v := by rw [heq]
+            _ = qOne v :=
+              (recon_eq_mul_quotientPolynomial qOne P hdivP v).symm
+            _ = q v.1 := rfl
+        · have hD :
+              DOneLow - j.val * delta -
+                  j.val * wt (contactWeights w) P =
+                Dlow - (j.val + 1) * delta -
+                  (j.val + 1) * wt (contactWeights w) P := by
+              simp only [DOneLow, Nat.sub_sub, Nat.add_mul, one_mul]
+              congr 1
+              omega
+          have hT : TOne - j.val * wt residualTotalWeights P =
+              T - (j.val + 1) * wt residualTotalWeights P := by
+            simp only [TOne, Nat.sub_sub, Nat.add_mul, one_mul]
+            congr 1
+            omega
+          have hY : YOne - j.val * wt residualYSWeights P =
+              YS - (j.val + 1) * wt residualYSWeights P := by
+            simp only [YOne, Nat.sub_sub, Nat.add_mul, one_mul]
+            congr 1
+            omega
+          have hS : SOne - j.val * wt residualSWeights P =
+              S - (j.val + 1) * wt residualSWeights P := by
+            simp only [SOne, Nat.sub_sub, Nat.add_mul, one_mul]
+            congr 1
+            omega
+          change J ∈ nestedCoefficientBox K
+            (DOneLow - j.val * delta -
+              j.val * wt (contactWeights w) P) w
+            (TOne - j.val * wt residualTotalWeights P)
+            (YOne - j.val * wt residualYSWeights P)
+            (SOne - j.val * wt residualSWeights P) at hbox
+          change J ∈ nestedCoefficientBox K
+            (Dlow - (j.val + 1) * delta -
+              (j.val + 1) * wt (contactWeights w) P) w
+            (T - (j.val + 1) * wt residualTotalWeights P)
+            (YS - (j.val + 1) * wt residualYSWeights P)
+            (S - (j.val + 1) * wt residualSWeights P)
+          rw [hD, hT, hY, hS] at hbox
+          exact hbox
+      · have hproper : U ⊂ A :=
+          (_root_.ssubset_iff_subset_ne).mpr ⟨hUsub, hall⟩
+        have hN : (A \ U).Nonempty := by
+          apply Finset.sdiff_nonempty.mpr
+          intro hAU
+          exact hall (Finset.Subset.antisymm hUsub hAU)
+        have hnon : ∀ F ∈ A \ U, ¬ ∀ v, F.1 ∣ qOne v := by
+          intro F hFN hdiv
+          have hp := Finset.mem_sdiff.mp hFN
+          apply hp.2
+          exact (mem_universalFactors H A qOne F).mpr ⟨hp.1, hdiv⟩
+        have hNcard : (A \ U).card < ENat.card K := by
+          calc
+            ((A \ U).card : ENat) ≤ (A.card : ENat) := by
+              exact_mod_cast (Finset.card_le_card Finset.sdiff_subset)
+            _ < ENat.card K := hfield
+        obtain ⟨v, hv, havoid⟩ := exists_avoiding_nonuniversal_factors
+          (A \ U) hN qOne (fun F => F.1) hnon hNcard
+        have hqv : qOne v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hqOne
+          simpa only [map_zero] using hz
+        refine ⟨⟨0, by omega⟩, U, v.1, qOne v, hproper, ?_, hqv, ?_, ?_, ?_⟩
+        · intro hz
+          apply hv
+          exact Subtype.ext hz
+        · simp only [Fin.val_zero, pow_zero, one_mul, qOne,
+            LinearMap.comp_apply, Submodule.coe_subtype]
+        · simpa only [Fin.val_zero, zero_mul, Nat.sub_zero] using hqOneBox v
+        · exact havoid
+
+
+/-! ## Derivative extraction has no internal-collision locus -/
+
+/-- The retained complementary product is part of the helper passed to the
+power-extraction lemma.  Hence this conclusion holds on every regular seed,
+without assuming that the complementary product specializes nonzero. -/
+theorem specialization_eq_zero_of_batch_power
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (F : RCN266.RegularIndex H) (hFA : F ∈ A)
+    (j : ℕ) (P : Polynomial K) (gamma : K) (J : P4 K)
+    (hfactorial : (j.factorial : K) ≠ 0)
+    (hFzero : RCN319.specialization K P gamma F.1 = 0)
+    (hregular : RCN319.specialization K P gamma
+      (MvPolynomial.pderiv (2 : Fin 4) F.1) ≠ 0)
+    (hpower : RCN319.specialization K P gamma
+      (iteratePderivR j (regularProduct H A ^ j * J)) = 0) :
+    RCN319.specialization K P gamma
+      (regularCofactor H A F ^ j * J) = 0 := by
+  rw [regularProduct_power_split H A F hFA j J] at hpower
+  exact specialization_eq_zero_of_iteratePderivR_power_product
+    j P gamma F.1 (regularCofactor H A F ^ j * J)
+    hfactorial hFzero hregular hpower
+
+/-- Kernel/contact wrapper for the collision-free batch extraction.  The
+only capacity cost is the derivative order `j`; no specialization condition
+on any other regular factor appears. -/
+theorem batch_helper_zero_on_regularSeeds
+    {I : Type} [Fintype I] [DecidableEq I]
+    (j D Dlow w L S m agreements p : ℕ)
+    [CharP K p] (hp : p.Prime)
+    (nodes : I ↪ K) (u0 u1 : I → K)
+    (H : P4 K) (A : Finset (RCN266.RegularIndex H))
+    (F : RCN266.RegularIndex H) (hFA : F ∈ A)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (v : ConstraintKernel (K := K) D w L S m nodes u0 u1)
+    (J : P4 K)
+    (hj : 1 ≤ j) (hjchar : j < p) (hw : 1 ≤ w)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
+    (hagreement : ∀ gamma ∈ Gamma, agreements ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (nodes i) = u0 i + gamma * u1 i)).card)
+    (hcapacity : Dlow ≤ (m - j) * agreements + j * (w - 1))
+    (hlow : reconstruct K D w L S v.1 ∈
+      globalCoefficientBox K Dlow w L S)
+    (heq : regularProduct H A ^ j * J = reconstruct K D w L S v.1) :
+    ∀ gamma ∈ regularSeeds H selected Gamma F,
+      RCN319.specialization K (selected gamma) gamma
+        (regularCofactor H A F ^ j * J) = 0 := by
+  classical
+  intro gamma hgamma
+  have hgammaG := regularSeeds_subset H selected Gamma F hgamma
+  let support := (Finset.univ : Finset I).filter (fun i ↦
+    (selected gamma).eval (nodes i) = u0 i + gamma * u1 i)
+  have hcard : agreements ≤ support.card := hagreement gamma hgammaG
+  have hcap : Dlow ≤ (m - j) * support.card + j * (w - 1) :=
+    hcapacity.trans (Nat.add_le_add_right
+      (Nat.mul_le_mul_left (m - j) hcard) _)
+  have hvalues : ∀ i ∈ support,
+      (selected gamma).eval (nodes i) = u0 i + gamma * u1 i := by
+    intro i hi
+    exact (Finset.mem_filter.mp hi).2
+  have hder := specialization_iteratePderivR_eq_zero_of_kernel_low_box
+    j D Dlow w L S m nodes u0 u1 v hlow
+    (selected gamma) gamma support hj hw (hdegree gamma hgammaG)
+    hcap hvalues
+  rw [← heq] at hder
+  obtain ⟨hFzero, hregular⟩ := (Finset.mem_filter.mp hgamma).2
+  exact specialization_eq_zero_of_batch_power H A F hFA j
+    (selected gamma) gamma J
+    (factorial_ne_zero_of_lt_char p j hp hjchar)
+    hFzero hregular hder
+
+/-! ## Numerical one-split interface -/
+
+/-- A one-split counting lemma.  Factors in `U` are the universal branch and
+are charged by an ordinary cap; every other factor is charged by the helper
+obtained from the common batch witness.  All numerical work is isolated in
+the final branch inequality. -/
+theorem regularSeeds_sum_le_of_one_split
+    (H : P4 K) (A U : Finset (RCN266.RegularIndex H)) (hUA : U ⊆ A)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (ordinaryCap helperCap : RCN266.RegularIndex H → ℕ) (B : ℕ)
+    (hordinary : ∀ F ∈ U,
+      (regularSeeds H selected Gamma F).card ≤ ordinaryCap F)
+    (hhelper : ∀ F ∈ A \ U,
+      (regularSeeds H selected Gamma F).card ≤ helperCap F)
+    (hbranch : (∑ F ∈ U, ordinaryCap F) +
+      (∑ F ∈ A \ U, helperCap F) ≤ B) :
+    (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤ B := by
+  classical
+  have hsplit : A = U ∪ (A \ U) := by
+    ext F
+    simp only [Finset.mem_union, Finset.mem_sdiff]
+    constructor
+    · intro hFA
+      by_cases hFU : F ∈ U
+      · exact Or.inl hFU
+      · exact Or.inr ⟨hFA, hFU⟩
+    · intro h
+      exact h.elim (fun h => hUA h) (fun h => h.1)
+  have hdisjoint : Disjoint U (A \ U) := by
+    apply Finset.disjoint_left.mpr
+    intro F hFU hFd
+    exact (Finset.mem_sdiff.mp hFd).2 hFU
+  rw [hsplit, Finset.sum_union hdisjoint]
+  exact (Nat.add_le_add
+    (Finset.sum_le_sum fun F hF => hordinary F hF)
+    (Finset.sum_le_sum fun F hF => hhelper F hF)).trans hbranch
+
+/-! ## Abstract recursion by a phase potential
+
+The state type below is deliberately indexed by an arbitrary well-founded
+phase rank.  A state may therefore carry the current quotient space, its
+post-projection linear family, the product identity, and all box receipts;
+none of those data has to be compressed into a flag.  Its `factors` are
+exactly the factors universal immediately after the preceding projection.
+
+At a successor state a consumer has two choices.
+
+* Stop, by showing that the sum of ordinary per-factor caps fits the current
+  potential.
+* Produce a child state on the universal subset `U`.  All factors in `A \ U`
+  must receive helper bounds from the *current* post-projection family.  The
+  child potential plus those helper caps must fit the parent potential.
+
+The child may have `U = A`; the phase rank then records one fewer band of the
+same source.  When `U ⊂ A`, the child may instead reset to a fresh source and
+the phase rank can encode a lexicographic measure such as aggregate positive
+R-weight followed by that source's remaining bands.  At rank zero `hbase` is the
+terminal receipt (usually the fact that no nonempty universal subset fits the
+residual box, followed by one last simultaneous-avoidance split).
+-/
+
+/-- Soundness of a recursive post-projection partition certificate.  This is
+pure finite-sum bookkeeping: all algebraic obligations are localized in
+`hstep`, and all numerical obligations are localized in `hbase`, the stop
+alternative, and the displayed potential inequality. -/
+theorem sum_count_le_of_phasePotential
+    {A : Type} [DecidableEq A]
+    (count ordinaryCap : A → ℕ)
+    (State : ℕ → Type)
+    (factors : (n : ℕ) → State n → Finset A)
+    (potential : (n : ℕ) → State n → ℕ)
+    (hordinary : ∀ a, count a ≤ ordinaryCap a)
+    (hbase : ∀ s : State 0,
+      (∑ a ∈ factors 0 s, ordinaryCap a) ≤ potential 0 s)
+    (hstep : ∀ n (s : State (n + 1)),
+      ((∑ a ∈ factors (n + 1) s, ordinaryCap a) ≤
+          potential (n + 1) s) ∨
+        ∃ (t : State n) (helperCap : A → ℕ),
+          factors n t ⊆ factors (n + 1) s ∧
+          (∀ a ∈ factors (n + 1) s \ factors n t,
+            count a ≤ helperCap a) ∧
+          potential n t +
+              (∑ a ∈ factors (n + 1) s \ factors n t, helperCap a) ≤
+            potential (n + 1) s)
+    (n : ℕ) (s : State n) :
+    (∑ a ∈ factors n s, count a) ≤ potential n s := by
+  induction n with
+  | zero =>
+      exact (Finset.sum_le_sum fun a _ha => hordinary a).trans (hbase s)
+  | succ n ih =>
+      rcases hstep n s with hstop | ⟨t, helperCap, hsub, hhelper, hpot⟩
+      · exact (Finset.sum_le_sum fun a _ha => hordinary a).trans hstop
+      · let current := factors (n + 1) s
+        let universal := factors n t
+        have hsplit : current = universal ∪ (current \ universal) := by
+          ext a
+          simp only [Finset.mem_union, Finset.mem_sdiff]
+          constructor
+          · intro ha
+            by_cases hau : a ∈ universal
+            · exact Or.inl hau
+            · exact Or.inr ⟨ha, hau⟩
+          · intro ha
+            exact ha.elim (fun hau => hsub hau) (fun hd => hd.1)
+        have hdisjoint : Disjoint universal (current \ universal) := by
+          apply Finset.disjoint_left.mpr
+          intro a hau had
+          exact (Finset.mem_sdiff.mp had).2 hau
+        change (∑ a ∈ current, count a) ≤ potential (n + 1) s
+        rw [hsplit, Finset.sum_union hdisjoint]
+        exact (Nat.add_le_add (ih t)
+          (Finset.sum_le_sum fun a ha => hhelper a ha)).trans hpot
+
+/-- Specialization of the abstract phase-potential recursion to regular-seed
+counts.  `OwnBound` is precisely the ordinary stopping interface already
+produced by `LocatorFixedOwnBound`; batch helper consumers need only populate
+the second branch of `hstep`. -/
+theorem regularSeeds_sum_le_of_phasePotential
+    (H : P4 K) (selected : K → Polynomial K) (Gamma : Finset K)
+    (State : ℕ → Type)
+    (factors : (n : ℕ) → State n →
+      Finset (RCN266.RegularIndex H))
+    (potential : (n : ℕ) → State n → ℕ)
+    (hown : ∀ F, LocatorHybridCost.OwnBound
+      (regularSeeds H selected Gamma F).card
+      (regularCumulativeFlag H F))
+    (hbase : ∀ s : State 0,
+      (∑ F ∈ factors 0 s,
+        LocatorHybridCost.ordinaryCostOf (regularCumulativeFlag H F)) ≤
+          potential 0 s)
+    (hstep : ∀ n (s : State (n + 1)),
+      ((∑ F ∈ factors (n + 1) s,
+          LocatorHybridCost.ordinaryCostOf (regularCumulativeFlag H F)) ≤
+            potential (n + 1) s) ∨
+        ∃ (t : State n) (helperCap : RCN266.RegularIndex H → ℕ),
+          factors n t ⊆ factors (n + 1) s ∧
+          (∀ F ∈ factors (n + 1) s \ factors n t,
+            (regularSeeds H selected Gamma F).card ≤ helperCap F) ∧
+          potential n t +
+              (∑ F ∈ factors (n + 1) s \ factors n t, helperCap F) ≤
+            potential (n + 1) s)
+    (n : ℕ) (s : State n) :
+    (∑ F ∈ factors n s,
+      (regularSeeds H selected Gamma F).card) ≤ potential n s := by
+  classical
+  apply sum_count_le_of_phasePotential
+    (fun F : RCN266.RegularIndex H =>
+      (regularSeeds H selected Gamma F).card)
+    (fun F : RCN266.RegularIndex H =>
+      LocatorHybridCost.ordinaryCostOf (regularCumulativeFlag H F))
+    State factors potential
+  · intro F
+    exact LocatorHybridCost.ownBound_le_ordinaryCostOf (hown F)
+  · exact hbase
+  · exact hstep
+
+/-! ## Complete descent through one source phase
+
+The rank-indexed interface above is convenient while constructing one
+particular algebraic route.  Numerical prefix certificates use a different
+view: keep applying the same source while it routes the current aggregate,
+and stop at the first nonrouteable strict subaggregate.  The next two lemmas
+are the finite-set induction engine for that view.
+
+Crucially, a routed step must return a *strict* child.  Thus its algebraic
+implementation may restart from a fresh source on that child; no claim about
+mixed powers in the preceding source family is hidden in this bookkeeping.
+-/
+
+/-- Repeatedly remove a helper-charged complement while `routeable` holds.
+At the terminal subaggregate the single shared `defect` bounds what remains
+above the additive charge. -/
+theorem sum_count_le_charge_add_defect_of_strict_routes
+    {A : Type} [DecidableEq A]
+    (count charge : A → ℕ)
+    (routeable : Finset A → Prop)
+    (ambient : Finset A) (defect : ℕ)
+    (hterminal : ∀ B, B ⊆ ambient → ¬ routeable B →
+      (∑ a ∈ B, count a) ≤ (∑ a ∈ B, charge a) + defect)
+    (hroute : ∀ B, B ⊆ ambient → routeable B →
+      ∃ U, U ⊂ B ∧
+        (∑ a ∈ B \ U, count a) ≤ (∑ a ∈ B \ U, charge a)) :
+    (∑ a ∈ ambient, count a) ≤
+      (∑ a ∈ ambient, charge a) + defect := by
+  classical
+  have aux : ∀ B : Finset A, B ⊆ ambient →
+      (∑ a ∈ B, count a) ≤ (∑ a ∈ B, charge a) + defect := by
+    intro B
+    induction B using Finset.strongInduction with
+    | H B ih =>
+        intro hB
+        by_cases hr : routeable B
+        · obtain ⟨U, hUB, hexit⟩ := hroute B hB hr
+          have hUsub : U ⊆ B := hUB.subset
+          have hUambient : U ⊆ ambient := hUsub.trans hB
+          have hUbound := ih U hUB hUambient
+          let exited := B \ U
+          have hexit' : (∑ a ∈ exited, count a) ≤
+              (∑ a ∈ exited, charge a) := by
+            simpa only [exited] using hexit
+          have hsplit : B = U ∪ exited := by
+            dsimp only [exited]
+            exact (Finset.union_sdiff_of_subset hUsub).symm
+          have hdisjoint : Disjoint U exited := by
+            apply Finset.disjoint_left.mpr
+            intro a hau had
+            change a ∈ B \ U at had
+            exact (Finset.mem_sdiff.mp had).2 hau
+          calc
+            (∑ a ∈ B, count a) =
+                (∑ a ∈ U, count a) + (∑ a ∈ exited, count a) := by
+              rw [hsplit, Finset.sum_union hdisjoint]
+            _ ≤ ((∑ a ∈ U, charge a) + defect) +
+                (∑ a ∈ exited, charge a) :=
+              Nat.add_le_add hUbound hexit'
+            _ = (∑ a ∈ B, charge a) + defect := by
+              rw [hsplit, Finset.sum_union hdisjoint]
+              omega
+        · exact hterminal B hB hr
+  exact aux ambient (fun _ ha => ha)
+
+/-- One numerical phase transition.  `previous` is the already certified
+bound before adding this source.  A nonrouteable terminal row bounds the
+previous excess over the new additive charge, while a routeable row supplies
+a strict child and helper-charged complement.  The resulting bound is the
+minimum of retaining the previous certificate and using the new phase. -/
+theorem sum_count_le_min_previous_onePhase
+    {A : Type} [DecidableEq A]
+    (count charge : A → ℕ)
+    (routeable : Finset A → Prop)
+    (previous : Finset A → ℕ)
+    (ambient : Finset A) (defect : ℕ)
+    (hprevious : ∀ B, B ⊆ ambient →
+      (∑ a ∈ B, count a) ≤ previous B)
+    (hterminal : ∀ B, B ⊆ ambient → ¬ routeable B →
+      previous B ≤ (∑ a ∈ B, charge a) + defect)
+    (hroute : ∀ B, B ⊆ ambient → routeable B →
+      ∃ U, U ⊂ B ∧
+        (∑ a ∈ B \ U, count a) ≤ (∑ a ∈ B \ U, charge a)) :
+    (∑ a ∈ ambient, count a) ≤
+      min (previous ambient) ((∑ a ∈ ambient, charge a) + defect) := by
+  classical
+  apply le_min
+  · exact hprevious ambient (fun _ ha => ha)
+  · apply sum_count_le_charge_add_defect_of_strict_routes
+      count charge routeable ambient defect
+    · intro B hB hnroute
+      exact (hprevious B hB).trans (hterminal B hB hnroute)
+    · exact hroute
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorBatchProductRoute
+end PackedLocator_LocatorBatchProductRoute
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier11 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorGenericHelperFactorSwitch. -/
+section PackedLocator_LocatorGenericHelperFactorSwitch
+
+namespace ProximityPrize.SubmissionLower.LocatorGenericHelperFactorSwitch
+
+open ProximityPrize.Benchmark
+open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
+  RCN238 RCN260 RCN266 RCN319
+open LocatorCoprimeQuotient LocatorLowQuotient
+
+open scoped Classical
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+abbrev P4 := MvPolynomial (Fin 4) K
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
+
+/-- Unequal-pair parameters for a regular factor and an arbitrary helper
+source.  Keeping the source parameters explicit lets all external locator
+profiles share one factor-switch proof. -/
+def helperPair (L YS S leftY leftR leftZ : ℕ) : UnequalParameters :=
+  ⟨262144, 131071, 181373, leftY, leftR, leftZ, YS, S, L⟩
+
+def HelperPairGates (L YS S leftY leftR leftZ : ℕ) : Prop :=
+  let P := helperPair L YS S leftY leftR leftZ
+  1 ≤ P.leftR ∧ P.leftY < 2130706433 ∧ P.leftR < 2130706433 ∧
+    P.leftZ < 2130706433 ∧ P.mixedCost.y < 2130706433 ∧
+    P.mixedCost.r < 2130706433 ∧ P.mixedCost.z < 2130706433
+
+private theorem degreeY_le_ysWeight (Q : P4) :
+    Q.degreeOf (1 : Fin 4) ≤ wt residualYSWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualYSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 0 ≤
+    wt residualYSWeights Q at h
+  omega
+
+private theorem degreeR_le_sWeight (Q : P4) :
+    Q.degreeOf (2 : Fin 4) ≤ wt residualSWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 0 + d 2 * 1 + d 3 * 0 ≤
+    wt residualSWeights Q at h
+  omega
+
+private theorem degreeZ_le_totalWeight (Q : P4) :
+    Q.degreeOf (3 : Fin 4) ≤ wt residualTotalWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualTotalWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 1 ≤
+    wt residualTotalWeights Q at h
+  omega
+
+/-- For each regular irreducible factor, either it divides an entire source
+kernel or one source witness is coprime to it and supplies the unequal-pair
+count. -/
+theorem divisor_or_helper_count
+    (D L S m YS : ℕ) (hD : 0 < D) (hDa : D ≤ m * 181373)
+    (hshape : D + S ≤ 131071 * (YS + 1))
+    {u0 u1 : I → K} {H : P4}
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (F : RegularIndex H) (leftY leftR leftZ : ℕ)
+    (hFY : F.1.degreeOf 1 ≤ leftY)
+    (hFR : F.1.degreeOf 2 ≤ leftR)
+    (hFZ : F.1.degreeOf 3 ≤ leftZ)
+    (hgates : HelperPairGates L YS S leftY leftR leftZ) :
+    (∀ v : ConstraintKernel (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1,
+      F.1 ∣ reconstruct K D 131071 L S v.1) ∨
+      (regularSeeds H selected Gamma F).card ≤
+        (helperPair L YS S leftY leftR leftZ).regularCountCap := by
+  classical
+  by_cases hdiv : ∀ v : ConstraintKernel (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1,
+      F.1 ∣ reconstruct K D 131071 L S v.1
+  · exact Or.inl hdiv
+  · right
+    push Not at hdiv
+    obtain ⟨v, hv⟩ := hdiv
+    let Q := reconstruct K D 131071 L S v.1
+    have hF := RCN167.positiveRFactors_spec H F.1 F.2
+    have hrel : IsRelPrime F.1 Q :=
+      hF.1.isRelPrime_iff_not_dvd.mpr hv
+    have hQbox : Q ∈ globalCoefficientBox K D 131071 L S :=
+      reconstruct_mem_globalCoefficientBox K D 131071 L S v.1
+    have hQYS : wt residualYSWeights Q ≤ YS := by
+      apply flag_box_ys_bound D 131071 L S YS (by decide) hshape Q hQbox
+    have hweights := (mem_flagGlobalCoefficientBox_iff Q
+      D 131071 L S hD).mp hQbox
+    have hQY : Q.degreeOf 1 ≤ YS :=
+      (degreeY_le_ysWeight Q).trans hQYS
+    have hQR : Q.degreeOf 2 ≤ S :=
+      (degreeR_le_sWeight Q).trans hweights.2.1
+    have hQZ : Q.degreeOf 3 ≤ L :=
+      (degreeZ_le_totalWeight Q).trans hweights.1
+    obtain ⟨hleftR, hleftYSmall, hleftRSmall, hleftZSmall,
+      hmixedYSmall, hmixedRSmall, hmixedZSmall⟩ := hgates
+    apply regularSeeds_count_le_intersection
+      (helperPair L YS S leftY leftR leftZ) H Q F hrel 2130706433
+      hFY hFR hFZ hQY hQR hQZ
+      hleftR hleftYSmall hleftRSmall hleftZSmall
+      hmixedYSmall hmixedRSmall hmixedZSmall
+      selected Gamma (Finset.univ : Finset I) IRSProfile.domain u0 u1
+      IRSProfile.domain.injective.injOn
+      (by
+        change (Finset.univ : Finset I).card = 262144
+        rw [Finset.card_univ]
+        norm_num [I, IRSProfile.Index])
+      (by norm_num [helperPair]) (by norm_num [helperPair])
+      (by norm_num [helperPair]) (by norm_num [helperPair])
+      (by simpa only [helperPair] using hdegree)
+      (by simpa only [helperPair] using hagreement)
+      (by simpa only [helperPair, UnequalParameters.errors, Nat.reduceSub] using hno)
+    intro gamma hgamma
+    dsimp only [Q]
+    apply specialization_eq_zero_of_mem_ker K
+      D 131071 L S m IRSProfile.domain u0 u1
+      v.1 v.2 (selected gamma) gamma
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i))
+    · exact hD
+    · exact hdegree gamma (Finset.mem_filter.mp hgamma).1
+    · exact hDa.trans (Nat.mul_le_mul_left m
+        (hagreement gamma (Finset.mem_filter.mp hgamma).1))
+    · intro i hi
+      exact (Finset.mem_filter.mp hi).2
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorGenericHelperFactorSwitch
+end PackedLocator_LocatorGenericHelperFactorSwitch
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier12 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorGenericPowerRoute. -/
+section PackedLocator_LocatorGenericPowerRoute
+
+/-!
+# A generic arbitrary-power locator route
+
+This file packages the three generic ingredients needed by the replacement
+grid.  A source first supplies either an immediate helper-pair bound or a
+common factor.  In the common-factor branch, arbitrary many high-band
+projections select an `F`-adic stage.  The arbitrary contact and product
+lemmas then make its terminal quotient vanish on every regular seed, and the
+same unequal-pair count charges that stage.
+
+There is no hard-coded maximum power and no source-specific arithmetic here.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorGenericPowerRoute
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
+  RCN238 RCN260 RCN266 RCN319
+open LocatorCoprimeQuotient LocatorLowQuotient
+open LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact
+open LocatorGenericHelperFactorSwitch
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+abbrev P4 := MvPolynomial (Fin 4) K
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
+
+/-- Lower and upper cumulative-weight bounds for one factor cell. -/
+structure PowerRouteBox where
+  tLo : ℕ
+  tHi : ℕ
+  yLo : ℕ
+  yHi : ℕ
+  rLo : ℕ
+  rHi : ℕ
+  deriving DecidableEq
+
+/-- The unequal-pair profile charged after removing `j` copies of a factor. -/
+def stagePair (L YS S : ℕ) (b : PowerRouteBox) (j : ℕ) :
+    UnequalParameters :=
+  helperPair (L - j * b.tLo) (YS - j * b.yLo) (S - j * b.rLo)
+    b.yHi b.rHi b.tHi
+
+def stageCost (L YS S : ℕ) (b : PowerRouteBox) (j : ℕ) : ℕ :=
+  (stagePair L YS S b j).regularCountCap
+
+/-- Maximum of the initial helper cost and every power-stage cost through
+`k`.  Primitive recursion avoids a large finite computation in receipts. -/
+def routeCost (L YS S : ℕ) (b : PowerRouteBox) : ℕ → ℕ
+  | 0 => stageCost L YS S b 0
+  | k + 1 => max (routeCost L YS S b k) (stageCost L YS S b (k + 1))
+
+theorem stageCost_le_routeCost (L YS S : ℕ) (b : PowerRouteBox)
+    {j k : ℕ} (hjk : j ≤ k) :
+    stageCost L YS S b j ≤ routeCost L YS S b k := by
+  induction k generalizing j with
+  | zero =>
+      have hj : j = 0 := by omega
+      subst j
+      exact le_rfl
+  | succ k ih =>
+      rw [routeCost]
+      by_cases hj : j ≤ k
+      · exact (ih hj).trans (Nat.le_max_left _ _)
+      · have hjeq : j = k + 1 := by omega
+        subst j
+        exact Nat.le_max_right _ _
+
+private theorem degreeY_le_ysWeight (Q : P4) :
+    Q.degreeOf (1 : Fin 4) ≤ wt residualYSWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualYSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 0 ≤
+    wt residualYSWeights Q at h
+  omega
+
+private theorem degreeR_le_sWeight (Q : P4) :
+    Q.degreeOf (2 : Fin 4) ≤ wt residualSWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 0 + d 2 * 1 + d 3 * 0 ≤
+    wt residualSWeights Q at h
+  omega
+
+private theorem degreeZ_le_totalWeight (Q : P4) :
+    Q.degreeOf (3 : Fin 4) ≤ wt residualTotalWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualTotalWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 1 ≤
+    wt residualTotalWeights Q at h
+  omega
+
+/-- The generic form of `count_le_stageCost`. -/
+theorem regularSeeds_count_le_stageCost
+    (L YS S : ℕ) (b : PowerRouteBox) (j : ℕ)
+    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
+    (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (F : RegularIndex H)
+    (hFY : F.1.degreeOf 1 ≤ b.yHi)
+    (hFR : F.1.degreeOf 2 ≤ b.rHi)
+    (hFZ : F.1.degreeOf 3 ≤ b.tHi)
+    (Q : P4)
+    (hQT : wt residualTotalWeights Q ≤ L - j * b.tLo)
+    (hQY : wt residualYSWeights Q ≤ YS - j * b.yLo)
+    (hQR : wt residualSWeights Q ≤ S - j * b.rLo)
+    (hrel : IsRelPrime F.1 Q)
+    (hgates : HelperPairGates (L - j * b.tLo) (YS - j * b.yLo)
+      (S - j * b.rLo) b.yHi b.rHi b.tHi)
+    (hQzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
+      RCN319.specialization K (selected gamma) gamma Q = 0) :
+    (regularSeeds H selected Gamma F).card ≤ stageCost L YS S b j := by
+  have hQY' : Q.degreeOf 1 ≤ (stagePair L YS S b j).rightY := by
+    simpa only [stagePair, helperPair] using (degreeY_le_ysWeight Q).trans hQY
+  have hQR' : Q.degreeOf 2 ≤ (stagePair L YS S b j).rightR := by
+    simpa only [stagePair, helperPair] using (degreeR_le_sWeight Q).trans hQR
+  have hQZ : Q.degreeOf 3 ≤ (stagePair L YS S b j).rightZ := by
+    simpa only [stagePair, helperPair] using (degreeZ_le_totalWeight Q).trans hQT
+  obtain ⟨hleftR, hleftYSmall, hleftRSmall, hleftZSmall,
+    hmixedYSmall, hmixedRSmall, hmixedZSmall⟩ := hgates
+  have hcount := regularSeeds_count_le_intersection
+    (stagePair L YS S b j) H Q F hrel 2130706433
+    (by simpa only [stagePair, helperPair] using hFY)
+    (by simpa only [stagePair, helperPair] using hFR)
+    (by simpa only [stagePair, helperPair] using hFZ)
+    hQY' hQR' hQZ hleftR hleftYSmall hleftRSmall hleftZSmall
+    hmixedYSmall hmixedRSmall hmixedZSmall selected Gamma
+    (Finset.univ : Finset I) IRSProfile.domain u0 u1
+    IRSProfile.domain.injective.injOn
+    (by
+      change (Finset.univ : Finset I).card = 262144
+      rw [Finset.card_univ]
+      norm_num [I, IRSProfile.Index])
+    (by norm_num [stagePair, helperPair])
+    (by norm_num [stagePair, helperPair])
+    (by norm_num [stagePair, helperPair])
+    (by norm_num [stagePair, helperPair])
+    hdegree hagreement
+    (by simpa only [stagePair, helperPair, UnequalParameters.errors,
+      Nat.reduceSub] using hno)
+    hQzero
+  simpa only [stageCost] using hcount
+
+private theorem quotient_nested
+    (D L S m YS : ℕ) (hshape : D + S ≤ 131071 * (YS + 1))
+    (u0 u1 : I → K) (F : P4) (hF : F ≠ 0)
+    (hdiv : ∀ v : ConstraintKernel (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1,
+      F ∣ reconstruct K D 131071 L S v.1) :
+    ∃ q : ConstraintKernel (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1 →ₗ[K] P4,
+      Function.Injective q ∧
+      (∀ v, reconstruct K D 131071 L S v.1 = F * q v) ∧
+      (∀ v, q v ∈ nestedCoefficientBox K
+        (D - wt (contactWeights 131071) F) 131071
+        (L - wt residualTotalWeights F)
+        (YS - wt residualYSWeights F)
+        (S - wt residualSWeights F)) := by
+  let recon := kernelReconstructLinear (K := K) D 131071 L S m
+    IRSProfile.domain u0 u1
+  have hdivK : ∀ v, F ∣ recon v := by
+    intro v
+    simpa only [recon, kernelReconstructLinear_apply] using hdiv v
+  let q := quotientLinear recon F hF hdivK
+  have hqinj : Function.Injective q := quotientLinear_injective recon
+    (kernelReconstructLinear_injective (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1) F hF hdivK
+  have hprod (v) : recon v = F * q v :=
+    recon_eq_mul_quotientPolynomial recon F hdivK v
+  have hproduct : ∀ v, reconstruct K D 131071 L S v.1 = F * q v := by
+    intro v
+    simpa only [recon, kernelReconstructLinear_apply] using hprod v
+  have hqbox : ∀ v, q v ∈ globalCoefficientBox K
+      (D - wt (contactWeights 131071) F) 131071
+      (L - wt residualTotalWeights F) (S - wt residualSWeights F) :=
+    quotient_box_of_full_divisor D 131071 L S m
+      (wt (contactWeights 131071) F) (wt residualTotalWeights F)
+      (wt residualSWeights F) IRSProfile.domain u0 u1 F hF hdivK
+      le_rfl le_rfl le_rfl
+  have hqNested : ∀ v, q v ∈ nestedCoefficientBox K
+      (D - wt (contactWeights 131071) F) 131071
+      (L - wt residualTotalWeights F)
+      (YS - wt residualYSWeights F)
+      (S - wt residualSWeights F) := by
+    intro v
+    have hqYS : wt residualYSWeights (q v) ≤
+        YS - wt residualYSWeights F := by
+      by_cases hv : v = 0
+      · subst v
+        simp [wt, MvPolynomial.weightedTotalDegree]
+      · have hqv : q v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hqinj
+          simpa only [map_zero] using hz
+        have hsrc : wt residualYSWeights
+            (reconstruct K D 131071 L S v.1) ≤ YS := by
+          apply flag_box_ys_bound D 131071 L S YS (by decide) hshape
+          exact reconstruct_mem_globalCoefficientBox K D 131071 L S v.1
+        have hmul := weightedTotalDegree_mul residualYSWeights F (q v) hF hqv
+        rw [← hproduct v] at hmul
+        simp only [wt] at hsrc ⊢
+        omega
+    intro d hd
+    have hb := hqbox v hd
+    have hy := (MvPolynomial.le_weightedTotalDegree residualYSWeights hd).trans hqYS
+    rw [weight_fin4] at hy
+    simp only [residualYSWeights] at hy
+    refine ⟨hb.1, ?_, hb.2.1, hb.2.2⟩
+    simpa [residualYSWeights] using hy
+  exact ⟨q, hqinj, hproduct, hqNested⟩
+
+private theorem sub_one_then_mul (a b j : ℕ) :
+    a - b - j * b = a - (j + 1) * b := by
+  simp only [Nat.sub_sub, Nat.add_mul, one_mul]
+  congr 1
+  omega
+
+private theorem sub_pair_then_mul (a x y j : ℕ) :
+    a - x - y - j * x - j * y =
+      a - (j + 1) * x - (j + 1) * y := by
+  simp only [Nat.sub_sub, Nat.add_mul, one_mul]
+  congr 1
+  omega
+
+private theorem reconstruct_mem_low_of_power
+    {D Dlow L S m j : ℕ} (u0 u1 : I → K)
+    (v : ConstraintKernel (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1)
+    (F Q : P4) (heq : reconstruct K D 131071 L S v.1 = F ^ j * Q)
+    (hD : 0 < D) (hDlow : 0 < Dlow)
+    (hcontact : wt (contactWeights 131071) Q <
+      Dlow - j * wt (contactWeights 131071) F) :
+    reconstruct K D 131071 L S v.1 ∈
+      globalCoefficientBox K Dlow 131071 L S := by
+  have hsource := (mem_flagGlobalCoefficientBox_iff
+    (reconstruct K D 131071 L S v.1) D 131071 L S hD).mp
+      (reconstruct_mem_globalCoefficientBox K D 131071 L S v.1)
+  apply (mem_flagGlobalCoefficientBox_iff
+    (reconstruct K D 131071 L S v.1) Dlow 131071 L S hDlow).mpr
+  refine ⟨hsource.1, hsource.2.1, ?_⟩
+  rw [heq]
+  have hmul := wt_mul_le (contactWeights 131071) (F ^ j) Q
+  have hp := wt_pow_le (contactWeights 131071) F j
+  omega
+
+/-- One theorem replaces every source-specific `count_k2`, ..., `count_kN`
+ladder.  The source arithmetic appears only in `hband`, `hgapLe`, capacity,
+and positivity receipts. -/
+theorem regularSeeds_count_le_arbitraryPowerRoute
+    (D L S m YS gap delta k : ℕ) (b : PowerRouteBox)
+    (hD : 0 < D) (hDa : D ≤ m * 181373)
+    (hshape : D + S ≤ 131071 * (YS + 1))
+    (hk : 1 ≤ k) (hkchar : k < 2130706433)
+    (hband : powerBandBudget delta b.tLo b.yLo b.rLo
+      (L - b.tLo) (YS - b.yLo) (S - b.rLo) k < gap)
+    (hcapacity : ∀ j, 1 ≤ j → j ≤ k →
+      D - j * delta ≤ (m - j) * 181373 + j * (131071 - 1))
+    (hlowpos : ∀ j, 1 ≤ j → j ≤ k → 0 < D - j * delta)
+    (hterminal : L - k * b.tLo < b.tLo ∨
+      YS - k * b.yLo < b.yLo ∨ S - k * b.rLo < b.rLo)
+    (hgates : ∀ j, j ≤ k →
+      HelperPairGates (L - j * b.tLo) (YS - j * b.yLo)
+        (S - j * b.rLo) b.yHi b.rHi b.tHi)
+    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
+    (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (F : RegularIndex H)
+    (hFT : b.tLo ≤ wt residualTotalWeights F.1 ∧
+      wt residualTotalWeights F.1 ≤ b.tHi)
+    (hFY : b.yLo ≤ wt residualYSWeights F.1 ∧
+      wt residualYSWeights F.1 ≤ b.yHi)
+    (hFR : b.rLo ≤ wt residualSWeights F.1 ∧
+      wt residualSWeights F.1 ≤ b.rHi)
+    (hgapLe : gap ≤ Module.finrank K
+      (ConstraintKernel (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1)) :
+    (regularSeeds H selected Gamma F).card ≤ routeCost L YS S b k := by
+  classical
+  have hFspec := RCN167.positiveRFactors_spec H F.1 F.2
+  have hF : F.1 ≠ 0 := hFspec.1.ne_zero
+  have hFdegY : F.1.degreeOf 1 ≤ b.yHi :=
+    (degreeY_le_ysWeight F.1).trans hFY.2
+  have hFdegR : F.1.degreeOf 2 ≤ b.rHi :=
+    (degreeR_le_sWeight F.1).trans hFR.2
+  have hFdegZ : F.1.degreeOf 3 ≤ b.tHi :=
+    (degreeZ_le_totalWeight F.1).trans hFT.2
+  rcases divisor_or_helper_count D L S m YS hD hDa hshape
+      selected Gamma hdegree hagreement hno F b.yHi b.rHi b.tHi
+      hFdegY hFdegR hFdegZ (by
+        simpa only [Nat.zero_mul, Nat.sub_zero] using
+          hgates 0 (Nat.zero_le k)) with hdiv | hhelper
+  · cases k with
+    | zero => omega
+    | succ steps =>
+      obtain ⟨q, hqinj, hproduct, hqNested⟩ :=
+        quotient_nested D L S m YS hshape u0 u1 F.1 hF hdiv
+      have hTstart : L - wt residualTotalWeights F.1 ≤ L - b.tLo :=
+        Nat.sub_le_sub_left hFT.1 L
+      have hYstart : YS - wt residualYSWeights F.1 ≤ YS - b.yLo :=
+        Nat.sub_le_sub_left hFY.1 YS
+      have hRstart : S - wt residualSWeights F.1 ≤ S - b.rLo :=
+        Nat.sub_le_sub_left hFR.1 S
+      have hbudgetMono := powerBandBudget_mono delta
+        (wt residualTotalWeights F.1) (wt residualYSWeights F.1)
+        (wt residualSWeights F.1)
+        (L - wt residualTotalWeights F.1)
+        (YS - wt residualYSWeights F.1) (S - wt residualSWeights F.1)
+        b.tLo b.yLo b.rLo (L - b.tLo) (YS - b.yLo) (S - b.rLo)
+        (steps + 1) hTstart hYstart hRstart hFT.1 hFY.1 hFR.1
+      have hsource : powerBandBudget delta
+          (wt residualTotalWeights F.1) (wt residualYSWeights F.1)
+          (wt residualSWeights F.1)
+          (L - wt residualTotalWeights F.1)
+          (YS - wt residualYSWeights F.1)
+          (S - wt residualSWeights F.1) (steps + 1) <
+        Module.finrank K (ConstraintKernel (K := K) D 131071 L S m
+          IRSProfile.domain u0 u1) := by
+        exact (hbudgetMono.trans_lt (by
+          simpa only [Nat.succ_eq_add_one] using hband)).trans_le hgapLe
+      have hwidth : D - wt (contactWeights 131071) F.1 ≤
+          (D - delta - wt (contactWeights 131071) F.1) + delta := by
+        omega
+      obtain ⟨j0, v, J, _hv, hJ, heq, hJbox, hnotTerminal⟩ :=
+        exists_power_stage_of_bandBudget_succ steps
+          (D - wt (contactWeights 131071) F.1)
+          (D - delta - wt (contactWeights 131071) F.1)
+          131071 delta
+          (L - wt residualTotalWeights F.1)
+          (YS - wt residualYSWeights F.1)
+          (S - wt residualSWeights F.1)
+          hwidth q hqinj hqNested F.1 hF hsource
+      let j := j0.val + 1
+      have hjpos : 1 ≤ j := by simp only [j]; omega
+      have hjle : j ≤ Nat.succ steps := by
+        simp only [j]
+        omega
+      have heqOriginal : reconstruct K D 131071 L S v.1 = F.1 ^ j * J := by
+        calc
+          reconstruct K D 131071 L S v.1 = F.1 * q v := hproduct v
+          _ = F.1 * (F.1 ^ j0.val * J) := by rw [heq]
+          _ = F.1 ^ j * J := by
+            simp only [j, pow_succ', mul_assoc]
+      have hweights := nested_mem_weights hJbox hJ
+      have hJTactual : wt residualTotalWeights J ≤
+          L - j * wt residualTotalWeights F.1 := by
+        simpa only [j, sub_one_then_mul] using hweights.1
+      have hJYactual : wt residualYSWeights J ≤
+          YS - j * wt residualYSWeights F.1 := by
+        simpa only [j, sub_one_then_mul] using hweights.2.1
+      have hJRactual : wt residualSWeights J ≤
+          S - j * wt residualSWeights F.1 := by
+        simpa only [j, sub_one_then_mul] using hweights.2.2.1
+      have hJT : wt residualTotalWeights J ≤ L - j * b.tLo :=
+        hJTactual.trans (Nat.sub_le_sub_left
+          (Nat.mul_le_mul_left j hFT.1) L)
+      have hJY : wt residualYSWeights J ≤ YS - j * b.yLo :=
+        hJYactual.trans (Nat.sub_le_sub_left
+          (Nat.mul_le_mul_left j hFY.1) YS)
+      have hJR : wt residualSWeights J ≤ S - j * b.rLo :=
+        hJRactual.trans (Nat.sub_le_sub_left
+          (Nat.mul_le_mul_left j hFR.1) S)
+      have hJcontact : wt (contactWeights 131071) J <
+          D - j * delta - j * wt (contactWeights 131071) F.1 := by
+        simpa only [j, sub_pair_then_mul] using hweights.2.2.2
+      have hlow : reconstruct K D 131071 L S v.1 ∈
+          globalCoefficientBox K (D - j * delta) 131071 L S :=
+        reconstruct_mem_low_of_power u0 u1 v F.1 J heqOriginal hD
+          (hlowpos j hjpos hjle) hJcontact
+      have hrel : IsRelPrime F.1 J := by
+        by_cases hjlt : j < Nat.succ steps
+        · apply hFspec.1.isRelPrime_iff_not_dvd.mpr
+          apply hnotTerminal
+          simpa only [j, Nat.succ_eq_add_one] using hjlt
+        · have hjeq : j = Nat.succ steps := by omega
+          rcases hterminal with ht | hy | hr
+          · apply isRelPrime_of_weight_lt residualTotalWeights F.1 J
+              hFspec.1 hJ
+            exact hJT.trans_lt (by rw [hjeq]; exact ht.trans_le hFT.1)
+          · apply isRelPrime_of_weight_lt residualYSWeights F.1 J
+              hFspec.1 hJ
+            exact hJY.trans_lt (by rw [hjeq]; exact hy.trans_le hFY.1)
+          · apply isRelPrime_of_weight_lt residualSWeights F.1 J
+              hFspec.1 hJ
+            exact hJR.trans_lt (by rw [hjeq]; exact hr.trans_le hFR.1)
+      have hJzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
+          RCN319.specialization K (selected gamma) gamma J = 0 := by
+        intro gamma hgamma
+        have hgammaG := regularSeeds_subset H selected Gamma F hgamma
+        let support := (Finset.univ : Finset I).filter (fun i ↦
+          (selected gamma).eval (IRSProfile.domain i) =
+            u0 i + gamma * u1 i)
+        have hcard : 181373 ≤ support.card := hagreement gamma hgammaG
+        have hcap : D - j * delta ≤
+            (m - j) * support.card + j * (131071 - 1) :=
+          (hcapacity j hjpos hjle).trans
+            (Nat.add_le_add_right (Nat.mul_le_mul_left (m - j) hcard) _)
+        have hvalues : ∀ i ∈ support,
+            (selected gamma).eval (IRSProfile.domain i) =
+              u0 i + gamma * u1 i := by
+          intro i hi
+          exact (Finset.mem_filter.mp hi).2
+        have hder := specialization_iteratePderivR_eq_zero_of_kernel_low_box
+          j D (D - j * delta) 131071 L S m IRSProfile.domain u0 u1
+          v hlow (selected gamma) gamma support hjpos (by decide)
+          (hdegree gamma hgammaG) hcap hvalues
+        rw [heqOriginal] at hder
+        obtain ⟨hFzero, hregular⟩ := (Finset.mem_filter.mp hgamma).2
+        apply specialization_eq_zero_of_iteratePderivR_power_product
+          j (selected gamma) gamma F.1 J
+          (factorial_ne_zero_of_lt_char 2130706433 j
+            (CharP.char_prime_of_ne_zero (R := K) (by norm_num))
+            (hjle.trans_lt hkchar))
+          hFzero hregular hder
+      have hstage := regularSeeds_count_le_stageCost L YS S b j u0 u1 H
+        selected Gamma hdegree hagreement hno F hFdegY hFdegR hFdegZ J
+        hJT hJY hJR hrel (hgates j hjle) hJzero
+      exact hstage.trans (stageCost_le_routeCost L YS S b hjle)
+  · have hzeroCost :
+      (helperPair L YS S b.yHi b.rHi b.tHi).regularCountCap =
+        stageCost L YS S b 0 := by
+      simp only [stageCost, stagePair, Nat.zero_mul, Nat.sub_zero]
+    rw [hzeroCost] at hhelper
+    exact hhelper.trans (stageCost_le_routeCost L YS S b (Nat.zero_le k))
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorGenericPowerRoute
+end PackedLocator_LocatorGenericPowerRoute
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier13 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800Oracle. -/
+section PackedLocator_LocatorPhase6800Oracle
+
+/-!
+# Compact numerical oracle for the 6800 regular-factor phases
+
+This module contains only the small, reusable interface of the numerical
+certificate.  The generated receipt rows live in separate modules.  A raw
+state `⟨z,v,r⟩` represents cumulative degrees
+`(total, middle, slope) = (z+v+r,v+r,r)`.
+
+The four source phases are, in order, R1200, C, Split500 and Split390.  Three
+prefixes forget `z`.  The C prefix retains 304-wide buckets (offset 64) only
+on the critical rectangle `r ≤ 17, v ≤ 64`; outside that rectangle it too
+forgets `z`.  This is a sound weakening of the exact prefix recurrence.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorPhase6800Oracle
+
+open scoped BigOperators
+open RCN095 LocatorFactorAggregate
+open LocatorLowQuotient LocatorArbitraryPowerAvoidance
+open LocatorGenericPowerRoute LocatorGenericHelperFactorSwitch
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+
+/-- Coefficients of an additive potential in cumulative coordinates. -/
+structure Potential where
+  totalCoeff : ℕ
+  middleCoeff : ℕ
+  slopeCoeff : ℕ
+  deriving DecidableEq, Repr
+
+def Potential.eval (q : Potential) (p : FlagDegree) : ℕ :=
+  q.totalCoeff * total p + q.middleCoeff * middle p + q.slopeCoeff * p.all
+
+theorem Potential.eval_add (q : Potential) (p₁ p₂ : FlagDegree) :
+    q.eval (p₁ + p₂) = q.eval p₁ + q.eval p₂ := by
+  simp only [Potential.eval, total, middle, add_zOnly, add_yz, add_all]
+  ring
+
+def initialAPotential : Potential :=
+  ⟨5961153504, 5974067721865, 22929595672934⟩
+
+def r1200Potential : Potential :=
+  ⟨13427087260899, 663874773565556, 2979865684813599⟩
+
+def sourceCPotential : Potential :=
+  ⟨838515060584, 41471165784403, 186185626057566⟩
+
+def split500Potential : Potential :=
+  ⟨585232039360, 17772798151495, 79353607227622⟩
+
+def split390Potential : Potential :=
+  ⟨88177732979, 3190112842069, 14358837685870⟩
+
+/-- The cumulative boxes used by a power source. -/
+structure SourceNumbers where
+  totalCap : ℕ
+  middleCap : ℕ
+  slopeCap : ℕ
+  gap : ℕ
+  deriving DecidableEq, Repr
+
+def sourceR1200 : SourceNumbers :=
+  ⟨328400, 6642, 1480, 5227117860923383312⟩
+
+def sourceC : SourceNumbers :=
+  ⟨82100, 1660, 370, 18811500529412710⟩
+
+def sourceSplit500 : SourceNumbers :=
+  ⟨42000, 1383, 310, 4161068143836058⟩
+
+def sourceSplit390 : SourceNumbers :=
+  ⟨19500, 539, 120, 95423319727890⟩
+
+def SourceNumbers.fuel (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  min (s.totalCap / total p)
+    (min (s.middleCap / middle p) (s.slopeCap / p.all))
+
+def SourceNumbers.band (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  powerBandBudget 50303 (total p) (middle p) p.all
+    (s.totalCap - total p) (s.middleCap - middle p)
+    (s.slopeCap - p.all) (s.fuel p)
+
+/-- Lever S1.  The product of the routed factors has contact weight at least
+`131071 * middle p - p.all` (`contact_ge_ys` with the exact aggregate weights), and the
+source's kernel degree satisfies `D + slopeCap ≤ 131071 * (middleCap + 1)`; so the level-1
+contact cap of the band ladder is at most `contactCap`, and it drops by `50303 + contactDec`
+per level.  `bandThin` is the ladder charged on the rows that can carry a monomial. -/
+def contactDec (p : FlagDegree) : ℕ := 131071 * middle p - p.all
+
+def SourceNumbers.contactCap (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  (131071 * (s.middleCap + 1) - s.slopeCap) - contactDec p
+
+def SourceNumbers.bandThin (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  powerBandBudgetThin 131071 (s.contactCap p) 50303 (contactDec p)
+    (total p) (middle p) p.all
+    (s.totalCap - total p) (s.middleCap - middle p)
+    (s.slopeCap - p.all) (s.fuel p)
+
+theorem SourceNumbers.bandThin_le (s : SourceNumbers) (p : FlagDegree) :
+    s.bandThin p ≤ s.band p :=
+  powerBandBudgetThin_le _ _ _ _ _ _ _ _ _ _ _
+
+def SourceNumbers.Routeable (s : SourceNumbers) (p : FlagDegree) : Prop :=
+  1 ≤ p.all ∧ total p ≤ s.totalCap ∧ middle p ≤ s.middleCap ∧
+    p.all ≤ s.slopeCap ∧ (s.band p < s.gap ∨ s.bandThin p < s.gap)
+
+instance (s : SourceNumbers) (p : FlagDegree) : Decidable (s.Routeable p) :=
+  by unfold SourceNumbers.Routeable; infer_instance
+
+def exactRouteBox (p : FlagDegree) : PowerRouteBox :=
+  ⟨total p, total p, middle p, middle p, p.all, p.all⟩
+
+/-- The arithmetic interface required by the algebraic source adapter.  The
+stage-cost and gate checks are deliberately separate from band thresholds. -/
+structure PhaseSourceSound where
+  source : SourceNumbers
+  potential : Potential
+  stageCost_le : ∀ (p : FlagDegree) (j : ℕ),
+    1 ≤ p.all → p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+    j ≤ source.fuel p →
+    stageCost source.totalCap source.middleCap source.slopeCap
+      (exactRouteBox p) j ≤ potential.eval p
+  stageGates : ∀ (p : FlagDegree) (j : ℕ),
+    1 ≤ p.all → p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+    j ≤ source.fuel p →
+    HelperPairGates
+      (source.totalCap - j * total p)
+      (source.middleCap - j * middle p)
+      (source.slopeCap - j * p.all)
+      (middle p) p.all (total p)
+
+/-- Raw-to-cumulative flag constructor. -/
+def rawFlag (r v z : ℕ) : FlagDegree := ⟨z, v, r⟩
+
+@[simp] theorem rawFlag_all (r v z : ℕ) : (rawFlag r v z).all = r := rfl
+@[simp] theorem rawFlag_middle (r v z : ℕ) : middle (rawFlag r v z) = r + v := by
+  simp [rawFlag, middle, Nat.add_comm]
+@[simp] theorem rawFlag_total (r v z : ℕ) : total (rawFlag r v z) = r + v + z := by
+  simp [rawFlag, total, Nat.add_comm, Nat.add_left_comm]
+
+/-- The C-prefix bucket used by the compact receipt. -/
+def cBucket (z : ℕ) : ℕ := if z ≤ 64 then 0 else (z - 64 + 303) / 304
+
+theorem cBucket_le_21 (z : ℕ) (hz : z ≤ 6412) : cBucket z ≤ 21 := by
+  unfold cBucket
+  split <;> omega
+
+/-- Exact maximum additive A-potential available to a complementary raw flag
+inside the wide cumulative box `(6412,153,33)`. -/
+def initialAComplement (p : FlagDegree) : ℕ :=
+  let t := 6412 - total p
+  let y := 153 - middle p
+  let r := 33 - p.all
+  let nr := min t (min y r)
+  let t' := t - nr
+  let y' := y - nr
+  let nv := min t' y'
+  initialAPotential.eval (rawFlag nr nv (t' - nv))
+
+/-- The greedy complement is maximal for the A potential among all raw flags
+that can be added to `p` inside the wide box. -/
+theorem initialAPotential_le_complement (p n : FlagDegree)
+    (ht : total p + total n ≤ 6412)
+    (hy : middle p + middle n ≤ 153)
+    (hr : p.all + n.all ≤ 33) :
+    initialAPotential.eval n ≤ initialAComplement p := by
+  have hnpY : n.all ≤ middle n := by simp [middle]
+  have hnpT : middle n ≤ total n := by simp [middle, total]
+  have hppY : p.all ≤ middle p := by simp [middle]
+  have hppT : middle p ≤ total p := by simp [middle, total]
+  simp only [initialAComplement, Potential.eval, initialAPotential,
+    rawFlag_total, rawFlag_middle, rawFlag_all]
+  simp only [Nat.min_def]
+  split_ifs <;> omega
+
+def sumFlag {ι : Type} (s : Finset ι) (p : ι → FlagDegree) : FlagDegree :=
+  ⟨∑ i ∈ s, (p i).zOnly, ∑ i ∈ s, (p i).yz,
+    ∑ i ∈ s, (p i).all⟩
+
+@[simp] theorem sumFlag_all {ι : Type} (s : Finset ι)
+    (p : ι → FlagDegree) :
+    (sumFlag s p).all = ∑ i ∈ s, (p i).all := rfl
+
+@[simp] theorem sumFlag_middle {ι : Type} (s : Finset ι)
+    (p : ι → FlagDegree) :
+    middle (sumFlag s p) = ∑ i ∈ s, middle (p i) := by
+  simp only [sumFlag, middle, Finset.sum_add_distrib]
+
+@[simp] theorem sumFlag_total {ι : Type} (s : Finset ι)
+    (p : ι → FlagDegree) :
+    total (sumFlag s p) = ∑ i ∈ s, total (p i) := by
+  simp only [sumFlag, total, Finset.sum_add_distrib]
+
+theorem sum_initialAPotential_eval {ι : Type} [DecidableEq ι] (s : Finset ι)
+    (p : ι → FlagDegree) :
+    (∑ i ∈ s, initialAPotential.eval (p i)) =
+      initialAPotential.eval (sumFlag s p) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simp [sumFlag, Potential.eval, total, middle]
+  | @insert i s hi ih =>
+      simp only [Finset.sum_insert hi, ih]
+      simp [sumFlag, Potential.eval, total, middle, hi]
+      ring
+
+/-- Aggregate direct-A helper ledger for the factors that leave the initial
+split.  The exact greedy complement avoids the seven-trillion loss of three
+independent cumulative-coordinate remainders. -/
+theorem initialA_helpers_sum_le_complement
+    {ι : Type} [DecidableEq ι] (s : Finset ι) (p : ι → FlagDegree)
+    (helper : ι → ℕ)
+    (universal : FlagDegree)
+    (hhelper : ∀ i ∈ s, helper i ≤ initialAPotential.eval (p i))
+    (ht : total universal + ∑ i ∈ s, total (p i) ≤ 6412)
+    (hy : middle universal + ∑ i ∈ s, middle (p i) ≤ 153)
+    (hr : universal.all + ∑ i ∈ s, (p i).all ≤ 33) :
+    (∑ i ∈ s, helper i) ≤ initialAComplement universal := by
+  calc
+    (∑ i ∈ s, helper i) ≤ ∑ i ∈ s, initialAPotential.eval (p i) :=
+      Finset.sum_le_sum (fun i hi => hhelper i hi)
+    _ = initialAPotential.eval (sumFlag s p) := sum_initialAPotential_eval s p
+    _ ≤ initialAComplement universal := by
+      apply initialAPotential_le_complement
+      · simpa only [sumFlag_total] using ht
+      · simpa only [sumFlag_middle] using hy
+      · simpa only [sumFlag_all] using hr
+
+/-- A threshold row says at which `z` each source becomes routeable for fixed
+positive slope `r` and residual middle coordinate `v`. -/
+structure ThresholdReceipt where
+  r : ℕ
+  v : ℕ
+  r1200 : ℕ
+  sourceC : ℕ
+  split500 : ℕ
+  split390 : ℕ
+  deriving DecidableEq, Repr
+
+def thresholdBoundary (s : SourceNumbers) (r v threshold : ℕ) : Prop :=
+  let maxZ := 6412 - (r + v)
+  if threshold = 0 then s.Routeable (rawFlag r v 0)
+  else if threshold ≤ maxZ then
+    ¬s.Routeable (rawFlag r v (threshold - 1)) ∧
+      s.Routeable (rawFlag r v threshold)
+  else threshold = maxZ + 1 ∧ ¬s.Routeable (rawFlag r v maxZ)
+
+instance (s : SourceNumbers) (r v threshold : ℕ) :
+    Decidable (thresholdBoundary s r v threshold) := by
+  unfold thresholdBoundary
+  infer_instance
+
+def ThresholdReceipt.Valid (q : ThresholdReceipt) : Prop :=
+  1 ≤ q.r ∧ q.r ≤ 29 ∧ q.r + q.v ≤ 132 ∧
+    thresholdBoundary sourceR1200 q.r q.v q.r1200 ∧
+    thresholdBoundary LocatorPhase6800Oracle.sourceC q.r q.v q.sourceC ∧
+    thresholdBoundary sourceSplit500 q.r q.v q.split500 ∧
+    thresholdBoundary sourceSplit390 q.r q.v q.split390
+
+instance (q : ThresholdReceipt) : Decidable q.Valid := by
+  unfold ThresholdReceipt.Valid
+  infer_instance
+
+/-- A prefix row is the defect prefix after completing slope layer `afterR`.
+`sourceC` has either 22 bucket entries (on the critical rectangle) or one
+fully-z-forgotten entry. -/
+structure PrefixReceipt where
+  afterR : ℕ
+  v : ℕ
+  r1200 : ℕ
+  sourceC : List ℕ
+  split500 : ℕ
+  split390 : ℕ
+  deriving DecidableEq, Repr
+
+def PrefixReceipt.ExpectedShape (q : PrefixReceipt) : Prop :=
+  1 ≤ q.afterR ∧ q.afterR ≤ 28 ∧ q.afterR + 1 + q.v ≤ 132 ∧
+    q.sourceC.length = (if q.afterR ≤ 0 ∧ q.v ≤ 64 then 22 else 1)
+
+instance (q : PrefixReceipt) : Decidable q.ExpectedShape := by
+  unfold PrefixReceipt.ExpectedShape
+  infer_instance
+
+/-! ## Compact exact base table
+
+For fixed raw `(r,v)`, the ordinary partition maximum is stored explicitly at
+`z=0,1,2`.  From `z=3` onward it is the maximum of affine carrier lines.  A
+segment stores its value at its first integer, avoiding signed intercepts.
+-/
+
+structure BaseSegment where
+  start : ℕ
+  valueAtStart : ℕ
+  slope : ℕ
+  deriving DecidableEq, Repr
+
+def BaseSegment.evalAt (q : BaseSegment) (z : ℕ) : ℕ :=
+  q.valueAtStart + q.slope * (z - q.start)
+
+structure BaseRow where
+  r : ℕ
+  v : ℕ
+  z0 : ℕ
+  z1 : ℕ
+  z2 : ℕ
+  segments : List BaseSegment
+  deriving DecidableEq, Repr
+
+def evalBaseSegments : List BaseSegment → ℕ → ℕ
+  | [], _ => 0
+  | q :: qs, z =>
+      (qs.foldl (fun best next => if next.start ≤ z then next else best) q).evalAt z
+
+def BaseRow.evalAt (q : BaseRow) (z : ℕ) : ℕ :=
+  if z = 0 then q.z0
+  else if z = 1 then q.z1
+  else if z = 2 then q.z2
+  else evalBaseSegments q.segments z
+
+/-- Row order used by the generated array: increasing `r`, then increasing
+`v`, over `1 ≤ r ≤ 29` and `r+v ≤ 132`. -/
+def baseRowIndex (r v : ℕ) : ℕ :=
+  (r - 1) * 133 - ((r - 1) * r) / 2 + v
+
+def defaultBaseRow : BaseRow := ⟨0, 0, 0, 0, 0, []⟩
+
+def lookupBaseRow (rows : Array BaseRow) (r v : ℕ) : BaseRow :=
+  (rows[baseRowIndex r v]?).getD defaultBaseRow
+
+def baseTableCap (rows : Array BaseRow) (p : FlagDegree) : ℕ :=
+  (lookupBaseRow rows p.all p.yz).evalAt p.zOnly
+
+def BaseRowsIndexed (rows : Array BaseRow) : Prop :=
+  rows.size = 3422 ∧
+    ∀ r ∈ (List.range 29).map (fun q => q + 1),
+      ∀ v ∈ List.range (133 - r),
+        let q := lookupBaseRow rows r v
+        q.r = r ∧ q.v = v
+
+instance (rows : Array BaseRow) : Decidable (BaseRowsIndexed rows) := by
+  unfold BaseRowsIndexed
+  infer_instance
+
+def BaseRow.ExpectedShape (q : BaseRow) : Prop :=
+  1 ≤ q.r ∧ q.r ≤ 29 ∧ q.r + q.v ≤ 132 ∧
+    q.segments ≠ [] ∧ q.segments.head?.map BaseSegment.start = some 3 ∧
+    q.segments.Pairwise (fun a b => a.start < b.start) ∧
+    ∀ s ∈ q.segments, s.start ≤ 6412 - (q.r + q.v)
+
+instance (q : BaseRow) : Decidable q.ExpectedShape := by
+  unfold BaseRow.ExpectedShape
+  infer_instance
+
+/-- State-local form of the base certificate.  Unlike the legacy full-box
+interface below, this preserves the aggregate flag needed by every phase
+transition. -/
+def StateLocalBaseOracleSound (baseCap : FlagDegree → ℕ) : Prop :=
+  ∀ {ι : Type} [DecidableEq ι] (s : Finset ι) (p : ι → FlagDegree),
+    (∀ i ∈ s, 1 ≤ (p i).all) →
+    (sumFlag s p).all ≤ 29 → middle (sumFlag s p) ≤ 132 →
+    total (sumFlag s p) ≤ 6412 →
+    (∑ i ∈ s, LocatorHybridCost.ordinaryCostOf (p i)) ≤
+      baseCap (sumFlag s p)
+
+/-- Componentwise raw containment used by the defect-prefix recurrence. -/
+def RawBelow (q p : FlagDegree) : Prop :=
+  q.all ≤ p.all ∧ q.yz ≤ p.yz ∧ q.zOnly ≤ p.zOnly
+
+def RawStrictSlopeBelow (q p : FlagDegree) : Prop :=
+  RawBelow q p ∧ q.all < p.all
+
+/-- Semantic condition checked by one phase's prefix table.  At a routeable
+parent, every strict nonrouteable stopping child is paid by the stored defect.
+The algebraic batch engine turns precisely this condition into the phase cap.
+-/
+def PhaseDefectSound (previousCap : FlagDegree → ℕ)
+    (source : SourceNumbers) (potential : Potential)
+    (defect : FlagDegree → ℕ) : Prop :=
+  ∀ p q, p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+    RawStrictSlopeBelow q p → ¬source.Routeable q →
+    previousCap q ≤ potential.eval q + defect p
+
+/-- Numeric recurrence represented by a checked phase table. -/
+def PhaseCapEquation (previousCap nextCap : FlagDegree → ℕ)
+    (source : SourceNumbers) (potential : Potential)
+    (defect : FlagDegree → ℕ) : Prop :=
+  ∀ p, p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+    nextCap p = if source.Routeable p then
+      min (previousCap p) (potential.eval p + defect p)
+    else previousCap p
+
+/-- Abstract base certificate.  This isolates the discrete-convexity and the
+two-coordinate unbounded knapsack proof from the algebraic phase consumer. -/
+def BaseOracleSound (baseCap : FlagDegree → ℕ) : Prop :=
+  ∀ {ι : Type} [Fintype ι] (p : ι → FlagDegree),
+    (∀ i, 1 ≤ (p i).all) →
+    (∑ i, (p i).all) ≤ 29 →
+    (∑ i, middle (p i)) ≤ 132 →
+    (∑ i, total (p i)) ≤ 6412 →
+    (∑ i, LocatorHybridCost.ordinaryCostOf (p i)) ≤
+      baseCap ⟨6412 - 132, 132 - 30, 30⟩
+
+/-- Consumer-facing abstraction: numerical receipt checking yields a narrow
+phase cap, while the algebraic batch route supplies the phase transitions. -/
+structure CheckedPhaseOracle where
+  narrowCap : FlagDegree → ℕ
+  baseCap : FlagDegree → ℕ
+  baseSound : BaseOracleSound baseCap
+  narrow_le : ∀ p, p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+    narrowCap p ≤ 254118829368535504
+  joint_le : ∀ p, p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+    narrowCap p + initialAComplement p ≤ 254595720129422441
+
+/-! ## Generic finite-set transition consumed by the batch route -/
+
+/-- A prefix defect converts a strict batch split into the next phase bound.
+This is the exact bookkeeping used by every one of the four source phases;
+all source-specific algebra is confined to `hchild` and `hexit`. -/
+theorem phase_split_le
+    {ι : Type} [DecidableEq ι]
+    (A U : Finset ι) (flag : ι → FlagDegree) (count : ι → ℕ)
+    (q : Potential)
+    (childCap defect parentPotential : ℕ)
+    (hsub : U ⊆ A)
+    (hchild : (∑ i ∈ U, count i) ≤ childCap)
+    (hexit : ∀ i ∈ A \ U, count i ≤ q.eval (flag i))
+    (hprefix : childCap ≤ (∑ i ∈ U, q.eval (flag i)) + defect)
+    (hparent : (∑ i ∈ A, q.eval (flag i)) + defect ≤ parentPotential) :
+    (∑ i ∈ A, count i) ≤ parentPotential := by
+  have hdisjoint : Disjoint U (A \ U) := by
+    apply Finset.disjoint_left.mpr
+    intro i hiU hiD
+    exact (Finset.mem_sdiff.mp hiD).2 hiU
+  have hsplit : A = U ∪ (A \ U) := by
+    exact (Finset.union_sdiff_of_subset hsub).symm
+  rw [hsplit, Finset.sum_union hdisjoint]
+  have hexitSum : (∑ i ∈ A \ U, count i) ≤
+      ∑ i ∈ A \ U, q.eval (flag i) :=
+    Finset.sum_le_sum (fun i hi => hexit i hi)
+  have hcombined : (∑ i ∈ U, count i) + (∑ i ∈ A \ U, count i) ≤
+      ((∑ i ∈ U, q.eval (flag i)) + (∑ i ∈ A \ U, q.eval (flag i))) +
+        defect := by
+    omega
+  have hpotentialSplit : (∑ i ∈ A, q.eval (flag i)) =
+      (∑ i ∈ U, q.eval (flag i)) +
+        (∑ i ∈ A \ U, q.eval (flag i)) := by
+    rw [Nat.add_comm]
+    exact (Finset.sum_sdiff hsub).symm
+  rw [hpotentialSplit] at hparent
+  exact hcombined.trans hparent
+
+def certifiedNarrowMaximum : ℕ := 254118829368535504
+def certifiedJointMaximum : ℕ := 254595720129422441
+def tightenedRegularAllowance : ℕ := 257395272113379213
+
+theorem certifiedJoint_lt_allowance :
+    certifiedJointMaximum < tightenedRegularAllowance := by decide
+
+theorem certifiedJoint_slack :
+    tightenedRegularAllowance - certifiedJointMaximum = 2799551983956772 := by
+  decide
+
+/-- Arithmetic end of the initial-A ledger.  The two hypotheses are the only
+set-dependent facts required from the structural bridge. -/
+theorem initialA_sum_le_certifiedJoint
+    (phaseSum helperSum : ℕ) (p : FlagDegree)
+    (hphase : phaseSum ≤ certifiedNarrowMaximum)
+    (hhelper : helperSum ≤ certifiedJointMaximum - certifiedNarrowMaximum) :
+    phaseSum + helperSum ≤ certifiedJointMaximum := by
+  unfold certifiedNarrowMaximum certifiedJointMaximum at *
+  omega
+
+end ProximityPrize.SubmissionLower.LocatorPhase6800Oracle
+end PackedLocator_LocatorPhase6800Oracle
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier14 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorOrdinaryZConvex. -/
+section PackedLocator_LocatorOrdinaryZConvex
+
+namespace ProximityPrize.SubmissionLower.LocatorOrdinaryZConvex
+
+open RCN095 LocatorFactorAggregate LocatorHybridCost LocatorHybridCostC1 LocatorHybridCostC2
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 800000
+
+def rawCost (r v z : ℕ) : ℕ := ordinaryCostOf ⟨z, v, r⟩
+
+theorem hybridApplies_raw (r v z : ℕ) (hr : 3 ≤ r) (hv : 2 ≤ v) :
+    HybridAppliesC2 (⟨z, v, r⟩ : FlagDegree) := by
+  change 3 ≤ r ∧ r + 2 ≤ v + r
+  omega
+
+theorem padS_raw_hybrid (r v z : ℕ) (hr : 2 ≤ r) :
+    padS (⟨z, v, r⟩ : FlagDegree) = r := by
+  simp only [padS]
+  omega
+
+theorem padY_raw_hybrid (r v z : ℕ) (hr : 2 ≤ r) (hv : 2 ≤ v) :
+    padY (⟨z, v, r⟩ : FlagDegree) = r + v := by
+  simp only [padY, middle, padS_raw_hybrid r v z hr]
+  omega
+
+theorem padT_raw_hybrid (r v z : ℕ) (hr : 2 ≤ r) (hv : 2 ≤ v) :
+    padT (⟨z, v, r⟩ : FlagDegree) = r + v + z := by
+  simp only [padT, total, padY_raw_hybrid r v z hr hv]
+  omega
+
+theorem sharp_raw_hybrid (r v z : ℕ) (hr : 2 ≤ r) (hv : 2 ≤ v) :
+    sharpTail (⟨z, v, r⟩ : FlagDegree) =
+      ⟨2 * z * 131072, 1 + (2 * v - 1) * 131072,
+        (2 * r - 1) * 131072⟩ := by
+  unfold sharpTail
+  rw [padS_raw_hybrid r v z hr, padY_raw_hybrid r v z hr hv,
+    padT_raw_hybrid r v z hr hv]
+  congr <;> omega
+
+theorem reduced_raw_hybrid (r v z : ℕ) (hr : 2 ≤ r) (hv : 2 ≤ v) :
+    reducedTail (⟨z, v, r⟩ : FlagDegree) =
+      ⟨2 * z * 131072, 1 + 2 * v * 131072, 2 * (r - 1) * 131072⟩ := by
+  unfold reducedTail paddedTail
+  rw [padS_raw_hybrid r v z hr, padY_raw_hybrid r v z hr hv,
+    padT_raw_hybrid r v z hr hv]
+  congr <;> omega
+
+theorem rational_raw_hybrid (r v z : ℕ) (hr : 2 ≤ r) (hv : 2 ≤ v) :
+    rationalFlag (⟨z, v, r⟩ : FlagDegree) =
+      ⟨131074 * z, 131074 * (v - 1) + 2, 131074 * (r - 2) + 3⟩ := by
+  unfold rationalFlag
+  rw [padS_raw_hybrid r v z hr, padY_raw_hybrid r v z hr hv,
+    padT_raw_hybrid r v z hr hv]
+  congr <;> omega
+
+theorem moving_raw_hybrid (r v z : ℕ) (hr : 2 ≤ r) (hv : 2 ≤ v) :
+    movingFiber (⟨z, v, r⟩ : FlagDegree) = ⟨z, v, r + 1⟩ := by
+  unfold movingFiber
+  rw [padS_raw_hybrid r v z hr, padY_raw_hybrid r v z hr hv,
+    padT_raw_hybrid r v z hr hv]
+  congr <;> omega
+
+theorem hybridCostC2_raw_affine (r v z : ℕ) (hr : 3 ≤ r) (hv : 2 ≤ v) :
+    2 * hybridCostC2 (⟨z + 1, v, r⟩ : FlagDegree) =
+      hybridCostC2 ⟨z, v, r⟩ + hybridCostC2 ⟨z + 2, v, r⟩ := by
+  have hr2 : 2 ≤ r := by omega
+  unfold hybridCostC2 hybridCoordinateC1 movingCut
+  rw [reduced_raw_hybrid r v z hr2 hv,
+    reduced_raw_hybrid r v (z + 1) hr2 hv,
+    reduced_raw_hybrid r v (z + 2) hr2 hv,
+    rational_raw_hybrid r v z hr2 hv,
+    rational_raw_hybrid r v (z + 1) hr2 hv,
+    rational_raw_hybrid r v (z + 2) hr2 hv,
+    moving_raw_hybrid r v z hr2 hv,
+    moving_raw_hybrid r v (z + 1) hr2 hv,
+    moving_raw_hybrid r v (z + 2) hr2 hv]
+  unfold flagMixed
+  simp only [add_zOnly, add_yz, add_all]
+  ring
+
+theorem rawCost_affine_of_hybrid (r v z : ℕ) (hr : 3 ≤ r) (hv : 2 ≤ v) :
+    2 * rawCost r v (z + 1) = rawCost r v z + rawCost r v (z + 2) := by
+  rw [rawCost, rawCost, rawCost]
+  simp only [ordinaryCostOf, if_pos (hybridApplies_raw r v z hr hv),
+    if_pos (hybridApplies_raw r v (z + 1) hr hv),
+    if_pos (hybridApplies_raw r v (z + 2) hr hv)]
+  exact hybridCostC2_raw_affine r v z hr hv
+
+theorem paddedTail_raw_of_r_two_v_pos (r v z d : ℕ)
+    (hr : 2 ≤ r) (hv : 1 ≤ v) :
+    paddedTail (⟨z, v, r⟩ : FlagDegree) d =
+      ⟨2 * z * d, 1 + 2 * v * d, 2 * (r - 1) * d⟩ := by
+  unfold paddedTail
+  have hs : padS (⟨z, v, r⟩ : FlagDegree) = r := by
+    simp only [padS]
+    omega
+  have hy : padY (⟨z, v, r⟩ : FlagDegree) = r + v := by
+    simp only [padY, middle, hs]
+    omega
+  have ht : padT (⟨z, v, r⟩ : FlagDegree) = r + v + z := by
+    simp only [padT, total, hy]
+    omega
+  rw [hs, hy, ht]
+  congr <;> omega
+
+theorem paddedCost_raw_affine_of_r_two_v_pos (r v z : ℕ)
+    (hr : 2 ≤ r) (hv : 1 ≤ v) :
+    2 * paddedCost 131072 131073 (⟨z + 1, v, r⟩ : FlagDegree) =
+      paddedCost 131072 131073 ⟨z, v, r⟩ +
+        paddedCost 131072 131073 ⟨z + 2, v, r⟩ := by
+  unfold paddedCost
+  rw [paddedTail_raw_of_r_two_v_pos r v z 131072 hr hv,
+    paddedTail_raw_of_r_two_v_pos r v z 131073 hr hv,
+    paddedTail_raw_of_r_two_v_pos r v (z + 1) 131072 hr hv,
+    paddedTail_raw_of_r_two_v_pos r v (z + 1) 131073 hr hv,
+    paddedTail_raw_of_r_two_v_pos r v (z + 2) 131072 hr hv,
+    paddedTail_raw_of_r_two_v_pos r v (z + 2) 131073 hr hv]
+  unfold flagMixed
+  ring
+
+theorem rawCost_affine_of_r_two_v_one (r z : ℕ) (hr : 2 ≤ r) :
+    2 * rawCost r 1 (z + 1) = rawCost r 1 z + rawCost r 1 (z + 2) := by
+  have hn (x : ℕ) : ¬ HybridAppliesC2 (⟨x, 1, r⟩ : FlagDegree) := by
+    intro h
+    have hbad := h.2
+    change r + 2 ≤ 1 + r at hbad
+    omega
+  simp only [rawCost, ordinaryCostOf, if_neg (hn z), if_neg (hn (z + 1)),
+    if_neg (hn (z + 2))]
+  exact paddedCost_raw_affine_of_r_two_v_pos r 1 z hr (by decide)
+
+theorem rawCost_affine_of_r_two_v_two (v z : ℕ) (hv : 2 ≤ v) :
+    2 * rawCost 2 v (z + 1) = rawCost 2 v z + rawCost 2 v (z + 2) := by
+  have hn (x : ℕ) : ¬ HybridAppliesC2 (⟨x, v, 2⟩ : FlagDegree) := by
+    intro h
+    have hbad := h.1
+    change 3 ≤ 2 at hbad
+    omega
+  simp only [rawCost, ordinaryCostOf, if_neg (hn z), if_neg (hn (z + 1)),
+    if_neg (hn (z + 2))]
+  exact paddedCost_raw_affine_of_r_two_v_pos 2 v z (le_refl 2) (by omega)
+
+theorem paddedTail_raw_of_r_one_v_two (v z d : ℕ) (hv : 2 ≤ v) :
+    paddedTail (⟨z, v, 1⟩ : FlagDegree) d =
+      ⟨2 * z * d, 1 + 2 * (v - 1) * d, 2 * d⟩ := by
+  have hs : padS (⟨z, v, 1⟩ : FlagDegree) = 2 := by rfl
+  have hy : padY (⟨z, v, 1⟩ : FlagDegree) = v + 1 := by
+    unfold padY
+    rw [hs]
+    change max (v + 1) 3 = v + 1
+    omega
+  have ht : padT (⟨z, v, 1⟩ : FlagDegree) = v + 1 + z := by
+    unfold padT
+    rw [hy]
+    change max (z + v + 1) (v + 1) = v + 1 + z
+    omega
+  change (⟨2 * (padT (⟨z, v, 1⟩ : FlagDegree) -
+      padY ⟨z, v, 1⟩) * d,
+    1 + 2 * (padY (⟨z, v, 1⟩ : FlagDegree) -
+      padS ⟨z, v, 1⟩) * d,
+    2 * (padS (⟨z, v, 1⟩ : FlagDegree) - 1) * d⟩ : FlagDegree) = _
+  rw [ht, hy, hs]
+  have hz : v + 1 + z - (v + 1) = z := by omega
+  have hvsub : v + 1 - 2 = v - 1 := by omega
+  rw [hz, hvsub]
+
+theorem paddedCost_raw_affine_of_r_one_v_two (v z : ℕ) (hv : 2 ≤ v) :
+    2 * paddedCost 131072 131073 (⟨z + 1, v, 1⟩ : FlagDegree) =
+      paddedCost 131072 131073 ⟨z, v, 1⟩ +
+        paddedCost 131072 131073 ⟨z + 2, v, 1⟩ := by
+  unfold paddedCost
+  rw [paddedTail_raw_of_r_one_v_two v z 131072 hv,
+    paddedTail_raw_of_r_one_v_two v z 131073 hv,
+    paddedTail_raw_of_r_one_v_two v (z + 1) 131072 hv,
+    paddedTail_raw_of_r_one_v_two v (z + 1) 131073 hv,
+    paddedTail_raw_of_r_one_v_two v (z + 2) 131072 hv,
+    paddedTail_raw_of_r_one_v_two v (z + 2) 131073 hv]
+  unfold flagMixed
+  ring
+
+theorem rawCost_affine_of_r_one_v_two (v z : ℕ) (hv : 2 ≤ v) :
+    2 * rawCost 1 v (z + 1) = rawCost 1 v z + rawCost 1 v (z + 2) := by
+  have hn (x : ℕ) : ¬ HybridAppliesC2 (⟨x, v, 1⟩ : FlagDegree) := by
+    intro h
+    have hbad := h.1
+    change 3 ≤ 1 at hbad
+    omega
+  simp only [rawCost, ordinaryCostOf, if_neg (hn z), if_neg (hn (z + 1)),
+    if_neg (hn (z + 2))]
+  exact paddedCost_raw_affine_of_r_one_v_two v z hv
+
+theorem paddedTail_raw_of_r_two_v_zero (r z d : ℕ)
+    (hr : 2 ≤ r) (hz : 1 ≤ z) :
+    paddedTail (⟨z, 0, r⟩ : FlagDegree) d =
+      ⟨2 * (z - 1) * d, 1 + 2 * d, 2 * (r - 1) * d⟩ := by
+  have hs : padS (⟨z, 0, r⟩ : FlagDegree) = r := by
+    unfold padS
+    change max r 2 = r
+    omega
+  have hy : padY (⟨z, 0, r⟩ : FlagDegree) = r + 1 := by
+    unfold padY middle
+    rw [hs]
+    change max (0 + r) (r + 1) = r + 1
+    omega
+  have ht : padT (⟨z, 0, r⟩ : FlagDegree) = r + z := by
+    unfold padT total
+    rw [hy]
+    change max (z + 0 + r) (r + 1) = r + z
+    omega
+  change (⟨2 * (padT (⟨z, 0, r⟩ : FlagDegree) -
+      padY ⟨z, 0, r⟩) * d,
+    1 + 2 * (padY (⟨z, 0, r⟩ : FlagDegree) -
+      padS ⟨z, 0, r⟩) * d,
+    2 * (padS (⟨z, 0, r⟩ : FlagDegree) - 1) * d⟩ : FlagDegree) = _
+  rw [ht, hy, hs]
+  have hzsub : r + z - (r + 1) = z - 1 := by omega
+  rw [hzsub]
+  congr <;> omega
+
+theorem paddedCost_raw_affine_of_r_two_v_zero (r z : ℕ)
+    (hr : 2 ≤ r) (hz : 1 ≤ z) :
+    2 * paddedCost 131072 131073 (⟨z + 1, 0, r⟩ : FlagDegree) =
+      paddedCost 131072 131073 ⟨z, 0, r⟩ +
+        paddedCost 131072 131073 ⟨z + 2, 0, r⟩ := by
+  unfold paddedCost
+  rw [paddedTail_raw_of_r_two_v_zero r z 131072 hr hz,
+    paddedTail_raw_of_r_two_v_zero r z 131073 hr hz,
+    paddedTail_raw_of_r_two_v_zero r (z + 1) 131072 hr (by omega),
+    paddedTail_raw_of_r_two_v_zero r (z + 1) 131073 hr (by omega),
+    paddedTail_raw_of_r_two_v_zero r (z + 2) 131072 hr (by omega),
+    paddedTail_raw_of_r_two_v_zero r (z + 2) 131073 hr (by omega)]
+  have h1 : z + 1 - 1 = z := by omega
+  have h2 : z + 2 - 1 = z + 1 := by omega
+  rw [h1, h2]
+  have hzsplit : z = (z - 1) + 1 := by omega
+  rw [hzsplit]
+  simp only [Nat.add_sub_cancel]
+  unfold flagMixed
+  ring
+
+theorem rawCost_affine_of_r_two_v_zero (r z : ℕ)
+    (hr : 2 ≤ r) (hz : 1 ≤ z) :
+    2 * rawCost r 0 (z + 1) = rawCost r 0 z + rawCost r 0 (z + 2) := by
+  have hn (x : ℕ) : ¬ HybridAppliesC2 (⟨x, 0, r⟩ : FlagDegree) := by
+    intro h
+    have hbad := h.2
+    change r + 2 ≤ 0 + r at hbad
+    omega
+  simp only [rawCost, ordinaryCostOf, if_neg (hn z), if_neg (hn (z + 1)),
+    if_neg (hn (z + 2))]
+  exact paddedCost_raw_affine_of_r_two_v_zero r z hr hz
+
+theorem paddedTail_raw_r_two_v_zero_boundary (r d : ℕ) (hr : 2 ≤ r) :
+    paddedTail (⟨0, 0, r⟩ : FlagDegree) d =
+        ⟨0, 1 + 2 * d, 2 * (r - 1) * d⟩ ∧
+      paddedTail (⟨1, 0, r⟩ : FlagDegree) d =
+        ⟨0, 1 + 2 * d, 2 * (r - 1) * d⟩ := by
+  constructor
+  · unfold paddedTail padT padY padS middle total
+    simp only [Nat.zero_add]
+    have hm : max r 2 = r := by omega
+    rw [hm]
+    have hm' : max r (r + 1) = r + 1 := by omega
+    rw [hm']
+    norm_num
+  · simpa using paddedTail_raw_of_r_two_v_zero r 1 d hr (by decide)
+
+theorem rawCost_convex_r_two_v_zero_boundary (r : ℕ) (hr : 2 ≤ r) :
+    2 * rawCost r 0 1 ≤ rawCost r 0 0 + rawCost r 0 2 := by
+  have hn (x : ℕ) : ¬ HybridAppliesC2 (⟨x, 0, r⟩ : FlagDegree) := by
+    intro h
+    have hbad := h.2
+    change r + 2 ≤ 0 + r at hbad
+    omega
+  simp only [rawCost, ordinaryCostOf, if_neg (hn 0), if_neg (hn 1),
+    if_neg (hn 2)]
+  unfold paddedCost
+  rw [(paddedTail_raw_r_two_v_zero_boundary r 131072 hr).1,
+    (paddedTail_raw_r_two_v_zero_boundary r 131073 hr).1,
+    (paddedTail_raw_r_two_v_zero_boundary r 131072 hr).2,
+    (paddedTail_raw_r_two_v_zero_boundary r 131073 hr).2,
+    paddedTail_raw_of_r_two_v_zero r 2 131072 hr (by decide),
+    paddedTail_raw_of_r_two_v_zero r 2 131073 hr (by decide)]
+  unfold flagMixed
+  ring_nf
+  omega
+
+theorem paddedTail_raw_r_one_v_one (z d : ℕ) (hz : 1 ≤ z) :
+    paddedTail (⟨z, 1, 1⟩ : FlagDegree) d =
+      ⟨2 * (z - 1) * d, 1 + 2 * d, 2 * d⟩ := by
+  unfold paddedTail padT padY padS middle total
+  norm_num
+  have hm : max (z + 2) 3 = z + 2 := by omega
+  rw [hm]
+  congr <;> omega
+
+theorem rawCost_convex_r_one_v_one (z : ℕ) :
+    2 * rawCost 1 1 (z + 1) ≤ rawCost 1 1 z + rawCost 1 1 (z + 2) := by
+  have hn (x : ℕ) : ¬ HybridAppliesC2 (⟨x, 1, 1⟩ : FlagDegree) := by
+    intro h
+    have hbad := h.1
+    change 3 ≤ 1 at hbad
+    omega
+  simp only [rawCost, ordinaryCostOf, if_neg (hn z), if_neg (hn (z + 1)),
+    if_neg (hn (z + 2))]
+  by_cases hz : z = 0
+  · subst z
+    norm_num [paddedCost, paddedTail, padT, padY, padS, middle, total, flagMixed]
+  · have hzpos : 1 ≤ z := by omega
+    have hEq : 2 * paddedCost 131072 131073
+          (⟨z + 1, 1, 1⟩ : FlagDegree) =
+        paddedCost 131072 131073 ⟨z, 1, 1⟩ +
+          paddedCost 131072 131073 ⟨z + 2, 1, 1⟩ := by
+      unfold paddedCost
+      rw [paddedTail_raw_r_one_v_one z 131072 hzpos,
+        paddedTail_raw_r_one_v_one z 131073 hzpos,
+        paddedTail_raw_r_one_v_one (z + 1) 131072 (by omega),
+        paddedTail_raw_r_one_v_one (z + 1) 131073 (by omega),
+        paddedTail_raw_r_one_v_one (z + 2) 131072 (by omega),
+        paddedTail_raw_r_one_v_one (z + 2) 131073 (by omega)]
+      have h1 : z + 1 - 1 = z := by omega
+      have h2 : z + 2 - 1 = z + 1 := by omega
+      rw [h1, h2]
+      have hzsplit : z = (z - 1) + 1 := by omega
+      rw [hzsplit]
+      simp only [Nat.add_sub_cancel]
+      unfold flagMixed
+      ring
+    exact hEq.le
+
+theorem paddedTail_raw_r_one_v_zero (z d : ℕ) (hz : 2 ≤ z) :
+    paddedTail (⟨z, 0, 1⟩ : FlagDegree) d =
+      ⟨2 * (z - 2) * d, 1 + 2 * d, 2 * d⟩ := by
+  unfold paddedTail padT padY padS middle total
+  norm_num
+  have hm : max (z + 1) 3 = z + 1 := by omega
+  rw [hm]
+  congr <;> omega
+
+theorem rawCost_convex_r_one_v_zero (z : ℕ) :
+    2 * rawCost 1 0 (z + 1) ≤ rawCost 1 0 z + rawCost 1 0 (z + 2) := by
+  have hn (x : ℕ) : ¬ HybridAppliesC2 (⟨x, 0, 1⟩ : FlagDegree) := by
+    intro h
+    have hbad := h.1
+    change 3 ≤ 1 at hbad
+    omega
+  simp only [rawCost, ordinaryCostOf, if_neg (hn z), if_neg (hn (z + 1)),
+    if_neg (hn (z + 2))]
+  by_cases hz0 : z = 0
+  · subst z
+    norm_num [paddedCost, paddedTail, padT, padY, padS, middle, total, flagMixed]
+  · by_cases hz1 : z = 1
+    · subst z
+      norm_num [paddedCost, paddedTail, padT, padY, padS, middle, total, flagMixed]
+    · have hz : 2 ≤ z := by omega
+      unfold paddedCost
+      rw [paddedTail_raw_r_one_v_zero z 131072 hz,
+        paddedTail_raw_r_one_v_zero z 131073 hz,
+        paddedTail_raw_r_one_v_zero (z + 1) 131072 (by omega),
+        paddedTail_raw_r_one_v_zero (z + 1) 131073 (by omega),
+        paddedTail_raw_r_one_v_zero (z + 2) 131072 (by omega),
+        paddedTail_raw_r_one_v_zero (z + 2) 131073 (by omega)]
+      have h1 : z + 1 - 2 = z - 1 := by omega
+      have h2 : z + 2 - 2 = z := by omega
+      rw [h1, h2]
+      have hzsplit : z = (z - 2) + 2 := by omega
+      rw [hzsplit]
+      norm_num
+      unfold flagMixed
+      ring_nf
+      exact le_rfl
+
+theorem rawCost_discreteConvex (r v z : ℕ) (hr : 1 ≤ r) :
+    2 * rawCost r v (z + 1) ≤ rawCost r v z + rawCost r v (z + 2) := by
+  by_cases hr1 : r = 1
+  · subst r
+    by_cases hv0 : v = 0
+    · subst v
+      exact rawCost_convex_r_one_v_zero z
+    · by_cases hv1 : v = 1
+      · subst v
+        exact rawCost_convex_r_one_v_one z
+      · exact (rawCost_affine_of_r_one_v_two v z (by omega)).le
+  · have hr2 : 2 ≤ r := by omega
+    by_cases hv0 : v = 0
+    · subst v
+      by_cases hz : z = 0
+      · subst z
+        exact rawCost_convex_r_two_v_zero_boundary r hr2
+      · exact (rawCost_affine_of_r_two_v_zero r z hr2 (by omega)).le
+    · by_cases hv1 : v = 1
+      · subst v
+        exact (rawCost_affine_of_r_two_v_one r z hr2).le
+      · by_cases hr3 : r = 2
+        · subst hr3
+          exact (rawCost_affine_of_r_two_v_two v z (by omega)).le
+        · exact (rawCost_affine_of_hybrid r v z (by omega) (by omega)).le
+
+theorem rawBelow_of_z_le (r v z₁ z₂ : ℕ) (hz : z₁ ≤ z₂) :
+    Below (⟨z₁, v, r⟩ : FlagDegree) ⟨z₂, v, r⟩ := by
+  change r ≤ r ∧ v + r ≤ v + r ∧ z₁ + v + r ≤ z₂ + v + r
+  omega
+
+theorem rawCost_mono_z (r v : ℕ) : Monotone (rawCost r v) := by
+  intro z₁ z₂ hz
+  have hb := rawBelow_of_z_le r v z₁ z₂ hz
+  by_cases ha : HybridAppliesC2 (⟨z₁, v, r⟩ : FlagDegree)
+  · have ha' : HybridAppliesC2 (⟨z₂, v, r⟩ : FlagDegree) := by
+      rcases ha with ⟨hr, hv⟩
+      exact ⟨hr, hv⟩
+    simp only [rawCost, ordinaryCostOf, if_pos ha, if_pos ha']
+    exact hybridCostC2_mono hb
+  · have ha' : ¬ HybridAppliesC2 (⟨z₂, v, r⟩ : FlagDegree) := by
+      intro h
+      apply ha
+      rcases h with ⟨hr, hv⟩
+      exact ⟨hr, hv⟩
+    simp only [rawCost, ordinaryCostOf, if_neg ha, if_neg ha']
+    exact paddedCost_mono 131072 131073 hb
+
+def forwardDiff (f : ℕ → ℕ) (n : ℕ) : ℕ := f (n + 1) - f n
+
+theorem forwardDiff_mono_of_discreteConvex
+    (f : ℕ → ℕ) (hmono : Monotone f)
+    (hconvex : ∀ n, 2 * f (n + 1) ≤ f n + f (n + 2)) (n : ℕ) :
+    forwardDiff f n ≤ forwardDiff f (n + 1) := by
+  have h₀ := hmono (Nat.le_add_right n 1)
+  have h₁ := hmono (Nat.le_add_right (n + 1) 1)
+  have hc := hconvex n
+  unfold forwardDiff
+  rw [show n + 1 + 1 = n + 2 by omega]
+  omega
+
+theorem move_one_right
+    (f g : ℕ → ℕ) (hf : Monotone f) (hg : Monotone g)
+    (a b : ℕ) (hcross : forwardDiff f a ≤ forwardDiff g b) :
+    f (a + 1) + g b ≤ f a + g (b + 1) := by
+  have hfa := hf (Nat.le_add_right a 1)
+  have hgb := hg (Nat.le_add_right b 1)
+  unfold forwardDiff at hcross
+  omega
+
+theorem transfer_all_right
+    (f g : ℕ → ℕ) (hf : Monotone f) (hg : Monotone g)
+    (hdf : ∀ n, forwardDiff f n ≤ forwardDiff f (n + 1))
+    (hdg : ∀ n, forwardDiff g n ≤ forwardDiff g (n + 1)) :
+    ∀ a b, forwardDiff f a ≤ forwardDiff g b →
+      f (a + 1) + g b ≤ f 0 + g (a + 1 + b) := by
+  intro a
+  induction a with
+  | zero =>
+      intro b hcross
+      simpa only [Nat.zero_add, Nat.add_comm] using
+        move_one_right f g hf hg 0 b hcross
+  | succ a ih =>
+      intro b hcross
+      have hcross' : forwardDiff f a ≤ forwardDiff g (b + 1) :=
+        (hdf a).trans (hcross.trans (hdg b))
+      calc
+        f (a + 1 + 1) + g b ≤ f (a + 1) + g (b + 1) :=
+          move_one_right f g hf hg (a + 1) b hcross
+        _ ≤ f 0 + g (a + 1 + (b + 1)) := ih (b + 1) hcross'
+        _ = f 0 + g (a + 1 + 1 + b) := by
+          rw [show a + 1 + (b + 1) = a + 1 + 1 + b by omega]
+
+theorem two_discreteConvex_endpoint
+    (f g : ℕ → ℕ) (hf : Monotone f) (hg : Monotone g)
+    (hcf : ∀ n, 2 * f (n + 1) ≤ f n + f (n + 2))
+    (hcg : ∀ n, 2 * g (n + 1) ≤ g n + g (n + 2))
+    (a b : ℕ) :
+    f a + g b ≤ max (f (a + b) + g 0) (f 0 + g (a + b)) := by
+  have hdf (n : ℕ) : forwardDiff f n ≤ forwardDiff f (n + 1) :=
+    forwardDiff_mono_of_discreteConvex f hf hcf n
+  have hdg (n : ℕ) : forwardDiff g n ≤ forwardDiff g (n + 1) :=
+    forwardDiff_mono_of_discreteConvex g hg hcg n
+  rcases a with _ | a
+  · simpa only [Nat.zero_add] using
+      (le_max_right (f b + g 0) (f 0 + g b))
+  rcases b with _ | b
+  · simpa only [Nat.add_zero] using
+      (le_max_left (f (a + 1) + g 0) (f 0 + g (a + 1)))
+  by_cases hcross : forwardDiff f a ≤ forwardDiff g (b + 1)
+  · have h := transfer_all_right f g hf hg hdf hdg a (b + 1) hcross
+    have h' : f (a + 1) + g (b + 1) ≤
+        f 0 + g (a + 1 + (b + 1)) := h
+    apply h'.trans
+    apply le_max_of_le_right
+    rfl
+  · have hcross' : forwardDiff g b ≤ forwardDiff f (a + 1) :=
+      (hdg b).trans ((Nat.lt_of_not_ge hcross).le.trans (hdf a))
+    have h := transfer_all_right g f hg hf hdg hdf b (a + 1) hcross'
+    have h' : f (a + 1) + g (b + 1) ≤
+        f (b + 1 + (a + 1)) + g 0 := by
+      simpa only [Nat.add_comm] using h
+    have h'' : f (a + 1) + g (b + 1) ≤
+        f ((a + 1) + (b + 1)) + g 0 := by
+      simpa only [Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using h'
+    apply h''.trans
+    apply le_max_of_le_left
+    rfl
+
+theorem rawCost_affine_r_one_v_one (z : ℕ) (hz : 1 ≤ z) :
+    2 * rawCost 1 1 (z + 1) = rawCost 1 1 z + rawCost 1 1 (z + 2) := by
+  have hn (x : ℕ) : ¬ HybridAppliesC2 (⟨x, 1, 1⟩ : FlagDegree) := by
+    intro h
+    have hbad := h.1
+    change 3 ≤ 1 at hbad
+    omega
+  simp only [rawCost, ordinaryCostOf, if_neg (hn z), if_neg (hn (z + 1)),
+    if_neg (hn (z + 2))]
+  unfold paddedCost
+  rw [paddedTail_raw_r_one_v_one z 131072 hz,
+    paddedTail_raw_r_one_v_one z 131073 hz,
+    paddedTail_raw_r_one_v_one (z + 1) 131072 (by omega),
+    paddedTail_raw_r_one_v_one (z + 1) 131073 (by omega),
+    paddedTail_raw_r_one_v_one (z + 2) 131072 (by omega),
+    paddedTail_raw_r_one_v_one (z + 2) 131073 (by omega)]
+  have h1 : z + 1 - 1 = z := by omega
+  have h2 : z + 2 - 1 = z + 1 := by omega
+  rw [h1, h2]
+  have hzsplit : z = (z - 1) + 1 := by omega
+  rw [hzsplit]
+  simp only [Nat.add_sub_cancel]
+  unfold flagMixed
+  ring
+
+theorem rawCost_affine_r_one_v_zero (z : ℕ) (hz : 2 ≤ z) :
+    2 * rawCost 1 0 (z + 1) = rawCost 1 0 z + rawCost 1 0 (z + 2) := by
+  have hn (x : ℕ) : ¬ HybridAppliesC2 (⟨x, 0, 1⟩ : FlagDegree) := by
+    intro h
+    have hbad := h.1
+    change 3 ≤ 1 at hbad
+    omega
+  simp only [rawCost, ordinaryCostOf, if_neg (hn z), if_neg (hn (z + 1)),
+    if_neg (hn (z + 2))]
+  unfold paddedCost
+  rw [paddedTail_raw_r_one_v_zero z 131072 hz,
+    paddedTail_raw_r_one_v_zero z 131073 hz,
+    paddedTail_raw_r_one_v_zero (z + 1) 131072 (by omega),
+    paddedTail_raw_r_one_v_zero (z + 1) 131073 (by omega),
+    paddedTail_raw_r_one_v_zero (z + 2) 131072 (by omega),
+    paddedTail_raw_r_one_v_zero (z + 2) 131073 (by omega)]
+  have h1 : z + 1 - 2 = z - 1 := by omega
+  have h2 : z + 2 - 2 = z := by omega
+  rw [h1, h2]
+  have hzsplit : z = (z - 2) + 2 := by omega
+  rw [hzsplit]
+  norm_num
+  unfold flagMixed
+  ring
+
+theorem rawCost_affine_step_from_two (r v z : ℕ)
+    (hr : 1 ≤ r) (hz : 2 ≤ z) :
+    2 * rawCost r v (z + 1) = rawCost r v z + rawCost r v (z + 2) := by
+  by_cases hr1 : r = 1
+  · subst r
+    by_cases hv0 : v = 0
+    · subst v
+      exact rawCost_affine_r_one_v_zero z hz
+    · by_cases hv1 : v = 1
+      · subst v
+        exact rawCost_affine_r_one_v_one z (by omega)
+      · exact rawCost_affine_of_r_one_v_two v z (by omega)
+  · have hr2 : 2 ≤ r := by omega
+    by_cases hv0 : v = 0
+    · subst v
+      exact rawCost_affine_of_r_two_v_zero r z hr2 (by omega)
+    · by_cases hv1 : v = 1
+      · subst v
+        exact rawCost_affine_of_r_two_v_one r z hr2
+      · by_cases hr3 : r = 2
+        · subst hr3
+          exact rawCost_affine_of_r_two_v_two v z (by omega)
+        · exact rawCost_affine_of_hybrid r v z (by omega) (by omega)
+
+theorem forwardDiff_eq_next_of_affine
+    (f : ℕ → ℕ) (hmono : Monotone f)
+    (n : ℕ) (hstep : 2 * f (n + 1) = f n + f (n + 2)) :
+    forwardDiff f n = forwardDiff f (n + 1) := by
+  have h₀ := hmono (Nat.le_add_right n 1)
+  have h₁ := hmono (Nat.le_add_right (n + 1) 1)
+  unfold forwardDiff
+  rw [show n + 1 + 1 = n + 2 by omega]
+  omega
+
+theorem affine_formula_from_three
+    (f : ℕ → ℕ) (hmono : Monotone f)
+    (hstep : ∀ n, 2 ≤ n → 2 * f (n + 1) = f n + f (n + 2))
+    (z : ℕ) (hz : 3 ≤ z) :
+    f z = f 3 + (f 4 - f 3) * (z - 3) := by
+  have hdiffStep (n : ℕ) (hn : 2 ≤ n) :
+      forwardDiff f n = forwardDiff f (n + 1) :=
+    forwardDiff_eq_next_of_affine f hmono n (hstep n hn)
+  have hdiff : ∀ n, 3 ≤ n → forwardDiff f n = forwardDiff f 3 := by
+    intro n hn
+    induction n, hn using Nat.le_induction with
+    | base => rfl
+    | succ n hn ih => exact (hdiffStep n (by omega)).symm.trans ih
+  induction z, hz using Nat.le_induction with
+  | base => simp
+  | succ n hn ih =>
+      have hmn := hmono (Nat.le_add_right n 1)
+      have hd := hdiff n hn
+      have hd' : f (n + 1) - f n = f 4 - f 3 := by
+        simpa only [forwardDiff, show 3 + 1 = 4 by decide] using hd
+      calc
+        f (n + 1) = f n + (f (n + 1) - f n) :=
+          (Nat.add_sub_of_le hmn).symm
+        _ = f n + (f 4 - f 3) := by rw [hd']
+        _ = (f 3 + (f 4 - f 3) * (n - 3)) + (f 4 - f 3) := by
+          rw [ih]
+        _ = f 3 + (f 4 - f 3) * (n + 1 - 3) := by
+          have hnsub : n + 1 - 3 = (n - 3) + 1 := by omega
+          rw [hnsub]
+          ring
+
+theorem rawCost_affine_from_three (r v z : ℕ)
+    (hr : 1 ≤ r) (hz : 3 ≤ z) :
+    rawCost r v z = rawCost r v 3 +
+      (rawCost r v 4 - rawCost r v 3) * (z - 3) := by
+  exact affine_formula_from_three (rawCost r v) (rawCost_mono_z r v)
+    (fun n hn => rawCost_affine_step_from_two r v n hr hn) z hz
+
+end ProximityPrize.SubmissionLower.LocatorOrdinaryZConvex
+end PackedLocator_LocatorOrdinaryZConvex
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier15 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorOrdinaryConcentration. -/
+section PackedLocator_LocatorOrdinaryConcentration
+
+/-!
+# Concentrating ordinary-factor excess total degree
+
+Discrete convexity lets all raw `z` weight in a finite nonempty family be
+moved to one carrier without decreasing the upper bound.  This reduces the
+three-coordinate ordinary partition problem to a two-coordinate zero-`z`
+knapsack plus one carrier line.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorOrdinaryConcentration
+
+open scoped BigOperators
+open LocatorOrdinaryZConvex
+
+set_option autoImplicit false
+
+theorem exists_z_carrier
+    {ι : Type} [DecidableEq ι]
+    (s : Finset ι) (r v z : ι → ℕ)
+    (hr : ∀ i ∈ s, 1 ≤ r i) (hne : s.Nonempty) :
+    ∃ c ∈ s,
+      (∑ i ∈ s, rawCost (r i) (v i) (z i)) ≤
+        rawCost (r c) (v c) (∑ i ∈ s, z i) +
+          ∑ i ∈ s.erase c, rawCost (r i) (v i) 0 := by
+  induction s using Finset.induction_on with
+  | empty => simp at hne
+  | @insert a s ha ih =>
+      by_cases hs : s = ∅
+      · subst s
+        refine ⟨a, by simp, ?_⟩
+        simp
+      · have hsne : s.Nonempty := Finset.nonempty_iff_ne_empty.mpr hs
+        obtain ⟨c, hc, hbound⟩ := ih (fun i hi => hr i (by simp [hi])) hsne
+        have hra : 1 ≤ r a := hr a (by simp)
+        have hrc : 1 ≤ r c := hr c (by simp [hc])
+        have hpair := two_discreteConvex_endpoint
+          (rawCost (r a) (v a)) (rawCost (r c) (v c))
+          (rawCost_mono_z (r a) (v a)) (rawCost_mono_z (r c) (v c))
+          (fun n => rawCost_discreteConvex (r a) (v a) n hra)
+          (fun n => rawCost_discreteConvex (r c) (v c) n hrc)
+          (z a) (∑ i ∈ s, z i)
+        have hpre :
+            (∑ i ∈ insert a s, rawCost (r i) (v i) (z i)) ≤
+              rawCost (r a) (v a) (z a) +
+                (rawCost (r c) (v c) (∑ i ∈ s, z i) +
+                  ∑ i ∈ s.erase c, rawCost (r i) (v i) 0) := by
+          rw [Finset.sum_insert ha]
+          exact Nat.add_le_add_left hbound _
+        by_cases hend :
+            rawCost (r a) (v a) (z a + ∑ i ∈ s, z i) +
+                rawCost (r c) (v c) 0 ≤
+              rawCost (r a) (v a) 0 +
+                rawCost (r c) (v c) (z a + ∑ i ∈ s, z i)
+        · refine ⟨c, by simp [hc], ?_⟩
+          have htwo :
+              rawCost (r a) (v a) (z a) +
+                  rawCost (r c) (v c) (∑ i ∈ s, z i) ≤
+                rawCost (r a) (v a) 0 +
+                  rawCost (r c) (v c) (z a + ∑ i ∈ s, z i) := by
+            exact hpair.trans (by simpa [max_eq_right hend])
+          calc
+            (∑ i ∈ insert a s, rawCost (r i) (v i) (z i)) ≤
+                rawCost (r a) (v a) (z a) +
+                  (rawCost (r c) (v c) (∑ i ∈ s, z i) +
+                    ∑ i ∈ s.erase c, rawCost (r i) (v i) 0) := hpre
+            _ ≤ (rawCost (r a) (v a) 0 +
+                  rawCost (r c) (v c) (z a + ∑ i ∈ s, z i)) +
+                    ∑ i ∈ s.erase c, rawCost (r i) (v i) 0 := by omega
+            _ = rawCost (r c) (v c) (∑ i ∈ insert a s, z i) +
+                  ∑ i ∈ (insert a s).erase c,
+                    rawCost (r i) (v i) 0 := by
+              rw [Finset.sum_insert ha]
+              have hac : a ≠ c := fun h => ha (h ▸ hc)
+              rw [Finset.erase_insert_of_ne hac, Finset.sum_insert]
+              · ac_rfl
+              · exact fun h => ha (Finset.mem_of_mem_erase h)
+        · refine ⟨a, by simp, ?_⟩
+          have hreverse :
+              rawCost (r c) (v c) (z a + ∑ i ∈ s, z i) +
+                  rawCost (r a) (v a) 0 ≤
+                rawCost (r a) (v a) (z a + ∑ i ∈ s, z i) +
+                  rawCost (r c) (v c) 0 := by
+            omega
+          have htwo :
+              rawCost (r a) (v a) (z a) +
+                  rawCost (r c) (v c) (∑ i ∈ s, z i) ≤
+                rawCost (r a) (v a) (z a + ∑ i ∈ s, z i) +
+                  rawCost (r c) (v c) 0 := by
+            exact hpair.trans (by
+              rw [max_eq_left]
+              simpa [Nat.add_comm] using hreverse)
+          have hzeros :
+              rawCost (r c) (v c) 0 +
+                  ∑ i ∈ s.erase c, rawCost (r i) (v i) 0 =
+                ∑ i ∈ s, rawCost (r i) (v i) 0 := by
+            simpa only [Nat.add_comm] using
+              (Finset.sum_erase_add s
+                (fun i => rawCost (r i) (v i) 0) hc)
+          calc
+            (∑ i ∈ insert a s, rawCost (r i) (v i) (z i)) ≤
+                rawCost (r a) (v a) (z a) +
+                  (rawCost (r c) (v c) (∑ i ∈ s, z i) +
+                    ∑ i ∈ s.erase c, rawCost (r i) (v i) 0) := hpre
+            _ ≤ (rawCost (r a) (v a) (z a + ∑ i ∈ s, z i) +
+                  rawCost (r c) (v c) 0) +
+                    ∑ i ∈ s.erase c, rawCost (r i) (v i) 0 := by omega
+            _ = rawCost (r a) (v a) (∑ i ∈ insert a s, z i) +
+                  ∑ i ∈ (insert a s).erase a,
+                    rawCost (r i) (v i) 0 := by
+              rw [Finset.sum_insert ha, Finset.erase_insert ha]
+              rw [← hzeros]
+              ac_rfl
+
+end ProximityPrize.SubmissionLower.LocatorOrdinaryConcentration
+end PackedLocator_LocatorOrdinaryConcentration
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier16 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800Audit. -/
+section PackedLocator_LocatorPhase6800Audit
+
+/-!
+# Soundness utilities for the compact 6800 phase receipt
+
+These lemmas are deliberately separate from the generated receipt data.  The
+first records the correlated (rather than independent-maxima) initial-A
+ledger.  The remaining lemmas justify interpreting a checked threshold row as
+an exact routeability cutoff in the raw total coordinate.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorPhase6800Audit
+
+open scoped BigOperators
+open RCN095 LocatorFactorAggregate LocatorArbitraryPowerAvoidance
+open LocatorPhase6800Oracle
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+
+/-- The initial-A ledger has to retain the common aggregate `p`: the maximum
+phase cost and maximum complementary A charge cannot be taken independently. -/
+theorem initialA_sum_le_certifiedJoint_correlated
+    (oracle : CheckedPhaseOracle)
+    (phaseSum helperSum : ℕ) (p : FlagDegree)
+    (hslope : p.all ≤ 29) (hmiddle : middle p ≤ 132)
+    (htotal : total p ≤ 6412)
+    (hphase : phaseSum ≤ oracle.narrowCap p)
+    (hhelper : helperSum ≤ initialAComplement p) :
+    phaseSum + helperSum ≤ certifiedJointMaximum := by
+  exact (Nat.add_le_add hphase hhelper).trans
+    (oracle.joint_le p hslope hmiddle htotal)
+
+/-- Taking one more high-band projection only adds a nonnegative summand. -/
+theorem powerBandBudget_le_succ
+    (delta dT dY dS T YS S k : ℕ) :
+    powerBandBudget delta dT dY dS T YS S k ≤
+      powerBandBudget delta dT dY dS T YS S (k + 1) := by
+  induction k generalizing T YS S with
+  | zero =>
+      simp only [powerBandBudget, Nat.zero_add]
+      exact Nat.zero_le _
+  | succ k ih =>
+      simp only [powerBandBudget]
+      exact Nat.add_le_add_left
+        (ih (T := T - dT) (YS := YS - dY) (S := S - dS)) _
+
+/-- The cumulative high-band cost is monotone in the number of projections. -/
+theorem powerBandBudget_mono_fuel
+    (delta dT dY dS T YS S : ℕ) {k₁ k₂ : ℕ} (hk : k₁ ≤ k₂) :
+    powerBandBudget delta dT dY dS T YS S k₁ ≤
+      powerBandBudget delta dT dY dS T YS S k₂ := by
+  obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hk
+  induction d with
+  | zero => simp
+  | succ d ih =>
+      calc
+        powerBandBudget delta dT dY dS T YS S k₁ ≤
+            powerBandBudget delta dT dY dS T YS S (k₁ + d) :=
+          ih (Nat.le_add_right _ _)
+        _ ≤ powerBandBudget delta dT dY dS T YS S ((k₁ + d) + 1) :=
+          powerBandBudget_le_succ delta dT dY dS T YS S (k₁ + d)
+        _ = powerBandBudget delta dT dY dS T YS S (k₁ + d.succ) := by
+          congr 1
+
+/-- For fixed raw slope and middle coordinates, increasing `z` can only make
+the source route easier: the residual total box and the fuel both decrease. -/
+theorem routeable_raw_mono_z
+    (s : SourceNumbers) {r v z₁ z₂ : ℕ}
+    (hz : z₁ ≤ z₂) (hcap : r + v + z₂ ≤ s.totalCap)
+    (hroute : s.Routeable (rawFlag r v z₁)) :
+    s.Routeable (rawFlag r v z₂) := by
+  rcases hroute with ⟨hr, ht, hy, hs, hband⟩
+  have hr' : 1 ≤ r := by simpa only [rawFlag_all] using hr
+  have htotal : r + v + z₁ ≤ r + v + z₂ := by omega
+  have hpos : 0 < r + v + z₁ := by omega
+  have hdiv : s.totalCap / (r + v + z₂) ≤
+      s.totalCap / (r + v + z₁) :=
+    Nat.div_le_div_left htotal hpos
+  have hfuel : s.fuel (rawFlag r v z₂) ≤
+      s.fuel (rawFlag r v z₁) := by
+    unfold SourceNumbers.fuel
+    simp only [rawFlag_total, rawFlag_middle, rawFlag_all]
+    exact min_le_min hdiv (le_refl _)
+  have hbox : s.totalCap - (r + v + z₂) ≤
+      s.totalCap - (r + v + z₁) := Nat.sub_le_sub_left htotal _
+  have hsameFuel :
+      powerBandBudget 50303 (r + v + z₂) (r + v) r
+          (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
+          (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
+        powerBandBudget 50303 (r + v + z₁) (r + v) r
+          (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+          (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) := by
+    exact powerBandBudget_mono 50303
+      (r + v + z₂) (r + v) r
+      (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
+      (s.slopeCap - r)
+      (r + v + z₁) (r + v) r
+      (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+      (s.slopeCap - r) (s.fuel (rawFlag r v z₂))
+      hbox (le_refl _) (le_refl _) htotal (le_refl _) (le_refl _)
+  have hmoreFuel :
+      powerBandBudget 50303 (r + v + z₁) (r + v) r
+          (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+          (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
+        powerBandBudget 50303 (r + v + z₁) (r + v) r
+          (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+          (s.slopeCap - r) (s.fuel (rawFlag r v z₁)) :=
+    powerBandBudget_mono_fuel 50303 (r + v + z₁) (r + v) r
+      (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+      (s.slopeCap - r) hfuel
+  refine ⟨hr, ?_, ?_, ?_, ?_⟩
+  · simpa only [rawFlag_total] using hcap
+  · simpa only [rawFlag_middle] using hy
+  · simpa only [rawFlag_all] using hs
+  · rcases hband with hband | hthin
+    · left
+      unfold SourceNumbers.band at hband ⊢
+      simp only [rawFlag_total, rawFlag_middle, rawFlag_all] at hband ⊢
+      exact (hsameFuel.trans hmoreFuel).trans_lt hband
+    · right
+      have hsameFuelT :
+          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₂)) 50303
+              (contactDec (rawFlag r v z₂)) (r + v + z₂) (r + v) r
+              (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
+              (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
+            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50303
+              (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
+              (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+              (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) := by
+        have hcap : s.contactCap (rawFlag r v z₂) = s.contactCap (rawFlag r v z₁) := by
+          simp only [SourceNumbers.contactCap, contactDec, rawFlag_middle, rawFlag_all]
+        have hdec : contactDec (rawFlag r v z₂) = contactDec (rawFlag r v z₁) := by
+          simp only [contactDec, rawFlag_middle, rawFlag_all]
+        rw [hcap, hdec]
+        exact powerBandBudgetThin_mono 131071 50303 (s.fuel (rawFlag r v z₂))
+          (s.contactCap (rawFlag r v z₁)) (contactDec (rawFlag r v z₁))
+          (r + v + z₂) (r + v) r
+          (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v)) (s.slopeCap - r)
+          (s.contactCap (rawFlag r v z₁)) (contactDec (rawFlag r v z₁))
+          (r + v + z₁) (r + v) r
+          (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v)) (s.slopeCap - r)
+          le_rfl le_rfl hbox le_rfl le_rfl htotal le_rfl le_rfl
+      have hmoreFuelT :
+          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50303
+              (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
+              (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+              (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
+            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50303
+              (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
+              (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+              (s.slopeCap - r) (s.fuel (rawFlag r v z₁)) :=
+        powerBandBudgetThin_mono_fuel 131071 (s.contactCap (rawFlag r v z₁)) 50303
+          (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
+          (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v)) (s.slopeCap - r) hfuel
+      unfold SourceNumbers.bandThin at hthin ⊢
+      simp only [rawFlag_total, rawFlag_middle, rawFlag_all] at hthin ⊢
+      exact (hsameFuelT.trans hmoreFuelT).trans_lt hthin
+
+/-- A valid threshold boundary is the exact routeability cutoff throughout
+the benchmark raw-total interval. -/
+theorem routeable_raw_iff_threshold
+    (s : SourceNumbers) {r v threshold z : ℕ}
+    (hsourceCap : 6412 ≤ s.totalCap)
+    (hrv : r + v ≤ 6412) (hz : z ≤ 6412 - (r + v))
+    (hboundary : thresholdBoundary s r v threshold) :
+    s.Routeable (rawFlag r v z) ↔ threshold ≤ z := by
+  unfold thresholdBoundary at hboundary
+  by_cases hzero : threshold = 0
+  · rw [if_pos hzero] at hboundary
+    constructor
+    · intro _
+      omega
+    · intro _
+      apply routeable_raw_mono_z s (z₁ := 0) (z₂ := z)
+      · omega
+      · omega
+      · exact hboundary
+  · rw [if_neg hzero] at hboundary
+    by_cases hin : threshold ≤ 6412 - (r + v)
+    · rw [if_pos hin] at hboundary
+      constructor
+      · intro hroute
+        by_contra hnot
+        have hzprev : z ≤ threshold - 1 := by omega
+        have hroutePrev := routeable_raw_mono_z s hzprev (by omega) hroute
+        exact hboundary.1 hroutePrev
+      · intro hthreshold
+        exact routeable_raw_mono_z s hthreshold (by omega) hboundary.2
+    · rw [if_neg hin] at hboundary
+      constructor
+      · intro hroute
+        have hrouteMax := routeable_raw_mono_z s hz (by omega) hroute
+        exact False.elim (hboundary.2 hrouteMax)
+      · intro hthreshold
+        omega
+
+/-! ## Noncircular semantics of a prefix receipt -/
+
+theorem sumFlag_rawBelow_of_subset
+    {ι : Type} [DecidableEq ι] (flag : ι → FlagDegree)
+    {A U : Finset ι} (hUA : U ⊆ A) :
+    RawBelow (sumFlag U flag) (sumFlag A flag) := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+    exact Finset.sum_le_sum_of_subset_of_nonneg hUA
+      (fun _ _ _ ↦ Nat.zero_le _)
+
+/-- A proper subfamily has strictly smaller raw slope when every factor has
+positive slope.  This is the well-founded coordinate behind `afterR = r-1`. -/
+theorem sumFlag_all_lt_of_ssubset
+    {ι : Type} [DecidableEq ι] (flag : ι → FlagDegree)
+    {A U : Finset ι} (hUA : U ⊂ A)
+    (hpositive : ∀ i ∈ A, 1 ≤ (flag i).all) :
+    (sumFlag U flag).all < (sumFlag A flag).all := by
+  have hdiff : (A \ U).Nonempty := by
+    exact Finset.sdiff_nonempty.mpr (fun hAU ↦ hUA.ne (Finset.Subset.antisymm hUA.subset hAU))
+  obtain ⟨i, hi⟩ := hdiff
+  have hiA : i ∈ A := (Finset.mem_sdiff.mp hi).1
+  have hiOne : 1 ≤ (flag i).all := hpositive i hiA
+  have hiSum : (flag i).all ≤ ∑ j ∈ A \ U, (flag j).all := by
+    exact Finset.single_le_sum
+      (f := fun j ↦ (flag j).all) (fun _ _ ↦ Nat.zero_le _) hi
+  have hsplit := Finset.sum_sdiff hUA.subset (f := fun j ↦ (flag j).all)
+  simp only [sumFlag_all] at *
+  omega
+
+/-- Additivity of every numerical phase potential on a finite family. -/
+theorem sum_potential_eval
+    {ι : Type} [DecidableEq ι] (s : Finset ι)
+    (flag : ι → FlagDegree) (q : Potential) :
+    (∑ i ∈ s, q.eval (flag i)) = q.eval (sumFlag s flag) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simp [sumFlag, Potential.eval, total, middle]
+  | @insert i s hi ih =>
+      simp only [Finset.sum_insert hi, ih]
+      simp [sumFlag, Potential.eval, total, middle, hi]
+      ring
+
+/-- Semantic content of one cumulative prefix table.  `terminal` checks only
+actual nonrouteable states.  `monotone` records the cumulative max closure in
+raw `r`, `v`, and `z`; neither field assumes the desired phase bound. -/
+structure PrefixTableSound
+    (previous : FlagDegree → ℕ) (q : Potential)
+    (routeable : FlagDegree → Prop) (pref : FlagDegree → ℕ) : Prop where
+  terminal : ∀ p, ¬ routeable p →
+    previous p ≤ q.eval p + pref p
+  monotone : ∀ {p₁ p₂}, RawBelow p₁ p₂ → pref p₁ ≤ pref p₂
+
+/-- A parent of raw slope `r` queries the prefix after completing slope
+`r-1`.  The subtraction is harmless at zero; routed nonempty products have
+positive slope. -/
+def parentDefect (pref : FlagDegree → ℕ) (parent : FlagDegree) : ℕ :=
+  pref (rawFlag (parent.all - 1) parent.yz parent.zOnly)
+
+/-- The value after adjoining one source phase. -/
+def applyPhase (previous : FlagDegree → ℕ) (q : Potential)
+    (routeable : FlagDegree → Prop) [DecidablePred routeable]
+    (pref : FlagDegree → ℕ)
+    (p : FlagDegree) : ℕ :=
+  if routeable p then
+    min (previous p) (q.eval p + parentDefect pref p)
+  else previous p
+
+/-- A cumulative prefix row bounds every nonrouteable strict child of its
+parent.  This is the exact semantic fact needed by the algebraic batch split. -/
+theorem terminal_le_parent_charge
+    {previous pref : FlagDegree → ℕ} {q : Potential}
+    {routeable : FlagDegree → Prop}
+    (hrows : PrefixTableSound previous q routeable pref)
+    {child parent : FlagDegree} (hbelow : RawBelow child parent)
+    (hslope : child.all < parent.all) (hterminal : ¬ routeable child) :
+    previous child ≤ q.eval child + parentDefect pref parent := by
+  have hpred : RawBelow child
+      (rawFlag (parent.all - 1) parent.yz parent.zOnly) := by
+    rcases hbelow with ⟨hr, hv, hz⟩
+    refine ⟨?_, ?_, ?_⟩
+    · simpa only [rawFlag_all]
+      using (show child.all ≤ parent.all - 1 by omega)
+    · simpa only [rawFlag] using hv
+    · simpa only [rawFlag] using hz
+  simpa only [parentDefect] using (hrows.terminal child hterminal).trans
+    (Nat.add_le_add_left (hrows.monotone hpred) _)
+
+/-- Soundness of one checked numerical phase.  The proof deliberately keeps
+the previous bound state-local.  When the current aggregate routes, repeated
+strict algebraic splits terminate at a nonrouteable subfamily covered by the
+prefix table; exited factors are charged by the additive source potential. -/
+theorem sum_count_le_applyPhase
+    {ι : Type} [DecidableEq ι]
+    (flag : ι → FlagDegree) (count : ι → ℕ)
+    (previous : FlagDegree → ℕ) (q : Potential)
+    (routeable : FlagDegree → Prop) [DecidablePred routeable]
+    (pref : FlagDegree → ℕ)
+    (ambient : Finset ι)
+    (hpositive : ∀ i ∈ ambient, 1 ≤ (flag i).all)
+    (hprevious : ∀ B, B ⊆ ambient →
+      (∑ i ∈ B, count i) ≤ previous (sumFlag B flag))
+    (hrows : PrefixTableSound previous q routeable pref)
+    (hroute : ∀ B, B ⊆ ambient → routeable (sumFlag B flag) →
+      ∃ U, U ⊂ B ∧
+        (∑ i ∈ B \ U, count i) ≤
+          ∑ i ∈ B \ U, q.eval (flag i)) :
+    (∑ i ∈ ambient, count i) ≤
+      applyPhase previous q routeable pref (sumFlag ambient flag) := by
+  classical
+  by_cases hr : routeable (sumFlag ambient flag)
+  · rw [applyPhase, if_pos hr]
+    apply le_min
+    · exact hprevious ambient (fun _ hi ↦ hi)
+    · have hcharged :=
+        LocatorBatchProductRoute.sum_count_le_charge_add_defect_of_strict_routes
+          count (fun i ↦ q.eval (flag i))
+          (fun B ↦ routeable (sumFlag B flag)) ambient
+          (parentDefect pref (sumFlag ambient flag))
+          (fun B hB hn ↦ by
+            have hprev := hprevious B hB
+            by_cases hEq : B = ambient
+            · subst B
+              exact False.elim (hn hr)
+            · have hproper : B ⊂ ambient :=
+                (_root_.ssubset_iff_subset_ne).mpr ⟨hB, hEq⟩
+              have hraw := sumFlag_rawBelow_of_subset flag hB
+              have hslope := sumFlag_all_lt_of_ssubset flag hproper hpositive
+              rw [sum_potential_eval B flag q]
+              exact hprev.trans
+                (terminal_le_parent_charge hrows hraw hslope hn))
+          hroute
+      rw [sum_potential_eval ambient flag q] at hcharged
+      exact hcharged
+  · rw [applyPhase, if_neg hr]
+    exact hprevious ambient (fun _ hi ↦ hi)
+
+/-- A threshold function is semantically checked by boundary receipts at
+every raw `(r,v)` row. -/
+def ThresholdTableSound (s : SourceNumbers)
+    (threshold : ℕ → ℕ → ℕ) : Prop :=
+  ∀ r v, 1 ≤ r → r + v ≤ 132 →
+    thresholdBoundary s r v (threshold r v)
+
+theorem routeable_iff_of_thresholdTableSound
+    (s : SourceNumbers) (threshold : ℕ → ℕ → ℕ)
+    (hsourceCap : 6412 ≤ s.totalCap)
+    (htable : ThresholdTableSound s threshold)
+    (p : FlagDegree) (hr : 1 ≤ p.all)
+    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
+    s.Routeable p ↔ threshold p.all p.yz ≤ p.zOnly := by
+  have hry : p.all + p.yz ≤ 132 := by
+    simpa only [middle, Nat.add_comm] using hy
+  have hrz : p.zOnly ≤ 6412 - (p.all + p.yz) := by
+    simp only [total] at ht
+    omega
+  have hryWide : p.all + p.yz ≤ 6412 := hry.trans (by decide)
+  have h := routeable_raw_iff_threshold s hsourceCap
+    (r := p.all) (v := p.yz) (z := p.zOnly)
+    (hrv := hryWide) (hz := hrz)
+    (hboundary := htable p.all p.yz hr hry)
+  simpa only [rawFlag] using h
+
+/-! ## State-local base semantics -/
+
+/-- The zero-`z` two-coordinate table.  The zero-slope state represents the
+empty family; positive-slope states are the `z = 0` entries of the base rows. -/
+def baseZeroCap (rows : Array BaseRow) (r v : ℕ) : ℕ :=
+  if r = 0 then 0 else baseTableCap rows (rawFlag r v 0)
+
+theorem baseZeroCap_eq_of_pos (rows : Array BaseRow) {r v : ℕ}
+    (hr : 1 ≤ r) :
+    baseZeroCap rows r v = baseTableCap rows (rawFlag r v 0) := by
+  simp only [baseZeroCap, if_neg (Nat.ne_of_gt hr)]
+
+/-- The sole semantic arithmetic condition required of the compact base
+table.  It is finite on the benchmark box.  For every possible carrier
+`(r,v)`, the row for the aggregate `(R,V)` dominates that carrier with all
+remaining factors charged to the zero-`z` table. -/
+def BaseCandidatesSound (rows : Array BaseRow) : Prop :=
+  ∀ R V r v z,
+    1 ≤ r → r ≤ R → v ≤ V → R ≤ 29 → R + V ≤ 132 →
+    (r < R ∨ v = V) → R + V + z ≤ 6412 →
+    LocatorOrdinaryZConvex.rawCost r v z +
+        baseZeroCap rows (R - r) (V - v) ≤
+      baseTableCap rows (rawFlag R V z)
+
+/-- Slope of the carrier's affine ordinary-cost tail, valid from `z = 3`. -/
+def candidateSlope (r v : ℕ) : ℕ :=
+  LocatorOrdinaryZConvex.rawCost r v 4 -
+    LocatorOrdinaryZConvex.rawCost r v 3
+
+/-- Carrier line after adding the exact zero-`z` residual-table value. -/
+def candidateLine (rows : Array BaseRow) (R V r v z : ℕ) : ℕ :=
+  LocatorOrdinaryZConvex.rawCost r v 3 +
+    baseZeroCap rows (R - r) (V - v) + candidateSlope r v * (z - 3)
+
+theorem carrierCost_eq_candidateLine
+    (rows : Array BaseRow) (R V r v z : ℕ)
+    (hr : 1 ≤ r) (hz : 3 ≤ z) :
+    LocatorOrdinaryZConvex.rawCost r v z +
+        baseZeroCap rows (R - r) (V - v) =
+      candidateLine rows R V r v z := by
+  rw [LocatorOrdinaryZConvex.rawCost_affine_from_three r v z hr hz]
+  unfold candidateLine candidateSlope
+  omega
+
+theorem candidateLine_shift
+    (rows : Array BaseRow) (R V r v start z : ℕ)
+    (hstart : 3 ≤ start) (hz : start ≤ z) :
+    candidateLine rows R V r v z =
+      candidateLine rows R V r v start + candidateSlope r v * (z - start) := by
+  unfold candidateLine
+  have hsplit : z - 3 = (start - 3) + (z - start) := by omega
+  rw [hsplit, Nat.mul_add]
+  omega
+
+/-- Two affine natural-number functions ordered at the left endpoint remain
+ordered when the lower function has no larger slope. -/
+theorem affine_le_of_start_and_slope
+    (a A m M d : ℕ) (ha : a ≤ A) (hm : m ≤ M) :
+    a + m * d ≤ A + M * d := by
+  exact Nat.add_le_add ha (Nat.mul_le_mul_right d hm)
+
+/-- Endpoint domination suffices on a finite interval even when the candidate
+line has the larger slope. -/
+theorem affine_le_between
+    (a A m M d finish : ℕ) (hd : d ≤ finish)
+    (hstart : a ≤ A)
+    (hend : a + m * finish ≤ A + M * finish) :
+    a + m * d ≤ A + M * d := by
+  by_cases hm : m ≤ M
+  · exact affine_le_of_start_and_slope a A m M d hstart hm
+  · have hMm : M ≤ m := (Nat.lt_of_not_ge hm).le
+    have hdecomp : M + (m - M) = m := Nat.add_sub_of_le hMm
+    have hdeltaFinish : a + (m - M) * finish ≤ A := by
+      rw [← hdecomp, Nat.add_mul] at hend
+      omega
+    have hdelta : (m - M) * d ≤ (m - M) * finish :=
+      Nat.mul_le_mul_left (m - M) hd
+    rw [← hdecomp, Nat.add_mul]
+    omega
+
+theorem candidateLine_le_segment_of_start_and_slope
+    (rows : Array BaseRow) (R V r v z : ℕ) (s : BaseSegment)
+    (hs3 : 3 ≤ s.start) (hsz : s.start ≤ z)
+    (hstart : candidateLine rows R V r v s.start ≤ s.valueAtStart)
+    (hslope : candidateSlope r v ≤ s.slope) :
+    candidateLine rows R V r v z ≤ s.evalAt z := by
+  rw [candidateLine_shift rows R V r v s.start z hs3 hsz]
+  unfold BaseSegment.evalAt
+  exact affine_le_of_start_and_slope _ _ _ _ _ hstart hslope
+
+theorem candidateLine_le_segment_between
+    (rows : Array BaseRow) (R V r v z finish : ℕ) (s : BaseSegment)
+    (hs3 : 3 ≤ s.start) (hsz : s.start ≤ z) (hzf : z ≤ finish)
+    (hstart : candidateLine rows R V r v s.start ≤ s.valueAtStart)
+    (hfinish : candidateLine rows R V r v finish ≤ s.evalAt finish) :
+    candidateLine rows R V r v z ≤ s.evalAt z := by
+  have hsf : s.start ≤ finish := hsz.trans hzf
+  rw [candidateLine_shift rows R V r v s.start z hs3 hsz]
+  rw [candidateLine_shift rows R V r v s.start finish hs3 hsf] at hfinish
+  unfold BaseSegment.evalAt at hfinish ⊢
+  apply affine_le_between _ _ _ _ _ _
+  · exact Nat.sub_le_sub_right hzf s.start
+  · exact hstart
+  · exact hfinish
+
+/-- Finite arithmetic checked for one aggregate row and one candidate
+carrier.  Every generated row has one or two useful affine segments. -/
+def CandidateRowCheck (rows : Array BaseRow) (R V r v : ℕ) : Prop :=
+  let q := lookupBaseRow rows R V
+  let zero := baseZeroCap rows (R - r) (V - v)
+  LocatorOrdinaryZConvex.rawCost r v 0 + zero ≤ q.z0 ∧
+  LocatorOrdinaryZConvex.rawCost r v 1 + zero ≤ q.z1 ∧
+  LocatorOrdinaryZConvex.rawCost r v 2 + zero ≤ q.z2 ∧
+  match q.segments with
+  | [s] =>
+      s.start = 3 ∧ candidateLine rows R V r v s.start ≤ s.valueAtStart ∧
+        candidateSlope r v ≤ s.slope
+  | [s₁, s₂] =>
+      s₁.start = 3 ∧ s₁.start < s₂.start ∧
+        candidateLine rows R V r v s₁.start ≤ s₁.valueAtStart ∧
+        candidateLine rows R V r v (s₂.start - 1) ≤
+          s₁.evalAt (s₂.start - 1) ∧
+        candidateLine rows R V r v s₂.start ≤ s₂.valueAtStart ∧
+        candidateSlope r v ≤ s₂.slope
+  | _ => False
+
+instance (rows : Array BaseRow) (R V r v : ℕ) :
+    Decidable (CandidateRowCheck rows R V r v) := by
+  unfold CandidateRowCheck
+  dsimp only
+  generalize hq : lookupBaseRow rows R V = q
+  cases hs : q.segments with
+  | nil =>
+      simp only [hs]
+      infer_instance
+  | cons s tail =>
+      cases ht : tail with
+      | nil =>
+          simp only [hs, ht]
+          infer_instance
+      | cons s₂ rest =>
+          cases hu : rest with
+          | nil =>
+              simp only [hs, ht, hu]
+              infer_instance
+          | cons s₃ rest₃ =>
+              simp only [hs, ht, hu]
+              infer_instance
+
+/-- One finite `R` layer of the carrier-row checker. -/
+def CandidateRCheck (rows : Array BaseRow) (R : ℕ) : Prop :=
+  ∀ V ∈ List.range (133 - R),
+    ∀ r ∈ List.range (R + 1), 1 ≤ r →
+      ∀ v ∈ List.range (V + 1), (r < R ∨ v = V) →
+        CandidateRowCheck rows R V r v
+
+instance (rows : Array BaseRow) (R : ℕ) : Decidable (CandidateRCheck rows R) := by
+  unfold CandidateRCheck
+  infer_instance
+
+/-- Complete finite base-table checker.  Its executable domain has only the
+2.443-million aggregate/carrier splits, not a `z` grid. -/
+def BaseCandidateChecks (rows : Array BaseRow) : Prop :=
+  ∀ R ∈ List.range 30, 1 ≤ R → CandidateRCheck rows R
+
+instance (rows : Array BaseRow) : Decidable (BaseCandidateChecks rows) := by
+  unfold BaseCandidateChecks
+  infer_instance
+
+theorem candidateRowCheck_sound
+    (rows : Array BaseRow) (R V r v z : ℕ) (hr : 1 ≤ r)
+    (hcheck : CandidateRowCheck rows R V r v) :
+    LocatorOrdinaryZConvex.rawCost r v z +
+        baseZeroCap rows (R - r) (V - v) ≤
+      baseTableCap rows (rawFlag R V z) := by
+  let q := lookupBaseRow rows R V
+  change LocatorOrdinaryZConvex.rawCost r v z +
+      baseZeroCap rows (R - r) (V - v) ≤ q.evalAt z
+  change
+    LocatorOrdinaryZConvex.rawCost r v 0 +
+          baseZeroCap rows (R - r) (V - v) ≤ q.z0 ∧
+      LocatorOrdinaryZConvex.rawCost r v 1 +
+          baseZeroCap rows (R - r) (V - v) ≤ q.z1 ∧
+      LocatorOrdinaryZConvex.rawCost r v 2 +
+          baseZeroCap rows (R - r) (V - v) ≤ q.z2 ∧
+      (match q.segments with
+      | [s] =>
+          s.start = 3 ∧
+            candidateLine rows R V r v s.start ≤ s.valueAtStart ∧
+            candidateSlope r v ≤ s.slope
+      | [s₁, s₂] =>
+          s₁.start = 3 ∧ s₁.start < s₂.start ∧
+            candidateLine rows R V r v s₁.start ≤ s₁.valueAtStart ∧
+            candidateLine rows R V r v (s₂.start - 1) ≤
+              s₁.evalAt (s₂.start - 1) ∧
+            candidateLine rows R V r v s₂.start ≤ s₂.valueAtStart ∧
+            candidateSlope r v ≤ s₂.slope
+      | _ => False) at hcheck
+  rcases hcheck with ⟨hzero, hone, htwo, hsegmentsSound⟩
+  by_cases hz0 : z = 0
+  · subst z
+    simpa [BaseRow.evalAt] using hzero
+  by_cases hz1 : z = 1
+  · subst z
+    simpa [BaseRow.evalAt] using hone
+  by_cases hz2 : z = 2
+  · subst z
+    simpa [BaseRow.evalAt] using htwo
+  have hz3 : 3 ≤ z := by omega
+  rw [carrierCost_eq_candidateLine rows R V r v z hr hz3]
+  cases hsegments : q.segments with
+  | nil =>
+      simp only [hsegments] at hsegmentsSound
+  | cons s₁ tail =>
+      cases htail : tail with
+      | nil =>
+          have hsound :
+              s₁.start = 3 ∧
+                candidateLine rows R V r v s₁.start ≤ s₁.valueAtStart ∧
+                candidateSlope r v ≤ s₁.slope := by
+            simpa only [hsegments, htail] using hsegmentsSound
+          rcases hsound with ⟨hs₁Start, hlineStart, hslope⟩
+          have hline := candidateLine_le_segment_of_start_and_slope
+            rows R V r v z s₁ (by omega) (by omega) hlineStart hslope
+          have heval : q.evalAt z = s₁.evalAt z := by
+            simp [BaseRow.evalAt, evalBaseSegments, hsegments, htail,
+              hz0, hz1, hz2]
+          rw [heval]
+          exact hline
+      | cons s₂ rest =>
+          cases hrest : rest with
+          | nil =>
+              have hsound :
+                  s₁.start = 3 ∧ s₁.start < s₂.start ∧
+                    candidateLine rows R V r v s₁.start ≤ s₁.valueAtStart ∧
+                    candidateLine rows R V r v (s₂.start - 1) ≤
+                      s₁.evalAt (s₂.start - 1) ∧
+                    candidateLine rows R V r v s₂.start ≤ s₂.valueAtStart ∧
+                    candidateSlope r v ≤ s₂.slope := by
+                simpa only [hsegments, htail, hrest] using hsegmentsSound
+              rcases hsound with
+                ⟨hs₁Start, hs₁₂, hlineStart, hlineFinish,
+                  hlineSecond, hslopeSecond⟩
+              by_cases hs₂z : s₂.start ≤ z
+              · have hline := candidateLine_le_segment_of_start_and_slope
+                  rows R V r v z s₂ (by omega) hs₂z hlineSecond
+                    hslopeSecond
+                have heval : q.evalAt z = s₂.evalAt z := by
+                  simp [BaseRow.evalAt, evalBaseSegments, hsegments, htail, hrest,
+                    hz0, hz1, hz2, hs₂z]
+                rw [heval]
+                exact hline
+              · have hzf : z ≤ s₂.start - 1 := by omega
+                have hline := candidateLine_le_segment_between
+                  rows R V r v z (s₂.start - 1) s₁
+                    (by omega) (by omega) hzf hlineStart hlineFinish
+                have heval : q.evalAt z = s₁.evalAt z := by
+                  simp [BaseRow.evalAt, evalBaseSegments, hsegments, htail, hrest,
+                    hz0, hz1, hz2, hs₂z]
+                rw [heval]
+                exact hline
+          | cons s₃ rest₃ =>
+              simp only [hsegments, htail, hrest] at hsegmentsSound
+
+theorem baseCandidatesSound_of_checks
+    (rows : Array BaseRow) (hchecks : BaseCandidateChecks rows) :
+    BaseCandidatesSound rows := by
+  intro R V r v z hr hrR hvV hR hRV hfits htotal
+  have hRpos : 1 ≤ R := hr.trans hrR
+  have hRcheck := hchecks R (List.mem_range.mpr (by omega)) hRpos
+  have hVcheck := hRcheck V (List.mem_range.mpr (by omega))
+  have hrcheck := hVcheck r (List.mem_range.mpr (by omega)) hr
+  have hcheck := hrcheck v (List.mem_range.mpr (by omega)) hfits
+  exact candidateRowCheck_sound rows R V r v z hr hcheck
+
+theorem ordinaryCostOf_eq_rawCost (p : FlagDegree) :
+    LocatorHybridCost.ordinaryCostOf p =
+      LocatorOrdinaryZConvex.rawCost p.all p.yz p.zOnly := by
+  cases p
+  rfl
+
+/-- The `z = 0` part of `BaseCandidatesSound` is exactly the Bellman
+inequality needed to aggregate an arbitrary finite zero-`z` family. -/
+theorem sum_rawCost_zero_le_baseZeroCap
+    (rows : Array BaseRow) (hrows : BaseCandidatesSound rows)
+    {ι : Type} [DecidableEq ι] (s : Finset ι) (r v : ι → ℕ)
+    (hpositive : ∀ i ∈ s, 1 ≤ r i)
+    (hrCap : (∑ i ∈ s, r i) ≤ 29)
+    (hrvCap : (∑ i ∈ s, r i) + (∑ i ∈ s, v i) ≤ 132) :
+    (∑ i ∈ s, LocatorOrdinaryZConvex.rawCost (r i) (v i) 0) ≤
+      baseZeroCap rows (∑ i ∈ s, r i) (∑ i ∈ s, v i) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simp [baseZeroCap]
+  | @insert a s ha ih =>
+      have hra : 1 ≤ r a := hpositive a (by simp)
+      have hRInsert : r a + (∑ i ∈ s, r i) ≤ 29 := by
+        simpa only [Finset.sum_insert ha] using hrCap
+      have hRVInsert :
+          (r a + ∑ i ∈ s, r i) + (v a + ∑ i ∈ s, v i) ≤ 132 := by
+        rw [Finset.sum_insert ha, Finset.sum_insert ha] at hrvCap
+        omega
+      have hsR : (∑ i ∈ s, r i) ≤ 29 := by
+        omega
+      have hsRV : (∑ i ∈ s, r i) + (∑ i ∈ s, v i) ≤ 132 := by
+        omega
+      have ihBound := ih
+        (fun i hi ↦ hpositive i (Finset.mem_insert_of_mem hi)) hsR hsRV
+      have hfits : r a < r a + (∑ i ∈ s, r i) ∨
+          v a = v a + (∑ i ∈ s, v i) := by
+        by_cases hs : s.Nonempty
+        · obtain ⟨i, hi⟩ := hs
+          have hri : 1 ≤ r i :=
+            hpositive i (Finset.mem_insert_of_mem hi)
+          have hriSum : r i ≤ ∑ j ∈ s, r j :=
+            Finset.single_le_sum (f := fun j ↦ r j)
+              (fun _ _ ↦ Nat.zero_le _) hi
+          left
+          omega
+        · have hs0 : s = ∅ := Finset.not_nonempty_iff_eq_empty.mp hs
+          subst s
+          simp
+      have hcandidate := hrows
+        (r a + ∑ i ∈ s, r i) (v a + ∑ i ∈ s, v i)
+        (r a) (v a) 0 hra (by omega) (by omega)
+        hRInsert hRVInsert hfits
+        (by omega)
+      have hposSum : 1 ≤ r a + ∑ i ∈ s, r i := by omega
+      calc
+        (∑ i ∈ insert a s,
+            LocatorOrdinaryZConvex.rawCost (r i) (v i) 0) =
+            LocatorOrdinaryZConvex.rawCost (r a) (v a) 0 +
+              ∑ i ∈ s, LocatorOrdinaryZConvex.rawCost (r i) (v i) 0 := by
+              rw [Finset.sum_insert ha]
+        _ ≤ LocatorOrdinaryZConvex.rawCost (r a) (v a) 0 +
+              baseZeroCap rows (∑ i ∈ s, r i) (∑ i ∈ s, v i) :=
+            Nat.add_le_add_left ihBound _
+        _ ≤ baseTableCap rows
+              (rawFlag (r a + ∑ i ∈ s, r i)
+                (v a + ∑ i ∈ s, v i) 0) := by
+            simpa only [Nat.add_sub_cancel_left] using hcandidate
+        _ = baseZeroCap rows (∑ i ∈ insert a s, r i)
+              (∑ i ∈ insert a s, v i) := by
+            simp only [Finset.sum_insert ha, baseZeroCap,
+              if_neg (Nat.ne_of_gt hposSum)]
+
+/-- A checked carrier table gives the genuinely state-local base oracle.  The
+proof first concentrates all `z` on one factor, bounds the remaining zero-`z`
+family by the same Bellman table, and finally applies that carrier's row. -/
+theorem stateLocalBaseOracleSound_of_candidates
+    (rows : Array BaseRow) (hrows : BaseCandidatesSound rows) :
+    StateLocalBaseOracleSound (baseTableCap rows) := by
+  intro ι inst s p hpositive hrCap hyCap htCap
+  classical
+  by_cases hs : s.Nonempty
+  · obtain ⟨c, hc, hconcentrate⟩ :=
+      LocatorOrdinaryConcentration.exists_z_carrier s
+        (fun i ↦ (p i).all) (fun i ↦ (p i).yz) (fun i ↦ (p i).zOnly)
+        hpositive hs
+    have hzero := sum_rawCost_zero_le_baseZeroCap rows hrows (s.erase c)
+      (fun i ↦ (p i).all) (fun i ↦ (p i).yz)
+      (fun i hi ↦ hpositive i (Finset.mem_of_mem_erase hi))
+      (by
+        have hsub : s.erase c ⊆ s := Finset.erase_subset c s
+        have hle := Finset.sum_le_sum_of_subset_of_nonneg hsub
+          (fun _ _ _ ↦ Nat.zero_le _) (f := fun i ↦ (p i).all)
+        exact hle.trans hrCap)
+      (by
+        have hsub : s.erase c ⊆ s := Finset.erase_subset c s
+        have hrle := Finset.sum_le_sum_of_subset_of_nonneg hsub
+          (fun _ _ _ ↦ Nat.zero_le _) (f := fun i ↦ (p i).all)
+        have hvle := Finset.sum_le_sum_of_subset_of_nonneg hsub
+          (fun _ _ _ ↦ Nat.zero_le _) (f := fun i ↦ (p i).yz)
+        have hmiddle : (∑ i ∈ s, (p i).all) + (∑ i ∈ s, (p i).yz) ≤ 132 := by
+          rw [sumFlag_middle] at hyCap
+          simp only [middle, Finset.sum_add_distrib] at hyCap
+          omega
+        omega)
+    have hcR : (p c).all ≤ ∑ i ∈ s, (p i).all := by
+      exact Finset.single_le_sum (f := fun i ↦ (p i).all)
+        (fun _ _ ↦ Nat.zero_le _) hc
+    have hcV : (p c).yz ≤ ∑ i ∈ s, (p i).yz := by
+      exact Finset.single_le_sum (f := fun i ↦ (p i).yz)
+        (fun _ _ ↦ Nat.zero_le _) hc
+    have hmiddle : (∑ i ∈ s, (p i).all) + (∑ i ∈ s, (p i).yz) ≤ 132 := by
+      rw [sumFlag_middle] at hyCap
+      simp only [middle, Finset.sum_add_distrib] at hyCap
+      omega
+    have htotal : (∑ i ∈ s, (p i).all) + (∑ i ∈ s, (p i).yz) +
+        (∑ i ∈ s, (p i).zOnly) ≤ 6412 := by
+      rw [sumFlag_total] at htCap
+      simp only [total, middle, Finset.sum_add_distrib] at htCap
+      omega
+    have hrErase := Finset.sum_erase_add s (fun i ↦ (p i).all) hc
+    have hvErase := Finset.sum_erase_add s (fun i ↦ (p i).yz) hc
+    have hfits :
+        (p c).all < ∑ i ∈ s, (p i).all ∨
+          (p c).yz = ∑ i ∈ s, (p i).yz := by
+      by_cases hrest : (s.erase c).Nonempty
+      · obtain ⟨i, hi⟩ := hrest
+        have hiS : i ∈ s := Finset.mem_of_mem_erase hi
+        have hri : 1 ≤ (p i).all := hpositive i hiS
+        have hriSum : (p i).all ≤ ∑ j ∈ s.erase c, (p j).all :=
+          Finset.single_le_sum (f := fun j ↦ (p j).all)
+            (fun _ _ ↦ Nat.zero_le _) hi
+        left
+        omega
+      · have hrest0 : s.erase c = ∅ :=
+          Finset.not_nonempty_iff_eq_empty.mp hrest
+        right
+        rw [hrest0] at hvErase
+        simp only [Finset.sum_empty] at hvErase
+        omega
+    have hcandidate := hrows
+      (∑ i ∈ s, (p i).all) (∑ i ∈ s, (p i).yz)
+      (p c).all (p c).yz (∑ i ∈ s, (p i).zOnly)
+      (hpositive c hc) hcR hcV hrCap hmiddle hfits htotal
+    have hzero' :
+        (∑ i ∈ s.erase c,
+            LocatorOrdinaryZConvex.rawCost (p i).all (p i).yz 0) ≤
+          baseZeroCap rows
+            ((∑ i ∈ s, (p i).all) - (p c).all)
+            ((∑ i ∈ s, (p i).yz) - (p c).yz) := by
+      simpa only [show (∑ i ∈ s, (p i).all) - (p c).all =
+          ∑ i ∈ s.erase c, (p i).all by omega,
+        show (∑ i ∈ s, (p i).yz) - (p c).yz =
+          ∑ i ∈ s.erase c, (p i).yz by omega] using hzero
+    have hcostEq :
+        (∑ i ∈ s, LocatorHybridCost.ordinaryCostOf (p i)) =
+          ∑ i ∈ s, LocatorOrdinaryZConvex.rawCost
+            (p i).all (p i).yz (p i).zOnly := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      exact ordinaryCostOf_eq_rawCost (p i)
+    have hflagEq : sumFlag s p =
+        rawFlag (∑ i ∈ s, (p i).all) (∑ i ∈ s, (p i).yz)
+          (∑ i ∈ s, (p i).zOnly) := rfl
+    rw [hcostEq, hflagEq]
+    exact hconcentrate.trans ((Nat.add_le_add_left hzero' _).trans hcandidate)
+  · have hs0 : s = ∅ := Finset.not_nonempty_iff_eq_empty.mp hs
+    subst s
+    simp
+
+end ProximityPrize.SubmissionLower.LocatorPhase6800Audit
+end PackedLocator_LocatorPhase6800Audit
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier17 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorBatchPowerRoute. -/
+section PackedLocator_LocatorBatchPowerRoute
+
+/-!
+# Counting consumer for shared regular-product power routes
+
+`LocatorBatchProductRoute` selects the first strict post-projection factor
+subset.  This file turns that algebraic stage into the helper bounds used by
+the numerical phase recursion.  Source-specific gaps and receipt arithmetic
+remain parameters here and are instantiated in the phase bridge.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorBatchPowerRoute
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
+  RCN238 RCN260 RCN266 RCN319
+open LocatorLowQuotient LocatorCoprimeQuotient
+  LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact
+  LocatorGenericHelperFactorSwitch LocatorGenericPowerRoute
+  LocatorBatchProductRoute
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+abbrev P4 := MvPolynomial (Fin 4) K
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
+
+/-- The exact cell box of a regular factor.  With this box `stageCost` is the
+actual unequal-pair charge after the displayed number of source quotients. -/
+def exactRouteBox {H : P4} (F : RegularIndex H) : PowerRouteBox where
+  tLo := wt residualTotalWeights F.1
+  tHi := wt residualTotalWeights F.1
+  yLo := wt residualYSWeights F.1
+  yHi := wt residualYSWeights F.1
+  rLo := wt residualSWeights F.1
+  rHi := wt residualSWeights F.1
+
+private theorem degreeY_le_ysWeight (Q : P4) :
+    Q.degreeOf (1 : Fin 4) ≤ wt residualYSWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualYSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 0 ≤
+    wt residualYSWeights Q at h
+  omega
+
+private theorem degreeR_le_sWeight (Q : P4) :
+    Q.degreeOf (2 : Fin 4) ≤ wt residualSWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 0 + d 2 * 1 + d 3 * 0 ≤
+    wt residualSWeights Q at h
+  omega
+
+private theorem degreeZ_le_totalWeight (Q : P4) :
+    Q.degreeOf (3 : Fin 4) ≤ wt residualTotalWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualTotalWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 1 ≤
+    wt residualTotalWeights Q at h
+  omega
+
+/-- Multiplying the low terminal quotient by the removed batch power returns
+an original source row in the derivative-contact box. -/
+theorem reconstruct_mem_low_of_batch_power
+    {D Dlow L S m j : ℕ} (u0 u1 : I → K)
+    (v : ConstraintKernel (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1)
+    (P J : P4)
+    (heq : P ^ j * J = reconstruct K D 131071 L S v.1)
+    (hD : 0 < D) (hDlow : 0 < Dlow)
+    (hcontact : wt (contactWeights 131071) J <
+      Dlow - j * wt (contactWeights 131071) P) :
+    reconstruct K D 131071 L S v.1 ∈
+      globalCoefficientBox K Dlow 131071 L S := by
+  have hsource := (mem_flagGlobalCoefficientBox_iff
+    (reconstruct K D 131071 L S v.1) D 131071 L S hD).mp
+      (reconstruct_mem_globalCoefficientBox K D 131071 L S v.1)
+  apply (mem_flagGlobalCoefficientBox_iff
+    (reconstruct K D 131071 L S v.1) Dlow 131071 L S hDlow).mpr
+  refine ⟨hsource.1, hsource.2.1, ?_⟩
+  rw [← heq]
+  have hmul := wt_mul_le (contactWeights 131071) (P ^ j) J
+  have hp := wt_pow_le (contactWeights 131071) P j
+  omega
+
+/-- Convert a selected batch exit into per-factor helper charges.  The
+consumer retains the complementary product in every helper, so no internal
+collision locus is charged. -/
+theorem counts_of_batchExitStage
+    (D L S m YS delta fuel : ℕ)
+    (hD : 0 < D) (hfuelChar : fuel < 2130706433)
+    (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
+    (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
+      D - j * delta ≤ (m - j) * 181373 + j * (131071 - 1))
+    (u0 u1 : I → K) (H : P4)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (A : Finset (RegularIndex H))
+    (q : ConstraintKernel (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1 →ₗ[K] P4)
+    (hproduct : ∀ v,
+      reconstruct K D 131071 L S v.1 = regularProduct H A * q v)
+    (hexit : HasBatchExitStage fuel
+      (D - delta - wt (contactWeights 131071) (regularProduct H A))
+      131071 delta
+      (L - wt residualTotalWeights (regularProduct H A))
+      (YS - wt residualYSWeights (regularProduct H A))
+      (S - wt residualSWeights (regularProduct H A)) H A q)
+    (hfeasible :
+      fuel * wt residualTotalWeights (regularProduct H A) ≤ L ∧
+      fuel * wt residualYSWeights (regularProduct H A) ≤ YS ∧
+      fuel * wt residualSWeights (regularProduct H A) ≤ S)
+    (hgates : ∀ F ∈ A, ∀ j, 1 ≤ j → j ≤ fuel →
+      HelperPairGates
+        (L - j * wt residualTotalWeights F.1)
+        (YS - j * wt residualYSWeights F.1)
+        (S - j * wt residualSWeights F.1)
+        (wt residualYSWeights F.1) (wt residualSWeights F.1)
+        (wt residualTotalWeights F.1))
+    (charge : RegularIndex H → ℕ)
+    (hcharge : ∀ F ∈ A, ∀ j, 1 ≤ j → j ≤ fuel →
+      stageCost L YS S (exactRouteBox F) j ≤ charge F) :
+    ∃ U, U ⊂ A ∧ ∀ F ∈ A \ U,
+      (regularSeeds H selected Gamma F).card ≤ charge F := by
+  classical
+  let P := regularProduct H A
+  change HasBatchExitStage fuel
+      (D - delta - wt (contactWeights 131071) P) 131071 delta
+      (L - wt residualTotalWeights P) (YS - wt residualYSWeights P)
+      (S - wt residualSWeights P) H A q at hexit
+  obtain ⟨e, U, v, J, hUA, hv, hJ, heq, hbox, havoid⟩ := hexit
+  let j := e.val + 1
+  have hj : 1 ≤ j := by simp only [j]; omega
+  have hjle : j ≤ fuel := by simp only [j]; omega
+  have hjchar : j < 2130706433 := hjle.trans_lt hfuelChar
+  have heqOriginal : P ^ j * J =
+      reconstruct K D 131071 L S v.1 := by
+    calc
+      P ^ j * J = P * (P ^ e.val * J) := by
+        simp only [j, pow_succ']
+        ring
+      _ = P * q v := by rw [heq]
+      _ = reconstruct K D 131071 L S v.1 := (hproduct v).symm
+  change J ∈ nestedCoefficientBox K
+      (D - delta - wt (contactWeights 131071) P - e.val * delta -
+        e.val * wt (contactWeights 131071) P) 131071
+      (L - wt residualTotalWeights P - e.val * wt residualTotalWeights P)
+      (YS - wt residualYSWeights P - e.val * wt residualYSWeights P)
+      (S - wt residualSWeights P - e.val * wt residualSWeights P) at hbox
+  have hweights := nested_mem_weights hbox hJ
+  have hJT : wt residualTotalWeights J ≤
+      L - j * wt residualTotalWeights P := by
+    simpa only [j, Nat.sub_sub, Nat.add_mul, one_mul, Nat.add_comm] using
+      hweights.1
+  have hJY : wt residualYSWeights J ≤
+      YS - j * wt residualYSWeights P := by
+    simpa only [j, Nat.sub_sub, Nat.add_mul, one_mul, Nat.add_comm] using
+      hweights.2.1
+  have hJS : wt residualSWeights J ≤
+      S - j * wt residualSWeights P := by
+    simpa only [j, Nat.sub_sub, Nat.add_mul, one_mul, Nat.add_comm] using
+      hweights.2.2.1
+  have hJcontact : wt (contactWeights 131071) J <
+      D - j * delta - j * wt (contactWeights 131071) P := by
+    have hc := hweights.2.2.2
+    simp only [j, Nat.sub_sub, Nat.add_mul, one_mul] at hc ⊢
+    omega
+  have hlow : reconstruct K D 131071 L S v.1 ∈
+      globalCoefficientBox K (D - j * delta) 131071 L S :=
+    reconstruct_mem_low_of_batch_power u0 u1 v P J heqOriginal hD
+      (hlowpos j hj hjle) hJcontact
+  have hPT : j * wt residualTotalWeights P ≤ L :=
+    (Nat.mul_le_mul_right (wt residualTotalWeights P) hjle).trans hfeasible.1
+  have hPY : j * wt residualYSWeights P ≤ YS :=
+    (Nat.mul_le_mul_right (wt residualYSWeights P) hjle).trans hfeasible.2.1
+  have hPS : j * wt residualSWeights P ≤ S :=
+    (Nat.mul_le_mul_right (wt residualSWeights P) hjle).trans hfeasible.2.2
+  refine ⟨U, hUA, ?_⟩
+  intro F hFU
+  have hFA : F ∈ A := (Finset.mem_sdiff.mp hFU).1
+  let QF := regularCofactor H A F ^ j * J
+  have hQF : QF ≠ 0 := by
+    exact mul_ne_zero (pow_ne_zero j (regularCofactor_ne_zero H A F)) hJ
+  have hrel : IsRelPrime F.1 QF := by
+    exact regularFactor_isRelPrime_liftedHelper H A F hFA j J
+      (havoid F hFU)
+  have hQbounds := liftedHelper_residual_bounds H A F hFA L YS S j J hJ
+    hJT hJY hJS hPT hPY hPS
+  have hQzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
+      specialization K (selected gamma) gamma QF = 0 := by
+    exact batch_helper_zero_on_regularSeeds j D (D - j * delta) 131071
+      L S m 181373 2130706433
+      (CharP.char_prime_of_ne_zero (R := K) (by norm_num))
+      IRSProfile.domain u0 u1 H A F hFA selected Gamma v J hj hjchar
+      (by decide) hdegree hagreement (hcapacity j hj hjle) hlow
+      heqOriginal
+  have hstage := regularSeeds_count_le_stageCost L YS S
+    (exactRouteBox F) j u0 u1 H selected Gamma hdegree hagreement hno F
+    (degreeY_le_ysWeight F.1) (degreeR_le_sWeight F.1)
+    (degreeZ_le_totalWeight F.1) QF
+    (by simpa only [exactRouteBox] using hQbounds.1)
+    (by simpa only [exactRouteBox] using hQbounds.2.1)
+    (by simpa only [exactRouteBox] using hQbounds.2.2)
+    hrel (by simpa only [exactRouteBox] using hgates F hFA j hj hjle)
+    hQzero
+  exact hstage.trans (hcharge F hFA j hj hjle)
+
+/-- A complete algebraic step for one fresh source.  Stage zero uses the
+existing divisor-or-helper switch.  If the entire batch product divides the
+source, it is removed once and the shared product-power selector finds a
+later strict exit.  `hcharge` is the sole interface to the additive numerical
+potential used by a phase receipt. -/
+theorem exists_strict_helper_split_of_batch_source
+    (D L S m YS gap delta fuel : ℕ)
+    (hD : 0 < D) (hDa : D ≤ m * 181373)
+    (hshape : D + S ≤ 131071 * (YS + 1))
+    (hfuel : 1 ≤ fuel) (hfuelChar : fuel < 2130706433)
+    (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
+    (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
+      D - j * delta ≤ (m - j) * 181373 + j * (131071 - 1))
+    (u0 u1 : I → K) (H : P4)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (A : Finset (RegularIndex H)) (hA : A.Nonempty)
+    (hband : powerBandBudget delta
+      (wt residualTotalWeights (regularProduct H A))
+      (wt residualYSWeights (regularProduct H A))
+      (wt residualSWeights (regularProduct H A))
+      (L - wt residualTotalWeights (regularProduct H A))
+      (YS - wt residualYSWeights (regularProduct H A))
+      (S - wt residualSWeights (regularProduct H A)) fuel < gap)
+    (hterminal :
+      L - fuel * wt residualTotalWeights (regularProduct H A) <
+          wt residualTotalWeights (regularProduct H A) ∨
+      YS - fuel * wt residualYSWeights (regularProduct H A) <
+          wt residualYSWeights (regularProduct H A) ∨
+      S - fuel * wt residualSWeights (regularProduct H A) <
+          wt residualSWeights (regularProduct H A))
+    (hfeasible :
+      fuel * wt residualTotalWeights (regularProduct H A) ≤ L ∧
+      fuel * wt residualYSWeights (regularProduct H A) ≤ YS ∧
+      fuel * wt residualSWeights (regularProduct H A) ≤ S)
+    (hgapLe : gap ≤ Module.finrank K
+      (ConstraintKernel (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1))
+    (hfield : A.card < ENat.card K)
+    (hgates : ∀ F ∈ A, ∀ j, j ≤ fuel →
+      HelperPairGates
+        (L - j * wt residualTotalWeights F.1)
+        (YS - j * wt residualYSWeights F.1)
+        (S - j * wt residualSWeights F.1)
+        (wt residualYSWeights F.1) (wt residualSWeights F.1)
+        (wt residualTotalWeights F.1))
+    (charge : RegularIndex H → ℕ)
+    (hcharge : ∀ F ∈ A, ∀ j, j ≤ fuel →
+      stageCost L YS S (exactRouteBox F) j ≤ charge F) :
+    ∃ U, U ⊂ A ∧ ∀ F ∈ A \ U,
+      (regularSeeds H selected Gamma F).card ≤ charge F := by
+  classical
+  let source := ConstraintKernel (K := K) D 131071 L S m
+    IRSProfile.domain u0 u1
+  let recon : source →ₗ[K] P4 :=
+    kernelReconstructLinear (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1
+  let U₀ := universalFactors H A recon
+  have hU₀sub : U₀ ⊆ A := universalFactors_subset H A recon
+  by_cases hall : U₀ = A
+  · have hdiv : ∀ v : source, regularProduct H A ∣
+        reconstruct K D 131071 L S v.1 := by
+      intro v
+      have hv := universalProduct_dvd H A recon v
+      change regularProduct H U₀ ∣ recon v at hv
+      rw [hall] at hv
+      change regularProduct H A ∣
+        kernelReconstructLinear (K := K) D 131071 L S m
+          IRSProfile.domain u0 u1 v at hv
+      rw [kernelReconstructLinear_apply] at hv
+      exact hv
+    obtain ⟨q, hq, hproduct, hqbox⟩ :=
+      kernelQuotient_regularProduct_nested D 131071 L S m YS
+        IRSProfile.domain u0 u1 (by decide) hshape H A hdiv
+    cases fuel with
+    | zero => omega
+    | succ steps =>
+      have hwidth :
+          D - wt (contactWeights 131071) (regularProduct H A) ≤
+            (D - delta -
+              wt (contactWeights 131071) (regularProduct H A)) + delta := by
+        omega
+      have hsource : powerBandBudget delta
+          (wt residualTotalWeights (regularProduct H A))
+          (wt residualYSWeights (regularProduct H A))
+          (wt residualSWeights (regularProduct H A))
+          (L - wt residualTotalWeights (regularProduct H A))
+          (YS - wt residualYSWeights (regularProduct H A))
+          (S - wt residualSWeights (regularProduct H A)) (steps + 1) <
+        Module.finrank K source := hband.trans_le hgapLe
+      have hterminal' :
+          (L - wt residualTotalWeights (regularProduct H A)) -
+              steps * wt residualTotalWeights (regularProduct H A) <
+                wt residualTotalWeights (regularProduct H A) ∨
+          (YS - wt residualYSWeights (regularProduct H A)) -
+              steps * wt residualYSWeights (regularProduct H A) <
+                wt residualYSWeights (regularProduct H A) ∨
+          (S - wt residualSWeights (regularProduct H A)) -
+              steps * wt residualSWeights (regularProduct H A) <
+                wt residualSWeights (regularProduct H A) := by
+        rcases hterminal with ht | hy | hs
+        · left
+          simpa only [Nat.sub_sub, Nat.succ_eq_add_one, Nat.add_mul,
+            one_mul, Nat.add_comm] using ht
+        · right; left
+          simpa only [Nat.sub_sub, Nat.succ_eq_add_one, Nat.add_mul,
+            one_mul, Nat.add_comm] using hy
+        · right; right
+          simpa only [Nat.sub_sub, Nat.succ_eq_add_one, Nat.add_mul,
+            one_mul, Nat.add_comm] using hs
+      have hexit := exists_batchExitStage_of_bandBudget_succ steps
+        (D - wt (contactWeights 131071) (regularProduct H A))
+        (D - delta - wt (contactWeights 131071) (regularProduct H A))
+        131071 delta
+        (L - wt residualTotalWeights (regularProduct H A))
+        (YS - wt residualYSWeights (regularProduct H A))
+        (S - wt residualSWeights (regularProduct H A)) hwidth q hq hqbox
+        H A hA hsource hterminal' hfield
+      exact counts_of_batchExitStage D L S m YS delta (steps + 1)
+        hD hfuelChar hlowpos hcapacity u0 u1 H selected Gamma hdegree
+        hagreement hno A q hproduct hexit hfeasible
+        (fun F hFA j _hj hjle => hgates F hFA j hjle) charge
+        (fun F hFA j _hj hjle => hcharge F hFA j hjle)
+  · have hproper : U₀ ⊂ A :=
+        (_root_.ssubset_iff_subset_ne).mpr ⟨hU₀sub, hall⟩
+    refine ⟨U₀, hproper, ?_⟩
+    intro F hFU
+    have hFA : F ∈ A := (Finset.mem_sdiff.mp hFU).1
+    have hnot : ¬ ∀ v : source,
+        F.1 ∣ reconstruct K D 131071 L S v.1 := by
+      intro hdiv
+      apply (Finset.mem_sdiff.mp hFU).2
+      apply (mem_universalFactors H A recon F).mpr
+      refine ⟨hFA, ?_⟩
+      intro v
+      change F.1 ∣ kernelReconstructLinear (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1 v
+      rw [kernelReconstructLinear_apply]
+      exact hdiv v
+    rcases divisor_or_helper_count D L S m YS hD hDa hshape selected
+      Gamma hdegree hagreement hno F
+      (wt residualYSWeights F.1) (wt residualSWeights F.1)
+      (wt residualTotalWeights F.1)
+      (degreeY_le_ysWeight F.1) (degreeR_le_sWeight F.1)
+      (degreeZ_le_totalWeight F.1)
+      (by simpa using hgates F hFA 0 (Nat.zero_le fuel)) with
+      hdiv | hhelper
+    · exact (hnot hdiv).elim
+    · have hstage : (regularSeeds H selected Gamma F).card ≤
+          stageCost L YS S (exactRouteBox F) 0 := by
+        simpa only [stageCost, stagePair, exactRouteBox, Nat.zero_mul,
+          Nat.sub_zero] using hhelper
+      exact hstage.trans (hcharge F hFA 0 (Nat.zero_le _))
+
+
+/-! ## Contact-thinned consumer (lever S1): the band hypothesis is the thin budget. -/
+
+
+theorem exists_strict_helper_split_of_batch_source_thin
+    (D L S m YS gap delta fuel : ℕ)
+    (hD : 0 < D) (hDa : D ≤ m * 181373)
+    (hshape : D + S ≤ 131071 * (YS + 1))
+    (hfuel : 1 ≤ fuel) (hfuelChar : fuel < 2130706433)
+    (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
+    (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
+      D - j * delta ≤ (m - j) * 181373 + j * (131071 - 1))
+    (u0 u1 : I → K) (H : P4)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (A : Finset (RegularIndex H)) (hA : A.Nonempty)
+    (hbandThin : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
+      (D - wt (contactWeights 131071) (regularProduct H A)) delta
+      (wt (contactWeights 131071) (regularProduct H A))
+      (wt residualTotalWeights (regularProduct H A))
+      (wt residualYSWeights (regularProduct H A))
+      (wt residualSWeights (regularProduct H A))
+      (L - wt residualTotalWeights (regularProduct H A))
+      (YS - wt residualYSWeights (regularProduct H A))
+      (S - wt residualSWeights (regularProduct H A)) fuel < gap)
+    (hterminal :
+      L - fuel * wt residualTotalWeights (regularProduct H A) <
+          wt residualTotalWeights (regularProduct H A) ∨
+      YS - fuel * wt residualYSWeights (regularProduct H A) <
+          wt residualYSWeights (regularProduct H A) ∨
+      S - fuel * wt residualSWeights (regularProduct H A) <
+          wt residualSWeights (regularProduct H A))
+    (hfeasible :
+      fuel * wt residualTotalWeights (regularProduct H A) ≤ L ∧
+      fuel * wt residualYSWeights (regularProduct H A) ≤ YS ∧
+      fuel * wt residualSWeights (regularProduct H A) ≤ S)
+    (hgapLe : gap ≤ Module.finrank K
+      (ConstraintKernel (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1))
+    (hfield : A.card < ENat.card K)
+    (hgates : ∀ F ∈ A, ∀ j, j ≤ fuel →
+      HelperPairGates
+        (L - j * wt residualTotalWeights F.1)
+        (YS - j * wt residualYSWeights F.1)
+        (S - j * wt residualSWeights F.1)
+        (wt residualYSWeights F.1) (wt residualSWeights F.1)
+        (wt residualTotalWeights F.1))
+    (charge : RegularIndex H → ℕ)
+    (hcharge : ∀ F ∈ A, ∀ j, j ≤ fuel →
+      stageCost L YS S (exactRouteBox F) j ≤ charge F) :
+    ∃ U, U ⊂ A ∧ ∀ F ∈ A \ U,
+      (regularSeeds H selected Gamma F).card ≤ charge F := by
+  classical
+  let source := ConstraintKernel (K := K) D 131071 L S m
+    IRSProfile.domain u0 u1
+  let recon : source →ₗ[K] P4 :=
+    kernelReconstructLinear (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1
+  let U₀ := universalFactors H A recon
+  have hU₀sub : U₀ ⊆ A := universalFactors_subset H A recon
+  by_cases hall : U₀ = A
+  · have hdiv : ∀ v : source, regularProduct H A ∣
+        reconstruct K D 131071 L S v.1 := by
+      intro v
+      have hv := universalProduct_dvd H A recon v
+      change regularProduct H U₀ ∣ recon v at hv
+      rw [hall] at hv
+      change regularProduct H A ∣
+        kernelReconstructLinear (K := K) D 131071 L S m
+          IRSProfile.domain u0 u1 v at hv
+      rw [kernelReconstructLinear_apply] at hv
+      exact hv
+    obtain ⟨q, hq, hproduct, hqbox⟩ :=
+      kernelQuotient_regularProduct_nested D 131071 L S m YS
+        IRSProfile.domain u0 u1 (by decide) hshape H A hdiv
+    cases fuel with
+    | zero => omega
+    | succ steps =>
+      have hDlow :
+          D - delta - wt (contactWeights 131071) (regularProduct H A) =
+            (D - wt (contactWeights 131071) (regularProduct H A)) - delta := by
+        omega
+      have hsource : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
+          (D - wt (contactWeights 131071) (regularProduct H A)) delta
+          (wt (contactWeights 131071) (regularProduct H A))
+          (wt residualTotalWeights (regularProduct H A))
+          (wt residualYSWeights (regularProduct H A))
+          (wt residualSWeights (regularProduct H A))
+          (L - wt residualTotalWeights (regularProduct H A))
+          (YS - wt residualYSWeights (regularProduct H A))
+          (S - wt residualSWeights (regularProduct H A)) (steps + 1) <
+        Module.finrank K source := hbandThin.trans_le hgapLe
+      have hterminal' :
+          (L - wt residualTotalWeights (regularProduct H A)) -
+              steps * wt residualTotalWeights (regularProduct H A) <
+                wt residualTotalWeights (regularProduct H A) ∨
+          (YS - wt residualYSWeights (regularProduct H A)) -
+              steps * wt residualYSWeights (regularProduct H A) <
+                wt residualYSWeights (regularProduct H A) ∨
+          (S - wt residualSWeights (regularProduct H A)) -
+              steps * wt residualSWeights (regularProduct H A) <
+                wt residualSWeights (regularProduct H A) := by
+        rcases hterminal with ht | hy | hs
+        · left
+          simpa only [Nat.sub_sub, Nat.succ_eq_add_one, Nat.add_mul,
+            one_mul, Nat.add_comm] using ht
+        · right; left
+          simpa only [Nat.sub_sub, Nat.succ_eq_add_one, Nat.add_mul,
+            one_mul, Nat.add_comm] using hy
+        · right; right
+          simpa only [Nat.sub_sub, Nat.succ_eq_add_one, Nat.add_mul,
+            one_mul, Nat.add_comm] using hs
+      have hexit := exists_batchExitStage_of_bandBudgetThin_succ steps
+        (D - wt (contactWeights 131071) (regularProduct H A))
+        (D - delta - wt (contactWeights 131071) (regularProduct H A))
+        131071 delta
+        (L - wt residualTotalWeights (regularProduct H A))
+        (YS - wt residualYSWeights (regularProduct H A))
+        (S - wt residualSWeights (regularProduct H A)) (by decide) hDlow q hq hqbox
+        H A hA hsource hterminal' hfield
+      exact counts_of_batchExitStage D L S m YS delta (steps + 1)
+        hD hfuelChar hlowpos hcapacity u0 u1 H selected Gamma hdegree
+        hagreement hno A q hproduct hexit hfeasible
+        (fun F hFA j _hj hjle => hgates F hFA j hjle) charge
+        (fun F hFA j _hj hjle => hcharge F hFA j hjle)
+  · have hproper : U₀ ⊂ A :=
+        (_root_.ssubset_iff_subset_ne).mpr ⟨hU₀sub, hall⟩
+    refine ⟨U₀, hproper, ?_⟩
+    intro F hFU
+    have hFA : F ∈ A := (Finset.mem_sdiff.mp hFU).1
+    have hnot : ¬ ∀ v : source,
+        F.1 ∣ reconstruct K D 131071 L S v.1 := by
+      intro hdiv
+      apply (Finset.mem_sdiff.mp hFU).2
+      apply (mem_universalFactors H A recon F).mpr
+      refine ⟨hFA, ?_⟩
+      intro v
+      change F.1 ∣ kernelReconstructLinear (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1 v
+      rw [kernelReconstructLinear_apply]
+      exact hdiv v
+    rcases divisor_or_helper_count D L S m YS hD hDa hshape selected
+      Gamma hdegree hagreement hno F
+      (wt residualYSWeights F.1) (wt residualSWeights F.1)
+      (wt residualTotalWeights F.1)
+      (degreeY_le_ysWeight F.1) (degreeR_le_sWeight F.1)
+      (degreeZ_le_totalWeight F.1)
+      (by simpa using hgates F hFA 0 (Nat.zero_le fuel)) with
+      hdiv | hhelper
+    · exact (hnot hdiv).elim
+    · have hstage : (regularSeeds H selected Gamma F).card ≤
+          stageCost L YS S (exactRouteBox F) 0 := by
+        simpa only [stageCost, stagePair, exactRouteBox, Nat.zero_mul,
+          Nat.sub_zero] using hhelper
+      exact hstage.trans (hcharge F hFA 0 (Nat.zero_le _))
+
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorBatchPowerRoute
+end PackedLocator_LocatorBatchPowerRoute
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier18 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorFastKernelArithmetic. -/
+section PackedLocator_LocatorFastKernelArithmetic
+
+/-!
+# Kernel-cheap arithmetic for large locator sources
+
+The contact-rank bound is definitionally a sum of nested `Finset.range` sums.
+For the larger replacement sources, evaluating that definition directly would
+expand hundreds of millions of summands.  This file closes each rectangular
+block symbolically and leaves only one primitive recursion over the contact
+rows.  It also provides a primitive-recursive evaluator for coefficient
+counts after the weighted cutoff has removed the long zero tail.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorFastKernelArithmetic
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN100 RCN119 RCN180 RCN302
+open LocatorLowQuotient
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+/-- Number of entries in a rectangular block, weighted by the descending
+affine function `L + 1 - offset - i - j`. -/
+def rectangularCount (ni nj offset L : ℕ) : ℕ :=
+  ni * nj * (L + 1 - offset) -
+    (nj * (ni * (ni - 1) / 2) + ni * (nj * (nj - 1) / 2))
+
+private theorem pairIndexSum (ni nj : ℕ) :
+    (∑ i ∈ Finset.range ni, ∑ j ∈ Finset.range nj, (i + j)) =
+      nj * (ni * (ni - 1) / 2) + ni * (nj * (nj - 1) / 2) := by
+  calc
+    (∑ i ∈ Finset.range ni, ∑ j ∈ Finset.range nj, (i + j)) =
+        ∑ i ∈ Finset.range ni,
+          (nj * i + nj * (nj - 1) / 2) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [Finset.sum_add_distrib, Finset.sum_range_id]
+      simp only [Finset.sum_const, Finset.card_range, Nat.nsmul_eq_mul]
+    _ = nj * (ni * (ni - 1) / 2) + ni * (nj * (nj - 1) / 2) := by
+      rw [Finset.sum_add_distrib, ← Finset.mul_sum, Finset.sum_range_id]
+      simp only [Finset.sum_const, Finset.card_range, Nat.nsmul_eq_mul]
+
+theorem rectangularSum_eq_rectangularCount (ni nj offset L : ℕ)
+    (hbound : offset + (ni - 1) + (nj - 1) ≤ L) :
+    (∑ i ∈ Finset.range ni,
+      ∑ j ∈ Finset.range nj, (L + 1 - offset - i - j)) =
+      rectangularCount ni nj offset L := by
+  have hpoint : ∀ i ∈ Finset.range ni, ∀ j ∈ Finset.range nj,
+      (L + 1 - offset - i - j) + (i + j) = L + 1 - offset := by
+    intro i hi j hj
+    have hil : i ≤ ni - 1 := by
+      have := Finset.mem_range.mp hi
+      omega
+    have hjl : j ≤ nj - 1 := by
+      have := Finset.mem_range.mp hj
+      omega
+    omega
+  have hadd :
+      (∑ i ∈ Finset.range ni,
+        ∑ j ∈ Finset.range nj, (L + 1 - offset - i - j)) +
+          (∑ i ∈ Finset.range ni,
+            ∑ j ∈ Finset.range nj, (i + j)) =
+        ni * nj * (L + 1 - offset) := by
+    calc
+      _ = ∑ i ∈ Finset.range ni,
+          ((∑ j ∈ Finset.range nj, (L + 1 - offset - i - j)) +
+            ∑ j ∈ Finset.range nj, (i + j)) := by
+          rw [Finset.sum_add_distrib]
+      _ = ∑ i ∈ Finset.range ni,
+          ∑ j ∈ Finset.range nj,
+            ((L + 1 - offset - i - j) + (i + j)) := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          exact Finset.sum_add_distrib.symm
+      _ = ∑ i ∈ Finset.range ni,
+          ∑ _j ∈ Finset.range nj, (L + 1 - offset) := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          apply Finset.sum_congr rfl
+          intro j hj
+          exact hpoint i hi j hj
+      _ = ni * nj * (L + 1 - offset) := by
+          simp only [Finset.sum_const, Finset.card_range, Nat.nsmul_eq_mul]
+          ring
+  rw [pairIndexSum] at hadd
+  unfold rectangularCount
+  omega
+
+theorem blockInputCount_eq_rectangularCount (M L s : ℕ)
+    (hbound : M + s ≤ L) :
+    blockInputCount M L s = rectangularCount (M + 1) (s + 1) 0 L := by
+  simpa only [blockInputCount, Nat.zero_add, Nat.sub_zero] using
+    rectangularSum_eq_rectangularCount (M + 1) (s + 1) 0 L (by omega)
+
+theorem blockKernelLowerBound_eq_rectangularCount (M L s h : ℕ)
+    (hbound : M + s ≤ L) :
+    blockKernelLowerBound M L s h =
+      rectangularCount (M + 1 - h) (s + 1 - h) h L := by
+  by_cases hM : h ≤ M
+  · by_cases hs : h ≤ s
+    · have hL : h ≤ L := by omega
+      have hshape : M - h + (s - h) ≤ L - h := by omega
+      have heq : blockKernelLowerBound M L s h =
+          blockInputCount (M - h) (L - h) (s - h) := by
+        have hMr : M + 1 - h = M - h + 1 := by omega
+        have hsr : s + 1 - h = s - h + 1 := by omega
+        have hLr : L + 1 - h = L - h + 1 := by omega
+        unfold blockKernelLowerBound blockInputCount
+        rw [hMr, hsr, hLr]
+      rw [heq, blockInputCount_eq_rectangularCount _ _ _ hshape]
+      have hMr : M + 1 - h = M - h + 1 := by omega
+      have hsr : s + 1 - h = s - h + 1 := by omega
+      have hLr : L + 1 - h = L - h + 1 := by omega
+      unfold rectangularCount
+      rw [hMr, hsr, hLr]
+      simp only [Nat.sub_zero]
+    · have hz : s + 1 - h = 0 := by omega
+      simp [blockKernelLowerBound, rectangularCount, hz]
+  · have hz : M + 1 - h = 0 := by omega
+    simp [blockKernelLowerBound, rectangularCount, hz]
+
+theorem contactRankBound_eq_rectangularCount (M L s h : ℕ)
+    (hbound : M + s ≤ L) :
+    contactRankBound M L s h =
+      rectangularCount (M + 1) (s + 1) 0 L -
+        rectangularCount (M + 1 - h) (s + 1 - h) h L := by
+  unfold contactRankBound
+  rw [blockInputCount_eq_rectangularCount M L s hbound,
+    blockKernelLowerBound_eq_rectangularCount M L s h hbound]
+
+/-- The same local rank as `RCN119.localRankBound`, but every rectangular
+block is closed and the sole remaining sum uses primitive recursion. -/
+def fastLocalRankBound (m L s : ℕ) : ℕ :=
+  kernelSumRange (fun r =>
+    let M := min r L
+    let h := min (r + 1) (m - r)
+    rectangularCount (M + 1) (s + 1) 0 L -
+      rectangularCount (M + 1 - h) (s + 1 - h) h L) m
+
+theorem localRankBound_eq_fastLocalRankBound (m L s : ℕ)
+    (hshape : m + s ≤ L + 1) :
+    localRankBound m L s = fastLocalRankBound m L s := by
+  unfold localRankBound fastLocalRankBound
+  rw [kernelSumRange_eq]
+  apply Finset.sum_congr rfl
+  intro r hr
+  have hrm : r < m := Finset.mem_range.mp hr
+  have hb : min r L + s ≤ L := by
+    have hm : min r L ≤ r := Nat.min_le_left _ _
+    omega
+  exact contactRankBound_eq_rectangularCount
+    (min r L) L s (min (r + 1) (m - r)) hb
+
+/-- Coefficient count with the weighted zero tail removed and both finite sums
+represented by primitive recursion. -/
+def fastCoefficientCount (D w L s cutoff : ℕ) : ℕ :=
+  kernelSumRange (fun i =>
+    kernelSumRange (fun j =>
+      (L + 1 - i - j) * (D - w * i - (w - 1) * j)) (s + 1)) cutoff
+
+theorem coefficientCount_eq_fastCoefficientCount
+    (D w L s cutoff : ℕ) (hcutoff : cutoff ≤ L + 1)
+    (hweight : D ≤ w * cutoff) :
+    coefficientCount D w L s = fastCoefficientCount D w L s cutoff := by
+  rw [coefficientCount_eq_sum_range_of_weighted_cutoff
+    D w L s cutoff hcutoff hweight]
+  unfold fastCoefficientCount
+  rw [kernelSumRange_eq]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [kernelSumRange_eq]
+
+/-! The primitive evaluator above is already much cheaper than the original
+nested `Finset` computation, but it still performs `cutoff * (s + 1)` steps.
+The inner summand is quadratic, so the following evaluator closes each row and
+performs only `cutoff` primitive steps. -/
+
+private def triangularCount (n : ℕ) : ℕ := n * (n - 1) / 2
+
+private def squareCount (n : ℕ) : ℕ :=
+  n * (n - 1) * (2 * n - 1) / 6
+
+private theorem kernelSumRange_id (n : ℕ) :
+    kernelSumRange (fun j => j) n = triangularCount n := by
+  rw [kernelSumRange_eq, Finset.sum_range_id]
+  rfl
+
+private theorem kernelSumRange_square_mul_six (n : ℕ) :
+    kernelSumRange (fun j => j * j) n * 6 =
+      n * (n - 1) * (2 * n - 1) := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+      rw [kernelSumRange_succ, Nat.add_mul, ih]
+      cases n with
+      | zero => decide
+      | succ k =>
+          have h1 : k + 1 - 1 = k := by omega
+          have h2 : 2 * (k + 1) - 1 = 2 * k + 1 := by omega
+          have h3 : k + 1 + 1 - 1 = k + 1 := by omega
+          have h4 : 2 * (k + 1 + 1) - 1 = 2 * k + 3 := by omega
+          rw [h1, h2, h3, h4]
+          ring
+
+private theorem kernelSumRange_square (n : ℕ) :
+    kernelSumRange (fun j => j * j) n = squareCount n := by
+  unfold squareCount
+  rw [← kernelSumRange_square_mul_six n,
+    Nat.mul_div_cancel _ (by decide : 0 < 6)]
+
+private theorem finset_sum_range_square (n : ℕ) :
+    (∑ j ∈ Finset.range n, j * j) = squareCount n := by
+  rw [← kernelSumRange_eq, kernelSumRange_square]
+
+/-- Closed value of `sum_{j<N} (A-j)*(B-c*j)` when neither subtraction
+truncates on that range. -/
+private def quadraticDescendingCount (A B c N : ℕ) : ℕ :=
+  N * (A * B) + c * squareCount N -
+    (A * c + B) * triangularCount N
+
+private theorem descendingProduct_add_cross (A B c j : ℕ)
+    (hjA : j ≤ A) (hjB : c * j ≤ B) :
+    (A - j) * (B - c * j) + (A * c + B) * j =
+      A * B + c * (j * j) := by
+  apply Nat.cast_injective (R := ℤ)
+  push_cast [Nat.cast_sub hjA, Nat.cast_sub hjB]
+  ring
+
+private theorem descendingProductSum_eq_quadraticDescendingCount
+    (A B c N : ℕ) (hA : N - 1 ≤ A) (hB : c * (N - 1) ≤ B) :
+    (∑ j ∈ Finset.range N, (A - j) * (B - c * j)) =
+      quadraticDescendingCount A B c N := by
+  have hsum :
+      (∑ j ∈ Finset.range N, (A - j) * (B - c * j)) +
+          (∑ j ∈ Finset.range N, (A * c + B) * j) =
+        ∑ j ∈ Finset.range N, (A * B + c * (j * j)) := by
+    rw [← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro j hj
+    have hjN : j ≤ N - 1 := by
+      have := Finset.mem_range.mp hj
+      omega
+    exact descendingProduct_add_cross A B c j (hjN.trans hA)
+      ((Nat.mul_le_mul_left c hjN).trans hB)
+  have hlinear :
+      (∑ j ∈ Finset.range N, (A * c + B) * j) =
+        (A * c + B) * triangularCount N := by
+    rw [← Finset.mul_sum, Finset.sum_range_id]
+    rfl
+  have hright :
+      (∑ j ∈ Finset.range N, (A * B + c * (j * j))) =
+        N * (A * B) + c * squareCount N := by
+    have hconstant :
+        (∑ _j ∈ Finset.range N, A * B) = N * (A * B) := by
+      simp only [Finset.sum_const, Finset.card_range, Nat.nsmul_eq_mul]
+    have hsquare :
+        (∑ j ∈ Finset.range N, c * (j * j)) = c * squareCount N := by
+      rw [← Finset.mul_sum, finset_sum_range_square]
+    rw [Finset.sum_add_distrib, hconstant, hsquare]
+  rw [hlinear, hright] at hsum
+  unfold quadraticDescendingCount
+  omega
+
+/-- Closed form for one coefficient-count row.  `J` is the last index before
+either descending factor becomes truncated, so all later terms are zero. -/
+def closedCoefficientRow (D w L s i : ℕ) : ℕ :=
+  let A := L + 1 - i
+  let B := D - w * i
+  let c := w - 1
+  let J := min s (min (L - i) (B / c))
+  quadraticDescendingCount A B c (J + 1)
+
+theorem coefficientRow_eq_closedCoefficientRow
+    (D w L s i : ℕ) (hw : 2 ≤ w) :
+    (∑ j ∈ Finset.range (s + 1),
+      (L + 1 - i - j) * (D - w * i - (w - 1) * j)) =
+      closedCoefficientRow D w L s i := by
+  let A := L + 1 - i
+  let B := D - w * i
+  let c := w - 1
+  let J := min s (min (L - i) (B / c))
+  have hc : 0 < c := by simp only [c]; omega
+  have hJs : J ≤ s := Nat.min_le_left _ _
+  have hJL : J ≤ L - i :=
+    (Nat.min_le_right _ _).trans (Nat.min_le_left _ _)
+  have hJdiv : J ≤ B / c :=
+    (Nat.min_le_right _ _).trans (Nat.min_le_right _ _)
+  have hJB : c * J ≤ B := by
+    have h := (Nat.le_div_iff_mul_le hc).mp hJdiv
+    simpa only [Nat.mul_comm] using h
+  have hsmall :
+      (∑ j ∈ Finset.range (J + 1),
+        (L + 1 - i - j) * (D - w * i - (w - 1) * j)) =
+        quadraticDescendingCount A B c (J + 1) := by
+    have hA : J + 1 - 1 ≤ A := by simp only [A]; omega
+    have hB : c * (J + 1 - 1) ≤ B := by
+      simpa only [Nat.add_sub_cancel] using hJB
+    simpa only [A, B, c] using
+      descendingProductSum_eq_quadraticDescendingCount A B c (J + 1) hA hB
+  have hsubset : Finset.range (J + 1) ⊆ Finset.range (s + 1) :=
+    Finset.range_mono (by omega)
+  have htrim :
+      (∑ j ∈ Finset.range (J + 1),
+        (L + 1 - i - j) * (D - w * i - (w - 1) * j)) =
+      ∑ j ∈ Finset.range (s + 1),
+        (L + 1 - i - j) * (D - w * i - (w - 1) * j) := by
+    apply Finset.sum_subset hsubset
+    intro j hjfull hjnot
+    have hjs : j ≤ s := by
+      have := Finset.mem_range.mp hjfull
+      omega
+    by_cases hjL : j ≤ L - i
+    · by_cases hjB : c * j ≤ B
+      · have hjdiv : j ≤ B / c :=
+          (Nat.le_div_iff_mul_le hc).mpr (by
+            simpa only [Nat.mul_comm] using hjB)
+        have hjJ : j ≤ J := by
+          simp only [J]
+          exact le_min hjs (le_min hjL hjdiv)
+        exact (hjnot (Finset.mem_range.mpr (by omega))).elim
+      · have hz : D - w * i - (w - 1) * j = 0 := by
+          simp only [B, c] at hjB
+          omega
+        simp only [hz, Nat.mul_zero]
+    · have hz : L + 1 - i - j = 0 := by omega
+      simp only [hz, Nat.zero_mul]
+  calc
+    (∑ j ∈ Finset.range (s + 1),
+      (L + 1 - i - j) * (D - w * i - (w - 1) * j)) =
+        ∑ j ∈ Finset.range (J + 1),
+          (L + 1 - i - j) * (D - w * i - (w - 1) * j) := htrim.symm
+    _ = quadraticDescendingCount A B c (J + 1) := hsmall
+    _ = closedCoefficientRow D w L s i := by
+      rfl
+
+/-- Coefficient count with a closed inner row and one primitive outer sum. -/
+def fastClosedCoefficientCount (D w L s cutoff : ℕ) : ℕ :=
+  kernelSumRange (closedCoefficientRow D w L s) cutoff
+
+theorem coefficientCount_eq_fastClosedCoefficientCount
+    (D w L s cutoff : ℕ) (hw : 2 ≤ w)
+    (hcutoff : cutoff ≤ L + 1) (hweight : D ≤ w * cutoff) :
+    coefficientCount D w L s =
+      fastClosedCoefficientCount D w L s cutoff := by
+  rw [coefficientCount_eq_sum_range_of_weighted_cutoff
+    D w L s cutoff hcutoff hweight]
+  unfold fastClosedCoefficientCount
+  rw [kernelSumRange_eq]
+  apply Finset.sum_congr rfl
+  intro i hi
+  exact coefficientRow_eq_closedCoefficientRow D w L s i hw
+
+/-! ## Constant-time coefficient count in the one-residue regime
+
+For the large power sources used by the 6800 locator, write `D = q*w+r`.
+Their entire slope range satisfies `r+s <= w`.  Hence, in slope row `j`,
+the nonzero weighted columns are exactly `0,...,q-j`.  Reflecting those
+columns and summing the resulting quadratic gives a linear combination of
+`choose (q+1-j) 1`, `choose (q+1-j) 2`, and `choose (q+1-j) 3`.
+The hockey-stick identity then closes the remaining slope sum.  Numerical
+evaluation below uses descending factorials, so its cost depends only on the
+fixed indices `2,3,4`, rather than on `q` or `s`.
+-/
+
+private theorem two_mul_choose_two_add (n : ℕ) :
+    2 * n.choose 2 + n = n * n := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+      rw [Nat.choose_succ_succ]
+      simp only [Nat.choose_one_right]
+      calc
+        2 * (n + n.choose 2) + (n + 1) =
+            (2 * n.choose 2 + n) + (2 * n + 1) := by ring
+        _ = n * n + (2 * n + 1) := by rw [ih]
+        _ = (n + 1) * (n + 1) := by ring
+
+private theorem kernelSumRange_square_eq_choose (n : ℕ) :
+    kernelSumRange (fun i => i * i) n =
+      2 * n.choose 3 + n.choose 2 := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+      rw [kernelSumRange_succ, ih, Nat.choose_succ_succ,
+        Nat.choose_succ_succ]
+      simp only [Nat.choose_one_right]
+      rw [← two_mul_choose_two_add n]
+      ring
+
+private theorem finset_sum_range_square_eq_choose (n : ℕ) :
+    (∑ i ∈ Finset.range n, i * i) =
+      2 * n.choose 3 + n.choose 2 := by
+  rw [← kernelSumRange_eq, kernelSumRange_square_eq_choose]
+
+private theorem sum_increasingProduct_eq_choose (U C w N : ℕ) :
+    (∑ h ∈ Finset.range N, (U + h) * (C + w * h)) =
+      N * (U * C) + (U * w + C) * N.choose 2 +
+        w * (2 * N.choose 3 + N.choose 2) := by
+  calc
+    (∑ h ∈ Finset.range N, (U + h) * (C + w * h)) =
+        ∑ h ∈ Finset.range N,
+          (U * C + (U * w + C) * h + w * (h * h)) := by
+      apply Finset.sum_congr rfl
+      intro h hh
+      ring
+    _ = N * (U * C) + (U * w + C) * N.choose 2 +
+          w * (2 * N.choose 3 + N.choose 2) := by
+      rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
+      simp only [Finset.sum_const, Finset.card_range, Nat.nsmul_eq_mul]
+      rw [← Finset.mul_sum, ← Finset.mul_sum, Finset.sum_range_id,
+        finset_sum_range_square_eq_choose, ← Nat.choose_two_right]
+
+private theorem three_mul_choose_three_add_two_mul_choose_two (n : ℕ) :
+    3 * n.choose 3 + 2 * n.choose 2 = n * n.choose 2 := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+      rw [Nat.choose_succ_succ, Nat.choose_succ_succ]
+      simp only [Nat.choose_one_right]
+      calc
+        3 * (n.choose 2 + n.choose 3) +
+              2 * (n + n.choose 2) =
+            (3 * n.choose 3 + 2 * n.choose 2) +
+              (2 * n.choose 2 + n) + (n.choose 2 + n) := by ring
+        _ = n * n.choose 2 + n * n + (n.choose 2 + n) := by
+          rw [ih, two_mul_choose_two_add]
+        _ = (n + 1) * (n + n.choose 2) := by ring
+
+private theorem oneResidueRow_algebra
+    (U C w r j q N wm T V : ℕ)
+    (hC : C = r + j) (hN : N + j = q + 1) (hw : wm + 2 = w)
+    (hsq : 2 * T + N = N * N)
+    (hcub : 3 * V + 2 * T = N * T) :
+    N * (U * C) + (U * w + C) * T + w * (2 * V + T) =
+      U * (r + q) * N +
+        (U * wm + r + q + (wm + 1)) * T +
+          (2 * wm + 1) * V := by
+  have hCz : (C : ℤ) = (r : ℤ) + j := by exact_mod_cast hC
+  have hNz : (N : ℤ) + j = (q : ℤ) + 1 := by exact_mod_cast hN
+  have hwz : (wm : ℤ) + 2 = w := by exact_mod_cast hw
+  have hsqz : 2 * (T : ℤ) + N = N * N := by exact_mod_cast hsq
+  have hcubz : 3 * (V : ℤ) + 2 * T = N * T := by exact_mod_cast hcub
+  have hqz : (q : ℤ) = N + j - 1 := by linarith
+  apply Nat.cast_injective (R := ℤ)
+  push_cast
+  rw [hCz, ← hwz, hqz]
+  linear_combination (U : ℤ) * hsqz + hcubz
+
+/-- The three binomial coefficients of one slope row after reflecting its
+weighted columns. -/
+private def oneResidueCoefficientRow (q r w L j : ℕ) : ℕ :=
+  let U := L + 1 - q
+  let N := q + 1 - j
+  U * (r + q) * N.choose 1 +
+    (U * (w - 2) + r + q + ((w - 2) + 1)) * N.choose 2 +
+      (2 * (w - 2) + 1) * N.choose 3
+
+private theorem coefficientColumn_eq_oneResidueCoefficientRow
+    (q r w L j : ℕ) (hw : 2 ≤ w) (hj : j ≤ q)
+    (hL : q ≤ L) (hres : r + j ≤ w) :
+    (∑ i ∈ Finset.range (q + 1),
+      (L + 1 - i - j) *
+        (q * w + r - w * i - (w - 1) * j)) =
+      oneResidueCoefficientRow q r w L j := by
+  let N := q + 1 - j
+  let U := L + 1 - q
+  let C := r + j
+  have hNpos : 0 < N := by simp only [N]; omega
+  have hNq : N ≤ q + 1 := by simp only [N]; omega
+  have hsubset : Finset.range N ⊆ Finset.range (q + 1) :=
+    Finset.range_mono hNq
+  have htrim :
+      (∑ i ∈ Finset.range N,
+        (L + 1 - i - j) *
+          (q * w + r - w * i - (w - 1) * j)) =
+      ∑ i ∈ Finset.range (q + 1),
+        (L + 1 - i - j) *
+          (q * w + r - w * i - (w - 1) * j) := by
+    apply Finset.sum_subset hsubset
+    intro i hi hinot
+    have hiq : i ≤ q := by
+      have := Finset.mem_range.mp hi
+      omega
+    have hiN : N ≤ i := by
+      by_contra hni
+      exact hinot (Finset.mem_range.mpr (by omega))
+    have hij : q + 1 ≤ i + j := by simp only [N] at hiN; omega
+    have hr : r ≤ w - j := by omega
+    have hmul : w * (q + 1) ≤ w * (i + j) :=
+      Nat.mul_le_mul_left w hij
+    have hwj : w * j - j = (w - 1) * j := by
+      symm
+      rw [Nat.sub_mul]
+      simp only [Nat.one_mul]
+    have hweight : q * w + r ≤ w * i + (w - 1) * j := by
+      calc
+        q * w + r ≤ q * w + (w - j) := Nat.add_le_add_left hr _
+        _ = w * (q + 1) - j := by
+          rw [Nat.mul_add, Nat.mul_one, Nat.mul_comm w q]
+          omega
+        _ ≤ w * (i + j) - j := Nat.sub_le_sub_right hmul j
+        _ = w * i + (w - 1) * j := by
+          have hjwj : j ≤ w * j :=
+            Nat.le_mul_of_pos_left j (by omega)
+          rw [Nat.mul_add, Nat.add_sub_assoc hjwj, hwj]
+    have hz : q * w + r - w * i - (w - 1) * j = 0 := by
+      rw [Nat.sub_sub]
+      exact Nat.sub_eq_zero_of_le hweight
+    simp only [hz, Nat.mul_zero]
+  have hreflect :
+      (∑ i ∈ Finset.range N,
+        (L + 1 - i - j) *
+          (q * w + r - w * i - (w - 1) * j)) =
+      ∑ h ∈ Finset.range N, (U + h) * (C + w * h) := by
+    rw [← Finset.sum_range_reflect (fun i =>
+      (L + 1 - i - j) *
+        (q * w + r - w * i - (w - 1) * j)) N]
+    apply Finset.sum_congr rfl
+    intro h hh
+    have hhN : h < N := Finset.mem_range.mp hh
+    have hidx : N - 1 - h = q - j - h := by
+      simp only [N]
+      omega
+    have hqsplit : q = (q - j - h) + j + h := by omega
+    have hwj : w * j = (w - 1) * j + j := by
+      have hw' : w - 1 + 1 = w := by omega
+      calc
+        w * j = (w - 1 + 1) * j := by rw [hw']
+        _ = (w - 1) * j + j := by ring
+    have htotal :
+        q * w + r = w * (q - j - h) + (w - 1) * j +
+          (r + j + w * h) := by
+      calc
+        q * w + r = ((q - j - h) + j + h) * w + r := by rw [← hqsplit]
+        _ = w * (q - j - h) + w * j + w * h + r := by ring
+        _ = w * (q - j - h) + (w - 1) * j +
+            (r + j + w * h) := by rw [hwj]; ring
+    have hfirst : L + 1 - (N - 1 - h) - j = U + h := by
+      simp only [N, U]
+      omega
+    have hsecond :
+        q * w + r - w * (N - 1 - h) - (w - 1) * j =
+          C + w * h := by
+      rw [hidx]
+      simp only [C]
+      omega
+    rw [hfirst, hsecond]
+  have hsum := sum_increasingProduct_eq_choose U C w N
+  have hNj : N + j = q + 1 := by simp only [N]; omega
+  have hwsub : w - 2 + 2 = w := by omega
+  have hsq := two_mul_choose_two_add N
+  have hcub := three_mul_choose_three_add_two_mul_choose_two N
+  rw [← htrim, hreflect, hsum]
+  change N * (U * C) + (U * w + C) * N.choose 2 +
+      w * (2 * N.choose 3 + N.choose 2) =
+    U * (r + q) * N.choose 1 +
+      (U * (w - 2) + r + q + ((w - 2) + 1)) * N.choose 2 +
+        (2 * (w - 2) + 1) * N.choose 3
+  simp only [Nat.choose_one_right]
+  exact oneResidueRow_algebra
+    (U := U) (C := C) (w := w) (r := r) (j := j) (q := q)
+    (N := N) (wm := w - 2) (T := N.choose 2) (V := N.choose 3)
+    (by rfl) hNj hwsub hsq hcub
+
+private theorem sum_range_choose_descending_add (N s k : ℕ)
+    (hs : s ≤ N) :
+    (∑ j ∈ Finset.range (s + 1), (N - j).choose k) +
+        (N - s).choose (k + 1) = (N + 1).choose (k + 1) := by
+  induction s with
+  | zero =>
+      simp only [Nat.sub_zero, Finset.range_one, Finset.sum_singleton]
+      exact (Nat.choose_succ_succ' N k).symm
+  | succ s ih =>
+      have hs' : s ≤ N := by omega
+      rw [Finset.sum_range_succ]
+      have hold := ih hs'
+      have hpred : N - s = (N - (s + 1)) + 1 := by omega
+      have hp := Nat.choose_succ_succ' (N - (s + 1)) k
+      rw [← hpred] at hp
+      omega
+
+private theorem sum_range_choose_descending (N s k : ℕ)
+    (hs : s ≤ N) :
+    (∑ j ∈ Finset.range (s + 1), (N - j).choose k) =
+      (N + 1).choose (k + 1) - (N - s).choose (k + 1) := by
+  have h := sum_range_choose_descending_add N s k hs
+  omega
+
+/-- `Nat.choose` evaluated through a descending factorial.  In this file it
+is used only at indices at most four, so closed source receipts do not recurse
+through a thousand Pascal rows. -/
+def smallChoose (n k : ℕ) : ℕ :=
+  n.descFactorial k / Nat.factorial k
+
+private theorem choose_eq_smallChoose (n k : ℕ) :
+    n.choose k = smallChoose n k := by
+  simpa only [smallChoose] using
+    Nat.choose_eq_descFactorial_div_factorial n k
+
+/-- Constant-time coefficient count for `D=q*w+r` when the complete slope
+range remains in the first residue regime. -/
+def oneResidueCoefficientCount (q r w L s : ℕ) : ℕ :=
+  let U := L + 1 - q
+  let c1 := U * (r + q)
+  let c2 := U * (w - 2) + r + q + ((w - 2) + 1)
+  let c3 := 2 * (w - 2) + 1
+  c1 * (smallChoose (q + 2) 2 - smallChoose (q + 1 - s) 2) +
+    c2 * (smallChoose (q + 2) 3 - smallChoose (q + 1 - s) 3) +
+      c3 * (smallChoose (q + 2) 4 - smallChoose (q + 1 - s) 4)
+
+theorem coefficientCount_eq_oneResidueCoefficientCount
+    (q r w L s : ℕ) (hw : 2 ≤ w) (hsq : s ≤ q)
+    (hL : q ≤ L) (hres : r + s ≤ w) :
+    coefficientCount (q * w + r) w L s =
+      oneResidueCoefficientCount q r w L s := by
+  have hcutoff : q + 1 ≤ L + 1 := by omega
+  have hweight : q * w + r ≤ w * (q + 1) := by
+    have hrw : r ≤ w := by omega
+    rw [Nat.mul_add, Nat.mul_one, Nat.mul_comm w q]
+    omega
+  rw [coefficientCount_eq_sum_range_of_weighted_cutoff
+    (q * w + r) w L s (q + 1) hcutoff hweight]
+  rw [Finset.sum_comm]
+  have hrows :
+      (∑ j ∈ Finset.range (s + 1),
+        ∑ i ∈ Finset.range (q + 1),
+          (L + 1 - i - j) *
+            (q * w + r - w * i - (w - 1) * j)) =
+      ∑ j ∈ Finset.range (s + 1),
+        oneResidueCoefficientRow q r w L j := by
+    apply Finset.sum_congr rfl
+    intro j hj
+    have hjs : j ≤ s := by
+      have := Finset.mem_range.mp hj
+      omega
+    exact coefficientColumn_eq_oneResidueCoefficientRow q r w L j hw
+      (hjs.trans hsq) hL ((Nat.add_le_add_left hjs r).trans hres)
+  rw [hrows]
+  let U := L + 1 - q
+  let c1 := U * (r + q)
+  let c2 := U * (w - 2) + r + q + ((w - 2) + 1)
+  let c3 := 2 * (w - 2) + 1
+  have h1 := sum_range_choose_descending (q + 1) s 1 (by omega)
+  have h2 := sum_range_choose_descending (q + 1) s 2 (by omega)
+  have h3 := sum_range_choose_descending (q + 1) s 3 (by omega)
+  unfold oneResidueCoefficientRow
+  change (∑ j ∈ Finset.range (s + 1),
+      (c1 * (q + 1 - j).choose 1 +
+        c2 * (q + 1 - j).choose 2 +
+          c3 * (q + 1 - j).choose 3)) = _
+  rw [Finset.sum_add_distrib, Finset.sum_add_distrib,
+    ← Finset.mul_sum, ← Finset.mul_sum, ← Finset.mul_sum, h1, h2, h3]
+  unfold oneResidueCoefficientCount
+  rw [← choose_eq_smallChoose, ← choose_eq_smallChoose,
+    ← choose_eq_smallChoose, ← choose_eq_smallChoose,
+    ← choose_eq_smallChoose, ← choose_eq_smallChoose]
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+/-- A numerical nullity receipt for any source profile gives the dimension
+needed by the arbitrary-power route, uniformly in the two received words. -/
+theorem challengeConstraintKernel_finrank_lower_bound_of_numeric
+    (D L s m gap : ℕ) (u0 u1 : I → K)
+    (hnumeric : gap ≤ coefficientCount D 131071 L s -
+      262144 * localRankBound m L s) :
+    gap ≤ Module.finrank K
+      (ConstraintKernel (K := K) D 131071 L s m
+        IRSProfile.domain u0 u1) := by
+  have hcard : Fintype.card I = 262144 := by
+    norm_num [I, IRSProfile.Index]
+  have hlo := constraintKernel_finrank_lower_bound
+    (K := K) D 131071 L s m IRSProfile.domain u0 u1
+  have hlo' := hcard ▸ hlo
+  exact hnumeric.trans hlo'
+
+end ProximityPrize.SubmissionLower.LocatorFastKernelArithmetic
+end PackedLocator_LocatorFastKernelArithmetic
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier19 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Parameters. -/
+section PackedLocator_LocatorR1200Parameters
+
+/-! Shared, reduction-cheap definitions for the 1200-contact locator source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Parameters
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+/-- One closed contact-rank row for the R1200 source. -/
+def rankRow (r : ℕ) : ℕ :=
+  let M := min r 328400
+  let h := min (r + 1) (4800 - r)
+  rectangularCount (M + 1) (1480 + 1) 0 328400 -
+    rectangularCount (M + 1 - h) (1480 + 1 - h) h 328400
+
+end ProximityPrize.SubmissionLower.LocatorR1200Parameters
+end PackedLocator_LocatorR1200Parameters
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier20 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Coefficient. -/
+section PackedLocator_LocatorR1200Coefficient
+
+/-! Constant-time coefficient-count receipt for the R1200 source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Coefficient
+
+open ProximityPrize.Benchmark
+open RCN100
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem coefficientCount_exact :
+    coefficientCount 870590400 131071 328400 1480 =
+      1107287009400021065232 := by
+  change coefficientCount (6642 * 131071 + 16818) 131071 328400 1480 =
+    1107287009400021065232
+  rw [coefficientCount_eq_oneResidueCoefficientCount
+    6642 16818 131071 328400 1480 (by decide) (by decide) (by decide)
+      (by decide)]
+  norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
+
+end ProximityPrize.SubmissionLower.LocatorR1200Coefficient
+end PackedLocator_LocatorR1200Coefficient
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier21 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankA. -/
+section PackedLocator_LocatorR1200RankA
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_0 :
+    (∑ i ∈ Finset.range 64, rankRow i) = 1009288467200 := by decide
+
+theorem chunk_64 :
+    (∑ i ∈ Finset.range 64, rankRow (64 + i)) = 2996549526272 := by decide
+
+theorem chunk_128 :
+    (∑ i ∈ Finset.range 64, rankRow (128 + i)) = 4983422350080 := by decide
+
+theorem chunk_192 :
+    (∑ i ∈ Finset.range 64, rankRow (192 + i)) = 6969906938624 := by decide
+
+theorem chunk_256 :
+    (∑ i ∈ Finset.range 64, rankRow (256 + i)) = 8956003291904 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankA
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier22 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankB. -/
+section PackedLocator_LocatorR1200RankB
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_320 :
+    (∑ i ∈ Finset.range 64, rankRow (320 + i)) = 10941711409920 := by decide
+
+theorem chunk_384 :
+    (∑ i ∈ Finset.range 64, rankRow (384 + i)) = 12927031292672 := by decide
+
+theorem chunk_448 :
+    (∑ i ∈ Finset.range 64, rankRow (448 + i)) = 14911962940160 := by decide
+
+theorem chunk_512 :
+    (∑ i ∈ Finset.range 64, rankRow (512 + i)) = 16896506352384 := by decide
+
+theorem chunk_576 :
+    (∑ i ∈ Finset.range 64, rankRow (576 + i)) = 18880661529344 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankB
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier23 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankC. -/
+section PackedLocator_LocatorR1200RankC
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_640 :
+    (∑ i ∈ Finset.range 64, rankRow (640 + i)) = 20864428471040 := by decide
+
+theorem chunk_704 :
+    (∑ i ∈ Finset.range 64, rankRow (704 + i)) = 22847807177472 := by decide
+
+theorem chunk_768 :
+    (∑ i ∈ Finset.range 64, rankRow (768 + i)) = 24830797648640 := by decide
+
+theorem chunk_832 :
+    (∑ i ∈ Finset.range 64, rankRow (832 + i)) = 26813399884544 := by decide
+
+theorem chunk_896 :
+    (∑ i ∈ Finset.range 64, rankRow (896 + i)) = 28795613885184 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankC
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier24 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankD. -/
+section PackedLocator_LocatorR1200RankD
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_960 :
+    (∑ i ∈ Finset.range 64, rankRow (960 + i)) = 30777439650560 := by decide
+
+theorem chunk_1024 :
+    (∑ i ∈ Finset.range 64, rankRow (1024 + i)) = 32758877180672 := by decide
+
+theorem chunk_1088 :
+    (∑ i ∈ Finset.range 64, rankRow (1088 + i)) = 34739926475520 := by decide
+
+theorem chunk_1152 :
+    (∑ i ∈ Finset.range 64, rankRow (1152 + i)) = 36720587535104 := by decide
+
+theorem chunk_1216 :
+    (∑ i ∈ Finset.range 64, rankRow (1216 + i)) = 38700860359424 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankD
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankE. -/
+section PackedLocator_LocatorR1200RankE
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_1280 :
+    (∑ i ∈ Finset.range 64, rankRow (1280 + i)) = 40680744948480 := by decide
+
+theorem chunk_1344 :
+    (∑ i ∈ Finset.range 64, rankRow (1344 + i)) = 42660241302272 := by decide
+
+theorem chunk_1408 :
+    (∑ i ∈ Finset.range 64, rankRow (1408 + i)) = 44639349420800 := by decide
+
+theorem chunk_1472 :
+    (∑ i ∈ Finset.range 64, rankRow (1472 + i)) = 46618069304064 := by decide
+
+theorem chunk_1536 :
+    (∑ i ∈ Finset.range 64, rankRow (1536 + i)) = 48596400952064 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankE
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankF. -/
+section PackedLocator_LocatorR1200RankF
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_1600 :
+    (∑ i ∈ Finset.range 64, rankRow (1600 + i)) = 50574344364800 := by decide
+
+theorem chunk_1664 :
+    (∑ i ∈ Finset.range 64, rankRow (1664 + i)) = 52551899542272 := by decide
+
+theorem chunk_1728 :
+    (∑ i ∈ Finset.range 64, rankRow (1728 + i)) = 54529066484480 := by decide
+
+theorem chunk_1792 :
+    (∑ i ∈ Finset.range 64, rankRow (1792 + i)) = 56505845191424 := by decide
+
+theorem chunk_1856 :
+    (∑ i ∈ Finset.range 64, rankRow (1856 + i)) = 58482235663104 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankF
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankG. -/
+section PackedLocator_LocatorR1200RankG
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_1920 :
+    (∑ i ∈ Finset.range 64, rankRow (1920 + i)) = 60458237899520 := by decide
+
+theorem chunk_1984 :
+    (∑ i ∈ Finset.range 64, rankRow (1984 + i)) = 62433851900672 := by decide
+
+theorem chunk_2048 :
+    (∑ i ∈ Finset.range 64, rankRow (2048 + i)) = 64409077666560 := by decide
+
+theorem chunk_2112 :
+    (∑ i ∈ Finset.range 64, rankRow (2112 + i)) = 66383915197184 := by decide
+
+theorem chunk_2176 :
+    (∑ i ∈ Finset.range 64, rankRow (2176 + i)) = 68358364492544 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankG
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankH. -/
+section PackedLocator_LocatorR1200RankH
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_2240 :
+    (∑ i ∈ Finset.range 64, rankRow (2240 + i)) = 70332425552640 := by decide
+
+theorem chunk_2304 :
+    (∑ i ∈ Finset.range 64, rankRow (2304 + i)) = 72306098377472 := by decide
+
+theorem chunk_2368 :
+    (∑ i ∈ Finset.range 64, rankRow (2368 + i)) = 74279382967040 := by decide
+
+theorem chunk_2432 :
+    (∑ i ∈ Finset.range 64, rankRow (2432 + i)) = 76252279321344 := by decide
+
+theorem chunk_2496 :
+    (∑ i ∈ Finset.range 64, rankRow (2496 + i)) = 78224787440384 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankH
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankI. -/
+section PackedLocator_LocatorR1200RankI
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_2560 :
+    (∑ i ∈ Finset.range 64, rankRow (2560 + i)) = 80196907324160 := by decide
+
+theorem chunk_2624 :
+    (∑ i ∈ Finset.range 64, rankRow (2624 + i)) = 82168638972672 := by decide
+
+theorem chunk_2688 :
+    (∑ i ∈ Finset.range 64, rankRow (2688 + i)) = 84139982385920 := by decide
+
+theorem chunk_2752 :
+    (∑ i ∈ Finset.range 64, rankRow (2752 + i)) = 86110937563904 := by decide
+
+theorem chunk_2816 :
+    (∑ i ∈ Finset.range 64, rankRow (2816 + i)) = 88081504506624 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankI
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankJ. -/
+section PackedLocator_LocatorR1200RankJ
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_2880 :
+    (∑ i ∈ Finset.range 64, rankRow (2880 + i)) = 90051683214080 := by decide
+
+theorem chunk_2944 :
+    (∑ i ∈ Finset.range 64, rankRow (2944 + i)) = 92021473686272 := by decide
+
+theorem chunk_3008 :
+    (∑ i ∈ Finset.range 64, rankRow (3008 + i)) = 93990875923200 := by decide
+
+theorem chunk_3072 :
+    (∑ i ∈ Finset.range 64, rankRow (3072 + i)) = 95959889924864 := by decide
+
+theorem chunk_3136 :
+    (∑ i ∈ Finset.range 64, rankRow (3136 + i)) = 97928515691264 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankJ
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankK. -/
+section PackedLocator_LocatorR1200RankK
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_3200 :
+    (∑ i ∈ Finset.range 64, rankRow (3200 + i)) = 99896753222400 := by decide
+
+theorem chunk_3264 :
+    (∑ i ∈ Finset.range 64, rankRow (3264 + i)) = 101842887095228 := by decide
+
+theorem chunk_3328 :
+    (∑ i ∈ Finset.range 64, rankRow (3328 + i)) = 102195555240800 := by decide
+
+theorem chunk_3392 :
+    (∑ i ∈ Finset.range 64, rankRow (3392 + i)) = 101320388887392 := by decide
+
+theorem chunk_3456 :
+    (∑ i ∈ Finset.range 64, rankRow (3456 + i)) = 100103643396960 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankK
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankL. -/
+section PackedLocator_LocatorR1200RankL
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_3520 :
+    (∑ i ∈ Finset.range 64, rankRow (3520 + i)) = 98545419432800 := by decide
+
+theorem chunk_3584 :
+    (∑ i ∈ Finset.range 64, rankRow (3584 + i)) = 96645817658208 := by decide
+
+theorem chunk_3648 :
+    (∑ i ∈ Finset.range 64, rankRow (3648 + i)) = 94404938736480 := by decide
+
+theorem chunk_3712 :
+    (∑ i ∈ Finset.range 64, rankRow (3712 + i)) = 91822883330912 := by decide
+
+theorem chunk_3776 :
+    (∑ i ∈ Finset.range 64, rankRow (3776 + i)) = 88899752104800 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankL
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankM. -/
+section PackedLocator_LocatorR1200RankM
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_3840 :
+    (∑ i ∈ Finset.range 64, rankRow (3840 + i)) = 85635645721440 := by decide
+
+theorem chunk_3904 :
+    (∑ i ∈ Finset.range 64, rankRow (3904 + i)) = 82030664844128 := by decide
+
+theorem chunk_3968 :
+    (∑ i ∈ Finset.range 64, rankRow (3968 + i)) = 78084910136160 := by decide
+
+theorem chunk_4032 :
+    (∑ i ∈ Finset.range 64, rankRow (4032 + i)) = 73798482260832 := by decide
+
+theorem chunk_4096 :
+    (∑ i ∈ Finset.range 64, rankRow (4096 + i)) = 69171481881440 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankM
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankN. -/
+section PackedLocator_LocatorR1200RankN
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_4160 :
+    (∑ i ∈ Finset.range 64, rankRow (4160 + i)) = 64204009661280 := by decide
+
+theorem chunk_4224 :
+    (∑ i ∈ Finset.range 64, rankRow (4224 + i)) = 58896166263648 := by decide
+
+theorem chunk_4288 :
+    (∑ i ∈ Finset.range 64, rankRow (4288 + i)) = 53248052351840 := by decide
+
+theorem chunk_4352 :
+    (∑ i ∈ Finset.range 64, rankRow (4352 + i)) = 47259768589152 := by decide
+
+theorem chunk_4416 :
+    (∑ i ∈ Finset.range 64, rankRow (4416 + i)) = 40931415638880 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankN
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankO. -/
+section PackedLocator_LocatorR1200RankO
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_4480 :
+    (∑ i ∈ Finset.range 64, rankRow (4480 + i)) = 34263094164320 := by decide
+
+theorem chunk_4544 :
+    (∑ i ∈ Finset.range 64, rankRow (4544 + i)) = 27254904828768 := by decide
+
+theorem chunk_4608 :
+    (∑ i ∈ Finset.range 64, rankRow (4608 + i)) = 19906948295520 := by decide
+
+theorem chunk_4672 :
+    (∑ i ∈ Finset.range 64, rankRow (4672 + i)) = 12219325227872 := by decide
+
+theorem chunk_4736 :
+    (∑ i ∈ Finset.range 64, rankRow (4736 + i)) = 4192136289120 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankO
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier25 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Rank. -/
+section PackedLocator_LocatorR1200Rank
+
+/-! Assembly of the separately checked R1200 local-rank chunks. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN119
+open LocatorFastKernelArithmetic LocatorLowQuotient LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem fastLocalRankBound_exact :
+    fastLocalRankBound 4800 328400 1480 = 4204024854809180 := by
+  unfold fastLocalRankBound
+  rw [kernelSumRange_eq]
+  change (∑ r ∈ Finset.range 4800, rankRow r) = _
+  rw [Finset.sum_range_add rankRow 4736 64,
+    Finset.sum_range_add rankRow 4672 64,
+    Finset.sum_range_add rankRow 4608 64,
+    Finset.sum_range_add rankRow 4544 64,
+    Finset.sum_range_add rankRow 4480 64,
+    Finset.sum_range_add rankRow 4416 64,
+    Finset.sum_range_add rankRow 4352 64,
+    Finset.sum_range_add rankRow 4288 64,
+    Finset.sum_range_add rankRow 4224 64,
+    Finset.sum_range_add rankRow 4160 64,
+    Finset.sum_range_add rankRow 4096 64,
+    Finset.sum_range_add rankRow 4032 64,
+    Finset.sum_range_add rankRow 3968 64,
+    Finset.sum_range_add rankRow 3904 64,
+    Finset.sum_range_add rankRow 3840 64,
+    Finset.sum_range_add rankRow 3776 64,
+    Finset.sum_range_add rankRow 3712 64,
+    Finset.sum_range_add rankRow 3648 64,
+    Finset.sum_range_add rankRow 3584 64,
+    Finset.sum_range_add rankRow 3520 64,
+    Finset.sum_range_add rankRow 3456 64,
+    Finset.sum_range_add rankRow 3392 64,
+    Finset.sum_range_add rankRow 3328 64,
+    Finset.sum_range_add rankRow 3264 64,
+    Finset.sum_range_add rankRow 3200 64,
+    Finset.sum_range_add rankRow 3136 64,
+    Finset.sum_range_add rankRow 3072 64,
+    Finset.sum_range_add rankRow 3008 64,
+    Finset.sum_range_add rankRow 2944 64,
+    Finset.sum_range_add rankRow 2880 64,
+    Finset.sum_range_add rankRow 2816 64,
+    Finset.sum_range_add rankRow 2752 64,
+    Finset.sum_range_add rankRow 2688 64,
+    Finset.sum_range_add rankRow 2624 64,
+    Finset.sum_range_add rankRow 2560 64,
+    Finset.sum_range_add rankRow 2496 64,
+    Finset.sum_range_add rankRow 2432 64,
+    Finset.sum_range_add rankRow 2368 64,
+    Finset.sum_range_add rankRow 2304 64,
+    Finset.sum_range_add rankRow 2240 64,
+    Finset.sum_range_add rankRow 2176 64,
+    Finset.sum_range_add rankRow 2112 64,
+    Finset.sum_range_add rankRow 2048 64,
+    Finset.sum_range_add rankRow 1984 64,
+    Finset.sum_range_add rankRow 1920 64,
+    Finset.sum_range_add rankRow 1856 64,
+    Finset.sum_range_add rankRow 1792 64,
+    Finset.sum_range_add rankRow 1728 64,
+    Finset.sum_range_add rankRow 1664 64,
+    Finset.sum_range_add rankRow 1600 64,
+    Finset.sum_range_add rankRow 1536 64,
+    Finset.sum_range_add rankRow 1472 64,
+    Finset.sum_range_add rankRow 1408 64,
+    Finset.sum_range_add rankRow 1344 64,
+    Finset.sum_range_add rankRow 1280 64,
+    Finset.sum_range_add rankRow 1216 64,
+    Finset.sum_range_add rankRow 1152 64,
+    Finset.sum_range_add rankRow 1088 64,
+    Finset.sum_range_add rankRow 1024 64,
+    Finset.sum_range_add rankRow 960 64,
+    Finset.sum_range_add rankRow 896 64,
+    Finset.sum_range_add rankRow 832 64,
+    Finset.sum_range_add rankRow 768 64,
+    Finset.sum_range_add rankRow 704 64,
+    Finset.sum_range_add rankRow 640 64,
+    Finset.sum_range_add rankRow 576 64,
+    Finset.sum_range_add rankRow 512 64,
+    Finset.sum_range_add rankRow 448 64,
+    Finset.sum_range_add rankRow 384 64,
+    Finset.sum_range_add rankRow 320 64,
+    Finset.sum_range_add rankRow 256 64,
+    Finset.sum_range_add rankRow 192 64,
+    Finset.sum_range_add rankRow 128 64,
+    Finset.sum_range_add rankRow 64 64,
+    chunk_0, chunk_64, chunk_128, chunk_192, chunk_256,
+    chunk_320, chunk_384, chunk_448, chunk_512, chunk_576,
+    chunk_640, chunk_704, chunk_768, chunk_832, chunk_896,
+    chunk_960, chunk_1024, chunk_1088, chunk_1152, chunk_1216,
+    chunk_1280, chunk_1344, chunk_1408, chunk_1472, chunk_1536,
+    chunk_1600, chunk_1664, chunk_1728, chunk_1792, chunk_1856,
+    chunk_1920, chunk_1984, chunk_2048, chunk_2112, chunk_2176,
+    chunk_2240, chunk_2304, chunk_2368, chunk_2432, chunk_2496,
+    chunk_2560, chunk_2624, chunk_2688, chunk_2752, chunk_2816,
+    chunk_2880, chunk_2944, chunk_3008, chunk_3072, chunk_3136,
+    chunk_3200, chunk_3264, chunk_3328, chunk_3392, chunk_3456,
+    chunk_3520, chunk_3584, chunk_3648, chunk_3712, chunk_3776,
+    chunk_3840, chunk_3904, chunk_3968, chunk_4032, chunk_4096,
+    chunk_4160, chunk_4224, chunk_4288, chunk_4352, chunk_4416,
+    chunk_4480, chunk_4544, chunk_4608, chunk_4672, chunk_4736]
+
+theorem localRankBound_exact :
+    localRankBound 4800 328400 1480 = 4204024854809180 := by
+  rw [localRankBound_eq_fastLocalRankBound 4800 328400 1480 (by decide)]
+  exact fastLocalRankBound_exact
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200Rank
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier26 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Source. -/
+section PackedLocator_LocatorR1200Source
+
+/-! Semantic kernel source backed by the isolated R1200 receipts. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Source
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+abbrev Kernel (u0 u1 : I → K) :=
+  ConstraintKernel (K := K) 870590400 131071 328400 1480 4800
+    IRSProfile.domain u0 u1
+
+theorem weighted_exact : 4800 * 181373 = 870590400 := by
+  decide
+
+theorem shape : 870590400 + 1480 ≤ 131071 * (6642 + 1) := by
+  decide
+
+theorem nullity_exact :
+    coefficientCount 870590400 131071 328400 1480 -
+      262144 * localRankBound 4800 328400 1480 =
+        5227117860923383312 := by
+  rw [LocatorR1200Coefficient.coefficientCount_exact,
+    LocatorR1200Rank.localRankBound_exact]
+
+theorem finrank_gap (u0 u1 : I → K) :
+    5227117860923383312 ≤ Module.finrank K (Kernel u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
+    870590400 328400 1480 4800 5227117860923383312 u0 u1 (by
+      rw [nullity_exact])
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorR1200Source
+end PackedLocator_LocatorR1200Source
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Parameters. -/
+section PackedLocator_LocatorR1Parameters
+
+/-! Shared, reduction-cheap definitions for the 1200-contact cascade source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Parameters
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+/-- One closed contact-rank row for the R1 source. -/
+def rankRow (r : ℕ) : ℕ :=
+  let M := min r 82100
+  let h := min (r + 1) (1200 - r)
+  rectangularCount (M + 1) (370 + 1) 0 82100 -
+    rectangularCount (M + 1 - h) (370 + 1 - h) h 82100
+
+end ProximityPrize.SubmissionLower.LocatorR1Parameters
+end PackedLocator_LocatorR1Parameters
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Coefficient. -/
+section PackedLocator_LocatorR1Coefficient
+
+/-! Constant-time coefficient-count receipt for the R1 source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Coefficient
+
+open ProximityPrize.Benchmark
+open RCN100
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem coefficientCount_exact :
+    coefficientCount 217647600 131071 82100 370 =
+      4336440015677516390 := by
+  change coefficientCount (1660 * 131071 + 69740) 131071 82100 370 =
+    4336440015677516390
+  rw [coefficientCount_eq_oneResidueCoefficientCount
+    1660 69740 131071 82100 370 (by decide) (by decide) (by decide)
+      (by decide)]
+  norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
+
+end ProximityPrize.SubmissionLower.LocatorR1Coefficient
+end PackedLocator_LocatorR1Coefficient
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankA. -/
+section PackedLocator_LocatorR1RankA
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
+
+open scoped BigOperators
+open LocatorR1Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_0 :
+    (∑ i ∈ Finset.range 64, rankRow i) = 63196733600 := by decide
+
+theorem chunk_64 :
+    (∑ i ∈ Finset.range 64, rankRow (64 + i)) = 187580342432 := by decide
+
+theorem chunk_128 :
+    (∑ i ∈ Finset.range 64, rankRow (128 + i)) = 311866695840 := by decide
+
+theorem chunk_192 :
+    (∑ i ∈ Finset.range 64, rankRow (192 + i)) = 436055793824 := by decide
+
+theorem chunk_256 :
+    (∑ i ∈ Finset.range 64, rankRow (256 + i)) = 560147636384 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankA
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankB. -/
+section PackedLocator_LocatorR1RankB
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
+
+open scoped BigOperators
+open LocatorR1Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_320 :
+    (∑ i ∈ Finset.range 64, rankRow (320 + i)) = 684142223520 := by decide
+
+theorem chunk_384 :
+    (∑ i ∈ Finset.range 64, rankRow (384 + i)) = 808039555232 := by decide
+
+theorem chunk_448 :
+    (∑ i ∈ Finset.range 64, rankRow (448 + i)) = 931839631520 := by decide
+
+theorem chunk_512 :
+    (∑ i ∈ Finset.range 64, rankRow (512 + i)) = 1055542452384 := by decide
+
+theorem chunk_576 :
+    (∑ i ∈ Finset.range 64, rankRow (576 + i)) = 1179148017824 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankB
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankC. -/
+section PackedLocator_LocatorR1RankC
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
+
+open scoped BigOperators
+open LocatorR1Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_640 :
+    (∑ i ∈ Finset.range 64, rankRow (640 + i)) = 1302656327840 := by decide
+
+theorem chunk_704 :
+    (∑ i ∈ Finset.range 64, rankRow (704 + i)) = 1426067382432 := by decide
+
+theorem chunk_768 :
+    (∑ i ∈ Finset.range 64, rankRow (768 + i)) = 1549268140176 := by decide
+
+theorem chunk_832 :
+    (∑ i ∈ Finset.range 64, rankRow (832 + i)) = 1574048718272 := by decide
+
+theorem chunk_896 :
+    (∑ i ∈ Finset.range 64, rankRow (896 + i)) = 1455328904640 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankC
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankD. -/
+section PackedLocator_LocatorR1RankD
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
+
+open scoped BigOperators
+open LocatorR1Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_960 :
+    (∑ i ∈ Finset.range 64, rankRow (960 + i)) = 1251326569920 := by decide
+
+theorem chunk_1024 :
+    (∑ i ∈ Finset.range 64, rankRow (1024 + i)) = 962142377408 := by decide
+
+theorem chunk_1088 :
+    (∑ i ∈ Finset.range 64, rankRow (1088 + i)) = 587876990400 := by decide
+
+theorem chunk_1152 :
+    (∑ i ∈ Finset.range 48, rankRow (1152 + i)) = 144171197072 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankD
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Rank. -/
+section PackedLocator_LocatorR1Rank
+
+/-! Assembly of the separately checked R1 local-rank chunks. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN119
+open LocatorFastKernelArithmetic LocatorLowQuotient LocatorR1Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem fastLocalRankBound_exact :
+    fastLocalRankBound 1200 82100 370 = 16470445690720 := by
+  unfold fastLocalRankBound
+  rw [kernelSumRange_eq]
+  change (∑ r ∈ Finset.range 1200, rankRow r) = _
+  rw [Finset.sum_range_add rankRow 1152 48,
+    Finset.sum_range_add rankRow 1088 64,
+    Finset.sum_range_add rankRow 1024 64,
+    Finset.sum_range_add rankRow 960 64,
+    Finset.sum_range_add rankRow 896 64,
+    Finset.sum_range_add rankRow 832 64,
+    Finset.sum_range_add rankRow 768 64,
+    Finset.sum_range_add rankRow 704 64,
+    Finset.sum_range_add rankRow 640 64,
+    Finset.sum_range_add rankRow 576 64,
+    Finset.sum_range_add rankRow 512 64,
+    Finset.sum_range_add rankRow 448 64,
+    Finset.sum_range_add rankRow 384 64,
+    Finset.sum_range_add rankRow 320 64,
+    Finset.sum_range_add rankRow 256 64,
+    Finset.sum_range_add rankRow 192 64,
+    Finset.sum_range_add rankRow 128 64,
+    Finset.sum_range_add rankRow 64 64,
+    chunk_0, chunk_64, chunk_128, chunk_192, chunk_256,
+    chunk_320, chunk_384, chunk_448, chunk_512, chunk_576,
+    chunk_640, chunk_704, chunk_768, chunk_832, chunk_896,
+    chunk_960, chunk_1024, chunk_1088, chunk_1152]
+
+theorem localRankBound_exact :
+    localRankBound 1200 82100 370 = 16470445690720 := by
+  rw [localRankBound_eq_fastLocalRankBound 1200 82100 370 (by decide)]
+  exact fastLocalRankBound_exact
+
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1Rank
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Source. -/
+section PackedLocator_LocatorR1Source
+
+/-! Semantic kernel source backed by the isolated R1 receipts. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Source
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+abbrev Kernel (u0 u1 : I → K) :=
+  ConstraintKernel (K := K) 217647600 131071 82100 370 1200
+    IRSProfile.domain u0 u1
+
+theorem weighted_exact : 1200 * 181373 = 217647600 := by
+  decide
+
+theorem shape : 217647600 + 370 ≤ 131071 * (1660 + 1) := by
+  decide
+
+theorem nullity_exact :
+    coefficientCount 217647600 131071 82100 370 -
+      262144 * localRankBound 1200 82100 370 =
+        18811500529412710 := by
+  rw [LocatorR1Coefficient.coefficientCount_exact,
+    LocatorR1Rank.localRankBound_exact]
+
+theorem finrank_gap (u0 u1 : I → K) :
+    18811500529412710 ≤ Module.finrank K (Kernel u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
+    217647600 82100 370 1200 18811500529412710 u0 u1 (by
+      rw [nullity_exact])
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorR1Source
+end PackedLocator_LocatorR1Source
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier27 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorChainArithmetic. -/
+section PackedLocator_LocatorChainArithmetic
+
+/-! A small, independently checkable receipt for the asymmetric derivative-chain cost. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorChainArithmetic
+
+open RCN260
+
+/-- In every nonterminal derivative-chain stage `j >= 1`, the left polynomial
+has `R`-degree at most `32`, while the original factor on the right may still
+have `R`-degree `33`. -/
+def chainStage : UnequalParameters :=
+  ⟨262144, 131071, 181373, 153, 32, 12960, 153, 33, 12960⟩
+
+theorem chainStage_exact : chainStage.regularCountCap = 264117369694349 := by
+  decide
+
+end ProximityPrize.SubmissionLower.LocatorChainArithmetic
+end PackedLocator_LocatorChainArithmetic
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier28 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorArithmetic. -/
+section PackedLocator_LocatorArithmetic
+namespace ProximityPrize.SubmissionLower.LocatorArithmetic
+open ProximityPrize.Benchmark
+open scoped BigOperators NNReal
+open RCN100 RCN119 RCN302 RCN318 RCN260 LocatorFastKernelArithmetic
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+def n:ℕ:=262144
+def w:ℕ:=131071
+def errors:ℕ:=80771
+def agreements:ℕ:=181373
+def gap:ℕ:=50302
+def prime:ℕ:=2130706433
+def budget:ℕ:=274980723107224037
+def LA:ℕ:=130000
+def LB:ℕ:=12960
+def LCap:ℕ:=6415
+def yB:ℕ:=153
+def sB:ℕ:=33
+def yC:ℕ:=373
+def sC:ℕ:=81
+def yT:ℕ:=250
+def sT:ℕ:=56
+def weightedA:ℕ:=17411808
+def weightedC:ℕ:=48970710
+abbrev weightedAmbient:=weightedC
+def weightedB:ℕ:=20132403
+def weightedTCap:ℕ:=32828513
+def fixedRegularCap:ℕ:=254595720129422441
+theorem kernelA_rank:localRankBound 96 130000 29=13837332645:=by
+  rw [localRankBound_eq_fastLocalRankBound 96 130000 29 (by decide)]
+  decide
+theorem kernelC_rank:localRankBound 270 130000 81=296615133081:=by
+  rw [localRankBound_eq_fastLocalRankBound 270 130000 81 (by decide)]
+  decide
+theorem kernelB_rank:localRankBound 111 12960 33=2086613235:=by
+  rw [localRankBound_eq_fastLocalRankBound 111 12960 33 (by decide)]
+  decide
+theorem kernelTCap_rank:localRankBound 181 6415 56=4498479216:=by
+  rw [localRankBound_eq_fastLocalRankBound 181 6415 56 (by decide)]
+  decide
+theorem kernelA_nullity:
+    coefficientCount 17411808 131071 130000 29 -
+      262144 * localRankBound 96 130000 29=122788671575:=by
+  rw [kernelA_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
+    17411808 131071 130000 29 133 (by decide) (by decide)]
+  decide
+theorem kernelC_nullity:
+    coefficientCount 48970710 131071 130000 81 -
+      262144 * localRankBound 270 130000 81=303286218157264:=by
+  rw [kernelC_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
+    48970710 131071 130000 81 374 (by decide) (by decide)]
+  decide
+theorem kernelB_nullity:
+    coefficientCount 20132403 131071 12960 33 -
+      262144 * localRankBound 111 12960 33=35582615:=by
+  rw [kernelB_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
+    20132403 131071 12960 33 154 (by decide) (by decide)]
+  decide
+theorem kernelTCap_nullity:
+    coefficientCount 32828513 131071 6415 56 -
+      262144 * localRankBound 181 6415 56=505596574:=by
+  rw [kernelTCap_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
+    32828513 131071 6415 56 251 (by decide) (by decide)]
+  decide
+theorem kernelTCap_total_quotient_lt:
+    coefficientCount 32828513 131071 2 56 <
+    coefficientCount 32828513 131071 6415 56 -
+      262144 * localRankBound 181 6415 56:=by
+  rw [kernelTCap_nullity]
+  decide
+/-- Fixed-stage derivative chain (`LocatorFixedChain.fixed_chain_count_le` with
+`T := H`): the differentiated left factor has slope at most `sB - 1 = 32`
+(`LocatorDerivativeChain.chainSeeds_card_le`), the original factor on the right
+slope `33`; both sides live in the wide selected box `(6412,153,33)`. -/
+def chainH:UnequalParameters:=⟨n,w,agreements,yB,sB - 1,6412,yB,sB,6412⟩
+/-- Fixed-stage slope-free tails (the `R`-free ends of the chains and the
+`R`-free product), in the wide box at slope `1`. -/
+def tailH:TightParameters:=⟨n,w,agreements,weightedB,6412,1⟩
+/-- What the fixed stage charges besides the certified regular maximum:
+`32` chain stages and `34` tail slots.  Replaces the singular-seed count of the
+whole gcd (`CommonShearTightPrototype.countCap ⟨n,w,agreements,weightedB,6412,sB⟩
+= 8526521187049187`). -/
+def fixedChainCap:ℕ:=(sB - 1) * chainH.regularCountCap + (sB + 1) * tailH.countCap
+def residualStage:UnequalParameters:=⟨n,w,agreements,yB,sB,LB,yT,sT,LCap⟩
+def chainStage:UnequalParameters:=
+  ⟨n,w,agreements,yB,sB-1,LB,yB,sB,LB⟩
+def tailSingular:TightParameters:=⟨n,w,agreements,weightedB,LB,1⟩
+theorem chainH_exact:chainH.regularCountCap=130673289699937:=by decide
+theorem tailH_exact:tailH.countCap=2010440530563:=by decide
+theorem fixedChainCap_exact:fixedChainCap=4249900248437126:=by
+  norm_num [fixedChainCap,chainH_exact,tailH_exact,sB]
+theorem residualStage_exact:residualStage.regularCountCap=469008854116807:=by decide
+theorem chainStage_exact:chainStage.regularCountCap=264117369694349:=by
+  simpa [chainStage, LocatorChainArithmetic.chainStage, n, w, agreements,
+    yB, sB, LB] using LocatorChainArithmetic.chainStage_exact
+theorem tailSingular_exact:tailSingular.countCap=4063680072343:=by decide
+structure SingularGates (P:TightParameters):Prop where
+  s_pos:1 ≤ P.s
+  s_small:P.s < prime
+  w_pos:1 ≤ P.w
+  w_small:P.w < prime
+  kD:P.w < P.kappa * P.D
+  algebraic_pos:1 ≤ P.algebraicCap
+  implicit_small:P.implicitYCap < prime
+  algebraic_small:P.algebraicCap < prime
+  mixed_small:2 * P.implicitYCap * P.algebraicCap < prime
+  wa:P.w < P.a
+  an:P.a ≤ P.n
+theorem tail_singular_gates:SingularGates tailSingular:=by constructor <;> decide
+theorem tailH_gates:SingularGates tailH:=by constructor <;> decide
+structure ChainGates:Prop where
+  qY:(tailSingular.D - 1) / w ≤ chainStage.leftY
+  qR:tailSingular.s ≤ chainStage.leftR
+  qZ:tailSingular.L ≤ chainStage.leftZ
+  leftR_pos:1 ≤ chainStage.leftR
+  leftY_small:chainStage.leftY < prime
+  leftR_small:chainStage.leftR < prime
+  leftZ_small:chainStage.leftZ < prime
+  rightR_pos:1 ≤ chainStage.rightR
+  rightY_small:chainStage.rightY < prime
+  rightR_small:chainStage.rightR < prime
+  rightZ_small:chainStage.rightZ < prime
+  mixedY_small:chainStage.mixedCost.y < prime
+  mixedR_small:chainStage.mixedCost.r < prime
+  mixedZ_small:chainStage.mixedCost.z < prime
+theorem chain_gates:ChainGates:=by constructor <;> decide
+def ledger:ℕ:=fixedRegularCap + fixedChainCap +
+  residualStage.regularCountCap +
+  (sB - 1) * chainStage.regularCountCap + (sB + 1) * tailSingular.countCap
+theorem ledger_exact:ledger=267904550184655204:=by
+  norm_num [ledger,fixedRegularCap,fixedChainCap_exact,
+    residualStage_exact,chainStage_exact,tailSingular_exact,sB]
+theorem ledger_lt:ledger < budget:=by rw [ledger_exact]; decide
+def radiusNumerator:ℕ:=10338815
+def radiusDenominator:ℕ:=33554432
+def radius:ℝ≥0:=claimedRadius radiusNumerator radiusDenominator
+theorem radius_floor:
+    ⌊(radius:ℝ) * (Fintype.card IRSProfile.Index:ℝ)⌋₊ =errors:=by
+  norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
+    errors,IRSProfile.Index]
+theorem radius_admissible:
+    radius ∈ Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance:=by
+  constructor <;> norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
+    IRSProfile.minRelativeDistance]
+theorem score_root_integer:(2:ℕ)^2 * 71^100 ≤ 72^100:=by decide
+theorem score_radius_integer:
+    (23215617:ℕ)^128 * (2^68 * 72) ≤ 71 * 33554432^128:=by decide
+theorem two_rpow_fraction_le:
+    (2:ℝ≥0)^((2:ℝ)/100) ≤ (72:ℝ≥0)/71:=by
+  have hroot:((2:ℝ≥0)^(2:ℕ))^((100:ℝ)⁻¹) ≤ (72:ℝ≥0)/71:=by
+    rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 100)]
+    rw [NNReal.rpow_ofNat,div_pow,le_div_iff₀ (by positivity)]
+    exact_mod_cast score_root_integer
+  calc
+    (2:ℝ≥0)^((2:ℝ)/100) = ((2:ℝ≥0)^(2:ℕ))^((100:ℝ)⁻¹):=by
+      rw [← NNReal.rpow_natCast_mul]
+      norm_num [div_eq_mul_inv]
+    _ ≤ _:=hroot
+theorem radius_power_bound:
+    (1 - radius)^IRSProfile.repetitions ≤
+      ((1:ℝ≥0)/2^(68:ℕ)) * (71/72):=by
+  have hsub:(1 - radius:ℝ≥0) =23215617/33554432:=by
+    have hr:radius ≤ 1:=by
+      rw [← NNReal.coe_le_coe]
+      norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
+    apply NNReal.coe_injective
+    rw [NNReal.coe_sub hr]
+    norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
+  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (71/72)
+  rw [hsub,div_pow,div_mul_div_comm,one_mul,
+    div_le_div_iff₀ (by positivity) (by positivity)]
+  exact_mod_cast score_radius_integer
+theorem score_target_le:
+    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6802:=by
+  have hscale:(71:ℝ≥0)/72 ≤ (2:ℝ≥0)^(-((2:ℝ)/100)):=by
+    calc
+      (71:ℝ≥0)/72=1/((72:ℝ≥0)/71):=by norm_num
+      _ ≤ 1/((2:ℝ≥0)^((2:ℝ)/100)) :=
+        one_div_le_one_div_of_le (by positivity) two_rpow_fraction_le
+      _=_:=by rw [one_div,NNReal.rpow_neg]
+  calc
+    (1 - radius)^IRSProfile.repetitions ≤
+        ((1:ℝ≥0)/2^(68:ℕ)) * (71/72):=radius_power_bound
+    _ ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (2:ℝ≥0)^(-((2:ℝ)/100)) :=
+      mul_le_mul_of_nonneg_left hscale (by positivity)
+    _=claimedError 6802:=by
+      unfold claimedError
+      rw [show -((((6802:ℕ):ℝ)/100)) =
+          -((68:ℕ):ℝ) + -((2:ℝ)/100) by norm_num,
+        NNReal.rpow_add (by norm_num:(2:ℝ≥0) ≠ 0)]
+      simp only [NNReal.rpow_neg,NNReal.rpow_natCast,one_div]
+end
+end LocatorArithmetic
+end ProximityPrize.SubmissionLower
+end PackedLocator_LocatorArithmetic
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier29 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSourceCGap. -/
+section PackedLocator_LocatorSourceCGap
+
+namespace ProximityPrize.SubmissionLower.LocatorSourceCGap
+
+open ProximityPrize.Benchmark
+open LocatorArithmetic
+open RCN100 RCN119 RCN180
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 2000000
+set_option Elab.async false
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+theorem finrank_lower_bound (u0 u1 : I → K) :
+    303286218157264 ≤ Module.finrank K
+      (ConstraintKernel (K := K) 48970710 131071 130000 81 270
+        IRSProfile.domain u0 u1) := by
+  have hcard : Fintype.card I = 262144 := by
+    norm_num [I, IRSProfile.Index]
+  have hlo := constraintKernel_finrank_lower_bound
+    48970710 131071 130000 81 270 IRSProfile.domain u0 u1
+  have hlo' := hcard ▸ hlo
+  exact LocatorArithmetic.kernelC_nullity ▸ hlo'
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorSourceCGap
+end PackedLocator_LocatorSourceCGap
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier30 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Parameters. -/
+section PackedLocator_LocatorSplit500Parameters
+
+/-! Shared, reduction-cheap definitions for the 500-contact split source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Parameters
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+/-- One closed contact-rank row for the Split500 source. -/
+def rankRow (r : ℕ) : ℕ :=
+  let M := min r 42000
+  let h := min (r + 1) (1000 - r)
+  rectangularCount (M + 1) (310 + 1) 0 42000 -
+    rectangularCount (M + 1 - h) (310 + 1 - h) h 42000
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Parameters
+end PackedLocator_LocatorSplit500Parameters
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier31 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Coefficient. -/
+section PackedLocator_LocatorSplit500Coefficient
+
+/-! Constant-time coefficient-count receipt for the Split500 source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Coefficient
+
+open ProximityPrize.Benchmark
+open RCN100
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem coefficientCount_exact :
+    coefficientCount 181373000 131071 42000 310 =
+      1283287897834879898 := by
+  change coefficientCount (1383 * 131071 + 101807) 131071 42000 310 =
+    1283287897834879898
+  rw [coefficientCount_eq_oneResidueCoefficientCount
+    1383 101807 131071 42000 310 (by decide) (by decide) (by decide)
+      (by decide)]
+  norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Coefficient
+end PackedLocator_LocatorSplit500Coefficient
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier32 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankA. -/
+section PackedLocator_LocatorSplit500RankA
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open scoped BigOperators
+open LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_0 :
+    (∑ i ∈ Finset.range 64, rankRow i) = 27055756000 := by decide
+
+theorem chunk_64 :
+    (∑ i ∈ Finset.range 64, rankRow (64 + i)) = 80280007392 := by decide
+
+theorem chunk_128 :
+    (∑ i ∈ Finset.range 64, rankRow (128 + i)) = 133422732000 := by decide
+
+theorem chunk_192 :
+    (∑ i ∈ Finset.range 64, rankRow (192 + i)) = 186483929824 := by decide
+
+theorem chunk_256 :
+    (∑ i ∈ Finset.range 64, rankRow (256 + i)) = 239463600864 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500RankA
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier33 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankB. -/
+section PackedLocator_LocatorSplit500RankB
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open scoped BigOperators
+open LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_320 :
+    (∑ i ∈ Finset.range 64, rankRow (320 + i)) = 292361745120 := by decide
+
+theorem chunk_384 :
+    (∑ i ∈ Finset.range 64, rankRow (384 + i)) = 345178362592 := by decide
+
+theorem chunk_448 :
+    (∑ i ∈ Finset.range 64, rankRow (448 + i)) = 397913453280 := by decide
+
+theorem chunk_512 :
+    (∑ i ∈ Finset.range 64, rankRow (512 + i)) = 450567017184 := by decide
+
+theorem chunk_576 :
+    (∑ i ∈ Finset.range 64, rankRow (576 + i)) = 503139054304 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500RankB
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankC. -/
+section PackedLocator_LocatorSplit500RankC
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open scoped BigOperators
+open LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_640 :
+    (∑ i ∈ Finset.range 64, rankRow (640 + i)) = 553893967770 := by decide
+
+theorem chunk_704 :
+    (∑ i ∈ Finset.range 64, rankRow (704 + i)) = 547969611648 := by decide
+
+theorem chunk_768 :
+    (∑ i ∈ Finset.range 64, rankRow (768 + i)) = 482699870080 := by decide
+
+theorem chunk_832 :
+    (∑ i ∈ Finset.range 64, rankRow (832 + i)) = 374104278912 := by decide
+
+theorem chunk_896 :
+    (∑ i ∈ Finset.range 64, rankRow (896 + i)) = 222283501440 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500RankC
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankD. -/
+section PackedLocator_LocatorSplit500RankD
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open scoped BigOperators
+open LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_960 :
+    (∑ i ∈ Finset.range 40, rankRow (960 + i)) = 42664731200 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500RankD
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier34 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Rank. -/
+section PackedLocator_LocatorSplit500Rank
+
+/-! Assembly of the separately checked Split500 local-rank chunks. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN119
+open LocatorFastKernelArithmetic LocatorLowQuotient LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem fastLocalRankBound_exact :
+    fastLocalRankBound 1000 42000 310 = 4879481619610 := by
+  unfold fastLocalRankBound
+  rw [kernelSumRange_eq]
+  change (∑ r ∈ Finset.range 1000, rankRow r) = _
+  rw [Finset.sum_range_add rankRow 960 40,
+    Finset.sum_range_add rankRow 896 64,
+    Finset.sum_range_add rankRow 832 64,
+    Finset.sum_range_add rankRow 768 64,
+    Finset.sum_range_add rankRow 704 64,
+    Finset.sum_range_add rankRow 640 64,
+    Finset.sum_range_add rankRow 576 64,
+    Finset.sum_range_add rankRow 512 64,
+    Finset.sum_range_add rankRow 448 64,
+    Finset.sum_range_add rankRow 384 64,
+    Finset.sum_range_add rankRow 320 64,
+    Finset.sum_range_add rankRow 256 64,
+    Finset.sum_range_add rankRow 192 64,
+    Finset.sum_range_add rankRow 128 64,
+    Finset.sum_range_add rankRow 64 64,
+    chunk_0, chunk_64, chunk_128, chunk_192,
+    chunk_256, chunk_320, chunk_384, chunk_448,
+    chunk_512, chunk_576, chunk_640, chunk_704,
+    chunk_768, chunk_832, chunk_896, chunk_960]
+
+theorem localRankBound_exact :
+    localRankBound 1000 42000 310 = 4879481619610 := by
+  rw [localRankBound_eq_fastLocalRankBound 1000 42000 310 (by decide)]
+  exact fastLocalRankBound_exact
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500Rank
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier35 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Source. -/
+section PackedLocator_LocatorSplit500Source
+
+/-! Semantic kernel source backed by the isolated Split500 receipts. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Source
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+abbrev Kernel (u0 u1 : I → K) :=
+  ConstraintKernel (K := K) 181373000 131071 42000 310 1000
+    IRSProfile.domain u0 u1
+
+theorem weighted_exact : 1000 * 181373 = 181373000 := by
+  decide
+
+theorem shape : 181373000 + 310 ≤ 131071 * (1383 + 1) := by
+  decide
+
+theorem nullity_exact :
+    coefficientCount 181373000 131071 42000 310 -
+      262144 * localRankBound 1000 42000 310 = 4161068143836058 := by
+  rw [LocatorSplit500Coefficient.coefficientCount_exact,
+    LocatorSplit500Rank.localRankBound_exact]
+
+theorem finrank_gap (u0 u1 : I → K) :
+    4161068143836058 ≤ Module.finrank K (Kernel u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
+    181373000 42000 310 1000 4161068143836058 u0 u1 (by
+      rw [nullity_exact])
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Source
+end PackedLocator_LocatorSplit500Source
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier36 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Parameters. -/
+section PackedLocator_LocatorSplit390Parameters
+
+/-! Shared, reduction-cheap definitions for the 390-contact split source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit390Parameters
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+/-- One closed contact-rank row for the Split390 source. -/
+def rankRow (r : ℕ) : ℕ :=
+  let M := min r 19500
+  let h := min (r + 1) (390 - r)
+  rectangularCount (M + 1) (120 + 1) 0 19500 -
+    rectangularCount (M + 1 - h) (120 + 1 - h) h 19500
+
+end ProximityPrize.SubmissionLower.LocatorSplit390Parameters
+end PackedLocator_LocatorSplit390Parameters
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier37 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Coefficient. -/
+section PackedLocator_LocatorSplit390Coefficient
+
+/-! Constant-time coefficient-count receipt for the Split390 source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit390Coefficient
+
+open ProximityPrize.Benchmark
+open RCN100
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem coefficientCount_exact :
+    coefficientCount 70735470 131071 19500 120 = 35445850035150610 := by
+  change coefficientCount (539 * 131071 + 88201) 131071 19500 120 =
+    35445850035150610
+  rw [coefficientCount_eq_oneResidueCoefficientCount
+    539 88201 131071 19500 120 (by decide) (by decide) (by decide)
+      (by decide)]
+  norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
+
+end ProximityPrize.SubmissionLower.LocatorSplit390Coefficient
+end PackedLocator_LocatorSplit390Coefficient
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier38 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390RankA. -/
+section PackedLocator_LocatorSplit390RankA
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit390Rank
+
+open scoped BigOperators
+open LocatorSplit390Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_0 :
+    (∑ i ∈ Finset.range 64, rankRow i) = 4887625600 := by decide
+
+theorem chunk_64 :
+    (∑ i ∈ Finset.range 64, rankRow (64 + i)) = 14491176832 := by decide
+
+theorem chunk_128 :
+    (∑ i ∈ Finset.range 64, rankRow (128 + i)) = 24063008640 := by decide
+
+theorem chunk_192 :
+    (∑ i ∈ Finset.range 64, rankRow (192 + i)) = 33603121024 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit390Rank
+end PackedLocator_LocatorSplit390RankA
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier39 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390RankB. -/
+section PackedLocator_LocatorSplit390RankB
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit390Rank
+
+open scoped BigOperators
+open LocatorSplit390Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_256 :
+    (∑ i ∈ Finset.range 64, rankRow (256 + i)) = 37791122159 := by decide
+
+theorem chunk_320 :
+    (∑ i ∈ Finset.range 64, rankRow (320 + i)) = 19811668800 := by decide
+
+theorem chunk_384 :
+    (∑ i ∈ Finset.range 6, rankRow (384 + i)) = 203453075 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit390Rank
+end PackedLocator_LocatorSplit390RankB
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier40 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Rank. -/
+section PackedLocator_LocatorSplit390Rank
+
+/-! Assembly of the separately checked Split390 local-rank chunks. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit390Rank
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN119
+open LocatorFastKernelArithmetic LocatorLowQuotient LocatorSplit390Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem fastLocalRankBound_exact :
+    fastLocalRankBound 390 19500 120 = 134851176130 := by
+  unfold fastLocalRankBound
+  rw [kernelSumRange_eq]
+  change (∑ r ∈ Finset.range 390, rankRow r) = _
+  rw [Finset.sum_range_add rankRow 384 6,
+    Finset.sum_range_add rankRow 320 64,
+    Finset.sum_range_add rankRow 256 64,
+    Finset.sum_range_add rankRow 192 64,
+    Finset.sum_range_add rankRow 128 64,
+    Finset.sum_range_add rankRow 64 64,
+    chunk_0, chunk_64, chunk_128, chunk_192,
+    chunk_256, chunk_320, chunk_384]
+
+theorem localRankBound_exact :
+    localRankBound 390 19500 120 = 134851176130 := by
+  rw [localRankBound_eq_fastLocalRankBound 390 19500 120 (by decide)]
+  exact fastLocalRankBound_exact
+
+end ProximityPrize.SubmissionLower.LocatorSplit390Rank
+end PackedLocator_LocatorSplit390Rank
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier41 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Source. -/
+section PackedLocator_LocatorSplit390Source
+
+/-! Semantic kernel source backed by the isolated Split390 receipts. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit390Source
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+abbrev Kernel (u0 u1 : I → K) :=
+  ConstraintKernel (K := K) 70735470 131071 19500 120 390
+    IRSProfile.domain u0 u1
+
+theorem weighted_exact : 390 * 181373 = 70735470 := by
+  decide
+
+theorem shape : 70735470 + 120 ≤ 131071 * (539 + 1) := by
+  decide
+
+theorem nullity_exact :
+    coefficientCount 70735470 131071 19500 120 -
+      262144 * localRankBound 390 19500 120 = 95423319727890 := by
+  rw [LocatorSplit390Coefficient.coefficientCount_exact,
+    LocatorSplit390Rank.localRankBound_exact]
+
+theorem finrank_gap (u0 u1 : I → K) :
+    95423319727890 ≤ Module.finrank K (Kernel u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
+    70735470 19500 120 390 95423319727890 u0 u1 (by
+      rw [nullity_exact])
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorSplit390Source
+end PackedLocator_LocatorSplit390Source
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier42 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorBatchPhase6800. -/
+section PackedLocator_LocatorBatchPhase6800
+
+/-!
+# Semantic batch phases for the 6800 certificate
+
+This module identifies a finset's cumulative flag with the three exact
+weights of its squarefree regular product and connects the numerical
+`SourceNumbers.Routeable` predicate to the shared batch source theorem.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorBatchPhase6800
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN071 RCN081 RCN095 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156
+  RCN180 RCN234 RCN238 RCN260 RCN266
+open LocatorFactorAggregate LocatorArbitraryPowerAvoidance
+  LocatorBatchProductRoute LocatorBatchPowerRoute
+  LocatorGenericHelperFactorSwitch LocatorPhase6800Oracle
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+abbrev P4 := MvPolynomial (Fin 4) K
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+
+/-- Additive flag of a finite batch of regular factors. -/
+def regularAggregateFlag (H : P4) (A : Finset (RegularIndex H)) : FlagDegree :=
+  sumFlag A (regularCumulativeFlag H)
+
+private theorem regularProduct_weight_eq_sum
+    (weights : Fin 4 → ℕ) (H : P4) (A : Finset (RegularIndex H)) :
+    wt weights (regularProduct H A) = ∑ F ∈ A, wt weights F.1 := by
+  have h := weightedTotalDegree_prod_eq weights A
+    (fun F : RegularIndex H => F.1)
+    (fun F _hF => regularFactor_ne_zero H F)
+  simpa only [regularProduct, wt] using h
+
+theorem regularAggregateFlag_all (H : P4) (A : Finset (RegularIndex H)) :
+    (regularAggregateFlag H A).all =
+      wt residualSWeights (regularProduct H A) := by
+  rw [regularAggregateFlag, sumFlag_all]
+  calc
+    (∑ F ∈ A, (regularCumulativeFlag H F).all) =
+        ∑ F ∈ A, wt residualSWeights F.1 := by
+      apply Finset.sum_congr rfl
+      intro F _hF
+      exact (originalCumulativeFlag_cumulative F.1).1
+    _ = wt residualSWeights (regularProduct H A) :=
+      (regularProduct_weight_eq_sum residualSWeights H A).symm
+
+theorem regularAggregateFlag_middle (H : P4)
+    (A : Finset (RegularIndex H)) :
+    middle (regularAggregateFlag H A) =
+      wt residualYSWeights (regularProduct H A) := by
+  rw [regularAggregateFlag, sumFlag_middle]
+  calc
+    (∑ F ∈ A, middle (regularCumulativeFlag H F)) =
+        ∑ F ∈ A, wt residualYSWeights F.1 := by
+      apply Finset.sum_congr rfl
+      intro F _hF
+      exact (originalCumulativeFlag_cumulative F.1).2.1
+    _ = wt residualYSWeights (regularProduct H A) :=
+      (regularProduct_weight_eq_sum residualYSWeights H A).symm
+
+theorem regularAggregateFlag_total (H : P4)
+    (A : Finset (RegularIndex H)) :
+    total (regularAggregateFlag H A) =
+      wt residualTotalWeights (regularProduct H A) := by
+  rw [regularAggregateFlag, sumFlag_total]
+  calc
+    (∑ F ∈ A, total (regularCumulativeFlag H F)) =
+        ∑ F ∈ A, wt residualTotalWeights F.1 := by
+      apply Finset.sum_congr rfl
+      intro F _hF
+      exact (originalCumulativeFlag_cumulative F.1).2.2
+    _ = wt residualTotalWeights (regularProduct H A) :=
+      (regularProduct_weight_eq_sum residualTotalWeights H A).symm
+
+theorem regularAggregateFlag_mono (H : P4)
+    {A B : Finset (RegularIndex H)} (hAB : A ⊆ B) :
+    (regularAggregateFlag H A).all ≤ (regularAggregateFlag H B).all ∧
+      middle (regularAggregateFlag H A) ≤
+        middle (regularAggregateFlag H B) ∧
+      total (regularAggregateFlag H A) ≤
+        total (regularAggregateFlag H B) := by
+  simp only [regularAggregateFlag, sumFlag_all, sumFlag_middle, sumFlag_total]
+  exact ⟨Finset.sum_le_sum_of_subset hAB,
+    Finset.sum_le_sum_of_subset hAB, Finset.sum_le_sum_of_subset hAB⟩
+
+theorem regularAggregateFlag_all_lt_of_ssubset (H : P4)
+    {A B : Finset (RegularIndex H)} (hAB : A ⊂ B) :
+    (regularAggregateFlag H A).all < (regularAggregateFlag H B).all := by
+  have hnBA : ¬ B ⊆ A := by
+    intro hBA
+    exact hAB.ne (Finset.Subset.antisymm hAB.subset hBA)
+  simp only [Finset.subset_iff, not_forall, _root_.not_imp] at hnBA
+  obtain ⟨F, hFB, hFA⟩ := hnBA
+  simp only [regularAggregateFlag, sumFlag_all]
+  exact Finset.sum_lt_sum_of_subset hAB.subset hFB hFA
+    (regularCumulativeFlag_positive H F)
+    (fun _ _ _ => Nat.zero_le _)
+
+private theorem sourceFuel_pos (s : SourceNumbers) (p : FlagDegree)
+    (hr : 1 ≤ p.all) (ht : total p ≤ s.totalCap)
+    (hy : middle p ≤ s.middleCap) (hs : p.all ≤ s.slopeCap) :
+    1 ≤ s.fuel p := by
+  have hmiddle : 1 ≤ middle p := hr.trans (all_le_middle p)
+  have htotal : 1 ≤ total p := hmiddle.trans (middle_le_total p)
+  unfold SourceNumbers.fuel
+  apply le_min
+  · exact (Nat.le_div_iff_mul_le htotal).mpr (by simpa using ht)
+  · apply le_min
+    · exact (Nat.le_div_iff_mul_le hmiddle).mpr (by simpa using hy)
+    · exact (Nat.le_div_iff_mul_le hr).mpr (by simpa using hs)
+
+private theorem sourceFuel_feasible (s : SourceNumbers) (p : FlagDegree)
+    (hr : 1 ≤ p.all) :
+    s.fuel p * total p ≤ s.totalCap ∧
+      s.fuel p * middle p ≤ s.middleCap ∧
+      s.fuel p * p.all ≤ s.slopeCap := by
+  have hmiddle : 1 ≤ middle p := hr.trans (all_le_middle p)
+  have htotal : 1 ≤ total p := hmiddle.trans (middle_le_total p)
+  unfold SourceNumbers.fuel
+  refine ⟨?_, ?_, ?_⟩
+  · apply (Nat.le_div_iff_mul_le htotal).mp
+    exact min_le_left _ _
+  · apply (Nat.le_div_iff_mul_le hmiddle).mp
+    exact (min_le_right _ _).trans (min_le_left _ _)
+  · apply (Nat.le_div_iff_mul_le hr).mp
+    exact (min_le_right _ _).trans (min_le_right _ _)
+
+private theorem div_remainder_lt (a b : ℕ) (hb : 0 < b) :
+    a - (a / b) * b < b := by
+  have hm := Nat.mod_lt a hb
+  have heq := Nat.mod_add_div' a b
+  omega
+
+private theorem sourceFuel_terminal (s : SourceNumbers) (p : FlagDegree)
+    (hr : 1 ≤ p.all) :
+    s.totalCap - s.fuel p * total p < total p ∨
+      s.middleCap - s.fuel p * middle p < middle p ∨
+      s.slopeCap - s.fuel p * p.all < p.all := by
+  have hall : 0 < p.all := by omega
+  have hmiddle : 0 < middle p := hall.trans_le (all_le_middle p)
+  have htotal : 0 < total p := hmiddle.trans_le (middle_le_total p)
+  unfold SourceNumbers.fuel
+  by_cases hT : s.totalCap / total p ≤
+      min (s.middleCap / middle p) (s.slopeCap / p.all)
+  · left
+    rw [min_eq_left hT]
+    exact div_remainder_lt s.totalCap (total p) htotal
+  · rw [min_eq_right (Nat.le_of_not_ge hT)]
+    by_cases hY : s.middleCap / middle p ≤ s.slopeCap / p.all
+    · right; left
+      rw [min_eq_left hY]
+      exact div_remainder_lt s.middleCap (middle p) hmiddle
+    · right; right
+      rw [min_eq_right (Nat.le_of_not_ge hY)]
+      exact div_remainder_lt s.slopeCap p.all hr
+
+/-- A numerical route for an aggregate flag supplies the strict algebraic
+split required by the phase recursion. -/
+theorem routeable_exists_strict_helper_split
+    (sound : PhaseSourceSound) (D m : ℕ)
+    (hweighted : D = m * 181373)
+    (hshape : D + sound.source.slopeCap ≤
+      131071 * (sound.source.middleCap + 1))
+    (hslopeM : sound.source.slopeCap ≤ m)
+    (hmChar : m < 2130706433)
+    (u0 u1 : I → K) (H : P4)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hgap : sound.source.gap ≤ Module.finrank K
+      (ConstraintKernel (K := K) D 131071 sound.source.totalCap
+        sound.source.slopeCap m IRSProfile.domain u0 u1))
+    (A : Finset (RegularIndex H))
+    (hroute : sound.source.Routeable (regularAggregateFlag H A))
+    (hnarrowS : (regularAggregateFlag H A).all ≤ 29)
+    (hnarrowY : middle (regularAggregateFlag H A) ≤ 132)
+    (hnarrowT : total (regularAggregateFlag H A) ≤ 6412) :
+    ∃ U, U ⊂ A ∧ ∀ F ∈ A \ U,
+      (regularSeeds H selected Gamma F).card ≤
+        sound.potential.eval (regularCumulativeFlag H F) := by
+  classical
+  let p := regularAggregateFlag H A
+  have hr : 1 ≤ p.all := hroute.1
+  have hA : A.Nonempty := by
+    by_contra hzero
+    have hAe : A = ∅ := Finset.not_nonempty_iff_eq_empty.mp hzero
+    subst A
+    simp [p, regularAggregateFlag, sumFlag] at hr
+  have hfuel : 1 ≤ sound.source.fuel p :=
+    sourceFuel_pos sound.source p hr hroute.2.1 hroute.2.2.1
+      hroute.2.2.2.1
+  have hfeasibleP := sourceFuel_feasible sound.source p hr
+  have hterminalP := sourceFuel_terminal sound.source p hr
+  have hfuelSlope : sound.source.fuel p ≤ sound.source.slopeCap := by
+    calc
+      sound.source.fuel p ≤ sound.source.slopeCap / p.all :=
+        (min_le_right _ _).trans (min_le_right _ _)
+      _ ≤ sound.source.slopeCap := Nat.div_le_self _ _
+  have hfuelM : sound.source.fuel p ≤ m := hfuelSlope.trans hslopeM
+  have hfuelChar : sound.source.fuel p < 2130706433 :=
+    hfuelM.trans_lt hmChar
+  have hlowpos : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
+      0 < D - j * 50303 := by
+    intro j hj hjfuel
+    have hjm : j ≤ m := hjfuel.trans hfuelM
+    rw [hweighted]
+    omega
+  have hcapacity : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
+      D - j * 50303 ≤
+        (m - j) * 181373 + j * (131071 - 1) := by
+    intro j _hj hjfuel
+    have hjm : j ≤ m := hjfuel.trans hfuelM
+    rw [hweighted]
+    omega
+  have hfield : A.card < ENat.card K := by
+    have hcard : A.card ≤ p.all := by
+      calc
+        A.card = ∑ F ∈ A, 1 := by simp
+        _ ≤ ∑ F ∈ A, (regularCumulativeFlag H F).all :=
+          Finset.sum_le_sum (fun F _ => Nat.one_le_iff_ne_zero.mpr
+            (Nat.ne_of_gt (regularCumulativeFlag_positive H F)))
+        _ = p.all := by simp only [p, regularAggregateFlag, sumFlag_all]
+    calc
+      (A.card : ENat) ≤ (29 : ℕ) := by
+        exact_mod_cast hcard.trans hnarrowS
+      _ < ENat.card K := by
+        rw [ENat.card_eq_coe_fintype_card, RCN183.field_cardinality]
+        norm_num
+  have factor_le_aggregate (F : RegularIndex H) (hFA : F ∈ A) :
+      (regularCumulativeFlag H F).all ≤ p.all ∧
+      middle (regularCumulativeFlag H F) ≤ middle p ∧
+      total (regularCumulativeFlag H F) ≤ total p := by
+    have hsub : ({F} : Finset (RegularIndex H)) ⊆ A :=
+      Finset.singleton_subset_iff.mpr hFA
+    simpa [p, regularAggregateFlag, sumFlag, middle, total] using
+      regularAggregateFlag_mono H hsub
+  have factorFuel (F : RegularIndex H) (hFA : F ∈ A) (j : ℕ)
+      (hj : j ≤ sound.source.fuel p) :
+      j ≤ sound.source.fuel (regularCumulativeFlag H F) := by
+    have hle := factor_le_aggregate F hFA
+    have hFr : 1 ≤ (regularCumulativeFlag H F).all :=
+      Nat.one_le_iff_ne_zero.mpr
+        (Nat.ne_of_gt (regularCumulativeFlag_positive H F))
+    have hFm : 1 ≤ middle (regularCumulativeFlag H F) :=
+      hFr.trans (all_le_middle _)
+    have hFt : 1 ≤ total (regularCumulativeFlag H F) :=
+      hFm.trans (middle_le_total _)
+    have hjT : j * total (regularCumulativeFlag H F) ≤
+        sound.source.totalCap := by
+      calc
+        j * total (regularCumulativeFlag H F) ≤ j * total p :=
+          Nat.mul_le_mul_left j hle.2.2
+        _ ≤ sound.source.fuel p * total p :=
+          Nat.mul_le_mul_right (total p) hj
+        _ ≤ sound.source.totalCap := hfeasibleP.1
+    have hjY : j * middle (regularCumulativeFlag H F) ≤
+        sound.source.middleCap := by
+      calc
+        j * middle (regularCumulativeFlag H F) ≤ j * middle p :=
+          Nat.mul_le_mul_left j hle.2.1
+        _ ≤ sound.source.fuel p * middle p :=
+          Nat.mul_le_mul_right (middle p) hj
+        _ ≤ sound.source.middleCap := hfeasibleP.2.1
+    have hjS : j * (regularCumulativeFlag H F).all ≤
+        sound.source.slopeCap := by
+      calc
+        j * (regularCumulativeFlag H F).all ≤ j * p.all :=
+          Nat.mul_le_mul_left j hle.1
+        _ ≤ sound.source.fuel p * p.all :=
+          Nat.mul_le_mul_right p.all hj
+        _ ≤ sound.source.slopeCap := hfeasibleP.2.2
+    unfold SourceNumbers.fuel
+    apply le_min
+    · exact (Nat.le_div_iff_mul_le hFt).mpr hjT
+    · apply le_min
+      · exact (Nat.le_div_iff_mul_le hFm).mpr hjY
+      · exact (Nat.le_div_iff_mul_le hFr).mpr hjS
+  have hgates : ∀ F ∈ A, ∀ j, j ≤ sound.source.fuel p →
+      HelperPairGates
+        (sound.source.totalCap - j * wt residualTotalWeights F.1)
+        (sound.source.middleCap - j * wt residualYSWeights F.1)
+        (sound.source.slopeCap - j * wt residualSWeights F.1)
+        (wt residualYSWeights F.1) (wt residualSWeights F.1)
+        (wt residualTotalWeights F.1) := by
+    intro F hFA j hj
+    have hc := originalCumulativeFlag_cumulative F.1
+    have hle := factor_le_aggregate F hFA
+    have hFr : 1 ≤ (regularCumulativeFlag H F).all :=
+      Nat.one_le_iff_ne_zero.mpr
+        (Nat.ne_of_gt (regularCumulativeFlag_positive H F))
+    have hs := sound.stageGates (regularCumulativeFlag H F) j hFr
+      (hle.1.trans hnarrowS) (hle.2.1.trans hnarrowY)
+      (hle.2.2.trans hnarrowT) (factorFuel F hFA j hj)
+    have hR : (regularCumulativeFlag H F).all =
+        wt residualSWeights F.1 := hc.1
+    have hY : middle (regularCumulativeFlag H F) =
+        wt residualYSWeights F.1 := hc.2.1
+    have hT : total (regularCumulativeFlag H F) =
+        wt residualTotalWeights F.1 := hc.2.2
+    simpa only [hR, hY, hT] using hs
+  have hcharge : ∀ F ∈ A, ∀ j, j ≤ sound.source.fuel p →
+      LocatorGenericPowerRoute.stageCost sound.source.totalCap
+        sound.source.middleCap sound.source.slopeCap
+        (LocatorBatchPowerRoute.exactRouteBox F) j ≤
+          sound.potential.eval (regularCumulativeFlag H F) := by
+    intro F hFA j hj
+    have hc := originalCumulativeFlag_cumulative F.1
+    have hle := factor_le_aggregate F hFA
+    have hFr : 1 ≤ (regularCumulativeFlag H F).all :=
+      Nat.one_le_iff_ne_zero.mpr
+        (Nat.ne_of_gt (regularCumulativeFlag_positive H F))
+    have hs := sound.stageCost_le (regularCumulativeFlag H F) j hFr
+      (hle.1.trans hnarrowS) (hle.2.1.trans hnarrowY)
+      (hle.2.2.trans hnarrowT) (factorFuel F hFA j hj)
+    have hR : (regularCumulativeFlag H F).all =
+        wt residualSWeights F.1 := hc.1
+    have hY : middle (regularCumulativeFlag H F) =
+        wt residualYSWeights F.1 := hc.2.1
+    have hT : total (regularCumulativeFlag H F) =
+        wt residualTotalWeights F.1 := hc.2.2
+    simpa only [LocatorBatchPowerRoute.exactRouteBox,
+      LocatorPhase6800Oracle.exactRouteBox, hR, hY, hT] using hs
+  have hmpos : 0 < m := by omega
+  have hDpos : 0 < D := by
+    rw [hweighted]
+    exact Nat.mul_pos hmpos (by decide)
+  have hDa : D ≤ m * 181373 := hweighted.le
+  have hP : regularProduct H A ≠ 0 := regularProduct_ne_zero H A
+  have hcP : contactDec p ≤ wt (contactWeights 131071) (regularProduct H A) := by
+    have h := LocatorArbitraryPowerAvoidance.contact_ge_ys 131071 (by decide)
+      (regularProduct H A) hP
+    simpa only [contactDec, p, regularAggregateFlag_middle,
+      regularAggregateFlag_all] using h
+  have hDcap : D - wt (contactWeights 131071) (regularProduct H A) ≤
+      sound.source.contactCap p := by
+    unfold SourceNumbers.contactCap
+    omega
+  have hbandThin : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
+      (D - wt (contactWeights 131071) (regularProduct H A)) 50303
+      (wt (contactWeights 131071) (regularProduct H A))
+      (wt residualTotalWeights (regularProduct H A))
+      (wt residualYSWeights (regularProduct H A))
+      (wt residualSWeights (regularProduct H A))
+      (sound.source.totalCap - wt residualTotalWeights (regularProduct H A))
+      (sound.source.middleCap - wt residualYSWeights (regularProduct H A))
+      (sound.source.slopeCap - wt residualSWeights (regularProduct H A))
+      (sound.source.fuel p) < sound.source.gap := by
+    rcases hroute.2.2.2.2 with hold | hthin
+    · have hold' : powerBandBudget 50303
+          (wt residualTotalWeights (regularProduct H A))
+          (wt residualYSWeights (regularProduct H A))
+          (wt residualSWeights (regularProduct H A))
+          (sound.source.totalCap - wt residualTotalWeights (regularProduct H A))
+          (sound.source.middleCap - wt residualYSWeights (regularProduct H A))
+          (sound.source.slopeCap - wt residualSWeights (regularProduct H A))
+          (sound.source.fuel p) < sound.source.gap := by
+        simpa only [SourceNumbers.band, p, regularAggregateFlag_total,
+          regularAggregateFlag_middle, regularAggregateFlag_all] using hold
+      exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_le
+        _ _ _ _ _ _ _ _ _ _ _).trans_lt hold'
+    · have hthin' : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
+          (sound.source.contactCap p) 50303 (contactDec p)
+          (wt residualTotalWeights (regularProduct H A))
+          (wt residualYSWeights (regularProduct H A))
+          (wt residualSWeights (regularProduct H A))
+          (sound.source.totalCap - wt residualTotalWeights (regularProduct H A))
+          (sound.source.middleCap - wt residualYSWeights (regularProduct H A))
+          (sound.source.slopeCap - wt residualSWeights (regularProduct H A))
+          (sound.source.fuel p) < sound.source.gap := by
+        simpa only [SourceNumbers.bandThin, p, regularAggregateFlag_total,
+          regularAggregateFlag_middle, regularAggregateFlag_all] using hthin
+      exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_mono 131071 50303
+        (sound.source.fuel p) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+        hDcap hcP le_rfl le_rfl le_rfl le_rfl le_rfl le_rfl).trans_lt hthin'
+  apply exists_strict_helper_split_of_batch_source_thin D
+    sound.source.totalCap sound.source.slopeCap m sound.source.middleCap
+    sound.source.gap 50303 (sound.source.fuel p)
+  · exact hDpos
+  · exact hDa
+  · exact hshape
+  · exact hfuel
+  · exact hfuelChar
+  · exact hlowpos
+  · exact hcapacity
+  · exact hdegree
+  · exact hagreement
+  · exact hno
+  · exact hA
+  · exact hbandThin
+  · simpa only [p, regularAggregateFlag_total,
+      regularAggregateFlag_middle, regularAggregateFlag_all] using hterminalP
+  · simpa only [p, regularAggregateFlag_total,
+      regularAggregateFlag_middle, regularAggregateFlag_all] using hfeasibleP
+  · exact hgap
+  · exact hfield
+  · exact hgates
+  · exact hcharge
+
+/-! ## State-local phase semantics
+
+The numerical receipt is indexed by the exact aggregate raw flag.  These
+lemmas keep that state intact while the algebraic route repeatedly replaces a
+routeable batch by a strict universal sub-batch.
+-/
+
+/-- Raw-coordinate monotonicity of the aggregate flag. -/
+theorem regularAggregateFlag_raw_mono (H : P4)
+    {A B : Finset (RegularIndex H)} (hAB : A ⊆ B) :
+    RawBelow (regularAggregateFlag H A) (regularAggregateFlag H B) := by
+  refine ⟨?_, ?_, ?_⟩
+  · change (∑ F ∈ A, (regularCumulativeFlag H F).all) ≤
+      ∑ F ∈ B, (regularCumulativeFlag H F).all
+    exact Finset.sum_le_sum_of_subset hAB
+  · change (∑ F ∈ A, (regularCumulativeFlag H F).yz) ≤
+      ∑ F ∈ B, (regularCumulativeFlag H F).yz
+    exact Finset.sum_le_sum_of_subset hAB
+  · change (∑ F ∈ A, (regularCumulativeFlag H F).zOnly) ≤
+      ∑ F ∈ B, (regularCumulativeFlag H F).zOnly
+    exact Finset.sum_le_sum_of_subset hAB
+
+/-- An additive phase potential commutes with aggregation. -/
+theorem sum_phasePotential_eval (q : Potential) (H : P4)
+    (A : Finset (RegularIndex H)) :
+    (∑ F ∈ A, q.eval (regularCumulativeFlag H F)) =
+      q.eval (regularAggregateFlag H A) := by
+  simp only [Potential.eval, Finset.sum_add_distrib, ← Finset.mul_sum,
+    regularAggregateFlag, sumFlag_total, sumFlag_middle, sumFlag_all]
+
+/-- State-local regular-seed bound used between consecutive source phases. -/
+def StateLocalRegularBound (H : P4) (selected : K → Polynomial K)
+    (Gamma : Finset K) (cap : FlagDegree → ℕ) : Prop :=
+  ∀ A : Finset (RegularIndex H),
+    (regularAggregateFlag H A).all ≤ 29 →
+    middle (regularAggregateFlag H A) ≤ 132 →
+    total (regularAggregateFlag H A) ≤ 6412 →
+    (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤
+      cap (regularAggregateFlag H A)
+
+/-- Ambient-scoped form needed after the initial A split.  Only factors in
+the A-universal set have the narrow ordinary bound. -/
+def StateLocalRegularBoundOn (H : P4) (selected : K → Polynomial K)
+    (Gamma : Finset K) (ambient : Finset (RegularIndex H))
+    (cap : FlagDegree → ℕ) : Prop :=
+  ∀ A : Finset (RegularIndex H), A ⊆ ambient →
+    (regularAggregateFlag H A).all ≤ 29 →
+    middle (regularAggregateFlag H A) ≤ 132 →
+    total (regularAggregateFlag H A) ≤ 6412 →
+    (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤
+      cap (regularAggregateFlag H A)
+
+/-- The state-local ordinary base restricted to an ambient factor set. -/
+theorem stateLocalRegularBoundOn_of_base
+    (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
+    (ambient : Finset (RegularIndex H)) (baseCap : FlagDegree → ℕ)
+    (hown : ∀ F ∈ ambient, LocatorHybridCost.OwnBound
+      (regularSeeds H selected Gamma F).card
+      (regularCumulativeFlag H F))
+    (hbase : StateLocalBaseOracleSound baseCap) :
+    StateLocalRegularBoundOn H selected Gamma ambient baseCap := by
+  classical
+  intro A hAambient hs hy ht
+  calc
+    (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤
+        ∑ F ∈ A,
+          LocatorHybridCost.ordinaryCostOf (regularCumulativeFlag H F) :=
+      Finset.sum_le_sum (fun F hFA =>
+        LocatorHybridCost.ownBound_le_ordinaryCostOf
+          (hown F (hAambient hFA)))
+    _ ≤ baseCap (regularAggregateFlag H A) := by
+      simpa only [regularAggregateFlag] using
+        hbase A (regularCumulativeFlag H)
+          (fun F _hF => Nat.one_le_iff_ne_zero.mpr
+            (Nat.ne_of_gt (regularCumulativeFlag_positive H F))) hs hy ht
+
+/-- The state-local ordinary partition oracle starts the four phase chain. -/
+theorem stateLocalRegularBound_of_base
+    (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
+    (baseCap : FlagDegree → ℕ)
+    (hown : ∀ F, LocatorHybridCost.OwnBound
+      (regularSeeds H selected Gamma F).card
+      (regularCumulativeFlag H F))
+    (hbase : StateLocalBaseOracleSound baseCap) :
+    StateLocalRegularBound H selected Gamma baseCap := by
+  classical
+  intro A hs hy ht
+  calc
+    (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤
+        ∑ F ∈ A,
+          LocatorHybridCost.ordinaryCostOf (regularCumulativeFlag H F) :=
+      Finset.sum_le_sum (fun F _hF =>
+        LocatorHybridCost.ownBound_le_ordinaryCostOf (hown F))
+    _ ≤ baseCap (regularAggregateFlag H A) := by
+      simpa only [regularAggregateFlag] using
+        hbase A (regularCumulativeFlag H)
+          (fun F _hF => Nat.one_le_iff_ne_zero.mpr
+            (Nat.ne_of_gt (regularCumulativeFlag_positive H F))) hs hy ht
+
+/-- Concrete kernel realization of one numerical source. -/
+structure PhaseKernelRealization (sound : PhaseSourceSound)
+    (u0 u1 : I → K) where
+  D : ℕ
+  m : ℕ
+  weighted : D = m * 181373
+  shape : D + sound.source.slopeCap ≤
+    131071 * (sound.source.middleCap + 1)
+  slope_le_m : sound.source.slopeCap ≤ m
+  m_lt_char : m < 2130706433
+  gap_le_finrank : sound.source.gap ≤ Module.finrank K
+    (ConstraintKernel (K := K) D 131071 sound.source.totalCap
+      sound.source.slopeCap m IRSProfile.domain u0 u1)
+
+/-- One source phase preserves a state-local bound according to the numeric
+cap equation.  The only recursive calls are on strict factor subsets, hence
+the receipt defect is queried at a strict raw-slope child of the parent. -/
+theorem stateLocalRegularBoundOn_onePhase
+    (sound : PhaseSourceSound) (u0 u1 : I → K)
+    (kernel : PhaseKernelRealization sound u0 u1)
+    (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
+    (ambient : Finset (RegularIndex H))
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (previousCap nextCap defect : FlagDegree → ℕ)
+    (hprevious : StateLocalRegularBoundOn H selected Gamma ambient previousCap)
+    (hdefect : PhaseDefectSound previousCap sound.source
+      sound.potential defect)
+    (hcap : PhaseCapEquation previousCap nextCap sound.source
+      sound.potential defect) :
+    StateLocalRegularBoundOn H selected Gamma ambient nextCap := by
+  classical
+  intro A hAambient hs hy ht
+  let p := regularAggregateFlag H A
+  have hpreviousA :
+      (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤ previousCap p :=
+    hprevious A hAambient hs hy ht
+  have hcapP := hcap p hs hy ht
+  by_cases hrouteP : sound.source.Routeable p
+  · have hphase :
+        (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤
+          min (previousCap p)
+            ((∑ F ∈ A,
+              sound.potential.eval (regularCumulativeFlag H F)) + defect p) := by
+      apply sum_count_le_min_previous_onePhase
+        (fun F : RegularIndex H =>
+          (regularSeeds H selected Gamma F).card)
+        (fun F : RegularIndex H =>
+          sound.potential.eval (regularCumulativeFlag H F))
+        (fun B : Finset (RegularIndex H) =>
+          sound.source.Routeable (regularAggregateFlag H B))
+        (fun B : Finset (RegularIndex H) =>
+          previousCap (regularAggregateFlag H B)) A (defect p)
+      · intro B hBA
+        have hmono := regularAggregateFlag_mono H hBA
+        exact hprevious B (hBA.trans hAambient)
+          (hmono.1.trans hs) (hmono.2.1.trans hy)
+          (hmono.2.2.trans ht)
+      · intro B hBA hnrouteB
+        have hne : B ≠ A := by
+          intro hBAeq
+          subst B
+          exact hnrouteB hrouteP
+        have hproper : B ⊂ A :=
+          (_root_.ssubset_iff_subset_ne).mpr ⟨hBA, hne⟩
+        have hd := hdefect p (regularAggregateFlag H B) hs hy ht
+          ⟨regularAggregateFlag_raw_mono H hBA,
+            regularAggregateFlag_all_lt_of_ssubset H hproper⟩ hnrouteB
+        rw [← sum_phasePotential_eval sound.potential H B] at hd
+        exact hd
+      · intro B hBA hrouteB
+        have hmono := regularAggregateFlag_mono H hBA
+        obtain ⟨U, hUB, hexit⟩ :=
+          routeable_exists_strict_helper_split sound kernel.D kernel.m
+            kernel.weighted kernel.shape kernel.slope_le_m kernel.m_lt_char
+            u0 u1 H selected Gamma hdegree hagreement hno
+            kernel.gap_le_finrank B hrouteB
+            (hmono.1.trans hs) (hmono.2.1.trans hy)
+            (hmono.2.2.trans ht)
+        refine ⟨U, hUB, ?_⟩
+        exact Finset.sum_le_sum (fun F hFU => hexit F hFU)
+    rw [hcapP, if_pos hrouteP]
+    simpa only [p, sum_phasePotential_eval] using hphase
+  · rw [hcapP, if_neg hrouteP]
+    exact hpreviousA
+
+/-- Unscoped convenience corollary. -/
+theorem stateLocalRegularBound_onePhase
+    (sound : PhaseSourceSound) (u0 u1 : I → K)
+    (kernel : PhaseKernelRealization sound u0 u1)
+    (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (previousCap nextCap defect : FlagDegree → ℕ)
+    (hprevious : StateLocalRegularBound H selected Gamma previousCap)
+    (hdefect : PhaseDefectSound previousCap sound.source
+      sound.potential defect)
+    (hcap : PhaseCapEquation previousCap nextCap sound.source
+      sound.potential defect) :
+    StateLocalRegularBound H selected Gamma nextCap := by
+  have hpreviousOn : StateLocalRegularBoundOn H selected Gamma
+      (Finset.univ : Finset (RegularIndex H)) previousCap := by
+    intro A _hA hs hy ht
+    exact hprevious A hs hy ht
+  have hnext := stateLocalRegularBoundOn_onePhase sound u0 u1 kernel H
+    selected Gamma (Finset.univ : Finset (RegularIndex H)) hdegree
+    hagreement hno previousCap nextCap defect hpreviousOn hdefect hcap
+  intro A hs hy ht
+  exact hnext A (fun _ _ ↦ Finset.mem_univ _) hs hy ht
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorBatchPhase6800
+end PackedLocator_LocatorBatchPhase6800
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier43 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800SourceSound. -/
+section PackedLocator_LocatorPhase6800SourceSound
+
+/-! Analytic helper-cost and gate bounds for the four 6800 phase sources. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorPhase6800SourceSound
+
+open RCN095 RCN223 RCN260 RCN294 LocatorFactorAggregate
+open LocatorGenericHelperFactorSwitch LocatorGenericPowerRoute
+open LocatorPhase6800Oracle
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 4000000
+
+theorem helperPair_regularCountCap_mono_right
+    (L₁ Y₁ S₁ L₂ Y₂ S₂ leftY leftR leftZ : ℕ)
+    (hL : L₁ ≤ L₂) (hY : Y₁ ≤ Y₂) (hS : S₁ ≤ S₂) :
+    (helperPair L₁ Y₁ S₁ leftY leftR leftZ).regularCountCap ≤
+      (helperPair L₂ Y₂ S₂ leftY leftR leftZ).regularCountCap := by
+  let P₁ := helperPair L₁ Y₁ S₁ leftY leftR leftZ
+  let P₂ := helperPair L₂ Y₂ S₂ leftY leftR leftZ
+  have ha : vectorLE P₁.agreement P₂.agreement := by
+    refine ⟨?_, ?_, ?_⟩
+    · exact max_le_max le_rfl (Nat.add_le_add_left
+        (Nat.mul_le_mul_left (2 * 131071) hY) 1)
+    · exact max_le_max le_rfl (Nat.mul_le_mul_left 131071
+        (Nat.sub_le_sub_right (Nat.mul_le_mul_left 2 hS) 1))
+    · exact max_le_max le_rfl (Nat.add_le_add_right
+        (Nat.mul_le_mul_left (2 * 131071) hL) 1)
+  have hm : vectorLE P₁.mixedCost P₂.mixedCost := by
+    refine ⟨?_, ?_, ?_⟩
+    · exact Nat.add_le_add (Nat.mul_le_mul_left leftR hL)
+        (Nat.mul_le_mul_left leftZ hS)
+    · exact Nat.add_le_add (Nat.mul_le_mul_left leftY hL)
+        (Nat.mul_le_mul_left leftZ hY)
+    · exact Nat.add_le_add (Nat.mul_le_mul_left leftY hS)
+        (Nat.mul_le_mul_left leftR hY)
+  have hdot : dot P₁.agreement P₁.mixedCost ≤
+      dot P₂.agreement P₂.mixedCost := by
+    unfold dot
+    exact Nat.add_le_add
+      (Nat.add_le_add (Nat.mul_le_mul ha.1 hm.1)
+        (Nat.mul_le_mul ha.2.1 hm.2.1))
+      (Nat.mul_le_mul ha.2.2 hm.2.2)
+  have hnum : P₁.regularNumerator ≤ P₂.regularNumerator := by
+    unfold UnequalParameters.regularNumerator
+    exact Nat.add_le_add (Nat.mul_le_mul_left (P₁.n - P₁.w) hdot)
+      (Nat.mul_le_mul_left ((P₁.errors + 1) * P₁.gap) hm.2.2)
+  exact Nat.div_le_div_right hnum
+
+theorem stageCost_le_stageZero (L YS S : ℕ) (p : FlagDegree) (j : ℕ) :
+    stageCost L YS S (exactRouteBox p) j ≤
+      stageCost L YS S (exactRouteBox p) 0 := by
+  apply helperPair_regularCountCap_mono_right
+  · simpa only [exactRouteBox, Nat.zero_mul, Nat.sub_zero] using
+      Nat.sub_le L (j * total p)
+  · simpa only [exactRouteBox, Nat.zero_mul, Nat.sub_zero] using
+      Nat.sub_le YS (j * middle p)
+  · simpa only [exactRouteBox, Nat.zero_mul, Nat.sub_zero] using
+      Nat.sub_le S (j * p.all)
+
+theorem helperPair_gates_of_right_le
+    (L₁ Y₁ S₁ L₂ Y₂ S₂ leftY leftR leftZ : ℕ)
+    (hL : L₁ ≤ L₂) (hY : Y₁ ≤ Y₂) (hS : S₁ ≤ S₂)
+    (hgate : HelperPairGates L₂ Y₂ S₂ leftY leftR leftZ) :
+    HelperPairGates L₁ Y₁ S₁ leftY leftR leftZ := by
+  rcases hgate with ⟨hr, hy, hs, hz, hmy, hmr, hmz⟩
+  refine ⟨hr, hy, hs, hz, ?_, ?_, ?_⟩
+  · exact (Nat.add_le_add (Nat.mul_le_mul_left leftR hL)
+      (Nat.mul_le_mul_left leftZ hS)).trans_lt hmy
+  · exact (Nat.add_le_add (Nat.mul_le_mul_left leftY hL)
+      (Nat.mul_le_mul_left leftZ hY)).trans_lt hmr
+  · exact (Nat.add_le_add (Nat.mul_le_mul_left leftY hS)
+      (Nat.mul_le_mul_left leftR hY)).trans_lt hmz
+
+theorem stageGates_of_stageZero (L YS S : ℕ) (p : FlagDegree) (j : ℕ)
+    (hgate : HelperPairGates L YS S (middle p) p.all (total p)) :
+    HelperPairGates (L - j * total p) (YS - j * middle p)
+      (S - j * p.all) (middle p) p.all (total p) := by
+  apply helperPair_gates_of_right_le
+  · exact Nat.sub_le _ _
+  · exact Nat.sub_le _ _
+  · exact Nat.sub_le _ _
+  · exact hgate
+
+private theorem r1200_stageZero_le (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
+    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
+    stageCost 328400 6642 1480 (exactRouteBox p) 0 ≤
+      r1200Potential.eval p := by
+  have hay : 1 + 262142 * middle p ≤ 1741147165 := by omega
+  have har : 131071 * (2 * p.all - 1) ≤ 387839089 := by omega
+  have haz : 262142 * total p + 1 ≤ 86087432801 := by omega
+  simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero,
+    helperPair, UnequalParameters.regularCountCap,
+    UnequalParameters.regularNumerator, UnequalParameters.errors,
+    UnequalParameters.gap, UnequalParameters.agreement,
+    UnequalParameters.leftAgreement, UnequalParameters.rightAgreement,
+    UnequalParameters.mixedCost, dot, Potential.eval, r1200Potential]
+  rw [max_eq_right hay, max_eq_right har, max_eq_right haz]
+  norm_num
+  omega
+
+private theorem sourceC_stageZero_le (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
+    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
+    stageCost 82100 1660 370 (exactRouteBox p) 0 ≤
+      sourceCPotential.eval p := by
+  have hay : 1 + 262142 * middle p ≤ 435155721 := by omega
+  have har : 131071 * (2 * p.all - 1) ≤ 96861469 := by omega
+  have haz : 262142 * total p + 1 ≤ 21521858201 := by omega
+  simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero,
+    helperPair, UnequalParameters.regularCountCap,
+    UnequalParameters.regularNumerator, UnequalParameters.errors,
+    UnequalParameters.gap, UnequalParameters.agreement,
+    UnequalParameters.leftAgreement, UnequalParameters.rightAgreement,
+    UnequalParameters.mixedCost, dot, Potential.eval, sourceCPotential]
+  rw [max_eq_right hay, max_eq_right har, max_eq_right haz]
+  norm_num
+  omega
+
+private theorem split500_stageZero_le (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
+    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
+    stageCost 42000 1383 310 (exactRouteBox p) 0 ≤
+      split500Potential.eval p := by
+  have hay : 1 + 262142 * middle p ≤ 362542387 := by omega
+  have har : 131071 * (2 * p.all - 1) ≤ 81132949 := by omega
+  have haz : 262142 * total p + 1 ≤ 11009964001 := by omega
+  simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero,
+    helperPair, UnequalParameters.regularCountCap,
+    UnequalParameters.regularNumerator, UnequalParameters.errors,
+    UnequalParameters.gap, UnequalParameters.agreement,
+    UnequalParameters.leftAgreement, UnequalParameters.rightAgreement,
+    UnequalParameters.mixedCost, dot, Potential.eval, split500Potential]
+  rw [max_eq_right hay, max_eq_right har, max_eq_right haz]
+  norm_num
+  omega
+
+private theorem split390_stageZero_le (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
+    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
+    stageCost 19500 539 120 (exactRouteBox p) 0 ≤
+      split390Potential.eval p := by
+  have hay : 1 + 262142 * middle p ≤ 141294539 := by omega
+  have har : 131071 * (2 * p.all - 1) ≤ 31325969 := by omega
+  have haz : 262142 * total p + 1 ≤ 5111769001 := by omega
+  simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero,
+    helperPair, UnequalParameters.regularCountCap,
+    UnequalParameters.regularNumerator, UnequalParameters.errors,
+    UnequalParameters.gap, UnequalParameters.agreement,
+    UnequalParameters.leftAgreement, UnequalParameters.rightAgreement,
+    UnequalParameters.mixedCost, dot, Potential.eval, split390Potential]
+  rw [max_eq_right hay, max_eq_right har, max_eq_right haz]
+  norm_num
+  omega
+
+private theorem r1200_stageZero_gates (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
+    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
+    HelperPairGates 328400 6642 1480 (middle p) p.all (total p) := by
+  unfold HelperPairGates helperPair UnequalParameters.mixedCost
+  norm_num
+  constructor
+  · exact hr
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · nlinarith
+  constructor <;> nlinarith
+
+private theorem sourceC_stageZero_gates (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
+    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
+    HelperPairGates 82100 1660 370 (middle p) p.all (total p) := by
+  unfold HelperPairGates helperPair UnequalParameters.mixedCost
+  norm_num
+  constructor
+  · exact hr
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · nlinarith
+  constructor <;> nlinarith
+
+private theorem split500_stageZero_gates (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
+    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
+    HelperPairGates 42000 1383 310 (middle p) p.all (total p) := by
+  unfold HelperPairGates helperPair UnequalParameters.mixedCost
+  norm_num
+  constructor
+  · exact hr
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · nlinarith
+  constructor <;> nlinarith
+
+private theorem split390_stageZero_gates (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
+    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
+    HelperPairGates 19500 539 120 (middle p) p.all (total p) := by
+  unfold HelperPairGates helperPair UnequalParameters.mixedCost
+  norm_num
+  constructor
+  · exact hr
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · nlinarith
+  constructor <;> nlinarith
+
+def r1200Sound : PhaseSourceSound where
+  source := sourceR1200
+  potential := r1200Potential
+  stageCost_le p j hr hs hy ht _ :=
+    (stageCost_le_stageZero 328400 6642 1480 p j).trans
+      (r1200_stageZero_le p hr hs hy ht)
+  stageGates p j hr hs hy ht _ :=
+    stageGates_of_stageZero 328400 6642 1480 p j
+      (r1200_stageZero_gates p hr hs hy ht)
+
+def sourceCSound : PhaseSourceSound where
+  source := sourceC
+  potential := sourceCPotential
+  stageCost_le p j hr hs hy ht _ :=
+    (stageCost_le_stageZero 82100 1660 370 p j).trans
+      (sourceC_stageZero_le p hr hs hy ht)
+  stageGates p j hr hs hy ht _ :=
+    stageGates_of_stageZero 82100 1660 370 p j
+      (sourceC_stageZero_gates p hr hs hy ht)
+
+def split500Sound : PhaseSourceSound where
+  source := sourceSplit500
+  potential := split500Potential
+  stageCost_le p j hr hs hy ht _ :=
+    (stageCost_le_stageZero 42000 1383 310 p j).trans
+      (split500_stageZero_le p hr hs hy ht)
+  stageGates p j hr hs hy ht _ :=
+    stageGates_of_stageZero 42000 1383 310 p j
+      (split500_stageZero_gates p hr hs hy ht)
+
+def split390Sound : PhaseSourceSound where
+  source := sourceSplit390
+  potential := split390Potential
+  stageCost_le p j hr hs hy ht _ :=
+    (stageCost_le_stageZero 19500 539 120 p j).trans
+      (split390_stageZero_le p hr hs hy ht)
+  stageGates p j hr hs hy ht _ :=
+    stageGates_of_stageZero 19500 539 120 p j
+      (split390_stageZero_gates p hr hs hy ht)
+
+/-! The initial A split is wider than A in the middle/slope coordinates, so
+its two agreement maxima are handled explicitly rather than by source
+dominance. -/
+
+private theorem initialA_highY_highR_int (t y r : ℤ)
+    (ht : y ≤ t) (hylo : 132 ≤ y) (hyhi : y ≤ 153)
+    (hrlo : 29 ≤ r) (hrhi : r ≤ 33) :
+    996432412614 * t * y + 4535485464312 * t * r +
+        8933531975160000 * y * r ≤
+      302125682489247 * t + 173204606068620937 * y +
+        563790857807479424 * r + 50301 := by
+  have hcT : 0 ≤ 302125682489247 - 996432412614 * y -
+      4535485464312 * r := by omega
+  have hpT : 0 ≤ (t - y) * (302125682489247 - 996432412614 * y -
+      4535485464312 * r) := mul_nonneg (by omega) hcT
+  have hcR : 0 ≤ 8938067460624312 * y - 563790857807479424 := by
+    omega
+  have hpR : 0 ≤ (33 - r) *
+      (8938067460624312 * y - 563790857807479424) :=
+    mul_nonneg (by omega) hcR
+  have hpY : 0 ≤ 2 * (153 - y) *
+      (498216206307 * y + 60800974304311027) :=
+    mul_nonneg (mul_nonneg (by norm_num) (by omega)) (by omega)
+  nlinarith
+
+private theorem initialA_highY_lowR_int (t y r : ℤ)
+    (ht : y ≤ t) (hylo : 132 ≤ y) (hyhi : y ≤ 153)
+    (hrhi : r ≤ 28) :
+    996432412614 * t * y + 4466765987580000 * y * r ≤
+      170596604024199 * t + 43668392428800937 * y +
+        563790857807479424 * r + 50301 := by
+  have hcT : 0 ≤ 170596604024199 - 996432412614 * y := by omega
+  have hpT : 0 ≤ (t - y) * (170596604024199 - 996432412614 * y) :=
+    mul_nonneg (by omega) hcT
+  have hcR : 0 ≤ 4466765987580000 * y - 563790857807479424 := by
+    omega
+  have hpR : 0 ≤ (28 - r) *
+      (4466765987580000 * y - 563790857807479424) :=
+    mul_nonneg (by omega) hcR
+  have hpY : 0 ≤ 2 * (153 - y) *
+      (498216206307 * y + 40691456389272403) :=
+    mul_nonneg (mul_nonneg (by norm_num) (by omega)) (by positivity)
+  nlinarith
+
+private theorem initialA_lowY_highR_int (t y r : ℤ)
+    (ht : y ≤ t) (hyr : r ≤ y) (hrlo : 29 ≤ r) (hrhi : r ≤ 33) :
+    4535485464312 * t * r + 4466765987580000 * y * r +
+        25822252553080576 * r ≤
+      170596604024199 * t + 173204606068620937 * y + 50301 := by
+  have hcT : 0 ≤ 170596604024199 - 4535485464312 * r := by omega
+  have hpT : 0 ≤ (t - y) * (170596604024199 - 4535485464312 * r) :=
+    mul_nonneg (by omega) hcT
+  have hcY : 0 ≤ 173375202672645136 - 4471301473044312 * r := by
+    omega
+  have hpY : 0 ≤ (y - r) *
+      (173375202672645136 - 4471301473044312 * r) :=
+    mul_nonneg (by omega) hcY
+  have hpR : 0 ≤ 2 * (33 - r) * (2235650736522156 * r - 754551132) :=
+    mul_nonneg (mul_nonneg (by norm_num) (by omega)) (by omega)
+  nlinarith
+
+/- Keep the casts and the truncated predecessor `2 * r - 1` out of the main
+   helper definition.  These three fixed branch lemmas elaborate much faster
+   than normalizing that definition after all maxima have been split. -/
+private theorem initialA_highY_highR_nat (t y r : ℕ)
+    (ht : y ≤ t) (hylo : 132 ≤ y) (hyhi : y ≤ 153)
+    (hrlo : 29 ≤ r) (hrhi : r ≤ 33) :
+    131073 *
+          ((1 + 262142 * y) * (r * 130000 + t * 29) +
+            131071 * (2 * r - 1) * (y * 130000 + t * 132) +
+            34078460001 * (y * 29 + r * 132)) +
+        4062993144 * (y * 29 + r * 132) ≤
+      (5961153504 * t + 5974067721865 * y + 22929595672934 * r) *
+          50302 + 50301 := by
+  have hi := initialA_highY_highR_int (t : ℤ) (y : ℤ) (r : ℤ)
+    (by exact_mod_cast ht) (by exact_mod_cast hylo) (by exact_mod_cast hyhi)
+    (by exact_mod_cast hrlo) (by exact_mod_cast hrhi)
+  have hn :
+      996432412614 * t * y + 4535485464312 * t * r +
+          8933531975160000 * y * r ≤
+        302125682489247 * t + 173204606068620937 * y +
+          563790857807479424 * r + 50301 := by
+    exact_mod_cast hi
+  have hsub : 2 * r - 1 + 1 = 2 * r := by omega
+  nlinarith
+
+private theorem initialA_highY_lowR_nat (t y r : ℕ)
+    (ht : y ≤ t) (hylo : 132 ≤ y) (hyhi : y ≤ 153)
+    (hrhi : r ≤ 28) (hrlo : 1 ≤ r) :
+    131073 *
+          ((1 + 262142 * y) * (r * 130000 + t * 29) +
+            7471047 * (y * 130000 + t * 132) +
+            34078460001 * (y * 29 + r * 132)) +
+        4062993144 * (y * 29 + r * 132) ≤
+      (5961153504 * t + 5974067721865 * y + 22929595672934 * r) *
+          50302 + 50301 := by
+  have hi := initialA_highY_lowR_int (t : ℤ) (y : ℤ) (r : ℤ)
+    (by exact_mod_cast ht) (by exact_mod_cast hylo) (by exact_mod_cast hyhi)
+    (by exact_mod_cast hrhi)
+  have hn :
+      996432412614 * t * y + 4466765987580000 * y * r ≤
+        170596604024199 * t + 43668392428800937 * y +
+          563790857807479424 * r + 50301 := by
+    exact_mod_cast hi
+  nlinarith
+
+private theorem initialA_lowY_highR_nat (t y r : ℕ)
+    (ht : y ≤ t) (hyr : r ≤ y) (hrlo : 29 ≤ r) (hrhi : r ≤ 33) :
+    131073 *
+          (34602745 * (r * 130000 + t * 29) +
+            131071 * (2 * r - 1) * (y * 130000 + t * 132) +
+            34078460001 * (y * 29 + r * 132)) +
+        4062993144 * (y * 29 + r * 132) ≤
+      (5961153504 * t + 5974067721865 * y + 22929595672934 * r) *
+          50302 + 50301 := by
+  have hi := initialA_lowY_highR_int (t : ℤ) (y : ℤ) (r : ℤ)
+    (by exact_mod_cast ht) (by exact_mod_cast hyr)
+    (by exact_mod_cast hrlo) (by exact_mod_cast hrhi)
+  have hn :
+      4535485464312 * t * r + 4466765987580000 * y * r +
+          25822252553080576 * r ≤
+        170596604024199 * t + 173204606068620937 * y + 50301 := by
+    exact_mod_cast hi
+  have hsub : 2 * r - 1 + 1 = 2 * r := by omega
+  nlinarith
+
+theorem initialAHelperCap_le_potential (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 153) (ht : total p ≤ 6412) :
+    (helperPair 130000 132 29 (middle p) p.all (total p)).regularCountCap ≤
+      initialAPotential.eval p := by
+  have haz : 262142 * total p + 1 ≤ 34078460001 := by omega
+  have hry : p.all ≤ middle p := by simp [middle]
+  have hyt : middle p ≤ total p := by simp [middle, total]
+  simp only [helperPair, UnequalParameters.regularCountCap,
+    UnequalParameters.regularNumerator, UnequalParameters.errors,
+    UnequalParameters.gap, UnequalParameters.agreement,
+    UnequalParameters.leftAgreement, UnequalParameters.rightAgreement,
+    UnequalParameters.mixedCost, dot, Potential.eval, initialAPotential]
+  rw [max_eq_right haz]
+  by_cases hay : 34602745 ≤ 1 + 262142 * middle p
+  · rw [max_eq_left hay]
+    by_cases har : 7471047 ≤ 131071 * (2 * p.all - 1)
+    · rw [max_eq_left har]
+      norm_num
+      apply (Nat.div_le_iff_le_mul (by decide)).2
+      have hrlo : 29 ≤ p.all := by omega
+      have hylo : 132 ≤ middle p := by omega
+      exact initialA_highY_highR_nat (total p) (middle p) p.all hyt hylo hy
+        hrlo hs
+    · rw [max_eq_right (Nat.le_of_not_ge har)]
+      norm_num
+      apply (Nat.div_le_iff_le_mul (by decide)).2
+      have hylo : 132 ≤ middle p := by omega
+      have hr27 : p.all ≤ 28 := by omega
+      exact initialA_highY_lowR_nat (total p) (middle p) p.all hyt hylo hy
+        hr27 hr
+  · rw [max_eq_right (Nat.le_of_not_ge hay)]
+    by_cases har : 7471047 ≤ 131071 * (2 * p.all - 1)
+    · rw [max_eq_left har]
+      norm_num
+      apply (Nat.div_le_iff_le_mul (by decide)).2
+      have hrlo : 29 ≤ p.all := by omega
+      exact initialA_lowY_highR_nat (total p) (middle p) p.all hyt hry hrlo hs
+    · rw [max_eq_right (Nat.le_of_not_ge har)]
+      norm_num
+      apply (Nat.div_le_iff_le_mul (by decide)).2
+      ring_nf
+      omega
+
+end ProximityPrize.SubmissionLower.LocatorPhase6800SourceSound
+end PackedLocator_LocatorPhase6800SourceSound
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier44 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800Kernels. -/
+section PackedLocator_LocatorPhase6800Kernels
+
+/-!
+# Concrete kernel realizations and four-phase chain
+
+The analytic source records are paired here with their actual constraint
+kernels and isolated finrank receipts.  The final theorem composes the four
+state-local transitions while leaving only the compact receipt's cap
+equations and defect inequalities as hypotheses.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorPhase6800Kernels
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN095 RCN100 RCN119 RCN130 RCN140 RCN180 RCN238 RCN266
+open LocatorBatchPhase6800 LocatorPhase6800Oracle
+  LocatorPhase6800SourceSound
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+abbrev P4 := MvPolynomial (Fin 4) K
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+
+def r1200Kernel (u0 u1 : I → K) :
+    PhaseKernelRealization r1200Sound u0 u1 where
+  D := 870590400
+  m := 4800
+  weighted := LocatorR1200Source.weighted_exact.symm
+  shape := by
+    simpa only [r1200Sound, sourceR1200] using LocatorR1200Source.shape
+  slope_le_m := by decide
+  m_lt_char := by decide
+  gap_le_finrank := by
+    exact LocatorFastKernelArithmetic.challengeConstraintKernel_finrank_lower_bound_of_numeric
+      870590400 328400 1480 4800 5227117860923383312 u0 u1 (by
+        rw [LocatorR1200Source.nullity_exact])
+
+def sourceCKernel (u0 u1 : I → K) :
+    PhaseKernelRealization sourceCSound u0 u1 where
+  D := 217647600
+  m := 1200
+  weighted := LocatorR1Source.weighted_exact.symm
+  shape := by
+    simpa only [sourceCSound, sourceC] using LocatorR1Source.shape
+  slope_le_m := by decide
+  m_lt_char := by decide
+  gap_le_finrank := by
+    exact LocatorFastKernelArithmetic.challengeConstraintKernel_finrank_lower_bound_of_numeric
+      217647600 82100 370 1200 18811500529412710 u0 u1 (by
+        rw [LocatorR1Source.nullity_exact])
+
+def split500Kernel (u0 u1 : I → K) :
+    PhaseKernelRealization split500Sound u0 u1 where
+  D := 181373000
+  m := 1000
+  weighted := LocatorSplit500Source.weighted_exact.symm
+  shape := by
+    simpa only [split500Sound, sourceSplit500] using
+      LocatorSplit500Source.shape
+  slope_le_m := by decide
+  m_lt_char := by decide
+  gap_le_finrank := by
+    exact LocatorFastKernelArithmetic.challengeConstraintKernel_finrank_lower_bound_of_numeric
+      181373000 42000 310 1000 4161068143836058 u0 u1 (by
+        rw [LocatorSplit500Source.nullity_exact])
+
+def split390Kernel (u0 u1 : I → K) :
+    PhaseKernelRealization split390Sound u0 u1 where
+  D := 70735470
+  m := 390
+  weighted := LocatorSplit390Source.weighted_exact.symm
+  shape := by
+    simpa only [split390Sound, sourceSplit390] using
+      LocatorSplit390Source.shape
+  slope_le_m := by decide
+  m_lt_char := by decide
+  gap_le_finrank := by
+    exact LocatorFastKernelArithmetic.challengeConstraintKernel_finrank_lower_bound_of_numeric
+      70735470 19500 120 390 95423319727890 u0 u1 (by
+        rw [LocatorSplit390Source.nullity_exact])
+
+/-- Concrete composition of the four fresh-source phases. -/
+theorem stateLocalRegularBoundOn_fourPhases
+    (u0 u1 : I → K) (H : P4)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (ambient : Finset (RegularIndex H))
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (baseCap rCap cCap f500Cap s390Cap : FlagDegree → ℕ)
+    (rDefect cDefect f500Defect s390Defect : FlagDegree → ℕ)
+    (hown : ∀ F ∈ ambient, LocatorHybridCost.OwnBound
+      (regularSeeds H selected Gamma F).card
+      (regularCumulativeFlag H F))
+    (hbase : StateLocalBaseOracleSound baseCap)
+    (hrDefect : PhaseDefectSound baseCap sourceR1200
+      r1200Potential rDefect)
+    (hrCap : PhaseCapEquation baseCap rCap sourceR1200
+      r1200Potential rDefect)
+    (hcDefect : PhaseDefectSound rCap sourceC
+      sourceCPotential cDefect)
+    (hcCap : PhaseCapEquation rCap cCap sourceC
+      sourceCPotential cDefect)
+    (hfDefect : PhaseDefectSound cCap sourceSplit500
+      split500Potential f500Defect)
+    (hfCap : PhaseCapEquation cCap f500Cap sourceSplit500
+      split500Potential f500Defect)
+    (hsDefect : PhaseDefectSound f500Cap sourceSplit390
+      split390Potential s390Defect)
+    (hsCap : PhaseCapEquation f500Cap s390Cap sourceSplit390
+      split390Potential s390Defect) :
+    StateLocalRegularBoundOn H selected Gamma ambient s390Cap := by
+  have h0 : StateLocalRegularBoundOn H selected Gamma ambient baseCap :=
+    stateLocalRegularBoundOn_of_base H selected Gamma ambient
+      baseCap hown hbase
+  have hR : StateLocalRegularBoundOn H selected Gamma ambient rCap :=
+    stateLocalRegularBoundOn_onePhase
+      (sound := r1200Sound) (u0 := u0) (u1 := u1)
+      (kernel := r1200Kernel u0 u1) (H := H) (selected := selected)
+      (Gamma := Gamma) (ambient := ambient) (hdegree := hdegree)
+      (hagreement := hagreement) (hno := hno) (previousCap := baseCap)
+      (nextCap := rCap) (defect := rDefect) (hprevious := h0)
+      (hdefect := by simpa only [r1200Sound] using hrDefect)
+      (hcap := by simpa only [r1200Sound] using hrCap)
+  have hC : StateLocalRegularBoundOn H selected Gamma ambient cCap :=
+    stateLocalRegularBoundOn_onePhase
+      (sound := sourceCSound) (u0 := u0) (u1 := u1)
+      (kernel := sourceCKernel u0 u1) (H := H) (selected := selected)
+      (Gamma := Gamma) (ambient := ambient) (hdegree := hdegree)
+      (hagreement := hagreement) (hno := hno) (previousCap := rCap)
+      (nextCap := cCap) (defect := cDefect) (hprevious := hR)
+      (hdefect := by simpa only [sourceCSound] using hcDefect)
+      (hcap := by simpa only [sourceCSound] using hcCap)
+  have hF : StateLocalRegularBoundOn H selected Gamma ambient f500Cap :=
+    stateLocalRegularBoundOn_onePhase
+      (sound := split500Sound) (u0 := u0) (u1 := u1)
+      (kernel := split500Kernel u0 u1) (H := H) (selected := selected)
+      (Gamma := Gamma) (ambient := ambient) (hdegree := hdegree)
+      (hagreement := hagreement) (hno := hno) (previousCap := cCap)
+      (nextCap := f500Cap) (defect := f500Defect) (hprevious := hC)
+      (hdefect := by simpa only [split500Sound] using hfDefect)
+      (hcap := by simpa only [split500Sound] using hfCap)
+  exact stateLocalRegularBoundOn_onePhase
+    (sound := split390Sound) (u0 := u0) (u1 := u1)
+    (kernel := split390Kernel u0 u1) (H := H) (selected := selected)
+    (Gamma := Gamma) (ambient := ambient) (hdegree := hdegree)
+    (hagreement := hagreement) (hno := hno) (previousCap := f500Cap)
+    (nextCap := s390Cap) (defect := s390Defect) (hprevious := hF)
+    (hdefect := by simpa only [split390Sound] using hsDefect)
+    (hcap := by simpa only [split390Sound] using hsCap)
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorPhase6800Kernels
+end PackedLocator_LocatorPhase6800Kernels
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier45 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorFixedStage. -/
+section PackedLocator_LocatorFixedStage
+namespace ProximityPrize.SubmissionLower.LocatorFixedStage
+open ProximityPrize.Benchmark
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN174 RCN159 RCN086 RCN095 RCN275 RCN198 RCN263 RCN146 RCN087 RCN203 RCN084 RCN313 RCN074 RCN335
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+def n:ℕ:=262144
+def w:ℕ:=131071
+def errors:ℕ:=80771
+def agreements:ℕ:=181373
+def gap:ℕ:=50302
+def prime:ℕ:=2130706433
+def weightedCap:ℕ:=17411808
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:DecidableEq (GenericField K):=Classical.decEq _
+local instance:CharP K prime:=by
+  simpa [prime,RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
+def firstTail (a b s:ℕ):FlagDegree:=
+  reducedResidualAgreementFlag (RCN198.support a b s) (w + 1)
+def secondTail (a b s:ℕ):FlagDegree:=
+  reducedResidualAgreementFlag (RCN198.support a b s) (w + 2)
+theorem tail_support_formula (a b s d:ℕ) :
+    reducedResidualAgreementFlag (RCN198.support a b s) d=
+      ⟨2 * a * d,1 + 2 * (b + 1) * d,2 * (s + 1) * d⟩:=by
+  have ht:a + b + s + 3 - (b + s + 3) =a:=by omega
+  have hy:b + s + 3 - (s + 2) =b + 1:=by omega
+  have hs:2 * (s + 2) - 2=2 * (s + 1):=by omega
+  simp only [reducedResidualAgreementFlag,reducedAgreementDirection,RCN198.support]
+  rw [ht,hy,hs]
+theorem identityDegree_linear (flag:FlagDegree) (a b s:ℕ) :
+    identityCurveDegree flag a b s w=
+      flag.zOnly * (393219 + 262146 * s) +
+      flag.yz * (786438 + 524292 * s) +
+      flag.all * (1048586 + 262146 * a + 524292 * b + 524292 * s):=by
+  simp only [identityCurveDegree,paddedCut,
+    RCN206.centreFlag,
+    RCN206.directionFlag,
+    flagMixed,unitZFlag,unitYZFlag,add_zOnly,add_yz,add_all,
+    nsmul_zOnly,nsmul_yz,nsmul_all,w]
+  ring
+def identitySlackZ (b s:ℕ):ℕ:=
+  6207266144245360 + 6913506983018496 * b + 11051693203460596 * s +
+    3456753491509248 * s ^ 2 + 6913506983018496 * b * s
+def identitySlackYZ (a b s:ℕ):ℕ:=
+  2044245441127396 + 6913506983018496 * a + 6913506983018496 * b +
+    8276346068048620 * s + 3456753491509248 * s ^ 2 +
+    6913506983018496 * a * s + 6913506983018496 * b * s
+def identitySlackAll (a b s:ℕ):ℕ:=
+  2725656996053838 + 11051693203460596 * a + 8276346068048620 * b +
+    3456753491509248 * b ^ 2 + 8276346068048620 * s +
+    3456753491509248 * s ^ 2 + 6913506983018496 * a * b +
+    6913506983018496 * a * s + 6913506983018496 * b * s
+def identitySlack (flag:FlagDegree) (a b s:ℕ):ℕ:=
+  flag.zOnly * identitySlackZ b s + flag.yz * identitySlackYZ a b s +
+    flag.all * identitySlackAll a b s
+theorem identity_budget_exact (flag:FlagDegree) (a b s:ℕ) :
+    gap * flagMixed flag (firstTail a b s) (secondTail a b s) =
+      (n - w) * (errors + 1) * identityCurveDegree flag a b s w +
+        identitySlack flag a b s:=by
+  rw [identityDegree_linear]
+  norm_num [firstTail,secondTail,tail_support_formula,w,n,errors,gap,
+    identitySlack,identitySlackZ,identitySlackYZ,identitySlackAll,flagMixed] <;>
+    ring
+theorem identity_budget (flag:FlagDegree) (a b s:ℕ) :
+    (n - w) * (errors + 1) * identityCurveDegree flag a b s w ≤
+      gap * flagMixed flag (firstTail a b s) (secondTail a b s):=by
+  rw [identity_budget_exact]
+  exact Nat.le_add_right _ _
+theorem identity_positive (flag:FlagDegree) (a b s:ℕ)
+    (hpos:0 < flag.zOnly + flag.yz + flag.all) :
+    1 ≤ identityCurveDegree flag a b s w:=by
+  rw [identityDegree_linear]
+  have hz:=Nat.mul_le_mul_left flag.zOnly
+    (show 1 ≤ 393219 + 262146 * s by omega)
+  have hy:=Nat.mul_le_mul_left flag.yz
+    (show 1 ≤ 786438 + 524292 * s by omega)
+  have ha:=Nat.mul_le_mul_left flag.all
+    (show 1 ≤ 1048586 + 262146 * a + 524292 * b + 524292 * s by omega)
+  simp only [Nat.mul_one] at hz hy ha
+  omega
+theorem tangent_gate (a b s:ℕ) :
+    errors + 1 ≤ (secondTail a b s).yz:=by
+  rw [secondTail,tail_support_formula]
+  change errors + 1 ≤ 1 + 2 * (b + 1) * (w + 2)
+  have hb:2 * (w + 2) ≤ 2 * (b + 1) * (w + 2):=by
+    have h:=Nat.mul_le_mul_right (w + 2)
+      (Nat.mul_le_mul_left 2 (show 1 ≤ b + 1 by omega))
+    simpa only [Nat.mul_one] using h
+  exact (by norm_num [errors,w]:errors + 1 ≤ 1 + 2 * (w + 2)).trans
+    (Nat.add_le_add_left hb 1)
+theorem flag_characteristic (a b s:ℕ) (flag:FlagDegree)
+    (hS:s + 2 ≤ 29) (hY:b + s + 3 ≤ 132) (hT:a + b + s + 3 ≤ 6412)
+    (hflag:flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
+      flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) :
+    flag.yz + flag.all < prime ∧ flag.all < prime ∧
+      flag.zOnly + flag.yz + flag.all < prime:=by
+  dsimp [prime]
+  omega
+theorem identity_mixed_gate (b s:ℕ) (flag:FlagDegree)
+    (hS:s + 2 ≤ 29) (hY:b + s + 3 ≤ 132)
+    (hfs:flag.all ≤ s + 2) (hfy:flag.yz + flag.all ≤ b + s + 3) :
+    (1 + w * (2 * (b + s + 3) - 2)) * flag.all +
+      (flag.yz + flag.all) * ((2 * (s + 2) - 1) * w) < prime:=by
+  have hy:2 * (b + s + 3) - 2 ≤ 262:=by omega
+  have hs:2 * (s + 2) - 1 ≤ 57:=by omega
+  have hfS:flag.all ≤ 29:=hfs.trans hS
+  have hfY:flag.yz + flag.all ≤ 132:=hfy.trans hY
+  calc
+    _ ≤ (1 + w * 262) * 29 + 132 * (57 * w) :=
+      Nat.add_le_add
+        (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left w hy) 1) hfS)
+        (Nat.mul_le_mul hfY (Nat.mul_le_mul_right w hs))
+    _ < prime:=by norm_num [w,prime]
+theorem provider_mixed_gate (b s:ℕ) (flag:FlagDegree)
+    (hS:s + 2 ≤ 29) (hY:b + s + 3 ≤ 132)
+    (hfs:flag.all ≤ s + 2) (hfy:flag.yz + flag.all ≤ b + s + 3) :
+    (1 + (w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
+      (flag.yz + flag.all) * ((2 * (s + 2) - 2) * (w + 1)) < prime:=by
+  have hy:2 * (b + s + 3) - 2 ≤ 262:=by omega
+  have hs:2 * (s + 2) - 2 ≤ 56:=by omega
+  have hfS:flag.all ≤ 29:=hfs.trans hS
+  have hfY:flag.yz + flag.all ≤ 132:=hfy.trans hY
+  calc
+    _ ≤ (1 + (w + 1) * 262) * 29 + 132 * (56 * (w + 1)) :=
+      Nat.add_le_add
+        (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left (w + 1) hy) 1) hfS)
+        (Nat.mul_le_mul hfY (Nat.mul_le_mul_right (w + 1) hs))
+    _ < prime:=by norm_num [w,prime]
+def FixedStageBound (D a b s:ℕ):Prop:=
+  ∀ {Gamma:Finset K} {flag:FlagDegree},
+    (S:ResidualStage (polynomialEmbedding K) Gamma IRSProfile.domain
+      prime errors flag w (RCN198.support a b s)) →
+    S.nodes.card=agreements + errors →
+    (∀ gamma ∈ Gamma,agreements ≤ (S.agreementFiber gamma).card) →
+    S.F ∈ RCN174.globalCoefficientBox K D w (a + b + s + 3) (s + 2) →
+    (flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
+      flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) →
+    Gamma.card ≤ flagMixed flag (firstTail a b s) (secondTail a b s)
+theorem fixedStageBound (D a b s:ℕ)
+    (hDlow:w + 1 ≤ D) (hDhigh:D ≤ weightedCap)
+    (hS:s + 2 ≤ 29) (hY:b + s + 3 ≤ 132) (hT:a + b + s + 3 ≤ 6412) :
+    FixedStageBound D a b s:=by
+  intro Gamma flag S hnodes hagreement hbox hflag
+  have hDchar:D < prime:=hDhigh.trans_lt (by norm_num [weightedCap,prime])
+  have hflagChar:=flag_characteristic a b s flag hS hY hT hflag
+  by_cases hTail:S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1)
+  · have hTailNumerator:S.G ∣ surfaceMap (polynomialEmbedding K)
+        (numerator K S.F (w + 1)) :=
+      (globalTailCut_dvd_iff (polynomialEmbedding K)
+        (polynomialEmbedding_injective K) S.F (w + 1) S.G).mp hTail
+    have hprovider:=actual_identityCurveCountProvider S agreements hnodes
+      hagreement (by norm_num [agreements,w]) hTailNumerator
+      D (a + b + s + 3) (s + 2)
+      (by norm_num [w]) hDlow hDchar hbox hflagChar
+      (identity_mixed_gate b s flag hS hY hflag.1 hflag.2.1)
+    have hpositive:1 ≤ identityCurveDegree flag a b s w:=by
+      apply identity_positive
+      have hy:0 < S.G.degreeOf 1:=S.y_dependent
+      have hdeg:=degreeOf_le_flag_total S.G flag S.flag_support 1
+      omega
+    have hinc:=identity_surface_seed_bound S agreements
+      (identityCurveDegree flag a b s w) hprovider hagreement
+      (by norm_num [agreements,w])
+      (by rw [hnodes] <;> norm_num [agreements,errors]) hpositive
+    have hscaled:Gamma.card * gap ≤
+        gap * flagMixed flag (firstTail a b s) (secondTail a b s):=by
+      calc
+        Gamma.card * gap=Gamma.card * (agreements - w):=rfl
+        _ ≤ (S.nodes.card - w) * (errors + 1) *
+            identityCurveDegree flag a b s w:=hinc
+        _= (n - w) * (errors + 1) * identityCurveDegree flag a b s w:=by
+          rw [hnodes] <;> norm_num [n,agreements,errors]
+        _ ≤ gap * flagMixed flag (firstTail a b s) (secondTail a b s) :=
+          identity_budget flag a b s
+    apply Nat.le_of_mul_le_mul_right ?_ (by norm_num [gap]:0 < gap)
+    simpa only [Nat.mul_comm] using hscaled
+  · have hprovider:=exists_delayedTailMultiplicityProvider_of_reducedGeneral
+      (stageErrorCap:=errors) agreements S hTail hflagChar
+      (provider_mixed_gate b s flag hS hY hflag.1 hflag.2.1)
+      D (a + b + s + 3) (s + 2) hnodes hagreement
+      (by norm_num [RCN327.w,agreements])
+      (by simpa only [RCN327.w,w] using hDlow)
+      hDchar hbox (tangent_gate a b s)
+    exact stage_card_le_flagMixed S hprovider.some
+end
+end ProximityPrize.SubmissionLower.LocatorFixedStage
+end PackedLocator_LocatorFixedStage
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier46 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorFixed. -/
+section PackedLocator_LocatorFixed
+namespace ProximityPrize.SubmissionLower.LocatorFixed
+open ProximityPrize.Benchmark
+open scoped Classical BigOperators
+open RCN174 RCN319 RCN286 RCN081 RCN135 RCN095 RCN238 RCN243 RCN222 RCN266 RCN221 RCN268 RCN140 RCN275 RCN130 RCN156 RCN159 RCN234 RCN137 RCN198 RCN263 LocatorFactorAggregate
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 6000000
+set_option maxRecDepth 100000
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+abbrev P4:=MvPolynomial (Fin 4) K
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:DecidableEq (GenericField K):=Classical.decEq _
+local instance:CharP K 2130706433:=by
+  simpa [RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
+def padA (p:FlagDegree):ℕ:=padT p - padY p
+def padB (p:FlagDegree):ℕ:=padY p - padS p - 1
+def padSlope (p:FlagDegree):ℕ:=padS p - 2
+theorem pad_sums (p:FlagDegree) :
+    padSlope p + 2=padS p ∧
+    padB p + padSlope p + 3=padY p ∧
+    padA p + padB p + padSlope p + 3=padT p:=by
+  have hs:2 ≤ padS p:=le_max_right _ _
+  have hy:padS p + 1 ≤ padY p:=le_max_right _ _
+  have ht:padY p ≤ padT p:=le_max_right _ _
+  dsimp [padA,padB,padSlope]
+  omega
+theorem padded_tail_eq (p:FlagDegree) (d:ℕ) :
+    reducedResidualAgreementFlag (RCN198.support (padA p) (padB p) (padSlope p)) d=
+      paddedTail p d:=by
+  have hc:=pad_sums p
+  have hs:2 ≤ padS p:=le_max_right _ _
+  simp only [reducedResidualAgreementFlag,reducedAgreementDirection,
+    RCN198.support,hc.1,hc.2.1,hc.2.2,paddedTail]
+  have he:2 * padS p - 2=2 * (padS p - 1):=by omega
+  rw [he]
+theorem own_support (F:P4) :
+    ResidualSupportData
+      (RCN198.support (padA (originalCumulativeFlag F))
+        (padB (originalCumulativeFlag F)) (padSlope (originalCumulativeFlag F))) F:=by
+  have hc:=originalCumulativeFlag_cumulative F
+  have hp:=pad_sums (originalCumulativeFlag F)
+  refine ⟨?_, ?_, ?_⟩
+  · change wt residualSWeights F ≤ padSlope (originalCumulativeFlag F) + 2
+    rw [hp.1, ← hc.1]
+    exact le_max_left _ _
+  · change wt residualYSWeights F ≤
+      padB (originalCumulativeFlag F) + padSlope (originalCumulativeFlag F) + 3
+    rw [hp.2.1, ← hc.2.1]
+    exact le_max_left _ _
+  · change wt residualTotalWeights F ≤ padA (originalCumulativeFlag F) +
+      padB (originalCumulativeFlag F) + padSlope (originalCumulativeFlag F) + 3
+    rw [hp.2.2, ← hc.2.2]
+    exact le_max_left _ _
+theorem own_box (F:P4) (D w L s:ℕ)
+    (hbox:F ∈ RCN174.globalCoefficientBox K D w L s) :
+    F ∈ RCN174.globalCoefficientBox K D w
+      (padA (originalCumulativeFlag F) + padB (originalCumulativeFlag F) +
+        padSlope (originalCumulativeFlag F) + 3)
+      (padSlope (originalCumulativeFlag F) + 2):=by
+  have hs:=(own_support F).s_weight
+  have ht:=(own_support F).total_weight
+  intro d hd
+  have hds:=(MvPolynomial.le_weightedTotalDegree residualSWeights hd).trans hs
+  have hdt:=(MvPolynomial.le_weightedTotalDegree residualTotalWeights hd).trans ht
+  rw [weight_fin4] at hds hdt
+  simp only [residualSWeights,residualTotalWeights,RCN198.support,Fin.isValue,
+    Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val,
+    Nat.mul_zero,Nat.mul_one,Nat.zero_add,Nat.add_zero] at hds hdt
+  exact ⟨by omega,hds, (hbox hd).2.2⟩
+theorem factor_support {P:ResidualSupportParameters} (Q:P4) (hQ:Q ≠ 0)
+    (HQ:ResidualSupportData P Q) (R:RegularIndex Q) :
+    ResidualSupportData P R.1:=by
+  have hd:=(RCN167.positiveRFactors_spec Q R.1 R.2).2.1
+  exact ⟨(weightedTotalDegree_le_of_dvd residualSWeights R.1 Q hd hQ).trans HQ.s_weight,
+    (weightedTotalDegree_le_of_dvd residualYSWeights R.1 Q hd hQ).trans HQ.ys_weight,
+    (weightedTotalDegree_le_of_dvd residualTotalWeights R.1 Q hd hQ).trans HQ.total_weight⟩
+theorem own_parameter_caps (p:FlagDegree)
+    (hs:p.all ≤ 29) (hy:middle p ≤ 132) (ht:total p ≤ 6412) :
+    padSlope p + 2 ≤ 29 ∧ padB p + padSlope p + 3 ≤ 132 ∧
+      padA p + padB p + padSlope p + 3 ≤ 6412:=by
+  have hp:=pad_sums p
+  have hps:padS p ≤ 29:=max_le hs (by decide)
+  have hpy:padY p ≤ 132:=max_le hy (by omega)
+  have hpt:padT p ≤ 6412:=max_le ht (by omega)
+  rw [hp.1,hp.2.1,hp.2.2]
+  exact ⟨hps,hpy,hpt⟩
+theorem regular_factor_count
+    (D:ℕ) (P:ResidualSupportParameters)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17411808)
+    (hS:P.s ≤ 29) (hY:P.ys ≤ 132) (hT:P.total ≤ 6412)
+    (Q:P4) (hQ:Q ≠ 0)
+    (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
+    (HQ:ResidualSupportData P Q)
+    (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
+    (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
+    (R:RegularIndex Q) :
+    (regularSeeds Q selected Gamma R).card ≤
+      paddedCost 131072 131073 (regularCumulativeFlag Q R):=by
+  letI:CharP (GenericField K) 2130706433:=genericField_charP K 2130706433
+  let p:=regularCumulativeFlag Q R
+  let a:=padA p
+  let b:=padB p
+  let s:=padSlope p
+  have hRdata:=directFactor_data Q R.1 hQ D 131071 P.total P.s hbox R.2
+  have hRsmall:R.1.degreeOf (2:Fin 4) < 2130706433:=
+    (degreeOf_R_le_of_mem_box _ _ _ _ _ hRdata.2.2).trans_lt
+      (hS.trans_lt (by decide))
+  have hRbox:=own_box R.1 D 131071 P.total P.s hRdata.2.2
+  have hRsupport:=own_support R.1
+  have hRwhole:=factor_support Q hQ HQ R
+  have hc:=originalCumulativeFlag_cumulative R.1
+  have hparam:s + 2 ≤ 29 ∧ b + s + 3 ≤ 132 ∧ a + b + s + 3 ≤ 6412:=by
+    apply own_parameter_caps p
+    · exact hRwhole.s_weight.trans hS
+    · simpa only [p,middle,regularCumulativeFlag,hc.2.1] using
+        hRwhole.ys_weight.trans hY
+    · simpa only [p,total,regularCumulativeFlag,hc.2.2] using
+        hRwhole.total_weight.trans hT
+  have hsolutions:∀ gamma ∈ regularSeeds Q selected Gamma R,
+      specialization K (selected gamma) gamma R.1=0:=by
+    intro gamma hgamma
+    exact (Finset.mem_filter.mp hgamma).2.1
+  have hcover:=card_le_sum_geometricSeeds K R.1 hRdata.1.ne_zero selected
+    (regularSeeds Q selected Gamma R) hsolutions
+  have hstage (g:GeometricFactor K R.1) :
+      (geometricSeeds K R.1 selected (regularSeeds Q selected Gamma R) g).card ≤
+        flagMixed (geometricCumulativeFlag K g) (paddedTail p 131072)
+          (paddedTail p 131073):=by
+    let S0:=regularGeometricResidualStageOfSupport (RCN198.support a b s) Q selected Gamma
+      (Finset.univ:Finset I) IRSProfile.domain u0 u1
+      IRSProfile.domain.injective.injOn hdegree hno R
+      hRdata.1 hRdata.2.1 hRsmall hRsupport (by decide) g
+    let S:=reflagResidualStage S0 (polynomialIn_surfaceCumulativeFlag g.1)
+    have hsub:geometricSeeds K R.1 selected
+        (regularSeeds Q selected Gamma R) g ⊆ Gamma:=
+      (geometricSeeds_subset K R.1 selected _ g).trans (regularSeeds_subset Q selected Gamma R)
+    have hnodes:S.nodes.card=181373 + 80771:=by
+      change (Finset.univ:Finset I).card=_
+      norm_num [I,IRSProfile.Index]
+    have hag:∀ gamma ∈ geometricSeeds K R.1 selected
+        (regularSeeds Q selected Gamma R) g,181373 ≤ (S.agreementFiber gamma).card:=by
+      intro gamma hgamma
+      simpa [S,S0,ResidualStage.agreementFiber,ResidualStage.Agrees,
+        reflagResidualStage,regularGeometricResidualStageOfSupport,
+        geometricResidualStageOfSupport] using hagreement gamma (hsub hgamma)
+    have hf:=geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero hRsupport g
+    have hcount:=LocatorFixedStage.fixedStageBound D a b s
+      hDlow hDhigh hparam.1 hparam.2.1 hparam.2.2 S hnodes hag hRbox hf
+    simpa only [LocatorFixedStage.firstTail,LocatorFixedStage.secondTail,
+      LocatorFixedStage.w,Nat.reduceAdd,geometricCumulativeFlag,
+      a,b,s,padded_tail_eq] using hcount
+  calc
+    (regularSeeds Q selected Gamma R).card ≤
+        ∑ g:GeometricFactor K R.1,
+          (geometricSeeds K R.1 selected (regularSeeds Q selected Gamma R) g).card:=hcover
+    _ ≤ ∑ g:GeometricFactor K R.1,
+        flagMixed (geometricCumulativeFlag K g) (paddedTail p 131072)
+          (paddedTail p 131073):=Finset.sum_le_sum (fun g _=> hstage g)
+    _ ≤ paddedCost 131072 131073 p:=by
+      have hb:=geometricCumulativeFlag_budgets R.1 hRdata.1.ne_zero
+      exact LocatorFactorAggregate.sum_mixed_le (geometricCumulativeFlag K) p _ _
+        hb.1 hb.2.1 hb.2.2
+def regularCost (T YS S:ℕ):ℕ:=
+  paddedCost 131072 131073 (cap T YS S)
+theorem regular_sum_count
+    (D:ℕ) (P:ResidualSupportParameters)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17411808)
+    (hS:P.s ≤ 29) (hY:P.ys ≤ 132) (hT:P.total ≤ 6412)
+    (Q:P4) (hQ:Q ≠ 0)
+    (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
+    (HQ:ResidualSupportData P Q)
+    (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
+    (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771) :
+    (∑ R:RegularIndex Q, (regularSeeds Q selected Gamma R).card) ≤
+      regularCost P.total P.ys P.s:=by
+  have hb:=regularCumulativeFlag_budgets Q hQ HQ
+  have hc:=cap_cumulative P.total P.ys P.s P.s_le_ys P.ys_le_total
+  have hcost:=merge_padded_costs 131072 131073 (regularCumulativeFlag Q)
+    (cap P.total P.ys P.s)
+    (by simpa only [hc.1] using hb.1)
+    (by rw [hc.2.1]; simpa only [middle] using hb.2.1)
+    (by rw [hc.2.2]; simpa only [total] using hb.2.2)
+  exact (Finset.sum_le_sum (fun R _=>
+    regular_factor_count D P hDlow hDhigh hS hY hT Q hQ hbox HQ selected Gamma u0 u1
+      hdegree hagreement hno R)).trans hcost
+def profile (D T S:ℕ):RCN276.Profile:=
+  ⟨262144,131071,181373,D,T,S⟩
+def singularProfile (D T S:ℕ):RCN318.TightParameters:=
+  ⟨262144,131071,181373,D,T,S⟩
+def equationCost (D T YS S:ℕ):ℕ:=
+  regularCost T YS S + CommonShearTightPrototype.countCap (singularProfile D T S)
+structure SingularGates (P:RCN318.TightParameters):Prop where
+  s_pos:1 ≤ P.s
+  s_small:P.s < 2130706433
+  w_pos:1 ≤ P.w
+  w_small:P.w < 2130706433
+  kD:P.w < P.kappa * P.D
+  algebraic_pos:1 ≤ P.algebraicCap
+  implicit_small:P.implicitYCap < 2130706433
+  algebraic_small:P.algebraicCap < 2130706433
+  wa:P.w < P.a
+  an:P.a ≤ P.n
+theorem singular_gates (D T S:ℕ)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17411808)
+    (hTpos:1 ≤ T) (hT:T ≤ 6412)
+    (hSpos:1 ≤ S) (hS:S ≤ 29) :
+    SingularGates (singularProfile D T S):=by
+  have hkpos:1 ≤ 2*S-1:=by omega
+  have hk:2*S-1 ≤ 57:=by omega
+  have hDle:D ≤ (2*S-1)*D:=by
+    simpa only [Nat.one_mul] using Nat.mul_le_mul_right D hkpos
+  have hnum:(2*S-1)*D-1 ≤ 992473055:=by
+    have hp:=Nat.mul_le_mul hk hDhigh
+    norm_num at hp
+    omega
+  have hiy:((2*S-1)*D-1)/131071 ≤ 7572:=
+    (Nat.div_le_div_right hnum).trans (by decide)
+  have halgpos:1 ≤ (2*S-1)*T:=by
+    simpa only [Nat.one_mul] using Nat.mul_le_mul hkpos hTpos
+  have halg:(2*S-1)*T ≤ 365484:=by
+    have hp:=Nat.mul_le_mul hk hT
+    norm_num at hp
+    exact hp
+  refine ⟨hSpos, ?_,by change 1 ≤ 131071; decide,
+    by change 131071 < 2130706433; decide, ?_,halgpos, ?_, ?_,
+    by change 131071 < 181373; decide,by change 181373 ≤ 262144; decide⟩
+  · exact hS.trans_lt (by decide)
+  · change 131071 < (2*S-1)*D
+    omega
+  · exact hiy.trans_lt (by decide)
+  · exact halg.trans_lt (by decide)
+theorem fixed_count_le
+    (D:ℕ) (P:ResidualSupportParameters)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17411808)
+    (hS:P.s ≤ 29) (hY:P.ys ≤ 132) (hT:P.total ≤ 6412)
+    (Q:P4) (hQ:Q ≠ 0)
+    (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
+    (HQ:ResidualSupportData P Q)
+    (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
+    (hsolution:∀ gamma ∈ Gamma,specialization K (selected gamma) gamma Q=0)
+    (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771) :
+    Gamma.card ≤ equationCost D P.total P.ys P.s:=by
+  have hg:=singular_gates D P.total P.s hDlow hDhigh
+    (P.one_le_s.trans (P.s_le_ys.trans P.ys_le_total)) hT P.one_le_s hS
+  have hcover:=RCN239.card_le_regular_sum_add_singular
+    (profile D P.total P.s) Q hQ hbox hg.s_pos hg.s_small hg.w_pos hg.kD
+    hg.algebraic_pos hg.algebraic_small selected Gamma hsolution
+  have hreg:=regular_sum_count D P hDlow hDhigh hS hY hT
+    Q hQ hbox HQ selected Gamma u0 u1 hdegree hagreement hno
+  have hsing:=CommonShearTightPrototype.singularSeeds_count_le_countCap
+    (singularProfile D P.total P.s) Q hQ hbox
+    hg.s_pos hg.s_small hg.w_pos hg.w_small hg.kD hg.algebraic_pos
+    hg.implicit_small hg.algebraic_small hg.wa hg.an
+    selected Gamma (Finset.univ:Finset I) IRSProfile.domain u0 u1
+    IRSProfile.domain.injective.injOn
+    (by
+      change (Finset.univ:Finset I).card=262144
+      rw [Finset.card_univ]
+      change Fintype.card (Fin (2 ^ 18)) =262144
+      rw [Fintype.card_fin]
+      decide) hdegree hagreement (by
+        simpa only [singularProfile,RCN318.TightParameters.errors,
+          Nat.reduceSub] using hno)
+  exact hcover.trans (Nat.add_le_add hreg hsing)
+end
+end ProximityPrize.SubmissionLower.LocatorFixed
+end PackedLocator_LocatorFixed
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier47 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier48 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridCells. -/
+section PackedLocator_LocatorHybridCells
+/-
+LOCATOR HYBRID CELLS (port of ContactRouterCellCosts6750Research + the pure
+flag arithmetic of ContactHybridTailProvider6751Research §1 from pr359).
+
+Cells are parameterised by (t y r) with the atoms
+  a = cellA t y = t - y,  b = cellB y r = y - r - 1,  s = cellS r = r - 2,
+so that (for 2 ≤ r < y ≤ t) t = a+b+s+3, y = b+s+3, r = s+2 and the stage
+support is `support a b s`.  `w` is the Locator's `RCN327.w = 131071`.
+-/
+namespace ProximityPrize.SubmissionLower.LocatorHybridCells
+open scoped Classical BigOperators
+open RCN095 RCN198 RCN206 RCN287 RCN327 RCN263 RCN237 RCN264 RCN275 RCN084
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+
+/-! ### Cell atoms and flags -/
+
+def cellA (t y : Nat) : Nat := t - y
+def cellB (y r : Nat) : Nat := y - r - 1
+def cellS (r : Nat) : Nat := r - 2
+
+def cellSupport (t y r : Nat) : ResidualSupportParameters :=
+  support (cellA t y) (cellB y r) (cellS r)
+
+def cellFixedFlag (t y r : Nat) : FlagDegree :=
+  surfaceFlag (cellA t y) (cellB y r) (cellS r)
+
+def cellFirstTail (t y r : Nat) : FlagDegree :=
+  reducedResidualAgreementFlag (cellSupport t y r) (w + 1)
+
+def cellSharpTail (t y r : Nat) : FlagDegree :=
+  sharpResidualAgreementFlag (cellSupport t y r) (w + 1)
+
+def cellSecondTail (t y r : Nat) : FlagDegree :=
+  reducedResidualAgreementFlag (cellSupport t y r) (w + 2)
+
+def cellDirection (t y r : Nat) : FlagDegree :=
+  RCN206.directionFlag (cellA t y) (cellB y r) (cellS r)
+
+def cellRational (t y r : Nat) : FlagDegree :=
+  ⟨(w + 1) * cellA t y + (cellDirection t y r).zOnly,
+    (w + 1) * cellB y r + (cellDirection t y r).yz + 1,
+    (w + 1) * cellS r + (cellDirection t y r).all⟩
+
+def cellHybridCoordinate (t y r : Nat) : FlagDegree :=
+  cellRational t y r + ⟨0, (w + 1) / 2, 3 * ((w + 1) / 2)⟩
+
+def cellMovingFiber (t y r : Nat) : FlagDegree :=
+  RCN206.fiberFlag (cellA t y) (cellB y r) (cellS r)
+
+def cellMovingCut (t y r : Nat) : FlagDegree :=
+  cellRational t y r + ⟨0, w + 1, 2 * (w + 1)⟩
+
+def cellHybridCost (t y r : Nat) : Nat :=
+  flagMixed (cellFixedFlag t y r) (cellSharpTail t y r)
+      (cellHybridCoordinate t y r) +
+    (w + 1) * flagMixed (cellFixedFlag t y r) (cellMovingFiber t y r)
+      (cellMovingCut t y r)
+
+def cellDelayedCost (t y r : Nat) : Nat :=
+  flagMixed (cellFixedFlag t y r) (cellFirstTail t y r)
+    (cellSecondTail t y r)
+
+def cellRegularCost (t y r : Nat) : Nat :=
+  if r + 2 ≤ y then cellHybridCost t y r else cellDelayedCost t y r
+
+def cellTail1 (t y r : Nat) : FlagDegree :=
+  if r + 2 ≤ y then cellSharpTail t y r else cellFirstTail t y r
+
+def cellTail2 (t y r : Nat) : FlagDegree :=
+  if r + 2 ≤ y then cellHybridCoordinate t y r else cellSecondTail t y r
+
+def cellCostOf (f : FlagDegree) (t y r : Nat) : Nat :=
+  if r + 2 ≤ y then
+    flagMixed f (cellSharpTail t y r) (cellHybridCoordinate t y r) +
+      (w + 1) * flagMixed f (cellMovingFiber t y r) (cellMovingCut t y r)
+  else flagMixed f (cellFirstTail t y r) (cellSecondTail t y r)
+
+theorem cellRegularCost_eq_cellCostOf (t y r : Nat) :
+    cellRegularCost t y r = cellCostOf (cellFixedFlag t y r) t y r := by
+  unfold cellRegularCost cellCostOf cellHybridCost cellDelayedCost
+  split_ifs <;> rfl
+
+theorem sum_cellCostOf_le_of_cumulative {J : Type*} [Fintype J]
+    (f : J → FlagDegree) (p : FlagDegree) (t y r : Nat)
+    (hs : (∑ i, (f i).all) ≤ p.all)
+    (hm : (∑ i, ((f i).yz + (f i).all)) ≤ p.yz + p.all)
+    (ht : (∑ i, ((f i).zOnly + (f i).yz + (f i).all)) ≤
+      p.zOnly + p.yz + p.all) :
+    (∑ i, cellCostOf (f i) t y r) ≤ cellCostOf p t y r := by
+  unfold cellCostOf
+  split_ifs
+  · rw [Finset.sum_add_distrib, ← Finset.mul_sum]
+    exact Nat.add_le_add
+      (sum_flagMixed_le_of_cumulative f p _ _ hs hm ht)
+      (Nat.mul_le_mul_left _
+        (sum_flagMixed_le_of_cumulative f p _ _ hs hm ht))
+  · exact sum_flagMixed_le_of_cumulative f p _ _ hs hm ht
+
+/-! ### Pure flag arithmetic (pr359 §1)
+
+All lemmas are subtraction-free: they are stated over the cell atoms
+a = cellA t y, b = cellB y r, s = cellS r. -/
+
+/-- z-cumulative absorption: sharp.all ≤ (mult • hybrid).all.
+    sharp.all = (2s+3)·d with d = (w+1)+delay; hybrid.all = (w+1)s+(2s+3)+3((w+1)/2). -/
+theorem sharp_absorbs_all (_a _b s delay mult : ℕ)
+    (hdm : delay ≤ mult) (hm2 : 2 ≤ mult) :
+    (2 * s + 3) * (131072 + delay) ≤
+      mult * (131072 * s + (2 * s + 3) + 196608) := by
+  calc
+    (2 * s + 3) * (131072 + delay) ≤ (2 * s + 3) * (131072 + mult) :=
+      Nat.mul_le_mul_left _ (by omega)
+    _ = 2 * (65536 * (2 * s + 3)) + mult * (2 * s + 3) := by ring
+    _ ≤ mult * (65536 * (2 * s + 3)) + mult * (2 * s + 3) :=
+      Nat.add_le_add_right (Nat.mul_le_mul_right _ hm2) _
+    _ = mult * (131072 * s + (2 * s + 3) + 196608) := by ring
+
+/-- yz-cumulative absorption:
+    sharp.(yz+all) = 1+(2(b+s)+4)·d; hybrid.(yz+all) = 131072(b+s)+2(b+s)+5+262144. -/
+theorem sharp_absorbs_ysall (_a b s delay mult : ℕ)
+    (_hd : 1 ≤ delay) (hdm : delay ≤ mult) (hm2 : 2 ≤ mult) :
+    1 + (2 * (b + s) + 4) * (131072 + delay) ≤
+      mult * (131072 * (b + s) + 2 * (b + s) + 5 + 262144) := by
+  have h1 : 1 + (2 * (b + s) + 4) * (131072 + delay) ≤
+      1 + (2 * (b + s) + 4) * (131072 + mult) :=
+    Nat.add_le_add_left (Nat.mul_le_mul_left _ (by omega)) _
+  have h2 : 2 * (65536 * (2 * (b + s) + 4)) ≤
+      mult * (65536 * (2 * (b + s) + 4)) :=
+    Nat.mul_le_mul_right _ hm2
+  have hm1 : 1 ≤ mult := by omega
+  calc
+    1 + (2 * (b + s) + 4) * (131072 + delay) ≤
+        1 + (2 * (b + s) + 4) * (131072 + mult) := h1
+    _ = 1 + 2 * (65536 * (2 * (b + s) + 4)) + mult * (2 * (b + s) + 4) := by
+      ring
+    _ ≤ 1 + mult * (65536 * (2 * (b + s) + 4)) + mult * (2 * (b + s) + 4) :=
+      Nat.add_le_add_right (Nat.add_le_add_left h2 _) _
+    _ = mult * (131072 * (b + s) + 2 * (b + s) + 4 + 262144) + 1 := by ring
+    _ ≤ mult * (131072 * (b + s) + 2 * (b + s) + 4 + 262144) + mult :=
+      Nat.add_le_add_left (by omega : (1:ℕ) ≤ mult) _
+    _ = mult * (131072 * (b + s) + 2 * (b + s) + 5 + 262144) := by ring
+
+/-- total-cumulative absorption: adds the z-column 131074·a on the hybrid side
+    against 2a·d on the sharp side. -/
+theorem sharp_absorbs_total (a b s delay mult : ℕ)
+    (_hd : 1 ≤ delay) (hdm : delay ≤ mult) (hm2 : 2 ≤ mult) :
+    1 + (2 * a + 2 * (b + s) + 4) * (131072 + delay) ≤
+      mult * (131074 * a + 131072 * (b + s) + 2 * (b + s) + 5 + 262144) := by
+  have h1 : 1 + (2 * a + 2 * (b + s) + 4) * (131072 + delay) ≤
+      1 + (2 * a + 2 * (b + s) + 4) * (131072 + mult) :=
+    Nat.add_le_add_left (Nat.mul_le_mul_left _ (by omega)) _
+  have h2 : 2 * (65536 * (2 * a + 2 * (b + s) + 4)) ≤
+      mult * (65536 * (2 * a + 2 * (b + s) + 4)) :=
+    Nat.mul_le_mul_right _ hm2
+  calc
+    1 + (2 * a + 2 * (b + s) + 4) * (131072 + delay) ≤
+        1 + (2 * a + 2 * (b + s) + 4) * (131072 + mult) := h1
+    _ = 1 + 2 * (65536 * (2 * a + 2 * (b + s) + 4)) +
+        mult * (2 * a + 2 * (b + s) + 4) := by ring
+    _ ≤ 1 + mult * (65536 * (2 * a + 2 * (b + s) + 4)) +
+        mult * (2 * a + 2 * (b + s) + 4) :=
+      Nat.add_le_add_right (Nat.add_le_add_left h2 _) _
+    _ = mult * (131074 * a + 131072 * (b + s) + 2 * (b + s) + 4 + 262144) +
+        1 := by ring
+    _ ≤ mult * (131074 * a + 131072 * (b + s) + 2 * (b + s) + 4 + 262144) +
+        mult := Nat.add_le_add_left (by omega : (1:ℕ) ≤ mult) _
+    _ = mult * (131074 * a + 131072 * (b + s) + 2 * (b + s) + 5 + 262144) := by
+      ring
+
+/-- center + (w+1) • ⟨a,b,s⟩ = cellRational (as flags), the identity that folds the
+    moving engine's k·wc(⟨a,b,s⟩) term into the rational weightedCost. -/
+theorem center_add_smul_eq_cellRational (t y r : Nat) :
+    center (cellA t y) (cellB y r) (cellS r) +
+        (w + 1) • (⟨cellA t y, cellB y r, cellS r⟩ : FlagDegree) =
+      cellRational t y r := by
+  change FlagDegree.mk _ _ _ = FlagDegree.mk _ _ _
+  simp only [center, direction, unitYZFlag, cellDirection,
+    RCN206.directionFlag,
+    add_zOnly, add_yz, add_all, nsmul_zOnly, nsmul_yz, nsmul_all]
+  congr 1 <;> ring
+
+theorem flag_ext {f g : FlagDegree} (h1 : f.zOnly = g.zOnly)
+    (h2 : f.yz = g.yz) (h3 : f.all = g.all) : f = g := by
+  cases f; cases g; simp_all
+
+/-- cellMovingCut = center + (w+1) • surfaceFlag — the flag under which
+    exists_firstTail_cut_budgets bounds the movingCost sum. -/
+theorem cellMovingCut_eq_center_add (t y r : Nat) :
+    cellMovingCut t y r =
+      center (cellA t y) (cellB y r) (cellS r) +
+        (w + 1) • RCN206.surfaceFlag (cellA t y) (cellB y r) (cellS r) := by
+  refine flag_ext ?_ ?_ ?_ <;>
+    simp only [center, direction, unitYZFlag, cellMovingCut, cellRational,
+      cellDirection, RCN206.directionFlag, RCN206.surfaceFlag,
+      add_zOnly, add_yz, add_all, nsmul_zOnly, nsmul_yz, nsmul_all] <;> ring
+
+/-- rational ≤ hybrid coordinate-wise (hybrid = rational + ⟨0,(w+1)/2,3((w+1)/2)⟩). -/
+theorem cellRational_le_hybrid (t y r : Nat) :
+    (cellRational t y r).zOnly ≤ (cellHybridCoordinate t y r).zOnly ∧
+    (cellRational t y r).yz ≤ (cellHybridCoordinate t y r).yz ∧
+    (cellRational t y r).all ≤ (cellHybridCoordinate t y r).all := by
+  simp only [cellHybridCoordinate, add_zOnly, add_yz, add_all]
+  omega
+
+/-- weightedCost is monotone under coordinate-wise flag dominance. -/
+theorem weightedCost_mono
+    {Omega : Type} [Field Omega]
+    {G T H : MvPolynomial (Fin 3) Omega}
+    {surfaceFlag firstTailFlag : FlagDegree}
+    (B : PrimeFlagBudgetFamily (G := G) (T := T) (H := H)
+      surfaceFlag firstTailFlag)
+    (C : RegularComponent Omega G T H)
+    {f g : FlagDegree}
+    (hz : f.zOnly ≤ g.zOnly) (hy : f.yz ≤ g.yz) (ha : f.all ≤ g.all) :
+    B.weightedCost f C ≤ B.weightedCost g C := by
+  simp only [PrimeFlagBudgetFamily.weightedCost]
+  gcongr
+
+/-! ### Numeric gates for the cell coordinates -/
+
+/-- The rational coordinate's yz-column in closed form. -/
+theorem cellRational_yz (t y r : Nat) :
+    (cellRational t y r).yz = 131074 * cellB y r + 2 := by
+  simp only [cellRational, cellDirection, RCN206.directionFlag, w]
+  omega
+
+/-- The hybrid coordinate's yz-column in closed form. -/
+theorem cellHybridCoordinate_yz (t y r : Nat) :
+    (cellHybridCoordinate t y r).yz = 131074 * cellB y r + 65538 := by
+  simp only [cellHybridCoordinate, add_yz, cellRational_yz, w]
+
+/-- In the hybrid branch `r + 2 ≤ y` the atom `b = cellB y r` is positive, so any
+    error cap below 131075 passes the rational gate. -/
+theorem rationalGate_of_le (t y r errorCap : Nat) (hb : r + 2 ≤ y)
+    (hcap : errorCap + 1 ≤ 131076) :
+    errorCap + 1 ≤ (cellRational t y r).yz := by
+  rw [cellRational_yz]
+  have hB : 1 ≤ cellB y r := by
+    simp only [cellB]
+    omega
+  have := Nat.mul_le_mul_left 131074 hB
+  omega
+
+theorem tangentGate_of_rationalGate (t y r errorCap : Nat)
+    (h : errorCap + 1 ≤ (cellRational t y r).yz) :
+    errorCap + 1 ≤ (cellHybridCoordinate t y r).yz :=
+  h.trans (cellRational_le_hybrid t y r).2.1
+
+/-! ### Closed forms in the atoms (a, b, s) = (cellA t y, cellB y r, cellS r)
+
+These match the subtraction-free shapes `sharpABS / rationalABS / hybABS /
+mfibABS / mcutABS` used elsewhere in the Locator, so the hybrid bound can be
+rewritten into that form by `hybridBound_eq`. -/
+
+theorem cellSharpTail_eq (t y r : Nat) :
+    cellSharpTail t y r =
+      ⟨2 * cellA t y * 131072, 1 + (2 * cellB y r + 1) * 131072,
+        (2 * cellS r + 3) * 131072⟩ := by
+  refine flag_ext ?_ ?_ ?_ <;>
+    simp only [cellSharpTail, sharpResidualAgreementFlag, sharpAgreementDirection,
+      cellSupport, RCN198.support, w] <;> omega
+
+theorem cellRational_eq (t y r : Nat) :
+    cellRational t y r =
+      ⟨131072 * cellA t y + 2 * cellA t y,
+        131072 * cellB y r + 2 * cellB y r + 2,
+        131072 * cellS r + 2 * cellS r + 3⟩ := by
+  refine flag_ext ?_ ?_ ?_ <;>
+    simp only [cellRational, cellDirection, RCN206.directionFlag, w] <;> omega
+
+theorem cellHybridCoordinate_eq (t y r : Nat) :
+    cellHybridCoordinate t y r =
+      ⟨131072 * cellA t y + 2 * cellA t y,
+        131072 * cellB y r + 2 * cellB y r + 2,
+        131072 * cellS r + 2 * cellS r + 3⟩ + ⟨0, 65536, 196608⟩ := by
+  refine flag_ext ?_ ?_ ?_ <;>
+    simp only [cellHybridCoordinate, cellRational, cellDirection,
+      RCN206.directionFlag, add_zOnly, add_yz, add_all, w] <;> omega
+
+theorem cellMovingFiber_eq (t y r : Nat) :
+    cellMovingFiber t y r = ⟨cellA t y, cellB y r + 1, cellS r + 3⟩ := rfl
+
+theorem cellMovingCut_eq (t y r : Nat) :
+    cellMovingCut t y r =
+      ⟨131072 * cellA t y + 2 * cellA t y,
+        131072 * cellB y r + 2 * cellB y r + 2,
+        131072 * cellS r + 2 * cellS r + 3⟩ + ⟨0, 131072, 262144⟩ := by
+  refine flag_ext ?_ ?_ ?_ <;>
+    simp only [cellMovingCut, cellRational, cellDirection,
+      RCN206.directionFlag, add_zOnly, add_yz, add_all, w] <;> omega
+
+/-- The hybrid bound in closed (a, b, s)-form. -/
+theorem hybridBound_eq (flag : FlagDegree) (t y r : Nat) :
+    flagMixed flag (cellSharpTail t y r) (cellHybridCoordinate t y r) +
+        (w + 1) * flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r) =
+      flagMixed flag
+          ⟨2 * cellA t y * 131072, 1 + (2 * cellB y r + 1) * 131072,
+            (2 * cellS r + 3) * 131072⟩
+          (⟨131072 * cellA t y + 2 * cellA t y,
+            131072 * cellB y r + 2 * cellB y r + 2,
+            131072 * cellS r + 2 * cellS r + 3⟩ + ⟨0, 65536, 196608⟩) +
+        131072 * flagMixed flag ⟨cellA t y, cellB y r + 1, cellS r + 3⟩
+          (⟨131072 * cellA t y + 2 * cellA t y,
+            131072 * cellB y r + 2 * cellB y r + 2,
+            131072 * cellS r + 2 * cellS r + 3⟩ + ⟨0, 131072, 262144⟩) := by
+  simp only [cellSharpTail_eq, cellHybridCoordinate_eq, cellMovingFiber_eq,
+    cellMovingCut_eq, w]
+
+end
+end ProximityPrize.SubmissionLower.LocatorHybridCells
+end PackedLocator_LocatorHybridCells
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridCellsC1. -/
+section PackedLocator_LocatorHybridCellsC1
+/-
+LOCATOR HYBRID CELLS — C1 VARIANT.
+
+C1 drops the half-tail offset from the hybrid coordinate:
+
+  cellHybridCoordinateC1 t y r = cellRational t y r      (was  cellRational + ⟨0, (w+1)/2, 3·((w+1)/2)⟩)
+
+which is affordable once the *flag* route is restricted to components of local
+multiplicity at least 6.  Components of multiplicity 1..5 are charged instead
+through the moving engine at cut level `w + mult`, so the moving term's outer
+factor grows from `w + 1` to `w + 5`.  The branch condition gains `3 ≤ r`
+(equivalently `1 ≤ cellS r`); at `r = 2` the padded two-tail cost is already
+cheaper than the current hybrid cost, so nothing is lost there.
+
+This file only ADDS the C1 pieces on top of `LocatorHybridCells`; every flag and
+lemma that is unchanged (cellA/cellB/cellS, cellSupport, cellSharpTail,
+cellRational, cellMovingFiber, cellMovingCut, cellMovingCut_eq_center_add,
+weightedCost_mono, the closed forms) is reused verbatim.
+-/
+namespace ProximityPrize.SubmissionLower.LocatorHybridCellsC1
+open scoped Classical BigOperators
+open RCN095 RCN198 RCN206 RCN287 RCN327 RCN263 RCN237 RCN264 RCN275 RCN084
+open LocatorHybridCells
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+
+/-! ### The C1 hybrid coordinate -/
+
+/-- C1: the hybrid coordinate is the bare rational coordinate. -/
+def cellHybridCoordinateC1 (t y r : Nat) : FlagDegree := cellRational t y r
+
+/-- The rational coordinate at an arbitrary cut level `k`; `k = w + 1` is
+`cellRational`.  This is the flag part produced by the moving engine when the
+proper cut sits at `globalTailCut (w + 1 + delay)` with `k = w + delay`. -/
+def cellRationalAt (t y r k : Nat) : FlagDegree :=
+  center (cellA t y) (cellB y r) (cellS r) +
+    k • (⟨cellA t y, cellB y r, cellS r⟩ : FlagDegree)
+
+theorem cellRationalAt_succ_w (t y r : Nat) :
+    cellRationalAt t y r (w + 1) = cellRational t y r :=
+  center_add_smul_eq_cellRational t y r
+
+theorem cellRationalAt_eq (t y r k : Nat) :
+    cellRationalAt t y r k =
+      ⟨2 * cellA t y + k * cellA t y,
+        2 * cellB y r + 2 + k * cellB y r,
+        2 * cellS r + 3 + k * cellS r⟩ := by
+  refine flag_ext ?_ ?_ ?_ <;>
+    simp only [cellRationalAt, center, direction, unitYZFlag,
+      add_zOnly, add_yz, add_all, nsmul_zOnly, nsmul_yz, nsmul_all] <;> ring
+
+/-! ### Absorption at the bare rational coordinate, threshold `6 ≤ mult`
+
+The three lemmas below replace `LocatorHybridCells.sharp_absorbs_all` /
+`sharp_absorbs_ysall` / `sharp_absorbs_total`.  The offsets `196608` and
+`262144` are gone; in exchange `2 ≤ mult` becomes `6 ≤ mult` and the branch
+positivity hypotheses `1 ≤ s`, `1 ≤ b + s`, `1 ≤ a + b + s` are required.  All
+three follow from `r + 2 ≤ y` and `3 ≤ r`. -/
+
+/-- z-cumulative absorption.
+    sharp.all = (2s+3)·(131072+delay);  rational.all = 131072·s + (2s+3). -/
+theorem sharp_absorbs_all_C1 (s delay mult : ℕ) (hs : 1 ≤ s)
+    (hdm : delay ≤ mult) (hm6 : 6 ≤ mult) :
+    (2 * s + 3) * (131072 + delay) ≤ mult * (131072 * s + (2 * s + 3)) := by
+  have key : 131072 * (2 * s + 3) ≤ mult * (131072 * s) := by
+    calc 131072 * (2 * s + 3) ≤ 131072 * (6 * s) := by omega
+      _ = 6 * (131072 * s) := by ring
+      _ ≤ mult * (131072 * s) := Nat.mul_le_mul_right _ hm6
+  calc
+    (2 * s + 3) * (131072 + delay) ≤ (2 * s + 3) * (131072 + mult) :=
+      Nat.mul_le_mul_left _ (by omega)
+    _ = 131072 * (2 * s + 3) + mult * (2 * s + 3) := by ring
+    _ ≤ mult * (131072 * s) + mult * (2 * s + 3) := Nat.add_le_add_right key _
+    _ = mult * (131072 * s + (2 * s + 3)) := by ring
+
+/-- yz-cumulative absorption, with `B = b + s`.
+    sharp.(yz+all) = 1 + (2B+4)·(131072+delay);  rational.(yz+all) = 131072·B + 2B + 5. -/
+theorem sharp_absorbs_ysall_C1 (B delay mult : ℕ) (hB : 1 ≤ B)
+    (hdm : delay ≤ mult) (hm6 : 6 ≤ mult) :
+    1 + (2 * B + 4) * (131072 + delay) ≤ mult * (131072 * B + 2 * B + 5) := by
+  have key : 1 + 131072 * (2 * B + 4) ≤ mult * (131072 * B) + mult := by
+    have h6 : 6 * (131072 * B) + 6 ≤ mult * (131072 * B) + mult := by
+      have := Nat.mul_le_mul_right (131072 * B) hm6
+      omega
+    have hB' : 262144 * B + 524289 ≤ 786432 * B + 6 := by
+      have : (524288 : ℕ) ≤ 524288 * B := by
+        calc (524288 : ℕ) = 524288 * 1 := by ring
+          _ ≤ 524288 * B := Nat.mul_le_mul_left _ hB
+      omega
+    calc 1 + 131072 * (2 * B + 4) = 262144 * B + 524289 := by ring
+      _ ≤ 786432 * B + 6 := hB'
+      _ = 6 * (131072 * B) + 6 := by ring
+      _ ≤ mult * (131072 * B) + mult := h6
+  calc
+    1 + (2 * B + 4) * (131072 + delay) ≤ 1 + (2 * B + 4) * (131072 + mult) :=
+      Nat.add_le_add_left (Nat.mul_le_mul_left _ (by omega)) _
+    _ = (1 + 131072 * (2 * B + 4)) + mult * (2 * B + 4) := by ring
+    _ ≤ (mult * (131072 * B) + mult) + mult * (2 * B + 4) :=
+      Nat.add_le_add_right key _
+    _ = mult * (131072 * B + 2 * B + 5) := by ring
+
+/-- total-cumulative absorption; the `yz` shape with `A = a + b + s`. -/
+theorem sharp_absorbs_total_C1 (A delay mult : ℕ) (hA : 1 ≤ A)
+    (hdm : delay ≤ mult) (hm6 : 6 ≤ mult) :
+    1 + (2 * A + 4) * (131072 + delay) ≤ mult * (131072 * A + 2 * A + 5) :=
+  sharp_absorbs_ysall_C1 A delay mult hA hdm hm6
+
+/-! ### The multiplicity 1..5 route fits inside `mult` copies of the coordinate
+
+`weightedCost` is linear in the *raw* flag components, so the moving route's flag
+part must be dominated componentwise (not just cumulatively). -/
+
+theorem affine_le_smul (u v mult : ℕ) (hm : 1 ≤ mult) :
+    (131073 + mult) * u + v ≤ mult * (131074 * u + v) := by
+  have h1 : 131073 + mult ≤ 131074 * mult := by
+    have : 131073 * 1 ≤ 131073 * mult := Nat.mul_le_mul_left _ hm
+    omega
+  calc (131073 + mult) * u + v ≤ (131074 * mult) * u + mult * v :=
+        Nat.add_le_add (Nat.mul_le_mul_right _ h1) (Nat.le_mul_of_pos_left _ hm)
+    _ = mult * (131074 * u + v) := by ring
+
+/-- The flag charged to a multiplicity-`mult` component on the moving route
+(`k = w + mult`) is dominated componentwise by `mult` copies of the C1 hybrid
+coordinate.  This is what makes the low-multiplicity branch affordable. -/
+theorem cellRationalAt_le_smul (t y r mult : Nat) (hm : 1 ≤ mult) :
+    (cellRationalAt t y r (w + mult)).zOnly ≤
+        (mult • cellHybridCoordinateC1 t y r).zOnly ∧
+      (cellRationalAt t y r (w + mult)).yz ≤
+        (mult • cellHybridCoordinateC1 t y r).yz ∧
+      (cellRationalAt t y r (w + mult)).all ≤
+        (mult • cellHybridCoordinateC1 t y r).all := by
+  have hz := affine_le_smul (cellA t y) 0 mult hm
+  have hy := affine_le_smul (cellB y r) 2 mult hm
+  have ha := affine_le_smul (cellS r) 3 mult hm
+  simp only [cellRationalAt_eq, cellHybridCoordinateC1, cellRational_eq,
+    nsmul_zOnly, nsmul_yz, nsmul_all, w] at *
+  refine ⟨?_, ?_, ?_⟩ <;> nlinarith [hz, hy, ha]
+
+/-- Trivially, the rational coordinate is the C1 hybrid coordinate. -/
+theorem cellRational_le_hybridC1 (t y r : Nat) :
+    (cellRational t y r).zOnly ≤ (cellHybridCoordinateC1 t y r).zOnly ∧
+      (cellRational t y r).yz ≤ (cellHybridCoordinateC1 t y r).yz ∧
+      (cellRational t y r).all ≤ (cellHybridCoordinateC1 t y r).all :=
+  ⟨le_rfl, le_rfl, le_rfl⟩
+
+theorem cellHybridCoordinateC1_yz (t y r : Nat) :
+    (cellHybridCoordinateC1 t y r).yz = 131074 * cellB y r + 2 :=
+  cellRational_yz t y r
+
+/-- The single numeric gate: in the hybrid branch `r + 2 ≤ y` we have `b ≥ 1`, so
+any error cap below `131076` passes. -/
+theorem hybridC1Gate_of_le (t y r errorCap : Nat) (hb : r + 2 ≤ y)
+    (hcap : errorCap + 1 ≤ 131076) :
+    errorCap + 1 ≤ (cellHybridCoordinateC1 t y r).yz :=
+  rationalGate_of_le t y r errorCap hb hcap
+
+/-! ### The C1 cell cost -/
+
+def cellHybridCostC1 (t y r : Nat) : Nat :=
+  flagMixed (cellFixedFlag t y r) (cellSharpTail t y r)
+      (cellHybridCoordinateC1 t y r) +
+    (w + 5) * flagMixed (cellFixedFlag t y r) (cellMovingFiber t y r)
+      (cellMovingCut t y r)
+
+def cellRegularCostC1 (t y r : Nat) : Nat :=
+  if 3 ≤ r ∧ r + 2 ≤ y then cellHybridCostC1 t y r else cellDelayedCost t y r
+
+def cellCostOfC1 (f : FlagDegree) (t y r : Nat) : Nat :=
+  if 3 ≤ r ∧ r + 2 ≤ y then
+    flagMixed f (cellSharpTail t y r) (cellHybridCoordinateC1 t y r) +
+      (w + 5) * flagMixed f (cellMovingFiber t y r) (cellMovingCut t y r)
+  else flagMixed f (cellFirstTail t y r) (cellSecondTail t y r)
+
+theorem cellRegularCostC1_eq_cellCostOfC1 (t y r : Nat) :
+    cellRegularCostC1 t y r = cellCostOfC1 (cellFixedFlag t y r) t y r := by
+  unfold cellRegularCostC1 cellCostOfC1 cellHybridCostC1 cellDelayedCost
+  split_ifs <;> rfl
+
+theorem sum_cellCostOfC1_le_of_cumulative {J : Type*} [Fintype J]
+    (f : J → FlagDegree) (p : FlagDegree) (t y r : Nat)
+    (hs : (∑ i, (f i).all) ≤ p.all)
+    (hm : (∑ i, ((f i).yz + (f i).all)) ≤ p.yz + p.all)
+    (ht : (∑ i, ((f i).zOnly + (f i).yz + (f i).all)) ≤
+      p.zOnly + p.yz + p.all) :
+    (∑ i, cellCostOfC1 (f i) t y r) ≤ cellCostOfC1 p t y r := by
+  unfold cellCostOfC1
+  split_ifs
+  · rw [Finset.sum_add_distrib, ← Finset.mul_sum]
+    exact Nat.add_le_add
+      (sum_flagMixed_le_of_cumulative f p _ _ hs hm ht)
+      (Nat.mul_le_mul_left _
+        (sum_flagMixed_le_of_cumulative f p _ _ hs hm ht))
+  · exact sum_flagMixed_le_of_cumulative f p _ _ hs hm ht
+
+/-- The C1 bound in closed (a, b, s)-form, matching `hybridBound_eq`. -/
+theorem hybridBoundC1_eq (flag : FlagDegree) (t y r : Nat) :
+    flagMixed flag (cellSharpTail t y r) (cellHybridCoordinateC1 t y r) +
+        (w + 5) * flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r) =
+      flagMixed flag
+          ⟨2 * cellA t y * 131072, 1 + (2 * cellB y r + 1) * 131072,
+            (2 * cellS r + 3) * 131072⟩
+          ⟨131072 * cellA t y + 2 * cellA t y,
+            131072 * cellB y r + 2 * cellB y r + 2,
+            131072 * cellS r + 2 * cellS r + 3⟩ +
+        131076 * flagMixed flag ⟨cellA t y, cellB y r + 1, cellS r + 3⟩
+          (⟨131072 * cellA t y + 2 * cellA t y,
+            131072 * cellB y r + 2 * cellB y r + 2,
+            131072 * cellS r + 2 * cellS r + 3⟩ + ⟨0, 131072, 262144⟩) := by
+  simp only [cellSharpTail_eq, cellHybridCoordinateC1, cellRational_eq,
+    cellMovingFiber_eq, cellMovingCut_eq, w]
+
+end
+end ProximityPrize.SubmissionLower.LocatorHybridCellsC1
+end PackedLocator_LocatorHybridCellsC1
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier49 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridTailProvider. -/
+section PackedLocator_LocatorHybridTailProvider
+/-
+LOCATOR HYBRID TAIL PROVIDER (port of ContactHybridTailProvider6751Research, pr359).
+
+Covers the `r + 2 ≤ y` ("hybrid second-surface") branch of `cellRegularCost`.
+The delayed branch keeps the Locator's reduced-tail discharge (Q2.lean) verbatim.
+
+§0 defines the *bounded* provider `HybridTailMultiplicityProvider`: it is
+pr359's refactored `DelayedTailMultiplicityProvider` (an extra
+`divisorBound` optParam and a single field `cost_sum_le : ∑ cost ≤ divisorBound`
+in place of `cost_le`/`divisor_le`), kept as a NEW structure so that the
+existing B3.lean structure and its constructors (Q2.lean, GZ.lean) stay
+untouched.  `stage_card_le_divisorBound` is the generalized
+`stage_card_le_flagMixed`.
+
+Conclusion shape of §3:
+
+  Nonempty (HybridTailMultiplicityProvider
+    (tailFlag1 := cellSharpTail t y r) (tailFlag2 := cellHybridCoordinate t y r) S
+    (flagMixed flag (cellSharpTail t y r) (cellHybridCoordinate t y r)
+      + (w + 1) * flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r)))
+
+Caller-side obligations (discharged in LocatorHybridTailRealization.lean):
+  B            : sharp unit family (activeNestedUnitFamily on T1 in the sharp
+                 flag DIRECTLY — no congruent-cut transport)
+  budget/hcost/hmovingSum : outputs of exists_firstTail_cut_budgets
+  hresultants  : sharp-family certificate (activeNestedWeightedCertificate on T1)
+  htangent     : the tangent count vs B.yzCost
+  htangentGate / hrationalGate : numeric gates errors+1 ≤ hybrid.yz / rational.yz
+                 (rational.yz = 131074·b + 2 ≥ 131076 whenever b ≥ 1, i.e. r+2 ≤ y).
+-/
+namespace ProximityPrize.SubmissionLower.LocatorHybridTailProvider
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
+open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
+open LocatorHybridCells
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+/-! ### 0. The bounded provider (pr359's refactored DelayedTailMultiplicityProvider) -/
+
+section BoundedProvider
+variable {K0 Omega Iota : Type} [Field K0] [Field Omega] [IsAlgClosed Omega]
+  {phi : Polynomial K0 →+* Omega} {Gamma0 : Finset K0} {x0 : Iota → K0}
+  {pchar errorCap d : ℕ} [CharP Omega pchar]
+  {flag0 tailFlag1 tailFlag2 : FlagDegree}
+  {support0 : RCN275.ResidualSupportParameters}
+
+structure HybridTailMultiplicityProvider
+    (S : ResidualStage phi Gamma0 x0 pchar errorCap flag0 d support0)
+    (divisorBound : optParam ℕ (flagMixed flag0 tailFlag1 tailFlag2)) where
+  budgetFamily : PrimeFlagBudgetFamily
+    (G := S.G) (T := globalTailCut phi S.F (d + 1))
+    (H := regularitySurface phi S.F) flag0 tailFlag1
+  multiplicity : FirstTailComponent S → ℕ
+  cost : FirstTailComponent S → ℕ
+  one_le_multiplicity : ∀ C, 1 ≤ multiplicity C
+  tangentYZGate : errorCap + 1 ≤ tailFlag2.yz
+  cost_sum_le : (∑ C, cost C) ≤ divisorBound
+  componentBound : ∀ C,
+    (componentSeeds Omega S.G (globalTailCut phi S.F (d + 1))
+      (regularitySurface phi S.F) Gamma0
+      (selectedPoint phi S.selected) C).card ≤ cost C
+  dichotomy : ∀ C,
+    (∃ delay, 1 ≤ delay ∧ delay ≤ multiplicity C ∧
+      globalTailCut phi S.F (d + 1 + delay) ∉ C.1) ∨
+    ((∀ delay, globalTailCut phi S.F (d + 1 + delay) ∈ C.1) ∧
+      (componentSeeds Omega S.G (globalTailCut phi S.F (d + 1))
+        (regularitySurface phi S.F) Gamma0
+        (selectedPoint phi S.selected) C).card ≤
+          (errorCap + 1) * budgetFamily.yzCost C)
+
+/-- The generalized `stage_card_le_flagMixed`: any bounded provider bounds the
+seed count by its `divisorBound`. -/
+theorem stage_card_le_divisorBound
+    (S : ResidualStage phi Gamma0 x0 pchar errorCap flag0 d support0)
+    {divisorBound : ℕ}
+    (P : HybridTailMultiplicityProvider
+      (tailFlag1 := tailFlag1) (tailFlag2 := tailFlag2) S divisorBound) :
+    Gamma0.card ≤ divisorBound := by
+  classical
+  let T1 := globalTailCut phi S.F (d + 1)
+  let H := regularitySurface phi S.F
+  let point := selectedPoint phi S.selected
+  have hG : ∀ gamma ∈ Gamma0,
+      MvPolynomial.eval (point gamma) S.G = 0 := S.on_component
+  have hT1 : ∀ gamma ∈ Gamma0,
+      MvPolynomial.eval (point gamma) T1 = 0 := by
+    intro gamma hgamma
+    exact selected_globalTailCut_zero phi S.F S.selected gamma d
+      (S.degree_le gamma hgamma) (S.solution gamma hgamma)
+  have hH : ∀ gamma ∈ Gamma0,
+      MvPolynomial.eval (point gamma) H ≠ 0 := by
+    intro gamma hgamma
+    exact selectedPoint_evaluation phi S.selected gamma
+      (MvPolynomial.pderiv (2:Fin 4) S.F) |>.symm ▸ S.regular gamma hgamma
+  have hcover : Gamma0.card ≤
+      ∑ C : RegularComponent Omega S.G T1 H,
+        (componentSeeds Omega S.G T1 H Gamma0 point C).card :=
+    card_le_sum_componentSeeds Omega S.G T1 H Gamma0 point hG hT1 hH
+  calc
+    Gamma0.card ≤ ∑ C : RegularComponent Omega S.G T1 H,
+        (componentSeeds Omega S.G T1 H Gamma0 point C).card := hcover
+    _ ≤ ∑ C : RegularComponent Omega S.G T1 H, P.cost C :=
+      Finset.sum_le_sum (fun C _ ↦ P.componentBound C)
+    _ ≤ divisorBound := P.cost_sum_le
+
+end BoundedProvider
+
+variable {K I : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
+variable [CharP (GenericField K) p]
+variable {stageErrorCap : ℕ}
+
+/-! ### 1. L1 — the delayed cut lands in mult • hybrid (mult ≥ 2)
+
+Direct containment (no mod-G reduction): the (w+1+delay)-th tail cut lies in the
+sharp flag at degree w+1+delay, and the three cumulative absorptions of
+LocatorHybridCells push that into `mult • cellHybridCoordinate` whenever
+1 ≤ delay ≤ mult and 2 ≤ mult. -/
+
+theorem laterTail_in_hybridFlag
+    (t y r : Nat) (_hr2 : 2 ≤ r) (_hry : r < y)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (delay mult : ℕ) (hd : 1 ≤ delay) (hdm : delay ≤ mult) (hm2 : 2 ≤ mult) :
+    PolynomialInFlag (mult • cellHybridCoordinate t y r)
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1 + delay)) := by
+  have hsy : (cellSupport t y r).s < (cellSupport t y r).ys := by
+    simp only [cellSupport, cellA, cellB, cellS, RCN198.support]
+    omega
+  -- globalTailCut is definitionally surfaceMap of the agreement numerator with
+  -- the tail selector, so the sharp containment applies directly.
+  have hsharp : PolynomialInFlag
+      (sharpResidualAgreementFlag (cellSupport t y r) (w + 1 + delay))
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1 + delay)) := by
+    exact surfaceMap_agreement_in_sharp_flag hsy (polynomialEmbedding K)
+      ⟨S.surface_s_weight, S.surface_ys_weight, S.surface_total_weight⟩
+      (w + 1 + delay) (tailSelector (w + 1 + delay)) 0 0 0
+  intro exponent hexp
+  have h := hsharp exponent hexp
+  obtain ⟨hall, hys, htot⟩ := h
+  -- rewrite the sharp cumulative sums into the subtraction-free atom form
+  have hallV : (sharpResidualAgreementFlag (cellSupport t y r)
+      (w + 1 + delay)).all = (2 * cellS r + 3) * (131072 + delay) := by
+    have e1 : ∀ m : ℕ, 2 * (m + 2) - 1 = 2 * m + 3 := fun m => by omega
+    have e2 : ∀ m2 m3 : ℕ,
+        2 * (m2 + m3 + 3 - (m3 + 2)) - 1 = 2 * m2 + 1 := fun m2 m3 => by omega
+    have e3 : ∀ m1 m2 m3 : ℕ,
+        m1 + m2 + m3 + 3 - (m2 + m3 + 3) = m1 := fun m1 m2 m3 => by omega
+    simp only [sharpResidualAgreementFlag, sharpAgreementDirection,
+      cellSupport, RCN198.support, w, e3, e2, e1]
+  have hysV : (sharpResidualAgreementFlag (cellSupport t y r)
+        (w + 1 + delay)).yz +
+      (sharpResidualAgreementFlag (cellSupport t y r)
+        (w + 1 + delay)).all =
+      1 + (2 * (cellB y r + cellS r) + 4) * (131072 + delay) := by
+    have e1 : ∀ m : ℕ, 2 * (m + 2) - 1 = 2 * m + 3 := fun m => by omega
+    have e2 : ∀ m2 m3 : ℕ,
+        2 * (m2 + m3 + 3 - (m3 + 2)) - 1 = 2 * m2 + 1 := fun m2 m3 => by omega
+    have e3 : ∀ m1 m2 m3 : ℕ,
+        m1 + m2 + m3 + 3 - (m2 + m3 + 3) = m1 := fun m1 m2 m3 => by omega
+    simp only [sharpResidualAgreementFlag, sharpAgreementDirection,
+      cellSupport, RCN198.support, w, e3, e2, e1]
+    all_goals ring
+  have htotV : (sharpResidualAgreementFlag (cellSupport t y r)
+        (w + 1 + delay)).zOnly +
+      (sharpResidualAgreementFlag (cellSupport t y r)
+        (w + 1 + delay)).yz +
+      (sharpResidualAgreementFlag (cellSupport t y r)
+        (w + 1 + delay)).all =
+      1 + (2 * cellA t y + 2 * (cellB y r + cellS r) + 4) *
+        (131072 + delay) := by
+    have e1 : ∀ m : ℕ, 2 * (m + 2) - 1 = 2 * m + 3 := fun m => by omega
+    have e2 : ∀ m2 m3 : ℕ,
+        2 * (m2 + m3 + 3 - (m3 + 2)) - 1 = 2 * m2 + 1 := fun m2 m3 => by omega
+    have e3 : ∀ m1 m2 m3 : ℕ,
+        m1 + m2 + m3 + 3 - (m2 + m3 + 3) = m1 := fun m1 m2 m3 => by omega
+    simp only [sharpResidualAgreementFlag, sharpAgreementDirection,
+      cellSupport, RCN198.support, w, e3, e2, e1]
+    all_goals ring
+  -- hybrid cumulative sums in atom form
+  have hhallV : (mult • cellHybridCoordinate t y r).all =
+      mult * (131072 * cellS r + (2 * cellS r + 3) + 196608) := by
+    simp only [cellHybridCoordinate, cellRational, cellDirection,
+      RCN206.directionFlag, add_all, nsmul_all, w]
+  have hhysV : (mult • cellHybridCoordinate t y r).yz +
+      (mult • cellHybridCoordinate t y r).all =
+      mult * (131072 * (cellB y r + cellS r) +
+        2 * (cellB y r + cellS r) + 5 + 262144) := by
+    simp only [cellHybridCoordinate, cellRational, cellDirection,
+      RCN206.directionFlag, add_yz, add_all, nsmul_yz, nsmul_all, w]
+    norm_num
+    ring
+  have hhtotV : (mult • cellHybridCoordinate t y r).zOnly +
+      (mult • cellHybridCoordinate t y r).yz +
+      (mult • cellHybridCoordinate t y r).all =
+      mult * (131074 * cellA t y + 131072 * (cellB y r + cellS r) +
+        2 * (cellB y r + cellS r) + 5 + 262144) := by
+    simp only [cellHybridCoordinate, cellRational, cellDirection,
+      RCN206.directionFlag, add_zOnly, add_yz, add_all, nsmul_zOnly,
+      nsmul_yz, nsmul_all, w]
+    norm_num
+    ring
+  refine ⟨?_, ?_, ?_⟩
+  · exact (hallV ▸ hall).trans (hhallV ▸
+      sharp_absorbs_all (cellA t y) (cellB y r) (cellS r) delay mult hdm hm2)
+  · exact (hysV ▸ hys).trans (hhysV ▸
+      sharp_absorbs_ysall (cellA t y) (cellB y r) (cellS r) delay mult
+        hd hdm hm2)
+  · exact (htotV ▸ htot).trans (hhtotV ▸
+      sharp_absorbs_total (cellA t y) (cellB y r) (cellS r) delay mult
+        hd hdm hm2)
+
+/-! ### 2. L2 — the multiplicity-1 moving count
+
+For a component whose (w+2)-cut is proper, the seeds are bounded by
+wc(rational) + (w+1)·movingCost, via the filteredCut decomposition of the (w+2)
+cut and the MovingPoleBudget zero bound at C := center, k := w+1. -/
+
+set_option maxHeartbeats 20000000 in
+theorem component_hybrid_moving_card_le
+    (t y r : Nat) (_hr2 : 2 ≤ r) (_hry : r < y) (_hyt : y ≤ t)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (C : FirstTailComponent S)
+    (budget : MovingPoleBudget C.1
+      (regularitySurface (polynomialEmbedding K) S.F)
+      (surfaceMap (polynomialEmbedding K) (polyG K S.F)))
+    (base : SeparableLiteralCoordinate C.1)
+    (hproper : globalTailCut (polynomialEmbedding K) S.F
+      (w + 1 + 1) ∉ C.1) :
+    (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+      budget.weightedCost (center (cellA t y) (cellB y r) (cellS r)) +
+        (w + 1) *
+          (budget.weightedCost
+              (⟨cellA t y, cellB y r, cellS r⟩ : FlagDegree) +
+            budget.movingCost) := by
+  classical
+  have Hsupport : ResidualSupportData (cellSupport t y r) S.F :=
+    ⟨S.surface_s_weight, S.surface_ys_weight, S.surface_total_weight⟩
+  have hR : S.F.degreeOf 2 ≤ cellS r + 2 := by
+    have h := Hsupport.coordinate_bounds.2.1
+    simpa only [cellSupport, cellS, RCN198.support] using h
+  have hYR : wt ![0, 1, 1, 0] S.F ≤ cellB y r + cellS r + 3 := by
+    have h := Hsupport.ys_weight
+    simpa only [residualYSWeights, cellSupport, cellB, cellS, RCN198.support] using h
+  have hAll : wt ![0, 1, 1, 1] S.F ≤ cellA t y + cellB y r + cellS r + 3 := by
+    have h := Hsupport.total_weight
+    simpa only [residualTotalWeights, cellSupport, cellA, cellB, cellS,
+      RCN198.support] using h
+  obtain ⟨Bc, cf, heq, hcoeff, hclass⟩ :=
+    globalTailCut_certificate (polynomialEmbedding K)
+      (cellA t y) (cellB y r) (cellS r) S.F hR hYR hAll
+      (w + 1) (Nat.le_add_left 1 w)
+  have hHrw : surfaceMap (polynomialEmbedding K) (polyH K S.F) =
+      regularitySurface (polynomialEmbedding K) S.F := rfl
+  rw [hHrw] at heq
+  have hA : filteredCut
+      (w + 1) Bc
+      (regularitySurface (polynomialEmbedding K) S.F)
+      (surfaceMap (polynomialEmbedding K) (polyG K S.F)) ∉ C.1 :=
+    heq ▸ hproper
+  have hHnot : regularitySurface (polynomialEmbedding K) S.F ∉ C.1 :=
+    regularComponent_H_not_mem (GenericField K) S.G _ _ C
+  have hzero : FiniteRegularZeroSetBound C.1
+      (regularitySurface (polynomialEmbedding K) S.F)
+      (filteredCut (w + 1) Bc
+        (regularitySurface (polynomialEmbedding K) S.F)
+        (surfaceMap (polynomialEmbedding K) (polyG K S.F)))
+      (budget.weightedCost (center (cellA t y) (cellB y r) (cellS r)) +
+        (w + 1) *
+          (budget.weightedCost
+              (⟨cellA t y, cellB y r, cellS r⟩ : FlagDegree) +
+            budget.movingCost)) :=
+    budget.zero_le base (cellA t y) (cellB y r) (cellS r) (w + 1)
+      (center (cellA t y) (cellB y r) (cellS r)) Bc cf hHnot hA hcoeff hclass
+  let seeds := componentSeeds (GenericField K) S.G
+    (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+    (regularitySurface (polynomialEmbedding K) S.F) Gamma
+    (selectedPoint (polynomialEmbedding K) S.selected) C
+  let pts : Finset (Fin 3 → GenericField K) :=
+    seeds.image (selectedPoint (polynomialEmbedding K) S.selected)
+  have hprime : ∀ v ∈ pts,
+      C.1 ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom := by
+    intro v hv
+    obtain ⟨gamma, hgamma, rfl⟩ := Finset.mem_image.mp hv
+    exact componentSeeds_on_prime (GenericField K) S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+      (regularitySurface (polynomialEmbedding K) S.F) Gamma
+      (selectedPoint (polynomialEmbedding K) S.selected) C gamma hgamma
+  have hHne : ∀ v ∈ pts, MvPolynomial.aeval v
+      (regularitySurface (polynomialEmbedding K) S.F) ≠ 0 := by
+    intro v hv
+    obtain ⟨gamma, hgamma, rfl⟩ := Finset.mem_image.mp hv
+    have hGamma : gamma ∈ Gamma := componentSeeds_subset (GenericField K) S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+      (regularitySurface (polynomialEmbedding K) S.F) Gamma
+      (selectedPoint (polynomialEmbedding K) S.selected) C hgamma
+    show MvPolynomial.eval
+        (selectedPoint (polynomialEmbedding K) S.selected gamma)
+        (regularitySurface (polynomialEmbedding K) S.F) ≠ 0
+    exact (selectedPoint_evaluation (polynomialEmbedding K) S.selected gamma
+      (MvPolynomial.pderiv (2 : Fin 4) S.F)).symm ▸ S.regular gamma hGamma
+  have hAzero : ∀ v ∈ pts, MvPolynomial.aeval v
+      (filteredCut (w + 1) Bc
+        (regularitySurface (polynomialEmbedding K) S.F)
+        (surfaceMap (polynomialEmbedding K) (polyG K S.F))) = 0 := by
+    intro v hv
+    obtain ⟨gamma, hgamma, rfl⟩ := Finset.mem_image.mp hv
+    have hGamma : gamma ∈ Gamma := componentSeeds_subset (GenericField K) S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+      (regularitySurface (polynomialEmbedding K) S.F) Gamma
+      (selectedPoint (polynomialEmbedding K) S.selected) C hgamma
+    have hz : MvPolynomial.aeval
+        (selectedPoint (polynomialEmbedding K) S.selected gamma)
+        (globalTailCut (polynomialEmbedding K) S.F
+          (w + 1 + 1)) = 0 :=
+      selected_globalTailCut_zero_of_lt (polynomialEmbedding K) S.F
+        S.selected gamma w (w + 1 + 1)
+        (S.degree_le gamma hGamma) (S.solution gamma hGamma) (by omega)
+    exact heq ▸ hz
+  have hbound : pts.card ≤
+      budget.weightedCost (center (cellA t y) (cellB y r) (cellS r)) +
+        (w + 1) *
+          (budget.weightedCost
+              (⟨cellA t y, cellB y r, cellS r⟩ : FlagDegree) +
+            budget.movingCost) :=
+    hzero pts hprime hHne hAzero
+  have hcard : pts.card = seeds.card :=
+    Finset.card_image_of_injective seeds
+      (selectedPoint_injective (polynomialEmbedding K) S.selected)
+  show seeds.card ≤ _
+  omega
+
+/-! ### 3. The hybrid provider from a local DVR family -/
+
+theorem exists_hybridTailMultiplicityProvider_of_localDVR
+    (t y r : Nat) (hr2 : 2 ≤ r) (hb : r + 2 ≤ y) (hyt : y ≤ t)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F
+      (w + 1))
+    (B : PrimeFlagBudgetFamily
+      (G := S.G) (T := globalTailCut (polynomialEmbedding K) S.F
+        (w + 1))
+      (H := regularitySurface (polynomialEmbedding K) S.F) flag
+      (cellSharpTail t y r))
+    (base : ∀ C : FirstTailComponent S, SeparableLiteralCoordinate C.1)
+    (budget : ∀ C : FirstTailComponent S,
+      MovingPoleBudget C.1
+        (regularitySurface (polynomialEmbedding K) S.F)
+        (surfaceMap (polynomialEmbedding K) (polyG K S.F)))
+    (hcost : ∀ C : FirstTailComponent S,
+      (budget C).zCost = B.zCost C ∧ (budget C).yzCost = B.yzCost C ∧
+        (budget C).allCost = B.allCost C)
+    (hmovingSum : (∑ C : FirstTailComponent S, (budget C).movingCost) ≤
+      flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r))
+    (htangentGate : stageErrorCap + 1 ≤ (cellHybridCoordinate t y r).yz)
+    (hrationalGate : stageErrorCap + 1 ≤ (cellRational t y r).yz)
+    (htangent : ∀ C : FirstTailComponent S,
+      (∀ delay, globalTailCut (polynomialEmbedding K) S.F
+        (w + 1 + delay) ∈ C.1) →
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+          (stageErrorCap + 1) * B.yzCost C)
+    (hresultants : RegularComponentWeightedInertiaResultantCertificate B
+      (fun C => localMultiplicity (loosenStageGeneral S)
+        (canonicalLocalDVRFamily (loosenStageGeneral S) hfirstProper) C)) :
+    Nonempty (HybridTailMultiplicityProvider
+      (tailFlag1 := cellSharpTail t y r)
+      (tailFlag2 := cellHybridCoordinate t y r) S
+      (flagMixed flag (cellSharpTail t y r) (cellHybridCoordinate t y r) +
+        (w + 1) *
+          flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r))) := by
+  classical
+  have hry : r < y := by omega
+  let S0 := loosenStageGeneral S
+  let multiplicity : FirstTailComponent S → ℕ := fun C =>
+    localMultiplicity S0 (canonicalLocalDVRFamily S0 hfirstProper) C
+  have hone : ∀ C, 1 ≤ multiplicity C :=
+    loosenStageGeneral_one_le_localMultiplicity S hfirstProper
+  -- weightedCost over budget = weightedCost over B (cost equalities)
+  have hwcEq : ∀ (C : FirstTailComponent S) (f : FlagDegree),
+      (budget C).weightedCost f = B.weightedCost f C := by
+    intro C f
+    obtain ⟨hz, hy', ha⟩ := hcost C
+    simp only [MovingPoleBudget.weightedCost,
+      PrimeFlagBudgetFamily.weightedCost, hz, hy', ha]
+  -- the piecewise cost
+  let cost : FirstTailComponent S → ℕ := fun C =>
+    if 2 ≤ multiplicity C then
+      multiplicity C * B.weightedCost (cellHybridCoordinate t y r) C
+    else
+      B.weightedCost (cellRational t y r) C +
+        (w + 1) * (budget C).movingCost
+  -- pointwise: cost C ≤ mult C * wc(hybrid) + (w+1) * movingCost C
+  have hcost_pointwise : ∀ C, cost C ≤
+      multiplicity C * B.weightedCost (cellHybridCoordinate t y r) C +
+        (w + 1) * (budget C).movingCost := by
+    intro C
+    by_cases hm : 2 ≤ multiplicity C
+    · simp only [cost, if_pos hm]
+      exact Nat.le_add_right _ _
+    · simp only [cost, if_neg hm]
+      have hmono := weightedCost_mono B C
+        (cellRational_le_hybrid t y r).1
+        (cellRational_le_hybrid t y r).2.1
+        (cellRational_le_hybrid t y r).2.2
+      have h1 : B.weightedCost (cellRational t y r) C ≤
+          multiplicity C *
+            B.weightedCost (cellHybridCoordinate t y r) C := by
+        calc B.weightedCost (cellRational t y r) C ≤
+            B.weightedCost (cellHybridCoordinate t y r) C := hmono
+          _ = 1 * B.weightedCost (cellHybridCoordinate t y r) C := by ring
+          _ ≤ multiplicity C *
+              B.weightedCost (cellHybridCoordinate t y r) C :=
+            Nat.mul_le_mul_right _ (hone C)
+      omega
+  -- the component bound
+  have hbound : ∀ C,
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+      cost C := by
+    intro C
+    have dichotomy := local_order_tail_dichotomy S0
+      (canonicalLocalDVRFamily S0 hfirstProper) C hfirstProper
+    rcases dichotomy.2 with hproper | htangentBranch
+    · obtain ⟨delay, hdelay, hdelayMu, htail⟩ := hproper
+      by_cases hm : 2 ≤ multiplicity C
+      · -- mult ≥ 2: cut with the delayed cut inside mult • hybrid
+        have hzero : ∀ gamma ∈ componentSeeds (GenericField K) S.G
+            (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+            (regularitySurface (polynomialEmbedding K) S.F) Gamma
+            (selectedPoint (polynomialEmbedding K) S.selected) C,
+            MvPolynomial.aeval
+              (selectedPoint (polynomialEmbedding K) S.selected gamma)
+              (globalTailCut (polynomialEmbedding K) S.F
+                (w + 1 + delay)) = 0 := by
+          intro gamma hgamma
+          have hGamma := componentSeeds_subset (GenericField K) S.G
+            (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+            (regularitySurface (polynomialEmbedding K) S.F) Gamma
+            (selectedPoint (polynomialEmbedding K) S.selected) C hgamma
+          exact selected_globalTailCut_zero_of_lt (polynomialEmbedding K)
+            S.F S.selected gamma w (w + 1 + delay)
+            (S.degree_le gamma hGamma) (S.solution gamma hGamma) (by omega)
+        have hflagMod : PolynomialInFlagMod C.1
+            (multiplicity C • cellHybridCoordinate t y r)
+            (globalTailCut (polynomialEmbedding K) S.F
+              (w + 1 + delay)) := by
+          refine ⟨globalTailCut (polynomialEmbedding K) S.F
+            (w + 1 + delay),
+            laterTail_in_hybridFlag t y r hr2 hry S delay
+              (multiplicity C) hdelay hdelayMu hm, ?_⟩
+          simp
+        have hcount := component_secondTail_card_le_mod (Seed := K) B C Gamma
+          (selectedPoint (polynomialEmbedding K) S.selected)
+          (selectedPoint_injective (polynomialEmbedding K) S.selected)
+          hflagMod htail hzero
+        have hscale : B.weightedCost
+            (multiplicity C • cellHybridCoordinate t y r) C =
+            multiplicity C *
+              B.weightedCost (cellHybridCoordinate t y r) C := by
+          simp only [PrimeFlagBudgetFamily.weightedCost, nsmul_zOnly,
+            nsmul_yz, nsmul_all]
+          ring
+        simp only [cost, if_pos hm]
+        rw [hscale] at hcount
+        exact hcount
+      · -- mult = 1: delay must be 1; use the moving engine
+        have hm1 : multiplicity C = 1 := by
+          have := hone C
+          omega
+        have hdelay1 : delay = 1 := by
+          have h2 : delay ≤ 1 := by rw [← hm1]; exact hdelayMu
+          omega
+        subst hdelay1
+        have hcount := component_hybrid_moving_card_le t y r hr2 hry hyt
+          S C (budget C) (base C) htail
+        simp only [cost, if_neg hm]
+        simp only [hwcEq] at hcount
+        -- fold wc(center) + (w+1)·wc(⟨a,b,s⟩) into wc(rational)
+        have hfold : B.weightedCost
+              (center (cellA t y) (cellB y r) (cellS r)) C +
+            (w + 1) *
+              (B.weightedCost
+                (⟨cellA t y, cellB y r, cellS r⟩ : FlagDegree) C +
+                (budget C).movingCost) =
+            B.weightedCost (cellRational t y r) C +
+              (w + 1) * (budget C).movingCost := by
+          have hid := center_add_smul_eq_cellRational t y r
+          simp only [← hid, PrimeFlagBudgetFamily.weightedCost, add_zOnly,
+            add_yz, add_all, nsmul_zOnly, nsmul_yz, nsmul_all]
+          ring
+        omega
+    · -- tangent branch
+      have hcount := htangent C htangentBranch
+      by_cases hm : 2 ≤ multiplicity C
+      · simp only [cost, if_pos hm]
+        calc _ ≤ (stageErrorCap + 1) * B.yzCost C := hcount
+          _ ≤ B.weightedCost (cellHybridCoordinate t y r) C :=
+            yzCost_mul_le_weightedCost B (cellHybridCoordinate t y r) C
+              (stageErrorCap + 1) htangentGate
+          _ = 1 * B.weightedCost (cellHybridCoordinate t y r) C := by ring
+          _ ≤ multiplicity C *
+              B.weightedCost (cellHybridCoordinate t y r) C :=
+            Nat.mul_le_mul_right _ (hone C)
+      · simp only [cost, if_neg hm]
+        calc _ ≤ (stageErrorCap + 1) * B.yzCost C := hcount
+          _ ≤ B.weightedCost (cellRational t y r) C :=
+            yzCost_mul_le_weightedCost B (cellRational t y r) C
+              (stageErrorCap + 1) hrationalGate
+          _ ≤ B.weightedCost (cellRational t y r) C +
+              (w + 1) * (budget C).movingCost := Nat.le_add_right _ _
+  -- the sum bound: certificate + moving sum
+  have hsum : (∑ C, cost C) ≤
+      flagMixed flag (cellSharpTail t y r) (cellHybridCoordinate t y r) +
+        (w + 1) *
+          flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r) := by
+    calc (∑ C, cost C) ≤
+        ∑ C, (multiplicity C *
+            B.weightedCost (cellHybridCoordinate t y r) C +
+          (w + 1) * (budget C).movingCost) :=
+        Finset.sum_le_sum (fun C _ => hcost_pointwise C)
+      _ = (∑ C, multiplicity C *
+            B.weightedCost (cellHybridCoordinate t y r) C) +
+          (w + 1) * (∑ C, (budget C).movingCost) := by
+        rw [Finset.sum_add_distrib, Finset.mul_sum]
+      _ ≤ flagMixed flag (cellSharpTail t y r)
+            (cellHybridCoordinate t y r) +
+          (w + 1) *
+            flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r) :=
+        Nat.add_le_add
+          (hresultants.divisor_le B multiplicity)
+          (Nat.mul_le_mul_left _ hmovingSum)
+  have providerDichotomy := loosenStageGeneral_dichotomy_with_tangent S
+    hfirstProper B htangent
+  exact ⟨{
+    budgetFamily := B
+    multiplicity := multiplicity
+    cost := cost
+    one_le_multiplicity := hone
+    tangentYZGate := htangentGate
+    cost_sum_le := hsum
+    componentBound := hbound
+    dichotomy := providerDichotomy }⟩
+
+end
+end ProximityPrize.SubmissionLower.LocatorHybridTailProvider
+end PackedLocator_LocatorHybridTailProvider
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier50 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier51 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorFactorReplacement. -/
+section PackedLocator_LocatorFactorReplacement
+namespace ProximityPrize.SubmissionLower.LocatorFactorReplacement
+open scoped BigOperators
+open RCN095 LocatorFactorAggregate
+set_option maxRecDepth 2048
+set_option maxHeartbeats 300000
+def remainingCap (T YS S:ℕ) (p:FlagDegree):FlagDegree :=
+  cap (T - total p) (min (YS - middle p) (T - total p))
+    (min (S - p.all) (min (YS - middle p) (T - total p)))
+def remainingCost (T YS S d e:ℕ) (p:FlagDegree):ℕ :=
+  if (remainingCap T YS S p).all = 0 then 0
+  else paddedCost d e (remainingCap T YS S p)
+def cellCost (T YS S d e:ℕ) (p:FlagDegree) (q:ℕ):ℕ :=
+  min (paddedCost d e p) q + remainingCost T YS S d e p
+def Bad (T d e bound:ℕ) (p:FlagDegree):Prop :=
+  bound * total p < T * paddedCost d e p
+theorem remainingCap_cumulative (T YS S:ℕ) (p:FlagDegree) :
+    (remainingCap T YS S p).all =
+        min (S - p.all) (min (YS - middle p) (T - total p)) ∧
+      middle (remainingCap T YS S p) = min (YS - middle p) (T - total p) ∧
+      total (remainingCap T YS S p) = T - total p:=by
+  exact cap_cumulative _ _ _ (Nat.min_le_right _ _) (Nat.min_le_right _ _)
+theorem sum_erase_le_sub {I:Type*} [Fintype I] [DecidableEq I]
+    (f:I → ℕ) (B:ℕ) (h:(∑ i, f i) ≤ B) (i:I) :
+    (∑ j ∈ Finset.univ.erase i, f j) ≤ B - f i:=by
+  have heq:=Finset.sum_erase_add Finset.univ f (Finset.mem_univ i)
+  omega
+theorem remaining_cumulative {I:Type*} [Fintype I] [DecidableEq I]
+    (p:I → FlagDegree) (T YS S:ℕ) (i:I)
+    (hs:(∑ j, (p j).all) ≤ S)
+    (hy:(∑ j, middle (p j)) ≤ YS)
+    (ht:(∑ j, total (p j)) ≤ T) :
+    (∑ j ∈ Finset.univ.erase i, (p j).all) ≤ (remainingCap T YS S (p i)).all ∧
+      (∑ j ∈ Finset.univ.erase i, middle (p j)) ≤ middle (remainingCap T YS S (p i)) ∧
+      (∑ j ∈ Finset.univ.erase i, total (p j)) ≤ total (remainingCap T YS S (p i)):=by
+  have hrs:=sum_erase_le_sub (fun j => (p j).all) S hs i
+  have hys:=sum_erase_le_sub (fun j => middle (p j)) YS hy i
+  have hts:=sum_erase_le_sub (fun j => total (p j)) T ht i
+  have hry:(∑ j ∈ Finset.univ.erase i, (p j).all) ≤
+      ∑ j ∈ Finset.univ.erase i, middle (p j) :=
+    Finset.sum_le_sum (fun j _ => all_le_middle (p j))
+  have hyt:(∑ j ∈ Finset.univ.erase i, middle (p j)) ≤
+      ∑ j ∈ Finset.univ.erase i, total (p j) :=
+    Finset.sum_le_sum (fun j _ => middle_le_total (p j))
+  have hc:=remainingCap_cumulative T YS S (p i)
+  rw [hc.1, hc.2.1, hc.2.2]
+  exact ⟨le_min hrs (le_min (hry.trans hys) ((hry.trans hyt).trans hts)),
+    le_min hys (hyt.trans hts), hts⟩
+theorem sum_others_le_remainingCost {I:Type*} [Fintype I] [DecidableEq I]
+    (p:I → FlagDegree) (count:I → ℕ) (T YS S d e:ℕ) (i:I)
+    (hs:(∑ j, (p j).all) ≤ S)
+    (hy:(∑ j, middle (p j)) ≤ YS)
+    (ht:(∑ j, total (p j)) ≤ T)
+    (hstage:∀ j, count j ≤ paddedCost d e (p j))
+    (hzero:∀ j, (p j).all = 0 → count j = 0) :
+    (∑ j ∈ Finset.univ.erase i, count j) ≤ remainingCost T YS S d e (p i):=by
+  have hc:=remaining_cumulative p T YS S i hs hy ht
+  by_cases hz:(remainingCap T YS S (p i)).all = 0
+  · rw [remainingCost, if_pos hz]
+    have hrs:(∑ j ∈ Finset.univ.erase i, (p j).all) ≤ 0:=by
+      simpa only [hz] using hc.1
+    have hcount:(∑ j ∈ Finset.univ.erase i, count j) = 0:=by
+      apply Finset.sum_eq_zero
+      intro j hj
+      apply hzero j
+      have hji:(p j).all ≤ ∑ k ∈ Finset.univ.erase i, (p k).all :=
+        Finset.single_le_sum (f:=fun k => (p k).all)
+          (fun k _ => Nat.zero_le (p k).all) hj
+      omega
+    exact hcount.le
+  · rw [remainingCost, if_neg hz]
+    calc
+      _ ≤ ∑ j ∈ Finset.univ.erase i, paddedCost d e (p j) :=
+        Finset.sum_le_sum (fun j _ => hstage j)
+      _ ≤ paddedCost d e (remainingCap T YS S (p i)) :=
+        merge_padded_costs_finset (Finset.univ.erase i) d e p _ hc.1 hc.2.1 hc.2.2
+theorem sum_le_cellCost {I:Type*} [Fintype I] [DecidableEq I]
+    (p:I → FlagDegree) (count:I → ℕ) (T YS S d e:ℕ) (i:I) (q:ℕ)
+    (hs:(∑ j, (p j).all) ≤ S)
+    (hy:(∑ j, middle (p j)) ≤ YS)
+    (ht:(∑ j, total (p j)) ≤ T)
+    (hstage:∀ j, count j ≤ paddedCost d e (p j))
+    (hzero:∀ j, (p j).all = 0 → count j = 0)
+    (hrepl:count i ≤ q) :
+    (∑ j, count j) ≤ cellCost T YS S d e (p i) q:=by
+  have hi:=le_min (hstage i) hrepl
+  have hr:=sum_others_le_remainingCost p count T YS S d e i hs hy ht hstage hzero
+  calc
+    _ = count i + ∑ j ∈ Finset.univ.erase i, count j :=
+      (Finset.add_sum_erase Finset.univ count (Finset.mem_univ i)).symm
+    _ ≤ min (paddedCost d e (p i)) q + remainingCost T YS S d e (p i) :=
+      Nat.add_le_add hi hr
+    _ = cellCost T YS S d e (p i) q:=rfl
+theorem high_unique {I:Type*} [Fintype I] [DecidableEq I] (p:I → FlagDegree)
+    (hs:(∑ i, (p i).all) ≤ 14) {i j:I}
+    (hi:8 ≤ (p i).all) (hj:8 ≤ (p j).all):i = j:=by
+  by_contra hne
+  have hjmem:j ∈ Finset.univ.erase i :=
+    Finset.mem_erase.mpr ⟨Ne.symm hne, Finset.mem_univ j⟩
+  have hrest:=sum_erase_le_sub (fun k => (p k).all) 14 hs i
+  have hjrest:(p j).all ≤ ∑ k ∈ Finset.univ.erase i, (p k).all :=
+    Finset.single_le_sum (f:=fun k => (p k).all)
+      (fun k _ => Nat.zero_le (p k).all) hjmem
+  omega
+theorem aggregate_of_rate_and_cells {I:Type*} [Fintype I]
+    (p:I → FlagDegree) (count q:I → ℕ) (T YS S d e lowR bound:ℕ)
+    (hT:0 < T)
+    (hs:(∑ i, (p i).all) ≤ S)
+    (hy:(∑ i, middle (p i)) ≤ YS)
+    (ht:(∑ i, total (p i)) ≤ T)
+    (hstage:∀ i, count i ≤ paddedCost d e (p i))
+    (hzero:∀ i, (p i).all = 0 → count i = 0)
+    (hrate:∀ i, (p i).all ≤ lowR → T * paddedCost d e (p i) ≤ bound * total (p i))
+    (hrepl:∀ i, lowR < (p i).all → count i ≤ q i)
+    (hcell:∀ i, lowR < (p i).all → cellCost T YS S d e (p i) (q i) ≤ bound) :
+    (∑ i, count i) ≤ bound:=by
+  classical
+  letI:DecidableEq I:=Classical.decEq I
+  by_cases hh:∃ i, lowR < (p i).all
+  · obtain ⟨i, hi⟩:=hh
+    exact (sum_le_cellCost p count T YS S d e i (q i) hs hy ht hstage hzero
+      (hrepl i hi)).trans (hcell i hi)
+  · have hlo (i:I):(p i).all ≤ lowR:=by
+      have hn:¬ lowR < (p i).all:=fun hi => hh ⟨i, hi⟩
+      omega
+    have hscaled:T * (∑ i, count i) ≤ T * bound:=by
+      calc
+        _ = ∑ i, T * count i:=by rw [Finset.mul_sum]
+        _ ≤ ∑ i, T * paddedCost d e (p i) :=
+          Finset.sum_le_sum (fun i _ => Nat.mul_le_mul_left T (hstage i))
+        _ ≤ ∑ i, bound * total (p i):=Finset.sum_le_sum (fun i _ => hrate i (hlo i))
+        _ = bound * (∑ i, total (p i)):=by rw [Finset.mul_sum]
+        _ ≤ bound * T:=Nat.mul_le_mul_left bound ht
+        _ = T * bound:=by ring
+    exact Nat.le_of_mul_le_mul_left hscaled hT
+theorem aggregate_of_bad_cells {I:Type*} [Fintype I]
+    (p:I → FlagDegree) (count q:I → ℕ) (T YS S d e bound:ℕ)
+    (hT:0 < T)
+    (hs:(∑ i, (p i).all) ≤ S)
+    (hy:(∑ i, middle (p i)) ≤ YS)
+    (ht:(∑ i, total (p i)) ≤ T)
+    (hstage:∀ i, count i ≤ paddedCost d e (p i))
+    (hzero:∀ i, (p i).all = 0 → count i = 0)
+    (hrepl:∀ i, Bad T d e bound (p i) → count i ≤ q i)
+    (hcell:∀ i, Bad T d e bound (p i) →
+      cellCost T YS S d e (p i) (q i) ≤ bound) :
+    (∑ i, count i) ≤ bound:=by
+  classical
+  letI:DecidableEq I:=Classical.decEq I
+  by_cases hh:∃ i, Bad T d e bound (p i)
+  · obtain ⟨i, hi⟩:=hh
+    exact (sum_le_cellCost p count T YS S d e i (q i) hs hy ht hstage hzero
+      (hrepl i hi)).trans (hcell i hi)
+  · have hrate (i:I):T * paddedCost d e (p i) ≤ bound * total (p i):=by
+      have hn:¬ Bad T d e bound (p i):=fun hi => hh ⟨i, hi⟩
+      dsimp only [Bad] at hn
+      omega
+    have hscaled:T * (∑ i, count i) ≤ T * bound:=by
+      calc
+        _ = ∑ i, T * count i:=by rw [Finset.mul_sum]
+        _ ≤ ∑ i, T * paddedCost d e (p i) :=
+          Finset.sum_le_sum (fun i _ => Nat.mul_le_mul_left T (hstage i))
+        _ ≤ ∑ i, bound * total (p i):=Finset.sum_le_sum (fun i _ => hrate i)
+        _ = bound * (∑ i, total (p i)):=by rw [Finset.mul_sum]
+        _ ≤ bound * T:=Nat.mul_le_mul_left bound ht
+        _ = T * bound:=by ring
+    exact Nat.le_of_mul_le_mul_left hscaled hT
+theorem aggregate_of_rate_replacements {I:Type*} [Fintype I]
+    (p:I → FlagDegree) (count q:I → ℕ) (T d e bound:ℕ)
+    (hT:0 < T)
+    (ht:(∑ i, total (p i)) ≤ T)
+    (hstage:∀ i, count i ≤ paddedCost d e (p i))
+    (hrepl:∀ i, Bad T d e bound (p i) → count i ≤ q i)
+    (hqrate:∀ i, Bad T d e bound (p i) →
+      T * q i ≤ bound * total (p i)) :
+    (∑ i, count i) ≤ bound:=by
+  have hone (i:I):T * count i ≤ bound * total (p i):=by
+    by_cases hbad:Bad T d e bound (p i)
+    · exact (Nat.mul_le_mul_left T (hrepl i hbad)).trans (hqrate i hbad)
+    · have hordinary:T * paddedCost d e (p i) ≤ bound * total (p i):=by
+        unfold Bad at hbad
+        omega
+      exact (Nat.mul_le_mul_left T (hstage i)).trans hordinary
+  have hscaled:T * (∑ i, count i) ≤ T * bound:=by
+    calc
+      _ = ∑ i, T * count i:=by rw [Finset.mul_sum]
+      _ ≤ ∑ i, bound * total (p i):=Finset.sum_le_sum (fun i _ => hone i)
+      _ = bound * (∑ i, total (p i)):=by rw [Finset.mul_sum]
+      _ ≤ bound * T:=Nat.mul_le_mul_left bound ht
+      _ = T * bound:=by ring
+  exact Nat.le_of_mul_le_mul_left hscaled hT
+theorem aggregate_6751 {I:Type*} [Fintype I]
+    (p:I → FlagDegree) (count q:I → ℕ)
+    (hs:(∑ i, (p i).all) ≤ 14)
+    (hy:(∑ i, middle (p i)) ≤ 64)
+    (ht:(∑ i, total (p i)) ≤ 1698)
+    (hstage:∀ i, count i ≤ paddedCost 131072 131073 (p i))
+    (hzero:∀ i, (p i).all = 0 → count i = 0)
+    (hrepl:∀ i, 8 ≤ (p i).all → count i ≤ q i)
+    (hcell:∀ i, 8 ≤ (p i).all →
+      cellCost 1698 64 14 131072 131073 (p i) (q i) ≤ 266000000000000000) :
+    (∑ i, count i) ≤ 266000000000000000:=by
+  classical
+  refine aggregate_of_rate_and_cells p count q 1698 64 14 131072 131073 7
+    266000000000000000 (by decide) hs hy ht hstage hzero ?_ ?_ ?_
+  · intro i hi
+    have hyi:middle (p i) ≤ 64 :=
+      (Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)).trans hy
+    have hti:total (p i) ≤ 1698 :=
+      (Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)).trans ht
+    exact (rate_bound_6751_low (p i) hi hyi hti).trans
+      (Nat.mul_le_mul_right (total (p i))
+        (by decide:261420997282933785 ≤ 266000000000000000))
+  · intro i hi
+    exact hrepl i (by omega)
+  · intro i hi
+    exact hcell i (by omega)
+/-- Ordinary-route badness for an arbitrary ordinary cost function. -/
+def BadCost (T:ℕ) (cost:FlagDegree → ℕ) (bound:ℕ) (p:FlagDegree):Prop :=
+  bound * total p < T * cost p
+theorem aggregate_of_rate_replacements_cost {I:Type*} [Fintype I]
+    (p:I → FlagDegree) (count q:I → ℕ) (T:ℕ) (cost:FlagDegree → ℕ) (bound:ℕ)
+    (hT:0 < T)
+    (ht:(∑ i, total (p i)) ≤ T)
+    (hstage:∀ i, count i ≤ cost (p i))
+    (hrepl:∀ i, BadCost T cost bound (p i) → count i ≤ q i)
+    (hqrate:∀ i, BadCost T cost bound (p i) →
+      T * q i ≤ bound * total (p i)) :
+    (∑ i, count i) ≤ bound:=by
+  have hone (i:I):T * count i ≤ bound * total (p i):=by
+    by_cases hbad:BadCost T cost bound (p i)
+    · exact (Nat.mul_le_mul_left T (hrepl i hbad)).trans (hqrate i hbad)
+    · have hordinary:T * cost (p i) ≤ bound * total (p i):=by
+        unfold BadCost at hbad
+        omega
+      exact (Nat.mul_le_mul_left T (hstage i)).trans hordinary
+  have hscaled:T * (∑ i, count i) ≤ T * bound:=by
+    calc
+      _ = ∑ i, T * count i:=by rw [Finset.mul_sum]
+      _ ≤ ∑ i, bound * total (p i):=Finset.sum_le_sum (fun i _ => hone i)
+      _ = bound * (∑ i, total (p i)):=by rw [Finset.mul_sum]
+      _ ≤ bound * T:=Nat.mul_le_mul_left bound ht
+      _ = T * bound:=by ring
+  exact Nat.le_of_mul_le_mul_left hscaled hT
+
+/-! A multiresource replacement ledger.  The scalar rate above charges every
+factor only against its total-degree contribution.  For a strongly anisotropic
+factor this can discard nearly all of the global middle- and slope-degree
+information.  The potential below charges against all three additive degree
+budgets, so a costly factor with large middle degree is automatically scarce. -/
+
+def degreePotential (aT aY aS : ℕ) (p : FlagDegree) : ℕ :=
+  aT * total p + aY * middle p + aS * p.all
+
+def BadPotential (aT aY aS : ℕ) (cost : FlagDegree → ℕ)
+    (p : FlagDegree) : Prop :=
+  degreePotential aT aY aS p < cost p
+
+theorem aggregate_of_potential_replacements_cost {I : Type*} [Fintype I]
+    (p : I → FlagDegree) (count q : I → ℕ)
+    (T YS S aT aY aS : ℕ) (cost : FlagDegree → ℕ)
+    (hs : (∑ i, (p i).all) ≤ S)
+    (hy : (∑ i, middle (p i)) ≤ YS)
+    (ht : (∑ i, total (p i)) ≤ T)
+    (hstage : ∀ i, count i ≤ cost (p i))
+    (hrepl : ∀ i, BadPotential aT aY aS cost (p i) → count i ≤ q i)
+    (hqpotential : ∀ i, BadPotential aT aY aS cost (p i) →
+      q i ≤ degreePotential aT aY aS (p i)) :
+    (∑ i, count i) ≤ aT * T + aY * YS + aS * S := by
+  have hone (i : I) : count i ≤ degreePotential aT aY aS (p i) := by
+    by_cases hbad : BadPotential aT aY aS cost (p i)
+    · exact (hrepl i hbad).trans (hqpotential i hbad)
+    · exact (hstage i).trans (by
+        unfold BadPotential at hbad
+        omega)
+  calc
+    (∑ i, count i) ≤ ∑ i, degreePotential aT aY aS (p i) :=
+      Finset.sum_le_sum (fun i _ => hone i)
+    _ = aT * (∑ i, total (p i)) +
+        aY * (∑ i, middle (p i)) + aS * (∑ i, (p i).all) := by
+      simp only [degreePotential, Finset.sum_add_distrib, Finset.mul_sum]
+    _ ≤ aT * T + aY * YS + aS * S :=
+      Nat.add_le_add (Nat.add_le_add (Nat.mul_le_mul_left aT ht)
+        (Nat.mul_le_mul_left aY hy)) (Nat.mul_le_mul_left aS hs)
+
+end ProximityPrize.SubmissionLower.LocatorFactorReplacement
+end PackedLocator_LocatorFactorReplacement
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier52 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorDerivativeChain. -/
+section PackedLocator_LocatorDerivativeChain
+
+/-!
+# Derivative chain for singular seeds
+
+For an irreducible factor `F` with positive `R`-degree, a seed at which both `F`
+and `∂_R F` specialise to zero is either a regular seed of some iterated
+`R`-derivative `∂_R^j F` (`1 ≤ j`), or a zero of the `R`-free polynomial
+`∂_R^m F` obtained when the `R`-degree is exhausted.  Regular seeds of a
+derivative are counted by the coprime pair `(∂_R^j F, F)`; the `R`-free tail is
+counted by the singular-seed bound at slope cap `1`, whose characteristic gate is
+`2 * ((D - 1) / w) * L < p`.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorDerivativeChain
+
+open scoped Classical BigOperators
+open RCN174 RCN319 RCN081 RCN082 RCN167 RCN286 RCN052 RCN260 RCN318 RCN267 RCN313 RCN135 RCN138 RCN136 RCN238 RCN293 RCN231 RCN243
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+set_option maxRecDepth 20000
+
+variable {K : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
+  UniqueFactorizationMonoid.strongNormalizationMonoid
+
+/-- Iterated `R`-derivative. -/
+def dR (j : ℕ) (F : MvPolynomial (Fin 4) K) : MvPolynomial (Fin 4) K :=
+  (MvPolynomial.pderiv (2 : Fin 4))^[j] F
+
+@[simp] theorem dR_zero (F : MvPolynomial (Fin 4) K) : dR 0 F = F := rfl
+
+theorem dR_succ (j : ℕ) (F : MvPolynomial (Fin 4) K) :
+    dR (j + 1) F = MvPolynomial.pderiv (2 : Fin 4) (dR j F) := by
+  unfold dR
+  exact Function.iterate_succ_apply' _ _ _
+
+/-- The `R`-derivative stays inside every coefficient box. -/
+theorem pderiv_R_mem_box (Q : MvPolynomial (Fin 4) K) (D w L s : ℕ)
+    (hbox : Q ∈ globalCoefficientBox K D w L s) :
+    MvPolynomial.pderiv (2 : Fin 4) Q ∈ globalCoefficientBox K D w L s := by
+  intro d hd
+  have hmem := support_before_pderiv (2 : Fin 4) Q d hd
+  obtain ⟨ht, hs, hc⟩ := hbox hmem
+  have h0 : ((d + Finsupp.single (2 : Fin 4) 1 : Fin 4 →₀ ℕ) : Fin 4 → ℕ) 0 = d 0 := by
+    simp [Finsupp.single_apply]
+  have h1 : ((d + Finsupp.single (2 : Fin 4) 1 : Fin 4 →₀ ℕ) : Fin 4 → ℕ) 1 = d 1 := by
+    simp [Finsupp.single_apply]
+  have h2 : ((d + Finsupp.single (2 : Fin 4) 1 : Fin 4 →₀ ℕ) : Fin 4 → ℕ) 2 = d 2 + 1 := by
+    simp [Finsupp.single_apply]
+  have h3 : ((d + Finsupp.single (2 : Fin 4) 1 : Fin 4 →₀ ℕ) : Fin 4 → ℕ) 3 = d 3 := by
+    simp [Finsupp.single_apply]
+  simp only [h0, h1, h2, h3] at ht hs hc
+  have hw1 : (w - 1) * d 2 ≤ (w - 1) * (d 2 + 1) := Nat.mul_le_mul_left _ (by omega)
+  exact ⟨by omega, by omega, by omega⟩
+
+theorem dR_mem_box (j : ℕ) (Q : MvPolynomial (Fin 4) K) (D w L s : ℕ)
+    (hbox : Q ∈ globalCoefficientBox K D w L s) :
+    dR j Q ∈ globalCoefficientBox K D w L s := by
+  induction j with
+  | zero => simpa using hbox
+  | succ k ih =>
+      rw [dR_succ]
+      exact pderiv_R_mem_box _ D w L s ih
+
+/-- Tighten only the `R`-slope coordinate of a coefficient box from an
+independent bound on the polynomial's actual `R`-degree. -/
+theorem mem_box_of_R_degree_le (Q : MvPolynomial (Fin 4) K) (D w L s s' : ℕ)
+    (hbox : Q ∈ globalCoefficientBox K D w L s) (hR : Q.degreeOf 2 ≤ s') :
+    Q ∈ globalCoefficientBox K D w L s' := by
+  intro d hd
+  obtain ⟨ht, _, hz⟩ := hbox hd
+  have hdR : d 2 ≤ Q.degreeOf 2 :=
+    MvPolynomial.monomial_le_degreeOf (2 : Fin 4) hd
+  exact ⟨ht, hdR.trans hR, hz⟩
+
+theorem dR_R_degree_le (j : ℕ) (F : MvPolynomial (Fin 4) K) :
+    (dR j F).degreeOf 2 ≤ F.degreeOf 2 - j := by
+  induction j with
+  | zero => simp
+  | succ k ih =>
+      rw [dR_succ]
+      have h := pderiv_same_degree_bound (2 : Fin 4) (dR k F) (F.degreeOf 2 - k) ih
+      omega
+
+/-- A box with slope cap `s` and no `R`-dependence lies in the slope-`1` box. -/
+theorem mem_box_slope_one (Q : MvPolynomial (Fin 4) K) (D w L s : ℕ)
+    (hbox : Q ∈ globalCoefficientBox K D w L s) (hR : Q.degreeOf 2 = 0) :
+    Q ∈ globalCoefficientBox K D w L 1 := by
+  intro d hd
+  obtain ⟨ht, _, hc⟩ := hbox hd
+  have hd2 : d 2 ≤ Q.degreeOf 2 := MvPolynomial.monomial_le_degreeOf (2 : Fin 4) hd
+  exact ⟨ht, by omega, hc⟩
+
+/-- Exhaustion index of the `R`-degree along the derivative chain. -/
+theorem exists_dR_R_degree_zero (F : MvPolynomial (Fin 4) K) :
+    ∃ j, (dR j F).degreeOf 2 = 0 :=
+  ⟨F.degreeOf 2, Nat.eq_zero_of_le_zero (by simpa using dR_R_degree_le (F.degreeOf 2) F)⟩
+
+def chainLength (F : MvPolynomial (Fin 4) K) : ℕ :=
+  Nat.find (exists_dR_R_degree_zero F)
+
+theorem chainLength_spec (F : MvPolynomial (Fin 4) K) :
+    (dR (chainLength F) F).degreeOf 2 = 0 :=
+  Nat.find_spec (exists_dR_R_degree_zero F)
+
+theorem chainLength_le (F : MvPolynomial (Fin 4) K) : chainLength F ≤ F.degreeOf 2 :=
+  Nat.find_min' (exists_dR_R_degree_zero F)
+    (Nat.eq_zero_of_le_zero (by simpa using dR_R_degree_le (F.degreeOf 2) F))
+
+theorem dR_R_degree_pos_of_lt_chainLength (F : MvPolynomial (Fin 4) K) (j : ℕ)
+    (hj : j < chainLength F) : 0 < (dR j F).degreeOf 2 :=
+  Nat.pos_of_ne_zero (Nat.find_min (exists_dR_R_degree_zero F) hj)
+
+theorem chainLength_pos (F : MvPolynomial (Fin 4) K) (hpos : 0 < F.degreeOf 2) :
+    1 ≤ chainLength F := by
+  by_contra h
+  have h0 : chainLength F = 0 := by omega
+  have := chainLength_spec F
+  rw [h0] at this
+  simp at this
+  omega
+
+theorem dR_ne_zero (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0) (p : ℕ) [CharP K p]
+    (hsmall : F.degreeOf 2 < p) (j : ℕ) (hj : j ≤ chainLength F) : dR j F ≠ 0 := by
+  induction j with
+  | zero => simpa using hF
+  | succ k ih =>
+      rw [dR_succ]
+      have hk : k < chainLength F := by omega
+      have hpos := dR_R_degree_pos_of_lt_chainLength F k hk
+      have hle : (dR k F).degreeOf 2 < p := by
+        have := dR_R_degree_le k F
+        omega
+      exact R_derivative_nonzero (dR k F) p hpos hle
+
+/-- Seeds along the chain: either some derivative is regular, or every
+derivative up to the exhaustion index vanishes. -/
+theorem chain_split (F : MvPolynomial (Fin 4) K) (P : Polynomial K) (γ : K)
+    (h0 : specialization K P γ F = 0)
+    (h1 : specialization K P γ (MvPolynomial.pderiv (2 : Fin 4) F) = 0)
+    (m : ℕ) (hm : 1 ≤ m) :
+    (∃ j, 1 ≤ j ∧ j < m ∧ RegularSolution (dR j F) P γ) ∨
+      (∀ i ≤ m, specialization K P γ (dR i F) = 0) := by
+  induction m with
+  | zero => omega
+  | succ k ih =>
+      by_cases hk : k = 0
+      · subst hk
+        right
+        intro i hi
+        interval_cases i
+        · simpa using h0
+        · rw [dR_succ]; simpa using h1
+      · have hk1 : 1 ≤ k := Nat.pos_of_ne_zero hk
+        rcases ih hk1 with ⟨j, hj1, hjk, hreg⟩ | hall
+        · exact Or.inl ⟨j, hj1, by omega, hreg⟩
+        · by_cases hnext : specialization K P γ (dR (k + 1) F) = 0
+          · right
+            intro i hi
+            rcases Nat.lt_or_ge i (k + 1) with hlt | hge
+            · exact hall i (by omega)
+            · have : i = k + 1 := by omega
+              subst this
+              exact hnext
+          · left
+            refine ⟨k, hk1, by omega, hall k le_rfl, ?_⟩
+            rw [← dR_succ]
+            exact hnext
+
+/-- A regular seed of `G` is a regular seed of one of its irreducible factors
+of positive `R`-degree. -/
+theorem exists_regular_positive_factor (G : MvPolynomial (Fin 4) K) (hG : G ≠ 0)
+    (P : Polynomial K) (γ : K) (hreg : RegularSolution G P γ) :
+    ∃ F' ∈ positiveRFactors G, RegularSolution F' P γ := by
+  classical
+  let ψ : MvPolynomial (Fin 4) K →+* Polynomial K := (specialization K P γ).toRingHom
+  obtain ⟨F', hmem, hzero⟩ := exists_normalized_factor_of_map_zero ψ G hG hreg.1
+  have hdiv : F' ∣ G := UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors hmem
+  have hregF' : ψ (MvPolynomial.pderiv (2 : Fin 4) F') ≠ 0 :=
+    factor_derivative_regular_at_zero ψ G F' hdiv hzero hreg.2
+  have hpos : 0 < F'.degreeOf 2 := by
+    apply Nat.pos_of_ne_zero
+    intro hzeroDeg
+    apply hregF'
+    rw [pderiv_zero_of_degree_zero (2 : Fin 4) F' hzeroDeg, map_zero]
+  have hactive : F' ∈ activeFactors G := by
+    unfold activeFactors
+    exact Finset.mem_filter.mpr ⟨Multiset.mem_toFinset.mpr hmem, by omega⟩
+  refine ⟨F', ?_, hzero, hregF'⟩
+  unfold positiveRFactors
+  exact Finset.mem_filter.mpr ⟨hactive, hpos⟩
+
+/-- Every seed of `Q` is a seed of an active irreducible factor of `Q`. -/
+theorem exists_active_factor_of_solution (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
+    (P : Polynomial K) (γ : K) (hsol : specialization K P γ Q = 0) :
+    ∃ F ∈ activeFactors Q, specialization K P γ F = 0 := by
+  classical
+  let φ := polynomialEmbedding K
+  let v : Fin 3 → GenericField K := fun i => initialPoint K P γ i.succ
+  have heval (F : MvPolynomial (Fin 4) K) :
+      MvPolynomial.eval v (surfaceMap φ F) = 0 ↔ specialization K P γ F = 0 := by
+    simpa only [canonical_geometricSurfaceMap] using
+      (actual_generic_initial_zero_iff K P γ F)
+  obtain ⟨F, hF, hz⟩ := exists_active_factor_of_surface_zero φ
+    (polynomialEmbedding_injective K) Q hQ v ((heval Q).mpr hsol)
+  exact ⟨F, hF, (heval F).mp hz⟩
+
+theorem irreducible_not_dvd_dR (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
+    (p : ℕ) [CharP K p] (hpos : 0 < F.degreeOf 2) (hsmall : F.degreeOf 2 < p)
+    (j : ℕ) (hj1 : 1 ≤ j) (hj : j ≤ chainLength F) : ¬ F ∣ dR j F := by
+  intro hdiv
+  have hne : dR j F ≠ 0 := dR_ne_zero F hF.ne_zero p hsmall j hj
+  have hle := degreeOf_le_of_dvd (2 : Fin 4) F (dR j F) hdiv hne
+  have hdeg := dR_R_degree_le j F
+  omega
+
+theorem isRelPrime_dR (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
+    (p : ℕ) [CharP K p] (hpos : 0 < F.degreeOf 2) (hsmall : F.degreeOf 2 < p)
+    (j : ℕ) (hj1 : 1 ≤ j) (hj : j ≤ chainLength F) : IsRelPrime (dR j F) F :=
+  (hF.isRelPrime_iff_not_dvd.mpr (irreducible_not_dvd_dR F hF p hpos hsmall j hj1 hj)).symm
+
+section Counting
+
+variable {Iota : Type}
+local instance : DecidableEq Iota := Classical.decEq Iota
+
+/-- Seeds that are regular for `dR j F` and at which `F` vanishes. -/
+def chainSeeds (F : MvPolynomial (Fin 4) K) (j : ℕ)
+    (selected : K → Polynomial K) (Gamma : Finset K) : Finset K :=
+  Gamma.filter fun γ => RegularSolution (dR j F) (selected γ) γ ∧
+    specialization K (selected γ) γ F = 0
+
+/-- Seeds of the `R`-free tail of the chain of `F`. -/
+def tailSeeds (F : MvPolynomial (Fin 4) K)
+    (selected : K → Polynomial K) (Gamma : Finset K) : Finset K :=
+  Gamma.filter fun γ => specialization K (selected γ) γ (dR (chainLength F) F) = 0
+
+/-- Product of the `R`-free active factors of `Q`. -/
+def rfreeProduct (Q : MvPolynomial (Fin 4) K) : MvPolynomial (Fin 4) K :=
+  ∏ F ∈ (activeFactors Q).filter (fun F => F.degreeOf 2 = 0), F
+
+def rfreeSeeds (Q : MvPolynomial (Fin 4) K)
+    (selected : K → Polynomial K) (Gamma : Finset K) : Finset K :=
+  Gamma.filter fun γ => specialization K (selected γ) γ (rfreeProduct Q) = 0
+
+theorem chainSeeds_subset (F : MvPolynomial (Fin 4) K) (j : ℕ)
+    (selected : K → Polynomial K) (Gamma : Finset K) :
+    chainSeeds F j selected Gamma ⊆ Gamma := Finset.filter_subset _ _
+
+theorem tailSeeds_subset (F : MvPolynomial (Fin 4) K)
+    (selected : K → Polynomial K) (Gamma : Finset K) :
+    tailSeeds F selected Gamma ⊆ Gamma := Finset.filter_subset _ _
+
+theorem rfreeSeeds_subset (Q : MvPolynomial (Fin 4) K)
+    (selected : K → Polynomial K) (Gamma : Finset K) :
+    rfreeSeeds Q selected Gamma ⊆ Gamma := Finset.filter_subset _ _
+
+theorem rfreeProduct_dvd (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) :
+    rfreeProduct Q ∣ Q := by
+  classical
+  unfold rfreeProduct
+  exact (Finset.prod_dvd_prod_of_subset _ (activeFactors Q) id
+    (Finset.filter_subset _ _)).trans (activeFactors_product_dvd Q hQ)
+
+theorem rfreeProduct_ne_zero (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) :
+    rfreeProduct Q ≠ 0 :=
+  ne_zero_of_dvd_ne_zero hQ (rfreeProduct_dvd Q hQ)
+
+theorem rfreeProduct_R_degree (Q : MvPolynomial (Fin 4) K) :
+    (rfreeProduct Q).degreeOf 2 = 0 := by
+  classical
+  unfold rfreeProduct
+  apply Nat.eq_zero_of_le_zero
+  refine (MvPolynomial.degreeOf_prod_le _ _ _).trans ?_
+  apply Nat.le_of_eq
+  apply Finset.sum_eq_zero
+  intro F hF
+  exact (Finset.mem_filter.mp hF).2
+
+/-- Every seed of `Q` lies in the regular pair seeds, the chain seeds, the tail
+seeds or the `R`-free seeds. -/
+theorem cover (Q T : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
+    (p : ℕ) [CharP K p] (s : ℕ) (hsmall : s < p)
+    (hR : ∀ F ∈ positiveRFactors Q, F.degreeOf 2 ≤ s)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hQsolution : ∀ γ ∈ Gamma, specialization K (selected γ) γ Q = 0)
+    (hTsolution : ∀ γ ∈ Gamma, specialization K (selected γ) γ T = 0) :
+    Gamma ⊆
+      (Finset.univ.biUnion fun F : RegularIndex Q =>
+          regularPairSeeds Q T selected Gamma F) ∪
+        ((positiveRFactors Q).biUnion fun F =>
+          (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma) ∪
+        ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma) ∪
+        rfreeSeeds Q selected Gamma := by
+  classical
+  intro γ hγ
+  obtain ⟨F, hFactive, hFzero⟩ :=
+    exists_active_factor_of_solution Q hQ (selected γ) γ (hQsolution γ hγ)
+  by_cases hRfree : F.degreeOf 2 = 0
+  · apply Finset.mem_union_right
+    apply Finset.mem_filter.mpr ⟨hγ, ?_⟩
+    have hdiv : F ∣ rfreeProduct Q := by
+      unfold rfreeProduct
+      exact Finset.dvd_prod_of_mem _ (Finset.mem_filter.mpr ⟨hFactive, hRfree⟩)
+    obtain ⟨c, hc⟩ := hdiv
+    rw [hc, map_mul, hFzero, zero_mul]
+  · have hpos : 0 < F.degreeOf 2 := Nat.pos_of_ne_zero hRfree
+    have hFpos : F ∈ positiveRFactors Q := by
+      unfold positiveRFactors
+      exact Finset.mem_filter.mpr ⟨hFactive, hpos⟩
+    by_cases hreg : specialization K (selected γ) γ (MvPolynomial.pderiv (2 : Fin 4) F) = 0
+    · have hm := chainLength_pos F hpos
+      rcases chain_split F (selected γ) γ hFzero hreg (chainLength F) hm with
+        ⟨j, hj1, hjm, hjreg⟩ | hall
+      · apply Finset.mem_union_left
+        apply Finset.mem_union_left
+        apply Finset.mem_union_right
+        apply Finset.mem_biUnion.mpr ⟨F, hFpos, ?_⟩
+        apply Finset.mem_biUnion.mpr ⟨j, Finset.mem_Ico.mpr ⟨hj1, hjm⟩, ?_⟩
+        exact Finset.mem_filter.mpr ⟨hγ, hjreg, hFzero⟩
+      · apply Finset.mem_union_left
+        apply Finset.mem_union_right
+        apply Finset.mem_biUnion.mpr ⟨F, hFpos, ?_⟩
+        exact Finset.mem_filter.mpr ⟨hγ, hall (chainLength F) le_rfl⟩
+    · apply Finset.mem_union_left
+      apply Finset.mem_union_left
+      apply Finset.mem_union_left
+      apply Finset.mem_biUnion.mpr ⟨⟨F, hFpos⟩, Finset.mem_univ _, ?_⟩
+      exact Finset.mem_filter.mpr ⟨hγ, ⟨hFzero, hreg⟩, hTsolution γ hγ⟩
+
+/-- The chain seeds at stage `j` are covered by the regular pair seeds of
+`(dR j F, F)`. -/
+theorem chainSeeds_subset_regularPairSeeds (F : MvPolynomial (Fin 4) K) (j : ℕ)
+    (hne : dR j F ≠ 0) (selected : K → Polynomial K) (Gamma : Finset K) :
+    chainSeeds F j selected Gamma ⊆
+      Finset.univ.biUnion fun F' : RegularIndex (dR j F) =>
+        regularPairSeeds (dR j F) F selected Gamma F' := by
+  classical
+  intro γ hγ
+  obtain ⟨hγΓ, hreg, hFzero⟩ := Finset.mem_filter.mp hγ
+  obtain ⟨F', hF'mem, hF'reg⟩ :=
+    exists_regular_positive_factor (dR j F) hne (selected γ) γ hreg
+  apply Finset.mem_biUnion.mpr ⟨⟨F', hF'mem⟩, Finset.mem_univ _, ?_⟩
+  exact Finset.mem_filter.mpr ⟨hγΓ, hF'reg, hFzero⟩
+
+theorem chainSeeds_card_le
+    (Pc : UnequalParameters) (Q F : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
+    (hF : F ∈ positiveRFactors Q) (j : ℕ) (hj1 : 1 ≤ j) (hj : j ≤ chainLength F)
+    (D w L s p : ℕ) [CharP K p] (hsmall : s < p) (hw : 1 ≤ w)
+    (hbox : Q ∈ globalCoefficientBox K D w L s)
+    (hcgap : 0 < Pc.gap)
+    (hcY : (D - 1) / w ≤ Pc.leftY) (hcR : s - 1 ≤ Pc.leftR) (hcZ : L ≤ Pc.leftZ)
+    (hcY' : (D - 1) / w ≤ Pc.rightY) (hcR' : s ≤ Pc.rightR) (hcZ' : L ≤ Pc.rightZ)
+    (hleftR : 1 ≤ Pc.leftR)
+    (hleftYSmall : Pc.leftY < p) (hleftRSmall : Pc.leftR < p) (hleftZSmall : Pc.leftZ < p)
+    (hmixedYSmall : Pc.mixedCost.y < p) (hmixedRSmall : Pc.mixedCost.r < p)
+    (hmixedZSmall : Pc.mixedCost.z < p)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (nodes : Finset Iota) (x u0 u1 : Iota → K) (hinj : Set.InjOn x nodes)
+    (hnodes : nodes.card = Pc.n)
+    (hPw : 1 ≤ Pc.w) (hchar : Pc.w < p) (hwa : Pc.w < Pc.a) (han : Pc.a ≤ Pc.n)
+    (hdegree : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ Pc.w)
+    (hagreement : ∀ γ ∈ Gamma, Pc.a ≤ (nodes.filter (fun i =>
+      (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
+    (hnoPencil : NoLargeSelectedPencil selected Gamma Pc.w Pc.errors) :
+    (chainSeeds F j selected Gamma).card ≤ Pc.regularCountCap := by
+  classical
+  obtain ⟨hFirr, hFpos, hFbox⟩ := directFactor_data Q F hQ D w L s hbox hF
+  have hFsmall : F.degreeOf 2 < p := by
+    have := degreeOf_R_le_of_mem_box F D w L s hFbox
+    omega
+  have hne : dR j F ≠ 0 := dR_ne_zero F hFirr.ne_zero p hFsmall j hj
+  have hrel : IsRelPrime (dR j F) F := isRelPrime_dR F hFirr p hFpos hFsmall j hj1 hj
+  have hdR : (dR j F).degreeOf 2 ≤ s - 1 := by
+    have hderiv := dR_R_degree_le j F
+    have hFdegree := degreeOf_R_le_of_mem_box F D w L s hFbox
+    omega
+  have hbox' : dR j F ∈ globalCoefficientBox K D w L (s - 1) :=
+    mem_box_of_R_degree_le (dR j F) D w L s (s - 1)
+      (dR_mem_box j F D w L s hFbox) hdR
+  have hFcaps := degree_bounds_of_mem_box F D w L s (by omega) hFbox
+  have hsub := chainSeeds_subset_regularPairSeeds F j hne selected Gamma
+  have hcount := all_regularPairSeeds_bound Pc (dR j F) F hne hrel D w L (s - 1) p hbox' hw
+    hcY hcR hcZ (hFcaps.1.trans hcY') (hFcaps.2.1.trans hcR') (hFcaps.2.2.trans hcZ')
+    hleftR hleftYSmall hleftRSmall hleftZSmall hmixedYSmall hmixedRSmall hmixedZSmall
+    selected Gamma nodes x u0 u1 hinj hnodes hPw hchar hwa han hdegree hagreement hnoPencil
+  have hsum := sum_regular_counts_bound Pc (dR j F) F selected Gamma
+    (regularVector_budgets Pc (dR j F) hne D w L (s - 1) (by omega) hbox' hcY hcR hcZ) hcount
+  have hcap : (∑ F' : RegularIndex (dR j F),
+      (regularPairSeeds (dR j F) F selected Gamma F').card) ≤ Pc.regularCountCap :=
+    Pc.regular_count_le _ hcgap hsum
+  calc (chainSeeds F j selected Gamma).card
+      ≤ (Finset.univ.biUnion fun F' : RegularIndex (dR j F) =>
+          regularPairSeeds (dR j F) F selected Gamma F').card := Finset.card_le_card hsub
+    _ ≤ ∑ F' : RegularIndex (dR j F),
+          (regularPairSeeds (dR j F) F selected Gamma F').card := Finset.card_biUnion_le
+    _ ≤ Pc.regularCountCap := hcap
+
+/-- Seeds of a nonzero `R`-free polynomial in the slope-`1` box are bounded by
+the singular-seed count of the slope-`1` Tight parameters. -/
+theorem rfree_seed_count_le
+    (S : TightParameters) (J : MvPolynomial (Fin 4) K) (hJ : J ≠ 0)
+    (p : ℕ) [CharP K p]
+    (hbox : J ∈ globalCoefficientBox K S.D S.w S.L S.s) (hJR : J.degreeOf 2 = 0) (hSs : S.s = 1)
+    (hp : 1 < p) (hw : 1 ≤ S.w) (hchar : S.w < p) (hDw : S.w < S.kappa * S.D)
+    (hj : 1 ≤ S.algebraicCap) (hjYSmall : S.implicitYCap < p) (hjZSmall : S.algebraicCap < p)
+    (hmixedSmall : 2 * S.implicitYCap * S.algebraicCap < p)
+    (hwa : S.w < S.a) (han : S.a ≤ S.n)
+    (selected : K → Polynomial K) (Delta : Finset K)
+    (nodes : Finset Iota) (x u0 u1 : Iota → K) (hinj : Set.InjOn x nodes)
+    (hnodes : nodes.card = S.n)
+    (hdegree : ∀ γ ∈ Delta, (selected γ).natDegree ≤ S.w)
+    (hsol : ∀ γ ∈ Delta, specialization K (selected γ) γ J = 0)
+    (hagreement : ∀ γ ∈ Delta, S.a ≤ (nodes.filter (fun i =>
+      (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
+    (hnoPencil : NoLargeSelectedPencil selected Delta S.w S.errors) :
+    Delta.card ≤ S.countCap := by
+  classical
+  have hs1 : 1 ≤ S.s := by omega
+  have hsp : S.s < p := by omega
+  have hcover := card_le_regular_sum_add_singular J J hJ S.D S.w S.L S.s p
+    hs1 hsp hw (by simpa [TightParameters.kappa] using hDw)
+    (by simpa [TightParameters.algebraicCap, TightParameters.kappa] using hj)
+    (by simpa [TightParameters.algebraicCap, TightParameters.kappa] using hjZSmall)
+    hbox selected Delta hsol hsol
+  have hregZero : (∑ F' : RegularIndex J, (regularPairSeeds J J selected Delta F').card) = 0 := by
+    apply Finset.sum_eq_zero
+    intro F' _
+    exfalso
+    obtain ⟨_, hdvd, hpos⟩ := positiveRFactors_spec J F'.1 F'.2
+    have := degreeOf_le_of_dvd (2 : Fin 4) F'.1 J hdvd hJ
+    omega
+  have hsingularOld := RCN292.TightParameters.singularSeeds_count_le_countCap
+    S J hJ hbox hs1 hsp hw hchar hDw hj hjYSmall hjZSmall hmixedSmall
+    hwa han selected Delta nodes x u0 u1 hinj hnodes hdegree hagreement hnoPencil
+  have hsingular : (RCN052.singularSeeds J selected Delta).card ≤ S.countCap := by
+    change (RCN291.singularSeeds J selected Delta).card ≤ S.countCap
+    exact hsingularOld
+  omega
+
+end Counting
+
+section Assembly
+
+variable {Iota : Type}
+local instance : DecidableEq Iota := Classical.decEq Iota
+
+theorem sum_chainLength_sub_one_le (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
+    (D w L s : ℕ) (hw : 0 < w) (hs : 1 ≤ s)
+    (hbox : Q ∈ globalCoefficientBox K D w L s) :
+    (∑ F ∈ positiveRFactors Q, (chainLength F - 1)) ≤ s - 1 ∧
+      (positiveRFactors Q).card ≤ s := by
+  classical
+  have hbudget := (directFactor_input_budgets Q hQ D w L s hw hbox).2.1
+  have hpos : ∀ F ∈ positiveRFactors Q, 1 ≤ F.degreeOf 2 :=
+    fun F hF => (positiveRFactors_spec Q F hF).2.2
+  have hcard : (positiveRFactors Q).card ≤ ∑ F ∈ positiveRFactors Q, F.degreeOf 2 := by
+    calc (positiveRFactors Q).card = ∑ _F ∈ positiveRFactors Q, (1 : ℕ) := by simp
+      _ ≤ ∑ F ∈ positiveRFactors Q, F.degreeOf 2 := Finset.sum_le_sum hpos
+  have hsub : (∑ F ∈ positiveRFactors Q, (chainLength F - 1)) + (positiveRFactors Q).card ≤
+      ∑ F ∈ positiveRFactors Q, F.degreeOf 2 := by
+    calc (∑ F ∈ positiveRFactors Q, (chainLength F - 1)) + (positiveRFactors Q).card
+        = ∑ F ∈ positiveRFactors Q, ((chainLength F - 1) + 1) := by
+          rw [Finset.sum_add_distrib]; simp
+      _ ≤ ∑ F ∈ positiveRFactors Q, F.degreeOf 2 := by
+          apply Finset.sum_le_sum
+          intro F hF
+          have h1 := hpos F hF
+          have h2 := chainLength_le F
+          omega
+  refine ⟨?_, hcard.trans hbudget⟩
+  by_cases hempty : (positiveRFactors Q).card = 0
+  · rw [Finset.card_eq_zero] at hempty
+    simp [hempty]
+  · omega
+
+theorem residual_chain_count_le
+    (P Pc : UnequalParameters) (S : TightParameters)
+    (Q T : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) (hrel : IsRelPrime Q T)
+    (D w L s p : ℕ) [CharP K p]
+    (hs : 1 ≤ s) (hsmall : s < p) (hw : 1 ≤ w) (hp : 1 < p)
+    (hbox : Q ∈ globalCoefficientBox K D w L s)
+    (hgap : 0 < P.gap) (hY : (D - 1) / w ≤ P.leftY) (hR : s ≤ P.leftR) (hZ : L ≤ P.leftZ)
+    (hTY : T.degreeOf 1 ≤ P.rightY) (hTR : T.degreeOf 2 ≤ P.rightR) (hTZ : T.degreeOf 3 ≤ P.rightZ)
+    (hleftR : 1 ≤ P.leftR) (hleftYSmall : P.leftY < p) (hleftRSmall : P.leftR < p)
+    (hleftZSmall : P.leftZ < p) (hmixedYSmall : P.mixedCost.y < p)
+    (hmixedRSmall : P.mixedCost.r < p) (hmixedZSmall : P.mixedCost.z < p)
+    (hcgap : 0 < Pc.gap) (hcY : (D - 1) / w ≤ Pc.leftY) (hcR : s - 1 ≤ Pc.leftR) (hcZ : L ≤ Pc.leftZ)
+    (hcY' : (D - 1) / w ≤ Pc.rightY) (hcR' : s ≤ Pc.rightR) (hcZ' : L ≤ Pc.rightZ)
+    (hcleftR : 1 ≤ Pc.leftR) (hcleftYSmall : Pc.leftY < p) (hcleftRSmall : Pc.leftR < p)
+    (hcleftZSmall : Pc.leftZ < p) (hcmixedYSmall : Pc.mixedCost.y < p)
+    (hcmixedRSmall : Pc.mixedCost.r < p) (hcmixedZSmall : Pc.mixedCost.z < p)
+    (hSD : S.D = D) (hSw : S.w = w) (hSL : S.L = L) (hSs : S.s = 1)
+    (hSchar : S.w < p) (hSDw : S.w < S.kappa * S.D) (hSj : 1 ≤ S.algebraicCap)
+    (hSY : S.implicitYCap < p) (hSZ : S.algebraicCap < p)
+    (hSmixed : 2 * S.implicitYCap * S.algebraicCap < p) (hSwa : S.w < S.a) (hSan : S.a ≤ S.n)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (nodes : Finset Iota) (x u0 u1 : Iota → K) (hinj : Set.InjOn x nodes)
+    (hnodesP : nodes.card = P.n) (hnodesC : nodes.card = Pc.n) (hnodesS : nodes.card = S.n)
+    (hPw : 1 ≤ P.w) (hPchar : P.w < p) (hPwa : P.w < P.a) (hPan : P.a ≤ P.n)
+    (hCw : 1 ≤ Pc.w) (hCchar : Pc.w < p) (hCwa : Pc.w < Pc.a) (hCan : Pc.a ≤ Pc.n)
+    (hdegreeP : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ P.w)
+    (hdegreeC : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ Pc.w)
+    (hdegreeS : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ S.w)
+    (hagreementP : ∀ γ ∈ Gamma, P.a ≤ (nodes.filter (fun i =>
+      (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
+    (hagreementC : ∀ γ ∈ Gamma, Pc.a ≤ (nodes.filter (fun i =>
+      (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
+    (hagreementS : ∀ γ ∈ Gamma, S.a ≤ (nodes.filter (fun i =>
+      (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
+    (hnoPencilP : NoLargeSelectedPencil selected Gamma P.w P.errors)
+    (hnoPencilC : NoLargeSelectedPencil selected Gamma Pc.w Pc.errors)
+    (hnoPencilS : NoLargeSelectedPencil selected Gamma S.w S.errors)
+    (hQsolution : ∀ γ ∈ Gamma, specialization K (selected γ) γ Q = 0)
+    (hTsolution : ∀ γ ∈ Gamma, specialization K (selected γ) γ T = 0) :
+    Gamma.card ≤ P.regularCountCap + (s - 1) * Pc.regularCountCap + (s + 1) * S.countCap := by
+  classical
+  -- regular pairs
+  have hregular := all_regularPairSeeds_bound P Q T hQ hrel D w L s p hbox hw hY hR hZ
+    hTY hTR hTZ hleftR hleftYSmall hleftRSmall hleftZSmall hmixedYSmall hmixedRSmall
+    hmixedZSmall selected Gamma nodes x u0 u1 hinj hnodesP hPw hPchar hPwa hPan
+    hdegreeP hagreementP hnoPencilP
+  have hregSum := sum_regular_counts_bound P Q T selected Gamma
+    (regularVector_budgets P Q hQ D w L s (by omega) hbox hY hR hZ) hregular
+  have hregCap : (∑ F : RegularIndex Q, (regularPairSeeds Q T selected Gamma F).card) ≤
+      P.regularCountCap := P.regular_count_le _ hgap hregSum
+  -- cover
+  have hRcap : ∀ F ∈ positiveRFactors Q, F.degreeOf 2 ≤ s := fun F hF =>
+    degreeOf_R_le_of_mem_box F D w L s (directFactor_data Q F hQ D w L s hbox hF).2.2
+  have hcover := cover Q T hQ p s hsmall hRcap selected Gamma hQsolution hTsolution
+  -- chain seeds
+  have hchain : ∀ F ∈ positiveRFactors Q, ∀ j ∈ Finset.Ico 1 (chainLength F),
+      (chainSeeds F j selected Gamma).card ≤ Pc.regularCountCap := by
+    intro F hF j hj
+    obtain ⟨hj1, hjm⟩ := Finset.mem_Ico.mp hj
+    exact chainSeeds_card_le Pc Q F hQ hF j hj1 hjm.le D w L s p hsmall hw hbox hcgap
+      hcY hcR hcZ hcY' hcR' hcZ' hcleftR hcleftYSmall hcleftRSmall hcleftZSmall
+      hcmixedYSmall hcmixedRSmall hcmixedZSmall selected Gamma nodes x u0 u1 hinj hnodesC
+      hCw hCchar hCwa hCan hdegreeC hagreementC hnoPencilC
+  -- tail seeds
+  have htail : ∀ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card ≤ S.countCap := by
+    intro F hF
+    obtain ⟨hFirr, hFpos, hFbox⟩ := directFactor_data Q F hQ D w L s hbox hF
+    have hFsmall : F.degreeOf 2 < p := by
+      have := degreeOf_R_le_of_mem_box F D w L s hFbox
+      omega
+    have hJ : dR (chainLength F) F ≠ 0 := dR_ne_zero F hFirr.ne_zero p hFsmall _ le_rfl
+    have hJbox : dR (chainLength F) F ∈ globalCoefficientBox K S.D S.w S.L S.s := by
+      rw [hSD, hSw, hSL, hSs]
+      exact mem_box_slope_one _ D w L s (dR_mem_box _ F D w L s hFbox) (chainLength_spec F)
+    refine rfree_seed_count_le S _ hJ p hJbox (chainLength_spec F) hSs hp (by omega) hSchar
+      hSDw hSj hSY hSZ hSmixed hSwa hSan selected (tailSeeds F selected Gamma) nodes x u0 u1
+      hinj hnodesS ?_ ?_ ?_ ?_
+    · intro γ hγ; exact hdegreeS γ (tailSeeds_subset F selected Gamma hγ)
+    · intro γ hγ; exact (Finset.mem_filter.mp hγ).2
+    · intro γ hγ; exact hagreementS γ (tailSeeds_subset F selected Gamma hγ)
+    · exact noLargeSelectedPencil_mono selected Gamma _ S.w S.errors
+        (tailSeeds_subset F selected Gamma) hnoPencilS
+  -- R-free seeds
+  have hrfree : (rfreeSeeds Q selected Gamma).card ≤ S.countCap := by
+    have hJ := rfreeProduct_ne_zero Q hQ
+    have hJbox : rfreeProduct Q ∈ globalCoefficientBox K S.D S.w S.L S.s := by
+      rw [hSD, hSw, hSL, hSs]
+      exact mem_box_slope_one _ D w L s
+        (mem_globalCoefficientBox_of_dvd _ Q D w L s hQ (rfreeProduct_dvd Q hQ) hbox)
+        (rfreeProduct_R_degree Q)
+    refine rfree_seed_count_le S _ hJ p hJbox (rfreeProduct_R_degree Q) hSs hp (by omega)
+      hSchar hSDw hSj hSY hSZ hSmixed hSwa hSan selected (rfreeSeeds Q selected Gamma) nodes
+      x u0 u1 hinj hnodesS ?_ ?_ ?_ ?_
+    · intro γ hγ; exact hdegreeS γ (rfreeSeeds_subset Q selected Gamma hγ)
+    · intro γ hγ; exact (Finset.mem_filter.mp hγ).2
+    · intro γ hγ; exact hagreementS γ (rfreeSeeds_subset Q selected Gamma hγ)
+    · exact noLargeSelectedPencil_mono selected Gamma _ S.w S.errors
+        (rfreeSeeds_subset Q selected Gamma) hnoPencilS
+  -- budgets
+  obtain ⟨hsumChain, hcardPos⟩ := sum_chainLength_sub_one_le Q hQ D w L s (by omega) hs hbox
+  -- cardinalities of the four parts
+  have hA : (Finset.univ.biUnion fun F : RegularIndex Q =>
+      regularPairSeeds Q T selected Gamma F).card ≤ P.regularCountCap :=
+    Finset.card_biUnion_le.trans hregCap
+  have hB : ((positiveRFactors Q).biUnion fun F =>
+      (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card ≤
+      (s - 1) * Pc.regularCountCap := by
+    calc ((positiveRFactors Q).biUnion fun F =>
+          (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card
+        ≤ ∑ F ∈ positiveRFactors Q,
+            ((Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card :=
+          Finset.card_biUnion_le
+      _ ≤ ∑ F ∈ positiveRFactors Q, ∑ j ∈ Finset.Ico 1 (chainLength F),
+            (chainSeeds F j selected Gamma).card :=
+          Finset.sum_le_sum fun F _ => Finset.card_biUnion_le
+      _ ≤ ∑ F ∈ positiveRFactors Q, ∑ _j ∈ Finset.Ico 1 (chainLength F), Pc.regularCountCap :=
+          Finset.sum_le_sum fun F hF => Finset.sum_le_sum fun j hj => hchain F hF j hj
+      _ = ∑ F ∈ positiveRFactors Q, (chainLength F - 1) * Pc.regularCountCap := by
+          apply Finset.sum_congr rfl
+          intro F _
+          simp [Finset.sum_const, Nat.card_Ico]
+      _ = (∑ F ∈ positiveRFactors Q, (chainLength F - 1)) * Pc.regularCountCap := by
+          rw [Finset.sum_mul]
+      _ ≤ (s - 1) * Pc.regularCountCap := Nat.mul_le_mul_right _ hsumChain
+  have hC : ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma).card ≤
+      s * S.countCap := by
+    calc ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma).card
+        ≤ ∑ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card := Finset.card_biUnion_le
+      _ ≤ ∑ _F ∈ positiveRFactors Q, S.countCap := Finset.sum_le_sum fun F hF => htail F hF
+      _ = (positiveRFactors Q).card * S.countCap := by simp [Finset.sum_const]
+      _ ≤ s * S.countCap := Nat.mul_le_mul_right _ hcardPos
+  have hunion := Finset.card_le_card hcover
+  have h1 := Finset.card_union_le
+    ((Finset.univ.biUnion fun F : RegularIndex Q => regularPairSeeds Q T selected Gamma F) ∪
+      ((positiveRFactors Q).biUnion fun F =>
+        (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma) ∪
+      ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma))
+    (rfreeSeeds Q selected Gamma)
+  have h2 := Finset.card_union_le
+    ((Finset.univ.biUnion fun F : RegularIndex Q => regularPairSeeds Q T selected Gamma F) ∪
+      ((positiveRFactors Q).biUnion fun F =>
+        (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma))
+    ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma)
+  have h3 := Finset.card_union_le
+    (Finset.univ.biUnion fun F : RegularIndex Q => regularPairSeeds Q T selected Gamma F)
+    ((positiveRFactors Q).biUnion fun F =>
+      (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma)
+  have hfinal : (s + 1) * S.countCap = s * S.countCap + S.countCap := by ring
+  omega
+
+end Assembly
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorDerivativeChain
+end PackedLocator_LocatorDerivativeChain
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier53 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorFixedChain. -/
+section PackedLocator_LocatorFixedChain
+/-!
+# Derivative chain on the fixed stage
+
+`LocatorDerivativeChain.residual_chain_count_le` counts the seeds of a
+polynomial `Q` by its regular seeds (through a coprime partner `T`), the
+derivative-chain pairs `(∂_R^j F, F)` of its positive-slope factors, and the
+R-free tails.  On the fixed stage the regular seeds of the common divisor `H`
+are already charged by the phase certificate through
+`LocatorFixedConsumer.initial_A_regularSeeds_sum_le`, so this file restates that
+lemma with `T := Q` and the regular block replaced by a hypothesis: no second
+polynomial of the selected pair is needed.  The chain pairs are coprime by the
+R-degree drop (`isRelPrime_dR`) and, as in `chainSeeds_card_le`, the
+differentiated left factor only needs slope `s - 1`; the tails use
+`card_le_regular_sum_add_singular J J`.  The only new mathematics is the
+inclusion `regularPairSeeds Q Q ⊆ regularSeeds Q`.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorFixedChain
+
+open scoped Classical BigOperators
+open RCN174 RCN319 RCN081 RCN082 RCN167 RCN286 RCN052 RCN260 RCN318 RCN267 RCN313 RCN135
+  RCN138 RCN136 RCN238 RCN293 RCN231 RCN243 RCN140 LocatorDerivativeChain
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+variable {K : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
+  UniqueFactorizationMonoid.strongNormalizationMonoid
+variable {Iota : Type}
+local instance : DecidableEq Iota := Classical.decEq Iota
+
+/-- With `T := Q`, the regular pair seeds of `(Q, Q)` are the regular seeds of the
+factors of `Q` (RCN140.regularSeeds, the set the grid bounds by `bound`). -/
+theorem regularPairSeeds_self_subset (Q : MvPolynomial (Fin 4) K)
+    (selected : K → Polynomial K) (Gamma : Finset K) (F : RegularIndex Q) :
+    regularPairSeeds Q Q selected Gamma F ⊆ regularSeeds Q selected Gamma F := by
+  intro γ hγ
+  simp only [regularPairSeeds, regularSeeds, Finset.mem_filter] at hγ ⊢
+  exact ⟨hγ.1, hγ.2.1⟩
+
+/-- `residual_chain_count_le` (`LocatorDerivativeChain`) with `T := Q`: the regular seeds are charged to `bound` by hypothesis (the grid), the chain seeds
+to `(s-1)*Pc`, the tails and R-free seeds to `(s+1)*S`.  No coprime partner from the
+selected pair is needed: the chain pairs `(∂_R^j F, F)` are coprime by the R-degree drop
+(`isRelPrime_dR`), and the tails/rfree parts use `card_le_regular_sum_add_singular J J`. -/
+theorem fixed_chain_count_le
+    (Pc : UnequalParameters) (S : TightParameters) (bound : ℕ)
+    (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
+    (D w L s p : ℕ) [CharP K p]
+    (hs : 1 ≤ s) (hsmall : s < p) (hw : 1 ≤ w) (hp : 1 < p)
+    (hbox : Q ∈ globalCoefficientBox K D w L s)
+    (hcgap : 0 < Pc.gap) (hcY : (D - 1) / w ≤ Pc.leftY) (hcR : s - 1 ≤ Pc.leftR) (hcZ : L ≤ Pc.leftZ)
+    (hcY' : (D - 1) / w ≤ Pc.rightY) (hcR' : s ≤ Pc.rightR) (hcZ' : L ≤ Pc.rightZ)
+    (hcleftR : 1 ≤ Pc.leftR) (hcleftYSmall : Pc.leftY < p) (hcleftRSmall : Pc.leftR < p)
+    (hcleftZSmall : Pc.leftZ < p) (hcmixedYSmall : Pc.mixedCost.y < p)
+    (hcmixedRSmall : Pc.mixedCost.r < p) (hcmixedZSmall : Pc.mixedCost.z < p)
+    (hSD : S.D = D) (hSw : S.w = w) (hSL : S.L = L) (hSs : S.s = 1)
+    (hSchar : S.w < p) (hSDw : S.w < S.kappa * S.D) (hSj : 1 ≤ S.algebraicCap)
+    (hSY : S.implicitYCap < p) (hSZ : S.algebraicCap < p)
+    (hSmixed : 2 * S.implicitYCap * S.algebraicCap < p) (hSwa : S.w < S.a) (hSan : S.a ≤ S.n)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (nodes : Finset Iota) (x u0 u1 : Iota → K) (hinj : Set.InjOn x nodes)
+    (hnodesC : nodes.card = Pc.n) (hnodesS : nodes.card = S.n)
+    (hCw : 1 ≤ Pc.w) (hCchar : Pc.w < p) (hCwa : Pc.w < Pc.a) (hCan : Pc.a ≤ Pc.n)
+    (hdegreeC : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ Pc.w)
+    (hdegreeS : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ S.w)
+    (hagreementC : ∀ γ ∈ Gamma, Pc.a ≤ (nodes.filter (fun i =>
+      (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
+    (hagreementS : ∀ γ ∈ Gamma, S.a ≤ (nodes.filter (fun i =>
+      (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
+    (hnoPencilC : NoLargeSelectedPencil selected Gamma Pc.w Pc.errors)
+    (hnoPencilS : NoLargeSelectedPencil selected Gamma S.w S.errors)
+    (hQsolution : ∀ γ ∈ Gamma, specialization K (selected γ) γ Q = 0)
+    (hregular : (∑ F : RegularIndex Q, (regularSeeds Q selected Gamma F).card) ≤ bound) :
+    Gamma.card ≤ bound + (s - 1) * Pc.regularCountCap + (s + 1) * S.countCap := by
+  classical
+  -- cover with T := Q  (LocatorDerivativeChain.cover)
+  have hRcap : ∀ F ∈ positiveRFactors Q, F.degreeOf 2 ≤ s := fun F hF =>
+    degreeOf_R_le_of_mem_box F D w L s (directFactor_data Q F hQ D w L s hbox hF).2.2
+  have hcover := cover Q Q hQ p s hsmall hRcap selected Gamma hQsolution hQsolution
+  -- regular seeds: the grid
+  have hA : (Finset.univ.biUnion fun F : RegularIndex Q =>
+      regularPairSeeds Q Q selected Gamma F).card ≤ bound := by
+    calc (Finset.univ.biUnion fun F : RegularIndex Q =>
+          regularPairSeeds Q Q selected Gamma F).card
+        ≤ ∑ F : RegularIndex Q, (regularPairSeeds Q Q selected Gamma F).card :=
+          Finset.card_biUnion_le
+      _ ≤ ∑ F : RegularIndex Q, (regularSeeds Q selected Gamma F).card :=
+          Finset.sum_le_sum fun F _ =>
+            Finset.card_le_card (regularPairSeeds_self_subset Q selected Gamma F)
+      _ ≤ bound := hregular
+  -- chain seeds  (LocatorDerivativeChain.residual_chain_count_le, verbatim)
+  have hchain : ∀ F ∈ positiveRFactors Q, ∀ j ∈ Finset.Ico 1 (chainLength F),
+      (chainSeeds F j selected Gamma).card ≤ Pc.regularCountCap := by
+    intro F hF j hj
+    obtain ⟨hj1, hjm⟩ := Finset.mem_Ico.mp hj
+    exact chainSeeds_card_le Pc Q F hQ hF j hj1 hjm.le D w L s p hsmall hw hbox hcgap
+      hcY hcR hcZ hcY' hcR' hcZ' hcleftR hcleftYSmall hcleftRSmall hcleftZSmall
+      hcmixedYSmall hcmixedRSmall hcmixedZSmall selected Gamma nodes x u0 u1 hinj hnodesC
+      hCw hCchar hCwa hCan hdegreeC hagreementC hnoPencilC
+  -- tail seeds  (verbatim)
+  have htail : ∀ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card ≤ S.countCap := by
+    intro F hF
+    obtain ⟨hFirr, hFpos, hFbox⟩ := directFactor_data Q F hQ D w L s hbox hF
+    have hFsmall : F.degreeOf 2 < p := by
+      have := degreeOf_R_le_of_mem_box F D w L s hFbox
+      omega
+    have hJ : dR (chainLength F) F ≠ 0 := dR_ne_zero F hFirr.ne_zero p hFsmall _ le_rfl
+    have hJbox : dR (chainLength F) F ∈ globalCoefficientBox K S.D S.w S.L S.s := by
+      rw [hSD, hSw, hSL, hSs]
+      exact mem_box_slope_one _ D w L s (dR_mem_box _ F D w L s hFbox) (chainLength_spec F)
+    refine rfree_seed_count_le S _ hJ p hJbox (chainLength_spec F) hSs hp (by omega) hSchar
+      hSDw hSj hSY hSZ hSmixed hSwa hSan selected (tailSeeds F selected Gamma) nodes x u0 u1
+      hinj hnodesS ?_ ?_ ?_ ?_
+    · intro γ hγ; exact hdegreeS γ (tailSeeds_subset F selected Gamma hγ)
+    · intro γ hγ; exact (Finset.mem_filter.mp hγ).2
+    · intro γ hγ; exact hagreementS γ (tailSeeds_subset F selected Gamma hγ)
+    · exact noLargeSelectedPencil_mono selected Gamma _ S.w S.errors
+        (tailSeeds_subset F selected Gamma) hnoPencilS
+  -- R-free seeds  (verbatim)
+  have hrfree : (rfreeSeeds Q selected Gamma).card ≤ S.countCap := by
+    have hJ := rfreeProduct_ne_zero Q hQ
+    have hJbox : rfreeProduct Q ∈ globalCoefficientBox K S.D S.w S.L S.s := by
+      rw [hSD, hSw, hSL, hSs]
+      exact mem_box_slope_one _ D w L s
+        (mem_globalCoefficientBox_of_dvd _ Q D w L s hQ (rfreeProduct_dvd Q hQ) hbox)
+        (rfreeProduct_R_degree Q)
+    refine rfree_seed_count_le S _ hJ p hJbox (rfreeProduct_R_degree Q) hSs hp (by omega)
+      hSchar hSDw hSj hSY hSZ hSmixed hSwa hSan selected (rfreeSeeds Q selected Gamma) nodes
+      x u0 u1 hinj hnodesS ?_ ?_ ?_ ?_
+    · intro γ hγ; exact hdegreeS γ (rfreeSeeds_subset Q selected Gamma hγ)
+    · intro γ hγ; exact (Finset.mem_filter.mp hγ).2
+    · intro γ hγ; exact hagreementS γ (rfreeSeeds_subset Q selected Gamma hγ)
+    · exact noLargeSelectedPencil_mono selected Gamma _ S.w S.errors
+        (rfreeSeeds_subset Q selected Gamma) hnoPencilS
+  -- budgets  (verbatim)
+  obtain ⟨hsumChain, hcardPos⟩ := sum_chainLength_sub_one_le Q hQ D w L s (by omega) hs hbox
+  have hB : ((positiveRFactors Q).biUnion fun F =>
+      (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card ≤
+      (s - 1) * Pc.regularCountCap := by
+    calc ((positiveRFactors Q).biUnion fun F =>
+          (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card
+        ≤ ∑ F ∈ positiveRFactors Q,
+            ((Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card :=
+          Finset.card_biUnion_le
+      _ ≤ ∑ F ∈ positiveRFactors Q, ∑ j ∈ Finset.Ico 1 (chainLength F),
+            (chainSeeds F j selected Gamma).card :=
+          Finset.sum_le_sum fun F _ => Finset.card_biUnion_le
+      _ ≤ ∑ F ∈ positiveRFactors Q, ∑ _j ∈ Finset.Ico 1 (chainLength F), Pc.regularCountCap :=
+          Finset.sum_le_sum fun F hF => Finset.sum_le_sum fun j hj => hchain F hF j hj
+      _ = ∑ F ∈ positiveRFactors Q, (chainLength F - 1) * Pc.regularCountCap := by
+          apply Finset.sum_congr rfl
+          intro F _
+          simp [Finset.sum_const, Nat.card_Ico]
+      _ = (∑ F ∈ positiveRFactors Q, (chainLength F - 1)) * Pc.regularCountCap := by
+          rw [Finset.sum_mul]
+      _ ≤ (s - 1) * Pc.regularCountCap := Nat.mul_le_mul_right _ hsumChain
+  have hC : ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma).card ≤
+      s * S.countCap := by
+    calc ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma).card
+        ≤ ∑ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card := Finset.card_biUnion_le
+      _ ≤ ∑ _F ∈ positiveRFactors Q, S.countCap := Finset.sum_le_sum fun F hF => htail F hF
+      _ = (positiveRFactors Q).card * S.countCap := by simp [Finset.sum_const]
+      _ ≤ s * S.countCap := Nat.mul_le_mul_right _ hcardPos
+  have hunion := Finset.card_le_card hcover
+  have h1 := Finset.card_union_le
+    ((Finset.univ.biUnion fun F : RegularIndex Q => regularPairSeeds Q Q selected Gamma F) ∪
+      ((positiveRFactors Q).biUnion fun F =>
+        (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma) ∪
+      ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma))
+    (rfreeSeeds Q selected Gamma)
+  have h2 := Finset.card_union_le
+    ((Finset.univ.biUnion fun F : RegularIndex Q => regularPairSeeds Q Q selected Gamma F) ∪
+      ((positiveRFactors Q).biUnion fun F =>
+        (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma))
+    ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma)
+  have h3 := Finset.card_union_le
+    (Finset.univ.biUnion fun F : RegularIndex Q => regularPairSeeds Q Q selected Gamma F)
+    ((positiveRFactors Q).biUnion fun F =>
+      (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma)
+  have hfinal : (s + 1) * S.countCap = s * S.countCap + S.countCap := by ring
+  omega
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorFixedChain
+end PackedLocator_LocatorFixedChain
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier54 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorFixedConsumer. -/
+section PackedLocator_LocatorFixedConsumer
+namespace ProximityPrize.SubmissionLower.LocatorFixedConsumer
+open ProximityPrize.Benchmark
+open scoped Classical BigOperators
+open RCN174 RCN319 RCN286 RCN238 RCN243 RCN266 RCN140 RCN130 RCN156 RCN234 RCN275 LocatorFactorAggregate
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 2048
+set_option maxHeartbeats 300000
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+abbrev P4:=MvPolynomial (Fin 4) K
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:CharP K 2130706433:=by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
+def wholeSupport:ResidualSupportParameters:=
+  ⟨29,132,6412,by decide,by decide,by decide,by decide⟩
+
+/-- The selected TCap/B gcd is wider in the middle and slope coordinates
+than `wholeSupport`.  It is nevertheless a valid carrier for the initial
+A-source split; only the factors in the universal child are later charged by
+the narrow fixed-phase argument. -/
+def wideSupport:ResidualSupportParameters:=
+  ⟨33,153,6412,by decide,by decide,by decide,by decide⟩
+
+/-- Regular allowance used by the initial A-source split. -/
+abbrev initialRegularCap:ℕ:=LocatorArithmetic.fixedRegularCap
+
+/-- Pure bookkeeping for the initial A-source split.  `U` is the set of
+factors universal on the current A kernel.  The universal child is bounded
+in aggregate by `phaseCap`; every factor outside it is charged by its direct
+A-helper cap.  No claim about divisibility is hidden in this lemma. -/
+theorem initial_A_regularSeeds_sum_le
+    (H:P4) (selected:K → Polynomial K) (Gamma:Finset K)
+    (U:Finset (RegularIndex H)) (phaseCap:ℕ)
+    (helperCap:RegularIndex H → ℕ)
+    (hphase:(∑ F ∈ U,(regularSeeds H selected Gamma F).card) ≤ phaseCap)
+    (hhelper:∀ F ∈ (Finset.univ:Finset (RegularIndex H)) \ U,
+      (regularSeeds H selected Gamma F).card ≤ helperCap F)
+    (hledger:phaseCap+
+      (∑ F ∈ (Finset.univ:Finset (RegularIndex H)) \ U,helperCap F) ≤
+        initialRegularCap) :
+    (∑ F:RegularIndex H,(regularSeeds H selected Gamma F).card) ≤
+      initialRegularCap:=by
+  classical
+  have hsplit:(Finset.univ:Finset (RegularIndex H)) =
+      U ∪ ((Finset.univ:Finset (RegularIndex H)) \ U):=by
+    ext F
+    simp only [Finset.mem_univ,Finset.mem_union,Finset.mem_sdiff,true_and]
+    tauto
+  have hdisjoint:Disjoint U
+      ((Finset.univ:Finset (RegularIndex H)) \ U):=by
+    apply Finset.disjoint_left.mpr
+    intro F hFU hFd
+    exact (Finset.mem_sdiff.mp hFd).2 hFU
+  change (∑ F ∈ (Finset.univ:Finset (RegularIndex H)),
+    (regularSeeds H selected Gamma F).card) ≤ initialRegularCap
+  rw [hsplit,Finset.sum_union hdisjoint]
+  exact (Nat.add_le_add hphase
+    (Finset.sum_le_sum (fun F hF=>hhelper F hF))).trans hledger
+
+/-- Cover/chain wrapper for the wide selected gcd.  The regular term is
+supplied by `initial_A_regularSeeds_sum_le`; the singular seeds are charged by
+the fixed-stage derivative chain (`LocatorFixedChain.fixed_chain_count_le`,
+`T := H`) in the full B contact/slope box, without the narrow A caps. -/
+theorem wide_fixed_count_le
+    (H:P4) (hH:H ≠ 0)
+    (hbox:H ∈ RCN174.globalCoefficientBox K 20132403 131071 6412 33)
+    (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
+    (hsolution:∀ gamma ∈ Gamma,specialization K (selected gamma) gamma H=0)
+    (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hregular:(∑ F:RegularIndex H,
+      (regularSeeds H selected Gamma F).card) ≤ initialRegularCap) :
+    Gamma.card ≤ initialRegularCap+LocatorArithmetic.fixedChainCap:=by
+  have hnodes:(Finset.univ:Finset I).card=262144:=by
+    rw [Finset.card_univ]
+    change Fintype.card (Fin (2 ^ 18)) =262144
+    rw [Fintype.card_fin]
+    decide
+  have h:=LocatorFixedChain.fixed_chain_count_le LocatorArithmetic.chainH
+    LocatorArithmetic.tailH initialRegularCap H hH 20132403 131071 6412 33 2130706433
+    (by decide) (by decide) (by decide) (by decide) hbox
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+    rfl rfl rfl rfl
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+    selected Gamma (Finset.univ:Finset I) IRSProfile.domain u0 u1
+    IRSProfile.domain.injective.injOn
+    (by rw [hnodes]; rfl) (by rw [hnodes]; rfl)
+    (by decide) (by decide) (by decide) (by decide)
+    hdegree hdegree hagreement hagreement hno hno hsolution hregular
+  unfold LocatorArithmetic.fixedChainCap
+  simp only [LocatorArithmetic.sB, Nat.reduceSub, Nat.reduceAdd] at h ⊢
+  omega
+end
+end ProximityPrize.SubmissionLower.LocatorFixedConsumer
+end PackedLocator_LocatorFixedConsumer
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridTailProviderC1. -/
+section PackedLocator_LocatorHybridTailProviderC1
+/-
+LOCATOR HYBRID TAIL PROVIDER — C1 VARIANT.
+
+Same architecture as `LocatorHybridTailProvider`, with the C1 trade:
+
+  * the FLAG route (charge `mult · weightedCost hybrid`) is restricted to
+    components of local multiplicity at least 6, which lets the coordinate drop
+    from `cellRational + ⟨0,(w+1)/2,3·((w+1)/2)⟩` all the way to `cellRational`;
+  * components of multiplicity 1..5 go through the MOVING engine at cut level
+    `w + mult` (the dichotomy's `delay` satisfies `delay ≤ mult`), charging
+    `weightedCost (cellRationalAt (w + mult)) + (w + mult) · movingCost`;
+  * the moving term's outer factor therefore becomes `w + 5` instead of `w + 1`.
+
+The structure `HybridTailMultiplicityProvider` and `stage_card_le_divisorBound`
+are reused unchanged from `LocatorHybridTailProvider`.
+-/
+namespace ProximityPrize.SubmissionLower.LocatorHybridTailProviderC1
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
+open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
+open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+variable {K I : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
+variable [CharP (GenericField K) p]
+variable {stageErrorCap : ℕ}
+
+/-! ### 0. Arithmetic helpers -/
+
+/-- `sharp_absorbs_total_C1` in the `(a, b + s)` shape used by the containment proof. -/
+theorem sharp_absorbs_total_abs (a B delay mult : ℕ) (hA : 1 ≤ a + B)
+    (hdm : delay ≤ mult) (hm6 : 6 ≤ mult) :
+    1 + (2 * a + 2 * B + 4) * (131072 + delay) ≤
+      mult * (131074 * a + 131072 * B + 2 * B + 5) := by
+  have h := sharp_absorbs_total_C1 (a + B) delay mult hA hdm hm6
+  have e1 : 2 * (a + B) + 4 = 2 * a + 2 * B + 4 := by ring
+  have e2 : 131072 * (a + B) + 2 * (a + B) + 5 =
+      131074 * a + 131072 * B + 2 * B + 5 := by ring
+  rw [e1, e2] at h
+  exact h
+
+/-- The rational coordinate grows componentwise with the cut level. -/
+theorem cellRationalAt_mono (t y r k l : Nat) (h : k ≤ l) :
+    (cellRationalAt t y r k).zOnly ≤ (cellRationalAt t y r l).zOnly ∧
+      (cellRationalAt t y r k).yz ≤ (cellRationalAt t y r l).yz ∧
+      (cellRationalAt t y r k).all ≤ (cellRationalAt t y r l).all := by
+  simp only [cellRationalAt_eq]
+  exact ⟨by exact Nat.add_le_add_left (Nat.mul_le_mul_right _ h) _,
+    by exact Nat.add_le_add_left (Nat.mul_le_mul_right _ h) _,
+    by exact Nat.add_le_add_left (Nat.mul_le_mul_right _ h) _⟩
+
+/-! ### 1. L1 (C1) — the delayed cut lands in `mult • cellRational` for `mult ≥ 6` -/
+
+theorem laterTail_in_hybridFlagC1
+    (t y r : Nat) (hr3 : 3 ≤ r) (_hry : r < y)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (delay mult : ℕ) (_hd : 1 ≤ delay) (hdm : delay ≤ mult) (hm6 : 6 ≤ mult) :
+    PolynomialInFlag (mult • cellHybridCoordinateC1 t y r)
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1 + delay)) := by
+  have hs1 : 1 ≤ cellS r := by simp only [cellS]; omega
+  have hB1 : 1 ≤ cellB y r + cellS r := by omega
+  have hA1 : 1 ≤ cellA t y + (cellB y r + cellS r) := by omega
+  have hsy : (cellSupport t y r).s < (cellSupport t y r).ys := by
+    simp only [cellSupport, cellA, cellB, cellS, RCN198.support]
+    omega
+  have hsharp : PolynomialInFlag
+      (sharpResidualAgreementFlag (cellSupport t y r) (w + 1 + delay))
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1 + delay)) := by
+    exact surfaceMap_agreement_in_sharp_flag hsy (polynomialEmbedding K)
+      ⟨S.surface_s_weight, S.surface_ys_weight, S.surface_total_weight⟩
+      (w + 1 + delay) (tailSelector (w + 1 + delay)) 0 0 0
+  intro exponent hexp
+  have h := hsharp exponent hexp
+  obtain ⟨hall, hys, htot⟩ := h
+  have hallV : (sharpResidualAgreementFlag (cellSupport t y r)
+      (w + 1 + delay)).all = (2 * cellS r + 3) * (131072 + delay) := by
+    have e1 : ∀ m : ℕ, 2 * (m + 2) - 1 = 2 * m + 3 := fun m => by omega
+    have e2 : ∀ m2 m3 : ℕ,
+        2 * (m2 + m3 + 3 - (m3 + 2)) - 1 = 2 * m2 + 1 := fun m2 m3 => by omega
+    have e3 : ∀ m1 m2 m3 : ℕ,
+        m1 + m2 + m3 + 3 - (m2 + m3 + 3) = m1 := fun m1 m2 m3 => by omega
+    simp only [sharpResidualAgreementFlag, sharpAgreementDirection,
+      cellSupport, RCN198.support, w, e3, e2, e1]
+  have hysV : (sharpResidualAgreementFlag (cellSupport t y r)
+        (w + 1 + delay)).yz +
+      (sharpResidualAgreementFlag (cellSupport t y r)
+        (w + 1 + delay)).all =
+      1 + (2 * (cellB y r + cellS r) + 4) * (131072 + delay) := by
+    have e1 : ∀ m : ℕ, 2 * (m + 2) - 1 = 2 * m + 3 := fun m => by omega
+    have e2 : ∀ m2 m3 : ℕ,
+        2 * (m2 + m3 + 3 - (m3 + 2)) - 1 = 2 * m2 + 1 := fun m2 m3 => by omega
+    have e3 : ∀ m1 m2 m3 : ℕ,
+        m1 + m2 + m3 + 3 - (m2 + m3 + 3) = m1 := fun m1 m2 m3 => by omega
+    simp only [sharpResidualAgreementFlag, sharpAgreementDirection,
+      cellSupport, RCN198.support, w, e3, e2, e1]
+    all_goals ring
+  have htotV : (sharpResidualAgreementFlag (cellSupport t y r)
+        (w + 1 + delay)).zOnly +
+      (sharpResidualAgreementFlag (cellSupport t y r)
+        (w + 1 + delay)).yz +
+      (sharpResidualAgreementFlag (cellSupport t y r)
+        (w + 1 + delay)).all =
+      1 + (2 * cellA t y + 2 * (cellB y r + cellS r) + 4) *
+        (131072 + delay) := by
+    have e1 : ∀ m : ℕ, 2 * (m + 2) - 1 = 2 * m + 3 := fun m => by omega
+    have e2 : ∀ m2 m3 : ℕ,
+        2 * (m2 + m3 + 3 - (m3 + 2)) - 1 = 2 * m2 + 1 := fun m2 m3 => by omega
+    have e3 : ∀ m1 m2 m3 : ℕ,
+        m1 + m2 + m3 + 3 - (m2 + m3 + 3) = m1 := fun m1 m2 m3 => by omega
+    simp only [sharpResidualAgreementFlag, sharpAgreementDirection,
+      cellSupport, RCN198.support, w, e3, e2, e1]
+    all_goals ring
+  have hhallV : (mult • cellHybridCoordinateC1 t y r).all =
+      mult * (131072 * cellS r + (2 * cellS r + 3)) := by
+    simp only [cellHybridCoordinateC1, cellRational, cellDirection,
+      RCN206.directionFlag, nsmul_all, w]
+  have hhysV : (mult • cellHybridCoordinateC1 t y r).yz +
+      (mult • cellHybridCoordinateC1 t y r).all =
+      mult * (131072 * (cellB y r + cellS r) +
+        2 * (cellB y r + cellS r) + 5) := by
+    simp only [cellHybridCoordinateC1, cellRational, cellDirection,
+      RCN206.directionFlag, nsmul_yz, nsmul_all, w]
+    ring
+  have hhtotV : (mult • cellHybridCoordinateC1 t y r).zOnly +
+      (mult • cellHybridCoordinateC1 t y r).yz +
+      (mult • cellHybridCoordinateC1 t y r).all =
+      mult * (131074 * cellA t y + 131072 * (cellB y r + cellS r) +
+        2 * (cellB y r + cellS r) + 5) := by
+    simp only [cellHybridCoordinateC1, cellRational, cellDirection,
+      RCN206.directionFlag, nsmul_zOnly, nsmul_yz, nsmul_all, w]
+    ring
+  refine ⟨?_, ?_, ?_⟩
+  · exact (hallV ▸ hall).trans (hhallV ▸
+      sharp_absorbs_all_C1 (cellS r) delay mult hs1 hdm hm6)
+  · exact (hysV ▸ hys).trans (hhysV ▸
+      sharp_absorbs_ysall_C1 (cellB y r + cellS r) delay mult hB1 hdm hm6)
+  · exact (htotV ▸ htot).trans (hhtotV ▸
+      sharp_absorbs_total_abs (cellA t y) (cellB y r + cellS r) delay mult
+        hA1 hdm hm6)
+
+/-! ### 2. L2 (C1) — the moving count at an arbitrary delay -/
+
+set_option maxHeartbeats 20000000 in
+theorem component_moving_card_le_delay
+    (t y r : Nat) (_hr2 : 2 ≤ r) (_hry : r < y) (_hyt : y ≤ t)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (C : FirstTailComponent S)
+    (budget : MovingPoleBudget C.1
+      (regularitySurface (polynomialEmbedding K) S.F)
+      (surfaceMap (polynomialEmbedding K) (polyG K S.F)))
+    (base : SeparableLiteralCoordinate C.1)
+    (delay : ℕ) (hd : 1 ≤ delay)
+    (hproper : globalTailCut (polynomialEmbedding K) S.F
+      (w + 1 + delay) ∉ C.1) :
+    (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+      budget.weightedCost (center (cellA t y) (cellB y r) (cellS r)) +
+        (w + delay) *
+          (budget.weightedCost
+              (⟨cellA t y, cellB y r, cellS r⟩ : FlagDegree) +
+            budget.movingCost) := by
+  classical
+  have Hsupport : ResidualSupportData (cellSupport t y r) S.F :=
+    ⟨S.surface_s_weight, S.surface_ys_weight, S.surface_total_weight⟩
+  have hR : S.F.degreeOf 2 ≤ cellS r + 2 := by
+    have h := Hsupport.coordinate_bounds.2.1
+    simpa only [cellSupport, cellS, RCN198.support] using h
+  have hYR : wt ![0, 1, 1, 0] S.F ≤ cellB y r + cellS r + 3 := by
+    have h := Hsupport.ys_weight
+    simpa only [residualYSWeights, cellSupport, cellB, cellS, RCN198.support] using h
+  have hAll : wt ![0, 1, 1, 1] S.F ≤ cellA t y + cellB y r + cellS r + 3 := by
+    have h := Hsupport.total_weight
+    simpa only [residualTotalWeights, cellSupport, cellA, cellB, cellS,
+      RCN198.support] using h
+  obtain ⟨Bc, cf, heq, hcoeff, hclass⟩ :=
+    globalTailCut_certificate (polynomialEmbedding K)
+      (cellA t y) (cellB y r) (cellS r) S.F hR hYR hAll
+      (w + delay) (by omega)
+  rw [show w + delay + 1 = w + 1 + delay from by omega] at heq
+  have hHrw : surfaceMap (polynomialEmbedding K) (polyH K S.F) =
+      regularitySurface (polynomialEmbedding K) S.F := rfl
+  rw [hHrw] at heq
+  have hA : filteredCut
+      (w + delay) Bc
+      (regularitySurface (polynomialEmbedding K) S.F)
+      (surfaceMap (polynomialEmbedding K) (polyG K S.F)) ∉ C.1 :=
+    heq ▸ hproper
+  have hHnot : regularitySurface (polynomialEmbedding K) S.F ∉ C.1 :=
+    regularComponent_H_not_mem (GenericField K) S.G _ _ C
+  have hzero : FiniteRegularZeroSetBound C.1
+      (regularitySurface (polynomialEmbedding K) S.F)
+      (filteredCut (w + delay) Bc
+        (regularitySurface (polynomialEmbedding K) S.F)
+        (surfaceMap (polynomialEmbedding K) (polyG K S.F)))
+      (budget.weightedCost (center (cellA t y) (cellB y r) (cellS r)) +
+        (w + delay) *
+          (budget.weightedCost
+              (⟨cellA t y, cellB y r, cellS r⟩ : FlagDegree) +
+            budget.movingCost)) :=
+    budget.zero_le base (cellA t y) (cellB y r) (cellS r) (w + delay)
+      (center (cellA t y) (cellB y r) (cellS r)) Bc cf hHnot hA hcoeff hclass
+  let seeds := componentSeeds (GenericField K) S.G
+    (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+    (regularitySurface (polynomialEmbedding K) S.F) Gamma
+    (selectedPoint (polynomialEmbedding K) S.selected) C
+  let pts : Finset (Fin 3 → GenericField K) :=
+    seeds.image (selectedPoint (polynomialEmbedding K) S.selected)
+  have hprime : ∀ v ∈ pts,
+      C.1 ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom := by
+    intro v hv
+    obtain ⟨gamma, hgamma, rfl⟩ := Finset.mem_image.mp hv
+    exact componentSeeds_on_prime (GenericField K) S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+      (regularitySurface (polynomialEmbedding K) S.F) Gamma
+      (selectedPoint (polynomialEmbedding K) S.selected) C gamma hgamma
+  have hHne : ∀ v ∈ pts, MvPolynomial.aeval v
+      (regularitySurface (polynomialEmbedding K) S.F) ≠ 0 := by
+    intro v hv
+    obtain ⟨gamma, hgamma, rfl⟩ := Finset.mem_image.mp hv
+    have hGamma : gamma ∈ Gamma := componentSeeds_subset (GenericField K) S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+      (regularitySurface (polynomialEmbedding K) S.F) Gamma
+      (selectedPoint (polynomialEmbedding K) S.selected) C hgamma
+    show MvPolynomial.eval
+        (selectedPoint (polynomialEmbedding K) S.selected gamma)
+        (regularitySurface (polynomialEmbedding K) S.F) ≠ 0
+    exact (selectedPoint_evaluation (polynomialEmbedding K) S.selected gamma
+      (MvPolynomial.pderiv (2 : Fin 4) S.F)).symm ▸ S.regular gamma hGamma
+  have hAzero : ∀ v ∈ pts, MvPolynomial.aeval v
+      (filteredCut (w + delay) Bc
+        (regularitySurface (polynomialEmbedding K) S.F)
+        (surfaceMap (polynomialEmbedding K) (polyG K S.F))) = 0 := by
+    intro v hv
+    obtain ⟨gamma, hgamma, rfl⟩ := Finset.mem_image.mp hv
+    have hGamma : gamma ∈ Gamma := componentSeeds_subset (GenericField K) S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+      (regularitySurface (polynomialEmbedding K) S.F) Gamma
+      (selectedPoint (polynomialEmbedding K) S.selected) C hgamma
+    have hz : MvPolynomial.aeval
+        (selectedPoint (polynomialEmbedding K) S.selected gamma)
+        (globalTailCut (polynomialEmbedding K) S.F
+          (w + 1 + delay)) = 0 :=
+      selected_globalTailCut_zero_of_lt (polynomialEmbedding K) S.F
+        S.selected gamma w (w + 1 + delay)
+        (S.degree_le gamma hGamma) (S.solution gamma hGamma) (by omega)
+    exact heq ▸ hz
+  have hbound : pts.card ≤
+      budget.weightedCost (center (cellA t y) (cellB y r) (cellS r)) +
+        (w + delay) *
+          (budget.weightedCost
+              (⟨cellA t y, cellB y r, cellS r⟩ : FlagDegree) +
+            budget.movingCost) :=
+    hzero pts hprime hHne hAzero
+  have hcard : pts.card = seeds.card :=
+    Finset.card_image_of_injective seeds
+      (selectedPoint_injective (polynomialEmbedding K) S.selected)
+  show seeds.card ≤ _
+  omega
+
+/-! ### 3. The C1 provider from a local DVR family -/
+
+theorem exists_hybridTailMultiplicityProviderC1_of_localDVR
+    (t y r : Nat) (hr3 : 3 ≤ r) (hb : r + 2 ≤ y) (hyt : y ≤ t)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F
+      (w + 1))
+    (B : PrimeFlagBudgetFamily
+      (G := S.G) (T := globalTailCut (polynomialEmbedding K) S.F
+        (w + 1))
+      (H := regularitySurface (polynomialEmbedding K) S.F) flag
+      (cellSharpTail t y r))
+    (base : ∀ C : FirstTailComponent S, SeparableLiteralCoordinate C.1)
+    (budget : ∀ C : FirstTailComponent S,
+      MovingPoleBudget C.1
+        (regularitySurface (polynomialEmbedding K) S.F)
+        (surfaceMap (polynomialEmbedding K) (polyG K S.F)))
+    (hcost : ∀ C : FirstTailComponent S,
+      (budget C).zCost = B.zCost C ∧ (budget C).yzCost = B.yzCost C ∧
+        (budget C).allCost = B.allCost C)
+    (hmovingSum : (∑ C : FirstTailComponent S, (budget C).movingCost) ≤
+      flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r))
+    (hgate : stageErrorCap + 1 ≤ (cellHybridCoordinateC1 t y r).yz)
+    (htangent : ∀ C : FirstTailComponent S,
+      (∀ delay, globalTailCut (polynomialEmbedding K) S.F
+        (w + 1 + delay) ∈ C.1) →
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+          (stageErrorCap + 1) * B.yzCost C)
+    (hresultants : RegularComponentWeightedInertiaResultantCertificate B
+      (fun C => localMultiplicity (loosenStageGeneral S)
+        (canonicalLocalDVRFamily (loosenStageGeneral S) hfirstProper) C)) :
+    Nonempty (HybridTailMultiplicityProvider
+      (tailFlag1 := cellSharpTail t y r)
+      (tailFlag2 := cellHybridCoordinateC1 t y r) S
+      (flagMixed flag (cellSharpTail t y r) (cellHybridCoordinateC1 t y r) +
+        (w + 5) *
+          flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r))) := by
+  classical
+  have hry : r < y := by omega
+  have hr2 : 2 ≤ r := by omega
+  let S0 := loosenStageGeneral S
+  let multiplicity : FirstTailComponent S → ℕ := fun C =>
+    localMultiplicity S0 (canonicalLocalDVRFamily S0 hfirstProper) C
+  have hone : ∀ C, 1 ≤ multiplicity C :=
+    loosenStageGeneral_one_le_localMultiplicity S hfirstProper
+  have hwcEq : ∀ (C : FirstTailComponent S) (f : FlagDegree),
+      (budget C).weightedCost f = B.weightedCost f C := by
+    intro C f
+    obtain ⟨hz, hy', ha⟩ := hcost C
+    simp only [MovingPoleBudget.weightedCost,
+      PrimeFlagBudgetFamily.weightedCost, hz, hy', ha]
+  have hscale : ∀ (m : ℕ) (f : FlagDegree) (C : FirstTailComponent S),
+      B.weightedCost (m • f) C = m * B.weightedCost f C := by
+    intro m f C
+    simp only [PrimeFlagBudgetFamily.weightedCost, nsmul_zOnly, nsmul_yz,
+      nsmul_all]
+    ring
+  -- the piecewise cost: flag route at multiplicity ≥ 6, moving route below
+  let cost : FirstTailComponent S → ℕ := fun C =>
+    if 6 ≤ multiplicity C then
+      multiplicity C * B.weightedCost (cellHybridCoordinateC1 t y r) C
+    else
+      B.weightedCost (cellRationalAt t y r (w + multiplicity C)) C +
+        (w + multiplicity C) * (budget C).movingCost
+  have hlow : ∀ C : FirstTailComponent S,
+      B.weightedCost (cellRationalAt t y r (w + multiplicity C)) C ≤
+        multiplicity C * B.weightedCost (cellHybridCoordinateC1 t y r) C := by
+    intro C
+    have hle := cellRationalAt_le_smul t y r (multiplicity C) (hone C)
+    have h := weightedCost_mono B C hle.1 hle.2.1 hle.2.2
+    rwa [hscale] at h
+  have hcost_pointwise : ∀ C, cost C ≤
+      multiplicity C * B.weightedCost (cellHybridCoordinateC1 t y r) C +
+        (w + 5) * (budget C).movingCost := by
+    intro C
+    by_cases hm : 6 ≤ multiplicity C
+    · simp only [cost, if_pos hm]
+      exact Nat.le_add_right _ _
+    · simp only [cost, if_neg hm]
+      have h2 : (w + multiplicity C) * (budget C).movingCost ≤
+          (w + 5) * (budget C).movingCost :=
+        Nat.mul_le_mul_right _ (by omega)
+      have := hlow C
+      omega
+  have hbound : ∀ C,
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+      cost C := by
+    intro C
+    have dichotomy := local_order_tail_dichotomy S0
+      (canonicalLocalDVRFamily S0 hfirstProper) C hfirstProper
+    rcases dichotomy.2 with hproper | htangentBranch
+    · obtain ⟨delay, hdelay, hdelayMu, htail⟩ := hproper
+      by_cases hm : 6 ≤ multiplicity C
+      · have hzero : ∀ gamma ∈ componentSeeds (GenericField K) S.G
+            (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+            (regularitySurface (polynomialEmbedding K) S.F) Gamma
+            (selectedPoint (polynomialEmbedding K) S.selected) C,
+            MvPolynomial.aeval
+              (selectedPoint (polynomialEmbedding K) S.selected gamma)
+              (globalTailCut (polynomialEmbedding K) S.F
+                (w + 1 + delay)) = 0 := by
+          intro gamma hgamma
+          have hGamma := componentSeeds_subset (GenericField K) S.G
+            (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+            (regularitySurface (polynomialEmbedding K) S.F) Gamma
+            (selectedPoint (polynomialEmbedding K) S.selected) C hgamma
+          exact selected_globalTailCut_zero_of_lt (polynomialEmbedding K)
+            S.F S.selected gamma w (w + 1 + delay)
+            (S.degree_le gamma hGamma) (S.solution gamma hGamma) (by omega)
+        have hflagMod : PolynomialInFlagMod C.1
+            (multiplicity C • cellHybridCoordinateC1 t y r)
+            (globalTailCut (polynomialEmbedding K) S.F
+              (w + 1 + delay)) := by
+          refine ⟨globalTailCut (polynomialEmbedding K) S.F
+            (w + 1 + delay),
+            laterTail_in_hybridFlagC1 t y r hr3 hry S delay
+              (multiplicity C) hdelay hdelayMu hm, ?_⟩
+          simp
+        have hcount := component_secondTail_card_le_mod (Seed := K) B C Gamma
+          (selectedPoint (polynomialEmbedding K) S.selected)
+          (selectedPoint_injective (polynomialEmbedding K) S.selected)
+          hflagMod htail hzero
+        simp only [cost, if_pos hm]
+        rw [hscale] at hcount
+        exact hcount
+      · -- the dichotomy hands back `delay ≤ localMultiplicity …`; restate it
+        -- against the local `multiplicity` so the atoms line up
+        have hdm' : delay ≤ multiplicity C := hdelayMu
+        have hcount := component_moving_card_le_delay t y r hr2 hry hyt
+          S C (budget C) (base C) delay hdelay htail
+        simp only [hwcEq] at hcount
+        have hfold : B.weightedCost
+              (center (cellA t y) (cellB y r) (cellS r)) C +
+            (w + delay) *
+              (B.weightedCost
+                (⟨cellA t y, cellB y r, cellS r⟩ : FlagDegree) C +
+                (budget C).movingCost) =
+            B.weightedCost (cellRationalAt t y r (w + delay)) C +
+              (w + delay) * (budget C).movingCost := by
+          simp only [cellRationalAt, PrimeFlagBudgetFamily.weightedCost,
+            add_zOnly, add_yz, add_all, nsmul_zOnly, nsmul_yz, nsmul_all]
+          ring
+        rw [hfold] at hcount
+        have hmono := cellRationalAt_mono t y r (w + delay)
+          (w + multiplicity C) (by omega)
+        have h1 := weightedCost_mono B C hmono.1 hmono.2.1 hmono.2.2
+        have h2 : (w + delay) * (budget C).movingCost ≤
+            (w + multiplicity C) * (budget C).movingCost :=
+          Nat.mul_le_mul_right _ (by omega)
+        simp only [cost, if_neg hm]
+        exact hcount.trans (Nat.add_le_add h1 h2)
+    · have hcount := htangent C htangentBranch
+      by_cases hm : 6 ≤ multiplicity C
+      · simp only [cost, if_pos hm]
+        calc _ ≤ (stageErrorCap + 1) * B.yzCost C := hcount
+          _ ≤ B.weightedCost (cellHybridCoordinateC1 t y r) C :=
+            yzCost_mul_le_weightedCost B (cellHybridCoordinateC1 t y r) C
+              (stageErrorCap + 1) hgate
+          _ = 1 * B.weightedCost (cellHybridCoordinateC1 t y r) C := by ring
+          _ ≤ multiplicity C *
+              B.weightedCost (cellHybridCoordinateC1 t y r) C :=
+            Nat.mul_le_mul_right _ (hone C)
+      · simp only [cost, if_neg hm]
+        have hmono := cellRationalAt_mono t y r (w + 1)
+          (w + multiplicity C) (by have := hone C; omega)
+        have h1 := weightedCost_mono B C hmono.1 hmono.2.1 hmono.2.2
+        rw [cellRationalAt_succ_w] at h1
+        calc _ ≤ (stageErrorCap + 1) * B.yzCost C := hcount
+          _ ≤ B.weightedCost (cellHybridCoordinateC1 t y r) C :=
+            yzCost_mul_le_weightedCost B (cellHybridCoordinateC1 t y r) C
+              (stageErrorCap + 1) hgate
+          _ ≤ B.weightedCost (cellRationalAt t y r (w + multiplicity C)) C :=
+            h1
+          _ ≤ B.weightedCost (cellRationalAt t y r (w + multiplicity C)) C +
+              (w + multiplicity C) * (budget C).movingCost :=
+            Nat.le_add_right _ _
+  have hsum : (∑ C, cost C) ≤
+      flagMixed flag (cellSharpTail t y r) (cellHybridCoordinateC1 t y r) +
+        (w + 5) *
+          flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r) := by
+    calc (∑ C, cost C) ≤
+        ∑ C, (multiplicity C *
+            B.weightedCost (cellHybridCoordinateC1 t y r) C +
+          (w + 5) * (budget C).movingCost) :=
+        Finset.sum_le_sum (fun C _ => hcost_pointwise C)
+      _ = (∑ C, multiplicity C *
+            B.weightedCost (cellHybridCoordinateC1 t y r) C) +
+          (w + 5) * (∑ C, (budget C).movingCost) := by
+        rw [Finset.sum_add_distrib, Finset.mul_sum]
+      _ ≤ flagMixed flag (cellSharpTail t y r)
+            (cellHybridCoordinateC1 t y r) +
+          (w + 5) *
+            flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r) :=
+        Nat.add_le_add
+          (hresultants.divisor_le B multiplicity)
+          (Nat.mul_le_mul_left _ hmovingSum)
+  have providerDichotomy := loosenStageGeneral_dichotomy_with_tangent S
+    hfirstProper B htangent
+  exact ⟨{
+    budgetFamily := B
+    multiplicity := multiplicity
+    cost := cost
+    one_le_multiplicity := hone
+    tangentYZGate := hgate
+    cost_sum_le := hsum
+    componentBound := hbound
+    dichotomy := providerDichotomy }⟩
+
+end
+end ProximityPrize.SubmissionLower.LocatorHybridTailProviderC1
+end PackedLocator_LocatorHybridTailProviderC1
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridTransportC2. -/
+section PackedLocator_LocatorHybridTransportC2
+/-
+C2 FOUNDATION: transporting the unit family across a congruent cut, and the
+moving-budget existence at an ARBITRARY first-tail flag.
+
+C2 replaces the sharp first tail `sharpResidualAgreementFlag (support a b s) (w+1)`
+by the reduced one `reducedResidualAgreementFlag (support a b s) (w+1)`, which is
+strictly `Below` it (same `yz + all` and total, `all` smaller by `w + 1`).  The
+reduced geometry lives over the components of `reducedFirstCut`, so it has to be
+transported to the components of `globalTailCut (w+1)`.
+
+`PrimeFlagBudgetFamily.ofCongruentCut` (B1.lean:108) already transports the
+budget family, and `RCN335` uses it for the certificate.  What is missing for the
+hybrid moving route is the transport of the whole `AdaptiveUnitProjectionFamily`,
+because `exists_moving_pole_budget_family` needs the projections themselves in
+order to produce a `MovingPoleBudget` whose costs agree with the family's.
+
+§1 supplies that transport.  Every field of `AdaptiveUnitProjectionFamily`
+mentions the component only through `C.1`, and `regularComponentEquiv h C` has
+`.1 = C.1` definitionally, so the transport is a precomposition.
+
+§2 generalises `RCN085.exists_firstTail_cut_budgets` (J3.lean:13) in the
+first-tail flag.  J3 hard-codes the sharp flag purely to state the three
+`z / yz / all` sum bounds through `mixed_sharp_le_padded`; the hybrid route uses
+only the cost equalities and the moving sum, both of which are flag-agnostic.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorHybridTransportC2
+open scoped Classical BigOperators
+open RCN136 RCN313 RCN238 RCN243 RCN264 RCN341 RCN046 RCN095 RCN199 RCN200 RCN207 RCN198 RCN203 RCN201 RCN275 RCN287 RCN086 RCN085
+open RCN066 RCN135 RCN159 RCN074 RCN237 RCN244 RCN327 RCN263 RCN206 RCN002 RCN344
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+set_option maxRecDepth 50000
+set_option synthInstance.maxHeartbeats 300000
+
+/-! ### 1. Transport of a unit family across a congruent cut -/
+
+section Transport
+variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
+  {G T T' H : MvPolynomial (Fin 3) Omega}
+
+/-- An `AdaptiveUnitProjectionFamily` over the components of `T'` transports to
+the components of `T` whenever `G ∣ T - T'`, for any choice of `base`.  All the
+structure's fields see the component only through `C.1`, and the equivalence
+preserves `C.1` definitionally. -/
+def unitFamilyOfCongruentCut (h : G ∣ T - T')
+    {base' : ∀ C : RegularComponent Omega G T' H, SeparableLiteralCoordinate C.1}
+    {p q : FlagDegree}
+    (U : AdaptiveUnitProjectionFamily base' p q)
+    (base : ∀ C : RegularComponent Omega G T H, SeparableLiteralCoordinate C.1) :
+    AdaptiveUnitProjectionFamily base p q where
+  zProjection C := U.zProjection (regularComponentEquiv h C)
+  yzProjection C := U.yzProjection (regularComponentEquiv h C)
+  allProjection C := U.allProjection (regularComponentEquiv h C)
+  zValue C := U.zValue (regularComponentEquiv h C)
+  allTranscendental C := U.allTranscendental (regularComponentEquiv h C)
+  zPole_eq C := U.zPole_eq (regularComponentEquiv h C)
+  yzPole_eq C := U.yzPole_eq (regularComponentEquiv h C)
+  allPole_eq C := U.allPole_eq (regularComponentEquiv h C)
+  sum_zDegree_le := by
+    refine Eq.trans_le ?_ U.sum_zDegree_le
+    exact Fintype.sum_equiv (regularComponentEquiv h) _ _ (fun _ => rfl)
+  sum_yzDegree_le := by
+    refine Eq.trans_le ?_ U.sum_yzDegree_le
+    exact Fintype.sum_equiv (regularComponentEquiv h) _ _ (fun _ => rfl)
+  sum_allDegree_le := by
+    refine Eq.trans_le ?_ U.sum_allDegree_le
+    exact Fintype.sum_equiv (regularComponentEquiv h) _ _ (fun _ => rfl)
+
+/-- The transported unit family carries exactly the costs of the transported
+budget family, so the hybrid provider can use the two interchangeably. -/
+theorem unitFamilyOfCongruentCut_costs (h : G ∣ T - T')
+    {base' : ∀ C : RegularComponent Omega G T' H, SeparableLiteralCoordinate C.1}
+    {p q : FlagDegree}
+    (U : AdaptiveUnitProjectionFamily base' p q)
+    (base : ∀ C : RegularComponent Omega G T H, SeparableLiteralCoordinate C.1)
+    (C : RegularComponent Omega G T H) :
+    (unitFamilyOfCongruentCut h U base).toPrimeFlagBudgetFamily.zCost C =
+        (PrimeFlagBudgetFamily.ofCongruentCut h
+          U.toPrimeFlagBudgetFamily).zCost C ∧
+      (unitFamilyOfCongruentCut h U base).toPrimeFlagBudgetFamily.yzCost C =
+        (PrimeFlagBudgetFamily.ofCongruentCut h
+          U.toPrimeFlagBudgetFamily).yzCost C ∧
+      (unitFamilyOfCongruentCut h U base).toPrimeFlagBudgetFamily.allCost C =
+        (PrimeFlagBudgetFamily.ofCongruentCut h
+          U.toPrimeFlagBudgetFamily).allCost C := by
+  refine ⟨?_, ?_, ?_⟩ <;> rfl
+
+end Transport
+
+/-! ### 2. Moving budgets at an arbitrary first-tail flag -/
+
+section Budgets
+variable {K Ω E : Type} [Field K] [Field Ω] [IsAlgClosed Ω]
+  [Field E] [IsAlgClosed E] [Algebra Ω E] [Algebra (RatFunc Ω) E]
+  [IsScalarTower Ω (RatFunc Ω) E]
+
+/-- `RCN085.exists_firstTail_cut_budgets` with the first-tail flag left free.
+Only the cost equalities and the moving sum are produced; the three `z / yz /
+all` sum bounds of J3 are exactly the parts that needed the sharp flag, and the
+hybrid route never uses them. -/
+theorem exists_firstTail_moving_budgets
+    (φ : Polynomial K →+* Ω) (F : MvPolynomial (Fin 4) K)
+    (G T : MvPolynomial (Fin 3) Ω) (a b s w : ℕ) (hw : 1 ≤ w)
+    (hT : T = globalTailCut φ F (w + 1))
+    (hF : ResidualSupportData (support a b s) F) (flag : FlagDegree)
+    (hG : G ≠ 0) (hdiv : G ∣ surfaceMap φ F) (hGflag : PolynomialInFlag flag G)
+    (base : ∀ C : RegularComponent Ω G T (regularitySurface φ F),
+      SeparableLiteralCoordinate C.1)
+    (tailFlag : FlagDegree)
+    (unit : AdaptiveUnitProjectionFamily base flag tailFlag)
+    (pchar : ℕ) [CharP E pchar]
+    (hmix : 2 * (flag.zOnly + flag.yz + flag.all) * (a + b + s + 4) < pchar) :
+    ∃ budget : ∀ C : RegularComponent Ω G T (regularitySurface φ F),
+      MovingPoleBudget C.1 (regularitySurface φ F) (surfaceMap φ (polyG K F)),
+      (∀ C, (budget C).zCost = unit.toPrimeFlagBudgetFamily.zCost C ∧
+        (budget C).yzCost = unit.toPrimeFlagBudgetFamily.yzCost C ∧
+        (budget C).allCost = unit.toPrimeFlagBudgetFamily.allCost C) ∧
+      (∑ C, (budget C).movingCost) ≤ flagMixed flag
+        (RCN206.fiberFlag a b s)
+        (center a b s + (w + 1) • RCN206.surfaceFlag a b s) := by
+  classical
+  obtain ⟨coeffs, cflags, heq, hcoeff, hclass⟩ := globalTailCut_certificate
+    φ a b s F hF.coordinate_bounds.2.1 hF.ys_weight hF.total_weight w hw
+  obtain ⟨hHflag, hGcontact⟩ := surfaceMap_HG_flags
+    φ a b s F hF.coordinate_bounds.2.1 hF.ys_weight hF.total_weight
+  have hderiv : regularitySurface φ F ∈
+      Ideal.span ({G, MvPolynomial.pderiv (1 : Fin 3) G} :
+        Set (MvPolynomial (Fin 3) Ω)) := by
+    rw [regularitySurface, ← RCN267.surfaceMap_pderiv_R]
+    exact RCN076.pderiv_mem_span_of_dvd G (surfaceMap φ F) hdiv
+  have hT' : T = filteredCut w coeffs (surfaceMap φ (polyH K F))
+      (surfaceMap φ (polyG K F)) := hT.trans heq
+  clear hT
+  subst T
+  obtain ⟨budget, hcost, hz, hyz, ha, hm⟩ :=
+    exists_moving_pole_budget_family (E := E)
+      G (regularitySurface φ F) (surfaceMap φ (polyG K F)) w coeffs
+      base flag tailFlag unit hG hderiv hGflag
+      a b s (center a b s) hHflag hGcontact cflags hcoeff hclass pchar
+      (by convert hmix using 1 <;> ring)
+  refine ⟨budget, hcost, hm.trans ?_⟩
+  rw [mixed_affine_third, mixed_affine_third]
+  exact Nat.add_le_add_left (Nat.mul_le_mul_right _ (Nat.le_succ w)) _
+
+end Budgets
+
+end
+end ProximityPrize.SubmissionLower.LocatorHybridTransportC2
+end PackedLocator_LocatorHybridTransportC2
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridTailProviderC2. -/
+section PackedLocator_LocatorHybridTailProviderC2
+/-
+LOCATOR HYBRID TAIL PROVIDER — C2 (first-tail flag left free).
+
+C1's provider proof never touches the sharp flag except through the type of its
+budget family, so this file re-states it with the first-tail flag `tail1` as a
+parameter.  Instantiating `tail1 := cellSharpTail t y r` recovers C1 exactly;
+instantiating `tail1 := cellFirstTail t y r` (the REDUCED agreement flag, which
+is strictly `Below` the sharp one) is the C2 tightening, worth about 1.29% on
+the binding cells.
+
+The C2 instantiation needs the reduced geometry transported to the components of
+`globalTailCut (w+1)`; `LocatorHybridTransportC2` supplies the missing piece
+(the unit-family transport and the moving budgets at a free first-tail flag),
+while `RCN332` already supplies `reducedBudgetFamily`, `reducedBaseOrd` and
+`transportedWeightedResultantsGeneral`.
+-/
+namespace ProximityPrize.SubmissionLower.LocatorHybridTailProviderC2
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
+open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
+open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
+open LocatorHybridTailProviderC1 LocatorHybridTransportC2
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+variable {K I : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
+variable [CharP (GenericField K) p]
+variable {stageErrorCap : ℕ}
+
+theorem exists_hybridTailMultiplicityProviderGen_of_localDVR
+    (t y r : Nat) (hr3 : 3 ≤ r) (hb : r + 2 ≤ y) (hyt : y ≤ t)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F
+      (w + 1))
+    (tail1 : FlagDegree)
+    (B : PrimeFlagBudgetFamily
+      (G := S.G) (T := globalTailCut (polynomialEmbedding K) S.F
+        (w + 1))
+      (H := regularitySurface (polynomialEmbedding K) S.F) flag tail1)
+    (base : ∀ C : FirstTailComponent S, SeparableLiteralCoordinate C.1)
+    (budget : ∀ C : FirstTailComponent S,
+      MovingPoleBudget C.1
+        (regularitySurface (polynomialEmbedding K) S.F)
+        (surfaceMap (polynomialEmbedding K) (polyG K S.F)))
+    (hcost : ∀ C : FirstTailComponent S,
+      (budget C).zCost = B.zCost C ∧ (budget C).yzCost = B.yzCost C ∧
+        (budget C).allCost = B.allCost C)
+    (hmovingSum : (∑ C : FirstTailComponent S, (budget C).movingCost) ≤
+      flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r))
+    (hgate : stageErrorCap + 1 ≤ (cellHybridCoordinateC1 t y r).yz)
+    (htangent : ∀ C : FirstTailComponent S,
+      (∀ delay, globalTailCut (polynomialEmbedding K) S.F
+        (w + 1 + delay) ∈ C.1) →
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+          (stageErrorCap + 1) * B.yzCost C)
+    (hresultants : RegularComponentWeightedInertiaResultantCertificate B
+      (fun C => localMultiplicity (loosenStageGeneral S)
+        (canonicalLocalDVRFamily (loosenStageGeneral S) hfirstProper) C)) :
+    Nonempty (HybridTailMultiplicityProvider
+      (tailFlag1 := tail1)
+      (tailFlag2 := cellHybridCoordinateC1 t y r) S
+      (flagMixed flag tail1 (cellHybridCoordinateC1 t y r) +
+        (w + 5) *
+          flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r))) := by
+  classical
+  have hry : r < y := by omega
+  have hr2 : 2 ≤ r := by omega
+  let S0 := loosenStageGeneral S
+  let multiplicity : FirstTailComponent S → ℕ := fun C =>
+    localMultiplicity S0 (canonicalLocalDVRFamily S0 hfirstProper) C
+  have hone : ∀ C, 1 ≤ multiplicity C :=
+    loosenStageGeneral_one_le_localMultiplicity S hfirstProper
+  have hwcEq : ∀ (C : FirstTailComponent S) (f : FlagDegree),
+      (budget C).weightedCost f = B.weightedCost f C := by
+    intro C f
+    obtain ⟨hz, hy', ha⟩ := hcost C
+    simp only [MovingPoleBudget.weightedCost,
+      PrimeFlagBudgetFamily.weightedCost, hz, hy', ha]
+  have hscale : ∀ (m : ℕ) (f : FlagDegree) (C : FirstTailComponent S),
+      B.weightedCost (m • f) C = m * B.weightedCost f C := by
+    intro m f C
+    simp only [PrimeFlagBudgetFamily.weightedCost, nsmul_zOnly, nsmul_yz,
+      nsmul_all]
+    ring
+  -- the piecewise cost: flag route at multiplicity ≥ 6, moving route below
+  let cost : FirstTailComponent S → ℕ := fun C =>
+    if 6 ≤ multiplicity C then
+      multiplicity C * B.weightedCost (cellHybridCoordinateC1 t y r) C
+    else
+      B.weightedCost (cellRationalAt t y r (w + multiplicity C)) C +
+        (w + multiplicity C) * (budget C).movingCost
+  have hlow : ∀ C : FirstTailComponent S,
+      B.weightedCost (cellRationalAt t y r (w + multiplicity C)) C ≤
+        multiplicity C * B.weightedCost (cellHybridCoordinateC1 t y r) C := by
+    intro C
+    have hle := cellRationalAt_le_smul t y r (multiplicity C) (hone C)
+    have h := weightedCost_mono B C hle.1 hle.2.1 hle.2.2
+    rwa [hscale] at h
+  have hcost_pointwise : ∀ C, cost C ≤
+      multiplicity C * B.weightedCost (cellHybridCoordinateC1 t y r) C +
+        (w + 5) * (budget C).movingCost := by
+    intro C
+    by_cases hm : 6 ≤ multiplicity C
+    · simp only [cost, if_pos hm]
+      exact Nat.le_add_right _ _
+    · simp only [cost, if_neg hm]
+      have h2 : (w + multiplicity C) * (budget C).movingCost ≤
+          (w + 5) * (budget C).movingCost :=
+        Nat.mul_le_mul_right _ (by omega)
+      have := hlow C
+      omega
+  have hbound : ∀ C,
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+      cost C := by
+    intro C
+    have dichotomy := local_order_tail_dichotomy S0
+      (canonicalLocalDVRFamily S0 hfirstProper) C hfirstProper
+    rcases dichotomy.2 with hproper | htangentBranch
+    · obtain ⟨delay, hdelay, hdelayMu, htail⟩ := hproper
+      by_cases hm : 6 ≤ multiplicity C
+      · have hzero : ∀ gamma ∈ componentSeeds (GenericField K) S.G
+            (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+            (regularitySurface (polynomialEmbedding K) S.F) Gamma
+            (selectedPoint (polynomialEmbedding K) S.selected) C,
+            MvPolynomial.aeval
+              (selectedPoint (polynomialEmbedding K) S.selected gamma)
+              (globalTailCut (polynomialEmbedding K) S.F
+                (w + 1 + delay)) = 0 := by
+          intro gamma hgamma
+          have hGamma := componentSeeds_subset (GenericField K) S.G
+            (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+            (regularitySurface (polynomialEmbedding K) S.F) Gamma
+            (selectedPoint (polynomialEmbedding K) S.selected) C hgamma
+          exact selected_globalTailCut_zero_of_lt (polynomialEmbedding K)
+            S.F S.selected gamma w (w + 1 + delay)
+            (S.degree_le gamma hGamma) (S.solution gamma hGamma) (by omega)
+        have hflagMod : PolynomialInFlagMod C.1
+            (multiplicity C • cellHybridCoordinateC1 t y r)
+            (globalTailCut (polynomialEmbedding K) S.F
+              (w + 1 + delay)) := by
+          refine ⟨globalTailCut (polynomialEmbedding K) S.F
+            (w + 1 + delay),
+            laterTail_in_hybridFlagC1 t y r hr3 hry S delay
+              (multiplicity C) hdelay hdelayMu hm, ?_⟩
+          simp
+        have hcount := component_secondTail_card_le_mod (Seed := K) B C Gamma
+          (selectedPoint (polynomialEmbedding K) S.selected)
+          (selectedPoint_injective (polynomialEmbedding K) S.selected)
+          hflagMod htail hzero
+        simp only [cost, if_pos hm]
+        rw [hscale] at hcount
+        exact hcount
+      · -- the dichotomy hands back `delay ≤ localMultiplicity …`; restate it
+        -- against the local `multiplicity` so the atoms line up
+        have hdm' : delay ≤ multiplicity C := hdelayMu
+        have hcount := component_moving_card_le_delay t y r hr2 hry hyt
+          S C (budget C) (base C) delay hdelay htail
+        simp only [hwcEq] at hcount
+        have hfold : B.weightedCost
+              (center (cellA t y) (cellB y r) (cellS r)) C +
+            (w + delay) *
+              (B.weightedCost
+                (⟨cellA t y, cellB y r, cellS r⟩ : FlagDegree) C +
+                (budget C).movingCost) =
+            B.weightedCost (cellRationalAt t y r (w + delay)) C +
+              (w + delay) * (budget C).movingCost := by
+          simp only [cellRationalAt, PrimeFlagBudgetFamily.weightedCost,
+            add_zOnly, add_yz, add_all, nsmul_zOnly, nsmul_yz, nsmul_all]
+          ring
+        rw [hfold] at hcount
+        have hmono := cellRationalAt_mono t y r (w + delay)
+          (w + multiplicity C) (by omega)
+        have h1 := weightedCost_mono B C hmono.1 hmono.2.1 hmono.2.2
+        have h2 : (w + delay) * (budget C).movingCost ≤
+            (w + multiplicity C) * (budget C).movingCost :=
+          Nat.mul_le_mul_right _ (by omega)
+        simp only [cost, if_neg hm]
+        exact hcount.trans (Nat.add_le_add h1 h2)
+    · have hcount := htangent C htangentBranch
+      by_cases hm : 6 ≤ multiplicity C
+      · simp only [cost, if_pos hm]
+        calc _ ≤ (stageErrorCap + 1) * B.yzCost C := hcount
+          _ ≤ B.weightedCost (cellHybridCoordinateC1 t y r) C :=
+            yzCost_mul_le_weightedCost B (cellHybridCoordinateC1 t y r) C
+              (stageErrorCap + 1) hgate
+          _ = 1 * B.weightedCost (cellHybridCoordinateC1 t y r) C := by ring
+          _ ≤ multiplicity C *
+              B.weightedCost (cellHybridCoordinateC1 t y r) C :=
+            Nat.mul_le_mul_right _ (hone C)
+      · simp only [cost, if_neg hm]
+        have hmono := cellRationalAt_mono t y r (w + 1)
+          (w + multiplicity C) (by have := hone C; omega)
+        have h1 := weightedCost_mono B C hmono.1 hmono.2.1 hmono.2.2
+        rw [cellRationalAt_succ_w] at h1
+        calc _ ≤ (stageErrorCap + 1) * B.yzCost C := hcount
+          _ ≤ B.weightedCost (cellHybridCoordinateC1 t y r) C :=
+            yzCost_mul_le_weightedCost B (cellHybridCoordinateC1 t y r) C
+              (stageErrorCap + 1) hgate
+          _ ≤ B.weightedCost (cellRationalAt t y r (w + multiplicity C)) C :=
+            h1
+          _ ≤ B.weightedCost (cellRationalAt t y r (w + multiplicity C)) C +
+              (w + multiplicity C) * (budget C).movingCost :=
+            Nat.le_add_right _ _
+  have hsum : (∑ C, cost C) ≤
+      flagMixed flag tail1 (cellHybridCoordinateC1 t y r) +
+        (w + 5) *
+          flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r) := by
+    calc (∑ C, cost C) ≤
+        ∑ C, (multiplicity C *
+            B.weightedCost (cellHybridCoordinateC1 t y r) C +
+          (w + 5) * (budget C).movingCost) :=
+        Finset.sum_le_sum (fun C _ => hcost_pointwise C)
+      _ = (∑ C, multiplicity C *
+            B.weightedCost (cellHybridCoordinateC1 t y r) C) +
+          (w + 5) * (∑ C, (budget C).movingCost) := by
+        rw [Finset.sum_add_distrib, Finset.mul_sum]
+      _ ≤ flagMixed flag tail1
+            (cellHybridCoordinateC1 t y r) +
+          (w + 5) *
+            flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r) :=
+        Nat.add_le_add
+          (hresultants.divisor_le B multiplicity)
+          (Nat.mul_le_mul_left _ hmovingSum)
+  have providerDichotomy := loosenStageGeneral_dichotomy_with_tangent S
+    hfirstProper B htangent
+  exact ⟨{
+    budgetFamily := B
+    multiplicity := multiplicity
+    cost := cost
+    one_le_multiplicity := hone
+    tangentYZGate := hgate
+    cost_sum_le := hsum
+    componentBound := hbound
+    dichotomy := providerDichotomy }⟩
+
+
+end
+end ProximityPrize.SubmissionLower.LocatorHybridTailProviderC2
+end PackedLocator_LocatorHybridTailProviderC2
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridTailRealizationC2. -/
+section PackedLocator_LocatorHybridTailRealizationC2
+/-
+LOCATOR HYBRID TAIL REALIZATION — C2 VARIANT.
+
+C2 runs the hybrid provider on the REDUCED first tail
+`cellFirstTail t y r = reducedResidualAgreementFlag (cellSupport t y r) (w+1)`
+instead of the sharp one.  Three pieces come from `RCN332` unchanged:
+
+  reducedBudgetFamily                  the budget family over the T1-components
+  reducedBaseOrd                       the separable base, transported
+  transportedWeightedResultantsGeneral the certificate at the reduced flag
+
+and the missing fourth — a `MovingPoleBudget` whose costs agree with that budget
+family — is built here from `LocatorHybridTransportC2`: the reduced unit family
+is transported to the T1-components, and `exists_firstTail_moving_budgets`
+consumes it at the reduced first-tail flag.
+
+The provider itself is `exists_hybridTailMultiplicityProviderGen_of_localDVR`,
+the C1 proof with the first-tail flag left free.
+-/
+namespace ProximityPrize.SubmissionLower.LocatorHybridTailRealizationC2
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
+open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
+open RCN331 RCN027 RCN030 RCN029 RCN037 RCN038 RCN042 RCN002 RCN344 RCN277 RCN003 RCN314 RCN315 RCN093 RCN046 RCN001
+open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
+open LocatorHybridTailProviderC1 LocatorHybridTailProviderC2 LocatorHybridTransportC2
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 8000000
+set_option maxRecDepth 800000
+
+variable {K I : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
+variable [CharP (GenericField K) p]
+variable {stageErrorCap : ℕ}
+variable {t y r : Nat}
+
+theorem exists_hybridTailMultiplicityProviderC2_realized
+    (hr3 : 3 ≤ r) (hb : r + 2 ≤ y) (hyt : y ≤ t)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F
+      (w + 1))
+    (hflagChar : flag.yz + flag.all < p ∧ flag.all < p ∧
+      flag.zOnly + flag.yz + flag.all < p)
+    (hmixedRed : (1 + (w + 1) *
+        (2 * (cellB y r + cellS r + 3) - 2)) * flag.all +
+      (flag.yz + flag.all) *
+        ((2 * (cellS r + 2) - 2) * (w + 1)) < p)
+    (hmix : 2 * (flag.zOnly + flag.yz + flag.all) *
+      (cellA t y + cellB y r + cellS r + 4) < p)
+    (hrationalGate : stageErrorCap + 1 ≤ (cellRational t y r).yz)
+    (htangent : ∀ C : FirstTailComponent S,
+      (∀ delay, globalTailCut (polynomialEmbedding K) S.F
+        (w + 1 + delay) ∈ C.1) →
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+          (stageErrorCap + 1) *
+            (reducedBudgetFamily S hfirstProper hflagChar hmixedRed).yzCost C) :
+    Nonempty (HybridTailMultiplicityProvider
+      (tailFlag1 := cellFirstTail t y r)
+      (tailFlag2 := cellHybridCoordinateC1 t y r) S
+      (flagMixed flag (cellFirstTail t y r) (cellHybridCoordinateC1 t y r) +
+        (w + 5) *
+          flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r))) := by
+  classical
+  haveI : CharP (AlgebraicClosure (RatFunc (GenericField K))) p :=
+    charP_of_injective_algebraMap
+      (algebraMap (GenericField K)
+        (AlgebraicClosure (RatFunc (GenericField K)))).injective p
+  obtain ⟨budget, hcost, hmov⟩ :=
+    exists_firstTail_moving_budgets
+      (E := AlgebraicClosure (RatFunc (GenericField K)))
+      (polynomialEmbedding K) S.F S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+      (cellA t y) (cellB y r) (cellS r) w (by norm_num [RCN327.w])
+      rfl
+      ⟨S.surface_s_weight, S.surface_ys_weight, S.surface_total_weight⟩
+      flag S.irreducible_G.ne_zero S.G_dvd_surface S.flag_support
+      (reducedBaseOrd S hfirstProper hflagChar hmixedRed)
+      (cellFirstTail t y r)
+      (unitFamilyOfCongruentCut (ordinary_sub_reducedFirstCut_dvd S)
+        (reducedUnitFamily S hfirstProper hflagChar hmixedRed)
+        (reducedBaseOrd S hfirstProper hflagChar hmixedRed))
+      p hmix
+  have hmovingSum : (∑ C : FirstTailComponent S, (budget C).movingCost) ≤
+      flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r) := by
+    have hcut := cellMovingCut_eq_center_add t y r
+    have hfib : cellMovingFiber t y r =
+        RCN206.fiberFlag (cellA t y) (cellB y r) (cellS r) := rfl
+    rw [hfib, hcut]
+    exact hmov
+  -- route the cost equalities through `unitFamilyOfCongruentCut_costs` rather
+  -- than through a single large defeq check, which overruns `maxRecDepth`
+  have hcost' : ∀ C : FirstTailComponent S,
+      (budget C).zCost =
+        (reducedBudgetFamily S hfirstProper hflagChar hmixedRed).zCost C ∧
+      (budget C).yzCost =
+        (reducedBudgetFamily S hfirstProper hflagChar hmixedRed).yzCost C ∧
+      (budget C).allCost =
+        (reducedBudgetFamily S hfirstProper hflagChar hmixedRed).allCost C := by
+    intro C
+    obtain ⟨hz, hy, ha⟩ := hcost C
+    obtain ⟨ez, ey, ea⟩ := unitFamilyOfCongruentCut_costs
+      (ordinary_sub_reducedFirstCut_dvd S)
+      (reducedUnitFamily S hfirstProper hflagChar hmixedRed)
+      (reducedBaseOrd S hfirstProper hflagChar hmixedRed) C
+    refine ⟨hz.trans ez, hy.trans ey, ha.trans ea⟩
+  exact exists_hybridTailMultiplicityProviderGen_of_localDVR
+    t y r hr3 hb hyt S hfirstProper (cellFirstTail t y r)
+    (reducedBudgetFamily S hfirstProper hflagChar hmixedRed)
+    (reducedBaseOrd S hfirstProper hflagChar hmixedRed)
+    budget hcost' hmovingSum hrationalGate htangent
+    (transportedWeightedResultantsGeneral S hfirstProper hflagChar hmixedRed)
+
+/-- The C2 hybrid fixed-stage seed bound. -/
+theorem hybridC2_stage_card_le
+    (hr3 : 3 ≤ r) (hb : r + 2 ≤ y) (hyt : y ≤ t)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F
+      (w + 1))
+    (hflagChar : flag.yz + flag.all < p ∧ flag.all < p ∧
+      flag.zOnly + flag.yz + flag.all < p)
+    (hmixedRed : (1 + (w + 1) *
+        (2 * (cellB y r + cellS r + 3) - 2)) * flag.all +
+      (flag.yz + flag.all) *
+        ((2 * (cellS r + 2) - 2) * (w + 1)) < p)
+    (hmix : 2 * (flag.zOnly + flag.yz + flag.all) *
+      (cellA t y + cellB y r + cellS r + 4) < p)
+    (hrationalGate : stageErrorCap + 1 ≤ (cellRational t y r).yz)
+    (htangent : ∀ C : FirstTailComponent S,
+      (∀ delay, globalTailCut (polynomialEmbedding K) S.F
+        (w + 1 + delay) ∈ C.1) →
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+          (stageErrorCap + 1) *
+            (reducedBudgetFamily S hfirstProper hflagChar hmixedRed).yzCost C) :
+    Gamma.card ≤
+      flagMixed flag (cellFirstTail t y r) (cellHybridCoordinateC1 t y r) +
+        (w + 5) *
+          flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r) :=
+  stage_card_le_divisorBound S
+    (exists_hybridTailMultiplicityProviderC2_realized hr3 hb hyt S hfirstProper
+      hflagChar hmixedRed hmix hrationalGate htangent).some
+
+end
+end ProximityPrize.SubmissionLower.LocatorHybridTailRealizationC2
+end PackedLocator_LocatorHybridTailRealizationC2
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridIdentityC2. -/
+section PackedLocator_LocatorHybridIdentityC2
+/-
+THE IDENTITY BRANCH IS DOMINATED BY THE C2 HYBRID COST — 6800 ROW.
+
+Self-contained in its row constants (errors 80771, agreements 181373,
+gap 50302), so it does not inherit whatever `LocatorFixedStage` currently
+carries.
+
+C2 tails: first tail `reducedABS` (the reduced agreement flag at `w + 1`,
+equal to `paddedTail p 131072`), coordinate `rationalABS`, moving factor
+`131076 = w + 5`.
+
+The slack polynomials were regenerated for errors = 80771 against the C2 cost
+and are subtraction-free, so `identity_le_hybridC2` is `Nat.le_add_right`.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorHybridIdentityC2
+
+open RCN095 RCN146 RCN203 RCN206 LocatorFactorAggregate LocatorHybridCost
+open LocatorHybridCostC1 LocatorHybridCostC2 RCN198
+
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+/-! ### Row constants for 6800 -/
+
+def n : ℕ := 262144
+def w : ℕ := 131071
+def errors : ℕ := 80771
+def agreements : ℕ := 181373
+def gap : ℕ := 50302
+
+theorem row_arithmetic : n - errors = agreements ∧ agreements - w = gap := by
+  refine ⟨?_, ?_⟩ <;> norm_num [n, errors, agreements, w, gap]
+
+/-- Local restatement of `LocatorFixedStage.identityDegree_linear`. -/
+theorem identityDegree_linear (flag : FlagDegree) (a b s : ℕ) :
+    identityCurveDegree flag a b s w =
+      flag.zOnly * (393219 + 262146 * s) +
+      flag.yz * (786438 + 524292 * s) +
+      flag.all * (1048586 + 262146 * a + 524292 * b + 524292 * s) := by
+  simp only [identityCurveDegree, paddedCut,
+    RCN206.centreFlag, RCN206.directionFlag,
+    flagMixed, unitZFlag, unitYZFlag, add_zOnly, add_yz, add_all,
+    nsmul_zOnly, nsmul_yz, nsmul_all, w]
+  ring
+
+/-! ### Subtraction-free C2 tails in the support coordinates `a, b, s` -/
+
+/-- The reduced first tail at `w + 1 = 131072`. -/
+def reducedABS (a b s : ℕ) : FlagDegree :=
+  ⟨2 * a * 131072, 1 + (2 * b + 2) * 131072, (2 * s + 2) * 131072⟩
+def rationalABS (a b s : ℕ) : FlagDegree :=
+  ⟨131072 * a + 2 * a, 131072 * b + 2 * b + 2, 131072 * s + 2 * s + 3⟩
+def mfibABS (a b s : ℕ) : FlagDegree := ⟨a, b + 1, s + 3⟩
+def mcutABS (a b s : ℕ) : FlagDegree := rationalABS a b s + ⟨0, 131072, 262144⟩
+
+def hybridCostABSC2 (flag : FlagDegree) (a b s : ℕ) : ℕ :=
+  flagMixed flag (reducedABS a b s) (rationalABS a b s) +
+    131076 * flagMixed flag (mfibABS a b s) (mcutABS a b s)
+
+theorem tails_eqC2 (p : FlagDegree) :
+    reducedTail p = reducedABS (padT p - padY p) (padY p - padS p - 1) (padS p - 2) ∧
+    hybridCoordinateC1 p =
+      rationalABS (padT p - padY p) (padY p - padS p - 1) (padS p - 2) ∧
+    movingFiber p = mfibABS (padT p - padY p) (padY p - padS p - 1) (padS p - 2) ∧
+    movingCut p = mcutABS (padT p - padY p) (padY p - padS p - 1) (padS p - 2) := by
+  have h := pad_bounds p
+  generalize hS : padS p = sP at h ⊢
+  generalize hY : padY p = yP at h ⊢
+  generalize hT : padT p = tP at h ⊢
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · have e1 : 2 * (yP - sP) = 2 * (yP - sP - 1) + 2 := by omega
+    have e2 : 2 * (sP - 1) = 2 * (sP - 2) + 2 := by omega
+    simp only [reducedTail, paddedTail, reducedABS, hS, hY, hT, e1, e2]
+  · simp only [hybridCoordinateC1, rationalFlag, rationalABS, hS, hY, hT]
+  · have e1 : yP - sP = yP - sP - 1 + 1 := by omega
+    have e2 : sP + 1 = sP - 2 + 3 := by omega
+    simp only [movingFiber, mfibABS, hS, hY, hT, FlagDegree.mk.injEq]
+    exact ⟨trivial, e1, e2⟩
+  · simp only [movingCut, rationalFlag, mcutABS, rationalABS, hS, hY, hT]
+
+theorem hybridCostC2_eq_abs (p : FlagDegree) (flag : FlagDegree) :
+    flagMixed flag (reducedTail p) (hybridCoordinateC1 p) +
+        131076 * flagMixed flag (movingFiber p) (movingCut p) =
+      hybridCostABSC2 flag (padT p - padY p) (padY p - padS p - 1)
+        (padS p - 2) := by
+  have h := tails_eqC2 p
+  rw [h.1, h.2.1, h.2.2.1, h.2.2.2]
+  rfl
+
+/-! ### Slack polynomials for `errors = 80771` (regenerated for the C2 cost) -/
+
+def hybridSlackZC2 (b s : ℕ) : ℕ :=
+  11393022739447830 +
+    11916270577599340 * s +
+    2592611271320560 * s ^ 2 +
+    6049529593831864 * b +
+    5185222542641120 * b * s
+
+def hybridSlackYZC2 (a b s : ℕ) : ℕ :=
+  7230002036329866 +
+    9140923442187364 * s +
+    2592611271320560 * s ^ 2 +
+    6049529593831864 * b +
+    5185222542641120 * b * s +
+    6049529593831864 * a +
+    5185222542641120 * a * s
+
+def hybridSlackAllC2 (a b s : ℕ) : ℕ :=
+  5817664015930146 +
+    9140923442187364 * s +
+    2592611271320560 * s ^ 2 +
+    9140923442187364 * b +
+    5185222542641120 * b * s +
+    2592611271320560 * b ^ 2 +
+    11916270577599340 * a +
+    5185222542641120 * a * s +
+    5185222542641120 * a * b
+
+def hybridSlackC2 (flag : FlagDegree) (a b s : ℕ) : ℕ :=
+  flag.zOnly * hybridSlackZC2 b s + flag.yz * hybridSlackYZC2 a b s +
+    flag.all * hybridSlackAllC2 a b s
+
+theorem hybrid_identity_exactC2 (flag : FlagDegree) (a b s : ℕ) :
+    gap * hybridCostABSC2 flag a (b + 1) s =
+      (n - w) * (errors + 1) * identityCurveDegree flag a (b + 1) s w +
+        hybridSlackC2 flag a b s := by
+  rw [identityDegree_linear]
+  norm_num [hybridCostABSC2, reducedABS, rationalABS, mfibABS, mcutABS,
+    w, n, errors, gap, hybridSlackC2, hybridSlackZC2, hybridSlackYZC2,
+    hybridSlackAllC2, flagMixed, add_zOnly, add_yz, add_all]
+  ring
+
+theorem identity_le_hybridC2 (flag : FlagDegree) (a b s : ℕ) (hb : 1 ≤ b) :
+    (n - w) * (errors + 1) * identityCurveDegree flag a b s w ≤
+      gap * hybridCostABSC2 flag a b s := by
+  obtain ⟨b', rfl⟩ : ∃ b', b = b' + 1 := ⟨b - 1, by omega⟩
+  rw [hybrid_identity_exactC2]
+  exact Nat.le_add_right _ _
+
+end ProximityPrize.SubmissionLower.LocatorHybridIdentityC2
+end PackedLocator_LocatorHybridIdentityC2
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridGatesC2. -/
+section PackedLocator_LocatorHybridGatesC2
+/-
+NUMERIC CHARACTERISTIC GATES — C2 / 6800 ROW.
+
+Caps: slope `s + 2 ≤ 29`, ys `b + s + 3 ≤ 132`, total `a + b + s + 3 ≤ 6412`,
+prime `2130706433`, errors `80771`.
+
+The C2 provider runs on the REDUCED first tail, whose mixed-degree gate carries
+`2 * (s + 2) - 2` where the sharp one carries `2 * (s + 2) - 1`; both shapes are
+provided so the same file serves the provider and the identity branch.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorHybridGatesC2
+open RCN095 LocatorHybridCells LocatorHybridCellsC1
+
+/-- Provider gate for the REDUCED first tail (`2 * (s + 2) - 2`). -/
+theorem reduced_mixed_gateC2 (b s : ℕ) (flag : FlagDegree)
+    (hS : s + 2 ≤ 29) (hY : b + s + 3 ≤ 132)
+    (hfs : flag.all ≤ s + 2) (hfy : flag.yz + flag.all ≤ b + s + 3) :
+    (1 + (RCN327.w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
+      (flag.yz + flag.all) * ((2 * (s + 2) - 2) * (RCN327.w + 1)) <
+        2130706433 := by
+  have hy : 2 * (b + s + 3) - 2 ≤ 262 := by omega
+  have hs : 2 * (s + 2) - 2 ≤ 56 := by omega
+  have hfS : flag.all ≤ 29 := hfs.trans hS
+  have hfY : flag.yz + flag.all ≤ 132 := hfy.trans hY
+  calc
+    _ ≤ (1 + (RCN327.w + 1) * 262) * 29 + 132 * (56 * (RCN327.w + 1)) :=
+      Nat.add_le_add
+        (Nat.mul_le_mul
+          (Nat.add_le_add_left (Nat.mul_le_mul_left (RCN327.w + 1) hy) 1) hfS)
+        (Nat.mul_le_mul hfY (Nat.mul_le_mul_right (RCN327.w + 1) hs))
+    _ < 2130706433 := by norm_num [RCN327.w]
+
+/-- Provider gate for the SHARP first tail, kept for the C1 comparison. -/
+theorem sharp_mixed_gateC2 (b s : ℕ) (flag : FlagDegree)
+    (hS : s + 2 ≤ 29) (hY : b + s + 3 ≤ 132)
+    (hfs : flag.all ≤ s + 2) (hfy : flag.yz + flag.all ≤ b + s + 3) :
+    (1 + (RCN327.w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
+      (flag.yz + flag.all) * ((2 * (s + 2) - 1) * (RCN327.w + 1)) <
+        2130706433 := by
+  have hy : 2 * (b + s + 3) - 2 ≤ 262 := by omega
+  have hs : 2 * (s + 2) - 1 ≤ 57 := by omega
+  have hfS : flag.all ≤ 29 := hfs.trans hS
+  have hfY : flag.yz + flag.all ≤ 132 := hfy.trans hY
+  calc
+    _ ≤ (1 + (RCN327.w + 1) * 262) * 29 + 132 * (57 * (RCN327.w + 1)) :=
+      Nat.add_le_add
+        (Nat.mul_le_mul
+          (Nat.add_le_add_left (Nat.mul_le_mul_left (RCN327.w + 1) hy) 1) hfS)
+        (Nat.mul_le_mul hfY (Nat.mul_le_mul_right (RCN327.w + 1) hs))
+    _ < 2130706433 := by norm_num [RCN327.w]
+
+theorem product_gateC2 (a b s : ℕ) (flag : FlagDegree)
+    (hT : a + b + s + 3 ≤ 6412)
+    (hft : flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) :
+    2 * (flag.zOnly + flag.yz + flag.all) * (a + b + s + 4) < 2130706433 := by
+  have h1 : flag.zOnly + flag.yz + flag.all ≤ 6412 := hft.trans hT
+  have h2 : a + b + s + 4 ≤ 6413 := by omega
+  calc
+    2 * (flag.zOnly + flag.yz + flag.all) * (a + b + s + 4) ≤ 2 * 6412 * 6413 :=
+      Nat.mul_le_mul (Nat.mul_le_mul_left 2 h1) h2
+    _ < 2130706433 := by norm_num
+
+/-- The single coordinate gate at `errors = 80771`. -/
+theorem rational_gateC2 (t y r : ℕ) (hb : r + 2 ≤ y) :
+    80771 + 1 ≤ (cellHybridCoordinateC1 t y r).yz :=
+  hybridC1Gate_of_le t y r 80771 hb (by norm_num)
+
+theorem flag_characteristicC2 (a b s : ℕ) (flag : FlagDegree)
+    (hS : s + 2 ≤ 29) (hY : b + s + 3 ≤ 132) (hT : a + b + s + 3 ≤ 6412)
+    (hflag : flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
+      flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) :
+    flag.yz + flag.all < 2130706433 ∧ flag.all < 2130706433 ∧
+      flag.zOnly + flag.yz + flag.all < 2130706433 := by
+  omega
+
+/-- `LocatorFixedStage.identity_mixed_gate` at the 6800 caps (uses `w`, not `w+1`). -/
+theorem identity_mixed_gateC2 (b s : ℕ) (flag : FlagDegree)
+    (hS : s + 2 ≤ 29) (hY : b + s + 3 ≤ 132)
+    (hfs : flag.all ≤ s + 2) (hfy : flag.yz + flag.all ≤ b + s + 3) :
+    (1 + RCN327.w * (2 * (b + s + 3) - 2)) * flag.all +
+      (flag.yz + flag.all) * ((2 * (s + 2) - 1) * RCN327.w) < 2130706433 := by
+  have hy : 2 * (b + s + 3) - 2 ≤ 262 := by omega
+  have hs : 2 * (s + 2) - 1 ≤ 57 := by omega
+  have hfS : flag.all ≤ 29 := hfs.trans hS
+  have hfY : flag.yz + flag.all ≤ 132 := hfy.trans hY
+  calc
+    _ ≤ (1 + RCN327.w * 262) * 29 + 132 * (57 * RCN327.w) :=
+      Nat.add_le_add
+        (Nat.mul_le_mul
+          (Nat.add_le_add_left (Nat.mul_le_mul_left RCN327.w hy) 1) hfS)
+        (Nat.mul_le_mul hfY (Nat.mul_le_mul_right RCN327.w hs))
+    _ < 2130706433 := by norm_num [RCN327.w]
+
+end ProximityPrize.SubmissionLower.LocatorHybridGatesC2
+end PackedLocator_LocatorHybridGatesC2
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorFixedHybridC2. -/
+section PackedLocator_LocatorFixedHybridC2
+/-
+HYBRID SECOND-SURFACE BOUND FOR A REGULAR FACTOR — C2 / 6800 ROW.
+
+Mirror of `LocatorFixedHybrid` against the C2 cost and the 6800 constants:
+
+  agreements 181373, errors 80771, gap 50302, weightedCap D ≤ 17411808,
+  caps slope ≤ 29, ys ≤ 132, total ≤ 6412, prime 2130706433.
+
+The hybrid branch additionally requires `3 ≤ padS p`, which is what lets the
+coordinate be the bare rational flag; the moving factor is `131076 = w + 5`.
+
+The identity branch goes through `LocatorHybridIdentityC2.identity_le_hybridC2`
+(self-contained in the 6800 row constants) and the two gates restated at the new
+caps in `LocatorHybridGatesC2`; the proper-first-tail branch goes through the
+C2 provider.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorFixedHybridC2
+open ProximityPrize.Benchmark
+open scoped Classical BigOperators
+open RCN174 RCN319 RCN286 RCN081 RCN135 RCN095 RCN238 RCN243 RCN222 RCN266 RCN221 RCN268 RCN140 RCN275 RCN130 RCN156 RCN159 RCN234 RCN137 RCN198 RCN263 RCN146 RCN287 RCN136 RCN086 RCN087 RCN203 RCN084 RCN313 RCN074 RCN335
+open LocatorFactorAggregate LocatorHybridCost LocatorHybridCostC1 LocatorHybridCostC2
+open LocatorHybridIdentityC2 LocatorHybridCells LocatorHybridCellsC1
+open LocatorHybridTailProvider LocatorHybridTailProviderC1 LocatorHybridTailProviderC2
+open LocatorHybridGatesC2 LocatorFixed
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 6000000
+set_option maxRecDepth 100000
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : DecidableEq (GenericField K) := Classical.decEq _
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
+
+theorem flagDegree_ext {f g : FlagDegree} (h1 : f.zOnly = g.zOnly)
+    (h2 : f.yz = g.yz) (h3 : f.all = g.all) : f = g := by
+  cases f; cases g
+  simp only at h1 h2 h3
+  subst h1; subst h2; subst h3
+  rfl
+
+theorem cellSupport_eq (p : FlagDegree) :
+    cellSupport (padT p) (padY p) (padS p) =
+      RCN198.support (padA p) (padB p) (padSlope p) := rfl
+
+theorem cellSupport_fields (p : FlagDegree) :
+    (cellSupport (padT p) (padY p) (padS p)).s = padS p ∧
+    (cellSupport (padT p) (padY p) (padS p)).ys = padY p ∧
+    (cellSupport (padT p) (padY p) (padS p)).total = padT p := by
+  have h := pad_sums p
+  simp only [cellSupport_eq, RCN198.support]
+  exact ⟨h.1, h.2.1, h.2.2⟩
+
+theorem cell_tails_eqC2 (p : FlagDegree) :
+    cellFirstTail (padT p) (padY p) (padS p) = reducedTail p ∧
+    cellHybridCoordinateC1 (padT p) (padY p) (padS p) = hybridCoordinateC1 p ∧
+    cellMovingFiber (padT p) (padY p) (padS p) = movingFiber p ∧
+    cellMovingCut (padT p) (padY p) (padS p) = movingCut p := by
+  have hf := cellSupport_fields p
+  have hb := pad_bounds p
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · apply flagDegree_ext <;>
+      simp only [cellFirstTail, reducedResidualAgreementFlag,
+        reducedAgreementDirection, hf.1, hf.2.1, hf.2.2, reducedTail,
+        paddedTail, RCN327.w, Nat.reduceAdd] <;> omega
+  · apply flagDegree_ext <;>
+      simp only [cellHybridCoordinateC1, cellRational, cellDirection,
+        RCN206.directionFlag, cellA, cellB, cellS, hybridCoordinateC1,
+        rationalFlag, RCN327.w, Nat.reduceAdd, Nat.reduceMul] <;> omega
+  · apply flagDegree_ext <;>
+      simp only [cellMovingFiber, RCN206.fiberFlag, cellA, cellB, cellS,
+        movingFiber] <;> omega
+  · apply flagDegree_ext <;>
+      simp only [cellMovingCut, cellRational, cellDirection,
+        RCN206.directionFlag, cellA, cellB, cellS, movingCut, rationalFlag,
+        add_zOnly, add_yz, add_all, RCN327.w, Nat.reduceAdd,
+        Nat.reduceMul] <;> omega
+
+/-- The C2 hybrid Bezout bound of a stage with flag `flag` on the padded cell. -/
+def hybridBoundC2 (flag p : FlagDegree) : ℕ :=
+  flagMixed flag (reducedTail p) (hybridCoordinateC1 p) +
+    131076 * flagMixed flag (movingFiber p) (movingCut p)
+
+theorem hybridBoundC2_eq_abs (flag p : FlagDegree) :
+    hybridBoundC2 flag p =
+      hybridCostABSC2 flag (padA p) (padB p) (padSlope p) :=
+  hybridCostC2_eq_abs p flag
+
+/-- The proper-first-tail obligation: a C2 hybrid provider on the cell of `p`. -/
+def ProviderHypC2 (D : ℕ) (p : FlagDegree) : Prop :=
+  letI : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
+  ∀ {Gamma : Finset K} {flag : FlagDegree}
+    (S : ResidualStage (polynomialEmbedding K) Gamma IRSProfile.domain
+      2130706433 80771 flag 131071 (cellSupport (padT p) (padY p) (padS p))),
+    S.nodes.card = 181373 + 80771 →
+    (∀ gamma ∈ Gamma, 181373 ≤ (S.agreementFiber gamma).card) →
+    S.F ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p) →
+    (flag.all ≤ padS p ∧ flag.yz + flag.all ≤ padY p ∧
+      flag.zOnly + flag.yz + flag.all ≤ padT p) →
+    ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (RCN327.w + 1) →
+    Nonempty (HybridTailMultiplicityProvider
+      (tailFlag1 := cellFirstTail (padT p) (padY p) (padS p))
+      (tailFlag2 := cellHybridCoordinateC1 (padT p) (padY p) (padS p)) S
+      (flagMixed flag (cellFirstTail (padT p) (padY p) (padS p))
+          (cellHybridCoordinateC1 (padT p) (padY p) (padS p)) +
+        (RCN327.w + 5) *
+          flagMixed flag (cellMovingFiber (padT p) (padY p) (padS p))
+            (cellMovingCut (padT p) (padY p) (padS p))))
+
+/-- The realization: C2 providers exist on every admissible hybrid cell.  Note
+the extra `3 ≤ padS p`, the C2 branch condition. -/
+def RealizationC2 (D : ℕ) : Prop :=
+  ∀ p : FlagDegree, padS p ≤ 29 → padY p ≤ 132 → padT p ≤ 6412 →
+    3 ≤ padS p → padS p + 2 ≤ padY p → ProviderHypC2 D p
+
+theorem hybridStageBoundC2 (D : ℕ) (p : FlagDegree)
+    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 17411808)
+    (hS : padS p ≤ 29) (hY : padY p ≤ 132) (hT : padT p ≤ 6412)
+    (hS3 : 3 ≤ padS p) (hhyb : padS p + 2 ≤ padY p)
+    (hprov : ProviderHypC2 D p)
+    {Gamma : Finset K} {flag : FlagDegree}
+    (S : ResidualStage (polynomialEmbedding K) Gamma IRSProfile.domain
+      2130706433 80771 flag 131071 (cellSupport (padT p) (padY p) (padS p)))
+    (hnodes : S.nodes.card = 181373 + 80771)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤ (S.agreementFiber gamma).card)
+    (hbox : S.F ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p))
+    (hflag : flag.all ≤ padS p ∧ flag.yz + flag.all ≤ padY p ∧
+      flag.zOnly + flag.yz + flag.all ≤ padT p) :
+    Gamma.card ≤ hybridBoundC2 flag p := by
+  letI : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
+  have hps := pad_sums p
+  have hS' : padSlope p + 2 ≤ 29 := by omega
+  have hY' : padB p + padSlope p + 3 ≤ 132 := by omega
+  have hT' : padA p + padB p + padSlope p + 3 ≤ 6412 := by omega
+  have hb1 : 1 ≤ padB p := by omega
+  have hDchar : D < 2130706433 := by omega
+  have hflag' : flag.all ≤ padSlope p + 2 ∧
+      flag.yz + flag.all ≤ padB p + padSlope p + 3 ∧
+      flag.zOnly + flag.yz + flag.all ≤ padA p + padB p + padSlope p + 3 := by
+    refine ⟨?_, ?_, ?_⟩ <;> omega
+  have hflagChar := flag_characteristicC2 (padA p) (padB p) (padSlope p)
+    flag hS' hY' hT' hflag'
+  by_cases hTail : S.G ∣ globalTailCut (polynomialEmbedding K) S.F (RCN327.w + 1)
+  · have hTailNumerator : S.G ∣ surfaceMap (polynomialEmbedding K)
+        (numerator K S.F (RCN327.w + 1)) :=
+      (globalTailCut_dvd_iff (polynomialEmbedding K)
+        (polynomialEmbedding_injective K) S.F (RCN327.w + 1) S.G).mp hTail
+    have hbox' : S.F ∈ RCN174.globalCoefficientBox K D 131071
+        (padA p + padB p + padSlope p + 3) (padSlope p + 2) := by
+      rw [hps.2.2, hps.1]; exact hbox
+    have hprovider := actual_identityCurveCountProvider
+      (a := padA p) (b := padB p) (s := padSlope p) S 181373 hnodes hagreement
+      (by norm_num) hTailNumerator D (padA p + padB p + padSlope p + 3)
+      (padSlope p + 2)
+      (by norm_num) hDlow hDchar hbox' hflagChar
+      (identity_mixed_gateC2 (padB p) (padSlope p) flag hS' hY'
+        hflag'.1 hflag'.2.1)
+    have hpositive : 1 ≤ identityCurveDegree flag (padA p) (padB p)
+        (padSlope p) 131071 := by
+      apply LocatorFixedStage.identity_positive
+      have hy : 0 < S.G.degreeOf 1 := S.y_dependent
+      have hdeg := degreeOf_le_flag_total S.G flag S.flag_support 1
+      omega
+    have hinc := identity_surface_seed_bound S 181373
+      (identityCurveDegree flag (padA p) (padB p) (padSlope p) 131071)
+      hprovider hagreement
+      (by norm_num) (by rw [hnodes]; norm_num) hpositive
+    have hscaled : Gamma.card * 50302 ≤
+        50302 * hybridCostABSC2 flag (padA p) (padB p) (padSlope p) := by
+      calc
+        Gamma.card * 50302 = Gamma.card * (181373 - 131071) := rfl
+        _ ≤ (S.nodes.card - 131071) * (80771 + 1) *
+            identityCurveDegree flag (padA p) (padB p) (padSlope p) 131071 :=
+          hinc
+        _ = (262144 - 131071) * (80771 + 1) *
+            identityCurveDegree flag (padA p) (padB p) (padSlope p) 131071 := by
+          rw [hnodes]
+        _ ≤ 50302 * hybridCostABSC2 flag (padA p) (padB p) (padSlope p) :=
+          identity_le_hybridC2 flag (padA p) (padB p) (padSlope p) hb1
+    rw [hybridBoundC2_eq_abs]
+    apply Nat.le_of_mul_le_mul_right ?_ (by norm_num : 0 < 50302)
+    simpa only [Nat.mul_comm] using hscaled
+  · obtain ⟨P⟩ := hprov S hnodes hagreement hbox hflag hTail
+    have h := stage_card_le_divisorBound S P
+    have hct := cell_tails_eqC2 p
+    rw [hct.1, hct.2.1, hct.2.2.1, hct.2.2.2] at h
+    simpa only [hybridBoundC2, RCN327.w, Nat.reduceAdd] using h
+
+theorem regular_factor_count_hybridC2
+    (D : ℕ) (P : ResidualSupportParameters)
+    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 17411808)
+    (hS : P.s ≤ 29) (hY : P.ys ≤ 132) (hT : P.total ≤ 6412)
+    (Q : P4) (hQ : Q ≠ 0)
+    (hbox : Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
+    (HQ : ResidualSupportData P Q)
+    (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i =>
+        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (R : RegularIndex Q)
+    (hhyb : HybridAppliesC2 (regularCumulativeFlag Q R))
+    (hreal : RealizationC2 D) :
+    (regularSeeds Q selected Gamma R).card ≤
+      hybridCostC2 (regularCumulativeFlag Q R) := by
+  letI : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
+  set p := regularCumulativeFlag Q R with hp
+  have hRdata := directFactor_data Q R.1 hQ D 131071 P.total P.s hbox R.2
+  have hRsmall : R.1.degreeOf (2 : Fin 4) < 2130706433 :=
+    (degreeOf_R_le_of_mem_box _ _ _ _ _ hRdata.2.2).trans_lt
+      (hS.trans_lt (by decide))
+  have hRbox0 : R.1 ∈ RCN174.globalCoefficientBox K D 131071
+      (padA p + padB p + padSlope p + 3) (padSlope p + 2) :=
+    own_box R.1 D 131071 P.total P.s hRdata.2.2
+  have hRsupport : ResidualSupportData
+      (RCN198.support (padA p) (padB p) (padSlope p)) R.1 :=
+    own_support R.1
+  have hRwhole := factor_support Q hQ HQ R
+  have hc := originalCumulativeFlag_cumulative R.1
+  have hps := pad_sums p
+  have hRbox : R.1 ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p) := by
+    rw [← hps.2.2, ← hps.1]; exact hRbox0
+  have h1 : p.all ≤ 29 := hRwhole.s_weight.trans hS
+  have h2 : middle p ≤ 132 := by
+    simpa only [hp, middle, regularCumulativeFlag, hc.2.1] using
+      hRwhole.ys_weight.trans hY
+  have h3 : total p ≤ 6412 := by
+    simpa only [hp, total, regularCumulativeFlag, hc.2.2] using
+      hRwhole.total_weight.trans hT
+  have hpS : padS p ≤ 29 := max_le h1 (by decide)
+  have hpY : padY p ≤ 132 := max_le h2 (by omega)
+  have hpT : padT p ≤ 6412 := max_le h3 (by omega)
+  have hp3 : 3 ≤ p.all := hhyb.1
+  have hpSeq : padS p = p.all := max_eq_left (by omega : 2 ≤ p.all)
+  have hpYeq : padY p = middle p :=
+    max_eq_left (by rw [hpSeq]; exact hhyb.2.trans' (by omega))
+  have hpS3 : 3 ≤ padS p := by rw [hpSeq]; exact hhyb.1
+  have hhyb' : padS p + 2 ≤ padY p := by rw [hpSeq, hpYeq]; exact hhyb.2
+  have hprov : ProviderHypC2 D p := hreal p hpS hpY hpT hpS3 hhyb'
+  have hsolutions : ∀ gamma ∈ regularSeeds Q selected Gamma R,
+      specialization K (selected gamma) gamma R.1 = 0 := by
+    intro gamma hgamma
+    exact (Finset.mem_filter.mp hgamma).2.1
+  have hcover := card_le_sum_geometricSeeds K R.1 hRdata.1.ne_zero selected
+    (regularSeeds Q selected Gamma R) hsolutions
+  have hstage (g : GeometricFactor K R.1) :
+      (geometricSeeds K R.1 selected (regularSeeds Q selected Gamma R) g).card ≤
+        hybridBoundC2 (geometricCumulativeFlag K g) p := by
+    let S0 := regularGeometricResidualStageOfSupport
+      (RCN198.support (padA p) (padB p) (padSlope p)) Q selected Gamma
+      (Finset.univ : Finset I) IRSProfile.domain u0 u1
+      IRSProfile.domain.injective.injOn hdegree hno R
+      hRdata.1 hRdata.2.1 hRsmall hRsupport (by decide) g
+    let S := reflagResidualStage S0 (polynomialIn_surfaceCumulativeFlag g.1)
+    have hsub : geometricSeeds K R.1 selected
+        (regularSeeds Q selected Gamma R) g ⊆ Gamma :=
+      (geometricSeeds_subset K R.1 selected _ g).trans
+        (regularSeeds_subset Q selected Gamma R)
+    have hnodes : S.nodes.card = 181373 + 80771 := by
+      change (Finset.univ : Finset I).card = _
+      norm_num [I, IRSProfile.Index]
+    have hag : ∀ gamma ∈ geometricSeeds K R.1 selected
+        (regularSeeds Q selected Gamma R) g,
+        181373 ≤ (S.agreementFiber gamma).card := by
+      intro gamma hgamma
+      simpa [S, S0, ResidualStage.agreementFiber, ResidualStage.Agrees,
+        reflagResidualStage, regularGeometricResidualStageOfSupport,
+        geometricResidualStageOfSupport] using hagreement gamma (hsub hgamma)
+    have hf := geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero hRsupport g
+    have hf1 : (geometricCumulativeFlag K g).all ≤ padSlope p + 2 := hf.1
+    have hf2 : (geometricCumulativeFlag K g).yz +
+        (geometricCumulativeFlag K g).all ≤ padB p + padSlope p + 3 := hf.2.1
+    have hf3 : (geometricCumulativeFlag K g).zOnly +
+        (geometricCumulativeFlag K g).yz +
+        (geometricCumulativeFlag K g).all ≤
+          padA p + padB p + padSlope p + 3 := hf.2.2
+    have hf' : (geometricCumulativeFlag K g).all ≤ padS p ∧
+        (geometricCumulativeFlag K g).yz + (geometricCumulativeFlag K g).all ≤
+          padY p ∧
+        (geometricCumulativeFlag K g).zOnly + (geometricCumulativeFlag K g).yz +
+          (geometricCumulativeFlag K g).all ≤ padT p := by
+      refine ⟨?_, ?_, ?_⟩ <;> omega
+    have hcount := hybridStageBoundC2 D p hDlow hDhigh hpS hpY hpT hpS3 hhyb'
+      hprov (S := S) hnodes hag hRbox hf'
+    simpa only [geometricCumulativeFlag] using hcount
+  calc
+    (regularSeeds Q selected Gamma R).card ≤
+        ∑ g : GeometricFactor K R.1,
+          (geometricSeeds K R.1 selected (regularSeeds Q selected Gamma R) g).card :=
+      hcover
+    _ ≤ ∑ g : GeometricFactor K R.1,
+        hybridBoundC2 (geometricCumulativeFlag K g) p :=
+      Finset.sum_le_sum (fun g _ => hstage g)
+    _ ≤ hybridCostC2 p := by
+      have hb := geometricCumulativeFlag_budgets R.1 hRdata.1.ne_zero
+      exact merge_hybrid_costsC2 (geometricCumulativeFlag K) p hb.1 hb.2.1 hb.2.2
+
+end
+end ProximityPrize.SubmissionLower.LocatorFixedHybridC2
+end PackedLocator_LocatorFixedHybridC2
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridRealizeC2. -/
+section PackedLocator_LocatorHybridRealizeC2
+/-
+THE C2 HYBRID PROVIDER EXISTS ON EVERY ADMISSIBLE CELL — 6800 ROW.
+
+`RealizationC2 17411808`: the weighted cap of the 6800 row is
+`A.m * agreements = 92 * 181373 = 17411808`.
+
+Gates come from `LocatorHybridGatesC2` (caps 29 / 132 / 6412, errors 80771).  The
+tangent count is `tangent_component_card_le` against the REDUCED budget family,
+exactly as `RCN335` does it for the delayed provider.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorHybridRealizeC2
+open ProximityPrize.Benchmark
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
+open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
+open RCN331 RCN027 RCN030 RCN029 RCN037 RCN038 RCN042 RCN002 RCN344 RCN277 RCN003 RCN314 RCN315 RCN093 RCN046 RCN001
+open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
+open LocatorFactorAggregate LocatorHybridCost LocatorHybridCostC1 LocatorHybridCostC2
+open LocatorHybridTailProviderC1 LocatorHybridTailProviderC2
+open LocatorHybridTailRealizationC2 LocatorHybridGatesC2
+open LocatorFixed LocatorFixedHybridC2
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 6000000
+set_option maxRecDepth 100000
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : DecidableEq (GenericField K) := Classical.decEq _
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
+
+theorem realizationC2 : RealizationC2 17411808 := by
+  intro p hS hY hT hS3 hhyb
+  letI : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
+  unfold ProviderHypC2
+  intro Gamma flag S hnodes hagreement hbox hflag hTail
+  have hps := pad_sums p
+  have hpb := pad_bounds p
+  have hyt : padY p ≤ padT p := hpb.2.2
+  have hflagChar : flag.yz + flag.all < 2130706433 ∧ flag.all < 2130706433 ∧
+      flag.zOnly + flag.yz + flag.all < 2130706433 := by
+    refine ⟨?_, ?_, ?_⟩ <;> omega
+  have hmixedRed := reduced_mixed_gateC2 (padB p) (padSlope p) flag
+    (by omega) (by omega) (by omega) (by omega)
+  have hmix := product_gateC2 (padA p) (padB p) (padSlope p) flag
+    (by omega) (by omega)
+  have hrat := rational_gateC2 (padT p) (padY p) (padS p) hhyb
+  have htangent : ∀ C : FirstTailComponent S,
+      (∀ delay, globalTailCut (polynomialEmbedding K) S.F
+        (RCN327.w + 1 + delay) ∈ C.1) →
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (RCN327.w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+          (80771 + 1) *
+            (reducedBudgetFamily S hTail hflagChar hmixedRed).yzCost C := by
+    intro C hall
+    exact tangent_component_card_le S C hTail
+      (reducedBaseOrd S hTail hflagChar hmixedRed C)
+      181373 17411808 (padT p) (padS p) hnodes hagreement
+      (by norm_num [RCN327.w]) (by norm_num [RCN327.w])
+      (by norm_num [RCN327.w]) (by norm_num)
+      hbox (reducedBudgetFamily S hTail hflagChar hmixedRed)
+      (reducedBudgetFamily_yzPositive S hTail hflagChar hmixedRed C) hall
+      (reducedBudgetFamily_yzPole S hTail hflagChar hmixedRed C)
+  exact exists_hybridTailMultiplicityProviderC2_realized hS3 hhyb hyt S hTail
+    hflagChar hmixedRed hmix hrat htangent
+
+end
+end ProximityPrize.SubmissionLower.LocatorHybridRealizeC2
+end PackedLocator_LocatorHybridRealizeC2
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorFixedOwnBoundC2. -/
+section PackedLocator_LocatorFixedOwnBoundC2
+/-! Per-factor bounds on the fixed stage — C2 / 6800 row: padded always, the C2
+hybrid one when the C2 branch applies (`3 ≤ p.all` and `p.all + 2 ≤ middle p`). -/
+
+namespace ProximityPrize.SubmissionLower.LocatorFixedOwnBoundC2
+open ProximityPrize.Benchmark
+open scoped Classical BigOperators
+open RCN174 RCN275 RCN238 RCN243 RCN266 RCN140 RCN130 RCN156 RCN234 RCN159 RCN137 RCN198 RCN095
+open LocatorFactorAggregate LocatorHybridCostC2 LocatorFixed LocatorFixedHybridC2
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+set_option maxRecDepth 100000
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:CharP K 2130706433:=by
+  simpa [RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
+
+/-- Both per-factor bounds: padded always, C2 hybrid when it applies. -/
+theorem regular_factor_own_bound
+    (D:ℕ) (P:ResidualSupportParameters)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17411808)
+    (hS:P.s ≤ 29) (hY:P.ys ≤ 132) (hT:P.total ≤ 6412)
+    (Q:P4) (hQ:Q ≠ 0)
+    (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
+    (HQ:ResidualSupportData P Q)
+    (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
+    (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
+    (R:RegularIndex Q) (hreal:RealizationC2 D) :
+    OwnBoundC2 (regularSeeds Q selected Gamma R).card (regularCumulativeFlag Q R):=
+  ⟨regular_factor_count D P hDlow hDhigh hS hY hT Q hQ hbox HQ selected Gamma u0 u1
+      hdegree hagreement hno R,
+    fun hhyb=> regular_factor_count_hybridC2 D P hDlow hDhigh hS hY hT Q hQ hbox HQ
+      selected Gamma u0 u1 hdegree hagreement hno R hhyb hreal⟩
+end
+end ProximityPrize.SubmissionLower.LocatorFixedOwnBoundC2
+end PackedLocator_LocatorFixedOwnBoundC2
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier55 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier56 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier57 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier58 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier59 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSourceArithmetic. -/
+section PackedLocator_LocatorSourceArithmetic
+namespace ProximityPrize.SubmissionLower.LocatorSourceArithmetic
+open RCN100 RCN119 RCN302
+set_option maxRecDepth 100000
+theorem kernelAmbient_nullity:
+    coefficientCount 48970710 131071 130000 81 -
+      262144 * localRankBound 270 130000 81=303286218157264:=
+  LocatorArithmetic.kernelC_nullity
+end ProximityPrize.SubmissionLower.LocatorSourceArithmetic
+end PackedLocator_LocatorSourceArithmetic
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier60 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSingletonSource. -/
+section PackedLocator_LocatorSingletonSource
+
+/-!
+# A compact source for the terminal singleton locator cell
+
+This source is small enough to fit inside the selected ambient coefficient
+box, but its kernel nullity is just large enough for the `(6412, 50, 11)`
+terminal route.  The local-rank receipt is split into short reductions so the
+verifier never has to normalize all 153 contact rows in one expression.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorSingletonSource
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic LocatorLowQuotient
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+abbrev Kernel (u0 u1 : I → K) :=
+  ConstraintKernel (K := K) 27750069 131071 7289 47 153
+    IRSProfile.domain u0 u1
+
+theorem weighted_exact : 153 * 181373 = 27750069 := by
+  decide
+
+theorem shape : 27750069 + 47 ≤ 131071 * (211 + 1) := by
+  decide
+
+theorem coefficientCount_exact :
+    coefficientCount 27750069 131071 7289 47 = 811593602962228 := by
+  change coefficientCount (211 * 131071 + 94088) 131071 7289 47 =
+    811593602962228
+  rw [coefficientCount_eq_oneResidueCoefficientCount
+    211 94088 131071 7289 47 (by decide) (by decide) (by decide)
+      (by decide)]
+  norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
+
+private def rankRow (r : ℕ) : ℕ :=
+  let M := min r 7289
+  let h := min (r + 1) (153 - r)
+  rectangularCount (M + 1) (47 + 1) 0 7289 -
+    rectangularCount (M + 1 - h) (47 + 1 - h) h 7289
+
+private theorem rank_0 :
+    (∑ i ∈ Finset.range 64, rankRow i) = 723390720 := by
+  decide
+
+private theorem rank_64 :
+    (∑ i ∈ Finset.range 64, rankRow (64 + i)) = 1979021408 := by
+  decide
+
+private theorem rank_128 :
+    (∑ i ∈ Finset.range 25, rankRow (128 + i)) = 393026400 := by
+  decide
+
+private theorem fastLocalRankBound_exact :
+    fastLocalRankBound 153 7289 47 = 3095438528 := by
+  unfold fastLocalRankBound
+  rw [kernelSumRange_eq]
+  change (∑ r ∈ Finset.range 153, rankRow r) = _
+  rw [Finset.sum_range_add rankRow 128 25,
+    Finset.sum_range_add rankRow 64 64, rank_0, rank_64, rank_128]
+
+theorem localRankBound_exact :
+    localRankBound 153 7289 47 = 3095438528 := by
+  rw [localRankBound_eq_fastLocalRankBound 153 7289 47 (by decide)]
+  exact fastLocalRankBound_exact
+
+theorem nullity_exact :
+    coefficientCount 27750069 131071 7289 47 -
+      262144 * localRankBound 153 7289 47 = 142965478196 := by
+  rw [coefficientCount_exact, localRankBound_exact]
+
+theorem finrank_gap (u0 u1 : I → K) :
+    142965478196 ≤ Module.finrank K (Kernel u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
+    27750069 7289 47 153 142965478196 u0 u1 (by
+      rw [nullity_exact])
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorSingletonSource
+end PackedLocator_LocatorSingletonSource
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier61 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSelection. -/
+section PackedLocator_LocatorSelection
+namespace ProximityPrize.SubmissionLower.LocatorSelection
+open ProximityPrize.Benchmark RCN100 RCN119 RCN101 RCN180 RCN181 RCN137 RCN183
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+set_option synthInstance.maxHeartbeats 200000
+section GenericCoefficients
+variable {E V:Type*} [Field E] [AddCommGroup V] [Module E V]
+def polynomialCoefficientsLinear (D w L s:ℕ)
+    (f:V →ₗ[E] MvPolynomial (Fin 4) E) :
+    V →ₗ[E] (CoefficientIndex D w L s → E) :=
+  LinearMap.pi (fun c=> (MvPolynomial.lcoeff E (columnExponent c)).comp f)
+@[simp] theorem polynomialCoefficientsLinear_apply (D w L s:ℕ)
+    (f:V →ₗ[E] MvPolynomial (Fin 4) E) (v:V)
+    (c:CoefficientIndex D w L s) :
+    polynomialCoefficientsLinear D w L s f v c=
+      MvPolynomial.coeff (columnExponent c) (f v):=by
+  simp only [polynomialCoefficientsLinear,LinearMap.pi_apply,
+    LinearMap.comp_apply,MvPolynomial.lcoeff_apply]
+theorem reconstruct_polynomialCoefficientsLinear (D w L s:ℕ)
+    (f:V →ₗ[E] MvPolynomial (Fin 4) E) (v:V)
+    (hbox:f v ∈ globalCoefficientBox E D w L s) :
+    reconstruct E D w L s (polynomialCoefficientsLinear D w L s f v) =f v:=by
+  let Q:globalCoefficientBox E D w L s:=⟨f v,hbox⟩
+  have he:polynomialCoefficientsLinear D w L s f v=encodeBox Q:=by
+    funext c
+    exact polynomialCoefficientsLinear_apply D w L s f v c
+  rw [he]
+  exact reconstruct_encodeBox Q
+theorem reconstruct_add_generic (D w L s:ℕ)
+    (a b:CoefficientIndex D w L s → E) :
+    reconstruct E D w L s (a + b) =
+      reconstruct E D w L s a + reconstruct E D w L s b:=
+  (reconstructLinear (K:=E) D w L s).map_add a b
+end GenericCoefficients
+section GenericJoin
+variable {E U V:Type*} [Field E]
+ [AddCommGroup U] [Module E U] [AddCommGroup V] [Module E V]
+def joinLinear (A:Submodule E U) (f:V →ₗ[E] U):(A × V) →ₗ[E] U:=
+  A.subtype.comp (LinearMap.fst E A V) + f.comp (LinearMap.snd E A V)
+@[simp] theorem joinLinear_apply (A:Submodule E U) (f:V →ₗ[E] U)
+    (v:A × V):joinLinear A f v=v.1.1 + f v.2:=by
+  simp only [joinLinear,LinearMap.add_apply,LinearMap.comp_apply,
+    LinearMap.fst_apply,LinearMap.snd_apply,Submodule.subtype_apply]
+variable {LeftRest RightRest:Type*} [AddCommGroup LeftRest] [Module E LeftRest]
+ [AddCommGroup RightRest] [Module E RightRest]
+def tripleLinear (f:V →ₗ[E] U) (g:LeftRest →ₗ[E] U) (h:RightRest →ₗ[E] U) :
+    (V × (LeftRest × RightRest)) →ₗ[E] U:=
+  f.comp (LinearMap.fst E V (LeftRest × RightRest)) +
+    g.comp ((LinearMap.fst E LeftRest RightRest).comp
+      (LinearMap.snd E V (LeftRest × RightRest))) +
+    h.comp ((LinearMap.snd E LeftRest RightRest).comp
+      (LinearMap.snd E V (LeftRest × RightRest)))
+@[simp] theorem tripleLinear_apply
+    (f:V →ₗ[E] U) (g:LeftRest →ₗ[E] U) (h:RightRest →ₗ[E] U)
+    (v:V × (LeftRest × RightRest)) :
+    tripleLinear f g h v=f v.1 + g v.2.1 + h v.2.2:=by
+  simp only [tripleLinear,LinearMap.add_apply,LinearMap.comp_apply,
+    LinearMap.fst_apply,LinearMap.snd_apply]
+end GenericJoin
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+abbrev P4:=MvPolynomial (Fin 4) K
+local instance:DecidableEq K:=Classical.decEq _
+local instance:DecidableEq I:=Classical.decEq _
+local instance:StrongNormalizationMonoid P4:=
+  UniqueFactorizationMonoid.strongNormalizationMonoid
+local instance:NormalizedGCDMonoid P4:=
+  UniqueFactorizationMonoid.toNormalizedGCDMonoid P4
+local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
+abbrev AKernel (u0 u1:I → K) :=
+  ConstraintKernel (K:=K) 17411808 131071 130000 29 96 IRSProfile.domain u0 u1
+abbrev AuxKernel (u0 u1:I → K) :=
+  ConstraintKernel (K:=K) 17411808 131071 130000 29 96 IRSProfile.domain u0 u1
+abbrev CKernel (u0 u1:I → K) :=
+  ConstraintKernel (K:=K) 48970710 131071 130000 81 270 IRSProfile.domain u0 u1
+abbrev TCapKernel (u0 u1:I → K) :=
+  ConstraintKernel (K:=K) 32828513 131071 6415 56 181 IRSProfile.domain u0 u1
+abbrev SKernel (u0 u1:I → K) :=
+  LocatorSingletonSource.Kernel u0 u1
+abbrev BKernel (u0 u1:I → K) :=
+  ConstraintKernel (K:=K) 20132403 131071 12960 33 111 IRSProfile.domain u0 u1
+abbrev Ambient:=CoefficientIndex 48970710 131071 130000 81 → K
+theorem gateC:Fintype.card I * localRankBound 270 130000 81 <
+    coefficientCount 48970710 131071 130000 81:=by
+  rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
+  have h:=LocatorSourceArithmetic.kernelAmbient_nullity
+  omega
+theorem gateTCap:Fintype.card I * localRankBound 181 6415 56 <
+    coefficientCount 32828513 131071 6415 56:=by
+  rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
+  have h:=LocatorArithmetic.kernelTCap_nullity
+  omega
+theorem gateB:Fintype.card I * localRankBound 111 12960 33 <
+    coefficientCount 20132403 131071 12960 33:=by
+  rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
+  have h:=LocatorArithmetic.kernelB_nullity
+  omega
+theorem aBox_le_cBox:globalCoefficientBox K 17411808 131071 130000 29 ≤
+    globalCoefficientBox K 48970710 131071 130000 81:=by
+  intro Q hQ d hd
+  obtain ⟨ht,hs,hc⟩:=hQ hd
+  exact ⟨ht,hs.trans (by decide),hc.trans_le (by decide)⟩
+def embedA (u0 u1:I → K):AKernel u0 u1 →ₗ[K] Ambient:=
+  polynomialCoefficientsLinear 48970710 131071 130000 81
+    (kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
+      IRSProfile.domain u0 u1)
+@[simp] theorem reconstruct_embedA (u0 u1:I → K) (v:AKernel u0 u1) :
+    reconstruct K 48970710 131071 130000 81 (embedA u0 u1 v) =
+      reconstruct K 17411808 131071 130000 29 v.1:=by
+  have hbox:kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
+      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 48970710 131071 130000 81:=by
+    rw [kernelReconstructLinear_apply]
+    exact aBox_le_cBox (reconstruct_mem_globalCoefficientBox
+      K 17411808 131071 130000 29 v.1)
+  have h:=reconstruct_polynomialCoefficientsLinear 48970710 131071 130000 81
+    (kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
+      IRSProfile.domain u0 u1) v hbox
+  simpa only [embedA,kernelReconstructLinear_apply] using h
+theorem auxBox_le_cBox:globalCoefficientBox K 17411808 131071 130000 29 ≤
+    globalCoefficientBox K 48970710 131071 130000 81:=by
+  intro Q hQ d hd
+  obtain ⟨ht,hs,hc⟩:=hQ hd
+  exact ⟨ht,hs.trans (by decide),hc.trans_le (by decide)⟩
+def embedAux (u0 u1:I → K):AuxKernel u0 u1 →ₗ[K] Ambient:=
+  polynomialCoefficientsLinear 48970710 131071 130000 81
+    (kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
+      IRSProfile.domain u0 u1)
+@[simp] theorem reconstruct_embedAux (u0 u1:I → K) (v:AuxKernel u0 u1) :
+    reconstruct K 48970710 131071 130000 81 (embedAux u0 u1 v) =
+      reconstruct K 17411808 131071 130000 29 v.1:=by
+  have hbox:kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
+      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 48970710 131071 130000 81:=by
+    rw [kernelReconstructLinear_apply]
+    exact auxBox_le_cBox (reconstruct_mem_globalCoefficientBox
+      K 17411808 131071 130000 29 v.1)
+  have h:=reconstruct_polynomialCoefficientsLinear 48970710 131071 130000 81
+    (kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
+      IRSProfile.domain u0 u1) v hbox
+  simpa only [embedAux,kernelReconstructLinear_apply] using h
+theorem tcapBox_le_cBox:globalCoefficientBox K 32828513 131071 6415 56 ≤
+    globalCoefficientBox K 48970710 131071 130000 81:=by
+  intro Q hQ d hd
+  obtain ⟨ht,hs,hc⟩:=hQ hd
+  exact ⟨ht.trans (by decide),hs.trans (by decide),hc.trans_le (by decide)⟩
+def embedTCap (u0 u1:I → K):TCapKernel u0 u1 →ₗ[K] Ambient:=
+  polynomialCoefficientsLinear 48970710 131071 130000 81
+    (kernelReconstructLinear (K:=K) 32828513 131071 6415 56 181
+      IRSProfile.domain u0 u1)
+@[simp] theorem reconstruct_embedTCap (u0 u1:I → K) (v:TCapKernel u0 u1) :
+    reconstruct K 48970710 131071 130000 81 (embedTCap u0 u1 v) =
+      reconstruct K 32828513 131071 6415 56 v.1:=by
+  have hbox:kernelReconstructLinear (K:=K) 32828513 131071 6415 56 181
+      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 48970710 131071 130000 81:=by
+    rw [kernelReconstructLinear_apply]
+    exact tcapBox_le_cBox (reconstruct_mem_globalCoefficientBox
+      K 32828513 131071 6415 56 v.1)
+  have h:=reconstruct_polynomialCoefficientsLinear 48970710 131071 130000 81
+    (kernelReconstructLinear (K:=K) 32828513 131071 6415 56 181
+      IRSProfile.domain u0 u1) v hbox
+  simpa only [embedTCap,kernelReconstructLinear_apply] using h
+theorem sBox_le_cBox:globalCoefficientBox K 27750069 131071 7289 47 ≤
+    globalCoefficientBox K 48970710 131071 130000 81:=by
+  intro Q hQ d hd
+  obtain ⟨ht,hs,hc⟩:=hQ hd
+  exact ⟨ht.trans (by decide),hs.trans (by decide),hc.trans_le (by decide)⟩
+def embedS (u0 u1:I → K):SKernel u0 u1 →ₗ[K] Ambient:=
+  polynomialCoefficientsLinear 48970710 131071 130000 81
+    (kernelReconstructLinear (K:=K) 27750069 131071 7289 47 153
+      IRSProfile.domain u0 u1)
+@[simp] theorem reconstruct_embedS (u0 u1:I → K) (v:SKernel u0 u1) :
+    reconstruct K 48970710 131071 130000 81 (embedS u0 u1 v) =
+      reconstruct K 27750069 131071 7289 47 v.1:=by
+  have hbox:kernelReconstructLinear (K:=K) 27750069 131071 7289 47 153
+      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 48970710 131071 130000 81:=by
+    rw [kernelReconstructLinear_apply]
+    exact sBox_le_cBox (reconstruct_mem_globalCoefficientBox
+      K 27750069 131071 7289 47 v.1)
+  have h:=reconstruct_polynomialCoefficientsLinear 48970710 131071 130000 81
+    (kernelReconstructLinear (K:=K) 27750069 131071 7289 47 153
+      IRSProfile.domain u0 u1) v hbox
+  simpa only [embedS,kernelReconstructLinear_apply] using h
+abbrev BaseJoinedDomain (u0 u1:I → K):=
+  CKernel u0 u1 × (AKernel u0 u1 × (AuxKernel u0 u1 × TCapKernel u0 u1))
+def baseJoinedMap (u0 u1:I → K) : BaseJoinedDomain u0 u1 →ₗ[K] Ambient:=
+  joinLinear (CKernel u0 u1)
+    (tripleLinear (embedA u0 u1) (embedAux u0 u1) (embedTCap u0 u1))
+@[simp] theorem baseJoinedMap_apply (u0 u1:I → K)
+    (v:BaseJoinedDomain u0 u1) :
+    baseJoinedMap u0 u1 v=
+      v.1.1 +
+        (embedA u0 u1 v.2.1 + embedAux u0 u1 v.2.2.1 +
+        embedTCap u0 u1 v.2.2.2):=by
+  simp only [baseJoinedMap,joinLinear_apply,tripleLinear_apply]
+def joinedMap (u0 u1:I → K) :
+    (BaseJoinedDomain u0 u1 × SKernel u0 u1) →ₗ[K] Ambient:=
+  (baseJoinedMap u0 u1).comp
+      (LinearMap.fst K (BaseJoinedDomain u0 u1) (SKernel u0 u1)) +
+    (embedS u0 u1).comp
+      (LinearMap.snd K (BaseJoinedDomain u0 u1) (SKernel u0 u1))
+abbrev JoinedKernel (u0 u1:I → K):=LinearMap.range (joinedMap u0 u1)
+@[simp] theorem joinedMap_apply (u0 u1:I → K)
+    (v:BaseJoinedDomain u0 u1 × SKernel u0 u1) :
+    joinedMap u0 u1 v=
+      baseJoinedMap u0 u1 v.1 + embedS u0 u1 v.2:=by
+  simp only [joinedMap,LinearMap.add_apply,LinearMap.comp_apply,
+    LinearMap.fst_apply,LinearMap.snd_apply]
+theorem reconstruct_baseJoinedMap (u0 u1:I → K)
+    (v:BaseJoinedDomain u0 u1) :
+    reconstruct K 48970710 131071 130000 81 (baseJoinedMap u0 u1 v) =
+      reconstruct K 48970710 131071 130000 81 v.1.1 +
+        (reconstruct K 17411808 131071 130000 29 v.2.1.1 +
+          reconstruct K 17411808 131071 130000 29 v.2.2.1.1 +
+          reconstruct K 32828513 131071 6415 56 v.2.2.2.1):=by
+  rw [baseJoinedMap_apply,reconstruct_add_generic,reconstruct_add_generic,
+    reconstruct_add_generic,reconstruct_embedA,reconstruct_embedAux,
+    reconstruct_embedTCap]
+theorem reconstruct_joinedMap (u0 u1:I → K)
+    (v:BaseJoinedDomain u0 u1 × SKernel u0 u1) :
+    reconstruct K 48970710 131071 130000 81 (joinedMap u0 u1 v) =
+      (reconstruct K 48970710 131071 130000 81 v.1.1.1 +
+        (reconstruct K 17411808 131071 130000 29 v.1.2.1.1 +
+          reconstruct K 17411808 131071 130000 29 v.1.2.2.1.1 +
+          reconstruct K 32828513 131071 6415 56 v.1.2.2.2.1)) +
+        reconstruct K 27750069 131071 7289 47 v.2.1:=by
+  rw [joinedMap_apply,reconstruct_add_generic,reconstruct_baseJoinedMap,
+    reconstruct_embedS]
+def includeC (u0 u1:I → K) (v:CKernel u0 u1):JoinedKernel u0 u1:=
+  ⟨v.1, ⟨((v, (0, (0,0))),0),by
+    simp only [joinedMap_apply,baseJoinedMap_apply,map_zero,zero_add,add_zero]⟩⟩
+def includeA (u0 u1:I → K) (v:AKernel u0 u1):JoinedKernel u0 u1:=
+  ⟨embedA u0 u1 v, ⟨((0, (v, (0,0))),0),by
+    simp only [joinedMap_apply,baseJoinedMap_apply,ZeroMemClass.coe_zero,map_zero,
+      zero_add,add_zero]⟩⟩
+def includeAux (u0 u1:I → K) (v:AuxKernel u0 u1):JoinedKernel u0 u1:=
+  ⟨embedAux u0 u1 v, ⟨((0, (0, (v,0))),0),by
+    simp only [joinedMap_apply,baseJoinedMap_apply,ZeroMemClass.coe_zero,map_zero,
+      zero_add,add_zero]⟩⟩
+def includeTCap (u0 u1:I → K) (v:TCapKernel u0 u1):JoinedKernel u0 u1:=
+  ⟨embedTCap u0 u1 v, ⟨((0, (0, (0,v))),0),by
+    simp only [joinedMap_apply,baseJoinedMap_apply,ZeroMemClass.coe_zero,map_zero,
+      zero_add,add_zero]⟩⟩
+def includeS (u0 u1:I → K) (v:SKernel u0 u1):JoinedKernel u0 u1:=
+  ⟨embedS u0 u1 v, ⟨((0, (0, (0,0))),v),by
+    simp only [joinedMap_apply,baseJoinedMap_apply,ZeroMemClass.coe_zero,map_zero,
+      zero_add,add_zero]⟩⟩
+theorem joined_universal (u0 u1:I → K) (v:JoinedKernel u0 u1)
+    (gamma:K) (P:Polynomial K) (points:Finset I)
+    (hP:P.natDegree ≤ 131071) (hcard:181373 ≤ points.card)
+    (hvalues:∀ i ∈ points,
+      P.eval (IRSProfile.domain i) =u0 i + gamma * u1 i) :
+    RCN319.specialization K P gamma
+      (reconstruct K 48970710 131071 130000 81 v.1) =0:=by
+  obtain ⟨z,hz⟩:=v.2
+  rw [← hz,reconstruct_joinedMap,map_add,map_add,map_add,map_add]
+  have hc:=specialization_eq_zero_of_agreements K
+    48970710 131071 130000 81 270 181373 IRSProfile.domain u0 u1
+    z.1.1.1 z.1.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
+  have ha:=specialization_eq_zero_of_agreements K
+    17411808 131071 130000 29 96 181373 IRSProfile.domain u0 u1
+    z.1.2.1.1 z.1.2.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
+  have haux:=specialization_eq_zero_of_agreements K
+    17411808 131071 130000 29 96 181373 IRSProfile.domain u0 u1
+    z.1.2.2.1.1 z.1.2.2.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
+  have htcap:=specialization_eq_zero_of_agreements K
+    32828513 131071 6415 56 181 181373 IRSProfile.domain u0 u1
+    z.1.2.2.2.1 z.1.2.2.2.2 (by decide) (by decide) P gamma points hP hcard hvalues
+  have hs:=specialization_eq_zero_of_agreements K
+    27750069 131071 7289 47 153 181373 IRSProfile.domain u0 u1
+    z.2.1 z.2.2 (by decide) (by decide) P gamma points hP hcard hvalues
+  rw [specialization_eq_ordinary] at ha haux hc htcap hs
+  simp only [hc,ha,haux,htcap,hs,zero_add]
+private theorem gcd_mul_right_plain_associated
+    (P H q:P4) (hc:IsRelPrime q P) :
+    Associated (gcd P (H * q)) (gcd P H):=by
+  apply associated_of_dvd_dvd
+  · have hleft:gcd P (H * q) ∣ P:=gcd_dvd_left P (H * q)
+    have hright:gcd P (H * q) ∣ H * q:=gcd_dvd_right P (H * q)
+    have hcop:IsRelPrime (gcd P (H * q)) q:=hc.symm.of_dvd_left hleft
+    exact dvd_gcd hleft (hcop.dvd_of_dvd_mul_right hright)
+  · exact dvd_gcd (gcd_dvd_left P H)
+      ((gcd_dvd_right P H).trans (dvd_mul_right H q))
+private theorem gcd_mul_left_plain_associated
+    (H q P:P4) (hc:IsRelPrime q P) :
+    Associated (gcd (H * q) P) (gcd H P):=by
+  apply associated_of_dvd_dvd
+  · have hleft:gcd (H * q) P ∣ H * q:=gcd_dvd_left (H * q) P
+    have hright:gcd (H * q) P ∣ P:=gcd_dvd_right (H * q) P
+    have hcop:IsRelPrime (gcd (H * q) P) q:=hc.symm.of_dvd_left hright
+    exact dvd_gcd (hcop.dvd_of_dvd_mul_right hleft) hright
+  · exact dvd_gcd ((gcd_dvd_left H P).trans (dvd_mul_right H q))
+      (gcd_dvd_right H P)
+structure SelectedPair (u0 u1:I → K) where
+  QA:P4
+  QB:P4
+  QA_ne:QA ≠ 0
+  QB_ne:QB ≠ 0
+  QA_flag:QA ∈ globalCoefficientBox K 32828513 131071 6415 56
+  QB_flag:QB ∈ globalCoefficientBox K 20132403 131071 12960 33
+  common_divides_TCap:∀ v:TCapKernel u0 u1,
+    gcd QA QB ∣ reconstruct K 32828513 131071 6415 56 v.1
+  common_divides_B:∀ v:BKernel u0 u1,
+    gcd QA QB ∣ reconstruct K 20132403 131071 12960 33 v.1
+  universal_vanishing:
+    ∀ (gamma:K) (P:Polynomial K) (points:Finset I),
+      P.natDegree ≤ 131071 → 181373 ≤ points.card →
+      (∀ i ∈ points,P.eval (IRSProfile.domain i) =u0 i + gamma * u1 i) →
+      RCN319.specialization K P gamma QA=0 ∧
+        RCN319.specialization K P gamma QB=0
+theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
+  classical
+  obtain ⟨thetaT,htT,hkT⟩:=exists_nonzero_kernel_array (I:=I)
+    K 32828513 131071 6415 56 181 IRSProfile.domain u0 u1 gateTCap
+  obtain ⟨thetaB,htB,hkB⟩:=exists_nonzero_kernel_array (I:=I)
+    K 20132403 131071 12960 33 111 IRSProfile.domain u0 u1 gateB
+  let vT0:TCapKernel u0 u1:=⟨thetaT,LinearMap.mem_ker.mpr hkT⟩
+  let vB0:BKernel u0 u1:=⟨thetaB,LinearMap.mem_ker.mpr hkB⟩
+  letI:Nontrivial (TCapKernel u0 u1):=⟨⟨vT0,0,by
+    intro h
+    exact htT (congrArg Subtype.val h)⟩⟩
+  letI:Nontrivial (BKernel u0 u1):=⟨⟨vB0,0,by
+    intro h
+    exact htB (congrArg Subtype.val h)⟩⟩
+  let bT:=Module.Free.chooseBasis K (TCapKernel u0 u1)
+  let bB:=Module.Free.chooseBasis K (BKernel u0 u1)
+  letI:Finite (Module.Free.ChooseBasisIndex K (TCapKernel u0 u1)) :=
+    Module.Finite.finite_basis bT
+  letI:Finite (Module.Free.ChooseBasisIndex K (BKernel u0 u1)) :=
+    Module.Finite.finite_basis bB
+  letI:Fintype (Module.Free.ChooseBasisIndex K (TCapKernel u0 u1)):=Fintype.ofFinite _
+  letI:Fintype (Module.Free.ChooseBasisIndex K (BKernel u0 u1)):=Fintype.ofFinite _
+  letI:Nonempty (Module.Free.ChooseBasisIndex K (TCapKernel u0 u1)):=bT.index_nonempty
+  letI:Nonempty (Module.Free.ChooseBasisIndex K (BKernel u0 u1)):=bB.index_nonempty
+  let HT:=commonGCD (TCapKernel u0 u1) bT
+  let HB:=commonGCD (BKernel u0 u1) bB
+  have hHT:HT ≠ 0:=commonGCD_ne_zero (TCapKernel u0 u1) bT
+  have hHB:HB ≠ 0:=commonGCD_ne_zero (BKernel u0 u1) bB
+  have hHBbox:HB ∈ globalCoefficientBox K 20132403 131071 12960 33:=
+    commonGCD_mem_flagBox (BKernel u0 u1) bB
+  have hcardHB:(normalizedFactorSet HB).card < ENat.card K:=
+    normalizedFactorSet_card_lt_field_of_mem_flagBox HB 20132403 12960 33
+      hHB hHBbox (by norm_num)
+  obtain ⟨vA,hvA,hcopA⟩:=exists_common_quotient_isRelPrime
+    (TCapKernel u0 u1) bT hHT HB hHB hcardHB
+  let qA:=commonQuotientLinear (TCapKernel u0 u1) bT hHT vA
+  let QA:=submoduleReconstructLinear (TCapKernel u0 u1) vA
+  have hQAeq:QA=HT * qA:=recon_eq_mul_quotientPolynomial
+    (submoduleReconstructLinear (TCapKernel u0 u1)) HT
+    (commonDivisorProof (TCapKernel u0 u1) bT) vA
+  have hQA:QA ≠ 0:=by
+    intro hz
+    apply hvA
+    apply submoduleReconstructLinear_injective (TCapKernel u0 u1)
+    simpa only [map_zero,QA] using hz
+  have hQAbox:QA ∈ globalCoefficientBox K 32828513 131071 6415 56:=by
+    dsimp only [QA]
+    rw [submoduleReconstructLinear_apply]
+    exact reconstruct_mem_globalCoefficientBox K 32828513 131071 6415 56 vA.1
+  have hcardQA:(normalizedFactorSet QA).card < ENat.card K:=
+    normalizedFactorSet_card_lt_field_of_mem_flagBox QA 32828513 6415 56
+      hQA hQAbox (by norm_num)
+  obtain ⟨vB,hvB,hcopB⟩:=exists_common_quotient_isRelPrime
+    (BKernel u0 u1) bB hHB QA hQA hcardQA
+  let qB:=commonQuotientLinear (BKernel u0 u1) bB hHB vB
+  let QB:=submoduleReconstructLinear (BKernel u0 u1) vB
+  have hQBeq:QB=HB * qB:=recon_eq_mul_quotientPolynomial
+    (submoduleReconstructLinear (BKernel u0 u1)) HB
+    (commonDivisorProof (BKernel u0 u1) bB) vB
+  have hQB:QB ≠ 0:=by
+    intro hz
+    apply hvB
+    apply submoduleReconstructLinear_injective (BKernel u0 u1)
+    simpa only [map_zero,QB] using hz
+  have hQBbox:QB ∈ globalCoefficientBox K 20132403 131071 12960 33:=by
+    dsimp only [QB]
+    rw [submoduleReconstructLinear_apply]
+    exact reconstruct_mem_globalCoefficientBox K 20132403 131071 12960 33 vB.1
+  have hAssocA:Associated (gcd QA HB) (gcd HT HB):=by
+    rw [hQAeq]
+    exact gcd_mul_left_plain_associated HT qA HB hcopA
+  have hAssocB:Associated (gcd QA QB) (gcd QA HB):=by
+    rw [hQBeq]
+    exact gcd_mul_right_plain_associated QA HB qB hcopB
+  have hAssoc:=hAssocB.trans hAssocA
+  have hHHT:gcd QA QB ∣ HT:=
+    hAssoc.dvd_iff_dvd_left.mpr (gcd_dvd_left HT HB)
+  have hHHB:gcd QA QB ∣ HB:=
+    hAssoc.dvd_iff_dvd_left.mpr (gcd_dvd_right HT HB)
+  refine ⟨{
+    QA:=QA,QB:=QB,QA_ne:=hQA,QB_ne:=hQB
+    QA_flag:=hQAbox,QB_flag:=hQBbox
+    common_divides_TCap:=?_,common_divides_B:=?_
+    universal_vanishing:=?_}⟩
+  · intro v
+    exact hHHT.trans (commonGCD_dvd (TCapKernel u0 u1) bT v)
+  · intro v
+    exact hHHB.trans (commonGCD_dvd (BKernel u0 u1) bB v)
+  · intro gamma P points hP hcard hvalues
+    constructor
+    · dsimp only [QA]
+      rw [submoduleReconstructLinear_apply]
+      exact specialization_eq_zero_of_agreements K
+        32828513 131071 6415 56 181 181373 IRSProfile.domain u0 u1
+        vA.1 vA.2 (by decide) (by decide) P gamma points hP hcard hvalues
+    · dsimp only [QB]
+      rw [submoduleReconstructLinear_apply]
+      exact specialization_eq_zero_of_agreements K
+        20132403 131071 12960 33 111 181373 IRSProfile.domain u0 u1
+        vB.1 vB.2 (by decide) (by decide) P gamma points hP hcard hvalues
+end
+end ProximityPrize.SubmissionLower.LocatorSelection
+end PackedLocator_LocatorSelection
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier62 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorCaps. -/
+section PackedLocator_LocatorCaps
+namespace ProximityPrize.SubmissionLower.LocatorCaps
+open ProximityPrize.Benchmark RCN100 RCN119 RCN180 RCN081 RCN234 RCN156 RCN130
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 3000
+set_option maxHeartbeats 600000
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+abbrev P4:=MvPolynomial (Fin 4) K
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+abbrev AKernel (u0 u1:I → K) :=
+  ConstraintKernel (K:=K) 17411808 131071 130000 29 96 IRSProfile.domain u0 u1
+abbrev TCapKernel (u0 u1:I → K) :=
+  ConstraintKernel (K:=K) 32828513 131071 6415 56 181 IRSProfile.domain u0 u1
+abbrev BKernel (u0 u1:I → K) :=
+  ConstraintKernel (K:=K) 20132403 131071 12960 33 111 IRSProfile.domain u0 u1
+theorem gateA:Fintype.card I * localRankBound 96 130000 29 <
+    coefficientCount 17411808 131071 130000 29:=by
+  rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
+  have h:=LocatorArithmetic.kernelA_nullity
+  omega
+theorem gateTCap:Fintype.card I * localRankBound 181 6415 56 <
+    coefficientCount 32828513 131071 6415 56:=by
+  rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
+  have h:=LocatorArithmetic.kernelTCap_nullity
+  omega
+theorem gateB:Fintype.card I * localRankBound 111 12960 33 <
+    coefficientCount 20132403 131071 12960 33:=by
+  rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
+  have h:=LocatorArithmetic.kernelB_nullity
+  omega
+theorem full_divisor_mem_box (D w L s m:ℕ)
+    (gate:Fintype.card I * localRankBound m L s < coefficientCount D w L s)
+    (u0 u1:I → K) (F:P4)
+    (hdiv:∀ v:ConstraintKernel (K:=K) D w L s m IRSProfile.domain u0 u1,
+      F ∣ reconstruct K D w L s v.1) :
+    F ∈ globalCoefficientBox K D w L s:=by
+  classical
+  obtain ⟨a,ha,hk⟩:=exists_nonzero_kernel_array (I:=I)
+    K D w L s m IRSProfile.domain u0 u1 gate
+  let v:ConstraintKernel (K:=K) D w L s m IRSProfile.domain u0 u1:=
+    ⟨a,LinearMap.mem_ker.mpr hk⟩
+  have hQ:reconstruct K D w L s a ≠ 0:=reconstruct_ne_zero K D w L s a ha
+  exact mem_flagGlobalCoefficientBox_of_dvd F (reconstruct K D w L s a)
+    D w L s hQ (hdiv v) (reconstruct_mem_globalCoefficientBox K D w L s a)
+theorem full_A_divisor_mem_box (u0 u1:I → K) (F:P4) (_hF:F ≠ 0)
+    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 17411808 131071 130000 29 v.1) :
+    F ∈ globalCoefficientBox K 17411808 131071 130000 29:=
+  full_divisor_mem_box 17411808 131071 130000 29 96 gateA u0 u1 F hdiv
+theorem full_TCap_divisor_mem_box (u0 u1:I → K) (F:P4) (_hF:F ≠ 0)
+    (hdiv:∀ v:TCapKernel u0 u1,F ∣ reconstruct K 32828513 131071 6415 56 v.1) :
+    F ∈ globalCoefficientBox K 32828513 131071 6415 56:=
+  full_divisor_mem_box 32828513 131071 6415 56 181 gateTCap u0 u1 F hdiv
+theorem full_B_divisor_mem_box (u0 u1:I → K) (F:P4) (_hF:F ≠ 0)
+    (hdiv:∀ v:BKernel u0 u1,F ∣ reconstruct K 20132403 131071 12960 33 v.1) :
+    F ∈ globalCoefficientBox K 20132403 131071 12960 33:=
+  full_divisor_mem_box 20132403 131071 12960 33 111 gateB u0 u1 F hdiv
+theorem common_A_ys_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
+    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 17411808 131071 130000 29 v.1) :
+    wt residualYSWeights F ≤ 132:=by
+  have hbox:=full_A_divisor_mem_box u0 u1 F hF hdiv
+  have hcaps:=(mem_flagGlobalCoefficientBox_iff F
+    17411808 131071 130000 29 (by decide)).mp hbox
+  have hr:wt residualSWeights F ≤ 29:=hcaps.2.1
+  have hw:=residualYS_mul_le_contact_add_slope F 131071 (by decide)
+  have hc:wt (contactWeights 131071) F ≤ 17411808:=by omega
+  omega
+theorem common_A_slope_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
+    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 17411808 131071 130000 29 v.1) :
+    wt residualSWeights F ≤ 29:=
+  ((mem_flagGlobalCoefficientBox_iff F 17411808 131071 130000 29 (by decide)).mp
+    (full_A_divisor_mem_box u0 u1 F hF hdiv)).2.1
+theorem common_B_slope_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
+    (hdiv:∀ v:BKernel u0 u1,F ∣ reconstruct K 20132403 131071 12960 33 v.1) :
+    wt residualSWeights F ≤ 33:=
+  ((mem_flagGlobalCoefficientBox_iff F 20132403 131071 12960 33 (by decide)).mp
+    (full_B_divisor_mem_box u0 u1 F hF hdiv)).2.1
+theorem common_B_ys_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
+    (hdiv:∀ v:BKernel u0 u1,F ∣ reconstruct K 20132403 131071 12960 33 v.1) :
+    wt residualYSWeights F ≤ 153:=by
+  have hcaps:=(mem_flagGlobalCoefficientBox_iff F
+    20132403 131071 12960 33 (by decide)).mp
+    (full_B_divisor_mem_box u0 u1 F hF hdiv)
+  have hr:wt residualSWeights F ≤ 33:=hcaps.2.1
+  have hc:wt (contactWeights 131071) F ≤ 20132403 - 1:=hcaps.2.2
+  have hw:=residualYS_mul_le_contact_add_slope F 131071 (by decide)
+  omega
+theorem common_TCap_total_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
+    (hdiv:∀ v:TCapKernel u0 u1,F ∣ reconstruct K 32828513 131071 6415 56 v.1) :
+    wt residualTotalWeights F ≤ 6412:=by
+  by_contra hnot
+  have ht:6413 ≤ wt residualTotalWeights F:=by omega
+  have hdivK:∀ v:TCapKernel u0 u1,
+      F ∣ kernelReconstructLinear (K:=K)
+        32828513 131071 6415 56 181 IRSProfile.domain u0 u1 v:=by
+    intro v
+    simpa only [kernelReconstructLinear_apply] using hdiv v
+  have hq:∀ v:TCapKernel u0 u1,
+      quotientPolynomial
+        (kernelReconstructLinear (K:=K) (I:=I)
+          32828513 131071 6415 56 181 IRSProfile.domain u0 u1)
+        F hdivK v ∈ globalCoefficientBox K 32828513 131071 2 56:=by
+    have h:=LocatorLowQuotient.quotient_box_of_full_divisor (K:=K) (I:=I)
+      32828513 131071 6415 56 181 0 6413 0
+      IRSProfile.domain u0 u1 F hF hdivK (Nat.zero_le _) ht (Nat.zero_le _)
+    intro v
+    simpa only [Nat.sub_zero,show 6415 - 6413=2 by decide] using h v
+  have hobs:=common_divisor_dimension_obstruction (K:=K) (I:=I)
+    32828513 131071 6415 56 181 32828513 2 56
+    IRSProfile.domain u0 u1 F hF hdivK hq
+  rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]] at hobs
+  exact (not_lt_of_ge hobs) LocatorArithmetic.kernelTCap_total_quotient_lt
+end
+end LocatorCaps
+end ProximityPrize.SubmissionLower
+end PackedLocator_LocatorCaps
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier63 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSelectedCaps. -/
+section PackedLocator_LocatorSelectedCaps
+namespace ProximityPrize.SubmissionLower.LocatorSelection.SelectedPair
+open RCN100 RCN180 RCN234 RCN156
+noncomputable section
+local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
+theorem common_total_le {u0 u1:I → K} (S:SelectedPair u0 u1) :
+    wt residualTotalWeights (gcd S.QA S.QB) ≤ 6412:=
+  LocatorCaps.common_TCap_total_le u0 u1 _
+    (gcd_ne_zero_of_left S.QA_ne) S.common_divides_TCap
+theorem common_ys_le {u0 u1:I → K} (S:SelectedPair u0 u1) :
+    wt residualYSWeights (gcd S.QA S.QB) ≤ 153:=
+  LocatorCaps.common_B_ys_le u0 u1 _
+    (gcd_ne_zero_of_left S.QA_ne) S.common_divides_B
+theorem common_slope_le {u0 u1:I → K} (S:SelectedPair u0 u1) :
+    wt residualSWeights (gcd S.QA S.QB) ≤ 33:=
+  LocatorCaps.common_B_slope_le u0 u1 _
+    (gcd_ne_zero_of_left S.QA_ne) S.common_divides_B
+end
+end ProximityPrize.SubmissionLower.LocatorSelection.SelectedPair
+end PackedLocator_LocatorSelectedCaps
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier64 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorCover. -/
+section PackedLocator_LocatorCover
+namespace ProximityPrize.SubmissionLower.LocatorCover
+open RCN259
+noncomputable section
+variable {R S I:Type*} [CommRing R] [GCDMonoid R]
+ [CommRing S] [IsDomain S]
+local instance:DecidableEq S:=Classical.decEq S
+local instance:DecidableEq I:=Classical.decEq I
+theorem quotient_vanish (phi:R →+* S) (a b:R)
+    (ha:phi a = 0) (hb:phi b = 0) (hg:phi (gcd12 a b) ≠ 0) :
+    phi (quotientA a b) = 0 ∧ phi (quotientB a b) = 0:=by
+  rw [a_eq_gcd12_mul_quotientA a b, map_mul] at ha
+  rw [b_eq_gcd12_mul_quotientB a b, map_mul] at hb
+  exact ⟨(mul_eq_zero.mp ha).resolve_left hg, (mul_eq_zero.mp hb).resolve_left hg⟩
+def fixed (phi:I → R →+* S) (seeds:Finset I) (a b:R):Finset I:=by
+  classical
+  exact seeds.filter (fun i => phi i (gcd12 a b) = 0)
+def residual (phi:I → R →+* S) (seeds:Finset I) (a b:R):Finset I:=by
+  classical
+  exact seeds.filter (fun i => phi i (gcd12 a b) ≠ 0)
+theorem partition_card (phi:I → R →+* S) (seeds:Finset I) (a b:R) :
+    (fixed phi seeds a b).card + (residual phi seeds a b).card = seeds.card:=by
+  classical
+  simpa only [fixed, residual] using
+    Finset.card_filter_add_card_filter_not (s:=seeds)
+      (fun i => phi i (gcd12 a b) = 0)
+theorem fixed_vanish (phi:I → R →+* S) (seeds:Finset I) (a b:R)
+    (i:I) (hi:i ∈ fixed phi seeds a b):phi i (gcd12 a b) = 0:=by
+  classical
+  have hm:i ∈ seeds ∧ phi i (gcd12 a b) = 0:=by
+    simpa only [fixed, Finset.mem_filter] using hi
+  exact hm.2
+theorem residual_vanish (phi:I → R →+* S) (seeds:Finset I) (a b:R)
+    (ha:∀ i ∈ seeds, phi i a = 0) (hb:∀ i ∈ seeds, phi i b = 0)
+    (i:I) (hi:i ∈ residual phi seeds a b) :
+    phi i (quotientA a b) = 0 ∧ phi i (quotientB a b) = 0:=by
+  classical
+  have hm:i ∈ seeds ∧ phi i (gcd12 a b) ≠ 0:=by
+    simpa only [residual, Finset.mem_filter] using hi
+  exact quotient_vanish (phi i) a b (ha i hm.1) (hb i hm.1) hm.2
+end
+end ProximityPrize.SubmissionLower.LocatorCover
+end PackedLocator_LocatorCover
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier65 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorFixedBridge. -/
+section PackedLocator_LocatorFixedBridge
+
+/-!
+# Initial A-source bridge for the wide selected gcd
+
+The selected TCap/B pair only puts its gcd in the wide box
+`(total,ys,slope)=(6412,153,33)`.  Split its regular factors on the independent
+A kernel.  Nonuniversal factors get the direct `pairCost(F,A)` bound;
+universal factors inherit A's narrow `(ys,slope)=(132,29)` caps.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorFixedBridge
+
+open ProximityPrize.Benchmark
+open scoped Classical BigOperators
+open RCN081 RCN095 RCN100 RCN101 RCN130 RCN140 RCN156 RCN180 RCN234
+  RCN238 RCN243 RCN259 RCN260 RCN266 RCN275 RCN319
+open LocatorSelection LocatorFactorAggregate LocatorBatchProductRoute
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+local instance:DecidableEq K:=Classical.decEq _
+local instance:DecidableEq I:=Classical.decEq _
+local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
+
+/-- Exact direct helper charge for one factor exiting at the A source. -/
+def initialAHelperCap (p:FlagDegree):ℕ:=
+  (LocatorGenericHelperFactorSwitch.helperPair
+    130000 132 29 (middle p) p.all (total p)).regularCountCap
+
+/-- Linear reconstruction of the independent A source. -/
+def initialAMap (u0 u1:I → K):LocatorCaps.AKernel u0 u1 →ₗ[K] P4:=
+  kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
+    IRSProfile.domain u0 u1
+
+/-- Factors universal on the current A source. -/
+def initialAUniversalFactors (u0 u1:I → K) (H:P4):
+    Finset (RegularIndex H):=
+  universalFactors H (Finset.univ:Finset (RegularIndex H))
+    (initialAMap u0 u1)
+
+@[simp] theorem mem_initialAUniversalFactors
+    (u0 u1:I → K) (H:P4) (F:RegularIndex H):
+    F ∈ initialAUniversalFactors u0 u1 H ↔
+      ∀ v:LocatorCaps.AKernel u0 u1,
+        F.1 ∣ reconstruct K 17411808 131071 130000 29 v.1:=by
+  simp only [initialAUniversalFactors,mem_universalFactors,Finset.mem_univ,
+    true_and,initialAMap,kernelReconstructLinear_apply]
+
+/-- The universal A factors divide every A row jointly. -/
+theorem initialAUniversalProduct_dvd
+    (u0 u1:I → K) (H:P4):
+    ∀ v:LocatorCaps.AKernel u0 u1,
+      regularProduct H (initialAUniversalFactors u0 u1 H) ∣
+        reconstruct K 17411808 131071 130000 29 v.1:=by
+  intro v
+  have h:=universalProduct_dvd H
+    (Finset.univ:Finset (RegularIndex H)) (initialAMap u0 u1) v
+  simpa only [initialAUniversalFactors,initialAMap,
+    kernelReconstructLinear_apply] using h
+
+/-- The same universal product divides the selected carrier. -/
+theorem initialAUniversalProduct_dvd_carrier
+    (u0 u1:I → K) (H:P4):
+    regularProduct H (initialAUniversalFactors u0 u1 H) ∣ H:=
+  regularProduct_dvd_carrier H (initialAUniversalFactors u0 u1 H)
+
+private theorem degreeY_le_ysWeight (Q:P4):
+    Q.degreeOf (1:Fin 4) ≤ wt residualYSWeights Q:=by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h:=MvPolynomial.le_weightedTotalDegree residualYSWeights hd
+  rw [weight_fin4] at h
+  change d 0*0+d 1*1+d 2*1+d 3*0 ≤ wt residualYSWeights Q at h
+  omega
+
+private theorem degreeZ_le_totalWeight (Q:P4):
+    Q.degreeOf (3:Fin 4) ≤ wt residualTotalWeights Q:=by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h:=MvPolynomial.le_weightedTotalDegree residualTotalWeights hd
+  rw [weight_fin4] at h
+  change d 0*0+d 1*1+d 2*1+d 3*1 ≤ wt residualTotalWeights Q at h
+  omega
+
+private theorem initialA_helper_gates (p:FlagDegree)
+    (hr:1 ≤ p.all) (hs:p.all ≤ 33)
+    (hy:middle p ≤ 153) (ht:total p ≤ 6412):
+    LocatorGenericHelperFactorSwitch.HelperPairGates
+      130000 132 29 (middle p) p.all (total p):=by
+  unfold LocatorGenericHelperFactorSwitch.HelperPairGates
+  change 1 ≤ p.all ∧ middle p < 2130706433 ∧ p.all < 2130706433 ∧
+    total p < 2130706433 ∧
+    p.all*130000+total p*29 < 2130706433 ∧
+    middle p*130000+total p*132 < 2130706433 ∧
+    middle p*29+p.all*132 < 2130706433
+  omega
+
+/-- Every factor outside the A-universal set gets the direct coprime A
+helper, with no minimum against its ordinary cost. -/
+theorem initialA_nonuniversal_count
+    (u0 u1:I → K) (H:P4) (hH:H ≠ 0)
+    (hwide:ResidualSupportData LocatorFixedConsumer.wideSupport H)
+    (selected:K → Polynomial K) (Gamma:Finset K)
+    (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
+    (F:RegularIndex H) (hFU:F ∉ initialAUniversalFactors u0 u1 H):
+    (regularSeeds H selected Gamma F).card ≤
+      initialAHelperCap (regularCumulativeFlag H F):=by
+  have hFsupport:=LocatorFixed.factor_support H hH hwide F
+  have hc:=originalCumulativeFlag_cumulative F.1
+  have hs:(regularCumulativeFlag H F).all ≤ 33:=by
+    simpa only [regularCumulativeFlag,hc.1,LocatorFixedConsumer.wideSupport]
+      using hFsupport.s_weight
+  have hy:middle (regularCumulativeFlag H F) ≤ 153:=by
+    simpa only [regularCumulativeFlag,middle,hc.2.1,
+      LocatorFixedConsumer.wideSupport] using hFsupport.ys_weight
+  have ht:total (regularCumulativeFlag H F) ≤ 6412:=by
+    simpa only [regularCumulativeFlag,total,hc.2.2,
+      LocatorFixedConsumer.wideSupport] using hFsupport.total_weight
+  have hr:1 ≤ (regularCumulativeFlag H F).all:=
+    Nat.one_le_iff_ne_zero.mpr
+      (Nat.ne_of_gt (regularCumulativeFlag_positive H F))
+  have hFY:F.1.degreeOf 1 ≤ middle (regularCumulativeFlag H F):=by
+    rw [regularCumulativeFlag,middle,hc.2.1]
+    exact degreeY_le_ysWeight F.1
+  have hFR:F.1.degreeOf 2 ≤ (regularCumulativeFlag H F).all:=by
+    rw [regularCumulativeFlag,originalCumulativeFlag_all]
+  have hFZ:F.1.degreeOf 3 ≤ total (regularCumulativeFlag H F):=by
+    rw [regularCumulativeFlag,total,hc.2.2]
+    exact degreeZ_le_totalWeight F.1
+  rcases LocatorGenericHelperFactorSwitch.divisor_or_helper_count
+      17411808 130000 29 96 132 (by decide) (by decide) (by decide)
+      selected Gamma hdegree hagreement hno F
+      (middle (regularCumulativeFlag H F)) (regularCumulativeFlag H F).all
+      (total (regularCumulativeFlag H F)) hFY hFR hFZ
+      (initialA_helper_gates (regularCumulativeFlag H F) hr hs hy ht) with
+    hdiv | hcount
+  · exact False.elim (hFU ((mem_initialAUniversalFactors u0 u1 H F).2 hdiv))
+  · simpa only [initialAHelperCap] using hcount
+
+/-- An A-universal factor has a narrow own-bound even though the whole
+selected gcd is wide. -/
+theorem initialA_universal_ownBound
+    (u0 u1:I → K) (H:P4) (hH:H ≠ 0)
+    (hTotal:wt residualTotalWeights H ≤ 6412)
+    (selected:K → Polynomial K) (Gamma:Finset K)
+    (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
+    (F:RegularIndex H) (hFU:F ∈ initialAUniversalFactors u0 u1 H):
+    LocatorHybridCost.OwnBound (regularSeeds H selected Gamma F).card
+      (regularCumulativeFlag H F):=by
+  have hF:=RCN167.positiveRFactors_spec H F.1 F.2
+  have hdivA:∀ v:LocatorCaps.AKernel u0 u1,
+      F.1 ∣ reconstruct K 17411808 131071 130000 29 v.1:=
+    (mem_initialAUniversalFactors u0 u1 H F).1 hFU
+  have hAflag:=LocatorCaps.full_A_divisor_mem_box u0 u1 F.1
+    hF.1.ne_zero hdivA
+  have hAcaps:=(mem_flagGlobalCoefficientBox_iff F.1
+    17411808 131071 130000 29 (by decide)).mp hAflag
+  have hFt:wt residualTotalWeights F.1 ≤ 6412:=
+    (weightedTotalDegree_le_of_dvd residualTotalWeights F.1 H hF.2.1 hH).trans
+      hTotal
+  have hFy:wt residualYSWeights F.1 ≤ 132:=
+    LocatorCaps.common_A_ys_le u0 u1 F.1 hF.1.ne_zero hdivA
+  have hFs:wt residualSWeights F.1 ≤ 29:=
+    LocatorCaps.common_A_slope_le u0 u1 F.1 hF.1.ne_zero hdivA
+  have hFflag:F.1 ∈ globalCoefficientBox K 17411808 131071 6412 29:=
+    (mem_flagGlobalCoefficientBox_iff F.1
+      17411808 131071 6412 29 (by decide)).mpr ⟨hFt,hFs,hAcaps.2.2⟩
+  have hFbox:=flag_box_to_ordinary K 17411808 131071 6412 29 F.1 hFflag
+  have hFsupport:ResidualSupportData LocatorFixedConsumer.wholeSupport F.1:=
+    ⟨hFs,hFy,hFt⟩
+  let Fself:=LocatorCoprimeQuotient.regularIndexSelf H F
+  have hown:=LocatorFixedOwnBoundC2.regular_factor_own_bound 17411808
+    LocatorFixedConsumer.wholeSupport (by decide) (by decide)
+    (by decide) (by decide) (by decide)
+    F.1 hF.1.ne_zero hFbox hFsupport selected Gamma u0 u1
+    hdegree hagreement hno Fself LocatorHybridRealizeC2.realizationC2
+  simpa only [RCN140.regularSeeds,regularCumulativeFlag,Fself,
+    LocatorCoprimeQuotient.regularIndexSelf_val] using hown
+
+/-! ## Wide selected-gcd bridge with a replaceable numerical receipt -/
+
+/-- Algebraic bridge to the phase-potential certificate.  `hphase` bounds
+the A-universal child; `hledger` combines it with the exact direct-A charges
+of all factors that exit at this first split. -/
+theorem gcd_fixed_count_le_of_initial_phase
+    (u0 u1:I → K) (S:SelectedPair u0 u1)
+    (selected:K → Polynomial K) (Gamma:Finset K)
+    (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
+    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
+    (phaseCap:ℕ)
+    (hphase:
+      let H:P4:=gcd12 S.QA S.QB
+      let phi:K → P4 →+* Polynomial K:=
+        fun gamma=>(specialization K (selected gamma) gamma).toRingHom
+      let Delta:=LocatorCover.fixed phi Gamma S.QA S.QB
+      let U:=initialAUniversalFactors u0 u1 H
+      (∑ F ∈ U,(regularSeeds H selected Delta F).card) ≤ phaseCap)
+    (hledger:
+      let H:P4:=gcd12 S.QA S.QB
+      let U:=initialAUniversalFactors u0 u1 H
+      phaseCap+(∑ F ∈ (Finset.univ:Finset (RegularIndex H)) \ U,
+        initialAHelperCap (regularCumulativeFlag H F)) ≤
+          LocatorFixedConsumer.initialRegularCap):
+    (LocatorCover.fixed
+      (fun gamma=>(specialization K (selected gamma) gamma).toRingHom)
+      Gamma S.QA S.QB).card ≤
+      LocatorFixedConsumer.initialRegularCap+
+        LocatorArithmetic.fixedChainCap:=by
+  classical
+  let H:P4:=gcd12 S.QA S.QB
+  let phi:K → P4 →+* Polynomial K:=
+    fun gamma=>(specialization K (selected gamma) gamma).toRingHom
+  let Delta:Finset K:=LocatorCover.fixed phi Gamma S.QA S.QB
+  let U:=initialAUniversalFactors u0 u1 H
+  have hH:H ≠ 0:=gcd_ne_zero_of_left S.QA_ne
+  have hBflag:H ∈ globalCoefficientBox K 20132403 131071 12960 33:=
+    LocatorCaps.full_B_divisor_mem_box u0 u1 H hH S.common_divides_B
+  have hBcaps:=(mem_flagGlobalCoefficientBox_iff H
+    20132403 131071 12960 33 (by decide)).mp hBflag
+  have hT:wt residualTotalWeights H ≤ 6412:=S.common_total_le
+  have hYS:wt residualYSWeights H ≤ 153:=S.common_ys_le
+  have hS:wt residualSWeights H ≤ 33:=S.common_slope_le
+  have hflag:H ∈ globalCoefficientBox K 20132403 131071 6412 33:=
+    (mem_flagGlobalCoefficientBox_iff H
+      20132403 131071 6412 33 (by decide)).mpr ⟨hT,hS,hBcaps.2.2⟩
+  have hbox:=flag_box_to_ordinary K 20132403 131071 6412 33 H hflag
+  have hwide:ResidualSupportData LocatorFixedConsumer.wideSupport H:=
+    ⟨hS,hYS,hT⟩
+  have hsub:Delta ⊆ Gamma:=by
+    intro gamma hg
+    have hm:gamma ∈ Gamma ∧ (phi gamma) (gcd12 S.QA S.QB)=0:=by
+      simpa only [Delta,LocatorCover.fixed,Finset.mem_filter] using hg
+    exact hm.1
+  have hsolution:∀ gamma ∈ Delta,
+      specialization K (selected gamma) gamma H=0:=by
+    intro gamma hg
+    exact LocatorCover.fixed_vanish phi Gamma S.QA S.QB gamma hg
+  have hdegreeD:∀ gamma ∈ Delta,(selected gamma).natDegree ≤ 131071:=
+    fun gamma hg=>hdegree gamma (hsub hg)
+  have hagreementD:∀ gamma ∈ Delta,181373 ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card:=
+    fun gamma hg=>hagreement gamma (hsub hg)
+  have hnoD:NoLargeSelectedPencil selected Delta 131071 80771:=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80771 hsub hno
+  have hN:∀ F ∈ (Finset.univ:Finset (RegularIndex H)) \ U,
+      (regularSeeds H selected Delta F).card ≤
+        initialAHelperCap (regularCumulativeFlag H F):=by
+    intro F hFN
+    apply initialA_nonuniversal_count u0 u1 H hH hwide selected Delta
+      hdegreeD hagreementD hnoD F
+    exact (Finset.mem_sdiff.mp hFN).2
+  have hreg:(∑ F:RegularIndex H,
+      (regularSeeds H selected Delta F).card) ≤
+        LocatorFixedConsumer.initialRegularCap:=by
+    apply LocatorFixedConsumer.initial_A_regularSeeds_sum_le H selected Delta
+      U phaseCap (fun F => initialAHelperCap (regularCumulativeFlag H F))
+    · simpa only [H,phi,Delta,U] using hphase
+    · exact hN
+    · simpa only [H,U] using hledger
+  exact LocatorFixedConsumer.wide_fixed_count_le H hH hbox selected Delta u0 u1
+    hsolution hdegreeD hagreementD hnoD hreg
+
+end
+end ProximityPrize.SubmissionLower.LocatorFixedBridge
+end PackedLocator_LocatorFixedBridge
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier66 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800Bridge. -/
+section PackedLocator_LocatorPhase6800Bridge
+
+/-!
+# Correlated initial-A bridge for the 6800 phase certificate
+
+This file turns a state-local narrow phase bound into the exact two-piece
+ledger required by `LocatorFixedBridge`.  The aggregate flag of the
+A-universal factors is retained in both terms; no independent maxima are
+taken.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorPhase6800Bridge
+
+open ProximityPrize.Benchmark
+open scoped Classical BigOperators
+open RCN081 RCN095 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
+  RCN238 RCN259 RCN260 RCN266 RCN319
+open LocatorSelection LocatorFactorAggregate LocatorBatchProductRoute
+  LocatorBatchPhase6800 LocatorPhase6800Oracle LocatorFixedBridge
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+abbrev P4 := MvPolynomial (Fin 4) K
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : GCDMonoid P4 :=
+  UniqueFactorizationMonoid.toGCDMonoid P4
+
+private theorem whole_regular_total_le
+    (H : P4) (hH : H ≠ 0) (T : ℕ)
+    (hT : wt residualTotalWeights H ≤ T) :
+    total (regularAggregateFlag H
+      (Finset.univ : Finset (RegularIndex H))) ≤ T := by
+  rw [regularAggregateFlag_total]
+  exact (weightedTotalDegree_le_of_dvd residualTotalWeights
+    (regularProduct H (Finset.univ : Finset (RegularIndex H))) H
+    (regularProduct_dvd_carrier H Finset.univ) hH).trans hT
+
+private theorem whole_regular_middle_le
+    (H : P4) (hH : H ≠ 0) (YS : ℕ)
+    (hYS : wt residualYSWeights H ≤ YS) :
+    middle (regularAggregateFlag H
+      (Finset.univ : Finset (RegularIndex H))) ≤ YS := by
+  rw [regularAggregateFlag_middle]
+  exact (weightedTotalDegree_le_of_dvd residualYSWeights
+    (regularProduct H (Finset.univ : Finset (RegularIndex H))) H
+    (regularProduct_dvd_carrier H Finset.univ) hH).trans hYS
+
+private theorem whole_regular_all_le
+    (H : P4) (hH : H ≠ 0) (S : ℕ)
+    (hS : wt residualSWeights H ≤ S) :
+    (regularAggregateFlag H
+      (Finset.univ : Finset (RegularIndex H))).all ≤ S := by
+  rw [regularAggregateFlag_all]
+  exact (weightedTotalDegree_le_of_dvd residualSWeights
+    (regularProduct H (Finset.univ : Finset (RegularIndex H))) H
+    (regularProduct_dvd_carrier H Finset.univ) hH).trans hS
+
+/-- Structural completion of the initial A split.  The numerical proof only
+has to provide a state-local phase cap, the analytic A-helper majorant, and
+the correlated final ledger at the same aggregate flag. -/
+theorem gcd_fixed_count_le_of_stateLocalPhase
+    (u0 u1 : I → K) (S : SelectedPair u0 u1)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (phaseCap : FlagDegree → ℕ)
+    (hphase :
+      let H : P4 := gcd12 S.QA S.QB
+      let phi : K → P4 →+* Polynomial K :=
+        fun gamma ↦ (specialization K (selected gamma) gamma).toRingHom
+      let Delta := LocatorCover.fixed phi Gamma S.QA S.QB
+      let U := initialAUniversalFactors u0 u1 H
+      StateLocalRegularBoundOn H selected Delta U phaseCap)
+    (hAhelper : ∀ p : FlagDegree,
+      1 ≤ p.all → p.all ≤ 33 → middle p ≤ 153 → total p ≤ 6412 →
+      initialAHelperCap p ≤ initialAPotential.eval p)
+    (hjoint : ∀ p : FlagDegree,
+      p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+      phaseCap p + initialAComplement p ≤
+        LocatorFixedConsumer.initialRegularCap) :
+    (LocatorCover.fixed
+      (fun gamma ↦ (specialization K (selected gamma) gamma).toRingHom)
+      Gamma S.QA S.QB).card ≤
+      LocatorFixedConsumer.initialRegularCap +
+        LocatorArithmetic.fixedChainCap := by
+  classical
+  let H : P4 := gcd12 S.QA S.QB
+  let phi : K → P4 →+* Polynomial K :=
+    fun gamma ↦ (specialization K (selected gamma) gamma).toRingHom
+  let Delta : Finset K := LocatorCover.fixed phi Gamma S.QA S.QB
+  let U := initialAUniversalFactors u0 u1 H
+  let A := (Finset.univ : Finset (RegularIndex H))
+  let N := A \ U
+  let p := regularAggregateFlag H U
+  have hH : H ≠ 0 := by
+    simpa only [H, gcd12] using gcd_ne_zero_of_left S.QA_ne
+  have hUsub : U ⊆ A := fun _ _ ↦ Finset.mem_univ _
+  have hPne : regularProduct H U ≠ 0 := regularProduct_ne_zero H U
+  have hdivA : ∀ v : LocatorCaps.AKernel u0 u1,
+      regularProduct H U ∣
+        reconstruct K 17411808 131071 130000 29 v.1 := by
+    simpa only [U] using initialAUniversalProduct_dvd u0 u1 H
+  have hpS : p.all ≤ 29 := by
+    simp only [p, regularAggregateFlag_all]
+    exact LocatorCaps.common_A_slope_le u0 u1 (regularProduct H U)
+      hPne hdivA
+  have hpY : middle p ≤ 132 := by
+    simp only [p, regularAggregateFlag_middle]
+    exact LocatorCaps.common_A_ys_le u0 u1 (regularProduct H U)
+      hPne hdivA
+  have hpT : total p ≤ 6412 := by
+    simp only [p, regularAggregateFlag_total]
+    exact (weightedTotalDegree_le_of_dvd residualTotalWeights
+      (regularProduct H U) H
+      (initialAUniversalProduct_dvd_carrier u0 u1 H) hH).trans
+        S.common_total_le
+  have hwholeT : total (regularAggregateFlag H A) ≤ 6412 := by
+    simpa only [H, A] using
+      whole_regular_total_le H hH 6412 S.common_total_le
+  have hwholeY : middle (regularAggregateFlag H A) ≤ 153 := by
+    simpa only [H, A] using
+      whole_regular_middle_le H hH 153 S.common_ys_le
+  have hwholeS : (regularAggregateFlag H A).all ≤ 33 := by
+    simpa only [H, A] using
+      whole_regular_all_le H hH 33 S.common_slope_le
+  have hsplitT := Finset.sum_sdiff hUsub
+    (f := fun F : RegularIndex H => total (regularCumulativeFlag H F))
+  have hsplitY := Finset.sum_sdiff hUsub
+    (f := fun F : RegularIndex H => middle (regularCumulativeFlag H F))
+  have hsplitS := Finset.sum_sdiff hUsub
+    (f := fun F : RegularIndex H => (regularCumulativeFlag H F).all)
+  have hcomplementT : total p +
+      (∑ F ∈ N, total (regularCumulativeFlag H F)) ≤ 6412 := by
+    have hpEq : total p =
+        ∑ F ∈ U, total (regularCumulativeFlag H F) := by
+      simp only [p, regularAggregateFlag, sumFlag_total]
+    have hwhole : (∑ F ∈ A, total (regularCumulativeFlag H F)) ≤
+        6412 := by
+      simpa only [regularAggregateFlag, sumFlag_total] using hwholeT
+    rw [hpEq]
+    change (∑ F ∈ U, total (regularCumulativeFlag H F)) +
+      (∑ F ∈ A \ U, total (regularCumulativeFlag H F)) ≤ 6412
+    omega
+  have hcomplementY : middle p +
+      (∑ F ∈ N, middle (regularCumulativeFlag H F)) ≤ 153 := by
+    have hpEq : middle p =
+        ∑ F ∈ U, middle (regularCumulativeFlag H F) := by
+      simp only [p, regularAggregateFlag, sumFlag_middle]
+    have hwhole : (∑ F ∈ A, middle (regularCumulativeFlag H F)) ≤
+        153 := by
+      simpa only [regularAggregateFlag, sumFlag_middle] using hwholeY
+    rw [hpEq]
+    change (∑ F ∈ U, middle (regularCumulativeFlag H F)) +
+      (∑ F ∈ A \ U, middle (regularCumulativeFlag H F)) ≤ 153
+    omega
+  have hcomplementS : p.all +
+      (∑ F ∈ N, (regularCumulativeFlag H F).all) ≤ 33 := by
+    have hpEq : p.all =
+        ∑ F ∈ U, (regularCumulativeFlag H F).all := by
+      simp only [p, regularAggregateFlag, sumFlag_all]
+    have hwhole : (∑ F ∈ A, (regularCumulativeFlag H F).all) ≤ 33 := by
+      simpa only [regularAggregateFlag, sumFlag_all] using hwholeS
+    rw [hpEq]
+    change (∑ F ∈ U, (regularCumulativeFlag H F).all) +
+      (∑ F ∈ A \ U, (regularCumulativeFlag H F).all) ≤ 33
+    omega
+  have hNpotential : ∀ F ∈ N,
+      initialAHelperCap (regularCumulativeFlag H F) ≤
+        initialAPotential.eval (regularCumulativeFlag H F) := by
+    intro F hFN
+    have hFA : F ∈ A := (Finset.mem_sdiff.mp hFN).1
+    have hsingle : ({F} : Finset (RegularIndex H)) ⊆ A :=
+      Finset.singleton_subset_iff.mpr hFA
+    have hmono := regularAggregateFlag_mono H hsingle
+    have hr : 1 ≤ (regularCumulativeFlag H F).all :=
+      Nat.one_le_iff_ne_zero.mpr
+        (Nat.ne_of_gt (regularCumulativeFlag_positive H F))
+    apply hAhelper (regularCumulativeFlag H F) hr
+    · simpa [regularAggregateFlag, sumFlag] using hmono.1.trans hwholeS
+    · simpa [regularAggregateFlag, sumFlag] using hmono.2.1.trans hwholeY
+    · simpa [regularAggregateFlag, sumFlag] using hmono.2.2.trans hwholeT
+  have hhelperSum :
+      (∑ F ∈ N, initialAHelperCap (regularCumulativeFlag H F)) ≤
+        initialAComplement p := by
+    exact initialA_helpers_sum_le_complement N (regularCumulativeFlag H)
+      (fun F ↦ initialAHelperCap (regularCumulativeFlag H F)) p
+      hNpotential hcomplementT hcomplementY hcomplementS
+  have hphaseU :
+      (∑ F ∈ U, (regularSeeds H selected Delta F).card) ≤ phaseCap p := by
+    have hp := hphase U (fun _ hFU ↦ hFU) hpS hpY hpT
+    simpa only [H, phi, Delta, p, U] using hp
+  apply gcd_fixed_count_le_of_initial_phase u0 u1 S selected Gamma
+    hdegree hagreement hno (phaseCap p)
+  · simpa only [H, phi, Delta, U, p] using hphaseU
+  · have hfinal := Nat.add_le_add_left hhelperSum (phaseCap p)
+    exact (hfinal.trans (hjoint p hpS hpY hpT))
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorPhase6800Bridge
+end PackedLocator_LocatorPhase6800Bridge
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier67 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800Composition. -/
+section PackedLocator_LocatorPhase6800Composition
+
+/-!
+# Final composition interface for the 6800 regular-factor certificate
+
+The generated files only need to instantiate `PhasePrefixCertificate`.
+Everything from those state-local tables through the four fresh-source
+algebraic phases and the correlated initial-A split is composed here.
+-/
+
+namespace ProximityPrize.SubmissionLower.LocatorPhase6800Composition
+
+open ProximityPrize.Benchmark
+open scoped Classical BigOperators
+open RCN081 RCN095 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180
+  RCN234 RCN238 RCN243 RCN259 RCN260 RCN266 RCN319
+open LocatorSelection LocatorFactorAggregate LocatorBatchPhase6800
+  LocatorPhase6800Oracle LocatorPhase6800Audit LocatorPhase6800Kernels
+  LocatorPhase6800SourceSound LocatorPhase6800Bridge LocatorFixedBridge
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+abbrev P4 := MvPolynomial (Fin 4) K
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : GCDMonoid P4 :=
+  UniqueFactorizationMonoid.toGCDMonoid P4
+
+def afterR1200 (base pref : FlagDegree → ℕ) : FlagDegree → ℕ :=
+  applyPhase base r1200Potential sourceR1200.Routeable pref
+
+def afterSourceC (base rPref cPref : FlagDegree → ℕ) : FlagDegree → ℕ :=
+  applyPhase (afterR1200 base rPref) sourceCPotential
+    sourceC.Routeable cPref
+
+def afterSplit500 (base rPref cPref fPref : FlagDegree → ℕ) :
+    FlagDegree → ℕ :=
+  applyPhase (afterSourceC base rPref cPref) split500Potential
+    sourceSplit500.Routeable fPref
+
+def afterSplit390 (base rPref cPref fPref sPref : FlagDegree → ℕ) :
+    FlagDegree → ℕ :=
+  applyPhase (afterSplit500 base rPref cPref fPref) split390Potential
+    sourceSplit390.Routeable sPref
+
+/-- Semantic payload produced by the compact generated receipt. -/
+structure PhasePrefixCertificate where
+  baseCap : FlagDegree → ℕ
+  rPrefix : FlagDegree → ℕ
+  cPrefix : FlagDegree → ℕ
+  f500Prefix : FlagDegree → ℕ
+  s390Prefix : FlagDegree → ℕ
+  baseSound : StateLocalBaseOracleSound baseCap
+  rRows : PrefixTableSound baseCap r1200Potential
+    sourceR1200.Routeable rPrefix
+  cRows : PrefixTableSound (afterR1200 baseCap rPrefix) sourceCPotential
+    sourceC.Routeable cPrefix
+  f500Rows : PrefixTableSound (afterSourceC baseCap rPrefix cPrefix)
+    split500Potential sourceSplit500.Routeable f500Prefix
+  s390Rows : PrefixTableSound
+    (afterSplit500 baseCap rPrefix cPrefix f500Prefix)
+    split390Potential sourceSplit390.Routeable s390Prefix
+  joint : ∀ p : FlagDegree,
+    p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+    afterSplit390 baseCap rPrefix cPrefix f500Prefix s390Prefix p +
+      initialAComplement p ≤ LocatorFixedConsumer.initialRegularCap
+
+private theorem defectSound_of_prefix
+    (previous pref : FlagDegree → ℕ) (q : Potential) (s : SourceNumbers)
+    (hrows : PrefixTableSound previous q s.Routeable pref) :
+    PhaseDefectSound previous s q (parentDefect pref) := by
+  intro parent child _hs _hy _ht hstrict hterminal
+  exact terminal_le_parent_charge hrows hstrict.1 hstrict.2 hterminal
+
+private theorem capEquation_applyPhase
+    (previous pref : FlagDegree → ℕ) (q : Potential) (s : SourceNumbers) :
+    PhaseCapEquation previous
+      (applyPhase previous q s.Routeable pref) s q (parentDefect pref) := by
+  intro p _hs _hy _ht
+  rfl
+
+/-- Four checked prefix tables give the state-local phase bound on exactly
+the ambient factors supplied by the initial A split. -/
+theorem PhasePrefixCertificate.stateLocalBoundOn
+    (cert : PhasePrefixCertificate)
+    (u0 u1 : I → K) (H : P4)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (ambient : Finset (RegularIndex H))
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hown : ∀ F ∈ ambient, LocatorHybridCost.OwnBound
+      (regularSeeds H selected Gamma F).card
+      (regularCumulativeFlag H F)) :
+    StateLocalRegularBoundOn H selected Gamma ambient
+      (afterSplit390 cert.baseCap cert.rPrefix cert.cPrefix
+        cert.f500Prefix cert.s390Prefix) := by
+  apply stateLocalRegularBoundOn_fourPhases u0 u1 H selected Gamma ambient
+    hdegree hagreement hno cert.baseCap
+    (afterR1200 cert.baseCap cert.rPrefix)
+    (afterSourceC cert.baseCap cert.rPrefix cert.cPrefix)
+    (afterSplit500 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix)
+    (afterSplit390 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix
+      cert.s390Prefix)
+    (parentDefect cert.rPrefix) (parentDefect cert.cPrefix)
+    (parentDefect cert.f500Prefix) (parentDefect cert.s390Prefix)
+    hown cert.baseSound
+  · exact defectSound_of_prefix cert.baseCap cert.rPrefix r1200Potential
+      sourceR1200 cert.rRows
+  · exact capEquation_applyPhase cert.baseCap cert.rPrefix r1200Potential
+      sourceR1200
+  · exact defectSound_of_prefix
+      (afterR1200 cert.baseCap cert.rPrefix) cert.cPrefix sourceCPotential
+      sourceC cert.cRows
+  · exact capEquation_applyPhase
+      (afterR1200 cert.baseCap cert.rPrefix) cert.cPrefix sourceCPotential
+      sourceC
+  · exact defectSound_of_prefix
+      (afterSourceC cert.baseCap cert.rPrefix cert.cPrefix) cert.f500Prefix
+      split500Potential sourceSplit500 cert.f500Rows
+  · exact capEquation_applyPhase
+      (afterSourceC cert.baseCap cert.rPrefix cert.cPrefix) cert.f500Prefix
+      split500Potential sourceSplit500
+  · exact defectSound_of_prefix
+      (afterSplit500 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix)
+      cert.s390Prefix split390Potential sourceSplit390 cert.s390Rows
+  · exact capEquation_applyPhase
+      (afterSplit500 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix)
+      cert.s390Prefix split390Potential sourceSplit390
+
+/-- End-to-end fixed-part theorem.  Once the generated receipt constructs a
+`PhasePrefixCertificate`, no algebraic or combinatorial premises remain. -/
+theorem gcd_fixed_count_le_of_certificate
+    (cert : PhasePrefixCertificate)
+    (u0 u1 : I → K) (S : SelectedPair u0 u1)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80771) :
+    (LocatorCover.fixed
+      (fun gamma ↦ (specialization K (selected gamma) gamma).toRingHom)
+      Gamma S.QA S.QB).card ≤
+      LocatorFixedConsumer.initialRegularCap +
+        LocatorArithmetic.fixedChainCap := by
+  classical
+  let H : P4 := gcd12 S.QA S.QB
+  let phi : K → P4 →+* Polynomial K :=
+    fun gamma ↦ (specialization K (selected gamma) gamma).toRingHom
+  let Delta : Finset K := LocatorCover.fixed phi Gamma S.QA S.QB
+  let U := initialAUniversalFactors u0 u1 H
+  have hH : H ≠ 0 := by
+    simpa only [H, gcd12] using gcd_ne_zero_of_left S.QA_ne
+  have hsub : Delta ⊆ Gamma := by
+    intro gamma hgamma
+    have hm : gamma ∈ Gamma ∧
+        phi gamma (gcd12 S.QA S.QB) = 0 := by
+      simpa only [Delta, LocatorCover.fixed, Finset.mem_filter] using hgamma
+    exact hm.1
+  have hdegreeD : ∀ gamma ∈ Delta,
+      (selected gamma).natDegree ≤ 131071 :=
+    fun gamma hgamma ↦ hdegree gamma (hsub hgamma)
+  have hagreementD : ∀ gamma ∈ Delta, 181373 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card :=
+    fun gamma hgamma ↦ hagreement gamma (hsub hgamma)
+  have hnoD : NoLargeSelectedPencil selected Delta 131071 80771 :=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80771 hsub hno
+  have hown : ∀ F ∈ U, LocatorHybridCost.OwnBound
+      (regularSeeds H selected Delta F).card
+      (regularCumulativeFlag H F) := by
+    intro F hFU
+    exact initialA_universal_ownBound u0 u1 H hH S.common_total_le
+      selected Delta hdegreeD hagreementD hnoD F hFU
+  have hphase := cert.stateLocalBoundOn u0 u1 H selected Delta U
+    hdegreeD hagreementD hnoD hown
+  apply gcd_fixed_count_le_of_stateLocalPhase u0 u1 S selected Gamma
+    hdegree hagreement hno
+    (afterSplit390 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix
+      cert.s390Prefix)
+  · simpa only [H, phi, Delta, U] using hphase
+  · intro p hr hs hy ht
+    simpa only [initialAHelperCap] using
+      initialAHelperCap_le_potential p hr hs hy ht
+  · exact cert.joint
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorPhase6800Composition
+end PackedLocator_LocatorPhase6800Composition
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier68 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptCellCore. -/
+section PackedLocator_LocatorPhase6800ReceiptCellCore
+
+/-! Lightweight predicates for independently checked receipt cells. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptCellCore
+
+open LocatorPhase6800Oracle
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+
+def defaultThreshold : ThresholdReceipt := ⟨0, 0, 0, 0, 0, 0⟩
+def defaultPrefix : PrefixReceipt := ⟨0, 0, 0, [], 0, 0⟩
+
+/-- It is enough for the stored cutoff to be outside the benchmark row, or
+for the source to be routeable at the cutoff.  Routeability is monotone in
+the raw `z` coordinate, so no false-boundary computation is needed. -/
+def SourceThresholdSufficient
+    (s : SourceNumbers) (r v threshold : ℕ) : Prop :=
+  6412 - (r + v) < threshold ∨ s.Routeable (rawFlag r v threshold)
+
+instance (s : SourceNumbers) (r v threshold : ℕ) :
+    Decidable (SourceThresholdSufficient s r v threshold) := by
+  unfold SourceThresholdSufficient
+  infer_instance
+
+def ThresholdSufficient (q : ThresholdReceipt) : Prop :=
+  1 ≤ q.r ∧ q.r ≤ 29 ∧ q.r + q.v ≤ 132 ∧
+    SourceThresholdSufficient sourceR1200 q.r q.v q.r1200 ∧
+    SourceThresholdSufficient LocatorPhase6800Oracle.sourceC q.r q.v q.sourceC ∧
+    SourceThresholdSufficient sourceSplit500 q.r q.v q.split500 ∧
+    SourceThresholdSufficient sourceSplit390 q.r q.v q.split390
+
+instance (q : ThresholdReceipt) : Decidable (ThresholdSufficient q) := by
+  unfold ThresholdSufficient
+  infer_instance
+
+def ThresholdAtOf (row : ℕ → ThresholdReceipt) (R V : ℕ) : Prop :=
+  let q := row V
+  q.r = R ∧ q.v = V ∧ ThresholdSufficient q
+
+instance (row : ℕ → ThresholdReceipt) (R V : ℕ) :
+    Decidable (ThresholdAtOf row R V) := by
+  unfold ThresholdAtOf
+  infer_instance
+
+def prefixSentinel : ℕ := 1000000000000000000000
+
+def rCoreOf (row : ℕ → PrefixReceipt) (v : ℕ) : ℕ := (row v).r1200
+def f500CoreOf (row : ℕ → PrefixReceipt) (v : ℕ) : ℕ := (row v).split500
+def s390CoreOf (row : ℕ → PrefixReceipt) (v : ℕ) : ℕ := (row v).split390
+
+def cAtOf (row : ℕ → PrefixReceipt) (v bucket : ℕ) : ℕ :=
+  let q := row v
+  if q.sourceC.length = 1 then q.sourceC.head?.getD prefixSentinel
+  else (q.sourceC[bucket]?).getD prefixSentinel
+
+def PrefixCoreAtOf (row nextRow : ℕ → PrefixReceipt) (R V : ℕ) : Prop :=
+  rCoreOf row V ≤ prefixSentinel ∧
+  f500CoreOf row V ≤ prefixSentinel ∧
+  s390CoreOf row V ≤ prefixSentinel ∧
+  (∀ b ∈ List.range 22, cAtOf row V b ≤ prefixSentinel) ∧
+  (R + 1 ≤ 28 ∧ R + 1 + 1 + V ≤ 132 →
+    rCoreOf row V ≤ rCoreOf nextRow V ∧
+    f500CoreOf row V ≤ f500CoreOf nextRow V ∧
+    s390CoreOf row V ≤ s390CoreOf nextRow V ∧
+    ∀ b ∈ List.range 22, cAtOf row V b ≤ cAtOf nextRow V b) ∧
+  (R + 1 + (V + 1) ≤ 132 →
+    rCoreOf row V ≤ rCoreOf row (V + 1) ∧
+    f500CoreOf row V ≤ f500CoreOf row (V + 1) ∧
+    s390CoreOf row V ≤ s390CoreOf row (V + 1) ∧
+    ∀ b ∈ List.range 22, cAtOf row V b ≤ cAtOf row (V + 1) b) ∧
+  (∀ b ∈ List.range 21, cAtOf row V b ≤ cAtOf row V (b + 1))
+
+instance (row nextRow : ℕ → PrefixReceipt) (R V : ℕ) :
+    Decidable (PrefixCoreAtOf row nextRow R V) := by
+  unfold PrefixCoreAtOf
+  infer_instance
+
+end ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptCellCore
+end PackedLocator_LocatorPhase6800ReceiptCellCore
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier69 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData01. -/
+section PackedLocator_LocatorPhase6800ReceiptRowData01
+
+namespace ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData01
+
+open LocatorPhase6800Oracle LocatorPhase6800ReceiptCellCore
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+
+def threshold : ℕ → ThresholdReceipt
+  | 0 => ⟨1, 0, 4286, 4469, 3541, 4358⟩
+  | 1 => ⟨1, 1, 4267, 4450, 3529, 4344⟩
+  | 2 => ⟨1, 2, 4248, 4431, 3516, 4331⟩
+  | 3 => ⟨1, 3, 4228, 4412, 3504, 4317⟩
+  | 4 => ⟨1, 4, 4209, 4393, 3491, 4303⟩
+  | 5 => ⟨1, 5, 4189, 4373, 3478, 4289⟩
+  | 6 => ⟨1, 6, 4169, 4353, 3466, 4275⟩
+  | 7 => ⟨1, 7, 4148, 4332, 3453, 4260⟩
+  | 8 => ⟨1, 8, 4128, 4311, 3441, 4245⟩
+  | 9 => ⟨1, 9, 4107, 4290, 3428, 4230⟩
+  | 10 => ⟨1, 10, 4086, 4269, 3416, 4215⟩
+  | 11 => ⟨1, 11, 4065, 4248, 3403, 4200⟩
+  | 12 => ⟨1, 12, 4044, 4228, 3391, 4185⟩
+  | 13 => ⟨1, 13, 4022, 4207, 3379, 4169⟩
+  | 14 => ⟨1, 14, 4001, 4186, 3367, 4153⟩
+  | 15 => ⟨1, 15, 3978, 4164, 3354, 4137⟩
+  | 16 => ⟨1, 16, 3956, 4142, 3341, 4121⟩
+  | 17 => ⟨1, 17, 3934, 4119, 3328, 4104⟩
+  | 18 => ⟨1, 18, 3911, 4096, 3315, 4087⟩
+  | 19 => ⟨1, 19, 3888, 4073, 3302, 4070⟩
+  | 20 => ⟨1, 20, 3864, 4049, 3288, 4053⟩
+  | 21 => ⟨1, 21, 3841, 4026, 3275, 4036⟩
+  | 22 => ⟨1, 22, 3817, 4003, 3261, 4018⟩
+  | 23 => ⟨1, 23, 3792, 3980, 3247, 4000⟩
+  | 24 => ⟨1, 24, 3768, 3955, 3232, 3982⟩
+  | 25 => ⟨1, 25, 3743, 3931, 3218, 3963⟩
+  | 26 => ⟨1, 26, 3717, 3905, 3203, 3945⟩
+  | 27 => ⟨1, 27, 3691, 3880, 3188, 3926⟩
+  | 28 => ⟨1, 28, 3665, 3853, 3173, 3906⟩
+  | 29 => ⟨1, 29, 3638, 3828, 3158, 3887⟩
+  | 30 => ⟨1, 30, 3611, 3802, 3144, 3867⟩
+  | 31 => ⟨1, 31, 3584, 3775, 3129, 3847⟩
+  | 32 => ⟨1, 32, 3555, 3748, 3115, 3829⟩
+  | 33 => ⟨1, 33, 3527, 3719, 3100, 3812⟩
+  | 34 => ⟨1, 34, 3498, 3691, 3085, 3795⟩
+  | 35 => ⟨1, 35, 3468, 3661, 3070, 3780⟩
+  | 36 => ⟨1, 36, 3437, 3633, 3054, 3764⟩
+  | 37 => ⟨1, 37, 3406, 3603, 3038, 3748⟩
+  | 38 => ⟨1, 38, 3374, 3572, 3022, 3731⟩
+  | 39 => ⟨1, 39, 3341, 3540, 3005, 3714⟩
+  | 40 => ⟨1, 40, 3308, 3508, 2989, 3697⟩
+  | 41 => ⟨1, 41, 3273, 3475, 2971, 3679⟩
+  | 42 => ⟨1, 42, 3237, 3442, 2954, 3661⟩
+  | 43 => ⟨1, 43, 3201, 3407, 2936, 3643⟩
+  | 44 => ⟨1, 44, 3163, 3371, 2919, 3624⟩
+  | 45 => ⟨1, 45, 3123, 3334, 2901, 3605⟩
+  | 46 => ⟨1, 46, 3082, 3296, 2884, 3585⟩
+  | 47 => ⟨1, 47, 3040, 3257, 2866, 3565⟩
+  | 48 => ⟨1, 48, 2995, 3216, 2848, 3544⟩
+  | 49 => ⟨1, 49, 2948, 3173, 2830, 3523⟩
+  | 50 => ⟨1, 50, 2898, 3129, 2811, 3501⟩
+  | 51 => ⟨1, 51, 2846, 3082, 2791, 3479⟩
+  | 52 => ⟨1, 52, 2790, 3033, 2771, 3456⟩
+  | 53 => ⟨1, 53, 2730, 2981, 2750, 3433⟩
+  | 54 => ⟨1, 54, 2666, 2926, 2729, 3409⟩
+  | 55 => ⟨1, 55, 2599, 2868, 2708, 3385⟩
+  | 56 => ⟨1, 56, 2527, 2805, 2688, 3359⟩
+  | 57 => ⟨1, 57, 2451, 2739, 2666, 3334⟩
+  | 58 => ⟨1, 58, 2371, 2669, 2644, 3307⟩
+  | 59 => ⟨1, 59, 2287, 2595, 2621, 3280⟩
+  | 60 => ⟨1, 60, 2199, 2517, 2598, 3252⟩
+  | 61 => ⟨1, 61, 2106, 2436, 2573, 3223⟩
+  | 62 => ⟨1, 62, 2010, 2350, 2548, 3193⟩
+  | 63 => ⟨1, 63, 1910, 2260, 2523, 3164⟩
+  | 64 => ⟨1, 64, 1805, 2167, 2497, 3136⟩
+  | 65 => ⟨1, 65, 1696, 2069, 2470, 3108⟩
+  | 66 => ⟨1, 66, 1584, 1968, 2441, 3078⟩
+  | 67 => ⟨1, 67, 1467, 1863, 2412, 3047⟩
+  | 68 => ⟨1, 68, 1346, 1753, 2381, 3014⟩
+  | 69 => ⟨1, 69, 1221, 1640, 2349, 2980⟩
+  | 70 => ⟨1, 70, 1092, 1523, 2316, 2944⟩
+  | 71 => ⟨1, 71, 959, 1402, 2281, 2906⟩
+  | 72 => ⟨1, 72, 822, 1277, 2244, 2867⟩
+  | 73 => ⟨1, 73, 681, 1148, 2206, 2826⟩
+  | 74 => ⟨1, 74, 536, 1016, 2165, 2783⟩
+  | 75 => ⟨1, 75, 386, 879, 2123, 2738⟩
+  | 76 => ⟨1, 76, 233, 738, 2079, 2691⟩
+  | 77 => ⟨1, 77, 75, 594, 2033, 2642⟩
+  | 78 => ⟨1, 78, 0, 445, 1986, 2590⟩
+  | 79 => ⟨1, 79, 0, 293, 1936, 2537⟩
+  | 80 => ⟨1, 80, 0, 137, 1885, 2481⟩
+  | 81 => ⟨1, 81, 0, 0, 1831, 2423⟩
+  | 82 => ⟨1, 82, 0, 0, 1776, 2362⟩
+  | 83 => ⟨1, 83, 0, 0, 1719, 2299⟩
+  | 84 => ⟨1, 84, 0, 0, 1660, 2234⟩
+  | 85 => ⟨1, 85, 0, 0, 1599, 2166⟩
+  | 86 => ⟨1, 86, 0, 0, 1537, 2096⟩
+  | 87 => ⟨1, 87, 0, 0, 1473, 2025⟩
+  | 88 => ⟨1, 88, 0, 0, 1406, 1952⟩
+  | 89 => ⟨1, 89, 0, 0, 1338, 1877⟩
+  | 90 => ⟨1, 90, 0, 0, 1268, 1801⟩
+  | 91 => ⟨1, 91, 0, 0, 1196, 1722⟩
+  | 92 => ⟨1, 92, 0, 0, 1123, 1641⟩
+  | 93 => ⟨1, 93, 0, 0, 1047, 1558⟩
+  | 94 => ⟨1, 94, 0, 0, 970, 1472⟩
+  | 95 => ⟨1, 95, 0, 0, 891, 1383⟩
+  | 96 => ⟨1, 96, 0, 0, 809, 1292⟩
+  | 97 => ⟨1, 97, 0, 0, 726, 1199⟩
+  | 98 => ⟨1, 98, 0, 0, 641, 1103⟩
+  | 99 => ⟨1, 99, 0, 0, 555, 1004⟩
+  | 100 => ⟨1, 100, 0, 0, 466, 903⟩
+  | 101 => ⟨1, 101, 0, 0, 376, 800⟩
+  | 102 => ⟨1, 102, 0, 0, 283, 694⟩
+  | 103 => ⟨1, 103, 0, 0, 189, 586⟩
+  | 104 => ⟨1, 104, 0, 0, 93, 475⟩
+  | 105 => ⟨1, 105, 0, 0, 0, 362⟩
+  | 106 => ⟨1, 106, 0, 0, 0, 248⟩
+  | 107 => ⟨1, 107, 0, 0, 0, 134⟩
+  | 108 => ⟨1, 108, 0, 0, 0, 18⟩
+  | 109 => ⟨1, 109, 0, 0, 0, 0⟩
+  | 110 => ⟨1, 110, 0, 0, 0, 0⟩
+  | 111 => ⟨1, 111, 0, 0, 0, 0⟩
+  | 112 => ⟨1, 112, 0, 0, 0, 0⟩
+  | 113 => ⟨1, 113, 0, 0, 0, 0⟩
+  | 114 => ⟨1, 114, 0, 0, 0, 0⟩
+  | 115 => ⟨1, 115, 0, 0, 0, 0⟩
+  | 116 => ⟨1, 116, 0, 0, 0, 0⟩
+  | 117 => ⟨1, 117, 0, 0, 0, 0⟩
+  | 118 => ⟨1, 118, 0, 0, 0, 0⟩
+  | 119 => ⟨1, 119, 0, 0, 0, 0⟩
+  | 120 => ⟨1, 120, 0, 0, 0, 0⟩
+  | 121 => ⟨1, 121, 0, 0, 0, 0⟩
+  | 122 => ⟨1, 122, 0, 0, 0, 0⟩
+  | 123 => ⟨1, 123, 0, 0, 0, 0⟩
+  | 124 => ⟨1, 124, 0, 0, 0, 0⟩
+  | 125 => ⟨1, 125, 0, 0, 0, 0⟩
+  | 126 => ⟨1, 126, 0, 0, 0, 0⟩
+  | 127 => ⟨1, 127, 0, 0, 0, 0⟩
+  | 128 => ⟨1, 128, 0, 0, 0, 0⟩
+  | 129 => ⟨1, 129, 0, 0, 0, 0⟩
+  | 130 => ⟨1, 130, 0, 0, 0, 0⟩
+  | 131 => ⟨1, 131, 0, 0, 0, 0⟩
+  | _ => defaultThreshold
+
+def prefixData : ℕ → PrefixReceipt
+  | 0 => ⟨1, 0, 0, [0], 0, 1693793489039520⟩
+  | 1 => ⟨1, 1, 0, [0], 1301590482481, 2253861101386049⟩
+  | 2 => ⟨1, 2, 0, [0], 466231411308474, 2323611286626862⟩
+  | 3 => ⟨1, 3, 0, [1100646343569847], 1891144175457159, 3757639138714782⟩
+  | 4 => ⟨1, 4, 0, [2864355736675692], 3305578250431760, 5180691247322237⟩
+  | 5 => ⟨1, 5, 0, [4611654923536517], 4709704325252761, 6593435355776092⟩
+  | 6 => ⟨1, 6, 0, [6342873630157726], 6105342368965222, 7998188487427788⟩
+  | 7 => ⟨1, 7, 0, [8056032850509339], 7489264763485167, 9390728915580587⟩
+  | 8 => ⟨1, 8, 0, [9752286950609048], 8865523766908860, 10776103006943515⟩
+  | 9 => ⟨1, 9, 0, [11431635930456853], 10229242481127749, 12148439754795258⟩
+  | 10 => ⟨1, 10, 0, [13094079790052754], 11586122444262674, 13514434805869418⟩
+  | 11 => ⟨1, 11, 0, [14739618529396751], 12929637478180507, 14866567873420105⟩
+  | 12 => ⟨1, 12, 0, [16372292754549544], 14267138401026664, 16213183884205497⟩
+  | 13 => ⟨1, 13, 0, [17984433573395877], 15595155963731509, 17550316534849577⟩
+  | 14 => ⟨1, 14, 0, [19579669271990306], 16913690166295042, 18877965825352345⟩
+  | 15 => ⟨1, 15, 0, [21152722284253699], 18217210159616907, 20190103852307064⟩
+  | 16 => ⟨1, 16, 0, [22708045536252900], 19510422152785172, 21491933879108183⟩
+  | 17 => ⟨1, 17, 0, [24239536821896489], 20793326145799837, 22783455905755702⟩
+  | 18 => ⟨1, 18, 0, [25752473707263598], 22065922138660902, 24064669932249621⟩
+  | 19 => ⟨1, 19, 0, [27246856192354227], 23328210131368367, 25335575958589940⟩
+  | 20 => ⟨1, 20, 0, [28715345111058524], 24572597674791156, 26588084481339202⟩
+  | 21 => ⟨1, 21, 0, [30172206475590049], 25813857347185277, 27837962187366177⟩
+  | 22 => ⟨1, 22, 0, [31610513439845094], 27036391930282434, 29068617749789807⟩
+  | 23 => ⟨1, 23, 0, [33030266003823659], 28247793873213703, 30288140672047549⟩
+  | 24 => ⟨1, 24, 0, [34413487275256888], 29438821446823432, 31486792170677370⟩
+  | 25 => ⟨1, 25, 0, [35785905632529633], 30627545789416781, 32683637492597192⟩
+  | 26 => ⟨1, 26, 0, [37119318777220178], 31795071122676302, 33858786750876805⟩
+  | 27 => ⟨1, 27, 0, [38441929007750239], 32950639175757647, 35021978728978242⟩
+  | 28 => ⟨1, 28, 0, [39723060105661236], 34094249948660816, 36173213426901503⟩
+  | 29 => ⟨1, 29, 0, [41004438335576897], 35225903441385809, 37312490844646588⟩
+  | 30 => ⟨1, 30, 0, [42254150519020210], 36357315303125142, 38452023685712394⟩
+  | 31 => ⟨1, 31, 0, [43470959695972743], 37465466555499927, 39567798863107271⟩
+  | 32 => ⟨1, 32, 0, [44665915912599644], 38574200816901340, 40684654103835157⟩
+  | 33 => ⟨1, 33, 0, [45813620516521465], 39658849828925917, 41776927040879826⟩
+  | 34 => ⟨1, 34, 0, [46950934526288946], 40731541560772318, 42857242697746319⟩
+  | 35 => ⟨1, 35, 0, [48038523003314483], 41792276012440543, 43925601074434636⟩
+  | 36 => ⟨1, 36, 0, [49129657172393836], 42826863614701212, 44967315547409016⟩
+  | 37 => ⟨1, 37, 0, [50169416528706669], 43848669296771417, 45996248100192932⟩
+  | 38 => ⟨1, 38, 0, [51170088078436562], 44857693058651158, 47012398732786384⟩
+  | 39 => ⟨1, 39, 0, [52130434861565083], 45838508371092623, 47999843861635179⟩
+  | 40 => ⟨1, 40, 0, [53064805484306532], 46821555972585292, 48990018333841559⟩
+  | 41 => ⟨1, 41, 0, [53957202060422033], 47759319315367297, 49933914438724513⟩
+  | 42 => ⟨1, 42, 0, [54822797836138174], 48699314947200506, 50880539886965052⟩
+  | 43 => ⟨1, 43, 0, [55627947758952627], 49608628209558575, 51795985911424070⟩
+  | 44 => ⟨1, 44, 0, [56387412755085836], 50520998400980136, 52714985919252961⟩
+  | 45 => ⟨1, 45, 0, [57099955864519369], 51401861582914269, 53601981863288043⟩
+  | 46 => ⟨1, 46, 0, [57764340127234794], 52286606333924182, 54493356430705286⟩
+  | 47 => ⟨1, 47, 0, [58379328583213679], 53139019435434379, 55351902294316432⟩
+  | 48 => ⟨1, 48, 0, [58924800146155708], 53977001336729536, 56196016957712538⟩
+  | 49 => ⟨1, 49, 0, [59398280896024017], 54800552037809653, 57025700420893604⟩
+  | 50 => ⟨1, 50, 0, [59817005679075914], 55589709489359334, 57820493580237853⟩
+  | 51 => ⟨1, 51, 0, [60139495362692335], 56343236731360147, 58579159475726853⟩
+  | 52 => ⟨1, 52, 0, [60382572473124444], 57080683493121344, 59321744890976237⟩
+  | 53 => ⟨1, 53, 0, [60522817364022773], 57780850765309097, 60026553762345796⟩
+  | 54 => ⟨1, 54, 0, [60556519155332026], 58464112917244946, 60714457513463451⟩
+  | 55 => ⟨1, 55, 0, [60556519155332026], 59130469948928891, 61385456144329202⟩
+  | 56 => ⟨1, 56, 0, [60556519155332026], 59802357829713192, 62062482678601690⟩
+  | 57 => ⟨1, 57, 0, [60556519155332026], 60412468651541069, 62676738045304992⟩
+  | 58 => ⟨1, 58, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 59 => ⟨1, 59, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 60 => ⟨1, 60, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 61 => ⟨1, 61, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 62 => ⟨1, 62, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 63 => ⟨1, 63, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 64 => ⟨1, 64, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 65 => ⟨1, 65, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 66 => ⟨1, 66, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 67 => ⟨1, 67, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 68 => ⟨1, 68, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 69 => ⟨1, 69, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 70 => ⟨1, 70, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 71 => ⟨1, 71, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 72 => ⟨1, 72, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 73 => ⟨1, 73, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 74 => ⟨1, 74, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 75 => ⟨1, 75, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 76 => ⟨1, 76, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 77 => ⟨1, 77, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 78 => ⟨1, 78, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 79 => ⟨1, 79, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 80 => ⟨1, 80, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 81 => ⟨1, 81, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 82 => ⟨1, 82, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 83 => ⟨1, 83, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 84 => ⟨1, 84, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 85 => ⟨1, 85, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 86 => ⟨1, 86, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 87 => ⟨1, 87, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 88 => ⟨1, 88, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 89 => ⟨1, 89, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 90 => ⟨1, 90, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 91 => ⟨1, 91, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 92 => ⟨1, 92, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 93 => ⟨1, 93, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 94 => ⟨1, 94, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 95 => ⟨1, 95, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 96 => ⟨1, 96, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 97 => ⟨1, 97, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 98 => ⟨1, 98, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 99 => ⟨1, 99, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 100 => ⟨1, 100, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 101 => ⟨1, 101, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 102 => ⟨1, 102, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 103 => ⟨1, 103, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 104 => ⟨1, 104, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 105 => ⟨1, 105, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 106 => ⟨1, 106, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 107 => ⟨1, 107, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 108 => ⟨1, 108, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 109 => ⟨1, 109, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 110 => ⟨1, 110, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 111 => ⟨1, 111, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 112 => ⟨1, 112, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 113 => ⟨1, 113, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 114 => ⟨1, 114, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 115 => ⟨1, 115, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 116 => ⟨1, 116, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 117 => ⟨1, 117, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 118 => ⟨1, 118, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 119 => ⟨1, 119, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 120 => ⟨1, 120, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 121 => ⟨1, 121, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 122 => ⟨1, 122, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 123 => ⟨1, 123, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 124 => ⟨1, 124, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 125 => ⟨1, 125, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 126 => ⟨1, 126, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 127 => ⟨1, 127, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 128 => ⟨1, 128, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 129 => ⟨1, 129, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 130 => ⟨1, 130, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | _ => defaultPrefix
+
+end ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData01
+end PackedLocator_LocatorPhase6800ReceiptRowData01
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier70 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData02. -/
+section PackedLocator_LocatorPhase6800ReceiptRowData02
+
+namespace ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData02
+
+open LocatorPhase6800Oracle LocatorPhase6800ReceiptCellCore
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+
+def threshold : ℕ → ThresholdReceipt
+  | 0 => ⟨2, 0, 4200, 4384, 3487, 4298⟩
+  | 1 => ⟨2, 1, 4180, 4364, 3474, 4284⟩
+  | 2 => ⟨2, 2, 4160, 4344, 3462, 4270⟩
+  | 3 => ⟨2, 3, 4141, 4324, 3449, 4255⟩
+  | 4 => ⟨2, 4, 4121, 4304, 3437, 4241⟩
+  | 5 => ⟨2, 5, 4100, 4283, 3425, 4226⟩
+  | 6 => ⟨2, 6, 4080, 4263, 3413, 4211⟩
+  | 7 => ⟨2, 7, 4059, 4243, 3401, 4196⟩
+  | 8 => ⟨2, 8, 4039, 4223, 3389, 4181⟩
+  | 9 => ⟨2, 9, 4018, 4202, 3377, 4165⟩
+  | 10 => ⟨2, 10, 3996, 4181, 3365, 4150⟩
+  | 11 => ⟨2, 11, 3975, 4160, 3352, 4134⟩
+  | 12 => ⟨2, 12, 3953, 4139, 3340, 4118⟩
+  | 13 => ⟨2, 13, 3931, 4117, 3327, 4102⟩
+  | 14 => ⟨2, 14, 3909, 4094, 3314, 4085⟩
+  | 15 => ⟨2, 15, 3887, 4071, 3301, 4068⟩
+  | 16 => ⟨2, 16, 3864, 4049, 3288, 4052⟩
+  | 17 => ⟨2, 17, 3841, 4026, 3274, 4034⟩
+  | 18 => ⟨2, 18, 3818, 4004, 3261, 4017⟩
+  | 19 => ⟨2, 19, 3794, 3981, 3247, 3999⟩
+  | 20 => ⟨2, 20, 3770, 3958, 3233, 3981⟩
+  | 21 => ⟨2, 21, 3746, 3934, 3219, 3963⟩
+  | 22 => ⟨2, 22, 3721, 3909, 3204, 3945⟩
+  | 23 => ⟨2, 23, 3696, 3884, 3189, 3926⟩
+  | 24 => ⟨2, 24, 3671, 3859, 3175, 3907⟩
+  | 25 => ⟨2, 25, 3645, 3834, 3160, 3888⟩
+  | 26 => ⟨2, 26, 3619, 3809, 3146, 3869⟩
+  | 27 => ⟨2, 27, 3593, 3783, 3132, 3850⟩
+  | 28 => ⟨2, 28, 3566, 3757, 3118, 3832⟩
+  | 29 => ⟨2, 29, 3539, 3730, 3103, 3815⟩
+  | 30 => ⟨2, 30, 3511, 3702, 3089, 3799⟩
+  | 31 => ⟨2, 31, 3482, 3674, 3074, 3784⟩
+  | 32 => ⟨2, 32, 3453, 3646, 3059, 3768⟩
+  | 33 => ⟨2, 33, 3424, 3618, 3043, 3752⟩
+  | 34 => ⟨2, 34, 3393, 3589, 3028, 3736⟩
+  | 35 => ⟨2, 35, 3362, 3559, 3012, 3720⟩
+  | 36 => ⟨2, 36, 3331, 3528, 2995, 3703⟩
+  | 37 => ⟨2, 37, 3298, 3497, 2979, 3686⟩
+  | 38 => ⟨2, 38, 3265, 3466, 2962, 3669⟩
+  | 39 => ⟨2, 39, 3231, 3433, 2944, 3651⟩
+  | 40 => ⟨2, 40, 3196, 3399, 2927, 3633⟩
+  | 41 => ⟨2, 41, 3160, 3365, 2910, 3614⟩
+  | 42 => ⟨2, 42, 3122, 3330, 2894, 3595⟩
+  | 43 => ⟨2, 43, 3083, 3294, 2877, 3576⟩
+  | 44 => ⟨2, 44, 3043, 3256, 2859, 3556⟩
+  | 45 => ⟨2, 45, 3001, 3217, 2841, 3535⟩
+  | 46 => ⟨2, 46, 2957, 3177, 2823, 3515⟩
+  | 47 => ⟨2, 47, 2911, 3135, 2804, 3493⟩
+  | 48 => ⟨2, 48, 2863, 3091, 2785, 3472⟩
+  | 49 => ⟨2, 49, 2812, 3046, 2766, 3449⟩
+  | 50 => ⟨2, 50, 2757, 2998, 2746, 3427⟩
+  | 51 => ⟨2, 51, 2699, 2947, 2725, 3403⟩
+  | 52 => ⟨2, 52, 2637, 2894, 2705, 3379⟩
+  | 53 => ⟨2, 53, 2570, 2837, 2685, 3355⟩
+  | 54 => ⟨2, 54, 2500, 2776, 2664, 3329⟩
+  | 55 => ⟨2, 55, 2426, 2711, 2643, 3304⟩
+  | 56 => ⟨2, 56, 2347, 2643, 2621, 3277⟩
+  | 57 => ⟨2, 57, 2265, 2570, 2598, 3250⟩
+  | 58 => ⟨2, 58, 2178, 2494, 2574, 3222⟩
+  | 59 => ⟨2, 59, 2088, 2413, 2550, 3193⟩
+  | 60 => ⟨2, 60, 1993, 2329, 2526, 3165⟩
+  | 61 => ⟨2, 61, 1894, 2241, 2501, 3138⟩
+  | 62 => ⟨2, 62, 1791, 2149, 2475, 3111⟩
+  | 63 => ⟨2, 63, 1684, 2053, 2448, 3083⟩
+  | 64 => ⟨2, 64, 1573, 1953, 2420, 3053⟩
+  | 65 => ⟨2, 65, 1458, 1850, 2391, 3022⟩
+  | 66 => ⟨2, 66, 1339, 1742, 2362, 2990⟩
+  | 67 => ⟨2, 67, 1215, 1630, 2330, 2956⟩
+  | 68 => ⟨2, 68, 1088, 1515, 2298, 2921⟩
+  | 69 => ⟨2, 69, 957, 1395, 2263, 2884⟩
+  | 70 => ⟨2, 70, 821, 1272, 2227, 2845⟩
+  | 71 => ⟨2, 71, 681, 1145, 2189, 2805⟩
+  | 72 => ⟨2, 72, 538, 1014, 2150, 2762⟩
+  | 73 => ⟨2, 73, 390, 878, 2108, 2718⟩
+  | 74 => ⟨2, 74, 238, 740, 2065, 2672⟩
+  | 75 => ⟨2, 75, 82, 597, 2020, 2624⟩
+  | 76 => ⟨2, 76, 0, 449, 1973, 2573⟩
+  | 77 => ⟨2, 77, 0, 299, 1924, 2521⟩
+  | 78 => ⟨2, 78, 0, 144, 1873, 2466⟩
+  | 79 => ⟨2, 79, 0, 0, 1821, 2409⟩
+  | 80 => ⟨2, 80, 0, 0, 1767, 2350⟩
+  | 81 => ⟨2, 81, 0, 0, 1710, 2288⟩
+  | 82 => ⟨2, 82, 0, 0, 1652, 2224⟩
+  | 83 => ⟨2, 83, 0, 0, 1592, 2157⟩
+  | 84 => ⟨2, 84, 0, 0, 1530, 2088⟩
+  | 85 => ⟨2, 85, 0, 0, 1467, 2017⟩
+  | 86 => ⟨2, 86, 0, 0, 1402, 1944⟩
+  | 87 => ⟨2, 87, 0, 0, 1334, 1870⟩
+  | 88 => ⟨2, 88, 0, 0, 1265, 1794⟩
+  | 89 => ⟨2, 89, 0, 0, 1194, 1716⟩
+  | 90 => ⟨2, 90, 0, 0, 1121, 1636⟩
+  | 91 => ⟨2, 91, 0, 0, 1046, 1553⟩
+  | 92 => ⟨2, 92, 0, 0, 969, 1468⟩
+  | 93 => ⟨2, 93, 0, 0, 891, 1381⟩
+  | 94 => ⟨2, 94, 0, 0, 811, 1291⟩
+  | 95 => ⟨2, 95, 0, 0, 728, 1199⟩
+  | 96 => ⟨2, 96, 0, 0, 644, 1105⟩
+  | 97 => ⟨2, 97, 0, 0, 559, 1008⟩
+  | 98 => ⟨2, 98, 0, 0, 471, 908⟩
+  | 99 => ⟨2, 99, 0, 0, 381, 806⟩
+  | 100 => ⟨2, 100, 0, 0, 289, 702⟩
+  | 101 => ⟨2, 101, 0, 0, 196, 595⟩
+  | 102 => ⟨2, 102, 0, 0, 100, 486⟩
+  | 103 => ⟨2, 103, 0, 0, 4, 374⟩
+  | 104 => ⟨2, 104, 0, 0, 0, 261⟩
+  | 105 => ⟨2, 105, 0, 0, 0, 146⟩
+  | 106 => ⟨2, 106, 0, 0, 0, 29⟩
+  | 107 => ⟨2, 107, 0, 0, 0, 0⟩
+  | 108 => ⟨2, 108, 0, 0, 0, 0⟩
+  | 109 => ⟨2, 109, 0, 0, 0, 0⟩
+  | 110 => ⟨2, 110, 0, 0, 0, 0⟩
+  | 111 => ⟨2, 111, 0, 0, 0, 0⟩
+  | 112 => ⟨2, 112, 0, 0, 0, 0⟩
+  | 113 => ⟨2, 113, 0, 0, 0, 0⟩
+  | 114 => ⟨2, 114, 0, 0, 0, 0⟩
+  | 115 => ⟨2, 115, 0, 0, 0, 0⟩
+  | 116 => ⟨2, 116, 0, 0, 0, 0⟩
+  | 117 => ⟨2, 117, 0, 0, 0, 0⟩
+  | 118 => ⟨2, 118, 0, 0, 0, 0⟩
+  | 119 => ⟨2, 119, 0, 0, 0, 0⟩
+  | 120 => ⟨2, 120, 0, 0, 0, 0⟩
+  | 121 => ⟨2, 121, 0, 0, 0, 0⟩
+  | 122 => ⟨2, 122, 0, 0, 0, 0⟩
+  | 123 => ⟨2, 123, 0, 0, 0, 0⟩
+  | 124 => ⟨2, 124, 0, 0, 0, 0⟩
+  | 125 => ⟨2, 125, 0, 0, 0, 0⟩
+  | 126 => ⟨2, 126, 0, 0, 0, 0⟩
+  | 127 => ⟨2, 127, 0, 0, 0, 0⟩
+  | 128 => ⟨2, 128, 0, 0, 0, 0⟩
+  | 129 => ⟨2, 129, 0, 0, 0, 0⟩
+  | 130 => ⟨2, 130, 0, 0, 0, 0⟩
+  | _ => defaultThreshold
+
+def prefixData : ℕ → PrefixReceipt
+  | 0 => ⟨2, 0, 0, [0], 399600479293792, 2295991372834275⟩
+  | 1 => ⟨2, 1, 0, [0], 857108533717713, 2758606897709851⟩
+  | 2 => ⟨2, 2, 0, [2086120364977884], 2738940578907784, 4649554030839157⟩
+  | 3 => ⟨2, 3, 0, [4410049070469583], 4606720494346233, 6525951979910460⟩
+  | 4 => ⟨2, 4, 0, [6712537135641794], 6462713819151280, 8391060392654742⟩
+  | 5 => ⟨2, 5, 0, [8991330673936151], 8306062663767911, 10243524325210608⟩
+  | 6 => ⟨2, 6, 0, [11250387698461194], 10136767028196126, 12083343777578058⟩
+  | 7 => ⟨2, 7, 0, [13488004082666749], 11954826912435925, 13910518749757092⟩
+  | 8 => ⟨2, 8, 0, [15704179826552816], 13760242316487308, 15725049241747710⟩
+  | 9 => ⟨2, 9, 0, [17894462003528261], 15553013240350275, 17526935253549912⟩
+  | 10 => ⟨2, 10, 0, [20062204020167834], 17333139684024826, 19316176785163698⟩
+  | 11 => ⟨2, 11, 0, [22207405876471535], 19094815917882219, 21086471052653945⟩
+  | 12 => ⟨2, 12, 0, [24330067572439364], 20849103641171746, 22849873863882707⟩
+  | 13 => ⟨2, 13, 0, [26423537141447419], 22583841634627731, 24593229890971546⟩
+  | 14 => ⟨2, 14, 0, [28486165303471124], 24304835627878916, 26322841917855585⟩
+  | 15 => ⟨2, 15, 0, [30524054265126189], 26012085620925301, 28038709944534824⟩
+  | 16 => ⟨2, 16, 0, [32545505273061092], 27705591613766886, 29740833971009263⟩
+  | 17 => ⟨2, 17, 0, [34534465593987069], 29376249316725777, 31419612653294627⟩
+  | 18 => ⟨2, 18, 0, [36508087481209268], 31041717549149570, 33093698919351274⟩
+  | 19 => ⟨2, 19, 0, [38448119161406157], 32683237971674285, 34743340321202462⟩
+  | 20 => ⟨2, 20, 0, [40363411641234406], 34309914873977816, 36378138202832466⟩
+  | 21 => ⟨2, 21, 0, [42242914874004577], 35921748256060163, 37998092564241286⟩
+  | 22 => ⟨2, 22, 0, [44084979579692094], 37506885028202472, 39590853261403687⟩
+  | 23 => ⟨2, 23, 0, [45900106044978203], 39076078760107213, 41167670918328520⟩
+  | 24 => ⟨2, 24, 0, [47688294269862904], 40642282061509624, 42741995199057404⟩
+  | 25 => ⟨2, 25, 0, [49449544254346197], 42180139472947421, 44287476535515293⟩
+  | 26 => ⟨2, 26, 0, [51183855998428082], 43716105973899272, 45831564015793617⟩
+  | 27 => ⟨2, 27, 0, [52876880895369969], 45237228954629939, 47360807975850757⟩
+  | 28 => ⟨2, 28, 0, [54541868031894064], 46743508415139422, 48875208415686713⟩
+  | 29 => ⟨2, 29, 0, [56163369281245393], 48219242945651523, 50358566871218906⟩
+  | 30 => ⟨2, 30, 0, [57739735363399380], 49695285605710446, 51842730510604302⟩
+  | 31 => ⟨2, 31, 0, [59285864645102807], 51139683815755603, 53294752645669551⟩
+  | 32 => ⟨2, 32, 0, [60801757126355674], 52568138985563192, 54730831740497232⟩
+  | 33 => ⟨2, 33, 0, [62287412807157981], 53962750665324247, 56132570290971998⟩
+  | 34 => ⟨2, 34, 0, [63724634760713794], 55358769994648508, 57536213545316351⟩
+  | 35 => ⟨2, 35, 0, [65111773706998537], 56719846313909851, 58904416735291405⟩
+  | 36 => ⟨2, 36, 0, [66447180365987634], 58044330343083700, 60235530580872584⟩
+  | 37 => ⟨2, 37, 0, [67749051664477019], 59370771781828947, 61569098890331542⟩
+  | 38 => ⟨2, 38, 0, [69017387602466692], 60659521410470316, 62864478335380241⟩
+  | 39 => ⟨2, 39, 0, [70210296726282865], 61908929948983231, 64120019635994105⟩
+  | 40 => ⟨2, 40, 0, [71345975962721472], 63160845657075736, 65378565160493940⟩
+  | 41 => ⟨2, 41, 0, [72444821278611215], 64394619284897905, 66618968604723439⟩
+  | 42 => ⟨2, 42, 0, [73484237667090624], 65633099122332432, 67864575312871677⟩
+  | 43 => ⟨2, 43, 0, [74462575848135123], 66831138349622121, 69069244356568696⟩
+  | 44 => ⟨2, 44, 0, [75354492014842282], 67987087686742396, 70231326455789920⟩
+  | 45 => ⟨2, 45, 0, [75916840772854102], 69123795423575951, 71374166954724424⟩
+  | 46 => ⟨2, 46, 0, [76048290064822970], 70241261560122786, 72497765853372208⟩
+  | 47 => ⟨2, 47, 0, [76154562212391208], 71313889006459247, 73576029007503237⟩
+  | 48 => ⟨2, 48, 0, [76235657215558816], 72366175332492604, 74633951041331162⟩
+  | 49 => ⟨2, 49, 0, [76304163646526109], 73398120538222857, 75671531954855983⟩
+  | 50 => ⟨2, 50, 0, [76334904360892457], 74382478253701776, 76661028323823089⟩
+  | 51 => ⟨2, 51, 0, [76334904360892457], 75317599198904785, 77600790868207904⟩
+  | 52 => ⟨2, 52, 0, [76334904360892457], 76108367528535810, 78396697851327116⟩
+  | 53 => ⟨2, 53, 0, [76334904360892457], 76510474254740630, 78803943231020123⟩
+  | 54 => ⟨2, 54, 0, [76334904360892457], 76899739125723911, 79197849701185210⟩
+  | 55 => ⟨2, 55, 0, [76334904360892457], 77289003996707192, 79591756171350297⟩
+  | 56 => ⟨2, 56, 0, [76334904360892457], 77665427012468934, 79972323731987464⟩
+  | 57 => ⟨2, 57, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 58 => ⟨2, 58, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 59 => ⟨2, 59, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 60 => ⟨2, 60, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 61 => ⟨2, 61, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 62 => ⟨2, 62, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 63 => ⟨2, 63, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 64 => ⟨2, 64, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 65 => ⟨2, 65, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 66 => ⟨2, 66, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 67 => ⟨2, 67, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 68 => ⟨2, 68, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 69 => ⟨2, 69, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 70 => ⟨2, 70, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 71 => ⟨2, 71, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 72 => ⟨2, 72, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 73 => ⟨2, 73, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 74 => ⟨2, 74, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 75 => ⟨2, 75, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 76 => ⟨2, 76, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 77 => ⟨2, 77, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 78 => ⟨2, 78, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 79 => ⟨2, 79, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 80 => ⟨2, 80, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 81 => ⟨2, 81, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 82 => ⟨2, 82, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 83 => ⟨2, 83, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 84 => ⟨2, 84, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 85 => ⟨2, 85, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 86 => ⟨2, 86, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 87 => ⟨2, 87, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 88 => ⟨2, 88, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 89 => ⟨2, 89, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 90 => ⟨2, 90, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 91 => ⟨2, 91, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 92 => ⟨2, 92, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 93 => ⟨2, 93, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 94 => ⟨2, 94, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 95 => ⟨2, 95, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 96 => ⟨2, 96, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 97 => ⟨2, 97, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 98 => ⟨2, 98, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 99 => ⟨2, 99, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 100 => ⟨2, 100, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 101 => ⟨2, 101, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 102 => ⟨2, 102, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 103 => ⟨2, 103, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 104 => ⟨2, 104, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 105 => ⟨2, 105, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 106 => ⟨2, 106, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 107 => ⟨2, 107, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 108 => ⟨2, 108, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 109 => ⟨2, 109, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 110 => ⟨2, 110, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 111 => ⟨2, 111, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 112 => ⟨2, 112, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 113 => ⟨2, 113, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 114 => ⟨2, 114, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 115 => ⟨2, 115, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 116 => ⟨2, 116, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 117 => ⟨2, 117, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 118 => ⟨2, 118, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 119 => ⟨2, 119, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 120 => ⟨2, 120, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 121 => ⟨2, 121, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 122 => ⟨2, 122, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 123 => ⟨2, 123, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 124 => ⟨2, 124, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 125 => ⟨2, 125, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 126 => ⟨2, 126, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 127 => ⟨2, 127, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 128 => ⟨2, 128, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 129 => ⟨2, 129, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | _ => defaultPrefix
+
+end ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData02
+end PackedLocator_LocatorPhase6800ReceiptRowData02
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier71 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData03. -/
+section PackedLocator_LocatorPhase6800ReceiptRowData03
+
+namespace ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData03
+
+open LocatorPhase6800Oracle LocatorPhase6800ReceiptCellCore
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+
+def threshold : ℕ → ThresholdReceipt
+  | 0 => ⟨3, 0, 4109, 4293, 3432, 4234⟩
+  | 1 => ⟨3, 1, 4090, 4273, 3420, 4220⟩
+  | 2 => ⟨3, 2, 4070, 4253, 3408, 4205⟩
+  | 3 => ⟨3, 3, 4049, 4233, 3397, 4190⟩
+  | 4 => ⟨3, 4, 4029, 4214, 3385, 4175⟩
+  | 5 => ⟨3, 5, 4009, 4194, 3373, 4160⟩
+  | 6 => ⟨3, 6, 3988, 4173, 3361, 4144⟩
+  | 7 => ⟨3, 7, 3967, 4152, 3349, 4129⟩
+  | 8 => ⟨3, 8, 3946, 4131, 3336, 4113⟩
+  | 9 => ⟨3, 9, 3924, 4110, 3324, 4097⟩
+  | 10 => ⟨3, 10, 3903, 4088, 3311, 4081⟩
+  | 11 => ⟨3, 11, 3881, 4065, 3298, 4064⟩
+  | 12 => ⟨3, 12, 3859, 4043, 3285, 4047⟩
+  | 13 => ⟨3, 13, 3836, 4022, 3272, 4031⟩
+  | 14 => ⟨3, 14, 3814, 4000, 3259, 4013⟩
+  | 15 => ⟨3, 15, 3791, 3978, 3245, 3996⟩
+  | 16 => ⟨3, 16, 3768, 3955, 3231, 3979⟩
+  | 17 => ⟨3, 17, 3744, 3932, 3217, 3961⟩
+  | 18 => ⟨3, 18, 3720, 3908, 3203, 3943⟩
+  | 19 => ⟨3, 19, 3696, 3883, 3189, 3924⟩
+  | 20 => ⟨3, 20, 3672, 3859, 3174, 3906⟩
+  | 21 => ⟨3, 21, 3647, 3835, 3160, 3887⟩
+  | 22 => ⟨3, 22, 3622, 3811, 3146, 3868⟩
+  | 23 => ⟨3, 23, 3596, 3786, 3132, 3849⟩
+  | 24 => ⟨3, 24, 3570, 3761, 3119, 3832⟩
+  | 25 => ⟨3, 25, 3544, 3735, 3105, 3816⟩
+  | 26 => ⟨3, 26, 3517, 3708, 3090, 3800⟩
+  | 27 => ⟨3, 27, 3490, 3681, 3076, 3785⟩
+  | 28 => ⟨3, 28, 3462, 3654, 3061, 3770⟩
+  | 29 => ⟨3, 29, 3434, 3627, 3046, 3755⟩
+  | 30 => ⟨3, 30, 3405, 3599, 3031, 3739⟩
+  | 31 => ⟨3, 31, 3376, 3571, 3015, 3723⟩
+  | 32 => ⟨3, 32, 3346, 3541, 2999, 3707⟩
+  | 33 => ⟨3, 33, 3315, 3511, 2983, 3690⟩
+  | 34 => ⟨3, 34, 3284, 3481, 2967, 3673⟩
+  | 35 => ⟨3, 35, 3251, 3451, 2950, 3656⟩
+  | 36 => ⟨3, 36, 3218, 3419, 2933, 3638⟩
+  | 37 => ⟨3, 37, 3185, 3386, 2917, 3620⟩
+  | 38 => ⟨3, 38, 3150, 3353, 2900, 3602⟩
+  | 39 => ⟨3, 39, 3114, 3320, 2884, 3583⟩
+  | 40 => ⟨3, 40, 3077, 3285, 2867, 3564⟩
+  | 41 => ⟨3, 41, 3039, 3248, 2850, 3544⟩
+  | 42 => ⟨3, 42, 2999, 3211, 2832, 3524⟩
+  | 43 => ⟨3, 43, 2958, 3173, 2815, 3504⟩
+  | 44 => ⟨3, 44, 2915, 3134, 2796, 3483⟩
+  | 45 => ⟨3, 45, 2870, 3092, 2777, 3462⟩
+  | 46 => ⟨3, 46, 2822, 3050, 2758, 3440⟩
+  | 47 => ⟨3, 47, 2772, 3005, 2738, 3417⟩
+  | 48 => ⟨3, 48, 2719, 2958, 2719, 3394⟩
+  | 49 => ⟨3, 49, 2662, 2908, 2699, 3371⟩
+  | 50 => ⟨3, 50, 2601, 2856, 2680, 3347⟩
+  | 51 => ⟨3, 51, 2536, 2800, 2659, 3322⟩
+  | 52 => ⟨3, 52, 2467, 2740, 2639, 3297⟩
+  | 53 => ⟨3, 53, 2394, 2677, 2617, 3271⟩
+  | 54 => ⟨3, 54, 2317, 2610, 2595, 3245⟩
+  | 55 => ⟨3, 55, 2236, 2539, 2572, 3217⟩
+  | 56 => ⟨3, 56, 2151, 2464, 2549, 3189⟩
+  | 57 => ⟨3, 57, 2062, 2385, 2526, 3162⟩
+  | 58 => ⟨3, 58, 1968, 2302, 2502, 3137⟩
+  | 59 => ⟨3, 59, 1871, 2215, 2477, 3111⟩
+  | 60 => ⟨3, 60, 1770, 2125, 2452, 3084⟩
+  | 61 => ⟨3, 61, 1664, 2030, 2425, 3055⟩
+  | 62 => ⟨3, 62, 1555, 1932, 2397, 3026⟩
+  | 63 => ⟨3, 63, 1441, 1830, 2369, 2995⟩
+  | 64 => ⟨3, 64, 1323, 1723, 2340, 2963⟩
+  | 65 => ⟨3, 65, 1202, 1613, 2309, 2930⟩
+  | 66 => ⟨3, 66, 1076, 1499, 2277, 2895⟩
+  | 67 => ⟨3, 67, 946, 1381, 2243, 2859⟩
+  | 68 => ⟨3, 68, 812, 1259, 2208, 2821⟩
+  | 69 => ⟨3, 69, 674, 1134, 2171, 2781⟩
+  | 70 => ⟨3, 70, 532, 1004, 2132, 2739⟩
+  | 71 => ⟨3, 71, 386, 871, 2091, 2696⟩
+  | 72 => ⟨3, 72, 235, 733, 2048, 2650⟩
+  | 73 => ⟨3, 73, 81, 592, 2004, 2603⟩
+  | 74 => ⟨3, 74, 0, 446, 1958, 2553⟩
+  | 75 => ⟨3, 75, 0, 297, 1910, 2502⟩
+  | 76 => ⟨3, 76, 0, 144, 1860, 2448⟩
+  | 77 => ⟨3, 77, 0, 0, 1808, 2392⟩
+  | 78 => ⟨3, 78, 0, 0, 1754, 2334⟩
+  | 79 => ⟨3, 79, 0, 0, 1699, 2273⟩
+  | 80 => ⟨3, 80, 0, 0, 1641, 2210⟩
+  | 81 => ⟨3, 81, 0, 0, 1582, 2145⟩
+  | 82 => ⟨3, 82, 0, 0, 1521, 2077⟩
+  | 83 => ⟨3, 83, 0, 0, 1458, 2007⟩
+  | 84 => ⟨3, 84, 0, 0, 1393, 1934⟩
+  | 85 => ⟨3, 85, 0, 0, 1327, 1859⟩
+  | 86 => ⟨3, 86, 0, 0, 1258, 1783⟩
+  | 87 => ⟨3, 87, 0, 0, 1188, 1706⟩
+  | 88 => ⟨3, 88, 0, 0, 1116, 1627⟩
+  | 89 => ⟨3, 89, 0, 0, 1042, 1545⟩
+  | 90 => ⟨3, 90, 0, 0, 966, 1461⟩
+  | 91 => ⟨3, 91, 0, 0, 888, 1375⟩
+  | 92 => ⟨3, 92, 0, 0, 808, 1286⟩
+  | 93 => ⟨3, 93, 0, 0, 727, 1195⟩
+  | 94 => ⟨3, 94, 0, 0, 644, 1102⟩
+  | 95 => ⟨3, 95, 0, 0, 559, 1006⟩
+  | 96 => ⟨3, 96, 0, 0, 472, 907⟩
+  | 97 => ⟨3, 97, 0, 0, 383, 807⟩
+  | 98 => ⟨3, 98, 0, 0, 292, 704⟩
+  | 99 => ⟨3, 99, 0, 0, 199, 598⟩
+  | 100 => ⟨3, 100, 0, 0, 104, 491⟩
+  | 101 => ⟨3, 101, 0, 0, 8, 381⟩
+  | 102 => ⟨3, 102, 0, 0, 0, 269⟩
+  | 103 => ⟨3, 103, 0, 0, 0, 155⟩
+  | 104 => ⟨3, 104, 0, 0, 0, 39⟩
+  | 105 => ⟨3, 105, 0, 0, 0, 0⟩
+  | 106 => ⟨3, 106, 0, 0, 0, 0⟩
+  | 107 => ⟨3, 107, 0, 0, 0, 0⟩
+  | 108 => ⟨3, 108, 0, 0, 0, 0⟩
+  | 109 => ⟨3, 109, 0, 0, 0, 0⟩
+  | 110 => ⟨3, 110, 0, 0, 0, 0⟩
+  | 111 => ⟨3, 111, 0, 0, 0, 0⟩
+  | 112 => ⟨3, 112, 0, 0, 0, 0⟩
+  | 113 => ⟨3, 113, 0, 0, 0, 0⟩
+  | 114 => ⟨3, 114, 0, 0, 0, 0⟩
+  | 115 => ⟨3, 115, 0, 0, 0, 0⟩
+  | 116 => ⟨3, 116, 0, 0, 0, 0⟩
+  | 117 => ⟨3, 117, 0, 0, 0, 0⟩
+  | 118 => ⟨3, 118, 0, 0, 0, 0⟩
+  | 119 => ⟨3, 119, 0, 0, 0, 0⟩
+  | 120 => ⟨3, 120, 0, 0, 0, 0⟩
+  | 121 => ⟨3, 121, 0, 0, 0, 0⟩
+  | 122 => ⟨3, 122, 0, 0, 0, 0⟩
+  | 123 => ⟨3, 123, 0, 0, 0, 0⟩
+  | 124 => ⟨3, 124, 0, 0, 0, 0⟩
+  | 125 => ⟨3, 125, 0, 0, 0, 0⟩
+  | 126 => ⟨3, 126, 0, 0, 0, 0⟩
+  | 127 => ⟨3, 127, 0, 0, 0, 0⟩
+  | 128 => ⟨3, 128, 0, 0, 0, 0⟩
+  | 129 => ⟨3, 129, 0, 0, 0, 0⟩
+  | _ => defaultThreshold
+
+def prefixData : ℕ → PrefixReceipt
+  | 0 => ⟨3, 0, 0, [3384839527954380], 3829797849397262, 5775414702063150⟩
+  | 1 => ⟨3, 1, 0, [4499639795505779], 4738623388554137, 6693355329159260⟩
+  | 2 => ⟨3, 2, 0, [5384044551428800], 5464950519583505, 7428797548127863⟩
+  | 3 => ⟨3, 3, 0, [8514595872335436], 7997721970310256, 9971181141100230⟩
+  | 4 => ⟨3, 4, 0, [11618623992426143], 10511407084327872, 12493981343057081⟩
+  | 5 => ⟨3, 5, 0, [14690968120052851], 13007705634119016, 14999394980787460⟩
+  | 6 => ⟨3, 6, 0, [17729360442490368], 15486617619683688, 17487422054291367⟩
+  | 7 => ⟨3, 7, 0, [20736759324350261], 17948143041021888, 19958062563568802⟩
+  | 8 => ⟨3, 8, 0, [23713164765632530], 20386046500200569, 22404584056380337⟩
+  | 9 => ⟨3, 9, 0, [26658576766337175], 22812042855510761, 24839695499629764⟩
+  | 10 => ⟨3, 10, 0, [29565501336402245], 25212905373511306, 27249176051263163⟩
+  | 11 => ⟨3, 11, 0, [32431670663102548], 27594869452135251, 29639758163519962⟩
+  | 12 => ⟨3, 12, 0, [35272828664137050], 29957935091382596, 32011441836400161⟩
+  | 13 => ⟨3, 13, 0, [38091243152230943], 32302102291253341, 34364227069903760⟩
+  | 14 => ⟨3, 14, 0, [40868146459385005], 34627371051747486, 36698113864030759⟩
+  | 15 => ⟨3, 15, 0, [43612544450811315], 36922214411906536, 39001078203516282⟩
+  | 16 => ⟨3, 16, 0, [46312407510997538], 39196647457538858, 41283632228475077⟩
+  | 17 => ⟨3, 17, 0, [48978253380305881], 41450670188644452, 43545775938907144⟩
+  | 18 => ⟨3, 18, 0, [51596540568073881], 43684282605223318, 45787509334812483⟩
+  | 19 => ⟨3, 19, 0, [54165001261576346], 45897484707275456, 48008832416191094⟩
+  | 20 => ⟨3, 20, 0, [56711474379713266], 48074969845967051, 50193941479902781⟩
+  | 21 => ⟨3, 21, 0, [59222418431822178], 50246595381390669, 52373687994652872⟩
+  | 22 => ⟨3, 22, 0, [61697833417903082], 52397810602287559, 54533024194876235⟩
+  | 23 => ⟨3, 23, 0, [64120398159418195], 54528615508657721, 56671950080572870⟩
+  | 24 => ⟨3, 24, 0, [66505921959755172], 56657340499635226, 58809293105183229⟩
+  | 25 => ⟨3, 25, 0, [68835571765226102], 58748080714526996, 60908154299401472⟩
+  | 26 => ⟨3, 26, 0, [71107079763105793], 60798568340607839, 62966265850502407⟩
+  | 27 => ⟨3, 27, 0, [73338523069507092], 62847731988871089, 65023550478092130⟩
+  | 28 => ⟨3, 28, 0, [74051852003444302], 64855131173173284, 67038573587414417⟩
+  | 29 => ⟨3, 29, 1545494138801813, [74346952734017265], 66840608167798623, 69031674507059848⟩
+  | 30 => ⟨3, 30, 3195698349481789, [75382980235010592], 68804162972747106, 71002853237028423⟩
+  | 31 => ⟨3, 31, 4802814118383117, [77260019590084253], 70722173625859214, 72927990760854242⟩
+  | 32 => ⟨3, 32, 6355305400992753, [79069845886665907], 72616750214144338, 74829694219853077⟩
+  | 33 => ⟨3, 33, 7850904384585505, [80810191312030362], 74487892737602478, 76707963614024928⟩
+  | 34 => ⟨3, 34, 9300391176099353, [82504424545315913], 76335601196233634, 78562798943369795⟩
+  | 35 => ⟨3, 35, 10676158061057825, [84099760727645458], 78133229877578031, 80367057441121522⟩
+  | 36 => ⟨3, 36, 12002789003637137, [85645960967595843], 79905912618945316, 82146369998896137⟩
+  | 37 => ⟨3, 37, 13280284003837289, [87143025265167068], 81681807007945392, 83929391258609924⟩
+  | 38 => ⟨3, 38, 14476499721731425, [88533633136031647], 83405353806933517, 85659567874005379⟩
+  | 39 => ⟨3, 39, 15603728139407653, [89842665134478003], 85133624128704561, 87394965066490134⟩
+  | 40 => ⟨3, 40, 16659701444140781, [91067853447780944], 86808034985313526, 89076005739506429⟩
+  | 41 => ⟨3, 41, 17642151823205617, [92206930263215278], 88457499901945379, 90732100472545612⟩
+  | 42 => ⟨3, 42, 18529716043613285, [93225943775591814], 90050081603114897, 92330814935816079⟩
+  | 43 => ⟨3, 43, 19337709837752149, [94152798289499231], 91648898702217462, 93936261851325974⟩
+  | 44 => ⟨3, 44, 20043258097483205, [94952030124598210], 93155871560072213, 95448870416975293⟩
+  | 45 => ⟨3, 45, 20641825197356069, [95619103655438367], 94634874727649596, 96933509292347244⟩
+  | 46 => ⟨3, 46, 21106756341356417, [96114775513805063], 96085908204949611, 98390178477441827⟩
+  | 47 => ⟨3, 47, 21454123199447677, [96467705941862041], 97473255028611715, 99782663954592118⟩
+  | 48 => ⟨3, 48, 21655759100465397, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 49 => ⟨3, 49, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 50 => ⟨3, 50, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 51 => ⟨3, 51, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 52 => ⟨3, 52, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 53 => ⟨3, 53, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 54 => ⟨3, 54, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 55 => ⟨3, 55, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 56 => ⟨3, 56, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 57 => ⟨3, 57, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 58 => ⟨3, 58, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 59 => ⟨3, 59, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 60 => ⟨3, 60, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 61 => ⟨3, 61, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 62 => ⟨3, 62, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 63 => ⟨3, 63, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 64 => ⟨3, 64, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 65 => ⟨3, 65, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 66 => ⟨3, 66, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 67 => ⟨3, 67, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 68 => ⟨3, 68, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 69 => ⟨3, 69, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 70 => ⟨3, 70, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 71 => ⟨3, 71, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 72 => ⟨3, 72, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 73 => ⟨3, 73, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 74 => ⟨3, 74, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 75 => ⟨3, 75, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 76 => ⟨3, 76, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 77 => ⟨3, 77, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 78 => ⟨3, 78, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 79 => ⟨3, 79, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 80 => ⟨3, 80, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 81 => ⟨3, 81, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 82 => ⟨3, 82, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 83 => ⟨3, 83, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 84 => ⟨3, 84, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 85 => ⟨3, 85, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 86 => ⟨3, 86, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 87 => ⟨3, 87, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 88 => ⟨3, 88, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 89 => ⟨3, 89, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 90 => ⟨3, 90, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 91 => ⟨3, 91, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 92 => ⟨3, 92, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 93 => ⟨3, 93, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 94 => ⟨3, 94, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 95 => ⟨3, 95, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 96 => ⟨3, 96, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 97 => ⟨3, 97, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 98 => ⟨3, 98, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 99 => ⟨3, 99, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 100 => ⟨3, 100, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 101 => ⟨3, 101, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 102 => ⟨3, 102, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 103 => ⟨3, 103, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 104 => ⟨3, 104, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 105 => ⟨3, 105, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 106 => ⟨3, 106, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 107 => ⟨3, 107, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 108 => ⟨3, 108, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 109 => ⟨3, 109, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 110 => ⟨3, 110, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 111 => ⟨3, 111, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 112 => ⟨3, 112, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 113 => ⟨3, 113, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 114 => ⟨3, 114, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 115 => ⟨3, 115, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 116 => ⟨3, 116, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 117 => ⟨3, 117, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 118 => ⟨3, 118, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 119 => ⟨3, 119, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 120 => ⟨3, 120, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 121 => ⟨3, 121, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 122 => ⟨3, 122, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 123 => ⟨3, 123, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 124 => ⟨3, 124, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 125 => ⟨3, 125, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 126 => ⟨3, 126, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 127 => ⟨3, 127, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 128 => ⟨3, 128, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | _ => defaultPrefix
+
+end ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData03
+end PackedLocator_LocatorPhase6800ReceiptRowData03
