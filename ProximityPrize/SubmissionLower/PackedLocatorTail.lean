@@ -1,5 +1,333 @@
 import ProximityPrize.SubmissionLower.PackedLegacy
 
+/-! Packed: amortised derivative-chain caps. -/
+section PackedLocator_ChainAmort
+
+/-!
+# Amortised chain caps
+
+The derivative chain over an irreducible factor `F` of `R`-degree `d` charges its
+level `j` to the coprime pair `(d_R^j F, F)`, whose LEFT `R`-degree is at most
+`d - j` (`dR_R_degree_le`); the RIGHT factor is `F` itself and does not descend.
+With a monotone level cap, `capSum cap d` is superadditive, so a family of factors
+whose `R`-degrees sum to at most `s` costs at most `capSum cap s`.
+
+Each factor also carries ONE slope-free tail, and there is one further global
+`R`-free tail.  Charging the chain at its `k = 1` maximum and the tails at their
+`k = s` maximum double-counts: with `tail <= cap 1` the augmented allowance
+`capSumT cap tail d = capSum cap d + tail` is still superadditive, so chains and
+tails together cost `capSum cap s + tail`, and the global tail brings the total to
+`capSum cap s + 2 * tail` in place of `capSum cap s + (s+1) * tail`.
+-/
+
+
+open Finset
+
+namespace ChainAmort
+
+/-- The amortised chain cap: the sum of the per-level caps below `d`. -/
+def capSum (cap : ℕ → ℕ) (d : ℕ) : ℕ := ∑ t ∈ Finset.Ico 1 d, cap t
+
+@[simp] theorem capSum_zero (cap : ℕ → ℕ) : capSum cap 0 = 0 := by
+  simp [capSum]
+
+@[simp] theorem capSum_one (cap : ℕ → ℕ) : capSum cap 1 = 0 := by
+  simp [capSum]
+
+theorem capSum_succ (cap : ℕ → ℕ) {d : ℕ} (hd : 1 ≤ d) :
+    capSum cap (d + 1) = capSum cap d + cap d := by
+  simp [capSum, Finset.sum_Ico_succ_top hd]
+
+theorem capSum_mono (cap : ℕ → ℕ) : Monotone (capSum cap) := by
+  intro a b hab
+  exact Finset.sum_le_sum_of_subset (Finset.Ico_subset_Ico le_rfl hab)
+
+/-- With a monotone level cap, the amortised sum is superadditive. -/
+theorem capSum_superadditive (cap : ℕ → ℕ) (hmono : Monotone cap) (a b : ℕ) :
+    capSum cap a + capSum cap b ≤ capSum cap (a + b) := by
+  induction b with
+  | zero => simp
+  | succ k ih =>
+      rcases Nat.eq_zero_or_pos k with hk | hk
+      · subst hk; simpa using capSum_mono cap (Nat.le_succ a)
+      · rw [capSum_succ cap hk, ← Nat.add_assoc,
+          show a + (k + 1) = (a + k) + 1 by omega,
+          capSum_succ cap (by omega : 1 ≤ a + k)]
+        exact Nat.add_le_add ih (hmono (by omega))
+
+/-- Summed over a family whose total does not exceed `s`. -/
+theorem sum_capSum_le_sum {ι : Type*} [DecidableEq ι] (cap : ℕ → ℕ) (hmono : Monotone cap)
+    (T : Finset ι) (d : ι → ℕ) :
+    ∑ i ∈ T, capSum cap (d i) ≤ capSum cap (∑ i ∈ T, d i) := by
+  classical
+  induction T using Finset.induction with
+  | empty => simp
+  | insert x T hx ih =>
+      rw [Finset.sum_insert hx, Finset.sum_insert hx]
+      exact le_trans (Nat.add_le_add_left ih _) (capSum_superadditive cap hmono _ _)
+
+/-- Summed over a family whose total does not exceed `s`. -/
+theorem sum_capSum_le {ι : Type*} [DecidableEq ι] (cap : ℕ → ℕ) (hmono : Monotone cap)
+    (T : Finset ι) (d : ι → ℕ) (s : ℕ) (h : ∑ i ∈ T, d i ≤ s) :
+    ∑ i ∈ T, capSum cap (d i) ≤ capSum cap s :=
+  le_trans (sum_capSum_le_sum cap hmono T d) (capSum_mono cap h)
+
+end ChainAmort
+
+namespace ChainAmort
+
+/-- Reflection: summing the level caps down from `d` is the same as summing them up. -/
+theorem sum_Ico_reflect (cap : ℕ → ℕ) (d : ℕ) :
+    ∑ j ∈ Finset.Ico 1 d, cap (d - j) = capSum cap d := by
+  classical
+  unfold capSum
+  refine Finset.sum_nbij' (fun j => d - j) (fun t => d - t) ?_ ?_ ?_ ?_ ?_ <;>
+    intro x hx <;> simp only [Finset.mem_Ico] at hx ⊢ <;> omega
+
+/-- The amortised chain bound in the shape the derivative chain produces:
+each factor `i` contributes levels `j ∈ [1, c i)` charged at `cap (d i - j)`. -/
+theorem chain_sum_bound {ι : Type*} [DecidableEq ι] (cap : ℕ → ℕ) (hmono : Monotone cap)
+    (T : Finset ι) (d c : ι → ℕ) (s : ℕ)
+    (hc : ∀ i ∈ T, c i ≤ d i) (hs : ∑ i ∈ T, d i ≤ s) :
+    ∑ i ∈ T, ∑ j ∈ Finset.Ico 1 (c i), cap (d i - j) ≤ capSum cap s := by
+  classical
+  refine le_trans (Finset.sum_le_sum (fun i hi => ?_)) (sum_capSum_le cap hmono T d s hs)
+  calc ∑ j ∈ Finset.Ico 1 (c i), cap (d i - j)
+      ≤ ∑ j ∈ Finset.Ico 1 (d i), cap (d i - j) :=
+        Finset.sum_le_sum_of_subset (Finset.Ico_subset_Ico le_rfl (hc i hi))
+    _ = capSum cap (d i) := sum_Ico_reflect cap (d i)
+
+end ChainAmort
+
+namespace ChainAmort
+
+/-- One factor's chain levels, charged against its own degree. -/
+theorem chain_row_le (cap : ℕ → ℕ) (d c : ℕ) (hc : c ≤ d) :
+    ∑ j ∈ Finset.Ico 1 c, cap (d - j) ≤ capSum cap d := by
+  calc ∑ j ∈ Finset.Ico 1 c, cap (d - j)
+      ≤ ∑ j ∈ Finset.Ico 1 d, cap (d - j) :=
+        Finset.sum_le_sum_of_subset (Finset.Ico_subset_Ico le_rfl hc)
+    _ = capSum cap d := sum_Ico_reflect cap d
+
+/-- Each factor carries its own chain AND its own tail.  With
+`tail ≤ cap 1` the augmented allowance is still superadditive, so a family of factors
+whose degrees sum to `s` costs at most `capSum cap s + tail` in chains-plus-tails —
+and the single global R-free tail adds one more, giving `+ 2 * tail` in place of
+`+ (s+1) * tail`. -/
+def capSumT (cap : ℕ → ℕ) (tail d : ℕ) : ℕ := capSum cap d + tail
+
+theorem capSumT_mono (cap : ℕ → ℕ) (tail : ℕ) {a b : ℕ} (h : a ≤ b) :
+    capSumT cap tail a ≤ capSumT cap tail b :=
+  Nat.add_le_add_right (capSum_mono cap h) _
+
+theorem capSumT_superadditive (cap : ℕ → ℕ) (hmono : Monotone cap) (tail : ℕ)
+    (htail : tail ≤ cap 1) {a b : ℕ} (ha : 1 ≤ a) (hb : 1 ≤ b) :
+    capSumT cap tail a + capSumT cap tail b ≤ capSumT cap tail (a + b) := by
+  unfold capSumT
+  induction b with
+  | zero => omega
+  | succ k ih =>
+      rcases Nat.eq_zero_or_pos k with hk | hk
+      · subst hk
+        have h0 : capSum cap (0 + 1) = 0 := by simp [capSum]
+        have h1 : capSum cap (a + (0 + 1)) = capSum cap a + cap a := by
+          simpa using capSum_succ cap ha
+        have h2 : tail ≤ cap a := le_trans htail (hmono ha)
+        omega
+      · have h1 : capSum cap (k + 1) = capSum cap k + cap k := capSum_succ cap hk
+        have h2 : capSum cap (a + (k + 1)) = capSum cap (a + k) + cap (a + k) := by
+          rw [show a + (k + 1) = (a + k) + 1 by omega]
+          exact capSum_succ cap (by omega)
+        have h3 : cap k ≤ cap (a + k) := hmono (by omega)
+        have h4 := ih hk
+        omega
+
+/-- Chains and tails charged together over the factor family. -/
+theorem sum_capSumT_le {ι : Type*} [DecidableEq ι] (cap : ℕ → ℕ) (hmono : Monotone cap)
+    (tail : ℕ) (htail : tail ≤ cap 1)
+    (T : Finset ι) (d : ι → ℕ) (s : ℕ)
+    (hpos : ∀ i ∈ T, 1 ≤ d i) (h : ∑ i ∈ T, d i ≤ s) :
+    ∑ i ∈ T, capSumT cap tail (d i) ≤ capSumT cap tail s := by
+  classical
+  have key : ∀ (T : Finset ι), (∀ i ∈ T, 1 ≤ d i) → T.Nonempty →
+      ∑ i ∈ T, capSumT cap tail (d i) ≤ capSumT cap tail (∑ i ∈ T, d i) := by
+    intro T
+    induction T using Finset.induction with
+    | empty => intro _ hne; exact absurd hne (by simp)
+    | insert x T hx ih =>
+        intro hp _
+        rcases T.eq_empty_or_nonempty with rfl | hne
+        · simp
+        · rw [Finset.sum_insert hx, Finset.sum_insert hx]
+          have hsum : 1 ≤ ∑ i ∈ T, d i := by
+            obtain ⟨y, hy⟩ := hne
+            exact le_trans (hp y (Finset.mem_insert_of_mem hy))
+              (Finset.single_le_sum (fun i _ => Nat.zero_le (d i)) hy)
+          refine le_trans (Nat.add_le_add_left
+            (ih (fun i hi => hp i (Finset.mem_insert_of_mem hi)) hne) _) ?_
+          exact capSumT_superadditive cap hmono tail htail
+            (hp x (Finset.mem_insert_self x T)) hsum
+  rcases T.eq_empty_or_nonempty with rfl | hne
+  · simp [capSumT]
+  · exact le_trans (key T hpos hne) (capSumT_mono cap tail h)
+
+end ChainAmort
+
+namespace ChainGroupMaj
+open ProximityPrize.SubmissionLower.RCN260 ProximityPrize.SubmissionLower.RCN294
+
+/-- Per-level pair parameters of a chain group with total slope `r`, Y-degree `y` and
+zc-degree `zc` at the 6803 profile (`n = 262144, w = 131071, a = 181363`): level `t` charges
+the pair `(d_R^{r-t} F, F)` with LEFT slope `t` and RIGHT slope `r`. -/
+def chainGroupAt (zc r y t : ℕ) : UnequalParameters :=
+  ⟨262144, 131071, 181363, y, max 1 (min t r), zc, y, max 1 r, zc⟩
+
+def coefA (zc r y : ℕ) : ℕ :=
+  131073 * ((1 + 2 * 131071 * y) * (zc * r) +
+    131071 * (2 * r - 1) * (2 * zc * y) +
+    (2 * 131071 * zc + 1) * (y * r)) +
+  (80781 + 1) * 50292 * (y * r)
+
+def coefB (zc y : ℕ) : ℕ :=
+  131073 * ((1 + 2 * 131071 * y) * zc + (2 * 131071 * zc + 1) * y) +
+  (80781 + 1) * 50292 * y
+
+/-- Closed-form majorant of `ChainAmort.capSum (fun t => (chainGroupAt zc r y t).regularCountCap) r`. -/
+def chainMaj (zc r y : ℕ) : ℕ :=
+  ((r - 1) * coefA zc r y + coefB zc y * (∑ t ∈ Finset.Ico 1 r, t)) / 50292
+
+theorem chainGroupAt_gap (zc r y t : ℕ) : (chainGroupAt zc r y t).gap = 50292 := by
+  simp [chainGroupAt, UnequalParameters.gap]
+
+theorem chainGroupAt_numerator (zc r y t : ℕ) (ht1 : 1 ≤ t) (htr : t ≤ r) :
+    (chainGroupAt zc r y t).regularNumerator = coefA zc r y + coefB zc y * t := by
+  have hl : max 1 (min t r) = t := by omega
+  have hr : max 1 r = r := by omega
+  have hmax : max (131071 * (2 * t - 1)) (131071 * (2 * r - 1)) =
+      131071 * (2 * r - 1) := by
+    apply max_eq_right
+    apply Nat.mul_le_mul_left
+    omega
+  simp only [chainGroupAt, UnequalParameters.regularNumerator, UnequalParameters.agreement,
+    UnequalParameters.leftAgreement, UnequalParameters.rightAgreement,
+    UnequalParameters.mixedCost, UnequalParameters.errors, UnequalParameters.gap, dot,
+    hl, hr, hmax, max_self]
+  unfold coefA coefB
+  norm_num
+  ring
+
+theorem sum_div_le {ι : Type*} [DecidableEq ι] (s : Finset ι) (f : ι → ℕ) (g : ℕ) :
+    ∑ i ∈ s, f i / g ≤ (∑ i ∈ s, f i) / g := by
+  induction s using Finset.induction with
+  | empty => simp
+  | insert x s hx ih =>
+      rw [Finset.sum_insert hx, Finset.sum_insert hx]
+      exact le_trans (Nat.add_le_add_left ih _) (Nat.add_div_le_add_div _ _ _)
+
+theorem capSum_le_chainMaj (zc r y : ℕ) :
+    ChainAmort.capSum (fun t => (chainGroupAt zc r y t).regularCountCap) r ≤ chainMaj zc r y := by
+  unfold ChainAmort.capSum chainMaj
+  have hnum : ∀ t ∈ Finset.Ico 1 r, (chainGroupAt zc r y t).regularCountCap =
+      (coefA zc r y + coefB zc y * t) / 50292 := by
+    intro t ht
+    rw [Finset.mem_Ico] at ht
+    rw [UnequalParameters.regularCountCap, chainGroupAt_gap,
+      chainGroupAt_numerator zc r y t ht.1 (by omega)]
+  rw [Finset.sum_congr rfl hnum]
+  refine le_trans (sum_div_le _ _ _) (Nat.div_le_div_right ?_)
+  rw [Finset.sum_add_distrib, Finset.sum_const, Nat.card_Ico, ← Finset.mul_sum, smul_eq_mul]
+
+theorem coefA_mono (zc r : ℕ) {y y' : ℕ} (h : y ≤ y') : coefA zc r y ≤ coefA zc r y' := by
+  unfold coefA
+  gcongr
+
+theorem coefB_mono (zc : ℕ) {y y' : ℕ} (h : y ≤ y') : coefB zc y ≤ coefB zc y' := by
+  unfold coefB
+  gcongr
+
+theorem chainMaj_mono_y (zc r : ℕ) {y y' : ℕ} (h : y ≤ y') : chainMaj zc r y ≤ chainMaj zc r y' := by
+  unfold chainMaj
+  apply Nat.div_le_div_right
+  gcongr
+  · exact coefA_mono zc r h
+  · exact coefB_mono zc h
+
+theorem chainGroupAt_mono (zc r y : ℕ) :
+    Monotone (fun t => (chainGroupAt zc r y t).regularCountCap) := by
+  intro t t' htt'
+  simp only [UnequalParameters.regularCountCap]
+  apply Nat.div_le_div_right
+  have hl : max 1 (min t r) ≤ max 1 (min t' r) := by omega
+  simp only [chainGroupAt, UnequalParameters.regularNumerator, UnequalParameters.agreement,
+    UnequalParameters.leftAgreement, UnequalParameters.rightAgreement,
+    UnequalParameters.mixedCost, UnequalParameters.errors, UnequalParameters.gap, dot]
+  gcongr
+
+theorem chainMaj_33_153 : chainMaj 6677 33 153 = 3662856455802725 := by decide
+
+theorem chainMaj_pair_le :
+    ∀ r ∈ Finset.range 34,
+      chainMaj 6677 r 153 + chainMaj 6677 (33 - r) 153 ≤ 3662856455802725 := by
+  decide
+
+/-- The gate facts a chain-group parameter family supplies to `fixed_chain_count_le_split`. -/
+structure Gates (P : UnequalParameters) (zc r y : ℕ) : Prop where
+  gap_pos : 0 < P.gap
+  leftY_ge : y ≤ P.leftY
+  rightY_ge : y ≤ P.rightY
+  rightR_ge : r ≤ P.rightR
+  leftZ_ge : zc ≤ P.leftZ
+  rightZ_ge : zc ≤ P.rightZ
+  leftR_pos : 1 ≤ P.leftR
+  leftY_small : P.leftY < 2130706433
+  leftR_small : P.leftR < 2130706433
+  leftZ_small : P.leftZ < 2130706433
+  mixedY_small : P.mixedCost.y < 2130706433
+  mixedR_small : P.mixedCost.r < 2130706433
+  mixedZ_small : P.mixedCost.z < 2130706433
+  n_eq : P.n = 262144
+  w_eq : P.w = 131071
+  a_eq : P.a = 181363
+  errors_eq : P.errors = 80781
+
+theorem chainGroupAt_gates (zc r y t : ℕ) (hZ : zc ≤ 15000) (hr : r ≤ 33) (hy : y ≤ 153) :
+    Gates (chainGroupAt zc r y t) zc r y := by
+  have hl : max 1 (min t r) ≤ 33 := by omega
+  have hrr : max 1 r ≤ 33 := by omega
+  have hmz : y * max 1 r + max 1 (min t r) * y ≤ 153 * 33 + 33 * 153 :=
+    Nat.add_le_add (Nat.mul_le_mul hy hrr) (Nat.mul_le_mul hl hy)
+  have hmy : max 1 (min t r) * zc + zc * max 1 r ≤ 33 * 15000 + 15000 * 33 :=
+    Nat.add_le_add (Nat.mul_le_mul hl hZ) (Nat.mul_le_mul hZ hrr)
+  have hmr : y * zc + zc * y ≤ 153 * 15000 + 15000 * 153 :=
+    Nat.add_le_add (Nat.mul_le_mul hy hZ) (Nat.mul_le_mul hZ hy)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp only [chainGroupAt, UnequalParameters.gap, UnequalParameters.mixedCost,
+      UnequalParameters.errors] <;> omega
+
+theorem chainGroupAt_leftR_ge (zc r y t : ℕ) (ht : t ≤ r) : t ≤ (chainGroupAt zc r y t).leftR := by
+  simp only [chainGroupAt]; omega
+
+/-- Residual-branch majorant at the 6802 profile, charged at slope `33 - d` where `d` is a
+lower bound on the slope of the common divisor: the residual stage pair, the amortised
+residual chain (closed form at `zc = LB = 14915`) and two slope-`1` tails. -/
+def residMaj6802 (d : ℕ) : ℕ :=
+  (⟨262144, 131071, 181363, 153, max 1 (33 - d), 14915, 250, 56, 6680⟩ :
+    UnequalParameters).regularCountCap +
+    chainMaj 14915 (33 - d) 153 + 2 * 4677667475173
+
+theorem residMaj6802_le : ∀ d ∈ Finset.range 30, residMaj6802 d ≤ 8723202663435526 := by
+  decide
+
+end ChainGroupMaj
+
+end PackedLocator_ChainAmort
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrierChainAmort : True := by trivial
+end ProximityPrize.SubmissionLower
+
+
 /-! Packed from ProximityPrize.SubmissionLower.LocatorNestedProjection. -/
 section PackedLocator_LocatorNestedProjection
 namespace ProximityPrize.SubmissionLower.LocatorLowQuotient
@@ -6812,7 +7140,7 @@ local instance : CharP K 2130706433 := by
 source.  Keeping the source parameters explicit lets all external locator
 profiles share one factor-switch proof. -/
 def helperPair (L YS S leftY leftR leftZ : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181373, leftY, leftR, leftZ, YS, S, L⟩
+  ⟨262144, 131071, 181363, leftY, leftR, leftZ, YS, S, L⟩
 
 def HelperPairGates (L YS S leftY leftR leftZ : ℕ) : Prop :=
   let P := helperPair L YS S leftY leftR leftZ
@@ -6854,16 +7182,16 @@ private theorem degreeZ_le_totalWeight (Q : P4) :
 kernel or one source witness is coprime to it and supplies the unequal-pair
 count. -/
 theorem divisor_or_helper_count
-    (D L S m YS : ℕ) (hD : 0 < D) (hDa : D ≤ m * 181373)
+    (D L S m YS : ℕ) (hD : 0 < D) (hDa : D ≤ m * 181363)
     (hshape : D + S ≤ 131071 * (YS + 1))
     {u0 u1 : I → K} {H : P4}
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
     (F : RegularIndex H) (leftY leftR leftZ : ℕ)
     (hFY : F.1.degreeOf 1 ≤ leftY)
     (hFR : F.1.degreeOf 2 ≤ leftR)
@@ -7059,11 +7387,11 @@ theorem regularSeeds_count_le_stageCost
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
     (F : RegularIndex H)
     (hFY : F.1.degreeOf 1 ≤ b.yHi)
     (hFR : F.1.degreeOf 2 ≤ b.rHi)
@@ -7217,13 +7545,13 @@ ladder.  The source arithmetic appears only in `hband`, `hgapLe`, capacity,
 and positivity receipts. -/
 theorem regularSeeds_count_le_arbitraryPowerRoute
     (D L S m YS gap delta k : ℕ) (b : PowerRouteBox)
-    (hD : 0 < D) (hDa : D ≤ m * 181373)
+    (hD : 0 < D) (hDa : D ≤ m * 181363)
     (hshape : D + S ≤ 131071 * (YS + 1))
     (hk : 1 ≤ k) (hkchar : k < 2130706433)
     (hband : powerBandBudget delta b.tLo b.yLo b.rLo
       (L - b.tLo) (YS - b.yLo) (S - b.rLo) k < gap)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ k →
-      D - j * delta ≤ (m - j) * 181373 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181363 + j * (131071 - 1))
     (hlowpos : ∀ j, 1 ≤ j → j ≤ k → 0 < D - j * delta)
     (hterminal : L - k * b.tLo < b.tLo ∨
       YS - k * b.yLo < b.yLo ∨ S - k * b.rLo < b.rLo)
@@ -7233,11 +7561,11 @@ theorem regularSeeds_count_le_arbitraryPowerRoute
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
     (F : RegularIndex H)
     (hFT : b.tLo ≤ wt residualTotalWeights F.1 ∧
       wt residualTotalWeights F.1 ≤ b.tHi)
@@ -7363,7 +7691,7 @@ theorem regularSeeds_count_le_arbitraryPowerRoute
         let support := (Finset.univ : Finset I).filter (fun i ↦
           (selected gamma).eval (IRSProfile.domain i) =
             u0 i + gamma * u1 i)
-        have hcard : 181373 ≤ support.card := hagreement gamma hgammaG
+        have hcard : 181363 ≤ support.card := hagreement gamma hgammaG
         have hcap : D - j * delta ≤
             (m - j) * support.card + j * (131071 - 1) :=
           (hcapacity j hjpos hjle).trans
@@ -7449,19 +7777,22 @@ theorem Potential.eval_add (q : Potential) (p₁ p₂ : FlagDegree) :
   ring
 
 def initialAPotential : Potential :=
-  ⟨5961153504, 5974067721865, 22929595672934⟩
+  ⟨6028951284, 5462225136421, 25579200875807⟩
 
 def r1200Potential : Potential :=
-  ⟨13427087260899, 663874773565556, 2979865684813599⟩
+  ⟨36764078701232, 1763223219624231, 7905084447061489⟩
 
 def sourceCPotential : Potential :=
-  ⟨838515060584, 41471165784403, 186185626057566⟩
+  ⟨13427735141811, 664006777607640, 2980009468608277⟩
 
 def split500Potential : Potential :=
-  ⟨585232039360, 17772798151495, 79353607227622⟩
+  ⟨3401226049834, 169036896818327, 748519503389805⟩
+
+def split1200Potential : Potential :=
+  ⟨838681789895, 41479411858231, 186222646970525⟩
 
 def split390Potential : Potential :=
-  ⟨88177732979, 3190112842069, 14358837685870⟩
+  ⟨88195266130, 3190747159490, 14361692776390⟩
 
 /-- The cumulative boxes used by a power source. -/
 structure SourceNumbers where
@@ -7472,30 +7803,33 @@ structure SourceNumbers where
   deriving DecidableEq, Repr
 
 def sourceR1200 : SourceNumbers :=
-  ⟨328400, 6642, 1480, 5227117860923383312⟩
+  ⟨526750, 10983, 2450, 36963750380693986577⟩
 
 def sourceC : SourceNumbers :=
-  ⟨82100, 1660, 370, 18811500529412710⟩
+  ⟨328400, 6641, 1480, 5090867013182078230⟩
 
 def sourceSplit500 : SourceNumbers :=
-  ⟨42000, 1383, 310, 4161068143836058⟩
+  ⟨165000, 3320, 750, 315862958949324685⟩
+
+def sourceSplit1200 : SourceNumbers :=
+  ⟨82100, 1660, 370, 18278038734560710⟩
 
 def sourceSplit390 : SourceNumbers :=
-  ⟨19500, 539, 120, 95423319727890⟩
+  ⟨19500, 539, 120, 91073661700890⟩
 
 def SourceNumbers.fuel (s : SourceNumbers) (p : FlagDegree) : ℕ :=
   min (s.totalCap / total p)
     (min (s.middleCap / middle p) (s.slopeCap / p.all))
 
 def SourceNumbers.band (s : SourceNumbers) (p : FlagDegree) : ℕ :=
-  powerBandBudget 50303 (total p) (middle p) p.all
+  powerBandBudget 50293 (total p) (middle p) p.all
     (s.totalCap - total p) (s.middleCap - middle p)
     (s.slopeCap - p.all) (s.fuel p)
 
 /-- Lever S1.  The product of the routed factors has contact weight at least
 `131071 * middle p - p.all` (`contact_ge_ys` with the exact aggregate weights), and the
 source's kernel degree satisfies `D + slopeCap ≤ 131071 * (middleCap + 1)`; so the level-1
-contact cap of the band ladder is at most `contactCap`, and it drops by `50303 + contactDec`
+contact cap of the band ladder is at most `contactCap`, and it drops by `50293 + contactDec`
 per level.  `bandThin` is the ladder charged on the rows that can carry a monomial. -/
 def contactDec (p : FlagDegree) : ℕ := 131071 * middle p - p.all
 
@@ -7503,7 +7837,7 @@ def SourceNumbers.contactCap (s : SourceNumbers) (p : FlagDegree) : ℕ :=
   (131071 * (s.middleCap + 1) - s.slopeCap) - contactDec p
 
 def SourceNumbers.bandThin (s : SourceNumbers) (p : FlagDegree) : ℕ :=
-  powerBandBudgetThin 131071 (s.contactCap p) 50303 (contactDec p)
+  powerBandBudgetThin 131071 (s.contactCap p) 50293 (contactDec p)
     (total p) (middle p) p.all
     (s.totalCap - total p) (s.middleCap - middle p)
     (s.slopeCap - p.all) (s.fuel p)
@@ -7528,12 +7862,12 @@ structure PhaseSourceSound where
   source : SourceNumbers
   potential : Potential
   stageCost_le : ∀ (p : FlagDegree) (j : ℕ),
-    1 ≤ p.all → p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+    1 ≤ p.all → p.all ≤ 29 → middle p ≤ 135 → total p ≤ 6677 →
     j ≤ source.fuel p →
     stageCost source.totalCap source.middleCap source.slopeCap
       (exactRouteBox p) j ≤ potential.eval p
   stageGates : ∀ (p : FlagDegree) (j : ℕ),
-    1 ≤ p.all → p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+    1 ≤ p.all → p.all ≤ 29 → middle p ≤ 135 → total p ≤ 6677 →
     j ≤ source.fuel p →
     HelperPairGates
       (source.totalCap - j * total p)
@@ -7553,14 +7887,14 @@ def rawFlag (r v z : ℕ) : FlagDegree := ⟨z, v, r⟩
 /-- The C-prefix bucket used by the compact receipt. -/
 def cBucket (z : ℕ) : ℕ := if z ≤ 64 then 0 else (z - 64 + 303) / 304
 
-theorem cBucket_le_21 (z : ℕ) (hz : z ≤ 6412) : cBucket z ≤ 21 := by
+theorem cBucket_le_22 (z : ℕ) (hz : z ≤ 6677) : cBucket z ≤ 22 := by
   unfold cBucket
   split <;> omega
 
 /-- Exact maximum additive A-potential available to a complementary raw flag
-inside the wide cumulative box `(6412,153,33)`. -/
-def initialAComplement (p : FlagDegree) : ℕ :=
-  let t := 6412 - total p
+inside the wide cumulative box `(6677,153,33)`. -/
+def initialAComplementCore (p : FlagDegree) : ℕ :=
+  let t := 6677 - total p
   let y := 153 - middle p
   let r := 33 - p.all
   let nr := min t (min y r)
@@ -7569,21 +7903,41 @@ def initialAComplement (p : FlagDegree) : ℕ :=
   let nv := min t' y'
   initialAPotential.eval (rawFlag nr nv (t' - nv))
 
+/-- The correlated complement charge: the greedy A-potential complement plus the
+derivative chains of the universal child (total slope `p.all`, Y-degree `middle p`)
+and of the remaining factors (slope `33 - p.all`, Y-degree `153 - p.yz`). -/
+def initialAComplement (p : FlagDegree) : ℕ :=
+  initialAComplementCore p + ChainGroupMaj.chainMaj 6677 p.all (middle p) +
+    ChainGroupMaj.chainMaj 6677 (33 - p.all) (153 - p.yz) +
+    ChainGroupMaj.residMaj6802 p.all
+
 /-- The greedy complement is maximal for the A potential among all raw flags
 that can be added to `p` inside the wide box. -/
-theorem initialAPotential_le_complement (p n : FlagDegree)
-    (ht : total p + total n ≤ 6412)
+theorem initialAPotential_le_complementCore (p n : FlagDegree)
+    (ht : total p + total n ≤ 6677)
     (hy : middle p + middle n ≤ 153)
     (hr : p.all + n.all ≤ 33) :
-    initialAPotential.eval n ≤ initialAComplement p := by
+    initialAPotential.eval n ≤ initialAComplementCore p := by
   have hnpY : n.all ≤ middle n := by simp [middle]
   have hnpT : middle n ≤ total n := by simp [middle, total]
   have hppY : p.all ≤ middle p := by simp [middle]
   have hppT : middle p ≤ total p := by simp [middle, total]
-  simp only [initialAComplement, Potential.eval, initialAPotential,
+  simp only [initialAComplementCore, Potential.eval, initialAPotential,
     rawFlag_total, rawFlag_middle, rawFlag_all]
   simp only [Nat.min_def]
   split_ifs <;> omega
+
+theorem initialAComplementCore_le (p : FlagDegree) :
+    initialAComplementCore p ≤ initialAComplement p := by
+  unfold initialAComplement
+  omega
+
+theorem initialAPotential_le_complement (p n : FlagDegree)
+    (ht : total p + total n ≤ 6677)
+    (hy : middle p + middle n ≤ 153)
+    (hr : p.all + n.all ≤ 33) :
+    initialAPotential.eval n ≤ initialAComplement p :=
+  (initialAPotential_le_complementCore p n ht hy hr).trans (initialAComplementCore_le p)
 
 def sumFlag {ι : Type} (s : Finset ι) (p : ι → FlagDegree) : FlagDegree :=
   ⟨∑ i ∈ s, (p i).zOnly, ∑ i ∈ s, (p i).yz,
@@ -7618,24 +7972,36 @@ theorem sum_initialAPotential_eval {ι : Type} [DecidableEq ι] (s : Finset ι)
 /-- Aggregate direct-A helper ledger for the factors that leave the initial
 split.  The exact greedy complement avoids the seven-trillion loss of three
 independent cumulative-coordinate remainders. -/
+theorem initialA_helpers_sum_le_complementCore
+    {ι : Type} [DecidableEq ι] (s : Finset ι) (p : ι → FlagDegree)
+    (helper : ι → ℕ)
+    (universal : FlagDegree)
+    (hhelper : ∀ i ∈ s, helper i ≤ initialAPotential.eval (p i))
+    (ht : total universal + ∑ i ∈ s, total (p i) ≤ 6677)
+    (hy : middle universal + ∑ i ∈ s, middle (p i) ≤ 153)
+    (hr : universal.all + ∑ i ∈ s, (p i).all ≤ 33) :
+    (∑ i ∈ s, helper i) ≤ initialAComplementCore universal := by
+  calc
+    (∑ i ∈ s, helper i) ≤ ∑ i ∈ s, initialAPotential.eval (p i) :=
+      Finset.sum_le_sum (fun i hi => hhelper i hi)
+    _ = initialAPotential.eval (sumFlag s p) := sum_initialAPotential_eval s p
+    _ ≤ initialAComplementCore universal := by
+      apply initialAPotential_le_complementCore
+      · simpa only [sumFlag_total] using ht
+      · simpa only [sumFlag_middle] using hy
+      · simpa only [sumFlag_all] using hr
+
 theorem initialA_helpers_sum_le_complement
     {ι : Type} [DecidableEq ι] (s : Finset ι) (p : ι → FlagDegree)
     (helper : ι → ℕ)
     (universal : FlagDegree)
     (hhelper : ∀ i ∈ s, helper i ≤ initialAPotential.eval (p i))
-    (ht : total universal + ∑ i ∈ s, total (p i) ≤ 6412)
+    (ht : total universal + ∑ i ∈ s, total (p i) ≤ 6677)
     (hy : middle universal + ∑ i ∈ s, middle (p i) ≤ 153)
     (hr : universal.all + ∑ i ∈ s, (p i).all ≤ 33) :
-    (∑ i ∈ s, helper i) ≤ initialAComplement universal := by
-  calc
-    (∑ i ∈ s, helper i) ≤ ∑ i ∈ s, initialAPotential.eval (p i) :=
-      Finset.sum_le_sum (fun i hi => hhelper i hi)
-    _ = initialAPotential.eval (sumFlag s p) := sum_initialAPotential_eval s p
-    _ ≤ initialAComplement universal := by
-      apply initialAPotential_le_complement
-      · simpa only [sumFlag_total] using ht
-      · simpa only [sumFlag_middle] using hy
-      · simpa only [sumFlag_all] using hr
+    (∑ i ∈ s, helper i) ≤ initialAComplement universal :=
+  (initialA_helpers_sum_le_complementCore s p helper universal hhelper ht hy hr).trans
+    (initialAComplementCore_le universal)
 
 /-- A threshold row says at which `z` each source becomes routeable for fixed
 positive slope `r` and residual middle coordinate `v`. -/
@@ -7645,11 +8011,12 @@ structure ThresholdReceipt where
   r1200 : ℕ
   sourceC : ℕ
   split500 : ℕ
+  split1200 : ℕ
   split390 : ℕ
   deriving DecidableEq, Repr
 
 def thresholdBoundary (s : SourceNumbers) (r v threshold : ℕ) : Prop :=
-  let maxZ := 6412 - (r + v)
+  let maxZ := 6677 - (r + v)
   if threshold = 0 then s.Routeable (rawFlag r v 0)
   else if threshold ≤ maxZ then
     ¬s.Routeable (rawFlag r v (threshold - 1)) ∧
@@ -7662,7 +8029,7 @@ instance (s : SourceNumbers) (r v threshold : ℕ) :
   infer_instance
 
 def ThresholdReceipt.Valid (q : ThresholdReceipt) : Prop :=
-  1 ≤ q.r ∧ q.r ≤ 29 ∧ q.r + q.v ≤ 132 ∧
+  1 ≤ q.r ∧ q.r ≤ 29 ∧ q.r + q.v ≤ 135 ∧
     thresholdBoundary sourceR1200 q.r q.v q.r1200 ∧
     thresholdBoundary LocatorPhase6800Oracle.sourceC q.r q.v q.sourceC ∧
     thresholdBoundary sourceSplit500 q.r q.v q.split500 ∧
@@ -7681,12 +8048,13 @@ structure PrefixReceipt where
   r1200 : ℕ
   sourceC : List ℕ
   split500 : ℕ
+  split1200 : ℕ
   split390 : ℕ
   deriving DecidableEq, Repr
 
 def PrefixReceipt.ExpectedShape (q : PrefixReceipt) : Prop :=
-  1 ≤ q.afterR ∧ q.afterR ≤ 28 ∧ q.afterR + 1 + q.v ≤ 132 ∧
-    q.sourceC.length = (if q.afterR ≤ 0 ∧ q.v ≤ 64 then 22 else 1)
+  1 ≤ q.afterR ∧ q.afterR ≤ 28 ∧ q.afterR + 1 + q.v ≤ 135 ∧
+    q.sourceC.length = (if q.afterR ≤ 0 ∧ q.v ≤ 64 then 23 else 1)
 
 instance (q : PrefixReceipt) : Decidable q.ExpectedShape := by
   unfold PrefixReceipt.ExpectedShape
@@ -7729,9 +8097,9 @@ def BaseRow.evalAt (q : BaseRow) (z : ℕ) : ℕ :=
   else evalBaseSegments q.segments z
 
 /-- Row order used by the generated array: increasing `r`, then increasing
-`v`, over `1 ≤ r ≤ 29` and `r+v ≤ 132`. -/
+`v`, over `1 ≤ r ≤ 29` and `r+v ≤ 135`. -/
 def baseRowIndex (r v : ℕ) : ℕ :=
-  (r - 1) * 133 - ((r - 1) * r) / 2 + v
+  (r - 1) * 136 - ((r - 1) * r) / 2 + v
 
 def defaultBaseRow : BaseRow := ⟨0, 0, 0, 0, 0, []⟩
 
@@ -7742,9 +8110,9 @@ def baseTableCap (rows : Array BaseRow) (p : FlagDegree) : ℕ :=
   (lookupBaseRow rows p.all p.yz).evalAt p.zOnly
 
 def BaseRowsIndexed (rows : Array BaseRow) : Prop :=
-  rows.size = 3422 ∧
+  rows.size = 3509 ∧
     ∀ r ∈ (List.range 29).map (fun q => q + 1),
-      ∀ v ∈ List.range (133 - r),
+      ∀ v ∈ List.range (136 - r),
         let q := lookupBaseRow rows r v
         q.r = r ∧ q.v = v
 
@@ -7753,10 +8121,10 @@ instance (rows : Array BaseRow) : Decidable (BaseRowsIndexed rows) := by
   infer_instance
 
 def BaseRow.ExpectedShape (q : BaseRow) : Prop :=
-  1 ≤ q.r ∧ q.r ≤ 29 ∧ q.r + q.v ≤ 132 ∧
+  1 ≤ q.r ∧ q.r ≤ 29 ∧ q.r + q.v ≤ 135 ∧
     q.segments ≠ [] ∧ q.segments.head?.map BaseSegment.start = some 3 ∧
     q.segments.Pairwise (fun a b => a.start < b.start) ∧
-    ∀ s ∈ q.segments, s.start ≤ 6412 - (q.r + q.v)
+    ∀ s ∈ q.segments, s.start ≤ 6677 - (q.r + q.v)
 
 instance (q : BaseRow) : Decidable q.ExpectedShape := by
   unfold BaseRow.ExpectedShape
@@ -7768,8 +8136,8 @@ transition. -/
 def StateLocalBaseOracleSound (baseCap : FlagDegree → ℕ) : Prop :=
   ∀ {ι : Type} [DecidableEq ι] (s : Finset ι) (p : ι → FlagDegree),
     (∀ i ∈ s, 1 ≤ (p i).all) →
-    (sumFlag s p).all ≤ 29 → middle (sumFlag s p) ≤ 132 →
-    total (sumFlag s p) ≤ 6412 →
+    (sumFlag s p).all ≤ 29 → middle (sumFlag s p) ≤ 135 →
+    total (sumFlag s p) ≤ 6677 →
     (∑ i ∈ s, LocatorHybridCost.ordinaryCostOf (p i)) ≤
       baseCap (sumFlag s p)
 
@@ -7787,7 +8155,7 @@ The algebraic batch engine turns precisely this condition into the phase cap.
 def PhaseDefectSound (previousCap : FlagDegree → ℕ)
     (source : SourceNumbers) (potential : Potential)
     (defect : FlagDegree → ℕ) : Prop :=
-  ∀ p q, p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+  ∀ p q, p.all ≤ 29 → middle p ≤ 135 → total p ≤ 6677 →
     RawStrictSlopeBelow q p → ¬source.Routeable q →
     previousCap q ≤ potential.eval q + defect p
 
@@ -7795,7 +8163,7 @@ def PhaseDefectSound (previousCap : FlagDegree → ℕ)
 def PhaseCapEquation (previousCap nextCap : FlagDegree → ℕ)
     (source : SourceNumbers) (potential : Potential)
     (defect : FlagDegree → ℕ) : Prop :=
-  ∀ p, p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+  ∀ p, p.all ≤ 29 → middle p ≤ 135 → total p ≤ 6677 →
     nextCap p = if source.Routeable p then
       min (previousCap p) (potential.eval p + defect p)
     else previousCap p
@@ -7806,10 +8174,10 @@ def BaseOracleSound (baseCap : FlagDegree → ℕ) : Prop :=
   ∀ {ι : Type} [Fintype ι] (p : ι → FlagDegree),
     (∀ i, 1 ≤ (p i).all) →
     (∑ i, (p i).all) ≤ 29 →
-    (∑ i, middle (p i)) ≤ 132 →
-    (∑ i, total (p i)) ≤ 6412 →
+    (∑ i, middle (p i)) ≤ 135 →
+    (∑ i, total (p i)) ≤ 6677 →
     (∑ i, LocatorHybridCost.ordinaryCostOf (p i)) ≤
-      baseCap ⟨6412 - 132, 132 - 30, 30⟩
+      baseCap ⟨6677 - 135, 135 - 30, 30⟩
 
 /-- Consumer-facing abstraction: numerical receipt checking yields a narrow
 phase cap, while the algebraic batch route supplies the phase transitions. -/
@@ -7817,10 +8185,10 @@ structure CheckedPhaseOracle where
   narrowCap : FlagDegree → ℕ
   baseCap : FlagDegree → ℕ
   baseSound : BaseOracleSound baseCap
-  narrow_le : ∀ p, p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
-    narrowCap p ≤ 254118829368535504
-  joint_le : ∀ p, p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
-    narrowCap p + initialAComplement p ≤ 254595720129422441
+  narrow_le : ∀ p, p.all ≤ 29 → middle p ≤ 135 → total p ≤ 6677 →
+    narrowCap p ≤ 269089533458270975
+  joint_le : ∀ p, p.all ≤ 29 → middle p ≤ 135 → total p ≤ 6677 →
+    narrowCap p + initialAComplement p ≤ 273301903386687639
 
 /-! ## Generic finite-set transition consumed by the batch route -/
 
@@ -7860,16 +8228,12 @@ theorem phase_split_le
   rw [hpotentialSplit] at hparent
   exact hcombined.trans hparent
 
-def certifiedNarrowMaximum : ℕ := 254118829368535504
-def certifiedJointMaximum : ℕ := 254595720129422441
-def tightenedRegularAllowance : ℕ := 257395272113379213
-
-theorem certifiedJoint_lt_allowance :
-    certifiedJointMaximum < tightenedRegularAllowance := by decide
-
-theorem certifiedJoint_slack :
-    tightenedRegularAllowance - certifiedJointMaximum = 2799551983956772 := by
-  decide
+def certifiedNarrowMaximum : ℕ := 269089533458270975
+/-- The 6802 regular allowance `254595720129422441` plus the fixed derivative chain
+`ChainGroupMaj.chainMaj 33 153 = 3516784745477411`, which is now charged inside the
+correlated complement instead of as a flat ledger term. -/
+def certifiedJointMaximum : ℕ := 273301903386687639
+def tightenedRegularAllowance : ℕ := 273301903386687639
 
 /-- Arithmetic end of the initial-A ledger.  The two hypotheses are the only
 set-dependent facts required from the structural bridge. -/
@@ -8673,8 +9037,8 @@ phase cost and maximum complementary A charge cannot be taken independently. -/
 theorem initialA_sum_le_certifiedJoint_correlated
     (oracle : CheckedPhaseOracle)
     (phaseSum helperSum : ℕ) (p : FlagDegree)
-    (hslope : p.all ≤ 29) (hmiddle : middle p ≤ 132)
-    (htotal : total p ≤ 6412)
+    (hslope : p.all ≤ 29) (hmiddle : middle p ≤ 135)
+    (htotal : total p ≤ 6677)
     (hphase : phaseSum ≤ oracle.narrowCap p)
     (hhelper : helperSum ≤ initialAComplement p) :
     phaseSum + helperSum ≤ certifiedJointMaximum := by
@@ -8735,13 +9099,13 @@ theorem routeable_raw_mono_z
   have hbox : s.totalCap - (r + v + z₂) ≤
       s.totalCap - (r + v + z₁) := Nat.sub_le_sub_left htotal _
   have hsameFuel :
-      powerBandBudget 50303 (r + v + z₂) (r + v) r
+      powerBandBudget 50293 (r + v + z₂) (r + v) r
           (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
           (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
-        powerBandBudget 50303 (r + v + z₁) (r + v) r
+        powerBandBudget 50293 (r + v + z₁) (r + v) r
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
           (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) := by
-    exact powerBandBudget_mono 50303
+    exact powerBandBudget_mono 50293
       (r + v + z₂) (r + v) r
       (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
       (s.slopeCap - r)
@@ -8750,13 +9114,13 @@ theorem routeable_raw_mono_z
       (s.slopeCap - r) (s.fuel (rawFlag r v z₂))
       hbox (le_refl _) (le_refl _) htotal (le_refl _) (le_refl _)
   have hmoreFuel :
-      powerBandBudget 50303 (r + v + z₁) (r + v) r
+      powerBandBudget 50293 (r + v + z₁) (r + v) r
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
           (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
-        powerBandBudget 50303 (r + v + z₁) (r + v) r
+        powerBandBudget 50293 (r + v + z₁) (r + v) r
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
           (s.slopeCap - r) (s.fuel (rawFlag r v z₁)) :=
-    powerBandBudget_mono_fuel 50303 (r + v + z₁) (r + v) r
+    powerBandBudget_mono_fuel 50293 (r + v + z₁) (r + v) r
       (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
       (s.slopeCap - r) hfuel
   refine ⟨hr, ?_, ?_, ?_, ?_⟩
@@ -8770,11 +9134,11 @@ theorem routeable_raw_mono_z
       exact (hsameFuel.trans hmoreFuel).trans_lt hband
     · right
       have hsameFuelT :
-          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₂)) 50303
+          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₂)) 50293
               (contactDec (rawFlag r v z₂)) (r + v + z₂) (r + v) r
               (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
               (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
-            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50303
+            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50293
               (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
               (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
               (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) := by
@@ -8783,7 +9147,7 @@ theorem routeable_raw_mono_z
         have hdec : contactDec (rawFlag r v z₂) = contactDec (rawFlag r v z₁) := by
           simp only [contactDec, rawFlag_middle, rawFlag_all]
         rw [hcap, hdec]
-        exact powerBandBudgetThin_mono 131071 50303 (s.fuel (rawFlag r v z₂))
+        exact powerBandBudgetThin_mono 131071 50293 (s.fuel (rawFlag r v z₂))
           (s.contactCap (rawFlag r v z₁)) (contactDec (rawFlag r v z₁))
           (r + v + z₂) (r + v) r
           (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v)) (s.slopeCap - r)
@@ -8792,15 +9156,15 @@ theorem routeable_raw_mono_z
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v)) (s.slopeCap - r)
           le_rfl le_rfl hbox le_rfl le_rfl htotal le_rfl le_rfl
       have hmoreFuelT :
-          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50303
+          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50293
               (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
               (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
               (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
-            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50303
+            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50293
               (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
               (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
               (s.slopeCap - r) (s.fuel (rawFlag r v z₁)) :=
-        powerBandBudgetThin_mono_fuel 131071 (s.contactCap (rawFlag r v z₁)) 50303
+        powerBandBudgetThin_mono_fuel 131071 (s.contactCap (rawFlag r v z₁)) 50293
           (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v)) (s.slopeCap - r) hfuel
       unfold SourceNumbers.bandThin at hthin ⊢
@@ -8811,8 +9175,8 @@ theorem routeable_raw_mono_z
 the benchmark raw-total interval. -/
 theorem routeable_raw_iff_threshold
     (s : SourceNumbers) {r v threshold z : ℕ}
-    (hsourceCap : 6412 ≤ s.totalCap)
-    (hrv : r + v ≤ 6412) (hz : z ≤ 6412 - (r + v))
+    (hsourceCap : 6677 ≤ s.totalCap)
+    (hrv : r + v ≤ 6677) (hz : z ≤ 6677 - (r + v))
     (hboundary : thresholdBoundary s r v threshold) :
     s.Routeable (rawFlag r v z) ↔ threshold ≤ z := by
   unfold thresholdBoundary at hboundary
@@ -8827,7 +9191,7 @@ theorem routeable_raw_iff_threshold
       · omega
       · exact hboundary
   · rw [if_neg hzero] at hboundary
-    by_cases hin : threshold ≤ 6412 - (r + v)
+    by_cases hin : threshold ≤ 6677 - (r + v)
     · rw [if_pos hin] at hboundary
       constructor
       · intro hroute
@@ -8985,22 +9349,22 @@ theorem sum_count_le_applyPhase
 every raw `(r,v)` row. -/
 def ThresholdTableSound (s : SourceNumbers)
     (threshold : ℕ → ℕ → ℕ) : Prop :=
-  ∀ r v, 1 ≤ r → r + v ≤ 132 →
+  ∀ r v, 1 ≤ r → r + v ≤ 135 →
     thresholdBoundary s r v (threshold r v)
 
 theorem routeable_iff_of_thresholdTableSound
     (s : SourceNumbers) (threshold : ℕ → ℕ → ℕ)
-    (hsourceCap : 6412 ≤ s.totalCap)
+    (hsourceCap : 6677 ≤ s.totalCap)
     (htable : ThresholdTableSound s threshold)
     (p : FlagDegree) (hr : 1 ≤ p.all)
-    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
+    (hy : middle p ≤ 135) (ht : total p ≤ 6677) :
     s.Routeable p ↔ threshold p.all p.yz ≤ p.zOnly := by
-  have hry : p.all + p.yz ≤ 132 := by
+  have hry : p.all + p.yz ≤ 135 := by
     simpa only [middle, Nat.add_comm] using hy
-  have hrz : p.zOnly ≤ 6412 - (p.all + p.yz) := by
+  have hrz : p.zOnly ≤ 6677 - (p.all + p.yz) := by
     simp only [total] at ht
     omega
-  have hryWide : p.all + p.yz ≤ 6412 := hry.trans (by decide)
+  have hryWide : p.all + p.yz ≤ 6677 := hry.trans (by decide)
   have h := routeable_raw_iff_threshold s hsourceCap
     (r := p.all) (v := p.yz) (z := p.zOnly)
     (hrv := hryWide) (hz := hrz)
@@ -9025,8 +9389,8 @@ table.  It is finite on the benchmark box.  For every possible carrier
 remaining factors charged to the zero-`z` table. -/
 def BaseCandidatesSound (rows : Array BaseRow) : Prop :=
   ∀ R V r v z,
-    1 ≤ r → r ≤ R → v ≤ V → R ≤ 29 → R + V ≤ 132 →
-    (r < R ∨ v = V) → R + V + z ≤ 6412 →
+    1 ≤ r → r ≤ R → v ≤ V → R ≤ 29 → R + V ≤ 135 →
+    (r < R ∨ v = V) → R + V + z ≤ 6677 →
     LocatorOrdinaryZConvex.rawCost r v z +
         baseZeroCap rows (R - r) (V - v) ≤
       baseTableCap rows (rawFlag R V z)
@@ -9158,7 +9522,7 @@ instance (rows : Array BaseRow) (R V r v : ℕ) :
 
 /-- One finite `R` layer of the carrier-row checker. -/
 def CandidateRCheck (rows : Array BaseRow) (R : ℕ) : Prop :=
-  ∀ V ∈ List.range (133 - R),
+  ∀ V ∈ List.range (136 - R),
     ∀ r ∈ List.range (R + 1), 1 ≤ r →
       ∀ v ∈ List.range (V + 1), (r < R ∨ v = V) →
         CandidateRowCheck rows R V r v
@@ -9295,7 +9659,7 @@ theorem sum_rawCost_zero_le_baseZeroCap
     {ι : Type} [DecidableEq ι] (s : Finset ι) (r v : ι → ℕ)
     (hpositive : ∀ i ∈ s, 1 ≤ r i)
     (hrCap : (∑ i ∈ s, r i) ≤ 29)
-    (hrvCap : (∑ i ∈ s, r i) + (∑ i ∈ s, v i) ≤ 132) :
+    (hrvCap : (∑ i ∈ s, r i) + (∑ i ∈ s, v i) ≤ 135) :
     (∑ i ∈ s, LocatorOrdinaryZConvex.rawCost (r i) (v i) 0) ≤
       baseZeroCap rows (∑ i ∈ s, r i) (∑ i ∈ s, v i) := by
   classical
@@ -9306,12 +9670,12 @@ theorem sum_rawCost_zero_le_baseZeroCap
       have hRInsert : r a + (∑ i ∈ s, r i) ≤ 29 := by
         simpa only [Finset.sum_insert ha] using hrCap
       have hRVInsert :
-          (r a + ∑ i ∈ s, r i) + (v a + ∑ i ∈ s, v i) ≤ 132 := by
+          (r a + ∑ i ∈ s, r i) + (v a + ∑ i ∈ s, v i) ≤ 135 := by
         rw [Finset.sum_insert ha, Finset.sum_insert ha] at hrvCap
         omega
       have hsR : (∑ i ∈ s, r i) ≤ 29 := by
         omega
-      have hsRV : (∑ i ∈ s, r i) + (∑ i ∈ s, v i) ≤ 132 := by
+      have hsRV : (∑ i ∈ s, r i) + (∑ i ∈ s, v i) ≤ 135 := by
         omega
       have ihBound := ih
         (fun i hi ↦ hpositive i (Finset.mem_insert_of_mem hi)) hsR hsRV
@@ -9380,7 +9744,7 @@ theorem stateLocalBaseOracleSound_of_candidates
           (fun _ _ _ ↦ Nat.zero_le _) (f := fun i ↦ (p i).all)
         have hvle := Finset.sum_le_sum_of_subset_of_nonneg hsub
           (fun _ _ _ ↦ Nat.zero_le _) (f := fun i ↦ (p i).yz)
-        have hmiddle : (∑ i ∈ s, (p i).all) + (∑ i ∈ s, (p i).yz) ≤ 132 := by
+        have hmiddle : (∑ i ∈ s, (p i).all) + (∑ i ∈ s, (p i).yz) ≤ 135 := by
           rw [sumFlag_middle] at hyCap
           simp only [middle, Finset.sum_add_distrib] at hyCap
           omega
@@ -9391,12 +9755,12 @@ theorem stateLocalBaseOracleSound_of_candidates
     have hcV : (p c).yz ≤ ∑ i ∈ s, (p i).yz := by
       exact Finset.single_le_sum (f := fun i ↦ (p i).yz)
         (fun _ _ ↦ Nat.zero_le _) hc
-    have hmiddle : (∑ i ∈ s, (p i).all) + (∑ i ∈ s, (p i).yz) ≤ 132 := by
+    have hmiddle : (∑ i ∈ s, (p i).all) + (∑ i ∈ s, (p i).yz) ≤ 135 := by
       rw [sumFlag_middle] at hyCap
       simp only [middle, Finset.sum_add_distrib] at hyCap
       omega
     have htotal : (∑ i ∈ s, (p i).all) + (∑ i ∈ s, (p i).yz) +
-        (∑ i ∈ s, (p i).zOnly) ≤ 6412 := by
+        (∑ i ∈ s, (p i).zOnly) ≤ 6677 := by
       rw [sumFlag_total] at htCap
       simp only [total, middle, Finset.sum_add_distrib] at htCap
       omega
@@ -9568,16 +9932,16 @@ theorem counts_of_batchExitStage
     (hD : 0 < D) (hfuelChar : fuel < 2130706433)
     (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
-      D - j * delta ≤ (m - j) * 181373 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181363 + j * (131071 - 1))
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
     (A : Finset (RegularIndex H))
     (q : ConstraintKernel (K := K) D 131071 L S m
         IRSProfile.domain u0 u1 →ₗ[K] P4)
@@ -9672,7 +10036,7 @@ theorem counts_of_batchExitStage
   have hQzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
       specialization K (selected gamma) gamma QF = 0 := by
     exact batch_helper_zero_on_regularSeeds j D (D - j * delta) 131071
-      L S m 181373 2130706433
+      L S m 181363 2130706433
       (CharP.char_prime_of_ne_zero (R := K) (by norm_num))
       IRSProfile.domain u0 u1 H A F hFA selected Gamma v J hj hjchar
       (by decide) hdegree hagreement (hcapacity j hj hjle) hlow
@@ -9695,21 +10059,21 @@ later strict exit.  `hcharge` is the sole interface to the additive numerical
 potential used by a phase receipt. -/
 theorem exists_strict_helper_split_of_batch_source
     (D L S m YS gap delta fuel : ℕ)
-    (hD : 0 < D) (hDa : D ≤ m * 181373)
+    (hD : 0 < D) (hDa : D ≤ m * 181363)
     (hshape : D + S ≤ 131071 * (YS + 1))
     (hfuel : 1 ≤ fuel) (hfuelChar : fuel < 2130706433)
     (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
-      D - j * delta ≤ (m - j) * 181373 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181363 + j * (131071 - 1))
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
     (A : Finset (RegularIndex H)) (hA : A.Nonempty)
     (hband : powerBandBudget delta
       (wt residualTotalWeights (regularProduct H A))
@@ -9854,21 +10218,21 @@ theorem exists_strict_helper_split_of_batch_source
 
 theorem exists_strict_helper_split_of_batch_source_thin
     (D L S m YS gap delta fuel : ℕ)
-    (hD : 0 < D) (hDa : D ≤ m * 181373)
+    (hD : 0 < D) (hDa : D ≤ m * 181363)
     (hshape : D + S ≤ 131071 * (YS + 1))
     (hfuel : 1 ≤ fuel) (hfuelChar : fuel < 2130706433)
     (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
-      D - j * delta ≤ (m - j) * 181373 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181363 + j * (131071 - 1))
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
     (A : Finset (RegularIndex H)) (hA : A.Nonempty)
     (hbandThin : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
       (D - wt (contactWeights 131071) (regularProduct H A)) delta
@@ -10712,7 +11076,7 @@ end ProximityPrize.SubmissionLower
 /-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Parameters. -/
 section PackedLocator_LocatorR1200Parameters
 
-/-! Shared, reduction-cheap definitions for the 1200-contact locator source. -/
+/-! Shared, reduction-cheap definitions for the R1200 locator source. -/
 
 namespace ProximityPrize.SubmissionLower.LocatorR1200Parameters
 
@@ -10726,17 +11090,18 @@ set_option maxHeartbeats 5000000
 
 /-- One closed contact-rank row for the R1200 source. -/
 def rankRow (r : ℕ) : ℕ :=
-  let M := min r 328400
-  let h := min (r + 1) (4800 - r)
-  rectangularCount (M + 1) (1480 + 1) 0 328400 -
-    rectangularCount (M + 1 - h) (1480 + 1 - h) h 328400
+  let M := min r 526750
+  let h := min (r + 1) (7938 - r)
+  rectangularCount (M + 1) (2450 + 1) 0 526750 -
+    rectangularCount (M + 1 - h) (2450 + 1 - h) h 526750
 
 end ProximityPrize.SubmissionLower.LocatorR1200Parameters
 end PackedLocator_LocatorR1200Parameters
 
+
 namespace ProximityPrize.SubmissionLower
 set_option Elab.async false in
-theorem PackedLocatorBarrier20 : True := by trivial
+theorem PackedLocatorBarrier6803_R1200P : True := by trivial
 end ProximityPrize.SubmissionLower
 
 /-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Coefficient. -/
@@ -10756,21 +11121,22 @@ set_option maxHeartbeats 5000000
 set_option Elab.async false
 
 theorem coefficientCount_exact :
-    coefficientCount 870590400 131071 328400 1480 =
-      1107287009400021065232 := by
-  change coefficientCount (6642 * 131071 + 16818) 131071 328400 1480 =
-    1107287009400021065232
+    coefficientCount 1439659494 131071 526750 2450 =
+      8033235822635536981265 := by
+  change coefficientCount (10983 * 131071 + 106701) 131071 526750 2450 =
+    8033235822635536981265
   rw [coefficientCount_eq_oneResidueCoefficientCount
-    6642 16818 131071 328400 1480 (by decide) (by decide) (by decide)
+    10983 106701 131071 526750 2450 (by decide) (by decide) (by decide)
       (by decide)]
   norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
 
 end ProximityPrize.SubmissionLower.LocatorR1200Coefficient
 end PackedLocator_LocatorR1200Coefficient
 
+
 namespace ProximityPrize.SubmissionLower
 set_option Elab.async false in
-theorem PackedLocatorBarrier21 : True := by trivial
+theorem PackedLocatorBarrier6803_R1200C : True := by trivial
 end ProximityPrize.SubmissionLower
 
 /-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankA. -/
@@ -10780,6 +11146,1256 @@ namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
 
 open scoped BigOperators
 open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_0 :
+    (∑ i ∈ Finset.range 64, rankRow i) = 2679066530400 := by decide
+
+theorem chunk_64 :
+    (∑ i ∈ Finset.range 64, rankRow (64 + i)) = 7954335085152 := by decide
+
+theorem chunk_128 :
+    (∑ i ∈ Finset.range 64, rankRow (128 + i)) = 13228961124960 := by decide
+
+theorem chunk_192 :
+    (∑ i ∈ Finset.range 64, rankRow (192 + i)) = 18502944649824 := by decide
+
+theorem chunk_256 :
+    (∑ i ∈ Finset.range 64, rankRow (256 + i)) = 23776285659744 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankA
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RA : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankB. -/
+section PackedLocator_LocatorR1200RankB
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_320 :
+    (∑ i ∈ Finset.range 64, rankRow (320 + i)) = 29048984154720 := by decide
+
+theorem chunk_384 :
+    (∑ i ∈ Finset.range 64, rankRow (384 + i)) = 34321040134752 := by decide
+
+theorem chunk_448 :
+    (∑ i ∈ Finset.range 64, rankRow (448 + i)) = 39592453599840 := by decide
+
+theorem chunk_512 :
+    (∑ i ∈ Finset.range 64, rankRow (512 + i)) = 44863224549984 := by decide
+
+theorem chunk_576 :
+    (∑ i ∈ Finset.range 64, rankRow (576 + i)) = 50133352985184 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankB
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RB : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankC. -/
+section PackedLocator_LocatorR1200RankC
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_640 :
+    (∑ i ∈ Finset.range 64, rankRow (640 + i)) = 55402838905440 := by decide
+
+theorem chunk_704 :
+    (∑ i ∈ Finset.range 64, rankRow (704 + i)) = 60671682310752 := by decide
+
+theorem chunk_768 :
+    (∑ i ∈ Finset.range 64, rankRow (768 + i)) = 65939883201120 := by decide
+
+theorem chunk_832 :
+    (∑ i ∈ Finset.range 64, rankRow (832 + i)) = 71207441576544 := by decide
+
+theorem chunk_896 :
+    (∑ i ∈ Finset.range 64, rankRow (896 + i)) = 76474357437024 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankC
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RC : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankD. -/
+section PackedLocator_LocatorR1200RankD
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_960 :
+    (∑ i ∈ Finset.range 64, rankRow (960 + i)) = 81740630782560 := by decide
+
+theorem chunk_1024 :
+    (∑ i ∈ Finset.range 64, rankRow (1024 + i)) = 87006261613152 := by decide
+
+theorem chunk_1088 :
+    (∑ i ∈ Finset.range 64, rankRow (1088 + i)) = 92271249928800 := by decide
+
+theorem chunk_1152 :
+    (∑ i ∈ Finset.range 64, rankRow (1152 + i)) = 97535595729504 := by decide
+
+theorem chunk_1216 :
+    (∑ i ∈ Finset.range 64, rankRow (1216 + i)) = 102799299015264 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankD
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RD : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankE. -/
+section PackedLocator_LocatorR1200RankE
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_1280 :
+    (∑ i ∈ Finset.range 64, rankRow (1280 + i)) = 108062359786080 := by decide
+
+theorem chunk_1344 :
+    (∑ i ∈ Finset.range 64, rankRow (1344 + i)) = 113324778041952 := by decide
+
+theorem chunk_1408 :
+    (∑ i ∈ Finset.range 64, rankRow (1408 + i)) = 118586553782880 := by decide
+
+theorem chunk_1472 :
+    (∑ i ∈ Finset.range 64, rankRow (1472 + i)) = 123847687008864 := by decide
+
+theorem chunk_1536 :
+    (∑ i ∈ Finset.range 64, rankRow (1536 + i)) = 129108177719904 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankE
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RE : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankF. -/
+section PackedLocator_LocatorR1200RankF
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_1600 :
+    (∑ i ∈ Finset.range 64, rankRow (1600 + i)) = 134368025916000 := by decide
+
+theorem chunk_1664 :
+    (∑ i ∈ Finset.range 64, rankRow (1664 + i)) = 139627231597152 := by decide
+
+theorem chunk_1728 :
+    (∑ i ∈ Finset.range 64, rankRow (1728 + i)) = 144885794763360 := by decide
+
+theorem chunk_1792 :
+    (∑ i ∈ Finset.range 64, rankRow (1792 + i)) = 150143715414624 := by decide
+
+theorem chunk_1856 :
+    (∑ i ∈ Finset.range 64, rankRow (1856 + i)) = 155400993550944 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankF
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RF : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankG. -/
+section PackedLocator_LocatorR1200RankG
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_1920 :
+    (∑ i ∈ Finset.range 64, rankRow (1920 + i)) = 160657629172320 := by decide
+
+theorem chunk_1984 :
+    (∑ i ∈ Finset.range 64, rankRow (1984 + i)) = 165913622278752 := by decide
+
+theorem chunk_2048 :
+    (∑ i ∈ Finset.range 64, rankRow (2048 + i)) = 171168972870240 := by decide
+
+theorem chunk_2112 :
+    (∑ i ∈ Finset.range 64, rankRow (2112 + i)) = 176423680946784 := by decide
+
+theorem chunk_2176 :
+    (∑ i ∈ Finset.range 64, rankRow (2176 + i)) = 181677746508384 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankG
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RG : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankH. -/
+section PackedLocator_LocatorR1200RankH
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_2240 :
+    (∑ i ∈ Finset.range 64, rankRow (2240 + i)) = 186931169555040 := by decide
+
+theorem chunk_2304 :
+    (∑ i ∈ Finset.range 64, rankRow (2304 + i)) = 192183950086752 := by decide
+
+theorem chunk_2368 :
+    (∑ i ∈ Finset.range 64, rankRow (2368 + i)) = 197436088103520 := by decide
+
+theorem chunk_2432 :
+    (∑ i ∈ Finset.range 64, rankRow (2432 + i)) = 202687583605344 := by decide
+
+theorem chunk_2496 :
+    (∑ i ∈ Finset.range 64, rankRow (2496 + i)) = 207938436592224 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankH
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RH : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankI. -/
+section PackedLocator_LocatorR1200RankI
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_2560 :
+    (∑ i ∈ Finset.range 64, rankRow (2560 + i)) = 213188647064160 := by decide
+
+theorem chunk_2624 :
+    (∑ i ∈ Finset.range 64, rankRow (2624 + i)) = 218438215021152 := by decide
+
+theorem chunk_2688 :
+    (∑ i ∈ Finset.range 64, rankRow (2688 + i)) = 223687140463200 := by decide
+
+theorem chunk_2752 :
+    (∑ i ∈ Finset.range 64, rankRow (2752 + i)) = 228935423390304 := by decide
+
+theorem chunk_2816 :
+    (∑ i ∈ Finset.range 64, rankRow (2816 + i)) = 234183063802464 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankI
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RI : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankJ. -/
+section PackedLocator_LocatorR1200RankJ
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_2880 :
+    (∑ i ∈ Finset.range 64, rankRow (2880 + i)) = 239430061699680 := by decide
+
+theorem chunk_2944 :
+    (∑ i ∈ Finset.range 64, rankRow (2944 + i)) = 244676417081952 := by decide
+
+theorem chunk_3008 :
+    (∑ i ∈ Finset.range 64, rankRow (3008 + i)) = 249922129949280 := by decide
+
+theorem chunk_3072 :
+    (∑ i ∈ Finset.range 64, rankRow (3072 + i)) = 255167200301664 := by decide
+
+theorem chunk_3136 :
+    (∑ i ∈ Finset.range 64, rankRow (3136 + i)) = 260411628139104 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankJ
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RJ : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankK. -/
+section PackedLocator_LocatorR1200RankK
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_3200 :
+    (∑ i ∈ Finset.range 64, rankRow (3200 + i)) = 265655413461600 := by decide
+
+theorem chunk_3264 :
+    (∑ i ∈ Finset.range 64, rankRow (3264 + i)) = 270898556269152 := by decide
+
+theorem chunk_3328 :
+    (∑ i ∈ Finset.range 64, rankRow (3328 + i)) = 276141056561760 := by decide
+
+theorem chunk_3392 :
+    (∑ i ∈ Finset.range 64, rankRow (3392 + i)) = 281382914339424 := by decide
+
+theorem chunk_3456 :
+    (∑ i ∈ Finset.range 64, rankRow (3456 + i)) = 286624129602144 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankK
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RK : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankL. -/
+section PackedLocator_LocatorR1200RankL
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_3520 :
+    (∑ i ∈ Finset.range 64, rankRow (3520 + i)) = 291864702349920 := by decide
+
+theorem chunk_3584 :
+    (∑ i ∈ Finset.range 64, rankRow (3584 + i)) = 297104632582752 := by decide
+
+theorem chunk_3648 :
+    (∑ i ∈ Finset.range 64, rankRow (3648 + i)) = 302343920300640 := by decide
+
+theorem chunk_3712 :
+    (∑ i ∈ Finset.range 64, rankRow (3712 + i)) = 307582565503584 := by decide
+
+theorem chunk_3776 :
+    (∑ i ∈ Finset.range 64, rankRow (3776 + i)) = 312820568191584 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankL
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RL : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankM. -/
+section PackedLocator_LocatorR1200RankM
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_3840 :
+    (∑ i ∈ Finset.range 64, rankRow (3840 + i)) = 318057928364640 := by decide
+
+theorem chunk_3904 :
+    (∑ i ∈ Finset.range 64, rankRow (3904 + i)) = 323294646022752 := by decide
+
+theorem chunk_3968 :
+    (∑ i ∈ Finset.range 64, rankRow (3968 + i)) = 328530721165920 := by decide
+
+theorem chunk_4032 :
+    (∑ i ∈ Finset.range 64, rankRow (4032 + i)) = 333766153794144 := by decide
+
+theorem chunk_4096 :
+    (∑ i ∈ Finset.range 64, rankRow (4096 + i)) = 339000943907424 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankM
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RM : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankN. -/
+section PackedLocator_LocatorR1200RankN
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_4160 :
+    (∑ i ∈ Finset.range 64, rankRow (4160 + i)) = 344235091505760 := by decide
+
+theorem chunk_4224 :
+    (∑ i ∈ Finset.range 64, rankRow (4224 + i)) = 349468596589152 := by decide
+
+theorem chunk_4288 :
+    (∑ i ∈ Finset.range 64, rankRow (4288 + i)) = 354701459157600 := by decide
+
+theorem chunk_4352 :
+    (∑ i ∈ Finset.range 64, rankRow (4352 + i)) = 359933679211104 := by decide
+
+theorem chunk_4416 :
+    (∑ i ∈ Finset.range 64, rankRow (4416 + i)) = 365165256749664 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankN
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RN : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankO. -/
+section PackedLocator_LocatorR1200RankO
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_4480 :
+    (∑ i ∈ Finset.range 64, rankRow (4480 + i)) = 370396191773280 := by decide
+
+theorem chunk_4544 :
+    (∑ i ∈ Finset.range 64, rankRow (4544 + i)) = 375626484281952 := by decide
+
+theorem chunk_4608 :
+    (∑ i ∈ Finset.range 64, rankRow (4608 + i)) = 380856134275680 := by decide
+
+theorem chunk_4672 :
+    (∑ i ∈ Finset.range 64, rankRow (4672 + i)) = 386085141754464 := by decide
+
+theorem chunk_4736 :
+    (∑ i ∈ Finset.range 64, rankRow (4736 + i)) = 391313506718304 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankO
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RO : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankP. -/
+section PackedLocator_LocatorR1200RankP
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_4800 :
+    (∑ i ∈ Finset.range 64, rankRow (4800 + i)) = 396541229167200 := by decide
+
+theorem chunk_4864 :
+    (∑ i ∈ Finset.range 64, rankRow (4864 + i)) = 401768309101152 := by decide
+
+theorem chunk_4928 :
+    (∑ i ∈ Finset.range 64, rankRow (4928 + i)) = 406994746520160 := by decide
+
+theorem chunk_4992 :
+    (∑ i ∈ Finset.range 64, rankRow (4992 + i)) = 412220541424224 := by decide
+
+theorem chunk_5056 :
+    (∑ i ∈ Finset.range 64, rankRow (5056 + i)) = 417445693813344 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankP
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RP : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankQ. -/
+section PackedLocator_LocatorR1200RankQ
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_5120 :
+    (∑ i ∈ Finset.range 64, rankRow (5120 + i)) = 422670203687520 := by decide
+
+theorem chunk_5184 :
+    (∑ i ∈ Finset.range 64, rankRow (5184 + i)) = 427894071046752 := by decide
+
+theorem chunk_5248 :
+    (∑ i ∈ Finset.range 64, rankRow (5248 + i)) = 433117295891040 := by decide
+
+theorem chunk_5312 :
+    (∑ i ∈ Finset.range 64, rankRow (5312 + i)) = 438339878220384 := by decide
+
+theorem chunk_5376 :
+    (∑ i ∈ Finset.range 64, rankRow (5376 + i)) = 443561818034784 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankQ
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RQ : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankR. -/
+section PackedLocator_LocatorR1200RankR
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_5440 :
+    (∑ i ∈ Finset.range 64, rankRow (5440 + i)) = 448565627557632 := by decide
+
+theorem chunk_5504 :
+    (∑ i ∈ Finset.range 64, rankRow (5504 + i)) = 448895612521440 := by decide
+
+theorem chunk_5568 :
+    (∑ i ∈ Finset.range 64, rankRow (5568 + i)) = 446924029985760 := by decide
+
+theorem chunk_5632 :
+    (∑ i ∈ Finset.range 64, rankRow (5632 + i)) = 444404600830944 := by decide
+
+theorem chunk_5696 :
+    (∑ i ∈ Finset.range 64, rankRow (5696 + i)) = 441337425720288 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankR
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RR : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankS. -/
+section PackedLocator_LocatorR1200RankS
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_5760 :
+    (∑ i ∈ Finset.range 64, rankRow (5760 + i)) = 437722605317088 := by decide
+
+theorem chunk_5824 :
+    (∑ i ∈ Finset.range 64, rankRow (5824 + i)) = 433560240284640 := by decide
+
+theorem chunk_5888 :
+    (∑ i ∈ Finset.range 64, rankRow (5888 + i)) = 428850431286240 := by decide
+
+theorem chunk_5952 :
+    (∑ i ∈ Finset.range 64, rankRow (5952 + i)) = 423593278985184 := by decide
+
+theorem chunk_6016 :
+    (∑ i ∈ Finset.range 64, rankRow (6016 + i)) = 417788884044768 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankS
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RS : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankT. -/
+section PackedLocator_LocatorR1200RankT
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_6080 :
+    (∑ i ∈ Finset.range 64, rankRow (6080 + i)) = 411437347128288 := by decide
+
+theorem chunk_6144 :
+    (∑ i ∈ Finset.range 64, rankRow (6144 + i)) = 404538768899040 := by decide
+
+theorem chunk_6208 :
+    (∑ i ∈ Finset.range 64, rankRow (6208 + i)) = 397093250020320 := by decide
+
+theorem chunk_6272 :
+    (∑ i ∈ Finset.range 64, rankRow (6272 + i)) = 389100891155424 := by decide
+
+theorem chunk_6336 :
+    (∑ i ∈ Finset.range 64, rankRow (6336 + i)) = 380561792967648 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankT
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RT : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankU. -/
+section PackedLocator_LocatorR1200RankU
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_6400 :
+    (∑ i ∈ Finset.range 64, rankRow (6400 + i)) = 371476056120288 := by decide
+
+theorem chunk_6464 :
+    (∑ i ∈ Finset.range 64, rankRow (6464 + i)) = 361843781276640 := by decide
+
+theorem chunk_6528 :
+    (∑ i ∈ Finset.range 64, rankRow (6528 + i)) = 351665069100000 := by decide
+
+theorem chunk_6592 :
+    (∑ i ∈ Finset.range 64, rankRow (6592 + i)) = 340940020253664 := by decide
+
+theorem chunk_6656 :
+    (∑ i ∈ Finset.range 64, rankRow (6656 + i)) = 329668735400928 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankU
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RU : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankV. -/
+section PackedLocator_LocatorR1200RankV
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_6720 :
+    (∑ i ∈ Finset.range 64, rankRow (6720 + i)) = 317851315205088 := by decide
+
+theorem chunk_6784 :
+    (∑ i ∈ Finset.range 64, rankRow (6784 + i)) = 305487860329440 := by decide
+
+theorem chunk_6848 :
+    (∑ i ∈ Finset.range 64, rankRow (6848 + i)) = 292578471437280 := by decide
+
+theorem chunk_6912 :
+    (∑ i ∈ Finset.range 64, rankRow (6912 + i)) = 279123249191904 := by decide
+
+theorem chunk_6976 :
+    (∑ i ∈ Finset.range 64, rankRow (6976 + i)) = 265122294256608 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankV
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RV : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankW. -/
+section PackedLocator_LocatorR1200RankW
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_7040 :
+    (∑ i ∈ Finset.range 64, rankRow (7040 + i)) = 250575707294688 := by decide
+
+theorem chunk_7104 :
+    (∑ i ∈ Finset.range 64, rankRow (7104 + i)) = 235483588969440 := by decide
+
+theorem chunk_7168 :
+    (∑ i ∈ Finset.range 64, rankRow (7168 + i)) = 219846039944160 := by decide
+
+theorem chunk_7232 :
+    (∑ i ∈ Finset.range 64, rankRow (7232 + i)) = 203663160882144 := by decide
+
+theorem chunk_7296 :
+    (∑ i ∈ Finset.range 64, rankRow (7296 + i)) = 186935052446688 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankW
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RW : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankX. -/
+section PackedLocator_LocatorR1200RankX
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_7360 :
+    (∑ i ∈ Finset.range 64, rankRow (7360 + i)) = 169661815301088 := by decide
+
+theorem chunk_7424 :
+    (∑ i ∈ Finset.range 64, rankRow (7424 + i)) = 151843550108640 := by decide
+
+theorem chunk_7488 :
+    (∑ i ∈ Finset.range 64, rankRow (7488 + i)) = 133480357532640 := by decide
+
+theorem chunk_7552 :
+    (∑ i ∈ Finset.range 64, rankRow (7552 + i)) = 114572338236384 := by decide
+
+theorem chunk_7616 :
+    (∑ i ∈ Finset.range 64, rankRow (7616 + i)) = 95119592883168 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankX
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RX : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankY. -/
+section PackedLocator_LocatorR1200RankY
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open scoped BigOperators
+open LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_7680 :
+    (∑ i ∈ Finset.range 64, rankRow (7680 + i)) = 75122222136288 := by decide
+
+theorem chunk_7744 :
+    (∑ i ∈ Finset.range 64, rankRow (7744 + i)) = 54580326659040 := by decide
+
+theorem chunk_7808 :
+    (∑ i ∈ Finset.range 64, rankRow (7808 + i)) = 33494007114720 := by decide
+
+theorem chunk_7872 :
+    (∑ i ∈ Finset.range 64, rankRow (7872 + i)) = 11863364166624 := by decide
+
+theorem chunk_7936 :
+    (∑ i ∈ Finset.range 2, rankRow (7936 + i)) = 16251742086 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200RankY
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RY : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Rank. -/
+section PackedLocator_LocatorR1200Rank
+
+/-! Assembly of the separately checked R1200 local-rank chunks. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN119
+open LocatorFastKernelArithmetic LocatorLowQuotient LocatorR1200Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem fastLocalRankBound_exact :
+    fastLocalRankBound 7938 526750 2450 = 30503357209224102 := by
+  unfold fastLocalRankBound
+  rw [kernelSumRange_eq]
+  change (∑ r ∈ Finset.range 7938, rankRow r) = _
+  rw [Finset.sum_range_add rankRow 7936 2,
+    Finset.sum_range_add rankRow 7872 64,
+    Finset.sum_range_add rankRow 7808 64,
+    Finset.sum_range_add rankRow 7744 64,
+    Finset.sum_range_add rankRow 7680 64,
+    Finset.sum_range_add rankRow 7616 64,
+    Finset.sum_range_add rankRow 7552 64,
+    Finset.sum_range_add rankRow 7488 64,
+    Finset.sum_range_add rankRow 7424 64,
+    Finset.sum_range_add rankRow 7360 64,
+    Finset.sum_range_add rankRow 7296 64,
+    Finset.sum_range_add rankRow 7232 64,
+    Finset.sum_range_add rankRow 7168 64,
+    Finset.sum_range_add rankRow 7104 64,
+    Finset.sum_range_add rankRow 7040 64,
+    Finset.sum_range_add rankRow 6976 64,
+    Finset.sum_range_add rankRow 6912 64,
+    Finset.sum_range_add rankRow 6848 64,
+    Finset.sum_range_add rankRow 6784 64,
+    Finset.sum_range_add rankRow 6720 64,
+    Finset.sum_range_add rankRow 6656 64,
+    Finset.sum_range_add rankRow 6592 64,
+    Finset.sum_range_add rankRow 6528 64,
+    Finset.sum_range_add rankRow 6464 64,
+    Finset.sum_range_add rankRow 6400 64,
+    Finset.sum_range_add rankRow 6336 64,
+    Finset.sum_range_add rankRow 6272 64,
+    Finset.sum_range_add rankRow 6208 64,
+    Finset.sum_range_add rankRow 6144 64,
+    Finset.sum_range_add rankRow 6080 64,
+    Finset.sum_range_add rankRow 6016 64,
+    Finset.sum_range_add rankRow 5952 64,
+    Finset.sum_range_add rankRow 5888 64,
+    Finset.sum_range_add rankRow 5824 64,
+    Finset.sum_range_add rankRow 5760 64,
+    Finset.sum_range_add rankRow 5696 64,
+    Finset.sum_range_add rankRow 5632 64,
+    Finset.sum_range_add rankRow 5568 64,
+    Finset.sum_range_add rankRow 5504 64,
+    Finset.sum_range_add rankRow 5440 64,
+    Finset.sum_range_add rankRow 5376 64,
+    Finset.sum_range_add rankRow 5312 64,
+    Finset.sum_range_add rankRow 5248 64,
+    Finset.sum_range_add rankRow 5184 64,
+    Finset.sum_range_add rankRow 5120 64,
+    Finset.sum_range_add rankRow 5056 64,
+    Finset.sum_range_add rankRow 4992 64,
+    Finset.sum_range_add rankRow 4928 64,
+    Finset.sum_range_add rankRow 4864 64,
+    Finset.sum_range_add rankRow 4800 64,
+    Finset.sum_range_add rankRow 4736 64,
+    Finset.sum_range_add rankRow 4672 64,
+    Finset.sum_range_add rankRow 4608 64,
+    Finset.sum_range_add rankRow 4544 64,
+    Finset.sum_range_add rankRow 4480 64,
+    Finset.sum_range_add rankRow 4416 64,
+    Finset.sum_range_add rankRow 4352 64,
+    Finset.sum_range_add rankRow 4288 64,
+    Finset.sum_range_add rankRow 4224 64,
+    Finset.sum_range_add rankRow 4160 64,
+    Finset.sum_range_add rankRow 4096 64,
+    Finset.sum_range_add rankRow 4032 64,
+    Finset.sum_range_add rankRow 3968 64,
+    Finset.sum_range_add rankRow 3904 64,
+    Finset.sum_range_add rankRow 3840 64,
+    Finset.sum_range_add rankRow 3776 64,
+    Finset.sum_range_add rankRow 3712 64,
+    Finset.sum_range_add rankRow 3648 64,
+    Finset.sum_range_add rankRow 3584 64,
+    Finset.sum_range_add rankRow 3520 64,
+    Finset.sum_range_add rankRow 3456 64,
+    Finset.sum_range_add rankRow 3392 64,
+    Finset.sum_range_add rankRow 3328 64,
+    Finset.sum_range_add rankRow 3264 64,
+    Finset.sum_range_add rankRow 3200 64,
+    Finset.sum_range_add rankRow 3136 64,
+    Finset.sum_range_add rankRow 3072 64,
+    Finset.sum_range_add rankRow 3008 64,
+    Finset.sum_range_add rankRow 2944 64,
+    Finset.sum_range_add rankRow 2880 64,
+    Finset.sum_range_add rankRow 2816 64,
+    Finset.sum_range_add rankRow 2752 64,
+    Finset.sum_range_add rankRow 2688 64,
+    Finset.sum_range_add rankRow 2624 64,
+    Finset.sum_range_add rankRow 2560 64,
+    Finset.sum_range_add rankRow 2496 64,
+    Finset.sum_range_add rankRow 2432 64,
+    Finset.sum_range_add rankRow 2368 64,
+    Finset.sum_range_add rankRow 2304 64,
+    Finset.sum_range_add rankRow 2240 64,
+    Finset.sum_range_add rankRow 2176 64,
+    Finset.sum_range_add rankRow 2112 64,
+    Finset.sum_range_add rankRow 2048 64,
+    Finset.sum_range_add rankRow 1984 64,
+    Finset.sum_range_add rankRow 1920 64,
+    Finset.sum_range_add rankRow 1856 64,
+    Finset.sum_range_add rankRow 1792 64,
+    Finset.sum_range_add rankRow 1728 64,
+    Finset.sum_range_add rankRow 1664 64,
+    Finset.sum_range_add rankRow 1600 64,
+    Finset.sum_range_add rankRow 1536 64,
+    Finset.sum_range_add rankRow 1472 64,
+    Finset.sum_range_add rankRow 1408 64,
+    Finset.sum_range_add rankRow 1344 64,
+    Finset.sum_range_add rankRow 1280 64,
+    Finset.sum_range_add rankRow 1216 64,
+    Finset.sum_range_add rankRow 1152 64,
+    Finset.sum_range_add rankRow 1088 64,
+    Finset.sum_range_add rankRow 1024 64,
+    Finset.sum_range_add rankRow 960 64,
+    Finset.sum_range_add rankRow 896 64,
+    Finset.sum_range_add rankRow 832 64,
+    Finset.sum_range_add rankRow 768 64,
+    Finset.sum_range_add rankRow 704 64,
+    Finset.sum_range_add rankRow 640 64,
+    Finset.sum_range_add rankRow 576 64,
+    Finset.sum_range_add rankRow 512 64,
+    Finset.sum_range_add rankRow 448 64,
+    Finset.sum_range_add rankRow 384 64,
+    Finset.sum_range_add rankRow 320 64,
+    Finset.sum_range_add rankRow 256 64,
+    Finset.sum_range_add rankRow 192 64,
+    Finset.sum_range_add rankRow 128 64,
+    Finset.sum_range_add rankRow 64 64,
+    chunk_0, chunk_64, chunk_128, chunk_192, chunk_256,
+    chunk_320, chunk_384, chunk_448, chunk_512, chunk_576,
+    chunk_640, chunk_704, chunk_768, chunk_832, chunk_896,
+    chunk_960, chunk_1024, chunk_1088, chunk_1152, chunk_1216,
+    chunk_1280, chunk_1344, chunk_1408, chunk_1472, chunk_1536,
+    chunk_1600, chunk_1664, chunk_1728, chunk_1792, chunk_1856,
+    chunk_1920, chunk_1984, chunk_2048, chunk_2112, chunk_2176,
+    chunk_2240, chunk_2304, chunk_2368, chunk_2432, chunk_2496,
+    chunk_2560, chunk_2624, chunk_2688, chunk_2752, chunk_2816,
+    chunk_2880, chunk_2944, chunk_3008, chunk_3072, chunk_3136,
+    chunk_3200, chunk_3264, chunk_3328, chunk_3392, chunk_3456,
+    chunk_3520, chunk_3584, chunk_3648, chunk_3712, chunk_3776,
+    chunk_3840, chunk_3904, chunk_3968, chunk_4032, chunk_4096,
+    chunk_4160, chunk_4224, chunk_4288, chunk_4352, chunk_4416,
+    chunk_4480, chunk_4544, chunk_4608, chunk_4672, chunk_4736,
+    chunk_4800, chunk_4864, chunk_4928, chunk_4992, chunk_5056,
+    chunk_5120, chunk_5184, chunk_5248, chunk_5312, chunk_5376,
+    chunk_5440, chunk_5504, chunk_5568, chunk_5632, chunk_5696,
+    chunk_5760, chunk_5824, chunk_5888, chunk_5952, chunk_6016,
+    chunk_6080, chunk_6144, chunk_6208, chunk_6272, chunk_6336,
+    chunk_6400, chunk_6464, chunk_6528, chunk_6592, chunk_6656,
+    chunk_6720, chunk_6784, chunk_6848, chunk_6912, chunk_6976,
+    chunk_7040, chunk_7104, chunk_7168, chunk_7232, chunk_7296,
+    chunk_7360, chunk_7424, chunk_7488, chunk_7552, chunk_7616,
+    chunk_7680, chunk_7744, chunk_7808, chunk_7872, chunk_7936]
+
+theorem localRankBound_exact :
+    localRankBound 7938 526750 2450 = 30503357209224102 := by
+  rw [localRankBound_eq_fastLocalRankBound 7938 526750 2450 (by decide)]
+  exact fastLocalRankBound_exact
+
+end ProximityPrize.SubmissionLower.LocatorR1200Rank
+end PackedLocator_LocatorR1200Rank
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200RankAsm : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Source. -/
+section PackedLocator_LocatorR1200Source
+
+/-! Semantic kernel source backed by the isolated R1200 receipts. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorR1200Source
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+abbrev Kernel (u0 u1 : I → K) :=
+  ConstraintKernel (K := K) 1439659494 131071 526750 2450 7938
+    IRSProfile.domain u0 u1
+
+theorem weighted_exact : 7938 * 181363 = 1439659494 := by
+  decide
+
+theorem shape : 1439659494 + 2450 ≤ 131071 * (10983 + 1) := by
+  decide
+
+theorem nullity_exact :
+    coefficientCount 1439659494 131071 526750 2450 -
+      262144 * localRankBound 7938 526750 2450 =
+        36963750380693986577 := by
+  rw [LocatorR1200Coefficient.coefficientCount_exact,
+    LocatorR1200Rank.localRankBound_exact]
+
+theorem finrank_gap (u0 u1 : I → K) :
+    36963750380693986577 ≤ Module.finrank K (Kernel u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
+    1439659494 526750 2450 7938 36963750380693986577 u0 u1 (by
+      rw [nullity_exact])
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorR1200Source
+end PackedLocator_LocatorR1200Source
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1200S : True := by trivial
+end ProximityPrize.SubmissionLower
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Parameters. -/
+section PackedLocator_LocatorR1Parameters
+
+/-! Shared, reduction-cheap definitions for the R1 locator source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Parameters
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+/-- One closed contact-rank row for the R1 source. -/
+def rankRow (r : ℕ) : ℕ :=
+  let M := min r 328400
+  let h := min (r + 1) (4800 - r)
+  rectangularCount (M + 1) (1480 + 1) 0 328400 -
+    rectangularCount (M + 1 - h) (1480 + 1 - h) h 328400
+
+end ProximityPrize.SubmissionLower.LocatorR1Parameters
+end PackedLocator_LocatorR1Parameters
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1P : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Coefficient. -/
+section PackedLocator_LocatorR1Coefficient
+
+/-! Constant-time coefficient-count receipt for the R1 source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Coefficient
+
+open ProximityPrize.Benchmark
+open RCN100
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem coefficientCount_exact :
+    coefficientCount 870542400 131071 328400 1480 =
+      1107150758552279760150 := by
+  change coefficientCount (6641 * 131071 + 99889) 131071 328400 1480 =
+    1107150758552279760150
+  rw [coefficientCount_eq_oneResidueCoefficientCount
+    6641 99889 131071 328400 1480 (by decide) (by decide) (by decide)
+      (by decide)]
+  norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
+
+end ProximityPrize.SubmissionLower.LocatorR1Coefficient
+end PackedLocator_LocatorR1Coefficient
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1C : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankA. -/
+section PackedLocator_LocatorR1RankA
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
+
+open scoped BigOperators
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -10801,21 +12417,22 @@ theorem chunk_192 :
 theorem chunk_256 :
     (∑ i ∈ Finset.range 64, rankRow (256 + i)) = 8956003291904 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankA
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankA
+
 
 namespace ProximityPrize.SubmissionLower
 set_option Elab.async false in
-theorem PackedLocatorBarrier22 : True := by trivial
+theorem PackedLocatorBarrier6803_R1RA : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankB. -/
-section PackedLocator_LocatorR1200RankB
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankB. -/
+section PackedLocator_LocatorR1RankB
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -10837,21 +12454,22 @@ theorem chunk_512 :
 theorem chunk_576 :
     (∑ i ∈ Finset.range 64, rankRow (576 + i)) = 18880661529344 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankB
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankB
+
 
 namespace ProximityPrize.SubmissionLower
 set_option Elab.async false in
-theorem PackedLocatorBarrier23 : True := by trivial
+theorem PackedLocatorBarrier6803_R1RB : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankC. -/
-section PackedLocator_LocatorR1200RankC
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankC. -/
+section PackedLocator_LocatorR1RankC
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -10873,21 +12491,22 @@ theorem chunk_832 :
 theorem chunk_896 :
     (∑ i ∈ Finset.range 64, rankRow (896 + i)) = 28795613885184 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankC
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankC
+
 
 namespace ProximityPrize.SubmissionLower
 set_option Elab.async false in
-theorem PackedLocatorBarrier24 : True := by trivial
+theorem PackedLocatorBarrier6803_R1RC : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankD. -/
-section PackedLocator_LocatorR1200RankD
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankD. -/
+section PackedLocator_LocatorR1RankD
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -10909,16 +12528,22 @@ theorem chunk_1152 :
 theorem chunk_1216 :
     (∑ i ∈ Finset.range 64, rankRow (1216 + i)) = 38700860359424 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankD
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankD
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankE. -/
-section PackedLocator_LocatorR1200RankE
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1RD : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankE. -/
+section PackedLocator_LocatorR1RankE
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -10940,16 +12565,22 @@ theorem chunk_1472 :
 theorem chunk_1536 :
     (∑ i ∈ Finset.range 64, rankRow (1536 + i)) = 48596400952064 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankE
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankE
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankF. -/
-section PackedLocator_LocatorR1200RankF
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1RE : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankF. -/
+section PackedLocator_LocatorR1RankF
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -10971,16 +12602,22 @@ theorem chunk_1792 :
 theorem chunk_1856 :
     (∑ i ∈ Finset.range 64, rankRow (1856 + i)) = 58482235663104 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankF
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankF
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankG. -/
-section PackedLocator_LocatorR1200RankG
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1RF : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankG. -/
+section PackedLocator_LocatorR1RankG
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11002,16 +12639,22 @@ theorem chunk_2112 :
 theorem chunk_2176 :
     (∑ i ∈ Finset.range 64, rankRow (2176 + i)) = 68358364492544 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankG
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankG
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankH. -/
-section PackedLocator_LocatorR1200RankH
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1RG : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankH. -/
+section PackedLocator_LocatorR1RankH
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11033,16 +12676,22 @@ theorem chunk_2432 :
 theorem chunk_2496 :
     (∑ i ∈ Finset.range 64, rankRow (2496 + i)) = 78224787440384 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankH
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankH
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankI. -/
-section PackedLocator_LocatorR1200RankI
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1RH : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankI. -/
+section PackedLocator_LocatorR1RankI
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11064,16 +12713,22 @@ theorem chunk_2752 :
 theorem chunk_2816 :
     (∑ i ∈ Finset.range 64, rankRow (2816 + i)) = 88081504506624 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankI
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankI
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankJ. -/
-section PackedLocator_LocatorR1200RankJ
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1RI : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankJ. -/
+section PackedLocator_LocatorR1RankJ
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11095,16 +12750,22 @@ theorem chunk_3072 :
 theorem chunk_3136 :
     (∑ i ∈ Finset.range 64, rankRow (3136 + i)) = 97928515691264 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankJ
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankJ
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankK. -/
-section PackedLocator_LocatorR1200RankK
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1RJ : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankK. -/
+section PackedLocator_LocatorR1RankK
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11126,16 +12787,22 @@ theorem chunk_3392 :
 theorem chunk_3456 :
     (∑ i ∈ Finset.range 64, rankRow (3456 + i)) = 100103643396960 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankK
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankK
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankL. -/
-section PackedLocator_LocatorR1200RankL
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1RK : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankL. -/
+section PackedLocator_LocatorR1RankL
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11157,16 +12824,22 @@ theorem chunk_3712 :
 theorem chunk_3776 :
     (∑ i ∈ Finset.range 64, rankRow (3776 + i)) = 88899752104800 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankL
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankL
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankM. -/
-section PackedLocator_LocatorR1200RankM
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1RL : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankM. -/
+section PackedLocator_LocatorR1RankM
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11188,16 +12861,22 @@ theorem chunk_4032 :
 theorem chunk_4096 :
     (∑ i ∈ Finset.range 64, rankRow (4096 + i)) = 69171481881440 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankM
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankM
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankN. -/
-section PackedLocator_LocatorR1200RankN
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1RM : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankN. -/
+section PackedLocator_LocatorR1RankN
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11219,16 +12898,22 @@ theorem chunk_4352 :
 theorem chunk_4416 :
     (∑ i ∈ Finset.range 64, rankRow (4416 + i)) = 40931415638880 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankN
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankN
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankO. -/
-section PackedLocator_LocatorR1200RankO
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1RN : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankO. -/
+section PackedLocator_LocatorR1RankO
+
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open scoped BigOperators
-open LocatorR1200Parameters
+open LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11250,25 +12935,26 @@ theorem chunk_4672 :
 theorem chunk_4736 :
     (∑ i ∈ Finset.range 64, rankRow (4736 + i)) = 4192136289120 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200RankO
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1RankO
+
 
 namespace ProximityPrize.SubmissionLower
 set_option Elab.async false in
-theorem PackedLocatorBarrier25 : True := by trivial
+theorem PackedLocatorBarrier6803_R1RO : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Rank. -/
-section PackedLocator_LocatorR1200Rank
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Rank. -/
+section PackedLocator_LocatorR1Rank
 
-/-! Assembly of the separately checked R1200 local-rank chunks. -/
+/-! Assembly of the separately checked R1 local-rank chunks. -/
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Rank
+namespace ProximityPrize.SubmissionLower.LocatorR1Rank
 
 open ProximityPrize.Benchmark
 open scoped BigOperators
 open RCN119
-open LocatorFastKernelArithmetic LocatorLowQuotient LocatorR1200Parameters
+open LocatorFastKernelArithmetic LocatorLowQuotient LocatorR1Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11375,20 +13061,21 @@ theorem localRankBound_exact :
   rw [localRankBound_eq_fastLocalRankBound 4800 328400 1480 (by decide)]
   exact fastLocalRankBound_exact
 
-end ProximityPrize.SubmissionLower.LocatorR1200Rank
-end PackedLocator_LocatorR1200Rank
+end ProximityPrize.SubmissionLower.LocatorR1Rank
+end PackedLocator_LocatorR1Rank
+
 
 namespace ProximityPrize.SubmissionLower
 set_option Elab.async false in
-theorem PackedLocatorBarrier26 : True := by trivial
+theorem PackedLocatorBarrier6803_R1RankAsm : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Source. -/
-section PackedLocator_LocatorR1200Source
+/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Source. -/
+section PackedLocator_LocatorR1Source
 
-/-! Semantic kernel source backed by the isolated R1200 receipts. -/
+/-! Semantic kernel source backed by the isolated R1 receipts. -/
 
-namespace ProximityPrize.SubmissionLower.LocatorR1200Source
+namespace ProximityPrize.SubmissionLower.LocatorR1Source
 
 open ProximityPrize.Benchmark
 open RCN100 RCN119 RCN180
@@ -11405,39 +13092,395 @@ abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
 
 abbrev Kernel (u0 u1 : I → K) :=
-  ConstraintKernel (K := K) 870590400 131071 328400 1480 4800
+  ConstraintKernel (K := K) 870542400 131071 328400 1480 4800
     IRSProfile.domain u0 u1
 
-theorem weighted_exact : 4800 * 181373 = 870590400 := by
+theorem weighted_exact : 4800 * 181363 = 870542400 := by
   decide
 
-theorem shape : 870590400 + 1480 ≤ 131071 * (6642 + 1) := by
+theorem shape : 870542400 + 1480 ≤ 131071 * (6641 + 1) := by
   decide
 
 theorem nullity_exact :
-    coefficientCount 870590400 131071 328400 1480 -
+    coefficientCount 870542400 131071 328400 1480 -
       262144 * localRankBound 4800 328400 1480 =
-        5227117860923383312 := by
-  rw [LocatorR1200Coefficient.coefficientCount_exact,
-    LocatorR1200Rank.localRankBound_exact]
+        5090867013182078230 := by
+  rw [LocatorR1Coefficient.coefficientCount_exact,
+    LocatorR1Rank.localRankBound_exact]
 
 theorem finrank_gap (u0 u1 : I → K) :
-    5227117860923383312 ≤ Module.finrank K (Kernel u0 u1) := by
+    5090867013182078230 ≤ Module.finrank K (Kernel u0 u1) := by
   exact challengeConstraintKernel_finrank_lower_bound_of_numeric
-    870590400 328400 1480 4800 5227117860923383312 u0 u1 (by
+    870542400 328400 1480 4800 5090867013182078230 u0 u1 (by
       rw [nullity_exact])
 
 end
 
-end ProximityPrize.SubmissionLower.LocatorR1200Source
-end PackedLocator_LocatorR1200Source
+end ProximityPrize.SubmissionLower.LocatorR1Source
+end PackedLocator_LocatorR1Source
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Parameters. -/
-section PackedLocator_LocatorR1Parameters
 
-/-! Shared, reduction-cheap definitions for the 1200-contact cascade source. -/
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_R1S : True := by trivial
+end ProximityPrize.SubmissionLower
 
-namespace ProximityPrize.SubmissionLower.LocatorR1Parameters
+
+
+
+
+
+
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorChainArithmetic. -/
+section PackedLocator_LocatorChainArithmetic
+
+/-! A small, independently checkable receipt for the asymmetric derivative-chain cost. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorChainArithmetic
+
+open RCN260
+
+/-- In every nonterminal derivative-chain stage `j >= 1`, the left polynomial
+has `R`-degree at most `32`, while the original factor on the right may still
+have `R`-degree `33`. -/
+def chainStage : UnequalParameters :=
+  ⟨262144, 131071, 181363, 153, 32, 14915, 153, 33, 14915⟩
+
+theorem chainStage_exact : chainStage.regularCountCap = 304019466447000 := by
+  decide
+
+end ProximityPrize.SubmissionLower.LocatorChainArithmetic
+end PackedLocator_LocatorChainArithmetic
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier28 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorArithmetic. -/
+section PackedLocator_LocatorArithmetic
+namespace ProximityPrize.SubmissionLower.LocatorArithmetic
+open ProximityPrize.Benchmark
+open scoped BigOperators NNReal
+open RCN100 RCN119 RCN302 RCN318 RCN260 LocatorFastKernelArithmetic
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+def n:ℕ:=262144
+def w:ℕ:=131071
+def errors:ℕ:=80781
+def agreements:ℕ:=181363
+def gap:ℕ:=50292
+def prime:ℕ:=2130706433
+def budget:ℕ:=274980722886578332
+def LA:ℕ:=130000
+def LB:ℕ:=14915
+def LCap:ℕ:=6680
+def yB:ℕ:=153
+def sB:ℕ:=33
+def yC:ℕ:=373
+def sC:ℕ:=81
+def yT:ℕ:=250
+def sT:ℕ:=56
+def weightedA:ℕ:=17773574
+def weightedC:ℕ:=48968010
+abbrev weightedAmbient:=weightedC
+def weightedB:ℕ:=20131293
+def weightedTCap:ℕ:=32826703
+def fixedRegularCap:ℕ:=273301903386687639
+theorem kernelA_rank:localRankBound 98 130000 29=14484454485:=by
+  rw [localRankBound_eq_fastLocalRankBound 98 130000 29 (by decide)]
+  decide
+theorem kernelC_rank:localRankBound 270 130000 81=296615133081:=by
+  rw [localRankBound_eq_fastLocalRankBound 270 130000 81 (by decide)]
+  decide
+theorem kernelB_rank:localRankBound 111 14915 33=2402545145:=by
+  rw [localRankBound_eq_fastLocalRankBound 111 14915 33 (by decide)]
+  decide
+theorem kernelTCap_rank:localRankBound 181 6680 56=4686652271:=by
+  rw [localRankBound_eq_fastLocalRankBound 181 6680 56 (by decide)]
+  decide
+theorem kernelA_nullity:
+    coefficientCount 17773574 131071 130000 29 -
+      262144 * localRankBound 98 130000 29=36690258760:=by
+  rw [kernelA_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
+    17773574 131071 130000 29 136 (by decide) (by decide)]
+  decide
+theorem kernelC_nullity:
+    coefficientCount 48968010 131071 130000 81 -
+      262144 * localRankBound 270 130000 81=293702551079764:=by
+  rw [kernelC_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
+    48968010 131071 130000 81 374 (by decide) (by decide)]
+  decide
+theorem kernelB_nullity:
+    coefficientCount 20131293 131071 14915 33 -
+      262144 * localRankBound 111 14915 33=56123375:=by
+  rw [kernelB_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
+    20131293 131071 14915 33 154 (by decide) (by decide)]
+  decide
+theorem kernelTCap_nullity:
+    coefficientCount 32826703 131071 6680 56 -
+      262144 * localRankBound 181 6680 56=913969464:=by
+  rw [kernelTCap_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
+    32826703 131071 6680 56 251 (by decide) (by decide)]
+  decide
+theorem kernelTCap_total_quotient_lt:
+    coefficientCount 32826703 131071 2 56 <
+    coefficientCount 32826703 131071 6680 56 -
+      262144 * localRankBound 181 6680 56:=by
+  rw [kernelTCap_nullity]
+  decide
+/-- Fixed-stage derivative chain (`LocatorFixedChain.fixed_chain_count_le` with
+`T := H`): the differentiated left factor has slope at most `sB - 1 = 32`
+(`LocatorDerivativeChain.chainSeeds_card_le`), the original factor on the right
+slope `33`; both sides live in the wide selected box `(6677,153,33)`. -/
+def chainH:UnequalParameters:=⟨n,w,agreements,yB,sB - 1,6677,yB,sB,6677⟩
+/-- Per-level fixed-chain parameters: level `t` charges LEFT slope `t` (capped at
+`sB`), the RIGHT factor never descends.  Constant above `sB`, so it is monotone. -/
+def chainHAt (t:ℕ):UnequalParameters:=⟨n,w,agreements,yB,max 1 (min t sB),6677,yB,sB,6677⟩
+def chainStageAt (t:ℕ):UnequalParameters:=⟨n,w,agreements,yB,max 1 (min t sB),LB,yB,sB,LB⟩
+/-- Fixed-stage slope-free tails (the `R`-free ends of the chains and the
+`R`-free product), in the wide box at slope `1`. -/
+def tailH:TightParameters:=⟨n,w,agreements,weightedB,6677,1⟩
+/-- What the fixed stage charges besides the certified regular maximum:
+`32` chain stages and `34` tail slots.  Replaces the singular-seed count of the
+whole gcd (`CommonShearTightPrototype.countCap ⟨n,w,agreements,weightedB,6677,sB⟩
+= 8526521187049187`). -/
+def fixedChainCap:ℕ:=
+  ChainAmort.capSum (fun t=>(chainHAt t).regularCountCap) sB + 2 * tailH.countCap
+/-- What the fixed stage charges besides the correlated regular maximum once the
+derivative chains are carried inside `initialAComplement`: one slope-`1` tail per
+positive-`R` factor (at most `sB`) plus the `R`-free product. -/
+def fixedTailCap:ℕ:=(sB + 1) * tailH.countCap
+def residualStage:UnequalParameters:=⟨n,w,agreements,yB,sB,LB,yT,sT,LCap⟩
+def chainStage:UnequalParameters:=
+  ⟨n,w,agreements,yB,sB-1,LB,yB,sB,LB⟩
+def tailSingular:TightParameters:=⟨n,w,agreements,weightedB,LB,1⟩
+theorem chainH_exact:chainH.regularCountCap=136100878035520:=by decide
+theorem tailH_exact:tailH.countCap=2093948826742:=by decide
+theorem chainHAt_mono:Monotone (fun t=>(chainHAt t).regularCountCap):=by
+  apply monotone_nat_of_le_succ
+  intro n
+  rcases Nat.lt_or_ge n sB with h | h
+  · have key:∀ m ∈ Finset.range sB,
+        (chainHAt m).regularCountCap ≤ (chainHAt (m+1)).regularCountCap:=by decide
+    exact key n (Finset.mem_range.mpr h)
+  · have hsb:sB=33:=rfl
+    have h1:max 1 (min n sB)=sB:=by omega
+    have h2:max 1 (min (n+1) sB)=sB:=by omega
+    simp only [chainHAt, h1, h2, le_refl]
+theorem chainStageAt_mono:Monotone (fun t=>(chainStageAt t).regularCountCap):=by
+  apply monotone_nat_of_le_succ
+  intro n
+  rcases Nat.lt_or_ge n sB with h | h
+  · have key:∀ m ∈ Finset.range sB,
+        (chainStageAt m).regularCountCap ≤ (chainStageAt (m+1)).regularCountCap:=by decide
+    exact key n (Finset.mem_range.mpr h)
+  · have hsb:sB=33:=rfl
+    have h1:max 1 (min n sB)=sB:=by omega
+    have h2:max 1 (min (n+1) sB)=sB:=by omega
+    simp only [chainStageAt, h1, h2, le_refl]
+theorem chainHAt_capSum_exact:
+    ChainAmort.capSum (fun t=>(chainHAt t).regularCountCap) sB=3662856455802708:=by decide
+theorem chainStageAt_capSum_exact:
+    ChainAmort.capSum (fun t=>(chainStageAt t).regularCountCap) sB=8182019282937310:=by decide
+theorem tailH_le_chainHAt_one:tailH.countCap ≤ (chainHAt 1).regularCountCap:=by decide
+theorem tailSingular_le_chainStageAt_one:
+    tailSingular.countCap ≤ (chainStageAt 1).regularCountCap:=by decide
+theorem fixedChainCap_exact:fixedChainCap=3667044353456192:=by
+  unfold fixedChainCap
+  rw [chainHAt_capSum_exact,tailH_exact]
+theorem residualStage_exact:residualStage.regularCountCap=531828045547854:=by decide
+theorem chainStage_exact:chainStage.regularCountCap=304019466447000:=by
+  simpa [chainStage, LocatorChainArithmetic.chainStage, n, w, agreements,
+    yB, sB, LB] using LocatorChainArithmetic.chainStage_exact
+theorem tailSingular_exact:tailSingular.countCap=4677667475173:=by decide
+/-- Residual-branch parameters when the common divisor has slope at least `d`: the
+cofactor `QB / H` has slope at most `sB - d`. -/
+def chainStageAtD (d t:ℕ):UnequalParameters:=ChainGroupMaj.chainGroupAt LB (sB - d) yB t
+def residualStageD (d:ℕ):UnequalParameters:=⟨n,w,agreements,yB,max 1 (sB - d),LB,yT,sT,LCap⟩
+theorem residMaj_eq (d:ℕ):ChainGroupMaj.residMaj6802 d=
+    (residualStageD d).regularCountCap+ChainGroupMaj.chainMaj LB (sB - d) yB+
+      2 * tailSingular.countCap:=by
+  rw [tailSingular_exact]
+  rfl
+theorem chainStageAtD_mono (d:ℕ):Monotone (fun t=>(chainStageAtD d t).regularCountCap):=
+  ChainGroupMaj.chainGroupAt_mono LB (sB - d) yB
+theorem tailSingular_le_chainStageAtD_one:
+    ∀ d ∈ Finset.range (sB + 1), tailSingular.countCap ≤ (chainStageAtD d 1).regularCountCap:=by
+  decide
+theorem residual_le_residMaj (d:ℕ):
+    (residualStageD d).regularCountCap+
+      ChainAmort.capSum (fun t=>(chainStageAtD d t).regularCountCap) (max 1 (sB - d))+
+      2 * tailSingular.countCap ≤ ChainGroupMaj.residMaj6802 d:=by
+  rw [residMaj_eq]
+  have h:=ChainGroupMaj.capSum_le_chainMaj LB (sB - d) yB
+  have hcs:ChainAmort.capSum (fun t=>(chainStageAtD d t).regularCountCap) (max 1 (sB - d))=
+      ChainAmort.capSum (fun t=>(ChainGroupMaj.chainGroupAt LB (sB - d) yB t).regularCountCap)
+        (sB - d):=by
+    rcases Nat.eq_zero_or_pos (sB - d) with h0 | hpos
+    · rw [h0]; simp [ChainAmort.capSum]
+    · rw [Nat.max_eq_right hpos]; rfl
+  rw [hcs]
+  omega
+structure SingularGates (P:TightParameters):Prop where
+  s_pos:1 ≤ P.s
+  s_small:P.s < prime
+  w_pos:1 ≤ P.w
+  w_small:P.w < prime
+  kD:P.w < P.kappa * P.D
+  algebraic_pos:1 ≤ P.algebraicCap
+  implicit_small:P.implicitYCap < prime
+  algebraic_small:P.algebraicCap < prime
+  mixed_small:2 * P.implicitYCap * P.algebraicCap < prime
+  wa:P.w < P.a
+  an:P.a ≤ P.n
+theorem tail_singular_gates:SingularGates tailSingular:=by constructor <;> decide
+theorem tailH_gates:SingularGates tailH:=by constructor <;> decide
+structure ChainGates:Prop where
+  qY:(tailSingular.D - 1) / w ≤ chainStage.leftY
+  qR:tailSingular.s ≤ chainStage.leftR
+  qZ:tailSingular.L ≤ chainStage.leftZ
+  leftR_pos:1 ≤ chainStage.leftR
+  leftY_small:chainStage.leftY < prime
+  leftR_small:chainStage.leftR < prime
+  leftZ_small:chainStage.leftZ < prime
+  rightR_pos:1 ≤ chainStage.rightR
+  rightY_small:chainStage.rightY < prime
+  rightR_small:chainStage.rightR < prime
+  rightZ_small:chainStage.rightZ < prime
+  mixedY_small:chainStage.mixedCost.y < prime
+  mixedR_small:chainStage.mixedCost.r < prime
+  mixedZ_small:chainStage.mixedCost.z < prime
+theorem chain_gates:ChainGates:=by constructor <;> decide
+/-- The residual branch is now carried inside the correlated complement
+(`ChainGroupMaj.residMaj6802 p.all`), so the flat ledger is the regular allowance plus the
+fixed tails. -/
+def ledger:ℕ:=fixedRegularCap + fixedTailCap
+theorem fixedTailCap_exact:fixedTailCap=71194260109228:=by
+  unfold fixedTailCap
+  rw [tailH_exact]
+  norm_num [sB]
+theorem ledger_exact:ledger=273373097646796867:=by
+  unfold ledger
+  rw [fixedTailCap_exact,fixedRegularCap]
+theorem ledger_lt:ledger < budget:=by rw [ledger_exact]; decide
+def radiusNumerator:ℕ:=10340095
+def radiusDenominator:ℕ:=33554432
+def radius:ℝ≥0:=claimedRadius radiusNumerator radiusDenominator
+theorem radius_floor:
+    ⌊(radius:ℝ) * (Fintype.card IRSProfile.Index:ℝ)⌋₊ =errors:=by
+  norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
+    errors,IRSProfile.Index]
+theorem radius_admissible:
+    radius ∈ Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance:=by
+  constructor <;> norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
+    IRSProfile.minRelativeDistance]
+theorem score_root_integer:(2:ℕ)^3 * 10000^100 ≤ 10211^100:=by decide
+theorem score_radius_integer:
+    (23214337:ℕ)^128 * (2^68 * 10211) ≤ 10000 * 33554432^128:=by decide
+theorem two_rpow_fraction_le:
+    (2:ℝ≥0)^((3:ℝ)/100) ≤ (10211:ℝ≥0)/10000:=by
+  have hroot:((2:ℝ≥0)^(3:ℕ))^((100:ℝ)⁻¹) ≤ (10211:ℝ≥0)/10000:=by
+    rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 100)]
+    rw [NNReal.rpow_ofNat,div_pow,le_div_iff₀ (by positivity)]
+    exact_mod_cast score_root_integer
+  calc
+    (2:ℝ≥0)^((3:ℝ)/100) = ((2:ℝ≥0)^(3:ℕ))^((100:ℝ)⁻¹):=by
+      rw [← NNReal.rpow_natCast_mul]
+      norm_num [div_eq_mul_inv]
+    _ ≤ _:=hroot
+theorem radius_power_bound:
+    (1 - radius)^IRSProfile.repetitions ≤
+      ((1:ℝ≥0)/2^(68:ℕ)) * (10000/10211):=by
+  have hsub:(1 - radius:ℝ≥0) =23214337/33554432:=by
+    have hr:radius ≤ 1:=by
+      rw [← NNReal.coe_le_coe]
+      norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
+    apply NNReal.coe_injective
+    rw [NNReal.coe_sub hr]
+    norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
+  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (10000/10211)
+  rw [hsub,div_pow,div_mul_div_comm,one_mul,
+    div_le_div_iff₀ (by positivity) (by positivity)]
+  exact_mod_cast score_radius_integer
+theorem score_target_le:
+    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6803:=by
+  have hscale:(10000:ℝ≥0)/10211 ≤ (2:ℝ≥0)^(-((3:ℝ)/100)):=by
+    calc
+      (10000:ℝ≥0)/10211=1/((10211:ℝ≥0)/10000):=by norm_num
+      _ ≤ 1/((2:ℝ≥0)^((3:ℝ)/100)) :=
+        one_div_le_one_div_of_le (by positivity) two_rpow_fraction_le
+      _=_:=by rw [one_div,NNReal.rpow_neg]
+  calc
+    (1 - radius)^IRSProfile.repetitions ≤
+        ((1:ℝ≥0)/2^(68:ℕ)) * (10000/10211):=radius_power_bound
+    _ ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (2:ℝ≥0)^(-((3:ℝ)/100)) :=
+      mul_le_mul_of_nonneg_left hscale (by positivity)
+    _=claimedError 6803:=by
+      unfold claimedError
+      rw [show -((((6803:ℕ):ℝ)/100)) =
+          -((68:ℕ):ℝ) + -((3:ℝ)/100) by norm_num,
+        NNReal.rpow_add (by norm_num:(2:ℝ≥0) ≠ 0)]
+      simp only [NNReal.rpow_neg,NNReal.rpow_natCast,one_div]
+end
+end LocatorArithmetic
+end ProximityPrize.SubmissionLower
+end PackedLocator_LocatorArithmetic
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier29 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSourceCGap. -/
+section PackedLocator_LocatorSourceCGap
+
+namespace ProximityPrize.SubmissionLower.LocatorSourceCGap
+
+open ProximityPrize.Benchmark
+open LocatorArithmetic
+open RCN100 RCN119 RCN180
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 2000000
+set_option Elab.async false
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+theorem finrank_lower_bound (u0 u1 : I → K) :
+    293702551079764 ≤ Module.finrank K
+      (ConstraintKernel (K := K) 48968010 131071 130000 81 270
+        IRSProfile.domain u0 u1) := by
+  have hcard : Fintype.card I = 262144 := by
+    norm_num [I, IRSProfile.Index]
+  have hlo := constraintKernel_finrank_lower_bound
+    48968010 131071 130000 81 270 IRSProfile.domain u0 u1
+  have hlo' := hcard ▸ hlo
+  exact LocatorArithmetic.kernelC_nullity ▸ hlo'
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorSourceCGap
+end PackedLocator_LocatorSourceCGap
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier30 : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Parameters. -/
+section PackedLocator_LocatorSplit500Parameters
+
+/-! Shared, reduction-cheap definitions for the Split500 locator source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Parameters
 
 open ProximityPrize.Benchmark
 open RCN100 RCN119 RCN180
@@ -11447,22 +13490,28 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
-/-- One closed contact-rank row for the R1 source. -/
+/-- One closed contact-rank row for the Split500 source. -/
 def rankRow (r : ℕ) : ℕ :=
-  let M := min r 82100
-  let h := min (r + 1) (1200 - r)
-  rectangularCount (M + 1) (370 + 1) 0 82100 -
-    rectangularCount (M + 1 - h) (370 + 1 - h) h 82100
+  let M := min r 165000
+  let h := min (r + 1) (2400 - r)
+  rectangularCount (M + 1) (750 + 1) 0 165000 -
+    rectangularCount (M + 1 - h) (750 + 1 - h) h 165000
 
-end ProximityPrize.SubmissionLower.LocatorR1Parameters
-end PackedLocator_LocatorR1Parameters
+end ProximityPrize.SubmissionLower.LocatorSplit500Parameters
+end PackedLocator_LocatorSplit500Parameters
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Coefficient. -/
-section PackedLocator_LocatorR1Coefficient
 
-/-! Constant-time coefficient-count receipt for the R1 source. -/
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split500P : True := by trivial
+end ProximityPrize.SubmissionLower
 
-namespace ProximityPrize.SubmissionLower.LocatorR1Coefficient
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Coefficient. -/
+section PackedLocator_LocatorSplit500Coefficient
+
+/-! Constant-time coefficient-count receipt for the Split500 source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Coefficient
 
 open ProximityPrize.Benchmark
 open RCN100
@@ -11474,25 +13523,767 @@ set_option maxHeartbeats 5000000
 set_option Elab.async false
 
 theorem coefficientCount_exact :
-    coefficientCount 217647600 131071 82100 370 =
-      4336440015677516390 := by
-  change coefficientCount (1660 * 131071 + 69740) 131071 82100 370 =
-    4336440015677516390
+    coefficientCount 435271200 131071 165000 750 =
+      70306798892001843085 := by
+  change coefficientCount (3320 * 131071 + 115480) 131071 165000 750 =
+    70306798892001843085
   rw [coefficientCount_eq_oneResidueCoefficientCount
-    1660 69740 131071 82100 370 (by decide) (by decide) (by decide)
+    3320 115480 131071 165000 750 (by decide) (by decide) (by decide)
       (by decide)]
   norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
 
-end ProximityPrize.SubmissionLower.LocatorR1Coefficient
-end PackedLocator_LocatorR1Coefficient
+end ProximityPrize.SubmissionLower.LocatorSplit500Coefficient
+end PackedLocator_LocatorSplit500Coefficient
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankA. -/
-section PackedLocator_LocatorR1RankA
 
-namespace ProximityPrize.SubmissionLower.LocatorR1Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split500C : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankA. -/
+section PackedLocator_LocatorSplit500RankA
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
 
 open scoped BigOperators
-open LocatorR1Parameters
+open LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_0 :
+    (∑ i ∈ Finset.range 64, rankRow i) = 257126178400 := by decide
+
+theorem chunk_64 :
+    (∑ i ∈ Finset.range 64, rankRow (64 + i)) = 763334688352 := by decide
+
+theorem chunk_128 :
+    (∑ i ∈ Finset.range 64, rankRow (128 + i)) = 1269346328160 := by decide
+
+theorem chunk_192 :
+    (∑ i ∈ Finset.range 64, rankRow (192 + i)) = 1775161097824 := by decide
+
+theorem chunk_256 :
+    (∑ i ∈ Finset.range 64, rankRow (256 + i)) = 2280778997344 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500RankA
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split500RA : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankB. -/
+section PackedLocator_LocatorSplit500RankB
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open scoped BigOperators
+open LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_320 :
+    (∑ i ∈ Finset.range 64, rankRow (320 + i)) = 2786200026720 := by decide
+
+theorem chunk_384 :
+    (∑ i ∈ Finset.range 64, rankRow (384 + i)) = 3291424185952 := by decide
+
+theorem chunk_448 :
+    (∑ i ∈ Finset.range 64, rankRow (448 + i)) = 3796451475040 := by decide
+
+theorem chunk_512 :
+    (∑ i ∈ Finset.range 64, rankRow (512 + i)) = 4301281893984 := by decide
+
+theorem chunk_576 :
+    (∑ i ∈ Finset.range 64, rankRow (576 + i)) = 4805915442784 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500RankB
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split500RB : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankC. -/
+section PackedLocator_LocatorSplit500RankC
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open scoped BigOperators
+open LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_640 :
+    (∑ i ∈ Finset.range 64, rankRow (640 + i)) = 5310352121440 := by decide
+
+theorem chunk_704 :
+    (∑ i ∈ Finset.range 64, rankRow (704 + i)) = 5814591929952 := by decide
+
+theorem chunk_768 :
+    (∑ i ∈ Finset.range 64, rankRow (768 + i)) = 6318634868320 := by decide
+
+theorem chunk_832 :
+    (∑ i ∈ Finset.range 64, rankRow (832 + i)) = 6822480936544 := by decide
+
+theorem chunk_896 :
+    (∑ i ∈ Finset.range 64, rankRow (896 + i)) = 7326130134624 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500RankC
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split500RC : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankD. -/
+section PackedLocator_LocatorSplit500RankD
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open scoped BigOperators
+open LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_960 :
+    (∑ i ∈ Finset.range 64, rankRow (960 + i)) = 7829582462560 := by decide
+
+theorem chunk_1024 :
+    (∑ i ∈ Finset.range 64, rankRow (1024 + i)) = 8332837920352 := by decide
+
+theorem chunk_1088 :
+    (∑ i ∈ Finset.range 64, rankRow (1088 + i)) = 8835896508000 := by decide
+
+theorem chunk_1152 :
+    (∑ i ∈ Finset.range 64, rankRow (1152 + i)) = 9338758225504 := by decide
+
+theorem chunk_1216 :
+    (∑ i ∈ Finset.range 64, rankRow (1216 + i)) = 9841423072864 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500RankD
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split500RD : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankE. -/
+section PackedLocator_LocatorSplit500RankE
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open scoped BigOperators
+open LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_1280 :
+    (∑ i ∈ Finset.range 64, rankRow (1280 + i)) = 10343891050080 := by decide
+
+theorem chunk_1344 :
+    (∑ i ∈ Finset.range 64, rankRow (1344 + i)) = 10846162157152 := by decide
+
+theorem chunk_1408 :
+    (∑ i ∈ Finset.range 64, rankRow (1408 + i)) = 11348236394080 := by decide
+
+theorem chunk_1472 :
+    (∑ i ∈ Finset.range 64, rankRow (1472 + i)) = 11850113760864 := by decide
+
+theorem chunk_1536 :
+    (∑ i ∈ Finset.range 64, rankRow (1536 + i)) = 12351794257504 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500RankE
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split500RE : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankF. -/
+section PackedLocator_LocatorSplit500RankF
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open scoped BigOperators
+open LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_1600 :
+    (∑ i ∈ Finset.range 64, rankRow (1600 + i)) = 12837483791630 := by decide
+
+theorem chunk_1664 :
+    (∑ i ∈ Finset.range 64, rankRow (1664 + i)) = 12863917815168 := by decide
+
+theorem chunk_1728 :
+    (∑ i ∈ Finset.range 64, rankRow (1728 + i)) = 12551541636480 := by decide
+
+theorem chunk_1792 :
+    (∑ i ∈ Finset.range 64, rankRow (1792 + i)) = 12067619734912 := by decide
+
+theorem chunk_1856 :
+    (∑ i ∈ Finset.range 64, rankRow (1856 + i)) = 11412252773760 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500RankF
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split500RF : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankG. -/
+section PackedLocator_LocatorSplit500RankG
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open scoped BigOperators
+open LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_1920 :
+    (∑ i ∈ Finset.range 64, rankRow (1920 + i)) = 10585541416320 := by decide
+
+theorem chunk_1984 :
+    (∑ i ∈ Finset.range 64, rankRow (1984 + i)) = 9587586325888 := by decide
+
+theorem chunk_2048 :
+    (∑ i ∈ Finset.range 64, rankRow (2048 + i)) = 8418488165760 := by decide
+
+theorem chunk_2112 :
+    (∑ i ∈ Finset.range 64, rankRow (2112 + i)) = 7078347599232 := by decide
+
+theorem chunk_2176 :
+    (∑ i ∈ Finset.range 64, rankRow (2176 + i)) = 5567265289600 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500RankG
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split500RG : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankH. -/
+section PackedLocator_LocatorSplit500RankH
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open scoped BigOperators
+open LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_2240 :
+    (∑ i ∈ Finset.range 64, rankRow (2240 + i)) = 3885341900160 := by decide
+
+theorem chunk_2304 :
+    (∑ i ∈ Finset.range 64, rankRow (2304 + i)) = 2032678094208 := by decide
+
+theorem chunk_2368 :
+    (∑ i ∈ Finset.range 32, rankRow (2368 + i)) = 268261264832 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500RankH
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split500RH : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Rank. -/
+section PackedLocator_LocatorSplit500Rank
+
+/-! Assembly of the separately checked Split500 local-rank chunks. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN119
+open LocatorFastKernelArithmetic LocatorLowQuotient LocatorSplit500Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem fastLocalRankBound_exact :
+    fastLocalRankBound 2400 165000 750 = 266994231922350 := by
+  unfold fastLocalRankBound
+  rw [kernelSumRange_eq]
+  change (∑ r ∈ Finset.range 2400, rankRow r) = _
+  rw [Finset.sum_range_add rankRow 2368 32,
+    Finset.sum_range_add rankRow 2304 64,
+    Finset.sum_range_add rankRow 2240 64,
+    Finset.sum_range_add rankRow 2176 64,
+    Finset.sum_range_add rankRow 2112 64,
+    Finset.sum_range_add rankRow 2048 64,
+    Finset.sum_range_add rankRow 1984 64,
+    Finset.sum_range_add rankRow 1920 64,
+    Finset.sum_range_add rankRow 1856 64,
+    Finset.sum_range_add rankRow 1792 64,
+    Finset.sum_range_add rankRow 1728 64,
+    Finset.sum_range_add rankRow 1664 64,
+    Finset.sum_range_add rankRow 1600 64,
+    Finset.sum_range_add rankRow 1536 64,
+    Finset.sum_range_add rankRow 1472 64,
+    Finset.sum_range_add rankRow 1408 64,
+    Finset.sum_range_add rankRow 1344 64,
+    Finset.sum_range_add rankRow 1280 64,
+    Finset.sum_range_add rankRow 1216 64,
+    Finset.sum_range_add rankRow 1152 64,
+    Finset.sum_range_add rankRow 1088 64,
+    Finset.sum_range_add rankRow 1024 64,
+    Finset.sum_range_add rankRow 960 64,
+    Finset.sum_range_add rankRow 896 64,
+    Finset.sum_range_add rankRow 832 64,
+    Finset.sum_range_add rankRow 768 64,
+    Finset.sum_range_add rankRow 704 64,
+    Finset.sum_range_add rankRow 640 64,
+    Finset.sum_range_add rankRow 576 64,
+    Finset.sum_range_add rankRow 512 64,
+    Finset.sum_range_add rankRow 448 64,
+    Finset.sum_range_add rankRow 384 64,
+    Finset.sum_range_add rankRow 320 64,
+    Finset.sum_range_add rankRow 256 64,
+    Finset.sum_range_add rankRow 192 64,
+    Finset.sum_range_add rankRow 128 64,
+    Finset.sum_range_add rankRow 64 64,
+    chunk_0, chunk_64, chunk_128, chunk_192, chunk_256,
+    chunk_320, chunk_384, chunk_448, chunk_512, chunk_576,
+    chunk_640, chunk_704, chunk_768, chunk_832, chunk_896,
+    chunk_960, chunk_1024, chunk_1088, chunk_1152, chunk_1216,
+    chunk_1280, chunk_1344, chunk_1408, chunk_1472, chunk_1536,
+    chunk_1600, chunk_1664, chunk_1728, chunk_1792, chunk_1856,
+    chunk_1920, chunk_1984, chunk_2048, chunk_2112, chunk_2176,
+    chunk_2240, chunk_2304, chunk_2368]
+
+theorem localRankBound_exact :
+    localRankBound 2400 165000 750 = 266994231922350 := by
+  rw [localRankBound_eq_fastLocalRankBound 2400 165000 750 (by decide)]
+  exact fastLocalRankBound_exact
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Rank
+end PackedLocator_LocatorSplit500Rank
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split500RankAsm : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Source. -/
+section PackedLocator_LocatorSplit500Source
+
+/-! Semantic kernel source backed by the isolated Split500 receipts. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit500Source
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+abbrev Kernel (u0 u1 : I → K) :=
+  ConstraintKernel (K := K) 435271200 131071 165000 750 2400
+    IRSProfile.domain u0 u1
+
+theorem weighted_exact : 2400 * 181363 = 435271200 := by
+  decide
+
+theorem shape : 435271200 + 750 ≤ 131071 * (3320 + 1) := by
+  decide
+
+theorem nullity_exact :
+    coefficientCount 435271200 131071 165000 750 -
+      262144 * localRankBound 2400 165000 750 =
+        315862958949324685 := by
+  rw [LocatorSplit500Coefficient.coefficientCount_exact,
+    LocatorSplit500Rank.localRankBound_exact]
+
+theorem finrank_gap (u0 u1 : I → K) :
+    315862958949324685 ≤ Module.finrank K (Kernel u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
+    435271200 165000 750 2400 315862958949324685 u0 u1 (by
+      rw [nullity_exact])
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorSplit500Source
+end PackedLocator_LocatorSplit500Source
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split500S : True := by trivial
+end ProximityPrize.SubmissionLower
+
+
+
+
+
+
+
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Parameters. -/
+section PackedLocator_LocatorSplit390Parameters
+
+/-! Shared, reduction-cheap definitions for the Split390 locator source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit390Parameters
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+/-- One closed contact-rank row for the Split390 source. -/
+def rankRow (r : ℕ) : ℕ :=
+  let M := min r 19500
+  let h := min (r + 1) (390 - r)
+  rectangularCount (M + 1) (120 + 1) 0 19500 -
+    rectangularCount (M + 1 - h) (120 + 1 - h) h 19500
+
+end ProximityPrize.SubmissionLower.LocatorSplit390Parameters
+end PackedLocator_LocatorSplit390Parameters
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split390P : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Coefficient. -/
+section PackedLocator_LocatorSplit390Coefficient
+
+/-! Constant-time coefficient-count receipt for the Split390 source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit390Coefficient
+
+open ProximityPrize.Benchmark
+open RCN100
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem coefficientCount_exact :
+    coefficientCount 70731570 131071 19500 120 =
+      35441500377123610 := by
+  change coefficientCount (539 * 131071 + 84301) 131071 19500 120 =
+    35441500377123610
+  rw [coefficientCount_eq_oneResidueCoefficientCount
+    539 84301 131071 19500 120 (by decide) (by decide) (by decide)
+      (by decide)]
+  norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
+
+end ProximityPrize.SubmissionLower.LocatorSplit390Coefficient
+end PackedLocator_LocatorSplit390Coefficient
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split390C : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390RankA. -/
+section PackedLocator_LocatorSplit390RankA
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit390Rank
+
+open scoped BigOperators
+open LocatorSplit390Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_0 :
+    (∑ i ∈ Finset.range 64, rankRow i) = 4887625600 := by decide
+
+theorem chunk_64 :
+    (∑ i ∈ Finset.range 64, rankRow (64 + i)) = 14491176832 := by decide
+
+theorem chunk_128 :
+    (∑ i ∈ Finset.range 64, rankRow (128 + i)) = 24063008640 := by decide
+
+theorem chunk_192 :
+    (∑ i ∈ Finset.range 64, rankRow (192 + i)) = 33603121024 := by decide
+
+theorem chunk_256 :
+    (∑ i ∈ Finset.range 64, rankRow (256 + i)) = 37791122159 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit390Rank
+end PackedLocator_LocatorSplit390RankA
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split390RA : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390RankB. -/
+section PackedLocator_LocatorSplit390RankB
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit390Rank
+
+open scoped BigOperators
+open LocatorSplit390Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem chunk_320 :
+    (∑ i ∈ Finset.range 64, rankRow (320 + i)) = 19811668800 := by decide
+
+theorem chunk_384 :
+    (∑ i ∈ Finset.range 6, rankRow (384 + i)) = 203453075 := by decide
+
+end ProximityPrize.SubmissionLower.LocatorSplit390Rank
+end PackedLocator_LocatorSplit390RankB
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split390RB : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Rank. -/
+section PackedLocator_LocatorSplit390Rank
+
+/-! Assembly of the separately checked Split390 local-rank chunks. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit390Rank
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN119
+open LocatorFastKernelArithmetic LocatorLowQuotient LocatorSplit390Parameters
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem fastLocalRankBound_exact :
+    fastLocalRankBound 390 19500 120 = 134851176130 := by
+  unfold fastLocalRankBound
+  rw [kernelSumRange_eq]
+  change (∑ r ∈ Finset.range 390, rankRow r) = _
+  rw [Finset.sum_range_add rankRow 384 6,
+    Finset.sum_range_add rankRow 320 64,
+    Finset.sum_range_add rankRow 256 64,
+    Finset.sum_range_add rankRow 192 64,
+    Finset.sum_range_add rankRow 128 64,
+    Finset.sum_range_add rankRow 64 64,
+    chunk_0, chunk_64, chunk_128, chunk_192, chunk_256,
+    chunk_320, chunk_384]
+
+theorem localRankBound_exact :
+    localRankBound 390 19500 120 = 134851176130 := by
+  rw [localRankBound_eq_fastLocalRankBound 390 19500 120 (by decide)]
+  exact fastLocalRankBound_exact
+
+end ProximityPrize.SubmissionLower.LocatorSplit390Rank
+end PackedLocator_LocatorSplit390Rank
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split390RankAsm : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Source. -/
+section PackedLocator_LocatorSplit390Source
+
+/-! Semantic kernel source backed by the isolated Split390 receipts. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit390Source
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+abbrev Kernel (u0 u1 : I → K) :=
+  ConstraintKernel (K := K) 70731570 131071 19500 120 390
+    IRSProfile.domain u0 u1
+
+theorem weighted_exact : 390 * 181363 = 70731570 := by
+  decide
+
+theorem shape : 70731570 + 120 ≤ 131071 * (539 + 1) := by
+  decide
+
+theorem nullity_exact :
+    coefficientCount 70731570 131071 19500 120 -
+      262144 * localRankBound 390 19500 120 =
+        91073661700890 := by
+  rw [LocatorSplit390Coefficient.coefficientCount_exact,
+    LocatorSplit390Rank.localRankBound_exact]
+
+theorem finrank_gap (u0 u1 : I → K) :
+    91073661700890 ≤ Module.finrank K (Kernel u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
+    70731570 19500 120 390 91073661700890 u0 u1 (by
+      rw [nullity_exact])
+
+end
+
+end ProximityPrize.SubmissionLower.LocatorSplit390Source
+end PackedLocator_LocatorSplit390Source
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split390S : True := by trivial
+end ProximityPrize.SubmissionLower
+
+
+
+
+
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200Parameters. -/
+section PackedLocator_LocatorSplit1200Parameters
+
+/-! Shared, reduction-cheap definitions for the Split1200 locator source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit1200Parameters
+
+open ProximityPrize.Benchmark
+open RCN100 RCN119 RCN180
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+/-- One closed contact-rank row for the Split1200 source. -/
+def rankRow (r : ℕ) : ℕ :=
+  let M := min r 82100
+  let h := min (r + 1) (1200 - r)
+  rectangularCount (M + 1) (370 + 1) 0 82100 -
+    rectangularCount (M + 1 - h) (370 + 1 - h) h 82100
+
+end ProximityPrize.SubmissionLower.LocatorSplit1200Parameters
+end PackedLocator_LocatorSplit1200Parameters
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split1200P : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200Coefficient. -/
+section PackedLocator_LocatorSplit1200Coefficient
+
+/-! Constant-time coefficient-count receipt for the Split1200 source. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit1200Coefficient
+
+open ProximityPrize.Benchmark
+open RCN100
+open LocatorFastKernelArithmetic
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+set_option Elab.async false
+
+theorem coefficientCount_exact :
+    coefficientCount 217635600 131071 82100 370 =
+      4335906553882664390 := by
+  change coefficientCount (1660 * 131071 + 57740) 131071 82100 370 =
+    4335906553882664390
+  rw [coefficientCount_eq_oneResidueCoefficientCount
+    1660 57740 131071 82100 370 (by decide) (by decide) (by decide)
+      (by decide)]
+  norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
+
+end ProximityPrize.SubmissionLower.LocatorSplit1200Coefficient
+end PackedLocator_LocatorSplit1200Coefficient
+
+
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split1200C : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200RankA. -/
+section PackedLocator_LocatorSplit1200RankA
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit1200Rank
+
+open scoped BigOperators
+open LocatorSplit1200Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11514,16 +14305,22 @@ theorem chunk_192 :
 theorem chunk_256 :
     (∑ i ∈ Finset.range 64, rankRow (256 + i)) = 560147636384 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1Rank
-end PackedLocator_LocatorR1RankA
+end ProximityPrize.SubmissionLower.LocatorSplit1200Rank
+end PackedLocator_LocatorSplit1200RankA
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankB. -/
-section PackedLocator_LocatorR1RankB
 
-namespace ProximityPrize.SubmissionLower.LocatorR1Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split1200RA : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200RankB. -/
+section PackedLocator_LocatorSplit1200RankB
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit1200Rank
 
 open scoped BigOperators
-open LocatorR1Parameters
+open LocatorSplit1200Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11545,16 +14342,22 @@ theorem chunk_512 :
 theorem chunk_576 :
     (∑ i ∈ Finset.range 64, rankRow (576 + i)) = 1179148017824 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1Rank
-end PackedLocator_LocatorR1RankB
+end ProximityPrize.SubmissionLower.LocatorSplit1200Rank
+end PackedLocator_LocatorSplit1200RankB
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankC. -/
-section PackedLocator_LocatorR1RankC
 
-namespace ProximityPrize.SubmissionLower.LocatorR1Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split1200RB : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200RankC. -/
+section PackedLocator_LocatorSplit1200RankC
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit1200Rank
 
 open scoped BigOperators
-open LocatorR1Parameters
+open LocatorSplit1200Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11576,16 +14379,22 @@ theorem chunk_832 :
 theorem chunk_896 :
     (∑ i ∈ Finset.range 64, rankRow (896 + i)) = 1455328904640 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1Rank
-end PackedLocator_LocatorR1RankC
+end ProximityPrize.SubmissionLower.LocatorSplit1200Rank
+end PackedLocator_LocatorSplit1200RankC
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankD. -/
-section PackedLocator_LocatorR1RankD
 
-namespace ProximityPrize.SubmissionLower.LocatorR1Rank
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split1200RC : True := by trivial
+end ProximityPrize.SubmissionLower
+
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200RankD. -/
+section PackedLocator_LocatorSplit1200RankD
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit1200Rank
 
 open scoped BigOperators
-open LocatorR1Parameters
+open LocatorSplit1200Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11604,20 +14413,26 @@ theorem chunk_1088 :
 theorem chunk_1152 :
     (∑ i ∈ Finset.range 48, rankRow (1152 + i)) = 144171197072 := by decide
 
-end ProximityPrize.SubmissionLower.LocatorR1Rank
-end PackedLocator_LocatorR1RankD
+end ProximityPrize.SubmissionLower.LocatorSplit1200Rank
+end PackedLocator_LocatorSplit1200RankD
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Rank. -/
-section PackedLocator_LocatorR1Rank
 
-/-! Assembly of the separately checked R1 local-rank chunks. -/
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split1200RD : True := by trivial
+end ProximityPrize.SubmissionLower
 
-namespace ProximityPrize.SubmissionLower.LocatorR1Rank
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200Rank. -/
+section PackedLocator_LocatorSplit1200Rank
+
+/-! Assembly of the separately checked Split1200 local-rank chunks. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit1200Rank
 
 open ProximityPrize.Benchmark
 open scoped BigOperators
 open RCN119
-open LocatorFastKernelArithmetic LocatorLowQuotient LocatorR1Parameters
+open LocatorFastKernelArithmetic LocatorLowQuotient LocatorSplit1200Parameters
 
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -11657,15 +14472,21 @@ theorem localRankBound_exact :
   rw [localRankBound_eq_fastLocalRankBound 1200 82100 370 (by decide)]
   exact fastLocalRankBound_exact
 
-end ProximityPrize.SubmissionLower.LocatorR1Rank
-end PackedLocator_LocatorR1Rank
+end ProximityPrize.SubmissionLower.LocatorSplit1200Rank
+end PackedLocator_LocatorSplit1200Rank
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Source. -/
-section PackedLocator_LocatorR1Source
 
-/-! Semantic kernel source backed by the isolated R1 receipts. -/
+namespace ProximityPrize.SubmissionLower
+set_option Elab.async false in
+theorem PackedLocatorBarrier6803_Split1200RankAsm : True := by trivial
+end ProximityPrize.SubmissionLower
 
-namespace ProximityPrize.SubmissionLower.LocatorR1Source
+/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200Source. -/
+section PackedLocator_LocatorSplit1200Source
+
+/-! Semantic kernel source backed by the isolated Split1200 receipts. -/
+
+namespace ProximityPrize.SubmissionLower.LocatorSplit1200Source
 
 open ProximityPrize.Benchmark
 open RCN100 RCN119 RCN180
@@ -11682,824 +14503,37 @@ abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
 
 abbrev Kernel (u0 u1 : I → K) :=
-  ConstraintKernel (K := K) 217647600 131071 82100 370 1200
+  ConstraintKernel (K := K) 217635600 131071 82100 370 1200
     IRSProfile.domain u0 u1
 
-theorem weighted_exact : 1200 * 181373 = 217647600 := by
+theorem weighted_exact : 1200 * 181363 = 217635600 := by
   decide
 
-theorem shape : 217647600 + 370 ≤ 131071 * (1660 + 1) := by
+theorem shape : 217635600 + 370 ≤ 131071 * (1660 + 1) := by
   decide
 
 theorem nullity_exact :
-    coefficientCount 217647600 131071 82100 370 -
+    coefficientCount 217635600 131071 82100 370 -
       262144 * localRankBound 1200 82100 370 =
-        18811500529412710 := by
-  rw [LocatorR1Coefficient.coefficientCount_exact,
-    LocatorR1Rank.localRankBound_exact]
+        18278038734560710 := by
+  rw [LocatorSplit1200Coefficient.coefficientCount_exact,
+    LocatorSplit1200Rank.localRankBound_exact]
 
 theorem finrank_gap (u0 u1 : I → K) :
-    18811500529412710 ≤ Module.finrank K (Kernel u0 u1) := by
+    18278038734560710 ≤ Module.finrank K (Kernel u0 u1) := by
   exact challengeConstraintKernel_finrank_lower_bound_of_numeric
-    217647600 82100 370 1200 18811500529412710 u0 u1 (by
+    217635600 82100 370 1200 18278038734560710 u0 u1 (by
       rw [nullity_exact])
 
 end
 
-end ProximityPrize.SubmissionLower.LocatorR1Source
-end PackedLocator_LocatorR1Source
+end ProximityPrize.SubmissionLower.LocatorSplit1200Source
+end PackedLocator_LocatorSplit1200Source
+
 
 namespace ProximityPrize.SubmissionLower
 set_option Elab.async false in
-theorem PackedLocatorBarrier27 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorChainArithmetic. -/
-section PackedLocator_LocatorChainArithmetic
-
-/-! A small, independently checkable receipt for the asymmetric derivative-chain cost. -/
-
-namespace ProximityPrize.SubmissionLower.LocatorChainArithmetic
-
-open RCN260
-
-/-- In every nonterminal derivative-chain stage `j >= 1`, the left polynomial
-has `R`-degree at most `32`, while the original factor on the right may still
-have `R`-degree `33`. -/
-def chainStage : UnequalParameters :=
-  ⟨262144, 131071, 181373, 153, 32, 12960, 153, 33, 12960⟩
-
-theorem chainStage_exact : chainStage.regularCountCap = 264117369694349 := by
-  decide
-
-end ProximityPrize.SubmissionLower.LocatorChainArithmetic
-end PackedLocator_LocatorChainArithmetic
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier28 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorArithmetic. -/
-section PackedLocator_LocatorArithmetic
-namespace ProximityPrize.SubmissionLower.LocatorArithmetic
-open ProximityPrize.Benchmark
-open scoped BigOperators NNReal
-open RCN100 RCN119 RCN302 RCN318 RCN260 LocatorFastKernelArithmetic
-noncomputable section
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-def n:ℕ:=262144
-def w:ℕ:=131071
-def errors:ℕ:=80771
-def agreements:ℕ:=181373
-def gap:ℕ:=50302
-def prime:ℕ:=2130706433
-def budget:ℕ:=274980723107224037
-def LA:ℕ:=130000
-def LB:ℕ:=12960
-def LCap:ℕ:=6415
-def yB:ℕ:=153
-def sB:ℕ:=33
-def yC:ℕ:=373
-def sC:ℕ:=81
-def yT:ℕ:=250
-def sT:ℕ:=56
-def weightedA:ℕ:=17411808
-def weightedC:ℕ:=48970710
-abbrev weightedAmbient:=weightedC
-def weightedB:ℕ:=20132403
-def weightedTCap:ℕ:=32828513
-def fixedRegularCap:ℕ:=254595720129422441
-theorem kernelA_rank:localRankBound 96 130000 29=13837332645:=by
-  rw [localRankBound_eq_fastLocalRankBound 96 130000 29 (by decide)]
-  decide
-theorem kernelC_rank:localRankBound 270 130000 81=296615133081:=by
-  rw [localRankBound_eq_fastLocalRankBound 270 130000 81 (by decide)]
-  decide
-theorem kernelB_rank:localRankBound 111 12960 33=2086613235:=by
-  rw [localRankBound_eq_fastLocalRankBound 111 12960 33 (by decide)]
-  decide
-theorem kernelTCap_rank:localRankBound 181 6415 56=4498479216:=by
-  rw [localRankBound_eq_fastLocalRankBound 181 6415 56 (by decide)]
-  decide
-theorem kernelA_nullity:
-    coefficientCount 17411808 131071 130000 29 -
-      262144 * localRankBound 96 130000 29=122788671575:=by
-  rw [kernelA_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
-    17411808 131071 130000 29 133 (by decide) (by decide)]
-  decide
-theorem kernelC_nullity:
-    coefficientCount 48970710 131071 130000 81 -
-      262144 * localRankBound 270 130000 81=303286218157264:=by
-  rw [kernelC_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
-    48970710 131071 130000 81 374 (by decide) (by decide)]
-  decide
-theorem kernelB_nullity:
-    coefficientCount 20132403 131071 12960 33 -
-      262144 * localRankBound 111 12960 33=35582615:=by
-  rw [kernelB_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
-    20132403 131071 12960 33 154 (by decide) (by decide)]
-  decide
-theorem kernelTCap_nullity:
-    coefficientCount 32828513 131071 6415 56 -
-      262144 * localRankBound 181 6415 56=505596574:=by
-  rw [kernelTCap_rank,coefficientCount_eq_sum_range_of_weighted_cutoff
-    32828513 131071 6415 56 251 (by decide) (by decide)]
-  decide
-theorem kernelTCap_total_quotient_lt:
-    coefficientCount 32828513 131071 2 56 <
-    coefficientCount 32828513 131071 6415 56 -
-      262144 * localRankBound 181 6415 56:=by
-  rw [kernelTCap_nullity]
-  decide
-/-- Fixed-stage derivative chain (`LocatorFixedChain.fixed_chain_count_le` with
-`T := H`): the differentiated left factor has slope at most `sB - 1 = 32`
-(`LocatorDerivativeChain.chainSeeds_card_le`), the original factor on the right
-slope `33`; both sides live in the wide selected box `(6412,153,33)`. -/
-def chainH:UnequalParameters:=⟨n,w,agreements,yB,sB - 1,6412,yB,sB,6412⟩
-/-- Fixed-stage slope-free tails (the `R`-free ends of the chains and the
-`R`-free product), in the wide box at slope `1`. -/
-def tailH:TightParameters:=⟨n,w,agreements,weightedB,6412,1⟩
-/-- What the fixed stage charges besides the certified regular maximum:
-`32` chain stages and `34` tail slots.  Replaces the singular-seed count of the
-whole gcd (`CommonShearTightPrototype.countCap ⟨n,w,agreements,weightedB,6412,sB⟩
-= 8526521187049187`). -/
-def fixedChainCap:ℕ:=(sB - 1) * chainH.regularCountCap + (sB + 1) * tailH.countCap
-def residualStage:UnequalParameters:=⟨n,w,agreements,yB,sB,LB,yT,sT,LCap⟩
-def chainStage:UnequalParameters:=
-  ⟨n,w,agreements,yB,sB-1,LB,yB,sB,LB⟩
-def tailSingular:TightParameters:=⟨n,w,agreements,weightedB,LB,1⟩
-theorem chainH_exact:chainH.regularCountCap=130673289699937:=by decide
-theorem tailH_exact:tailH.countCap=2010440530563:=by decide
-theorem fixedChainCap_exact:fixedChainCap=4249900248437126:=by
-  norm_num [fixedChainCap,chainH_exact,tailH_exact,sB]
-theorem residualStage_exact:residualStage.regularCountCap=469008854116807:=by decide
-theorem chainStage_exact:chainStage.regularCountCap=264117369694349:=by
-  simpa [chainStage, LocatorChainArithmetic.chainStage, n, w, agreements,
-    yB, sB, LB] using LocatorChainArithmetic.chainStage_exact
-theorem tailSingular_exact:tailSingular.countCap=4063680072343:=by decide
-structure SingularGates (P:TightParameters):Prop where
-  s_pos:1 ≤ P.s
-  s_small:P.s < prime
-  w_pos:1 ≤ P.w
-  w_small:P.w < prime
-  kD:P.w < P.kappa * P.D
-  algebraic_pos:1 ≤ P.algebraicCap
-  implicit_small:P.implicitYCap < prime
-  algebraic_small:P.algebraicCap < prime
-  mixed_small:2 * P.implicitYCap * P.algebraicCap < prime
-  wa:P.w < P.a
-  an:P.a ≤ P.n
-theorem tail_singular_gates:SingularGates tailSingular:=by constructor <;> decide
-theorem tailH_gates:SingularGates tailH:=by constructor <;> decide
-structure ChainGates:Prop where
-  qY:(tailSingular.D - 1) / w ≤ chainStage.leftY
-  qR:tailSingular.s ≤ chainStage.leftR
-  qZ:tailSingular.L ≤ chainStage.leftZ
-  leftR_pos:1 ≤ chainStage.leftR
-  leftY_small:chainStage.leftY < prime
-  leftR_small:chainStage.leftR < prime
-  leftZ_small:chainStage.leftZ < prime
-  rightR_pos:1 ≤ chainStage.rightR
-  rightY_small:chainStage.rightY < prime
-  rightR_small:chainStage.rightR < prime
-  rightZ_small:chainStage.rightZ < prime
-  mixedY_small:chainStage.mixedCost.y < prime
-  mixedR_small:chainStage.mixedCost.r < prime
-  mixedZ_small:chainStage.mixedCost.z < prime
-theorem chain_gates:ChainGates:=by constructor <;> decide
-def ledger:ℕ:=fixedRegularCap + fixedChainCap +
-  residualStage.regularCountCap +
-  (sB - 1) * chainStage.regularCountCap + (sB + 1) * tailSingular.countCap
-theorem ledger_exact:ledger=267904550184655204:=by
-  norm_num [ledger,fixedRegularCap,fixedChainCap_exact,
-    residualStage_exact,chainStage_exact,tailSingular_exact,sB]
-theorem ledger_lt:ledger < budget:=by rw [ledger_exact]; decide
-def radiusNumerator:ℕ:=10338815
-def radiusDenominator:ℕ:=33554432
-def radius:ℝ≥0:=claimedRadius radiusNumerator radiusDenominator
-theorem radius_floor:
-    ⌊(radius:ℝ) * (Fintype.card IRSProfile.Index:ℝ)⌋₊ =errors:=by
-  norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
-    errors,IRSProfile.Index]
-theorem radius_admissible:
-    radius ∈ Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance:=by
-  constructor <;> norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
-    IRSProfile.minRelativeDistance]
-theorem score_root_integer:(2:ℕ)^2 * 71^100 ≤ 72^100:=by decide
-theorem score_radius_integer:
-    (23215617:ℕ)^128 * (2^68 * 72) ≤ 71 * 33554432^128:=by decide
-theorem two_rpow_fraction_le:
-    (2:ℝ≥0)^((2:ℝ)/100) ≤ (72:ℝ≥0)/71:=by
-  have hroot:((2:ℝ≥0)^(2:ℕ))^((100:ℝ)⁻¹) ≤ (72:ℝ≥0)/71:=by
-    rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 100)]
-    rw [NNReal.rpow_ofNat,div_pow,le_div_iff₀ (by positivity)]
-    exact_mod_cast score_root_integer
-  calc
-    (2:ℝ≥0)^((2:ℝ)/100) = ((2:ℝ≥0)^(2:ℕ))^((100:ℝ)⁻¹):=by
-      rw [← NNReal.rpow_natCast_mul]
-      norm_num [div_eq_mul_inv]
-    _ ≤ _:=hroot
-theorem radius_power_bound:
-    (1 - radius)^IRSProfile.repetitions ≤
-      ((1:ℝ≥0)/2^(68:ℕ)) * (71/72):=by
-  have hsub:(1 - radius:ℝ≥0) =23215617/33554432:=by
-    have hr:radius ≤ 1:=by
-      rw [← NNReal.coe_le_coe]
-      norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
-    apply NNReal.coe_injective
-    rw [NNReal.coe_sub hr]
-    norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
-  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (71/72)
-  rw [hsub,div_pow,div_mul_div_comm,one_mul,
-    div_le_div_iff₀ (by positivity) (by positivity)]
-  exact_mod_cast score_radius_integer
-theorem score_target_le:
-    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6802:=by
-  have hscale:(71:ℝ≥0)/72 ≤ (2:ℝ≥0)^(-((2:ℝ)/100)):=by
-    calc
-      (71:ℝ≥0)/72=1/((72:ℝ≥0)/71):=by norm_num
-      _ ≤ 1/((2:ℝ≥0)^((2:ℝ)/100)) :=
-        one_div_le_one_div_of_le (by positivity) two_rpow_fraction_le
-      _=_:=by rw [one_div,NNReal.rpow_neg]
-  calc
-    (1 - radius)^IRSProfile.repetitions ≤
-        ((1:ℝ≥0)/2^(68:ℕ)) * (71/72):=radius_power_bound
-    _ ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (2:ℝ≥0)^(-((2:ℝ)/100)) :=
-      mul_le_mul_of_nonneg_left hscale (by positivity)
-    _=claimedError 6802:=by
-      unfold claimedError
-      rw [show -((((6802:ℕ):ℝ)/100)) =
-          -((68:ℕ):ℝ) + -((2:ℝ)/100) by norm_num,
-        NNReal.rpow_add (by norm_num:(2:ℝ≥0) ≠ 0)]
-      simp only [NNReal.rpow_neg,NNReal.rpow_natCast,one_div]
-end
-end LocatorArithmetic
-end ProximityPrize.SubmissionLower
-end PackedLocator_LocatorArithmetic
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier29 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSourceCGap. -/
-section PackedLocator_LocatorSourceCGap
-
-namespace ProximityPrize.SubmissionLower.LocatorSourceCGap
-
-open ProximityPrize.Benchmark
-open LocatorArithmetic
-open RCN100 RCN119 RCN180
-
-noncomputable section
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 2000000
-set_option Elab.async false
-
-abbrev K := IRSProfile.Field
-abbrev I := IRSProfile.Index
-
-theorem finrank_lower_bound (u0 u1 : I → K) :
-    303286218157264 ≤ Module.finrank K
-      (ConstraintKernel (K := K) 48970710 131071 130000 81 270
-        IRSProfile.domain u0 u1) := by
-  have hcard : Fintype.card I = 262144 := by
-    norm_num [I, IRSProfile.Index]
-  have hlo := constraintKernel_finrank_lower_bound
-    48970710 131071 130000 81 270 IRSProfile.domain u0 u1
-  have hlo' := hcard ▸ hlo
-  exact LocatorArithmetic.kernelC_nullity ▸ hlo'
-
-end
-
-end ProximityPrize.SubmissionLower.LocatorSourceCGap
-end PackedLocator_LocatorSourceCGap
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier30 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Parameters. -/
-section PackedLocator_LocatorSplit500Parameters
-
-/-! Shared, reduction-cheap definitions for the 500-contact split source. -/
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit500Parameters
-
-open ProximityPrize.Benchmark
-open RCN100 RCN119 RCN180
-open LocatorFastKernelArithmetic
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-
-/-- One closed contact-rank row for the Split500 source. -/
-def rankRow (r : ℕ) : ℕ :=
-  let M := min r 42000
-  let h := min (r + 1) (1000 - r)
-  rectangularCount (M + 1) (310 + 1) 0 42000 -
-    rectangularCount (M + 1 - h) (310 + 1 - h) h 42000
-
-end ProximityPrize.SubmissionLower.LocatorSplit500Parameters
-end PackedLocator_LocatorSplit500Parameters
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier31 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Coefficient. -/
-section PackedLocator_LocatorSplit500Coefficient
-
-/-! Constant-time coefficient-count receipt for the Split500 source. -/
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit500Coefficient
-
-open ProximityPrize.Benchmark
-open RCN100
-open LocatorFastKernelArithmetic
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-set_option Elab.async false
-
-theorem coefficientCount_exact :
-    coefficientCount 181373000 131071 42000 310 =
-      1283287897834879898 := by
-  change coefficientCount (1383 * 131071 + 101807) 131071 42000 310 =
-    1283287897834879898
-  rw [coefficientCount_eq_oneResidueCoefficientCount
-    1383 101807 131071 42000 310 (by decide) (by decide) (by decide)
-      (by decide)]
-  norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
-
-end ProximityPrize.SubmissionLower.LocatorSplit500Coefficient
-end PackedLocator_LocatorSplit500Coefficient
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier32 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankA. -/
-section PackedLocator_LocatorSplit500RankA
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
-
-open scoped BigOperators
-open LocatorSplit500Parameters
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-set_option Elab.async false
-
-theorem chunk_0 :
-    (∑ i ∈ Finset.range 64, rankRow i) = 27055756000 := by decide
-
-theorem chunk_64 :
-    (∑ i ∈ Finset.range 64, rankRow (64 + i)) = 80280007392 := by decide
-
-theorem chunk_128 :
-    (∑ i ∈ Finset.range 64, rankRow (128 + i)) = 133422732000 := by decide
-
-theorem chunk_192 :
-    (∑ i ∈ Finset.range 64, rankRow (192 + i)) = 186483929824 := by decide
-
-theorem chunk_256 :
-    (∑ i ∈ Finset.range 64, rankRow (256 + i)) = 239463600864 := by decide
-
-end ProximityPrize.SubmissionLower.LocatorSplit500Rank
-end PackedLocator_LocatorSplit500RankA
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier33 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankB. -/
-section PackedLocator_LocatorSplit500RankB
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
-
-open scoped BigOperators
-open LocatorSplit500Parameters
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-set_option Elab.async false
-
-theorem chunk_320 :
-    (∑ i ∈ Finset.range 64, rankRow (320 + i)) = 292361745120 := by decide
-
-theorem chunk_384 :
-    (∑ i ∈ Finset.range 64, rankRow (384 + i)) = 345178362592 := by decide
-
-theorem chunk_448 :
-    (∑ i ∈ Finset.range 64, rankRow (448 + i)) = 397913453280 := by decide
-
-theorem chunk_512 :
-    (∑ i ∈ Finset.range 64, rankRow (512 + i)) = 450567017184 := by decide
-
-theorem chunk_576 :
-    (∑ i ∈ Finset.range 64, rankRow (576 + i)) = 503139054304 := by decide
-
-end ProximityPrize.SubmissionLower.LocatorSplit500Rank
-end PackedLocator_LocatorSplit500RankB
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankC. -/
-section PackedLocator_LocatorSplit500RankC
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
-
-open scoped BigOperators
-open LocatorSplit500Parameters
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-set_option Elab.async false
-
-theorem chunk_640 :
-    (∑ i ∈ Finset.range 64, rankRow (640 + i)) = 553893967770 := by decide
-
-theorem chunk_704 :
-    (∑ i ∈ Finset.range 64, rankRow (704 + i)) = 547969611648 := by decide
-
-theorem chunk_768 :
-    (∑ i ∈ Finset.range 64, rankRow (768 + i)) = 482699870080 := by decide
-
-theorem chunk_832 :
-    (∑ i ∈ Finset.range 64, rankRow (832 + i)) = 374104278912 := by decide
-
-theorem chunk_896 :
-    (∑ i ∈ Finset.range 64, rankRow (896 + i)) = 222283501440 := by decide
-
-end ProximityPrize.SubmissionLower.LocatorSplit500Rank
-end PackedLocator_LocatorSplit500RankC
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankD. -/
-section PackedLocator_LocatorSplit500RankD
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
-
-open scoped BigOperators
-open LocatorSplit500Parameters
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-set_option Elab.async false
-
-theorem chunk_960 :
-    (∑ i ∈ Finset.range 40, rankRow (960 + i)) = 42664731200 := by decide
-
-end ProximityPrize.SubmissionLower.LocatorSplit500Rank
-end PackedLocator_LocatorSplit500RankD
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier34 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Rank. -/
-section PackedLocator_LocatorSplit500Rank
-
-/-! Assembly of the separately checked Split500 local-rank chunks. -/
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit500Rank
-
-open ProximityPrize.Benchmark
-open scoped BigOperators
-open RCN119
-open LocatorFastKernelArithmetic LocatorLowQuotient LocatorSplit500Parameters
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-set_option Elab.async false
-
-theorem fastLocalRankBound_exact :
-    fastLocalRankBound 1000 42000 310 = 4879481619610 := by
-  unfold fastLocalRankBound
-  rw [kernelSumRange_eq]
-  change (∑ r ∈ Finset.range 1000, rankRow r) = _
-  rw [Finset.sum_range_add rankRow 960 40,
-    Finset.sum_range_add rankRow 896 64,
-    Finset.sum_range_add rankRow 832 64,
-    Finset.sum_range_add rankRow 768 64,
-    Finset.sum_range_add rankRow 704 64,
-    Finset.sum_range_add rankRow 640 64,
-    Finset.sum_range_add rankRow 576 64,
-    Finset.sum_range_add rankRow 512 64,
-    Finset.sum_range_add rankRow 448 64,
-    Finset.sum_range_add rankRow 384 64,
-    Finset.sum_range_add rankRow 320 64,
-    Finset.sum_range_add rankRow 256 64,
-    Finset.sum_range_add rankRow 192 64,
-    Finset.sum_range_add rankRow 128 64,
-    Finset.sum_range_add rankRow 64 64,
-    chunk_0, chunk_64, chunk_128, chunk_192,
-    chunk_256, chunk_320, chunk_384, chunk_448,
-    chunk_512, chunk_576, chunk_640, chunk_704,
-    chunk_768, chunk_832, chunk_896, chunk_960]
-
-theorem localRankBound_exact :
-    localRankBound 1000 42000 310 = 4879481619610 := by
-  rw [localRankBound_eq_fastLocalRankBound 1000 42000 310 (by decide)]
-  exact fastLocalRankBound_exact
-
-end ProximityPrize.SubmissionLower.LocatorSplit500Rank
-end PackedLocator_LocatorSplit500Rank
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier35 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Source. -/
-section PackedLocator_LocatorSplit500Source
-
-/-! Semantic kernel source backed by the isolated Split500 receipts. -/
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit500Source
-
-open ProximityPrize.Benchmark
-open RCN100 RCN119 RCN180
-open LocatorFastKernelArithmetic
-
-noncomputable section
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-set_option Elab.async false
-
-abbrev K := IRSProfile.Field
-abbrev I := IRSProfile.Index
-
-abbrev Kernel (u0 u1 : I → K) :=
-  ConstraintKernel (K := K) 181373000 131071 42000 310 1000
-    IRSProfile.domain u0 u1
-
-theorem weighted_exact : 1000 * 181373 = 181373000 := by
-  decide
-
-theorem shape : 181373000 + 310 ≤ 131071 * (1383 + 1) := by
-  decide
-
-theorem nullity_exact :
-    coefficientCount 181373000 131071 42000 310 -
-      262144 * localRankBound 1000 42000 310 = 4161068143836058 := by
-  rw [LocatorSplit500Coefficient.coefficientCount_exact,
-    LocatorSplit500Rank.localRankBound_exact]
-
-theorem finrank_gap (u0 u1 : I → K) :
-    4161068143836058 ≤ Module.finrank K (Kernel u0 u1) := by
-  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
-    181373000 42000 310 1000 4161068143836058 u0 u1 (by
-      rw [nullity_exact])
-
-end
-
-end ProximityPrize.SubmissionLower.LocatorSplit500Source
-end PackedLocator_LocatorSplit500Source
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier36 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Parameters. -/
-section PackedLocator_LocatorSplit390Parameters
-
-/-! Shared, reduction-cheap definitions for the 390-contact split source. -/
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit390Parameters
-
-open ProximityPrize.Benchmark
-open RCN100 RCN119 RCN180
-open LocatorFastKernelArithmetic
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-
-/-- One closed contact-rank row for the Split390 source. -/
-def rankRow (r : ℕ) : ℕ :=
-  let M := min r 19500
-  let h := min (r + 1) (390 - r)
-  rectangularCount (M + 1) (120 + 1) 0 19500 -
-    rectangularCount (M + 1 - h) (120 + 1 - h) h 19500
-
-end ProximityPrize.SubmissionLower.LocatorSplit390Parameters
-end PackedLocator_LocatorSplit390Parameters
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier37 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Coefficient. -/
-section PackedLocator_LocatorSplit390Coefficient
-
-/-! Constant-time coefficient-count receipt for the Split390 source. -/
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit390Coefficient
-
-open ProximityPrize.Benchmark
-open RCN100
-open LocatorFastKernelArithmetic
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-set_option Elab.async false
-
-theorem coefficientCount_exact :
-    coefficientCount 70735470 131071 19500 120 = 35445850035150610 := by
-  change coefficientCount (539 * 131071 + 88201) 131071 19500 120 =
-    35445850035150610
-  rw [coefficientCount_eq_oneResidueCoefficientCount
-    539 88201 131071 19500 120 (by decide) (by decide) (by decide)
-      (by decide)]
-  norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
-
-end ProximityPrize.SubmissionLower.LocatorSplit390Coefficient
-end PackedLocator_LocatorSplit390Coefficient
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier38 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390RankA. -/
-section PackedLocator_LocatorSplit390RankA
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit390Rank
-
-open scoped BigOperators
-open LocatorSplit390Parameters
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-set_option Elab.async false
-
-theorem chunk_0 :
-    (∑ i ∈ Finset.range 64, rankRow i) = 4887625600 := by decide
-
-theorem chunk_64 :
-    (∑ i ∈ Finset.range 64, rankRow (64 + i)) = 14491176832 := by decide
-
-theorem chunk_128 :
-    (∑ i ∈ Finset.range 64, rankRow (128 + i)) = 24063008640 := by decide
-
-theorem chunk_192 :
-    (∑ i ∈ Finset.range 64, rankRow (192 + i)) = 33603121024 := by decide
-
-end ProximityPrize.SubmissionLower.LocatorSplit390Rank
-end PackedLocator_LocatorSplit390RankA
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier39 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390RankB. -/
-section PackedLocator_LocatorSplit390RankB
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit390Rank
-
-open scoped BigOperators
-open LocatorSplit390Parameters
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-set_option Elab.async false
-
-theorem chunk_256 :
-    (∑ i ∈ Finset.range 64, rankRow (256 + i)) = 37791122159 := by decide
-
-theorem chunk_320 :
-    (∑ i ∈ Finset.range 64, rankRow (320 + i)) = 19811668800 := by decide
-
-theorem chunk_384 :
-    (∑ i ∈ Finset.range 6, rankRow (384 + i)) = 203453075 := by decide
-
-end ProximityPrize.SubmissionLower.LocatorSplit390Rank
-end PackedLocator_LocatorSplit390RankB
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier40 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Rank. -/
-section PackedLocator_LocatorSplit390Rank
-
-/-! Assembly of the separately checked Split390 local-rank chunks. -/
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit390Rank
-
-open ProximityPrize.Benchmark
-open scoped BigOperators
-open RCN119
-open LocatorFastKernelArithmetic LocatorLowQuotient LocatorSplit390Parameters
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-set_option Elab.async false
-
-theorem fastLocalRankBound_exact :
-    fastLocalRankBound 390 19500 120 = 134851176130 := by
-  unfold fastLocalRankBound
-  rw [kernelSumRange_eq]
-  change (∑ r ∈ Finset.range 390, rankRow r) = _
-  rw [Finset.sum_range_add rankRow 384 6,
-    Finset.sum_range_add rankRow 320 64,
-    Finset.sum_range_add rankRow 256 64,
-    Finset.sum_range_add rankRow 192 64,
-    Finset.sum_range_add rankRow 128 64,
-    Finset.sum_range_add rankRow 64 64,
-    chunk_0, chunk_64, chunk_128, chunk_192,
-    chunk_256, chunk_320, chunk_384]
-
-theorem localRankBound_exact :
-    localRankBound 390 19500 120 = 134851176130 := by
-  rw [localRankBound_eq_fastLocalRankBound 390 19500 120 (by decide)]
-  exact fastLocalRankBound_exact
-
-end ProximityPrize.SubmissionLower.LocatorSplit390Rank
-end PackedLocator_LocatorSplit390Rank
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier41 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Source. -/
-section PackedLocator_LocatorSplit390Source
-
-/-! Semantic kernel source backed by the isolated Split390 receipts. -/
-
-namespace ProximityPrize.SubmissionLower.LocatorSplit390Source
-
-open ProximityPrize.Benchmark
-open RCN100 RCN119 RCN180
-open LocatorFastKernelArithmetic
-
-noncomputable section
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 5000000
-set_option Elab.async false
-
-abbrev K := IRSProfile.Field
-abbrev I := IRSProfile.Index
-
-abbrev Kernel (u0 u1 : I → K) :=
-  ConstraintKernel (K := K) 70735470 131071 19500 120 390
-    IRSProfile.domain u0 u1
-
-theorem weighted_exact : 390 * 181373 = 70735470 := by
-  decide
-
-theorem shape : 70735470 + 120 ≤ 131071 * (539 + 1) := by
-  decide
-
-theorem nullity_exact :
-    coefficientCount 70735470 131071 19500 120 -
-      262144 * localRankBound 390 19500 120 = 95423319727890 := by
-  rw [LocatorSplit390Coefficient.coefficientCount_exact,
-    LocatorSplit390Rank.localRankBound_exact]
-
-theorem finrank_gap (u0 u1 : I → K) :
-    95423319727890 ≤ Module.finrank K (Kernel u0 u1) := by
-  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
-    70735470 19500 120 390 95423319727890 u0 u1 (by
-      rw [nullity_exact])
-
-end
-
-end ProximityPrize.SubmissionLower.LocatorSplit390Source
-end PackedLocator_LocatorSplit390Source
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier42 : True := by trivial
+theorem PackedLocatorBarrier6803_Split1200S : True := by trivial
 end ProximityPrize.SubmissionLower
 
 /-! Packed from ProximityPrize.SubmissionLower.LocatorBatchPhase6800. -/
@@ -12675,7 +14709,7 @@ private theorem sourceFuel_terminal (s : SourceNumbers) (p : FlagDegree)
 split required by the phase recursion. -/
 theorem routeable_exists_strict_helper_split
     (sound : PhaseSourceSound) (D m : ℕ)
-    (hweighted : D = m * 181373)
+    (hweighted : D = m * 181363)
     (hshape : D + sound.source.slopeCap ≤
       131071 * (sound.source.middleCap + 1))
     (hslopeM : sound.source.slopeCap ≤ m)
@@ -12684,19 +14718,19 @@ theorem routeable_exists_strict_helper_split
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
     (hgap : sound.source.gap ≤ Module.finrank K
       (ConstraintKernel (K := K) D 131071 sound.source.totalCap
         sound.source.slopeCap m IRSProfile.domain u0 u1))
     (A : Finset (RegularIndex H))
     (hroute : sound.source.Routeable (regularAggregateFlag H A))
     (hnarrowS : (regularAggregateFlag H A).all ≤ 29)
-    (hnarrowY : middle (regularAggregateFlag H A) ≤ 132)
-    (hnarrowT : total (regularAggregateFlag H A) ≤ 6412) :
+    (hnarrowY : middle (regularAggregateFlag H A) ≤ 135)
+    (hnarrowT : total (regularAggregateFlag H A) ≤ 6677) :
     ∃ U, U ⊂ A ∧ ∀ F ∈ A \ U,
       (regularSeeds H selected Gamma F).card ≤
         sound.potential.eval (regularCumulativeFlag H F) := by
@@ -12722,14 +14756,14 @@ theorem routeable_exists_strict_helper_split
   have hfuelChar : sound.source.fuel p < 2130706433 :=
     hfuelM.trans_lt hmChar
   have hlowpos : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
-      0 < D - j * 50303 := by
+      0 < D - j * 50293 := by
     intro j hj hjfuel
     have hjm : j ≤ m := hjfuel.trans hfuelM
     rw [hweighted]
     omega
   have hcapacity : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
-      D - j * 50303 ≤
-        (m - j) * 181373 + j * (131071 - 1) := by
+      D - j * 50293 ≤
+        (m - j) * 181363 + j * (131071 - 1) := by
     intro j _hj hjfuel
     have hjm : j ≤ m := hjfuel.trans hfuelM
     rw [hweighted]
@@ -12846,7 +14880,7 @@ theorem routeable_exists_strict_helper_split
   have hDpos : 0 < D := by
     rw [hweighted]
     exact Nat.mul_pos hmpos (by decide)
-  have hDa : D ≤ m * 181373 := hweighted.le
+  have hDa : D ≤ m * 181363 := hweighted.le
   have hP : regularProduct H A ≠ 0 := regularProduct_ne_zero H A
   have hcP : contactDec p ≤ wt (contactWeights 131071) (regularProduct H A) := by
     have h := LocatorArbitraryPowerAvoidance.contact_ge_ys 131071 (by decide)
@@ -12858,7 +14892,7 @@ theorem routeable_exists_strict_helper_split
     unfold SourceNumbers.contactCap
     omega
   have hbandThin : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
-      (D - wt (contactWeights 131071) (regularProduct H A)) 50303
+      (D - wt (contactWeights 131071) (regularProduct H A)) 50293
       (wt (contactWeights 131071) (regularProduct H A))
       (wt residualTotalWeights (regularProduct H A))
       (wt residualYSWeights (regularProduct H A))
@@ -12868,7 +14902,7 @@ theorem routeable_exists_strict_helper_split
       (sound.source.slopeCap - wt residualSWeights (regularProduct H A))
       (sound.source.fuel p) < sound.source.gap := by
     rcases hroute.2.2.2.2 with hold | hthin
-    · have hold' : powerBandBudget 50303
+    · have hold' : powerBandBudget 50293
           (wt residualTotalWeights (regularProduct H A))
           (wt residualYSWeights (regularProduct H A))
           (wt residualSWeights (regularProduct H A))
@@ -12881,7 +14915,7 @@ theorem routeable_exists_strict_helper_split
       exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_le
         _ _ _ _ _ _ _ _ _ _ _).trans_lt hold'
     · have hthin' : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
-          (sound.source.contactCap p) 50303 (contactDec p)
+          (sound.source.contactCap p) 50293 (contactDec p)
           (wt residualTotalWeights (regularProduct H A))
           (wt residualYSWeights (regularProduct H A))
           (wt residualSWeights (regularProduct H A))
@@ -12891,12 +14925,12 @@ theorem routeable_exists_strict_helper_split
           (sound.source.fuel p) < sound.source.gap := by
         simpa only [SourceNumbers.bandThin, p, regularAggregateFlag_total,
           regularAggregateFlag_middle, regularAggregateFlag_all] using hthin
-      exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_mono 131071 50303
+      exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_mono 131071 50293
         (sound.source.fuel p) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
         hDcap hcP le_rfl le_rfl le_rfl le_rfl le_rfl le_rfl).trans_lt hthin'
   apply exists_strict_helper_split_of_batch_source_thin D
     sound.source.totalCap sound.source.slopeCap m sound.source.middleCap
-    sound.source.gap 50303 (sound.source.fuel p)
+    sound.source.gap 50293 (sound.source.fuel p)
   · exact hDpos
   · exact hDa
   · exact hshape
@@ -12953,8 +14987,8 @@ def StateLocalRegularBound (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K) (cap : FlagDegree → ℕ) : Prop :=
   ∀ A : Finset (RegularIndex H),
     (regularAggregateFlag H A).all ≤ 29 →
-    middle (regularAggregateFlag H A) ≤ 132 →
-    total (regularAggregateFlag H A) ≤ 6412 →
+    middle (regularAggregateFlag H A) ≤ 135 →
+    total (regularAggregateFlag H A) ≤ 6677 →
     (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤
       cap (regularAggregateFlag H A)
 
@@ -12965,8 +14999,8 @@ def StateLocalRegularBoundOn (H : P4) (selected : K → Polynomial K)
     (cap : FlagDegree → ℕ) : Prop :=
   ∀ A : Finset (RegularIndex H), A ⊆ ambient →
     (regularAggregateFlag H A).all ≤ 29 →
-    middle (regularAggregateFlag H A) ≤ 132 →
-    total (regularAggregateFlag H A) ≤ 6412 →
+    middle (regularAggregateFlag H A) ≤ 135 →
+    total (regularAggregateFlag H A) ≤ 6677 →
     (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤
       cap (regularAggregateFlag H A)
 
@@ -13022,7 +15056,7 @@ structure PhaseKernelRealization (sound : PhaseSourceSound)
     (u0 u1 : I → K) where
   D : ℕ
   m : ℕ
-  weighted : D = m * 181373
+  weighted : D = m * 181363
   shape : D + sound.source.slopeCap ≤
     131071 * (sound.source.middleCap + 1)
   slope_le_m : sound.source.slopeCap ≤ m
@@ -13041,11 +15075,11 @@ theorem stateLocalRegularBoundOn_onePhase
     (ambient : Finset (RegularIndex H))
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
     (previousCap nextCap defect : FlagDegree → ℕ)
     (hprevious : StateLocalRegularBoundOn H selected Gamma ambient previousCap)
     (hdefect : PhaseDefectSound previousCap sound.source
@@ -13115,11 +15149,11 @@ theorem stateLocalRegularBound_onePhase
     (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
     (previousCap nextCap defect : FlagDegree → ℕ)
     (hprevious : StateLocalRegularBound H selected Gamma previousCap)
     (hdefect : PhaseDefectSound previousCap sound.source
@@ -13235,12 +15269,12 @@ theorem stageGates_of_stageZero (L YS S : ℕ) (p : FlagDegree) (j : ℕ)
 
 private theorem r1200_stageZero_le (p : FlagDegree)
     (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
-    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
-    stageCost 328400 6642 1480 (exactRouteBox p) 0 ≤
+    (hy : middle p ≤ 135) (ht : total p ≤ 6677) :
+    stageCost 526750 10983 2450 (exactRouteBox p) 0 ≤
       r1200Potential.eval p := by
-  have hay : 1 + 262142 * middle p ≤ 1741147165 := by omega
-  have har : 131071 * (2 * p.all - 1) ≤ 387839089 := by omega
-  have haz : 262142 * total p + 1 ≤ 86087432801 := by omega
+  have hay : 1 + 262142 * middle p ≤ 2879105587 := by omega
+  have har : 131071 * (2 * p.all - 1) ≤ 642116829 := by omega
+  have haz : 262142 * total p + 1 ≤ 138083298501 := by omega
   simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero,
     helperPair, UnequalParameters.regularCountCap,
     UnequalParameters.regularNumerator, UnequalParameters.errors,
@@ -13253,12 +15287,12 @@ private theorem r1200_stageZero_le (p : FlagDegree)
 
 private theorem sourceC_stageZero_le (p : FlagDegree)
     (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
-    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
-    stageCost 82100 1660 370 (exactRouteBox p) 0 ≤
+    (hy : middle p ≤ 135) (ht : total p ≤ 6677) :
+    stageCost 328400 6641 1480 (exactRouteBox p) 0 ≤
       sourceCPotential.eval p := by
-  have hay : 1 + 262142 * middle p ≤ 435155721 := by omega
-  have har : 131071 * (2 * p.all - 1) ≤ 96861469 := by omega
-  have haz : 262142 * total p + 1 ≤ 21521858201 := by omega
+  have hay : 1 + 262142 * middle p ≤ 1740885023 := by omega
+  have har : 131071 * (2 * p.all - 1) ≤ 387839089 := by omega
+  have haz : 262142 * total p + 1 ≤ 86087432801 := by omega
   simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero,
     helperPair, UnequalParameters.regularCountCap,
     UnequalParameters.regularNumerator, UnequalParameters.errors,
@@ -13271,12 +15305,12 @@ private theorem sourceC_stageZero_le (p : FlagDegree)
 
 private theorem split500_stageZero_le (p : FlagDegree)
     (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
-    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
-    stageCost 42000 1383 310 (exactRouteBox p) 0 ≤
+    (hy : middle p ≤ 135) (ht : total p ≤ 6677) :
+    stageCost 165000 3320 750 (exactRouteBox p) 0 ≤
       split500Potential.eval p := by
-  have hay : 1 + 262142 * middle p ≤ 362542387 := by omega
-  have har : 131071 * (2 * p.all - 1) ≤ 81132949 := by omega
-  have haz : 262142 * total p + 1 ≤ 11009964001 := by omega
+  have hay : 1 + 262142 * middle p ≤ 870311441 := by omega
+  have har : 131071 * (2 * p.all - 1) ≤ 196475429 := by omega
+  have haz : 262142 * total p + 1 ≤ 43253430001 := by omega
   simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero,
     helperPair, UnequalParameters.regularCountCap,
     UnequalParameters.regularNumerator, UnequalParameters.errors,
@@ -13287,9 +15321,27 @@ private theorem split500_stageZero_le (p : FlagDegree)
   norm_num
   omega
 
+private theorem split1200_stageZero_le (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
+    (hy : middle p ≤ 135) (ht : total p ≤ 6677) :
+    stageCost 82100 1660 370 (exactRouteBox p) 0 ≤
+      split1200Potential.eval p := by
+  have hay : 1 + 262142 * middle p ≤ 435155721 := by omega
+  have har : 131071 * (2 * p.all - 1) ≤ 96861469 := by omega
+  have haz : 262142 * total p + 1 ≤ 21521858201 := by omega
+  simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero,
+    helperPair, UnequalParameters.regularCountCap,
+    UnequalParameters.regularNumerator, UnequalParameters.errors,
+    UnequalParameters.gap, UnequalParameters.agreement,
+    UnequalParameters.leftAgreement, UnequalParameters.rightAgreement,
+    UnequalParameters.mixedCost, dot, Potential.eval, split1200Potential]
+  rw [max_eq_right hay, max_eq_right har, max_eq_right haz]
+  norm_num
+  omega
+
 private theorem split390_stageZero_le (p : FlagDegree)
     (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
-    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
+    (hy : middle p ≤ 135) (ht : total p ≤ 6677) :
     stageCost 19500 539 120 (exactRouteBox p) 0 ≤
       split390Potential.eval p := by
   have hay : 1 + 262142 * middle p ≤ 141294539 := by omega
@@ -13307,8 +15359,8 @@ private theorem split390_stageZero_le (p : FlagDegree)
 
 private theorem r1200_stageZero_gates (p : FlagDegree)
     (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
-    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
-    HelperPairGates 328400 6642 1480 (middle p) p.all (total p) := by
+    (hy : middle p ≤ 135) (ht : total p ≤ 6677) :
+    HelperPairGates 526750 10983 2450 (middle p) p.all (total p) := by
   unfold HelperPairGates helperPair UnequalParameters.mixedCost
   norm_num
   constructor
@@ -13325,8 +15377,8 @@ private theorem r1200_stageZero_gates (p : FlagDegree)
 
 private theorem sourceC_stageZero_gates (p : FlagDegree)
     (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
-    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
-    HelperPairGates 82100 1660 370 (middle p) p.all (total p) := by
+    (hy : middle p ≤ 135) (ht : total p ≤ 6677) :
+    HelperPairGates 328400 6641 1480 (middle p) p.all (total p) := by
   unfold HelperPairGates helperPair UnequalParameters.mixedCost
   norm_num
   constructor
@@ -13343,8 +15395,26 @@ private theorem sourceC_stageZero_gates (p : FlagDegree)
 
 private theorem split500_stageZero_gates (p : FlagDegree)
     (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
-    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
-    HelperPairGates 42000 1383 310 (middle p) p.all (total p) := by
+    (hy : middle p ≤ 135) (ht : total p ≤ 6677) :
+    HelperPairGates 165000 3320 750 (middle p) p.all (total p) := by
+  unfold HelperPairGates helperPair UnequalParameters.mixedCost
+  norm_num
+  constructor
+  · exact hr
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · nlinarith
+  constructor <;> nlinarith
+
+private theorem split1200_stageZero_gates (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
+    (hy : middle p ≤ 135) (ht : total p ≤ 6677) :
+    HelperPairGates 82100 1660 370 (middle p) p.all (total p) := by
   unfold HelperPairGates helperPair UnequalParameters.mixedCost
   norm_num
   constructor
@@ -13361,7 +15431,7 @@ private theorem split500_stageZero_gates (p : FlagDegree)
 
 private theorem split390_stageZero_gates (p : FlagDegree)
     (hr : 1 ≤ p.all) (hs : p.all ≤ 29)
-    (hy : middle p ≤ 132) (ht : total p ≤ 6412) :
+    (hy : middle p ≤ 135) (ht : total p ≤ 6677) :
     HelperPairGates 19500 539 120 (middle p) p.all (total p) := by
   unfold HelperPairGates helperPair UnequalParameters.mixedCost
   norm_num
@@ -13381,31 +15451,41 @@ def r1200Sound : PhaseSourceSound where
   source := sourceR1200
   potential := r1200Potential
   stageCost_le p j hr hs hy ht _ :=
-    (stageCost_le_stageZero 328400 6642 1480 p j).trans
+    (stageCost_le_stageZero 526750 10983 2450 p j).trans
       (r1200_stageZero_le p hr hs hy ht)
   stageGates p j hr hs hy ht _ :=
-    stageGates_of_stageZero 328400 6642 1480 p j
+    stageGates_of_stageZero 526750 10983 2450 p j
       (r1200_stageZero_gates p hr hs hy ht)
 
 def sourceCSound : PhaseSourceSound where
   source := sourceC
   potential := sourceCPotential
   stageCost_le p j hr hs hy ht _ :=
-    (stageCost_le_stageZero 82100 1660 370 p j).trans
+    (stageCost_le_stageZero 328400 6641 1480 p j).trans
       (sourceC_stageZero_le p hr hs hy ht)
   stageGates p j hr hs hy ht _ :=
-    stageGates_of_stageZero 82100 1660 370 p j
+    stageGates_of_stageZero 328400 6641 1480 p j
       (sourceC_stageZero_gates p hr hs hy ht)
 
 def split500Sound : PhaseSourceSound where
   source := sourceSplit500
   potential := split500Potential
   stageCost_le p j hr hs hy ht _ :=
-    (stageCost_le_stageZero 42000 1383 310 p j).trans
+    (stageCost_le_stageZero 165000 3320 750 p j).trans
       (split500_stageZero_le p hr hs hy ht)
   stageGates p j hr hs hy ht _ :=
-    stageGates_of_stageZero 42000 1383 310 p j
+    stageGates_of_stageZero 165000 3320 750 p j
       (split500_stageZero_gates p hr hs hy ht)
+
+def split1200Sound : PhaseSourceSound where
+  source := sourceSplit1200
+  potential := split1200Potential
+  stageCost_le p j hr hs hy ht _ :=
+    (stageCost_le_stageZero 82100 1660 370 p j).trans
+      (split1200_stageZero_le p hr hs hy ht)
+  stageGates p j hr hs hy ht _ :=
+    stageGates_of_stageZero 82100 1660 370 p j
+      (split1200_stageZero_gates p hr hs hy ht)
 
 def split390Sound : PhaseSourceSound where
   source := sourceSplit390
@@ -13421,171 +15501,26 @@ def split390Sound : PhaseSourceSound where
 its two agreement maxima are handled explicitly rather than by source
 dominance. -/
 
-private theorem initialA_highY_highR_int (t y r : ℤ)
-    (ht : y ≤ t) (hylo : 132 ≤ y) (hyhi : y ≤ 153)
-    (hrlo : 29 ≤ r) (hrhi : r ≤ 33) :
-    996432412614 * t * y + 4535485464312 * t * r +
-        8933531975160000 * y * r ≤
-      302125682489247 * t + 173204606068620937 * y +
-        563790857807479424 * r + 50301 := by
-  have hcT : 0 ≤ 302125682489247 - 996432412614 * y -
-      4535485464312 * r := by omega
-  have hpT : 0 ≤ (t - y) * (302125682489247 - 996432412614 * y -
-      4535485464312 * r) := mul_nonneg (by omega) hcT
-  have hcR : 0 ≤ 8938067460624312 * y - 563790857807479424 := by
-    omega
-  have hpR : 0 ≤ (33 - r) *
-      (8938067460624312 * y - 563790857807479424) :=
-    mul_nonneg (by omega) hcR
-  have hpY : 0 ≤ 2 * (153 - y) *
-      (498216206307 * y + 60800974304311027) :=
-    mul_nonneg (mul_nonneg (by norm_num) (by omega)) (by omega)
-  nlinarith
-
-private theorem initialA_highY_lowR_int (t y r : ℤ)
-    (ht : y ≤ t) (hylo : 132 ≤ y) (hyhi : y ≤ 153)
-    (hrhi : r ≤ 28) :
-    996432412614 * t * y + 4466765987580000 * y * r ≤
-      170596604024199 * t + 43668392428800937 * y +
-        563790857807479424 * r + 50301 := by
-  have hcT : 0 ≤ 170596604024199 - 996432412614 * y := by omega
-  have hpT : 0 ≤ (t - y) * (170596604024199 - 996432412614 * y) :=
-    mul_nonneg (by omega) hcT
-  have hcR : 0 ≤ 4466765987580000 * y - 563790857807479424 := by
-    omega
-  have hpR : 0 ≤ (28 - r) *
-      (4466765987580000 * y - 563790857807479424) :=
-    mul_nonneg (by omega) hcR
-  have hpY : 0 ≤ 2 * (153 - y) *
-      (498216206307 * y + 40691456389272403) :=
-    mul_nonneg (mul_nonneg (by norm_num) (by omega)) (by positivity)
-  nlinarith
-
-private theorem initialA_lowY_highR_int (t y r : ℤ)
-    (ht : y ≤ t) (hyr : r ≤ y) (hrlo : 29 ≤ r) (hrhi : r ≤ 33) :
-    4535485464312 * t * r + 4466765987580000 * y * r +
-        25822252553080576 * r ≤
-      170596604024199 * t + 173204606068620937 * y + 50301 := by
-  have hcT : 0 ≤ 170596604024199 - 4535485464312 * r := by omega
-  have hpT : 0 ≤ (t - y) * (170596604024199 - 4535485464312 * r) :=
-    mul_nonneg (by omega) hcT
-  have hcY : 0 ≤ 173375202672645136 - 4471301473044312 * r := by
-    omega
-  have hpY : 0 ≤ (y - r) *
-      (173375202672645136 - 4471301473044312 * r) :=
-    mul_nonneg (by omega) hcY
-  have hpR : 0 ≤ 2 * (33 - r) * (2235650736522156 * r - 754551132) :=
-    mul_nonneg (mul_nonneg (by norm_num) (by omega)) (by omega)
-  nlinarith
-
-/- Keep the casts and the truncated predecessor `2 * r - 1` out of the main
-   helper definition.  These three fixed branch lemmas elaborate much faster
-   than normalizing that definition after all maxima have been split. -/
-private theorem initialA_highY_highR_nat (t y r : ℕ)
-    (ht : y ≤ t) (hylo : 132 ≤ y) (hyhi : y ≤ 153)
-    (hrlo : 29 ≤ r) (hrhi : r ≤ 33) :
-    131073 *
-          ((1 + 262142 * y) * (r * 130000 + t * 29) +
-            131071 * (2 * r - 1) * (y * 130000 + t * 132) +
-            34078460001 * (y * 29 + r * 132)) +
-        4062993144 * (y * 29 + r * 132) ≤
-      (5961153504 * t + 5974067721865 * y + 22929595672934 * r) *
-          50302 + 50301 := by
-  have hi := initialA_highY_highR_int (t : ℤ) (y : ℤ) (r : ℤ)
-    (by exact_mod_cast ht) (by exact_mod_cast hylo) (by exact_mod_cast hyhi)
-    (by exact_mod_cast hrlo) (by exact_mod_cast hrhi)
-  have hn :
-      996432412614 * t * y + 4535485464312 * t * r +
-          8933531975160000 * y * r ≤
-        302125682489247 * t + 173204606068620937 * y +
-          563790857807479424 * r + 50301 := by
-    exact_mod_cast hi
-  have hsub : 2 * r - 1 + 1 = 2 * r := by omega
-  nlinarith
-
-private theorem initialA_highY_lowR_nat (t y r : ℕ)
-    (ht : y ≤ t) (hylo : 132 ≤ y) (hyhi : y ≤ 153)
-    (hrhi : r ≤ 28) (hrlo : 1 ≤ r) :
-    131073 *
-          ((1 + 262142 * y) * (r * 130000 + t * 29) +
-            7471047 * (y * 130000 + t * 132) +
-            34078460001 * (y * 29 + r * 132)) +
-        4062993144 * (y * 29 + r * 132) ≤
-      (5961153504 * t + 5974067721865 * y + 22929595672934 * r) *
-          50302 + 50301 := by
-  have hi := initialA_highY_lowR_int (t : ℤ) (y : ℤ) (r : ℤ)
-    (by exact_mod_cast ht) (by exact_mod_cast hylo) (by exact_mod_cast hyhi)
-    (by exact_mod_cast hrhi)
-  have hn :
-      996432412614 * t * y + 4466765987580000 * y * r ≤
-        170596604024199 * t + 43668392428800937 * y +
-          563790857807479424 * r + 50301 := by
-    exact_mod_cast hi
-  nlinarith
-
-private theorem initialA_lowY_highR_nat (t y r : ℕ)
-    (ht : y ≤ t) (hyr : r ≤ y) (hrlo : 29 ≤ r) (hrhi : r ≤ 33) :
-    131073 *
-          (34602745 * (r * 130000 + t * 29) +
-            131071 * (2 * r - 1) * (y * 130000 + t * 132) +
-            34078460001 * (y * 29 + r * 132)) +
-        4062993144 * (y * 29 + r * 132) ≤
-      (5961153504 * t + 5974067721865 * y + 22929595672934 * r) *
-          50302 + 50301 := by
-  have hi := initialA_lowY_highR_int (t : ℤ) (y : ℤ) (r : ℤ)
-    (by exact_mod_cast ht) (by exact_mod_cast hyr)
-    (by exact_mod_cast hrlo) (by exact_mod_cast hrhi)
-  have hn :
-      4535485464312 * t * r + 4466765987580000 * y * r +
-          25822252553080576 * r ≤
-        170596604024199 * t + 173204606068620937 * y + 50301 := by
-    exact_mod_cast hi
-  have hsub : 2 * r - 1 + 1 = 2 * r := by omega
-  nlinarith
-
 theorem initialAHelperCap_le_potential (p : FlagDegree)
     (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
-    (hy : middle p ≤ 153) (ht : total p ≤ 6412) :
-    (helperPair 130000 132 29 (middle p) p.all (total p)).regularCountCap ≤
+    (hy : middle p ≤ 153) (ht : total p ≤ 6677) :
+    (helperPair 130000 135 29 (middle p) p.all (total p)).regularCountCap ≤
       initialAPotential.eval p := by
   have haz : 262142 * total p + 1 ≤ 34078460001 := by omega
-  have hry : p.all ≤ middle p := by simp [middle]
-  have hyt : middle p ≤ total p := by simp [middle, total]
+  have hay : max (1 + 262142 * middle p) 35389171 ≤ 40107727 := by omega
+  have har : max (131071 * (2 * p.all - 1)) 7471047 ≤ 8519615 := by omega
   simp only [helperPair, UnequalParameters.regularCountCap,
     UnequalParameters.regularNumerator, UnequalParameters.errors,
     UnequalParameters.gap, UnequalParameters.agreement,
     UnequalParameters.leftAgreement, UnequalParameters.rightAgreement,
     UnequalParameters.mixedCost, dot, Potential.eval, initialAPotential]
   rw [max_eq_right haz]
-  by_cases hay : 34602745 ≤ 1 + 262142 * middle p
-  · rw [max_eq_left hay]
-    by_cases har : 7471047 ≤ 131071 * (2 * p.all - 1)
-    · rw [max_eq_left har]
-      norm_num
-      apply (Nat.div_le_iff_le_mul (by decide)).2
-      have hrlo : 29 ≤ p.all := by omega
-      have hylo : 132 ≤ middle p := by omega
-      exact initialA_highY_highR_nat (total p) (middle p) p.all hyt hylo hy
-        hrlo hs
-    · rw [max_eq_right (Nat.le_of_not_ge har)]
-      norm_num
-      apply (Nat.div_le_iff_le_mul (by decide)).2
-      have hylo : 132 ≤ middle p := by omega
-      have hr27 : p.all ≤ 28 := by omega
-      exact initialA_highY_lowR_nat (total p) (middle p) p.all hyt hylo hy
-        hr27 hr
-  · rw [max_eq_right (Nat.le_of_not_ge hay)]
-    by_cases har : 7471047 ≤ 131071 * (2 * p.all - 1)
-    · rw [max_eq_left har]
-      norm_num
-      apply (Nat.div_le_iff_le_mul (by decide)).2
-      have hrlo : 29 ≤ p.all := by omega
-      exact initialA_lowY_highR_nat (total p) (middle p) p.all hyt hry hrlo hs
-    · rw [max_eq_right (Nat.le_of_not_ge har)]
-      norm_num
-      apply (Nat.div_le_iff_le_mul (by decide)).2
-      ring_nf
-      omega
+  norm_num
+  apply (Nat.div_le_iff_le_mul (by decide)).2
+  norm_num
+  have h1 := Nat.mul_le_mul_right (p.all * 130000 + total p * 29) hay
+  have h2 := Nat.mul_le_mul_right (middle p * 130000 + total p * 135) har
+  nlinarith [h1, h2]
 
 end ProximityPrize.SubmissionLower.LocatorPhase6800SourceSound
 end PackedLocator_LocatorPhase6800SourceSound
@@ -13630,8 +15565,8 @@ local instance : DecidableEq I := Classical.decEq I
 
 def r1200Kernel (u0 u1 : I → K) :
     PhaseKernelRealization r1200Sound u0 u1 where
-  D := 870590400
-  m := 4800
+  D := 1439659494
+  m := 7938
   weighted := LocatorR1200Source.weighted_exact.symm
   shape := by
     simpa only [r1200Sound, sourceR1200] using LocatorR1200Source.shape
@@ -13639,13 +15574,13 @@ def r1200Kernel (u0 u1 : I → K) :
   m_lt_char := by decide
   gap_le_finrank := by
     exact LocatorFastKernelArithmetic.challengeConstraintKernel_finrank_lower_bound_of_numeric
-      870590400 328400 1480 4800 5227117860923383312 u0 u1 (by
+      1439659494 526750 2450 7938 36963750380693986577 u0 u1 (by
         rw [LocatorR1200Source.nullity_exact])
 
 def sourceCKernel (u0 u1 : I → K) :
     PhaseKernelRealization sourceCSound u0 u1 where
-  D := 217647600
-  m := 1200
+  D := 870542400
+  m := 4800
   weighted := LocatorR1Source.weighted_exact.symm
   shape := by
     simpa only [sourceCSound, sourceC] using LocatorR1Source.shape
@@ -13653,53 +15588,65 @@ def sourceCKernel (u0 u1 : I → K) :
   m_lt_char := by decide
   gap_le_finrank := by
     exact LocatorFastKernelArithmetic.challengeConstraintKernel_finrank_lower_bound_of_numeric
-      217647600 82100 370 1200 18811500529412710 u0 u1 (by
+      870542400 328400 1480 4800 5090867013182078230 u0 u1 (by
         rw [LocatorR1Source.nullity_exact])
 
 def split500Kernel (u0 u1 : I → K) :
     PhaseKernelRealization split500Sound u0 u1 where
-  D := 181373000
-  m := 1000
+  D := 435271200
+  m := 2400
   weighted := LocatorSplit500Source.weighted_exact.symm
   shape := by
-    simpa only [split500Sound, sourceSplit500] using
-      LocatorSplit500Source.shape
+    simpa only [split500Sound, sourceSplit500] using LocatorSplit500Source.shape
   slope_le_m := by decide
   m_lt_char := by decide
   gap_le_finrank := by
     exact LocatorFastKernelArithmetic.challengeConstraintKernel_finrank_lower_bound_of_numeric
-      181373000 42000 310 1000 4161068143836058 u0 u1 (by
+      435271200 165000 750 2400 315862958949324685 u0 u1 (by
         rw [LocatorSplit500Source.nullity_exact])
+
+def split1200Kernel (u0 u1 : I → K) :
+    PhaseKernelRealization split1200Sound u0 u1 where
+  D := 217635600
+  m := 1200
+  weighted := LocatorSplit1200Source.weighted_exact.symm
+  shape := by
+    simpa only [split1200Sound, sourceSplit1200] using LocatorSplit1200Source.shape
+  slope_le_m := by decide
+  m_lt_char := by decide
+  gap_le_finrank := by
+    exact LocatorFastKernelArithmetic.challengeConstraintKernel_finrank_lower_bound_of_numeric
+      217635600 82100 370 1200 18278038734560710 u0 u1 (by
+        rw [LocatorSplit1200Source.nullity_exact])
 
 def split390Kernel (u0 u1 : I → K) :
     PhaseKernelRealization split390Sound u0 u1 where
-  D := 70735470
+  D := 70731570
   m := 390
   weighted := LocatorSplit390Source.weighted_exact.symm
   shape := by
-    simpa only [split390Sound, sourceSplit390] using
-      LocatorSplit390Source.shape
+    simpa only [split390Sound, sourceSplit390] using LocatorSplit390Source.shape
   slope_le_m := by decide
   m_lt_char := by decide
   gap_le_finrank := by
     exact LocatorFastKernelArithmetic.challengeConstraintKernel_finrank_lower_bound_of_numeric
-      70735470 19500 120 390 95423319727890 u0 u1 (by
+      70731570 19500 120 390 91073661700890 u0 u1 (by
         rw [LocatorSplit390Source.nullity_exact])
 
 /-- Concrete composition of the four fresh-source phases. -/
-theorem stateLocalRegularBoundOn_fourPhases
+theorem stateLocalRegularBoundOn_fivePhases
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (ambient : Finset (RegularIndex H))
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
-    (baseCap rCap cCap f500Cap s390Cap : FlagDegree → ℕ)
-    (rDefect cDefect f500Defect s390Defect : FlagDegree → ℕ)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
+    (baseCap rCap cCap f500Cap s1200Cap s390Cap : FlagDegree → ℕ)
+    (rDefect cDefect f500Defect s1200Defect s390Defect : FlagDegree → ℕ)
     (hown : ∀ F ∈ ambient, LocatorHybridCost.OwnBound
       (regularSeeds H selected Gamma F).card
       (regularCumulativeFlag H F))
@@ -13716,9 +15663,13 @@ theorem stateLocalRegularBoundOn_fourPhases
       split500Potential f500Defect)
     (hfCap : PhaseCapEquation cCap f500Cap sourceSplit500
       split500Potential f500Defect)
-    (hsDefect : PhaseDefectSound f500Cap sourceSplit390
+    (htDefect : PhaseDefectSound f500Cap sourceSplit1200
+      split1200Potential s1200Defect)
+    (htCap : PhaseCapEquation f500Cap s1200Cap sourceSplit1200
+      split1200Potential s1200Defect)
+    (hsDefect : PhaseDefectSound s1200Cap sourceSplit390
       split390Potential s390Defect)
-    (hsCap : PhaseCapEquation f500Cap s390Cap sourceSplit390
+    (hsCap : PhaseCapEquation s1200Cap s390Cap sourceSplit390
       split390Potential s390Defect) :
     StateLocalRegularBoundOn H selected Gamma ambient s390Cap := by
   have h0 : StateLocalRegularBoundOn H selected Gamma ambient baseCap :=
@@ -13751,12 +15702,21 @@ theorem stateLocalRegularBoundOn_fourPhases
       (nextCap := f500Cap) (defect := f500Defect) (hprevious := hC)
       (hdefect := by simpa only [split500Sound] using hfDefect)
       (hcap := by simpa only [split500Sound] using hfCap)
+  have hT : StateLocalRegularBoundOn H selected Gamma ambient s1200Cap :=
+    stateLocalRegularBoundOn_onePhase
+      (sound := split1200Sound) (u0 := u0) (u1 := u1)
+      (kernel := split1200Kernel u0 u1) (H := H) (selected := selected)
+      (Gamma := Gamma) (ambient := ambient) (hdegree := hdegree)
+      (hagreement := hagreement) (hno := hno) (previousCap := f500Cap)
+      (nextCap := s1200Cap) (defect := s1200Defect) (hprevious := hF)
+      (hdefect := by simpa only [split1200Sound] using htDefect)
+      (hcap := by simpa only [split1200Sound] using htCap)
   exact stateLocalRegularBoundOn_onePhase
     (sound := split390Sound) (u0 := u0) (u1 := u1)
     (kernel := split390Kernel u0 u1) (H := H) (selected := selected)
     (Gamma := Gamma) (ambient := ambient) (hdegree := hdegree)
-    (hagreement := hagreement) (hno := hno) (previousCap := f500Cap)
-    (nextCap := s390Cap) (defect := s390Defect) (hprevious := hF)
+    (hagreement := hagreement) (hno := hno) (previousCap := s1200Cap)
+    (nextCap := s390Cap) (defect := s390Defect) (hprevious := hT)
     (hdefect := by simpa only [split390Sound] using hsDefect)
     (hcap := by simpa only [split390Sound] using hsCap)
 
@@ -13782,11 +15742,11 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80771
-def agreements:ℕ:=181373
-def gap:ℕ:=50302
+def errors:ℕ:=80781
+def agreements:ℕ:=181363
+def gap:ℕ:=50292
 def prime:ℕ:=2130706433
-def weightedCap:ℕ:=17411808
+def weightedCap:ℕ:=17773574
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index
 local instance:DecidableEq K:=Classical.decEq K
@@ -13819,17 +15779,29 @@ theorem identityDegree_linear (flag:FlagDegree) (a b s:ℕ) :
     nsmul_zOnly,nsmul_yz,nsmul_all,w]
   ring
 def identitySlackZ (b s:ℕ):ℕ:=
-  6207266144245360 + 6913506983018496 * b + 11051693203460596 * s +
-    3456753491509248 * s ^ 2 + 6913506983018496 * b * s
+  6204689135031870 +
+    11048600795550156 * s +
+    6912132582998016 * b +
+    3456066291499008 * s ^ 2 +
+    6912132582998016 * b * s
 def identitySlackYZ (a b s:ℕ):ℕ:=
-  2044245441127396 + 6913506983018496 * a + 6913506983018496 * b +
-    8276346068048620 * s + 3456753491509248 * s ^ 2 +
-    6913506983018496 * a * s + 6913506983018496 * b * s
+  2041153027974036 +
+    8272910057511600 * s +
+    6912132582998016 * b +
+    6912132582998016 * a +
+    3456066291499008 * s ^ 2 +
+    6912132582998016 * b * s +
+    6912132582998016 * a * s
 def identitySlackAll (a b s:ℕ):ℕ:=
-  2725656996053838 + 11051693203460596 * a + 8276346068048620 * b +
-    3456753491509248 * b ^ 2 + 8276346068048620 * s +
-    3456753491509248 * s ^ 2 + 6913506983018496 * a * b +
-    6913506983018496 * a * s + 6913506983018496 * b * s
+  2721533772399288 +
+    8272910057511600 * s +
+    8272910057511600 * b +
+    11048600795550156 * a +
+    3456066291499008 * s ^ 2 +
+    6912132582998016 * b * s +
+    3456066291499008 * b ^ 2 +
+    6912132582998016 * a * s +
+    6912132582998016 * a * b
 def identitySlack (flag:FlagDegree) (a b s:ℕ):ℕ:=
   flag.zOnly * identitySlackZ b s + flag.yz * identitySlackYZ a b s +
     flag.all * identitySlackAll a b s
@@ -13869,7 +15841,7 @@ theorem tangent_gate (a b s:ℕ) :
   exact (by norm_num [errors,w]:errors + 1 ≤ 1 + 2 * (w + 2)).trans
     (Nat.add_le_add_left hb 1)
 theorem flag_characteristic (a b s:ℕ) (flag:FlagDegree)
-    (hS:s + 2 ≤ 29) (hY:b + s + 3 ≤ 132) (hT:a + b + s + 3 ≤ 6412)
+    (hS:s + 2 ≤ 29) (hY:b + s + 3 ≤ 135) (hT:a + b + s + 3 ≤ 6677)
     (hflag:flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
       flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) :
     flag.yz + flag.all < prime ∧ flag.all < prime ∧
@@ -13877,31 +15849,31 @@ theorem flag_characteristic (a b s:ℕ) (flag:FlagDegree)
   dsimp [prime]
   omega
 theorem identity_mixed_gate (b s:ℕ) (flag:FlagDegree)
-    (hS:s + 2 ≤ 29) (hY:b + s + 3 ≤ 132)
+    (hS:s + 2 ≤ 29) (hY:b + s + 3 ≤ 135)
     (hfs:flag.all ≤ s + 2) (hfy:flag.yz + flag.all ≤ b + s + 3) :
     (1 + w * (2 * (b + s + 3) - 2)) * flag.all +
       (flag.yz + flag.all) * ((2 * (s + 2) - 1) * w) < prime:=by
-  have hy:2 * (b + s + 3) - 2 ≤ 262:=by omega
+  have hy:2 * (b + s + 3) - 2 ≤ 268:=by omega
   have hs:2 * (s + 2) - 1 ≤ 57:=by omega
   have hfS:flag.all ≤ 29:=hfs.trans hS
-  have hfY:flag.yz + flag.all ≤ 132:=hfy.trans hY
+  have hfY:flag.yz + flag.all ≤ 135:=hfy.trans hY
   calc
-    _ ≤ (1 + w * 262) * 29 + 132 * (57 * w) :=
+    _ ≤ (1 + w * 268) * 29 + 135 * (57 * w) :=
       Nat.add_le_add
         (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left w hy) 1) hfS)
         (Nat.mul_le_mul hfY (Nat.mul_le_mul_right w hs))
     _ < prime:=by norm_num [w,prime]
 theorem provider_mixed_gate (b s:ℕ) (flag:FlagDegree)
-    (hS:s + 2 ≤ 29) (hY:b + s + 3 ≤ 132)
+    (hS:s + 2 ≤ 29) (hY:b + s + 3 ≤ 135)
     (hfs:flag.all ≤ s + 2) (hfy:flag.yz + flag.all ≤ b + s + 3) :
     (1 + (w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
       (flag.yz + flag.all) * ((2 * (s + 2) - 2) * (w + 1)) < prime:=by
-  have hy:2 * (b + s + 3) - 2 ≤ 262:=by omega
+  have hy:2 * (b + s + 3) - 2 ≤ 268:=by omega
   have hs:2 * (s + 2) - 2 ≤ 56:=by omega
   have hfS:flag.all ≤ 29:=hfs.trans hS
-  have hfY:flag.yz + flag.all ≤ 132:=hfy.trans hY
+  have hfY:flag.yz + flag.all ≤ 135:=hfy.trans hY
   calc
-    _ ≤ (1 + (w + 1) * 262) * 29 + 132 * (56 * (w + 1)) :=
+    _ ≤ (1 + (w + 1) * 268) * 29 + 135 * (56 * (w + 1)) :=
       Nat.add_le_add
         (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left (w + 1) hy) 1) hfS)
         (Nat.mul_le_mul hfY (Nat.mul_le_mul_right (w + 1) hs))
@@ -13918,7 +15890,7 @@ def FixedStageBound (D a b s:ℕ):Prop:=
     Gamma.card ≤ flagMixed flag (firstTail a b s) (secondTail a b s)
 theorem fixedStageBound (D a b s:ℕ)
     (hDlow:w + 1 ≤ D) (hDhigh:D ≤ weightedCap)
-    (hS:s + 2 ≤ 29) (hY:b + s + 3 ≤ 132) (hT:a + b + s + 3 ≤ 6412) :
+    (hS:s + 2 ≤ 29) (hY:b + s + 3 ≤ 135) (hT:a + b + s + 3 ≤ 6677) :
     FixedStageBound D a b s:=by
   intro Gamma flag S hnodes hagreement hbox hflag
   have hDchar:D < prime:=hDhigh.trans_lt (by norm_num [weightedCap,prime])
@@ -14053,28 +16025,28 @@ theorem factor_support {P:ResidualSupportParameters} (Q:P4) (hQ:Q ≠ 0)
     (weightedTotalDegree_le_of_dvd residualYSWeights R.1 Q hd hQ).trans HQ.ys_weight,
     (weightedTotalDegree_le_of_dvd residualTotalWeights R.1 Q hd hQ).trans HQ.total_weight⟩
 theorem own_parameter_caps (p:FlagDegree)
-    (hs:p.all ≤ 29) (hy:middle p ≤ 132) (ht:total p ≤ 6412) :
-    padSlope p + 2 ≤ 29 ∧ padB p + padSlope p + 3 ≤ 132 ∧
-      padA p + padB p + padSlope p + 3 ≤ 6412:=by
+    (hs:p.all ≤ 29) (hy:middle p ≤ 135) (ht:total p ≤ 6677) :
+    padSlope p + 2 ≤ 29 ∧ padB p + padSlope p + 3 ≤ 135 ∧
+      padA p + padB p + padSlope p + 3 ≤ 6677:=by
   have hp:=pad_sums p
   have hps:padS p ≤ 29:=max_le hs (by decide)
-  have hpy:padY p ≤ 132:=max_le hy (by omega)
-  have hpt:padT p ≤ 6412:=max_le ht (by omega)
+  have hpy:padY p ≤ 135:=max_le hy (by omega)
+  have hpt:padT p ≤ 6677:=max_le ht (by omega)
   rw [hp.1,hp.2.1,hp.2.2]
   exact ⟨hps,hpy,hpt⟩
 theorem regular_factor_count
     (D:ℕ) (P:ResidualSupportParameters)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17411808)
-    (hS:P.s ≤ 29) (hY:P.ys ≤ 132) (hT:P.total ≤ 6412)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17773574)
+    (hS:P.s ≤ 29) (hY:P.ys ≤ 135) (hT:P.total ≤ 6677)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+    (hagreement:∀ gamma ∈ Gamma,181363 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80781)
     (R:RegularIndex Q) :
     (regularSeeds Q selected Gamma R).card ≤
       paddedCost 131072 131073 (regularCumulativeFlag Q R):=by
@@ -14091,7 +16063,7 @@ theorem regular_factor_count
   have hRsupport:=own_support R.1
   have hRwhole:=factor_support Q hQ HQ R
   have hc:=originalCumulativeFlag_cumulative R.1
-  have hparam:s + 2 ≤ 29 ∧ b + s + 3 ≤ 132 ∧ a + b + s + 3 ≤ 6412:=by
+  have hparam:s + 2 ≤ 29 ∧ b + s + 3 ≤ 135 ∧ a + b + s + 3 ≤ 6677:=by
     apply own_parameter_caps p
     · exact hRwhole.s_weight.trans hS
     · simpa only [p,middle,regularCumulativeFlag,hc.2.1] using
@@ -14116,11 +16088,11 @@ theorem regular_factor_count
     have hsub:geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g ⊆ Gamma:=
       (geometricSeeds_subset K R.1 selected _ g).trans (regularSeeds_subset Q selected Gamma R)
-    have hnodes:S.nodes.card=181373 + 80771:=by
+    have hnodes:S.nodes.card=181363 + 80781:=by
       change (Finset.univ:Finset I).card=_
       norm_num [I,IRSProfile.Index]
     have hag:∀ gamma ∈ geometricSeeds K R.1 selected
-        (regularSeeds Q selected Gamma R) g,181373 ≤ (S.agreementFiber gamma).card:=by
+        (regularSeeds Q selected Gamma R) g,181363 ≤ (S.agreementFiber gamma).card:=by
       intro gamma hgamma
       simpa [S,S0,ResidualStage.agreementFiber,ResidualStage.Agrees,
         reflagResidualStage,regularGeometricResidualStageOfSupport,
@@ -14146,17 +16118,17 @@ def regularCost (T YS S:ℕ):ℕ:=
   paddedCost 131072 131073 (cap T YS S)
 theorem regular_sum_count
     (D:ℕ) (P:ResidualSupportParameters)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17411808)
-    (hS:P.s ≤ 29) (hY:P.ys ≤ 132) (hT:P.total ≤ 6412)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17773574)
+    (hS:P.s ≤ 29) (hY:P.ys ≤ 135) (hT:P.total ≤ 6677)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+    (hagreement:∀ gamma ∈ Gamma,181363 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80771) :
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80781) :
     (∑ R:RegularIndex Q, (regularSeeds Q selected Gamma R).card) ≤
       regularCost P.total P.ys P.s:=by
   have hb:=regularCumulativeFlag_budgets Q hQ HQ
@@ -14170,9 +16142,9 @@ theorem regular_sum_count
     regular_factor_count D P hDlow hDhigh hS hY hT Q hQ hbox HQ selected Gamma u0 u1
       hdegree hagreement hno R)).trans hcost
 def profile (D T S:ℕ):RCN276.Profile:=
-  ⟨262144,131071,181373,D,T,S⟩
+  ⟨262144,131071,181363,D,T,S⟩
 def singularProfile (D T S:ℕ):RCN318.TightParameters:=
-  ⟨262144,131071,181373,D,T,S⟩
+  ⟨262144,131071,181363,D,T,S⟩
 def equationCost (D T YS S:ℕ):ℕ:=
   regularCost T YS S + CommonShearTightPrototype.countCap (singularProfile D T S)
 structure SingularGates (P:RCN318.TightParameters):Prop where
@@ -14187,29 +16159,29 @@ structure SingularGates (P:RCN318.TightParameters):Prop where
   wa:P.w < P.a
   an:P.a ≤ P.n
 theorem singular_gates (D T S:ℕ)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17411808)
-    (hTpos:1 ≤ T) (hT:T ≤ 6412)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17773574)
+    (hTpos:1 ≤ T) (hT:T ≤ 6677)
     (hSpos:1 ≤ S) (hS:S ≤ 29) :
     SingularGates (singularProfile D T S):=by
   have hkpos:1 ≤ 2*S-1:=by omega
   have hk:2*S-1 ≤ 57:=by omega
   have hDle:D ≤ (2*S-1)*D:=by
     simpa only [Nat.one_mul] using Nat.mul_le_mul_right D hkpos
-  have hnum:(2*S-1)*D-1 ≤ 992473055:=by
+  have hnum:(2*S-1)*D-1 ≤ 1013093717:=by
     have hp:=Nat.mul_le_mul hk hDhigh
     norm_num at hp
     omega
-  have hiy:((2*S-1)*D-1)/131071 ≤ 7572:=
+  have hiy:((2*S-1)*D-1)/131071 ≤ 7729:=
     (Nat.div_le_div_right hnum).trans (by decide)
   have halgpos:1 ≤ (2*S-1)*T:=by
     simpa only [Nat.one_mul] using Nat.mul_le_mul hkpos hTpos
-  have halg:(2*S-1)*T ≤ 365484:=by
+  have halg:(2*S-1)*T ≤ 380589:=by
     have hp:=Nat.mul_le_mul hk hT
     norm_num at hp
     exact hp
   refine ⟨hSpos, ?_,by change 1 ≤ 131071; decide,
     by change 131071 < 2130706433; decide, ?_,halgpos, ?_, ?_,
-    by change 131071 < 181373; decide,by change 181373 ≤ 262144; decide⟩
+    by change 131071 < 181363; decide,by change 181363 ≤ 262144; decide⟩
   · exact hS.trans_lt (by decide)
   · change 131071 < (2*S-1)*D
     omega
@@ -14217,18 +16189,18 @@ theorem singular_gates (D T S:ℕ)
   · exact halg.trans_lt (by decide)
 theorem fixed_count_le
     (D:ℕ) (P:ResidualSupportParameters)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17411808)
-    (hS:P.s ≤ 29) (hY:P.ys ≤ 132) (hT:P.total ≤ 6412)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17773574)
+    (hS:P.s ≤ 29) (hY:P.ys ≤ 135) (hT:P.total ≤ 6677)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hsolution:∀ gamma ∈ Gamma,specialization K (selected gamma) gamma Q=0)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+    (hagreement:∀ gamma ∈ Gamma,181363 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80771) :
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80781) :
     Gamma.card ≤ equationCost D P.total P.ys P.s:=by
   have hg:=singular_gates D P.total P.s hDlow hDhigh
     (P.one_le_s.trans (P.s_le_ys.trans P.ys_le_total)) hT P.one_le_s hS
@@ -16032,7 +18004,7 @@ theorem chainSeeds_card_le
     (D w L s p : ℕ) [CharP K p] (hsmall : s < p) (hw : 1 ≤ w)
     (hbox : Q ∈ globalCoefficientBox K D w L s)
     (hcgap : 0 < Pc.gap)
-    (hcY : (D - 1) / w ≤ Pc.leftY) (hcR : s - 1 ≤ Pc.leftR) (hcZ : L ≤ Pc.leftZ)
+    (hcY : (D - 1) / w ≤ Pc.leftY) (hcR : F.degreeOf 2 - j ≤ Pc.leftR) (hcZ : L ≤ Pc.leftZ)
     (hcY' : (D - 1) / w ≤ Pc.rightY) (hcR' : s ≤ Pc.rightR) (hcZ' : L ≤ Pc.rightZ)
     (hleftR : 1 ≤ Pc.leftR)
     (hleftYSmall : Pc.leftY < p) (hleftRSmall : Pc.leftR < p) (hleftZSmall : Pc.leftZ < p)
@@ -16054,21 +18026,20 @@ theorem chainSeeds_card_le
     omega
   have hne : dR j F ≠ 0 := dR_ne_zero F hFirr.ne_zero p hFsmall j hj
   have hrel : IsRelPrime (dR j F) F := isRelPrime_dR F hFirr p hFpos hFsmall j hj1 hj
-  have hdR : (dR j F).degreeOf 2 ≤ s - 1 := by
-    have hderiv := dR_R_degree_le j F
-    have hFdegree := degreeOf_R_le_of_mem_box F D w L s hFbox
-    omega
-  have hbox' : dR j F ∈ globalCoefficientBox K D w L (s - 1) :=
-    mem_box_of_R_degree_le (dR j F) D w L s (s - 1)
+  have hdR : (dR j F).degreeOf 2 ≤ F.degreeOf 2 - j := dR_R_degree_le j F
+  have hbox' : dR j F ∈ globalCoefficientBox K D w L (F.degreeOf 2 - j) :=
+    mem_box_of_R_degree_le (dR j F) D w L s (F.degreeOf 2 - j)
       (dR_mem_box j F D w L s hFbox) hdR
   have hFcaps := degree_bounds_of_mem_box F D w L s (by omega) hFbox
   have hsub := chainSeeds_subset_regularPairSeeds F j hne selected Gamma
-  have hcount := all_regularPairSeeds_bound Pc (dR j F) F hne hrel D w L (s - 1) p hbox' hw
+  have hcount := all_regularPairSeeds_bound Pc (dR j F) F hne hrel D w L
+      (F.degreeOf 2 - j) p hbox' hw
     hcY hcR hcZ (hFcaps.1.trans hcY') (hFcaps.2.1.trans hcR') (hFcaps.2.2.trans hcZ')
     hleftR hleftYSmall hleftRSmall hleftZSmall hmixedYSmall hmixedRSmall hmixedZSmall
     selected Gamma nodes x u0 u1 hinj hnodes hPw hchar hwa han hdegree hagreement hnoPencil
   have hsum := sum_regular_counts_bound Pc (dR j F) F selected Gamma
-    (regularVector_budgets Pc (dR j F) hne D w L (s - 1) (by omega) hbox' hcY hcR hcZ) hcount
+    (regularVector_budgets Pc (dR j F) hne D w L (F.degreeOf 2 - j) (by omega)
+      hbox' hcY hcR hcZ) hcount
   have hcap : (∑ F' : RegularIndex (dR j F),
       (regularPairSeeds (dR j F) F selected Gamma F').card) ≤ Pc.regularCountCap :=
     Pc.regular_count_le _ hcgap hsum
@@ -16078,6 +18049,161 @@ theorem chainSeeds_card_le
     _ ≤ ∑ F' : RegularIndex (dR j F),
           (regularPairSeeds (dR j F) F selected Gamma F').card := Finset.card_biUnion_le
     _ ≤ Pc.regularCountCap := hcap
+
+/-- `regularVector_budgets` with the LEFT Y-budget taken from the actual Y-degree of `Q`
+rather than from the kernel box. -/
+theorem regularVector_budgets'
+    (P : UnequalParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
+    (D w L s : ℕ) (hw : 0 < w)
+    (hbox : Q ∈ globalCoefficientBox K D w L s)
+    (hY : Q.degreeOf 1 ≤ P.leftY)
+    (hR : s ≤ P.leftR) (hZ : L ≤ P.leftZ) :
+    (∑ F : RegularIndex Q, (regularVector P F.1).y) ≤ P.mixedCost.y ∧
+      (∑ F : RegularIndex Q, (regularVector P F.1).r) ≤ P.mixedCost.r ∧
+      (∑ F : RegularIndex Q, (regularVector P F.1).z) ≤ P.mixedCost.z := by
+  classical
+  have hb := directFactor_input_budgets Q hQ D w L s hw hbox
+  have hbY0 := (separated_degree_budgets_of_prod_dvd (positiveRFactors Q) id Q hQ
+    (positiveRFactors_product_dvd Q hQ)).1
+  have hbY : (∑ F : RegularIndex Q, F.1.degreeOf (1 : Fin 4)) ≤ Q.degreeOf 1 := by
+    rw [← Finset.sum_subtype (positiveRFactors Q) (fun _ ↦ Iff.rfl)]
+    simpa using hbY0
+  have hbR : (∑ F : RegularIndex Q, F.1.degreeOf (2 : Fin 4)) ≤ s := by
+    rw [← Finset.sum_subtype (positiveRFactors Q) (fun _ ↦ Iff.rfl)]
+    exact hb.2.1
+  have hbZ : (∑ F : RegularIndex Q, F.1.degreeOf (3 : Fin 4)) ≤ L := by
+    rw [← Finset.sum_subtype (positiveRFactors Q) (fun _ ↦ Iff.rfl)]
+    exact hb.2.2
+  simp only [regularVector, Finset.sum_add_distrib]
+  constructor
+  · rw [← Finset.sum_mul, ← Finset.sum_mul]
+    exact Nat.add_le_add
+      (Nat.mul_le_mul_right P.rightZ (hbR.trans hR))
+      (Nat.mul_le_mul_right P.rightR (hbZ.trans hZ))
+  constructor
+  · rw [← Finset.sum_mul, ← Finset.sum_mul]
+    exact Nat.add_le_add
+      (Nat.mul_le_mul_right P.rightZ (hbY.trans hY))
+      (Nat.mul_le_mul_right P.rightY (hbZ.trans hZ))
+  · rw [← Finset.sum_mul, ← Finset.sum_mul]
+    exact Nat.add_le_add
+      (Nat.mul_le_mul_right P.rightR (hbY.trans hY))
+      (Nat.mul_le_mul_right P.rightY (hbR.trans hR))
+
+/-- `all_regularPairSeeds_bound` with the LEFT Y-budget taken from `Q.degreeOf 1`. -/
+theorem all_regularPairSeeds_bound'
+    (P : UnequalParameters) (Q T : MvPolynomial (Fin 4) K)
+    (hQ : Q ≠ 0) (hrel : IsRelPrime Q T)
+    (D w L s p : ℕ) [CharP K p]
+    (hbox : Q ∈ globalCoefficientBox K D w L s) (hwBox : 1 ≤ w)
+    (hY : Q.degreeOf 1 ≤ P.leftY)
+    (hR : s ≤ P.leftR) (hZ : L ≤ P.leftZ)
+    (hTY : T.degreeOf 1 ≤ P.rightY)
+    (hTR : T.degreeOf 2 ≤ P.rightR)
+    (hTZ : T.degreeOf 3 ≤ P.rightZ)
+    (hleftR : 1 ≤ P.leftR)
+    (hleftYSmall : P.leftY < p) (hleftRSmall : P.leftR < p)
+    (hleftZSmall : P.leftZ < p)
+    (hmixedYSmall : P.mixedCost.y < p)
+    (hmixedRSmall : P.mixedCost.r < p)
+    (hmixedZSmall : P.mixedCost.z < p)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (nodes : Finset Iota) (x u₀ u₁ : Iota → K) (hinj : Set.InjOn x nodes)
+    (hnodes : nodes.card = P.n)
+    (hw : 1 ≤ P.w) (hchar : P.w < p) (hwa : P.w < P.a)
+    (han : P.a ≤ P.n)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ P.w)
+    (hagreement : ∀ gamma ∈ Gamma,
+      P.a ≤ (nodes.filter (fun i =>
+        (selected gamma).eval (x i) = u₀ i + gamma * u₁ i)).card)
+    (hnoPencil : NoLargeSelectedPencil selected Gamma P.w P.errors) :
+    ∀ F : RegularIndex Q,
+      (regularPairSeeds Q T selected Gamma F).card * P.gap ≤
+        (P.n - P.w) * RCN294.dot P.agreement (regularVector P F.1) +
+          (P.errors + 1) * P.gap * (regularVector P F.1).z := by
+  intro F
+  have hFbox := (directFactor_data Q F.1 hQ D w L s hbox F.2).2.2
+  have hFcaps := degree_bounds_of_mem_box F.1 D w L s hwBox hFbox
+  have hFY : F.1.degreeOf 1 ≤ Q.degreeOf 1 :=
+    degreeOf_le_of_dvd 1 F.1 Q (positiveRFactors_spec Q F.1 F.2).2.1 hQ
+  exact regularPairSeeds_bound P Q T hrel F p
+    (hFY.trans hY)
+    (hFcaps.2.1.trans hR) (hFcaps.2.2.trans hZ)
+    hTY hTR hTZ hleftR hleftYSmall hleftRSmall hleftZSmall
+    hmixedYSmall hmixedRSmall hmixedZSmall selected Gamma nodes x u₀ u₁
+    hinj hnodes hw hchar hwa han hdegree hagreement hnoPencil
+
+theorem pderiv_other_degree_le (i j : Fin 4) (hij : j ≠ i) (P : MvPolynomial (Fin 4) K) :
+    (MvPolynomial.pderiv i P).degreeOf j ≤ P.degreeOf j := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have hh := (MvPolynomial.degreeOf_le_iff (n := j) (f := P) (d := P.degreeOf j)).mp le_rfl
+    (d + Finsupp.single i 1) (support_before_pderiv i P d hd)
+  simpa [Finsupp.add_apply, Finsupp.single_apply, hij.symm] using hh
+
+theorem dR_Y_degree_le (j : ℕ) (F : MvPolynomial (Fin 4) K) :
+    (dR j F).degreeOf 1 ≤ F.degreeOf 1 := by
+  induction j with
+  | zero => simp
+  | succ k ih =>
+      rw [dR_succ]
+      exact (pderiv_other_degree_le 2 1 (by decide) _).trans ih
+
+/-- `chainSeeds_card_le` with the Y-budgets and the RIGHT slope taken from the factor `F`
+itself instead of the kernel box of `Q`. -/
+theorem chainSeeds_card_le'
+    (Pc : UnequalParameters) (Q F : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
+    (hF : F ∈ positiveRFactors Q) (j : ℕ) (hj1 : 1 ≤ j) (hj : j ≤ chainLength F)
+    (D w L s p : ℕ) [CharP K p] (hsmall : s < p) (hw : 1 ≤ w)
+    (hbox : Q ∈ globalCoefficientBox K D w L s)
+    (hcgap : 0 < Pc.gap)
+    (hcY : F.degreeOf 1 ≤ Pc.leftY) (hcR : F.degreeOf 2 - j ≤ Pc.leftR) (hcZ : L ≤ Pc.leftZ)
+    (hcY' : F.degreeOf 1 ≤ Pc.rightY) (hcR' : F.degreeOf 2 ≤ Pc.rightR) (hcZ' : L ≤ Pc.rightZ)
+    (hleftR : 1 ≤ Pc.leftR)
+    (hleftYSmall : Pc.leftY < p) (hleftRSmall : Pc.leftR < p) (hleftZSmall : Pc.leftZ < p)
+    (hmixedYSmall : Pc.mixedCost.y < p) (hmixedRSmall : Pc.mixedCost.r < p)
+    (hmixedZSmall : Pc.mixedCost.z < p)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (nodes : Finset Iota) (x u0 u1 : Iota → K) (hinj : Set.InjOn x nodes)
+    (hnodes : nodes.card = Pc.n)
+    (hPw : 1 ≤ Pc.w) (hchar : Pc.w < p) (hwa : Pc.w < Pc.a) (han : Pc.a ≤ Pc.n)
+    (hdegree : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ Pc.w)
+    (hagreement : ∀ γ ∈ Gamma, Pc.a ≤ (nodes.filter (fun i =>
+      (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
+    (hnoPencil : NoLargeSelectedPencil selected Gamma Pc.w Pc.errors) :
+    (chainSeeds F j selected Gamma).card ≤ Pc.regularCountCap := by
+  classical
+  obtain ⟨hFirr, hFpos, hFbox⟩ := directFactor_data Q F hQ D w L s hbox hF
+  have hFsmall : F.degreeOf 2 < p := by
+    have := degreeOf_R_le_of_mem_box F D w L s hFbox
+    omega
+  have hne : dR j F ≠ 0 := dR_ne_zero F hFirr.ne_zero p hFsmall j hj
+  have hrel : IsRelPrime (dR j F) F := isRelPrime_dR F hFirr p hFpos hFsmall j hj1 hj
+  have hdR : (dR j F).degreeOf 2 ≤ F.degreeOf 2 - j := dR_R_degree_le j F
+  have hbox' : dR j F ∈ globalCoefficientBox K D w L (F.degreeOf 2 - j) :=
+    mem_box_of_R_degree_le (dR j F) D w L s (F.degreeOf 2 - j)
+      (dR_mem_box j F D w L s hFbox) hdR
+  have hFcaps := degree_bounds_of_mem_box F D w L s (by omega) hFbox
+  have hYleft : (dR j F).degreeOf 1 ≤ Pc.leftY := (dR_Y_degree_le j F).trans hcY
+  have hsub := chainSeeds_subset_regularPairSeeds F j hne selected Gamma
+  have hcount := all_regularPairSeeds_bound' Pc (dR j F) F hne hrel D w L
+      (F.degreeOf 2 - j) p hbox' hw
+    hYleft hcR hcZ hcY' hcR' (hFcaps.2.2.trans hcZ')
+    hleftR hleftYSmall hleftRSmall hleftZSmall hmixedYSmall hmixedRSmall hmixedZSmall
+    selected Gamma nodes x u0 u1 hinj hnodes hPw hchar hwa han hdegree hagreement hnoPencil
+  have hsum := sum_regular_counts_bound Pc (dR j F) F selected Gamma
+    (regularVector_budgets' Pc (dR j F) hne D w L (F.degreeOf 2 - j) (by omega)
+      hbox' hYleft hcR hcZ) hcount
+  have hcap : (∑ F' : RegularIndex (dR j F),
+      (regularPairSeeds (dR j F) F selected Gamma F').card) ≤ Pc.regularCountCap :=
+    Pc.regular_count_le _ hcgap hsum
+  calc (chainSeeds F j selected Gamma).card
+      ≤ (Finset.univ.biUnion fun F' : RegularIndex (dR j F) =>
+          regularPairSeeds (dR j F) F selected Gamma F').card := Finset.card_le_card hsub
+    _ ≤ ∑ F' : RegularIndex (dR j F),
+          (regularPairSeeds (dR j F) F selected Gamma F').card := Finset.card_biUnion_le
+    _ ≤ Pc.regularCountCap := hcap
+
 
 /-- Seeds of a nonzero `R`-free polynomial in the slope-`1` box are bounded by
 the singular-seed count of the slope-`1` Tight parameters. -/
@@ -16158,7 +18284,7 @@ theorem sum_chainLength_sub_one_le (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
   · omega
 
 theorem residual_chain_count_le
-    (P Pc : UnequalParameters) (S : TightParameters)
+    (P : UnequalParameters) (Pc : ℕ → UnequalParameters) (S : TightParameters)
     (Q T : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) (hrel : IsRelPrime Q T)
     (D w L s p : ℕ) [CharP K p]
     (hs : 1 ≤ s) (hsmall : s < p) (hw : 1 ≤ w) (hp : 1 < p)
@@ -16168,35 +18294,43 @@ theorem residual_chain_count_le
     (hleftR : 1 ≤ P.leftR) (hleftYSmall : P.leftY < p) (hleftRSmall : P.leftR < p)
     (hleftZSmall : P.leftZ < p) (hmixedYSmall : P.mixedCost.y < p)
     (hmixedRSmall : P.mixedCost.r < p) (hmixedZSmall : P.mixedCost.z < p)
-    (hcgap : 0 < Pc.gap) (hcY : (D - 1) / w ≤ Pc.leftY) (hcR : s - 1 ≤ Pc.leftR) (hcZ : L ≤ Pc.leftZ)
-    (hcY' : (D - 1) / w ≤ Pc.rightY) (hcR' : s ≤ Pc.rightR) (hcZ' : L ≤ Pc.rightZ)
-    (hcleftR : 1 ≤ Pc.leftR) (hcleftYSmall : Pc.leftY < p) (hcleftRSmall : Pc.leftR < p)
-    (hcleftZSmall : Pc.leftZ < p) (hcmixedYSmall : Pc.mixedCost.y < p)
-    (hcmixedRSmall : Pc.mixedCost.r < p) (hcmixedZSmall : Pc.mixedCost.z < p)
+    (hcmono : Monotone (fun t => (Pc t).regularCountCap))
+    (hcgap : ∀ t, 0 < (Pc t).gap) (hcY : ∀ t, (D - 1) / w ≤ (Pc t).leftY)
+    (hcR : ∀ t, t ≤ s → t ≤ (Pc t).leftR) (hcZ : ∀ t, L ≤ (Pc t).leftZ)
+    (hcY' : ∀ t, (D - 1) / w ≤ (Pc t).rightY) (hcR' : ∀ t, s ≤ (Pc t).rightR)
+    (hcZ' : ∀ t, L ≤ (Pc t).rightZ)
+    (hcleftR : ∀ t, 1 ≤ (Pc t).leftR) (hcleftYSmall : ∀ t, (Pc t).leftY < p)
+    (hcleftRSmall : ∀ t, (Pc t).leftR < p)
+    (hcleftZSmall : ∀ t, (Pc t).leftZ < p) (hcmixedYSmall : ∀ t, (Pc t).mixedCost.y < p)
+    (hcmixedRSmall : ∀ t, (Pc t).mixedCost.r < p) (hcmixedZSmall : ∀ t, (Pc t).mixedCost.z < p)
+    (htailLe : S.countCap ≤ (Pc 1).regularCountCap)
     (hSD : S.D = D) (hSw : S.w = w) (hSL : S.L = L) (hSs : S.s = 1)
     (hSchar : S.w < p) (hSDw : S.w < S.kappa * S.D) (hSj : 1 ≤ S.algebraicCap)
     (hSY : S.implicitYCap < p) (hSZ : S.algebraicCap < p)
     (hSmixed : 2 * S.implicitYCap * S.algebraicCap < p) (hSwa : S.w < S.a) (hSan : S.a ≤ S.n)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K) (hinj : Set.InjOn x nodes)
-    (hnodesP : nodes.card = P.n) (hnodesC : nodes.card = Pc.n) (hnodesS : nodes.card = S.n)
+    (hnodesP : nodes.card = P.n) (hnodesC : ∀ t, nodes.card = (Pc t).n)
+    (hnodesS : nodes.card = S.n)
     (hPw : 1 ≤ P.w) (hPchar : P.w < p) (hPwa : P.w < P.a) (hPan : P.a ≤ P.n)
-    (hCw : 1 ≤ Pc.w) (hCchar : Pc.w < p) (hCwa : Pc.w < Pc.a) (hCan : Pc.a ≤ Pc.n)
+    (hCw : ∀ t, 1 ≤ (Pc t).w) (hCchar : ∀ t, (Pc t).w < p) (hCwa : ∀ t, (Pc t).w < (Pc t).a)
+    (hCan : ∀ t, (Pc t).a ≤ (Pc t).n)
     (hdegreeP : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ P.w)
-    (hdegreeC : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ Pc.w)
+    (hdegreeC : ∀ t, ∀ γ ∈ Gamma, (selected γ).natDegree ≤ (Pc t).w)
     (hdegreeS : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ S.w)
     (hagreementP : ∀ γ ∈ Gamma, P.a ≤ (nodes.filter (fun i =>
       (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
-    (hagreementC : ∀ γ ∈ Gamma, Pc.a ≤ (nodes.filter (fun i =>
+    (hagreementC : ∀ t, ∀ γ ∈ Gamma, (Pc t).a ≤ (nodes.filter (fun i =>
       (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
     (hagreementS : ∀ γ ∈ Gamma, S.a ≤ (nodes.filter (fun i =>
       (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
     (hnoPencilP : NoLargeSelectedPencil selected Gamma P.w P.errors)
-    (hnoPencilC : NoLargeSelectedPencil selected Gamma Pc.w Pc.errors)
+    (hnoPencilC : ∀ t, NoLargeSelectedPencil selected Gamma (Pc t).w (Pc t).errors)
     (hnoPencilS : NoLargeSelectedPencil selected Gamma S.w S.errors)
     (hQsolution : ∀ γ ∈ Gamma, specialization K (selected γ) γ Q = 0)
     (hTsolution : ∀ γ ∈ Gamma, specialization K (selected γ) γ T = 0) :
-    Gamma.card ≤ P.regularCountCap + (s - 1) * Pc.regularCountCap + (s + 1) * S.countCap := by
+    Gamma.card ≤ P.regularCountCap
+      + ChainAmort.capSum (fun t => (Pc t).regularCountCap) s + 2 * S.countCap := by
   classical
   -- regular pairs
   have hregular := all_regularPairSeeds_bound P Q T hQ hrel D w L s p hbox hw hY hR hZ
@@ -16213,13 +18347,17 @@ theorem residual_chain_count_le
   have hcover := cover Q T hQ p s hsmall hRcap selected Gamma hQsolution hTsolution
   -- chain seeds
   have hchain : ∀ F ∈ positiveRFactors Q, ∀ j ∈ Finset.Ico 1 (chainLength F),
-      (chainSeeds F j selected Gamma).card ≤ Pc.regularCountCap := by
+      (chainSeeds F j selected Gamma).card ≤ (Pc (F.degreeOf 2 - j)).regularCountCap := by
     intro F hF j hj
     obtain ⟨hj1, hjm⟩ := Finset.mem_Ico.mp hj
-    exact chainSeeds_card_le Pc Q F hQ hF j hj1 hjm.le D w L s p hsmall hw hbox hcgap
-      hcY hcR hcZ hcY' hcR' hcZ' hcleftR hcleftYSmall hcleftRSmall hcleftZSmall
-      hcmixedYSmall hcmixedRSmall hcmixedZSmall selected Gamma nodes x u0 u1 hinj hnodesC
-      hCw hCchar hCwa hCan hdegreeC hagreementC hnoPencilC
+    have hFd : F.degreeOf 2 ≤ s :=
+      degreeOf_R_le_of_mem_box F D w L s (directFactor_data Q F hQ D w L s hbox hF).2.2
+    exact chainSeeds_card_le (Pc (F.degreeOf 2 - j)) Q F hQ hF j hj1 hjm.le D w L s p hsmall hw
+      hbox (hcgap _) (hcY _) (hcR _ (by omega)) (hcZ _) (hcY' _) (hcR' _) (hcZ' _) (hcleftR _)
+      (hcleftYSmall _) (hcleftRSmall _) (hcleftZSmall _)
+      (hcmixedYSmall _) (hcmixedRSmall _) (hcmixedZSmall _)
+      selected Gamma nodes x u0 u1 hinj (hnodesC _)
+      (hCw _) (hCchar _) (hCwa _) (hCan _) (hdegreeC _) (hagreementC _) (hnoPencilC _)
   -- tail seeds
   have htail : ∀ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card ≤ S.countCap := by
     intro F hF
@@ -16261,33 +18399,43 @@ theorem residual_chain_count_le
   have hA : (Finset.univ.biUnion fun F : RegularIndex Q =>
       regularPairSeeds Q T selected Gamma F).card ≤ P.regularCountCap :=
     Finset.card_biUnion_le.trans hregCap
+  have hdeg : (∑ F ∈ positiveRFactors Q, F.degreeOf 2) ≤ s :=
+    (directFactor_input_budgets Q hQ D w L s (by omega) hbox).2.1
+  have hpos1 : ∀ F ∈ positiveRFactors Q, 1 ≤ F.degreeOf 2 :=
+    fun F hF => (positiveRFactors_spec Q F hF).2.2
+  have hrow : ∀ F ∈ positiveRFactors Q,
+      ((Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card
+        + (tailSeeds F selected Gamma).card ≤
+      ChainAmort.capSumT (fun t => (Pc t).regularCountCap) S.countCap (F.degreeOf 2) := by
+    intro F hF
+    have h1 : ((Finset.Ico 1 (chainLength F)).biUnion fun j =>
+        chainSeeds F j selected Gamma).card ≤
+        ∑ j ∈ Finset.Ico 1 (chainLength F), (chainSeeds F j selected Gamma).card :=
+      Finset.card_biUnion_le
+    have h2 : ∑ j ∈ Finset.Ico 1 (chainLength F), (chainSeeds F j selected Gamma).card ≤
+        ChainAmort.capSum (fun t => (Pc t).regularCountCap) (F.degreeOf 2) :=
+      le_trans (Finset.sum_le_sum fun j hj => hchain F hF j hj)
+        (ChainAmort.chain_row_le (fun t => (Pc t).regularCountCap)
+          (F.degreeOf 2) (chainLength F) (chainLength_le F))
+    have h4 := htail F hF
+    unfold ChainAmort.capSumT
+    omega
+  have hsumrow : ∑ F ∈ positiveRFactors Q,
+      (((Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card
+        + (tailSeeds F selected Gamma).card) ≤
+      ChainAmort.capSumT (fun t => (Pc t).regularCountCap) S.countCap s :=
+    le_trans (Finset.sum_le_sum hrow)
+      (ChainAmort.sum_capSumT_le (fun t => (Pc t).regularCountCap) hcmono S.countCap htailLe
+        (positiveRFactors Q) (fun F => F.degreeOf 2) s hpos1 hdeg)
+  rw [Finset.sum_add_distrib] at hsumrow
+  unfold ChainAmort.capSumT at hsumrow
   have hB : ((positiveRFactors Q).biUnion fun F =>
       (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card ≤
-      (s - 1) * Pc.regularCountCap := by
-    calc ((positiveRFactors Q).biUnion fun F =>
-          (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card
-        ≤ ∑ F ∈ positiveRFactors Q,
-            ((Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card :=
-          Finset.card_biUnion_le
-      _ ≤ ∑ F ∈ positiveRFactors Q, ∑ j ∈ Finset.Ico 1 (chainLength F),
-            (chainSeeds F j selected Gamma).card :=
-          Finset.sum_le_sum fun F _ => Finset.card_biUnion_le
-      _ ≤ ∑ F ∈ positiveRFactors Q, ∑ _j ∈ Finset.Ico 1 (chainLength F), Pc.regularCountCap :=
-          Finset.sum_le_sum fun F hF => Finset.sum_le_sum fun j hj => hchain F hF j hj
-      _ = ∑ F ∈ positiveRFactors Q, (chainLength F - 1) * Pc.regularCountCap := by
-          apply Finset.sum_congr rfl
-          intro F _
-          simp [Finset.sum_const, Nat.card_Ico]
-      _ = (∑ F ∈ positiveRFactors Q, (chainLength F - 1)) * Pc.regularCountCap := by
-          rw [Finset.sum_mul]
-      _ ≤ (s - 1) * Pc.regularCountCap := Nat.mul_le_mul_right _ hsumChain
+      ∑ F ∈ positiveRFactors Q,
+        ((Finset.Ico 1 (chainLength F)).biUnion fun j =>
+          chainSeeds F j selected Gamma).card := Finset.card_biUnion_le
   have hC : ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma).card ≤
-      s * S.countCap := by
-    calc ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma).card
-        ≤ ∑ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card := Finset.card_biUnion_le
-      _ ≤ ∑ _F ∈ positiveRFactors Q, S.countCap := Finset.sum_le_sum fun F hF => htail F hF
-      _ = (positiveRFactors Q).card * S.countCap := by simp [Finset.sum_const]
-      _ ≤ s * S.countCap := Nat.mul_le_mul_right _ hcardPos
+      ∑ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card := Finset.card_biUnion_le
   have hunion := Finset.card_le_card hcover
   have h1 := Finset.card_union_le
     ((Finset.univ.biUnion fun F : RegularIndex Q => regularPairSeeds Q T selected Gamma F) ∪
@@ -16304,7 +18452,6 @@ theorem residual_chain_count_le
     (Finset.univ.biUnion fun F : RegularIndex Q => regularPairSeeds Q T selected Gamma F)
     ((positiveRFactors Q).biUnion fun F =>
       (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma)
-  have hfinal : (s + 1) * S.countCap = s * S.countCap + S.countCap := by ring
   omega
 
 end Assembly
@@ -16371,35 +18518,42 @@ to `(s-1)*Pc`, the tails and R-free seeds to `(s+1)*S`.  No coprime partner from
 selected pair is needed: the chain pairs `(∂_R^j F, F)` are coprime by the R-degree drop
 (`isRelPrime_dR`), and the tails/rfree parts use `card_le_regular_sum_add_singular J J`. -/
 theorem fixed_chain_count_le
-    (Pc : UnequalParameters) (S : TightParameters) (bound : ℕ)
+    (Pc : ℕ → UnequalParameters) (S : TightParameters) (bound : ℕ)
     (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (D w L s p : ℕ) [CharP K p]
     (hs : 1 ≤ s) (hsmall : s < p) (hw : 1 ≤ w) (hp : 1 < p)
     (hbox : Q ∈ globalCoefficientBox K D w L s)
-    (hcgap : 0 < Pc.gap) (hcY : (D - 1) / w ≤ Pc.leftY) (hcR : s - 1 ≤ Pc.leftR) (hcZ : L ≤ Pc.leftZ)
-    (hcY' : (D - 1) / w ≤ Pc.rightY) (hcR' : s ≤ Pc.rightR) (hcZ' : L ≤ Pc.rightZ)
-    (hcleftR : 1 ≤ Pc.leftR) (hcleftYSmall : Pc.leftY < p) (hcleftRSmall : Pc.leftR < p)
-    (hcleftZSmall : Pc.leftZ < p) (hcmixedYSmall : Pc.mixedCost.y < p)
-    (hcmixedRSmall : Pc.mixedCost.r < p) (hcmixedZSmall : Pc.mixedCost.z < p)
+    (hcmono : Monotone (fun t => (Pc t).regularCountCap))
+    (hcgap : ∀ t, 0 < (Pc t).gap) (hcY : ∀ t, (D - 1) / w ≤ (Pc t).leftY)
+    (hcR : ∀ t, t ≤ s → t ≤ (Pc t).leftR) (hcZ : ∀ t, L ≤ (Pc t).leftZ)
+    (hcY' : ∀ t, (D - 1) / w ≤ (Pc t).rightY) (hcR' : ∀ t, s ≤ (Pc t).rightR)
+    (hcZ' : ∀ t, L ≤ (Pc t).rightZ)
+    (hcleftR : ∀ t, 1 ≤ (Pc t).leftR) (hcleftYSmall : ∀ t, (Pc t).leftY < p)
+    (hcleftRSmall : ∀ t, (Pc t).leftR < p)
+    (hcleftZSmall : ∀ t, (Pc t).leftZ < p) (hcmixedYSmall : ∀ t, (Pc t).mixedCost.y < p)
+    (hcmixedRSmall : ∀ t, (Pc t).mixedCost.r < p) (hcmixedZSmall : ∀ t, (Pc t).mixedCost.z < p)
+    (htailLe : S.countCap ≤ (Pc 1).regularCountCap)
     (hSD : S.D = D) (hSw : S.w = w) (hSL : S.L = L) (hSs : S.s = 1)
     (hSchar : S.w < p) (hSDw : S.w < S.kappa * S.D) (hSj : 1 ≤ S.algebraicCap)
     (hSY : S.implicitYCap < p) (hSZ : S.algebraicCap < p)
     (hSmixed : 2 * S.implicitYCap * S.algebraicCap < p) (hSwa : S.w < S.a) (hSan : S.a ≤ S.n)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset Iota) (x u0 u1 : Iota → K) (hinj : Set.InjOn x nodes)
-    (hnodesC : nodes.card = Pc.n) (hnodesS : nodes.card = S.n)
-    (hCw : 1 ≤ Pc.w) (hCchar : Pc.w < p) (hCwa : Pc.w < Pc.a) (hCan : Pc.a ≤ Pc.n)
-    (hdegreeC : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ Pc.w)
+    (hnodesC : ∀ t, nodes.card = (Pc t).n) (hnodesS : nodes.card = S.n)
+    (hCw : ∀ t, 1 ≤ (Pc t).w) (hCchar : ∀ t, (Pc t).w < p) (hCwa : ∀ t, (Pc t).w < (Pc t).a)
+    (hCan : ∀ t, (Pc t).a ≤ (Pc t).n)
+    (hdegreeC : ∀ t, ∀ γ ∈ Gamma, (selected γ).natDegree ≤ (Pc t).w)
     (hdegreeS : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ S.w)
-    (hagreementC : ∀ γ ∈ Gamma, Pc.a ≤ (nodes.filter (fun i =>
+    (hagreementC : ∀ t, ∀ γ ∈ Gamma, (Pc t).a ≤ (nodes.filter (fun i =>
       (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
     (hagreementS : ∀ γ ∈ Gamma, S.a ≤ (nodes.filter (fun i =>
       (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
-    (hnoPencilC : NoLargeSelectedPencil selected Gamma Pc.w Pc.errors)
+    (hnoPencilC : ∀ t, NoLargeSelectedPencil selected Gamma (Pc t).w (Pc t).errors)
     (hnoPencilS : NoLargeSelectedPencil selected Gamma S.w S.errors)
     (hQsolution : ∀ γ ∈ Gamma, specialization K (selected γ) γ Q = 0)
     (hregular : (∑ F : RegularIndex Q, (regularSeeds Q selected Gamma F).card) ≤ bound) :
-    Gamma.card ≤ bound + (s - 1) * Pc.regularCountCap + (s + 1) * S.countCap := by
+    Gamma.card ≤ bound
+      + ChainAmort.capSum (fun t => (Pc t).regularCountCap) s + 2 * S.countCap := by
   classical
   -- cover with T := Q  (LocatorDerivativeChain.cover)
   have hRcap : ∀ F ∈ positiveRFactors Q, F.degreeOf 2 ≤ s := fun F hF =>
@@ -16418,13 +18572,17 @@ theorem fixed_chain_count_le
       _ ≤ bound := hregular
   -- chain seeds  (LocatorDerivativeChain.residual_chain_count_le, verbatim)
   have hchain : ∀ F ∈ positiveRFactors Q, ∀ j ∈ Finset.Ico 1 (chainLength F),
-      (chainSeeds F j selected Gamma).card ≤ Pc.regularCountCap := by
+      (chainSeeds F j selected Gamma).card ≤ (Pc (F.degreeOf 2 - j)).regularCountCap := by
     intro F hF j hj
     obtain ⟨hj1, hjm⟩ := Finset.mem_Ico.mp hj
-    exact chainSeeds_card_le Pc Q F hQ hF j hj1 hjm.le D w L s p hsmall hw hbox hcgap
-      hcY hcR hcZ hcY' hcR' hcZ' hcleftR hcleftYSmall hcleftRSmall hcleftZSmall
-      hcmixedYSmall hcmixedRSmall hcmixedZSmall selected Gamma nodes x u0 u1 hinj hnodesC
-      hCw hCchar hCwa hCan hdegreeC hagreementC hnoPencilC
+    have hFd : F.degreeOf 2 ≤ s :=
+      degreeOf_R_le_of_mem_box F D w L s (directFactor_data Q F hQ D w L s hbox hF).2.2
+    exact chainSeeds_card_le (Pc (F.degreeOf 2 - j)) Q F hQ hF j hj1 hjm.le D w L s p hsmall hw
+      hbox (hcgap _) (hcY _) (hcR _ (by omega)) (hcZ _) (hcY' _) (hcR' _) (hcZ' _) (hcleftR _)
+      (hcleftYSmall _) (hcleftRSmall _) (hcleftZSmall _)
+      (hcmixedYSmall _) (hcmixedRSmall _) (hcmixedZSmall _)
+      selected Gamma nodes x u0 u1 hinj (hnodesC _)
+      (hCw _) (hCchar _) (hCwa _) (hCan _) (hdegreeC _) (hagreementC _) (hnoPencilC _)
   -- tail seeds  (verbatim)
   have htail : ∀ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card ≤ S.countCap := by
     intro F hF
@@ -16462,33 +18620,43 @@ theorem fixed_chain_count_le
         (rfreeSeeds_subset Q selected Gamma) hnoPencilS
   -- budgets  (verbatim)
   obtain ⟨hsumChain, hcardPos⟩ := sum_chainLength_sub_one_le Q hQ D w L s (by omega) hs hbox
+  have hdeg : (∑ F ∈ positiveRFactors Q, F.degreeOf 2) ≤ s :=
+    (directFactor_input_budgets Q hQ D w L s (by omega) hbox).2.1
+  have hpos1 : ∀ F ∈ positiveRFactors Q, 1 ≤ F.degreeOf 2 :=
+    fun F hF => (positiveRFactors_spec Q F hF).2.2
+  have hrow : ∀ F ∈ positiveRFactors Q,
+      ((Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card
+        + (tailSeeds F selected Gamma).card ≤
+      ChainAmort.capSumT (fun t => (Pc t).regularCountCap) S.countCap (F.degreeOf 2) := by
+    intro F hF
+    have h1 : ((Finset.Ico 1 (chainLength F)).biUnion fun j =>
+        chainSeeds F j selected Gamma).card ≤
+        ∑ j ∈ Finset.Ico 1 (chainLength F), (chainSeeds F j selected Gamma).card :=
+      Finset.card_biUnion_le
+    have h2 : ∑ j ∈ Finset.Ico 1 (chainLength F), (chainSeeds F j selected Gamma).card ≤
+        ChainAmort.capSum (fun t => (Pc t).regularCountCap) (F.degreeOf 2) :=
+      le_trans (Finset.sum_le_sum fun j hj => hchain F hF j hj)
+        (ChainAmort.chain_row_le (fun t => (Pc t).regularCountCap)
+          (F.degreeOf 2) (chainLength F) (chainLength_le F))
+    have h4 := htail F hF
+    unfold ChainAmort.capSumT
+    omega
+  have hsumrow : ∑ F ∈ positiveRFactors Q,
+      (((Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card
+        + (tailSeeds F selected Gamma).card) ≤
+      ChainAmort.capSumT (fun t => (Pc t).regularCountCap) S.countCap s :=
+    le_trans (Finset.sum_le_sum hrow)
+      (ChainAmort.sum_capSumT_le (fun t => (Pc t).regularCountCap) hcmono S.countCap htailLe
+        (positiveRFactors Q) (fun F => F.degreeOf 2) s hpos1 hdeg)
+  rw [Finset.sum_add_distrib] at hsumrow
+  unfold ChainAmort.capSumT at hsumrow
   have hB : ((positiveRFactors Q).biUnion fun F =>
       (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card ≤
-      (s - 1) * Pc.regularCountCap := by
-    calc ((positiveRFactors Q).biUnion fun F =>
-          (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card
-        ≤ ∑ F ∈ positiveRFactors Q,
-            ((Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card :=
-          Finset.card_biUnion_le
-      _ ≤ ∑ F ∈ positiveRFactors Q, ∑ j ∈ Finset.Ico 1 (chainLength F),
-            (chainSeeds F j selected Gamma).card :=
-          Finset.sum_le_sum fun F _ => Finset.card_biUnion_le
-      _ ≤ ∑ F ∈ positiveRFactors Q, ∑ _j ∈ Finset.Ico 1 (chainLength F), Pc.regularCountCap :=
-          Finset.sum_le_sum fun F hF => Finset.sum_le_sum fun j hj => hchain F hF j hj
-      _ = ∑ F ∈ positiveRFactors Q, (chainLength F - 1) * Pc.regularCountCap := by
-          apply Finset.sum_congr rfl
-          intro F _
-          simp [Finset.sum_const, Nat.card_Ico]
-      _ = (∑ F ∈ positiveRFactors Q, (chainLength F - 1)) * Pc.regularCountCap := by
-          rw [Finset.sum_mul]
-      _ ≤ (s - 1) * Pc.regularCountCap := Nat.mul_le_mul_right _ hsumChain
+      ∑ F ∈ positiveRFactors Q,
+        ((Finset.Ico 1 (chainLength F)).biUnion fun j =>
+          chainSeeds F j selected Gamma).card := Finset.card_biUnion_le
   have hC : ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma).card ≤
-      s * S.countCap := by
-    calc ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma).card
-        ≤ ∑ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card := Finset.card_biUnion_le
-      _ ≤ ∑ _F ∈ positiveRFactors Q, S.countCap := Finset.sum_le_sum fun F hF => htail F hF
-      _ = (positiveRFactors Q).card * S.countCap := by simp [Finset.sum_const]
-      _ ≤ s * S.countCap := Nat.mul_le_mul_right _ hcardPos
+      ∑ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card := Finset.card_biUnion_le
   have hunion := Finset.card_le_card hcover
   have h1 := Finset.card_union_le
     ((Finset.univ.biUnion fun F : RegularIndex Q => regularPairSeeds Q Q selected Gamma F) ∪
@@ -16505,8 +18673,182 @@ theorem fixed_chain_count_le
     (Finset.univ.biUnion fun F : RegularIndex Q => regularPairSeeds Q Q selected Gamma F)
     ((positiveRFactors Q).biUnion fun F =>
       (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma)
-  have hfinal : (s + 1) * S.countCap = s * S.countCap + S.countCap := by ring
   omega
+
+/-- Two-group form of `fixed_chain_count_le`: the positive-`R` factors of `Q` are split by
+membership in `U`; each group is charged its own amortised chain (`Pc true` / `Pc false`)
+at its own total slope (`rB true` / `rB false`), and every factor's tail is charged once. -/
+theorem fixed_chain_count_le_split
+    (Pc : Bool → ℕ → UnequalParameters) (rB : Bool → ℕ) (S : TightParameters) (bound : ℕ)
+    (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
+    (U : Finset (MvPolynomial (Fin 4) K)) (hU : U ⊆ positiveRFactors Q)
+    (D w L s p : ℕ) [CharP K p]
+    (hs : 1 ≤ s) (hsmall : s < p) (hw : 1 ≤ w) (hp : 1 < p)
+    (hbox : Q ∈ globalCoefficientBox K D w L s)
+    (hcmono : ∀ b, Monotone (fun t => (Pc b t).regularCountCap))
+    (hcgap : ∀ b t, 0 < (Pc b t).gap)
+    (hcdeg : ∀ F ∈ positiveRFactors Q, ∀ t, t ≤ F.degreeOf 2 →
+      F.degreeOf 1 ≤ (Pc (decide (F ∈ U)) t).leftY ∧
+      F.degreeOf 1 ≤ (Pc (decide (F ∈ U)) t).rightY ∧
+      F.degreeOf 2 ≤ (Pc (decide (F ∈ U)) t).rightR ∧
+      t ≤ (Pc (decide (F ∈ U)) t).leftR)
+    (hcZ : ∀ b t, L ≤ (Pc b t).leftZ) (hcZ' : ∀ b t, L ≤ (Pc b t).rightZ)
+    (hcleftR : ∀ b t, 1 ≤ (Pc b t).leftR)
+    (hcleftYSmall : ∀ b t, (Pc b t).leftY < p) (hcleftRSmall : ∀ b t, (Pc b t).leftR < p)
+    (hcleftZSmall : ∀ b t, (Pc b t).leftZ < p)
+    (hcmixedYSmall : ∀ b t, (Pc b t).mixedCost.y < p)
+    (hcmixedRSmall : ∀ b t, (Pc b t).mixedCost.r < p)
+    (hcmixedZSmall : ∀ b t, (Pc b t).mixedCost.z < p)
+    (hrU : ∑ F ∈ U, F.degreeOf 2 ≤ rB true)
+    (hrR : ∑ F ∈ positiveRFactors Q \ U, F.degreeOf 2 ≤ rB false)
+    (hSD : S.D = D) (hSw : S.w = w) (hSL : S.L = L) (hSs : S.s = 1)
+    (hSchar : S.w < p) (hSDw : S.w < S.kappa * S.D) (hSj : 1 ≤ S.algebraicCap)
+    (hSY : S.implicitYCap < p) (hSZ : S.algebraicCap < p)
+    (hSmixed : 2 * S.implicitYCap * S.algebraicCap < p) (hSwa : S.w < S.a) (hSan : S.a ≤ S.n)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (nodes : Finset Iota) (x u0 u1 : Iota → K) (hinj : Set.InjOn x nodes)
+    (hnodesC : ∀ b t, nodes.card = (Pc b t).n) (hnodesS : nodes.card = S.n)
+    (hCw : ∀ b t, 1 ≤ (Pc b t).w) (hCchar : ∀ b t, (Pc b t).w < p)
+    (hCwa : ∀ b t, (Pc b t).w < (Pc b t).a) (hCan : ∀ b t, (Pc b t).a ≤ (Pc b t).n)
+    (hdegreeC : ∀ b t, ∀ γ ∈ Gamma, (selected γ).natDegree ≤ (Pc b t).w)
+    (hdegreeS : ∀ γ ∈ Gamma, (selected γ).natDegree ≤ S.w)
+    (hagreementC : ∀ b t, ∀ γ ∈ Gamma, (Pc b t).a ≤ (nodes.filter (fun i =>
+      (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
+    (hagreementS : ∀ γ ∈ Gamma, S.a ≤ (nodes.filter (fun i =>
+      (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
+    (hnoPencilC : ∀ b t, NoLargeSelectedPencil selected Gamma (Pc b t).w (Pc b t).errors)
+    (hnoPencilS : NoLargeSelectedPencil selected Gamma S.w S.errors)
+    (hQsolution : ∀ γ ∈ Gamma, specialization K (selected γ) γ Q = 0)
+    (hregular : (∑ F : RegularIndex Q, (regularSeeds Q selected Gamma F).card) ≤ bound) :
+    Gamma.card ≤ bound
+      + ChainAmort.capSum (fun t => (Pc true t).regularCountCap) (rB true)
+      + ChainAmort.capSum (fun t => (Pc false t).regularCountCap) (rB false)
+      + (s + 1) * S.countCap := by
+  classical
+  have hRcap : ∀ F ∈ positiveRFactors Q, F.degreeOf 2 ≤ s := fun F hF =>
+    degreeOf_R_le_of_mem_box F D w L s (directFactor_data Q F hQ D w L s hbox hF).2.2
+  have hcover := cover Q Q hQ p s hsmall hRcap selected Gamma hQsolution hQsolution
+  have hA : (Finset.univ.biUnion fun F : RegularIndex Q =>
+      regularPairSeeds Q Q selected Gamma F).card ≤ bound := by
+    calc (Finset.univ.biUnion fun F : RegularIndex Q =>
+          regularPairSeeds Q Q selected Gamma F).card
+        ≤ ∑ F : RegularIndex Q, (regularPairSeeds Q Q selected Gamma F).card :=
+          Finset.card_biUnion_le
+      _ ≤ ∑ F : RegularIndex Q, (regularSeeds Q selected Gamma F).card :=
+          Finset.sum_le_sum fun F _ =>
+            Finset.card_le_card (regularPairSeeds_self_subset Q selected Gamma F)
+      _ ≤ bound := hregular
+  have hchain : ∀ F ∈ positiveRFactors Q, ∀ j ∈ Finset.Ico 1 (chainLength F),
+      (chainSeeds F j selected Gamma).card ≤
+        (Pc (decide (F ∈ U)) (F.degreeOf 2 - j)).regularCountCap := by
+    intro F hF j hj
+    obtain ⟨hj1, hjm⟩ := Finset.mem_Ico.mp hj
+    obtain ⟨hY, hY', hR', hL⟩ := hcdeg F hF (F.degreeOf 2 - j) (Nat.sub_le _ _)
+    exact chainSeeds_card_le'
+      (Pc (decide (F ∈ U)) (F.degreeOf 2 - j)) Q F hQ hF j hj1 hjm.le D w L s p hsmall hw
+      hbox (hcgap _ _) hY hL (hcZ _ _) hY' hR' (hcZ' _ _) (hcleftR _ _)
+      (hcleftYSmall _ _) (hcleftRSmall _ _) (hcleftZSmall _ _)
+      (hcmixedYSmall _ _) (hcmixedRSmall _ _) (hcmixedZSmall _ _)
+      selected Gamma nodes x u0 u1 hinj (hnodesC _ _)
+      (hCw _ _) (hCchar _ _) (hCwa _ _) (hCan _ _) (hdegreeC _ _) (hagreementC _ _)
+      (hnoPencilC _ _)
+  have htail : ∀ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card ≤ S.countCap := by
+    intro F hF
+    obtain ⟨hFirr, hFpos, hFbox⟩ := directFactor_data Q F hQ D w L s hbox hF
+    have hFsmall : F.degreeOf 2 < p := by
+      have := degreeOf_R_le_of_mem_box F D w L s hFbox
+      omega
+    have hJ : dR (chainLength F) F ≠ 0 := dR_ne_zero F hFirr.ne_zero p hFsmall _ le_rfl
+    have hJbox : dR (chainLength F) F ∈ globalCoefficientBox K S.D S.w S.L S.s := by
+      rw [hSD, hSw, hSL, hSs]
+      exact mem_box_slope_one _ D w L s (dR_mem_box _ F D w L s hFbox) (chainLength_spec F)
+    refine rfree_seed_count_le S _ hJ p hJbox (chainLength_spec F) hSs hp (by omega) hSchar
+      hSDw hSj hSY hSZ hSmixed hSwa hSan selected (tailSeeds F selected Gamma) nodes x u0 u1
+      hinj hnodesS ?_ ?_ ?_ ?_
+    · intro γ hγ; exact hdegreeS γ (tailSeeds_subset F selected Gamma hγ)
+    · intro γ hγ; exact (Finset.mem_filter.mp hγ).2
+    · intro γ hγ; exact hagreementS γ (tailSeeds_subset F selected Gamma hγ)
+    · exact noLargeSelectedPencil_mono selected Gamma _ S.w S.errors
+        (tailSeeds_subset F selected Gamma) hnoPencilS
+  have hrfree : (rfreeSeeds Q selected Gamma).card ≤ S.countCap := by
+    have hJ := rfreeProduct_ne_zero Q hQ
+    have hJbox : rfreeProduct Q ∈ globalCoefficientBox K S.D S.w S.L S.s := by
+      rw [hSD, hSw, hSL, hSs]
+      exact mem_box_slope_one _ D w L s
+        (mem_globalCoefficientBox_of_dvd _ Q D w L s hQ (rfreeProduct_dvd Q hQ) hbox)
+        (rfreeProduct_R_degree Q)
+    refine rfree_seed_count_le S _ hJ p hJbox (rfreeProduct_R_degree Q) hSs hp (by omega)
+      hSchar hSDw hSj hSY hSZ hSmixed hSwa hSan selected (rfreeSeeds Q selected Gamma) nodes
+      x u0 u1 hinj hnodesS ?_ ?_ ?_ ?_
+    · intro γ hγ; exact hdegreeS γ (rfreeSeeds_subset Q selected Gamma hγ)
+    · intro γ hγ; exact (Finset.mem_filter.mp hγ).2
+    · intro γ hγ; exact hagreementS γ (rfreeSeeds_subset Q selected Gamma hγ)
+    · exact noLargeSelectedPencil_mono selected Gamma _ S.w S.errors
+        (rfreeSeeds_subset Q selected Gamma) hnoPencilS
+  obtain ⟨_hsumChain, hcardPos⟩ := sum_chainLength_sub_one_le Q hQ D w L s (by omega) hs hbox
+  have hrow : ∀ F ∈ positiveRFactors Q,
+      ((Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card ≤
+      ChainAmort.capSum (fun t => (Pc (decide (F ∈ U)) t).regularCountCap) (F.degreeOf 2) := by
+    intro F hF
+    refine le_trans Finset.card_biUnion_le ?_
+    exact le_trans (Finset.sum_le_sum fun j hj => hchain F hF j hj)
+      (ChainAmort.chain_row_le (fun t => (Pc (decide (F ∈ U)) t).regularCountCap)
+        (F.degreeOf 2) (chainLength F) (chainLength_le F))
+  have hgroupU : ∑ F ∈ U,
+      ((Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card ≤
+      ChainAmort.capSum (fun t => (Pc true t).regularCountCap) (rB true) := by
+    refine le_trans (Finset.sum_le_sum fun F hF => ?_)
+      (ChainAmort.sum_capSum_le _ (hcmono true) U (fun F => F.degreeOf 2) (rB true) hrU)
+    have h := hrow F (hU hF)
+    simpa [hF] using h
+  have hgroupR : ∑ F ∈ positiveRFactors Q \ U,
+      ((Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card ≤
+      ChainAmort.capSum (fun t => (Pc false t).regularCountCap) (rB false) := by
+    refine le_trans (Finset.sum_le_sum fun F hF => ?_)
+      (ChainAmort.sum_capSum_le _ (hcmono false) _ (fun F => F.degreeOf 2) (rB false) hrR)
+    have hFmem := (Finset.mem_sdiff.mp hF).1
+    have hFnot := (Finset.mem_sdiff.mp hF).2
+    have h := hrow F hFmem
+    simpa [hFnot] using h
+  have hsumChainCards : ∑ F ∈ positiveRFactors Q,
+      ((Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma).card ≤
+      ChainAmort.capSum (fun t => (Pc true t).regularCountCap) (rB true) +
+        ChainAmort.capSum (fun t => (Pc false t).regularCountCap) (rB false) := by
+    rw [← Finset.sum_sdiff hU]
+    omega
+  have htails : ∑ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card ≤
+      s * S.countCap := by
+    calc ∑ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card
+        ≤ ∑ _F ∈ positiveRFactors Q, S.countCap := Finset.sum_le_sum htail
+      _ = (positiveRFactors Q).card * S.countCap := by simp
+      _ ≤ s * S.countCap := Nat.mul_le_mul_right _ hcardPos
+  set A := (Finset.univ.biUnion fun F : RegularIndex Q => regularPairSeeds Q Q selected Gamma F)
+    with hAdef
+  set B := ((positiveRFactors Q).biUnion fun F =>
+    (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma) with hBdef
+  set C := ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma) with hCdef
+  set Dset := rfreeSeeds Q selected Gamma with hDdef
+  have hB : B.card ≤ ∑ F ∈ positiveRFactors Q,
+      ((Finset.Ico 1 (chainLength F)).biUnion fun j =>
+        chainSeeds F j selected Gamma).card := Finset.card_biUnion_le
+  have hC : C.card ≤ ∑ F ∈ positiveRFactors Q, (tailSeeds F selected Gamma).card :=
+    Finset.card_biUnion_le
+  have hunion : Gamma.card ≤ (A ∪ B ∪ C ∪ Dset).card := Finset.card_le_card hcover
+  calc Gamma.card ≤ (A ∪ B ∪ C ∪ Dset).card := hunion
+    _ ≤ (A ∪ B ∪ C).card + Dset.card := Finset.card_union_le _ _
+    _ ≤ (A ∪ B).card + C.card + Dset.card :=
+        Nat.add_le_add_right (Finset.card_union_le _ _) _
+    _ ≤ A.card + B.card + C.card + Dset.card := by
+        have := Finset.card_union_le A B
+        omega
+    _ ≤ bound + (ChainAmort.capSum (fun t => (Pc true t).regularCountCap) (rB true) +
+          ChainAmort.capSum (fun t => (Pc false t).regularCountCap) (rB false)) +
+        s * S.countCap + S.countCap :=
+        Nat.add_le_add (Nat.add_le_add (Nat.add_le_add hA (hB.trans hsumChainCards))
+          (hC.trans htails)) hrfree
+    _ = bound + ChainAmort.capSum (fun t => (Pc true t).regularCountCap) (rB true)
+          + ChainAmort.capSum (fun t => (Pc false t).regularCountCap) (rB false)
+          + (s + 1) * S.countCap := by ring
 
 end
 
@@ -16526,7 +18868,7 @@ open scoped Classical BigOperators
 open RCN174 RCN319 RCN286 RCN238 RCN243 RCN266 RCN140 RCN130 RCN156 RCN234 RCN275 LocatorFactorAggregate
 noncomputable section
 set_option autoImplicit false
-set_option maxRecDepth 2048
+set_option maxRecDepth 200000
 set_option maxHeartbeats 300000
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index
@@ -16536,14 +18878,14 @@ local instance:DecidableEq I:=Classical.decEq I
 local instance:CharP K 2130706433:=by
   simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
 def wholeSupport:ResidualSupportParameters:=
-  ⟨29,132,6412,by decide,by decide,by decide,by decide⟩
+  ⟨29,135,6677,by decide,by decide,by decide,by decide⟩
 
 /-- The selected TCap/B gcd is wider in the middle and slope coordinates
 than `wholeSupport`.  It is nevertheless a valid carrier for the initial
 A-source split; only the factors in the universal child are later charged by
 the narrow fixed-phase argument. -/
 def wideSupport:ResidualSupportParameters:=
-  ⟨33,153,6412,by decide,by decide,by decide,by decide⟩
+  ⟨33,153,6677,by decide,by decide,by decide,by decide⟩
 
 /-- Regular allowance used by the initial A-source split. -/
 abbrev initialRegularCap:ℕ:=LocatorArithmetic.fixedRegularCap
@@ -16555,15 +18897,13 @@ A-helper cap.  No claim about divisibility is hidden in this lemma. -/
 theorem initial_A_regularSeeds_sum_le
     (H:P4) (selected:K → Polynomial K) (Gamma:Finset K)
     (U:Finset (RegularIndex H)) (phaseCap:ℕ)
-    (helperCap:RegularIndex H → ℕ)
+    (helperCap:RegularIndex H → ℕ) (B:ℕ)
     (hphase:(∑ F ∈ U,(regularSeeds H selected Gamma F).card) ≤ phaseCap)
     (hhelper:∀ F ∈ (Finset.univ:Finset (RegularIndex H)) \ U,
       (regularSeeds H selected Gamma F).card ≤ helperCap F)
     (hledger:phaseCap+
-      (∑ F ∈ (Finset.univ:Finset (RegularIndex H)) \ U,helperCap F) ≤
-        initialRegularCap) :
-    (∑ F:RegularIndex H,(regularSeeds H selected Gamma F).card) ≤
-      initialRegularCap:=by
+      (∑ F ∈ (Finset.univ:Finset (RegularIndex H)) \ U,helperCap F) ≤ B) :
+    (∑ F:RegularIndex H,(regularSeeds H selected Gamma F).card) ≤ B:=by
   classical
   have hsplit:(Finset.univ:Finset (RegularIndex H)) =
       U ∪ ((Finset.univ:Finset (RegularIndex H)) \ U):=by
@@ -16576,7 +18916,7 @@ theorem initial_A_regularSeeds_sum_le
     intro F hFU hFd
     exact (Finset.mem_sdiff.mp hFd).2 hFU
   change (∑ F ∈ (Finset.univ:Finset (RegularIndex H)),
-    (regularSeeds H selected Gamma F).card) ≤ initialRegularCap
+    (regularSeeds H selected Gamma F).card) ≤ B
   rw [hsplit,Finset.sum_union hdisjoint]
   exact (Nat.add_le_add hphase
     (Finset.sum_le_sum (fun F hF=>hhelper F hF))).trans hledger
@@ -16587,14 +18927,14 @@ the fixed-stage derivative chain (`LocatorFixedChain.fixed_chain_count_le`,
 `T := H`) in the full B contact/slope box, without the narrow A caps. -/
 theorem wide_fixed_count_le
     (H:P4) (hH:H ≠ 0)
-    (hbox:H ∈ RCN174.globalCoefficientBox K 20132403 131071 6412 33)
+    (hbox:H ∈ RCN174.globalCoefficientBox K 20131293 131071 6677 33)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hsolution:∀ gamma ∈ Gamma,specialization K (selected gamma) gamma H=0)
     (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+    (hagreement:∀ gamma ∈ Gamma,181363 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80781)
     (hregular:(∑ F:RegularIndex H,
       (regularSeeds H selected Gamma F).card) ≤ initialRegularCap) :
     Gamma.card ≤ initialRegularCap+LocatorArithmetic.fixedChainCap:=by
@@ -16603,18 +18943,72 @@ theorem wide_fixed_count_le
     change Fintype.card (Fin (2 ^ 18)) =262144
     rw [Fintype.card_fin]
     decide
-  have h:=LocatorFixedChain.fixed_chain_count_le LocatorArithmetic.chainH
-    LocatorArithmetic.tailH initialRegularCap H hH 20132403 131071 6412 33 2130706433
+  have hclamp:∀ t:ℕ,1 ≤ max 1 (min t LocatorArithmetic.sB) ∧
+      max 1 (min t LocatorArithmetic.sB) ≤ LocatorArithmetic.sB:=by
+    intro t; simp only [LocatorArithmetic.sB]; omega
+  have hPgap : ∀ t:ℕ, 0 < (LocatorArithmetic.chainHAt t).gap := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPY : ∀ t:ℕ, (20131293 - 1) / 131071 ≤ (LocatorArithmetic.chainHAt t).leftY := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPR : ∀ t:ℕ, t ≤ 33 → t ≤ (LocatorArithmetic.chainHAt t).leftR := by
+    intro t ht; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPZ : ∀ t:ℕ, 6677 ≤ (LocatorArithmetic.chainHAt t).leftZ := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPY' : ∀ t:ℕ, (20131293 - 1) / 131071 ≤ (LocatorArithmetic.chainHAt t).rightY := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPR' : ∀ t:ℕ, 33 ≤ (LocatorArithmetic.chainHAt t).rightR := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPZ' : ∀ t:ℕ, 6677 ≤ (LocatorArithmetic.chainHAt t).rightZ := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPleftR : ∀ t:ℕ, 1 ≤ (LocatorArithmetic.chainHAt t).leftR := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPlYS : ∀ t:ℕ, (LocatorArithmetic.chainHAt t).leftY < 2130706433 := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPlRS : ∀ t:ℕ, (LocatorArithmetic.chainHAt t).leftR < 2130706433 := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPlZS : ∀ t:ℕ, (LocatorArithmetic.chainHAt t).leftZ < 2130706433 := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPmY : ∀ t:ℕ, (LocatorArithmetic.chainHAt t).mixedCost.y < 2130706433 := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPmR : ∀ t:ℕ, (LocatorArithmetic.chainHAt t).mixedCost.r < 2130706433 := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hPmZ : ∀ t:ℕ, (LocatorArithmetic.chainHAt t).mixedCost.z < 2130706433 := by
+    intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hnodesC : ∀ t:ℕ, (Finset.univ:Finset I).card = (LocatorArithmetic.chainHAt t).n := by
+    intro t; rw [hnodes]; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]
+  have hnodesS : (Finset.univ:Finset I).card = LocatorArithmetic.tailH.n := by
+    rw [hnodes]; rfl
+  have hCwC : ∀ t:ℕ, 1 ≤ (LocatorArithmetic.chainHAt t).w := by intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hCcharC : ∀ t:ℕ, (LocatorArithmetic.chainHAt t).w < 2130706433 := by intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hCwaC : ∀ t:ℕ, (LocatorArithmetic.chainHAt t).w < (LocatorArithmetic.chainHAt t).a := by intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hCanC : ∀ t:ℕ, (LocatorArithmetic.chainHAt t).a ≤ (LocatorArithmetic.chainHAt t).n := by intro t; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; omega
+  have hdegreeC : ∀ t:ℕ, ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ (LocatorArithmetic.chainHAt t).w := by
+    intro t gamma hg; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; exact hdegree gamma hg
+  have hagreementC : ∀ t:ℕ, ∀ gamma ∈ Gamma, (LocatorArithmetic.chainHAt t).a ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card := by
+    intro t gamma hg; simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.gap, RCN260.UnequalParameters.mixedCost, LocatorArithmetic.n, LocatorArithmetic.w, LocatorArithmetic.agreements, LocatorArithmetic.yB, LocatorArithmetic.sB]; exact hagreement gamma hg
+  have hnoC : ∀ t:ℕ, NoLargeSelectedPencil selected Gamma
+      (LocatorArithmetic.chainHAt t).w (LocatorArithmetic.chainHAt t).errors := by
+    intro t
+    have he : (LocatorArithmetic.chainHAt t).errors = 80781 := by
+      simp only [LocatorArithmetic.chainHAt, RCN260.UnequalParameters.errors,
+        LocatorArithmetic.n, LocatorArithmetic.agreements]
+    have hw : (LocatorArithmetic.chainHAt t).w = 131071 := rfl
+    rw [he, hw]; exact hno
+  have h:=LocatorFixedChain.fixed_chain_count_le LocatorArithmetic.chainHAt
+    LocatorArithmetic.tailH initialRegularCap H hH 20131293 131071 6677 33 2130706433
     (by decide) (by decide) (by decide) (by decide) hbox
-    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
-    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+    LocatorArithmetic.chainHAt_mono
+    hPgap hPY hPR hPZ hPY' hPR' hPZ' hPleftR hPlYS hPlRS hPlZS hPmY hPmR hPmZ
+    LocatorArithmetic.tailH_le_chainHAt_one
     rfl rfl rfl rfl
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
     selected Gamma (Finset.univ:Finset I) IRSProfile.domain u0 u1
     IRSProfile.domain.injective.injOn
-    (by rw [hnodes]; rfl) (by rw [hnodes]; rfl)
-    (by decide) (by decide) (by decide) (by decide)
-    hdegree hdegree hagreement hagreement hno hno hsolution hregular
+    hnodesC hnodesS hCwC hCcharC hCwaC hCanC
+    hdegreeC hdegree hagreementC hagreement hnoC hno hsolution hregular
   unfold LocatorArithmetic.fixedChainCap
   simp only [LocatorArithmetic.sB, Nat.reduceSub, Nat.reduceAdd] at h ⊢
   omega
@@ -17683,15 +20077,15 @@ section PackedLocator_LocatorHybridIdentityC2
 /-
 THE IDENTITY BRANCH IS DOMINATED BY THE C2 HYBRID COST — 6800 ROW.
 
-Self-contained in its row constants (errors 80771, agreements 181373,
-gap 50302), so it does not inherit whatever `LocatorFixedStage` currently
+Self-contained in its row constants (errors 80781, agreements 181363,
+gap 50292), so it does not inherit whatever `LocatorFixedStage` currently
 carries.
 
 C2 tails: first tail `reducedABS` (the reduced agreement flag at `w + 1`,
 equal to `paddedTail p 131072`), coordinate `rationalABS`, moving factor
 `131076 = w + 5`.
 
-The slack polynomials were regenerated for errors = 80771 against the C2 cost
+The slack polynomials were regenerated for errors = 80781 against the C2 cost
 and are subtraction-free, so `identity_le_hybridC2` is `Nat.le_add_right`.
 -/
 
@@ -17707,9 +20101,9 @@ set_option maxHeartbeats 5000000
 
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 80771
-def agreements : ℕ := 181373
-def gap : ℕ := 50302
+def errors : ℕ := 80781
+def agreements : ℕ := 181363
+def gap : ℕ := 50292
 
 theorem row_arithmetic : n - errors = agreements ∧ agreements - w = gap := by
   refine ⟨?_, ?_⟩ <;> norm_num [n, errors, agreements, w, gap]
@@ -17770,34 +20164,34 @@ theorem hybridCostC2_eq_abs (p : FlagDegree) (flag : FlagDegree) :
   rw [h.1, h.2.1, h.2.2.1, h.2.2.2]
   rfl
 
-/-! ### Slack polynomials for `errors = 80771` (regenerated for the C2 cost) -/
+/-! ### Slack polynomials for `errors = 80781` (regenerated for the C2 cost) -/
 
 def hybridSlackZC2 (b s : ℕ) : ℕ :=
-  11393022739447830 +
-    11916270577599340 * s +
-    2592611271320560 * s ^ 2 +
-    6049529593831864 * b +
-    5185222542641120 * b * s
+  11389414805699490 +
+    11913006292353180 * s +
+    6048326951870544 * b +
+    2592095862137760 * s ^ 2 +
+    5184191724275520 * b * s
 
 def hybridSlackYZC2 (a b s : ℕ) : ℕ :=
-  7230002036329866 +
-    9140923442187364 * s +
-    2592611271320560 * s ^ 2 +
-    6049529593831864 * b +
-    5185222542641120 * b * s +
-    6049529593831864 * a +
-    5185222542641120 * a * s
+  7225878698641656 +
+    9137315554314624 * s +
+    6048326951870544 * b +
+    6048326951870544 * a +
+    2592095862137760 * s ^ 2 +
+    5184191724275520 * b * s +
+    5184191724275520 * a * s
 
 def hybridSlackAllC2 (a b s : ℕ) : ℕ :=
-  5817664015930146 +
-    9140923442187364 * s +
-    2592611271320560 * s ^ 2 +
-    9140923442187364 * b +
-    5185222542641120 * b * s +
-    2592611271320560 * b ^ 2 +
-    11916270577599340 * a +
-    5185222542641120 * a * s +
-    5185222542641120 * a * b
+  5811135424466136 +
+    9137315554314624 * s +
+    9137315554314624 * b +
+    11913006292353180 * a +
+    2592095862137760 * s ^ 2 +
+    5184191724275520 * b * s +
+    2592095862137760 * b ^ 2 +
+    5184191724275520 * a * s +
+    5184191724275520 * a * b
 
 def hybridSlackC2 (flag : FlagDegree) (a b s : ℕ) : ℕ :=
   flag.zOnly * hybridSlackZC2 b s + flag.yz * hybridSlackYZC2 a b s +
@@ -17828,8 +20222,8 @@ section PackedLocator_LocatorHybridGatesC2
 /-
 NUMERIC CHARACTERISTIC GATES — C2 / 6800 ROW.
 
-Caps: slope `s + 2 ≤ 29`, ys `b + s + 3 ≤ 132`, total `a + b + s + 3 ≤ 6412`,
-prime `2130706433`, errors `80771`.
+Caps: slope `s + 2 ≤ 29`, ys `b + s + 3 ≤ 135`, total `a + b + s + 3 ≤ 6677`,
+prime `2130706433`, errors `80781`.
 
 The C2 provider runs on the REDUCED first tail, whose mixed-degree gate carries
 `2 * (s + 2) - 2` where the sharp one carries `2 * (s + 2) - 1`; both shapes are
@@ -17841,17 +20235,17 @@ open RCN095 LocatorHybridCells LocatorHybridCellsC1
 
 /-- Provider gate for the REDUCED first tail (`2 * (s + 2) - 2`). -/
 theorem reduced_mixed_gateC2 (b s : ℕ) (flag : FlagDegree)
-    (hS : s + 2 ≤ 29) (hY : b + s + 3 ≤ 132)
+    (hS : s + 2 ≤ 29) (hY : b + s + 3 ≤ 135)
     (hfs : flag.all ≤ s + 2) (hfy : flag.yz + flag.all ≤ b + s + 3) :
     (1 + (RCN327.w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
       (flag.yz + flag.all) * ((2 * (s + 2) - 2) * (RCN327.w + 1)) <
         2130706433 := by
-  have hy : 2 * (b + s + 3) - 2 ≤ 262 := by omega
+  have hy : 2 * (b + s + 3) - 2 ≤ 268 := by omega
   have hs : 2 * (s + 2) - 2 ≤ 56 := by omega
   have hfS : flag.all ≤ 29 := hfs.trans hS
-  have hfY : flag.yz + flag.all ≤ 132 := hfy.trans hY
+  have hfY : flag.yz + flag.all ≤ 135 := hfy.trans hY
   calc
-    _ ≤ (1 + (RCN327.w + 1) * 262) * 29 + 132 * (56 * (RCN327.w + 1)) :=
+    _ ≤ (1 + (RCN327.w + 1) * 268) * 29 + 135 * (56 * (RCN327.w + 1)) :=
       Nat.add_le_add
         (Nat.mul_le_mul
           (Nat.add_le_add_left (Nat.mul_le_mul_left (RCN327.w + 1) hy) 1) hfS)
@@ -17860,17 +20254,17 @@ theorem reduced_mixed_gateC2 (b s : ℕ) (flag : FlagDegree)
 
 /-- Provider gate for the SHARP first tail, kept for the C1 comparison. -/
 theorem sharp_mixed_gateC2 (b s : ℕ) (flag : FlagDegree)
-    (hS : s + 2 ≤ 29) (hY : b + s + 3 ≤ 132)
+    (hS : s + 2 ≤ 29) (hY : b + s + 3 ≤ 135)
     (hfs : flag.all ≤ s + 2) (hfy : flag.yz + flag.all ≤ b + s + 3) :
     (1 + (RCN327.w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
       (flag.yz + flag.all) * ((2 * (s + 2) - 1) * (RCN327.w + 1)) <
         2130706433 := by
-  have hy : 2 * (b + s + 3) - 2 ≤ 262 := by omega
+  have hy : 2 * (b + s + 3) - 2 ≤ 268 := by omega
   have hs : 2 * (s + 2) - 1 ≤ 57 := by omega
   have hfS : flag.all ≤ 29 := hfs.trans hS
-  have hfY : flag.yz + flag.all ≤ 132 := hfy.trans hY
+  have hfY : flag.yz + flag.all ≤ 135 := hfy.trans hY
   calc
-    _ ≤ (1 + (RCN327.w + 1) * 262) * 29 + 132 * (57 * (RCN327.w + 1)) :=
+    _ ≤ (1 + (RCN327.w + 1) * 268) * 29 + 135 * (57 * (RCN327.w + 1)) :=
       Nat.add_le_add
         (Nat.mul_le_mul
           (Nat.add_le_add_left (Nat.mul_le_mul_left (RCN327.w + 1) hy) 1) hfS)
@@ -17878,23 +20272,23 @@ theorem sharp_mixed_gateC2 (b s : ℕ) (flag : FlagDegree)
     _ < 2130706433 := by norm_num [RCN327.w]
 
 theorem product_gateC2 (a b s : ℕ) (flag : FlagDegree)
-    (hT : a + b + s + 3 ≤ 6412)
+    (hT : a + b + s + 3 ≤ 6677)
     (hft : flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) :
     2 * (flag.zOnly + flag.yz + flag.all) * (a + b + s + 4) < 2130706433 := by
-  have h1 : flag.zOnly + flag.yz + flag.all ≤ 6412 := hft.trans hT
-  have h2 : a + b + s + 4 ≤ 6413 := by omega
+  have h1 : flag.zOnly + flag.yz + flag.all ≤ 6677 := hft.trans hT
+  have h2 : a + b + s + 4 ≤ 6678 := by omega
   calc
-    2 * (flag.zOnly + flag.yz + flag.all) * (a + b + s + 4) ≤ 2 * 6412 * 6413 :=
+    2 * (flag.zOnly + flag.yz + flag.all) * (a + b + s + 4) ≤ 2 * 6677 * 6678 :=
       Nat.mul_le_mul (Nat.mul_le_mul_left 2 h1) h2
     _ < 2130706433 := by norm_num
 
-/-- The single coordinate gate at `errors = 80771`. -/
+/-- The single coordinate gate at `errors = 80781`. -/
 theorem rational_gateC2 (t y r : ℕ) (hb : r + 2 ≤ y) :
-    80771 + 1 ≤ (cellHybridCoordinateC1 t y r).yz :=
-  hybridC1Gate_of_le t y r 80771 hb (by norm_num)
+    80781 + 1 ≤ (cellHybridCoordinateC1 t y r).yz :=
+  hybridC1Gate_of_le t y r 80781 hb (by norm_num)
 
 theorem flag_characteristicC2 (a b s : ℕ) (flag : FlagDegree)
-    (hS : s + 2 ≤ 29) (hY : b + s + 3 ≤ 132) (hT : a + b + s + 3 ≤ 6412)
+    (hS : s + 2 ≤ 29) (hY : b + s + 3 ≤ 135) (hT : a + b + s + 3 ≤ 6677)
     (hflag : flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
       flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) :
     flag.yz + flag.all < 2130706433 ∧ flag.all < 2130706433 ∧
@@ -17903,16 +20297,16 @@ theorem flag_characteristicC2 (a b s : ℕ) (flag : FlagDegree)
 
 /-- `LocatorFixedStage.identity_mixed_gate` at the 6800 caps (uses `w`, not `w+1`). -/
 theorem identity_mixed_gateC2 (b s : ℕ) (flag : FlagDegree)
-    (hS : s + 2 ≤ 29) (hY : b + s + 3 ≤ 132)
+    (hS : s + 2 ≤ 29) (hY : b + s + 3 ≤ 135)
     (hfs : flag.all ≤ s + 2) (hfy : flag.yz + flag.all ≤ b + s + 3) :
     (1 + RCN327.w * (2 * (b + s + 3) - 2)) * flag.all +
       (flag.yz + flag.all) * ((2 * (s + 2) - 1) * RCN327.w) < 2130706433 := by
-  have hy : 2 * (b + s + 3) - 2 ≤ 262 := by omega
+  have hy : 2 * (b + s + 3) - 2 ≤ 268 := by omega
   have hs : 2 * (s + 2) - 1 ≤ 57 := by omega
   have hfS : flag.all ≤ 29 := hfs.trans hS
-  have hfY : flag.yz + flag.all ≤ 132 := hfy.trans hY
+  have hfY : flag.yz + flag.all ≤ 135 := hfy.trans hY
   calc
-    _ ≤ (1 + RCN327.w * 262) * 29 + 132 * (57 * RCN327.w) :=
+    _ ≤ (1 + RCN327.w * 268) * 29 + 135 * (57 * RCN327.w) :=
       Nat.add_le_add
         (Nat.mul_le_mul
           (Nat.add_le_add_left (Nat.mul_le_mul_left RCN327.w hy) 1) hfS)
@@ -17929,8 +20323,8 @@ HYBRID SECOND-SURFACE BOUND FOR A REGULAR FACTOR — C2 / 6800 ROW.
 
 Mirror of `LocatorFixedHybrid` against the C2 cost and the 6800 constants:
 
-  agreements 181373, errors 80771, gap 50302, weightedCap D ≤ 17411808,
-  caps slope ≤ 29, ys ≤ 132, total ≤ 6412, prime 2130706433.
+  agreements 181363, errors 80781, gap 50292, weightedCap D ≤ 17773574,
+  caps slope ≤ 29, ys ≤ 135, total ≤ 6677, prime 2130706433.
 
 The hybrid branch additionally requires `3 ≤ padS p`, which is what lets the
 coordinate be the bare rational flag; the moving factor is `131076 = w + 5`.
@@ -18019,9 +20413,9 @@ def ProviderHypC2 (D : ℕ) (p : FlagDegree) : Prop :=
   letI : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
   ∀ {Gamma : Finset K} {flag : FlagDegree}
     (S : ResidualStage (polynomialEmbedding K) Gamma IRSProfile.domain
-      2130706433 80771 flag 131071 (cellSupport (padT p) (padY p) (padS p))),
-    S.nodes.card = 181373 + 80771 →
-    (∀ gamma ∈ Gamma, 181373 ≤ (S.agreementFiber gamma).card) →
+      2130706433 80781 flag 131071 (cellSupport (padT p) (padY p) (padS p))),
+    S.nodes.card = 181363 + 80781 →
+    (∀ gamma ∈ Gamma, 181363 ≤ (S.agreementFiber gamma).card) →
     S.F ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p) →
     (flag.all ≤ padS p ∧ flag.yz + flag.all ≤ padY p ∧
       flag.zOnly + flag.yz + flag.all ≤ padT p) →
@@ -18038,19 +20432,19 @@ def ProviderHypC2 (D : ℕ) (p : FlagDegree) : Prop :=
 /-- The realization: C2 providers exist on every admissible hybrid cell.  Note
 the extra `3 ≤ padS p`, the C2 branch condition. -/
 def RealizationC2 (D : ℕ) : Prop :=
-  ∀ p : FlagDegree, padS p ≤ 29 → padY p ≤ 132 → padT p ≤ 6412 →
+  ∀ p : FlagDegree, padS p ≤ 29 → padY p ≤ 135 → padT p ≤ 6677 →
     3 ≤ padS p → padS p + 2 ≤ padY p → ProviderHypC2 D p
 
 theorem hybridStageBoundC2 (D : ℕ) (p : FlagDegree)
-    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 17411808)
-    (hS : padS p ≤ 29) (hY : padY p ≤ 132) (hT : padT p ≤ 6412)
+    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 17773574)
+    (hS : padS p ≤ 29) (hY : padY p ≤ 135) (hT : padT p ≤ 6677)
     (hS3 : 3 ≤ padS p) (hhyb : padS p + 2 ≤ padY p)
     (hprov : ProviderHypC2 D p)
     {Gamma : Finset K} {flag : FlagDegree}
     (S : ResidualStage (polynomialEmbedding K) Gamma IRSProfile.domain
-      2130706433 80771 flag 131071 (cellSupport (padT p) (padY p) (padS p)))
-    (hnodes : S.nodes.card = 181373 + 80771)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤ (S.agreementFiber gamma).card)
+      2130706433 80781 flag 131071 (cellSupport (padT p) (padY p) (padS p)))
+    (hnodes : S.nodes.card = 181363 + 80781)
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤ (S.agreementFiber gamma).card)
     (hbox : S.F ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p))
     (hflag : flag.all ≤ padS p ∧ flag.yz + flag.all ≤ padY p ∧
       flag.zOnly + flag.yz + flag.all ≤ padT p) :
@@ -18058,8 +20452,8 @@ theorem hybridStageBoundC2 (D : ℕ) (p : FlagDegree)
   letI : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
   have hps := pad_sums p
   have hS' : padSlope p + 2 ≤ 29 := by omega
-  have hY' : padB p + padSlope p + 3 ≤ 132 := by omega
-  have hT' : padA p + padB p + padSlope p + 3 ≤ 6412 := by omega
+  have hY' : padB p + padSlope p + 3 ≤ 135 := by omega
+  have hT' : padA p + padB p + padSlope p + 3 ≤ 6677 := by omega
   have hb1 : 1 ≤ padB p := by omega
   have hDchar : D < 2130706433 := by omega
   have hflag' : flag.all ≤ padSlope p + 2 ∧
@@ -18077,7 +20471,7 @@ theorem hybridStageBoundC2 (D : ℕ) (p : FlagDegree)
         (padA p + padB p + padSlope p + 3) (padSlope p + 2) := by
       rw [hps.2.2, hps.1]; exact hbox
     have hprovider := actual_identityCurveCountProvider
-      (a := padA p) (b := padB p) (s := padSlope p) S 181373 hnodes hagreement
+      (a := padA p) (b := padB p) (s := padSlope p) S 181363 hnodes hagreement
       (by norm_num) hTailNumerator D (padA p + padB p + padSlope p + 3)
       (padSlope p + 2)
       (by norm_num) hDlow hDchar hbox' hflagChar
@@ -18089,24 +20483,24 @@ theorem hybridStageBoundC2 (D : ℕ) (p : FlagDegree)
       have hy : 0 < S.G.degreeOf 1 := S.y_dependent
       have hdeg := degreeOf_le_flag_total S.G flag S.flag_support 1
       omega
-    have hinc := identity_surface_seed_bound S 181373
+    have hinc := identity_surface_seed_bound S 181363
       (identityCurveDegree flag (padA p) (padB p) (padSlope p) 131071)
       hprovider hagreement
       (by norm_num) (by rw [hnodes]; norm_num) hpositive
-    have hscaled : Gamma.card * 50302 ≤
-        50302 * hybridCostABSC2 flag (padA p) (padB p) (padSlope p) := by
+    have hscaled : Gamma.card * 50292 ≤
+        50292 * hybridCostABSC2 flag (padA p) (padB p) (padSlope p) := by
       calc
-        Gamma.card * 50302 = Gamma.card * (181373 - 131071) := rfl
-        _ ≤ (S.nodes.card - 131071) * (80771 + 1) *
+        Gamma.card * 50292 = Gamma.card * (181363 - 131071) := rfl
+        _ ≤ (S.nodes.card - 131071) * (80781 + 1) *
             identityCurveDegree flag (padA p) (padB p) (padSlope p) 131071 :=
           hinc
-        _ = (262144 - 131071) * (80771 + 1) *
+        _ = (262144 - 131071) * (80781 + 1) *
             identityCurveDegree flag (padA p) (padB p) (padSlope p) 131071 := by
           rw [hnodes]
-        _ ≤ 50302 * hybridCostABSC2 flag (padA p) (padB p) (padSlope p) :=
+        _ ≤ 50292 * hybridCostABSC2 flag (padA p) (padB p) (padSlope p) :=
           identity_le_hybridC2 flag (padA p) (padB p) (padSlope p) hb1
     rw [hybridBoundC2_eq_abs]
-    apply Nat.le_of_mul_le_mul_right ?_ (by norm_num : 0 < 50302)
+    apply Nat.le_of_mul_le_mul_right ?_ (by norm_num : 0 < 50292)
     simpa only [Nat.mul_comm] using hscaled
   · obtain ⟨P⟩ := hprov S hnodes hagreement hbox hflag hTail
     have h := stage_card_le_divisorBound S P
@@ -18116,17 +20510,17 @@ theorem hybridStageBoundC2 (D : ℕ) (p : FlagDegree)
 
 theorem regular_factor_count_hybridC2
     (D : ℕ) (P : ResidualSupportParameters)
-    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 17411808)
-    (hS : P.s ≤ 29) (hY : P.ys ≤ 132) (hT : P.total ≤ 6412)
+    (hDlow : 131072 ≤ D) (hDhigh : D ≤ 17773574)
+    (hS : P.s ≤ 29) (hY : P.ys ≤ 135) (hT : P.total ≤ 6677)
     (Q : P4) (hQ : Q ≠ 0)
     (hbox : Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ : ResidualSupportData P Q)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
     (R : RegularIndex Q)
     (hhyb : HybridAppliesC2 (regularCumulativeFlag Q R))
     (hreal : RealizationC2 D) :
@@ -18150,15 +20544,15 @@ theorem regular_factor_count_hybridC2
   have hRbox : R.1 ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p) := by
     rw [← hps.2.2, ← hps.1]; exact hRbox0
   have h1 : p.all ≤ 29 := hRwhole.s_weight.trans hS
-  have h2 : middle p ≤ 132 := by
+  have h2 : middle p ≤ 135 := by
     simpa only [hp, middle, regularCumulativeFlag, hc.2.1] using
       hRwhole.ys_weight.trans hY
-  have h3 : total p ≤ 6412 := by
+  have h3 : total p ≤ 6677 := by
     simpa only [hp, total, regularCumulativeFlag, hc.2.2] using
       hRwhole.total_weight.trans hT
   have hpS : padS p ≤ 29 := max_le h1 (by decide)
-  have hpY : padY p ≤ 132 := max_le h2 (by omega)
-  have hpT : padT p ≤ 6412 := max_le h3 (by omega)
+  have hpY : padY p ≤ 135 := max_le h2 (by omega)
+  have hpT : padT p ≤ 6677 := max_le h3 (by omega)
   have hp3 : 3 ≤ p.all := hhyb.1
   have hpSeq : padS p = p.all := max_eq_left (by omega : 2 ≤ p.all)
   have hpYeq : padY p = middle p :=
@@ -18185,12 +20579,12 @@ theorem regular_factor_count_hybridC2
         (regularSeeds Q selected Gamma R) g ⊆ Gamma :=
       (geometricSeeds_subset K R.1 selected _ g).trans
         (regularSeeds_subset Q selected Gamma R)
-    have hnodes : S.nodes.card = 181373 + 80771 := by
+    have hnodes : S.nodes.card = 181363 + 80781 := by
       change (Finset.univ : Finset I).card = _
       norm_num [I, IRSProfile.Index]
     have hag : ∀ gamma ∈ geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g,
-        181373 ≤ (S.agreementFiber gamma).card := by
+        181363 ≤ (S.agreementFiber gamma).card := by
       intro gamma hgamma
       simpa [S, S0, ResidualStage.agreementFiber, ResidualStage.Agrees,
         reflagResidualStage, regularGeometricResidualStageOfSupport,
@@ -18233,10 +20627,10 @@ section PackedLocator_LocatorHybridRealizeC2
 /-
 THE C2 HYBRID PROVIDER EXISTS ON EVERY ADMISSIBLE CELL — 6800 ROW.
 
-`RealizationC2 17411808`: the weighted cap of the 6800 row is
-`A.m * agreements = 92 * 181373 = 17411808`.
+`RealizationC2 17773574`: the weighted cap of the 6800 row is
+`A.m * agreements = 92 * 181363 = 17773574`.
 
-Gates come from `LocatorHybridGatesC2` (caps 29 / 132 / 6412, errors 80771).  The
+Gates come from `LocatorHybridGatesC2` (caps 29 / 135 / 6677, errors 80781).  The
 tangent count is `tangent_component_card_le` against the REDUCED budget family,
 exactly as `RCN335` does it for the delayed provider.
 -/
@@ -18263,7 +20657,7 @@ local instance : CharP K 2130706433 := by
   simpa [RCN223.prime] using
     RCN128.challenge_field_characteristic6600
 
-theorem realizationC2 : RealizationC2 17411808 := by
+theorem realizationC2 : RealizationC2 17773574 := by
   intro p hS hY hT hS3 hhyb
   letI : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
   unfold ProviderHypC2
@@ -18286,12 +20680,12 @@ theorem realizationC2 : RealizationC2 17411808 := by
         (globalTailCut (polynomialEmbedding K) S.F (RCN327.w + 1))
         (regularitySurface (polynomialEmbedding K) S.F) Gamma
         (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
-          (80771 + 1) *
+          (80781 + 1) *
             (reducedBudgetFamily S hTail hflagChar hmixedRed).yzCost C := by
     intro C hall
     exact tangent_component_card_le S C hTail
       (reducedBaseOrd S hTail hflagChar hmixedRed C)
-      181373 17411808 (padT p) (padS p) hnodes hagreement
+      181363 17773574 (padT p) (padS p) hnodes hagreement
       (by norm_num [RCN327.w]) (by norm_num [RCN327.w])
       (by norm_num [RCN327.w]) (by norm_num)
       hbox (reducedBudgetFamily S hTail hflagChar hmixedRed)
@@ -18327,17 +20721,17 @@ local instance:CharP K 2130706433:=by
 /-- Both per-factor bounds: padded always, C2 hybrid when it applies. -/
 theorem regular_factor_own_bound
     (D:ℕ) (P:ResidualSupportParameters)
-    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17411808)
-    (hS:P.s ≤ 29) (hY:P.ys ≤ 132) (hT:P.total ≤ 6412)
+    (hDlow:131072 ≤ D) (hDhigh:D ≤ 17773574)
+    (hS:P.s ≤ 29) (hY:P.ys ≤ 135) (hT:P.total ≤ 6677)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+    (hagreement:∀ gamma ∈ Gamma,181363 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80781)
     (R:RegularIndex Q) (hreal:RealizationC2 D) :
     OwnBoundC2 (regularSeeds Q selected Gamma R).card (regularCumulativeFlag Q R):=
   ⟨regular_factor_count D P hDlow hDhigh hS hY hT Q hQ hbox HQ selected Gamma u0 u1
@@ -18383,8 +20777,8 @@ namespace ProximityPrize.SubmissionLower.LocatorSourceArithmetic
 open RCN100 RCN119 RCN302
 set_option maxRecDepth 100000
 theorem kernelAmbient_nullity:
-    coefficientCount 48970710 131071 130000 81 -
-      262144 * localRankBound 270 130000 81=303286218157264:=
+    coefficientCount 48968010 131071 130000 81 -
+      262144 * localRankBound 270 130000 81=293702551079764:=
   LocatorArithmetic.kernelC_nullity
 end ProximityPrize.SubmissionLower.LocatorSourceArithmetic
 end PackedLocator_LocatorSourceArithmetic
@@ -18401,7 +20795,7 @@ section PackedLocator_LocatorSingletonSource
 # A compact source for the terminal singleton locator cell
 
 This source is small enough to fit inside the selected ambient coefficient
-box, but its kernel nullity is just large enough for the `(6412, 50, 11)`
+box, but its kernel nullity is just large enough for the `(6677, 50, 11)`
 terminal route.  The local-rank receipt is split into short reductions so the
 verifier never has to normalize all 153 contact rows in one expression.
 -/
@@ -18424,21 +20818,21 @@ abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
 
 abbrev Kernel (u0 u1 : I → K) :=
-  ConstraintKernel (K := K) 27750069 131071 7289 47 153
+  ConstraintKernel (K := K) 27748539 131071 7289 47 153
     IRSProfile.domain u0 u1
 
-theorem weighted_exact : 153 * 181373 = 27750069 := by
+theorem weighted_exact : 153 * 181363 = 27748539 := by
   decide
 
-theorem shape : 27750069 + 47 ≤ 131071 * (211 + 1) := by
+theorem shape : 27748539 + 47 ≤ 131071 * (211 + 1) := by
   decide
 
 theorem coefficientCount_exact :
-    coefficientCount 27750069 131071 7289 47 = 811593602962228 := by
-  change coefficientCount (211 * 131071 + 94088) 131071 7289 47 =
-    811593602962228
+    coefficientCount 27748539 131071 7289 47 = 811494300380788 := by
+  change coefficientCount (211 * 131071 + 92558) 131071 7289 47 =
+    811494300380788
   rw [coefficientCount_eq_oneResidueCoefficientCount
-    211 94088 131071 7289 47 (by decide) (by decide) (by decide)
+    211 92558 131071 7289 47 (by decide) (by decide) (by decide)
       (by decide)]
   norm_num [oneResidueCoefficientCount, smallChoose, Nat.descFactorial]
 
@@ -18474,14 +20868,14 @@ theorem localRankBound_exact :
   exact fastLocalRankBound_exact
 
 theorem nullity_exact :
-    coefficientCount 27750069 131071 7289 47 -
-      262144 * localRankBound 153 7289 47 = 142965478196 := by
+    coefficientCount 27748539 131071 7289 47 -
+      262144 * localRankBound 153 7289 47 = 43662896756 := by
   rw [coefficientCount_exact, localRankBound_exact]
 
 theorem finrank_gap (u0 u1 : I → K) :
-    142965478196 ≤ Module.finrank K (Kernel u0 u1) := by
+    43662896756 ≤ Module.finrank K (Kernel u0 u1) := by
   exact challengeConstraintKernel_finrank_lower_bound_of_numeric
-    27750069 7289 47 153 142965478196 u0 u1 (by
+    27748539 7289 47 153 43662896756 u0 u1 (by
       rw [nullity_exact])
 
 end
@@ -18568,115 +20962,115 @@ local instance:NormalizedGCDMonoid P4:=
   UniqueFactorizationMonoid.toNormalizedGCDMonoid P4
 local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
 abbrev AKernel (u0 u1:I → K) :=
-  ConstraintKernel (K:=K) 17411808 131071 130000 29 96 IRSProfile.domain u0 u1
+  ConstraintKernel (K:=K) 17773574 131071 130000 29 98 IRSProfile.domain u0 u1
 abbrev AuxKernel (u0 u1:I → K) :=
-  ConstraintKernel (K:=K) 17411808 131071 130000 29 96 IRSProfile.domain u0 u1
+  ConstraintKernel (K:=K) 17773574 131071 130000 29 98 IRSProfile.domain u0 u1
 abbrev CKernel (u0 u1:I → K) :=
-  ConstraintKernel (K:=K) 48970710 131071 130000 81 270 IRSProfile.domain u0 u1
+  ConstraintKernel (K:=K) 48968010 131071 130000 81 270 IRSProfile.domain u0 u1
 abbrev TCapKernel (u0 u1:I → K) :=
-  ConstraintKernel (K:=K) 32828513 131071 6415 56 181 IRSProfile.domain u0 u1
+  ConstraintKernel (K:=K) 32826703 131071 6680 56 181 IRSProfile.domain u0 u1
 abbrev SKernel (u0 u1:I → K) :=
   LocatorSingletonSource.Kernel u0 u1
 abbrev BKernel (u0 u1:I → K) :=
-  ConstraintKernel (K:=K) 20132403 131071 12960 33 111 IRSProfile.domain u0 u1
-abbrev Ambient:=CoefficientIndex 48970710 131071 130000 81 → K
+  ConstraintKernel (K:=K) 20131293 131071 14915 33 111 IRSProfile.domain u0 u1
+abbrev Ambient:=CoefficientIndex 48968010 131071 130000 81 → K
 theorem gateC:Fintype.card I * localRankBound 270 130000 81 <
-    coefficientCount 48970710 131071 130000 81:=by
+    coefficientCount 48968010 131071 130000 81:=by
   rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
   have h:=LocatorSourceArithmetic.kernelAmbient_nullity
   omega
-theorem gateTCap:Fintype.card I * localRankBound 181 6415 56 <
-    coefficientCount 32828513 131071 6415 56:=by
+theorem gateTCap:Fintype.card I * localRankBound 181 6680 56 <
+    coefficientCount 32826703 131071 6680 56:=by
   rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
   have h:=LocatorArithmetic.kernelTCap_nullity
   omega
-theorem gateB:Fintype.card I * localRankBound 111 12960 33 <
-    coefficientCount 20132403 131071 12960 33:=by
+theorem gateB:Fintype.card I * localRankBound 111 14915 33 <
+    coefficientCount 20131293 131071 14915 33:=by
   rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
   have h:=LocatorArithmetic.kernelB_nullity
   omega
-theorem aBox_le_cBox:globalCoefficientBox K 17411808 131071 130000 29 ≤
-    globalCoefficientBox K 48970710 131071 130000 81:=by
+theorem aBox_le_cBox:globalCoefficientBox K 17773574 131071 130000 29 ≤
+    globalCoefficientBox K 48968010 131071 130000 81:=by
   intro Q hQ d hd
   obtain ⟨ht,hs,hc⟩:=hQ hd
   exact ⟨ht,hs.trans (by decide),hc.trans_le (by decide)⟩
 def embedA (u0 u1:I → K):AKernel u0 u1 →ₗ[K] Ambient:=
-  polynomialCoefficientsLinear 48970710 131071 130000 81
-    (kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
+  polynomialCoefficientsLinear 48968010 131071 130000 81
+    (kernelReconstructLinear (K:=K) 17773574 131071 130000 29 98
       IRSProfile.domain u0 u1)
 @[simp] theorem reconstruct_embedA (u0 u1:I → K) (v:AKernel u0 u1) :
-    reconstruct K 48970710 131071 130000 81 (embedA u0 u1 v) =
-      reconstruct K 17411808 131071 130000 29 v.1:=by
-  have hbox:kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
-      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 48970710 131071 130000 81:=by
+    reconstruct K 48968010 131071 130000 81 (embedA u0 u1 v) =
+      reconstruct K 17773574 131071 130000 29 v.1:=by
+  have hbox:kernelReconstructLinear (K:=K) 17773574 131071 130000 29 98
+      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 48968010 131071 130000 81:=by
     rw [kernelReconstructLinear_apply]
     exact aBox_le_cBox (reconstruct_mem_globalCoefficientBox
-      K 17411808 131071 130000 29 v.1)
-  have h:=reconstruct_polynomialCoefficientsLinear 48970710 131071 130000 81
-    (kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
+      K 17773574 131071 130000 29 v.1)
+  have h:=reconstruct_polynomialCoefficientsLinear 48968010 131071 130000 81
+    (kernelReconstructLinear (K:=K) 17773574 131071 130000 29 98
       IRSProfile.domain u0 u1) v hbox
   simpa only [embedA,kernelReconstructLinear_apply] using h
-theorem auxBox_le_cBox:globalCoefficientBox K 17411808 131071 130000 29 ≤
-    globalCoefficientBox K 48970710 131071 130000 81:=by
+theorem auxBox_le_cBox:globalCoefficientBox K 17773574 131071 130000 29 ≤
+    globalCoefficientBox K 48968010 131071 130000 81:=by
   intro Q hQ d hd
   obtain ⟨ht,hs,hc⟩:=hQ hd
   exact ⟨ht,hs.trans (by decide),hc.trans_le (by decide)⟩
 def embedAux (u0 u1:I → K):AuxKernel u0 u1 →ₗ[K] Ambient:=
-  polynomialCoefficientsLinear 48970710 131071 130000 81
-    (kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
+  polynomialCoefficientsLinear 48968010 131071 130000 81
+    (kernelReconstructLinear (K:=K) 17773574 131071 130000 29 98
       IRSProfile.domain u0 u1)
 @[simp] theorem reconstruct_embedAux (u0 u1:I → K) (v:AuxKernel u0 u1) :
-    reconstruct K 48970710 131071 130000 81 (embedAux u0 u1 v) =
-      reconstruct K 17411808 131071 130000 29 v.1:=by
-  have hbox:kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
-      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 48970710 131071 130000 81:=by
+    reconstruct K 48968010 131071 130000 81 (embedAux u0 u1 v) =
+      reconstruct K 17773574 131071 130000 29 v.1:=by
+  have hbox:kernelReconstructLinear (K:=K) 17773574 131071 130000 29 98
+      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 48968010 131071 130000 81:=by
     rw [kernelReconstructLinear_apply]
     exact auxBox_le_cBox (reconstruct_mem_globalCoefficientBox
-      K 17411808 131071 130000 29 v.1)
-  have h:=reconstruct_polynomialCoefficientsLinear 48970710 131071 130000 81
-    (kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
+      K 17773574 131071 130000 29 v.1)
+  have h:=reconstruct_polynomialCoefficientsLinear 48968010 131071 130000 81
+    (kernelReconstructLinear (K:=K) 17773574 131071 130000 29 98
       IRSProfile.domain u0 u1) v hbox
   simpa only [embedAux,kernelReconstructLinear_apply] using h
-theorem tcapBox_le_cBox:globalCoefficientBox K 32828513 131071 6415 56 ≤
-    globalCoefficientBox K 48970710 131071 130000 81:=by
+theorem tcapBox_le_cBox:globalCoefficientBox K 32826703 131071 6680 56 ≤
+    globalCoefficientBox K 48968010 131071 130000 81:=by
   intro Q hQ d hd
   obtain ⟨ht,hs,hc⟩:=hQ hd
   exact ⟨ht.trans (by decide),hs.trans (by decide),hc.trans_le (by decide)⟩
 def embedTCap (u0 u1:I → K):TCapKernel u0 u1 →ₗ[K] Ambient:=
-  polynomialCoefficientsLinear 48970710 131071 130000 81
-    (kernelReconstructLinear (K:=K) 32828513 131071 6415 56 181
+  polynomialCoefficientsLinear 48968010 131071 130000 81
+    (kernelReconstructLinear (K:=K) 32826703 131071 6680 56 181
       IRSProfile.domain u0 u1)
 @[simp] theorem reconstruct_embedTCap (u0 u1:I → K) (v:TCapKernel u0 u1) :
-    reconstruct K 48970710 131071 130000 81 (embedTCap u0 u1 v) =
-      reconstruct K 32828513 131071 6415 56 v.1:=by
-  have hbox:kernelReconstructLinear (K:=K) 32828513 131071 6415 56 181
-      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 48970710 131071 130000 81:=by
+    reconstruct K 48968010 131071 130000 81 (embedTCap u0 u1 v) =
+      reconstruct K 32826703 131071 6680 56 v.1:=by
+  have hbox:kernelReconstructLinear (K:=K) 32826703 131071 6680 56 181
+      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 48968010 131071 130000 81:=by
     rw [kernelReconstructLinear_apply]
     exact tcapBox_le_cBox (reconstruct_mem_globalCoefficientBox
-      K 32828513 131071 6415 56 v.1)
-  have h:=reconstruct_polynomialCoefficientsLinear 48970710 131071 130000 81
-    (kernelReconstructLinear (K:=K) 32828513 131071 6415 56 181
+      K 32826703 131071 6680 56 v.1)
+  have h:=reconstruct_polynomialCoefficientsLinear 48968010 131071 130000 81
+    (kernelReconstructLinear (K:=K) 32826703 131071 6680 56 181
       IRSProfile.domain u0 u1) v hbox
   simpa only [embedTCap,kernelReconstructLinear_apply] using h
-theorem sBox_le_cBox:globalCoefficientBox K 27750069 131071 7289 47 ≤
-    globalCoefficientBox K 48970710 131071 130000 81:=by
+theorem sBox_le_cBox:globalCoefficientBox K 27748539 131071 7289 47 ≤
+    globalCoefficientBox K 48968010 131071 130000 81:=by
   intro Q hQ d hd
   obtain ⟨ht,hs,hc⟩:=hQ hd
   exact ⟨ht.trans (by decide),hs.trans (by decide),hc.trans_le (by decide)⟩
 def embedS (u0 u1:I → K):SKernel u0 u1 →ₗ[K] Ambient:=
-  polynomialCoefficientsLinear 48970710 131071 130000 81
-    (kernelReconstructLinear (K:=K) 27750069 131071 7289 47 153
+  polynomialCoefficientsLinear 48968010 131071 130000 81
+    (kernelReconstructLinear (K:=K) 27748539 131071 7289 47 153
       IRSProfile.domain u0 u1)
 @[simp] theorem reconstruct_embedS (u0 u1:I → K) (v:SKernel u0 u1) :
-    reconstruct K 48970710 131071 130000 81 (embedS u0 u1 v) =
-      reconstruct K 27750069 131071 7289 47 v.1:=by
-  have hbox:kernelReconstructLinear (K:=K) 27750069 131071 7289 47 153
-      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 48970710 131071 130000 81:=by
+    reconstruct K 48968010 131071 130000 81 (embedS u0 u1 v) =
+      reconstruct K 27748539 131071 7289 47 v.1:=by
+  have hbox:kernelReconstructLinear (K:=K) 27748539 131071 7289 47 153
+      IRSProfile.domain u0 u1 v ∈ globalCoefficientBox K 48968010 131071 130000 81:=by
     rw [kernelReconstructLinear_apply]
     exact sBox_le_cBox (reconstruct_mem_globalCoefficientBox
-      K 27750069 131071 7289 47 v.1)
-  have h:=reconstruct_polynomialCoefficientsLinear 48970710 131071 130000 81
-    (kernelReconstructLinear (K:=K) 27750069 131071 7289 47 153
+      K 27748539 131071 7289 47 v.1)
+  have h:=reconstruct_polynomialCoefficientsLinear 48968010 131071 130000 81
+    (kernelReconstructLinear (K:=K) 27748539 131071 7289 47 153
       IRSProfile.domain u0 u1) v hbox
   simpa only [embedS,kernelReconstructLinear_apply] using h
 abbrev BaseJoinedDomain (u0 u1:I → K):=
@@ -18706,22 +21100,22 @@ abbrev JoinedKernel (u0 u1:I → K):=LinearMap.range (joinedMap u0 u1)
     LinearMap.fst_apply,LinearMap.snd_apply]
 theorem reconstruct_baseJoinedMap (u0 u1:I → K)
     (v:BaseJoinedDomain u0 u1) :
-    reconstruct K 48970710 131071 130000 81 (baseJoinedMap u0 u1 v) =
-      reconstruct K 48970710 131071 130000 81 v.1.1 +
-        (reconstruct K 17411808 131071 130000 29 v.2.1.1 +
-          reconstruct K 17411808 131071 130000 29 v.2.2.1.1 +
-          reconstruct K 32828513 131071 6415 56 v.2.2.2.1):=by
+    reconstruct K 48968010 131071 130000 81 (baseJoinedMap u0 u1 v) =
+      reconstruct K 48968010 131071 130000 81 v.1.1 +
+        (reconstruct K 17773574 131071 130000 29 v.2.1.1 +
+          reconstruct K 17773574 131071 130000 29 v.2.2.1.1 +
+          reconstruct K 32826703 131071 6680 56 v.2.2.2.1):=by
   rw [baseJoinedMap_apply,reconstruct_add_generic,reconstruct_add_generic,
     reconstruct_add_generic,reconstruct_embedA,reconstruct_embedAux,
     reconstruct_embedTCap]
 theorem reconstruct_joinedMap (u0 u1:I → K)
     (v:BaseJoinedDomain u0 u1 × SKernel u0 u1) :
-    reconstruct K 48970710 131071 130000 81 (joinedMap u0 u1 v) =
-      (reconstruct K 48970710 131071 130000 81 v.1.1.1 +
-        (reconstruct K 17411808 131071 130000 29 v.1.2.1.1 +
-          reconstruct K 17411808 131071 130000 29 v.1.2.2.1.1 +
-          reconstruct K 32828513 131071 6415 56 v.1.2.2.2.1)) +
-        reconstruct K 27750069 131071 7289 47 v.2.1:=by
+    reconstruct K 48968010 131071 130000 81 (joinedMap u0 u1 v) =
+      (reconstruct K 48968010 131071 130000 81 v.1.1.1 +
+        (reconstruct K 17773574 131071 130000 29 v.1.2.1.1 +
+          reconstruct K 17773574 131071 130000 29 v.1.2.2.1.1 +
+          reconstruct K 32826703 131071 6680 56 v.1.2.2.2.1)) +
+        reconstruct K 27748539 131071 7289 47 v.2.1:=by
   rw [joinedMap_apply,reconstruct_add_generic,reconstruct_baseJoinedMap,
     reconstruct_embedS]
 def includeC (u0 u1:I → K) (v:CKernel u0 u1):JoinedKernel u0 u1:=
@@ -18745,27 +21139,27 @@ def includeS (u0 u1:I → K) (v:SKernel u0 u1):JoinedKernel u0 u1:=
       zero_add,add_zero]⟩⟩
 theorem joined_universal (u0 u1:I → K) (v:JoinedKernel u0 u1)
     (gamma:K) (P:Polynomial K) (points:Finset I)
-    (hP:P.natDegree ≤ 131071) (hcard:181373 ≤ points.card)
+    (hP:P.natDegree ≤ 131071) (hcard:181363 ≤ points.card)
     (hvalues:∀ i ∈ points,
       P.eval (IRSProfile.domain i) =u0 i + gamma * u1 i) :
     RCN319.specialization K P gamma
-      (reconstruct K 48970710 131071 130000 81 v.1) =0:=by
+      (reconstruct K 48968010 131071 130000 81 v.1) =0:=by
   obtain ⟨z,hz⟩:=v.2
   rw [← hz,reconstruct_joinedMap,map_add,map_add,map_add,map_add]
   have hc:=specialization_eq_zero_of_agreements K
-    48970710 131071 130000 81 270 181373 IRSProfile.domain u0 u1
+    48968010 131071 130000 81 270 181363 IRSProfile.domain u0 u1
     z.1.1.1 z.1.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have ha:=specialization_eq_zero_of_agreements K
-    17411808 131071 130000 29 96 181373 IRSProfile.domain u0 u1
+    17773574 131071 130000 29 98 181363 IRSProfile.domain u0 u1
     z.1.2.1.1 z.1.2.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have haux:=specialization_eq_zero_of_agreements K
-    17411808 131071 130000 29 96 181373 IRSProfile.domain u0 u1
+    17773574 131071 130000 29 98 181363 IRSProfile.domain u0 u1
     z.1.2.2.1.1 z.1.2.2.1.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have htcap:=specialization_eq_zero_of_agreements K
-    32828513 131071 6415 56 181 181373 IRSProfile.domain u0 u1
+    32826703 131071 6680 56 181 181363 IRSProfile.domain u0 u1
     z.1.2.2.2.1 z.1.2.2.2.2 (by decide) (by decide) P gamma points hP hcard hvalues
   have hs:=specialization_eq_zero_of_agreements K
-    27750069 131071 7289 47 153 181373 IRSProfile.domain u0 u1
+    27748539 131071 7289 47 153 181363 IRSProfile.domain u0 u1
     z.2.1 z.2.2 (by decide) (by decide) P gamma points hP hcard hvalues
   rw [specialization_eq_ordinary] at ha haux hc htcap hs
   simp only [hc,ha,haux,htcap,hs,zero_add]
@@ -18794,24 +21188,24 @@ structure SelectedPair (u0 u1:I → K) where
   QB:P4
   QA_ne:QA ≠ 0
   QB_ne:QB ≠ 0
-  QA_flag:QA ∈ globalCoefficientBox K 32828513 131071 6415 56
-  QB_flag:QB ∈ globalCoefficientBox K 20132403 131071 12960 33
+  QA_flag:QA ∈ globalCoefficientBox K 32826703 131071 6680 56
+  QB_flag:QB ∈ globalCoefficientBox K 20131293 131071 14915 33
   common_divides_TCap:∀ v:TCapKernel u0 u1,
-    gcd QA QB ∣ reconstruct K 32828513 131071 6415 56 v.1
+    gcd QA QB ∣ reconstruct K 32826703 131071 6680 56 v.1
   common_divides_B:∀ v:BKernel u0 u1,
-    gcd QA QB ∣ reconstruct K 20132403 131071 12960 33 v.1
+    gcd QA QB ∣ reconstruct K 20131293 131071 14915 33 v.1
   universal_vanishing:
     ∀ (gamma:K) (P:Polynomial K) (points:Finset I),
-      P.natDegree ≤ 131071 → 181373 ≤ points.card →
+      P.natDegree ≤ 131071 → 181363 ≤ points.card →
       (∀ i ∈ points,P.eval (IRSProfile.domain i) =u0 i + gamma * u1 i) →
       RCN319.specialization K P gamma QA=0 ∧
         RCN319.specialization K P gamma QB=0
 theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
   classical
   obtain ⟨thetaT,htT,hkT⟩:=exists_nonzero_kernel_array (I:=I)
-    K 32828513 131071 6415 56 181 IRSProfile.domain u0 u1 gateTCap
+    K 32826703 131071 6680 56 181 IRSProfile.domain u0 u1 gateTCap
   obtain ⟨thetaB,htB,hkB⟩:=exists_nonzero_kernel_array (I:=I)
-    K 20132403 131071 12960 33 111 IRSProfile.domain u0 u1 gateB
+    K 20131293 131071 14915 33 111 IRSProfile.domain u0 u1 gateB
   let vT0:TCapKernel u0 u1:=⟨thetaT,LinearMap.mem_ker.mpr hkT⟩
   let vB0:BKernel u0 u1:=⟨thetaB,LinearMap.mem_ker.mpr hkB⟩
   letI:Nontrivial (TCapKernel u0 u1):=⟨⟨vT0,0,by
@@ -18834,10 +21228,10 @@ theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
   let HB:=commonGCD (BKernel u0 u1) bB
   have hHT:HT ≠ 0:=commonGCD_ne_zero (TCapKernel u0 u1) bT
   have hHB:HB ≠ 0:=commonGCD_ne_zero (BKernel u0 u1) bB
-  have hHBbox:HB ∈ globalCoefficientBox K 20132403 131071 12960 33:=
+  have hHBbox:HB ∈ globalCoefficientBox K 20131293 131071 14915 33:=
     commonGCD_mem_flagBox (BKernel u0 u1) bB
   have hcardHB:(normalizedFactorSet HB).card < ENat.card K:=
-    normalizedFactorSet_card_lt_field_of_mem_flagBox HB 20132403 12960 33
+    normalizedFactorSet_card_lt_field_of_mem_flagBox HB 20131293 14915 33
       hHB hHBbox (by norm_num)
   obtain ⟨vA,hvA,hcopA⟩:=exists_common_quotient_isRelPrime
     (TCapKernel u0 u1) bT hHT HB hHB hcardHB
@@ -18851,12 +21245,12 @@ theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
     apply hvA
     apply submoduleReconstructLinear_injective (TCapKernel u0 u1)
     simpa only [map_zero,QA] using hz
-  have hQAbox:QA ∈ globalCoefficientBox K 32828513 131071 6415 56:=by
+  have hQAbox:QA ∈ globalCoefficientBox K 32826703 131071 6680 56:=by
     dsimp only [QA]
     rw [submoduleReconstructLinear_apply]
-    exact reconstruct_mem_globalCoefficientBox K 32828513 131071 6415 56 vA.1
+    exact reconstruct_mem_globalCoefficientBox K 32826703 131071 6680 56 vA.1
   have hcardQA:(normalizedFactorSet QA).card < ENat.card K:=
-    normalizedFactorSet_card_lt_field_of_mem_flagBox QA 32828513 6415 56
+    normalizedFactorSet_card_lt_field_of_mem_flagBox QA 32826703 6680 56
       hQA hQAbox (by norm_num)
   obtain ⟨vB,hvB,hcopB⟩:=exists_common_quotient_isRelPrime
     (BKernel u0 u1) bB hHB QA hQA hcardQA
@@ -18870,10 +21264,10 @@ theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
     apply hvB
     apply submoduleReconstructLinear_injective (BKernel u0 u1)
     simpa only [map_zero,QB] using hz
-  have hQBbox:QB ∈ globalCoefficientBox K 20132403 131071 12960 33:=by
+  have hQBbox:QB ∈ globalCoefficientBox K 20131293 131071 14915 33:=by
     dsimp only [QB]
     rw [submoduleReconstructLinear_apply]
-    exact reconstruct_mem_globalCoefficientBox K 20132403 131071 12960 33 vB.1
+    exact reconstruct_mem_globalCoefficientBox K 20131293 131071 14915 33 vB.1
   have hAssocA:Associated (gcd QA HB) (gcd HT HB):=by
     rw [hQAeq]
     exact gcd_mul_left_plain_associated HT qA HB hcopA
@@ -18899,12 +21293,12 @@ theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
     · dsimp only [QA]
       rw [submoduleReconstructLinear_apply]
       exact specialization_eq_zero_of_agreements K
-        32828513 131071 6415 56 181 181373 IRSProfile.domain u0 u1
+        32826703 131071 6680 56 181 181363 IRSProfile.domain u0 u1
         vA.1 vA.2 (by decide) (by decide) P gamma points hP hcard hvalues
     · dsimp only [QB]
       rw [submoduleReconstructLinear_apply]
       exact specialization_eq_zero_of_agreements K
-        20132403 131071 12960 33 111 181373 IRSProfile.domain u0 u1
+        20131293 131071 14915 33 111 181363 IRSProfile.domain u0 u1
         vB.1 vB.2 (by decide) (by decide) P gamma points hP hcard hvalues
 end
 end ProximityPrize.SubmissionLower.LocatorSelection
@@ -18929,23 +21323,23 @@ abbrev P4:=MvPolynomial (Fin 4) K
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 abbrev AKernel (u0 u1:I → K) :=
-  ConstraintKernel (K:=K) 17411808 131071 130000 29 96 IRSProfile.domain u0 u1
+  ConstraintKernel (K:=K) 17773574 131071 130000 29 98 IRSProfile.domain u0 u1
 abbrev TCapKernel (u0 u1:I → K) :=
-  ConstraintKernel (K:=K) 32828513 131071 6415 56 181 IRSProfile.domain u0 u1
+  ConstraintKernel (K:=K) 32826703 131071 6680 56 181 IRSProfile.domain u0 u1
 abbrev BKernel (u0 u1:I → K) :=
-  ConstraintKernel (K:=K) 20132403 131071 12960 33 111 IRSProfile.domain u0 u1
-theorem gateA:Fintype.card I * localRankBound 96 130000 29 <
-    coefficientCount 17411808 131071 130000 29:=by
+  ConstraintKernel (K:=K) 20131293 131071 14915 33 111 IRSProfile.domain u0 u1
+theorem gateA:Fintype.card I * localRankBound 98 130000 29 <
+    coefficientCount 17773574 131071 130000 29:=by
   rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
   have h:=LocatorArithmetic.kernelA_nullity
   omega
-theorem gateTCap:Fintype.card I * localRankBound 181 6415 56 <
-    coefficientCount 32828513 131071 6415 56:=by
+theorem gateTCap:Fintype.card I * localRankBound 181 6680 56 <
+    coefficientCount 32826703 131071 6680 56:=by
   rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
   have h:=LocatorArithmetic.kernelTCap_nullity
   omega
-theorem gateB:Fintype.card I * localRankBound 111 12960 33 <
-    coefficientCount 20132403 131071 12960 33:=by
+theorem gateB:Fintype.card I * localRankBound 111 14915 33 <
+    coefficientCount 20131293 131071 14915 33:=by
   rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]]
   have h:=LocatorArithmetic.kernelB_nullity
   omega
@@ -18964,69 +21358,69 @@ theorem full_divisor_mem_box (D w L s m:ℕ)
   exact mem_flagGlobalCoefficientBox_of_dvd F (reconstruct K D w L s a)
     D w L s hQ (hdiv v) (reconstruct_mem_globalCoefficientBox K D w L s a)
 theorem full_A_divisor_mem_box (u0 u1:I → K) (F:P4) (_hF:F ≠ 0)
-    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 17411808 131071 130000 29 v.1) :
-    F ∈ globalCoefficientBox K 17411808 131071 130000 29:=
-  full_divisor_mem_box 17411808 131071 130000 29 96 gateA u0 u1 F hdiv
+    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 17773574 131071 130000 29 v.1) :
+    F ∈ globalCoefficientBox K 17773574 131071 130000 29:=
+  full_divisor_mem_box 17773574 131071 130000 29 98 gateA u0 u1 F hdiv
 theorem full_TCap_divisor_mem_box (u0 u1:I → K) (F:P4) (_hF:F ≠ 0)
-    (hdiv:∀ v:TCapKernel u0 u1,F ∣ reconstruct K 32828513 131071 6415 56 v.1) :
-    F ∈ globalCoefficientBox K 32828513 131071 6415 56:=
-  full_divisor_mem_box 32828513 131071 6415 56 181 gateTCap u0 u1 F hdiv
+    (hdiv:∀ v:TCapKernel u0 u1,F ∣ reconstruct K 32826703 131071 6680 56 v.1) :
+    F ∈ globalCoefficientBox K 32826703 131071 6680 56:=
+  full_divisor_mem_box 32826703 131071 6680 56 181 gateTCap u0 u1 F hdiv
 theorem full_B_divisor_mem_box (u0 u1:I → K) (F:P4) (_hF:F ≠ 0)
-    (hdiv:∀ v:BKernel u0 u1,F ∣ reconstruct K 20132403 131071 12960 33 v.1) :
-    F ∈ globalCoefficientBox K 20132403 131071 12960 33:=
-  full_divisor_mem_box 20132403 131071 12960 33 111 gateB u0 u1 F hdiv
+    (hdiv:∀ v:BKernel u0 u1,F ∣ reconstruct K 20131293 131071 14915 33 v.1) :
+    F ∈ globalCoefficientBox K 20131293 131071 14915 33:=
+  full_divisor_mem_box 20131293 131071 14915 33 111 gateB u0 u1 F hdiv
 theorem common_A_ys_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
-    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 17411808 131071 130000 29 v.1) :
-    wt residualYSWeights F ≤ 132:=by
+    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 17773574 131071 130000 29 v.1) :
+    wt residualYSWeights F ≤ 135:=by
   have hbox:=full_A_divisor_mem_box u0 u1 F hF hdiv
   have hcaps:=(mem_flagGlobalCoefficientBox_iff F
-    17411808 131071 130000 29 (by decide)).mp hbox
+    17773574 131071 130000 29 (by decide)).mp hbox
   have hr:wt residualSWeights F ≤ 29:=hcaps.2.1
   have hw:=residualYS_mul_le_contact_add_slope F 131071 (by decide)
-  have hc:wt (contactWeights 131071) F ≤ 17411808:=by omega
+  have hc:wt (contactWeights 131071) F ≤ 17773574:=by omega
   omega
 theorem common_A_slope_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
-    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 17411808 131071 130000 29 v.1) :
+    (hdiv:∀ v:AKernel u0 u1,F ∣ reconstruct K 17773574 131071 130000 29 v.1) :
     wt residualSWeights F ≤ 29:=
-  ((mem_flagGlobalCoefficientBox_iff F 17411808 131071 130000 29 (by decide)).mp
+  ((mem_flagGlobalCoefficientBox_iff F 17773574 131071 130000 29 (by decide)).mp
     (full_A_divisor_mem_box u0 u1 F hF hdiv)).2.1
 theorem common_B_slope_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
-    (hdiv:∀ v:BKernel u0 u1,F ∣ reconstruct K 20132403 131071 12960 33 v.1) :
+    (hdiv:∀ v:BKernel u0 u1,F ∣ reconstruct K 20131293 131071 14915 33 v.1) :
     wt residualSWeights F ≤ 33:=
-  ((mem_flagGlobalCoefficientBox_iff F 20132403 131071 12960 33 (by decide)).mp
+  ((mem_flagGlobalCoefficientBox_iff F 20131293 131071 14915 33 (by decide)).mp
     (full_B_divisor_mem_box u0 u1 F hF hdiv)).2.1
 theorem common_B_ys_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
-    (hdiv:∀ v:BKernel u0 u1,F ∣ reconstruct K 20132403 131071 12960 33 v.1) :
+    (hdiv:∀ v:BKernel u0 u1,F ∣ reconstruct K 20131293 131071 14915 33 v.1) :
     wt residualYSWeights F ≤ 153:=by
   have hcaps:=(mem_flagGlobalCoefficientBox_iff F
-    20132403 131071 12960 33 (by decide)).mp
+    20131293 131071 14915 33 (by decide)).mp
     (full_B_divisor_mem_box u0 u1 F hF hdiv)
   have hr:wt residualSWeights F ≤ 33:=hcaps.2.1
-  have hc:wt (contactWeights 131071) F ≤ 20132403 - 1:=hcaps.2.2
+  have hc:wt (contactWeights 131071) F ≤ 20131293 - 1:=hcaps.2.2
   have hw:=residualYS_mul_le_contact_add_slope F 131071 (by decide)
   omega
 theorem common_TCap_total_le (u0 u1:I → K) (F:P4) (hF:F ≠ 0)
-    (hdiv:∀ v:TCapKernel u0 u1,F ∣ reconstruct K 32828513 131071 6415 56 v.1) :
-    wt residualTotalWeights F ≤ 6412:=by
+    (hdiv:∀ v:TCapKernel u0 u1,F ∣ reconstruct K 32826703 131071 6680 56 v.1) :
+    wt residualTotalWeights F ≤ 6677:=by
   by_contra hnot
-  have ht:6413 ≤ wt residualTotalWeights F:=by omega
+  have ht:6678 ≤ wt residualTotalWeights F:=by omega
   have hdivK:∀ v:TCapKernel u0 u1,
       F ∣ kernelReconstructLinear (K:=K)
-        32828513 131071 6415 56 181 IRSProfile.domain u0 u1 v:=by
+        32826703 131071 6680 56 181 IRSProfile.domain u0 u1 v:=by
     intro v
     simpa only [kernelReconstructLinear_apply] using hdiv v
   have hq:∀ v:TCapKernel u0 u1,
       quotientPolynomial
         (kernelReconstructLinear (K:=K) (I:=I)
-          32828513 131071 6415 56 181 IRSProfile.domain u0 u1)
-        F hdivK v ∈ globalCoefficientBox K 32828513 131071 2 56:=by
+          32826703 131071 6680 56 181 IRSProfile.domain u0 u1)
+        F hdivK v ∈ globalCoefficientBox K 32826703 131071 2 56:=by
     have h:=LocatorLowQuotient.quotient_box_of_full_divisor (K:=K) (I:=I)
-      32828513 131071 6415 56 181 0 6413 0
+      32826703 131071 6680 56 181 0 6678 0
       IRSProfile.domain u0 u1 F hF hdivK (Nat.zero_le _) ht (Nat.zero_le _)
     intro v
-    simpa only [Nat.sub_zero,show 6415 - 6413=2 by decide] using h v
+    simpa only [Nat.sub_zero,show 6680 - 6678=2 by decide] using h v
   have hobs:=common_divisor_dimension_obstruction (K:=K) (I:=I)
-    32828513 131071 6415 56 181 32828513 2 56
+    32826703 131071 6680 56 181 32826703 2 56
     IRSProfile.domain u0 u1 F hF hdivK hq
   rw [show Fintype.card I=262144 by norm_num [I,IRSProfile.Index]] at hobs
   exact (not_lt_of_ge hobs) LocatorArithmetic.kernelTCap_total_quotient_lt
@@ -19047,7 +21441,7 @@ open RCN100 RCN180 RCN234 RCN156
 noncomputable section
 local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
 theorem common_total_le {u0 u1:I → K} (S:SelectedPair u0 u1) :
-    wt residualTotalWeights (gcd S.QA S.QB) ≤ 6412:=
+    wt residualTotalWeights (gcd S.QA S.QB) ≤ 6677:=
   LocatorCaps.common_TCap_total_le u0 u1 _
     (gcd_ne_zero_of_left S.QA_ne) S.common_divides_TCap
 theorem common_ys_le {u0 u1:I → K} (S:SelectedPair u0 u1) :
@@ -19124,9 +21518,9 @@ section PackedLocator_LocatorFixedBridge
 # Initial A-source bridge for the wide selected gcd
 
 The selected TCap/B pair only puts its gcd in the wide box
-`(total,ys,slope)=(6412,153,33)`.  Split its regular factors on the independent
+`(total,ys,slope)=(6677,153,33)`.  Split its regular factors on the independent
 A kernel.  Nonuniversal factors get the direct `pairCost(F,A)` bound;
-universal factors inherit A's narrow `(ys,slope)=(132,29)` caps.
+universal factors inherit A's narrow `(ys,slope)=(135,29)` caps.
 -/
 
 namespace ProximityPrize.SubmissionLower.LocatorFixedBridge
@@ -19150,11 +21544,11 @@ local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
 /-- Exact direct helper charge for one factor exiting at the A source. -/
 def initialAHelperCap (p:FlagDegree):ℕ:=
   (LocatorGenericHelperFactorSwitch.helperPair
-    130000 132 29 (middle p) p.all (total p)).regularCountCap
+    130000 135 29 (middle p) p.all (total p)).regularCountCap
 
 /-- Linear reconstruction of the independent A source. -/
 def initialAMap (u0 u1:I → K):LocatorCaps.AKernel u0 u1 →ₗ[K] P4:=
-  kernelReconstructLinear (K:=K) 17411808 131071 130000 29 96
+  kernelReconstructLinear (K:=K) 17773574 131071 130000 29 98
     IRSProfile.domain u0 u1
 
 /-- Factors universal on the current A source. -/
@@ -19167,7 +21561,7 @@ def initialAUniversalFactors (u0 u1:I → K) (H:P4):
     (u0 u1:I → K) (H:P4) (F:RegularIndex H):
     F ∈ initialAUniversalFactors u0 u1 H ↔
       ∀ v:LocatorCaps.AKernel u0 u1,
-        F.1 ∣ reconstruct K 17411808 131071 130000 29 v.1:=by
+        F.1 ∣ reconstruct K 17773574 131071 130000 29 v.1:=by
   simp only [initialAUniversalFactors,mem_universalFactors,Finset.mem_univ,
     true_and,initialAMap,kernelReconstructLinear_apply]
 
@@ -19176,7 +21570,7 @@ theorem initialAUniversalProduct_dvd
     (u0 u1:I → K) (H:P4):
     ∀ v:LocatorCaps.AKernel u0 u1,
       regularProduct H (initialAUniversalFactors u0 u1 H) ∣
-        reconstruct K 17411808 131071 130000 29 v.1:=by
+        reconstruct K 17773574 131071 130000 29 v.1:=by
   intro v
   have h:=universalProduct_dvd H
     (Finset.univ:Finset (RegularIndex H)) (initialAMap u0 u1) v
@@ -19209,15 +21603,15 @@ private theorem degreeZ_le_totalWeight (Q:P4):
 
 private theorem initialA_helper_gates (p:FlagDegree)
     (hr:1 ≤ p.all) (hs:p.all ≤ 33)
-    (hy:middle p ≤ 153) (ht:total p ≤ 6412):
+    (hy:middle p ≤ 153) (ht:total p ≤ 6677):
     LocatorGenericHelperFactorSwitch.HelperPairGates
-      130000 132 29 (middle p) p.all (total p):=by
+      130000 135 29 (middle p) p.all (total p):=by
   unfold LocatorGenericHelperFactorSwitch.HelperPairGates
   change 1 ≤ p.all ∧ middle p < 2130706433 ∧ p.all < 2130706433 ∧
     total p < 2130706433 ∧
     p.all*130000+total p*29 < 2130706433 ∧
-    middle p*130000+total p*132 < 2130706433 ∧
-    middle p*29+p.all*132 < 2130706433
+    middle p*130000+total p*135 < 2130706433 ∧
+    middle p*29+p.all*135 < 2130706433
   omega
 
 /-- Every factor outside the A-universal set gets the direct coprime A
@@ -19227,10 +21621,10 @@ theorem initialA_nonuniversal_count
     (hwide:ResidualSupportData LocatorFixedConsumer.wideSupport H)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+    (hagreement:∀ gamma ∈ Gamma,181363 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80781)
     (F:RegularIndex H) (hFU:F ∉ initialAUniversalFactors u0 u1 H):
     (regularSeeds H selected Gamma F).card ≤
       initialAHelperCap (regularCumulativeFlag H F):=by
@@ -19242,7 +21636,7 @@ theorem initialA_nonuniversal_count
   have hy:middle (regularCumulativeFlag H F) ≤ 153:=by
     simpa only [regularCumulativeFlag,middle,hc.2.1,
       LocatorFixedConsumer.wideSupport] using hFsupport.ys_weight
-  have ht:total (regularCumulativeFlag H F) ≤ 6412:=by
+  have ht:total (regularCumulativeFlag H F) ≤ 6677:=by
     simpa only [regularCumulativeFlag,total,hc.2.2,
       LocatorFixedConsumer.wideSupport] using hFsupport.total_weight
   have hr:1 ≤ (regularCumulativeFlag H F).all:=
@@ -19257,7 +21651,7 @@ theorem initialA_nonuniversal_count
     rw [regularCumulativeFlag,total,hc.2.2]
     exact degreeZ_le_totalWeight F.1
   rcases LocatorGenericHelperFactorSwitch.divisor_or_helper_count
-      17411808 130000 29 96 132 (by decide) (by decide) (by decide)
+      17773574 130000 29 98 135 (by decide) (by decide) (by decide)
       selected Gamma hdegree hagreement hno F
       (middle (regularCumulativeFlag H F)) (regularCumulativeFlag H F).all
       (total (regularCumulativeFlag H F)) hFY hFR hFZ
@@ -19270,39 +21664,39 @@ theorem initialA_nonuniversal_count
 selected gcd is wide. -/
 theorem initialA_universal_ownBound
     (u0 u1:I → K) (H:P4) (hH:H ≠ 0)
-    (hTotal:wt residualTotalWeights H ≤ 6412)
+    (hTotal:wt residualTotalWeights H ≤ 6677)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+    (hagreement:∀ gamma ∈ Gamma,181363 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80781)
     (F:RegularIndex H) (hFU:F ∈ initialAUniversalFactors u0 u1 H):
     LocatorHybridCost.OwnBound (regularSeeds H selected Gamma F).card
       (regularCumulativeFlag H F):=by
   have hF:=RCN167.positiveRFactors_spec H F.1 F.2
   have hdivA:∀ v:LocatorCaps.AKernel u0 u1,
-      F.1 ∣ reconstruct K 17411808 131071 130000 29 v.1:=
+      F.1 ∣ reconstruct K 17773574 131071 130000 29 v.1:=
     (mem_initialAUniversalFactors u0 u1 H F).1 hFU
   have hAflag:=LocatorCaps.full_A_divisor_mem_box u0 u1 F.1
     hF.1.ne_zero hdivA
   have hAcaps:=(mem_flagGlobalCoefficientBox_iff F.1
-    17411808 131071 130000 29 (by decide)).mp hAflag
-  have hFt:wt residualTotalWeights F.1 ≤ 6412:=
+    17773574 131071 130000 29 (by decide)).mp hAflag
+  have hFt:wt residualTotalWeights F.1 ≤ 6677:=
     (weightedTotalDegree_le_of_dvd residualTotalWeights F.1 H hF.2.1 hH).trans
       hTotal
-  have hFy:wt residualYSWeights F.1 ≤ 132:=
+  have hFy:wt residualYSWeights F.1 ≤ 135:=
     LocatorCaps.common_A_ys_le u0 u1 F.1 hF.1.ne_zero hdivA
   have hFs:wt residualSWeights F.1 ≤ 29:=
     LocatorCaps.common_A_slope_le u0 u1 F.1 hF.1.ne_zero hdivA
-  have hFflag:F.1 ∈ globalCoefficientBox K 17411808 131071 6412 29:=
+  have hFflag:F.1 ∈ globalCoefficientBox K 17773574 131071 6677 29:=
     (mem_flagGlobalCoefficientBox_iff F.1
-      17411808 131071 6412 29 (by decide)).mpr ⟨hFt,hFs,hAcaps.2.2⟩
-  have hFbox:=flag_box_to_ordinary K 17411808 131071 6412 29 F.1 hFflag
+      17773574 131071 6677 29 (by decide)).mpr ⟨hFt,hFs,hAcaps.2.2⟩
+  have hFbox:=flag_box_to_ordinary K 17773574 131071 6677 29 F.1 hFflag
   have hFsupport:ResidualSupportData LocatorFixedConsumer.wholeSupport F.1:=
     ⟨hFs,hFy,hFt⟩
   let Fself:=LocatorCoprimeQuotient.regularIndexSelf H F
-  have hown:=LocatorFixedOwnBoundC2.regular_factor_own_bound 17411808
+  have hown:=LocatorFixedOwnBoundC2.regular_factor_own_bound 17773574
     LocatorFixedConsumer.wholeSupport (by decide) (by decide)
     (by decide) (by decide) (by decide)
     F.1 hF.1.ne_zero hFbox hFsupport selected Gamma u0 u1
@@ -19312,6 +21706,233 @@ theorem initialA_universal_ownBound
 
 /-! ## Wide selected-gcd bridge with a replaceable numerical receipt -/
 
+section ChainSplit
+open RCN167
+local instance:CharP K 2130706433:=by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
+
+theorem wt_S_le_degreeOf (F : P4) : wt residualSWeights F ≤ F.degreeOf 2 := by
+  change MvPolynomial.weightedTotalDegree residualSWeights F ≤ F.degreeOf 2
+  unfold MvPolynomial.weightedTotalDegree
+  apply Finset.sup_le
+  intro d hd
+  rw [weight_fin4]
+  change d 0 * 0 + d 1 * 0 + d 2 * 1 + d 3 * 0 ≤ F.degreeOf 2
+  have := (MvPolynomial.degreeOf_le_iff (n := 2) (f := F) (d := F.degreeOf 2)).mp le_rfl d hd
+  omega
+
+theorem wt_YS_le_degreeOf_add (F : P4) :
+    wt residualYSWeights F ≤ F.degreeOf 1 + F.degreeOf 2 := by
+  change MvPolynomial.weightedTotalDegree residualYSWeights F ≤ F.degreeOf 1 + F.degreeOf 2
+  unfold MvPolynomial.weightedTotalDegree
+  apply Finset.sup_le
+  intro d hd
+  rw [weight_fin4]
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 0 ≤ F.degreeOf 1 + F.degreeOf 2
+  have h1 := (MvPolynomial.degreeOf_le_iff (n := 1) (f := F) (d := F.degreeOf 1)).mp le_rfl d hd
+  have h2 := (MvPolynomial.degreeOf_le_iff (n := 2) (f := F) (d := F.degreeOf 2)).mp le_rfl d hd
+  omega
+
+theorem degreeOf_Y_le_wt_YS (F : P4) : F.degreeOf 1 ≤ wt residualYSWeights F := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualYSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 0 ≤ wt residualYSWeights F at h
+  omega
+
+theorem degreeOf_R_le_wt_S (F : P4) : F.degreeOf 2 ≤ wt residualSWeights F := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 0 + d 2 * 1 + d 3 * 0 ≤ wt residualSWeights F at h
+  omega
+
+/-- Cover/chain wrapper for the wide selected gcd with the derivative chain charged per
+group: the universal factors `U` at the aggregate flag `p`, the remaining factors at the
+complementary budget `(153 - p.yz, 33 - p.all)`. -/
+theorem wide_fixed_count_le_split
+    (H:P4) (hH:H ≠ 0)
+    (hbox:H ∈ RCN174.globalCoefficientBox K 20131293 131071 6677 33)
+    (hYS : wt residualYSWeights H ≤ 153) (hS : wt residualSWeights H ≤ 33)
+    (U : Finset (RegularIndex H))
+    (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
+    (hsolution:∀ gamma ∈ Gamma,specialization K (selected gamma) gamma H=0)
+    (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
+    (hagreement:∀ gamma ∈ Gamma,181363 ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80781)
+    (bound : ℕ)
+    (hregular:(∑ F:RegularIndex H,
+      (regularSeeds H selected Gamma F).card) ≤ bound) :
+    Gamma.card ≤ bound
+      + ChainGroupMaj.chainMaj 6677 (LocatorBatchPhase6800.regularAggregateFlag H U).all (middle (LocatorBatchPhase6800.regularAggregateFlag H U))
+      + ChainGroupMaj.chainMaj 6677 (33 - (LocatorBatchPhase6800.regularAggregateFlag H U).all)
+          (153 - (LocatorBatchPhase6800.regularAggregateFlag H U).yz)
+      + 34 * LocatorArithmetic.tailH.countCap := by
+  classical
+  have hnodes:(Finset.univ:Finset I).card=262144:=by
+    rw [Finset.card_univ]
+    change Fintype.card (Fin (2 ^ 18)) =262144
+    rw [Fintype.card_fin]
+    decide
+  have hpall : (LocatorBatchPhase6800.regularAggregateFlag H U).all = ∑ F ∈ U, wt residualSWeights F.1 := by
+    simp only [LocatorBatchPhase6800.regularAggregateFlag, LocatorPhase6800Oracle.sumFlag_all]
+    apply Finset.sum_congr rfl
+    intro F _
+    exact (originalCumulativeFlag_cumulative F.1).1
+  have hpmid : middle (LocatorBatchPhase6800.regularAggregateFlag H U) = ∑ F ∈ U, wt residualYSWeights F.1 := by
+    simp only [LocatorBatchPhase6800.regularAggregateFlag, LocatorPhase6800Oracle.sumFlag_middle]
+    apply Finset.sum_congr rfl
+    intro F _
+    exact (originalCumulativeFlag_cumulative F.1).2.1
+  have hpS : (LocatorBatchPhase6800.regularAggregateFlag H U).all ≤ 33 := by
+    rw [LocatorBatchPhase6800.regularAggregateFlag_all]
+    exact (weightedTotalDegree_le_of_dvd residualSWeights (regularProduct H U) H
+      (regularProduct_dvd_carrier H U) hH).trans hS
+  have hpY : middle (LocatorBatchPhase6800.regularAggregateFlag H U) ≤ 153 := by
+    rw [LocatorBatchPhase6800.regularAggregateFlag_middle]
+    exact (weightedTotalDegree_le_of_dvd residualYSWeights (regularProduct H U) H
+      (regularProduct_dvd_carrier H U) hH).trans hYS
+  generalize hp : LocatorBatchPhase6800.regularAggregateFlag H U = p at hpall hpmid hpS hpY ⊢
+  have hmid : middle p = p.yz + p.all := rfl
+  -- the universal factors as a finset of polynomials
+  let U' : Finset P4 := U.map ⟨Subtype.val, Subtype.val_injective⟩
+  have hU' : U' ⊆ positiveRFactors H := by
+    intro F hF
+    obtain ⟨G, _, rfl⟩ := Finset.mem_map.mp hF
+    exact G.2
+  have hsumU'Y : ∑ F ∈ U', F.degreeOf 1 = ∑ F ∈ U, F.1.degreeOf 1 :=
+    Finset.sum_map U _ (fun F : P4 => F.degreeOf 1)
+  have hsumU'R : ∑ F ∈ U', F.degreeOf 2 = ∑ F ∈ U, F.1.degreeOf 2 :=
+    Finset.sum_map U _ (fun F : P4 => F.degreeOf 2)
+  have hdegU : ∀ F ∈ U', F.degreeOf 1 ≤ middle p ∧ F.degreeOf 2 ≤ p.all := by
+    intro F hF
+    obtain ⟨G, hG, rfl⟩ := Finset.mem_map.mp hF
+    constructor
+    · refine (degreeOf_Y_le_wt_YS G.1).trans ?_
+      rw [hpmid]
+      exact Finset.single_le_sum (f := fun F : RegularIndex H => wt residualYSWeights F.1)
+        (fun _ _ => Nat.zero_le _) hG
+    · refine (degreeOf_R_le_wt_S G.1).trans ?_
+      rw [hpall]
+      exact Finset.single_le_sum (f := fun F : RegularIndex H => wt residualSWeights F.1)
+        (fun _ _ => Nat.zero_le _) hG
+  have hsumU : ∑ F ∈ U', F.degreeOf 2 ≤ p.all := by
+    rw [hsumU'R, hpall]
+    exact Finset.sum_le_sum (fun F _ => degreeOf_R_le_wt_S F.1)
+  have hUY : p.yz ≤ ∑ F ∈ U', F.degreeOf 1 := by
+    rw [hsumU'Y]
+    have h1 : ∑ F ∈ U, wt residualYSWeights F.1 ≤
+        ∑ F ∈ U, (F.1.degreeOf 1 + F.1.degreeOf 2) :=
+      Finset.sum_le_sum (fun F _ => wt_YS_le_degreeOf_add F.1)
+    have h2 : ∑ F ∈ U, F.1.degreeOf 2 ≤ ∑ F ∈ U, wt residualSWeights F.1 :=
+      Finset.sum_le_sum (fun F _ => degreeOf_R_le_wt_S F.1)
+    rw [Finset.sum_add_distrib] at h1
+    omega
+  have hUR : p.all ≤ ∑ F ∈ U', F.degreeOf 2 := by
+    rw [hsumU'R, hpall]
+    exact Finset.sum_le_sum (fun F _ => wt_S_le_degreeOf F.1)
+  have hdegH_Y : H.degreeOf 1 ≤ 153 := (degreeOf_Y_le_wt_YS H).trans hYS
+  have hdegH_R : H.degreeOf 2 ≤ 33 := (degreeOf_R_le_wt_S H).trans hS
+  have hallY : ∑ F ∈ positiveRFactors H, F.degreeOf 1 ≤ H.degreeOf 1 := by
+    simpa using sum_degreeOf_le_of_prod_dvd (positiveRFactors H) id H hH
+      (positiveRFactors_product_dvd H hH) 1
+  have hallR : ∑ F ∈ positiveRFactors H, F.degreeOf 2 ≤ H.degreeOf 2 := by
+    simpa using sum_degreeOf_le_of_prod_dvd (positiveRFactors H) id H hH
+      (positiveRFactors_product_dvd H hH) 2
+  have hsplitY : (∑ F ∈ positiveRFactors H \ U', F.degreeOf 1) + ∑ F ∈ U', F.degreeOf 1 =
+      ∑ F ∈ positiveRFactors H, F.degreeOf 1 := Finset.sum_sdiff hU'
+  have hsplitR : (∑ F ∈ positiveRFactors H \ U', F.degreeOf 2) + ∑ F ∈ U', F.degreeOf 2 =
+      ∑ F ∈ positiveRFactors H, F.degreeOf 2 := Finset.sum_sdiff hU'
+  have hrestR : ∑ F ∈ positiveRFactors H \ U', F.degreeOf 2 ≤ 33 - p.all := by
+    omega
+  have hrestY : ∑ F ∈ positiveRFactors H \ U', F.degreeOf 1 ≤ 153 - p.yz := by
+    omega
+  have hdegR : ∀ F ∈ positiveRFactors H \ U',
+      F.degreeOf 1 ≤ 153 - p.yz ∧ F.degreeOf 2 ≤ 33 - p.all := by
+    intro F hF
+    constructor
+    · exact (Finset.single_le_sum (f := fun F : P4 => F.degreeOf 1)
+        (fun _ _ => Nat.zero_le _) hF).trans hrestY
+    · exact (Finset.single_le_sum (f := fun F : P4 => F.degreeOf 2)
+        (fun _ _ => Nat.zero_le _) hF).trans hrestR
+  -- the two parameter families
+  let Pc : Bool → ℕ → RCN260.UnequalParameters := fun b t =>
+    if b then ChainGroupMaj.chainGroupAt 6677 p.all (middle p) t
+    else ChainGroupMaj.chainGroupAt 6677 (33 - p.all) (153 - p.yz) t
+  let rB : Bool → ℕ := fun b => if b then p.all else 33 - p.all
+  let yG : Bool → ℕ := fun b => if b then middle p else 153 - p.yz
+  have hG : ∀ b t, ChainGroupMaj.Gates (Pc b t) 6677 (rB b) (yG b) := by
+    intro b t
+    cases b
+    · exact ChainGroupMaj.chainGroupAt_gates 6677 _ _ t (by norm_num) (by omega) (by omega)
+    · exact ChainGroupMaj.chainGroupAt_gates 6677 _ _ t (by norm_num) hpS hpY
+  have hmono : ∀ b, Monotone (fun t => (Pc b t).regularCountCap) := by
+    intro b
+    cases b
+    · exact ChainGroupMaj.chainGroupAt_mono 6677 _ _
+    · exact ChainGroupMaj.chainGroupAt_mono 6677 _ _
+  have hcdeg : ∀ F ∈ positiveRFactors H, ∀ t, t ≤ F.degreeOf 2 →
+      F.degreeOf 1 ≤ (Pc (decide (F ∈ U')) t).leftY ∧
+      F.degreeOf 1 ≤ (Pc (decide (F ∈ U')) t).rightY ∧
+      F.degreeOf 2 ≤ (Pc (decide (F ∈ U')) t).rightR ∧
+      t ≤ (Pc (decide (F ∈ U')) t).leftR := by
+    intro F hF t ht
+    by_cases hFU : F ∈ U'
+    · have hd := hdegU F hFU
+      have g := hG true t
+      simp only [decide_eq_true hFU]
+      exact ⟨hd.1.trans g.leftY_ge, hd.1.trans g.rightY_ge, hd.2.trans g.rightR_ge,
+        ChainGroupMaj.chainGroupAt_leftR_ge 6677 _ _ t (ht.trans hd.2)⟩
+    · have hd := hdegR F (Finset.mem_sdiff.mpr ⟨hF, hFU⟩)
+      have g := hG false t
+      simp only [decide_eq_false hFU]
+      exact ⟨hd.1.trans g.leftY_ge, hd.1.trans g.rightY_ge, hd.2.trans g.rightR_ge,
+        ChainGroupMaj.chainGroupAt_leftR_ge 6677 _ _ t (ht.trans hd.2)⟩
+  have hrU : ∑ F ∈ U', F.degreeOf 2 ≤ rB true := hsumU
+  have hrR : ∑ F ∈ positiveRFactors H \ U', F.degreeOf 2 ≤ rB false := hrestR
+  have hnodesS : (Finset.univ:Finset I).card = LocatorArithmetic.tailH.n := by
+    rw [hnodes]; rfl
+  have h := LocatorFixedChain.fixed_chain_count_le_split Pc rB
+    LocatorArithmetic.tailH bound H hH U' hU' 20131293 131071 6677 33 2130706433
+    (by decide) (by decide) (by decide) (by decide) hbox hmono
+    (fun b t => (hG b t).gap_pos) hcdeg
+    (fun b t => (hG b t).leftZ_ge) (fun b t => (hG b t).rightZ_ge)
+    (fun b t => (hG b t).leftR_pos)
+    (fun b t => (hG b t).leftY_small) (fun b t => (hG b t).leftR_small)
+    (fun b t => (hG b t).leftZ_small)
+    (fun b t => (hG b t).mixedY_small) (fun b t => (hG b t).mixedR_small)
+    (fun b t => (hG b t).mixedZ_small)
+    hrU hrR
+    rfl rfl rfl rfl
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+    selected Gamma (Finset.univ:Finset I) IRSProfile.domain u0 u1
+    IRSProfile.domain.injective.injOn
+    (fun b t => by rw [hnodes, (hG b t).n_eq]) hnodesS
+    (fun b t => by rw [(hG b t).w_eq]; decide) (fun b t => by rw [(hG b t).w_eq]; decide)
+    (fun b t => by rw [(hG b t).w_eq, (hG b t).a_eq]; decide)
+    (fun b t => by rw [(hG b t).a_eq, (hG b t).n_eq]; decide)
+    (fun b t gamma hg => by rw [(hG b t).w_eq]; exact hdegree gamma hg) hdegree
+    (fun b t gamma hg => by rw [(hG b t).a_eq]; exact hagreement gamma hg) hagreement
+    (fun b t => by rw [(hG b t).w_eq, (hG b t).errors_eq]; exact hno) hno
+    hsolution hregular
+  have e1 : ChainAmort.capSum (fun t => (Pc true t).regularCountCap) (rB true) =
+      ChainAmort.capSum
+        (fun t => (ChainGroupMaj.chainGroupAt 6677 p.all (middle p) t).regularCountCap) p.all := rfl
+  have e2 : ChainAmort.capSum (fun t => (Pc false t).regularCountCap) (rB false) =
+      ChainAmort.capSum
+        (fun t => (ChainGroupMaj.chainGroupAt 6677 (33 - p.all) (153 - p.yz) t).regularCountCap)
+        (33 - p.all) := rfl
+  rw [e1, e2] at h
+  have m1 := ChainGroupMaj.capSum_le_chainMaj 6677 p.all (middle p)
+  have m2 := ChainGroupMaj.capSum_le_chainMaj 6677 (33 - p.all) (153 - p.yz)
+  omega
+
+end ChainSplit
+
 /-- Algebraic bridge to the phase-potential certificate.  `hphase` bounds
 the A-universal child; `hledger` combines it with the exact direct-A charges
 of all factors that exit at this first split. -/
@@ -19319,10 +21940,10 @@ theorem gcd_fixed_count_le_of_initial_phase
     (u0 u1:I → K) (S:SelectedPair u0 u1)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181373 ≤
+    (hagreement:∀ gamma ∈ Gamma,181363 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80781)
     (phaseCap:ℕ)
     (hphase:
       let H:P4:=gcd12 S.QA S.QB
@@ -19334,14 +21955,21 @@ theorem gcd_fixed_count_le_of_initial_phase
     (hledger:
       let H:P4:=gcd12 S.QA S.QB
       let U:=initialAUniversalFactors u0 u1 H
+      let p:=LocatorBatchPhase6800.regularAggregateFlag H U
       phaseCap+(∑ F ∈ (Finset.univ:Finset (RegularIndex H)) \ U,
-        initialAHelperCap (regularCumulativeFlag H F)) ≤
+        initialAHelperCap (regularCumulativeFlag H F)) +
+        ChainGroupMaj.chainMaj 6677 p.all (middle p) +
+        ChainGroupMaj.chainMaj 6677 (33 - p.all) (153 - p.yz) +
+        ChainGroupMaj.residMaj6802 p.all ≤
           LocatorFixedConsumer.initialRegularCap):
     (LocatorCover.fixed
       (fun gamma=>(specialization K (selected gamma) gamma).toRingHom)
-      Gamma S.QA S.QB).card ≤
+      Gamma S.QA S.QB).card +
+      ChainGroupMaj.residMaj6802
+        (LocatorBatchPhase6800.regularAggregateFlag (gcd12 S.QA S.QB)
+          (initialAUniversalFactors u0 u1 (gcd12 S.QA S.QB))).all ≤
       LocatorFixedConsumer.initialRegularCap+
-        LocatorArithmetic.fixedChainCap:=by
+        LocatorArithmetic.fixedTailCap:=by
   classical
   let H:P4:=gcd12 S.QA S.QB
   let phi:K → P4 →+* Polynomial K:=
@@ -19349,17 +21977,17 @@ theorem gcd_fixed_count_le_of_initial_phase
   let Delta:Finset K:=LocatorCover.fixed phi Gamma S.QA S.QB
   let U:=initialAUniversalFactors u0 u1 H
   have hH:H ≠ 0:=gcd_ne_zero_of_left S.QA_ne
-  have hBflag:H ∈ globalCoefficientBox K 20132403 131071 12960 33:=
+  have hBflag:H ∈ globalCoefficientBox K 20131293 131071 14915 33:=
     LocatorCaps.full_B_divisor_mem_box u0 u1 H hH S.common_divides_B
   have hBcaps:=(mem_flagGlobalCoefficientBox_iff H
-    20132403 131071 12960 33 (by decide)).mp hBflag
-  have hT:wt residualTotalWeights H ≤ 6412:=S.common_total_le
+    20131293 131071 14915 33 (by decide)).mp hBflag
+  have hT:wt residualTotalWeights H ≤ 6677:=S.common_total_le
   have hYS:wt residualYSWeights H ≤ 153:=S.common_ys_le
   have hS:wt residualSWeights H ≤ 33:=S.common_slope_le
-  have hflag:H ∈ globalCoefficientBox K 20132403 131071 6412 33:=
+  have hflag:H ∈ globalCoefficientBox K 20131293 131071 6677 33:=
     (mem_flagGlobalCoefficientBox_iff H
-      20132403 131071 6412 33 (by decide)).mpr ⟨hT,hS,hBcaps.2.2⟩
-  have hbox:=flag_box_to_ordinary K 20132403 131071 6412 33 H hflag
+      20131293 131071 6677 33 (by decide)).mpr ⟨hT,hS,hBcaps.2.2⟩
+  have hbox:=flag_box_to_ordinary K 20131293 131071 6677 33 H hflag
   have hwide:ResidualSupportData LocatorFixedConsumer.wideSupport H:=
     ⟨hS,hYS,hT⟩
   have hsub:Delta ⊆ Gamma:=by
@@ -19373,12 +22001,12 @@ theorem gcd_fixed_count_le_of_initial_phase
     exact LocatorCover.fixed_vanish phi Gamma S.QA S.QB gamma hg
   have hdegreeD:∀ gamma ∈ Delta,(selected gamma).natDegree ≤ 131071:=
     fun gamma hg=>hdegree gamma (hsub hg)
-  have hagreementD:∀ gamma ∈ Delta,181373 ≤
+  have hagreementD:∀ gamma ∈ Delta,181363 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card:=
     fun gamma hg=>hagreement gamma (hsub hg)
-  have hnoD:NoLargeSelectedPencil selected Delta 131071 80771:=
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80771 hsub hno
+  have hnoD:NoLargeSelectedPencil selected Delta 131071 80781:=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80781 hsub hno
   have hN:∀ F ∈ (Finset.univ:Finset (RegularIndex H)) \ U,
       (regularSeeds H selected Delta F).card ≤
         initialAHelperCap (regularCumulativeFlag H F):=by
@@ -19388,14 +22016,29 @@ theorem gcd_fixed_count_le_of_initial_phase
     exact (Finset.mem_sdiff.mp hFN).2
   have hreg:(∑ F:RegularIndex H,
       (regularSeeds H selected Delta F).card) ≤
-        LocatorFixedConsumer.initialRegularCap:=by
+        phaseCap+(∑ F ∈ (Finset.univ:Finset (RegularIndex H)) \ U,
+          initialAHelperCap (regularCumulativeFlag H F)):=by
     apply LocatorFixedConsumer.initial_A_regularSeeds_sum_le H selected Delta
       U phaseCap (fun F => initialAHelperCap (regularCumulativeFlag H F))
     · simpa only [H,phi,Delta,U] using hphase
     · exact hN
-    · simpa only [H,U] using hledger
-  exact LocatorFixedConsumer.wide_fixed_count_le H hH hbox selected Delta u0 u1
-    hsolution hdegreeD hagreementD hnoD hreg
+    · exact le_rfl
+  have hcount:=wide_fixed_count_le_split H hH hbox hYS hS U selected Delta u0 u1
+    hsolution hdegreeD hagreementD hnoD _ hreg
+  have hledger':phaseCap+(∑ F ∈ (Finset.univ:Finset (RegularIndex H)) \ U,
+      initialAHelperCap (regularCumulativeFlag H F)) +
+      ChainGroupMaj.chainMaj 6677 (LocatorBatchPhase6800.regularAggregateFlag H U).all
+        (middle (LocatorBatchPhase6800.regularAggregateFlag H U)) +
+      ChainGroupMaj.chainMaj 6677 (33 - (LocatorBatchPhase6800.regularAggregateFlag H U).all)
+        (153 - (LocatorBatchPhase6800.regularAggregateFlag H U).yz) +
+      ChainGroupMaj.residMaj6802 (LocatorBatchPhase6800.regularAggregateFlag H U).all ≤
+        LocatorFixedConsumer.initialRegularCap:=hledger
+  change Delta.card + ChainGroupMaj.residMaj6802
+      (LocatorBatchPhase6800.regularAggregateFlag H U).all ≤
+    LocatorFixedConsumer.initialRegularCap+LocatorArithmetic.fixedTailCap
+  unfold LocatorArithmetic.fixedTailCap
+  simp only [LocatorArithmetic.sB, Nat.reduceAdd]
+  omega
 
 end
 end ProximityPrize.SubmissionLower.LocatorFixedBridge
@@ -19480,11 +22123,11 @@ theorem gcd_fixed_count_le_of_stateLocalPhase
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
     (phaseCap : FlagDegree → ℕ)
     (hphase :
       let H : P4 := gcd12 S.QA S.QB
@@ -19494,17 +22137,18 @@ theorem gcd_fixed_count_le_of_stateLocalPhase
       let U := initialAUniversalFactors u0 u1 H
       StateLocalRegularBoundOn H selected Delta U phaseCap)
     (hAhelper : ∀ p : FlagDegree,
-      1 ≤ p.all → p.all ≤ 33 → middle p ≤ 153 → total p ≤ 6412 →
+      1 ≤ p.all → p.all ≤ 33 → middle p ≤ 153 → total p ≤ 6677 →
       initialAHelperCap p ≤ initialAPotential.eval p)
     (hjoint : ∀ p : FlagDegree,
-      p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
+      p.all ≤ 29 → middle p ≤ 135 → total p ≤ 6677 →
       phaseCap p + initialAComplement p ≤
         LocatorFixedConsumer.initialRegularCap) :
+    ∃ d, d ≤ wt residualSWeights (gcd12 S.QA S.QB) ∧
     (LocatorCover.fixed
       (fun gamma ↦ (specialization K (selected gamma) gamma).toRingHom)
-      Gamma S.QA S.QB).card ≤
+      Gamma S.QA S.QB).card + ChainGroupMaj.residMaj6802 d ≤
       LocatorFixedConsumer.initialRegularCap +
-        LocatorArithmetic.fixedChainCap := by
+        LocatorArithmetic.fixedTailCap := by
   classical
   let H : P4 := gcd12 S.QA S.QB
   let phi : K → P4 →+* Polynomial K :=
@@ -19520,25 +22164,25 @@ theorem gcd_fixed_count_le_of_stateLocalPhase
   have hPne : regularProduct H U ≠ 0 := regularProduct_ne_zero H U
   have hdivA : ∀ v : LocatorCaps.AKernel u0 u1,
       regularProduct H U ∣
-        reconstruct K 17411808 131071 130000 29 v.1 := by
+        reconstruct K 17773574 131071 130000 29 v.1 := by
     simpa only [U] using initialAUniversalProduct_dvd u0 u1 H
   have hpS : p.all ≤ 29 := by
     simp only [p, regularAggregateFlag_all]
     exact LocatorCaps.common_A_slope_le u0 u1 (regularProduct H U)
       hPne hdivA
-  have hpY : middle p ≤ 132 := by
+  have hpY : middle p ≤ 135 := by
     simp only [p, regularAggregateFlag_middle]
     exact LocatorCaps.common_A_ys_le u0 u1 (regularProduct H U)
       hPne hdivA
-  have hpT : total p ≤ 6412 := by
+  have hpT : total p ≤ 6677 := by
     simp only [p, regularAggregateFlag_total]
     exact (weightedTotalDegree_le_of_dvd residualTotalWeights
       (regularProduct H U) H
       (initialAUniversalProduct_dvd_carrier u0 u1 H) hH).trans
         S.common_total_le
-  have hwholeT : total (regularAggregateFlag H A) ≤ 6412 := by
+  have hwholeT : total (regularAggregateFlag H A) ≤ 6677 := by
     simpa only [H, A] using
-      whole_regular_total_le H hH 6412 S.common_total_le
+      whole_regular_total_le H hH 6677 S.common_total_le
   have hwholeY : middle (regularAggregateFlag H A) ≤ 153 := by
     simpa only [H, A] using
       whole_regular_middle_le H hH 153 S.common_ys_le
@@ -19552,16 +22196,16 @@ theorem gcd_fixed_count_le_of_stateLocalPhase
   have hsplitS := Finset.sum_sdiff hUsub
     (f := fun F : RegularIndex H => (regularCumulativeFlag H F).all)
   have hcomplementT : total p +
-      (∑ F ∈ N, total (regularCumulativeFlag H F)) ≤ 6412 := by
+      (∑ F ∈ N, total (regularCumulativeFlag H F)) ≤ 6677 := by
     have hpEq : total p =
         ∑ F ∈ U, total (regularCumulativeFlag H F) := by
       simp only [p, regularAggregateFlag, sumFlag_total]
     have hwhole : (∑ F ∈ A, total (regularCumulativeFlag H F)) ≤
-        6412 := by
+        6677 := by
       simpa only [regularAggregateFlag, sumFlag_total] using hwholeT
     rw [hpEq]
     change (∑ F ∈ U, total (regularCumulativeFlag H F)) +
-      (∑ F ∈ A \ U, total (regularCumulativeFlag H F)) ≤ 6412
+      (∑ F ∈ A \ U, total (regularCumulativeFlag H F)) ≤ 6677
     omega
   have hcomplementY : middle p +
       (∑ F ∈ N, middle (regularCumulativeFlag H F)) ≤ 153 := by
@@ -19603,19 +22247,31 @@ theorem gcd_fixed_count_le_of_stateLocalPhase
     · simpa [regularAggregateFlag, sumFlag] using hmono.2.2.trans hwholeT
   have hhelperSum :
       (∑ F ∈ N, initialAHelperCap (regularCumulativeFlag H F)) ≤
-        initialAComplement p := by
-    exact initialA_helpers_sum_le_complement N (regularCumulativeFlag H)
+        initialAComplementCore p := by
+    exact initialA_helpers_sum_le_complementCore N (regularCumulativeFlag H)
       (fun F ↦ initialAHelperCap (regularCumulativeFlag H F)) p
       hNpotential hcomplementT hcomplementY hcomplementS
   have hphaseU :
       (∑ F ∈ U, (regularSeeds H selected Delta F).card) ≤ phaseCap p := by
     have hp := hphase U (fun _ hFU ↦ hFU) hpS hpY hpT
     simpa only [H, phi, Delta, p, U] using hp
+  refine ⟨p.all, ?_, ?_⟩
+  · show (regularAggregateFlag H U).all ≤ wt residualSWeights H
+    rw [regularAggregateFlag_all]
+    exact weightedTotalDegree_le_of_dvd residualSWeights (regularProduct H U) H
+      (initialAUniversalProduct_dvd_carrier u0 u1 H) hH
   apply gcd_fixed_count_le_of_initial_phase u0 u1 S selected Gamma
     hdegree hagreement hno (phaseCap p)
   · simpa only [H, phi, Delta, U, p] using hphaseU
-  · have hfinal := Nat.add_le_add_left hhelperSum (phaseCap p)
-    exact (hfinal.trans (hjoint p hpS hpY hpT))
+  · have hj := hjoint p hpS hpY hpT
+    unfold initialAComplement at hj
+    have hsum := Nat.add_le_add_left hhelperSum (phaseCap p)
+    show phaseCap p + (∑ F ∈ N, initialAHelperCap (regularCumulativeFlag H F)) +
+      ChainGroupMaj.chainMaj 6677 p.all (middle p) +
+      ChainGroupMaj.chainMaj 6677 (33 - p.all) (153 - p.yz) +
+      ChainGroupMaj.residMaj6802 p.all ≤
+        LocatorFixedConsumer.initialRegularCap
+    omega
 
 end
 
@@ -19675,9 +22331,14 @@ def afterSplit500 (base rPref cPref fPref : FlagDegree → ℕ) :
   applyPhase (afterSourceC base rPref cPref) split500Potential
     sourceSplit500.Routeable fPref
 
-def afterSplit390 (base rPref cPref fPref sPref : FlagDegree → ℕ) :
+def afterSplit1200 (base rPref cPref fPref tPref : FlagDegree → ℕ) :
     FlagDegree → ℕ :=
-  applyPhase (afterSplit500 base rPref cPref fPref) split390Potential
+  applyPhase (afterSplit500 base rPref cPref fPref) split1200Potential
+    sourceSplit1200.Routeable tPref
+
+def afterSplit390 (base rPref cPref fPref tPref sPref : FlagDegree → ℕ) :
+    FlagDegree → ℕ :=
+  applyPhase (afterSplit1200 base rPref cPref fPref tPref) split390Potential
     sourceSplit390.Routeable sPref
 
 /-- Semantic payload produced by the compact generated receipt. -/
@@ -19686,6 +22347,7 @@ structure PhasePrefixCertificate where
   rPrefix : FlagDegree → ℕ
   cPrefix : FlagDegree → ℕ
   f500Prefix : FlagDegree → ℕ
+  s1200Prefix : FlagDegree → ℕ
   s390Prefix : FlagDegree → ℕ
   baseSound : StateLocalBaseOracleSound baseCap
   rRows : PrefixTableSound baseCap r1200Potential
@@ -19694,12 +22356,15 @@ structure PhasePrefixCertificate where
     sourceC.Routeable cPrefix
   f500Rows : PrefixTableSound (afterSourceC baseCap rPrefix cPrefix)
     split500Potential sourceSplit500.Routeable f500Prefix
-  s390Rows : PrefixTableSound
+  s1200Rows : PrefixTableSound
     (afterSplit500 baseCap rPrefix cPrefix f500Prefix)
+    split1200Potential sourceSplit1200.Routeable s1200Prefix
+  s390Rows : PrefixTableSound
+    (afterSplit1200 baseCap rPrefix cPrefix f500Prefix s1200Prefix)
     split390Potential sourceSplit390.Routeable s390Prefix
   joint : ∀ p : FlagDegree,
-    p.all ≤ 29 → middle p ≤ 132 → total p ≤ 6412 →
-    afterSplit390 baseCap rPrefix cPrefix f500Prefix s390Prefix p +
+    p.all ≤ 29 → middle p ≤ 135 → total p ≤ 6677 →
+    afterSplit390 baseCap rPrefix cPrefix f500Prefix s1200Prefix s390Prefix p +
       initialAComplement p ≤ LocatorFixedConsumer.initialRegularCap
 
 private theorem defectSound_of_prefix
@@ -19725,26 +22390,29 @@ theorem PhasePrefixCertificate.stateLocalBoundOn
     (ambient : Finset (RegularIndex H))
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781)
     (hown : ∀ F ∈ ambient, LocatorHybridCost.OwnBound
       (regularSeeds H selected Gamma F).card
       (regularCumulativeFlag H F)) :
     StateLocalRegularBoundOn H selected Gamma ambient
       (afterSplit390 cert.baseCap cert.rPrefix cert.cPrefix
-        cert.f500Prefix cert.s390Prefix) := by
-  apply stateLocalRegularBoundOn_fourPhases u0 u1 H selected Gamma ambient
+        cert.f500Prefix cert.s1200Prefix cert.s390Prefix) := by
+  apply stateLocalRegularBoundOn_fivePhases u0 u1 H selected Gamma ambient
     hdegree hagreement hno cert.baseCap
     (afterR1200 cert.baseCap cert.rPrefix)
     (afterSourceC cert.baseCap cert.rPrefix cert.cPrefix)
     (afterSplit500 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix)
+    (afterSplit1200 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix
+      cert.s1200Prefix)
     (afterSplit390 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix
-      cert.s390Prefix)
+      cert.s1200Prefix cert.s390Prefix)
     (parentDefect cert.rPrefix) (parentDefect cert.cPrefix)
-    (parentDefect cert.f500Prefix) (parentDefect cert.s390Prefix)
+    (parentDefect cert.f500Prefix) (parentDefect cert.s1200Prefix)
+    (parentDefect cert.s390Prefix)
     hown cert.baseSound
   · exact defectSound_of_prefix cert.baseCap cert.rPrefix r1200Potential
       sourceR1200 cert.rRows
@@ -19764,9 +22432,17 @@ theorem PhasePrefixCertificate.stateLocalBoundOn
       split500Potential sourceSplit500
   · exact defectSound_of_prefix
       (afterSplit500 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix)
-      cert.s390Prefix split390Potential sourceSplit390 cert.s390Rows
+      cert.s1200Prefix split1200Potential sourceSplit1200 cert.s1200Rows
   · exact capEquation_applyPhase
       (afterSplit500 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix)
+      cert.s1200Prefix split1200Potential sourceSplit1200
+  · exact defectSound_of_prefix
+      (afterSplit1200 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix
+        cert.s1200Prefix)
+      cert.s390Prefix split390Potential sourceSplit390 cert.s390Rows
+  · exact capEquation_applyPhase
+      (afterSplit1200 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix
+        cert.s1200Prefix)
       cert.s390Prefix split390Potential sourceSplit390
 
 /-- End-to-end fixed-part theorem.  Once the generated receipt constructs a
@@ -19777,16 +22453,17 @@ theorem gcd_fixed_count_le_of_certificate
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181373 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80771) :
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80781) :
+    ∃ d, d ≤ wt residualSWeights (gcd12 S.QA S.QB) ∧
     (LocatorCover.fixed
       (fun gamma ↦ (specialization K (selected gamma) gamma).toRingHom)
-      Gamma S.QA S.QB).card ≤
+      Gamma S.QA S.QB).card + ChainGroupMaj.residMaj6802 d ≤
       LocatorFixedConsumer.initialRegularCap +
-        LocatorArithmetic.fixedChainCap := by
+        LocatorArithmetic.fixedTailCap := by
   classical
   let H : P4 := gcd12 S.QA S.QB
   let phi : K → P4 →+* Polynomial K :=
@@ -19804,13 +22481,13 @@ theorem gcd_fixed_count_le_of_certificate
   have hdegreeD : ∀ gamma ∈ Delta,
       (selected gamma).natDegree ≤ 131071 :=
     fun gamma hgamma ↦ hdegree gamma (hsub hgamma)
-  have hagreementD : ∀ gamma ∈ Delta, 181373 ≤
+  have hagreementD : ∀ gamma ∈ Delta, 181363 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card :=
     fun gamma hgamma ↦ hagreement gamma (hsub hgamma)
-  have hnoD : NoLargeSelectedPencil selected Delta 131071 80771 :=
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80771 hsub hno
+  have hnoD : NoLargeSelectedPencil selected Delta 131071 80781 :=
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80781 hsub hno
   have hown : ∀ F ∈ U, LocatorHybridCost.OwnBound
       (regularSeeds H selected Delta F).card
       (regularCumulativeFlag H F) := by
@@ -19822,7 +22499,7 @@ theorem gcd_fixed_count_le_of_certificate
   apply gcd_fixed_count_le_of_stateLocalPhase u0 u1 S selected Gamma
     hdegree hagreement hno
     (afterSplit390 cert.baseCap cert.rPrefix cert.cPrefix cert.f500Prefix
-      cert.s390Prefix)
+      cert.s1200Prefix cert.s390Prefix)
   · simpa only [H, phi, Delta, U] using hphase
   · intro p hr hs hy ht
     simpa only [initialAHelperCap] using
@@ -19851,15 +22528,15 @@ open LocatorPhase6800Oracle
 set_option autoImplicit false
 set_option maxRecDepth 100000
 
-def defaultThreshold : ThresholdReceipt := ⟨0, 0, 0, 0, 0, 0⟩
-def defaultPrefix : PrefixReceipt := ⟨0, 0, 0, [], 0, 0⟩
+def defaultThreshold : ThresholdReceipt := ⟨0, 0, 0, 0, 0, 0, 0⟩
+def defaultPrefix : PrefixReceipt := ⟨0, 0, 0, [0], 0, 0, 0⟩
 
 /-- It is enough for the stored cutoff to be outside the benchmark row, or
 for the source to be routeable at the cutoff.  Routeability is monotone in
 the raw `z` coordinate, so no false-boundary computation is needed. -/
 def SourceThresholdSufficient
     (s : SourceNumbers) (r v threshold : ℕ) : Prop :=
-  6412 - (r + v) < threshold ∨ s.Routeable (rawFlag r v threshold)
+  6677 - (r + v) < threshold ∨ s.Routeable (rawFlag r v threshold)
 
 instance (s : SourceNumbers) (r v threshold : ℕ) :
     Decidable (SourceThresholdSufficient s r v threshold) := by
@@ -19867,10 +22544,11 @@ instance (s : SourceNumbers) (r v threshold : ℕ) :
   infer_instance
 
 def ThresholdSufficient (q : ThresholdReceipt) : Prop :=
-  1 ≤ q.r ∧ q.r ≤ 29 ∧ q.r + q.v ≤ 132 ∧
+  1 ≤ q.r ∧ q.r ≤ 29 ∧ q.r + q.v ≤ 135 ∧
     SourceThresholdSufficient sourceR1200 q.r q.v q.r1200 ∧
     SourceThresholdSufficient LocatorPhase6800Oracle.sourceC q.r q.v q.sourceC ∧
     SourceThresholdSufficient sourceSplit500 q.r q.v q.split500 ∧
+    SourceThresholdSufficient sourceSplit1200 q.r q.v q.split1200 ∧
     SourceThresholdSufficient sourceSplit390 q.r q.v q.split390
 
 instance (q : ThresholdReceipt) : Decidable (ThresholdSufficient q) := by
@@ -19890,6 +22568,7 @@ def prefixSentinel : ℕ := 1000000000000000000000
 
 def rCoreOf (row : ℕ → PrefixReceipt) (v : ℕ) : ℕ := (row v).r1200
 def f500CoreOf (row : ℕ → PrefixReceipt) (v : ℕ) : ℕ := (row v).split500
+def s1200CoreOf (row : ℕ → PrefixReceipt) (v : ℕ) : ℕ := (row v).split1200
 def s390CoreOf (row : ℕ → PrefixReceipt) (v : ℕ) : ℕ := (row v).split390
 
 def cAtOf (row : ℕ → PrefixReceipt) (v bucket : ℕ) : ℕ :=
@@ -19900,19 +22579,22 @@ def cAtOf (row : ℕ → PrefixReceipt) (v bucket : ℕ) : ℕ :=
 def PrefixCoreAtOf (row nextRow : ℕ → PrefixReceipt) (R V : ℕ) : Prop :=
   rCoreOf row V ≤ prefixSentinel ∧
   f500CoreOf row V ≤ prefixSentinel ∧
+  s1200CoreOf row V ≤ prefixSentinel ∧
   s390CoreOf row V ≤ prefixSentinel ∧
-  (∀ b ∈ List.range 22, cAtOf row V b ≤ prefixSentinel) ∧
-  (R + 1 ≤ 28 ∧ R + 1 + 1 + V ≤ 132 →
+  (∀ b ∈ List.range 23, cAtOf row V b ≤ prefixSentinel) ∧
+  (R + 1 ≤ 28 ∧ R + 1 + 1 + V ≤ 135 →
     rCoreOf row V ≤ rCoreOf nextRow V ∧
     f500CoreOf row V ≤ f500CoreOf nextRow V ∧
+    s1200CoreOf row V ≤ s1200CoreOf nextRow V ∧
     s390CoreOf row V ≤ s390CoreOf nextRow V ∧
-    ∀ b ∈ List.range 22, cAtOf row V b ≤ cAtOf nextRow V b) ∧
-  (R + 1 + (V + 1) ≤ 132 →
+    ∀ b ∈ List.range 23, cAtOf row V b ≤ cAtOf nextRow V b) ∧
+  (R + 1 + (V + 1) ≤ 135 →
     rCoreOf row V ≤ rCoreOf row (V + 1) ∧
     f500CoreOf row V ≤ f500CoreOf row (V + 1) ∧
+    s1200CoreOf row V ≤ s1200CoreOf row (V + 1) ∧
     s390CoreOf row V ≤ s390CoreOf row (V + 1) ∧
-    ∀ b ∈ List.range 22, cAtOf row V b ≤ cAtOf row (V + 1) b) ∧
-  (∀ b ∈ List.range 21, cAtOf row V b ≤ cAtOf row V (b + 1))
+    ∀ b ∈ List.range 23, cAtOf row V b ≤ cAtOf row (V + 1) b) ∧
+  (∀ b ∈ List.range 22, cAtOf row V b ≤ cAtOf row V (b + 1))
 
 instance (row nextRow : ℕ → PrefixReceipt) (R V : ℕ) :
     Decidable (PrefixCoreAtOf row nextRow R V) := by
@@ -19938,272 +22620,278 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 
 def threshold : ℕ → ThresholdReceipt
-  | 0 => ⟨1, 0, 4286, 4469, 3541, 4358⟩
-  | 1 => ⟨1, 1, 4267, 4450, 3529, 4344⟩
-  | 2 => ⟨1, 2, 4248, 4431, 3516, 4331⟩
-  | 3 => ⟨1, 3, 4228, 4412, 3504, 4317⟩
-  | 4 => ⟨1, 4, 4209, 4393, 3491, 4303⟩
-  | 5 => ⟨1, 5, 4189, 4373, 3478, 4289⟩
-  | 6 => ⟨1, 6, 4169, 4353, 3466, 4275⟩
-  | 7 => ⟨1, 7, 4148, 4332, 3453, 4260⟩
-  | 8 => ⟨1, 8, 4128, 4311, 3441, 4245⟩
-  | 9 => ⟨1, 9, 4107, 4290, 3428, 4230⟩
-  | 10 => ⟨1, 10, 4086, 4269, 3416, 4215⟩
-  | 11 => ⟨1, 11, 4065, 4248, 3403, 4200⟩
-  | 12 => ⟨1, 12, 4044, 4228, 3391, 4185⟩
-  | 13 => ⟨1, 13, 4022, 4207, 3379, 4169⟩
-  | 14 => ⟨1, 14, 4001, 4186, 3367, 4153⟩
-  | 15 => ⟨1, 15, 3978, 4164, 3354, 4137⟩
-  | 16 => ⟨1, 16, 3956, 4142, 3341, 4121⟩
-  | 17 => ⟨1, 17, 3934, 4119, 3328, 4104⟩
-  | 18 => ⟨1, 18, 3911, 4096, 3315, 4087⟩
-  | 19 => ⟨1, 19, 3888, 4073, 3302, 4070⟩
-  | 20 => ⟨1, 20, 3864, 4049, 3288, 4053⟩
-  | 21 => ⟨1, 21, 3841, 4026, 3275, 4036⟩
-  | 22 => ⟨1, 22, 3817, 4003, 3261, 4018⟩
-  | 23 => ⟨1, 23, 3792, 3980, 3247, 4000⟩
-  | 24 => ⟨1, 24, 3768, 3955, 3232, 3982⟩
-  | 25 => ⟨1, 25, 3743, 3931, 3218, 3963⟩
-  | 26 => ⟨1, 26, 3717, 3905, 3203, 3945⟩
-  | 27 => ⟨1, 27, 3691, 3880, 3188, 3926⟩
-  | 28 => ⟨1, 28, 3665, 3853, 3173, 3906⟩
-  | 29 => ⟨1, 29, 3638, 3828, 3158, 3887⟩
-  | 30 => ⟨1, 30, 3611, 3802, 3144, 3867⟩
-  | 31 => ⟨1, 31, 3584, 3775, 3129, 3847⟩
-  | 32 => ⟨1, 32, 3555, 3748, 3115, 3829⟩
-  | 33 => ⟨1, 33, 3527, 3719, 3100, 3812⟩
-  | 34 => ⟨1, 34, 3498, 3691, 3085, 3795⟩
-  | 35 => ⟨1, 35, 3468, 3661, 3070, 3780⟩
-  | 36 => ⟨1, 36, 3437, 3633, 3054, 3764⟩
-  | 37 => ⟨1, 37, 3406, 3603, 3038, 3748⟩
-  | 38 => ⟨1, 38, 3374, 3572, 3022, 3731⟩
-  | 39 => ⟨1, 39, 3341, 3540, 3005, 3714⟩
-  | 40 => ⟨1, 40, 3308, 3508, 2989, 3697⟩
-  | 41 => ⟨1, 41, 3273, 3475, 2971, 3679⟩
-  | 42 => ⟨1, 42, 3237, 3442, 2954, 3661⟩
-  | 43 => ⟨1, 43, 3201, 3407, 2936, 3643⟩
-  | 44 => ⟨1, 44, 3163, 3371, 2919, 3624⟩
-  | 45 => ⟨1, 45, 3123, 3334, 2901, 3605⟩
-  | 46 => ⟨1, 46, 3082, 3296, 2884, 3585⟩
-  | 47 => ⟨1, 47, 3040, 3257, 2866, 3565⟩
-  | 48 => ⟨1, 48, 2995, 3216, 2848, 3544⟩
-  | 49 => ⟨1, 49, 2948, 3173, 2830, 3523⟩
-  | 50 => ⟨1, 50, 2898, 3129, 2811, 3501⟩
-  | 51 => ⟨1, 51, 2846, 3082, 2791, 3479⟩
-  | 52 => ⟨1, 52, 2790, 3033, 2771, 3456⟩
-  | 53 => ⟨1, 53, 2730, 2981, 2750, 3433⟩
-  | 54 => ⟨1, 54, 2666, 2926, 2729, 3409⟩
-  | 55 => ⟨1, 55, 2599, 2868, 2708, 3385⟩
-  | 56 => ⟨1, 56, 2527, 2805, 2688, 3359⟩
-  | 57 => ⟨1, 57, 2451, 2739, 2666, 3334⟩
-  | 58 => ⟨1, 58, 2371, 2669, 2644, 3307⟩
-  | 59 => ⟨1, 59, 2287, 2595, 2621, 3280⟩
-  | 60 => ⟨1, 60, 2199, 2517, 2598, 3252⟩
-  | 61 => ⟨1, 61, 2106, 2436, 2573, 3223⟩
-  | 62 => ⟨1, 62, 2010, 2350, 2548, 3193⟩
-  | 63 => ⟨1, 63, 1910, 2260, 2523, 3164⟩
-  | 64 => ⟨1, 64, 1805, 2167, 2497, 3136⟩
-  | 65 => ⟨1, 65, 1696, 2069, 2470, 3108⟩
-  | 66 => ⟨1, 66, 1584, 1968, 2441, 3078⟩
-  | 67 => ⟨1, 67, 1467, 1863, 2412, 3047⟩
-  | 68 => ⟨1, 68, 1346, 1753, 2381, 3014⟩
-  | 69 => ⟨1, 69, 1221, 1640, 2349, 2980⟩
-  | 70 => ⟨1, 70, 1092, 1523, 2316, 2944⟩
-  | 71 => ⟨1, 71, 959, 1402, 2281, 2906⟩
-  | 72 => ⟨1, 72, 822, 1277, 2244, 2867⟩
-  | 73 => ⟨1, 73, 681, 1148, 2206, 2826⟩
-  | 74 => ⟨1, 74, 536, 1016, 2165, 2783⟩
-  | 75 => ⟨1, 75, 386, 879, 2123, 2738⟩
-  | 76 => ⟨1, 76, 233, 738, 2079, 2691⟩
-  | 77 => ⟨1, 77, 75, 594, 2033, 2642⟩
-  | 78 => ⟨1, 78, 0, 445, 1986, 2590⟩
-  | 79 => ⟨1, 79, 0, 293, 1936, 2537⟩
-  | 80 => ⟨1, 80, 0, 137, 1885, 2481⟩
-  | 81 => ⟨1, 81, 0, 0, 1831, 2423⟩
-  | 82 => ⟨1, 82, 0, 0, 1776, 2362⟩
-  | 83 => ⟨1, 83, 0, 0, 1719, 2299⟩
-  | 84 => ⟨1, 84, 0, 0, 1660, 2234⟩
-  | 85 => ⟨1, 85, 0, 0, 1599, 2166⟩
-  | 86 => ⟨1, 86, 0, 0, 1537, 2096⟩
-  | 87 => ⟨1, 87, 0, 0, 1473, 2025⟩
-  | 88 => ⟨1, 88, 0, 0, 1406, 1952⟩
-  | 89 => ⟨1, 89, 0, 0, 1338, 1877⟩
-  | 90 => ⟨1, 90, 0, 0, 1268, 1801⟩
-  | 91 => ⟨1, 91, 0, 0, 1196, 1722⟩
-  | 92 => ⟨1, 92, 0, 0, 1123, 1641⟩
-  | 93 => ⟨1, 93, 0, 0, 1047, 1558⟩
-  | 94 => ⟨1, 94, 0, 0, 970, 1472⟩
-  | 95 => ⟨1, 95, 0, 0, 891, 1383⟩
-  | 96 => ⟨1, 96, 0, 0, 809, 1292⟩
-  | 97 => ⟨1, 97, 0, 0, 726, 1199⟩
-  | 98 => ⟨1, 98, 0, 0, 641, 1103⟩
-  | 99 => ⟨1, 99, 0, 0, 555, 1004⟩
-  | 100 => ⟨1, 100, 0, 0, 466, 903⟩
-  | 101 => ⟨1, 101, 0, 0, 376, 800⟩
-  | 102 => ⟨1, 102, 0, 0, 283, 694⟩
-  | 103 => ⟨1, 103, 0, 0, 189, 586⟩
-  | 104 => ⟨1, 104, 0, 0, 93, 475⟩
-  | 105 => ⟨1, 105, 0, 0, 0, 362⟩
-  | 106 => ⟨1, 106, 0, 0, 0, 248⟩
-  | 107 => ⟨1, 107, 0, 0, 0, 134⟩
-  | 108 => ⟨1, 108, 0, 0, 0, 18⟩
-  | 109 => ⟨1, 109, 0, 0, 0, 0⟩
-  | 110 => ⟨1, 110, 0, 0, 0, 0⟩
-  | 111 => ⟨1, 111, 0, 0, 0, 0⟩
-  | 112 => ⟨1, 112, 0, 0, 0, 0⟩
-  | 113 => ⟨1, 113, 0, 0, 0, 0⟩
-  | 114 => ⟨1, 114, 0, 0, 0, 0⟩
-  | 115 => ⟨1, 115, 0, 0, 0, 0⟩
-  | 116 => ⟨1, 116, 0, 0, 0, 0⟩
-  | 117 => ⟨1, 117, 0, 0, 0, 0⟩
-  | 118 => ⟨1, 118, 0, 0, 0, 0⟩
-  | 119 => ⟨1, 119, 0, 0, 0, 0⟩
-  | 120 => ⟨1, 120, 0, 0, 0, 0⟩
-  | 121 => ⟨1, 121, 0, 0, 0, 0⟩
-  | 122 => ⟨1, 122, 0, 0, 0, 0⟩
-  | 123 => ⟨1, 123, 0, 0, 0, 0⟩
-  | 124 => ⟨1, 124, 0, 0, 0, 0⟩
-  | 125 => ⟨1, 125, 0, 0, 0, 0⟩
-  | 126 => ⟨1, 126, 0, 0, 0, 0⟩
-  | 127 => ⟨1, 127, 0, 0, 0, 0⟩
-  | 128 => ⟨1, 128, 0, 0, 0, 0⟩
-  | 129 => ⟨1, 129, 0, 0, 0, 0⟩
-  | 130 => ⟨1, 130, 0, 0, 0, 0⟩
-  | 131 => ⟨1, 131, 0, 0, 0, 0⟩
+  | 0 => ⟨1, 0, 4287, 4400, 4471, 4595, 4511⟩
+  | 1 => ⟨1, 1, 4269, 4381, 4451, 4575, 4498⟩
+  | 2 => ⟨1, 2, 4250, 4362, 4432, 4555, 4485⟩
+  | 3 => ⟨1, 3, 4231, 4342, 4412, 4535, 4473⟩
+  | 4 => ⟨1, 4, 4212, 4323, 4392, 4515, 4460⟩
+  | 5 => ⟨1, 5, 4193, 4303, 4372, 4496, 4446⟩
+  | 6 => ⟨1, 6, 4173, 4283, 4352, 4476, 4433⟩
+  | 7 => ⟨1, 7, 4154, 4262, 4332, 4457, 4420⟩
+  | 8 => ⟨1, 8, 4134, 4242, 4311, 4437, 4406⟩
+  | 9 => ⟨1, 9, 4114, 4221, 4290, 4417, 4392⟩
+  | 10 => ⟨1, 10, 4093, 4201, 4269, 4396, 4378⟩
+  | 11 => ⟨1, 11, 4073, 4179, 4248, 4375, 4364⟩
+  | 12 => ⟨1, 12, 4052, 4158, 4227, 4354, 4350⟩
+  | 13 => ⟨1, 13, 4032, 4137, 4205, 4332, 4335⟩
+  | 14 => ⟨1, 14, 4011, 4115, 4183, 4310, 4320⟩
+  | 15 => ⟨1, 15, 3989, 4093, 4161, 4288, 4305⟩
+  | 16 => ⟨1, 16, 3968, 4071, 4139, 4266, 4290⟩
+  | 17 => ⟨1, 17, 3946, 4049, 4117, 4244, 4275⟩
+  | 18 => ⟨1, 18, 3924, 4026, 4094, 4222, 4259⟩
+  | 19 => ⟨1, 19, 3902, 4003, 4071, 4200, 4244⟩
+  | 20 => ⟨1, 20, 3879, 3980, 4048, 4177, 4228⟩
+  | 21 => ⟨1, 21, 3857, 3956, 4024, 4154, 4211⟩
+  | 22 => ⟨1, 22, 3833, 3932, 4000, 4130, 4195⟩
+  | 23 => ⟨1, 23, 3810, 3908, 3976, 4106, 4178⟩
+  | 24 => ⟨1, 24, 3786, 3884, 3951, 4081, 4161⟩
+  | 25 => ⟨1, 25, 3762, 3859, 3927, 4057, 4144⟩
+  | 26 => ⟨1, 26, 3738, 3834, 3901, 4032, 4127⟩
+  | 27 => ⟨1, 27, 3713, 3808, 3875, 4007, 4109⟩
+  | 28 => ⟨1, 28, 3688, 3782, 3850, 3983, 4091⟩
+  | 29 => ⟨1, 29, 3663, 3756, 3823, 3957, 4073⟩
+  | 30 => ⟨1, 30, 3637, 3729, 3796, 3931, 4055⟩
+  | 31 => ⟨1, 31, 3610, 3702, 3769, 3904, 4036⟩
+  | 32 => ⟨1, 32, 3583, 3674, 3742, 3876, 4017⟩
+  | 33 => ⟨1, 33, 3556, 3646, 3713, 3848, 3998⟩
+  | 34 => ⟨1, 34, 3528, 3617, 3684, 3821, 3978⟩
+  | 35 => ⟨1, 35, 3500, 3588, 3655, 3793, 3958⟩
+  | 36 => ⟨1, 36, 3471, 3558, 3625, 3764, 3938⟩
+  | 37 => ⟨1, 37, 3442, 3527, 3595, 3735, 3917⟩
+  | 38 => ⟨1, 38, 3411, 3496, 3564, 3704, 3896⟩
+  | 39 => ⟨1, 39, 3381, 3464, 3532, 3673, 3875⟩
+  | 40 => ⟨1, 40, 3349, 3432, 3499, 3642, 3854⟩
+  | 41 => ⟨1, 41, 3317, 3398, 3466, 3611, 3833⟩
+  | 42 => ⟨1, 42, 3283, 3364, 3431, 3578, 3813⟩
+  | 43 => ⟨1, 43, 3249, 3328, 3396, 3544, 3796⟩
+  | 44 => ⟨1, 44, 3214, 3291, 3360, 3509, 3778⟩
+  | 45 => ⟨1, 45, 3177, 3254, 3322, 3474, 3761⟩
+  | 46 => ⟨1, 46, 3140, 3215, 3284, 3438, 3743⟩
+  | 47 => ⟨1, 47, 3101, 3174, 3243, 3400, 3725⟩
+  | 48 => ⟨1, 48, 3060, 3132, 3202, 3360, 3706⟩
+  | 49 => ⟨1, 49, 3018, 3088, 3158, 3320, 3687⟩
+  | 50 => ⟨1, 50, 2973, 3041, 3113, 3279, 3667⟩
+  | 51 => ⟨1, 51, 2927, 2993, 3065, 3235, 3647⟩
+  | 52 => ⟨1, 52, 2877, 2941, 3015, 3189, 3626⟩
+  | 53 => ⟨1, 53, 2825, 2886, 2961, 3141, 3605⟩
+  | 54 => ⟨1, 54, 2770, 2828, 2904, 3091, 3584⟩
+  | 55 => ⟨1, 55, 2710, 2766, 2844, 3037, 3561⟩
+  | 56 => ⟨1, 56, 2647, 2700, 2780, 2981, 3539⟩
+  | 57 => ⟨1, 57, 2581, 2630, 2712, 2921, 3515⟩
+  | 58 => ⟨1, 58, 2510, 2556, 2639, 2857, 3491⟩
+  | 59 => ⟨1, 59, 2436, 2479, 2563, 2789, 3466⟩
+  | 60 => ⟨1, 60, 2357, 2397, 2483, 2718, 3441⟩
+  | 61 => ⟨1, 61, 2275, 2311, 2399, 2642, 3415⟩
+  | 62 => ⟨1, 62, 2189, 2221, 2311, 2563, 3388⟩
+  | 63 => ⟨1, 63, 2099, 2127, 2219, 2480, 3361⟩
+  | 64 => ⟨1, 64, 2006, 2029, 2123, 2394, 3332⟩
+  | 65 => ⟨1, 65, 1908, 1928, 2023, 2303, 3303⟩
+  | 66 => ⟨1, 66, 1807, 1822, 1919, 2209, 3273⟩
+  | 67 => ⟨1, 67, 1702, 1712, 1812, 2110, 3242⟩
+  | 68 => ⟨1, 68, 1592, 1598, 1700, 2008, 3209⟩
+  | 69 => ⟨1, 69, 1480, 1481, 1584, 1903, 3176⟩
+  | 70 => ⟨1, 70, 1363, 1359, 1464, 1793, 3144⟩
+  | 71 => ⟨1, 71, 1242, 1233, 1340, 1680, 3112⟩
+  | 72 => ⟨1, 72, 1118, 1104, 1213, 1562, 3078⟩
+  | 73 => ⟨1, 73, 990, 970, 1081, 1441, 3042⟩
+  | 74 => ⟨1, 74, 858, 833, 945, 1316, 3004⟩
+  | 75 => ⟨1, 75, 722, 691, 806, 1188, 2965⟩
+  | 76 => ⟨1, 76, 582, 546, 662, 1055, 2924⟩
+  | 77 => ⟨1, 77, 438, 396, 515, 919, 2880⟩
+  | 78 => ⟨1, 78, 291, 243, 363, 779, 2835⟩
+  | 79 => ⟨1, 79, 139, 85, 207, 635, 2788⟩
+  | 80 => ⟨1, 80, 0, 0, 48, 487, 2738⟩
+  | 81 => ⟨1, 81, 0, 0, 0, 335, 2687⟩
+  | 82 => ⟨1, 82, 0, 0, 0, 180, 2633⟩
+  | 83 => ⟨1, 83, 0, 0, 0, 21, 2576⟩
+  | 84 => ⟨1, 84, 0, 0, 0, 0, 2518⟩
+  | 85 => ⟨1, 85, 0, 0, 0, 0, 2457⟩
+  | 86 => ⟨1, 86, 0, 0, 0, 0, 2394⟩
+  | 87 => ⟨1, 87, 0, 0, 0, 0, 2330⟩
+  | 88 => ⟨1, 88, 0, 0, 0, 0, 2264⟩
+  | 89 => ⟨1, 89, 0, 0, 0, 0, 2196⟩
+  | 90 => ⟨1, 90, 0, 0, 0, 0, 2127⟩
+  | 91 => ⟨1, 91, 0, 0, 0, 0, 2055⟩
+  | 92 => ⟨1, 92, 0, 0, 0, 0, 1981⟩
+  | 93 => ⟨1, 93, 0, 0, 0, 0, 1905⟩
+  | 94 => ⟨1, 94, 0, 0, 0, 0, 1826⟩
+  | 95 => ⟨1, 95, 0, 0, 0, 0, 1746⟩
+  | 96 => ⟨1, 96, 0, 0, 0, 0, 1662⟩
+  | 97 => ⟨1, 97, 0, 0, 0, 0, 1577⟩
+  | 98 => ⟨1, 98, 0, 0, 0, 0, 1489⟩
+  | 99 => ⟨1, 99, 0, 0, 0, 0, 1398⟩
+  | 100 => ⟨1, 100, 0, 0, 0, 0, 1306⟩
+  | 101 => ⟨1, 101, 0, 0, 0, 0, 1210⟩
+  | 102 => ⟨1, 102, 0, 0, 0, 0, 1113⟩
+  | 103 => ⟨1, 103, 0, 0, 0, 0, 1013⟩
+  | 104 => ⟨1, 104, 0, 0, 0, 0, 911⟩
+  | 105 => ⟨1, 105, 0, 0, 0, 0, 807⟩
+  | 106 => ⟨1, 106, 0, 0, 0, 0, 701⟩
+  | 107 => ⟨1, 107, 0, 0, 0, 0, 595⟩
+  | 108 => ⟨1, 108, 0, 0, 0, 0, 488⟩
+  | 109 => ⟨1, 109, 0, 0, 0, 0, 378⟩
+  | 110 => ⟨1, 110, 0, 0, 0, 0, 266⟩
+  | 111 => ⟨1, 111, 0, 0, 0, 0, 151⟩
+  | 112 => ⟨1, 112, 0, 0, 0, 0, 34⟩
+  | 113 => ⟨1, 113, 0, 0, 0, 0, 0⟩
+  | 114 => ⟨1, 114, 0, 0, 0, 0, 0⟩
+  | 115 => ⟨1, 115, 0, 0, 0, 0, 0⟩
+  | 116 => ⟨1, 116, 0, 0, 0, 0, 0⟩
+  | 117 => ⟨1, 117, 0, 0, 0, 0, 0⟩
+  | 118 => ⟨1, 118, 0, 0, 0, 0, 0⟩
+  | 119 => ⟨1, 119, 0, 0, 0, 0, 0⟩
+  | 120 => ⟨1, 120, 0, 0, 0, 0, 0⟩
+  | 121 => ⟨1, 121, 0, 0, 0, 0, 0⟩
+  | 122 => ⟨1, 122, 0, 0, 0, 0, 0⟩
+  | 123 => ⟨1, 123, 0, 0, 0, 0, 0⟩
+  | 124 => ⟨1, 124, 0, 0, 0, 0, 0⟩
+  | 125 => ⟨1, 125, 0, 0, 0, 0, 0⟩
+  | 126 => ⟨1, 126, 0, 0, 0, 0, 0⟩
+  | 127 => ⟨1, 127, 0, 0, 0, 0, 0⟩
+  | 128 => ⟨1, 128, 0, 0, 0, 0, 0⟩
+  | 129 => ⟨1, 129, 0, 0, 0, 0, 0⟩
+  | 130 => ⟨1, 130, 0, 0, 0, 0, 0⟩
+  | 131 => ⟨1, 131, 0, 0, 0, 0, 0⟩
+  | 135 => ⟨1, 135, 0, 0, 0, 0, 0⟩
+  | 136 => ⟨1, 136, 0, 0, 0, 0, 0⟩
+  | 134 => ⟨1, 134, 0, 0, 0, 0, 0⟩
   | _ => defaultThreshold
 
 def prefixData : ℕ → PrefixReceipt
-  | 0 => ⟨1, 0, 0, [0], 0, 1693793489039520⟩
-  | 1 => ⟨1, 1, 0, [0], 1301590482481, 2253861101386049⟩
-  | 2 => ⟨1, 2, 0, [0], 466231411308474, 2323611286626862⟩
-  | 3 => ⟨1, 3, 0, [1100646343569847], 1891144175457159, 3757639138714782⟩
-  | 4 => ⟨1, 4, 0, [2864355736675692], 3305578250431760, 5180691247322237⟩
-  | 5 => ⟨1, 5, 0, [4611654923536517], 4709704325252761, 6593435355776092⟩
-  | 6 => ⟨1, 6, 0, [6342873630157726], 6105342368965222, 7998188487427788⟩
-  | 7 => ⟨1, 7, 0, [8056032850509339], 7489264763485167, 9390728915580587⟩
-  | 8 => ⟨1, 8, 0, [9752286950609048], 8865523766908860, 10776103006943515⟩
-  | 9 => ⟨1, 9, 0, [11431635930456853], 10229242481127749, 12148439754795258⟩
-  | 10 => ⟨1, 10, 0, [13094079790052754], 11586122444262674, 13514434805869418⟩
-  | 11 => ⟨1, 11, 0, [14739618529396751], 12929637478180507, 14866567873420105⟩
-  | 12 => ⟨1, 12, 0, [16372292754549544], 14267138401026664, 16213183884205497⟩
-  | 13 => ⟨1, 13, 0, [17984433573395877], 15595155963731509, 17550316534849577⟩
-  | 14 => ⟨1, 14, 0, [19579669271990306], 16913690166295042, 18877965825352345⟩
-  | 15 => ⟨1, 15, 0, [21152722284253699], 18217210159616907, 20190103852307064⟩
-  | 16 => ⟨1, 16, 0, [22708045536252900], 19510422152785172, 21491933879108183⟩
-  | 17 => ⟨1, 17, 0, [24239536821896489], 20793326145799837, 22783455905755702⟩
-  | 18 => ⟨1, 18, 0, [25752473707263598], 22065922138660902, 24064669932249621⟩
-  | 19 => ⟨1, 19, 0, [27246856192354227], 23328210131368367, 25335575958589940⟩
-  | 20 => ⟨1, 20, 0, [28715345111058524], 24572597674791156, 26588084481339202⟩
-  | 21 => ⟨1, 21, 0, [30172206475590049], 25813857347185277, 27837962187366177⟩
-  | 22 => ⟨1, 22, 0, [31610513439845094], 27036391930282434, 29068617749789807⟩
-  | 23 => ⟨1, 23, 0, [33030266003823659], 28247793873213703, 30288140672047549⟩
-  | 24 => ⟨1, 24, 0, [34413487275256888], 29438821446823432, 31486792170677370⟩
-  | 25 => ⟨1, 25, 0, [35785905632529633], 30627545789416781, 32683637492597192⟩
-  | 26 => ⟨1, 26, 0, [37119318777220178], 31795071122676302, 33858786750876805⟩
-  | 27 => ⟨1, 27, 0, [38441929007750239], 32950639175757647, 35021978728978242⟩
-  | 28 => ⟨1, 28, 0, [39723060105661236], 34094249948660816, 36173213426901503⟩
-  | 29 => ⟨1, 29, 0, [41004438335576897], 35225903441385809, 37312490844646588⟩
-  | 30 => ⟨1, 30, 0, [42254150519020210], 36357315303125142, 38452023685712394⟩
-  | 31 => ⟨1, 31, 0, [43470959695972743], 37465466555499927, 39567798863107271⟩
-  | 32 => ⟨1, 32, 0, [44665915912599644], 38574200816901340, 40684654103835157⟩
-  | 33 => ⟨1, 33, 0, [45813620516521465], 39658849828925917, 41776927040879826⟩
-  | 34 => ⟨1, 34, 0, [46950934526288946], 40731541560772318, 42857242697746319⟩
-  | 35 => ⟨1, 35, 0, [48038523003314483], 41792276012440543, 43925601074434636⟩
-  | 36 => ⟨1, 36, 0, [49129657172393836], 42826863614701212, 44967315547409016⟩
-  | 37 => ⟨1, 37, 0, [50169416528706669], 43848669296771417, 45996248100192932⟩
-  | 38 => ⟨1, 38, 0, [51170088078436562], 44857693058651158, 47012398732786384⟩
-  | 39 => ⟨1, 39, 0, [52130434861565083], 45838508371092623, 47999843861635179⟩
-  | 40 => ⟨1, 40, 0, [53064805484306532], 46821555972585292, 48990018333841559⟩
-  | 41 => ⟨1, 41, 0, [53957202060422033], 47759319315367297, 49933914438724513⟩
-  | 42 => ⟨1, 42, 0, [54822797836138174], 48699314947200506, 50880539886965052⟩
-  | 43 => ⟨1, 43, 0, [55627947758952627], 49608628209558575, 51795985911424070⟩
-  | 44 => ⟨1, 44, 0, [56387412755085836], 50520998400980136, 52714985919252961⟩
-  | 45 => ⟨1, 45, 0, [57099955864519369], 51401861582914269, 53601981863288043⟩
-  | 46 => ⟨1, 46, 0, [57764340127234794], 52286606333924182, 54493356430705286⟩
-  | 47 => ⟨1, 47, 0, [58379328583213679], 53139019435434379, 55351902294316432⟩
-  | 48 => ⟨1, 48, 0, [58924800146155708], 53977001336729536, 56196016957712538⟩
-  | 49 => ⟨1, 49, 0, [59398280896024017], 54800552037809653, 57025700420893604⟩
-  | 50 => ⟨1, 50, 0, [59817005679075914], 55589709489359334, 57820493580237853⟩
-  | 51 => ⟨1, 51, 0, [60139495362692335], 56343236731360147, 58579159475726853⟩
-  | 52 => ⟨1, 52, 0, [60382572473124444], 57080683493121344, 59321744890976237⟩
-  | 53 => ⟨1, 53, 0, [60522817364022773], 57780850765309097, 60026553762345796⟩
-  | 54 => ⟨1, 54, 0, [60556519155332026], 58464112917244946, 60714457513463451⟩
-  | 55 => ⟨1, 55, 0, [60556519155332026], 59130469948928891, 61385456144329202⟩
-  | 56 => ⟨1, 56, 0, [60556519155332026], 59802357829713192, 62062482678601690⟩
-  | 57 => ⟨1, 57, 0, [60556519155332026], 60412468651541069, 62676738045304992⟩
-  | 58 => ⟨1, 58, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 59 => ⟨1, 59, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 60 => ⟨1, 60, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 61 => ⟨1, 61, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 62 => ⟨1, 62, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 63 => ⟨1, 63, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 64 => ⟨1, 64, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 65 => ⟨1, 65, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 66 => ⟨1, 66, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 67 => ⟨1, 67, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 68 => ⟨1, 68, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 69 => ⟨1, 69, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 70 => ⟨1, 70, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 71 => ⟨1, 71, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 72 => ⟨1, 72, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 73 => ⟨1, 73, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 74 => ⟨1, 74, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 75 => ⟨1, 75, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 76 => ⟨1, 76, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 77 => ⟨1, 77, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 78 => ⟨1, 78, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 79 => ⟨1, 79, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 80 => ⟨1, 80, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 81 => ⟨1, 81, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 82 => ⟨1, 82, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 83 => ⟨1, 83, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 84 => ⟨1, 84, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 85 => ⟨1, 85, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 86 => ⟨1, 86, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 87 => ⟨1, 87, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 88 => ⟨1, 88, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 89 => ⟨1, 89, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 90 => ⟨1, 90, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 91 => ⟨1, 91, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 92 => ⟨1, 92, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 93 => ⟨1, 93, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 94 => ⟨1, 94, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 95 => ⟨1, 95, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 96 => ⟨1, 96, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 97 => ⟨1, 97, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 98 => ⟨1, 98, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 99 => ⟨1, 99, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 100 => ⟨1, 100, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 101 => ⟨1, 101, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 102 => ⟨1, 102, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 103 => ⟨1, 103, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 104 => ⟨1, 104, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 105 => ⟨1, 105, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 106 => ⟨1, 106, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 107 => ⟨1, 107, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 108 => ⟨1, 108, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 109 => ⟨1, 109, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 110 => ⟨1, 110, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 111 => ⟨1, 111, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 112 => ⟨1, 112, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 113 => ⟨1, 113, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 114 => ⟨1, 114, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 115 => ⟨1, 115, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 116 => ⟨1, 116, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 117 => ⟨1, 117, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 118 => ⟨1, 118, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 119 => ⟨1, 119, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 120 => ⟨1, 120, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 121 => ⟨1, 121, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 122 => ⟨1, 122, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 123 => ⟨1, 123, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 124 => ⟨1, 124, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 125 => ⟨1, 125, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 126 => ⟨1, 126, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 127 => ⟨1, 127, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 128 => ⟨1, 128, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 129 => ⟨1, 129, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
-  | 130 => ⟨1, 130, 0, [60556519155332026], 61004849713104754, 63273263651744102⟩
+  | 0 => ⟨1, 0, 0, [0], 0, 0, 1753818995971075⟩
+  | 1 => ⟨1, 1, 0, [0], 0, 0, 2363844348543977⟩
+  | 2 => ⟨1, 2, 0, [0], 0, 0, 2970571141067727⟩
+  | 3 => ⟨1, 3, 0, [0], 0, 1140376019412950, 4804136637656423⟩
+  | 4 => ⟨1, 4, 0, [0], 0, 2954053649046040, 6626726408297805⟩
+  | 5 => ⟨1, 5, 0, [0], 0, 4752804997727895, 8437103492973441⟩
+  | 6 => ⟨1, 6, 0, [0], 0, 6534733986887897, 10238664943301479⟩
+  | 7 => ⟨1, 7, 0, [0], 0, 8302561335108952, 12029918393475917⟩
+  | 8 => ⟨1, 8, 0, [0], 0, 10052741683795866, 13807722197666177⟩
+  | 9 => ⟨1, 9, 0, [0], 0, 11786841552243164, 15574393361690549⟩
+  | 10 => ⟨1, 10, 0, [0], 162682548346601, 13255999200271570, 17096044535753774⟩
+  | 11 => ⟨1, 11, 0, [0], 1731909776441674, 14738772455462307, 18566419490756469⟩
+  | 12 => ⟨1, 12, 0, [0], 3284231884284843, 16367401163066792, 20218327132584395⟩
+  | 13 => ⟨1, 13, 0, [0], 4817758656798514, 17974671991081840, 21848126408299119⟩
+  | 14 => ⟨1, 14, 0, [0], 6333555669047993, 19564213058832696, 23460195923749651⟩
+  | 15 => ⟨1, 15, 0, [0], 7831622921033280, 21136024366319360, 25054535678935991⟩
+  | 16 => ⟨1, 16, 0, [0], 9311960412754375, 22690105913541832, 26631145673858139⟩
+  | 17 => ⟨1, 17, 0, [0], 10774568144211278, 24226457700500112, 28190025908516095⟩
+  | 18 => ⟨1, 18, 0, [0], 12215494300295675, 25738565367825947, 29723911537017841⟩
+  | 19 => ⟨1, 19, 0, [0], 13637866056103592, 27232118634875302, 31239242765243107⟩
+  | 20 => ⟨1, 20, 0, [0], 15041683411635029, 28707117501648177, 32736019593191893⟩
+  | 21 => ⟨1, 21, 0, [0], 16421757591763240, 30155810648757887, 34205740214953749⟩
+  | 22 => ⟨1, 22, 0, [0], 17782452731602683, 31585124755578829, 35656081796426837⟩
+  | 23 => ⟨1, 23, 0, [0], 19123768831153358, 32995059822111003, 37087044337611157⟩
+  | 24 => ⟨1, 24, 0, [0], 20439280155270087, 34376627568949292, 38488889072577827⟩
+  | 25 => ⟨1, 25, 0, [0], 21741425854237082, 35747392234897786, 39880681213178467⟩
+  | 26 => ⟨1, 26, 0, [0], 23009691762600377, 37079152021722702, 41231967501607999⟩
+  | 27 => ⟨1, 27, 0, [0], 24256929350650328, 38389883488234274, 42562225469724187⟩
+  | 28 => ⟨1, 28, 0, [0], 25491213633556689, 39690224193862195, 43882843163480489⟩
+  | 29 => ⟨1, 29, 0, [0], 26688319565810198, 40948261460317386, 45159656445016531⟩
+  | 30 => ⟨1, 30, 0, [0], 27863572537738075, 42184445766446945, 46414616766226941⟩
+  | 31 => ⟨1, 31, 0, [0], 29016972549340320, 43398777112250872, 47647724127111719⟩
+  | 32 => ⟨1, 32, 0, [0], 30148519600616933, 44591255497729167, 48858978527670865⟩
+  | 33 => ⟨1, 33, 0, [0], 31237940461166966, 45736482603961004, 50021480675936023⟩
+  | 34 => ⟨1, 34, 0, [0], 32303859081366791, 46858207469842633, 51160480583850973⟩
+  | 35 => ⟨1, 35, 0, [0], 33346275461216408, 47956430095374054, 52275978251415715⟩
+  | 36 => ⟨1, 36, 0, [0], 34353816025496911, 49017214361076422, 53353287072627639⟩
+  | 37 => ⟨1, 37, 0, [0], 35337029709414918, 50053671746416294, 54406269013477067⟩
+  | 38 => ⟨1, 38, 0, [0], 36283718297739235, 51051041491902537, 55419412827949101⟩
+  | 39 => ⟨1, 39, 0, [0], 37192644830451430, 52008086637516719, 56391481556025309⟩
+  | 40 => ⟨1, 40, 0, [0], 38062572347533071, 52923570223240408, 57321238237687259⟩
+  | 41 => ⟨1, 41, 0, [0], 38905699064215352, 53812253008564737, 58224194118949849⟩
+  | 42 => ⟨1, 42, 0, [0], 39694329989986733, 54641314914458288, 59066028147734131⟩
+  | 43 => ⟨1, 43, 0, [0], 40454510835334178, 55441926739927903, 59879412096094477⟩
+  | 44 => ⟨1, 44, 0, [0], 41171569464989629, 56196853805445585, 60646360797979125⟩
+  | 45 => ⟨1, 45, 0, [0], 41829184463660452, 56887212151458761, 61347239807311737⟩
+  | 46 => ⟨1, 46, 0, [0], 42455875461870475, 57546646497011137, 62017194816183549⟩
+  | 47 => ⟨1, 47, 0, [0], 43003915173760228, 58119741923463426, 62598559446383979⟩
+  | 48 => ⟨1, 48, 0, [0], 43518556965152317, 58659439429418051, 63146526156086745⟩
+  | 49 => ⟨1, 49, 0, [0], 43949599630150408, 59107850176198861, 63600954647044401⟩
+  | 50 => ⟨1, 50, 0, [0], 44327624399309049, 59500680482880282, 63999052211378903⟩
+  | 51 => ⟨1, 51, 0, [0], 44616277561987676, 59796451550301872, 64297839076882279⟩
+  | 52 => ⟨1, 52, 0, [0], 44829818933448203, 60011985737985484, 64514888089600147⟩
+  | 53 => ⟨1, 53, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 54 => ⟨1, 54, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 55 => ⟨1, 55, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 56 => ⟨1, 56, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 57 => ⟨1, 57, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 58 => ⟨1, 58, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 59 => ⟨1, 59, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 60 => ⟨1, 60, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 61 => ⟨1, 61, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 62 => ⟨1, 62, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 63 => ⟨1, 63, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 64 => ⟨1, 64, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 65 => ⟨1, 65, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 66 => ⟨1, 66, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 67 => ⟨1, 67, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 68 => ⟨1, 68, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 69 => ⟨1, 69, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 70 => ⟨1, 70, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 71 => ⟨1, 71, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 72 => ⟨1, 72, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 73 => ⟨1, 73, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 74 => ⟨1, 74, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 75 => ⟨1, 75, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 76 => ⟨1, 76, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 77 => ⟨1, 77, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 78 => ⟨1, 78, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 79 => ⟨1, 79, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 80 => ⟨1, 80, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 81 => ⟨1, 81, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 82 => ⟨1, 82, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 83 => ⟨1, 83, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 84 => ⟨1, 84, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 85 => ⟨1, 85, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 86 => ⟨1, 86, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 87 => ⟨1, 87, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 88 => ⟨1, 88, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 89 => ⟨1, 89, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 90 => ⟨1, 90, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 91 => ⟨1, 91, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 92 => ⟨1, 92, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 93 => ⟨1, 93, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 94 => ⟨1, 94, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 95 => ⟨1, 95, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 96 => ⟨1, 96, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 97 => ⟨1, 97, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 98 => ⟨1, 98, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 99 => ⟨1, 99, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 100 => ⟨1, 100, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 101 => ⟨1, 101, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 102 => ⟨1, 102, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 103 => ⟨1, 103, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 104 => ⟨1, 104, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 105 => ⟨1, 105, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 106 => ⟨1, 106, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 107 => ⟨1, 107, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 108 => ⟨1, 108, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 109 => ⟨1, 109, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 110 => ⟨1, 110, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 111 => ⟨1, 111, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 112 => ⟨1, 112, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 113 => ⟨1, 113, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 114 => ⟨1, 114, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 115 => ⟨1, 115, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 116 => ⟨1, 116, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 117 => ⟨1, 117, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 118 => ⟨1, 118, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 119 => ⟨1, 119, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 120 => ⟨1, 120, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 121 => ⟨1, 121, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 122 => ⟨1, 122, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 123 => ⟨1, 123, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 124 => ⟨1, 124, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 125 => ⟨1, 125, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 126 => ⟨1, 126, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 127 => ⟨1, 127, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 128 => ⟨1, 128, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 129 => ⟨1, 129, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 130 => ⟨1, 130, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 131 => ⟨1, 131, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 135 => ⟨1, 135, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
+  | 136 => ⟨1, 136, 0, [0], 44929008563007058, 60102918006727668, 64604333237281527⟩
   | _ => defaultPrefix
 
 end ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData01
@@ -20225,270 +22913,276 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 
 def threshold : ℕ → ThresholdReceipt
-  | 0 => ⟨2, 0, 4200, 4384, 3487, 4298⟩
-  | 1 => ⟨2, 1, 4180, 4364, 3474, 4284⟩
-  | 2 => ⟨2, 2, 4160, 4344, 3462, 4270⟩
-  | 3 => ⟨2, 3, 4141, 4324, 3449, 4255⟩
-  | 4 => ⟨2, 4, 4121, 4304, 3437, 4241⟩
-  | 5 => ⟨2, 5, 4100, 4283, 3425, 4226⟩
-  | 6 => ⟨2, 6, 4080, 4263, 3413, 4211⟩
-  | 7 => ⟨2, 7, 4059, 4243, 3401, 4196⟩
-  | 8 => ⟨2, 8, 4039, 4223, 3389, 4181⟩
-  | 9 => ⟨2, 9, 4018, 4202, 3377, 4165⟩
-  | 10 => ⟨2, 10, 3996, 4181, 3365, 4150⟩
-  | 11 => ⟨2, 11, 3975, 4160, 3352, 4134⟩
-  | 12 => ⟨2, 12, 3953, 4139, 3340, 4118⟩
-  | 13 => ⟨2, 13, 3931, 4117, 3327, 4102⟩
-  | 14 => ⟨2, 14, 3909, 4094, 3314, 4085⟩
-  | 15 => ⟨2, 15, 3887, 4071, 3301, 4068⟩
-  | 16 => ⟨2, 16, 3864, 4049, 3288, 4052⟩
-  | 17 => ⟨2, 17, 3841, 4026, 3274, 4034⟩
-  | 18 => ⟨2, 18, 3818, 4004, 3261, 4017⟩
-  | 19 => ⟨2, 19, 3794, 3981, 3247, 3999⟩
-  | 20 => ⟨2, 20, 3770, 3958, 3233, 3981⟩
-  | 21 => ⟨2, 21, 3746, 3934, 3219, 3963⟩
-  | 22 => ⟨2, 22, 3721, 3909, 3204, 3945⟩
-  | 23 => ⟨2, 23, 3696, 3884, 3189, 3926⟩
-  | 24 => ⟨2, 24, 3671, 3859, 3175, 3907⟩
-  | 25 => ⟨2, 25, 3645, 3834, 3160, 3888⟩
-  | 26 => ⟨2, 26, 3619, 3809, 3146, 3869⟩
-  | 27 => ⟨2, 27, 3593, 3783, 3132, 3850⟩
-  | 28 => ⟨2, 28, 3566, 3757, 3118, 3832⟩
-  | 29 => ⟨2, 29, 3539, 3730, 3103, 3815⟩
-  | 30 => ⟨2, 30, 3511, 3702, 3089, 3799⟩
-  | 31 => ⟨2, 31, 3482, 3674, 3074, 3784⟩
-  | 32 => ⟨2, 32, 3453, 3646, 3059, 3768⟩
-  | 33 => ⟨2, 33, 3424, 3618, 3043, 3752⟩
-  | 34 => ⟨2, 34, 3393, 3589, 3028, 3736⟩
-  | 35 => ⟨2, 35, 3362, 3559, 3012, 3720⟩
-  | 36 => ⟨2, 36, 3331, 3528, 2995, 3703⟩
-  | 37 => ⟨2, 37, 3298, 3497, 2979, 3686⟩
-  | 38 => ⟨2, 38, 3265, 3466, 2962, 3669⟩
-  | 39 => ⟨2, 39, 3231, 3433, 2944, 3651⟩
-  | 40 => ⟨2, 40, 3196, 3399, 2927, 3633⟩
-  | 41 => ⟨2, 41, 3160, 3365, 2910, 3614⟩
-  | 42 => ⟨2, 42, 3122, 3330, 2894, 3595⟩
-  | 43 => ⟨2, 43, 3083, 3294, 2877, 3576⟩
-  | 44 => ⟨2, 44, 3043, 3256, 2859, 3556⟩
-  | 45 => ⟨2, 45, 3001, 3217, 2841, 3535⟩
-  | 46 => ⟨2, 46, 2957, 3177, 2823, 3515⟩
-  | 47 => ⟨2, 47, 2911, 3135, 2804, 3493⟩
-  | 48 => ⟨2, 48, 2863, 3091, 2785, 3472⟩
-  | 49 => ⟨2, 49, 2812, 3046, 2766, 3449⟩
-  | 50 => ⟨2, 50, 2757, 2998, 2746, 3427⟩
-  | 51 => ⟨2, 51, 2699, 2947, 2725, 3403⟩
-  | 52 => ⟨2, 52, 2637, 2894, 2705, 3379⟩
-  | 53 => ⟨2, 53, 2570, 2837, 2685, 3355⟩
-  | 54 => ⟨2, 54, 2500, 2776, 2664, 3329⟩
-  | 55 => ⟨2, 55, 2426, 2711, 2643, 3304⟩
-  | 56 => ⟨2, 56, 2347, 2643, 2621, 3277⟩
-  | 57 => ⟨2, 57, 2265, 2570, 2598, 3250⟩
-  | 58 => ⟨2, 58, 2178, 2494, 2574, 3222⟩
-  | 59 => ⟨2, 59, 2088, 2413, 2550, 3193⟩
-  | 60 => ⟨2, 60, 1993, 2329, 2526, 3165⟩
-  | 61 => ⟨2, 61, 1894, 2241, 2501, 3138⟩
-  | 62 => ⟨2, 62, 1791, 2149, 2475, 3111⟩
-  | 63 => ⟨2, 63, 1684, 2053, 2448, 3083⟩
-  | 64 => ⟨2, 64, 1573, 1953, 2420, 3053⟩
-  | 65 => ⟨2, 65, 1458, 1850, 2391, 3022⟩
-  | 66 => ⟨2, 66, 1339, 1742, 2362, 2990⟩
-  | 67 => ⟨2, 67, 1215, 1630, 2330, 2956⟩
-  | 68 => ⟨2, 68, 1088, 1515, 2298, 2921⟩
-  | 69 => ⟨2, 69, 957, 1395, 2263, 2884⟩
-  | 70 => ⟨2, 70, 821, 1272, 2227, 2845⟩
-  | 71 => ⟨2, 71, 681, 1145, 2189, 2805⟩
-  | 72 => ⟨2, 72, 538, 1014, 2150, 2762⟩
-  | 73 => ⟨2, 73, 390, 878, 2108, 2718⟩
-  | 74 => ⟨2, 74, 238, 740, 2065, 2672⟩
-  | 75 => ⟨2, 75, 82, 597, 2020, 2624⟩
-  | 76 => ⟨2, 76, 0, 449, 1973, 2573⟩
-  | 77 => ⟨2, 77, 0, 299, 1924, 2521⟩
-  | 78 => ⟨2, 78, 0, 144, 1873, 2466⟩
-  | 79 => ⟨2, 79, 0, 0, 1821, 2409⟩
-  | 80 => ⟨2, 80, 0, 0, 1767, 2350⟩
-  | 81 => ⟨2, 81, 0, 0, 1710, 2288⟩
-  | 82 => ⟨2, 82, 0, 0, 1652, 2224⟩
-  | 83 => ⟨2, 83, 0, 0, 1592, 2157⟩
-  | 84 => ⟨2, 84, 0, 0, 1530, 2088⟩
-  | 85 => ⟨2, 85, 0, 0, 1467, 2017⟩
-  | 86 => ⟨2, 86, 0, 0, 1402, 1944⟩
-  | 87 => ⟨2, 87, 0, 0, 1334, 1870⟩
-  | 88 => ⟨2, 88, 0, 0, 1265, 1794⟩
-  | 89 => ⟨2, 89, 0, 0, 1194, 1716⟩
-  | 90 => ⟨2, 90, 0, 0, 1121, 1636⟩
-  | 91 => ⟨2, 91, 0, 0, 1046, 1553⟩
-  | 92 => ⟨2, 92, 0, 0, 969, 1468⟩
-  | 93 => ⟨2, 93, 0, 0, 891, 1381⟩
-  | 94 => ⟨2, 94, 0, 0, 811, 1291⟩
-  | 95 => ⟨2, 95, 0, 0, 728, 1199⟩
-  | 96 => ⟨2, 96, 0, 0, 644, 1105⟩
-  | 97 => ⟨2, 97, 0, 0, 559, 1008⟩
-  | 98 => ⟨2, 98, 0, 0, 471, 908⟩
-  | 99 => ⟨2, 99, 0, 0, 381, 806⟩
-  | 100 => ⟨2, 100, 0, 0, 289, 702⟩
-  | 101 => ⟨2, 101, 0, 0, 196, 595⟩
-  | 102 => ⟨2, 102, 0, 0, 100, 486⟩
-  | 103 => ⟨2, 103, 0, 0, 4, 374⟩
-  | 104 => ⟨2, 104, 0, 0, 0, 261⟩
-  | 105 => ⟨2, 105, 0, 0, 0, 146⟩
-  | 106 => ⟨2, 106, 0, 0, 0, 29⟩
-  | 107 => ⟨2, 107, 0, 0, 0, 0⟩
-  | 108 => ⟨2, 108, 0, 0, 0, 0⟩
-  | 109 => ⟨2, 109, 0, 0, 0, 0⟩
-  | 110 => ⟨2, 110, 0, 0, 0, 0⟩
-  | 111 => ⟨2, 111, 0, 0, 0, 0⟩
-  | 112 => ⟨2, 112, 0, 0, 0, 0⟩
-  | 113 => ⟨2, 113, 0, 0, 0, 0⟩
-  | 114 => ⟨2, 114, 0, 0, 0, 0⟩
-  | 115 => ⟨2, 115, 0, 0, 0, 0⟩
-  | 116 => ⟨2, 116, 0, 0, 0, 0⟩
-  | 117 => ⟨2, 117, 0, 0, 0, 0⟩
-  | 118 => ⟨2, 118, 0, 0, 0, 0⟩
-  | 119 => ⟨2, 119, 0, 0, 0, 0⟩
-  | 120 => ⟨2, 120, 0, 0, 0, 0⟩
-  | 121 => ⟨2, 121, 0, 0, 0, 0⟩
-  | 122 => ⟨2, 122, 0, 0, 0, 0⟩
-  | 123 => ⟨2, 123, 0, 0, 0, 0⟩
-  | 124 => ⟨2, 124, 0, 0, 0, 0⟩
-  | 125 => ⟨2, 125, 0, 0, 0, 0⟩
-  | 126 => ⟨2, 126, 0, 0, 0, 0⟩
-  | 127 => ⟨2, 127, 0, 0, 0, 0⟩
-  | 128 => ⟨2, 128, 0, 0, 0, 0⟩
-  | 129 => ⟨2, 129, 0, 0, 0, 0⟩
-  | 130 => ⟨2, 130, 0, 0, 0, 0⟩
+  | 0 => ⟨2, 0, 4203, 4314, 4384, 4507, 4455⟩
+  | 1 => ⟨2, 1, 4184, 4294, 4365, 4487, 4442⟩
+  | 2 => ⟨2, 2, 4165, 4275, 4345, 4468, 4429⟩
+  | 3 => ⟨2, 3, 4146, 4255, 4325, 4449, 4415⟩
+  | 4 => ⟨2, 4, 4127, 4235, 4305, 4430, 4402⟩
+  | 5 => ⟨2, 5, 4107, 4215, 4285, 4410, 4388⟩
+  | 6 => ⟨2, 6, 4087, 4194, 4264, 4390, 4374⟩
+  | 7 => ⟨2, 7, 4068, 4174, 4244, 4369, 4360⟩
+  | 8 => ⟨2, 8, 4047, 4153, 4223, 4348, 4346⟩
+  | 9 => ⟨2, 9, 4027, 4132, 4202, 4327, 4332⟩
+  | 10 => ⟨2, 10, 4007, 4111, 4180, 4306, 4317⟩
+  | 11 => ⟨2, 11, 3986, 4089, 4159, 4284, 4303⟩
+  | 12 => ⟨2, 12, 3965, 4068, 4137, 4262, 4288⟩
+  | 13 => ⟨2, 13, 3944, 4046, 4115, 4241, 4273⟩
+  | 14 => ⟨2, 14, 3922, 4024, 4093, 4220, 4257⟩
+  | 15 => ⟨2, 15, 3901, 4002, 4071, 4198, 4242⟩
+  | 16 => ⟨2, 16, 3879, 3979, 4048, 4176, 4226⟩
+  | 17 => ⟨2, 17, 3857, 3956, 4025, 4154, 4210⟩
+  | 18 => ⟨2, 18, 3834, 3933, 4002, 4131, 4194⟩
+  | 19 => ⟨2, 19, 3811, 3910, 3978, 4107, 4178⟩
+  | 20 => ⟨2, 20, 3788, 3886, 3955, 4083, 4161⟩
+  | 21 => ⟨2, 21, 3765, 3862, 3931, 4059, 4144⟩
+  | 22 => ⟨2, 22, 3742, 3837, 3906, 4035, 4127⟩
+  | 23 => ⟨2, 23, 3718, 3813, 3881, 4011, 4110⟩
+  | 24 => ⟨2, 24, 3693, 3788, 3856, 3987, 4092⟩
+  | 25 => ⟨2, 25, 3669, 3762, 3831, 3963, 4074⟩
+  | 26 => ⟨2, 26, 3644, 3737, 3805, 3937, 4056⟩
+  | 27 => ⟨2, 27, 3619, 3710, 3779, 3911, 4038⟩
+  | 28 => ⟨2, 28, 3593, 3684, 3752, 3885, 4019⟩
+  | 29 => ⟨2, 29, 3567, 3657, 3725, 3858, 4001⟩
+  | 30 => ⟨2, 30, 3540, 3629, 3698, 3831, 3981⟩
+  | 31 => ⟨2, 31, 3513, 3601, 3670, 3805, 3962⟩
+  | 32 => ⟨2, 32, 3485, 3573, 3641, 3777, 3942⟩
+  | 33 => ⟨2, 33, 3457, 3544, 3612, 3749, 3922⟩
+  | 34 => ⟨2, 34, 3429, 3514, 3583, 3720, 3902⟩
+  | 35 => ⟨2, 35, 3399, 3484, 3552, 3690, 3881⟩
+  | 36 => ⟨2, 36, 3369, 3453, 3521, 3660, 3860⟩
+  | 37 => ⟨2, 37, 3339, 3421, 3490, 3631, 3839⟩
+  | 38 => ⟨2, 38, 3308, 3389, 3457, 3600, 3820⟩
+  | 39 => ⟨2, 39, 3276, 3356, 3425, 3568, 3802⟩
+  | 40 => ⟨2, 40, 3243, 3322, 3391, 3535, 3786⟩
+  | 41 => ⟨2, 41, 3209, 3286, 3356, 3501, 3769⟩
+  | 42 => ⟨2, 42, 3174, 3250, 3320, 3468, 3751⟩
+  | 43 => ⟨2, 43, 3138, 3213, 3283, 3433, 3734⟩
+  | 44 => ⟨2, 44, 3101, 3175, 3245, 3397, 3716⟩
+  | 45 => ⟨2, 45, 3063, 3135, 3205, 3359, 3697⟩
+  | 46 => ⟨2, 46, 3023, 3093, 3164, 3321, 3678⟩
+  | 47 => ⟨2, 47, 2981, 3050, 3122, 3282, 3659⟩
+  | 48 => ⟨2, 48, 2938, 3005, 3077, 3240, 3639⟩
+  | 49 => ⟨2, 49, 2892, 2957, 3030, 3197, 3619⟩
+  | 50 => ⟨2, 50, 2844, 2907, 2981, 3153, 3598⟩
+  | 51 => ⟨2, 51, 2793, 2853, 2929, 3106, 3577⟩
+  | 52 => ⟨2, 52, 2739, 2796, 2874, 3056, 3555⟩
+  | 53 => ⟨2, 53, 2681, 2736, 2815, 3004, 3533⟩
+  | 54 => ⟨2, 54, 2619, 2672, 2752, 2949, 3510⟩
+  | 55 => ⟨2, 55, 2554, 2603, 2686, 2890, 3487⟩
+  | 56 => ⟨2, 56, 2485, 2531, 2615, 2828, 3463⟩
+  | 57 => ⟨2, 57, 2412, 2454, 2540, 2762, 3438⟩
+  | 58 => ⟨2, 58, 2335, 2374, 2462, 2692, 3413⟩
+  | 59 => ⟨2, 59, 2254, 2290, 2380, 2618, 3387⟩
+  | 60 => ⟨2, 60, 2170, 2201, 2293, 2540, 3360⟩
+  | 61 => ⟨2, 61, 2082, 2109, 2203, 2459, 3332⟩
+  | 62 => ⟨2, 62, 1989, 2013, 2108, 2373, 3304⟩
+  | 63 => ⟨2, 63, 1893, 1913, 2010, 2284, 3275⟩
+  | 64 => ⟨2, 64, 1794, 1809, 1908, 2192, 3245⟩
+  | 65 => ⟨2, 65, 1690, 1700, 1802, 2095, 3214⟩
+  | 66 => ⟨2, 66, 1582, 1588, 1691, 1994, 3182⟩
+  | 67 => ⟨2, 67, 1471, 1472, 1577, 1890, 3151⟩
+  | 68 => ⟨2, 68, 1356, 1352, 1459, 1782, 3120⟩
+  | 69 => ⟨2, 69, 1237, 1228, 1337, 1670, 3088⟩
+  | 70 => ⟨2, 70, 1114, 1100, 1211, 1555, 3055⟩
+  | 71 => ⟨2, 71, 987, 968, 1081, 1435, 3019⟩
+  | 72 => ⟨2, 72, 857, 832, 947, 1311, 2982⟩
+  | 73 => ⟨2, 73, 722, 692, 809, 1184, 2943⟩
+  | 74 => ⟨2, 74, 584, 548, 667, 1054, 2903⟩
+  | 75 => ⟨2, 75, 442, 400, 521, 919, 2860⟩
+  | 76 => ⟨2, 76, 296, 248, 371, 780, 2816⟩
+  | 77 => ⟨2, 77, 146, 93, 217, 638, 2770⟩
+  | 78 => ⟨2, 78, 0, 0, 59, 491, 2721⟩
+  | 79 => ⟨2, 79, 0, 0, 0, 341, 2671⟩
+  | 80 => ⟨2, 80, 0, 0, 0, 187, 2618⟩
+  | 81 => ⟨2, 81, 0, 0, 0, 30, 2563⟩
+  | 82 => ⟨2, 82, 0, 0, 0, 0, 2505⟩
+  | 83 => ⟨2, 83, 0, 0, 0, 0, 2446⟩
+  | 84 => ⟨2, 84, 0, 0, 0, 0, 2383⟩
+  | 85 => ⟨2, 85, 0, 0, 0, 0, 2319⟩
+  | 86 => ⟨2, 86, 0, 0, 0, 0, 2253⟩
+  | 87 => ⟨2, 87, 0, 0, 0, 0, 2186⟩
+  | 88 => ⟨2, 88, 0, 0, 0, 0, 2117⟩
+  | 89 => ⟨2, 89, 0, 0, 0, 0, 2046⟩
+  | 90 => ⟨2, 90, 0, 0, 0, 0, 1973⟩
+  | 91 => ⟨2, 91, 0, 0, 0, 0, 1898⟩
+  | 92 => ⟨2, 92, 0, 0, 0, 0, 1820⟩
+  | 93 => ⟨2, 93, 0, 0, 0, 0, 1741⟩
+  | 94 => ⟨2, 94, 0, 0, 0, 0, 1659⟩
+  | 95 => ⟨2, 95, 0, 0, 0, 0, 1574⟩
+  | 96 => ⟨2, 96, 0, 0, 0, 0, 1487⟩
+  | 97 => ⟨2, 97, 0, 0, 0, 0, 1398⟩
+  | 98 => ⟨2, 98, 0, 0, 0, 0, 1307⟩
+  | 99 => ⟨2, 99, 0, 0, 0, 0, 1213⟩
+  | 100 => ⟨2, 100, 0, 0, 0, 0, 1117⟩
+  | 101 => ⟨2, 101, 0, 0, 0, 0, 1019⟩
+  | 102 => ⟨2, 102, 0, 0, 0, 0, 918⟩
+  | 103 => ⟨2, 103, 0, 0, 0, 0, 815⟩
+  | 104 => ⟨2, 104, 0, 0, 0, 0, 710⟩
+  | 105 => ⟨2, 105, 0, 0, 0, 0, 603⟩
+  | 106 => ⟨2, 106, 0, 0, 0, 0, 496⟩
+  | 107 => ⟨2, 107, 0, 0, 0, 0, 387⟩
+  | 108 => ⟨2, 108, 0, 0, 0, 0, 275⟩
+  | 109 => ⟨2, 109, 0, 0, 0, 0, 161⟩
+  | 110 => ⟨2, 110, 0, 0, 0, 0, 45⟩
+  | 111 => ⟨2, 111, 0, 0, 0, 0, 0⟩
+  | 112 => ⟨2, 112, 0, 0, 0, 0, 0⟩
+  | 113 => ⟨2, 113, 0, 0, 0, 0, 0⟩
+  | 114 => ⟨2, 114, 0, 0, 0, 0, 0⟩
+  | 115 => ⟨2, 115, 0, 0, 0, 0, 0⟩
+  | 116 => ⟨2, 116, 0, 0, 0, 0, 0⟩
+  | 117 => ⟨2, 117, 0, 0, 0, 0, 0⟩
+  | 118 => ⟨2, 118, 0, 0, 0, 0, 0⟩
+  | 119 => ⟨2, 119, 0, 0, 0, 0, 0⟩
+  | 120 => ⟨2, 120, 0, 0, 0, 0, 0⟩
+  | 121 => ⟨2, 121, 0, 0, 0, 0, 0⟩
+  | 122 => ⟨2, 122, 0, 0, 0, 0, 0⟩
+  | 123 => ⟨2, 123, 0, 0, 0, 0, 0⟩
+  | 124 => ⟨2, 124, 0, 0, 0, 0, 0⟩
+  | 125 => ⟨2, 125, 0, 0, 0, 0, 0⟩
+  | 126 => ⟨2, 126, 0, 0, 0, 0, 0⟩
+  | 127 => ⟨2, 127, 0, 0, 0, 0, 0⟩
+  | 128 => ⟨2, 128, 0, 0, 0, 0, 0⟩
+  | 129 => ⟨2, 129, 0, 0, 0, 0, 0⟩
+  | 130 => ⟨2, 130, 0, 0, 0, 0, 0⟩
+  | 131 => ⟨2, 131, 0, 0, 0, 0, 0⟩
+  | 135 => ⟨2, 135, 0, 0, 0, 0, 0⟩
+  | 136 => ⟨2, 136, 0, 0, 0, 0, 0⟩
   | _ => defaultThreshold
 
 def prefixData : ℕ → PrefixReceipt
-  | 0 => ⟨2, 0, 0, [0], 399600479293792, 2295991372834275⟩
-  | 1 => ⟨2, 1, 0, [0], 857108533717713, 2758606897709851⟩
-  | 2 => ⟨2, 2, 0, [2086120364977884], 2738940578907784, 4649554030839157⟩
-  | 3 => ⟨2, 3, 0, [4410049070469583], 4606720494346233, 6525951979910460⟩
-  | 4 => ⟨2, 4, 0, [6712537135641794], 6462713819151280, 8391060392654742⟩
-  | 5 => ⟨2, 5, 0, [8991330673936151], 8306062663767911, 10243524325210608⟩
-  | 6 => ⟨2, 6, 0, [11250387698461194], 10136767028196126, 12083343777578058⟩
-  | 7 => ⟨2, 7, 0, [13488004082666749], 11954826912435925, 13910518749757092⟩
-  | 8 => ⟨2, 8, 0, [15704179826552816], 13760242316487308, 15725049241747710⟩
-  | 9 => ⟨2, 9, 0, [17894462003528261], 15553013240350275, 17526935253549912⟩
-  | 10 => ⟨2, 10, 0, [20062204020167834], 17333139684024826, 19316176785163698⟩
-  | 11 => ⟨2, 11, 0, [22207405876471535], 19094815917882219, 21086471052653945⟩
-  | 12 => ⟨2, 12, 0, [24330067572439364], 20849103641171746, 22849873863882707⟩
-  | 13 => ⟨2, 13, 0, [26423537141447419], 22583841634627731, 24593229890971546⟩
-  | 14 => ⟨2, 14, 0, [28486165303471124], 24304835627878916, 26322841917855585⟩
-  | 15 => ⟨2, 15, 0, [30524054265126189], 26012085620925301, 28038709944534824⟩
-  | 16 => ⟨2, 16, 0, [32545505273061092], 27705591613766886, 29740833971009263⟩
-  | 17 => ⟨2, 17, 0, [34534465593987069], 29376249316725777, 31419612653294627⟩
-  | 18 => ⟨2, 18, 0, [36508087481209268], 31041717549149570, 33093698919351274⟩
-  | 19 => ⟨2, 19, 0, [38448119161406157], 32683237971674285, 34743340321202462⟩
-  | 20 => ⟨2, 20, 0, [40363411641234406], 34309914873977816, 36378138202832466⟩
-  | 21 => ⟨2, 21, 0, [42242914874004577], 35921748256060163, 37998092564241286⟩
-  | 22 => ⟨2, 22, 0, [44084979579692094], 37506885028202472, 39590853261403687⟩
-  | 23 => ⟨2, 23, 0, [45900106044978203], 39076078760107213, 41167670918328520⟩
-  | 24 => ⟨2, 24, 0, [47688294269862904], 40642282061509624, 42741995199057404⟩
-  | 25 => ⟨2, 25, 0, [49449544254346197], 42180139472947421, 44287476535515293⟩
-  | 26 => ⟨2, 26, 0, [51183855998428082], 43716105973899272, 45831564015793617⟩
-  | 27 => ⟨2, 27, 0, [52876880895369969], 45237228954629939, 47360807975850757⟩
-  | 28 => ⟨2, 28, 0, [54541868031894064], 46743508415139422, 48875208415686713⟩
-  | 29 => ⟨2, 29, 0, [56163369281245393], 48219242945651523, 50358566871218906⟩
-  | 30 => ⟨2, 30, 0, [57739735363399380], 49695285605710446, 51842730510604302⟩
-  | 31 => ⟨2, 31, 0, [59285864645102807], 51139683815755603, 53294752645669551⟩
-  | 32 => ⟨2, 32, 0, [60801757126355674], 52568138985563192, 54730831740497232⟩
-  | 33 => ⟨2, 33, 0, [62287412807157981], 53962750665324247, 56132570290971998⟩
-  | 34 => ⟨2, 34, 0, [63724634760713794], 55358769994648508, 57536213545316351⟩
-  | 35 => ⟨2, 35, 0, [65111773706998537], 56719846313909851, 58904416735291405⟩
-  | 36 => ⟨2, 36, 0, [66447180365987634], 58044330343083700, 60235530580872584⟩
-  | 37 => ⟨2, 37, 0, [67749051664477019], 59370771781828947, 61569098890331542⟩
-  | 38 => ⟨2, 38, 0, [69017387602466692], 60659521410470316, 62864478335380241⟩
-  | 39 => ⟨2, 39, 0, [70210296726282865], 61908929948983231, 64120019635994105⟩
-  | 40 => ⟨2, 40, 0, [71345975962721472], 63160845657075736, 65378565160493940⟩
-  | 41 => ⟨2, 41, 0, [72444821278611215], 64394619284897905, 66618968604723439⟩
-  | 42 => ⟨2, 42, 0, [73484237667090624], 65633099122332432, 67864575312871677⟩
-  | 43 => ⟨2, 43, 0, [74462575848135123], 66831138349622121, 69069244356568696⟩
-  | 44 => ⟨2, 44, 0, [75354492014842282], 67987087686742396, 70231326455789920⟩
-  | 45 => ⟨2, 45, 0, [75916840772854102], 69123795423575951, 71374166954724424⟩
-  | 46 => ⟨2, 46, 0, [76048290064822970], 70241261560122786, 72497765853372208⟩
-  | 47 => ⟨2, 47, 0, [76154562212391208], 71313889006459247, 73576029007503237⟩
-  | 48 => ⟨2, 48, 0, [76235657215558816], 72366175332492604, 74633951041331162⟩
-  | 49 => ⟨2, 49, 0, [76304163646526109], 73398120538222857, 75671531954855983⟩
-  | 50 => ⟨2, 50, 0, [76334904360892457], 74382478253701776, 76661028323823089⟩
-  | 51 => ⟨2, 51, 0, [76334904360892457], 75317599198904785, 77600790868207904⟩
-  | 52 => ⟨2, 52, 0, [76334904360892457], 76108367528535810, 78396697851327116⟩
-  | 53 => ⟨2, 53, 0, [76334904360892457], 76510474254740630, 78803943231020123⟩
-  | 54 => ⟨2, 54, 0, [76334904360892457], 76899739125723911, 79197849701185210⟩
-  | 55 => ⟨2, 55, 0, [76334904360892457], 77289003996707192, 79591756171350297⟩
-  | 56 => ⟨2, 56, 0, [76334904360892457], 77665427012468934, 79972323731987464⟩
-  | 57 => ⟨2, 57, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 58 => ⟨2, 58, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 59 => ⟨2, 59, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 60 => ⟨2, 60, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 61 => ⟨2, 61, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 62 => ⟨2, 62, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 63 => ⟨2, 63, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 64 => ⟨2, 64, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 65 => ⟨2, 65, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 66 => ⟨2, 66, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 67 => ⟨2, 67, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 68 => ⟨2, 68, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 69 => ⟨2, 69, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 70 => ⟨2, 70, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 71 => ⟨2, 71, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 72 => ⟨2, 72, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 73 => ⟨2, 73, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 74 => ⟨2, 74, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 75 => ⟨2, 75, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 76 => ⟨2, 76, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 77 => ⟨2, 77, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 78 => ⟨2, 78, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 79 => ⟨2, 79, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 80 => ⟨2, 80, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 81 => ⟨2, 81, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 82 => ⟨2, 82, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 83 => ⟨2, 83, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 84 => ⟨2, 84, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 85 => ⟨2, 85, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 86 => ⟨2, 86, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 87 => ⟨2, 87, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 88 => ⟨2, 88, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 89 => ⟨2, 89, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 90 => ⟨2, 90, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 91 => ⟨2, 91, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 92 => ⟨2, 92, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 93 => ⟨2, 93, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 94 => ⟨2, 94, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 95 => ⟨2, 95, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 96 => ⟨2, 96, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 97 => ⟨2, 97, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 98 => ⟨2, 98, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 99 => ⟨2, 99, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 100 => ⟨2, 100, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 101 => ⟨2, 101, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 102 => ⟨2, 102, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 103 => ⟨2, 103, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 104 => ⟨2, 104, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 105 => ⟨2, 105, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 106 => ⟨2, 106, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 107 => ⟨2, 107, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 108 => ⟨2, 108, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 109 => ⟨2, 109, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 110 => ⟨2, 110, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 111 => ⟨2, 111, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 112 => ⟨2, 112, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 113 => ⟨2, 113, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 114 => ⟨2, 114, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 115 => ⟨2, 115, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 116 => ⟨2, 116, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 117 => ⟨2, 117, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 118 => ⟨2, 118, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 119 => ⟨2, 119, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 120 => ⟨2, 120, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 121 => ⟨2, 121, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 122 => ⟨2, 122, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 123 => ⟨2, 123, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 124 => ⟨2, 124, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 125 => ⟨2, 125, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 126 => ⟨2, 126, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 127 => ⟨2, 127, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 128 => ⟨2, 128, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
-  | 129 => ⟨2, 129, 0, [76334904360892457], 77669436226806045, 79972323731987464⟩
+  | 0 => ⟨2, 0, 0, [0], 0, 0, 2938771751034378⟩
+  | 1 => ⟨2, 1, 0, [0], 0, 0, 3537939337154008⟩
+  | 2 => ⟨2, 2, 0, [0], 0, 2160239102297133, 5959698790432166⟩
+  | 3 => ⟨2, 3, 0, [0], 0, 4553487170400392, 8365809557169088⟩
+  | 4 => ⟨2, 4, 0, [0], 0, 6926394118200547, 10759531250029454⟩
+  | 5 => ⟨2, 5, 0, [0], 0, 9276706225868543, 13136504736332200⟩
+  | 6 => ⟨2, 6, 0, [0], 0, 11605577693217051, 15498634702413762⟩
+  | 7 => ⟨2, 7, 0, [0], 321951028980705, 13490500299720757, 17432249431375435⟩
+  | 8 => ⟨2, 8, 0, [0], 2458461855043098, 15703317725544466, 19605985249493626⟩
+  | 9 => ⟨2, 9, 0, [0], 4572432520769619, 17893594991032303, 21819541449204904⟩
+  | 10 => ⟨2, 10, 0, [0], 6661423050550192, 20056329576314253, 24004804482186530⟩
+  | 11 => ⟨2, 11, 0, [0], 8729763635596777, 22200976761122154, 26172730601217872⟩
+  | 12 => ⟨2, 12, 0, [0], 10772024564681030, 24316981745707784, 28311264033503178⟩
+  | 13 => ⟨2, 13, 0, [0], 12790645813413027, 26409347049941158, 30426157785436228⟩
+  | 14 => ⟨2, 14, 0, [0], 14785627381792768, 28478072673822276, 32517411857017022⟩
+  | 15 => ⟨2, 15, 0, [0], 16756969269820253, 30523158617351138, 34585026248245560⟩
+  | 16 => ⟨2, 16, 0, [0], 18698932941836254, 32536303800608577, 36619949392678910⟩
+  | 17 => ⟨2, 17, 0, [0], 20616157413483615, 34524709783497376, 38630133336743620⟩
+  | 18 => ⟨2, 18, 0, [0], 22508642684762336, 36488376566017535, 40615578080439690⟩
+  | 19 => ⟨2, 19, 0, [0], 24369000939988613, 38417353788225311, 42565582777299612⟩
+  | 20 => ⟨2, 20, 0, [0], 26211458050521862, 40330992409999998, 44500999360250210⟩
+  | 21 => ⟨2, 21, 0, [0], 28020688624986283, 42208841951445918, 46399876376348276⟩
+  | 22 => ⟨2, 22, 0, [0], 29795043383357300, 44049253132538495, 48260564545569234⟩
+  | 23 => ⟨2, 23, 0, [0], 31542459901326909, 45862726073229664, 50094314474388784⟩
+  | 24 => ⟨2, 24, 0, [0], 33262938178895110, 47649260773519425, 51901126162806926⟩
+  | 25 => ⟨2, 25, 0, [0], 34956478216061903, 49408857233407778, 53680999610823660⟩
+  | 26 => ⟨2, 26, 0, [0], 36611843877086140, 51127716772893636, 55419385651914134⟩
+  | 27 => ⟨2, 27, 0, [0], 38239171777692585, 52818538551961702, 57129733932586816⟩
+  | 28 => ⟨2, 28, 0, [0], 39826126262123706, 54466424370594505, 58796395766300470⟩
+  | 29 => ⟨2, 29, 0, [0], 41383943466120651, 56085172908793132, 60433920319579948⟩
+  | 30 => ⟨2, 30, 0, [0], 42912623389683420, 57674784166557583, 62042307592425250⟩
+  | 31 => ⟨2, 31, 0, [0], 44398181097029905, 59218710663845811, 63604259618270564⟩
+  | 32 => ⟨2, 32, 0, [0], 45838967308135530, 60715303120633240, 65118127117091314⟩
+  | 33 => ⟨2, 33, 0, [0], 47248417198774211, 62180559256953725, 66600658295445120⟩
+  | 34 => ⟨2, 34, 0, [0], 48626530768945948, 63614479072807266, 68051853153331982⟩
+  | 35 => ⟨2, 35, 0, [0], 49940940067020989, 64979569528044233, 69432717677554740⟩
+  | 36 => ⟨2, 36, 0, [0], 51221814004596318, 66311124622781488, 70780046841277786⟩
+  | 37 => ⟨2, 37, 0, [0], 52469152581671935, 67609144357019031, 72093840644501120⟩
+  | 38 => ⟨2, 38, 0, [0], 53647289286568936, 68832837130558080, 73331806513978430⟩
+  | 39 => ⟨2, 39, 0, [0], 54808074606781101, 70041741063672232, 74555734029554608⟩
+  | 40 => ⟨2, 40, 0, [0], 55896359494765498, 71173019476038738, 75700535051335610⟩
+  | 41 => ⟨2, 41, 0, [0], 56928327926337003, 72245418887732413, 76785706585920016⟩
+  | 42 => ⟨2, 42, 0, [0], 57902330621471040, 73257290018728681, 77809599353283250⟩
+  | 43 => ⟨2, 43, 0, [0], 58816718300143033, 74206983589002966, 78770564073400736⟩
+  | 44 => ⟨2, 44, 0, [0], 59669841682328406, 75092850318530692, 79666951466247898⟩
+  | 45 => ⟨2, 45, 0, [0], 60322745385551882, 75773372280576643, 80356493118565755⟩
+  | 46 => ⟨2, 46, 0, [0], 60416654902662115, 75892337512249412, 80483727553986665⟩
+  | 47 => ⟨2, 47, 0, [357921800172518], 60500537910680371, 75998713690570265, 80597622449531894⟩
+  | 48 => ⟨2, 48, 0, [784467147044810], 60616899883845162, 76067322708835370, 80671498725450080⟩
+  | 49 => ⟨2, 49, 0, [1120521532675253], 60976678222941999, 76312274258382028, 80865431043367444⟩
+  | 50 => ⟨2, 50, 0, [1375540983835898], 61235368609385084, 76572957461048198, 81127629071067870⟩
+  | 51 => ⟨2, 51, 0, [1516319686769651], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 52 => ⟨2, 52, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 53 => ⟨2, 53, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 54 => ⟨2, 54, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 55 => ⟨2, 55, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 56 => ⟨2, 56, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 57 => ⟨2, 57, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 58 => ⟨2, 58, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 59 => ⟨2, 59, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 60 => ⟨2, 60, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 61 => ⟨2, 61, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 62 => ⟨2, 62, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 63 => ⟨2, 63, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 64 => ⟨2, 64, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 65 => ⟨2, 65, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 66 => ⟨2, 66, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 67 => ⟨2, 67, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 68 => ⟨2, 68, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 69 => ⟨2, 69, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 70 => ⟨2, 70, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 71 => ⟨2, 71, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 72 => ⟨2, 72, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 73 => ⟨2, 73, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 74 => ⟨2, 74, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 75 => ⟨2, 75, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 76 => ⟨2, 76, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 77 => ⟨2, 77, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 78 => ⟨2, 78, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 79 => ⟨2, 79, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 80 => ⟨2, 80, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 81 => ⟨2, 81, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 82 => ⟨2, 82, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 83 => ⟨2, 83, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 84 => ⟨2, 84, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 85 => ⟨2, 85, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 86 => ⟨2, 86, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 87 => ⟨2, 87, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 88 => ⟨2, 88, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 89 => ⟨2, 89, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 90 => ⟨2, 90, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 91 => ⟨2, 91, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 92 => ⟨2, 92, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 93 => ⟨2, 93, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 94 => ⟨2, 94, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 95 => ⟨2, 95, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 96 => ⟨2, 96, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 97 => ⟨2, 97, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 98 => ⟨2, 98, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 99 => ⟨2, 99, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 100 => ⟨2, 100, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 101 => ⟨2, 101, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 102 => ⟨2, 102, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 103 => ⟨2, 103, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 104 => ⟨2, 104, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 105 => ⟨2, 105, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 106 => ⟨2, 106, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 107 => ⟨2, 107, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 108 => ⟨2, 108, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 109 => ⟨2, 109, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 110 => ⟨2, 110, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 111 => ⟨2, 111, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 112 => ⟨2, 112, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 113 => ⟨2, 113, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 114 => ⟨2, 114, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 115 => ⟨2, 115, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 116 => ⟨2, 116, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 117 => ⟨2, 117, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 118 => ⟨2, 118, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 119 => ⟨2, 119, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 120 => ⟨2, 120, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 121 => ⟨2, 121, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 122 => ⟨2, 122, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 123 => ⟨2, 123, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 124 => ⟨2, 124, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 125 => ⟨2, 125, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 126 => ⟨2, 126, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 127 => ⟨2, 127, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 128 => ⟨2, 128, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 129 => ⟨2, 129, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 130 => ⟨2, 130, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 131 => ⟨2, 131, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
+  | 135 => ⟨2, 135, 0, [1551763908240371], 61339712211233369, 76669043702079812, 81222228191038680⟩
   | _ => defaultPrefix
 
 end ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData02
@@ -20510,268 +23204,274 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 
 def threshold : ℕ → ThresholdReceipt
-  | 0 => ⟨3, 0, 4109, 4293, 3432, 4234⟩
-  | 1 => ⟨3, 1, 4090, 4273, 3420, 4220⟩
-  | 2 => ⟨3, 2, 4070, 4253, 3408, 4205⟩
-  | 3 => ⟨3, 3, 4049, 4233, 3397, 4190⟩
-  | 4 => ⟨3, 4, 4029, 4214, 3385, 4175⟩
-  | 5 => ⟨3, 5, 4009, 4194, 3373, 4160⟩
-  | 6 => ⟨3, 6, 3988, 4173, 3361, 4144⟩
-  | 7 => ⟨3, 7, 3967, 4152, 3349, 4129⟩
-  | 8 => ⟨3, 8, 3946, 4131, 3336, 4113⟩
-  | 9 => ⟨3, 9, 3924, 4110, 3324, 4097⟩
-  | 10 => ⟨3, 10, 3903, 4088, 3311, 4081⟩
-  | 11 => ⟨3, 11, 3881, 4065, 3298, 4064⟩
-  | 12 => ⟨3, 12, 3859, 4043, 3285, 4047⟩
-  | 13 => ⟨3, 13, 3836, 4022, 3272, 4031⟩
-  | 14 => ⟨3, 14, 3814, 4000, 3259, 4013⟩
-  | 15 => ⟨3, 15, 3791, 3978, 3245, 3996⟩
-  | 16 => ⟨3, 16, 3768, 3955, 3231, 3979⟩
-  | 17 => ⟨3, 17, 3744, 3932, 3217, 3961⟩
-  | 18 => ⟨3, 18, 3720, 3908, 3203, 3943⟩
-  | 19 => ⟨3, 19, 3696, 3883, 3189, 3924⟩
-  | 20 => ⟨3, 20, 3672, 3859, 3174, 3906⟩
-  | 21 => ⟨3, 21, 3647, 3835, 3160, 3887⟩
-  | 22 => ⟨3, 22, 3622, 3811, 3146, 3868⟩
-  | 23 => ⟨3, 23, 3596, 3786, 3132, 3849⟩
-  | 24 => ⟨3, 24, 3570, 3761, 3119, 3832⟩
-  | 25 => ⟨3, 25, 3544, 3735, 3105, 3816⟩
-  | 26 => ⟨3, 26, 3517, 3708, 3090, 3800⟩
-  | 27 => ⟨3, 27, 3490, 3681, 3076, 3785⟩
-  | 28 => ⟨3, 28, 3462, 3654, 3061, 3770⟩
-  | 29 => ⟨3, 29, 3434, 3627, 3046, 3755⟩
-  | 30 => ⟨3, 30, 3405, 3599, 3031, 3739⟩
-  | 31 => ⟨3, 31, 3376, 3571, 3015, 3723⟩
-  | 32 => ⟨3, 32, 3346, 3541, 2999, 3707⟩
-  | 33 => ⟨3, 33, 3315, 3511, 2983, 3690⟩
-  | 34 => ⟨3, 34, 3284, 3481, 2967, 3673⟩
-  | 35 => ⟨3, 35, 3251, 3451, 2950, 3656⟩
-  | 36 => ⟨3, 36, 3218, 3419, 2933, 3638⟩
-  | 37 => ⟨3, 37, 3185, 3386, 2917, 3620⟩
-  | 38 => ⟨3, 38, 3150, 3353, 2900, 3602⟩
-  | 39 => ⟨3, 39, 3114, 3320, 2884, 3583⟩
-  | 40 => ⟨3, 40, 3077, 3285, 2867, 3564⟩
-  | 41 => ⟨3, 41, 3039, 3248, 2850, 3544⟩
-  | 42 => ⟨3, 42, 2999, 3211, 2832, 3524⟩
-  | 43 => ⟨3, 43, 2958, 3173, 2815, 3504⟩
-  | 44 => ⟨3, 44, 2915, 3134, 2796, 3483⟩
-  | 45 => ⟨3, 45, 2870, 3092, 2777, 3462⟩
-  | 46 => ⟨3, 46, 2822, 3050, 2758, 3440⟩
-  | 47 => ⟨3, 47, 2772, 3005, 2738, 3417⟩
-  | 48 => ⟨3, 48, 2719, 2958, 2719, 3394⟩
-  | 49 => ⟨3, 49, 2662, 2908, 2699, 3371⟩
-  | 50 => ⟨3, 50, 2601, 2856, 2680, 3347⟩
-  | 51 => ⟨3, 51, 2536, 2800, 2659, 3322⟩
-  | 52 => ⟨3, 52, 2467, 2740, 2639, 3297⟩
-  | 53 => ⟨3, 53, 2394, 2677, 2617, 3271⟩
-  | 54 => ⟨3, 54, 2317, 2610, 2595, 3245⟩
-  | 55 => ⟨3, 55, 2236, 2539, 2572, 3217⟩
-  | 56 => ⟨3, 56, 2151, 2464, 2549, 3189⟩
-  | 57 => ⟨3, 57, 2062, 2385, 2526, 3162⟩
-  | 58 => ⟨3, 58, 1968, 2302, 2502, 3137⟩
-  | 59 => ⟨3, 59, 1871, 2215, 2477, 3111⟩
-  | 60 => ⟨3, 60, 1770, 2125, 2452, 3084⟩
-  | 61 => ⟨3, 61, 1664, 2030, 2425, 3055⟩
-  | 62 => ⟨3, 62, 1555, 1932, 2397, 3026⟩
-  | 63 => ⟨3, 63, 1441, 1830, 2369, 2995⟩
-  | 64 => ⟨3, 64, 1323, 1723, 2340, 2963⟩
-  | 65 => ⟨3, 65, 1202, 1613, 2309, 2930⟩
-  | 66 => ⟨3, 66, 1076, 1499, 2277, 2895⟩
-  | 67 => ⟨3, 67, 946, 1381, 2243, 2859⟩
-  | 68 => ⟨3, 68, 812, 1259, 2208, 2821⟩
-  | 69 => ⟨3, 69, 674, 1134, 2171, 2781⟩
-  | 70 => ⟨3, 70, 532, 1004, 2132, 2739⟩
-  | 71 => ⟨3, 71, 386, 871, 2091, 2696⟩
-  | 72 => ⟨3, 72, 235, 733, 2048, 2650⟩
-  | 73 => ⟨3, 73, 81, 592, 2004, 2603⟩
-  | 74 => ⟨3, 74, 0, 446, 1958, 2553⟩
-  | 75 => ⟨3, 75, 0, 297, 1910, 2502⟩
-  | 76 => ⟨3, 76, 0, 144, 1860, 2448⟩
-  | 77 => ⟨3, 77, 0, 0, 1808, 2392⟩
-  | 78 => ⟨3, 78, 0, 0, 1754, 2334⟩
-  | 79 => ⟨3, 79, 0, 0, 1699, 2273⟩
-  | 80 => ⟨3, 80, 0, 0, 1641, 2210⟩
-  | 81 => ⟨3, 81, 0, 0, 1582, 2145⟩
-  | 82 => ⟨3, 82, 0, 0, 1521, 2077⟩
-  | 83 => ⟨3, 83, 0, 0, 1458, 2007⟩
-  | 84 => ⟨3, 84, 0, 0, 1393, 1934⟩
-  | 85 => ⟨3, 85, 0, 0, 1327, 1859⟩
-  | 86 => ⟨3, 86, 0, 0, 1258, 1783⟩
-  | 87 => ⟨3, 87, 0, 0, 1188, 1706⟩
-  | 88 => ⟨3, 88, 0, 0, 1116, 1627⟩
-  | 89 => ⟨3, 89, 0, 0, 1042, 1545⟩
-  | 90 => ⟨3, 90, 0, 0, 966, 1461⟩
-  | 91 => ⟨3, 91, 0, 0, 888, 1375⟩
-  | 92 => ⟨3, 92, 0, 0, 808, 1286⟩
-  | 93 => ⟨3, 93, 0, 0, 727, 1195⟩
-  | 94 => ⟨3, 94, 0, 0, 644, 1102⟩
-  | 95 => ⟨3, 95, 0, 0, 559, 1006⟩
-  | 96 => ⟨3, 96, 0, 0, 472, 907⟩
-  | 97 => ⟨3, 97, 0, 0, 383, 807⟩
-  | 98 => ⟨3, 98, 0, 0, 292, 704⟩
-  | 99 => ⟨3, 99, 0, 0, 199, 598⟩
-  | 100 => ⟨3, 100, 0, 0, 104, 491⟩
-  | 101 => ⟨3, 101, 0, 0, 8, 381⟩
-  | 102 => ⟨3, 102, 0, 0, 0, 269⟩
-  | 103 => ⟨3, 103, 0, 0, 0, 155⟩
-  | 104 => ⟨3, 104, 0, 0, 0, 39⟩
-  | 105 => ⟨3, 105, 0, 0, 0, 0⟩
-  | 106 => ⟨3, 106, 0, 0, 0, 0⟩
-  | 107 => ⟨3, 107, 0, 0, 0, 0⟩
-  | 108 => ⟨3, 108, 0, 0, 0, 0⟩
-  | 109 => ⟨3, 109, 0, 0, 0, 0⟩
-  | 110 => ⟨3, 110, 0, 0, 0, 0⟩
-  | 111 => ⟨3, 111, 0, 0, 0, 0⟩
-  | 112 => ⟨3, 112, 0, 0, 0, 0⟩
-  | 113 => ⟨3, 113, 0, 0, 0, 0⟩
-  | 114 => ⟨3, 114, 0, 0, 0, 0⟩
-  | 115 => ⟨3, 115, 0, 0, 0, 0⟩
-  | 116 => ⟨3, 116, 0, 0, 0, 0⟩
-  | 117 => ⟨3, 117, 0, 0, 0, 0⟩
-  | 118 => ⟨3, 118, 0, 0, 0, 0⟩
-  | 119 => ⟨3, 119, 0, 0, 0, 0⟩
-  | 120 => ⟨3, 120, 0, 0, 0, 0⟩
-  | 121 => ⟨3, 121, 0, 0, 0, 0⟩
-  | 122 => ⟨3, 122, 0, 0, 0, 0⟩
-  | 123 => ⟨3, 123, 0, 0, 0, 0⟩
-  | 124 => ⟨3, 124, 0, 0, 0, 0⟩
-  | 125 => ⟨3, 125, 0, 0, 0, 0⟩
-  | 126 => ⟨3, 126, 0, 0, 0, 0⟩
-  | 127 => ⟨3, 127, 0, 0, 0, 0⟩
-  | 128 => ⟨3, 128, 0, 0, 0, 0⟩
-  | 129 => ⟨3, 129, 0, 0, 0, 0⟩
+  | 0 => ⟨3, 0, 4116, 4224, 4295, 4419, 4396⟩
+  | 1 => ⟨3, 1, 4097, 4204, 4275, 4400, 4382⟩
+  | 2 => ⟨3, 2, 4078, 4184, 4255, 4380, 4369⟩
+  | 3 => ⟨3, 3, 4058, 4164, 4235, 4360, 4355⟩
+  | 4 => ⟨3, 4, 4038, 4143, 4215, 4339, 4341⟩
+  | 5 => ⟨3, 5, 4019, 4123, 4194, 4318, 4327⟩
+  | 6 => ⟨3, 6, 3998, 4102, 4173, 4297, 4312⟩
+  | 7 => ⟨3, 7, 3978, 4081, 4152, 4276, 4298⟩
+  | 8 => ⟨3, 8, 3958, 4060, 4131, 4255, 4283⟩
+  | 9 => ⟨3, 9, 3937, 4039, 4110, 4234, 4268⟩
+  | 10 => ⟨3, 10, 3916, 4017, 4088, 4214, 4253⟩
+  | 11 => ⟨3, 11, 3895, 3996, 4066, 4192, 4238⟩
+  | 12 => ⟨3, 12, 3874, 3974, 4044, 4171, 4222⟩
+  | 13 => ⟨3, 13, 3852, 3951, 4022, 4149, 4207⟩
+  | 14 => ⟨3, 14, 3830, 3929, 3999, 4126, 4191⟩
+  | 15 => ⟨3, 15, 3808, 3906, 3976, 4103, 4175⟩
+  | 16 => ⟨3, 16, 3786, 3883, 3953, 4080, 4158⟩
+  | 17 => ⟨3, 17, 3763, 3860, 3930, 4057, 4142⟩
+  | 18 => ⟨3, 18, 3740, 3836, 3906, 4034, 4125⟩
+  | 19 => ⟨3, 19, 3717, 3812, 3882, 4011, 4108⟩
+  | 20 => ⟨3, 20, 3694, 3788, 3858, 3987, 4091⟩
+  | 21 => ⟨3, 21, 3670, 3763, 3833, 3963, 4073⟩
+  | 22 => ⟨3, 22, 3646, 3739, 3808, 3939, 4056⟩
+  | 23 => ⟨3, 23, 3621, 3713, 3783, 3914, 4038⟩
+  | 24 => ⟨3, 24, 3597, 3688, 3757, 3888, 4019⟩
+  | 25 => ⟨3, 25, 3571, 3662, 3731, 3862, 4001⟩
+  | 26 => ⟨3, 26, 3546, 3635, 3705, 3836, 3982⟩
+  | 27 => ⟨3, 27, 3520, 3608, 3678, 3811, 3963⟩
+  | 28 => ⟨3, 28, 3493, 3581, 3651, 3784, 3944⟩
+  | 29 => ⟨3, 29, 3466, 3553, 3623, 3757, 3924⟩
+  | 30 => ⟨3, 30, 3439, 3525, 3594, 3729, 3904⟩
+  | 31 => ⟨3, 31, 3411, 3496, 3566, 3701, 3884⟩
+  | 32 => ⟨3, 32, 3382, 3466, 3536, 3672, 3864⟩
+  | 33 => ⟨3, 33, 3353, 3436, 3506, 3643, 3843⟩
+  | 34 => ⟨3, 34, 3324, 3406, 3475, 3614, 3824⟩
+  | 35 => ⟨3, 35, 3293, 3374, 3444, 3584, 3807⟩
+  | 36 => ⟨3, 36, 3262, 3342, 3412, 3553, 3790⟩
+  | 37 => ⟨3, 37, 3231, 3309, 3379, 3521, 3774⟩
+  | 38 => ⟨3, 38, 3198, 3275, 3346, 3489, 3757⟩
+  | 39 => ⟨3, 39, 3165, 3241, 3311, 3456, 3740⟩
+  | 40 => ⟨3, 40, 3130, 3205, 3276, 3423, 3723⟩
+  | 41 => ⟨3, 41, 3095, 3168, 3239, 3388, 3705⟩
+  | 42 => ⟨3, 42, 3058, 3130, 3202, 3352, 3687⟩
+  | 43 => ⟨3, 43, 3020, 3091, 3163, 3315, 3668⟩
+  | 44 => ⟨3, 44, 2981, 3050, 3122, 3277, 3649⟩
+  | 45 => ⟨3, 45, 2940, 3007, 3080, 3238, 3629⟩
+  | 46 => ⟨3, 46, 2897, 2963, 3037, 3197, 3610⟩
+  | 47 => ⟨3, 47, 2852, 2916, 2991, 3155, 3589⟩
+  | 48 => ⟨3, 48, 2805, 2867, 2943, 3111, 3568⟩
+  | 49 => ⟨3, 49, 2755, 2815, 2892, 3065, 3547⟩
+  | 50 => ⟨3, 50, 2702, 2759, 2838, 3017, 3525⟩
+  | 51 => ⟨3, 51, 2646, 2700, 2780, 2966, 3503⟩
+  | 52 => ⟨3, 52, 2586, 2637, 2719, 2912, 3480⟩
+  | 53 => ⟨3, 53, 2522, 2570, 2654, 2854, 3456⟩
+  | 54 => ⟨3, 54, 2454, 2499, 2585, 2793, 3432⟩
+  | 55 => ⟨3, 55, 2382, 2424, 2512, 2728, 3407⟩
+  | 56 => ⟨3, 56, 2307, 2345, 2434, 2660, 3382⟩
+  | 57 => ⟨3, 57, 2227, 2262, 2354, 2587, 3356⟩
+  | 58 => ⟨3, 58, 2144, 2175, 2269, 2511, 3329⟩
+  | 59 => ⟨3, 59, 2057, 2084, 2180, 2431, 3301⟩
+  | 60 => ⟨3, 60, 1967, 1990, 2087, 2347, 3273⟩
+  | 61 => ⟨3, 61, 1872, 1891, 1990, 2259, 3244⟩
+  | 62 => ⟨3, 62, 1774, 1788, 1889, 2168, 3214⟩
+  | 63 => ⟨3, 63, 1671, 1682, 1785, 2073, 3183⟩
+  | 64 => ⟨3, 64, 1565, 1571, 1676, 1974, 3154⟩
+  | 65 => ⟨3, 65, 1455, 1456, 1563, 1871, 3125⟩
+  | 66 => ⟨3, 66, 1342, 1338, 1447, 1764, 3094⟩
+  | 67 => ⟨3, 67, 1224, 1215, 1326, 1654, 3062⟩
+  | 68 => ⟨3, 68, 1103, 1089, 1202, 1539, 3029⟩
+  | 69 => ⟨3, 69, 977, 958, 1073, 1421, 2994⟩
+  | 70 => ⟨3, 70, 848, 824, 941, 1300, 2958⟩
+  | 71 => ⟨3, 71, 715, 685, 805, 1174, 2919⟩
+  | 72 => ⟨3, 72, 579, 543, 664, 1044, 2880⟩
+  | 73 => ⟨3, 73, 438, 396, 520, 911, 2838⟩
+  | 74 => ⟨3, 74, 294, 246, 372, 774, 2794⟩
+  | 75 => ⟨3, 75, 145, 92, 219, 633, 2748⟩
+  | 76 => ⟨3, 76, 0, 0, 63, 488, 2701⟩
+  | 77 => ⟨3, 77, 0, 0, 0, 340, 2651⟩
+  | 78 => ⟨3, 78, 0, 0, 0, 187, 2599⟩
+  | 79 => ⟨3, 79, 0, 0, 0, 31, 2545⟩
+  | 80 => ⟨3, 80, 0, 0, 0, 0, 2489⟩
+  | 81 => ⟨3, 81, 0, 0, 0, 0, 2430⟩
+  | 82 => ⟨3, 82, 0, 0, 0, 0, 2370⟩
+  | 83 => ⟨3, 83, 0, 0, 0, 0, 2306⟩
+  | 84 => ⟨3, 84, 0, 0, 0, 0, 2241⟩
+  | 85 => ⟨3, 85, 0, 0, 0, 0, 2173⟩
+  | 86 => ⟨3, 86, 0, 0, 0, 0, 2104⟩
+  | 87 => ⟨3, 87, 0, 0, 0, 0, 2034⟩
+  | 88 => ⟨3, 88, 0, 0, 0, 0, 1962⟩
+  | 89 => ⟨3, 89, 0, 0, 0, 0, 1887⟩
+  | 90 => ⟨3, 90, 0, 0, 0, 0, 1811⟩
+  | 91 => ⟨3, 91, 0, 0, 0, 0, 1732⟩
+  | 92 => ⟨3, 92, 0, 0, 0, 0, 1651⟩
+  | 93 => ⟨3, 93, 0, 0, 0, 0, 1567⟩
+  | 94 => ⟨3, 94, 0, 0, 0, 0, 1482⟩
+  | 95 => ⟨3, 95, 0, 0, 0, 0, 1394⟩
+  | 96 => ⟨3, 96, 0, 0, 0, 0, 1303⟩
+  | 97 => ⟨3, 97, 0, 0, 0, 0, 1211⟩
+  | 98 => ⟨3, 98, 0, 0, 0, 0, 1116⟩
+  | 99 => ⟨3, 99, 0, 0, 0, 0, 1019⟩
+  | 100 => ⟨3, 100, 0, 0, 0, 0, 920⟩
+  | 101 => ⟨3, 101, 0, 0, 0, 0, 818⟩
+  | 102 => ⟨3, 102, 0, 0, 0, 0, 715⟩
+  | 103 => ⟨3, 103, 0, 0, 0, 0, 609⟩
+  | 104 => ⟨3, 104, 0, 0, 0, 0, 502⟩
+  | 105 => ⟨3, 105, 0, 0, 0, 0, 393⟩
+  | 106 => ⟨3, 106, 0, 0, 0, 0, 282⟩
+  | 107 => ⟨3, 107, 0, 0, 0, 0, 169⟩
+  | 108 => ⟨3, 108, 0, 0, 0, 0, 53⟩
+  | 109 => ⟨3, 109, 0, 0, 0, 0, 0⟩
+  | 110 => ⟨3, 110, 0, 0, 0, 0, 0⟩
+  | 111 => ⟨3, 111, 0, 0, 0, 0, 0⟩
+  | 112 => ⟨3, 112, 0, 0, 0, 0, 0⟩
+  | 113 => ⟨3, 113, 0, 0, 0, 0, 0⟩
+  | 114 => ⟨3, 114, 0, 0, 0, 0, 0⟩
+  | 115 => ⟨3, 115, 0, 0, 0, 0, 0⟩
+  | 116 => ⟨3, 116, 0, 0, 0, 0, 0⟩
+  | 117 => ⟨3, 117, 0, 0, 0, 0, 0⟩
+  | 118 => ⟨3, 118, 0, 0, 0, 0, 0⟩
+  | 119 => ⟨3, 119, 0, 0, 0, 0, 0⟩
+  | 120 => ⟨3, 120, 0, 0, 0, 0, 0⟩
+  | 121 => ⟨3, 121, 0, 0, 0, 0, 0⟩
+  | 122 => ⟨3, 122, 0, 0, 0, 0, 0⟩
+  | 123 => ⟨3, 123, 0, 0, 0, 0, 0⟩
+  | 124 => ⟨3, 124, 0, 0, 0, 0, 0⟩
+  | 125 => ⟨3, 125, 0, 0, 0, 0, 0⟩
+  | 126 => ⟨3, 126, 0, 0, 0, 0, 0⟩
+  | 127 => ⟨3, 127, 0, 0, 0, 0, 0⟩
+  | 128 => ⟨3, 128, 0, 0, 0, 0, 0⟩
+  | 129 => ⟨3, 129, 0, 0, 0, 0, 0⟩
+  | 130 => ⟨3, 130, 0, 0, 0, 0, 0⟩
+  | 131 => ⟨3, 131, 0, 0, 0, 0, 0⟩
+  | 135 => ⟨3, 135, 0, 0, 0, 0, 0⟩
   | _ => defaultThreshold
 
 def prefixData : ℕ → PrefixReceipt
-  | 0 => ⟨3, 0, 0, [3384839527954380], 3829797849397262, 5775414702063150⟩
-  | 1 => ⟨3, 1, 0, [4499639795505779], 4738623388554137, 6693355329159260⟩
-  | 2 => ⟨3, 2, 0, [5384044551428800], 5464950519583505, 7428797548127863⟩
-  | 3 => ⟨3, 3, 0, [8514595872335436], 7997721970310256, 9971181141100230⟩
-  | 4 => ⟨3, 4, 0, [11618623992426143], 10511407084327872, 12493981343057081⟩
-  | 5 => ⟨3, 5, 0, [14690968120052851], 13007705634119016, 14999394980787460⟩
-  | 6 => ⟨3, 6, 0, [17729360442490368], 15486617619683688, 17487422054291367⟩
-  | 7 => ⟨3, 7, 0, [20736759324350261], 17948143041021888, 19958062563568802⟩
-  | 8 => ⟨3, 8, 0, [23713164765632530], 20386046500200569, 22404584056380337⟩
-  | 9 => ⟨3, 9, 0, [26658576766337175], 22812042855510761, 24839695499629764⟩
-  | 10 => ⟨3, 10, 0, [29565501336402245], 25212905373511306, 27249176051263163⟩
-  | 11 => ⟨3, 11, 0, [32431670663102548], 27594869452135251, 29639758163519962⟩
-  | 12 => ⟨3, 12, 0, [35272828664137050], 29957935091382596, 32011441836400161⟩
-  | 13 => ⟨3, 13, 0, [38091243152230943], 32302102291253341, 34364227069903760⟩
-  | 14 => ⟨3, 14, 0, [40868146459385005], 34627371051747486, 36698113864030759⟩
-  | 15 => ⟨3, 15, 0, [43612544450811315], 36922214411906536, 39001078203516282⟩
-  | 16 => ⟨3, 16, 0, [46312407510997538], 39196647457538858, 41283632228475077⟩
-  | 17 => ⟨3, 17, 0, [48978253380305881], 41450670188644452, 43545775938907144⟩
-  | 18 => ⟨3, 18, 0, [51596540568073881], 43684282605223318, 45787509334812483⟩
-  | 19 => ⟨3, 19, 0, [54165001261576346], 45897484707275456, 48008832416191094⟩
-  | 20 => ⟨3, 20, 0, [56711474379713266], 48074969845967051, 50193941479902781⟩
-  | 21 => ⟨3, 21, 0, [59222418431822178], 50246595381390669, 52373687994652872⟩
-  | 22 => ⟨3, 22, 0, [61697833417903082], 52397810602287559, 54533024194876235⟩
-  | 23 => ⟨3, 23, 0, [64120398159418195], 54528615508657721, 56671950080572870⟩
-  | 24 => ⟨3, 24, 0, [66505921959755172], 56657340499635226, 58809293105183229⟩
-  | 25 => ⟨3, 25, 0, [68835571765226102], 58748080714526996, 60908154299401472⟩
-  | 26 => ⟨3, 26, 0, [71107079763105793], 60798568340607839, 62966265850502407⟩
-  | 27 => ⟨3, 27, 0, [73338523069507092], 62847731988871089, 65023550478092130⟩
-  | 28 => ⟨3, 28, 0, [74051852003444302], 64855131173173284, 67038573587414417⟩
-  | 29 => ⟨3, 29, 1545494138801813, [74346952734017265], 66840608167798623, 69031674507059848⟩
-  | 30 => ⟨3, 30, 3195698349481789, [75382980235010592], 68804162972747106, 71002853237028423⟩
-  | 31 => ⟨3, 31, 4802814118383117, [77260019590084253], 70722173625859214, 72927990760854242⟩
-  | 32 => ⟨3, 32, 6355305400992753, [79069845886665907], 72616750214144338, 74829694219853077⟩
-  | 33 => ⟨3, 33, 7850904384585505, [80810191312030362], 74487892737602478, 76707963614024928⟩
-  | 34 => ⟨3, 34, 9300391176099353, [82504424545315913], 76335601196233634, 78562798943369795⟩
-  | 35 => ⟨3, 35, 10676158061057825, [84099760727645458], 78133229877578031, 80367057441121522⟩
-  | 36 => ⟨3, 36, 12002789003637137, [85645960967595843], 79905912618945316, 82146369998896137⟩
-  | 37 => ⟨3, 37, 13280284003837289, [87143025265167068], 81681807007945392, 83929391258609924⟩
-  | 38 => ⟨3, 38, 14476499721731425, [88533633136031647], 83405353806933517, 85659567874005379⟩
-  | 39 => ⟨3, 39, 15603728139407653, [89842665134478003], 85133624128704561, 87394965066490134⟩
-  | 40 => ⟨3, 40, 16659701444140781, [91067853447780944], 86808034985313526, 89076005739506429⟩
-  | 41 => ⟨3, 41, 17642151823205617, [92206930263215278], 88457499901945379, 90732100472545612⟩
-  | 42 => ⟨3, 42, 18529716043613285, [93225943775591814], 90050081603114897, 92330814935816079⟩
-  | 43 => ⟨3, 43, 19337709837752149, [94152798289499231], 91648898702217462, 93936261851325974⟩
-  | 44 => ⟨3, 44, 20043258097483205, [94952030124598210], 93155871560072213, 95448870416975293⟩
-  | 45 => ⟨3, 45, 20641825197356069, [95619103655438367], 94634874727649596, 96933509292347244⟩
-  | 46 => ⟨3, 46, 21106756341356417, [96114775513805063], 96085908204949611, 98390178477441827⟩
-  | 47 => ⟨3, 47, 21454123199447677, [96467705941862041], 97473255028611715, 99782663954592118⟩
-  | 48 => ⟨3, 48, 21655759100465397, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 49 => ⟨3, 49, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 50 => ⟨3, 50, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 51 => ⟨3, 51, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 52 => ⟨3, 52, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 53 => ⟨3, 53, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 54 => ⟨3, 54, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 55 => ⟨3, 55, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 56 => ⟨3, 56, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 57 => ⟨3, 57, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 58 => ⟨3, 58, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 59 => ⟨3, 59, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 60 => ⟨3, 60, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 61 => ⟨3, 61, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 62 => ⟨3, 62, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 63 => ⟨3, 63, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 64 => ⟨3, 64, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 65 => ⟨3, 65, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 66 => ⟨3, 66, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 67 => ⟨3, 67, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 68 => ⟨3, 68, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 69 => ⟨3, 69, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 70 => ⟨3, 70, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 71 => ⟨3, 71, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 72 => ⟨3, 72, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 73 => ⟨3, 73, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 74 => ⟨3, 74, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 75 => ⟨3, 75, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 76 => ⟨3, 76, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 77 => ⟨3, 77, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 78 => ⟨3, 78, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 79 => ⟨3, 79, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 80 => ⟨3, 80, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 81 => ⟨3, 81, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 82 => ⟨3, 82, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 83 => ⟨3, 83, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 84 => ⟨3, 84, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 85 => ⟨3, 85, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 86 => ⟨3, 86, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 87 => ⟨3, 87, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 88 => ⟨3, 88, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 89 => ⟨3, 89, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 90 => ⟨3, 90, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 91 => ⟨3, 91, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 92 => ⟨3, 92, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 93 => ⟨3, 93, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 94 => ⟨3, 94, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 95 => ⟨3, 95, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 96 => ⟨3, 96, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 97 => ⟨3, 97, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 98 => ⟨3, 98, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 99 => ⟨3, 99, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 100 => ⟨3, 100, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 101 => ⟨3, 101, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 102 => ⟨3, 102, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 103 => ⟨3, 103, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 104 => ⟨3, 104, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 105 => ⟨3, 105, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 106 => ⟨3, 106, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 107 => ⟨3, 107, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 108 => ⟨3, 108, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 109 => ⟨3, 109, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 110 => ⟨3, 110, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 111 => ⟨3, 111, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 112 => ⟨3, 112, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 113 => ⟨3, 113, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 114 => ⟨3, 114, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 115 => ⟨3, 115, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 116 => ⟨3, 116, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 117 => ⟨3, 117, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 118 => ⟨3, 118, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 119 => ⟨3, 119, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 120 => ⟨3, 120, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 121 => ⟨3, 121, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 122 => ⟨3, 122, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 123 => ⟨3, 123, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 124 => ⟨3, 124, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 125 => ⟨3, 125, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 126 => ⟨3, 126, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 127 => ⟨3, 127, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
-  | 128 => ⟨3, 128, 21680473622944869, [96637139696244534], 98867593187781930, 101182637821556901⟩
+  | 0 => ⟨3, 0, 0, [0], 0, 3503440772733828, 7412724421192809⟩
+  | 1 => ⟨3, 1, 0, [0], 0, 4654093763446679, 8591702116012623⟩
+  | 2 => ⟨3, 2, 0, [0], 0, 5566865478624112, 9539859683071159⟩
+  | 3 => ⟨3, 3, 0, [0], 0, 8793415793346957, 12799840586201248⟩
+  | 4 => ⟨3, 4, 0, [0], 0, 11987526344760050, 16031993805992567⟩
+  | 5 => ⟨3, 5, 0, [0], 1217491773945492, 14690090658887839, 18664776725396937⟩
+  | 6 => ⟨3, 6, 0, [0], 4179572585134085, 17728478069837748, 21726443070570287⟩
+  | 7 => ⟨3, 7, 0, [0], 7110659955745054, 20735872040210033, 24757115975166013⟩
+  | 8 => ⟨3, 8, 0, [0], 10010753885778399, 23712272570004694, 27756795439184115⟩
+  | 9 => ⟨3, 9, 0, [0], 12879854375234120, 26657679659221731, 30725481462624593⟩
+  | 10 => ⟨3, 10, 0, [0], 15713030145039516, 29564599484528504, 33654929735631042⟩
+  | 11 => ⟨3, 11, 0, [0], 18513700599117160, 32439013994107525, 36551872692909739⟩
+  | 12 => ⟨3, 12, 0, [0], 21281865737467052, 35280923187958794, 39416310334460684⟩
+  | 13 => ⟨3, 13, 0, [0], 24017525560089192, 38090327066082311, 42248242660283877⟩
+  | 14 => ⟨3, 14, 0, [0], 26712725037610623, 40856708054845180, 45036401610222657⟩
+  | 15 => ⟨3, 15, 0, [0], 29373907324254174, 43589071852730169, 47790543369283557⟩
+  | 16 => ⟨3, 16, 0, [0], 32001072420019845, 46287418459737278, 50510667937466577⟩
+  | 17 => ⟨3, 17, 0, [0], 34594220324907636, 48951747875866507, 53196775314771717⟩
+  | 18 => ⟨3, 18, 0, [0], 37142372259244334, 51568518777184704, 55834573690742060⟩
+  | 19 => ⟨3, 19, 0, [0], 39654995127553024, 54149760612474893, 58436843000684395⟩
+  | 20 => ⟨3, 20, 0, [0], 42132088929833706, 56695473381737074, 61003583244598722⟩
+  | 21 => ⟨3, 21, 0, [0], 44560407073687975, 59189847948312903, 63518234799302932⟩
+  | 22 => ⟨3, 22, 0, [0], 46951684276364108, 61647181573710596, 65995845412829006⟩
+  | 23 => ⟨3, 23, 0, [0], 49305920537862105, 64067474257930153, 68436415085176944⟩
+  | 24 => ⟨3, 24, 0, [0], 51607601453058369, 66432649051588038, 70821116380439445⟩
+  | 25 => ⟨3, 25, 0, [0], 53870729551926369, 68759271028917659, 73167264859373682⟩
+  | 26 => ⟨3, 26, 0, [0], 56095304834466105, 71047340189919016, 75474860521979655⟩
+  | 27 => ⟨3, 27, 0, [0], 58263545082828788, 73276511772483381, 77722808119624871⟩
+  | 28 => ⟨3, 28, 0, [849789228790303], 59094049760043369, 74020014191547731, 78485086553770072⟩
+  | 29 => ⟨3, 29, 0, [2641436235636871], 61109950902195871, 76062839617798159, 80493403451914036⟩
+  | 30 => ⟨3, 30, 0, [4391506675854919], 63084275477719853, 78095532983263884, 82544122345936847⟩
+  | 31 => ⟨3, 31, 0, [6089221090387379], 64996217518466270, 80063281269692105, 84529145674398389⟩
+  | 32 => ⟨3, 32, 0, [7732311666509059], 66843509211709930, 81963816664357630, 86446205624573470⟩
+  | 33 => ⟨3, 33, 0, [9330801925701963], 68646200588024814, 83819751742094379, 88318665257819775⟩
+  | 34 => ⟨3, 34, 0, [10884691867966091], 70404291647410922, 85631086502902352, 90146524574137304⟩
+  | 35 => ⟨3, 35, 0, [12366375074586795], 72070122952969652, 87345036421363069, 91875498075060047⟩
+  | 36 => ⟨3, 36, 0, [13800434213978467], 73688330191299350, 89011362272594754, 93556847508753758⟩
+  | 37 => ⟨3, 37, 0, [15171554201633655], 75233571768800587, 90602159918738039, 95161918250835304⟩
+  | 38 => ⟨3, 38, 0, [16477467224827167], 76703579872748171, 92115161547067732, 96688442488579493⟩
+  | 39 => ⟨3, 39, 0, [17732732430491391], 78122940159166467, 93577515357868137, 98164318908794394⟩
+  | 40 => ⟨3, 40, 0, [18902184024161039], 79436433815406233, 94928877449970134, 99527702637263357⟩
+  | 41 => ⟨3, 41, 0, [19999625215193435], 80667890559916770, 96195640086082963, 100805736423219387⟩
+  | 42 => ⟨3, 42, 0, [21022788190863387], 81815042579972886, 97375535453481432, 101996152453937292⟩
+  | 43 => ⟨3, 43, 0, [21969405138445703], 82875622062849389, 98466295739440349, 103096682916691880⟩
+  | 44 => ⟨3, 44, 0, [22816601597682291], 83816728039196210, 99432457430349706, 104071113811349378⟩
+  | 45 => ⟨3, 45, 0, [23559841943122767], 84633824883562965, 100269484900759119, 104914909512459402⟩
+  | 46 => ⟨3, 46, 0, [24216709071999775], 85354522002274275, 101007550101253148, 105658992457130277⟩
+  | 47 => ⟨3, 47, 0, [24739186251071939], 85910749643904810, 101573458191886585, 106228666832369265⟩
+  | 48 => ⟨3, 48, 0, [25144100439996839], 86329361277204127, 101996625185668926, 106654099137709627⟩
+  | 49 => ⟨3, 49, 0, [25402529677915871], 86571408432221645, 102235540068389651, 106893027872417078⟩
+  | 50 => ⟨3, 50, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 51 => ⟨3, 51, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 52 => ⟨3, 52, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 53 => ⟨3, 53, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 54 => ⟨3, 54, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 55 => ⟨3, 55, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 56 => ⟨3, 56, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 57 => ⟨3, 57, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 58 => ⟨3, 58, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 59 => ⟨3, 59, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 60 => ⟨3, 60, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 61 => ⟨3, 61, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 62 => ⟨3, 62, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 63 => ⟨3, 63, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 64 => ⟨3, 64, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 65 => ⟨3, 65, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 66 => ⟨3, 66, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 67 => ⟨3, 67, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 68 => ⟨3, 68, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 69 => ⟨3, 69, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 70 => ⟨3, 70, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 71 => ⟨3, 71, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 72 => ⟨3, 72, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 73 => ⟨3, 73, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 74 => ⟨3, 74, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 75 => ⟨3, 75, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 76 => ⟨3, 76, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 77 => ⟨3, 77, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 78 => ⟨3, 78, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 79 => ⟨3, 79, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 80 => ⟨3, 80, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 81 => ⟨3, 81, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 82 => ⟨3, 82, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 83 => ⟨3, 83, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 84 => ⟨3, 84, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 85 => ⟨3, 85, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 86 => ⟨3, 86, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 87 => ⟨3, 87, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 88 => ⟨3, 88, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 89 => ⟨3, 89, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 90 => ⟨3, 90, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 91 => ⟨3, 91, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 92 => ⟨3, 92, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 93 => ⟨3, 93, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 94 => ⟨3, 94, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 95 => ⟨3, 95, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 96 => ⟨3, 96, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 97 => ⟨3, 97, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 98 => ⟨3, 98, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 99 => ⟨3, 99, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 100 => ⟨3, 100, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 101 => ⟨3, 101, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 102 => ⟨3, 102, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 103 => ⟨3, 103, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 104 => ⟨3, 104, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 105 => ⟨3, 105, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 106 => ⟨3, 106, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 107 => ⟨3, 107, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 108 => ⟨3, 108, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 109 => ⟨3, 109, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 110 => ⟨3, 110, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 111 => ⟨3, 111, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 112 => ⟨3, 112, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 113 => ⟨3, 113, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 114 => ⟨3, 114, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 115 => ⟨3, 115, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 116 => ⟨3, 116, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 117 => ⟨3, 117, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 118 => ⟨3, 118, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 119 => ⟨3, 119, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 120 => ⟨3, 120, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 121 => ⟨3, 121, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 122 => ⟨3, 122, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 123 => ⟨3, 123, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 124 => ⟨3, 124, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 125 => ⟨3, 125, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 126 => ⟨3, 126, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 127 => ⟨3, 127, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 128 => ⟨3, 128, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 129 => ⟨3, 129, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 130 => ⟨3, 130, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
+  | 131 => ⟨3, 131, 0, [25482528253670175], 86594918888706527, 102245668075537984, 106900167785457077⟩
   | _ => defaultPrefix
 
 end ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData03
