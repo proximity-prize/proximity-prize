@@ -47,6 +47,17 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    `Finset.range` sum, which the kernel walks as a `List` where a `Nat`
    recursion would be one addition. It is not part of the challenge; copy, edit
    or ignore it.
+
+   The sharpest saving is not computing the quantity at all. A `decide` that
+   compares something against a threshold does not need the value, only enough
+   to settle the comparison: if the goal is `cost < limit`, any `bound` with
+   `cost ≤ bound` settles it whenever `bound < limit`, and a closed-form bound
+   costs the kernel O(1) where the exact value costs O(n) or worse — times
+   however many instances the `decide` enumerates. Define the bounded predicate
+   separately and prove it implies the exact one, so the cases where the bound
+   is too loose keep the exact path and nothing is weakened. `KernelEval.lean`
+   has the worked pattern.
+
 6. Stay inside the verifier's **time** budget. Both tracks currently allow
    **80 minutes** for the whole build, and a submission that runs past it is
    failed unscored, exactly like the memory ceiling. This repository's own

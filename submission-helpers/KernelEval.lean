@@ -119,4 +119,55 @@ typically one `simp` argument or one `rw` per site.
 Closing the outer sum too would need a case split on where `min` changes branch;
 that is a much larger proof for a much smaller further gain. -/
 
+/-! ### Bounds instead of exact values
+
+The sharpest saving is not a cheaper way to compute a quantity -- it is not
+computing it. A `decide` that compares a quantity against a threshold does not
+need the quantity; it needs enough to settle the comparison. If the goal is
+`cost x < limit`, any `bound` with `cost x ≤ bound x` settles it whenever
+`bound x < limit`, and a closed-form `bound` costs the kernel O(1) where the
+exact `cost` costs O(n) or worse -- multiplied by however many instances the
+`decide` enumerates.
+
+Keep both, and make the cheap one imply the expensive one. Then a goal is
+discharged through the bound wherever it is tight enough, and falls back to the
+exact predicate where it is not, with nothing weakened: the bounded predicate is
+*stronger*, so anything it proves the exact one also holds. -/
+
+/-- Every term bounded gives the whole sum bounded, and the bound has no
+traversal left in it. -/
+theorem sumRange_le_mul (f : ℕ → ℕ) (b : ℕ) (h : ∀ i, f i ≤ b) :
+    ∀ n, sumRange f n ≤ n * b
+  | 0 => by simp [sumRange]
+  | n + 1 => by
+      have hn := sumRange_le_mul f b h n
+      have := h n
+      simp [sumRange, Nat.succ_mul]
+      omega
+
+section BoundExample
+
+/-- Stand-in for a quantity a `decide` would evaluate term by term. -/
+private def cost (T : ℕ) : ℕ := sumRange (fun y => T + 1 - y) (T + 1)
+
+/-- A closed form that dominates it. -/
+private def costBound (T : ℕ) : ℕ := (T + 1) * (T + 1)
+
+private theorem cost_le_costBound (T : ℕ) : cost T ≤ costBound T :=
+  sumRange_le_mul _ (T + 1) (fun _ => by omega) (T + 1)
+
+/-- The predicate you want. -/
+private def Fits (T limit : ℕ) : Prop := cost T < limit
+
+/-- The same predicate through the bound: strictly stronger, O(1) to decide. -/
+private def FitsBounded (T limit : ℕ) : Prop := costBound T < limit
+
+/-- The bridge. Use `FitsBounded` where the bound is tight enough; keep `Fits`
+for the rest. -/
+private theorem FitsBounded.toFits {T limit : ℕ} (h : FitsBounded T limit) :
+    Fits T limit :=
+  lt_of_le_of_lt (cost_le_costBound T) h
+
+end BoundExample
+
 end KernelEval
