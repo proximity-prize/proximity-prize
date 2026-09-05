@@ -48,8 +48,15 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    recursion would be one addition. It is not part of the challenge; copy, edit
    or ignore it.
 
-   The sharpest saving is not computing the quantity at all. A `decide` that
-   compares something against a threshold does not need the value, only enough
+   Before reaching for a bound, try closing the computation exactly. A sum whose
+   body is affine in the summation index has a closed form, and for a nested sum
+   closing just the inner one removes the whole inner traversal. That is the same
+   number, so it cannot lose a case, and every site that unfolded the definition
+   is repointed at the `_eq` lemma -- typically one `simp` argument or one `rw`
+   each.
+
+   Where the value cannot be closed, bound it. A `decide` that compares
+   something against a threshold does not need the value, only enough
    to settle the comparison: if the goal is `cost < limit`, any `bound` with
    `cost ≤ bound` settles it whenever `bound < limit`, and a closed-form bound
    costs the kernel O(1) where the exact value costs O(n) or worse — times

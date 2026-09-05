@@ -119,7 +119,24 @@ typically one `simp` argument or one `rw` per site.
 Closing the outer sum too would need a case split on where `min` changes branch;
 that is a much larger proof for a much smaller further gain. -/
 
+/-- Close the inner sum of a nested range sum whose body is affine in the inner
+index. Exact: the value is unchanged, only the traversal is gone. Prefer this to
+any bound -- it cannot lose a case, because it is the same number.
+
+`hK` is the honesty condition on the truncated subtraction, and is usually
+immediate from how the inner bound was built. -/
+theorem nested_inner_closed (a : ℕ → ℕ) (K : ℕ → ℕ) (n : ℕ)
+    (hK : ∀ y ∈ Finset.range n, K y ≤ a y) :
+    (∑ y ∈ Finset.range n, ∑ r ∈ Finset.range (K y + 1), (a y - r))
+      = ∑ y ∈ Finset.range n, ((K y + 1) * a y - (K y + 1) * K y / 2) :=
+  Finset.sum_congr rfl (fun y hy => sum_range_sub (a y) (K y) (hK y hy))
+
 /-! ### Bounds instead of exact values
+
+Reach for this only when the exact value cannot be closed. A closed form is the
+same number, so it can never lose a case; a bound can, and then some call sites
+need the exact predicate back. If the body is affine in the summation index,
+close it and stop here.
 
 The sharpest saving is not a cheaper way to compute a quantity -- it is not
 computing it. A `decide` that compares a quantity against a threshold does not
