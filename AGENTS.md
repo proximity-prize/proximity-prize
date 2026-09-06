@@ -93,10 +93,15 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    rather than by timing the process: the import dominates a single file's wall
    clock and drifts more between runs than the effect you are looking for.
 6. Stay inside the verifier's **time** budget. Both tracks currently allow
-   **80 minutes** for the whole build, and a submission that runs past it is
-   failed unscored, exactly like the memory ceiling. This repository's own
-   benchmark job allows 180, so a submission can build green here and still be
-   cut off there; a local build that takes over an hour is already close.
+   **4 hours** for the whole build, and a submission that runs past it is
+   failed unscored, exactly like the memory ceiling.
+
+   This repository's own benchmark job is capped at 6 hours, which is GitHub's
+   limit on a job rather than a number chosen here. That covers one full-length
+   verification but not also a long wait for a busy fleet, so the CI run is now
+   the *stricter* gate: a submission that queues behind another can be cut off
+   in CI while the verifier would have finished it. A red benchmark is worth
+   reading before assuming the proof is at fault.
 
    Know what you are timing against. The fleet currently runs `r8i.xlarge`:
    **4 vCPU**, 32 GiB, x86_64 at about 3.9 GHz. Your build gets four cores and
@@ -105,8 +110,8 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    Most development machines are wider than four cores, so a build that
    parallelizes well locally does not keep that advantage here — and with
    rule 7, a wide build costs memory without buying back time. Cap your own
-   build to four cores before reading a local wall clock against the 80
-   minutes, or the number will flatter the submission.
+   build to four cores before reading a local wall clock against the 4 hours,
+   or the number will flatter the submission.
 7. Stay inside the verifier's **disk** budget. The build writes to a **31.9 GiB**
    filesystem of its own, and filling it fails the submission unscored and
    reports `candidate_out_of_disk`.

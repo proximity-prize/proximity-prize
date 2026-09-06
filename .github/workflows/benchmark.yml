@@ -34,13 +34,17 @@ jobs:
     # sized for v3's 1200s challenge, inside a 50-minute cap -- which is the
     # reason there is now one.
     #
-    # It has to cover the worst honest case: waiting for a slot while the fleet
-    # is full, then a full-length verification. At v4's 1500s that is about 50
-    # minutes; the rest is headroom for a queue deeper than the fleet.
+    # It used to cover the worst honest case: waiting for a slot while the fleet
+    # is full, then a full-length verification. At v11's 14400s it no longer can.
+    # One verification is 240 minutes on its own and a slot wait behind another
+    # candidate is 240 more -- 480 against a ceiling of 360, which is GitHub's
+    # limit on a job and not a number this file is free to choose.
     #
-    # 180 rather than a fresh number, because production already runs 180 and a
-    # sync should not quietly reduce a live limit to match a value chosen here.
-    timeout-minutes: 180
+    # So this is the maximum available rather than a sizing argument, and the
+    # consequence is that CI is now the stricter gate: a submission that queues
+    # behind another can be cut off here while the verifier would have finished
+    # it. Read a red benchmark before assuming the proof is at fault.
+    timeout-minutes: 360
     env:
       BASE: https://proximity-prize.zksecurity.xyz
       PROFILE: ${{ inputs.profile }}
