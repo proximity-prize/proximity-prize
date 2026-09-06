@@ -83,6 +83,18 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
      dispatches an instance per element — nested bounded quantifiers with
      hypothesis guards. For a flat check over a short list it changes nothing.
 
+   - **How many points you evaluate.** A check over a range costs the range's
+     length. If the property is preserved between points where it holds, the
+     ends of an interval carry it, and a range split into runs costs the number
+     of runs rather than its size. The between-lemma is proved once about the
+     property, not once per interval. Likewise an interval sum is a difference
+     of two prefixes, so a closed form for the prefix answers every interval and
+     overlapping checks stop re-walking the shared part.
+   - **Whether your fast path fires.** A cheap test in front of an expensive one
+     only pays if it is usually true. If it is usually false you evaluate it
+     every time and take it never, which is the expensive path plus overhead.
+     Measure which branch actually decides before optimising either.
+
    Two things that look like levers and are not. The kernel already shares
    repeated subterms, so binding a repeated call to a `let` does not make a
    `decide` cheaper. And grouping several `decide`s into one theorem over a
