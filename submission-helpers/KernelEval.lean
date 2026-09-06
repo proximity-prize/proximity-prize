@@ -187,4 +187,70 @@ private theorem FitsBounded.toFits {T limit : ℕ} (h : FitsBounded T limit) :
 
 end BoundExample
 
+/-! ## Keep a `decide` off `ℤ`
+
+The kernel evaluates `Nat` literals on an accelerated path. `Int` has none: an
+`Int` is `Int.ofNat`/`Int.negSucc`, so every `Int` step the kernel takes is a
+constructor match wrapped around the same `Nat` work. A `decide` over `Int`
+arithmetic pays that wrapper on every operation.
+
+This is worth acting on in one case and not the other.
+
+**Worth it: a comparison whose sign is fixed in the source.** `0 ≤ c - d * i`
+over `ℤ`, with `c` and `d` naturals, is `d * i ≤ c` over `ℕ`. The `ℤ`
+disappears completely and no sign bookkeeping is left behind. Predicates of the
+shape "this affine expression is non-negative here" are the common instance.
+
+**Not worth it: re-encoding signed arithmetic by hand.** Carrying a sign
+alongside a magnitude and branching on it in every operation costs the kernel
+more than `Int`'s own representation does. A general `ℤ`-to-`ℕ` rewrite of a
+polynomial is a slowdown, not a speedup. Convert where the `ℤ` vanishes; leave
+it alone where it does not. -/
+
+/-- `0 ≤ c - d * i` over `ℤ` is `d * i ≤ c` over `ℕ`.
+
+Use it to state a non-negativity test so the kernel never builds the `Int`. -/
+theorem nonneg_sub_iff (c d i : ℕ) :
+    (0 : ℤ) ≤ (c : ℤ) - (d : ℤ) * (i : ℤ) ↔ d * i ≤ c := by
+  have h : ((d * i : ℕ) : ℤ) = (d : ℤ) * (i : ℤ) := by push_cast; rfl
+  rw [← h]; omega
+
+/-- The same for the `constant + slope * i` spelling with a non-positive slope. -/
+theorem nonneg_sub_iff' (c d i : ℕ) :
+    (0 : ℤ) ≤ (c : ℤ) + -((d : ℤ) * (i : ℤ)) ↔ d * i ≤ c := by
+  have h : ((d * i : ℕ) : ℤ) = (d : ℤ) * (i : ℤ) := by push_cast; rfl
+  rw [← h]; omega
+
+/-! Given a predicate the kernel has to decide many times
+
+```lean
+structure Affine where
+  constant : ℤ
+  slope    : ℤ
+
+def Affine.eval (a : Affine) (i : ℕ) : ℤ := a.constant + a.slope * i
+
+def Ok (as : List Affine) (i : ℕ) : Prop := ∀ a ∈ as, 0 ≤ a.eval i
+```
+
+carry the magnitudes as naturals instead, so the decision is a `Nat`
+comparison, and keep the original statement as a lemma:
+
+```lean
+structure Affine where
+  constant : ℕ
+  slope    : ℕ          -- the slope's magnitude; it is subtracted
+
+def Affine.ok (a : Affine) (i : ℕ) : Bool := a.slope * i ≤ a.constant
+
+def Ok (as : List Affine) (i : ℕ) : Prop := ∀ a ∈ as, a.ok i = true
+
+theorem ok_iff (a : Affine) (i : ℕ) :
+    a.ok i = true ↔ (0 : ℤ) ≤ (a.constant : ℤ) - (a.slope : ℤ) * (i : ℤ) := by
+  rw [Affine.ok, nonneg_sub_iff]; simp
+```
+
+The gain is in `Affine.ok`; `ok_iff` keeps every proof that spoke about the
+`ℤ` form. -/
+
 end KernelEval

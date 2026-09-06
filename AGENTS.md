@@ -65,6 +65,33 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    is too loose keep the exact path and nothing is weakened. `KernelEval.lean`
    has the worked pattern.
 
+   When a `decide` is slow, the definition it unfolds is the only lever, and
+   these are the parts of it that pay:
+
+   - **The arithmetic type.** The kernel evaluates `Nat` literals on an
+     accelerated path and `Int` on none. Where a test's sign is fixed in the
+     source — a non-negativity check on an affine expression, say — state it
+     over `ℕ` so the `Int` never gets built. Where the sign is genuinely
+     dynamic, leave it: carrying a sign and branching on it by hand costs more
+     than `Int`'s own representation.
+   - **Short-circuiting.** The `Decidable` instances for `∨` and `∧` stop at the
+     first decisive side, so the order of the operands is a real cost decision.
+     Put the cheap side that usually settles it first; the expensive side then
+     runs only where it must.
+   - **Instance dispatch, but only where it is dense.** Rewriting a `Prop` with
+     a `Decidable` instance as a `Bool` function pays where the `Prop` form
+     dispatches an instance per element — nested bounded quantifiers with
+     hypothesis guards. For a flat check over a short list it changes nothing.
+
+   Two things that look like levers and are not. The kernel already shares
+   repeated subterms, so binding a repeated call to a `let` does not make a
+   `decide` cheaper. And grouping several `decide`s into one theorem over a
+   range costs the same as the separate ones, so batching is a packaging
+   choice, not a speed one.
+
+   Measure with `set_option profiler true` and `set_option Elab.async false`
+   rather than by timing the process: the import dominates a single file's wall
+   clock and drifts more between runs than the effect you are looking for.
 6. Stay inside the verifier's **time** budget. Both tracks currently allow
    **80 minutes** for the whole build, and a submission that runs past it is
    failed unscored, exactly like the memory ceiling. This repository's own
