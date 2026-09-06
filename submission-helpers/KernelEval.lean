@@ -253,4 +253,51 @@ theorem ok_iff (a : Affine) (i : ℕ) :
 The gain is in `Affine.ok`; `ok_iff` keeps every proof that spoke about the
 `ℤ` form. -/
 
+/-! ## Check an interval at its ends, not at every point
+
+A `decide` over `∀ i ∈ [lo, hi], P i` costs the length of the interval. When `P`
+is preserved between points where it holds, the two ends carry the same
+statement for two evaluations instead of `hi - lo` of them.
+
+The condition is a lemma about `P`, proved once, and reused by every interval.
+Monotone is the easy case and needs only the far end:
+
+```lean
+def Ok (c d i : ℕ) : Prop := d * i ≤ c
+
+theorem ok_below (c d hi i : ℕ) (hhi : i ≤ hi) (h : Ok c d hi) : Ok c d i :=
+  le_at_right c d hi i hhi h
+```
+
+An expression whose slope could go either way needs both ends and a lemma
+saying it cannot dip between them -- affine and concave both qualify, and the
+proof is about the shape of `P`, not about any particular interval. That lemma
+is the whole cost, and it is paid once.
+
+The same decomposition is what makes a *segmented* check cheap: split the range
+into runs, check each run's ends, and let the between-lemma cover the interiors.
+The number of evaluations then follows the number of runs rather than the size
+of the range. -/
+
+/-- `d * i ≤ c` at the far end of an interval gives it everywhere below. -/
+theorem le_at_right (c d hi i : ℕ) (hhi : i ≤ hi) (h : d * hi ≤ c) : d * i ≤ c :=
+  le_trans (Nat.mul_le_mul_left d hhi) h
+
+/-! ## Sum an interval as a difference of prefixes
+
+The closed forms above answer `∑ i ∈ range n`. An interval sum is the difference
+of two of them, so one closed form for the prefix answers *every* interval in
+two evaluations -- and a check over many overlapping intervals stops re-walking
+the shared part.
+
+Stated additively because `ℕ` subtraction truncates; use it left to right when
+the prefix has a closed form and you want the interval, right to left when you
+have the interval and want to fold it into a prefix. -/
+
+/-- `sumRange f lo + (interval lo..hi) = sumRange f hi`. -/
+theorem sumRange_Ico (f : ℕ → ℕ) (lo hi : ℕ) (h : lo ≤ hi) :
+    sumRange f lo + (∑ i ∈ Finset.Ico lo hi, f i) = sumRange f hi := by
+  rw [sumRange_eq, sumRange_eq, Finset.range_eq_Ico, Finset.range_eq_Ico,
+    Finset.sum_Ico_consecutive _ (Nat.zero_le lo) h]
+
 end KernelEval
