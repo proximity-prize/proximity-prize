@@ -97,11 +97,16 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    failed unscored, exactly like the memory ceiling.
 
    This repository's own benchmark job is capped at 6 hours, which is GitHub's
-   limit on a job rather than a number chosen here. That covers one full-length
-   verification but not also a long wait for a busy fleet, so the CI run is now
-   the *stricter* gate: a submission that queues behind another can be cut off
-   in CI while the verifier would have finished it. A red benchmark is worth
-   reading before assuming the proof is at fault.
+   limit on a job rather than a number chosen here. It waits for a verifier slot
+   and then for the verification, so it has to cover both. Normally it does: a
+   queued submission brings up another host within about twenty minutes, which
+   leaves the full budget for the run itself.
+
+   What it does not cover is a saturated fleet. Autoscaling stops at three
+   hosts, so a fourth concurrent submission can wait behind a whole verification
+   and exceed the job ceiling. In that case only, a red benchmark can mean CI
+   ran out of time rather than the proof being at fault — check the submission's
+   own status before concluding anything from it.
 
    Know what you are timing against. The fleet currently runs `r8i.xlarge`:
    **4 vCPU**, 32 GiB, x86_64 at about 3.9 GHz. Your build gets four cores and

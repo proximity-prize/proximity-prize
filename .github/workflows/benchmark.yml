@@ -34,16 +34,18 @@ jobs:
     # sized for v3's 1200s challenge, inside a 50-minute cap -- which is the
     # reason there is now one.
     #
-    # It used to cover the worst honest case: waiting for a slot while the fleet
-    # is full, then a full-length verification. At v11's 14400s it no longer can.
-    # One verification is 240 minutes on its own and a slot wait behind another
-    # candidate is 240 more -- 480 against a ceiling of 360, which is GitHub's
-    # limit on a job and not a number this file is free to choose.
+    # It has to cover waiting for a slot and then a full-length verification.
+    # At v11's 14400s the run alone is 240 minutes, which fits: a queued
+    # submission trips the scale-out alarm after ten minutes and a new host is
+    # serving about ten minutes later, so the wait is ~20 and the total ~270
+    # against this ceiling.
     #
-    # So this is the maximum available rather than a sizing argument, and the
-    # consequence is that CI is now the stricter gate: a submission that queues
-    # behind another can be cut off here while the verifier would have finished
-    # it. Read a red benchmark before assuming the proof is at fault.
+    # 360 is GitHub's limit on a job rather than a number chosen here, and the
+    # case it does not cover is a saturated fleet: autoscaling stops at three
+    # hosts, so a fourth concurrent submission can wait behind a whole
+    # verification -- 480 total. That case, and only that one, can fail here
+    # while the verifier would have finished. Check the submission's own status
+    # before reading a red benchmark as a proof failure.
     timeout-minutes: 360
     env:
       BASE: https://proximity-prize.zksecurity.xyz
