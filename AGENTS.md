@@ -97,6 +97,16 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    failed unscored, exactly like the memory ceiling. This repository's own
    benchmark job allows 180, so a submission can build green here and still be
    cut off there; a local build that takes over an hour is already close.
+
+   Know what you are timing against. The fleet currently runs `r8i.xlarge`:
+   **4 vCPU**, 32 GiB, x86_64 at about 3.9 GHz. Your build gets four cores and
+   the memory budget in rule 5; the rest of the box is the host's.
+
+   Most development machines are wider than four cores, so a build that
+   parallelizes well locally does not keep that advantage here — and with
+   rule 7, a wide build costs memory without buying back time. Cap your own
+   build to four cores before reading a local wall clock against the 80
+   minutes, or the number will flatter the submission.
 7. Stay inside the verifier's **disk** budget. The build writes to a **31.9 GiB**
    filesystem of its own, and filling it fails the submission unscored and
    reports `candidate_out_of_disk`.
