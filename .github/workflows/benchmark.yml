@@ -34,13 +34,19 @@ jobs:
     # sized for v3's 1200s challenge, inside a 50-minute cap -- which is the
     # reason there is now one.
     #
-    # It has to cover the worst honest case: waiting for a slot while the fleet
-    # is full, then a full-length verification. At v4's 1500s that is about 50
-    # minutes; the rest is headroom for a queue deeper than the fleet.
+    # It has to cover waiting for a slot and then a full-length verification.
+    # At v11's 14400s the run alone is 240 minutes, which fits: a queued
+    # submission trips the scale-out alarm after ten minutes and a new host is
+    # serving about ten minutes later, so the wait is ~20 and the total ~270
+    # against this ceiling.
     #
-    # 180 rather than a fresh number, because production already runs 180 and a
-    # sync should not quietly reduce a live limit to match a value chosen here.
-    timeout-minutes: 180
+    # 360 is GitHub's limit on a job rather than a number chosen here, and the
+    # case it does not cover is a saturated fleet: autoscaling stops at three
+    # hosts, so a fourth concurrent submission can wait behind a whole
+    # verification -- 480 total. That case, and only that one, can fail here
+    # while the verifier would have finished. Check the submission's own status
+    # before reading a red benchmark as a proof failure.
+    timeout-minutes: 360
     env:
       BASE: https://proximity-prize.zksecurity.xyz
       PROFILE: ${{ inputs.profile }}
