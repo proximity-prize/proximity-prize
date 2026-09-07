@@ -15,7 +15,7 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    file, `score.txt`, and the track-specific claim file directly in that root.
    Subdirectories are not allowed.
 3. Stay inside the verifier's size limits. Both tracks admit at most **1000
-   files**, **8 MiB per file**, and **16 MiB across the whole submission root**.
+   files**, **8 MiB per file**, and **32 MiB across the whole submission root**.
    The total is still the one to watch: it counts every admitted file together,
    so several generated modules can exhaust it while each stays well inside the
    per-file cap. Nothing in this repository enforces these — the submission is
@@ -26,10 +26,14 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    room here to spend deliberately: a value precomputed into a literal table
    and looked up costs the kernel far less than the same value recomputed, and
    lookup cost does not grow with the table, so trading source bytes for kernel
-   work is usually a good trade. It is bounded by this rule at one end and by
-   rules 5 and 6 at the other — a table still has to elaborate inside the
-   memory and time budgets, and on a large submission that is the ceiling that
-   binds first.
+   work is usually a good trade.
+
+   **Split generated tables into small per-row definitions.** This is the one
+   thing that decides whether a large table is usable at all. Around 30 MiB of
+   tables split that way elaborates in a couple of minutes and a few GiB; the
+   same data in one definition does not finish. The cost is superlinear in the
+   size of a single definition and roughly linear in the number of them, so the
+   shape of what you generate matters far more than how much.
 4. Do not use the submission as an archive. Only `.lean` files plus `score.txt`
    and the track claim file (`radius.txt` for lower, `unsafe-index.txt` for
    upper) are admitted at all, and files that no import reaches still count
