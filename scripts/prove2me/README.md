@@ -127,7 +127,8 @@ Do not run Yukon benchmark reorganization; it would reset and replay results.
 
 The CompPoly pin `9d36af56cd57a468ade1cbbc8fae324983d79708` contains the dependency
 fix and its regression test. It is retained on `fix/koalabear-proof-replay` in
-`https://github.com/yudduy/CompPoly`.
+`https://github.com/yudduy/CompPoly`, with upstream review in
+[CompPoly #323](https://github.com/Verified-zkEVM/CompPoly/pull/323).
 
 To continue elsewhere, fetch branch `feat/prove2me` from
 `https://github.com/yudduy/proximity-prize`. During `prepare`, use
@@ -137,6 +138,7 @@ live verifier remain unchanged. The matching Yukon branch is
 `Layr-Labs/yukon:feat/prove2me`; its `docs/prove2me.md` describes local API and
 website setup. These exact fork commits can be used locally while the upstream
 PRs are reviewed; a branch rename does not change the dependency or maintenance pins.
+The competition changes are under review in [PR #527](https://github.com/proximity-prize/proximity-prize/pull/527).
 
 For a future hosted test, the service account, actual authenticated graph
 responses, matching verifier profiles and accessible dependency/maintenance pins
