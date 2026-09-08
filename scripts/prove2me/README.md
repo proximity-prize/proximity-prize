@@ -1,7 +1,7 @@
 # Better.codes imports into Prove2Me
 
-This integration is prepared locally. The schedule and publication are disabled
-by default. No provider records, verifier profiles or deployments were changed.
+This importer is run manually. It adds no competition workflow or schedule.
+No provider records, verifier profiles or deployments were changed.
 
 Prove2Me stores definitions, statements, proof attempts and dependencies. This
 repository only prepares and publishes Lean files. Yukon reads the provider and
@@ -10,10 +10,9 @@ attribution. A confirmed publication catalog connects provider UUIDs to source.
 
 ## Local commands
 
-Run the ordinary Python checks without provider credentials:
+Check the competition versions without provider credentials:
 
 ```sh
-python3 -m unittest discover -s scripts/prove2me -p 'test_*.py'
 python3 scripts/check-versions.py
 ```
 
@@ -80,20 +79,21 @@ An uncertain or ambiguous request is never blindly repeated. Failed jobs remain
 in state for explicit repair. Repeated unchanged statements reuse the same record;
 another proof can be added without replacing the statement or its original source.
 
-The workflow permits one batch at a time and has a combined 235-minute job budget
-plus a shared four-hour deadline. GitHub caches hold native preparation progress
-and checked bundles, while per-module source bindings allow extraction to resume.
-Checked bundles are keyed by the source and checker version; pending publication
-can resume without repeating Lean work. Cache eviction can require recomputation.
+Run only one batch at a time against a given checkpoint. Each command defaults to
+a four-hour deadline; pass the same `--deadline` timestamp to share a batch limit.
+Keep the batch directory to reuse native preparation and checked bundles.
+Per-module source bindings allow extraction to resume, and checked bundles are
+keyed by source and checker version. Pending publication can resume without
+repeating Lean work.
 `--workers 2` permits bounded parallel extraction; one worker is the default
 because the earlier two-worker Lean run was slower under contention.
 
 ## Local verification and the remaining external checks
 
-Python tests cover source selection, exact byte edits, context identity,
+Completed local tests covered source selection, exact byte edits, context identity,
 credential separation, queueing, interrupted POSTs, duplicate prevention, private
-records, failed jobs and accepted reductions. They use a simulated provider.
-They do not establish that the authenticated hosted contract matches those fixtures.
+records, failed jobs and accepted reductions using a simulated provider.
+These checks do not establish the authenticated hosted contract.
 
 The pinned upstream SumSquares example was also mechanically converted and checked
 with Lean 4.33.1: native/staged definition bodies and theorem types matched, its
@@ -135,14 +135,12 @@ To continue elsewhere, fetch branch `feat/prove2me` from
 `--repository https://github.com/yudduy/proximity-prize` so Git can retrieve the
 maintenance commits from that fork. The canonical competition repository and its
 live verifier remain unchanged. The matching Yukon branch is
-`Layr-Labs/yukon:feat/prove2me`; its `docs/prove2me.md` describes local API and
-website setup. These exact fork commits can be used locally while the upstream
+`Layr-Labs/yukon:feat/prove2me` provides the API, CLI and proof map.
+These exact fork commits can be used locally while the upstream
 PRs are reviewed; a branch rename does not change the dependency or maintenance pins.
 The competition changes are under review in [PR #527](https://github.com/proximity-prize/proximity-prize/pull/527).
 
 For a future hosted test, the service account, actual authenticated graph
 responses, matching verifier profiles and accessible dependency/maintenance pins
-must be available first. Keep `PROVE2ME_SYNC_ENABLED` and
-`PROVE2ME_PUBLICATION_READY` unset for local work. Enabling the daily schedule is
-a separate decision after a hosted solver-A → import → independent-solver-B test
-and its normal competition verification pass.
+must be available first. Hosted publication and a solver-A → import →
+independent-solver-B test with normal competition verification remain pending.
