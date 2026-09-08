@@ -54,10 +54,21 @@ def inventory(state, fetch=None, limit=1):
                          "repository": CONFIG["repository"], "benchmarkId": track["benchmarkId"],
                          "track": track["track"], "directory": track["directory"], "module": track["module"], "root": track["root"],
                          "winner": winner is not None and row["id"] == winner["id"], "createdAt": row["createdAt"]})
-    # Both current winners lead the historical backlog; nonwinning attempts follow.
-    work.sort(key=lambda item: (not item["winner"], item["createdAt"], item["id"]))
+    # Resume queued provider work first. A source that cannot prepare must not
+    # monopolize every later batch; try fresh work before retrying it.
+    pending = set()
+    for receipt in state.get("items", {}).values():
+        if receipt["phase"] not in {"FAILED", "ERROR"} and (receipt["phase"] != "published" or
+                (receipt["kind"] == "problem" and (not receipt["proofs"] or
+                 any(proof["phase"] in {"posting", "PENDING"} for proof in receipt["proofs"].values())))):
+            pending.update(source["submissionId"] for source in receipt["sources"])
+    def priority(item):
+        return (item["submissionId"] not in pending, state.get("attempted", {}).get(item["id"], 0),
+                not item["winner"], item["createdAt"], item["submissionId"])
+    # Both unattempted current winners lead the historical backlog.
+    work.sort(key=priority)
     unique = {item["id"]: item for item in reversed(work)}
-    return sorted(unique.values(), key=lambda item: (not item["winner"], item["createdAt"], item["id"]))[:limit]
+    return sorted(unique.values(), key=priority)[:limit]
 
 
 def checkout(work, directory, repository=None):
@@ -158,8 +169,10 @@ def main():
         storage = Storage(args.state)
         state = storage.read("state.json", empty_state())
         # Starting a new checkpoint is explicit; do not manufacture success from absent state later.
-        storage.write("state.json", state)
         work = inventory(state)
+        for item in work:
+            state.setdefault("attempted", {})[item["id"]] = time.time()
+        storage.write("state.json", state)
         (directory / "inventory.json").write_text(json.dumps({"version": 1, "deadline": args.deadline, "work": work}, indent=2) + "\n")
         (directory / "state.json").write_text(json.dumps(state, indent=2) + "\n")
     elif args.stage == "prepare":

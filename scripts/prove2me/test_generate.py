@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 from generate import apply_edits, declaration, discovery_roots, reachable, statement_name, submission_modules, suggest_nodes
-from validate import compare_types, source_fields, validate_bundle
+from validate import compare_types, source_binding, source_fields, validate_bundle
 from batch import CONFIG, extract, inventory, run
 from test_publish import fixture
 
@@ -108,10 +108,29 @@ class GenerationTests(unittest.TestCase):
         self.assertTrue(all(not item['winner'] for item in first[2:]))
         state['completed'][first[0]['id']]={}
         self.assertNotIn(first[0]['id'],[item['id'] for item in inventory(state,fetch,limit=4)])
+        state['completed'].clear()
+        state['attempted']={first[0]['id']: 1}
+        self.assertEqual(inventory(state,fetch)[0]['id'],first[1]['id'])
+        state['attempted']={item['id']: index+1 for index,item in enumerate(first)}
+        self.assertEqual(inventory(state,fetch)[0]['id'],first[0]['id'])
+        # A confirmed queued upload gets its cached publication resumed before
+        # another source's extraction, rather than waiting for the whole backlog.
+        state['items']={'pending': {'phase':'posting','kind':'problem','proofs':{},'sources':[{'submissionId':first[-1]['submissionId']}]}}
+        self.assertEqual(inventory(state,fetch)[0]['id'],first[-1]['id'])
+        state['items']['pending']['phase']='FAILED'
+        self.assertEqual(inventory(state,fetch)[0]['id'],first[0]['id'])
 
     def test_compile_boundary_refuses_publication_credentials(self):
         with patch.dict(os.environ, {'PROVE2ME_API_KEY':'test-only-secret'}):
             with self.assertRaisesRegex(ValueError, 'credentials'): run(['false'], Path('.'))
+
+    def test_source_links_bind_the_original_commit_and_actual_native_module(self):
+        mapping = fixture()['items'][0]['sources'][0]
+        work = {key: mapping[key] for key in ('submissionId', 'benchmarkId', 'repository', 'commit')}
+        item = {'nativeModule': 'Main'}
+        source_binding(item, mapping, work)
+        for change in [{'commit':'c'*40}, {'path':'Other.lean'}, {'submissionId':'another-submission'}]:
+            with self.assertRaises(ValueError): source_binding(item, mapping | change, work)
 
     def test_public_bundle_rejects_private_fields_bad_order_and_other_collections(self):
         bundle=fixture()

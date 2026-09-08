@@ -51,7 +51,10 @@ proofs with regex. The checker compares elaborated types, definition bodies and
 constructor shapes with native source and checks for untracked admissions.
 
 A historical source whose toolchain differs needs an explicit maintenance port;
-it is left pending instead of being misrepresented as compatible. `config.json`
+it remains unprocessed instead of being misrepresented as compatible. The batch
+records attempt times, tries other fresh sources, then retries older attempts.
+Queued provider publications take priority so checked work can resume directly.
+One incompatible or failed source does not block every future submission. `config.json`
 contains the two winning sources' local ports. The upper source at `224323f` has
 identical submission bytes at `1b2ca03`. Future unported historical attempts may
 need additional agent/maintainer work before they can pass this gate.

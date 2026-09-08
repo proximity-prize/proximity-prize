@@ -77,6 +77,15 @@ def compare_types(native, generated, *, allow_stubs=False):
         raise ValueError("Generated proof contains an admission or unexpected axiom")
 
 
+def source_binding(item, mapping, work):
+    if mapping["submissionId"] != work["submissionId"] or mapping["benchmarkId"] != work["benchmarkId"]:
+        raise ValueError("Source attribution differs from the selected submission")
+    if mapping["path"] != item["nativeModule"].replace(".", "/") + ".lean":
+        raise ValueError("Source reference does not contain the selected native declaration")
+    if mapping["repository"] == work["repository"] and mapping["commit"] != work["commit"]:
+        raise ValueError("Original source must remain at the selected submission commit")
+
+
 def check(directory, deadline):
     from batch import CONFIG, HERE, run
     source = directory / "source"
@@ -146,8 +155,7 @@ def check(directory, deadline):
 
     for item in bundle["items"]:
         for mapping in item["sources"]:
-            if mapping["submissionId"] != work["submissionId"] or mapping["benchmarkId"] != work["benchmarkId"]:
-                raise ValueError("Source attribution differs from the selected submission")
+            source_binding(item, mapping, work)
             roots = [source, *(source / ".lake/packages").iterdir()]
             found = False
             for root in roots:
@@ -155,6 +163,8 @@ def check(directory, deadline):
                     # These reads cannot execute source code, and the shell never interprets paths.
                     expected_repo = CONFIG["repository"] if root == source else run(["git", "remote", "get-url", "origin"], root).removesuffix(".git")
                     if mapping["repository"] != expected_repo:
+                        continue
+                    if root != source and mapping["commit"] != run(["git", "rev-parse", "HEAD"], root):
                         continue
                     toolchain = run(["git", "show", f'{mapping["commit"]}:lean-toolchain'], root)
                     # run() strips terminal whitespace; fetch raw bytes for source-hash fidelity.
