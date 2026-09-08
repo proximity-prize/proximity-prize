@@ -49,6 +49,8 @@ agent handles useful-node selection, scope/import adaptation and descriptions;
 `generate.py` performs exact byte-range cuts and renames. It does not split Lean
 proofs with regex. The checker compares elaborated types, definition bodies and
 constructor shapes with native source and checks for untracked admissions.
+Lean also supplies each declaration's defining module, so source ownership does
+not rely on the agent's metadata. Checks sharing an environment run together.
 
 A historical source whose toolchain differs needs an explicit maintenance port;
 it remains unprocessed instead of being misrepresented as compatible. The batch
@@ -98,6 +100,16 @@ with Lean 4.33.1: native/staged definition bodies and theorem types matched, its
 shared reduction dependency remained tracked, and the unproved stub was detected.
 The completed compute check took 328.76 seconds. This is a real local Lean check,
 separate from the simulated publication service and the competition verifier.
+
+A real upper-submission result outside the final claim's dependencies,
+`HalfRadiusCollision.exists_dot_surjective_of_card_sq_lt`, was converted and
+checked too. The local flow exercised the actual publisher with a simulated
+provider, Yukon API/CLI discovery, and original-source retrieval from public
+GitHub. A scripted reuse test in a separate checkout used that source and the
+existing compatibility patch to prove a further result, then passed the source
+policy and complete Lean submission build. This checks the connected local path;
+it is not an independent-agent trial, hosted publication, or competition service
+verdict.
 
 The Lean compatibility files at `8b7e6d422a8d7f4554e06ae2ed23eb12c1651ebf` are
 byte-identical to the previously checked corrected port. They preserve the

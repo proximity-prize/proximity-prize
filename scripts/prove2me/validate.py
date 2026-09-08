@@ -65,7 +65,9 @@ def validate_bundle(bundle):
     return bundle
 
 
-def compare_types(native, generated, *, allow_stubs=False):
+def compare_types(native, generated, *, allow_stubs=False, native_module=None):
+    if native_module is not None and native.get("module") != native_module:
+        raise ValueError("Native declaration belongs to a different module than its source reference")
     if native["levels"] != generated["levels"] or native["type"] != generated["type"] or native.get("body") != generated.get("body") or native.get("shape") != generated.get("shape"):
         raise ValueError("Generated statement changed the native theorem's exact type or context")
     serialized = json.dumps(native["type"]) + json.dumps(generated["type"])
@@ -174,15 +176,18 @@ def check(directory, deadline):
                 except subprocess.CalledProcessError:
                     continue
             if not found: raise ValueError("Original source or dependency hashes do not match Git")
-        native = inspect(item["nativeModule"], [item["nativeName"]])[0]
+        pairs = [(item.get("generatedName", item["name"]), item["nativeName"]), *item.get("definitionRenames", [])]
+        # All declarations in a bundle share an environment; import it once per
+        # side instead of restarting Lean for every supporting definition/proof.
+        native_records = inspect(item["nativeModule"], [original for _, original in pairs])
+        native = native_records[0]
         module = ("Definitions.Def_" if item["kind"] == "definition" else "Theorems.Thm_") + item["name"]
         compile_module(module, item["body"] if item["kind"] == "definition" else item["preamble"] + "\n" + item["body"])
-        imported = inspect(module, [item.get("generatedName", item["name"])], renames)[0]
-        if any(name.startswith(("ProximityPrize", "ArkLib", "CompPoly")) for name in imported["modules"]):
+        imported_records = inspect(module, [generated for generated, _ in pairs], renames)
+        if any(name.startswith(("ProximityPrize", "ArkLib", "CompPoly")) for name in imported_records[0]["modules"]):
             raise ValueError("Platform files must use published definitions instead of native-only libraries")
-        compare_types(native, imported, allow_stubs=item["kind"] == "problem")
-        for generated, original in item.get("definitionRenames", []):
-            compare_types(inspect(item["nativeModule"], [original])[0], inspect(module, [generated], renames)[0])
+        for original, imported in zip(native_records, imported_records):
+            compare_types(original, imported, allow_stubs=item["kind"] == "problem", native_module=item["nativeModule"])
         if item["kind"] == "problem":
             # Only other checked theorem stubs can discharge tracked dependencies.
             allowed = [by_key[key]["name"] for key in item["requires"] if by_key[key]["kind"] == "problem"]
