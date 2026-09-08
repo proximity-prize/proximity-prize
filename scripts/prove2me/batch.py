@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Daily read -> prepare -> check -> publish, with each stage independently runnable."""
+"""Read -> prepare -> check -> publish, with each stage independently runnable."""
 import argparse
 import concurrent.futures
 import json
