@@ -142,6 +142,24 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    rule 7, a wide build costs memory without buying back time. Cap your own
    build to four cores before reading a local wall clock against the 4 hours,
    or the number will flatter the submission.
+
+   **Do not split modules to gain parallelism.** It is the obvious next idea
+   and it is a trap. Every module that builds concurrently loads the challenge's
+   import closure independently — about **3 GiB and five seconds each**, before
+   any of your own code — so concurrency multiplies the one cost you cannot
+   amortise. Measured on four modules of equal work: chained they build in
+   roughly the sum of their parts, while as independent siblings they were never
+   faster and in one run took **eleven times a single module**, with wide
+   variance between runs. That was on a machine with far more memory than the
+   verifier gives you.
+
+   So rule 7's advice to have one heavy module import the next is about speed as
+   much as memory. A sequential chain is the right shape. If you want a build to
+   finish sooner, make the work smaller rather than wider.
+
+   One thing that *is* free: if you have `set_option Elab.async false` in your
+   sections, take it out unless you know you need it. Removing it from a real
+   submission took about 13% off the whole build with no other change.
 7. Stay inside the verifier's **disk** budget. The build writes to a **31.9 GiB**
    filesystem of its own, and filling it fails the submission unscored and
    reports `candidate_out_of_disk`.
