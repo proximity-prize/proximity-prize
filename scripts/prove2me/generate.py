@@ -5,6 +5,7 @@ agent supplies selection, scope/import changes and prose; Lean checks the result
 """
 import hashlib
 import json
+import re
 from pathlib import Path
 
 
@@ -47,10 +48,35 @@ def reachable(rows, roots):
     return [by_name[name] for name in sorted(seen) if by_name[name]["startLine"] > 0]
 
 
-def suggest_nodes(rows, facts_by_module, roots):
-    live = reachable(rows, roots)
+def submission_modules(paths, directory):
+    """Only tracked, flat Lean files in the selected submission can seed discovery."""
+    modules = []
+    for path in paths:
+        if not path.startswith(directory + "/") or not path.endswith(".lean"):
+            continue
+        relative = path[len(directory) + 1:]
+        module = path[:-5].replace("/", ".")
+        if "/" in relative or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_']*(?:\.[A-Za-z_][A-Za-z0-9_']*)*", module):
+            raise ValueError("Submission module is outside the supported flat source policy")
+        modules.append(module)
+    return sorted(set(modules))
+
+
+def discovery_roots(rows, modules):
+    """Expose independent public results; selection is the agent's job, not reachability's."""
+    return sorted(row["name"] for row in rows if row["module"] in modules and row["startLine"] > 0
+                  and not row["isPrivate"] and row["kind"] in {"theorem", "def", "opaque", "inductive"})
+
+
+def suggest_nodes(rows, facts_by_module, roots, candidates=()):
+    live = reachable(rows, [*roots, *candidates])
     result = []
     for row in live:
+        if row["name"] in candidates:
+            # Short lemmas and definitions can be reusable too. Do not suppress them
+            # just because a final candidate does not reference them.
+            result.append(row["name"])
+            continue
         if row["kind"] != "theorem":
             continue
         fact = declaration_fact(row, facts_by_module[row["module"]])

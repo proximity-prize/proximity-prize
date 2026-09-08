@@ -1,12 +1,14 @@
 import copy
 import json
 import os
+import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
-from generate import apply_edits, declaration, reachable, statement_name
+from generate import apply_edits, declaration, discovery_roots, reachable, statement_name, submission_modules, suggest_nodes
 from validate import compare_types, source_fields, validate_bundle
-from batch import CONFIG, inventory, run
+from batch import CONFIG, extract, inventory, run
 from test_publish import fixture
 
 
@@ -31,6 +33,55 @@ class GenerationTests(unittest.TestCase):
             return {"name": name, "kind": kind, "startLine": 1, "isInstance": False, "typeDeps": [], "valueDeps": [], **extra}
         rows = [row('root', 'theorem', valueDeps=['aux']), row('aux', startLine=0, valueDeps=['shape']), row('shape','inductive'), row('ctor','ctor',typeDeps=['shape','fieldType']), row('fieldType'), row('instance',isInstance=True), row('dead')]
         self.assertEqual({row['name'] for row in reachable(rows,['root'])}, {'root','shape','ctor','fieldType','instance'})
+
+    def test_independent_short_results_are_candidates_without_becoming_final_roots(self):
+        module = 'ProximityPrize.SubmissionUpper.Helper'
+        def row(name, **extra):
+            return {"name": name, "module": module, "kind": "theorem", "startLine": 1,
+                    "isPrivate": False, "isInstance": False, "typeDeps": [], "valueDeps": [], **extra}
+        rows = [row('candidate'), row('short_unused'), row('useful_definition', kind='def'),
+                row('private_helper', isPrivate=True), row('compiler_helper', startLine=0),
+                row('other_track', module='ProximityPrize.SubmissionLower.Helper'),
+                row('library', module='ArkLib.Helper')]
+        candidates = discovery_roots(rows, {module})
+        self.assertEqual(candidates, ['candidate', 'short_unused', 'useful_definition'])
+        self.assertEqual({entry['name'] for entry in reachable(rows, ['candidate'])}, {'candidate'})
+        self.assertEqual(suggest_nodes(rows, {}, ['candidate'], candidates), candidates)
+
+    def test_discovery_module_scope_is_flat_tracked_submission_source(self):
+        directory = 'ProximityPrize/SubmissionUpper'
+        self.assertEqual(submission_modules([directory + '/Helper.lean', directory + '/Solution.lean',
+                         directory + '/score.txt', 'ProximityPrize/SubmissionLower/Helper.lean'], directory),
+                         ['ProximityPrize.SubmissionUpper.Helper', 'ProximityPrize.SubmissionUpper.Solution'])
+        with self.assertRaises(ValueError): submission_modules([directory + '/nested/Helper.lean'], directory)
+
+    def test_failed_nonwinning_root_does_not_hide_an_independent_compiled_helper(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary); source = directory / 'source'; upstream = directory / 'upstream'
+            (source / 'ProximityPrize/SubmissionUpper').mkdir(parents=True)
+            (source / '.lake/packages').mkdir(parents=True)
+            (upstream / 'scripts').mkdir(parents=True)
+            (upstream / 'scripts/extract_decl_graph.lean').write_text('import SumSquares\n')
+            helper = 'ProximityPrize.SubmissionUpper.Helper'; root_module = 'ProximityPrize.SubmissionUpper.Solution'
+            (source / 'ProximityPrize/SubmissionUpper/Helper.lean').write_text('theorem independent : True := by trivial\n')
+            row = {'name': 'independent', 'module': helper, 'kind': 'theorem', 'startLine': 1,
+                   'isPrivate': False, 'isInstance': False, 'typeDeps': [], 'valueDeps': []}
+            def execute(args, cwd, timeout=600, output=None):
+                if args[:3] == ['git', 'rev-parse', 'HEAD']: return CONFIG['workspaceRevision']
+                if args[:2] == ['git', 'ls-tree']:
+                    return 'ProximityPrize/SubmissionUpper/Helper.lean\nProximityPrize/SubmissionUpper/Solution.lean'
+                if args == ['lake', 'build', root_module]: raise subprocess.CalledProcessError(1, args)
+                if args[-1] == 'ExtractGraph.lean': (source / 'decl_graph.jsonl').write_text(json.dumps(row) + '\n')
+                if output: Path(output).write_text('')
+                return ''
+            work = {'module': root_module, 'root': 'candidate', 'directory': 'ProximityPrize/SubmissionUpper', 'nativeCommit': 'a'*40, 'winner': False}
+            with patch('batch.run', execute):
+                extract(source, upstream, directory, work)
+                discovered = json.loads((directory / 'facts/suggested.json').read_text())
+                self.assertEqual(discovered, {'roots': [], 'candidates': ['independent'], 'nodes': ['independent'], 'failedModules': [root_module]})
+                self.assertEqual((source / 'ExtractGraph.lean').read_text(), f'import {helper}\n')
+                with self.assertRaisesRegex(ValueError, 'winning claim'):
+                    extract(source, upstream, directory, work | {'winner': True})
 
     def test_unchanged_statements_reuse_names_but_context_changes_do_not(self):
         args = ('Bound','import Mathlib','theorem _ : P', ['definition-a'], 'a'*40)
