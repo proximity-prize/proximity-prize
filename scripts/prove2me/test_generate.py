@@ -94,6 +94,10 @@ class GenerationTests(unittest.TestCase):
         for change in [{"type": ['claim',6800]}, {"body": ['new-definition']}, {"axioms": ['sorryAx']}, {"shape": ['different-constructor']}]:
             with self.assertRaises(ValueError): compare_types(native, native | change)
         compare_types(native,native)
+        # A matching Mathlib theorem cannot be attributed to an unrelated
+        # submission file by changing the agent's extracted metadata.
+        with self.assertRaisesRegex(ValueError, 'different module'):
+            compare_types(native | {'module':'Mathlib.Other'}, native, native_module='ProximityPrize.SubmissionUpper.Helper')
 
     def test_inventory_starts_with_both_winners_then_nonwinning_work(self):
         track_ids = [track['benchmarkId'] for track in CONFIG['tracks']]

@@ -72,6 +72,7 @@ unsafe def main (args : List String) : IO UInt32 := do
   let env ← importModules #[{ module := moduleName.toName }] {} 0
   for name in names do
     let some ci := env.find? name.toName | throw <| IO.userError s!"Missing declaration {name}"
+    let owner := (env.getModuleIdxFor? name.toName).bind fun idx => env.header.moduleNames[idx.toNat]?
     let body := match ci with
       | .defnInfo d => exprJson ci.levelParams renames d.value
       | .opaqueInfo o => exprJson ci.levelParams renames o.value
@@ -82,6 +83,6 @@ unsafe def main (args : List String) : IO UInt32 := do
           | some c => exprJson c.levelParams renames c.type
           | none => toJson "MISSING_CONSTRUCTOR")
       | _ => Json.null
-    IO.println (Json.mkObj [("name", toJson name), ("levels", toJson ci.levelParams.length), ("body", body), ("shape", shape),
+    IO.println (Json.mkObj [("name", toJson name), ("module", toJson (owner.map Name.toString)), ("levels", toJson ci.levelParams.length), ("body", body), ("shape", shape),
       ("type", exprJson ci.levelParams renames ci.type), ("modules", toJson (env.header.moduleNames.map Name.toString)), ("axioms", toJson (axioms env name.toName allowed))]).compress
   return 0
