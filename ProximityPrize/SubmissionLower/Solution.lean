@@ -6783,17 +6783,17 @@ theorem cap_le_choice (w r v lo z : ℕ) (h : ChoiceActive w r v lo) (hz : lo �
     | zero =>
       change 3 ≤ r ∧ 2 ≤ v ∧ 2233 < lo at h
       have ha : 3 ≤ r ∧ 2 ≤ v ∧ 2233 < z := ⟨h.1,h.2.1,h.2.2.trans_le hz⟩
-      simpa only [choice,activated,rawFlag,if_pos ha] using h1
+      exact h1.trans_eq (if_pos ha)
     | succ w =>
       cases w with
       | zero =>
         change 3 ≤ r ∧ 2 ≤ v ∧ 2141 < lo at h
         have ha : 3 ≤ r ∧ 2 ≤ v ∧ 2141 < z := ⟨h.1,h.2.1,h.2.2.trans_le hz⟩
-        simpa only [choice,activated,rawFlag,if_pos ha] using h2
+        exact h2.trans_eq (if_pos ha)
       | succ w =>
         change 3 ≤ r ∧ 2 ≤ v ∧ 2111 < lo at h
         have ha : 3 ≤ r ∧ 2 ≤ v ∧ 2111 < z := ⟨h.1,h.2.1,h.2.2.trans_le hz⟩
-        simpa only [choice,activated,rawFlag,if_pos ha] using h3
+        exact h3.trans_eq (if_pos ha)
 
 theorem choice_affine (w r v lo z : ℕ) (hr : 1 ≤ r) (hlo : 3 ≤ lo)
     (hactive : ChoiceActive w r v lo) (hz : lo ≤ z) :
@@ -8022,9 +8022,9 @@ theorem regular_factor_count
     have hag:∀ gamma ∈ geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g,181353 ≤ (S.agreementFiber gamma).card:=by
       intro gamma hgamma
-      simpa [S,S0,ResidualStage.agreementFiber,ResidualStage.Agrees,
-        reflagResidualStage,regularGeometricResidualStageOfSupport,
-        geometricResidualStageOfSupport] using hagreement gamma (hsub hgamma)
+      change _ ≤ (Finset.univ.filter (fun i : I =>
+        Polynomial.eval (IRSProfile.domain i) (selected gamma) = u0 i + gamma * u1 i)).card
+      exact hagreement gamma (hsub hgamma)
     have hf:=geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero hRsupport g
     have hcount:=Lower80791.FixedStage.fixedStageBound D a b s
       hDlow hDhigh hparam.1 hparam.2.1 hparam.2.2 S hnodes hag hRbox hf
@@ -8518,9 +8518,9 @@ theorem regular_factor_count_hybridC2
         (regularSeeds Q selected Gamma R) g,
         181353 ≤ (S.agreementFiber gamma).card := by
       intro gamma hgamma
-      simpa [S, S0, ResidualStage.agreementFiber, ResidualStage.Agrees,
-        reflagResidualStage, regularGeometricResidualStageOfSupport,
-        geometricResidualStageOfSupport] using hagreement gamma (hsub hgamma)
+      change _ ≤ (Finset.univ.filter (fun i : I =>
+        Polynomial.eval (IRSProfile.domain i) (selected gamma) = u0 i + gamma * u1 i)).card
+      exact hagreement gamma (hsub hgamma)
     have hf := geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero hRsupport g
     have hf1 : (geometricCumulativeFlag K g).all ≤ padSlope p + 2 := hf.1
     have hf2 : (geometricCumulativeFlag K g).yz +
@@ -8925,8 +8925,9 @@ theorem initialA_universal_ownBound
     (by decide +kernel) (by decide +kernel) (by decide +kernel)
     F.1 hF.1.ne_zero hFbox hFsupport selected Gamma u0 u1
     hdegree hagreement hno Fself Lower80791.HybridRealizeC2.realizationC2
-  simpa only [RCN140.regularSeeds,regularCumulativeFlag,Fself,
-    LocatorCoprimeQuotient.regularIndexSelf_val] using hown
+  set_option backward.isDefEq.respectTransparency false in
+    simpa only [LocatorHybridCost.OwnBound,RCN140.regularSeeds,regularCumulativeFlag,Fself,
+      LocatorCoprimeQuotient.regularIndexSelf_val] using hown
 
 end
 end ProximityPrize.SubmissionLower.Lower80791.InitialBridge
@@ -11414,7 +11415,8 @@ theorem irs_scalar_finite_list_card_le
    funext i
    have hh:=congrArg (fun P:Polynomial IRSProfile.Field =>
      P.eval (IRSProfile.domain i)) h
-   simpa only [selected, ReedSolomon.toPolynomial_eval_at_domain] using hh
+   exact (ReedSolomon.toPolynomial_eval_at_domain (c:=codeword c) (i:=i)).symm.trans
+     (hh.trans (ReedSolomon.toPolynomial_eval_at_domain (c:=codeword d) (i:=i)))
  have hcard:Gamma.card = L.card:=by
    rw [show Gamma = Finset.univ.image selected by rfl,
      Finset.card_image_of_injective _ hselected, Finset.card_univ,
@@ -11454,7 +11456,8 @@ theorem irs_scalar_finite_list_card_le
        Finset.univ.filter (fun i => c.1 i = received i):=by
      apply Finset.filter_congr
      intro i hi
-     rw [ReedSolomon.toPolynomial_eval_at_domain]
+     rw [show (selected c).eval (IRSProfile.domain i) = c.1 i from
+       ReedSolomon.toPolynomial_eval_at_domain (c:=codeword c) (i:=i)]
    rw [heq]
    exact hclose c.1 c.2
  have hbound:=seedless_list_card_le IRSProfile.Field Q hQ hbox hlegacy Gamma
