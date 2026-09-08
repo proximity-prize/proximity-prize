@@ -125,9 +125,8 @@ preserve the current limits and scoring, and run both winners plus the malformed
 proof/import negative cases. Those actual competition checks have not run here.
 Do not run Yukon benchmark reorganization; it would reset and replay results.
 
-The CompPoly pin `9d36af56cd57a468ade1cbbc8fae324983d79708` is currently local.
-`benchmark/comp-poly-lean4331.patch` carries that exact dependency fix and its
-regression test for review. A remote clean checkout needs that commit made
+The CompPoly pin `9d36af56cd57a468ade1cbbc8fae324983d79708` contains the dependency
+fix and its regression test. A remote clean checkout needs that local commit made
 available at its configured repository before dependency installation can succeed.
 Likewise the configured maintenance source commits are local until a separately
 approved push. The `--repository` override supports local Git preparation now.
