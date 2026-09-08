@@ -126,10 +126,15 @@ proof/import negative cases. Those actual competition checks have not run here.
 Do not run Yukon benchmark reorganization; it would reset and replay results.
 
 The CompPoly pin `9d36af56cd57a468ade1cbbc8fae324983d79708` contains the dependency
-fix and its regression test. A remote clean checkout needs that local commit made
-available at its configured repository before dependency installation can succeed.
-Likewise the configured maintenance source commits are local until a separately
-approved push. The `--repository` override supports local Git preparation now.
+fix and its regression test. It is available on `codex/prove2me-rabin-replay` in
+`https://github.com/yudduy/CompPoly`.
+
+To continue elsewhere, fetch branch `codex/prove2me-integration-20260907` from
+`https://github.com/yudduy/proximity-prize`. During `prepare`, use
+`--repository https://github.com/yudduy/proximity-prize` so Git can retrieve the
+maintenance commits from that fork. The canonical competition repository and its
+live verifier remain unchanged. The matching Yukon branch is in the private
+`yudduy/yukon` fork; its `docs/prove2me.md` describes local API and website setup.
 
 For a future hosted test, the service account, actual authenticated graph
 responses, matching verifier profiles and accessible dependency/maintenance pins
