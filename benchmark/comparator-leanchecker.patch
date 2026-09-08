@@ -1,5 +1,5 @@
 diff --git a/Main.lean b/Main.lean
-index f77c3a1..0382491 100644
+index f77c3a1..9a06a03 100644
 --- a/Main.lean
 +++ b/Main.lean
 @@ -152,2 +152,21 @@ def safeExport (module : Lean.Name) (decls : Array Lean.Name) : M String := do
@@ -16,8 +16,8 @@ index f77c3a1..0382491 100644
 +  runSandBoxed {
 +    cmd := (leanPrefix / "bin" / "leanchecker").toString
 +    args := #[modulePrefix.toString]
-+    envPass := #["PATH", "HOME", "LEAN_PATH", "LEAN_ABORT_ON_PANIC"]
-+    envOverride := #[("LEAN_ABORT_ON_PANIC", some "1")]
++    envPass := #["PATH", "HOME", "LEAN_PATH", "LEAN_ABORT_ON_PANIC", "LEAN_NUM_THREADS"]
++    envOverride := #[("LEAN_ABORT_ON_PANIC", some "1"), ("LEAN_NUM_THREADS", some "1")]
 +    readablePaths := #[projectDir, dotLakeDir]
 +    writablePaths := #[]
 +    executablePaths := #[leanPrefix]

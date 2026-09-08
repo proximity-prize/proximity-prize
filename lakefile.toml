@@ -5,14 +5,18 @@ defaultTargets = ["ProximityPrize"]
 pp.unicode.fun = true
 autoImplicit = false
 
-# Verified-zkEVM/ArkLib#754 is merged; this is its squash-merge commit on `main`,
-# which supersedes the `alh/abf26-toyproblem` branch ref used while the PR was in
-# review. `lake-manifest.json` records the same commit, and it is exposed in every
-# score artifact.
+# Pin the Lean 4.33.1 / Mathlib migration from Verified-zkEVM/ArkLib#791.
+# The manifest and score artifacts record this exact commit.
 [[require]]
 name = "Arklib"
 git = "https://github.com/Verified-zkEVM/ArkLib"
-rev = "e65197892890b8fd9b0dc05b8980273cf1d595cc"
+rev = "3f3f045dd295834c262bd6f0d9dfdfee07cc8e76"
+
+# Keep the KoalaBear certificate replayable with the Lean 4.33.1 kernel.
+[[require]]
+name = "CompPoly"
+git = "https://github.com/yudduy/CompPoly"
+rev = "9d36af56cd57a468ade1cbbc8fae324983d79708"
 
 [[lean_lib]]
 name = "ProximityPrize"

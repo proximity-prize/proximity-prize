@@ -1796,7 +1796,7 @@ theorem mem_finiteOrderSupport (x:L) (hx:x≠0)
    (w:HeightOneSpectrum (FiniteNormalization K L)):
    w∈finiteOrderSupport K L x hx ↔
      fieldOrder (FiniteNormalization K L) L w x≠0:=by
- simp [finiteOrderSupport]
+ exact Set.Finite.mem_toFinset _
 def baseRepresentative (w:HeightOneSpectrum (FiniteNormalization K L)):Polynomial K:=
  (RCN366.exists_monic_primePlace K
    (HeightOneSpectrum.under (Polynomial K) w)).choose
@@ -30870,7 +30870,8 @@ def adaptiveUnitProjectionFamily_of_nested
  · intro C v
    rw [exponentSetPoleWeight_unitZ]
    change _=RCN187.poleOrder v.val _
-   rw [coordinateOfGate_value]
+   exact congrArg (RCN187.poleOrder v.val)
+     (coordinateOfGate_value (coordinate Omega C.1 2) (hZ C)).symm
  · intro C v
    rw [exponentSetPoleWeight_unitYZ]
    change _=RCN187.poleOrder v.val _
@@ -35618,7 +35619,8 @@ def adaptiveUnitProjectionFamily_of_active_nested
  · intro C v
    rw [exponentSetPoleWeight_unitZ]
    change _=RCN187.poleOrder v.val _
-   rw [coordinateOfGate_value]
+   exact congrArg (RCN187.poleOrder v.val)
+     (coordinateOfGate_value (coordinate Omega C.1 2) (hZ C)).symm
  · intro C v
    rw [exponentSetPoleWeight_unitYZ]
    change _=RCN187.poleOrder v.val _
@@ -37636,7 +37638,7 @@ theorem exponent_mul_residueDegree_le_length_quotient_maximal_pow
      (IsLocalRing.ResidueField L):ℕ):ℕ∞) ≤ Module.length R M:=by
    rw [Nat.cast_mul, ←hresidue,
      IsLocalRing.length_restrictScalars R L M]
-   exact mul_le_mul_right' hlocal _
+   exact mul_le_mul_left hlocal _
  let e:=IsLocalization.AtPrime.equivQuotMaximalIdealPow p L n
  have heq:Module.length R (S ⧸ p^n)=Module.length R M:=
    (e.toLinearEquiv.restrictScalars R).length_eq
@@ -39226,6 +39228,7 @@ instance [CommRing R]:CommRing (DualNumber R) where
  zero_mul x:=by ext <;> simp
  mul_zero x:=by ext <;> simp
  mul_comm x y:=by ext <;> simp [mul_comm,add_comm]
+set_option backward.isDefEq.respectTransparency false in
 def inlRingHom [CommRing R]:R →+*DualNumber R where
  toFun r:=(r,0)
  map_one':=rfl
@@ -39255,6 +39258,7 @@ def sndHom [CommRing R]:DualNumber R →ₗ[R] R where
  toFun x:=x.2
  map_add' _ _:=rfl
  map_smul' _ _:=rfl
+set_option backward.isDefEq.respectTransparency false in
 theorem isUnit_of_isUnit_fst [CommRing R] {x:DualNumber R} (hx:IsUnit x.1):
    IsUnit x:=by
  rcases x with ⟨a,b⟩
@@ -39279,6 +39283,7 @@ open RCN078
 variable {K R S:Type*} [CommRing K] [CommRing R] [CommRing S]
  [Algebra K R] [Algebra K S] [Algebra R S] [IsScalarTower K R S]
  (M:Submonoid R) [IsLocalization M S]
+set_option backward.isDefEq.respectTransparency false in
 def derivationDualAlgHom (D:Derivation K R R):R →ₐ[K] DualNumber S where
  toFun r:=(algebraMap R S r,algebraMap R S (D r))
  map_one':=by
@@ -39296,6 +39301,7 @@ def derivationDualAlgHom (D:Derivation K R R):R →ₐ[K] DualNumber S where
    apply DualNumber.ext
    · exact (IsScalarTower.algebraMap_apply K R S k).symm
    · simp
+set_option backward.isDefEq.respectTransparency false in
 theorem derivationDualAlgHom_isUnit (D:Derivation K R R) (y:M):
    IsUnit (derivationDualAlgHom (S:=S) D y):=by
  apply DualNumber.isUnit_of_isUnit_fst
@@ -39303,11 +39309,13 @@ theorem derivationDualAlgHom_isUnit (D:Derivation K R R) (y:M):
 noncomputable def localizedDualAlgHom (D:Derivation K R R):
    S →ₐ[K] DualNumber S:=
  IsLocalization.liftAlgHom (derivationDualAlgHom_isUnit M D)
+set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem localizedDualAlgHom_algebraMap (D:Derivation K R R) (r:R):
    localizedDualAlgHom M D (algebraMap R S r)=
      (algebraMap R S r,algebraMap R S (D r)):=by
  simp [localizedDualAlgHom,derivationDualAlgHom]
+set_option backward.isDefEq.respectTransparency false in
 theorem localizedDualAlgHom_fst (D:Derivation K R R) (x:S):
    (localizedDualAlgHom M D x).fst=x:=by
  have hhom:
@@ -40368,6 +40376,7 @@ theorem map_agreementNumerator_base
  simp only [agreementNumerator,clearedTaylorNumerator,commonNumeratorTerm,
    affineSeedPolynomial,map_sub,map_sum,map_add,map_mul,map_pow,MvPolynomial.map_C,
    MvPolynomial.map_X,map_numerator,polyH,MvPolynomial.pderiv_map]
+set_option backward.isDefEq.respectTransparency false in
 theorem globalPolynomial_mul_factor
    (c:K →+*L) (F Q:Poly4 K) (v:Fin 4 → L)
    (hF:MvPolynomial.eval₂Hom c v F=0)
@@ -42230,6 +42239,7 @@ theorem coefficientPoleProfile_of_tangent_firstTail
      (initialCoordinate K) hxk (coordinate (Omega K) Pcurve 0)
    exact truncatedPolynomial_initial_value phi Pcurve S.F hFC hHC w
  · exact hyz
+set_option backward.isDefEq.respectTransparency false in
 theorem tangent_component_card_le
    (S:ResidualStage (polynomialEmbedding K) Gamma x p errors flag w support)
    (C:FirstTailComponent S)
@@ -44624,6 +44634,7 @@ variable (K L:Type) [Field K] [Field L] [Algebra K L]
  (order:Fin 3 ≃ Fin 3)
  (e:MvPolynomial (Fin 3) K →ₐ[K] L)
  (ht:Transcendental K (e (MvPolynomial.X (order 0))))
+set_option backward.isDefEq.respectTransparency false in
 theorem localized_surface_residue_ne_zero
    (hfinite:
      letI:Algebra (RatFunc K) L:=
@@ -45691,6 +45702,7 @@ theorem activeNestedUnitFamily_allCost (C:RegularComponent Omega G T H):
              (D.allAffineTranscendental C)
          finite:=D.allFinite C
          separable:=D.allSeparable C}):=rfl
+set_option backward.isDefEq.respectTransparency false in
 theorem activeNestedUnitFamily_zCost_eq_flagCost
    (a:ActiveNestedZIndex (G:=G) (T:=T) (H:=H)):
    (activeNestedUnitFamily base hactive hZ hSderiv D hG hproper
@@ -47111,6 +47123,7 @@ theorem mixed_padded_le_succ (flag:FlagDegree) (a b s d:ℕ) (r:FlagDegree):
  exact Nat.le_add_right _ _
 variable {Γ:Finset K} {x:I → K} {p e a b s:ℕ} [CharP (Ω K) p]
  {flag:FlagDegree} {w:ℕ}
+set_option backward.isDefEq.respectTransparency false in
 theorem actual_identityCurveCountProvider
    (S:ResidualStage (polynomialEmbedding K) Γ x p e flag w (support a b s))
    (agreements:ℕ) (hnodes:S.nodes.card=agreements+e)
@@ -49297,6 +49310,7 @@ local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
 local instance:CharP IRSProfile.Field prime:=by
  change CharP KoalaBear.Ext6 2130706433
  exact charP_of_injective_algebraMap' KoalaBear.Field 2130706433
+set_option backward.isDefEq.respectTransparency false in
 theorem irs_scalar_finite_list_card_le
    (received:IRSProfile.Index → IRSProfile.Field)
    (L:Finset (IRSProfile.Index → IRSProfile.Field))
