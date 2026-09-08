@@ -29,11 +29,11 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    work is usually a good trade.
 
    **Split generated tables into small per-row definitions.** This is the one
-   thing that decides whether a large table is usable at all. Around 30 MiB of
-   tables split that way elaborates in a couple of minutes and a few GiB; the
-   same data in one definition does not finish. The cost is superlinear in the
-   size of a single definition and roughly linear in the number of them, so the
-   shape of what you generate matters far more than how much.
+   thing that decides whether a large table is usable at all. The cost is
+   superlinear in the size of a single definition and roughly linear in the
+   number of them, so a table filling the size budget elaborates in minutes when
+   split and does not finish at all as one definition. Shape matters far more
+   than size.
 4. Do not use the submission as an archive. Only `.lean` files plus `score.txt`
    and the track claim file (`radius.txt` for lower, `unsafe-index.txt` for
    upper) are admitted at all, and files that no import reaches still count
@@ -147,19 +147,19 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    and it is a trap. Every module that builds concurrently loads the challenge's
    import closure independently — about **3 GiB and five seconds each**, before
    any of your own code — so concurrency multiplies the one cost you cannot
-   amortise. Measured on four modules of equal work: chained they build in
-   roughly the sum of their parts, while as independent siblings they were never
-   faster and in one run took **eleven times a single module**, with wide
-   variance between runs. That was on a machine with far more memory than the
-   verifier gives you.
+   amortise. Modules of equal work chained together build in roughly the sum of
+   their parts; the same modules as independent siblings are never faster, and
+   can be several times slower, with wide variance between runs. Memory
+   bandwidth on import is the limit, and it binds sooner than the memory
+   ceiling does.
 
    So rule 7's advice to have one heavy module import the next is about speed as
    much as memory. A sequential chain is the right shape. If you want a build to
    finish sooner, make the work smaller rather than wider.
 
    One thing that *is* free: if you have `set_option Elab.async false` in your
-   sections, take it out unless you know you need it. Removing it from a real
-   submission took about 13% off the whole build with no other change.
+   sections, take it out unless you know you need it. Sequential elaboration is
+   rarely what you want, and turning it back on costs nothing to try.
 7. Stay inside the verifier's **disk** budget. The build writes to a **31.9 GiB**
    filesystem of its own, and filling it fails the submission unscored and
    reports `candidate_out_of_disk`.
