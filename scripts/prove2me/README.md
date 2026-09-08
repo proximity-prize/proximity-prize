@@ -20,6 +20,12 @@ python3 scripts/check-versions.py
 The batch stages are independently runnable. `inventory` reads public Yukon
 submissions, starts with the current winners and includes nonwinning attempts.
 It selects one source commit per batch. The default state is local; R2 is optional.
+Discovery builds all tracked Lean modules in that submission root, including
+helpers the final claim does not import. Independently compiled public lemmas
+and definitions are offered to the agent even when they are short or unused.
+A failed nonwinning final attempt does not hide working helper modules. Only
+selected results that pass the source-fidelity and admission checks can publish;
+this does not turn a failed competition attempt into an accepted submission.
 
 ```sh
 python3 scripts/prove2me/batch.py inventory --directory batch

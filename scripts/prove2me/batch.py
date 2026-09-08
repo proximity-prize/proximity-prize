@@ -10,7 +10,7 @@ import sys
 import time
 import urllib.request
 from pathlib import Path
-from generate import read_jsonl, suggest_nodes
+from generate import discovery_roots, read_jsonl, submission_modules, suggest_nodes
 from provider import Provider
 from publish import Publisher, digest
 from storage import Storage, empty_state
@@ -83,11 +83,26 @@ def extract(source, upstream, directory, work, workers=1):
         raise ValueError("Prove2Me workspace is not at the pinned revision")
     if not MODULE.fullmatch(work["module"]):
         raise ValueError("Invalid root module")
-    run(["lake", "build", work["module"]], source, timeout=10500)
     facts = directory / "facts"
     facts.mkdir(exist_ok=True)
+    paths = run(["git", "ls-tree", "-r", "--name-only", work["nativeCommit"], "--", work["directory"]], source).splitlines()
+    modules = submission_modules(paths, work["directory"])
+    built, failed = [], []
+    # A failed final attempt must not hide independently compiling helper modules.
+    # Helpers go first; Lake reuses their outputs when compiling the final claim.
+    for module in sorted(modules, key=lambda name: (name == work["module"], name)):
+        try:
+            run(["lake", "build", module], source, timeout=10500)
+            built.append(module)
+        except subprocess.CalledProcessError:
+            failed.append(module)
+    (facts / "builds.json").write_text(json.dumps({"built": built, "failed": failed}, indent=2) + "\n")
+    if not built:
+        raise ValueError("No submission module compiled; retain this source for repair")
+    if work.get("winner") and work["module"] not in built:
+        raise ValueError("The winning claim did not compile; do not replace it with a partial import")
     script = (upstream / "scripts/extract_decl_graph.lean").read_text()
-    script = script.replace("import SumSquares\n", f'import {work["module"]}\n')
+    script = script.replace("import SumSquares\n", "".join(f"import {module}\n" for module in built))
     script = script.replace("let isProj : Name → Bool := fun m => projPrefix.isPrefixOf m", "let isProj : Name → Bool := fun m => projPrefix.isPrefixOf m || (`ArkLib).isPrefixOf m || (`CompPoly).isPrefixOf m")
     script = script.replace("let projPrefix := `SumSquares", "let projPrefix := `ProximityPrize")
     (source / "ExtractGraph.lean").write_text(script)
@@ -95,7 +110,9 @@ def extract(source, upstream, directory, work, workers=1):
     (facts / "decl_graph.jsonl").write_bytes((source / "decl_graph.jsonl").read_bytes())
     rows = read_jsonl(facts / "decl_graph.jsonl")
     from generate import reachable
-    live = reachable(rows, [work["root"]])
+    candidates = discovery_roots(rows, set(built))
+    roots = [work["root"]] if any(row["name"] == work["root"] for row in rows) else []
+    live = reachable(rows, [*roots, *candidates])
     modules = sorted({row["module"] for row in live})
     search = [source, *(source / ".lake/packages").iterdir()]
     oracle = upstream / "scripts/extract_sketch_info.lean"
@@ -118,8 +135,8 @@ def extract(source, upstream, directory, work, workers=1):
         for module, binding in pool.map(one, modules):
             bindings[module] = binding
     (facts / "sources.json").write_text(json.dumps(bindings, indent=2) + "\n")
-    suggested = suggest_nodes(rows, {module: read_jsonl(facts / f"{module}.jsonl") for module in modules}, [work["root"]])
-    (facts / "suggested.json").write_text(json.dumps({"roots": [work["root"]], "nodes": suggested}, indent=2) + "\n")
+    suggested = suggest_nodes(rows, {module: read_jsonl(facts / f"{module}.jsonl") for module in modules}, roots, candidates)
+    (facts / "suggested.json").write_text(json.dumps({"roots": roots, "candidates": candidates, "nodes": suggested, "failedModules": failed}, indent=2) + "\n")
 
 
 def main():

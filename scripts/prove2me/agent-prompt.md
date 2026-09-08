@@ -12,8 +12,15 @@ Offsets are UTF-8 bytes from upstream's Lean oracles. Do not split proof bodies
 with regex or infer dependency facts from text. Preserve scopes, notation and
 instance context. The upstream worked example demonstrates the transformation.
 
-Select a small useful graph, starting with the indicated root. Include relevant
-nonwinning work. Keep definitions, theorem statements and proof attempts separate.
+Select useful work from `candidates`, including short lemmas, definitions and
+results independent of the final claim. Review `failedModules`: independently
+compiled helpers may still be useful when the final attempt failed. The checker
+must verify each selected result; compilation alone does not rule out `sorry`.
+For a winning submission, preserve the indicated final root. For other submissions,
+publish useful verified intermediate work even without a completed final claim.
+Only actual final claims use `isRoot: true`; independent lemmas remain searchable
+without becoming numerical competition claims. Keep definitions, statements and
+proof attempts separate.
 Vendor only the needed ArkLib/CompPoly declarations into platform definition
 bundles; the provider environment has Mathlib, not the competition repository.
 Use the graph's type/value dependencies, instance roots and constructor closure.
