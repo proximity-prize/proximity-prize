@@ -66,9 +66,10 @@ def inventory(state, fetch=None, limit=1):
         return (item["submissionId"] not in pending, state.get("attempted", {}).get(item["id"], 0),
                 not item["winner"], item["createdAt"], item["submissionId"])
     # Both unattempted current winners lead the historical backlog.
-    work.sort(key=priority)
-    unique = {item["id"]: item for item in reversed(work)}
-    return sorted(unique.values(), key=priority)[:limit]
+    unique = {}
+    for item in sorted(work, key=priority):
+        unique.setdefault(item["id"], item)
+    return list(unique.values())[:limit]
 
 
 def checkout(work, directory, repository=None):
@@ -127,7 +128,6 @@ def extract(source, upstream, directory, work, workers=1):
     modules = sorted({row["module"] for row in live})
     search = [source, *(source / ".lake/packages").iterdir()]
     oracle = upstream / "scripts/extract_sketch_info.lean"
-    bindings = {}
     def one(module):
         relative = Path(*module.split(".")).with_suffix(".lean")
         candidates = [root / relative for root in search if (root / relative).is_file()]
@@ -143,8 +143,7 @@ def extract(source, upstream, directory, work, workers=1):
         return module, binding
     # Optional bounded overlap; default is one because measured Lean contention can cost more.
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
-        for module, binding in pool.map(one, modules):
-            bindings[module] = binding
+        bindings = dict(pool.map(one, modules))
     (facts / "sources.json").write_text(json.dumps(bindings, indent=2) + "\n")
     suggested = suggest_nodes(rows, {module: read_jsonl(facts / f"{module}.jsonl") for module in modules}, roots, candidates)
     (facts / "suggested.json").write_text(json.dumps({"roots": roots, "candidates": candidates, "nodes": suggested, "failedModules": failed}, indent=2) + "\n")
