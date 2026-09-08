@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "workspaceRevision": "6b46503a65c3a4252170ed5ca984a796b5a5b6b4",
+  "toolchain": "leanprover/lean4:v4.33.1",
+  "mathlibRev": "0df444a360eaa60ab8c11dca51a86af692955474",
+  "repository": "https://github.com/proximity-prize/proximity-prize",
+  "api": "https://yukon-api-prod.fly.dev",
+  "tag": "better-codes-proximity-prize",
+  "tracks": [
+    {
+      "track": "upper",
+      "benchmarkId": "1226aa4f-1258-4eb7-8c9e-846ece1e2543",
+      "directory": "ProximityPrize/SubmissionUpper",
+      "module": "ProximityPrize.SubmissionUpper.Solution",
+      "root": "ProximityPrize.Benchmark.Upper.candidate",
+      "direction": "-"
+    },
+    {
+      "track": "lower",
+      "benchmarkId": "a2e3eaa8-95c0-4a62-81d3-2cd7e78e8575",
+      "directory": "ProximityPrize/SubmissionLower",
+      "module": "ProximityPrize.SubmissionLower.Solution",
+      "root": "ProximityPrize.Benchmark.candidate",
+      "direction": "+"
+    }
+  ],
+  "maintenanceSources": {
+    "224323f053d0d1dfa78d7b9625194fe0133f04bc": "8b7e6d422a8d7f4554e06ae2ed23eb12c1651ebf",
+    "1b2ca03c8b0ad8a53d647f1eb13aa60b928b8a2c": "8b7e6d422a8d7f4554e06ae2ed23eb12c1651ebf"
+  }
+}
