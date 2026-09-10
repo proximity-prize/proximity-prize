@@ -1,0 +1,139 @@
+import ProximityPrize.SubmissionLower.BoundaryTailBaseChecked08FastZero06
+
+namespace ProximityPrize.SubmissionLower.BoundaryTailBaseChecked
+open BoundaryTailBaseChecksData BoundaryTailBaseChecksCore
+open BoundaryTailBaseFast BoundaryTailBaseFastData BoundaryTailBaseFastValidated
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 10000000
+set_option Elab.async true
+
+theorem zero_r8_part96 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (96+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 96 := by decide +kernel
+  exact zeroAtFast_sound 8 96 hfast
+
+theorem zero_r8_part97 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (97+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 97 := by decide +kernel
+  exact zeroAtFast_sound 8 97 hfast
+
+theorem zero_r8_part98 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (98+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 98 := by decide +kernel
+  exact zeroAtFast_sound 8 98 hfast
+
+theorem zero_r8_part99 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (99+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 99 := by decide +kernel
+  exact zeroAtFast_sound 8 99 hfast
+
+theorem zero_r8_part100 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (100+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 100 := by decide +kernel
+  exact zeroAtFast_sound 8 100 hfast
+
+theorem zero_r8_part101 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (101+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 101 := by decide +kernel
+  exact zeroAtFast_sound 8 101 hfast
+
+theorem zero_r8_part102 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (102+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 102 := by decide +kernel
+  exact zeroAtFast_sound 8 102 hfast
+
+theorem zero_r8_part103 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (103+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 103 := by decide +kernel
+  exact zeroAtFast_sound 8 103 hfast
+
+theorem zero_r8_part104 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (104+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 104 := by decide +kernel
+  exact zeroAtFast_sound 8 104 hfast
+
+theorem zero_r8_part105 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (105+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 105 := by decide +kernel
+  exact zeroAtFast_sound 8 105 hfast
+
+theorem zero_r8_part106 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (106+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 106 := by decide +kernel
+  exact zeroAtFast_sound 8 106 hfast
+
+theorem zero_r8_part107 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (107+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 107 := by decide +kernel
+  exact zeroAtFast_sound 8 107 hfast
+
+theorem zero_r8_part108 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (108+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 108 := by decide +kernel
+  exact zeroAtFast_sound 8 108 hfast
+
+theorem zero_r8_part109 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (109+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 109 := by decide +kernel
+  exact zeroAtFast_sound 8 109 hfast
+
+theorem zero_r8_part110 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (110+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 110 := by decide +kernel
+  exact zeroAtFast_sound 8 110 hfast
+
+theorem zero_r8_part111 : ∀ i ∈ List.range 1, ZeroCheckAt 8 (111+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast : ZeroAtFast 8 111 := by decide +kernel
+  exact zeroAtFast_sound 8 111 hfast
+
+end ProximityPrize.SubmissionLower.BoundaryTailBaseChecked
