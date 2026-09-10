@@ -11166,7 +11166,7 @@ theorem cellRational_yz (t y r : Nat) :
 /-- The hybrid coordinate's yz-column in closed form. -/
 theorem cellHybridCoordinate_yz (t y r : Nat) :
     (cellHybridCoordinate t y r).yz = 131074 * cellB y r + 65538 := by
-  simp only [cellHybridCoordinate, add_yz, cellRational_yz, w]
+  norm_num [cellHybridCoordinate, add_yz, cellRational_yz, w, Nat.add_assoc]
 
 /-- In the hybrid branch `r + 2 ≤ y` the atom `b = cellB y r` is positive, so any
     error cap below 131075 passes the rational gate. -/
@@ -18025,7 +18025,7 @@ theorem mem_range_exponent (m L s1 s2 : ℕ) (d : Fin 5 →₀ ℕ) :
     let e : Index m L s1 s2 := ⟨fun k => ⟨d k,hb k⟩,h.2.1,h.2.2.2.2⟩
     refine ⟨e,?_⟩
     ext k
-    simp [e]
+    exact exponent_apply e k
 
 def sourceMap (m L s1 s2 : ℕ) : (Index m L s1 s2 → K) →ₗ[K]
     Jet (MvPolynomial (Fin 3) K) :=
@@ -21730,9 +21730,9 @@ theorem regular_factor_count
     have hag:∀ gamma ∈ geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g,181356 ≤ (S.agreementFiber gamma).card:=by
       intro gamma hgamma
-      simpa [S,S0,ResidualStage.agreementFiber,ResidualStage.Agrees,
-        reflagResidualStage,regularGeometricResidualStageOfSupport,
-        geometricResidualStageOfSupport] using hagreement gamma (hsub hgamma)
+      change _ ≤ (Finset.univ.filter (fun i : I =>
+        Polynomial.eval (IRSProfile.domain i) (selected gamma) = u0 i + gamma * u1 i)).card
+      exact hagreement gamma (hsub hgamma)
     have hf:=geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero hRsupport g
     have hcount:=Lower80788.FixedStage.fixedStageBound D a b s
       hDlow hDhigh hparam.1 hparam.2.1 hparam.2.2 S hnodes hag hRbox hf
@@ -22226,9 +22226,9 @@ theorem regular_factor_count_hybridC2
         (regularSeeds Q selected Gamma R) g,
         181356 ≤ (S.agreementFiber gamma).card := by
       intro gamma hgamma
-      simpa [S, S0, ResidualStage.agreementFiber, ResidualStage.Agrees,
-        reflagResidualStage, regularGeometricResidualStageOfSupport,
-        geometricResidualStageOfSupport] using hagreement gamma (hsub hgamma)
+      change _ ≤ (Finset.univ.filter (fun i : I =>
+        Polynomial.eval (IRSProfile.domain i) (selected gamma) = u0 i + gamma * u1 i)).card
+      exact hagreement gamma (hsub hgamma)
     have hf := geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero hRsupport g
     have hf1 : (geometricCumulativeFlag K g).all ≤ padSlope p + 2 := hf.1
     have hf2 : (geometricCumulativeFlag K g).yz +
@@ -23629,10 +23629,9 @@ theorem outside_sum (A B C H : ℕ) (hA : 0 < A) (hB : 0 < B)
     apply Finset.sum_bij (fun p _ => (A-1-p.1,B-1-p.2))
     · intro p hp
       simp only [s, Finset.mem_filter, Finset.mem_product, Finset.mem_range] at hp
-      simp only [t, Finset.mem_filter, Finset.mem_product, Finset.mem_range, corner,
-        Prod.fst, Prod.snd]
-      dsimp [corner] at hkA hkB
-      omega
+      apply Finset.mem_filter.mpr
+      refine ⟨Finset.mem_product.mpr ⟨Finset.mem_range.mpr ?_, Finset.mem_range.mpr ?_⟩, ?_⟩
+      all_goals dsimp [corner] at hkA hkB ⊢; omega
     · intro p hp q hq hpq
       simp only [s, Finset.mem_filter, Finset.mem_product, Finset.mem_range] at hp hq
       have h1 := congrArg Prod.fst hpq

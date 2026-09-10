@@ -11,7 +11,8 @@
       "setupCommand": ["bash", "-lc", "./setup.sh"],
       "benchmarkCommand": ["bash", "-lc", "./benchmark.sh lower"],
       "scorePath": ".yukon/irs-reduction-threshold-lower-score.json",
-      "runner": {"provider": "github-actions", "workflow": "benchmark-irs-reduction-threshold-lower.yml"}
+      "runner": {"provider": "github-actions", "workflow": "benchmark-irs-reduction-threshold-lower.yml"},
+      "syncSource": {"submissionId": "f59afa4c-56e0-40f4-95d8-0877f6fe9577", "commit": "8b7e6d422a8d7f4554e06ae2ed23eb12c1651ebf"}
     },
     {
       "name": "irs-reduction-threshold-upper",
@@ -22,7 +23,8 @@
       "setupCommand": ["bash", "-lc", "./setup.sh"],
       "benchmarkCommand": ["bash", "-lc", "./benchmark.sh upper"],
       "scorePath": ".yukon/irs-reduction-threshold-upper-score.json",
-      "runner": {"provider": "github-actions", "workflow": "benchmark-irs-reduction-threshold-upper.yml"}
+      "runner": {"provider": "github-actions", "workflow": "benchmark-irs-reduction-threshold-upper.yml"},
+      "syncSource": {"submissionId": "bd59768c-5fe4-466a-a8f2-e94a39ae4d4a", "commit": "8b7e6d422a8d7f4554e06ae2ed23eb12c1651ebf"}
     }
   ]
 }
