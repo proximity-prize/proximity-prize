@@ -1,0 +1,155 @@
+import ProximityPrize.SubmissionLower.BoundaryTailBaseChecked24FastStrict06
+
+namespace ProximityPrize.SubmissionLower.BoundaryTailBaseChecked
+open BoundaryTailBaseChecksData BoundaryTailBaseChecksCore
+open BoundaryTailBaseFast BoundaryTailBaseFastData BoundaryTailBaseFastValidated
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 10000000
+set_option Elab.async true
+
+theorem strict_r24_part96 : ∀ i ∈ List.range 1, StrictCheckAt 24 (96+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 96 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 96) 24 96 := by decide +kernel
+  exact strictAtFast_sound (row 24 96) 24 96 hvalid hfast
+
+theorem strict_r24_part97 : ∀ i ∈ List.range 1, StrictCheckAt 24 (97+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 97 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 97) 24 97 := by decide +kernel
+  exact strictAtFast_sound (row 24 97) 24 97 hvalid hfast
+
+theorem strict_r24_part98 : ∀ i ∈ List.range 1, StrictCheckAt 24 (98+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 98 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 98) 24 98 := by decide +kernel
+  exact strictAtFast_sound (row 24 98) 24 98 hvalid hfast
+
+theorem strict_r24_part99 : ∀ i ∈ List.range 1, StrictCheckAt 24 (99+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 99 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 99) 24 99 := by decide +kernel
+  exact strictAtFast_sound (row 24 99) 24 99 hvalid hfast
+
+theorem strict_r24_part100 : ∀ i ∈ List.range 1, StrictCheckAt 24 (100+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 100 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 100) 24 100 := by decide +kernel
+  exact strictAtFast_sound (row 24 100) 24 100 hvalid hfast
+
+theorem strict_r24_part101 : ∀ i ∈ List.range 1, StrictCheckAt 24 (101+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 101 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 101) 24 101 := by decide +kernel
+  exact strictAtFast_sound (row 24 101) 24 101 hvalid hfast
+
+theorem strict_r24_part102 : ∀ i ∈ List.range 1, StrictCheckAt 24 (102+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 102 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 102) 24 102 := by decide +kernel
+  exact strictAtFast_sound (row 24 102) 24 102 hvalid hfast
+
+theorem strict_r24_part103 : ∀ i ∈ List.range 1, StrictCheckAt 24 (103+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 103 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 103) 24 103 := by decide +kernel
+  exact strictAtFast_sound (row 24 103) 24 103 hvalid hfast
+
+theorem strict_r24_part104 : ∀ i ∈ List.range 1, StrictCheckAt 24 (104+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 104 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 104) 24 104 := by decide +kernel
+  exact strictAtFast_sound (row 24 104) 24 104 hvalid hfast
+
+theorem strict_r24_part105 : ∀ i ∈ List.range 1, StrictCheckAt 24 (105+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 105 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 105) 24 105 := by decide +kernel
+  exact strictAtFast_sound (row 24 105) 24 105 hvalid hfast
+
+theorem strict_r24_part106 : ∀ i ∈ List.range 1, StrictCheckAt 24 (106+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 106 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 106) 24 106 := by decide +kernel
+  exact strictAtFast_sound (row 24 106) 24 106 hvalid hfast
+
+theorem strict_r24_part107 : ∀ i ∈ List.range 1, StrictCheckAt 24 (107+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 107 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 107) 24 107 := by decide +kernel
+  exact strictAtFast_sound (row 24 107) 24 107 hvalid hfast
+
+theorem strict_r24_part108 : ∀ i ∈ List.range 1, StrictCheckAt 24 (108+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 108 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 108) 24 108 := by decide +kernel
+  exact strictAtFast_sound (row 24 108) 24 108 hvalid hfast
+
+theorem strict_r24_part109 : ∀ i ∈ List.range 1, StrictCheckAt 24 (109+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 109 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 109) 24 109 := by decide +kernel
+  exact strictAtFast_sound (row 24 109) 24 109 hvalid hfast
+
+theorem strict_r24_part110 : ∀ i ∈ List.range 1, StrictCheckAt 24 (110+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 110 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 110) 24 110 := by decide +kernel
+  exact strictAtFast_sound (row 24 110) 24 110 hvalid hfast
+
+theorem strict_r24_part111 : ∀ i ∈ List.range 1, StrictCheckAt 24 (111+i) := by
+  intro i hi
+  have hi0 : i = 0 := by have := List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid := validAll 24 111 (by omega) (by omega) (by omega)
+  have hfast : StrictAtFast (row 24 111) 24 111 := by decide +kernel
+  exact strictAtFast_sound (row 24 111) 24 111 hvalid hfast
+
+end ProximityPrize.SubmissionLower.BoundaryTailBaseChecked
