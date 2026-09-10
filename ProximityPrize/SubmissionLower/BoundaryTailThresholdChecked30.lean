@@ -1,0 +1,2212 @@
+import ProximityPrize.SubmissionLower.BoundaryTailThresholdChecked29
+
+namespace ProximityPrize.SubmissionLower.Lower80801.ThresholdCompressed
+open Lower80801.CompressedData Lower80801.PhaseChecks
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 10000000
+set_option Elab.async true
+
+theorem cell_30_0_0 : CertificateAt 30 0 0 := by decide +kernel
+theorem cell_30_0_1 : CertificateAt 30 0 1 := by decide +kernel
+theorem cell_30_0_2 : CertificateAt 30 0 2 := by decide +kernel
+theorem cell_30_0_3 : CertificateAt 30 0 3 := by decide +kernel
+theorem cell_30_0_4 : CertificateAt 30 0 4 := by decide +kernel
+theorem cell_30_0_5 : CertificateAt 30 0 5 := by decide +kernel
+theorem row_30_0 : ThresholdAt 30 0 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 0 0 cell_30_0_0
+    | exact certificate_sound 30 0 1 cell_30_0_1
+    | exact certificate_sound 30 0 2 cell_30_0_2
+    | exact certificate_sound 30 0 3 cell_30_0_3
+    | exact certificate_sound 30 0 4 cell_30_0_4
+    | exact certificate_sound 30 0 5 cell_30_0_5
+theorem cell_30_1_0 : CertificateAt 30 1 0 := by decide +kernel
+theorem cell_30_1_1 : CertificateAt 30 1 1 := by decide +kernel
+theorem cell_30_1_2 : CertificateAt 30 1 2 := by decide +kernel
+theorem cell_30_1_3 : CertificateAt 30 1 3 := by decide +kernel
+theorem cell_30_1_4 : CertificateAt 30 1 4 := by decide +kernel
+theorem cell_30_1_5 : CertificateAt 30 1 5 := by decide +kernel
+theorem row_30_1 : ThresholdAt 30 1 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 1 0 cell_30_1_0
+    | exact certificate_sound 30 1 1 cell_30_1_1
+    | exact certificate_sound 30 1 2 cell_30_1_2
+    | exact certificate_sound 30 1 3 cell_30_1_3
+    | exact certificate_sound 30 1 4 cell_30_1_4
+    | exact certificate_sound 30 1 5 cell_30_1_5
+theorem cell_30_2_0 : CertificateAt 30 2 0 := by decide +kernel
+theorem cell_30_2_1 : CertificateAt 30 2 1 := by decide +kernel
+theorem cell_30_2_2 : CertificateAt 30 2 2 := by decide +kernel
+theorem cell_30_2_3 : CertificateAt 30 2 3 := by decide +kernel
+theorem cell_30_2_4 : CertificateAt 30 2 4 := by decide +kernel
+theorem cell_30_2_5 : CertificateAt 30 2 5 := by decide +kernel
+theorem row_30_2 : ThresholdAt 30 2 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 2 0 cell_30_2_0
+    | exact certificate_sound 30 2 1 cell_30_2_1
+    | exact certificate_sound 30 2 2 cell_30_2_2
+    | exact certificate_sound 30 2 3 cell_30_2_3
+    | exact certificate_sound 30 2 4 cell_30_2_4
+    | exact certificate_sound 30 2 5 cell_30_2_5
+theorem cell_30_3_0 : CertificateAt 30 3 0 := by decide +kernel
+theorem cell_30_3_1 : CertificateAt 30 3 1 := by decide +kernel
+theorem cell_30_3_2 : CertificateAt 30 3 2 := by decide +kernel
+theorem cell_30_3_3 : CertificateAt 30 3 3 := by decide +kernel
+theorem cell_30_3_4 : CertificateAt 30 3 4 := by decide +kernel
+theorem cell_30_3_5 : CertificateAt 30 3 5 := by decide +kernel
+theorem row_30_3 : ThresholdAt 30 3 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 3 0 cell_30_3_0
+    | exact certificate_sound 30 3 1 cell_30_3_1
+    | exact certificate_sound 30 3 2 cell_30_3_2
+    | exact certificate_sound 30 3 3 cell_30_3_3
+    | exact certificate_sound 30 3 4 cell_30_3_4
+    | exact certificate_sound 30 3 5 cell_30_3_5
+theorem cell_30_4_0 : CertificateAt 30 4 0 := by decide +kernel
+theorem cell_30_4_1 : CertificateAt 30 4 1 := by decide +kernel
+theorem cell_30_4_2 : CertificateAt 30 4 2 := by decide +kernel
+theorem cell_30_4_3 : CertificateAt 30 4 3 := by decide +kernel
+theorem cell_30_4_4 : CertificateAt 30 4 4 := by decide +kernel
+theorem cell_30_4_5 : CertificateAt 30 4 5 := by decide +kernel
+theorem row_30_4 : ThresholdAt 30 4 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 4 0 cell_30_4_0
+    | exact certificate_sound 30 4 1 cell_30_4_1
+    | exact certificate_sound 30 4 2 cell_30_4_2
+    | exact certificate_sound 30 4 3 cell_30_4_3
+    | exact certificate_sound 30 4 4 cell_30_4_4
+    | exact certificate_sound 30 4 5 cell_30_4_5
+theorem cell_30_5_0 : CertificateAt 30 5 0 := by decide +kernel
+theorem cell_30_5_1 : CertificateAt 30 5 1 := by decide +kernel
+theorem cell_30_5_2 : CertificateAt 30 5 2 := by decide +kernel
+theorem cell_30_5_3 : CertificateAt 30 5 3 := by decide +kernel
+theorem cell_30_5_4 : CertificateAt 30 5 4 := by decide +kernel
+theorem cell_30_5_5 : CertificateAt 30 5 5 := by decide +kernel
+theorem row_30_5 : ThresholdAt 30 5 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 5 0 cell_30_5_0
+    | exact certificate_sound 30 5 1 cell_30_5_1
+    | exact certificate_sound 30 5 2 cell_30_5_2
+    | exact certificate_sound 30 5 3 cell_30_5_3
+    | exact certificate_sound 30 5 4 cell_30_5_4
+    | exact certificate_sound 30 5 5 cell_30_5_5
+theorem cell_30_6_0 : CertificateAt 30 6 0 := by decide +kernel
+theorem cell_30_6_1 : CertificateAt 30 6 1 := by decide +kernel
+theorem cell_30_6_2 : CertificateAt 30 6 2 := by decide +kernel
+theorem cell_30_6_3 : CertificateAt 30 6 3 := by decide +kernel
+theorem cell_30_6_4 : CertificateAt 30 6 4 := by decide +kernel
+theorem cell_30_6_5 : CertificateAt 30 6 5 := by decide +kernel
+theorem row_30_6 : ThresholdAt 30 6 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 6 0 cell_30_6_0
+    | exact certificate_sound 30 6 1 cell_30_6_1
+    | exact certificate_sound 30 6 2 cell_30_6_2
+    | exact certificate_sound 30 6 3 cell_30_6_3
+    | exact certificate_sound 30 6 4 cell_30_6_4
+    | exact certificate_sound 30 6 5 cell_30_6_5
+theorem cell_30_7_0 : CertificateAt 30 7 0 := by decide +kernel
+theorem cell_30_7_1 : CertificateAt 30 7 1 := by decide +kernel
+theorem cell_30_7_2 : CertificateAt 30 7 2 := by decide +kernel
+theorem cell_30_7_3 : CertificateAt 30 7 3 := by decide +kernel
+theorem cell_30_7_4 : CertificateAt 30 7 4 := by decide +kernel
+theorem cell_30_7_5 : CertificateAt 30 7 5 := by decide +kernel
+theorem row_30_7 : ThresholdAt 30 7 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 7 0 cell_30_7_0
+    | exact certificate_sound 30 7 1 cell_30_7_1
+    | exact certificate_sound 30 7 2 cell_30_7_2
+    | exact certificate_sound 30 7 3 cell_30_7_3
+    | exact certificate_sound 30 7 4 cell_30_7_4
+    | exact certificate_sound 30 7 5 cell_30_7_5
+theorem cell_30_8_0 : CertificateAt 30 8 0 := by decide +kernel
+theorem cell_30_8_1 : CertificateAt 30 8 1 := by decide +kernel
+theorem cell_30_8_2 : CertificateAt 30 8 2 := by decide +kernel
+theorem cell_30_8_3 : CertificateAt 30 8 3 := by decide +kernel
+theorem cell_30_8_4 : CertificateAt 30 8 4 := by decide +kernel
+theorem cell_30_8_5 : CertificateAt 30 8 5 := by decide +kernel
+theorem row_30_8 : ThresholdAt 30 8 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 8 0 cell_30_8_0
+    | exact certificate_sound 30 8 1 cell_30_8_1
+    | exact certificate_sound 30 8 2 cell_30_8_2
+    | exact certificate_sound 30 8 3 cell_30_8_3
+    | exact certificate_sound 30 8 4 cell_30_8_4
+    | exact certificate_sound 30 8 5 cell_30_8_5
+theorem cell_30_9_0 : CertificateAt 30 9 0 := by decide +kernel
+theorem cell_30_9_1 : CertificateAt 30 9 1 := by decide +kernel
+theorem cell_30_9_2 : CertificateAt 30 9 2 := by decide +kernel
+theorem cell_30_9_3 : CertificateAt 30 9 3 := by decide +kernel
+theorem cell_30_9_4 : CertificateAt 30 9 4 := by decide +kernel
+theorem cell_30_9_5 : CertificateAt 30 9 5 := by decide +kernel
+theorem row_30_9 : ThresholdAt 30 9 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 9 0 cell_30_9_0
+    | exact certificate_sound 30 9 1 cell_30_9_1
+    | exact certificate_sound 30 9 2 cell_30_9_2
+    | exact certificate_sound 30 9 3 cell_30_9_3
+    | exact certificate_sound 30 9 4 cell_30_9_4
+    | exact certificate_sound 30 9 5 cell_30_9_5
+theorem cell_30_10_0 : CertificateAt 30 10 0 := by decide +kernel
+theorem cell_30_10_1 : CertificateAt 30 10 1 := by decide +kernel
+theorem cell_30_10_2 : CertificateAt 30 10 2 := by decide +kernel
+theorem cell_30_10_3 : CertificateAt 30 10 3 := by decide +kernel
+theorem cell_30_10_4 : CertificateAt 30 10 4 := by decide +kernel
+theorem cell_30_10_5 : CertificateAt 30 10 5 := by decide +kernel
+theorem row_30_10 : ThresholdAt 30 10 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 10 0 cell_30_10_0
+    | exact certificate_sound 30 10 1 cell_30_10_1
+    | exact certificate_sound 30 10 2 cell_30_10_2
+    | exact certificate_sound 30 10 3 cell_30_10_3
+    | exact certificate_sound 30 10 4 cell_30_10_4
+    | exact certificate_sound 30 10 5 cell_30_10_5
+theorem cell_30_11_0 : CertificateAt 30 11 0 := by decide +kernel
+theorem cell_30_11_1 : CertificateAt 30 11 1 := by decide +kernel
+theorem cell_30_11_2 : CertificateAt 30 11 2 := by decide +kernel
+theorem cell_30_11_3 : CertificateAt 30 11 3 := by decide +kernel
+theorem cell_30_11_4 : CertificateAt 30 11 4 := by decide +kernel
+theorem cell_30_11_5 : CertificateAt 30 11 5 := by decide +kernel
+theorem row_30_11 : ThresholdAt 30 11 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 11 0 cell_30_11_0
+    | exact certificate_sound 30 11 1 cell_30_11_1
+    | exact certificate_sound 30 11 2 cell_30_11_2
+    | exact certificate_sound 30 11 3 cell_30_11_3
+    | exact certificate_sound 30 11 4 cell_30_11_4
+    | exact certificate_sound 30 11 5 cell_30_11_5
+theorem cell_30_12_0 : CertificateAt 30 12 0 := by decide +kernel
+theorem cell_30_12_1 : CertificateAt 30 12 1 := by decide +kernel
+theorem cell_30_12_2 : CertificateAt 30 12 2 := by decide +kernel
+theorem cell_30_12_3 : CertificateAt 30 12 3 := by decide +kernel
+theorem cell_30_12_4 : CertificateAt 30 12 4 := by decide +kernel
+theorem cell_30_12_5 : CertificateAt 30 12 5 := by decide +kernel
+theorem row_30_12 : ThresholdAt 30 12 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 12 0 cell_30_12_0
+    | exact certificate_sound 30 12 1 cell_30_12_1
+    | exact certificate_sound 30 12 2 cell_30_12_2
+    | exact certificate_sound 30 12 3 cell_30_12_3
+    | exact certificate_sound 30 12 4 cell_30_12_4
+    | exact certificate_sound 30 12 5 cell_30_12_5
+theorem cell_30_13_0 : CertificateAt 30 13 0 := by decide +kernel
+theorem cell_30_13_1 : CertificateAt 30 13 1 := by decide +kernel
+theorem cell_30_13_2 : CertificateAt 30 13 2 := by decide +kernel
+theorem cell_30_13_3 : CertificateAt 30 13 3 := by decide +kernel
+theorem cell_30_13_4 : CertificateAt 30 13 4 := by decide +kernel
+theorem cell_30_13_5 : CertificateAt 30 13 5 := by decide +kernel
+theorem row_30_13 : ThresholdAt 30 13 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 13 0 cell_30_13_0
+    | exact certificate_sound 30 13 1 cell_30_13_1
+    | exact certificate_sound 30 13 2 cell_30_13_2
+    | exact certificate_sound 30 13 3 cell_30_13_3
+    | exact certificate_sound 30 13 4 cell_30_13_4
+    | exact certificate_sound 30 13 5 cell_30_13_5
+theorem cell_30_14_0 : CertificateAt 30 14 0 := by decide +kernel
+theorem cell_30_14_1 : CertificateAt 30 14 1 := by decide +kernel
+theorem cell_30_14_2 : CertificateAt 30 14 2 := by decide +kernel
+theorem cell_30_14_3 : CertificateAt 30 14 3 := by decide +kernel
+theorem cell_30_14_4 : CertificateAt 30 14 4 := by decide +kernel
+theorem cell_30_14_5 : CertificateAt 30 14 5 := by decide +kernel
+theorem row_30_14 : ThresholdAt 30 14 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 14 0 cell_30_14_0
+    | exact certificate_sound 30 14 1 cell_30_14_1
+    | exact certificate_sound 30 14 2 cell_30_14_2
+    | exact certificate_sound 30 14 3 cell_30_14_3
+    | exact certificate_sound 30 14 4 cell_30_14_4
+    | exact certificate_sound 30 14 5 cell_30_14_5
+theorem cell_30_15_0 : CertificateAt 30 15 0 := by decide +kernel
+theorem cell_30_15_1 : CertificateAt 30 15 1 := by decide +kernel
+theorem cell_30_15_2 : CertificateAt 30 15 2 := by decide +kernel
+theorem cell_30_15_3 : CertificateAt 30 15 3 := by decide +kernel
+theorem cell_30_15_4 : CertificateAt 30 15 4 := by decide +kernel
+theorem cell_30_15_5 : CertificateAt 30 15 5 := by decide +kernel
+theorem row_30_15 : ThresholdAt 30 15 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 15 0 cell_30_15_0
+    | exact certificate_sound 30 15 1 cell_30_15_1
+    | exact certificate_sound 30 15 2 cell_30_15_2
+    | exact certificate_sound 30 15 3 cell_30_15_3
+    | exact certificate_sound 30 15 4 cell_30_15_4
+    | exact certificate_sound 30 15 5 cell_30_15_5
+theorem cell_30_16_0 : CertificateAt 30 16 0 := by decide +kernel
+theorem cell_30_16_1 : CertificateAt 30 16 1 := by decide +kernel
+theorem cell_30_16_2 : CertificateAt 30 16 2 := by decide +kernel
+theorem cell_30_16_3 : CertificateAt 30 16 3 := by decide +kernel
+theorem cell_30_16_4 : CertificateAt 30 16 4 := by decide +kernel
+theorem cell_30_16_5 : CertificateAt 30 16 5 := by decide +kernel
+theorem row_30_16 : ThresholdAt 30 16 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 16 0 cell_30_16_0
+    | exact certificate_sound 30 16 1 cell_30_16_1
+    | exact certificate_sound 30 16 2 cell_30_16_2
+    | exact certificate_sound 30 16 3 cell_30_16_3
+    | exact certificate_sound 30 16 4 cell_30_16_4
+    | exact certificate_sound 30 16 5 cell_30_16_5
+theorem cell_30_17_0 : CertificateAt 30 17 0 := by decide +kernel
+theorem cell_30_17_1 : CertificateAt 30 17 1 := by decide +kernel
+theorem cell_30_17_2 : CertificateAt 30 17 2 := by decide +kernel
+theorem cell_30_17_3 : CertificateAt 30 17 3 := by decide +kernel
+theorem cell_30_17_4 : CertificateAt 30 17 4 := by decide +kernel
+theorem cell_30_17_5 : CertificateAt 30 17 5 := by decide +kernel
+theorem row_30_17 : ThresholdAt 30 17 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 17 0 cell_30_17_0
+    | exact certificate_sound 30 17 1 cell_30_17_1
+    | exact certificate_sound 30 17 2 cell_30_17_2
+    | exact certificate_sound 30 17 3 cell_30_17_3
+    | exact certificate_sound 30 17 4 cell_30_17_4
+    | exact certificate_sound 30 17 5 cell_30_17_5
+theorem cell_30_18_0 : CertificateAt 30 18 0 := by decide +kernel
+theorem cell_30_18_1 : CertificateAt 30 18 1 := by decide +kernel
+theorem cell_30_18_2 : CertificateAt 30 18 2 := by decide +kernel
+theorem cell_30_18_3 : CertificateAt 30 18 3 := by decide +kernel
+theorem cell_30_18_4 : CertificateAt 30 18 4 := by decide +kernel
+theorem cell_30_18_5 : CertificateAt 30 18 5 := by decide +kernel
+theorem row_30_18 : ThresholdAt 30 18 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 18 0 cell_30_18_0
+    | exact certificate_sound 30 18 1 cell_30_18_1
+    | exact certificate_sound 30 18 2 cell_30_18_2
+    | exact certificate_sound 30 18 3 cell_30_18_3
+    | exact certificate_sound 30 18 4 cell_30_18_4
+    | exact certificate_sound 30 18 5 cell_30_18_5
+theorem cell_30_19_0 : CertificateAt 30 19 0 := by decide +kernel
+theorem cell_30_19_1 : CertificateAt 30 19 1 := by decide +kernel
+theorem cell_30_19_2 : CertificateAt 30 19 2 := by decide +kernel
+theorem cell_30_19_3 : CertificateAt 30 19 3 := by decide +kernel
+theorem cell_30_19_4 : CertificateAt 30 19 4 := by decide +kernel
+theorem cell_30_19_5 : CertificateAt 30 19 5 := by decide +kernel
+theorem row_30_19 : ThresholdAt 30 19 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 19 0 cell_30_19_0
+    | exact certificate_sound 30 19 1 cell_30_19_1
+    | exact certificate_sound 30 19 2 cell_30_19_2
+    | exact certificate_sound 30 19 3 cell_30_19_3
+    | exact certificate_sound 30 19 4 cell_30_19_4
+    | exact certificate_sound 30 19 5 cell_30_19_5
+theorem cell_30_20_0 : CertificateAt 30 20 0 := by decide +kernel
+theorem cell_30_20_1 : CertificateAt 30 20 1 := by decide +kernel
+theorem cell_30_20_2 : CertificateAt 30 20 2 := by decide +kernel
+theorem cell_30_20_3 : CertificateAt 30 20 3 := by decide +kernel
+theorem cell_30_20_4 : CertificateAt 30 20 4 := by decide +kernel
+theorem cell_30_20_5 : CertificateAt 30 20 5 := by decide +kernel
+theorem row_30_20 : ThresholdAt 30 20 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 20 0 cell_30_20_0
+    | exact certificate_sound 30 20 1 cell_30_20_1
+    | exact certificate_sound 30 20 2 cell_30_20_2
+    | exact certificate_sound 30 20 3 cell_30_20_3
+    | exact certificate_sound 30 20 4 cell_30_20_4
+    | exact certificate_sound 30 20 5 cell_30_20_5
+theorem cell_30_21_0 : CertificateAt 30 21 0 := by decide +kernel
+theorem cell_30_21_1 : CertificateAt 30 21 1 := by decide +kernel
+theorem cell_30_21_2 : CertificateAt 30 21 2 := by decide +kernel
+theorem cell_30_21_3 : CertificateAt 30 21 3 := by decide +kernel
+theorem cell_30_21_4 : CertificateAt 30 21 4 := by decide +kernel
+theorem cell_30_21_5 : CertificateAt 30 21 5 := by decide +kernel
+theorem row_30_21 : ThresholdAt 30 21 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 21 0 cell_30_21_0
+    | exact certificate_sound 30 21 1 cell_30_21_1
+    | exact certificate_sound 30 21 2 cell_30_21_2
+    | exact certificate_sound 30 21 3 cell_30_21_3
+    | exact certificate_sound 30 21 4 cell_30_21_4
+    | exact certificate_sound 30 21 5 cell_30_21_5
+theorem cell_30_22_0 : CertificateAt 30 22 0 := by decide +kernel
+theorem cell_30_22_1 : CertificateAt 30 22 1 := by decide +kernel
+theorem cell_30_22_2 : CertificateAt 30 22 2 := by decide +kernel
+theorem cell_30_22_3 : CertificateAt 30 22 3 := by decide +kernel
+theorem cell_30_22_4 : CertificateAt 30 22 4 := by decide +kernel
+theorem cell_30_22_5 : CertificateAt 30 22 5 := by decide +kernel
+theorem row_30_22 : ThresholdAt 30 22 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 22 0 cell_30_22_0
+    | exact certificate_sound 30 22 1 cell_30_22_1
+    | exact certificate_sound 30 22 2 cell_30_22_2
+    | exact certificate_sound 30 22 3 cell_30_22_3
+    | exact certificate_sound 30 22 4 cell_30_22_4
+    | exact certificate_sound 30 22 5 cell_30_22_5
+theorem cell_30_23_0 : CertificateAt 30 23 0 := by decide +kernel
+theorem cell_30_23_1 : CertificateAt 30 23 1 := by decide +kernel
+theorem cell_30_23_2 : CertificateAt 30 23 2 := by decide +kernel
+theorem cell_30_23_3 : CertificateAt 30 23 3 := by decide +kernel
+theorem cell_30_23_4 : CertificateAt 30 23 4 := by decide +kernel
+theorem cell_30_23_5 : CertificateAt 30 23 5 := by decide +kernel
+theorem row_30_23 : ThresholdAt 30 23 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 23 0 cell_30_23_0
+    | exact certificate_sound 30 23 1 cell_30_23_1
+    | exact certificate_sound 30 23 2 cell_30_23_2
+    | exact certificate_sound 30 23 3 cell_30_23_3
+    | exact certificate_sound 30 23 4 cell_30_23_4
+    | exact certificate_sound 30 23 5 cell_30_23_5
+theorem cell_30_24_0 : CertificateAt 30 24 0 := by decide +kernel
+theorem cell_30_24_1 : CertificateAt 30 24 1 := by decide +kernel
+theorem cell_30_24_2 : CertificateAt 30 24 2 := by decide +kernel
+theorem cell_30_24_3 : CertificateAt 30 24 3 := by decide +kernel
+theorem cell_30_24_4 : CertificateAt 30 24 4 := by decide +kernel
+theorem cell_30_24_5 : CertificateAt 30 24 5 := by decide +kernel
+theorem row_30_24 : ThresholdAt 30 24 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 24 0 cell_30_24_0
+    | exact certificate_sound 30 24 1 cell_30_24_1
+    | exact certificate_sound 30 24 2 cell_30_24_2
+    | exact certificate_sound 30 24 3 cell_30_24_3
+    | exact certificate_sound 30 24 4 cell_30_24_4
+    | exact certificate_sound 30 24 5 cell_30_24_5
+theorem cell_30_25_0 : CertificateAt 30 25 0 := by decide +kernel
+theorem cell_30_25_1 : CertificateAt 30 25 1 := by decide +kernel
+theorem cell_30_25_2 : CertificateAt 30 25 2 := by decide +kernel
+theorem cell_30_25_3 : CertificateAt 30 25 3 := by decide +kernel
+theorem cell_30_25_4 : CertificateAt 30 25 4 := by decide +kernel
+theorem cell_30_25_5 : CertificateAt 30 25 5 := by decide +kernel
+theorem row_30_25 : ThresholdAt 30 25 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 25 0 cell_30_25_0
+    | exact certificate_sound 30 25 1 cell_30_25_1
+    | exact certificate_sound 30 25 2 cell_30_25_2
+    | exact certificate_sound 30 25 3 cell_30_25_3
+    | exact certificate_sound 30 25 4 cell_30_25_4
+    | exact certificate_sound 30 25 5 cell_30_25_5
+theorem cell_30_26_0 : CertificateAt 30 26 0 := by decide +kernel
+theorem cell_30_26_1 : CertificateAt 30 26 1 := by decide +kernel
+theorem cell_30_26_2 : CertificateAt 30 26 2 := by decide +kernel
+theorem cell_30_26_3 : CertificateAt 30 26 3 := by decide +kernel
+theorem cell_30_26_4 : CertificateAt 30 26 4 := by decide +kernel
+theorem cell_30_26_5 : CertificateAt 30 26 5 := by decide +kernel
+theorem row_30_26 : ThresholdAt 30 26 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 26 0 cell_30_26_0
+    | exact certificate_sound 30 26 1 cell_30_26_1
+    | exact certificate_sound 30 26 2 cell_30_26_2
+    | exact certificate_sound 30 26 3 cell_30_26_3
+    | exact certificate_sound 30 26 4 cell_30_26_4
+    | exact certificate_sound 30 26 5 cell_30_26_5
+theorem cell_30_27_0 : CertificateAt 30 27 0 := by decide +kernel
+theorem cell_30_27_1 : CertificateAt 30 27 1 := by decide +kernel
+theorem cell_30_27_2 : CertificateAt 30 27 2 := by decide +kernel
+theorem cell_30_27_3 : CertificateAt 30 27 3 := by decide +kernel
+theorem cell_30_27_4 : CertificateAt 30 27 4 := by decide +kernel
+theorem cell_30_27_5 : CertificateAt 30 27 5 := by decide +kernel
+theorem row_30_27 : ThresholdAt 30 27 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 27 0 cell_30_27_0
+    | exact certificate_sound 30 27 1 cell_30_27_1
+    | exact certificate_sound 30 27 2 cell_30_27_2
+    | exact certificate_sound 30 27 3 cell_30_27_3
+    | exact certificate_sound 30 27 4 cell_30_27_4
+    | exact certificate_sound 30 27 5 cell_30_27_5
+theorem cell_30_28_0 : CertificateAt 30 28 0 := by decide +kernel
+theorem cell_30_28_1 : CertificateAt 30 28 1 := by decide +kernel
+theorem cell_30_28_2 : CertificateAt 30 28 2 := by decide +kernel
+theorem cell_30_28_3 : CertificateAt 30 28 3 := by decide +kernel
+theorem cell_30_28_4 : CertificateAt 30 28 4 := by decide +kernel
+theorem cell_30_28_5 : CertificateAt 30 28 5 := by decide +kernel
+theorem row_30_28 : ThresholdAt 30 28 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 28 0 cell_30_28_0
+    | exact certificate_sound 30 28 1 cell_30_28_1
+    | exact certificate_sound 30 28 2 cell_30_28_2
+    | exact certificate_sound 30 28 3 cell_30_28_3
+    | exact certificate_sound 30 28 4 cell_30_28_4
+    | exact certificate_sound 30 28 5 cell_30_28_5
+theorem cell_30_29_0 : CertificateAt 30 29 0 := by decide +kernel
+theorem cell_30_29_1 : CertificateAt 30 29 1 := by decide +kernel
+theorem cell_30_29_2 : CertificateAt 30 29 2 := by decide +kernel
+theorem cell_30_29_3 : CertificateAt 30 29 3 := by decide +kernel
+theorem cell_30_29_4 : CertificateAt 30 29 4 := by decide +kernel
+theorem cell_30_29_5 : CertificateAt 30 29 5 := by decide +kernel
+theorem row_30_29 : ThresholdAt 30 29 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 29 0 cell_30_29_0
+    | exact certificate_sound 30 29 1 cell_30_29_1
+    | exact certificate_sound 30 29 2 cell_30_29_2
+    | exact certificate_sound 30 29 3 cell_30_29_3
+    | exact certificate_sound 30 29 4 cell_30_29_4
+    | exact certificate_sound 30 29 5 cell_30_29_5
+theorem cell_30_30_0 : CertificateAt 30 30 0 := by decide +kernel
+theorem cell_30_30_1 : CertificateAt 30 30 1 := by decide +kernel
+theorem cell_30_30_2 : CertificateAt 30 30 2 := by decide +kernel
+theorem cell_30_30_3 : CertificateAt 30 30 3 := by decide +kernel
+theorem cell_30_30_4 : CertificateAt 30 30 4 := by decide +kernel
+theorem cell_30_30_5 : CertificateAt 30 30 5 := by decide +kernel
+theorem row_30_30 : ThresholdAt 30 30 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 30 0 cell_30_30_0
+    | exact certificate_sound 30 30 1 cell_30_30_1
+    | exact certificate_sound 30 30 2 cell_30_30_2
+    | exact certificate_sound 30 30 3 cell_30_30_3
+    | exact certificate_sound 30 30 4 cell_30_30_4
+    | exact certificate_sound 30 30 5 cell_30_30_5
+theorem cell_30_31_0 : CertificateAt 30 31 0 := by decide +kernel
+theorem cell_30_31_1 : CertificateAt 30 31 1 := by decide +kernel
+theorem cell_30_31_2 : CertificateAt 30 31 2 := by decide +kernel
+theorem cell_30_31_3 : CertificateAt 30 31 3 := by decide +kernel
+theorem cell_30_31_4 : CertificateAt 30 31 4 := by decide +kernel
+theorem cell_30_31_5 : CertificateAt 30 31 5 := by decide +kernel
+theorem row_30_31 : ThresholdAt 30 31 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 31 0 cell_30_31_0
+    | exact certificate_sound 30 31 1 cell_30_31_1
+    | exact certificate_sound 30 31 2 cell_30_31_2
+    | exact certificate_sound 30 31 3 cell_30_31_3
+    | exact certificate_sound 30 31 4 cell_30_31_4
+    | exact certificate_sound 30 31 5 cell_30_31_5
+theorem cell_30_32_0 : CertificateAt 30 32 0 := by decide +kernel
+theorem cell_30_32_1 : CertificateAt 30 32 1 := by decide +kernel
+theorem cell_30_32_2 : CertificateAt 30 32 2 := by decide +kernel
+theorem cell_30_32_3 : CertificateAt 30 32 3 := by decide +kernel
+theorem cell_30_32_4 : CertificateAt 30 32 4 := by decide +kernel
+theorem cell_30_32_5 : CertificateAt 30 32 5 := by decide +kernel
+theorem row_30_32 : ThresholdAt 30 32 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 32 0 cell_30_32_0
+    | exact certificate_sound 30 32 1 cell_30_32_1
+    | exact certificate_sound 30 32 2 cell_30_32_2
+    | exact certificate_sound 30 32 3 cell_30_32_3
+    | exact certificate_sound 30 32 4 cell_30_32_4
+    | exact certificate_sound 30 32 5 cell_30_32_5
+theorem cell_30_33_0 : CertificateAt 30 33 0 := by decide +kernel
+theorem cell_30_33_1 : CertificateAt 30 33 1 := by decide +kernel
+theorem cell_30_33_2 : CertificateAt 30 33 2 := by decide +kernel
+theorem cell_30_33_3 : CertificateAt 30 33 3 := by decide +kernel
+theorem cell_30_33_4 : CertificateAt 30 33 4 := by decide +kernel
+theorem cell_30_33_5 : CertificateAt 30 33 5 := by decide +kernel
+theorem row_30_33 : ThresholdAt 30 33 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 33 0 cell_30_33_0
+    | exact certificate_sound 30 33 1 cell_30_33_1
+    | exact certificate_sound 30 33 2 cell_30_33_2
+    | exact certificate_sound 30 33 3 cell_30_33_3
+    | exact certificate_sound 30 33 4 cell_30_33_4
+    | exact certificate_sound 30 33 5 cell_30_33_5
+theorem cell_30_34_0 : CertificateAt 30 34 0 := by decide +kernel
+theorem cell_30_34_1 : CertificateAt 30 34 1 := by decide +kernel
+theorem cell_30_34_2 : CertificateAt 30 34 2 := by decide +kernel
+theorem cell_30_34_3 : CertificateAt 30 34 3 := by decide +kernel
+theorem cell_30_34_4 : CertificateAt 30 34 4 := by decide +kernel
+theorem cell_30_34_5 : CertificateAt 30 34 5 := by decide +kernel
+theorem row_30_34 : ThresholdAt 30 34 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 34 0 cell_30_34_0
+    | exact certificate_sound 30 34 1 cell_30_34_1
+    | exact certificate_sound 30 34 2 cell_30_34_2
+    | exact certificate_sound 30 34 3 cell_30_34_3
+    | exact certificate_sound 30 34 4 cell_30_34_4
+    | exact certificate_sound 30 34 5 cell_30_34_5
+theorem cell_30_35_0 : CertificateAt 30 35 0 := by decide +kernel
+theorem cell_30_35_1 : CertificateAt 30 35 1 := by decide +kernel
+theorem cell_30_35_2 : CertificateAt 30 35 2 := by decide +kernel
+theorem cell_30_35_3 : CertificateAt 30 35 3 := by decide +kernel
+theorem cell_30_35_4 : CertificateAt 30 35 4 := by decide +kernel
+theorem cell_30_35_5 : CertificateAt 30 35 5 := by decide +kernel
+theorem row_30_35 : ThresholdAt 30 35 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 35 0 cell_30_35_0
+    | exact certificate_sound 30 35 1 cell_30_35_1
+    | exact certificate_sound 30 35 2 cell_30_35_2
+    | exact certificate_sound 30 35 3 cell_30_35_3
+    | exact certificate_sound 30 35 4 cell_30_35_4
+    | exact certificate_sound 30 35 5 cell_30_35_5
+theorem cell_30_36_0 : CertificateAt 30 36 0 := by decide +kernel
+theorem cell_30_36_1 : CertificateAt 30 36 1 := by decide +kernel
+theorem cell_30_36_2 : CertificateAt 30 36 2 := by decide +kernel
+theorem cell_30_36_3 : CertificateAt 30 36 3 := by decide +kernel
+theorem cell_30_36_4 : CertificateAt 30 36 4 := by decide +kernel
+theorem cell_30_36_5 : CertificateAt 30 36 5 := by decide +kernel
+theorem row_30_36 : ThresholdAt 30 36 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 36 0 cell_30_36_0
+    | exact certificate_sound 30 36 1 cell_30_36_1
+    | exact certificate_sound 30 36 2 cell_30_36_2
+    | exact certificate_sound 30 36 3 cell_30_36_3
+    | exact certificate_sound 30 36 4 cell_30_36_4
+    | exact certificate_sound 30 36 5 cell_30_36_5
+theorem cell_30_37_0 : CertificateAt 30 37 0 := by decide +kernel
+theorem cell_30_37_1 : CertificateAt 30 37 1 := by decide +kernel
+theorem cell_30_37_2 : CertificateAt 30 37 2 := by decide +kernel
+theorem cell_30_37_3 : CertificateAt 30 37 3 := by decide +kernel
+theorem cell_30_37_4 : CertificateAt 30 37 4 := by decide +kernel
+theorem cell_30_37_5 : CertificateAt 30 37 5 := by decide +kernel
+theorem row_30_37 : ThresholdAt 30 37 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 37 0 cell_30_37_0
+    | exact certificate_sound 30 37 1 cell_30_37_1
+    | exact certificate_sound 30 37 2 cell_30_37_2
+    | exact certificate_sound 30 37 3 cell_30_37_3
+    | exact certificate_sound 30 37 4 cell_30_37_4
+    | exact certificate_sound 30 37 5 cell_30_37_5
+theorem cell_30_38_0 : CertificateAt 30 38 0 := by decide +kernel
+theorem cell_30_38_1 : CertificateAt 30 38 1 := by decide +kernel
+theorem cell_30_38_2 : CertificateAt 30 38 2 := by decide +kernel
+theorem cell_30_38_3 : CertificateAt 30 38 3 := by decide +kernel
+theorem cell_30_38_4 : CertificateAt 30 38 4 := by decide +kernel
+theorem cell_30_38_5 : CertificateAt 30 38 5 := by decide +kernel
+theorem row_30_38 : ThresholdAt 30 38 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 38 0 cell_30_38_0
+    | exact certificate_sound 30 38 1 cell_30_38_1
+    | exact certificate_sound 30 38 2 cell_30_38_2
+    | exact certificate_sound 30 38 3 cell_30_38_3
+    | exact certificate_sound 30 38 4 cell_30_38_4
+    | exact certificate_sound 30 38 5 cell_30_38_5
+theorem cell_30_39_0 : CertificateAt 30 39 0 := by decide +kernel
+theorem cell_30_39_1 : CertificateAt 30 39 1 := by decide +kernel
+theorem cell_30_39_2 : CertificateAt 30 39 2 := by decide +kernel
+theorem cell_30_39_3 : CertificateAt 30 39 3 := by decide +kernel
+theorem cell_30_39_4 : CertificateAt 30 39 4 := by decide +kernel
+theorem cell_30_39_5 : CertificateAt 30 39 5 := by decide +kernel
+theorem row_30_39 : ThresholdAt 30 39 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 39 0 cell_30_39_0
+    | exact certificate_sound 30 39 1 cell_30_39_1
+    | exact certificate_sound 30 39 2 cell_30_39_2
+    | exact certificate_sound 30 39 3 cell_30_39_3
+    | exact certificate_sound 30 39 4 cell_30_39_4
+    | exact certificate_sound 30 39 5 cell_30_39_5
+theorem cell_30_40_0 : CertificateAt 30 40 0 := by decide +kernel
+theorem cell_30_40_1 : CertificateAt 30 40 1 := by decide +kernel
+theorem cell_30_40_2 : CertificateAt 30 40 2 := by decide +kernel
+theorem cell_30_40_3 : CertificateAt 30 40 3 := by decide +kernel
+theorem cell_30_40_4 : CertificateAt 30 40 4 := by decide +kernel
+theorem cell_30_40_5 : CertificateAt 30 40 5 := by decide +kernel
+theorem row_30_40 : ThresholdAt 30 40 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 40 0 cell_30_40_0
+    | exact certificate_sound 30 40 1 cell_30_40_1
+    | exact certificate_sound 30 40 2 cell_30_40_2
+    | exact certificate_sound 30 40 3 cell_30_40_3
+    | exact certificate_sound 30 40 4 cell_30_40_4
+    | exact certificate_sound 30 40 5 cell_30_40_5
+theorem cell_30_41_0 : CertificateAt 30 41 0 := by decide +kernel
+theorem cell_30_41_1 : CertificateAt 30 41 1 := by decide +kernel
+theorem cell_30_41_2 : CertificateAt 30 41 2 := by decide +kernel
+theorem cell_30_41_3 : CertificateAt 30 41 3 := by decide +kernel
+theorem cell_30_41_4 : CertificateAt 30 41 4 := by decide +kernel
+theorem cell_30_41_5 : CertificateAt 30 41 5 := by decide +kernel
+theorem row_30_41 : ThresholdAt 30 41 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 41 0 cell_30_41_0
+    | exact certificate_sound 30 41 1 cell_30_41_1
+    | exact certificate_sound 30 41 2 cell_30_41_2
+    | exact certificate_sound 30 41 3 cell_30_41_3
+    | exact certificate_sound 30 41 4 cell_30_41_4
+    | exact certificate_sound 30 41 5 cell_30_41_5
+theorem cell_30_42_0 : CertificateAt 30 42 0 := by decide +kernel
+theorem cell_30_42_1 : CertificateAt 30 42 1 := by decide +kernel
+theorem cell_30_42_2 : CertificateAt 30 42 2 := by decide +kernel
+theorem cell_30_42_3 : CertificateAt 30 42 3 := by decide +kernel
+theorem cell_30_42_4 : CertificateAt 30 42 4 := by decide +kernel
+theorem cell_30_42_5 : CertificateAt 30 42 5 := by decide +kernel
+theorem row_30_42 : ThresholdAt 30 42 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 42 0 cell_30_42_0
+    | exact certificate_sound 30 42 1 cell_30_42_1
+    | exact certificate_sound 30 42 2 cell_30_42_2
+    | exact certificate_sound 30 42 3 cell_30_42_3
+    | exact certificate_sound 30 42 4 cell_30_42_4
+    | exact certificate_sound 30 42 5 cell_30_42_5
+theorem cell_30_43_0 : CertificateAt 30 43 0 := by decide +kernel
+theorem cell_30_43_1 : CertificateAt 30 43 1 := by decide +kernel
+theorem cell_30_43_2 : CertificateAt 30 43 2 := by decide +kernel
+theorem cell_30_43_3 : CertificateAt 30 43 3 := by decide +kernel
+theorem cell_30_43_4 : CertificateAt 30 43 4 := by decide +kernel
+theorem cell_30_43_5 : CertificateAt 30 43 5 := by decide +kernel
+theorem row_30_43 : ThresholdAt 30 43 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 43 0 cell_30_43_0
+    | exact certificate_sound 30 43 1 cell_30_43_1
+    | exact certificate_sound 30 43 2 cell_30_43_2
+    | exact certificate_sound 30 43 3 cell_30_43_3
+    | exact certificate_sound 30 43 4 cell_30_43_4
+    | exact certificate_sound 30 43 5 cell_30_43_5
+theorem cell_30_44_0 : CertificateAt 30 44 0 := by decide +kernel
+theorem cell_30_44_1 : CertificateAt 30 44 1 := by decide +kernel
+theorem cell_30_44_2 : CertificateAt 30 44 2 := by decide +kernel
+theorem cell_30_44_3 : CertificateAt 30 44 3 := by decide +kernel
+theorem cell_30_44_4 : CertificateAt 30 44 4 := by decide +kernel
+theorem cell_30_44_5 : CertificateAt 30 44 5 := by decide +kernel
+theorem row_30_44 : ThresholdAt 30 44 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 44 0 cell_30_44_0
+    | exact certificate_sound 30 44 1 cell_30_44_1
+    | exact certificate_sound 30 44 2 cell_30_44_2
+    | exact certificate_sound 30 44 3 cell_30_44_3
+    | exact certificate_sound 30 44 4 cell_30_44_4
+    | exact certificate_sound 30 44 5 cell_30_44_5
+theorem cell_30_45_0 : CertificateAt 30 45 0 := by decide +kernel
+theorem cell_30_45_1 : CertificateAt 30 45 1 := by decide +kernel
+theorem cell_30_45_2 : CertificateAt 30 45 2 := by decide +kernel
+theorem cell_30_45_3 : CertificateAt 30 45 3 := by decide +kernel
+theorem cell_30_45_4 : CertificateAt 30 45 4 := by decide +kernel
+theorem cell_30_45_5 : CertificateAt 30 45 5 := by decide +kernel
+theorem row_30_45 : ThresholdAt 30 45 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 45 0 cell_30_45_0
+    | exact certificate_sound 30 45 1 cell_30_45_1
+    | exact certificate_sound 30 45 2 cell_30_45_2
+    | exact certificate_sound 30 45 3 cell_30_45_3
+    | exact certificate_sound 30 45 4 cell_30_45_4
+    | exact certificate_sound 30 45 5 cell_30_45_5
+theorem cell_30_46_0 : CertificateAt 30 46 0 := by decide +kernel
+theorem cell_30_46_1 : CertificateAt 30 46 1 := by decide +kernel
+theorem cell_30_46_2 : CertificateAt 30 46 2 := by decide +kernel
+theorem cell_30_46_3 : CertificateAt 30 46 3 := by decide +kernel
+theorem cell_30_46_4 : CertificateAt 30 46 4 := by decide +kernel
+theorem cell_30_46_5 : CertificateAt 30 46 5 := by decide +kernel
+theorem row_30_46 : ThresholdAt 30 46 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 46 0 cell_30_46_0
+    | exact certificate_sound 30 46 1 cell_30_46_1
+    | exact certificate_sound 30 46 2 cell_30_46_2
+    | exact certificate_sound 30 46 3 cell_30_46_3
+    | exact certificate_sound 30 46 4 cell_30_46_4
+    | exact certificate_sound 30 46 5 cell_30_46_5
+theorem cell_30_47_0 : CertificateAt 30 47 0 := by decide +kernel
+theorem cell_30_47_1 : CertificateAt 30 47 1 := by decide +kernel
+theorem cell_30_47_2 : CertificateAt 30 47 2 := by decide +kernel
+theorem cell_30_47_3 : CertificateAt 30 47 3 := by decide +kernel
+theorem cell_30_47_4 : CertificateAt 30 47 4 := by decide +kernel
+theorem cell_30_47_5 : CertificateAt 30 47 5 := by decide +kernel
+theorem row_30_47 : ThresholdAt 30 47 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 47 0 cell_30_47_0
+    | exact certificate_sound 30 47 1 cell_30_47_1
+    | exact certificate_sound 30 47 2 cell_30_47_2
+    | exact certificate_sound 30 47 3 cell_30_47_3
+    | exact certificate_sound 30 47 4 cell_30_47_4
+    | exact certificate_sound 30 47 5 cell_30_47_5
+theorem cell_30_48_0 : CertificateAt 30 48 0 := by decide +kernel
+theorem cell_30_48_1 : CertificateAt 30 48 1 := by decide +kernel
+theorem cell_30_48_2 : CertificateAt 30 48 2 := by decide +kernel
+theorem cell_30_48_3 : CertificateAt 30 48 3 := by decide +kernel
+theorem cell_30_48_4 : CertificateAt 30 48 4 := by decide +kernel
+theorem cell_30_48_5 : CertificateAt 30 48 5 := by decide +kernel
+theorem row_30_48 : ThresholdAt 30 48 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 48 0 cell_30_48_0
+    | exact certificate_sound 30 48 1 cell_30_48_1
+    | exact certificate_sound 30 48 2 cell_30_48_2
+    | exact certificate_sound 30 48 3 cell_30_48_3
+    | exact certificate_sound 30 48 4 cell_30_48_4
+    | exact certificate_sound 30 48 5 cell_30_48_5
+theorem cell_30_49_0 : CertificateAt 30 49 0 := by decide +kernel
+theorem cell_30_49_1 : CertificateAt 30 49 1 := by decide +kernel
+theorem cell_30_49_2 : CertificateAt 30 49 2 := by decide +kernel
+theorem cell_30_49_3 : CertificateAt 30 49 3 := by decide +kernel
+theorem cell_30_49_4 : CertificateAt 30 49 4 := by decide +kernel
+theorem cell_30_49_5 : CertificateAt 30 49 5 := by decide +kernel
+theorem row_30_49 : ThresholdAt 30 49 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 49 0 cell_30_49_0
+    | exact certificate_sound 30 49 1 cell_30_49_1
+    | exact certificate_sound 30 49 2 cell_30_49_2
+    | exact certificate_sound 30 49 3 cell_30_49_3
+    | exact certificate_sound 30 49 4 cell_30_49_4
+    | exact certificate_sound 30 49 5 cell_30_49_5
+theorem cell_30_50_0 : CertificateAt 30 50 0 := by decide +kernel
+theorem cell_30_50_1 : CertificateAt 30 50 1 := by decide +kernel
+theorem cell_30_50_2 : CertificateAt 30 50 2 := by decide +kernel
+theorem cell_30_50_3 : CertificateAt 30 50 3 := by decide +kernel
+theorem cell_30_50_4 : CertificateAt 30 50 4 := by decide +kernel
+theorem cell_30_50_5 : CertificateAt 30 50 5 := by decide +kernel
+theorem row_30_50 : ThresholdAt 30 50 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 50 0 cell_30_50_0
+    | exact certificate_sound 30 50 1 cell_30_50_1
+    | exact certificate_sound 30 50 2 cell_30_50_2
+    | exact certificate_sound 30 50 3 cell_30_50_3
+    | exact certificate_sound 30 50 4 cell_30_50_4
+    | exact certificate_sound 30 50 5 cell_30_50_5
+theorem cell_30_51_0 : CertificateAt 30 51 0 := by decide +kernel
+theorem cell_30_51_1 : CertificateAt 30 51 1 := by decide +kernel
+theorem cell_30_51_2 : CertificateAt 30 51 2 := by decide +kernel
+theorem cell_30_51_3 : CertificateAt 30 51 3 := by decide +kernel
+theorem cell_30_51_4 : CertificateAt 30 51 4 := by decide +kernel
+theorem cell_30_51_5 : CertificateAt 30 51 5 := by decide +kernel
+theorem row_30_51 : ThresholdAt 30 51 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 51 0 cell_30_51_0
+    | exact certificate_sound 30 51 1 cell_30_51_1
+    | exact certificate_sound 30 51 2 cell_30_51_2
+    | exact certificate_sound 30 51 3 cell_30_51_3
+    | exact certificate_sound 30 51 4 cell_30_51_4
+    | exact certificate_sound 30 51 5 cell_30_51_5
+theorem cell_30_52_0 : CertificateAt 30 52 0 := by decide +kernel
+theorem cell_30_52_1 : CertificateAt 30 52 1 := by decide +kernel
+theorem cell_30_52_2 : CertificateAt 30 52 2 := by decide +kernel
+theorem cell_30_52_3 : CertificateAt 30 52 3 := by decide +kernel
+theorem cell_30_52_4 : CertificateAt 30 52 4 := by decide +kernel
+theorem cell_30_52_5 : CertificateAt 30 52 5 := by decide +kernel
+theorem row_30_52 : ThresholdAt 30 52 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 52 0 cell_30_52_0
+    | exact certificate_sound 30 52 1 cell_30_52_1
+    | exact certificate_sound 30 52 2 cell_30_52_2
+    | exact certificate_sound 30 52 3 cell_30_52_3
+    | exact certificate_sound 30 52 4 cell_30_52_4
+    | exact certificate_sound 30 52 5 cell_30_52_5
+theorem cell_30_53_0 : CertificateAt 30 53 0 := by decide +kernel
+theorem cell_30_53_1 : CertificateAt 30 53 1 := by decide +kernel
+theorem cell_30_53_2 : CertificateAt 30 53 2 := by decide +kernel
+theorem cell_30_53_3 : CertificateAt 30 53 3 := by decide +kernel
+theorem cell_30_53_4 : CertificateAt 30 53 4 := by decide +kernel
+theorem cell_30_53_5 : CertificateAt 30 53 5 := by decide +kernel
+theorem row_30_53 : ThresholdAt 30 53 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 53 0 cell_30_53_0
+    | exact certificate_sound 30 53 1 cell_30_53_1
+    | exact certificate_sound 30 53 2 cell_30_53_2
+    | exact certificate_sound 30 53 3 cell_30_53_3
+    | exact certificate_sound 30 53 4 cell_30_53_4
+    | exact certificate_sound 30 53 5 cell_30_53_5
+theorem cell_30_54_0 : CertificateAt 30 54 0 := by decide +kernel
+theorem cell_30_54_1 : CertificateAt 30 54 1 := by decide +kernel
+theorem cell_30_54_2 : CertificateAt 30 54 2 := by decide +kernel
+theorem cell_30_54_3 : CertificateAt 30 54 3 := by decide +kernel
+theorem cell_30_54_4 : CertificateAt 30 54 4 := by decide +kernel
+theorem cell_30_54_5 : CertificateAt 30 54 5 := by decide +kernel
+theorem row_30_54 : ThresholdAt 30 54 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 54 0 cell_30_54_0
+    | exact certificate_sound 30 54 1 cell_30_54_1
+    | exact certificate_sound 30 54 2 cell_30_54_2
+    | exact certificate_sound 30 54 3 cell_30_54_3
+    | exact certificate_sound 30 54 4 cell_30_54_4
+    | exact certificate_sound 30 54 5 cell_30_54_5
+theorem cell_30_55_0 : CertificateAt 30 55 0 := by decide +kernel
+theorem cell_30_55_1 : CertificateAt 30 55 1 := by decide +kernel
+theorem cell_30_55_2 : CertificateAt 30 55 2 := by decide +kernel
+theorem cell_30_55_3 : CertificateAt 30 55 3 := by decide +kernel
+theorem cell_30_55_4 : CertificateAt 30 55 4 := by decide +kernel
+theorem cell_30_55_5 : CertificateAt 30 55 5 := by decide +kernel
+theorem row_30_55 : ThresholdAt 30 55 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 55 0 cell_30_55_0
+    | exact certificate_sound 30 55 1 cell_30_55_1
+    | exact certificate_sound 30 55 2 cell_30_55_2
+    | exact certificate_sound 30 55 3 cell_30_55_3
+    | exact certificate_sound 30 55 4 cell_30_55_4
+    | exact certificate_sound 30 55 5 cell_30_55_5
+theorem cell_30_56_0 : CertificateAt 30 56 0 := by decide +kernel
+theorem cell_30_56_1 : CertificateAt 30 56 1 := by decide +kernel
+theorem cell_30_56_2 : CertificateAt 30 56 2 := by decide +kernel
+theorem cell_30_56_3 : CertificateAt 30 56 3 := by decide +kernel
+theorem cell_30_56_4 : CertificateAt 30 56 4 := by decide +kernel
+theorem cell_30_56_5 : CertificateAt 30 56 5 := by decide +kernel
+theorem row_30_56 : ThresholdAt 30 56 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 56 0 cell_30_56_0
+    | exact certificate_sound 30 56 1 cell_30_56_1
+    | exact certificate_sound 30 56 2 cell_30_56_2
+    | exact certificate_sound 30 56 3 cell_30_56_3
+    | exact certificate_sound 30 56 4 cell_30_56_4
+    | exact certificate_sound 30 56 5 cell_30_56_5
+theorem cell_30_57_0 : CertificateAt 30 57 0 := by decide +kernel
+theorem cell_30_57_1 : CertificateAt 30 57 1 := by decide +kernel
+theorem cell_30_57_2 : CertificateAt 30 57 2 := by decide +kernel
+theorem cell_30_57_3 : CertificateAt 30 57 3 := by decide +kernel
+theorem cell_30_57_4 : CertificateAt 30 57 4 := by decide +kernel
+theorem cell_30_57_5 : CertificateAt 30 57 5 := by decide +kernel
+theorem row_30_57 : ThresholdAt 30 57 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 57 0 cell_30_57_0
+    | exact certificate_sound 30 57 1 cell_30_57_1
+    | exact certificate_sound 30 57 2 cell_30_57_2
+    | exact certificate_sound 30 57 3 cell_30_57_3
+    | exact certificate_sound 30 57 4 cell_30_57_4
+    | exact certificate_sound 30 57 5 cell_30_57_5
+theorem cell_30_58_0 : CertificateAt 30 58 0 := by decide +kernel
+theorem cell_30_58_1 : CertificateAt 30 58 1 := by decide +kernel
+theorem cell_30_58_2 : CertificateAt 30 58 2 := by decide +kernel
+theorem cell_30_58_3 : CertificateAt 30 58 3 := by decide +kernel
+theorem cell_30_58_4 : CertificateAt 30 58 4 := by decide +kernel
+theorem cell_30_58_5 : CertificateAt 30 58 5 := by decide +kernel
+theorem row_30_58 : ThresholdAt 30 58 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 58 0 cell_30_58_0
+    | exact certificate_sound 30 58 1 cell_30_58_1
+    | exact certificate_sound 30 58 2 cell_30_58_2
+    | exact certificate_sound 30 58 3 cell_30_58_3
+    | exact certificate_sound 30 58 4 cell_30_58_4
+    | exact certificate_sound 30 58 5 cell_30_58_5
+theorem cell_30_59_0 : CertificateAt 30 59 0 := by decide +kernel
+theorem cell_30_59_1 : CertificateAt 30 59 1 := by decide +kernel
+theorem cell_30_59_2 : CertificateAt 30 59 2 := by decide +kernel
+theorem cell_30_59_3 : CertificateAt 30 59 3 := by decide +kernel
+theorem cell_30_59_4 : CertificateAt 30 59 4 := by decide +kernel
+theorem cell_30_59_5 : CertificateAt 30 59 5 := by decide +kernel
+theorem row_30_59 : ThresholdAt 30 59 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 59 0 cell_30_59_0
+    | exact certificate_sound 30 59 1 cell_30_59_1
+    | exact certificate_sound 30 59 2 cell_30_59_2
+    | exact certificate_sound 30 59 3 cell_30_59_3
+    | exact certificate_sound 30 59 4 cell_30_59_4
+    | exact certificate_sound 30 59 5 cell_30_59_5
+theorem cell_30_60_0 : CertificateAt 30 60 0 := by decide +kernel
+theorem cell_30_60_1 : CertificateAt 30 60 1 := by decide +kernel
+theorem cell_30_60_2 : CertificateAt 30 60 2 := by decide +kernel
+theorem cell_30_60_3 : CertificateAt 30 60 3 := by decide +kernel
+theorem cell_30_60_4 : CertificateAt 30 60 4 := by decide +kernel
+theorem cell_30_60_5 : CertificateAt 30 60 5 := by decide +kernel
+theorem row_30_60 : ThresholdAt 30 60 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 60 0 cell_30_60_0
+    | exact certificate_sound 30 60 1 cell_30_60_1
+    | exact certificate_sound 30 60 2 cell_30_60_2
+    | exact certificate_sound 30 60 3 cell_30_60_3
+    | exact certificate_sound 30 60 4 cell_30_60_4
+    | exact certificate_sound 30 60 5 cell_30_60_5
+theorem cell_30_61_0 : CertificateAt 30 61 0 := by decide +kernel
+theorem cell_30_61_1 : CertificateAt 30 61 1 := by decide +kernel
+theorem cell_30_61_2 : CertificateAt 30 61 2 := by decide +kernel
+theorem cell_30_61_3 : CertificateAt 30 61 3 := by decide +kernel
+theorem cell_30_61_4 : CertificateAt 30 61 4 := by decide +kernel
+theorem cell_30_61_5 : CertificateAt 30 61 5 := by decide +kernel
+theorem row_30_61 : ThresholdAt 30 61 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 61 0 cell_30_61_0
+    | exact certificate_sound 30 61 1 cell_30_61_1
+    | exact certificate_sound 30 61 2 cell_30_61_2
+    | exact certificate_sound 30 61 3 cell_30_61_3
+    | exact certificate_sound 30 61 4 cell_30_61_4
+    | exact certificate_sound 30 61 5 cell_30_61_5
+theorem cell_30_62_0 : CertificateAt 30 62 0 := by decide +kernel
+theorem cell_30_62_1 : CertificateAt 30 62 1 := by decide +kernel
+theorem cell_30_62_2 : CertificateAt 30 62 2 := by decide +kernel
+theorem cell_30_62_3 : CertificateAt 30 62 3 := by decide +kernel
+theorem cell_30_62_4 : CertificateAt 30 62 4 := by decide +kernel
+theorem cell_30_62_5 : CertificateAt 30 62 5 := by decide +kernel
+theorem row_30_62 : ThresholdAt 30 62 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 62 0 cell_30_62_0
+    | exact certificate_sound 30 62 1 cell_30_62_1
+    | exact certificate_sound 30 62 2 cell_30_62_2
+    | exact certificate_sound 30 62 3 cell_30_62_3
+    | exact certificate_sound 30 62 4 cell_30_62_4
+    | exact certificate_sound 30 62 5 cell_30_62_5
+theorem cell_30_63_0 : CertificateAt 30 63 0 := by decide +kernel
+theorem cell_30_63_1 : CertificateAt 30 63 1 := by decide +kernel
+theorem cell_30_63_2 : CertificateAt 30 63 2 := by decide +kernel
+theorem cell_30_63_3 : CertificateAt 30 63 3 := by decide +kernel
+theorem cell_30_63_4 : CertificateAt 30 63 4 := by decide +kernel
+theorem cell_30_63_5 : CertificateAt 30 63 5 := by decide +kernel
+theorem row_30_63 : ThresholdAt 30 63 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 63 0 cell_30_63_0
+    | exact certificate_sound 30 63 1 cell_30_63_1
+    | exact certificate_sound 30 63 2 cell_30_63_2
+    | exact certificate_sound 30 63 3 cell_30_63_3
+    | exact certificate_sound 30 63 4 cell_30_63_4
+    | exact certificate_sound 30 63 5 cell_30_63_5
+theorem cell_30_64_0 : CertificateAt 30 64 0 := by decide +kernel
+theorem cell_30_64_1 : CertificateAt 30 64 1 := by decide +kernel
+theorem cell_30_64_2 : CertificateAt 30 64 2 := by decide +kernel
+theorem cell_30_64_3 : CertificateAt 30 64 3 := by decide +kernel
+theorem cell_30_64_4 : CertificateAt 30 64 4 := by decide +kernel
+theorem cell_30_64_5 : CertificateAt 30 64 5 := by decide +kernel
+theorem row_30_64 : ThresholdAt 30 64 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 64 0 cell_30_64_0
+    | exact certificate_sound 30 64 1 cell_30_64_1
+    | exact certificate_sound 30 64 2 cell_30_64_2
+    | exact certificate_sound 30 64 3 cell_30_64_3
+    | exact certificate_sound 30 64 4 cell_30_64_4
+    | exact certificate_sound 30 64 5 cell_30_64_5
+theorem cell_30_65_0 : CertificateAt 30 65 0 := by decide +kernel
+theorem cell_30_65_1 : CertificateAt 30 65 1 := by decide +kernel
+theorem cell_30_65_2 : CertificateAt 30 65 2 := by decide +kernel
+theorem cell_30_65_3 : CertificateAt 30 65 3 := by decide +kernel
+theorem cell_30_65_4 : CertificateAt 30 65 4 := by decide +kernel
+theorem cell_30_65_5 : CertificateAt 30 65 5 := by decide +kernel
+theorem row_30_65 : ThresholdAt 30 65 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 65 0 cell_30_65_0
+    | exact certificate_sound 30 65 1 cell_30_65_1
+    | exact certificate_sound 30 65 2 cell_30_65_2
+    | exact certificate_sound 30 65 3 cell_30_65_3
+    | exact certificate_sound 30 65 4 cell_30_65_4
+    | exact certificate_sound 30 65 5 cell_30_65_5
+theorem cell_30_66_0 : CertificateAt 30 66 0 := by decide +kernel
+theorem cell_30_66_1 : CertificateAt 30 66 1 := by decide +kernel
+theorem cell_30_66_2 : CertificateAt 30 66 2 := by decide +kernel
+theorem cell_30_66_3 : CertificateAt 30 66 3 := by decide +kernel
+theorem cell_30_66_4 : CertificateAt 30 66 4 := by decide +kernel
+theorem cell_30_66_5 : CertificateAt 30 66 5 := by decide +kernel
+theorem row_30_66 : ThresholdAt 30 66 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 66 0 cell_30_66_0
+    | exact certificate_sound 30 66 1 cell_30_66_1
+    | exact certificate_sound 30 66 2 cell_30_66_2
+    | exact certificate_sound 30 66 3 cell_30_66_3
+    | exact certificate_sound 30 66 4 cell_30_66_4
+    | exact certificate_sound 30 66 5 cell_30_66_5
+theorem cell_30_67_0 : CertificateAt 30 67 0 := by decide +kernel
+theorem cell_30_67_1 : CertificateAt 30 67 1 := by decide +kernel
+theorem cell_30_67_2 : CertificateAt 30 67 2 := by decide +kernel
+theorem cell_30_67_3 : CertificateAt 30 67 3 := by decide +kernel
+theorem cell_30_67_4 : CertificateAt 30 67 4 := by decide +kernel
+theorem cell_30_67_5 : CertificateAt 30 67 5 := by decide +kernel
+theorem row_30_67 : ThresholdAt 30 67 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 67 0 cell_30_67_0
+    | exact certificate_sound 30 67 1 cell_30_67_1
+    | exact certificate_sound 30 67 2 cell_30_67_2
+    | exact certificate_sound 30 67 3 cell_30_67_3
+    | exact certificate_sound 30 67 4 cell_30_67_4
+    | exact certificate_sound 30 67 5 cell_30_67_5
+theorem cell_30_68_0 : CertificateAt 30 68 0 := by decide +kernel
+theorem cell_30_68_1 : CertificateAt 30 68 1 := by decide +kernel
+theorem cell_30_68_2 : CertificateAt 30 68 2 := by decide +kernel
+theorem cell_30_68_3 : CertificateAt 30 68 3 := by decide +kernel
+theorem cell_30_68_4 : CertificateAt 30 68 4 := by decide +kernel
+theorem cell_30_68_5 : CertificateAt 30 68 5 := by decide +kernel
+theorem row_30_68 : ThresholdAt 30 68 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 68 0 cell_30_68_0
+    | exact certificate_sound 30 68 1 cell_30_68_1
+    | exact certificate_sound 30 68 2 cell_30_68_2
+    | exact certificate_sound 30 68 3 cell_30_68_3
+    | exact certificate_sound 30 68 4 cell_30_68_4
+    | exact certificate_sound 30 68 5 cell_30_68_5
+theorem cell_30_69_0 : CertificateAt 30 69 0 := by decide +kernel
+theorem cell_30_69_1 : CertificateAt 30 69 1 := by decide +kernel
+theorem cell_30_69_2 : CertificateAt 30 69 2 := by decide +kernel
+theorem cell_30_69_3 : CertificateAt 30 69 3 := by decide +kernel
+theorem cell_30_69_4 : CertificateAt 30 69 4 := by decide +kernel
+theorem cell_30_69_5 : CertificateAt 30 69 5 := by decide +kernel
+theorem row_30_69 : ThresholdAt 30 69 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 69 0 cell_30_69_0
+    | exact certificate_sound 30 69 1 cell_30_69_1
+    | exact certificate_sound 30 69 2 cell_30_69_2
+    | exact certificate_sound 30 69 3 cell_30_69_3
+    | exact certificate_sound 30 69 4 cell_30_69_4
+    | exact certificate_sound 30 69 5 cell_30_69_5
+theorem cell_30_70_0 : CertificateAt 30 70 0 := by decide +kernel
+theorem cell_30_70_1 : CertificateAt 30 70 1 := by decide +kernel
+theorem cell_30_70_2 : CertificateAt 30 70 2 := by decide +kernel
+theorem cell_30_70_3 : CertificateAt 30 70 3 := by decide +kernel
+theorem cell_30_70_4 : CertificateAt 30 70 4 := by decide +kernel
+theorem cell_30_70_5 : CertificateAt 30 70 5 := by decide +kernel
+theorem row_30_70 : ThresholdAt 30 70 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 70 0 cell_30_70_0
+    | exact certificate_sound 30 70 1 cell_30_70_1
+    | exact certificate_sound 30 70 2 cell_30_70_2
+    | exact certificate_sound 30 70 3 cell_30_70_3
+    | exact certificate_sound 30 70 4 cell_30_70_4
+    | exact certificate_sound 30 70 5 cell_30_70_5
+theorem cell_30_71_0 : CertificateAt 30 71 0 := by decide +kernel
+theorem cell_30_71_1 : CertificateAt 30 71 1 := by decide +kernel
+theorem cell_30_71_2 : CertificateAt 30 71 2 := by decide +kernel
+theorem cell_30_71_3 : CertificateAt 30 71 3 := by decide +kernel
+theorem cell_30_71_4 : CertificateAt 30 71 4 := by decide +kernel
+theorem cell_30_71_5 : CertificateAt 30 71 5 := by decide +kernel
+theorem row_30_71 : ThresholdAt 30 71 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 71 0 cell_30_71_0
+    | exact certificate_sound 30 71 1 cell_30_71_1
+    | exact certificate_sound 30 71 2 cell_30_71_2
+    | exact certificate_sound 30 71 3 cell_30_71_3
+    | exact certificate_sound 30 71 4 cell_30_71_4
+    | exact certificate_sound 30 71 5 cell_30_71_5
+theorem cell_30_72_0 : CertificateAt 30 72 0 := by decide +kernel
+theorem cell_30_72_1 : CertificateAt 30 72 1 := by decide +kernel
+theorem cell_30_72_2 : CertificateAt 30 72 2 := by decide +kernel
+theorem cell_30_72_3 : CertificateAt 30 72 3 := by decide +kernel
+theorem cell_30_72_4 : CertificateAt 30 72 4 := by decide +kernel
+theorem cell_30_72_5 : CertificateAt 30 72 5 := by decide +kernel
+theorem row_30_72 : ThresholdAt 30 72 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 72 0 cell_30_72_0
+    | exact certificate_sound 30 72 1 cell_30_72_1
+    | exact certificate_sound 30 72 2 cell_30_72_2
+    | exact certificate_sound 30 72 3 cell_30_72_3
+    | exact certificate_sound 30 72 4 cell_30_72_4
+    | exact certificate_sound 30 72 5 cell_30_72_5
+theorem cell_30_73_0 : CertificateAt 30 73 0 := by decide +kernel
+theorem cell_30_73_1 : CertificateAt 30 73 1 := by decide +kernel
+theorem cell_30_73_2 : CertificateAt 30 73 2 := by decide +kernel
+theorem cell_30_73_3 : CertificateAt 30 73 3 := by decide +kernel
+theorem cell_30_73_4 : CertificateAt 30 73 4 := by decide +kernel
+theorem cell_30_73_5 : CertificateAt 30 73 5 := by decide +kernel
+theorem row_30_73 : ThresholdAt 30 73 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 73 0 cell_30_73_0
+    | exact certificate_sound 30 73 1 cell_30_73_1
+    | exact certificate_sound 30 73 2 cell_30_73_2
+    | exact certificate_sound 30 73 3 cell_30_73_3
+    | exact certificate_sound 30 73 4 cell_30_73_4
+    | exact certificate_sound 30 73 5 cell_30_73_5
+theorem cell_30_74_0 : CertificateAt 30 74 0 := by decide +kernel
+theorem cell_30_74_1 : CertificateAt 30 74 1 := by decide +kernel
+theorem cell_30_74_2 : CertificateAt 30 74 2 := by decide +kernel
+theorem cell_30_74_3 : CertificateAt 30 74 3 := by decide +kernel
+theorem cell_30_74_4 : CertificateAt 30 74 4 := by decide +kernel
+theorem cell_30_74_5 : CertificateAt 30 74 5 := by decide +kernel
+theorem row_30_74 : ThresholdAt 30 74 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 74 0 cell_30_74_0
+    | exact certificate_sound 30 74 1 cell_30_74_1
+    | exact certificate_sound 30 74 2 cell_30_74_2
+    | exact certificate_sound 30 74 3 cell_30_74_3
+    | exact certificate_sound 30 74 4 cell_30_74_4
+    | exact certificate_sound 30 74 5 cell_30_74_5
+theorem cell_30_75_0 : CertificateAt 30 75 0 := by decide +kernel
+theorem cell_30_75_1 : CertificateAt 30 75 1 := by decide +kernel
+theorem cell_30_75_2 : CertificateAt 30 75 2 := by decide +kernel
+theorem cell_30_75_3 : CertificateAt 30 75 3 := by decide +kernel
+theorem cell_30_75_4 : CertificateAt 30 75 4 := by decide +kernel
+theorem cell_30_75_5 : CertificateAt 30 75 5 := by decide +kernel
+theorem row_30_75 : ThresholdAt 30 75 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 75 0 cell_30_75_0
+    | exact certificate_sound 30 75 1 cell_30_75_1
+    | exact certificate_sound 30 75 2 cell_30_75_2
+    | exact certificate_sound 30 75 3 cell_30_75_3
+    | exact certificate_sound 30 75 4 cell_30_75_4
+    | exact certificate_sound 30 75 5 cell_30_75_5
+theorem cell_30_76_0 : CertificateAt 30 76 0 := by decide +kernel
+theorem cell_30_76_1 : CertificateAt 30 76 1 := by decide +kernel
+theorem cell_30_76_2 : CertificateAt 30 76 2 := by decide +kernel
+theorem cell_30_76_3 : CertificateAt 30 76 3 := by decide +kernel
+theorem cell_30_76_4 : CertificateAt 30 76 4 := by decide +kernel
+theorem cell_30_76_5 : CertificateAt 30 76 5 := by decide +kernel
+theorem row_30_76 : ThresholdAt 30 76 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 76 0 cell_30_76_0
+    | exact certificate_sound 30 76 1 cell_30_76_1
+    | exact certificate_sound 30 76 2 cell_30_76_2
+    | exact certificate_sound 30 76 3 cell_30_76_3
+    | exact certificate_sound 30 76 4 cell_30_76_4
+    | exact certificate_sound 30 76 5 cell_30_76_5
+theorem cell_30_77_0 : CertificateAt 30 77 0 := by decide +kernel
+theorem cell_30_77_1 : CertificateAt 30 77 1 := by decide +kernel
+theorem cell_30_77_2 : CertificateAt 30 77 2 := by decide +kernel
+theorem cell_30_77_3 : CertificateAt 30 77 3 := by decide +kernel
+theorem cell_30_77_4 : CertificateAt 30 77 4 := by decide +kernel
+theorem cell_30_77_5 : CertificateAt 30 77 5 := by decide +kernel
+theorem row_30_77 : ThresholdAt 30 77 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 77 0 cell_30_77_0
+    | exact certificate_sound 30 77 1 cell_30_77_1
+    | exact certificate_sound 30 77 2 cell_30_77_2
+    | exact certificate_sound 30 77 3 cell_30_77_3
+    | exact certificate_sound 30 77 4 cell_30_77_4
+    | exact certificate_sound 30 77 5 cell_30_77_5
+theorem cell_30_78_0 : CertificateAt 30 78 0 := by decide +kernel
+theorem cell_30_78_1 : CertificateAt 30 78 1 := by decide +kernel
+theorem cell_30_78_2 : CertificateAt 30 78 2 := by decide +kernel
+theorem cell_30_78_3 : CertificateAt 30 78 3 := by decide +kernel
+theorem cell_30_78_4 : CertificateAt 30 78 4 := by decide +kernel
+theorem cell_30_78_5 : CertificateAt 30 78 5 := by decide +kernel
+theorem row_30_78 : ThresholdAt 30 78 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 78 0 cell_30_78_0
+    | exact certificate_sound 30 78 1 cell_30_78_1
+    | exact certificate_sound 30 78 2 cell_30_78_2
+    | exact certificate_sound 30 78 3 cell_30_78_3
+    | exact certificate_sound 30 78 4 cell_30_78_4
+    | exact certificate_sound 30 78 5 cell_30_78_5
+theorem cell_30_79_0 : CertificateAt 30 79 0 := by decide +kernel
+theorem cell_30_79_1 : CertificateAt 30 79 1 := by decide +kernel
+theorem cell_30_79_2 : CertificateAt 30 79 2 := by decide +kernel
+theorem cell_30_79_3 : CertificateAt 30 79 3 := by decide +kernel
+theorem cell_30_79_4 : CertificateAt 30 79 4 := by decide +kernel
+theorem cell_30_79_5 : CertificateAt 30 79 5 := by decide +kernel
+theorem row_30_79 : ThresholdAt 30 79 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 79 0 cell_30_79_0
+    | exact certificate_sound 30 79 1 cell_30_79_1
+    | exact certificate_sound 30 79 2 cell_30_79_2
+    | exact certificate_sound 30 79 3 cell_30_79_3
+    | exact certificate_sound 30 79 4 cell_30_79_4
+    | exact certificate_sound 30 79 5 cell_30_79_5
+theorem cell_30_80_0 : CertificateAt 30 80 0 := by decide +kernel
+theorem cell_30_80_1 : CertificateAt 30 80 1 := by decide +kernel
+theorem cell_30_80_2 : CertificateAt 30 80 2 := by decide +kernel
+theorem cell_30_80_3 : CertificateAt 30 80 3 := by decide +kernel
+theorem cell_30_80_4 : CertificateAt 30 80 4 := by decide +kernel
+theorem cell_30_80_5 : CertificateAt 30 80 5 := by decide +kernel
+theorem row_30_80 : ThresholdAt 30 80 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 80 0 cell_30_80_0
+    | exact certificate_sound 30 80 1 cell_30_80_1
+    | exact certificate_sound 30 80 2 cell_30_80_2
+    | exact certificate_sound 30 80 3 cell_30_80_3
+    | exact certificate_sound 30 80 4 cell_30_80_4
+    | exact certificate_sound 30 80 5 cell_30_80_5
+theorem cell_30_81_0 : CertificateAt 30 81 0 := by decide +kernel
+theorem cell_30_81_1 : CertificateAt 30 81 1 := by decide +kernel
+theorem cell_30_81_2 : CertificateAt 30 81 2 := by decide +kernel
+theorem cell_30_81_3 : CertificateAt 30 81 3 := by decide +kernel
+theorem cell_30_81_4 : CertificateAt 30 81 4 := by decide +kernel
+theorem cell_30_81_5 : CertificateAt 30 81 5 := by decide +kernel
+theorem row_30_81 : ThresholdAt 30 81 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 81 0 cell_30_81_0
+    | exact certificate_sound 30 81 1 cell_30_81_1
+    | exact certificate_sound 30 81 2 cell_30_81_2
+    | exact certificate_sound 30 81 3 cell_30_81_3
+    | exact certificate_sound 30 81 4 cell_30_81_4
+    | exact certificate_sound 30 81 5 cell_30_81_5
+theorem cell_30_82_0 : CertificateAt 30 82 0 := by decide +kernel
+theorem cell_30_82_1 : CertificateAt 30 82 1 := by decide +kernel
+theorem cell_30_82_2 : CertificateAt 30 82 2 := by decide +kernel
+theorem cell_30_82_3 : CertificateAt 30 82 3 := by decide +kernel
+theorem cell_30_82_4 : CertificateAt 30 82 4 := by decide +kernel
+theorem cell_30_82_5 : CertificateAt 30 82 5 := by decide +kernel
+theorem row_30_82 : ThresholdAt 30 82 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 82 0 cell_30_82_0
+    | exact certificate_sound 30 82 1 cell_30_82_1
+    | exact certificate_sound 30 82 2 cell_30_82_2
+    | exact certificate_sound 30 82 3 cell_30_82_3
+    | exact certificate_sound 30 82 4 cell_30_82_4
+    | exact certificate_sound 30 82 5 cell_30_82_5
+theorem cell_30_83_0 : CertificateAt 30 83 0 := by decide +kernel
+theorem cell_30_83_1 : CertificateAt 30 83 1 := by decide +kernel
+theorem cell_30_83_2 : CertificateAt 30 83 2 := by decide +kernel
+theorem cell_30_83_3 : CertificateAt 30 83 3 := by decide +kernel
+theorem cell_30_83_4 : CertificateAt 30 83 4 := by decide +kernel
+theorem cell_30_83_5 : CertificateAt 30 83 5 := by decide +kernel
+theorem row_30_83 : ThresholdAt 30 83 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 83 0 cell_30_83_0
+    | exact certificate_sound 30 83 1 cell_30_83_1
+    | exact certificate_sound 30 83 2 cell_30_83_2
+    | exact certificate_sound 30 83 3 cell_30_83_3
+    | exact certificate_sound 30 83 4 cell_30_83_4
+    | exact certificate_sound 30 83 5 cell_30_83_5
+theorem cell_30_84_0 : CertificateAt 30 84 0 := by decide +kernel
+theorem cell_30_84_1 : CertificateAt 30 84 1 := by decide +kernel
+theorem cell_30_84_2 : CertificateAt 30 84 2 := by decide +kernel
+theorem cell_30_84_3 : CertificateAt 30 84 3 := by decide +kernel
+theorem cell_30_84_4 : CertificateAt 30 84 4 := by decide +kernel
+theorem cell_30_84_5 : CertificateAt 30 84 5 := by decide +kernel
+theorem row_30_84 : ThresholdAt 30 84 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 84 0 cell_30_84_0
+    | exact certificate_sound 30 84 1 cell_30_84_1
+    | exact certificate_sound 30 84 2 cell_30_84_2
+    | exact certificate_sound 30 84 3 cell_30_84_3
+    | exact certificate_sound 30 84 4 cell_30_84_4
+    | exact certificate_sound 30 84 5 cell_30_84_5
+theorem cell_30_85_0 : CertificateAt 30 85 0 := by decide +kernel
+theorem cell_30_85_1 : CertificateAt 30 85 1 := by decide +kernel
+theorem cell_30_85_2 : CertificateAt 30 85 2 := by decide +kernel
+theorem cell_30_85_3 : CertificateAt 30 85 3 := by decide +kernel
+theorem cell_30_85_4 : CertificateAt 30 85 4 := by decide +kernel
+theorem cell_30_85_5 : CertificateAt 30 85 5 := by decide +kernel
+theorem row_30_85 : ThresholdAt 30 85 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 85 0 cell_30_85_0
+    | exact certificate_sound 30 85 1 cell_30_85_1
+    | exact certificate_sound 30 85 2 cell_30_85_2
+    | exact certificate_sound 30 85 3 cell_30_85_3
+    | exact certificate_sound 30 85 4 cell_30_85_4
+    | exact certificate_sound 30 85 5 cell_30_85_5
+theorem cell_30_86_0 : CertificateAt 30 86 0 := by decide +kernel
+theorem cell_30_86_1 : CertificateAt 30 86 1 := by decide +kernel
+theorem cell_30_86_2 : CertificateAt 30 86 2 := by decide +kernel
+theorem cell_30_86_3 : CertificateAt 30 86 3 := by decide +kernel
+theorem cell_30_86_4 : CertificateAt 30 86 4 := by decide +kernel
+theorem cell_30_86_5 : CertificateAt 30 86 5 := by decide +kernel
+theorem row_30_86 : ThresholdAt 30 86 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 86 0 cell_30_86_0
+    | exact certificate_sound 30 86 1 cell_30_86_1
+    | exact certificate_sound 30 86 2 cell_30_86_2
+    | exact certificate_sound 30 86 3 cell_30_86_3
+    | exact certificate_sound 30 86 4 cell_30_86_4
+    | exact certificate_sound 30 86 5 cell_30_86_5
+theorem cell_30_87_0 : CertificateAt 30 87 0 := by decide +kernel
+theorem cell_30_87_1 : CertificateAt 30 87 1 := by decide +kernel
+theorem cell_30_87_2 : CertificateAt 30 87 2 := by decide +kernel
+theorem cell_30_87_3 : CertificateAt 30 87 3 := by decide +kernel
+theorem cell_30_87_4 : CertificateAt 30 87 4 := by decide +kernel
+theorem cell_30_87_5 : CertificateAt 30 87 5 := by decide +kernel
+theorem row_30_87 : ThresholdAt 30 87 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 87 0 cell_30_87_0
+    | exact certificate_sound 30 87 1 cell_30_87_1
+    | exact certificate_sound 30 87 2 cell_30_87_2
+    | exact certificate_sound 30 87 3 cell_30_87_3
+    | exact certificate_sound 30 87 4 cell_30_87_4
+    | exact certificate_sound 30 87 5 cell_30_87_5
+theorem cell_30_88_0 : CertificateAt 30 88 0 := by decide +kernel
+theorem cell_30_88_1 : CertificateAt 30 88 1 := by decide +kernel
+theorem cell_30_88_2 : CertificateAt 30 88 2 := by decide +kernel
+theorem cell_30_88_3 : CertificateAt 30 88 3 := by decide +kernel
+theorem cell_30_88_4 : CertificateAt 30 88 4 := by decide +kernel
+theorem cell_30_88_5 : CertificateAt 30 88 5 := by decide +kernel
+theorem row_30_88 : ThresholdAt 30 88 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 88 0 cell_30_88_0
+    | exact certificate_sound 30 88 1 cell_30_88_1
+    | exact certificate_sound 30 88 2 cell_30_88_2
+    | exact certificate_sound 30 88 3 cell_30_88_3
+    | exact certificate_sound 30 88 4 cell_30_88_4
+    | exact certificate_sound 30 88 5 cell_30_88_5
+theorem cell_30_89_0 : CertificateAt 30 89 0 := by decide +kernel
+theorem cell_30_89_1 : CertificateAt 30 89 1 := by decide +kernel
+theorem cell_30_89_2 : CertificateAt 30 89 2 := by decide +kernel
+theorem cell_30_89_3 : CertificateAt 30 89 3 := by decide +kernel
+theorem cell_30_89_4 : CertificateAt 30 89 4 := by decide +kernel
+theorem cell_30_89_5 : CertificateAt 30 89 5 := by decide +kernel
+theorem row_30_89 : ThresholdAt 30 89 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 89 0 cell_30_89_0
+    | exact certificate_sound 30 89 1 cell_30_89_1
+    | exact certificate_sound 30 89 2 cell_30_89_2
+    | exact certificate_sound 30 89 3 cell_30_89_3
+    | exact certificate_sound 30 89 4 cell_30_89_4
+    | exact certificate_sound 30 89 5 cell_30_89_5
+theorem cell_30_90_0 : CertificateAt 30 90 0 := by decide +kernel
+theorem cell_30_90_1 : CertificateAt 30 90 1 := by decide +kernel
+theorem cell_30_90_2 : CertificateAt 30 90 2 := by decide +kernel
+theorem cell_30_90_3 : CertificateAt 30 90 3 := by decide +kernel
+theorem cell_30_90_4 : CertificateAt 30 90 4 := by decide +kernel
+theorem cell_30_90_5 : CertificateAt 30 90 5 := by decide +kernel
+theorem row_30_90 : ThresholdAt 30 90 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 90 0 cell_30_90_0
+    | exact certificate_sound 30 90 1 cell_30_90_1
+    | exact certificate_sound 30 90 2 cell_30_90_2
+    | exact certificate_sound 30 90 3 cell_30_90_3
+    | exact certificate_sound 30 90 4 cell_30_90_4
+    | exact certificate_sound 30 90 5 cell_30_90_5
+theorem cell_30_91_0 : CertificateAt 30 91 0 := by decide +kernel
+theorem cell_30_91_1 : CertificateAt 30 91 1 := by decide +kernel
+theorem cell_30_91_2 : CertificateAt 30 91 2 := by decide +kernel
+theorem cell_30_91_3 : CertificateAt 30 91 3 := by decide +kernel
+theorem cell_30_91_4 : CertificateAt 30 91 4 := by decide +kernel
+theorem cell_30_91_5 : CertificateAt 30 91 5 := by decide +kernel
+theorem row_30_91 : ThresholdAt 30 91 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 91 0 cell_30_91_0
+    | exact certificate_sound 30 91 1 cell_30_91_1
+    | exact certificate_sound 30 91 2 cell_30_91_2
+    | exact certificate_sound 30 91 3 cell_30_91_3
+    | exact certificate_sound 30 91 4 cell_30_91_4
+    | exact certificate_sound 30 91 5 cell_30_91_5
+theorem cell_30_92_0 : CertificateAt 30 92 0 := by decide +kernel
+theorem cell_30_92_1 : CertificateAt 30 92 1 := by decide +kernel
+theorem cell_30_92_2 : CertificateAt 30 92 2 := by decide +kernel
+theorem cell_30_92_3 : CertificateAt 30 92 3 := by decide +kernel
+theorem cell_30_92_4 : CertificateAt 30 92 4 := by decide +kernel
+theorem cell_30_92_5 : CertificateAt 30 92 5 := by decide +kernel
+theorem row_30_92 : ThresholdAt 30 92 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 92 0 cell_30_92_0
+    | exact certificate_sound 30 92 1 cell_30_92_1
+    | exact certificate_sound 30 92 2 cell_30_92_2
+    | exact certificate_sound 30 92 3 cell_30_92_3
+    | exact certificate_sound 30 92 4 cell_30_92_4
+    | exact certificate_sound 30 92 5 cell_30_92_5
+theorem cell_30_93_0 : CertificateAt 30 93 0 := by decide +kernel
+theorem cell_30_93_1 : CertificateAt 30 93 1 := by decide +kernel
+theorem cell_30_93_2 : CertificateAt 30 93 2 := by decide +kernel
+theorem cell_30_93_3 : CertificateAt 30 93 3 := by decide +kernel
+theorem cell_30_93_4 : CertificateAt 30 93 4 := by decide +kernel
+theorem cell_30_93_5 : CertificateAt 30 93 5 := by decide +kernel
+theorem row_30_93 : ThresholdAt 30 93 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 93 0 cell_30_93_0
+    | exact certificate_sound 30 93 1 cell_30_93_1
+    | exact certificate_sound 30 93 2 cell_30_93_2
+    | exact certificate_sound 30 93 3 cell_30_93_3
+    | exact certificate_sound 30 93 4 cell_30_93_4
+    | exact certificate_sound 30 93 5 cell_30_93_5
+theorem cell_30_94_0 : CertificateAt 30 94 0 := by decide +kernel
+theorem cell_30_94_1 : CertificateAt 30 94 1 := by decide +kernel
+theorem cell_30_94_2 : CertificateAt 30 94 2 := by decide +kernel
+theorem cell_30_94_3 : CertificateAt 30 94 3 := by decide +kernel
+theorem cell_30_94_4 : CertificateAt 30 94 4 := by decide +kernel
+theorem cell_30_94_5 : CertificateAt 30 94 5 := by decide +kernel
+theorem row_30_94 : ThresholdAt 30 94 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 94 0 cell_30_94_0
+    | exact certificate_sound 30 94 1 cell_30_94_1
+    | exact certificate_sound 30 94 2 cell_30_94_2
+    | exact certificate_sound 30 94 3 cell_30_94_3
+    | exact certificate_sound 30 94 4 cell_30_94_4
+    | exact certificate_sound 30 94 5 cell_30_94_5
+theorem cell_30_95_0 : CertificateAt 30 95 0 := by decide +kernel
+theorem cell_30_95_1 : CertificateAt 30 95 1 := by decide +kernel
+theorem cell_30_95_2 : CertificateAt 30 95 2 := by decide +kernel
+theorem cell_30_95_3 : CertificateAt 30 95 3 := by decide +kernel
+theorem cell_30_95_4 : CertificateAt 30 95 4 := by decide +kernel
+theorem cell_30_95_5 : CertificateAt 30 95 5 := by decide +kernel
+theorem row_30_95 : ThresholdAt 30 95 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 95 0 cell_30_95_0
+    | exact certificate_sound 30 95 1 cell_30_95_1
+    | exact certificate_sound 30 95 2 cell_30_95_2
+    | exact certificate_sound 30 95 3 cell_30_95_3
+    | exact certificate_sound 30 95 4 cell_30_95_4
+    | exact certificate_sound 30 95 5 cell_30_95_5
+theorem cell_30_96_0 : CertificateAt 30 96 0 := by decide +kernel
+theorem cell_30_96_1 : CertificateAt 30 96 1 := by decide +kernel
+theorem cell_30_96_2 : CertificateAt 30 96 2 := by decide +kernel
+theorem cell_30_96_3 : CertificateAt 30 96 3 := by decide +kernel
+theorem cell_30_96_4 : CertificateAt 30 96 4 := by decide +kernel
+theorem cell_30_96_5 : CertificateAt 30 96 5 := by decide +kernel
+theorem row_30_96 : ThresholdAt 30 96 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 96 0 cell_30_96_0
+    | exact certificate_sound 30 96 1 cell_30_96_1
+    | exact certificate_sound 30 96 2 cell_30_96_2
+    | exact certificate_sound 30 96 3 cell_30_96_3
+    | exact certificate_sound 30 96 4 cell_30_96_4
+    | exact certificate_sound 30 96 5 cell_30_96_5
+theorem cell_30_97_0 : CertificateAt 30 97 0 := by decide +kernel
+theorem cell_30_97_1 : CertificateAt 30 97 1 := by decide +kernel
+theorem cell_30_97_2 : CertificateAt 30 97 2 := by decide +kernel
+theorem cell_30_97_3 : CertificateAt 30 97 3 := by decide +kernel
+theorem cell_30_97_4 : CertificateAt 30 97 4 := by decide +kernel
+theorem cell_30_97_5 : CertificateAt 30 97 5 := by decide +kernel
+theorem row_30_97 : ThresholdAt 30 97 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 97 0 cell_30_97_0
+    | exact certificate_sound 30 97 1 cell_30_97_1
+    | exact certificate_sound 30 97 2 cell_30_97_2
+    | exact certificate_sound 30 97 3 cell_30_97_3
+    | exact certificate_sound 30 97 4 cell_30_97_4
+    | exact certificate_sound 30 97 5 cell_30_97_5
+theorem cell_30_98_0 : CertificateAt 30 98 0 := by decide +kernel
+theorem cell_30_98_1 : CertificateAt 30 98 1 := by decide +kernel
+theorem cell_30_98_2 : CertificateAt 30 98 2 := by decide +kernel
+theorem cell_30_98_3 : CertificateAt 30 98 3 := by decide +kernel
+theorem cell_30_98_4 : CertificateAt 30 98 4 := by decide +kernel
+theorem cell_30_98_5 : CertificateAt 30 98 5 := by decide +kernel
+theorem row_30_98 : ThresholdAt 30 98 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 98 0 cell_30_98_0
+    | exact certificate_sound 30 98 1 cell_30_98_1
+    | exact certificate_sound 30 98 2 cell_30_98_2
+    | exact certificate_sound 30 98 3 cell_30_98_3
+    | exact certificate_sound 30 98 4 cell_30_98_4
+    | exact certificate_sound 30 98 5 cell_30_98_5
+theorem cell_30_99_0 : CertificateAt 30 99 0 := by decide +kernel
+theorem cell_30_99_1 : CertificateAt 30 99 1 := by decide +kernel
+theorem cell_30_99_2 : CertificateAt 30 99 2 := by decide +kernel
+theorem cell_30_99_3 : CertificateAt 30 99 3 := by decide +kernel
+theorem cell_30_99_4 : CertificateAt 30 99 4 := by decide +kernel
+theorem cell_30_99_5 : CertificateAt 30 99 5 := by decide +kernel
+theorem row_30_99 : ThresholdAt 30 99 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 99 0 cell_30_99_0
+    | exact certificate_sound 30 99 1 cell_30_99_1
+    | exact certificate_sound 30 99 2 cell_30_99_2
+    | exact certificate_sound 30 99 3 cell_30_99_3
+    | exact certificate_sound 30 99 4 cell_30_99_4
+    | exact certificate_sound 30 99 5 cell_30_99_5
+theorem cell_30_100_0 : CertificateAt 30 100 0 := by decide +kernel
+theorem cell_30_100_1 : CertificateAt 30 100 1 := by decide +kernel
+theorem cell_30_100_2 : CertificateAt 30 100 2 := by decide +kernel
+theorem cell_30_100_3 : CertificateAt 30 100 3 := by decide +kernel
+theorem cell_30_100_4 : CertificateAt 30 100 4 := by decide +kernel
+theorem cell_30_100_5 : CertificateAt 30 100 5 := by decide +kernel
+theorem row_30_100 : ThresholdAt 30 100 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 100 0 cell_30_100_0
+    | exact certificate_sound 30 100 1 cell_30_100_1
+    | exact certificate_sound 30 100 2 cell_30_100_2
+    | exact certificate_sound 30 100 3 cell_30_100_3
+    | exact certificate_sound 30 100 4 cell_30_100_4
+    | exact certificate_sound 30 100 5 cell_30_100_5
+theorem cell_30_101_0 : CertificateAt 30 101 0 := by decide +kernel
+theorem cell_30_101_1 : CertificateAt 30 101 1 := by decide +kernel
+theorem cell_30_101_2 : CertificateAt 30 101 2 := by decide +kernel
+theorem cell_30_101_3 : CertificateAt 30 101 3 := by decide +kernel
+theorem cell_30_101_4 : CertificateAt 30 101 4 := by decide +kernel
+theorem cell_30_101_5 : CertificateAt 30 101 5 := by decide +kernel
+theorem row_30_101 : ThresholdAt 30 101 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 101 0 cell_30_101_0
+    | exact certificate_sound 30 101 1 cell_30_101_1
+    | exact certificate_sound 30 101 2 cell_30_101_2
+    | exact certificate_sound 30 101 3 cell_30_101_3
+    | exact certificate_sound 30 101 4 cell_30_101_4
+    | exact certificate_sound 30 101 5 cell_30_101_5
+theorem cell_30_102_0 : CertificateAt 30 102 0 := by decide +kernel
+theorem cell_30_102_1 : CertificateAt 30 102 1 := by decide +kernel
+theorem cell_30_102_2 : CertificateAt 30 102 2 := by decide +kernel
+theorem cell_30_102_3 : CertificateAt 30 102 3 := by decide +kernel
+theorem cell_30_102_4 : CertificateAt 30 102 4 := by decide +kernel
+theorem cell_30_102_5 : CertificateAt 30 102 5 := by decide +kernel
+theorem row_30_102 : ThresholdAt 30 102 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 102 0 cell_30_102_0
+    | exact certificate_sound 30 102 1 cell_30_102_1
+    | exact certificate_sound 30 102 2 cell_30_102_2
+    | exact certificate_sound 30 102 3 cell_30_102_3
+    | exact certificate_sound 30 102 4 cell_30_102_4
+    | exact certificate_sound 30 102 5 cell_30_102_5
+theorem cell_30_103_0 : CertificateAt 30 103 0 := by decide +kernel
+theorem cell_30_103_1 : CertificateAt 30 103 1 := by decide +kernel
+theorem cell_30_103_2 : CertificateAt 30 103 2 := by decide +kernel
+theorem cell_30_103_3 : CertificateAt 30 103 3 := by decide +kernel
+theorem cell_30_103_4 : CertificateAt 30 103 4 := by decide +kernel
+theorem cell_30_103_5 : CertificateAt 30 103 5 := by decide +kernel
+theorem row_30_103 : ThresholdAt 30 103 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 103 0 cell_30_103_0
+    | exact certificate_sound 30 103 1 cell_30_103_1
+    | exact certificate_sound 30 103 2 cell_30_103_2
+    | exact certificate_sound 30 103 3 cell_30_103_3
+    | exact certificate_sound 30 103 4 cell_30_103_4
+    | exact certificate_sound 30 103 5 cell_30_103_5
+theorem cell_30_104_0 : CertificateAt 30 104 0 := by decide +kernel
+theorem cell_30_104_1 : CertificateAt 30 104 1 := by decide +kernel
+theorem cell_30_104_2 : CertificateAt 30 104 2 := by decide +kernel
+theorem cell_30_104_3 : CertificateAt 30 104 3 := by decide +kernel
+theorem cell_30_104_4 : CertificateAt 30 104 4 := by decide +kernel
+theorem cell_30_104_5 : CertificateAt 30 104 5 := by decide +kernel
+theorem row_30_104 : ThresholdAt 30 104 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 104 0 cell_30_104_0
+    | exact certificate_sound 30 104 1 cell_30_104_1
+    | exact certificate_sound 30 104 2 cell_30_104_2
+    | exact certificate_sound 30 104 3 cell_30_104_3
+    | exact certificate_sound 30 104 4 cell_30_104_4
+    | exact certificate_sound 30 104 5 cell_30_104_5
+theorem cell_30_105_0 : CertificateAt 30 105 0 := by decide +kernel
+theorem cell_30_105_1 : CertificateAt 30 105 1 := by decide +kernel
+theorem cell_30_105_2 : CertificateAt 30 105 2 := by decide +kernel
+theorem cell_30_105_3 : CertificateAt 30 105 3 := by decide +kernel
+theorem cell_30_105_4 : CertificateAt 30 105 4 := by decide +kernel
+theorem cell_30_105_5 : CertificateAt 30 105 5 := by decide +kernel
+theorem row_30_105 : ThresholdAt 30 105 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 105 0 cell_30_105_0
+    | exact certificate_sound 30 105 1 cell_30_105_1
+    | exact certificate_sound 30 105 2 cell_30_105_2
+    | exact certificate_sound 30 105 3 cell_30_105_3
+    | exact certificate_sound 30 105 4 cell_30_105_4
+    | exact certificate_sound 30 105 5 cell_30_105_5
+theorem cell_30_106_0 : CertificateAt 30 106 0 := by decide +kernel
+theorem cell_30_106_1 : CertificateAt 30 106 1 := by decide +kernel
+theorem cell_30_106_2 : CertificateAt 30 106 2 := by decide +kernel
+theorem cell_30_106_3 : CertificateAt 30 106 3 := by decide +kernel
+theorem cell_30_106_4 : CertificateAt 30 106 4 := by decide +kernel
+theorem cell_30_106_5 : CertificateAt 30 106 5 := by decide +kernel
+theorem row_30_106 : ThresholdAt 30 106 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 106 0 cell_30_106_0
+    | exact certificate_sound 30 106 1 cell_30_106_1
+    | exact certificate_sound 30 106 2 cell_30_106_2
+    | exact certificate_sound 30 106 3 cell_30_106_3
+    | exact certificate_sound 30 106 4 cell_30_106_4
+    | exact certificate_sound 30 106 5 cell_30_106_5
+theorem cell_30_107_0 : CertificateAt 30 107 0 := by decide +kernel
+theorem cell_30_107_1 : CertificateAt 30 107 1 := by decide +kernel
+theorem cell_30_107_2 : CertificateAt 30 107 2 := by decide +kernel
+theorem cell_30_107_3 : CertificateAt 30 107 3 := by decide +kernel
+theorem cell_30_107_4 : CertificateAt 30 107 4 := by decide +kernel
+theorem cell_30_107_5 : CertificateAt 30 107 5 := by decide +kernel
+theorem row_30_107 : ThresholdAt 30 107 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 107 0 cell_30_107_0
+    | exact certificate_sound 30 107 1 cell_30_107_1
+    | exact certificate_sound 30 107 2 cell_30_107_2
+    | exact certificate_sound 30 107 3 cell_30_107_3
+    | exact certificate_sound 30 107 4 cell_30_107_4
+    | exact certificate_sound 30 107 5 cell_30_107_5
+theorem cell_30_108_0 : CertificateAt 30 108 0 := by decide +kernel
+theorem cell_30_108_1 : CertificateAt 30 108 1 := by decide +kernel
+theorem cell_30_108_2 : CertificateAt 30 108 2 := by decide +kernel
+theorem cell_30_108_3 : CertificateAt 30 108 3 := by decide +kernel
+theorem cell_30_108_4 : CertificateAt 30 108 4 := by decide +kernel
+theorem cell_30_108_5 : CertificateAt 30 108 5 := by decide +kernel
+theorem row_30_108 : ThresholdAt 30 108 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 108 0 cell_30_108_0
+    | exact certificate_sound 30 108 1 cell_30_108_1
+    | exact certificate_sound 30 108 2 cell_30_108_2
+    | exact certificate_sound 30 108 3 cell_30_108_3
+    | exact certificate_sound 30 108 4 cell_30_108_4
+    | exact certificate_sound 30 108 5 cell_30_108_5
+theorem cell_30_109_0 : CertificateAt 30 109 0 := by decide +kernel
+theorem cell_30_109_1 : CertificateAt 30 109 1 := by decide +kernel
+theorem cell_30_109_2 : CertificateAt 30 109 2 := by decide +kernel
+theorem cell_30_109_3 : CertificateAt 30 109 3 := by decide +kernel
+theorem cell_30_109_4 : CertificateAt 30 109 4 := by decide +kernel
+theorem cell_30_109_5 : CertificateAt 30 109 5 := by decide +kernel
+theorem row_30_109 : ThresholdAt 30 109 := by
+  intro j hj
+  have hj6 : j < 6 := List.mem_range.mp hj
+  interval_cases j <;> first
+    | exact certificate_sound 30 109 0 cell_30_109_0
+    | exact certificate_sound 30 109 1 cell_30_109_1
+    | exact certificate_sound 30 109 2 cell_30_109_2
+    | exact certificate_sound 30 109 3 cell_30_109_3
+    | exact certificate_sound 30 109 4 cell_30_109_4
+    | exact certificate_sound 30 109 5 cell_30_109_5
+theorem checkedR30 : ∀ V ∈ List.range 110, ThresholdAt 30 V := by
+  intro V hV
+  have hv : V < 110 := List.mem_range.mp hV
+  by_cases h0_110 : V < 55
+  · by_cases h0_55 : V < 27
+    · by_cases h0_27 : V < 13
+      · by_cases h0_13 : V < 6
+        · by_cases h0_6 : V < 3
+          · by_cases h0_3 : V < 1
+            · have he : V = 0 := by omega
+              subst V
+              exact row_30_0
+            · by_cases h1_3 : V < 2
+              · have he : V = 1 := by omega
+                subst V
+                exact row_30_1
+              · have he : V = 2 := by omega
+                subst V
+                exact row_30_2
+          · by_cases h3_6 : V < 4
+            · have he : V = 3 := by omega
+              subst V
+              exact row_30_3
+            · by_cases h4_6 : V < 5
+              · have he : V = 4 := by omega
+                subst V
+                exact row_30_4
+              · have he : V = 5 := by omega
+                subst V
+                exact row_30_5
+        · by_cases h6_13 : V < 9
+          · by_cases h6_9 : V < 7
+            · have he : V = 6 := by omega
+              subst V
+              exact row_30_6
+            · by_cases h7_9 : V < 8
+              · have he : V = 7 := by omega
+                subst V
+                exact row_30_7
+              · have he : V = 8 := by omega
+                subst V
+                exact row_30_8
+          · by_cases h9_13 : V < 11
+            · by_cases h9_11 : V < 10
+              · have he : V = 9 := by omega
+                subst V
+                exact row_30_9
+              · have he : V = 10 := by omega
+                subst V
+                exact row_30_10
+            · by_cases h11_13 : V < 12
+              · have he : V = 11 := by omega
+                subst V
+                exact row_30_11
+              · have he : V = 12 := by omega
+                subst V
+                exact row_30_12
+      · by_cases h13_27 : V < 20
+        · by_cases h13_20 : V < 16
+          · by_cases h13_16 : V < 14
+            · have he : V = 13 := by omega
+              subst V
+              exact row_30_13
+            · by_cases h14_16 : V < 15
+              · have he : V = 14 := by omega
+                subst V
+                exact row_30_14
+              · have he : V = 15 := by omega
+                subst V
+                exact row_30_15
+          · by_cases h16_20 : V < 18
+            · by_cases h16_18 : V < 17
+              · have he : V = 16 := by omega
+                subst V
+                exact row_30_16
+              · have he : V = 17 := by omega
+                subst V
+                exact row_30_17
+            · by_cases h18_20 : V < 19
+              · have he : V = 18 := by omega
+                subst V
+                exact row_30_18
+              · have he : V = 19 := by omega
+                subst V
+                exact row_30_19
+        · by_cases h20_27 : V < 23
+          · by_cases h20_23 : V < 21
+            · have he : V = 20 := by omega
+              subst V
+              exact row_30_20
+            · by_cases h21_23 : V < 22
+              · have he : V = 21 := by omega
+                subst V
+                exact row_30_21
+              · have he : V = 22 := by omega
+                subst V
+                exact row_30_22
+          · by_cases h23_27 : V < 25
+            · by_cases h23_25 : V < 24
+              · have he : V = 23 := by omega
+                subst V
+                exact row_30_23
+              · have he : V = 24 := by omega
+                subst V
+                exact row_30_24
+            · by_cases h25_27 : V < 26
+              · have he : V = 25 := by omega
+                subst V
+                exact row_30_25
+              · have he : V = 26 := by omega
+                subst V
+                exact row_30_26
+    · by_cases h27_55 : V < 41
+      · by_cases h27_41 : V < 34
+        · by_cases h27_34 : V < 30
+          · by_cases h27_30 : V < 28
+            · have he : V = 27 := by omega
+              subst V
+              exact row_30_27
+            · by_cases h28_30 : V < 29
+              · have he : V = 28 := by omega
+                subst V
+                exact row_30_28
+              · have he : V = 29 := by omega
+                subst V
+                exact row_30_29
+          · by_cases h30_34 : V < 32
+            · by_cases h30_32 : V < 31
+              · have he : V = 30 := by omega
+                subst V
+                exact row_30_30
+              · have he : V = 31 := by omega
+                subst V
+                exact row_30_31
+            · by_cases h32_34 : V < 33
+              · have he : V = 32 := by omega
+                subst V
+                exact row_30_32
+              · have he : V = 33 := by omega
+                subst V
+                exact row_30_33
+        · by_cases h34_41 : V < 37
+          · by_cases h34_37 : V < 35
+            · have he : V = 34 := by omega
+              subst V
+              exact row_30_34
+            · by_cases h35_37 : V < 36
+              · have he : V = 35 := by omega
+                subst V
+                exact row_30_35
+              · have he : V = 36 := by omega
+                subst V
+                exact row_30_36
+          · by_cases h37_41 : V < 39
+            · by_cases h37_39 : V < 38
+              · have he : V = 37 := by omega
+                subst V
+                exact row_30_37
+              · have he : V = 38 := by omega
+                subst V
+                exact row_30_38
+            · by_cases h39_41 : V < 40
+              · have he : V = 39 := by omega
+                subst V
+                exact row_30_39
+              · have he : V = 40 := by omega
+                subst V
+                exact row_30_40
+      · by_cases h41_55 : V < 48
+        · by_cases h41_48 : V < 44
+          · by_cases h41_44 : V < 42
+            · have he : V = 41 := by omega
+              subst V
+              exact row_30_41
+            · by_cases h42_44 : V < 43
+              · have he : V = 42 := by omega
+                subst V
+                exact row_30_42
+              · have he : V = 43 := by omega
+                subst V
+                exact row_30_43
+          · by_cases h44_48 : V < 46
+            · by_cases h44_46 : V < 45
+              · have he : V = 44 := by omega
+                subst V
+                exact row_30_44
+              · have he : V = 45 := by omega
+                subst V
+                exact row_30_45
+            · by_cases h46_48 : V < 47
+              · have he : V = 46 := by omega
+                subst V
+                exact row_30_46
+              · have he : V = 47 := by omega
+                subst V
+                exact row_30_47
+        · by_cases h48_55 : V < 51
+          · by_cases h48_51 : V < 49
+            · have he : V = 48 := by omega
+              subst V
+              exact row_30_48
+            · by_cases h49_51 : V < 50
+              · have he : V = 49 := by omega
+                subst V
+                exact row_30_49
+              · have he : V = 50 := by omega
+                subst V
+                exact row_30_50
+          · by_cases h51_55 : V < 53
+            · by_cases h51_53 : V < 52
+              · have he : V = 51 := by omega
+                subst V
+                exact row_30_51
+              · have he : V = 52 := by omega
+                subst V
+                exact row_30_52
+            · by_cases h53_55 : V < 54
+              · have he : V = 53 := by omega
+                subst V
+                exact row_30_53
+              · have he : V = 54 := by omega
+                subst V
+                exact row_30_54
+  · by_cases h55_110 : V < 82
+    · by_cases h55_82 : V < 68
+      · by_cases h55_68 : V < 61
+        · by_cases h55_61 : V < 58
+          · by_cases h55_58 : V < 56
+            · have he : V = 55 := by omega
+              subst V
+              exact row_30_55
+            · by_cases h56_58 : V < 57
+              · have he : V = 56 := by omega
+                subst V
+                exact row_30_56
+              · have he : V = 57 := by omega
+                subst V
+                exact row_30_57
+          · by_cases h58_61 : V < 59
+            · have he : V = 58 := by omega
+              subst V
+              exact row_30_58
+            · by_cases h59_61 : V < 60
+              · have he : V = 59 := by omega
+                subst V
+                exact row_30_59
+              · have he : V = 60 := by omega
+                subst V
+                exact row_30_60
+        · by_cases h61_68 : V < 64
+          · by_cases h61_64 : V < 62
+            · have he : V = 61 := by omega
+              subst V
+              exact row_30_61
+            · by_cases h62_64 : V < 63
+              · have he : V = 62 := by omega
+                subst V
+                exact row_30_62
+              · have he : V = 63 := by omega
+                subst V
+                exact row_30_63
+          · by_cases h64_68 : V < 66
+            · by_cases h64_66 : V < 65
+              · have he : V = 64 := by omega
+                subst V
+                exact row_30_64
+              · have he : V = 65 := by omega
+                subst V
+                exact row_30_65
+            · by_cases h66_68 : V < 67
+              · have he : V = 66 := by omega
+                subst V
+                exact row_30_66
+              · have he : V = 67 := by omega
+                subst V
+                exact row_30_67
+      · by_cases h68_82 : V < 75
+        · by_cases h68_75 : V < 71
+          · by_cases h68_71 : V < 69
+            · have he : V = 68 := by omega
+              subst V
+              exact row_30_68
+            · by_cases h69_71 : V < 70
+              · have he : V = 69 := by omega
+                subst V
+                exact row_30_69
+              · have he : V = 70 := by omega
+                subst V
+                exact row_30_70
+          · by_cases h71_75 : V < 73
+            · by_cases h71_73 : V < 72
+              · have he : V = 71 := by omega
+                subst V
+                exact row_30_71
+              · have he : V = 72 := by omega
+                subst V
+                exact row_30_72
+            · by_cases h73_75 : V < 74
+              · have he : V = 73 := by omega
+                subst V
+                exact row_30_73
+              · have he : V = 74 := by omega
+                subst V
+                exact row_30_74
+        · by_cases h75_82 : V < 78
+          · by_cases h75_78 : V < 76
+            · have he : V = 75 := by omega
+              subst V
+              exact row_30_75
+            · by_cases h76_78 : V < 77
+              · have he : V = 76 := by omega
+                subst V
+                exact row_30_76
+              · have he : V = 77 := by omega
+                subst V
+                exact row_30_77
+          · by_cases h78_82 : V < 80
+            · by_cases h78_80 : V < 79
+              · have he : V = 78 := by omega
+                subst V
+                exact row_30_78
+              · have he : V = 79 := by omega
+                subst V
+                exact row_30_79
+            · by_cases h80_82 : V < 81
+              · have he : V = 80 := by omega
+                subst V
+                exact row_30_80
+              · have he : V = 81 := by omega
+                subst V
+                exact row_30_81
+    · by_cases h82_110 : V < 96
+      · by_cases h82_96 : V < 89
+        · by_cases h82_89 : V < 85
+          · by_cases h82_85 : V < 83
+            · have he : V = 82 := by omega
+              subst V
+              exact row_30_82
+            · by_cases h83_85 : V < 84
+              · have he : V = 83 := by omega
+                subst V
+                exact row_30_83
+              · have he : V = 84 := by omega
+                subst V
+                exact row_30_84
+          · by_cases h85_89 : V < 87
+            · by_cases h85_87 : V < 86
+              · have he : V = 85 := by omega
+                subst V
+                exact row_30_85
+              · have he : V = 86 := by omega
+                subst V
+                exact row_30_86
+            · by_cases h87_89 : V < 88
+              · have he : V = 87 := by omega
+                subst V
+                exact row_30_87
+              · have he : V = 88 := by omega
+                subst V
+                exact row_30_88
+        · by_cases h89_96 : V < 92
+          · by_cases h89_92 : V < 90
+            · have he : V = 89 := by omega
+              subst V
+              exact row_30_89
+            · by_cases h90_92 : V < 91
+              · have he : V = 90 := by omega
+                subst V
+                exact row_30_90
+              · have he : V = 91 := by omega
+                subst V
+                exact row_30_91
+          · by_cases h92_96 : V < 94
+            · by_cases h92_94 : V < 93
+              · have he : V = 92 := by omega
+                subst V
+                exact row_30_92
+              · have he : V = 93 := by omega
+                subst V
+                exact row_30_93
+            · by_cases h94_96 : V < 95
+              · have he : V = 94 := by omega
+                subst V
+                exact row_30_94
+              · have he : V = 95 := by omega
+                subst V
+                exact row_30_95
+      · by_cases h96_110 : V < 103
+        · by_cases h96_103 : V < 99
+          · by_cases h96_99 : V < 97
+            · have he : V = 96 := by omega
+              subst V
+              exact row_30_96
+            · by_cases h97_99 : V < 98
+              · have he : V = 97 := by omega
+                subst V
+                exact row_30_97
+              · have he : V = 98 := by omega
+                subst V
+                exact row_30_98
+          · by_cases h99_103 : V < 101
+            · by_cases h99_101 : V < 100
+              · have he : V = 99 := by omega
+                subst V
+                exact row_30_99
+              · have he : V = 100 := by omega
+                subst V
+                exact row_30_100
+            · by_cases h101_103 : V < 102
+              · have he : V = 101 := by omega
+                subst V
+                exact row_30_101
+              · have he : V = 102 := by omega
+                subst V
+                exact row_30_102
+        · by_cases h103_110 : V < 106
+          · by_cases h103_106 : V < 104
+            · have he : V = 103 := by omega
+              subst V
+              exact row_30_103
+            · by_cases h104_106 : V < 105
+              · have he : V = 104 := by omega
+                subst V
+                exact row_30_104
+              · have he : V = 105 := by omega
+                subst V
+                exact row_30_105
+          · by_cases h106_110 : V < 108
+            · by_cases h106_108 : V < 107
+              · have he : V = 106 := by omega
+                subst V
+                exact row_30_106
+              · have he : V = 107 := by omega
+                subst V
+                exact row_30_107
+            · by_cases h108_110 : V < 109
+              · have he : V = 108 := by omega
+                subst V
+                exact row_30_108
+              · have he : V = 109 := by omega
+                subst V
+                exact row_30_109
+end ProximityPrize.SubmissionLower.Lower80801.ThresholdCompressed
