@@ -73,7 +73,7 @@ theorem alignmentBound6806 :
     Profile6806.mcaBudget (selectedNoLargePencilBound6806 hbase hpref hthreshold hruns hledger)
   simpa [IRSProfile.baseCode, IRSProfile.baseDimension, Profile6806.errors] using h
 
-theorem protocolClaim6806 : ProtocolClaim 6806 10343935 33554432 :=
+theorem protocolClaim6806 : ProtocolClaim 6806 338950094847 1099511627776 :=
   Profile6806.protocolClaim6806_of_alignment
     (alignmentBound6806 hbase hpref hthreshold hruns hledger)
 

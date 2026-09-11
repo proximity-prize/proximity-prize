@@ -15,7 +15,7 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
-theorem protocolClaim : ProtocolClaim 6806 10343935 33554432 := by
+theorem protocolClaim : ProtocolClaim 6806 338950094847 1099511627776 := by
   exact Closure.protocolClaim6806
     BoundaryTailBaseChecked.phaseReceipt
     PhaseChecked.prefixReceipt

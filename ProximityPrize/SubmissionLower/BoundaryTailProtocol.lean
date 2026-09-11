@@ -2,11 +2,12 @@ import ProximityPrize.SubmissionLower.LowerGeometry
 import ProximityPrize.SubmissionLower.BoundaryTailScalar
 
 section Compact_Profile6806
-/-! The exact 68.06 profile and its remaining proof obligation.
+/-! The exact 68.06 profile at a strictly improved radius.
 The scalar list arm, radius, score conversion and final extractor arithmetic
-are checked here. The final theorem is conditional on AffineLineAlignmentBound;
-that hypothesis has NOT been established. The proof template is adapted from
-the promoted 68.03 LocatorProtocol and LocatorArithmetic modules. -/
+are checked here. This module takes an AffineLineAlignmentBound hypothesis;
+BoundaryTailClosure discharges it using the checked counting receipts.
+The radius is 2^(-40) below the upper boundary of Hamming cell 80811.
+The proof template is adapted from the promoted 68.03 and 68.06 certificates. -/
 namespace ProximityPrize.SubmissionLower.Profile6806Arithmetic
 open ProximityPrize.Benchmark
 open scoped NNReal
@@ -15,20 +16,30 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 set_option Elab.async false
 def errors : ℕ := 80811
-def radiusNumerator:ℕ:=10343935
-def radiusDenominator:ℕ:=33554432
+def radiusNumerator:ℕ:=338950094847
+def radiusDenominator:ℕ:=1099511627776
 def radius:ℝ≥0:=claimedRadius radiusNumerator radiusDenominator
 theorem radius_floor:
     ⌊(radius:ℝ) * (Fintype.card IRSProfile.Index:ℝ)⌋₊ =errors:=by
   norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
     errors,IRSProfile.Index]
+/-- The new radius is strictly larger than the promoted 68.06 radius. -/
+theorem promoted_radius_lt_radius :
+    claimedRadius 10343935 33554432 < radius := by
+  norm_num [radius, claimedRadius, radiusNumerator, radiusDenominator]
+/-- The whole counting certificate stays in the same integer Hamming cell. -/
+theorem radius_cell_margin :
+    (radius : ℝ) * (Fintype.card IRSProfile.Index : ℝ) =
+      80812 - 1 / 4194304 := by
+  norm_num [radius, claimedRadius, radiusNumerator, radiusDenominator,
+    IRSProfile.Index]
 theorem radius_admissible:
     radius ∈ Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance:=by
   constructor <;> norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
     IRSProfile.minRelativeDistance]
 theorem score_root_integer:(2:ℕ)^6 * 100000000^100 ≤ 104246577^100:=by decide
 theorem score_radius_integer:
-    (23210497:ℕ)^128 * (2^68 * 104246577) ≤ 100000000 * 33554432^128:=by decide
+    (760561532929:ℕ)^128 * (2^68 * 104246577) ≤ 100000000 * 1099511627776^128:=by decide
 theorem two_rpow_fraction_le:
     (2:ℝ≥0)^((6:ℝ)/100) ≤ (104246577:ℝ≥0)/100000000:=by
   have hroot:((2:ℝ≥0)^(6:ℕ))^((100:ℝ)⁻¹) ≤ (104246577:ℝ≥0)/100000000:=by
@@ -43,7 +54,7 @@ theorem two_rpow_fraction_le:
 theorem radius_power_bound:
     (1 - radius)^IRSProfile.repetitions ≤
       ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/104246577):=by
-  have hsub:(1 - radius:ℝ≥0) =23210497/33554432:=by
+  have hsub:(1 - radius:ℝ≥0) =760561532929/1099511627776:=by
     have hr:radius ≤ 1:=by
       rw [← NNReal.coe_le_coe]
       norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
@@ -244,7 +255,7 @@ theorem certifiedGammaError_le_of_alignment
      · simpa only [Nat.mul_comm] using field_capacity_split
 theorem protocolClaim6806_of_alignment
    (halign:AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-   ProtocolClaim 6806 10343935 33554432 where
+   ProtocolClaim 6806 338950094847 1099511627776 where
  admissible:=Profile6806Arithmetic.radius_admissible
  reduction:=by
    change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
@@ -260,8 +271,8 @@ end ProximityPrize.SubmissionLower.Profile6806
 end Compact_Profile6806
 
 section Compact_Protocol80811
-/-! Reuse the checked scalar-list reduction and 68.5 score arithmetic at
-this exact radius. The new work supplies its alignment hypothesis. -/
+/-! Reuse the checked scalar-list reduction and 68.06 score arithmetic at
+this exact radius. The checked closure supplies its alignment hypothesis. -/
 namespace ProximityPrize.SubmissionLower.Lower80811.Protocol
 open ProximityPrize.Benchmark CoreDefinitions ProximityGap ToyProblem RCN018 RCN019 RCN284 RCN280
 
