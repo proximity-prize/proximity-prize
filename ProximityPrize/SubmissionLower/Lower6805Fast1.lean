@@ -1,0 +1,9068 @@
+import ProximityPrize.SubmissionLower.LowerGeometry
+import ProximityPrize.Benchmark.TargetLower
+
+/- Packed from the boundary-tail candidate in PR #535 by @0xLucqs. -/
+set_option Elab.async false
+
+section P0
+namespace ProximityPrize.SubmissionLower.BoundaryTailPaddedIdentity
+
+open RCN095 RCN146
+open Lower80788.FixedStage
+
+set_option maxHeartbeats 1000000
+
+def slackZ (b s : ℕ) : ℕ :=
+  6199535116604890 + 6909383782957056*b + 11042415979729276*s +
+    3454691891478528*s^2 + 6909383782957056*b*s
+
+def slackYZ (a b s : ℕ) : ℕ :=
+  2034968201667316 + 6909383782957056*a + 6909383782957056*b +
+    8266038036437560*s + 3454691891478528*s^2 +
+    6909383782957056*a*s + 6909383782957056*b*s
+
+def slackAll (a b s : ℕ) : ℕ :=
+  2713287325090188 + 11042415979729276*a + 8266038036437560*b +
+    8266038036437560*s + 3454691891478528*b^2 + 3454691891478528*s^2 +
+    6909383782957056*a*b + 6909383782957056*a*s + 6909383782957056*b*s
+
+/-- The ordinary two-tail identity budget at 80801 errors. The ABS parameters
+are unshifted, so this includes the padded boundary cases b=0 and s=0. -/
+theorem identity_budget_exact (f : FlagDegree) (a b s : ℕ) :
+    50272 * flagMixed f (firstTail a b s) (secondTail a b s) =
+      131073 * 80802 * identityCurveDegree f a b s 131071 +
+        (f.zOnly * slackZ b s + f.yz * slackYZ a b s + f.all * slackAll a b s) := by
+  change 50272 * flagMixed f (firstTail a b s) (secondTail a b s) =
+    131073 * 80802 * identityCurveDegree f a b s Lower80788.FixedStage.w +
+      (f.zOnly * slackZ b s + f.yz * slackYZ a b s + f.all * slackAll a b s)
+  rw [Lower80788.FixedStage.identityDegree_linear]
+  norm_num [firstTail, secondTail, Lower80788.FixedStage.tail_support_formula,
+    Lower80788.FixedStage.w, flagMixed, slackZ, slackYZ, slackAll]
+  ring
+
+theorem identity_absorption (f : FlagDegree) (a b s : ℕ) :
+    131073 * 80802 * identityCurveDegree f a b s 131071 ≤
+      50272 * flagMixed f (firstTail a b s) (secondTail a b s) := by
+  rw [identity_budget_exact]
+  exact Nat.le_add_right _ _
+
+theorem low_pad_parameters (p : FlagDegree)
+    (h : ¬ LocatorHybridCostC2.HybridAppliesC2 p) :
+    Lower80788.Fixed.padSlope p = 0 ∨ Lower80788.Fixed.padB p = 0 := by
+  dsimp [LocatorHybridCostC2.HybridAppliesC2, LocatorFactorAggregate.middle] at h
+  dsimp [Lower80788.Fixed.padSlope, Lower80788.Fixed.padB,
+    LocatorFactorAggregate.padS, LocatorFactorAggregate.padY,
+    LocatorFactorAggregate.middle]
+  omega
+
+/-- On a non-hybrid padded cell either the padded R degree is 2 (s=0),
+or the padded YR degree is the R degree plus 1 (b=0). The old rectangular
+gate is already small on both parts of this boundary. -/
+theorem low_provider_mixed_gate (b s : ℕ) (f : FlagDegree)
+    (hS : s+2 ≤ 30) (hY : b+s+3 ≤ 139)
+    (hlow : s=0 ∨ b=0)
+    (hfs : f.all ≤ s+2) (hfy : f.yz+f.all ≤ b+s+3) :
+    (1+131072*(2*(b+s+3)-2))*f.all +
+      (f.yz+f.all)*((2*(s+2)-2)*131072) < 2130706433 := by
+  rcases hlow with hs0 | hb0
+  · have hy : 2*(b+s+3)-2 ≤ 276 := by omega
+    have hs : 2*(s+2)-2 ≤ 2 := by omega
+    have hfS : f.all ≤ 2 := by omega
+    have hfY : f.yz+f.all ≤ 139 := by omega
+    calc
+      _ ≤ (1+131072*276)*2 + 139*(2*131072) :=
+        Nat.add_le_add
+          (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left 131072 hy) 1) hfS)
+          (Nat.mul_le_mul hfY (Nat.mul_le_mul_right 131072 hs))
+      _ < 2130706433 := by decide
+  · have hy : 2*(b+s+3)-2 ≤ 60 := by omega
+    have hs : 2*(s+2)-2 ≤ 58 := by omega
+    have hfS : f.all ≤ 30 := by omega
+    have hfY : f.yz+f.all ≤ 31 := by omega
+    calc
+      _ ≤ (1+131072*60)*30 + 31*(58*131072) :=
+        Nat.add_le_add
+          (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left 131072 hy) 1) hfS)
+          (Nat.mul_le_mul hfY (Nat.mul_le_mul_right 131072 hs))
+      _ < 2130706433 := by decide
+
+theorem low_identity_mixed_gate (b s : ℕ) (f : FlagDegree)
+    (hS : s+2 ≤ 30) (hY : b+s+3 ≤ 139)
+    (hlow : s=0 ∨ b=0)
+    (hfs : f.all ≤ s+2) (hfy : f.yz+f.all ≤ b+s+3) :
+    (1+131071*(2*(b+s+3)-2))*f.all +
+      (f.yz+f.all)*((2*(s+2)-1)*131071) < 2130706433 := by
+  rcases hlow with hs0 | hb0
+  · have hy : 2*(b+s+3)-2 ≤ 276 := by omega
+    have hs : 2*(s+2)-1 ≤ 3 := by omega
+    have hfS : f.all ≤ 2 := by omega
+    have hfY : f.yz+f.all ≤ 139 := by omega
+    calc
+      _ ≤ (1+131071*276)*2 + 139*(3*131071) :=
+        Nat.add_le_add
+          (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left 131071 hy) 1) hfS)
+          (Nat.mul_le_mul hfY (Nat.mul_le_mul_right 131071 hs))
+      _ < 2130706433 := by decide
+  · have hy : 2*(b+s+3)-2 ≤ 60 := by omega
+    have hs : 2*(s+2)-1 ≤ 59 := by omega
+    have hfS : f.all ≤ 30 := by omega
+    have hfY : f.yz+f.all ≤ 31 := by omega
+    calc
+      _ ≤ (1+131071*60)*30 + 31*(59*131071) :=
+        Nat.add_le_add
+          (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left 131071 hy) 1) hfS)
+          (Nat.mul_le_mul hfY (Nat.mul_le_mul_right 131071 hs))
+      _ < 2130706433 := by decide
+
+end ProximityPrize.SubmissionLower.BoundaryTailPaddedIdentity
+
+end P0
+
+section P1
+namespace ProximityPrize.SubmissionLower.BoundaryTailOrdinaryLow
+open ProximityPrize.Benchmark
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN174 RCN159 RCN086 RCN095 RCN275 RCN198 RCN263 RCN146 RCN087 RCN203 RCN084 RCN313 RCN074 RCN335
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+def n:ℕ:=262144
+def w:ℕ:=131071
+def errors:ℕ:=80801
+def agreements:ℕ:=181343
+def gap:ℕ:=50272
+def prime:ℕ:=2130706433
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:DecidableEq (GenericField K):=Classical.decEq _
+local instance:CharP K prime:=by
+  simpa [prime,RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
+def firstTail (a b s:ℕ):FlagDegree:=
+  reducedResidualAgreementFlag (RCN198.support a b s) (w + 1)
+def secondTail (a b s:ℕ):FlagDegree:=
+  reducedResidualAgreementFlag (RCN198.support a b s) (w + 2)
+theorem tail_support_formula (a b s d:ℕ) :
+    reducedResidualAgreementFlag (RCN198.support a b s) d=
+      ⟨2 * a * d,1 + 2 * (b + 1) * d,2 * (s + 1) * d⟩:=by
+  have ht:a + b + s + 3 - (b + s + 3) =a:=by omega
+  have hy:b + s + 3 - (s + 2) =b + 1:=by omega
+  have hs:2 * (s + 2) - 2=2 * (s + 1):=by omega
+  simp only [reducedResidualAgreementFlag,reducedAgreementDirection,RCN198.support]
+  rw [ht,hy,hs]
+theorem tangent_gate (a b s:ℕ) :
+    errors + 1 ≤ (secondTail a b s).yz:=by
+  rw [secondTail,tail_support_formula]
+  change errors + 1 ≤ 1 + 2 * (b + 1) * (w + 2)
+  have hb:2 * (w + 2) ≤ 2 * (b + 1) * (w + 2):=by
+    have h:=Nat.mul_le_mul_right (w + 2)
+      (Nat.mul_le_mul_left 2 (show 1 ≤ b + 1 by omega))
+    simpa only [Nat.mul_one] using h
+  exact (by norm_num [errors,w]:errors + 1 ≤ 1 + 2 * (w + 2)).trans
+    (Nat.add_le_add_left hb 1)
+theorem flag_characteristic (a b s:ℕ) (flag:FlagDegree)
+    (hS:s + 2 ≤ 30) (hY:b + s + 3 ≤ 139) (hT:a + b + s + 3 ≤ 7199)
+    (hflag:flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
+      flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) :
+    flag.yz + flag.all < prime ∧ flag.all < prime ∧
+      flag.zOnly + flag.yz + flag.all < prime:=by
+  dsimp [prime]
+  omega
+def FixedStageBound (D a b s:ℕ):Prop:=
+  ∀ {Gamma:Finset K} {flag:FlagDegree},
+    (S:ResidualStage (polynomialEmbedding K) Gamma IRSProfile.domain
+      prime errors flag w (RCN198.support a b s)) →
+    S.nodes.card=agreements + errors →
+    (∀ gamma ∈ Gamma,agreements ≤ (S.agreementFiber gamma).card) →
+    S.F ∈ RCN174.globalCoefficientBox K D w (a + b + s + 3) (s + 2) →
+    (flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
+      flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) →
+    Gamma.card ≤ flagMixed flag (firstTail a b s) (secondTail a b s)
+theorem fixedStageBound (D a b s:ℕ)
+    (hDlow:w + 1 ≤ D) (hDhigh:D < prime)
+    (hS:s + 2 ≤ 30) (hY:b + s + 3 ≤ 139) (hT:a + b + s + 3 ≤ 7199)
+    (hlow : s = 0 ∨ b = 0) :
+    FixedStageBound D a b s:=by
+  intro Gamma flag S hnodes hagreement hbox hflag
+  have hDchar:D < prime:=hDhigh
+  have hflagChar:=flag_characteristic a b s flag hS hY hT hflag
+  by_cases hTail:S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1)
+  · have hTailNumerator:S.G ∣ surfaceMap (polynomialEmbedding K)
+        (numerator K S.F (w + 1)) :=
+      (globalTailCut_dvd_iff (polynomialEmbedding K)
+        (polynomialEmbedding_injective K) S.F (w + 1) S.G).mp hTail
+    have hprovider:=actual_identityCurveCountProvider S agreements hnodes
+      hagreement (by norm_num [agreements,w]) hTailNumerator
+      D (a + b + s + 3) (s + 2)
+      (by norm_num [w]) hDlow hDchar hbox hflagChar
+      (BoundaryTailPaddedIdentity.low_identity_mixed_gate b s flag hS hY hlow hflag.1 hflag.2.1)
+    have hpositive:1 ≤ identityCurveDegree flag a b s w:=by
+      apply Lower80788.FixedStage.identity_positive
+      have hy:0 < S.G.degreeOf 1:=S.y_dependent
+      have hdeg:=degreeOf_le_flag_total S.G flag S.flag_support 1
+      omega
+    have hinc:=identity_surface_seed_bound S agreements
+      (identityCurveDegree flag a b s w) hprovider hagreement
+      (by norm_num [agreements,w])
+      (by rw [hnodes] <;> norm_num [agreements,errors]) hpositive
+    have hscaled:Gamma.card * gap ≤
+        gap * flagMixed flag (firstTail a b s) (secondTail a b s):=by
+      calc
+        Gamma.card * gap=Gamma.card * (agreements - w):=rfl
+        _ ≤ (S.nodes.card - w) * (errors + 1) *
+            identityCurveDegree flag a b s w:=hinc
+        _= (n - w) * (errors + 1) * identityCurveDegree flag a b s w:=by
+          rw [hnodes] <;> norm_num [n,agreements,errors]
+        _ ≤ gap * flagMixed flag (firstTail a b s) (secondTail a b s) :=
+          BoundaryTailPaddedIdentity.identity_absorption flag a b s
+    apply Nat.le_of_mul_le_mul_right ?_ (by norm_num [gap]:0 < gap)
+    simpa only [Nat.mul_comm] using hscaled
+  · have hprovider:=exists_delayedTailMultiplicityProvider_of_reducedGeneral
+      (stageErrorCap:=errors) agreements S hTail hflagChar
+      (BoundaryTailPaddedIdentity.low_provider_mixed_gate b s flag hS hY hlow hflag.1 hflag.2.1)
+      D (a + b + s + 3) (s + 2) hnodes hagreement
+      (by norm_num [RCN327.w,agreements])
+      (by simpa only [RCN327.w,w] using hDlow)
+      hDchar hbox (tangent_gate a b s)
+    exact stage_card_le_flagMixed S hprovider.some
+end
+
+end ProximityPrize.SubmissionLower.BoundaryTailOrdinaryLow
+
+end P1
+
+section P2
+/-! Refined coefficient data for the correlated differential-tail recurrence.
+Only definitions and elementary exponent side conditions live here. -/
+
+namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+open RCN055 RCN056 RCN313
+variable {K : Type*} [CommRing K]
+noncomputable section
+local notation "Poly4" => MvPolynomial (Fin 4) K
+
+def sExponent (m i : ℕ) : ℕ := max (m - 2 * i) 0
+def boundaryJ (F : Poly4) : Poly4 := MvPolynomial.pderiv (2 : Fin 4) (polyH K F)
+
+def refinedMonomial (F : Poly4) (m i : ℕ) (C : Poly4) : Poly4 :=
+  polyH K F ^ i * polyG K F ^ (m + 1 - i) * boundaryJ F ^ sExponent m i * C
+
+def dZero (P : Poly4) : Poly4 :=
+  horizontalDerivation P
+
+def contributionA (F : Poly4) (m i : ℕ) (C : Poly4) : Poly4 :=
+  ((i : Poly4) - (2 * m + 1 : ℕ)) *
+    boundaryJ F ^ (sExponent m i + 1 - sExponent (m + 1) i) * C
+
+def contributionB (F : Poly4) (m i : ℕ) (C : Poly4) : Poly4 :=
+  boundaryJ F ^ (sExponent m i - sExponent (m + 1) (i + 1)) *
+    (((i : Poly4) - (2 * m + 1 : ℕ)) * dZero (polyH K F) +
+      (m + 1 - i : Poly4) * MvPolynomial.pderiv (2 : Fin 4) (polyG K F)) * C
+      + polyG K F * boundaryJ F ^ (sExponent m i - sExponent (m + 1) (i + 1)) *
+        MvPolynomial.pderiv (2 : Fin 4) C
+
+def contributionC (F : Poly4) (m i : ℕ) (C : Poly4) : Poly4 :=
+  if 0 < sExponent m i then
+    (sExponent m i : Poly4) * polyG K F *
+      MvPolynomial.pderiv (2 : Fin 4) (boundaryJ F) *
+      boundaryJ F ^ (sExponent m i - 1 - sExponent (m + 1) (i + 1)) * C
+  else 0
+
+def contributionD (F : Poly4) (m i : ℕ) (C : Poly4) : Poly4 :=
+    boundaryJ F ^ (sExponent m i - sExponent (m + 1) (i + 2)) *
+    ((m + 1 - i : Poly4) * dZero (polyG K F)) * C +
+      polyG K F * boundaryJ F ^ (sExponent m i - sExponent (m + 1) (i + 2)) *
+        dZero C
+
+def contributionE (F : Poly4) (m i : ℕ) (C : Poly4) : Poly4 :=
+  if 0 < sExponent m i then
+    (sExponent m i : Poly4) * polyG K F * dZero (boundaryJ F) *
+      boundaryJ F ^ (sExponent m i - 1 - sExponent (m + 1) (i + 2)) * C
+  else 0
+
+def contributionF (F : Poly4) (C : Poly4) : Poly4 := polyH K F * dZero C
+
+def refinedCoefficientStep (F : Poly4) (m : ℕ) (C : ℕ → Poly4) (q : ℕ) : Poly4 :=
+  ∑ i ∈ Finset.range (m + 2),
+    (if q = i then contributionA F m i (C i)
+     else if q = i + 1 then
+       contributionB F m i (C i) + contributionC F m i (C i) +
+         if i = m + 1 then contributionF F (C i) else 0
+     else if q = i + 2 ∧ i ≤ m then
+       contributionD F m i (C i) + contributionE F m i (C i)
+     else 0)
+
+def refinedCoefficients (F : Poly4) : ℕ → ℕ → Poly4
+  | 0, i => if i = 0 then 1 else 0
+  | m + 1, i => refinedCoefficientStep F m (refinedCoefficients F m) i
+
+theorem expanded_monomial_step (F C : Poly4) (i b s lambda : ℕ) :
+    polyH K F * baseDerivation F
+        (polyH K F ^ i * polyG K F ^ b * boundaryJ F ^ s * C) -
+      (lambda : Poly4) * (polyH K F ^ i * polyG K F ^ b * boundaryJ F ^ s * C) *
+        baseDerivation F (polyH K F) =
+      ((i : Poly4) - (lambda : ℕ)) * polyH K F ^ i * polyG K F ^ (b + 1) *
+          boundaryJ F ^ (s + 1) * C +
+      polyH K F ^ (i + 1) * polyG K F ^ b * boundaryJ F ^ s *
+        (((i : Poly4) - (lambda : ℕ)) * dZero (polyH K F) +
+          (b : Poly4) * MvPolynomial.pderiv (2 : Fin 4) (polyG K F)) * C +
+      polyH K F ^ (i + 1) * polyG K F ^ (b + 1) * boundaryJ F ^ s *
+        MvPolynomial.pderiv (2 : Fin 4) C +
+      (s : Poly4) * polyH K F ^ (i + 1) * polyG K F ^ (b + 1) *
+        boundaryJ F ^ (s - 1) * MvPolynomial.pderiv (2 : Fin 4) (boundaryJ F) * C +
+      (b : Poly4) * polyH K F ^ (i + 2) * polyG K F ^ (b - 1) *
+        boundaryJ F ^ s * dZero (polyG K F) * C +
+      polyH K F ^ (i + 2) * polyG K F ^ b * boundaryJ F ^ s * dZero C +
+      (s : Poly4) * polyH K F ^ (i + 2) * polyG K F ^ b *
+        boundaryJ F ^ (s - 1) * dZero (boundaryJ F) * C := by
+  simp only [baseDerivation_apply, dZero, horizontalDerivation,
+    Derivation.add_apply, Derivation.smul_apply, smul_eq_mul,
+    MvPolynomial.pderiv_mul, Derivation.leibniz_pow, nsmul_eq_mul]
+  cases i <;> cases b <;> cases s <;>
+    simp only [Nat.cast_succ, Nat.cast_zero, Nat.cast_add, Nat.cast_one,
+    Nat.add_sub_cancel, Nat.succ_sub_one, pow_succ, pow_zero,
+      zero_mul, mul_zero, one_mul, mul_one, boundaryJ] <;> ring
+
+theorem sExponent_step_same (m i : ℕ) :
+    sExponent m i + 1 ≥ sExponent (m + 1) i := by
+  unfold sExponent
+  omega
+
+theorem sExponent_step_up (m i : ℕ) :
+    sExponent m i ≥ sExponent (m + 1) (i + 1) := by
+  unfold sExponent
+  omega
+
+theorem sExponent_step_up_two (m i : ℕ) :
+    sExponent m i ≥ sExponent (m + 1) (i + 2) := by
+  unfold sExponent
+  omega
+
+theorem sExponent_step_up_sub_one (m i : ℕ) (hs : 0 < sExponent m i) :
+    sExponent m i - 1 ≥ sExponent (m + 1) (i + 1) := by
+  unfold sExponent at *
+  omega
+
+theorem sExponent_step_up_two_sub_one (m i : ℕ) (hs : 0 < sExponent m i) :
+    sExponent m i - 1 ≥ sExponent (m + 1) (i + 2) := by
+  unfold sExponent at *
+  omega
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+end P2
+
+section P3
+namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+open RCN055 RCN056 RCN057 RCN313
+open scoped BigOperators
+
+noncomputable section
+variable {K : Type*} [Field K]
+local notation "Poly4" => MvPolynomial (Fin 4) K
+
+theorem weightBound_pow {w : Fin 4 → ℕ} {P : Poly4} {a : ℤ}
+    (hP : WeightBound w P a) (n : ℕ) : WeightBound w (P ^ n) ((n : ℤ) * a) := by
+  induction n with
+  | zero => simpa using (WeightBound.natCast (w := w) (K := K) 1)
+  | succ n ih =>
+    rw [pow_succ]
+    convert ih.mul hP using 1 <;> push_cast <;> ring
+
+theorem weightBound_sum {w : Fin 4 → ℕ} {ι : Type*} [DecidableEq ι] (S : Finset ι)
+    (P : ι → Poly4) (a : ℤ) (hP : ∀ i ∈ S, WeightBound w (P i) a) :
+    WeightBound w (∑ i ∈ S, P i) a := by
+  classical
+  induction S using Finset.induction_on with
+  | empty => exact Or.inl (by simp)
+  | @insert i S hi ih =>
+    rw [Finset.sum_insert hi]
+    exact (hP i (Finset.mem_insert_self i S)).add
+      (ih (fun j hj => hP j (Finset.mem_insert_of_mem hj)))
+
+def coefficientWeight (m i : ℕ) (f t : ℤ) : ℤ :=
+  (i : ℤ) * (2 - t) + ((min (2 * i) m : ℕ) : ℤ) * (f - 2)
+
+theorem coefficientWeight_alt (m i : ℕ) (f t : ℤ) :
+    coefficientWeight m i f t =
+      (i : ℤ) * (2 - t) + ((m : ℤ) - sExponent m i) * (f - 2) := by
+  have he : ((min (2 * i) m : ℕ) : ℤ) = (m : ℤ) - sExponent m i := by
+    unfold sExponent
+    omega
+  simp only [coefficientWeight, he]
+
+theorem coefficientWeight_step_same (m i : ℕ) (f t : ℤ) :
+    coefficientWeight (m + 1) i f t = coefficientWeight m i f t +
+      ((sExponent m i + 1 - sExponent (m + 1) i : ℕ) : ℤ) * (f - 2) := by
+  have h := sExponent_step_same m i
+  rw [coefficientWeight_alt, coefficientWeight_alt]
+  have he : ((sExponent m i + 1 - sExponent (m + 1) i : ℕ) : ℤ) =
+      (sExponent m i : ℤ) + 1 - sExponent (m + 1) i := by omega
+  rw [he]
+  push_cast
+  ring
+
+theorem coefficientWeight_step_up (m i : ℕ) (f t : ℤ) :
+    coefficientWeight (m + 1) (i + 1) f t = coefficientWeight m i f t +
+      (f - t) + ((sExponent m i - sExponent (m + 1) (i + 1) : ℕ) : ℤ) * (f - 2) := by
+  have h := sExponent_step_up m i
+  rw [coefficientWeight_alt, coefficientWeight_alt]
+  have he : ((sExponent m i - sExponent (m + 1) (i + 1) : ℕ) : ℤ) =
+      (sExponent m i : ℤ) - sExponent (m + 1) (i + 1) := by omega
+  rw [he]
+  push_cast
+  ring
+
+theorem coefficientWeight_step_up_two (m i : ℕ) (f t : ℤ) :
+    coefficientWeight (m + 1) (i + 2) f t = coefficientWeight m i f t +
+      (f + 2 - 2 * t) +
+      ((sExponent m i - sExponent (m + 1) (i + 2) : ℕ) : ℤ) * (f - 2) := by
+  have h := sExponent_step_up_two m i
+  rw [coefficientWeight_alt, coefficientWeight_alt]
+  have he : ((sExponent m i - sExponent (m + 1) (i + 2) : ℕ) : ℤ) =
+      (sExponent m i : ℤ) - sExponent (m + 1) (i + 2) := by omega
+  rw [he]
+  push_cast
+  ring
+
+theorem boundary_polynomial_bounds (w : Fin 4 → ℕ) (t : ℕ)
+    (hX : w 0 = 0) (hY : w 1 = t) (hR : w 2 = 1) (ht : t ≤ 1)
+    (F : Poly4) (f : ℤ) (hF : WeightBound w F f) :
+    WeightBound w (polyH K F) (f - 1) ∧
+    WeightBound w (polyG K F) (f + 1 - t) ∧
+    WeightBound w (boundaryJ F) (f - 2) := by
+  have hH : WeightBound w (polyH K F) (f - 1) := by
+    simpa only [polyH, hR, Nat.cast_one] using hF.pderiv (2 : Fin 4)
+  refine ⟨hH, ?_, ?_⟩
+  · simpa only [polyG, horizontalDerivation, Derivation.add_apply,
+      Derivation.smul_apply, smul_eq_mul] using (hF.horizontal t hX hY hR ht).neg
+  · have := hH.pderiv (2 : Fin 4)
+    simpa only [boundaryJ, hR, Nat.cast_one, sub_sub, Int.reduceAdd] using this
+
+theorem refined_contribution_bounds (w : Fin 4 → ℕ) (t : ℕ)
+    (hX : w 0 = 0) (hY : w 1 = t) (hR : w 2 = 1) (ht : t ≤ 1)
+    (F P : Poly4) (f : ℤ) (hF : WeightBound w F f)
+    (m i : ℕ) (hi : i ≤ m + 1)
+    (hP : WeightBound w P (coefficientWeight m i f t)) :
+    WeightBound w (contributionA F m i P) (coefficientWeight (m + 1) i f t) ∧
+    WeightBound w (contributionB F m i P) (coefficientWeight (m + 1) (i + 1) f t) ∧
+    WeightBound w (contributionC F m i P) (coefficientWeight (m + 1) (i + 1) f t) ∧
+    WeightBound w (contributionD F m i P) (coefficientWeight (m + 1) (i + 2) f t) ∧
+    WeightBound w (contributionE F m i P) (coefficientWeight (m + 1) (i + 2) f t) ∧
+    (i = m + 1 → WeightBound w (contributionF F P)
+      (coefficientWeight (m + 1) (i + 1) f t)) := by
+  obtain ⟨hH, hG, hJ⟩ := boundary_polynomial_bounds w t hX hY hR ht F f hF
+  have hDH := hH.horizontal t hX hY hR ht
+  have hDG := hG.horizontal t hX hY hR ht
+  have hDJ := hJ.horizontal t hX hY hR ht
+  have hDP := hP.horizontal t hX hY hR ht
+  have hGR := hG.pderiv (2 : Fin 4)
+  have hJR := hJ.pderiv (2 : Fin 4)
+  have hPR := hP.pderiv (2 : Fin 4)
+  simp only [hR, Nat.cast_one] at hGR hJR hPR
+  have hscalar : WeightBound w ((i : Poly4) - ((2 * m + 1 : ℕ) : Poly4)) 0 :=
+    (WeightBound.natCast i).sub (WeightBound.natCast (2 * m + 1))
+  have hb : WeightBound w (m + 1 - i : Poly4) 0 := by
+    convert (WeightBound.natCast (w := w) (K := K) (m + 1)).sub
+      (WeightBound.natCast i) using 1 <;> push_cast <;> ring
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · unfold contributionA
+    rw [coefficientWeight_step_same]
+    convert (hscalar.mul (weightBound_pow hJ _)).mul hP using 1 <;> ring
+  · unfold contributionB
+    rw [coefficientWeight_step_up]
+    apply WeightBound.add
+    · have hmid : WeightBound w
+          (((i : Poly4) - ((2 * m + 1 : ℕ) : Poly4)) * dZero (polyH K F) +
+            (m + 1 - i : Poly4) * MvPolynomial.pderiv (2 : Fin 4) (polyG K F))
+          (f - t) := by
+        apply WeightBound.add
+        · convert hscalar.mul hDH using 1 <;> (try dsimp only [dZero]) <;> ring
+        · convert hb.mul hGR using 1 <;> ring
+      convert ((weightBound_pow hJ _).mul hmid).mul hP using 1 <;> ring
+    · convert (hG.mul (weightBound_pow hJ _)).mul hPR using 1 <;> ring
+  · unfold contributionC
+    split_ifs with hs
+    · have he : ((sExponent m i - 1 - sExponent (m + 1) (i + 1) : ℕ) : ℤ) + 1 =
+          ((sExponent m i - sExponent (m + 1) (i + 1) : ℕ) : ℤ) := by
+        have := sExponent_step_up_sub_one m i hs
+        omega
+      rw [coefficientWeight_step_up]
+      convert ((((WeightBound.natCast (w := w) (K := K) (sExponent m i)).mul hG).mul hJR).mul
+        (weightBound_pow hJ _)).mul hP using 1
+      nlinarith [congrArg (fun x : ℤ => x * (f - 2)) he]
+    · exact Or.inl rfl
+  · unfold contributionD
+    rw [coefficientWeight_step_up_two]
+    apply WeightBound.add
+    · convert ((weightBound_pow hJ (sExponent m i - sExponent (m + 1) (i + 2))).mul (hb.mul hDG)).mul hP using 1
+        <;> (try dsimp only [dZero]) <;> ring
+    · convert (hG.mul (weightBound_pow hJ (sExponent m i - sExponent (m + 1) (i + 2)))).mul hDP using 1
+        <;> (try dsimp only [dZero]) <;> ring
+  · unfold contributionE
+    split_ifs with hs
+    · have he : ((sExponent m i - 1 - sExponent (m + 1) (i + 2) : ℕ) : ℤ) + 1 =
+          ((sExponent m i - sExponent (m + 1) (i + 2) : ℕ) : ℤ) := by
+        have := sExponent_step_up_two_sub_one m i hs
+        omega
+      rw [coefficientWeight_step_up_two]
+      convert ((((WeightBound.natCast (w := w) (K := K) (sExponent m i)).mul hG).mul hDJ).mul
+        (weightBound_pow hJ _)).mul hP using 1
+      · rfl
+      · nlinarith [congrArg (fun x : ℤ => x * (f - 2)) he]
+    · exact Or.inl rfl
+  · intro htop
+    have he : sExponent m i - sExponent (m + 1) (i + 1) = 0 := by
+      unfold sExponent
+      omega
+    rw [coefficientWeight_step_up, he]
+    unfold contributionF
+    convert hH.mul hDP using 1 <;> (try dsimp only [dZero]) <;> push_cast <;> ring
+
+theorem refinedCoefficients_weightBound (w : Fin 4 → ℕ) (t : ℕ)
+    (hX : w 0 = 0) (hY : w 1 = t) (hR : w 2 = 1) (ht : t ≤ 1)
+    (F : Poly4) (f : ℤ) (hF : WeightBound w F f) (m i : ℕ) :
+    WeightBound w (refinedCoefficients F m i) (coefficientWeight m i f t) := by
+  induction m generalizing i with
+  | zero =>
+    by_cases hi : i = 0
+    · subst i
+      simpa only [refinedCoefficients, ↓reduceIte, coefficientWeight,
+        Nat.mul_zero, min_self, Nat.cast_zero, Nat.cast_one, zero_mul, zero_add] using
+        (WeightBound.natCast (w := w) (K := K) 1)
+    · exact Or.inl (by simp only [refinedCoefficients, if_neg hi])
+  | succ m ih =>
+    simp only [refinedCoefficients, refinedCoefficientStep]
+    apply weightBound_sum
+    intro j hj
+    have hjm : j ≤ m + 1 := by have := Finset.mem_range.mp hj; omega
+    obtain ⟨hA, hB, hC, hD, hE, htop⟩ := refined_contribution_bounds
+      w t hX hY hR ht F (refinedCoefficients F m j) f hF m j hjm (ih j)
+    by_cases hi0 : i = j
+    · simp only [if_pos hi0]
+      simpa only [hi0] using hA
+    · rw [if_neg hi0]
+      by_cases hi1 : i = j + 1
+      · rw [if_pos hi1, hi1]
+        apply (hB.add hC).add
+        split_ifs with he
+        · exact htop he
+        · exact Or.inl rfl
+      · rw [if_neg hi1]
+        split_ifs with he
+        · rw [he.1]
+          exact hD.add hE
+        · exact Or.inl rfl
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+end P3
+
+section P4
+namespace ProximityPrize.SubmissionLower.BoundaryTail
+
+theorem weighted_tail_bound {n j a b c : ℤ}
+    (hn : 2 ≤ n) (hj0 : 0 ≤ j) (hjn : j ≤ n - 1)
+    (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) (hab : a - b ≤ 2 * c) :
+    2 * (j * a + (n - 1 - j) * b + max (n - 2 - 2 * j) 0 * c) ≥
+      2 * (n - 1) * a - n * max (a - b) 0 := by
+  by_cases hpos : 0 ≤ n - 2 - 2 * j
+  · rw [max_eq_left hpos]
+    by_cases hd : 0 ≤ a - b
+    · rw [max_eq_left hd]
+      nlinarith
+    · rw [max_eq_right (le_of_not_ge hd)]
+      nlinarith
+  · rw [max_eq_right (le_of_not_ge hpos)]
+    by_cases hd : 0 ≤ a - b
+    · rw [max_eq_left hd]
+      nlinarith
+    · rw [max_eq_right (le_of_not_ge hd)]
+      nlinarith
+
+theorem leading_separation {n j a b c : ℤ}
+    (hn : 2 ≤ n) (hj0 : 1 ≤ j) (hjn : j ≤ n - 1)
+    (hc : 0 ≤ c) (hgap : 2 * c < a - b) :
+    j * a + (n - 1 - j) * b + max (n - 2 - 2 * j) 0 * c >
+      (n - 1) * b + (n - 2) * c := by
+  by_cases hpos : 0 ≤ n - 2 - 2 * j
+  · rw [max_eq_left hpos]
+    nlinarith
+  · rw [max_eq_right (le_of_not_ge hpos)]
+    nlinarith
+
+theorem max_shift_identity {u v p : ℤ}
+    (hv : 0 ≤ v) (hvu : v ≤ u) :
+    max (max (2 * u) (v + max p 0) - 2 * u) 0 =
+      max (p - (2 * u - v)) 0 := by
+  simp [max_def]
+  omega
+theorem normalized_tail_arithmetic {n u v A a b : ℤ}
+    (hn : 2 ≤ n) (hv : 0 ≤ v) (hvu : v ≤ u) (ha : 0 ≤ a) :
+    let delta := 2 * u - v
+    let D := A - u
+    let B := A + delta
+    let P := (n - 1) * B + (n - 2) * D
+    let theta := max (2 * u) (v + max ((a - A) - (b - B)) 0)
+    2 * (P - (n - 1) * a) + n * max (a - b) 0 +
+        2 * (n - 4) * (a - A) ≤
+      2 * ((n + 1) * A - (n - 1) * v) + n * theta := by
+  dsimp
+  have htheta := max_shift_identity (u := u) (v := v)
+    (p := (a - A) - (b - (A + (2 * u - v)))) hv hvu
+  have hp : (a - A) - (b - (A + (2 * u - v))) - (2 * u - v) = a - b := by ring
+  rw [hp] at htheta
+  have hnon : 0 ≤ max (2 * u) (v + max ((a - A) - (b - (A + (2 * u - v)))) 0) - 2 * u := by omega
+  rw [max_eq_left hnon] at htheta
+  nlinarith
+
+theorem weighted_tail_bound_zero_J {n j a b : ℤ}
+    (hn : 2 ≤ n) (hj0 : 0 ≤ j) (hjn : j ≤ n - 1)
+    (hpos : n - 2 ≤ 2 * j) (ha : 0 ≤ a) (hb : 0 ≤ b) :
+    2 * (j * a + (n - 1 - j) * b) ≥
+      2 * (n - 1) * a - n * max (a - b) 0 := by
+  by_cases hd : 0 ≤ a - b
+  · rw [max_eq_left hd]
+    nlinarith
+  · rw [max_eq_right (le_of_not_ge hd)]
+    nlinarith
+
+end ProximityPrize.SubmissionLower.BoundaryTail
+
+end P4
+
+section P5
+namespace ProximityPrize.SubmissionLower.BoundaryTail
+
+open scoped BigOperators
+
+noncomputable section
+
+variable {L : Type*} [Field L]
+
+def refinedMonomial (n j : ℕ) (H G J C : L) : L :=
+  H ^ j * G ^ (n - 1 - j) * J ^ (n - 2 - 2 * j) * C
+
+def refinedWeight (n j : ℕ) (a b c : ℤ) : ℤ :=
+  (j : ℤ) * a + ((n - 1 - j : ℕ) : ℤ) * b +
+    ((n - 2 - 2 * j : ℕ) : ℤ) * c
+
+theorem refinedWeight_eq {n j : ℕ} (hn : 2 ≤ n) (hj : j < n)
+    (a b c : ℤ) :
+    refinedWeight n j a b c =
+      (j : ℤ) * a + ((n : ℤ) - 1 - j) * b +
+        max ((n : ℤ) - 2 - 2 * j) 0 * c := by
+  have hsub : ((n - 1 - j : ℕ) : ℤ) = (n : ℤ) - 1 - j := by omega
+  have htail : ((n - 2 - 2 * j : ℕ) : ℤ) =
+      max ((n : ℤ) - 2 - 2 * j) 0 := by omega
+  simp only [refinedWeight, hsub, htail]
+
+theorem refined_monomial_value_le_exp
+    (v : Valuation L (WithZero (Multiplicative ℤ)))
+    {n j : ℕ} (hn : 2 ≤ n) (hj : j < n)
+    (H G J C : L) (h g q A B D : ℤ)
+    (hH : v H ≤ WithZero.exp h) (hG : v G ≤ WithZero.exp g)
+    (hJ : v J ≤ WithZero.exp q)
+    (hC : v C ≤ WithZero.exp
+      ((j : ℤ) * (B - A) + ((min (2 * j) (n - 2) : ℕ) : ℤ) * D)) :
+    v (refinedMonomial n j H G J C) ≤ WithZero.exp
+      (((n - 1 : ℕ) : ℤ) * B + ((n - 2 : ℕ) : ℤ) * D -
+        refinedWeight n j (A - h) (B - g) (D - q)) := by
+  have hpow (x : L) (e : ℤ) (hx : v x ≤ WithZero.exp e) (k : ℕ) :
+      v x ^ k ≤ WithZero.exp ((k : ℤ) * e) := by
+    rw [← nsmul_eq_mul, WithZero.exp_nsmul]
+    exact pow_le_pow_left₀ zero_le hx k
+  have hsub : ((n - 1 - j : ℕ) : ℤ) + j = ((n - 1 : ℕ) : ℤ) := by omega
+  have hmin : ((n - 2 - 2 * j : ℕ) : ℤ) +
+      ((min (2 * j) (n - 2) : ℕ) : ℤ) = ((n - 2 : ℕ) : ℤ) := by omega
+  unfold refinedMonomial
+  simp only [map_mul, map_pow]
+  calc
+    _ ≤ WithZero.exp ((j : ℤ) * h) *
+        WithZero.exp (((n - 1 - j : ℕ) : ℤ) * g) *
+        WithZero.exp (((n - 2 - 2 * j : ℕ) : ℤ) * q) *
+        WithZero.exp ((j : ℤ) * (B - A) +
+          ((min (2 * j) (n - 2) : ℕ) : ℤ) * D) :=
+      mul_le_mul' (mul_le_mul' (mul_le_mul' (hpow H h hH j)
+        (hpow G g hG (n - 1 - j))) (hpow J q hJ (n - 2 - 2 * j))) hC
+    _ = _ := by
+      rw [← WithZero.exp_add, ← WithZero.exp_add, ← WithZero.exp_add]
+      congr 1
+      unfold refinedWeight
+      nlinarith [congrArg (fun t : ℤ => t * B) hsub,
+        congrArg (fun t : ℤ => t * D) hmin]
+
+theorem refined_monomial_value_le
+    (v : Valuation L (WithZero (Multiplicative ℤ)))
+    {n j : ℕ} (hn : 2 ≤ n) (hj : j < n)
+    (H G J C : L) (hH : H ≠ 0) (hG : G ≠ 0) (hJ : J ≠ 0)
+    (A B D : ℤ)
+    (hC : v C ≤ WithZero.exp
+      ((j : ℤ) * (B - A) + ((min (2 * j) (n - 2) : ℕ) : ℤ) * D)) :
+    v (refinedMonomial n j H G J C) ≤ WithZero.exp
+      (((n - 1 : ℕ) : ℤ) * B + ((n - 2 : ℕ) : ℤ) * D -
+        refinedWeight n j (A - (v H).log) (B - (v G).log) (D - (v J).log)) :=
+  refined_monomial_value_le_exp v hn hj H G J C _ _ _ A B D
+    (WithZero.le_exp_of_log_le (le_refl _))
+    (WithZero.le_exp_of_log_le (le_refl _))
+    (WithZero.le_exp_of_log_le (le_refl _)) hC
+
+theorem zero_sum_has_no_strictly_dominant_term
+    (v : Valuation L (WithZero (Multiplicative ℤ)))
+    {ι : Type*} [Fintype ι] [DecidableEq ι] (T : ι → L) (i : ι)
+    (hi : T i ≠ 0) (hsum : ∑ j, T j = 0) :
+    ¬ (∀ j, j ≠ i → v (T j) < v (T i)) := by
+  intro hlt
+  have hsmall : v (∑ j ∈ Finset.univ.erase i, T j) < v (T i) := by
+    apply v.map_sum_lt (by simpa using hi)
+    intro j hj
+    exact hlt j (Finset.mem_erase.mp hj).1
+  have hsplit : (∑ j ∈ Finset.univ.erase i, T j) + T i = 0 := by
+    rw [Finset.sum_erase_add _ _ (Finset.mem_univ i)]
+    exact hsum
+  have hneg : (∑ j ∈ Finset.univ.erase i, T j) = -T i :=
+    eq_neg_of_add_eq_zero_left hsplit
+  rw [hneg, v.map_neg] at hsmall
+  exact lt_irrefl _ hsmall
+
+theorem first_tail_shifted_constraint
+    (v : Valuation L (WithZero (Multiplicative ℤ)))
+    {n : ℕ} (hn : 2 ≤ n) (H G J : L)
+    (hH : H ≠ 0) (hG : G ≠ 0) (hJ : J ≠ 0)
+    (C : Fin n → L) (A B D : ℤ)
+    (hD : (v J).log ≤ D)
+    (hC : ∀ j, v (C j) ≤ WithZero.exp
+      ((j.val : ℤ) * (B - A) + ((min (2 * j.val) (n - 2) : ℕ) : ℤ) * D))
+    (hlead : v (C ⟨0, by omega⟩) = 1)
+    (hzero : ∑ j, refinedMonomial n j.val H G J (C j) = 0) :
+    (A - (v H).log) - (B - (v G).log) ≤ 2 * (D - (v J).log) := by
+  letI : DecidableEq L := Classical.decEq L
+  by_contra hgap
+  let i : Fin n := ⟨0, by omega⟩
+  let T : Fin n → L := fun j => refinedMonomial n j.val H G J (C j)
+  let P : ℤ := ((n - 1 : ℕ) : ℤ) * B + ((n - 2 : ℕ) : ℤ) * D
+  let a := A - (v H).log
+  let b := B - (v G).log
+  let c := D - (v J).log
+  have hleadval : v (T i) = WithZero.exp
+      (P - (((n - 1 : ℕ) : ℤ) * b + ((n - 2 : ℕ) : ℤ) * c)) := by
+    have hGv : v G ≠ 0 := (Valuation.ne_zero_iff v).mpr hG
+    have hJv : v J ≠ 0 := (Valuation.ne_zero_iff v).mpr hJ
+    simp only [T, i, refinedMonomial, pow_zero, one_mul, Nat.sub_zero,
+      Nat.mul_zero, map_mul, map_pow, hlead, mul_one]
+    rw [← WithZero.exp_log (pow_ne_zero (n - 1) hGv),
+      ← WithZero.exp_log (pow_ne_zero (n - 2) hJv), ← WithZero.exp_add]
+    congr 1
+    simp only [WithZero.log_pow, nsmul_eq_mul, P, b, c]
+    ring
+  have hi : T i ≠ 0 := by
+    intro hz
+    have := hleadval
+    rw [hz, map_zero] at this
+    exact WithZero.exp_ne_zero this.symm
+  apply zero_sum_has_no_strictly_dominant_term v T i hi hzero
+  intro j hji
+  have hjpos : 1 ≤ (j.val : ℤ) := by
+    have : j.val ≠ 0 := by
+      intro hz
+      apply hji
+      exact Fin.ext hz
+    omega
+  have hsep := leading_separation
+    (n := (n : ℤ)) (j := (j.val : ℤ)) (a := a) (b := b) (c := c)
+    (by omega) hjpos (by omega) (by dsimp [c]; omega) (by exact lt_of_not_ge hgap)
+  have hvalue := refined_monomial_value_le v hn j.isLt H G J (C j)
+    hH hG hJ A B D (hC j)
+  change v (T j) ≤ WithZero.exp (P - refinedWeight n j.val a b c) at hvalue
+  apply lt_of_le_of_lt hvalue
+  rw [hleadval]
+  apply WithZero.exp_lt_exp.mpr
+  rw [refinedWeight_eq hn j.isLt]
+  have hsub1 : ((n - 1 : ℕ) : ℤ) = (n : ℤ) - 1 := by omega
+  have hsub2 : ((n - 2 : ℕ) : ℤ) = (n : ℤ) - 2 := by omega
+  rw [hsub1, hsub2]
+  linarith
+
+theorem later_tail_value_le_exp
+    (v : Valuation L (WithZero (Multiplicative ℤ)))
+    {n : ℕ} (hn : 2 ≤ n) (H G J : L)
+    (C : Fin n → L) (h g q A B D : ℤ)
+    (hH : v H ≤ WithZero.exp h) (hG : v G ≤ WithZero.exp g)
+    (hJ : v J ≤ WithZero.exp q)
+    (hA : h ≤ A) (hB : g ≤ B) (hD : q ≤ D)
+    (hgap : (A - h) - (B - g) ≤ 2 * (D - q))
+    (hC : ∀ j, v (C j) ≤ WithZero.exp
+      ((j.val : ℤ) * (B - A) + ((min (2 * j.val) (n - 2) : ℕ) : ℤ) * D)) :
+    v (∑ j, refinedMonomial n j.val H G J (C j)) ≤ WithZero.exp
+      ((2 * (((n - 1 : ℕ) : ℤ) * B + ((n - 2 : ℕ) : ℤ) * D) -
+          2 * ((n - 1 : ℕ) : ℤ) * (A - h) +
+          (n : ℤ) * max ((A - h) - (B - g)) 0) / 2) := by
+  apply v.map_sum_le
+  intro j _
+  apply le_trans (refined_monomial_value_le_exp v hn j.isLt H G J (C j)
+    h g q A B D hH hG hJ (hC j))
+  apply WithZero.exp_le_exp.mpr
+  apply (Int.le_ediv_iff_mul_le (by decide : (0 : ℤ) < 2)).mpr
+  have hweight := weighted_tail_bound
+    (n := (n : ℤ)) (j := (j.val : ℤ))
+    (a := A - h) (b := B - g) (c := D - q)
+    (by omega) (by omega) (by omega) (by omega) (by omega) (by omega) hgap
+  rw [refinedWeight_eq hn j.isLt]
+  have hsub : ((n - 1 : ℕ) : ℤ) = (n : ℤ) - 1 := by omega
+  rw [hsub]
+  nlinarith
+
+theorem exists_admissible_exponents
+    (v : Valuation L (WithZero (Multiplicative ℤ)))
+    (H G J : L) (A B D : ℤ) (hH : H ≠ 0) (hAB : A ≤ B)
+    (hA : (v H).log ≤ A)
+    (hB : G ≠ 0 → (v G).log ≤ B) (hD : J ≠ 0 → (v J).log ≤ D)
+    (hfirst : G ≠ 0 → J ≠ 0 →
+      (A - (v H).log) - (B - (v G).log) ≤ 2 * (D - (v J).log)) :
+    ∃ g q : ℤ,
+      v G ≤ WithZero.exp g ∧ v J ≤ WithZero.exp q ∧
+      g ≤ B ∧ q ≤ D ∧
+      (A - (v H).log) - (B - g) ≤ 2 * (D - q) ∧
+      max ((A - (v H).log) - (B - g)) 0 =
+        max (max (v (G / H)).log 0 - (B - A)) 0 := by
+  letI : DecidableEq L := Classical.decEq L
+  have hHv : v H ≠ 0 := (Valuation.ne_zero_iff v).mpr hH
+  have hJchoice (g : ℤ)
+      (hg : J ≠ 0 → (A - (v H).log) - (B - g) ≤ 2 * (D - (v J).log)) :
+      ∃ q : ℤ, v J ≤ WithZero.exp q ∧ q ≤ D ∧
+        (A - (v H).log) - (B - g) ≤ 2 * (D - q) := by
+    by_cases hz : J = 0
+    · refine ⟨D - max ((A - (v H).log) - (B - g)) 0, ?_, ?_, ?_⟩
+      · simp only [hz, map_zero]; exact zero_le
+      · omega
+      · omega
+    · exact ⟨(v J).log, WithZero.le_exp_of_log_le (le_refl _), hD hz, hg hz⟩
+  by_cases hG : G = 0
+  · obtain ⟨q, hqv, hqD, hq⟩ := hJchoice ((v H).log + B - A) (by
+      intro hJ
+      have := hD hJ
+      omega)
+    refine ⟨(v H).log + B - A, q, ?_, hqv, ?_, hqD, hq, ?_⟩
+    · simp only [hG, map_zero]; exact zero_le
+    · omega
+    · simp only [hG, zero_div, map_zero, WithZero.log_zero]
+      omega
+  · obtain ⟨q, hqv, hqD, hq⟩ := hJchoice (v G).log (hfirst hG)
+    refine ⟨(v G).log, q, WithZero.le_exp_of_log_le (le_refl _),
+      hqv, hB hG, hqD, hq, ?_⟩
+    have hGv : v G ≠ 0 := (Valuation.ne_zero_iff v).mpr hG
+    rw [map_div₀, WithZero.log_div hGv hHv]
+    omega
+
+theorem normalized_tail_pole_le
+    (v : Valuation L (WithZero (Multiplicative ℤ)))
+    {n : ℕ} (hn : 2 ≤ n) (H G J : L) (hH : H ≠ 0)
+    (C : Fin n → L) (A u t : ℤ) (ht : 0 ≤ t) (htu : t ≤ u) (huA : u ≤ A)
+    (hA : (v H).log ≤ A)
+    (hB : G ≠ 0 → (v G).log ≤ A + 2 * u - t)
+    (hD : J ≠ 0 → (v J).log ≤ A - u)
+    (hfirst : G ≠ 0 → J ≠ 0 →
+      (A - (v H).log) - (A + 2 * u - t - (v G).log) ≤
+        2 * (A - u - (v J).log))
+    (hC : ∀ j, v (C j) ≤ WithZero.exp
+      ((j.val : ℤ) * (2 * u - t) +
+        ((min (2 * j.val) (n - 2) : ℕ) : ℤ) * (A - u))) :
+    2 * max (v (H ^ 3 * (∑ j, refinedMonomial n j.val H G J (C j)) /
+      H ^ (n - 1))).log 0 ≤
+      2 * (((n : ℤ) + 1) * A - ((n : ℤ) - 1) * t) +
+        (n : ℤ) * max (2 * u) (t + max (v (G / H)).log 0) := by
+  letI : DecidableEq L := Classical.decEq L
+  let T := ∑ j, refinedMonomial n j.val H G J (C j)
+  let theta := max (2 * u) (t + max (v (G / H)).log 0)
+  have htheta0 : 0 ≤ theta := by dsimp [theta]; omega
+  have hnormal0 : 0 ≤ ((n : ℤ) + 1) * A - ((n : ℤ) - 1) * t := by
+    have hprod := mul_nonneg (show 0 ≤ (n : ℤ) - 1 by omega)
+      (show 0 ≤ A - t by omega)
+    nlinarith
+  have hright0 : 0 ≤ 2 * (((n : ℤ) + 1) * A - ((n : ℤ) - 1) * t) +
+      (n : ℤ) * theta := by positivity
+  change 2 * max (v (H ^ 3 * T / H ^ (n - 1))).log 0 ≤ _
+  by_cases hT : T = 0
+  · simpa only [hT, mul_zero, zero_div, map_zero, WithZero.log_zero,
+      max_self, mul_zero] using hright0
+  obtain ⟨g, q, hg, hq, hgB, hqD, hgap, hr⟩ := exists_admissible_exponents
+    v H G J A (A + 2 * u - t) (A - u) hH (by omega) hA hB hD hfirst
+  have hc' : ∀ j, v (C j) ≤ WithZero.exp
+      ((j.val : ℤ) * ((A + 2 * u - t) - A) +
+        ((min (2 * j.val) (n - 2) : ℕ) : ℤ) * (A - u)) := by
+    convert hC using 1 <;> ring
+  have hvalue := later_tail_value_le_exp v hn H G J C (v H).log g q
+    A (A + 2 * u - t) (A - u)
+    (WithZero.le_exp_of_log_le (le_refl _)) hg hq hA hgB hqD hgap hc'
+  let Q : ℤ := 2 * (((n - 1 : ℕ) : ℤ) * (A + 2 * u - t) +
+      ((n - 2 : ℕ) : ℤ) * (A - u)) -
+      2 * ((n - 1 : ℕ) : ℤ) * (A - (v H).log) +
+      (n : ℤ) * max ((A - (v H).log) - (A + 2 * u - t - g)) 0
+  change v T ≤ WithZero.exp (Q / 2) at hvalue
+  have hTv : v T ≠ 0 := (Valuation.ne_zero_iff v).mpr hT
+  have hlog : (v T).log ≤ Q / 2 := by
+    simpa only [WithZero.log_exp] using
+      (WithZero.log_le_log hTv WithZero.exp_ne_zero).mpr hvalue
+  have htwolog : 2 * (v T).log ≤ Q := by omega
+  have htheta := max_shift_identity (u := u) (v := t) (p := (v (G / H)).log) ht htu
+  have htheta_ge : 0 ≤ theta - 2 * u := by dsimp [theta]; omega
+  change max (theta - 2 * u) 0 = _ at htheta
+  rw [max_eq_left htheta_ge] at htheta
+  have hdelta : max ((A - (v H).log) - (A + 2 * u - t - g)) 0 = theta - 2 * u := by
+    rw [hr, htheta]
+    omega
+  have hHv : v H ≠ 0 := (Valuation.ne_zero_iff v).mpr hH
+  have hlogcut : (v (H ^ 3 * T / H ^ (n - 1))).log =
+      (4 - (n : ℤ)) * (v H).log + (v T).log := by
+    rw [map_div₀, map_mul, map_pow, map_pow,
+      WithZero.log_div (mul_ne_zero (pow_ne_zero 3 hHv) hTv) (pow_ne_zero _ hHv),
+      WithZero.log_mul (pow_ne_zero 3 hHv) hTv]
+    simp only [WithZero.log_pow, nsmul_eq_mul, Nat.cast_ofNat]
+    have hsub : ((n - 1 : ℕ) : ℤ) = (n : ℤ) - 1 := by omega
+    rw [hsub]
+    ring
+  rw [hlogcut]
+  by_cases hnonneg : 0 ≤ (4 - (n : ℤ)) * (v H).log + (v T).log
+  · rw [max_eq_left hnonneg]
+    dsimp [Q] at htwolog
+    rw [hdelta] at htwolog
+    have hsub1 : ((n - 1 : ℕ) : ℤ) = (n : ℤ) - 1 := by omega
+    have hsub2 : ((n - 2 : ℕ) : ℤ) = (n : ℤ) - 2 := by omega
+    rw [hsub1, hsub2] at htwolog
+    nlinarith
+  · rw [max_eq_right (by omega), mul_zero]
+    exact hright0
+
+end
+
+end ProximityPrize.SubmissionLower.BoundaryTail
+
+end P5
+
+section P6
+namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+open RCN055 RCN057 RCN095 RCN136 RCN156 RCN234 RCN313
+
+noncomputable section
+variable {K Ω : Type} [Field K] [Field Ω]
+
+def coefficientFlag (m i r v z : ℕ) : FlagDegree :=
+  ⟨min (2 * i) m * z, min (2 * i) m * v - i,
+    2 * i + min (2 * i) m * (r - 2)⟩
+
+theorem coefficientFlag_sub_safe {m i v : ℕ}
+    (hm : 1 ≤ m) (hi : i ≤ m + 1) (hv : 2 ≤ v) : i ≤ min (2 * i) m * v := by
+  have h : i ≤ 2 * min (2 * i) m := by
+    by_cases hh : 2 * i ≤ m
+    · rw [min_eq_left hh]; omega
+    · rw [min_eq_right (by omega)]; omega
+  have := Nat.mul_le_mul_left (min (2 * i) m) hv
+  omega
+
+theorem coefficientFlag_cumulative {m i r v : ℕ} (z : ℕ)
+    (hm : 1 ≤ m) (hi : i ≤ m + 1) (hr : 2 ≤ r) (hv : 2 ≤ v) :
+    ((coefficientFlag m i r v z).all : ℤ) = coefficientWeight m i r 0 ∧
+    (((coefficientFlag m i r v z).yz + (coefficientFlag m i r v z).all : ℕ) : ℤ) =
+      coefficientWeight m i (r + v) 1 ∧
+    (((coefficientFlag m i r v z).zOnly + (coefficientFlag m i r v z).yz +
+      (coefficientFlag m i r v z).all : ℕ) : ℤ) = coefficientWeight m i (r + v + z) 1 := by
+  have hsafe := coefficientFlag_sub_safe hm hi hv
+  simp only [coefficientFlag, coefficientWeight, Nat.cast_add, Nat.cast_mul,
+    Nat.cast_sub hr, Nat.cast_sub hsafe, Nat.cast_ofNat]
+  constructor
+  · ring
+  constructor <;> ring
+
+theorem weightBound_nat {w : Fin 4 → ℕ} {P : MvPolynomial (Fin 4) K} {a : ℕ}
+    (h : WeightBound w P (a : ℤ)) : wt w P ≤ a := by
+  rcases h with rfl | h
+  · simp [wt, MvPolynomial.weightedTotalDegree]
+  · exact_mod_cast h
+
+theorem weightBounds_surfaceMap_flag (φ : Polynomial K →+* Ω)
+    (P : MvPolynomial (Fin 4) K) (p : FlagDegree)
+    (hR : WeightBound residualSWeights P (p.all : ℤ))
+    (hYR : WeightBound residualYSWeights P ((p.yz + p.all : ℕ) : ℤ))
+    (hAll : WeightBound residualTotalWeights P ((p.zOnly + p.yz + p.all : ℕ) : ℤ)) :
+    PolynomialInFlag p (surfaceMap φ P) := by
+  intro e he
+  obtain ⟨d, hd, rfl⟩ := Finset.mem_image.mp (support_surfaceMap_subset φ P he)
+  have hr := (MvPolynomial.le_weightedTotalDegree residualSWeights hd).trans (weightBound_nat hR)
+  have hm := (MvPolynomial.le_weightedTotalDegree residualYSWeights hd).trans (weightBound_nat hYR)
+  have ht := (MvPolynomial.le_weightedTotalDegree residualTotalWeights hd).trans (weightBound_nat hAll)
+  simp [RCN081.weight_fin4, residualSWeights] at hr
+  simp [RCN081.weight_fin4, residualYSWeights] at hm
+  simp [RCN081.weight_fin4, residualTotalWeights] at ht
+  exact ⟨hr, hm, ht⟩
+
+theorem refinedCoefficients_surfaceMap_flag (φ : Polynomial K →+* Ω)
+    (F : MvPolynomial (Fin 4) K) (m i r v z : ℕ)
+    (hm : 1 ≤ m) (hi : i ≤ m + 1) (hr : 2 ≤ r) (hv : 2 ≤ v)
+    (hR : WeightBound residualSWeights F (r : ℤ))
+    (hYR : WeightBound residualYSWeights F ((r + v : ℕ) : ℤ))
+    (hAll : WeightBound residualTotalWeights F ((r + v + z : ℕ) : ℤ)) :
+    PolynomialInFlag (coefficientFlag m i r v z) (surfaceMap φ (refinedCoefficients F m i)) := by
+  obtain ⟨hcR, hcYR, hcAll⟩ := coefficientFlag_cumulative z hm hi hr hv
+  apply weightBounds_surfaceMap_flag
+  · rw [hcR]
+    exact refinedCoefficients_weightBound residualSWeights 0 rfl rfl rfl (by omega) F _ hR m i
+  · rw [hcYR]
+    convert refinedCoefficients_weightBound residualYSWeights 1 rfl rfl rfl (by omega)
+      F _ hYR m i using 1 <;> push_cast <;> rfl
+  · rw [hcAll]
+    convert refinedCoefficients_weightBound residualTotalWeights 1 rfl rfl rfl (by omega)
+      F _ hAll m i using 1 <;> push_cast <;> rfl
+
+theorem boundary_surfaceMap_flags (φ : Polynomial K →+* Ω)
+    (F : MvPolynomial (Fin 4) K) (r v z : ℕ) (hr : 2 ≤ r) (hv : 1 ≤ v)
+    (hR : WeightBound residualSWeights F (r : ℤ))
+    (hYR : WeightBound residualYSWeights F ((r + v : ℕ) : ℤ))
+    (hAll : WeightBound residualTotalWeights F ((r + v + z : ℕ) : ℤ)) :
+    PolynomialInFlag ⟨z, v, r - 1⟩ (surfaceMap φ (polyH K F)) ∧
+    PolynomialInFlag ⟨z, v - 1, r + 1⟩ (surfaceMap φ (polyG K F)) ∧
+    PolynomialInFlag ⟨z, v, r - 2⟩ (surfaceMap φ (boundaryJ F)) := by
+  have hR' := boundary_polynomial_bounds residualSWeights 0 rfl rfl rfl (by omega) F _ hR
+  have hYR' := boundary_polynomial_bounds residualYSWeights 1 rfl rfl rfl (by omega) F _ hYR
+  have hAll' := boundary_polynomial_bounds residualTotalWeights 1 rfl rfl rfl (by omega) F _ hAll
+  have hr1 : 1 ≤ r := by omega
+  refine ⟨?_, ?_, ?_⟩
+  · apply weightBounds_surfaceMap_flag
+    · convert hR'.1 using 1 <;> simp only [Nat.cast_sub hr1, Nat.cast_one]
+    · convert hYR'.1 using 1 <;> simp only [Nat.cast_add, Nat.cast_sub hr1, Nat.cast_one] <;> ring
+    · convert hAll'.1 using 1 <;> simp only [Nat.cast_add, Nat.cast_sub hr1, Nat.cast_one] <;> ring
+  · apply weightBounds_surfaceMap_flag
+    · convert hR'.2.1 using 1 <;> simp only [Nat.cast_add, Nat.cast_one, Nat.cast_zero, sub_zero]
+    · convert hYR'.2.1 using 1 <;> simp only [Nat.cast_add, Nat.cast_sub hv, Nat.cast_one] <;> ring
+    · convert hAll'.2.1 using 1 <;> simp only [Nat.cast_add, Nat.cast_sub hv, Nat.cast_one] <;> ring
+  · apply weightBounds_surfaceMap_flag
+    · convert hR'.2.2 using 1 <;> simp only [Nat.cast_sub hr, Nat.cast_ofNat]
+    · convert hYR'.2.2 using 1 <;> simp only [Nat.cast_add, Nat.cast_sub hr, Nat.cast_ofNat] <;> ring
+    · convert hAll'.2.2 using 1 <;> simp only [Nat.cast_add, Nat.cast_sub hr, Nat.cast_ofNat] <;> ring
+
+theorem coefficientFlag_pole {L : Type*} [Field L]
+    (V : Valuation L (WithZero (Multiplicative ℤ))) (x : Fin 3 → L)
+    (m i r v z : ℕ) (hm : 1 ≤ m) (hi : i ≤ m + 1) (hv : 2 ≤ v) :
+    RCN204.flagPole V x (coefficientFlag m i r v z) =
+      (i : ℤ) * (2 * RCN204.flagPole V x unitAllFlag - RCN204.flagPole V x unitYZFlag) +
+      ((min (2 * i) m : ℕ) : ℤ) * RCN204.flagPole V x (⟨z, v, r - 2⟩ : FlagDegree) := by
+  have hsafe := coefficientFlag_sub_safe hm hi hv
+  simp only [RCN204.flagPole, coefficientFlag, unitAllFlag, unitYZFlag,
+    Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, Nat.cast_one, Nat.cast_zero, Nat.cast_sub hsafe]
+  ring
+
+theorem refinedCoefficients_value_le {L : Type*} [Field L]
+    (V : Valuation L (WithZero (Multiplicative ℤ)))
+    (coeff : Ω →+* L) (hcoeff : ∀ a, V (coeff a) ≤ 1) (x : Fin 3 → L)
+    (φ : Polynomial K →+* Ω) (F : MvPolynomial (Fin 4) K) (m i r v z : ℕ)
+    (hm : 1 ≤ m) (hi : i ≤ m + 1) (hr : 2 ≤ r) (hv : 2 ≤ v)
+    (hR : WeightBound residualSWeights F (r : ℤ))
+    (hYR : WeightBound residualYSWeights F ((r + v : ℕ) : ℤ))
+    (hAll : WeightBound residualTotalWeights F ((r + v + z : ℕ) : ℤ)) :
+    V (MvPolynomial.eval₂Hom coeff x (surfaceMap φ (refinedCoefficients F m i))) ≤
+      WithZero.exp ((i : ℤ) * (2 * RCN204.flagPole V x unitAllFlag -
+        RCN204.flagPole V x unitYZFlag) + ((min (2 * i) m : ℕ) : ℤ) *
+        RCN204.flagPole V x (⟨z, v, r - 2⟩ : FlagDegree)) := by
+  rw [← coefficientFlag_pole V x m i r v z hm hi hv]
+  exact RCN204.valuation_eval_le_flag V coeff hcoeff x _ _
+    (refinedCoefficients_surfaceMap_flag φ F m i r v z hm hi hr hv hR hYR hAll)
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+end P6
+
+section P7
+namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+open RCN055 RCN056 RCN313
+open scoped BigOperators
+
+noncomputable section
+variable {K : Type*} [CommRing K]
+local notation "Poly4" => MvPolynomial (Fin 4) K
+
+theorem refined_monomial_step (F P : Poly4) (m i : ℕ) (hi : i ≤ m + 1) :
+    baseStep F m (refinedMonomial F m i P) =
+      refinedMonomial F (m + 1) i (contributionA F m i P) +
+      refinedMonomial F (m + 1) (i + 1)
+        (contributionB F m i P + contributionC F m i P +
+          if i = m + 1 then contributionF F P else 0) +
+      if i ≤ m then refinedMonomial F (m + 1) (i + 2)
+        (contributionD F m i P + contributionE F m i P) else 0 := by
+  simp only [baseStep, refinedMonomial]
+  rw [expanded_monomial_step]
+  by_cases htop : i = m + 1
+  · subst i
+    have hs0 : sExponent m (m + 1) = 0 := by unfold sExponent; omega
+    have hs1 : sExponent (m + 1) (m + 1) = 0 := by unfold sExponent; omega
+    have hs2 : sExponent (m + 1) (m + 1 + 1) = 0 := by unfold sExponent; omega
+    have hGexp : m + 1 + 1 - (m + 1) = 1 := by omega
+    simp only [contributionA, contributionB, contributionC, contributionF,
+      hs0, hs1, hs2, hGexp, Nat.lt_irrefl, if_false, Nat.le_add_left, if_true,
+      show ¬ m + 1 ≤ m by omega, ↓reduceIte]
+    simp only [Nat.add_sub_cancel, Nat.sub_self, Nat.zero_sub, Nat.zero_add,
+      Nat.sub_zero, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, Nat.cast_one,
+      Nat.cast_zero, pow_zero, pow_succ, zero_mul, mul_zero, one_mul, mul_one,
+      dZero]
+    ring
+  · have him : i ≤ m := by omega
+    have hb0 : m + 1 + 1 - i = (m + 1 - i) + 1 := by omega
+    have hb1 : m + 1 + 1 - (i + 1) = m + 1 - i := by omega
+    have hb2 : m + 1 + 1 - (i + 2) = m - i := by omega
+    have hb3 : m + 1 - i = (m - i) + 1 := by omega
+    have hcast : (m + 1 - i : Poly4) = ((m + 1 - i : ℕ) : Poly4) := by
+      rw [Nat.cast_sub hi, Nat.cast_add, Nat.cast_one]
+    simp only [if_neg htop, if_pos him, contributionA, contributionB,
+      contributionC, contributionD, contributionE, hb0, hb1, hb2, hb3, hcast]
+    by_cases hs : 2 * i ≤ m
+    · obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hs
+      have he0 : sExponent (2 * i + d) i = d := by unfold sExponent; omega
+      have he1 : sExponent (2 * i + d + 1) i = d + 1 := by unfold sExponent; omega
+      have he2 : sExponent (2 * i + d + 1) (i + 1) = d - 1 := by unfold sExponent; omega
+      have he3 : sExponent (2 * i + d + 1) (i + 2) = d - 3 := by unfold sExponent; omega
+      have he4 : 2 * i + d - i = i + d := by omega
+      simp only [he0, he1, he2, he3, he4]
+      by_cases hd : d < 3
+      · interval_cases d <;>
+          norm_num [pow_add, pow_succ, dZero] <;> ring
+      · obtain ⟨s, rfl⟩ := Nat.exists_eq_add_of_le (show 3 ≤ d by omega)
+        have h1 : 3 + s - 1 = s + 2 := by omega
+        have h3 : 3 + s - 3 = s := by omega
+        have h4 : 3 + s - (s + 2) = 1 := by omega
+        have h5 : 3 + s - 1 - (s + 2) = 0 := by omega
+        have h6 : 3 + s - 1 - s = 2 := by omega
+        simp only [h1, h3, h4, h5, h6, show 0 < 3 + s by omega, if_true]
+        norm_num [pow_add, pow_succ, dZero] <;> ring
+    · have he0 : sExponent m i = 0 := by unfold sExponent; omega
+      have he1 : sExponent (m + 1) i = 0 := by unfold sExponent; omega
+      have he2 : sExponent (m + 1) (i + 1) = 0 := by unfold sExponent; omega
+      have he3 : sExponent (m + 1) (i + 2) = 0 := by unfold sExponent; omega
+      simp only [he0, he1, he2, he3]
+      norm_num [pow_add, pow_succ, dZero] <;> ring
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+end P7
+
+section P8
+namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+open RCN055 RCN056 RCN313
+open scoped BigOperators
+
+noncomputable section
+variable {K : Type*} [CommRing K]
+local notation "Poly4" => MvPolynomial (Fin 4) K
+
+theorem coefficient_selector_eq (m i q : ℕ) (A B D : Poly4) :
+    (if q = i then A else if q = i + 1 then B else if q = i + 2 ∧ i ≤ m then D else 0) =
+      (if q = i then A else 0) + (if q = i + 1 then B else 0) +
+        (if q = i + 2 ∧ i ≤ m then D else 0) := by
+  split_ifs <;> simp_all <;> omega
+
+theorem refinedCoefficientStep_represents (F : Poly4) (m : ℕ) (C : ℕ → Poly4) :
+    baseStep F m (∑ i ∈ Finset.range (m + 2), refinedMonomial F m i (C i)) =
+      ∑ q ∈ Finset.range (m + 3),
+        refinedMonomial F (m + 1) q (refinedCoefficientStep F m C q) := by
+  rw [baseStep_sum]
+  conv_rhs =>
+    simp only [refinedCoefficientStep, coefficient_selector_eq,
+      refinedMonomial, Finset.mul_sum, mul_add, mul_ite, mul_zero,
+      Finset.sum_add_distrib]
+  simp only [← Finset.sum_add_distrib]
+  rw [Finset.sum_comm]
+  apply Finset.sum_congr rfl
+  intro i hi
+  have him : i ≤ m + 1 := by have := Finset.mem_range.mp hi; omega
+  rw [refined_monomial_step F (C i) m i him]
+  have hi0 : i ∈ Finset.range (m + 3) := by simp only [Finset.mem_range]; omega
+  have hi1 : i + 1 ∈ Finset.range (m + 3) := by simp only [Finset.mem_range]; omega
+  simp only [Finset.sum_add_distrib]
+  by_cases hi2 : i ≤ m
+  · have hi2mem : i + 2 ∈ Finset.range (m + 3) := by simp only [Finset.mem_range]; omega
+    simp [hi2, hi0, hi1, hi2mem, refinedMonomial, mul_add]
+  · simp [hi2, hi0, hi1, refinedMonomial, mul_add]
+
+theorem baseNumerator_refined_sum (F : Poly4) (m : ℕ) :
+    baseNumerator F m =
+      ∑ i ∈ Finset.range (m + 2), refinedMonomial F m i (refinedCoefficients F m i) := by
+  induction m with
+  | zero => simp [baseNumerator, refinedMonomial, refinedCoefficients, sExponent]
+  | succ m ih =>
+    change baseStep F m (baseNumerator F m) = _
+    rw [ih, refinedCoefficientStep_represents]
+    rfl
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+end P8
+
+section P9
+namespace ProximityPrize.SubmissionLower.BoundaryTailCoefficientFacts
+
+open BoundaryTailAlgebra RCN055 RCN313
+variable {K : Type*} [Field K]
+local notation "Poly4" => MvPolynomial (Fin 4) K
+noncomputable section
+
+def signedOddScalar : ℕ → K
+  | 0 => 1
+  | m + 1 => -(2 * m + 1 : K) * signedOddScalar m
+
+@[simp] theorem signedOddScalar_zero : signedOddScalar (K := K) 0 = 1 := rfl
+
+@[simp] theorem signedOddScalar_succ (m : ℕ) :
+    signedOddScalar (K := K) (m + 1) = -(2 * m + 1 : K) * signedOddScalar m := by
+  rfl
+
+theorem signedOddScalar_ne_zero {p : ℕ} [CharP K p] (m : ℕ)
+    (hm : 2 * m < p) : signedOddScalar (K := K) m ≠ 0 := by
+  induction m with
+  | zero => simp [signedOddScalar]
+  | succ m ih =>
+      rw [signedOddScalar_succ]
+      apply mul_ne_zero
+      · apply neg_ne_zero.mpr
+        intro hz
+        have hdvd : p ∣ 2 * m + 1 :=
+          (CharP.cast_eq_zero_iff K p (2 * m + 1)).mp (by
+            simpa only [Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat,
+              Nat.cast_one] using hz)
+        exact (Nat.not_dvd_of_pos_of_lt (by omega) (by omega)) hdvd
+      · apply ih
+        omega
+
+theorem refinedCoefficientStep_support (F : Poly4) (m : ℕ)
+    (C : ℕ → Poly4) (q : ℕ) (hq : m + 2 < q) :
+    refinedCoefficientStep F m C q = 0 := by
+  unfold refinedCoefficientStep
+  apply Finset.sum_eq_zero
+  intro i hi
+  have hil : i ≤ m + 1 := by
+    exact Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
+  have hqi : q ≠ i := by omega
+  have hqi1 : q ≠ i + 1 := by omega
+  have hqbranch : ¬(q = i + 2 ∧ i ≤ m) := by omega
+  simp [hqi, hqi1, hqbranch]
+
+theorem refinedCoefficients_support (F : Poly4) (m q : ℕ)
+    (hq : m + 1 < q) : refinedCoefficients F m q = 0 := by
+  induction m generalizing q with
+  | zero =>
+      have hq0 : q ≠ 0 := by omega
+      simp [refinedCoefficients, hq0]
+  | succ m ih =>
+      simp only [refinedCoefficients]
+      apply refinedCoefficientStep_support F m (refinedCoefficients F m) q
+      omega
+
+theorem refinedCoefficients_zero (F : Poly4) (m : ℕ) :
+    refinedCoefficients F m 0 = MvPolynomial.C (signedOddScalar (K := K) m) := by
+  induction m with
+  | zero => simp [refinedCoefficients]
+  | succ m ih =>
+      have hC2 : MvPolynomial.C (2 : K) = (2 : Poly4) :=
+        map_natCast (MvPolynomial.C : K →+* Poly4) 2
+      simp [refinedCoefficients, refinedCoefficientStep, ih, signedOddScalar,
+        contributionA, sExponent, Nat.cast_add, Nat.cast_mul, hC2]
+
+theorem refinedCoefficients_zero_recurrence (F : Poly4) (m : ℕ) :
+    refinedCoefficients F (m + 1) 0 =
+      MvPolynomial.C (-(2 * m + 1 : K)) * refinedCoefficients F m 0 := by
+  rw [refinedCoefficients_zero, refinedCoefficients_zero]
+  simp [signedOddScalar, Nat.cast_add, Nat.cast_mul]
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailCoefficientFacts
+
+end P9
+
+section P10
+namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+open RCN055 RCN057 RCN095 RCN136 RCN156 RCN204 RCN234 RCN313
+open BoundaryTailCoefficientFacts
+open scoped BigOperators
+
+noncomputable section
+variable {K Ω L : Type} [Field K] [Field Ω] [Field L]
+
+theorem map_baseNumerator_refined (ev : MvPolynomial (Fin 4) K →+* L)
+    (F : MvPolynomial (Fin 4) K) (m : ℕ) :
+    ev (baseNumerator F m) =
+      ∑ i : Fin (m + 2), BoundaryTail.refinedMonomial (m + 2) i.val
+        (ev (polyH K F)) (ev (polyG K F)) (ev (boundaryJ F))
+        (ev (refinedCoefficients F m i.val)) := by
+  rw [baseNumerator_refined_sum, map_sum, ← Fin.sum_univ_eq_sum_range]
+  apply Finset.sum_congr rfl
+  intro i hi
+  simp only [refinedMonomial, map_mul, map_pow, BoundaryTail.refinedMonomial,
+    sExponent, Nat.max_zero, show m + 2 - 1 = m + 1 by omega,
+    show m + 2 - 2 = m by omega]
+
+theorem boundary_flag_poles (V : Valuation L (WithZero (Multiplicative ℤ)))
+    (x : Fin 3 → L) (r v z : ℕ) (hr : 3 ≤ r) (hv : 1 ≤ v) :
+    let A := flagPole V x (⟨z, v, r - 1⟩ : FlagDegree)
+    let u := flagPole V x unitAllFlag
+    let t := flagPole V x unitYZFlag
+    0 ≤ t ∧ t ≤ u ∧ u ≤ A ∧
+      flagPole V x (⟨z, v, r - 2⟩ : FlagDegree) = A - u ∧
+      flagPole V x (⟨z, v - 1, r + 1⟩ : FlagDegree) = A + 2 * u - t := by
+  dsimp
+  have hr1 : 1 ≤ r := by omega
+  have hr2 : 2 ≤ r := by omega
+  have hu0 := flagPole_nonneg V x unitAllFlag
+  have ht0 := flagPole_nonneg V x unitYZFlag
+  have hz0 : 0 ≤ RCN187.poleOrder V (x 2) := le_max_left _ _
+  simp only [flagPole, unitAllFlag, unitYZFlag, Nat.cast_add, Nat.cast_sub hr1,
+    Nat.cast_sub hr2, Nat.cast_sub hv, Nat.cast_one, Nat.cast_zero, Nat.cast_ofNat,
+    zero_mul, one_mul, zero_add, add_zero] at *
+  refine ⟨ht0, le_max_right _ _, ?_, ?_, ?_⟩
+  · have := mul_nonneg (show 0 ≤ (r : ℤ) - 2 by omega) hu0
+    have := mul_nonneg (show 0 ≤ (v : ℤ) by omega) ht0
+    have := mul_nonneg (show 0 ≤ (z : ℤ) by omega) hz0
+    nlinarith
+  · ring
+  · ring
+
+theorem actual_tail_normalized_pole_le
+    (V : Valuation L (WithZero (Multiplicative ℤ)))
+    (coeff : Ω →+* L) (hcoeff : ∀ a : Ω, a ≠ 0 → V (coeff a) = 1)
+    (x : Fin 3 → L) (φ : Polynomial K →+* Ω)
+    (F : MvPolynomial (Fin 4) K) (m₀ m r v z p : ℕ) [CharP K p]
+    (hm₀ : 1 ≤ m₀) (hm : 1 ≤ m) (hchar : 2 * m₀ < p)
+    (hr : 3 ≤ r) (hv : 2 ≤ v)
+    (hR : WeightBound residualSWeights F (r : ℤ))
+    (hYR : WeightBound residualYSWeights F ((r + v : ℕ) : ℤ))
+    (hAll : WeightBound residualTotalWeights F ((r + v + z : ℕ) : ℤ))
+    (hH : MvPolynomial.eval₂Hom coeff x (surfaceMap φ (polyH K F)) ≠ 0)
+    (hfirst : MvPolynomial.eval₂Hom coeff x (surfaceMap φ (baseNumerator F m₀)) = 0) :
+    let ev := (MvPolynomial.eval₂Hom coeff x).comp (surfaceMap φ)
+    let A := flagPole V x (⟨z, v, r - 1⟩ : FlagDegree)
+    let t := flagPole V x unitYZFlag
+    let u := flagPole V x unitAllFlag
+    2 * max (V (ev (polyH K F) ^ 3 * ev (baseNumerator F m) /
+      ev (polyH K F) ^ (m + 1))).log 0 ≤
+      2 * (((m : ℤ) + 3) * A - ((m : ℤ) + 1) * t) +
+        ((m : ℤ) + 2) * max (2 * u) (t + max (V (ev (polyG K F) / ev (polyH K F))).log 0) := by
+  classical
+  let ev := (MvPolynomial.eval₂Hom coeff x).comp (surfaceMap φ)
+  let H := ev (polyH K F)
+  let G := ev (polyG K F)
+  let J := ev (boundaryJ F)
+  let A := flagPole V x (⟨z, v, r - 1⟩ : FlagDegree)
+  let u := flagPole V x unitAllFlag
+  let t := flagPole V x unitYZFlag
+  have hc : ∀ a : Ω, V (coeff a) ≤ 1 := by
+    intro a
+    letI : Decidable (a = 0) := Classical.propDecidable _
+    by_cases ha : a = 0
+    · simp [ha]
+    · rw [hcoeff a ha]
+  obtain ⟨ht0, htu, huA, hJcap, hGcap⟩ := boundary_flag_poles V x r v z hr (by omega)
+  obtain ⟨hHF, hGF, hJF⟩ := boundary_surfaceMap_flags φ F r v z (by omega) (by omega) hR hYR hAll
+  have log_cap (P : MvPolynomial (Fin 3) Ω) (cap : FlagDegree)
+      (hP : PolynomialInFlag cap P) (hne : MvPolynomial.eval₂Hom coeff x P ≠ 0) :
+      (V (MvPolynomial.eval₂Hom coeff x P)).log ≤ flagPole V x cap := by
+    have hh := valuation_eval_le_flag V coeff hc x cap P hP
+    simpa only [WithZero.log_exp] using
+      (WithZero.log_le_log ((Valuation.ne_zero_iff V).mpr hne) WithZero.exp_ne_zero).mpr hh
+  have hA : (V H).log ≤ A := log_cap _ _ hHF hH
+  have hB : G ≠ 0 → (V G).log ≤ A + 2 * u - t := by
+    intro hn
+    rw [← hGcap]
+    exact log_cap _ _ hGF hn
+  have hD : J ≠ 0 → (V J).log ≤ A - u := by
+    intro hn
+    rw [← hJcap]
+    exact log_cap _ _ hJF hn
+  have hcoeffs (k : ℕ) (hk : 1 ≤ k) (i : Fin (k + 2)) :
+      V (ev (refinedCoefficients F k i.val)) ≤ WithZero.exp
+        ((i.val : ℤ) * (2 * u - t) +
+          ((min (2 * i.val) k : ℕ) : ℤ) * (A - u)) := by
+    rw [← hJcap]
+    exact refinedCoefficients_value_le V coeff hc x φ F k i.val r v z hk
+      (by omega) (by omega) hv hR hYR hAll
+  have hconstraint : G ≠ 0 → J ≠ 0 →
+      (A - (V H).log) - (A + 2 * u - t - (V G).log) ≤ 2 * (A - u - (V J).log) := by
+    intro hG hJ
+    apply BoundaryTail.first_tail_shifted_constraint V (n := m₀ + 2) (by omega)
+      H G J hH hG hJ (fun i => ev (refinedCoefficients F m₀ i.val)) A (A + 2 * u - t) (A - u) (hD hJ)
+    · intro i
+      simpa only [show m₀ + 2 - 2 = m₀ by omega,
+        show A + 2 * u - t - A = 2 * u - t by ring] using hcoeffs m₀ hm₀ i
+    · simp only [ev, RingHom.comp_apply, refinedCoefficients_zero,
+        surfaceMap_C, MvPolynomial.eval₂Hom_C]
+      apply hcoeff
+      have hn := signedOddScalar_ne_zero (K := K) m₀ hchar
+      intro hz
+      apply hn
+      apply (φ.comp Polynomial.C).injective
+      simpa using hz
+    · rw [← map_baseNumerator_refined ev F m₀]
+      exact hfirst
+  have hresult := BoundaryTail.normalized_tail_pole_le V (n := m + 2) (by omega) H G J hH
+    (fun i => ev (refinedCoefficients F m i.val)) A u t ht0 htu huA hA hB hD hconstraint
+    (by intro i; simpa only [Nat.add_sub_cancel] using hcoeffs m hm i)
+  rw [← map_baseNumerator_refined ev F m] at hresult
+  simp only [show m + 2 - 1 = m + 1 by omega] at hresult
+  convert hresult using 1 <;> push_cast <;> ring
+
+def normalFlag (m r v z : ℕ) : FlagDegree :=
+  ⟨(m + 3) * z, (m + 3) * v - (m + 1), (m + 3) * (r - 1)⟩
+
+theorem normalFlag_pole (V : Valuation L (WithZero (Multiplicative ℤ)))
+    (x : Fin 3 → L) (m r v z : ℕ) (hv : 1 ≤ v) :
+    flagPole V x (normalFlag m r v z) =
+      ((m : ℤ) + 3) * flagPole V x (⟨z, v, r - 1⟩ : FlagDegree) -
+        ((m : ℤ) + 1) * flagPole V x unitYZFlag := by
+  have hsub : m + 1 ≤ (m + 3) * v := by nlinarith
+  simp only [normalFlag, flagPole, unitYZFlag, Nat.cast_sub hsub,
+    Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, Nat.cast_one, Nat.cast_zero]
+  ring
+
+theorem global_tail_value (V : Valuation L (WithZero (Multiplicative ℤ)))
+    (coeff : Ω →+* L) (hcoeff : ∀ a : Ω, a ≠ 0 → V (coeff a) = 1)
+    (x : Fin 3 → L) (φ : Polynomial K →+* Ω) (hφ : Function.Injective φ)
+    (F : MvPolynomial (Fin 4) K) (m : ℕ) :
+    V (MvPolynomial.eval₂Hom coeff x (RCN086.globalTailCut φ F (m + 2)) /
+      (MvPolynomial.eval₂Hom coeff x (surfaceMap φ (polyH K F))) ^ (m + 1)) =
+    V ((MvPolynomial.eval₂Hom coeff x (surfaceMap φ (polyH K F))) ^ 3 *
+      MvPolynomial.eval₂Hom coeff x (surfaceMap φ (baseNumerator F m)) /
+      (MvPolynomial.eval₂Hom coeff x (surfaceMap φ (polyH K F))) ^ (m + 1)) := by
+  have hunit := hcoeff _ (RCN086.tail_scalar_ne_zero φ hφ (m + 2))
+  simp only [map_pow] at hunit
+  rw [RCN086.globalTailCut_eq, numerator_eq_H_cube]
+  simp only [map_mul, map_pow, MvPolynomial.eval₂Hom_C, map_div₀, hunit, mul_one]
+
+theorem global_tail_normalized_pole_le
+    (V : Valuation L (WithZero (Multiplicative ℤ)))
+    (coeff : Ω →+* L) (hcoeff : ∀ a : Ω, a ≠ 0 → V (coeff a) = 1)
+    (x : Fin 3 → L) (φ : Polynomial K →+* Ω) (hφ : Function.Injective φ)
+    (F : MvPolynomial (Fin 4) K) (m₀ m r v z p : ℕ) [CharP K p]
+    (hm₀ : 1 ≤ m₀) (hm : 1 ≤ m) (hchar : 2 * m₀ < p)
+    (hr : 3 ≤ r) (hv : 2 ≤ v)
+    (hR : WeightBound residualSWeights F (r : ℤ))
+    (hYR : WeightBound residualYSWeights F ((r + v : ℕ) : ℤ))
+    (hAll : WeightBound residualTotalWeights F ((r + v + z : ℕ) : ℤ))
+    (hH : MvPolynomial.eval₂Hom coeff x (surfaceMap φ (polyH K F)) ≠ 0)
+    (hfirst : MvPolynomial.eval₂Hom coeff x (RCN086.globalTailCut φ F (m₀ + 2)) = 0) :
+    2 * RCN187.poleOrder V
+      (MvPolynomial.eval₂Hom coeff x (RCN086.globalTailCut φ F (m + 2)) /
+        (MvPolynomial.eval₂Hom coeff x (surfaceMap φ (polyH K F))) ^ (m + 1)) ≤
+      2 * flagPole V x (normalFlag m r v z) + ((m : ℤ) + 2) *
+        max (2 * flagPole V x unitAllFlag) (flagPole V x unitYZFlag +
+          RCN187.poleOrder V (MvPolynomial.eval₂Hom coeff x (surfaceMap φ (polyG K F)) /
+            MvPolynomial.eval₂Hom coeff x (surfaceMap φ (polyH K F)))) := by
+  have hscalar : coeff ((-φ Polynomial.X) ^ (m₀ + 2)) ≠ 0 := by
+    intro hz
+    have hh := hcoeff _ (RCN086.tail_scalar_ne_zero φ hφ (m₀ + 2))
+    rw [hz, map_zero] at hh
+    exact zero_ne_one hh
+  simp only [map_pow] at hscalar
+  have hbase : MvPolynomial.eval₂Hom coeff x (surfaceMap φ (baseNumerator F m₀)) = 0 := by
+    rw [RCN086.globalTailCut_eq, numerator_eq_H_cube] at hfirst
+    simp only [map_mul, map_pow, MvPolynomial.eval₂Hom_C] at hfirst
+    exact (mul_eq_zero.mp ((mul_eq_zero.mp hfirst).resolve_right hscalar)).resolve_left
+      (pow_ne_zero 3 hH)
+  have h := actual_tail_normalized_pole_le V coeff hcoeff x φ F m₀ m r v z p
+    hm₀ hm hchar hr hv hR hYR hAll hH hbase
+  rw [normalFlag_pole V x m r v z (by omega)]
+  simp only [RCN187.poleOrder, global_tail_value V coeff hcoeff x φ hφ F m, max_comm]
+  simpa only [max_comm, RingHom.comp_apply] using h
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+end P10
+
+section P11
+namespace ProximityPrize.SubmissionLower.RCN199
+open scoped Classical BigOperators WithZero
+open RCN002 RCN344 RCN341 RCN095 RCN114 RCN295 RCN187 RCN207 RCN064 RCN204 RCN271 RCN257
+noncomputable section
+set_option autoImplicit false
+variable {K : Type} [Field K]
+variable {P : Ideal (MvPolynomial (Fin 3) K)} [P.IsPrime]
+variable {H G : MvPolynomial (Fin 3) K}
+
+namespace MovingPoleBudget
+
+theorem zero_le_of_doubled_pole [IsAlgClosed K]
+    (budget : MovingPoleBudget P H G)
+    (base : SeparableLiteralCoordinate P)
+    (T : MvPolynomial (Fin 3) K) (denom factor : ℕ) (q : FlagDegree)
+    (hH : H ∉ P) (hT : T ∉ P)
+    (hpole : ∀ v : Place K (CoordinateField K P),
+      2 * poleOrder v.val
+          (coordinateEvaluation K P T /
+            (coordinateEvaluation K P H)^denom) ≤
+        2 * flagPole v.val (coordinate K P) q +
+          (2 * factor : ℕ) * movingPoleTarget P H G v) :
+    FiniteRegularZeroSetBound P H T
+      (budget.weightedCost q + factor * budget.movingCost) := by
+  apply finite_regular_zero_bound_of_separator K P base H T denom _ hT hH
+  intro W
+  have hlocal : ∀ v ∈ W,
+      (2 * poleOrder v.val
+          (coordinateEvaluation K P T /
+            (coordinateEvaluation K P H)^denom) : ℤ) ≤
+        2 * flagPole v.val (coordinate K P) q +
+          (2 * factor : ℤ) * movingPoleTarget P H G v := by
+    intro v hv
+    exact hpole v
+  have hsum := Finset.sum_le_sum hlocal
+  have hflag := budget.sum_flagPole_le q W
+  have hmove := budget.movingPole W
+  have hbound :
+      (2 : ℤ) * (∑ v ∈ W, poleOrder v.val
+        (coordinateEvaluation K P T /
+          (coordinateEvaluation K P H)^denom)) ≤
+      (2 : ℤ) * (budget.weightedCost q + factor * budget.movingCost) := by
+    calc
+      _ = ∑ v ∈ W, (2 * poleOrder v.val
+          (coordinateEvaluation K P T /
+            (coordinateEvaluation K P H)^denom) : ℤ) := by
+            simp only [Finset.mul_sum]
+      _ ≤ ∑ v ∈ W, (2 * flagPole v.val (coordinate K P) q +
+          (2 * factor : ℤ) * movingPoleTarget P H G v) := hsum
+      _ = (2 : ℤ) * ((∑ v ∈ W, flagPole v.val (coordinate K P) q) +
+          (factor : ℤ) * ∑ v ∈ W, movingPoleTarget P H G v) := by
+            simp only [Finset.sum_add_distrib, ← Finset.mul_sum]
+            push_cast
+            ring
+      _ ≤ (2 : ℤ) * (budget.weightedCost q + factor * budget.movingCost) := by
+            gcongr
+  have hfinal :
+      (∑ v ∈ W, poleOrder v.val
+        (coordinateEvaluation K P T /
+          (coordinateEvaluation K P H)^denom) : ℤ) ≤
+        (budget.weightedCost q + factor * budget.movingCost : ℤ) := by
+    linarith
+  simpa only [RCN346.poleOrder, coordinateEvaluation_eq_aeval,
+    Nat.cast_add, Nat.cast_mul] using hfinal
+
+end MovingPoleBudget
+end
+end ProximityPrize.SubmissionLower.RCN199
+
+end P11
+
+section P12
+namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+open RCN002 RCN055 RCN057 RCN064 RCN086 RCN095 RCN114 RCN136 RCN156
+open RCN187 RCN199 RCN204 RCN234 RCN257 RCN271 RCN295 RCN313 RCN341 RCN344
+
+noncomputable section
+variable {K Ω : Type} [Field K] [Field Ω]
+
+theorem coordinate_eval₂ (P : Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
+    (Q : MvPolynomial (Fin 3) Ω) :
+    MvPolynomial.eval₂Hom (algebraMap Ω (CoordinateField Ω P)) (coordinate Ω P) Q =
+      coordinateEvaluation Ω P Q := by
+  rw [coordinateEvaluation_eq_aeval]
+  exact (MvPolynomial.aeval_eq_eval₂Hom _ _).symm
+
+theorem coordinate_global_tail_pole_le
+    (P : Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
+    (V : Place Ω (CoordinateField Ω P))
+    (φ : Polynomial K →+* Ω) (hφ : Function.Injective φ)
+    (F : MvPolynomial (Fin 4) K) (m₀ m r v z p : ℕ) [CharP K p]
+    (hm₀ : 1 ≤ m₀) (hm : 1 ≤ m) (hchar : 2 * m₀ < p)
+    (hr : 3 ≤ r) (hv : 2 ≤ v)
+    (hR : WeightBound residualSWeights F (r : ℤ))
+    (hYR : WeightBound residualYSWeights F ((r + v : ℕ) : ℤ))
+    (hAll : WeightBound residualTotalWeights F ((r + v + z : ℕ) : ℤ))
+    (hH : surfaceMap φ (polyH K F) ∉ P)
+    (hfirst : globalTailCut φ F (m₀ + 2) ∈ P) :
+    2 * poleOrder V.val (coordinateEvaluation Ω P (globalTailCut φ F (m + 2)) /
+      coordinateEvaluation Ω P (surfaceMap φ (polyH K F)) ^ (m + 1)) ≤
+      2 * flagPole V.val (coordinate Ω P) (normalFlag m r v z) +
+        ((m : ℤ) + 2) * movingPoleTarget P
+          (surfaceMap φ (polyH K F)) (surfaceMap φ (polyG K F)) V := by
+  have hHne : coordinateEvaluation Ω P (surfaceMap φ (polyH K F)) ≠ 0 := by
+    intro hz
+    apply hH
+    rw [← coordinateEvaluation_ker Ω P]
+    exact hz
+  have hfirstzero : coordinateEvaluation Ω P (globalTailCut φ F (m₀ + 2)) = 0 := by
+    change globalTailCut φ F (m₀ + 2) ∈ RingHom.ker (coordinateEvaluation Ω P).toRingHom
+    rw [coordinateEvaluation_ker]
+    exact hfirst
+  have hcoeff : ∀ a : Ω, a ≠ 0 → V.val (algebraMap Ω (CoordinateField Ω P) a) = 1 := by
+    letI : V.val.IsTrivialOn Ω := V.property.2
+    exact Valuation.IsTrivialOn.eq_one
+  have h := global_tail_normalized_pole_le V.val (algebraMap Ω (CoordinateField Ω P))
+    hcoeff (coordinate Ω P) φ hφ F m₀ m r v z p hm₀ hm hchar hr hv hR hYR hAll
+    (by rwa [coordinate_eval₂]) (by rwa [coordinate_eval₂])
+  simpa only [coordinate_eval₂, movingPoleTarget, movingRatio, flagPole_unitAll,
+    flagPole_unitYZ] using h
+
+theorem global_tail_zero_count [IsAlgClosed Ω]
+    (P : Ideal (MvPolynomial (Fin 3) Ω)) [P.IsPrime]
+    (φ : Polynomial K →+* Ω) (hφ : Function.Injective φ)
+    (F : MvPolynomial (Fin 4) K) (m₀ m r v z p factor : ℕ) [CharP K p]
+    (hm₀ : 1 ≤ m₀) (hm : 1 ≤ m) (hchar : 2 * m₀ < p)
+    (hr : 3 ≤ r) (hv : 2 ≤ v) (hfactor : m + 2 ≤ 2 * factor)
+    (hR : WeightBound residualSWeights F (r : ℤ))
+    (hYR : WeightBound residualYSWeights F ((r + v : ℕ) : ℤ))
+    (hAll : WeightBound residualTotalWeights F ((r + v + z : ℕ) : ℤ))
+    (budget : MovingPoleBudget P (surfaceMap φ (polyH K F)) (surfaceMap φ (polyG K F)))
+    (base : SeparableLiteralCoordinate P)
+    (hH : surfaceMap φ (polyH K F) ∉ P)
+    (hfirst : globalTailCut φ F (m₀ + 2) ∈ P)
+    (hlater : globalTailCut φ F (m + 2) ∉ P) :
+    FiniteRegularZeroSetBound P (surfaceMap φ (polyH K F)) (globalTailCut φ F (m + 2))
+      (budget.weightedCost (normalFlag m r v z) + factor * budget.movingCost) := by
+  apply budget.zero_le_of_doubled_pole base _ (m + 1) factor _ hH hlater
+  intro V
+  apply (coordinate_global_tail_pole_le P V φ hφ F m₀ m r v z p hm₀ hm hchar
+    hr hv hR hYR hAll hH hfirst).trans
+  apply add_le_add le_rfl
+  apply mul_le_mul_of_nonneg_right (by exact_mod_cast hfactor)
+  simp only [movingPoleTarget, poleOrder]
+  positivity
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+end P12
+
+section P13
+namespace ProximityPrize.SubmissionLower.BoundaryTailComponent
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
+open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
+open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
+open BoundaryTailAlgebra RCN057
+set_option Elab.async false
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option maxRecDepth 100000
+variable {K I : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
+variable [CharP (GenericField K) p]
+variable [CharP K p]
+variable {stageErrorCap : ℕ}
+
+set_option maxHeartbeats 1000000 in
+theorem component_moving_card_le_delay
+    (t y r : Nat) (hr3 : 3 ≤ r) (hb : r + 2 ≤ y) (hyt : y ≤ t)
+    (hchar : 2 * (w - 1) < p)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (C : FirstTailComponent S)
+    (budget : MovingPoleBudget C.1
+      (regularitySurface (polynomialEmbedding K) S.F)
+      (surfaceMap (polynomialEmbedding K) (polyG K S.F)))
+    (base : SeparableLiteralCoordinate C.1)
+    (delay : ℕ) (hdelay : 1 ≤ delay) (factor : ℕ)
+    (hfactor : w + 1 + delay ≤ 2 * factor)
+    (htail : globalTailCut (polynomialEmbedding K) S.F
+      (w + 1 + delay) ∉ C.1) :
+    (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+      budget.weightedCost (BoundaryTailAlgebra.normalFlag (w - 1 + delay) r (y-r) (t-y)) +
+        factor * budget.movingCost := by
+  classical
+  have Hsupport : ResidualSupportData (cellSupport t y r) S.F :=
+    ⟨S.surface_s_weight, S.surface_ys_weight, S.surface_total_weight⟩
+  have hs : cellS r + 2 = r := by dsimp [cellS]; omega
+  have hys : cellB y r + cellS r + 3 = r + (y-r) := by
+    dsimp [cellB, cellS]; omega
+  have htot : cellA t y + cellB y r + cellS r + 3 = r + (y-r) + (t-y) := by
+    dsimp [cellA, cellB, cellS]; omega
+  have hR : WeightBound residualSWeights S.F (r : ℤ) := by
+    apply Or.inr
+    exact_mod_cast (show wt residualSWeights S.F ≤ r by
+      simpa only [cellSupport, RCN198.support, hs] using Hsupport.s_weight)
+  have hYR : WeightBound residualYSWeights S.F ((r + (y-r) : ℕ) : ℤ) := by
+    apply Or.inr
+    exact_mod_cast (show wt residualYSWeights S.F ≤ r + (y-r) by
+      simpa only [cellSupport, RCN198.support, hys] using Hsupport.ys_weight)
+  have hAll : WeightBound residualTotalWeights S.F ((r + (y-r) + (t-y) : ℕ) : ℤ) := by
+    apply Or.inr
+    exact_mod_cast (show wt residualTotalWeights S.F ≤ r + (y-r) + (t-y) by
+      simpa only [cellSupport, RCN198.support, htot] using Hsupport.total_weight)
+  have hHnot : regularitySurface (polynomialEmbedding K) S.F ∉ C.1 :=
+    regularComponent_H_not_mem (GenericField K) S.G _ _ C
+  have hfirst : globalTailCut (polynomialEmbedding K) S.F (w + 1) ∈ C.1 :=
+    regularComponent_T_mem (GenericField K) S.G _ _ C
+  have hzero : FiniteRegularZeroSetBound C.1
+      (regularitySurface (polynomialEmbedding K) S.F)
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1 + delay))
+      (budget.weightedCost (BoundaryTailAlgebra.normalFlag (w - 1 + delay) r (y-r) (t-y)) +
+        factor * budget.movingCost) := by
+    have hlevel : w - 1 + delay + 2 = w + 1 + delay := by norm_num [w]; omega
+    have hfirstlevel : w - 1 + 2 = w + 1 := by norm_num [w]
+    have hf : w - 1 + delay + 2 ≤ 2 * factor := by omega
+    have hfirst0 : globalTailCut (polynomialEmbedding K) S.F (w-1+2) ∈ C.1 := by
+      rw [hfirstlevel]
+      exact hfirst
+    have hlater0 : globalTailCut (polynomialEmbedding K) S.F (w-1+delay+2) ∉ C.1 := by
+      rw [hlevel]
+      exact htail
+    have hz := BoundaryTailAlgebra.global_tail_zero_count C.1
+      (polynomialEmbedding K) (polynomialEmbedding_injective K) S.F
+      (w-1) (w-1+delay) r (y-r) (t-y) p factor
+      (by norm_num [w]) (by norm_num [w]; omega) hchar hr3 (by omega)
+      hf hR hYR hAll budget base hHnot hfirst0 hlater0
+    rwa [hlevel] at hz
+  let seeds := componentSeeds (GenericField K) S.G
+    (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+    (regularitySurface (polynomialEmbedding K) S.F) Gamma
+    (selectedPoint (polynomialEmbedding K) S.selected) C
+  let pts : Finset (Fin 3 → GenericField K) :=
+    seeds.image (selectedPoint (polynomialEmbedding K) S.selected)
+  have hprime : ∀ v ∈ pts,
+      C.1 ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom := by
+    intro v hv
+    obtain ⟨gamma, hgamma, rfl⟩ := Finset.mem_image.mp hv
+    exact componentSeeds_on_prime (GenericField K) S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+      (regularitySurface (polynomialEmbedding K) S.F) Gamma
+      (selectedPoint (polynomialEmbedding K) S.selected) C gamma hgamma
+  have hHne : ∀ v ∈ pts, MvPolynomial.aeval v
+      (regularitySurface (polynomialEmbedding K) S.F) ≠ 0 := by
+    intro v hv
+    obtain ⟨gamma, hgamma, rfl⟩ := Finset.mem_image.mp hv
+    have hGamma : gamma ∈ Gamma := componentSeeds_subset (GenericField K) S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+      (regularitySurface (polynomialEmbedding K) S.F) Gamma
+      (selectedPoint (polynomialEmbedding K) S.selected) C hgamma
+    show MvPolynomial.eval
+        (selectedPoint (polynomialEmbedding K) S.selected gamma)
+        (regularitySurface (polynomialEmbedding K) S.F) ≠ 0
+    exact (selectedPoint_evaluation (polynomialEmbedding K) S.selected gamma
+      (MvPolynomial.pderiv (2 : Fin 4) S.F)).symm ▸ S.regular gamma hGamma
+  have hAzero : ∀ v ∈ pts, MvPolynomial.aeval v
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1 + delay)) = 0 := by
+    intro v hv
+    obtain ⟨gamma, hgamma, rfl⟩ := Finset.mem_image.mp hv
+    have hGamma : gamma ∈ Gamma := componentSeeds_subset (GenericField K) S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+      (regularitySurface (polynomialEmbedding K) S.F) Gamma
+      (selectedPoint (polynomialEmbedding K) S.selected) C hgamma
+    have hz : MvPolynomial.aeval
+        (selectedPoint (polynomialEmbedding K) S.selected gamma)
+        (globalTailCut (polynomialEmbedding K) S.F
+          (w + 1 + delay)) = 0 :=
+      selected_globalTailCut_zero_of_lt (polynomialEmbedding K) S.F
+        S.selected gamma w (w + 1 + delay)
+        (S.degree_le gamma hGamma) (S.solution gamma hGamma) (by omega)
+    exact hz
+  have hbound : pts.card ≤
+      budget.weightedCost (BoundaryTailAlgebra.normalFlag (w - 1 + delay) r (y-r) (t-y)) +
+        factor * budget.movingCost :=
+    hzero pts hprime hHne hAzero
+  have hcard : pts.card = seeds.card :=
+    Finset.card_image_of_injective seeds
+      (selectedPoint_injective (polynomialEmbedding K) S.selected)
+  show seeds.card ≤ _
+  omega
+
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailComponent
+
+end P13
+
+section P14
+namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+set_option maxRecDepth 10000
+set_option maxHeartbeats 1000000
+open RCN095 RCN237 RCN206 RCN327 LocatorHybridCells LocatorHybridCellsC1
+
+theorem normalFlag_yz_eq (m v : ℕ) (hv : 1 ≤ v) :
+    (m + 3) * v - (m + 1) = (m + 3) * (v - 1) + 2 := by
+  obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hv
+  simp only [Nat.add_sub_cancel_left, Nat.mul_add, Nat.mul_one]
+  omega
+
+theorem normalFlag_eq_cell (t y r : ℕ) (hr : 3 ≤ r)
+    (hy : r + 2 ≤ y) :
+    normalFlag w r (y - r) (t - y) =
+      cellHybridCoordinateC1 t y r + w • unitAllFlag := by
+  unfold normalFlag cellHybridCoordinateC1 cellRational
+  apply congrArg₃ (f := FlagDegree.mk)
+  all_goals simp only [normalFlag, cellHybridCoordinateC1, cellRational,
+    cellDirection, directionFlag, cellA, cellB, cellS, add_zOnly, add_yz,
+    add_all, nsmul_zOnly, nsmul_yz, nsmul_all, unitAllFlag, w]
+  all_goals omega
+
+theorem normalFlag_delay_le_smul (w m d r v z : ℕ)
+    (hw : 1 ≤ w) (hm : 1 ≤ m) (hd : d ≤ m) (hv : 1 ≤ v) :
+    (normalFlag (w - 1 + d) r v z).zOnly ≤ (m • normalFlag w r v z).zOnly ∧
+    (normalFlag (w - 1 + d) r v z).yz ≤ (m • normalFlag w r v z).yz ∧
+    (normalFlag (w - 1 + d) r v z).all ≤ (m • normalFlag w r v z).all := by
+  have hwsub : w - 1 + 1 = w := Nat.sub_add_cancel hw
+  have hscale : w - 1 + d + 3 ≤ m * (w + 3) := by nlinarith [Nat.mul_le_mul_right w hm]
+  simp only [normalFlag, nsmul_zOnly, nsmul_yz, nsmul_all]
+  refine ⟨?_, ?_, ?_⟩
+  · nlinarith [Nat.mul_le_mul_right z hscale]
+  · rw [normalFlag_yz_eq _ _ hv, normalFlag_yz_eq _ _ hv]
+    nlinarith [Nat.mul_le_mul_right (v - 1) hscale]
+  · nlinarith [Nat.mul_le_mul_right (r - 1) hscale]
+
+theorem low_delay_factor (d m : ℕ) (hd : d ≤ m) (hm : m ≤ 5) :
+    w + 1 + d ≤ 2 * 65539 := by
+  simp only [w]
+  omega
+
+end ProximityPrize.SubmissionLower.BoundaryTailAlgebra
+
+end P14
+
+section P15
+namespace ProximityPrize.SubmissionLower.BoundaryTailProvider
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
+open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
+open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
+open LocatorHybridTailProviderC1 LocatorHybridTransportC2
+open BoundaryTailAlgebra
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+variable {K I : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
+variable [CharP (GenericField K) p] [CharP K p]
+variable {stageErrorCap : ℕ}
+
+def cellNormal (t y r : ℕ) : FlagDegree :=
+  BoundaryTailAlgebra.normalFlag w r (y-r) (t-y)
+
+theorem exists_provider_on_active_components
+    (t y r : Nat) (hr3 : 3 ≤ r) (hb : r + 2 ≤ y) (hyt : y ≤ t)
+    (hchar : 2 * (w - 1) < p)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F
+      (w + 1))
+    (tail1 : FlagDegree)
+    (B : PrimeFlagBudgetFamily
+      (G := S.G) (T := globalTailCut (polynomialEmbedding K) S.F
+        (w + 1))
+      (H := regularitySurface (polynomialEmbedding K) S.F) flag tail1)
+    (base : ∀ C : FirstTailComponent S, SeparableLiteralCoordinate C.1)
+    (budget : ∀ C : FirstTailComponent S,
+      MovingPoleBudget C.1
+        (regularitySurface (polynomialEmbedding K) S.F)
+        (surfaceMap (polynomialEmbedding K) (polyG K S.F)))
+    (hcost : ∀ C : FirstTailComponent S,
+      (budget C).zCost = B.zCost C ∧ (budget C).yzCost = B.yzCost C ∧
+        (budget C).allCost = B.allCost C)
+    (active : Finset (FirstTailComponent S)) (movingTotal : ℕ)
+    (hinactive : ∀ C : FirstTailComponent S, C ∉ active →
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card = 0)
+    (hmovingSum : (∑ C ∈ active, (budget C).movingCost) ≤ movingTotal)
+    (hgate : stageErrorCap + 1 ≤ (cellNormal t y r).yz)
+    (htangent : ∀ C : FirstTailComponent S,
+      (∀ delay, globalTailCut (polynomialEmbedding K) S.F
+        (w + 1 + delay) ∈ C.1) →
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+          (stageErrorCap + 1) * B.yzCost C)
+    (hresultants : RegularComponentWeightedInertiaResultantCertificate B
+      (fun C => localMultiplicity (loosenStageGeneral S)
+        (canonicalLocalDVRFamily (loosenStageGeneral S) hfirstProper) C)) :
+    Nonempty (HybridTailMultiplicityProvider
+      (tailFlag1 := tail1)
+      (tailFlag2 := cellNormal t y r) S
+      (flagMixed flag tail1 (cellNormal t y r) +
+        65539 * movingTotal)) := by
+  classical
+  have hry : r < y := by omega
+  have hr2 : 2 ≤ r := by omega
+  let S0 := loosenStageGeneral S
+  let multiplicity : FirstTailComponent S → ℕ := fun C =>
+    localMultiplicity S0 (canonicalLocalDVRFamily S0 hfirstProper) C
+  have hone : ∀ C, 1 ≤ multiplicity C :=
+    loosenStageGeneral_one_le_localMultiplicity S hfirstProper
+  have hwcEq : ∀ (C : FirstTailComponent S) (f : FlagDegree),
+      (budget C).weightedCost f = B.weightedCost f C := by
+    intro C f
+    obtain ⟨hz, hy', ha⟩ := hcost C
+    simp only [MovingPoleBudget.weightedCost,
+      PrimeFlagBudgetFamily.weightedCost, hz, hy', ha]
+  have hscale : ∀ (m : ℕ) (f : FlagDegree) (C : FirstTailComponent S),
+      B.weightedCost (m • f) C = m * B.weightedCost f C := by
+    intro m f C
+    simp only [PrimeFlagBudgetFamily.weightedCost, nsmul_zOnly, nsmul_yz,
+      nsmul_all]
+    ring
+  have hnormal : ∀ C : FirstTailComponent S,
+      B.weightedCost (cellHybridCoordinateC1 t y r) C ≤
+        B.weightedCost (cellNormal t y r) C := by
+    intro C
+    unfold cellNormal
+    rw [normalFlag_eq_cell t y r hr3 hb]
+    apply weightedCost_mono B C
+    all_goals simp only [add_zOnly, add_yz, add_all, nsmul_zOnly,
+      nsmul_yz, nsmul_all, unitAllFlag]
+    all_goals omega
+  let cost : FirstTailComponent S → ℕ := fun C =>
+    multiplicity C * B.weightedCost (cellNormal t y r) C +
+      65539 * (budget C).movingCost
+  have hcost_pointwise : ∀ C, cost C ≤
+      multiplicity C * B.weightedCost (cellNormal t y r) C +
+        65539 * (budget C).movingCost := fun _ => le_rfl
+  have hbound : ∀ C,
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤ cost C := by
+    intro C
+    have dichotomy := local_order_tail_dichotomy S0
+      (canonicalLocalDVRFamily S0 hfirstProper) C hfirstProper
+    rcases dichotomy.2 with hproper | htangentBranch
+    · obtain ⟨delay, hdelay, hdelayMu, htail⟩ := hproper
+      by_cases hm : 6 ≤ multiplicity C
+      · have hzero : ∀ gamma ∈ componentSeeds (GenericField K) S.G
+            (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+            (regularitySurface (polynomialEmbedding K) S.F) Gamma
+            (selectedPoint (polynomialEmbedding K) S.selected) C,
+            MvPolynomial.aeval
+              (selectedPoint (polynomialEmbedding K) S.selected gamma)
+              (globalTailCut (polynomialEmbedding K) S.F (w + 1 + delay)) = 0 := by
+          intro gamma hgamma
+          have hGamma := componentSeeds_subset (GenericField K) S.G
+            (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+            (regularitySurface (polynomialEmbedding K) S.F) Gamma
+            (selectedPoint (polynomialEmbedding K) S.selected) C hgamma
+          exact selected_globalTailCut_zero_of_lt (polynomialEmbedding K)
+            S.F S.selected gamma w (w + 1 + delay)
+            (S.degree_le gamma hGamma) (S.solution gamma hGamma) (by omega)
+        have hflagMod : PolynomialInFlagMod C.1
+            (multiplicity C • cellHybridCoordinateC1 t y r)
+            (globalTailCut (polynomialEmbedding K) S.F (w + 1 + delay)) := by
+          refine ⟨globalTailCut (polynomialEmbedding K) S.F (w + 1 + delay),
+            laterTail_in_hybridFlagC1 t y r hr3 hry S delay
+              (multiplicity C) hdelay hdelayMu hm, ?_⟩
+          simp
+        have hcount := component_secondTail_card_le_mod (Seed := K) B C Gamma
+          (selectedPoint (polynomialEmbedding K) S.selected)
+          (selectedPoint_injective (polynomialEmbedding K) S.selected)
+          hflagMod htail hzero
+        rw [hscale] at hcount
+        exact hcount.trans ((Nat.mul_le_mul_left _ (hnormal C)).trans
+          (Nat.le_add_right _ _))
+      · have hdm : delay ≤ multiplicity C := hdelayMu
+        have hcount := BoundaryTailComponent.component_moving_card_le_delay
+          t y r hr3 hb hyt hchar S C (budget C) (base C) delay hdelay
+          65539 (low_delay_factor delay (multiplicity C) hdm (by omega)) htail
+        simp only [hwcEq] at hcount
+        have hmono := normalFlag_delay_le_smul w (multiplicity C) delay r
+          (y-r) (t-y) (by norm_num [w]) (hone C) hdm (by omega)
+        have hcostle := weightedCost_mono B C hmono.1 hmono.2.1 hmono.2.2
+        rw [hscale] at hcostle
+        exact hcount.trans (Nat.add_le_add_right hcostle _)
+    · have hcount := htangent C htangentBranch
+      calc _ ≤ (stageErrorCap + 1) * B.yzCost C := hcount
+        _ ≤ B.weightedCost (cellNormal t y r) C :=
+          yzCost_mul_le_weightedCost B (cellNormal t y r) C
+            (stageErrorCap + 1) hgate
+        _ ≤ multiplicity C * B.weightedCost (cellNormal t y r) C := by
+          simpa only [one_mul] using Nat.mul_le_mul_right
+            (B.weightedCost (cellNormal t y r) C) (hone C)
+        _ ≤ cost C := Nat.le_add_right _ _
+  let activeCost : FirstTailComponent S → ℕ := fun C => if C ∈ active then cost C else 0
+  have hactiveBound : ∀ C,
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤ activeCost C := by
+    intro C
+    by_cases hC : C ∈ active
+    · simpa only [activeCost,if_pos hC] using hbound C
+    · simp only [activeCost,if_neg hC,hinactive C hC,le_refl]
+  have hsum : (∑ C, activeCost C) ≤
+      flagMixed flag tail1 (cellNormal t y r) + 65539*movingTotal := by
+    have ha : (∑ C, activeCost C) = ∑ C ∈ active, cost C := by simp only [activeCost,Finset.sum_ite_mem,Finset.univ_inter]
+    rw [ha]
+    calc
+      (∑ C ∈ active, cost C) ≤
+          ∑ C ∈ active, (multiplicity C *
+            B.weightedCost (cellNormal t y r) C +
+            65539*(budget C).movingCost) :=
+        Finset.sum_le_sum (fun C _ => hcost_pointwise C)
+      _ = (∑ C ∈ active, multiplicity C *
+            B.weightedCost (cellNormal t y r) C) +
+          65539*(∑ C ∈ active, (budget C).movingCost) := by
+        rw [Finset.sum_add_distrib,Finset.mul_sum]
+      _ ≤ (∑ C, multiplicity C *
+            B.weightedCost (cellNormal t y r) C) +
+          65539*movingTotal :=
+        Nat.add_le_add (Finset.sum_le_sum_of_subset (Finset.subset_univ active))
+          (Nat.mul_le_mul_left _ hmovingSum)
+      _ ≤ _ := Nat.add_le_add (hresultants.divisor_le B multiplicity) (le_refl _)
+  have providerDichotomy := loosenStageGeneral_dichotomy_with_tangent S
+    hfirstProper B htangent
+  exact ⟨{
+    budgetFamily := B
+    multiplicity := multiplicity
+    cost := activeCost
+    one_le_multiplicity := hone
+    tangentYZGate := hgate
+    cost_sum_le := hsum
+    componentBound := hactiveBound
+    dichotomy := providerDichotomy }⟩
+
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailProvider
+
+end P15
+
+section P16
+namespace ProximityPrize.SubmissionLower.BoundaryTailSharpGate
+set_option maxHeartbeats 1000000
+open RCN002 RCN004 RCN005 RCN095 RCN125 RCN371
+open scoped BigOperators
+
+/-- A prime curve with two proper equations and a transcendental Z coordinate
+has separating Z projection whenever its sharp flag-trapezoid degree is below
+the characteristic. No rectangular coordinate-degree gate is required. -/
+theorem finite_separable_z_of_flag_gate {Omega : Type} [Field Omega]
+    (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
+    (hZ : Transcendental Omega (coordinate Omega P 2))
+    (prime : Nat) [CharP Omega prime]
+    (G T : MvPolynomial (Fin 3) Omega)
+    (hG : Irreducible G) (hGmem : G ∈ P) (hTmem : T ∈ P)
+    (hproper : ¬ G ∣ T)
+    (hR : MvPolynomial.pderiv (1 : Fin 3) G ≠ 0)
+    (pG pT : FlagDegree)
+    (hGflag : RCN095.PolynomialInFlag pG G)
+    (hTflag : RCN095.PolynomialInFlag pT T)
+    (hsmall : flagMixed pG pT unitZFlag < prime) :
+    letI := rationalBaseAlgebra Omega P 2 hZ
+    FiniteDimensional (RatFunc Omega) (CoordinateField Omega P) ∧
+      Algebra.IsSeparable (RatFunc Omega) (CoordinateField Omega P) := by
+  let Q : Unit → Ideal (MvPolynomial (Fin 3) Omega) := fun _ => P
+  have hinj : Function.Injective Q := by
+    intro i j _
+    exact Subsingleton.elim i j
+  letI : Algebra (RatFunc Omega) (CoordinateField Omega P) :=
+    rationalBaseAlgebra Omega P 2 hZ
+  have htZ : ∀ i : Unit, Transcendental Omega
+      (RCN093.flagEvaluation Omega (Q i) 0 0 0 (MvPolynomial.X (zOrder 0))) := by
+    intro i
+    simpa [Q, zOrder, Equiv.swap_apply_def] using hZ
+  have hembZ (i : Unit) :
+      RCN022.elementEmbedding Omega (CoordinateField Omega (Q i))
+        (RCN093.flagEvaluation Omega (Q i) 0 0 0 (MvPolynomial.X (zOrder 0))) (htZ i) =
+      RCN022.elementEmbedding Omega (CoordinateField Omega P) (coordinate Omega P 2) hZ :=
+    by
+      have hx : RCN093.flagEvaluation Omega (Q i) 0 0 0 (MvPolynomial.X (zOrder 0)) =
+          coordinate Omega P 2 := by simp [Q, zOrder]
+      simp only [hx]
+      rfl
+  have hgenZ : ∀ i : Unit,
+      letI : Algebra (RatFunc Omega) (CoordinateField Omega (Q i)) :=
+        (RCN022.elementEmbedding Omega (CoordinateField Omega (Q i))
+          (RCN093.flagEvaluation Omega (Q i) 0 0 0 (MvPolynomial.X (zOrder 0)))
+          (htZ i)).toRingHom.toAlgebra
+      IntermediateField.adjoin (RatFunc Omega)
+        ({RCN093.flagEvaluation Omega (Q i) 0 0 0 (MvPolynomial.X (zOrder 2)),
+          RCN093.flagEvaluation Omega (Q i) 0 0 0 (MvPolynomial.X (zOrder 1))} :
+            Set (CoordinateField Omega (Q i))) = ⊤ := by
+    intro i
+    rw [hembZ i]
+    simpa [Q, zOrder, Equiv.swap_apply_def] using RCN093.flag_generators_z Omega P 0 0 0 hZ
+  have hfamily := RCN093.finite_sum_flag_finrank_trapezoid
+    (K := Omega) (Q := Q) hinj 0 0 0 zOrder htZ hgenZ
+      G T hG (fun _ => hGmem) (fun _ => hTmem) hproper
+      (by simpa using (RCN117.flag_u_z_outer_positive_of_pderiv 0 0 G hR).2)
+      pG.all pT.all (pG.yz + pG.all) (pT.yz + pT.all)
+      (flagMixed pG pT unitZFlag) (by
+        intro hzero
+        apply hproper
+        rw [hzero]
+        exact dvd_zero G)
+      (by
+        simpa using (RCN123.flagTrapezoidCaps_flagAlgHom pG G 0 0 0
+          ((support_subset_flagSupport_iff pG G).2 hGflag)).zOuter)
+      (by
+        simpa using (RCN123.flagTrapezoidCaps_flagAlgHom pT T 0 0 0
+          ((support_subset_flagSupport_iff pT T).2 hTflag)).zOuter)
+      (by
+        simpa using (RCN123.flagTrapezoidCaps_flagAlgHom pG G 0 0 0
+          ((support_subset_flagSupport_iff pG G).2 hGflag)).zTotal)
+      (by
+        simpa using (RCN123.flagTrapezoidCaps_flagAlgHom pT T 0 0 0
+          ((support_subset_flagSupport_iff pT T).2 hTflag)).zTotal)
+      (RCN121.z_flag_trapezoid_budget pG pT)
+  have hfd : FiniteDimensional (RatFunc Omega) (CoordinateField Omega P) := by
+    convert hfamily.1 () using 1
+    congr 1
+    exact congrArg (fun e : RatFunc Omega →ₐ[Omega] CoordinateField Omega P => e.toRingHom.toAlgebra) (hembZ ()).symm
+  have hrank : Module.finrank (RatFunc Omega) (CoordinateField Omega P) ≤
+      flagMixed pG pT unitZFlag := by
+    have hs := hfamily.2
+    simp only [Fintype.sum_unique] at hs
+    convert hs using 1
+    congr 2
+    exact congrArg (fun e : RatFunc Omega →ₐ[Omega] CoordinateField Omega P => e.toRingHom.toAlgebra) (hembZ ()).symm
+  letI := hfd
+  refine ⟨hfd, ⟨fun x => ?_⟩⟩
+  have hint : IsIntegral (RatFunc Omega) x := Algebra.IsIntegral.isIntegral x
+  exact (RCN364.integral_and_separable_of_small_annihilator prime
+    (minpoly (RatFunc Omega) x) x (minpoly.ne_zero hint) (minpoly.aeval _ _)
+    ((minpoly.natDegree_le (A := RatFunc Omega) x).trans_lt (hrank.trans_lt hsmall))).2
+end ProximityPrize.SubmissionLower.BoundaryTailSharpGate
+
+end P16
+
+section P17
+namespace ProximityPrize.SubmissionLower.BoundaryTailProjection
+open scoped Classical BigOperators
+open BoundaryTailSharpGate
+open Polynomial KaehlerDifferential RCN002 RCN005 RCN003 RCN001 RCN136 RCN231 RCN319 RCN238 RCN264 RCN243 RCN095 RCN159 RCN275 RCN287 RCN341 RCN277 RCN037 RCN038 RCN040 RCN041 RCN265 RCN274 RCN198 RCN086 RCN263 RCN089
+noncomputable section
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 50000
+set_option synthInstance.maxHeartbeats 300000
+variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
+ {phi:Polynomial K →+* Omega} {Gamma:Finset K} {x:Iota → K}
+ {pchar e w a b s:ℕ} [CharP Omega pchar] {flag:FlagDegree}
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq Omega:=Classical.decEq Omega
+local instance:DecidableEq Iota:=Classical.decEq Iota
+theorem exists_reduced_firstTail_activeNestedData_of_caps
+   (S:ResidualStage phi Gamma x pchar e flag w (support a b s))
+   (hproper:¬ S.G ∣ globalTailCut phi S.F (w + 1))
+   (hflagChar:flag.yz + flag.all < pchar ∧ flag.all < pchar ∧
+     flag.zOnly + flag.yz + flag.all < pchar)
+   (hmixed:flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < pchar) :
+   ∃ (base:∀ C:RegularComponent Omega S.G
+       (reducedGlobalTailCut phi (support a b s) S.F (w + 1))
+       (regularitySurface phi S.F), SeparableLiteralCoordinate C.1),
+     ∃ (hactive:∀ C:RegularComponent Omega S.G
+         (reducedGlobalTailCut phi (support a b s) S.F (w + 1))
+         (regularitySurface phi S.F),
+         KaehlerDifferential.D Omega (CoordinateField Omega C.1)
+             (coordinate Omega C.1 0) ≠ 0 ∨
+           KaehlerDifferential.D Omega (CoordinateField Omega C.1)
+             (coordinate Omega C.1 2) ≠ 0),
+       ∃ (hZ:∀ C:RegularComponent Omega S.G
+           (reducedGlobalTailCut phi (support a b s) S.F (w + 1))
+           (regularitySurface phi S.F), LiteralProjectionGate C 2),
+         Nonempty (AdaptiveNestedProjectionDataActive base hactive
+           (RCN315.residualStage_pderiv_one_ne_zero_of_support S)):=by
+ classical
+ let supp:=support a b s
+ let T:=globalTailCut phi S.F (w + 1)
+ let Tred:=reducedGlobalTailCut phi supp S.F (w + 1)
+ let H:=regularitySurface phi S.F
+ have hd:S.G ∣ T - Tred :=
+   S.G_dvd_surface.trans (globalTailCut_sub_reduced_dvd phi supp S.F (w + 1))
+ have hproperRed:¬ S.G ∣ Tred:=by
+   intro hr
+   apply hproper
+   have:=hd.add hr
+   simpa only [T, Tred, sub_add_cancel] using this
+ have hGflag:PolynomialInFlag flag S.G:=S.flag_support
+ let Hsupport:ResidualSupportData supp S.F :=
+   ⟨S.surface_s_weight, S.surface_ys_weight, S.surface_total_weight⟩
+ have hTflag:PolynomialInFlag
+     (reducedResidualAgreementFlag supp (w + 1)) Tred :=
+   reducedGlobalTailCut_in_flag phi supp Hsupport (w + 1)
+ obtain ⟨hGY, hGS, hGZ⟩ :=
+   RCN314.degree_bounds_of_polynomialInFlag
+     hGflag
+ have hGdegree:∀ j:Fin 3, S.G.degreeOf j < pchar:=by
+   intro j
+   fin_cases j
+   · exact hGY.trans_lt hflagChar.1
+   · exact hGS.trans_lt hflagChar.2.1
+   · exact hGZ.trans_lt hflagChar.2.2
+ have hR := RCN315.residualStage_pderiv_one_ne_zero_of_support S
+ let hZ:∀ C:RegularComponent Omega S.G Tred H, LiteralProjectionGate C 2 := by
+   intro C htr
+   exact finite_separable_z_of_flag_gate C.1 htr pchar S.G Tred
+     S.irreducible_G (regularComponent_G_mem Omega S.G Tred H C)
+     (regularComponent_T_mem Omega S.G Tred H C) hproperRed hR
+     flag (reducedResidualAgreementFlag supp (w+1)) hGflag hTflag hmixed
+ let choiceData:∀ C:RegularComponent Omega S.G Tred H,
+     ∃ B:SeparableLiteralCoordinate C.1, B.index = 0 ∨ B.index = 2 := by
+   intro C
+   by_cases hz:Transcendental Omega (coordinate Omega C.1 2)
+   · exact ⟨⟨2,hz,(hZ C hz).1,(hZ C hz).2⟩,Or.inr rfl⟩
+   · have hy := (regularComponent_y_or_z_transcendental phi S.F S.G Tred
+       S.G_dvd_surface C).resolve_right hz
+     have hsep := finite_separable_at_y_of_z_algebraic C.1 pchar S.G
+       S.irreducible_G (regularComponent_G_mem Omega S.G Tred H C)
+       S.y_dependent hGdegree hy (not_not.mp hz)
+     exact ⟨⟨0,hy,hsep.1,hsep.2⟩,Or.inl rfl⟩
+ let base:∀ C:RegularComponent Omega S.G Tred H,
+     SeparableLiteralCoordinate C.1:=fun C ↦ (choiceData C).choose
+ have hbaseIndex:∀ C:RegularComponent Omega S.G Tred H,
+     (base C).index = 0 ∨ (base C).index = 2:=by
+   intro C
+   exact (choiceData C).choose_spec
+ have hactive:∀ C:RegularComponent Omega S.G Tred H,
+     KaehlerDifferential.D Omega (CoordinateField Omega C.1)
+         (coordinate Omega C.1 0) ≠ 0 ∨
+       KaehlerDifferential.D Omega (CoordinateField Omega C.1)
+         (coordinate Omega C.1 2) ≠ 0:=by
+   intro C
+   have hb:=base_differential_ne_zero (base C)
+   rcases hbaseIndex C with hidx | hidx
+   · left
+     simpa only [hidx] using hb
+   · right
+     simpa only [hidx] using hb
+ exact ⟨base, hactive, hZ,
+   exists_adaptiveNestedProjectionDataActive base hactive
+     (RCN315.residualStage_pderiv_one_ne_zero_of_support S)⟩
+end
+end ProximityPrize.SubmissionLower.BoundaryTailProjection
+
+namespace ProximityPrize.SubmissionLower.BoundaryTailProjection
+open scoped Classical BigOperators
+open BoundaryTailSharpGate
+open Polynomial KaehlerDifferential RCN002 RCN005 RCN003 RCN001 RCN136 RCN238 RCN264 RCN243 RCN095 RCN159 RCN275 RCN287 RCN341 RCN277 RCN037 RCN038 RCN039 RCN040 RCN041 RCN265 RCN274 RCN198
+noncomputable section
+set_option maxHeartbeats 3500000
+set_option maxRecDepth 40000
+set_option synthInstance.maxHeartbeats 300000
+variable {K Ω I:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
+ {φ:Polynomial K →+*Ω} {Γ:Finset K} {x:I → K}
+ {p e w a b s:ℕ} [CharP Ω p] {flag:FlagDegree}
+theorem exists_agreement_projection_of_caps
+   (S:ResidualStage φ Γ x p e flag w (support a b s))
+   (x0 u0 u1:K)
+   (hproper:¬S.G∣agreementPolynomial φ S.F w x0 u0 u1)
+   (hflagChar:flag.yz+flag.all<p∧flag.all<p∧
+     flag.zOnly+flag.yz+flag.all<p)
+   (hmixed:flagMixed flag (sharpResidualAgreementFlag (support a b s) w) unitZFlag < p):
+   ∃ base:∀ C:RegularComponent Ω S.G
+       (agreementPolynomial φ S.F w x0 u0 u1) (regularitySurface φ S.F),
+       SeparableLiteralCoordinate C.1,
+     Nonempty (AdaptiveUnitProjectionFamilyYZ base flag
+       (sharpResidualAgreementFlag (support a b s) w)):=by
+ classical
+ let T:=agreementPolynomial φ S.F w x0 u0 u1
+ let H:=regularitySurface φ S.F
+ have hsy:s+2 < b+s+3:=by omega
+ have hTflag:PolynomialInFlag (sharpResidualAgreementFlag (support a b s) w) T:=
+   surfaceMap_agreement_in_sharp_flag hsy (phi:=φ)
+     ⟨S.surface_s_weight,S.surface_ys_weight,S.surface_total_weight⟩
+     w (fun j:ℕ => (j.factorial:K)⁻¹) x0 u0 u1
+ obtain ⟨hGY,hGS,hGZ⟩:=
+   RCN314.degree_bounds_of_polynomialInFlag S.flag_support
+ have hGdegree:∀ j:Fin 3,S.G.degreeOf j<p:=by
+   intro j
+   fin_cases j
+   · exact hGY.trans_lt hflagChar.1
+   · exact hGS.trans_lt hflagChar.2.1
+   · exact hGZ.trans_lt hflagChar.2.2
+ have hR := RCN315.residualStage_pderiv_one_ne_zero_of_support S
+ let hZ:∀ C:RegularComponent Ω S.G T H, LiteralProjectionGate C 2 := by
+   intro C htr
+   exact finite_separable_z_of_flag_gate C.1 htr p S.G T
+     S.irreducible_G (regularComponent_G_mem Ω S.G T H C)
+     (regularComponent_T_mem Ω S.G T H C) hproper hR
+     flag (sharpResidualAgreementFlag (support a b s) w) S.flag_support hTflag hmixed
+ let choiceData:∀ C:RegularComponent Ω S.G T H,
+     ∃ B:SeparableLiteralCoordinate C.1, B.index = 0 ∨ B.index = 2 := by
+   intro C
+   by_cases hz:Transcendental Ω (coordinate Ω C.1 2)
+   · exact ⟨⟨2,hz,(hZ C hz).1,(hZ C hz).2⟩,Or.inr rfl⟩
+   · have hy := (regularComponent_y_or_z_transcendental φ S.F S.G T
+       S.G_dvd_surface C).resolve_right hz
+     have hsep := finite_separable_at_y_of_z_algebraic C.1 p S.G
+       S.irreducible_G (regularComponent_G_mem Ω S.G T H C)
+       S.y_dependent hGdegree hy (not_not.mp hz)
+     exact ⟨⟨0,hy,hsep.1,hsep.2⟩,Or.inl rfl⟩
+ let base:∀ C:RegularComponent Ω S.G T H,
+     SeparableLiteralCoordinate C.1:=fun C => (choiceData C).choose
+ have hbaseIndex:∀ C:RegularComponent Ω S.G T H,
+     (base C).index=0∨(base C).index=2:=by
+   intro C
+   exact (choiceData C).choose_spec
+ have hactive:∀ C:RegularComponent Ω S.G T H,
+     D Ω (CoordinateField Ω C.1) (coordinate Ω C.1 0)≠0∨
+       D Ω (CoordinateField Ω C.1) (coordinate Ω C.1 2)≠0:=by
+   intro C
+   have hb:=base_differential_ne_zero (base C)
+   rcases hbaseIndex C with hidx | hidx
+   · left;simpa only [hidx] using hb
+   · right;simpa only [hidx] using hb
+ obtain ⟨P⟩:=exists_adaptiveUnitProjectionFamilyYZ_of_active_nested
+   flag (sharpResidualAgreementFlag (support a b s) w) base hactive hZ
+   (RCN315.residualStage_pderiv_one_ne_zero_of_support S)
+   S.irreducible_G hproper
+   ((support_subset_flagSupport_iff flag S.G).2 S.flag_support)
+   ((support_subset_flagSupport_iff
+     (sharpResidualAgreementFlag (support a b s) w) T).2 hTflag)
+ exact ⟨base,⟨P⟩⟩
+end
+end ProximityPrize.SubmissionLower.BoundaryTailProjection
+
+end P17
+
+section P18
+namespace ProximityPrize.SubmissionLower.BoundaryTailReduced
+open scoped Classical BigOperators
+open RCN332 BoundaryTailProjection
+open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN089 RCN066 RCN334 RCN331 RCN336 RCN027 RCN030 RCN029 RCN338 RCN042 RCN341 RCN002 RCN344 RCN340
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+variable {K I:Type} [Field K]
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
+ [CharP (GenericField K) p]
+ {stageErrorCap:ℕ}
+theorem exists_reducedActiveGeometry
+   {a b s:ℕ}
+   (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
+     (support a b s))
+   (hfirstProper:¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
+   (hflagChar:flag.yz + flag.all < p ∧ flag.all < p ∧
+     flag.zOnly + flag.yz + flag.all < p)
+   (hmixed:flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p) :
+   Nonempty (ReducedActiveGeometry S):=by
+ obtain ⟨base, hactive, hZ, ⟨D⟩⟩ :=
+   BoundaryTailProjection.exists_reduced_firstTail_activeNestedData_of_caps S hfirstProper hflagChar hmixed
+ exact ⟨⟨base, hactive, hZ, D⟩⟩
+noncomputable def reducedActiveGeometry
+   {a b s:ℕ}
+   (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
+     (support a b s))
+   (hfirstProper:¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
+   (hflagChar:flag.yz + flag.all < p ∧ flag.all < p ∧
+     flag.zOnly + flag.yz + flag.all < p)
+   (hmixed:flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p) :
+   ReducedActiveGeometry S :=
+ Classical.choice (exists_reducedActiveGeometry S hfirstProper hflagChar hmixed)
+noncomputable def reducedUnitFamily
+   {a b s:ℕ}
+   (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
+     (support a b s))
+   (hfirstProper:¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
+   (hflagChar:flag.yz + flag.all < p ∧ flag.all < p ∧
+     flag.zOnly + flag.yz + flag.all < p)
+   (hmixed:flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p) :=
+ let A:=reducedActiveGeometry S hfirstProper hflagChar hmixed
+ activeNestedUnitFamily A.base A.hactive A.hZ
+   (RCN315.residualStage_pderiv_one_ne_zero_of_support S) A.data
+   S.irreducible_G (reducedFirstCut_proper S hfirstProper)
+   ((support_subset_flagSupport_iff flag S.G).2 S.flag_support)
+   ((support_subset_flagSupport_iff
+     (reducedResidualAgreementFlag (support a b s) (w + 1))
+     (reducedFirstCut S)).2 (reducedFirstCut_in_flag S))
+noncomputable def reducedBudgetFamily
+   {a b s:ℕ}
+   (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
+     (support a b s))
+   (hfirstProper:¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
+   (hflagChar:flag.yz + flag.all < p ∧ flag.all < p ∧
+     flag.zOnly + flag.yz + flag.all < p)
+   (hmixed:flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p) :=
+ PrimeFlagBudgetFamily.ofCongruentCut (ordinary_sub_reducedFirstCut_dvd S)
+   (reducedUnitFamily S hfirstProper hflagChar hmixed).toPrimeFlagBudgetFamily
+noncomputable def reducedBaseOrd
+   {a b s:ℕ}
+   (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
+     (support a b s))
+   (hfirstProper:¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
+   (hflagChar:flag.yz + flag.all < p ∧ flag.all < p ∧
+     flag.zOnly + flag.yz + flag.all < p)
+   (hmixed:flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p)
+   (C:FirstTailComponent S):SeparableLiteralCoordinate C.1:=by
+ let C':RegularComponent (GenericField K) S.G (reducedFirstCut S)
+     (regularitySurface (polynomialEmbedding K) S.F) :=
+   ⟨C.1, by
+     rw [← regularComponents_eq_of_dvd_sub (ordinary_sub_reducedFirstCut_dvd S)]
+     exact C.2⟩
+ exact (reducedActiveGeometry S hfirstProper hflagChar hmixed).base C'
+theorem reducedBudgetFamily_yzPositive
+   {a b s:ℕ}
+   (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
+     (support a b s))
+   (hfirstProper:¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
+   (hflagChar:flag.yz + flag.all < p ∧ flag.all < p ∧
+     flag.zOnly + flag.yz + flag.all < p)
+   (hmixed:flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p)
+   (C:FirstTailComponent S) :
+   1 ≤ (reducedBudgetFamily S hfirstProper hflagChar hmixed).yzCost C:=by
+ let hd:=ordinary_sub_reducedFirstCut_dvd S
+ let C':=regularComponentEquiv hd C
+ let A:=reducedActiveGeometry S hfirstProper hflagChar hmixed
+ let U:=reducedUnitFamily S hfirstProper hflagChar hmixed
+ change 1 ≤ U.toPrimeFlagBudgetFamily.yzCost C'
+ change 1 ≤ coordinateDegree (GenericField K)
+   (CoordinateField (GenericField K) C'.1) (U.yzProjection C')
+ apply one_le_coordinateDegree_of_transcendental_value
+ have hproj:U.yzProjection C' = coordinateOfGate
+     (RCN093.affineU
+       (GenericField K) C'.1 A.data.lam) (A.data.uGate C'):=rfl
+ rw [hproj, coordinateOfGate_value]
+ exact A.data.uTranscendental C'
+theorem reducedBudgetFamily_yzPole
+   {a b s:ℕ}
+   (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
+     (support a b s))
+   (hfirstProper:¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
+   (hflagChar:flag.yz + flag.all < p ∧ flag.all < p ∧
+     flag.zOnly + flag.yz + flag.all < p)
+   (hmixed:flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p)
+   (C:FirstTailComponent S) :
+   LiteralSupportPoleBound
+     (reducedBaseOrd S hfirstProper hflagChar hmixed C)
+     (flagSupport unitYZFlag)
+     ((reducedBudgetFamily S hfirstProper hflagChar hmixed).yzCost C):=by
+ let C':RegularComponent (GenericField K) S.G (reducedFirstCut S)
+     (regularitySurface (polynomialEmbedding K) S.F) :=
+   ⟨C.1, by
+     rw [← regularComponents_eq_of_dvd_sub (ordinary_sub_reducedFirstCut_dvd S)]
+     exact C.2⟩
+ have heq:regularComponentEquiv (ordinary_sub_reducedFirstCut_dvd S) C = C':=by
+   apply Subtype.ext
+   rfl
+ rw [show (reducedBudgetFamily S hfirstProper hflagChar hmixed).yzCost C =
+     (reducedUnitFamily S hfirstProper hflagChar hmixed).toPrimeFlagBudgetFamily.yzCost C' by
+   simp only [reducedBudgetFamily, PrimeFlagBudgetFamily.ofCongruentCut, heq]]
+ change LiteralSupportPoleBound
+   ((reducedActiveGeometry S hfirstProper hflagChar hmixed).base C')
+   (flagSupport unitYZFlag)
+   ((reducedUnitFamily S hfirstProper hflagChar hmixed).toPrimeFlagBudgetFamily.yzCost C')
+ exact (reducedUnitFamily S hfirstProper hflagChar hmixed).toAdaptiveUnitPoleBudget.yzPole C'
+theorem reducedFixedPowersGeneral
+   {a b s:ℕ}
+   (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
+     (support a b s))
+   (hfirstProper:¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
+   (hflagChar:flag.yz + flag.all < p ∧ flag.all < p ∧
+     flag.zOnly + flag.yz + flag.all < p)
+   (hmixed:flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p) :
+   let A:=reducedActiveGeometry S hfirstProper hflagChar hmixed
+   ActiveNestedFixedPowers A.base A.hactive A.hZ
+     (RCN315.residualStage_pderiv_one_ne_zero_of_support S) A.data
+     (transportedMultiplicity (ordinary_sub_reducedFirstCut_dvd S)
+       (reducedMultiplicityGeneral S hfirstProper)):=by
+ dsimp only
+ exact reducedStage_activeFixedPowers (loosenStageGeneral S)
+   hfirstProper (reducedFirstCut S) (ordinary_sub_reducedFirstCut_dvd S)
+   (reducedActiveGeometry S hfirstProper hflagChar hmixed).base
+   (reducedActiveGeometry S hfirstProper hflagChar hmixed).hactive
+   (reducedActiveGeometry S hfirstProper hflagChar hmixed).hZ
+   (RCN315.residualStage_pderiv_one_ne_zero_of_support S)
+   (reducedActiveGeometry S hfirstProper hflagChar hmixed).data
+theorem reducedWeightedResultantsGeneral
+   {a b s:ℕ}
+   (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
+     (support a b s))
+   (hfirstProper:¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
+   (hflagChar:flag.yz + flag.all < p ∧ flag.all < p ∧
+     flag.zOnly + flag.yz + flag.all < p)
+   (hmixed:flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p) :
+   RegularComponentWeightedInertiaResultantCertificate
+     (reducedUnitFamily S hfirstProper hflagChar hmixed).toPrimeFlagBudgetFamily
+     (transportedMultiplicity (ordinary_sub_reducedFirstCut_dvd S)
+       (reducedMultiplicityGeneral S hfirstProper)):=by
+ let A:=reducedActiveGeometry S hfirstProper hflagChar hmixed
+ exact activeNestedWeightedCertificate A.base A.hactive A.hZ
+   (RCN315.residualStage_pderiv_one_ne_zero_of_support S) A.data
+   S.irreducible_G (reducedFirstCut_proper S hfirstProper)
+   ((support_subset_flagSupport_iff flag S.G).2 S.flag_support)
+   ((support_subset_flagSupport_iff
+     (reducedResidualAgreementFlag (support a b s) (w + 1))
+     (reducedFirstCut S)).2 (reducedFirstCut_in_flag S))
+   (transportedMultiplicity (ordinary_sub_reducedFirstCut_dvd S)
+     (reducedMultiplicityGeneral S hfirstProper))
+   (reducedFixedPowersGeneral S hfirstProper hflagChar hmixed)
+theorem transportedWeightedResultantsGeneral
+   {a b s:ℕ}
+   (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
+     (support a b s))
+   (hfirstProper:¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w + 1))
+   (hflagChar:flag.yz + flag.all < p ∧ flag.all < p ∧
+     flag.zOnly + flag.yz + flag.all < p)
+   (hmixed:flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p) :
+   RegularComponentWeightedInertiaResultantCertificate
+     (reducedBudgetFamily S hfirstProper hflagChar hmixed)
+     (reducedMultiplicityGeneral S hfirstProper):=by
+ exact weightedCertificate_of_congruentCut (ordinary_sub_reducedFirstCut_dvd S)
+   (reducedUnitFamily S hfirstProper hflagChar hmixed).toPrimeFlagBudgetFamily
+   (reducedMultiplicityGeneral S hfirstProper)
+   (reducedWeightedResultantsGeneral S hfirstProper hflagChar hmixed)
+end
+end ProximityPrize.SubmissionLower.BoundaryTailReduced
+
+end P18
+
+section P19
+namespace ProximityPrize.SubmissionLower.BoundaryTailRealization
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
+open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
+open RCN331 RCN027 RCN030 RCN029 RCN037 RCN038 RCN042 RCN002 RCN344 RCN277 RCN003 RCN314 RCN315 RCN093 RCN046 RCN001
+open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
+open LocatorHybridTailProviderC1 LocatorHybridTailProviderC2 LocatorHybridTransportC2
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 8000000
+set_option maxRecDepth 800000
+
+variable {K I : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
+variable [CharP (GenericField K) p] [CharP K p]
+variable {stageErrorCap : ℕ}
+variable {t y r : Nat}
+
+theorem exists_provider
+    (hr3 : 3 ≤ r) (hb : r + 2 ≤ y) (hyt : y ≤ t) (hchar : 2*(w-1) < p)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F
+      (w + 1))
+    (hflagChar : flag.yz + flag.all < p ∧ flag.all < p ∧
+      flag.zOnly + flag.yz + flag.all < p)
+    (hmixedRed : flagMixed flag (cellFirstTail t y r) unitZFlag < p)
+    (hmix : 2 * (flag.zOnly + flag.yz + flag.all) *
+      (cellA t y + cellB y r + cellS r + 4) < p)
+    (hrationalGate : stageErrorCap + 1 ≤ (BoundaryTailProvider.cellNormal t y r).yz)
+    (htangent : ∀ C : FirstTailComponent S,
+      (∀ delay, globalTailCut (polynomialEmbedding K) S.F
+        (w + 1 + delay) ∈ C.1) →
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+          (stageErrorCap + 1) *
+            (BoundaryTailReduced.reducedBudgetFamily S hfirstProper hflagChar hmixedRed).yzCost C) :
+    Nonempty (HybridTailMultiplicityProvider
+      (tailFlag1 := cellFirstTail t y r)
+      (tailFlag2 := BoundaryTailProvider.cellNormal t y r) S
+      (flagMixed flag (cellFirstTail t y r) (BoundaryTailProvider.cellNormal t y r) +
+        65539 *
+          flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r))) := by
+  classical
+  haveI : CharP (AlgebraicClosure (RatFunc (GenericField K))) p :=
+    charP_of_injective_algebraMap
+      (algebraMap (GenericField K)
+        (AlgebraicClosure (RatFunc (GenericField K)))).injective p
+  obtain ⟨budget, hcost, hmov⟩ :=
+    exists_firstTail_moving_budgets
+      (E := AlgebraicClosure (RatFunc (GenericField K)))
+      (polynomialEmbedding K) S.F S.G
+      (globalTailCut (polynomialEmbedding K) S.F (w + 1))
+      (cellA t y) (cellB y r) (cellS r) w (by norm_num [RCN327.w])
+      rfl
+      ⟨S.surface_s_weight, S.surface_ys_weight, S.surface_total_weight⟩
+      flag S.irreducible_G.ne_zero S.G_dvd_surface S.flag_support
+      (BoundaryTailReduced.reducedBaseOrd S hfirstProper hflagChar hmixedRed)
+      (cellFirstTail t y r)
+      (unitFamilyOfCongruentCut (ordinary_sub_reducedFirstCut_dvd S)
+        (BoundaryTailReduced.reducedUnitFamily S hfirstProper hflagChar hmixedRed)
+        (BoundaryTailReduced.reducedBaseOrd S hfirstProper hflagChar hmixedRed))
+      p hmix
+  have hmovingSum : (∑ C : FirstTailComponent S, (budget C).movingCost) ≤
+      flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r) := by
+    have hcut := cellMovingCut_eq_center_add t y r
+    have hfib : cellMovingFiber t y r =
+        RCN206.fiberFlag (cellA t y) (cellB y r) (cellS r) := rfl
+    rw [hfib, hcut]
+    exact hmov
+  -- route the cost equalities through `unitFamilyOfCongruentCut_costs` rather
+  -- than through a single large defeq check, which overruns `maxRecDepth`
+  have hcost' : ∀ C : FirstTailComponent S,
+      (budget C).zCost =
+        (BoundaryTailReduced.reducedBudgetFamily S hfirstProper hflagChar hmixedRed).zCost C ∧
+      (budget C).yzCost =
+        (BoundaryTailReduced.reducedBudgetFamily S hfirstProper hflagChar hmixedRed).yzCost C ∧
+      (budget C).allCost =
+        (BoundaryTailReduced.reducedBudgetFamily S hfirstProper hflagChar hmixedRed).allCost C := by
+    intro C
+    obtain ⟨hz, hy, ha⟩ := hcost C
+    obtain ⟨ez, ey, ea⟩ := unitFamilyOfCongruentCut_costs
+      (ordinary_sub_reducedFirstCut_dvd S)
+      (BoundaryTailReduced.reducedUnitFamily S hfirstProper hflagChar hmixedRed)
+      (BoundaryTailReduced.reducedBaseOrd S hfirstProper hflagChar hmixedRed) C
+    refine ⟨hz.trans ez, hy.trans ey, ha.trans ea⟩
+  exact BoundaryTailProvider.exists_provider_on_active_components
+    t y r hr3 hb hyt hchar S hfirstProper (cellFirstTail t y r)
+    (BoundaryTailReduced.reducedBudgetFamily S hfirstProper hflagChar hmixedRed)
+    (BoundaryTailReduced.reducedBaseOrd S hfirstProper hflagChar hmixedRed)
+    budget hcost' Finset.univ
+    (flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r))
+    (by intro C hC; exact False.elim (hC (Finset.mem_univ C)))
+    (by simpa using hmovingSum)
+    hrationalGate htangent
+    (BoundaryTailReduced.transportedWeightedResultantsGeneral S hfirstProper hflagChar hmixedRed)
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailRealization
+
+end P19
+
+section P20
+namespace ProximityPrize.SubmissionLower.BoundaryTailGates
+open RCN095 RCN198 RCN263 RCN287 RCN327 LocatorHybridCells
+set_option maxHeartbeats 1000000
+set_option maxRecDepth 10000
+
+theorem z_mixed_bound (f q : FlagDegree) (R capY : ℕ) (hfa : f.all ≤ 30)
+    (hfy : f.yz + f.all ≤ 139) (hqa : q.all ≤ R)
+    (hqy : q.yz + q.all ≤ capY) :
+    flagMixed f q unitZFlag ≤ 30 * capY + 109 * R := by
+  have h1 := Nat.mul_le_mul_right q.all hfy
+  have h2 := Nat.mul_le_mul_right q.yz hfa
+  have h3 := Nat.mul_le_mul_left 30 hqy
+  have h4 := Nat.mul_le_mul_left 109 hqa
+  simp only [flagMixed, unitZFlag]
+  nlinarith
+
+theorem reduced_gate (f : FlagDegree) (t y r : ℕ)
+    (hr : 3 ≤ r) (hrcap : r ≤ 30) (hycap : y ≤ 139)
+    (hry : r + 2 ≤ y) (hyt : y ≤ t)
+    (hfa : f.all ≤ r) (hfy : f.yz + f.all ≤ y) :
+    flagMixed f (cellFirstTail t y r) unitZFlag < 2130706433 := by
+  have hys : cellB y r + cellS r + 3 = y := by dsimp [cellB,cellS]; omega
+  have hs : cellS r + 2 = r := by dsimp [cellS]; omega
+  have hqa : (cellFirstTail t y r).all ≤ 7602176 := by
+    simp only [cellFirstTail, reducedResidualAgreementFlag, reducedAgreementDirection, cellSupport, RCN198.support, hs, w]
+    omega
+  have hqy : (cellFirstTail t y r).yz + (cellFirstTail t y r).all ≤ 36175873 := by
+    rw [cellFirstTail, reducedResidualAgreementFlag_ys]
+    simp only [cellSupport, RCN198.support, hys, w]
+    omega
+  exact (z_mixed_bound f _ _ _ (hfa.trans hrcap) (hfy.trans hycap) hqa hqy).trans_lt (by decide)
+
+theorem identity_gate (f : FlagDegree) (t y r : ℕ)
+    (hr : 3 ≤ r) (hrcap : r ≤ 30) (hycap : y ≤ 139)
+    (hry : r + 2 ≤ y) (hyt : y ≤ t)
+    (hfa : f.all ≤ r) (hfy : f.yz + f.all ≤ y) :
+    flagMixed f (sharpResidualAgreementFlag (cellSupport t y r) w) unitZFlag <
+      2130706433 := by
+  have hys : cellB y r + cellS r + 3 = y := by dsimp [cellB,cellS]; omega
+  have hs : cellS r + 2 = r := by dsimp [cellS]; omega
+  have hqa : (sharpResidualAgreementFlag (cellSupport t y r) w).all ≤ 7733189 := by
+    simp only [sharpResidualAgreementFlag, sharpAgreementDirection, cellSupport, RCN198.support, hs, w]
+    omega
+  have hqy : (sharpResidualAgreementFlag (cellSupport t y r) w).yz +
+      (sharpResidualAgreementFlag (cellSupport t y r) w).all ≤ 36175597 := by
+    rw [sharpResidualAgreementFlag_ys (cellSupport t y r) (by
+      simp only [cellSupport, RCN198.support]; omega)]
+    simp only [cellSupport, RCN198.support, hys, w]
+    omega
+  exact (z_mixed_bound f _ _ _ (hfa.trans hrcap) (hfy.trans hycap) hqa hqy).trans_lt (by decide)
+
+end ProximityPrize.SubmissionLower.BoundaryTailGates
+
+end P20
+
+section P21
+namespace ProximityPrize.SubmissionLower.BoundaryTailIdentity
+open scoped Classical BigOperators
+open RCN146
+open RCN135 RCN136 RCN231 RCN319 RCN313 RCN174 RCN238 RCN065 RCN243 RCN264 RCN159 RCN095 RCN275 RCN198 RCN203 RCN287 RCN049 RCN144 RCN063 RCN145 RCN087 RCN046 RCN265 RCN295 RCN344 RCN002
+noncomputable section
+set_option maxHeartbeats 4000000
+set_option maxRecDepth 45000
+set_option synthInstance.maxHeartbeats 300000
+variable {K I:Type} [Field K]
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+variable {Γ:Finset K} {x:I → K} {p e a b s:ℕ} [CharP (GenericField K) p]
+ {flag:FlagDegree} {w:ℕ}
+theorem actual_identityCurveCountProvider
+   (S:ResidualStage (polynomialEmbedding K) Γ x p e flag w (support a b s))
+   (agreements:ℕ) (hnodes:S.nodes.card=agreements+e)
+   (hagreement:∀ γ∈Γ,agreements≤(S.agreementFiber γ).card)
+   (hwa:w<agreements)
+   (hTail:S.G∣surfaceMap (polynomialEmbedding K) (numerator K S.F (w+1)))
+   (bound seedCap slopeCap:ℕ) (hw:1≤w)
+   (hshort:w+1≤bound) (hchar:bound<p)
+   (hbox:S.F∈globalCoefficientBox K bound w seedCap slopeCap)
+   (hflagChar:flag.yz+flag.all<p∧flag.all<p∧
+     flag.zOnly+flag.yz+flag.all<p)
+   (hmixed:flagMixed flag (sharpResidualAgreementFlag (support a b s) w) unitZFlag < p):
+   IdentityCurveCountProvider S (identityCurveDegree flag a b s w):=by
+ classical
+ unfold IdentityCurveCountProvider
+ intro i hi
+ dsimp only
+ intro hproper
+ let T:=agreementPolynomial (polynomialEmbedding K) S.F w
+   (x i) (S.u0 i) (S.u1 i)
+ let Gi:=Γ.filter (fun γ => S.Agrees γ i)
+ obtain ⟨base,⟨U⟩⟩:=BoundaryTailProjection.exists_agreement_projection_of_caps S
+   (x i) (S.u0 i) (S.u1 i) hproper hflagChar hmixed
+ let cost:RegularComponent (GenericField K) S.G T (regularitySurface (polynomialEmbedding K) S.F)→ℕ:=
+   fun C => U.family.toPrimeFlagBudgetFamily.zCost C+
+     U.family.toPrimeFlagBudgetFamily.yzCost C
+ refine ⟨cost,?_,?_⟩
+ · intro C
+   let Gc:=componentSeeds (GenericField K) S.G T
+     (regularitySurface (polynomialEmbedding K) S.F) Gi
+     (selectedPoint (polynomialEmbedding K) S.selected) C
+   have hGcGi:Gc⊆Gi:=componentSeeds_subset (GenericField K) S.G T _ Gi _ C
+   have hGiΓ:Gi⊆Γ:=Finset.filter_subset _ _
+   have hGcΓ:Gc⊆Γ:=hGcGi.trans hGiΓ
+   have hyzC:∀ W:Finset (RCN346.Place (GenericField K)
+       (CoordinateField (GenericField K) C.1)),
+       (∑ v∈W,exponentSetPoleWeight v.val (coordinate (GenericField K) C.1)
+         (flagSupport unitYZFlag))≤
+         (U.family.toPrimeFlagBudgetFamily.yzCost C:ℤ):=by
+     intro W
+     change (∑ v∈W,exponentSetPoleWeight v.val (coordinate (GenericField K) C.1)
+       (flagSupport unitYZFlag))≤
+       (coordinateDegree (GenericField K) (CoordinateField (GenericField K) C.1)
+         (U.family.yzProjection C):ℤ)
+     calc
+       _=∑ v∈W,RCN346.poleOrder (GenericField K)
+           (CoordinateField (GenericField K) C.1) v
+           (coordinateValue (GenericField K) (CoordinateField (GenericField K) C.1)
+             (U.family.yzProjection C)):=by
+         apply Finset.sum_congr rfl
+         intro v _
+         exact U.family.yzPole_eq C v
+       _ ≤ _:=finite_sum_coordinate_pole_le_degree (GenericField K)
+         (CoordinateField (GenericField K) C.1) (U.family.yzProjection C) W
+   have hprofileYZ:=coefficientPoleProfile_of_regular_agreement_curve
+     S hTail (x i) (S.u0 i) (S.u1 i) hproper C
+     bound seedCap slopeCap (U.family.toPrimeFlagBudgetFamily.yzCost C)
+     hw hshort hchar hbox hyzC
+   have hprofile:CoefficientPoleProfile (polynomialEmbedding K) C.1 S.F
+       (stage_surface_mem S (x i) (S.u0 i) (S.u1 i) C)
+       (stage_regularity_not_mem S (x i) (S.u0 i) (S.u1 i) C) w (cost C):=by
+     intro W
+     exact (hprofileYZ W).trans (by
+       change (U.family.toPrimeFlagBudgetFamily.yzCost C:ℤ) ≤
+         ((U.family.toPrimeFlagBudgetFamily.zCost C+
+           U.family.toPrimeFlagBudgetFamily.yzCost C:ℕ):ℤ)
+       norm_cast
+       omega)
+   have hcost:1≤cost C:=
+     U.one_le_zCost_add_yzCost (polynomialEmbedding K) S.F rfl S.G_dvd_surface C
+   apply prime_curve_card_le_of_coefficientPoleProfile
+     (polynomialEmbedding K) C.1 S.F
+     (stage_surface_mem S (x i) (S.u0 i) (S.u1 i) C)
+     (stage_regularity_not_mem S (x i) (S.u0 i) (S.u1 i) C)
+     (base C) p w agreements e (cost C) S.characteristic_bound hwa hcost hprofile
+     S.selected Gc S.nodes x S.u0 S.u1 S.x_injective hnodes
+   · intro γ hγ
+     exact S.degree_le γ (hGcΓ hγ)
+   · intro γ hγ
+     exact S.solution γ (hGcΓ hγ)
+   · intro γ hγ
+     exact S.regular γ (hGcΓ hγ)
+   · intro γ hγ
+     exact componentSeeds_on_prime (GenericField K) S.G T
+       (regularitySurface (polynomialEmbedding K) S.F) Gi
+       (selectedPoint (polynomialEmbedding K) S.selected) C γ hγ
+   · intro γ hγ
+     have hΓ:=hGcΓ hγ
+     simpa only [ResidualStage.agreementFiber,ResidualStage.Agrees] using
+       hagreement γ hΓ
+   · exact noLargeSelectedPencil_mono S.selected Γ Gc w e hGcΓ S.no_large_pencil
+ · have hz:=U.family.sum_zDegree_le
+   have hyz:=U.family.sum_yzDegree_le
+   change (∑ C,U.family.toPrimeFlagBudgetFamily.zCost C)≤
+     flagMixed flag (sharpResidualAgreementFlag (support a b s) w) unitZFlag at hz
+   change (∑ C,U.family.toPrimeFlagBudgetFamily.yzCost C)≤
+     flagMixed flag (sharpResidualAgreementFlag (support a b s) w) unitYZFlag at hyz
+   have hz':=hz.trans (mixed_sharp_le_padded a b s w flag unitZFlag)
+   have hyz':=hyz.trans (mixed_sharp_le_padded a b s w flag unitYZFlag)
+   have hz'':=hz'.trans (mixed_padded_le_succ flag a b s w unitZFlag)
+   have hyz'':=hyz'.trans (mixed_padded_le_succ flag a b s w unitYZFlag)
+   change (∑ C,(U.family.toPrimeFlagBudgetFamily.zCost C+
+     U.family.toPrimeFlagBudgetFamily.yzCost C)) ≤ identityCurveDegree flag a b s w
+   rw [Finset.sum_add_distrib]
+   exact Nat.add_le_add hz'' hyz''
+end
+end ProximityPrize.SubmissionLower.BoundaryTailIdentity
+
+end P21
+
+section P22
+namespace ProximityPrize.SubmissionLower.BoundaryTailIdentityArithmetic
+
+open RCN095 RCN146
+open Lower80788.FixedStage
+open Lower80788.HybridIdentityC2
+
+def newNormal (f : FlagDegree) (a b s : ℕ) : ℕ :=
+  flagMixed f (reducedABS a b s)
+    (rationalABS a b s + 131071 • unitAllFlag)
+
+def newCost (f : FlagDegree) (a b s : ℕ) : ℕ :=
+  newNormal f a b s + 65539 * flagMixed f (mfibABS a b s) (mcutABS a b s)
+
+def slackGeneric (f : FlagDegree) (a b s : ℕ) : ℕ :=
+  f.zOnly * (21561040785294102 + 9932450046012064*b +
+      2159218673359424*s^2 + 14065620618274076*s + 4318437346718848*b*s) +
+    f.yz * (14620095927064812 + 9932450046012064*a + 9932450046012064*b +
+      2159218673359424*s^2 + 11289242674982360*s +
+      4318437346718848*a*s + 4318437346718848*b*s) +
+    f.all * (11473156663686748 + 14065620618274076*a +
+      2159218673359424*b^2 + 11289242674982360*b + 2159218673359424*s^2 +
+      11289242674982360*s + 4318437346718848*a*b +
+      4318437346718848*a*s + 4318437346718848*b*s)
+
+def slackNormal (f : FlagDegree) (a b s : ℕ) : ℕ :=
+  f.zOnly * (10332712276911958 + 6909436496969728*b +
+      1727359124242432*s^2 + 9315168872763772*s + 3454718248484864*b*s) +
+    f.yz * (17210640412622124 + 6909436496969728*a + 6909436496969728*b +
+      1727359124242432*s^2 + 13448227426441784*s +
+      3454718248484864*a*s + 3454718248484864*b*s) +
+    f.all * (17147727704364180 + 9315168872763772*a +
+      1727359124242432*b^2 + 13448227426441784*b + 1727359124242432*s^2 +
+      13448227426441784*s + 3454718248484864*a*b +
+      3454718248484864*a*s + 3454718248484864*b*s)
+
+theorem generic_slack_identity (f : FlagDegree) (a b s : ℕ) :
+    50272 * newCost f a (b+1) (s+1) =
+        131073 * 80802 * identityCurveDegree f a (b+1) (s+1) 131071 +
+      slackGeneric f a b s := by
+  change 50272 * newCost f a (b+1) (s+1) =
+    131073 * 80802 * identityCurveDegree f a (b+1) (s+1)
+      Lower80788.HybridIdentityC2.w + slackGeneric f a b s
+  rw [Lower80788.HybridIdentityC2.identityDegree_linear]
+  simp [newCost, newNormal, slackGeneric, reducedABS, rationalABS,
+    mfibABS, mcutABS, flagMixed, unitAllFlag, add_zOnly, add_yz, add_all,
+    nsmul_zOnly, nsmul_yz, nsmul_all]
+  ring
+
+theorem normal_slack_identity (f : FlagDegree) (a b s : ℕ) :
+    50272 * newNormal f (a+2) (b+1) (s+1) =
+        131073 * 80802 * identityCurveDegree f (a+2) (b+1) (s+1) 131071 +
+      slackNormal f a b s := by
+  change 50272 * newNormal f (a+2) (b+1) (s+1) =
+    131073 * 80802 * identityCurveDegree f (a+2) (b+1) (s+1)
+      Lower80788.HybridIdentityC2.w + slackNormal f a b s
+  rw [Lower80788.HybridIdentityC2.identityDegree_linear]
+  simp [newNormal, slackNormal, reducedABS, rationalABS, flagMixed,
+    unitAllFlag, add_zOnly, add_yz, add_all, nsmul_zOnly, nsmul_yz,
+    nsmul_all]
+  ring
+
+theorem generic_absorption (f : FlagDegree) (a b s : ℕ) (hb : 0 ≤ a)
+    (hb' : 1 ≤ b) (hs : 1 ≤ s) :
+    131073 * 80802 * identityCurveDegree f a b s 131071 ≤
+      50272 * newCost f a b s := by
+  obtain ⟨b', rfl⟩ := Nat.exists_eq_add_of_le hb'
+  obtain ⟨s', rfl⟩ := Nat.exists_eq_add_of_le hs
+  have h := generic_slack_identity f a b' s'
+  have heq : 50272 * newCost f a (1+b') (1+s') =
+      131073 * 80802 * identityCurveDegree f a (1+b') (1+s')
+        Lower80788.HybridIdentityC2.w + slackGeneric f a b' s' := by
+    simpa [Lower80788.HybridIdentityC2.w, Lower80788.FixedStage.w,
+      Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using h
+  simpa [Lower80788.HybridIdentityC2.w, Lower80788.FixedStage.w] using
+    (show 131073 * 80802 * identityCurveDegree f a (1+b') (1+s')
+        Lower80788.HybridIdentityC2.w ≤
+      50272 * newCost f a (1+b') (1+s') by
+      calc
+        _ ≤ _ + slackGeneric f a b' s' := Nat.le_add_right _ _
+        _ = _ := heq.symm)
+
+theorem normal_absorption (f : FlagDegree) (a b s : ℕ) (ha : 2 ≤ a)
+    (hb : 1 ≤ b) (hs : 1 ≤ s) :
+    131073 * 80802 * identityCurveDegree f a b s 131071 ≤
+      50272 * newNormal f a b s := by
+  obtain ⟨a', rfl⟩ := Nat.exists_eq_add_of_le ha
+  obtain ⟨b', rfl⟩ := Nat.exists_eq_add_of_le hb
+  obtain ⟨s', rfl⟩ := Nat.exists_eq_add_of_le hs
+  have h := normal_slack_identity f a' b' s'
+  have heq : 50272 * newNormal f (2+a') (1+b') (1+s') =
+      131073 * 80802 * identityCurveDegree f (2+a') (1+b') (1+s')
+        Lower80788.HybridIdentityC2.w + slackNormal f a' b' s' := by
+    simpa [Lower80788.HybridIdentityC2.w, Lower80788.FixedStage.w,
+      Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using h
+  simpa [Lower80788.HybridIdentityC2.w, Lower80788.FixedStage.w] using
+    (show 131073 * 80802 * identityCurveDegree f (2+a') (1+b') (1+s')
+        Lower80788.HybridIdentityC2.w ≤
+      50272 * newNormal f (2+a') (1+b') (1+s') by
+      calc
+        _ ≤ _ + slackNormal f a' b' s' := Nat.le_add_right _ _
+        _ = _ := heq.symm)
+
+end ProximityPrize.SubmissionLower.BoundaryTailIdentityArithmetic
+
+end P22
+
+section P23
+namespace ProximityPrize.SubmissionLower.BoundaryTailOrdinaryHigh
+
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN139 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095
+open RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312
+open RCN339 RCN330 RCN174 RCN319 RCN206 RCN287 RCN066 RCN338 RCN199 RCN207
+open RCN271 RCN313 RCN234 RCN156 RCN341 RCN085 RCN146 RCN087 RCN203 RCN084 RCN335
+open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
+open LocatorHybridTailProviderC1 LocatorHybridTransportC2
+
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+def bound (flag : FlagDegree) (t y r : ℕ) : ℕ :=
+  flagMixed flag (cellFirstTail t y r) (BoundaryTailProvider.cellNormal t y r) +
+    65539 * flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r)
+
+theorem bound_eq_abs (flag : FlagDegree) (t y r : ℕ)
+    (hr3 : 3 ≤ r) (hb : r+2 ≤ y) :
+    bound flag t y r = BoundaryTailIdentityArithmetic.newCost flag
+      (cellA t y) (cellB y r) (cellS r) := by
+  have hfirst := SecondJetIdentity.cell_first_eq t y r
+  have hnormal : BoundaryTailProvider.cellNormal t y r =
+      Lower80788.HybridIdentityC2.rationalABS (cellA t y) (cellB y r) (cellS r) +
+        131071 • unitAllFlag := by
+    unfold BoundaryTailProvider.cellNormal
+    rw [BoundaryTailAlgebra.normalFlag_eq_cell t y r hr3 hb,
+      SecondJetIdentity.cell_normal_eq]
+    rfl
+  have hfiber : cellMovingFiber t y r =
+      Lower80788.HybridIdentityC2.mfibABS (cellA t y) (cellB y r) (cellS r) := rfl
+  have hrat : cellRational t y r =
+      Lower80788.HybridIdentityC2.rationalABS (cellA t y) (cellB y r) (cellS r) :=
+    SecondJetIdentity.cell_normal_eq t y r
+  have hcut : cellMovingCut t y r =
+      Lower80788.HybridIdentityC2.mcutABS (cellA t y) (cellB y r) (cellS r) := by
+    simp only [cellMovingCut, Lower80788.HybridIdentityC2.mcutABS, hrat,
+      RCN327.w, Nat.reduceAdd, Nat.reduceMul]
+  unfold bound BoundaryTailIdentityArithmetic.newCost BoundaryTailIdentityArithmetic.newNormal
+  rw [hfirst, hnormal, hfiber, hcut]
+
+variable {K I : Type} [Field K] [CharP K 2130706433]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
+variable {Gamma : Finset K} {x : I → K} {flag : FlagDegree}
+
+/-- The actual ordinary high-cell count at 80801 errors, including the
+identity-first-tail branch. No positive Z-degree assumption is used. -/
+theorem stage_card_le (D t y r : ℕ)
+    (hDlow : 131072 ≤ D) (hDchar : D < 2130706433)
+    (hr3 : 3 ≤ r) (hb : r+2 ≤ y) (hyt : y ≤ t)
+    (hRcap : r ≤ 30) (hYcap : y ≤ 139) (hTcap : t ≤ 7199)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x 2130706433 80801 flag
+      w (cellSupport t y r))
+    (hnodes : S.nodes.card = 181343+80801)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤ (S.agreementFiber gamma).card)
+    (hbox : S.F ∈ globalCoefficientBox K D w t r)
+    (hflag : flag.all ≤ r ∧ flag.yz+flag.all ≤ y ∧
+      flag.zOnly+flag.yz+flag.all ≤ t) :
+    Gamma.card ≤ bound flag t y r := by
+  have hflagChar : flag.yz+flag.all < 2130706433 ∧ flag.all < 2130706433 ∧
+      flag.zOnly+flag.yz+flag.all < 2130706433 := by omega
+  have hshort : w+1 ≤ D := by simpa only [RCN327.w] using hDlow
+  have hb1 : 1 ≤ cellB y r := by dsimp [cellB]; omega
+  have hs1 : 1 ≤ cellS r := by dsimp [cellS]; omega
+  by_cases hTail : S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1)
+  · have hTailNumerator : S.G ∣ surfaceMap (polynomialEmbedding K)
+        (numerator K S.F (w+1)) :=
+      (globalTailCut_dvd_iff (polynomialEmbedding K)
+        (polynomialEmbedding_injective K) S.F (w+1) S.G).mp hTail
+    have hidentityGate := BoundaryTailGates.identity_gate flag t y r hr3 hRcap hYcap
+      hb hyt hflag.1 hflag.2.1
+    have hprovider := BoundaryTailIdentity.actual_identityCurveCountProvider
+      (a := cellA t y) (b := cellB y r) (s := cellS r) S 181343 hnodes hagreement
+      (by norm_num [RCN327.w]) hTailNumerator D t r
+      (by norm_num [RCN327.w]) hshort hDchar hbox hflagChar hidentityGate
+    have hpositive : 1 ≤ identityCurveDegree flag (cellA t y) (cellB y r)
+        (cellS r) w := by
+      apply Lower80788.FixedStage.identity_positive
+      have hy : 0 < S.G.degreeOf 1 := S.y_dependent
+      have hdeg := degreeOf_le_flag_total S.G flag S.flag_support 1
+      omega
+    have hinc := identity_surface_seed_bound S 181343
+      (identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w)
+      hprovider hagreement (by norm_num [RCN327.w])
+      (by rw [hnodes]; norm_num [RCN327.w]) hpositive
+    have habsorb := BoundaryTailIdentityArithmetic.generic_absorption flag
+      (cellA t y) (cellB y r) (cellS r) (Nat.zero_le _) hb1 hs1
+    have hscaled : Gamma.card * 50272 ≤ 50272 * bound flag t y r := by
+      calc
+        Gamma.card * 50272 = Gamma.card * (181343-w) := by norm_num [RCN327.w]
+        _ ≤ (S.nodes.card-w) * (80801+1) *
+            identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w := hinc
+        _ = 131073 * 80802 *
+            identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) 131071 := by
+          rw [hnodes]
+          norm_num [RCN327.w]
+        _ ≤ 50272 * BoundaryTailIdentityArithmetic.newCost flag
+            (cellA t y) (cellB y r) (cellS r) := habsorb
+        _ = 50272 * bound flag t y r := by rw [bound_eq_abs flag t y r hr3 hb]
+    apply Nat.le_of_mul_le_mul_right ?_ (by decide : 0 < 50272)
+    simpa only [Nat.mul_comm] using hscaled
+  · have hmixedRed := BoundaryTailGates.reduced_gate flag t y r hr3 hRcap hYcap
+      hb hyt hflag.1 hflag.2.1
+    have hmix : 2 * (flag.zOnly+flag.yz+flag.all) *
+        (cellA t y+cellB y r+cellS r+4) < 2130706433 := by
+      have hf : flag.zOnly+flag.yz+flag.all ≤ 7199 := hflag.2.2.trans hTcap
+      have ht : cellA t y+cellB y r+cellS r+4 ≤ 7200 := by
+        dsimp [cellA, cellB, cellS]
+        omega
+      exact (Nat.mul_le_mul (Nat.mul_le_mul_left 2 hf) ht).trans_lt (by decide)
+    have hrationalGate : 80801+1 ≤ (BoundaryTailProvider.cellNormal t y r).yz := by
+      have hv : 2 ≤ y-r := by omega
+      simp only [BoundaryTailProvider.cellNormal, BoundaryTailAlgebra.normalFlag, RCN327.w]
+      omega
+    have htangent : ∀ C : FirstTailComponent S,
+        (∀ delay, globalTailCut (polynomialEmbedding K) S.F (w+1+delay) ∈ C.1) →
+        (componentSeeds (GenericField K) S.G
+          (globalTailCut (polynomialEmbedding K) S.F (w+1))
+          (regularitySurface (polynomialEmbedding K) S.F) Gamma
+          (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+            (80801+1) *
+              (BoundaryTailReduced.reducedBudgetFamily S hTail hflagChar hmixedRed).yzCost C := by
+      intro C hall
+      exact tangent_component_card_le S C hTail
+        (BoundaryTailReduced.reducedBaseOrd S hTail hflagChar hmixedRed C)
+        181343 D t r hnodes hagreement
+        (by norm_num [RCN327.w]) (by norm_num [RCN327.w]) hshort hDchar hbox
+        (BoundaryTailReduced.reducedBudgetFamily S hTail hflagChar hmixedRed)
+        (BoundaryTailReduced.reducedBudgetFamily_yzPositive S hTail hflagChar hmixedRed C)
+        hall
+        (BoundaryTailReduced.reducedBudgetFamily_yzPole S hTail hflagChar hmixedRed C)
+    obtain ⟨provider⟩ := BoundaryTailRealization.exists_provider hr3 hb hyt
+      (by norm_num [RCN327.w]) S hTail hflagChar hmixedRed hmix hrationalGate htangent
+    exact stage_card_le_divisorBound S provider
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailOrdinaryHigh
+
+end P23
+
+section P24
+namespace ProximityPrize.SubmissionLower.BoundaryTailOrdinary
+open ProximityPrize.Benchmark
+open scoped Classical BigOperators
+open RCN174 RCN319 RCN286 RCN081 RCN135 RCN095 RCN238 RCN243 RCN222 RCN266 RCN221 RCN268 RCN140 RCN275 RCN130 RCN156 RCN159 RCN234 RCN137 RCN198 RCN263 LocatorFactorAggregate
+open LocatorHybridCostC2 LocatorHybridCells
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 6000000
+set_option maxRecDepth 100000
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+abbrev P4:=MvPolynomial (Fin 4) K
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:DecidableEq (GenericField K):=Classical.decEq _
+local instance:CharP K 2130706433:=by
+  simpa [RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
+def padA (p:FlagDegree):ℕ:=padT p - padY p
+def padB (p:FlagDegree):ℕ:=padY p - padS p - 1
+def padSlope (p:FlagDegree):ℕ:=padS p - 2
+theorem pad_sums (p:FlagDegree) :
+    padSlope p + 2=padS p ∧
+    padB p + padSlope p + 3=padY p ∧
+    padA p + padB p + padSlope p + 3=padT p:=by
+  have hs:2 ≤ padS p:=le_max_right _ _
+  have hy:padS p + 1 ≤ padY p:=le_max_right _ _
+  have ht:padY p ≤ padT p:=le_max_right _ _
+  dsimp [padA,padB,padSlope]
+  omega
+theorem padded_tail_eq (p:FlagDegree) (d:ℕ) :
+    reducedResidualAgreementFlag (RCN198.support (padA p) (padB p) (padSlope p)) d=
+      paddedTail p d:=by
+  have hc:=pad_sums p
+  have hs:2 ≤ padS p:=le_max_right _ _
+  simp only [reducedResidualAgreementFlag,reducedAgreementDirection,
+    RCN198.support,hc.1,hc.2.1,hc.2.2,paddedTail]
+  have he:2 * padS p - 2=2 * (padS p - 1):=by omega
+  rw [he]
+theorem own_support (F:P4) :
+    ResidualSupportData
+      (RCN198.support (padA (originalCumulativeFlag F))
+        (padB (originalCumulativeFlag F)) (padSlope (originalCumulativeFlag F))) F:=by
+  have hc:=originalCumulativeFlag_cumulative F
+  have hp:=pad_sums (originalCumulativeFlag F)
+  refine ⟨?_, ?_, ?_⟩
+  · change wt residualSWeights F ≤ padSlope (originalCumulativeFlag F) + 2
+    rw [hp.1, ← hc.1]
+    exact le_max_left _ _
+  · change wt residualYSWeights F ≤
+      padB (originalCumulativeFlag F) + padSlope (originalCumulativeFlag F) + 3
+    rw [hp.2.1, ← hc.2.1]
+    exact le_max_left _ _
+  · change wt residualTotalWeights F ≤ padA (originalCumulativeFlag F) +
+      padB (originalCumulativeFlag F) + padSlope (originalCumulativeFlag F) + 3
+    rw [hp.2.2, ← hc.2.2]
+    exact le_max_left _ _
+theorem own_box (F:P4) (D w L s:ℕ)
+    (hbox:F ∈ RCN174.globalCoefficientBox K D w L s) :
+    F ∈ RCN174.globalCoefficientBox K D w
+      (padA (originalCumulativeFlag F) + padB (originalCumulativeFlag F) +
+        padSlope (originalCumulativeFlag F) + 3)
+      (padSlope (originalCumulativeFlag F) + 2):=by
+  have hs:=(own_support F).s_weight
+  have ht:=(own_support F).total_weight
+  intro d hd
+  have hds:=(MvPolynomial.le_weightedTotalDegree residualSWeights hd).trans hs
+  have hdt:=(MvPolynomial.le_weightedTotalDegree residualTotalWeights hd).trans ht
+  rw [weight_fin4] at hds hdt
+  simp only [residualSWeights,residualTotalWeights,RCN198.support,Fin.isValue,
+    Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val,
+    Nat.mul_zero,Nat.mul_one,Nat.zero_add,Nat.add_zero] at hds hdt
+  exact ⟨by omega,hds, (hbox hd).2.2⟩
+theorem factor_support {P:ResidualSupportParameters} (Q:P4) (hQ:Q ≠ 0)
+    (HQ:ResidualSupportData P Q) (R:RegularIndex Q) :
+    ResidualSupportData P R.1:=by
+  have hd:=(RCN167.positiveRFactors_spec Q R.1 R.2).2.1
+  exact ⟨(weightedTotalDegree_le_of_dvd residualSWeights R.1 Q hd hQ).trans HQ.s_weight,
+    (weightedTotalDegree_le_of_dvd residualYSWeights R.1 Q hd hQ).trans HQ.ys_weight,
+    (weightedTotalDegree_le_of_dvd residualTotalWeights R.1 Q hd hQ).trans HQ.total_weight⟩
+theorem own_parameter_caps (p:FlagDegree)
+    (hs:p.all ≤ 30) (hy:middle p ≤ 139) (ht:total p ≤ 7199) :
+    padSlope p + 2 ≤ 30 ∧ padB p + padSlope p + 3 ≤ 139 ∧
+      padA p + padB p + padSlope p + 3 ≤ 7199:=by
+  have hp:=pad_sums p
+  have hps:padS p ≤ 30:=max_le hs (by decide)
+  have hpy:padY p ≤ 139:=max_le hy (by omega)
+  have hpt:padT p ≤ 7199:=max_le ht (by omega)
+  rw [hp.1,hp.2.1,hp.2.2]
+  exact ⟨hps,hpy,hpt⟩
+theorem regular_factor_count
+    (D:ℕ) (P:ResidualSupportParameters)
+    (hDlow:131072 ≤ D) (hDhigh:D < 2130706433)
+    (hS:P.s ≤ 30) (hY:P.ys ≤ 139) (hT:P.total ≤ 7199)
+    (Q:P4) (hQ:Q ≠ 0)
+    (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
+    (HQ:ResidualSupportData P Q)
+    (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
+    (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement:∀ gamma ∈ Gamma,181343 ≤
+      ((Finset.univ:Finset I).filter (fun i=>
+        (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80801)
+    (R:RegularIndex Q)
+    (hhyb : ¬ HybridAppliesC2 (regularCumulativeFlag Q R)) :
+    (regularSeeds Q selected Gamma R).card ≤
+      paddedCost 131072 131073 (regularCumulativeFlag Q R):=by
+  letI:CharP (GenericField K) 2130706433:=genericField_charP K 2130706433
+  let p:=regularCumulativeFlag Q R
+  let a:=padA p
+  let b:=padB p
+  let s:=padSlope p
+  have hlow := BoundaryTailPaddedIdentity.low_pad_parameters p hhyb
+  have hRdata:=directFactor_data Q R.1 hQ D 131071 P.total P.s hbox R.2
+  have hRsmall:R.1.degreeOf (2:Fin 4) < 2130706433:=
+    (degreeOf_R_le_of_mem_box _ _ _ _ _ hRdata.2.2).trans_lt
+      (hS.trans_lt (by decide))
+  have hRbox:=own_box R.1 D 131071 P.total P.s hRdata.2.2
+  have hRsupport:=own_support R.1
+  have hRwhole:=factor_support Q hQ HQ R
+  have hc:=originalCumulativeFlag_cumulative R.1
+  have hparam:s + 2 ≤ 30 ∧ b + s + 3 ≤ 139 ∧ a + b + s + 3 ≤ 7199:=by
+    apply own_parameter_caps p
+    · exact hRwhole.s_weight.trans hS
+    · simpa only [p,middle,regularCumulativeFlag,hc.2.1] using
+        hRwhole.ys_weight.trans hY
+    · simpa only [p,total,regularCumulativeFlag,hc.2.2] using
+        hRwhole.total_weight.trans hT
+  have hsolutions:∀ gamma ∈ regularSeeds Q selected Gamma R,
+      specialization K (selected gamma) gamma R.1=0:=by
+    intro gamma hgamma
+    exact (Finset.mem_filter.mp hgamma).2.1
+  have hcover:=card_le_sum_geometricSeeds K R.1 hRdata.1.ne_zero selected
+    (regularSeeds Q selected Gamma R) hsolutions
+  have hstage (g:GeometricFactor K R.1) :
+      (geometricSeeds K R.1 selected (regularSeeds Q selected Gamma R) g).card ≤
+        flagMixed (geometricCumulativeFlag K g) (paddedTail p 131072)
+          (paddedTail p 131073):=by
+    let S0:=regularGeometricResidualStageOfSupport (RCN198.support a b s) Q selected Gamma
+      (Finset.univ:Finset I) IRSProfile.domain u0 u1
+      IRSProfile.domain.injective.injOn hdegree hno R
+      hRdata.1 hRdata.2.1 hRsmall hRsupport (by decide) g
+    let S:=reflagResidualStage S0 (polynomialIn_surfaceCumulativeFlag g.1)
+    have hsub:geometricSeeds K R.1 selected
+        (regularSeeds Q selected Gamma R) g ⊆ Gamma:=
+      (geometricSeeds_subset K R.1 selected _ g).trans (regularSeeds_subset Q selected Gamma R)
+    have hnodes:S.nodes.card=181343 + 80801:=by
+      change (Finset.univ:Finset I).card=_
+      norm_num [I,IRSProfile.Index]
+    have hag:∀ gamma ∈ geometricSeeds K R.1 selected
+        (regularSeeds Q selected Gamma R) g,181343 ≤ (S.agreementFiber gamma).card:=by
+      intro gamma hgamma
+      simpa [S,S0,ResidualStage.agreementFiber,ResidualStage.Agrees,
+        reflagResidualStage,regularGeometricResidualStageOfSupport,
+        geometricResidualStageOfSupport] using hagreement gamma (hsub hgamma)
+    have hf:=geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero hRsupport g
+    have hcount:=BoundaryTailOrdinaryLow.fixedStageBound D a b s
+      hDlow hDhigh hparam.1 hparam.2.1 hparam.2.2 hlow S hnodes hag hRbox hf
+    simpa only [BoundaryTailOrdinaryLow.firstTail,BoundaryTailOrdinaryLow.secondTail,
+      BoundaryTailOrdinaryLow.w,Nat.reduceAdd,geometricCumulativeFlag,
+      a,b,s,padded_tail_eq] using hcount
+  calc
+    (regularSeeds Q selected Gamma R).card ≤
+        ∑ g:GeometricFactor K R.1,
+          (geometricSeeds K R.1 selected (regularSeeds Q selected Gamma R) g).card:=hcover
+    _ ≤ ∑ g:GeometricFactor K R.1,
+        flagMixed (geometricCumulativeFlag K g) (paddedTail p 131072)
+          (paddedTail p 131073):=Finset.sum_le_sum (fun g _=> hstage g)
+    _ ≤ paddedCost 131072 131073 p:=by
+      have hb:=geometricCumulativeFlag_budgets R.1 hRdata.1.ne_zero
+      exact LocatorFactorAggregate.sum_mixed_le (geometricCumulativeFlag K) p _ _
+        hb.1 hb.2.1 hb.2.2
+
+/-- The high-cell alternative, with all geometric factors charged against
+the original factor's same three cumulative degree budgets. -/
+theorem regular_factor_count_high
+    (D : ℕ) (P : ResidualSupportParameters)
+    (hDlow : 131072 ≤ D) (hDhigh : D < 2130706433)
+    (hS : P.s ≤ 30) (hY : P.ys ≤ 139) (hT : P.total ≤ 7199)
+    (Q : P4) (hQ : Q ≠ 0)
+    (hbox : Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
+    (HQ : ResidualSupportData P Q)
+    (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      ((Finset.univ : Finset I).filter (fun i =>
+        (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma*u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80801)
+    (R : RegularIndex Q)
+    (hhyb : HybridAppliesC2 (regularCumulativeFlag Q R)) :
+    (regularSeeds Q selected Gamma R).card ≤
+      BoundaryTailOrdinaryHigh.bound (regularCumulativeFlag Q R)
+        (total (regularCumulativeFlag Q R)) (middle (regularCumulativeFlag Q R))
+        (regularCumulativeFlag Q R).all := by
+  letI : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
+  set p := regularCumulativeFlag Q R with hp
+  have hRdata := directFactor_data Q R.1 hQ D 131071 P.total P.s hbox R.2
+  have hRsmall : R.1.degreeOf (2 : Fin 4) < 2130706433 :=
+    (degreeOf_R_le_of_mem_box _ _ _ _ _ hRdata.2.2).trans_lt
+      (hS.trans_lt (by decide))
+  have hRbox0 : R.1 ∈ RCN174.globalCoefficientBox K D 131071
+      (padA p+padB p+padSlope p+3) (padSlope p+2) :=
+    own_box R.1 D 131071 P.total P.s hRdata.2.2
+  have hRsupport : ResidualSupportData
+      (RCN198.support (padA p) (padB p) (padSlope p)) R.1 := own_support R.1
+  have hRwhole := factor_support Q hQ HQ R
+  have hc := originalCumulativeFlag_cumulative R.1
+  have hps := pad_sums p
+  have hRbox : R.1 ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p) := by
+    rw [← hps.2.2, ← hps.1]
+    exact hRbox0
+  have h1 : p.all ≤ 30 := hRwhole.s_weight.trans hS
+  have h2 : middle p ≤ 139 := by
+    simpa only [hp, middle, regularCumulativeFlag, hc.2.1] using
+      hRwhole.ys_weight.trans hY
+  have h3 : total p ≤ 7199 := by
+    simpa only [hp, total, regularCumulativeFlag, hc.2.2] using
+      hRwhole.total_weight.trans hT
+  have hpS : padS p ≤ 30 := max_le h1 (by decide)
+  have hpY : padY p ≤ 139 := max_le h2 (by omega)
+  have hpT : padT p ≤ 7199 := max_le h3 (by omega)
+  have hp3 : 3 ≤ p.all := hhyb.1
+  have hpSeq : padS p = p.all := max_eq_left (by omega : 2 ≤ p.all)
+  have hpYeq : padY p = middle p :=
+    max_eq_left (by rw [hpSeq]; exact hhyb.2.trans' (by omega))
+  have hpTeq : padT p = total p := by
+    unfold padT
+    rw [hpYeq]
+    exact max_eq_left (by dsimp [total, middle]; omega)
+  have hpS3 : 3 ≤ padS p := by rw [hpSeq]; exact hhyb.1
+  have hhyb' : padS p+2 ≤ padY p := by rw [hpSeq, hpYeq]; exact hhyb.2
+  have hpyt : padY p ≤ padT p := le_max_right _ _
+  have hsolutions : ∀ gamma ∈ regularSeeds Q selected Gamma R,
+      specialization K (selected gamma) gamma R.1 = 0 := by
+    intro gamma hgamma
+    exact (Finset.mem_filter.mp hgamma).2.1
+  have hcover := card_le_sum_geometricSeeds K R.1 hRdata.1.ne_zero selected
+    (regularSeeds Q selected Gamma R) hsolutions
+  have hstage (g : GeometricFactor K R.1) :
+      (geometricSeeds K R.1 selected (regularSeeds Q selected Gamma R) g).card ≤
+        BoundaryTailOrdinaryHigh.bound (geometricCumulativeFlag K g)
+          (padT p) (padY p) (padS p) := by
+    let S0 := regularGeometricResidualStageOfSupport
+      (RCN198.support (padA p) (padB p) (padSlope p)) Q selected Gamma
+      (Finset.univ : Finset I) IRSProfile.domain u0 u1
+      IRSProfile.domain.injective.injOn hdegree hno R
+      hRdata.1 hRdata.2.1 hRsmall hRsupport (by decide) g
+    let S := reflagResidualStage S0 (polynomialIn_surfaceCumulativeFlag g.1)
+    have hsub : geometricSeeds K R.1 selected
+        (regularSeeds Q selected Gamma R) g ⊆ Gamma :=
+      (geometricSeeds_subset K R.1 selected _ g).trans
+        (regularSeeds_subset Q selected Gamma R)
+    have hnodes : S.nodes.card = 181343+80801 := by
+      change (Finset.univ : Finset I).card = _
+      norm_num [I, IRSProfile.Index]
+    have hag : ∀ gamma ∈ geometricSeeds K R.1 selected
+        (regularSeeds Q selected Gamma R) g,
+        181343 ≤ (S.agreementFiber gamma).card := by
+      intro gamma hgamma
+      simpa [S, S0, ResidualStage.agreementFiber, ResidualStage.Agrees,
+        reflagResidualStage, regularGeometricResidualStageOfSupport,
+        geometricResidualStageOfSupport] using hagreement gamma (hsub hgamma)
+    have hf := geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero hRsupport g
+    have hf1 : (geometricCumulativeFlag K g).all ≤ padSlope p+2 := hf.1
+    have hf2 : (geometricCumulativeFlag K g).yz+
+        (geometricCumulativeFlag K g).all ≤ padB p+padSlope p+3 := hf.2.1
+    have hf3 : (geometricCumulativeFlag K g).zOnly+
+        (geometricCumulativeFlag K g).yz+(geometricCumulativeFlag K g).all ≤
+          padA p+padB p+padSlope p+3 := hf.2.2
+    have hf' : (geometricCumulativeFlag K g).all ≤ padS p ∧
+        (geometricCumulativeFlag K g).yz+(geometricCumulativeFlag K g).all ≤ padY p ∧
+        (geometricCumulativeFlag K g).zOnly+(geometricCumulativeFlag K g).yz+
+          (geometricCumulativeFlag K g).all ≤ padT p := by
+      refine ⟨?_, ?_, ?_⟩ <;> omega
+    have hcount := BoundaryTailOrdinaryHigh.stage_card_le D (padT p) (padY p) (padS p)
+      hDlow hDhigh hpS3 hhyb' hpyt hpS hpY hpT S hnodes hag hRbox hf'
+    simpa only [geometricCumulativeFlag] using hcount
+  have hsum :
+      (∑ g : GeometricFactor K R.1,
+        BoundaryTailOrdinaryHigh.bound (geometricCumulativeFlag K g)
+          (padT p) (padY p) (padS p)) ≤
+        BoundaryTailOrdinaryHigh.bound p (padT p) (padY p) (padS p) := by
+    have hb := geometricCumulativeFlag_budgets R.1 hRdata.1.ne_zero
+    unfold BoundaryTailOrdinaryHigh.bound
+    rw [Finset.sum_add_distrib, ← Finset.mul_sum]
+    exact Nat.add_le_add
+      (LocatorFactorAggregate.sum_mixed_le (geometricCumulativeFlag K) p _ _
+        hb.1 hb.2.1 hb.2.2)
+      (Nat.mul_le_mul_left 65539
+        (LocatorFactorAggregate.sum_mixed_le (geometricCumulativeFlag K) p _ _
+          hb.1 hb.2.1 hb.2.2))
+  have hcount := hcover.trans ((Finset.sum_le_sum (fun g _ => hstage g)).trans hsum)
+  rwa [hpTeq, hpYeq, hpSeq] at hcount
+
+/-- Numerical raw cost used by the 68.05 ordinary-domain envelope. -/
+def rawCost (p : FlagDegree) : ℕ :=
+  if HybridAppliesC2 p then
+    BoundaryTailOrdinaryHigh.bound p (total p) (middle p) p.all
+  else paddedCost 131072 131073 p
+
+/-- The concrete per-factor estimate for every ordinary-domain cell. -/
+theorem regular_factor_count_raw
+    (D : ℕ) (P : ResidualSupportParameters)
+    (hDlow : 131072 ≤ D) (hDhigh : D < 2130706433)
+    (hS : P.s ≤ 30) (hY : P.ys ≤ 139) (hT : P.total ≤ 7199)
+    (Q : P4) (hQ : Q ≠ 0)
+    (hbox : Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
+    (HQ : ResidualSupportData P Q)
+    (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      ((Finset.univ : Finset I).filter (fun i =>
+        (selected gamma).eval (IRSProfile.domain i) = u0 i+gamma*u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80801)
+    (R : RegularIndex Q) :
+    (regularSeeds Q selected Gamma R).card ≤ rawCost (regularCumulativeFlag Q R) := by
+  unfold rawCost
+  split_ifs with hhyb
+  · exact regular_factor_count_high D P hDlow hDhigh hS hY hT Q hQ hbox HQ
+      selected Gamma u0 u1 hdegree hagreement hno R hhyb
+  · exact regular_factor_count D P hDlow hDhigh hS hY hT Q hQ hbox HQ
+      selected Gamma u0 u1 hdegree hagreement hno R hhyb
+
+end
+
+end ProximityPrize.SubmissionLower.BoundaryTailOrdinary
+
+end P24
+
+section P25
+namespace ProximityPrize.SubmissionLower.BoundaryTailRetainedStage
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
+open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
+open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
+open LocatorHybridTailProviderC1 LocatorHybridTransportC2
+open BoundaryTailProvider
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+variable {K I : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
+variable [CharP (GenericField K) p] [CharP K p]
+variable {stageErrorCap : ℕ}
+
+theorem stage_card_le_scaled
+    (t y r : ℕ) (hr3 : 3 ≤ r) (hb : r+2 ≤ y) (hyt : y ≤ t)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (cellSupport t y r))
+    (hfirstProper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))
+    (hflagChar : flag.yz+flag.all < p ∧ flag.all < p ∧
+      flag.zOnly+flag.yz+flag.all < p)
+    (hmixedRed : flagMixed flag (cellFirstTail t y r) unitZFlag < p)
+    (hchar : 2*(w-1) < p)
+    (hgate : stageErrorCap+1 ≤ (cellNormal t y r).yz)
+    (htangent : ∀ C : FirstTailComponent S,
+      (∀ delay, globalTailCut (polynomialEmbedding K) S.F (w+1+delay) ∈ C.1) →
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w+1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+          (stageErrorCap+1)*(BoundaryTailReduced.reducedBudgetFamily S hfirstProper hflagChar hmixedRed).yzCost C)
+    (P : SecondJetSupport.Poly (K := K)) (B U L s k n0 : ℕ)
+    (hS : ∀ e ∈ P.support, e 1 ≤ s)
+    (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
+      e 1+e 2+e 3+e 4 ≤ L)
+    (hBU : B ≤ U) (hUL : U ≤ L) (hdn : k+1 ≤ n0) (hB : 2*(n0-(k+1)) ≤ B)
+    (hn : n0 ≤ (SecondJetCoefficients.asS P).natDegree)
+    (hdiv : ∀ d ≤ k, S.F ∣ SecondJetClearedHelper.helper P S.F (s-d) d)
+    (h2 : (2 : GenericField K) ≠ 0) (hfact : (k.factorial : GenericField K) ≠ 0)
+    (hgood : ∀ gamma ∈ Gamma,
+      MvPolynomial.eval (selectedPoint (polynomialEmbedding K) S.selected gamma)
+        (surfaceMap (polynomialEmbedding K) (SecondJetCoefficients.asS P).leadingCoeff) ≠ 0) :
+    (k+1)*Gamma.card ≤
+      (k+1)*flagMixed flag (cellFirstTail t y r) (cellNormal t y r)+
+      65539*flagMixed flag (cellFirstTail t y r)
+        (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0) := by
+  classical
+  obtain ⟨budget,hcost,hmov⟩ := SecondJetRetainedBudgets.exists_retained_budgets
+    (polynomialEmbedding K) S.F S.G
+    (globalTailCut (polynomialEmbedding K) S.F (w+1)) S.G_dvd_surface
+    P B U L s k n0 hS hP hBU hUL hdn hB hn hdiv h2 hfact
+    (BoundaryTailReduced.reducedBaseOrd S hfirstProper hflagChar hmixedRed) flag (cellFirstTail t y r)
+    (unitFamilyOfCongruentCut (ordinary_sub_reducedFirstCut_dvd S)
+      (BoundaryTailReduced.reducedUnitFamily S hfirstProper hflagChar hmixedRed)
+      (BoundaryTailReduced.reducedBaseOrd S hfirstProper hflagChar hmixedRed))
+  let active := Finset.univ.filter (fun C : FirstTailComponent S =>
+    surfaceMap (polynomialEmbedding K) (SecondJetCoefficients.asS P).leadingCoeff ∉ C.1)
+  have hcost' : ∀ C : FirstTailComponent S,
+      (budget C).zCost = (BoundaryTailReduced.reducedBudgetFamily S hfirstProper hflagChar hmixedRed).zCost C ∧
+      (budget C).yzCost = (BoundaryTailReduced.reducedBudgetFamily S hfirstProper hflagChar hmixedRed).yzCost C ∧
+      (budget C).allCost = (BoundaryTailReduced.reducedBudgetFamily S hfirstProper hflagChar hmixedRed).allCost C := by
+    intro C
+    obtain ⟨hz,hy,ha⟩ := hcost C
+    obtain ⟨ez,ey,ea⟩ := unitFamilyOfCongruentCut_costs
+      (ordinary_sub_reducedFirstCut_dvd S)
+      (BoundaryTailReduced.reducedUnitFamily S hfirstProper hflagChar hmixedRed)
+      (BoundaryTailReduced.reducedBaseOrd S hfirstProper hflagChar hmixedRed) C
+    exact ⟨hz.trans ez,hy.trans ey,ha.trans ea⟩
+  have hinactive : ∀ C : FirstTailComponent S, C ∉ active →
+      (componentSeeds (GenericField K) S.G
+        (globalTailCut (polynomialEmbedding K) S.F (w+1))
+        (regularitySurface (polynomialEmbedding K) S.F) Gamma
+        (selectedPoint (polynomialEmbedding K) S.selected) C).card = 0 := by
+    intro C hC
+    apply SecondJetExceptionalComponents.component_empty_of_nonvanishing _ _ _
+      (surfaceMap (polynomialEmbedding K) (SecondJetCoefficients.asS P).leadingCoeff)
+      Gamma _ C ?_ hgood
+    simpa only [active,Finset.mem_filter,Finset.mem_univ,true_and,not_not] using hC
+  obtain ⟨provider⟩ := BoundaryTailProvider.exists_provider_on_active_components
+    t y r hr3 hb hyt hchar S hfirstProper (cellFirstTail t y r)
+    (BoundaryTailReduced.reducedBudgetFamily S hfirstProper hflagChar hmixedRed)
+    (BoundaryTailReduced.reducedBaseOrd S hfirstProper hflagChar hmixedRed)
+    budget hcost' active (∑ C ∈ active, (budget C).movingCost) hinactive (le_refl _)
+    hgate htangent
+    (BoundaryTailReduced.transportedWeightedResultantsGeneral S hfirstProper hflagChar hmixedRed)
+  have hc := Nat.mul_le_mul_left (k+1) (stage_card_le_divisorBound S provider)
+  have hm := Nat.mul_le_mul_left 65539 hmov
+  calc
+    (k+1)*Gamma.card ≤ (k+1)*
+        (flagMixed flag (cellFirstTail t y r) (cellNormal t y r)+
+          65539*(∑ C ∈ active, (budget C).movingCost)) := hc
+    _ = (k+1)*flagMixed flag (cellFirstTail t y r) (cellNormal t y r)+
+          65539*((k+1)*(∑ C ∈ active, (budget C).movingCost)) := by ring
+    _ ≤ _ := Nat.add_le_add_left hm _
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailRetainedStage
+
+end P25
+
+section P26
+namespace ProximityPrize.SubmissionLower.BoundaryTailFixedStage
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
+open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
+open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
+open LocatorHybridTailProviderC1 LocatorHybridTransportC2
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+open BoundaryTailProvider
+open RCN084 RCN146 RCN087 RCN335 RCN174 RCN275 RCN234 RCN156
+variable {K I : Type} [Field K] [CharP K 2130706433]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
+variable {Gamma : Finset K} {x : I → K} {flag : FlagDegree}
+
+theorem stage_card_le_scaled
+    (D t y r : ℕ) (hDlow : 131072 ≤ D) (hDchar : D < 2130706433)
+    (ht : t ≤ 7199) (hy : y ≤ 139) (hr : r ≤ 30)
+    (hr3 : 3 ≤ r) (hry : r+2 ≤ y) (hyt : y+2 ≤ t)
+    (S : ResidualStage (polynomialEmbedding K) Gamma x 2130706433 80801 flag
+      w (cellSupport t y r))
+    (hnodes : S.nodes.card = 181343+80801)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤ (S.agreementFiber gamma).card)
+    (hbox : S.F ∈ globalCoefficientBox K D w t r)
+    (hflag : flag.all ≤ r ∧ flag.yz+flag.all ≤ y ∧ flag.zOnly+flag.yz+flag.all ≤ t)
+    (P : SecondJetSupport.Poly (K := K)) (B U L s k n0 : ℕ)
+    (hS : ∀ e ∈ P.support, e 1 ≤ s)
+    (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
+      e 1+e 2+e 3+e 4 ≤ L)
+    (hBU : B ≤ U) (hUL : U ≤ L) (hdn : k+1 ≤ n0) (hB : 2*(n0-(k+1)) ≤ B)
+    (hn : n0 ≤ (SecondJetCoefficients.asS P).natDegree)
+    (hdiv : ∀ d ≤ k, S.F ∣ SecondJetClearedHelper.helper P S.F (s-d) d)
+    (h2 : (2 : GenericField K) ≠ 0) (hfact : (k.factorial : GenericField K) ≠ 0)
+    (hgood : ∀ gamma ∈ Gamma,
+      MvPolynomial.eval (selectedPoint (polynomialEmbedding K) S.selected gamma)
+        (surfaceMap (polynomialEmbedding K) (SecondJetCoefficients.asS P).leadingCoeff) ≠ 0) :
+    (k+1)*Gamma.card ≤
+      (k+1)*flagMixed flag (cellFirstTail t y r) (cellNormal t y r)+
+      65539*flagMixed flag (cellFirstTail t y r)
+        (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0) := by
+  have hs : cellS r+2 = r := by dsimp [cellS]; omega
+  have hys : cellB y r+cellS r+3 = y := by dsimp [cellB,cellS]; omega
+  have hts : cellA t y+cellB y r+cellS r+3 = t := by dsimp [cellA,cellB,cellS]; omega
+  have hflagChar : flag.yz+flag.all < 2130706433 ∧ flag.all < 2130706433 ∧
+      flag.zOnly+flag.yz+flag.all < 2130706433 := by omega
+  by_cases hTail : S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1)
+  · have hTailNumerator := (globalTailCut_dvd_iff (polynomialEmbedding K)
+        (polynomialEmbedding_injective K) S.F (w+1) S.G).mp hTail
+    have hmixed := BoundaryTailGates.identity_gate flag t y r hr3 hr hy hry (by omega) hflag.1 hflag.2.1
+    have hprovider := BoundaryTailIdentity.actual_identityCurveCountProvider S 181343 hnodes hagreement
+      (by norm_num [RCN327.w]) hTailNumerator D t r (by norm_num [RCN327.w])
+      hDlow hDchar hbox hflagChar hmixed
+    have hpositive : 1 ≤ identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w := by
+      apply Lower80788.FixedStage.identity_positive
+      have hp := S.y_dependent
+      have hdeg := degreeOf_le_flag_total S.G flag S.flag_support 1
+      omega
+    have hinc := identity_surface_seed_bound S 181343 _ hprovider hagreement
+      (by norm_num [RCN327.w]) (by rw [hnodes]; norm_num) hpositive
+    have hid : 131073 * 80802 * identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) 131071 ≤
+        50272 * flagMixed flag (cellFirstTail t y r) (cellNormal t y r) := by
+      unfold cellNormal
+      rw [BoundaryTailAlgebra.normalFlag_eq_cell t y r hr3 hry,
+        SecondJetIdentity.cell_first_eq, SecondJetIdentity.cell_normal_eq]
+      apply BoundaryTailIdentityArithmetic.normal_absorption
+      · dsimp [cellA]; omega
+      · dsimp [cellB]; omega
+      · dsimp [cellS]; omega
+    have hc : Gamma.card ≤ flagMixed flag (cellFirstTail t y r) (cellNormal t y r) := by
+      have hh : Gamma.card*50272 ≤ 50272*
+          flagMixed flag (cellFirstTail t y r) (cellNormal t y r) := by
+        calc
+          Gamma.card*50272 ≤ (S.nodes.card-w)*(80801+1)*
+              identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w := hinc
+          _ = 131073*80802*identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) 131071 := by
+            rw [hnodes]; rfl
+          _ ≤ _ := hid
+      exact Nat.le_of_mul_le_mul_right (by simpa only [Nat.mul_comm] using hh) (by decide : 0 < 50272)
+    exact (Nat.mul_le_mul_left (k+1) hc).trans (Nat.le_add_right _ _)
+  · have hmixed := BoundaryTailGates.reduced_gate flag t y r hr3 hr hy hry (by omega) hflag.1 hflag.2.1
+    have htangent : ∀ C : FirstTailComponent S,
+        (∀ delay, globalTailCut (polynomialEmbedding K) S.F (w+1+delay) ∈ C.1) →
+        (componentSeeds (GenericField K) S.G
+          (globalTailCut (polynomialEmbedding K) S.F (w+1))
+          (regularitySurface (polynomialEmbedding K) S.F) Gamma
+          (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
+            (80801+1)*(BoundaryTailReduced.reducedBudgetFamily S hTail hflagChar hmixed).yzCost C := by
+      intro C hall
+      exact tangent_component_card_le S C hTail (BoundaryTailReduced.reducedBaseOrd S hTail hflagChar hmixed C)
+        181343 D t r hnodes hagreement (by norm_num [RCN327.w]) (by norm_num [RCN327.w])
+        hDlow hDchar hbox (BoundaryTailReduced.reducedBudgetFamily S hTail hflagChar hmixed)
+        (BoundaryTailReduced.reducedBudgetFamily_yzPositive S hTail hflagChar hmixed C) hall
+        (BoundaryTailReduced.reducedBudgetFamily_yzPole S hTail hflagChar hmixed C)
+    exact BoundaryTailRetainedStage.stage_card_le_scaled t y r hr3 hry (by omega) S hTail
+      hflagChar hmixed (by norm_num [RCN327.w]) (by
+        unfold cellNormal
+        rw [BoundaryTailAlgebra.normalFlag_eq_cell t y r hr3 hry]
+        simpa only [add_yz, nsmul_yz, unitAllFlag, mul_zero, add_zero] using
+          hybridC1Gate_of_le t y r 80801 hry (by norm_num)) htangent
+      P B U L s k n0 hS hP hBU hUL hdn hB hn hdiv h2 hfact hgood
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailFixedStage
+
+end P26
+
+section P27
+namespace ProximityPrize.SubmissionLower.BoundaryTailRegularGeometry
+open scoped Classical BigOperators
+open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
+open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
+open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
+open LocatorHybridTailProviderC1 LocatorHybridTransportC2
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+open RCN084 RCN146 RCN087 RCN335 RCN174 RCN275 RCN234 RCN156
+variable {K I : Type} [Field K] [CharP K 2130706433]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
+variable {Gamma : Finset K} {x : I → K} {flag : FlagDegree}
+
+open RCN081 RCN130 RCN221 RCN222 RCN137 RCN238 RCN275
+
+theorem regular_seed_bound_scaled
+    (D t y r : ℕ) (hDlow : 131072 ≤ D) (hDchar : D < 2130706433)
+    (ht : t ≤ 7199) (hy : y ≤ 139) (hr : r ≤ 30)
+    (hr3 : 3 ≤ r) (hry : r+2 ≤ y) (hyt : y+2 ≤ t)
+    (F : MvPolynomial (Fin 4) K) (hF : Irreducible F) (hFR : 0 < F.degreeOf 2)
+    (hbox : F ∈ globalCoefficientBox K D w t r)
+    (hsupport : ResidualSupportData (cellSupport t y r) F)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (nodes : Finset I) (x u0 u1 : I → K) (hinj : Set.InjOn x nodes)
+    (hnodes : nodes.card = 262144)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      (nodes.filter (fun i => (selected gamma).eval (x i) = u0 i+gamma*u1 i)).card)
+    (hsolution : ∀ gamma ∈ Gamma, specialization K (selected gamma) gamma F=0)
+    (hregular : ∀ gamma ∈ Gamma,
+      specialization K (selected gamma) gamma (MvPolynomial.pderiv (2:Fin 4) F)≠0)
+    (hno : NoLargeSelectedPencil selected Gamma w 80801)
+    (P : SecondJetSupport.Poly (K := K)) (B U L s k n0 : ℕ)
+    (hS : ∀ e ∈ P.support, e 1 ≤ s)
+    (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
+      e 1+e 2+e 3+e 4 ≤ L)
+    (hBU : B ≤ U) (hUL : U ≤ L) (hdn : k+1 ≤ n0) (hB : 2*(n0-(k+1)) ≤ B)
+    (hn : n0 ≤ (SecondJetCoefficients.asS P).natDegree)
+    (hdiv : ∀ d ≤ k, F ∣ SecondJetClearedHelper.helper P F (s-d) d)
+    (h2 : (2 : GenericField K) ≠ 0) (hfact : (k.factorial : GenericField K) ≠ 0)
+    (hgood : ∀ gamma ∈ Gamma,
+      MvPolynomial.eval (selectedPoint (polynomialEmbedding K) selected gamma)
+        (surfaceMap (polynomialEmbedding K) (SecondJetCoefficients.asS P).leadingCoeff) ≠ 0) :
+    (k+1)*Gamma.card ≤
+      (k+1)*flagMixed (originalCumulativeFlag F) (cellFirstTail t y r) (BoundaryTailProvider.cellNormal t y r)+
+      65539*flagMixed (originalCumulativeFlag F) (cellFirstTail t y r)
+        (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0) := by
+  have hFRsmall : F.degreeOf 2 < 2130706433 :=
+    (degreeOf_R_le_of_mem_box F D w t r hbox).trans_lt (by omega)
+  have hs : cellS r+2 = r := by dsimp [cellS]; omega
+  have hys : cellB y r+cellS r+3 = y := by dsimp [cellB,cellS]; omega
+  have hts : cellA t y+cellB y r+cellS r+3 = t := by dsimp [cellA,cellB,cellS]; omega
+  have hcover := card_le_sum_geometricSeeds K F hF.ne_zero selected Gamma hsolution
+  have hstage (g : GeometricFactor K F) :
+      (k+1)*(geometricSeeds K F selected Gamma g).card ≤
+        (k+1)*flagMixed (geometricCumulativeFlag K g) (cellFirstTail t y r) (BoundaryTailProvider.cellNormal t y r)+
+        65539*flagMixed (geometricCumulativeFlag K g) (cellFirstTail t y r)
+          (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0) := by
+    let S0 := geometricResidualStageOfSupport K (cellSupport t y r) F hF hFR hFRsmall
+      hsupport selected Gamma nodes x u0 u1 hinj hdegree hsolution hregular hno (by norm_num [RCN327.w]) g
+    let S := reflagResidualStage S0 (polynomialIn_surfaceCumulativeFlag g.1)
+    have hsub := geometricSeeds_subset K F selected Gamma g
+    have hag : ∀ gamma ∈ geometricSeeds K F selected Gamma g,
+        181343 ≤ (S.agreementFiber gamma).card := by
+      intro gamma hgamma
+      exact hagreement gamma (hsub hgamma)
+    have hf := geometricCumulativeFlag_le_support F hF.ne_zero hsupport g
+    have hf' : (geometricCumulativeFlag K g).all ≤ r ∧
+        (geometricCumulativeFlag K g).yz+(geometricCumulativeFlag K g).all ≤ y ∧
+        (geometricCumulativeFlag K g).zOnly+(geometricCumulativeFlag K g).yz+
+          (geometricCumulativeFlag K g).all ≤ t := by
+      simpa only [cellSupport,RCN198.support,hs,hys,hts] using hf
+    exact BoundaryTailFixedStage.stage_card_le_scaled D t y r hDlow hDchar ht hy hr hr3 hry hyt
+      S hnodes hag hbox hf' P B U L s k n0 hS hP hBU hUL hdn hB hn hdiv h2 hfact
+      (fun gamma hgamma => hgood gamma (hsub hgamma))
+  have hb := geometricCumulativeFlag_budgets F hF.ne_zero
+  have hnormal := RCN084.sum_flagMixed_le_of_cumulative (geometricCumulativeFlag K)
+    (originalCumulativeFlag F) (cellFirstTail t y r) (BoundaryTailProvider.cellNormal t y r) hb.1 hb.2.1 hb.2.2
+  have hmove := RCN084.sum_flagMixed_le_of_cumulative (geometricCumulativeFlag K)
+    (originalCumulativeFlag F) (cellFirstTail t y r)
+    (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0) hb.1 hb.2.1 hb.2.2
+  calc
+    (k+1)*Gamma.card ≤ (k+1)*∑ g : GeometricFactor K F,
+        (geometricSeeds K F selected Gamma g).card := Nat.mul_le_mul_left _ hcover
+    _ = ∑ g : GeometricFactor K F, (k+1)*(geometricSeeds K F selected Gamma g).card := by
+      rw [Finset.mul_sum]
+    _ ≤ ∑ g : GeometricFactor K F,
+        ((k+1)*flagMixed (geometricCumulativeFlag K g) (cellFirstTail t y r) (BoundaryTailProvider.cellNormal t y r)+
+          65539*flagMixed (geometricCumulativeFlag K g) (cellFirstTail t y r)
+            (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0)) := Finset.sum_le_sum (fun g _ => hstage g)
+    _ = (k+1)*(∑ g : GeometricFactor K F,
+        flagMixed (geometricCumulativeFlag K g) (cellFirstTail t y r) (BoundaryTailProvider.cellNormal t y r))+
+      65539*(∑ g : GeometricFactor K F,
+        flagMixed (geometricCumulativeFlag K g) (cellFirstTail t y r)
+          (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0)) := by
+      rw [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.mul_sum]
+    _ ≤ _ := Nat.add_le_add (Nat.mul_le_mul_left _ hnormal) (Nat.mul_le_mul_left _ hmove)
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailRegularGeometry
+
+
+end P27
+
+section P28
+namespace ProximityPrize.SubmissionLower.BoundaryTailRegularData
+open scoped Classical BigOperators
+open MvPolynomial RCN135 RCN136 RCN319 RCN238 RCN243 RCN260 RCN174 RCN275 RCN327
+open RCN156 RCN234 LocatorHybridCells LocatorHybridCellsC1 RCN130 RCN095
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+set_option maxRecDepth 100000
+variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+
+structure Data (nodes : I ↪ K) (u0 u1 : I → K) where
+  D : ℕ
+  t : ℕ
+  y : ℕ
+  r : ℕ
+  Dlow : 131072 ≤ D
+  Dchar : D < 2130706433
+  tbound : t ≤ 7199
+  ybound : y ≤ 139
+  rbound : r ≤ 30
+  rpos : 3 ≤ r
+  ry : r+2 ≤ y
+  yt : y+2 ≤ t
+  F : MvPolynomial (Fin 4) K
+  irreducible : Irreducible F
+  rdegree : 0 < F.degreeOf 2
+  box : F ∈ globalCoefficientBox K D w t r
+  support : ResidualSupportData (cellSupport t y r) F
+  selected : K → Polynomial K
+  seeds : Finset K
+  degree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ w
+  agreement : ∀ gamma ∈ seeds, 181343 ≤
+    (Finset.univ.filter (fun i => (selected gamma).eval (nodes i) = u0 i+gamma*u1 i)).card
+  solution : ∀ gamma ∈ seeds, specialization K (selected gamma) gamma F=0
+  regular : ∀ gamma ∈ seeds,
+    specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0
+  noPencil : NoLargeSelectedPencil selected seeds w 80801
+
+namespace Data
+variable {nodes : I ↪ K} {u0 u1 : I → K}
+
+def restrict (S : Data nodes u0 u1) (Delta : Finset K) (hsub : Delta ⊆ S.seeds) :
+    Data nodes u0 u1 :=
+  { S with seeds := Delta
+           degree := fun gamma h => S.degree gamma (hsub h)
+           agreement := fun gamma h => S.agreement gamma (hsub h)
+           solution := fun gamma h => S.solution gamma (hsub h)
+           regular := fun gamma h => S.regular gamma (hsub h)
+           noPencil := noLargeSelectedPencil_mono S.selected S.seeds Delta w 80801 hsub S.noPencil }
+
+def pair (S : Data nodes u0 u1) (R capY T : ℕ) : UnequalParameters :=
+  ⟨262144,131071,181343,S.y,S.r,S.t,capY,R,T⟩
+
+def PairGates (S : Data nodes u0 u1) (R capY T : ℕ) : Prop :=
+  (S.pair R capY T).mixedCost.y < 2130706433 ∧
+  (S.pair R capY T).mixedCost.r < 2130706433 ∧
+  (S.pair R capY T).mixedCost.z < 2130706433
+
+theorem weights (S : Data nodes u0 u1) :
+    wt residualSWeights S.F ≤ S.r ∧ wt residualYSWeights S.F ≤ S.y ∧
+      wt residualTotalWeights S.F ≤ S.t := by
+  have hs : cellS S.r+2 = S.r := by have := S.rpos; dsimp [cellS]; omega
+  have hy : cellB S.y S.r+cellS S.r+3 = S.y := by have := S.ry; dsimp [cellB,cellS]; omega
+  have ht : cellA S.t S.y+cellB S.y S.r+cellS S.r+3 = S.t := by
+    have := S.yt; dsimp [cellA]; omega
+  have h := S.support
+  exact ⟨by simpa only [cellSupport,RCN198.support,hs] using h.s_weight,
+    by simpa only [cellSupport,RCN198.support,hy] using h.ys_weight,
+    by simpa only [cellSupport,RCN198.support,ht] using h.total_weight⟩
+
+theorem proper_count (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
+    (Q : MvPolynomial (Fin 4) K) (R capY T : ℕ) (hrel : IsRelPrime S.F Q)
+    (hQ : Q.degreeOf 1 ≤ capY ∧ Q.degreeOf 2 ≤ R ∧ Q.degreeOf 3 ≤ T)
+    (hgates : S.PairGates R capY T)
+    (hzero : ∀ gamma ∈ S.seeds, specialization K (S.selected gamma) gamma Q=0) :
+    S.seeds.card ≤ (S.pair R capY T).regularCountCap := by
+  have hF := SecondJetPairBounds.degree_caps_of_weights S.F S.r S.y S.t S.weights
+  have hcount := SecondJetProperCounting.regular_seed_bound_left
+    (S.pair R capY T) S.F Q S.irreducible S.rdegree hrel 2130706433
+    hF.1 hF.2.1 hF.2.2 hQ.1 hQ.2.1 hQ.2.2 (by have := S.rpos; dsimp [pair]; omega)
+    (by have := S.ybound; dsimp [pair]; omega)
+    (by have := S.rbound; dsimp [pair]; omega)
+    (by have := S.tbound; dsimp [pair]; omega)
+    hgates.1 hgates.2.1 hgates.2.2 S.selected S.seeds Finset.univ nodes u0 u1
+    nodes.injective.injOn (by simpa only [Finset.card_univ,pair] using hI)
+    (by norm_num [pair]) (by norm_num [pair]) (by norm_num [pair]) (by norm_num [pair])
+    S.degree S.agreement (by simpa only [pair,UnequalParameters.errors,(show (262144 - 181343 : ℕ) = 80801 by decide +kernel),RCN327.w] using S.noPencil)
+    S.solution S.regular hzero
+  exact SecondJetPairBounds.count_le_cap (S.pair R capY T) S.F hF.1 hF.2.1 hF.2.2
+    S.seeds.card (by change 0 < (181343 - 131071 : ℕ); decide +kernel) hcount
+
+def normal (S : Data nodes u0 u1) : ℕ :=
+  flagMixed (originalCumulativeFlag S.F) (cellFirstTail S.t S.y S.r) (BoundaryTailProvider.cellNormal S.t S.y S.r)
+
+def moving (S : Data nodes u0 u1) (B U L k n0 : ℕ) : ℕ :=
+  flagMixed (originalCumulativeFlag S.F) (cellFirstTail S.t S.y S.r)
+    (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0)
+
+theorem retained_scaled (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
+    (P : SecondJetSupport.Poly (K := K)) (B U L s k n0 : ℕ)
+    (hS : ∀ e ∈ P.support, e 1 ≤ s)
+    (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧ e 1+e 2+e 3+e 4 ≤ L)
+    (hBU : B ≤ U) (hUL : U ≤ L) (hdn : k+1 ≤ n0) (hB : 2*(n0-(k+1)) ≤ B)
+    (hn : n0 ≤ (SecondJetCoefficients.asS P).natDegree)
+    (hdiv : ∀ d ≤ k, S.F ∣ SecondJetClearedHelper.helper P S.F (s-d) d)
+    (h2 : (2 : GenericField K) ≠ 0) (hfact : (k.factorial : GenericField K) ≠ 0)
+    (hgood : ∀ gamma ∈ S.seeds,
+      MvPolynomial.eval (selectedPoint (polynomialEmbedding K) S.selected gamma)
+        (surfaceMap (polynomialEmbedding K) (SecondJetCoefficients.asS P).leadingCoeff) ≠ 0) :
+    (k+1)*S.seeds.card ≤ (k+1)*S.normal+65539*S.moving B U L k n0 := by
+  exact BoundaryTailRegularGeometry.regular_seed_bound_scaled
+    S.D S.t S.y S.r S.Dlow S.Dchar S.tbound S.ybound S.rbound S.rpos S.ry S.yt
+    S.F S.irreducible S.rdegree S.box S.support S.selected S.seeds Finset.univ nodes u0 u1
+    nodes.injective.injOn (by simpa only [Finset.card_univ] using hI)
+    S.degree S.agreement S.solution S.regular S.noPencil
+    P B U L s k n0 hS hP hBU hUL hdn hB hn hdiv h2 hfact hgood
+
+end Data
+end
+end ProximityPrize.SubmissionLower.BoundaryTailRegularData
+
+
+end P28
+
+section P29
+namespace ProximityPrize.SubmissionLower.BoundaryTailNumericGeometry
+open RCN260 RCN095 RCN294
+set_option autoImplicit false
+set_option maxHeartbeats 3000000
+set_option maxRecDepth 100000
+
+def properParameters (r v z B U L s : ℕ) : UnequalParameters :=
+  ⟨262144,131071,181343,r+v,r,r+v+z,U+s*(r+v-1),B+s*(r-1),L+s*(r+v+z-1)⟩
+
+def normal (r v z : ℕ) : ℕ :=
+  flagMixed ⟨z,v,r⟩ ⟨262144*z,1+262144*v,262144*(r-1)⟩
+    (⟨131074*z,131074*(v-1)+2,131074*(r-2)+3⟩ + 131071 • unitAllFlag)
+
+def parameters (r y t R capY T : ℕ) : UnequalParameters :=
+  ⟨262144,131071,181343,y,r,t,capY,R,T⟩
+
+theorem count_mono {r y t R capY T r' y' t' R' capY' T' : ℕ}
+    (hr : r ≤ r') (hy : y ≤ y') (ht : t ≤ t')
+    (hR : R ≤ R') (hY : capY ≤ capY') (hT : T ≤ T') :
+    (parameters r y t R capY T).regularCountCap ≤
+      (parameters r' y' t' R' capY' T').regularCountCap := by
+  norm_num only [parameters,UnequalParameters.regularCountCap,UnequalParameters.regularNumerator,UnequalParameters.agreement,
+    UnequalParameters.leftAgreement,UnequalParameters.rightAgreement,UnequalParameters.mixedCost,
+    UnequalParameters.errors,UnequalParameters.gap,RCN294.dot]
+  apply Nat.div_le_div_right
+  gcongr
+
+theorem mixed_mono {r y t R capY T r' y' t' R' capY' T' : ℕ}
+    (hr : r ≤ r') (hy : y ≤ y') (ht : t ≤ t')
+    (hR : R ≤ R') (hY : capY ≤ capY') (hT : T ≤ T') :
+    (parameters r y t R capY T).mixedCost.y ≤ (parameters r' y' t' R' capY' T').mixedCost.y ∧
+    (parameters r y t R capY T).mixedCost.r ≤ (parameters r' y' t' R' capY' T').mixedCost.r ∧
+    (parameters r y t R capY T).mixedCost.z ≤ (parameters r' y' t' R' capY' T').mixedCost.z := by
+  dsimp [parameters,UnequalParameters.mixedCost]
+  constructor
+  · gcongr
+  constructor <;> gcongr
+
+theorem regularNumerator_right (P : UnequalParameters)
+    (hy : P.leftY ≤ P.rightY) (hr : P.leftR ≤ P.rightR) (hz : P.leftZ ≤ P.rightZ) :
+    P.regularNumerator = (P.n-P.w)*dot P.rightAgreement P.mixedCost+
+      (P.errors+1)*P.gap*P.mixedCost.z := by
+  have hy' : P.leftAgreement.y ≤ P.rightAgreement.y :=
+    Nat.add_le_add_left (Nat.mul_le_mul_left (2*P.w) hy) 1
+  have hr' : P.leftAgreement.r ≤ P.rightAgreement.r :=
+    Nat.mul_le_mul_left P.w (Nat.sub_le_sub_right (Nat.mul_le_mul_left 2 hr) 1)
+  have hz' : P.leftAgreement.z ≤ P.rightAgreement.z :=
+    Nat.add_le_add_right (Nat.mul_le_mul_left (2*P.w) hz) 1
+  simp only [UnequalParameters.regularNumerator,UnequalParameters.agreement,
+    max_eq_right hy',max_eq_right hr',max_eq_right hz']
+
+end ProximityPrize.SubmissionLower.BoundaryTailNumericGeometry
+
+namespace ProximityPrize.SubmissionLower.BoundaryTailOwnShape
+open MvPolynomial RCN130 RCN234 RCN156 RCN095 RCN347 RCN135
+open BoundaryTailRegularData BoundaryTailRegularData.Data LocatorHybridCells LocatorHybridCellsC1
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+variable {nodes : I ↪ K} {u0 u1 : I → K}
+
+theorem zOnly_le_degree (F : MvPolynomial (Fin 4) K) :
+    (originalCumulativeFlag F).zOnly ≤ F.degreeOf 3 := by
+  have hw : wt residualTotalWeights F ≤ wt residualYSWeights F+F.degreeOf 3 := by
+    apply (RCN081.weightedTotalDegree_le_iff _ _ _).mpr
+    intro e he
+    have h1 := MvPolynomial.le_weightedTotalDegree residualYSWeights he
+    have h2 := MvPolynomial.monomial_le_degreeOf (3:Fin 4) he
+    simp [wt,RCN081.weight_fin4,residualYSWeights,residualTotalWeights] at h1 ⊢
+    omega
+  change wt residualTotalWeights F-wt residualYSWeights F ≤ F.degreeOf 3
+  omega
+
+def Own (S : Data nodes u0 u1) : Prop :=
+  originalCumulativeFlag S.F = ⟨S.t-S.y,S.y-S.r,S.r⟩
+
+theorem normal_eq (S : Data nodes u0 u1) (hown : Own S) :
+    S.normal = BoundaryTailNumericGeometry.normal S.r (S.y-S.r) (S.t-S.y) := by
+  have h1 : cellB S.y S.r = S.y-S.r-1 := rfl
+  have h2 : cellS S.r = S.r-2 := rfl
+  have h3 : 2*(S.y-S.r-1)+2 = 2*(S.y-S.r) := by have := S.ry; omega
+  have h4 : 2*(S.r-2)+2 = 2*(S.r-1) := by have := S.rpos; omega
+  unfold Data.normal BoundaryTailProvider.cellNormal
+  rw [BoundaryTailAlgebra.normalFlag_eq_cell S.t S.y S.r S.rpos S.ry]
+  rw [hown,SecondJetIdentity.cell_first_eq,SecondJetIdentity.cell_normal_eq]
+  simp only [Lower80788.HybridIdentityC2.reducedABS,Lower80788.HybridIdentityC2.rationalABS,
+    cellA,h1,h2,h3,h4,BoundaryTailNumericGeometry.normal]
+  simp only [flagMixed, RCN327.w]
+  ring
+
+theorem avoidance (S : Data nodes u0 u1) (hown : Own S) (L : ℕ) (hL : L < S.t-S.y) :
+    L < S.F.degreeOf 3 := by
+  have h := zOnly_le_degree S.F
+  rw [hown] at h
+  exact hL.trans_le h
+
+theorem factorial_ne (d : ℕ) (hd : d < 2130706433) : (d.factorial : K) ≠ 0 :=
+  factorial_cast_ne_zero_below_characteristic 2130706433 d hd
+
+theorem two_ne : (2 : K) ≠ 0 := by
+  have h := factorial_ne (K := K) 2 (by decide)
+  simpa only [show Nat.factorial 2 = 2 by decide,Nat.cast_ofNat] using h
+
+theorem moving_eq (S : Data nodes u0 u1) (hown : Own S) (B U L k n0 : ℕ) :
+    S.moving B U L k n0 = SecondJetAffineCeiling.moving S.r (S.y-S.r) (S.t-S.y)
+      (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0) := by
+  have h3 : 2*(S.y-S.r-1)+2 = 2*(S.y-S.r) := by have := S.ry; omega
+  have h4 : 2*(S.r-2)+2 = 2*(S.r-1) := by have := S.rpos; omega
+  unfold Data.moving
+  rw [hown,SecondJetIdentity.cell_first_eq]
+  simp only [Lower80788.HybridIdentityC2.reducedABS,LocatorHybridCells.cellA,
+    LocatorHybridCells.cellB,LocatorHybridCells.cellS,h3,h4,SecondJetAffineCeiling.moving,flagMixed]
+  ring
+
+theorem total_weight_eq (S : Data nodes u0 u1) (hown : Own S) :
+    wt residualTotalWeights S.F = S.t := by
+  have h := (originalCumulativeFlag_cumulative S.F).2.2
+  rw [hown] at h
+  dsimp only at h
+  have := S.ry
+  have := S.yt
+  omega
+
+theorem avoidance_total (S : Data nodes u0 u1) (hown : Own S) (L : ℕ) (hL : L < S.t) :
+    L < wt residualTotalWeights S.F := by
+  rwa [total_weight_eq S hown]
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailOwnShape
+
+end P29
+
+section P30
+namespace ProximityPrize.SubmissionLower.SecondJetTotalAvoidance
+open MvPolynomial SecondJetSupport SecondJetCoefficients RCN234 RCN156
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+variable {K : Type*} [Field K]
+
+/-- A coefficient loses one unit of residual total weight per S power. -/
+theorem coefficient_total_weight (P : Poly (K := K)) (L j : ℕ)
+    (hP : ∀ e ∈ P.support, e 1+e 2+e 3+e 4 ≤ L) :
+    wt residualTotalWeights ((asS P).coeff j) ≤ L-j := by
+  apply (RCN081.weightedTotalDegree_le_iff _ _ _).mpr
+  intro e he
+  have hh := hP _ (coefficient_support P j e he)
+  obtain ⟨h0,h1,h2,h3,h4⟩ := lift_coordinates j e
+  rw [h1,h2,h3,h4] at hh
+  simp [residualTotalWeights, RCN081.weight_fin4]
+  omega
+
+theorem coefficient_not_dvd (P : Poly (K := K)) (F : MvPolynomial (Fin 4) K)
+    (L j : ℕ) (hP : ∀ e ∈ P.support, e 1+e 2+e 3+e 4 ≤ L)
+    (hF : L < wt residualTotalWeights F) (hC : (asS P).coeff j ≠ 0) :
+    ¬ F ∣ (asS P).coeff j := by
+  intro hdiv
+  have hh := RCN081.weightedTotalDegree_le_of_dvd residualTotalWeights F
+    ((asS P).coeff j) hdiv hC
+  have hc := coefficient_total_weight P L j hP
+  change wt residualTotalWeights F ≤ wt residualTotalWeights ((asS P).coeff j) at hh
+  omega
+
+theorem leading_not_dvd (P : Poly (K := K)) (hP : P ≠ 0)
+    (F : MvPolynomial (Fin 4) K) (L : ℕ)
+    (hPL : ∀ e ∈ P.support, e 1+e 2+e 3+e 4 ≤ L)
+    (hF : L < wt residualTotalWeights F) :
+    (asS P).leadingCoeff ≠ 0 ∧ ¬ F ∣ (asS P).leadingCoeff := by
+  have hn : asS P ≠ 0 := by
+    intro hz
+    apply hP
+    apply (asS (K := K)).injective
+    simpa only [map_zero] using hz
+  have hc := Polynomial.leadingCoeff_ne_zero.mpr hn
+  exact ⟨hc,coefficient_not_dvd P F L (asS P).natDegree hPL hF hc⟩
+
+open SecondJetCoefficientSpecialization SecondJetClearedHelper SecondJetHelperWeights
+open SecondJetRelaxedInterpolation SecondJetRelaxedCoefficientsReceipt SecondJetProperAlternatives
+variable {N : Type*} [Fintype N]
+
+theorem helper_or_divisibility (P : Poly (K := K)) (F : MvPolynomial (Fin 4) K)
+    (m B s U L k n0 capR capY capT : ℕ)
+    (nodes : N ↪ K) (u0 u1 : N → K)
+    (hP : Interpolant m B s U L k n0 nodes u0 u1 P)
+    (hFi : Irreducible F) (hFT : L < wt residualTotalWeights F)
+    (hsB : 2*s ≤ B) (hsU : s ≤ U) (hsL : s ≤ L) (hks : k ≤ s) (hsm : s < m)
+    (hR : 1 ≤ capR) (hY : 1 ≤ capY) (hT : 1 ≤ capT)
+    (hF : wt residualSWeights F ≤ capR ∧ wt residualYSWeights F ≤ capY ∧
+      wt residualTotalWeights F ≤ capT)
+    (hfact : ∀ d ≤ s, (d.factorial : K) ≠ 0) :
+    (∃ Q, ProperHelper F Q B U L s capR capY capT nodes u0 u1) ∨
+      (n0 ≤ (asS P).natDegree ∧ ∀ d ≤ k, F ∣ helper P F (s-d) d) := by
+  classical
+  have hflags : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
+      e 1+e 2+e 3+e 4 ≤ L := by
+    intro e he
+    have h := hP.2.1 e he
+    exact ⟨h.1,h.2.2.1,h.2.2.2.1⟩
+  have hS : ∀ e ∈ P.support, e 1 ≤ s := fun e he => (hP.2.1 e he).2.1
+  have hdegree : (asS P).natDegree ≤ s := by
+    simpa using asS_derivative_degree P s 0 hS
+  by_cases hn : (asS P).natDegree < n0
+  · left
+    let n := (asS P).natDegree
+    let Q := (asS P).leadingCoeff
+    have hQ := SecondJetTotalAvoidance.leading_not_dvd P hP.1 F L
+      (fun e he => (hflags e he).2.2) hFT
+    refine ⟨Q,hFi.isRelPrime_iff_not_dvd.mpr hQ.2,?_,?_⟩
+    · have hw := derivative_coefficient_weights P B U L 0 n hflags
+      simp only [Function.iterate_zero, id_eq, Nat.mul_zero, Nat.sub_zero] at hw
+      change wt residualSWeights ((asS P).coeff n) ≤ B+s*(capR-1) ∧
+        wt residualYSWeights ((asS P).coeff n) ≤ U+s*(capY-1) ∧
+        wt residualTotalWeights ((asS P).coeff n) ≤ L+s*(capT-1)
+      omega
+    · intro f hf z S hSc hvalues _hFzero
+      have hweight : ∀ e ∈ P.support,
+          e 0+131071*e 2+131070*e 3+131069*e 1+
+            SecondJetRelaxedDifferentiation.reserve k n0 (e 1)*50284 < m*181353 := by
+        intro e he
+        have hw := (hP.2.1 e he).2.2.2.2
+        dsimp [cutoff] at hw
+        omega
+      apply SecondJetLeadingCoefficient.low_coefficient_vanish P m k n0 n
+        (by dsimp [n]; omega) hn (hfact n hdegree) hweight nodes u0 u1 hP.2.2.1
+        f hf z S hSc hvalues
+      intro j hj
+      rw [Polynomial.coeff_eq_zero_of_natDegree_lt hj,map_zero]
+  · by_cases hdiv : ∀ d ≤ k, F ∣ helper P F (s-d) d
+    · exact Or.inr ⟨Nat.le_of_not_gt hn,hdiv⟩
+    · left
+      push_neg at hdiv
+      obtain ⟨d,hd,hproper⟩ := hdiv
+      refine ⟨helper P F (s-d) d,hFi.isRelPrime_iff_not_dvd.mpr hproper,?_,?_⟩
+      · have hw := helper_weights P F B U L s d capT capY capR hsB hsU hsL
+          (hd.trans hks) hR hY hT hflags hF
+        have hr := Nat.mul_le_mul_right (capR-1) (Nat.sub_le s d)
+        have hy := Nat.mul_le_mul_right (capY-1) (Nat.sub_le s d)
+        have ht := Nat.mul_le_mul_right (capT-1) (Nat.sub_le s d)
+        omega
+      · intro f hf z S hSc hvalues hFzero
+        exact helper_vanish P F (s-d) d (asS_derivative_degree P s d hS) f z hFzero
+          (hP.2.2.2 d hd f hf z S hSc hvalues)
+
+
+end
+end ProximityPrize.SubmissionLower.SecondJetTotalAvoidance
+
+namespace ProximityPrize.SubmissionLower.SecondJetPairBounds
+open RCN260 RCN052 RCN294
+
+/-- The regular-seed inequality only needs the carrier's agreement vector. -/
+theorem count_le_left_cap {K : Type} [Field K]
+    (P : UnequalParameters) (F : MvPolynomial (Fin 4) K)
+    (hY : F.degreeOf 1 ≤ P.leftY) (hR : F.degreeOf 2 ≤ P.leftR)
+    (hZ : F.degreeOf 3 ≤ P.leftZ) (count : ℕ) (hgap : 0 < P.gap)
+    (hc : count*P.gap ≤ (P.n-P.w)*dot P.leftAgreement (regularVector P F)+
+      (P.errors+1)*P.gap*(regularVector P F).z) :
+    count ≤ AsymmetricHelper.leftRegularCountCap P := by
+  have hv := LocatorCoprimeQuotient.regularVector_le_mixedCost P F hY hR hZ
+  have hdot : dot P.leftAgreement (regularVector P F) ≤ dot P.leftAgreement P.mixedCost :=
+    Nat.add_le_add
+      (Nat.add_le_add (Nat.mul_le_mul_left P.leftAgreement.y hv.1)
+        (Nat.mul_le_mul_left P.leftAgreement.r hv.2.1))
+      (Nat.mul_le_mul_left P.leftAgreement.z hv.2.2)
+  apply (Nat.le_div_iff_mul_le hgap).mpr
+  exact hc.trans (Nat.add_le_add (Nat.mul_le_mul_left (P.n-P.w) hdot)
+    (Nat.mul_le_mul_left ((P.errors+1)*P.gap) hv.2.2))
+
+end ProximityPrize.SubmissionLower.SecondJetPairBounds
+
+namespace ProximityPrize.SubmissionLower.SecondJetRegularData.Data
+open MvPolynomial RCN319 RCN260 RCN327
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+set_option maxRecDepth 100000
+variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {nodes : I ↪ K} {u0 u1 : I → K}
+
+theorem proper_count_left (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
+    (Q : MvPolynomial (Fin 4) K) (R capY T : ℕ) (hrel : IsRelPrime S.F Q)
+    (hQ : Q.degreeOf 1 ≤ capY ∧ Q.degreeOf 2 ≤ R ∧ Q.degreeOf 3 ≤ T)
+    (hgates : S.PairGates R capY T)
+    (hzero : ∀ gamma ∈ S.seeds, specialization K (S.selected gamma) gamma Q=0) :
+    S.seeds.card ≤ AsymmetricHelper.leftRegularCountCap (S.pair R capY T) := by
+  have hF := SecondJetPairBounds.degree_caps_of_weights S.F S.r S.y S.t S.weights
+  have hcount := SecondJetProperCounting.regular_seed_bound_left
+    (S.pair R capY T) S.F Q S.irreducible S.rdegree hrel 2130706433
+    hF.1 hF.2.1 hF.2.2 hQ.1 hQ.2.1 hQ.2.2 (by have := S.rpos; dsimp [pair]; omega)
+    (by have := S.ybound; dsimp [pair]; omega)
+    (by have := S.rbound; dsimp [pair]; omega)
+    (by have := S.tbound; dsimp [pair]; omega)
+    hgates.1 hgates.2.1 hgates.2.2 S.selected S.seeds Finset.univ nodes u0 u1
+    nodes.injective.injOn (by simpa only [Finset.card_univ,pair] using hI)
+    (by norm_num [pair]) (by norm_num [pair]) (by norm_num [pair]) (by norm_num [pair])
+    S.degree S.agreement (by simpa only [pair,UnequalParameters.errors,
+      (show (262144 - 181353 : ℕ) = 80791 by decide),RCN327.w] using S.noPencil)
+    S.solution S.regular hzero
+  exact SecondJetPairBounds.count_le_left_cap (S.pair R capY T) S.F hF.1 hF.2.1 hF.2.2
+    S.seeds.card (by change 0 < (181353 - 131071 : ℕ); decide) hcount
+
+end
+end ProximityPrize.SubmissionLower.SecondJetRegularData.Data
+
+namespace ProximityPrize.SubmissionLower.SecondJetAsymmetric
+open scoped Classical
+open MvPolynomial RCN135 RCN136 RCN319 RCN327 RCN238 RCN222 RCN234 RCN156
+open SecondJetRegularData SecondJetRegularData.Data SecondJetCoefficients
+open SecondJetRelaxedInterpolation SecondJetProperAlternatives SecondJetExceptionalComponents
+open AsymmetricHelper
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {nodes : I ↪ K} {u0 u1 : I → K}
+
+def bound (S : Data nodes u0 u1) (B U L s k n0 : ℕ) : ℕ :=
+  max (leftRegularCountCap (S.pair (B+s*(S.r-1)) (U+s*(S.y-1)) (L+s*(S.t-1))))
+    (S.normal+131076*((S.moving B U L k n0+k)/(k+1))+leftRegularCountCap (S.pair B U L))
+
+omit [CharP K 2130706433] in
+theorem bound_le_symmetric (S : Data nodes u0 u1) (B U L s k n0 : ℕ) :
+    bound S B U L s k n0 ≤ SecondJetCombinedCount.bound S B U L s k n0 := by
+  apply max_le_max
+  · exact Nat.div_le_div_right (leftRegularNumerator_le _)
+  · exact Nat.add_le_add_left (Nat.div_le_div_right (leftRegularNumerator_le _)) _
+
+theorem count_of_interpolant_total (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
+    (P : SecondJetSupport.Poly (K := K)) (m B s U L k n0 : ℕ)
+    (hP : Interpolant m B s U L k n0 nodes u0 u1 P)
+    (hL : L < wt residualTotalWeights S.F)
+    (hsB : 2*s ≤ B) (hsU : s ≤ U) (hsL : s ≤ L) (hks : k ≤ s) (hsm : s < m)
+    (hBU : B ≤ U) (hUL : U ≤ L) (hdn : k+1 ≤ n0) (hB : 2*(n0-(k+1)) ≤ B)
+    (hfact : ∀ d ≤ s, (d.factorial : K) ≠ 0)
+    (h2 : (2 : GenericField K) ≠ 0) (hfactG : (k.factorial : GenericField K) ≠ 0)
+    (hhelperGates : S.PairGates (B+s*(S.r-1)) (U+s*(S.y-1)) (L+s*(S.t-1)))
+    (hcoefficientGates : S.PairGates B U L) :
+    S.seeds.card ≤ bound S B U L s k n0 := by
+  have hflags : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
+      e 1+e 2+e 3+e 4 ≤ L := fun e he =>
+    ⟨(hP.2.1 e he).1,(hP.2.1 e he).2.2.1,(hP.2.1 e he).2.2.2.1⟩
+  have hS : ∀ e ∈ P.support, e 1 ≤ s := fun e he => (hP.2.1 e he).2.1
+  have halt := SecondJetTotalAvoidance.helper_or_divisibility P S.F m B s U L k n0 S.r S.y S.t nodes u0 u1 hP
+    S.irreducible hL hsB hsU hsL hks hsm
+    (by have := S.rpos; omega) (by have := S.ry; omega) (by have := S.yt; omega)
+    S.weights hfact
+  rcases halt with ⟨Q,hQ⟩ | ⟨hn,hdiv⟩
+  · have hzero : ∀ gamma ∈ S.seeds, specialization K (S.selected gamma) gamma Q = 0 := by
+      intro gamma hgamma
+      apply hQ.2.2 (S.selected gamma) (S.degree gamma hgamma) gamma
+        (Finset.univ.filter (fun i => (S.selected gamma).eval (nodes i)=u0 i+gamma*u1 i))
+        (S.agreement gamma hgamma) ?_ (S.solution gamma hgamma)
+      intro i hi
+      simpa only [mul_comm] using (Finset.mem_filter.mp hi).2
+    have hc := S.proper_count_left hI Q (B+s*(S.r-1)) (U+s*(S.y-1)) (L+s*(S.t-1))
+      hQ.1 (SecondJetPairBounds.degree_caps_of_weights Q _ _ _ hQ.2.1) hhelperGates hzero
+    exact hc.trans (le_max_left _ _)
+  · let C := (asS P).leadingCoeff
+    let point := RCN238.selectedPoint (polynomialEmbedding K) S.selected
+    let T := surfaceMap (polynomialEmbedding K) C
+    let Good := goodSeeds S.seeds point T
+    let Bad := exceptionalSeeds S.seeds point T
+    have hgoodSub : Good ⊆ S.seeds := Finset.filter_subset _ _
+    have hbadSub : Bad ⊆ S.seeds := Finset.filter_subset _ _
+    let SG := S.restrict Good hgoodSub
+    let SB := S.restrict Bad hbadSub
+    have hgood : ∀ gamma ∈ SG.seeds,
+        MvPolynomial.eval (RCN238.selectedPoint (polynomialEmbedding K) SG.selected gamma)
+          (surfaceMap (polynomialEmbedding K) (asS P).leadingCoeff) ≠ 0 := by
+      intro gamma hgamma
+      exact (Finset.mem_filter.mp hgamma).2
+    have hscaled := SG.retained_scaled hI P B U L s k n0 hS hflags hBU hUL hdn hB hn hdiv h2 hfactG hgood
+    have hGcount := SecondJetRounding.count_le Good.card S.normal (S.moving B U L k n0) 131076 k hscaled
+    have hproper := SecondJetTotalAvoidance.leading_not_dvd P hP.1 S.F L
+      (fun e he => (hflags e he).2.2) hL
+    have hrel : IsRelPrime SB.F C := S.irreducible.isRelPrime_iff_not_dvd.mpr hproper.2
+    have hzero : ∀ gamma ∈ SB.seeds, specialization K (SB.selected gamma) gamma C = 0 := by
+      intro gamma hgamma
+      have hz : MvPolynomial.eval (point gamma) T = 0 := (Finset.mem_filter.mp hgamma).2
+      change MvPolynomial.eval (RCN238.selectedPoint (polynomialEmbedding K) S.selected gamma)
+        (surfaceMap (polynomialEmbedding K) C)=0 at hz
+      rw [selectedPoint_surface_evaluation] at hz
+      change specialization K (S.selected gamma) gamma C = 0
+      exact (polynomialEmbedding_injective K) (by simpa only [map_zero] using hz)
+    have hBcount := SB.proper_count_left hI C B U L hrel
+      (SecondJetPairBounds.leading_degree_caps P B U L hflags) hcoefficientGates hzero
+    have hpartition := card_partition S.seeds point T
+    have hc : S.seeds.card ≤ S.normal+131076*((S.moving B U L k n0+k)/(k+1))+
+        leftRegularCountCap (S.pair B U L) := by
+      rw [hpartition]
+      exact Nat.add_le_add hGcount hBcount
+    exact hc.trans (le_max_right _ _)
+
+def numericBound (r v z B U L s k n0 : ℕ) : ℕ :=
+  max (leftRegularCountCap (SecondJetNumericGeometry.properParameters r v z B U L s))
+    (SecondJetNumericGeometry.normal r v z+
+      131076*((SecondJetAffineCeiling.moving r v z
+        (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0)+k)/(k+1))+
+      leftRegularCountCap (SecondJetNumericGeometry.parameters r (r+v) (r+v+z) B U L))
+
+theorem bound_eq_numeric (S : Data nodes u0 u1) (hown : SecondJetOwnShape.Own S)
+    (B U L s k n0 : ℕ) :
+    bound S B U L s k n0 = numericBound S.r (S.y-S.r) (S.t-S.y) B U L s k n0 := by
+  have hy : S.r+(S.y-S.r) = S.y := by have := S.ry; omega
+  have ht : S.y+(S.t-S.y) = S.t := by have := S.yt; omega
+  unfold bound numericBound
+  rw [SecondJetOwnShape.normal_eq S hown, SecondJetSingleCap.moving_eq S hown]
+  simp only [SecondJetNumericGeometry.properParameters, SecondJetNumericGeometry.parameters,
+    Data.pair, hy, ht]
+
+theorem profile114_binding_value :
+    numericBound 10 37 2276 47 155 2255 21 5 7 = 268923679246212987 := by
+  decide
+
+end
+end ProximityPrize.SubmissionLower.SecondJetAsymmetric
+
+
+namespace ProximityPrize.SubmissionLower.SecondJetOwnShape
+open MvPolynomial RCN130 RCN234 RCN156 RCN095 RCN347 RCN135
+open SecondJetRegularData SecondJetRegularData.Data
+noncomputable section
+set_option autoImplicit false
+variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+variable {nodes : I ↪ K} {u0 u1 : I → K}
+
+theorem total_weight_eq (S : Data nodes u0 u1) (hown : Own S) :
+    wt residualTotalWeights S.F = S.t := by
+  have h := (originalCumulativeFlag_cumulative S.F).2.2
+  rw [hown] at h
+  dsimp only at h
+  have := S.ry
+  have := S.yt
+  omega
+
+theorem avoidance_total (S : Data nodes u0 u1) (hown : Own S) (L : ℕ) (hL : L < S.t) :
+    L < wt residualTotalWeights S.F := by
+  rwa [total_weight_eq S hown]
+
+end
+end ProximityPrize.SubmissionLower.SecondJetOwnShape
+
+namespace ProximityPrize.SubmissionLower.SecondJetProfile114
+open SecondJetRelaxedGlobalIndex SecondJetRelaxedGlobalCounts SecondJetRelaxedCounts
+open SecondJetRelaxedCoefficientsReceipt SecondJetRelaxedInterpolation
+open SecondJetNumericGeometry RCN260 RCN294 RCN135
+open SecondJetRegularData SecondJetRegularData.Data SecondJetOwnShape
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 8000000
+
+theorem coefficient_count :
+    coefficientCount (cutoff 114 5 7) 131071 2255 47 21 155 = 1521555139747342 := by
+  decide
+
+theorem local_rank : rankBound 114 2255 47 21 155 = 5804271999 := by
+  decide
+
+theorem cutoff_caps : ∀ h : Fin 22, 155 ≤ (cutoff 114 5 7 h.val+47-1)/131071 := by
+  decide
+
+theorem source_card :
+    Fintype.card (Index (cutoff 114 5 7) 131071 2255 47 21 155) = 1521555139747342 := by
+  rw [card_index_closed _ _ _ _ _ _ (by decide), coefficient_count]
+
+theorem exact_rank :
+    SecondJetRelaxedGlobalMap.rankBound 114 2255 47 21 155
+      (fun h => (cutoff 114 5 7 h+47-1)/131071) = 5804271999 := by
+  rw [rankBound_eq_closed _ _ _ _ _ _ (by decide) (by decide) (by decide) (by decide)
+    (fun h hh => cutoff_caps ⟨h,by omega⟩), local_rank]
+
+variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+variable {nodes : I ↪ K} {u0 u1 : I → K}
+local instance : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
+
+theorem exists_interpolant (hI : Fintype.card I = 262144) :
+    ∃ P, Interpolant 114 47 21 155 2255 5 7 nodes u0 u1 P := by
+  apply exists_of_dimension _ _ _ _ _ _ _ (by decide) (by decide) hI nodes u0 u1
+  rw [exact_rank, source_card]
+  decide
+
+theorem uniform_gates (r y t R U T : ℕ)
+    (hr : r ≤ 30) (hy : y ≤ 136) (ht : t ≤ 6917)
+    (hR : R ≤ 656) (hU : U ≤ 2990) (hT : T ≤ 147491) :
+    (parameters r y t R U T).mixedCost.y < 2130706433 ∧
+    (parameters r y t R U T).mixedCost.r < 2130706433 ∧
+    (parameters r y t R U T).mixedCost.z < 2130706433 := by
+  have h := mixed_mono hr hy ht hR hU hT
+  exact ⟨h.1.trans_lt (by norm_num [parameters,UnequalParameters.mixedCost]),
+    h.2.1.trans_lt (by norm_num [parameters,UnequalParameters.mixedCost]),
+    h.2.2.trans_lt (by norm_num [parameters,UnequalParameters.mixedCost])⟩
+
+theorem helper_gates (S : Data nodes u0 u1) :
+    S.PairGates (47+21*(S.r-1)) (155+21*(S.y-1)) (2255+21*(S.t-1)) := by
+  apply uniform_gates _ _ _ _ _ _ S.rbound S.ybound S.tbound
+  · have := S.rbound
+    omega
+  · have := S.ybound
+    omega
+  · have := S.tbound
+    omega
+
+theorem coefficient_gates (S : Data nodes u0 u1) : S.PairGates 47 155 2255 :=
+  uniform_gates _ _ _ _ _ _ S.rbound S.ybound S.tbound (by decide) (by decide) (by decide)
+
+theorem count_114 (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
+    (hown : Own S) (hL : 2255 < S.t) :
+    S.seeds.card ≤ SecondJetAsymmetric.numericBound S.r (S.y-S.r) (S.t-S.y)
+      47 155 2255 21 5 7 := by
+  obtain ⟨P,hP⟩ := exists_interpolant (nodes := nodes) (u0 := u0) (u1 := u1) hI
+  have hc := SecondJetAsymmetric.count_of_interpolant_total S hI P 114 47 21 155 2255 5 7 hP
+    (avoidance_total S hown _ hL)
+    (by decide) (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide)
+    (fun d hd => factorial_ne (K := K) d (by omega))
+    (two_ne (K := GenericField K)) (factorial_ne (K := GenericField K) 5 (by decide))
+    (helper_gates S) (coefficient_gates S)
+  rwa [SecondJetAsymmetric.bound_eq_numeric S hown] at hc
+
+end
+end ProximityPrize.SubmissionLower.SecondJetProfile114
+
+namespace ProximityPrize.SubmissionLower.SecondJetRefinedCap
+open RCN095 RCN260 RCN294 AsymmetricHelper SecondJetNumericGeometry
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+def pairNumerator (r v z B U L s : ℕ) : ℕ :=
+  leftRegularNumerator (properParameters r v z B U L s)
+
+def pairSlope (r v B U s : ℕ) : ℕ :=
+  let rightR := B+s*(r-1)
+  let rightY := U+s*(r+v-1)
+  131073*((1+262142*(r+v))*(r*s+rightR)+131071*(2*r-1)*((r+v)*s+rightY)+
+    262142*((r+v)*rightR+r*rightY))
+
+theorem pairNumerator_add (r v z h B U L s : ℕ) (hr : 1 ≤ r) :
+    pairNumerator r v (z+h) B U L s = pairNumerator r v z B U L s+
+      h*pairSlope r v B U s := by
+  have hs : r+v+(z+h)-1 = (r+v+z-1)+h := by omega
+  simp only [pairNumerator,pairSlope,properParameters,leftRegularNumerator,
+    UnequalParameters.leftAgreement,UnequalParameters.mixedCost,UnequalParameters.errors,
+    UnequalParameters.gap,dot]
+  rw [hs]
+  ring
+
+def start (r v : ℕ) : ℕ := 2256-(r+v)
+
+def properValue (r v : ℕ) : ℕ :=
+  (pairNumerator r v (start r v) 47 155 2255 21+50281)/50282
+
+def properSlope (r v : ℕ) : ℕ := (pairSlope r v 47 155 21+50281)/50282
+
+def coefficientValue (r v : ℕ) : ℕ :=
+  (pairNumerator r v (start r v) 47 155 2255 0+50281)/50282
+
+def coefficientSlope (r v : ℕ) : ℕ := (pairSlope r v 47 155 0+50281)/50282
+
+def retainedValue (r v : ℕ) : ℕ :=
+  normal r v (start r v)+
+    131076*((SecondJetAffineCeiling.moving r v (start r v)
+      (SecondJetRelaxedFlag.budgetFlag 47 155 2255 6 7)+5)/6)+coefficientValue r v
+
+def retainedSlope (r v : ℕ) : ℕ :=
+  (normal r v 1-normal r v 0)+
+    131076*((SecondJetAffineCeiling.movingSlope r v
+      (SecondJetRelaxedFlag.budgetFlag 47 155 2255 6 7)+5)/6)+coefficientSlope r v
+
+def properLine (r v z : ℕ) : ℕ := properValue r v+properSlope r v*(z-start r v)
+
+def retainedLine (r v z : ℕ) : ℕ := retainedValue r v+retainedSlope r v*(z-start r v)
+
+/-- Both possible geometric branches remain explicitly charged. -/
+def profile (r v z : ℕ) : ℕ := max (properLine r v z) (retainedLine r v z)
+
+def activated (p : FlagDegree) : ℕ :=
+  if 3 ≤ p.all ∧ 2 ≤ p.yz ∧ 2 ≤ p.zOnly ∧ 2255 < p.all+p.yz+p.zOnly then
+    profile p.all p.yz p.zOnly
+  else SecondJetSingleCap.cap p
+
+def cap (p : FlagDegree) : ℕ := min (SecondJetSingleCap.cap p) (activated p)
+
+theorem cap_le_old (p : FlagDegree) : cap p ≤ SecondJetSingleCap.cap p := min_le_left _ _
+
+theorem pairCount_le_line (r v z B U L s : ℕ) (hr : 1 ≤ r)
+    (hz : start r v ≤ z) :
+    leftRegularCountCap (properParameters r v z B U L s) ≤
+      (pairNumerator r v (start r v) B U L s+50281)/50282+
+      ((pairSlope r v B U s+50281)/50282)*(z-start r v) := by
+  have he : z = start r v+(z-start r v) := by omega
+  unfold leftRegularCountCap
+  rw [show (properParameters r v z B U L s).gap = 50282 by
+    norm_num [properParameters,UnequalParameters.gap]]
+  change pairNumerator r v z B U L s / 50282 ≤ _
+  have hp := pairNumerator_add r v (start r v) (z-start r v) B U L s hr
+  rw [←he] at hp
+  rw [hp]
+  have h := SecondJetAffineCeiling.ceil_add_mul_le
+    (pairNumerator r v (start r v) B U L s) (pairSlope r v B U s)
+    (z-start r v) 50281
+  have hl := Nat.div_le_div_right (c := 50282)
+    (Nat.le_add_right (pairNumerator r v (start r v) B U L s+
+      (z-start r v)*pairSlope r v B U s) 50281)
+  simpa only [Nat.add_sub_cancel_left, Nat.add_sub_cancel, Nat.mul_comm] using hl.trans h
+
+theorem numericBound_le_profile (r v z : ℕ) (hr : 1 ≤ r) (hz : start r v ≤ z) :
+    SecondJetAsymmetric.numericBound r v z 47 155 2255 21 5 7 ≤ profile r v z := by
+  apply max_le_max
+  · exact pairCount_le_line r v z 47 155 2255 21 hr hz
+  · have hc := pairCount_le_line r v z 47 155 2255 0 hr hz
+    have he : z = start r v+(z-start r v) := by omega
+    have hm := SecondJetAffineCeiling.moving_ceil_add_le r v (start r v)
+      (z-start r v) 5 (SecondJetRelaxedFlag.budgetFlag 47 155 2255 6 7)
+    have hn := SecondJetSingleCap.normal_add r v (start r v) (z-start r v)
+    rw [←he] at hm hn
+    simp only [properParameters,Nat.zero_mul,Nat.add_zero] at hc
+    change leftRegularCountCap (parameters r (r+v) (r+v+z) 47 155 2255) ≤
+      coefficientValue r v+coefficientSlope r v*(z-start r v) at hc
+    change normal r v z+131076*((SecondJetAffineCeiling.moving r v z
+      (SecondJetRelaxedFlag.budgetFlag 47 155 2255 6 7)+5)/6)+
+      leftRegularCountCap (parameters r (r+v) (r+v+z) 47 155 2255) ≤ retainedLine r v z
+    rw [hn]
+    have h := Nat.add_le_add (Nat.add_le_add_left (Nat.mul_le_mul_left 131076 hm)
+      (normal r v (start r v)+(z-start r v)*(normal r v 1-normal r v 0))) hc
+    apply h.trans_eq
+    simp only [retainedLine,retainedValue,retainedSlope]
+    ring
+
+theorem properLine_affine (r v lo z : ℕ) (hlo : start r v ≤ lo) (hz : lo ≤ z) :
+    properLine r v z = properLine r v lo+properSlope r v*(z-lo) := by
+  have h : z-start r v = (lo-start r v)+(z-lo) := by omega
+  simp only [properLine,h]
+  ring
+
+theorem retainedLine_affine (r v lo z : ℕ) (hlo : start r v ≤ lo) (hz : lo ≤ z) :
+    retainedLine r v z = retainedLine r v lo+retainedSlope r v*(z-lo) := by
+  have h : z-start r v = (lo-start r v)+(z-lo) := by omega
+  simp only [retainedLine,h]
+  ring
+
+theorem profile_le_between (r v lo hi z : ℕ) (g : ℕ → ℕ) (slope : ℕ)
+    (hstart : start r v ≤ lo) (hz : lo ≤ z) (hzi : z ≤ hi)
+    (hg : ∀ zz, lo ≤ zz → zz ≤ hi → g zz = g lo+slope*(zz-lo))
+    (h0 : profile r v lo ≤ g lo) (h1 : profile r v hi ≤ g hi) :
+    profile r v z ≤ g z := by
+  have hlo : lo ≤ hi := hz.trans hzi
+  rw [hg z hz hzi]
+  apply max_le
+  · rw [properLine_affine r v lo z hstart hz]
+    have hlast := (le_max_left (properLine r v hi) (retainedLine r v hi)).trans h1
+    rw [properLine_affine r v lo hi hstart hlo, hg hi hlo le_rfl] at hlast
+    exact Lower80791.PhaseRows.affine_le_between _ _ _ _ _ _
+      (Nat.sub_le_sub_right hzi lo) ((le_max_left _ _).trans h0) hlast
+  · rw [retainedLine_affine r v lo z hstart hz]
+    have hlast := (le_max_right (properLine r v hi) (retainedLine r v hi)).trans h1
+    rw [retainedLine_affine r v lo hi hstart hlo, hg hi hlo le_rfl] at hlast
+    exact Lower80791.PhaseRows.affine_le_between _ _ _ _ _ _
+      (Nat.sub_le_sub_right hzi lo) ((le_max_right _ _).trans h0) hlast
+
+end ProximityPrize.SubmissionLower.SecondJetRefinedCap
+
+namespace ProximityPrize.SubmissionLower.SecondJetRefinedCap
+open RCN130 RCN234 RCN156 RCN347 SecondJetRegularData SecondJetRegularData.Data SecondJetOwnShape
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+variable {nodes : I ↪ K} {u0 u1 : I → K}
+
+theorem count_114 (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
+    (hown : Own S) (hL : 2255 < S.t) :
+    S.seeds.card ≤ profile S.r (S.y-S.r) (S.t-S.y) := by
+  have hs : start S.r (S.y-S.r) ≤ S.t-S.y := by
+    have := S.ry
+    have := S.yt
+    unfold start
+    omega
+  exact (SecondJetProfile114.count_114 S hI hown hL).trans
+    (numericBound_le_profile _ _ _ (by have := S.rpos; omega) hs)
+
+theorem count_le_cap (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
+    (hown : Own S)
+    (hold : S.seeds.card ≤ SecondJetSingleCap.cap (originalCumulativeFlag S.F)) :
+    S.seeds.card ≤ cap (originalCumulativeFlag S.F) := by
+  apply le_min hold
+  unfold activated
+  rw [hown]
+  dsimp only
+  have ht : S.r+(S.y-S.r)+(S.t-S.y) = S.t := by
+    have := S.ry
+    have := S.yt
+    omega
+  rw [ht]
+  split
+  · rename_i ha
+    exact count_114 S hI hown ha.2.2.2
+  · rw [hown] at hold
+    exact hold
+
+end
+end ProximityPrize.SubmissionLower.SecondJetRefinedCap
+
+end P30
+
+section P31
+namespace ProximityPrize.SubmissionLower.BoundaryTailInterpolation
+open SecondJetDifferentiation
+open MvPolynomial SecondJetSupport SecondJetGlobalSupport SecondJetSpecialize
+open SecondJetRelaxedCoefficientsReceipt SecondJetRelaxedDifferentiation
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 3000000
+variable {K N : Type*} [Field K] [Fintype N]
+
+def cutoff (m k n0 h : ℕ) : ℕ := m*181343-SecondJetRelaxedDifferentiation.reserve k n0 h*50274
+
+def Interpolant (m B s U L k n0 : ℕ) (nodes : N ↪ K) (u0 u1 : N → K)
+    (P : Poly (K := K)) : Prop :=
+  P ≠ 0 ∧
+  (∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1 ≤ s ∧ e 1+e 2+e 3 ≤ U ∧
+    e 1+e 2+e 3+e 4 ≤ L ∧
+    e 0+131071*e 2+131070*e 3+131069*e 1 < cutoff m k n0 (e 1)) ∧
+  (∀ i, MvPolynomial.X 0^m ∣ substitute (K := K)
+    (localize (nodes i) (u0 i) (u1 i) P)) ∧
+  ∀ d ≤ k, ∀ f : Polynomial K, f.natDegree ≤ 131071 → ∀ z : K, ∀ S : Finset N,
+    181343 ≤ S.card → (∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) →
+      specialize f z ((pderiv 1)^[d] P) = 0
+
+theorem exists_of_dimension (m B s U L k n0 : ℕ) (hsB : 2*s ≤ B) (hkm : k < m)
+    (hN : Fintype.card N = 262144) (nodes : N ↪ K) (u0 u1 : N → K)
+    (hcard : 262144*SecondJetRelaxedGlobalMap.rankBound m L B s U
+        (fun h => (cutoff m k n0 h+B-1)/131071) <
+      Fintype.card (SecondJetRelaxedGlobalIndex.Index (cutoff m k n0) 131071 L B s U)) :
+    ∃ P, Interpolant m B s U L k n0 nodes u0 u1 P := by
+  obtain ⟨P,hP,hbounds,hcontact⟩ := SecondJetRelaxedGlobalIndex.exists_weighted_global_contact
+    (cutoff m k n0) 131071 L B s U m hsB (by decide) nodes u0 u1 (by simpa only [hN] using hcard)
+  have hc : ∀ i, MvPolynomial.X 0^m ∣ substitute (K := K)
+      (localize (nodes i) (u0 i) (u1 i) P) := fun i =>
+    SecondJetGlobalDifferentiation.nested_to_flat_contact _ m (hcontact i)
+  refine ⟨P,hP,hbounds,hc,?_⟩
+  intro d hd f hf z S hS hvalues
+  apply derivative_vanish P m 181343 131071 k n0 d (by decide) (by decide)
+    (by omega) hd ?_ nodes u0 u1 hc f hf z S hS hvalues
+  intro e he
+  have hb := (hbounds e he).2.2.2.2
+  dsimp [cutoff] at hb
+  norm_num
+  omega
+
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailInterpolation
+
+end P31
+
+section P32
+namespace ProximityPrize.SubmissionLower.BoundaryTailLeadingCoefficient
+open MvPolynomial SecondJetSupport SecondJetGlobalSupport SecondJetSpecialize
+open SecondJetCoefficients SecondJetCoefficientSpecialization SecondJetDifferentiation
+open SecondJetRelaxedDifferentiation
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+variable {K N : Type*} [Field K]
+
+theorem coefficient_monomial_degree (f : Polynomial K) (z : K) (w : ℕ)
+    (hf : f.natDegree ≤ w) (e : Fin 4 →₀ ℕ) (c : K) :
+    (coefficientSpecialize f z (MvPolynomial.monomial e c)).natDegree ≤
+      e 0+w*e 1+(w-1)*e 2 := by
+  rw [MvPolynomial.monomial_eq, Finsupp.prod_fintype]
+  · simp only [Fin.prod_univ_succ, Fin.prod_univ_zero, mul_one, map_mul, map_pow]
+    have hc : (coefficientSpecialize f z (MvPolynomial.C c)).natDegree ≤ 0 := by
+      simp [coefficientSpecialize]
+    have h0 : (coefficientSpecialize f z (MvPolynomial.X 0)^e 0).natDegree ≤ e 0 := by
+      simp [coefficientSpecialize]
+    have h1 : (coefficientSpecialize f z (MvPolynomial.X 1)^e 1).natDegree ≤ e 1*w := by
+      simpa [coefficientSpecialize] using Polynomial.natDegree_pow_le_of_le (e 1) hf
+    have h2 : (coefficientSpecialize f z (MvPolynomial.X 2)^e 2).natDegree ≤ e 2*(w-1) := by
+      simpa [coefficientSpecialize] using Polynomial.natDegree_pow_le_of_le (e 2)
+        ((Polynomial.natDegree_derivative_le f).trans (Nat.sub_le_sub_right hf 1))
+    have h3 : (coefficientSpecialize f z (MvPolynomial.X 3)^e 3).natDegree ≤ 0 := by
+      simp [coefficientSpecialize]
+    have hh := Polynomial.natDegree_mul_le_of_le hc (Polynomial.natDegree_mul_le_of_le h0
+      (Polynomial.natDegree_mul_le_of_le h1 (Polynomial.natDegree_mul_le_of_le h2 h3)))
+    simpa [Nat.add_comm,Nat.add_left_comm,Nat.add_assoc,Nat.mul_comm] using hh
+  · intro i
+    simp
+
+theorem coefficient_degree (P : MvPolynomial (Fin 4) K) (f : Polynomial K)
+    (z : K) (w D : ℕ) (hf : f.natDegree ≤ w) (hD : 0 < D)
+    (hP : ∀ e ∈ P.support, e 0+w*e 1+(w-1)*e 2 < D) :
+    (coefficientSpecialize f z P).natDegree < D := by
+  classical
+  have ht : ∀ e ∈ P.support,
+      (coefficientSpecialize f z (MvPolynomial.monomial e (MvPolynomial.coeff e P))).natDegree ≤ D-1 := by
+    intro e he
+    have hh := coefficient_monomial_degree f z w hf e (MvPolynomial.coeff e P)
+    have hb := hP e he
+    omega
+  rw [MvPolynomial.as_sum P, map_sum]
+  have hh := Polynomial.natDegree_sum_le_of_forall_le P.support
+    (fun e => coefficientSpecialize f z (MvPolynomial.monomial e (MvPolynomial.coeff e P))) ht
+  omega
+
+theorem iterate_derivative_top {R : Type*} [CommRing R] (P : Polynomial R) (d : ℕ)
+    (hh : ∀ j, d < j → P.coeff j = 0) :
+    (Polynomial.derivative)^[d] P = Polynomial.C (d.factorial • P.coeff d) := by
+  ext j
+  rw [Polynomial.coeff_iterate_derivative]
+  by_cases hj : j = 0
+  · subst j
+    simp [Nat.descFactorial_self]
+  · rw [hh (j+d) (by omega)]
+    simp [hj]
+
+theorem specialize_top (P : Poly (K := K)) (f : Polynomial K) (z : K) (d : ℕ)
+    (hh : ∀ j, d < j → coefficientSpecialize f z ((asS P).coeff j) = 0) :
+    specialize f z ((pderiv 1)^[d] P) =
+      d.factorial • coefficientSpecialize f z ((asS P).coeff d) := by
+  rw [specialize_eq, asS_iterate, ← Polynomial.eval_map, ← Polynomial.iterate_derivative_map]
+  rw [iterate_derivative_top _ d (by intro j hj; simpa using hh j hj)]
+  simp
+
+theorem low_coefficient_vanish (P : Poly (K := K)) (m k n0 d : ℕ)
+    (hdm : d < m) (hdn : d < n0) (hfact : (d.factorial : K) ≠ 0)
+    (hP : ∀ e ∈ P.support,
+      e 0+131071*e 2+131070*e 3+131069*e 1+
+        reserve k n0 (e 1)*50274 < m*181343)
+    (nodes : N ↪ K) (u0 u1 : N → K)
+    (hcontact : ∀ i, MvPolynomial.X 0^m ∣ substitute (K := K)
+      (localize (nodes i) (u0 i) (u1 i) P))
+    (f : Polynomial K) (hf : f.natDegree ≤ 131071) (z : K) (S : Finset N)
+    (hS : 181343 ≤ S.card) (hvalues : ∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z)
+    (hh : ∀ j, d < j → coefficientSpecialize f z ((asS P).coeff j) = 0) :
+    coefficientSpecialize f z ((asS P).coeff d) = 0 := by
+  have hweight : ∀ e ∈ ((asS P).coeff d).support,
+      e 0+131071*e 1+131070*e 2 < (m-d)*181343 := by
+    intro e he
+    have hb := hP _ (coefficient_support P d e he)
+    obtain ⟨h0,h1,h2,h3,h4⟩ := lift_coordinates d e
+    rw [h0,h1,h2,h3] at hb
+    simp only [reserve,if_pos hdn] at hb
+    omega
+  have hdeg := coefficient_degree ((asS P).coeff d) f z 131071 ((m-d)*181343)
+    hf (by omega) hweight
+  have htop := specialize_top P f z d hh
+  have hv : specialize f z ((pderiv 1)^[d] P) = 0 := by
+    refine SecondJetVanish.eq_zero_of_contact_degree _ f z nodes u0 u1 S (m-d) ?_ hvalues ?_
+    · intro i _
+      apply SecondJetGlobalDifferentiation.local_derivative_contact
+      simpa only [Nat.sub_add_cancel (Nat.le_of_lt hdm)] using hcontact i
+    · rw [htop]
+      have hs := Polynomial.natDegree_smul_le d.factorial
+        (coefficientSpecialize f z ((asS P).coeff d))
+      exact (hs.trans_lt hdeg).trans_le (Nat.mul_le_mul_left (m-d) hS)
+  rw [htop,nsmul_eq_mul] at hv
+  apply (mul_eq_zero.mp hv).resolve_left
+  simpa only [map_natCast] using (Polynomial.C_ne_zero.mpr hfact)
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailLeadingCoefficient
+
+end P32
+
+section P33
+namespace ProximityPrize.SubmissionLower.BoundaryTailTotalAvoidance
+open MvPolynomial SecondJetSupport SecondJetCoefficients SecondJetCoefficientSpecialization
+open SecondJetClearedHelper SecondJetHelperWeights BoundaryTailInterpolation
+open SecondJetRelaxedCoefficientsReceipt RCN234 RCN156
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+variable {K N : Type*} [Field K] [Fintype N]
+
+def ProperHelper (F Q : MvPolynomial (Fin 4) K) (B U L s capR capY capT : ℕ)
+    (nodes : N ↪ K) (u0 u1 : N → K) : Prop :=
+  IsRelPrime F Q ∧
+  (wt residualSWeights Q ≤ B+s*(capR-1) ∧
+    wt residualYSWeights Q ≤ U+s*(capY-1) ∧
+    wt residualTotalWeights Q ≤ L+s*(capT-1)) ∧
+  ∀ f : Polynomial K, f.natDegree ≤ 131071 → ∀ z : K, ∀ S : Finset N,
+    181343 ≤ S.card → (∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) →
+    RCN319.specialization K f z F = 0 → RCN319.specialization K f z Q = 0
+
+theorem helper_or_divisibility (P : Poly (K := K)) (F : MvPolynomial (Fin 4) K)
+    (m B s U L k n0 capR capY capT : ℕ)
+    (nodes : N ↪ K) (u0 u1 : N → K)
+    (hP : Interpolant m B s U L k n0 nodes u0 u1 P)
+    (hFi : Irreducible F) (hFT : L < wt residualTotalWeights F)
+    (hsB : 2*s ≤ B) (hsU : s ≤ U) (hsL : s ≤ L) (hks : k ≤ s) (hsm : s < m)
+    (hR : 1 ≤ capR) (hY : 1 ≤ capY) (hT : 1 ≤ capT)
+    (hF : wt residualSWeights F ≤ capR ∧ wt residualYSWeights F ≤ capY ∧
+      wt residualTotalWeights F ≤ capT)
+    (hfact : ∀ d ≤ s, (d.factorial : K) ≠ 0) :
+    (∃ Q, ProperHelper F Q B U L s capR capY capT nodes u0 u1) ∨
+      (n0 ≤ (asS P).natDegree ∧ ∀ d ≤ k, F ∣ helper P F (s-d) d) := by
+  classical
+  have hflags : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
+      e 1+e 2+e 3+e 4 ≤ L := by
+    intro e he
+    have h := hP.2.1 e he
+    exact ⟨h.1,h.2.2.1,h.2.2.2.1⟩
+  have hS : ∀ e ∈ P.support, e 1 ≤ s := fun e he => (hP.2.1 e he).2.1
+  have hdegree : (asS P).natDegree ≤ s := by
+    simpa using asS_derivative_degree P s 0 hS
+  by_cases hn : (asS P).natDegree < n0
+  · left
+    let n := (asS P).natDegree
+    let Q := (asS P).leadingCoeff
+    have hQ := SecondJetTotalAvoidance.leading_not_dvd P hP.1 F L
+      (fun e he => (hflags e he).2.2) hFT
+    refine ⟨Q,hFi.isRelPrime_iff_not_dvd.mpr hQ.2,?_,?_⟩
+    · have hw := derivative_coefficient_weights P B U L 0 n hflags
+      simp only [Function.iterate_zero, id_eq, Nat.mul_zero, Nat.sub_zero] at hw
+      change wt residualSWeights ((asS P).coeff n) ≤ B+s*(capR-1) ∧
+        wt residualYSWeights ((asS P).coeff n) ≤ U+s*(capY-1) ∧
+        wt residualTotalWeights ((asS P).coeff n) ≤ L+s*(capT-1)
+      omega
+    · intro f hf z S hSc hvalues _hFzero
+      have hweight : ∀ e ∈ P.support,
+          e 0+131071*e 2+131070*e 3+131069*e 1+
+            SecondJetRelaxedDifferentiation.reserve k n0 (e 1)*50274 < m*181343 := by
+        intro e he
+        have hw := (hP.2.1 e he).2.2.2.2
+        dsimp [BoundaryTailInterpolation.cutoff] at hw
+        omega
+      apply BoundaryTailLeadingCoefficient.low_coefficient_vanish P m k n0 n
+        (by dsimp [n]; omega) hn (hfact n hdegree) hweight nodes u0 u1 hP.2.2.1
+        f hf z S hSc hvalues
+      intro j hj
+      rw [Polynomial.coeff_eq_zero_of_natDegree_lt hj,map_zero]
+  · by_cases hdiv : ∀ d ≤ k, F ∣ helper P F (s-d) d
+    · exact Or.inr ⟨Nat.le_of_not_gt hn,hdiv⟩
+    · left
+      push_neg at hdiv
+      obtain ⟨d,hd,hproper⟩ := hdiv
+      refine ⟨helper P F (s-d) d,hFi.isRelPrime_iff_not_dvd.mpr hproper,?_,?_⟩
+      · have hw := helper_weights P F B U L s d capT capY capR hsB hsU hsL
+          (hd.trans hks) hR hY hT hflags hF
+        have hr := Nat.mul_le_mul_right (capR-1) (Nat.sub_le s d)
+        have hy := Nat.mul_le_mul_right (capY-1) (Nat.sub_le s d)
+        have ht := Nat.mul_le_mul_right (capT-1) (Nat.sub_le s d)
+        omega
+      · intro f hf z S hSc hvalues hFzero
+        exact helper_vanish P F (s-d) d (asS_derivative_degree P s d hS) f z hFzero
+          (hP.2.2.2 d hd f hf z S hSc hvalues)
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailTotalAvoidance
+
+end P33
+
+section P34
+namespace ProximityPrize.SubmissionLower.BoundaryTailRegularData.Data
+open MvPolynomial RCN319 RCN260 RCN327
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+set_option maxRecDepth 100000
+variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {nodes : I ↪ K} {u0 u1 : I → K}
+
+theorem proper_count_left (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
+    (Q : MvPolynomial (Fin 4) K) (R capY T : ℕ) (hrel : IsRelPrime S.F Q)
+    (hQ : Q.degreeOf 1 ≤ capY ∧ Q.degreeOf 2 ≤ R ∧ Q.degreeOf 3 ≤ T)
+    (hgates : S.PairGates R capY T)
+    (hzero : ∀ gamma ∈ S.seeds, specialization K (S.selected gamma) gamma Q=0) :
+    S.seeds.card ≤ AsymmetricHelper.leftRegularCountCap (S.pair R capY T) := by
+  have hF := SecondJetPairBounds.degree_caps_of_weights S.F S.r S.y S.t S.weights
+  have hcount := SecondJetProperCounting.regular_seed_bound_left
+    (S.pair R capY T) S.F Q S.irreducible S.rdegree hrel 2130706433
+    hF.1 hF.2.1 hF.2.2 hQ.1 hQ.2.1 hQ.2.2 (by have := S.rpos; dsimp [pair]; omega)
+    (by have := S.ybound; dsimp [pair]; omega)
+    (by have := S.rbound; dsimp [pair]; omega)
+    (by have := S.tbound; dsimp [pair]; omega)
+    hgates.1 hgates.2.1 hgates.2.2 S.selected S.seeds Finset.univ nodes u0 u1
+    nodes.injective.injOn (by simpa only [Finset.card_univ,pair] using hI)
+    (by norm_num [pair]) (by norm_num [pair]) (by norm_num [pair]) (by norm_num [pair])
+    S.degree S.agreement (by simpa only [pair,UnequalParameters.errors,
+      (show (262144 - 181343 : ℕ) = 80801 by decide),RCN327.w] using S.noPencil)
+    S.solution S.regular hzero
+  exact SecondJetPairBounds.count_le_left_cap (S.pair R capY T) S.F hF.1 hF.2.1 hF.2.2
+    S.seeds.card (by change 0 < (181343 - 131071 : ℕ); decide) hcount
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailRegularData.Data
+
+
+
+namespace ProximityPrize.SubmissionLower.BoundaryTailAsymmetric
+open scoped Classical
+open MvPolynomial RCN135 RCN136 RCN319 RCN327 RCN238 RCN222 RCN234 RCN156
+open BoundaryTailRegularData BoundaryTailRegularData.Data SecondJetCoefficients
+open BoundaryTailInterpolation BoundaryTailTotalAvoidance SecondJetExceptionalComponents
+open AsymmetricHelper
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {nodes : I ↪ K} {u0 u1 : I → K}
+
+def bound (S : Data nodes u0 u1) (B U L s k n0 : ℕ) : ℕ :=
+  max (leftRegularCountCap (S.pair (B+s*(S.r-1)) (U+s*(S.y-1)) (L+s*(S.t-1))))
+    (S.normal+65539*((S.moving B U L k n0+k)/(k+1))+leftRegularCountCap (S.pair B U L))
+
+theorem count_of_interpolant_total (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
+    (P : SecondJetSupport.Poly (K := K)) (m B s U L k n0 : ℕ)
+    (hP : Interpolant m B s U L k n0 nodes u0 u1 P)
+    (hL : L < wt residualTotalWeights S.F)
+    (hsB : 2*s ≤ B) (hsU : s ≤ U) (hsL : s ≤ L) (hks : k ≤ s) (hsm : s < m)
+    (hBU : B ≤ U) (hUL : U ≤ L) (hdn : k+1 ≤ n0) (hB : 2*(n0-(k+1)) ≤ B)
+    (hfact : ∀ d ≤ s, (d.factorial : K) ≠ 0)
+    (h2 : (2 : GenericField K) ≠ 0) (hfactG : (k.factorial : GenericField K) ≠ 0)
+    (hhelperGates : S.PairGates (B+s*(S.r-1)) (U+s*(S.y-1)) (L+s*(S.t-1)))
+    (hcoefficientGates : S.PairGates B U L) :
+    S.seeds.card ≤ bound S B U L s k n0 := by
+  have hflags : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
+      e 1+e 2+e 3+e 4 ≤ L := fun e he =>
+    ⟨(hP.2.1 e he).1,(hP.2.1 e he).2.2.1,(hP.2.1 e he).2.2.2.1⟩
+  have hS : ∀ e ∈ P.support, e 1 ≤ s := fun e he => (hP.2.1 e he).2.1
+  have halt := BoundaryTailTotalAvoidance.helper_or_divisibility P S.F m B s U L k n0 S.r S.y S.t nodes u0 u1 hP
+    S.irreducible hL hsB hsU hsL hks hsm
+    (by have := S.rpos; omega) (by have := S.ry; omega) (by have := S.yt; omega)
+    S.weights hfact
+  rcases halt with ⟨Q,hQ⟩ | ⟨hn,hdiv⟩
+  · have hzero : ∀ gamma ∈ S.seeds, specialization K (S.selected gamma) gamma Q = 0 := by
+      intro gamma hgamma
+      apply hQ.2.2 (S.selected gamma) (S.degree gamma hgamma) gamma
+        (Finset.univ.filter (fun i => (S.selected gamma).eval (nodes i)=u0 i+gamma*u1 i))
+        (S.agreement gamma hgamma) ?_ (S.solution gamma hgamma)
+      intro i hi
+      simpa only [mul_comm] using (Finset.mem_filter.mp hi).2
+    have hc := S.proper_count_left hI Q (B+s*(S.r-1)) (U+s*(S.y-1)) (L+s*(S.t-1))
+      hQ.1 (SecondJetPairBounds.degree_caps_of_weights Q _ _ _ hQ.2.1) hhelperGates hzero
+    exact hc.trans (le_max_left _ _)
+  · let C := (asS P).leadingCoeff
+    let point := RCN238.selectedPoint (polynomialEmbedding K) S.selected
+    let T := surfaceMap (polynomialEmbedding K) C
+    let Good := goodSeeds S.seeds point T
+    let Bad := exceptionalSeeds S.seeds point T
+    have hgoodSub : Good ⊆ S.seeds := Finset.filter_subset _ _
+    have hbadSub : Bad ⊆ S.seeds := Finset.filter_subset _ _
+    let SG := S.restrict Good hgoodSub
+    let SB := S.restrict Bad hbadSub
+    have hgood : ∀ gamma ∈ SG.seeds,
+        MvPolynomial.eval (RCN238.selectedPoint (polynomialEmbedding K) SG.selected gamma)
+          (surfaceMap (polynomialEmbedding K) (asS P).leadingCoeff) ≠ 0 := by
+      intro gamma hgamma
+      exact (Finset.mem_filter.mp hgamma).2
+    have hscaled := SG.retained_scaled hI P B U L s k n0 hS hflags hBU hUL hdn hB hn hdiv h2 hfactG hgood
+    have hGcount := SecondJetRounding.count_le Good.card S.normal (S.moving B U L k n0) 65539 k hscaled
+    have hproper := SecondJetTotalAvoidance.leading_not_dvd P hP.1 S.F L
+      (fun e he => (hflags e he).2.2) hL
+    have hrel : IsRelPrime SB.F C := S.irreducible.isRelPrime_iff_not_dvd.mpr hproper.2
+    have hzero : ∀ gamma ∈ SB.seeds, specialization K (SB.selected gamma) gamma C = 0 := by
+      intro gamma hgamma
+      have hz : MvPolynomial.eval (point gamma) T = 0 := (Finset.mem_filter.mp hgamma).2
+      change MvPolynomial.eval (RCN238.selectedPoint (polynomialEmbedding K) S.selected gamma)
+        (surfaceMap (polynomialEmbedding K) C)=0 at hz
+      rw [selectedPoint_surface_evaluation] at hz
+      change specialization K (S.selected gamma) gamma C = 0
+      exact (polynomialEmbedding_injective K) (by simpa only [map_zero] using hz)
+    have hBcount := SB.proper_count_left hI C B U L hrel
+      (SecondJetPairBounds.leading_degree_caps P B U L hflags) hcoefficientGates hzero
+    have hpartition := card_partition S.seeds point T
+    have hc : S.seeds.card ≤ S.normal+65539*((S.moving B U L k n0+k)/(k+1))+
+        leftRegularCountCap (S.pair B U L) := by
+      rw [hpartition]
+      exact Nat.add_le_add hGcount hBcount
+    exact hc.trans (le_max_right _ _)
+
+
+def numericBound (r v z B U L s k n0 : ℕ) : ℕ :=
+  max (leftRegularCountCap (BoundaryTailNumericGeometry.properParameters r v z B U L s))
+    (BoundaryTailNumericGeometry.normal r v z+
+      65539*((SecondJetAffineCeiling.moving r v z
+        (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0)+k)/(k+1))+
+      leftRegularCountCap (BoundaryTailNumericGeometry.parameters r (r+v) (r+v+z) B U L))
+
+theorem bound_eq_numeric (S : Data nodes u0 u1) (hown : BoundaryTailOwnShape.Own S)
+    (B U L s k n0 : ℕ) :
+    bound S B U L s k n0 = numericBound S.r (S.y-S.r) (S.t-S.y) B U L s k n0 := by
+  have hy : S.r+(S.y-S.r) = S.y := by have := S.ry; omega
+  have ht : S.y+(S.t-S.y) = S.t := by have := S.yt; omega
+  unfold bound numericBound
+  rw [BoundaryTailOwnShape.normal_eq S hown, BoundaryTailOwnShape.moving_eq S hown]
+  simp only [BoundaryTailNumericGeometry.properParameters, BoundaryTailNumericGeometry.parameters,
+    Data.pair, hy, ht]
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailAsymmetric
+
+end P34
+
+section P35
+namespace ProximityPrize.SubmissionLower.BoundaryTailProfile116
+
+open RCN135 SecondJetRelaxedGlobalIndex SecondJetRelaxedGlobalCounts
+open SecondJetRelaxedDifferentiation SecondJetRelaxedGlobalMap
+open SecondJetRelaxedCoefficientsReceipt
+
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 8000000
+
+def m : ℕ := 116
+def B : ℕ := 47
+def s : ℕ := 21
+def U : ℕ := 157
+def L : ℕ := 2286
+def k : ℕ := 5
+def n0 : ℕ := 7
+
+theorem coefficient_count :
+    coefficientCount (BoundaryTailInterpolation.cutoff m k n0) 131071 L B s U =
+      1606478760777756 := by decide
+
+theorem local_rank :
+    SecondJetRelaxedCounts.rankBound m L B s U = 6128217722 := by decide
+
+theorem cutoff_caps : ∀ h : Fin (s + 1),
+    U ≤ (BoundaryTailInterpolation.cutoff m k n0 h.val + B - 1) / 131071 := by
+  decide
+
+theorem source_card :
+    Fintype.card (Index (BoundaryTailInterpolation.cutoff m k n0)
+      131071 L B s U) = 1606478760777756 := by
+  rw [card_index_closed _ _ _ _ _ _ (by decide), coefficient_count]
+
+theorem exact_rank :
+    SecondJetRelaxedGlobalMap.rankBound m L B s U
+      (fun h => (BoundaryTailInterpolation.cutoff m k n0 h + B - 1) / 131071) =
+        6128217722 := by
+  rw [SecondJetRelaxedCounts.rankBound_eq_closed _ _ _ _ _ _ (by decide) (by decide) (by decide)
+    (by decide) (fun h hh => cutoff_caps ⟨h, by omega⟩), local_rank]
+
+theorem dimension_gap :
+    262144 * 6128217722 < 1606478760777756 := by decide
+
+variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+variable {nodes : I ↪ K} {u0 u1 : I → K}
+local instance : CharP (GenericField K) 2130706433 :=
+  genericField_charP K 2130706433
+
+theorem exists_interpolant (hI : Fintype.card I = 262144) :
+    ∃ P, BoundaryTailInterpolation.Interpolant m B s U L k n0
+      nodes u0 u1 P := by
+  apply BoundaryTailInterpolation.exists_of_dimension m B s U L k n0
+    (by decide) (by decide) hI nodes u0 u1
+  rw [exact_rank, source_card]
+  exact dimension_gap
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailProfile116
+
+end P35
+
+section P36
+namespace ProximityPrize.SubmissionLower.BoundaryTailProfileCount
+open BoundaryTailNumericGeometry RCN260 RCN294 RCN135
+open BoundaryTailRegularData BoundaryTailRegularData.Data BoundaryTailOwnShape
+open BoundaryTailProfile116 (exists_interpolant)
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 3000000
+variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+variable {nodes : I ↪ K} {u0 u1 : I → K}
+local instance : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
+
+theorem uniform_gates (r y t R U T : ℕ)
+    (hr : r ≤ 30) (hy : y ≤ 139) (ht : t ≤ 7199)
+    (hR : R ≤ 656) (hU : U ≤ 3055) (hT : T ≤ 153444) :
+    (parameters r y t R U T).mixedCost.y < 2130706433 ∧
+    (parameters r y t R U T).mixedCost.r < 2130706433 ∧
+    (parameters r y t R U T).mixedCost.z < 2130706433 := by
+  have h := mixed_mono hr hy ht hR hU hT
+  exact ⟨h.1.trans_lt (by norm_num [parameters,UnequalParameters.mixedCost]),
+    h.2.1.trans_lt (by norm_num [parameters,UnequalParameters.mixedCost]),
+    h.2.2.trans_lt (by norm_num [parameters,UnequalParameters.mixedCost])⟩
+
+theorem helper_gates (S : Data nodes u0 u1) :
+    S.PairGates (47+21*(S.r-1)) (157+21*(S.y-1)) (2286+21*(S.t-1)) := by
+  apply uniform_gates _ _ _ _ _ _ S.rbound S.ybound S.tbound
+  · have := S.rbound
+    omega
+  · have := S.ybound
+    omega
+  · have := S.tbound
+    omega
+
+theorem coefficient_gates (S : Data nodes u0 u1) : S.PairGates 47 157 2286 :=
+  uniform_gates _ _ _ _ _ _ S.rbound S.ybound S.tbound (by decide) (by decide) (by decide)
+
+theorem count_116 (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
+    (hown : Own S) (hL : 2286 < S.t) :
+    S.seeds.card ≤ BoundaryTailAsymmetric.numericBound S.r (S.y-S.r) (S.t-S.y)
+      47 157 2286 21 5 7 := by
+  obtain ⟨P,hP⟩ := exists_interpolant (nodes := nodes) (u0 := u0) (u1 := u1) hI
+  have hc := BoundaryTailAsymmetric.count_of_interpolant_total S hI P 116 47 21 157 2286 5 7 hP
+    (avoidance_total S hown _ hL)
+    (by decide) (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide)
+    (fun d hd => factorial_ne (K := K) d (by omega))
+    (two_ne (K := GenericField K)) (factorial_ne (K := GenericField K) 5 (by decide))
+    (helper_gates S) (coefficient_gates S)
+  rwa [BoundaryTailAsymmetric.bound_eq_numeric S hown] at hc
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailProfileCount
+
+end P36
+
+section P37
+namespace ProximityPrize.SubmissionLower.BoundaryTailRefinedCap
+open RCN095 RCN260 RCN294 AsymmetricHelper BoundaryTailNumericGeometry
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+def pairNumerator (r v z B U L s : ℕ) : ℕ :=
+  leftRegularNumerator (properParameters r v z B U L s)
+
+def pairSlope (r v B U s : ℕ) : ℕ :=
+  131073*((1+262142*(r+v))*(r*s+B+s*(r-1))+
+    131071*(2*r-1)*((r+v)*s+U+s*(r+v-1))+
+    262142*((r+v)*(B+s*(r-1))+r*(U+s*(r+v-1))))
+
+theorem pairNumerator_add (r v z h B U L s : ℕ) (hr : 1 ≤ r) :
+    pairNumerator r v (z+h) B U L s =
+      pairNumerator r v z B U L s + h*pairSlope r v B U s := by
+  have hs : r+v+(z+h)-1 = (r+v+z-1)+h := by omega
+  simp only [pairNumerator,pairSlope,properParameters,leftRegularNumerator,
+    UnequalParameters.leftAgreement,UnequalParameters.mixedCost,
+    UnequalParameters.errors,UnequalParameters.gap,dot]
+  rw [hs]
+  ring
+
+def start (r v : ℕ) : ℕ := 2287-(r+v)
+
+def properValue (r v : ℕ) : ℕ :=
+  (pairNumerator r v (start r v) 47 157 2286 21+50271)/50272
+def properSlope (r v : ℕ) : ℕ := (pairSlope r v 47 157 21+50271)/50272
+def coefficientValue (r v : ℕ) : ℕ :=
+  (pairNumerator r v (start r v) 47 157 2286 0+50271)/50272
+def coefficientSlope (r v : ℕ) : ℕ := (pairSlope r v 47 157 0+50271)/50272
+
+def retainedValue (r v : ℕ) : ℕ :=
+  normal r v (start r v)+
+    65539*((SecondJetAffineCeiling.moving r v (start r v)
+      (SecondJetRelaxedFlag.budgetFlag 47 157 2286 6 7)+5)/6)+coefficientValue r v
+
+def retainedSlope (r v : ℕ) : ℕ :=
+  (normal r v 1-normal r v 0)+
+    65539*((SecondJetAffineCeiling.movingSlope r v
+      (SecondJetRelaxedFlag.budgetFlag 47 157 2286 6 7)+5)/6)+coefficientSlope r v
+
+def properLine (r v z : ℕ) : ℕ := properValue r v+properSlope r v*(z-start r v)
+def retainedLine (r v z : ℕ) : ℕ := retainedValue r v+retainedSlope r v*(z-start r v)
+def profile (r v z : ℕ) : ℕ := max (properLine r v z) (retainedLine r v z)
+
+theorem normal_add (r v z h : ℕ) :
+    normal r v (z+h) = normal r v z + h*(normal r v 1-normal r v 0) := by
+  have hid : normal r v (z+h)+h*normal r v 0 =
+      normal r v z+h*normal r v 1 := by
+    simp only [normal,flagMixed,add_zOnly,add_yz,add_all,
+      nsmul_zOnly,nsmul_yz,nsmul_all,unitAllFlag]
+    ring
+  have hle : normal r v 0 ≤ normal r v 1 := by
+    dsimp [normal,flagMixed]
+    gcongr <;> norm_num
+  have hs := Nat.sub_add_cancel hle
+  nlinarith
+
+theorem pairCount_le_line (r v z B U L s : ℕ) (hr : 1 ≤ r)
+    (hz : start r v ≤ z) :
+    leftRegularCountCap (properParameters r v z B U L s) ≤
+      (pairNumerator r v (start r v) B U L s+50271)/50272+
+      ((pairSlope r v B U s+50271)/50272)*(z-start r v) := by
+  have he : z = start r v+(z-start r v) := by omega
+  unfold leftRegularCountCap
+  rw [show (properParameters r v z B U L s).gap = 50272 by
+    norm_num [properParameters,UnequalParameters.gap]]
+  change pairNumerator r v z B U L s / 50272 ≤ _
+  have hp := pairNumerator_add r v (start r v) (z-start r v) B U L s hr
+  rw [←he] at hp
+  rw [hp]
+  have h := SecondJetAffineCeiling.ceil_add_mul_le
+    (pairNumerator r v (start r v) B U L s) (pairSlope r v B U s)
+    (z-start r v) 50271
+  have hl := Nat.div_le_div_right (c := 50272)
+    (Nat.le_add_right (pairNumerator r v (start r v) B U L s+
+      (z-start r v)*pairSlope r v B U s) 50271)
+  simpa only [Nat.add_sub_cancel_left, Nat.add_sub_cancel, Nat.mul_comm] using hl.trans h
+
+theorem numericBound_le_profile (r v z : ℕ) (hr : 1 ≤ r) (hz : start r v ≤ z) :
+    BoundaryTailAsymmetric.numericBound r v z 47 157 2286 21 5 7 ≤ profile r v z := by
+  apply max_le_max
+  · exact pairCount_le_line r v z 47 157 2286 21 hr hz
+  · have hc := pairCount_le_line r v z 47 157 2286 0 hr hz
+    have he : z = start r v+(z-start r v) := by omega
+    have hm := SecondJetAffineCeiling.moving_ceil_add_le r v (start r v)
+      (z-start r v) 5 (SecondJetRelaxedFlag.budgetFlag 47 157 2286 6 7)
+    rw [←he] at hm
+    simp only [properParameters,Nat.zero_mul,Nat.add_zero] at hc
+    change leftRegularCountCap (parameters r (r+v) (r+v+z) 47 157 2286) ≤
+      coefficientValue r v+coefficientSlope r v*(z-start r v) at hc
+    change normal r v z+65539*((SecondJetAffineCeiling.moving r v z
+      (SecondJetRelaxedFlag.budgetFlag 47 157 2286 6 7)+5)/6)+
+      leftRegularCountCap (parameters r (r+v) (r+v+z) 47 157 2286) ≤ retainedLine r v z
+    have hn := normal_add r v (start r v) (z-start r v)
+    rw [←he] at hn
+    rw [hn]
+    have h := Nat.add_le_add (Nat.add_le_add_left (Nat.mul_le_mul_left 65539 hm)
+      (normal r v (start r v)+(z-start r v)*(normal r v 1-normal r v 0))) hc
+    apply h.trans_eq
+    simp only [retainedLine,retainedValue,retainedSlope]
+    ring
+
+end ProximityPrize.SubmissionLower.BoundaryTailRefinedCap
+
+end P37
+
+section P38
+namespace ProximityPrize.SubmissionLower.BoundaryTailBase
+
+open scoped Classical BigOperators
+open MvPolynomial RCN135 RCN136 RCN319 RCN238 RCN243 RCN130 RCN234 RCN156
+open RCN095 RCN174 RCN275 RCN327 RCN140 RCN266 RCN286
+open LocatorHybridCells
+
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+set_option maxRecDepth 100000
+
+def Active (p : FlagDegree) : Prop :=
+  3 ≤ p.all ∧ 2 ≤ p.yz ∧ 2 ≤ p.zOnly ∧ 2286 < p.all+p.yz+p.zOnly
+
+instance (p : FlagDegree) : Decidable (Active p) := by
+  unfold Active
+  infer_instance
+
+/-- The sole profile refinement of the new ordinary singleton cost. -/
+def cap (p : FlagDegree) : ℕ :=
+  if Active p then
+    min (BoundaryTailOrdinary.rawCost p)
+      (BoundaryTailRefinedCap.profile p.all p.yz p.zOnly)
+  else BoundaryTailOrdinary.rawCost p
+
+theorem cap_le_raw (p : FlagDegree) : cap p ≤ BoundaryTailOrdinary.rawCost p := by
+  unfold cap
+  split_ifs
+  · exact min_le_left _ _
+  · exact le_rfl
+
+theorem cap_le_profile (p : FlagDegree) (h : Active p) :
+    cap p ≤ BoundaryTailRefinedCap.profile p.all p.yz p.zOnly := by
+  rw [cap, if_pos h]
+  exact min_le_right _ _
+
+section Carrier
+variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+variable {nodes : I ↪ K} {u0 u1 : I → K}
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+
+/-- Build the retained-profile context from the carrier's actual cumulative
+weights, restricting neither the source box nor the selected solution set. -/
+def ofCarrier (D L s : ℕ) (F : MvPolynomial (Fin 4) K)
+    (hDlow : 131072 ≤ D) (hDchar : D < 2130706433)
+    (hF : Irreducible F) (hrdegree : 0 < F.degreeOf 2)
+    (hbox : F ∈ globalCoefficientBox K D w L s)
+    (ht : wt residualTotalWeights F ≤ 7199) (hy : wt residualYSWeights F ≤ 139)
+    (hr : wt residualSWeights F ≤ 30)
+    (h3 : 3 ≤ wt residualSWeights F)
+    (hry : wt residualSWeights F+2 ≤ wt residualYSWeights F)
+    (hyt : wt residualYSWeights F+2 ≤ wt residualTotalWeights F)
+    (selected : K → Polynomial K) (seeds : Finset K)
+    (hdegree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ w)
+    (hagreement : ∀ gamma ∈ seeds, 181343 ≤
+      (Finset.univ.filter (fun i => (selected gamma).eval (nodes i) = u0 i+gamma*u1 i)).card)
+    (hsolution : ∀ gamma ∈ seeds, specialization K (selected gamma) gamma F=0)
+    (hregular : ∀ gamma ∈ seeds,
+      specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0)
+    (hno : NoLargeSelectedPencil selected seeds w 80801) :
+    BoundaryTailRegularData.Data nodes u0 u1 where
+  D := D
+  t := wt residualTotalWeights F
+  y := wt residualYSWeights F
+  r := wt residualSWeights F
+  Dlow := hDlow
+  Dchar := hDchar
+  tbound := ht
+  ybound := hy
+  rbound := hr
+  rpos := h3
+  ry := hry
+  yt := hyt
+  F := F
+  irreducible := hF
+  rdegree := hrdegree
+  box := by
+    intro e he
+    have hs := MvPolynomial.le_weightedTotalDegree residualSWeights he
+    have ht := MvPolynomial.le_weightedTotalDegree residualTotalWeights he
+    simp only [RCN081.weight_fin4,residualSWeights,residualTotalWeights,Fin.isValue,
+      Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val,Nat.mul_zero,Nat.mul_one,
+      Nat.zero_add,Nat.add_zero] at hs ht
+    change e 1+e 2+e 3 ≤ wt residualTotalWeights F at ht
+    exact ⟨by omega,hs,(hbox he).2.2⟩
+  support := by
+    constructor <;> dsimp only [cellSupport,RCN198.support,cellA,cellB,cellS] <;> omega
+  selected := selected
+  seeds := seeds
+  degree := hdegree
+  agreement := hagreement
+  solution := hsolution
+  regular := hregular
+  noPencil := hno
+
+theorem carrier_count_le_profile (D L s : ℕ) (F : MvPolynomial (Fin 4) K)
+    (hDlow : 131072 ≤ D) (hDchar : D < 2130706433)
+    (hF : Irreducible F) (hrdegree : 0 < F.degreeOf 2)
+    (hbox : F ∈ globalCoefficientBox K D w L s)
+    (ht : wt residualTotalWeights F ≤ 7199) (hy : wt residualYSWeights F ≤ 139)
+    (hr : wt residualSWeights F ≤ 30)
+    (selected : K → Polynomial K) (seeds : Finset K)
+    (hdegree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ w)
+    (hagreement : ∀ gamma ∈ seeds, 181343 ≤
+      (Finset.univ.filter (fun i => (selected gamma).eval (nodes i) = u0 i+gamma*u1 i)).card)
+    (hsolution : ∀ gamma ∈ seeds, specialization K (selected gamma) gamma F=0)
+    (hregular : ∀ gamma ∈ seeds,
+      specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0)
+    (hno : NoLargeSelectedPencil selected seeds w 80801)
+    (hI : Fintype.card I=262144)
+    (ha : Active (originalCumulativeFlag F)) :
+    seeds.card ≤ BoundaryTailRefinedCap.profile
+      (originalCumulativeFlag F).all (originalCumulativeFlag F).yz
+      (originalCumulativeFlag F).zOnly := by
+  let p := originalCumulativeFlag F
+  have ha' : 3 ≤ p.all ∧ 2 ≤ p.yz ∧ 2 ≤ p.zOnly ∧
+      2286 < p.all+p.yz+p.zOnly := ha
+  have h3 : 3 ≤ wt residualSWeights F := ha'.1
+  have hry : wt residualSWeights F+2 ≤ wt residualYSWeights F := by
+    have hv : 2 ≤ wt residualYSWeights F-wt residualSWeights F := ha'.2.1
+    omega
+  have hyt : wt residualYSWeights F+2 ≤ wt residualTotalWeights F := by
+    have hz : 2 ≤ wt residualTotalWeights F-wt residualYSWeights F := ha'.2.2.1
+    omega
+  have htotal : p.all+p.yz+p.zOnly = wt residualTotalWeights F := by
+    change wt residualSWeights F+(wt residualYSWeights F-wt residualSWeights F)+
+      (wt residualTotalWeights F-wt residualYSWeights F) = wt residualTotalWeights F
+    omega
+  let S := ofCarrier D L s F hDlow hDchar hF hrdegree hbox ht hy hr h3 hry hyt
+    selected seeds hdegree hagreement hsolution hregular hno
+  have hown : BoundaryTailOwnShape.Own S := rfl
+  have hL : 2286 < S.t := by
+    change 2286 < wt residualTotalWeights F
+    rw [← htotal]
+    exact ha'.2.2.2
+  have hb := BoundaryTailProfileCount.count_116 S hI hown hL
+  change seeds.card ≤ BoundaryTailAsymmetric.numericBound p.all p.yz p.zOnly
+    47 157 2286 21 5 7 at hb
+  exact hb.trans (BoundaryTailRefinedCap.numericBound_le_profile p.all p.yz p.zOnly
+    (by omega) (by unfold BoundaryTailRefinedCap.start; omega))
+
+end Carrier
+
+section Benchmark
+open ProximityPrize.Benchmark
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+abbrev P4 := MvPolynomial (Fin 4) K
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
+
+/-- The semantic base cap for every actual regular factor. Ordinary counting,
+profile interpolation, retained geometry and exceptional events are supplied
+by proved construction theorems, not assumptions on an external provider. -/
+theorem regular_factor_count
+    (D : ℕ) (P : ResidualSupportParameters)
+    (hDlow : 131072 ≤ D) (hDchar : D < 2130706433)
+    (hS : P.s ≤ 30) (hY : P.ys ≤ 139) (hT : P.total ≤ 7199)
+    (Q : P4) (hQ : Q ≠ 0)
+    (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
+    (HQ : ResidualSupportData P Q)
+    (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      ((Finset.univ : Finset I).filter (fun i =>
+        (selected gamma).eval (IRSProfile.domain i) = u0 i+gamma*u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80801)
+    (R : RegularIndex Q) :
+    (regularSeeds Q selected Gamma R).card ≤ cap (regularCumulativeFlag Q R) := by
+  have hold := BoundaryTailOrdinary.regular_factor_count_raw D P hDlow hDchar
+    hS hY hT Q hQ hbox HQ selected Gamma u0 u1 hdegree hagreement hno R
+  unfold cap
+  split_ifs with ha
+  · apply le_min hold
+    have hRdata := directFactor_data Q R.1 hQ D 131071 P.total P.s hbox R.2
+    have hRsupport := BoundaryTailOrdinary.factor_support Q hQ HQ R
+    have hsub := regularSeeds_subset Q selected Gamma R
+    exact carrier_count_le_profile (nodes := IRSProfile.domain) (u0 := u0) (u1 := u1)
+      D P.total P.s R.1 hDlow hDchar hRdata.1 hRdata.2.1 hRdata.2.2
+      (hRsupport.total_weight.trans hT) (hRsupport.ys_weight.trans hY)
+      (hRsupport.s_weight.trans hS)
+      selected (regularSeeds Q selected Gamma R)
+      (fun gamma hg => hdegree gamma (hsub hg))
+      (fun gamma hg => hagreement gamma (hsub hg))
+      (fun gamma hg => (Finset.mem_filter.mp hg).2.1)
+      (fun gamma hg => (Finset.mem_filter.mp hg).2.2)
+      (noLargeSelectedPencil_mono selected Gamma _ 131071 80801 hsub hno)
+      (by norm_num [I, IRSProfile.Index]) ha
+  · exact hold
+
+end Benchmark
+end
+end ProximityPrize.SubmissionLower.BoundaryTailBase
+
+end P38
+
+section P39
+namespace ProximityPrize.SubmissionLower.Lower80801.FactorSwitch
+
+open ProximityPrize.Benchmark
+open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
+  RCN238 RCN260 RCN266 RCN319
+open LocatorCoprimeQuotient LocatorLowQuotient
+
+open scoped Classical
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+abbrev P4 := MvPolynomial (Fin 4) K
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
+
+/-- Unequal-pair parameters for a regular factor and an arbitrary helper
+source.  Keeping the source parameters explicit lets all external locator
+profiles share one factor-switch proof. -/
+def helperPair (L YS S leftY leftR leftZ : ℕ) : UnequalParameters :=
+  ⟨262144, 131071, 181343, leftY, leftR, leftZ, YS, S, L⟩
+
+def HelperPairGates (L YS S leftY leftR leftZ : ℕ) : Prop :=
+  let P := helperPair L YS S leftY leftR leftZ
+  1 ≤ P.leftR ∧ P.leftY < 2130706433 ∧ P.leftR < 2130706433 ∧
+    P.leftZ < 2130706433 ∧ P.mixedCost.y < 2130706433 ∧
+    P.mixedCost.r < 2130706433 ∧ P.mixedCost.z < 2130706433
+
+private theorem degreeY_le_ysWeight (Q : P4) :
+    Q.degreeOf (1 : Fin 4) ≤ wt residualYSWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualYSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 0 ≤
+    wt residualYSWeights Q at h
+  omega
+
+private theorem degreeR_le_sWeight (Q : P4) :
+    Q.degreeOf (2 : Fin 4) ≤ wt residualSWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 0 + d 2 * 1 + d 3 * 0 ≤
+    wt residualSWeights Q at h
+  omega
+
+private theorem degreeZ_le_totalWeight (Q : P4) :
+    Q.degreeOf (3 : Fin 4) ≤ wt residualTotalWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualTotalWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 1 ≤
+    wt residualTotalWeights Q at h
+  omega
+
+/-- For each regular irreducible factor, either it divides an entire source
+kernel or one source witness is coprime to it and supplies the unequal-pair
+count. -/
+theorem divisor_or_helper_count
+    (D L S m YS : ℕ) (hD : 0 < D) (hDa : D ≤ m * 181343)
+    (hshape : D + S ≤ 131071 * (YS + 1))
+    {u0 u1 : I → K} {H : P4}
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80801)
+    (F : RegularIndex H) (leftY leftR leftZ : ℕ)
+    (hFY : F.1.degreeOf 1 ≤ leftY)
+    (hFR : F.1.degreeOf 2 ≤ leftR)
+    (hFZ : F.1.degreeOf 3 ≤ leftZ)
+    (hgates : HelperPairGates L YS S leftY leftR leftZ) :
+    (∀ v : ConstraintKernel (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1,
+      F.1 ∣ reconstruct K D 131071 L S v.1) ∨
+      (regularSeeds H selected Gamma F).card ≤
+        AsymmetricHelper.leftRegularCountCap (helperPair L YS S leftY leftR leftZ) := by
+  classical
+  by_cases hdiv : ∀ v : ConstraintKernel (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1,
+      F.1 ∣ reconstruct K D 131071 L S v.1
+  · exact Or.inl hdiv
+  · right
+    push Not at hdiv
+    obtain ⟨v, hv⟩ := hdiv
+    let Q := reconstruct K D 131071 L S v.1
+    have hF := RCN167.positiveRFactors_spec H F.1 F.2
+    have hrel : IsRelPrime F.1 Q :=
+      hF.1.isRelPrime_iff_not_dvd.mpr hv
+    have hQbox : Q ∈ globalCoefficientBox K D 131071 L S :=
+      reconstruct_mem_globalCoefficientBox K D 131071 L S v.1
+    have hQYS : wt residualYSWeights Q ≤ YS := by
+      apply flag_box_ys_bound D 131071 L S YS (by decide) hshape Q hQbox
+    have hweights := (mem_flagGlobalCoefficientBox_iff Q
+      D 131071 L S hD).mp hQbox
+    have hQY : Q.degreeOf 1 ≤ YS :=
+      (degreeY_le_ysWeight Q).trans hQYS
+    have hQR : Q.degreeOf 2 ≤ S :=
+      (degreeR_le_sWeight Q).trans hweights.2.1
+    have hQZ : Q.degreeOf 3 ≤ L :=
+      (degreeZ_le_totalWeight Q).trans hweights.1
+    obtain ⟨hleftR, hleftYSmall, hleftRSmall, hleftZSmall,
+      hmixedYSmall, hmixedRSmall, hmixedZSmall⟩ := hgates
+    apply AsymmetricHelper.regularSeeds_count_le_left_intersection
+      (helperPair L YS S leftY leftR leftZ) H Q F hrel 2130706433
+      hFY hFR hFZ hQY hQR hQZ
+      hleftR hleftYSmall hleftRSmall hleftZSmall
+      hmixedYSmall hmixedRSmall hmixedZSmall
+      selected Gamma (Finset.univ : Finset I) IRSProfile.domain u0 u1
+      IRSProfile.domain.injective.injOn
+      (by
+        change (Finset.univ : Finset I).card = 262144
+        rw [Finset.card_univ]
+        exact Fintype.card_fin _)
+      (by norm_num [helperPair]) (by norm_num [helperPair])
+      (by norm_num [helperPair]) (by norm_num [helperPair])
+      (by simpa only [helperPair] using hdegree)
+      (by simpa only [helperPair] using hagreement)
+      (by simpa only [helperPair, UnequalParameters.errors, (show (262144 - 181343 : ℕ) = 80801 by decide +kernel)] using hno)
+    intro gamma hgamma
+    dsimp only [Q]
+    apply specialization_eq_zero_of_mem_ker K
+      D 131071 L S m IRSProfile.domain u0 u1
+      v.1 v.2 (selected gamma) gamma
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i))
+    · exact hD
+    · exact hdegree gamma (Finset.mem_filter.mp hgamma).1
+    · exact hDa.trans (Nat.mul_le_mul_left m
+        (hagreement gamma (Finset.mem_filter.mp hgamma).1))
+    · intro i hi
+      exact (Finset.mem_filter.mp hi).2
+
+end
+
+end ProximityPrize.SubmissionLower.Lower80801.FactorSwitch
+
+namespace ProximityPrize.SubmissionLower.Lower80801.PowerRoute
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
+  RCN238 RCN260 RCN266 RCN319
+open LocatorCoprimeQuotient LocatorLowQuotient
+open LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact
+open Lower80801.FactorSwitch
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+abbrev P4 := MvPolynomial (Fin 4) K
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
+
+/-- Lower and upper cumulative-weight bounds for one factor cell. -/
+structure PowerRouteBox where
+  tLo : ℕ
+  tHi : ℕ
+  yLo : ℕ
+  yHi : ℕ
+  rLo : ℕ
+  rHi : ℕ
+  deriving DecidableEq
+
+/-- The unequal-pair profile charged after removing `j` copies of a factor. -/
+def stagePair (L YS S : ℕ) (b : PowerRouteBox) (j : ℕ) :
+    UnequalParameters :=
+  helperPair (L - j * b.tLo) (YS - j * b.yLo) (S - j * b.rLo)
+    b.yHi b.rHi b.tHi
+
+def stageCost (L YS S : ℕ) (b : PowerRouteBox) (j : ℕ) : ℕ :=
+  AsymmetricHelper.leftRegularCountCap (stagePair L YS S b j)
+
+/-- Maximum of the initial helper cost and every power-stage cost through
+`k`.  Primitive recursion avoids a large finite computation in receipts. -/
+def routeCost (L YS S : ℕ) (b : PowerRouteBox) : ℕ → ℕ
+  | 0 => stageCost L YS S b 0
+  | k + 1 => max (routeCost L YS S b k) (stageCost L YS S b (k + 1))
+
+theorem stageCost_le_routeCost (L YS S : ℕ) (b : PowerRouteBox)
+    {j k : ℕ} (hjk : j ≤ k) :
+    stageCost L YS S b j ≤ routeCost L YS S b k := by
+  induction k generalizing j with
+  | zero =>
+      have hj : j = 0 := by omega
+      subst j
+      exact le_rfl
+  | succ k ih =>
+      rw [routeCost]
+      by_cases hj : j ≤ k
+      · exact (ih hj).trans (Nat.le_max_left _ _)
+      · have hjeq : j = k + 1 := by omega
+        subst j
+        exact Nat.le_max_right _ _
+
+private theorem degreeY_le_ysWeight (Q : P4) :
+    Q.degreeOf (1 : Fin 4) ≤ wt residualYSWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualYSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 0 ≤
+    wt residualYSWeights Q at h
+  omega
+
+private theorem degreeR_le_sWeight (Q : P4) :
+    Q.degreeOf (2 : Fin 4) ≤ wt residualSWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 0 + d 2 * 1 + d 3 * 0 ≤
+    wt residualSWeights Q at h
+  omega
+
+private theorem degreeZ_le_totalWeight (Q : P4) :
+    Q.degreeOf (3 : Fin 4) ≤ wt residualTotalWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualTotalWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 1 ≤
+    wt residualTotalWeights Q at h
+  omega
+
+/-- The generic form of `count_le_stageCost`. -/
+theorem regularSeeds_count_le_stageCost
+    (L YS S : ℕ) (b : PowerRouteBox) (j : ℕ)
+    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
+    (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80801)
+    (F : RegularIndex H)
+    (hFY : F.1.degreeOf 1 ≤ b.yHi)
+    (hFR : F.1.degreeOf 2 ≤ b.rHi)
+    (hFZ : F.1.degreeOf 3 ≤ b.tHi)
+    (Q : P4)
+    (hQT : wt residualTotalWeights Q ≤ L - j * b.tLo)
+    (hQY : wt residualYSWeights Q ≤ YS - j * b.yLo)
+    (hQR : wt residualSWeights Q ≤ S - j * b.rLo)
+    (hrel : IsRelPrime F.1 Q)
+    (hgates : HelperPairGates (L - j * b.tLo) (YS - j * b.yLo)
+      (S - j * b.rLo) b.yHi b.rHi b.tHi)
+    (hQzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
+      RCN319.specialization K (selected gamma) gamma Q = 0) :
+    (regularSeeds H selected Gamma F).card ≤ stageCost L YS S b j := by
+  have hQY' : Q.degreeOf 1 ≤ (stagePair L YS S b j).rightY := by
+    simpa only [stagePair, helperPair] using (degreeY_le_ysWeight Q).trans hQY
+  have hQR' : Q.degreeOf 2 ≤ (stagePair L YS S b j).rightR := by
+    simpa only [stagePair, helperPair] using (degreeR_le_sWeight Q).trans hQR
+  have hQZ : Q.degreeOf 3 ≤ (stagePair L YS S b j).rightZ := by
+    simpa only [stagePair, helperPair] using (degreeZ_le_totalWeight Q).trans hQT
+  obtain ⟨hleftR, hleftYSmall, hleftRSmall, hleftZSmall,
+    hmixedYSmall, hmixedRSmall, hmixedZSmall⟩ := hgates
+  have hcount := AsymmetricHelper.regularSeeds_count_le_left_intersection
+    (stagePair L YS S b j) H Q F hrel 2130706433
+    (by simpa only [stagePair, helperPair] using hFY)
+    (by simpa only [stagePair, helperPair] using hFR)
+    (by simpa only [stagePair, helperPair] using hFZ)
+    hQY' hQR' hQZ hleftR hleftYSmall hleftRSmall hleftZSmall
+    hmixedYSmall hmixedRSmall hmixedZSmall selected Gamma
+    (Finset.univ : Finset I) IRSProfile.domain u0 u1
+    IRSProfile.domain.injective.injOn
+    (by
+      change (Finset.univ : Finset I).card = 262144
+      rw [Finset.card_univ]
+      exact Fintype.card_fin _)
+    (by norm_num [stagePair, helperPair])
+    (by norm_num [stagePair, helperPair])
+    (by norm_num [stagePair, helperPair])
+    (by norm_num [stagePair, helperPair])
+    hdegree hagreement
+    (by simpa only [stagePair, helperPair, UnequalParameters.errors,
+      (show (262144 - 181343 : ℕ) = 80801 by decide +kernel)] using hno)
+    hQzero
+  simpa only [stageCost] using hcount
+
+private theorem quotient_nested
+    (D L S m YS : ℕ) (hshape : D + S ≤ 131071 * (YS + 1))
+    (u0 u1 : I → K) (F : P4) (hF : F ≠ 0)
+    (hdiv : ∀ v : ConstraintKernel (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1,
+      F ∣ reconstruct K D 131071 L S v.1) :
+    ∃ q : ConstraintKernel (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1 →ₗ[K] P4,
+      Function.Injective q ∧
+      (∀ v, reconstruct K D 131071 L S v.1 = F * q v) ∧
+      (∀ v, q v ∈ nestedCoefficientBox K
+        (D - wt (contactWeights 131071) F) 131071
+        (L - wt residualTotalWeights F)
+        (YS - wt residualYSWeights F)
+        (S - wt residualSWeights F)) := by
+  let recon := kernelReconstructLinear (K := K) D 131071 L S m
+    IRSProfile.domain u0 u1
+  have hdivK : ∀ v, F ∣ recon v := by
+    intro v
+    simpa only [recon, kernelReconstructLinear_apply] using hdiv v
+  let q := quotientLinear recon F hF hdivK
+  have hqinj : Function.Injective q := quotientLinear_injective recon
+    (kernelReconstructLinear_injective (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1) F hF hdivK
+  have hprod (v) : recon v = F * q v :=
+    recon_eq_mul_quotientPolynomial recon F hdivK v
+  have hproduct : ∀ v, reconstruct K D 131071 L S v.1 = F * q v := by
+    intro v
+    simpa only [recon, kernelReconstructLinear_apply] using hprod v
+  have hqbox : ∀ v, q v ∈ globalCoefficientBox K
+      (D - wt (contactWeights 131071) F) 131071
+      (L - wt residualTotalWeights F) (S - wt residualSWeights F) :=
+    quotient_box_of_full_divisor D 131071 L S m
+      (wt (contactWeights 131071) F) (wt residualTotalWeights F)
+      (wt residualSWeights F) IRSProfile.domain u0 u1 F hF hdivK
+      le_rfl le_rfl le_rfl
+  have hqNested : ∀ v, q v ∈ nestedCoefficientBox K
+      (D - wt (contactWeights 131071) F) 131071
+      (L - wt residualTotalWeights F)
+      (YS - wt residualYSWeights F)
+      (S - wt residualSWeights F) := by
+    intro v
+    have hqYS : wt residualYSWeights (q v) ≤
+        YS - wt residualYSWeights F := by
+      by_cases hv : v = 0
+      · subst v
+        simp [wt, MvPolynomial.weightedTotalDegree]
+      · have hqv : q v ≠ 0 := by
+          intro hz
+          apply hv
+          apply hqinj
+          simpa only [map_zero] using hz
+        have hsrc : wt residualYSWeights
+            (reconstruct K D 131071 L S v.1) ≤ YS := by
+          apply flag_box_ys_bound D 131071 L S YS (by decide) hshape
+          exact reconstruct_mem_globalCoefficientBox K D 131071 L S v.1
+        have hmul := weightedTotalDegree_mul residualYSWeights F (q v) hF hqv
+        rw [← hproduct v] at hmul
+        simp only [wt] at hsrc ⊢
+        omega
+    intro d hd
+    have hb := hqbox v hd
+    have hy := (MvPolynomial.le_weightedTotalDegree residualYSWeights hd).trans hqYS
+    rw [weight_fin4] at hy
+    simp only [residualYSWeights] at hy
+    refine ⟨hb.1, ?_, hb.2.1, hb.2.2⟩
+    simpa [residualYSWeights] using hy
+  exact ⟨q, hqinj, hproduct, hqNested⟩
+
+private theorem sub_one_then_mul (a b j : ℕ) :
+    a - b - j * b = a - (j + 1) * b := by
+  simp only [Nat.sub_sub, Nat.add_mul, one_mul]
+  congr 1
+  omega
+
+private theorem sub_pair_then_mul (a x y j : ℕ) :
+    a - x - y - j * x - j * y =
+      a - (j + 1) * x - (j + 1) * y := by
+  simp only [Nat.sub_sub, Nat.add_mul, one_mul]
+  congr 1
+  omega
+
+private theorem reconstruct_mem_low_of_power
+    {D Dlow L S m j : ℕ} (u0 u1 : I → K)
+    (v : ConstraintKernel (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1)
+    (F Q : P4) (heq : reconstruct K D 131071 L S v.1 = F ^ j * Q)
+    (hD : 0 < D) (hDlow : 0 < Dlow)
+    (hcontact : wt (contactWeights 131071) Q <
+      Dlow - j * wt (contactWeights 131071) F) :
+    reconstruct K D 131071 L S v.1 ∈
+      globalCoefficientBox K Dlow 131071 L S := by
+  have hsource := (mem_flagGlobalCoefficientBox_iff
+    (reconstruct K D 131071 L S v.1) D 131071 L S hD).mp
+      (reconstruct_mem_globalCoefficientBox K D 131071 L S v.1)
+  apply (mem_flagGlobalCoefficientBox_iff
+    (reconstruct K D 131071 L S v.1) Dlow 131071 L S hDlow).mpr
+  refine ⟨hsource.1, hsource.2.1, ?_⟩
+  rw [heq]
+  have hmul := wt_mul_le (contactWeights 131071) (F ^ j) Q
+  have hp := wt_pow_le (contactWeights 131071) F j
+  omega
+
+/-- One theorem replaces every source-specific `count_k2`, ..., `count_kN`
+ladder.  The source arithmetic appears only in `hband`, `hgapLe`, capacity,
+and positivity receipts. -/
+theorem regularSeeds_count_le_arbitraryPowerRoute
+    (D L S m YS gap delta k : ℕ) (b : PowerRouteBox)
+    (hD : 0 < D) (hDa : D ≤ m * 181343)
+    (hshape : D + S ≤ 131071 * (YS + 1))
+    (hk : 1 ≤ k) (hkchar : k < 2130706433)
+    (hband : powerBandBudget delta b.tLo b.yLo b.rLo
+      (L - b.tLo) (YS - b.yLo) (S - b.rLo) k < gap)
+    (hcapacity : ∀ j, 1 ≤ j → j ≤ k →
+      D - j * delta ≤ (m - j) * 181343 + j * (131071 - 1))
+    (hlowpos : ∀ j, 1 ≤ j → j ≤ k → 0 < D - j * delta)
+    (hterminal : L - k * b.tLo < b.tLo ∨
+      YS - k * b.yLo < b.yLo ∨ S - k * b.rLo < b.rLo)
+    (hgates : ∀ j, j ≤ k →
+      HelperPairGates (L - j * b.tLo) (YS - j * b.yLo)
+        (S - j * b.rLo) b.yHi b.rHi b.tHi)
+    (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
+    (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80801)
+    (F : RegularIndex H)
+    (hFT : b.tLo ≤ wt residualTotalWeights F.1 ∧
+      wt residualTotalWeights F.1 ≤ b.tHi)
+    (hFY : b.yLo ≤ wt residualYSWeights F.1 ∧
+      wt residualYSWeights F.1 ≤ b.yHi)
+    (hFR : b.rLo ≤ wt residualSWeights F.1 ∧
+      wt residualSWeights F.1 ≤ b.rHi)
+    (hgapLe : gap ≤ Module.finrank K
+      (ConstraintKernel (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1)) :
+    (regularSeeds H selected Gamma F).card ≤ routeCost L YS S b k := by
+  classical
+  have hFspec := RCN167.positiveRFactors_spec H F.1 F.2
+  have hF : F.1 ≠ 0 := hFspec.1.ne_zero
+  have hFdegY : F.1.degreeOf 1 ≤ b.yHi :=
+    (degreeY_le_ysWeight F.1).trans hFY.2
+  have hFdegR : F.1.degreeOf 2 ≤ b.rHi :=
+    (degreeR_le_sWeight F.1).trans hFR.2
+  have hFdegZ : F.1.degreeOf 3 ≤ b.tHi :=
+    (degreeZ_le_totalWeight F.1).trans hFT.2
+  rcases divisor_or_helper_count D L S m YS hD hDa hshape
+      selected Gamma hdegree hagreement hno F b.yHi b.rHi b.tHi
+      hFdegY hFdegR hFdegZ (by
+        simpa only [Nat.zero_mul, Nat.sub_zero] using
+          hgates 0 (Nat.zero_le k)) with hdiv | hhelper
+  · cases k with
+    | zero => omega
+    | succ steps =>
+      obtain ⟨q, hqinj, hproduct, hqNested⟩ :=
+        quotient_nested D L S m YS hshape u0 u1 F.1 hF hdiv
+      have hTstart : L - wt residualTotalWeights F.1 ≤ L - b.tLo :=
+        Nat.sub_le_sub_left hFT.1 L
+      have hYstart : YS - wt residualYSWeights F.1 ≤ YS - b.yLo :=
+        Nat.sub_le_sub_left hFY.1 YS
+      have hRstart : S - wt residualSWeights F.1 ≤ S - b.rLo :=
+        Nat.sub_le_sub_left hFR.1 S
+      have hbudgetMono := powerBandBudget_mono delta
+        (wt residualTotalWeights F.1) (wt residualYSWeights F.1)
+        (wt residualSWeights F.1)
+        (L - wt residualTotalWeights F.1)
+        (YS - wt residualYSWeights F.1) (S - wt residualSWeights F.1)
+        b.tLo b.yLo b.rLo (L - b.tLo) (YS - b.yLo) (S - b.rLo)
+        (steps + 1) hTstart hYstart hRstart hFT.1 hFY.1 hFR.1
+      have hsource : powerBandBudget delta
+          (wt residualTotalWeights F.1) (wt residualYSWeights F.1)
+          (wt residualSWeights F.1)
+          (L - wt residualTotalWeights F.1)
+          (YS - wt residualYSWeights F.1)
+          (S - wt residualSWeights F.1) (steps + 1) <
+        Module.finrank K (ConstraintKernel (K := K) D 131071 L S m
+          IRSProfile.domain u0 u1) := by
+        exact (hbudgetMono.trans_lt (by
+          simpa only [Nat.succ_eq_add_one] using hband)).trans_le hgapLe
+      have hwidth : D - wt (contactWeights 131071) F.1 ≤
+          (D - delta - wt (contactWeights 131071) F.1) + delta := by
+        omega
+      obtain ⟨j0, v, J, _hv, hJ, heq, hJbox, hnotTerminal⟩ :=
+        exists_power_stage_of_bandBudget_succ steps
+          (D - wt (contactWeights 131071) F.1)
+          (D - delta - wt (contactWeights 131071) F.1)
+          131071 delta
+          (L - wt residualTotalWeights F.1)
+          (YS - wt residualYSWeights F.1)
+          (S - wt residualSWeights F.1)
+          hwidth q hqinj hqNested F.1 hF hsource
+      let j := j0.val + 1
+      have hjpos : 1 ≤ j := by simp only [j]; omega
+      have hjle : j ≤ Nat.succ steps := by
+        simp only [j]
+        omega
+      have heqOriginal : reconstruct K D 131071 L S v.1 = F.1 ^ j * J := by
+        calc
+          reconstruct K D 131071 L S v.1 = F.1 * q v := hproduct v
+          _ = F.1 * (F.1 ^ j0.val * J) := by rw [heq]
+          _ = F.1 ^ j * J := by
+            simp only [j, pow_succ', mul_assoc]
+      have hweights := nested_mem_weights hJbox hJ
+      have hJTactual : wt residualTotalWeights J ≤
+          L - j * wt residualTotalWeights F.1 := by
+        simpa only [j, sub_one_then_mul] using hweights.1
+      have hJYactual : wt residualYSWeights J ≤
+          YS - j * wt residualYSWeights F.1 := by
+        simpa only [j, sub_one_then_mul] using hweights.2.1
+      have hJRactual : wt residualSWeights J ≤
+          S - j * wt residualSWeights F.1 := by
+        simpa only [j, sub_one_then_mul] using hweights.2.2.1
+      have hJT : wt residualTotalWeights J ≤ L - j * b.tLo :=
+        hJTactual.trans (Nat.sub_le_sub_left
+          (Nat.mul_le_mul_left j hFT.1) L)
+      have hJY : wt residualYSWeights J ≤ YS - j * b.yLo :=
+        hJYactual.trans (Nat.sub_le_sub_left
+          (Nat.mul_le_mul_left j hFY.1) YS)
+      have hJR : wt residualSWeights J ≤ S - j * b.rLo :=
+        hJRactual.trans (Nat.sub_le_sub_left
+          (Nat.mul_le_mul_left j hFR.1) S)
+      have hJcontact : wt (contactWeights 131071) J <
+          D - j * delta - j * wt (contactWeights 131071) F.1 := by
+        simpa only [j, sub_pair_then_mul] using hweights.2.2.2
+      have hlow : reconstruct K D 131071 L S v.1 ∈
+          globalCoefficientBox K (D - j * delta) 131071 L S :=
+        reconstruct_mem_low_of_power u0 u1 v F.1 J heqOriginal hD
+          (hlowpos j hjpos hjle) hJcontact
+      have hrel : IsRelPrime F.1 J := by
+        by_cases hjlt : j < Nat.succ steps
+        · apply hFspec.1.isRelPrime_iff_not_dvd.mpr
+          apply hnotTerminal
+          simpa only [j, Nat.succ_eq_add_one] using hjlt
+        · have hjeq : j = Nat.succ steps := by omega
+          rcases hterminal with ht | hy | hr
+          · apply isRelPrime_of_weight_lt residualTotalWeights F.1 J
+              hFspec.1 hJ
+            exact hJT.trans_lt (by rw [hjeq]; exact ht.trans_le hFT.1)
+          · apply isRelPrime_of_weight_lt residualYSWeights F.1 J
+              hFspec.1 hJ
+            exact hJY.trans_lt (by rw [hjeq]; exact hy.trans_le hFY.1)
+          · apply isRelPrime_of_weight_lt residualSWeights F.1 J
+              hFspec.1 hJ
+            exact hJR.trans_lt (by rw [hjeq]; exact hr.trans_le hFR.1)
+      have hJzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
+          RCN319.specialization K (selected gamma) gamma J = 0 := by
+        intro gamma hgamma
+        have hgammaG := regularSeeds_subset H selected Gamma F hgamma
+        let support := (Finset.univ : Finset I).filter (fun i ↦
+          (selected gamma).eval (IRSProfile.domain i) =
+            u0 i + gamma * u1 i)
+        have hcard : 181343 ≤ support.card := hagreement gamma hgammaG
+        have hcap : D - j * delta ≤
+            (m - j) * support.card + j * (131071 - 1) :=
+          (hcapacity j hjpos hjle).trans
+            (Nat.add_le_add_right (Nat.mul_le_mul_left (m - j) hcard) _)
+        have hvalues : ∀ i ∈ support,
+            (selected gamma).eval (IRSProfile.domain i) =
+              u0 i + gamma * u1 i := by
+          intro i hi
+          exact (Finset.mem_filter.mp hi).2
+        have hder := specialization_iteratePderivR_eq_zero_of_kernel_low_box
+          j D (D - j * delta) 131071 L S m IRSProfile.domain u0 u1
+          v hlow (selected gamma) gamma support hjpos (by decide)
+          (hdegree gamma hgammaG) hcap hvalues
+        rw [heqOriginal] at hder
+        obtain ⟨hFzero, hregular⟩ := (Finset.mem_filter.mp hgamma).2
+        apply specialization_eq_zero_of_iteratePderivR_power_product
+          j (selected gamma) gamma F.1 J
+          (factorial_ne_zero_of_lt_char 2130706433 j
+            (CharP.char_prime_of_ne_zero (R := K) (by norm_num))
+            (hjle.trans_lt hkchar))
+          hFzero hregular hder
+      have hstage := regularSeeds_count_le_stageCost L YS S b j u0 u1 H
+        selected Gamma hdegree hagreement hno F hFdegY hFdegR hFdegZ J
+        hJT hJY hJR hrel (hgates j hjle) hJzero
+      exact hstage.trans (stageCost_le_routeCost L YS S b hjle)
+  · have hzeroCost :
+      AsymmetricHelper.leftRegularCountCap (helperPair L YS S b.yHi b.rHi b.tHi) =
+        stageCost L YS S b 0 := by
+      simp only [stageCost, stagePair, Nat.zero_mul, Nat.sub_zero]
+    rw [hzeroCost] at hhelper
+    exact hhelper.trans (stageCost_le_routeCost L YS S b (Nat.zero_le k))
+
+end
+
+end ProximityPrize.SubmissionLower.Lower80801.PowerRoute
+
+namespace ProximityPrize.SubmissionLower.Lower80801.BatchPowerRoute
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
+  RCN238 RCN260 RCN266 RCN319
+open LocatorLowQuotient LocatorCoprimeQuotient
+  LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact
+  Lower80801.FactorSwitch Lower80801.PowerRoute
+  LocatorBatchProductRoute
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+abbrev P4 := MvPolynomial (Fin 4) K
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
+
+/-- The exact cell box of a regular factor.  With this box `stageCost` is the
+actual unequal-pair charge after the displayed number of source quotients. -/
+def exactRouteBox {H : P4} (F : RegularIndex H) : PowerRouteBox where
+  tLo := wt residualTotalWeights F.1
+  tHi := wt residualTotalWeights F.1
+  yLo := wt residualYSWeights F.1
+  yHi := wt residualYSWeights F.1
+  rLo := wt residualSWeights F.1
+  rHi := wt residualSWeights F.1
+
+private theorem degreeY_le_ysWeight (Q : P4) :
+    Q.degreeOf (1 : Fin 4) ≤ wt residualYSWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualYSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 0 ≤
+    wt residualYSWeights Q at h
+  omega
+
+private theorem degreeR_le_sWeight (Q : P4) :
+    Q.degreeOf (2 : Fin 4) ≤ wt residualSWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualSWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 0 + d 2 * 1 + d 3 * 0 ≤
+    wt residualSWeights Q at h
+  omega
+
+private theorem degreeZ_le_totalWeight (Q : P4) :
+    Q.degreeOf (3 : Fin 4) ≤ wt residualTotalWeights Q := by
+  apply MvPolynomial.degreeOf_le_iff.mpr
+  intro d hd
+  have h := MvPolynomial.le_weightedTotalDegree residualTotalWeights hd
+  rw [weight_fin4] at h
+  change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 1 ≤
+    wt residualTotalWeights Q at h
+  omega
+
+/-- Multiplying the low terminal quotient by the removed batch power returns
+an original source row in the derivative-contact box. -/
+theorem reconstruct_mem_low_of_batch_power
+    {D Dlow L S m j : ℕ} (u0 u1 : I → K)
+    (v : ConstraintKernel (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1)
+    (P J : P4)
+    (heq : P ^ j * J = reconstruct K D 131071 L S v.1)
+    (hD : 0 < D) (hDlow : 0 < Dlow)
+    (hcontact : wt (contactWeights 131071) J <
+      Dlow - j * wt (contactWeights 131071) P) :
+    reconstruct K D 131071 L S v.1 ∈
+      globalCoefficientBox K Dlow 131071 L S := by
+  have hsource := (mem_flagGlobalCoefficientBox_iff
+    (reconstruct K D 131071 L S v.1) D 131071 L S hD).mp
+      (reconstruct_mem_globalCoefficientBox K D 131071 L S v.1)
+  apply (mem_flagGlobalCoefficientBox_iff
+    (reconstruct K D 131071 L S v.1) Dlow 131071 L S hDlow).mpr
+  refine ⟨hsource.1, hsource.2.1, ?_⟩
+  rw [← heq]
+  have hmul := wt_mul_le (contactWeights 131071) (P ^ j) J
+  have hp := wt_pow_le (contactWeights 131071) P j
+  omega
+
+/-- Convert a selected batch exit into per-factor helper charges.  The
+consumer retains the complementary product in every helper, so no internal
+collision locus is charged. -/
+theorem counts_of_batchExitStage
+    (D L S m YS delta fuel : ℕ)
+    (hD : 0 < D) (hfuelChar : fuel < 2130706433)
+    (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
+    (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
+      D - j * delta ≤ (m - j) * 181343 + j * (131071 - 1))
+    (u0 u1 : I → K) (H : P4)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80801)
+    (A : Finset (RegularIndex H))
+    (q : ConstraintKernel (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1 →ₗ[K] P4)
+    (hproduct : ∀ v,
+      reconstruct K D 131071 L S v.1 = regularProduct H A * q v)
+    (hexit : HasBatchExitStage fuel
+      (D - delta - wt (contactWeights 131071) (regularProduct H A))
+      131071 delta
+      (L - wt residualTotalWeights (regularProduct H A))
+      (YS - wt residualYSWeights (regularProduct H A))
+      (S - wt residualSWeights (regularProduct H A)) H A q)
+    (hfeasible :
+      fuel * wt residualTotalWeights (regularProduct H A) ≤ L ∧
+      fuel * wt residualYSWeights (regularProduct H A) ≤ YS ∧
+      fuel * wt residualSWeights (regularProduct H A) ≤ S)
+    (hgates : ∀ F ∈ A, ∀ j, 1 ≤ j → j ≤ fuel →
+      HelperPairGates
+        (L - j * wt residualTotalWeights F.1)
+        (YS - j * wt residualYSWeights F.1)
+        (S - j * wt residualSWeights F.1)
+        (wt residualYSWeights F.1) (wt residualSWeights F.1)
+        (wt residualTotalWeights F.1))
+    (charge : RegularIndex H → ℕ)
+    (hcharge : ∀ F ∈ A, ∀ j, 1 ≤ j → j ≤ fuel →
+      stageCost L YS S (exactRouteBox F) j ≤ charge F) :
+    ∃ U, U ⊂ A ∧ ∀ F ∈ A \ U,
+      (regularSeeds H selected Gamma F).card ≤ charge F := by
+  classical
+  let P := regularProduct H A
+  change HasBatchExitStage fuel
+      (D - delta - wt (contactWeights 131071) P) 131071 delta
+      (L - wt residualTotalWeights P) (YS - wt residualYSWeights P)
+      (S - wt residualSWeights P) H A q at hexit
+  obtain ⟨e, U, v, J, hUA, hv, hJ, heq, hbox, havoid⟩ := hexit
+  let j := e.val + 1
+  have hj : 1 ≤ j := by simp only [j]; omega
+  have hjle : j ≤ fuel := by simp only [j]; omega
+  have hjchar : j < 2130706433 := hjle.trans_lt hfuelChar
+  have heqOriginal : P ^ j * J =
+      reconstruct K D 131071 L S v.1 := by
+    calc
+      P ^ j * J = P * (P ^ e.val * J) := by
+        simp only [j, pow_succ']
+        ring
+      _ = P * q v := by rw [heq]
+      _ = reconstruct K D 131071 L S v.1 := (hproduct v).symm
+  change J ∈ nestedCoefficientBox K
+      (D - delta - wt (contactWeights 131071) P - e.val * delta -
+        e.val * wt (contactWeights 131071) P) 131071
+      (L - wt residualTotalWeights P - e.val * wt residualTotalWeights P)
+      (YS - wt residualYSWeights P - e.val * wt residualYSWeights P)
+      (S - wt residualSWeights P - e.val * wt residualSWeights P) at hbox
+  have hweights := nested_mem_weights hbox hJ
+  have hJT : wt residualTotalWeights J ≤
+      L - j * wt residualTotalWeights P := by
+    simpa only [j, Nat.sub_sub, Nat.add_mul, one_mul, Nat.add_comm] using
+      hweights.1
+  have hJY : wt residualYSWeights J ≤
+      YS - j * wt residualYSWeights P := by
+    simpa only [j, Nat.sub_sub, Nat.add_mul, one_mul, Nat.add_comm] using
+      hweights.2.1
+  have hJS : wt residualSWeights J ≤
+      S - j * wt residualSWeights P := by
+    simpa only [j, Nat.sub_sub, Nat.add_mul, one_mul, Nat.add_comm] using
+      hweights.2.2.1
+  have hJcontact : wt (contactWeights 131071) J <
+      D - j * delta - j * wt (contactWeights 131071) P := by
+    have hc := hweights.2.2.2
+    simp only [j, Nat.sub_sub, Nat.add_mul, one_mul] at hc ⊢
+    omega
+  have hlow : reconstruct K D 131071 L S v.1 ∈
+      globalCoefficientBox K (D - j * delta) 131071 L S :=
+    reconstruct_mem_low_of_batch_power u0 u1 v P J heqOriginal hD
+      (hlowpos j hj hjle) hJcontact
+  have hPT : j * wt residualTotalWeights P ≤ L :=
+    (Nat.mul_le_mul_right (wt residualTotalWeights P) hjle).trans hfeasible.1
+  have hPY : j * wt residualYSWeights P ≤ YS :=
+    (Nat.mul_le_mul_right (wt residualYSWeights P) hjle).trans hfeasible.2.1
+  have hPS : j * wt residualSWeights P ≤ S :=
+    (Nat.mul_le_mul_right (wt residualSWeights P) hjle).trans hfeasible.2.2
+  refine ⟨U, hUA, ?_⟩
+  intro F hFU
+  have hFA : F ∈ A := (Finset.mem_sdiff.mp hFU).1
+  let QF := regularCofactor H A F ^ j * J
+  have hQF : QF ≠ 0 := by
+    exact mul_ne_zero (pow_ne_zero j (regularCofactor_ne_zero H A F)) hJ
+  have hrel : IsRelPrime F.1 QF := by
+    exact regularFactor_isRelPrime_liftedHelper H A F hFA j J
+      (havoid F hFU)
+  have hQbounds := liftedHelper_residual_bounds H A F hFA L YS S j J hJ
+    hJT hJY hJS hPT hPY hPS
+  have hQzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
+      specialization K (selected gamma) gamma QF = 0 := by
+    exact batch_helper_zero_on_regularSeeds j D (D - j * delta) 131071
+      L S m 181343 2130706433
+      (CharP.char_prime_of_ne_zero (R := K) (by norm_num))
+      IRSProfile.domain u0 u1 H A F hFA selected Gamma v J hj hjchar
+      (by decide) hdegree hagreement (hcapacity j hj hjle) hlow
+      heqOriginal
+  have hstage := regularSeeds_count_le_stageCost L YS S
+    (exactRouteBox F) j u0 u1 H selected Gamma hdegree hagreement hno F
+    (degreeY_le_ysWeight F.1) (degreeR_le_sWeight F.1)
+    (degreeZ_le_totalWeight F.1) QF
+    (by simpa only [exactRouteBox] using hQbounds.1)
+    (by simpa only [exactRouteBox] using hQbounds.2.1)
+    (by simpa only [exactRouteBox] using hQbounds.2.2)
+    hrel (by simpa only [exactRouteBox] using hgates F hFA j hj hjle)
+    hQzero
+  exact hstage.trans (hcharge F hFA j hj hjle)
+
+/-- A complete algebraic step for one fresh source.  Stage zero uses the
+existing divisor-or-helper switch.  If the entire batch product divides the
+source, it is removed once and the shared product-power selector finds a
+later strict exit.  `hcharge` is the sole interface to the additive numerical
+potential used by a phase receipt. -/
+theorem exists_strict_helper_split_of_batch_source
+    (D L S m YS gap delta fuel : ℕ)
+    (hD : 0 < D) (hDa : D ≤ m * 181343)
+    (hshape : D + S ≤ 131071 * (YS + 1))
+    (hfuel : 1 ≤ fuel) (hfuelChar : fuel < 2130706433)
+    (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
+    (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
+      D - j * delta ≤ (m - j) * 181343 + j * (131071 - 1))
+    (u0 u1 : I → K) (H : P4)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80801)
+    (A : Finset (RegularIndex H)) (hA : A.Nonempty)
+    (hband : powerBandBudget delta
+      (wt residualTotalWeights (regularProduct H A))
+      (wt residualYSWeights (regularProduct H A))
+      (wt residualSWeights (regularProduct H A))
+      (L - wt residualTotalWeights (regularProduct H A))
+      (YS - wt residualYSWeights (regularProduct H A))
+      (S - wt residualSWeights (regularProduct H A)) fuel < gap)
+    (hterminal :
+      L - fuel * wt residualTotalWeights (regularProduct H A) <
+          wt residualTotalWeights (regularProduct H A) ∨
+      YS - fuel * wt residualYSWeights (regularProduct H A) <
+          wt residualYSWeights (regularProduct H A) ∨
+      S - fuel * wt residualSWeights (regularProduct H A) <
+          wt residualSWeights (regularProduct H A))
+    (hfeasible :
+      fuel * wt residualTotalWeights (regularProduct H A) ≤ L ∧
+      fuel * wt residualYSWeights (regularProduct H A) ≤ YS ∧
+      fuel * wt residualSWeights (regularProduct H A) ≤ S)
+    (hgapLe : gap ≤ Module.finrank K
+      (ConstraintKernel (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1))
+    (hfield : A.card < ENat.card K)
+    (hgates : ∀ F ∈ A, ∀ j, j ≤ fuel →
+      HelperPairGates
+        (L - j * wt residualTotalWeights F.1)
+        (YS - j * wt residualYSWeights F.1)
+        (S - j * wt residualSWeights F.1)
+        (wt residualYSWeights F.1) (wt residualSWeights F.1)
+        (wt residualTotalWeights F.1))
+    (charge : RegularIndex H → ℕ)
+    (hcharge : ∀ F ∈ A, ∀ j, j ≤ fuel →
+      stageCost L YS S (exactRouteBox F) j ≤ charge F) :
+    ∃ U, U ⊂ A ∧ ∀ F ∈ A \ U,
+      (regularSeeds H selected Gamma F).card ≤ charge F := by
+  classical
+  let source := ConstraintKernel (K := K) D 131071 L S m
+    IRSProfile.domain u0 u1
+  let recon : source →ₗ[K] P4 :=
+    kernelReconstructLinear (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1
+  let U₀ := universalFactors H A recon
+  have hU₀sub : U₀ ⊆ A := universalFactors_subset H A recon
+  by_cases hall : U₀ = A
+  · have hdiv : ∀ v : source, regularProduct H A ∣
+        reconstruct K D 131071 L S v.1 := by
+      intro v
+      have hv := universalProduct_dvd H A recon v
+      change regularProduct H U₀ ∣ recon v at hv
+      rw [hall] at hv
+      change regularProduct H A ∣
+        kernelReconstructLinear (K := K) D 131071 L S m
+          IRSProfile.domain u0 u1 v at hv
+      rw [kernelReconstructLinear_apply] at hv
+      exact hv
+    obtain ⟨q, hq, hproduct, hqbox⟩ :=
+      kernelQuotient_regularProduct_nested D 131071 L S m YS
+        IRSProfile.domain u0 u1 (by decide) hshape H A hdiv
+    cases fuel with
+    | zero => omega
+    | succ steps =>
+      have hwidth :
+          D - wt (contactWeights 131071) (regularProduct H A) ≤
+            (D - delta -
+              wt (contactWeights 131071) (regularProduct H A)) + delta := by
+        omega
+      have hsource : powerBandBudget delta
+          (wt residualTotalWeights (regularProduct H A))
+          (wt residualYSWeights (regularProduct H A))
+          (wt residualSWeights (regularProduct H A))
+          (L - wt residualTotalWeights (regularProduct H A))
+          (YS - wt residualYSWeights (regularProduct H A))
+          (S - wt residualSWeights (regularProduct H A)) (steps + 1) <
+        Module.finrank K source := hband.trans_le hgapLe
+      have hterminal' :
+          (L - wt residualTotalWeights (regularProduct H A)) -
+              steps * wt residualTotalWeights (regularProduct H A) <
+                wt residualTotalWeights (regularProduct H A) ∨
+          (YS - wt residualYSWeights (regularProduct H A)) -
+              steps * wt residualYSWeights (regularProduct H A) <
+                wt residualYSWeights (regularProduct H A) ∨
+          (S - wt residualSWeights (regularProduct H A)) -
+              steps * wt residualSWeights (regularProduct H A) <
+                wt residualSWeights (regularProduct H A) := by
+        rcases hterminal with ht | hy | hs
+        · left
+          simpa only [Nat.sub_sub, Nat.succ_eq_add_one, Nat.add_mul,
+            one_mul, Nat.add_comm] using ht
+        · right; left
+          simpa only [Nat.sub_sub, Nat.succ_eq_add_one, Nat.add_mul,
+            one_mul, Nat.add_comm] using hy
+        · right; right
+          simpa only [Nat.sub_sub, Nat.succ_eq_add_one, Nat.add_mul,
+            one_mul, Nat.add_comm] using hs
+      have hexit := exists_batchExitStage_of_bandBudget_succ steps
+        (D - wt (contactWeights 131071) (regularProduct H A))
+        (D - delta - wt (contactWeights 131071) (regularProduct H A))
+        131071 delta
+        (L - wt residualTotalWeights (regularProduct H A))
+        (YS - wt residualYSWeights (regularProduct H A))
+        (S - wt residualSWeights (regularProduct H A)) hwidth q hq hqbox
+        H A hA hsource hterminal' hfield
+      exact counts_of_batchExitStage D L S m YS delta (steps + 1)
+        hD hfuelChar hlowpos hcapacity u0 u1 H selected Gamma hdegree
+        hagreement hno A q hproduct hexit hfeasible
+        (fun F hFA j _hj hjle => hgates F hFA j hjle) charge
+        (fun F hFA j _hj hjle => hcharge F hFA j hjle)
+  · have hproper : U₀ ⊂ A :=
+        (_root_.ssubset_iff_subset_ne).mpr ⟨hU₀sub, hall⟩
+    refine ⟨U₀, hproper, ?_⟩
+    intro F hFU
+    have hFA : F ∈ A := (Finset.mem_sdiff.mp hFU).1
+    have hnot : ¬ ∀ v : source,
+        F.1 ∣ reconstruct K D 131071 L S v.1 := by
+      intro hdiv
+      apply (Finset.mem_sdiff.mp hFU).2
+      apply (mem_universalFactors H A recon F).mpr
+      refine ⟨hFA, ?_⟩
+      intro v
+      change F.1 ∣ kernelReconstructLinear (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1 v
+      rw [kernelReconstructLinear_apply]
+      exact hdiv v
+    rcases divisor_or_helper_count D L S m YS hD hDa hshape selected
+      Gamma hdegree hagreement hno F
+      (wt residualYSWeights F.1) (wt residualSWeights F.1)
+      (wt residualTotalWeights F.1)
+      (degreeY_le_ysWeight F.1) (degreeR_le_sWeight F.1)
+      (degreeZ_le_totalWeight F.1)
+      (by simpa using hgates F hFA 0 (Nat.zero_le fuel)) with
+      hdiv | hhelper
+    · exact (hnot hdiv).elim
+    · have hstage : (regularSeeds H selected Gamma F).card ≤
+          stageCost L YS S (exactRouteBox F) 0 := by
+        simpa only [stageCost, stagePair, exactRouteBox, Nat.zero_mul,
+          Nat.sub_zero] using hhelper
+      exact hstage.trans (hcharge F hFA 0 (Nat.zero_le _))
+
+
+/-! ## Contact-thinned consumer (lever S1): the band hypothesis is the thin budget. -/
+
+
+theorem exists_strict_helper_split_of_batch_source_thin
+    (D L S m YS gap delta fuel : ℕ)
+    (hD : 0 < D) (hDa : D ≤ m * 181343)
+    (hshape : D + S ≤ 131071 * (YS + 1))
+    (hfuel : 1 ≤ fuel) (hfuelChar : fuel < 2130706433)
+    (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
+    (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
+      D - j * delta ≤ (m - j) * 181343 + j * (131071 - 1))
+    (u0 u1 : I → K) (H : P4)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80801)
+    (A : Finset (RegularIndex H)) (hA : A.Nonempty)
+    (hbandThin : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
+      (D - wt (contactWeights 131071) (regularProduct H A)) delta
+      (wt (contactWeights 131071) (regularProduct H A))
+      (wt residualTotalWeights (regularProduct H A))
+      (wt residualYSWeights (regularProduct H A))
+      (wt residualSWeights (regularProduct H A))
+      (L - wt residualTotalWeights (regularProduct H A))
+      (YS - wt residualYSWeights (regularProduct H A))
+      (S - wt residualSWeights (regularProduct H A)) fuel < gap)
+    (hterminal :
+      L - fuel * wt residualTotalWeights (regularProduct H A) <
+          wt residualTotalWeights (regularProduct H A) ∨
+      YS - fuel * wt residualYSWeights (regularProduct H A) <
+          wt residualYSWeights (regularProduct H A) ∨
+      S - fuel * wt residualSWeights (regularProduct H A) <
+          wt residualSWeights (regularProduct H A))
+    (hfeasible :
+      fuel * wt residualTotalWeights (regularProduct H A) ≤ L ∧
+      fuel * wt residualYSWeights (regularProduct H A) ≤ YS ∧
+      fuel * wt residualSWeights (regularProduct H A) ≤ S)
+    (hgapLe : gap ≤ Module.finrank K
+      (ConstraintKernel (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1))
+    (hfield : A.card < ENat.card K)
+    (hgates : ∀ F ∈ A, ∀ j, j ≤ fuel →
+      HelperPairGates
+        (L - j * wt residualTotalWeights F.1)
+        (YS - j * wt residualYSWeights F.1)
+        (S - j * wt residualSWeights F.1)
+        (wt residualYSWeights F.1) (wt residualSWeights F.1)
+        (wt residualTotalWeights F.1))
+    (charge : RegularIndex H → ℕ)
+    (hcharge : ∀ F ∈ A, ∀ j, j ≤ fuel →
+      stageCost L YS S (exactRouteBox F) j ≤ charge F) :
+    ∃ U, U ⊂ A ∧ ∀ F ∈ A \ U,
+      (regularSeeds H selected Gamma F).card ≤ charge F := by
+  classical
+  let source := ConstraintKernel (K := K) D 131071 L S m
+    IRSProfile.domain u0 u1
+  let recon : source →ₗ[K] P4 :=
+    kernelReconstructLinear (K := K) D 131071 L S m
+      IRSProfile.domain u0 u1
+  let U₀ := universalFactors H A recon
+  have hU₀sub : U₀ ⊆ A := universalFactors_subset H A recon
+  by_cases hall : U₀ = A
+  · have hdiv : ∀ v : source, regularProduct H A ∣
+        reconstruct K D 131071 L S v.1 := by
+      intro v
+      have hv := universalProduct_dvd H A recon v
+      change regularProduct H U₀ ∣ recon v at hv
+      rw [hall] at hv
+      change regularProduct H A ∣
+        kernelReconstructLinear (K := K) D 131071 L S m
+          IRSProfile.domain u0 u1 v at hv
+      rw [kernelReconstructLinear_apply] at hv
+      exact hv
+    obtain ⟨q, hq, hproduct, hqbox⟩ :=
+      kernelQuotient_regularProduct_nested D 131071 L S m YS
+        IRSProfile.domain u0 u1 (by decide) hshape H A hdiv
+    cases fuel with
+    | zero => omega
+    | succ steps =>
+      have hDlow :
+          D - delta - wt (contactWeights 131071) (regularProduct H A) =
+            (D - wt (contactWeights 131071) (regularProduct H A)) - delta := by
+        omega
+      have hsource : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
+          (D - wt (contactWeights 131071) (regularProduct H A)) delta
+          (wt (contactWeights 131071) (regularProduct H A))
+          (wt residualTotalWeights (regularProduct H A))
+          (wt residualYSWeights (regularProduct H A))
+          (wt residualSWeights (regularProduct H A))
+          (L - wt residualTotalWeights (regularProduct H A))
+          (YS - wt residualYSWeights (regularProduct H A))
+          (S - wt residualSWeights (regularProduct H A)) (steps + 1) <
+        Module.finrank K source := hbandThin.trans_le hgapLe
+      have hterminal' :
+          (L - wt residualTotalWeights (regularProduct H A)) -
+              steps * wt residualTotalWeights (regularProduct H A) <
+                wt residualTotalWeights (regularProduct H A) ∨
+          (YS - wt residualYSWeights (regularProduct H A)) -
+              steps * wt residualYSWeights (regularProduct H A) <
+                wt residualYSWeights (regularProduct H A) ∨
+          (S - wt residualSWeights (regularProduct H A)) -
+              steps * wt residualSWeights (regularProduct H A) <
+                wt residualSWeights (regularProduct H A) := by
+        rcases hterminal with ht | hy | hs
+        · left
+          simpa only [Nat.sub_sub, Nat.succ_eq_add_one, Nat.add_mul,
+            one_mul, Nat.add_comm] using ht
+        · right; left
+          simpa only [Nat.sub_sub, Nat.succ_eq_add_one, Nat.add_mul,
+            one_mul, Nat.add_comm] using hy
+        · right; right
+          simpa only [Nat.sub_sub, Nat.succ_eq_add_one, Nat.add_mul,
+            one_mul, Nat.add_comm] using hs
+      have hexit := exists_batchExitStage_of_bandBudgetThin_succ steps
+        (D - wt (contactWeights 131071) (regularProduct H A))
+        (D - delta - wt (contactWeights 131071) (regularProduct H A))
+        131071 delta
+        (L - wt residualTotalWeights (regularProduct H A))
+        (YS - wt residualYSWeights (regularProduct H A))
+        (S - wt residualSWeights (regularProduct H A)) (by decide) hDlow q hq hqbox
+        H A hA hsource hterminal' hfield
+      exact counts_of_batchExitStage D L S m YS delta (steps + 1)
+        hD hfuelChar hlowpos hcapacity u0 u1 H selected Gamma hdegree
+        hagreement hno A q hproduct hexit hfeasible
+        (fun F hFA j _hj hjle => hgates F hFA j hjle) charge
+        (fun F hFA j _hj hjle => hcharge F hFA j hjle)
+  · have hproper : U₀ ⊂ A :=
+        (_root_.ssubset_iff_subset_ne).mpr ⟨hU₀sub, hall⟩
+    refine ⟨U₀, hproper, ?_⟩
+    intro F hFU
+    have hFA : F ∈ A := (Finset.mem_sdiff.mp hFU).1
+    have hnot : ¬ ∀ v : source,
+        F.1 ∣ reconstruct K D 131071 L S v.1 := by
+      intro hdiv
+      apply (Finset.mem_sdiff.mp hFU).2
+      apply (mem_universalFactors H A recon F).mpr
+      refine ⟨hFA, ?_⟩
+      intro v
+      change F.1 ∣ kernelReconstructLinear (K := K) D 131071 L S m
+        IRSProfile.domain u0 u1 v
+      rw [kernelReconstructLinear_apply]
+      exact hdiv v
+    rcases divisor_or_helper_count D L S m YS hD hDa hshape selected
+      Gamma hdegree hagreement hno F
+      (wt residualYSWeights F.1) (wt residualSWeights F.1)
+      (wt residualTotalWeights F.1)
+      (degreeY_le_ysWeight F.1) (degreeR_le_sWeight F.1)
+      (degreeZ_le_totalWeight F.1)
+      (by simpa using hgates F hFA 0 (Nat.zero_le fuel)) with
+      hdiv | hhelper
+    · exact (hnot hdiv).elim
+    · have hstage : (regularSeeds H selected Gamma F).card ≤
+          stageCost L YS S (exactRouteBox F) 0 := by
+        simpa only [stageCost, stagePair, exactRouteBox, Nat.zero_mul,
+          Nat.sub_zero] using hhelper
+      exact hstage.trans (hcharge F hFA 0 (Nat.zero_le _))
+
+
+end
+
+end ProximityPrize.SubmissionLower.Lower80801.BatchPowerRoute
+
+namespace ProximityPrize.SubmissionLower.Lower80801.Oracle
+open RCN095 LocatorFactorAggregate LocatorLowQuotient LocatorArbitraryPowerAvoidance
+open Lower80801.PowerRoute Lower80801.FactorSwitch
+open LocatorPhase6800Oracle (Potential rawFlag sumFlag RawBelow RawStrictSlopeBelow)
+set_option autoImplicit false
+set_option maxRecDepth 100000
+/-- The cumulative boxes used by a power source. -/
+structure SourceNumbers where
+  totalCap : ℕ
+  middleCap : ℕ
+  slopeCap : ℕ
+  gap : ℕ
+  deriving DecidableEq, Repr
+
+def SourceNumbers.fuel (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  min (s.totalCap / total p)
+    (min (s.middleCap / middle p) (s.slopeCap / p.all))
+
+def SourceNumbers.band (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  powerBandBudget 50273 (total p) (middle p) p.all
+    (s.totalCap - total p) (s.middleCap - middle p)
+    (s.slopeCap - p.all) (s.fuel p)
+
+/-- Lever S1.  The product of the routed factors has contact weight at least
+`131071 * middle p - p.all` (`contact_ge_ys` with the exact aggregate weights), and the
+source's kernel degree satisfies `D + slopeCap ≤ 131071 * (middleCap + 1)`; so the level-1
+contact cap of the band ladder is at most `contactCap`, and it drops by `50273 + contactDec`
+per level.  `bandThin` is the ladder charged on the rows that can carry a monomial. -/
+def contactDec (p : FlagDegree) : ℕ := 131071 * middle p - p.all
+
+def SourceNumbers.contactCap (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  (131071 * (s.middleCap + 1) - s.slopeCap) - contactDec p
+
+def SourceNumbers.bandThin (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  powerBandBudgetThin 131071 (s.contactCap p) 50273 (contactDec p)
+    (total p) (middle p) p.all
+    (s.totalCap - total p) (s.middleCap - middle p)
+    (s.slopeCap - p.all) (s.fuel p)
+
+theorem SourceNumbers.bandThin_le (s : SourceNumbers) (p : FlagDegree) :
+    s.bandThin p ≤ s.band p :=
+  powerBandBudgetThin_le _ _ _ _ _ _ _ _ _ _ _
+
+def SourceNumbers.Routeable (s : SourceNumbers) (p : FlagDegree) : Prop :=
+  1 ≤ p.all ∧ total p ≤ s.totalCap ∧ middle p ≤ s.middleCap ∧
+    p.all ≤ s.slopeCap ∧ (s.band p < s.gap ∨ s.bandThin p < s.gap)
+
+instance (s : SourceNumbers) (p : FlagDegree) : Decidable (s.Routeable p) :=
+  by unfold SourceNumbers.Routeable; infer_instance
+
+def exactRouteBox (p : FlagDegree) : PowerRouteBox :=
+  ⟨total p, total p, middle p, middle p, p.all, p.all⟩
+
+/-- The arithmetic interface required by the algebraic source adapter.  The
+stage-cost and gate checks are deliberately separate from band thresholds. -/
+structure PhaseSourceSound where
+  source : SourceNumbers
+  potential : Potential
+  stageCost_le : ∀ (p : FlagDegree) (j : ℕ),
+    1 ≤ p.all → p.all ≤ 30 → middle p ≤ 139 → total p ≤ 7199 →
+    j ≤ source.fuel p →
+    stageCost source.totalCap source.middleCap source.slopeCap
+      (exactRouteBox p) j ≤ potential.eval p
+  stageGates : ∀ (p : FlagDegree) (j : ℕ),
+    1 ≤ p.all → p.all ≤ 30 → middle p ≤ 139 → total p ≤ 7199 →
+    j ≤ source.fuel p →
+    HelperPairGates
+      (source.totalCap - j * total p)
+      (source.middleCap - j * middle p)
+      (source.slopeCap - j * p.all)
+      (middle p) p.all (total p)
+
+/-- Semantic condition checked by one phase's prefix table.  At a routeable
+parent, every strict nonrouteable stopping child is paid by the stored defect.
+The algebraic batch engine turns precisely this condition into the phase cap.
+-/
+def PhaseDefectSound (previousCap : FlagDegree → ℕ)
+    (source : SourceNumbers) (potential : Potential)
+    (defect : FlagDegree → ℕ) : Prop :=
+  ∀ p q, p.all ≤ 30 → middle p ≤ 139 → total p ≤ 7199 →
+    RawStrictSlopeBelow q p → ¬source.Routeable q →
+    previousCap q ≤ potential.eval q + defect p
+
+/-- Numeric recurrence represented by a checked phase table. -/
+def PhaseCapEquation (previousCap nextCap : FlagDegree → ℕ)
+    (source : SourceNumbers) (potential : Potential)
+    (defect : FlagDegree → ℕ) : Prop :=
+  ∀ p, p.all ≤ 30 → middle p ≤ 139 → total p ≤ 7199 →
+    nextCap p = if source.Routeable p then
+      min (previousCap p) (potential.eval p + defect p)
+    else previousCap p
+
+
+end ProximityPrize.SubmissionLower.Lower80801.Oracle
+
+namespace ProximityPrize.SubmissionLower.Lower80801.BatchPhase
+
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN071 RCN081 RCN095 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156
+  RCN180 RCN234 RCN238 RCN260 RCN266
+open LocatorFactorAggregate LocatorArbitraryPowerAvoidance
+  LocatorBatchProductRoute Lower80801.BatchPowerRoute
+  Lower80801.FactorSwitch Lower80801.Oracle
+
+open LocatorPhase6800Oracle (Potential sumFlag sumFlag_all sumFlag_middle sumFlag_total RawBelow RawStrictSlopeBelow)
+open LocatorBatchPhase6800 (regularAggregateFlag regularAggregateFlag_all
+  regularAggregateFlag_middle regularAggregateFlag_total regularAggregateFlag_mono
+  regularAggregateFlag_all_lt_of_ssubset regularAggregateFlag_raw_mono sum_phasePotential_eval)
+
+noncomputable section
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 5000000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+abbrev P4 := MvPolynomial (Fin 4) K
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+
+private theorem sourceFuel_pos (s : SourceNumbers) (p : FlagDegree)
+    (hr : 1 ≤ p.all) (ht : total p ≤ s.totalCap)
+    (hy : middle p ≤ s.middleCap) (hs : p.all ≤ s.slopeCap) :
+    1 ≤ s.fuel p := by
+  have hmiddle : 1 ≤ middle p := hr.trans (all_le_middle p)
+  have htotal : 1 ≤ total p := hmiddle.trans (middle_le_total p)
+  unfold SourceNumbers.fuel
+  apply le_min
+  · exact (Nat.le_div_iff_mul_le htotal).mpr (by simpa using ht)
+  · apply le_min
+    · exact (Nat.le_div_iff_mul_le hmiddle).mpr (by simpa using hy)
+    · exact (Nat.le_div_iff_mul_le hr).mpr (by simpa using hs)
+
+private theorem sourceFuel_feasible (s : SourceNumbers) (p : FlagDegree)
+    (hr : 1 ≤ p.all) :
+    s.fuel p * total p ≤ s.totalCap ∧
+      s.fuel p * middle p ≤ s.middleCap ∧
+      s.fuel p * p.all ≤ s.slopeCap := by
+  have hmiddle : 1 ≤ middle p := hr.trans (all_le_middle p)
+  have htotal : 1 ≤ total p := hmiddle.trans (middle_le_total p)
+  unfold SourceNumbers.fuel
+  refine ⟨?_, ?_, ?_⟩
+  · apply (Nat.le_div_iff_mul_le htotal).mp
+    exact min_le_left _ _
+  · apply (Nat.le_div_iff_mul_le hmiddle).mp
+    exact (min_le_right _ _).trans (min_le_left _ _)
+  · apply (Nat.le_div_iff_mul_le hr).mp
+    exact (min_le_right _ _).trans (min_le_right _ _)
+
+private theorem div_remainder_lt (a b : ℕ) (hb : 0 < b) :
+    a - (a / b) * b < b := by
+  have hm := Nat.mod_lt a hb
+  have heq := Nat.mod_add_div' a b
+  omega
+
+private theorem sourceFuel_terminal (s : SourceNumbers) (p : FlagDegree)
+    (hr : 1 ≤ p.all) :
+    s.totalCap - s.fuel p * total p < total p ∨
+      s.middleCap - s.fuel p * middle p < middle p ∨
+      s.slopeCap - s.fuel p * p.all < p.all := by
+  have hall : 0 < p.all := by omega
+  have hmiddle : 0 < middle p := hall.trans_le (all_le_middle p)
+  have htotal : 0 < total p := hmiddle.trans_le (middle_le_total p)
+  unfold SourceNumbers.fuel
+  by_cases hT : s.totalCap / total p ≤
+      min (s.middleCap / middle p) (s.slopeCap / p.all)
+  · left
+    rw [min_eq_left hT]
+    exact div_remainder_lt s.totalCap (total p) htotal
+  · rw [min_eq_right (Nat.le_of_not_ge hT)]
+    by_cases hY : s.middleCap / middle p ≤ s.slopeCap / p.all
+    · right; left
+      rw [min_eq_left hY]
+      exact div_remainder_lt s.middleCap (middle p) hmiddle
+    · right; right
+      rw [min_eq_right (Nat.le_of_not_ge hY)]
+      exact div_remainder_lt s.slopeCap p.all hr
+
+/-- A numerical route for an aggregate flag supplies the strict algebraic
+split required by the phase recursion. -/
+theorem routeable_exists_strict_helper_split
+    (sound : PhaseSourceSound) (D m : ℕ)
+    (hweighted : D = m * 181343)
+    (hshape : D + sound.source.slopeCap ≤
+      131071 * (sound.source.middleCap + 1))
+    (hslopeM : sound.source.slopeCap ≤ m)
+    (hmChar : m < 2130706433)
+    (u0 u1 : I → K) (H : P4)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80801)
+    (hgap : sound.source.gap ≤ Module.finrank K
+      (ConstraintKernel (K := K) D 131071 sound.source.totalCap
+        sound.source.slopeCap m IRSProfile.domain u0 u1))
+    (A : Finset (RegularIndex H))
+    (hroute : sound.source.Routeable (regularAggregateFlag H A))
+    (hnarrowS : (regularAggregateFlag H A).all ≤ 30)
+    (hnarrowY : middle (regularAggregateFlag H A) ≤ 139)
+    (hnarrowT : total (regularAggregateFlag H A) ≤ 7199) :
+    ∃ U, U ⊂ A ∧ ∀ F ∈ A \ U,
+      (regularSeeds H selected Gamma F).card ≤
+        sound.potential.eval (regularCumulativeFlag H F) := by
+  classical
+  let p := regularAggregateFlag H A
+  have hr : 1 ≤ p.all := hroute.1
+  have hA : A.Nonempty := by
+    by_contra hzero
+    have hAe : A = ∅ := Finset.not_nonempty_iff_eq_empty.mp hzero
+    subst A
+    simp [p, regularAggregateFlag, sumFlag] at hr
+  have hfuel : 1 ≤ sound.source.fuel p :=
+    sourceFuel_pos sound.source p hr hroute.2.1 hroute.2.2.1
+      hroute.2.2.2.1
+  have hfeasibleP := sourceFuel_feasible sound.source p hr
+  have hterminalP := sourceFuel_terminal sound.source p hr
+  have hfuelSlope : sound.source.fuel p ≤ sound.source.slopeCap := by
+    calc
+      sound.source.fuel p ≤ sound.source.slopeCap / p.all :=
+        (min_le_right _ _).trans (min_le_right _ _)
+      _ ≤ sound.source.slopeCap := Nat.div_le_self _ _
+  have hfuelM : sound.source.fuel p ≤ m := hfuelSlope.trans hslopeM
+  have hfuelChar : sound.source.fuel p < 2130706433 :=
+    hfuelM.trans_lt hmChar
+  have hlowpos : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
+      0 < D - j * 50273 := by
+    intro j hj hjfuel
+    have hjm : j ≤ m := hjfuel.trans hfuelM
+    rw [hweighted]
+    omega
+  have hcapacity : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
+      D - j * 50273 ≤
+        (m - j) * 181343 + j * (131071 - 1) := by
+    intro j _hj hjfuel
+    have hjm : j ≤ m := hjfuel.trans hfuelM
+    rw [hweighted]
+    omega
+  have hfield : A.card < ENat.card K := by
+    have hcard : A.card ≤ p.all := by
+      calc
+        A.card = ∑ F ∈ A, 1 := by simp
+        _ ≤ ∑ F ∈ A, (regularCumulativeFlag H F).all :=
+          Finset.sum_le_sum (fun F _ => Nat.one_le_iff_ne_zero.mpr
+            (Nat.ne_of_gt (regularCumulativeFlag_positive H F)))
+        _ = p.all := by simp only [p, regularAggregateFlag, sumFlag_all]
+    calc
+      (A.card : ENat) ≤ (30 : ℕ) := by
+        exact_mod_cast hcard.trans hnarrowS
+      _ < ENat.card K := by
+        rw [ENat.card_eq_coe_fintype_card, RCN183.field_cardinality]
+        norm_num
+  have factor_le_aggregate (F : RegularIndex H) (hFA : F ∈ A) :
+      (regularCumulativeFlag H F).all ≤ p.all ∧
+      middle (regularCumulativeFlag H F) ≤ middle p ∧
+      total (regularCumulativeFlag H F) ≤ total p := by
+    have hsub : ({F} : Finset (RegularIndex H)) ⊆ A :=
+      Finset.singleton_subset_iff.mpr hFA
+    simpa [p, regularAggregateFlag, sumFlag, middle, total] using
+      regularAggregateFlag_mono H hsub
+  have factorFuel (F : RegularIndex H) (hFA : F ∈ A) (j : ℕ)
+      (hj : j ≤ sound.source.fuel p) :
+      j ≤ sound.source.fuel (regularCumulativeFlag H F) := by
+    have hle := factor_le_aggregate F hFA
+    have hFr : 1 ≤ (regularCumulativeFlag H F).all :=
+      Nat.one_le_iff_ne_zero.mpr
+        (Nat.ne_of_gt (regularCumulativeFlag_positive H F))
+    have hFm : 1 ≤ middle (regularCumulativeFlag H F) :=
+      hFr.trans (all_le_middle _)
+    have hFt : 1 ≤ total (regularCumulativeFlag H F) :=
+      hFm.trans (middle_le_total _)
+    have hjT : j * total (regularCumulativeFlag H F) ≤
+        sound.source.totalCap := by
+      calc
+        j * total (regularCumulativeFlag H F) ≤ j * total p :=
+          Nat.mul_le_mul_left j hle.2.2
+        _ ≤ sound.source.fuel p * total p :=
+          Nat.mul_le_mul_right (total p) hj
+        _ ≤ sound.source.totalCap := hfeasibleP.1
+    have hjY : j * middle (regularCumulativeFlag H F) ≤
+        sound.source.middleCap := by
+      calc
+        j * middle (regularCumulativeFlag H F) ≤ j * middle p :=
+          Nat.mul_le_mul_left j hle.2.1
+        _ ≤ sound.source.fuel p * middle p :=
+          Nat.mul_le_mul_right (middle p) hj
+        _ ≤ sound.source.middleCap := hfeasibleP.2.1
+    have hjS : j * (regularCumulativeFlag H F).all ≤
+        sound.source.slopeCap := by
+      calc
+        j * (regularCumulativeFlag H F).all ≤ j * p.all :=
+          Nat.mul_le_mul_left j hle.1
+        _ ≤ sound.source.fuel p * p.all :=
+          Nat.mul_le_mul_right p.all hj
+        _ ≤ sound.source.slopeCap := hfeasibleP.2.2
+    unfold SourceNumbers.fuel
+    apply le_min
+    · exact (Nat.le_div_iff_mul_le hFt).mpr hjT
+    · apply le_min
+      · exact (Nat.le_div_iff_mul_le hFm).mpr hjY
+      · exact (Nat.le_div_iff_mul_le hFr).mpr hjS
+  have hgates : ∀ F ∈ A, ∀ j, j ≤ sound.source.fuel p →
+      HelperPairGates
+        (sound.source.totalCap - j * wt residualTotalWeights F.1)
+        (sound.source.middleCap - j * wt residualYSWeights F.1)
+        (sound.source.slopeCap - j * wt residualSWeights F.1)
+        (wt residualYSWeights F.1) (wt residualSWeights F.1)
+        (wt residualTotalWeights F.1) := by
+    intro F hFA j hj
+    have hc := originalCumulativeFlag_cumulative F.1
+    have hle := factor_le_aggregate F hFA
+    have hFr : 1 ≤ (regularCumulativeFlag H F).all :=
+      Nat.one_le_iff_ne_zero.mpr
+        (Nat.ne_of_gt (regularCumulativeFlag_positive H F))
+    have hs := sound.stageGates (regularCumulativeFlag H F) j hFr
+      (hle.1.trans hnarrowS) (hle.2.1.trans hnarrowY)
+      (hle.2.2.trans hnarrowT) (factorFuel F hFA j hj)
+    have hR : (regularCumulativeFlag H F).all =
+        wt residualSWeights F.1 := hc.1
+    have hY : middle (regularCumulativeFlag H F) =
+        wt residualYSWeights F.1 := hc.2.1
+    have hT : total (regularCumulativeFlag H F) =
+        wt residualTotalWeights F.1 := hc.2.2
+    simpa only [hR, hY, hT] using hs
+  have hcharge : ∀ F ∈ A, ∀ j, j ≤ sound.source.fuel p →
+      Lower80801.PowerRoute.stageCost sound.source.totalCap
+        sound.source.middleCap sound.source.slopeCap
+        (Lower80801.BatchPowerRoute.exactRouteBox F) j ≤
+          sound.potential.eval (regularCumulativeFlag H F) := by
+    intro F hFA j hj
+    have hc := originalCumulativeFlag_cumulative F.1
+    have hle := factor_le_aggregate F hFA
+    have hFr : 1 ≤ (regularCumulativeFlag H F).all :=
+      Nat.one_le_iff_ne_zero.mpr
+        (Nat.ne_of_gt (regularCumulativeFlag_positive H F))
+    have hs := sound.stageCost_le (regularCumulativeFlag H F) j hFr
+      (hle.1.trans hnarrowS) (hle.2.1.trans hnarrowY)
+      (hle.2.2.trans hnarrowT) (factorFuel F hFA j hj)
+    have hR : (regularCumulativeFlag H F).all =
+        wt residualSWeights F.1 := hc.1
+    have hY : middle (regularCumulativeFlag H F) =
+        wt residualYSWeights F.1 := hc.2.1
+    have hT : total (regularCumulativeFlag H F) =
+        wt residualTotalWeights F.1 := hc.2.2
+    simpa only [Lower80801.BatchPowerRoute.exactRouteBox,
+      Lower80801.Oracle.exactRouteBox, hR, hY, hT] using hs
+  have hmpos : 0 < m := by omega
+  have hDpos : 0 < D := by
+    rw [hweighted]
+    exact Nat.mul_pos hmpos (by decide)
+  have hDa : D ≤ m * 181343 := hweighted.le
+  have hP : regularProduct H A ≠ 0 := regularProduct_ne_zero H A
+  have hcP : contactDec p ≤ wt (contactWeights 131071) (regularProduct H A) := by
+    have h := LocatorArbitraryPowerAvoidance.contact_ge_ys 131071 (by decide)
+      (regularProduct H A) hP
+    simpa only [contactDec, p, regularAggregateFlag_middle,
+      regularAggregateFlag_all] using h
+  have hDcap : D - wt (contactWeights 131071) (regularProduct H A) ≤
+      sound.source.contactCap p := by
+    unfold SourceNumbers.contactCap
+    omega
+  have hbandThin : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
+      (D - wt (contactWeights 131071) (regularProduct H A)) 50273
+      (wt (contactWeights 131071) (regularProduct H A))
+      (wt residualTotalWeights (regularProduct H A))
+      (wt residualYSWeights (regularProduct H A))
+      (wt residualSWeights (regularProduct H A))
+      (sound.source.totalCap - wt residualTotalWeights (regularProduct H A))
+      (sound.source.middleCap - wt residualYSWeights (regularProduct H A))
+      (sound.source.slopeCap - wt residualSWeights (regularProduct H A))
+      (sound.source.fuel p) < sound.source.gap := by
+    rcases hroute.2.2.2.2 with hold | hthin
+    · have hold' : powerBandBudget 50273
+          (wt residualTotalWeights (regularProduct H A))
+          (wt residualYSWeights (regularProduct H A))
+          (wt residualSWeights (regularProduct H A))
+          (sound.source.totalCap - wt residualTotalWeights (regularProduct H A))
+          (sound.source.middleCap - wt residualYSWeights (regularProduct H A))
+          (sound.source.slopeCap - wt residualSWeights (regularProduct H A))
+          (sound.source.fuel p) < sound.source.gap := by
+        simpa only [SourceNumbers.band, p, regularAggregateFlag_total,
+          regularAggregateFlag_middle, regularAggregateFlag_all] using hold
+      exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_le
+        _ _ _ _ _ _ _ _ _ _ _).trans_lt hold'
+    · have hthin' : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
+          (sound.source.contactCap p) 50273 (contactDec p)
+          (wt residualTotalWeights (regularProduct H A))
+          (wt residualYSWeights (regularProduct H A))
+          (wt residualSWeights (regularProduct H A))
+          (sound.source.totalCap - wt residualTotalWeights (regularProduct H A))
+          (sound.source.middleCap - wt residualYSWeights (regularProduct H A))
+          (sound.source.slopeCap - wt residualSWeights (regularProduct H A))
+          (sound.source.fuel p) < sound.source.gap := by
+        simpa only [SourceNumbers.bandThin, p, regularAggregateFlag_total,
+          regularAggregateFlag_middle, regularAggregateFlag_all] using hthin
+      exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_mono 131071 50273
+        (sound.source.fuel p) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+        hDcap hcP le_rfl le_rfl le_rfl le_rfl le_rfl le_rfl).trans_lt hthin'
+  apply exists_strict_helper_split_of_batch_source_thin D
+    sound.source.totalCap sound.source.slopeCap m sound.source.middleCap
+    sound.source.gap 50273 (sound.source.fuel p)
+  · exact hDpos
+  · exact hDa
+  · exact hshape
+  · exact hfuel
+  · exact hfuelChar
+  · exact hlowpos
+  · exact hcapacity
+  · exact hdegree
+  · exact hagreement
+  · exact hno
+  · exact hA
+  · exact hbandThin
+  · simpa only [p, regularAggregateFlag_total,
+      regularAggregateFlag_middle, regularAggregateFlag_all] using hterminalP
+  · simpa only [p, regularAggregateFlag_total,
+      regularAggregateFlag_middle, regularAggregateFlag_all] using hfeasibleP
+  · exact hgap
+  · exact hfield
+  · exact hgates
+  · exact hcharge
+
+/-! ## State-local phase semantics
+
+The numerical receipt is indexed by the exact aggregate raw flag.  These
+lemmas keep that state intact while the algebraic route repeatedly replaces a
+routeable batch by a strict universal sub-batch.
+-/
+
+/-- State-local regular-seed bound used between consecutive source phases. -/
+def StateLocalRegularBound (H : P4) (selected : K → Polynomial K)
+    (Gamma : Finset K) (cap : FlagDegree → ℕ) : Prop :=
+  ∀ A : Finset (RegularIndex H),
+    (regularAggregateFlag H A).all ≤ 30 →
+    middle (regularAggregateFlag H A) ≤ 139 →
+    total (regularAggregateFlag H A) ≤ 7199 →
+    (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤
+      cap (regularAggregateFlag H A)
+
+/-- Ambient-scoped form needed after the initial A split.  Only factors in
+the A-universal set have the narrow ordinary bound. -/
+def StateLocalRegularBoundOn (H : P4) (selected : K → Polynomial K)
+    (Gamma : Finset K) (ambient : Finset (RegularIndex H))
+    (cap : FlagDegree → ℕ) : Prop :=
+  ∀ A : Finset (RegularIndex H), A ⊆ ambient →
+    (regularAggregateFlag H A).all ≤ 30 →
+    middle (regularAggregateFlag H A) ≤ 139 →
+    total (regularAggregateFlag H A) ≤ 7199 →
+    (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤
+      cap (regularAggregateFlag H A)
+
+/-- Concrete kernel realization of one numerical source. -/
+structure PhaseKernelRealization (sound : PhaseSourceSound)
+    (u0 u1 : I → K) where
+  D : ℕ
+  m : ℕ
+  weighted : D = m * 181343
+  shape : D + sound.source.slopeCap ≤
+    131071 * (sound.source.middleCap + 1)
+  slope_le_m : sound.source.slopeCap ≤ m
+  m_lt_char : m < 2130706433
+  gap_le_finrank : sound.source.gap ≤ Module.finrank K
+    (ConstraintKernel (K := K) D 131071 sound.source.totalCap
+      sound.source.slopeCap m IRSProfile.domain u0 u1)
+
+/-- One source phase preserves a state-local bound according to the numeric
+cap equation.  The only recursive calls are on strict factor subsets, hence
+the receipt defect is queried at a strict raw-slope child of the parent. -/
+theorem stateLocalRegularBoundOn_onePhase
+    (sound : PhaseSourceSound) (u0 u1 : I → K)
+    (kernel : PhaseKernelRealization sound u0 u1)
+    (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
+    (ambient : Finset (RegularIndex H))
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80801)
+    (previousCap nextCap defect : FlagDegree → ℕ)
+    (hprevious : StateLocalRegularBoundOn H selected Gamma ambient previousCap)
+    (hdefect : PhaseDefectSound previousCap sound.source
+      sound.potential defect)
+    (hcap : PhaseCapEquation previousCap nextCap sound.source
+      sound.potential defect) :
+    StateLocalRegularBoundOn H selected Gamma ambient nextCap := by
+  classical
+  intro A hAambient hs hy ht
+  let p := regularAggregateFlag H A
+  have hpreviousA :
+      (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤ previousCap p :=
+    hprevious A hAambient hs hy ht
+  have hcapP := hcap p hs hy ht
+  by_cases hrouteP : sound.source.Routeable p
+  · have hphase :
+        (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤
+          min (previousCap p)
+            ((∑ F ∈ A,
+              sound.potential.eval (regularCumulativeFlag H F)) + defect p) := by
+      apply sum_count_le_min_previous_onePhase
+        (fun F : RegularIndex H =>
+          (regularSeeds H selected Gamma F).card)
+        (fun F : RegularIndex H =>
+          sound.potential.eval (regularCumulativeFlag H F))
+        (fun B : Finset (RegularIndex H) =>
+          sound.source.Routeable (regularAggregateFlag H B))
+        (fun B : Finset (RegularIndex H) =>
+          previousCap (regularAggregateFlag H B)) A (defect p)
+      · intro B hBA
+        have hmono := regularAggregateFlag_mono H hBA
+        exact hprevious B (hBA.trans hAambient)
+          (hmono.1.trans hs) (hmono.2.1.trans hy)
+          (hmono.2.2.trans ht)
+      · intro B hBA hnrouteB
+        have hne : B ≠ A := by
+          intro hBAeq
+          subst B
+          exact hnrouteB hrouteP
+        have hproper : B ⊂ A :=
+          (_root_.ssubset_iff_subset_ne).mpr ⟨hBA, hne⟩
+        have hd := hdefect p (regularAggregateFlag H B) hs hy ht
+          ⟨regularAggregateFlag_raw_mono H hBA,
+            regularAggregateFlag_all_lt_of_ssubset H hproper⟩ hnrouteB
+        rw [← sum_phasePotential_eval sound.potential H B] at hd
+        exact hd
+      · intro B hBA hrouteB
+        have hmono := regularAggregateFlag_mono H hBA
+        obtain ⟨U, hUB, hexit⟩ :=
+          routeable_exists_strict_helper_split sound kernel.D kernel.m
+            kernel.weighted kernel.shape kernel.slope_le_m kernel.m_lt_char
+            u0 u1 H selected Gamma hdegree hagreement hno
+            kernel.gap_le_finrank B hrouteB
+            (hmono.1.trans hs) (hmono.2.1.trans hy)
+            (hmono.2.2.trans ht)
+        refine ⟨U, hUB, ?_⟩
+        exact Finset.sum_le_sum (fun F hFU => hexit F hFU)
+    rw [hcapP, if_pos hrouteP]
+    simpa only [p, sum_phasePotential_eval] using hphase
+  · rw [hcapP, if_neg hrouteP]
+    exact hpreviousA
+
+/-- Unscoped convenience corollary. -/
+theorem stateLocalRegularBound_onePhase
+    (sound : PhaseSourceSound) (u0 u1 : I → K)
+    (kernel : PhaseKernelRealization sound u0 u1)
+    (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma ∈ Gamma,
+      (selected gamma).natDegree ≤ 131071)
+    (hagreement : ∀ gamma ∈ Gamma, 181343 ≤
+      ((Finset.univ : Finset I).filter (fun i ↦
+        (selected gamma).eval (IRSProfile.domain i) =
+          u0 i + gamma * u1 i)).card)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80801)
+    (previousCap nextCap defect : FlagDegree → ℕ)
+    (hprevious : StateLocalRegularBound H selected Gamma previousCap)
+    (hdefect : PhaseDefectSound previousCap sound.source
+      sound.potential defect)
+    (hcap : PhaseCapEquation previousCap nextCap sound.source
+      sound.potential defect) :
+    StateLocalRegularBound H selected Gamma nextCap := by
+  have hpreviousOn : StateLocalRegularBoundOn H selected Gamma
+      (Finset.univ : Finset (RegularIndex H)) previousCap := by
+    intro A _hA hs hy ht
+    exact hprevious A hs hy ht
+  have hnext := stateLocalRegularBoundOn_onePhase sound u0 u1 kernel H
+    selected Gamma (Finset.univ : Finset (RegularIndex H)) hdegree
+    hagreement hno previousCap nextCap defect hpreviousOn hdefect hcap
+  intro A hs hy ht
+  exact hnext A (fun _ _ ↦ Finset.mem_univ _) hs hy ht
+
+end
+
+end ProximityPrize.SubmissionLower.Lower80801.BatchPhase
+
+
+end P39
+
+section P40
+/-! Arithmetic receipt interface for the 6805 base. The numerical certificate
+retains the ordinary zero-z Bellman table and a strict carrier floor. No
+geometric provider is assumed: each factor uses BoundaryTailBase.cap. -/
+namespace ProximityPrize.SubmissionLower.BoundaryTailBaseOracle
+
+open scoped BigOperators
+open RCN095 LocatorFactorAggregate LocatorPhase6800Oracle
+open LocatorOrdinaryZConvex (two_discreteConvex_endpoint)
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+set_option maxRecDepth 100000
+noncomputable section
+
+def cost (r v z : ℕ) : ℕ := BoundaryTailOrdinary.rawCost (rawFlag r v z)
+
+/-- Pure arithmetic shape needed to concentrate the z coordinate. The low
+branch is the checked old padded cost; the high branch is affine in z. -/
+structure Shape : Prop where
+  mono : ∀ r v, Monotone (cost r v)
+  convex : ∀ r v z, 1 ≤ r →
+    2 * cost r v (z+1) ≤ cost r v z + cost r v (z+2)
+
+theorem exists_z_carrier
+    (cost : ℕ → ℕ → ℕ → ℕ)
+    (hmono : ∀ r v, Monotone (cost r v))
+    (hconvex : ∀ r v z, 1 ≤ r →
+      2 * cost r v (z+1) ≤ cost r v z + cost r v (z+2))
+    {ι : Type} [DecidableEq ι]
+    (s : Finset ι) (r v z : ι → ℕ)
+    (hr : ∀ i ∈ s, 1 ≤ r i) (hne : s.Nonempty) :
+    ∃ c ∈ s,
+      (∑ i ∈ s, cost (r i) (v i) (z i)) ≤
+        cost (r c) (v c) (∑ i ∈ s, z i) +
+          ∑ i ∈ s.erase c, cost (r i) (v i) 0 := by
+  induction s using Finset.induction_on with
+  | empty => simp at hne
+  | @insert a s ha ih =>
+      by_cases hs : s = ∅
+      · subst s
+        refine ⟨a, by simp, ?_⟩
+        simp
+      · have hsne : s.Nonempty := Finset.nonempty_iff_ne_empty.mpr hs
+        obtain ⟨c, hc, hbound⟩ := ih (fun i hi => hr i (by simp [hi])) hsne
+        have hra : 1 ≤ r a := hr a (by simp)
+        have hrc : 1 ≤ r c := hr c (by simp [hc])
+        have hpair := two_discreteConvex_endpoint
+          (cost (r a) (v a)) (cost (r c) (v c))
+          (hmono (r a) (v a)) (hmono (r c) (v c))
+          (fun n => hconvex (r a) (v a) n hra)
+          (fun n => hconvex (r c) (v c) n hrc)
+          (z a) (∑ i ∈ s, z i)
+        have hpre :
+            (∑ i ∈ insert a s, cost (r i) (v i) (z i)) ≤
+              cost (r a) (v a) (z a) +
+                (cost (r c) (v c) (∑ i ∈ s, z i) +
+                  ∑ i ∈ s.erase c, cost (r i) (v i) 0) := by
+          rw [Finset.sum_insert ha]
+          exact Nat.add_le_add_left hbound _
+        by_cases hend :
+            cost (r a) (v a) (z a + ∑ i ∈ s, z i) +
+                cost (r c) (v c) 0 ≤
+              cost (r a) (v a) 0 +
+                cost (r c) (v c) (z a + ∑ i ∈ s, z i)
+        · refine ⟨c, by simp [hc], ?_⟩
+          have htwo :
+              cost (r a) (v a) (z a) +
+                  cost (r c) (v c) (∑ i ∈ s, z i) ≤
+                cost (r a) (v a) 0 +
+                  cost (r c) (v c) (z a + ∑ i ∈ s, z i) := by
+            exact hpair.trans (by simpa [max_eq_right hend])
+          calc
+            (∑ i ∈ insert a s, cost (r i) (v i) (z i)) ≤
+                cost (r a) (v a) (z a) +
+                  (cost (r c) (v c) (∑ i ∈ s, z i) +
+                    ∑ i ∈ s.erase c, cost (r i) (v i) 0) := hpre
+            _ ≤ (cost (r a) (v a) 0 +
+                  cost (r c) (v c) (z a + ∑ i ∈ s, z i)) +
+                    ∑ i ∈ s.erase c, cost (r i) (v i) 0 := by omega
+            _ = cost (r c) (v c) (∑ i ∈ insert a s, z i) +
+                  ∑ i ∈ (insert a s).erase c,
+                    cost (r i) (v i) 0 := by
+              rw [Finset.sum_insert ha]
+              have hac : a ≠ c := fun h => ha (h ▸ hc)
+              rw [Finset.erase_insert_of_ne hac, Finset.sum_insert]
+              · ac_rfl
+              · exact fun h => ha (Finset.mem_of_mem_erase h)
+        · refine ⟨a, by simp, ?_⟩
+          have hreverse :
+              cost (r c) (v c) (z a + ∑ i ∈ s, z i) +
+                  cost (r a) (v a) 0 ≤
+                cost (r a) (v a) (z a + ∑ i ∈ s, z i) +
+                  cost (r c) (v c) 0 := by
+            omega
+          have htwo :
+              cost (r a) (v a) (z a) +
+                  cost (r c) (v c) (∑ i ∈ s, z i) ≤
+                cost (r a) (v a) (z a + ∑ i ∈ s, z i) +
+                  cost (r c) (v c) 0 := by
+            exact hpair.trans (by
+              rw [max_eq_left]
+              simpa [Nat.add_comm] using hreverse)
+          have hzeros :
+              cost (r c) (v c) 0 +
+                  ∑ i ∈ s.erase c, cost (r i) (v i) 0 =
+                ∑ i ∈ s, cost (r i) (v i) 0 := by
+            simpa only [Nat.add_comm] using
+              (Finset.sum_erase_add s
+                (fun i => cost (r i) (v i) 0) hc)
+          calc
+            (∑ i ∈ insert a s, cost (r i) (v i) (z i)) ≤
+                cost (r a) (v a) (z a) +
+                  (cost (r c) (v c) (∑ i ∈ s, z i) +
+                    ∑ i ∈ s.erase c, cost (r i) (v i) 0) := hpre
+            _ ≤ (cost (r a) (v a) (z a + ∑ i ∈ s, z i) +
+                  cost (r c) (v c) 0) +
+                    ∑ i ∈ s.erase c, cost (r i) (v i) 0 := by omega
+            _ = cost (r a) (v a) (∑ i ∈ insert a s, z i) +
+                  ∑ i ∈ (insert a s).erase a,
+                    cost (r i) (v i) 0 := by
+              rw [Finset.sum_insert ha, Finset.erase_insert ha]
+              rw [← hzeros]
+              ac_rfl
+
+/-- The Bellman check has only four bounded indices. The `fits` alternative
+excludes a nonempty residual family with zero total slope. -/
+def ZeroRows (zero : ℕ → ℕ → ℕ) : Prop :=
+  ∀ R V r v, 1 ≤ r → r ≤ R → v ≤ V → R ≤ 30 → R+V ≤ 139 →
+    (r < R ∨ v = V) → cost r v 0 + zero (R-r) (V-v) ≤ zero R V
+
+def StrictRows (zero : ℕ → ℕ → ℕ) (split : FlagDegree → ℕ) : Prop :=
+  ∀ R V r v z, 1 ≤ r → r < R → v ≤ V → R ≤ 30 → R+V ≤ 139 →
+    R+V+z ≤ 7199 → cost r v z + zero (R-r) (V-v) ≤ split (rawFlag R V z)
+
+theorem sum_zero_le (zero : ℕ → ℕ → ℕ) (hrows : ZeroRows zero)
+    {ι : Type} [DecidableEq ι] (s : Finset ι) (r v : ι → ℕ)
+    (hpositive : ∀ i ∈ s, 1 ≤ r i)
+    (hrCap : (∑ i ∈ s, r i) ≤ 30)
+    (hrvCap : (∑ i ∈ s, r i) + (∑ i ∈ s, v i) ≤ 139) :
+    (∑ i ∈ s, cost (r i) (v i) 0) ≤ zero (∑ i ∈ s, r i) (∑ i ∈ s, v i) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simp
+  | @insert a s ha ih =>
+      have hra : 1 ≤ r a := hpositive a (by simp)
+      have hRInsert : r a + (∑ i ∈ s, r i) ≤ 30 := by
+        simpa only [Finset.sum_insert ha] using hrCap
+      have hRVInsert :
+          (r a + ∑ i ∈ s, r i) + (v a + ∑ i ∈ s, v i) ≤ 139 := by
+        rw [Finset.sum_insert ha, Finset.sum_insert ha] at hrvCap
+        omega
+      have ihBound := ih
+        (fun i hi ↦ hpositive i (Finset.mem_insert_of_mem hi))
+        (by omega) (by omega)
+      have hfits : r a < r a + (∑ i ∈ s, r i) ∨
+          v a = v a + (∑ i ∈ s, v i) := by
+        by_cases hs : s.Nonempty
+        · obtain ⟨i, hi⟩ := hs
+          have hri := hpositive i (Finset.mem_insert_of_mem hi)
+          have hriSum : r i ≤ ∑ j ∈ s, r j :=
+            Finset.single_le_sum (f := fun j ↦ r j)
+              (fun _ _ ↦ Nat.zero_le _) hi
+          left
+          omega
+        · have hs0 : s = ∅ := Finset.not_nonempty_iff_eq_empty.mp hs
+          subst s
+          simp
+      have hcandidate := hrows
+        (r a + ∑ i ∈ s, r i) (v a + ∑ i ∈ s, v i)
+        (r a) (v a) hra (by omega) (by omega) hRInsert hRVInsert hfits
+      rw [Finset.sum_insert ha, Finset.sum_insert ha, Finset.sum_insert ha]
+      exact (Nat.add_le_add_left ihBound _).trans (by
+        simpa only [Nat.add_sub_cancel_left] using hcandidate)
+
+theorem sum_count_le (shape : Shape) (zero : ℕ → ℕ → ℕ)
+    (hzeroRows : ZeroRows zero) (single split : FlagDegree → ℕ)
+    (hsplit : StrictRows zero split)
+    {ι : Type} [DecidableEq ι] (s : Finset ι) (p : ι → FlagDegree) (count : ι → ℕ)
+    (hpositive : ∀ i ∈ s, 1 ≤ (p i).all)
+    (hrCap : (sumFlag s p).all ≤ 30) (hyCap : middle (sumFlag s p) ≤ 139)
+    (htCap : total (sumFlag s p) ≤ 7199)
+    (hold : ∀ i ∈ s, count i ≤ cost (p i).all (p i).yz (p i).zOnly)
+    (hnew : ∀ i ∈ s, count i ≤ single (p i)) :
+    (∑ i ∈ s, count i) ≤ max (single (sumFlag s p)) (split (sumFlag s p)) := by
+  classical
+  have hcount := Finset.sum_le_sum hold
+  by_cases hs : s.Nonempty
+  · obtain ⟨c,hc,hconcentrate⟩ := exists_z_carrier cost shape.mono shape.convex s
+      (fun i => (p i).all) (fun i => (p i).yz) (fun i => (p i).zOnly) hpositive hs
+    by_cases hrest : (s.erase c).Nonempty
+    ·
+      have hzero := sum_zero_le zero hzeroRows (s.erase c)
+        (fun i ↦ (p i).all) (fun i ↦ (p i).yz)
+        (fun i hi ↦ hpositive i (Finset.mem_of_mem_erase hi))
+        (by
+          have hsub : s.erase c ⊆ s := Finset.erase_subset c s
+          have hle := Finset.sum_le_sum_of_subset_of_nonneg hsub
+            (fun _ _ _ ↦ Nat.zero_le _) (f := fun i ↦ (p i).all)
+          exact hle.trans hrCap)
+        (by
+          have hsub : s.erase c ⊆ s := Finset.erase_subset c s
+          have hrle := Finset.sum_le_sum_of_subset_of_nonneg hsub
+            (fun _ _ _ ↦ Nat.zero_le _) (f := fun i ↦ (p i).all)
+          have hvle := Finset.sum_le_sum_of_subset_of_nonneg hsub
+            (fun _ _ _ ↦ Nat.zero_le _) (f := fun i ↦ (p i).yz)
+          have hmiddle : (∑ i ∈ s, (p i).all) + (∑ i ∈ s, (p i).yz) ≤ 139 := by
+            rw [sumFlag_middle] at hyCap
+            simp only [middle, Finset.sum_add_distrib] at hyCap
+            omega
+          omega)
+      have hcR : (p c).all ≤ ∑ i ∈ s, (p i).all := by
+        exact Finset.single_le_sum (f := fun i ↦ (p i).all)
+          (fun _ _ ↦ Nat.zero_le _) hc
+      have hcV : (p c).yz ≤ ∑ i ∈ s, (p i).yz := by
+        exact Finset.single_le_sum (f := fun i ↦ (p i).yz)
+          (fun _ _ ↦ Nat.zero_le _) hc
+      have hmiddle : (∑ i ∈ s, (p i).all) + (∑ i ∈ s, (p i).yz) ≤ 139 := by
+        rw [sumFlag_middle] at hyCap
+        simp only [middle, Finset.sum_add_distrib] at hyCap
+        omega
+      have htotal : (∑ i ∈ s, (p i).all) + (∑ i ∈ s, (p i).yz) +
+          (∑ i ∈ s, (p i).zOnly) ≤ 7199 := by
+        rw [sumFlag_total] at htCap
+        simp only [total, middle, Finset.sum_add_distrib] at htCap
+        omega
+      have hrErase := Finset.sum_erase_add s (fun i ↦ (p i).all) hc
+      have hvErase := Finset.sum_erase_add s (fun i ↦ (p i).yz) hc
+      have hstrict : (p c).all < ∑ i ∈ s, (p i).all := by
+        obtain ⟨i,hi⟩ := hrest
+        have hiS := Finset.mem_of_mem_erase hi
+        have hri := hpositive i hiS
+        have hiSum : (p i).all ≤ ∑ j ∈ s.erase c, (p j).all :=
+          Finset.single_le_sum (f := fun j => (p j).all) (fun _ _ => Nat.zero_le _) hi
+        omega
+      have hcandidate := hsplit
+        (∑ i ∈ s, (p i).all) (∑ i ∈ s, (p i).yz)
+        (p c).all (p c).yz (∑ i ∈ s, (p i).zOnly)
+        (hpositive c hc) hstrict hcV hrCap hmiddle htotal
+      have hzero' :
+          (∑ i ∈ s.erase c,
+              cost (p i).all (p i).yz 0) ≤
+            zero
+              ((∑ i ∈ s, (p i).all) - (p c).all)
+              ((∑ i ∈ s, (p i).yz) - (p c).yz) := by
+        simpa only [show (∑ i ∈ s, (p i).all) - (p c).all =
+            ∑ i ∈ s.erase c, (p i).all by omega,
+          show (∑ i ∈ s, (p i).yz) - (p c).yz =
+            ∑ i ∈ s.erase c, (p i).yz by omega] using hzero
+      have hflagEq : sumFlag s p = rawFlag (∑ i ∈ s, (p i).all)
+          (∑ i ∈ s, (p i).yz) (∑ i ∈ s, (p i).zOnly) := rfl
+      have hb := hconcentrate.trans ((Nat.add_le_add_left hzero' _).trans hcandidate)
+      rw [←hflagEq] at hb
+      exact (hcount.trans hb).trans (le_max_right _ _)
+    · have he : s.erase c = ∅ := Finset.not_nonempty_iff_eq_empty.mp hrest
+      have hsEq : s = {c} := by rw [←Finset.insert_erase hc,he]; rfl
+      rw [hsEq]
+      simpa only [Finset.sum_singleton,sumFlag,Finset.sum_singleton] using
+        (hnew c hc).trans (le_max_left (single (p c)) (split (p c)))
+  · have he : s = ∅ := Finset.not_nonempty_iff_eq_empty.mp hs
+    subst s
+    simp
+
+/-- Compact numerical facts required of the generated rows. All fields are
+inequalities in natural numbers; no algebraic counting provider is assumed.
+The last field retains the strict aggregate floor even when a profile improves
+the singleton row. -/
+structure Receipt (zero : ℕ → ℕ → ℕ) (split base : FlagDegree → ℕ) : Prop where
+  shape : Shape
+  zeroRows : ZeroRows zero
+  strictRows : StrictRows zero split
+  singleton : ∀ p : FlagDegree, 1 ≤ p.all → p.all ≤ 30 →
+    middle p ≤ 139 → total p ≤ 7199 →
+    BoundaryTailOrdinary.rawCost p ≤ base p ∨
+      (BoundaryTailBase.Active p ∧
+        BoundaryTailRefinedCap.profile p.all p.yz p.zOnly ≤ base p)
+  floor : ∀ p : FlagDegree, 1 ≤ p.all → p.all ≤ 30 →
+    middle p ≤ 139 → total p ≤ 7199 → split p ≤ base p
+
+theorem Receipt.single_le {zero : ℕ → ℕ → ℕ} {split base : FlagDegree → ℕ}
+    (receipt : Receipt zero split base) (p : FlagDegree)
+    (hpos : 1 ≤ p.all) (hr : p.all ≤ 30) (hy : middle p ≤ 139)
+    (ht : total p ≤ 7199) : BoundaryTailBase.cap p ≤ base p := by
+  rcases receipt.singleton p hpos hr hy ht with hraw | ⟨hactive,hprofile⟩
+  · exact (BoundaryTailBase.cap_le_raw p).trans hraw
+  · exact (BoundaryTailBase.cap_le_profile p hactive).trans hprofile
+
+theorem Receipt.sum_count_le {zero : ℕ → ℕ → ℕ} {split base : FlagDegree → ℕ}
+    (receipt : Receipt zero split base)
+    {ι : Type} [DecidableEq ι] (s : Finset ι) (p : ι → FlagDegree) (count : ι → ℕ)
+    (hpositive : ∀ i ∈ s, 1 ≤ (p i).all)
+    (hrCap : (sumFlag s p).all ≤ 30) (hyCap : middle (sumFlag s p) ≤ 139)
+    (htCap : total (sumFlag s p) ≤ 7199)
+    (hnew : ∀ i ∈ s, count i ≤ BoundaryTailBase.cap (p i)) :
+    (∑ i ∈ s, count i) ≤ base (sumFlag s p) := by
+  classical
+  by_cases hs : s.Nonempty
+  · obtain ⟨i,hi⟩ := hs
+    have hpos : 1 ≤ (sumFlag s p).all :=
+      (hpositive i hi).trans
+        (Finset.single_le_sum (f := fun j => (p j).all)
+          (fun _ _ => Nat.zero_le _) hi)
+    have hraw : ∀ i ∈ s, count i ≤ cost (p i).all (p i).yz (p i).zOnly := by
+      intro i hi
+      have h := (hnew i hi).trans (BoundaryTailBase.cap_le_raw (p i))
+      simpa only [cost, rawFlag] using h
+    exact (BoundaryTailBaseOracle.sum_count_le receipt.shape zero receipt.zeroRows BoundaryTailBase.cap split
+      receipt.strictRows s p count hpositive hrCap hyCap htCap hraw hnew).trans
+      (max_le (receipt.single_le (sumFlag s p) hpos hrCap hyCap htCap)
+        (receipt.floor (sumFlag s p) hpos hrCap hyCap htCap))
+  · have he : s = ∅ := Finset.not_nonempty_iff_eq_empty.mp hs
+    subst s
+    simp
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailBaseOracle
+
+namespace ProximityPrize.SubmissionLower.Lower80801.PhaseSemantics
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN095 RCN130 RCN140 RCN238 RCN266 RCN275 LocatorFactorAggregate
+open LocatorBatchProductRoute
+open LocatorPhase6800Oracle (sumFlag)
+open LocatorBatchPhase6800 (regularAggregateFlag)
+open Lower80801.BatchPhase
+set_option autoImplicit false
+noncomputable section
+local instance : DecidableEq K := Classical.decEq _
+local instance : DecidableEq I := Classical.decEq _
+
+/-- The base step consumes the actual per-factor cap already established by
+BoundaryTailBase.regular_factor_count (or its carrier specialization). Its
+remaining assumptions are precisely the generated arithmetic receipts. -/
+theorem stateLocalRegularBoundOn_of_base
+    {zero : ℕ → ℕ → ℕ} {split base : FlagDegree → ℕ}
+    (receipt : BoundaryTailBaseOracle.Receipt zero split base)
+    (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
+    (ambient : Finset (RegularIndex H))
+    (hsingle : ∀ F ∈ ambient, (regularSeeds H selected Gamma F).card ≤
+      BoundaryTailBase.cap (regularCumulativeFlag H F)) :
+    StateLocalRegularBoundOn H selected Gamma ambient base := by
+  classical
+  intro A hAambient hs hy ht
+  exact receipt.sum_count_le A (regularCumulativeFlag H)
+    (fun F => (regularSeeds H selected Gamma F).card)
+    (fun F _ => Nat.one_le_iff_ne_zero.mpr
+      (Nat.ne_of_gt (regularCumulativeFlag_positive H F)))
+    hs hy ht (fun F hF => hsingle F (hAambient hF))
+
+end
+end ProximityPrize.SubmissionLower.Lower80801.PhaseSemantics
+
+end P40
+
+section P41
+namespace ProximityPrize.SubmissionLower.BoundaryTailShape
+open RCN095 RCN146 LocatorFactorAggregate LocatorPhase6800Oracle
+open LocatorHybridCostC2 LocatorHybridCells BoundaryTailBaseOracle
+open BoundaryTailIdentityArithmetic Lower80788.HybridIdentityC2
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+set_option maxRecDepth 100000
+noncomputable section
+
+/-- Subtraction-free in the varying total-degree coordinate. The remaining
+natural subtractions are constant as z varies. -/
+def high (r v z : ℕ) : ℕ := newCost ⟨z,v,r⟩ z (v-1) (r-2)
+
+theorem high_mono (r v : ℕ) : Monotone (high r v) := by
+  intro a b hab
+  simp only [high,newCost,newNormal,reducedABS,rationalABS,mfibABS,mcutABS,
+    flagMixed,unitAllFlag,add_zOnly,add_yz,add_all,
+    nsmul_zOnly,nsmul_yz,nsmul_all]
+  gcongr
+
+theorem high_affine (r v z : ℕ) :
+    2*high r v (z+1) = high r v z + high r v (z+2) := by
+  simp only [high,newCost,newNormal,reducedABS,rationalABS,mfibABS,mcutABS,
+    flagMixed,unitAllFlag,add_zOnly,add_yz,add_all,
+    nsmul_zOnly,nsmul_yz,nsmul_all]
+  ring
+
+theorem hybrid_iff (r v z : ℕ) :
+    HybridAppliesC2 (rawFlag r v z) ↔ 3 ≤ r ∧ 2 ≤ v := by
+  unfold HybridAppliesC2 rawFlag middle
+  dsimp
+  omega
+
+theorem cost_eq_high (r v z : ℕ) (hr : 3 ≤ r) (hv : 2 ≤ v) :
+    cost r v z = high r v z := by
+  have ha := (hybrid_iff r v z).mpr ⟨hr,hv⟩
+  unfold cost BoundaryTailOrdinary.rawCost
+  rw [if_pos ha]
+  simp only [rawFlag_all,rawFlag_middle,rawFlag_total]
+  rw [BoundaryTailOrdinaryHigh.bound_eq_abs _ _ _ _ hr (by omega)]
+  unfold high
+  congr 1 <;> simp only [rawFlag,total,middle,cellA,cellB,cellS] <;> omega
+
+theorem cost_eq_old (r v z : ℕ) (h : ¬ (3 ≤ r ∧ 2 ≤ v)) :
+    cost r v z = LocatorOrdinaryZConvex.rawCost r v z := by
+  have ha : ¬ HybridAppliesC2 (rawFlag r v z) := by
+    simpa only [hybrid_iff] using h
+  change BoundaryTailOrdinary.rawCost (rawFlag r v z) =
+    LocatorHybridCost.ordinaryCostOf (rawFlag r v z)
+  simp only [BoundaryTailOrdinary.rawCost,LocatorHybridCost.ordinaryCostOf,if_neg ha]
+
+theorem cost_mono (r v : ℕ) : Monotone (cost r v) := by
+  intro a b hab
+  by_cases h : 3 ≤ r ∧ 2 ≤ v
+  · rw [cost_eq_high r v a h.1 h.2,cost_eq_high r v b h.1 h.2]
+    exact high_mono r v hab
+  · rw [cost_eq_old r v a h,cost_eq_old r v b h]
+    exact LocatorOrdinaryZConvex.rawCost_mono_z r v hab
+
+theorem cost_discreteConvex (r v z : ℕ) (hr : 1 ≤ r) :
+    2*cost r v (z+1) ≤ cost r v z + cost r v (z+2) := by
+  by_cases h : 3 ≤ r ∧ 2 ≤ v
+  · rw [cost_eq_high r v (z+1) h.1 h.2,cost_eq_high r v z h.1 h.2,
+      cost_eq_high r v (z+2) h.1 h.2]
+    exact (high_affine r v z).le
+  · rw [cost_eq_old r v (z+1) h,cost_eq_old r v z h,cost_eq_old r v (z+2) h]
+    exact LocatorOrdinaryZConvex.rawCost_discreteConvex r v z hr
+
+def shape : BoundaryTailBaseOracle.Shape := ⟨cost_mono,cost_discreteConvex⟩
+
+end
+end ProximityPrize.SubmissionLower.BoundaryTailShape
+
+end P41
+
+section P42
+namespace ProximityPrize.SubmissionLower.BoundaryTailStrictData
+open LocatorPhase6800Oracle
+set_option autoImplicit false
+
+def defaultRow : BaseRow := ⟨0, 0, 0, 0, 0, []⟩
+def row1 : ℕ → BaseRow := fun i =>
+  if i<139 then(if i<69 then(if i<34 then(if i<17 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(⟨1,0,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,1,0,0,0,[⟨3,0,0⟩]⟩))else(if i<3 then(⟨1,2,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,3,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<6 then(if i<5 then(⟨1,4,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,5,0,0,0,[⟨3,0,0⟩]⟩))else(if i<7 then(⟨1,6,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,7,0,0,0,[⟨3,0,0⟩]⟩))))else(if i<12 then(if i<10 then(if i<9 then(⟨1,8,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,9,0,0,0,[⟨3,0,0⟩]⟩))else(if i<11 then(⟨1,10,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,11,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<14 then(if i<13 then(⟨1,12,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,13,0,0,0,[⟨3,0,0⟩]⟩))else(if i<15 then(⟨1,14,0,0,0,[⟨3,0,0⟩]⟩)else(if i<16 then(⟨1,15,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,16,0,0,0,[⟨3,0,0⟩]⟩))))))else(if i<25 then(if i<21 then(if i<19 then(if i<18 then(⟨1,17,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,18,0,0,0,[⟨3,0,0⟩]⟩))else(if i<20 then(⟨1,19,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,20,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<23 then(if i<22 then(⟨1,21,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,22,0,0,0,[⟨3,0,0⟩]⟩))else(if i<24 then(⟨1,23,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,24,0,0,0,[⟨3,0,0⟩]⟩))))else(if i<29 then(if i<27 then(if i<26 then(⟨1,25,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,26,0,0,0,[⟨3,0,0⟩]⟩))else(if i<28 then(⟨1,27,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,28,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<31 then(if i<30 then(⟨1,29,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,30,0,0,0,[⟨3,0,0⟩]⟩))else(if i<32 then(⟨1,31,0,0,0,[⟨3,0,0⟩]⟩)else(if i<33 then(⟨1,32,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,33,0,0,0,[⟨3,0,0⟩]⟩)))))))else(if i<51 then(if i<42 then(if i<38 then(if i<36 then(if i<35 then(⟨1,34,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,35,0,0,0,[⟨3,0,0⟩]⟩))else(if i<37 then(⟨1,36,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,37,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<40 then(if i<39 then(⟨1,38,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,39,0,0,0,[⟨3,0,0⟩]⟩))else(if i<41 then(⟨1,40,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,41,0,0,0,[⟨3,0,0⟩]⟩))))else(if i<46 then(if i<44 then(if i<43 then(⟨1,42,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,43,0,0,0,[⟨3,0,0⟩]⟩))else(if i<45 then(⟨1,44,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,45,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<48 then(if i<47 then(⟨1,46,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,47,0,0,0,[⟨3,0,0⟩]⟩))else(if i<49 then(⟨1,48,0,0,0,[⟨3,0,0⟩]⟩)else(if i<50 then(⟨1,49,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,50,0,0,0,[⟨3,0,0⟩]⟩))))))else(if i<60 then(if i<55 then(if i<53 then(if i<52 then(⟨1,51,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,52,0,0,0,[⟨3,0,0⟩]⟩))else(if i<54 then(⟨1,53,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,54,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<57 then(if i<56 then(⟨1,55,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,56,0,0,0,[⟨3,0,0⟩]⟩))else(if i<58 then(⟨1,57,0,0,0,[⟨3,0,0⟩]⟩)else(if i<59 then(⟨1,58,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,59,0,0,0,[⟨3,0,0⟩]⟩)))))else(if i<64 then(if i<62 then(if i<61 then(⟨1,60,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,61,0,0,0,[⟨3,0,0⟩]⟩))else(if i<63 then(⟨1,62,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,63,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<66 then(if i<65 then(⟨1,64,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,65,0,0,0,[⟨3,0,0⟩]⟩))else(if i<67 then(⟨1,66,0,0,0,[⟨3,0,0⟩]⟩)else(if i<68 then(⟨1,67,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,68,0,0,0,[⟨3,0,0⟩]⟩))))))))else(if i<104 then(if i<86 then(if i<77 then(if i<73 then(if i<71 then(if i<70 then(⟨1,69,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,70,0,0,0,[⟨3,0,0⟩]⟩))else(if i<72 then(⟨1,71,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,72,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<75 then(if i<74 then(⟨1,73,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,74,0,0,0,[⟨3,0,0⟩]⟩))else(if i<76 then(⟨1,75,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,76,0,0,0,[⟨3,0,0⟩]⟩))))else(if i<81 then(if i<79 then(if i<78 then(⟨1,77,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,78,0,0,0,[⟨3,0,0⟩]⟩))else(if i<80 then(⟨1,79,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,80,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<83 then(if i<82 then(⟨1,81,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,82,0,0,0,[⟨3,0,0⟩]⟩))else(if i<84 then(⟨1,83,0,0,0,[⟨3,0,0⟩]⟩)else(if i<85 then(⟨1,84,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,85,0,0,0,[⟨3,0,0⟩]⟩))))))else(if i<95 then(if i<90 then(if i<88 then(if i<87 then(⟨1,86,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,87,0,0,0,[⟨3,0,0⟩]⟩))else(if i<89 then(⟨1,88,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,89,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<92 then(if i<91 then(⟨1,90,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,91,0,0,0,[⟨3,0,0⟩]⟩))else(if i<93 then(⟨1,92,0,0,0,[⟨3,0,0⟩]⟩)else(if i<94 then(⟨1,93,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,94,0,0,0,[⟨3,0,0⟩]⟩)))))else(if i<99 then(if i<97 then(if i<96 then(⟨1,95,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,96,0,0,0,[⟨3,0,0⟩]⟩))else(if i<98 then(⟨1,97,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,98,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<101 then(if i<100 then(⟨1,99,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,100,0,0,0,[⟨3,0,0⟩]⟩))else(if i<102 then(⟨1,101,0,0,0,[⟨3,0,0⟩]⟩)else(if i<103 then(⟨1,102,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,103,0,0,0,[⟨3,0,0⟩]⟩)))))))else(if i<121 then(if i<112 then(if i<108 then(if i<106 then(if i<105 then(⟨1,104,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,105,0,0,0,[⟨3,0,0⟩]⟩))else(if i<107 then(⟨1,106,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,107,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<110 then(if i<109 then(⟨1,108,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,109,0,0,0,[⟨3,0,0⟩]⟩))else(if i<111 then(⟨1,110,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,111,0,0,0,[⟨3,0,0⟩]⟩))))else(if i<116 then(if i<114 then(if i<113 then(⟨1,112,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,113,0,0,0,[⟨3,0,0⟩]⟩))else(if i<115 then(⟨1,114,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,115,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<118 then(if i<117 then(⟨1,116,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,117,0,0,0,[⟨3,0,0⟩]⟩))else(if i<119 then(⟨1,118,0,0,0,[⟨3,0,0⟩]⟩)else(if i<120 then(⟨1,119,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,120,0,0,0,[⟨3,0,0⟩]⟩))))))else(if i<130 then(if i<125 then(if i<123 then(if i<122 then(⟨1,121,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,122,0,0,0,[⟨3,0,0⟩]⟩))else(if i<124 then(⟨1,123,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,124,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<127 then(if i<126 then(⟨1,125,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,126,0,0,0,[⟨3,0,0⟩]⟩))else(if i<128 then(⟨1,127,0,0,0,[⟨3,0,0⟩]⟩)else(if i<129 then(⟨1,128,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,129,0,0,0,[⟨3,0,0⟩]⟩)))))else(if i<134 then(if i<132 then(if i<131 then(⟨1,130,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,131,0,0,0,[⟨3,0,0⟩]⟩))else(if i<133 then(⟨1,132,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,133,0,0,0,[⟨3,0,0⟩]⟩)))else(if i<136 then(if i<135 then(⟨1,134,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,135,0,0,0,[⟨3,0,0⟩]⟩))else(if i<137 then(⟨1,136,0,0,0,[⟨3,0,0⟩]⟩)else(if i<138 then(⟨1,137,0,0,0,[⟨3,0,0⟩]⟩)else(⟨1,138,0,0,0,[⟨3,0,0⟩]⟩)))))))))else(defaultRow)
+
+def row2 : ℕ → BaseRow := fun i =>
+  if i<138 then(if i<69 then(if i<34 then(if i<17 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(⟨2,0,549762105354,755922632716,962083160078,[⟨3,1443124215826,481041055748⟩]⟩)else(⟨2,1,755922632716,962083160078,1580564217874,[⟨3,2199045275670,618481057796⟩]⟩))else(if i<3 then(⟨2,2,962083160078,1718004219922,2473925279766,[⟨3,3229846339610,755921059844⟩]⟩)else(⟨2,3,1924164222994,3092405288982,4260646354970,[⟨3,5428887420958,1168241065988⟩]⟩)))else(if i<6 then(if i<5 then(⟨2,4,3298565292054,4879126364186,6459687436318,[⟨3,8040248508450,1580561072132⟩]⟩)else(⟨2,5,5085286367258,7078167445534,9071048523810,[⟨3,11063929602086,1992881078276⟩]⟩))else(if i<7 then(⟨2,6,7284327448606,9689528533026,12094729617446,[⟨3,14499930701866,2405201084420⟩]⟩)else(⟨2,7,9895688536098,12713209626662,15530730717226,[⟨3,18348251807790,2817521090564⟩]⟩))))else(if i<12 then(if i<10 then(if i<9 then(⟨2,8,12919369629734,16149210726442,19379051823150,[⟨3,22608892919858,3229841096708⟩]⟩)else(⟨2,9,16355370729514,19997531832366,23639692935218,[⟨3,27281854038070,3642161102852⟩]⟩))else(if i<11 then(⟨2,10,20203691835438,24258172944434,28312654053430,[⟨3,32367135162426,4054481108996⟩]⟩)else(⟨2,11,24464332947506,28931134062646,33397935177786,[⟨3,37864736292926,4466801115140⟩]⟩)))else(if i<14 then(if i<13 then(⟨2,12,29137294065718,34016415187002,38895536308286,[⟨3,43774657429570,4879121121284⟩]⟩)else(⟨2,13,34222575190074,39514016317502,44805457444930,[⟨3,50096898572358,5291441127428⟩]⟩))else(if i<15 then(⟨2,14,39720176320574,45423937454146,51127698587718,[⟨3,56831459721290,5703761133572⟩]⟩)else(if i<16 then(⟨2,15,45630097457218,51746178596934,57862259736650,[⟨3,63978340876366,6116081139716⟩]⟩)else(⟨2,16,51952338600006,58480739745866,65009140891726,[⟨3,71537542037586,6528401145860⟩]⟩))))))else(if i<25 then(if i<21 then(if i<19 then(if i<18 then(⟨2,17,58686899748938,65627620900942,72568342052946,[⟨3,79509063204950,6940721152004⟩]⟩)else(⟨2,18,65833780904014,73186822062162,80539863220310,[⟨3,87892904378458,7353041158148⟩]⟩))else(if i<20 then(⟨2,19,73392982065234,81158343229526,88923704393818,[⟨3,96689065558110,7765361164292⟩]⟩)else(⟨2,20,81364503232598,89542184403034,97719865573470,[⟨3,105897546743906,8177681170436⟩]⟩)))else(if i<23 then(if i<22 then(⟨2,21,89748344406106,98338345582686,106928346759266,[⟨3,115518347935846,8590001176580⟩]⟩)else(⟨2,22,98544505585758,107546826768482,116549147951206,[⟨3,125551469133930,9002321182724⟩]⟩))else(if i<24 then(⟨2,23,107752986771554,117167627960422,126582269149290,[⟨3,135996910338158,9414641188868⟩]⟩)else(⟨2,24,117373787963494,127200749158506,137027710353518,[⟨3,146854671548530,9826961195012⟩]⟩))))else(if i<29 then(if i<27 then(if i<26 then(⟨2,25,127406909161578,137646190362734,147885471563890,[⟨3,158124752765046,10239281201156⟩]⟩)else(⟨2,26,137852350365806,148503951573106,159155552780406,[⟨3,169807153987706,10651601207300⟩]⟩))else(if i<28 then(⟨2,27,148710111576178,159774032789622,170837954003066,[⟨3,181901875216510,11063921213444⟩]⟩)else(⟨2,28,159980192792694,171456434012282,182932675231870,[⟨3,194408916451458,11476241219588⟩]⟩)))else(if i<31 then(if i<30 then(⟨2,29,171662594015354,183551155241086,195439716466818,[⟨3,207328277692550,11888561225732⟩]⟩)else(⟨2,30,183757315244158,196058196476034,208359077707910,[⟨3,220659958939786,12300881231876⟩]⟩))else(if i<32 then(⟨2,31,196264356479106,208977557717126,221690758955146,[⟨3,234403960193166,12713201238020⟩]⟩)else(if i<33 then(⟨2,32,209183717720198,222309238964362,235434760208526,[⟨3,248560281452690,13125521244164⟩]⟩)else(⟨2,33,222515398967434,236053240217742,249591081468050,[⟨3,263128922718358,13537841250308⟩]⟩)))))))else(if i<51 then(if i<42 then(if i<38 then(if i<36 then(if i<35 then(⟨2,34,236259400220814,250209561477266,264159722733718,[⟨3,278109883990170,13950161256452⟩]⟩)else(⟨2,35,250415721480338,264778202742934,279140684005530,[⟨3,293503165268126,14362481262596⟩]⟩))else(if i<37 then(⟨2,36,264984362746006,279759164014746,294533965283486,[⟨3,309308766552226,14774801268740⟩]⟩)else(⟨2,37,279965324017818,295152445292702,310339566567586,[⟨3,325526687842470,15187121274884⟩]⟩)))else(if i<40 then(if i<39 then(⟨2,38,295358605295774,310958046576802,326557487857830,[⟨3,342156929138858,15599441281028⟩]⟩)else(⟨2,39,311164206579874,327175967867046,343187729154218,[⟨3,359199490441390,16011761287172⟩]⟩))else(if i<41 then(⟨2,40,327382127870118,343806209163434,360230290456750,[⟨3,376654371750066,16424081293316⟩]⟩)else(⟨2,41,344012369166506,360848770465966,377685171765426,[⟨3,394521573064886,16836401299460⟩]⟩))))else(if i<46 then(if i<44 then(if i<43 then(⟨2,42,361054930469038,378303651774642,395552373080246,[⟨3,412801094385850,17248721305604⟩]⟩)else(⟨2,43,378509811777714,396170853089462,413831894401210,[⟨3,431492935712958,17661041311748⟩]⟩))else(if i<45 then(⟨2,44,396377013092534,414450374410426,432523735728318,[⟨3,450597097046210,18073361317892⟩]⟩)else(⟨2,45,414656534413498,433142215737534,451627897061570,[⟨3,470113578385606,18485681324036⟩]⟩)))else(if i<48 then(if i<47 then(⟨2,46,433348375740606,452246377070786,471144378400966,[⟨3,490042379731146,18898001330180⟩]⟩)else(⟨2,47,452452537073858,471762858410182,491073179746506,[⟨3,510383501082830,19310321336324⟩]⟩))else(if i<49 then(⟨2,48,471969018413254,491691659755722,511414301098190,[⟨3,531136942440658,19722641342468⟩]⟩)else(if i<50 then(⟨2,49,491897819758794,512032781107406,532167742456018,[⟨3,552302703804630,20134961348612⟩]⟩)else(⟨2,50,512238941110478,532786222465234,553333503819990,[⟨3,573880785174746,20547281354756⟩]⟩))))))else(if i<60 then(if i<55 then(if i<53 then(if i<52 then(⟨2,51,532992382468306,553951983829206,574911585190106,[⟨3,595871186551006,20959601360900⟩]⟩)else(⟨2,52,554158143832278,575530065199322,596901986566366,[⟨3,618273907933410,21371921367044⟩]⟩))else(if i<54 then(⟨2,53,575736225202394,597520466575582,619304707948770,[⟨3,641088949321958,21784241373188⟩]⟩)else(⟨2,54,597726626578654,619923187957986,642119749337318,[⟨3,664316310716650,22196561379332⟩]⟩)))else(if i<57 then(if i<56 then(⟨2,55,620129347961058,642738229346534,665347110732010,[⟨3,687955992117486,22608881385476⟩]⟩)else(⟨2,56,642944389349606,665965590741226,688986792132846,[⟨3,712007993524466,23021201391620⟩]⟩))else(if i<58 then(⟨2,57,666171750744298,689605272142062,713038793539826,[⟨3,736472314937590,23433521397764⟩]⟩)else(if i<59 then(⟨2,58,689811432145134,713657273549042,737503114952950,[⟨3,761348956356858,23845841403908⟩]⟩)else(⟨2,59,713863433552114,738121594962166,762379756372218,[⟨3,786637917782270,24258161410052⟩]⟩)))))else(if i<64 then(if i<62 then(if i<61 then(⟨2,60,738327754965238,762998236381434,787668717797630,[⟨3,812339199213826,24670481416196⟩]⟩)else(⟨2,61,763204396384506,788287197806846,813369999229186,[⟨3,838452800651526,25082801422340⟩]⟩))else(if i<63 then(⟨2,62,788493357809918,813988479238402,839483600666886,[⟨3,864978722095370,25495121428484⟩]⟩)else(⟨2,63,814194639241474,840102080676102,866009522110730,[⟨3,891916963545358,25907441434628⟩]⟩)))else(if i<66 then(if i<65 then(⟨2,64,840308240679174,866628002119946,892947763560718,[⟨3,919267525001490,26319761440772⟩]⟩)else(⟨2,65,866834162123018,893566243569934,920298325016850,[⟨3,947030406463766,26732081446916⟩]⟩))else(if i<67 then(⟨2,66,893772403573006,920916805026066,948061206479126,[⟨3,975205607932186,27144401453060⟩]⟩)else(if i<68 then(⟨2,67,921122965029138,948679686488342,976236407947546,[⟨3,1003793129406750,27556721459204⟩]⟩)else(⟨2,68,948885846491414,976854887956762,1004823929422110,[⟨3,1032792970887458,27969041465348⟩]⟩))))))))else(if i<103 then(if i<86 then(if i<77 then(if i<73 then(if i<71 then(if i<70 then(⟨2,69,977061047959834,1005442409431326,1033823770902818,[⟨3,1062205132374310,28381361471492⟩]⟩)else(⟨2,70,1005648569434398,1034442250912034,1063235932389670,[⟨3,1092029613867306,28793681477636⟩]⟩))else(if i<72 then(⟨2,71,1034648410915106,1063854412398886,1093060413882666,[⟨3,1122266415366446,29206001483780⟩]⟩)else(⟨2,72,1064060572401958,1093678893891882,1123297215381806,[⟨3,1152915536871730,29618321489924⟩]⟩)))else(if i<75 then(if i<74 then(⟨2,73,1093885053894954,1123915695391022,1153946336887090,[⟨3,1183976978383158,30030641496068⟩]⟩)else(⟨2,74,1124121855394094,1154564816896306,1185007778398518,[⟨3,1215450739900730,30442961502212⟩]⟩))else(if i<76 then(⟨2,75,1154770976899378,1185626258407734,1216481539916090,[⟨3,1247336821424446,30855281508356⟩]⟩)else(⟨2,76,1185832418410806,1217100019925306,1248367621439806,[⟨3,1279635222954306,31267601514500⟩]⟩))))else(if i<81 then(if i<79 then(if i<78 then(⟨2,77,1217306179928378,1248986101449022,1280666022969666,[⟨3,1312345944490310,31679921520644⟩]⟩)else(⟨2,78,1249192261452094,1281284502978882,1313376744505670,[⟨3,1345468986032458,32092241526788⟩]⟩))else(if i<80 then(⟨2,79,1281490662981954,1313995224514886,1346499786047818,[⟨3,1379004347580750,32504561532932⟩]⟩)else(⟨2,80,1314201384517958,1347118266057034,1380035147596110,[⟨3,1412952029135186,32916881539076⟩]⟩)))else(if i<83 then(if i<82 then(⟨2,81,1347324426060106,1380653627605326,1413982829150546,[⟨3,1447312030695766,33329201545220⟩]⟩)else(⟨2,82,1380859787608398,1414601309159762,1448342830711126,[⟨3,1482084352262490,33741521551364⟩]⟩))else(if i<84 then(⟨2,83,1414807469162834,1448961310720342,1483115152277850,[⟨3,1517268993835358,34153841557508⟩]⟩)else(if i<85 then(⟨2,84,1449167470723414,1483733632287066,1518299793850718,[⟨3,1552865955414370,34566161563652⟩]⟩)else(⟨2,85,1483939792290138,1518918273859934,1553896755429730,[⟨3,1588875236999526,34978481569796⟩]⟩))))))else(if i<94 then(if i<90 then(if i<88 then(if i<87 then(⟨2,86,1519124433863006,1554515235438946,1589906037014886,[⟨3,1625296838590826,35390801575940⟩]⟩)else(⟨2,87,1554721395442018,1590524517024102,1626327638606186,[⟨3,1662130760188270,35803121582084⟩]⟩))else(if i<89 then(⟨2,88,1590730677027174,1626946118615402,1663161560203630,[⟨3,1699377001791858,36215441588228⟩]⟩)else(⟨2,89,1627152278618474,1663780040212846,1700407801807218,[⟨3,1737035563401590,36627761594372⟩]⟩)))else(if i<92 then(if i<91 then(⟨2,90,1663986200215918,1701026281816434,1738066363416950,[⟨3,1775106445017466,37040081600516⟩]⟩)else(⟨2,91,1701232441819506,1738684843426166,1776137245032826,[⟨3,1813589646639486,37452401606660⟩]⟩))else(if i<93 then(⟨2,92,1738891003429238,1776755725042042,1814620446654846,[⟨3,1852485168267650,37864721612804⟩]⟩)else(⟨2,93,1776961885045114,1815238926664062,1853515968283010,[⟨3,1891793009901958,38277041618948⟩]⟩))))else(if i<98 then(if i<96 then(if i<95 then(⟨2,94,1815445086667134,1854134448292226,1892823809917318,[⟨3,1931513171542410,38689361625092⟩]⟩)else(⟨2,95,1854340608295298,1893442289926534,1932543971557770,[⟨3,1971645653189006,39101681631236⟩]⟩))else(if i<97 then(⟨2,96,1893648449929606,1933162451566986,1972676453204366,[⟨3,2012190454841746,39514001637380⟩]⟩)else(⟨2,97,1933368611570058,1973294933213582,2013221254857106,[⟨3,2053147576500630,39926321643524⟩]⟩)))else(if i<100 then(if i<99 then(⟨2,98,1973501093216654,2013839734866322,2054178376515990,[⟨3,2094517018165658,40338641649668⟩]⟩)else(⟨2,99,2014045894869394,2054796856525206,2095547818181018,[⟨3,2136298779836830,40750961655812⟩]⟩))else(if i<101 then(⟨2,100,2055003016528278,2096166298190234,2137329579852190,[⟨3,2178492861514146,41163281661956⟩]⟩)else(if i<102 then(⟨2,101,2096372458193306,2137948059861406,2179523661529506,[⟨3,2221099263197606,41575601668100⟩]⟩)else(⟨2,102,2138154219864478,2180142141538722,2222130063212966,[⟨3,2264117984887210,41987921674244⟩]⟩)))))))else(if i<120 then(if i<111 then(if i<107 then(if i<105 then(if i<104 then(⟨2,103,2180348301541794,2222748543222182,2265148784902570,[⟨3,2307549026582958,42400241680388⟩]⟩)else(⟨2,104,2222954703225254,2265767264911786,2308579826598318,[⟨3,2351392388284850,42812561686532⟩]⟩))else(if i<106 then(⟨2,105,2265973424914858,2309198306607534,2352423188300210,[⟨3,2395648069992886,43224881692676⟩]⟩)else(⟨2,106,2309404466610606,2353041668309426,2396678870008246,[⟨3,2440316071707066,43637201698820⟩]⟩)))else(if i<109 then(if i<108 then(⟨2,107,2353247828312498,2397297350017462,2441346871722426,[⟨3,2485396393427390,44049521704964⟩]⟩)else(⟨2,108,2397503510020534,2441965351731642,2486427193442750,[⟨3,2530889035153858,44461841711108⟩]⟩))else(if i<110 then(⟨2,109,2442171511734714,2487045673451966,2531919835169218,[⟨3,2576793996886470,44874161717252⟩]⟩)else(⟨2,110,2487251833455038,2532538315178434,2577824796901830,[⟨3,2623111278625226,45286481723396⟩]⟩))))else(if i<115 then(if i<113 then(if i<112 then(⟨2,111,2532744475181506,2578443276911046,2624142078640586,[⟨3,2669840880370126,45698801729540⟩]⟩)else(⟨2,112,2578649436914118,2624760558649802,2670871680385486,[⟨3,2716982802121170,46111121735684⟩]⟩))else(if i<114 then(⟨2,113,2624966718652874,2671490160394702,2718013602136530,[⟨3,2764537043878358,46523441741828⟩]⟩)else(⟨2,114,2671696320397774,2718632082145746,2765567843893718,[⟨3,2812503605641690,46935761747972⟩]⟩)))else(if i<117 then(if i<116 then(⟨2,115,2718838242148818,2766186323902934,2813534405657050,[⟨3,2860882487411166,47348081754116⟩]⟩)else(⟨2,116,2766392483906006,2814152885666266,2861913287426526,[⟨3,2909673689186786,47760401760260⟩]⟩))else(if i<118 then(⟨2,117,2814359045669338,2862531767435742,2910704489202146,[⟨3,2958877210968550,48172721766404⟩]⟩)else(if i<119 then(⟨2,118,2862737927438814,2911322969211362,2959908010983910,[⟨3,3008493052756458,48585041772548⟩]⟩)else(⟨2,119,2911529129214434,2960526490993126,3009523852771818,[⟨3,3058521214550510,48997361778692⟩]⟩))))))else(if i<129 then(if i<124 then(if i<122 then(if i<121 then(⟨2,120,2960732650996198,3010142332781034,3059552014565870,[⟨3,3108961696350706,49409681784836⟩]⟩)else(⟨2,121,3010348492784106,3060170494575086,3109992496366066,[⟨3,3159814498157046,49822001790980⟩]⟩))else(if i<123 then(⟨2,122,3060376654578158,3110610976375282,3160845298172406,[⟨3,3211079619969530,50234321797124⟩]⟩)else(⟨2,123,3110817136378354,3161463778181622,3212110419984890,[⟨3,3262757061788158,50646641803268⟩]⟩)))else(if i<126 then(if i<125 then(⟨2,124,3161669938184694,3212728899994106,3263787861803518,[⟨3,3314846823612930,51058961809412⟩]⟩)else(⟨2,125,3212935059997178,3264406341812734,3315877623628290,[⟨3,3367348905443846,51471281815556⟩]⟩))else(if i<127 then(⟨2,126,3264612501815806,3316496103637506,3368379705459206,[⟨3,3420263307280906,51883601821700⟩]⟩)else(if i<128 then(⟨2,127,3316702263640578,3368998185468422,3421294107296266,[⟨3,3473590029124110,52295921827844⟩]⟩)else(⟨2,128,3369204345471494,3421912587305482,3474620829139470,[⟨3,3527329070973458,52708241833988⟩]⟩)))))else(if i<133 then(if i<131 then(if i<130 then(⟨2,129,3422118747308554,3475239309148686,3528359870988818,[⟨3,3581480432828950,53120561840132⟩]⟩)else(⟨2,130,3475445469151758,3528978350998034,3582511232844310,[⟨3,3636044114690586,53532881846276⟩]⟩))else(if i<132 then(⟨2,131,3529184511001106,3583129712853526,3637074914705946,[⟨3,3691020116558366,53945201852420⟩]⟩)else(⟨2,132,3583335872856598,3637693394715162,3692050916573726,[⟨3,3746408438432290,54357521858564⟩]⟩)))else(if i<135 then(if i<134 then(⟨2,133,3637899554718234,3692669396582942,3747439238447650,[⟨3,3802209080312358,54769841864708⟩]⟩)else(⟨2,134,3692875556586014,3748057718456866,3803239880327718,[⟨3,3858422042198570,55182161870852⟩]⟩))else(if i<136 then(⟨2,135,3748263878459938,3803858360336934,3859452842213930,[⟨3,3915047324090926,55594481876996⟩]⟩)else(if i<137 then(⟨2,136,3804064520340006,3860071322223146,3916078124106286,[⟨3,3972084925989426,56006801883140⟩]⟩)else(⟨2,137,3860277482226218,3916696604115502,3973115726004786,[⟨3,4029534847894070,56419121889284⟩]⟩)))))))))else(defaultRow)
+
+def row3 : ℕ → BaseRow := fun i =>
+  if i<137 then(if i<68 then(if i<34 then(if i<17 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(⟨3,0,824643158031,1030803685393,1786725269527,[⟨3,2542646853661,755921584134⟩]⟩)else(⟨3,1,1030803685393,1924165271575,2817526857757,[⟨3,3710888443939,893361586182⟩]⟩))else(if i<3 then(⟨3,2,2199045275671,3642166870045,5085288464419,[⟨3,6528410058793,1443121594374⟩]⟩)else(⟨3,3,3917046874141,5909928476707,7902810079273,[⟨3,9895691681839,1992881602566⟩]⟩)))else(if i<6 then(if i<5 then(⟨3,4,6184808480803,8727450091561,11270091702319,[⟨3,13812733313077,2542641610758⟩]⟩)else(⟨3,5,9002330095657,12094731714607,15187133333557,[⟨3,18279534952507,3092401618950⟩]⟩))else(if i<7 then(⟨3,6,12369611718703,16011773345845,19653934972987,[⟨3,23296096600129,3642161627142⟩]⟩)else(⟨3,7,16286653349941,20478574985275,24670496620609,[⟨3,28862418255943,4191921635334⟩]⟩))))else(if i<12 then(if i<10 then(if i<9 then(⟨3,8,20753454989371,25495136632897,30236818276423,[⟨3,34978499919949,4741681643526⟩]⟩)else(⟨3,9,25770016636993,31061458288711,36352899940429,[⟨3,41644341592147,5291441651718⟩]⟩))else(if i<11 then(⟨3,10,31336338292807,37177539952717,43018741612627,[⟨3,48859943272537,5841201659910⟩]⟩)else(⟨3,11,37452419956813,43843381624915,50234343293017,[⟨3,56625304961119,6390961668102⟩]⟩)))else(if i<14 then(if i<13 then(⟨3,12,44118261629011,51058983305305,57999704981599,[⟨3,64940426657893,6940721676294⟩]⟩)else(⟨3,13,51333863309401,58824344993887,66314826678373,[⟨3,73805308362859,7490481684486⟩]⟩))else(if i<15 then(⟨3,14,59099224997983,67139466690661,75179708383339,[⟨3,83219950076017,8040241692678⟩]⟩)else(if i<16 then(⟨3,15,67414346694757,76004348395627,84594350096497,[⟨3,93184351797367,8590001700870⟩]⟩)else(⟨3,16,76279228399723,85418990108785,94558751817847,[⟨3,103698513526909,9139761709062⟩]⟩))))))else(if i<25 then(if i<21 then(if i<19 then(if i<18 then(⟨3,17,85693870112881,95383391830135,105072913547389,[⟨3,114762435264643,9689521717254⟩]⟩)else(⟨3,18,95658271834231,105897553559677,116136835285123,[⟨3,126376117010569,10239281725446⟩]⟩))else(if i<20 then(⟨3,19,106172433563773,116961475297411,127750517031049,[⟨3,138539558764687,10789041733638⟩]⟩)else(⟨3,20,117236355301507,128575157043337,139913958785167,[⟨3,151252760526997,11338801741830⟩]⟩)))else(if i<23 then(if i<22 then(⟨3,21,128850037047433,140738598797455,152627160547477,[⟨3,164515722297499,11888561750022⟩]⟩)else(⟨3,22,141013478801551,153451800559765,165890122317979,[⟨3,178328444076193,12438321758214⟩]⟩))else(if i<24 then(⟨3,23,153726680563861,166714762330267,179702844096673,[⟨3,192690925863079,12988081766406⟩]⟩)else(⟨3,24,166989642334363,180527484108961,194065325883559,[⟨3,207603167658157,13537841774598⟩]⟩))))else(if i<29 then(if i<27 then(if i<26 then(⟨3,25,180802364113057,194889965895847,208977567678637,[⟨3,223065169461427,14087601782790⟩]⟩)else(⟨3,26,195164845899943,209802207690925,224439569481907,[⟨3,239076931272889,14637361790982⟩]⟩))else(if i<28 then(⟨3,27,210077087695021,225264209494195,240451331293369,[⟨3,255638453092543,15187121799174⟩]⟩)else(⟨3,28,225539089498291,241275971305657,257012853113023,[⟨3,272749734920389,15736881807366⟩]⟩)))else(if i<31 then(if i<30 then(⟨3,29,241550851309753,257837493125311,274124134940869,[⟨3,290410776756427,16286641815558⟩]⟩)else(⟨3,30,258112373129407,274948774953157,291785176776907,[⟨3,308621578600657,16836401823750⟩]⟩))else(if i<32 then(⟨3,31,275223654957253,292609816789195,309995978621137,[⟨3,327382140453079,17386161831942⟩]⟩)else(if i<33 then(⟨3,32,292884696793291,310820618633425,328756540473559,[⟨3,346692462313693,17935921840134⟩]⟩)else(⟨3,33,311095498637521,329581180485847,348066862334173,[⟨3,366552544182499,18485681848326⟩]⟩)))))))else(if i<51 then(if i<42 then(if i<38 then(if i<36 then(if i<35 then(⟨3,34,329856060489943,348891502346461,367926944202979,[⟨3,386962386059497,19035441856518⟩]⟩)else(⟨3,35,349166382350557,368751584215267,388336786079977,[⟨3,407921987944687,19585201864710⟩]⟩))else(if i<37 then(⟨3,36,369026464219363,389161426092265,409296387965167,[⟨3,429431349838069,20134961872902⟩]⟩)else(⟨3,37,389436306096361,410121027977455,430805749858549,[⟨3,451490471739643,20684721881094⟩]⟩)))else(if i<40 then(if i<39 then(⟨3,38,410395907981551,431630389870837,452864871760123,[⟨3,474099353649409,21234481889286⟩]⟩)else(⟨3,39,431905269874933,453689511772411,475473753669889,[⟨3,497257995567367,21784241897478⟩]⟩))else(if i<41 then(⟨3,40,453964391776507,476298393682177,498632395587847,[⟨3,520966397493517,22334001905670⟩]⟩)else(⟨3,41,476573273686273,499457035600135,522340797513997,[⟨3,545224559427859,22883761913862⟩]⟩))))else(if i<46 then(if i<44 then(if i<43 then(⟨3,42,499731915604231,523165437526285,546598959448339,[⟨3,570032481370393,23433521922054⟩]⟩)else(⟨3,43,523440317530381,547423599460627,571406881390873,[⟨3,595390163321119,23983281930246⟩]⟩))else(if i<45 then(⟨3,44,547698479464723,572231521403161,596764563341599,[⟨3,621297605280037,24533041938438⟩]⟩)else(⟨3,45,572506401407257,597589203353887,622672005300517,[⟨3,647754807247147,25082801946630⟩]⟩)))else(if i<48 then(if i<47 then(⟨3,46,597864083357983,623496645312805,649129207267627,[⟨3,674761769222449,25632561954822⟩]⟩)else(⟨3,47,623771525316901,649953847279915,676136169242929,[⟨3,702318491205943,26182321963014⟩]⟩))else(if i<49 then(⟨3,48,650228727284011,676960809255217,703692891226423,[⟨3,730424973197629,26732081971206⟩]⟩)else(if i<50 then(⟨3,49,677235689259313,704517531238711,731799373218109,[⟨3,759081215197507,27281841979398⟩]⟩)else(⟨3,50,704792411242807,732624013230397,760455615217987,[⟨3,788287217205577,27831601987590⟩]⟩))))))else(if i<59 then(if i<55 then(if i<53 then(if i<52 then(⟨3,51,732898893234493,761280255230275,789661617226057,[⟨3,818042979221839,28381361995782⟩]⟩)else(⟨3,52,761555135234371,790486257238345,819417379242319,[⟨3,848348501246293,28931122003974⟩]⟩))else(if i<54 then(⟨3,53,790761137242441,820242019254607,849722901266773,[⟨3,879203783278939,29480882012166⟩]⟩)else(⟨3,54,820516899258703,850547541279061,880578183299419,[⟨3,910608825319777,30030642020358⟩]⟩)))else(if i<57 then(if i<56 then(⟨3,55,850822421283157,881402823311707,911983225340257,[⟨3,942563627368807,30580402028550⟩]⟩)else(⟨3,56,881677703315803,912807865352545,943938027389287,[⟨3,975068189426029,31130162036742⟩]⟩))else(if i<58 then(⟨3,57,913082745356641,944762667401575,976442589446509,[⟨3,1008122511491443,31679922044934⟩]⟩)else(⟨3,58,945037547405671,977267229458797,1009496911511923,[⟨3,1041726593565049,32229682053126⟩]⟩))))else(if i<63 then(if i<61 then(if i<60 then(⟨3,59,977542109462893,1010321551524211,1043100993585529,[⟨3,1075880435646847,32779442061318⟩]⟩)else(⟨3,60,1010596431528307,1043925633597817,1077254835667327,[⟨3,1110584037736837,33329202069510⟩]⟩))else(if i<62 then(⟨3,61,1044200513601913,1078079475679615,1111958437757317,[⟨3,1145837399835019,33878962077702⟩]⟩)else(⟨3,62,1078354355683711,1112783077769605,1147211799855499,[⟨3,1181640521941393,34428722085894⟩]⟩)))else(if i<65 then(if i<64 then(⟨3,63,1113057957773701,1148036439867787,1183014921961873,[⟨3,1217993404055959,34978482094086⟩]⟩)else(⟨3,64,1148311319871883,1183839561974161,1219367804076439,[⟨3,1254896046178717,35528242102278⟩]⟩))else(if i<66 then(⟨3,65,1184114441978257,1220192444088727,1256270446199197,[⟨3,1292348448309667,36078002110470⟩]⟩)else(if i<67 then(⟨3,66,1220467324092823,1257095086211485,1293722848330147,[⟨3,1330350610448809,36627762118662⟩]⟩)else(⟨3,67,1257369966215581,1294547488342435,1331725010469289,[⟨3,1368902532596143,37177522126854⟩]⟩))))))))else(if i<102 then(if i<85 then(if i<76 then(if i<72 then(if i<70 then(if i<69 then(⟨3,68,1294822368346531,1332549650481577,1370276932616623,[⟨3,1408004214751669,37727282135046⟩]⟩)else(⟨3,69,1332824530485673,1371101572628911,1409378614772149,[⟨3,1447655656915387,38277042143238⟩]⟩))else(if i<71 then(⟨3,70,1371376452633007,1410203254784437,1449030056935867,[⟨3,1487856859087297,38826802151430⟩]⟩)else(⟨3,71,1410478134788533,1449854696948155,1489231259107777,[⟨3,1528607821267399,39376562159622⟩]⟩)))else(if i<74 then(if i<73 then(⟨3,72,1450129576952251,1490055899120065,1529982221287879,[⟨3,1569908543455693,39926322167814⟩]⟩)else(⟨3,73,1490330779124161,1530806861300167,1571282943476173,[⟨3,1611759025652179,40476082176006⟩]⟩))else(if i<75 then(⟨3,74,1531081741304263,1572107583488461,1613133425672659,[⟨3,1654159267856857,41025842184198⟩]⟩)else(⟨3,75,1572382463492557,1613958065684947,1655533667877337,[⟨3,1697109270069727,41575602192390⟩]⟩))))else(if i<80 then(if i<78 then(if i<77 then(⟨3,76,1614232945689043,1656358307889625,1698483670090207,[⟨3,1740609032290789,42125362200582⟩]⟩)else(⟨3,77,1656633187893721,1699308310102495,1741983432311269,[⟨3,1784658554520043,42675122208774⟩]⟩))else(if i<79 then(⟨3,78,1699583190106591,1742808072323557,1786032954540523,[⟨3,1829257836757489,43224882216966⟩]⟩)else(⟨3,79,1743082952327653,1786857594552811,1830632236777969,[⟨3,1874406879003127,43774642225158⟩]⟩)))else(if i<82 then(if i<81 then(⟨3,80,1787132474556907,1831456876790257,1875781279023607,[⟨3,1920105681256957,44324402233350⟩]⟩)else(⟨3,81,1831731756794353,1876605919035895,1921480081277437,[⟨3,1966354243518979,44874162241542⟩]⟩))else(if i<83 then(⟨3,82,1876880799039991,1922304721289725,1967728643539459,[⟨3,2013152565789193,45423922249734⟩]⟩)else(if i<84 then(⟨3,83,1922579601293821,1968553283551747,2014526965809673,[⟨3,2060500648067599,45973682257926⟩]⟩)else(⟨3,84,1968828163555843,2015351605821961,2061875048088079,[⟨3,2108398490354197,46523442266118⟩]⟩))))))else(if i<93 then(if i<89 then(if i<87 then(if i<86 then(⟨3,85,2015626485826057,2062699688100367,2109772890374677,[⟨3,2156846092648987,47073202274310⟩]⟩)else(⟨3,86,2062974568104463,2110597530386965,2158220492669467,[⟨3,2205843454951969,47622962282502⟩]⟩))else(if i<88 then(⟨3,87,2110872410391061,2159045132681755,2207217854972449,[⟨3,2255390577263143,48172722290694⟩]⟩)else(⟨3,88,2159320012685851,2208042494984737,2256764977283623,[⟨3,2305487459582509,48722482298886⟩]⟩)))else(if i<91 then(if i<90 then(⟨3,89,2208317374988833,2257589617295911,2306861859602989,[⟨3,2356134101910067,49272242307078⟩]⟩)else(⟨3,90,2257864497300007,2307686499615277,2357508501930547,[⟨3,2407330504245817,49822002315270⟩]⟩))else(if i<92 then(⟨3,91,2307961379619373,2358333141942835,2408704904266297,[⟨3,2459076666589759,50371762323462⟩]⟩)else(⟨3,92,2358608021946931,2409529544278585,2460451066610239,[⟨3,2511372588941893,50921522331654⟩]⟩))))else(if i<97 then(if i<95 then(if i<94 then(⟨3,93,2409804424282681,2461275706622527,2512746988962373,[⟨3,2564218271302219,51471282339846⟩]⟩)else(⟨3,94,2461550586626623,2513571628974661,2565592671322699,[⟨3,2617613713670737,52021042348038⟩]⟩))else(if i<96 then(⟨3,95,2513846508978757,2566417311334987,2618988113691217,[⟨3,2671558916047447,52570802356230⟩]⟩)else(⟨3,96,2566692191339083,2619812753703505,2672933316067927,[⟨3,2726053878432349,53120562364422⟩]⟩)))else(if i<99 then(if i<98 then(⟨3,97,2620087633707601,2673757956080215,2727428278452829,[⟨3,2781098600825443,53670322372614⟩]⟩)else(⟨3,98,2674032836084311,2728252918465117,2782473000845923,[⟨3,2836693083226729,54220082380806⟩]⟩))else(if i<100 then(⟨3,99,2728527798469213,2783297640858211,2838067483247209,[⟨3,2892837325636207,54769842388998⟩]⟩)else(if i<101 then(⟨3,100,2783572520862307,2838892123259497,2894211725656687,[⟨3,2949531328053877,55319602397190⟩]⟩)else(⟨3,101,2839167003263593,2895036365668975,2950905728074357,[⟨3,3006775090479739,55869362405382⟩]⟩)))))))else(if i<119 then(if i<110 then(if i<106 then(if i<104 then(if i<103 then(⟨3,102,2895311245673071,2951730368086645,3008149490500219,[⟨3,3064568612913793,56419122413574⟩]⟩)else(⟨3,103,2952005248090741,3008974130512507,3065943012934273,[⟨3,3122911895356039,56968882421766⟩]⟩))else(if i<105 then(⟨3,104,3009249010516603,3066767652946561,3124286295376519,[⟨3,3181804937806477,57518642429958⟩]⟩)else(⟨3,105,3067042532950657,3125110935388807,3183179337826957,[⟨3,3241247740265107,58068402438150⟩]⟩)))else(if i<108 then(if i<107 then(⟨3,106,3125385815392903,3184003977839245,3242622140285587,[⟨3,3301240302731929,58618162446342⟩]⟩)else(⟨3,107,3184278857843341,3243446780297875,3302614702752409,[⟨3,3361782625206943,59167922454534⟩]⟩))else(if i<109 then(⟨3,108,3243721660301971,3303439342764697,3363157025227423,[⟨3,3422874707690149,59717682462726⟩]⟩)else(⟨3,109,3303714222768793,3363981665239711,3424249107710629,[⟨3,3484516550181547,60267442470918⟩]⟩))))else(if i<114 then(if i<112 then(if i<111 then(⟨3,110,3364256545243807,3425073747722917,3485890950202027,[⟨3,3546708152681137,60817202479110⟩]⟩)else(⟨3,111,3425348627727013,3486715590214315,3548082552701617,[⟨3,3609449515188919,61366962487302⟩]⟩))else(if i<113 then(⟨3,112,3486990470218411,3548907192713905,3610823915209399,[⟨3,3672740637704893,61916722495494⟩]⟩)else(⟨3,113,3549182072718001,3611648555221687,3674115037725373,[⟨3,3736581520229059,62466482503686⟩]⟩)))else(if i<116 then(if i<115 then(⟨3,114,3611923435225783,3674939677737661,3737955920249539,[⟨3,3800972162761417,63016242511878⟩]⟩)else(⟨3,115,3675214557741757,3738780560261827,3802346562781897,[⟨3,3865912565301967,63566002520070⟩]⟩))else(if i<117 then(⟨3,116,3739055440265923,3803171202794185,3867286965322447,[⟨3,3931402727850709,64115762528262⟩]⟩)else(if i<118 then(⟨3,117,3803446082798281,3868111605334735,3932777127871189,[⟨3,3997442650407643,64665522536454⟩]⟩)else(⟨3,118,3868386485338831,3933601767883477,3998817050428123,[⟨3,4064032332972769,65215282544646⟩]⟩))))))else(if i<128 then(if i<123 then(if i<121 then(if i<120 then(⟨3,119,3933876647887573,3999641690440411,4065406732993249,[⟨3,4131171775546087,65765042552838⟩]⟩)else(⟨3,120,3999916570444507,4066231373005537,4132546175566567,[⟨3,4198860978127597,66314802561030⟩]⟩))else(if i<122 then(⟨3,121,4066506253009633,4133370815578855,4200235378148077,[⟨3,4267099940717299,66864562569222⟩]⟩)else(⟨3,122,4133645695582951,4201060018160365,4268474340737779,[⟨3,4335888663315193,67414322577414⟩]⟩)))else(if i<125 then(if i<124 then(⟨3,123,4201334898164461,4269298980750067,4337263063335673,[⟨3,4405227145921279,67964082585606⟩]⟩)else(⟨3,124,4269573860754163,4338087703347961,4406601545941759,[⟨3,4475115388535557,68513842593798⟩]⟩))else(if i<126 then(⟨3,125,4338362583352057,4407426185954047,4476489788556037,[⟨3,4545553391158027,69063602601990⟩]⟩)else(if i<127 then(⟨3,126,4407701065958143,4477314428568325,4546927791178507,[⟨3,4616541153788689,69613362610182⟩]⟩)else(⟨3,127,4477589308572421,4547752431190795,4617915553809169,[⟨3,4688078676427543,70163122618374⟩]⟩)))))else(if i<132 then(if i<130 then(if i<129 then(⟨3,128,4548027311194891,4618740193821457,4689453076448023,[⟨3,4760165959074589,70712882626566⟩]⟩)else(⟨3,129,4619015073825553,4690277716460311,4761540359095069,[⟨3,4832803001729827,71262642634758⟩]⟩))else(if i<131 then(⟨3,130,4690552596464407,4762364999107357,4834177401750307,[⟨3,4905989804393257,71812402642950⟩]⟩)else(⟨3,131,4762639879111453,4835002041762595,4907364204413737,[⟨3,4979726367064879,72362162651142⟩]⟩)))else(if i<134 then(if i<133 then(⟨3,132,4835276921766691,4908188844426025,4981100767085359,[⟨3,5054012689744693,72911922659334⟩]⟩)else(⟨3,133,4908463724430121,4981925407097647,5055387089765173,[⟨3,5128848772432699,73461682667526⟩]⟩))else(if i<135 then(⟨3,134,4982200287101743,5056211729777461,5130223172453179,[⟨3,5204234615128897,74011442675718⟩]⟩)else(if i<136 then(⟨3,135,5056486609781557,5131047812465467,5205609015149377,[⟨3,5280170217833287,74561202683910⟩]⟩)else(⟨3,136,5131322692469563,5206433655161665,5281544617853767,[⟨3,5356655580545869,75110962692102⟩]⟩)))))))))else(defaultRow)
+
+def row4 : ℕ → BaseRow := fun i =>
+  if i<136 then(if i<68 then(if i<34 then(if i<17 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(⟨4,0,2130325798938,2680086855710,4466809503784,[⟨3,6253532151858,1786722648074⟩]⟩)else(⟨4,1,2680086855710,4741689507880,6803292160050,[⟨3,8864894812220,2061602652170⟩]⟩))else(if i<3 then(⟨4,2,3418909049631,5386065347774,7353221645917,[⟨3,9320377944060,1967156298143⟩,⟨6,15255863296092,2061602652170⟩]⟩)else(⟨4,3,5712491709687,8332500731656,10952509753625,[⟨3,13572518775594,2620009021969⟩]⟩)))else(if i<6 then(if i<5 then(⟨4,4,8658927093569,11931788839364,15204650585159,[⟨3,18477512330954,3272861745795⟩]⟩)else(⟨4,5,12258215201277,16183929670898,20109644140519,[⟨3,24035358610140,3925714469621⟩]⟩))else(if i<7 then(⟨4,6,16510356032811,21088923226258,25667490419705,[⟨3,30246057613152,4578567193447⟩]⟩)else(⟨4,7,21415349588171,26646769505444,31878189422717,[⟨3,37109609339990,5231419917273⟩]⟩))))else(if i<12 then(if i<10 then(if i<9 then(⟨4,8,26973195867357,32857468508456,38741741149555,[⟨3,44626013790654,5884272641099⟩]⟩)else(⟨4,9,33183894870369,39721020235294,46258145600219,[⟨3,52795270965144,6537125364925⟩]⟩))else(if i<11 then(⟨4,10,40047446597207,47237424685958,54427402774709,[⟨3,61617380863460,7189978088751⟩]⟩)else(⟨4,11,47563851047871,55406681860448,63249512673025,[⟨3,71092343485602,7842830812577⟩]⟩)))else(if i<14 then(if i<13 then(⟨4,12,55733108222361,64228791758764,72724475295167,[⟨3,81220158831570,8495683536403⟩]⟩)else(⟨4,13,64555218120677,73703754380906,82852290641135,[⟨3,92000826901364,9148536260229⟩]⟩))else(if i<15 then(⟨4,14,74030180742819,83831569726874,93632958710929,[⟨3,103434347694984,9801388984055⟩]⟩)else(if i<16 then(⟨4,15,84157996088787,94612237796668,105066479504549,[⟨3,115520721212430,10454241707881⟩]⟩)else(⟨4,16,94938664158581,106045758590288,117152853021995,[⟨3,128259947453702,11107094431707⟩]⟩))))))else(if i<25 then(if i<21 then(if i<19 then(if i<18 then(⟨4,17,106372184952201,118132132107734,129892079263267,[⟨3,141652026418800,11759947155533⟩]⟩)else(⟨4,18,118458558469647,130871358349006,143284158228365,[⟨3,155696958107724,12412799879359⟩]⟩))else(if i<20 then(⟨4,19,131197784710919,144263437314104,157329089917289,[⟨3,170394742520474,13065652603185⟩]⟩)else(⟨4,20,144589863676017,158308369003028,172026874330039,[⟨3,185745379657050,13718505327011⟩]⟩)))else(if i<23 then(if i<22 then(⟨4,21,158634795364941,173006153415778,187377511466615,[⟨3,201748869517452,14371358050837⟩]⟩)else(⟨4,22,173332579777691,188356790552354,203381001327017,[⟨3,218405212101680,15024210774663⟩]⟩))else(if i<24 then(⟨4,23,188683216914267,204360280412756,220037343911245,[⟨3,235714407409734,15677063498489⟩]⟩)else(⟨4,24,204686706774669,221016622996984,237346539219299,[⟨3,253676455441614,16329916222315⟩]⟩))))else(if i<29 then(if i<27 then(if i<26 then(⟨4,25,221343049358897,238325818305038,255308587251179,[⟨3,272291356197320,16982768946141⟩]⟩)else(⟨4,26,238652244666951,256287866336918,273923488006885,[⟨3,291559109676852,17635621669967⟩]⟩))else(if i<28 then(⟨4,27,256614292698831,274902767092624,293191241486417,[⟨3,311479715880210,18288474393793⟩]⟩)else(⟨4,28,275229193454537,294170520572156,313111847689775,[⟨3,332053174807394,18941327117619⟩]⟩)))else(if i<31 then(if i<30 then(⟨4,29,294496946934069,314091126775514,333685306616959,[⟨3,353279486458404,19594179841445⟩]⟩)else(⟨4,30,314417553137427,334664585702698,354911618267969,[⟨3,375158650833240,20247032565271⟩]⟩))else(if i<32 then(⟨4,31,334991012064611,355890897353708,376790782642805,[⟨3,397690667931902,20899885289097⟩]⟩)else(if i<33 then(⟨4,32,356217323715621,377770061728544,399322799741467,[⟨3,420875537754390,21552738012923⟩]⟩)else(⟨4,33,378096488090457,400302078827206,422507669563955,[⟨3,444713260300704,22205590736749⟩]⟩)))))))else(if i<51 then(if i<42 then(if i<38 then(if i<36 then(if i<35 then(⟨4,34,400628505189119,423486948649694,446345392110269,[⟨3,469203835570844,22858443460575⟩]⟩)else(⟨4,35,423813375011607,447324671196008,470835967380409,[⟨3,494347263564810,23511296184401⟩]⟩))else(if i<37 then(⟨4,36,447651097557921,471815246466148,495979395374375,[⟨3,520143544282602,24164148908227⟩]⟩)else(⟨4,37,472141672828061,496958674460114,521775676092167,[⟨3,546592677724220,24817001632053⟩]⟩)))else(if i<40 then(if i<39 then(⟨4,38,497285100822027,522754955177906,548224809533785,[⟨3,573694663889664,25469854355879⟩]⟩)else(⟨4,39,523081381539819,549204088619524,575326795699229,[⟨3,601449502778934,26122707079705⟩]⟩))else(if i<41 then(⟨4,40,549530514981437,576306074784968,603081634588499,[⟨3,629857194392030,26775559803531⟩]⟩)else(⟨4,41,576632501146881,604060913674238,631489326201595,[⟨3,658917738728952,27428412527357⟩]⟩))))else(if i<46 then(if i<44 then(if i<43 then(⟨4,42,604387340036151,632468605287334,660549870538517,[⟨3,688631135789700,28081265251183⟩]⟩)else(⟨4,43,632795031649247,661529149624256,690263267599265,[⟨3,718997385574274,28734117975009⟩]⟩))else(if i<45 then(⟨4,44,661855575986169,691242546685004,720629517383839,[⟨3,750016488082674,29386970698835⟩]⟩)else(⟨4,45,691568973046917,721608796469578,751648619892239,[⟨3,781688443314900,30039823422661⟩]⟩)))else(if i<48 then(if i<47 then(⟨4,46,721935222831491,752627898977978,783320575124465,[⟨3,814013251270952,30692676146487⟩]⟩)else(⟨4,47,752954325339891,784299854210204,815645383080517,[⟨3,846990911950830,31345528870313⟩]⟩))else(if i<49 then(⟨4,48,784626280572117,816624662166256,848623043760395,[⟨3,880621425354534,31998381594139⟩]⟩)else(if i<50 then(⟨4,49,816951088528169,849602322846134,882253557164099,[⟨3,914904791482064,32651234317965⟩]⟩)else(⟨4,50,849928749208047,883232836249838,916536923291629,[⟨3,949841010333420,33304087041791⟩]⟩))))))else(if i<59 then(if i<55 then(if i<53 then(if i<52 then(⟨4,51,883559262611751,917516202377368,951473142142985,[⟨3,985430081908602,33956939765617⟩]⟩)else(⟨4,52,917842628739281,952452421228724,987062213718167,[⟨3,1021672006207610,34609792489443⟩]⟩))else(if i<54 then(⟨4,53,952778847590637,988041492803906,1023304138017175,[⟨3,1058566783230444,35262645213269⟩]⟩)else(⟨4,54,988367919165819,1024283417102914,1060198915040009,[⟨3,1096114412977104,35915497937095⟩]⟩)))else(if i<57 then(if i<56 then(⟨4,55,1024609843464827,1061178194125748,1097746544786669,[⟨3,1134314895447590,36568350660921⟩]⟩)else(⟨4,56,1061504620487661,1098725823872408,1135947027257155,[⟨3,1173168230641902,37221203384747⟩]⟩))else(if i<58 then(⟨4,57,1099052250234321,1136926306342894,1174800362451467,[⟨3,1212674418560040,37874056108573⟩]⟩)else(⟨4,58,1137252732704807,1175779641537206,1214306550369605,[⟨3,1252833459202004,38526908832399⟩]⟩))))else(if i<63 then(if i<61 then(if i<60 then(⟨4,59,1176106067899119,1215285829455344,1254465591011569,[⟨3,1293645352567794,39179761556225⟩]⟩)else(⟨4,60,1215612255817257,1255444870097308,1295277484377359,[⟨3,1335110098657410,39832614280051⟩]⟩))else(if i<62 then(⟨4,61,1255771296459221,1296256763463098,1336742230466975,[⟨3,1377227697470852,40485467003877⟩]⟩)else(⟨4,62,1296583189825011,1337721509552714,1378859829280417,[⟨3,1419998149008120,41138319727703⟩]⟩)))else(if i<65 then(if i<64 then(⟨4,63,1338047935914627,1379839108366156,1421630280817685,[⟨3,1463421453269214,41791172451529⟩]⟩)else(⟨4,64,1380165534728069,1422609559903424,1465053585078779,[⟨3,1507497610254134,42444025175355⟩]⟩))else(if i<66 then(⟨4,65,1422935986265337,1466032864164518,1509129742063699,[⟨3,1552226619962880,43096877899181⟩]⟩)else(if i<67 then(⟨4,66,1466359290526431,1510109021149438,1553858751772445,[⟨3,1597608482395452,43749730623007⟩]⟩)else(⟨4,67,1510435447511351,1554838030858184,1599240614205017,[⟨3,1643643197551850,44402583346833⟩]⟩))))))))else(if i<102 then(if i<85 then(if i<76 then(if i<72 then(if i<70 then(if i<69 then(⟨4,68,1555164457220097,1600219893290756,1645275329361415,[⟨3,1690330765432074,45055436070659⟩]⟩)else(⟨4,69,1600546319652669,1646254608447154,1691962897241639,[⟨3,1737671186036124,45708288794485⟩]⟩))else(if i<71 then(⟨4,70,1646581034809067,1692942176327378,1739303317845689,[⟨3,1785664459364000,46361141518311⟩]⟩)else(⟨4,71,1693268602689291,1740282596931428,1787296591173565,[⟨3,1834310585415702,47013994242137⟩]⟩)))else(if i<74 then(if i<73 then(⟨4,72,1740609023293341,1788275870259304,1835942717225267,[⟨3,1883609564191230,47666846965963⟩]⟩)else(⟨4,73,1788602296621217,1836921996311006,1885241696000795,[⟨3,1933561395690584,48319699689789⟩]⟩))else(if i<75 then(⟨4,74,1837248422672919,1886220975086534,1935193527500149,[⟨3,1984166079913764,48972552413615⟩]⟩)else(⟨4,75,1886547401448447,1936172806585888,1985798211723329,[⟨3,2035423616860770,49625405137441⟩]⟩))))else(if i<80 then(if i<78 then(if i<77 then(⟨4,76,1936499232947801,1986777490809068,2037055748670335,[⟨3,2087334006531602,50278257861267⟩]⟩)else(⟨4,77,1987103917170981,2038035027756074,2088966138341167,[⟨3,2139897248926260,50931110585093⟩]⟩))else(if i<79 then(⟨4,78,2038361454117987,2089945417426906,2141529380735825,[⟨3,2193113344044744,51583963308919⟩]⟩)else(⟨4,79,2090271843788819,2142508659821564,2194745475854309,[⟨3,2246982291887054,52236816032745⟩]⟩)))else(if i<82 then(if i<81 then(⟨4,80,2142835086183477,2195724754940048,2248614423696619,[⟨3,2301504092453190,52889668756571⟩]⟩)else(⟨4,81,2196051181301961,2249593702782358,2303136224262755,[⟨3,2356678745743152,53542521480397⟩]⟩))else(if i<83 then(⟨4,82,2249920129144271,2304115503348494,2358310877552717,[⟨3,2412506251756940,54195374204223⟩]⟩)else(if i<84 then(⟨4,83,2304441929710407,2359290156638456,2414138383566505,[⟨3,2468986610494554,54848226928049⟩]⟩)else(⟨4,84,2359616583000369,2415117662652244,2470618742304119,[⟨3,2526119821955994,55501079651875⟩]⟩))))))else(if i<93 then(if i<89 then(if i<87 then(if i<86 then(⟨4,85,2415444089014157,2471598021389858,2527751953765559,[⟨3,2583905886141260,56153932375701⟩]⟩)else(⟨4,86,2471924447751771,2528731232851298,2585538017950825,[⟨3,2642344803050352,56806785099527⟩]⟩))else(if i<88 then(⟨4,87,2529057659213211,2586517297036564,2643976934859917,[⟨3,2701436572683270,57459637823353⟩]⟩)else(⟨4,88,2586843723398477,2644956213945656,2703068704492835,[⟨3,2761181195040014,58112490547179⟩]⟩)))else(if i<91 then(if i<90 then(⟨4,89,2645282640307569,2704047983578574,2762813326849579,[⟨3,2821578670120584,58765343271005⟩]⟩)else(⟨4,90,2704374409940487,2763792605935318,2823210801930149,[⟨3,2882628997924980,59418195994831⟩]⟩))else(if i<92 then(⟨4,91,2764119032297231,2824190081015888,2884261129734545,[⟨3,2944332178453202,60071048718657⟩]⟩)else(⟨4,92,2824516507377801,2885240408820284,2945964310262767,[⟨3,3006688211705250,60723901442483⟩]⟩))))else(if i<97 then(if i<95 then(if i<94 then(⟨4,93,2885566835182197,2946943589348506,3008320343514815,[⟨3,3069697097681124,61376754166309⟩]⟩)else(⟨4,94,2947270015710419,3009299622600554,3071329229490689,[⟨3,3133358836380824,62029606890135⟩]⟩))else(if i<96 then(⟨4,95,3009626048962467,3072308508576428,3134990968190389,[⟨3,3197673427804350,62682459613961⟩]⟩)else(⟨4,96,3072634934938341,3135970247276128,3199305559613915,[⟨3,3262640871951702,63335312337787⟩]⟩)))else(if i<99 then(if i<98 then(⟨4,97,3136296673638041,3200284838699654,3264273003761267,[⟨3,3328261168822880,63988165061613⟩]⟩)else(⟨4,98,3200611265061567,3265252282847006,3329893300632445,[⟨3,3394534318417884,64641017785439⟩]⟩))else(if i<100 then(⟨4,99,3265578709208919,3330872579718184,3396166450227449,[⟨3,3461460320736714,65293870509265⟩]⟩)else(if i<101 then(⟨4,100,3331199006080097,3397145729313188,3463092452546279,[⟨3,3529039175779370,65946723233091⟩]⟩)else(⟨4,101,3397472155675101,3464071731632018,3530671307588935,[⟨3,3597270883545852,66599575956917⟩]⟩)))))))else(if i<119 then(if i<110 then(if i<106 then(if i<104 then(if i<103 then(⟨4,102,3464398157993931,3531650586674674,3598903015355417,[⟨3,3666155444036160,67252428680743⟩]⟩)else(⟨4,103,3531977013036587,3599882294441156,3667787575845725,[⟨3,3735692857250294,67905281404569⟩]⟩))else(if i<105 then(⟨4,104,3600208720803069,3668766854931464,3737324989059859,[⟨3,3805883123188254,68558134128395⟩]⟩)else(⟨4,105,3669093281293377,3738304268145598,3807515254997819,[⟨3,3876726241850040,69210986852221⟩]⟩)))else(if i<108 then(if i<107 then(⟨4,106,3738630694507511,3808494534083558,3878358373659605,[⟨3,3948222213235652,69863839576047⟩]⟩)else(⟨4,107,3808820960445471,3879337652745344,3949854345045217,[⟨3,4020371037345090,70516692299873⟩]⟩))else(if i<109 then(⟨4,108,3879664079107257,3950833624130956,4022003169154655,[⟨3,4093172714178354,71169545023699⟩]⟩)else(⟨4,109,3951160050492869,4022982448240394,4094804845987919,[⟨3,4166627243735444,71822397747525⟩]⟩))))else(if i<114 then(if i<112 then(if i<111 then(⟨4,110,4023308874602307,4095784125073658,4168259375545009,[⟨3,4240734626016360,72475250471351⟩]⟩)else(⟨4,111,4096110551435571,4169238654630748,4242366757825925,[⟨3,4315494861021102,73128103195177⟩]⟩))else(if i<113 then(⟨4,112,4169565080992661,4243346036911664,4317126992830667,[⟨3,4390907948749670,73780955919003⟩]⟩)else(⟨4,113,4243672463273577,4318106271916406,4392540080559235,[⟨3,4466973889202064,74433808642829⟩]⟩)))else(if i<116 then(if i<115 then(⟨4,114,4318432698278319,4393519359644974,4468606021011629,[⟨3,4543692682378284,75086661366655⟩]⟩)else(⟨4,115,4393845786006887,4469585300097368,4545324814187849,[⟨3,4621064328278330,75739514090481⟩]⟩))else(if i<117 then(⟨4,116,4469911726459281,4546304093273588,4622696460087895,[⟨3,4699088826902202,76392366814307⟩]⟩)else(if i<118 then(⟨4,117,4546630519635501,4623675739173634,4700720958711767,[⟨3,4777766178249900,77045219538133⟩]⟩)else(⟨4,118,4624002165535547,4701700237797506,4779398310059465,[⟨3,4857096382321424,77698072261959⟩]⟩))))))else(if i<127 then(if i<123 then(if i<121 then(if i<120 then(⟨4,119,4702026664159419,4780377589145204,4858728514130989,[⟨3,4937079439116774,78350924985785⟩]⟩)else(⟨4,120,4780704015507117,4859707793216728,4938711570926339,[⟨3,5017715348635950,79003777709611⟩]⟩))else(if i<122 then(⟨4,121,4860034219578641,4939690850012078,5019347480445515,[⟨3,5099004110878952,79656630433437⟩]⟩)else(⟨4,122,4940017276373991,5020326759531254,5100636242688517,[⟨3,5180945725845780,80309483157263⟩]⟩)))else(if i<125 then(if i<124 then(⟨4,123,5020653185893167,5101615521774256,5182577857655345,[⟨3,5263540193536434,80962335881089⟩]⟩)else(⟨4,124,5101941948136169,5183557136741084,5265172325345999,[⟨3,5346787513950914,81615188604915⟩]⟩))else(if i<126 then(⟨4,125,5183883563102997,5266151604431738,5348419645760479,[⟨3,5430687687089220,82268041328741⟩]⟩)else(⟨4,126,5266478030793651,5349398924846218,5432319818898785,[⟨3,5515240712951352,82920894052567⟩]⟩))))else(if i<131 then(if i<129 then(if i<128 then(⟨4,127,5349725351208131,5433299097984524,5516872844760917,[⟨3,5600446591537310,83573746776393⟩]⟩)else(⟨4,128,5433625524346437,5517852123846656,5602078723346875,[⟨3,5686305322847094,84226599500219⟩]⟩))else(if i<130 then(⟨4,129,5518178550208569,5603058002432614,5687937454656659,[⟨3,5772816906880704,84879452224045⟩]⟩)else(⟨4,130,5603384428794527,5688916733742398,5774449038690269,[⟨3,5859981343638140,85532304947871⟩]⟩)))else(if i<133 then(if i<132 then(⟨4,131,5689243160104311,5775428317776008,5861613475447705,[⟨3,5947798633119402,86185157671697⟩]⟩)else(⟨4,132,5775754744137921,5862592754533444,5949430764928967,[⟨3,6036268775324490,86838010395523⟩]⟩))else(if i<134 then(⟨4,133,5862919180895357,5950410044014706,6037900907134055,[⟨3,6125391770253404,87490863119349⟩]⟩)else(if i<135 then(⟨4,134,5950736470376619,6038880186219794,6127023902062969,[⟨3,6215167617906144,88143715843175⟩]⟩)else(⟨4,135,6039206612581707,6128003181148708,6216799749715709,[⟨3,6305596318282710,88796568567001⟩]⟩)))))))))else(defaultRow)
+
+def row5 : ℕ → BaseRow := fun i =>
+  if i<135 then(if i<67 then(if i<33 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(⟨5,0,4672969506857,5703771095087,8933614813245,[⟨3,12163458531403,3229843718158⟩]⟩)else(⟨5,1,5703771095087,9345934819389,12988098543691,[⟨3,16630262267993,3642163724302⟩]⟩))else(if i<3 then(⟨5,2,6356757251443,9552307881954,13194259071053,[⟨3,16836422795355,3642163724302⟩]⟩)else(⟨5,3,10007586408493,14113694092082,18219801775671,[⟨3,22325909459260,4106107683589⟩]⟩)))else(if i<6 then(if i<5 then(⟨5,4,14568972618621,19585637355288,24602302091955,[⟨3,29618966828622,5016664736667⟩]⟩)else(⟨5,5,20040915881827,25968137671572,31895359461317,[⟨3,37822581251062,5927221789745⟩]⟩))else(if i<7 then(⟨5,6,26423416198111,33261195040934,40098973883757,[⟨3,46936752726580,6837778842823⟩]⟩)else(⟨5,7,33716473567473,41464809463374,49213145359275,[⟨3,56961481255176,7748335895901⟩]⟩))))else(if i<12 then(if i<10 then(if i<9 then(⟨5,8,41920087989913,50578980938892,59237873887871,[⟨3,67896766836850,8658892948979⟩]⟩)else(⟨5,9,51034259465431,60603709467488,70173159469545,[⟨3,79742609471602,9569450002057⟩]⟩))else(if i<11 then(⟨5,10,61058987994027,71538995049162,82019002104297,[⟨3,92499009159432,10480007055135⟩]⟩)else(⟨5,11,71994273575701,83384837683914,94775401792127,[⟨3,106165965900340,11390564108213⟩]⟩)))else(if i<14 then(if i<13 then(⟨5,12,83840116210453,96141237371744,108442358533035,[⟨3,120743479694326,12301121161291⟩]⟩)else(⟨5,13,96596515898283,109808194112652,123019872327021,[⟨3,136231550541390,13211678214369⟩]⟩))else(if i<15 then(⟨5,14,110263472639191,124385707906638,138507943174085,[⟨3,152630178441532,14122235267447⟩]⟩)else(⟨5,15,124840986433177,139873778753702,154906571074227,[⟨3,169939363394752,15032792320525⟩]⟩)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(⟨5,16,140329057280241,156272406653844,172215756027447,[⟨3,188159105401050,15943349373603⟩]⟩)else(⟨5,17,156727685180383,173581591607064,190435498033745,[⟨3,207289404460426,16853906426681⟩]⟩))else(if i<19 then(⟨5,18,174036870133603,191801333613362,209565797093121,[⟨3,227330260572880,17764463479759⟩]⟩)else(⟨5,19,192256612139901,210931632672738,229606653205575,[⟨3,248281673738412,18675020532837⟩]⟩)))else(if i<22 then(if i<21 then(⟨5,20,211386911199277,230972488785192,250558066371107,[⟨3,270143643957022,19585577585915⟩]⟩)else(⟨5,21,231427767311731,251923901950724,272420036589717,[⟨3,292916171228710,20496134638993⟩]⟩))else(if i<23 then(⟨5,22,252379180477263,273785872169334,295192563861405,[⟨3,316599255553476,21406691692071⟩]⟩)else(⟨5,23,274241150695873,296558399441022,318875648186171,[⟨3,341192896931320,22317248745149⟩]⟩))))else(if i<28 then(if i<26 then(if i<25 then(⟨5,24,297013677967561,320241483765788,343469289564015,[⟨3,366697095362242,23227805798227⟩]⟩)else(⟨5,25,320696762292327,344835125143632,368973487994937,[⟨3,393111850846242,24138362851305⟩]⟩))else(if i<27 then(⟨5,26,345290403670171,370339323574554,395388243478937,[⟨3,420437163383320,25048919904383⟩]⟩)else(⟨5,27,370794602101093,396754079058554,422713556016015,[⟨3,448673032973476,25959476957461⟩]⟩)))else(if i<30 then(if i<29 then(⟨5,28,397209357585093,424079391595632,450949425606171,[⟨3,477819459616710,26870034010539⟩]⟩)else(⟨5,29,424534670122171,452315261185788,480095852249405,[⟨3,507876443313022,27780591063617⟩]⟩))else(if i<31 then(⟨5,30,452770539712327,481461687829022,510152835945717,[⟨3,538843984062412,28691148116695⟩]⟩)else(if i<32 then(⟨5,31,481916966355561,511518671525334,541120376695107,[⟨3,570722081864880,29601705169773⟩]⟩)else(⟨5,32,511973950051873,542486212274724,572998474497575,[⟨3,603510736720426,30512262222851⟩]⟩)))))))else(if i<50 then(if i<41 then(if i<37 then(if i<35 then(if i<34 then(⟨5,33,542941490801263,574364310077192,605787129353121,[⟨3,637209948629050,31422819275929⟩]⟩)else(⟨5,34,574819588603731,607152964932738,639486341261745,[⟨3,671819717590752,32333376329007⟩]⟩))else(if i<36 then(⟨5,35,607608243459277,640852176841362,674096110223447,[⟨3,707340043605532,33243933382085⟩]⟩)else(⟨5,36,641307455367901,675461945803064,709616436238227,[⟨3,743770926673390,34154490435163⟩]⟩)))else(if i<39 then(if i<38 then(⟨5,37,675917224329603,710982271817844,746047319306085,[⟨3,781112366794326,35065047488241⟩]⟩)else(⟨5,38,711437550344383,747413154885702,783388759427021,[⟨3,819364363968340,35975604541319⟩]⟩))else(if i<40 then(⟨5,39,747868433412241,784754595006638,821640756601035,[⟨3,858526918195432,36886161594397⟩]⟩)else(⟨5,40,785209873533177,823006592180652,860803310828127,[⟨3,898600029475602,37796718647475⟩]⟩))))else(if i<45 then(if i<43 then(if i<42 then(⟨5,41,823461870707191,862169146407744,900876422108297,[⟨3,939583697808850,38707275700553⟩]⟩)else(⟨5,42,862624424934283,902242257687914,941860090441545,[⟨3,981477923195176,39617832753631⟩]⟩))else(if i<44 then(⟨5,43,902697536214453,943225926021162,983754315827871,[⟨3,1024282705634580,40528389806709⟩]⟩)else(⟨5,44,943681204547701,985120151407488,1026559098267275,[⟨3,1067998045127062,41438946859787⟩]⟩)))else(if i<47 then(if i<46 then(⟨5,45,985575429934027,1027924933846892,1070274437759757,[⟨3,1112623941672622,42349503912865⟩]⟩)else(⟨5,46,1028380212373431,1071640273339374,1114900334305317,[⟨3,1158160395271260,43260060965943⟩]⟩))else(if i<48 then(⟨5,47,1072095551865913,1116266169884934,1160436787903955,[⟨3,1204607405922976,44170618019021⟩]⟩)else(if i<49 then(⟨5,48,1116721448411473,1161802623483572,1206883798555671,[⟨3,1251964973627770,45081175072099⟩]⟩)else(⟨5,49,1162257902010111,1208249634135288,1254241366260465,[⟨3,1300233098385642,45991732125177⟩]⟩))))))else(if i<58 then(if i<54 then(if i<52 then(if i<51 then(⟨5,50,1208704912661827,1255607201840082,1302509491018337,[⟨3,1349411780196592,46902289178255⟩]⟩)else(⟨5,51,1256062480366621,1303875326597954,1351688172829287,[⟨3,1399501019060620,47812846231333⟩]⟩))else(if i<53 then(⟨5,52,1304330605124493,1353054008408904,1401777411693315,[⟨3,1450500814977726,48723403284411⟩]⟩)else(⟨5,53,1353509286935443,1403143247272932,1452777207610421,[⟨3,1502411167947910,49633960337489⟩]⟩)))else(if i<56 then(if i<55 then(⟨5,54,1403598525799471,1454143043190038,1504687560580605,[⟨3,1555232077971172,50544517390567⟩]⟩)else(⟨5,55,1454598321716577,1506053396160222,1557508470603867,[⟨3,1608963545047512,51455074443645⟩]⟩))else(if i<57 then(⟨5,56,1506508674686761,1558874306183484,1611239937680207,[⟨3,1663605569176930,52365631496723⟩]⟩)else(⟨5,57,1559329584710023,1612605773259824,1665881961809625,[⟨3,1719158150359426,53276188549801⟩]⟩))))else(if i<62 then(if i<60 then(if i<59 then(⟨5,58,1613061051786363,1667247797389242,1721434542992121,[⟨3,1775621288595000,54186745602879⟩]⟩)else(⟨5,59,1667703075915781,1722800378571738,1777897681227695,[⟨3,1832994983883652,55097302655957⟩]⟩))else(if i<61 then(⟨5,60,1723255657098277,1779263516807312,1835271376516347,[⟨3,1891279236225382,56007859709035⟩]⟩)else(⟨5,61,1779718795333851,1836637212095964,1893555628858077,[⟨3,1950474045620190,56918416762113⟩]⟩)))else(if i<64 then(if i<63 then(⟨5,62,1837092490622503,1894921464437694,1952750438252885,[⟨3,2010579412068076,57828973815191⟩]⟩)else(⟨5,63,1895376742964233,1954116273832502,2012855804700771,[⟨3,2071595335569040,58739530868269⟩]⟩))else(if i<65 then(⟨5,64,1954571552359041,2014221640280388,2073871728201735,[⟨3,2133521816123082,59650087921347⟩]⟩)else(if i<66 then(⟨5,65,2014676918806927,2075237563781352,2135798208755777,[⟨3,2196358853730202,60560644974425⟩]⟩)else(⟨5,66,2075692842307891,2137164044335394,2198635246362897,[⟨3,2260106448390400,61471202027503⟩]⟩))))))))else(if i<101 then(if i<84 then(if i<75 then(if i<71 then(if i<69 then(if i<68 then(⟨5,67,2137619322861933,2200001081942514,2262382841023095,[⟨3,2324764600103676,62381759080581⟩]⟩)else(⟨5,68,2200456360469053,2263748676602712,2327040992736371,[⟨3,2390333308870030,63292316133659⟩]⟩))else(if i<70 then(⟨5,69,2264203955129251,2328406828315988,2392609701502725,[⟨3,2456812574689462,64202873186737⟩]⟩)else(⟨5,70,2328862106842527,2393975537082342,2459088967322157,[⟨3,2524202397561972,65113430239815⟩]⟩)))else(if i<73 then(if i<72 then(⟨5,71,2394430815608881,2460454802901774,2526478790194667,[⟨3,2592502777487560,66023987292893⟩]⟩)else(⟨5,72,2460910081428313,2527844625774284,2594779170120255,[⟨3,2661713714466226,66934544345971⟩]⟩))else(if i<74 then(⟨5,73,2528299904300823,2596145005699872,2663990107098921,[⟨3,2731835208497970,67845101399049⟩]⟩)else(⟨5,74,2596600284226411,2665355942678538,2734111601130665,[⟨3,2802867259582792,68755658452127⟩]⟩))))else(if i<79 then(if i<77 then(if i<76 then(⟨5,75,2665811221205077,2735477436710282,2805143652215487,[⟨3,2874809867720692,69666215505205⟩]⟩)else(⟨5,76,2735932715236821,2806509487795104,2877086260353387,[⟨3,2947663032911670,70576772558283⟩]⟩))else(if i<78 then(⟨5,77,2806964766321643,2878452095933004,2949939425544365,[⟨3,3021426755155726,71487329611361⟩]⟩)else(⟨5,78,2878907374459543,2951305261123982,3023703147788421,[⟨3,3096101034452860,72397886664439⟩]⟩)))else(if i<81 then(if i<80 then(⟨5,79,2951760539650521,3025068983368038,3098377427085555,[⟨3,3171685870803072,73308443717517⟩]⟩)else(⟨5,80,3025524261894577,3099743262665172,3173962263435767,[⟨3,3248181264206362,74219000770595⟩]⟩))else(if i<82 then(⟨5,81,3100198541191711,3175328099015384,3250457656839057,[⟨3,3325587214662730,75129557823673⟩]⟩)else(if i<83 then(⟨5,82,3175783377541923,3251823492418674,3327863607295425,[⟨3,3403903722172176,76040114876751⟩]⟩)else(⟨5,83,3252278770945213,3329229442875042,3406180114804871,[⟨3,3483130786734700,76950671929829⟩]⟩))))))else(if i<92 then(if i<88 then(if i<86 then(if i<85 then(⟨5,84,3329684721401581,3407545950384488,3485407179367395,[⟨3,3563268408350302,77861228982907⟩]⟩)else(⟨5,85,3408001228911027,3486773014947012,3565544800982997,[⟨3,3644316587018982,78771786035985⟩]⟩))else(if i<87 then(⟨5,86,3487228293473551,3566910636562614,3646592979651677,[⟨3,3726275322740740,79682343089063⟩]⟩)else(⟨5,87,3567365915089153,3647958815231294,3728551715373435,[⟨3,3809144615515576,80592900142141⟩]⟩)))else(if i<90 then(if i<89 then(⟨5,88,3648414093757833,3729917550953052,3811421008148271,[⟨3,3892924465343490,81503457195219⟩]⟩)else(⟨5,89,3730372829479591,3812786843727888,3895200857976185,[⟨3,3977614872224482,82414014248297⟩]⟩))else(if i<91 then(⟨5,90,3813242122254427,3896566693555802,3979891264857177,[⟨3,4063215836158552,83324571301375⟩]⟩)else(⟨5,91,3897021972082341,3981257100436794,4065492228791247,[⟨3,4149727357145700,84235128354453⟩]⟩))))else(if i<96 then(if i<94 then(if i<93 then(⟨5,92,3981712378963333,4066858064370864,4152003749778395,[⟨3,4237149435185926,85145685407531⟩]⟩)else(⟨5,93,4067313342897403,4153369585358012,4239425827818621,[⟨3,4325482070279230,86056242460609⟩]⟩))else(if i<95 then(⟨5,94,4153824863884551,4240791663398238,4327758462911925,[⟨3,4414725262425612,86966799513687⟩]⟩)else(⟨5,95,4241246941924777,4329124298491542,4417001655058307,[⟨3,4504879011625072,87877356566765⟩]⟩)))else(if i<98 then(if i<97 then(⟨5,96,4329579577018081,4418367490637924,4507155404257767,[⟨3,4595943317877610,88787913619843⟩]⟩)else(⟨5,97,4418822769164463,4508521239837384,4598219710510305,[⟨3,4687918181183226,89698470672921⟩]⟩))else(if i<99 then(⟨5,98,4508976518363923,4599585546089922,4690194573815921,[⟨3,4780803601541920,90609027725999⟩]⟩)else(if i<100 then(⟨5,99,4600040824616461,4691560409395538,4783079994174615,[⟨3,4874599578953692,91519584779077⟩]⟩)else(⟨5,100,4692015687922077,4784445829754232,4876875971586387,[⟨3,4969306113418542,92430141832155⟩]⟩)))))))else(if i<118 then(if i<109 then(if i<105 then(if i<103 then(if i<102 then(⟨5,101,4784901108280771,4878241807166004,4971582506051237,[⟨3,5064923204936470,93340698885233⟩]⟩)else(⟨5,102,4878697085692543,4972948341630854,5067199597569165,[⟨3,5161450853507476,94251255938311⟩]⟩))else(if i<104 then(⟨5,103,4973403620157393,5068565433148782,5163727246140171,[⟨3,5258889059131560,95161812991389⟩]⟩)else(⟨5,104,5069020711675321,5165093081719788,5261165451764255,[⟨3,5357237821808722,96072370044467⟩]⟩)))else(if i<107 then(if i<106 then(⟨5,105,5165548360246327,5262531287343872,5359514214441417,[⟨3,5456497141538962,96982927097545⟩]⟩)else(⟨5,106,5262986565870411,5360880050021034,5458773534171657,[⟨3,5556667018322280,97893484150623⟩]⟩))else(if i<108 then(⟨5,107,5361335328547573,5460139369751274,5558943410954975,[⟨3,5657747452158676,98804041203701⟩]⟩)else(⟨5,108,5460594648277813,5560309246534592,5660023844791371,[⟨3,5759738443048150,99714598256779⟩]⟩))))else(if i<113 then(if i<111 then(if i<110 then(⟨5,109,5560764525061131,5661389680370988,5762014835680845,[⟨3,5862639990990702,100625155309857⟩]⟩)else(⟨5,110,5661844958897527,5763380671260462,5864916383623397,[⟨3,5966452095986332,101535712362935⟩]⟩))else(if i<112 then(⟨5,111,5763835949787001,5866282219203014,5968728488619027,[⟨3,6071174758035040,102446269416013⟩]⟩)else(⟨5,112,5866737497729553,5970094324198644,6073451150667735,[⟨3,6176807977136826,103356826469091⟩]⟩)))else(if i<115 then(if i<114 then(⟨5,113,5970549602725183,6074816986247352,6179084369769521,[⟨3,6283351753291690,104267383522169⟩]⟩)else(⟨5,114,6075272264773891,6180450205349138,6285628145924385,[⟨3,6390806086499632,105177940575247⟩]⟩))else(if i<116 then(⟨5,115,6180905483875677,6286993981504002,6393082479132327,[⟨3,6499170976760652,106088497628325⟩]⟩)else(if i<117 then(⟨5,116,6287449260030541,6394448314711944,6501447369393347,[⟨3,6608446424074750,106999054681403⟩]⟩)else(⟨5,117,6394903593238483,6502813204972964,6610722816707445,[⟨3,6718632428441926,107909611734481⟩]⟩))))))else(if i<126 then(if i<122 then(if i<120 then(if i<119 then(⟨5,118,6503268483499503,6612088652287062,6720908821074621,[⟨3,6829728989862180,108820168787559⟩]⟩)else(⟨5,119,6612543930813601,6722274656654238,6832005382494875,[⟨3,6941736108335512,109730725840637⟩]⟩))else(if i<121 then(⟨5,120,6722729935180777,6833371218074492,6944012500968207,[⟨3,7054653783861922,110641282893715⟩]⟩)else(⟨5,121,6833826496601031,6945378336547824,7056930176494617,[⟨3,7168482016441410,111551839946793⟩]⟩)))else(if i<124 then(if i<123 then(⟨5,122,6945833615074363,7058296012074234,7170758409074105,[⟨3,7283220806073976,112462396999871⟩]⟩)else(⟨5,123,7058751290600773,7172124244653722,7285497198706671,[⟨3,7398870152759620,113372954052949⟩]⟩))else(if i<125 then(⟨5,124,7172579523180261,7286863034286288,7401146545392315,[⟨3,7515430056498342,114283511106027⟩]⟩)else(⟨5,125,7287318312812827,7402512380971932,7517706449131037,[⟨3,7632900517290142,115194068159105⟩]⟩))))else(if i<130 then(if i<128 then(if i<127 then(⟨5,126,7402967659498471,7519072284710654,7635176909922837,[⟨3,7751281535135020,116104625212183⟩]⟩)else(⟨5,127,7519527563237193,7636542745502454,7753557927767715,[⟨3,7870573110032976,117015182265261⟩]⟩))else(if i<129 then(⟨5,128,7636998024028993,7754923763347332,7872849502665671,[⟨3,7990775241984010,117925739318339⟩]⟩)else(⟨5,129,7755379041873871,7874215338245288,7993051634616705,[⟨3,8111887930988122,118836296371417⟩]⟩)))else(if i<132 then(if i<131 then(⟨5,130,7874670616771827,7994417470196322,8114164323620817,[⟨3,8233911177045312,119746853424495⟩]⟩)else(⟨5,131,7994872748722861,8115530159200434,8236187569678007,[⟨3,8356844980155580,120657410477573⟩]⟩))else(if i<133 then(⟨5,132,8115985437726973,8237553405257624,8359121372788275,[⟨3,8480689340318926,121567967530651⟩]⟩)else(if i<134 then(⟨5,133,8238008683784163,8360487208367892,8482965732951621,[⟨3,8605444257535350,122478524583729⟩]⟩)else(⟨5,134,8360942486894431,8484331568531238,8607720650168045,[⟨3,8731109731804852,123389081636807⟩]⟩)))))))))else(defaultRow)
+
+def row6 : ℕ → BaseRow := fun i =>
+  if i<134 then(if i<67 then(if i<33 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(⟨6,0,8864894287932,10514176409668,15599461204054,[⟨3,20684745998440,5085284794386⟩]⟩)else(⟨6,1,10514176409668,16149221212246,21784266014824,[⟨3,27419310817402,5635044802578⟩]⟩))else(if i<3 then(⟨6,2,10720336937030,16355381739608,21990426542186,[⟨3,27625471344764,5635044802578⟩]⟩)else(⟨6,3,15917631933545,21767542608006,27617453282467,[⟨3,33467363956928,5849910674461⟩]⟩)))else(if i<6 then(if i<5 then(⟨6,4,22351673299171,29369845355962,36388017412753,[⟨3,43406189469544,7018172056791⟩]⟩)else(⟨6,5,29953976047127,38140409486248,46326842925369,[⟨3,54513276364490,8186433439121⟩]⟩))else(if i<7 then(⟨6,6,38724540177413,48079234998864,57433929820315,[⟨3,66788624641766,9354694821451⟩]⟩)else(⟨6,7,48663365690029,59186321893810,69709278097591,[⟨3,80232234301372,10522956203781⟩]⟩))))else(if i<12 then(if i<10 then(if i<9 then(⟨6,8,59770452584975,71461670171086,83152887757197,[⟨3,94844105343308,11691217586111⟩]⟩)else(⟨6,9,72045800862251,84905279830692,97764758799133,[⟨3,110624237767574,12859478968441⟩]⟩))else(if i<11 then(⟨6,10,85489410521857,99517150872628,113544891223399,[⟨3,127572631574170,14027740350771⟩]⟩)else(⟨6,11,100101281563793,115297283296894,130493285029995,[⟨3,145689286763096,15196001733101⟩]⟩)))else(if i<14 then(if i<13 then(⟨6,12,115881413988059,132245677103490,148609940218921,[⟨3,164974203334352,16364263115431⟩]⟩)else(⟨6,13,132829807794655,150362332292416,167894856790177,[⟨3,185427381287938,17532524497761⟩]⟩))else(if i<15 then(⟨6,14,150946462983581,169647248863672,188348034743763,[⟨3,207048820623854,18700785880091⟩]⟩)else(⟨6,15,170231379554837,190100426817258,209969474079679,[⟨3,229838521342100,19869047262421⟩]⟩)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(⟨6,16,190684557508423,211721866153174,232759174797925,[⟨3,253796483442676,21037308644751⟩]⟩)else(⟨6,17,212305996844339,234511566871420,256717136898501,[⟨3,278922706925582,22205570027081⟩]⟩))else(if i<19 then(⟨6,18,235095697562585,258469528971996,281843360381407,[⟨3,305217191790818,23373831409411⟩]⟩)else(⟨6,19,259053659663161,283595752454902,308137845246643,[⟨3,332679938038384,24542092791741⟩]⟩)))else(if i<22 then(if i<21 then(⟨6,20,284179883146067,309890237320138,335600591494209,[⟨3,361310945668280,25710354174071⟩]⟩)else(⟨6,21,310474368011303,337352983567704,364231599124105,[⟨3,391110214680506,26878615556401⟩]⟩))else(if i<23 then(⟨6,22,337937114258869,365983991197600,394030868136331,[⟨3,422077745075062,28046876938731⟩]⟩)else(⟨6,23,366568121888765,395783260209826,424998398530887,[⟨3,454213536851948,29215138321061⟩]⟩))))else(if i<28 then(if i<26 then(if i<25 then(⟨6,24,396367390900991,426750790604382,457134190307773,[⟨3,487517590011164,30383399703391⟩]⟩)else(⟨6,25,427334921295547,458886582381268,490438243466989,[⟨3,521989904552710,31551661085721⟩]⟩))else(if i<27 then(⟨6,26,459470713072433,492190635540484,524910558008535,[⟨3,557630480476586,32719922468051⟩]⟩)else(⟨6,27,492774766231649,526662950082030,560551133932411,[⟨3,594439317782792,33888183850381⟩]⟩)))else(if i<30 then(if i<29 then(⟨6,28,527247080773195,562303526005906,597359971238617,[⟨3,632416416471328,35056445232711⟩]⟩)else(⟨6,29,562887656697071,599112363312112,635337069927153,[⟨3,671561776542194,36224706615041⟩]⟩))else(if i<31 then(⟨6,30,599696494003277,637089462000648,674482429998019,[⟨3,711875397995390,37392967997371⟩]⟩)else(if i<32 then(⟨6,31,637673592691813,676234822071514,714796051451215,[⟨3,753357280830916,38561229379701⟩]⟩)else(⟨6,32,676818952762679,716548443524710,756277934286741,[⟨3,796007425048772,39729490762031⟩]⟩)))))))else(if i<50 then(if i<41 then(if i<37 then(if i<35 then(if i<34 then(⟨6,33,717132574215875,758030326360236,798928078504597,[⟨3,839825830648958,40897752144361⟩]⟩)else(⟨6,34,758614457051401,800680470578092,842746484104783,[⟨3,884812497631474,42066013526691⟩]⟩))else(if i<36 then(⟨6,35,801264601269257,844498876178278,887733151087299,[⟨3,930967425996320,43234274909021⟩]⟩)else(⟨6,36,845083006869443,889485543160794,933888079452145,[⟨3,978290615743496,44402536291351⟩]⟩)))else(if i<39 then(if i<38 then(⟨6,37,890069673851959,935640471525640,981211269199321,[⟨3,1026782066873002,45570797673681⟩]⟩)else(⟨6,38,936224602216805,982963661272816,1029702720328827,[⟨3,1076441779384838,46739059056011⟩]⟩))else(if i<40 then(⟨6,39,983547791963981,1031455112402322,1079362432840663,[⟨3,1127269753279004,47907320438341⟩]⟩)else(⟨6,40,1032039243093487,1081114824914158,1130190406734829,[⟨3,1179265988555500,49075581820671⟩]⟩))))else(if i<45 then(if i<43 then(if i<42 then(⟨6,41,1081698955605323,1131942798808324,1182186642011325,[⟨3,1232430485214326,50243843203001⟩]⟩)else(⟨6,42,1132526929499489,1183939034084820,1235351138670151,[⟨3,1286763243255482,51412104585331⟩]⟩))else(if i<44 then(⟨6,43,1184523164775985,1237103530743646,1289683896711307,[⟨3,1342264262678968,52580365967661⟩]⟩)else(⟨6,44,1237687661434811,1291436288784802,1345184916134793,[⟨3,1398933543484784,53748627349991⟩]⟩)))else(if i<47 then(if i<46 then(⟨6,45,1292020419475967,1346937308208288,1401854196940609,[⟨3,1456771085672930,54916888732321⟩]⟩)else(⟨6,46,1347521438899453,1403606589014104,1459691739128755,[⟨3,1515776889243406,56085150114651⟩]⟩))else(if i<48 then(⟨6,47,1404190719705269,1461444131202250,1518697542699231,[⟨3,1575950954196212,57253411496981⟩]⟩)else(if i<49 then(⟨6,48,1462028261893415,1520449934772726,1578871607652037,[⟨3,1637293280531348,58421672879311⟩]⟩)else(⟨6,49,1521034065463891,1580623999725532,1640213933987173,[⟨3,1699803868248814,59589934261641⟩]⟩))))))else(if i<58 then(if i<54 then(if i<52 then(if i<51 then(⟨6,50,1581208130416697,1641966326060668,1702724521704639,[⟨3,1763482717348610,60758195643971⟩]⟩)else(⟨6,51,1642550456751833,1704476913778134,1766403370804435,[⟨3,1828329827830736,61926457026301⟩]⟩))else(if i<53 then(⟨6,52,1705061044469299,1768155762877930,1831250481286561,[⟨3,1894345199695192,63094718408631⟩]⟩)else(⟨6,53,1768739893569095,1833002873360056,1897265853151017,[⟨3,1961528832941978,64262979790961⟩]⟩)))else(if i<56 then(if i<55 then(⟨6,54,1833587004051221,1899018245224512,1964449486397803,[⟨3,2029880727571094,65431241173291⟩]⟩)else(⟨6,55,1899602375915677,1966201878471298,2032801381026919,[⟨3,2099400883582540,66599502555621⟩]⟩))else(if i<57 then(⟨6,56,1966786009162463,2034553773100414,2102321537038365,[⟨3,2170089300976316,67767763937951⟩]⟩)else(⟨6,57,2035137903791579,2104073929111860,2173009954432141,[⟨3,2241945979752422,68936025320281⟩]⟩))))else(if i<62 then(if i<60 then(if i<59 then(⟨6,58,2104658059803025,2174762346505636,2244866633208247,[⟨3,2314970919910858,70104286702611⟩]⟩)else(⟨6,59,2175346477196801,2246619025281742,2317891573366683,[⟨3,2389164121451624,71272548084941⟩]⟩))else(if i<61 then(⟨6,60,2247203155972907,2319643965440178,2392084774907449,[⟨3,2464525584374720,72440809467271⟩]⟩)else(⟨6,61,2320228096131343,2393837166980944,2467446237830545,[⟨3,2541055308680146,73609070849601⟩]⟩)))else(if i<64 then(if i<63 then(⟨6,62,2394421297672109,2469198629904040,2543975962135971,[⟨3,2618753294367902,74777332231931⟩]⟩)else(⟨6,63,2469782760595205,2545728354209466,2621673947823727,[⟨3,2697619541437988,75945593614261⟩]⟩))else(if i<65 then(⟨6,64,2546312484900631,2623426339897222,2700540194893813,[⟨3,2777654049890404,77113854996591⟩]⟩)else(if i<66 then(⟨6,65,2624010470588387,2702292586967308,2780574703346229,[⟨3,2858856819725150,78282116378921⟩]⟩)else(⟨6,66,2702876717658473,2782327095419724,2861777473180975,[⟨3,2941227850942226,79450377761251⟩]⟩))))))))else(if i<100 then(if i<83 then(if i<75 then(if i<71 then(if i<69 then(if i<68 then(⟨6,67,2782911226110889,2863529865254470,2944148504398051,[⟨3,3024767143541632,80618639143581⟩]⟩)else(⟨6,68,2864113995945635,2945900896471546,3027687796997457,[⟨3,3109474697523368,81786900525911⟩]⟩))else(if i<70 then(⟨6,69,2946485027162711,3029440189070952,3112395350979193,[⟨3,3195350512887434,82955161908241⟩]⟩)else(⟨6,70,3030024319762117,3114147743052688,3198271166343259,[⟨3,3282394589633830,84123423290571⟩]⟩)))else(if i<73 then(if i<72 then(⟨6,71,3114731873743853,3200023558416754,3285315243089655,[⟨3,3370606927762556,85291684672901⟩]⟩)else(⟨6,72,3200607689107919,3287067635163150,3373527581218381,[⟨3,3459987527273612,86459946055231⟩]⟩))else(if i<74 then(⟨6,73,3287651765854315,3375279973291876,3462908180729437,[⟨3,3550536388166998,87628207437561⟩]⟩)else(⟨6,74,3375864103983041,3464660572802932,3553457041622823,[⟨3,3642253510442714,88796468819891⟩]⟩))))else(if i<79 then(if i<77 then(if i<76 then(⟨6,75,3465244703494097,3555209433696318,3645174163898539,[⟨3,3735138894100760,89964730202221⟩]⟩)else(⟨6,76,3555793564387483,3646926555972034,3738059547556585,[⟨3,3829192539141136,91132991584551⟩]⟩))else(if i<78 then(⟨6,77,3647510686663199,3739811939630080,3832113192596961,[⟨3,3924414445563842,92301252966881⟩]⟩)else(⟨6,78,3740396070321245,3833865584670456,3927335099019667,[⟨3,4020804613368878,93469514349211⟩]⟩)))else(if i<81 then(if i<80 then(⟨6,79,3834449715361621,3929087491093162,4023725266824703,[⟨3,4118363042556244,94637775731541⟩]⟩)else(⟨6,80,3929671621784327,4025477658898198,4121283696012069,[⟨3,4217089733125940,95806037113871⟩]⟩))else(if i<82 then(⟨6,81,4026061789589363,4123036088085564,4220010386581765,[⟨3,4316984685077966,96974298496201⟩]⟩)else(⟨6,82,4123620218776729,4221762778655260,4319905338533791,[⟨3,4418047898412322,98142559878531⟩]⟩)))))else(if i<91 then(if i<87 then(if i<85 then(if i<84 then(⟨6,83,4222346909346425,4321657730607286,4420968551868147,[⟨3,4520279373129008,99310821260861⟩]⟩)else(⟨6,84,4322241861298451,4422720943941642,4523200026584833,[⟨3,4623679109228024,100479082643191⟩]⟩))else(if i<86 then(⟨6,85,4423305074632807,4524952418658328,4626599762683849,[⟨3,4728247106709370,101647344025521⟩]⟩)else(⟨6,86,4525536549349493,4628352154757344,4731167760165195,[⟨3,4833983365573046,102815605407851⟩]⟩)))else(if i<89 then(if i<88 then(⟨6,87,4628936285448509,4732920152238690,4836904019028871,[⟨3,4940887885819052,103983866790181⟩]⟩)else(⟨6,88,4733504282929855,4838656411102366,4943808539274877,[⟨3,5048960667447388,105152128172511⟩]⟩))else(if i<90 then(⟨6,89,4839240541793531,4945560931348372,5051881320903213,[⟨3,5158201710458054,106320389554841⟩]⟩)else(⟨6,90,4946145062039537,5053633712976708,5161122363913879,[⟨3,5268611014851050,107488650937171⟩]⟩))))else(if i<95 then(if i<93 then(if i<92 then(⟨6,91,5054217843667873,5162874755987374,5271531668306875,[⟨3,5380188580626376,108656912319501⟩]⟩)else(⟨6,92,5163458886678539,5273284060380370,5383109234082201,[⟨3,5492934407784032,109825173701831⟩]⟩))else(if i<94 then(⟨6,93,5273868191071535,5384861626155696,5495855061239857,[⟨3,5606848496324018,110993435084161⟩]⟩)else(⟨6,94,5385445756846861,5497607453313352,5609769149779843,[⟨3,5721930846246334,112161696466491⟩]⟩)))else(if i<97 then(if i<96 then(⟨6,95,5498191584004517,5611521541853338,5724851499702159,[⟨3,5838181457550980,113329957848821⟩]⟩)else(⟨6,96,5612105672544503,5726603891775654,5841102111006805,[⟨3,5955600330237956,114498219231151⟩]⟩))else(if i<98 then(⟨6,97,5727188022466819,5842854503080300,5958520983693781,[⟨3,6074187464307262,115666480613481⟩]⟩)else(if i<99 then(⟨6,98,5843438633771465,5960273375767276,6077108117763087,[⟨3,6193942859758898,116834741995811⟩]⟩)else(⟨6,99,5960857506458441,6078860509836582,6196863513214723,[⟨3,6314866516592864,118003003378141⟩]⟩)))))))else(if i<117 then(if i<108 then(if i<104 then(if i<102 then(if i<101 then(⟨6,100,6079444640527747,6198615905288218,6317787170048689,[⟨3,6436958434809160,119171264760471⟩]⟩)else(⟨6,101,6199200035979383,6319539562122184,6439879088264985,[⟨3,6560218614407786,120339526142801⟩]⟩))else(if i<103 then(⟨6,102,6320123692813349,6441631480338480,6563139267863611,[⟨3,6684647055388742,121507787525131⟩]⟩)else(⟨6,103,6442215611029645,6564891659937106,6687567708844567,[⟨3,6810243757752028,122676048907461⟩]⟩)))else(if i<106 then(if i<105 then(⟨6,104,6565475790628271,6689320100918062,6813164411207853,[⟨3,6937008721497644,123844310289791⟩]⟩)else(⟨6,105,6689904231609227,6814916803281348,6939929374953469,[⟨3,7064941946625590,125012571672121⟩]⟩))else(if i<107 then(⟨6,106,6815500933972513,6941681767026964,7067862600081415,[⟨3,7194043433135866,126180833054451⟩]⟩)else(⟨6,107,6942265897718129,7069614992154910,7196964086591691,[⟨3,7324313181028472,127349094436781⟩]⟩))))else(if i<112 then(if i<110 then(if i<109 then(⟨6,108,7070199122846075,7198716478665186,7327233834484297,[⟨3,7455751190303408,128517355819111⟩]⟩)else(⟨6,109,7199300609356351,7328986226557792,7458671843759233,[⟨3,7588357460960674,129685617201441⟩]⟩))else(if i<111 then(⟨6,110,7329570357248957,7460424235832728,7591278114416499,[⟨3,7722131993000270,130853878583771⟩]⟩)else(⟨6,111,7461008366523893,7593030506489994,7725052646456095,[⟨3,7857074786422196,132022139966101⟩]⟩)))else(if i<114 then(if i<113 then(⟨6,112,7593614637181159,7726805038529590,7859995439878021,[⟨3,7993185841226452,133190401348431⟩]⟩)else(⟨6,113,7727389169220755,7861747831951516,7996106494682277,[⟨3,8130465157413038,134358662730761⟩]⟩))else(if i<115 then(⟨6,114,7862331962642681,7997858886755772,8133385810868863,[⟨3,8268912734981954,135526924113091⟩]⟩)else(if i<116 then(⟨6,115,7998443017446937,8135138202942358,8271833388437779,[⟨3,8408528573933200,136695185495421⟩]⟩)else(⟨6,116,8135722333633523,8273585780511274,8411449227389025,[⟨3,8549312674266776,137863446877751⟩]⟩))))))else(if i<125 then(if i<121 then(if i<119 then(if i<118 then(⟨6,117,8274169911202439,8413201619462520,8552233327722601,[⟨3,8691265035982682,139031708260081⟩]⟩)else(⟨6,118,8413785750153685,8553985719796096,8694185689438507,[⟨3,8834385659080918,140199969642411⟩]⟩))else(if i<120 then(⟨6,119,8554569850487261,8695938081512002,8837306312536743,[⟨3,8978674543561484,141368231024741⟩]⟩)else(⟨6,120,8696522212203167,8839058704610238,8981595197017309,[⟨3,9124131689424380,142536492407071⟩]⟩)))else(if i<123 then(if i<122 then(⟨6,121,8839642835301403,8983347589090804,9127052342880205,[⟨3,9270757096669606,143704753789401⟩]⟩)else(⟨6,122,8983931719781969,9128804734953700,9273677750125431,[⟨3,9418550765297162,144873015171731⟩]⟩))else(if i<124 then(⟨6,123,9129388865644865,9275430142198926,9421471418752987,[⟨3,9567512695307048,146041276554061⟩]⟩)else(⟨6,124,9276014272890091,9423223810826482,9570433348762873,[⟨3,9717642886699264,147209537936391⟩]⟩))))else(if i<129 then(if i<127 then(if i<126 then(⟨6,125,9423807941517647,9572185740836368,9720563540155089,[⟨3,9868941339473810,148377799318721⟩]⟩)else(⟨6,126,9572769871527533,9722315932228584,9871861992929635,[⟨3,10021408053630686,149546060701051⟩]⟩))else(if i<128 then(⟨6,127,9722900062919749,9873614385003130,10024328707086511,[⟨3,10175043029169892,150714322083381⟩]⟩)else(⟨6,128,9874198515694295,10026081099160006,10177963682625717,[⟨3,10329846266091428,151882583465711⟩]⟩)))else(if i<131 then(if i<130 then(⟨6,129,10026665229851171,10179716074699212,10332766919547253,[⟨3,10485817764395294,153050844848041⟩]⟩)else(⟨6,130,10180300205390377,10334519311620748,10488738417851119,[⟨3,10642957524081490,154219106230371⟩]⟩))else(if i<132 then(⟨6,131,10335103442311913,10490490809924614,10645878177537315,[⟨3,10801265545150016,155387367612701⟩]⟩)else(if i<133 then(⟨6,132,10491074940615779,10647630569610810,10804186198605841,[⟨3,10960741827600872,156555628995031⟩]⟩)else(⟨6,133,10648214700301975,10805938590679336,10963662481056697,[⟨3,11121386371434058,157723890377361⟩]⟩)))))))))else(defaultRow)
+
+def row7 : ℕ → BaseRow := fun i =>
+  if i<133 then(if i<66 then(if i<33 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(⟨7,0,15118420148307,17523622805597,24876668682355,[⟨3,32229714559113,7353045876758⟩]⟩)else(⟨7,1,17523622805597,25563868692595,33604114579593,[⟨3,41644360466591,8040245886998⟩]⟩))else(if i<3 then(⟨7,2,17729783332959,25770029219957,33810275106955,[⟨3,41850520993953,8040245886998⟩]⟩)else(⟨7,3,23700332614095,31551750608680,39403168603265,[⟨3,47254586597850,7851417994585⟩,⟨31,267183566357259,8040245886998⟩]⟩)))else(if i<6 then(if i<5 then(⟨7,4,32264733464471,41542117170638,50819500876805,[⟨3,60096884582972,9277383706167⟩]⟩)else(⟨7,5,42255100026429,52958449444178,63661798861927,[⟨3,74365148279676,10703349417749⟩]⟩))else(if i<7 then(⟨7,6,53671432299969,65800747429300,77930062558631,[⟨3,90059377687962,12129315129331⟩]⟩)else(⟨7,7,66513730285091,80069011126004,93624291966917,[⟨3,107179572807830,13555280840913⟩]⟩))))else(if i<12 then(if i<10 then(if i<9 then(⟨7,8,80781993981795,95763240534290,110744487086785,[⟨3,125725733639280,14981246552495⟩]⟩)else(⟨7,9,96476223390081,112883435654158,129290647918235,[⟨3,145697860182312,16407212264077⟩]⟩))else(if i<11 then(⟨7,10,113596418509949,131429596485608,149262774461267,[⟨3,167095952436926,17833177975659⟩]⟩)else(⟨7,11,132142579341399,151401723028640,170660866715881,[⟨3,189920010403122,19259143687241⟩]⟩)))else(if i<14 then(if i<13 then(⟨7,12,152114705884431,172799815283254,193484924682077,[⟨3,214170034080900,20685109398823⟩]⟩)else(⟨7,13,173512798139045,195623873249450,217734948359855,[⟨3,239846023470260,22111075110405⟩]⟩))else(if i<15 then(⟨7,14,196336856105241,219873896927228,243410937749215,[⟨3,266947978571202,23537040821987⟩]⟩)else(⟨7,15,220586879783019,245549886316588,270512892850157,[⟨3,295475899383726,24963006533569⟩]⟩)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(⟨7,16,246262869172379,272651841417530,299040813662681,[⟨3,325429785907832,26388972245151⟩]⟩)else(⟨7,17,273364824273321,301179762230054,328994700186787,[⟨3,356809638143520,27814937956733⟩]⟩))else(if i<19 then(⟨7,18,301892745085845,331133648754160,360374552422475,[⟨3,389615456090790,29240903668315⟩]⟩)else(⟨7,19,331846631609951,362513500989848,393180370369745,[⟨3,423847239749642,30666869379897⟩]⟩)))else(if i<22 then(if i<21 then(⟨7,20,363226483845639,395319318937118,427412154028597,[⟨3,459504989120076,32092835091479⟩]⟩)else(⟨7,21,396032301792909,429551102595970,463069903399031,[⟨3,496588704202092,33518800803061⟩]⟩))else(if i<23 then(⟨7,22,430264085451761,465208851966404,500153618481047,[⟨3,535098384995690,34944766514643⟩]⟩)else(⟨7,23,465921834822195,502292567048420,538663299274645,[⟨3,575034031500870,36370732226225⟩]⟩))))else(if i<28 then(if i<26 then(if i<25 then(⟨7,24,503005549904211,540802247842018,578598945779825,[⟨3,616395643717632,37796697937807⟩]⟩)else(⟨7,25,541515230697809,580737894347198,619960557996587,[⟨3,659183221645976,39222663649389⟩]⟩))else(if i<27 then(⟨7,26,581450877202989,622099506563960,662748135924931,[⟨3,703396765285902,40648629360971⟩]⟩)else(⟨7,27,622812489419751,664887084492304,706961679564857,[⟨3,749036274637410,42074595072553⟩]⟩)))else(if i<30 then(if i<29 then(⟨7,28,665600067348095,709100628132230,752601188916365,[⟨3,796101749700500,43500560784135⟩]⟩)else(⟨7,29,709813610988021,754740137483738,799666663979455,[⟨3,844593190475172,44926526495717⟩]⟩))else(if i<31 then(⟨7,30,755453120339529,801805612546828,848158104754127,[⟨3,894510596961426,46352492207299⟩]⟩)else(if i<32 then(⟨7,31,802518595402619,850297053321500,898075511240381,[⟨3,945853969159262,47778457918881⟩]⟩)else(⟨7,32,851010036177291,900214459807754,949418883438217,[⟨3,998623307068680,49204423630463⟩]⟩)))))))else(if i<49 then(if i<41 then(if i<37 then(if i<35 then(if i<34 then(⟨7,33,900927442663545,951557832005590,1002188221347635,[⟨3,1052818610689680,50630389342045⟩]⟩)else(⟨7,34,952270814861381,1004327169915008,1056383524968635,[⟨3,1108439880022262,52056355053627⟩]⟩))else(if i<36 then(⟨7,35,1005040152770799,1058522473536008,1112004794301217,[⟨3,1165487115066426,53482320765209⟩]⟩)else(⟨7,36,1059235456391799,1114143742868590,1169052029345381,[⟨3,1223960315822172,54908286476791⟩]⟩)))else(if i<39 then(if i<38 then(⟨7,37,1114856725724381,1171190977912754,1227525230101127,[⟨3,1283859482289500,56334252188373⟩]⟩)else(⟨7,38,1171903960768545,1229664178668500,1287424396568455,[⟨3,1345184614468410,57760217899955⟩]⟩))else(if i<40 then(⟨7,39,1230377161524291,1289563345135828,1348749528747365,[⟨3,1407935712358902,59186183611537⟩]⟩)else(⟨7,40,1290276327991619,1350888477314738,1411500626637857,[⟨3,1472112775960976,60612149323119⟩]⟩))))else(if i<45 then(if i<43 then(if i<42 then(⟨7,41,1351601460170529,1413639575205230,1475677690239931,[⟨3,1537715805274632,62038115034701⟩]⟩)else(⟨7,42,1414352558061021,1477816638807304,1541280719553587,[⟨3,1604744800299870,63464080746283⟩]⟩))else(if i<44 then(⟨7,43,1478529621663095,1543419668120960,1608309714578825,[⟨3,1673199761036690,64890046457865⟩]⟩)else(⟨7,44,1544132650976751,1610448663146198,1676764675315645,[⟨3,1743080687485092,66316012169447⟩]⟩)))else(if i<47 then(if i<46 then(⟨7,45,1611161646001989,1678903623883018,1746645601764047,[⟨3,1814387579645076,67741977881029⟩]⟩)else(⟨7,46,1679616606738809,1748784550331420,1817952493924031,[⟨3,1887120437516642,69167943592611⟩]⟩))else(if i<48 then(⟨7,47,1749497533187211,1820091442491404,1890685351795597,[⟨3,1961279261099790,70593909304193⟩]⟩)else(⟨7,48,1820804425347195,1892824300362970,1964844175378745,[⟨3,2036864050394520,72019875015775⟩]⟩)))))else(if i<57 then(if i<53 then(if i<51 then(if i<50 then(⟨7,49,1893537283218761,1966983123946118,2040428964673475,[⟨3,2113874805400832,73445840727357⟩]⟩)else(⟨7,50,1967696106801909,2042567913240848,2117439719679787,[⟨3,2192311526118726,74871806438939⟩]⟩))else(if i<52 then(⟨7,51,2043280896096639,2119578668247160,2195876440397681,[⟨3,2272174212548202,76297772150521⟩]⟩)else(⟨7,52,2120291651102951,2198015388965054,2275739126827157,[⟨3,2353462864689260,77723737862103⟩]⟩)))else(if i<55 then(if i<54 then(⟨7,53,2198728371820845,2277878075394530,2357027778968215,[⟨3,2436177482541900,79149703573685⟩]⟩)else(⟨7,54,2278591058250321,2359166727535588,2439742396820855,[⟨3,2520318066106122,80575669285267⟩]⟩))else(if i<56 then(⟨7,55,2359879710391379,2441881345388228,2523882980385077,[⟨3,2605884615381926,82001634996849⟩]⟩)else(⟨7,56,2442594328244019,2526021928952450,2609449529660881,[⟨3,2692877130369312,83427600708431⟩]⟩))))else(if i<61 then(if i<59 then(if i<58 then(⟨7,57,2526734911808241,2611588478228254,2696442044648267,[⟨3,2781295611068280,84853566420013⟩]⟩)else(⟨7,58,2612301461084045,2698580993215640,2784860525347235,[⟨3,2871140057478830,86279532131595⟩]⟩))else(if i<60 then(⟨7,59,2699293976071431,2786999473914608,2874704971757785,[⟨3,2962410469600962,87705497843177⟩]⟩)else(⟨7,60,2787712456770399,2876843920325158,2965975383879917,[⟨3,3055106847434676,89131463554759⟩]⟩)))else(if i<63 then(if i<62 then(⟨7,61,2877556903180949,2968114332447290,3058671761713631,[⟨3,3149229190979972,90557429266341⟩]⟩)else(⟨7,62,2968827315303081,3060810710281004,3152794105258927,[⟨3,3244777500236850,91983394977923⟩]⟩))else(if i<64 then(⟨7,63,3061523693136795,3154933053826300,3248342414515805,[⟨3,3341751775205310,93409360689505⟩]⟩)else(if i<65 then(⟨7,64,3155646036682091,3250481363083178,3345316689484265,[⟨3,3440152015885352,94835326401087⟩]⟩)else(⟨7,65,3251194345938969,3347455638051638,3443716930164307,[⟨3,3539978222276976,96261292112669⟩]⟩))))))))else(if i<99 then(if i<82 then(if i<74 then(if i<70 then(if i<68 then(if i<67 then(⟨7,66,3348168620907429,3445855878731680,3543543136555931,[⟨3,3641230394380182,97687257824251⟩]⟩)else(⟨7,67,3446568861587471,3545682085123304,3644795308659137,[⟨3,3743908532194970,99113223535833⟩]⟩))else(if i<69 then(⟨7,68,3546395067979095,3646934257226510,3747473446473925,[⟨3,3848012635721340,100539189247415⟩]⟩)else(⟨7,69,3647647240082301,3749612395041298,3851577550000295,[⟨3,3953542704959292,101965154958997⟩]⟩)))else(if i<72 then(if i<71 then(⟨7,70,3750325377897089,3853716498567668,3957107619238247,[⟨3,4060498739908826,103391120670579⟩]⟩)else(⟨7,71,3854429481423459,3959246567805620,4064063654187781,[⟨3,4168880740569942,104817086382161⟩]⟩))else(if i<73 then(⟨7,72,3959959550661411,4066202602755154,4172445654848897,[⟨3,4278688706942640,106243052093743⟩]⟩)else(⟨7,73,4066915585610945,4174584603416270,4282253621221595,[⟨3,4389922639026920,107669017805325⟩]⟩))))else(if i<78 then(if i<76 then(if i<75 then(⟨7,74,4175297586272061,4284392569788968,4393487553305875,[⟨3,4502582536822782,109094983516907⟩]⟩)else(⟨7,75,4285105552644759,4395626501873248,4506147451101737,[⟨3,4616668400330226,110520949228489⟩]⟩))else(if i<77 then(⟨7,76,4396339484729039,4508286399669110,4620233314609181,[⟨3,4732180229549252,111946914940071⟩]⟩)else(⟨7,77,4508999382524901,4622372263176554,4735745143828207,[⟨3,4849118024479860,113372880651653⟩]⟩)))else(if i<80 then(if i<79 then(⟨7,78,4623085246032345,4737884092395580,4852682938758815,[⟨3,4967481785122050,114798846363235⟩]⟩)else(⟨7,79,4738597075251371,4854821887326188,4971046699401005,[⟨3,5087271511475822,116224812074817⟩]⟩))else(if i<81 then(⟨7,80,4855534870181979,4973185647968378,5090836425754777,[⟨3,5208487203541176,117650777786399⟩]⟩)else(⟨7,81,4973898630824169,5092975374322150,5212052117820131,[⟨3,5331128861318112,119076743497981⟩]⟩)))))else(if i<90 then(if i<86 then(if i<84 then(if i<83 then(⟨7,82,5093688357177941,5214191066387504,5334693775597067,[⟨3,5455196484806630,120502709209563⟩]⟩)else(⟨7,83,5214904049243295,5336832724164440,5458761399085585,[⟨3,5580690074006730,121928674921145⟩]⟩))else(if i<85 then(⟨7,84,5337545707020231,5460900347652958,5584254988285685,[⟨3,5707609628918412,123354640632727⟩]⟩)else(⟨7,85,5461613330508749,5586393936853058,5711174543197367,[⟨3,5835955149541676,124780606344309⟩]⟩)))else(if i<88 then(if i<87 then(⟨7,86,5587106919708849,5713313491764740,5839520063820631,[⟨3,5965726635876522,126206572055891⟩]⟩)else(⟨7,87,5714026474620531,5841659012388004,5969291550155477,[⟨3,6096924087922950,127632537767473⟩]⟩))else(if i<89 then(⟨7,88,5842371995243795,5971430498722850,6100489002201905,[⟨3,6229547505680960,129058503479055⟩]⟩)else(⟨7,89,5972143481578641,6102627950769278,6233112419959915,[⟨3,6363596889150552,130484469190637⟩]⟩))))else(if i<94 then(if i<92 then(if i<91 then(⟨7,90,6103340933625069,6235251368527288,6367161803429507,[⟨3,6499072238331726,131910434902219⟩]⟩)else(⟨7,91,6235964351383079,6369300751996880,6502637152610681,[⟨3,6635973553224482,133336400613801⟩]⟩))else(if i<93 then(⟨7,92,6370013734852671,6504776101178054,6639538467503437,[⟨3,6774300833828820,134762366325383⟩]⟩)else(⟨7,93,6505489084033845,6641677416070810,6777865748107775,[⟨3,6914054080144740,136188332036965⟩]⟩)))else(if i<96 then(if i<95 then(⟨7,94,6642390398926601,6780004696675148,6917618994423695,[⟨3,7055233292172242,137614297748547⟩]⟩)else(⟨7,95,6780717679530939,6919757942991068,7058798206451197,[⟨3,7197838469911326,139040263460129⟩]⟩))else(if i<97 then(⟨7,96,6920470925846859,7060937155018570,7201403384190281,[⟨3,7341869613361992,140466229171711⟩]⟩)else(if i<98 then(⟨7,97,7061650137874361,7203542332757654,7345434527640947,[⟨3,7487326722524240,141892194883293⟩]⟩)else(⟨7,98,7204255315613445,7347573476208320,7490891636803195,[⟨3,7634209797398070,143318160594875⟩]⟩)))))))else(if i<116 then(if i<107 then(if i<103 then(if i<101 then(if i<100 then(⟨7,99,7348286459064111,7493030585370568,7637774711677025,[⟨3,7782518837983482,144744126306457⟩]⟩)else(⟨7,100,7493743568226359,7639913660244398,7786083752262437,[⟨3,7932253844280476,146170092018039⟩]⟩))else(if i<102 then(⟨7,101,7640626643100189,7788222700829810,7935818758559431,[⟨3,8083414816289052,147596057729621⟩]⟩)else(⟨7,102,7788935683685601,7937957707126804,8086979730568007,[⟨3,8236001754009210,149022023441203⟩]⟩)))else(if i<105 then(if i<104 then(⟨7,103,7938670689982595,8089118679135380,8239566668288165,[⟨3,8390014657440950,150447989152785⟩]⟩)else(⟨7,104,8089831661991171,8241705616855538,8393579571719905,[⟨3,8545453526584272,151873954864367⟩]⟩))else(if i<106 then(⟨7,105,8242418599711329,8395718520287278,8549018440863227,[⟨3,8702318361439176,153299920575949⟩]⟩)else(⟨7,106,8396431503143069,8551157389430600,8705883275718131,[⟨3,8860609162005662,154725886287531⟩]⟩))))else(if i<111 then(if i<109 then(if i<108 then(⟨7,107,8551870372286391,8708022224285504,8864174076284617,[⟨3,9020325928283730,156151851999113⟩]⟩)else(⟨7,108,8708735207141295,8866313024851990,9023890842562685,[⟨3,9181468660273380,157577817710695⟩]⟩))else(if i<110 then(⟨7,109,8867026007707781,9026029791130058,9185033574552335,[⟨3,9344037357974612,159003783422277⟩]⟩)else(⟨7,110,9026742773985849,9187172523119708,9347602272253567,[⟨3,9508032021387426,160429749133859⟩]⟩)))else(if i<113 then(if i<112 then(⟨7,111,9187885505975499,9349741220820940,9511596935666381,[⟨3,9673452650511822,161855714845441⟩]⟩)else(⟨7,112,9350454203676731,9513735884233754,9677017564790777,[⟨3,9840299245347800,163281680557023⟩]⟩))else(if i<114 then(⟨7,113,9514448867089545,9679156513358150,9843864159626755,[⟨3,10008571805895360,164707646268605⟩]⟩)else(if i<115 then(⟨7,114,9679869496213941,9846003108194128,10012136720174315,[⟨3,10178270332154502,166133611980187⟩]⟩)else(⟨7,115,9846716091049919,10014275668741688,10181835246433457,[⟨3,10349394824125226,167559577691769⟩]⟩))))))else(if i<124 then(if i<120 then(if i<118 then(if i<117 then(⟨7,116,10014988651597479,10183974195000830,10352959738404181,[⟨3,10521945281807532,168985543403351⟩]⟩)else(⟨7,117,10184687177856621,10355098686971554,10525510196086487,[⟨3,10695921705201420,170411509114933⟩]⟩))else(if i<119 then(⟨7,118,10355811669827345,10527649144653860,10699486619480375,[⟨3,10871324094306890,171837474826515⟩]⟩)else(⟨7,119,10528362127509651,10701625568047748,10874889008585845,[⟨3,11048152449123942,173263440538097⟩]⟩)))else(if i<122 then(if i<121 then(⟨7,120,10702338550903539,10877027957153218,11051717363402897,[⟨3,11226406769652576,174689406249679⟩]⟩)else(⟨7,121,10877740940009009,11053856311970270,11229971683931531,[⟨3,11406087055892792,176115371961261⟩]⟩))else(if i<123 then(⟨7,122,11054569294826061,11232110632498904,11409651970171747,[⟨3,11587193307844590,177541337672843⟩]⟩)else(⟨7,123,11232823615354695,11411790918739120,11590758222123545,[⟨3,11769725525507970,178967303384425⟩]⟩))))else(if i<128 then(if i<126 then(if i<125 then(⟨7,124,11412503901594911,11592897170690918,11773290439786925,[⟨3,11953683708882932,180393269096007⟩]⟩)else(⟨7,125,11593610153546709,11775429388354298,11957248623161887,[⟨3,12139067857969476,181819234807589⟩]⟩))else(if i<127 then(⟨7,126,11776142371210089,11959387571729260,12142632772248431,[⟨3,12325877972767602,183245200519171⟩]⟩)else(⟨7,127,11960100554585051,12144771720815804,12329442887046557,[⟨3,12514114053277310,184671166230753⟩]⟩)))else(if i<130 then(if i<129 then(⟨7,128,12145484703671595,12331581835613930,12517678967556265,[⟨3,12703776099498600,186097131942335⟩]⟩)else(⟨7,129,12332294818469721,12519817916123638,12707341013777555,[⟨3,12894864111431472,187523097653917⟩]⟩))else(if i<131 then(⟨7,130,12520530898979429,12709479962344928,12898429025710427,[⟨3,13087378089075926,188949063365499⟩]⟩)else(if i<132 then(⟨7,131,12710192945200719,12900567974277800,13090943003354881,[⟨3,13281318032431962,190375029077081⟩]⟩)else(⟨7,132,12901280957133591,13093081951922254,13284882946710917,[⟨3,13476683941499580,191800994788663⟩]⟩)))))))))else(defaultRow)
+
+def row8 : ℕ → BaseRow := fun i =>
+  if i<132 then(if i<66 then(if i<33 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(⟨8,0,23845867094126,27144430289018,37177557254292,[⟨3,47210684219566,10033126965274⟩]⟩)else(⟨8,1,27144430289018,38002197266580,48859964244142,[⟨3,59717731221704,10857766977562⟩]⟩))else(if i<3 then(⟨8,2,27350590816380,38208357793942,49066124771504,[⟨3,59923891749066,10857766977562⟩]⟩)else(⟨8,3,33613392779395,43724022423356,53834652067317,[⟨3,63945281711278,10110629643961⟩,⟨9,125276654141800,10857766977562⟩]⟩)))else(if i<6 then(if i<5 then(⟨8,4,44565857443773,56360157128568,68154456813363,[⟨3,79948756498158,11794299684795⟩]⟩)else(⟨8,5,57201992148985,70679961874614,84157931600243,[⟨3,97635901325872,13477969725629⟩]⟩))else(if i<7 then(⟨8,6,71521796895031,86683436661494,101845076427957,[⟨3,117006716194420,15161639766463⟩]⟩)else(⟨8,7,87525271681911,104370581489208,121215891296505,[⟨3,138061201103802,16845309807297⟩]⟩))))else(if i<12 then(if i<10 then(if i<9 then(⟨8,8,105212416509625,123741396357756,142270376205887,[⟨3,160799356054018,18528979848131⟩]⟩)else(⟨8,9,124583231378173,144795881267138,165008531156103,[⟨3,185221181045068,20212649888965⟩]⟩))else(if i<11 then(⟨8,10,145637716287555,167534036217354,189430356147153,[⟨3,211326676076952,21896319929799⟩]⟩)else(⟨8,11,168375871237771,191955861208404,215535851179037,[⟨3,239115841149670,23579989970633⟩]⟩)))else(if i<14 then(if i<13 then(⟨8,12,192797696228821,218061356240288,243325016251755,[⟨3,268588676263222,25263660011467⟩]⟩)else(⟨8,13,218903191260705,245850521313006,272797851365307,[⟨3,299745181417608,26947330052301⟩]⟩))else(if i<15 then(⟨8,14,246692356333423,275323356426558,303954356519693,[⟨3,332585356612828,28631000093135⟩]⟩)else(⟨8,15,276165191446975,306479861580944,336794531714913,[⟨3,367109201848882,30314670133969⟩]⟩)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(⟨8,16,307321696601361,339320036776164,371318376950967,[⟨3,403316717125770,31998340174803⟩]⟩)else(⟨8,17,340161871796581,373843882012218,407525892227855,[⟨3,441207902443492,33682010215637⟩]⟩))else(if i<19 then(⟨8,18,374685717032635,410051397289106,445417077545577,[⟨3,480782757802048,35365680256471⟩]⟩)else(⟨8,19,410893232309523,447942582606828,484991932904133,[⟨3,522041283201438,37049350297305⟩]⟩)))else(if i<22 then(if i<21 then(⟨8,20,448784417627245,487517437965384,526250458303523,[⟨3,564983478641662,38733020338139⟩]⟩)else(⟨8,21,488359272985801,528775963364774,569192653743747,[⟨3,609609344122720,40416690378973⟩]⟩))else(if i<23 then(⟨8,22,529617798385191,571718158804998,613818519224805,[⟨3,655918879644612,42100360419807⟩]⟩)else(⟨8,23,572559993825415,616344024286056,660128054746697,[⟨3,703912085207338,43784030460641⟩]⟩))))else(if i<28 then(if i<26 then(if i<25 then(⟨8,24,617185859306473,662653559807948,708121260309423,[⟨3,753588960810898,45467700501475⟩]⟩)else(⟨8,25,663495394828365,710646765370674,757798135912983,[⟨3,804949506455292,47151370542309⟩]⟩))else(if i<27 then(⟨8,26,711488600391091,760323640974234,809158681557377,[⟨3,857993722140520,48835040583143⟩]⟩)else(⟨8,27,761165475994651,811684186618628,862202897242605,[⟨3,912721607866582,50518710623977⟩]⟩)))else(if i<30 then(if i<29 then(⟨8,28,812526021639045,864728402303856,916930782968667,[⟨3,969133163633478,52202380664811⟩]⟩)else(⟨8,29,865570237324273,919456288029918,973342338735563,[⟨3,1027228389441208,53886050705645⟩]⟩))else(if i<31 then(⟨8,30,920298123050335,975867843796814,1031437564543293,[⟨3,1087007285289772,55569720746479⟩]⟩)else(if i<32 then(⟨8,31,976709678817231,1033963069604544,1091216460391857,[⟨3,1148469851179170,57253390787313⟩]⟩)else(⟨8,32,1034804904624961,1093741965453108,1152679026281255,[⟨3,1211616087109402,58937060828147⟩]⟩)))))))else(if i<49 then(if i<41 then(if i<37 then(if i<35 then(if i<34 then(⟨8,33,1094583800473525,1155204531342506,1215825262211487,[⟨3,1276445993080468,60620730868981⟩]⟩)else(⟨8,34,1156046366362923,1218350767272738,1280655168182553,[⟨3,1342959569092368,62304400909815⟩]⟩))else(if i<36 then(⟨8,35,1219192602293155,1283180673243804,1347168744194453,[⟨3,1411156815145102,63988070950649⟩]⟩)else(⟨8,36,1284022508264221,1349694249255704,1415365990247187,[⟨3,1481037731238670,65671740991483⟩]⟩)))else(if i<39 then(if i<38 then(⟨8,37,1350536084276121,1417891495308438,1485246906340755,[⟨3,1552602317373072,67355411032317⟩]⟩)else(⟨8,38,1418733330328855,1487772411402006,1556811492475157,[⟨3,1625850573548308,69039081073151⟩]⟩))else(if i<40 then(⟨8,39,1488614246422423,1559336997536408,1630059748650393,[⟨3,1700782499764378,70722751113985⟩]⟩)else(⟨8,40,1560178832556825,1632585253711644,1704991674866463,[⟨3,1777398096021282,72406421154819⟩]⟩))))else(if i<45 then(if i<43 then(if i<42 then(⟨8,41,1633427088732061,1707517179927714,1781607271123367,[⟨3,1855697362319020,74090091195653⟩]⟩)else(⟨8,42,1708359014948131,1784132776184618,1859906537421105,[⟨3,1935680298657592,75773761236487⟩]⟩))else(if i<44 then(⟨8,43,1784974611205035,1862432042482356,1939889473759677,[⟨3,2017346905036998,77457431277321⟩]⟩)else(⟨8,44,1863273877502773,1942414978820928,2021556080139083,[⟨3,2100697181457238,79141101318155⟩]⟩)))else(if i<47 then(if i<46 then(⟨8,45,1943256813841345,2024081585200334,2104906356559323,[⟨3,2185731127918312,80824771358989⟩]⟩)else(⟨8,46,2024923420220751,2107431861620574,2189940303020397,[⟨3,2272448744420220,82508441399823⟩]⟩))else(if i<48 then(⟨8,47,2108273696640991,2192465808081648,2276657919522305,[⟨3,2360850030962962,84192111440657⟩]⟩)else(⟨8,48,2193307643102065,2279183424583556,2365059206065047,[⟨3,2450934987546538,85875781481491⟩]⟩)))))else(if i<57 then(if i<53 then(if i<51 then(if i<50 then(⟨8,49,2280025259603973,2367584711126298,2455144162648623,[⟨3,2542703614170948,87559451522325⟩]⟩)else(⟨8,50,2368426546146715,2457669667709874,2546912789273033,[⟨3,2636155910836192,89243121563159⟩]⟩))else(if i<52 then(⟨8,51,2458511502730291,2549438294334284,2640365085938277,[⟨3,2731291877542270,90926791603993⟩]⟩)else(⟨8,52,2550280129354701,2642890590999528,2735501052644355,[⟨3,2828111514289182,92610461644827⟩]⟩)))else(if i<55 then(if i<54 then(⟨8,53,2643732426019945,2738026557705606,2832320689391267,[⟨3,2926614821076928,94294131685661⟩]⟩)else(⟨8,54,2738868392726023,2834846194452518,2930823996179013,[⟨3,3026801797905508,95977801726495⟩]⟩))else(if i<56 then(⟨8,55,2835688029472935,2933349501240264,3031010973007593,[⟨3,3128672444774922,97661471767329⟩]⟩)else(⟨8,56,2934191336260681,3033536478068844,3132881619877007,[⟨3,3232226761685170,99345141808163⟩]⟩))))else(if i<61 then(if i<59 then(if i<58 then(⟨8,57,3034378313089261,3135407124938258,3236435936787255,[⟨3,3337464748636252,101028811848997⟩]⟩)else(⟨8,58,3136248959958675,3238961441848506,3341673923738337,[⟨3,3444386405628168,102712481889831⟩]⟩))else(if i<60 then(⟨8,59,3239803276868923,3344199428799588,3448595580730253,[⟨3,3552991732660918,104396151930665⟩]⟩)else(⟨8,60,3345041263820005,3451121085791504,3557200907763003,[⟨3,3663280729734502,106079821971499⟩]⟩)))else(if i<63 then(if i<62 then(⟨8,61,3451962920811921,3559726412824254,3667489904836587,[⟨3,3775253396848920,107763492012333⟩]⟩)else(⟨8,62,3560568247844671,3670015409897838,3779462571951005,[⟨3,3888909734004172,109447162053167⟩]⟩))else(if i<64 then(⟨8,63,3670857244918255,3781988077012256,3893118909106257,[⟨3,4004249741200258,111130832094001⟩]⟩)else(if i<65 then(⟨8,64,3782829912032673,3895644414167508,4008458916302343,[⟨3,4121273418437178,112814502134835⟩]⟩)else(⟨8,65,3896486249187925,4010984421363594,4125482593539263,[⟨3,4239980765714932,114498172175669⟩]⟩))))))))else(if i<99 then(if i<82 then(if i<74 then(if i<70 then(if i<68 then(if i<67 then(⟨8,66,4011826256384011,4128008098600514,4244189940817017,[⟨3,4360371783033520,116181842216503⟩]⟩)else(⟨8,67,4128849933620931,4246715445878268,4364580958135605,[⟨3,4482446470392942,117865512257337⟩]⟩))else(if i<69 then(⟨8,68,4247557280898685,4367106463196856,4486655645495027,[⟨3,4606204827793198,119549182298171⟩]⟩)else(⟨8,69,4367948298217273,4489181150556278,4610414002895283,[⟨3,4731646855234288,121232852339005⟩]⟩)))else(if i<72 then(if i<71 then(⟨8,70,4490022985576695,4612939507956534,4735856030336373,[⟨3,4858772552716212,122916522379839⟩]⟩)else(⟨8,71,4613781342976951,4738381535397624,4862981727818297,[⟨3,4987581920238970,124600192420673⟩]⟩))else(if i<73 then(⟨8,72,4739223370418041,4865507232879548,4991791095341055,[⟨3,5118074957802562,126283862461507⟩]⟩)else(⟨8,73,4866349067899965,4994316600402306,5122284132904647,[⟨3,5250251665406988,127967532502341⟩]⟩))))else(if i<78 then(if i<76 then(if i<75 then(⟨8,74,4995158435422723,5124809637965898,5254460840509073,[⟨3,5384112043052248,129651202543175⟩]⟩)else(⟨8,75,5125651472986315,5256986345570324,5388321218154333,[⟨3,5519656090738342,131334872584009⟩]⟩))else(if i<77 then(⟨8,76,5257828180590741,5390846723215584,5523865265840427,[⟨3,5656883808465270,133018542624843⟩]⟩)else(⟨8,77,5391688558236001,5526390770901678,5661092983567355,[⟨3,5795795196233032,134702212665677⟩]⟩)))else(if i<80 then(if i<79 then(⟨8,78,5527232605922095,5663618488628606,5800004371335117,[⟨3,5936390254041628,136385882706511⟩]⟩)else(⟨8,79,5664460323649023,5802529876396368,5940599429143713,[⟨3,6078668981891058,138069552747345⟩]⟩))else(if i<81 then(⟨8,80,5803371711416785,5943124934204964,6082878156993143,[⟨3,6222631379781322,139753222788179⟩]⟩)else(⟨8,81,5943966769225381,6085403662054394,6226840554883407,[⟨3,6368277447712420,141436892829013⟩]⟩)))))else(if i<90 then(if i<86 then(if i<84 then(if i<83 then(⟨8,82,6086245497074811,6229366059944658,6372486622814505,[⟨3,6515607185684352,143120562869847⟩]⟩)else(⟨8,83,6230207894965075,6375012127875756,6519816360786437,[⟨3,6664620593697118,144804232910681⟩]⟩))else(if i<85 then(⟨8,84,6375853962896173,6522341865847688,6668829768799203,[⟨3,6815317671750718,146487902951515⟩]⟩)else(⟨8,85,6523183700868105,6671355273860454,6819526846852803,[⟨3,6967698419845152,148171572992349⟩]⟩)))else(if i<88 then(if i<87 then(⟨8,86,6672197108880871,6822052351914054,6971907594947237,[⟨3,7121762837980420,149855243033183⟩]⟩)else(⟨8,87,6822894186934471,6974433100008488,7125972013082505,[⟨3,7277510926156522,151538913074017⟩]⟩))else(if i<89 then(⟨8,88,6975274935028905,7128497518143756,7281720101258607,[⟨3,7434942684373458,153222583114851⟩]⟩)else(⟨8,89,7129339353164173,7284245606319858,7439151859475543,[⟨3,7594058112631228,154906253155685⟩]⟩))))else(if i<94 then(if i<92 then(if i<91 then(⟨8,90,7285087441340275,7441677364536794,7598267287733313,[⟨3,7754857210929832,156589923196519⟩]⟩)else(⟨8,91,7442519199557211,7600792792794564,7759066386031917,[⟨3,7917339979269270,158273593237353⟩]⟩))else(if i<93 then(⟨8,92,7601634627814981,7761591891093168,7921549154371355,[⟨3,8081506417649542,159957263278187⟩]⟩)else(⟨8,93,7762433726113585,7924074659432606,8085715592751627,[⟨3,8247356526070648,161640933319021⟩]⟩)))else(if i<96 then(if i<95 then(⟨8,94,7924916494453023,8088241097812878,8251565701172733,[⟨3,8414890304532588,163324603359855⟩]⟩)else(⟨8,95,8089082932833295,8254091206233984,8419099479634673,[⟨3,8584107753035362,165008273400689⟩]⟩))else(if i<97 then(⟨8,96,8254933041254401,8421624984695924,8588316928137447,[⟨3,8755008871578970,166691943441523⟩]⟩)else(if i<98 then(⟨8,97,8422466819716341,8590842433198698,8759218046681055,[⟨3,8927593660163412,168375613482357⟩]⟩)else(⟨8,98,8591684268219115,8761743551742306,8931802835265497,[⟨3,9101862118788688,170059283523191⟩]⟩)))))))else(if i<115 then(if i<107 then(if i<103 then(if i<101 then(if i<100 then(⟨8,99,8762585386762723,8934328340326748,9106071293890773,[⟨3,9277814247454798,171742953564025⟩]⟩)else(⟨8,100,8935170175347165,9108596798952024,9282023422556883,[⟨3,9455450046161742,173426623604859⟩]⟩))else(if i<102 then(⟨8,101,9109438633972441,9284548927618134,9459659221263827,[⟨3,9634769514909520,175110293645693⟩]⟩)else(⟨8,102,9285390762638551,9462184726325078,9638978690011605,[⟨3,9815772653698132,176793963686527⟩]⟩)))else(if i<105 then(if i<104 then(⟨8,103,9463026561345495,9641504195072856,9819981828800217,[⟨3,9998459462527578,178477633727361⟩]⟩)else(⟨8,104,9642346030093273,9822507333861468,10002668637629663,[⟨3,10182829941397858,180161303768195⟩]⟩))else(if i<106 then(⟨8,105,9823349168881885,10005194142690914,10187039116499943,[⟨3,10368884090308972,181844973809029⟩]⟩)else(⟨8,106,10006035977711331,10189564621561194,10373093265411057,[⟨3,10556621909260920,183528643849863⟩]⟩))))else(if i<111 then(if i<109 then(if i<108 then(⟨8,107,10190406456581611,10375618770472308,10560831084363005,[⟨3,10746043398253702,185212313890697⟩]⟩)else(⟨8,108,10376460605492725,10563356589424256,10750252573355787,[⟨3,10937148557287318,186895983931531⟩]⟩))else(if i<110 then(⟨8,109,10564198424444673,10752778078417038,10941357732389403,[⟨3,11129937386361768,188579653972365⟩]⟩)else(⟨8,110,10753619913437455,10943883237450654,11134146561463853,[⟨3,11324409885477052,190263324013199⟩]⟩)))else(if i<113 then(if i<112 then(⟨8,111,10944725072471071,11136672066525104,11328619060579137,[⟨3,11520566054633170,191946994054033⟩]⟩)else(⟨8,112,11137513901545521,11331144565640388,11524775229735255,[⟨3,11718405893830122,193630664094867⟩]⟩))else(if i<114 then(⟨8,113,11331986400660805,11527300734796506,11722615068932207,[⟨3,11917929403067908,195314334135701⟩]⟩)else(⟨8,114,11528142569816923,11725140573993458,11922138578169993,[⟨3,12119136582346528,196998004176535⟩]⟩)))))else(if i<123 then(if i<119 then(if i<117 then(if i<116 then(⟨8,115,11725982409013875,11924664083231244,12123345757448613,[⟨3,12322027431665982,198681674217369⟩]⟩)else(⟨8,116,11925505918251661,12125871262509864,12326236606768067,[⟨3,12526601951026270,200365344258203⟩]⟩))else(if i<118 then(⟨8,117,12126713097530281,12328762111829318,12530811126128355,[⟨3,12732860140427392,202049014299037⟩]⟩)else(⟨8,118,12329603946849735,12533336631189606,12737069315529477,[⟨3,12940801999869348,203732684339871⟩]⟩)))else(if i<121 then(if i<120 then(⟨8,119,12534178466210023,12739594820590728,12945011174971433,[⟨3,13150427529352138,205416354380705⟩]⟩)else(⟨8,120,12740436655611145,12947536680032684,13154636704454223,[⟨3,13361736728875762,207100024421539⟩]⟩))else(if i<122 then(⟨8,121,12948378515053101,13157162209515474,13365945903977847,[⟨3,13574729598440220,208783694462373⟩]⟩)else(⟨8,122,13158004044535891,13368471409039098,13578938773542305,[⟨3,13789406138045512,210467364503207⟩]⟩))))else(if i<127 then(if i<125 then(if i<124 then(⟨8,123,13369313244059515,13581464278603556,13793615313147597,[⟨3,14005766347691638,212151034544041⟩]⟩)else(⟨8,124,13582306113623973,13796140818208848,14009975522793723,[⟨3,14223810227378598,213834704584875⟩]⟩))else(if i<126 then(⟨8,125,13796982653229265,14012501027854974,14228019402480683,[⟨3,14443537777106392,215518374625709⟩]⟩)else(⟨8,126,14013342862875391,14230544907541934,14447746952208477,[⟨3,14664948996875020,217202044666543⟩]⟩)))else(if i<129 then(if i<128 then(⟨8,127,14231386742562351,14450272457269728,14669158171977105,[⟨3,14888043886684482,218885714707377⟩]⟩)else(⟨8,128,14451114292290145,14671683677038356,14892253061786567,[⟨3,15112822446534778,220569384748211⟩]⟩))else(if i<130 then(⟨8,129,14672525512058773,14894778566847818,15117031621636863,[⟨3,15339284676425908,222253054789045⟩]⟩)else(if i<131 then(⟨8,130,14895620401868235,15119557126698114,15343493851527993,[⟨3,15567430576357872,223936724829879⟩]⟩)else(⟨8,131,15120398961718531,15346019356589244,15571639751459957,[⟨3,15797260146330670,225620394870713⟩]⟩)))))))))else(defaultRow)
+
+def row9 : ℕ → BaseRow := fun i =>
+  if i<131 then(if i<65 then(if i<32 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(⟨9,0,35459555131533,39788918866075,52914446926009,[⟨3,66039974985943,13125528059934⟩]⟩)else(⟨9,1,39788918866075,53876526940345,67964135014615,[⟨3,82051743088885,14087608074270⟩]⟩))else(if i<3 then(⟨9,2,39995079393437,54082687467707,68170295541977,[⟨3,82257903616247,14087608074270⟩]⟩)else(⟨9,3,45914516758697,58542062381286,71169608003875,[⟨3,83797153626464,12627545622589⟩,⟨4,96551672217879,14087608074270⟩]⟩)))else(if i<6 then(if i<5 then(⟨9,4,59512749566329,74081669559004,88650589551679,[⟨3,103219509544354,14568919992675⟩]⟩)else(⟨9,5,75052356744047,91562651106808,108072945469569,[⟨3,124583239832330,16510294362761⟩]⟩))else(if i<7 then(⟨9,6,92533338291851,110985007024698,129436675757545,[⟨3,147888344490392,18451668732847⟩]⟩)else(⟨9,7,111955694209741,132348737312674,152741780415607,[⟨3,173134823518540,20393043102933⟩]⟩))))else(if i<12 then(if i<10 then(if i<9 then(⟨9,8,133319424497717,155653841970736,177988259443755,[⟨3,200322676916774,22334417473019⟩]⟩)else(⟨9,9,156624529155779,180900320998884,205176112841989,[⟨3,229451904685094,24275791843105⟩]⟩))else(if i<11 then(⟨9,10,181871008183927,208088174397118,234305340610309,[⟨3,260522506823500,26217166213191⟩]⟩)else(⟨9,11,209058861582161,237217402165438,265375942748715,[⟨3,293534483331992,28158540583277⟩]⟩)))else(if i<14 then(if i<13 then(⟨9,12,238188089350481,268288004303844,298387919257207,[⟨3,328487834210570,30099914953363⟩]⟩)else(⟨9,13,269258691488887,301299980812336,333341270135785,[⟨3,365382559459234,32041289323449⟩]⟩))else(if i<15 then(⟨9,14,302270667997379,336253331690914,370235995384449,[⟨3,404218659077984,33982663693535⟩]⟩)else(⟨9,15,337224018875957,373148056939578,409072095003199,[⟨3,444996133066820,35924038063621⟩]⟩)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(⟨9,16,374118744124621,411984156558328,449849568992035,[⟨3,487714981425742,37865412433707⟩]⟩)else(⟨9,17,412954843743371,452761630547164,492568417350957,[⟨3,532375204154750,39806786803793⟩]⟩))else(if i<19 then(⟨9,18,453732317732207,495480478906086,537228640079965,[⟨3,578976801253844,41748161173879⟩]⟩)else(⟨9,19,496451166091129,540140701635094,583830237179059,[⟨3,627519772723024,43689535543965⟩]⟩)))else(if i<22 then(if i<21 then(⟨9,20,541111388820137,586742298734188,632373208648239,[⟨3,678004118562290,45630909914051⟩]⟩)else(⟨9,21,587712985919231,635285270203368,682857554487505,[⟨3,730429838771642,47572284284137⟩]⟩))else(if i<23 then(⟨9,22,636255957388411,685769616042634,735283274696857,[⟨3,784796933351080,49513658654223⟩]⟩)else(⟨9,23,686740303227677,738195336251986,789650369276295,[⟨3,841105402300604,51455033024309⟩]⟩))))else(if i<28 then(if i<26 then(if i<25 then(⟨9,24,739166023437029,792562430831424,845958838225819,[⟨3,899355245620214,53396407394395⟩]⟩)else(⟨9,25,793533118016467,848870899780948,904208681545429,[⟨3,959546463309910,55337781764481⟩]⟩))else(if i<27 then(⟨9,26,849841586965991,907120743100558,964399899235125,[⟨3,1021679055369692,57279156134567⟩]⟩)else(⟨9,27,908091430285601,967311960790254,1026532491294907,[⟨3,1085753021799560,59220530504653⟩]⟩)))else(if i<30 then(if i<29 then(⟨9,28,968282647975297,1029444552850036,1090606457724775,[⟨3,1151768362599514,61161904874739⟩]⟩)else(⟨9,29,1030415240035079,1093518519279904,1156621798524729,[⟨3,1219725077769554,63103279244825⟩]⟩))else(if i<31 then(⟨9,30,1094489206464947,1159533860079858,1224578513694769,[⟨3,1289623167309680,65044653614911⟩]⟩)else(⟨9,31,1160504547264901,1227490575249898,1294476603234895,[⟨3,1361462631219892,66986027984997⟩]⟩))))))else(if i<48 then(if i<40 then(if i<36 then(if i<34 then(if i<33 then(⟨9,32,1228461262434941,1297388664790024,1366316067145107,[⟨3,1435243469500190,68927402355083⟩]⟩)else(⟨9,33,1298359351975067,1369228128700236,1440096905425405,[⟨3,1510965682150574,70868776725169⟩]⟩))else(if i<35 then(⟨9,34,1370198815885279,1443008966980534,1515819118075789,[⟨3,1588629269171044,72810151095255⟩]⟩)else(⟨9,35,1443979654165577,1518731179630918,1593482705096259,[⟨3,1668234230561600,74751525465341⟩]⟩)))else(if i<38 then(if i<37 then(⟨9,36,1519701866815961,1596394766651388,1673087666486815,[⟨3,1749780566322242,76692899835427⟩]⟩)else(⟨9,37,1597365453836431,1675999728041944,1754634002247457,[⟨3,1833268276452970,78634274205513⟩]⟩))else(if i<39 then(⟨9,38,1676970415226987,1757546063802586,1838121712378185,[⟨3,1918697360953784,80575648575599⟩]⟩)else(⟨9,39,1758516750987629,1841033773933314,1923550796878999,[⟨3,2006067819824684,82517022945685⟩]⟩))))else(if i<44 then(if i<42 then(if i<41 then(⟨9,40,1842004461118357,1926462858434128,2010921255749899,[⟨3,2095379653065670,84458397315771⟩]⟩)else(⟨9,41,1927433545619171,2013833317305028,2100233088990885,[⟨3,2186632860676742,86399771685857⟩]⟩))else(if i<43 then(⟨9,42,2014804004490071,2103145150546014,2191486296601957,[⟨3,2279827442657900,88341146055943⟩]⟩)else(⟨9,43,2104115837731057,2194398358157086,2284680878583115,[⟨3,2374963399009144,90282520426029⟩]⟩)))else(if i<46 then(if i<45 then(⟨9,44,2195369045342129,2287592940138244,2379816834934359,[⟨3,2472040729730474,92223894796115⟩]⟩)else(⟨9,45,2288563627323287,2382728896489488,2476894165655689,[⟨3,2571059434821890,94165269166201⟩]⟩))else(if i<47 then(⟨9,46,2383699583674531,2479806227210818,2575912870747105,[⟨3,2672019514283392,96106643536287⟩]⟩)else(⟨9,47,2480776914395861,2578824932302234,2676872950208607,[⟨3,2774920968114980,98048017906373⟩]⟩)))))else(if i<56 then(if i<52 then(if i<50 then(if i<49 then(⟨9,48,2579795619487277,2679785011763736,2779774404040195,[⟨3,2879763796316654,99989392276459⟩]⟩)else(⟨9,49,2680755698948779,2782686465595324,2884617232241869,[⟨3,2986547998888414,101930766646545⟩]⟩))else(if i<51 then(⟨9,50,2783657152780367,2887529293796998,2991401434813629,[⟨3,3095273575830260,103872141016631⟩]⟩)else(⟨9,51,2888499980982041,2994313496368758,3100127011755475,[⟨3,3205940527142192,105813515386717⟩]⟩)))else(if i<54 then(if i<53 then(⟨9,52,2995284183553801,3103039073310604,3210793963067407,[⟨3,3318548852824210,107754889756803⟩]⟩)else(⟨9,53,3104009760495647,3213706024622536,3323402288749425,[⟨3,3433098552876314,109696264126889⟩]⟩))else(if i<55 then(⟨9,54,3214676711807579,3326314350304554,3437951988801529,[⟨3,3549589627298504,111637638496975⟩]⟩)else(⟨9,55,3327285037489597,3440864050356658,3554443063223719,[⟨3,3668022076090780,113579012867061⟩]⟩))))else(if i<60 then(if i<58 then(if i<57 then(⟨9,56,3441834737541701,3557355124778848,3672875512015995,[⟨3,3788395899253142,115520387237147⟩]⟩)else(⟨9,57,3558325811963891,3675787573571124,3793249335178357,[⟨3,3910711096785590,117461761607233⟩]⟩))else(if i<59 then(⟨9,58,3676758260756167,3796161396733486,3915564532710805,[⟨3,4034967668688124,119403135977319⟩]⟩)else(⟨9,59,3797132083918529,3918476594265934,4039821104613339,[⟨3,4161165614960744,121344510347405⟩]⟩)))else(if i<62 then(if i<61 then(⟨9,60,3919447281450977,4042733166168468,4166019050885959,[⟨3,4289304935603450,123285884717491⟩]⟩)else(⟨9,61,4043703853353511,4168931112441088,4294158371528665,[⟨3,4419385630616242,125227259087577⟩]⟩))else(if i<63 then(⟨9,62,4169901799626131,4297070433083794,4424239066541457,[⟨3,4551407699999120,127168633457663⟩]⟩)else(if i<64 then(⟨9,63,4298041120268837,4427151128096586,4556261135924335,[⟨3,4685371143752084,129110007827749⟩]⟩)else(⟨9,64,4428121815281629,4559173197479464,4690224579677299,[⟨3,4821275961875134,131051382197835⟩]⟩))))))))else(if i<98 then(if i<81 then(if i<73 then(if i<69 then(if i<67 then(if i<66 then(⟨9,65,4560143884664507,4693136641232428,4826129397800349,[⟨3,4959122154368270,132992756567921⟩]⟩)else(⟨9,66,4694107328417471,4829041459355478,4963975590293485,[⟨3,5098909721231492,134934130938007⟩]⟩))else(if i<68 then(⟨9,67,4830012146540521,4966887651848614,5103763157156707,[⟨3,5240638662464800,136875505308093⟩]⟩)else(⟨9,68,4967858339033657,5106675218711836,5245492098390015,[⟨3,5384308978068194,138816879678179⟩]⟩)))else(if i<71 then(if i<70 then(⟨9,69,5107645905896879,5248404159945144,5389162413993409,[⟨3,5529920668041674,140758254048265⟩]⟩)else(⟨9,70,5249374847130187,5392074475548538,5534774103966889,[⟨3,5677473732385240,142699628418351⟩]⟩))else(if i<72 then(⟨9,71,5393045162733581,5537686165522018,5682327168310455,[⟨3,5826968171098892,144641002788437⟩]⟩)else(⟨9,72,5538656852707061,5685239229865584,5831821607024107,[⟨3,5978403984182630,146582377158523⟩]⟩))))else(if i<77 then(if i<75 then(if i<74 then(⟨9,73,5686209917050627,5834733668579236,5983257420107845,[⟨3,6131781171636454,148523751528609⟩]⟩)else(⟨9,74,5835704355764279,5986169481662974,6136634607561669,[⟨3,6287099733460364,150465125898695⟩]⟩))else(if i<76 then(⟨9,75,5987140168848017,6139546669116798,6291953169385579,[⟨3,6444359669654360,152406500268781⟩]⟩)else(⟨9,76,6140517356301841,6294865230940708,6449213105579575,[⟨3,6603560980218442,154347874638867⟩]⟩)))else(if i<79 then(if i<78 then(⟨9,77,6295835918125751,6452125167134704,6608414416143657,[⟨3,6764703665152610,156289249008953⟩]⟩)else(⟨9,78,6453095854319747,6611326477698786,6769557101077825,[⟨3,6927787724456864,158230623379039⟩]⟩))else(if i<80 then(⟨9,79,6612297164883829,6772469162632954,6932641160382079,[⟨3,7092813158131204,160171997749125⟩]⟩)else(⟨9,80,6773439849817997,6935553221937208,7097666594056419,[⟨3,7259779966175630,162113372119211⟩]⟩)))))else(if i<89 then(if i<85 then(if i<83 then(if i<82 then(⟨9,81,6936523909122251,7100578655611548,7264633402100845,[⟨3,7428688148590142,164054746489297⟩]⟩)else(⟨9,82,7101549342796591,7267545463655974,7433541584515357,[⟨3,7599537705374740,165996120859383⟩]⟩))else(if i<84 then(⟨9,83,7268516150841017,7436453646070486,7604391141299955,[⟨3,7772328636529424,167937495229469⟩]⟩)else(⟨9,84,7437424333255529,7607303202855084,7777182072454639,[⟨3,7947060942054194,169878869599555⟩]⟩)))else(if i<87 then(if i<86 then(⟨9,85,7608273890040127,7780094134009768,7951914377979409,[⟨3,8123734621949050,171820243969641⟩]⟩)else(⟨9,86,7781064821194811,7954826439534538,8128588057874265,[⟨3,8302349676213992,173761618339727⟩]⟩))else(if i<88 then(⟨9,87,7955797126719581,8131500119429394,8307203112139207,[⟨3,8482906104849020,175702992709813⟩]⟩)else(⟨9,88,8132470806614437,8310115173694336,8487759540774235,[⟨3,8665403907854134,177644367079899⟩]⟩))))else(if i<93 then(if i<91 then(if i<90 then(⟨9,89,8311085860879379,8490671602329364,8670257343779349,[⟨3,8849843085229334,179585741449985⟩]⟩)else(⟨9,90,8491642289514407,8673169405334478,8854696521154549,[⟨3,9036223636974620,181527115820071⟩]⟩))else(if i<92 then(⟨9,91,8674140092519521,8857608582709678,9041077072899835,[⟨3,9224545563089992,183468490190157⟩]⟩)else(⟨9,92,8858579269894721,9043989134454964,9229398999015207,[⟨3,9414808863575450,185409864560243⟩]⟩)))else(if i<95 then(if i<94 then(⟨9,93,9044959821640007,9232311060570336,9419662299500665,[⟨3,9607013538430994,187351238930329⟩]⟩)else(⟨9,94,9233281747755379,9422574361055794,9611866974356209,[⟨3,9801159587656624,189292613300415⟩]⟩))else(if i<96 then(⟨9,95,9423545048240837,9614779035911338,9806013023581839,[⟨3,9997247011252340,191233987670501⟩]⟩)else(if i<97 then(⟨9,96,9615749723096381,9808925085136968,10002100447177555,[⟨3,10195275809218142,193175362040587⟩]⟩)else(⟨9,97,9809895772322011,10005012508732684,10200129245143357,[⟨3,10395245981554030,195116736410673⟩]⟩)))))))else(if i<114 then(if i<106 then(if i<102 then(if i<100 then(if i<99 then(⟨9,98,10005983195917727,10203041306698486,10400099417479245,[⟨3,10597157528260004,197058110780759⟩]⟩)else(⟨9,99,10204011993883529,10403011479034374,10602010964185219,[⟨3,10801010449336064,198999485150845⟩]⟩))else(if i<101 then(⟨9,100,10403982166219417,10604923025740348,10805863885261279,[⟨3,11006804744782210,200940859520931⟩]⟩)else(⟨9,101,10605893712925391,10808775946816408,11011658180707425,[⟨3,11214540414598442,202882233891017⟩]⟩)))else(if i<104 then(if i<103 then(⟨9,102,10809746634001451,11014570242262554,11219393850523657,[⟨3,11424217458784760,204823608261103⟩]⟩)else(⟨9,103,11015540929447597,11222305912078786,11429070894709975,[⟨3,11635835877341164,206764982631189⟩]⟩))else(if i<105 then(⟨9,104,11223276599263829,11431982956265104,11640689313266379,[⟨3,11849395670267654,208706357001275⟩]⟩)else(⟨9,105,11432953643450147,11643601374821508,11854249106192869,[⟨3,12064896837564230,210647731371361⟩]⟩))))else(if i<110 then(if i<108 then(if i<107 then(⟨9,106,11644572062006551,11857161167747998,12069750273489445,[⟨3,12282339379230892,212589105741447⟩]⟩)else(⟨9,107,11858131854933041,12072662335044574,12287192815156107,[⟨3,12501723295267640,214530480111533⟩]⟩))else(if i<109 then(⟨9,108,12073633022229617,12290104876711236,12506576731192855,[⟨3,12723048585674474,216471854481619⟩]⟩)else(⟨9,109,12291075563896279,12509488792747984,12727902021599689,[⟨3,12946315250451394,218413228851705⟩]⟩)))else(if i<112 then(if i<111 then(⟨9,110,12510459479933027,12730814083154818,12951168686376609,[⟨3,13171523289598400,220354603221791⟩]⟩)else(⟨9,111,12731784770339861,12954080747931738,13176376725523615,[⟨3,13398672703115492,222295977591877⟩]⟩))else(if i<113 then(⟨9,112,12955051435116781,13179288787078744,13403526139040707,[⟨3,13627763491002670,224237351961963⟩]⟩)else(⟨9,113,13180259474263787,13406438200595836,13632616926927885,[⟨3,13858795653259934,226178726332049⟩]⟩)))))else(if i<122 then(if i<118 then(if i<116 then(if i<115 then(⟨9,114,13407408887780879,13635528988483014,13863649089185149,[⟨3,14091769189887284,228120100702135⟩]⟩)else(⟨9,115,13636499675668057,13866561150740278,14096622625812499,[⟨3,14326684100884720,230061475072221⟩]⟩))else(if i<117 then(⟨9,116,13867531837925321,14099534687367628,14331537536809935,[⟨3,14563540386252242,232002849442307⟩]⟩)else(⟨9,117,14100505374552671,14334449598365064,14568393822177457,[⟨3,14802338045989850,233944223812393⟩]⟩)))else(if i<120 then(if i<119 then(⟨9,118,14335420285550107,14571305883732586,14807191481915065,[⟨3,15043077080097544,235885598182479⟩]⟩)else(⟨9,119,14572276570917629,14810103543470194,15047930516022759,[⟨3,15285757488575324,237826972552565⟩]⟩))else(if i<121 then(⟨9,120,14811074230655237,15050842577577888,15290610924500539,[⟨3,15530379271423190,239768346922651⟩]⟩)else(⟨9,121,15051813264762931,15293522986055668,15535232707348405,[⟨3,15776942428641142,241709721292737⟩]⟩))))else(if i<126 then(if i<124 then(if i<123 then(⟨9,122,15294493673240711,15538144768903534,15781795864566357,[⟨3,16025446960229180,243651095662823⟩]⟩)else(⟨9,123,15539115456088577,15784707926121486,16030300396154395,[⟨3,16275892866187304,245592470032909⟩]⟩))else(if i<125 then(⟨9,124,15785678613306529,16033212457709524,16280746302112519,[⟨3,16528280146515514,247533844402995⟩]⟩)else(⟨9,125,16034183144894567,16283658363667648,16533133582440729,[⟨3,16782608801213810,249475218773081⟩]⟩)))else(if i<128 then(if i<127 then(⟨9,126,16284629050852691,16536045643995858,16787462237139025,[⟨3,17038878830282192,251416593143167⟩]⟩)else(⟨9,127,16537016331180901,16790374298694154,17043732266207407,[⟨3,17297090233720660,253357967513253⟩]⟩))else(if i<129 then(⟨9,128,16791344985879197,17046644327762536,17301943669645875,[⟨3,17557243011529214,255299341883339⟩]⟩)else(if i<130 then(⟨9,129,17047615014947579,17304855731201004,17562096447454429,[⟨3,17819337163707854,257240716253425⟩]⟩)else(⟨9,130,17305826418386047,17565008509009558,17824190599633069,[⟨3,18083372690256580,259182090623511⟩]⟩)))))))))else(defaultRow)
+
+def row10 : ℕ → BaseRow := fun i =>
+  if i<130 then(if i<65 then(if i<32 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(⟨10,0,50371804266672,55869408542912,72499657703650,[⟨3,89129906864388,16630249160738⟩]⟩)else(⟨10,1,55869408542912,73599177720034,91328946897156,[⟨3,109058716074278,17729769177122⟩]⟩))else(if i<3 then(⟨10,2,56075569070274,73805338247396,91535107424518,[⟨3,109264876601640,17729769177122⟩]⟩)else(⟨10,3,60861408881253,76263574811722,91741267951880,[⟨3,109471037129002,17729769177122⟩]⟩)))else(if i<6 then(if i<5 then(⟨10,4,77363114161391,94964358791198,112565603421005,[⟨3,130166848050812,17601244629807⟩,⟨157,2840817571468706,17729769177122⟩]⟩)else(⟨10,5,96063898140867,115864221470012,135664544799157,[⟨3,155464868128302,19800323329145⟩]⟩))else(if i<7 then(⟨10,6,116963760819681,138963162848164,160962564876647,[⟨3,182961966905130,21999402028483⟩]⟩)else(⟨10,7,140062702197833,164261182925654,188459663653475,[⟨3,212658144381296,24198480727821⟩]⟩))))else(if i<12 then(if i<10 then(if i<9 then(⟨10,8,165360722275323,191758281702482,218155841129641,[⟨3,244553400556800,26397559427159⟩]⟩)else(⟨10,9,192857821052151,221454459178648,250051097305145,[⟨3,278647735431642,28596638126497⟩]⟩))else(if i<11 then(⟨10,10,222553998528317,253349715354152,284145432179987,[⟨3,314941149005822,30795716825835⟩]⟩)else(⟨10,11,254449254703821,287444050228994,320438845754167,[⟨3,353433641279340,32994795525173⟩]⟩)))else(if i<14 then(if i<13 then(⟨10,12,288543589578663,323737463803174,358931338027685,[⟨3,394125212252196,35193874224511⟩]⟩)else(⟨10,13,324837003152843,362229956076692,399622909000541,[⟨3,437015861924390,37392952923849⟩]⟩))else(if i<15 then(⟨10,14,363329495426361,402921527049548,442513558672735,[⟨3,482105590295922,39592031623187⟩]⟩)else(⟨10,15,404021066399217,445812176721742,487603287044267,[⟨3,529394397366792,41791110322525⟩]⟩)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(⟨10,16,446911716071411,490901905093274,534892094115137,[⟨3,578882283137000,43990189021863⟩]⟩)else(⟨10,17,492001444442943,538190712164144,584379979885345,[⟨3,630569247606546,46189267721201⟩]⟩))else(if i<19 then(⟨10,18,539290251513813,587678597934352,636066944354891,[⟨3,684455290775430,48388346420539⟩]⟩)else(⟨10,19,588778137284021,639365562403898,689952987523775,[⟨3,740540412643652,50587425119877⟩]⟩)))else(if i<22 then(if i<21 then(⟨10,20,640465101753567,693251605572782,746038109391997,[⟨3,798824613211212,52786503819215⟩]⟩)else(⟨10,21,694351144922451,749336727441004,804322309959557,[⟨3,859307892478110,54985582518553⟩]⟩))else(if i<23 then(⟨10,22,750436266790673,807620928008564,864805589226455,[⟨3,921990250444346,57184661217891⟩]⟩)else(⟨10,23,808720467358233,868104207275462,927487947192691,[⟨3,986871687109920,59383739917229⟩]⟩))))else(if i<28 then(if i<26 then(if i<25 then(⟨10,24,869203746625131,930786565241698,992369383858265,[⟨3,1053952202474832,61582818616567⟩]⟩)else(⟨10,25,931886104591367,995668001907272,1059449899223177,[⟨3,1123231796539082,63781897315905⟩]⟩))else(if i<27 then(⟨10,26,996767541256941,1062748517272184,1128729493287427,[⟨3,1194710469302670,65980976015243⟩]⟩)else(⟨10,27,1063848056621853,1132028111336434,1200208166051015,[⟨3,1268388220765596,68180054714581⟩]⟩)))else(if i<30 then(if i<29 then(⟨10,28,1133127650686103,1203506784100022,1273885917513941,[⟨3,1344265050927860,70379133413919⟩]⟩)else(⟨10,29,1204606323449691,1277184535562948,1349762747676205,[⟨3,1422340959789462,72578212113257⟩]⟩))else(if i<31 then(⟨10,30,1278284074912617,1353061365725212,1427838656537807,[⟨3,1502615947350402,74777290812595⟩]⟩)else(⟨10,31,1354160905074881,1431137274586814,1508113644098747,[⟨3,1585090013610680,76976369511933⟩]⟩))))))else(if i<48 then(if i<40 then(if i<36 then(if i<34 then(if i<33 then(⟨10,32,1432236813936483,1511412262147754,1590587710359025,[⟨3,1669763158570296,79175448211271⟩]⟩)else(⟨10,33,1512511801497423,1593886328408032,1675260855318641,[⟨3,1756635382229250,81374526910609⟩]⟩))else(if i<35 then(⟨10,34,1594985867757701,1678559473367648,1762133078977595,[⟨3,1845706684587542,83573605609947⟩]⟩)else(⟨10,35,1679659012717317,1765431697026602,1851204381335887,[⟨3,1936977065645172,85772684309285⟩]⟩)))else(if i<38 then(if i<37 then(⟨10,36,1766531236376271,1854502999384894,1942474762393517,[⟨3,2030446525402140,87971763008623⟩]⟩)else(⟨10,37,1855602538734563,1945773380442524,2035944222150485,[⟨3,2126115063858446,90170841707961⟩]⟩))else(if i<39 then(⟨10,38,1946872919792193,2039242840199492,2131612760606791,[⟨3,2223982681014090,92369920407299⟩]⟩)else(⟨10,39,2040342379549161,2134911378655798,2229480377762435,[⟨3,2324049376869072,94568999106637⟩]⟩))))else(if i<44 then(if i<42 then(if i<41 then(⟨10,40,2136010918005467,2232778995811442,2329547073617417,[⟨3,2426315151423392,96768077805975⟩]⟩)else(⟨10,41,2233878535161111,2332845691666424,2431812848171737,[⟨3,2530780004677050,98967156505313⟩]⟩))else(if i<43 then(⟨10,42,2333945231016093,2435111466220744,2536277701425395,[⟨3,2637443936630046,101166235204651⟩]⟩)else(⟨10,43,2436211005570413,2539576319474402,2642941633378391,[⟨3,2746306947282380,103365313903989⟩]⟩)))else(if i<46 then(if i<45 then(⟨10,44,2540675858824071,2646240251427398,2751804644030725,[⟨3,2857369036634052,105564392603327⟩]⟩)else(⟨10,45,2647339790777067,2755103262079732,2862866733382397,[⟨3,2970630204685062,107763471302665⟩]⟩))else(if i<47 then(⟨10,46,2756202801429401,2866165351431404,2976127901433407,[⟨3,3086090451435410,109962550002003⟩]⟩)else(⟨10,47,2867264890781073,2979426519482414,3091588148183755,[⟨3,3203749776885096,112161628701341⟩]⟩)))))else(if i<56 then(if i<52 then(if i<50 then(if i<49 then(⟨10,48,2980526058832083,3094886766232762,3209247473633441,[⟨3,3323608181034120,114360707400679⟩]⟩)else(⟨10,49,3095986305582431,3212546091682448,3329105877782465,[⟨3,3445665663882482,116559786100017⟩]⟩))else(if i<51 then(⟨10,50,3213645631032117,3332404495831472,3451163360630827,[⟨3,3569922225430182,118758864799355⟩]⟩)else(⟨10,51,3333504035181141,3454461978679834,3575419922178527,[⟨3,3696377865677220,120957943498693⟩]⟩)))else(if i<54 then(if i<53 then(⟨10,52,3455561518029503,3578718540227534,3701875562425565,[⟨3,3825032584623596,123157022198031⟩]⟩)else(⟨10,53,3579818079577203,3705174180474572,3830530281371941,[⟨3,3955886382269310,125356100897369⟩]⟩))else(if i<55 then(⟨10,54,3706273719824241,3833828899420948,3961384079017655,[⟨3,4088939258614362,127555179596707⟩]⟩)else(⟨10,55,3834928438770617,3964682697066662,4094436955362707,[⟨3,4224191213658752,129754258296045⟩]⟩))))else(if i<60 then(if i<58 then(if i<57 then(⟨10,56,3965782236416331,4097735573411714,4229688910407097,[⟨3,4361642247402480,131953336995383⟩]⟩)else(⟨10,57,4098835112761383,4232987528456104,4367139944150825,[⟨3,4501292359845546,134152415694721⟩]⟩))else(if i<59 then(⟨10,58,4234087067805773,4370438562199832,4506790056593891,[⟨3,4643141550987950,136351494394059⟩]⟩)else(⟨10,59,4371538101549501,4510088674642898,4648639247736295,[⟨3,4787189820829692,138550573093397⟩]⟩)))else(if i<62 then(if i<61 then(⟨10,60,4511188213992567,4651937865785302,4792687517578037,[⟨3,4933437169370772,140749651792735⟩]⟩)else(⟨10,61,4653037405134971,4795986135627044,4938934866119117,[⟨3,5081883596611190,142948730492073⟩]⟩))else(if i<63 then(⟨10,62,4797085674976713,4942233484168124,5087381293359535,[⟨3,5232529102550946,145147809191411⟩]⟩)else(if i<64 then(⟨10,63,4943333023517793,5090679911408542,5238026799299291,[⟨3,5385373687190040,147346887890749⟩]⟩)else(⟨10,64,5091779450758211,5241325417348298,5390871383938385,[⟨3,5540417350528472,149545966590087⟩]⟩))))))))else(if i<97 then(if i<81 then(if i<73 then(if i<69 then(if i<67 then(if i<66 then(⟨10,65,5242424956697967,5394170001987392,5545915047276817,[⟨3,5697660092566242,151745045289425⟩]⟩)else(⟨10,66,5395269541337061,5549213665325824,5703157789314587,[⟨3,5857101913303350,153944123988763⟩]⟩))else(if i<68 then(⟨10,67,5550313204675493,5706456407363594,5862599610051695,[⟨3,6018742812739796,156143202688101⟩]⟩)else(⟨10,68,5707555946713263,5865898228100702,6024240509488141,[⟨3,6182582790875580,158342281387439⟩]⟩)))else(if i<71 then(if i<70 then(⟨10,69,5866997767450371,6027539127537148,6188080487623925,[⟨3,6348621847710702,160541360086777⟩]⟩)else(⟨10,70,6028638666886817,6191379105672932,6354119544459047,[⟨3,6516859983245162,162740438786115⟩]⟩))else(if i<72 then(⟨10,71,6192478645022601,6357418162508054,6522357679993507,[⟨3,6687297197478960,164939517485453⟩]⟩)else(⟨10,72,6358517701857723,6525656298042514,6692794894227305,[⟨3,6859933490412096,167138596184791⟩]⟩))))else(if i<77 then(if i<75 then(if i<74 then(⟨10,73,6526755837392183,6696093512276312,6865431187160441,[⟨3,7034768862044570,169337674884129⟩]⟩)else(⟨10,74,6697193051625981,6868729805209448,7040266558792915,[⟨3,7211803312376382,171536753583467⟩]⟩))else(if i<76 then(⟨10,75,6869829344559117,7043565176841922,7217301009124727,[⟨3,7391036841407532,173735832282805⟩]⟩)else(⟨10,76,7044664716191591,7220599627173734,7396534538155877,[⟨3,7572469449138020,175934910982143⟩]⟩)))else(if i<79 then(if i<78 then(⟨10,77,7221699166523403,7399833156204884,7577967145886365,[⟨3,7756101135567846,178133989681481⟩]⟩)else(⟨10,78,7400932695554553,7581265763935372,7761598832316191,[⟨3,7941931900697010,180333068380819⟩]⟩))else(if i<80 then(⟨10,79,7582365303285041,7764897450365198,7947429597445355,[⟨3,8129961744525512,182532147080157⟩]⟩)else(⟨10,80,7765996989714867,7950728215494362,8135459441273857,[⟨3,8320190667053352,184731225779495⟩]⟩)))))else(if i<89 then(if i<85 then(if i<83 then(if i<82 then(⟨10,81,7951827754844031,8138758059322864,8325688363801697,[⟨3,8512618668280530,186930304478833⟩]⟩)else(⟨10,82,8139857598672533,8328986981850704,8518116365028875,[⟨3,8707245748207046,189129383178171⟩]⟩))else(if i<84 then(⟨10,83,8330086521200373,8521414983077882,8712743444955391,[⟨3,8904071906832900,191328461877509⟩]⟩)else(⟨10,84,8522514522427551,8716042063004398,8909569603581245,[⟨3,9103097144158092,193527540576847⟩]⟩)))else(if i<87 then(if i<86 then(⟨10,85,8717141602354067,8912868221630252,9108594840906437,[⟨3,9304321460182622,195726619276185⟩]⟩)else(⟨10,86,8913967760979921,9111893458955444,9309819156930967,[⟨3,9507744854906490,197925697975523⟩]⟩))else(if i<88 then(⟨10,87,9112992998305113,9313117774979974,9513242551654835,[⟨3,9713367328329696,200124776674861⟩]⟩)else(⟨10,88,9314217314329643,9516541169703842,9718865025078041,[⟨3,9921188880452240,202323855374199⟩]⟩))))else(if i<93 then(if i<91 then(if i<90 then(⟨10,89,9517640709053511,9722163643127048,9926686577200585,[⟨3,10131209511274122,204522934073537⟩]⟩)else(⟨10,90,9723263182476717,9929985195249592,10136707208022467,[⟨3,10343429220795342,206722012772875⟩]⟩))else(if i<92 then(⟨10,91,9931084734599261,10140005826071474,10348926917543687,[⟨3,10557848009015900,208921091472213⟩]⟩)else(⟨10,92,10141105365421143,10352225535592694,10563345705764245,[⟨3,10774465875935796,211120170171551⟩]⟩)))else(if i<95 then(if i<94 then(⟨10,93,10353325074942363,10566644323813252,10779963572684141,[⟨3,10993282821555030,213319248870889⟩]⟩)else(⟨10,94,10567743863162921,10783262190733148,10998780518303375,[⟨3,11214298845873602,215518327570227⟩]⟩))else(if i<96 then(⟨10,95,10784361730082817,11002079136352382,11219796542621947,[⟨3,11437513948891512,217717406269565⟩]⟩)else(⟨10,96,11003178675702051,11223095160670954,11443011645639857,[⟨3,11662928130608760,219916484968903⟩]⟩))))))else(if i<113 then(if i<105 then(if i<101 then(if i<99 then(if i<98 then(⟨10,97,11224194700020623,11446310263688864,11668425827357105,[⟨3,11890541391025346,222115563668241⟩]⟩)else(⟨10,98,11447409803038533,11671724445406112,11896039087773691,[⟨3,12120353730141270,224314642367579⟩]⟩))else(if i<100 then(⟨10,99,11672823984755781,11899337705822698,12125851426889615,[⟨3,12352365147956532,226513721066917⟩]⟩)else(⟨10,100,11900437245172367,12129150044938622,12357862844704877,[⟨3,12586575644471132,228712799766255⟩]⟩)))else(if i<103 then(if i<102 then(⟨10,101,12130249584288291,12361161462753884,12592073341219477,[⟨3,12822985219685070,230911878465593⟩]⟩)else(⟨10,102,12362261002103553,12595371959268484,12828482916433415,[⟨3,13061593873598346,233110957164931⟩]⟩))else(if i<104 then(⟨10,103,12596471498618153,12831781534482422,13067091570346691,[⟨3,13302401606210960,235310035864269⟩]⟩)else(⟨10,104,12832881073832091,13070390188395698,13307899302959305,[⟨3,13545408417522912,237509114563607⟩]⟩))))else(if i<109 then(if i<107 then(if i<106 then(⟨10,105,13071489727745367,13311197921008312,13550906114271257,[⟨3,13790614307534202,239708193262945⟩]⟩)else(⟨10,106,13312297460357981,13554204732320264,13796112004282547,[⟨3,14038019276244830,241907271962283⟩]⟩))else(if i<108 then(⟨10,107,13555304271669933,13799410622331554,14043516972993175,[⟨3,14287623323654796,244106350661621⟩]⟩)else(⟨10,108,13800510161681223,14046815591042182,14293121020403141,[⟨3,14539426449764100,246305429360959⟩]⟩)))else(if i<111 then(if i<110 then(⟨10,109,14047915130391851,14296419638452148,14544924146512445,[⟨3,14793428654572742,248504508060297⟩]⟩)else(⟨10,110,14297519177801817,14548222764561452,14798926351321087,[⟨3,15049629938080722,250703586759635⟩]⟩))else(if i<112 then(⟨10,111,14549322303911121,14802224969370094,15055127634829067,[⟨3,15308030300288040,252902665458973⟩]⟩)else(⟨10,112,14803324508719763,15058426252878074,15313527997036385,[⟨3,15568629741194696,255101744158311⟩]⟩)))))else(if i<121 then(if i<117 then(if i<115 then(if i<114 then(⟨10,113,15059525792227743,15316826615085392,15574127437943041,[⟨3,15831428260800690,257300822857649⟩]⟩)else(⟨10,114,15317926154435061,15577426055992048,15836925957549035,[⟨3,16096425859106022,259499901556987⟩]⟩))else(if i<116 then(⟨10,115,15578525595341717,15840224575598042,16101923555854367,[⟨3,16363622536110692,261698980256325⟩]⟩)else(⟨10,116,15841324114947711,16105222173903374,16369120232859037,[⟨3,16633018291814700,263898058955663⟩]⟩)))else(if i<119 then(if i<118 then(⟨10,117,16106321713253043,16372418850908044,16638515988563045,[⟨3,16904613126218046,266097137655001⟩]⟩)else(⟨10,118,16373518390257713,16641814606612052,16910110822966391,[⟨3,17178407039320730,268296216354339⟩]⟩))else(if i<120 then(⟨10,119,16642914145961721,16913409441015398,17183904736069075,[⟨3,17454400031122752,270495295053677⟩]⟩)else(⟨10,120,16914508980365067,17187203354118082,17459897727871097,[⟨3,17732592101624112,272694373753015⟩]⟩))))else(if i<125 then(if i<123 then(if i<122 then(⟨10,121,17188302893467751,17463196345920104,17738089798372457,[⟨3,18012983250824810,274893452452353⟩]⟩)else(⟨10,122,17464295885269773,17741388416421464,18018480947573155,[⟨3,18295573478724846,277092531151691⟩]⟩))else(if i<124 then(⟨10,123,17742487955771133,18021779565622162,18301071175473191,[⟨3,18580362785324220,279291609851029⟩]⟩)else(⟨10,124,18022879104971831,18304369793522198,18585860482072565,[⟨3,18867351170622932,281490688550367⟩]⟩)))else(if i<127 then(if i<126 then(⟨10,125,18305469332871867,18589159100121572,18872848867371277,[⟨3,19156538634620982,283689767249705⟩]⟩)else(⟨10,126,18590258639471241,18876147485420284,19162036331369327,[⟨3,19447925177318370,285888845949043⟩]⟩))else(if i<128 then(⟨10,127,18877247024769953,19165334949418334,19453422874066715,[⟨3,19741510798715096,288087924648381⟩]⟩)else(if i<129 then(⟨10,128,19166434488768003,19456721492115722,19747008495463441,[⟨3,20037295498811160,290287003347719⟩]⟩)else(⟨10,129,19457821031465391,19750307113512448,20042793195559505,[⟨3,20335279277606562,292486082047057⟩]⟩)))))))))else(defaultRow)
+
+def row11 : ℕ → BaseRow := fun i =>
+  if i<129 then(if i<64 then(if i<32 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(⟨11,0,68994934505687,75798219325673,96345509593359,[⟨3,116892799861045,20547290267686⟩]⟩)else(⟨11,1,75798219325673,97582469611791,119366719897909,[⟨3,141150970184027,21784250286118⟩]⟩))else(if i<3 then(⟨11,2,76004379853035,97788630139153,119572880425271,[⟨3,141357130711389,21784250286118⟩]⟩)else(⟨11,3,78711773476315,97994790666515,119779040952633,[⟨3,141563291238751,21784250286118⟩]⟩)))else(if i<6 then(if i<5 then(⟨11,4,98374655558211,119265929154402,140157202750593,[⟨3,161048476346784,20891273596191⟩,⟨24,599994628310145,21784250286118⟩]⟩)else(⟨11,5,120494320668697,143842377293478,167190433918259,[⟨3,190538490543040,23348056624781⟩]⟩))else(if i<7 then(⟨11,6,145070768807773,170875608461144,196680448114515,[⟨3,222485287767886,25804839653371⟩]⟩)else(⟨11,7,172103999975439,200365622657400,228627245339361,[⟨3,256888868021322,28261622681961⟩]⟩))))else(if i<12 then(if i<10 then(if i<9 then(⟨11,8,201594014171695,232312419882246,263030825592797,[⟨3,293749231303348,30718405710551⟩]⟩)else(⟨11,9,233540811396541,266716000135682,299891188874823,[⟨3,333066377613964,33175188739141⟩]⟩))else(if i<11 then(⟨11,10,267944391649977,303576363417708,339208335185439,[⟨3,374840306953170,35631971767731⟩]⟩)else(⟨11,11,304804754932003,342893509728324,380982264524645,[⟨3,419071019320966,38088754796321⟩]⟩)))else(if i<14 then(if i<13 then(⟨11,12,344121901242619,384667439067530,425212976892441,[⟨3,465758514717352,40545537824911⟩]⟩)else(⟨11,13,385895830581825,428898151435326,471900472288827,[⟨3,514902793142328,43002320853501⟩]⟩))else(if i<15 then(⟨11,14,430126542949621,475585646831712,521044750713803,[⟨3,566503854595894,45459103882091⟩]⟩)else(⟨11,15,476814038346007,524729925256688,572645812167369,[⟨3,620561699078050,47915886910681⟩]⟩)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(⟨11,16,525958316770983,576330986710254,626703656649525,[⟨3,677076326588796,50372669939271⟩]⟩)else(⟨11,17,577559378224549,630388831192410,683218284160271,[⟨3,736047737128132,52829452967861⟩]⟩))else(if i<19 then(⟨11,18,631617222706705,686903458703156,742189694699607,[⟨3,797475930696058,55286235996451⟩]⟩)else(⟨11,19,688131850217451,745874869242492,803617888267533,[⟨3,861360907292574,57743019025041⟩]⟩)))else(if i<22 then(if i<21 then(⟨11,20,747103260756787,807303062810418,867502864864049,[⟨3,927702666917680,60199802053631⟩]⟩)else(⟨11,21,808531454324713,871188039406934,933844624489155,[⟨3,996501209571376,62656585082221⟩]⟩))else(if i<23 then(⟨11,22,872416430921229,937529799032040,1002643167142851,[⟨3,1067756535253662,65113368110811⟩]⟩)else(⟨11,23,938758190546335,1006328341685736,1073898492825137,[⟨3,1141468643964538,67570151139401⟩]⟩))))else(if i<28 then(if i<26 then(if i<25 then(⟨11,24,1007556733200031,1077583667368022,1147610601536013,[⟨3,1217637535704004,70026934167991⟩]⟩)else(⟨11,25,1078812058882317,1151295776078898,1223779493275479,[⟨3,1296263210472060,72483717196581⟩]⟩))else(if i<27 then(⟨11,26,1152524167593193,1227464667818364,1302405168043535,[⟨3,1377345668268706,74940500225171⟩]⟩)else(⟨11,27,1228693059332659,1306090342586420,1383487625840181,[⟨3,1460884909093942,77397283253761⟩]⟩)))else(if i<30 then(if i<29 then(⟨11,28,1307318734100715,1387172800383066,1467026866665417,[⟨3,1546880932947768,79854066282351⟩]⟩)else(⟨11,29,1388401191897361,1470712041208302,1553022890519243,[⟨3,1635333739830184,82310849310941⟩]⟩))else(if i<31 then(⟨11,30,1471940432722597,1556708065062128,1641475697401659,[⟨3,1726243329741190,84767632339531⟩]⟩)else(⟨11,31,1557936456576423,1645160871944544,1732385287312665,[⟨3,1819609702680786,87224415368121⟩]⟩))))))else(if i<48 then(if i<40 then(if i<36 then(if i<34 then(if i<33 then(⟨11,32,1646389263458839,1736070461855550,1825751660252261,[⟨3,1915432858648972,89681198396711⟩]⟩)else(⟨11,33,1737298853369845,1829436834795146,1921574816220447,[⟨3,2013712797645748,92137981425301⟩]⟩))else(if i<35 then(⟨11,34,1830665226309441,1925259990763332,2019854755217223,[⟨3,2114449519671114,94594764453891⟩]⟩)else(⟨11,35,1926488382277627,2023539929760108,2120591477242589,[⟨3,2217643024725070,97051547482481⟩]⟩)))else(if i<38 then(if i<37 then(⟨11,36,2024768321274403,2124276651785474,2223784982296545,[⟨3,2323293312807616,99508330511071⟩]⟩)else(⟨11,37,2125505043299769,2227470156839430,2329435270379091,[⟨3,2431400383918752,101965113539661⟩]⟩))else(if i<39 then(⟨11,38,2228698548353725,2333120444921976,2437542341490227,[⟨3,2541964238058478,104421896568251⟩]⟩)else(⟨11,39,2334348836436271,2441227516033112,2548106195629953,[⟨3,2654984875226794,106878679596841⟩]⟩))))else(if i<44 then(if i<42 then(if i<41 then(⟨11,40,2442455907547407,2551791370172838,2661126832798269,[⟨3,2770462295423700,109335462625431⟩]⟩)else(⟨11,41,2553019761687133,2664812007341154,2776604252995175,[⟨3,2888396498649196,111792245654021⟩]⟩))else(if i<43 then(⟨11,42,2666040398855449,2780289427538060,2894538456220671,[⟨3,3008787484903282,114249028682611⟩]⟩)else(⟨11,43,2781517819052355,2898223630763556,3014929442474757,[⟨3,3131635254185958,116705811711201⟩]⟩)))else(if i<46 then(if i<45 then(⟨11,44,2899452022277851,3018614617017642,3137777211757433,[⟨3,3256939806497224,119162594739791⟩]⟩)else(⟨11,45,3019843008531937,3141462386300318,3263081764068699,[⟨3,3384701141837080,121619377768381⟩]⟩))else(if i<47 then(⟨11,46,3142690777814613,3266766938611584,3390843099408555,[⟨3,3514919260205526,124076160796971⟩]⟩)else(⟨11,47,3267995330125879,3394528273951440,3521061217777001,[⟨3,3647594161602562,126532943825561⟩]⟩)))))else(if i<56 then(if i<52 then(if i<50 then(if i<49 then(⟨11,48,3395756665465735,3524746392319886,3653736119174037,[⟨3,3782725846028188,128989726854151⟩]⟩)else(⟨11,49,3525974783834181,3657421293716922,3788867803599663,[⟨3,3920314313482404,131446509882741⟩]⟩))else(if i<51 then(⟨11,50,3658649685231217,3792552978142548,3926456271053879,[⟨3,4060359563965210,133903292911331⟩]⟩)else(⟨11,51,3793781369656843,3930141445596764,4066501521536685,[⟨3,4202861597476606,136360075939921⟩]⟩)))else(if i<54 then(if i<53 then(⟨11,52,3931369837111059,4070186696079570,4209003555048081,[⟨3,4347820414016592,138816858968511⟩]⟩)else(⟨11,53,4071415087593865,4212688729590966,4353962371588067,[⟨3,4495236013585168,141273641997101⟩]⟩))else(if i<55 then(⟨11,54,4213917121105261,4357647546130952,4501377971156643,[⟨3,4645108396182334,143730425025691⟩]⟩)else(⟨11,55,4358875937645247,4505063145699528,4651250353753809,[⟨3,4797437561808090,146187208054281⟩]⟩))))else(if i<60 then(if i<58 then(if i<57 then(⟨11,56,4506291537213823,4654935528296694,4803579519379565,[⟨3,4952223510462436,148643991082871⟩]⟩)else(⟨11,57,4656163919810989,4807264693922450,4958365468033911,[⟨3,5109466242145372,151100774111461⟩]⟩))else(if i<59 then(⟨11,58,4808493085436745,4962050642576796,5115608199716847,[⟨3,5269165756856898,153557557140051⟩]⟩)else(⟨11,59,4963279034091091,5119293374259732,5275307714428373,[⟨3,5431322054597014,156014340168641⟩]⟩)))else(if i<62 then(if i<61 then(⟨11,60,5120521765774027,5278992888971258,5437464012168489,[⟨3,5595935135365720,158471123197231⟩]⟩)else(⟨11,61,5280221280485553,5441149186711374,5602077092937195,[⟨3,5763004999163016,160927906225821⟩]⟩))else(if i<63 then(⟨11,62,5442377578225669,5605762267480080,5769146956734491,[⟨3,5932531645988902,163384689254411⟩]⟩)else(⟨11,63,5606990658994375,5772832131277376,5938673603560377,[⟨3,6104515075843378,165841472283001⟩]⟩)))))))else(if i<96 then(if i<80 then(if i<72 then(if i<68 then(if i<66 then(if i<65 then(⟨11,64,5774060522791671,5942358778103262,6110657033414853,[⟨3,6278955288726444,168298255311591⟩]⟩)else(⟨11,65,5943587169617557,6114342207957738,6285097246297919,[⟨3,6455852284638100,170755038340181⟩]⟩))else(if i<67 then(⟨11,66,6115570599472033,6288782420840804,6461994242209575,[⟨3,6635206063578346,173211821368771⟩]⟩)else(⟨11,67,6290010812355099,6465679416752460,6641348021149821,[⟨3,6817016625547182,175668604397361⟩]⟩)))else(if i<70 then(if i<69 then(⟨11,68,6466907808266755,6645033195692706,6823158583118657,[⟨3,7001283970544608,178125387425951⟩]⟩)else(⟨11,69,6646261587207001,6826843757661542,7007425928116083,[⟨3,7188008098570624,180582170454541⟩]⟩))else(if i<71 then(⟨11,70,6828072149175837,7011111102658968,7194150056142099,[⟨3,7377189009625230,183038953483131⟩]⟩)else(⟨11,71,7012339494173263,7197835230684984,7383330967196705,[⟨3,7568826703708426,185495736511721⟩]⟩))))else(if i<76 then(if i<74 then(if i<73 then(⟨11,72,7199063622199279,7387016141739590,7574968661279901,[⟨3,7762921180820212,187952519540311⟩]⟩)else(⟨11,73,7388244533253885,7578653835822786,7769063138391687,[⟨3,7959472440960588,190409302568901⟩]⟩))else(if i<75 then(⟨11,74,7579882227337081,7772748312934572,7965614398532063,[⟨3,8158480484129554,192866085597491⟩]⟩)else(⟨11,75,7773976704448867,7969299573074948,8164622441701029,[⟨3,8359945310327110,195322868626081⟩]⟩)))else(if i<78 then(if i<77 then(⟨11,76,7970527964589243,8168307616243914,8366087267898585,[⟨3,8563866919553256,197779651654671⟩]⟩)else(⟨11,77,8169536007758209,8369772442441470,8570008877124731,[⟨3,8770245311807992,200236434683261⟩]⟩))else(if i<79 then(⟨11,78,8371000833955765,8573694051667616,8776387269379467,[⟨3,8979080487091318,202693217711851⟩]⟩)else(⟨11,79,8574922443181911,8780072443922352,8985222444662793,[⟨3,9190372445403234,205150000740441⟩]⟩)))))else(if i<88 then(if i<84 then(if i<82 then(if i<81 then(⟨11,80,8781300835436647,8988907619205678,9196514402974709,[⟨3,9404121186743740,207606783769031⟩]⟩)else(⟨11,81,8990136010719973,9200199577517594,9410263144315215,[⟨3,9620326711112836,210063566797621⟩]⟩))else(if i<83 then(⟨11,82,9201427969031889,9413948318858100,9626468668684311,[⟨3,9838989018510522,212520349826211⟩]⟩)else(⟨11,83,9415176710372395,9630153843227196,9845130976081997,[⟨3,10060108108936798,214977132854801⟩]⟩)))else(if i<86 then(if i<85 then(⟨11,84,9631382234741491,9848816150624882,10066250066508273,[⟨3,10283683982391664,217433915883391⟩]⟩)else(⟨11,85,9850044542139177,10069935241051158,10289825939963139,[⟨3,10509716638875120,219890698911981⟩]⟩))else(if i<87 then(⟨11,86,10071163632565453,10293511114506024,10515858596446595,[⟨3,10738206078387166,222347481940571⟩]⟩)else(⟨11,87,10294739506020319,10519543770989480,10744348035958641,[⟨3,10969152300927802,224804264969161⟩]⟩))))else(if i<92 then(if i<90 then(if i<89 then(⟨11,88,10520772162503775,10748033210501526,10975294258499277,[⟨3,11202555306497028,227261047997751⟩]⟩)else(⟨11,89,10749261602015821,10978979433042162,11208697264068503,[⟨3,11438415095094844,229717831026341⟩]⟩))else(if i<91 then(⟨11,90,10980207824556457,11212382438611388,11444557052666319,[⟨3,11676731666721250,232174614054931⟩]⟩)else(⟨11,91,11213610830125683,11448242227209204,11682873624292725,[⟨3,11917505021376246,234631397083521⟩]⟩)))else(if i<94 then(if i<93 then(⟨11,92,11449470618723499,11686558798835610,11923646978947721,[⟨3,12160735159059832,237088180112111⟩]⟩)else(⟨11,93,11687787190349905,11927332153490606,12166877116631307,[⟨3,12406422079772008,239544963140701⟩]⟩))else(if i<95 then(⟨11,94,11928560545004901,12170562291174192,12412564037343483,[⟨3,12654565783512774,242001746169291⟩]⟩)else(⟨11,95,12171790682688487,12416249211886368,12660707741084249,[⟨3,12905166270282130,244458529197881⟩]⟩))))))else(if i<112 then(if i<104 then(if i<100 then(if i<98 then(if i<97 then(⟨11,96,12417477603400663,12664392915627134,12911308227853605,[⟨3,13158223540080076,246915312226471⟩]⟩)else(⟨11,97,12665621307141429,12914993402396490,13164365497651551,[⟨3,13413737592906612,249372095255061⟩]⟩))else(if i<99 then(⟨11,98,12916221793910785,13168050672194436,13419879550478087,[⟨3,13671708428761738,251828878283651⟩]⟩)else(⟨11,99,13169279063708731,13423564725020972,13677850386333213,[⟨3,13932136047645454,254285661312241⟩]⟩)))else(if i<102 then(if i<101 then(⟨11,100,13424793116535267,13681535560876098,13938278005216929,[⟨3,14195020449557760,256742444340831⟩]⟩)else(⟨11,101,13682763952390393,13941963179759814,14201162407129235,[⟨3,14460361634498656,259199227369421⟩]⟩))else(if i<103 then(⟨11,102,13943191571274109,14204847581672120,14466503592070131,[⟨3,14728159602468142,261656010398011⟩]⟩)else(⟨11,103,14206075973186415,14470188766613016,14734301560039617,[⟨3,14998414353466218,264112793426601⟩]⟩))))else(if i<108 then(if i<106 then(if i<105 then(⟨11,104,14471417158127311,14737986734582502,15004556311037693,[⟨3,15271125887492884,266569576455191⟩]⟩)else(⟨11,105,14739215126096797,15008241485580578,15277267845064359,[⟨3,15546294204548140,269026359483781⟩]⟩))else(if i<107 then(⟨11,106,15009469877094873,15280953019607244,15552436162119615,[⟨3,15823919304631986,271483142512371⟩]⟩)else(⟨11,107,15282181411121539,15556121336662500,15830061262203461,[⟨3,16104001187744422,273939925540961⟩]⟩)))else(if i<110 then(if i<109 then(⟨11,108,15557349728176795,15833746436746346,16110143145315897,[⟨3,16386539853885448,276396708569551⟩]⟩)else(⟨11,109,15834974828260641,16113828319858782,16392681811456923,[⟨3,16671535303055064,278853491598141⟩]⟩))else(if i<111 then(⟨11,110,16115056711373077,16396366985999808,16677677260626539,[⟨3,16958987535253270,281310274626731⟩]⟩)else(⟨11,111,16397595377514103,16681362435169424,16965129492824745,[⟨3,17248896550480066,283767057655321⟩]⟩)))))else(if i<120 then(if i<116 then(if i<114 then(if i<113 then(⟨11,112,16682590826683719,16968814667367630,17255038508051541,[⟨3,17541262348735452,286223840683911⟩]⟩)else(⟨11,113,16970043058881925,17258723682594426,17547404306306927,[⟨3,17836084930019428,288680623712501⟩]⟩))else(if i<115 then(⟨11,114,17259952074108721,17551089480849812,17842226887590903,[⟨3,18133364294331994,291137406741091⟩]⟩)else(⟨11,115,17552317872364107,17845912062133788,18139506251903469,[⟨3,18433100441673150,293594189769681⟩]⟩)))else(if i<118 then(if i<117 then(⟨11,116,17847140453648083,18143191426446354,18439242399244625,[⟨3,18735293372042896,296050972798271⟩]⟩)else(⟨11,117,18144419817960649,18442927573787510,18741435329614371,[⟨3,19039943085441232,298507755826861⟩]⟩))else(if i<119 then(⟨11,118,18444155965301805,18745120504157256,19046085043012707,[⟨3,19347049581868158,300964538855451⟩]⟩)else(⟨11,119,18746348895671551,19049770217555592,19353191539439633,[⟨3,19656612861323674,303421321884041⟩]⟩))))else(if i<124 then(if i<122 then(if i<121 then(⟨11,120,19050998609069887,19356876713982518,19662754818895149,[⟨3,19968632923807780,305878104912631⟩]⟩)else(⟨11,121,19358105105496813,19666439993438034,19974774881379255,[⟨3,20283109769320476,308334887941221⟩]⟩))else(if i<123 then(⟨11,122,19667668384952329,19978460055922140,20289251726891951,[⟨3,20600043397861762,310791670969811⟩]⟩)else(⟨11,123,19979688447436435,20292936901434836,20606185355433237,[⟨3,20919433809431638,313248453998401⟩]⟩)))else(if i<126 then(if i<125 then(⟨11,124,20294165292949131,20609870529976122,20925575767003113,[⟨3,21241281004030104,315705237026991⟩]⟩)else(⟨11,125,20611098921490417,20929260941545998,21247422961601579,[⟨3,21565584981657160,318162020055581⟩]⟩))else(if i<127 then(⟨11,126,20930489333060293,21251108136144464,21571726939228635,[⟨3,21892345742312806,320618803084171⟩]⟩)else(if i<128 then(⟨11,127,21252336527658759,21575412113771520,21898487699884281,[⟨3,22221563285997042,323075586112761⟩]⟩)else(⟨11,128,21576640505285815,21902172874427166,22227705243568517,[⟨3,22553237612709868,325532369141351⟩]⟩)))))))))else(defaultRow)
+
+def row12 : ℕ → BaseRow := fun i =>
+  if i<128 then(if i<64 then(if i<32 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(⟨12,0,91741265854722,99987671220502,124864322601280,[⟨3,149740973982058,24876651380778⟩]⟩)else(⟨12,1,99987671220502,126238722621760,152489774023018,[⟨3,178740825424276,26251051401258⟩]⟩))else(if i<3 then(⟨12,2,100193831747864,126444883149122,152695934550380,[⟨3,178946985951638,26251051401258⟩]⟩)else(⟨12,3,100399992275226,126651043676484,152902095077742,[⟨3,179153146479000,26251051401258⟩]⟩)))else(if i<6 then(if i<5 then(⟨12,4,122805078086041,147244084977868,171683091869695,[⟨3,196122098761522,24439006891827⟩,⟨12,416374690153238,26251051401258⟩]⟩)else(⟨12,5,148601328656789,175754822906458,202908317156127,[⟨3,230061811405796,27153494249669⟩]⟩))else(if i<7 then(⟨12,6,177112066585379,206980048192890,236848029800401,[⟨3,266716011407912,29867981607511⟩]⟩)else(⟨12,7,208337291871811,240919760837164,273502229802517,[⟨3,306084698767870,32582468965353⟩]⟩))))else(if i<12 then(if i<10 then(if i<9 then(⟨12,8,242277004516085,277573960839280,312870917162475,[⟨3,348167873485670,35296956323195⟩]⟩)else(⟨12,9,278931204518201,316942648199238,354954091880275,[⟨3,392965535561312,38011443681037⟩]⟩))else(if i<11 then(⟨12,10,318299891878159,359025822917038,399751753955917,[⟨3,440477684994796,40725931038879⟩]⟩)else(⟨12,11,360383066595959,403823484992680,447263903389401,[⟨3,490704321786122,43440418396721⟩]⟩)))else(if i<14 then(if i<13 then(⟨12,12,405180728671601,451335634426164,497490540180727,[⟨3,543645445935290,46154905754563⟩]⟩)else(⟨12,13,452692878105085,501562271217490,550431664329895,[⟨3,599301057442300,48869393112405⟩]⟩))else(if i<15 then(⟨12,14,502919514896411,554503395366658,606087275836905,[⟨3,657671156307152,51583880470247⟩]⟩)else(⟨12,15,555860639045579,610159006873668,664457374701757,[⟨3,718755742529846,54298367828089⟩]⟩)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(⟨12,16,611516250552589,668529105738520,725541960924451,[⟨3,782554816110382,57012855185931⟩]⟩)else(⟨12,17,669886349417441,729613691961214,789341034504987,[⟨3,849068377048760,59727342543773⟩]⟩))else(if i<19 then(⟨12,18,730970935640135,793412765541750,855854595443365,[⟨3,918296425344980,62441829901615⟩]⟩)else(⟨12,19,794770009220671,859926326480128,925082643739585,[⟨3,990238960999042,65156317259457⟩]⟩)))else(if i<22 then(if i<21 then(⟨12,20,861283570159049,929154374776348,997025179393647,[⟨3,1064895984010946,67870804617299⟩]⟩)else(⟨12,21,930511618455269,1001096910430410,1071682202405551,[⟨3,1142267494380692,70585291975141⟩]⟩))else(if i<23 then(⟨12,22,1002454154109331,1075753933442314,1149053712775297,[⟨3,1222353492108280,73299779332983⟩]⟩)else(⟨12,23,1077111177121235,1153125443812060,1229139710502885,[⟨3,1305153977193710,76014266690825⟩]⟩))))else(if i<28 then(if i<26 then(if i<25 then(⟨12,24,1154482687490981,1233211441539648,1311940195588315,[⟨3,1390668949636982,78728754048667⟩]⟩)else(⟨12,25,1234568685218569,1316011926625078,1397455168031587,[⟨3,1478898409438096,81443241406509⟩]⟩))else(if i<27 then(⟨12,26,1317369170303999,1401526899068350,1485684627832701,[⟨3,1569842356597052,84157728764351⟩]⟩)else(⟨12,27,1402884142747271,1489756358869464,1576628574991657,[⟨3,1663500791113850,86872216122193⟩]⟩)))else(if i<30 then(if i<29 then(⟨12,28,1491113602548385,1580700306028420,1670287009508455,[⟨3,1759873712988490,89586703480035⟩]⟩)else(⟨12,29,1582057549707341,1674358740545218,1766659931383095,[⟨3,1858961122220972,92301190837877⟩]⟩))else(if i<31 then(⟨12,30,1675715984224139,1770731662419858,1865747340615577,[⟨3,1960763018811296,95015678195719⟩]⟩)else(⟨12,31,1772088906098779,1869819071652340,1967549237205901,[⟨3,2065279402759462,97730165553561⟩]⟩))))))else(if i<48 then(if i<40 then(if i<36 then(if i<34 then(if i<33 then(⟨12,32,1871176315331261,1971620968242664,2072065621154067,[⟨3,2172510274065470,100444652911403⟩]⟩)else(⟨12,33,1972978211921585,2076137352190830,2179296492460075,[⟨3,2282455632729320,103159140269245⟩]⟩))else(if i<35 then(⟨12,34,2077494595869751,2183368223496838,2289241851123925,[⟨3,2395115478751012,105873627627087⟩]⟩)else(⟨12,35,2184725467175759,2293313582160688,2401901697145617,[⟨3,2510489812130546,108588114984929⟩]⟩)))else(if i<38 then(if i<37 then(⟨12,36,2294670825839609,2405973428182380,2517276030525151,[⟨3,2628578632867922,111302602342771⟩]⟩)else(⟨12,37,2407330671861301,2521347761561914,2635364851262527,[⟨3,2749381940963140,114017089700613⟩]⟩))else(if i<39 then(⟨12,38,2522705005240835,2639436582299290,2756168159357745,[⟨3,2872899736416200,116731577058455⟩]⟩)else(⟨12,39,2640793825978211,2760239890394508,2879685954810805,[⟨3,2999132019227102,119446064416297⟩]⟩))))else(if i<44 then(if i<42 then(if i<41 then(⟨12,40,2761597134073429,2883757685847568,3005918237621707,[⟨3,3128078789395846,122160551774139⟩]⟩)else(⟨12,41,2885114929526489,3009989968658470,3134865007790451,[⟨3,3259740046922432,124875039131981⟩]⟩))else(if i<43 then(⟨12,42,3011347212337391,3138936738827214,3266526265317037,[⟨3,3394115791806860,127589526489823⟩]⟩)else(⟨12,43,3140293982506135,3270597996353800,3400902010201465,[⟨3,3531206024049130,130304013847665⟩]⟩)))else(if i<46 then(if i<45 then(⟨12,44,3271955240032721,3404973741238228,3537992242443735,[⟨3,3671010743649242,133018501205507⟩]⟩)else(⟨12,45,3406330984917149,3542063973480498,3677796962043847,[⟨3,3813529950607196,135732988563349⟩]⟩))else(if i<47 then(⟨12,46,3543421217159419,3681868693080610,3820316169001801,[⟨3,3958763644922992,138447475921191⟩]⟩)else(⟨12,47,3683225936759531,3824387900038564,3965549863317597,[⟨3,4106711826596630,141161963279033⟩]⟩)))))else(if i<56 then(if i<52 then(if i<50 then(if i<49 then(⟨12,48,3825745143717485,3969621594354360,4113498044991235,[⟨3,4257374495628110,143876450636875⟩]⟩)else(⟨12,49,3970978838033281,4117569776027998,4264160714022715,[⟨3,4410751652017432,146590937994717⟩]⟩))else(if i<51 then(⟨12,50,4118927019706919,4268232445059478,4417537870412037,[⟨3,4566843295764596,149305425352559⟩]⟩)else(⟨12,51,4269589688738399,4421609601448800,4573629514159201,[⟨3,4725649426869602,152019912710401⟩]⟩)))else(if i<54 then(if i<53 then(⟨12,52,4422966845127721,4577701245195964,4732435645264207,[⟨3,4887170045332450,154734400068243⟩]⟩)else(⟨12,53,4579058488874885,4736507376300970,4893956263727055,[⟨3,5051405151153140,157448887426085⟩]⟩))else(if i<55 then(⟨12,54,4737864619979891,4898027994763818,5058191369547745,[⟨3,5218354744331672,160163374783927⟩]⟩)else(⟨12,55,4899385238442739,5062263100584508,5225140962726277,[⟨3,5388018824868046,162877862141769⟩]⟩))))else(if i<60 then(if i<58 then(if i<57 then(⟨12,56,5063620344263429,5229212693763040,5394805043262651,[⟨3,5560397392762262,165592349499611⟩]⟩)else(⟨12,57,5230569937441961,5398876774299414,5567183611156867,[⟨3,5735490448014320,168306836857453⟩]⟩))else(if i<59 then(⟨12,58,5400234017978335,5571255342193630,5742276666408925,[⟨3,5913297990624220,171021324215295⟩]⟩)else(⟨12,59,5572612585872551,5746348397445688,5920084209018825,[⟨3,6093820020591962,173735811573137⟩]⟩)))else(if i<62 then(if i<61 then(⟨12,60,5747705641124609,5924155940055588,6100606238986567,[⟨3,6277056537917546,176450298930979⟩]⟩)else(⟨12,61,5925513183734509,6104677970023330,6283842756312151,[⟨3,6463007542600972,179164786288821⟩]⟩))else(if i<63 then(⟨12,62,6106035213702251,6287914487348914,6469793760995577,[⟨3,6651673034642240,181879273646663⟩]⟩)else(⟨12,63,6289271731027835,6473865492032340,6658459253036845,[⟨3,6843053014041350,184593761004505⟩]⟩)))))))else(if i<96 then(if i<80 then(if i<72 then(if i<68 then(if i<66 then(if i<65 then(⟨12,64,6475222735711261,6662530984073608,6849839232435955,[⟨3,7037147480798302,187308248362347⟩]⟩)else(⟨12,65,6663888227752529,6853910963472718,7043933699192907,[⟨3,7233956434913096,190022735720189⟩]⟩))else(if i<67 then(⟨12,66,6855268207151639,7048005430229670,7240742653307701,[⟨3,7433479876385732,192737223078031⟩]⟩)else(⟨12,67,7049362673908591,7244814384344464,7440266094780337,[⟨3,7635717805216210,195451710435873⟩]⟩)))else(if i<70 then(if i<69 then(⟨12,68,7246171628023385,7444337825817100,7642504023610815,[⟨3,7840670221404530,198166197793715⟩]⟩)else(⟨12,69,7445695069496021,7646575754647578,7847456439799135,[⟨3,8048337124950692,200880685151557⟩]⟩))else(if i<71 then(⟨12,70,7647932998326499,7851528170835898,8055123343345297,[⟨3,8258718515854696,203595172509399⟩]⟩)else(⟨12,71,7852885414514819,8059195074382060,8265504734249301,[⟨3,8471814394116542,206309659867241⟩]⟩))))else(if i<76 then(if i<74 then(if i<73 then(⟨12,72,8060552318060981,8269576465286064,8478600612511147,[⟨3,8687624759736230,209024147225083⟩]⟩)else(⟨12,73,8270933708964985,8482672343547910,8694410978130835,[⟨3,8906149612713760,211738634582925⟩]⟩))else(if i<75 then(⟨12,74,8484029587226831,8698482709167598,8912935831108365,[⟨3,9127388953049132,214453121940767⟩]⟩)else(⟨12,75,8699839952846519,8917007562145128,9134175171443737,[⟨3,9351342780742346,217167609298609⟩]⟩)))else(if i<78 then(if i<77 then(⟨12,76,8918364805824049,9138246902480500,9358128999136951,[⟨3,9578011095793402,219882096656451⟩]⟩)else(⟨12,77,9139604146159421,9362200730173714,9584797314188007,[⟨3,9807393898202300,222596584014293⟩]⟩))else(if i<79 then(⟨12,78,9363557973852635,9588869045224770,9814180116596905,[⟨3,10039491187969040,225311071372135⟩]⟩)else(⟨12,79,9590226288903691,9818251847633668,10046277406363645,[⟨3,10274302965093622,228025558729977⟩]⟩)))))else(if i<88 then(if i<84 then(if i<82 then(if i<81 then(⟨12,80,9819609091312589,10050349137400408,10281089183488227,[⟨3,10511829229576046,230740046087819⟩]⟩)else(⟨12,81,10051706381079329,10285160914524990,10518615447970651,[⟨3,10752069981416312,233454533445661⟩]⟩))else(if i<83 then(⟨12,82,10286518158203911,10522687179007414,10758856199810917,[⟨3,10995025220614420,236169020803503⟩]⟩)else(⟨12,83,10524044422686335,10762927930847680,11001811439009025,[⟨3,11240694947170370,238883508161345⟩]⟩)))else(if i<86 then(if i<85 then(⟨12,84,10764285174526601,11005883170045788,11247481165564975,[⟨3,11489079161084162,241597995519187⟩]⟩)else(⟨12,85,11007240413724709,11251552896601738,11495865379478767,[⟨3,11740177862355796,244312482877029⟩]⟩))else(if i<87 then(⟨12,86,11252910140280659,11499937110515530,11746964080750401,[⟨3,11993991050985272,247026970234871⟩]⟩)else(⟨12,87,11501294354194451,11751035811787164,12000777269379877,[⟨3,12250518726972590,249741457592713⟩]⟩))))else(if i<92 then(if i<90 then(if i<89 then(⟨12,88,11752393055466085,12004849000416640,12257304945367195,[⟨3,12509760890317750,252455944950555⟩]⟩)else(⟨12,89,12006206244095561,12261376676403958,12516547108712355,[⟨3,12771717541020752,255170432308397⟩]⟩))else(if i<91 then(⟨12,90,12262733920082879,12520618839749118,12778503759415357,[⟨3,13036388679081596,257884919666239⟩]⟩)else(⟨12,91,12521976083428039,12782575490452120,13043174897476201,[⟨3,13303774304500282,260599407024081⟩]⟩)))else(if i<94 then(if i<93 then(⟨12,92,12783932734131041,13047246628512964,13310560522894887,[⟨3,13573874417276810,263313894381923⟩]⟩)else(⟨12,93,13048603872191885,13314632253931650,13580660635671415,[⟨3,13846689017411180,266028381739765⟩]⟩))else(if i<95 then(⟨12,94,13315989497610571,13584732366708178,13853475235805785,[⟨3,14122218104903392,268742869097607⟩]⟩)else(⟨12,95,13586089610387099,13857546966842548,14129004323297997,[⟨3,14400461679753446,271457356455449⟩]⟩))))))else(if i<112 then(if i<104 then(if i<100 then(if i<98 then(if i<97 then(⟨12,96,13858904210521469,14133076054334760,14407247898148051,[⟨3,14681419741961342,274171843813291⟩]⟩)else(⟨12,97,14134433298013681,14411319629184814,14688205960355947,[⟨3,14965092291527080,276886331171133⟩]⟩))else(if i<99 then(⟨12,98,14412676872863735,14692277691392710,14971878509921685,[⟨3,15251479328450660,279600818528975⟩]⟩)else(⟨12,99,14693634935071631,14975950240958448,15258265546845265,[⟨3,15540580852732082,282315305886817⟩]⟩)))else(if i<102 then(if i<101 then(⟨12,100,14977307484637369,15262337277882028,15547367071126687,[⟨3,15832396864371346,285029793244659⟩]⟩)else(⟨12,101,15263694521560949,15551438802163450,15839183082765951,[⟨3,16126927363368452,287744280602501⟩]⟩))else(if i<103 then(⟨12,102,15552796045842371,15843254813802714,16133713581763057,[⟨3,16424172349723400,290458767960343⟩]⟩)else(⟨12,103,15844612057481635,16137785312799820,16430958568118005,[⟨3,16724131823436190,293173255318185⟩]⟩))))else(if i<108 then(if i<106 then(if i<105 then(⟨12,104,16139142556478741,16435030299154768,16730918041830795,[⟨3,17026805784506822,295887742676027⟩]⟩)else(⟨12,105,16436387542833689,16734989772867558,17033592002901427,[⟨3,17332194232935296,298602230033869⟩]⟩))else(if i<107 then(⟨12,106,16736347016546479,17037663733938190,17338980451329901,[⟨3,17640297168721612,301316717391711⟩]⟩)else(⟨12,107,17039020977617111,17343052182366664,17647083387116217,[⟨3,17951114591865770,304031204749553⟩]⟩)))else(if i<110 then(if i<109 then(⟨12,108,17344409426045585,17651155118152980,17957900810260375,[⟨3,18264646502367770,306745692107395⟩]⟩)else(⟨12,109,17652512361831901,17961972541297138,18271432720762375,[⟨3,18580892900227612,309460179465237⟩]⟩))else(if i<111 then(⟨12,110,17963329784976059,18275504451799138,18587679118622217,[⟨3,18899853785445296,312174666823079⟩]⟩)else(⟨12,111,18276861695478059,18591750849658980,18906640003839901,[⟨3,19221529158020822,314889154180921⟩]⟩)))))else(if i<120 then(if i<116 then(if i<114 then(if i<113 then(⟨12,112,18593108093337901,18910711734876664,19228315376415427,[⟨3,19545919017954190,317603641538763⟩]⟩)else(⟨12,113,18912068978555585,19232387107452190,19552705236348795,[⟨3,19873023365245400,320318128896605⟩]⟩))else(if i<115 then(⟨12,114,19233744351131111,19556776967385558,19879809583640005,[⟨3,20202842199894452,323032616254447⟩]⟩)else(⟨12,115,19558134211064479,19883881314676768,20209628418289057,[⟨3,20535375521901346,325747103612289⟩]⟩)))else(if i<118 then(if i<117 then(⟨12,116,19885238558355689,20213700149325820,20542161740295951,[⟨3,20870623331266082,328461590970131⟩]⟩)else(⟨12,117,20215057393004741,20546233471332714,20877409549660687,[⟨3,21208585627988660,331176078327973⟩]⟩))else(if i<119 then(⟨12,118,20547590715011635,20881481280697450,21215371846383265,[⟨3,21549262412069080,333890565685815⟩]⟩)else(⟨12,119,20882838524376371,21219443577420028,21556048630463685,[⟨3,21892653683507342,336605053043657⟩]⟩))))else(if i<124 then(if i<122 then(if i<121 then(⟨12,120,21220800821098949,21560120361500448,21899439901901947,[⟨3,22238759442303446,339319540401499⟩]⟩)else(⟨12,121,21561477605179369,21903511632938710,22245545660698051,[⟨3,22587579688457392,342034027759341⟩]⟩))else(if i<123 then(⟨12,122,21904868876617631,22249617391734814,22594365906851997,[⟨3,22939114421969180,344748515117183⟩]⟩)else(⟨12,123,22250974635413735,22598437637888760,22945900640363785,[⟨3,23293363642838810,347463002475025⟩]⟩)))else(if i<126 then(if i<125 then(⟨12,124,22599794881567681,22949972371400548,23300149861233415,[⟨3,23650327351066282,350177489832867⟩]⟩)else(⟨12,125,22951329615079469,23304221592270178,23657113569460887,[⟨3,24010005546651596,352891977190709⟩]⟩))else(if i<127 then(⟨12,126,23305578835949099,23661185300497650,24016791765046201,[⟨3,24372398229594752,355606464548551⟩]⟩)else(⟨12,127,23662542544176571,24020863496082964,24379184447989357,[⟨3,24737505399895750,358320951906393⟩]⟩))))))))else(defaultRow)
+
+def row13 : ℕ → BaseRow := fun i =>
+  if i<127 then(if i<63 then(if i<31 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(⟨13,0,119023118319921,128850084233543,158468416733557,[⟨3,188086749233571,29618332500014⟩]⟩)else(if i<2 then(⟨13,1,128850084233543,159980256756085,191110429278627,[⟨3,222240601801169,31130172522542⟩]⟩)else(⟨13,2,129056244760905,160186417283447,191316589805989,[⟨3,222446762328531,31130172522542⟩]⟩)))else(if i<5 then(if i<4 then(⟨13,3,129262405288267,160392577810809,191522750333351,[⟨3,222652922855893,31130172522542⟩]⟩)else(⟨13,4,150912086074133,179156530590848,207400975107563,[⟨3,235645419624278,28244444516715⟩,⟨8,379265866531519,31130172522542⟩]⟩))else(if i<6 then(⟨13,5,180642626434395,211859262638204,243075898842013,[⟨3,274292535045822,31216636203809⟩]⟩)else(⟨13,6,213345358481751,247534186372654,281723014263557,[⟨3,315911842154460,34188827890903⟩]⟩))))else(if i<11 then(if i<9 then(if i<8 then(⟨13,7,249020282216201,286181301794198,323342321372195,[⟨3,360503340950192,37161019577997⟩]⟩)else(⟨13,8,287667397637745,327800608902836,367933820167927,[⟨3,408067031433018,40133211265091⟩]⟩))else(if i<10 then(⟨13,9,329286704746383,372392107698568,415497510650753,[⟨3,458602913602938,43105402952185⟩]⟩)else(⟨13,10,373878203542115,419955798181394,466033392820673,[⟨3,512110987459952,46077594639279⟩]⟩)))else(if i<13 then(if i<12 then(⟨13,11,421441894024941,470491680351314,519541466677687,[⟨3,568591253004060,49049786326373⟩]⟩)else(⟨13,12,471977776194861,523999754208328,576021732221795,[⟨3,628043710235262,52021978013467⟩]⟩))else(if i<14 then(⟨13,13,525485850051875,580480019752436,635474189452997,[⟨3,690468359153558,54994169700561⟩]⟩)else(⟨13,14,581966115595983,639932476983638,697898838371293,[⟨3,755865199758948,57966361387655⟩]⟩)))))else(if i<23 then(if i<19 then(if i<17 then(if i<16 then(⟨13,15,641418572827185,702357125901934,763295678976683,[⟨3,824234232051432,60938553074749⟩]⟩)else(⟨13,16,703843221745481,767753966507324,831664711269167,[⟨3,895575456031010,63910744761843⟩]⟩))else(if i<18 then(⟨13,17,769240062350871,836122998799808,903005935248745,[⟨3,969888871697682,66882936448937⟩]⟩)else(⟨13,18,837609094643355,907464222779386,977319350915417,[⟨3,1047174479051448,69855128136031⟩]⟩)))else(if i<21 then(if i<20 then(⟨13,19,908950318622933,981777638446058,1054604958269183,[⟨3,1127432278092308,72827319823125⟩]⟩)else(⟨13,20,983263734289605,1059063245799824,1134862757310043,[⟨3,1210662268820262,75799511510219⟩]⟩))else(if i<22 then(⟨13,21,1060549341643371,1139321044840684,1218092748037997,[⟨3,1296864451235310,78771703197313⟩]⟩)else(⟨13,22,1140807140684231,1222551035568638,1304294930453045,[⟨3,1386038825337452,81743894884407⟩]⟩))))else(if i<27 then(if i<25 then(if i<24 then(⟨13,23,1224037131412185,1308753217983686,1393469304555187,[⟨3,1478185391126688,84716086571501⟩]⟩)else(⟨13,24,1310239313827233,1397927592085828,1485615870344423,[⟨3,1573304148603018,87688278258595⟩]⟩))else(if i<26 then(⟨13,25,1399413687929375,1490074157875064,1580734627820753,[⟨3,1671395097766442,90660469945689⟩]⟩)else(⟨13,26,1491560253718611,1585192915351394,1678825576984177,[⟨3,1772458238616960,93632661632783⟩]⟩)))else(if i<29 then(if i<28 then(⟨13,27,1586679011194941,1683283864514818,1779888717834695,[⟨3,1876493571154572,96604853319877⟩]⟩)else(⟨13,28,1684769960358365,1784347005365336,1883924050372307,[⟨3,1983501095379278,99577045006971⟩]⟩))else(if i<30 then(⟨13,29,1785833101208883,1888382337902948,1990931574597013,[⟨3,2093480811291078,102549236694065⟩]⟩)else(⟨13,30,1889868433746495,1995389862127654,2100911290508813,[⟨3,2206432718889972,105521428381159⟩]⟩))))))else(if i<47 then(if i<39 then(if i<35 then(if i<33 then(if i<32 then(⟨13,31,1996875957971201,2105369578039454,2213863198107707,[⟨3,2322356818175960,108493620068253⟩]⟩)else(⟨13,32,2106855673883001,2218321485638348,2329787297393695,[⟨3,2441253109149042,111465811755347⟩]⟩))else(if i<34 then(⟨13,33,2219807581481895,2334245584924336,2448683588366777,[⟨3,2563121591809218,114438003442441⟩]⟩)else(⟨13,34,2335731680767883,2453141875897418,2570552071026953,[⟨3,2687962266156488,117410195129535⟩]⟩)))else(if i<37 then(if i<36 then(⟨13,35,2454627971740965,2575010358557594,2695392745374223,[⟨3,2815775132190852,120382386816629⟩]⟩)else(⟨13,36,2576496454401141,2699851032904864,2823205611408587,[⟨3,2946560189912310,123354578503723⟩]⟩))else(if i<38 then(⟨13,37,2701337128748411,2827663898939228,2953990669130045,[⟨3,3080317439320862,126326770190817⟩]⟩)else(⟨13,38,2829149994782775,2958448956660686,3087747918538597,[⟨3,3217046880416508,129298961877911⟩]⟩))))else(if i<43 then(if i<41 then(if i<40 then(⟨13,39,2959935052504233,3092206206069238,3224477359634243,[⟨3,3356748513199248,132271153565005⟩]⟩)else(⟨13,40,3093692301912785,3228935647164884,3364178992416983,[⟨3,3499422337669082,135243345252099⟩]⟩))else(if i<42 then(⟨13,41,3230421743008431,3368637279947624,3506852816886817,[⟨3,3645068353826010,138215536939193⟩]⟩)else(⟨13,42,3370123375791171,3511311104417458,3652498833043745,[⟨3,3793686561670032,141187728626287⟩]⟩)))else(if i<45 then(if i<44 then(⟨13,43,3512797200261005,3656957120574386,3801117040887767,[⟨3,3945276961201148,144159920313381⟩]⟩)else(⟨13,44,3658443216417933,3805575328418408,3952707440418883,[⟨3,4099839552419358,147132112000475⟩]⟩))else(if i<46 then(⟨13,45,3807061424261955,3957165727949524,4107270031637093,[⟨3,4257374335324662,150104303687569⟩]⟩)else(⟨13,46,3958651823793071,4111728319167734,4264804814542397,[⟨3,4417881309917060,153076495374663⟩]⟩)))))else(if i<55 then(if i<51 then(if i<49 then(if i<48 then(⟨13,47,4113214415011281,4269263102073038,4425311789134795,[⟨3,4581360476196552,156048687061757⟩]⟩)else(⟨13,48,4270749197916585,4429770076665436,4588790955414287,[⟨3,4747811834163138,159020878748851⟩]⟩))else(if i<50 then(⟨13,49,4431256172508983,4593249242944928,4755242313380873,[⟨3,4917235383816818,161993070435945⟩]⟩)else(⟨13,50,4594735338788475,4759700600911514,4924665863034553,[⟨3,5089631125157592,164965262123039⟩]⟩)))else(if i<53 then(if i<52 then(⟨13,51,4761186696755061,4929124150565194,5097061604375327,[⟨3,5264999058185460,167937453810133⟩]⟩)else(⟨13,52,4930610246408741,5101519891905968,5272429537403195,[⟨3,5443339182900422,170909645497227⟩]⟩))else(if i<54 then(⟨13,53,5103005987749515,5276887824933836,5450769662118157,[⟨3,5624651499302478,173881837184321⟩]⟩)else(⟨13,54,5278373920777383,5455227949648798,5632081978520213,[⟨3,5808936007391628,176854028871415⟩]⟩))))else(if i<59 then(if i<57 then(if i<56 then(⟨13,55,5456714045492345,5636540266050854,5816366486609363,[⟨3,5996192707167872,179826220558509⟩]⟩)else(⟨13,56,5638026361894401,5820824774140004,6003623186385607,[⟨3,6186421598631210,182798412245603⟩]⟩))else(if i<58 then(⟨13,57,5822310869983551,6008081473916248,6193852077848945,[⟨3,6379622681781642,185770603932697⟩]⟩)else(⟨13,58,6009567569759795,6198310365379586,6387053160999377,[⟨3,6575795956619168,188742795619791⟩]⟩)))else(if i<61 then(if i<60 then(⟨13,59,6199796461223133,6391511448530018,6583226435836903,[⟨3,6774941423143788,191714987306885⟩]⟩)else(⟨13,60,6392997544373565,6587684723367544,6782371902361523,[⟨3,6977059081355502,194687178993979⟩]⟩))else(if i<62 then(⟨13,61,6589170819211091,6786830189892164,6984489560573237,[⟨3,7182148931254310,197659370681073⟩]⟩)else(⟨13,62,6788316285735711,6988947848103878,7189579410472045,[⟨3,7390210972840212,200631562368167⟩]⟩)))))))else(if i<95 then(if i<79 then(if i<71 then(if i<67 then(if i<65 then(if i<64 then(⟨13,63,6990433943947425,7194037698002686,7397641452057947,[⟨3,7601245206113208,203603754055261⟩]⟩)else(⟨13,64,7195523793846233,7402099739588588,7608675685330943,[⟨3,7815251631073298,206575945742355⟩]⟩))else(if i<66 then(⟨13,65,7403585835432135,7613133972861584,7822682110291033,[⟨3,8032230247720482,209548137429449⟩]⟩)else(⟨13,66,7614620068705131,7827140397821674,8039660726938217,[⟨3,8252181056054760,212520329116543⟩]⟩)))else(if i<69 then(if i<68 then(⟨13,67,7828626493665221,8044119014468858,8259611535272495,[⟨3,8475104056076132,215492520803637⟩]⟩)else(⟨13,68,8045605110312405,8264069822803136,8482534535293867,[⟨3,8700999247784598,218464712490731⟩]⟩))else(if i<70 then(⟨13,69,8265555918646683,8486992822824508,8708429727002333,[⟨3,8929866631180158,221436904177825⟩]⟩)else(⟨13,70,8488478918668055,8712888014532974,8937297110397893,[⟨3,9161706206262812,224409095864919⟩]⟩))))else(if i<75 then(if i<73 then(if i<72 then(⟨13,71,8714374110376521,8941755397928534,9169136685480547,[⟨3,9396517973032560,227381287552013⟩]⟩)else(⟨13,72,8943241493772081,9173594973011188,9403948452250295,[⟨3,9634301931489402,230353479239107⟩]⟩))else(if i<74 then(⟨13,73,9175081068854735,9408406739780936,9641732410707137,[⟨3,9875058081633338,233325670926201⟩]⟩)else(⟨13,74,9409892835624483,9646190698237778,9882488560851073,[⟨3,10118786423464368,236297862613295⟩]⟩)))else(if i<77 then(if i<76 then(⟨13,75,9647676794081325,9886946848381714,10126216902682103,[⟨3,10365486956982492,239270054300389⟩]⟩)else(⟨13,76,9888432944225261,10130675190212744,10372917436200227,[⟨3,10615159682187710,242242245987483⟩]⟩))else(if i<78 then(⟨13,77,10132161286056291,10377375723730868,10622590161405445,[⟨3,10867804599080022,245214437674577⟩]⟩)else(⟨13,78,10378861819574415,10627048448936086,10875235078297757,[⟨3,11123421707659428,248186629361671⟩]⟩)))))else(if i<87 then(if i<83 then(if i<81 then(if i<80 then(⟨13,79,10628534544779633,10879693365828398,11130852186877163,[⟨3,11382011007925928,251158821048765⟩]⟩)else(⟨13,80,10881179461671945,11135310474407804,11389441487143663,[⟨3,11643572499879522,254131012735859⟩]⟩))else(if i<82 then(⟨13,81,11136796570251351,11393899774674304,11651002979097257,[⟨3,11908106183520210,257103204422953⟩]⟩)else(⟨13,82,11395385870517851,11655461266627898,11915536662737945,[⟨3,12175612058847992,260075396110047⟩]⟩)))else(if i<85 then(if i<84 then(⟨13,83,11656947362471445,11919994950268586,12183042538065727,[⟨3,12446090125862868,263047587797141⟩]⟩)else(⟨13,84,11921481046112133,12187500825596368,12453520605080603,[⟨3,12719540384564838,266019779484235⟩]⟩))else(if i<86 then(⟨13,85,12188986921439915,12457978892611244,12726970863782573,[⟨3,12995962834953902,268991971171329⟩]⟩)else(⟨13,86,12459464988454791,12731429151313214,13003393314171637,[⟨3,13275357477030060,271964162858423⟩]⟩))))else(if i<91 then(if i<89 then(if i<88 then(⟨13,87,12732915247156761,13007851601702278,13282787956247795,[⟨3,13557724310793312,274936354545517⟩]⟩)else(⟨13,88,13009337697545825,13287246243778436,13565154790011047,[⟨3,13843063336243658,277908546232611⟩]⟩))else(if i<90 then(⟨13,89,13288732339621983,13569613077541688,13850493815461393,[⟨3,14131374553381098,280880737919705⟩]⟩)else(⟨13,90,13571099173385235,13854952102992034,14138805032598833,[⟨3,14422657962205632,283852929606799⟩]⟩)))else(if i<93 then(if i<92 then(⟨13,91,13856438198835581,14143263320129474,14430088441423367,[⟨3,14716913562717260,286825121293893⟩]⟩)else(⟨13,92,14144749415973021,14434546728954008,14724344041934995,[⟨3,15014141354915982,289797312980987⟩]⟩))else(if i<94 then(⟨13,93,14436032824797555,14728802329465636,15021571834133717,[⟨3,15314341338801798,292769504668081⟩]⟩)else(⟨13,94,14730288425309183,15026030121664358,15321771818019533,[⟨3,15617513514374708,295741696355175⟩]⟩))))))else(if i<111 then(if i<103 then(if i<99 then(if i<97 then(if i<96 then(⟨13,95,15027516217507905,15326230105550174,15624943993592443,[⟨3,15923657881634712,298713888042269⟩]⟩)else(⟨13,96,15327716201393721,15629402281123084,15931088360852447,[⟨3,16232774440581810,301686079729363⟩]⟩))else(if i<98 then(⟨13,97,15630888376966631,15935546648383088,16240204919799545,[⟨3,16544863191216002,304658271416457⟩]⟩)else(⟨13,98,15937032744226635,16244663207330186,16552293670433737,[⟨3,16859924133537288,307630463103551⟩]⟩)))else(if i<101 then(if i<100 then(⟨13,99,16246149303173733,16556751957964378,16867354612755023,[⟨3,17177957267545668,310602654790645⟩]⟩)else(⟨13,100,16558238053807925,16871812900285664,17185387746763403,[⟨3,17498962593241142,313574846477739⟩]⟩))else(if i<102 then(⟨13,101,16873298996129211,17189846034294044,17506393072458877,[⟨3,17822940110623710,316547038164833⟩]⟩)else(⟨13,102,17191332130137591,17510851359989518,17830370589841445,[⟨3,18149889819693372,319519229851927⟩]⟩))))else(if i<107 then(if i<105 then(if i<104 then(⟨13,103,17512337455833065,17834828877372086,18157320298911107,[⟨3,18479811720450128,322491421539021⟩]⟩)else(⟨13,104,17836314973215633,18161778586441748,18487242199667863,[⟨3,18812705812893978,325463613226115⟩]⟩))else(if i<106 then(⟨13,105,18163264682285295,18491700487198504,18820136292111713,[⟨3,19148572097024922,328435804913209⟩]⟩)else(⟨13,106,18493186583042051,18824594579642354,19156002576242657,[⟨3,19487410572842960,331407996600303⟩]⟩)))else(if i<109 then(if i<108 then(⟨13,107,18826080675485901,19160460863773298,19494841052060695,[⟨3,19829221240348092,334380188287397⟩]⟩)else(⟨13,108,19161946959616845,19499299339591336,19836651719565827,[⟨3,20174004099540318,337352379974491⟩]⟩))else(if i<110 then(⟨13,109,19500785435434883,19841110007096468,20181434578758053,[⟨3,20521759150419638,340324571661585⟩]⟩)else(⟨13,110,19842596102940015,20185892866288694,20529189629637373,[⟨3,20872486392986052,343296763348679⟩]⟩)))))else(if i<119 then(if i<115 then(if i<113 then(if i<112 then(⟨13,111,20187378962132241,20533647917168014,20879916872203787,[⟨3,21226185827239560,346268955035773⟩]⟩)else(⟨13,112,20535134013011561,20884375159734428,21233616306457295,[⟨3,21582857453180162,349241146722867⟩]⟩))else(if i<114 then(⟨13,113,20885861255577975,21238074593987936,21590287932397897,[⟨3,21942501270807858,352213338409961⟩]⟩)else(⟨13,114,21239560689831483,21594746219928538,21949931750025593,[⟨3,22305117280122648,355185530097055⟩]⟩)))else(if i<117 then(if i<116 then(⟨13,115,21596232315772085,21954390037556234,22312547759340383,[⟨3,22670705481124532,358157721784149⟩]⟩)else(⟨13,116,21955876133399781,22317006046871024,22678135960342267,[⟨3,23039265873813510,361129913471243⟩]⟩))else(if i<118 then(⟨13,117,22318492142714571,22682594247872908,23046696353031245,[⟨3,23410798458189582,364102105158337⟩]⟩)else(⟨13,118,22684080343716455,23051154640561886,23418228937407317,[⟨3,23785303234252748,367074296845431⟩]⟩))))else(if i<123 then(if i<121 then(if i<120 then(⟨13,119,23052640736405433,23422687224937958,23792733713470483,[⟨3,24162780202003008,370046488532525⟩]⟩)else(⟨13,120,23424173320781505,23797192001001124,24170210681220743,[⟨3,24543229361440362,373018680219619⟩]⟩))else(if i<122 then(⟨13,121,23798678096844671,24174668968751384,24550659840658097,[⟨3,24926650712564810,375990871906713⟩]⟩)else(⟨13,122,24176155064594931,24555118128188738,24934081191782545,[⟨3,25313044255376352,378963063593807⟩]⟩)))else(if i<125 then(if i<124 then(⟨13,123,24556604224032285,24938539479313186,25320474734594087,[⟨3,25702409989874988,381935255280901⟩]⟩)else(⟨13,124,24940025575156733,25324933022124728,25709840469092723,[⟨3,26094747916060718,384907446967995⟩]⟩))else(if i<126 then(⟨13,125,25326419117968275,25714298756623364,26102178395278453,[⟨3,26490058033933542,387879638655089⟩]⟩)else(⟨13,126,25715784852466911,26106636682809094,26497488513151277,[⟨3,26888340343493460,390851830342183⟩]⟩))))))))else(defaultRow)
+
+def row14 : ℕ → BaseRow := fun i =>
+  if i<126 then(if i<63 then(if i<31 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(⟨14,0,151252811907428,162797778370940,197570111996334,[⟨3,232342445621728,34772333625394⟩]⟩)else(if i<2 then(⟨14,1,162797778370940,199219392020910,235641005670880,[⟨3,272062619320850,36421613649970⟩]⟩)else(⟨14,2,163003938898302,199425552548272,235847166198242,[⟨3,272268779848212,36421613649970⟩]⟩)))else(if i<5 then(if i<4 then(⟨14,3,163210099425664,199631713075634,236053326725604,[⟨3,272474940375574,36421613649970⟩]⟩)else(⟨14,4,182953383851739,215260970322594,247568556793449,[⟨3,279876143264304,32307586470855⟩,⟨5,346280248738430,36421613649970⟩]⟩))else(if i<6 then(⟨14,5,216875918330767,252413400817968,287950883305169,[⟨3,323488365792370,35537482487201⟩,⟨59,2314421786905870,36421613649970⟩]⟩)else(⟨14,6,254028348826141,292795727329688,331563105833235,[⟨3,370330484336782,38767378503547⟩]⟩))))else(if i<11 then(if i<9 then(if i<8 then(⟨14,7,294410675337861,336407949857754,378405224377647,[⟨3,420402498897540,41997274519893⟩]⟩)else(⟨14,8,338022897865927,383250068402166,428477238938405,[⟨3,473704409474644,45227170536239⟩]⟩))else(if i<10 then(⟨14,9,384865016410339,433322082962924,481779149515509,[⟨3,530236216068094,48457066552585⟩]⟩)else(⟨14,10,434937030971097,486623993540028,538310956108959,[⟨3,589997918677890,51686962568931⟩]⟩)))else(if i<13 then(if i<12 then(⟨14,11,488238941548201,543155800133478,598072658718755,[⟨3,652989517304032,54916858585277⟩]⟩)else(⟨14,12,544770748141651,602917502743274,661064257344897,[⟨3,719211011946520,58146754601623⟩]⟩))else(if i<14 then(⟨14,13,604532450751447,665909101369416,727285751987385,[⟨3,788662402605354,61376650617969⟩]⟩)else(⟨14,14,667524049377589,732130596011904,796737142646219,[⟨3,861343689280534,64606546634315⟩]⟩)))))else(if i<23 then(if i<19 then(if i<17 then(if i<16 then(⟨14,15,733745544020077,801581986670738,869418429321399,[⟨3,937254871972060,67836442650661⟩]⟩)else(⟨14,16,803196934678911,874263273345918,945329612012925,[⟨3,1016395950679932,71066338667007⟩]⟩))else(if i<18 then(⟨14,17,875878221354091,950174456037444,1024470690720797,[⟨3,1098766925404150,74296234683353⟩]⟩)else(⟨14,18,951789404045617,1029315534745316,1106841665445015,[⟨3,1184367796144714,77526130699699⟩]⟩)))else(if i<21 then(if i<20 then(⟨14,19,1030930482753489,1111686509469534,1192442536185579,[⟨3,1273198562901624,80756026716045⟩]⟩)else(⟨14,20,1113301457477707,1197287380210098,1281273302942489,[⟨3,1365259225674880,83985922732391⟩]⟩))else(if i<22 then(⟨14,21,1198902328218271,1286118146967008,1373333965715745,[⟨3,1460549784464482,87215818748737⟩]⟩)else(⟨14,22,1287733094975181,1378178809740264,1468624524505347,[⟨3,1559070239270430,90445714765083⟩]⟩))))else(if i<27 then(if i<25 then(if i<24 then(⟨14,23,1379793757748437,1473469368529866,1567144979311295,[⟨3,1660820590092724,93675610781429⟩]⟩)else(⟨14,24,1475084316538039,1571989823335814,1668895330133589,[⟨3,1765800836931364,96905506797775⟩]⟩))else(if i<26 then(⟨14,25,1573604771343987,1673740174158108,1773875576972229,[⟨3,1874010979786350,100135402814121⟩]⟩)else(⟨14,26,1675355122166281,1778720420996748,1882085719827215,[⟨3,1985451018657682,103365298830467⟩]⟩)))else(if i<29 then(if i<28 then(⟨14,27,1780335369004921,1886930563851734,1993525758698547,[⟨3,2100120953545360,106595194846813⟩]⟩)else(⟨14,28,1888545511859907,1998370602723066,2108195693586225,[⟨3,2218020784449384,109825090863159⟩]⟩))else(if i<30 then(⟨14,29,1999985550731239,2113040537610744,2226095524490249,[⟨3,2339150511369754,113054986879505⟩]⟩)else(⟨14,30,2114655485618917,2230940368514768,2347225251410619,[⟨3,2463510134306470,116284882895851⟩]⟩))))))else(if i<47 then(if i<39 then(if i<35 then(if i<33 then(if i<32 then(⟨14,31,2232555316522941,2352070095435138,2471584874347335,[⟨3,2591099653259532,119514778912197⟩]⟩)else(⟨14,32,2353685043443311,2476429718371854,2599174393300397,[⟨3,2721919068228940,122744674928543⟩]⟩))else(if i<34 then(⟨14,33,2478044666380027,2604019237324916,2729993808269805,[⟨3,2855968379214694,125974570944889⟩]⟩)else(⟨14,34,2605634185333089,2734838652294324,2864043119255559,[⟨3,2993247586216794,129204466961235⟩]⟩)))else(if i<37 then(if i<36 then(⟨14,35,2736453600302497,2868887963280078,3001322326257659,[⟨3,3133756689235240,132434362977581⟩]⟩)else(⟨14,36,2870502911288251,3006167170282178,3141831429276105,[⟨3,3277495688270032,135664258993927⟩]⟩))else(if i<38 then(⟨14,37,3007782118290351,3146676273300624,3285570428310897,[⟨3,3424464583321170,138894155010273⟩]⟩)else(⟨14,38,3148291221308797,3290415272335416,3432539323362035,[⟨3,3574663374388654,142124051026619⟩]⟩))))else(if i<43 then(if i<41 then(if i<40 then(⟨14,39,3292030220343589,3437384167386554,3582738114429519,[⟨3,3728092061472484,145353947042965⟩]⟩)else(⟨14,40,3438999115394727,3587582958454038,3736166801513349,[⟨3,3884750644572660,148583843059311⟩]⟩))else(if i<42 then(⟨14,41,3589197906462211,3741011645537868,3892825384613525,[⟨3,4044639123689182,151813739075657⟩]⟩)else(⟨14,42,3742626593546041,3897670228638044,4052713863730047,[⟨3,4207757498822050,155043635092003⟩]⟩)))else(if i<45 then(if i<44 then(⟨14,43,3899285176646217,4057558707754566,4215832238862915,[⟨3,4374105769971264,158273531108349⟩]⟩)else(⟨14,44,4059173655762739,4220677082887434,4382180510012129,[⟨3,4543683937136824,161503427124695⟩]⟩))else(if i<46 then(⟨14,45,4222292030895607,4387025354036648,4551758677177689,[⟨3,4716492000318730,164733323141041⟩]⟩)else(⟨14,46,4388640302044821,4556603521202208,4724566740359595,[⟨3,4892529959516982,167963219157387⟩]⟩)))))else(if i<55 then(if i<51 then(if i<49 then(if i<48 then(⟨14,47,4558218469210381,4729411584384114,4900604699557847,[⟨3,5071797814731580,171193115173733⟩]⟩)else(⟨14,48,4731026532392287,4905449543582366,5079872554772445,[⟨3,5254295565962524,174423011190079⟩]⟩))else(if i<50 then(⟨14,49,4907064491590539,5084717398796964,5262370306003389,[⟨3,5440023213209814,177652907206425⟩]⟩)else(⟨14,50,5086332346805137,5267215150027908,5448097953250679,[⟨3,5628980756473450,180882803222771⟩]⟩)))else(if i<53 then(if i<52 then(⟨14,51,5268830098036081,5452942797275198,5637055496514315,[⟨3,5821168195753432,184112699239117⟩]⟩)else(⟨14,52,5454557745283371,5641900340538834,5829242935794297,[⟨3,6016585531049760,187342595255463⟩]⟩))else(if i<54 then(⟨14,53,5643515288547007,5834087779818816,6024660271090625,[⟨3,6215232762362434,190572491271809⟩]⟩)else(⟨14,54,5835702727826989,6029505115115144,6223307502403299,[⟨3,6417109889691454,193802387288155⟩]⟩))))else(if i<59 then(if i<57 then(if i<56 then(⟨14,55,6031120063123317,6228152346427818,6425184629732319,[⟨3,6622216913036820,197032283304501⟩]⟩)else(⟨14,56,6229767294435991,6430029473756838,6630291653077685,[⟨3,6830553832398532,200262179320847⟩]⟩))else(if i<58 then(⟨14,57,6431644421765011,6635136497102204,6838628572439397,[⟨3,7042120647776590,203492075337193⟩]⟩)else(⟨14,58,6636751445110377,6843473416463916,7050195387817455,[⟨3,7256917359170994,206721971353539⟩]⟩)))else(if i<61 then(if i<60 then(⟨14,59,6845088364472089,7055040231841974,7264992099211859,[⟨3,7474943966581744,209951867369885⟩]⟩)else(⟨14,60,7056655179850147,7269836943236378,7483018706622609,[⟨3,7696200470008840,213181763386231⟩]⟩))else(if i<62 then(⟨14,61,7271451891244551,7487863550647128,7704275210049705,[⟨3,7920686869452282,216411659402577⟩]⟩)else(⟨14,62,7489478498655301,7709120054074224,7928761609493147,[⟨3,8148403164912070,219641555418923⟩]⟩)))))))else(if i<94 then(if i<78 then(if i<70 then(if i<66 then(if i<64 then(⟨14,63,7710735002082397,7933606453517666,8156477904952935,[⟨3,8379349356388204,222871451435269⟩]⟩)else(if i<65 then(⟨14,64,7935221401525839,8161322748977454,8387424096429069,[⟨3,8613525443880684,226101347451615⟩]⟩)else(⟨14,65,8162937696985627,8392268940453588,8621600183921549,[⟨3,8850931427389510,229331243467961⟩]⟩)))else(if i<68 then(if i<67 then(⟨14,66,8393883888461761,8626445027946068,8859006167430375,[⟨3,9091567306914682,232561139484307⟩]⟩)else(⟨14,67,8628059975954241,8863851011454894,9099642046955547,[⟨3,9335433082456200,235791035500653⟩]⟩))else(if i<69 then(⟨14,68,8865465959463067,9104486890980066,9343507822497065,[⟨3,9582528754014064,239020931516999⟩]⟩)else(⟨14,69,9106101838988239,9348352666521584,9590603494054929,[⟨3,9832854321588274,242250827533345⟩]⟩))))else(if i<74 then(if i<72 then(if i<71 then(⟨14,70,9349967614529757,9595448338079448,9840929061629139,[⟨3,10086409785178830,245480723549691⟩]⟩)else(⟨14,71,9597063286087621,9845773905653658,10094484525219695,[⟨3,10343195144785732,248710619566037⟩]⟩))else(if i<73 then(⟨14,72,9847388853661831,10099329369244214,10351269884826597,[⟨3,10603210400408980,251940515582383⟩]⟩)else(⟨14,73,10100944317252387,10356114728851116,10611285140449845,[⟨3,10866455552048574,255170411598729⟩]⟩)))else(if i<76 then(if i<75 then(⟨14,74,10357729676859289,10616129984474364,10874530292089439,[⟨3,11132930599704514,258400307615075⟩]⟩)else(⟨14,75,10617744932482537,10879375136113958,11141005339745379,[⟨3,11402635543376800,261630203631421⟩]⟩))else(if i<77 then(⟨14,76,10880990084122131,11145850183769898,11410710283417665,[⟨3,11675570383065432,264860099647767⟩]⟩)else(⟨14,77,11147465131778071,11415555127442184,11683645123106297,[⟨3,11951735118770410,268089995664113⟩]⟩)))))else(if i<86 then(if i<82 then(if i<80 then(if i<79 then(⟨14,78,11417170075450357,11688489967130816,11959809858811275,[⟨3,12231129750491734,271319891680459⟩]⟩)else(⟨14,79,11690104915138989,11964654702835794,12239204490532599,[⟨3,12513754278229404,274549787696805⟩]⟩))else(if i<81 then(⟨14,80,11966269650843967,12244049334557118,12521829018270269,[⟨3,12799608701983420,277779683713151⟩]⟩)else(⟨14,81,12245664282565291,12526673862294788,12807683442024285,[⟨3,13088693021753782,281009579729497⟩]⟩)))else(if i<84 then(if i<83 then(⟨14,82,12528288810302961,12812528286048804,13096767761794647,[⟨3,13381007237540490,284239475745843⟩]⟩)else(⟨14,83,12814143234056977,13101612605819166,13389081977581355,[⟨3,13676551349343544,287469371762189⟩]⟩))else(if i<85 then(⟨14,84,13103227553827339,13393926821605874,13684626089384409,[⟨3,13975325357162944,290699267778535⟩]⟩)else(⟨14,85,13395541769614047,13689470933408928,13983400097203809,[⟨3,14277329260998690,293929163794881⟩]⟩))))else(if i<90 then(if i<88 then(if i<87 then(⟨14,86,13691085881417101,13988244941228328,14285404001039555,[⟨3,14582563060850782,297159059811227⟩]⟩)else(⟨14,87,13989859889236501,14290248845064074,14590637800891647,[⟨3,14891026756719220,300388955827573⟩]⟩))else(if i<89 then(⟨14,88,14291863793072247,14595482644916166,14899101496760085,[⟨3,15202720348604004,303618851843919⟩]⟩)else(⟨14,89,14597097592924339,14903946340784604,15210795088644869,[⟨3,15517643836505134,306848747860265⟩]⟩)))else(if i<92 then(if i<91 then(⟨14,90,14905561288792777,15215639932669388,15525718576545999,[⟨3,15835797220422610,310078643876611⟩]⟩)else(⟨14,91,15217254880677561,15530563420570518,15843871960463475,[⟨3,16157180500356432,313308539892957⟩]⟩))else(if i<93 then(⟨14,92,15532178368578691,15848716804487994,16165255240397297,[⟨3,16481793676306600,316538435909303⟩]⟩)else(⟨14,93,15850331752496167,16170100084421816,16489868416347465,[⟨3,16809636748273114,319768331925649⟩]⟩))))))else(if i<110 then(if i<102 then(if i<98 then(if i<96 then(if i<95 then(⟨14,94,16171715032429989,16494713260371984,16817711488313979,[⟨3,17140709716255974,322998227941995⟩]⟩)else(⟨14,95,16496328208380157,16822556332338498,17148784456296839,[⟨3,17475012580255180,326228123958341⟩]⟩))else(if i<97 then(⟨14,96,16824171280346671,17153629300321358,17483087320296045,[⟨3,17812545340270732,329458019974687⟩]⟩)else(⟨14,97,17155244248329531,17487932164320564,17820620080311597,[⟨3,18153307996302630,332687915991033⟩]⟩)))else(if i<100 then(if i<99 then(⟨14,98,17489547112328737,17825464924336116,18161382736343495,[⟨3,18497300548350874,335917812007379⟩]⟩)else(⟨14,99,17827079872344289,18166227580368014,18505375288391739,[⟨3,18844522996415464,339147708023725⟩]⟩))else(if i<101 then(⟨14,100,18167842528376187,18510220132416258,18852597736456329,[⟨3,19194975340496400,342377604040071⟩]⟩)else(⟨14,101,18511835080424431,18857442580480848,19203050080537265,[⟨3,19548657580593682,345607500056417⟩]⟩))))else(if i<106 then(if i<104 then(if i<103 then(⟨14,102,18859057528489021,19207894924561784,19556732320634547,[⟨3,19905569716707310,348837396072763⟩]⟩)else(⟨14,103,19209509872569957,19561577164659066,19913644456748175,[⟨3,20265711748837284,352067292089109⟩]⟩))else(if i<105 then(⟨14,104,19563192112667239,19918489300772694,20273786488878149,[⟨3,20629083676983604,355297188105455⟩]⟩)else(⟨14,105,19920104248780867,20278631332902668,20637158417024469,[⟨3,20995685501146270,358527084121801⟩]⟩)))else(if i<108 then(if i<107 then(⟨14,106,20280246280910841,20642003261048988,21003760241187135,[⟨3,21365517221325282,361756980138147⟩]⟩)else(⟨14,107,20643618209057161,21008605085211654,21373591961366147,[⟨3,21738578837520640,364986876154493⟩]⟩))else(if i<109 then(⟨14,108,21010220033219827,21378436805390666,21746653577561505,[⟨3,22114870349732344,368216772170839⟩]⟩)else(⟨14,109,21380051753398839,21751498421586024,22122945089773209,[⟨3,22494391757960394,371446668187185⟩]⟩)))))else(if i<118 then(if i<114 then(if i<112 then(if i<111 then(⟨14,110,21753113369594197,22127789933797728,22502466498001259,[⟨3,22877143062204790,374676564203531⟩]⟩)else(⟨14,111,22129404881805901,22507311342025778,22885217802245655,[⟨3,23263124262465532,377906460219877⟩]⟩))else(if i<113 then(⟨14,112,22508926290033951,22890062646270174,23271199002506397,[⟨3,23652335358742620,381136356236223⟩]⟩)else(⟨14,113,22891677594278347,23276043846530916,23660410098783485,[⟨3,24044776351036054,384366252252569⟩]⟩)))else(if i<116 then(if i<115 then(⟨14,114,23277658794539089,23665254942808004,24052851091076919,[⟨3,24440447239345834,387596148268915⟩]⟩)else(⟨14,115,23666869890816177,24057695935101438,24448521979386699,[⟨3,24839348023671960,390826044285261⟩]⟩))else(if i<117 then(⟨14,116,24059310883109611,24453366823411218,24847422763712825,[⟨3,25241478704014432,394055940301607⟩]⟩)else(⟨14,117,24454981771419391,24852267607737344,25249553444055297,[⟨3,25646839280373250,397285836317953⟩]⟩))))else(if i<122 then(if i<120 then(if i<119 then(⟨14,118,24853882555745517,25254398288079816,25654914020414115,[⟨3,26055429752748414,400515732334299⟩]⟩)else(⟨14,119,25256013236087989,25659758864438634,26063504492789279,[⟨3,26467250121139924,403745628350645⟩]⟩))else(if i<121 then(⟨14,120,25661373812446807,26068349336813798,26475324861180789,[⟨3,26882300385547780,406975524366991⟩]⟩)else(⟨14,121,26069964284821971,26480169705205308,26890375125588645,[⟨3,27300580545971982,410205420383337⟩]⟩)))else(if i<124 then(if i<123 then(⟨14,122,26481784653213481,26895219969613164,27308655286012847,[⟨3,27722090602412530,413435316399683⟩]⟩)else(⟨14,123,26896834917621337,27313500130037366,27730165342453395,[⟨3,28146830554869424,416665212416029⟩]⟩))else(if i<125 then(⟨14,124,27315115078045539,27735010186477914,28154905294910289,[⟨3,28574800403342664,419895108432375⟩]⟩)else(⟨14,125,27736625134486087,28159750138934808,28582875143383529,[⟨3,29006000147832250,423125004448721⟩]⟩))))))))else(defaultRow)
+
+def row15 : ℕ → BaseRow := fun i =>
+  if i<125 then(if i<62 then(if i<31 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(⟨15,0,188842666623387,202243073638837,242581728395755,[⟨3,282920383152673,40338654756918⟩]⟩)else(if i<2 then(⟨15,1,202243073638837,244368448422379,286493823205921,[⟨3,328619197989463,42125374783542⟩]⟩)else(⟨15,2,202449234166199,244574608949741,286699983733283,[⟨3,328825358516825,42125374783542⟩]⟩)))else(if i<5 then(if i<4 then(⟨15,3,202655394693561,244780769477103,286906144260645,[⟨3,329031519044187,42125374783542⟩]⟩)else(⟨15,4,219186675748111,255815108502358,292443541256605,[⟨3,329993600107103,42125374783542⟩]⟩))else(if i<6 then(⟨15,5,257558908675157,297674941775002,337790974874847,[⟨3,377907007974692,40116033099845⟩,⟨27,1342376995981171,42125374783542⟩]⟩)else(⟨15,6,299418741947801,343022375393244,386626008838687,[⟨3,430229642284130,43603633445443⟩]⟩))))else(if i<11 then(if i<9 then(if i<8 then(⟨15,7,344766175566043,391857409357084,438948643148125,[⟨3,486039876939166,47091233791041⟩]⟩)else(⟨15,8,393601209529883,444180043666522,494758877803161,[⟨3,545337711939800,50578834136639⟩]⟩))else(if i<10 then(⟨15,9,445923843839321,499990278321558,554056712803795,[⟨3,608123147286032,54066434482237⟩]⟩)else(⟨15,10,501734078494357,559288113322192,616842148150027,[⟨3,674396182977862,57554034827835⟩]⟩)))else(if i<13 then(if i<12 then(⟨15,11,561031913494991,622073548668424,683115183841857,[⟨3,744156819015290,61041635173433⟩]⟩)else(⟨15,12,623817348841223,688346584360254,752875819879285,[⟨3,817405055398316,64529235519031⟩]⟩))else(if i<14 then(⟨15,13,690090384533053,758107220397682,826124056262311,[⟨3,894140892126940,68016835864629⟩]⟩)else(⟨15,14,759851020570481,831355456780708,902859892990935,[⟨3,974364329201162,71504436210227⟩]⟩)))))else(if i<23 then(if i<19 then(if i<17 then(if i<16 then(⟨15,15,833099256953507,908091293509332,983083330065157,[⟨3,1058075366620982,74992036555825⟩]⟩)else(⟨15,16,909835093682131,988314730583554,1066794367484977,[⟨3,1145274004386400,78479636901423⟩]⟩))else(if i<18 then(⟨15,17,990058530756353,1072025768003374,1153993005250395,[⟨3,1235960242497416,81967237247021⟩]⟩)else(⟨15,18,1073769568176173,1159224405768792,1244679243361411,[⟨3,1330134080954030,85454837592619⟩]⟩)))else(if i<21 then(if i<20 then(⟨15,19,1160968205941591,1249910643879808,1338853081818025,[⟨3,1427795519756242,88942437938217⟩]⟩)else(⟨15,20,1251654444052607,1344084482336422,1436514520620237,[⟨3,1528944558904052,92430038283815⟩]⟩))else(if i<22 then(⟨15,21,1345828282509221,1441745921138634,1537663559768047,[⟨3,1633581198397460,95917638629413⟩]⟩)else(⟨15,22,1443489721311433,1542894960286444,1642300199261455,[⟨3,1741705438236466,99405238975011⟩]⟩))))else(if i<27 then(if i<25 then(if i<24 then(⟨15,23,1544638760459243,1647531599779852,1750424439100461,[⟨3,1853317278421070,102892839320609⟩]⟩)else(⟨15,24,1649275399952651,1755655839618858,1862036279285065,[⟨3,1968416718951272,106380439666207⟩]⟩))else(if i<26 then(⟨15,25,1757399639791657,1867267679803462,1977135719815267,[⟨3,2087003759827072,109868040011805⟩]⟩)else(⟨15,26,1869011479976261,1982367120333664,2095722760691067,[⟨3,2209078401048470,113355640357403⟩]⟩)))else(if i<29 then(if i<28 then(⟨15,27,1984110920506463,2100954161209464,2217797401912465,[⟨3,2334640642615466,116843240703001⟩]⟩)else(⟨15,28,2102697961382263,2223028802430862,2343359643479461,[⟨3,2463690484528060,120330841048599⟩]⟩))else(if i<30 then(⟨15,29,2224772602603661,2348591043997858,2472409485392055,[⟨3,2596227926786252,123818441394197⟩]⟩)else(⟨15,30,2350334844170657,2477640885910452,2604946927650247,[⟨3,2732252969390042,127306041739795⟩]⟩))))))else(if i<46 then(if i<38 then(if i<34 then(if i<32 then(⟨15,31,2479384686083251,2610178328168644,2740971970254037,[⟨3,2871765612339430,130793642085393⟩]⟩)else(if i<33 then(⟨15,32,2611922128341443,2746203370772434,2880484613203425,[⟨3,3014765855634416,134281242430991⟩]⟩)else(⟨15,33,2747947170945233,2885716013721822,3023484856498411,[⟨3,3161253699275000,137768842776589⟩]⟩)))else(if i<36 then(if i<35 then(⟨15,34,2887459813894621,3028716257016808,3169972700138995,[⟨3,3311229143261182,141256443122187⟩]⟩)else(⟨15,35,3030460057189607,3175204100657392,3319948144125177,[⟨3,3464692187592962,144744043467785⟩]⟩))else(if i<37 then(⟨15,36,3176947900830191,3325179544643574,3473411188456957,[⟨3,3621642832270340,148231643813383⟩]⟩)else(⟨15,37,3326923344816373,3478642588975354,3630361833134335,[⟨3,3782081077293316,151719244158981⟩]⟩))))else(if i<42 then(if i<40 then(if i<39 then(⟨15,38,3480386389148153,3635593233652732,3790800078157311,[⟨3,3946006922661890,155206844504579⟩]⟩)else(⟨15,39,3637337033825531,3796031478675708,3954725923525885,[⟨3,4113420368376062,158694444850177⟩]⟩))else(if i<41 then(⟨15,40,3797775278848507,3959957324044282,4122139369240057,[⟨3,4284321414435832,162182045195775⟩]⟩)else(⟨15,41,3961701124217081,4127370769758454,4293040415299827,[⟨3,4458710060841200,165669645541373⟩]⟩)))else(if i<44 then(if i<43 then(⟨15,42,4129114569931253,4298271815818224,4467429061705195,[⟨3,4636586307592166,169157245886971⟩]⟩)else(⟨15,43,4300015615991023,4472660462223592,4645305308456161,[⟨3,4817950154688730,172644846232569⟩]⟩))else(if i<45 then(⟨15,44,4474404262396391,4650536708974558,4826669155552725,[⟨3,5002801602130892,176132446578167⟩]⟩)else(⟨15,45,4652280509147357,4831900556071122,5011520602994887,[⟨3,5191140649918652,179620046923765⟩]⟩)))))else(if i<54 then(if i<50 then(if i<48 then(if i<47 then(⟨15,46,4833644356243921,5016752003513284,5199859650782647,[⟨3,5382967298052010,183107647269363⟩]⟩)else(⟨15,47,5018495803686083,5205091051301044,5391686298916005,[⟨3,5578281546530966,186595247614961⟩]⟩))else(if i<49 then(⟨15,48,5206834851473843,5396917699434402,5587000547394961,[⟨3,5777083395355520,190082847960559⟩]⟩)else(⟨15,49,5398661499607201,5592231947913358,5785802396219515,[⟨3,5979372844525672,193570448306157⟩]⟩)))else(if i<52 then(if i<51 then(⟨15,50,5593975748086157,5791033796737912,5988091845389667,[⟨3,6185149894041422,197058048651755⟩]⟩)else(⟨15,51,5792777596910711,5993323245908064,6193868894905417,[⟨3,6394414543902770,200545648997353⟩]⟩))else(if i<53 then(⟨15,52,5995067046080863,6199100295423814,6403133544766765,[⟨3,6607166794109716,204033249342951⟩]⟩)else(⟨15,53,6200844095596613,6408364945285162,6615885794973711,[⟨3,6823406644662260,207520849688549⟩]⟩))))else(if i<58 then(if i<56 then(if i<55 then(⟨15,54,6410108745457961,6621117195492108,6832125645526255,[⟨3,7043134095560402,211008450034147⟩]⟩)else(⟨15,55,6622860995664907,6837357046044652,7051853096424397,[⟨3,7266349146804142,214496050379745⟩]⟩))else(if i<57 then(⟨15,56,6839100846217451,7057084496942794,7275068147668137,[⟨3,7493051798393480,217983650725343⟩]⟩)else(⟨15,57,7058828297115593,7280299548186534,7501770799257475,[⟨3,7723242050328416,221471251070941⟩]⟩)))else(if i<60 then(if i<59 then(⟨15,58,7282043348359333,7507002199775872,7731961051192411,[⟨3,7956919902608950,224958851416539⟩]⟩)else(⟨15,59,7508745999948671,7737192451710808,7965638903472945,[⟨3,8194085355235082,228446451762137⟩]⟩))else(if i<61 then(⟨15,60,7738936251883607,7970870303991342,8202804356099077,[⟨3,8434738408206812,231934052107735⟩]⟩)else(⟨15,61,7972614104164141,8208035756617474,8443457409070807,[⟨3,8678879061524140,235421652453333⟩]⟩)))))))else(if i<93 then(if i<77 then(if i<69 then(if i<65 then(if i<63 then(⟨15,62,8209779556790273,8448688809589204,8687598062388135,[⟨3,8926507315187066,238909252798931⟩]⟩)else(if i<64 then(⟨15,63,8450432609762003,8692829462906532,8935226316051061,[⟨3,9177623169195590,242396853144529⟩]⟩)else(⟨15,64,8694573263079331,8940457716569458,9186342170059585,[⟨3,9432226623549712,245884453490127⟩]⟩)))else(if i<67 then(if i<66 then(⟨15,65,8942201516742257,9191573570577982,9440945624413707,[⟨3,9690317678249432,249372053835725⟩]⟩)else(⟨15,66,9193317370750781,9446177024932104,9699036679113427,[⟨3,9951896333294750,252859654181323⟩]⟩))else(if i<68 then(⟨15,67,9447920825104903,9704268079631824,9960615334158745,[⟨3,10216962588685666,256347254526921⟩]⟩)else(⟨15,68,9706011879804623,9965846734677142,10225681589549661,[⟨3,10485516444422180,259834854872519⟩]⟩))))else(if i<73 then(if i<71 then(if i<70 then(⟨15,69,9967590534849941,10230912990068058,10494235445286175,[⟨3,10757557900504292,263322455218117⟩]⟩)else(⟨15,70,10232656790240857,10499466845804572,10766276901368287,[⟨3,11033086956932002,266810055563715⟩]⟩))else(if i<72 then(⟨15,71,10501210645977371,10771508301886684,11041805957795997,[⟨3,11312103613705310,270297655909313⟩]⟩)else(⟨15,72,10773252102059483,11047037358314394,11320822614569305,[⟨3,11594607870824216,273785256254911⟩]⟩)))else(if i<75 then(if i<74 then(⟨15,73,11048781158487193,11326054015087702,11603326871688211,[⟨3,11880599728288720,277272856600509⟩]⟩)else(⟨15,74,11327797815260501,11608558272206608,11889318729152715,[⟨3,12170079186098822,280760456946107⟩]⟩))else(if i<76 then(⟨15,75,11610302072379407,11894550129671112,12178798186962817,[⟨3,12463046244254522,284248057291705⟩]⟩)else(⟨15,76,11896293929843911,12184029587481214,12471765245118517,[⟨3,12759500902755820,287735657637303⟩]⟩)))))else(if i<85 then(if i<81 then(if i<79 then(if i<78 then(⟨15,77,12185773387654013,12476996645636914,12768219903619815,[⟨3,13059443161602716,291223257982901⟩]⟩)else(⟨15,78,12478740445809713,12773451304138212,13068162162466711,[⟨3,13362873020795210,294710858328499⟩]⟩))else(if i<80 then(⟨15,79,12775195104311011,13073393562985108,13371592021659205,[⟨3,13669790480333302,298198458674097⟩]⟩)else(⟨15,80,13075137363157907,13376823422177602,13678509481197297,[⟨3,13980195540216992,301686059019695⟩]⟩)))else(if i<83 then(if i<82 then(⟨15,81,13378567222350401,13683740881715694,13988914541080987,[⟨3,14294088200446280,305173659365293⟩]⟩)else(⟨15,82,13685484681888493,13994145941599384,14302807201310275,[⟨3,14611468461021166,308661259710891⟩]⟩))else(if i<84 then(⟨15,83,13995889741772183,14308038601828672,14620187461885161,[⟨3,14932336321941650,312148860056489⟩]⟩)else(⟨15,84,14309782402001471,14625418862403558,14941055322805645,[⟨3,15256691783207732,315636460402087⟩]⟩))))else(if i<89 then(if i<87 then(if i<86 then(⟨15,85,14627162662576357,14946286723324042,15265410784071727,[⟨3,15584534844819412,319124060747685⟩]⟩)else(⟨15,86,14948030523496841,15270642184590124,15593253845683407,[⟨3,15915865506776690,322611661093283⟩]⟩))else(if i<88 then(⟨15,87,15272385984762923,15598485246201804,15924584507640685,[⟨3,16250683769079566,326099261438881⟩]⟩)else(⟨15,88,15600229046374603,15929815908159082,16259402769943561,[⟨3,16588989631728040,329586861784479⟩]⟩)))else(if i<91 then(if i<90 then(⟨15,89,15931559708331881,16264634170461958,16597708632592035,[⟨3,16930783094722112,333074462130077⟩]⟩)else(⟨15,90,16266377970634757,16602940033110432,16939502095586107,[⟨3,17276064158061782,336562062475675⟩]⟩))else(if i<92 then(⟨15,91,16604683833283231,16944733496104504,17284783158925777,[⟨3,17624832821747050,340049662821273⟩]⟩)else(⟨15,92,16946477296277303,17290014559444174,17633551822611045,[⟨3,17977089085777916,343537263166871⟩]⟩))))))else(if i<109 then(if i<101 then(if i<97 then(if i<95 then(if i<94 then(⟨15,93,17291758359616973,17638783223129442,17985808086641911,[⟨3,18332832950154380,347024863512469⟩]⟩)else(⟨15,94,17640527023302241,17991039487160308,18341551951018375,[⟨3,18692064414876442,350512463858067⟩]⟩))else(if i<96 then(⟨15,95,17992783287333107,18346783351536772,18700783415740437,[⟨3,19054783479944102,354000064203665⟩]⟩)else(⟨15,96,18348527151709571,18706014816258834,19063502480808097,[⟨3,19420990145357360,357487664549263⟩]⟩)))else(if i<99 then(if i<98 then(⟨15,97,18707758616431633,19068733881326494,19429709146221355,[⟨3,19790684411116216,360975264894861⟩]⟩)else(⟨15,98,19070477681499293,19434940546739752,19799403411980211,[⟨3,20163866277220670,364462865240459⟩]⟩))else(if i<100 then(⟨15,99,19436684346912551,19804634812498608,20172585278084665,[⟨3,20540535743670722,367950465586057⟩]⟩)else(⟨15,100,19806378612671407,20177816678603062,20549254744534717,[⟨3,20920692810466372,371438065931655⟩]⟩))))else(if i<105 then(if i<103 then(if i<102 then(⟨15,101,20179560478775861,20554486145053114,20929411811330367,[⟨3,21304337477607620,374925666277253⟩]⟩)else(⟨15,102,20556229945225913,20934643211848764,21313056478471615,[⟨3,21691469745094466,378413266622851⟩]⟩))else(if i<104 then(⟨15,103,20936387012021563,21318287878990012,21700188745958461,[⟨3,22082089612926910,381900866968449⟩]⟩)else(⟨15,104,21320031679162811,21705420146476858,22090808613790905,[⟨3,22476197081104952,385388467314047⟩]⟩)))else(if i<107 then(if i<106 then(⟨15,105,21707163946649657,22096040014309302,22484916081968947,[⟨3,22873792149628592,388876067659645⟩]⟩)else(⟨15,106,22097783814482101,22490147482487344,22882511150492587,[⟨3,23274874818497830,392363668005243⟩]⟩))else(if i<108 then(⟨15,107,22491891282660143,22887742551010984,23283593819361825,[⟨3,23679445087712666,395851268350841⟩]⟩)else(⟨15,108,22889486351183783,23288825219880222,23688164088576661,[⟨3,24087502957273100,399338868696439⟩]⟩)))))else(if i<117 then(if i<113 then(if i<111 then(if i<110 then(⟨15,109,23290569020053021,23693395489095058,24096221958137095,[⟨3,24499048427179132,402826469042037⟩]⟩)else(⟨15,110,23695139289267857,24101453358655492,24507767428043127,[⟨3,24914081497430762,406314069387635⟩]⟩))else(if i<112 then(⟨15,111,24103197158828291,24512998828561524,24922800498294757,[⟨3,25332602168027990,409801669733233⟩]⟩)else(⟨15,112,24514742628734323,24928031898813154,25341321168891985,[⟨3,25754610438970816,413289270078831⟩]⟩)))else(if i<115 then(if i<114 then(⟨15,113,24929775698985953,25346552569410382,25763329439834811,[⟨3,26180106310259240,416776870424429⟩]⟩)else(⟨15,114,25348296369583181,25768560840353208,26188825311123235,[⟨3,26609089781893262,420264470770027⟩]⟩))else(if i<116 then(⟨15,115,25770304640526007,26194056711641632,26617808782757257,[⟨3,27041560853872882,423752071115625⟩]⟩)else(⟨15,116,26195800511814431,26623040183275654,27050279854736877,[⟨3,27477519526198100,427239671461223⟩]⟩))))else(if i<121 then(if i<119 then(if i<118 then(⟨15,117,26624783983448453,27055511255255274,27486238527062095,[⟨3,27916965798868916,430727271806821⟩]⟩)else(⟨15,118,27057255055428073,27491469927580492,27925684799732911,[⟨3,28359899671885330,434214872152419⟩]⟩))else(if i<120 then(⟨15,119,27493213727753291,27930916200251308,28368618672749325,[⟨3,28806321145247342,437702472498017⟩]⟩)else(⟨15,120,27932660000424107,28373850073267722,28815040146111337,[⟨3,29256230218954952,441190072843615⟩]⟩)))else(if i<123 then(if i<122 then(⟨15,121,28375593873440521,28820271546629734,29264949219818947,[⟨3,29709626893008160,444677673189213⟩]⟩)else(⟨15,122,28822015346802533,29270180620337344,29718345893872155,[⟨3,30166511167406966,448165273534811⟩]⟩))else(if i<124 then(⟨15,123,29271924420510143,29723577294390552,30175230168270961,[⟨3,30626883042151370,451652873880409⟩]⟩)else(⟨15,124,29725321094563351,30180461568789358,30635602043015365,[⟨3,31090742517241372,455140474226007⟩]⟩))))))))else(defaultRow)
+
+def row16 : ℕ → BaseRow := fun i =>
+  if i<124 then(if i<62 then(if i<31 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(⟨16,0,232205002473942,247598290043378,293915585937964,[⟨3,340232881832550,46317295894586⟩]⟩)else(if i<2 then(⟨16,1,247598290043378,295839745966636,344081201889894,[⟨3,392322657813152,48241455923258⟩]⟩)else(⟨16,2,247804450570740,296045906493998,344287362417256,[⟨3,392528818340514,48241455923258⟩]⟩)))else(if i<5 then(if i<4 then(⟨16,3,248010611098102,296252067021360,344493522944618,[⟨3,392734978867876,48241455923258⟩]⟩)else(⟨16,4,259869666092501,301076649459392,345455604007534,[⟨3,393697059930792,48241455923258⟩]⟩))else(if i<6 then(⟨16,5,302949301796817,347901589838558,392853877880299,[⟨3,437806165922040,44952288041741⟩,⟨16,1022210388002206,48241455923258⟩]⟩)else(⟨16,6,349774242175983,398471834892574,447169427609165,[⟨3,495867020325756,48697592716591⟩]⟩))))else(if i<11 then(if i<9 then(if i<8 then(⟨16,7,400344487229999,452787384621440,505230282012881,[⟨3,557673179404322,52442897391441⟩]⟩)else(⟨16,8,454660036958865,510848239025156,567036441091447,[⟨3,623224643157738,56188202066291⟩]⟩))else(if i<10 then(⟨16,9,512720891362581,572654398103722,632587904844863,[⟨3,692521411586004,59933506741141⟩]⟩)else(⟨16,10,574527050441147,638205861857138,701884673273129,[⟨3,765563484689120,63678811415991⟩]⟩)))else(if i<13 then(if i<12 then(⟨16,11,640078514194563,707502630285404,774926746376245,[⟨3,842350862467086,67424116090841⟩]⟩)else(⟨16,12,709375282622829,780544703388520,851714124154211,[⟨3,922883544919902,71169420765691⟩]⟩))else(if i<14 then(⟨16,13,782417355725945,857332081166486,932246806607027,[⟨3,1007161532047568,74914725440541⟩]⟩)else(⟨16,14,859204733503911,937864763619302,1016524793734693,[⟨3,1095184823850084,78660030115391⟩]⟩)))))else(if i<23 then(if i<19 then(if i<17 then(if i<16 then(⟨16,15,939737415956727,1022142750746968,1104548085537209,[⟨3,1186953420327450,82405334790241⟩]⟩)else(⟨16,16,1024015403084393,1110166042549484,1196316682014575,[⟨3,1282467321479666,86150639465091⟩]⟩))else(if i<18 then(⟨16,17,1112038694886909,1201934639026850,1291830583166791,[⟨3,1381726527306732,89895944139941⟩]⟩)else(⟨16,18,1203807291364275,1297448540179066,1391089788993857,[⟨3,1484731037808648,93641248814791⟩]⟩)))else(if i<21 then(if i<20 then(⟨16,19,1299321192516491,1396707746006132,1494094299495773,[⟨3,1591480852985414,97386553489641⟩]⟩)else(⟨16,20,1398580398343557,1499712256508048,1600844114672539,[⟨3,1701975972837030,101131858164491⟩]⟩))else(if i<22 then(⟨16,21,1501584908845473,1606462071684814,1711339234524155,[⟨3,1816216397363496,104877162839341⟩]⟩)else(⟨16,22,1608334724022239,1716957191536430,1825579659050621,[⟨3,1934202126564812,108622467514191⟩]⟩))))else(if i<27 then(if i<25 then(if i<24 then(⟨16,23,1718829843873855,1831197616062896,1943565388251937,[⟨3,2055933160440978,112367772189041⟩]⟩)else(⟨16,24,1833070268400321,1949183345264212,2065296422128103,[⟨3,2181409498991994,116113076863891⟩]⟩))else(if i<26 then(⟨16,25,1951055997601637,2070914379140378,2190772760679119,[⟨3,2310631142217860,119858381538741⟩]⟩)else(⟨16,26,2072787031477803,2196390717691394,2319994403904985,[⟨3,2443598090118576,123603686213591⟩]⟩)))else(if i<29 then(if i<28 then(⟨16,27,2198263370028819,2325612360917260,2452961351805701,[⟨3,2580310342694142,127348990888441⟩]⟩)else(⟨16,28,2327485013254685,2458579308817976,2589673604381267,[⟨3,2720767899944558,131094295563291⟩]⟩))else(if i<30 then(⟨16,29,2460451961155401,2595291561393542,2730131161631683,[⟨3,2864970761869824,134839600238141⟩]⟩)else(⟨16,30,2597164213730967,2735749118643958,2874334023556949,[⟨3,3012918928469940,138584904912991⟩]⟩))))))else(if i<46 then(if i<38 then(if i<34 then(if i<32 then(⟨16,31,2737621770981383,2879951980569224,3022282190157065,[⟨3,3164612399744906,142330209587841⟩]⟩)else(if i<33 then(⟨16,32,2881824632906649,3027900147169340,3173975661432031,[⟨3,3320051175694722,146075514262691⟩]⟩)else(⟨16,33,3029772799506765,3179593618444306,3329414437381847,[⟨3,3479235256319388,149820818937541⟩]⟩)))else(if i<36 then(if i<35 then(⟨16,34,3181466270781731,3335032394394122,3488598518006513,[⟨3,3642164641618904,153566123612391⟩]⟩)else(⟨16,35,3336905046731547,3494216475018788,3651527903306029,[⟨3,3808839331593270,157311428287241⟩]⟩))else(if i<37 then(⟨16,36,3496089127356213,3657145860318304,3818202593280395,[⟨3,3979259326242486,161056732962091⟩]⟩)else(⟨16,37,3659018512655729,3823820550292670,3988622587929611,[⟨3,4153424625566552,164802037636941⟩]⟩))))else(if i<42 then(if i<40 then(if i<39 then(⟨16,38,3825693202630095,3994240544941886,4162787887253677,[⟨3,4331335229565468,168547342311791⟩]⟩)else(⟨16,39,3996113197279311,4168405844265952,4340698491252593,[⟨3,4512991138239234,172292646986641⟩]⟩))else(if i<41 then(⟨16,40,4170278496603377,4346316448264868,4522354399926359,[⟨3,4698392351587850,176037951661491⟩]⟩)else(⟨16,41,4348189100602293,4527972356938634,4707755613274975,[⟨3,4887538869611316,179783256336341⟩]⟩)))else(if i<44 then(if i<43 then(⟨16,42,4529845009276059,4713373570287250,4896902131298441,[⟨3,5080430692309632,183528561011191⟩]⟩)else(⟨16,43,4715246222624675,4902520088310716,5089793953996757,[⟨3,5277067819682798,187273865686041⟩]⟩))else(if i<45 then(⟨16,44,4904392740648141,5095411911009032,5286431081369923,[⟨3,5477450251730814,191019170360891⟩]⟩)else(⟨16,45,5097284563346457,5292049038382198,5486813513417939,[⟨3,5681577988453680,194764475035741⟩]⟩)))))else(if i<54 then(if i<50 then(if i<48 then(if i<47 then(⟨16,46,5293921690719623,5492431470430214,5690941250140805,[⟨3,5889451029851396,198509779710591⟩]⟩)else(⟨16,47,5494304122767639,5696559207153080,5898814291538521,[⟨3,6101069375923962,202255084385441⟩]⟩))else(if i<49 then(⟨16,48,5698431859490505,5904432248550796,6110432637611087,[⟨3,6316433026671378,206000389060291⟩]⟩)else(⟨16,49,5906304900888221,6116050594623362,6325796288358503,[⟨3,6535541982093644,209745693735141⟩]⟩)))else(if i<52 then(if i<51 then(⟨16,50,6117923246960787,6331414245370778,6544905243780769,[⟨3,6758396242190760,213490998409991⟩]⟩)else(⟨16,51,6333286897708203,6550523200793044,6767759503877885,[⟨3,6984995806962726,217236303084841⟩]⟩))else(if i<53 then(⟨16,52,6552395853130469,6773377460890160,6994359068649851,[⟨3,7215340676409542,220981607759691⟩]⟩)else(⟨16,53,6775250113227585,6999977025662126,7224703938096667,[⟨3,7449430850531208,224726912434541⟩]⟩))))else(if i<58 then(if i<56 then(if i<55 then(⟨16,54,7001849677999551,7230321895108942,7458794112218333,[⟨3,7687266329327724,228472217109391⟩]⟩)else(⟨16,55,7232194547446367,7464412069230608,7696629591014849,[⟨3,7928847112799090,232217521784241⟩]⟩))else(if i<57 then(⟨16,56,7466284721568033,7702247548027124,7938210374486215,[⟨3,8174173200945306,235962826459091⟩]⟩)else(⟨16,57,7704120200364549,7943828331498490,8183536462632431,[⟨3,8423244593766372,239708131133941⟩]⟩)))else(if i<60 then(if i<59 then(⟨16,58,7945700983835915,8189154419644706,8432607855453497,[⟨3,8676061291262288,243453435808791⟩]⟩)else(⟨16,59,8191027071982131,8438225812465772,8685424552949413,[⟨3,8932623293433054,247198740483641⟩]⟩))else(if i<61 then(⟨16,60,8440098464803197,8691042509961688,8941986555120179,[⟨3,9192930600278670,250944045158491⟩]⟩)else(⟨16,61,8692915162299113,8947604512132454,9202293861965795,[⟨3,9456983211799136,254689349833341⟩]⟩)))))))else(if i<93 then(if i<77 then(if i<69 then(if i<65 then(if i<63 then(⟨16,62,8949477164469879,9207911818978070,9466346473486261,[⟨3,9724781127994452,258434654508191⟩]⟩)else(if i<64 then(⟨16,63,9209784471315495,9471964430498536,9734144389681577,[⟨3,9996324348864618,262179959183041⟩]⟩)else(⟨16,64,9473837082835961,9739762346693852,10005687610551743,[⟨3,10271612874409634,265925263857891⟩]⟩)))else(if i<67 then(if i<66 then(⟨16,65,9741634999031277,10011305567564018,10280976136096759,[⟨3,10550646704629500,269670568532741⟩]⟩)else(⟨16,66,10013178219901443,10286594093109034,10560009966316625,[⟨3,10833425839524216,273415873207591⟩]⟩))else(if i<68 then(⟨16,67,10288466745446459,10565627923328900,10842789101211341,[⟨3,11119950279093782,277161177882441⟩]⟩)else(⟨16,68,10567500575666325,10848407058223616,11129313540780907,[⟨3,11410220023338198,280906482557291⟩]⟩))))else(if i<73 then(if i<71 then(if i<70 then(⟨16,69,10850279710561041,11134931497793182,11419583285025323,[⟨3,11704235072257464,284651787232141⟩]⟩)else(⟨16,70,11136804150130607,11425201242037598,11713598333944589,[⟨3,12001995425851580,288397091906991⟩]⟩))else(if i<72 then(⟨16,71,11427073894375023,11719216290956864,12011358687538705,[⟨3,12303501084120546,292142396581841⟩]⟩)else(⟨16,72,11721088943294289,12016976644550980,12312864345807671,[⟨3,12608752047064362,295887701256691⟩]⟩)))else(if i<75 then(if i<74 then(⟨16,73,12018849296888405,12318482302819946,12618115308751487,[⟨3,12917748314683028,299633005931541⟩]⟩)else(⟨16,74,12320354955157371,12623733265763762,12927111576370153,[⟨3,13230489886976544,303378310606391⟩]⟩))else(if i<76 then(⟨16,75,12625605918101187,12932729533382428,13239853148663669,[⟨3,13546976763944910,307123615281241⟩]⟩)else(⟨16,76,12934602185719853,13245471105675944,13556340025632035,[⟨3,13867208945588126,310868919956091⟩]⟩)))))else(if i<85 then(if i<81 then(if i<79 then(if i<78 then(⟨16,77,13247343758013369,13561957982644310,13876572207275251,[⟨3,14191186431906192,314614224630941⟩]⟩)else(⟨16,78,13563830634981735,13882190164287526,14200549693593317,[⟨3,14518909222899108,318359529305791⟩]⟩))else(if i<80 then(⟨16,79,13884062816624951,14206167650605592,14528272484586233,[⟨3,14850377318566874,322104833980641⟩]⟩)else(⟨16,80,14208040302943017,14533890441598508,14859740580253999,[⟨3,15185590718909490,325850138655491⟩]⟩)))else(if i<83 then(if i<82 then(⟨16,81,14535763093935933,14865358537266274,15194953980596615,[⟨3,15524549423926956,329595443330341⟩]⟩)else(⟨16,82,14867231189603699,15200571937608890,15533912685614081,[⟨3,15867253433619272,333340748005191⟩]⟩))else(if i<84 then(⟨16,83,15202444589946315,15539530642626356,15876616695306397,[⟨3,16213702747986438,337086052680041⟩]⟩)else(⟨16,84,15541403294963781,15882234652318672,16223066009673563,[⟨3,16563897367028454,340831357354891⟩]⟩))))else(if i<89 then(if i<87 then(if i<86 then(⟨16,85,15884107304656097,16228683966685838,16573260628715579,[⟨3,16917837290745320,344576662029741⟩]⟩)else(⟨16,86,16230556619023263,16578878585727854,16927200552432445,[⟨3,17275522519137036,348321966704591⟩]⟩))else(if i<88 then(⟨16,87,16580751238065279,16932818509444720,17284885780824161,[⟨3,17636953052203602,352067271379441⟩]⟩)else(⟨16,88,16934691161782145,17290503737836436,17646316313890727,[⟨3,18002128889945018,355812576054291⟩]⟩)))else(if i<91 then(if i<90 then(⟨16,89,17292376390173861,17651934270903002,18011492151632143,[⟨3,18371050032361284,359557880729141⟩]⟩)else(⟨16,90,17653806923240427,18017110108644418,18380413294048409,[⟨3,18743716479452400,363303185403991⟩]⟩))else(if i<92 then(⟨16,91,18018982760981843,18386031251060684,18753079741139525,[⟨3,19120128231218366,367048490078841⟩]⟩)else(⟨16,92,18387903903398109,18758697698151800,19129491492905491,[⟨3,19500285287659182,370793794753691⟩]⟩))))))else(if i<108 then(if i<100 then(if i<96 then(if i<94 then(⟨16,93,18760570350489225,19135109449917766,19509648549346307,[⟨3,19884187648774848,374539099428541⟩]⟩)else(if i<95 then(⟨16,94,19136982102255191,19515266506358582,19893550910461973,[⟨3,20271835314565364,378284404103391⟩]⟩)else(⟨16,95,19517139158696007,19899168867474248,20281198576252489,[⟨3,20663228285030730,382029708778241⟩]⟩)))else(if i<98 then(if i<97 then(⟨16,96,19901041519811673,20286816533264764,20672591546717855,[⟨3,21058366560170946,385775013453091⟩]⟩)else(⟨16,97,20288689185602189,20678209503730130,21067729821858071,[⟨3,21457250139986012,389520318127941⟩]⟩))else(if i<99 then(⟨16,98,20680082156067555,21073347778870346,21466613401673137,[⟨3,21859879024475928,393265622802791⟩]⟩)else(⟨16,99,21075220431207771,21472231358685412,21869242286163053,[⟨3,22266253213640694,397010927477641⟩]⟩))))else(if i<104 then(if i<102 then(if i<101 then(⟨16,100,21474104011022837,21874860243175328,22275616475327819,[⟨3,22676372707480310,400756232152491⟩]⟩)else(⟨16,101,21876732895512753,22281234432340094,22685735969167435,[⟨3,23090237505994776,404501536827341⟩]⟩))else(if i<103 then(⟨16,102,22283107084677519,22691353926179710,23099600767681901,[⟨3,23507847609184092,408246841502191⟩]⟩)else(⟨16,103,22693226578517135,23105218724694176,23517210870871217,[⟨3,23929203017048258,411992146177041⟩]⟩)))else(if i<106 then(if i<105 then(⟨16,104,23107091377031601,23522828827883492,23938566278735383,[⟨3,24354303729587274,415737450851891⟩]⟩)else(⟨16,105,23524701480220917,23944184235747658,24363666991274399,[⟨3,24783149746801140,419482755526741⟩]⟩))else(if i<107 then(⟨16,106,23946056888085083,24369284948286674,24792513008488265,[⟨3,25215741068689856,423228060201591⟩]⟩)else(⟨16,107,24371157600624099,24798130965500540,25225104330376981,[⟨3,25652077695253422,426973364876441⟩]⟩)))))else(if i<116 then(if i<112 then(if i<110 then(if i<109 then(⟨16,108,24800003617837965,25230722287389256,25661440956940547,[⟨3,26092159626491838,430718669551291⟩]⟩)else(⟨16,109,25232594939726681,25667058913952822,26101522888178963,[⟨3,26535986862405104,434463974226141⟩]⟩))else(if i<111 then(⟨16,110,25668931566290247,26107140845191238,26545350124092229,[⟨3,26983559402993220,438209278900991⟩]⟩)else(⟨16,111,26109013497528663,26550968081104504,26992922664680345,[⟨3,27434877248256186,441954583575841⟩]⟩)))else(if i<114 then(if i<113 then(⟨16,112,26552840733441929,26998540621692620,27444240509943311,[⟨3,27889940398194002,445699888250691⟩]⟩)else(⟨16,113,27000413274030045,27449858466955586,27899303659881127,[⟨3,28348748852806668,449445192925541⟩]⟩))else(if i<115 then(⟨16,114,27451731119293011,27904921616893402,28358112114493793,[⟨3,28811302612094184,453190497600391⟩]⟩)else(⟨16,115,27906794269230827,28363730071506068,28820665873781309,[⟨3,29277601676056550,456935802275241⟩]⟩))))else(if i<120 then(if i<118 then(if i<117 then(⟨16,116,28365602723843493,28826283830793584,29286964937743675,[⟨3,29747646044693766,460681106950091⟩]⟩)else(⟨16,117,28828156483131009,29292582894755950,29757009306380891,[⟨3,30221435718005832,464426411624941⟩]⟩))else(if i<119 then(⟨16,118,29294455547093375,29762627263393166,30230798979692957,[⟨3,30698970695992748,468171716299791⟩]⟩)else(⟨16,119,29764499915730591,30236416936705232,30708333957679873,[⟨3,31180250978654514,471917020974641⟩]⟩)))else(if i<122 then(if i<121 then(⟨16,120,30238289589042657,30713951914692148,31189614240341639,[⟨3,31665276565991130,475662325649491⟩]⟩)else(⟨16,121,30715824567029573,31195232197353914,31674639827678255,[⟨3,32154047458002596,479407630324341⟩]⟩))else(if i<123 then(⟨16,122,31197104849691339,31680257784690530,32163410719689721,[⟨3,32646563654688912,483152934999191⟩]⟩)else(⟨16,123,31682130437027955,32169028676701996,32655926916376037,[⟨3,33142825156050078,486898239674041⟩]⟩))))))))else(defaultRow)
+
+def row17 : ℕ → BaseRow := fun i =>
+  if i<123 then(if i<61 then(if i<30 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(⟨17,0,281752139465237,299275747590707,351984004629105,[⟨3,404692261667503,52708257038398⟩]⟩)else(if i<2 then(⟨17,1,299275747590707,354045604659825,408815461728943,[⟨3,463585318798061,54769857069118⟩]⟩)else(⟨17,2,299481908118069,354251765187187,409021622256305,[⟨3,463791479325423,54769857069118⟩]⟩)))else(if i<5 then(if i<4 then(⟨17,3,299688068645431,354457925714549,409227782783667,[⟨3,463997639852785,54769857069118⟩]⟩)else(⟨17,4,305260059214161,355420006777465,410189863846583,[⟨3,464959720915701,54769857069118⟩]⟩))else(if i<6 then(⟨17,5,353304802024999,403351049337888,453397296650777,[⟨3,503443543963666,50046247312889⟩,⟨11,904492978537705,54769857069118⟩]⟩)else(⟨17,6,405352553839939,459401810156930,513451066473921,[⟨3,567500322790912,54049256316991⟩,⟨141,8026361118598249,54769857069118⟩]⟩))))else(if i<11 then(if i<9 then(if i<8 then(⟨17,7,461403314658981,519455579980074,577507845301167,[⟨3,635560110622260,58052265321093⟩]⟩)else(⟨17,8,521457084482125,583512358807320,645567633132515,[⟨3,707622907457710,62055274325195⟩]⟩))else(if i<10 then(⟨17,9,585513863309371,651572146638668,717630429967965,[⟨3,783688713297262,66058283329297⟩]⟩)else(⟨17,10,653573651140719,723634943474118,793696235807517,[⟨3,863757528140916,70061292333399⟩]⟩)))else(if i<13 then(if i<12 then(⟨17,11,725636447976169,799700749313670,873765050651171,[⟨3,947829351988672,74064301337501⟩]⟩)else(⟨17,12,801702253815721,879769564157324,957836874498927,[⟨3,1035904184840530,78067310341603⟩]⟩))else(if i<14 then(⟨17,13,881771068659375,963841388005080,1045911707350785,[⟨3,1127982026696490,82070319345705⟩]⟩)else(⟨17,14,965842892507131,1051916220856938,1137989549206745,[⟨3,1224062877556552,86073328349807⟩]⟩)))))else(if i<22 then(if i<18 then(if i<16 then(⟨17,15,1053917725358989,1143994062712898,1234070400066807,[⟨3,1324146737420716,90076337353909⟩]⟩)else(if i<17 then(⟨17,16,1145995567214949,1240074913572960,1334154259930971,[⟨3,1428233606288982,94079346358011⟩]⟩)else(⟨17,17,1242076418075011,1340158773437124,1438241128799237,[⟨3,1536323484161350,98082355362113⟩]⟩)))else(if i<20 then(if i<19 then(⟨17,18,1342160277939175,1444245642305390,1546331006671605,[⟨3,1648416371037820,102085364366215⟩]⟩)else(⟨17,19,1446247146807441,1552335520177758,1658423893548075,[⟨3,1764512266918392,106088373370317⟩]⟩))else(if i<21 then(⟨17,20,1554337024679809,1664428407054228,1774519789428647,[⟨3,1884611171803066,110091382374419⟩]⟩)else(⟨17,21,1666429911556279,1780524302934800,1894618694313321,[⟨3,2008713085691842,114094391378521⟩]⟩))))else(if i<26 then(if i<24 then(if i<23 then(⟨17,22,1782525807436851,1900623207819474,2018720608202097,[⟨3,2136818008584720,118097400382623⟩]⟩)else(⟨17,23,1902624712321525,2024725121708250,2146825531094975,[⟨3,2268925940481700,122100409386725⟩]⟩))else(if i<25 then(⟨17,24,2026726626210301,2152830044601128,2278933462991955,[⟨3,2405036881382782,126103418390827⟩]⟩)else(⟨17,25,2154831549103179,2284937976498108,2415044403893037,[⟨3,2545150831287966,130106427394929⟩]⟩)))else(if i<28 then(if i<27 then(⟨17,26,2286939481000159,2421048917399190,2555158353798221,[⟨3,2689267790197252,134109436399031⟩]⟩)else(⟨17,27,2423050421901241,2561162867304374,2699275312707507,[⟨3,2837387758110640,138112445403133⟩]⟩))else(if i<29 then(⟨17,28,2563164371806425,2705279826213660,2847395280620895,[⟨3,2989510735028130,142115454407235⟩]⟩)else(⟨17,29,2707281330715711,2853399794127048,2999518257538385,[⟨3,3145636720949722,146118463411337⟩]⟩))))))else(if i<45 then(if i<37 then(if i<33 then(if i<31 then(⟨17,30,2855401298629099,3005522771044538,3155644243459977,[⟨3,3305765715875416,150121472415439⟩]⟩)else(if i<32 then(⟨17,31,3007524275546589,3161648756966130,3315773238385671,[⟨3,3469897719805212,154124481419541⟩]⟩)else(⟨17,32,3163650261468181,3321777751891824,3479905242315467,[⟨3,3638032732739110,158127490423643⟩]⟩)))else(if i<35 then(if i<34 then(⟨17,33,3323779256393875,3485909755821620,3648040255249365,[⟨3,3810170754677110,162130499427745⟩]⟩)else(⟨17,34,3487911260323671,3654044768755518,3820178277187365,[⟨3,3986311785619212,166133508431847⟩]⟩))else(if i<36 then(⟨17,35,3656046273257569,3826182790693518,3996319308129467,[⟨3,4166455825565416,170136517435949⟩]⟩)else(⟨17,36,3828184295195569,4002323821635620,4176463348075671,[⟨3,4350602874515722,174139526440051⟩]⟩))))else(if i<41 then(if i<39 then(if i<38 then(⟨17,37,4004325326137671,4182467861581824,4360610397025977,[⟨3,4538752932470130,178142535444153⟩]⟩)else(⟨17,38,4184469366083875,4366614910532130,4548760454980385,[⟨3,4730905999428640,182145544448255⟩]⟩))else(if i<40 then(⟨17,39,4368616415034181,4554764968486538,4740913521938895,[⟨3,4927062075391252,186148553452357⟩]⟩)else(⟨17,40,4556766472988589,4746918035445048,4937069597901507,[⟨3,5127221160357966,190151562456459⟩]⟩)))else(if i<43 then(if i<42 then(⟨17,41,4748919539947099,4943074111407660,5137228682868221,[⟨3,5331383254328782,194154571460561⟩]⟩)else(⟨17,42,4945075615909711,5143233196374374,5341390776839037,[⟨3,5539548357303700,198157580464663⟩]⟩))else(if i<44 then(⟨17,43,5145234700876425,5347395290345190,5549555879813955,[⟨3,5751716469282720,202160589468765⟩]⟩)else(⟨17,44,5349396794847241,5555560393320108,5761723991792975,[⟨3,5967887590265842,206163598472867⟩]⟩)))))else(if i<53 then(if i<49 then(if i<47 then(if i<46 then(⟨17,45,5557561897822159,5767728505299128,5977895112776097,[⟨3,6188061720253066,210166607476969⟩]⟩)else(⟨17,46,5769730009801179,5983899626282250,6198069242763321,[⟨3,6412238859244392,214169616481071⟩]⟩))else(if i<48 then(⟨17,47,5985901130784301,6204073756269474,6422246381754647,[⟨3,6640419007239820,218172625485173⟩]⟩)else(⟨17,48,6206075260771525,6428250895260800,6650426529750075,[⟨3,6872602164239350,222175634489275⟩]⟩)))else(if i<51 then(if i<50 then(⟨17,49,6430252399762851,6656431043256228,6882609686749605,[⟨3,7108788330242982,226178643493377⟩]⟩)else(⟨17,50,6658432547758279,6888614200255758,7118795852753237,[⟨3,7348977505250716,230181652497479⟩]⟩))else(if i<52 then(⟨17,51,6890615704757809,7124800366259390,7358985027760971,[⟨3,7593169689262552,234184661501581⟩]⟩)else(⟨17,52,7126801870761441,7364989541267124,7603177211772807,[⟨3,7841364882278490,238187670505683⟩]⟩))))else(if i<57 then(if i<55 then(if i<54 then(⟨17,53,7366991045769175,7609181725278960,7851372404788745,[⟨3,8093563084298530,242190679509785⟩]⟩)else(⟨17,54,7611183229781011,7857376918294898,8103570606808785,[⟨3,8349764295322672,246193688513887⟩]⟩))else(if i<56 then(⟨17,55,7859378422796949,8109575120314938,8359771817832927,[⟨3,8609968515350916,250196697517989⟩]⟩)else(⟨17,56,8111576624816989,8365776331339080,8619976037861171,[⟨3,8874175744383262,254199706522091⟩]⟩)))else(if i<59 then(if i<58 then(⟨17,57,8367777835841131,8625980551367324,8884183266893517,[⟨3,9142385982419710,258202715526193⟩]⟩)else(⟨17,58,8627982055869375,8890187780399670,9152393504929965,[⟨3,9414599229460260,262205724530295⟩]⟩))else(if i<60 then(⟨17,59,8892189284901721,9158398018436118,9424606751970515,[⟨3,9690815485504912,266208733534397⟩]⟩)else(⟨17,60,9160399522938169,9430611265476668,9700823008015167,[⟨3,9971034750553666,270211742538499⟩]⟩)))))))else(if i<92 then(if i<76 then(if i<68 then(if i<64 then(if i<62 then(⟨17,61,9432612769978719,9706827521521320,9981042273063921,[⟨3,10255257024606522,274214751542601⟩]⟩)else(if i<63 then(⟨17,62,9708829026023371,9987046786570074,10265264547116777,[⟨3,10543482307663480,278217760546703⟩]⟩)else(⟨17,63,9989048291072125,10271269060622930,10553489830173735,[⟨3,10835710599724540,282220769550805⟩]⟩)))else(if i<66 then(if i<65 then(⟨17,64,10273270565124981,10559494343679888,10845718122234795,[⟨3,11131941900789702,286223778554907⟩]⟩)else(⟨17,65,10561495848181939,10851722635740948,11141949423299957,[⟨3,11432176210858966,290226787559009⟩]⟩))else(if i<67 then(⟨17,66,10853724140242999,11147953936806110,11442183733369221,[⟨3,11736413529932332,294229796563111⟩]⟩)else(⟨17,67,11149955441308161,11448188246875374,11746421052442587,[⟨3,12044653858009800,298232805567213⟩]⟩))))else(if i<72 then(if i<70 then(if i<69 then(⟨17,68,11450189751377425,11752425565948740,12054661380520055,[⟨3,12356897195091370,302235814571315⟩]⟩)else(⟨17,69,11754427070450791,12060665894026208,12366904717601625,[⟨3,12673143541177042,306238823575417⟩]⟩))else(if i<71 then(⟨17,70,12062667398528259,12372909231107778,12683151063687297,[⟨3,12993392896266816,310241832579519⟩]⟩)else(⟨17,71,12374910735609829,12689155577193450,13003400418777071,[⟨3,13317645260360692,314244841583621⟩]⟩)))else(if i<74 then(if i<73 then(⟨17,72,12691157081695501,13009404932283224,13327652782870947,[⟨3,13645900633458670,318247850587723⟩]⟩)else(⟨17,73,13011406436785275,13333657296377100,13655908155968925,[⟨3,13978159015560750,322250859591825⟩]⟩))else(if i<75 then(⟨17,74,13335658800879151,13661912669475078,13988166538071005,[⟨3,14314420406666932,326253868595927⟩]⟩)else(⟨17,75,13663914173977129,13994171051577158,14324427929177187,[⟨3,14654684806777216,330256877600029⟩]⟩)))))else(if i<84 then(if i<80 then(if i<78 then(if i<77 then(⟨17,76,13996172556079209,14330432442683340,14664692329287471,[⟨3,14998952215891602,334259886604131⟩]⟩)else(⟨17,77,14332433947185391,14670696842793624,15008959738401857,[⟨3,15347222634010090,338262895608233⟩]⟩))else(if i<79 then(⟨17,78,14672698347295675,15014964251908010,15357230156520345,[⟨3,15699496061132680,342265904612335⟩]⟩)else(⟨17,79,15016965756410061,15363234670026498,15709503583642935,[⟨3,16055772497259372,346268913616437⟩]⟩)))else(if i<82 then(if i<81 then(⟨17,80,15365236174528549,15715508097149088,16065780019769627,[⟨3,16416051942390166,350271922620539⟩]⟩)else(⟨17,81,15717509601651139,16071784533275780,16426059464900421,[⟨3,16780334396525062,354274931624641⟩]⟩))else(if i<83 then(⟨17,82,16073786037777831,16432063978406574,16790341919035317,[⟨3,17148619859664060,358277940628743⟩]⟩)else(⟨17,83,16434065482908625,16796346432541470,17158627382174315,[⟨3,17520908331807160,362280949632845⟩]⟩))))else(if i<88 then(if i<86 then(if i<85 then(⟨17,84,16798347937043521,17164631895680468,17530915854317415,[⟨3,17897199812954362,366283958636947⟩]⟩)else(⟨17,85,17166633400182519,17536920367823568,17907207335464617,[⟨3,18277494303105666,370286967641049⟩]⟩))else(if i<87 then(⟨17,86,17538921872325619,17913211848970770,18287501825615921,[⟨3,18661791802261072,374289976645151⟩]⟩)else(⟨17,87,17915213353472821,18293506339122074,18671799324771327,[⟨3,19050092310420580,378292985649253⟩]⟩)))else(if i<90 then(if i<89 then(⟨17,88,18295507843624125,18677803838277480,19060099832930835,[⟨3,19442395827584190,382295994653355⟩]⟩)else(⟨17,89,18679805342779531,19066104346436988,19452403350094445,[⟨3,19838702353751902,386299003657457⟩]⟩))else(if i<91 then(⟨17,90,19068105850939039,19458407863600598,19848709876262157,[⟨3,20239011888923716,390302012661559⟩]⟩)else(⟨17,91,19460409368102649,19854714389768310,20249019411433971,[⟨3,20643324433099632,394305021665661⟩]⟩))))))else(if i<107 then(if i<99 then(if i<95 then(if i<93 then(⟨17,92,19856715894270361,20255023924940124,20653331955609887,[⟨3,21051639986279650,398308030669763⟩]⟩)else(if i<94 then(⟨17,93,20257025429442175,20659336469116040,21061647508789905,[⟨3,21463958548463770,402311039673865⟩]⟩)else(⟨17,94,20661337973618091,21067652022296058,21473966070974025,[⟨3,21880280119651992,406314048677967⟩]⟩)))else(if i<97 then(if i<96 then(⟨17,95,21069653526798109,21479970584480178,21890287642162247,[⟨3,22300604699844316,410317057682069⟩]⟩)else(⟨17,96,21481972088982229,21896292155668400,22310612222354571,[⟨3,22724932289040742,414320066686171⟩]⟩))else(if i<98 then(⟨17,97,21898293660170451,22316616735860724,22734939811550997,[⟨3,23153262887241270,418323075690273⟩]⟩)else(⟨17,98,22318618240362775,22740944325057150,23163270409751525,[⟨3,23585596494445900,422326084694375⟩]⟩))))else(if i<103 then(if i<101 then(if i<100 then(⟨17,99,22742945829559201,23169274923257678,23595604016956155,[⟨3,24021933110654632,426329093698477⟩]⟩)else(⟨17,100,23171276427759729,23601608530462308,24031940633164887,[⟨3,24462272735867466,430332102702579⟩]⟩))else(if i<102 then(⟨17,101,23603610034964359,24037945146671040,24472280258377721,[⟨3,24906615370084402,434335111706681⟩]⟩)else(⟨17,102,24039946651173091,24478284771883874,24916622892594657,[⟨3,25354961013305440,438338120710783⟩]⟩)))else(if i<105 then(if i<104 then(⟨17,103,24480286276385925,24922627406100810,25364968535815695,[⟨3,25807309665530580,442341129714885⟩]⟩)else(⟨17,104,24924628910602861,25370973049321848,25817317188040835,[⟨3,26263661326759822,446344138718987⟩]⟩))else(if i<106 then(⟨17,105,25372974553823899,25823321701546988,26273668849270077,[⟨3,26724015996993166,450347147723089⟩]⟩)else(⟨17,106,25825323206049039,26279673362776230,26734023519503421,[⟨3,27188373676230612,454350156727191⟩]⟩)))))else(if i<115 then(if i<111 then(if i<109 then(if i<108 then(⟨17,107,26281674867278281,26740028033009574,27198381198740867,[⟨3,27656734364472160,458353165731293⟩]⟩)else(⟨17,108,26742029537511625,27204385712247020,27666741886982415,[⟨3,28129098061717810,462356174735395⟩]⟩))else(if i<110 then(⟨17,109,27206387216749071,27672746400488568,28139105584228065,[⟨3,28605464767967562,466359183739497⟩]⟩)else(⟨17,110,27674747904990619,28145110097734218,28615472290477817,[⟨3,29085834483221416,470362192743599⟩]⟩)))else(if i<113 then(if i<112 then(⟨17,111,28147111602236269,28621476803983970,29095842005731671,[⟨3,29570207207479372,474365201747701⟩]⟩)else(⟨17,112,28623478308486021,29101846519237824,29580214729989627,[⟨3,30058582940741430,478368210751803⟩]⟩))else(if i<114 then(⟨17,113,29103848023739875,29586219243495780,30068590463251685,[⟨3,30550961683007590,482371219755905⟩]⟩)else(⟨17,114,29588220747997831,30074594976757838,30560969205517845,[⟨3,31047343434277852,486374228760007⟩]⟩))))else(if i<119 then(if i<117 then(if i<116 then(⟨17,115,30076596481259889,30566973719023998,31057350956788107,[⟨3,31547728194552216,490377237764109⟩]⟩)else(⟨17,116,30568975223526049,31063355470294260,31557735717062471,[⟨3,32052115963830682,494380246768211⟩]⟩))else(if i<118 then(⟨17,117,31065356974796311,31563740230568624,32062123486340937,[⟨3,32560506742113250,498383255772313⟩]⟩)else(⟨17,118,31565741735070675,32068127999847090,32570514264623505,[⟨3,33072900529399920,502386264776415⟩]⟩)))else(if i<121 then(if i<120 then(⟨17,119,32070129504349141,32576518778129658,33082908051910175,[⟨3,33589297325690692,506389273780517⟩]⟩)else(⟨17,120,32578520282631709,33088912565416328,33599304848200947,[⟨3,34109697130985566,510392282784619⟩]⟩))else(if i<122 then(⟨17,121,33090914069918379,33605309361707100,34119704653495821,[⟨3,34634099945284542,514395291788721⟩]⟩)else(⟨17,122,33607310866209151,34125709167001974,34644107467794797,[⟨3,35162505768587620,518398300792823⟩]⟩))))))))else(defaultRow)
+
+def row18 : ℕ → BaseRow := fun i =>
+  if i<122 then(if i<61 then(if i<30 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(⟨18,0,337896397603416,357687766286968,417199304475322,[⟨3,476710842663676,59511538188354⟩]⟩)else(if i<2 then(⟨18,1,357687766286968,419398344508090,481108922729212,[⟨3,542819500950334,61710578221122⟩]⟩)else(⟨18,2,357893926814330,419604505035452,481315083256574,[⟨3,543025661477696,61710578221122⟩]⟩)))else(if i<5 then(if i<4 then(⟨18,3,358100087341692,419810665562814,481521243783936,[⟨3,543231822005058,61710578221122⟩]⟩)else(⟨18,4,359062168404608,420772746625730,482483324846852,[⟨3,544193903067974,61710578221122⟩]⟩))else(if i<6 then(⟨18,5,408883113688955,464281024602244,519678935515533,[⟨3,575076846428822,55397910913289⟩,⟨8,854121195242644,61710578221122⟩]⟩)else(⟨18,6,466411381268921,526070005515564,585728629762207,[⟨3,645387254008850,59658624246643⟩,⟨51,3509462779826094,61710578221122⟩]⟩))))else(if i<11 then(if i<9 then(if i<8 then(⟨18,7,528200362182241,592119699762238,656039037342235,[⟨3,719958374922232,63919337579997⟩]⟩)else(⟨18,8,594250056428915,662430107342266,730610158255617,[⟨3,798790209168968,68180050913351⟩]⟩))else(if i<10 then(⟨18,9,664560464008943,737001228255648,809441992502353,[⟨3,881882756749058,72440764246705⟩]⟩)else(⟨18,10,739131584922325,815833062502384,892534540082443,[⟨3,969236017662502,76701477580059⟩]⟩)))else(if i<13 then(if i<12 then(⟨18,11,817963419169061,898925610082474,979887800995887,[⟨3,1060849991909300,80962190913413⟩]⟩)else(⟨18,12,901055966749151,986278870995918,1071501775242685,[⟨3,1156724679489452,85222904246767⟩]⟩))else(if i<14 then(⟨18,13,988409227662595,1077892845242716,1167376462822837,[⟨3,1256860080402958,89483617580121⟩]⟩)else(⟨18,14,1080023201909393,1173767532822868,1267511863736343,[⟨3,1361256194649818,93744330913475⟩]⟩)))))else(if i<22 then(if i<18 then(if i<16 then(⟨18,15,1175897889489545,1273902933736374,1371907977983203,[⟨3,1469913022230032,98005044246829⟩]⟩)else(if i<17 then(⟨18,16,1276033290403051,1378299047983234,1480564805563417,[⟨3,1582830563143600,102265757580183⟩]⟩)else(⟨18,17,1380429404649911,1486955875563448,1593482346476985,[⟨3,1700008817390522,106526470913537⟩]⟩)))else(if i<20 then(if i<19 then(⟨18,18,1489086232230125,1599873416477016,1710660600723907,[⟨3,1821447784970798,110787184246891⟩]⟩)else(⟨18,19,1602003773143693,1717051670723938,1832099568304183,[⟨3,1947147465884428,115047897580245⟩]⟩))else(if i<21 then(⟨18,20,1719182027390615,1838490638304214,1957799249217813,[⟨3,2077107860131412,119308610913599⟩]⟩)else(⟨18,21,1840620994970891,1964190319217844,2087759643464797,[⟨3,2211328967711750,123569324246953⟩]⟩))))else(if i<26 then(if i<24 then(if i<23 then(⟨18,22,1966320675884521,2094150713464828,2221980751045135,[⟨3,2349810788625442,127830037580307⟩]⟩)else(⟨18,23,2096281070131505,2228371821045166,2360462571958827,[⟨3,2492553322872488,132090750913661⟩]⟩))else(if i<25 then(⟨18,24,2230502177711843,2366853641958858,2503205106205873,[⟨3,2639556570452888,136351464247015⟩]⟩)else(⟨18,25,2368983998625535,2509596176205904,2650208353786273,[⟨3,2790820531366642,140612177580369⟩]⟩)))else(if i<28 then(if i<27 then(⟨18,26,2511726532872581,2656599423786304,2801472314700027,[⟨3,2946345205613750,144872890913723⟩]⟩)else(⟨18,27,2658729780452981,2807863384700058,2956996988947135,[⟨3,3106130593194212,149133604247077⟩]⟩))else(if i<29 then(⟨18,28,2809993741366735,2963388058947166,3116782376527597,[⟨3,3270176694108028,153394317580431⟩]⟩)else(⟨18,29,2965518415613843,3123173446527628,3280828477441413,[⟨3,3438483508355198,157655030913785⟩]⟩))))))else(if i<45 then(if i<37 then(if i<33 then(if i<31 then(⟨18,30,3125303803194305,3287219547441444,3449135291688583,[⟨3,3611051035935722,161915744247139⟩]⟩)else(if i<32 then(⟨18,31,3289349904108121,3455526361688614,3621702819269107,[⟨3,3787879276849600,166176457580493⟩]⟩)else(⟨18,32,3457656718355291,3628093889269138,3798531060182985,[⟨3,3968968231096832,170437170913847⟩]⟩)))else(if i<35 then(if i<34 then(⟨18,33,3630224245935815,3804922130183016,3979620014430217,[⟨3,4154317898677418,174697884247201⟩]⟩)else(⟨18,34,3807052486849693,3986011084430248,4164969682010803,[⟨3,4343928279591358,178958597580555⟩]⟩))else(if i<36 then(⟨18,35,3988141441096925,4171360752010834,4354580062924743,[⟨3,4537799373838652,183219310913909⟩]⟩)else(⟨18,36,4173491108677511,4360971132924774,4548451157172037,[⟨3,4735931181419300,187480024247263⟩]⟩))))else(if i<41 then(if i<39 then(if i<38 then(⟨18,37,4363101489591451,4554842227172068,4746582964752685,[⟨3,4938323702333302,191740737580617⟩]⟩)else(⟨18,38,4556972583838745,4752974034752716,4948975485666687,[⟨3,5144976936580658,196001450913971⟩]⟩))else(if i<40 then(⟨18,39,4755104391419393,4955366555666718,5155628719914043,[⟨3,5355890884161368,200262164247325⟩]⟩)else(⟨18,40,4957496912333395,5162019789914074,5366542667494753,[⟨3,5571065545075432,204522877580679⟩]⟩)))else(if i<43 then(if i<42 then(⟨18,41,5164150146580751,5372933737494784,5581717328408817,[⟨3,5790500919322850,208783590914033⟩]⟩)else(⟨18,42,5375064094161461,5588108398408848,5801152702656235,[⟨3,6014197006903622,213044304247387⟩]⟩))else(if i<44 then(⟨18,43,5590238755075525,5807543772656266,6024848790237007,[⟨3,6242153807817748,217305017580741⟩]⟩)else(⟨18,44,5809674129322943,6031239860237038,6252805591151133,[⟨3,6474371322065228,221565730914095⟩]⟩)))))else(if i<53 then(if i<49 then(if i<47 then(if i<46 then(⟨18,45,6033370216903715,6259196661151164,6485023105398613,[⟨3,6710849549646062,225826444247449⟩]⟩)else(⟨18,46,6261327017817841,6491414175398644,6721501332979447,[⟨3,6951588490560250,230087157580803⟩]⟩))else(if i<48 then(⟨18,47,6493544532065321,6727892402979478,6962240273893635,[⟨3,7196588144807792,234347870914157⟩]⟩)else(⟨18,48,6730022759646155,6968631343893666,7207239928141177,[⟨3,7445848512388688,238608584247511⟩]⟩)))else(if i<51 then(if i<50 then(⟨18,49,6970761700560343,7213630998141208,7456500295722073,[⟨3,7699369593302938,242869297580865⟩]⟩)else(⟨18,50,7215761354807885,7462891365722104,7710021376636323,[⟨3,7957151387550542,247130010914219⟩]⟩))else(if i<52 then(⟨18,51,7465021722388781,7716412446636354,7967803170883927,[⟨3,8219193895131500,251390724247573⟩]⟩)else(⟨18,52,7718542803303031,7974194240883958,8229845678464885,[⟨3,8485497116045812,255651437580927⟩]⟩))))else(if i<57 then(if i<55 then(if i<54 then(⟨18,53,7976324597550635,8236236748464916,8496148899379197,[⟨3,8756061050293478,259912150914281⟩]⟩)else(⟨18,54,8238367105131593,8502539969379228,8766712833626863,[⟨3,9030885697874498,264172864247635⟩]⟩))else(if i<56 then(⟨18,55,8504670326045905,8773103903626894,9041537481207883,[⟨3,9309971058788872,268433577580989⟩]⟩)else(⟨18,56,8775234260293571,9047928551207914,9320622842122257,[⟨3,9593317133036600,272694290914343⟩]⟩)))else(if i<59 then(if i<58 then(⟨18,57,9050058907874591,9327013912122288,9603968916369985,[⟨3,9880923920617682,276955004247697⟩]⟩)else(⟨18,58,9329144268788965,9610359986370016,9891575703951067,[⟨3,10172791421532118,281215717581051⟩]⟩))else(if i<60 then(⟨18,59,9612490343036693,9897966773951098,10183443204865503,[⟨3,10468919635779908,285476430914405⟩]⟩)else(⟨18,60,9900097130617775,10189834274865534,10479571419113293,[⟨3,10769308563361052,289737144247759⟩]⟩)))))))else(if i<91 then(if i<76 then(if i<68 then(if i<64 then(if i<62 then(⟨18,61,10191964631532211,10485962489113324,10779960346694437,[⟨3,11073958204275550,293997857581113⟩]⟩)else(if i<63 then(⟨18,62,10488092845780001,10786351416694468,11084609987608935,[⟨3,11382868558523402,298258570914467⟩]⟩)else(⟨18,63,10788481773361145,11091001057608966,11393520341856787,[⟨3,11696039626104608,302519284247821⟩]⟩)))else(if i<66 then(if i<65 then(⟨18,64,11093131414275643,11399911411856818,11706691409437993,[⟨3,12013471407019168,306779997581175⟩]⟩)else(⟨18,65,11402041768523495,11713082479438024,12024123190352553,[⟨3,12335163901267082,311040710914529⟩]⟩))else(if i<67 then(⟨18,66,11715212836104701,12030514260352584,12345815684600467,[⟨3,12661117108848350,315301424247883⟩]⟩)else(⟨18,67,12032644617019261,12352206754600498,12671768892181735,[⟨3,12991331029762972,319562137581237⟩]⟩))))else(if i<72 then(if i<70 then(if i<69 then(⟨18,68,12354337111267175,12678159962181766,13001982813096357,[⟨3,13325805664010948,323822850914591⟩]⟩)else(⟨18,69,12680290318848443,13008373883096388,13336457447344333,[⟨3,13664541011592278,328083564247945⟩]⟩))else(if i<71 then(⟨18,70,13010504239763065,13342848517344364,13675192794925663,[⟨3,14007537072506962,332344277581299⟩]⟩)else(⟨18,71,13344978874011041,13681583864925694,14018188855840347,[⟨3,14354793846755000,336604990914653⟩]⟩)))else(if i<74 then(if i<73 then(⟨18,72,13683714221592371,14024579925840378,14365445630088385,[⟨3,14706311334336392,340865704248007⟩]⟩)else(⟨18,73,14026710282507055,14371836700088416,14716963117669777,[⟨3,15062089535251138,345126417581361⟩]⟩))else(if i<75 then(⟨18,74,14373967056755093,14723354187669808,15072741318584523,[⟨3,15422128449499238,349387130914715⟩]⟩)else(⟨18,75,14725484544336485,15079132388584554,15432780232832623,[⟨3,15786428077080692,353647844248069⟩]⟩)))))else(if i<83 then(if i<79 then(if i<77 then(⟨18,76,15081262745251231,15439171302832654,15797079860414077,[⟨3,16154988417995500,357908557581423⟩]⟩)else(if i<78 then(⟨18,77,15441301659499331,15803470930414108,16165640201328885,[⟨3,16527809472243662,362169270914777⟩]⟩)else(⟨18,78,15805601287080785,16172031271328916,16538461255577047,[⟨3,16904891239825178,366429984248131⟩]⟩)))else(if i<81 then(if i<80 then(⟨18,79,16174161627995593,16544852325577078,16915543023158563,[⟨3,17286233720740048,370690697581485⟩]⟩)else(⟨18,80,16546982682243755,16921934093158594,17296885504073433,[⟨3,17671836914988272,374951410914839⟩]⟩))else(if i<82 then(⟨18,81,16924064449825271,17303276574073464,17682488698321657,[⟨3,18061700822569850,379212124248193⟩]⟩)else(⟨18,82,17305406930740141,17688879768321688,18072352605903235,[⟨3,18455825443484782,383472837581547⟩]⟩))))else(if i<87 then(if i<85 then(if i<84 then(⟨18,83,17691010124988365,18078743675903266,18466477226818167,[⟨3,18854210777733068,387733550914901⟩]⟩)else(⟨18,84,18080874032569943,18472868296818198,18864862561066453,[⟨3,19256856825314708,391994264248255⟩]⟩))else(if i<86 then(⟨18,85,18474998653484875,18871253631066484,19267508608648093,[⟨3,19663763586229702,396254977581609⟩]⟩)else(⟨18,86,18873383987733161,19273899678648124,19674415369563087,[⟨3,20074931060478050,400515690914963⟩]⟩)))else(if i<89 then(if i<88 then(⟨18,87,19276030035314801,19680806439563118,20085582843811435,[⟨3,20490359248059752,404776404248317⟩]⟩)else(⟨18,88,19682936796229795,20091973913811466,20501011031393137,[⟨3,20910048148974808,409037117581671⟩]⟩))else(if i<90 then(⟨18,89,20094104270478143,20507402101393168,20920699932308193,[⟨3,21333997763223218,413297830915025⟩]⟩)else(⟨18,90,20509532458059845,20927091002308224,21344649546556603,[⟨3,21762208090804982,417558544248379⟩]⟩))))))else(if i<106 then(if i<98 then(if i<94 then(if i<92 then(⟨18,91,20929221358974901,21351040616556634,21772859874138367,[⟨3,22194679131720100,421819257581733⟩]⟩)else(if i<93 then(⟨18,92,21353170973223311,21779250944138398,22205330915053485,[⟨3,22631410885968572,426079970915087⟩]⟩)else(⟨18,93,21781381300805075,22211721985053516,22642062669301957,[⟨3,23072403353550398,430340684248441⟩]⟩)))else(if i<96 then(if i<95 then(⟨18,94,22213852341720193,22648453739301988,23083055136883783,[⟨3,23517656534465578,434601397581795⟩]⟩)else(⟨18,95,22650584095968665,23089446206883814,23528308317798963,[⟨3,23967170428714112,438862110915149⟩]⟩))else(if i<97 then(⟨18,96,23091576563550491,23534699387798994,23977822212047497,[⟨3,24420945036296000,443122824248503⟩]⟩)else(⟨18,97,23536829744465671,23984213282047528,24431596819629385,[⟨3,24878980357211242,447383537581857⟩]⟩))))else(if i<102 then(if i<100 then(if i<99 then(⟨18,98,23986343638714205,24437987889629416,24889632140544627,[⟨3,25341276391459838,451644250915211⟩]⟩)else(⟨18,99,24440118246296093,24896023210544658,25351928174793223,[⟨3,25807833139041788,455904964248565⟩]⟩))else(if i<101 then(⟨18,100,24898153567211335,25358319244793254,25818484922375173,[⟨3,26278650599957092,460165677581919⟩]⟩)else(⟨18,101,25360449601459931,25824875992375204,26289302383290477,[⟨3,26753728774205750,464426390915273⟩]⟩)))else(if i<104 then(if i<103 then(⟨18,102,25827006349041881,26295693453290508,26764380557539135,[⟨3,27233067661787762,468687104248627⟩]⟩)else(⟨18,103,26297823809957185,26770771627539166,27243719445121147,[⟨3,27716667262703128,472947817581981⟩]⟩))else(if i<105 then(⟨18,104,26772901984205843,27250110515121178,27727319046036513,[⟨3,28204527576951848,477208530915335⟩]⟩)else(⟨18,105,27252240871787855,27733710116036544,28215179360285233,[⟨3,28696648604533922,481469244248689⟩]⟩)))))else(if i<114 then(if i<110 then(if i<108 then(if i<107 then(⟨18,106,27735840472703221,28221570430285264,28707300387867307,[⟨3,29193030345449350,485729957582043⟩]⟩)else(⟨18,107,28223700786951941,28713691457867338,29203682128782735,[⟨3,29693672799698132,489990670915397⟩]⟩))else(if i<109 then(⟨18,108,28715821814534015,29210073198782766,29704324583031517,[⟨3,30198575967280268,494251384248751⟩]⟩)else(⟨18,109,29212203555449443,29710715653031548,30209227750613653,[⟨3,30707739848195758,498512097582105⟩]⟩)))else(if i<112 then(if i<111 then(⟨18,110,29712846009698225,30215618820613684,30718391631529143,[⟨3,31221164442444602,502772810915459⟩]⟩)else(⟨18,111,30217749177280361,30724782701529174,31231816225777987,[⟨3,31738849750026800,507033524248813⟩]⟩))else(if i<113 then(⟨18,112,30726913058195851,31238207295778018,31749501533360185,[⟨3,32260795770942352,511294237582167⟩]⟩)else(⟨18,113,31240337652444695,31755892603360216,32271447554275737,[⟨3,32787002505191258,515554950915521⟩]⟩))))else(if i<118 then(if i<116 then(if i<115 then(⟨18,114,31758022960026893,32277838624275768,32797654288524643,[⟨3,33317469952773518,519815664248875⟩]⟩)else(⟨18,115,32279968980942445,32804045358524674,33328121736106903,[⟨3,33852198113689132,524076377582229⟩]⟩))else(if i<117 then(⟨18,116,32806175715191351,33334512806106934,33862849897022517,[⟨3,34391186987938100,528337090915583⟩]⟩)else(⟨18,117,33336643162773611,33869240967022548,34401838771271485,[⟨3,34934436575520422,532597804248937⟩]⟩)))else(if i<120 then(if i<119 then(⟨18,118,33871371323689225,34408229841271516,34945088358853807,[⟨3,35481946876436098,536858517582291⟩]⟩)else(⟨18,119,34410360197938193,34951479428853838,35492598659769483,[⟨3,36033717890685128,541119230915645⟩]⟩))else(if i<121 then(⟨18,120,34953609785520515,35498989729769514,36044369674018513,[⟨3,36589749618267512,545379944248999⟩]⟩)else(⟨18,121,35501120086436191,36050760744018544,36600401401600897,[⟨3,37150042059183250,549640657582353⟩]⟩))))))))else(defaultRow)
+
+def row19 : ℕ → BaseRow := fun i =>
+  if i<121 then(if i<60 then(if i<30 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(⟨19,0,401050096894623,423246666138305,489973805482759,[⟨3,556700944827213,66727139344454⟩]⟩)else(if i<2 then(⟨19,1,423246666138305,492310285517575,561373904896845,[⟨3,630437524276115,69063619379270⟩]⟩)else(⟨19,2,423452826665667,492516446044937,561580065424207,[⟨3,630643684803477,69063619379270⟩]⟩)))else(if i<5 then(if i<4 then(⟨19,3,423658987193029,492722606572299,561786225951569,[⟨3,630849845330839,69063619379270⟩]⟩)else(⟨19,4,424621068255945,493684687635215,562748307014485,[⟨3,631811926393755,69063619379270⟩]⟩))else(if i<6 then(⟨19,5,469941941117937,530949219960878,591956498803819,[⟨3,652963777646760,61007278842941⟩,⟨6,840377185600625,69063619379270⟩]⟩)else(⟨19,6,533208428792181,598734125297728,664259821803275,[⟨3,729785518308822,65525696505547⟩,⟨30,2499690771778309,69063619379270⟩]⟩))))else(if i<11 then(if i<9 then(if i<8 then(⟨19,7,600993334129031,671037448297184,741081562465337,[⟨3,811125676633490,70044114168153⟩]⟩)else(⟨19,8,673296657128487,747859188959246,822421720790005,[⟨3,896984252620764,74562531830759⟩]⟩))else(if i<10 then(⟨19,9,750118397790549,829199347283914,908280296777279,[⟨3,987361246270644,79080949493365⟩]⟩)else(⟨19,10,831458556115217,915057923271188,998657290427159,[⟨3,1082256657583130,83599367155971⟩]⟩)))else(if i<13 then(if i<12 then(⟨19,11,917317132102491,1005434916921068,1093552701739645,[⟨3,1181670486558222,88117784818577⟩]⟩)else(⟨19,12,1007694125752371,1100330328233554,1192966530714737,[⟨3,1285602733195920,92636202481183⟩]⟩))else(if i<14 then(⟨19,13,1102589537064857,1199744157208646,1296898777352435,[⟨3,1394053397496224,97154620143789⟩]⟩)else(⟨19,14,1202003366039949,1303676403846344,1405349441652739,[⟨3,1507022479459134,101673037806395⟩]⟩)))))else(if i<22 then(if i<18 then(if i<16 then(⟨19,15,1305935612677647,1412127068146648,1518318523615649,[⟨3,1624509979084650,106191455469001⟩]⟩)else(if i<17 then(⟨19,16,1414386276977951,1525096150109558,1635806023241165,[⟨3,1746515896372772,110709873131607⟩]⟩)else(⟨19,17,1527355358940861,1642583649735074,1757811940529287,[⟨3,1873040231323500,115228290794213⟩]⟩)))else(if i<20 then(if i<19 then(⟨19,18,1644842858566377,1764589567023196,1884336275480015,[⟨3,2004082983936834,119746708456819⟩]⟩)else(⟨19,19,1766848775854499,1891113901973924,2015379028093349,[⟨3,2139644154212774,124265126119425⟩]⟩))else(if i<21 then(⟨19,20,1893373110805227,2022156654587258,2150940198369289,[⟨3,2279723742151320,128783543782031⟩]⟩)else(⟨19,21,2024415863418561,2157717824863198,2291019786307835,[⟨3,2424321747752472,133301961444637⟩]⟩))))else(if i<26 then(if i<24 then(if i<23 then(⟨19,22,2159977033694501,2297797412801744,2435617791908987,[⟨3,2573438171016230,137820379107243⟩]⟩)else(⟨19,23,2300056621633047,2442395418402896,2584734215172745,[⟨3,2727073011942594,142338796769849⟩]⟩))else(if i<25 then(⟨19,24,2444654627234199,2591511841666654,2738369056099109,[⟨3,2885226270531564,146857214432455⟩]⟩)else(⟨19,25,2593771050497957,2745146682593018,2896522314688079,[⟨3,3047897946783140,151375632095061⟩]⟩)))else(if i<28 then(if i<27 then(⟨19,26,2747405891424321,2903299941181988,3059193990939655,[⟨3,3215088040697322,155894049757667⟩]⟩)else(⟨19,27,2905559150013291,3065971617433564,3226384084853837,[⟨3,3386796552274110,160412467420273⟩]⟩))else(if i<29 then(⟨19,28,3068230826264867,3233161711347746,3398092596430625,[⟨3,3563023481513504,164930885082879⟩]⟩)else(⟨19,29,3235420920179049,3404870222924534,3574319525670019,[⟨3,3743768828415504,169449302745485⟩]⟩))))))else(if i<45 then(if i<37 then(if i<33 then(if i<31 then(⟨19,30,3407129431755837,3581097152163928,3755064872572019,[⟨3,3929032592980110,173967720408091⟩]⟩)else(if i<32 then(⟨19,31,3583356360995231,3761842499065928,3940328637136625,[⟨3,4118814775207322,178486138070697⟩]⟩)else(⟨19,32,3764101707897231,3947106263630534,4130110819363837,[⟨3,4313115375097140,183004555733303⟩]⟩)))else(if i<35 then(if i<34 then(⟨19,33,3949365472461837,4136888445857746,4324411419253655,[⟨3,4511934392649564,187522973395909⟩]⟩)else(⟨19,34,4139147654689049,4331189045747564,4523230436806079,[⟨3,4715271827864594,192041391058515⟩]⟩))else(if i<36 then(⟨19,35,4333448254578867,4530008063299988,4726567872021109,[⟨3,4923127680742230,196559808721121⟩]⟩)else(⟨19,36,4532267272131291,4733345498515018,4934423724898745,[⟨3,5135501951282472,201078226383727⟩]⟩))))else(if i<41 then(if i<39 then(if i<38 then(⟨19,37,4735604707346321,4941201351392654,5146797995438987,[⟨3,5352394639485320,205596644046333⟩]⟩)else(⟨19,38,4943460560223957,5153575621932896,5363690683641835,[⟨3,5573805745350774,210115061708939⟩]⟩))else(if i<40 then(⟨19,39,5155834830764199,5370468310135744,5585101789507289,[⟨3,5799735268878834,214633479371545⟩]⟩)else(⟨19,40,5372727518967047,5591879416001198,5811031313035349,[⟨3,6030183210069500,219151897034151⟩]⟩)))else(if i<43 then(if i<42 then(⟨19,41,5594138624832501,5817808939529258,6041479254226015,[⟨3,6265149568922772,223670314696757⟩]⟩)else(⟨19,42,5820068148360561,6048256880719924,6276445613079287,[⟨3,6504634345438650,228188732359363⟩]⟩))else(if i<44 then(⟨19,43,6050516089551227,6283223239573196,6515930389595165,[⟨3,6748637539617134,232707150021969⟩]⟩)else(⟨19,44,6285482448404499,6522708016089074,6759933583773649,[⟨3,6997159151458224,237225567684575⟩]⟩)))))else(if i<52 then(if i<48 then(if i<46 then(⟨19,45,6524967224920377,6766711210267558,7008455195614739,[⟨3,7250199180961920,241743985347181⟩]⟩)else(if i<47 then(⟨19,46,6768970419098861,7015232822108648,7261495225118435,[⟨3,7507757628128222,246262403009787⟩]⟩)else(⟨19,47,7017492030939951,7268272851612344,7519053672284737,[⟨3,7769834492957130,250780820672393⟩]⟩)))else(if i<50 then(if i<49 then(⟨19,48,7270532060443647,7525831298778646,7781130537113645,[⟨3,8036429775448644,255299238334999⟩]⟩)else(⟨19,49,7528090507609949,7787908163607554,8047725819605159,[⟨3,8307543475602764,259817655997605⟩]⟩))else(if i<51 then(⟨19,50,7790167372438857,8054503446099068,8318839519759279,[⟨3,8583175593419490,264336073660211⟩]⟩)else(⟨19,51,8056762654930371,8325617146253188,8594471637576005,[⟨3,8863326128898822,268854491322817⟩]⟩))))else(if i<56 then(if i<54 then(if i<53 then(⟨19,52,8327876355084491,8601249264069914,8874622173055337,[⟨3,9147995082040760,273372908985423⟩]⟩)else(⟨19,53,8603508472901217,8881399799549246,9159291126197275,[⟨3,9437182452845304,277891326648029⟩]⟩))else(if i<55 then(⟨19,54,8883659008380549,9166068752691184,9448478497001819,[⟨3,9730888241312454,282409744310635⟩]⟩)else(⟨19,55,9168327961522487,9455256123495728,9742184285468969,[⟨3,10029112447442210,286928161973241⟩]⟩)))else(if i<58 then(if i<57 then(⟨19,56,9457515332327031,9748961911962878,10040408491598725,[⟨3,10331855071234572,291446579635847⟩]⟩)else(⟨19,57,9751221120794181,10047186118092634,10343151115391087,[⟨3,10639116112689540,295964997298453⟩]⟩))else(if i<59 then(⟨19,58,10049445326923937,10349928741884996,10650412156846055,[⟨3,10950895571807114,300483414961059⟩]⟩)else(⟨19,59,10352187950716299,10657189783339964,10962191615963629,[⟨3,11267193448587294,305001832623665⟩]⟩)))))))else(if i<90 then(if i<75 then(if i<67 then(if i<63 then(if i<61 then(⟨19,60,10659448992171267,10968969242457538,11278489492743809,[⟨3,11588009743030080,309520250286271⟩]⟩)else(if i<62 then(⟨19,61,10971228451288841,11285267119237718,11599305787186595,[⟨3,11913344455135472,314038667948877⟩]⟩)else(⟨19,62,11287526328069021,11606083413680504,11924640499291987,[⟨3,12243197584903470,318557085611483⟩]⟩)))else(if i<65 then(if i<64 then(⟨19,63,11608342622511807,11931418125785896,12254493629059985,[⟨3,12577569132334074,323075503274089⟩]⟩)else(⟨19,64,11933677334617199,12261271255553894,12588865176490589,[⟨3,12916459097427284,327593920936695⟩]⟩))else(if i<66 then(⟨19,65,12263530464385197,12595642802984498,12927755141583799,[⟨3,13259867480183100,332112338599301⟩]⟩)else(⟨19,66,12597902011815801,12934532768077708,13271163524339615,[⟨3,13607794280601522,336630756261907⟩]⟩))))else(if i<71 then(if i<69 then(if i<68 then(⟨19,67,12936791976909011,13277941150833524,13619090324758037,[⟨3,13960239498682550,341149173924513⟩]⟩)else(⟨19,68,13280200359664827,13625867951251946,13971535542839065,[⟨3,14317203134426184,345667591587119⟩]⟩))else(if i<70 then(⟨19,69,13628127160083249,13978313169332974,14328499178582699,[⟨3,14678685187832424,350186009249725⟩]⟩)else(⟨19,70,13980572378164277,14335276805076608,14689981231988939,[⟨3,15044685658901270,354704426912331⟩]⟩)))else(if i<73 then(if i<72 then(⟨19,71,14337536013907911,14696758858482848,15055981703057785,[⟨3,15415204547632722,359222844574937⟩]⟩)else(⟨19,72,14699018067314151,15062759329551694,15426500591789237,[⟨3,15790241854026780,363741262237543⟩]⟩))else(if i<74 then(⟨19,73,15065018538382997,15433278218283146,15801537898183295,[⟨3,16169797578083444,368259679900149⟩]⟩)else(⟨19,74,15435537427114449,15808315524677204,16181093622239959,[⟨3,16553871719802714,372778097562755⟩]⟩)))))else(if i<82 then(if i<78 then(if i<76 then(⟨19,75,15810574733508507,16187871248733868,16565167763959229,[⟨3,16942464279184590,377296515225361⟩]⟩)else(if i<77 then(⟨19,76,16190130457565171,16571945390453138,16953760323341105,[⟨3,17335575256229072,381814932887967⟩]⟩)else(⟨19,77,16574204599284441,16960537949835014,17346871300385587,[⟨3,17733204650936160,386333350550573⟩]⟩)))else(if i<80 then(if i<79 then(⟨19,78,16962797158666317,17353648926879496,17744500695092675,[⟨3,18135352463305854,390851768213179⟩]⟩)else(⟨19,79,17355908135710799,17751278321586584,18146648507462369,[⟨3,18542018693338154,395370185875785⟩]⟩))else(if i<81 then(⟨19,80,17753537530417887,18153426133956278,18553314737494669,[⟨3,18953203341033060,399888603538391⟩]⟩)else(⟨19,81,18155685342787581,18560092363988578,18964499385189575,[⟨3,19368906406390572,404407021200997⟩]⟩))))else(if i<86 then(if i<84 then(if i<83 then(⟨19,82,18562351572819881,18971277011683484,19380202450547087,[⟨3,19789127889410690,408925438863603⟩]⟩)else(⟨19,83,18973536220514787,19386980077040996,19800423933567205,[⟨3,20213867790093414,413443856526209⟩]⟩))else(if i<85 then(⟨19,84,19389239285872299,19807201560061114,20225163834249929,[⟨3,20643126108438744,417962274188815⟩]⟩)else(⟨19,85,19809460768892417,20231941460743838,20654422152595259,[⟨3,21076902844446680,422480691851421⟩]⟩)))else(if i<88 then(if i<87 then(⟨19,86,20234200669575141,20661199779089168,21088198888603195,[⟨3,21515197998117222,426999109514027⟩]⟩)else(⟨19,87,20663458987920471,21094976515097104,21526494042273737,[⟨3,21958011569450370,431517527176633⟩]⟩))else(if i<89 then(⟨19,88,21097235723928407,21533271668767646,21969307613606885,[⟨3,22405343558446124,436035944839239⟩]⟩)else(⟨19,89,21535530877598949,21976085240100794,22416639602602639,[⟨3,22857193965104484,440554362501845⟩]⟩))))))else(if i<105 then(if i<97 then(if i<93 then(if i<91 then(⟨19,90,21978344448932097,22423417229096548,22868490009260999,[⟨3,23313562789425450,445072780164451⟩]⟩)else(if i<92 then(⟨19,91,22425676437927851,22875267635754908,23324858833581965,[⟨3,23774450031409022,449591197827057⟩]⟩)else(⟨19,92,22877526844586211,23331636460075874,23785746075565537,[⟨3,24239855691055200,454109615489663⟩]⟩)))else(if i<95 then(if i<94 then(⟨19,93,23333895668907177,23792523702059446,24251151735211715,[⟨3,24709779768363984,458628033152269⟩]⟩)else(⟨19,94,23794782910890749,24257929361705624,24721075812520499,[⟨3,25184222263335374,463146450814875⟩]⟩))else(if i<96 then(⟨19,95,24260188570536927,24727853439014408,25195518307491889,[⟨3,25663183175969370,467664868477481⟩]⟩)else(⟨19,96,24730112647845711,25202295933985798,25674479220125885,[⟨3,26146662506265972,472183286140087⟩]⟩))))else(if i<101 then(if i<99 then(if i<98 then(⟨19,97,25204555142817101,25681256846619794,26157958550422487,[⟨3,26634660254225180,476701703802693⟩]⟩)else(⟨19,98,25683516055451097,26164736176916396,26645956298381695,[⟨3,27127176419846994,481220121465299⟩]⟩))else(if i<100 then(⟨19,99,26166995385747699,26652733924875604,27138472464003509,[⟨3,27624211003131414,485738539127905⟩]⟩)else(⟨19,100,26654993133706907,27145250090497418,27635507047287929,[⟨3,28125764004078440,490256956790511⟩]⟩)))else(if i<103 then(if i<102 then(⟨19,101,27147509299328721,27642284673781838,28137060048234955,[⟨3,28631835422688072,494775374453117⟩]⟩)else(⟨19,102,27644543882613141,28143837674728864,28643131466844587,[⟨3,29142425258960310,499293792115723⟩]⟩))else(if i<104 then(⟨19,103,28146096883560167,28649909093338496,29153721303116825,[⟨3,29657533512895154,503812209778329⟩]⟩)else(⟨19,104,28652168302169799,29160498929610734,29668829557051669,[⟨3,30177160184492604,508330627440935⟩]⟩)))))else(if i<113 then(if i<109 then(if i<107 then(if i<106 then(⟨19,105,29162758138442037,29675607183545578,30188456228649119,[⟨3,30701305273752660,512849045103541⟩]⟩)else(⟨19,106,29677866392376881,30195233855143028,30712601317909175,[⟨3,31229968780675322,517367462766147⟩]⟩))else(if i<108 then(⟨19,107,30197493063974331,30719378944403084,31241264824831837,[⟨3,31763150705260590,521885880428753⟩]⟩)else(⟨19,108,30721638153234387,31248042451325746,31774446749417105,[⟨3,32300851047508464,526404298091359⟩]⟩)))else(if i<111 then(if i<110 then(⟨19,109,31250301660157049,31781224375911014,32312147091664979,[⟨3,32843069807418944,530922715753965⟩]⟩)else(⟨19,110,31783483584742317,32318924718158888,32854365851575459,[⟨3,33389806984992030,535441133416571⟩]⟩))else(if i<112 then(⟨19,111,32321183926990191,32861143478069368,33401103029148545,[⟨3,33941062580227722,539959551079177⟩]⟩)else(⟨19,112,32863402686900671,33407880655642454,33952358624384237,[⟨3,34496836593126020,544477968741783⟩]⟩))))else(if i<117 then(if i<115 then(if i<114 then(⟨19,113,33410139864473757,33959136250878146,34508132637282535,[⟨3,35057129023686924,548996386404389⟩]⟩)else(⟨19,114,33961395459709449,34514910263776444,35068425067843439,[⟨3,35621939871910434,553514804066995⟩]⟩))else(if i<116 then(⟨19,115,34517169472607747,35075202694337348,35633235916066949,[⟨3,36191269137796550,558033221729601⟩]⟩)else(⟨19,116,35077461903168651,35640013542560858,36202565181953065,[⟨3,36765116821345272,562551639392207⟩]⟩)))else(if i<119 then(if i<118 then(⟨19,117,35642272751392161,36209342808446974,36776412865501787,[⟨3,37343482922556600,567070057054813⟩]⟩)else(⟨19,118,36211602017278277,36783190491995696,37354778966713115,[⟨3,37926367441430534,571588474717419⟩]⟩))else(if i<120 then(⟨19,119,36785449700826999,37361556593207024,37937663485587049,[⟨3,38513770377967074,576106892380025⟩]⟩)else(⟨19,120,37363815802038327,37944441112080958,38525066422123589,[⟨3,39105691732166220,580625310042631⟩]⟩))))))))else(defaultRow)
+
+def row20 : ℕ → BaseRow := fun i =>
+  if i<120 then(if i<60 then(if i<30 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(⟨20,0,471625557345002,496364767150862,570719827657560,[⟨3,645074888164258,74355060506698⟩]⟩)else(if i<2 then(⟨20,1,496364767150862,573193747694424,650022728237986,[⟨3,726851708781548,76828980543562⟩]⟩)else(⟨20,2,496570927678224,573399908221786,650228888765348,[⟨3,727057869308910,76828980543562⟩]⟩)))else(if i<5 then(if i<4 then(⟨20,3,496777088205586,573606068749148,650435049292710,[⟨3,727264029836272,76828980543562⟩]⟩)else(⟨20,4,497739169268502,574568149812064,651397130355626,[⟨3,728226110899188,76828980543562⟩]⟩))else(if i<6 then(⟨20,5,536738988641197,603613339743042,670487690844887,[⟨3,737362041946732,66874351101845⟩,⟨4,806429492511810,76828980543562⟩]⟩)else(⟨20,6,606001400738971,677651873832674,749302346926377,[⟨3,820952820020080,71650473093703⟩,⟨21,2114308882827568,76828980543562⟩]⟩))))else(if i<11 then(if i<9 then(if i<8 then(⟨20,7,680039934828603,756466529914164,832893124999725,[⟨3,909319720085286,76426595085561⟩,⟨440,34307850771661394,76828980543562⟩]⟩)else(⟨20,8,758854590910093,840057307987512,921260025064931,[⟨3,1002462742142350,81202717077419⟩]⟩))else(if i<10 then(⟨20,9,842445368983441,928424208052718,1014403047121995,[⟨3,1100381886191272,85978839069277⟩]⟩)else(⟨20,10,930812269048647,1021567230109782,1112322191170917,[⟨3,1203077152232052,90754961061135⟩]⟩)))else(if i<13 then(if i<12 then(⟨20,11,1023955291105711,1119486374158704,1215017457211697,[⟨3,1310548540264690,95531083052993⟩]⟩)else(⟨20,12,1121874435154633,1222181640199484,1322488845244335,[⟨3,1422796050289186,100307205044851⟩]⟩))else(if i<14 then(⟨20,13,1224569701195413,1329653028232122,1434736355268831,[⟨3,1539819682305540,105083327036709⟩]⟩)else(⟨20,14,1332041089228051,1441900538256618,1551759987285185,[⟨3,1661619436313752,109859449028567⟩]⟩)))))else(if i<22 then(if i<18 then(if i<16 then(⟨20,15,1444288599252547,1558924170272972,1673559741293397,[⟨3,1788195312313822,114635571020425⟩]⟩)else(if i<17 then(⟨20,16,1561312231268901,1680723924281184,1800135617293467,[⟨3,1919547310305750,119411693012283⟩]⟩)else(⟨20,17,1683111985277113,1807299800281254,1931487615285395,[⟨3,2055675430289536,124187815004141⟩]⟩)))else(if i<20 then(if i<19 then(⟨20,18,1809687861277183,1938651798273182,2067615735269181,[⟨3,2196579672265180,128963936995999⟩]⟩)else(⟨20,19,1941039859269111,2074779918256968,2208519977244825,[⟨3,2342260036232682,133740058987857⟩]⟩))else(if i<21 then(⟨20,20,2077167979252897,2215684160232612,2354200341212327,[⟨3,2492716522192042,138516180979715⟩]⟩)else(⟨20,21,2218072221228541,2361364524200114,2504656827171687,[⟨3,2647949130143260,143292302971573⟩]⟩))))else(if i<26 then(if i<24 then(if i<23 then(⟨20,22,2363752585196043,2511821010159474,2659889435122905,[⟨3,2807957860086336,148068424963431⟩]⟩)else(⟨20,23,2514209071155403,2667053618110692,2819898165065981,[⟨3,2972742712021270,152844546955289⟩]⟩))else(if i<25 then(⟨20,24,2669441679106621,2827062348053768,2984683017000915,[⟨3,3142303685948062,157620668947147⟩]⟩)else(⟨20,25,2829450409049697,2991847199988702,3154243990927707,[⟨3,3316640781866712,162396790939005⟩]⟩)))else(if i<28 then(if i<27 then(⟨20,26,2994235260984631,3161408173915494,3328581086846357,[⟨3,3495753999777220,167172912930863⟩]⟩)else(⟨20,27,3163796234911423,3335745269834144,3507694304756865,[⟨3,3679643339679586,171949034922721⟩]⟩))else(if i<29 then(⟨20,28,3338133330830073,3514858487744652,3691583644659231,[⟨3,3868308801573810,176725156914579⟩]⟩)else(⟨20,29,3517246548740581,3698747827647018,3880249106553455,[⟨3,4061750385459892,181501278906437⟩]⟩))))))else(if i<45 then(if i<37 then(if i<33 then(if i<31 then(⟨20,30,3701135888642947,3887413289541242,4073690690439537,[⟨3,4259968091337832,186277400898295⟩]⟩)else(if i<32 then(⟨20,31,3889801350537171,4080854873427324,4271908396317477,[⟨3,4462961919207630,191053522890153⟩]⟩)else(⟨20,32,4083242934423253,4279072579305264,4474902224187275,[⟨3,4670731869069286,195829644882011⟩]⟩)))else(if i<35 then(if i<34 then(⟨20,33,4281460640301193,4482066407175062,4682672174048931,[⟨3,4883277940922800,200605766873869⟩]⟩)else(⟨20,34,4484454468170991,4689836357036718,4895218245902445,[⟨3,5100600134768172,205381888865727⟩]⟩))else(if i<36 then(⟨20,35,4692224418032647,4902382428890232,5112540439747817,[⟨3,5322698450605402,210158010857585⟩]⟩)else(⟨20,36,4904770489886161,5119704622735604,5334638755585047,[⟨3,5549572888434490,214934132849443⟩]⟩))))else(if i<41 then(if i<39 then(if i<38 then(⟨20,37,5122092683731533,5341802938572834,5561513193414135,[⟨3,5781223448255436,219710254841301⟩]⟩)else(⟨20,38,5344190999568763,5568677376401922,5793163753235081,[⟨3,6017650130068240,224486376833159⟩]⟩))else(if i<40 then(⟨20,39,5571065437397851,5800327936222868,6029590435047885,[⟨3,6258852933872902,229262498825017⟩]⟩)else(⟨20,40,5802715997218797,6036754618035672,6270793238852547,[⟨3,6504831859669422,234038620816875⟩]⟩)))else(if i<43 then(if i<42 then(⟨20,41,6039142679031601,6277957421840334,6516772164649067,[⟨3,6755586907457800,238814742808733⟩]⟩)else(⟨20,42,6280345482836263,6523936347636854,6767527212437445,[⟨3,7011118077238036,243590864800591⟩]⟩))else(if i<44 then(⟨20,43,6526324408632783,6774691395425232,7023058382217681,[⟨3,7271425369010130,248366986792449⟩]⟩)else(⟨20,44,6777079456421161,7030222565205468,7283365673989775,[⟨3,7536508782774082,253143108784307⟩]⟩)))))else(if i<52 then(if i<48 then(if i<46 then(⟨20,45,7032610626201397,7290529856977562,7548449087753727,[⟨3,7806368318529892,257919230776165⟩]⟩)else(if i<47 then(⟨20,46,7292917917973491,7555613270741514,7818308623509537,[⟨3,8081003976277560,262695352768023⟩]⟩)else(⟨20,47,7558001331737443,7825472806497324,8092944281257205,[⟨3,8360415756017086,267471474759881⟩]⟩)))else(if i<50 then(if i<49 then(⟨20,48,7827860867493253,8100108464244992,8372356060996731,[⟨3,8644603657748470,272247596751739⟩]⟩)else(⟨20,49,8102496525240921,8379520243984518,8656543962728115,[⟨3,8933567681471712,277023718743597⟩]⟩))else(if i<51 then(⟨20,50,8381908304980447,8663708145715902,8945507986451357,[⟨3,9227307827186812,281799840735455⟩]⟩)else(⟨20,51,8666096206711831,8952672169439144,9239248132166457,[⟨3,9525824094893770,286575962727313⟩]⟩))))else(if i<56 then(if i<54 then(if i<53 then(⟨20,52,8955060230435073,9246412315154244,9537764399873415,[⟨3,9829116484592586,291352084719171⟩]⟩)else(⟨20,53,9248800376150173,9544928582861202,9841056789572231,[⟨3,10137184996283260,296128206711029⟩]⟩))else(if i<55 then(⟨20,54,9547316643857131,9848220972560018,10149125301262905,[⟨3,10450029629965792,300904328702887⟩]⟩)else(⟨20,55,9850609033555947,10156289484250692,10461969934945437,[⟨3,10767650385640182,305680450694745⟩]⟩)))else(if i<58 then(if i<57 then(⟨20,56,10158677545246621,10469134117933224,10779590690619827,[⟨3,11090047263306430,310456572686603⟩]⟩)else(⟨20,57,10471522178929153,10786754873607614,11101987568286075,[⟨3,11417220262964536,315232694678461⟩]⟩))else(if i<59 then(⟨20,58,10789142934603543,11109151751273862,11429160567944181,[⟨3,11749169384614500,320008816670319⟩]⟩)else(⟨20,59,11111539812269791,11436324750931968,11761109689594145,[⟨3,12085894628256322,324784938662177⟩]⟩)))))))else(if i<90 then(if i<75 then(if i<67 then(if i<63 then(if i<61 then(⟨20,60,11438712811927897,11768273872581932,12097834933235967,[⟨3,12427395993890002,329561060654035⟩]⟩)else(if i<62 then(⟨20,61,11770661933577861,12104999116223754,12439336298869647,[⟨3,12773673481515540,334337182645893⟩]⟩)else(⟨20,62,12107387177219683,12446500481857434,12785613786495185,[⟨3,13124727091132936,339113304637751⟩]⟩)))else(if i<65 then(if i<64 then(⟨20,63,12448888542853363,12792777969482972,13136667396112581,[⟨3,13480556822742190,343889426629609⟩]⟩)else(⟨20,64,12795166030478901,13143831579100368,13492497127721835,[⟨3,13841162676343302,348665548621467⟩]⟩))else(if i<66 then(⟨20,65,13146219640096297,13499661310709622,13853102981322947,[⟨3,14206544651936272,353441670613325⟩]⟩)else(⟨20,66,13502049371705551,13860267164310734,14218484956915917,[⟨3,14576702749521100,358217792605183⟩]⟩))))else(if i<71 then(if i<69 then(if i<68 then(⟨20,67,13862655225306663,14225649139903704,14588643054500745,[⟨3,14951636969097786,362993914597041⟩]⟩)else(⟨20,68,14228037200899633,14595807237488532,14963577274077431,[⟨3,15331347310666330,367770036588899⟩]⟩))else(if i<70 then(⟨20,69,14598195298484461,14970741457065218,15343287615645975,[⟨3,15715833774226732,372546158580757⟩]⟩)else(⟨20,70,14973129518061147,15350451798633762,15727774079206377,[⟨3,16105096359778992,377322280572615⟩]⟩)))else(if i<73 then(if i<72 then(⟨20,71,15352839859629691,15734938262194164,16117036664758637,[⟨3,16499135067323110,382098402564473⟩]⟩)else(⟨20,72,15737326323190093,16124200847746424,16511075372302755,[⟨3,16897949896859086,386874524556331⟩]⟩))else(if i<74 then(⟨20,73,16126588908742353,16518239555290542,16909890201838731,[⟨3,17301540848386920,391650646548189⟩]⟩)else(⟨20,74,16520627616286471,16917054384826518,17313481153366565,[⟨3,17709907921906612,396426768540047⟩]⟩)))))else(if i<82 then(if i<78 then(if i<76 then(⟨20,75,16919442445822447,17320645336354352,17721848226886257,[⟨3,18123051117418162,401202890531905⟩]⟩)else(if i<77 then(⟨20,76,17323033397350281,17729012409874044,18134991422397807,[⟨3,18540970434921570,405979012523763⟩]⟩)else(⟨20,77,17731400470869973,18142155605385594,18552910739901215,[⟨3,18963665874416836,410755134515621⟩]⟩)))else(if i<80 then(if i<79 then(⟨20,78,18144543666381523,18560074922889002,18975606179396481,[⟨3,19391137435903960,415531256507479⟩]⟩)else(⟨20,79,18562462983884931,18982770362384268,19403077740883605,[⟨3,19823385119382942,420307378499337⟩]⟩))else(if i<81 then(⟨20,80,18985158423380197,19410241923871392,19835325424362587,[⟨3,20260408924853782,425083500491195⟩]⟩)else(⟨20,81,19412629984867321,19842489607350374,20272349229833427,[⟨3,20702208852316480,429859622483053⟩]⟩))))else(if i<86 then(if i<84 then(if i<83 then(⟨20,82,19844877668346303,20279513412821214,20714149157296125,[⟨3,21148784901771036,434635744474911⟩]⟩)else(⟨20,83,20281901473817143,20721313340283912,21160725206750681,[⟨3,21600137073217450,439411866466769⟩]⟩))else(if i<85 then(⟨20,84,20723701401279841,21167889389738468,21612077378197095,[⟨3,22056265366655722,444187988458627⟩]⟩)else(⟨20,85,21170277450734397,21619241561184882,22068205671635367,[⟨3,22517169782085852,448964110450485⟩]⟩)))else(if i<88 then(if i<87 then(⟨20,86,21621629622180811,22075369854623154,22529110087065497,[⟨3,22982850319507840,453740232442343⟩]⟩)else(⟨20,87,22077757915619083,22536274270053284,22994790624487485,[⟨3,23453306978921686,458516354434201⟩]⟩))else(if i<89 then(⟨20,88,22538662331049213,23001954807475272,23465247283901331,[⟨3,23928539760327390,463292476426059⟩]⟩)else(⟨20,89,23004342868471201,23472411466889118,23940480065307035,[⟨3,24408548663724952,468068598417917⟩]⟩))))))else(if i<105 then(if i<97 then(if i<93 then(if i<91 then(⟨20,90,23474799527885047,23947644248294822,24420488968704597,[⟨3,24893333689114372,472844720409775⟩]⟩)else(if i<92 then(⟨20,91,23950032309290751,24427653151692384,24905273994094017,[⟨3,25382894836495650,477620842401633⟩]⟩)else(⟨20,92,24430041212688313,24912438177081804,25394835141475295,[⟨3,25877232105868786,482396964393491⟩]⟩)))else(if i<95 then(if i<94 then(⟨20,93,24914826238077733,25401999324463082,25889172410848431,[⟨3,26376345497233780,487173086385349⟩]⟩)else(⟨20,94,25404387385459011,25896336593836218,26388285802213425,[⟨3,26880235010590632,491949208377207⟩]⟩))else(if i<96 then(⟨20,95,25898724654832147,26395449985201212,26892175315570277,[⟨3,27388900645939342,496725330369065⟩]⟩)else(⟨20,96,26397838046197141,26899339498558064,27400840950918987,[⟨3,27902342403279910,501501452360923⟩]⟩))))else(if i<101 then(if i<99 then(if i<98 then(⟨20,97,26901727559553993,27408005133906774,27914282708259555,[⟨3,28420560282612336,506277574352781⟩]⟩)else(⟨20,98,27410393194902703,27921446891247342,28432500587591981,[⟨3,28943554283936620,511053696344639⟩]⟩))else(if i<100 then(⟨20,99,27923834952243271,28439664770579768,28955494588916265,[⟨3,29471324407252762,515829818336497⟩]⟩)else(⟨20,100,28442052831575697,28962658771904052,29483264712232407,[⟨3,30003870652560762,520605940328355⟩]⟩)))else(if i<103 then(if i<102 then(⟨20,101,28965046832899981,29490428895220194,30015810957540407,[⟨3,30541193019860620,525382062320213⟩]⟩)else(⟨20,102,29492816956216123,30022975140528194,30553133324840265,[⟨3,31083291509152336,530158184312071⟩]⟩))else(if i<104 then(⟨20,103,30025363201524123,30560297507828052,31095231814131981,[⟨3,31630166120435910,534934306303929⟩]⟩)else(⟨20,104,30562685568823981,31102395997119768,31642106425415555,[⟨3,32181816853711342,539710428295787⟩]⟩)))))else(if i<112 then(if i<108 then(if i<106 then(⟨20,105,31104784058115697,31649270608403342,32193757158690987,[⟨3,32738243708978632,544486550287645⟩]⟩)else(if i<107 then(⟨20,106,31651658669399271,32200921341678774,32750184013958277,[⟨3,33299446686237780,549262672279503⟩]⟩)else(⟨20,107,32203309402674703,32757348196946064,33311386991217425,[⟨3,33865425785488786,554038794271361⟩]⟩)))else(if i<110 then(if i<109 then(⟨20,108,32759736257941993,33318551174205212,33877366090468431,[⟨3,34436181006731650,558814916263219⟩]⟩)else(⟨20,109,33320939235201141,33884530273456218,34448121311711295,[⟨3,35011712349966372,563591038255077⟩]⟩))else(if i<111 then(⟨20,110,33886918334452147,34455285494699082,35023652654946017,[⟨3,35592019815192952,568367160246935⟩]⟩)else(⟨20,111,34457673555695011,35030816837933804,35603960120172597,[⟨3,36177103402411390,573143282238793⟩]⟩))))else(if i<116 then(if i<114 then(if i<113 then(⟨20,112,35033204898929733,35611124303160384,36189043707391035,[⟨3,36766963111621686,577919404230651⟩]⟩)else(⟨20,113,35613512364156313,36196207890378822,36778903416601331,[⟨3,37361598942823840,582695526222509⟩]⟩))else(if i<115 then(⟨20,114,36198595951374751,36786067599589118,37373539247803485,[⟨3,37961010896017852,587471648214367⟩]⟩)else(⟨20,115,36788455660585047,37380703430791272,37972951200997497,[⟨3,38565198971203722,592247770206225⟩]⟩)))else(if i<118 then(if i<117 then(⟨20,116,37383091491787201,37980115383985284,38577139276183367,[⟨3,39174163168381450,597023892198083⟩]⟩)else(⟨20,117,37982503444981213,38584303459171154,39186103473361095,[⟨3,39787903487551036,601800014189941⟩]⟩))else(if i<119 then(⟨20,118,38586691520167083,39193267656348882,39799843792530681,[⟨3,40406419928712480,606576136181799⟩]⟩)else(⟨20,119,39195655717344811,39807007975518468,40418360233692125,[⟨3,41029712491865782,611352258173657⟩]⟩))))))))else(defaultRow)
+
+def row21 : ℕ → BaseRow := fun i =>
+  if i<119 then(if i<59 then(if i<29 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(⟨21,0,550035098960697,577454389330783,659849691005869,[⟨3,742244992680955,82395301675086⟩]⟩)else(if i<2 then(⟨21,1,577454389330783,662461051044781,747467712758779,[⟨3,832474374472777,85006661713998⟩]⟩)else(⟨21,2,577660549858145,662667211572143,747673873286141,[⟨3,832680535000139,85006661713998⟩]⟩)))else(if i<5 then(if i<4 then(⟨21,3,577866710385507,662873372099505,747880033813503,[⟨3,832886695527501,85006661713998⟩]⟩)else(⟨21,4,578828791448423,663835453162421,748842114876419,[⟨3,833848776590417,85006661713998⟩]⟩))else(if i<6 then(⟨21,5,609531960587987,682531088277988,755530215967989,[⟨3,835223177659477,85006661713998⟩]⟩)else(⟨21,6,685048001438543,763080955449654,841113909460765,[⟨3,919146863471876,78032954011111⟩,⟨15,1857089839302657,85006661713998⟩]⟩))))else(if i<10 then(if i<8 then(⟨21,7,765597868610209,848664648942430,931731429274651,[⟨3,1014798209606872,83066780332221⟩,⟨94,8574815155789847,85006661713998⟩]⟩)else(if i<9 then(⟨21,8,851181562102985,939282168756316,1027382775409647,[⟨3,1115483382062978,88100606653331⟩]⟩)else(⟨21,9,941799081916871,1034933514891312,1128067947865753,[⟨3,1221202380840194,93134432974441⟩]⟩)))else(if i<12 then(if i<11 then(⟨21,10,1037450428051867,1135618687347418,1233786946642969,[⟨3,1331955205938520,98168259295551⟩]⟩)else(⟨21,11,1138135600507973,1241337686124634,1344539771741295,[⟨3,1447741857357956,103202085616661⟩]⟩))else(if i<13 then(⟨21,12,1243854599285189,1352090511222960,1460326423160731,[⟨3,1568562335098502,108235911937771⟩]⟩)else(⟨21,13,1354607424383515,1467877162642396,1581146900901277,[⟨3,1694416639160158,113269738258881⟩]⟩)))))else(if i<21 then(if i<17 then(if i<15 then(⟨21,14,1470394075802951,1588697640382942,1707001204962933,[⟨3,1825304769542924,118303564579991⟩]⟩)else(if i<16 then(⟨21,15,1591214553543497,1714551944444598,1837889335345699,[⟨3,1961226726246800,123337390901101⟩]⟩)else(⟨21,16,1717068857605153,1845440074827364,1973811292049575,[⟨3,2102182509271786,128371217222211⟩]⟩)))else(if i<19 then(if i<18 then(⟨21,17,1847956987987919,1981362031531240,2114767075074561,[⟨3,2248172118617882,133405043543321⟩]⟩)else(⟨21,18,1983878944691795,2122317814556226,2260756684420657,[⟨3,2399195554285088,138438869864431⟩]⟩))else(if i<20 then(⟨21,19,2124834727716781,2268307423902322,2411780120087863,[⟨3,2555252816273404,143472696185541⟩]⟩)else(⟨21,20,2270824337062877,2419330859569528,2567837382076179,[⟨3,2716343904582830,148506522506651⟩]⟩))))else(if i<25 then(if i<23 then(if i<22 then(⟨21,21,2421847772730083,2575388121557844,2728928470385605,[⟨3,2882468819213366,153540348827761⟩]⟩)else(⟨21,22,2577905034718399,2736479209867270,2895053385016141,[⟨3,3053627560165012,158574175148871⟩]⟩))else(if i<24 then(⟨21,23,2738996123027825,2902604124497806,3066212125967787,[⟨3,3229820127437768,163608001469981⟩]⟩)else(⟨21,24,2905121037658361,3073762865449452,3242404693240543,[⟨3,3411046521031634,168641827791091⟩]⟩)))else(if i<27 then(if i<26 then(⟨21,25,3076279778610007,3249955432722208,3423631086834409,[⟨3,3597306740946610,173675654112201⟩]⟩)else(⟨21,26,3252472345882763,3431181826316074,3609891306749385,[⟨3,3788600787182696,178709480433311⟩]⟩))else(if i<28 then(⟨21,27,3433698739476629,3617442046231050,3801185352985471,[⟨3,3984928659739892,183743306754421⟩]⟩)else(⟨21,28,3619958959391605,3808736092467136,3997513225542667,[⟨3,4186290358618198,188777133075531⟩]⟩))))))else(if i<44 then(if i<36 then(if i<32 then(if i<30 then(⟨21,29,3811253005627691,4005063965024332,4198874924420973,[⟨3,4392685883817614,193810959396641⟩]⟩)else(if i<31 then(⟨21,30,4007580878184887,4206425663902638,4405270449620389,[⟨3,4604115235338140,198844785717751⟩]⟩)else(⟨21,31,4208942577063193,4412821189102054,4616699801140915,[⟨3,4820578413179776,203878612038861⟩]⟩)))else(if i<34 then(if i<33 then(⟨21,32,4415338102262609,4624250540622580,4833162978982551,[⟨3,5042075417342522,208912438359971⟩]⟩)else(⟨21,33,4626767453783135,4840713718464216,5054659983145297,[⟨3,5268606247826378,213946264681081⟩]⟩))else(if i<35 then(⟨21,34,4843230631624771,5062210722626962,5281190813629153,[⟨3,5500170904631344,218980091002191⟩]⟩)else(⟨21,35,5064727635787517,5288741553110818,5512755470434119,[⟨3,5736769387757420,224013917323301⟩]⟩))))else(if i<40 then(if i<38 then(if i<37 then(⟨21,36,5291258466271373,5520306209915784,5749353953560195,[⟨3,5978401697204606,229047743644411⟩]⟩)else(⟨21,37,5522823123076339,5756904693041860,5990986263007381,[⟨3,6225067832972902,234081569965521⟩]⟩))else(if i<39 then(⟨21,38,5759421606202415,5998537002489046,6237652398775677,[⟨3,6476767795062308,239115396286631⟩]⟩)else(⟨21,39,6001053915649601,6245203138257342,6489352360865083,[⟨3,6733501583472824,244149222607741⟩]⟩)))else(if i<42 then(if i<41 then(⟨21,40,6247720051417897,6496903100346748,6746086149275599,[⟨3,6995269198204450,249183048928851⟩]⟩)else(⟨21,41,6499420013507303,6753636888757264,7007853764007225,[⟨3,7262070639257186,254216875249961⟩]⟩))else(if i<43 then(⟨21,42,6756153801917819,7015404503488890,7274655205059961,[⟨3,7533905906631032,259250701571071⟩]⟩)else(⟨21,43,7017921416649445,7282205944541626,7546490472433807,[⟨3,7810775000325988,264284527892181⟩]⟩)))))else(if i<51 then(if i<47 then(if i<45 then(⟨21,44,7284722857702181,7554041211915472,7823359566128763,[⟨3,8092677920342054,269318354213291⟩]⟩)else(if i<46 then(⟨21,45,7556558125076027,7830910305610428,8105262486144829,[⟨3,8379614666679230,274352180534401⟩]⟩)else(⟨21,46,7833427218770983,8112813225626494,8392199232482005,[⟨3,8671585239337516,279386006855511⟩]⟩)))else(if i<49 then(if i<48 then(⟨21,47,8115330138787049,8399749971963670,8684169805140291,[⟨3,8968589638316912,284419833176621⟩]⟩)else(⟨21,48,8402266885124225,8691720544621956,8981174204119687,[⟨3,9270627863617418,289453659497731⟩]⟩))else(if i<50 then(⟨21,49,8694237457782511,8988724943601352,9283212429420193,[⟨3,9577699915239034,294487485818841⟩]⟩)else(⟨21,50,8991241856761907,9290763168901858,9590284481041809,[⟨3,9889805793181760,299521312139951⟩]⟩))))else(if i<55 then(if i<53 then(if i<52 then(⟨21,51,9293280082062413,9597835220523474,9902390358984535,[⟨3,10206945497445596,304555138461061⟩]⟩)else(⟨21,52,9600352133684029,9909941098466200,10219530063248371,[⟨3,10529119028030542,309588964782171⟩]⟩))else(if i<54 then(⟨21,53,9912458011626755,10227080802730036,10541703593833317,[⟨3,10856326384936598,314622791103281⟩]⟩)else(⟨21,54,10229597715890591,10549254333314982,10868910950739373,[⟨3,11188567568163764,319656617424391⟩]⟩)))else(if i<57 then(if i<56 then(⟨21,55,10551771246475537,10876461690221038,11201152133966539,[⟨3,11525842577712040,324690443745501⟩]⟩)else(⟨21,56,10878978603381593,11208702873448204,11538427143514815,[⟨3,11868151413581426,329724270066611⟩]⟩))else(if i<58 then(⟨21,57,11211219786608759,11545977882996480,11880735979384201,[⟨3,12215494075771922,334758096387721⟩]⟩)else(⟨21,58,11548494796157035,11888286718865866,12228078641574697,[⟨3,12567870564283528,339791922708831⟩]⟩)))))))else(if i<89 then(if i<74 then(if i<66 then(if i<62 then(if i<60 then(⟨21,59,11890803632026421,12235629381056362,12580455130086303,[⟨3,12925280879116244,344825749029941⟩]⟩)else(if i<61 then(⟨21,60,12238146294216917,12588005869567968,12937865444919019,[⟨3,13287725020270070,349859575351051⟩]⟩)else(⟨21,61,12590522782728523,12945416184400684,13300309586072845,[⟨3,13655202987745006,354893401672161⟩]⟩)))else(if i<64 then(if i<63 then(⟨21,62,12947933097561239,13307860325554510,13667787553547781,[⟨3,14027714781541052,359927227993271⟩]⟩)else(⟨21,63,13310377238715065,13675338293029446,14040299347343827,[⟨3,14405260401658208,364961054314381⟩]⟩))else(if i<65 then(⟨21,64,13677855206190001,14047850086825492,14417844967460983,[⟨3,14787839848096474,369994880635491⟩]⟩)else(⟨21,65,14050366999986047,14425395706942648,14800424413899249,[⟨3,15175453120855850,375028706956601⟩]⟩))))else(if i<70 then(if i<68 then(if i<67 then(⟨21,66,14427912620103203,14807975153380914,15188037686658625,[⟨3,15568100219936336,380062533277711⟩]⟩)else(⟨21,67,14810492066541469,15195588426140290,15580684785739111,[⟨3,15965781145337932,385096359598821⟩]⟩))else(if i<69 then(⟨21,68,15198105339300845,15588235525220776,15978365711140707,[⟨3,16368495897060638,390130185919931⟩]⟩)else(⟨21,69,15590752438381331,15985916450622372,16381080462863413,[⟨3,16776244475104454,395164012241041⟩]⟩)))else(if i<72 then(if i<71 then(⟨21,70,15988433363782927,16388631202345078,16788829040907229,[⟨3,17189026879469380,400197838562151⟩]⟩)else(⟨21,71,16391148115505633,16796379780388894,17201611445272155,[⟨3,17606843110155416,405231664883261⟩]⟩))else(if i<73 then(⟨21,72,16798896693549449,17209162184753820,17619427675958191,[⟨3,18029693167162562,410265491204371⟩]⟩)else(⟨21,73,17211679097914375,17626978415439856,18042277732965337,[⟨3,18457577050490818,415299317525481⟩]⟩)))))else(if i<81 then(if i<77 then(if i<75 then(⟨21,74,17629495328600411,18049828472447002,18470161616293593,[⟨3,18890494760140184,420333143846591⟩]⟩)else(if i<76 then(⟨21,75,18052345385607557,18477712355775258,18903079325942959,[⟨3,19328446296110660,425366970167701⟩]⟩)else(⟨21,76,18480229268935813,18910630065424624,19341030861913435,[⟨3,19771431658402246,430400796488811⟩]⟩)))else(if i<79 then(if i<78 then(⟨21,77,18913146978585179,19348581601395100,19784016224205021,[⟨3,20219450847014942,435434622809921⟩]⟩)else(⟨21,78,19351098514555655,19791566963686686,20232035412817717,[⟨3,20672503861948748,440468449131031⟩]⟩))else(if i<80 then(⟨21,79,19794083876847241,20239586152299382,20685088427751523,[⟨3,21130590703203664,445502275452141⟩]⟩)else(⟨21,80,20242103065459937,20692639167233188,21143175269006439,[⟨3,21593711370779690,450536101773251⟩]⟩))))else(if i<85 then(if i<83 then(if i<82 then(⟨21,81,20695156080393743,21150726008488104,21606295936582465,[⟨3,22061865864676826,455569928094361⟩]⟩)else(⟨21,82,21153242921648659,21613846676064130,22074450430479601,[⟨3,22535054184895072,460603754415471⟩]⟩))else(if i<84 then(⟨21,83,21616363589224685,22082001169961266,22547638750697847,[⟨3,23013276331434428,465637580736581⟩]⟩)else(⟨21,84,22084518083121821,22555189490179512,23025860897237203,[⟨3,23496532304294894,470671407057691⟩]⟩)))else(if i<87 then(if i<86 then(⟨21,85,22557706403340067,23033411636718868,23509116870097669,[⟨3,23984822103476470,475705233378801⟩]⟩)else(⟨21,86,23035928549879423,23516667609579334,23997406669279245,[⟨3,24478145728979156,480739059699911⟩]⟩))else(if i<88 then(⟨21,87,23519184522739889,24004957408760910,24490730294781931,[⟨3,24976503180802952,485772886021021⟩]⟩)else(⟨21,88,24007474321921465,24498281034263596,24989087746605727,[⟨3,25479894458947858,490806712342131⟩]⟩))))))else(if i<104 then(if i<96 then(if i<92 then(if i<90 then(⟨21,89,24500797947424151,24996638486087392,25492479024750633,[⟨3,25988319563413874,495840538663241⟩]⟩)else(if i<91 then(⟨21,90,24999155399247947,25500029764232298,26000904129216649,[⟨3,26501778494201000,500874364984351⟩]⟩)else(⟨21,91,25502546677392853,26008454868698314,26514363060003775,[⟨3,27020271251309236,505908191305461⟩]⟩)))else(if i<94 then(if i<93 then(⟨21,92,26010971781858869,26521913799485440,27032855817112011,[⟨3,27543797834738582,510942017626571⟩]⟩)else(⟨21,93,26524430712645995,27040406556593676,27556382400541357,[⟨3,28072358244489038,515975843947681⟩]⟩))else(if i<95 then(⟨21,94,27042923469754231,27563933140023022,28084942810291813,[⟨3,28605952480560604,521009670268791⟩]⟩)else(⟨21,95,27566450053183577,28092493549773478,28618537046363379,[⟨3,29144580542953280,526043496589901⟩]⟩))))else(if i<100 then(if i<98 then(if i<97 then(⟨21,96,28095010462934033,28626087785845044,29157165108756055,[⟨3,29688242431667066,531077322911011⟩]⟩)else(⟨21,97,28628604699005599,29164715848237720,29700826997469841,[⟨3,30236938146701962,536111149232121⟩]⟩))else(if i<99 then(⟨21,98,29167232761398275,29708377736951506,30249522712504737,[⟨3,30790667688057968,541144975553231⟩]⟩)else(⟨21,99,29710894650112061,30257073451986402,30803252253860743,[⟨3,31349431055735084,546178801874341⟩]⟩)))else(if i<102 then(if i<101 then(⟨21,100,30259590365146957,30810802993342408,31362015621537859,[⟨3,31913228249733310,551212628195451⟩]⟩)else(⟨21,101,30813319906502963,31369566361019524,31925812815536085,[⟨3,32482059270052646,556246454516561⟩]⟩))else(if i<103 then(⟨21,102,31372083274180079,31933363555017750,32494643835855421,[⟨3,33055924116693092,561280280837671⟩]⟩)else(⟨21,103,31935880468178305,32502194575337086,33068508682495867,[⟨3,33634822789654648,566314107158781⟩]⟩)))))else(if i<111 then(if i<107 then(if i<105 then(⟨21,104,32504711488497641,33076059421977532,33647407355457423,[⟨3,34218755288937314,571347933479891⟩]⟩)else(if i<106 then(⟨21,105,33078576335138087,33654958094939088,34231339854740089,[⟨3,34807721614541090,576381759801001⟩]⟩)else(⟨21,106,33657475008099643,34238890594221754,34820306180343865,[⟨3,35401721766465976,581415586122111⟩]⟩)))else(if i<109 then(if i<108 then(⟨21,107,34241407507382309,34827856919825530,35414306332268751,[⟨3,36000755744711972,586449412443221⟩]⟩)else(⟨21,108,34830373832986085,35421857071750416,36013340310514747,[⟨3,36604823549279078,591483238764331⟩]⟩))else(if i<110 then(⟨21,109,35424373984910971,36020891049996412,36617408115081853,[⟨3,37213925180167294,596517065085441⟩]⟩)else(⟨21,110,36023407963156967,36624958854563518,37226509745970069,[⟨3,37828060637376620,601550891406551⟩]⟩))))else(if i<115 then(if i<113 then(if i<112 then(⟨21,111,36627475767724073,37234060485451734,37840645203179395,[⟨3,38447229920907056,606584717727661⟩]⟩)else(⟨21,112,37236577398612289,37848195942661060,38459814486709831,[⟨3,39071433030758602,611618544048771⟩]⟩))else(if i<114 then(⟨21,113,37850712855821615,38467365226191496,39084017596561377,[⟨3,39700669966931258,616652370369881⟩]⟩)else(⟨21,114,38469882139352051,39091568336043042,39713254532734033,[⟨3,40334940729425024,621686196690991⟩]⟩)))else(if i<117 then(if i<116 then(⟨21,115,39094085249203597,39720805272215698,40347525295227799,[⟨3,40974245318239900,626720023012101⟩]⟩)else(⟨21,116,39723322185376253,40355076034709464,40986829884042675,[⟨3,41618583733375886,631753849333211⟩]⟩))else(if i<118 then(⟨21,117,40357592947870019,40994380623524340,41631168299178661,[⟨3,42267955974832982,636787675654321⟩]⟩)else(⟨21,118,40996897536684895,41638719038660326,42280540540635757,[⟨3,42922362042611188,641821501975431⟩]⟩))))))))else(defaultRow)
+
+def row22 : ℕ → BaseRow := fun i =>
+  if i<118 then(if i<59 then(if i<29 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(⟨22,0,636691041747852,666927852684212,757775715533830,[⟨3,848623578383448,90847862849618⟩]⟩)else(if i<2 then(⟨22,1,666927852684212,760524515574790,854121178465368,[⟨3,947717841355946,93596662890578⟩]⟩)else(⟨22,2,667134013211574,760730676102152,854327338992730,[⟨3,947924001883308,93596662890578⟩]⟩)))else(if i<5 then(if i<4 then(⟨22,3,667340173738936,760936836629514,854533499520092,[⟨3,948130162410670,93596662890578⟩]⟩)else(⟨22,4,668302254801852,761898917692430,855495580583008,[⟨3,949092243473586,93596662890578⟩]⟩))else(if i<6 then(⟨22,5,688578561287559,767960169894968,856869981652068,[⟨3,950466644542646,93596662890578⟩]⟩)else(⟨22,6,770605935220149,855279074477920,939952213735691,[⟨3,1024625352993462,84673139257771⟩,⟨12,1794623331633052,93596662890578⟩]⟩))))else(if i<10 then(if i<8 then(⟨22,7,857924839803101,947889509711234,1037854179619367,[⟨3,1127818849527500,89964669908133⟩,⟨51,5447092225446942,93596662890578⟩]⟩)else(if i<9 then(⟨22,8,950535275036415,1045791475594910,1141047676153405,[⟨3,1236303876711900,95256200558495⟩]⟩)else(⟨22,9,1048437240920091,1148984972128948,1249532703337805,[⟨3,1350080434546662,100547731208857⟩]⟩)))else(if i<12 then(if i<11 then(⟨22,10,1151630737454129,1257469999313348,1363309261172567,[⟨3,1469148523031786,105839261859219⟩]⟩)else(⟨22,11,1260115764638529,1371246557148110,1482377349657691,[⟨3,1593508142167272,111130792509581⟩]⟩))else(if i<13 then(⟨22,12,1373892322473291,1490314645633234,1606736968793177,[⟨3,1723159291953120,116422323159943⟩]⟩)else(⟨22,13,1492960410958415,1614674264768720,1736388118579025,[⟨3,1858101972389330,121713853810305⟩]⟩)))))else(if i<21 then(if i<17 then(if i<15 then(⟨22,14,1617320030093901,1744325414554568,1871330799015235,[⟨3,1998336183475902,127005384460667⟩]⟩)else(if i<16 then(⟨22,15,1746971179879749,1879268094990778,2011565010101807,[⟨3,2143861925212836,132296915111029⟩]⟩)else(⟨22,16,1881913860315959,2019502306077350,2157090751838741,[⟨3,2294679197600132,137588445761391⟩]⟩)))else(if i<19 then(if i<18 then(⟨22,17,2022148071402531,2165028047814284,2307908024226037,[⟨3,2450788000637790,142879976411753⟩]⟩)else(⟨22,18,2167673813139465,2315845320201580,2464016827263695,[⟨3,2612188334325810,148171507062115⟩]⟩))else(if i<20 then(⟨22,19,2318491085526761,2471954123239238,2625417160951715,[⟨3,2778880198664192,153463037712477⟩]⟩)else(⟨22,20,2474599888564419,2633354456927258,2792109025290097,[⟨3,2950863593652936,158754568362839⟩]⟩))))else(if i<25 then(if i<23 then(if i<22 then(⟨22,21,2636000222252439,2800046321265640,2964092420278841,[⟨3,3128138519292042,164046099013201⟩]⟩)else(⟨22,22,2802692086590821,2972029716254384,3141367345917947,[⟨3,3310704975581510,169337629663563⟩]⟩))else(if i<24 then(⟨22,23,2974675481579565,3149304641893490,3323933802207415,[⟨3,3498562962521340,174629160313925⟩]⟩)else(⟨22,24,3151950407218671,3331871098182958,3511791789147245,[⟨3,3691712480111532,179920690964287⟩]⟩)))else(if i<27 then(if i<26 then(⟨22,25,3334516863508139,3519729085122788,3704941306737437,[⟨3,3890153528352086,185212221614649⟩]⟩)else(⟨22,26,3522374850447969,3712878602712980,3903382354977991,[⟨3,4093886107243002,190503752265011⟩]⟩))else(if i<28 then(⟨22,27,3715524368038161,3911319650953534,4107114933868907,[⟨3,4302910216784280,195795282915373⟩]⟩)else(⟨22,28,3913965416278715,4115052229844450,4316139043410185,[⟨3,4517225856975920,201086813565735⟩]⟩))))))else(if i<44 then(if i<36 then(if i<32 then(if i<30 then(⟨22,29,4117697995169631,4324076339385728,4530454683601825,[⟨3,4736833027817922,206378344216097⟩]⟩)else(if i<31 then(⟨22,30,4326722104710909,4538391979577368,4750061854443827,[⟨3,4961731729310286,211669874866459⟩]⟩)else(⟨22,31,4541037744902549,4757999150419370,4974960555936191,[⟨3,5191921961453012,216961405516821⟩]⟩)))else(if i<34 then(if i<33 then(⟨22,32,4760644915744551,4982897851911734,5205150788078917,[⟨3,5427403724246100,222252936167183⟩]⟩)else(⟨22,33,4985543617236915,5213088084054460,5440632550872005,[⟨3,5668177017689550,227544466817545⟩]⟩))else(if i<35 then(⟨22,34,5215733849379641,5448569846847548,5681405844315455,[⟨3,5914241841783362,232835997467907⟩]⟩)else(⟨22,35,5451215612172729,5689343140290998,5927470668409267,[⟨3,6165598196527536,238127528118269⟩]⟩))))else(if i<40 then(if i<38 then(if i<37 then(⟨22,36,5691988905616179,5935407964384810,6178827023153441,[⟨3,6422246081922072,243419058768631⟩]⟩)else(⟨22,37,5938053729709991,6186764319128984,6435474908547977,[⟨3,6684185497966970,248710589418993⟩]⟩))else(if i<39 then(⟨22,38,6189410084454165,6443412204523520,6697414324592875,[⟨3,6951416444662230,254002120069355⟩]⟩)else(⟨22,39,6446057969848701,6705351620568418,6964645271288135,[⟨3,7223938922007852,259293650719717⟩]⟩)))else(if i<42 then(if i<41 then(⟨22,40,6707997385893599,6972582567263678,7237167748633757,[⟨3,7501752930003836,264585181370079⟩]⟩)else(⟨22,41,6975228332588859,7245105044609300,7514981756629741,[⟨3,7784858468650182,269876712020441⟩]⟩))else(if i<43 then(⟨22,42,7247750809934481,7522919052605284,7798087295276087,[⟨3,8073255537946890,275168242670803⟩]⟩)else(⟨22,43,7525564817930465,7806024591251630,8086484364572795,[⟨3,8366944137893960,280459773321165⟩]⟩)))))else(if i<51 then(if i<47 then(if i<45 then(⟨22,44,7808670356576811,8094421660548338,8380172964519865,[⟨3,8665924268491392,285751303971527⟩]⟩)else(if i<46 then(⟨22,45,8097067425873519,8388110260495408,8679153095117297,[⟨3,8970195929739186,291042834621889⟩]⟩)else(⟨22,46,8390756025820589,8687090391092840,8983424756365091,[⟨3,9279759121637342,296334365272251⟩]⟩)))else(if i<49 then(if i<48 then(⟨22,47,8689736156418021,8991362052340634,9292987948263247,[⟨3,9594613844185860,301625895922613⟩]⟩)else(⟨22,48,8994007817665815,9300925244238790,9607842670811765,[⟨3,9914760097384740,306917426572975⟩]⟩))else(if i<50 then(⟨22,49,9303571009563971,9615779966787308,9927988924010645,[⟨3,10240197881233982,312208957223337⟩]⟩)else(⟨22,50,9618425732112489,9935926219986188,10253426707859887,[⟨3,10570927195733586,317500487873699⟩]⟩))))else(if i<55 then(if i<53 then(if i<52 then(⟨22,51,9938571985311369,10261364003835430,10584156022359491,[⟨3,10906948040883552,322792018524061⟩]⟩)else(⟨22,52,10264009769160611,10592093318335034,10920176867509457,[⟨3,11248260416683880,328083549174423⟩]⟩))else(if i<54 then(⟨22,53,10594739083660215,10928114163485000,11261489243309785,[⟨3,11594864323134570,333375079824785⟩]⟩)else(⟨22,54,10930759928810181,11269426539285328,11608093149760475,[⟨3,11946759760235622,338666610475147⟩]⟩)))else(if i<57 then(if i<56 then(⟨22,55,11272072304610509,11616030445736018,11959988586861527,[⟨3,12303946727987036,343958141125509⟩]⟩)else(⟨22,56,11618676211061199,11967925882837070,12317175554612941,[⟨3,12666425226388812,349249671775871⟩]⟩))else(if i<58 then(⟨22,57,11970571648162251,12325112850588484,12679654053014717,[⟨3,13034195255440950,354541202426233⟩]⟩)else(⟨22,58,12327758615913665,12687591348990260,13047424082066855,[⟨3,13407256815143450,359832733076595⟩]⟩)))))))else(if i<88 then(if i<73 then(if i<66 then(if i<62 then(if i<60 then(⟨22,59,12690237114315441,13055361378042398,13420485641769355,[⟨3,13785609905496312,365124263726957⟩]⟩)else(if i<61 then(⟨22,60,13058007143367579,13428422937744898,13798838732122217,[⟨3,14169254526499536,370415794377319⟩]⟩)else(⟨22,61,13431068703070079,13806776028097760,14182483353125441,[⟨3,14558190678153122,375707325027681⟩]⟩)))else(if i<64 then(if i<63 then(⟨22,62,13809421793422941,14190420649100984,14571419504779027,[⟨3,14952418360457070,380998855678043⟩]⟩)else(⟨22,63,14193066414426165,14579356800754570,14965647187082975,[⟨3,15351937573411380,386290386328405⟩]⟩))else(if i<65 then(⟨22,64,14582002566079751,14973584483058518,15365166400037285,[⟨3,15756748317016052,391581916978767⟩]⟩)else(⟨22,65,14976230248383699,15373103696012828,15769977143641957,[⟨3,16166850591271086,396873447629129⟩]⟩))))else(if i<69 then(if i<67 then(⟨22,66,15375749461338009,15777914439617500,16180079417896991,[⟨3,16582244396176482,402164978279491⟩]⟩)else(if i<68 then(⟨22,67,15780560204942681,16188016713872534,16595473222802387,[⟨3,17002929731732240,407456508929853⟩]⟩)else(⟨22,68,16190662479197715,16603410518777930,17016158558358145,[⟨3,17428906597938360,412748039580215⟩]⟩)))else(if i<71 then(if i<70 then(⟨22,69,16606056284103111,17024095854333688,17442135424564265,[⟨3,17860174994794842,418039570230577⟩]⟩)else(⟨22,70,17026741619658869,17450072720539808,17873403821420747,[⟨3,18296734922301686,423331100880939⟩]⟩))else(if i<72 then(⟨22,71,17452718485864989,17881341117396290,18309963748927591,[⟨3,18738586380458892,428622631531301⟩]⟩)else(⟨22,72,17883986882721471,18317901044903134,18751815207084797,[⟨3,19185729369266460,433914162181663⟩]⟩)))))else(if i<80 then(if i<76 then(if i<74 then(⟨22,73,18320546810228315,18759752503060340,19198958195892365,[⟨3,19638163888724390,439205692832025⟩]⟩)else(if i<75 then(⟨22,74,18762398268385521,19206895491867908,19651392715350295,[⟨3,20095889938832682,444497223482387⟩]⟩)else(⟨22,75,19209541257193089,19659330011325838,20109118765458587,[⟨3,20558907519591336,449788754132749⟩]⟩)))else(if i<78 then(if i<77 then(⟨22,76,19661975776651019,20117056061434130,20572136346217241,[⟨3,21027216631000352,455080284783111⟩]⟩)else(⟨22,77,20119701826759311,20580073642192784,21040445457626257,[⟨3,21500817273059730,460371815433473⟩]⟩))else(if i<79 then(⟨22,78,20582719407517965,21048382753601800,21514046099685635,[⟨3,21979709445769470,465663346083835⟩]⟩)else(⟨22,79,21051028518926981,21521983395661178,21992938272395375,[⟨3,22463893149129572,470954876734197⟩]⟩))))else(if i<84 then(if i<82 then(if i<81 then(⟨22,80,21524629160986359,22000875568370918,22477121975755477,[⟨3,22953368383140036,476246407384559⟩]⟩)else(⟨22,81,22003521333696099,22485059271731020,22966597209765941,[⟨3,23448135147800862,481537938034921⟩]⟩))else(if i<83 then(⟨22,82,22487705037056201,22974534505741484,23461363974426767,[⟨3,23948193443112050,486829468685283⟩]⟩)else(⟨22,83,22977180271066665,23469301270402310,23961422269737955,[⟨3,24453543269073600,492120999335645⟩]⟩)))else(if i<86 then(if i<85 then(⟨22,84,23471947035727491,23969359565713498,24466772095699505,[⟨3,24964184625685512,497412529986007⟩]⟩)else(⟨22,85,23972005331038679,24474709391675048,24977413452311417,[⟨3,25480117512947786,502704060636369⟩]⟩))else(if i<87 then(⟨22,86,24477355157000229,24985350748286960,25493346339573691,[⟨3,26001341930860422,507995591286731⟩]⟩)else(⟨22,87,24987996513612141,25501283635549234,26014570757486327,[⟨3,26527857879423420,513287121937093⟩]⟩))))))else(if i<103 then(if i<95 then(if i<91 then(if i<89 then(⟨22,88,25503929400874415,26022508053461870,26541086706049325,[⟨3,27059665358636780,518578652587455⟩]⟩)else(if i<90 then(⟨22,89,26025153818787051,26549024002024868,27072894185262685,[⟨3,27596764368500502,523870183237817⟩]⟩)else(⟨22,90,26551669767350049,27080831481238228,27609993195126407,[⟨3,28139154909014586,529161713888179⟩]⟩)))else(if i<93 then(if i<92 then(⟨22,91,27083477246563409,27617930491101950,28152383735640491,[⟨3,28686836980179032,534453244538541⟩]⟩)else(⟨22,92,27620576256427131,28160321031616034,28700065806804937,[⟨3,29239810581993840,539744775188903⟩]⟩))else(if i<94 then(⟨22,93,28162966796941215,28708003102780480,29253039408619745,[⟨3,29798075714459010,545036305839265⟩]⟩)else(⟨22,94,28710648868105661,29260976704595288,29811304541084915,[⟨3,30361632377574542,550327836489627⟩]⟩))))else(if i<99 then(if i<97 then(if i<96 then(⟨22,95,29263622469920469,29819241837060458,30374861204200447,[⟨3,30930480571340436,555619367139989⟩]⟩)else(⟨22,96,29821887602385639,30382798500175990,30943709397966341,[⟨3,31504620295756692,560910897790351⟩]⟩))else(if i<98 then(⟨22,97,30385444265501171,30951646693941884,31517849122382597,[⟨3,32084051550823310,566202428440713⟩]⟩)else(⟨22,98,30954292459267065,31525786418358140,32097280377449215,[⟨3,32668774336540290,571493959091075⟩]⟩)))else(if i<101 then(if i<100 then(⟨22,99,31528432183683321,32105217673424758,32682003163166195,[⟨3,33258788652907632,576785489741437⟩]⟩)else(⟨22,100,32107863438749939,32689940459141738,33272017479533537,[⟨3,33854094499925336,582077020391799⟩]⟩))else(if i<102 then(⟨22,101,32692586224466919,33279954775509080,33867323326551241,[⟨3,34454691877593402,587368551042161⟩]⟩)else(⟨22,102,33282600540834261,33875260622526784,34467920704219307,[⟨3,35060580785911830,592660081692523⟩]⟩)))))else(if i<110 then(if i<106 then(if i<104 then(⟨22,103,33877906387851965,34475858000194850,35073809612537735,[⟨3,35671761224880620,597951612342885⟩]⟩)else(if i<105 then(⟨22,104,34478503765520031,35081746908513278,35684990051506525,[⟨3,36288233194499772,603243142993247⟩]⟩)else(⟨22,105,35084392673838459,35692927347482068,36301462021125677,[⟨3,36909996694769286,608534673643609⟩]⟩)))else(if i<108 then(if i<107 then(⟨22,106,35695573112807249,36309399317101220,36923225521395191,[⟨3,37537051725689162,613826204293971⟩]⟩)else(⟨22,107,36312045082426401,36931162817370734,37550280552315067,[⟨3,38169398287259400,619117734944333⟩]⟩))else(if i<109 then(⟨22,108,36933808582695915,37558217848290610,38182627113885305,[⟨3,38807036379480000,624409265594695⟩]⟩)else(⟨22,109,37560863613615791,38190564409860848,38820265206105905,[⟨3,39449966002350962,629700796245057⟩]⟩))))else(if i<114 then(if i<112 then(if i<111 then(⟨22,110,38193210175186029,38828202502081448,39463194828976867,[⟨3,40098187155872286,634992326895419⟩]⟩)else(⟨22,111,38830848267406629,39471132124952410,40111415982498191,[⟨3,40751699840043972,640283857545781⟩]⟩))else(if i<113 then(⟨22,112,39473777890277591,40119353278473734,40764928666669877,[⟨3,41410504054866020,645575388196143⟩]⟩)else(⟨22,113,40121999043798915,40772865962645420,41423732881491925,[⟨3,42074599800338430,650866918846505⟩]⟩)))else(if i<116 then(if i<115 then(⟨22,114,40775511727970601,41431670177467468,42087828626964335,[⟨3,42743987076461202,656158449496867⟩]⟩)else(⟨22,115,41434315942792649,42095765922939878,42757215903087107,[⟨3,43418665883234336,661449980147229⟩]⟩))else(if i<117 then(⟨22,116,42098411688265059,42765153199062650,43431894709860241,[⟨3,44098636220657832,666741510797591⟩]⟩)else(⟨22,117,42767798964387831,43439832005835784,44111865047283737,[⟨3,44783898088731690,672033041447953⟩]⟩))))))))else(defaultRow)
+
+def row23 : ℕ → BaseRow := fun i =>
+  if i<117 then(if i<58 then(if i<29 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(⟨23,0,732005705712611,765197477217293,864910221247587,[⟨3,964622965277881,99712744030294⟩]⟩)else(if i<2 then(⟨23,1,765197477217293,867796461290595,970395445363897,[⟨3,1072994429437199,102598984073302⟩]⟩)else(⟨23,2,765403637744655,868002621817957,970601605891259,[⟨3,1073200589964561,102598984073302⟩]⟩)))else(if i<5 then(if i<4 then(⟨23,3,765609798272017,868208782345319,970807766418621,[⟨3,1073406750491923,102598984073302⟩]⟩)else(⟨23,4,766571879334933,869170863408235,971769847481537,[⟨3,1074368831554839,102598984073302⟩]⟩))else(if i<6 then(⟨23,5,774136495069165,870545264477295,973144248550597,[⟨3,1075743232623899,102598984073302⟩]⟩)else(⟨23,6,862932906413041,954503935246724,1046074964080407,[⟨3,1137645992914090,91571028833683⟩,⟨9,1693123858138915,102598984073302⟩]⟩))))else(if i<10 then(if i<8 then(⟨23,7,957278552736531,1054398816549828,1151519080363125,[⟨3,1248639344176422,97120263813297⟩,⟨34,4260297501052813,102598984073302⟩]⟩)else(if i<9 then(⟨23,8,1057173434039635,1159842932832546,1262512431625457,[⟨3,1365181930418368,102669498792911⟩]⟩)else(⟨23,9,1162617550322353,1270836284094878,1379055017867403,[⟨3,1487273751639928,108218733772525⟩]⟩)))else(if i<12 then(if i<11 then(⟨23,10,1273610901584685,1387378870336824,1501146839088963,[⟨3,1614914807841102,113767968752139⟩]⟩)else(⟨23,11,1390153487826631,1509470691558384,1628787895290137,[⟨3,1748105099021890,119317203731753⟩]⟩))else(if i<13 then(⟨23,12,1512245309048191,1637111747759558,1761978186470925,[⟨3,1886844625182292,124866438711367⟩]⟩)else(⟨23,13,1639886365249365,1770302038940346,1900717712631327,[⟨3,2031133386322308,130415673690981⟩]⟩)))))else(if i<21 then(if i<17 then(if i<15 then(⟨23,14,1773076656430153,1909041565100748,2045006473771343,[⟨3,2180971382441938,135964908670595⟩]⟩)else(if i<16 then(⟨23,15,1911816182590555,2053330326240764,2194844469890973,[⟨3,2336358613541182,141514143650209⟩]⟩)else(⟨23,16,2056104943730571,2203168322360394,2350231700990217,[⟨3,2497295079620040,147063378629823⟩]⟩)))else(if i<19 then(if i<18 then(⟨23,17,2205942939850201,2358555553459638,2511168167069075,[⟨3,2663780780678512,152612613609437⟩]⟩)else(⟨23,18,2361330170949445,2519492019538496,2677653868127547,[⟨3,2835815716716598,158161848589051⟩]⟩))else(if i<20 then(⟨23,19,2522266637028303,2685977720596968,2849688804165633,[⟨3,3013399887734298,163711083568665⟩]⟩)else(⟨23,20,2688752338086775,2858012656635054,3027272975183333,[⟨3,3196533293731612,169260318548279⟩]⟩))))else(if i<25 then(if i<23 then(if i<22 then(⟨23,21,2860787274124861,3035596827652754,3210406381180647,[⟨3,3385215934708540,174809553527893⟩]⟩)else(⟨23,22,3038371445142561,3218730233650068,3399089022157575,[⟨3,3579447810665082,180358788507507⟩]⟩))else(if i<24 then(⟨23,23,3221504851139875,3407412874626996,3593320898114117,[⟨3,3779228921601238,185908023487121⟩]⟩)else(⟨23,24,3410187492116803,3601644750583538,3793102009050273,[⟨3,3984559267517008,191457258466735⟩]⟩)))else(if i<27 then(if i<26 then(⟨23,25,3604419368073345,3801425861519694,3998432354966043,[⟨3,4195438848412392,197006493446349⟩]⟩)else(⟨23,26,3804200479009501,4006756207435464,4209311935861427,[⟨3,4411867664287390,202555728425963⟩]⟩))else(if i<28 then(⟨23,27,4009530824925271,4217635788330848,4425740751736425,[⟨3,4633845715142002,208104963405577⟩]⟩)else(⟨23,28,4220410405820655,4434064604205846,4647718802591037,[⟨3,4861373000976228,213654198385191⟩]⟩))))))else(if i<43 then(if i<36 then(if i<32 then(if i<30 then(⟨23,29,4436839221695653,4656042655060458,4875246088425263,[⟨3,5094449521790068,219203433364805⟩]⟩)else(if i<31 then(⟨23,30,4658817272550265,4883569940894684,5108322609239103,[⟨3,5333075277583522,224752668344419⟩]⟩)else(⟨23,31,4886344558384491,5116646461708524,5346948365032557,[⟨3,5577250268356590,230301903324033⟩]⟩)))else(if i<34 then(if i<33 then(⟨23,32,5119421079198331,5355272217501978,5591123355805625,[⟨3,5826974494109272,235851138303647⟩]⟩)else(⟨23,33,5358046834991785,5599447208275046,5840847581558307,[⟨3,6082247954841568,241400373283261⟩]⟩))else(if i<35 then(⟨23,34,5602221825764853,5849171434027728,6096121042290603,[⟨3,6343070650553478,246949608262875⟩]⟩)else(⟨23,35,5851946051517535,6104444894760024,6356943738002513,[⟨3,6609442581245002,252498843242489⟩]⟩))))else(if i<39 then(if i<37 then(⟨23,36,6107219512249831,6365267590471934,6623315668694037,[⟨3,6881363746916140,258048078222103⟩]⟩)else(if i<38 then(⟨23,37,6368042207961741,6631639521163458,6895236834365175,[⟨3,7158834147566892,263597313201717⟩]⟩)else(⟨23,38,6634414138653265,6903560686834596,7172707235015927,[⟨3,7441853783197258,269146548181331⟩]⟩)))else(if i<41 then(if i<40 then(⟨23,39,6906335304324403,7181031087485348,7455726870646293,[⟨3,7730422653807238,274695783160945⟩]⟩)else(⟨23,40,7183805704975155,7464050723115714,7744295741256273,[⟨3,8024540759396832,280245018140559⟩]⟩))else(if i<42 then(⟨23,41,7466825340605521,7752619593725694,8038413846845867,[⟨3,8324208099966040,285794253120173⟩]⟩)else(⟨23,42,7755394211215501,8046737699315288,8338081187415075,[⟨3,8629424675514862,291343488099787⟩]⟩)))))else(if i<50 then(if i<46 then(if i<44 then(⟨23,43,8049512316805095,8346405039884496,8643297762963897,[⟨3,8940190486043298,296892723079401⟩]⟩)else(if i<45 then(⟨23,44,8349179657374303,8651621615433318,8954063573492333,[⟨3,9256505531551348,302441958059015⟩]⟩)else(⟨23,45,8654396232923125,8962387425961754,9270378619000383,[⟨3,9578369812039012,307991193038629⟩]⟩)))else(if i<48 then(if i<47 then(⟨23,46,8965162043451561,9278702471469804,9592242899488047,[⟨3,9905783327506290,313540428018243⟩]⟩)else(⟨23,47,9281477088959611,9600566751957468,9919656414955325,[⟨3,10238746077953182,319089662997857⟩]⟩))else(if i<49 then(⟨23,48,9603341369447275,9927980267424746,10252619165402217,[⟨3,10577258063379688,324638897977471⟩]⟩)else(⟨23,49,9930754884914553,10260943017871638,10591131150828723,[⟨3,10921319283785808,330188132957085⟩]⟩))))else(if i<54 then(if i<52 then(if i<51 then(⟨23,50,10263717635361445,10599455003298144,10935192371234843,[⟨3,11270929739171542,335737367936699⟩]⟩)else(⟨23,51,10602229620787951,10943516223704264,11284802826620577,[⟨3,11626089429536890,341286602916313⟩]⟩))else(if i<53 then(⟨23,52,10946290841194071,11293126679089998,11639962516985925,[⟨3,11986798354881852,346835837895927⟩]⟩)else(⟨23,53,11295901296579805,11648286369455346,12000671442330887,[⟨3,12353056515206428,352385072875541⟩]⟩)))else(if i<56 then(if i<55 then(⟨23,54,11651060986945153,12008995294800308,12366929602655463,[⟨3,12724863910510618,357934307855155⟩]⟩)else(⟨23,55,12011769912290115,12375253455124884,12738736997959653,[⟨3,13102220540794422,363483542834769⟩]⟩))else(if i<57 then(⟨23,56,12378028072614691,12747060850429074,13116093628243457,[⟨3,13485126406057840,369032777814383⟩]⟩)else(⟨23,57,12749835467918881,13124417480712878,13498999493506875,[⟨3,13873581506300872,374582012793997⟩]⟩)))))))else(if i<87 then(if i<72 then(if i<65 then(if i<61 then(if i<59 then(⟨23,58,13127192098202685,13507323345976296,13887454593749907,[⟨3,14267585841523518,380131247773611⟩]⟩)else(if i<60 then(⟨23,59,13510097963466103,13895778446219328,14281458928972553,[⟨3,14667139411725778,385680482753225⟩]⟩)else(⟨23,60,13898553063709135,14289782781441974,14681012499174813,[⟨3,15072242216907652,391229717732839⟩]⟩)))else(if i<63 then(if i<62 then(⟨23,61,14292557398931781,14689336351644234,15086115304356687,[⟨3,15482894257069140,396778952712453⟩]⟩)else(⟨23,62,14692110969134041,15094439156826108,15496767344518175,[⟨3,15899095532210242,402328187692067⟩]⟩))else(if i<64 then(⟨23,63,15097213774315915,15505091196987596,15912968619659277,[⟨3,16320846042330958,407877422671681⟩]⟩)else(⟨23,64,15507865814477403,15921292472128698,16334719129779993,[⟨3,16748145787431288,413426657651295⟩]⟩))))else(if i<68 then(if i<66 then(⟨23,65,15924067089618505,16343042982249414,16762018874880323,[⟨3,17180994767511232,418975892630909⟩]⟩)else(if i<67 then(⟨23,66,16345817599739221,16770342727349744,17194867854960267,[⟨3,17619392982570790,424525127610523⟩]⟩)else(⟨23,67,16773117344839551,17203191707429688,17633266070019825,[⟨3,18063340432609962,430074362590137⟩]⟩)))else(if i<70 then(if i<69 then(⟨23,68,17205966324919495,17641589922489246,18077213520058997,[⟨3,18512837117628748,435623597569751⟩]⟩)else(⟨23,69,17644364539979053,18085537372528418,18526710205077783,[⟨3,18967883037627148,441172832549365⟩]⟩))else(if i<71 then(⟨23,70,18088311990018225,18535034057547204,18981756125076183,[⟨3,19428478192605162,446722067528979⟩]⟩)else(⟨23,71,18537808675037011,18990079977545604,19442351280054197,[⟨3,19894622582562790,452271302508593⟩]⟩)))))else(if i<79 then(if i<75 then(if i<73 then(⟨23,72,18992854595035411,19450675132523618,19908495670011825,[⟨3,20366316207500032,457820537488207⟩]⟩)else(if i<74 then(⟨23,73,19453449750013425,19916819522481246,20380189294949067,[⟨3,20843559067416888,463369772467821⟩]⟩)else(⟨23,74,19919594139971053,20388513147418488,20857432154865923,[⟨3,21326351162313358,468919007447435⟩]⟩)))else(if i<77 then(if i<76 then(⟨23,75,20391287764908295,20865756007335344,21340224249762393,[⟨3,21814692492189442,474468242427049⟩]⟩)else(⟨23,76,20868530624825151,21348548102231814,21828565579638477,[⟨3,22308583057045140,480017477406663⟩]⟩))else(if i<78 then(⟨23,77,21351322719721621,21836889432107898,22322456144494175,[⟨3,22808022856880452,485566712386277⟩]⟩)else(⟨23,78,21839664049597705,22330779996963596,22821895944329487,[⟨3,23313011891695378,491115947365891⟩]⟩))))else(if i<83 then(if i<81 then(if i<80 then(⟨23,79,22333554614453403,22830219796798908,23326884979144413,[⟨3,23823550161489918,496665182345505⟩]⟩)else(⟨23,80,22832994414288715,23335208831613834,23837423248938953,[⟨3,24339637666264072,502214417325119⟩]⟩))else(if i<82 then(⟨23,81,23337983449103641,23845747101408374,24353510753713107,[⟨3,24861274406017840,507763652304733⟩]⟩)else(⟨23,82,23848521718898181,24361834606182528,24875147493466875,[⟨3,25388460380751222,513312887284347⟩]⟩)))else(if i<85 then(if i<84 then(⟨23,83,24364609223672335,24883471345936296,25402333468200257,[⟨3,25921195590464218,518862122263961⟩]⟩)else(⟨23,84,24886245963426103,25410657320669678,25935068677913253,[⟨3,26459480035156828,524411357243575⟩]⟩))else(if i<86 then(⟨23,85,25413431938159485,25943392530382674,26473353122605863,[⟨3,27003313714829052,529960592223189⟩]⟩)else(⟨23,86,25946167147872481,26481676975075284,27017186802278087,[⟨3,27552696629480890,535509827202803⟩]⟩))))))else(if i<102 then(if i<94 then(if i<90 then(if i<88 then(⟨23,87,26484451592565091,27025510654747508,27566569716929925,[⟨3,28107628779112342,541059062182417⟩]⟩)else(if i<89 then(⟨23,88,27028285272237315,27574893569399346,28121501866561377,[⟨3,28668110163723408,546608297162031⟩]⟩)else(⟨23,89,27577668186889153,28129825719030798,28681983251172443,[⟨3,29234140783314088,552157532141645⟩]⟩)))else(if i<92 then(if i<91 then(⟨23,90,28132600336520605,28690307103641864,29248013870763123,[⟨3,29805720637884382,557706767121259⟩]⟩)else(⟨23,91,28693081721131671,29256337723232544,29819593725333417,[⟨3,30382849727434290,563256002100873⟩]⟩))else(if i<93 then(⟨23,92,29259112340722351,29827917577802838,30396722814883325,[⟨3,30965528051963812,568805237080487⟩]⟩)else(⟨23,93,29830692195292645,30405046667352746,30979401139412847,[⟨3,31553755611472948,574354472060101⟩]⟩))))else(if i<98 then(if i<96 then(if i<95 then(⟨23,94,30407821284842553,30987724991882268,31567628698921983,[⟨3,32147532405961698,579903707039715⟩]⟩)else(⟨23,95,30990499609372075,31575952551391404,32161405493410733,[⟨3,32746858435430062,585452942019329⟩]⟩))else(if i<97 then(⟨23,96,31578727168881211,32169729345880154,32760731522879097,[⟨3,33351733699878040,591002176998943⟩]⟩)else(⟨23,97,32172503963369961,32769055375348518,33365606787327075,[⟨3,33962158199305632,596551411978557⟩]⟩)))else(if i<100 then(if i<99 then(⟨23,98,32771829992838325,33373930639796496,33976031286754667,[⟨3,34578131933712838,602100646958171⟩]⟩)else(⟨23,99,33376705257286303,33984355139224088,34592005021161873,[⟨3,35199654903099658,607649881937785⟩]⟩))else(if i<101 then(⟨23,100,33987129756713895,34600328873631294,35213527990548693,[⟨3,35826727107466092,613199116917399⟩]⟩)else(⟨23,101,34603103491121101,35221851843018114,35840600194915127,[⟨3,36459348546812140,618748351897013⟩]⟩)))))else(if i<109 then(if i<105 then(if i<103 then(⟨23,102,35224626460507921,35848924047384548,36473221634261175,[⟨3,37097519221137802,624297586876627⟩]⟩)else(if i<104 then(⟨23,103,35851698664874355,36481545486730596,37111392308586837,[⟨3,37741239130443078,629846821856241⟩]⟩)else(⟨23,104,36484320104220403,37119716161056258,37755112217892113,[⟨3,38390508274727968,635396056835855⟩]⟩)))else(if i<107 then(if i<106 then(⟨23,105,37122490778546065,37763436070361534,38404381362177003,[⟨3,39045326653992472,640945291815469⟩]⟩)else(⟨23,106,37766210687851341,38412705214646424,39059199741441507,[⟨3,39705694268236590,646494526795083⟩]⟩))else(if i<108 then(⟨23,107,38415479832136231,39067523593910928,39719567355685625,[⟨3,40371611117460322,652043761774697⟩]⟩)else(⟨23,108,39070298211400735,39727891208155046,40385484204909357,[⟨3,41043077201663668,657592996754311⟩]⟩))))else(if i<113 then(if i<111 then(if i<110 then(⟨23,109,39730665825644853,40393808057378778,41056950289112703,[⟨3,41720092520846628,663142231733925⟩]⟩)else(⟨23,110,40396582674868585,41065274141582124,41733965608295663,[⟨3,42402657075009202,668691466713539⟩]⟩))else(if i<112 then(⟨23,111,41068048759071931,41742289460765084,42416530162458237,[⟨3,43090770864151390,674240701693153⟩]⟩)else(⟨23,112,41745064078254891,42424854014927658,43104643951600425,[⟨3,43784433888273192,679789936672767⟩]⟩)))else(if i<115 then(if i<114 then(⟨23,113,42427628632417465,43112967804069846,43798306975722227,[⟨3,44483646147374608,685339171652381⟩]⟩)else(⟨23,114,43115742421559653,43806630828191648,44497519234823643,[⟨3,45188407641455638,690888406631995⟩]⟩))else(if i<116 then(⟨23,115,43809405445681455,44505843087293064,45202280728904673,[⟨3,45898718370516282,696437641611609⟩]⟩)else(⟨23,116,44508617704782871,45210604581374094,45912591457965317,[⟨3,46614578334556540,701986876591223⟩]⟩))))))))else(defaultRow)
+
+def row24 : ℕ → BaseRow := fun i =>
+  if i<116 then(if i<58 then(if i<29 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(⟨24,0,836391410861118,872675582936170,981665528153284,[⟨3,1090655473370398,108989945217114⟩]⟩)else(if i<2 then(⟨24,1,872675582936170,984689208198340,1096702833460510,[⟨3,1208716458722680,112013625262170⟩]⟩)else(⟨24,2,872881743463532,984895368725702,1096908993987872,[⟨3,1208922619250042,112013625262170⟩]⟩)))else(if i<5 then(if i<4 then(⟨24,3,873087903990894,985101529253064,1097115154515234,[⟨3,1209128779777404,112013625262170⟩]⟩)else(⟨24,4,874049985053810,986063610315980,1098077235578150,[⟨3,1210090860840320,112013625262170⟩]⟩))else(if i<6 then(⟨24,5,875424386122870,987438011385040,1099451636647210,[⟨3,1211465261909380,112013625262170⟩]⟩)else(⟨24,6,962286619346471,1061013242085318,1159739864824165,[⟨3,1258466487563012,98726622738847⟩,⟨7,1661306484033264,112013625262170⟩]⟩))))else(if i<10 then(if i<8 then(⟨24,7,1063916711739751,1168450273787464,1272983835835177,[⟨3,1377517397882890,104533562047713⟩,⟨25,3679750779833672,112013625262170⟩]⟩)else(if i<9 then(⟨24,8,1171353743441897,1281694244798476,1392034746155055,[⟨3,1502375247511634,110340501356579⟩,⟨173,20260378679722324,112013625262170⟩]⟩)else(⟨24,9,1284597714452909,1400745155118354,1516892595783799,[⟨3,1633040036449244,116147440665445⟩]⟩)))else(if i<12 then(if i<11 then(⟨24,10,1403648624772787,1525603004747098,1647557384721409,[⟨3,1769511764695720,121954379974311⟩]⟩)else(⟨24,11,1528506474401531,1656267793684708,1784029112967885,[⟨3,1911790432251062,127761319283177⟩]⟩))else(if i<13 then(⟨24,12,1659171263339141,1792739521931184,1926307780523227,[⟨3,2059876039115270,133568258592043⟩]⟩)else(⟨24,13,1795642991585617,1935018189486526,2074393387387435,[⟨3,2213768585288344,139375197900909⟩]⟩)))))else(if i<21 then(if i<17 then(if i<15 then(⟨24,14,1937921659140959,2083103796350734,2228285933560509,[⟨3,2373468070770284,145182137209775⟩]⟩)else(if i<16 then(⟨24,15,2086007266005167,2236996342523808,2387985419042449,[⟨3,2538974495561090,150989076518641⟩]⟩)else(⟨24,16,2239899812178241,2396695828005748,2553491843833255,[⟨3,2710287859660762,156796015827507⟩]⟩)))else(if i<19 then(if i<18 then(⟨24,17,2399599297660181,2562202252796554,2724805207932927,[⟨3,2887408163069300,162602955136373⟩]⟩)else(⟨24,18,2565105722450987,2733515616896226,2901925511341465,[⟨3,3070335405786704,168409894445239⟩]⟩))else(if i<20 then(⟨24,19,2736419086550659,2910635920304764,3084852754058869,[⟨3,3259069587812974,174216833754105⟩]⟩)else(⟨24,20,2913539389959197,3093563163022168,3273586936085139,[⟨3,3453610709148110,180023773062971⟩]⟩))))else(if i<25 then(if i<23 then(if i<22 then(⟨24,21,3096466632676601,3282297345048438,3468128057420275,[⟨3,3653958769792112,185830712371837⟩]⟩)else(⟨24,22,3285200814702871,3476838466383574,3668476118064277,[⟨3,3860113769744980,191637651680703⟩]⟩))else(if i<24 then(⟨24,23,3479741936038007,3677186527027576,3874631118017145,[⟨3,4072075709006714,197444590989569⟩]⟩)else(⟨24,24,3680089996682009,3883341526980444,4086593057278879,[⟨3,4289844587577314,203251530298435⟩]⟩)))else(if i<27 then(if i<26 then(⟨24,25,3886244996634877,4095303466242178,4304361935849479,[⟨3,4513420405456780,209058469607301⟩]⟩)else(⟨24,26,4098206935896611,4313072344812778,4527937753728945,[⟨3,4742803162645112,214865408916167⟩]⟩))else(if i<28 then(⟨24,27,4315975814467211,4536648162692244,4757320510917277,[⟨3,4977992859142310,220672348225033⟩]⟩)else(⟨24,28,4539551632346677,4766030919880576,4992510207414475,[⟨3,5218989494948374,226479287533899⟩]⟩))))))else(if i<43 then(if i<36 then(if i<32 then(if i<30 then(⟨24,29,4768934389535009,5001220616377774,5233506843220539,[⟨3,5465793070063304,232286226842765⟩]⟩)else(if i<31 then(⟨24,30,5004124086032207,5242217252183838,5480310418335469,[⟨3,5718403584487100,238093166151631⟩]⟩)else(⟨24,31,5245120721838271,5489020827298768,5732920932759265,[⟨3,5976821038219762,243900105460497⟩]⟩)))else(if i<34 then(if i<33 then(⟨24,32,5491924296953201,5741631341722564,5991338386491927,[⟨3,6241045431261290,249707044769363⟩]⟩)else(⟨24,33,5744534811376997,6000048795455226,6255562779533455,[⟨3,6511076763611684,255513984078229⟩]⟩))else(if i<35 then(⟨24,34,6002952265109659,6264273188496754,6525594111883849,[⟨3,6786915035270944,261320923387095⟩]⟩)else(⟨24,35,6267176658151187,6534304520847148,6801432383543109,[⟨3,7068560246239070,267127862695961⟩]⟩))))else(if i<39 then(if i<37 then(⟨24,36,6537207990501581,6810142792506408,7083077594511235,[⟨3,7356012396516062,272934802004827⟩]⟩)else(if i<38 then(⟨24,37,6813046262160841,7091788003474534,7370529744788227,[⟨3,7649271486101920,278741741313693⟩]⟩)else(⟨24,38,7094691473128967,7379240153751526,7663788834374085,[⟨3,7948337514996644,284548680622559⟩]⟩)))else(if i<41 then(if i<40 then(⟨24,39,7382143623405959,7672499243337384,7962854863268809,[⟨3,8253210483200234,290355619931425⟩]⟩)else(⟨24,40,7675402712991817,7971565272232108,8267727831472399,[⟨3,8563890390712690,296162559240291⟩]⟩))else(if i<42 then(⟨24,41,7974468741886541,8276438240435698,8578407738984855,[⟨3,8880377237534012,301969498549157⟩]⟩)else(⟨24,42,8279341710090131,8587118147948154,8894894585806177,[⟨3,9202671023664200,307776437858023⟩]⟩)))))else(if i<50 then(if i<46 then(if i<44 then(⟨24,43,8590021617602587,8903604994769476,9217188371936365,[⟨3,9530771749103254,313583377166889⟩]⟩)else(if i<45 then(⟨24,44,8906508464423909,9225898780899664,9545289097375419,[⟨3,9864679413851174,319390316475755⟩]⟩)else(⟨24,45,9228802250554097,9553999506338718,9879196762123339,[⟨3,10204394017907960,325197255784621⟩]⟩)))else(if i<48 then(if i<47 then(⟨24,46,9556902975993151,9887907171086638,10218911366180125,[⟨3,10549915561273612,331004195093487⟩]⟩)else(⟨24,47,9890810640741071,10227621775143424,10564432909545777,[⟨3,10901244043948130,336811134402353⟩]⟩))else(if i<49 then(⟨24,48,10230525244797857,10573143318509076,10915761392220295,[⟨3,11258379465931514,342618073711219⟩]⟩)else(⟨24,49,10576046788163509,10924471801183594,11272896814203679,[⟨3,11621321827223764,348425013020085⟩]⟩))))else(if i<54 then(if i<52 then(if i<51 then(⟨24,50,10927375270838027,11281607223166978,11635839175495929,[⟨3,11990071127824880,354231952328951⟩]⟩)else(⟨24,51,11284510692821411,11644549584459228,12004588476097045,[⟨3,12364627367734862,360038891637817⟩]⟩))else(if i<53 then(⟨24,52,11647453054113661,12013298885060344,12379144716007027,[⟨3,12744990546953710,365845830946683⟩]⟩)else(⟨24,53,12016202354714777,12387855124970326,12759507895225875,[⟨3,13131160665481424,371652770255549⟩]⟩)))else(if i<56 then(if i<55 then(⟨24,54,12390758594624759,12768218304189174,13145678013753589,[⟨3,13523137723318004,377459709564415⟩]⟩)else(⟨24,55,12771121773843607,13154388422716888,13537655071590169,[⟨3,13920921720463450,383266648873281⟩]⟩))else(if i<57 then(⟨24,56,13157291892371321,13546365480553468,13935439068735615,[⟨3,14324512656917762,389073588182147⟩]⟩)else(⟨24,57,13549268950207901,13944149477698914,14339030005189927,[⟨3,14733910532680940,394880527491013⟩]⟩)))))))else(if i<87 then(if i<72 then(if i<65 then(if i<61 then(if i<59 then(⟨24,58,13947052947353347,14347740414153226,14748427880953105,[⟨3,15149115347752984,400687466799879⟩]⟩)else(if i<60 then(⟨24,59,14350643883807659,14757138289916404,15163632696025149,[⟨3,15570127102133894,406494406108745⟩]⟩)else(⟨24,60,14760041759570837,15172343104988448,15584644450406059,[⟨3,15996945795823670,412301345417611⟩]⟩)))else(if i<63 then(if i<62 then(⟨24,61,15175246574642881,15593354859369358,16011463144095835,[⟨3,16429571428822312,418108284726477⟩]⟩)else(⟨24,62,15596258329023791,16020173553059134,16444088777094477,[⟨3,16868004001129820,423915224035343⟩]⟩))else(if i<64 then(⟨24,63,16023077022713567,16452799186057776,16882521349401985,[⟨3,17312243512746194,429722163344209⟩]⟩)else(⟨24,64,16455702655712209,16891231758365284,17326760861018359,[⟨3,17762289963671434,435529102653075⟩]⟩))))else(if i<68 then(if i<66 then(⟨24,65,16894135228019717,17335471269981658,17776807311943599,[⟨3,18218143353905540,441336041961941⟩]⟩)else(if i<67 then(⟨24,66,17338374739636091,17785517720906898,18232660702177705,[⟨3,18679803683448512,447142981270807⟩]⟩)else(⟨24,67,17788421190561331,18241371111141004,18694321031720677,[⟨3,19147270952300350,452949920579673⟩]⟩)))else(if i<70 then(if i<69 then(⟨24,68,18244274580795437,18703031440683976,19161788300572515,[⟨3,19620545160461054,458756859888539⟩]⟩)else(⟨24,69,18705934910338409,19170498709535814,19635062508733219,[⟨3,20099626307930624,464563799197405⟩]⟩))else(if i<71 then(⟨24,70,19173402179190247,19643772917696518,20114143656202789,[⟨3,20584514394709060,470370738506271⟩]⟩)else(⟨24,71,19646676387350951,20122854065166088,20599031742981225,[⟨3,21075209420796362,476177677815137⟩]⟩)))))else(if i<79 then(if i<75 then(if i<73 then(⟨24,72,20125757534820521,20607742151944524,21089726769068527,[⟨3,21571711386192530,481984617124003⟩]⟩)else(if i<74 then(⟨24,73,20610645621598957,21098437178031826,21586228734464695,[⟨3,22074020290897564,487791556432869⟩]⟩)else(⟨24,74,21101340647686259,21594939143427994,22088537639169729,[⟨3,22582136134911464,493598495741735⟩]⟩)))else(if i<77 then(if i<76 then(⟨24,75,21597842613082427,22097248048133028,22596653483183629,[⟨3,23096058918234230,499405435050601⟩]⟩)else(⟨24,76,22100151517787461,22605363892146928,23110576266506395,[⟨3,23615788640865862,505212374359467⟩]⟩))else(if i<78 then(⟨24,77,22608267361801361,23119286675469694,23630305989138027,[⟨3,24141325302806360,511019313668333⟩]⟩)else(⟨24,78,23122190145124127,23639016398101326,24155842651078525,[⟨3,24672668904055724,516826252977199⟩]⟩))))else(if i<83 then(if i<81 then(if i<80 then(⟨24,79,23641919867755759,24164553060041824,24687186252327889,[⟨3,25209819444613954,522633192286065⟩]⟩)else(⟨24,80,24167456529696257,24695896661291188,25224336792886119,[⟨3,25752776924481050,528440131594931⟩]⟩))else(if i<82 then(⟨24,81,24698800130945621,25233047201849418,25767294272753215,[⟨3,26301541343657012,534247070903797⟩]⟩)else(⟨24,82,25235950671503851,25776004681716514,26316058691929177,[⟨3,26856112702141840,540054010212663⟩]⟩)))else(if i<85 then(if i<84 then(⟨24,83,25778908151370947,26324769100892476,26870630050414005,[⟨3,27416490999935534,545860949521529⟩]⟩)else(⟨24,84,26327672570546909,26879340459377304,27431008348207699,[⟨3,27982676237038094,551667888830395⟩]⟩))else(if i<86 then(⟨24,85,26882243929031737,27439718757170998,27997193585310259,[⟨3,28554668413449520,557474828139261⟩]⟩)else(⟨24,86,27442622226825431,28005903994273558,28569185761721685,[⟨3,29132467529169812,563281767448127⟩]⟩))))))else(if i<101 then(if i<94 then(if i<90 then(if i<88 then(⟨24,87,28008807463927991,28577896170684984,29146984877441977,[⟨3,29716073584198970,569088706756993⟩]⟩)else(if i<89 then(⟨24,88,28580799640339417,29155695286405276,29730590932471135,[⟨3,30305486578536994,574895646065859⟩]⟩)else(⟨24,89,29158598756059709,29739301341434434,30320003926809159,[⟨3,30900706512183884,580702585374725⟩]⟩)))else(if i<92 then(if i<91 then(⟨24,90,29742204811088867,30328714335772458,30915223860456049,[⟨3,31501733385139640,586509524683591⟩]⟩)else(⟨24,91,30331617805426891,30923934269419348,31516250733411805,[⟨3,32108567197404262,592316463992457⟩]⟩))else(if i<93 then(⟨24,92,30926837739073781,31524961142375104,32123084545676427,[⟨3,32721207948977750,598123403301323⟩]⟩)else(⟨24,93,31527864612029537,32131794954639726,32735725297249915,[⟨3,33339655639860104,603930342610189⟩]⟩))))else(if i<97 then(if i<95 then(⟨24,94,32134698424294159,32744435706213214,33354172988132269,[⟨3,33963910270051324,609737281919055⟩]⟩)else(if i<96 then(⟨24,95,32747339175867647,33362883397095568,33978427618323489,[⟨3,34593971839551410,615544221227921⟩]⟩)else(⟨24,96,33365786866750001,33987138027286788,34608489187823575,[⟨3,35229840348360362,621351160536787⟩]⟩)))else(if i<99 then(if i<98 then(⟨24,97,33990041496941221,34617199596786874,35244357696632527,[⟨3,35871515796478180,627158099845653⟩]⟩)else(⟨24,98,34620103066441307,35253068105595826,35886033144750345,[⟨3,36518998183904864,632965039154519⟩]⟩))else(if i<100 then(⟨24,99,35255971575250259,35894743553713644,36533515532177029,[⟨3,37172287510640414,638771978463385⟩]⟩)else(⟨24,100,35897647023368077,36542225941140328,37186804858912579,[⟨3,37831383776684830,644578917772251⟩]⟩)))))else(if i<108 then(if i<104 then(if i<102 then(⟨24,101,36545129410794761,37195515267875878,37845901124956995,[⟨3,38496286982038112,650385857081117⟩]⟩)else(if i<103 then(⟨24,102,37198418737530311,37854611533920294,38510804330310277,[⟨3,39166997126700260,656192796389983⟩]⟩)else(⟨24,103,37857515003574727,38519514739273576,39181514474972425,[⟨3,39843514210671274,661999735698849⟩]⟩)))else(if i<106 then(if i<105 then(⟨24,104,38522418208928009,39190224883935724,39858031558943439,[⟨3,40525838233951154,667806675007715⟩]⟩)else(⟨24,105,39193128353590157,39866741967906738,40540355582223319,[⟨3,41213969196539900,673613614316581⟩]⟩))else(if i<107 then(⟨24,106,39869645437561171,40549065991186618,41228486544812065,[⟨3,41907907098437512,679420553625447⟩]⟩)else(⟨24,107,40551969460841051,41237196953775364,41922424446709677,[⟨3,42607651939643990,685227492934313⟩]⟩))))else(if i<112 then(if i<110 then(if i<109 then(⟨24,108,41240100423429797,41931134855672976,42622169287916155,[⟨3,43313203720159334,691034432243179⟩]⟩)else(⟨24,109,41934038325327409,42630879696879454,43327721068431499,[⟨3,44024562439983544,696841371552045⟩]⟩))else(if i<111 then(⟨24,110,42633783166533887,43336431477394798,44039079788255709,[⟨3,44741728099116620,702648310860911⟩]⟩)else(⟨24,111,43339334947049231,44047790197219008,44756245447388785,[⟨3,45464700697558562,708455250169777⟩]⟩)))else(if i<114 then(if i<113 then(⟨24,112,44050693666873441,44764955856352084,45479218045830727,[⟨3,46193480235309370,714262189478643⟩]⟩)else(⟨24,113,44767859326006517,45487928454794026,46207997583581535,[⟨3,46928066712369044,720069128787509⟩]⟩))else(if i<115 then(⟨24,114,45490831924448459,46216707992544834,46942584060641209,[⟨3,47668460128737584,725876068096375⟩]⟩)else(⟨24,115,46219611462199267,46951294469604508,47682977477009749,[⟨3,48414660484414990,731683007405241⟩]⟩))))))))else(defaultRow)
+
+def row25 : ℕ → BaseRow := fun i =>
+  if i<115 then(if i<57 then(if i<28 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(⟨25,0,950260477199517,989774489846987,1108453956257065,[⟨3,1227133422667143,118679466410078⟩]⟩)else(if i<2 then(⟨25,1,989774489846987,1111615076304169,1233455662761351,[⟨3,1355296249218533,121840586457182⟩]⟩)else(⟨25,2,989980650374349,1111821236831531,1233661823288713,[⟨3,1355502409745895,121840586457182⟩]⟩)))else(if i<5 then(if i<4 then(⟨25,3,990186810901711,1112027397358893,1233867983816075,[⟨3,1355708570273257,121840586457182⟩]⟩)else(⟨25,4,991148891964627,1112989478421809,1234830064878991,[⟨3,1356670651336173,121840586457182⟩]⟩))else(if i<6 then(⟨25,5,992523293033687,1114363879490869,1236204465948051,[⟨3,1358045052405233,121840586457182⟩]⟩)else(⟨25,6,1068924778349691,1175064699322954,1281204620296217,[⟨3,1387344541269480,106139920973263⟩,⟨5,1603512946394801,121840586457182⟩]⟩))))else(if i<10 then(if i<8 then(⟨25,7,1178097021142013,1290301585753394,1402506150364775,[⟨3,1514710714976156,112204564611381⟩,⟨19,3311480197876697,121840586457182⟩]⟩)else(if i<9 then(⟨25,8,1293333907572453,1411603115821952,1529872324071451,[⟨3,1648141532320950,118269208249499⟩,⟨83,11111889092223837,121840586457182⟩]⟩)else(⟨25,9,1414635437641011,1538969289528628,1663303141416245,[⟨3,1787636993303862,124333851887617⟩]⟩)))else(if i<12 then(if i<11 then(⟨25,10,1542001611347687,1672400106873422,1802798602399157,[⟨3,1933197097924892,130398495525735⟩]⟩)else(⟨25,11,1675432428692481,1811895567856334,1948358707020187,[⟨3,2084821846184040,136463139163853⟩]⟩))else(if i<13 then(⟨25,12,1814927889675393,1957455672477364,2099983455279335,[⟨3,2242511238081306,142527782801971⟩]⟩)else(⟨25,13,1960487994296423,2109080420736512,2257672847176601,[⟨3,2406265273616690,148592426440089⟩]⟩)))))else(if i<21 then(if i<17 then(if i<15 then(⟨25,14,2112112742555571,2266769812633778,2421426882711985,[⟨3,2576083952790192,154657070078207⟩]⟩)else(if i<16 then(⟨25,15,2269802134452837,2430523848169162,2591245561885487,[⟨3,2751967275601812,160721713716325⟩]⟩)else(⟨25,16,2433556169988221,2600342527342664,2767128884697107,[⟨3,2933915242051550,166786357354443⟩]⟩)))else(if i<19 then(if i<18 then(⟨25,17,2603374849161723,2776225850154284,2949076851146845,[⟨3,3121927852139406,172851000992561⟩]⟩)else(⟨25,18,2779258171973343,2958173816604022,3137089461234701,[⟨3,3316005105865380,178915644630679⟩]⟩))else(if i<20 then(⟨25,19,2961206138423081,3146186426691878,3331166714960675,[⟨3,3516147003229472,184980288268797⟩]⟩)else(⟨25,20,3149218748510937,3340263680417852,3531308612324767,[⟨3,3722353544231682,191044931906915⟩]⟩))))else(if i<24 then(if i<22 then(⟨25,21,3343296002236911,3540405577781944,3737515153326977,[⟨3,3934624728872010,197109575545033⟩]⟩)else(if i<23 then(⟨25,22,3543437899601003,3746612118784154,3949786337967305,[⟨3,4152960557150456,203174219183151⟩]⟩)else(⟨25,23,3749644440603213,3958883303424482,4168122166245751,[⟨3,4377361029067020,209238862821269⟩]⟩)))else(if i<26 then(if i<25 then(⟨25,24,3961915625243541,4177219131702928,4392522638162315,[⟨3,4607826144621702,215303506459387⟩]⟩)else(⟨25,25,4180251453521987,4401619603619492,4622987753716997,[⟨3,4844355903814502,221368150097505⟩]⟩))else(if i<27 then(⟨25,26,4404651925438551,4632084719174174,4859517512909797,[⟨3,5086950306645420,227432793735623⟩]⟩)else(⟨25,27,4635117040993233,4868614478366974,5102111915740715,[⟨3,5335609353114456,233497437373741⟩]⟩))))))else(if i<42 then(if i<35 then(if i<31 then(if i<29 then(⟨25,28,4871646800186033,5111208881197892,5350770962209751,[⟨3,5590333043221610,239562081011859⟩]⟩)else(if i<30 then(⟨25,29,5114241203016951,5359867927666928,5605494652316905,[⟨3,5851121376966882,245626724649977⟩]⟩)else(⟨25,30,5362900249485987,5614591617774082,5866282986062177,[⟨3,6117974354350272,251691368288095⟩]⟩)))else(if i<33 then(if i<32 then(⟨25,31,5617623939593141,5875379951519354,6133135963445567,[⟨3,6390891975371780,257756011926213⟩]⟩)else(⟨25,32,5878412273338413,6142232928902744,6406053584467075,[⟨3,6669874240031406,263820655564331⟩]⟩))else(if i<34 then(⟨25,33,6145265250721803,6415150549924252,6685035849126701,[⟨3,6954921148329150,269885299202449⟩]⟩)else(⟨25,34,6418182871743311,6694132814583878,6970082757424445,[⟨3,7246032700265012,275949942840567⟩]⟩))))else(if i<38 then(if i<36 then(⟨25,35,6697165136402937,6979179722881622,7261194309360307,[⟨3,7543208895838992,282014586478685⟩]⟩)else(if i<37 then(⟨25,36,6982212044700681,7270291274817484,7558370504934287,[⟨3,7846449735051090,288079230116803⟩]⟩)else(⟨25,37,7273323596636543,7567467470391464,7861611344146385,[⟨3,8155755217901306,294143873754921⟩]⟩)))else(if i<40 then(if i<39 then(⟨25,38,7570499792210523,7870708309603562,8170916826996601,[⟨3,8471125344389640,300208517393039⟩]⟩)else(⟨25,39,7873740631422621,8180013792453778,8486286953484935,[⟨3,8792560114516092,306273161031157⟩]⟩))else(if i<41 then(⟨25,40,8183046114272837,8495383918942112,8807721723611387,[⟨3,9120059528280662,312337804669275⟩]⟩)else(⟨25,41,8498416240761171,8816818689068564,9135221137375957,[⟨3,9453623585683350,318402448307393⟩]⟩)))))else(if i<49 then(if i<45 then(if i<43 then(⟨25,42,8819851010887623,9144318102833134,9468785194778645,[⟨3,9793252286724156,324467091945511⟩]⟩)else(if i<44 then(⟨25,43,9147350424652193,9477882160235822,9808413895819451,[⟨3,10138945631403080,330531735583629⟩]⟩)else(⟨25,44,9480914482054881,9817510861276628,10154107240498375,[⟨3,10490703619720122,336596379221747⟩]⟩)))else(if i<47 then(if i<46 then(⟨25,45,9820543183095687,10163204205955552,10505865228815417,[⟨3,10848526251675282,342661022859865⟩]⟩)else(⟨25,46,10166236527774611,10514962194272594,10863687860770577,[⟨3,11212413527268560,348725666497983⟩]⟩))else(if i<48 then(⟨25,47,10517994516091653,10872784826227754,11227575136363855,[⟨3,11582365446499956,354790310136101⟩]⟩)else(⟨25,48,10875817148046813,11236672101821032,11597527055595251,[⟨3,11958382009369470,360854953774219⟩]⟩))))else(if i<53 then(if i<51 then(if i<50 then(⟨25,49,11239704423640091,11606624021052428,11973543618464765,[⟨3,12340463215877102,366919597412337⟩]⟩)else(⟨25,50,11609656342871487,11982640583921942,12355624824972397,[⟨3,12728609066022852,372984241050455⟩]⟩))else(if i<52 then(⟨25,51,11985672905741001,12364721790429574,12743770675118147,[⟨3,13122819559806720,379048884688573⟩]⟩)else(⟨25,52,12367754112248633,12752867640575324,13137981168902015,[⟨3,13523094697228706,385113528326691⟩]⟩)))else(if i<55 then(if i<54 then(⟨25,53,12755899962394383,13147078134359192,13538256306324001,[⟨3,13929434478288810,391178171964809⟩]⟩)else(⟨25,54,13150110456178251,13547353271781178,13944596087384105,[⟨3,14341838902987032,397242815602927⟩]⟩))else(if i<56 then(⟨25,55,13550385593600237,13953693052841282,14357000512082327,[⟨3,14760307971323372,403307459241045⟩]⟩)else(⟨25,56,13956725374660341,14366097477539504,14775469580418667,[⟨3,15184841683297830,409372102879163⟩]⟩)))))))else(if i<86 then(if i<71 then(if i<64 then(if i<60 then(if i<58 then(⟨25,57,14369129799358563,14784566545875844,15200003292393125,[⟨3,15615440038910406,415436746517281⟩]⟩)else(if i<59 then(⟨25,58,14787598867694903,15209100257850302,15630601648005701,[⟨3,16052103038161100,421501390155399⟩]⟩)else(⟨25,59,15212132579669361,15639698613462878,16067264647256395,[⟨3,16494830681049912,427566033793517⟩]⟩)))else(if i<62 then(if i<61 then(⟨25,60,15642730935281937,16076361612713572,16509992290145207,[⟨3,16943622967576842,433630677431635⟩]⟩)else(⟨25,61,16079393934532631,16519089255602384,16958784576672137,[⟨3,17398479897741890,439695321069753⟩]⟩))else(if i<63 then(⟨25,62,16522121577421443,16967881542129314,17413641506837185,[⟨3,17859401471545056,445759964707871⟩]⟩)else(⟨25,63,16970913863948373,17422738472294362,17874563080640351,[⟨3,18326387688986340,451824608345989⟩]⟩))))else(if i<67 then(if i<65 then(⟨25,64,17425770794113421,17883660046097528,18341549298081635,[⟨3,18799438550065742,457889251984107⟩]⟩)else(if i<66 then(⟨25,65,17886692367916587,18350646263538812,18814600159161037,[⟨3,19278554054783262,463953895622225⟩]⟩)else(⟨25,66,18353678585357871,18823697124618214,19293715663878557,[⟨3,19763734203138900,470018539260343⟩]⟩)))else(if i<69 then(if i<68 then(⟨25,67,18826729446437273,19302812629335734,19778895812234195,[⟨3,20254978995132656,476083182898461⟩]⟩)else(⟨25,68,19305844951154793,19787992777691372,20270140604227951,[⟨3,20752288430764530,482147826536579⟩]⟩))else(if i<70 then(⟨25,69,19791025099510431,20279237569685128,20767450039859825,[⟨3,21255662510034522,488212470174697⟩]⟩)else(⟨25,70,20282269891504187,20776547005317002,21270824119129817,[⟨3,21765101232942632,494277113812815⟩]⟩)))))else(if i<78 then(if i<74 then(if i<72 then(⟨25,71,20779579327136061,21279921084586994,21780262842037927,[⟨3,22280604599488860,500341757450933⟩]⟩)else(if i<73 then(⟨25,72,21282953406406053,21789359807495104,22295766208584155,[⟨3,22802172609673206,506406401089051⟩]⟩)else(⟨25,73,21792392129314163,22304863174041332,22817334218768501,[⟨3,23329805263495670,512471044727169⟩]⟩)))else(if i<76 then(if i<75 then(⟨25,74,22307895495860391,22826431184225678,23344966872590965,[⟨3,23863502560956252,518535688365287⟩]⟩)else(⟨25,75,22829463506044737,23354063838048142,23878664170051547,[⟨3,24403264502054952,524600332003405⟩]⟩))else(if i<77 then(⟨25,76,23357096159867201,23887761135508724,24418426111150247,[⟨3,24949091086791770,530664975641523⟩]⟩)else(⟨25,77,23890793457327783,24427523076607424,24964252695887065,[⟨3,25500982315166706,536729619279641⟩]⟩))))else(if i<82 then(if i<80 then(if i<79 then(⟨25,78,24430555398426483,24973349661344242,25516143924262001,[⟨3,26058938187179760,542794262917759⟩]⟩)else(⟨25,79,24976381983163301,25525240889719178,26074099796275055,[⟨3,26622958702830932,548858906555877⟩]⟩))else(if i<81 then(⟨25,80,25528273211538237,26083196761732232,26638120311926227,[⟨3,27193043862120222,554923550193995⟩]⟩)else(⟨25,81,26086229083551291,26647217277383404,27208205471215517,[⟨3,27769193665047630,560988193832113⟩]⟩)))else(if i<84 then(if i<83 then(⟨25,82,26650249599202463,27217302436672694,27784355274142925,[⟨3,28351408111613156,567052837470231⟩]⟩)else(⟨25,83,27220334758491753,27793452239600102,28366569720708451,[⟨3,28939687201816800,573117481108349⟩]⟩))else(if i<85 then(⟨25,84,27796484561419161,28375666686165628,28954848810912095,[⟨3,29534030935658562,579182124746467⟩]⟩)else(⟨25,85,28378699007984687,28963945776369272,29549192544753857,[⟨3,30134439313138442,585246768384585⟩]⟩))))))else(if i<100 then(if i<93 then(if i<89 then(if i<87 then(⟨25,86,28966978098188331,29558289510211034,30149600922233737,[⟨3,30740912334256440,591311412022703⟩]⟩)else(if i<88 then(⟨25,87,29561321832030093,30158697887690914,30756073943351735,[⟨3,31353449999012556,597376055660821⟩]⟩)else(⟨25,88,30161730209509973,30765170908808912,31368611608107851,[⟨3,31972052307406790,603440699298939⟩]⟩)))else(if i<91 then(if i<90 then(⟨25,89,30768203230627971,31377708573565028,31987213916502085,[⟨3,32596719259439142,609505342937057⟩]⟩)else(⟨25,90,31380740895384087,31996310881959262,32611880868534437,[⟨3,33227450855109612,615569986575175⟩]⟩))else(if i<92 then(⟨25,91,31999343203778321,32620977833991614,33242612464204907,[⟨3,33864247094418200,621634630213293⟩]⟩)else(⟨25,92,32624010155810673,33251709429662084,33879408703513495,[⟨3,34507107977364906,627699273851411⟩]⟩))))else(if i<96 then(if i<94 then(⟨25,93,33254741751481143,33888505668970672,34522269586460201,[⟨3,35156033503949730,633763917489529⟩]⟩)else(if i<95 then(⟨25,94,33891537990789731,34531366551917378,35171195113045025,[⟨3,35811023674172672,639828561127647⟩]⟩)else(⟨25,95,34534398873736437,35180292078502202,35826185283267967,[⟨3,36472078488033732,645893204765765⟩]⟩)))else(if i<98 then(if i<97 then(⟨25,96,35183324400321261,35835282248725144,36487240097129027,[⟨3,37139197945532910,651957848403883⟩]⟩)else(⟨25,97,35838314570544203,36496337062586204,37154359554628205,[⟨3,37812382046670206,658022492042001⟩]⟩))else(if i<99 then(⟨25,98,36499369384405263,37163456520085382,37827543655765501,[⟨3,38491630791445620,664087135680119⟩]⟩)else(⟨25,99,37166488841904441,37836640621222678,38506792400540915,[⟨3,39176944179859152,670151779318237⟩]⟩)))))else(if i<107 then(if i<103 then(if i<101 then(⟨25,100,37839672943041737,38515889365998092,39192105788954447,[⟨3,39868322211910802,676216422956355⟩]⟩)else(if i<102 then(⟨25,101,38518921687817151,39201202754411624,39883483821006097,[⟨3,40565764887600570,682281066594473⟩]⟩)else(⟨25,102,39204235076230683,39892580786463274,40580926496695865,[⟨3,41269272206928456,688345710232591⟩]⟩)))else(if i<105 then(if i<104 then(⟨25,103,39895613108282333,40590023462153042,41284433816023751,[⟨3,41978844169894460,694410353870709⟩]⟩)else(⟨25,104,40593055783972101,41293530781480928,41994005778989755,[⟨3,42694480776498582,700474997508827⟩]⟩))else(if i<106 then(⟨25,105,41296563103299987,42003102744446932,42709642385593877,[⟨3,43416182026740822,706539641146945⟩]⟩)else(⟨25,106,42006135066265991,42718739351051054,43431343635836117,[⟨3,44143947920621180,712604284785063⟩]⟩))))else(if i<111 then(if i<109 then(if i<108 then(⟨25,107,42721771672870113,43440440601293294,44159109529716475,[⟨3,44877778458139656,718668928423181⟩]⟩)else(⟨25,108,43443472923112353,44168206495173652,44892940067234951,[⟨3,45617673639296250,724733572061299⟩]⟩))else(if i<110 then(⟨25,109,44171238816992711,44902037032692128,45632835248391545,[⟨3,46363633464090962,730798215699417⟩]⟩)else(⟨25,110,44905069354511187,45641932213848722,46378795073186257,[⟨3,47115657932523792,736862859337535⟩]⟩)))else(if i<113 then(if i<112 then(⟨25,111,45644964535667781,46387892038643434,47130819541619087,[⟨3,47873747044594740,742927502975653⟩]⟩)else(⟨25,112,46390924360462493,47139916507076264,47888908653690035,[⟨3,48637900800303806,748992146613771⟩]⟩))else(if i<114 then(⟨25,113,47142948828895323,47898005619147212,48653062409399101,[⟨3,49408119199650990,755056790251889⟩]⟩)else(⟨25,114,47901037940966271,48662159374856278,49423280808746285,[⟨3,50184402242636292,761121433890007⟩]⟩))))))))else(defaultRow)
+
+def row26 : ℕ → BaseRow := fun i =>
+  if i<114 then(if i<57 then(if i<28 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(⟨26,0,1074025224733952,1116906517955888,1245687825565074,[⟨3,1374469133174260,128781307609186⟩]⟩)else(if i<2 then(⟨26,1,1116906517955888,1248986385614226,1381066253272564,[⟨3,1513146120930902,132079867658338⟩]⟩)else(⟨26,2,1117112678483250,1249192546141588,1381272413799926,[⟨3,1513352281458264,132079867658338⟩]⟩)))else(if i<5 then(if i<4 then(⟨26,3,1117318839010612,1249398706668950,1381478574327288,[⟨3,1513558441985626,132079867658338⟩]⟩)else(⟨26,4,1118280920073528,1250360787731866,1382440655390204,[⟨3,1514520523048542,132079867658338⟩]⟩))else(if i<6 then(⟨26,5,1119655321142588,1251735188800926,1383815056459264,[⟨3,1515894924117602,132079867658338⟩]⟩)else(⟨26,6,1183105087751953,1296916011288884,1410726934825815,[⟨3,1524537858362746,113810923536931⟩,⟨4,1649761512851144,132079867658338⟩]⟩))))else(if i<10 then(if i<8 then(⟨26,7,1300077185272569,1420210456776870,1540343728281171,[⟨3,1660476999785472,120133271504301⟩,⟨15,3104839098174210,132079867658338⟩]⟩)else(if i<9 then(⟨26,8,1423371630760555,1549827250232226,1676282869703897,[⟨3,1802738489175568,126455619471671⟩,⟨53,8126485430278546,132079867658338⟩]⟩)else(⟨26,9,1552988424215911,1685766391654952,1818544359093993,[⟨3,1951322326533034,132777967439041⟩]⟩)))else(if i<12 then(if i<11 then(⟨26,10,1688927565638637,1828027881045048,1967128196451459,[⟨3,2106228511857870,139100315406411⟩]⟩)else(⟨26,11,1831189055028733,1976611718402514,2122034381776295,[⟨3,2267457045150076,145422663373781⟩]⟩))else(if i<13 then(⟨26,12,1979772892386199,2131517903727350,2283262915068501,[⟨3,2435007926409652,151745011341151⟩]⟩)else(⟨26,13,2134679077711035,2292746437019556,2450813796328077,[⟨3,2608881155636598,158067359308521⟩]⟩)))))else(if i<21 then(if i<17 then(if i<15 then(⟨26,14,2295907611003241,2460297318279132,2624687025555023,[⟨3,2789076732830914,164389707275891⟩]⟩)else(if i<16 then(⟨26,15,2463458492262817,2634170547506078,2804882602749339,[⟨3,2975594657992600,170712055243261⟩]⟩)else(⟨26,16,2637331721489763,2814366124700394,2991400527911025,[⟨3,3168434931121656,177034403210631⟩]⟩)))else(if i<19 then(if i<18 then(⟨26,17,2817527298684079,3000884049862080,3184240801040081,[⟨3,3367597552218082,183356751178001⟩]⟩)else(⟨26,18,3004045223845765,3193724322991136,3383403422136507,[⟨3,3573082521281878,189679099145371⟩]⟩))else(if i<20 then(⟨26,19,3196885496974821,3392886944087562,3588888391200303,[⟨3,3784889838313044,196001447112741⟩]⟩)else(⟨26,20,3396048118071247,3598371913151358,3800695708231469,[⟨3,4003019503311580,202323795080111⟩]⟩))))else(if i<24 then(if i<22 then(⟨26,21,3601533087135043,3810179230182524,4018825373230005,[⟨3,4227471516277486,208646143047481⟩]⟩)else(if i<23 then(⟨26,22,3813340404166209,4028308895181060,4243277386195911,[⟨3,4458245877210762,214968491014851⟩]⟩)else(⟨26,23,4031470069164745,4252760908146966,4474051747129187,[⟨3,4695342586111408,221290838982221⟩]⟩)))else(if i<26 then(if i<25 then(⟨26,24,4255922082130651,4483535269080242,4711148456029833,[⟨3,4938761642979424,227613186949591⟩]⟩)else(⟨26,25,4486696443063927,4720631977980888,4954567512897849,[⟨3,5188503047814810,233935534916961⟩]⟩))else(if i<27 then(⟨26,26,4723793151964573,4964051034848904,5204308917733235,[⟨3,5444566800617566,240257882884331⟩]⟩)else(⟨26,27,4967212208832589,5213792439684290,5460372670535991,[⟨3,5706952901387692,246580230851701⟩]⟩))))))else(if i<42 then(if i<35 then(if i<31 then(if i<29 then(⟨26,28,5216953613667975,5469856192487046,5722758771306117,[⟨3,5975661350125188,252902578819071⟩]⟩)else(if i<30 then(⟨26,29,5473017366470731,5732242293257172,5991467220043613,[⟨3,6250692146830054,259224926786441⟩]⟩)else(⟨26,30,5735403467240857,6000950741994668,6266498016748479,[⟨3,6532045291502290,265547274753811⟩]⟩)))else(if i<33 then(if i<32 then(⟨26,31,6004111915978353,6275981538699534,6547851161420715,[⟨3,6819720784141896,271869622721181⟩]⟩)else(⟨26,32,6279142712683219,6557334683371770,6835526654060321,[⟨3,7113718624748872,278191970688551⟩]⟩))else(if i<34 then(⟨26,33,6560495857355455,6845010176011376,7129524494667297,[⟨3,7414038813323218,284514318655921⟩]⟩)else(⟨26,34,6848171349995061,7139008016618352,7429844683241643,[⟨3,7720681349864934,290836666623291⟩]⟩))))else(if i<38 then(if i<36 then(⟨26,35,7142169190602037,7439328205192698,7736487219783359,[⟨3,8033646234374020,297159014590661⟩]⟩)else(if i<37 then(⟨26,36,7442489379176383,7745970741734414,8049452104292445,[⟨3,8352933466850476,303481362558031⟩]⟩)else(⟨26,37,7749131915718099,8058935626243500,8368739336768901,[⟨3,8678543047294302,309803710525401⟩]⟩)))else(if i<40 then(if i<39 then(⟨26,38,8062096800227185,8378222858719956,8694348917212727,[⟨3,9010474975705498,316126058492771⟩]⟩)else(⟨26,39,8381384032703641,8703832439163782,9026280845623923,[⟨3,9348729252084064,322448406460141⟩]⟩))else(if i<41 then(⟨26,40,8706993613147467,9035764367574978,9364535122002489,[⟨3,9693305876430000,328770754427511⟩]⟩)else(⟨26,41,9038925541558663,9374018643953544,9709111746348425,[⟨3,10044204848743306,335093102394881⟩]⟩)))))else(if i<49 then(if i<45 then(if i<43 then(⟨26,42,9377179817937229,9718595268299480,10060010718661731,[⟨3,10401426169023982,341415450362251⟩]⟩)else(if i<44 then(⟨26,43,9721756442283165,10069494240612786,10417232038942407,[⟨3,10764969837272028,347737798329621⟩]⟩)else(⟨26,44,10072655414596471,10426715560893462,10780775707190453,[⟨3,11134835853487444,354060146296991⟩]⟩)))else(if i<47 then(if i<46 then(⟨26,45,10429876734877147,10790259229141508,11150641723405869,[⟨3,11511024217670230,360382494264361⟩]⟩)else(⟨26,46,10793420403125193,11160125245356924,11526830087588655,[⟨3,11893534929820386,366704842231731⟩]⟩))else(if i<48 then(⟨26,47,11163286419340609,11536313609539710,11909340799738811,[⟨3,12282367989937912,373027190199101⟩]⟩)else(⟨26,48,11539474783523395,11918824321689866,12298173859856337,[⟨3,12677523398022808,379349538166471⟩]⟩))))else(if i<53 then(if i<51 then(if i<50 then(⟨26,49,11921985495673551,12307657381807392,12693329267941233,[⟨3,13079001154075074,385671886133841⟩]⟩)else(⟨26,50,12310818555791077,12702812789892288,13094807023993499,[⟨3,13486801258094710,391994234101211⟩]⟩))else(if i<52 then(⟨26,51,12705973963875973,13104290545944554,13502607128013135,[⟨3,13900923710081716,398316582068581⟩]⟩)else(⟨26,52,13107451719928239,13512090649964190,13916729580000141,[⟨3,14321368510036092,404638930035951⟩]⟩)))else(if i<55 then(if i<54 then(⟨26,53,13515251823947875,13926213101951196,14337174379954517,[⟨3,14748135657957838,410961278003321⟩]⟩)else(⟨26,54,13929374275934881,14346657901905572,14763941527876263,[⟨3,15181225153846954,417283625970691⟩]⟩))else(if i<56 then(⟨26,55,14349819075889257,14773425049827318,15197031023765379,[⟨3,15620636997703440,423605973938061⟩]⟩)else(⟨26,56,14776586223811003,15206514545716434,15636442867621865,[⟨3,16066371189527296,429928321905431⟩]⟩)))))))else(if i<85 then(if i<71 then(if i<64 then(if i<60 then(if i<58 then(⟨26,57,15209675719700119,15645926389572920,16082177059445721,[⟨3,16518427729318522,436250669872801⟩]⟩)else(if i<59 then(⟨26,58,15649087563556605,16091660581396776,16534233599236947,[⟨3,16976806617077118,442573017840171⟩]⟩)else(⟨26,59,16094821755380461,16543717121188002,16992612486995543,[⟨3,17441507852803084,448895365807541⟩]⟩)))else(if i<62 then(if i<61 then(⟨26,60,16546878295171687,17002096008946598,17457313722721509,[⟨3,17912531436496420,455217713774911⟩]⟩)else(⟨26,61,17005257182930283,17466797244672564,17928337306414845,[⟨3,18389877368157126,461540061742281⟩]⟩))else(if i<63 then(⟨26,62,17469958418656249,17937820828365900,18405683238075551,[⟨3,18873545647785202,467862409709651⟩]⟩)else(⟨26,63,17940982002349585,18415166760026606,18889351517703627,[⟨3,19363536275380648,474184757677021⟩]⟩))))else(if i<67 then(if i<65 then(⟨26,64,18418327934010291,18898835039654682,19379342145299073,[⟨3,19859849250943464,480507105644391⟩]⟩)else(if i<66 then(⟨26,65,18901996213638367,19388825667250128,19875655120861889,[⟨3,20362484574473650,486829453611761⟩]⟩)else(⟨26,66,19391986841233813,19885138642812944,20378290444392075,[⟨3,20871442245971206,493151801579131⟩]⟩)))else(if i<69 then(if i<68 then(⟨26,67,19888299816796629,20387773966343130,20887248115889631,[⟨3,21386722265436132,499474149546501⟩]⟩)else(⟨26,68,20390935140326815,20896731637840686,21402528135354557,[⟨3,21908324632868428,505796497513871⟩]⟩))else(if i<70 then(⟨26,69,20899892811824371,21412011657305612,21924130502786853,[⟨3,22436249348268094,512118845481241⟩]⟩)else(⟨26,70,21415172831289297,21933614024737908,22452055218186519,[⟨3,22970496411635130,518441193448611⟩]⟩)))))else(if i<78 then(if i<74 then(if i<72 then(⟨26,71,21936775198721593,22461538740137574,22986302281553555,[⟨3,23511065822969536,524763541415981⟩]⟩)else(if i<73 then(⟨26,72,22464699914121259,22995785803504610,23526871692887961,[⟨3,24057957582271312,531085889383351⟩]⟩)else(⟨26,73,22998946977488295,23536355214839016,24073763452189737,[⟨3,24611171689540458,537408237350721⟩]⟩)))else(if i<76 then(if i<75 then(⟨26,74,23539516388822701,24083246974140792,24626977559458883,[⟨3,25170708144776974,543730585318091⟩]⟩)else(⟨26,75,24086408148124477,24636461081409938,25186514014695399,[⟨3,25736566947980860,550052933285461⟩]⟩))else(if i<77 then(⟨26,76,24639622255393623,25195997536646454,25752372817899285,[⟨3,26308748099152116,556375281252831⟩]⟩)else(⟨26,77,25199158710630139,25761856339850340,26324553969070541,[⟨3,26887251598290742,562697629220201⟩]⟩))))else(if i<81 then(if i<79 then(⟨26,78,25765017513834025,26334037491021596,26903057468209167,[⟨3,27472077445396738,569019977187571⟩]⟩)else(if i<80 then(⟨26,79,26337198665005281,26912540990160222,27487883315315163,[⟨3,28063225640470104,575342325154941⟩]⟩)else(⟨26,80,26915702164143907,27497366837266218,28079031510388529,[⟨3,28660696183510840,581664673122311⟩]⟩)))else(if i<83 then(if i<82 then(⟨26,81,27500528011249903,28088515032339584,28676502053429265,[⟨3,29264489074518946,587987021089681⟩]⟩)else(⟨26,82,28091676206323269,28685985575380320,29280294944437371,[⟨3,29874604313494422,594309369057051⟩]⟩))else(if i<84 then(⟨26,83,28689146749364005,29289778466388426,29890410183412847,[⟨3,30491041900437268,600631717024421⟩]⟩)else(⟨26,84,29292939640372111,29899893705363902,30506847770355693,[⟨3,31113801835347484,606954064991791⟩]⟩))))))else(if i<99 then(if i<92 then(if i<88 then(if i<86 then(⟨26,85,29903054879347587,30516331292306748,31129607705265909,[⟨3,31742884118225070,613276412959161⟩]⟩)else(if i<87 then(⟨26,86,30519492466290433,31139091227216964,31758689988143495,[⟨3,32378288749070026,619598760926531⟩]⟩)else(⟨26,87,31142252401200649,31768173510094550,32394094618988451,[⟨3,33020015727882352,625921108893901⟩]⟩)))else(if i<90 then(if i<89 then(⟨26,88,31771334684078235,32403578140939506,33035821597800777,[⟨3,33668065054662048,632243456861271⟩]⟩)else(⟨26,89,32406739314923191,33045305119751832,33683870924580473,[⟨3,34322436729409114,638565804828641⟩]⟩))else(if i<91 then(⟨26,90,33048466293735517,33693354446531528,34338242599327539,[⟨3,34983130752123550,644888152796011⟩]⟩)else(⟨26,91,33696515620515213,34347726121278594,34998936622041975,[⟨3,35650147122805356,651210500763381⟩]⟩))))else(if i<95 then(if i<93 then(⟨26,92,34350887295262279,35008420143993030,35665952992723781,[⟨3,36323485841454532,657532848730751⟩]⟩)else(if i<94 then(⟨26,93,35011581317976715,35675436514674836,36339291711372957,[⟨3,37003146908071078,663855196698121⟩]⟩)else(⟨26,94,35678597688658521,36348775233324012,37018952777989503,[⟨3,37689130322654994,670177544665491⟩]⟩)))else(if i<97 then(if i<96 then(⟨26,95,36351936407307697,37028436299940558,37704936192573419,[⟨3,38381436085206280,676499892632861⟩]⟩)else(⟨26,96,37031597473924243,37714419714524474,38397241955124705,[⟨3,39080064195724936,682822240600231⟩]⟩))else(if i<98 then(⟨26,97,37717580888508159,38406725477075760,39095870065643361,[⟨3,39785014654210962,689144588567601⟩]⟩)else(⟨26,98,38409886651059445,39105353587594416,39800820524129387,[⟨3,40496287460664358,695466936534971⟩]⟩)))))else(if i<106 then(if i<102 then(if i<100 then(⟨26,99,39108514761578101,39810304046080442,40512093330582783,[⟨3,41213882615085124,701789284502341⟩]⟩)else(if i<101 then(⟨26,100,39813465220064127,40521576852533838,41229688485003549,[⟨3,41937800117473260,708111632469711⟩]⟩)else(⟨26,101,40524738026517523,41239172006954604,41953605987391685,[⟨3,42668039967828766,714433980437081⟩]⟩)))else(if i<104 then(if i<103 then(⟨26,102,41242333180938289,41963089509342740,42683845837747191,[⟨3,43404602166151642,720756328404451⟩]⟩)else(⟨26,103,41966250683326425,42693329359698246,43420408036070067,[⟨3,44147486712441888,727078676371821⟩]⟩))else(if i<105 then(⟨26,104,42696490533681931,43429891558021122,44163292582360313,[⟨3,44896693606699504,733401024339191⟩]⟩)else(⟨26,105,43433052732004807,44172776104311368,44912499476617929,[⟨3,45652222848924490,739723372306561⟩]⟩))))else(if i<110 then(if i<108 then(if i<107 then(⟨26,106,44175937278295053,44921982998568984,45668028718842915,[⟨3,46414074439116846,746045720273931⟩]⟩)else(⟨26,107,44925144172552669,45677512240793970,46429880309035271,[⟨3,47182248377276572,752368068241301⟩]⟩))else(if i<109 then(⟨26,108,45680673414777655,46439363830986326,47198054247194997,[⟨3,47956744663403668,758690416208671⟩]⟩)else(⟨26,109,46442525004970011,47207537769146052,47972550533322093,[⟨3,48737563297498134,765012764176041⟩]⟩)))else(if i<112 then(if i<111 then(⟨26,110,47210698943129737,47982034055273148,48753369167416559,[⟨3,49524704279559970,771335112143411⟩]⟩)else(⟨26,111,47985195229256833,48762852689367614,49540510149478395,[⟨3,50318167609589176,777657460110781⟩]⟩))else(if i<113 then(⟨26,112,48766013863351299,49549993671429450,50333973479507601,[⟨3,51117953287585752,783979808078151⟩]⟩)else(⟨26,113,49553154845413135,50343457001458656,51133759157504177,[⟨3,51924061313549698,790302156045521⟩]⟩))))))))else(defaultRow)
+
+def row27 : ℕ → BaseRow := fun i =>
+  if i<113 then(if i<56 then(if i<28 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(⟨27,0,1208097973470567,1254483987269017,1393779456083455,[⟨3,1533074924897893,139295468814438⟩]⟩)else(if i<2 then(⟨27,1,1254483987269017,1397215456134655,1539946925000293,[⟨3,1682678393865931,142731468865638⟩]⟩)else(⟨27,2,1254690147796379,1397421616662017,1540153085527655,[⟨3,1682884554393293,142731468865638⟩]⟩)))else(if i<5 then(if i<4 then(⟨27,3,1254896308323741,1397627777189379,1540359246055017,[⟨3,1683090714920655,142731468865638⟩]⟩)else(⟨27,4,1255858389386657,1398589858252295,1541321327117933,[⟨3,1684052795983571,142731468865638⟩]⟩))else(if i<6 then(⟨27,5,1257232790455717,1399964259321355,1542695728186993,[⟨3,1685427197052631,142731468865638⟩]⟩)else(⟨27,6,1305085251882509,1426824882312360,1548564512742211,[⟨3,1687213918127835,142731468865638⟩]⟩))))else(if i<10 then(if i<8 then(⟨27,7,1430114908460671,1558434591187144,1686754273913617,[⟨3,1815073956640090,128319682726473⟩,⟨12,2973996178999925,142731468865638⟩]⟩)else(if i<9 then(⟨27,8,1561724617335455,1696624352358550,1831524087381645,[⟨3,1966423822404740,134899735023095⟩,⟨39,6830357199459643,142731468865638⟩]⟩)else(⟨27,9,1699914378506861,1841394165826578,1982873953146295,[⟨3,2124353740466012,141479787319717⟩,⟨346,50651941822304145,142731468865638⟩]⟩)))else(if i<12 then(if i<11 then(⟨27,10,1844684191974889,1992744031591228,2140803871207567,[⟨3,2288863710823906,148059839616339⟩]⟩)else(⟨27,11,1996034057739539,2150673949652500,2305313841565461,[⟨3,2459953733478422,154639891912961⟩]⟩))else(if i<13 then(⟨27,12,2153963975800811,2315183920010394,2476403864219977,[⟨3,2637623808429560,161219944209583⟩]⟩)else(⟨27,13,2318473946158705,2486273942664910,2654073939171115,[⟨3,2821873935677320,167799996506205⟩]⟩)))))else(if i<21 then(if i<17 then(if i<15 then(⟨27,14,2489563968813221,2663944017616048,2838324066418875,[⟨3,3012704115221702,174380048802827⟩]⟩)else(if i<16 then(⟨27,15,2667234043764359,2848194144863808,3029154245963257,[⟨3,3210114347062706,180960101099449⟩]⟩)else(⟨27,16,2851484171012119,3039024324408190,3226564477804261,[⟨3,3414104631200332,187540153396071⟩]⟩)))else(if i<19 then(if i<18 then(⟨27,17,3042314350556501,3236434556249194,3430554761941887,[⟨3,3624674967634580,194120205692693⟩]⟩)else(⟨27,18,3239724582397505,3440424840386820,3641125098376135,[⟨3,3841825356365450,200700257989315⟩]⟩))else(if i<20 then(⟨27,19,3443714866535131,3650995176821068,3858275487107005,[⟨3,4065555797392942,207280310285937⟩]⟩)else(⟨27,20,3654285202969379,3868145565551938,4082005928134497,[⟨3,4295866290717056,213860362582559⟩]⟩))))else(if i<24 then(if i<22 then(⟨27,21,3871435591700249,4091876006579430,4312316421458611,[⟨3,4532756836337792,220440414879181⟩]⟩)else(if i<23 then(⟨27,22,4095166032727741,4322186499903544,4549206967079347,[⟨3,4776227434255150,227020467175803⟩]⟩)else(⟨27,23,4325476526051855,4559077045524280,4792677564996705,[⟨3,5026278084469130,233600519472425⟩]⟩)))else(if i<26 then(if i<25 then(⟨27,24,4562367071672591,4802547643441638,5042728215210685,[⟨3,5282908786979732,240180571769047⟩]⟩)else(⟨27,25,4805837669589949,5052598293655618,5299358917721287,[⟨3,5546119541786956,246760624065669⟩]⟩))else(if i<27 then(⟨27,26,5055888319803929,5309228996166220,5562569672528511,[⟨3,5815910348890802,253340676362291⟩]⟩)else(⟨27,27,5312519022314531,5572439750973444,5832360479632357,[⟨3,6092281208291270,259920728658913⟩]⟩))))))else(if i<42 then(if i<35 then(if i<31 then(if i<29 then(⟨27,28,5575729777121755,5842230558077290,6108731339032825,[⟨3,6375232119988360,266500780955535⟩]⟩)else(if i<30 then(⟨27,29,5845520584225601,6118601417477758,6391682250729915,[⟨3,6664763083982072,273080833252157⟩]⟩)else(⟨27,30,6121891443626069,6401552329174848,6681213214723627,[⟨3,6960874100272406,279660885548779⟩]⟩)))else(if i<33 then(if i<32 then(⟨27,31,6404842355323159,6691083293168560,6977324231013961,[⟨3,7263565168859362,286240937845401⟩]⟩)else(⟨27,32,6694373319316871,6987194309458894,7280015299600917,[⟨3,7572836289742940,292820990142023⟩]⟩))else(if i<34 then(⟨27,33,6990484335607205,7289885378045850,7589286420484495,[⟨3,7888687462923140,299401042438645⟩]⟩)else(⟨27,34,7293175404194161,7599156498929428,7905137593664695,[⟨3,8211118688399962,305981094735267⟩]⟩))))else(if i<38 then(if i<36 then(⟨27,35,7602446525077739,7915007672109628,8227568819141517,[⟨3,8540129966173406,312561147031889⟩]⟩)else(if i<37 then(⟨27,36,7918297698257939,8237438897586450,8556580096914961,[⟨3,8875721296243472,319141199328511⟩]⟩)else(⟨27,37,8240728923734761,8566450175359894,8892171426985027,[⟨3,9217892678610160,325721251625133⟩]⟩)))else(if i<40 then(if i<39 then(⟨27,38,8569740201508205,8902041505429960,9234342809351715,[⟨3,9566644113273470,332301303921755⟩]⟩)else(⟨27,39,8905331531578271,9244212887796648,9583094244015025,[⟨3,9921975600233402,338881356218377⟩]⟩))else(if i<41 then(⟨27,40,9247502913944959,9592964322459958,9938425730974957,[⟨3,10283887139489956,345461408514999⟩]⟩)else(⟨27,41,9596254348608269,9948295809419890,10300337270231511,[⟨3,10652378731043132,352041460811621⟩]⟩)))))else(if i<49 then(if i<45 then(if i<43 then(⟨27,42,9951585835568201,10310207348676444,10668828861784687,[⟨3,11027450374892930,358621513108243⟩]⟩)else(if i<44 then(⟨27,43,10313497374824755,10678698940229620,11043900505634485,[⟨3,11409102071039350,365201565404865⟩]⟩)else(⟨27,44,10681988966377931,11053770584079418,11425552201780905,[⟨3,11797333819482392,371781617701487⟩]⟩)))else(if i<47 then(if i<46 then(⟨27,45,11057060610227729,11435422280225838,11813783950223947,[⟨3,12192145620222056,378361669998109⟩]⟩)else(⟨27,46,11438712306374149,11823654028668880,12208595750963611,[⟨3,12593537473258342,384941722294731⟩]⟩))else(if i<48 then(⟨27,47,11826944054817191,12218465829408544,12609987603999897,[⟨3,13001509378591250,391521774591353⟩]⟩)else(⟨27,48,12221755855556855,12619857682444830,13017959509332805,[⟨3,13416061336220780,398101826887975⟩]⟩))))else(if i<52 then(if i<50 then(⟨27,49,12623147708593141,13027829587777738,13432511466962335,[⟨3,13837193346146932,404681879184597⟩]⟩)else(if i<51 then(⟨27,50,13031119613926049,13442381545407268,13853643476888487,[⟨3,14264905408369706,411261931481219⟩]⟩)else(⟨27,51,13445671571555579,13863513555333420,14281355539111261,[⟨3,14699197522889102,417841983777841⟩]⟩)))else(if i<54 then(if i<53 then(⟨27,52,13866803581481731,14291225617556194,14715647653630657,[⟨3,15140069689705120,424422036074463⟩]⟩)else(⟨27,53,14294515643704505,14725517732075590,15156519820446675,[⟨3,15587521908817760,431002088371085⟩]⟩))else(if i<55 then(⟨27,54,14728807758223901,15166389898891608,15603972039559315,[⟨3,16041554180227022,437582140667707⟩]⟩)else(⟨27,55,15169679925039919,15613842118004248,16058004310968577,[⟨3,16502166503932906,444162192964329⟩]⟩)))))))else(if i<84 then(if i<70 then(if i<63 then(if i<59 then(if i<57 then(⟨27,56,15617132144152559,16067874389413510,16518616634674461,[⟨3,16969358879935412,450742245260951⟩]⟩)else(if i<58 then(⟨27,57,16071164415561821,16528486713119394,16985809010676967,[⟨3,17443131308234540,457322297557573⟩]⟩)else(⟨27,58,16531776739267705,16995679089121900,17459581438976095,[⟨3,17923483788830290,463902349854195⟩]⟩)))else(if i<61 then(if i<60 then(⟨27,59,16998969115270211,17469451517421028,17939933919571845,[⟨3,18410416321722662,470482402150817⟩]⟩)else(⟨27,60,17472741543569339,17949803998016778,18426866452464217,[⟨3,18903928906911656,477062454447439⟩]⟩))else(if i<62 then(⟨27,61,17953094024165089,18436736530909150,18920379037653211,[⟨3,19404021544397272,483642506744061⟩]⟩)else(⟨27,62,18440026557057461,18930249116098144,19420471675138827,[⟨3,19910694234179510,490222559040683⟩]⟩))))else(if i<66 then(if i<64 then(⟨27,63,18933539142246455,19430341753583760,19927144364921065,[⟨3,20423946976258370,496802611337305⟩]⟩)else(if i<65 then(⟨27,64,19433631779732071,19937014443365998,20440397106999925,[⟨3,20943779770633852,503382663633927⟩]⟩)else(⟨27,65,19940304469514309,20450267185444858,20960229901375407,[⟨3,21470192617305956,509962715930549⟩]⟩)))else(if i<68 then(if i<67 then(⟨27,66,20453557211593169,20970099979820340,21486642748047511,[⟨3,22003185516274682,516542768227171⟩]⟩)else(⟨27,67,20973390005968651,21496512826492444,22019635647016237,[⟨3,22542758467540030,523122820523793⟩]⟩))else(if i<69 then(⟨27,68,21499802852640755,22029505725461170,22559208598281585,[⟨3,23088911471102000,529702872820415⟩]⟩)else(⟨27,69,22032795751609481,22569078676726518,23105361601843555,[⟨3,23641644526960592,536282925117037⟩]⟩)))))else(if i<77 then(if i<73 then(if i<71 then(⟨27,70,22572368702874829,23115231680288488,23658094657702147,[⟨3,24200957635115806,542862977413659⟩]⟩)else(if i<72 then(⟨27,71,23118521706436799,23667964736147080,24217407765857361,[⟨3,24766850795567642,549443029710281⟩]⟩)else(⟨27,72,23671254762295391,24227277844302294,24783300926309197,[⟨3,25339324008316100,556023082006903⟩]⟩)))else(if i<75 then(if i<74 then(⟨27,73,24230567870450605,24793171004754130,25355774139057655,[⟨3,25918377273361180,562603134303525⟩]⟩)else(⟨27,74,24796461030902441,25365644217502588,25934827404102735,[⟨3,26504010590702882,569183186600147⟩]⟩))else(if i<76 then(⟨27,75,25368934243650899,25944697482547668,26520460721444437,[⟨3,27096223960341206,575763238896769⟩]⟩)else(⟨27,76,25947987508695979,26530330799889370,27112674091082761,[⟨3,27695017382276152,582343291193391⟩]⟩))))else(if i<80 then(if i<78 then(⟨27,77,26533620826037681,27122544169527694,27711467513017707,[⟨3,28300390856507720,588923343490013⟩]⟩)else(if i<79 then(⟨27,78,27125834195676005,27721337591462640,28316840987249275,[⟨3,28912344383035910,595503395786635⟩]⟩)else(⟨27,79,27724627617610951,28326711065694208,28928794513777465,[⟨3,29530877961860722,602083448083257⟩]⟩)))else(if i<82 then(if i<81 then(⟨27,80,28330001091842519,28938664592222398,29547328092602277,[⟨3,30155991592982156,608663500379879⟩]⟩)else(⟨27,81,28941954618370709,29557198171047210,30172441723723711,[⟨3,30787685276400212,615243552676501⟩]⟩))else(if i<83 then(⟨27,82,29560488197195521,30182311802168644,30804135407141767,[⟨3,31425959012114890,621823604973123⟩]⟩)else(⟨27,83,30185601828316955,30814005485586700,31442409142856445,[⟨3,32070812800126190,628403657269745⟩]⟩))))))else(if i<98 then(if i<91 then(if i<87 then(if i<85 then(⟨27,84,30817295511735011,31452279221301378,32087262930867745,[⟨3,32722246640434112,634983709566367⟩]⟩)else(if i<86 then(⟨27,85,31455569247449689,32097133009312678,32738696771175667,[⟨3,33380260533038656,641563761862989⟩]⟩)else(⟨27,86,32100423035460989,32748566849620600,33396710663780211,[⟨3,34044854477939822,648143814159611⟩]⟩)))else(if i<89 then(if i<88 then(⟨27,87,32751856875768911,33406580742225144,34061304608681377,[⟨3,34716028475137610,654723866456233⟩]⟩)else(⟨27,88,33409870768373455,34071174687126310,34732478605879165,[⟨3,35393782524632020,661303918752855⟩]⟩))else(if i<90 then(⟨27,89,34074464713274621,34742348684324098,35410232655373575,[⟨3,36078116626423052,667883971049477⟩]⟩)else(⟨27,90,34745638710472409,35420102733818508,36094566757164607,[⟨3,36769030780510706,674464023346099⟩]⟩))))else(if i<94 then(if i<92 then(⟨27,91,35423392759966819,36104436835609540,36785480911252261,[⟨3,37466524986894982,681044075642721⟩]⟩)else(if i<93 then(⟨27,92,36107726861757851,36795350989697194,37482975117636537,[⟨3,38170599245575880,687624127939343⟩]⟩)else(⟨27,93,36798641015845505,37492845196081470,38187049376317435,[⟨3,38881253556553400,694204180235965⟩]⟩)))else(if i<96 then(if i<95 then(⟨27,94,37496135222229781,38196919454762368,38897703687294955,[⟨3,39598487919827542,700784232532587⟩]⟩)else(⟨27,95,38200209480910679,38907573765739888,39614938050569097,[⟨3,40322302335398306,707364284829209⟩]⟩))else(if i<97 then(⟨27,96,38910863791888199,39624808129014030,40338752466139861,[⟨3,41052696803265692,713944337125831⟩]⟩)else(⟨27,97,39628098155162341,40348622544584794,41069146934007247,[⟨3,41789671323429700,720524389422453⟩]⟩)))))else(if i<105 then(if i<101 then(if i<99 then(⟨27,98,40351912570733105,41079017012452180,41806121454171255,[⟨3,42533225895890330,727104441719075⟩]⟩)else(if i<100 then(⟨27,99,41082307038600491,41815991532616188,42549676026631885,[⟨3,43283360520647582,733684494015697⟩]⟩)else(⟨27,100,41819281558764499,42559546105076818,43299810651389137,[⟨3,44040075197701456,740264546312319⟩]⟩)))else(if i<103 then(if i<102 then(⟨27,101,42562836131225129,43309680729834070,44056525328443011,[⟨3,44803369927051952,746844598608941⟩]⟩)else(⟨27,102,43312970755982381,44066395406887944,44819820057793507,[⟨3,45573244708699070,753424650905563⟩]⟩))else(if i<104 then(⟨27,103,44069685433036255,44829690136238440,45589694839440625,[⟨3,46349699542642810,760004703202185⟩]⟩)else(⟨27,104,44832980162386751,45599564917885558,46366149673384365,[⟨3,47132734428883172,766584755498807⟩]⟩))))else(if i<109 then(if i<107 then(if i<106 then(⟨27,105,45602854944033869,46376019751829298,47149184559624727,[⟨3,47922349367420156,773164807795429⟩]⟩)else(⟨27,106,46379309777977609,47159054638069660,47938799498161711,[⟨3,48718544358253762,779744860092051⟩]⟩))else(if i<108 then(⟨27,107,47162344664217971,47948669576606644,48734994488995317,[⟨3,49521319401383990,786324912388673⟩]⟩)else(⟨27,108,47951959602754955,48744864567440250,49537769532125545,[⟨3,50330674496810840,792904964685295⟩]⟩)))else(if i<111 then(if i<110 then(⟨27,109,48748154593588561,49547639610570478,50347124627552395,[⟨3,51146609644534312,799485016981917⟩]⟩)else(⟨27,110,49550929636718789,50356994705997328,51163059775275867,[⟨3,51969124844554406,806065069278539⟩]⟩))else(if i<112 then(⟨27,111,50360284732145639,51172929853720800,51985574975295961,[⟨3,52798220096871122,812645121575161⟩]⟩)else(⟨27,112,51176219879869111,51995445053740894,52814670227612677,[⟨3,53633895401484460,819225173871783⟩]⟩))))))))else(defaultRow)
+
+def row28 : ℕ → BaseRow := fun i =>
+  if i<112 then(if i<56 then(if i<28 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(⟨28,0,1352891043415506,1402919217792518,1553141167818352,[⟨3,1703363117844186,150221950025834⟩]⟩)else(if i<2 then(⟨28,1,1402919217792518,1556714607871600,1710509997950682,[⟨3,1864305388029764,153795390079082⟩]⟩)else(⟨28,2,1403125378319880,1556920768398962,1710716158478044,[⟨3,1864511548557126,153795390079082⟩]⟩)))else(if i<5 then(if i<4 then(⟨28,3,1403331538847242,1557126928926324,1710922319005406,[⟨3,1864717709084488,153795390079082⟩]⟩)else(⟨28,4,1404293619910158,1558089009989240,1711884400068322,[⟨3,1865679790147404,153795390079082⟩]⟩))else(if i<6 then(⟨28,5,1405668020979218,1559463411058300,1713258801137382,[⟨3,1867054191216464,153795390079082⟩]⟩)else(⟨28,6,1435122975070611,1565049016722634,1715045522212586,[⟨3,1868840912291668,153795390079082⟩]⟩))))else(if i<10 then(if i<8 then(⟨28,7,1568467895035571,1705231693313468,1841995491591365,[⟨3,1978759289869262,136763798277897⟩,⟨10,2947607683926590,153795390079082⟩]⟩)else(if i<9 then(⟨28,8,1708650571626405,1852252126530176,1995853681433947,[⟨3,2139455236337718,143601554903771⟩,⟨30,6026126846595722,153795390079082⟩]⟩)else(⟨28,9,1855671004843113,2006110316372758,2156549627902403,[⟨3,2306988939432048,150439311529645⟩,⟨132,21716280315755722,153795390079082⟩]⟩)))else(if i<12 then(if i<11 then(⟨28,10,2009529194685695,2166806262841214,2324083330996733,[⟨3,2481360399152252,157277068155519⟩]⟩)else(⟨28,11,2170225141154151,2334339965935544,2498454790716937,[⟨3,2662569615498330,164114824781393⟩]⟩))else(if i<13 then(⟨28,12,2337758844248481,2508711425655748,2679664007063015,[⟨3,2850616588470282,170952581407267⟩]⟩)else(⟨28,13,2512130303968685,2689920642001826,2867710980034967,[⟨3,3045501318068108,177790338033141⟩]⟩)))))else(if i<21 then(if i<17 then(if i<15 then(⟨28,14,2693339520314763,2877967614973778,3062595709632793,[⟨3,3247223804291808,184628094659015⟩]⟩)else(if i<16 then(⟨28,15,2881386493286715,3072852344571604,3264318195856493,[⟨3,3455784047141382,191465851284889⟩]⟩)else(⟨28,16,3076271222884541,3274574830795304,3472878438706067,[⟨3,3671182046616830,198303607910763⟩]⟩)))else(if i<19 then(if i<18 then(⟨28,17,3277993709108241,3483135073644878,3688276438181515,[⟨3,3893417802718152,205141364536637⟩]⟩)else(⟨28,18,3486553951957815,3698533073120326,3910512194282837,[⟨3,4122491315445348,211979121162511⟩]⟩))else(if i<20 then(⟨28,19,3701951951433263,3920768829221648,4139585707010033,[⟨3,4358402584798418,218816877788385⟩]⟩)else(⟨28,20,3924187707534585,4149842341948844,4375496976363103,[⟨3,4601151610777362,225654634414259⟩]⟩))))else(if i<24 then(if i<22 then(⟨28,21,4153261220261781,4385753611301914,4618246002342047,[⟨3,4850738393382180,232492391040133⟩]⟩)else(if i<23 then(⟨28,22,4389172489614851,4628502637280858,4867832784946865,[⟨3,5107162932612872,239330147666007⟩]⟩)else(⟨28,23,4631921515593795,4878089419885676,5124257324177557,[⟨3,5370425228469438,246167904291881⟩]⟩)))else(if i<26 then(if i<25 then(⟨28,24,4881508298198613,5134513959116368,5387519620034123,[⟨3,5640525280951878,253005660917755⟩]⟩)else(⟨28,25,5137932837429305,5397776254972934,5657619672516563,[⟨3,5917463090060192,259843417543629⟩]⟩))else(if i<27 then(⟨28,26,5401195133285871,5667876307455374,5934557481624877,[⟨3,6201238655794380,266681174169503⟩]⟩)else(⟨28,27,5671295185768311,5944814116563688,6218333047359065,[⟨3,6491851978154442,273518930795377⟩]⟩))))))else(if i<42 then(if i<35 then(if i<31 then(if i<29 then(⟨28,28,5948232994876625,6228589682297876,6508946369719127,[⟨3,6789303057140378,280356687421251⟩]⟩)else(if i<30 then(⟨28,29,6232008560610813,6519203004657938,6806397448705063,[⟨3,7093591892752188,287194444047125⟩]⟩)else(⟨28,30,6522621882970875,6816654083643874,7110686284316873,[⟨3,7404718484989872,294032200672999⟩]⟩)))else(if i<33 then(if i<32 then(⟨28,31,6820072961956811,7120942919255684,7421812876554557,[⟨3,7722682833853430,300869957298873⟩]⟩)else(⟨28,32,7124361797568621,7432069511493368,7739777225418115,[⟨3,8047484939342862,307707713924747⟩]⟩))else(if i<34 then(⟨28,33,7435488389806305,7750033860356926,8064579330907547,[⟨3,8379124801458168,314545470550621⟩]⟩)else(⟨28,34,7753452738669863,8074835965846358,8396219193022853,[⟨3,8717602420199348,321383227176495⟩]⟩))))else(if i<38 then(if i<36 then(⟨28,35,8078254844159295,8406475827961664,8734696811764033,[⟨3,9062917795566402,328220983802369⟩]⟩)else(if i<37 then(⟨28,36,8409894706274601,8744953446702844,9080012187131087,[⟨3,9415070927559330,335058740428243⟩]⟩)else(⟨28,37,8748372325015781,9090268822069898,9432165319124015,[⟨3,9774061816178132,341896497054117⟩]⟩)))else(if i<40 then(if i<39 then(⟨28,38,9093687700382835,9442421954062826,9791156207742817,[⟨3,10139890461422808,348734253679991⟩]⟩)else(⟨28,39,9445840832375763,9801412842681628,10156984852987493,[⟨3,10512556863293358,355572010305865⟩]⟩))else(if i<41 then(⟨28,40,9804831720994565,10167241487926304,10529651254858043,[⟨3,10892061021789782,362409766931739⟩]⟩)else(⟨28,41,10170660366239241,10539907889796854,10909155413354467,[⟨3,11278402936912080,369247523557613⟩]⟩)))))else(if i<49 then(if i<45 then(if i<43 then(⟨28,42,10543326768109791,10919412048293278,11295497328476765,[⟨3,11671582608660252,376085280183487⟩]⟩)else(if i<44 then(⟨28,43,10922830926606215,11305753963415576,11688677000224937,[⟨3,12071600037034298,382923036809361⟩]⟩)else(⟨28,44,11309172841728513,11698933635163748,12088694428598983,[⟨3,12478455222034218,389760793435235⟩]⟩)))else(if i<47 then(if i<46 then(⟨28,45,11702352513476685,12098951063537794,12495549613598903,[⟨3,12892148163660012,396598550061109⟩]⟩)else(⟨28,46,12102369941850731,12505806248537714,12909242555224697,[⟨3,13312678861911680,403436306686983⟩]⟩))else(if i<48 then(⟨28,47,12509225126850651,12919499190163508,13329773253476365,[⟨3,13740047316789222,410274063312857⟩]⟩)else(⟨28,48,12922918068476445,13340029888415176,13757141708353907,[⟨3,14174253528292638,417111819938731⟩]⟩))))else(if i<52 then(if i<50 then(⟨28,49,13343448766728113,13767398343292718,14191347919857323,[⟨3,14615297496421928,423949576564605⟩]⟩)else(if i<51 then(⟨28,50,13770817221605655,14201604554796134,14632391887986613,[⟨3,15063179221177092,430787333190479⟩]⟩)else(⟨28,51,14205023433109071,14642648522925424,15080273612741777,[⟨3,15517898702558130,437625089816353⟩]⟩)))else(if i<54 then(if i<53 then(⟨28,52,14646067401238361,15090530247680588,15534993094122815,[⟨3,15979455940565042,444462846442227⟩]⟩)else(⟨28,53,15093949125993525,15545249729061626,15996550332129727,[⟨3,16447850935197828,451300603068101⟩]⟩))else(if i<55 then(⟨28,54,15548668607374563,16006806967068538,16464945326762513,[⟨3,16923083686456488,458138359693975⟩]⟩)else(⟨28,55,16010225845381475,16475201961701324,16940178078021173,[⟨3,17405154194341022,464976116319849⟩]⟩)))))))else(if i<84 then(if i<70 then(if i<63 then(if i<59 then(if i<57 then(⟨28,56,16478620840014261,16950434712959984,17422248585905707,[⟨3,17894062458851430,471813872945723⟩]⟩)else(if i<58 then(⟨28,57,16953853591272921,17432505220844518,17911156850416115,[⟨3,18389808479987712,478651629571597⟩]⟩)else(⟨28,58,17435924099157455,17921413485354926,18406902871552397,[⟨3,18892392257749868,485489386197471⟩]⟩)))else(if i<61 then(if i<60 then(⟨28,59,17924832363667863,18417159506491208,18909486649314553,[⟨3,19401813792137898,492327142823345⟩]⟩)else(⟨28,60,18420578384804145,18919743284253364,19418908183702583,[⟨3,19918073083151802,499164899449219⟩]⟩))else(if i<62 then(⟨28,61,18923162162566301,19429164818641394,19935167474716487,[⟨3,20441170130791580,506002656075093⟩]⟩)else(⟨28,62,19432583696954331,19945424109655298,20458264522356265,[⟨3,20971104935057232,512840412700967⟩]⟩))))else(if i<66 then(if i<64 then(⟨28,63,19948842987968235,20468521157295076,20988199326621917,[⟨3,21507877495948758,519678169326841⟩]⟩)else(if i<65 then(⟨28,64,20471940035608013,20998455961560728,21524971887513443,[⟨3,22051487813466158,526515925952715⟩]⟩)else(⟨28,65,21001874839873665,21535228522452254,22068582205030843,[⟨3,22601935887609432,533353682578589⟩]⟩)))else(if i<68 then(if i<67 then(⟨28,66,21538647400765191,22078838839969654,22619030279174117,[⟨3,23159221718378580,540191439204463⟩]⟩)else(⟨28,67,22082257718282591,22629286914112928,23176316109943265,[⟨3,23723345305773602,547029195830337⟩]⟩))else(if i<69 then(⟨28,68,22632705792425865,23186572744882076,23740439697338287,[⟨3,24294306649794498,553866952456211⟩]⟩)else(⟨28,69,23189991623195013,23750696332277098,24311401041359183,[⟨3,24872105750441268,560704709082085⟩]⟩)))))else(if i<77 then(if i<73 then(if i<71 then(⟨28,70,23754115210590035,24321657676297994,24889200142005953,[⟨3,25456742607713912,567542465707959⟩]⟩)else(if i<72 then(⟨28,71,24325076554610931,24899456776944764,25473836999278597,[⟨3,26048217221612430,574380222333833⟩]⟩)else(⟨28,72,24902875655257701,25484093634217408,26065311613177115,[⟨3,26646529592136822,581217978959707⟩]⟩)))else(if i<75 then(if i<74 then(⟨28,73,25487512512530345,26075568248115926,26663623983701507,[⟨3,27251679719287088,588055735585581⟩]⟩)else(⟨28,74,26078987126428863,26673880618640318,27268774110851773,[⟨3,27863667603063228,594893492211455⟩]⟩))else(if i<76 then(⟨28,75,26677299496953255,27279030745790584,27880761994627913,[⟨3,28482493243465242,601731248837329⟩]⟩)else(⟨28,76,27282449624103521,27891018629566724,28499587635029927,[⟨3,29108156640493130,608569005463203⟩]⟩))))else(if i<80 then(if i<78 then(⟨28,77,27894437507879661,28509844269968738,29125251032057815,[⟨3,29740657794146892,615406762089077⟩]⟩)else(if i<79 then(⟨28,78,28513263148281675,29135507666996626,29757752185711577,[⟨3,30379996704426528,622244518714951⟩]⟩)else(⟨28,79,29138926545309563,29768008820650388,30397091095991213,[⟨3,31026173371332038,629082275340825⟩]⟩)))else(if i<82 then(if i<81 then(⟨28,80,29771427698963325,30407347730930024,31043267762896723,[⟨3,31679187794863422,635920031966699⟩]⟩)else(⟨28,81,30410766609242961,31053524397835534,31696282186428107,[⟨3,32339039975020680,642757788592573⟩]⟩))else(if i<83 then(⟨28,82,31056943276148471,31706538821366918,32356134366585365,[⟨3,33005729911803812,649595545218447⟩]⟩)else(⟨28,83,31709957699679855,32366391001524176,33022824303368497,[⟨3,33679257605212818,656433301844321⟩]⟩))))))else(if i<98 then(if i<91 then(if i<87 then(if i<85 then(⟨28,84,32369809879837113,33033080938307308,33696351996777503,[⟨3,34359623055247698,663271058470195⟩]⟩)else(if i<86 then(⟨28,85,33036499816620245,33706608631716314,34376717446812383,[⟨3,35046826261908452,670108815096069⟩]⟩)else(⟨28,86,33710027510029251,34386974081751194,35063920653473137,[⟨3,35740867225195080,676946571721943⟩]⟩)))else(if i<89 then(if i<88 then(⟨28,87,34390392960064131,35074177288411948,35757961616759765,[⟨3,36441745945107582,683784328347817⟩]⟩)else(⟨28,88,35077596166724885,35768218251698576,36458840336672267,[⟨3,37149462421645958,690622084973691⟩]⟩))else(if i<90 then(⟨28,89,35771637130011513,36469096971611078,37166556813210643,[⟨3,37864016654810208,697459841599565⟩]⟩)else(⟨28,90,36472515849924015,37176813448149454,37881111046374893,[⟨3,38585408644600332,704297598225439⟩]⟩))))else(if i<94 then(if i<92 then(⟨28,91,37180232326462391,37891367681313704,38602503036165017,[⟨3,39313638391016330,711135354851313⟩]⟩)else(if i<93 then(⟨28,92,37894786559626641,38612759671103828,39330732782581015,[⟨3,40048705894058202,717973111477187⟩]⟩)else(⟨28,93,38616178549416765,39340989417519826,40065800285622887,[⟨3,40790611153725948,724810868103061⟩]⟩)))else(if i<96 then(if i<95 then(⟨28,94,39344408295832763,40076056920561698,40807705545290633,[⟨3,41539354170019568,731648624728935⟩]⟩)else(⟨28,95,40079475798874635,40817962180229444,41556448561584253,[⟨3,42294934942939062,738486381354809⟩]⟩))else(if i<97 then(⟨28,96,40821381058542381,41566705196523064,42312029334503747,[⟨3,43057353472484430,745324137980683⟩]⟩)else(⟨28,97,41570124074836001,42322285969442558,43074447864049115,[⟨3,43826609758655672,752161894606557⟩]⟩)))))else(if i<105 then(if i<101 then(if i<99 then(⟨28,98,42325704847755495,43084704498987926,43843704150220357,[⟨3,44602703801452788,758999651232431⟩]⟩)else(if i<100 then(⟨28,99,43088123377300863,43853960785159168,44619798193017473,[⟨3,45385635600875778,765837407858305⟩]⟩)else(⟨28,100,43857379663472105,44630054827956284,45402729992440463,[⟨3,46175405156924642,772675164484179⟩]⟩)))else(if i<103 then(if i<102 then(⟨28,101,44633473706269221,45412986627379274,46192499548489327,[⟨3,46972012469599380,779512921110053⟩]⟩)else(⟨28,102,45416405505692211,46202756183428138,46989106861164065,[⟨3,47775457538899992,786350677735927⟩]⟩))else(if i<104 then(⟨28,103,46206175061741075,46999363496102876,47792551930464677,[⟨3,48585740364826478,793188434361801⟩]⟩)else(⟨28,104,47002782374415813,47802808565403488,48602834756391163,[⟨3,49402860947378838,800026190987675⟩]⟩))))else(if i<108 then(if i<106 then(⟨28,105,47806227443716425,48613091391329974,49419955338943523,[⟨3,50226819286557072,806863947613549⟩]⟩)else(if i<107 then(⟨28,106,48616510269642911,49430211973882334,50243913678121757,[⟨3,51057615382361180,813701704239423⟩]⟩)else(⟨28,107,49433630852195271,50254170313060568,51074709773925865,[⟨3,51895249234791162,820539460865297⟩]⟩)))else(if i<110 then(if i<109 then(⟨28,108,50257589191373505,51084966408864676,51912343626355847,[⟨3,52739720843847018,827377217491171⟩]⟩)else(⟨28,109,51088385287177613,51922600261294658,52756815235411703,[⟨3,53591030209528748,834214974117045⟩]⟩))else(if i<111 then(⟨28,110,51926019139607595,52767071870350514,53608124601093433,[⟨3,54449177331836352,841052730742919⟩]⟩)else(⟨28,111,52770490748663451,53618381236032244,54466271723401037,[⟨3,55314162210769830,847890487368793⟩]⟩))))))))else(defaultRow)
+
+def row29 : ℕ → BaseRow := fun i =>
+  if i<111 then(if i<55 then(if i<27 then(if i<13 then(if i<6 then(if i<3 then(if i<1 then(⟨29,0,1508816754574913,1562624529532535,1724185280775909,[⟨3,1885746032019283,161560751243374⟩]⟩)else(if i<2 then(⟨29,1,1562624529532535,1727896160831205,1893167792129875,[⟨3,2058439423428545,165271631298670⟩]⟩)else(⟨29,2,1562830690059897,1728102321358567,1893373952657237,[⟨3,2058645583955907,165271631298670⟩]⟩)))else(if i<4 then(⟨29,3,1563036850587259,1728308481885929,1893580113184599,[⟨3,2058851744483269,165271631298670⟩]⟩)else(if i<5 then(⟨29,4,1563998931650175,1729270562948845,1894542194247515,[⟨3,2059813825546185,165271631298670⟩]⟩)else(⟨29,5,1565373332719235,1730644964017905,1895916595316575,[⟨3,2061188226615245,165271631298670⟩]⟩))))else(if i<9 then(if i<7 then(⟨29,6,1573475961645511,1732431685093109,1897703316391779,[⟨3,2062974947690449,165271631298670⟩]⟩)else(if i<8 then(⟨29,7,1715393849326521,1860859467485094,2006325085643667,[⟨3,2151790703802240,145465618158573⟩,⟨8,2891532145265147,165271631298670⟩]⟩)else(⟨29,8,1864407197962657,2016968277076356,2169529356190055,[⟨3,2322090435303754,152561079113699⟩,⟨24,5538489607131359,165271631298670⟩]⟩)))else(if i<11 then(if i<10 then(⟨29,9,2020516007553919,2180172547622744,2339829087691569,[⟨3,2499485627760394,159656540068825⟩,⟨80,14796724640950515,165271631298670⟩]⟩)else(⟨29,10,2183720278100307,2350472279124258,2517224280148209,[⟨3,2683976281172160,166752001023951⟩]⟩))else(if i<12 then(⟨29,11,2354020009601821,2527867471580898,2701714933559975,[⟨3,2875562395539052,173847461979077⟩]⟩)else(⟨29,12,2531415202058461,2712358124992664,2893301047926867,[⟨3,3074243970861070,180942922934203⟩]⟩)))))else(if i<20 then(if i<16 then(if i<14 then(⟨29,13,2715905855470227,2903944239359556,3091982623248885,[⟨3,3280021007138214,188038383889329⟩]⟩)else(if i<15 then(⟨29,14,2907491969837119,3102625814681574,3297759659526029,[⟨3,3492893504370484,195133844844455⟩]⟩)else(⟨29,15,3106173545159137,3308402850958718,3510632156758299,[⟨3,3712861462557880,202229305799581⟩]⟩)))else(if i<18 then(if i<17 then(⟨29,16,3311950581436281,3521275348190988,3730600114945695,[⟨3,3939924881700402,209324766754707⟩]⟩)else(⟨29,17,3524823078668551,3741243306378384,3957663534088217,[⟨3,4174083761798050,216420227709833⟩]⟩))else(if i<19 then(⟨29,18,3744791036855947,3968306725520906,4191822414185865,[⟨3,4415338102850824,223515688664959⟩]⟩)else(⟨29,19,3971854455998469,4202465605618554,4433076755238639,[⟨3,4663687904858724,230611149620085⟩]⟩))))else(if i<23 then(if i<21 then(⟨29,20,4206013336096117,4443719946671328,4681426557246539,[⟨3,4919133167821750,237706610575211⟩]⟩)else(if i<22 then(⟨29,21,4447267677148891,4692069748679228,4936871820209565,[⟨3,5181673891739902,244802071530337⟩]⟩)else(⟨29,22,4695617479156791,4947515011642254,5199412544127717,[⟨3,5451310076613180,251897532485463⟩]⟩)))else(if i<25 then(if i<24 then(⟨29,23,4951062742119817,5210055735560406,5469048729000995,[⟨3,5728041722441584,258992993440589⟩]⟩)else(⟨29,24,5213603466037969,5479691920433684,5745780374829399,[⟨3,6011868829225114,266088454395715⟩]⟩))else(if i<26 then(⟨29,25,5483239650911247,5756423566262088,6029607481612929,[⟨3,6302791396963770,273183915350841⟩]⟩)else(⟨29,26,5759971296739651,6040250673045618,6320530049351585,[⟨3,6600809425657552,280279376305967⟩]⟩))))))else(if i<41 then(if i<34 then(if i<30 then(if i<28 then(⟨29,27,6043798403523181,6331173240784274,6618548078045367,[⟨3,6905922915306460,287374837261093⟩]⟩)else(if i<29 then(⟨29,28,6334720971261837,6629191269478056,6923661567694275,[⟨3,7218131865910494,294470298216219⟩]⟩)else(⟨29,29,6632738999955619,6934304759126964,7235870518298309,[⟨3,7537436277469654,301565759171345⟩]⟩)))else(if i<32 then(if i<31 then(⟨29,30,6937852489604527,7246513709730998,7555174929857469,[⟨3,7863836149983940,308661220126471⟩]⟩)else(⟨29,31,7250061440208561,7565818121290158,7881574802371755,[⟨3,8197331483453352,315756681081597⟩]⟩))else(if i<33 then(⟨29,32,7569365851767721,7892217993804444,8215070135841167,[⟨3,8537922277877890,322852142036723⟩]⟩)else(⟨29,33,7895765724282007,8225713327273856,8555660930265705,[⟨3,8885608533257554,329947602991849⟩]⟩))))else(if i<37 then(if i<35 then(⟨29,34,8229261057751419,8566304121698394,8903347185645369,[⟨3,9240390249592344,337043063946975⟩]⟩)else(if i<36 then(⟨29,35,8569851852175957,8913990377078058,9258128901980159,[⟨3,9602267426882260,344138524902101⟩]⟩)else(⟨29,36,8917538107555621,9268772093412848,9620006079270075,[⟨3,9971240065127302,351233985857227⟩]⟩)))else(if i<39 then(if i<38 then(⟨29,37,9272319823890411,9630649270702764,9988978717515117,[⟨3,10347308164327470,358329446812353⟩]⟩)else(⟨29,38,9634197001180327,9999621908947806,10365046816715285,[⟨3,10730471724482764,365424907767479⟩]⟩))else(if i<40 then(⟨29,39,10003169639425369,10375690008147974,10748210376870579,[⟨3,11120730745593184,372520368722605⟩]⟩)else(⟨29,40,10379237738625537,10758853568303268,11138469397980999,[⟨3,11518085227658730,379615829677731⟩]⟩)))))else(if i<48 then(if i<44 then(if i<42 then(⟨29,41,10762401298780831,11149112589413688,11535823880046545,[⟨3,11922535170679402,386711290632857⟩]⟩)else(if i<43 then(⟨29,42,11152660319891251,11546467071479234,11940273823067217,[⟨3,12334080574655200,393806751587983⟩]⟩)else(⟨29,43,11550014801956797,11950917014499906,12351819227043015,[⟨3,12752721439586124,400902212543109⟩]⟩)))else(if i<46 then(if i<45 then(⟨29,44,11954464744977469,12362462418475704,12770460091973939,[⟨3,13178457765472174,407997673498235⟩]⟩)else(⟨29,45,12366010148953267,12781103283406628,13196196417859989,[⟨3,13611289552313350,415093134453361⟩]⟩))else(if i<47 then(⟨29,46,12784651013884191,13206839609292678,13629028204701165,[⟨3,14051216800109652,422188595408487⟩]⟩)else(⟨29,47,13210387339770241,13639671396133854,14068955452497467,[⟨3,14498239508861080,429284056363613⟩]⟩))))else(if i<51 then(if i<49 then(⟨29,48,13643219126611417,14079598643930156,14515978161248895,[⟨3,14952357678567634,436379517318739⟩]⟩)else(if i<50 then(⟨29,49,14083146374407719,14526621352681584,14970096330955449,[⟨3,15413571309229314,443474978273865⟩]⟩)else(⟨29,50,14530169083159147,14980739522388138,15431309961617129,[⟨3,15881880400846120,450570439228991⟩]⟩)))else(if i<53 then(if i<52 then(⟨29,51,14984287252865701,15441953153049818,15899619053233935,[⟨3,16357284953418052,457665900184117⟩]⟩)else(⟨29,52,15445500883527381,15910262244666624,16375023605805867,[⟨3,16839784966945110,464761361139243⟩]⟩))else(if i<54 then(⟨29,53,15913809975144187,16385666797238556,16857523619332925,[⟨3,17329380441427294,471856822094369⟩]⟩)else(⟨29,54,16389214527716119,16868166810765614,17347119093815109,[⟨3,17826071376864604,478952283049495⟩]⟩)))))))else(if i<83 then(if i<69 then(if i<62 then(if i<58 then(if i<56 then(⟨29,55,16871714541243177,17357762285247798,17843810029252419,[⟨3,18329857773257040,486047744004621⟩]⟩)else(if i<57 then(⟨29,56,17361310015725361,17854453220685108,18347596425644855,[⟨3,18840739630604602,493143204959747⟩]⟩)else(⟨29,57,17858000951162671,18358239617077544,18858478282992417,[⟨3,19358716948907290,500238665914873⟩]⟩)))else(if i<60 then(if i<59 then(⟨29,58,18361787347555107,18869121474425106,19376455601295105,[⟨3,19883789728165104,507334126869999⟩]⟩)else(⟨29,59,18872669204902669,19387098792727794,19901528380552919,[⟨3,20415957968378044,514429587825125⟩]⟩))else(if i<61 then(⟨29,60,19390646523205357,19912171571985608,20433696620765859,[⟨3,20955221669546110,521525048780251⟩]⟩)else(⟨29,61,19915719302463171,20444339812198548,20972960321933925,[⟨3,21501580831669302,528620509735377⟩]⟩))))else(if i<65 then(if i<63 then(⟨29,62,20447887542676111,20983603513366614,21519319484057117,[⟨3,22055035454747620,535715970690503⟩]⟩)else(if i<64 then(⟨29,63,20987151243844177,21529962675489806,22072774107135435,[⟨3,22615585538781064,542811431645629⟩]⟩)else(⟨29,64,21533510405967369,22083417298568124,22633324191168879,[⟨3,23183231083769634,549906892600755⟩]⟩)))else(if i<67 then(if i<66 then(⟨29,65,22086965029045687,22643967382601568,23200969736157449,[⟨3,23757972089713330,557002353555881⟩]⟩)else(⟨29,66,22647515113079131,23211612927590138,23775710742101145,[⟨3,24339808556612152,564097814511007⟩]⟩))else(if i<68 then(⟨29,67,23215160658067701,23786353933533834,24357547208999967,[⟨3,24928740484466100,571193275466133⟩]⟩)else(⟨29,68,23789901664011397,24368190400432656,24946479136853915,[⟨3,25524767873275174,578288736421259⟩]⟩)))))else(if i<76 then(if i<72 then(if i<70 then(⟨29,69,24371738130910219,24957122328286604,25542506525662989,[⟨3,26127890723039374,585384197376385⟩]⟩)else(if i<71 then(⟨29,70,24960670058764167,25553149717095678,26145629375427189,[⟨3,26738109033758700,592479658331511⟩]⟩)else(⟨29,71,25556697447573241,26156272566859878,26755847686146515,[⟨3,27355422805433152,599575119286637⟩]⟩)))else(if i<74 then(if i<73 then(⟨29,72,26159820297337441,26766490877579204,27373161457820967,[⟨3,27979832038062730,606670580241763⟩]⟩)else(⟨29,73,26770038608056767,27383804649253656,27997570690450545,[⟨3,28611336731647434,613766041196889⟩]⟩))else(if i<75 then(⟨29,74,27387352379731219,28008213881883234,28629075384035249,[⟨3,29249936886187264,620861502152015⟩]⟩)else(⟨29,75,28011761612360797,28639718575467938,29267675538575079,[⟨3,29895632501682220,627956963107141⟩]⟩))))else(if i<79 then(if i<77 then(⟨29,76,28643266305945501,29278318730007768,29913371154070035,[⟨3,30548423578132302,635052424062267⟩]⟩)else(if i<78 then(⟨29,77,29281866460485331,29924014345502724,30566162230520117,[⟨3,31208310115537510,642147885017393⟩]⟩)else(⟨29,78,29927562075980287,30576805421952806,31226048767925325,[⟨3,31875292113897844,649243345972519⟩]⟩)))else(if i<81 then(if i<80 then(⟨29,79,30580353152430369,31236691959358014,31893030766285659,[⟨3,32549369573213304,656338806927645⟩]⟩)else(⟨29,80,31240239689835577,31903673957718348,32567108225601119,[⟨3,33230542493483890,663434267882771⟩]⟩))else(if i<82 then(⟨29,81,31907221688195911,32577751417033808,33248281145871705,[⟨3,33918810874709602,670529728837897⟩]⟩)else(⟨29,82,32581299147511371,33258924337304394,33936549527097417,[⟨3,34614174716890440,677625189793023⟩]⟩))))))else(if i<97 then(if i<90 then(if i<86 then(if i<84 then(⟨29,83,33262472067781957,33947192718530106,34631913369278255,[⟨3,35316634020026404,684720650748149⟩]⟩)else(if i<85 then(⟨29,84,33950740449007669,34642556560710944,35334372672414219,[⟨3,36026188784117494,691816111703275⟩]⟩)else(⟨29,85,34646104291188507,35345015863846908,36043927436505309,[⟨3,36742839009163710,698911572658401⟩]⟩)))else(if i<88 then(if i<87 then(⟨29,86,35348563594324471,36054570627937998,36760577661551525,[⟨3,37466584695165052,706007033613527⟩]⟩)else(⟨29,87,36058118358415561,36771220852984214,37484323347552867,[⟨3,38197425842121520,713102494568653⟩]⟩))else(if i<89 then(⟨29,88,36774768583461777,37494966538985556,38215164494509335,[⟨3,38935362450033114,720197955523779⟩]⟩)else(⟨29,89,37498514269463119,38225807685942024,38953101102420929,[⟨3,39680394518899834,727293416478905⟩]⟩))))else(if i<93 then(if i<91 then(⟨29,90,38229355416419587,38963744293853618,39698133171287649,[⟨3,40432522048721680,734388877434031⟩]⟩)else(if i<92 then(⟨29,91,38967292024331181,39708776362720338,40450260701109495,[⟨3,41191745039498652,741484338389157⟩]⟩)else(⟨29,92,39712324093197901,40460903892542184,41209483691886467,[⟨3,41958063491230750,748579799344283⟩]⟩)))else(if i<95 then(if i<94 then(⟨29,93,40464451623019747,41220126883319156,41975802143618565,[⟨3,42731477403917974,755675260299409⟩]⟩)else(⟨29,94,41223674613796719,41986445335051254,42749216056305789,[⟨3,43511986777560324,762770721254535⟩]⟩))else(if i<96 then(⟨29,95,41989993065528817,42759859247738478,43529725429948139,[⟨3,44299591612157800,769866182209661⟩]⟩)else(⟨29,96,42763406978216041,43540368621380828,44317330264545615,[⟨3,45094291907710402,776961643164787⟩]⟩)))))else(if i<104 then(if i<100 then(if i<98 then(⟨29,97,43543916351858391,44327973455978304,45112030560098217,[⟨3,45896087664218130,784057104119913⟩]⟩)else(if i<99 then(⟨29,98,44331521186455867,45122673751530906,45913826316605945,[⟨3,46704978881680984,791152565075039⟩]⟩)else(⟨29,99,45126221482008469,45924469508038634,46722717534068799,[⟨3,47520965560098964,798248026030165⟩]⟩)))else(if i<102 then(if i<101 then(⟨29,100,45928017238516197,46733360725501488,47538704212486779,[⟨3,48344047699472070,805343486985291⟩]⟩)else(⟨29,101,46736908455979051,47549347403919468,48361786351859885,[⟨3,49174225299800302,812438947940417⟩]⟩))else(if i<103 then(⟨29,102,47552895134397031,48372429543292574,49191963952188117,[⟨3,50011498361083660,819534408895543⟩]⟩)else(⟨29,103,48375977273770137,49202607143620806,50029237013471475,[⟨3,50855866883322144,826629869850669⟩]⟩))))else(if i<107 then(if i<105 then(⟨29,104,49206154874098369,50039880204904164,50873605535709959,[⟨3,51707330866515754,833725330805795⟩]⟩)else(if i<106 then(⟨29,105,50043427935381727,50884248727142648,51725069518903569,[⟨3,52565890310664490,840820791760921⟩]⟩)else(⟨29,106,50887796457620211,51735712710336258,52583628963052305,[⟨3,53431545215768352,847916252716047⟩]⟩)))else(if i<109 then(if i<108 then(⟨29,107,51739260440813821,52594272154484994,53449283868156167,[⟨3,54304295581827340,855011713671173⟩]⟩)else(⟨29,108,52597819884962557,53459927059588856,54322034234215155,[⟨3,55184141408841454,862107174626299⟩]⟩))else(if i<110 then(⟨29,109,53463474790066419,54332677425647844,55201880061229269,[⟨3,56071082696810694,869202635581425⟩]⟩)else(⟨29,110,54336225156125407,55212523252661958,56088821349198509,[⟨3,56965119445735060,876298096536551⟩]⟩))))))))else(defaultRow)
+
+def row30 : ℕ → BaseRow := fun i =>
+  if i<110 then(if i<55 then(if i<27 then(if i<13 then(if i<6 then(if i<3 then(if i<1 then(⟨30,0,1676287426954932,1734012242495212,1907324114962270,[⟨3,2080635987429328,173311872467058⟩]⟩)else(if i<2 then(⟨30,1,1734012242495212,1911172435019614,2088332627544016,[⟨3,2265492820068418,177160192524402⟩]⟩)else(⟨30,2,1734218403022574,1911378595546976,2088538788071378,[⟨3,2265698980595780,177160192524402⟩]⟩)))else(if i<4 then(⟨30,3,1734424563549936,1911584756074338,2088744948598740,[⟨3,2265905141123142,177160192524402⟩]⟩)else(if i<5 then(⟨30,4,1735386644612852,1912546837137254,2089707029661656,[⟨3,2266867222186058,177160192524402⟩]⟩)else(⟨30,5,1736761045681912,1913921238206314,2091081430730716,[⟨3,2268241623255118,177160192524402⟩]⟩))))else(if i<9 then(if i<7 then(⟨30,6,1738547766757116,1915707959281518,2092868151805920,[⟨3,2270028344330322,177160192524402⟩]⟩)else(if i<8 then(⟨30,7,1871150475662773,2025575618031274,2180000760399775,[⟨3,2334425902768276,154425142368501⟩,⟨6,2803707962984876,177160192524402⟩]⟩)else(⟨30,8,2029252200673463,2191030508326342,2352808815979221,[⟨3,2514587123632100,161778307652879⟩,⟨19,5109401826889594,177160192524402⟩]⟩)))else(if i<11 then(if i<10 then(⟨30,9,2194707090968531,2363838563905788,2532970036843045,[⟨3,2702101509780302,169131472937257⟩,⟨56,11667352631386104,177160192524402⟩]⟩)else(⟨30,10,2367515146547977,2543999784769612,2720484422991247,[⟨3,2896969061212882,176484638221635⟩,⟨915,163851394010947202,177160192524402⟩]⟩))else(if i<12 then(⟨30,11,2547676367411801,2731514170917814,2915351974423827,[⟨3,3099189777929840,183837803506013⟩]⟩)else(⟨30,12,2735190753560003,2926381722350394,3117572691140785,[⟨3,3308763659931176,191190968790391⟩]⟩)))))else(if i<20 then(if i<16 then(if i<14 then(⟨30,13,2930058304992583,3128602439067352,3327146573142121,[⟨3,3525690707216890,198544134074769⟩]⟩)else(if i<15 then(⟨30,14,3132279021709541,3338176321068688,3544073620427835,[⟨3,3749970919786982,205897299359147⟩]⟩)else(⟨30,15,3341852903710877,3555103368354402,3768353832997927,[⟨3,3981604297641452,213250464643525⟩]⟩)))else(if i<18 then(if i<17 then(⟨30,16,3558779950996591,3779383580924494,3999987210852397,[⟨3,4220590840780300,220603629927903⟩]⟩)else(⟨30,17,3783060163566683,4011016958778964,4238973753991245,[⟨3,4466930549203526,227956795212281⟩]⟩))else(if i<19 then(⟨30,18,4014693541421153,4250003501917812,4485313462414471,[⟨3,4720623422911130,235309960496659⟩]⟩)else(⟨30,19,4253680084560001,4496343210341038,4739006336122075,[⟨3,4981669461903112,242663125781037⟩]⟩))))else(if i<23 then(if i<21 then(⟨30,20,4500019792983227,4750036084048642,5000052375114057,[⟨3,5250068666179472,250016291065415⟩]⟩)else(if i<22 then(⟨30,21,4753712666690831,5011082123040624,5268451579390417,[⟨3,5525821035740210,257369456349793⟩]⟩)else(⟨30,22,5014758705682813,5279481327316984,5544203948951155,[⟨3,5808926570585326,264722621634171⟩]⟩)))else(if i<25 then(if i<24 then(⟨30,23,5283157909959173,5555233696877722,5827309483796271,[⟨3,6099385270714820,272075786918549⟩]⟩)else(⟨30,24,5558910279519911,5838339231722838,6117768183925765,[⟨3,6397197136128692,279428952202927⟩]⟩))else(if i<26 then(⟨30,25,5842015814365027,6128797931852332,6415580049339637,[⟨3,6702362166826942,286782117487305⟩]⟩)else(⟨30,26,6132474514494521,6426609797266204,6720745080037887,[⟨3,7014880362809570,294135282771683⟩]⟩))))))else(if i<41 then(if i<34 then(if i<30 then(if i<28 then(⟨30,27,6430286379908393,6731774827964454,7033263276020515,[⟨3,7334751724076576,301488448056061⟩]⟩)else(if i<29 then(⟨30,28,6735451410606643,7044293023947082,7353134637287521,[⟨3,7661976250627960,308841613340439⟩]⟩)else(⟨30,29,7047969606589271,7364164385214088,7680359163838905,[⟨3,7996553942463722,316194778624817⟩]⟩)))else(if i<32 then(if i<31 then(⟨30,30,7367840967856277,7691388911765472,8014936855674667,[⟨3,8338484799583862,323547943909195⟩]⟩)else(⟨30,31,7695065494407661,8025966603601234,8356867712794807,[⟨3,8687768821988380,330901109193573⟩]⟩))else(if i<33 then(⟨30,32,8029643186243423,8367897460721374,8706151735199325,[⟨3,9044406009677276,338254274477951⟩]⟩)else(⟨30,33,8371574043363563,8717181483125892,9062788922888221,[⟨3,9408396362650550,345607439762329⟩]⟩))))else(if i<37 then(if i<35 then(⟨30,34,8720858065768081,9073818670814788,9426779275861495,[⟨3,9779739880908202,352960605046707⟩]⟩)else(if i<36 then(⟨30,35,9077495253456977,9437809023788062,9798122794119147,[⟨3,10158436564450232,360313770331085⟩]⟩)else(⟨30,36,9441485606430251,9809152542045714,10176819477661177,[⟨3,10544486413276640,367666935615463⟩]⟩)))else(if i<39 then(if i<38 then(⟨30,37,9812829124687903,10187849225587744,10562869326487585,[⟨3,10937889427387426,375020100899841⟩]⟩)else(⟨30,38,10191525808229933,10573899074414152,10956272340598371,[⟨3,11338645606782590,382373266184219⟩]⟩))else(if i<40 then(⟨30,39,10577575657056341,10967302088524938,11357028519993535,[⟨3,11746754951462132,389726431468597⟩]⟩)else(⟨30,40,10970978671167127,11368058267920102,11765137864673077,[⟨3,12162217461426052,397079596752975⟩]⟩)))))else(if i<48 then(if i<44 then(if i<42 then(⟨30,41,11371734850562291,11776167612599644,12180600374636997,[⟨3,12585033136674350,404432762037353⟩]⟩)else(if i<43 then(⟨30,42,11779844195241833,12191630122563564,12603416049885295,[⟨3,13015201977207026,411785927321731⟩]⟩)else(⟨30,43,12195306705205753,12614445797811862,13033584890417971,[⟨3,13452723983024080,419139092606109⟩]⟩)))else(if i<46 then(if i<45 then(⟨30,44,12618122380454051,13044614638344538,13471106896235025,[⟨3,13897599154125512,426492257890487⟩]⟩)else(⟨30,45,13048291220986727,13482136644161592,13915982067336457,[⟨3,14349827490511322,433845423174865⟩]⟩))else(if i<47 then(⟨30,46,13485813226803781,13927011815263024,14368210403722267,[⟨3,14809408992181510,441198588459243⟩]⟩)else(⟨30,47,13930688397905213,14379240151648834,14827791905392455,[⟨3,15276343659136076,448551753743621⟩]⟩))))else(if i<51 then(if i<49 then(⟨30,48,14382916734291023,14838821653319022,15294726572347021,[⟨3,15750631491375020,455904919027999⟩]⟩)else(if i<50 then(⟨30,49,14842498235961211,15305756320273588,15769014404585965,[⟨3,16232272488898342,463258084312377⟩]⟩)else(⟨30,50,15309432902915777,15780044152512532,16250655402109287,[⟨3,16721266651706042,470611249596755⟩]⟩)))else(if i<53 then(if i<52 then(⟨30,51,15783720735154721,16261685150035854,16739649564916987,[⟨3,17217613979798120,477964414881133⟩]⟩)else(⟨30,52,16265361732678043,16750679312843554,17235996893009065,[⟨3,17721314473174576,485317580165511⟩]⟩))else(if i<54 then(⟨30,53,16754355895485743,17247026640935632,17739697386385521,[⟨3,18232368131835410,492670745449889⟩]⟩)else(⟨30,54,17250703223577821,17750727134312088,18250751045046355,[⟨3,18750774955780622,500023910734267⟩]⟩)))))))else(if i<82 then(if i<68 then(if i<61 then(if i<58 then(if i<56 then(⟨30,55,17754403716954277,18261780792972922,18769157868991567,[⟨3,19276534945010212,507377076018645⟩]⟩)else(if i<57 then(⟨30,56,18265457375615111,18780187616918134,19294917858221157,[⟨3,19809648099524180,514730241303023⟩]⟩)else(⟨30,57,18783864199560323,19305947606147724,19828031012735125,[⟨3,20350114419322526,522083406587401⟩]⟩)))else(if i<59 then(⟨30,58,19309624188789913,19839060760661692,20368497332533471,[⟨3,20897933904405250,529436571871779⟩]⟩)else(if i<60 then(⟨30,59,19842737343303881,20379527080460038,20916316817616195,[⟨3,21453106554772352,536789737156157⟩]⟩)else(⟨30,60,20383203663102227,20927346565542762,21471489467983297,[⟨3,22015632370423832,544142902440535⟩]⟩))))else(if i<64 then(if i<62 then(⟨30,61,20931023148184951,21482519215909864,22034015283634777,[⟨3,22585511351359690,551496067724913⟩]⟩)else(if i<63 then(⟨30,62,21486195798552053,22045045031561344,22603894264570635,[⟨3,23162743497579926,558849233009291⟩]⟩)else(⟨30,63,22048721614203533,22614924012497202,23181126410790871,[⟨3,23747328809084540,566202398293669⟩]⟩)))else(if i<66 then(if i<65 then(⟨30,64,22618600595139391,23192156158717438,23765711722295485,[⟨3,24339267285873532,573555563578047⟩]⟩)else(⟨30,65,23195832741359627,23776741470222052,24357650199084477,[⟨3,24938558927946902,580908728862425⟩]⟩))else(if i<67 then(⟨30,66,23780418052864241,24368679947011044,24956941841157847,[⟨3,25545203735304650,588261894146803⟩]⟩)else(⟨30,67,24372356529653233,24967971589084414,25563586648515595,[⟨3,26159201707946776,595615059431181⟩]⟩)))))else(if i<75 then(if i<71 then(if i<69 then(⟨30,68,24971648171726603,25574616396442162,26177584621157721,[⟨3,26780552845873280,602968224715559⟩]⟩)else(if i<70 then(⟨30,69,25578292979084351,26188614369084288,26798935759084225,[⟨3,27409257149084162,610321389999937⟩]⟩)else(⟨30,70,26192290951726477,26809965507010792,27427640062295107,[⟨3,28045314617579422,617674555284315⟩]⟩)))else(if i<73 then(if i<72 then(⟨30,71,26813642089652981,27438669810221674,28063697530790367,[⟨3,28688725251359060,625027720568693⟩]⟩)else(⟨30,72,27442346392863863,28074727278716934,28707108164570005,[⟨3,29339489050423076,632380885853071⟩]⟩))else(if i<74 then(⟨30,73,28078403861359123,28718137912496572,29357871963634021,[⟨3,29997606014771470,639734051137449⟩]⟩)else(⟨30,74,28721814495138761,29368901711560588,30015988927982415,[⟨3,30663076144404242,647087216421827⟩]⟩))))else(if i<78 then(if i<76 then(⟨30,75,29372578294202777,30027018675908982,30681459057615187,[⟨3,31335899439321392,654440381706205⟩]⟩)else(if i<77 then(⟨30,76,30030695258551171,30692488805541754,31354282352532337,[⟨3,32016075899522920,661793546990583⟩]⟩)else(⟨30,77,30696165388183943,31365312100458904,32034458812733865,[⟨3,32703605525008826,669146712274961⟩]⟩)))else(if i<80 then(if i<79 then(⟨30,78,31368988683101093,32045488560660432,32721988438219771,[⟨3,33398488315779110,676499877559339⟩]⟩)else(⟨30,79,32049165143302621,32733018186146338,33416871228990055,[⟨3,34100724271833772,683853042843717⟩]⟩))else(if i<81 then(⟨30,80,32736694768788527,33427900976916622,34119107185044717,[⟨3,34810313393172812,691206208128095⟩]⟩)else(⟨30,81,33431577559558811,34130136932971284,34828696306383757,[⟨3,35527255679796230,698559373412473⟩]⟩))))))else(if i<96 then(if i<89 then(if i<85 then(if i<83 then(⟨30,82,34133813515613473,34839726054310324,35545638593007175,[⟨3,36251551131704026,705912538696851⟩]⟩)else(if i<84 then(⟨30,83,34843402636952513,35556668340933742,36269934044914971,[⟨3,36983199748896200,713265703981229⟩]⟩)else(⟨30,84,35560344923575931,36280963792841538,37001582662107145,[⟨3,37722201531372752,720618869265607⟩]⟩)))else(if i<87 then(if i<86 then(⟨30,85,36284640375483727,37012612410033712,37740584444583697,[⟨3,38468556479133682,727972034549985⟩]⟩)else(⟨30,86,37016288992675901,37751614192510264,38486939392344627,[⟨3,39222264592178990,735325199834363⟩]⟩))else(if i<88 then(⟨30,87,37755290775152453,38497969140271194,39240647505389935,[⟨3,39983325870508676,742678365118741⟩]⟩)else(⟨30,88,38501645722913383,39251677253316502,40001708783719621,[⟨3,40751740314122740,750031530403119⟩]⟩))))else(if i<92 then(if i<90 then(⟨30,89,39255353835958691,40012738531646188,40770123227333685,[⟨3,41527507923021182,757384695687497⟩]⟩)else(if i<91 then(⟨30,90,40016415114288377,40781152975260252,41545890836232127,[⟨3,42310628697204002,764737860971875⟩]⟩)else(⟨30,91,40784829557902441,41556920584158694,42329011610414947,[⟨3,43101102636671200,772091026256253⟩]⟩)))else(if i<94 then(if i<93 then(⟨30,92,41560597166800883,42340041358341514,43119485549882145,[⟨3,43898929741422776,779444191540631⟩]⟩)else(⟨30,93,42343717940983703,43130515297808712,43917312654633721,[⟨3,44704110011458730,786797356825009⟩]⟩))else(if i<95 then(⟨30,94,43134191880450901,43928342402560288,44722492924669675,[⟨3,45516643446779062,794150522109387⟩]⟩)else(⟨30,95,43932018985202477,44733522672596242,45535026359990007,[⟨3,46336530047383772,801503687393765⟩]⟩)))))else(if i<103 then(if i<99 then(if i<97 then(⟨30,96,44737199255238431,45546056107916574,46354912960594717,[⟨3,47163769813272860,808856852678143⟩]⟩)else(if i<98 then(⟨30,97,45549732690558763,46365942708521284,47182152726483805,[⟨3,47998362744446326,816210017962521⟩]⟩)else(⟨30,98,46369619291163473,47193182474410372,48016745657657271,[⟨3,48840308840904170,823563183246899⟩]⟩)))else(if i<101 then(if i<100 then(⟨30,99,47196859057052561,48027775405583838,48858691754115115,[⟨3,49689608102646392,830916348531277⟩]⟩)else(⟨30,100,48031451988226027,48869721502041682,49707991015857337,[⟨3,50546260529672992,838269513815655⟩]⟩))else(if i<102 then(⟨30,101,48873398084683871,49719020763783904,50564643442883937,[⟨3,51410266121983970,845622679100033⟩]⟩)else(⟨30,102,49722697346426093,50575673190810504,51428649035194915,[⟨3,52281624879579326,852975844384411⟩]⟩))))else(if i<106 then(if i<104 then(⟨30,103,50579349773452693,51439678783121482,52300007792790271,[⟨3,53160336802459060,860329009668789⟩]⟩)else(if i<105 then(⟨30,104,51443355365763671,52311037540716838,53178719715670005,[⟨3,54046401890623172,867682174953167⟩]⟩)else(⟨30,105,52314714123359027,53189749463596572,54064784803834117,[⟨3,54939820144071662,875035340237545⟩]⟩)))else(if i<108 then(if i<107 then(⟨30,106,53193426046238761,54075814551760684,54958203057282607,[⟨3,55840591562804530,882388505521923⟩]⟩)else(⟨30,107,54079491134402873,54969232805209174,55858974476015475,[⟨3,56748716146821776,889741670806301⟩]⟩))else(if i<109 then(⟨30,108,54972909387851363,55870004223942042,56767099060032721,[⟨3,57664193896123400,897094836090679⟩]⟩)else(⟨30,109,55873680806584231,56778128807959288,57682576809334345,[⟨3,58587024810709402,904448001375057⟩]⟩))))))))else(defaultRow)
+
+def lookup : ℕ → ℕ → BaseRow
+  | 1, v => row1 v
+  | 2, v => row2 v
+  | 3, v => row3 v
+  | 4, v => row4 v
+  | 5, v => row5 v
+  | 6, v => row6 v
+  | 7, v => row7 v
+  | 8, v => row8 v
+  | 9, v => row9 v
+  | 10, v => row10 v
+  | 11, v => row11 v
+  | 12, v => row12 v
+  | 13, v => row13 v
+  | 14, v => row14 v
+  | 15, v => row15 v
+  | 16, v => row16 v
+  | 17, v => row17 v
+  | 18, v => row18 v
+  | 19, v => row19 v
+  | 20, v => row20 v
+  | 21, v => row21 v
+  | 22, v => row22 v
+  | 23, v => row23 v
+  | 24, v => row24 v
+  | 25, v => row25 v
+  | 26, v => row26 v
+  | 27, v => row27 v
+  | 28, v => row28 v
+  | 29, v => row29 v
+  | 30, v => row30 v
+  | _, _ => defaultRow
+
+def zeroRow1 : ℕ → ℕ := fun i =>
+  if i<139 then(if i<69 then(if i<34 then(if i<17 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(274881052677)else(481041580039))else(if i<3 then(687202107401)else(1649283170317)))else(if i<6 then(if i<5 then(3023684239377)else(4810405314581))else(if i<7 then(7009446395929)else(9620807483421))))else(if i<12 then(if i<10 then(if i<9 then(12644488577057)else(16080489676837))else(if i<11 then(19928810782761)else(24189451894829)))else(if i<14 then(if i<13 then(28862413013041)else(33947694137397))else(if i<15 then(39445295267897)else(if i<16 then(45355216404541)else(51677457547329))))))else(if i<25 then(if i<21 then(if i<19 then(if i<18 then(58412018696261)else(65558899851337))else(if i<20 then(73118101012557)else(81089622179921)))else(if i<23 then(if i<22 then(89473463353429)else(98269624533081))else(if i<24 then(107478105718877)else(117098906910817))))else(if i<29 then(if i<27 then(if i<26 then(127132028108901)else(137577469313129))else(if i<28 then(148435230523501)else(159705311740017)))else(if i<31 then(if i<30 then(171387712962677)else(183482434191481))else(if i<32 then(195989475426429)else(if i<33 then(208908836667521)else(222240517914757)))))))else(if i<51 then(if i<42 then(if i<38 then(if i<36 then(if i<35 then(235984519168137)else(250140840427661))else(if i<37 then(264709481693329)else(279690442965141)))else(if i<40 then(if i<39 then(295083724243097)else(310889325527197))else(if i<41 then(327107246817441)else(343737488113829))))else(if i<46 then(if i<44 then(if i<43 then(360780049416361)else(378234930725037))else(if i<45 then(396102132039857)else(414381653360821)))else(if i<48 then(if i<47 then(433073494687929)else(452177656021181))else(if i<49 then(471694137360577)else(if i<50 then(491622938706117)else(511964060057801))))))else(if i<60 then(if i<55 then(if i<53 then(if i<52 then(532717501415629)else(553883262779601))else(if i<54 then(575461344149717)else(597451745525977)))else(if i<57 then(if i<56 then(619854466908381)else(642669508296929))else(if i<58 then(665896869691621)else(if i<59 then(689536551092457)else(713588552499437)))))else(if i<64 then(if i<62 then(if i<61 then(738052873912561)else(762929515331829))else(if i<63 then(788218476757241)else(813919758188797)))else(if i<66 then(if i<65 then(840033359626497)else(866559281070341))else(if i<67 then(893497522520329)else(if i<68 then(920848083976461)else(948610965438737))))))))else(if i<104 then(if i<86 then(if i<77 then(if i<73 then(if i<71 then(if i<70 then(976786166907157)else(1005373688381721))else(if i<72 then(1034373529862429)else(1063785691349281)))else(if i<75 then(if i<74 then(1093610172842277)else(1123846974341417))else(if i<76 then(1154496095846701)else(1185557537358129))))else(if i<81 then(if i<79 then(if i<78 then(1217031298875701)else(1248917380399417))else(if i<80 then(1281215781929277)else(1313926503465281)))else(if i<83 then(if i<82 then(1347049545007429)else(1380584906555721))else(if i<84 then(1414532588110157)else(if i<85 then(1448892589670737)else(1483664911237461))))))else(if i<95 then(if i<90 then(if i<88 then(if i<87 then(1518849552810329)else(1554446514389341))else(if i<89 then(1590455795974497)else(1626877397565797)))else(if i<92 then(if i<91 then(1663711319163241)else(1700957560766829))else(if i<93 then(1738616122376561)else(if i<94 then(1776687003992437)else(1815170205614457)))))else(if i<99 then(if i<97 then(if i<96 then(1854065727242621)else(1893373568876929))else(if i<98 then(1933093730517381)else(1973226212163977)))else(if i<101 then(if i<100 then(2013771013816717)else(2054728135475601))else(if i<102 then(2096097577140629)else(if i<103 then(2137879338811801)else(2180073420489117)))))))else(if i<121 then(if i<112 then(if i<108 then(if i<106 then(if i<105 then(2222679822172577)else(2265698543862181))else(if i<107 then(2309129585557929)else(2352972947259821)))else(if i<110 then(if i<109 then(2397228628967857)else(2441896630682037))else(if i<111 then(2486976952402361)else(2532469594128829))))else(if i<116 then(if i<114 then(if i<113 then(2578374555861441)else(2624691837600197))else(if i<115 then(2671421439345097)else(2718563361096141)))else(if i<118 then(if i<117 then(2766117602853329)else(2814084164616661))else(if i<119 then(2862463046386137)else(if i<120 then(2911254248161757)else(2960457769943521))))))else(if i<130 then(if i<125 then(if i<123 then(if i<122 then(3010073611731429)else(3060101773525481))else(if i<124 then(3110542255325677)else(3161395057132017)))else(if i<127 then(if i<126 then(3212660178944501)else(3264337620763129))else(if i<128 then(3316427382587901)else(if i<129 then(3368929464418817)else(3421843866255877)))))else(if i<134 then(if i<132 then(if i<131 then(3475170588099081)else(3528909629948429))else(if i<133 then(3583060991803921)else(3637624673665557)))else(if i<136 then(if i<135 then(3692600675533337)else(3747988997407261))else(if i<137 then(3803789639287329)else(if i<138 then(3860002601173541)else(3916627883065897)))))))))else(0)
+
+def zeroRow2 : ℕ → ℕ := fun i =>
+  if i<138 then(if i<69 then(if i<34 then(if i<17 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(549762105354)else(755922632716))else(if i<3 then(1924164222994)else(3642165821464)))else(if i<6 then(if i<5 then(5909927428126)else(8727449042980))else(if i<7 then(12094730666026)else(16011772297264))))else(if i<12 then(if i<10 then(if i<9 then(20478573936694)else(25495135584316))else(if i<11 then(31061457240130)else(37177538904136)))else(if i<14 then(if i<13 then(43843380576334)else(51058982256724))else(if i<15 then(58824343945306)else(if i<16 then(67139465642080)else(76004347347046))))))else(if i<25 then(if i<21 then(if i<19 then(if i<18 then(85418989060204)else(95383390781554))else(if i<20 then(105897552511096)else(116961474248830)))else(if i<23 then(if i<22 then(128575155994756)else(140738597748874))else(if i<24 then(153451799511184)else(166714761281686))))else(if i<29 then(if i<27 then(if i<26 then(180527483060380)else(194889964847266))else(if i<28 then(209802206642344)else(225264208445614)))else(if i<31 then(if i<30 then(241275970257076)else(257837492076730))else(if i<32 then(274948773904576)else(if i<33 then(292609815740614)else(310820617584844)))))))else(if i<51 then(if i<42 then(if i<38 then(if i<36 then(if i<35 then(329581179437266)else(348891501297880))else(if i<37 then(368751583166686)else(389161425043684)))else(if i<40 then(if i<39 then(410121026928874)else(431630388822256))else(if i<41 then(453689510723830)else(476298392633596))))else(if i<46 then(if i<44 then(if i<43 then(499457034551554)else(523165436477704))else(if i<45 then(547423598412046)else(572231520354580)))else(if i<48 then(if i<47 then(597589202305306)else(623496644264224))else(if i<49 then(649953846231334)else(if i<50 then(676960808206636)else(704517530190130))))))else(if i<60 then(if i<55 then(if i<53 then(if i<52 then(732624012181816)else(761280254181694))else(if i<54 then(790486256189764)else(820242018206026)))else(if i<57 then(if i<56 then(850547540230480)else(881402822263126))else(if i<58 then(912807864303964)else(if i<59 then(944762666352994)else(977267228410216)))))else(if i<64 then(if i<62 then(if i<61 then(1010321550475630)else(1043925632549236))else(if i<63 then(1078079474631034)else(1112783076721024)))else(if i<66 then(if i<65 then(1148036438819206)else(1183839560925580))else(if i<67 then(1220192443040146)else(if i<68 then(1257095085162904)else(1294547487293854))))))))else(if i<103 then(if i<86 then(if i<77 then(if i<73 then(if i<71 then(if i<70 then(1332549649432996)else(1371101571580330))else(if i<72 then(1410203253735856)else(1449854695899574)))else(if i<75 then(if i<74 then(1490055898071484)else(1530806860251586))else(if i<76 then(1572107582439880)else(1613958064636366))))else(if i<81 then(if i<79 then(if i<78 then(1656358306841044)else(1699308309053914))else(if i<80 then(1742808071274976)else(1786857593504230)))else(if i<83 then(if i<82 then(1831456875741676)else(1876605917987314))else(if i<84 then(1922304720241144)else(if i<85 then(1968553282503166)else(2015351604773380))))))else(if i<94 then(if i<90 then(if i<88 then(if i<87 then(2062699687051786)else(2110597529338384))else(if i<89 then(2159045131633174)else(2208042493936156)))else(if i<92 then(if i<91 then(2257589616247330)else(2307686498566696))else(if i<93 then(2358333140894254)else(2409529543230004))))else(if i<98 then(if i<96 then(if i<95 then(2461275705573946)else(2513571627926080))else(if i<97 then(2566417310286406)else(2619812752654924)))else(if i<100 then(if i<99 then(2673757955031634)else(2728252917416536))else(if i<101 then(2783297639809630)else(if i<102 then(2838892122210916)else(2895036364620394)))))))else(if i<120 then(if i<111 then(if i<107 then(if i<105 then(if i<104 then(2951730367038064)else(3008974129463926))else(if i<106 then(3066767651897980)else(3125110934340226)))else(if i<109 then(if i<108 then(3184003976790664)else(3243446779249294))else(if i<110 then(3303439341716116)else(3363981664191130))))else(if i<115 then(if i<113 then(if i<112 then(3425073746674336)else(3486715589165734))else(if i<114 then(3548907191665324)else(3611648554173106)))else(if i<117 then(if i<116 then(3674939676689080)else(3738780559213246))else(if i<118 then(3803171201745604)else(if i<119 then(3868111604286154)else(3933601766834896))))))else(if i<129 then(if i<124 then(if i<122 then(if i<121 then(3999641689391830)else(4066231371956956))else(if i<123 then(4133370814530274)else(4201060017111784)))else(if i<126 then(if i<125 then(4269298979701486)else(4338087702299380))else(if i<127 then(4407426184905466)else(if i<128 then(4477314427519744)else(4547752430142214)))))else(if i<133 then(if i<131 then(if i<130 then(4618740192772876)else(4690277715411730))else(if i<132 then(4762364998058776)else(4835002040714014)))else(if i<135 then(if i<134 then(4908188843377444)else(4981925406049066))else(if i<136 then(5056211728728880)else(if i<137 then(5131047811416886)else(5206433654113084)))))))))else(0)
+
+def zeroRow3 : ℕ → ℕ := fun i =>
+  if i<137 then(if i<68 then(if i<34 then(if i<17 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(1855444746261)else(2405205803033))else(if i<3 then(3144027996954)else(5437610657010)))else(if i<6 then(if i<5 then(8384046040892)else(11983334148600))else(if i<7 then(16235474980134)else(21140468535494))))else(if i<12 then(if i<10 then(if i<9 then(26698314814680)else(32909013817692))else(if i<11 then(39772565544530)else(47288969995194)))else(if i<14 then(if i<13 then(55458227169684)else(64280337068000))else(if i<15 then(73755299690142)else(if i<16 then(83883115036110)else(94663783105904))))))else(if i<25 then(if i<21 then(if i<19 then(if i<18 then(106097303899524)else(118183677416970))else(if i<20 then(130922903658242)else(144314982623340)))else(if i<23 then(if i<22 then(158359914312264)else(173057698725014))else(if i<24 then(188408335861590)else(204411825721992))))else(if i<29 then(if i<27 then(if i<26 then(221068168306220)else(238377363614274))else(if i<28 then(256339411646154)else(274954312401860)))else(if i<31 then(if i<30 then(294222065881392)else(314142672084750))else(if i<32 then(334716131011934)else(if i<33 then(355942442662944)else(377821607037780)))))))else(if i<51 then(if i<42 then(if i<38 then(if i<36 then(if i<35 then(400353624136442)else(423538493958930))else(if i<37 then(447376216505244)else(471866791775384)))else(if i<40 then(if i<39 then(497010219769350)else(522806500487142))else(if i<41 then(549255633928760)else(576357620094204))))else(if i<46 then(if i<44 then(if i<43 then(604112458983474)else(632520150596570))else(if i<45 then(661580694933492)else(691294091994240)))else(if i<48 then(if i<47 then(721660341778814)else(752679444287214))else(if i<49 then(784351399519440)else(if i<50 then(816676207475492)else(849653868155370))))))else(if i<59 then(if i<55 then(if i<53 then(if i<52 then(883284381559074)else(917567747686604))else(if i<54 then(952503966537960)else(988093038113142)))else(if i<57 then(if i<56 then(1024334962412150)else(1061229739434984))else(if i<58 then(1098777369181644)else(1136977851652130))))else(if i<63 then(if i<61 then(if i<60 then(1175831186846442)else(1215337374764580))else(if i<62 then(1255496415406544)else(1296308308772334)))else(if i<65 then(if i<64 then(1337773054861950)else(1379890653675392))else(if i<66 then(1422661105212660)else(if i<67 then(1466084409473754)else(1510160566458674))))))))else(if i<102 then(if i<85 then(if i<76 then(if i<72 then(if i<70 then(if i<69 then(1554889576167420)else(1600271438599992))else(if i<71 then(1646306153756390)else(1692993721636614)))else(if i<74 then(if i<73 then(1740334142240664)else(1788327415568540))else(if i<75 then(1836973541620242)else(1886272520395770))))else(if i<80 then(if i<78 then(if i<77 then(1936224351895124)else(1986829036118304))else(if i<79 then(2038086573065310)else(2089996962736142)))else(if i<82 then(if i<81 then(2142560205130800)else(2195776300249284))else(if i<83 then(2249645248091594)else(if i<84 then(2304167048657730)else(2359341701947692))))))else(if i<93 then(if i<89 then(if i<87 then(if i<86 then(2415169207961480)else(2471649566699094))else(if i<88 then(2528782778160534)else(2586568842345800)))else(if i<91 then(if i<90 then(2645007759254892)else(2704099528887810))else(if i<92 then(2763844151244554)else(2824241626325124))))else(if i<97 then(if i<95 then(if i<94 then(2885291954129520)else(2946995134657742))else(if i<96 then(3009351167909790)else(3072360053885664)))else(if i<99 then(if i<98 then(3136021792585364)else(3200336384008890))else(if i<100 then(3265303828156242)else(if i<101 then(3330924125027420)else(3397197274622424)))))))else(if i<119 then(if i<110 then(if i<106 then(if i<104 then(if i<103 then(3464123276941254)else(3531702131983910))else(if i<105 then(3599933839750392)else(3668818400240700)))else(if i<108 then(if i<107 then(3738355813454834)else(3808546079392794))else(if i<109 then(3879389198054580)else(3950885169440192))))else(if i<114 then(if i<112 then(if i<111 then(4023033993549630)else(4095835670382894))else(if i<113 then(4169290199939984)else(4243397582220900)))else(if i<116 then(if i<115 then(4318157817225642)else(4393570904954210))else(if i<117 then(4469636845406604)else(if i<118 then(4546355638582824)else(4623727284482870))))))else(if i<128 then(if i<123 then(if i<121 then(if i<120 then(4701751783106742)else(4780429134454440))else(if i<122 then(4859759338525964)else(4939742395321314)))else(if i<125 then(if i<124 then(5020378304840490)else(5101667067083492))else(if i<126 then(5183608682050320)else(if i<127 then(5266203149740974)else(5349450470155454)))))else(if i<132 then(if i<130 then(if i<129 then(5433350643293760)else(5517903669155892))else(if i<131 then(5603109547741850)else(5688968279051634)))else(if i<134 then(if i<133 then(5775479863085244)else(5862644299842680))else(if i<135 then(5950461589323942)else(if i<136 then(6038931731529030)else(6128054726457944)))))))))else(0)
+
+def zeroRow4 : ℕ → ℕ := fun i =>
+  if i<136 then(if i<68 then(if i<34 then(if i<17 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(4398088454180)else(5428890042410))else(if i<3 then(6081876198766)else(9732705355816)))else(if i<6 then(if i<5 then(14294091565944)else(19766034829150))else(if i<7 then(26148535145434)else(33441592514796))))else(if i<12 then(if i<10 then(if i<9 then(41645206937236)else(50759378412754))else(if i<11 then(60784106941350)else(71719392523024)))else(if i<14 then(if i<13 then(83565235157776)else(96321634845606))else(if i<15 then(109988591586514)else(if i<16 then(124566105380500)else(140054176227564))))))else(if i<25 then(if i<21 then(if i<19 then(if i<18 then(156452804127706)else(173761989080926))else(if i<20 then(191981731087224)else(211112030146600)))else(if i<23 then(if i<22 then(231152886259054)else(252104299424586))else(if i<24 then(273966269643196)else(296738796914884))))else(if i<29 then(if i<27 then(if i<26 then(320421881239650)else(345015522617494))else(if i<28 then(370519721048416)else(396934476532416)))else(if i<31 then(if i<30 then(424259789069494)else(452495658659650))else(if i<32 then(481642085302884)else(if i<33 then(511699068999196)else(542666609748586)))))))else(if i<51 then(if i<42 then(if i<38 then(if i<36 then(if i<35 then(574544707551054)else(607333362406600))else(if i<37 then(641032574315224)else(675642343276926)))else(if i<40 then(if i<39 then(711162669291706)else(747593552359564))else(if i<41 then(784934992480500)else(823186989654514))))else(if i<46 then(if i<44 then(if i<43 then(862349543881606)else(902422655161776))else(if i<45 then(943406323495024)else(985300548881350)))else(if i<48 then(if i<47 then(1028105331320754)else(1071820670813236))else(if i<49 then(1116446567358796)else(if i<50 then(1161983020957434)else(1208430031609150))))))else(if i<59 then(if i<55 then(if i<53 then(if i<52 then(1255787599313944)else(1304055724071816))else(if i<54 then(1353234405882766)else(1403323644746794)))else(if i<57 then(if i<56 then(1454323440663900)else(1506233793634084))else(if i<58 then(1559054703657346)else(1612786170733686))))else(if i<63 then(if i<61 then(if i<60 then(1667428194863104)else(1722980776045600))else(if i<62 then(1779443914281174)else(1836817609569826)))else(if i<65 then(if i<64 then(1895101861911556)else(1954296671306364))else(if i<66 then(2014402037754250)else(if i<67 then(2075417961255214)else(2137344441809256))))))))else(if i<102 then(if i<85 then(if i<76 then(if i<72 then(if i<70 then(if i<69 then(2200181479416376)else(2263929074076574))else(if i<71 then(2328587225789850)else(2394155934556204)))else(if i<74 then(if i<73 then(2460635200375636)else(2528025023248146))else(if i<75 then(2596325403173734)else(2665536340152400))))else(if i<80 then(if i<78 then(if i<77 then(2735657834184144)else(2806689885268966))else(if i<79 then(2878632493406866)else(2951485658597844)))else(if i<82 then(if i<81 then(3025249380841900)else(3099923660139034))else(if i<83 then(3175508496489246)else(if i<84 then(3252003889892536)else(3329409840348904))))))else(if i<93 then(if i<89 then(if i<87 then(if i<86 then(3407726347858350)else(3486953412420874))else(if i<88 then(3567091034036476)else(3648139212705156)))else(if i<91 then(if i<90 then(3730097948426914)else(3812967241201750))else(if i<92 then(3896747091029664)else(3981437497910656))))else(if i<97 then(if i<95 then(if i<94 then(4067038461844726)else(4153549982831874))else(if i<96 then(4240972060872100)else(4329304695965404)))else(if i<99 then(if i<98 then(4418547888111786)else(4508701637311246))else(if i<100 then(4599765943563784)else(if i<101 then(4691740806869400)else(4784626227228094)))))))else(if i<119 then(if i<110 then(if i<106 then(if i<104 then(if i<103 then(4878422204639866)else(4973128739104716))else(if i<105 then(5068745830622644)else(5165273479193650)))else(if i<108 then(if i<107 then(5262711684817734)else(5361060447494896))else(if i<109 then(5460319767225136)else(5560489644008454))))else(if i<114 then(if i<112 then(if i<111 then(5661570077844850)else(5763561068734324))else(if i<113 then(5866462616676876)else(5970274721672506)))else(if i<116 then(if i<115 then(6074997383721214)else(6180630602823000))else(if i<117 then(6287174378977864)else(if i<118 then(6394628712185806)else(6502993602446826))))))else(if i<127 then(if i<123 then(if i<121 then(if i<120 then(6612269049760924)else(6722455054128100))else(if i<122 then(6833551615548354)else(6945558734021686)))else(if i<125 then(if i<124 then(7058476409548096)else(7172304642127584))else(if i<126 then(7287043431760150)else(7402692778445794))))else(if i<131 then(if i<129 then(if i<128 then(7519252682184516)else(7636723142976316))else(if i<130 then(7755104160821194)else(7874395735719150)))else(if i<133 then(if i<132 then(7994597867670184)else(8115710556674296))else(if i<134 then(8237733802731486)else(if i<135 then(8360667605841754)else(8484511966005100)))))))))else(0)
+
+def zeroRow5 : ℕ → ℕ := fun i =>
+  if i<135 then(if i<67 then(if i<33 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(8590013235255)else(10239295356991))else(if i<3 then(10376970897572)else(15642750880868)))else(if i<6 then(if i<5 then(22076792246494)else(29679094994450))else(if i<7 then(38449659124736)else(48388484637352))))else(if i<12 then(if i<10 then(if i<9 then(59495571532298)else(71770919809574))else(if i<11 then(85214529469180)else(99826400511116)))else(if i<14 then(if i<13 then(115606532935382)else(132554926741978))else(if i<15 then(150671581930904)else(169956498502160)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(190409676455746)else(212031115791662))else(if i<19 then(234820816509908)else(258778778610484)))else(if i<22 then(if i<21 then(283905002093390)else(310199486958626))else(if i<23 then(337662233206192)else(366293240836088))))else(if i<28 then(if i<26 then(if i<25 then(396092509848314)else(427060040242870))else(if i<27 then(459195832019756)else(492499885178972)))else(if i<30 then(if i<29 then(526972199720518)else(562612775644394))else(if i<31 then(599421612950600)else(if i<32 then(637398711639136)else(676544071710002)))))))else(if i<50 then(if i<41 then(if i<37 then(if i<35 then(if i<34 then(716857693163198)else(758339575998724))else(if i<36 then(800989720216580)else(844808125816766)))else(if i<39 then(if i<38 then(889794792799282)else(935949721164128))else(if i<40 then(983272910911304)else(1031764362040810))))else(if i<45 then(if i<43 then(if i<42 then(1081424074552646)else(1132252048446812))else(if i<44 then(1184248283723308)else(1237412780382134)))else(if i<47 then(if i<46 then(1291745538423290)else(1347246557846776))else(if i<48 then(1403915838652592)else(if i<49 then(1461753380840738)else(1520759184411214))))))else(if i<58 then(if i<54 then(if i<52 then(if i<51 then(1580933249364020)else(1642275575699156))else(if i<53 then(1704786163416622)else(1768465012516418)))else(if i<56 then(if i<55 then(1833312122998544)else(1899327494863000))else(if i<57 then(1966511128109786)else(2034863022738902))))else(if i<62 then(if i<60 then(if i<59 then(2104383178750348)else(2175071596144124))else(if i<61 then(2246928274920230)else(2319953215078666)))else(if i<64 then(if i<63 then(2394146416619432)else(2469507879542528))else(if i<65 then(2546037603847954)else(if i<66 then(2623735589535710)else(2702601836605796))))))))else(if i<101 then(if i<84 then(if i<75 then(if i<71 then(if i<69 then(if i<68 then(2782636345058212)else(2863839114892958))else(if i<70 then(2946210146110034)else(3029749438709440)))else(if i<73 then(if i<72 then(3114456992691176)else(3200332808055242))else(if i<74 then(3287376884801638)else(3375589222930364))))else(if i<79 then(if i<77 then(if i<76 then(3464969822441420)else(3555518683334806))else(if i<78 then(3647235805610522)else(3740121189268568)))else(if i<81 then(if i<80 then(3834174834308944)else(3929396740731650))else(if i<82 then(4025786908536686)else(if i<83 then(4123345337724052)else(4222072028293748))))))else(if i<92 then(if i<88 then(if i<86 then(if i<85 then(4321966980245774)else(4423030193580130))else(if i<87 then(4525261668296816)else(4628661404395832)))else(if i<90 then(if i<89 then(4733229401877178)else(4838965660740854))else(if i<91 then(4945870180986860)else(5053942962615196))))else(if i<96 then(if i<94 then(if i<93 then(5163184005625862)else(5273593310018858))else(if i<95 then(5385170875794184)else(5497916702951840)))else(if i<98 then(if i<97 then(5611830791491826)else(5726913141414142))else(if i<99 then(5843163752718788)else(if i<100 then(5960582625405764)else(6079169759475070)))))))else(if i<118 then(if i<109 then(if i<105 then(if i<103 then(if i<102 then(6198925154926706)else(6319848811760672))else(if i<104 then(6441940729976968)else(6565200909575594)))else(if i<107 then(if i<106 then(6689629350556550)else(6815226052919836))else(if i<108 then(6941991016665452)else(7069924241793398))))else(if i<113 then(if i<111 then(if i<110 then(7199025728303674)else(7329295476196280))else(if i<112 then(7460733485471216)else(7593339756128482)))else(if i<115 then(if i<114 then(7727114288168078)else(7862057081590004))else(if i<116 then(7998168136394260)else(if i<117 then(8135447452580846)else(8273895030149762))))))else(if i<126 then(if i<122 then(if i<120 then(if i<119 then(8413510869101008)else(8554294969434584))else(if i<121 then(8696247331150490)else(8839367954248726)))else(if i<124 then(if i<123 then(8983656838729292)else(9129113984592188))else(if i<125 then(9275739391837414)else(9423533060464970))))else(if i<130 then(if i<128 then(if i<127 then(9572494990474856)else(9722625181867072))else(if i<129 then(9873923634641618)else(10026390348798494)))else(if i<132 then(if i<131 then(10180025324337700)else(10334828561259236))else(if i<133 then(10490800059563102)else(if i<134 then(10647939819249298)else(10806247840317824)))))))))else(0)
+
+def zeroRow6 : ℕ → ℕ := fun i =>
+  if i<134 then(if i<67 then(if i<33 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(14843539095630)else(17248741752920))else(if i<3 then(16287016422624)else(23425451561418)))else(if i<6 then(if i<5 then(31989852411794)else(41980218973752))else(if i<7 then(53396551247292)else(66238849232414))))else(if i<12 then(if i<10 then(if i<9 then(80507112929118)else(96201342337404))else(if i<11 then(113321537457272)else(131867698288722)))else(if i<14 then(if i<13 then(151839824831754)else(173237917086368))else(if i<15 then(196061975052564)else(220311998730342)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(245987988119702)else(273089943220644))else(if i<19 then(301617864033168)else(331571750557274)))else(if i<22 then(if i<21 then(362951602792962)else(395757420740232))else(if i<23 then(429989204399084)else(465646953769518))))else(if i<28 then(if i<26 then(if i<25 then(502730668851534)else(541240349645132))else(if i<27 then(581175996150312)else(622537608367074)))else(if i<30 then(if i<29 then(665325186295418)else(709538729935344))else(if i<31 then(755178239286852)else(if i<32 then(802243714349942)else(850735155124614)))))))else(if i<50 then(if i<41 then(if i<37 then(if i<35 then(if i<34 then(900652561610868)else(951995933808704))else(if i<36 then(1004765271718122)else(1058960575339122)))else(if i<39 then(if i<38 then(1114581844671704)else(1171629079715868))else(if i<40 then(1230102280471614)else(1290001446938942))))else(if i<45 then(if i<43 then(if i<42 then(1351326579117852)else(1414077677008344))else(if i<44 then(1478254740610418)else(1543857769924074)))else(if i<47 then(if i<46 then(1610886764949312)else(1679341725686132))else(if i<48 then(1749222652134534)else(if i<49 then(1820529544294518)else(1893262402166084))))))else(if i<58 then(if i<54 then(if i<52 then(if i<51 then(1967421225749232)else(2043006015043962))else(if i<53 then(2120016770050274)else(2198453490768168)))else(if i<56 then(if i<55 then(2278316177197644)else(2359604829338702))else(if i<57 then(2442319447191342)else(2526460030755564))))else(if i<62 then(if i<60 then(if i<59 then(2612026580031368)else(2699019095018754))else(if i<61 then(2787437575717722)else(2877282022128272)))else(if i<64 then(if i<63 then(2968552434250404)else(3061248812084118))else(if i<65 then(3155371155629414)else(if i<66 then(3250919464886292)else(3347893739854752))))))))else(if i<100 then(if i<83 then(if i<75 then(if i<71 then(if i<69 then(if i<68 then(3446293980534794)else(3546120186926418))else(if i<70 then(3647372359029624)else(3750050496844412)))else(if i<73 then(if i<72 then(3854154600370782)else(3959684669608734))else(if i<74 then(4066640704558268)else(4175022705219384))))else(if i<79 then(if i<77 then(if i<76 then(4284830671592082)else(4396064603676362))else(if i<78 then(4508724501472224)else(4622810364979668)))else(if i<81 then(if i<80 then(4738322194198694)else(4855259989129302))else(if i<82 then(4973623749771492)else(5093413476125264)))))else(if i<91 then(if i<87 then(if i<85 then(if i<84 then(5214629168190618)else(5337270825967554))else(if i<86 then(5461338449456072)else(5586832038656172)))else(if i<89 then(if i<88 then(5713751593567854)else(5842097114191118))else(if i<90 then(5971868600525964)else(6103066052572392))))else(if i<95 then(if i<93 then(if i<92 then(6235689470330402)else(6369738853799994))else(if i<94 then(6505214202981168)else(6642115517873924)))else(if i<97 then(if i<96 then(6780442798478262)else(6920196044794182))else(if i<98 then(7061375256821684)else(if i<99 then(7203980434560768)else(7348011578011434)))))))else(if i<117 then(if i<108 then(if i<104 then(if i<102 then(if i<101 then(7493468687173682)else(7640351762047512))else(if i<103 then(7788660802632924)else(7938395808929918)))else(if i<106 then(if i<105 then(8089556780938494)else(8242143718658652))else(if i<107 then(8396156622090392)else(8551595491233714))))else(if i<112 then(if i<110 then(if i<109 then(8708460326088618)else(8866751126655104))else(if i<111 then(9026467892933172)else(9187610624922822)))else(if i<114 then(if i<113 then(9350179322624054)else(9514173986036868))else(if i<115 then(9679594615161264)else(if i<116 then(9846441209997242)else(10014713770544802))))))else(if i<125 then(if i<121 then(if i<119 then(if i<118 then(10184412296803944)else(10355536788774668))else(if i<120 then(10528087246456974)else(10702063669850862)))else(if i<123 then(if i<122 then(10877466058956332)else(11054294413773384))else(if i<124 then(11232548734302018)else(11412229020542234))))else(if i<129 then(if i<127 then(if i<126 then(11593335272494032)else(11775867490157412))else(if i<128 then(11959825673532374)else(12145209822618918)))else(if i<131 then(if i<130 then(12332019937417044)else(12520256017926752))else(if i<132 then(12709918064148042)else(if i<133 then(12901006076080914)else(13093520053725368)))))))))else(0)
+
+def zeroRow7 : ℕ → ℕ := fun i =>
+  if i<133 then(if i<66 then(if i<33 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(23570986041449)else(26869549236341))else(if i<3 then(24069717103174)else(33338511726718)))else(if i<6 then(if i<5 then(44290976391096)else(56927111096308))else(if i<7 then(71246915842354)else(87250390629234))))else(if i<12 then(if i<10 then(if i<9 then(104937535456948)else(124308350325496))else(if i<11 then(145362835234878)else(168100990185094)))else(if i<14 then(if i<13 then(192522815176144)else(218628310208028))else(if i<15 then(246417475280746)else(275890310394298)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(307046815548684)else(339886990743904))else(if i<19 then(374410835979958)else(410618351256846)))else(if i<22 then(if i<21 then(448509536574568)else(488084391933124))else(if i<23 then(529342917332514)else(572285112772738))))else(if i<28 then(if i<26 then(if i<25 then(616910978253796)else(663220513775688))else(if i<27 then(711213719338414)else(760890594941974)))else(if i<30 then(if i<29 then(812251140586368)else(865295356271596))else(if i<31 then(920023241997658)else(if i<32 then(976434797764554)else(1034530023572284)))))))else(if i<49 then(if i<41 then(if i<37 then(if i<35 then(if i<34 then(1094308919420848)else(1155771485310246))else(if i<36 then(1218917721240478)else(1283747627211544)))else(if i<39 then(if i<38 then(1350261203223444)else(1418458449276178))else(if i<40 then(1488339365369746)else(1559903951504148))))else(if i<45 then(if i<43 then(if i<42 then(1633152207679384)else(1708084133895454))else(if i<44 then(1784699730152358)else(1862998996450096)))else(if i<47 then(if i<46 then(1942981932788668)else(2024648539168074))else(if i<48 then(2107998815588314)else(2193032762049388)))))else(if i<57 then(if i<53 then(if i<51 then(if i<50 then(2279750378551296)else(2368151665094038))else(if i<52 then(2458236621677614)else(2550005248302024)))else(if i<55 then(if i<54 then(2643457544967268)else(2738593511673346))else(if i<56 then(2835413148420258)else(2933916455208004))))else(if i<61 then(if i<59 then(if i<58 then(3034103432036584)else(3135974078905998))else(if i<60 then(3239528395816246)else(3344766382767328)))else(if i<63 then(if i<62 then(3451688039759244)else(3560293366791994))else(if i<64 then(3670582363865578)else(if i<65 then(3782555030979996)else(3896211368135248))))))))else(if i<99 then(if i<82 then(if i<74 then(if i<70 then(if i<68 then(if i<67 then(4011551375331334)else(4128575052568254))else(if i<69 then(4247282399846008)else(4367673417164596)))else(if i<72 then(if i<71 then(4489748104524018)else(4613506461924274))else(if i<73 then(4738948489365364)else(4866074186847288))))else(if i<78 then(if i<76 then(if i<75 then(4994883554370046)else(5125376591933638))else(if i<77 then(5257553299538064)else(5391413677183324)))else(if i<80 then(if i<79 then(5526957724869418)else(5664185442596346))else(if i<81 then(5803096830364108)else(5943691888172704)))))else(if i<90 then(if i<86 then(if i<84 then(if i<83 then(6085970616022134)else(6229933013912398))else(if i<85 then(6375579081843496)else(6522908819815428)))else(if i<88 then(if i<87 then(6671922227828194)else(6822619305881794))else(if i<89 then(6975000053976228)else(7129064472111496))))else(if i<94 then(if i<92 then(if i<91 then(7284812560287598)else(7442244318504534))else(if i<93 then(7601359746762304)else(7762158845060908)))else(if i<96 then(if i<95 then(7924641613400346)else(8088808051780618))else(if i<97 then(8254658160201724)else(if i<98 then(8422191938663664)else(8591409387166438)))))))else(if i<116 then(if i<107 then(if i<103 then(if i<101 then(if i<100 then(8762310505710046)else(8934895294294488))else(if i<102 then(9109163752919764)else(9285115881585874)))else(if i<105 then(if i<104 then(9462751680292818)else(9642071149040596))else(if i<106 then(9823074287829208)else(10005761096658654))))else(if i<111 then(if i<109 then(if i<108 then(10190131575528934)else(10376185724440048))else(if i<110 then(10563923543391996)else(10753345032384778)))else(if i<113 then(if i<112 then(10944450191418394)else(11137239020492844))else(if i<114 then(11331711519608128)else(if i<115 then(11527867688764246)else(11725707527961198))))))else(if i<124 then(if i<120 then(if i<118 then(if i<117 then(11925231037198984)else(12126438216477604))else(if i<119 then(12329329065797058)else(12533903585157346)))else(if i<122 then(if i<121 then(12740161774558468)else(12948103634000424))else(if i<123 then(13157729163483214)else(13369038363006838))))else(if i<128 then(if i<126 then(if i<125 then(13582031232571296)else(13796707772176588))else(if i<127 then(14013067981822714)else(14231111861509674)))else(if i<130 then(if i<129 then(14450839411237468)else(14672250631006096))else(if i<131 then(14895345520815558)else(if i<132 then(15120124080665854)else(15346586310556984)))))))))else(0)
+
+def zeroRow8 : ℕ → ℕ := fun i =>
+  if i<132 then(if i<66 then(if i<33 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(35184674078856)else(39514037813398))else(if i<3 then(33982777268474)else(45639635706020)))else(if i<6 then(if i<5 then(59237868513652)else(74777475691370))else(if i<7 then(92258457239174)else(111680813157064))))else(if i<12 then(if i<10 then(if i<9 then(133044543445040)else(156349648103102))else(if i<11 then(181596127131250)else(208783980529484)))else(if i<14 then(if i<13 then(237913208297804)else(268983810436210))else(if i<15 then(301995786944702)else(336949137823280)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(373843863071944)else(412679962690694))else(if i<19 then(453457436679530)else(496176285038452)))else(if i<22 then(if i<21 then(540836507767460)else(587438104866554))else(if i<23 then(635981076335734)else(686465422175000))))else(if i<28 then(if i<26 then(if i<25 then(738891142384352)else(793258236963790))else(if i<27 then(849566705913314)else(907816549232924)))else(if i<30 then(if i<29 then(968007766922620)else(1030140358982402))else(if i<31 then(1094214325412270)else(if i<32 then(1160229666212224)else(1228186381382264)))))))else(if i<49 then(if i<41 then(if i<37 then(if i<35 then(if i<34 then(1298084470922390)else(1369923934832602))else(if i<36 then(1443704773112900)else(1519426985763284)))else(if i<39 then(if i<38 then(1597090572783754)else(1676695534174310))else(if i<40 then(1758241869934952)else(1841729580065680))))else(if i<45 then(if i<43 then(if i<42 then(1927158664566494)else(2014529123437394))else(if i<44 then(2103840956678380)else(2195094164289452)))else(if i<47 then(if i<46 then(2288288746270610)else(2383424702621854))else(if i<48 then(2480502033343184)else(2579520738434600)))))else(if i<57 then(if i<53 then(if i<51 then(if i<50 then(2680480817896102)else(2783382271727690))else(if i<52 then(2888225099929364)else(2995009302501124)))else(if i<55 then(if i<54 then(3103734879442970)else(3214401830754902))else(if i<56 then(3327010156436920)else(3441559856489024))))else(if i<61 then(if i<59 then(if i<58 then(3558050930911214)else(3676483379703490))else(if i<60 then(3796857202865852)else(3919172400398300)))else(if i<63 then(if i<62 then(4043428972300834)else(4169626918573454))else(if i<64 then(4297766239216160)else(if i<65 then(4427846934228952)else(4559869003611830))))))))else(if i<99 then(if i<82 then(if i<74 then(if i<70 then(if i<68 then(if i<67 then(4693832447364794)else(4829737265487844))else(if i<69 then(4967583457980980)else(5107371024844202)))else(if i<72 then(if i<71 then(5249099966077510)else(5392770281680904))else(if i<73 then(5538381971654384)else(5685935035997950))))else(if i<78 then(if i<76 then(if i<75 then(5835429474711602)else(5986865287795340))else(if i<77 then(6140242475249164)else(6295561037073074)))else(if i<80 then(if i<79 then(6452820973267070)else(6612022283831152))else(if i<81 then(6773164968765320)else(6936249028069574)))))else(if i<90 then(if i<86 then(if i<84 then(if i<83 then(7101274461743914)else(7268241269788340))else(if i<85 then(7437149452202852)else(7607999008987450)))else(if i<88 then(if i<87 then(7780789940142134)else(7955522245666904))else(if i<89 then(8132195925561760)else(8310810979826702))))else(if i<94 then(if i<92 then(if i<91 then(8491367408461730)else(8673865211466844))else(if i<93 then(8858304388842044)else(9044684940587330)))else(if i<96 then(if i<95 then(9233006866702702)else(9423270167188160))else(if i<97 then(9615474842043704)else(if i<98 then(9809620891269334)else(10005708314865050)))))))else(if i<115 then(if i<107 then(if i<103 then(if i<101 then(if i<100 then(10203737112830852)else(10403707285166740))else(if i<102 then(10605618831872714)else(10809471752948774)))else(if i<105 then(if i<104 then(11015266048394920)else(11223001718211152))else(if i<106 then(11432678762397470)else(11644297180953874))))else(if i<111 then(if i<109 then(if i<108 then(11857856973880364)else(12073358141176940))else(if i<110 then(12290800682843602)else(12510184598880350)))else(if i<113 then(if i<112 then(12731509889287184)else(12954776554064104))else(if i<114 then(13179984593211110)else(13407134006728202)))))else(if i<123 then(if i<119 then(if i<117 then(if i<116 then(13636224794615380)else(13867256956872644))else(if i<118 then(14100230493499994)else(14335145404497430)))else(if i<121 then(if i<120 then(14572001689864952)else(14810799349602560))else(if i<122 then(15051538383710254)else(15294218792188034))))else(if i<127 then(if i<125 then(if i<124 then(15538840575035900)else(15785403732253852))else(if i<126 then(16033908263841890)else(16284354169800014)))else(if i<129 then(if i<128 then(16536741450128224)else(16791070104826520))else(if i<130 then(17047340133894902)else(if i<131 then(17305551537333370)else(17565704315141924)))))))))else(0)
+
+def zeroRow9 : ℕ → ℕ := fun i =>
+  if i<131 then(if i<65 then(if i<32 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(50096923213995)else(55594527490235))else(if i<3 then(46283901247776)else(60586527828576)))else(if i<6 then(if i<5 then(77088233108714)else(95789017088190))else(if i<7 then(116688879767004)else(139787821145156))))else(if i<12 then(if i<10 then(if i<9 then(165085841222646)else(192582939999474))else(if i<11 then(222279117475640)else(254174373651144)))else(if i<14 then(if i<13 then(288268708525986)else(324562122100166))else(if i<15 then(363054614373684)else(403746185346540)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(446636835018734)else(491726563390266))else(if i<19 then(539015370461136)else(588503256231344)))else(if i<22 then(if i<21 then(640190220700890)else(694076263869774))else(if i<23 then(750161385737996)else(808445586305556))))else(if i<28 then(if i<26 then(if i<25 then(868928865572454)else(931611223538690))else(if i<27 then(996492660204264)else(1063573175569176)))else(if i<30 then(if i<29 then(1132852769633426)else(1204331442397014))else(if i<31 then(1278009193859940)else(1353886024022204))))))else(if i<48 then(if i<40 then(if i<36 then(if i<34 then(if i<33 then(1431961932883806)else(1512236920444746))else(if i<35 then(1594710986705024)else(1679384131664640)))else(if i<38 then(if i<37 then(1766256355323594)else(1855327657681886))else(if i<39 then(1946598038739516)else(2040067498496484))))else(if i<44 then(if i<42 then(if i<41 then(2135736036952790)else(2233603654108434))else(if i<43 then(2333670349963416)else(2435936124517736)))else(if i<46 then(if i<45 then(2540400977771394)else(2647064909724390))else(if i<47 then(2755927920376724)else(2866990009728396)))))else(if i<56 then(if i<52 then(if i<50 then(if i<49 then(2980251177779406)else(3095711424529754))else(if i<51 then(3213370749979440)else(3333229154128464)))else(if i<54 then(if i<53 then(3455286636976826)else(3579543198524526))else(if i<55 then(3705998838771564)else(3834653557717940))))else(if i<60 then(if i<58 then(if i<57 then(3965507355363654)else(4098560231708706))else(if i<59 then(4233812186753096)else(4371263220496824)))else(if i<62 then(if i<61 then(4510913332939890)else(4652762524082294))else(if i<63 then(4796810793924036)else(if i<64 then(4943058142465116)else(5091504569705534))))))))else(if i<98 then(if i<81 then(if i<73 then(if i<69 then(if i<67 then(if i<66 then(5242150075645290)else(5394994660284384))else(if i<68 then(5550038323622816)else(5707281065660586)))else(if i<71 then(if i<70 then(5866722886397694)else(6028363785834140))else(if i<72 then(6192203763969924)else(6358242820805046))))else(if i<77 then(if i<75 then(if i<74 then(6526480956339506)else(6696918170573304))else(if i<76 then(6869554463506440)else(7044389835138914)))else(if i<79 then(if i<78 then(7221424285470726)else(7400657814501876))else(if i<80 then(7582090422232364)else(7765722108662190)))))else(if i<89 then(if i<85 then(if i<83 then(if i<82 then(7951552873791354)else(8139582717619856))else(if i<84 then(8329811640147696)else(8522239641374874)))else(if i<87 then(if i<86 then(8716866721301390)else(8913692879927244))else(if i<88 then(9112718117252436)else(9313942433276966))))else(if i<93 then(if i<91 then(if i<90 then(9517365828000834)else(9722988301424040))else(if i<92 then(9930809853546584)else(10140830484368466)))else(if i<95 then(if i<94 then(10353050193889686)else(10567468982110244))else(if i<96 then(10784086849030140)else(if i<97 then(11002903794649374)else(11223919818967946)))))))else(if i<114 then(if i<106 then(if i<102 then(if i<100 then(if i<99 then(11447134921985856)else(11672549103703104))else(if i<101 then(11900162364119690)else(12129974703235614)))else(if i<104 then(if i<103 then(12361986121050876)else(12596196617565476))else(if i<105 then(12832606192779414)else(13071214846692690))))else(if i<110 then(if i<108 then(if i<107 then(13312022579305304)else(13555029390617256))else(if i<109 then(13800235280628546)else(14047640249339174)))else(if i<112 then(if i<111 then(14297244296749140)else(14549047422858444))else(if i<113 then(14803049627667086)else(15059250911175066)))))else(if i<122 then(if i<118 then(if i<116 then(if i<115 then(15317651273382384)else(15578250714289040))else(if i<117 then(15841049233895034)else(16106046832200366)))else(if i<120 then(if i<119 then(16373243509205036)else(16642639264909044))else(if i<121 then(16914234099312390)else(17188028012415074))))else(if i<126 then(if i<124 then(if i<123 then(17464021004217096)else(17742213074718456))else(if i<125 then(18022604223919154)else(18305194451819190)))else(if i<128 then(if i<127 then(18589983758418564)else(18876972143717276))else(if i<129 then(19166159607715326)else(if i<130 then(19457546150412714)else(19751131771809440)))))))))else(0)
+
+def zeroRow10 : ℕ → ℕ := fun i =>
+  if i<130 then(if i<65 then(if i<32 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(68720053453010)else(75523338272996))else(if i<3 then(61230793370332)else(78436892423638)))else(if i<6 then(if i<5 then(98099774505534)else(120219439616020))else(if i<7 then(144795887755096)else(171829118922762))))else(if i<12 then(if i<10 then(if i<9 then(201319133119018)else(233265930343864))else(if i<11 then(267669510597300)else(304529873879326)))else(if i<14 then(if i<13 then(343847020189942)else(385620949529148))else(if i<15 then(429851661896944)else(476539157293330)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(525683435718306)else(577284497171872))else(if i<19 then(631342341654028)else(687856969164774)))else(if i<22 then(if i<21 then(746828379704110)else(808256573272036))else(if i<23 then(872141549868552)else(938483309493658))))else(if i<28 then(if i<26 then(if i<25 then(1007281852147354)else(1078537177829640))else(if i<27 then(1152249286540516)else(1228418178279982)))else(if i<30 then(if i<29 then(1307043853048038)else(1388126310844684))else(if i<31 then(1471665551669920)else(1557661575523746))))))else(if i<48 then(if i<40 then(if i<36 then(if i<34 then(if i<33 then(1646114382406162)else(1737023972317168))else(if i<35 then(1830390345256764)else(1926213501224950)))else(if i<38 then(if i<37 then(2024493440221726)else(2125230162247092))else(if i<39 then(2228423667301048)else(2334073955383594))))else(if i<44 then(if i<42 then(if i<41 then(2442181026494730)else(2552744880634456))else(if i<43 then(2665765517802772)else(2781242937999678)))else(if i<46 then(if i<45 then(2899177141225174)else(3019568127479260))else(if i<47 then(3142415896761936)else(3267720449073202)))))else(if i<56 then(if i<52 then(if i<50 then(if i<49 then(3395481784413058)else(3525699902781504))else(if i<51 then(3658374804178540)else(3793506488604166)))else(if i<54 then(if i<53 then(3931094956058382)else(4071140206541188))else(if i<55 then(4213642240052584)else(4358601056592570))))else(if i<60 then(if i<58 then(if i<57 then(4506016656161146)else(4655889038758312))else(if i<59 then(4808218204384068)else(4963004153038414)))else(if i<62 then(if i<61 then(5120246884721350)else(5279946399432876))else(if i<63 then(5442102697172992)else(if i<64 then(5606715777941698)else(5773785641738994))))))))else(if i<97 then(if i<81 then(if i<73 then(if i<69 then(if i<67 then(if i<66 then(5943312288564880)else(6115295718419356))else(if i<68 then(6289735931302422)else(6466632927214078)))else(if i<71 then(if i<70 then(6645986706154324)else(6827797268123160))else(if i<72 then(7012064613120586)else(7198788741146602))))else(if i<77 then(if i<75 then(if i<74 then(7387969652201208)else(7579607346284404))else(if i<76 then(7773701823396190)else(7970253083536566)))else(if i<79 then(if i<78 then(8169261126705532)else(8370725952903088))else(if i<80 then(8574647562129234)else(8781025954383970)))))else(if i<89 then(if i<85 then(if i<83 then(if i<82 then(8989861129667296)else(9201153087979212))else(if i<84 then(9414901829319718)else(9631107353688814)))else(if i<87 then(if i<86 then(9849769661086500)else(10070888751512776))else(if i<88 then(10294464624967642)else(10520497281451098))))else(if i<93 then(if i<91 then(if i<90 then(10748986720963144)else(10979932943503780))else(if i<92 then(11213335949073006)else(11449195737670822)))else(if i<95 then(if i<94 then(11687512309297228)else(11928285663952224))else(if i<96 then(12171515801635810)else(12417202722347986))))))else(if i<113 then(if i<105 then(if i<101 then(if i<99 then(if i<98 then(12665346426088752)else(12915946912858108))else(if i<100 then(13169004182656054)else(13424518235482590)))else(if i<103 then(if i<102 then(13682489071337716)else(13942916690221432))else(if i<104 then(14205801092133738)else(14471142277074634))))else(if i<109 then(if i<107 then(if i<106 then(14738940245044120)else(15009194996042196))else(if i<108 then(15281906530068862)else(15557074847124118)))else(if i<111 then(if i<110 then(15834699947207964)else(16114781830320400))else(if i<112 then(16397320496461426)else(16682315945631042)))))else(if i<121 then(if i<117 then(if i<115 then(if i<114 then(16969768177829248)else(17259677193056044))else(if i<116 then(17552042991311430)else(17846865572595406)))else(if i<119 then(if i<118 then(18144144936907972)else(18443881084249128))else(if i<120 then(18746074014618874)else(19050723728017210))))else(if i<125 then(if i<123 then(if i<122 then(19357830224444136)else(19667393503899652))else(if i<124 then(19979413566383758)else(20293890411896454)))else(if i<127 then(if i<126 then(20610824040437740)else(20930214452007616))else(if i<128 then(21252061646606082)else(if i<129 then(21576365624233138)else(21903126384888784)))))))))else(0)
+
+def zeroRow11 : ℕ → ℕ := fun i =>
+  if i<129 then(if i<64 then(if i<32 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(91466384802045)else(99712790167825))else(if i<3 then(79081157965394)else(99448433820458)))else(if i<6 then(if i<5 then(122530197033364)else(148326447604112))else(if i<7 then(176837185532702)else(208062410819134))))else(if i<12 then(if i<10 then(if i<9 then(242002123463408)else(278656323465524))else(if i<11 then(318025010825482)else(360108185543282)))else(if i<14 then(if i<13 then(404905847618924)else(452417997052408))else(if i<15 then(502644633843734)else(555585757992902)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(611241369499912)else(669611468364764))else(if i<19 then(730696054587458)else(794495128167994)))else(if i<22 then(if i<21 then(861008689106372)else(930236737402592))else(if i<23 then(1002179273056654)else(1076836296068558))))else(if i<28 then(if i<26 then(if i<25 then(1154207806438304)else(1234293804165892))else(if i<27 then(1317094289251322)else(1402609261694594)))else(if i<30 then(if i<29 then(1490838721495708)else(1581782668654664))else(if i<31 then(1675441103171462)else(1771814025046102))))))else(if i<48 then(if i<40 then(if i<36 then(if i<34 then(if i<33 then(1870901434278584)else(1972703330868908))else(if i<35 then(2077219714817074)else(2184450586123082)))else(if i<38 then(if i<37 then(2294395944786932)else(2407055790808624))else(if i<39 then(2522430124188158)else(2640518944925534))))else(if i<44 then(if i<42 then(if i<41 then(2761322253020752)else(2884840048473812))else(if i<43 then(3011072331284714)else(3140019101453458)))else(if i<46 then(if i<45 then(3271680358980044)else(3406056103864472))else(if i<47 then(3543146336106742)else(3682951055706854)))))else(if i<56 then(if i<52 then(if i<50 then(if i<49 then(3825470262664808)else(3970703956980604))else(if i<51 then(4118652138654242)else(4269314807685722)))else(if i<54 then(if i<53 then(4422691964075044)else(4578783607822208))else(if i<55 then(4737589738927214)else(4899110357390062))))else(if i<60 then(if i<58 then(if i<57 then(5063345463210752)else(5230295056389284))else(if i<59 then(5399959136925658)else(5572337704819874)))else(if i<62 then(if i<61 then(5747430760071932)else(5925238302681832))else(if i<63 then(6105760332649574)else(6288996849975158)))))))else(if i<96 then(if i<80 then(if i<72 then(if i<68 then(if i<66 then(if i<65 then(6474947854658584)else(6663613346699852))else(if i<67 then(6854993326098962)else(7049087792855914)))else(if i<70 then(if i<69 then(7245896746970708)else(7445420188443344))else(if i<71 then(7647658117273822)else(7852610533462142))))else(if i<76 then(if i<74 then(if i<73 then(8060277437008304)else(8270658827912308))else(if i<75 then(8483754706174154)else(8699565071793842)))else(if i<78 then(if i<77 then(8918089924771372)else(9139329265106744))else(if i<79 then(9363283092799958)else(9589951407851014)))))else(if i<88 then(if i<84 then(if i<82 then(if i<81 then(9819334210259912)else(10051431500026652))else(if i<83 then(10286243277151234)else(10523769541633658)))else(if i<86 then(if i<85 then(10764010293473924)else(11006965532672032))else(if i<87 then(11252635259227982)else(11501019473141774))))else(if i<92 then(if i<90 then(if i<89 then(11752118174413408)else(12005931363042884))else(if i<91 then(12262459039030202)else(12521701202375362)))else(if i<94 then(if i<93 then(12783657853078364)else(13048328991139208))else(if i<95 then(13315714616557894)else(13585814729334422))))))else(if i<112 then(if i<104 then(if i<100 then(if i<98 then(if i<97 then(13858629329468792)else(14134158416961004))else(if i<99 then(14412401991811058)else(14693360054018954)))else(if i<102 then(if i<101 then(14977032603584692)else(15263419640508272))else(if i<103 then(15552521164789694)else(15844337176428958))))else(if i<108 then(if i<106 then(if i<105 then(16138867675426064)else(16436112661781012))else(if i<107 then(16736072135493802)else(17038746096564434)))else(if i<110 then(if i<109 then(17344134544992908)else(17652237480779224))else(if i<111 then(17963054903923382)else(18276586814425382)))))else(if i<120 then(if i<116 then(if i<114 then(if i<113 then(18592833212285224)else(18911794097502908))else(if i<115 then(19233469470078434)else(19557859330011802)))else(if i<118 then(if i<117 then(19884963677303012)else(20214782511952064))else(if i<119 then(20547315833958958)else(20882563643323694))))else(if i<124 then(if i<122 then(if i<121 then(21220525940046272)else(21561202724126692))else(if i<123 then(21904593995564954)else(22250699754361058)))else(if i<126 then(if i<125 then(22599520000515004)else(22951054734026792))else(if i<127 then(23305303954896422)else(if i<128 then(23662267663123894)else(24021945858709208)))))))))else(0)
+
+def zeroRow12 : ℕ → ℕ := fun i =>
+  if i<128 then(if i<64 then(if i<32 then(if i<16 then(if i<8 then(if i<4 then(if i<2 then(if i<1 then(118748237267244)else(128575203180866))else(if i<3 then(100193831747864)else(123878856348288)))else(if i<6 then(if i<5 then(150637205021456)else(180367745381718))else(if i<7 then(213070477429074)else(248745401163524))))else(if i<12 then(if i<10 then(if i<9 then(287392516585068)else(329011823693706))else(if i<11 then(373603322489438)else(421167012972264)))else(if i<14 then(if i<13 then(471702895142184)else(525210968999198))else(if i<15 then(581691234543306)else(641143691774508)))))else(if i<24 then(if i<20 then(if i<18 then(if i<17 then(703568340692804)else(768965181298194))else(if i<19 then(837334213590678)else(908675437570256)))else(if i<22 then(if i<21 then(982988853236928)else(1060274460590694))else(if i<23 then(1140532259631554)else(1223762250359508))))else(if i<28 then(if i<26 then(if i<25 then(1309964432774556)else(1399138806876698))else(if i<27 then(1491285372665934)else(1586404130142264)))else(if i<30 then(if i<29 then(1684495079305688)else(1785558220156206))else(if i<31 then(1889593552693818)else(1996601076918524))))))else(if i<48 then(if i<40 then(if i<36 then(if i<34 then(if i<33 then(2106580792830324)else(2219532700429218))else(if i<35 then(2335456799715206)else(2454353090688288)))else(if i<38 then(if i<37 then(2576221573348464)else(2701062247695734))else(if i<39 then(2828875113730098)else(2959660171451556))))else(if i<44 then(if i<42 then(if i<41 then(3093417420860108)else(3230146861955754))else(if i<43 then(3369848494738494)else(3512522319208328)))else(if i<46 then(if i<45 then(3658168335365256)else(3806786543209278))else(if i<47 then(3958376942740394)else(4112939533958604)))))else(if i<56 then(if i<52 then(if i<50 then(if i<49 then(4270474316863908)else(4430981291456306))else(if i<51 then(4594460457735798)else(4760911815702384)))else(if i<54 then(if i<53 then(4930335365356064)else(5102731106696838))else(if i<55 then(5278099039724706)else(5456439164439668))))else(if i<60 then(if i<58 then(if i<57 then(5637751480841724)else(5822035988930874))else(if i<59 then(6009292688707118)else(6199521580170456)))else(if i<62 then(if i<61 then(6392722663320888)else(6588895938158414))else(if i<63 then(6788041404683034)else(6990159062894748)))))))else(if i<96 then(if i<80 then(if i<72 then(if i<68 then(if i<66 then(if i<65 then(7195248912793556)else(7403310954379458))else(if i<67 then(7614345187652454)else(7828351612612544)))else(if i<70 then(if i<69 then(8045330229259728)else(8265281037594006))else(if i<71 then(8488204037615378)else(8714099229323844))))else(if i<76 then(if i<74 then(if i<73 then(8942966612719404)else(9174806187802058))else(if i<75 then(9409617954571806)else(9647401913028648)))else(if i<78 then(if i<77 then(9888158063172584)else(10131886405003614))else(if i<79 then(10378586938521738)else(10628259663726956)))))else(if i<88 then(if i<84 then(if i<82 then(if i<81 then(10880904580619268)else(11136521689198674))else(if i<83 then(11395110989465174)else(11656672481418768)))else(if i<86 then(if i<85 then(11921206165059456)else(12188712040387238))else(if i<87 then(12459190107402114)else(12732640366104084))))else(if i<92 then(if i<90 then(if i<89 then(13009062816493148)else(13288457458569306))else(if i<91 then(13570824292332558)else(13856163317782904)))else(if i<94 then(if i<93 then(14144474534920344)else(14435757943744878))else(if i<95 then(14730013544256506)else(15027241336455228))))))else(if i<112 then(if i<104 then(if i<100 then(if i<98 then(if i<97 then(15327441320341044)else(15630613495913954))else(if i<99 then(15936757863173958)else(16245874422121056)))else(if i<102 then(if i<101 then(16557963172755248)else(16873024115076534))else(if i<103 then(17191057249084914)else(17512062574780388))))else(if i<108 then(if i<106 then(if i<105 then(17836040092162956)else(18162989801232618))else(if i<107 then(18492911701989374)else(18825805794433224)))else(if i<110 then(if i<109 then(19161672078564168)else(19500510554382206))else(if i<111 then(19842321221887338)else(20187104081079564)))))else(if i<120 then(if i<116 then(if i<114 then(if i<113 then(20534859131958884)else(20885586374525298))else(if i<115 then(21239285808778806)else(21595957434719408)))else(if i<118 then(if i<117 then(21955601252347104)else(22318217261661894))else(if i<119 then(22683805462663778)else(23052365855352756))))else(if i<124 then(if i<122 then(if i<121 then(23423898439728828)else(23798403215791994))else(if i<123 then(24175880183542254)else(24556329342979608)))else(if i<126 then(if i<125 then(24939750694104056)else(25326144236915598))else(if i<127 then(25715509971414234)else(26107847897599964))))))))else(0)
+
+def zeroRow13 : ℕ → ℕ := fun i =>
+  if i<127 then(if i<63 then(if i<31 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(150977930854751)else(if i<2 then(162522897318263)else(129056244760905)))else(if i<5 then(if i<4 then(151985864336380)else(182678502799062))else(if i<6 then(216601037278090)else(253753467773464))))else(if i<11 then(if i<9 then(if i<8 then(294135794285184)else(337748016813250))else(if i<10 then(384590135357662)else(434662149918420)))else(if i<13 then(if i<12 then(487964060495524)else(544495867088974))else(if i<14 then(604257569698770)else(667249168324912)))))else(if i<23 then(if i<19 then(if i<17 then(if i<16 then(733470662967400)else(802922053626234))else(if i<18 then(875603340301414)else(951514522992940)))else(if i<21 then(if i<20 then(1030655601700812)else(1113026576425030))else(if i<22 then(1198627447165594)else(1287458213922504))))else(if i<27 then(if i<25 then(if i<24 then(1379518876695760)else(1474809435485362))else(if i<26 then(1573329890291310)else(1675080241113604)))else(if i<29 then(if i<28 then(1780060487952244)else(1888270630807230))else(if i<30 then(1999710669678562)else(2114380604566240))))))else(if i<47 then(if i<39 then(if i<35 then(if i<33 then(if i<32 then(2232280435470264)else(2353410162390634))else(if i<34 then(2477769785327350)else(2605359304280412)))else(if i<37 then(if i<36 then(2736178719249820)else(2870228030235574))else(if i<38 then(3007507237237674)else(3148016340256120))))else(if i<43 then(if i<41 then(if i<40 then(3291755339290912)else(3438724234342050))else(if i<42 then(3588923025409534)else(3742351712493364)))else(if i<45 then(if i<44 then(3899010295593540)else(4058898774710062))else(if i<46 then(4222017149842930)else(4388365420992144)))))else(if i<55 then(if i<51 then(if i<49 then(if i<48 then(4557943588157704)else(4730751651339610))else(if i<50 then(4906789610537862)else(5086057465752460)))else(if i<53 then(if i<52 then(5268555216983404)else(5454282864230694))else(if i<54 then(5643240407494330)else(5835427846774312))))else(if i<59 then(if i<57 then(if i<56 then(6030845182070640)else(6229492413383314))else(if i<58 then(6431369540712334)else(6636476564057700)))else(if i<61 then(if i<60 then(6844813483419412)else(7056380298797470))else(if i<62 then(7271177010191874)else(7489203617602624)))))))else(if i<95 then(if i<79 then(if i<71 then(if i<67 then(if i<65 then(if i<64 then(7710460121029720)else(7934946520473162))else(if i<66 then(8162662815932950)else(8393609007409084)))else(if i<69 then(if i<68 then(8627785094901564)else(8865191078410390))else(if i<70 then(9105826957935562)else(9349692733477080))))else(if i<75 then(if i<73 then(if i<72 then(9596788405034944)else(9847113972609154))else(if i<74 then(10100669436199710)else(10357454795806612)))else(if i<77 then(if i<76 then(10617470051429860)else(10880715203069454))else(if i<78 then(11147190250725394)else(11416895194397680)))))else(if i<87 then(if i<83 then(if i<81 then(if i<80 then(11689830034086312)else(11965994769791290))else(if i<82 then(12245389401512614)else(12528013929250284)))else(if i<85 then(if i<84 then(12813868353004300)else(13102952672774662))else(if i<86 then(13395266888561370)else(13690811000364424))))else(if i<91 then(if i<89 then(if i<88 then(13989585008183824)else(14291588912019570))else(if i<90 then(14596822711871662)else(14905286407740100)))else(if i<93 then(if i<92 then(15216979999624884)else(15531903487526014))else(if i<94 then(15850056871443490)else(16171440151377312))))))else(if i<111 then(if i<103 then(if i<99 then(if i<97 then(if i<96 then(16496053327327480)else(16823896399293994))else(if i<98 then(17154969367276854)else(17489272231276060)))else(if i<101 then(if i<100 then(17826804991291612)else(18167567647323510))else(if i<102 then(18511560199371754)else(18858782647436344))))else(if i<107 then(if i<105 then(if i<104 then(19209234991517280)else(19562917231614562))else(if i<106 then(19919829367728190)else(20279971399858164)))else(if i<109 then(if i<108 then(20643343328004484)else(21009945152167150))else(if i<110 then(21379776872346162)else(21752838488541520)))))else(if i<119 then(if i<115 then(if i<113 then(if i<112 then(22129130000753224)else(22508651408981274))else(if i<114 then(22891402713225670)else(23277383913486412)))else(if i<117 then(if i<116 then(23666595009763500)else(24059036002056934))else(if i<118 then(24454706890366714)else(24853607674692840))))else(if i<123 then(if i<121 then(if i<120 then(25255738355035312)else(25661098931394130))else(if i<122 then(26069689403769294)else(26481509772160804)))else(if i<125 then(if i<124 then(26896560036568660)else(27314840196992862))else(if i<126 then(27736350253433410)else(28161090205890304))))))))else(0)
+
+def zeroRow14 : ℕ → ℕ := fun i =>
+  if i<126 then(if i<63 then(if i<31 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(188567785570710)else(if i<2 then(201968192586160)else(163003938898302)))else(if i<5 then(if i<4 then(184027162113986)else(218911794695434))else(if i<6 then(257284027622480)else(299143860895124))))else(if i<11 then(if i<9 then(if i<8 then(344491294513366)else(393326328477206))else(if i<10 then(445648962786644)else(501459197441680)))else(if i<13 then(if i<12 then(560757032442314)else(623542467788546))else(if i<14 then(689815503480376)else(759576139517804)))))else(if i<23 then(if i<19 then(if i<17 then(if i<16 then(832824375900830)else(909560212629454))else(if i<18 then(989783649703676)else(1073494687123496)))else(if i<21 then(if i<20 then(1160693324888914)else(1251379562999930))else(if i<22 then(1345553401456544)else(1443214840258756))))else(if i<27 then(if i<25 then(if i<24 then(1544363879406566)else(1649000518899974))else(if i<26 then(1757124758738980)else(1868736598923584)))else(if i<29 then(if i<28 then(1983836039453786)else(2102423080329586))else(if i<30 then(2224497721550984)else(2350059963117980))))))else(if i<47 then(if i<39 then(if i<35 then(if i<33 then(if i<32 then(2479109805030574)else(2611647247288766))else(if i<34 then(2747672289892556)else(2887184932841944)))else(if i<37 then(if i<36 then(3030185176136930)else(3176673019777514))else(if i<38 then(3326648463763696)else(3480111508095476))))else(if i<43 then(if i<41 then(if i<40 then(3637062152772854)else(3797500397795830))else(if i<42 then(3961426243164404)else(4128839688878576)))else(if i<45 then(if i<44 then(4299740734938346)else(4474129381343714))else(if i<46 then(4652005628094680)else(4833369475191244)))))else(if i<55 then(if i<51 then(if i<49 then(if i<48 then(5018220922633406)else(5206559970421166))else(if i<50 then(5398386618554524)else(5593700867033480)))else(if i<53 then(if i<52 then(5792502715858034)else(5994792165028186))else(if i<54 then(6200569214543936)else(6409833864405284))))else(if i<59 then(if i<57 then(if i<56 then(6622586114612230)else(6838825965164774))else(if i<58 then(7058553416062916)else(7281768467306656)))else(if i<61 then(if i<60 then(7508471118895994)else(7738661370830930))else(if i<62 then(7972339223111464)else(8209504675737596)))))))else(if i<94 then(if i<78 then(if i<70 then(if i<66 then(if i<64 then(8450157728709326)else(if i<65 then(8694298382026654)else(8941926635689580)))else(if i<68 then(if i<67 then(9193042489698104)else(9447645944052226))else(if i<69 then(9705736998751946)else(9967315653797264))))else(if i<74 then(if i<72 then(if i<71 then(10232381909188180)else(10500935764924694))else(if i<73 then(10772977221006806)else(11048506277434516)))else(if i<76 then(if i<75 then(11327522934207824)else(11610027191326730))else(if i<77 then(11896019048791234)else(12185498506601336)))))else(if i<86 then(if i<82 then(if i<80 then(if i<79 then(12478465564757036)else(12774920223258334))else(if i<81 then(13074862482105230)else(13378292341297724)))else(if i<84 then(if i<83 then(13685209800835816)else(13995614860719506))else(if i<85 then(14309507520948794)else(14626887781523680))))else(if i<90 then(if i<88 then(if i<87 then(14947755642444164)else(15272111103710246))else(if i<89 then(15599954165321926)else(15931284827279204)))else(if i<92 then(if i<91 then(16266103089582080)else(16604408952230554))else(if i<93 then(16946202415224626)else(17291483478564296))))))else(if i<110 then(if i<102 then(if i<98 then(if i<96 then(if i<95 then(17640252142249564)else(17992508406280430))else(if i<97 then(18348252270656894)else(18707483735378956)))else(if i<100 then(if i<99 then(19070202800446616)else(19436409465859874))else(if i<101 then(19806103731618730)else(20179285597723184))))else(if i<106 then(if i<104 then(if i<103 then(20555955064173236)else(20936112130968886))else(if i<105 then(21319756798110134)else(21706889065596980)))else(if i<108 then(if i<107 then(22097508933429424)else(22491616401607466))else(if i<109 then(22889211470131106)else(23290294139000344)))))else(if i<118 then(if i<114 then(if i<112 then(if i<111 then(23694864408215180)else(24102922277775614))else(if i<113 then(24514467747681646)else(24929500817933276)))else(if i<116 then(if i<115 then(25348021488530504)else(25770029759473330))else(if i<117 then(26195525630761754)else(26624509102395776))))else(if i<122 then(if i<120 then(if i<119 then(27056980174375396)else(27492938846700614))else(if i<121 then(27932385119371430)else(28375318992387844)))else(if i<124 then(if i<123 then(28821740465749856)else(29271649539457466))else(if i<125 then(29725046213510674)else(30181930487909480))))))))else(0)
+
+def zeroRow15 : ℕ → ℕ := fun i =>
+  if i<125 then(if i<62 then(if i<31 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(231930121421265)else(if i<2 then(247323408990701)else(202449234166199)))else(if i<5 then(if i<4 then(220260454010358)else(259594785039824))else(if i<6 then(302674420744140)else(349499361123306))))else(if i<11 then(if i<9 then(if i<8 then(400069606177322)else(454385155906188))else(if i<10 then(512446010309904)else(574252169388470)))else(if i<13 then(if i<12 then(639803633141886)else(709100401570152))else(if i<14 then(782142474673268)else(858929852451234)))))else(if i<23 then(if i<19 then(if i<17 then(if i<16 then(939462534904050)else(1023740522031716))else(if i<18 then(1111763813834232)else(1203532410311598)))else(if i<21 then(if i<20 then(1299046311463814)else(1398305517290880))else(if i<22 then(1501310027792796)else(1608059842969562))))else(if i<27 then(if i<25 then(if i<24 then(1718554962821178)else(1832795387347644))else(if i<26 then(1950781116548960)else(2072512150425126)))else(if i<29 then(if i<28 then(2197988488976142)else(2327210132202008))else(if i<30 then(2460177080102724)else(2596889332678290))))))else(if i<46 then(if i<38 then(if i<34 then(if i<32 then(2737346889928706)else(if i<33 then(2881549751853972)else(3029497918454088)))else(if i<36 then(if i<35 then(3181191389729054)else(3336630165678870))else(if i<37 then(3495814246303536)else(3658743631603052))))else(if i<42 then(if i<40 then(if i<39 then(3825418321577418)else(3995838316226634))else(if i<41 then(4170003615550700)else(4347914219549616)))else(if i<44 then(if i<43 then(4529570128223382)else(4714971341571998))else(if i<45 then(4904117859595464)else(5097009682293780)))))else(if i<54 then(if i<50 then(if i<48 then(if i<47 then(5293646809666946)else(5494029241714962))else(if i<49 then(5698156978437828)else(5906030019835544)))else(if i<52 then(if i<51 then(6117648365908110)else(6333012016655526))else(if i<53 then(6552120972077792)else(6774975232174908))))else(if i<58 then(if i<56 then(if i<55 then(7001574796946874)else(7231919666393690))else(if i<57 then(7466009840515356)else(7703845319311872)))else(if i<60 then(if i<59 then(7945426102783238)else(8190752190929454))else(if i<61 then(8439823583750520)else(8692640281246436)))))))else(if i<93 then(if i<77 then(if i<69 then(if i<65 then(if i<63 then(8949202283417202)else(if i<64 then(9209509590262818)else(9473562201783284)))else(if i<67 then(if i<66 then(9741360117978600)else(10012903338848766))else(if i<68 then(10288191864393782)else(10567225694613648))))else(if i<73 then(if i<71 then(if i<70 then(10850004829508364)else(11136529269077930))else(if i<72 then(11426799013322346)else(11720814062241612)))else(if i<75 then(if i<74 then(12018574415835728)else(12320080074104694))else(if i<76 then(12625331037048510)else(12934327304667176)))))else(if i<85 then(if i<81 then(if i<79 then(if i<78 then(13247068876960692)else(13563555753929058))else(if i<80 then(13883787935572274)else(14207765421890340)))else(if i<83 then(if i<82 then(14535488212883256)else(14866956308551022))else(if i<84 then(15202169708893638)else(15541128413911104))))else(if i<89 then(if i<87 then(if i<86 then(15883832423603420)else(16230281737970586))else(if i<88 then(16580476357012602)else(16934416280729468)))else(if i<91 then(if i<90 then(17292101509121184)else(17653532042187750))else(if i<92 then(18018707879929166)else(18387629022345432))))))else(if i<109 then(if i<101 then(if i<97 then(if i<95 then(if i<94 then(18760295469436548)else(19136707221202514))else(if i<96 then(19516864277643330)else(19900766638758996)))else(if i<99 then(if i<98 then(20288414304549512)else(20679807275014878))else(if i<100 then(21074945550155094)else(21473829129970160))))else(if i<105 then(if i<103 then(if i<102 then(21876458014460076)else(22282832203624842))else(if i<104 then(22692951697464458)else(23106816495978924)))else(if i<107 then(if i<106 then(23524426599168240)else(23945782007032406))else(if i<108 then(24370882719571422)else(24799728736785288)))))else(if i<117 then(if i<113 then(if i<111 then(if i<110 then(25232320058674004)else(25668656685237570))else(if i<112 then(26108738616475986)else(26552565852389252)))else(if i<115 then(if i<114 then(27000138392977368)else(27451456238240334))else(if i<116 then(27906519388178150)else(28365327842790816))))else(if i<121 then(if i<119 then(if i<118 then(28827881602078332)else(29294180666040698))else(if i<120 then(29764225034677914)else(30238014707989980)))else(if i<123 then(if i<122 then(30715549685976896)else(31196829968638662))else(if i<124 then(31681855555975278)else(32170626447986744))))))))else(0)
+
+def zeroRow16 : ℕ → ℕ := fun i =>
+  if i<124 then(if i<62 then(if i<31 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(281477258412560)else(if i<2 then(299000866538030)else(247804450570740)))else(if i<5 then(if i<4 then(260943444354748)else(304985178161484))else(if i<6 then(353029920972322)else(405077672787262))))else(if i<11 then(if i<9 then(if i<8 then(461128433606304)else(521182203429448))else(if i<10 then(585238982256694)else(653298770088042)))else(if i<13 then(if i<12 then(725361566923492)else(801427372763044))else(if i<14 then(881496187606698)else(965568011454454)))))else(if i<23 then(if i<19 then(if i<17 then(if i<16 then(1053642844306312)else(1145720686162272))else(if i<18 then(1241801537022334)else(1341885396886498)))else(if i<21 then(if i<20 then(1445972265754764)else(1554062143627132))else(if i<22 then(1666155030503602)else(1782250926384174))))else(if i<27 then(if i<25 then(if i<24 then(1902349831268848)else(2026451745157624))else(if i<26 then(2154556668050502)else(2286664599947482)))else(if i<29 then(if i<28 then(2422775540848564)else(2562889490753748))else(if i<30 then(2707006449663034)else(2855126417576422))))))else(if i<46 then(if i<38 then(if i<34 then(if i<32 then(3007249394493912)else(if i<33 then(3163375380415504)else(3323504375341198)))else(if i<36 then(if i<35 then(3487636379270994)else(3655771392204892))else(if i<37 then(3827909414142892)else(4004050445084994))))else(if i<42 then(if i<40 then(if i<39 then(4184194485031198)else(4368341533981504))else(if i<41 then(4556491591935912)else(4748644658894422)))else(if i<44 then(if i<43 then(4944800734857034)else(5144959819823748))else(if i<45 then(5349121913794564)else(5557287016769482)))))else(if i<54 then(if i<50 then(if i<48 then(if i<47 then(5769455128748502)else(5985626249731624))else(if i<49 then(6205800379718848)else(6429977518710174)))else(if i<52 then(if i<51 then(6658157666705602)else(6890340823705132))else(if i<53 then(7126526989708764)else(7366716164716498))))else(if i<58 then(if i<56 then(if i<55 then(7610908348728334)else(7859103541744272))else(if i<57 then(8111301743764312)else(8367502954788454)))else(if i<60 then(if i<59 then(8627707174816698)else(8891914403849044))else(if i<61 then(9160124641885492)else(9432337888926042)))))))else(if i<93 then(if i<77 then(if i<69 then(if i<65 then(if i<63 then(9708554144970694)else(if i<64 then(9988773410019448)else(10272995684072304)))else(if i<67 then(if i<66 then(10561220967129262)else(10853449259190322))else(if i<68 then(11149680560255484)else(11449914870324748))))else(if i<73 then(if i<71 then(if i<70 then(11754152189398114)else(12062392517475582))else(if i<72 then(12374635854557152)else(12690882200642824)))else(if i<75 then(if i<74 then(13011131555732598)else(13335383919826474))else(if i<76 then(13663639292924452)else(13995897675026532)))))else(if i<85 then(if i<81 then(if i<79 then(if i<78 then(14332159066132714)else(14672423466242998))else(if i<80 then(15016690875357384)else(15364961293475872)))else(if i<83 then(if i<82 then(15717234720598462)else(16073511156725154))else(if i<84 then(16433790601855948)else(16798073055990844))))else(if i<89 then(if i<87 then(if i<86 then(17166358519129842)else(17538646991272942))else(if i<88 then(17914938472420144)else(18295232962571448)))else(if i<91 then(if i<90 then(18679530461726854)else(19067830969886362))else(if i<92 then(19460134487049972)else(19856441013217684))))))else(if i<108 then(if i<100 then(if i<96 then(if i<94 then(20256750548389498)else(if i<95 then(20661063092565414)else(21069378645745432)))else(if i<98 then(if i<97 then(21481697207929552)else(21898018779117774))else(if i<99 then(22318343359310098)else(22742670948506524))))else(if i<104 then(if i<102 then(if i<101 then(23171001546707052)else(23603335153911682))else(if i<103 then(24039671770120414)else(24480011395333248)))else(if i<106 then(if i<105 then(24924354029550184)else(25372699672771222))else(if i<107 then(25825048324996362)else(26281399986225604)))))else(if i<116 then(if i<112 then(if i<110 then(if i<109 then(26741754656458948)else(27206112335696394))else(if i<111 then(27674473023937942)else(28146836721183592)))else(if i<114 then(if i<113 then(28623203427433344)else(29103573142687198))else(if i<115 then(29587945866945154)else(30076321600207212))))else(if i<120 then(if i<118 then(if i<117 then(30568700342473372)else(31065082093743634))else(if i<119 then(31565466854017998)else(32069854623296464)))else(if i<122 then(if i<121 then(32578245401579032)else(33090639188865702))else(if i<123 then(33607035985156474)else(34127435790451348))))))))else(0)
+
+def zeroRow17 : ℕ → ℕ := fun i =>
+  if i<123 then(if i<61 then(if i<30 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(337621516550739)else(if i<2 then(357412885234291)else(299481908118069)))else(if i<5 then(if i<4 then(306333837476408)else(355340678389666))else(if i<6 then(408608232636278)else(466136500216244))))else(if i<11 then(if i<9 then(if i<8 then(527925481129564)else(593975175376238))else(if i<10 then(664285582956266)else(738856703869648)))else(if i<13 then(if i<12 then(817688538116384)else(900781085696474))else(if i<14 then(988134346609918)else(1079748320856716)))))else(if i<22 then(if i<18 then(if i<16 then(1175623008436868)else(if i<17 then(1275758409350374)else(1380154523597234)))else(if i<20 then(if i<19 then(1488811351177448)else(1601728892091016))else(if i<21 then(1718907146337938)else(1840346113918214))))else(if i<26 then(if i<24 then(if i<23 then(1966045794831844)else(2096006189078828))else(if i<25 then(2230227296659166)else(2368709117572858)))else(if i<28 then(if i<27 then(2511451651819904)else(2658454899400304))else(if i<29 then(2809718860314058)else(2965243534561166))))))else(if i<45 then(if i<37 then(if i<33 then(if i<31 then(3125028922141628)else(if i<32 then(3289075023055444)else(3457381837302614)))else(if i<35 then(if i<34 then(3629949364883138)else(3806777605797016))else(if i<36 then(3987866560044248)else(4173216227624834))))else(if i<41 then(if i<39 then(if i<38 then(4362826608538774)else(4556697702786068))else(if i<40 then(4754829510366716)else(4957222031280718)))else(if i<43 then(if i<42 then(5163875265528074)else(5374789213108784))else(if i<44 then(5589963874022848)else(5809399248270266)))))else(if i<53 then(if i<49 then(if i<47 then(if i<46 then(6033095335851038)else(6261052136765164))else(if i<48 then(6493269651012644)else(6729747878593478)))else(if i<51 then(if i<50 then(6970486819507666)else(7215486473755208))else(if i<52 then(7464746841336104)else(7718267922250354))))else(if i<57 then(if i<55 then(if i<54 then(7976049716497958)else(8238092224078916))else(if i<56 then(8504395444993228)else(8774959379240894)))else(if i<59 then(if i<58 then(9049784026821914)else(9328869387736288))else(if i<60 then(9612215461984016)else(9899822249565098)))))))else(if i<92 then(if i<76 then(if i<68 then(if i<64 then(if i<62 then(10191689750479534)else(if i<63 then(10487817964727324)else(10788206892308468)))else(if i<66 then(if i<65 then(11092856533222966)else(11401766887470818))else(if i<67 then(11714937955052024)else(12032369735966584))))else(if i<72 then(if i<70 then(if i<69 then(12354062230214498)else(12680015437795766))else(if i<71 then(13010229358710388)else(13344703992958364)))else(if i<74 then(if i<73 then(13683439340539694)else(14026435401454378))else(if i<75 then(14373692175702416)else(14725209663283808)))))else(if i<84 then(if i<80 then(if i<78 then(if i<77 then(15080987864198554)else(15441026778446654))else(if i<79 then(15805326406028108)else(16173886746942916)))else(if i<82 then(if i<81 then(16546707801191078)else(16923789568772594))else(if i<83 then(17305132049687464)else(17690735243935688))))else(if i<88 then(if i<86 then(if i<85 then(18080599151517266)else(18474723772432198))else(if i<87 then(18873109106680484)else(19275755154262124)))else(if i<90 then(if i<89 then(19682661915177118)else(20093829389425466))else(if i<91 then(20509257577007168)else(20928946477922224))))))else(if i<107 then(if i<99 then(if i<95 then(if i<93 then(21352896092170634)else(if i<94 then(21781106419752398)else(22213577460667516)))else(if i<97 then(if i<96 then(22650309214915988)else(23091301682497814))else(if i<98 then(23536554863412994)else(23986068757661528))))else(if i<103 then(if i<101 then(if i<100 then(24439843365243416)else(24897878686158658))else(if i<102 then(25360174720407254)else(25826731467989204)))else(if i<105 then(if i<104 then(26297548928904508)else(26772627103153166))else(if i<106 then(27251965990735178)else(27735565591650544)))))else(if i<115 then(if i<111 then(if i<109 then(if i<108 then(28223425905899264)else(28715546933481338))else(if i<110 then(29211928674396766)else(29712571128645548)))else(if i<113 then(if i<112 then(30217474296227684)else(30726638177143174))else(if i<114 then(31240062771392018)else(31757748078974216))))else(if i<119 then(if i<117 then(if i<116 then(32279694099889768)else(32805900834138674))else(if i<118 then(33336368281720934)else(33871096442636548)))else(if i<121 then(if i<120 then(34410085316885516)else(34953334904467838))else(if i<122 then(35500845205383514)else(36052616219632544))))))))else(0)
+
+def zeroRow18 : ℕ → ℕ := fun i =>
+  if i<122 then(if i<61 then(if i<30 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(400775215841946)else(if i<2 then(422971785085628)else(357893926814330)))else(if i<5 then(if i<4 then(358100087341692)else(410918990053622))else(if i<6 then(469667060065260)else(532933547739504))))else(if i<11 then(if i<9 then(if i<8 then(600718453076354)else(673021776075810))else(if i<10 then(749843516737872)else(831183675062540)))else(if i<13 then(if i<12 then(917042251049814)else(1007419244699694))else(if i<14 then(1102314656012180)else(1201728484987272)))))else(if i<22 then(if i<18 then(if i<16 then(1305660731624970)else(if i<17 then(1414111395925274)else(1527080477888184)))else(if i<20 then(if i<19 then(1644567977513700)else(1766573894801822))else(if i<21 then(1893098229752550)else(2024140982365884))))else(if i<26 then(if i<24 then(if i<23 then(2159702152641824)else(2299781740580370))else(if i<25 then(2444379746181522)else(2593496169445280)))else(if i<28 then(if i<27 then(2747131010371644)else(2905284268960614))else(if i<29 then(3067955945212190)else(3235146039126372))))))else(if i<45 then(if i<37 then(if i<33 then(if i<31 then(3406854550703160)else(if i<32 then(3583081479942554)else(3763826826844554)))else(if i<35 then(if i<34 then(3949090591409160)else(4138872773636372))else(if i<36 then(4333173373526190)else(4531992391078614))))else(if i<41 then(if i<39 then(if i<38 then(4735329826293644)else(4943185679171280))else(if i<40 then(5155559949711522)else(5372452637914370)))else(if i<43 then(if i<42 then(5593863743779824)else(5819793267307884))else(if i<44 then(6050241208498550)else(6285207567351822)))))else(if i<53 then(if i<49 then(if i<47 then(if i<46 then(6524692343867700)else(6768695538046184))else(if i<48 then(7017217149887274)else(7270257179390970)))else(if i<51 then(if i<50 then(7527815626557272)else(7789892491386180))else(if i<52 then(8056487773877694)else(8327601474031814))))else(if i<57 then(if i<55 then(if i<54 then(8603233591848540)else(8883384127327872))else(if i<56 then(9168053080469810)else(9457240451274354)))else(if i<59 then(if i<58 then(9750946239741504)else(10049170445871260))else(if i<60 then(10351913069663622)else(10659174111118590)))))))else(if i<91 then(if i<76 then(if i<68 then(if i<64 then(if i<62 then(10970953570236164)else(if i<63 then(11287251447016344)else(11608067741459130)))else(if i<66 then(if i<65 then(11933402453564522)else(12263255583332520))else(if i<67 then(12597627130763124)else(12936517095856334))))else(if i<72 then(if i<70 then(if i<69 then(13279925478612150)else(13627852279030572))else(if i<71 then(13980297497111600)else(14337261132855234)))else(if i<74 then(if i<73 then(14698743186261474)else(15064743657330320))else(if i<75 then(15435262546061772)else(15810299852455830)))))else(if i<83 then(if i<79 then(if i<77 then(16189855576512494)else(if i<78 then(16573929718231764)else(16962522277613640)))else(if i<81 then(if i<80 then(17355633254658122)else(17753262649365210))else(if i<82 then(18155410461734904)else(18562076691767204))))else(if i<87 then(if i<85 then(if i<84 then(18973261339462110)else(19388964404819622))else(if i<86 then(19809185887839740)else(20233925788522464)))else(if i<89 then(if i<88 then(20663184106867794)else(21096960842875730))else(if i<90 then(21535255996546272)else(21978069567879420))))))else(if i<106 then(if i<98 then(if i<94 then(if i<92 then(22425401556875174)else(if i<93 then(22877251963533534)else(23333620787854500)))else(if i<96 then(if i<95 then(23794508029838072)else(24259913689484250))else(if i<97 then(24729837766793034)else(25204280261764424))))else(if i<102 then(if i<100 then(if i<99 then(25683241174398420)else(26166720504695022))else(if i<101 then(26654718252654230)else(27147234418276044)))else(if i<104 then(if i<103 then(27644269001560464)else(28145822002507490))else(if i<105 then(28651893421117122)else(29162483257389360)))))else(if i<114 then(if i<110 then(if i<108 then(if i<107 then(29677591511324204)else(30197218182921654))else(if i<109 then(30721363272181710)else(31250026779104372)))else(if i<112 then(if i<111 then(31783208703689640)else(32320909045937514))else(if i<113 then(32863127805847994)else(33409864983421080))))else(if i<118 then(if i<116 then(if i<115 then(33961120578656772)else(34516894591555070))else(if i<117 then(35077187022115974)else(35641997870339484)))else(if i<120 then(if i<119 then(36211327136225600)else(36785174819774322))else(if i<121 then(37363540920985650)else(37946425439859584))))))))else(0)
+
+def zeroRow19 : ℕ → ℕ := fun i =>
+  if i<121 then(if i<60 then(if i<30 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(471350676292325)else(if i<2 then(496089886098185)else(423452826665667)))else(if i<5 then(if i<4 then(423658987193029)else(471977817482604))else(if i<6 then(536464107588520)else(605726519686294))))else(if i<11 then(if i<9 then(if i<8 then(679765053775926)else(758579709857416))else(if i<10 then(842170487930764)else(930537387995970)))else(if i<13 then(if i<12 then(1023680410053034)else(1121599554101956))else(if i<14 then(1224294820142736)else(1331766208175374)))))else(if i<22 then(if i<18 then(if i<16 then(1444013718199870)else(if i<17 then(1561037350216224)else(1682837104224436)))else(if i<20 then(if i<19 then(1809412980224506)else(1940764978216434))else(if i<21 then(2076893098200220)else(2217797340175864))))else(if i<26 then(if i<24 then(if i<23 then(2363477704143366)else(2513934190102726))else(if i<25 then(2669166798053944)else(2829175527997020)))else(if i<28 then(if i<27 then(2993960379931954)else(3163521353858746))else(if i<29 then(3337858449777396)else(3516971667687904))))))else(if i<45 then(if i<37 then(if i<33 then(if i<31 then(3700861007590270)else(if i<32 then(3889526469484494)else(4082968053370576)))else(if i<35 then(if i<34 then(4281185759248516)else(4484179587118314))else(if i<36 then(4691949536979970)else(4904495608833484))))else(if i<41 then(if i<39 then(if i<38 then(5121817802678856)else(5343916118516086))else(if i<40 then(5570790556345174)else(5802441116166120)))else(if i<43 then(if i<42 then(6038867797978924)else(6280070601783586))else(if i<44 then(6526049527580106)else(6776804575368484)))))else(if i<52 then(if i<48 then(if i<46 then(7032335745148720)else(if i<47 then(7292643036920814)else(7557726450684766)))else(if i<50 then(if i<49 then(7827585986440576)else(8102221644188244))else(if i<51 then(8381633423927770)else(8665821325659154))))else(if i<56 then(if i<54 then(if i<53 then(8954785349382396)else(9248525495097496))else(if i<55 then(9547041762804454)else(9850334152503270)))else(if i<58 then(if i<57 then(10158402664193944)else(10471247297876476))else(if i<59 then(10788868053550866)else(11111264931217114)))))))else(if i<90 then(if i<75 then(if i<67 then(if i<63 then(if i<61 then(11438437930875220)else(if i<62 then(11770387052525184)else(12107112296167006)))else(if i<65 then(if i<64 then(12448613661800686)else(12794891149426224))else(if i<66 then(13145944759043620)else(13501774490652874))))else(if i<71 then(if i<69 then(if i<68 then(13862380344253986)else(14227762319846956))else(if i<70 then(14597920417431784)else(14972854637008470)))else(if i<73 then(if i<72 then(15352564978577014)else(15737051442137416))else(if i<74 then(16126314027689676)else(16520352735233794)))))else(if i<82 then(if i<78 then(if i<76 then(16919167564769770)else(if i<77 then(17322758516297604)else(17731125589817296)))else(if i<80 then(if i<79 then(18144268785328846)else(18562188102832254))else(if i<81 then(18984883542327520)else(19412355103814644))))else(if i<86 then(if i<84 then(if i<83 then(19844602787293626)else(20281626592764466))else(if i<85 then(20723426520227164)else(21170002569681720)))else(if i<88 then(if i<87 then(21621354741128134)else(22077483034566406))else(if i<89 then(22538387449996536)else(23004067987418524))))))else(if i<105 then(if i<97 then(if i<93 then(if i<91 then(23474524646832370)else(if i<92 then(23949757428238074)else(24429766331635636)))else(if i<95 then(if i<94 then(24914551357025056)else(25404112504406334))else(if i<96 then(25898449773779470)else(26397563165144464))))else(if i<101 then(if i<99 then(if i<98 then(26901452678501316)else(27410118313850026))else(if i<100 then(27923560071190594)else(28441777950523020)))else(if i<103 then(if i<102 then(28964771951847304)else(29492542075163446))else(if i<104 then(30025088320471446)else(30562410687771304)))))else(if i<113 then(if i<109 then(if i<107 then(if i<106 then(31104509177063020)else(31651383788346594))else(if i<108 then(32203034521622026)else(32759461376889316)))else(if i<111 then(if i<110 then(33320664354148464)else(33886643453399470))else(if i<112 then(34457398674642334)else(35032930017877056))))else(if i<117 then(if i<115 then(if i<114 then(35613237483103636)else(36198321070322074))else(if i<116 then(36788180779532370)else(37382816610734524)))else(if i<119 then(if i<118 then(37982228563928536)else(38586416639114406))else(if i<120 then(39195380836292134)else(39809121155461720))))))))else(0)
+
+def zeroRow20 : ℕ → ℕ := fun i =>
+  if i<120 then(if i<60 then(if i<30 then(if i<15 then(if i<7 then(if i<3 then(if i<1 then(549760217908020)else(if i<2 then(577179508278106)else(496570927678224)))else(if i<5 then(if i<4 then(496777088205586)else(538774865005864))else(if i<6 then(609257079535310)else(684773120385866))))else(if i<11 then(if i<9 then(if i<8 then(765322987557532)else(850906681050308))else(if i<10 then(941524200864194)else(1037175546999190)))else(if i<13 then(if i<12 then(1137860719455296)else(1243579718232512))else(if i<14 then(1354332543330838)else(1470119194750274)))))else(if i<22 then(if i<18 then(if i<16 then(1590939672490820)else(if i<17 then(1716793976552476)else(1847682106935242)))else(if i<20 then(if i<19 then(1983604063639118)else(2124559846664104))else(if i<21 then(2270549456010200)else(2421572891677406))))else(if i<26 then(if i<24 then(if i<23 then(2577630153665722)else(2738721241975148))else(if i<25 then(2904846156605684)else(3076004897557330)))else(if i<28 then(if i<27 then(3252197464830086)else(3433423858423952))else(if i<29 then(3619684078338928)else(3810978124575014))))))else(if i<45 then(if i<37 then(if i<33 then(if i<31 then(4007305997132210)else(if i<32 then(4208667696010516)else(4415063221209932)))else(if i<35 then(if i<34 then(4626492572730458)else(4842955750572094))else(if i<36 then(5064452754734840)else(5290983585218696))))else(if i<41 then(if i<39 then(if i<38 then(5522548242023662)else(5759146725149738))else(if i<40 then(6000779034596924)else(6247445170365220)))else(if i<43 then(if i<42 then(6499145132454626)else(6755878920865142))else(if i<44 then(7017646535596768)else(7284447976649504)))))else(if i<52 then(if i<48 then(if i<46 then(7556283244023350)else(if i<47 then(7833152337718306)else(8115055257734372)))else(if i<50 then(if i<49 then(8401992004071548)else(8693962576729834))else(if i<51 then(8990966975709230)else(9293005201009736))))else(if i<56 then(if i<54 then(if i<53 then(9600077252631352)else(9912183130574078))else(if i<55 then(10229322834837914)else(10551496365422860)))else(if i<58 then(if i<57 then(10878703722328916)else(11210944905556082))else(if i<59 then(11548219915104358)else(11890528750973744)))))))else(if i<90 then(if i<75 then(if i<67 then(if i<63 then(if i<61 then(12237871413164240)else(if i<62 then(12590247901675846)else(12947658216508562)))else(if i<65 then(if i<64 then(13310102357662388)else(13677580325137324))else(if i<66 then(14050092118933370)else(14427637739050526))))else(if i<71 then(if i<69 then(if i<68 then(14810217185488792)else(15197830458248168))else(if i<70 then(15590477557328654)else(15988158482730250)))else(if i<73 then(if i<72 then(16390873234452956)else(16798621812496772))else(if i<74 then(17211404216861698)else(17629220447547734)))))else(if i<82 then(if i<78 then(if i<76 then(18052070504554880)else(if i<77 then(18479954387883136)else(18912872097532502)))else(if i<80 then(if i<79 then(19350823633502978)else(19793808995794564))else(if i<81 then(20241828184407260)else(20694881199341066))))else(if i<86 then(if i<84 then(if i<83 then(21152968040595982)else(21616088708172008))else(if i<85 then(22084243202069144)else(22557431522287390)))else(if i<88 then(if i<87 then(23035653668826746)else(23518909641687212))else(if i<89 then(24007199440868788)else(24500523066371474))))))else(if i<105 then(if i<97 then(if i<93 then(if i<91 then(24998880518195270)else(if i<92 then(25502271796340176)else(26010696900806192)))else(if i<95 then(if i<94 then(26524155831593318)else(27042648588701554))else(if i<96 then(27566175172130900)else(28094735581881356))))else(if i<101 then(if i<99 then(if i<98 then(28628329817952922)else(29166957880345598))else(if i<100 then(29710619769059384)else(30259315484094280)))else(if i<103 then(if i<102 then(30813045025450286)else(31371808393127402))else(if i<104 then(31935605587125628)else(32504436607444964)))))else(if i<112 then(if i<108 then(if i<106 then(33078301454085410)else(if i<107 then(33657200127046966)else(34241132626329632)))else(if i<110 then(if i<109 then(34830098951933408)else(35424099103858294))else(if i<111 then(36023133082104290)else(36627200886671396))))else(if i<116 then(if i<114 then(if i<113 then(37236302517559612)else(37850437974768938))else(if i<115 then(38469607258299374)else(39093810368150920)))else(if i<118 then(if i<117 then(39723047304323576)else(40357318066817342))else(if i<119 then(40996622655632218)else(41640961070768204))))))))else(0)
+
+def zeroRow21 : ℕ → ℕ := fun i =>
+  if i<119 then(if i<59 then(if i<29 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(636416160695175)else(if i<2 then(666652971631535)else(577660549858145)))else(if i<5 then(if i<4 then(577866710385507)else(611567836952654))else(if i<6 then(688303680234882)else(770331054167472))))else(if i<10 then(if i<8 then(857649958750424)else(if i<9 then(950260393983738)else(1048162359867414)))else(if i<12 then(if i<11 then(1151355856401452)else(1259840883585852))else(if i<13 then(1373617441420614)else(1492685529905738)))))else(if i<21 then(if i<17 then(if i<15 then(1617045149041224)else(if i<16 then(1746696298827072)else(1881638979263282)))else(if i<19 then(if i<18 then(2021873190349854)else(2167398932086788))else(if i<20 then(2318216204474084)else(2474325007511742))))else(if i<25 then(if i<23 then(if i<22 then(2635725341199762)else(2802417205538144))else(if i<24 then(2974400600526888)else(3151675526165994)))else(if i<27 then(if i<26 then(3334241982455462)else(3522099969395292))else(if i<28 then(3715249486985484)else(3913690535226038))))))else(if i<44 then(if i<36 then(if i<32 then(if i<30 then(4117423114116954)else(if i<31 then(4326447223658232)else(4540762863849872)))else(if i<34 then(if i<33 then(4760370034691874)else(4985268736184238))else(if i<35 then(5215458968326964)else(5450940731120052))))else(if i<40 then(if i<38 then(if i<37 then(5691714024563502)else(5937778848657314))else(if i<39 then(6189135203401488)else(6445783088796024)))else(if i<42 then(if i<41 then(6707722504840922)else(6974953451536182))else(if i<43 then(7247475928881804)else(7525289936877788)))))else(if i<51 then(if i<47 then(if i<45 then(7808395475524134)else(if i<46 then(8096792544820842)else(8390481144767912)))else(if i<49 then(if i<48 then(8689461275365344)else(8993732936613138))else(if i<50 then(9303296128511294)else(9618150851059812))))else(if i<55 then(if i<53 then(if i<52 then(9938297104258692)else(10263734888107934))else(if i<54 then(10594464202607538)else(10930485047757504)))else(if i<57 then(if i<56 then(11271797423557832)else(11618401330008522))else(if i<58 then(11970296767109574)else(12327483734860988)))))))else(if i<89 then(if i<74 then(if i<66 then(if i<62 then(if i<60 then(12689962233262764)else(if i<61 then(13057732262314902)else(13430793822017402)))else(if i<64 then(if i<63 then(13809146912370264)else(14192791533373488))else(if i<65 then(14581727685027074)else(14975955367331022))))else(if i<70 then(if i<68 then(if i<67 then(15375474580285332)else(15780285323890004))else(if i<69 then(16190387598145038)else(16605781403050434)))else(if i<72 then(if i<71 then(17026466738606192)else(17452443604812312))else(if i<73 then(17883712001668794)else(18320271929175638)))))else(if i<81 then(if i<77 then(if i<75 then(18762123387332844)else(if i<76 then(19209266376140412)else(19661700895598342)))else(if i<79 then(if i<78 then(20119426945706634)else(20582444526465288))else(if i<80 then(21050753637874304)else(21524354279933682))))else(if i<85 then(if i<83 then(if i<82 then(22003246452643422)else(22487430156003524))else(if i<84 then(22976905390013988)else(23471672154674814)))else(if i<87 then(if i<86 then(23971730449986002)else(24477080275947552))else(if i<88 then(24987721632559464)else(25503654519821738))))))else(if i<104 then(if i<96 then(if i<92 then(if i<90 then(26024878937734374)else(if i<91 then(26551394886297372)else(27083202365510732)))else(if i<94 then(if i<93 then(27620301375374454)else(28162691915888538))else(if i<95 then(28710373987052984)else(29263347588867792))))else(if i<100 then(if i<98 then(if i<97 then(29821612721332962)else(30385169384448494))else(if i<99 then(30954017578214388)else(31528157302630644)))else(if i<102 then(if i<101 then(32107588557697262)else(32692311343414242))else(if i<103 then(33282325659781584)else(33877631506799288)))))else(if i<111 then(if i<107 then(if i<105 then(34478228884467354)else(if i<106 then(35084117792785782)else(35695298231754572)))else(if i<109 then(if i<108 then(36311770201373724)else(36933533701643238))else(if i<110 then(37560588732563114)else(38192935294133352))))else(if i<115 then(if i<113 then(if i<112 then(38830573386353952)else(39473503009224914))else(if i<114 then(40121724162746238)else(40775236846917924)))else(if i<117 then(if i<116 then(41434041061739972)else(42098136807212382))else(if i<118 then(42767524083335154)else(43442202890108288))))))))else(0)
+
+def zeroRow22 : ℕ → ℕ := fun i =>
+  if i<118 then(if i<59 then(if i<29 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(731730824659934)else(if i<2 then(764922596164616)else(667134013211574)))else(if i<5 then(if i<4 then(667340173738936)else(690614437652226))else(if i<6 then(773861614016488)else(862658025360364))))else(if i<10 then(if i<8 then(957003671683854)else(if i<9 then(1056898552986958)else(1162342669269676)))else(if i<12 then(if i<11 then(1273336020532008)else(1389878606773954))else(if i<13 then(1511970427995514)else(1639611484196688)))))else(if i<21 then(if i<17 then(if i<15 then(1772801775377476)else(if i<16 then(1911541301537878)else(2055830062677894)))else(if i<19 then(if i<18 then(2205668058797524)else(2361055289896768))else(if i<20 then(2521991755975626)else(2688477457034098))))else(if i<25 then(if i<23 then(if i<22 then(2860512393072184)else(3038096564089884))else(if i<24 then(3221229970087198)else(3409912611064126)))else(if i<27 then(if i<26 then(3604144487020668)else(3803925597956824))else(if i<28 then(4009255943872594)else(4220135524767978))))))else(if i<44 then(if i<36 then(if i<32 then(if i<30 then(4436564340642976)else(if i<31 then(4658542391497588)else(4886069677331814)))else(if i<34 then(if i<33 then(5119146198145654)else(5357771953939108))else(if i<35 then(5601946944712176)else(5851671170464858))))else(if i<40 then(if i<38 then(if i<37 then(6106944631197154)else(6367767326909064))else(if i<39 then(6634139257600588)else(6906060423271726)))else(if i<42 then(if i<41 then(7183530823922478)else(7466550459552844))else(if i<43 then(7755119330162824)else(8049237435752418)))))else(if i<51 then(if i<47 then(if i<45 then(8348904776321626)else(if i<46 then(8654121351870448)else(8964887162398884)))else(if i<49 then(if i<48 then(9281202207906934)else(9603066488394598))else(if i<50 then(9930480003861876)else(10263442754308768))))else(if i<55 then(if i<53 then(if i<52 then(10601954739735274)else(10946015960141394))else(if i<54 then(11295626415527128)else(11650786105892476)))else(if i<57 then(if i<56 then(12011495031237438)else(12377753191562014))else(if i<58 then(12749560586866204)else(13126917217150008)))))))else(if i<88 then(if i<73 then(if i<66 then(if i<62 then(if i<60 then(13509823082413426)else(if i<61 then(13898278182656458)else(14292282517879104)))else(if i<64 then(if i<63 then(14691836088081364)else(15096938893263238))else(if i<65 then(15507590933424726)else(15923792208565828))))else(if i<69 then(if i<67 then(16345542718686544)else(if i<68 then(16772842463786874)else(17205691443866818)))else(if i<71 then(if i<70 then(17644089658926376)else(18088037108965548))else(if i<72 then(18537533793984334)else(18992579713982734)))))else(if i<80 then(if i<76 then(if i<74 then(19453174868960748)else(if i<75 then(19919319258918376)else(20391012883855618)))else(if i<78 then(if i<77 then(20868255743772474)else(21351047838668944))else(if i<79 then(21839389168545028)else(22333279733400726))))else(if i<84 then(if i<82 then(if i<81 then(22832719533236038)else(23337708568050964))else(if i<83 then(23848246837845504)else(24364334342619658)))else(if i<86 then(if i<85 then(24885971082373426)else(25413157057106808))else(if i<87 then(25945892266819804)else(26484176711512414))))))else(if i<103 then(if i<95 then(if i<91 then(if i<89 then(27028010391184638)else(if i<90 then(27577393305836476)else(28132325455467928)))else(if i<93 then(if i<92 then(28692806840078994)else(29258837459669674))else(if i<94 then(29830417314239968)else(30407546403789876))))else(if i<99 then(if i<97 then(if i<96 then(30990224728319398)else(31578452287828534))else(if i<98 then(32172229082317284)else(32771555111785648)))else(if i<101 then(if i<100 then(33376430376233626)else(33986854875661218))else(if i<102 then(34602828610068424)else(35224351579455244)))))else(if i<110 then(if i<106 then(if i<104 then(35851423783821678)else(if i<105 then(36484045223167726)else(37122215897493388)))else(if i<108 then(if i<107 then(37765935806798664)else(38415204951083554))else(if i<109 then(39070023330348058)else(39730390944592176))))else(if i<114 then(if i<112 then(if i<111 then(40396307793815908)else(41067773878019254))else(if i<113 then(41744789197202214)else(42427353751364788)))else(if i<116 then(if i<115 then(43115467540506976)else(43809130564628778))else(if i<117 then(44508342823730194)else(45213104317811224))))))))else(0)
+
+def zeroRow23 : ℕ → ℕ := fun i =>
+  if i<117 then(if i<58 then(if i<29 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(836116529808441)else(if i<2 then(872400701883493)else(765403637744655)))else(if i<5 then(if i<4 then(765609798272017)else(776172371433832))else(if i<6 then(866188585209380)else(962011738293794))))else(if i<10 then(if i<8 then(1063641830687074)else(if i<9 then(1171078862389220)else(1284322833400232)))else(if i<12 then(if i<11 then(1403373743720110)else(1528231593348854))else(if i<13 then(1658896382286464)else(1795368110532940)))))else(if i<21 then(if i<17 then(if i<15 then(1937646778088282)else(if i<16 then(2085732384952490)else(2239624931125564)))else(if i<19 then(if i<18 then(2399324416607504)else(2564830841398310))else(if i<20 then(2736144205497982)else(2913264508906520))))else(if i<25 then(if i<23 then(if i<22 then(3096191751623924)else(3284925933650194))else(if i<24 then(3479467054985330)else(3679815115629332)))else(if i<27 then(if i<26 then(3885970115582200)else(4097932054843934))else(if i<28 then(4315700933414534)else(4539276751294000))))))else(if i<43 then(if i<36 then(if i<32 then(if i<30 then(4768659508482332)else(if i<31 then(5003849204979530)else(5244845840785594)))else(if i<34 then(if i<33 then(5491649415900524)else(5744259930324320))else(if i<35 then(6002677384056982)else(6266901777098510))))else(if i<39 then(if i<37 then(6536933109448904)else(if i<38 then(6812771381108164)else(7094416592076290)))else(if i<41 then(if i<40 then(7381868742353282)else(7675127831939140))else(if i<42 then(7974193860833864)else(8279066829037454)))))else(if i<50 then(if i<46 then(if i<44 then(8589746736549910)else(if i<45 then(8906233583371232)else(9228527369501420)))else(if i<48 then(if i<47 then(9556628094940474)else(9890535759688394))else(if i<49 then(10230250363745180)else(10575771907110832))))else(if i<54 then(if i<52 then(if i<51 then(10927100389785350)else(11284235811768734))else(if i<53 then(11647178173060984)else(12015927473662100)))else(if i<56 then(if i<55 then(12390483713572082)else(12770846892790930))else(if i<57 then(13157017011318644)else(13548994069155224)))))))else(if i<87 then(if i<72 then(if i<65 then(if i<61 then(if i<59 then(13946778066300670)else(if i<60 then(14350369002754982)else(14759766878518160)))else(if i<63 then(if i<62 then(15174971693590204)else(15595983447971114))else(if i<64 then(16022802141660890)else(16455427774659532))))else(if i<68 then(if i<66 then(16893860346967040)else(if i<67 then(17338099858583414)else(17788146309508654)))else(if i<70 then(if i<69 then(18243999699742760)else(18705660029285732))else(if i<71 then(19173127298137570)else(19646401506298274)))))else(if i<79 then(if i<75 then(if i<73 then(20125482653767844)else(if i<74 then(20610370740546280)else(21101065766633582)))else(if i<77 then(if i<76 then(21597567732029750)else(22099876636734784))else(if i<78 then(22607992480748684)else(23121915264071450))))else(if i<83 then(if i<81 then(if i<80 then(23641644986703082)else(24167181648643580))else(if i<82 then(24698525249892944)else(25235675790451174)))else(if i<85 then(if i<84 then(25778633270318270)else(26327397689494232))else(if i<86 then(26881969047979060)else(27442347345772754))))))else(if i<102 then(if i<94 then(if i<90 then(if i<88 then(28008532582875314)else(if i<89 then(28580524759286740)else(29158323875007032)))else(if i<92 then(if i<91 then(29741929930036190)else(30331342924374214))else(if i<93 then(30926562858021104)else(31527589730976860))))else(if i<98 then(if i<96 then(if i<95 then(32134423543241482)else(32747064294814970))else(if i<97 then(33365511985697324)else(33989766615888544)))else(if i<100 then(if i<99 then(34619828185388630)else(35255696694197582))else(if i<101 then(35897372142315400)else(36544854529742084)))))else(if i<109 then(if i<105 then(if i<103 then(37198143856477634)else(if i<104 then(37857240122522050)else(38522143327875332)))else(if i<107 then(if i<106 then(39192853472537480)else(39869370556508494))else(if i<108 then(40551694579788374)else(41239825542377120))))else(if i<113 then(if i<111 then(if i<110 then(41933763444274732)else(42633508285481210))else(if i<112 then(43339060065996554)else(44050418785820764)))else(if i<115 then(if i<114 then(44767584444953840)else(45490557043395782))else(if i<116 then(46219336581146590)else(46953923058206264))))))))else(0)
+
+def zeroRow24 : ℕ → ℕ := fun i =>
+  if i<116 then(if i<58 then(if i<29 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(949985596146840)else(if i<2 then(989499608794310)else(872881743463532)))else(if i<5 then(if i<4 then(873087903990894)else(874049985053810))else(if i<6 then(965542298142810)else(1068649897297014))))else(if i<10 then(if i<8 then(1177822140089336)else(if i<9 then(1293059026519776)else(1414360556588334)))else(if i<12 then(if i<11 then(1541726730295010)else(1675157547639804))else(if i<13 then(1814653008622716)else(1960213113243746)))))else(if i<21 then(if i<17 then(if i<15 then(2111837861502894)else(if i<16 then(2269527253400160)else(2433281288935544)))else(if i<19 then(if i<18 then(2603099968109046)else(2778983290920666))else(if i<20 then(2960931257370404)else(3148943867458260))))else(if i<25 then(if i<23 then(if i<22 then(3343021121184234)else(3543163018548326))else(if i<24 then(3749369559550536)else(3961640744190864)))else(if i<27 then(if i<26 then(4179976572469310)else(4404377044385874))else(if i<28 then(4634842159940556)else(4871371919133356))))))else(if i<43 then(if i<36 then(if i<32 then(if i<30 then(5113966321964274)else(if i<31 then(5362625368433310)else(5617349058540464)))else(if i<34 then(if i<33 then(5878137392285736)else(6144990369669126))else(if i<35 then(6417907990690634)else(6696890255350260))))else(if i<39 then(if i<37 then(6981937163648004)else(if i<38 then(7273048715583866)else(7570224911157846)))else(if i<41 then(if i<40 then(7873465750369944)else(8182771233220160))else(if i<42 then(8498141359708494)else(8819576129834946)))))else(if i<50 then(if i<46 then(if i<44 then(9147075543599516)else(if i<45 then(9480639601002204)else(9820268302043010)))else(if i<48 then(if i<47 then(10165961646721934)else(10517719635038976))else(if i<49 then(10875542266994136)else(11239429542587414))))else(if i<54 then(if i<52 then(if i<51 then(11609381461818810)else(11985398024688324))else(if i<53 then(12367479231195956)else(12755625081341706)))else(if i<56 then(if i<55 then(13149835575125574)else(13550110712547560))else(if i<57 then(13956450493607664)else(14368854918305886)))))))else(if i<87 then(if i<72 then(if i<65 then(if i<61 then(if i<59 then(14787323986642226)else(if i<60 then(15211857698616684)else(15642456054229260)))else(if i<63 then(if i<62 then(16079119053479954)else(16521846696368766))else(if i<64 then(16970638982895696)else(17425495913060744))))else(if i<68 then(if i<66 then(17886417486863910)else(if i<67 then(18353403704305194)else(18826454565384596)))else(if i<70 then(if i<69 then(19305570070102116)else(19790750218457754))else(if i<71 then(20281995010451510)else(20779304446083384)))))else(if i<79 then(if i<75 then(if i<73 then(21282678525353376)else(if i<74 then(21792117248261486)else(22307620614807714)))else(if i<77 then(if i<76 then(22829188624992060)else(23356821278814524))else(if i<78 then(23890518576275106)else(24430280517373806))))else(if i<83 then(if i<81 then(if i<80 then(24976107102110624)else(25527998330485560))else(if i<82 then(26085954202498614)else(26649974718149786)))else(if i<85 then(if i<84 then(27220059877439076)else(27796209680366484))else(if i<86 then(28378424126932010)else(28966703217135654))))))else(if i<101 then(if i<94 then(if i<90 then(if i<88 then(29561046950977416)else(if i<89 then(30161455328457296)else(30767928349575294)))else(if i<92 then(if i<91 then(31380466014331410)else(31999068322725644))else(if i<93 then(32623735274757996)else(33254466870428466))))else(if i<97 then(if i<95 then(33891263109737054)else(if i<96 then(34534123992683760)else(35183049519268584)))else(if i<99 then(if i<98 then(35838039689491526)else(36499094503352586))else(if i<100 then(37166213960851764)else(37839398061989060)))))else(if i<108 then(if i<104 then(if i<102 then(38518646806764474)else(if i<103 then(39203960195178006)else(39895338227229656)))else(if i<106 then(if i<105 then(40592780902919424)else(41296288222247310))else(if i<107 then(42005860185213314)else(42721496791817436))))else(if i<112 then(if i<110 then(if i<109 then(43443198042059676)else(44170963935940034))else(if i<111 then(44904794473458510)else(45644689654615104)))else(if i<114 then(if i<113 then(46390649479409816)else(47142673947842646))else(if i<115 then(47900763059913594)else(48664916815622660))))))))else(0)
+
+def zeroRow25 : ℕ → ℕ := fun i =>
+  if i<115 then(if i<57 then(if i<28 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(1073750343681275)else(if i<2 then(1116631636903211)else(989980650374349)))else(if i<5 then(if i<4 then(990186810901711)else(991148891964627))else(if i<6 then(1072180457146030)else(1182830206699276))))else(if i<10 then(if i<8 then(1299802304219892)else(if i<9 then(1423096749707878)else(1552713543163234)))else(if i<12 then(if i<11 then(1688652684585960)else(1830914173976056))else(if i<13 then(1979498011333522)else(2134404196658358)))))else(if i<21 then(if i<17 then(if i<15 then(2295632729950564)else(if i<16 then(2463183611210140)else(2637056840437086)))else(if i<19 then(if i<18 then(2817252417631402)else(3003770342793088))else(if i<20 then(3196610615922144)else(3395773237018570))))else(if i<24 then(if i<22 then(3601258206082366)else(if i<23 then(3813065523113532)else(4031195188112068)))else(if i<26 then(if i<25 then(4255647201077974)else(4486421562011250))else(if i<27 then(4723518270911896)else(4966937327779912))))))else(if i<42 then(if i<35 then(if i<31 then(if i<29 then(5216678732615298)else(if i<30 then(5472742485418054)else(5735128586188180)))else(if i<33 then(if i<32 then(6003837034925676)else(6278867831630542))else(if i<34 then(6560220976302778)else(6847896468942384))))else(if i<38 then(if i<36 then(7141894309549360)else(if i<37 then(7442214498123706)else(7748857034665422)))else(if i<40 then(if i<39 then(8061821919174508)else(8381109151650964))else(if i<41 then(8706718732094790)else(9038650660505986)))))else(if i<49 then(if i<45 then(if i<43 then(9376904936884552)else(if i<44 then(9721481561230488)else(10072380533543794)))else(if i<47 then(if i<46 then(10429601853824470)else(10793145522072516))else(if i<48 then(11163011538287932)else(11539199902470718))))else(if i<53 then(if i<51 then(if i<50 then(11921710614620874)else(12310543674738400))else(if i<52 then(12705699082823296)else(13107176838875562)))else(if i<55 then(if i<54 then(13514976942895198)else(13929099394882204))else(if i<56 then(14349544194836580)else(14776311342758326)))))))else(if i<86 then(if i<71 then(if i<64 then(if i<60 then(if i<58 then(15209400838647442)else(if i<59 then(15648812682503928)else(16094546874327784)))else(if i<62 then(if i<61 then(16546603414119010)else(17004982301877606))else(if i<63 then(17469683537603572)else(17940707121296908))))else(if i<67 then(if i<65 then(18418053052957614)else(if i<66 then(18901721332585690)else(19391711960181136)))else(if i<69 then(if i<68 then(19888024935743952)else(20390660259274138))else(if i<70 then(20899617930771694)else(21414897950236620)))))else(if i<78 then(if i<74 then(if i<72 then(21936500317668916)else(if i<73 then(22464425033068582)else(22998672096435618)))else(if i<76 then(if i<75 then(23539241507770024)else(24086133267071800))else(if i<77 then(24639347374340946)else(25198883829577462))))else(if i<82 then(if i<80 then(if i<79 then(25764742632781348)else(26336923783952604))else(if i<81 then(26915427283091230)else(27500253130197226)))else(if i<84 then(if i<83 then(28091401325270592)else(28688871868311328))else(if i<85 then(29292664759319434)else(29902779998294910))))))else(if i<100 then(if i<93 then(if i<89 then(if i<87 then(30519217585237756)else(if i<88 then(31141977520147972)else(31771059803025558)))else(if i<91 then(if i<90 then(32406464433870514)else(33048191412682840))else(if i<92 then(33696240739462536)else(34350612414209602))))else(if i<96 then(if i<94 then(35011306436924038)else(if i<95 then(35678322807605844)else(36351661526255020)))else(if i<98 then(if i<97 then(37031322592871566)else(37717306007455482))else(if i<99 then(38409611770006768)else(39108239880525424)))))else(if i<107 then(if i<103 then(if i<101 then(39813190339011450)else(if i<102 then(40524463145464846)else(41242058299885612)))else(if i<105 then(if i<104 then(41965975802273748)else(42696215652629254))else(if i<106 then(43432777850952130)else(44175662397242376))))else(if i<111 then(if i<109 then(if i<108 then(44924869291499992)else(45680398533724978))else(if i<110 then(46442250123917334)else(47210424062077060)))else(if i<113 then(if i<112 then(47984920348204156)else(48765738982298622))else(if i<114 then(49552879964360458)else(50346343294389664))))))))else(0)
+
+def zeroRow26 : ℕ → ℕ := fun i =>
+  if i<114 then(if i<57 then(if i<28 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(1207823092417890)else(if i<2 then(1254209106216340)else(1117112678483250)))else(if i<5 then(if i<4 then(1117318839010612)else(1118280920073528))else(if i<6 then(1186360766548292)else(1304810370829832))))else(if i<10 then(if i<8 then(1429840027407994)else(if i<9 then(1561449736282778)else(1699639497454184)))else(if i<12 then(if i<11 then(1844409310922212)else(1995759176686862))else(if i<13 then(2153689094748134)else(2318199065106028)))))else(if i<21 then(if i<17 then(if i<15 then(2489289087760544)else(if i<16 then(2666959162711682)else(2851209289959442)))else(if i<19 then(if i<18 then(3042039469503824)else(3239449701344828))else(if i<20 then(3443439985482454)else(3654010321916702))))else(if i<24 then(if i<22 then(3871160710647572)else(if i<23 then(4094891151675064)else(4325201644999178)))else(if i<26 then(if i<25 then(4562092190619914)else(4805562788537272))else(if i<27 then(5055613438751252)else(5312244141261854))))))else(if i<42 then(if i<35 then(if i<31 then(if i<29 then(5575454896069078)else(if i<30 then(5845245703172924)else(6121616562573392)))else(if i<33 then(if i<32 then(6404567474270482)else(6694098438264194))else(if i<34 then(6990209454554528)else(7292900523141484))))else(if i<38 then(if i<36 then(7602171644025062)else(if i<37 then(7918022817205262)else(8240454042682084)))else(if i<40 then(if i<39 then(8569465320455528)else(8905056650525594))else(if i<41 then(9247228032892282)else(9595979467555592)))))else(if i<49 then(if i<45 then(if i<43 then(9951310954515524)else(if i<44 then(10313222493772078)else(10681714085325254)))else(if i<47 then(if i<46 then(11056785729175052)else(11438437425321472))else(if i<48 then(11826669173764514)else(12221480974504178))))else(if i<53 then(if i<51 then(if i<50 then(12622872827540464)else(13030844732873372))else(if i<52 then(13445396690502902)else(13866528700429054)))else(if i<55 then(if i<54 then(14294240762651828)else(14728532877171224))else(if i<56 then(15169405043987242)else(15616857263099882)))))))else(if i<85 then(if i<71 then(if i<64 then(if i<60 then(if i<58 then(16070889534509144)else(if i<59 then(16531501858215028)else(16998694234217534)))else(if i<62 then(if i<61 then(17472466662516662)else(17952819143112412))else(if i<63 then(18439751676004784)else(18933264261193778))))else(if i<67 then(if i<65 then(19433356898679394)else(if i<66 then(19940029588461632)else(20453282330540492)))else(if i<69 then(if i<68 then(20973115124915974)else(21499527971588078))else(if i<70 then(22032520870556804)else(22572093821822152)))))else(if i<78 then(if i<74 then(if i<72 then(23118246825384122)else(if i<73 then(23670979881242714)else(24230292989397928)))else(if i<76 then(if i<75 then(24796186149849764)else(25368659362598222))else(if i<77 then(25947712627643302)else(26533345944985004))))else(if i<81 then(if i<79 then(27125559314623328)else(if i<80 then(27724352736558274)else(28329726210789842)))else(if i<83 then(if i<82 then(28941679737318032)else(29560213316142844))else(if i<84 then(30185326947264278)else(30817020630682334))))))else(if i<99 then(if i<92 then(if i<88 then(if i<86 then(31455294366397012)else(if i<87 then(32100148154408312)else(32751581994716234)))else(if i<90 then(if i<89 then(33409595887320778)else(34074189832221944))else(if i<91 then(34745363829419732)else(35423117878914142))))else(if i<95 then(if i<93 then(36107451980705174)else(if i<94 then(36798366134792828)else(37495860341177104)))else(if i<97 then(if i<96 then(38199934599858002)else(38910588910835522))else(if i<98 then(39627823274109664)else(40351637689680428)))))else(if i<106 then(if i<102 then(if i<100 then(41082032157547814)else(if i<101 then(41819006677711822)else(42562561250172452)))else(if i<104 then(if i<103 then(43312695874929704)else(44069410551983578))else(if i<105 then(44832705281334074)else(45602580062981192))))else(if i<110 then(if i<108 then(if i<107 then(46379034896924932)else(47162069783165294))else(if i<109 then(47951684721702278)else(48747879712535884)))else(if i<112 then(if i<111 then(49550654755666112)else(50360009851092962))else(if i<113 then(51175944998816434)else(51998460198836528))))))))else(0)
+
+def zeroRow27 : ℕ → ℕ := fun i =>
+  if i<113 then(if i<56 then(if i<28 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(1352616162362829)else(if i<2 then(1402644336739841)else(1254690147796379)))else(if i<5 then(if i<4 then(1254896308323741)else(1255858389386657))else(if i<6 then(1308340930678848)else(1434848094017934))))else(if i<10 then(if i<8 then(1568193013982894)else(if i<9 then(1708375690573728)else(1855396123790436)))else(if i<12 then(if i<11 then(2009254313633018)else(2169950260101474))else(if i<13 then(2337483963195804)else(2511855422916008)))))else(if i<21 then(if i<17 then(if i<15 then(2693064639262086)else(if i<16 then(2881111612234038)else(3075996341831864)))else(if i<19 then(if i<18 then(3277718828055564)else(3486279070905138))else(if i<20 then(3701677070380586)else(3923912826481908))))else(if i<24 then(if i<22 then(4152986339209104)else(if i<23 then(4388897608562174)else(4631646634541118)))else(if i<26 then(if i<25 then(4881233417145936)else(5137657956376628))else(if i<27 then(5400920252233194)else(5671020304715634))))))else(if i<42 then(if i<35 then(if i<31 then(if i<29 then(5947958113823948)else(if i<30 then(6231733679558136)else(6522347001918198)))else(if i<33 then(if i<32 then(6819798080904134)else(7124086916515944))else(if i<34 then(7435213508753628)else(7753177857617186))))else(if i<38 then(if i<36 then(8077979963106618)else(if i<37 then(8409619825221924)else(8748097443963104)))else(if i<40 then(if i<39 then(9093412819330158)else(9445565951323086))else(if i<41 then(9804556839941888)else(10170385485186564)))))else(if i<49 then(if i<45 then(if i<43 then(10543051887057114)else(if i<44 then(10922556045553538)else(11308897960675836)))else(if i<47 then(if i<46 then(11702077632424008)else(12102095060798054))else(if i<48 then(12508950245797974)else(12922643187423768))))else(if i<52 then(if i<50 then(13343173885675436)else(if i<51 then(13770542340552978)else(14204748552056394)))else(if i<54 then(if i<53 then(14645792520185684)else(15093674244940848))else(if i<55 then(15548393726321886)else(16009950964328798)))))))else(if i<84 then(if i<70 then(if i<63 then(if i<59 then(if i<57 then(16478345958961584)else(if i<58 then(16953578710220244)else(17435649218104778)))else(if i<61 then(if i<60 then(17924557482615186)else(18420303503751468))else(if i<62 then(18922887281513624)else(19432308815901654))))else(if i<66 then(if i<64 then(19948568106915558)else(if i<65 then(20471665154555336)else(21001599958820988)))else(if i<68 then(if i<67 then(21538372519712514)else(22081982837229914))else(if i<69 then(22632430911373188)else(23189716742142336)))))else(if i<77 then(if i<73 then(if i<71 then(23753840329537358)else(if i<72 then(24324801673558254)else(24902600774205024)))else(if i<75 then(if i<74 then(25487237631477668)else(26078712245376186))else(if i<76 then(26677024615900578)else(27282174743050844))))else(if i<80 then(if i<78 then(27894162626826984)else(if i<79 then(28512988267228998)else(29138651664256886)))else(if i<82 then(if i<81 then(29771152817910648)else(30410491728190284))else(if i<83 then(31056668395095794)else(31709682818627178))))))else(if i<98 then(if i<91 then(if i<87 then(if i<85 then(32369534998784436)else(if i<86 then(33036224935567568)else(33709752628976574)))else(if i<89 then(if i<88 then(34390118079011454)else(35077321285672208))else(if i<90 then(35771362248958836)else(36472240968871338))))else(if i<94 then(if i<92 then(37179957445409714)else(if i<93 then(37894511678573964)else(38615903668364088)))else(if i<96 then(if i<95 then(39344133414780086)else(40079200917821958))else(if i<97 then(40821106177489704)else(41569849193783324)))))else(if i<105 then(if i<101 then(if i<99 then(42325429966702818)else(if i<100 then(43087848496248186)else(43857104782419428)))else(if i<103 then(if i<102 then(44633198825216544)else(45416130624639534))else(if i<104 then(46205900180688398)else(47002507493363136))))else(if i<109 then(if i<107 then(if i<106 then(47805952562663748)else(48616235388590234))else(if i<108 then(49433355971142594)else(50257314310320828)))else(if i<111 then(if i<110 then(51088110406124936)else(51925744258554918))else(if i<112 then(52770215867610774)else(53621525233292504))))))))else(0)
+
+def zeroRow28 : ℕ → ℕ := fun i =>
+  if i<112 then(if i<56 then(if i<28 then(if i<14 then(if i<7 then(if i<3 then(if i<1 then(1508541873522236)else(if i<2 then(1562349648479858)else(1403125378319880)))else(if i<5 then(if i<4 then(1403331538847242)else(1404293619910158))else(if i<6 then(1438378653866950)else(1573201080592834))))else(if i<10 then(if i<8 then(1715118968273844)else(if i<9 then(1864132316909980)else(2020241126501242)))else(if i<12 then(if i<11 then(2183445397047630)else(2353745128549144))else(if i<13 then(2531140321005784)else(2715630974417550)))))else(if i<21 then(if i<17 then(if i<15 then(2907217088784442)else(if i<16 then(3105898664106460)else(3311675700383604)))else(if i<19 then(if i<18 then(3524548197615874)else(3744516155803270))else(if i<20 then(3971579574945792)else(4205738455043440))))else(if i<24 then(if i<22 then(4446992796096214)else(if i<23 then(4695342598104114)else(4950787861067140)))else(if i<26 then(if i<25 then(5213328584985292)else(5482964769858570))else(if i<27 then(5759696415686974)else(6043523522470504))))))else(if i<42 then(if i<35 then(if i<31 then(if i<29 then(6334446090209160)else(if i<30 then(6632464118902942)else(6937577608551850)))else(if i<33 then(if i<32 then(7249786559155884)else(7569090970715044))else(if i<34 then(7895490843229330)else(8228986176698742))))else(if i<38 then(if i<36 then(8569576971123280)else(if i<37 then(8917263226502944)else(9272044942837734)))else(if i<40 then(if i<39 then(9633922120127650)else(10002894758372692))else(if i<41 then(10378962857572860)else(10762126417728154)))))else(if i<49 then(if i<45 then(if i<43 then(11152385438838574)else(if i<44 then(11549739920904120)else(11954189863924792)))else(if i<47 then(if i<46 then(12365735267900590)else(12784376132831514))else(if i<48 then(13210112458717564)else(13642944245558740))))else(if i<52 then(if i<50 then(14082871493355042)else(if i<51 then(14529894202106470)else(14984012371813024)))else(if i<54 then(if i<53 then(15445226002474704)else(15913535094091510))else(if i<55 then(16388939646663442)else(16871439660190500)))))))else(if i<84 then(if i<70 then(if i<63 then(if i<59 then(if i<57 then(17361035134672684)else(if i<58 then(17857726070109994)else(18361512466502430)))else(if i<61 then(if i<60 then(18872394323849992)else(19390371642152680))else(if i<62 then(19915444421410494)else(20447612661623434))))else(if i<66 then(if i<64 then(20986876362791500)else(if i<65 then(21533235524914692)else(22086690147993010)))else(if i<68 then(if i<67 then(22647240232026454)else(23214885777015024))else(if i<69 then(23789626782958720)else(24371463249857542)))))else(if i<77 then(if i<73 then(if i<71 then(24960395177711490)else(if i<72 then(25556422566520564)else(26159545416284764)))else(if i<75 then(if i<74 then(26769763727004090)else(27387077498678542))else(if i<76 then(28011486731308120)else(28642991424892824))))else(if i<80 then(if i<78 then(29281591579432654)else(if i<79 then(29927287194927610)else(30580078271377692)))else(if i<82 then(if i<81 then(31239964808782900)else(31906946807143234))else(if i<83 then(32581024266458694)else(33262197186729280))))))else(if i<98 then(if i<91 then(if i<87 then(if i<85 then(33950465567954992)else(if i<86 then(34645829410135830)else(35348288713271794)))else(if i<89 then(if i<88 then(36057843477362884)else(36774493702409100))else(if i<90 then(37498239388410442)else(38229080535366910))))else(if i<94 then(if i<92 then(38967017143278504)else(if i<93 then(39712049212145224)else(40464176741967070)))else(if i<96 then(if i<95 then(41223399732744042)else(41989718184476140))else(if i<97 then(42763132097163364)else(43543641470805714)))))else(if i<105 then(if i<101 then(if i<99 then(44331246305403190)else(if i<100 then(45125946600955792)else(45927742357463520)))else(if i<103 then(if i<102 then(46736633574926374)else(47552620253344354))else(if i<104 then(48375702392717460)else(49205879993045692))))else(if i<108 then(if i<106 then(50043153054329050)else(if i<107 then(50887521576567534)else(51738985559761144)))else(if i<110 then(if i<109 then(52597545003909880)else(53463199909013742))else(if i<111 then(54335950275072730)else(55215796102086844))))))))else(0)
+
+def zeroRow29 : ℕ → ℕ := fun i =>
+  if i<111 then(if i<55 then(if i<27 then(if i<13 then(if i<6 then(if i<3 then(if i<1 then(1676012545902255)else(if i<2 then(1733737361442535)else(1562830690059897)))else(if i<4 then(1563036850587259)else(if i<5 then(1563998931650175)else(1576731640441850))))else(if i<9 then(if i<7 then(1720127034883784)else(if i<8 then(1870875594610096)else(2028977319620786)))else(if i<11 then(if i<10 then(2194432209915854)else(2367240265495300))else(if i<12 then(2547401486359124)else(2734915872507326)))))else(if i<20 then(if i<16 then(if i<14 then(2929783423939906)else(if i<15 then(3132004140656864)else(3341578022658200)))else(if i<18 then(if i<17 then(3558505069943914)else(3782785282514006))else(if i<19 then(4014418660368476)else(4253405203507324))))else(if i<23 then(if i<21 then(4499744911930550)else(if i<22 then(4753437785638154)else(5014483824630136)))else(if i<25 then(if i<24 then(5282883028906496)else(5558635398467234))else(if i<26 then(5841740933312350)else(6132199633441844))))))else(if i<41 then(if i<34 then(if i<30 then(if i<28 then(6430011498855716)else(if i<29 then(6735176529553966)else(7047694725536594)))else(if i<32 then(if i<31 then(7367566086803600)else(7694790613354984))else(if i<33 then(8029368305190746)else(8371299162310886))))else(if i<37 then(if i<35 then(8720583184715404)else(if i<36 then(9077220372404300)else(9441210725377574)))else(if i<39 then(if i<38 then(9812554243635226)else(10191250927177256))else(if i<40 then(10577300776003664)else(10970703790114450)))))else(if i<48 then(if i<44 then(if i<42 then(11371459969509614)else(if i<43 then(11779569314189156)else(12195031824153076)))else(if i<46 then(if i<45 then(12617847499401374)else(13048016339934050))else(if i<47 then(13485538345751104)else(13930413516852536))))else(if i<51 then(if i<49 then(14382641853238346)else(if i<50 then(14842223354908534)else(15309158021863100)))else(if i<53 then(if i<52 then(15783445854102044)else(16265086851625366))else(if i<54 then(16754081014433066)else(17250428342525144)))))))else(if i<83 then(if i<69 then(if i<62 then(if i<58 then(if i<56 then(17754128835901600)else(if i<57 then(18265182494562434)else(18783589318507646)))else(if i<60 then(if i<59 then(19309349307737236)else(19842462462251204))else(if i<61 then(20382928782049550)else(20930748267132274))))else(if i<65 then(if i<63 then(21485920917499376)else(if i<64 then(22048446733150856)else(22618325714086714)))else(if i<67 then(if i<66 then(23195557860306950)else(23780143171811564))else(if i<68 then(24372081648600556)else(24971373290673926)))))else(if i<76 then(if i<72 then(if i<70 then(25578018098031674)else(if i<71 then(26192016070673800)else(26813367208600304)))else(if i<74 then(if i<73 then(27442071511811186)else(28078128980306446))else(if i<75 then(28721539614086084)else(29372303413150100))))else(if i<79 then(if i<77 then(30030420377498494)else(if i<78 then(30695890507131266)else(31368713802048416)))else(if i<81 then(if i<80 then(32048890262249944)else(32736419887735850))else(if i<82 then(33431302678506134)else(34133538634560796))))))else(if i<97 then(if i<90 then(if i<86 then(if i<84 then(34843127755899836)else(if i<85 then(35560070042523254)else(36284365494431050)))else(if i<88 then(if i<87 then(37016014111623224)else(37755015894099776))else(if i<89 then(38501370841860706)else(39255078954906014))))else(if i<93 then(if i<91 then(40016140233235700)else(if i<92 then(40784554676849764)else(41560322285748206)))else(if i<95 then(if i<94 then(42343443059931026)else(43133916999398224))else(if i<96 then(43931744104149800)else(44736924374185754)))))else(if i<104 then(if i<100 then(if i<98 then(45549457809506086)else(if i<99 then(46369344410110796)else(47196584175999884)))else(if i<102 then(if i<101 then(48031177107173350)else(48873123203631194))else(if i<103 then(49722422465373416)else(50579074892400016))))else(if i<107 then(if i<105 then(51443080484710994)else(if i<106 then(52314439242306350)else(53193151165186084)))else(if i<109 then(if i<108 then(54079216253350196)else(54972634506798686))else(if i<110 then(55873405925531554)else(56781530509548800))))))))else(0)
+
+def zeroRow30 : ℕ → ℕ := fun i =>
+  if i<110 then(if i<55 then(if i<27 then(if i<13 then(if i<6 then(if i<3 then(if i<1 then(1855440499509030)else(if i<2 then(1917219795634016)else(1734218403022574)))else(if i<4 then(1734424563549936)else(if i<5 then(1735386644612852)else(1736761045681912))))else(if i<9 then(if i<7 then(1875883661220036)else(if i<8 then(2035720597320902)else(2203168403035398)))else(if i<11 then(if i<10 then(2378227078363524)else(2560896623305280))else(if i<12 then(2751177037860666)else(2949068322029682)))))else(if i<20 then(if i<16 then(if i<14 then(3154570475812328)else(if i<15 then(3367683499208604)else(3588407392218510)))else(if i<18 then(if i<17 then(3816742154842046)else(4052687787079212))else(if i<19 then(4296244288930008)else(4547411660394434))))else(if i<23 then(if i<21 then(4806189901472490)else(if i<22 then(5072579012164176)else(5346578992469492)))else(if i<25 then(if i<24 then(5628189842388438)else(5917411561921014))else(if i<26 then(6214244151067220)else(6518687609827056))))))else(if i<41 then(if i<34 then(if i<30 then(if i<28 then(6830741938200522)else(if i<29 then(7150407136187618)else(7477683203788344)))else(if i<32 then(if i<31 then(7812570141002700)else(8155067947830686))else(if i<33 then(8505176624272302)else(8862896170327548))))else(if i<37 then(if i<35 then(9228226585996424)else(if i<36 then(9601167871278930)else(9981720026175066)))else(if i<39 then(if i<38 then(10369883050684832)else(10765656944808228))else(if i<40 then(11169041708545254)else(11580037341895910)))))else(if i<48 then(if i<44 then(if i<42 then(11998643844860196)else(if i<43 then(12424861217438112)else(12858689459629658)))else(if i<46 then(if i<45 then(13300128571434834)else(13749178552853640))else(if i<47 then(14205839403886076)else(14670111124532142))))else(if i<51 then(if i<49 then(15141993714791838)else(if i<50 then(15621487174665164)else(16108591504152120)))else(if i<53 then(if i<52 then(16603306703252706)else(17105632771966922))else(if i<54 then(17615569710294768)else(18133117518236244)))))))else(if i<82 then(if i<68 then(if i<61 then(if i<58 then(if i<56 then(18658276195791350)else(if i<57 then(19191045742960086)else(19731426159742452)))else(if i<59 then(20279417446138448)else(if i<60 then(20835019602148074)else(21398232627771330))))else(if i<64 then(if i<62 then(21969056523008216)else(if i<63 then(22547491287858732)else(23133536922322878)))else(if i<66 then(if i<65 then(23727193426400654)else(24328460800092060))else(if i<67 then(24937339043397096)else(25553828156315762)))))else(if i<75 then(if i<71 then(if i<69 then(26177928138848058)else(if i<70 then(26809638990993984)else(27448960712753540)))else(if i<73 then(if i<72 then(28095893304126726)else(28750436765113542))else(if i<74 then(29412591095713988)else(30082356295928064))))else(if i<78 then(if i<76 then(30759732365755770)else(if i<77 then(31444719305197106)else(32137317114252072)))else(if i<80 then(if i<79 then(32837525792920668)else(33545345341202894))else(if i<81 then(34260775759098750)else(34983817046608236))))))else(if i<96 then(if i<89 then(if i<85 then(if i<83 then(35714469203731352)else(if i<84 then(36452732230468098)else(37198606126818474)))else(if i<87 then(if i<86 then(37952090892782480)else(38713186528360116))else(if i<88 then(39481893033551382)else(40258210408356278))))else(if i<92 then(if i<90 then(41042138652774804)else(if i<91 then(41833677766806960)else(42632827750452746)))else(if i<94 then(if i<93 then(43439588603712162)else(44253960326585208))else(if i<95 then(45075942919071884)else(45905536381172190)))))else(if i<103 then(if i<99 then(if i<97 then(46742740712886126)else(if i<98 then(47587555914213692)else(48439981985154888)))else(if i<101 then(if i<100 then(49300018925709714)else(50167666735878170))else(if i<102 then(51042925415660256)else(51925794965055972))))else(if i<106 then(if i<104 then(52816275384065318)else(if i<105 then(53714366672688294)else(54620068830924900)))else(if i<108 then(if i<107 then(55533381858775136)else(56454305756239002))else(if i<109 then(57382840523316498)else(58318986160007624))))))))else(0)
+
+def zero : ℕ → ℕ → ℕ
+  | 1, v => zeroRow1 v
+  | 2, v => zeroRow2 v
+  | 3, v => zeroRow3 v
+  | 4, v => zeroRow4 v
+  | 5, v => zeroRow5 v
+  | 6, v => zeroRow6 v
+  | 7, v => zeroRow7 v
+  | 8, v => zeroRow8 v
+  | 9, v => zeroRow9 v
+  | 10, v => zeroRow10 v
+  | 11, v => zeroRow11 v
+  | 12, v => zeroRow12 v
+  | 13, v => zeroRow13 v
+  | 14, v => zeroRow14 v
+  | 15, v => zeroRow15 v
+  | 16, v => zeroRow16 v
+  | 17, v => zeroRow17 v
+  | 18, v => zeroRow18 v
+  | 19, v => zeroRow19 v
+  | 20, v => zeroRow20 v
+  | 21, v => zeroRow21 v
+  | 22, v => zeroRow22 v
+  | 23, v => zeroRow23 v
+  | 24, v => zeroRow24 v
+  | 25, v => zeroRow25 v
+  | 26, v => zeroRow26 v
+  | 27, v => zeroRow27 v
+  | 28, v => zeroRow28 v
+  | 29, v => zeroRow29 v
+  | 30, v => zeroRow30 v
+  | _, _ => 0
+
+def cap (p : RCN095.FlagDegree) : ℕ :=
+  (lookup p.all p.yz).evalAt p.zOnly
+
+end ProximityPrize.SubmissionLower.BoundaryTailStrictData
+
+end P42
+
+section P43
+namespace ProximityPrize.SubmissionLower.Kernels80801
+open ProximityPrize.Benchmark
+open scoped BigOperators
+open RCN100 RCN119 RCN180 LocatorFastKernelArithmetic LocatorLowQuotient
+set_option autoImplicit false
+set_option maxRecDepth 10000
+set_option maxHeartbeats 1000000
+set_option Elab.async false
+
+namespace A
+theorem coefficient_exact : coefficientCount 18315643 131071 350390 30 = 11220335138994680 := by
+  rw [show 18315643 = 139*131071+96774 by decide]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 139 96774 131071 350390 30 (by decide) (by decide) (by decide) (by decide)]
+  decide
+theorem rank_exact : localRankBound 101 350390 30 = 42802181771 := by
+  rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide) (by decide)]
+  decide
+theorem nullity_exact : coefficientCount 18315643 131071 350390 30 - 262144 * localRankBound 101 350390 30 = 817656 := by
+  norm_num only [coefficient_exact, rank_exact]
+theorem shape : 18315643+30 ≤ 131071*(139+1) := by decide
+theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
+    817656 ≤ Module.finrank IRSProfile.Field
+      (ConstraintKernel (K := IRSProfile.Field) 18315643 131071 350390 30 101
+        IRSProfile.domain u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
+    18315643 350390 30 101 817656 u0 u1 (by rw [nullity_exact])
+end A
+
+namespace B
+theorem coefficient_exact : coefficientCount 20129073 131071 21378 33 = 903604845898865 := by
+  rw [show 20129073 = 153*131071+75210 by decide]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 153 75210 131071 21378 33 (by decide) (by decide) (by decide) (by decide)]
+  decide
+theorem rank_exact : localRankBound 111 21378 33 = 3446978871 := by
+  rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide) (by decide)]
+  decide
+theorem nullity_exact : coefficientCount 20129073 131071 21378 33 - 262144 * localRankBound 111 21378 33 = 16739441 := by
+  norm_num only [coefficient_exact, rank_exact]
+theorem shape : 20129073+33 ≤ 131071*(153+1) := by decide
+theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
+    16739441 ≤ Module.finrank IRSProfile.Field
+      (ConstraintKernel (K := IRSProfile.Field) 20129073 131071 21378 33 111
+        IRSProfile.domain u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
+    20129073 21378 33 111 16739441 u0 u1 (by rw [nullity_exact])
+end B
+
+namespace T
+theorem coefficient_exact : coefficientCount 36268600 131071 7204 62 = 1785229835798871 := by
+  rw [show 36268600 = 276*131071+93004 by decide]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 276 93004 131071 7204 62 (by decide) (by decide) (by decide) (by decide)]
+  decide
+theorem rank_exact : localRankBound 200 7204 62 = 6810105834 := by
+  rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide) (by decide)]
+  decide
+theorem nullity_exact : coefficientCount 36268600 131071 7204 62 - 262144 * localRankBound 200 7204 62 = 1452050775 := by
+  norm_num only [coefficient_exact, rank_exact]
+theorem shape : 36268600+62 ≤ 131071*(276+1) := by decide
+theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
+    1452050775 ≤ Module.finrank IRSProfile.Field
+      (ConstraintKernel (K := IRSProfile.Field) 36268600 131071 7204 62 200
+        IRSProfile.domain u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric
+    36268600 7204 62 200 1452050775 u0 u1 (by rw [nullity_exact])
+theorem quotient_count_lt : coefficientCount 36268600 131071 4 62 < 1452050775 := by decide
+end T
+
+namespace Source00
+theorem coefficient_lower : 30745256612158425592082712 ≤ coefficientCount 11605952000 131071 3840000 19840 := by
+  rw [show 11605952000 = 88547*131071+8163 by decide]
+  have h := OneResidueLower.oneResidue_le_coefficientCount 88547 8163 131071 3840000 19840 (by decide) (by decide) (by decide) (by decide)
+  exact (show 30745256612158425592082712 = oneResidueCoefficientCount 88547 8163 131071 3840000 19840 by decide).le.trans h
+theorem rank_exact : localRankBound 64000 3840000 19840 = 116784455894414962240 := by
+  rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide) (by decide)]
+  decide
+theorem nullity_lower : 130912206172909730640152 ≤ coefficientCount 11605952000 131071 3840000 19840 - 262144 * localRankBound 64000 3840000 19840 := by
+  have h := Nat.sub_le_sub_right coefficient_lower (262144*116784455894414962240)
+  rw [rank_exact]
+  exact (show 130912206172909730640152 = 30745256612158425592082712-262144*116784455894414962240 by decide).le.trans h
+theorem shape : 11605952000+19840 ≤ 131071*(88547+1) := by decide
+theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
+    130912206172909730640152 ≤ Module.finrank IRSProfile.Field (ConstraintKernel (K := IRSProfile.Field) 11605952000 131071 3840000 19840 64000 IRSProfile.domain u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric 11605952000 3840000 19840 64000 130912206172909730640152 u0 u1 nullity_lower
+end Source00
+
+namespace Source01
+theorem coefficient_lower : 3206940441726229701831800 ≤ coefficientCount 5802976000 131071 3200000 9888 := by
+  rw [show 5802976000 = 44273*131071+69617 by decide]
+  have h := OneResidueLower.oneResidue_le_coefficientCount 44273 69617 131071 3200000 9888 (by decide) (by decide) (by decide) (by decide)
+  exact (show 3206940441726229701831800 = oneResidueCoefficientCount 44273 69617 131071 3200000 9888 by decide).le.trans h
+theorem rank_exact : localRankBound 32000 3200000 9888 = 12172764924613929328 := by
+  rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide) (by decide)]
+  decide
+theorem nullity_lower : 15923153328235812072568 ≤ coefficientCount 5802976000 131071 3200000 9888 - 262144 * localRankBound 32000 3200000 9888 := by
+  have h := Nat.sub_le_sub_right coefficient_lower (262144*12172764924613929328)
+  rw [rank_exact]
+  exact (show 15923153328235812072568 = 3206940441726229701831800-262144*12172764924613929328 by decide).le.trans h
+theorem shape : 5802976000+9888 ≤ 131071*(44273+1) := by decide
+theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
+    15923153328235812072568 ≤ Module.finrank IRSProfile.Field (ConstraintKernel (K := IRSProfile.Field) 5802976000 131071 3200000 9888 32000 IRSProfile.domain u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric 5802976000 3200000 9888 32000 15923153328235812072568 u0 u1 nullity_lower
+end Source01
+
+namespace Source02
+theorem coefficient_lower : 2884454818654081905031800 ≤ coefficientCount 5802976000 131071 2880000 9888 := by
+  rw [show 5802976000 = 44273*131071+69617 by decide]
+  have h := OneResidueLower.oneResidue_le_coefficientCount 44273 69617 131071 2880000 9888 (by decide) (by decide) (by decide) (by decide)
+  exact (show 2884454818654081905031800 = oneResidueCoefficientCount 44273 69617 131071 2880000 9888 by decide).le.trans h
+theorem rank_exact : localRankBound 32000 2880000 9888 = 10950008283031849328 := by
+  rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide) (by decide)]
+  decide
+theorem nullity_lower : 13975847306980794792568 ≤ coefficientCount 5802976000 131071 2880000 9888 - 262144 * localRankBound 32000 2880000 9888 := by
+  have h := Nat.sub_le_sub_right coefficient_lower (262144*10950008283031849328)
+  rw [rank_exact]
+  exact (show 13975847306980794792568 = 2884454818654081905031800-262144*10950008283031849328 by decide).le.trans h
+theorem shape : 5802976000+9888 ≤ 131071*(44273+1) := by decide
+theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
+    13975847306980794792568 ≤ Module.finrank IRSProfile.Field (ConstraintKernel (K := IRSProfile.Field) 5802976000 131071 2880000 9888 32000 IRSProfile.domain u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric 5802976000 2880000 9888 32000 13975847306980794792568 u0 u1 nullity_lower
+end Source02
+
+namespace Source03
+theorem coefficient_lower : 132596923602714481688535 ≤ coefficientCount 2901488000 131071 1062000 4940 := by
+  rw [show 2901488000 = 22136*131071+100344 by decide]
+  have h := OneResidueLower.oneResidue_le_coefficientCount 22136 100344 131071 1062000 4940 (by decide) (by decide) (by decide) (by decide)
+  exact (show 132596923602714481688535 = oneResidueCoefficientCount 22136 100344 131071 1062000 4940 by decide).le.trans h
+theorem rank_exact : localRankBound 16000 1062000 4940 = 503593395806461590 := by
+  rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide) (by decide)]
+  decide
+theorem nullity_lower : 582936452425414639575 ≤ coefficientCount 2901488000 131071 1062000 4940 - 262144 * localRankBound 16000 1062000 4940 := by
+  have h := Nat.sub_le_sub_right coefficient_lower (262144*503593395806461590)
+  rw [rank_exact]
+  exact (show 582936452425414639575 = 132596923602714481688535-262144*503593395806461590 by decide).le.trans h
+theorem shape : 2901488000+4940 ≤ 131071*(22136+1) := by decide
+theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
+    582936452425414639575 ≤ Module.finrank IRSProfile.Field (ConstraintKernel (K := IRSProfile.Field) 2901488000 131071 1062000 4940 16000 IRSProfile.domain u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric 2901488000 1062000 4940 16000 582936452425414639575 u0 u1 nullity_lower
+end Source03
+
+namespace Source04
+theorem coefficient_lower : 8289432693401489457513 ≤ coefficientCount 1450744000 131071 531000 2470 := by
+  rw [show 1450744000 = 11068*131071+50172 by decide]
+  have h := OneResidueLower.oneResidue_le_coefficientCount 11068 50172 131071 531000 2470 (by decide) (by decide) (by decide) (by decide)
+  exact (show 8289432693401489457513 = oneResidueCoefficientCount 11068 50172 131071 531000 2470 by decide).le.trans h
+theorem rank_exact : localRankBound 8000 531000 2470 = 31483869872329770 := by
+  rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide) (by decide)]
+  decide
+theorem nullity_lower : 36125109589474230633 ≤ coefficientCount 1450744000 131071 531000 2470 - 262144 * localRankBound 8000 531000 2470 := by
+  have h := Nat.sub_le_sub_right coefficient_lower (262144*31483869872329770)
+  rw [rank_exact]
+  exact (show 36125109589474230633 = 8289432693401489457513-262144*31483869872329770 by decide).le.trans h
+theorem shape : 1450744000+2470 ≤ 131071*(11068+1) := by decide
+theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
+    36125109589474230633 ≤ Module.finrank IRSProfile.Field (ConstraintKernel (K := IRSProfile.Field) 1450744000 131071 531000 2470 8000 IRSProfile.domain u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric 1450744000 531000 2470 8000 36125109589474230633 u0 u1 nullity_lower
+end Source04
+
+namespace Source05
+theorem coefficient_lower : 2721164626950118715 ≤ coefficientCount 181343000 131071 88902 308 := by
+  rw [show 181343000 = 1383*131071+71807 by decide]
+  have h := OneResidueLower.oneResidue_le_coefficientCount 1383 71807 131071 88902 308 (by decide) (by decide) (by decide) (by decide)
+  exact (show 2721164626950118715 = oneResidueCoefficientCount 1383 71807 131071 88902 308 by decide).le.trans h
+theorem rank_exact : localRankBound 1000 88902 308 = 10336494078526 := by
+  rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide) (by decide)]
+  decide
+theorem nullity_lower : 11514723228998971 ≤ coefficientCount 181343000 131071 88902 308 - 262144 * localRankBound 1000 88902 308 := by
+  have h := Nat.sub_le_sub_right coefficient_lower (262144*10336494078526)
+  rw [rank_exact]
+  exact (show 11514723228998971 = 2721164626950118715-262144*10336494078526 by decide).le.trans h
+theorem shape : 181343000+308 ≤ 131071*(1383+1) := by decide
+theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
+    11514723228998971 ≤ Module.finrank IRSProfile.Field (ConstraintKernel (K := IRSProfile.Field) 181343000 131071 88902 308 1000 IRSProfile.domain u0 u1) := by
+  exact challengeConstraintKernel_finrank_lower_bound_of_numeric 181343000 88902 308 1000 11514723228998971 u0 u1 nullity_lower
+end Source05
+
+end ProximityPrize.SubmissionLower.Kernels80801
+
+end P43
+
+section P44
+namespace ProximityPrize.SubmissionLower.Lower80801.SourceSound
+
+open RCN095 RCN223 RCN260 RCN294 LocatorFactorAggregate
+open Lower80801.FactorSwitch Lower80801.PowerRoute
+open Lower80801.Oracle
+open LocatorPhase6800Oracle (Potential)
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 4000000
+
+theorem helperPair_regularCountCap_mono_right
+    (L₁ Y₁ S₁ L₂ Y₂ S₂ leftY leftR leftZ : ℕ)
+    (hL : L₁ ≤ L₂) (hY : Y₁ ≤ Y₂) (hS : S₁ ≤ S₂) :
+    AsymmetricHelper.leftRegularCountCap (helperPair L₁ Y₁ S₁ leftY leftR leftZ) ≤
+      AsymmetricHelper.leftRegularCountCap (helperPair L₂ Y₂ S₂ leftY leftR leftZ) := by
+  let P₁ := helperPair L₁ Y₁ S₁ leftY leftR leftZ
+  let P₂ := helperPair L₂ Y₂ S₂ leftY leftR leftZ
+  have ha : vectorLE P₁.leftAgreement P₂.leftAgreement := by
+    exact ⟨le_rfl, le_rfl, le_rfl⟩
+  have hm : vectorLE P₁.mixedCost P₂.mixedCost := by
+    refine ⟨?_, ?_, ?_⟩
+    · exact Nat.add_le_add (Nat.mul_le_mul_left leftR hL)
+        (Nat.mul_le_mul_left leftZ hS)
+    · exact Nat.add_le_add (Nat.mul_le_mul_left leftY hL)
+        (Nat.mul_le_mul_left leftZ hY)
+    · exact Nat.add_le_add (Nat.mul_le_mul_left leftY hS)
+        (Nat.mul_le_mul_left leftR hY)
+  have hdot : dot P₁.leftAgreement P₁.mixedCost ≤
+      dot P₂.leftAgreement P₂.mixedCost := by
+    unfold dot
+    exact Nat.add_le_add
+      (Nat.add_le_add (Nat.mul_le_mul ha.1 hm.1)
+        (Nat.mul_le_mul ha.2.1 hm.2.1))
+      (Nat.mul_le_mul ha.2.2 hm.2.2)
+  have hnum : AsymmetricHelper.leftRegularNumerator P₁ ≤ AsymmetricHelper.leftRegularNumerator P₂ := by
+    unfold AsymmetricHelper.leftRegularNumerator
+    exact Nat.add_le_add (Nat.mul_le_mul_left (P₁.n - P₁.w) hdot)
+      (Nat.mul_le_mul_left ((P₁.errors + 1) * P₁.gap) hm.2.2)
+  exact Nat.div_le_div_right hnum
+
+theorem stageCost_le_stageZero (L YS S : ℕ) (p : FlagDegree) (j : ℕ) :
+    stageCost L YS S (exactRouteBox p) j ≤
+      stageCost L YS S (exactRouteBox p) 0 := by
+  apply helperPair_regularCountCap_mono_right
+  · simpa only [exactRouteBox, Nat.zero_mul, Nat.sub_zero] using
+      Nat.sub_le L (j * total p)
+  · simpa only [exactRouteBox, Nat.zero_mul, Nat.sub_zero] using
+      Nat.sub_le YS (j * middle p)
+  · simpa only [exactRouteBox, Nat.zero_mul, Nat.sub_zero] using
+      Nat.sub_le S (j * p.all)
+
+theorem helperPair_gates_of_right_le
+    (L₁ Y₁ S₁ L₂ Y₂ S₂ leftY leftR leftZ : ℕ)
+    (hL : L₁ ≤ L₂) (hY : Y₁ ≤ Y₂) (hS : S₁ ≤ S₂)
+    (hgate : HelperPairGates L₂ Y₂ S₂ leftY leftR leftZ) :
+    HelperPairGates L₁ Y₁ S₁ leftY leftR leftZ := by
+  rcases hgate with ⟨hr, hy, hs, hz, hmy, hmr, hmz⟩
+  refine ⟨hr, hy, hs, hz, ?_, ?_, ?_⟩
+  · exact (Nat.add_le_add (Nat.mul_le_mul_left leftR hL)
+      (Nat.mul_le_mul_left leftZ hS)).trans_lt hmy
+  · exact (Nat.add_le_add (Nat.mul_le_mul_left leftY hL)
+      (Nat.mul_le_mul_left leftZ hY)).trans_lt hmr
+  · exact (Nat.add_le_add (Nat.mul_le_mul_left leftY hS)
+      (Nat.mul_le_mul_left leftR hY)).trans_lt hmz
+
+theorem stageGates_of_stageZero (L YS S : ℕ) (p : FlagDegree) (j : ℕ)
+    (hgate : HelperPairGates L YS S (middle p) p.all (total p)) :
+    HelperPairGates (L - j * total p) (YS - j * middle p)
+      (S - j * p.all) (middle p) p.all (total p) := by
+  apply helperPair_gates_of_right_le
+  · exact Nat.sub_le _ _
+  · exact Nat.sub_le _ _
+  · exact Nat.sub_le _ _
+  · exact hgate
+
+
+namespace Phase00
+def source : SourceNumbers := ⟨3840000, 88547, 19840, 130912206172909730640152⟩
+def potential : Potential := ⟨3670198945596, 175045551504387, 800501756853143⟩
+theorem stageZero_le (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 30)
+    (hy : middle p ≤ 139) (ht : total p ≤ 7199) :
+    stageCost 3840000 88547 19840 (exactRouteBox p) 0 ≤ potential.eval p := by
+  simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
+  change AsymmetricHelper.leftRegularCountCap (helperPair 3840000 88547 19840 (middle p) p.all (total p)) ≤
+    3670198945596 * total p + 175045551504387 * middle p + 800501756853143 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 36437739 7733189 1887160259 3670198945596 175045551504387 800501756853143
+  · norm_num [helperPair, UnequalParameters.gap]
+  · change 1 + 2*131071*middle p ≤ 36437739
+    omega
+  · change 131071*(2*p.all-1) ≤ 7733189
+    omega
+  · change 2*131071*total p+1 ≤ 1887160259
+    omega
+  all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
+
+theorem stageZero_gates (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 30)
+    (hy : middle p ≤ 139) (ht : total p ≤ 7199) :
+    HelperPairGates 3840000 88547 19840 (middle p) p.all (total p) := by
+  unfold HelperPairGates helperPair UnequalParameters.mixedCost
+  norm_num
+  constructor
+  · exact hr
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · nlinarith
+  constructor <;> nlinarith
+
+def sound : PhaseSourceSound where
+  source := source
+  potential := potential
+  stageCost_le := by
+    intro p j hr hs hy ht _hj
+    exact (stageCost_le_stageZero _ _ _ p j).trans (stageZero_le p hr hs hy ht)
+  stageGates := by
+    intro p j hr hs hy ht _hj
+    exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
+
+noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
+    Lower80801.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 11605952000
+  m := 64000
+  weighted := by decide
+  shape := Kernels80801.Source00.shape
+  slope_le_m := by decide
+  m_lt_char := by decide
+  gap_le_finrank := Kernels80801.Source00.finrank_gap u0 u1
+end Phase00
+
+namespace Phase01
+def source : SourceNumbers := ⟨3200000, 44273, 9888, 15923153328235812072568⟩
+def potential : Potential := ⟨1832049287276, 113173400483686, 521852587885969⟩
+theorem stageZero_le (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 30)
+    (hy : middle p ≤ 139) (ht : total p ≤ 7199) :
+    stageCost 3200000 44273 9888 (exactRouteBox p) 0 ≤ potential.eval p := by
+  simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
+  change AsymmetricHelper.leftRegularCountCap (helperPair 3200000 44273 9888 (middle p) p.all (total p)) ≤
+    1832049287276 * total p + 113173400483686 * middle p + 521852587885969 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 36437739 7733189 1887160259 1832049287276 113173400483686 521852587885969
+  · norm_num [helperPair, UnequalParameters.gap]
+  · change 1 + 2*131071*middle p ≤ 36437739
+    omega
+  · change 131071*(2*p.all-1) ≤ 7733189
+    omega
+  · change 2*131071*total p+1 ≤ 1887160259
+    omega
+  all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
+
+theorem stageZero_gates (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 30)
+    (hy : middle p ≤ 139) (ht : total p ≤ 7199) :
+    HelperPairGates 3200000 44273 9888 (middle p) p.all (total p) := by
+  unfold HelperPairGates helperPair UnequalParameters.mixedCost
+  norm_num
+  constructor
+  · exact hr
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · nlinarith
+  constructor <;> nlinarith
+
+def sound : PhaseSourceSound where
+  source := source
+  potential := potential
+  stageCost_le := by
+    intro p j hr hs hy ht _hj
+    exact (stageCost_le_stageZero _ _ _ p j).trans (stageZero_le p hr hs hy ht)
+  stageGates := by
+    intro p j hr hs hy ht _hj
+    exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
+
+noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
+    Lower80801.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 5802976000
+  m := 32000
+  weighted := by decide
+  shape := Kernels80801.Source01.shape
+  slope_le_m := by decide
+  m_lt_char := by decide
+  gap_le_finrank := Kernels80801.Source01.finrank_gap u0 u1
+end Phase01
+
+namespace Phase02
+def source : SourceNumbers := ⟨2880000, 44273, 9888, 13975847306980794792568⟩
+def potential : Potential := ⟨1832049287276, 106721380866900, 491451545467465⟩
+theorem stageZero_le (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 30)
+    (hy : middle p ≤ 139) (ht : total p ≤ 7199) :
+    stageCost 2880000 44273 9888 (exactRouteBox p) 0 ≤ potential.eval p := by
+  simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
+  change AsymmetricHelper.leftRegularCountCap (helperPair 2880000 44273 9888 (middle p) p.all (total p)) ≤
+    1832049287276 * total p + 106721380866900 * middle p + 491451545467465 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 36437739 7733189 1887160259 1832049287276 106721380866900 491451545467465
+  · norm_num [helperPair, UnequalParameters.gap]
+  · change 1 + 2*131071*middle p ≤ 36437739
+    omega
+  · change 131071*(2*p.all-1) ≤ 7733189
+    omega
+  · change 2*131071*total p+1 ≤ 1887160259
+    omega
+  all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
+
+theorem stageZero_gates (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 30)
+    (hy : middle p ≤ 139) (ht : total p ≤ 7199) :
+    HelperPairGates 2880000 44273 9888 (middle p) p.all (total p) := by
+  unfold HelperPairGates helperPair UnequalParameters.mixedCost
+  norm_num
+  constructor
+  · exact hr
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · nlinarith
+  constructor <;> nlinarith
+
+def sound : PhaseSourceSound where
+  source := source
+  potential := potential
+  stageCost_le := by
+    intro p j hr hs hy ht _hj
+    exact (stageCost_le_stageZero _ _ _ p j).trans (stageZero_le p hr hs hy ht)
+  stageGates := by
+    intro p j hr hs hy ht _hj
+    exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
+
+noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
+    Lower80801.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 5802976000
+  m := 32000
+  weighted := by decide
+  shape := Kernels80801.Source02.shape
+  slope_le_m := by decide
+  m_lt_char := by decide
+  gap_le_finrank := Kernels80801.Source02.finrank_gap u0 u1
+end Phase02
+
+namespace Phase03
+def source : SourceNumbers := ⟨1062000, 22136, 4940, 582936452425414639575⟩
+def potential : Potential := ⟨915634549327, 45719560544166, 209812081162255⟩
+theorem stageZero_le (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 30)
+    (hy : middle p ≤ 139) (ht : total p ≤ 7199) :
+    stageCost 1062000 22136 4940 (exactRouteBox p) 0 ≤ potential.eval p := by
+  simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
+  change AsymmetricHelper.leftRegularCountCap (helperPair 1062000 22136 4940 (middle p) p.all (total p)) ≤
+    915634549327 * total p + 45719560544166 * middle p + 209812081162255 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 36437739 7733189 1887160259 915634549327 45719560544166 209812081162255
+  · norm_num [helperPair, UnequalParameters.gap]
+  · change 1 + 2*131071*middle p ≤ 36437739
+    omega
+  · change 131071*(2*p.all-1) ≤ 7733189
+    omega
+  · change 2*131071*total p+1 ≤ 1887160259
+    omega
+  all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
+
+theorem stageZero_gates (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 30)
+    (hy : middle p ≤ 139) (ht : total p ≤ 7199) :
+    HelperPairGates 1062000 22136 4940 (middle p) p.all (total p) := by
+  unfold HelperPairGates helperPair UnequalParameters.mixedCost
+  norm_num
+  constructor
+  · exact hr
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · nlinarith
+  constructor <;> nlinarith
+
+def sound : PhaseSourceSound where
+  source := source
+  potential := potential
+  stageCost_le := by
+    intro p j hr hs hy ht _hj
+    exact (stageCost_le_stageZero _ _ _ p j).trans (stageZero_le p hr hs hy ht)
+  stageGates := by
+    intro p j hr hs hy ht _hj
+    exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
+
+noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
+    Lower80801.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 2901488000
+  m := 16000
+  weighted := by decide
+  shape := Kernels80801.Source03.shape
+  slope_le_m := by decide
+  m_lt_char := by decide
+  gap_le_finrank := Kernels80801.Source03.finrank_gap u0 u1
+end Phase03
+
+namespace Phase04
+def source : SourceNumbers := ⟨531000, 11068, 2470, 36125109589474230633⟩
+def potential : Potential := ⟨457817274664, 22859780272083, 104906040581128⟩
+theorem stageZero_le (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 30)
+    (hy : middle p ≤ 139) (ht : total p ≤ 7199) :
+    stageCost 531000 11068 2470 (exactRouteBox p) 0 ≤ potential.eval p := by
+  simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
+  change AsymmetricHelper.leftRegularCountCap (helperPair 531000 11068 2470 (middle p) p.all (total p)) ≤
+    457817274664 * total p + 22859780272083 * middle p + 104906040581128 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 36437739 7733189 1887160259 457817274664 22859780272083 104906040581128
+  · norm_num [helperPair, UnequalParameters.gap]
+  · change 1 + 2*131071*middle p ≤ 36437739
+    omega
+  · change 131071*(2*p.all-1) ≤ 7733189
+    omega
+  · change 2*131071*total p+1 ≤ 1887160259
+    omega
+  all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
+
+theorem stageZero_gates (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 30)
+    (hy : middle p ≤ 139) (ht : total p ≤ 7199) :
+    HelperPairGates 531000 11068 2470 (middle p) p.all (total p) := by
+  unfold HelperPairGates helperPair UnequalParameters.mixedCost
+  norm_num
+  constructor
+  · exact hr
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · nlinarith
+  constructor <;> nlinarith
+
+def sound : PhaseSourceSound where
+  source := source
+  potential := potential
+  stageCost_le := by
+    intro p j hr hs hy ht _hj
+    exact (stageCost_le_stageZero _ _ _ p j).trans (stageZero_le p hr hs hy ht)
+  stageGates := by
+    intro p j hr hs hy ht _hj
+    exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
+
+noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
+    Lower80801.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 1450744000
+  m := 8000
+  weighted := by decide
+  shape := Kernels80801.Source04.shape
+  slope_le_m := by decide
+  m_lt_char := by decide
+  gap_le_finrank := Kernels80801.Source04.finrank_gap u0 u1
+end Phase04
+
+namespace Phase05
+def source : SourceNumbers := ⟨88902, 1383, 308, 11514723228998971⟩
+def potential : Potential := ⟨57145825610, 3307984230542, 15250933241027⟩
+theorem stageZero_le (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 30)
+    (hy : middle p ≤ 139) (ht : total p ≤ 7199) :
+    stageCost 88902 1383 308 (exactRouteBox p) 0 ≤ potential.eval p := by
+  simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
+  change AsymmetricHelper.leftRegularCountCap (helperPair 88902 1383 308 (middle p) p.all (total p)) ≤
+    57145825610 * total p + 3307984230542 * middle p + 15250933241027 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 36437739 7733189 1887160259 57145825610 3307984230542 15250933241027
+  · norm_num [helperPair, UnequalParameters.gap]
+  · change 1 + 2*131071*middle p ≤ 36437739
+    omega
+  · change 131071*(2*p.all-1) ≤ 7733189
+    omega
+  · change 2*131071*total p+1 ≤ 1887160259
+    omega
+  all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
+
+theorem stageZero_gates (p : FlagDegree)
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 30)
+    (hy : middle p ≤ 139) (ht : total p ≤ 7199) :
+    HelperPairGates 88902 1383 308 (middle p) p.all (total p) := by
+  unfold HelperPairGates helperPair UnequalParameters.mixedCost
+  norm_num
+  constructor
+  · exact hr
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · nlinarith
+  constructor <;> nlinarith
+
+def sound : PhaseSourceSound where
+  source := source
+  potential := potential
+  stageCost_le := by
+    intro p j hr hs hy ht _hj
+    exact (stageCost_le_stageZero _ _ _ p j).trans (stageZero_le p hr hs hy ht)
+  stageGates := by
+    intro p j hr hs hy ht _hj
+    exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
+
+noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
+    Lower80801.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 181343000
+  m := 1000
+  weighted := by decide
+  shape := Kernels80801.Source05.shape
+  slope_le_m := by decide
+  m_lt_char := by decide
+  gap_le_finrank := Kernels80801.Source05.finrank_gap u0 u1
+end Phase05
+
+end ProximityPrize.SubmissionLower.Lower80801.SourceSound
+
+end P44
+
+section P45
+namespace ProximityPrize.SubmissionLower.Lower80801.PhaseRows
+open RCN095 LocatorFactorAggregate LocatorArbitraryPowerAvoidance
+open LocatorPhase6800Oracle (Potential BaseRow BaseSegment evalBaseSegments rawFlag rawFlag_total rawFlag_middle rawFlag_all)
+open Lower80801.Oracle
+open LocatorPhase6800Audit (powerBandBudget_mono_fuel)
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 4000000
+theorem routeable_raw_mono_z
+    (s : SourceNumbers) {r v z₁ z₂ : ℕ}
+    (hz : z₁ ≤ z₂) (hcap : r + v + z₂ ≤ s.totalCap)
+    (hroute : s.Routeable (rawFlag r v z₁)) :
+    s.Routeable (rawFlag r v z₂) := by
+  rcases hroute with ⟨hr, ht, hy, hs, hband⟩
+  have hr' : 1 ≤ r := by simpa only [rawFlag_all] using hr
+  have htotal : r + v + z₁ ≤ r + v + z₂ := by omega
+  have hpos : 0 < r + v + z₁ := by omega
+  have hdiv : s.totalCap / (r + v + z₂) ≤
+      s.totalCap / (r + v + z₁) :=
+    Nat.div_le_div_left htotal hpos
+  have hfuel : s.fuel (rawFlag r v z₂) ≤
+      s.fuel (rawFlag r v z₁) := by
+    unfold SourceNumbers.fuel
+    simp only [rawFlag_total, rawFlag_middle, rawFlag_all]
+    exact min_le_min hdiv (le_refl _)
+  have hbox : s.totalCap - (r + v + z₂) ≤
+      s.totalCap - (r + v + z₁) := Nat.sub_le_sub_left htotal _
+  have hsameFuel :
+      powerBandBudget 50273 (r + v + z₂) (r + v) r
+          (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
+          (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
+        powerBandBudget 50273 (r + v + z₁) (r + v) r
+          (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+          (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) := by
+    exact powerBandBudget_mono 50273
+      (r + v + z₂) (r + v) r
+      (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
+      (s.slopeCap - r)
+      (r + v + z₁) (r + v) r
+      (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+      (s.slopeCap - r) (s.fuel (rawFlag r v z₂))
+      hbox (le_refl _) (le_refl _) htotal (le_refl _) (le_refl _)
+  have hmoreFuel :
+      powerBandBudget 50273 (r + v + z₁) (r + v) r
+          (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+          (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
+        powerBandBudget 50273 (r + v + z₁) (r + v) r
+          (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+          (s.slopeCap - r) (s.fuel (rawFlag r v z₁)) :=
+    powerBandBudget_mono_fuel 50273 (r + v + z₁) (r + v) r
+      (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+      (s.slopeCap - r) hfuel
+  refine ⟨hr, ?_, ?_, ?_, ?_⟩
+  · simpa only [rawFlag_total] using hcap
+  · simpa only [rawFlag_middle] using hy
+  · simpa only [rawFlag_all] using hs
+  · rcases hband with hband | hthin
+    · left
+      unfold SourceNumbers.band at hband ⊢
+      simp only [rawFlag_total, rawFlag_middle, rawFlag_all] at hband ⊢
+      exact (hsameFuel.trans hmoreFuel).trans_lt hband
+    · right
+      have hsameFuelT :
+          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₂)) 50273
+              (contactDec (rawFlag r v z₂)) (r + v + z₂) (r + v) r
+              (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
+              (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
+            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50273
+              (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
+              (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+              (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) := by
+        have hcap : s.contactCap (rawFlag r v z₂) = s.contactCap (rawFlag r v z₁) := by
+          simp only [SourceNumbers.contactCap, contactDec, rawFlag_middle, rawFlag_all]
+        have hdec : contactDec (rawFlag r v z₂) = contactDec (rawFlag r v z₁) := by
+          simp only [contactDec, rawFlag_middle, rawFlag_all]
+        rw [hcap, hdec]
+        exact powerBandBudgetThin_mono 131071 50273 (s.fuel (rawFlag r v z₂))
+          (s.contactCap (rawFlag r v z₁)) (contactDec (rawFlag r v z₁))
+          (r + v + z₂) (r + v) r
+          (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v)) (s.slopeCap - r)
+          (s.contactCap (rawFlag r v z₁)) (contactDec (rawFlag r v z₁))
+          (r + v + z₁) (r + v) r
+          (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v)) (s.slopeCap - r)
+          le_rfl le_rfl hbox le_rfl le_rfl htotal le_rfl le_rfl
+      have hmoreFuelT :
+          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50273
+              (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
+              (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+              (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
+            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50273
+              (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
+              (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
+              (s.slopeCap - r) (s.fuel (rawFlag r v z₁)) :=
+        powerBandBudgetThin_mono_fuel 131071 (s.contactCap (rawFlag r v z₁)) 50273
+          (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
+          (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v)) (s.slopeCap - r) hfuel
+      unfold SourceNumbers.bandThin at hthin ⊢
+      simp only [rawFlag_total, rawFlag_middle, rawFlag_all] at hthin ⊢
+      exact (hsameFuelT.trans hmoreFuelT).trans_lt hthin
+
+
+def phasePotential : ℕ → Potential
+  | 0 => Lower80801.SourceSound.Phase00.potential
+  | 1 => Lower80801.SourceSound.Phase01.potential
+  | 2 => Lower80801.SourceSound.Phase02.potential
+  | 3 => Lower80801.SourceSound.Phase03.potential
+  | 4 => Lower80801.SourceSound.Phase04.potential
+  | _ => Lower80801.SourceSound.Phase05.potential
+
+def thresholdAt (q : Array ℕ) (j : ℕ) : ℕ := (q[j]?).getD 7200
+def cachedPrefixAt (q : Array ℕ) (j : ℕ) : ℕ := (q[j]?).getD 0
+structure PhaseRowContext where
+  R : ℕ
+  V : ℕ
+  base : BaseRow
+  threshold : Array ℕ
+  here : Array ℕ
+  parent : Array ℕ
+
+def baseAt (c : PhaseRowContext) (z : ℕ) : ℕ := c.base.evalAt z
+
+def parentCharge (c : PhaseRowContext) (phase z : ℕ) : ℕ :=
+  (phasePotential phase).eval (rawFlag c.R c.V z) + cachedPrefixAt c.parent phase
+
+def hereCharge (c : PhaseRowContext) (phase z : ℕ) : ℕ :=
+  (phasePotential phase).eval (rawFlag c.R c.V z) + cachedPrefixAt c.here phase
+
+/-- Source `0` is the base line; source `j+1` is the parent charge of phase
+`j`. -/
+def sourceLine (c : PhaseRowContext) : ℕ → ℕ → ℕ
+  | 0, z => baseAt c z
+  | j + 1, z => parentCharge c j z
+
+/-- The cap just before `phase`. -/
+def capBefore (c : PhaseRowContext) : ℕ → ℕ → ℕ
+  | 0, z => baseAt c z
+  | j + 1, z =>
+      if thresholdAt c.threshold j ≤ z then
+        min (capBefore c j z) (parentCharge c j z)
+      else capBefore c j z
+
+def SourceActive (c : PhaseRowContext) : ℕ → ℕ → Prop
+  | 0, _ => True
+  | j + 1, z => thresholdAt c.threshold j ≤ z
+
+instance (c : PhaseRowContext) (w z : ℕ) : Decidable (SourceActive c w z) := by
+  cases w <;> simp only [SourceActive] <;> infer_instance
+
+theorem sourceActive_mono (c : PhaseRowContext) (w lo z : ℕ)
+    (h : SourceActive c w lo) (hz : lo ≤ z) : SourceActive c w z := by
+  cases w with
+  | zero => trivial
+  | succ j =>
+      change thresholdAt c.threshold j ≤ lo at h
+      change thresholdAt c.threshold j ≤ z
+      exact h.trans hz
+
+theorem capBefore_step_le (c : PhaseRowContext) (phase z : ℕ) :
+    capBefore c (phase + 1) z ≤ capBefore c phase z := by
+  simp only [capBefore]
+  split
+  · exact min_le_left _ _
+  · exact le_rfl
+
+theorem capBefore_le_sourceLine (c : PhaseRowContext) (phase witness z : ℕ)
+    (hw : witness ≤ phase) (ha : SourceActive c witness z) :
+    capBefore c phase z ≤ sourceLine c witness z := by
+  induction phase with
+  | zero =>
+      have : witness = 0 := by omega
+      subst witness
+      exact le_rfl
+  | succ phase ih =>
+      by_cases hprev : witness ≤ phase
+      · exact (capBefore_step_le c phase z).trans (ih hprev)
+      · have heq : witness = phase + 1 := by omega
+        subst witness
+        simp only [SourceActive] at ha
+        simp only [capBefore, sourceLine, if_pos ha]
+        exact min_le_right _ _
+
+/-! ## Affine cells -/
+
+open SecondJetRowIntervals
+
+theorem potential_raw_affine (q : Potential) (R V lo z : ℕ) (hlo : lo ≤ z) :
+    q.eval (rawFlag R V z) =
+      q.eval (rawFlag R V lo) + q.totalCoeff * (z - lo) := by
+  have hz : z = lo + (z - lo) := by omega
+  rw [hz]
+  simp only [Potential.eval, rawFlag_total, rawFlag_middle, rawFlag_all]
+  have hsub : lo + (z - lo) - lo = z - lo := by omega
+  rw [hsub]
+  ring
+
+
+def SourceCell (c : PhaseRowContext) : ℕ → ℕ → ℕ → Prop
+  | 0, lo, hi => BaseCell c.base lo hi
+  | _+1, _, _ => True
+instance (c : PhaseRowContext) (w lo hi : ℕ) : Decidable (SourceCell c w lo hi) := by
+  cases w <;> simp only [SourceCell] <;> infer_instance
+
+def sourceSlope (c : PhaseRowContext) : ℕ → ℕ → ℕ
+  | 0, lo => baseSlopeAt c.base lo
+  | j+1, _ => (phasePotential j).totalCoeff
+
+theorem parentCharge_affine (c : PhaseRowContext) (phase lo z : ℕ) (hz : lo ≤ z) :
+    parentCharge c phase z = parentCharge c phase lo + (phasePotential phase).totalCoeff*(z-lo) := by
+  unfold parentCharge
+  rw [potential_raw_affine _ _ _ lo z hz]
+  omega
+
+theorem hereCharge_affine (c : PhaseRowContext) (phase lo hi z : ℕ)
+    (_hp : phase < 6) (hlo : lo ≤ z) (_hhi : z ≤ hi) :
+    hereCharge c phase z = hereCharge c phase lo + (phasePotential phase).totalCoeff*(z-lo) := by
+  unfold hereCharge
+  rw [potential_raw_affine _ _ _ lo z hlo]
+  omega
+
+theorem sourceLine_affine (c : PhaseRowContext) (w lo hi z : ℕ)
+    (_hw : w ≤ 6) (hc : SourceCell c w lo hi) (hlo : lo ≤ z) (hhi : z ≤ hi) :
+    sourceLine c w z = sourceLine c w lo + sourceSlope c w lo*(z-lo) := by
+  cases w with
+  | zero => exact baseAt_affine c.base lo hi z hc hlo hhi
+  | succ j => exact parentCharge_affine c j lo z hlo
+
+theorem affine_le_between (a A m M d finish : ℕ) (hd : d ≤ finish)
+    (hstart : a ≤ A) (hend : a+m*finish ≤ A+M*finish) : a+m*d ≤ A+M*d := by
+  by_cases hm : m ≤ M
+  · exact Nat.add_le_add hstart (Nat.mul_le_mul_right d hm)
+  · have hMm : M ≤ m := (Nat.lt_of_not_ge hm).le
+    have hdecomp : M+(m-M)=m := Nat.add_sub_of_le hMm
+    have hdeltaFinish : a+(m-M)*finish ≤ A := by
+      rw [← hdecomp, Nat.add_mul] at hend
+      omega
+    have hdelta := Nat.mul_le_mul_left (m-M) hd
+    rw [← hdecomp, Nat.add_mul]
+    omega
+
+structure PhaseRun where
+  stop : ℕ
+  witness : ℕ
+  deriving DecidableEq, Repr
+
+def RunValid (c : PhaseRowContext) (phase start : ℕ) (run : PhaseRun) : Prop :=
+  let hi := run.stop - 1
+  start < run.stop ∧ run.witness ≤ phase ∧
+    SourceActive c run.witness start ∧
+    SourceCell c run.witness start hi ∧
+    sourceLine c run.witness start ≤ hereCharge c phase start ∧
+    sourceLine c run.witness hi ≤ hereCharge c phase hi
+
+instance (c : PhaseRowContext) (phase start : ℕ) (run : PhaseRun) :
+    Decidable (RunValid c phase start run) := by
+  unfold RunValid
+  infer_instance
+
+theorem RunValid.sound (c : PhaseRowContext) (phase start : ℕ) (run : PhaseRun)
+    (hp : phase < 6) (h : RunValid c phase start run)
+    (z : ℕ) (hlo : start ≤ z) (hhi : z < run.stop) :
+    capBefore c phase z ≤ hereCharge c phase z := by
+  change start < run.stop ∧ run.witness ≤ phase ∧
+    SourceActive c run.witness start ∧
+    SourceCell c run.witness start (run.stop - 1) ∧
+    sourceLine c run.witness start ≤ hereCharge c phase start ∧
+    sourceLine c run.witness (run.stop - 1) ≤
+      hereCharge c phase (run.stop - 1) at h
+  rcases h with ⟨hstart, hw, hactive, hsource, hleft, hright⟩
+  let hi := run.stop - 1
+  have hzhi : z ≤ hi := by dsimp only [hi]; omega
+  have hsthi : start ≤ hi := by dsimp only [hi]; omega
+  have hs := sourceLine_affine c run.witness start hi z (by omega)
+    hsource hlo hzhi
+  have ht := hereCharge_affine c phase start hi z hp hlo hzhi
+  have hsEnd := sourceLine_affine c run.witness start hi hi (by omega)
+    hsource hsthi le_rfl
+  have htEnd := hereCharge_affine c phase start hi hi hp
+    hsthi le_rfl
+  have hline : sourceLine c run.witness z ≤ hereCharge c phase z := by
+    rw [hs, ht]
+    apply affine_le_between
+      (sourceLine c run.witness start) (hereCharge c phase start)
+      (sourceSlope c run.witness start) ((phasePotential phase).totalCoeff)
+      (z - start) (hi - start)
+    · exact Nat.sub_le_sub_right hzhi start
+    · exact hleft
+    · rw [← hsEnd, ← htEnd]
+      exact hright
+  apply (capBefore_le_sourceLine c phase run.witness z hw ?_).trans hline
+  exact sourceActive_mono c run.witness start z hactive hlo
+
+def RunsValid (c : PhaseRowContext) (phase finish : ℕ) :
+    ℕ → List PhaseRun → Prop
+  | start, [] => start = finish
+  | start, run :: runs =>
+      run.stop ≤ finish ∧ RunValid c phase start run ∧
+        RunsValid c phase finish run.stop runs
+
+instance (c : PhaseRowContext) (phase finish start : ℕ)
+    (runs : List PhaseRun) : Decidable (RunsValid c phase finish start runs) := by
+  induction runs generalizing start with
+  | nil => simp only [RunsValid]; infer_instance
+  | cons run runs ih => simp only [RunsValid]; infer_instance
+
+theorem RunsValid.sound (c : PhaseRowContext) (phase finish start : ℕ)
+    (runs : List PhaseRun) (hp : phase < 6)
+    (h : RunsValid c phase finish start runs)
+    (z : ℕ) (hlo : start ≤ z) (hhi : z < finish) :
+    capBefore c phase z ≤ hereCharge c phase z := by
+  induction runs generalizing start with
+  | nil =>
+      simp only [RunsValid] at h
+      omega
+  | cons run runs ih =>
+      simp only [RunsValid] at h
+      by_cases hz : z < run.stop
+      · exact RunValid.sound c phase start run hp h.2.1 z hlo hz
+      · exact ih run.stop h.2.2 (by omega)
+
+def phaseFinish (c : PhaseRowContext) (phase : ℕ) : ℕ :=
+  min (thresholdAt c.threshold phase) (7200 - (c.R + c.V))
+
+def RowRunsValid (c : PhaseRowContext) (runs : Array (List PhaseRun)) : Prop :=
+  ∀ j ∈ List.range 6, RunsValid c j (phaseFinish c j) 0 ((runs[j]?).getD [])
+
+instance (c : PhaseRowContext) (runs : Array (List PhaseRun)) :
+    Decidable (RowRunsValid c runs) := by
+  unfold RowRunsValid
+  infer_instance
+
+theorem phaseTerminal_of_runs (c : PhaseRowContext) (phase : ℕ)
+    (runs : List PhaseRun) (hp : phase < 6)
+    (h : RunsValid c phase (phaseFinish c phase) 0 runs)
+    (z : ℕ) (hz : z < 7200 - (c.R + c.V)) :
+    thresholdAt c.threshold phase ≤ z ∨
+      capBefore c phase z ≤ hereCharge c phase z := by
+  by_cases ht : thresholdAt c.threshold phase ≤ z
+  · exact Or.inl ht
+  · apply Or.inr
+    apply RunsValid.sound c phase (phaseFinish c phase) 0 runs hp h z
+    · omega
+    · unfold phaseFinish
+      exact lt_min (Nat.lt_of_not_ge ht) hz
+
+
+end ProximityPrize.SubmissionLower.Lower80801.PhaseRows
+
+namespace ProximityPrize.SubmissionLower.Lower80801.ThresholdFast
+
+open scoped BigOperators
+open LocatorLowQuotient
+
+set_option autoImplicit false
+set_option maxRecDepth 100000
+
+theorem term_eq (B x : ℕ) :
+    (x + 1) * (B + x) - (x + 1) * x / 2 =
+      (x + 1) * B + (x + 1).choose 2 := by
+  rw [Nat.choose_two_right]
+  simp only [Nat.add_sub_cancel]
+  have hdvd : 2 ∣ (x + 1) * x := by
+    simpa [Nat.mul_comm, Nat.add_comm] using
+      (even_iff_two_dvd.mp (Nat.even_mul_succ_self x))
+  have hhalf := Nat.div_mul_cancel hdvd
+  rw [Nat.mul_add]
+  omega
+
+theorem kernelSumRange_succ_all : ∀ n : ℕ,
+    kernelSumRange (fun x => x + 1) n = (n + 1).choose 2
+  | 0 => by decide
+  | n + 1 => by
+      rw [LocatorLowQuotient.kernelSumRange_succ, kernelSumRange_succ_all]
+      simpa [Nat.choose_one_right, Nat.add_comm, Nat.add_left_comm,
+        Nat.add_assoc] using (Nat.choose_succ_succ (n + 1) 1).symm
+
+theorem kernelSumRange_succ (U : ℕ) :
+    kernelSumRange (fun x => x + 1) (U + 1) = (U + 2).choose 2 := by
+  simpa only [Nat.add_assoc] using kernelSumRange_succ_all (U + 1)
+
+theorem kernelSumRange_choose_two_all : ∀ n : ℕ,
+    kernelSumRange (fun x => (x + 1).choose 2) n = (n + 1).choose 3
+  | 0 => by decide
+  | n + 1 => by
+      rw [LocatorLowQuotient.kernelSumRange_succ, kernelSumRange_choose_two_all]
+      simpa [Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using
+        (Nat.choose_succ_succ (n + 1) 2).symm
+
+theorem kernelSumRange_choose_two (U : ℕ) :
+    kernelSumRange (fun x => (x + 1).choose 2) (U + 1) =
+      (U + 2).choose 3 := by
+  simpa only [Nat.add_assoc] using kernelSumRange_choose_two_all (U + 1)
+
+theorem kernelSumRange_uncapped (B U : ℕ) :
+    kernelSumRange (fun x =>
+      (x + 1) * (B + x) - (x + 1) * x / 2) (U + 1) =
+      B * (U + 2).choose 2 + (U + 2).choose 3 := by
+  rw [kernelSumRange_eq]
+  simp_rw [term_eq]
+  rw [Finset.sum_add_distrib]
+  rw [← Finset.sum_mul]
+  rw [← kernelSumRange_eq, kernelSumRange_succ]
+  rw [← kernelSumRange_eq, kernelSumRange_choose_two]
+  simp only [Nat.mul_comm]
+
+def cappedTerm (B S x : ℕ) : ℕ :=
+  let M := min S x
+  (M + 1) * (B + x) - (M + 1) * M / 2
+
+theorem min_sub_min_eq (T YS x : ℕ) (hx : x ≤ min T YS) :
+    min (T - (min T YS - x)) (YS - (min T YS - x)) = x := by
+  rcases le_total T YS with h | h
+  · simp only [Nat.min_eq_left h] at hx ⊢
+    omega
+  · simp only [Nat.min_eq_right h] at hx ⊢
+    omega
+
+theorem channelCount_eq_cappedKernel (T YS S : ℕ) :
+    channelCount T YS S =
+      kernelSumRange
+        (cappedTerm (T + 1 - min T YS) S) (min T YS + 1) := by
+  unfold channelCount
+  rw [kernelSumRange_eq, ← Finset.sum_range_reflect]
+  rw [kernelSumRange_eq]
+  refine Finset.sum_congr rfl ?_
+  intro x hx
+  have hx' : x ≤ min T YS := by
+    have := Finset.mem_range.mp hx
+    omega
+  have hU : min T YS ≤ T := Nat.min_le_left _ _
+  simp only [Nat.add_sub_cancel, cappedTerm]
+  rw [min_sub_min_eq T YS x hx']
+  have harg : T + 1 - (min T YS - x) =
+      (T + 1 - min T YS) + x := by omega
+  rw [harg]
+
+def fastChannelCount (T YS S : ℕ) : ℕ :=
+  let U := min T YS
+  let B := T + 1 - U
+  let k := min S U
+  let n := U - k
+  let C := (S + 1) * (B + S + 1) - (S + 1) * S / 2
+  B * (k + 2).choose 2 + (k + 2).choose 3 +
+    n * C + (S + 1) * (n * (n - 1) / 2)
+
+theorem tail_term_eq (B S t : ℕ) :
+    cappedTerm B S (S + 1 + t) =
+      ((S + 1) * (B + S + 1) - (S + 1) * S / 2) +
+        (S + 1) * t := by
+  unfold cappedTerm
+  rw [Nat.min_eq_left (by omega)]
+  change (S + 1) * (B + (S + 1 + t)) - (S + 1) * S / 2 =
+    ((S + 1) * (B + S + 1) - (S + 1) * S / 2) + (S + 1) * t
+  rw [show B + (S + 1 + t) = (B + S + 1) + t by omega,
+    Nat.mul_add]
+  have hS : S ≤ B + S + 1 := by omega
+  have hq : (S + 1) * S / 2 ≤ (S + 1) * (B + S + 1) :=
+    (Nat.div_le_self ((S + 1) * S) 2).trans
+      (Nat.mul_le_mul_left (S + 1) hS)
+  exact Nat.sub_add_comm
+    (n := (S + 1) * (B + S + 1)) (m := (S + 1) * t)
+    (k := (S + 1) * S / 2) hq
+
+theorem kernelSumRange_capped_prefix (B S k : ℕ) (hk : k ≤ S) :
+    kernelSumRange (cappedTerm B S) (k + 1) =
+      B * (k + 2).choose 2 + (k + 2).choose 3 := by
+  calc
+    kernelSumRange (cappedTerm B S) (k + 1) =
+        kernelSumRange (fun x =>
+          (x + 1) * (B + x) - (x + 1) * x / 2) (k + 1) := by
+      rw [kernelSumRange_eq, kernelSumRange_eq]
+      refine Finset.sum_congr rfl ?_
+      intro x hx
+      have hxk : x ≤ k := by
+        have := Finset.mem_range.mp hx
+        omega
+      simp only [cappedTerm, Nat.min_eq_right (hxk.trans hk)]
+    _ = B * (k + 2).choose 2 + (k + 2).choose 3 :=
+      kernelSumRange_uncapped B k
+
+theorem sum_Ico_capped_tail (B S U : ℕ) (hSU : S < U) :
+    (∑ x ∈ Finset.Ico (S + 1) (U + 1), cappedTerm B S x) =
+      (U - S) *
+          ((S + 1) * (B + S + 1) - (S + 1) * S / 2) +
+        (S + 1) * ((U - S) * (U - S - 1) / 2) := by
+  rw [Finset.sum_Ico_eq_sum_range]
+  have hsub : U + 1 - (S + 1) = U - S := by omega
+  rw [hsub]
+  simp_rw [tail_term_eq]
+  rw [Finset.sum_add_distrib]
+  rw [← Finset.mul_sum]
+  simp only [Finset.sum_const, Finset.card_range, Nat.nsmul_eq_mul,
+    Finset.sum_range_id]
+
+theorem kernelSumRange_capped_closed (B S U : ℕ) :
+    kernelSumRange (cappedTerm B S) (U + 1) =
+      let k := min S U
+      let n := U - k
+      B * (k + 2).choose 2 + (k + 2).choose 3 +
+        n * ((S + 1) * (B + S + 1) - (S + 1) * S / 2) +
+          (S + 1) * (n * (n - 1) / 2) := by
+  by_cases hSU : S < U
+  · simp only [Nat.min_eq_left hSU.le]
+    rw [kernelSumRange_eq]
+    rw [← Finset.sum_range_add_sum_Ico (cappedTerm B S)
+      (show S + 1 ≤ U + 1 by omega)]
+    rw [← kernelSumRange_eq, kernelSumRange_capped_prefix B S S le_rfl,
+      sum_Ico_capped_tail B S U hSU]
+    simp only [Nat.add_assoc]
+  · have hUS : U ≤ S := Nat.le_of_not_gt hSU
+    simp only [Nat.min_eq_right hUS, Nat.sub_self, zero_mul,
+      Nat.zero_sub, Nat.add_zero]
+    exact kernelSumRange_capped_prefix B S U hUS
+
+theorem channelCount_eq_fast (T YS S : ℕ) :
+    channelCount T YS S = fastChannelCount T YS S := by
+  rw [channelCount_eq_cappedKernel]
+  rw [kernelSumRange_capped_closed]
+  rfl
+
+/-! ## Constant-time executable form -/
+
+theorem choose_three_right (n : ℕ) :
+    n.choose 3 = n * (n - 1) * (n - 2) / 6 := by
+  rw [Nat.choose_eq_descFactorial_div_factorial]
+  simp [Nat.descFactorial, Nat.factorial]
+  congr 1
+  ring
+
+def evalChooseTwo (n : ℕ) : ℕ := n * (n - 1) / 2
+def evalChooseThree (n : ℕ) : ℕ := n * (n - 1) * (n - 2) / 6
+
+/-- A constant-time executable version of `channelCount`. -/
+def evalChannelCount (T YS S : ℕ) : ℕ :=
+  let U := min T YS
+  let B := T + 1 - U
+  let k := min S U
+  let n := U - k
+  let C := (S + 1) * (B + S + 1) - (S + 1) * S / 2
+  B * evalChooseTwo (k + 2) + evalChooseThree (k + 2) +
+    n * C + (S + 1) * (n * (n - 1) / 2)
+
+theorem fastChannelCount_eq_eval (T YS S : ℕ) :
+    fastChannelCount T YS S = evalChannelCount T YS S := by
+  simp only [fastChannelCount, evalChannelCount, evalChooseTwo,
+    evalChooseThree, Nat.choose_two_right, choose_three_right]
+
+theorem channelCount_eq_eval (T YS S : ℕ) :
+    channelCount T YS S = evalChannelCount T YS S :=
+  (channelCount_eq_fast T YS S).trans (fastChannelCount_eq_eval T YS S)
+
+open LocatorArbitraryPowerAvoidance Lower80801.Oracle
+open LocatorPhase6800Oracle (rawFlag)
+open RCN095 LocatorFactorAggregate
+
+/-- Executable power-band budget with the expensive range sum replaced by
+the proved constant-time channel-count formula. -/
+def evalPowerBandBudget
+    (delta dT dY dS T YS S : ℕ) : ℕ → ℕ
+  | 0 => 0
+  | fuel + 1 =>
+      delta * evalChannelCount T YS S +
+        evalPowerBandBudget delta dT dY dS
+          (T - dT) (YS - dY) (S - dS) fuel
+
+theorem evalPowerBandBudget_eq
+    (delta dT dY dS T YS S fuel : ℕ) :
+    evalPowerBandBudget delta dT dY dS T YS S fuel =
+      powerBandBudget delta dT dY dS T YS S fuel := by
+  induction fuel generalizing T YS S with
+  | zero => rfl
+  | succ fuel ih =>
+      simp only [evalPowerBandBudget, powerBandBudget]
+      rw [← channelCount_eq_eval, ih]
+
+def evalBand (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  evalPowerBandBudget 50273 (total p) (middle p) p.all
+    (s.totalCap - total p) (s.middleCap - middle p)
+    (s.slopeCap - p.all) (s.fuel p)
+
+theorem evalBand_eq (s : SourceNumbers) (p : FlagDegree) :
+    evalBand s p = s.band p := by
+  unfold evalBand SourceNumbers.band
+  exact evalPowerBandBudget_eq _ _ _ _ _ _ _ _
+
+/-- Executable thin budget (lever S1): the same recursion with the constant-time
+channel count; `thinTop` is already a single division. -/
+def evalPowerBandBudgetThin
+    (w Dh delta dc dT dY dS T YS S : ℕ) : ℕ → ℕ
+  | 0 => 0
+  | fuel + 1 =>
+      delta * evalChannelCount T (min YS (thinTop w Dh S)) S +
+        evalPowerBandBudgetThin w (Dh - delta - dc) delta dc dT dY dS
+          (T - dT) (YS - dY) (S - dS) fuel
+
+theorem evalPowerBandBudgetThin_eq
+    (w Dh delta dc dT dY dS T YS S fuel : ℕ) :
+    evalPowerBandBudgetThin w Dh delta dc dT dY dS T YS S fuel =
+      powerBandBudgetThin w Dh delta dc dT dY dS T YS S fuel := by
+  induction fuel generalizing Dh T YS S with
+  | zero => rfl
+  | succ fuel ih =>
+      simp only [evalPowerBandBudgetThin, powerBandBudgetThin]
+      rw [← channelCount_eq_eval, ih]
+
+def evalBandThin (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  evalPowerBandBudgetThin 131071 (s.contactCap p) 50273 (contactDec p)
+    (total p) (middle p) p.all
+    (s.totalCap - total p) (s.middleCap - middle p)
+    (s.slopeCap - p.all) (s.fuel p)
+
+theorem evalBandThin_eq (s : SourceNumbers) (p : FlagDegree) :
+    evalBandThin s p = s.bandThin p := by
+  unfold evalBandThin SourceNumbers.bandThin
+  exact evalPowerBandBudgetThin_eq _ _ _ _ _ _ _ _ _ _ _
+
+def FastRouteable (s : SourceNumbers) (p : FlagDegree) : Prop :=
+  1 ≤ p.all ∧ total p ≤ s.totalCap ∧ middle p ≤ s.middleCap ∧
+    p.all ≤ s.slopeCap ∧ (evalBandThin s p < s.gap ∨ evalBand s p < s.gap)
+
+instance (s : SourceNumbers) (p : FlagDegree) :
+    Decidable (FastRouteable s p) := by
+  unfold FastRouteable
+  infer_instance
+
+theorem fastRouteable_iff (s : SourceNumbers) (p : FlagDegree) :
+    FastRouteable s p ↔ s.Routeable p := by
+  unfold FastRouteable SourceNumbers.Routeable
+  rw [evalBand_eq, evalBandThin_eq, or_comm]
+
+def FastSourceThresholdSufficient
+    (s : SourceNumbers) (r v threshold : ℕ) : Prop :=
+  7199 - (r + v) < threshold ∨ FastRouteable s (rawFlag r v threshold)
+
+instance (s : SourceNumbers) (r v threshold : ℕ) :
+    Decidable (FastSourceThresholdSufficient s r v threshold) := by
+  unfold FastSourceThresholdSufficient
+  infer_instance
+
+
+theorem sufficient_route (s : SourceNumbers) (r v threshold z : ℕ)
+    (hs : 7199 ≤ s.totalCap) (hz : r+v+z ≤ 7199) (ht : threshold ≤ z)
+    (hc : FastSourceThresholdSufficient s r v threshold) :
+    s.Routeable (rawFlag r v z) := by
+  rcases hc with hbad | hroute
+  · omega
+  · exact Lower80801.PhaseRows.routeable_raw_mono_z s ht (hz.trans hs)
+      ((fastRouteable_iff _ _).mp hroute)
+end ProximityPrize.SubmissionLower.Lower80801.ThresholdFast
+
+
+end P45
+
