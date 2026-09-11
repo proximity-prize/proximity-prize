@@ -1,0 +1,123 @@
+import ProximityPrize.SubmissionLower.BoundaryTailBaseChecked17FastZero07
+
+namespace ProximityPrize.SubmissionLower.BoundaryTailBaseChecked
+open BoundaryTailBaseChecksData BoundaryTailBaseChecksCore
+open BoundaryTailBaseFast BoundaryTailBaseFastData BoundaryTailBaseFastValidated
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 10000000
+set_option Elab.async true
+
+theorem zr17p112:∀ i ∈ List.range 1,ZeroCheckAt 17 (112+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 112:=by decide +kernel
+  exact zeroAtFast_sound 17 112 hfast
+
+theorem zr17p113:∀ i ∈ List.range 1,ZeroCheckAt 17 (113+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 113:=by decide +kernel
+  exact zeroAtFast_sound 17 113 hfast
+
+theorem zr17p114:∀ i ∈ List.range 1,ZeroCheckAt 17 (114+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 114:=by decide +kernel
+  exact zeroAtFast_sound 17 114 hfast
+
+theorem zr17p115:∀ i ∈ List.range 1,ZeroCheckAt 17 (115+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 115:=by decide +kernel
+  exact zeroAtFast_sound 17 115 hfast
+
+theorem zr17p116:∀ i ∈ List.range 1,ZeroCheckAt 17 (116+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 116:=by decide +kernel
+  exact zeroAtFast_sound 17 116 hfast
+
+theorem zr17p117:∀ i ∈ List.range 1,ZeroCheckAt 17 (117+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 117:=by decide +kernel
+  exact zeroAtFast_sound 17 117 hfast
+
+theorem zr17p118:∀ i ∈ List.range 1,ZeroCheckAt 17 (118+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 118:=by decide +kernel
+  exact zeroAtFast_sound 17 118 hfast
+
+theorem zr17p119:∀ i ∈ List.range 1,ZeroCheckAt 17 (119+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 119:=by decide +kernel
+  exact zeroAtFast_sound 17 119 hfast
+
+theorem zr17p120:∀ i ∈ List.range 1,ZeroCheckAt 17 (120+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 120:=by decide +kernel
+  exact zeroAtFast_sound 17 120 hfast
+
+theorem zr17p121:∀ i ∈ List.range 1,ZeroCheckAt 17 (121+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 121:=by decide +kernel
+  exact zeroAtFast_sound 17 121 hfast
+
+theorem zr17p122:∀ i ∈ List.range 1,ZeroCheckAt 17 (122+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 122:=by decide +kernel
+  exact zeroAtFast_sound 17 122 hfast
+
+theorem zr17p123:∀ i ∈ List.range 1,ZeroCheckAt 17 (123+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 123:=by decide +kernel
+  exact zeroAtFast_sound 17 123 hfast
+
+theorem zr17p124:∀ i ∈ List.range 1,ZeroCheckAt 17 (124+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 124:=by decide +kernel
+  exact zeroAtFast_sound 17 124 hfast
+
+theorem zr17p125:∀ i ∈ List.range 1,ZeroCheckAt 17 (125+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hfast:ZeroAtFast 17 125:=by decide +kernel
+  exact zeroAtFast_sound 17 125 hfast
+
+end ProximityPrize.SubmissionLower.BoundaryTailBaseChecked

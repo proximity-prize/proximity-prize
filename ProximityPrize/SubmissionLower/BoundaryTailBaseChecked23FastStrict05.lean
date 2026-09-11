@@ -1,0 +1,155 @@
+import ProximityPrize.SubmissionLower.BoundaryTailBaseChecked23FastStrict04
+
+namespace ProximityPrize.SubmissionLower.BoundaryTailBaseChecked
+open BoundaryTailBaseChecksData BoundaryTailBaseChecksCore
+open BoundaryTailBaseFast BoundaryTailBaseFastData BoundaryTailBaseFastValidated
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 10000000
+set_option Elab.async true
+
+theorem sr23p64:∀ i ∈ List.range 1,StrictCheckAt 23 (64+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 64 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 64) 23 64:=by decide +kernel
+  exact strictAtFast_sound (row 23 64) 23 64 hvalid hfast
+
+theorem sr23p65:∀ i ∈ List.range 1,StrictCheckAt 23 (65+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 65 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 65) 23 65:=by decide +kernel
+  exact strictAtFast_sound (row 23 65) 23 65 hvalid hfast
+
+theorem sr23p66:∀ i ∈ List.range 1,StrictCheckAt 23 (66+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 66 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 66) 23 66:=by decide +kernel
+  exact strictAtFast_sound (row 23 66) 23 66 hvalid hfast
+
+theorem sr23p67:∀ i ∈ List.range 1,StrictCheckAt 23 (67+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 67 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 67) 23 67:=by decide +kernel
+  exact strictAtFast_sound (row 23 67) 23 67 hvalid hfast
+
+theorem sr23p68:∀ i ∈ List.range 1,StrictCheckAt 23 (68+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 68 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 68) 23 68:=by decide +kernel
+  exact strictAtFast_sound (row 23 68) 23 68 hvalid hfast
+
+theorem sr23p69:∀ i ∈ List.range 1,StrictCheckAt 23 (69+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 69 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 69) 23 69:=by decide +kernel
+  exact strictAtFast_sound (row 23 69) 23 69 hvalid hfast
+
+theorem sr23p70:∀ i ∈ List.range 1,StrictCheckAt 23 (70+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 70 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 70) 23 70:=by decide +kernel
+  exact strictAtFast_sound (row 23 70) 23 70 hvalid hfast
+
+theorem sr23p71:∀ i ∈ List.range 1,StrictCheckAt 23 (71+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 71 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 71) 23 71:=by decide +kernel
+  exact strictAtFast_sound (row 23 71) 23 71 hvalid hfast
+
+theorem sr23p72:∀ i ∈ List.range 1,StrictCheckAt 23 (72+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 72 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 72) 23 72:=by decide +kernel
+  exact strictAtFast_sound (row 23 72) 23 72 hvalid hfast
+
+theorem sr23p73:∀ i ∈ List.range 1,StrictCheckAt 23 (73+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 73 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 73) 23 73:=by decide +kernel
+  exact strictAtFast_sound (row 23 73) 23 73 hvalid hfast
+
+theorem sr23p74:∀ i ∈ List.range 1,StrictCheckAt 23 (74+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 74 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 74) 23 74:=by decide +kernel
+  exact strictAtFast_sound (row 23 74) 23 74 hvalid hfast
+
+theorem sr23p75:∀ i ∈ List.range 1,StrictCheckAt 23 (75+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 75 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 75) 23 75:=by decide +kernel
+  exact strictAtFast_sound (row 23 75) 23 75 hvalid hfast
+
+theorem sr23p76:∀ i ∈ List.range 1,StrictCheckAt 23 (76+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 76 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 76) 23 76:=by decide +kernel
+  exact strictAtFast_sound (row 23 76) 23 76 hvalid hfast
+
+theorem sr23p77:∀ i ∈ List.range 1,StrictCheckAt 23 (77+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 77 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 77) 23 77:=by decide +kernel
+  exact strictAtFast_sound (row 23 77) 23 77 hvalid hfast
+
+theorem sr23p78:∀ i ∈ List.range 1,StrictCheckAt 23 (78+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 78 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 78) 23 78:=by decide +kernel
+  exact strictAtFast_sound (row 23 78) 23 78 hvalid hfast
+
+theorem sr23p79:∀ i ∈ List.range 1,StrictCheckAt 23 (79+i):=by
+  intro i hi
+  have hi0:i = 0:=by have:=List.mem_range.mp hi; omega
+  subst i
+  simp only [Nat.add_zero]
+  have hvalid:=validAll 23 79 (by omega) (by omega) (by omega)
+  have hfast:StrictAtFast (row 23 79) 23 79:=by decide +kernel
+  exact strictAtFast_sound (row 23 79) 23 79 hvalid hfast
+
+end ProximityPrize.SubmissionLower.BoundaryTailBaseChecked
