@@ -1,0 +1,74 @@
+import ProximityPrize.SubmissionLower.BoundaryTailBaseChecked06Strict01
+
+namespace ProximityPrize.SubmissionLower.BoundaryTailBaseChecked
+open BoundaryTailBaseChecksData
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 10000000
+set_option Elab.async true
+
+theorem strict_r6_part32 : ∀ i ∈ List.range 1, StrictCheckAt 6 (32+i) := by decide +kernel
+
+theorem strict_r6_part33 : ∀ i ∈ List.range 1, StrictCheckAt 6 (33+i) := by decide +kernel
+
+theorem strict_r6_part34 : ∀ i ∈ List.range 1, StrictCheckAt 6 (34+i) := by decide +kernel
+
+theorem strict_r6_part35 : ∀ i ∈ List.range 1, StrictCheckAt 6 (35+i) := by decide +kernel
+
+theorem strict_r6_part36 : ∀ i ∈ List.range 1, StrictCheckAt 6 (36+i) := by decide +kernel
+
+theorem strict_r6_part37 : ∀ i ∈ List.range 1, StrictCheckAt 6 (37+i) := by decide +kernel
+
+theorem strict_r6_part38 : ∀ i ∈ List.range 1, StrictCheckAt 6 (38+i) := by decide +kernel
+
+theorem strict_r6_part39 : ∀ i ∈ List.range 1, StrictCheckAt 6 (39+i) := by decide +kernel
+
+theorem strict_r6_part40 : ∀ i ∈ List.range 1, StrictCheckAt 6 (40+i) := by decide +kernel
+
+theorem strict_r6_part41 : ∀ i ∈ List.range 1, StrictCheckAt 6 (41+i) := by decide +kernel
+
+theorem strict_r6_part42 : ∀ i ∈ List.range 1, StrictCheckAt 6 (42+i) := by decide +kernel
+
+theorem strict_r6_part43 : ∀ i ∈ List.range 1, StrictCheckAt 6 (43+i) := by decide +kernel
+
+theorem strict_r6_part44 : ∀ i ∈ List.range 1, StrictCheckAt 6 (44+i) := by decide +kernel
+
+theorem strict_r6_part45 : ∀ i ∈ List.range 1, StrictCheckAt 6 (45+i) := by decide +kernel
+
+theorem strict_r6_part46 : ∀ i ∈ List.range 1, StrictCheckAt 6 (46+i) := by decide +kernel
+
+theorem strict_r6_part47 : ∀ i ∈ List.range 1, StrictCheckAt 6 (47+i) := by decide +kernel
+
+theorem strict_r6_part48 : ∀ i ∈ List.range 1, StrictCheckAt 6 (48+i) := by decide +kernel
+
+theorem strict_r6_part49 : ∀ i ∈ List.range 1, StrictCheckAt 6 (49+i) := by decide +kernel
+
+theorem strict_r6_part50 : ∀ i ∈ List.range 1, StrictCheckAt 6 (50+i) := by decide +kernel
+
+theorem strict_r6_part51 : ∀ i ∈ List.range 1, StrictCheckAt 6 (51+i) := by decide +kernel
+
+theorem strict_r6_part52 : ∀ i ∈ List.range 1, StrictCheckAt 6 (52+i) := by decide +kernel
+
+theorem strict_r6_part53 : ∀ i ∈ List.range 1, StrictCheckAt 6 (53+i) := by decide +kernel
+
+theorem strict_r6_part54 : ∀ i ∈ List.range 1, StrictCheckAt 6 (54+i) := by decide +kernel
+
+theorem strict_r6_part55 : ∀ i ∈ List.range 1, StrictCheckAt 6 (55+i) := by decide +kernel
+
+theorem strict_r6_part56 : ∀ i ∈ List.range 1, StrictCheckAt 6 (56+i) := by decide +kernel
+
+theorem strict_r6_part57 : ∀ i ∈ List.range 1, StrictCheckAt 6 (57+i) := by decide +kernel
+
+theorem strict_r6_part58 : ∀ i ∈ List.range 1, StrictCheckAt 6 (58+i) := by decide +kernel
+
+theorem strict_r6_part59 : ∀ i ∈ List.range 1, StrictCheckAt 6 (59+i) := by decide +kernel
+
+theorem strict_r6_part60 : ∀ i ∈ List.range 1, StrictCheckAt 6 (60+i) := by decide +kernel
+
+theorem strict_r6_part61 : ∀ i ∈ List.range 1, StrictCheckAt 6 (61+i) := by decide +kernel
+
+theorem strict_r6_part62 : ∀ i ∈ List.range 1, StrictCheckAt 6 (62+i) := by decide +kernel
+
+theorem strict_r6_part63 : ∀ i ∈ List.range 1, StrictCheckAt 6 (63+i) := by decide +kernel
+
+end ProximityPrize.SubmissionLower.BoundaryTailBaseChecked
