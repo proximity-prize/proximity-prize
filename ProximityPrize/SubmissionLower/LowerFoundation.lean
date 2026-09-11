@@ -20819,7 +20819,7 @@ theorem finite_iUnion_ssubset
      rw [Set.disjoint_iff]
      rintro-⟨⟨t,ht₀,rfl⟩,ht:x+t • y∈p j⟩
      rw [(p j).add_mem_iff_right hx,(p j).smul_mem_iff ht₀] at ht
-     contradiction
+     exact hy ht
    obtain ⟨k,hk,t₁,t₂,ht,ht₁,ht₂⟩:∃ᵉ (k∈s) (t₁:K) (t₂:K),
        t₁≠t₂∧x+t₁ • y∈p k∧x+t₂ • y∈p k:=by
      suffices ∃ᵉ (k∈s) (z₁∈sxy) (z₂∈sxy),z₁≠z₂∧z₁∈p k∧z₂∈p k by
