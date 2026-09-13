@@ -2,6 +2,7 @@
 """Read -> prepare -> check -> publish, with each stage independently runnable."""
 import argparse
 import concurrent.futures
+import hashlib
 import json
 import os
 import re
@@ -158,6 +159,7 @@ def main():
     parser.add_argument("--repository", help="Local repository override for local maintenance commits")
     parser.add_argument("--workers", type=int, choices=[1, 2], default=1)
     parser.add_argument("--publish", action="store_true", help="Explicitly permit provider writes (default: check only)")
+    parser.add_argument("--checked-sha256", help="Whole-artifact SHA256 from the trusted checker; required for publication")
     parser.add_argument("--deadline", type=float, default=time.time() + 4 * 3600)
     args = parser.parse_args()
     global RUN_DEADLINE
@@ -187,7 +189,12 @@ def main():
         check(directory, args.deadline)
     else:
         from validate import validate_bundle
-        bundle = validate_bundle(json.loads((directory / "checked.json").read_text()))
+        checked = (directory / "checked.json").read_bytes()
+        if args.publish and not args.checked_sha256:
+            parser.error("--publish requires --checked-sha256 from the trusted checker")
+        if args.checked_sha256 and hashlib.sha256(checked).hexdigest() != args.checked_sha256:
+            raise ValueError("Checked artifact differs from the trusted checker receipt")
+        bundle = validate_bundle(json.loads(checked))
         if any(item.get("checkedDigest") != digest([item["body"], item.get("preamble", ""), item.get("solution", "")]) for item in bundle["items"]):
             raise ValueError("Checked publication bytes changed")
         if not args.publish:

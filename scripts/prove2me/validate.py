@@ -1,5 +1,6 @@
 """Check a prepared bundle in a credential-free job before a separate uploader sees it."""
 import copy
+import hashlib
 import json
 import re
 import subprocess
@@ -200,4 +201,6 @@ def check(directory, deadline):
         item["checkedDigest"] = digest([item["body"], item.get("preamble", ""), item.get("solution", "")])
     # This file is the only artifact passed to the credentialed publisher job.
     bundle["validationDigest"] = validation_digest
-    (directory / "checked.json").write_text(json.dumps(bundle, indent=2) + "\n")
+    checked = (json.dumps(bundle, indent=2) + "\n").encode()
+    (directory / "checked.json").write_bytes(checked)
+    print("checked-sha256=" + hashlib.sha256(checked).hexdigest())

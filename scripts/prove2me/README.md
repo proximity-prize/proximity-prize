@@ -38,6 +38,12 @@ python3 scripts/prove2me/batch.py publish --directory batch
 The final command checks the publication bundle and makes no provider requests.
 Only the explicit `--publish` option permits writes. Do not set publication or
 storage credentials during prepare, extract, or check; those stages reject them.
+The checker prints `checked-sha256=<hash>` after successful verification. To write,
+pass that hash as `--checked-sha256 "$CHECKED_SHA256" --publish`. The trusted runner
+must retain this receipt separately from the batch directory and pass it to the
+publisher. Never derive the expected hash from an incoming bundle or accept it
+from its contributor. It binds the entire artifact, including source attribution,
+dependencies and descriptions; a checksum is not proof of who ran the checker.
 Run Lean work on an appropriate compute host. FarmShare execution and prior proof
 reports remain outside this release.
 
