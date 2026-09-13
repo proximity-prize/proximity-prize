@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "workspaceRevision": "6b46503a65c3a4252170ed5ca984a796b5a5b6b4",
+  "workspaceRevision": "8d697eeda2f65d396209a9b4f888602de1f55fbf",
   "toolchain": "leanprover/lean4:v4.33.1",
   "mathlibRev": "0df444a360eaa60ab8c11dca51a86af692955474",
   "repository": "https://github.com/proximity-prize/proximity-prize",

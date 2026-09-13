@@ -12,11 +12,12 @@ name = "Arklib"
 git = "https://github.com/Verified-zkEVM/ArkLib"
 rev = "3f3f045dd295834c262bd6f0d9dfdfee07cc8e76"
 
-# Keep the KoalaBear certificate replayable with the Lean 4.33.1 kernel.
+# Exact source of zksecurity/CompPoly#1, pending merge into its upstream repository.
+# Use the merged upstream URL/SHA before activating the harness.
 [[require]]
 name = "CompPoly"
 git = "https://github.com/yudduy/CompPoly"
-rev = "9d36af56cd57a468ade1cbbc8fae324983d79708"
+rev = "61f39cdba1d15da9078e082a0c117cf60dfb99b3"
 
 [[lean_lib]]
 name = "ProximityPrize"

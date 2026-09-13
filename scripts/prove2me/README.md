@@ -42,7 +42,7 @@ Run Lean work on an appropriate compute host. FarmShare execution and prior proo
 reports remain outside this release.
 
 The upstream checkout must be at
-`6b46503a65c3a4252170ed5ca984a796b5a5b6b4`. We reuse its declaration graph and
+`8d697eeda2f65d396209a9b4f888602de1f55fbf`. We reuse its declaration graph and
 sketch-position scripts, with the documented root/prefix customization. The
 agent handles useful-node selection, scope/import adaptation and descriptions;
 `generate.py` performs exact byte-range cuts and renames. It does not split Lean
@@ -111,31 +111,42 @@ policy and complete Lean submission build. This checks the connected local path;
 it is not an independent-agent trial, hosted publication, or competition service
 verdict.
 
-The Lean compatibility files at `8b7e6d422a8d7f4554e06ae2ed23eb12c1651ebf` are
-byte-identical to the previously checked corrected port. They preserve the
-current competition's newer source rules and workflow. The lower claim remains
-`ProtocolClaim 6804 10341375 33554432` (68.04 bits); the upper claim remains
-`ProtocolClaimUpper 11613 122369` (116.13 bits).
+The branch is rebased onto the current challenge source. The lower candidate is
+`ProtocolClaim 6806 10343935 33554432` (68.06 bits). Its submission files and
+attribution remain current; the old 68.04 maintenance source is used only for
+that explicitly mapped historical import. No historical winner is installed as
+the current `syncSource`.
+
+The CompPoly dependency uses the exact source revision
+`61f39cdba1d15da9078e082a0c117cf60dfb99b3` under review in
+[zksecurity/CompPoly #1](https://github.com/zksecurity/CompPoly/pull/1). This PR is
+still open; its source branch is `yudduy/CompPoly:codex/zksecurity-lean-4-33-1`.
+Fresh Lake checks confirmed that neither this SHA nor `refs/pull/1/head` can be
+resolved from a normal `zksecurity/CompPoly` clone. The draft therefore pins the
+actual source repository and exact SHA. Before activating the harness, replace
+that URL/SHA with the merged upstream revision and rerun the clean setup. This
+uses the existing upstream-review implementation; it adds no new copy of the fix.
 
 The public workflow still selects the service profiles in `challenges.json`.
 Changing this repository's Lean version does not update the separate verifier
-service. Before any future remote use, its maintainer must register matching
-immutable profiles using this toolchain, dependency pins and comparator changes,
-preserve the current limits and scoring, and run both winners plus the malformed
-proof/import negative cases. Those actual competition checks have not run here.
-Do not run Yukon benchmark reorganization; it would reset and replay results.
+service. This migration must remain a draft until matching immutable profiles
+are available and both current winners pass the actual competition verifier,
+along with malformed-proof and forbidden-import checks. Preserve the current
+limits, scoring, and historical results. Do not repoint or overwrite an existing
+verifier version, or run benchmark reorganization to replay the leaderboard.
 
-The CompPoly pin `9d36af56cd57a468ade1cbbc8fae324983d79708` contains the dependency
-fix and its regression test. It is retained on `fix/koalabear-proof-replay` in
-`https://github.com/yudduy/CompPoly`, with upstream review in
-[CompPoly #323](https://github.com/Verified-zkEVM/CompPoly/pull/323).
+Prove2Me contributions also require matching hosted dependencies. Competition
+imports and native `Definitions` imports are different module paths; a matching
+Lean version alone does not establish that a solver can submit the same file to
+both systems. The importer checks the generated declarations against the exact
+source. Its provider upload must not be treated as a competition verdict.
 
 To continue elsewhere, fetch branch `feat/prove2me` from
 `https://github.com/yudduy/proximity-prize`. During `prepare`, use
 `--repository https://github.com/yudduy/proximity-prize` so Git can retrieve the
 maintenance commits from that fork. The canonical competition repository and its
-live verifier remain unchanged. The matching Yukon branch is
-`Layr-Labs/yukon:feat/prove2me` provides the API, CLI and proof map.
+live verifier remain unchanged. The matching Yukon branch,
+`Layr-Labs/yukon:feat/prove2me`, provides the API, CLI and proof map.
 These exact fork commits can be used locally while the upstream
 PRs are reviewed; a branch rename does not change the dependency or maintenance pins.
 The competition changes are under review in [PR #527](https://github.com/proximity-prize/proximity-prize/pull/527).

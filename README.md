@@ -122,12 +122,15 @@ yukon run
 
 Local artifacts are diagnostic only. Ranked results require the independent
 verifier to accept the exact commit and return the matching score plus exact
-radius or unsafe index. The repository-side identities are:
+radius or unsafe index. `challenges.json` selects the immutable verifier versions
+used by both workflows. Inspect the current selection with:
 
-```text
-proximity-prize-reduction-lower @ irs-reduction-threshold-v10
-proximity-prize-reduction-upper @ irs-reduction-threshold-v10
+```sh
+python3 scripts/challenges.py version proximity-prize-reduction-lower
+python3 scripts/challenges.py version proximity-prize-reduction-upper
 ```
 
-Those verifier profiles must be registered before either workflow can issue an
-authoritative leaderboard score.
+Those exact profiles must be registered before either workflow can issue an
+authoritative leaderboard score. Changing the repository toolchain alone does
+not change a hosted profile. The Prove2Me environment migration and its release
+gates are described in [the integration guide](scripts/prove2me/README.md).

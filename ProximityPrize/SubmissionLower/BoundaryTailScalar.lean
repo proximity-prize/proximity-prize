@@ -545,7 +545,8 @@ theorem irs_scalar_finite_list_card_le
    funext i
    have hh:=congrArg (fun P:Polynomial IRSProfile.Field =>
      P.eval (IRSProfile.domain i)) h
-   simpa only [selected, ReedSolomon.toPolynomial_eval_at_domain] using hh
+   exact (ReedSolomon.toPolynomial_eval_at_domain (c:=codeword c) (i:=i)).symm.trans
+     (hh.trans (ReedSolomon.toPolynomial_eval_at_domain (c:=codeword d) (i:=i)))
  have hcard:Gamma.card = L.card:=by
    rw [show Gamma = Finset.univ.image selected by rfl,
      Finset.card_image_of_injective _ hselected, Finset.card_univ,
@@ -585,7 +586,8 @@ theorem irs_scalar_finite_list_card_le
        Finset.univ.filter (fun i => c.1 i = received i):=by
      apply Finset.filter_congr
      intro i hi
-     rw [ReedSolomon.toPolynomial_eval_at_domain]
+     rw [show (selected c).eval (IRSProfile.domain i) = c.1 i from
+       ReedSolomon.toPolynomial_eval_at_domain (c:=codeword c) (i:=i)]
    rw [heq]
    exact hclose c.1 c.2
  have hbound:=seedless_list_card_le IRSProfile.Field Q hQ hbox hlegacy Gamma
