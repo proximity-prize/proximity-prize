@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.BoundaryTailOwnShape
 import ProximityPrize.SubmissionLower.SecondJetRefinements
 
 namespace ProximityPrize.SubmissionLower.BoundaryTailInterpolation

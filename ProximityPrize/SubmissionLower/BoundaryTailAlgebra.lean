@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.LowerGeometry
 import ProximityPrize.SubmissionLower.LowerFoundation
 
 /-! Refined coefficient data for the correlated differential-tail recurrence.

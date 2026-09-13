@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.BoundaryTailOrdinaryLow6807
 import ProximityPrize.SubmissionLower.BoundaryTailProvider
 import ProximityPrize.SubmissionLower.BoundaryTailReduced
 

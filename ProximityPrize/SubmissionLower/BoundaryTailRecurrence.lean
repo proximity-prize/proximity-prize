@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.BoundaryTailFlags
 import ProximityPrize.SubmissionLower.BoundaryTailAlgebra
 
 namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra

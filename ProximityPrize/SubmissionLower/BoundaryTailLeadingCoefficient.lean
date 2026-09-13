@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.BoundaryTailInterpolation
 import ProximityPrize.SubmissionLower.SecondJetRefinements
 
 namespace ProximityPrize.SubmissionLower.BoundaryTailLeadingCoefficient

@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.BoundaryTailAsymmetric
 import ProximityPrize.SubmissionLower.BoundaryTailInterpolation
 
 namespace ProximityPrize.SubmissionLower.BoundaryTailProfile116

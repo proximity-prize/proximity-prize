@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.BoundaryTailDegrees
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 

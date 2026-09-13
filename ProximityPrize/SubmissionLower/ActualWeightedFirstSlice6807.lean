@@ -1,0 +1,159 @@
+/-
+UNCOMPILED. Per-prime-slice integration of actual Stage multiplicities, generic
+embedding points, the frozen helper-root theorem, and the original product formula.
+The two remaining budget inputs are PURE FLAG finite-place bounds; they are
+provided by PureFlagSliceBudget6807, not a hypothesized first-cut inequality.
+-/
+import ProximityPrize.SubmissionLower.ActualSliceMultiplicity6807
+import ProximityPrize.SubmissionLower.FirstSlicePoleBudget6807
+import ProximityPrize.SubmissionLower.PureFlagSliceBudget6807
+import ProximityPrize.SubmissionLower.WeightedZeroMass6807
+
+namespace ProximityPrize.SubmissionLower.ActualWeightedFirstSlice6807
+open RCN057 (WeightBound)
+open RCN204 (flagPole)
+open scoped Classical BigOperators WithZero
+open RCN002 RCN005 RCN006 RCN007 RCN026 RCN055 RCN074 RCN086 RCN095
+open RCN134 RCN135 RCN136 RCN156 RCN208 RCN234 RCN244 RCN248 RCN313 RCN341
+open SecondJetSupport SecondJetCoefficients SecondJetClearedHelper
+open ActualSliceMultiplicity6807 ActualFirstCutPole6807
+noncomputable section
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 12000000
+set_option synthInstance.maxHeartbeats 500000
+variable {K I E T : Type} [Field K] [Field E] [IsAlgClosed E]
+  [Algebra (GenericField K) E] [Fintype T] [Nonempty T]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
+  [CharP (GenericField K) p] {errorCap : ℕ}
+  {stageSupport : RCN275.ResidualSupportParameters}
+local notation "Ω" => GenericField K
+local notation "PE" => MvPolynomial (Fin 3) E
+local notation "w" => RCN326.w
+
+theorem first_cut_on_prime_slice
+    (S : Stage K I Gamma x p flag errorCap stageSupport)
+    (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))
+    (old : T → FirstTailComponent S)
+    (emb : ∀ i, CoordinateField Ω (old i).1 →ₐ[Ω] E)
+    (hinj : Function.Injective (fun i => embeddingPoint (old i).1 (emb i)))
+    (D : Ideal PE) [D.IsPrime] (sep : SeparableLiteralCoordinate D)
+    (hpoint : ∀ i, D ≤ RingHom.ker
+      (MvPolynomial.aeval (embeddingPoint (old i).1 (emb i)) : PE →ₐ[E] E).toRingHom)
+    (hcarrier : scalarPolynomialMap Ω E S.G ∈ D)
+    (hisolated : scalarPolynomialMap Ω E
+      (globalTailCut (polynomialEmbedding K) S.F (w+1)) ∉ D)
+    (P : Poly (K := K)) (B U L s k n0 : ℕ)
+    (hS : ∀ e ∈ P.support, e 1 ≤ s)
+    (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
+      e 1+e 2+e 3+e 4 ≤ L)
+    (hBU : B ≤ U) (hUL : U ≤ L) (hdn : k+1 ≤ n0)
+    (hB : 2*(n0-(k+1)) ≤ B) (hn : n0 ≤ (asS P).natDegree)
+    (hlead : ∀ i, surfaceMap (polynomialEmbedding K) (asS P).leadingCoeff ∉ (old i).1)
+    (hdiv : ∀ j ≤ k, S.F ∣ helper P S.F (s-j) j)
+    (h2 : (2 : E) ≠ 0) (hfact : (k.factorial : E) ≠ 0)
+    (r v z : ℕ) (hr : 3 ≤ r) (hv : 2 ≤ v)
+    (hR : WeightBound residualSWeights S.F (r : ℤ))
+    (hYR : WeightBound residualYSWeights S.F ((r+v : ℕ) : ℤ))
+    (hAll : WeightBound residualTotalWeights S.F ((r+v+z : ℕ) : ℤ))
+    (CJ CV : ℕ)
+    (hJbudget : ∀ W : Finset (Place E (CoordinateField E D)),
+      (∑ nu ∈ W, flagPole nu.val (coordinate E D) (firstBaseFlag (w-1) r v z)) ≤ (CJ : ℤ))
+    (hVbudget : ∀ W : Finset (Place E (CoordinateField E D)),
+      (∑ nu ∈ W, flagPole nu.val (coordinate E D)
+        (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0)) ≤ (CV : ℤ)) :
+    (k+1) * (∑ i, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)) ≤
+      (k+1)*CJ+w*CV := by
+  classical
+  let A := CoordinateRing E D
+  let Lf := CoordinateField E D
+  letI := quotientPolynomialAlgebra E D sep.index
+  letI := polynomialBaseAlgebra E D sep.index
+  letI := rationalBaseAlgebra E D sep.index sep.transcendental
+  letI := quotientBaseScalarTower E D sep.index
+  letI := polynomialBaseScalarTower E D sep.index
+  letI := quotientFractionScalarTower E D sep.index
+  letI := polynomialRationalScalarTower E D sep.index sep.transcendental
+  letI := rationalBaseScalarTower E D sep.index sep.transcendental
+  letI : FiniteDimensional (RatFunc E) Lf := sep.finite
+  letI : Algebra.IsSeparable (RatFunc E) Lf := sep.separable
+  let i0 : T := Classical.choice inferInstance
+  let phiE := (algebraMap Ω E).comp (polynomialEmbedding K)
+  let ev := SecondJetComponentRoots.coefficientMap phiE D
+  let evalPoint := fun i => pointHom E D (slicePoint S (old i) (emb i) D (hpoint i))
+  let mu := fun i => localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)
+  let a : A := firstTailInSlice S D
+  let H : A := originalToSlice (K := K) D (polyH K S.F)
+  let c : A := firstTailScalarInSlice (K := K) D
+  let b : A := c*H^(w+3)
+  let iota : A →+* Lf := algebraMap A Lf
+  have hpi : Function.Injective evalPoint := by
+    intro i j hh
+    have hs := pointHom_injective E D hh
+    exact hinj (congrArg Subtype.val hs)
+  have hmu : ∀ i, 1 ≤ mu i := fun i => one_le_localMultiplicity S hproper (old i)
+  have ha : ∀ i, a ∈ (RingHom.ker (evalPoint i).toRingHom)^(mu i) := by
+    intro i
+    exact actual_first_tail_mem_point_power S hproper (old i) (emb i) D
+      (hpoint i) hcarrier
+  have hHpt : ∀ i, evalPoint i H ≠ 0 := fun i =>
+    original_H_point_ne_zero S (old i) (emb i) D (hpoint i)
+  have hcpt : ∀ i, evalPoint i c ≠ 0 := fun i => firstTailScalar_point_ne_zero D _
+  have hb : ∀ i, evalPoint i b ≠ 0 := by
+    intro i
+    simpa only [b,map_mul,map_pow] using mul_ne_zero (hcpt i) (pow_ne_zero _ (hHpt i))
+  have hiota : Function.Injective iota := IsFractionRing.injective A Lf
+  have hHi : iota H ≠ 0 := by
+    intro hz
+    have hH0 : H = 0 := hiota (by simpa only [map_zero] using hz)
+    exact hHpt i0 (by rw [hH0,map_zero])
+  have hci : iota c ≠ 0 := by
+    intro hz
+    have hc0 : c = 0 := hiota (by simpa only [map_zero] using hz)
+    exact hcpt i0 (by rw [hc0,map_zero])
+  have hai : iota a ≠ 0 := by
+    intro hz
+    exact firstTailInSlice_ne_zero S D hisolated
+      (hiota (by simpa only [map_zero] using hz))
+  have hbi : iota b ≠ 0 := by
+    simpa only [b,map_mul,map_pow] using mul_ne_zero hci (pow_ne_zero _ hHi)
+  have hx : iota a / iota b ≠ 0 := div_ne_zero hai hbi
+  have hrepr : iota a / iota b = ev (baseNumerator S.F (w-1))/ev (polyH K S.F)^w := by
+    have hh := normalized_first_tail_identity iota a
+      (originalToSlice (K := K) D (baseNumerator S.F (w-1))) H c w
+      (firstTailInSlice_normal_form S D) hHi hci
+    have hbv : iota (originalToSlice (K := K) D (baseNumerator S.F (w-1))) =
+        ev (baseNumerator S.F (w-1)) := originalToSlice_fraction_value D _
+    have hHv : iota H = ev (polyH K S.F) := originalToSlice_fraction_value D _
+    exact hh.trans (by rw [hbv, hHv])
+  have hnot (F0 : MvPolynomial (Fin 4) K)
+      (hn0 : surfaceMap (polynomialEmbedding K) F0 ∉ (old i0).1) :
+      surfaceMap phiE F0 ∉ D := by
+    intro hmem
+    have hz := RingHom.mem_ker.mp (hpoint i0 hmem)
+    change MvPolynomial.eval (embeddingPoint (old i0).1 (emb i0))
+      (surfaceMap phiE F0) = 0 at hz
+    apply GenericSlicePoints6807.scalar_eval_ne_zero (old i0).1 (emb i0)
+      (surfaceMap (polynomialEmbedding K) F0) hn0
+    simpa only [scalar_surfaceMap, phiE, MvPolynomial.aeval_eq_eval] using hz
+  have hFd : surfaceMap phiE S.F ∈ D := by
+    rw [← scalar_surfaceMap]
+    exact D.mem_of_dvd (map_dvd (scalarPolynomialMap Ω E) S.G_dvd_surface) hcarrier
+  have hHd : surfaceMap phiE (polyH K S.F) ∉ D :=
+    hnot _ (RCN312.firstTailComponent_regularity_not_mem S (old i0))
+  have hLd : surfaceMap phiE (asS P).leadingCoeff ∉ D := hnot _ (hlead i0)
+  apply WeightedZeroMass6807.weighted_affine_points_scaled E Lf A
+    evalPoint hpi mu hmu a b ha hb hx (k+1) ((k+1)*CJ+w*CV)
+  intro W
+  have hs := FirstSlicePoleBudget6807.actual_first_source_pole_mass phiE S.F D sep
+    P B U L s k n0 hS hP hBU hUL hdn hB hn hFd hHd hLd hdiv h2 hfact
+    (w-1) r v z (by decide) hr hv hR hYR hAll CJ CV hJbudget hVbudget W
+  change ((k+1 : ℕ) : ℤ) * (∑ nu ∈ W,
+    RCN187.poleOrder nu.val (iota a / iota b)) ≤ (((k+1)*CJ+w*CV : ℕ) : ℤ)
+  rw [hrepr]
+  simpa only [show w-1+1=w by decide, Nat.cast_add, Nat.cast_mul] using hs
+
+end
+end ProximityPrize.SubmissionLower.ActualWeightedFirstSlice6807

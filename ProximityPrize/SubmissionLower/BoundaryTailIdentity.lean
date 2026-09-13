@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.BoundaryTailDualRetained6807
 import ProximityPrize.SubmissionLower.BoundaryTailProjection
 
 namespace ProximityPrize.SubmissionLower.BoundaryTailIdentity
