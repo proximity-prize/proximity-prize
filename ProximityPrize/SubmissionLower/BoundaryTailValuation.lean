@@ -10,6 +10,9 @@ noncomputable section
 
 variable {L : Type*} [Field L]
 
+-- Resolve equality case splits directly in the larger serialized import environment.
+local instance : DecidableEq L := Classical.decEq L
+
 def refinedMonomial (n j : ℕ) (H G J C : L) : L :=
   H ^ j * G ^ (n - 1 - j) * J ^ (n - 2 - 2 * j) * C
 

@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.BoundaryTailBase6807
 import ProximityPrize.SubmissionLower.LowerGeometry
 
 namespace ProximityPrize.SubmissionLower.Lower80811.FactorSwitch

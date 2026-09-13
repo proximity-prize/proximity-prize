@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.BoundaryTailIdentity
 import ProximityPrize.SubmissionLower.LowerGeometry
 
 namespace ProximityPrize.SubmissionLower.BoundaryTailIdentityArithmetic

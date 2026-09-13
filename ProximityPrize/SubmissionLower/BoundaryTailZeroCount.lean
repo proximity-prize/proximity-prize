@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.BoundaryTailPole
 import ProximityPrize.SubmissionLower.LowerFoundation
 
 namespace ProximityPrize.SubmissionLower.RCN199

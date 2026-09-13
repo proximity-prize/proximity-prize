@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.BoundaryTailComponent
 import ProximityPrize.SubmissionLower.BoundaryTailPole
 import ProximityPrize.SubmissionLower.LowerGeometry
 
