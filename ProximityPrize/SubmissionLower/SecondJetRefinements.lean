@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.BoundaryTailOwnShape6807
+import ProximityPrize.SubmissionLower.BoundaryTailOwnShape6808
 import ProximityPrize.SubmissionLower.LowerGeometry
 
 namespace ProximityPrize.SubmissionLower.SecondJetTotalAvoidance

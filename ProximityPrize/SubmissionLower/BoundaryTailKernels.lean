@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.BoundaryTailInitial6807
+import ProximityPrize.SubmissionLower.BoundaryTailInitial6808
 import ProximityPrize.SubmissionLower.LowerGeometry
 
 namespace ProximityPrize.SubmissionLower.Kernels80811
