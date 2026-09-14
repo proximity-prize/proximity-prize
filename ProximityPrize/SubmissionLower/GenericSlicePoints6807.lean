@@ -1,4 +1,3 @@
-import ProximityPrize.SubmissionLower.HigherSelection6810
 /-
 UNCOMPILED. Concrete generic-fiber point construction from the pinned APIs.
 The nonlinear elimination theorem RCN202.embedding_point_certificate is used

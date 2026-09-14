@@ -1,4 +1,3 @@
-import ProximityPrize.SubmissionLower.BoundaryTailInitial
 import ProximityPrize.SubmissionLower.LowerGeometry
 
 namespace ProximityPrize.SubmissionLower.BoundaryTailDegreeAwareChain

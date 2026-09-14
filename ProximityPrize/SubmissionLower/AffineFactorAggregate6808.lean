@@ -1,4 +1,3 @@
-import ProximityPrize.SubmissionLower.HigherPhaseCore6810
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
