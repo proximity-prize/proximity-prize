@@ -35,12 +35,12 @@ theorem regular_seed_bound_dual
     (nodes : Finset I) (x u0 u1 : I → K) (hinj : Set.InjOn x nodes)
     (hnodes : nodes.card = 262144)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ Gamma, 181314 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181304 ≤
       (nodes.filter (fun i => (selected gamma).eval (x i) = u0 i+gamma*u1 i)).card)
     (hsolution : ∀ gamma ∈ Gamma, specialization K (selected gamma) gamma F=0)
     (hregular : ∀ gamma ∈ Gamma,
       specialization K (selected gamma) gamma (MvPolynomial.pderiv (2:Fin 4) F)≠0)
-    (hno : NoLargeSelectedPencil selected Gamma w 80830)
+    (hno : NoLargeSelectedPencil selected Gamma w 80840)
     (P : SecondJetSupport.Poly (K := K))
     (hS : ∀ e ∈ P.support, e 1 ≤ 24)
     (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ 54 ∧ e 1+e 2+e 3 ≤ 180 ∧
@@ -66,7 +66,7 @@ theorem regular_seed_bound_dual
     let S := reflagResidualStage S0 (polynomialIn_surfaceCumulativeFlag g.1)
     have hsub := geometricSeeds_subset K F selected Gamma g
     have hag : ∀ gamma ∈ geometricSeeds K F selected Gamma g,
-        181314 ≤ (S.agreementFiber gamma).card := by
+        181304 ≤ (S.agreementFiber gamma).card := by
       intro gamma hgamma
       exact hagreement gamma (hsub hgamma)
     have hf := geometricCumulativeFlag_le_support F hF.ne_zero hsupport g

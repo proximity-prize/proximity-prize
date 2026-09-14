@@ -7,14 +7,14 @@ set_option maxHeartbeats 3000000
 set_option maxRecDepth 100000
 
 def properParameters (r v z B U L s : ℕ) : UnequalParameters :=
-  ⟨262144,131071,181314,r+v,r,r+v+z,U+s*(r+v-1),B+s*(r-1),L+s*(r+v+z-1)⟩
+  ⟨262144,131071,181304,r+v,r,r+v+z,U+s*(r+v-1),B+s*(r-1),L+s*(r+v+z-1)⟩
 
 def normal (r v z : ℕ) : ℕ :=
   flagMixed ⟨z,v,r⟩ ⟨262144*z,1+262144*v,262144*(r-1)⟩
     (⟨131074*z,131074*(v-1)+2,131074*(r-2)+3⟩ + 131071 • unitAllFlag)
 
 def parameters (r y t R capY T : ℕ) : UnequalParameters :=
-  ⟨262144,131071,181314,y,r,t,capY,R,T⟩
+  ⟨262144,131071,181304,y,r,t,capY,R,T⟩
 
 theorem count_mono {r y t R capY T r' y' t' R' capY' T' : ℕ}
     (hr : r ≤ r') (hy : y ≤ y') (ht : t ≤ t')

@@ -7,7 +7,7 @@ open scoped Classical BigOperators
 open MvPolynomial RCN135 RCN136 RCN319 RCN238 RCN243 RCN130 RCN234 RCN156
 open RCN095 RCN174 RCN275 RCN327 RCN140 RCN266 RCN286
 open LocatorFactorAggregate LocatorPhase6800Oracle LocatorBatchPhase6800
-open Lower80830.Oracle Lower80830.BatchPhase
+open Lower80840.Oracle Lower80840.BatchPhase
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 4000000
@@ -21,17 +21,17 @@ local instance : CharP K 2130706433 := by
   simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
 
 theorem source_count
-    (sound : Lower80830.Oracle.PhaseSourceSound) (u0 u1 : I → K)
+    (sound : Lower80840.Oracle.PhaseSourceSound) (u0 u1 : I → K)
     (kernel : PhaseKernelRealization sound u0 u1)
     (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181314 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181304 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80830)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80840)
     (F : RegularIndex H)
-    (hR : (regularCumulativeFlag H F).all ≤ 32)
-    (hY : middle (regularCumulativeFlag H F) ≤ 149)
-    (hT : total (regularCumulativeFlag H F) ≤ 8121)
+    (hR : (regularCumulativeFlag H F).all ≤ 33)
+    (hY : middle (regularCumulativeFlag H F) ≤ 152)
+    (hT : total (regularCumulativeFlag H F) ≤ 8483)
     (hroute : sound.source.Routeable (regularCumulativeFlag H F)) :
     (regularSeeds H selected Gamma F).card ≤ sound.potential.eval (regularCumulativeFlag H F) := by
   have he : regularAggregateFlag H ({F} : Finset (RegularIndex H)) = regularCumulativeFlag H F := by
@@ -52,9 +52,9 @@ theorem root_count
     (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181314 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181304 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80830)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80840)
     (F : RegularIndex Q)
     (hr : (regularCumulativeFlag Q F).all ≤ 31)
     (hy : middle (regularCumulativeFlag Q F) ≤ 142)
@@ -77,7 +77,7 @@ theorem root_count
     (fun g hg => hdegree g (hsub hg)) (fun g hg => hagreement g (hsub hg))
     (fun g hg => (Finset.mem_filter.mp hg).2.1)
     (fun g hg => (Finset.mem_filter.mp hg).2.2)
-    (noLargeSelectedPencil_mono selected Gamma _ 131071 80830 hsub hno)
+    (noLargeSelectedPencil_mono selected Gamma _ 131071 80840 hsub hno)
     (by norm_num [I,IRSProfile.Index]) ha
   exact hcount.trans (BoundaryTailAffineRounding6808.ledger_le_rootUpper _ _ _ ha.1 ha.2.1)
 

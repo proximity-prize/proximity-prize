@@ -7,7 +7,7 @@ set_option maxRecDepth 100000
 
 def defaultRow : BaseRow := ⟨0,0,0,0,0,[]⟩
 def lookup (r v : ℕ) : BaseRow :=
-  if 1≤r ∧ r≤32 ∧ r+v≤149 then
+  if 1≤r ∧ r≤33 ∧ r+v≤152 then
     let b := r*AffineRateData6808.rate r v
     ⟨r,v,b,b+AffineSingleton6808.slope,b+2*AffineSingleton6808.slope,
       [⟨3,b+3*AffineSingleton6808.slope,AffineSingleton6808.slope⟩]⟩

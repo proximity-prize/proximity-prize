@@ -32,10 +32,10 @@ theorem proper_count_left (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
     nodes.injective.injOn (by simpa only [Finset.card_univ,pair] using hI)
     (by norm_num [pair]) (by norm_num [pair]) (by norm_num [pair]) (by norm_num [pair])
     S.degree S.agreement (by simpa only [pair,UnequalParameters.errors,
-      (show (262144 - 181314 : ℕ) = 80830 by decide),RCN327.w] using S.noPencil)
+      (show (262144 - 181304 : ℕ) = 80840 by decide),RCN327.w] using S.noPencil)
     S.solution S.regular hzero
   exact SecondJetPairBounds.count_le_left_cap (S.pair R capY T) S.F hF.1 hF.2.1 hF.2.2
-    S.seeds.card (by change 0 < (181314 - 131071 : ℕ); decide) hcount
+    S.seeds.card (by change 0 < (181304 - 131071 : ℕ); decide) hcount
 
 end
 end ProximityPrize.SubmissionLower.BoundaryTailRegularData6808.Data

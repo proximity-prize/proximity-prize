@@ -1,13 +1,13 @@
-import ProximityPrize.SubmissionLower.AffineCheckedR326808
+import ProximityPrize.SubmissionLower.AffineAllRows6808
 import ProximityPrize.SubmissionLower.BoundaryTailClosure6808
 namespace ProximityPrize.SubmissionLower.AffineCertificate6808
 open RCN095 LocatorFactorAggregate
-open AffineFiniteChecks6808 AffineRowsChecked6808 Lower80830
+open AffineFiniteChecks6808 AffineRowsChecked6808 Lower80840
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 10000000
 
-theorem single_all (r v : ℕ) (hr : 1≤r) (hR : r≤32) (hY : r+v≤149) : SingleAt r v := by
+theorem single_all (r v : ℕ) (hr : 1≤r) (hR : r≤33) (hY : r+v≤152) : SingleAt r v := by
   interval_cases r
   · exact single_1 v (List.mem_range.mpr (by omega))
   · exact single_2 v (List.mem_range.mpr (by omega))
@@ -41,8 +41,9 @@ theorem single_all (r v : ℕ) (hr : 1≤r) (hR : r≤32) (hY : r+v≤149) : Sin
   · exact single_30 v (List.mem_range.mpr (by omega))
   · exact single_31 v (List.mem_range.mpr (by omega))
   · exact single_32 v (List.mem_range.mpr (by omega))
+  · exact single_33 v (List.mem_range.mpr (by omega))
 
-theorem phase_all (r v : ℕ) (hr : 1≤r) (hR : r≤32) (hY : r+v≤149) : PhaseAt r v := by
+theorem phase_all (r v : ℕ) (hr : 1≤r) (hR : r≤33) (hY : r+v≤152) : PhaseAt r v := by
   interval_cases r
   · exact phase_1 v (List.mem_range.mpr (by omega))
   · exact phase_2 v (List.mem_range.mpr (by omega))
@@ -76,8 +77,9 @@ theorem phase_all (r v : ℕ) (hr : 1≤r) (hR : r≤32) (hY : r+v≤149) : Phas
   · exact phase_30 v (List.mem_range.mpr (by omega))
   · exact phase_31 v (List.mem_range.mpr (by omega))
   · exact phase_32 v (List.mem_range.mpr (by omega))
+  · exact phase_33 v (List.mem_range.mpr (by omega))
 
-theorem threshold_all (r v : ℕ) (hr : 1≤r) (hR : r≤32) (hY : r+v≤149) : AffineFiniteChecks6808.ThresholdAt r v := by
+theorem threshold_all (r v : ℕ) (hr : 1≤r) (hR : r≤33) (hY : r+v≤152) : AffineFiniteChecks6808.ThresholdAt r v := by
   interval_cases r
   · exact threshold_1 v (List.mem_range.mpr (by omega))
   · exact threshold_2 v (List.mem_range.mpr (by omega))
@@ -111,8 +113,9 @@ theorem threshold_all (r v : ℕ) (hr : 1≤r) (hR : r≤32) (hY : r+v≤149) : 
   · exact threshold_30 v (List.mem_range.mpr (by omega))
   · exact threshold_31 v (List.mem_range.mpr (by omega))
   · exact threshold_32 v (List.mem_range.mpr (by omega))
+  · exact threshold_33 v (List.mem_range.mpr (by omega))
 
-theorem ledger_all (r v : ℕ) (hr : 1≤r) (hR : r≤32) (hY : r+v≤149) : LedgerAt r v := by
+theorem ledger_all (r v : ℕ) (hr : 1≤r) (hR : r≤33) (hY : r+v≤152) : LedgerAt r v := by
   interval_cases r
   · exact ledger_1 v (List.mem_range.mpr (by omega))
   · exact ledger_2 v (List.mem_range.mpr (by omega))
@@ -146,6 +149,7 @@ theorem ledger_all (r v : ℕ) (hr : 1≤r) (hR : r≤32) (hY : r+v≤149) : Led
   · exact ledger_30 v (List.mem_range.mpr (by omega))
   · exact ledger_31 v (List.mem_range.mpr (by omega))
   · exact ledger_32 v (List.mem_range.mpr (by omega))
+  · exact ledger_33 v (List.mem_range.mpr (by omega))
 
 theorem baseReceipt : AffineSingleBridge6808.Receipt :=
   ⟨fun r v hr hR hY => (single_all r v hr hR hY).1,
@@ -164,8 +168,8 @@ theorem thresholdReceipt : PhaseSemantics.ThresholdReceiptSound := by
   exact CompressedData.zowh r v j (threshold_all r v hr hR hY j hj)
 
 private theorem ledger_transfer (a b c d e f : ℕ) (hc : c=e) (hd : d=f)
-    (h : a+b+e+f+18000000000000+(1690684695462646+127940574522131) ≤ 258791250294373749) :
-    a+b+c+d+18000000000000+1690684695462646+37*3457853365463 ≤ 258791250294373749 := by
+    (h : a+b+e+f+18000000000000+835595750639557 ≤ 273363630004575212) :
+    a+b+c+d+18000000000000+835595750639557 ≤ 273363630004575212 := by
   omega
 
 theorem ledgerReceipt : Assembly.LedgerReceiptSound PhaseSemantics.phaseCap Closure.ledgerBudget := by
@@ -173,29 +177,29 @@ theorem ledgerReceipt : Assembly.LedgerReceiptSound PhaseSemantics.phaseCap Clos
   · decide +kernel
   · intro r v z hr hR hY hT
     have h := LedgerAudit.RunsValid.sound (PhaseData.rowContext r v) (LedgerData.lookup r v)
-      0 z (ledger_all r v hr hR hY) (Nat.zero_le _) (by change z < 8122-(r+v); omega)
+      0 z (ledger_all r v hr hR hY) (Nat.zero_le _) (by change z < 8484-(r+v); omega)
     change PhaseRows.capBefore (PhaseData.rowContext r v) 10 z +
       Initial.initialAComplement (LocatorPhase6800Oracle.rawFlag r v z) +
-      r * AsymmetricChainPolynomial80830.unit (r+v) (r+v+z) r +
-      (35-r) * AsymmetricChainPolynomial80830.unit (156-(r+v)) (38915-(r+v+z)) (35-r) +
-      18000000000000 + (1690684695462646+127940574522131) ≤ 258791250294373749 at h
+      r * AsymmetricChainPolynomial80840.unit (r+v) (r+v+z) r +
+      (39-r) * AsymmetricChainPolynomial80840.unit (178-(r+v)) (16146-(r+v+z)) (39-r) +
+      18000000000000 + 835595750639557 ≤ 273363630004575212 at h
     change PhaseRows.capBefore (PhaseData.rowContext r v) 10 z +
       Initial.initialAComplement (LocatorPhase6800Oracle.rawFlag r v z) +
-      r * AsymmetricChainPolynomial80830.unit (v+r) (z+v+r) r +
-      (35-r) * AsymmetricChainPolynomial80830.unit (156-(v+r)) (38915-(z+v+r)) (35-r) +
-      18000000000000 + 1690684695462646 + 37*3457853365463 ≤ 258791250294373749
-    have hu : AsymmetricChainPolynomial80830.unit (v+r) (z+v+r) r =
-        AsymmetricChainPolynomial80830.unit (r+v) (r+v+z) r :=
-      congrArg₂ (fun y t => AsymmetricChainPolynomial80830.unit y t r)
+      r * AsymmetricChainPolynomial80840.unit (v+r) (z+v+r) r +
+      (39-r) * AsymmetricChainPolynomial80840.unit (178-(v+r)) (16146-(z+v+r)) (39-r) +
+      18000000000000 + 835595750639557 ≤ 273363630004575212
+    have hu : AsymmetricChainPolynomial80840.unit (v+r) (z+v+r) r =
+        AsymmetricChainPolynomial80840.unit (r+v) (r+v+z) r :=
+      congrArg₂ (fun y t => AsymmetricChainPolynomial80840.unit y t r)
         (show v+r = r+v by omega) (show z+v+r = r+v+z by omega)
-    have hv : AsymmetricChainPolynomial80830.unit (156-(v+r)) (38915-(z+v+r)) (35-r) =
-        AsymmetricChainPolynomial80830.unit (156-(r+v)) (38915-(r+v+z)) (35-r) :=
-      congrArg₂ (fun y t => AsymmetricChainPolynomial80830.unit (156-y) (38915-t) (35-r))
+    have hv : AsymmetricChainPolynomial80840.unit (178-(v+r)) (16146-(z+v+r)) (39-r) =
+        AsymmetricChainPolynomial80840.unit (178-(r+v)) (16146-(r+v+z)) (39-r) :=
+      congrArg₂ (fun y t => AsymmetricChainPolynomial80840.unit (178-y) (16146-t) (39-r))
         (show v+r = r+v by omega) (show z+v+r = r+v+z by omega)
     exact ledger_transfer _ _ _ _ _ _ (congrArg (fun u => r*u) hu)
-      (congrArg (fun u => (35-r)*u) hv) h
+      (congrArg (fun u => (39-r)*u) hv) h
 
-theorem protocolClaim : ProximityPrize.Benchmark.ProtocolClaim 6808 10346334 33554432 :=
-  Closure.protocolClaim6808 baseReceipt prefixReceipt thresholdReceipt runsReceipt ledgerReceipt
+theorem protocolClaim : ProximityPrize.Benchmark.ProtocolClaim 6809 10347591 33554432 :=
+  Closure.protocolClaim6809 baseReceipt prefixReceipt thresholdReceipt runsReceipt ledgerReceipt
 
 end ProximityPrize.SubmissionLower.AffineCertificate6808

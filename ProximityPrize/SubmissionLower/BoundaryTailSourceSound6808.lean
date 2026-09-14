@@ -1,11 +1,11 @@
 import ProximityPrize.SubmissionLower.BoundaryTailRouting6808
 import ProximityPrize.SubmissionLower.BoundaryTailKernels80830
 
-namespace ProximityPrize.SubmissionLower.Lower80830.SourceSound
+namespace ProximityPrize.SubmissionLower.Lower80840.SourceSound
 
 open RCN095 RCN223 RCN260 RCN294 LocatorFactorAggregate
-open Lower80830.FactorSwitch Lower80830.PowerRoute
-open Lower80830.Oracle
+open Lower80840.FactorSwitch Lower80840.PowerRoute
+open Lower80840.Oracle
 open LocatorPhase6800Oracle (Potential)
 
 set_option autoImplicit false
@@ -79,29 +79,29 @@ theorem stageGates_of_stageZero (L YS S : ℕ) (p : FlagDegree) (j : ℕ)
 
 
 namespace Phase00
-def source : SourceNumbers := ⟨3840000, 88533, 19840, 119936584085811789477372⟩
-def potential : Potential := ⟨3928805293203, 192908416399544, 882978169271437⟩
+def source : SourceNumbers := ⟨3840000, 88528, 19840, 116152340868634539327888⟩
+def potential : Potential := ⟨4030745590214, 200486002112969, 912926409500727⟩
 theorem stageZero_le (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
-    stageCost 3840000 88533 19840 (exactRouteBox p) 0 ≤ potential.eval p := by
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
+    stageCost 3840000 88528 19840 (exactRouteBox p) 0 ≤ potential.eval p := by
   simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
-  change AsymmetricHelper.leftRegularCountCap (helperPair 3840000 88533 19840 (middle p) p.all (total p)) ≤
-    3928805293203 * total p + 192908416399544 * middle p + 882978169271437 * p.all
-  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39059159 8257473 2128855183 3928805293203 192908416399544 882978169271437
+  change AsymmetricHelper.leftRegularCountCap (helperPair 3840000 88528 19840 (middle p) p.all (total p)) ≤
+    4030745590214 * total p + 200486002112969 * middle p + 912926409500727 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39845585 8519615 2223750587 4030745590214 200486002112969 912926409500727
   · norm_num [helperPair, UnequalParameters.gap]
-  · change 1 + 2*131071*middle p ≤ 39059159
+  · change 1 + 2*131071*middle p ≤ 39845585
     omega
-  · change 131071*(2*p.all-1) ≤ 8257473
+  · change 131071*(2*p.all-1) ≤ 8519615
     omega
-  · change 2*131071*total p+1 ≤ 2128855183
+  · change 2*131071*total p+1 ≤ 2223750587
     omega
   all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
 
 theorem stageZero_gates (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
-    HelperPairGates 3840000 88533 19840 (middle p) p.all (total p) := by
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
+    HelperPairGates 3840000 88528 19840 (middle p) p.all (total p) := by
   unfold HelperPairGates helperPair UnequalParameters.mixedCost
   norm_num
   constructor
@@ -127,40 +127,40 @@ def sound : PhaseSourceSound where
     exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
 
 noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
-    Lower80830.BatchPhase.PhaseKernelRealization sound u0 u1 where
-  D := 11604096000
+    Lower80840.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 11603456000
   m := 64000
   weighted := by decide
-  shape := Kernels80830.Source00.shape
+  shape := Kernels80840.Source00.shape
   slope_le_m := by decide
   m_lt_char := by decide
-  gap_le_finrank := Kernels80830.Source00.finrank_gap u0 u1
+  gap_le_finrank := Kernels80840.Source00.finrank_gap u0 u1
 end Phase00
 
 namespace Phase01
-def source : SourceNumbers := ⟨3200000, 44266, 9888, 14777118577657165926174⟩
-def potential : Potential := ⟨1961131177888, 123850171558372, 571914217473899⟩
+def source : SourceNumbers := ⟨3200000, 44264, 9888, 14381981301127046791888⟩
+def potential : Potential := ⟨2012045783549, 128512023988326, 589543667081150⟩
 theorem stageZero_le (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
-    stageCost 3200000 44266 9888 (exactRouteBox p) 0 ≤ potential.eval p := by
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
+    stageCost 3200000 44264 9888 (exactRouteBox p) 0 ≤ potential.eval p := by
   simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
-  change AsymmetricHelper.leftRegularCountCap (helperPair 3200000 44266 9888 (middle p) p.all (total p)) ≤
-    1961131177888 * total p + 123850171558372 * middle p + 571914217473899 * p.all
-  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39059159 8257473 2128855183 1961131177888 123850171558372 571914217473899
+  change AsymmetricHelper.leftRegularCountCap (helperPair 3200000 44264 9888 (middle p) p.all (total p)) ≤
+    2012045783549 * total p + 128512023988326 * middle p + 589543667081150 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39845585 8519615 2223750587 2012045783549 128512023988326 589543667081150
   · norm_num [helperPair, UnequalParameters.gap]
-  · change 1 + 2*131071*middle p ≤ 39059159
+  · change 1 + 2*131071*middle p ≤ 39845585
     omega
-  · change 131071*(2*p.all-1) ≤ 8257473
+  · change 131071*(2*p.all-1) ≤ 8519615
     omega
-  · change 2*131071*total p+1 ≤ 2128855183
+  · change 2*131071*total p+1 ≤ 2223750587
     omega
   all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
 
 theorem stageZero_gates (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
-    HelperPairGates 3200000 44266 9888 (middle p) p.all (total p) := by
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
+    HelperPairGates 3200000 44264 9888 (middle p) p.all (total p) := by
   unfold HelperPairGates helperPair UnequalParameters.mixedCost
   norm_num
   constructor
@@ -186,40 +186,40 @@ def sound : PhaseSourceSound where
     exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
 
 noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
-    Lower80830.BatchPhase.PhaseKernelRealization sound u0 u1 where
-  D := 5802048000
+    Lower80840.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 5801728000
   m := 32000
   weighted := by decide
-  shape := Kernels80830.Source01.shape
+  shape := Kernels80840.Source01.shape
   slope_le_m := by decide
   m_lt_char := by decide
-  gap_le_finrank := Kernels80830.Source01.finrank_gap u0 u1
+  gap_le_finrank := Kernels80840.Source01.finrank_gap u0 u1
 end Phase01
 
 namespace Phase02
-def source : SourceNumbers := ⟨2880000, 44266, 9888, 12945300312285541286174⟩
-def potential : Potential := ⟨1961131177888, 116956750330952, 539307240039545⟩
+def source : SourceNumbers := ⟨2880000, 44264, 9888, 12589981621733099911888⟩
+def potential : Potential := ⟨2012045783549, 121398348137662, 556273551498453⟩
 theorem stageZero_le (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
-    stageCost 2880000 44266 9888 (exactRouteBox p) 0 ≤ potential.eval p := by
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
+    stageCost 2880000 44264 9888 (exactRouteBox p) 0 ≤ potential.eval p := by
   simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
-  change AsymmetricHelper.leftRegularCountCap (helperPair 2880000 44266 9888 (middle p) p.all (total p)) ≤
-    1961131177888 * total p + 116956750330952 * middle p + 539307240039545 * p.all
-  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39059159 8257473 2128855183 1961131177888 116956750330952 539307240039545
+  change AsymmetricHelper.leftRegularCountCap (helperPair 2880000 44264 9888 (middle p) p.all (total p)) ≤
+    2012045783549 * total p + 121398348137662 * middle p + 556273551498453 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39845585 8519615 2223750587 2012045783549 121398348137662 556273551498453
   · norm_num [helperPair, UnequalParameters.gap]
-  · change 1 + 2*131071*middle p ≤ 39059159
+  · change 1 + 2*131071*middle p ≤ 39845585
     omega
-  · change 131071*(2*p.all-1) ≤ 8257473
+  · change 131071*(2*p.all-1) ≤ 8519615
     omega
-  · change 2*131071*total p+1 ≤ 2128855183
+  · change 2*131071*total p+1 ≤ 2223750587
     omega
   all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
 
 theorem stageZero_gates (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
-    HelperPairGates 2880000 44266 9888 (middle p) p.all (total p) := by
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
+    HelperPairGates 2880000 44264 9888 (middle p) p.all (total p) := by
   unfold HelperPairGates helperPair UnequalParameters.mixedCost
   norm_num
   constructor
@@ -245,40 +245,40 @@ def sound : PhaseSourceSound where
     exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
 
 noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
-    Lower80830.BatchPhase.PhaseKernelRealization sound u0 u1 where
-  D := 5802048000
+    Lower80840.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 5801728000
   m := 32000
   weighted := by decide
-  shape := Kernels80830.Source02.shape
+  shape := Kernels80840.Source02.shape
   slope_le_m := by decide
   m_lt_char := by decide
-  gap_le_finrank := Kernels80830.Source02.finrank_gap u0 u1
+  gap_le_finrank := Kernels80840.Source02.finrank_gap u0 u1
 end Phase02
 
 namespace Phase03
-def source : SourceNumbers := ⟨1062000, 22133, 4940, 535607796149921249523⟩
-def potential : Potential := ⟨980158001726, 50313306146701, 231136627925442⟩
+def source : SourceNumbers := ⟨1062000, 22132, 4940, 519289470505939163247⟩
+def potential : Potential := ⟨1005607015330, 52272934411383, 238836451717167⟩
 theorem stageZero_le (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
-    stageCost 1062000 22133 4940 (exactRouteBox p) 0 ≤ potential.eval p := by
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
+    stageCost 1062000 22132 4940 (exactRouteBox p) 0 ≤ potential.eval p := by
   simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
-  change AsymmetricHelper.leftRegularCountCap (helperPair 1062000 22133 4940 (middle p) p.all (total p)) ≤
-    980158001726 * total p + 50313306146701 * middle p + 231136627925442 * p.all
-  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39059159 8257473 2128855183 980158001726 50313306146701 231136627925442
+  change AsymmetricHelper.leftRegularCountCap (helperPair 1062000 22132 4940 (middle p) p.all (total p)) ≤
+    1005607015330 * total p + 52272934411383 * middle p + 238836451717167 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39845585 8519615 2223750587 1005607015330 52272934411383 238836451717167
   · norm_num [helperPair, UnequalParameters.gap]
-  · change 1 + 2*131071*middle p ≤ 39059159
+  · change 1 + 2*131071*middle p ≤ 39845585
     omega
-  · change 131071*(2*p.all-1) ≤ 8257473
+  · change 131071*(2*p.all-1) ≤ 8519615
     omega
-  · change 2*131071*total p+1 ≤ 2128855183
+  · change 2*131071*total p+1 ≤ 2223750587
     omega
   all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
 
 theorem stageZero_gates (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
-    HelperPairGates 1062000 22133 4940 (middle p) p.all (total p) := by
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
+    HelperPairGates 1062000 22132 4940 (middle p) p.all (total p) := by
   unfold HelperPairGates helperPair UnequalParameters.mixedCost
   norm_num
   constructor
@@ -304,39 +304,39 @@ def sound : PhaseSourceSound where
     exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
 
 noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
-    Lower80830.BatchPhase.PhaseKernelRealization sound u0 u1 where
-  D := 2901024000
+    Lower80840.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 2900864000
   m := 16000
   weighted := by decide
-  shape := Kernels80830.Source03.shape
+  shape := Kernels80840.Source03.shape
   slope_le_m := by decide
   m_lt_char := by decide
-  gap_le_finrank := Kernels80830.Source03.finrank_gap u0 u1
+  gap_le_finrank := Kernels80840.Source03.finrank_gap u0 u1
 end Phase03
 
 namespace Phase04
-def source : SourceNumbers := ⟨531000, 11066, 2470, 33166390491841354440⟩
-def potential : Potential := ⟨490068229893, 25156653073351, 115565537063486⟩
+def source : SourceNumbers := ⟨531000, 11066, 2470, 32146246142741674440⟩
+def potential : Potential := ⟨502803507665, 26136467205692, 119418225858584⟩
 theorem stageZero_le (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
     stageCost 531000 11066 2470 (exactRouteBox p) 0 ≤ potential.eval p := by
   simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
   change AsymmetricHelper.leftRegularCountCap (helperPair 531000 11066 2470 (middle p) p.all (total p)) ≤
-    490068229893 * total p + 25156653073351 * middle p + 115565537063486 * p.all
-  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39059159 8257473 2128855183 490068229893 25156653073351 115565537063486
+    502803507665 * total p + 26136467205692 * middle p + 119418225858584 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39845585 8519615 2223750587 502803507665 26136467205692 119418225858584
   · norm_num [helperPair, UnequalParameters.gap]
-  · change 1 + 2*131071*middle p ≤ 39059159
+  · change 1 + 2*131071*middle p ≤ 39845585
     omega
-  · change 131071*(2*p.all-1) ≤ 8257473
+  · change 131071*(2*p.all-1) ≤ 8519615
     omega
-  · change 2*131071*total p+1 ≤ 2128855183
+  · change 2*131071*total p+1 ≤ 2223750587
     omega
   all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
 
 theorem stageZero_gates (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
     HelperPairGates 531000 11066 2470 (middle p) p.all (total p) := by
   unfold HelperPairGates helperPair UnequalParameters.mixedCost
   norm_num
@@ -363,39 +363,39 @@ def sound : PhaseSourceSound where
     exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
 
 noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
-    Lower80830.BatchPhase.PhaseKernelRealization sound u0 u1 where
-  D := 1450512000
+    Lower80840.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 1450432000
   m := 8000
   weighted := by decide
-  shape := Kernels80830.Source04.shape
+  shape := Kernels80840.Source04.shape
   slope_le_m := by decide
   m_lt_char := by decide
-  gap_le_finrank := Kernels80830.Source04.finrank_gap u0 u1
+  gap_le_finrank := Kernels80840.Source04.finrank_gap u0 u1
 end Phase04
 
 namespace Phase05
-def source : SourceNumbers := ⟨88902, 1383, 308, 10543266476118971⟩
-def potential : Potential := ⟨61176720648, 3625691597785, 16739732997892⟩
+def source : SourceNumbers := ⟨88902, 1383, 308, 10208281388918971⟩
+def potential : Potential := ⟨62766904066, 3763487064327, 17267939771556⟩
 theorem stageZero_le (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
     stageCost 88902 1383 308 (exactRouteBox p) 0 ≤ potential.eval p := by
   simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
   change AsymmetricHelper.leftRegularCountCap (helperPair 88902 1383 308 (middle p) p.all (total p)) ≤
-    61176720648 * total p + 3625691597785 * middle p + 16739732997892 * p.all
-  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39059159 8257473 2128855183 61176720648 3625691597785 16739732997892
+    62766904066 * total p + 3763487064327 * middle p + 17267939771556 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39845585 8519615 2223750587 62766904066 3763487064327 17267939771556
   · norm_num [helperPair, UnequalParameters.gap]
-  · change 1 + 2*131071*middle p ≤ 39059159
+  · change 1 + 2*131071*middle p ≤ 39845585
     omega
-  · change 131071*(2*p.all-1) ≤ 8257473
+  · change 131071*(2*p.all-1) ≤ 8519615
     omega
-  · change 2*131071*total p+1 ≤ 2128855183
+  · change 2*131071*total p+1 ≤ 2223750587
     omega
   all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
 
 theorem stageZero_gates (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
     HelperPairGates 88902 1383 308 (middle p) p.all (total p) := by
   unfold HelperPairGates helperPair UnequalParameters.mixedCost
   norm_num
@@ -422,40 +422,40 @@ def sound : PhaseSourceSound where
     exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
 
 noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
-    Lower80830.BatchPhase.PhaseKernelRealization sound u0 u1 where
-  D := 181314000
+    Lower80840.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 181304000
   m := 1000
   weighted := by decide
-  shape := Kernels80830.Source05.shape
+  shape := Kernels80840.Source05.shape
   slope_le_m := by decide
   m_lt_char := by decide
-  gap_le_finrank := Kernels80830.Source05.finrank_gap u0 u1
+  gap_le_finrank := Kernels80840.Source05.finrank_gap u0 u1
 end Phase05
 
 namespace Phase06
-def source : SourceNumbers := ⟨3640000, 19366, 4267, 1582484275863798669549⟩
-def potential : Potential := ⟨851974900634, 102110724538924, 478459229510881⟩
+def source : SourceNumbers := ⟨3640000, 19365, 4267, 1545113083611437217999⟩
+def potential : Potential := ⟨874124737624, 105677393081476, 490813262169523⟩
 theorem stageZero_le (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
-    stageCost 3640000 19366 4267 (exactRouteBox p) 0 ≤ potential.eval p := by
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
+    stageCost 3640000 19365 4267 (exactRouteBox p) 0 ≤ potential.eval p := by
   simp only [stageCost, stagePair, exactRouteBox, Nat.zero_mul, Nat.sub_zero]
-  change AsymmetricHelper.leftRegularCountCap (helperPair 3640000 19366 4267 (middle p) p.all (total p)) ≤
-    851974900634 * total p + 102110724538924 * middle p + 478459229510881 * p.all
-  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39059159 8257473 2128855183 851974900634 102110724538924 478459229510881
+  change AsymmetricHelper.leftRegularCountCap (helperPair 3640000 19365 4267 (middle p) p.all (total p)) ≤
+    874124737624 * total p + 105677393081476 * middle p + 490813262169523 * p.all
+  apply AsymmetricHelper.leftRegularCountCap_le_linear _ 39845585 8519615 2223750587 874124737624 105677393081476 490813262169523
   · norm_num [helperPair, UnequalParameters.gap]
-  · change 1 + 2*131071*middle p ≤ 39059159
+  · change 1 + 2*131071*middle p ≤ 39845585
     omega
-  · change 131071*(2*p.all-1) ≤ 8257473
+  · change 131071*(2*p.all-1) ≤ 8519615
     omega
-  · change 2*131071*total p+1 ≤ 2128855183
+  · change 2*131071*total p+1 ≤ 2223750587
     omega
   all_goals norm_num [helperPair, UnequalParameters.gap, UnequalParameters.errors]
 
 theorem stageZero_gates (p : FlagDegree)
-    (hr : 1 ≤ p.all) (hs : p.all ≤ 32)
-    (hy : middle p ≤ 149) (ht : total p ≤ 8121) :
-    HelperPairGates 3640000 19366 4267 (middle p) p.all (total p) := by
+    (hr : 1 ≤ p.all) (hs : p.all ≤ 33)
+    (hy : middle p ≤ 152) (ht : total p ≤ 8483) :
+    HelperPairGates 3640000 19365 4267 (middle p) p.all (total p) := by
   unfold HelperPairGates helperPair UnequalParameters.mixedCost
   norm_num
   constructor
@@ -481,14 +481,14 @@ def sound : PhaseSourceSound where
     exact stageGates_of_stageZero _ _ _ p j (stageZero_gates p hr hs hy ht)
 
 noncomputable def kernel (u0 u1 : ProximityPrize.Benchmark.IRSProfile.Index → ProximityPrize.Benchmark.IRSProfile.Field) :
-    Lower80830.BatchPhase.PhaseKernelRealization sound u0 u1 where
-  D := 2538396000
+    Lower80840.BatchPhase.PhaseKernelRealization sound u0 u1 where
+  D := 2538256000
   m := 14000
   weighted := by decide
-  shape := Kernels80830.Source06.shape
+  shape := Kernels80840.Source06.shape
   slope_le_m := by decide
   m_lt_char := by decide
-  gap_le_finrank := Kernels80830.Source06.finrank_gap u0 u1
+  gap_le_finrank := Kernels80840.Source06.finrank_gap u0 u1
 end Phase06
 
-end ProximityPrize.SubmissionLower.Lower80830.SourceSound
+end ProximityPrize.SubmissionLower.Lower80840.SourceSound

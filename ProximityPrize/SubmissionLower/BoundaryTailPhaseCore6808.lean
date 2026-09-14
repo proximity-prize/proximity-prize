@@ -1,9 +1,9 @@
 import ProximityPrize.SubmissionLower.BoundaryTailSourceSound6808
 
-namespace ProximityPrize.SubmissionLower.Lower80830.PhaseRows
+namespace ProximityPrize.SubmissionLower.Lower80840.PhaseRows
 open RCN095 LocatorFactorAggregate LocatorArbitraryPowerAvoidance
 open LocatorPhase6800Oracle (Potential BaseRow BaseSegment evalBaseSegments rawFlag rawFlag_total rawFlag_middle rawFlag_all)
-open Lower80830.Oracle
+open Lower80840.Oracle
 open LocatorPhase6800Audit (powerBandBudget_mono_fuel)
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -28,13 +28,13 @@ theorem routeable_raw_mono_z
   have hbox : s.totalCap - (r + v + z₂) ≤
       s.totalCap - (r + v + z₁) := Nat.sub_le_sub_left htotal _
   have hsameFuel :
-      powerBandBudget 50244 (r + v + z₂) (r + v) r
+      powerBandBudget 50234 (r + v + z₂) (r + v) r
           (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
           (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
-        powerBandBudget 50244 (r + v + z₁) (r + v) r
+        powerBandBudget 50234 (r + v + z₁) (r + v) r
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
           (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) := by
-    exact powerBandBudget_mono 50244
+    exact powerBandBudget_mono 50234
       (r + v + z₂) (r + v) r
       (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
       (s.slopeCap - r)
@@ -43,13 +43,13 @@ theorem routeable_raw_mono_z
       (s.slopeCap - r) (s.fuel (rawFlag r v z₂))
       hbox (le_refl _) (le_refl _) htotal (le_refl _) (le_refl _)
   have hmoreFuel :
-      powerBandBudget 50244 (r + v + z₁) (r + v) r
+      powerBandBudget 50234 (r + v + z₁) (r + v) r
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
           (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
-        powerBandBudget 50244 (r + v + z₁) (r + v) r
+        powerBandBudget 50234 (r + v + z₁) (r + v) r
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
           (s.slopeCap - r) (s.fuel (rawFlag r v z₁)) :=
-    powerBandBudget_mono_fuel 50244 (r + v + z₁) (r + v) r
+    powerBandBudget_mono_fuel 50234 (r + v + z₁) (r + v) r
       (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
       (s.slopeCap - r) hfuel
   refine ⟨hr, ?_, ?_, ?_, ?_⟩
@@ -63,11 +63,11 @@ theorem routeable_raw_mono_z
       exact (hsameFuel.trans hmoreFuel).trans_lt hband
     · right
       have hsameFuelT :
-          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₂)) 50244
+          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₂)) 50234
               (contactDec (rawFlag r v z₂)) (r + v + z₂) (r + v) r
               (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
               (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
-            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50244
+            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50234
               (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
               (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
               (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) := by
@@ -76,7 +76,7 @@ theorem routeable_raw_mono_z
         have hdec : contactDec (rawFlag r v z₂) = contactDec (rawFlag r v z₁) := by
           simp only [contactDec, rawFlag_middle, rawFlag_all]
         rw [hcap, hdec]
-        exact powerBandBudgetThin_mono 131071 50244 (s.fuel (rawFlag r v z₂))
+        exact powerBandBudgetThin_mono 131071 50234 (s.fuel (rawFlag r v z₂))
           (s.contactCap (rawFlag r v z₁)) (contactDec (rawFlag r v z₁))
           (r + v + z₂) (r + v) r
           (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v)) (s.slopeCap - r)
@@ -85,15 +85,15 @@ theorem routeable_raw_mono_z
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v)) (s.slopeCap - r)
           le_rfl le_rfl hbox le_rfl le_rfl htotal le_rfl le_rfl
       have hmoreFuelT :
-          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50244
+          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50234
               (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
               (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
               (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
-            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50244
+            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50234
               (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
               (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
               (s.slopeCap - r) (s.fuel (rawFlag r v z₁)) :=
-        powerBandBudgetThin_mono_fuel 131071 (s.contactCap (rawFlag r v z₁)) 50244
+        powerBandBudgetThin_mono_fuel 131071 (s.contactCap (rawFlag r v z₁)) 50234
           (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v)) (s.slopeCap - r) hfuel
       unfold SourceNumbers.bandThin at hthin ⊢
@@ -102,18 +102,18 @@ theorem routeable_raw_mono_z
 
 
 def phasePotential : ℕ → Potential
-  | 0 => Lower80830.SourceSound.Phase00.potential
-  | 1 => Lower80830.SourceSound.Phase01.potential
-  | 2 => Lower80830.SourceSound.Phase02.potential
-  | 3 => Lower80830.SourceSound.Phase03.potential
-  | 4 => Lower80830.SourceSound.Phase04.potential
-  | 5 => Lower80830.SourceSound.Phase05.potential
-  | 6 => Lower80830.SourceSound.Phase06.potential
-  | 7 => Lower80830.SourceSound.Phase03.potential
-  | 8 => Lower80830.SourceSound.Phase04.potential
-  | _ => Lower80830.SourceSound.Phase05.potential
+  | 0 => Lower80840.SourceSound.Phase00.potential
+  | 1 => Lower80840.SourceSound.Phase01.potential
+  | 2 => Lower80840.SourceSound.Phase02.potential
+  | 3 => Lower80840.SourceSound.Phase03.potential
+  | 4 => Lower80840.SourceSound.Phase04.potential
+  | 5 => Lower80840.SourceSound.Phase05.potential
+  | 6 => Lower80840.SourceSound.Phase06.potential
+  | 7 => Lower80840.SourceSound.Phase03.potential
+  | 8 => Lower80840.SourceSound.Phase04.potential
+  | _ => Lower80840.SourceSound.Phase05.potential
 
-def thresholdAt (q : Array ℕ) (j : ℕ) : ℕ := (q[j]?).getD 8122
+def thresholdAt (q : Array ℕ) (j : ℕ) : ℕ := (q[j]?).getD 8484
 def cachedPrefixAt (q : Array ℕ) (j : ℕ) : ℕ := (q[j]?).getD 0
 structure PhaseRowContext where
   R : ℕ
@@ -324,7 +324,7 @@ theorem RunsValid.sound (c : PhaseRowContext) (phase finish start : ℕ)
       · exact ih run.stop h.2.2 (by omega)
 
 def phaseFinish (c : PhaseRowContext) (phase : ℕ) : ℕ :=
-  min (thresholdAt c.threshold phase) (8122 - (c.R + c.V))
+  min (thresholdAt c.threshold phase) (8484 - (c.R + c.V))
 
 def RowRunsValid (c : PhaseRowContext) (runs : Array (List PhaseRun)) : Prop :=
   ∀ j ∈ List.range 10, RunsValid c j (phaseFinish c j) 0 ((runs[j]?).getD [])
@@ -337,7 +337,7 @@ instance (c : PhaseRowContext) (runs : Array (List PhaseRun)) :
 theorem phaseTerminal_of_runs (c : PhaseRowContext) (phase : ℕ)
     (runs : List PhaseRun) (hp : phase < 10)
     (h : RunsValid c phase (phaseFinish c phase) 0 runs)
-    (z : ℕ) (hz : z < 8122 - (c.R + c.V)) :
+    (z : ℕ) (hz : z < 8484 - (c.R + c.V)) :
     thresholdAt c.threshold phase ≤ z ∨
       capBefore c phase z ≤ hereCharge c phase z := by
   by_cases ht : thresholdAt c.threshold phase ≤ z
@@ -349,9 +349,9 @@ theorem phaseTerminal_of_runs (c : PhaseRowContext) (phase : ℕ)
       exact lt_min (Nat.lt_of_not_ge ht) hz
 
 
-end ProximityPrize.SubmissionLower.Lower80830.PhaseRows
+end ProximityPrize.SubmissionLower.Lower80840.PhaseRows
 
-namespace ProximityPrize.SubmissionLower.Lower80830.ThresholdFast
+namespace ProximityPrize.SubmissionLower.Lower80840.ThresholdFast
 
 open scoped BigOperators
 open LocatorLowQuotient
@@ -554,7 +554,7 @@ theorem channelCount_eq_eval (T YS S : ℕ) :
     channelCount T YS S = evalChannelCount T YS S :=
   (channelCount_eq_fast T YS S).trans (fastChannelCount_eq_eval T YS S)
 
-open LocatorArbitraryPowerAvoidance Lower80830.Oracle
+open LocatorArbitraryPowerAvoidance Lower80840.Oracle
 open LocatorPhase6800Oracle (rawFlag)
 open RCN095 LocatorFactorAggregate
 
@@ -579,7 +579,7 @@ theorem evalPowerBandBudget_eq
       rw [← channelCount_eq_eval, ih]
 
 def evalBand (s : SourceNumbers) (p : FlagDegree) : ℕ :=
-  evalPowerBandBudget 50244 (total p) (middle p) p.all
+  evalPowerBandBudget 50234 (total p) (middle p) p.all
     (s.totalCap - total p) (s.middleCap - middle p)
     (s.slopeCap - p.all) (s.fuel p)
 
@@ -609,7 +609,7 @@ theorem evalPowerBandBudgetThin_eq
       rw [← channelCount_eq_eval, ih]
 
 def evalBandThin (s : SourceNumbers) (p : FlagDegree) : ℕ :=
-  evalPowerBandBudgetThin 131071 (s.contactCap p) 50244 (contactDec p)
+  evalPowerBandBudgetThin 131071 (s.contactCap p) 50234 (contactDec p)
     (total p) (middle p) p.all
     (s.totalCap - total p) (s.middleCap - middle p)
     (s.slopeCap - p.all) (s.fuel p)
@@ -635,7 +635,7 @@ theorem fastRouteable_iff (s : SourceNumbers) (p : FlagDegree) :
 
 def FastSourceThresholdSufficient
     (s : SourceNumbers) (r v threshold : ℕ) : Prop :=
-  8121 - (r + v) < threshold ∨ FastRouteable s (rawFlag r v threshold)
+  8483 - (r + v) < threshold ∨ FastRouteable s (rawFlag r v threshold)
 
 instance (s : SourceNumbers) (r v threshold : ℕ) :
     Decidable (FastSourceThresholdSufficient s r v threshold) := by
@@ -644,11 +644,11 @@ instance (s : SourceNumbers) (r v threshold : ℕ) :
 
 
 theorem sufficient_route (s : SourceNumbers) (r v threshold z : ℕ)
-    (hs : 8121 ≤ s.totalCap) (hz : r+v+z ≤ 8121) (ht : threshold ≤ z)
+    (hs : 8483 ≤ s.totalCap) (hz : r+v+z ≤ 8483) (ht : threshold ≤ z)
     (hc : FastSourceThresholdSufficient s r v threshold) :
     s.Routeable (rawFlag r v z) := by
   rcases hc with hbad | hroute
   · omega
-  · exact Lower80830.PhaseRows.routeable_raw_mono_z s ht (hz.trans hs)
+  · exact Lower80840.PhaseRows.routeable_raw_mono_z s ht (hz.trans hs)
       ((fastRouteable_iff _ _).mp hroute)
-end ProximityPrize.SubmissionLower.Lower80830.ThresholdFast
+end ProximityPrize.SubmissionLower.Lower80840.ThresholdFast

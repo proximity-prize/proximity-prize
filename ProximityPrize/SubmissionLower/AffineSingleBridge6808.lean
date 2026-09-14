@@ -5,24 +5,24 @@ import ProximityPrize.SubmissionLower.BoundaryTailPhaseSemantics6808
 namespace ProximityPrize.SubmissionLower.AffineSingleBridge6808
 open scoped BigOperators
 open RCN095 LocatorFactorAggregate LocatorPhase6800Oracle
-open AffineSingleton6808 Lower80830.PhaseRows Lower80830.PhaseData
-open Lower80830.PhaseSemantics Lower80830.PhaseChecks Lower80830.ThresholdFast
+open AffineSingleton6808 Lower80840.PhaseRows Lower80840.PhaseData
+open Lower80840.PhaseSemantics Lower80840.PhaseChecks Lower80840.ThresholdFast
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 4000000
 
 def RateAt (r v : ℕ) : Prop :=
-  (r+1≤32 → r+1+v≤149 → AffineRateData6808.rate r v ≤ AffineRateData6808.rate (r+1) v) ∧
-  (r+(v+1)≤149 → AffineRateData6808.rate r v ≤ AffineRateData6808.rate r (v+1))
+  (r+1≤33 → r+1+v≤152 → AffineRateData6808.rate r v ≤ AffineRateData6808.rate (r+1) v) ∧
+  (r+(v+1)≤152 → AffineRateData6808.rate r v ≤ AffineRateData6808.rate r (v+1))
 instance (r v : ℕ) : Decidable (RateAt r v) := by unfold RateAt; infer_instance
 
-def RateReceipt : Prop := ∀ r v, 1≤r → r≤32 → r+v≤149 → RateAt r v
+def RateReceipt : Prop := ∀ r v, 1≤r → r≤33 → r+v≤152 → RateAt r v
 
 theorem rate_zero (v : ℕ) : AffineRateData6808.rate 0 v = 0 := by
   simp [AffineRateData6808.rate]
 
 theorem rate_r_mono (hc : RateReceipt) (r R v : ℕ)
-    (hr : r≤R) (hR : R≤32) (hY : R+v≤149) :
+    (hr : r≤R) (hR : R≤33) (hY : R+v≤152) :
     AffineRateData6808.rate r v ≤ AffineRateData6808.rate R v := by
   by_cases h0 : r=0
   · subst r; rw [rate_zero]; exact Nat.zero_le _
@@ -32,7 +32,7 @@ theorem rate_r_mono (hc : RateReceipt) (r R v : ℕ)
     exact (ih (by omega) (by omega)).trans ((hc R v (by omega) (by omega) (by omega)).1 (by omega) (by omega))
 
 theorem rate_v_mono (hc : RateReceipt) (r v V : ℕ)
-    (hv : v≤V) (hR : r≤32) (hY : r+V≤149) :
+    (hv : v≤V) (hR : r≤33) (hY : r+V≤152) :
     AffineRateData6808.rate r v ≤ AffineRateData6808.rate r V := by
   by_cases h0 : r=0
   · subst r; simp [rate_zero]
@@ -42,12 +42,12 @@ theorem rate_v_mono (hc : RateReceipt) (r v V : ℕ)
     exact (ih (by omega)).trans ((hc r V (by omega) hR (by omega)).2 (by omega))
 
 theorem rate_mono (hc : RateReceipt) (r v R V : ℕ)
-    (hr : r≤R) (hv : v≤V) (hR : R≤32) (hY : R+V≤149) :
+    (hr : r≤R) (hv : v≤V) (hR : R≤33) (hY : R+V≤152) :
     AffineRateData6808.rate r v ≤ AffineRateData6808.rate R V :=
   (rate_r_mono hc r R v hr hR (by omega)).trans (rate_v_mono hc R v V hv hR hY)
 
 theorem count_le_affine
-    (r v z count : ℕ) (hr : 1≤r) (hR : r≤32) (hY : r+v≤149) (hT : r+v+z≤8121)
+    (r v z count : ℕ) (hr : 1≤r) (hR : r≤33) (hY : r+v≤152) (hT : r+v+z≤8483)
     (hvalid : AffineSingleData6808.Valid r v)
     (hthreshold : ThresholdAt r v)
     (hraw : BoundaryTailGates6808.Safe r (r+v) → count ≤ BoundaryTailShape6808.cost r v z)
@@ -59,7 +59,7 @@ theorem count_le_affine
   rcases hvalid with ⟨hc,hcover⟩
   obtain ⟨w,hw,hbound⟩ := cover_sound (AffineSingleData6808.carrier r v)
     (AffineRateData6808.rate r v) r v (lookup r v).threshold
-    (8122-r-v) 0 (AffineSingleData6808.cover r v) hcover z (Nat.zero_le _) (by omega)
+    (8484-r-v) 0 (AffineSingleData6808.cover r v) hcover z (Nat.zero_le _) (by omega)
   apply le_trans (b := choice (AffineSingleData6808.carrier r v) w r v z) ?_ hbound
   by_cases h0 : w=0
   · subst w
@@ -77,24 +77,24 @@ theorem count_le_affine
       (source_total (w-2) hw'.1) hT hw'.2 ht
     simpa only [choice,if_neg h0,if_neg h1] using hsource (w-2) hw'.1 route
 
-theorem base_value (r v z : ℕ) (hr : 1≤r) (hR : r≤32) (hY : r+v≤149) :
+theorem base_value (r v z : ℕ) (hr : 1≤r) (hR : r≤33) (hY : r+v≤152) :
     (BoundaryTailBaseData6808.lookup r v).evalAt z =
       AffineSingleton6808.cap (AffineRateData6808.rate r v) r z := by
-  have hbox : 1≤r ∧ r≤32 ∧ r+v≤149 := ⟨hr,hR,hY⟩
+  have hbox : 1≤r ∧ r≤33 ∧ r+v≤152 := ⟨hr,hR,hY⟩
   rw [BoundaryTailBaseData6808.lookup,if_pos hbox]
   dsimp [BaseRow.evalAt,evalBaseSegments,BaseSegment.evalAt,AffineSingleton6808.cap,AffineSingleton6808.slope]
   split_ifs <;> omega
 
 
 structure Receipt : Prop where
-  single : ∀ r v, 1≤r → r≤32 → r+v≤149 → AffineSingleData6808.Valid r v
+  single : ∀ r v, 1≤r → r≤33 → r+v≤152 → AffineSingleData6808.Valid r v
   rate : RateReceipt
 
 theorem sum_count_le_base {ι : Type} [DecidableEq ι]
     (hRate : RateReceipt) (s : Finset ι) (p : ι → FlagDegree) (count : ι → ℕ)
     (hr : ∀ i ∈ s, 1≤(p i).all)
-    (hR : (∑ i ∈ s, (p i).all)≤32)
-    (hY : (∑ i ∈ s, (p i).all)+(∑ i ∈ s, (p i).yz)≤149)
+    (hR : (∑ i ∈ s, (p i).all)≤33)
+    (hY : (∑ i ∈ s, (p i).all)+(∑ i ∈ s, (p i).yz)≤152)
     (hcount : ∀ i ∈ s, count i ≤ AffineSingleton6808.cap
       (AffineRateData6808.rate (p i).all (p i).yz) (p i).all (p i).zOnly) :
     (∑ i ∈ s, count i) ≤ BoundaryTailBaseData6808.cap (sumFlag s p) := by
@@ -102,9 +102,9 @@ theorem sum_count_le_base {ι : Type} [DecidableEq ι]
   · obtain ⟨i,hi⟩ := hs
     have hpos := (hr i hi).trans (Finset.single_le_sum (f := fun i => (p i).all)
       (fun _ _ => Nat.zero_le _) hi)
-    have hrows := AffineFactorAggregate6808.rate_bellman 32 149 AffineRateData6808.rate
+    have hrows := AffineFactorAggregate6808.rate_bellman 33 152 AffineRateData6808.rate
       (rate_mono hRate)
-    have hb := AffineFactorAggregate6808.sum_count_le 32 149 AffineSingleton6808.slope
+    have hb := AffineFactorAggregate6808.sum_count_le 33 152 AffineSingleton6808.slope
       (fun r v => r*AffineRateData6808.rate r v) (fun r v => r*AffineRateData6808.rate r v)
       hrows s (fun i => (p i).all) (fun i => (p i).yz) (fun i => (p i).zOnly) count
       hr hR hY hcount

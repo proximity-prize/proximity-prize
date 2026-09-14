@@ -1,9 +1,9 @@
 import ProximityPrize.SubmissionLower.AffineSingleData6808
 import ProximityPrize.SubmissionLower.BoundaryTailSourceSound6808
 
-namespace ProximityPrize.SubmissionLower.Lower80830.TenPhase
+namespace ProximityPrize.SubmissionLower.Lower80840.TenPhase
 open ProximityPrize.Benchmark RCN095 RCN140 RCN156 RCN234 RCN238 RCN266 RCN319
-open Lower80830.Oracle Lower80830.BatchPhase
+open Lower80840.Oracle Lower80840.BatchPhase
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -41,4 +41,4 @@ def kernel (u0 u1 : I → K) (j : ℕ) : PhaseKernelRealization (sound j) u0 u1 
   | _+9 => SourceSound.Phase05.kernel u0 u1
 
 end
-end ProximityPrize.SubmissionLower.Lower80830.TenPhase
+end ProximityPrize.SubmissionLower.Lower80840.TenPhase

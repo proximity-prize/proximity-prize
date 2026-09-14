@@ -34,9 +34,9 @@ theorem identity_budget_exact (f : FlagDegree) (a b s : ℕ) :
   ring
 
 theorem identity_absorption (f : FlagDegree) (a b s : ℕ) :
-    131073 * 80831 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
-      50243 * flagMixed f (firstTail a b s) (secondTail a b s) := by
-  change 131073 * 80831 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s Lower80788.FixedStage.w ≤ _
+    131073 * 80841 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
+      50233 * flagMixed f (firstTail a b s) (secondTail a b s) := by
+  change 131073 * 80841 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s Lower80788.FixedStage.w ≤ _
   rw [Lower80788.FixedStage.identityDegree_linear]
   norm_num [firstTail, secondTail, Lower80788.FixedStage.tail_support_formula,
     Lower80788.FixedStage.w, flagMixed]
@@ -56,56 +56,56 @@ theorem low_pad_parameters (p : FlagDegree)
 or the padded YR degree is the R degree plus 1 (b=0). The old rectangular
 gate is already small on both parts of this boundary. -/
 theorem low_provider_mixed_gate (b s : ℕ) (f : FlagDegree)
-    (hS : s+2 ≤ 32) (hY : b+s+3 ≤ 149)
+    (hS : s+2 ≤ 33) (hY : b+s+3 ≤ 152)
     (hlow : s=0 ∨ b=0)
     (hfs : f.all ≤ s+2) (hfy : f.yz+f.all ≤ b+s+3) :
     (1+131072*(2*(b+s+3)-2))*f.all +
       (f.yz+f.all)*((2*(s+2)-2)*131072) < 2130706433 := by
   rcases hlow with hs0 | hb0
-  · have hy : 2*(b+s+3)-2 ≤ 296 := by omega
+  · have hy : 2*(b+s+3)-2 ≤ 302 := by omega
     have hs : 2*(s+2)-2 ≤ 2 := by omega
     have hfS : f.all ≤ 2 := by omega
-    have hfY : f.yz+f.all ≤ 149 := by omega
+    have hfY : f.yz+f.all ≤ 152 := by omega
     calc
-      _ ≤ (1+131072*296)*2 + 149*(2*131072) :=
+      _ ≤ (1+131072*302)*2 + 152*(2*131072) :=
         Nat.add_le_add
           (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left 131072 hy) 1) hfS)
           (Nat.mul_le_mul hfY (Nat.mul_le_mul_right 131072 hs))
       _ < 2130706433 := by decide
-  · have hy : 2*(b+s+3)-2 ≤ 64 := by omega
-    have hs : 2*(s+2)-2 ≤ 62 := by omega
-    have hfS : f.all ≤ 32 := by omega
-    have hfY : f.yz+f.all ≤ 33 := by omega
+  · have hy : 2*(b+s+3)-2 ≤ 66 := by omega
+    have hs : 2*(s+2)-2 ≤ 64 := by omega
+    have hfS : f.all ≤ 33 := by omega
+    have hfY : f.yz+f.all ≤ 34 := by omega
     calc
-      _ ≤ (1+131072*64)*32 + 33*(62*131072) :=
+      _ ≤ (1+131072*66)*33 + 34*(64*131072) :=
         Nat.add_le_add
           (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left 131072 hy) 1) hfS)
           (Nat.mul_le_mul hfY (Nat.mul_le_mul_right 131072 hs))
       _ < 2130706433 := by decide
 
 theorem low_identity_mixed_gate (b s : ℕ) (f : FlagDegree)
-    (hS : s+2 ≤ 32) (hY : b+s+3 ≤ 149)
+    (hS : s+2 ≤ 33) (hY : b+s+3 ≤ 152)
     (hlow : s=0 ∨ b=0)
     (hfs : f.all ≤ s+2) (hfy : f.yz+f.all ≤ b+s+3) :
     (1+131071*(2*(b+s+3)-2))*f.all +
       (f.yz+f.all)*((2*(s+2)-1)*131071) < 2130706433 := by
   rcases hlow with hs0 | hb0
-  · have hy : 2*(b+s+3)-2 ≤ 296 := by omega
+  · have hy : 2*(b+s+3)-2 ≤ 302 := by omega
     have hs : 2*(s+2)-1 ≤ 3 := by omega
     have hfS : f.all ≤ 2 := by omega
-    have hfY : f.yz+f.all ≤ 149 := by omega
+    have hfY : f.yz+f.all ≤ 152 := by omega
     calc
-      _ ≤ (1+131071*296)*2 + 149*(3*131071) :=
+      _ ≤ (1+131071*302)*2 + 152*(3*131071) :=
         Nat.add_le_add
           (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left 131071 hy) 1) hfS)
           (Nat.mul_le_mul hfY (Nat.mul_le_mul_right 131071 hs))
       _ < 2130706433 := by decide
-  · have hy : 2*(b+s+3)-2 ≤ 64 := by omega
-    have hs : 2*(s+2)-1 ≤ 63 := by omega
-    have hfS : f.all ≤ 32 := by omega
-    have hfY : f.yz+f.all ≤ 33 := by omega
+  · have hy : 2*(b+s+3)-2 ≤ 66 := by omega
+    have hs : 2*(s+2)-1 ≤ 65 := by omega
+    have hfS : f.all ≤ 33 := by omega
+    have hfY : f.yz+f.all ≤ 34 := by omega
     calc
-      _ ≤ (1+131071*64)*32 + 33*(63*131071) :=
+      _ ≤ (1+131071*66)*33 + 34*(65*131071) :=
         Nat.add_le_add
           (Nat.mul_le_mul (Nat.add_le_add_left (Nat.mul_le_mul_left 131071 hy) 1) hfS)
           (Nat.mul_le_mul hfY (Nat.mul_le_mul_right 131071 hs))

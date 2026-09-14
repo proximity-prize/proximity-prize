@@ -83,28 +83,28 @@ theorem factor_support {P:ResidualSupportParameters} (Q:P4) (hQ:Q ≠ 0)
     (weightedTotalDegree_le_of_dvd residualYSWeights R.1 Q hd hQ).trans HQ.ys_weight,
     (weightedTotalDegree_le_of_dvd residualTotalWeights R.1 Q hd hQ).trans HQ.total_weight⟩
 theorem own_parameter_caps (p:FlagDegree)
-    (hs:p.all ≤ 32) (hy:middle p ≤ 149) (ht:total p ≤ 8121) :
-    padSlope p + 2 ≤ 32 ∧ padB p + padSlope p + 3 ≤ 149 ∧
-      padA p + padB p + padSlope p + 3 ≤ 8121:=by
+    (hs:p.all ≤ 33) (hy:middle p ≤ 152) (ht:total p ≤ 8483) :
+    padSlope p + 2 ≤ 33 ∧ padB p + padSlope p + 3 ≤ 152 ∧
+      padA p + padB p + padSlope p + 3 ≤ 8483:=by
   have hp:=pad_sums p
-  have hps:padS p ≤ 32:=max_le hs (by decide)
-  have hpy:padY p ≤ 149:=max_le hy (by omega)
-  have hpt:padT p ≤ 8121:=max_le ht (by omega)
+  have hps:padS p ≤ 33:=max_le hs (by decide)
+  have hpy:padY p ≤ 152:=max_le hy (by omega)
+  have hpt:padT p ≤ 8483:=max_le ht (by omega)
   rw [hp.1,hp.2.1,hp.2.2]
   exact ⟨hps,hpy,hpt⟩
 theorem regular_factor_count
     (D:ℕ) (P:ResidualSupportParameters)
     (hDlow:131072 ≤ D) (hDhigh:D < 2130706433)
-    (hS:P.s ≤ 32) (hY:P.ys ≤ 149) (hT:P.total ≤ 8121)
+    (hS:P.s ≤ 33) (hY:P.ys ≤ 152) (hT:P.total ≤ 8483)
     (Q:P4) (hQ:Q ≠ 0)
     (hbox:Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181314 ≤
+    (hagreement:∀ gamma ∈ Gamma,181304 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80830)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80840)
     (R:RegularIndex Q)
     (hhyb : ¬ HybridAppliesC2 (regularCumulativeFlag Q R)) :
     (regularSeeds Q selected Gamma R).card ≤
@@ -123,7 +123,7 @@ theorem regular_factor_count
   have hRsupport:=own_support R.1
   have hRwhole:=factor_support Q hQ HQ R
   have hc:=originalCumulativeFlag_cumulative R.1
-  have hparam:s + 2 ≤ 32 ∧ b + s + 3 ≤ 149 ∧ a + b + s + 3 ≤ 8121:=by
+  have hparam:s + 2 ≤ 33 ∧ b + s + 3 ≤ 152 ∧ a + b + s + 3 ≤ 8483:=by
     apply own_parameter_caps p
     · exact hRwhole.s_weight.trans hS
     · simpa only [p,middle,regularCumulativeFlag,hc.2.1] using
@@ -148,11 +148,11 @@ theorem regular_factor_count
     have hsub:geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g ⊆ Gamma:=
       (geometricSeeds_subset K R.1 selected _ g).trans (regularSeeds_subset Q selected Gamma R)
-    have hnodes:S.nodes.card=181314 + 80830:=by
+    have hnodes:S.nodes.card=181304 + 80840:=by
       change (Finset.univ:Finset I).card=_
       norm_num [I,IRSProfile.Index]
     have hag:∀ gamma ∈ geometricSeeds K R.1 selected
-        (regularSeeds Q selected Gamma R) g,181314 ≤ (S.agreementFiber gamma).card:=by
+        (regularSeeds Q selected Gamma R) g,181304 ≤ (S.agreementFiber gamma).card:=by
       intro gamma hgamma
       simpa [S,S0,ResidualStage.agreementFiber,ResidualStage.Agrees,
         reflagResidualStage,regularGeometricResidualStageOfSupport,
@@ -180,16 +180,16 @@ the original factor's same three cumulative degree budgets. -/
 theorem regular_factor_count_high
     (D : ℕ) (P : ResidualSupportParameters)
     (hDlow : 131072 ≤ D) (hDhigh : D < 2130706433)
-    (hS : P.s ≤ 32) (hY : P.ys ≤ 149) (hT : P.total ≤ 8121)
+    (hS : P.s ≤ 33) (hY : P.ys ≤ 152) (hT : P.total ≤ 8483)
     (Q : P4) (hQ : Q ≠ 0)
     (hbox : Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ : ResidualSupportData P Q)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181314 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181304 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80830)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80840)
     (R : RegularIndex Q)
     (hSafe : BoundaryTailGates6808.Safe (regularCumulativeFlag Q R).all (middle (regularCumulativeFlag Q R)))
     (hhyb : HybridAppliesC2 (regularCumulativeFlag Q R)) :
@@ -214,16 +214,16 @@ theorem regular_factor_count_high
   have hRbox : R.1 ∈ RCN174.globalCoefficientBox K D 131071 (padT p) (padS p) := by
     rw [← hps.2.2, ← hps.1]
     exact hRbox0
-  have h1 : p.all ≤ 32 := hRwhole.s_weight.trans hS
-  have h2 : middle p ≤ 149 := by
+  have h1 : p.all ≤ 33 := hRwhole.s_weight.trans hS
+  have h2 : middle p ≤ 152 := by
     simpa only [hp, middle, regularCumulativeFlag, hc.2.1] using
       hRwhole.ys_weight.trans hY
-  have h3 : total p ≤ 8121 := by
+  have h3 : total p ≤ 8483 := by
     simpa only [hp, total, regularCumulativeFlag, hc.2.2] using
       hRwhole.total_weight.trans hT
-  have hpS : padS p ≤ 32 := max_le h1 (by decide)
-  have hpY : padY p ≤ 149 := max_le h2 (by omega)
-  have hpT : padT p ≤ 8121 := max_le h3 (by omega)
+  have hpS : padS p ≤ 33 := max_le h1 (by decide)
+  have hpY : padY p ≤ 152 := max_le h2 (by omega)
+  have hpT : padT p ≤ 8483 := max_le h3 (by omega)
   have hp3 : 3 ≤ p.all := hhyb.1
   have hpSeq : padS p = p.all := max_eq_left (by omega : 2 ≤ p.all)
   have hpYeq : padY p = middle p :=
@@ -255,12 +255,12 @@ theorem regular_factor_count_high
         (regularSeeds Q selected Gamma R) g ⊆ Gamma :=
       (geometricSeeds_subset K R.1 selected _ g).trans
         (regularSeeds_subset Q selected Gamma R)
-    have hnodes : S.nodes.card = 181314+80830 := by
+    have hnodes : S.nodes.card = 181304+80840 := by
       change (Finset.univ : Finset I).card = _
       norm_num [I, IRSProfile.Index]
     have hag : ∀ gamma ∈ geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g,
-        181314 ≤ (S.agreementFiber gamma).card := by
+        181304 ≤ (S.agreementFiber gamma).card := by
       intro gamma hgamma
       simpa [S, S0, ResidualStage.agreementFiber, ResidualStage.Agrees,
         reflagResidualStage, regularGeometricResidualStageOfSupport,
@@ -307,16 +307,16 @@ def rawCost (p : FlagDegree) : ℕ :=
 theorem regular_factor_count_raw
     (D : ℕ) (P : ResidualSupportParameters)
     (hDlow : 131072 ≤ D) (hDhigh : D < 2130706433)
-    (hS : P.s ≤ 32) (hY : P.ys ≤ 149) (hT : P.total ≤ 8121)
+    (hS : P.s ≤ 33) (hY : P.ys ≤ 152) (hT : P.total ≤ 8483)
     (Q : P4) (hQ : Q ≠ 0)
     (hbox : Q ∈ RCN174.globalCoefficientBox K D 131071 P.total P.s)
     (HQ : ResidualSupportData P Q)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181314 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181304 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i+gamma*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80830)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80840)
     (R : RegularIndex Q)
     (hSafe : BoundaryTailGates6808.Safe (regularCumulativeFlag Q R).all (middle (regularCumulativeFlag Q R))) :
     (regularSeeds Q selected Gamma R).card ≤ rawCost (regularCumulativeFlag Q R) := by

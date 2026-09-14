@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.BoundaryTailRegularBridge6808
 import ProximityPrize.SubmissionLower.BoundaryTailCounting6808
 
-namespace ProximityPrize.SubmissionLower.Lower80830.Geometry
+namespace ProximityPrize.SubmissionLower.Lower80840.Geometry
 open ProximityPrize.Benchmark
 open scoped Classical BigOperators
 open RCN052 RCN081 RCN140 RCN167 RCN174 RCN234 RCN238 RCN243 RCN260 RCN267 RCN275 RCN286 RCN294 RCN303 RCN313 RCN318 RCN319
@@ -17,17 +17,17 @@ local instance : CharP K 2130706433 := by
 local instance : StrongNormalizationMonoid P4 := UniqueFactorizationMonoid.strongNormalizationMonoid
 
 theorem cover_count (Q T : P4) (hQ : Q ≠ 0)
-    (hbox : Q ∈ RCN174.globalCoefficientBox K 20488482 131071 38915 35)
+    (hbox : Q ∈ RCN174.globalCoefficientBox K 23388216 131071 16146 39)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hQsolution : ∀ g ∈ Gamma, specialization K (selected g) g Q = 0)
     (hTsolution : ∀ g ∈ Gamma, specialization K (selected g) g T = 0) :
     Gamma.card ≤ (∑ F : RegularIndex Q, (regularPairSeeds Q T selected Gamma F).card) +
       (∑ F : RegularIndex Q, factorCharge F.1 selected Gamma) +
       (rfreeSeeds Q selected Gamma).card := by
-  have hR : ∀ F ∈ positiveRFactors Q, F.degreeOf 2 ≤ 35 := fun F hF =>
-    degreeOf_R_le_of_mem_box F 20488482 131071 38915 35
-      (directFactor_data Q F hQ 20488482 131071 38915 35 hbox hF).2.2
-  have hcover := cover Q T hQ 2130706433 35 (by decide +kernel) hR selected Gamma hQsolution hTsolution
+  have hR : ∀ F ∈ positiveRFactors Q, F.degreeOf 2 ≤ 39 := fun F hF =>
+    degreeOf_R_le_of_mem_box F 23388216 131071 16146 39
+      (directFactor_data Q F hQ 23388216 131071 16146 39 hbox hF).2.2
+  have hcover := cover Q T hQ 2130706433 39 (by decide +kernel) hR selected Gamma hQsolution hTsolution
   have hA := Finset.card_biUnion_le (s := (Finset.univ : Finset (RegularIndex Q)))
     (t := fun F => regularPairSeeds Q T selected Gamma F)
   have hB : ((positiveRFactors Q).biUnion fun F =>
@@ -63,15 +63,16 @@ theorem cover_count (Q T : P4) (hQ : Q ≠ 0)
   omega
 
 def pairParameters : UnequalParameters :=
-  ⟨262144,131071,181314,156,35,38915,294,66,8125⟩
+  ⟨262144,131071,181304,178,39,16146,298,67,8486⟩
 
 theorem pair_count {u0 u1 : I → K} {selected : K → Polynomial K} {Gamma : Finset K}
     (inp : Input u0 u1 selected Gamma) (Q T : P4) (hQ : Q ≠ 0) (hrel : IsRelPrime Q T)
-    (hbox : Q ∈ RCN174.globalCoefficientBox K 20488482 131071 38915 35)
-    (hTcaps : T.degreeOf 1 ≤ 294 ∧ T.degreeOf 2 ≤ 66 ∧ T.degreeOf 3 ≤ 8125) :
-    (∑ F : RegularIndex Q, (regularPairSeeds Q T selected Gamma F).card) ≤ 1690684695462646 := by
+    (hbox : Q ∈ RCN174.globalCoefficientBox K 23388216 131071 16146 39)
+    (hTcaps : T.degreeOf 1 ≤ 298 ∧ T.degreeOf 2 ≤ 67 ∧ T.degreeOf 3 ≤ 8486) :
+    (∑ F : RegularIndex Q, (regularPairSeeds Q T selected Gamma F).card) ≤
+      835595750639557 := by
   have hcount := all_regularPairSeeds_bound pairParameters Q T hQ hrel
-    20488482 131071 38915 35 2130706433 hbox
+    23388216 131071 16146 39 2130706433 hbox
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)
     hTcaps.1 hTcaps.2.1 hTcaps.2.2
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)
@@ -79,12 +80,12 @@ theorem pair_count {u0 u1 : I → K} {selected : K → Polynomial K} {Gamma : Fi
     selected Gamma Finset.univ IRSProfile.domain u0 u1 IRSProfile.domain.injective.injOn
     (by rw [Finset.card_univ]; exact Fintype.card_fin _)
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    inp.degree inp.agreement (by simpa only [pairParameters, UnequalParameters.errors, (show (262144 - 181314 : ℕ) = 80830 by decide +kernel)] using inp.noPencil)
+    inp.degree inp.agreement (by simpa only [pairParameters, UnequalParameters.errors, (show (262144 - 181304 : ℕ) = 80840 by decide +kernel)] using inp.noPencil)
   have hsum := sum_regular_counts_bound pairParameters Q T selected Gamma
-    (regularVector_budgets pairParameters Q hQ 20488482 131071 38915 35
+    (regularVector_budgets pairParameters Q hQ 23388216 131071 16146 39
       (by decide +kernel) hbox (by decide +kernel) (by decide +kernel) (by decide +kernel)) hcount
   have hc := pairParameters.regular_count_le _ (by decide +kernel) hsum
   exact hc.trans_eq (by decide +kernel)
 
 end
-end ProximityPrize.SubmissionLower.Lower80830.Geometry
+end ProximityPrize.SubmissionLower.Lower80840.Geometry

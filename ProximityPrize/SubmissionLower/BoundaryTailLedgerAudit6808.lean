@@ -2,52 +2,52 @@ import ProximityPrize.SubmissionLower.BoundaryTailInitial6808
 import ProximityPrize.SubmissionLower.BoundaryTailCounting6808
 import ProximityPrize.SubmissionLower.BoundaryTailPhaseSemantics6808
 
-namespace ProximityPrize.SubmissionLower.Lower80830.LedgerAudit
+namespace ProximityPrize.SubmissionLower.Lower80840.LedgerAudit
 open RCN095 LocatorFactorAggregate
 open LocatorPhase6800Oracle (Potential rawFlag)
-open Lower80830.Initial Lower80830.PhaseRows Lower80830.PhaseData AsymmetricChainPolynomial80830
+open Lower80840.Initial Lower80840.PhaseRows Lower80840.PhaseData AsymmetricChainPolynomial80840
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
-def bound : ℕ := 258791250294373749
+def bound : ℕ := 273363630004575212
 
 def ledger (c : PhaseRowContext) (z : ℕ) : ℕ :=
   capBefore c 10 z + initialAComplement (rawFlag c.R c.V z) +
     c.R * unit (c.R+c.V) (c.R+c.V+z) c.R +
-    (35-c.R) * unit (156-(c.R+c.V)) (38915-(c.R+c.V+z)) (35-c.R) +
-    18000000000000 + (1690684695462646+127940574522131)
+    (39-c.R) * unit (178-(c.R+c.V)) (16146-(c.R+c.V+z)) (39-c.R) +
+    18000000000000 + (835595750639557)
 
 def complementUpper (R V mode z : ℕ) : ℤ :=
-  let t : ℤ := 8121-R-V-z
-  let y : ℕ := 156-(R+V)
-  let r : ℕ := min y (35-R)
-  if mode = 0 then 6929324547*t+5694979965961*y+25775119849557*r
-  else if mode = 1 then (6929324547+5694979965961)*t+25775119849557*r
-  else (6929324547+5694979965961+25775119849557)*t
+  let t : ℤ := 8483-R-V-z
+  let y : ℕ := 178-(R+V)
+  let r : ℕ := min y (39-R)
+  if mode = 0 then 8020669608*t+6658181645698*y+30779966292966*r
+  else if mode = 1 then (8020669608+6658181645698)*t+30779966292966*r
+  else (8020669608+6658181645698+30779966292966)*t
 
 def complementSlope (mode : ℕ) : ℤ :=
-  if mode = 0 then -6929324547
-  else if mode = 1 then -(6929324547+5694979965961)
-  else -(6929324547+5694979965961+25775119849557)
+  if mode = 0 then -8020669608
+  else if mode = 1 then -(8020669608+6658181645698)
+  else -(8020669608+6658181645698+30779966292966)
 
 theorem complement_formula (R V z : ℕ) :
     initialAComplement (rawFlag R V z) =
-      6929324547*(8121-(R+V+z)) +
-      5694979965961*min (8121-(R+V+z)) (156-(R+V)) +
-      25775119849557*min (8121-(R+V+z)) (min (156-(R+V)) (35-R)) := by
+      8020669608*(8483-(R+V+z)) +
+      6658181645698*min (8483-(R+V+z)) (178-(R+V)) +
+      30779966292966*min (8483-(R+V+z)) (min (178-(R+V)) (39-R)) := by
   simp [initialAComplement, initialAPotential, Potential.eval, rawFlag,
     total, middle, Nat.min_def]
   split_ifs <;> omega
 
-theorem complement_le_upper (R V mode z : ℕ) (ht : R+V+z ≤ 8121) :
+theorem complement_le_upper (R V mode z : ℕ) (ht : R+V+z ≤ 8483) :
     (initialAComplement (rawFlag R V z) : ℤ) ≤ complementUpper R V mode z := by
   rw [complement_formula]
-  have hmy := Nat.min_le_right (8121-(R+V+z)) (156-(R+V))
-  have hmt := Nat.min_le_left (8121-(R+V+z)) (156-(R+V))
-  have hmr := Nat.min_le_right (8121-(R+V+z)) (min (156-(R+V)) (35-R))
-  have hmrt := Nat.min_le_left (8121-(R+V+z)) (min (156-(R+V)) (35-R))
-  have hti : ((8121-(R+V+z) : ℕ) : ℤ) = 8121-R-V-z := by omega
+  have hmy := Nat.min_le_right (8483-(R+V+z)) (178-(R+V))
+  have hmt := Nat.min_le_left (8483-(R+V+z)) (178-(R+V))
+  have hmr := Nat.min_le_right (8483-(R+V+z)) (min (178-(R+V)) (39-R))
+  have hmrt := Nat.min_le_left (8483-(R+V+z)) (min (178-(R+V)) (39-R))
+  have hti : ((8483-(R+V+z) : ℕ) : ℤ) = 8483-R-V-z := by omega
   simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat]
   rw [hti]
   unfold complementUpper
@@ -58,15 +58,15 @@ def branch (c : PhaseRowContext) (w mode : ℕ) (u v : Bool) (z : ℕ) : ℤ :=
   (c.R : ℤ)*(if u then
     (unitSlope (c.R+c.V) c.R : ℤ)*(c.R+c.V+z)+(unitConstant (c.R+c.V) c.R : ℤ)
     else 9000000000000) +
-  ((35-c.R : ℕ) : ℤ)*(if v then
-    (unitSlope (156-(c.R+c.V)) (35-c.R) : ℤ)*(38915-c.R-c.V-z)+
-      (unitConstant (156-(c.R+c.V)) (35-c.R) : ℤ)
-    else 9000000000000) + 18000000000000+(1690684695462646+127940574522131)
+  ((39-c.R : ℕ) : ℤ)*(if v then
+    (unitSlope (178-(c.R+c.V)) (39-c.R) : ℤ)*(16146-c.R-c.V-z)+
+      (unitConstant (178-(c.R+c.V)) (39-c.R) : ℤ)
+    else 9000000000000) + 18000000000000+(835595750639557)
 
 def branchSlope (c : PhaseRowContext) (w mode lo : ℕ) (u v : Bool) : ℤ :=
   (sourceSlope c w lo : ℤ)+complementSlope mode+
   (c.R : ℤ)*(if u then (unitSlope (c.R+c.V) c.R : ℤ) else 0)-
-  ((35-c.R : ℕ) : ℤ)*(if v then (unitSlope (156-(c.R+c.V)) (35-c.R) : ℤ) else 0)
+  ((39-c.R : ℕ) : ℤ)*(if v then (unitSlope (178-(c.R+c.V)) (39-c.R) : ℤ) else 0)
 
 theorem branch_affine (c : PhaseRowContext) (w mode lo hi z : ℕ) (u v : Bool)
     (hw : w ≤ 10)
@@ -99,23 +99,23 @@ theorem branch_between (c : PhaseRowContext) (w mode lo hi z : ℕ) (u v : Bool)
     nlinarith
 
 theorem ledger_le_of_branches (c : PhaseRowContext) (w mode z : ℕ)
-    (hw : w ≤ 10) (ha : SourceActive c w z) (ht : c.R+c.V+z ≤ 8121)
+    (hw : w ≤ 10) (ha : SourceActive c w z) (ht : c.R+c.V+z ≤ 8483)
     (hb : ∀ u v : Bool, branch c w mode u v z ≤ bound) : ledger c z ≤ bound := by
   have hs := capBefore_le_sourceLine c 10 w z hw ha
   have hc := complement_le_upper c.R c.V mode z ht
-  have hti : ((38915-(c.R+c.V+z) : ℕ) : ℤ) = 38915-c.R-c.V-z := by omega
+  have hti : ((16146-(c.R+c.V+z) : ℕ) : ℤ) = 16146-c.R-c.V-z := by omega
   unfold ledger unit
   by_cases hu : 9000000000000 ≤ unitSlope (c.R+c.V) c.R*(c.R+c.V+z)+unitConstant (c.R+c.V) c.R
   · rw [max_eq_right hu]
-    by_cases hv : 9000000000000 ≤ unitSlope (156-(c.R+c.V)) (35-c.R)*(38915-(c.R+c.V+z))+unitConstant (156-(c.R+c.V)) (35-c.R)
+    by_cases hv : 9000000000000 ≤ unitSlope (178-(c.R+c.V)) (39-c.R)*(16146-(c.R+c.V+z))+unitConstant (178-(c.R+c.V)) (39-c.R)
     · rw [max_eq_right hv]
       have hh := hb true true
       simp only [branch, Bool.true_eq, ↓reduceIte] at hh
       norm_cast at hs
       have hh' : (capBefore c 10 z : ℤ)+(initialAComplement (rawFlag c.R c.V z) : ℤ)+
           (c.R : ℤ)*((unitSlope (c.R+c.V) c.R : ℤ)*(c.R+c.V+z)+unitConstant (c.R+c.V) c.R)+
-          ((35-c.R : ℕ) : ℤ)*((unitSlope (156-(c.R+c.V)) (35-c.R) : ℤ)*(38915-c.R-c.V-z)+unitConstant (156-(c.R+c.V)) (35-c.R))+
-          18000000000000+(1690684695462646+127940574522131) ≤ bound := by omega
+          ((39-c.R : ℕ) : ℤ)*((unitSlope (178-(c.R+c.V)) (39-c.R) : ℤ)*(16146-c.R-c.V-z)+unitConstant (178-(c.R+c.V)) (39-c.R))+
+          18000000000000+(835595750639557) ≤ bound := by omega
       rw [← hti] at hh'
       exact_mod_cast hh'
     · rw [max_eq_left (Nat.le_of_not_ge hv)]
@@ -124,18 +124,18 @@ theorem ledger_le_of_branches (c : PhaseRowContext) (w mode z : ℕ)
       have hsi : (capBefore c 10 z : ℤ) ≤ sourceLine c w z := by exact_mod_cast hs
       have hi : (capBefore c 10 z : ℤ)+(initialAComplement (rawFlag c.R c.V z) : ℤ)+
           (c.R : ℤ)*((unitSlope (c.R+c.V) c.R : ℤ)*(c.R+c.V+z)+unitConstant (c.R+c.V) c.R)+
-          ((35-c.R : ℕ) : ℤ)*9000000000000+18000000000000+(1690684695462646+127940574522131) ≤ bound := by omega
+          ((39-c.R : ℕ) : ℤ)*9000000000000+18000000000000+(835595750639557) ≤ bound := by omega
       exact_mod_cast hi
   · rw [max_eq_left (Nat.le_of_not_ge hu)]
-    by_cases hv : 9000000000000 ≤ unitSlope (156-(c.R+c.V)) (35-c.R)*(38915-(c.R+c.V+z))+unitConstant (156-(c.R+c.V)) (35-c.R)
+    by_cases hv : 9000000000000 ≤ unitSlope (178-(c.R+c.V)) (39-c.R)*(16146-(c.R+c.V+z))+unitConstant (178-(c.R+c.V)) (39-c.R)
     · rw [max_eq_right hv]
       have hh := hb false true
       simp only [branch, Bool.true_eq, Bool.false_eq_true, ↓reduceIte] at hh
       have hsi : (capBefore c 10 z : ℤ) ≤ sourceLine c w z := by exact_mod_cast hs
       have hi : (capBefore c 10 z : ℤ)+(initialAComplement (rawFlag c.R c.V z) : ℤ)+
           (c.R : ℤ)*9000000000000+
-          ((35-c.R : ℕ) : ℤ)*((unitSlope (156-(c.R+c.V)) (35-c.R) : ℤ)*(38915-c.R-c.V-z)+unitConstant (156-(c.R+c.V)) (35-c.R))+
-          18000000000000+(1690684695462646+127940574522131) ≤ bound := by omega
+          ((39-c.R : ℕ) : ℤ)*((unitSlope (178-(c.R+c.V)) (39-c.R) : ℤ)*(16146-c.R-c.V-z)+unitConstant (178-(c.R+c.V)) (39-c.R))+
+          18000000000000+(835595750639557) ≤ bound := by omega
       rw [← hti] at hi
       exact_mod_cast hi
     · rw [max_eq_left (Nat.le_of_not_ge hv)]
@@ -143,8 +143,8 @@ theorem ledger_le_of_branches (c : PhaseRowContext) (w mode z : ℕ)
       simp only [branch, Bool.false_eq_true, ↓reduceIte] at hh
       have hsi : (capBefore c 10 z : ℤ) ≤ sourceLine c w z := by exact_mod_cast hs
       have hi : (capBefore c 10 z : ℤ)+(initialAComplement (rawFlag c.R c.V z) : ℤ)+
-          (c.R : ℤ)*9000000000000+((35-c.R : ℕ) : ℤ)*9000000000000+
-          18000000000000+(1690684695462646+127940574522131) ≤ bound := by omega
+          (c.R : ℤ)*9000000000000+((39-c.R : ℕ) : ℤ)*9000000000000+
+          18000000000000+(835595750639557) ≤ bound := by omega
       exact_mod_cast hi
 
 
@@ -184,10 +184,10 @@ def branchUpper (c : PhaseRowContext) (w mode z : ℕ) : ℤ :=
   (c.R : ℤ) * max
     ((unitSlope (c.R+c.V) c.R : ℤ)*(c.R+c.V+z) +
       (unitConstant (c.R+c.V) c.R : ℤ)) 9000000000000 +
-  ((35-c.R : ℕ) : ℤ) * max
-    ((unitSlope (156-(c.R+c.V)) (35-c.R) : ℤ)*(38915-c.R-c.V-z) +
-      (unitConstant (156-(c.R+c.V)) (35-c.R) : ℤ)) 9000000000000 +
-  18000000000000 + (1690684695462646+127940574522131)
+  ((39-c.R : ℕ) : ℤ) * max
+    ((unitSlope (178-(c.R+c.V)) (39-c.R) : ℤ)*(16146-c.R-c.V-z) +
+      (unitConstant (178-(c.R+c.V)) (39-c.R) : ℤ)) 9000000000000 +
+  18000000000000 + (835595750639557)
 
 theorem branches_iff (c : PhaseRowContext) (w mode z : ℕ) :
     (∀ u v : Bool, branch c w mode u v z ≤ bound) ↔
@@ -197,17 +197,17 @@ theorem branches_iff (c : PhaseRowContext) (w mode z : ℕ) :
     ((sourceLine c w z : ℤ) + complementUpper c.R c.V mode z)
     ((unitSlope (c.R+c.V) c.R : ℤ)*(c.R+c.V+z) +
       (unitConstant (c.R+c.V) c.R : ℤ))
-    ((unitSlope (156-(c.R+c.V)) (35-c.R) : ℤ)*(38915-c.R-c.V-z) +
-      (unitConstant (156-(c.R+c.V)) (35-c.R) : ℤ))
-    9000000000000 (18000000000000 + (1690684695462646+127940574522131)) bound c.R (35-c.R)
+    ((unitSlope (178-(c.R+c.V)) (39-c.R) : ℤ)*(16146-c.R-c.V-z) +
+      (unitConstant (178-(c.R+c.V)) (39-c.R) : ℤ))
+    9000000000000 (18000000000000 + (835595750639557)) bound c.R (39-c.R)
 
 def RunValid (c : PhaseRowContext) (start : ℕ) (run : LedgerRun) : Prop :=
-  start < run.stop ∧ run.stop ≤ 8122-(c.R+c.V) ∧ run.witness ≤ 10 ∧
+  start < run.stop ∧ run.stop ≤ 8484-(c.R+c.V) ∧ run.witness ≤ 10 ∧
   SourceActive c run.witness start ∧ SourceCell c run.witness start (run.stop-1) ∧
   ∀ u v : Bool, branch c run.witness run.mode u v start ≤ bound ∧
     branch c run.witness run.mode u v (run.stop-1) ≤ bound
 def FastRunValid (c : PhaseRowContext) (start : ℕ) (run : LedgerRun) : Prop :=
-  start < run.stop ∧ run.stop ≤ 8122-(c.R+c.V) ∧ run.witness ≤ 10 ∧
+  start < run.stop ∧ run.stop ≤ 8484-(c.R+c.V) ∧ run.witness ≤ 10 ∧
   SourceActive c run.witness start ∧ SourceCell c run.witness start (run.stop-1) ∧
   branchUpper c run.witness run.mode start ≤ bound ∧
   branchUpper c run.witness run.mode (run.stop-1) ≤ bound
@@ -241,7 +241,7 @@ theorem RunValid.sound (c : PhaseRowContext) (start z : ℕ) (run : LedgerRun)
     (by omega) (hb u v).1 (hb u v).2
 
 def RunsValid (c : PhaseRowContext) : ℕ → List LedgerRun → Prop
-  | start, [] => start = 8122-(c.R+c.V)
+  | start, [] => start = 8484-(c.R+c.V)
   | start, run :: runs => RunValid c start run ∧ RunsValid c run.stop runs
 instance (c : PhaseRowContext) (start : ℕ) (runs : List LedgerRun) :
     Decidable (RunsValid c start runs) := by
@@ -250,7 +250,7 @@ instance (c : PhaseRowContext) (start : ℕ) (runs : List LedgerRun) :
   | cons run runs ih => simp only [RunsValid]; infer_instance
 
 theorem RunsValid.sound (c : PhaseRowContext) (runs : List LedgerRun) (start z : ℕ)
-    (h : RunsValid c start runs) (hlo : start ≤ z) (hhi : z < 8122-(c.R+c.V)) : ledger c z ≤ bound := by
+    (h : RunsValid c start runs) (hlo : start ≤ z) (hhi : z < 8484-(c.R+c.V)) : ledger c z ≤ bound := by
   induction runs generalizing start with
   | nil => simp only [RunsValid] at h; omega
   | cons run runs ih =>
@@ -258,4 +258,4 @@ theorem RunsValid.sound (c : PhaseRowContext) (runs : List LedgerRun) (start z :
       · exact RunValid.sound c start z run h.1 hlo hz
       · exact ih run.stop h.2 (by omega)
 
-end ProximityPrize.SubmissionLower.Lower80830.LedgerAudit
+end ProximityPrize.SubmissionLower.Lower80840.LedgerAudit

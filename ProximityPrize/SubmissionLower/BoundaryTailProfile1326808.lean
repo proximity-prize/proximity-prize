@@ -1,9 +1,5 @@
 import ProximityPrize.SubmissionLower.BoundaryTailAsymmetric6808
-/-
-UNCOMPILED. Exact sixfold-root source used by compact10.
-This module follows the pinned Profile116 counting/existence proof template.
-The by-decide declarations must actually be elaborated and kernel checked before use.
--/
+/- Exact sixfold-root source used by compact10. -/
 import ProximityPrize.SubmissionLower.BoundaryTailInterpolation6808
 
 namespace ProximityPrize.SubmissionLower.BoundaryTailProfile1326808
@@ -27,7 +23,7 @@ def n0 : ℕ := 7
 
 theorem coefficient_count :
     coefficientCount (BoundaryTailInterpolation6808.cutoff m k n0) 131071 L B s U =
-      2103146303934600 := by decide
+      2102887000692630 := by decide
 
 theorem local_rank :
     SecondJetRelaxedCounts.rankBound m L B s U = 8019382406 := by decide
@@ -38,7 +34,7 @@ theorem cutoff_caps : ∀ h : Fin (s + 1),
 
 theorem source_card :
     Fintype.card (Index (BoundaryTailInterpolation6808.cutoff m k n0)
-      131071 L B s U) = 2103146303934600 := by
+      131071 L B s U) = 2102887000692630 := by
   rw [card_index_closed _ _ _ _ _ _ (by decide), coefficient_count]
 
 theorem exact_rank :
@@ -49,13 +45,14 @@ theorem exact_rank :
     (by decide) (fun h hh => cutoff_caps ⟨h, by omega⟩), local_rank]
 
 theorem dimension_gap :
-    262144 * 8019382406 < 2103146303934600 := by decide
+    262144 * 8019382406 < 2102887000692630 := by decide
 
 variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
 variable {nodes : I ↪ K} {u0 u1 : I → K}
 local instance : CharP (GenericField K) 2130706433 :=
   genericField_charP K 2130706433
 
+omit [CharP K 2130706433] in
 theorem exists_interpolant (hI : Fintype.card I = 262144) :
     ∃ P, BoundaryTailInterpolation6808.Interpolant m B s U L k n0
       nodes u0 u1 P := by

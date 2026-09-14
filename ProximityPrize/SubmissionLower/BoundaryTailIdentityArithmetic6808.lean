@@ -10,11 +10,11 @@ set_option maxRecDepth 100000
 
 theorem generic_absorption (f : FlagDegree) (a b s : ℕ) (_ha : 0 ≤ a)
     (hb : 1 ≤ b) (hs : 1 ≤ s) :
-    131073 * 80831 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
-      50243 * newCost f a b s := by
+    131073 * 80841 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
+      50233 * newCost f a b s := by
   obtain ⟨b',rfl⟩ : ∃ b', b = b'+1 := ⟨b-1,by omega⟩
   obtain ⟨s',rfl⟩ : ∃ s', s = s'+1 := ⟨s-1,by omega⟩
-  change 131073 * 80831 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a (b'+1) (s'+1)
+  change 131073 * 80841 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a (b'+1) (s'+1)
     Lower80788.HybridIdentityC2.w ≤ _
   rw [Lower80788.HybridIdentityC2.identityDegree_linear]
   simp [newCost, newNormal, reducedABS, rationalABS, mfibABS, mcutABS,

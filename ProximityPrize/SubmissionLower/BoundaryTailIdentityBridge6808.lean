@@ -27,13 +27,11 @@ theorem numerator_d6_coordinates (f : FlagDegree) (a b c : ℕ) :
   have hr1 : a+3-1 = a+2 := by omega
   have hr2 : a+3-2 = a+1 := by omega
   have hv1 : 131070*(b+2)-131071 = 131070*b+131069 := by
-    calc
-      _ = (131070*b+131069)+131071-131071 := by congr 1 <;> ring
-      _ = _ := Nat.add_sub_cancel _ _
+    rw [show 131070 * (b + 2) = (131070 * b + 131069) + 131071 by ring,
+      Nat.add_sub_cancel]
   have hv2 : 131074*(b+2)-131072 = 131074*b+131076 := by
-    calc
-      _ = (131074*b+131076)+131072-131072 := by congr 1 <;> ring
-      _ = _ := Nat.add_sub_cancel _ _
+    rw [show 131074 * (b + 2) = (131074 * b + 131076) + 131072 by ring,
+      Nat.add_sub_cancel]
   norm_num only [dualNumerator, ActualFirstCutPole6807.firstBaseFlag,
     cellNormal, BoundaryTailAlgebra.normalFlag, RCN327.w, hy, hz, hr1, hr2]
   simp only [hv1, hv2, add_zOnly, add_yz, add_all, nsmul_zOnly, nsmul_yz, nsmul_all,
@@ -55,38 +53,38 @@ theorem identity_degree_coordinates (f : FlagDegree) (a b c : ℕ) :
   simp only [DualCutBridge6807Arithmetic.identityDegree,toTri]
   ring
 
-def newSlackZ (a b c : ℕ) : ℕ :=
-    31074054019586640*a^2 +
-    62148108039173280*a*b +
-    1492581956935076160*a +
-    497191028263698864*b +
-    9841646074620153840
+def newSlackZ (a b _c : ℕ) : ℕ :=
+    31067869266681840*a^2 +
+    62135738533363680*a*b +
+    1492252614242289120*a +
+    497092070990394384*b +
+    9839606590033105440
 
 def newSlackV (a b c : ℕ) : ℕ :=
-    31074054019586640*a^2 +
-    62148108039173280*a*b +
-    62148108039173280*a*c +
-    13977780387554688072*a +
-    497191028263698864*b +
-    497191028263698864*c +
-    103282985074091340660
+    31067869266681840*a^2 +
+    62135738533363680*a*b +
+    62135738533363680*a*c +
+    13974933812020499352*a +
+    497092070990394384*b +
+    497092070990394384*c +
+    103262267032225555260
 
 def newSlackR (a b c : ℕ) : ℕ :=
-    31074054019586640*a^2 +
-    62148108039173280*a*b +
-    62148108039173280*a*c +
-    13977780387554688072*a +
-    31074054019586640*b^2 +
-    62148108039173280*b*c +
-    13977780387554688072*b +
-    1492581956935076160*c +
-    310252507904959633793
+    31067869266681840*a^2 +
+    62135738533363680*a*b +
+    62135738533363680*a*c +
+    13974933812020499352*a +
+    31067869266681840*b^2 +
+    62135738533363680*b*c +
+    13974933812020499352*b +
+    1492252614242289120*c +
+    310190499349455898483
 
 theorem absorption_new (p : DualCutBridge6807Arithmetic.Tri) (a b c : ℕ) :
-    36*131073*80831*DualCutBridge6807Arithmetic.identityDegree p a b c ≤
-      50243*DualCutBridge6807Arithmetic.graphNumerator p 6 1620 133 52 a b c := by
-  have h : 50243*DualCutBridge6807Arithmetic.graphNumerator p 6 1620 133 52 a b c =
-      36*131073*80831*DualCutBridge6807Arithmetic.identityDegree p a b c +
+    36*131073*80841*DualCutBridge6807Arithmetic.identityDegree p a b c ≤
+      50233*DualCutBridge6807Arithmetic.graphNumerator p 6 1620 133 52 a b c := by
+  have h : 50233*DualCutBridge6807Arithmetic.graphNumerator p 6 1620 133 52 a b c =
+      36*131073*80841*DualCutBridge6807Arithmetic.identityDegree p a b c +
       (p.z*newSlackZ a b c+p.v*newSlackV a b c+p.r*newSlackR a b c) := by
     simp only [DualCutBridge6807Arithmetic.graphNumerator, DualCutBridge6807Arithmetic.identityDegree,
       DualCutBridge6807Arithmetic.mixed, DualCutBridge6807Arithmetic.firstFlag,
@@ -99,8 +97,8 @@ theorem absorption_new (p : DualCutBridge6807Arithmetic.Tri) (a b c : ℕ) :
 No geometric incidence or final intersection bound is assumed. -/
 theorem identity_absorption_d6 (f : FlagDegree) (t y r : ℕ)
     (hr : 3 ≤ r) (hy : r+2 ≤ y) (ht : y ≤ t) :
-    36 * 131073 * 80831 * identityCurveDegree f (cellA t y) (cellB y r) (cellS r) w ≤
-      50243 * dualNumerator f t y r 6 ⟨1620,133,52⟩ := by
+    36 * 131073 * 80841 * identityCurveDegree f (cellA t y) (cellB y r) (cellS r) w ≤
+      50233 * dualNumerator f t y r 6 ⟨1620,133,52⟩ := by
   obtain ⟨a,rfl⟩ : ∃ a, r = a+3 := ⟨r-3,by omega⟩
   obtain ⟨b,rfl⟩ : ∃ b, y = a+3+(b+2) := ⟨y-(a+3)-2,by omega⟩
   obtain ⟨c,rfl⟩ : ∃ c, t = a+3+(b+2)+c := ⟨t-(a+3+(b+2)),by omega⟩

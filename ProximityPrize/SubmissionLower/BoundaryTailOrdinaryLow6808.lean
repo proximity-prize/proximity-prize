@@ -11,9 +11,9 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80830
-def agreements:ℕ:=181314
-def gap:ℕ:=50243
+def errors:ℕ:=80840
+def agreements:ℕ:=181304
+def gap:ℕ:=50233
 def prime:ℕ:=2130706433
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index
@@ -46,7 +46,7 @@ theorem tangent_gate (a b s:ℕ) :
   exact (by norm_num [errors,w]:errors + 1 ≤ 1 + 2 * (w + 2)).trans
     (Nat.add_le_add_left hb 1)
 theorem flag_characteristic (a b s:ℕ) (flag:FlagDegree)
-    (hS:s + 2 ≤ 32) (hY:b + s + 3 ≤ 149) (hT:a + b + s + 3 ≤ 8121)
+    (hS:s + 2 ≤ 33) (hY:b + s + 3 ≤ 152) (hT:a + b + s + 3 ≤ 8483)
     (hflag:flag.all ≤ s + 2 ∧ flag.yz + flag.all ≤ b + s + 3 ∧
       flag.zOnly + flag.yz + flag.all ≤ a + b + s + 3) :
     flag.yz + flag.all < prime ∧ flag.all < prime ∧
@@ -65,7 +65,7 @@ def FixedStageBound (D a b s:ℕ):Prop:=
     Gamma.card ≤ flagMixed flag (firstTail a b s) (secondTail a b s)
 theorem fixedStageBound (D a b s:ℕ)
     (hDlow:w + 1 ≤ D) (hDhigh:D < prime)
-    (hS:s + 2 ≤ 32) (hY:b + s + 3 ≤ 149) (hT:a + b + s + 3 ≤ 8121)
+    (hS:s + 2 ≤ 33) (hY:b + s + 3 ≤ 152) (hT:a + b + s + 3 ≤ 8483)
     (hlow : s = 0 ∨ b = 0) :
     FixedStageBound D a b s:=by
   intro Gamma flag S hnodes hagreement hbox hflag

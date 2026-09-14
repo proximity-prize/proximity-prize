@@ -3,459 +3,248 @@ namespace ProximityPrize.SubmissionLower.AffineRowsChecked6808
 open AffineFiniteChecks6808
 set_option autoImplicit false
 set_option maxRecDepth 100000
-set_option maxHeartbeats 100000000
-set_option Elab.async false
+set_option maxHeartbeats 10000000
 
 theorem single_27_0 : ∀ i ∈ List.range 4, SingleAt 27 (0+i) := by decide +kernel
-
 theorem single_27_4 : ∀ i ∈ List.range 4, SingleAt 27 (4+i) := by decide +kernel
-
 theorem single_27_8 : ∀ i ∈ List.range 4, SingleAt 27 (8+i) := by decide +kernel
-
 theorem single_27_12 : ∀ i ∈ List.range 4, SingleAt 27 (12+i) := by decide +kernel
-
 theorem single_27_16 : ∀ i ∈ List.range 4, SingleAt 27 (16+i) := by decide +kernel
-
 theorem single_27_20 : ∀ i ∈ List.range 4, SingleAt 27 (20+i) := by decide +kernel
-
 theorem single_27_24 : ∀ i ∈ List.range 4, SingleAt 27 (24+i) := by decide +kernel
-
 theorem single_27_28 : ∀ i ∈ List.range 4, SingleAt 27 (28+i) := by decide +kernel
-
 theorem single_27_32 : ∀ i ∈ List.range 4, SingleAt 27 (32+i) := by decide +kernel
-
 theorem single_27_36 : ∀ i ∈ List.range 4, SingleAt 27 (36+i) := by decide +kernel
-
 theorem single_27_40 : ∀ i ∈ List.range 4, SingleAt 27 (40+i) := by decide +kernel
-
 theorem single_27_44 : ∀ i ∈ List.range 4, SingleAt 27 (44+i) := by decide +kernel
-
 theorem single_27_48 : ∀ i ∈ List.range 4, SingleAt 27 (48+i) := by decide +kernel
-
 theorem single_27_52 : ∀ i ∈ List.range 4, SingleAt 27 (52+i) := by decide +kernel
-
 theorem single_27_56 : ∀ i ∈ List.range 4, SingleAt 27 (56+i) := by decide +kernel
-
 theorem single_27_60 : ∀ i ∈ List.range 4, SingleAt 27 (60+i) := by decide +kernel
-
 theorem single_27_64 : ∀ i ∈ List.range 4, SingleAt 27 (64+i) := by decide +kernel
-
 theorem single_27_68 : ∀ i ∈ List.range 4, SingleAt 27 (68+i) := by decide +kernel
-
 theorem single_27_72 : ∀ i ∈ List.range 4, SingleAt 27 (72+i) := by decide +kernel
-
 theorem single_27_76 : ∀ i ∈ List.range 4, SingleAt 27 (76+i) := by decide +kernel
-
 theorem single_27_80 : ∀ i ∈ List.range 4, SingleAt 27 (80+i) := by decide +kernel
-
 theorem single_27_84 : ∀ i ∈ List.range 4, SingleAt 27 (84+i) := by decide +kernel
-
 theorem single_27_88 : ∀ i ∈ List.range 4, SingleAt 27 (88+i) := by decide +kernel
-
 theorem single_27_92 : ∀ i ∈ List.range 4, SingleAt 27 (92+i) := by decide +kernel
-
 theorem single_27_96 : ∀ i ∈ List.range 4, SingleAt 27 (96+i) := by decide +kernel
-
 theorem single_27_100 : ∀ i ∈ List.range 4, SingleAt 27 (100+i) := by decide +kernel
-
 theorem single_27_104 : ∀ i ∈ List.range 4, SingleAt 27 (104+i) := by decide +kernel
-
 theorem single_27_108 : ∀ i ∈ List.range 4, SingleAt 27 (108+i) := by decide +kernel
-
 theorem single_27_112 : ∀ i ∈ List.range 4, SingleAt 27 (112+i) := by decide +kernel
-
 theorem single_27_116 : ∀ i ∈ List.range 4, SingleAt 27 (116+i) := by decide +kernel
-
-theorem single_27_120 : ∀ i ∈ List.range 3, SingleAt 27 (120+i) := by decide +kernel
-
-theorem single_27 (v : ℕ) (hv : v ∈ List.range 123) : SingleAt 27 v := by
+theorem single_27_120 : ∀ i ∈ List.range 4, SingleAt 27 (120+i) := by decide +kernel
+theorem single_27_124 : ∀ i ∈ List.range 2, SingleAt 27 (124+i) := by decide +kernel
+theorem single_27 : ∀ i ∈ List.range 126, SingleAt 27 i := by
   let join := @AffineFiniteChecks6808.range_join (fun v => SingleAt 27 v)
-  have h := (join 0 60 63 (join 0 28 32 (join 0 12 16 (join 0 4 8 single_27_0 (join 4 4 4 single_27_4 single_27_8)) (join 12 8 8 (join 12 4 4 single_27_12 single_27_16) (join 20 4 4 single_27_20 single_27_24))) (join 28 16 16 (join 28 8 8 (join 28 4 4 single_27_28 single_27_32) (join 36 4 4 single_27_36 single_27_40)) (join 44 8 8 (join 44 4 4 single_27_44 single_27_48) (join 52 4 4 single_27_52 single_27_56)))) (join 60 32 31 (join 60 16 16 (join 60 8 8 (join 60 4 4 single_27_60 single_27_64) (join 68 4 4 single_27_68 single_27_72)) (join 76 8 8 (join 76 4 4 single_27_76 single_27_80) (join 84 4 4 single_27_84 single_27_88))) (join 92 16 15 (join 92 8 8 (join 92 4 4 single_27_92 single_27_96) (join 100 4 4 single_27_100 single_27_104)) (join 108 8 7 (join 108 4 4 single_27_108 single_27_112) (join 116 4 3 single_27_116 single_27_120)))))
-  simpa only [Nat.zero_add] using h v hv
+  have h := (join 0 64 62 (join 0 32 32 (join 0 16 16 (join 0 8 8 (join 0 4 4 single_27_0 single_27_4) (join 8 4 4 single_27_8 single_27_12)) (join 16 8 8 (join 16 4 4 single_27_16 single_27_20) (join 24 4 4 single_27_24 single_27_28))) (join 32 16 16 (join 32 8 8 (join 32 4 4 single_27_32 single_27_36) (join 40 4 4 single_27_40 single_27_44)) (join 48 8 8 (join 48 4 4 single_27_48 single_27_52) (join 56 4 4 single_27_56 single_27_60)))) (join 64 32 30 (join 64 16 16 (join 64 8 8 (join 64 4 4 single_27_64 single_27_68) (join 72 4 4 single_27_72 single_27_76)) (join 80 8 8 (join 80 4 4 single_27_80 single_27_84) (join 88 4 4 single_27_88 single_27_92))) (join 96 16 14 (join 96 8 8 (join 96 4 4 single_27_96 single_27_100) (join 104 4 4 single_27_104 single_27_108)) (join 112 8 6 (join 112 4 4 single_27_112 single_27_116) (join 120 4 2 single_27_120 single_27_124)))))
+  simpa only [Nat.zero_add] using h
 
 theorem phase_27_0 : ∀ i ∈ List.range 4, PhaseAt 27 (0+i) := by decide +kernel
-
 theorem phase_27_4 : ∀ i ∈ List.range 4, PhaseAt 27 (4+i) := by decide +kernel
-
 theorem phase_27_8 : ∀ i ∈ List.range 4, PhaseAt 27 (8+i) := by decide +kernel
-
 theorem phase_27_12 : ∀ i ∈ List.range 4, PhaseAt 27 (12+i) := by decide +kernel
-
 theorem phase_27_16 : ∀ i ∈ List.range 4, PhaseAt 27 (16+i) := by decide +kernel
-
 theorem phase_27_20 : ∀ i ∈ List.range 4, PhaseAt 27 (20+i) := by decide +kernel
-
 theorem phase_27_24 : ∀ i ∈ List.range 4, PhaseAt 27 (24+i) := by decide +kernel
-
 theorem phase_27_28 : ∀ i ∈ List.range 4, PhaseAt 27 (28+i) := by decide +kernel
-
 theorem phase_27_32 : ∀ i ∈ List.range 4, PhaseAt 27 (32+i) := by decide +kernel
-
 theorem phase_27_36 : ∀ i ∈ List.range 4, PhaseAt 27 (36+i) := by decide +kernel
-
 theorem phase_27_40 : ∀ i ∈ List.range 4, PhaseAt 27 (40+i) := by decide +kernel
-
 theorem phase_27_44 : ∀ i ∈ List.range 4, PhaseAt 27 (44+i) := by decide +kernel
-
 theorem phase_27_48 : ∀ i ∈ List.range 4, PhaseAt 27 (48+i) := by decide +kernel
-
 theorem phase_27_52 : ∀ i ∈ List.range 4, PhaseAt 27 (52+i) := by decide +kernel
-
 theorem phase_27_56 : ∀ i ∈ List.range 4, PhaseAt 27 (56+i) := by decide +kernel
-
 theorem phase_27_60 : ∀ i ∈ List.range 4, PhaseAt 27 (60+i) := by decide +kernel
-
 theorem phase_27_64 : ∀ i ∈ List.range 4, PhaseAt 27 (64+i) := by decide +kernel
-
 theorem phase_27_68 : ∀ i ∈ List.range 4, PhaseAt 27 (68+i) := by decide +kernel
-
 theorem phase_27_72 : ∀ i ∈ List.range 4, PhaseAt 27 (72+i) := by decide +kernel
-
 theorem phase_27_76 : ∀ i ∈ List.range 4, PhaseAt 27 (76+i) := by decide +kernel
-
 theorem phase_27_80 : ∀ i ∈ List.range 4, PhaseAt 27 (80+i) := by decide +kernel
-
 theorem phase_27_84 : ∀ i ∈ List.range 4, PhaseAt 27 (84+i) := by decide +kernel
-
 theorem phase_27_88 : ∀ i ∈ List.range 4, PhaseAt 27 (88+i) := by decide +kernel
-
 theorem phase_27_92 : ∀ i ∈ List.range 4, PhaseAt 27 (92+i) := by decide +kernel
-
 theorem phase_27_96 : ∀ i ∈ List.range 4, PhaseAt 27 (96+i) := by decide +kernel
-
 theorem phase_27_100 : ∀ i ∈ List.range 4, PhaseAt 27 (100+i) := by decide +kernel
-
 theorem phase_27_104 : ∀ i ∈ List.range 4, PhaseAt 27 (104+i) := by decide +kernel
-
 theorem phase_27_108 : ∀ i ∈ List.range 4, PhaseAt 27 (108+i) := by decide +kernel
-
 theorem phase_27_112 : ∀ i ∈ List.range 4, PhaseAt 27 (112+i) := by decide +kernel
-
 theorem phase_27_116 : ∀ i ∈ List.range 4, PhaseAt 27 (116+i) := by decide +kernel
-
-theorem phase_27_120 : ∀ i ∈ List.range 3, PhaseAt 27 (120+i) := by decide +kernel
-
-theorem phase_27 (v : ℕ) (hv : v ∈ List.range 123) : PhaseAt 27 v := by
+theorem phase_27_120 : ∀ i ∈ List.range 4, PhaseAt 27 (120+i) := by decide +kernel
+theorem phase_27_124 : ∀ i ∈ List.range 2, PhaseAt 27 (124+i) := by decide +kernel
+theorem phase_27 : ∀ i ∈ List.range 126, PhaseAt 27 i := by
   let join := @AffineFiniteChecks6808.range_join (fun v => PhaseAt 27 v)
-  have h := (join 0 60 63 (join 0 28 32 (join 0 12 16 (join 0 4 8 phase_27_0 (join 4 4 4 phase_27_4 phase_27_8)) (join 12 8 8 (join 12 4 4 phase_27_12 phase_27_16) (join 20 4 4 phase_27_20 phase_27_24))) (join 28 16 16 (join 28 8 8 (join 28 4 4 phase_27_28 phase_27_32) (join 36 4 4 phase_27_36 phase_27_40)) (join 44 8 8 (join 44 4 4 phase_27_44 phase_27_48) (join 52 4 4 phase_27_52 phase_27_56)))) (join 60 32 31 (join 60 16 16 (join 60 8 8 (join 60 4 4 phase_27_60 phase_27_64) (join 68 4 4 phase_27_68 phase_27_72)) (join 76 8 8 (join 76 4 4 phase_27_76 phase_27_80) (join 84 4 4 phase_27_84 phase_27_88))) (join 92 16 15 (join 92 8 8 (join 92 4 4 phase_27_92 phase_27_96) (join 100 4 4 phase_27_100 phase_27_104)) (join 108 8 7 (join 108 4 4 phase_27_108 phase_27_112) (join 116 4 3 phase_27_116 phase_27_120)))))
-  simpa only [Nat.zero_add] using h v hv
+  have h := (join 0 64 62 (join 0 32 32 (join 0 16 16 (join 0 8 8 (join 0 4 4 phase_27_0 phase_27_4) (join 8 4 4 phase_27_8 phase_27_12)) (join 16 8 8 (join 16 4 4 phase_27_16 phase_27_20) (join 24 4 4 phase_27_24 phase_27_28))) (join 32 16 16 (join 32 8 8 (join 32 4 4 phase_27_32 phase_27_36) (join 40 4 4 phase_27_40 phase_27_44)) (join 48 8 8 (join 48 4 4 phase_27_48 phase_27_52) (join 56 4 4 phase_27_56 phase_27_60)))) (join 64 32 30 (join 64 16 16 (join 64 8 8 (join 64 4 4 phase_27_64 phase_27_68) (join 72 4 4 phase_27_72 phase_27_76)) (join 80 8 8 (join 80 4 4 phase_27_80 phase_27_84) (join 88 4 4 phase_27_88 phase_27_92))) (join 96 16 14 (join 96 8 8 (join 96 4 4 phase_27_96 phase_27_100) (join 104 4 4 phase_27_104 phase_27_108)) (join 112 8 6 (join 112 4 4 phase_27_112 phase_27_116) (join 120 4 2 phase_27_120 phase_27_124)))))
+  simpa only [Nat.zero_add] using h
 
 theorem threshold_27_0 : ∀ i ∈ List.range 1, ThresholdAt 27 (0+i) := by decide +kernel
-
 theorem threshold_27_1 : ∀ i ∈ List.range 1, ThresholdAt 27 (1+i) := by decide +kernel
-
 theorem threshold_27_2 : ∀ i ∈ List.range 1, ThresholdAt 27 (2+i) := by decide +kernel
-
 theorem threshold_27_3 : ∀ i ∈ List.range 1, ThresholdAt 27 (3+i) := by decide +kernel
-
 theorem threshold_27_4 : ∀ i ∈ List.range 1, ThresholdAt 27 (4+i) := by decide +kernel
-
 theorem threshold_27_5 : ∀ i ∈ List.range 1, ThresholdAt 27 (5+i) := by decide +kernel
-
 theorem threshold_27_6 : ∀ i ∈ List.range 1, ThresholdAt 27 (6+i) := by decide +kernel
-
 theorem threshold_27_7 : ∀ i ∈ List.range 1, ThresholdAt 27 (7+i) := by decide +kernel
-
 theorem threshold_27_8 : ∀ i ∈ List.range 1, ThresholdAt 27 (8+i) := by decide +kernel
-
 theorem threshold_27_9 : ∀ i ∈ List.range 1, ThresholdAt 27 (9+i) := by decide +kernel
-
 theorem threshold_27_10 : ∀ i ∈ List.range 1, ThresholdAt 27 (10+i) := by decide +kernel
-
 theorem threshold_27_11 : ∀ i ∈ List.range 1, ThresholdAt 27 (11+i) := by decide +kernel
-
 theorem threshold_27_12 : ∀ i ∈ List.range 1, ThresholdAt 27 (12+i) := by decide +kernel
-
 theorem threshold_27_13 : ∀ i ∈ List.range 1, ThresholdAt 27 (13+i) := by decide +kernel
-
 theorem threshold_27_14 : ∀ i ∈ List.range 1, ThresholdAt 27 (14+i) := by decide +kernel
-
 theorem threshold_27_15 : ∀ i ∈ List.range 1, ThresholdAt 27 (15+i) := by decide +kernel
-
 theorem threshold_27_16 : ∀ i ∈ List.range 1, ThresholdAt 27 (16+i) := by decide +kernel
-
 theorem threshold_27_17 : ∀ i ∈ List.range 1, ThresholdAt 27 (17+i) := by decide +kernel
-
 theorem threshold_27_18 : ∀ i ∈ List.range 1, ThresholdAt 27 (18+i) := by decide +kernel
-
 theorem threshold_27_19 : ∀ i ∈ List.range 1, ThresholdAt 27 (19+i) := by decide +kernel
-
 theorem threshold_27_20 : ∀ i ∈ List.range 1, ThresholdAt 27 (20+i) := by decide +kernel
-
 theorem threshold_27_21 : ∀ i ∈ List.range 1, ThresholdAt 27 (21+i) := by decide +kernel
-
 theorem threshold_27_22 : ∀ i ∈ List.range 1, ThresholdAt 27 (22+i) := by decide +kernel
-
 theorem threshold_27_23 : ∀ i ∈ List.range 1, ThresholdAt 27 (23+i) := by decide +kernel
-
 theorem threshold_27_24 : ∀ i ∈ List.range 1, ThresholdAt 27 (24+i) := by decide +kernel
-
 theorem threshold_27_25 : ∀ i ∈ List.range 1, ThresholdAt 27 (25+i) := by decide +kernel
-
 theorem threshold_27_26 : ∀ i ∈ List.range 1, ThresholdAt 27 (26+i) := by decide +kernel
-
 theorem threshold_27_27 : ∀ i ∈ List.range 1, ThresholdAt 27 (27+i) := by decide +kernel
-
 theorem threshold_27_28 : ∀ i ∈ List.range 1, ThresholdAt 27 (28+i) := by decide +kernel
-
 theorem threshold_27_29 : ∀ i ∈ List.range 1, ThresholdAt 27 (29+i) := by decide +kernel
-
 theorem threshold_27_30 : ∀ i ∈ List.range 1, ThresholdAt 27 (30+i) := by decide +kernel
-
 theorem threshold_27_31 : ∀ i ∈ List.range 1, ThresholdAt 27 (31+i) := by decide +kernel
-
 theorem threshold_27_32 : ∀ i ∈ List.range 1, ThresholdAt 27 (32+i) := by decide +kernel
-
 theorem threshold_27_33 : ∀ i ∈ List.range 1, ThresholdAt 27 (33+i) := by decide +kernel
-
 theorem threshold_27_34 : ∀ i ∈ List.range 1, ThresholdAt 27 (34+i) := by decide +kernel
-
 theorem threshold_27_35 : ∀ i ∈ List.range 1, ThresholdAt 27 (35+i) := by decide +kernel
-
 theorem threshold_27_36 : ∀ i ∈ List.range 1, ThresholdAt 27 (36+i) := by decide +kernel
-
 theorem threshold_27_37 : ∀ i ∈ List.range 1, ThresholdAt 27 (37+i) := by decide +kernel
-
 theorem threshold_27_38 : ∀ i ∈ List.range 1, ThresholdAt 27 (38+i) := by decide +kernel
-
 theorem threshold_27_39 : ∀ i ∈ List.range 1, ThresholdAt 27 (39+i) := by decide +kernel
-
 theorem threshold_27_40 : ∀ i ∈ List.range 1, ThresholdAt 27 (40+i) := by decide +kernel
-
 theorem threshold_27_41 : ∀ i ∈ List.range 1, ThresholdAt 27 (41+i) := by decide +kernel
-
 theorem threshold_27_42 : ∀ i ∈ List.range 1, ThresholdAt 27 (42+i) := by decide +kernel
-
 theorem threshold_27_43 : ∀ i ∈ List.range 1, ThresholdAt 27 (43+i) := by decide +kernel
-
 theorem threshold_27_44 : ∀ i ∈ List.range 1, ThresholdAt 27 (44+i) := by decide +kernel
-
 theorem threshold_27_45 : ∀ i ∈ List.range 1, ThresholdAt 27 (45+i) := by decide +kernel
-
 theorem threshold_27_46 : ∀ i ∈ List.range 1, ThresholdAt 27 (46+i) := by decide +kernel
-
 theorem threshold_27_47 : ∀ i ∈ List.range 1, ThresholdAt 27 (47+i) := by decide +kernel
-
 theorem threshold_27_48 : ∀ i ∈ List.range 1, ThresholdAt 27 (48+i) := by decide +kernel
-
 theorem threshold_27_49 : ∀ i ∈ List.range 1, ThresholdAt 27 (49+i) := by decide +kernel
-
 theorem threshold_27_50 : ∀ i ∈ List.range 1, ThresholdAt 27 (50+i) := by decide +kernel
-
 theorem threshold_27_51 : ∀ i ∈ List.range 1, ThresholdAt 27 (51+i) := by decide +kernel
-
 theorem threshold_27_52 : ∀ i ∈ List.range 1, ThresholdAt 27 (52+i) := by decide +kernel
-
 theorem threshold_27_53 : ∀ i ∈ List.range 1, ThresholdAt 27 (53+i) := by decide +kernel
-
 theorem threshold_27_54 : ∀ i ∈ List.range 1, ThresholdAt 27 (54+i) := by decide +kernel
-
 theorem threshold_27_55 : ∀ i ∈ List.range 1, ThresholdAt 27 (55+i) := by decide +kernel
-
 theorem threshold_27_56 : ∀ i ∈ List.range 1, ThresholdAt 27 (56+i) := by decide +kernel
-
 theorem threshold_27_57 : ∀ i ∈ List.range 1, ThresholdAt 27 (57+i) := by decide +kernel
-
 theorem threshold_27_58 : ∀ i ∈ List.range 1, ThresholdAt 27 (58+i) := by decide +kernel
-
 theorem threshold_27_59 : ∀ i ∈ List.range 1, ThresholdAt 27 (59+i) := by decide +kernel
-
 theorem threshold_27_60 : ∀ i ∈ List.range 1, ThresholdAt 27 (60+i) := by decide +kernel
-
 theorem threshold_27_61 : ∀ i ∈ List.range 1, ThresholdAt 27 (61+i) := by decide +kernel
-
 theorem threshold_27_62 : ∀ i ∈ List.range 1, ThresholdAt 27 (62+i) := by decide +kernel
-
 theorem threshold_27_63 : ∀ i ∈ List.range 1, ThresholdAt 27 (63+i) := by decide +kernel
-
 theorem threshold_27_64 : ∀ i ∈ List.range 1, ThresholdAt 27 (64+i) := by decide +kernel
-
 theorem threshold_27_65 : ∀ i ∈ List.range 1, ThresholdAt 27 (65+i) := by decide +kernel
-
 theorem threshold_27_66 : ∀ i ∈ List.range 1, ThresholdAt 27 (66+i) := by decide +kernel
-
 theorem threshold_27_67 : ∀ i ∈ List.range 1, ThresholdAt 27 (67+i) := by decide +kernel
-
 theorem threshold_27_68 : ∀ i ∈ List.range 1, ThresholdAt 27 (68+i) := by decide +kernel
-
 theorem threshold_27_69 : ∀ i ∈ List.range 1, ThresholdAt 27 (69+i) := by decide +kernel
-
 theorem threshold_27_70 : ∀ i ∈ List.range 1, ThresholdAt 27 (70+i) := by decide +kernel
-
 theorem threshold_27_71 : ∀ i ∈ List.range 1, ThresholdAt 27 (71+i) := by decide +kernel
-
 theorem threshold_27_72 : ∀ i ∈ List.range 1, ThresholdAt 27 (72+i) := by decide +kernel
-
 theorem threshold_27_73 : ∀ i ∈ List.range 1, ThresholdAt 27 (73+i) := by decide +kernel
-
 theorem threshold_27_74 : ∀ i ∈ List.range 1, ThresholdAt 27 (74+i) := by decide +kernel
-
 theorem threshold_27_75 : ∀ i ∈ List.range 1, ThresholdAt 27 (75+i) := by decide +kernel
-
 theorem threshold_27_76 : ∀ i ∈ List.range 1, ThresholdAt 27 (76+i) := by decide +kernel
-
 theorem threshold_27_77 : ∀ i ∈ List.range 1, ThresholdAt 27 (77+i) := by decide +kernel
-
 theorem threshold_27_78 : ∀ i ∈ List.range 1, ThresholdAt 27 (78+i) := by decide +kernel
-
 theorem threshold_27_79 : ∀ i ∈ List.range 1, ThresholdAt 27 (79+i) := by decide +kernel
-
 theorem threshold_27_80 : ∀ i ∈ List.range 1, ThresholdAt 27 (80+i) := by decide +kernel
-
 theorem threshold_27_81 : ∀ i ∈ List.range 1, ThresholdAt 27 (81+i) := by decide +kernel
-
 theorem threshold_27_82 : ∀ i ∈ List.range 1, ThresholdAt 27 (82+i) := by decide +kernel
-
 theorem threshold_27_83 : ∀ i ∈ List.range 1, ThresholdAt 27 (83+i) := by decide +kernel
-
 theorem threshold_27_84 : ∀ i ∈ List.range 1, ThresholdAt 27 (84+i) := by decide +kernel
-
 theorem threshold_27_85 : ∀ i ∈ List.range 1, ThresholdAt 27 (85+i) := by decide +kernel
-
 theorem threshold_27_86 : ∀ i ∈ List.range 1, ThresholdAt 27 (86+i) := by decide +kernel
-
 theorem threshold_27_87 : ∀ i ∈ List.range 1, ThresholdAt 27 (87+i) := by decide +kernel
-
 theorem threshold_27_88 : ∀ i ∈ List.range 1, ThresholdAt 27 (88+i) := by decide +kernel
-
 theorem threshold_27_89 : ∀ i ∈ List.range 1, ThresholdAt 27 (89+i) := by decide +kernel
-
 theorem threshold_27_90 : ∀ i ∈ List.range 1, ThresholdAt 27 (90+i) := by decide +kernel
-
 theorem threshold_27_91 : ∀ i ∈ List.range 1, ThresholdAt 27 (91+i) := by decide +kernel
-
 theorem threshold_27_92 : ∀ i ∈ List.range 1, ThresholdAt 27 (92+i) := by decide +kernel
-
 theorem threshold_27_93 : ∀ i ∈ List.range 1, ThresholdAt 27 (93+i) := by decide +kernel
-
 theorem threshold_27_94 : ∀ i ∈ List.range 1, ThresholdAt 27 (94+i) := by decide +kernel
-
 theorem threshold_27_95 : ∀ i ∈ List.range 1, ThresholdAt 27 (95+i) := by decide +kernel
-
 theorem threshold_27_96 : ∀ i ∈ List.range 1, ThresholdAt 27 (96+i) := by decide +kernel
-
 theorem threshold_27_97 : ∀ i ∈ List.range 1, ThresholdAt 27 (97+i) := by decide +kernel
-
 theorem threshold_27_98 : ∀ i ∈ List.range 1, ThresholdAt 27 (98+i) := by decide +kernel
-
 theorem threshold_27_99 : ∀ i ∈ List.range 1, ThresholdAt 27 (99+i) := by decide +kernel
-
 theorem threshold_27_100 : ∀ i ∈ List.range 1, ThresholdAt 27 (100+i) := by decide +kernel
-
 theorem threshold_27_101 : ∀ i ∈ List.range 1, ThresholdAt 27 (101+i) := by decide +kernel
-
 theorem threshold_27_102 : ∀ i ∈ List.range 1, ThresholdAt 27 (102+i) := by decide +kernel
-
 theorem threshold_27_103 : ∀ i ∈ List.range 1, ThresholdAt 27 (103+i) := by decide +kernel
-
 theorem threshold_27_104 : ∀ i ∈ List.range 1, ThresholdAt 27 (104+i) := by decide +kernel
-
 theorem threshold_27_105 : ∀ i ∈ List.range 1, ThresholdAt 27 (105+i) := by decide +kernel
-
 theorem threshold_27_106 : ∀ i ∈ List.range 1, ThresholdAt 27 (106+i) := by decide +kernel
-
 theorem threshold_27_107 : ∀ i ∈ List.range 1, ThresholdAt 27 (107+i) := by decide +kernel
-
 theorem threshold_27_108 : ∀ i ∈ List.range 1, ThresholdAt 27 (108+i) := by decide +kernel
-
 theorem threshold_27_109 : ∀ i ∈ List.range 1, ThresholdAt 27 (109+i) := by decide +kernel
-
 theorem threshold_27_110 : ∀ i ∈ List.range 1, ThresholdAt 27 (110+i) := by decide +kernel
-
 theorem threshold_27_111 : ∀ i ∈ List.range 1, ThresholdAt 27 (111+i) := by decide +kernel
-
 theorem threshold_27_112 : ∀ i ∈ List.range 1, ThresholdAt 27 (112+i) := by decide +kernel
-
 theorem threshold_27_113 : ∀ i ∈ List.range 1, ThresholdAt 27 (113+i) := by decide +kernel
-
 theorem threshold_27_114 : ∀ i ∈ List.range 1, ThresholdAt 27 (114+i) := by decide +kernel
-
 theorem threshold_27_115 : ∀ i ∈ List.range 1, ThresholdAt 27 (115+i) := by decide +kernel
-
 theorem threshold_27_116 : ∀ i ∈ List.range 1, ThresholdAt 27 (116+i) := by decide +kernel
-
 theorem threshold_27_117 : ∀ i ∈ List.range 1, ThresholdAt 27 (117+i) := by decide +kernel
-
 theorem threshold_27_118 : ∀ i ∈ List.range 1, ThresholdAt 27 (118+i) := by decide +kernel
-
 theorem threshold_27_119 : ∀ i ∈ List.range 1, ThresholdAt 27 (119+i) := by decide +kernel
-
 theorem threshold_27_120 : ∀ i ∈ List.range 1, ThresholdAt 27 (120+i) := by decide +kernel
-
 theorem threshold_27_121 : ∀ i ∈ List.range 1, ThresholdAt 27 (121+i) := by decide +kernel
-
 theorem threshold_27_122 : ∀ i ∈ List.range 1, ThresholdAt 27 (122+i) := by decide +kernel
-
-theorem threshold_27 (v : ℕ) (hv : v ∈ List.range 123) : ThresholdAt 27 v := by
+theorem threshold_27_123 : ∀ i ∈ List.range 1, ThresholdAt 27 (123+i) := by decide +kernel
+theorem threshold_27_124 : ∀ i ∈ List.range 1, ThresholdAt 27 (124+i) := by decide +kernel
+theorem threshold_27_125 : ∀ i ∈ List.range 1, ThresholdAt 27 (125+i) := by decide +kernel
+theorem threshold_27 : ∀ i ∈ List.range 126, ThresholdAt 27 i := by
   let join := @AffineFiniteChecks6808.range_join (fun v => ThresholdAt 27 v)
-  have h := (join 0 61 62 (join 0 30 31 (join 0 15 15 (join 0 7 8 (join 0 3 4 (join 0 1 2 threshold_27_0 (join 1 1 1 threshold_27_1 threshold_27_2)) (join 3 2 2 (join 3 1 1 threshold_27_3 threshold_27_4) (join 5 1 1 threshold_27_5 threshold_27_6))) (join 7 4 4 (join 7 2 2 (join 7 1 1 threshold_27_7 threshold_27_8) (join 9 1 1 threshold_27_9 threshold_27_10)) (join 11 2 2 (join 11 1 1 threshold_27_11 threshold_27_12) (join 13 1 1 threshold_27_13 threshold_27_14)))) (join 15 7 8 (join 15 3 4 (join 15 1 2 threshold_27_15 (join 16 1 1 threshold_27_16 threshold_27_17)) (join 18 2 2 (join 18 1 1 threshold_27_18 threshold_27_19) (join 20 1 1 threshold_27_20 threshold_27_21))) (join 22 4 4 (join 22 2 2 (join 22 1 1 threshold_27_22 threshold_27_23) (join 24 1 1 threshold_27_24 threshold_27_25)) (join 26 2 2 (join 26 1 1 threshold_27_26 threshold_27_27) (join 28 1 1 threshold_27_28 threshold_27_29))))) (join 30 15 16 (join 30 7 8 (join 30 3 4 (join 30 1 2 threshold_27_30 (join 31 1 1 threshold_27_31 threshold_27_32)) (join 33 2 2 (join 33 1 1 threshold_27_33 threshold_27_34) (join 35 1 1 threshold_27_35 threshold_27_36))) (join 37 4 4 (join 37 2 2 (join 37 1 1 threshold_27_37 threshold_27_38) (join 39 1 1 threshold_27_39 threshold_27_40)) (join 41 2 2 (join 41 1 1 threshold_27_41 threshold_27_42) (join 43 1 1 threshold_27_43 threshold_27_44)))) (join 45 8 8 (join 45 4 4 (join 45 2 2 (join 45 1 1 threshold_27_45 threshold_27_46) (join 47 1 1 threshold_27_47 threshold_27_48)) (join 49 2 2 (join 49 1 1 threshold_27_49 threshold_27_50) (join 51 1 1 threshold_27_51 threshold_27_52))) (join 53 4 4 (join 53 2 2 (join 53 1 1 threshold_27_53 threshold_27_54) (join 55 1 1 threshold_27_55 threshold_27_56)) (join 57 2 2 (join 57 1 1 threshold_27_57 threshold_27_58) (join 59 1 1 threshold_27_59 threshold_27_60)))))) (join 61 31 31 (join 61 15 16 (join 61 7 8 (join 61 3 4 (join 61 1 2 threshold_27_61 (join 62 1 1 threshold_27_62 threshold_27_63)) (join 64 2 2 (join 64 1 1 threshold_27_64 threshold_27_65) (join 66 1 1 threshold_27_66 threshold_27_67))) (join 68 4 4 (join 68 2 2 (join 68 1 1 threshold_27_68 threshold_27_69) (join 70 1 1 threshold_27_70 threshold_27_71)) (join 72 2 2 (join 72 1 1 threshold_27_72 threshold_27_73) (join 74 1 1 threshold_27_74 threshold_27_75)))) (join 76 8 8 (join 76 4 4 (join 76 2 2 (join 76 1 1 threshold_27_76 threshold_27_77) (join 78 1 1 threshold_27_78 threshold_27_79)) (join 80 2 2 (join 80 1 1 threshold_27_80 threshold_27_81) (join 82 1 1 threshold_27_82 threshold_27_83))) (join 84 4 4 (join 84 2 2 (join 84 1 1 threshold_27_84 threshold_27_85) (join 86 1 1 threshold_27_86 threshold_27_87)) (join 88 2 2 (join 88 1 1 threshold_27_88 threshold_27_89) (join 90 1 1 threshold_27_90 threshold_27_91))))) (join 92 15 16 (join 92 7 8 (join 92 3 4 (join 92 1 2 threshold_27_92 (join 93 1 1 threshold_27_93 threshold_27_94)) (join 95 2 2 (join 95 1 1 threshold_27_95 threshold_27_96) (join 97 1 1 threshold_27_97 threshold_27_98))) (join 99 4 4 (join 99 2 2 (join 99 1 1 threshold_27_99 threshold_27_100) (join 101 1 1 threshold_27_101 threshold_27_102)) (join 103 2 2 (join 103 1 1 threshold_27_103 threshold_27_104) (join 105 1 1 threshold_27_105 threshold_27_106)))) (join 107 8 8 (join 107 4 4 (join 107 2 2 (join 107 1 1 threshold_27_107 threshold_27_108) (join 109 1 1 threshold_27_109 threshold_27_110)) (join 111 2 2 (join 111 1 1 threshold_27_111 threshold_27_112) (join 113 1 1 threshold_27_113 threshold_27_114))) (join 115 4 4 (join 115 2 2 (join 115 1 1 threshold_27_115 threshold_27_116) (join 117 1 1 threshold_27_117 threshold_27_118)) (join 119 2 2 (join 119 1 1 threshold_27_119 threshold_27_120) (join 121 1 1 threshold_27_121 threshold_27_122)))))))
-  simpa only [Nat.zero_add] using h v hv
+  have h := (join 0 63 63 (join 0 31 32 (join 0 15 16 (join 0 7 8 (join 0 3 4 (join 0 1 2 threshold_27_0 (join 1 1 1 threshold_27_1 threshold_27_2)) (join 3 2 2 (join 3 1 1 threshold_27_3 threshold_27_4) (join 5 1 1 threshold_27_5 threshold_27_6))) (join 7 4 4 (join 7 2 2 (join 7 1 1 threshold_27_7 threshold_27_8) (join 9 1 1 threshold_27_9 threshold_27_10)) (join 11 2 2 (join 11 1 1 threshold_27_11 threshold_27_12) (join 13 1 1 threshold_27_13 threshold_27_14)))) (join 15 8 8 (join 15 4 4 (join 15 2 2 (join 15 1 1 threshold_27_15 threshold_27_16) (join 17 1 1 threshold_27_17 threshold_27_18)) (join 19 2 2 (join 19 1 1 threshold_27_19 threshold_27_20) (join 21 1 1 threshold_27_21 threshold_27_22))) (join 23 4 4 (join 23 2 2 (join 23 1 1 threshold_27_23 threshold_27_24) (join 25 1 1 threshold_27_25 threshold_27_26)) (join 27 2 2 (join 27 1 1 threshold_27_27 threshold_27_28) (join 29 1 1 threshold_27_29 threshold_27_30))))) (join 31 16 16 (join 31 8 8 (join 31 4 4 (join 31 2 2 (join 31 1 1 threshold_27_31 threshold_27_32) (join 33 1 1 threshold_27_33 threshold_27_34)) (join 35 2 2 (join 35 1 1 threshold_27_35 threshold_27_36) (join 37 1 1 threshold_27_37 threshold_27_38))) (join 39 4 4 (join 39 2 2 (join 39 1 1 threshold_27_39 threshold_27_40) (join 41 1 1 threshold_27_41 threshold_27_42)) (join 43 2 2 (join 43 1 1 threshold_27_43 threshold_27_44) (join 45 1 1 threshold_27_45 threshold_27_46)))) (join 47 8 8 (join 47 4 4 (join 47 2 2 (join 47 1 1 threshold_27_47 threshold_27_48) (join 49 1 1 threshold_27_49 threshold_27_50)) (join 51 2 2 (join 51 1 1 threshold_27_51 threshold_27_52) (join 53 1 1 threshold_27_53 threshold_27_54))) (join 55 4 4 (join 55 2 2 (join 55 1 1 threshold_27_55 threshold_27_56) (join 57 1 1 threshold_27_57 threshold_27_58)) (join 59 2 2 (join 59 1 1 threshold_27_59 threshold_27_60) (join 61 1 1 threshold_27_61 threshold_27_62)))))) (join 63 31 32 (join 63 15 16 (join 63 7 8 (join 63 3 4 (join 63 1 2 threshold_27_63 (join 64 1 1 threshold_27_64 threshold_27_65)) (join 66 2 2 (join 66 1 1 threshold_27_66 threshold_27_67) (join 68 1 1 threshold_27_68 threshold_27_69))) (join 70 4 4 (join 70 2 2 (join 70 1 1 threshold_27_70 threshold_27_71) (join 72 1 1 threshold_27_72 threshold_27_73)) (join 74 2 2 (join 74 1 1 threshold_27_74 threshold_27_75) (join 76 1 1 threshold_27_76 threshold_27_77)))) (join 78 8 8 (join 78 4 4 (join 78 2 2 (join 78 1 1 threshold_27_78 threshold_27_79) (join 80 1 1 threshold_27_80 threshold_27_81)) (join 82 2 2 (join 82 1 1 threshold_27_82 threshold_27_83) (join 84 1 1 threshold_27_84 threshold_27_85))) (join 86 4 4 (join 86 2 2 (join 86 1 1 threshold_27_86 threshold_27_87) (join 88 1 1 threshold_27_88 threshold_27_89)) (join 90 2 2 (join 90 1 1 threshold_27_90 threshold_27_91) (join 92 1 1 threshold_27_92 threshold_27_93))))) (join 94 16 16 (join 94 8 8 (join 94 4 4 (join 94 2 2 (join 94 1 1 threshold_27_94 threshold_27_95) (join 96 1 1 threshold_27_96 threshold_27_97)) (join 98 2 2 (join 98 1 1 threshold_27_98 threshold_27_99) (join 100 1 1 threshold_27_100 threshold_27_101))) (join 102 4 4 (join 102 2 2 (join 102 1 1 threshold_27_102 threshold_27_103) (join 104 1 1 threshold_27_104 threshold_27_105)) (join 106 2 2 (join 106 1 1 threshold_27_106 threshold_27_107) (join 108 1 1 threshold_27_108 threshold_27_109)))) (join 110 8 8 (join 110 4 4 (join 110 2 2 (join 110 1 1 threshold_27_110 threshold_27_111) (join 112 1 1 threshold_27_112 threshold_27_113)) (join 114 2 2 (join 114 1 1 threshold_27_114 threshold_27_115) (join 116 1 1 threshold_27_116 threshold_27_117))) (join 118 4 4 (join 118 2 2 (join 118 1 1 threshold_27_118 threshold_27_119) (join 120 1 1 threshold_27_120 threshold_27_121)) (join 122 2 2 (join 122 1 1 threshold_27_122 threshold_27_123) (join 124 1 1 threshold_27_124 threshold_27_125)))))))
+  simpa only [Nat.zero_add] using h
 
 theorem ledger_27_0 : ∀ i ∈ List.range 4, LedgerAt 27 (0+i) := by decide +kernel
-
 theorem ledger_27_4 : ∀ i ∈ List.range 4, LedgerAt 27 (4+i) := by decide +kernel
-
 theorem ledger_27_8 : ∀ i ∈ List.range 4, LedgerAt 27 (8+i) := by decide +kernel
-
 theorem ledger_27_12 : ∀ i ∈ List.range 4, LedgerAt 27 (12+i) := by decide +kernel
-
 theorem ledger_27_16 : ∀ i ∈ List.range 4, LedgerAt 27 (16+i) := by decide +kernel
-
 theorem ledger_27_20 : ∀ i ∈ List.range 4, LedgerAt 27 (20+i) := by decide +kernel
-
 theorem ledger_27_24 : ∀ i ∈ List.range 4, LedgerAt 27 (24+i) := by decide +kernel
-
 theorem ledger_27_28 : ∀ i ∈ List.range 4, LedgerAt 27 (28+i) := by decide +kernel
-
 theorem ledger_27_32 : ∀ i ∈ List.range 4, LedgerAt 27 (32+i) := by decide +kernel
-
 theorem ledger_27_36 : ∀ i ∈ List.range 4, LedgerAt 27 (36+i) := by decide +kernel
-
 theorem ledger_27_40 : ∀ i ∈ List.range 4, LedgerAt 27 (40+i) := by decide +kernel
-
 theorem ledger_27_44 : ∀ i ∈ List.range 4, LedgerAt 27 (44+i) := by decide +kernel
-
 theorem ledger_27_48 : ∀ i ∈ List.range 4, LedgerAt 27 (48+i) := by decide +kernel
-
 theorem ledger_27_52 : ∀ i ∈ List.range 4, LedgerAt 27 (52+i) := by decide +kernel
-
 theorem ledger_27_56 : ∀ i ∈ List.range 4, LedgerAt 27 (56+i) := by decide +kernel
-
 theorem ledger_27_60 : ∀ i ∈ List.range 4, LedgerAt 27 (60+i) := by decide +kernel
-
 theorem ledger_27_64 : ∀ i ∈ List.range 4, LedgerAt 27 (64+i) := by decide +kernel
-
 theorem ledger_27_68 : ∀ i ∈ List.range 4, LedgerAt 27 (68+i) := by decide +kernel
-
 theorem ledger_27_72 : ∀ i ∈ List.range 4, LedgerAt 27 (72+i) := by decide +kernel
-
 theorem ledger_27_76 : ∀ i ∈ List.range 4, LedgerAt 27 (76+i) := by decide +kernel
-
 theorem ledger_27_80 : ∀ i ∈ List.range 4, LedgerAt 27 (80+i) := by decide +kernel
-
 theorem ledger_27_84 : ∀ i ∈ List.range 4, LedgerAt 27 (84+i) := by decide +kernel
-
 theorem ledger_27_88 : ∀ i ∈ List.range 4, LedgerAt 27 (88+i) := by decide +kernel
-
 theorem ledger_27_92 : ∀ i ∈ List.range 4, LedgerAt 27 (92+i) := by decide +kernel
-
 theorem ledger_27_96 : ∀ i ∈ List.range 4, LedgerAt 27 (96+i) := by decide +kernel
-
 theorem ledger_27_100 : ∀ i ∈ List.range 4, LedgerAt 27 (100+i) := by decide +kernel
-
 theorem ledger_27_104 : ∀ i ∈ List.range 4, LedgerAt 27 (104+i) := by decide +kernel
-
 theorem ledger_27_108 : ∀ i ∈ List.range 4, LedgerAt 27 (108+i) := by decide +kernel
-
 theorem ledger_27_112 : ∀ i ∈ List.range 4, LedgerAt 27 (112+i) := by decide +kernel
-
 theorem ledger_27_116 : ∀ i ∈ List.range 4, LedgerAt 27 (116+i) := by decide +kernel
-
-theorem ledger_27_120 : ∀ i ∈ List.range 3, LedgerAt 27 (120+i) := by decide +kernel
-
-theorem ledger_27 (v : ℕ) (hv : v ∈ List.range 123) : LedgerAt 27 v := by
+theorem ledger_27_120 : ∀ i ∈ List.range 4, LedgerAt 27 (120+i) := by decide +kernel
+theorem ledger_27_124 : ∀ i ∈ List.range 2, LedgerAt 27 (124+i) := by decide +kernel
+theorem ledger_27 : ∀ i ∈ List.range 126, LedgerAt 27 i := by
   let join := @AffineFiniteChecks6808.range_join (fun v => LedgerAt 27 v)
-  have h := (join 0 60 63 (join 0 28 32 (join 0 12 16 (join 0 4 8 ledger_27_0 (join 4 4 4 ledger_27_4 ledger_27_8)) (join 12 8 8 (join 12 4 4 ledger_27_12 ledger_27_16) (join 20 4 4 ledger_27_20 ledger_27_24))) (join 28 16 16 (join 28 8 8 (join 28 4 4 ledger_27_28 ledger_27_32) (join 36 4 4 ledger_27_36 ledger_27_40)) (join 44 8 8 (join 44 4 4 ledger_27_44 ledger_27_48) (join 52 4 4 ledger_27_52 ledger_27_56)))) (join 60 32 31 (join 60 16 16 (join 60 8 8 (join 60 4 4 ledger_27_60 ledger_27_64) (join 68 4 4 ledger_27_68 ledger_27_72)) (join 76 8 8 (join 76 4 4 ledger_27_76 ledger_27_80) (join 84 4 4 ledger_27_84 ledger_27_88))) (join 92 16 15 (join 92 8 8 (join 92 4 4 ledger_27_92 ledger_27_96) (join 100 4 4 ledger_27_100 ledger_27_104)) (join 108 8 7 (join 108 4 4 ledger_27_108 ledger_27_112) (join 116 4 3 ledger_27_116 ledger_27_120)))))
-  simpa only [Nat.zero_add] using h v hv
+  have h := (join 0 64 62 (join 0 32 32 (join 0 16 16 (join 0 8 8 (join 0 4 4 ledger_27_0 ledger_27_4) (join 8 4 4 ledger_27_8 ledger_27_12)) (join 16 8 8 (join 16 4 4 ledger_27_16 ledger_27_20) (join 24 4 4 ledger_27_24 ledger_27_28))) (join 32 16 16 (join 32 8 8 (join 32 4 4 ledger_27_32 ledger_27_36) (join 40 4 4 ledger_27_40 ledger_27_44)) (join 48 8 8 (join 48 4 4 ledger_27_48 ledger_27_52) (join 56 4 4 ledger_27_56 ledger_27_60)))) (join 64 32 30 (join 64 16 16 (join 64 8 8 (join 64 4 4 ledger_27_64 ledger_27_68) (join 72 4 4 ledger_27_72 ledger_27_76)) (join 80 8 8 (join 80 4 4 ledger_27_80 ledger_27_84) (join 88 4 4 ledger_27_88 ledger_27_92))) (join 96 16 14 (join 96 8 8 (join 96 4 4 ledger_27_96 ledger_27_100) (join 104 4 4 ledger_27_104 ledger_27_108)) (join 112 8 6 (join 112 4 4 ledger_27_112 ledger_27_116) (join 120 4 2 ledger_27_120 ledger_27_124)))))
+  simpa only [Nat.zero_add] using h
 
 end ProximityPrize.SubmissionLower.AffineRowsChecked6808

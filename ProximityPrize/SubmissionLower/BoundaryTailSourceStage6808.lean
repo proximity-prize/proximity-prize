@@ -23,10 +23,10 @@ theorem stage_card_le_dual
     (D t y r : ℕ) (hDlow : 131072 ≤ D) (hDchar : D < 2130706433)
     (ht : t ≤ 7501) (hy : y ≤ 142) (hr : r ≤ 31)
     (hr3 : 3 ≤ r) (hry : r+2 ≤ y) (hyt : y+2 ≤ t)
-    (S : ResidualStage (polynomialEmbedding K) Gamma x 2130706433 80830 flag
+    (S : ResidualStage (polynomialEmbedding K) Gamma x 2130706433 80840 flag
       w (cellSupport t y r))
-    (hnodes : S.nodes.card = 181314+80830)
-    (hagreement : ∀ gamma ∈ Gamma, 181314 ≤ (S.agreementFiber gamma).card)
+    (hnodes : S.nodes.card = 181304+80840)
+    (hagreement : ∀ gamma ∈ Gamma, 181304 ≤ (S.agreementFiber gamma).card)
     (hbox : S.F ∈ globalCoefficientBox K D w t r)
     (hflag : flag.all ≤ r ∧ flag.yz+flag.all ≤ y ∧ flag.zOnly+flag.yz+flag.all ≤ t)
     (P : SecondJetSupport.Poly (K := K))

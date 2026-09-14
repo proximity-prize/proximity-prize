@@ -1,12 +1,11 @@
-/- UNCOMPILED new instance. Generated from the pinned template; not an official receipt. -/
 import ProximityPrize.SubmissionLower.LowerGeometry
 import ProximityPrize.SubmissionLower.BoundaryTailScalar6808
 
 section Compact_Profile6808
-/-! The exact 68.6 profile and its remaining proof obligation.
+/-! The exact 68.09 profile and its protocol closure.
 The scalar list arm, radius, score conversion and final extractor arithmetic
-are checked here. The final theorem is conditional on AffineLineAlignmentBound;
-that hypothesis has NOT been established. The proof template is adapted from
+are checked here. This module derives the final theorem from an
+AffineLineAlignmentBound; `AffineCertificate6808` supplies that bound. The proof is adapted from
 the promoted 68.3 LocatorProtocol and LocatorArithmetic modules. -/
 namespace ProximityPrize.SubmissionLower.Profile6808Arithmetic
 open ProximityPrize.Benchmark
@@ -15,8 +14,8 @@ noncomputable section
 set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 set_option Elab.async false
-def errors : ℕ := 80830
-def radiusNumerator:ℕ:=10346334
+def errors : ℕ := 80840
+def radiusNumerator:ℕ:=10347591
 def radiusDenominator:ℕ:=33554432
 def radius:ℝ≥0:=claimedRadius radiusNumerator radiusDenominator
 theorem radius_floor:
@@ -27,51 +26,51 @@ theorem radius_admissible:
     radius ∈ Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance:=by
   constructor <;> norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
     IRSProfile.minRelativeDistance]
-theorem score_root_integer:(2:ℕ)^8 * 100000000^100 ≤ 105701805^100:=by decide
+theorem score_root_integer:(2:ℕ)^9 * 100000000^100 ≤ 106437019^100:=by decide
 theorem score_radius_integer:
-    (23208098:ℕ)^128 * (2^68 * 105701805) ≤ 100000000 * 33554432^128:=by decide
+    (23206841:ℕ)^128 * (2^68 * 106437019) ≤ 100000000 * 33554432^128:=by decide
 theorem two_rpow_fraction_le:
-    (2:ℝ≥0)^((8:ℝ)/100) ≤ (105701805:ℝ≥0)/100000000:=by
-  have hroot:((2:ℝ≥0)^(8:ℕ))^((100:ℝ)⁻¹) ≤ (105701805:ℝ≥0)/100000000:=by
+    (2:ℝ≥0)^((9:ℝ)/100) ≤ (106437019:ℝ≥0)/100000000:=by
+  have hroot:((2:ℝ≥0)^(9:ℕ))^((100:ℝ)⁻¹) ≤ (106437019:ℝ≥0)/100000000:=by
     rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 100)]
     rw [NNReal.rpow_ofNat,div_pow,le_div_iff₀ (by positivity)]
     exact_mod_cast score_root_integer
   calc
-    (2:ℝ≥0)^((8:ℝ)/100) = ((2:ℝ≥0)^(8:ℕ))^((100:ℝ)⁻¹):=by
+    (2:ℝ≥0)^((9:ℝ)/100) = ((2:ℝ≥0)^(9:ℕ))^((100:ℝ)⁻¹):=by
       rw [← NNReal.rpow_natCast_mul]
       norm_num [div_eq_mul_inv]
     _ ≤ _:=hroot
 theorem radius_power_bound:
     (1 - radius)^IRSProfile.repetitions ≤
-      ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/105701805):=by
-  have hsub:(1 - radius:ℝ≥0) =23208098/33554432:=by
+      ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/106437019):=by
+  have hsub:(1 - radius:ℝ≥0) =23206841/33554432:=by
     have hr:radius ≤ 1:=by
       rw [← NNReal.coe_le_coe]
       norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
     apply NNReal.coe_injective
     rw [NNReal.coe_sub hr]
     norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
-  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/105701805)
+  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/106437019)
   rw [hsub,div_pow,div_mul_div_comm,one_mul,
     div_le_div_iff₀ (by positivity) (by positivity)]
   exact_mod_cast score_radius_integer
 theorem score_target_le:
-    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6808:=by
-  have hscale:(100000000:ℝ≥0)/105701805 ≤ (2:ℝ≥0)^(-((8:ℝ)/100)):=by
+    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6809:=by
+  have hscale:(100000000:ℝ≥0)/106437019 ≤ (2:ℝ≥0)^(-((9:ℝ)/100)):=by
     calc
-      (100000000:ℝ≥0)/105701805=1/((105701805:ℝ≥0)/100000000):=by norm_num
-      _ ≤ 1/((2:ℝ≥0)^((8:ℝ)/100)) :=
+      (100000000:ℝ≥0)/106437019=1/((106437019:ℝ≥0)/100000000):=by norm_num
+      _ ≤ 1/((2:ℝ≥0)^((9:ℝ)/100)) :=
         one_div_le_one_div_of_le (by positivity) two_rpow_fraction_le
       _=_:=by rw [one_div,NNReal.rpow_neg]
   calc
     (1 - radius)^IRSProfile.repetitions ≤
-        ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/105701805):=radius_power_bound
-    _ ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (2:ℝ≥0)^(-((8:ℝ)/100)) :=
+        ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/106437019):=radius_power_bound
+    _ ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (2:ℝ≥0)^(-((9:ℝ)/100)) :=
       mul_le_mul_of_nonneg_left hscale (by positivity)
-    _=claimedError 6808:=by
+    _=claimedError 6809:=by
       unfold claimedError
-      rw [show -((((6808:ℕ):ℝ)/100)) =
-          -((68:ℕ):ℝ) + -((8:ℝ)/100) by norm_num,
+      rw [show -((((6809:ℕ):ℝ)/100)) =
+          -((68:ℕ):ℝ) + -((9:ℝ)/100) by norm_num,
         NNReal.rpow_add (by norm_num:(2:ℝ≥0) ≠ 0)]
       simp only [NNReal.rpow_neg,NNReal.rpow_natCast,one_div]
 end
@@ -86,10 +85,10 @@ set_option maxHeartbeats 5000000
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
 local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
 def n:ℕ:=262144
-def errors:ℕ:=80830
+def errors:ℕ:=80840
 def agreements:ℕ:=n-errors
-def listBudget:ℕ:=6470456390
-def mcaBudget:ℕ:=274980721640938697
+def listBudget:ℕ:=6809986579
+def mcaBudget:ℕ:=274980721301408508
 def radius:ℝ≥0:=Profile6808Arithmetic.radius
 theorem sixteen_row_separation:
    15 * (listBudget + 1).choose 2 < Fintype.card IRSProfile.Field:=by
@@ -243,9 +242,9 @@ theorem certifiedGammaError_le_of_alignment
      apply RCN284.nat_div_le_inv_pow
      · norm_num [mcaBudget,listBudget]
      · simpa only [Nat.mul_comm] using field_capacity_split
-theorem protocolClaim6808_of_alignment
+theorem protocolClaim6809_of_alignment
    (halign:AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-   ProtocolClaim 6808 10346334 33554432 where
+   ProtocolClaim 6809 10347591 33554432 where
  admissible:=Profile6808Arithmetic.radius_admissible
  reduction:=by
    change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
@@ -253,22 +252,9 @@ theorem protocolClaim6808_of_alignment
      certifiedGammaError_le_of_alignment halign
  score:=by
    change (1 - Profile6808Arithmetic.radius) ^
-     IRSProfile.repetitions ≤ claimedError 6808
+     IRSProfile.repetitions ≤ claimedError 6809
    exact Profile6808Arithmetic.score_target_le
 end
 end ProximityPrize.SubmissionLower.Profile6808
 
 end Compact_Profile6808
-
-section Compact_Protocol80830
-/-! Reuse the checked scalar-list reduction and 68.8 score arithmetic at
-this exact radius. The new work supplies its alignment hypothesis. -/
-namespace ProximityPrize.SubmissionLower.Lower80830.Protocol
-open ProximityPrize.Benchmark CoreDefinitions ProximityGap ToyProblem RCN018 RCN019 RCN284 RCN280
-
-abbrev protocolClaim6808_of_alignment :=
-  Profile6808.protocolClaim6808_of_alignment
-
-end ProximityPrize.SubmissionLower.Lower80830.Protocol
-
-end Compact_Protocol80830

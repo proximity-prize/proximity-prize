@@ -1,14 +1,14 @@
-import ProximityPrize.SubmissionLower.AffineCheckedR326808
+import ProximityPrize.SubmissionLower.AffineAllRows6808
 import ProximityPrize.SubmissionLower.BoundaryTailInitial6808
 import ProximityPrize.SubmissionLower.BoundaryTailCounting6808
 import ProximityPrize.SubmissionLower.BoundaryTailPhaseSemantics6808
 
-namespace ProximityPrize.SubmissionLower.Lower80830.RegularBridge
+namespace ProximityPrize.SubmissionLower.Lower80840.RegularBridge
 open ProximityPrize.Benchmark
 open scoped Classical BigOperators
 open RCN081 RCN095 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
   RCN238 RCN259 RCN260 RCN266 RCN275 RCN319
-open Lower80830.Selection Lower80830.InitialBridge Lower80830.Initial
+open Lower80840.Selection Lower80840.InitialBridge Lower80840.Initial
 open LocatorFactorAggregate LocatorBatchProductRoute
 open LocatorBatchPhase6800 (regularAggregateFlag regularAggregateFlag_total
   regularAggregateFlag_middle regularAggregateFlag_all regularAggregateFlag_mono)
@@ -65,7 +65,7 @@ theorem regular_count
     let Delta := LocatorCover.fixed phi Gamma S.QA S.QB
     let U := initialAUniversalFactors u0 u1 H
     let p := regularAggregateFlag H U
-    p.all ≤ 32 ∧ middle p ≤ 149 ∧ total p ≤ 8121 ∧
+    p.all ≤ 33 ∧ middle p ≤ 152 ∧ total p ≤ 8483 ∧
       (∑ F : RegularIndex H, (regularSeeds H selected Delta F).card) ≤
         PhaseSemantics.phaseCap 10 p + initialAComplement p := by
   classical
@@ -83,31 +83,31 @@ theorem regular_count
   have hPne : regularProduct H U ≠ 0 := regularProduct_ne_zero H U
   have hdivA : ∀ v : Caps.AKernel u0 u1,
       regularProduct H U ∣
-        reconstruct K 19581912 131071 233846 32 v.1 := by
+        reconstruct K 19943440 131071 245562 33 v.1 := by
     simpa only [U] using initialAUniversalProduct_dvd u0 u1 H
-  have hpS : p.all ≤ 32 := by
+  have hpS : p.all ≤ 33 := by
     simp only [p, regularAggregateFlag_all]
     exact Caps.common_A_slope_le u0 u1 (regularProduct H U)
       hPne hdivA
-  have hpY : middle p ≤ 149 := by
+  have hpY : middle p ≤ 152 := by
     simp only [p, regularAggregateFlag_middle]
     exact Caps.common_A_ys_le u0 u1 (regularProduct H U)
       hPne hdivA
-  have hpT : total p ≤ 8121 := by
+  have hpT : total p ≤ 8483 := by
     simp only [p, regularAggregateFlag_total]
     exact (weightedTotalDegree_le_of_dvd residualTotalWeights
       (regularProduct H U) H
       (initialAUniversalProduct_dvd_carrier u0 u1 H) hH).trans
         S.common_total_le
-  have hwholeT : total (regularAggregateFlag H A) ≤ 8121 := by
+  have hwholeT : total (regularAggregateFlag H A) ≤ 8483 := by
     simpa only [H, A] using
-      whole_regular_total_le H hH 8121 S.common_total_le
-  have hwholeY : middle (regularAggregateFlag H A) ≤ 156 := by
+      whole_regular_total_le H hH 8483 S.common_total_le
+  have hwholeY : middle (regularAggregateFlag H A) ≤ 178 := by
     simpa only [H, A] using
-      whole_regular_middle_le H hH 156 S.common_ys_le
-  have hwholeS : (regularAggregateFlag H A).all ≤ 35 := by
+      whole_regular_middle_le H hH 178 S.common_ys_le
+  have hwholeS : (regularAggregateFlag H A).all ≤ 39 := by
     simpa only [H, A] using
-      whole_regular_all_le H hH 35 S.common_slope_le
+      whole_regular_all_le H hH 39 S.common_slope_le
   have hsplitT := Finset.sum_sdiff hUsub
     (f := fun F : RegularIndex H => total (regularCumulativeFlag H F))
   have hsplitY := Finset.sum_sdiff hUsub
@@ -115,39 +115,39 @@ theorem regular_count
   have hsplitS := Finset.sum_sdiff hUsub
     (f := fun F : RegularIndex H => (regularCumulativeFlag H F).all)
   have hcomplementT : total p +
-      (∑ F ∈ N, total (regularCumulativeFlag H F)) ≤ 8121 := by
+      (∑ F ∈ N, total (regularCumulativeFlag H F)) ≤ 8483 := by
     have hpEq : total p =
         ∑ F ∈ U, total (regularCumulativeFlag H F) := by
       simp only [p, regularAggregateFlag, sumFlag_total]
     have hwhole : (∑ F ∈ A, total (regularCumulativeFlag H F)) ≤
-        8121 := by
+        8483 := by
       simpa only [regularAggregateFlag, sumFlag_total] using hwholeT
     rw [hpEq]
     change (∑ F ∈ U, total (regularCumulativeFlag H F)) +
-      (∑ F ∈ A \ U, total (regularCumulativeFlag H F)) ≤ 8121
+      (∑ F ∈ A \ U, total (regularCumulativeFlag H F)) ≤ 8483
     omega
   have hcomplementY : middle p +
-      (∑ F ∈ N, middle (regularCumulativeFlag H F)) ≤ 156 := by
+      (∑ F ∈ N, middle (regularCumulativeFlag H F)) ≤ 178 := by
     have hpEq : middle p =
         ∑ F ∈ U, middle (regularCumulativeFlag H F) := by
       simp only [p, regularAggregateFlag, sumFlag_middle]
     have hwhole : (∑ F ∈ A, middle (regularCumulativeFlag H F)) ≤
-        156 := by
+        178 := by
       simpa only [regularAggregateFlag, sumFlag_middle] using hwholeY
     rw [hpEq]
     change (∑ F ∈ U, middle (regularCumulativeFlag H F)) +
-      (∑ F ∈ A \ U, middle (regularCumulativeFlag H F)) ≤ 156
+      (∑ F ∈ A \ U, middle (regularCumulativeFlag H F)) ≤ 178
     omega
   have hcomplementS : p.all +
-      (∑ F ∈ N, (regularCumulativeFlag H F).all) ≤ 35 := by
+      (∑ F ∈ N, (regularCumulativeFlag H F).all) ≤ 39 := by
     have hpEq : p.all =
         ∑ F ∈ U, (regularCumulativeFlag H F).all := by
       simp only [p, regularAggregateFlag, sumFlag_all]
-    have hwhole : (∑ F ∈ A, (regularCumulativeFlag H F).all) ≤ 35 := by
+    have hwhole : (∑ F ∈ A, (regularCumulativeFlag H F).all) ≤ 39 := by
       simpa only [regularAggregateFlag, sumFlag_all] using hwholeS
     rw [hpEq]
     change (∑ F ∈ U, (regularCumulativeFlag H F).all) +
-      (∑ F ∈ A \ U, (regularCumulativeFlag H F).all) ≤ 35
+      (∑ F ∈ A \ U, (regularCumulativeFlag H F).all) ≤ 39
     omega
   have hNpotential : ∀ F ∈ N,
       initialAHelperCap (regularCumulativeFlag H F) ≤
@@ -180,7 +180,7 @@ theorem regular_count
     ⟨S.common_slope_le,S.common_ys_le,S.common_total_le⟩
   have hsingle := initialA_universal_singleBound hbaseReceipt hthreshold u0 u1 H hH S.common_total_le
     selected Delta inpD.degree inpD.agreement inpD.noPencil
-  have hbase : Lower80830.BatchPhase.StateLocalRegularBoundOn H selected Delta U
+  have hbase : Lower80840.BatchPhase.StateLocalRegularBoundOn H selected Delta U
       (PhaseSemantics.phaseCap 0) := by
     intro A hAU hs hy ht
     apply AffineSingleBridge6808.sum_count_le_base hbaseReceipt.rate A
@@ -203,4 +203,4 @@ theorem regular_count
   change (∑ F ∈ A \ U, (regularSeeds H selected Delta F).card) ≤ initialAComplement p at hN
   omega
 end
-end ProximityPrize.SubmissionLower.Lower80830.RegularBridge
+end ProximityPrize.SubmissionLower.Lower80840.RegularBridge

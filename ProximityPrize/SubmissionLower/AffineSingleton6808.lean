@@ -5,7 +5,7 @@ import ProximityPrize.SubmissionLower.AffineFactorAggregate6808
 
 namespace ProximityPrize.SubmissionLower.AffineSingleton6808
 open RCN095 LocatorFactorAggregate LocatorPhase6800Oracle
-open BoundaryTailShape6808 BoundaryTailAffineRounding6808 Lower80830.PhaseRows
+open BoundaryTailShape6808 BoundaryTailAffineRounding6808 Lower80840.PhaseRows
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 3000000
@@ -62,7 +62,7 @@ instance (thresholds : Array ℕ) (w r v lo hi : ℕ) : Decidable (Active thresh
   unfold Active; infer_instance
 
 def choiceSlope (c : Carrier) (w r v : ℕ) : ℕ :=
-  if w=0 then c.c4-c.c3 else if w=1 then slopeNumerator (r-3) (v-2)/1808748+1
+  if w=0 then c.c4-c.c3 else if w=1 then slopeNumerator (r-3) (v-2)/1808388+1
   else (phasePotential (w-2)).totalCoeff
 
 theorem choice_affine (c : Carrier) (w r v lo z : ℕ)

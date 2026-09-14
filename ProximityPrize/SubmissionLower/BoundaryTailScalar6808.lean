@@ -1,10 +1,9 @@
 import ProximityPrize.SubmissionLower.BoundaryTailAssembly6808
-/- UNCOMPILED new instance. Generated from the pinned template; not an official receipt. -/
 import ProximityPrize.SubmissionLower.LowerGeometry
 
 section Compact_Scalar6808
-/-! A seedless interpolation kernel for error cell 80830, the first cell
-used for the 68.7 scalar-list arm. This is one ingredient only; it does
+/-! A seedless interpolation kernel for error cell 80840, used for the 68.09
+scalar-list arm. This is one ingredient only; it does
 not establish the MCA bound or a ProtocolClaim. -/
 namespace ProximityPrize.SubmissionLower.Scalar6808
 open scoped BigOperators
@@ -14,17 +13,17 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 set_option Elab.async false
 
-theorem coefficientCount_exact : coefficientCount 19581912 131071 149 32 = 38970697975 := by decide +kernel
+theorem coefficientCount_exact : coefficientCount 19943440 131071 152 33 = 41522725216 := by decide +kernel
 
-theorem localRankBound_exact : localRankBound 108 149 32 = 148654 := by decide +kernel
+theorem localRankBound_exact : localRankBound 110 152 33 = 158389 := by decide +kernel
 
 theorem nullity_exact :
-    coefficientCount 19581912 131071 149 32 -
-      262144 * localRankBound 108 149 32 = 1943799 := by
+    coefficientCount 19943440 131071 152 33 -
+      262144 * localRankBound 110 152 33 = 1999200 := by
   norm_num only [coefficientCount_exact, localRankBound_exact]
 
 theorem interpolation_gate :
-    262144 * localRankBound 108 149 32 < coefficientCount 19581912 131071 149 32 := by
+    262144 * localRankBound 110 152 33 < coefficientCount 19943440 131071 152 33 := by
   norm_num only [coefficientCount_exact, localRankBound_exact]
 
 theorem exists_frozen_seedless_interpolant
@@ -32,26 +31,26 @@ theorem exists_frozen_seedless_interpolant
    ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
      Q≠0∧
      Q∈globalCoefficientBox IRSProfile.Field
-       19581912 131071 149 32∧
+       19943440 131071 152 33∧
      ∀ (i:IRSProfile.Index) (r:ℕ),
-       RCN119.slopeDifference IRSProfile.Field^(108-r)∣
+       RCN119.slopeDifference IRSProfile.Field^(110-r)∣
          (RCN319.homogenizedTranslation IRSProfile.Field
            (IRSProfile.domain i) (received i) 0 Q).coeff r:=by
  obtain ⟨theta,htheta,hzero⟩:=exists_nonzero_kernel_array
-   IRSProfile.Field 19581912 131071 149 32 108
+   IRSProfile.Field 19943440 131071 152 33 110
    IRSProfile.domain received (by
      rw [show Fintype.card IRSProfile.Index=262144 by
        norm_num [IRSProfile.Index]]
      exact interpolation_gate)
- refine ⟨reconstruct IRSProfile.Field 19581912 131071 149 32 theta,
+ refine ⟨reconstruct IRSProfile.Field 19943440 131071 152 33 theta,
    reconstruct_ne_zero IRSProfile.Field _ _ _ _ theta htheta,
    reconstruct_mem_box IRSProfile.Field _ _ _ _ theta,?_⟩
  intro i r
  have hdiv:=all_blocks_divisible_of_kernel IRSProfile.Field
-   19581912 131071 149 32 108 IRSProfile.domain received
+   19943440 131071 152 33 110 IRSProfile.domain received
    theta hzero i r
- rw [←translation_reconstruct_coeff IRSProfile.Field 19581912 131071
-   149 32 (IRSProfile.domain i) (received i) theta r] at hdiv
+ rw [←translation_reconstruct_coeff IRSProfile.Field 19943440 131071
+   152 33 (IRSProfile.domain i) (received i) theta r] at hdiv
  exact hdiv
 
 end ProximityPrize.SubmissionLower.Scalar6808
@@ -59,7 +58,7 @@ end ProximityPrize.SubmissionLower.Scalar6808
 end Compact_Scalar6808
 
 section Compact_ScalarList6808
-/-! Scalar list arm for error cell 80830. The counting argument is adapted
+/-! Scalar list arm for error cell 80840. The counting argument is adapted
 from the promoted 68.3 submission's LocatorScalar module; only its numerical
 profile changes here. This module alone is not a ProtocolClaim. -/
 namespace ProximityPrize.SubmissionLower.ScalarList6808Arithmetic
@@ -72,15 +71,15 @@ set_option Elab.async false
 
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 80830
+def errors : ℕ := 80840
 def agreements : ℕ := n-errors
 def gap : ℕ := agreements-w
 def prime : ℕ := 2130706433
-def multiplicity : ℕ := 108
-def yTotalCap : ℕ := 149
-def slopeCap : ℕ := 32
+def multiplicity : ℕ := 110
+def yTotalCap : ℕ := 152
+def slopeCap : ℕ := 33
 def weightedCap : ℕ := multiplicity*agreements
-def listBudget : ℕ := 6470456390
+def listBudget : ℕ := 6809986579
 def capY : ℕ := 1+2*w*yTotalCap
 def capR : ℕ := w*(2*slopeCap-1)
 def regularListNumerator : ℕ := (n-w)*(capY*slopeCap+capR*yTotalCap)
@@ -185,7 +184,7 @@ private theorem original_regular_seedless_bound
    [CharP K prime]
    (F:MvPolynomial (Fin 4) K) (hF:Irreducible F)
    (hRpos:0 < F.degreeOf 2)
-   (hbox:F ∈ RCN174.globalCoefficientBox K
+   (_hbox:F ∈ RCN174.globalCoefficientBox K
      weightedCap w yTotalCap slopeCap)
    (hY:F.degreeOf 1 ≤ yTotalCap)
    (hR:F.degreeOf 2 ≤ slopeCap)
@@ -341,7 +340,7 @@ private theorem singular_seedless_card_le
    intro d hd
    have hh:=(hbox hd).2.2.1
    rw [weight_fin4]
-   simpa [RCN281.zWeights, hh]
+   simp [RCN281.zWeights, hh]
  have hJYw:=singularAuxiliary_weight_le
    RCN281.yWeights Q hQ slopeCap
    slopeCap_pos hcaps.2.1

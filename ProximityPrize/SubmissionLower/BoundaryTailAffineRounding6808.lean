@@ -40,14 +40,19 @@ theorem rounding_error_le (a b d z maxZ : ℕ) (hd : 0 < d) (hz : z ≤ maxZ) :
 open RCN095 RCN146
 
 def slopeNumerator (a b : ℕ) : ℕ :=
-    93222280598677596*a^2 + 186444561197355192*a*b + 3496456548794713058*a + 1180960945979680456*b + 15865592863136259350
+    93203726316369876*a^2 + 186407452632739752*a*b +
+      3495760754822234758*a + 1180725922721651096*b + 15862435468010870290
 
 def interceptNumerator (a b : ℕ) : ℕ :=
-    31074093532892532*a^3 + 93222280598677596*a^2*b + 14338159986076996693*a^2 + 93222280598677596*a*b^2 + 28671421647852536426*a*b + 381980542961811353439*a + 590547268321223732*b^2 + 147325400949900121454*b + 1140793940893489645748
+    31067908772123292*a^3 + 93203726316369876*a^2*b +
+      14335307224882180943*a^2 + 93203726316369876*a*b^2 +
+      28665716125462904926*a*b + 381904524168393160509*a +
+      590429756692209052*b^2 + 147296081325326637274*b +
+      1140566899678685286988
 
 theorem ledger_affine (a b z : ℕ) :
     BoundaryTailCarrier6808.ledgerCap ⟨z,b+2,a+3⟩ =
-      (slopeNumerator a b*z+interceptNumerator a b)/1808748 := by
+      (slopeNumerator a b*z+interceptNumerator a b)/1808388 := by
   have hr : a+3-1 = a+2 := by omega
   have hv : 131074*(b+2)-131072 = 131074*b+131076 := by omega
   have hn : BoundaryTailAlgebra.normalFlag 131071 (a+3) (b+2) z =
@@ -55,7 +60,7 @@ theorem ledger_affine (a b z : ℕ) :
     change (⟨131074*z,131074*(b+2)-131072,131074*(a+3-1)⟩ : FlagDegree) = _
     rw [hr,hv]
   have he : BoundaryTailOwnArithmetic6808.ownPolynomial a b z +
-      50243 * flagMixed (⟨z,b+2,a+3⟩ : FlagDegree) ⟨z,b+2,a+3⟩
+      50233 * flagMixed (⟨z,b+2,a+3⟩ : FlagDegree) ⟨z,b+2,a+3⟩
         (6 • BoundaryTailAlgebra.normalFlag 131071 (a+3) (b+2) z +
           65539 • (⟨1620,133,52⟩ : FlagDegree)) =
         slopeNumerator a b*z+interceptNumerator a b := by
@@ -64,10 +69,10 @@ theorem ledger_affine (a b z : ℕ) :
       BoundaryTailOwnArithmetic6808.ownPolynomial, slopeNumerator, interceptNumerator]
     ring
   simpa only [BoundaryTailCarrier6808.ledgerCap, Nat.add_sub_cancel] using
-    congrArg (fun n : ℕ => n / 1808748) he
+    congrArg (fun n : ℕ => n / 1808388) he
 
 def rootUpper (r v z : ℕ) : ℕ :=
-  upper (slopeNumerator (r-3) (v-2)) (interceptNumerator (r-3) (v-2)) 1808748 z
+  upper (slopeNumerator (r-3) (v-2)) (interceptNumerator (r-3) (v-2)) 1808388 z
 
 theorem ledger_le_rootUpper (r v z : ℕ) (hr : 3 ≤ r) (hv : 2 ≤ v) :
     BoundaryTailCarrier6808.ledgerCap ⟨z,v,r⟩ ≤ rootUpper r v z := by
@@ -75,6 +80,6 @@ theorem ledger_le_rootUpper (r v z : ℕ) (hr : 3 ≤ r) (hv : 2 ≤ v) :
   obtain ⟨b,rfl⟩ : ∃ b, v=b+2 := ⟨v-2,by omega⟩
   rw [ledger_affine]
   simpa only [rootUpper, Nat.add_sub_cancel] using
-    floor_le_upper (slopeNumerator a b) (interceptNumerator a b) 1808748 z (by decide)
+    floor_le_upper (slopeNumerator a b) (interceptNumerator a b) 1808388 z (by decide)
 
 end ProximityPrize.SubmissionLower.BoundaryTailAffineRounding6808

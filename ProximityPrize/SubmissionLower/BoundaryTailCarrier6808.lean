@@ -16,15 +16,15 @@ def Active (p : FlagDegree) : Prop :=
   3 ≤ p.all ∧ 2 ≤ p.yz ∧ 3 ≤ p.zOnly ∧ 1800 < p.all+p.yz+p.zOnly
 
 def ownCap (p : FlagDegree) : ℕ :=
-  BoundaryTailOwnArithmetic6808.ownPolynomial (p.all-3) (p.yz-2) p.zOnly / 1808748
+  BoundaryTailOwnArithmetic6808.ownPolynomial (p.all-3) (p.yz-2) p.zOnly / 1808388
 
 /-- The compact ledger's additional full-surface charge is included before
 rounding, with the same denominator as the certified source numerator. -/
 def ledgerCap (p : FlagDegree) : ℕ :=
   (BoundaryTailOwnArithmetic6808.ownPolynomial (p.all-3) (p.yz-2) p.zOnly +
-    50243 * flagMixed p p
+    50233 * flagMixed p p
       (6 • BoundaryTailAlgebra.normalFlag 131071 p.all p.yz p.zOnly +
-        65539 • (⟨1620,133,52⟩ : FlagDegree))) / 1808748
+        65539 • (⟨1620,133,52⟩ : FlagDegree))) / 1808388
 
 theorem ownCap_le_ledgerCap (p : FlagDegree) : ownCap p ≤ ledgerCap p :=
   Nat.div_le_div_right (Nat.le_add_right _ _)
@@ -48,12 +48,12 @@ def ofCarrier (D L s : ℕ) (F : MvPolynomial (Fin 4) K)
     (hyt : wt residualYSWeights F+2 ≤ wt residualTotalWeights F)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ seeds, 181314 ≤
+    (hagreement : ∀ gamma ∈ seeds, 181304 ≤
       (Finset.univ.filter (fun i => (selected gamma).eval (nodes i) = u0 i+gamma*u1 i)).card)
     (hsolution : ∀ gamma ∈ seeds, specialization K (selected gamma) gamma F=0)
     (hregular : ∀ gamma ∈ seeds,
       specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0)
-    (hno : NoLargeSelectedPencil selected seeds w 80830) :
+    (hno : NoLargeSelectedPencil selected seeds w 80840) :
     BoundaryTailRegularData6808.Data nodes u0 u1 where
   D := D
   t := wt residualTotalWeights F
@@ -97,12 +97,12 @@ theorem carrier_count_le_ledger (D L s : ℕ) (F : MvPolynomial (Fin 4) K)
     (hr : wt residualSWeights F ≤ 31)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ seeds, 181314 ≤
+    (hagreement : ∀ gamma ∈ seeds, 181304 ≤
       (Finset.univ.filter (fun i => (selected gamma).eval (nodes i) = u0 i+gamma*u1 i)).card)
     (hsolution : ∀ gamma ∈ seeds, specialization K (selected gamma) gamma F=0)
     (hregular : ∀ gamma ∈ seeds,
       specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0)
-    (hno : NoLargeSelectedPencil selected seeds w 80830)
+    (hno : NoLargeSelectedPencil selected seeds w 80840)
     (hI : Fintype.card I=262144)
     (ha : Active (originalCumulativeFlag F)) :
     seeds.card ≤ ledgerCap (originalCumulativeFlag F) := by

@@ -35,10 +35,10 @@ theorem stage_card_le_dual_of_identity_absorption
     (D t y r : ℕ) (hDlow : 131072 ≤ D) (hDchar : D < 2130706433)
     (ht : t ≤ 7501) (hy : y ≤ 142) (hr : r ≤ 31)
     (hr3 : 3 ≤ r) (hry : r+2 ≤ y) (hyt : y+2 ≤ t)
-    (S : ResidualStage (polynomialEmbedding K) Gamma x 2130706433 80830 flag
+    (S : ResidualStage (polynomialEmbedding K) Gamma x 2130706433 80840 flag
       w (cellSupport t y r))
-    (hnodes : S.nodes.card = 181314+80830)
-    (hagreement : ∀ gamma ∈ Gamma, 181314 ≤ (S.agreementFiber gamma).card)
+    (hnodes : S.nodes.card = 181304+80840)
+    (hagreement : ∀ gamma ∈ Gamma, 181304 ≤ (S.agreementFiber gamma).card)
     (hbox : S.F ∈ globalCoefficientBox K D w t r)
     (hflag : flag.all ≤ r ∧ flag.yz+flag.all ≤ y ∧ flag.zOnly+flag.yz+flag.all ≤ t)
     (P : SecondJetSupport.Poly (K := K)) (B U L s k n0 : ℕ)
@@ -52,9 +52,9 @@ theorem stage_card_le_dual_of_identity_absorption
     (hgood : ∀ gamma ∈ Gamma,
       MvPolynomial.eval (selectedPoint (polynomialEmbedding K) S.selected gamma)
         (surfaceMap (polynomialEmbedding K) (SecondJetCoefficients.asS P).leadingCoeff) ≠ 0)
-    (hidentityAbs : (k+1)^2 * 131073 * 80831 *
+    (hidentityAbs : (k+1)^2 * 131073 * 80841 *
       identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w ≤
-        50243 * dualNumerator flag t y r (k+1)
+        50233 * dualNumerator flag t y r (k+1)
           (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0)) :
     Gamma.card ≤ dualNumerator flag t y r (k+1)
       (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0) / (k+1)^2 := by
@@ -67,7 +67,7 @@ theorem stage_card_le_dual_of_identity_absorption
   · have hTailNumerator := (globalTailCut_dvd_iff (polynomialEmbedding K)
         (polynomialEmbedding_injective K) S.F (w+1) S.G).mp hTail
     have hmixed := BoundaryTailGates.identity_gate flag t y r hr3 hr hy hry (by omega) hflag.1 hflag.2.1
-    have hprovider := BoundaryTailIdentity.actual_identityCurveCountProvider S 181314 hnodes hagreement
+    have hprovider := BoundaryTailIdentity.actual_identityCurveCountProvider S 181304 hnodes hagreement
       (by norm_num [RCN327.w]) hTailNumerator D t r (by norm_num [RCN327.w])
       hDlow hDchar hbox hflagChar hmixed
     have hpositive : 1 ≤ identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w := by
@@ -75,17 +75,17 @@ theorem stage_card_le_dual_of_identity_absorption
       have hp := S.y_dependent
       have hdeg := degreeOf_le_flag_total S.G flag S.flag_support 1
       omega
-    have hinc := identity_surface_seed_bound S 181314 _ hprovider hagreement
+    have hinc := identity_surface_seed_bound S 181304 _ hprovider hagreement
       (by norm_num [RCN327.w]) (by rw [hnodes]; norm_num) hpositive
-    have hinc' : Gamma.card*50243 ≤ 131073*80831*
+    have hinc' : Gamma.card*50233 ≤ 131073*80841*
         identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w := by
       simpa only [hnodes, RCN327.w] using hinc
     have hnum : (k+1)^2 * Gamma.card ≤ dualNumerator flag t y r (k+1)
         (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0) := by
-      refine Nat.le_of_mul_le_mul_left (c := 50243) ?_ (by decide)
+      refine Nat.le_of_mul_le_mul_left (c := 50233) ?_ (by decide)
       calc
-        50243 * ((k+1)^2 * Gamma.card) = (k+1)^2 * (Gamma.card*50243) := by ring
-        _ ≤ (k+1)^2 * (131073*80831*
+        50233 * ((k+1)^2 * Gamma.card) = (k+1)^2 * (Gamma.card*50233) := by ring
+        _ ≤ (k+1)^2 * (131073*80841*
             identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w) :=
           Nat.mul_le_mul_left _ hinc'
         _ ≤ _ := by simpa only [Nat.mul_assoc] using hidentityAbs
@@ -98,10 +98,10 @@ theorem stage_card_le_dual_of_identity_absorption
           (globalTailCut (polynomialEmbedding K) S.F (w+1))
           (regularitySurface (polynomialEmbedding K) S.F) Gamma
           (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
-            (80830+1)*(BoundaryTailReduced.reducedBudgetFamily S hTail hflagChar hmixed).yzCost C := by
+            (80840+1)*(BoundaryTailReduced.reducedBudgetFamily S hTail hflagChar hmixed).yzCost C := by
       intro C hall
       exact tangent_component_card_le S C hTail (BoundaryTailReduced.reducedBaseOrd S hTail hflagChar hmixed C)
-        181314 D t r hnodes hagreement (by norm_num [RCN327.w]) (by norm_num [RCN327.w])
+        181304 D t r hnodes hagreement (by norm_num [RCN327.w]) (by norm_num [RCN327.w])
         hDlow hDchar hbox (BoundaryTailReduced.reducedBudgetFamily S hTail hflagChar hmixed)
         (BoundaryTailReduced.reducedBudgetFamily_yzPositive S hTail hflagChar hmixed C) hall
         (BoundaryTailReduced.reducedBudgetFamily_yzPole S hTail hflagChar hmixed C)
@@ -110,7 +110,7 @@ theorem stage_card_le_dual_of_identity_absorption
         unfold cellNormal
         rw [BoundaryTailAlgebra.normalFlag_eq_cell t y r hr3 hry]
         simpa only [add_yz, nsmul_yz, unitAllFlag, mul_zero, add_zero] using
-          hybridC1Gate_of_le t y r 80830 hry (by norm_num)) htangent
+          hybridC1Gate_of_le t y r 80840 hry (by norm_num)) htangent
       P B U L s k n0 hS hP hBU hUL hdn hB hn hdiv h2 hfact hgood
 
 
