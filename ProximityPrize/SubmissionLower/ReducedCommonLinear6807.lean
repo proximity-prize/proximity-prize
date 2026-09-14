@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.ThreeChannelJoint6807
 /-
 UNCOMPILED. The shared linear values are constructed for the actual reduced
 family and transported to the ORIGINAL first-tail components. No new budget

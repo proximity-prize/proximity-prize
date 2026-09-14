@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.BoundaryTailFixedStage6808
+import ProximityPrize.SubmissionLower.HigherRootSources6810
 import Mathlib.Tactic.Ring
 
 /- UNCOMPILED DRAFT. Arithmetic identities only; no geometry or protocol claim. -/

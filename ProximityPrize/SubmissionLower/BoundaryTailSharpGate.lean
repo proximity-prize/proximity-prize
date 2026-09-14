@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.ThreeChannelJoint6807
+import ProximityPrize.SubmissionLower.BoundaryTailProvider
 import ProximityPrize.SubmissionLower.LowerFoundation
 
 namespace ProximityPrize.SubmissionLower.BoundaryTailSharpGate

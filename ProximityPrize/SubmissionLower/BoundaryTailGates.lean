@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.BoundaryTailIdentityArithmetic
+import ProximityPrize.SubmissionLower.BoundaryTailDualRetained6807
 import ProximityPrize.SubmissionLower.LowerGeometry
 
 namespace ProximityPrize.SubmissionLower.BoundaryTailGates
