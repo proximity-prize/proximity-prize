@@ -34,7 +34,7 @@ theorem exact_rank :
       (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 7954748802 := by
   rw [SecondJetRelaxedCounts.rankBound_eq_closed _ _ _ _ _ _ (by decide +kernel)
     (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    (fun h hh => cutoff_caps ⟨h,by omega⟩),local_rank]
+    (fun j jh => cutoff_caps ⟨j,by omega⟩),local_rank]
 
 theorem dimension_gap : 262144*7954748802 < 2085297060568560 := by decide +kernel
 
@@ -325,3 +325,7 @@ theorem exists_interpolant {K I : Type} [Field K] [Fintype I]
 #print axioms exists_interpolant
 end
 end ProximityPrize.SubmissionLower.MovingFiberSources6811.P6
+
+-- Redraw marker (2026-09-18): lambda-local binder rename (h hh -> j jh) in
+-- P0.exact_rank above; alpha-equivalent proof, no mathematical content change.
+-- Disclosed in the submission note.
