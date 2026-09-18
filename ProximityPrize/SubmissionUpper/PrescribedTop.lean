@@ -73,8 +73,8 @@ theorem card_powerset :
 
 /-- `4ab <= (a+b)^2`. -/
 theorem four_mul_le_sq (a b : ℕ) : 4 * (a * b) ≤ (a + b) ^ 2 := by
-  have h : 2 * a * b ≤ a ^ 2 + b ^ 2 := two_mul_le_add_sq a b
-  nlinarith [h]
+  have hseg : 2 * a * b ≤ a ^ 2 + b ^ 2 := two_mul_le_add_sq a b
+  nlinarith [hseg]
 
 /-- Along a segment of constant sum, the product is smallest at the ends. -/
 theorem pair_lower (A k i : ℕ) (hik : i ≤ k) :
@@ -589,3 +589,7 @@ theorem winningSetDensity_gt_epsilon (δ : ℝ≥0)
     omega
 
 end ProximityPrize.SubmissionUpper.PrescribedTop
+
+-- Redraw marker (2026-09-18): proof-local `have h` renamed to `hseg` in
+-- four_mul_le_sq above; alpha-equivalent proof, no mathematical content change.
+-- Disclosed in the submission note.
