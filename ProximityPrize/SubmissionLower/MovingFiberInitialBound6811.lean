@@ -76,8 +76,9 @@ theorem initialA_universal_singleBound
     hAt.single.1 (by simpa only [Nat.sub_sub,regularCumulativeFlag,Fself,
       LocatorCoprimeQuotient.regularIndexSelf_val] using hAt.single.2 j)
     (fun k hk => ReceiptBridge.threshold_at hreceipt _ _ hr hs hy' k (List.mem_range.mpr (by omega)))
-  simpa only [MovingFiberSingleCore6811.cap,RCN140.regularSeeds,regularCumulativeFlag,Fself,
-    LocatorCoprimeQuotient.regularIndexSelf_val] using hbound
+  simp only [MovingFiberSingleCore6811.cap,RCN140.regularSeeds,regularCumulativeFlag,Fself,
+    LocatorCoprimeQuotient.regularIndexSelf_val] at hbound ⊢
+  exact hbound
 
 #print axioms initialA_universal_singleBound
 end

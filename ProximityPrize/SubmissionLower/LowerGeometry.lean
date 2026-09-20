@@ -7190,7 +7190,8 @@ theorem mem_range_exponent (m L s1 s2 : ℕ) (d : Fin 5 →₀ ℕ) :
     let e : Index m L s1 s2 := ⟨fun k => ⟨d k,hb k⟩,h.2.1,h.2.2.2.2⟩
     refine ⟨e,?_⟩
     ext k
-    simp [e]
+    simp only [exponent_apply]
+    rfl
 
 def sourceMap (m L s1 s2 : ℕ) : (Index m L s1 s2 → K) →ₗ[K]
     Jet (MvPolynomial (Fin 3) K) :=
@@ -10379,9 +10380,8 @@ theorem outside_sum (A B C H : ℕ) (hA : 0 < A) (hB : 0 < B)
     apply Finset.sum_bij (fun p _ => (A-1-p.1,B-1-p.2))
     · intro p hp
       simp only [s, Finset.mem_filter, Finset.mem_product, Finset.mem_range] at hp
-      simp only [t, Finset.mem_filter, Finset.mem_product, Finset.mem_range, corner,
-        Prod.fst, Prod.snd]
-      dsimp [corner] at hkA hkB
+      simp only [t, Finset.mem_filter, Finset.mem_product, Finset.mem_range]
+      dsimp only [corner] at hkA hkB ⊢
       omega
     · intro p hp q hq hpq
       simp only [s, Finset.mem_filter, Finset.mem_product, Finset.mem_range] at hp hq

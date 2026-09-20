@@ -1784,7 +1784,7 @@ theorem mem_finiteOrderSupport (x:L) (hx:x≠0)
    (w:HeightOneSpectrum (FiniteNormalization K L)):
    w∈finiteOrderSupport K L x hx ↔
      fieldOrder (FiniteNormalization K L) L w x≠0:=by
- simp [finiteOrderSupport]
+ exact Set.Finite.mem_toFinset _
 def baseRepresentative (w:HeightOneSpectrum (FiniteNormalization K L)):Polynomial K:=
  (RCN366.exists_monic_primePlace K
    (HeightOneSpectrum.under (Polynomial K) w)).choose
@@ -25305,7 +25305,8 @@ def adaptiveUnitProjectionFamily_of_nested
  · intro C v
    rw [exponentSetPoleWeight_unitZ]
    change _=RCN187.poleOrder v.val _
-   rw [coordinateOfGate_value]
+   simp only [zProj]
+   rw [coordinateOfGate_value (coordinate Omega C.1 2) (hZ C)]
  · intro C v
    rw [exponentSetPoleWeight_unitYZ]
    change _=RCN187.poleOrder v.val _
@@ -28368,7 +28369,8 @@ def adaptiveUnitProjectionFamily_of_active_nested
  · intro C v
    rw [exponentSetPoleWeight_unitZ]
    change _=RCN187.poleOrder v.val _
-   rw [coordinateOfGate_value]
+   simp only [zProj]
+   rw [coordinateOfGate_value (coordinate Omega C.1 2) (hZ C)]
  · intro C v
    rw [exponentSetPoleWeight_unitYZ]
    change _=RCN187.poleOrder v.val _
@@ -29973,7 +29975,7 @@ theorem exponent_mul_residueDegree_le_length_quotient_maximal_pow
      (IsLocalRing.ResidueField L):ℕ):ℕ∞) ≤ Module.length R M:=by
    rw [Nat.cast_mul, ←hresidue,
      IsLocalRing.length_restrictScalars R L M]
-   exact mul_le_mul_right' hlocal _
+   exact mul_le_mul_left hlocal _
  let e:=IsLocalization.AtPrime.equivQuotMaximalIdealPow p L n
  have heq:Module.length R (S ⧸ p^n)=Module.length R M:=
    (e.toLinearEquiv.restrictScalars R).length_eq
@@ -31566,9 +31568,9 @@ instance [CommRing R]:CommRing (DualNumber R) where
 def inlRingHom [CommRing R]:R →+*DualNumber R where
  toFun r:=(r,0)
  map_one':=rfl
- map_mul' _ _:=by ext <;> simp
+ map_mul' x y:=DualNumber.ext rfl (by show (0:R)=x*0+0*y; simp)
  map_zero':=rfl
- map_add' _ _:=by ext <;> simp
+ map_add' x y:=DualNumber.ext rfl (by show (0:R)=0+0; simp)
 instance [CommRing K] [CommRing R] [Algebra K R]:Algebra K (DualNumber R) where
  algebraMap:=inlRingHom.comp (algebraMap K R)
  commutes' k x:=by ext <;> simp [mul_comm]
@@ -31603,8 +31605,16 @@ theorem isUnit_of_isUnit_fst [CommRing R] {x:DualNumber R} (hx:IsUnit x.1):
    inv:=((↑u⁻¹:R), -((↑u⁻¹:R)*b*(↑u⁻¹:R)))
    val_inv:=?_
    inv_val:=?_},rfl⟩
- · ext <;> simp [mul_assoc]
- · ext <;> simp [mul_assoc]
+ · refine DualNumber.ext ?_ ?_
+   · show (u:R)*(↑u⁻¹:R)=1
+     exact u.mul_inv
+   · show (u:R)*(-((↑u⁻¹:R)*b*(↑u⁻¹:R)))+b*(↑u⁻¹:R)=0
+     simp [mul_assoc]
+ · refine DualNumber.ext ?_ ?_
+   · show (↑u⁻¹:R)*(u:R)=1
+     exact u.inv_mul
+   · show (↑u⁻¹:R)*b+(-((↑u⁻¹:R)*b*(↑u⁻¹:R)))*(u:R)=0
+     simp [mul_assoc]
 end DualNumber
 end ProximityPrize.SubmissionLower.RCN078
 end PackedLegacy_I8
@@ -31622,13 +31632,20 @@ def derivationDualAlgHom (D:Derivation K R R):R →ₐ[K] DualNumber S where
    apply DualNumber.ext <;> simp
  map_mul' x y:=by
    apply DualNumber.ext
-   · simp
-   · simp [D.leibniz]
+   · show algebraMap R S (x*y)=algebraMap R S x*algebraMap R S y
+     simp
+   · show algebraMap R S (D (x*y))=
+       algebraMap R S x*algebraMap R S (D y)+algebraMap R S (D x)*algebraMap R S y
+     simp [D.leibniz]
      exact mul_comm _ _
  map_zero':=by
    apply DualNumber.ext <;> simp
  map_add' x y:=by
-   apply DualNumber.ext <;> simp
+   apply DualNumber.ext
+   · show algebraMap R S (x+y)=algebraMap R S x+algebraMap R S y
+     simp
+   · show algebraMap R S (D (x+y))=algebraMap R S (D x)+algebraMap R S (D y)
+     simp
  commutes' k:=by
    apply DualNumber.ext
    · exact (IsScalarTower.algebraMap_apply K R S k).symm
@@ -31636,7 +31653,7 @@ def derivationDualAlgHom (D:Derivation K R R):R →ₐ[K] DualNumber S where
 theorem derivationDualAlgHom_isUnit (D:Derivation K R R) (y:M):
    IsUnit (derivationDualAlgHom (S:=S) D y):=by
  apply DualNumber.isUnit_of_isUnit_fst
- simpa [derivationDualAlgHom] using IsLocalization.map_units S y
+ exact IsLocalization.map_units S y
 noncomputable def localizedDualAlgHom (D:Derivation K R R):
    S →ₐ[K] DualNumber S:=
  IsLocalization.liftAlgHom (derivationDualAlgHom_isUnit M D)
@@ -31645,6 +31662,7 @@ theorem localizedDualAlgHom_algebraMap (D:Derivation K R R) (r:R):
    localizedDualAlgHom M D (algebraMap R S r)=
      (algebraMap R S r,algebraMap R S (D r)):=by
  simp [localizedDualAlgHom,derivationDualAlgHom]
+ rfl
 theorem localizedDualAlgHom_fst (D:Derivation K R R) (x:S):
    (localizedDualAlgHom M D x).fst=x:=by
  have hhom:
@@ -31657,6 +31675,7 @@ theorem localizedDualAlgHom_fst (D:Derivation K R R) (x:S):
      apply IsLocalization.ringHom_ext M
      ext r
      simp [DualNumber.fstHom]
+     rfl
    exact AlgHom.ext fun x => RingHom.congr_fun hr x
  exact AlgHom.congr_fun hhom x
 noncomputable def localizationDerivation (D:Derivation K R R):Derivation K S S:=
@@ -32647,8 +32666,8 @@ theorem globalPolynomial_mul_factor
    simp only [reconstructedPolynomial,jetPolynomial_coeff]
    by_cases hj:j<w+1
    · rw [if_pos hj,if_pos hj]
-     rw [jetCoefficient_eq_evaluated_numerator,
-       jetCoefficient_eq_evaluated_numerator]
+     rw [jetCoefficient_eq_evaluated_numerator c (F*Q) v hprod hregprod,
+       jetCoefficient_eq_evaluated_numerator c F v hF hregF]
      change ev (numerator K (F*Q) j)*(ev (polyH K (F*Q)))⁻¹^(2*j)/
          (j.factorial:L)=
        ev (numerator K F j)*(ev (polyH K F))⁻¹^(2*j)/
@@ -34479,8 +34498,9 @@ theorem tangent_component_card_le
      (selectedPoint (polynomialEmbedding K) S.selected) C gamma hgamma
  · intro gamma hgamma
    have hGamma:=hGcGamma hgamma
-   simpa only [ResidualStage.agreementFiber,ResidualStage.Agrees] using
-     hagreement gamma hGamma
+   have h:=hagreement gamma hGamma
+   simp only [ResidualStage.agreementFiber] at h
+   exact h
  · exact noLargeSelectedPencil_mono S.selected Gamma Gc w errors
      hGcGamma S.no_large_pencil
 end
@@ -36626,7 +36646,10 @@ theorem localized_surface_residue_ne_zero
  have hmap:source.map eqv.toRingHom=target:=by
    apply Polynomial.ext
    intro n
-   simp only [source,target,Polynomial.coeff_map,Function.comp_apply]
+   show (Polynomial.map eqv.toRingHom (Polynomial.map (AdjoinRoot.mk q) P₀)).coeff n=
+     (Polynomial.map (IsLocalRing.residue Rp)
+       (Polynomial.map (algebraMap (Polynomial (RatFunc K)) Rp) P₀)).coeff n
+   simp only [Polynomial.coeff_map]
    exact coefficientResidueEquiv_mk K L order e ht hfinite (P₀.coeff n)
  intro hzero
  apply hspecial
@@ -37595,8 +37618,9 @@ theorem activeNestedUnitFamily_zCost_eq_flagCost
            (MvPolynomial.X (zOrder 0)))
          (activeNestedZGate base hactive hZ hSderiv D a)):=by
  rw [activeNestedUnitFamily_zCost]
- rw [coordinateOfGate_degree_of_transcendental _ _ a.2]
- rw [coordinateOfGate_degree_of_transcendental _ _
+ rw [coordinateOfGate_degree_of_transcendental _ (hZ a.1) a.2]
+ rw [coordinateOfGate_degree_of_transcendental _
+   (activeNestedZGate base hactive hZ hSderiv D a)
    (activeNestedZTranscendental base hactive hSderiv D a)]
  rw [elementEmbedding_congr
    (activeNestedZTranscendental base hactive hSderiv D a) a.2
@@ -39078,8 +39102,9 @@ theorem actual_identityCurveCountProvider
        (selectedPoint (polynomialEmbedding K) S.selected) C γ hγ
    · intro γ hγ
      have hΓ:=hGcΓ hγ
-     simpa only [ResidualStage.agreementFiber,ResidualStage.Agrees] using
-       hagreement γ hΓ
+     have h:=hagreement γ hΓ
+     simp only [ResidualStage.agreementFiber] at h
+     exact h
    · exact noLargeSelectedPencil_mono S.selected Γ Gc w e hGcΓ S.no_large_pencil
  · have hz:=U.family.sum_zDegree_le
    have hyz:=U.family.sum_yzDegree_le
