@@ -17,6 +17,23 @@ on:
         options:
           - lower
           - upper
+      # Try a version this repository is not pinned to, without repinning it.
+      #
+      # Empty means the pin in challenges.json, which is what every automatic run
+      # uses and the only thing `workflow_call` can reach: this input exists on
+      # `workflow_dispatch` alone, so a scheduled or called run cannot be diverted
+      # to a version nobody chose.
+      #
+      # It exists because some versions are deliberately never the pin.
+      # `irs-reduction-threshold-cached-20260923` verifies the same statement with
+      # the declaration cache and the attested base and must never become the
+      # default, so naming it per-run is the only way to exercise it -- and
+      # repinning to measure it would be exactly the thing it must not be.
+      challenge_version:
+        description: challenge version to submit against (blank = the pinned one)
+        required: false
+        default: ""
+        type: string
 
 permissions:
   id-token: write
@@ -62,6 +79,8 @@ jobs:
 
       - name: Resolve immutable challenge policy
         shell: bash
+        env:
+          CHALLENGE_VERSION_OVERRIDE: ${{ inputs.challenge_version }}
         run: |
           case "$PROFILE" in
             lower)
@@ -76,7 +95,17 @@ jobs:
               ;;
           esac
           echo "CHALLENGE=$challenge" >> "$GITHUB_ENV"
-          echo "CHALLENGE_VERSION=$(python3 scripts/challenges.py version "$challenge")" >> "$GITHUB_ENV"
+          # The override is trusted only as a version string, never as anything a
+          # shell expands: the service refuses a version it does not hold, so a
+          # wrong value costs a rejected submission rather than a wrong verdict.
+          # `inputs.challenge_version` is empty on every path but a manual
+          # dispatch, so this is the pin unless a human typed otherwise.
+          pinned="$(python3 scripts/challenges.py version "$challenge")"
+          chosen="${CHALLENGE_VERSION_OVERRIDE:-}"
+          if [ -n "$chosen" ] && [ "$chosen" != "$pinned" ]; then
+            echo "::notice::submitting against $chosen, not the pinned $pinned"
+          fi
+          echo "CHALLENGE_VERSION=${chosen:-$pinned}" >> "$GITHUB_ENV"
 
       - name: Benchmark with independent verifier
         env:
