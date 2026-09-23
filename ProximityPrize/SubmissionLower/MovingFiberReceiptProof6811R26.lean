@@ -277,7 +277,15 @@ theorem at26_132 : At 26 132 :=
   at_of_direct direct26_132 rfl rfl (by intro _; rfl)
 theorem at26_133 : At 26 133 :=
   at_of_direct direct26_133 rfl rfl (by intro _; rfl)
-theorem all26 (v : Nat) (hv : v≤133) : At 26 v := by
+theorem at26_134 : At 26 134 :=
+  at_of_direct direct26_134 rfl rfl (by intro _; rfl)
+theorem at26_135 : At 26 135 :=
+  at_of_direct direct26_135 rfl rfl (by intro _; rfl)
+theorem at26_136 : At 26 136 :=
+  at_of_direct direct26_136 rfl rfl (by intro _; rfl)
+theorem at26_137 : At 26 137 :=
+  at_of_direct direct26_137 rfl rfl (by intro _; rfl)
+theorem all26 (v : Nat) (hv : v≤137) : At 26 v := by
   interval_cases v
   · exact at26_0
   · exact at26_1
@@ -413,5 +421,9 @@ theorem all26 (v : Nat) (hv : v≤133) : At 26 v := by
   · exact at26_131
   · exact at26_132
   · exact at26_133
+  · exact at26_134
+  · exact at26_135
+  · exact at26_136
+  · exact at26_137
 #print axioms all26
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

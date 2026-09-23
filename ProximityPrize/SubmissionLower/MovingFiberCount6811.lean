@@ -1,4 +1,5 @@
-import ProximityPrize.SubmissionLower.MovingFiberArithmetic6811D
+import ProximityPrize.SubmissionLower.MovingFiberArithmetic6811E
+import ProximityPrize.SubmissionLower.HFreeDischarge6812
 
 namespace ProximityPrize.SubmissionLower.MovingFiberCount6811
 open scoped BigOperators
@@ -11,7 +12,7 @@ set_option maxRecDepth 100000
 
 /-- Store each numerical row together with its proved inequalities. This avoids
 kernel conversion through a table of large natural-number divisions. -/
-structure Receipt (g : Fin 16) where
+structure Receipt (g : Fin 20) where
   scale : ℕ
   denominator : ℕ
   full : ℕ → ℕ → ℕ → ℕ
@@ -20,14 +21,14 @@ structure Receipt (g : Fin 16) where
   intercept : ℕ → ℕ → ℕ
   rounded_formula : ∀ a b c, rounded a b c=slope a b*c+intercept a b
   positive : 0 < scale
-  divides : ∀ j : Fin 3, (groups g j).d ∣ scale
+  divides : ∀ j : Fin 3, 3*(groups g j).d ∣ scale
   identity : ∀ (f : FlagDegree) (a b c : ℕ),
-    scale*131073*80861*identityDegree f a b c ≤ 50213*graph (groups g) scale f a b c
+    scale*131073*80870*identityDegree f a b c ≤ 50204*graph (groups g) scale f a b c
   helper : ∀ (a b c : ℕ) (j : Fin 3),
-    MovingFiberArithmeticBase6811.helper (groups g j) a b c/50213 ≤ full a b c/denominator
+    MovingFiberArithmeticBase6811.helper (groups g j) a b c/50204 ≤ full a b c/denominator
   retained : ∀ a b c,
     graph (groups g) scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (groups g j) a b c/50213) ≤ full a b c/denominator
+      (∑ j : Fin 3, coeff (groups g j) a b c/50204) ≤ full a b c/denominator
   rounded_bound : ∀ a b c, full a b c/denominator ≤ rounded a b c
 
 def receipt0 : Receipt 0 where
@@ -270,33 +271,93 @@ def receipt15 : Receipt 15 where
   retained := MovingFiberArithmetic6811.G15.retained_cap
   rounded_bound := MovingFiberArithmetic6811.G15.full_cap_rounded
 
-def receipt (g : Fin 16) : Receipt g := by
-  exact (Fin.cases (motive := fun j : Fin 16 => Receipt j) receipt0 (Fin.cases (motive := fun j : Fin 15 => Receipt (j.succ)) receipt1 (Fin.cases (motive := fun j : Fin 14 => Receipt (j.succ.succ)) receipt2 (Fin.cases (motive := fun j : Fin 13 => Receipt (j.succ.succ.succ)) receipt3 (Fin.cases (motive := fun j : Fin 12 => Receipt (j.succ.succ.succ.succ)) receipt4 (Fin.cases (motive := fun j : Fin 11 => Receipt (j.succ.succ.succ.succ.succ)) receipt5 (Fin.cases (motive := fun j : Fin 10 => Receipt (j.succ.succ.succ.succ.succ.succ)) receipt6 (Fin.cases (motive := fun j : Fin 9 => Receipt (j.succ.succ.succ.succ.succ.succ.succ)) receipt7 (Fin.cases (motive := fun j : Fin 8 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ)) receipt8 (Fin.cases (motive := fun j : Fin 7 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt9 (Fin.cases (motive := fun j : Fin 6 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt10 (Fin.cases (motive := fun j : Fin 5 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt11 (Fin.cases (motive := fun j : Fin 4 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt12 (Fin.cases (motive := fun j : Fin 3 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt13 (Fin.cases (motive := fun j : Fin 2 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt14 (Fin.cases (motive := fun j : Fin 1 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt15 (fun i => Fin.elim0 i))))))))))))))))) g
+def receipt16 : Receipt 16 where
+  scale := MovingFiberArithmetic6811.G16.scale
+  denominator := MovingFiberArithmetic6811.G16.denominator
+  full := MovingFiberArithmetic6811.G16.full
+  rounded := MovingFiberArithmetic6811.G16.rounded
+  slope := fun a b => MovingFiberArithmetic6811.G16.slope a b/MovingFiberArithmetic6811.G16.denominator+1
+  intercept := fun a b => MovingFiberArithmetic6811.G16.intercept a b/MovingFiberArithmetic6811.G16.denominator+1
+  rounded_formula := by intro a b c; rfl
+  positive := MovingFiberArithmetic6811.G16.positive
+  divides := MovingFiberArithmetic6811.G16.divides
+  identity := MovingFiberArithmetic6811.G16.identity_absorption
+  helper := MovingFiberArithmetic6811.G16.helper_cap
+  retained := MovingFiberArithmetic6811.G16.retained_cap
+  rounded_bound := MovingFiberArithmetic6811.G16.full_cap_rounded
 
-def scales (g : Fin 16) : ℕ := (receipt g).scale
-def denominators (g : Fin 16) : ℕ := (receipt g).denominator
-def fulls (g : Fin 16) : ℕ → ℕ → ℕ → ℕ := (receipt g).full
-def roundedCaps (g : Fin 16) : ℕ → ℕ → ℕ → ℕ := (receipt g).rounded
-def sourceLimit (g : Fin 16) : ℕ := Finset.univ.sup (fun j : Fin 3 => (groups g j).L)
+def receipt17 : Receipt 17 where
+  scale := MovingFiberArithmetic6811.G17.scale
+  denominator := MovingFiberArithmetic6811.G17.denominator
+  full := MovingFiberArithmetic6811.G17.full
+  rounded := MovingFiberArithmetic6811.G17.rounded
+  slope := fun a b => MovingFiberArithmetic6811.G17.slope a b/MovingFiberArithmetic6811.G17.denominator+1
+  intercept := fun a b => MovingFiberArithmetic6811.G17.intercept a b/MovingFiberArithmetic6811.G17.denominator+1
+  rounded_formula := by intro a b c; rfl
+  positive := MovingFiberArithmetic6811.G17.positive
+  divides := MovingFiberArithmetic6811.G17.divides
+  identity := MovingFiberArithmetic6811.G17.identity_absorption
+  helper := MovingFiberArithmetic6811.G17.helper_cap
+  retained := MovingFiberArithmetic6811.G17.retained_cap
+  rounded_bound := MovingFiberArithmetic6811.G17.full_cap_rounded
 
-theorem scale_positive (g : Fin 16) : 0 < scales g := (receipt g).positive
-theorem scale_divides (g : Fin 16) (j : Fin 3) : (groups g j).d ∣ scales g := (receipt g).divides j
-theorem identity_absorption (g : Fin 16) (f : FlagDegree) (a b c : ℕ) :
-    scales g*131073*80861*identityDegree f a b c ≤ 50213*graph (groups g) (scales g) f a b c :=
+def receipt18 : Receipt 18 where
+  scale := MovingFiberArithmetic6811.G18.scale
+  denominator := MovingFiberArithmetic6811.G18.denominator
+  full := MovingFiberArithmetic6811.G18.full
+  rounded := MovingFiberArithmetic6811.G18.rounded
+  slope := fun a b => MovingFiberArithmetic6811.G18.slope a b/MovingFiberArithmetic6811.G18.denominator+1
+  intercept := fun a b => MovingFiberArithmetic6811.G18.intercept a b/MovingFiberArithmetic6811.G18.denominator+1
+  rounded_formula := by intro a b c; rfl
+  positive := MovingFiberArithmetic6811.G18.positive
+  divides := MovingFiberArithmetic6811.G18.divides
+  identity := MovingFiberArithmetic6811.G18.identity_absorption
+  helper := MovingFiberArithmetic6811.G18.helper_cap
+  retained := MovingFiberArithmetic6811.G18.retained_cap
+  rounded_bound := MovingFiberArithmetic6811.G18.full_cap_rounded
+
+def receipt19 : Receipt 19 where
+  scale := MovingFiberArithmetic6811.G19.scale
+  denominator := MovingFiberArithmetic6811.G19.denominator
+  full := MovingFiberArithmetic6811.G19.full
+  rounded := MovingFiberArithmetic6811.G19.rounded
+  slope := fun a b => MovingFiberArithmetic6811.G19.slope a b/MovingFiberArithmetic6811.G19.denominator+1
+  intercept := fun a b => MovingFiberArithmetic6811.G19.intercept a b/MovingFiberArithmetic6811.G19.denominator+1
+  rounded_formula := by intro a b c; rfl
+  positive := MovingFiberArithmetic6811.G19.positive
+  divides := MovingFiberArithmetic6811.G19.divides
+  identity := MovingFiberArithmetic6811.G19.identity_absorption
+  helper := MovingFiberArithmetic6811.G19.helper_cap
+  retained := MovingFiberArithmetic6811.G19.retained_cap
+  rounded_bound := MovingFiberArithmetic6811.G19.full_cap_rounded
+
+def receipt (g : Fin 20) : Receipt g := by
+  exact (Fin.cases (motive := fun j : Fin 20 => Receipt (j)) receipt0 (Fin.cases (motive := fun j : Fin 19 => Receipt (j.succ)) receipt1 (Fin.cases (motive := fun j : Fin 18 => Receipt (j.succ.succ)) receipt2 (Fin.cases (motive := fun j : Fin 17 => Receipt (j.succ.succ.succ)) receipt3 (Fin.cases (motive := fun j : Fin 16 => Receipt (j.succ.succ.succ.succ)) receipt4 (Fin.cases (motive := fun j : Fin 15 => Receipt (j.succ.succ.succ.succ.succ)) receipt5 (Fin.cases (motive := fun j : Fin 14 => Receipt (j.succ.succ.succ.succ.succ.succ)) receipt6 (Fin.cases (motive := fun j : Fin 13 => Receipt (j.succ.succ.succ.succ.succ.succ.succ)) receipt7 (Fin.cases (motive := fun j : Fin 12 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ)) receipt8 (Fin.cases (motive := fun j : Fin 11 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt9 (Fin.cases (motive := fun j : Fin 10 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt10 (Fin.cases (motive := fun j : Fin 9 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt11 (Fin.cases (motive := fun j : Fin 8 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt12 (Fin.cases (motive := fun j : Fin 7 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt13 (Fin.cases (motive := fun j : Fin 6 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt14 (Fin.cases (motive := fun j : Fin 5 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt15 (Fin.cases (motive := fun j : Fin 4 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt16 (Fin.cases (motive := fun j : Fin 3 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt17 (Fin.cases (motive := fun j : Fin 2 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt18 (Fin.cases (motive := fun j : Fin 1 => Receipt (j.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ.succ)) receipt19 (fun i => Fin.elim0 i))))))))))))))))))))) g
+
+def scales (g : Fin 20) : ℕ := (receipt g).scale
+def denominators (g : Fin 20) : ℕ := (receipt g).denominator
+def fulls (g : Fin 20) : ℕ → ℕ → ℕ → ℕ := (receipt g).full
+def roundedCaps (g : Fin 20) : ℕ → ℕ → ℕ → ℕ := (receipt g).rounded
+def sourceLimit (g : Fin 20) : ℕ := Finset.univ.sup (fun j : Fin 3 => (groups g j).L)
+
+theorem scale_positive (g : Fin 20) : 0 < scales g := (receipt g).positive
+theorem scale_divides (g : Fin 20) (j : Fin 3) : 3*(groups g j).d ∣ scales g := (receipt g).divides j
+theorem identity_absorption (g : Fin 20) (f : FlagDegree) (a b c : ℕ) :
+    scales g*131073*80870*identityDegree f a b c ≤ 50204*graph (groups g) (scales g) f a b c :=
   (receipt g).identity f a b c
-theorem helper_cap (g : Fin 16) (a b c : ℕ) (j : Fin 3) :
-    helper (groups g j) a b c/50213 ≤ fulls g a b c/denominators g := (receipt g).helper a b c j
-theorem retained_cap (g : Fin 16) (a b c : ℕ) :
+theorem helper_cap (g : Fin 20) (a b c : ℕ) (j : Fin 3) :
+    helper (groups g j) a b c/50204 ≤ fulls g a b c/denominators g := (receipt g).helper a b c j
+theorem retained_cap (g : Fin 20) (a b c : ℕ) :
     graph (groups g) (scales g) ⟨c,b+2,a+3⟩ a b c/scales g+
-      (∑ j : Fin 3, coeff (groups g j) a b c/50213) ≤ fulls g a b c/denominators g :=
+      (∑ j : Fin 3, coeff (groups g j) a b c/50204) ≤ fulls g a b c/denominators g :=
   (receipt g).retained a b c
-theorem rounded_cap (g : Fin 16) (a b c : ℕ) :
+theorem rounded_cap (g : Fin 20) (a b c : ℕ) :
     fulls g a b c/denominators g ≤ roundedCaps g a b c := (receipt g).rounded_bound a b c
 
 variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
 variable {nodes : I ↪ K} {u0 u1 : I → K}
 
-theorem bound_le_full (S : Data nodes u0 u1) (hown : Own S) (g : Fin 16) :
+theorem bound_le_full (S : Data nodes u0 u1) (hown : Own S) (g : Fin 20) :
     bound S (groups g) (scales g) ≤
       fulls g (S.r-3) (S.y-S.r-2) (S.t-S.y)/denominators g := by
   obtain ⟨a,ha⟩ : ∃ a, S.r=a+3 := ⟨S.r-3,by have := S.rpos; omega⟩
@@ -307,12 +368,12 @@ theorem bound_le_full (S : Data nodes u0 u1) (hown : Own S) (g : Fin 16) :
   have har : S.r-3=a := by omega
   have hbr : S.y-S.r-2=b := by omega
   have hp (R U T : ℕ) : AsymmetricHelper.leftRegularCountCap (S.pair R U T)=
-      pairNumerator a b c U R T/50213 := by
+      pairNumerator a b c U R T/50204 := by
     unfold AsymmetricHelper.leftRegularCountCap
     rw [pair_numerator S a b c ha hb hc]
     norm_num only [Data.pair,UnequalParameters.gap]
-  have hcoeff (j : Fin 3) : coefficientCap S (groups g j)=coeff (groups g j) a b c/50213 := hp _ _ _
-  have hhelper (j : Fin 3) : helperCap S (groups g j)=helper (groups g j) a b c/50213 := by
+  have hcoeff (j : Fin 3) : coefficientCap S (groups g j)=coeff (groups g j) a b c/50204 := hp _ _ _
+  have hhelper (j : Fin 3) : helperCap S (groups g j)=helper (groups g j) a b c/50204 := by
     unfold helperCap
     rw [hp,ha,hb,hc]
     have h1 : a+3-1=a+2 := by omega
@@ -333,25 +394,39 @@ theorem bound_le_full (S : Data nodes u0 u1) (hown : Own S) (g : Fin 16) :
     simp_rw [hcoeff]
     exact retained_cap g a b c
 
+/-- The H-free per-slice pole budget (`HFreeSliceBudget`) on every retained stage, via
+`HFree6812.hfree_stage_of_gaps`; its only open input is `HFree6812.hdefer_gap`. -/
+theorem hfree_stage_gap (S : Data nodes u0 u1) :
+    ∀ (G : Finset K) (fl : FlagDegree) (S' : RCN159.ResidualStage (RCN135.polynomialEmbedding K) G
+      ⇑nodes 2130706433 80869 fl w (LocatorHybridCells.cellSupport S.t S.y S.r)), S'.F = S.F →
+      MovingFiberRetainedStage6811.HFreeStage S' := by
+  intro G fl S' _
+  haveI : CharP (RCN135.GenericField K) 2130706433 := RCN135.genericField_charP K 2130706433
+  refine HFree6812.hfree_stage_of_gaps S' ?_
+  have := S.tbound; have := S.yt; have := S.ry; have := S.rpos
+  simp only [LocatorHybridCells.cellSupport, RCN198.support, LocatorHybridCells.cellA,
+    LocatorHybridCells.cellB, LocatorHybridCells.cellS]
+  omega
+
 /-- Actual interpolants and all exceptional cases are supplied internally. -/
 theorem count_group (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
-    (hown : Own S) (g : Fin 16) (hL : sourceLimit g < S.t) :
+    (hown : Own S) (g : Fin 20) (hL : sourceLimit g < S.t) :
     S.seeds.card ≤ roundedCaps g (S.r-3) (S.y-S.r-2) (S.t-S.y) := by
   obtain ⟨P,hP⟩ := exists_group nodes u0 u1 hI g
   have hLt (j : Fin 3) : (groups g j).L < RCN234.wt RCN156.residualTotalWeights S.F := by
     rw [own_total S hown]
     exact (Finset.le_sup (f := fun j : Fin 3 => (groups g j).L) (Finset.mem_univ j)).trans_lt hL
-  have hid (f : FlagDegree) : scales g*131073*80861*
+  have hid (f : FlagDegree) : scales g*131073*80870*
       identityCurveDegree f (LocatorHybridCells.cellA S.t S.y)
         (LocatorHybridCells.cellB S.y S.r) (LocatorHybridCells.cellS S.r) w ≤
-        50213*number (groups g) (scales g) S.t S.y S.r f := by
+        50204*number (groups g) (scales g) S.t S.y S.r f := by
     obtain ⟨a,ha⟩ : ∃ a, S.r=a+3 := ⟨S.r-3,by have := S.rpos; omega⟩
     obtain ⟨b,hb⟩ : ∃ b, S.y=a+3+(b+2) := ⟨S.y-S.r-2,by have := S.ry; omega⟩
     obtain ⟨c,hc⟩ : ∃ c, S.t=a+3+(b+2)+c := ⟨S.t-S.y,by have := S.yt; omega⟩
     rw [ha,hb,hc,identity_coordinates,number_coordinates]
     exact identity_absorption g f a b c
   have hcount := count_of_interpolants S hI (groups g) (wellFormed g) (scales g)
-    (scale_positive g) (scale_divides g) P hP hLt
+    (scale_positive g) (scale_divides g) (hfree_stage_gap S) P hP hLt
     (fun j => (catalog_gates S g j).1) (fun j => (catalog_gates S g j).2) hid
   exact (hcount.trans (bound_le_full S hown g)).trans (rounded_cap g _ _ _)
 

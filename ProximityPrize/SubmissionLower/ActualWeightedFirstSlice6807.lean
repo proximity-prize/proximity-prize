@@ -33,7 +33,11 @@ local notation "Ω" => GenericField K
 local notation "PE" => MvPolynomial (Fin 3) E
 local notation "w" => RCN326.w
 
-theorem first_cut_on_prime_slice
+local notation "φE" => RingHom.comp (algebraMap (GenericField K) E) (polynomialEmbedding K)
+
+/-- The per-slice zero count for ANY exponent `e` of the counted function
+`baseNumerator/H^e` (denominator `c*H^(e+3)`), given its pole mass. -/
+theorem first_cut_on_prime_slice_of
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))
     (old : T → FirstTailComponent S)
@@ -45,27 +49,15 @@ theorem first_cut_on_prime_slice
     (hcarrier : scalarPolynomialMap Ω E S.G ∈ D)
     (hisolated : scalarPolynomialMap Ω E
       (globalTailCut (polynomialEmbedding K) S.F (w+1)) ∉ D)
-    (P : Poly (K := K)) (B U L s k n0 : ℕ)
-    (hS : ∀ e ∈ P.support, e 1 ≤ s)
-    (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
-      e 1+e 2+e 3+e 4 ≤ L)
-    (hBU : B ≤ U) (hUL : U ≤ L) (hdn : k+1 ≤ n0)
-    (hB : 2*(n0-(k+1)) ≤ B) (hn : n0 ≤ (asS P).natDegree)
-    (hlead : ∀ i, surfaceMap (polynomialEmbedding K) (asS P).leadingCoeff ∉ (old i).1)
-    (hdiv : ∀ j ≤ k, S.F ∣ helper P S.F (s-j) j)
-    (h2 : (2 : E) ≠ 0) (hfact : (k.factorial : E) ≠ 0)
-    (r v z : ℕ) (hr : 3 ≤ r) (hv : 2 ≤ v)
-    (hR : WeightBound residualSWeights S.F (r : ℤ))
-    (hYR : WeightBound residualYSWeights S.F ((r+v : ℕ) : ℤ))
-    (hAll : WeightBound residualTotalWeights S.F ((r+v+z : ℕ) : ℤ))
-    (CJ CV : ℕ)
-    (hJbudget : ∀ W : Finset (Place E (CoordinateField E D)),
-      (∑ nu ∈ W, flagPole nu.val (coordinate E D) (firstBaseFlag (w-1) r v z)) ≤ (CJ : ℤ))
-    (hVbudget : ∀ W : Finset (Place E (CoordinateField E D)),
-      (∑ nu ∈ W, flagPole nu.val (coordinate E D)
-        (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0)) ≤ (CV : ℤ)) :
-    (k+1) * (∑ i, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)) ≤
-      (k+1)*CJ+w*CV := by
+    (e d cost : ℕ)
+    (hpole : surfaceMap φE S.F ∈ D → surfaceMap φE (polyH K S.F) ∉ D →
+      (∀ F0 : MvPolynomial (Fin 4) K,
+        (∀ i, surfaceMap (polynomialEmbedding K) F0 ∉ (old i).1) → surfaceMap φE F0 ∉ D) →
+      ∀ W : Finset (Place E (CoordinateField E D)),
+        (d : ℤ) * (∑ nu ∈ W, RCN187.poleOrder nu.val
+          (SecondJetComponentRoots.coefficientMap φE D (baseNumerator S.F (w-1))/
+            SecondJetComponentRoots.coefficientMap φE D (polyH K S.F)^e)) ≤ cost) :
+    d * (∑ i, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)) ≤ cost := by
   classical
   let A := CoordinateRing E D
   let Lf := CoordinateField E D
@@ -80,14 +72,13 @@ theorem first_cut_on_prime_slice
   letI : FiniteDimensional (RatFunc E) Lf := sep.finite
   letI : Algebra.IsSeparable (RatFunc E) Lf := sep.separable
   let i0 : T := Classical.choice inferInstance
-  let phiE := (algebraMap Ω E).comp (polynomialEmbedding K)
-  let ev := SecondJetComponentRoots.coefficientMap phiE D
+  let ev := SecondJetComponentRoots.coefficientMap φE D
   let evalPoint := fun i => pointHom E D (slicePoint S (old i) (emb i) D (hpoint i))
   let mu := fun i => localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)
   let a : A := firstTailInSlice S D
   let H : A := originalToSlice (K := K) D (polyH K S.F)
   let c : A := firstTailScalarInSlice (K := K) D
-  let b : A := c*H^(w+3)
+  let b : A := c*H^(e+3)
   let iota : A →+* Lf := algebraMap A Lf
   have hpi : Function.Injective evalPoint := by
     intro i j hh
@@ -120,40 +111,35 @@ theorem first_cut_on_prime_slice
   have hbi : iota b ≠ 0 := by
     simpa only [b,map_mul,map_pow] using mul_ne_zero hci (pow_ne_zero _ hHi)
   have hx : iota a / iota b ≠ 0 := div_ne_zero hai hbi
-  have hrepr : iota a / iota b = ev (baseNumerator S.F (w-1))/ev (polyH K S.F)^w := by
+  have hrepr : iota a / iota b = ev (baseNumerator S.F (w-1))/ev (polyH K S.F)^e := by
     have hh := normalized_first_tail_identity iota a
-      (originalToSlice (K := K) D (baseNumerator S.F (w-1))) H c w
+      (originalToSlice (K := K) D (baseNumerator S.F (w-1))) H c e
       (firstTailInSlice_normal_form S D) hHi hci
     have hbv : iota (originalToSlice (K := K) D (baseNumerator S.F (w-1))) =
         ev (baseNumerator S.F (w-1)) := originalToSlice_fraction_value D _
     have hHv : iota H = ev (polyH K S.F) := originalToSlice_fraction_value D _
     exact hh.trans (by rw [hbv, hHv])
   have hnot (F0 : MvPolynomial (Fin 4) K)
-      (hn0 : surfaceMap (polynomialEmbedding K) F0 ∉ (old i0).1) :
-      surfaceMap phiE F0 ∉ D := by
+      (hn0 : ∀ i, surfaceMap (polynomialEmbedding K) F0 ∉ (old i).1) :
+      surfaceMap φE F0 ∉ D := by
     intro hmem
     have hz := RingHom.mem_ker.mp (hpoint i0 hmem)
     change MvPolynomial.eval (embeddingPoint (old i0).1 (emb i0))
-      (surfaceMap phiE F0) = 0 at hz
+      (surfaceMap φE F0) = 0 at hz
     apply GenericSlicePoints6807.scalar_eval_ne_zero (old i0).1 (emb i0)
-      (surfaceMap (polynomialEmbedding K) F0) hn0
-    simpa only [scalar_surfaceMap, phiE, MvPolynomial.aeval_eq_eval] using hz
-  have hFd : surfaceMap phiE S.F ∈ D := by
+      (surfaceMap (polynomialEmbedding K) F0) (hn0 i0)
+    simpa only [scalar_surfaceMap, MvPolynomial.aeval_eq_eval] using hz
+  have hFd : surfaceMap φE S.F ∈ D := by
     rw [← scalar_surfaceMap]
     exact D.mem_of_dvd (map_dvd (scalarPolynomialMap Ω E) S.G_dvd_surface) hcarrier
-  have hHd : surfaceMap phiE (polyH K S.F) ∉ D :=
-    hnot _ (RCN312.firstTailComponent_regularity_not_mem S (old i0))
-  have hLd : surfaceMap phiE (asS P).leadingCoeff ∉ D := hnot _ (hlead i0)
+  have hHd : surfaceMap φE (polyH K S.F) ∉ D :=
+    hnot _ (fun i => RCN312.firstTailComponent_regularity_not_mem S (old i))
   apply WeightedZeroMass6807.weighted_affine_points_scaled E Lf A
-    evalPoint hpi mu hmu a b ha hb hx (k+1) ((k+1)*CJ+w*CV)
+    evalPoint hpi mu hmu a b ha hb hx d cost
   intro W
-  have hs := FirstSlicePoleBudget6807.actual_first_source_pole_mass phiE S.F D sep
-    P B U L s k n0 hS hP hBU hUL hdn hB hn hFd hHd hLd hdiv h2 hfact
-    (w-1) r v z (by decide) hr hv hR hYR hAll CJ CV hJbudget hVbudget W
-  change ((k+1 : ℕ) : ℤ) * (∑ nu ∈ W,
-    RCN187.poleOrder nu.val (iota a / iota b)) ≤ (((k+1)*CJ+w*CV : ℕ) : ℤ)
+  change (d : ℤ) * (∑ nu ∈ W, RCN187.poleOrder nu.val (iota a / iota b)) ≤ (cost : ℤ)
   rw [hrepr]
-  simpa only [show w-1+1=w by decide, Nat.cast_add, Nat.cast_mul] using hs
+  exact hpole hFd hHd hnot W
 
 end
 end ProximityPrize.SubmissionLower.ActualWeightedFirstSlice6807

@@ -17,6 +17,8 @@ open RCN207 RCN208 RCN234 RCN237 RCN243 RCN244 RCN248 RCN264 RCN267 RCN313 RCN34
 open SecondJetSupport SecondJetCoefficients SecondJetClearedHelper
 open ActualFirstCutPole6807 GenericSlicePoints6807 WeightedSliceAssignment6807
 open SmallSliceBudgets6807
+open RCN204 (flagPole)
+open RCN026 (Place)
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 12000000
@@ -50,6 +52,27 @@ theorem carrier_derivative_not_mem
     (C.1.mul_mem_right (MvPolynomial.pderiv (1 : Fin 3) Q)
       (regularComponent_G_mem Ω S.G _ _ C))
 
+/-- A per-prime-slice first-cut charge: on every prime slice component `D ∋ G, N`
+through the embedding points of a `Good` family, `c*Σμ ≤ m*CJ+n*CV` whenever the
+flags `J` and `V` have slice pole budgets `CJ` and `CV`. -/
+def SliceCharge (S : Stage K I Gamma x p flag errorCap stageSupport)
+    (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))
+    (Good : FirstTailComponent S → Prop) (N : PE) (c m n : ℕ) (J V : FlagDegree) : Prop :=
+  ∀ (T0 : Type) [Fintype T0] [Nonempty T0] (old : T0 → FirstTailComponent S),
+    (∀ i, Good (old i)) → ∀ emb : ∀ i, CoordinateField Ω (old i).1 →ₐ[Ω] E,
+    Function.Injective (fun i => embeddingPoint (old i).1 (emb i)) →
+    ∀ (D : Ideal PE) [D.IsPrime], SeparableLiteralCoordinate D →
+    (∀ i, D ≤ RingHom.ker
+      (MvPolynomial.aeval (embeddingPoint (old i).1 (emb i)) : PE →ₐ[E] E).toRingHom) →
+    scalarPolynomialMap Ω E S.G ∈ D → N ∈ D →
+    scalarPolynomialMap Ω E (globalTailCut (polynomialEmbedding K) S.F (w+1)) ∉ D →
+    ∀ CJ CV : ℕ,
+    (∀ W : Finset (Place E (CoordinateField E D)),
+      (∑ nu ∈ W, flagPole nu.val (coordinate E D) J) ≤ (CJ : ℤ)) →
+    (∀ W : Finset (Place E (CoordinateField E D)),
+      (∑ nu ∈ W, flagPole nu.val (coordinate E D) V) ≤ (CV : ℤ)) →
+    c * (∑ i, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)) ≤ m*CJ+n*CV
+
 /-- This theorem actually constructs the pure-flag budgets and disjoint point
 assignment. Repeated components and empty fibres do not add multiplicity. -/
 theorem first_cut_on_all_active_slices
@@ -65,31 +88,17 @@ theorem first_cut_on_all_active_slices
       (embeddingPoint (old i).1 (emb i)))
     (hdeg : flag.zOnly+flag.yz+flag.all < p)
     (hmix : 2*(flag.zOnly+flag.yz+flag.all)*(q.zOnly+q.yz+q.all) < p)
-    (P : Poly (K := K)) (B U L s k n0 : ℕ)
-    (hS : ∀ e ∈ P.support, e 1 ≤ s)
-    (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
-      e 1+e 2+e 3+e 4 ≤ L)
-    (hBU : B ≤ U) (hUL : U ≤ L) (hdn : k+1 ≤ n0)
-    (hB : 2*(n0-(k+1)) ≤ B) (hn : n0 ≤ (asS P).natDegree)
-    (hlead : ∀ i, surfaceMap (polynomialEmbedding K) (asS P).leadingCoeff ∉ (old i).1)
-    (hdiv : ∀ j ≤ k, S.F ∣ helper P S.F (s-j) j)
-    (h2 : (2 : E) ≠ 0) (hfact : (k.factorial : E) ≠ 0)
-    (r v z : ℕ) (hr : 3 ≤ r) (hv : 2 ≤ v)
-    (hR : WeightBound residualSWeights S.F (r : ℤ))
-    (hYR : WeightBound residualYSWeights S.F ((r+v : ℕ) : ℤ))
-    (hAll : WeightBound residualTotalWeights S.F ((r+v+z : ℕ) : ℤ)) :
-    (k+1)*(∑ i, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)) ≤
-      flagMixed flag q ((k+1) • firstBaseFlag (w-1) r v z +
-        w • SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0) := by
+    (Good : FirstTailComponent S → Prop) (hgood : ∀ i, Good (old i))
+    (c m n : ℕ) (J V : FlagDegree) (hslice : SliceCharge S hproper Good N c m n J V) :
+    c*(∑ i, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)) ≤
+      flagMixed flag q (m • J + n • V) := by
   classical
   let F := scalarPolynomialMap Ω E S.G
   let A := scalarPolynomialMap Ω E (globalTailCut (polynomialEmbedding K) S.F (w+1))
   let R := scalarPolynomialMap Ω E (regularitySurface (polynomialEmbedding K) S.F)
   let point := fun i => embeddingPoint (old i).1 (emb i)
   let mu := fun i => localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)
-  let J := firstBaseFlag (w-1) r v z
-  let V := SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0
-  let D1 := (k+1) • J + w • V
+  let D1 := m • J + n • V
   have hF : F ≠ 0 := by
     intro hz
     apply S.irreducible_G.ne_zero
@@ -130,7 +139,7 @@ theorem first_cut_on_all_active_slices
   let cost := fun a : SliceComponent F N R =>
     (budgets.unit a.1).toPrimeFlagBudgetFamily.weightedCost D1 a.2
   have hlocal (a : SliceComponent F N R) :
-      (k+1)*(∑ i with assign i = a, mu i) ≤ cost a := by
+      c*(∑ i with assign i = a, mu i) ≤ cost a := by
     let T0 := {i : T // assign i = a}
     by_cases hne : Nonempty T0
     · letI : Nonempty T0 := hne
@@ -155,10 +164,8 @@ theorem first_cut_on_all_active_slices
       let unit := budgets.unit a.1
       let CJ := unit.toPrimeFlagBudgetFamily.weightedCost J a.2
       let CV := unit.toPrimeFlagBudgetFamily.weightedCost V a.2
-      have hb := ActualWeightedFirstSlice6807.first_cut_on_prime_slice S hproper
-        old0 emb0 hi0 a.2.1 (budgets.base a.1 a.2) hpt hcar hAz
-        P B U L s k n0 hS hP hBU hUL hdn hB hn (fun i => hlead i.1) hdiv h2 hfact
-        r v z hr hv hR hYR hAll CJ CV
+      have hb := hslice T0 old0 (fun i => hgood i.1) emb0 hi0 a.2.1 (budgets.base a.1 a.2)
+        hpt hcar (regularComponent_T_mem E a.1.1 N R a.2) hAz CJ CV
         (PureFlagSliceBudget6807.sum_flagPole_le unit a.2 J)
         (PureFlagSliceBudget6807.sum_flagPole_le unit a.2 V)
       have hsum : (∑ i with assign i = a, mu i) = ∑ i : T0, mu i.1 := by
@@ -167,16 +174,16 @@ theorem first_cut_on_all_active_slices
             mu (p := fun i => assign i = a)).symm
       rw [hsum]
       calc
-        _ ≤ (k+1)*CJ+w*CV := hb
+        _ ≤ m*CJ+n*CV := hb
         _ = cost a := (PureFlagSliceBudget6807.weightedCost_add_smul
-          unit a.2 (k+1) w J V).symm
+          unit a.2 m n J V).symm
     · have he : (Finset.univ.filter (fun i : T => assign i = a)) = ∅ := by
         apply Finset.eq_empty_iff_forall_notMem.mpr
         intro i hi
         exact hne ⟨⟨i,(Finset.mem_filter.mp hi).2⟩⟩
       simp only [he,Finset.sum_empty,Nat.mul_zero,Nat.zero_le]
   calc
-    _ ≤ ∑ a : SliceComponent F N R, cost a := sum_local_slice_bounds assign mu cost (k+1) hlocal
+    _ ≤ ∑ a : SliceComponent F N R, cost a := sum_local_slice_bounds assign mu cost c hlocal
     _ = ∑ g : ↥(activeFactors F N), ∑ C : RegularComponent E g.1 N R,
         (budgets.unit g).toPrimeFlagBudgetFamily.weightedCost D1 C := by
       rw [Fintype.sum_sigma]

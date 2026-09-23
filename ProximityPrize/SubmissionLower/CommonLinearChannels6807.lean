@@ -51,8 +51,6 @@ theorem linearA_in_flag (mu lam : Ω) : PolynomialInFlag unitAllFlag (linearA mu
     (inFlag_const_mul mu (inFlag_X 0 unitAllFlag (by simp [InFlag,unitAllFlag,Finsupp.single_apply]))))
     (inFlag_const_mul (mu*lam) (inFlag_X 2 unitAllFlag (by simp [InFlag,unitAllFlag,Finsupp.single_apply])))
 
-theorem eval_linearZ (P : Ideal Poly) [P.IsPrime] :
-    coordinateEvaluation Ω P (linearZ : Poly) = coordinate Ω P 2 := rfl
 theorem eval_linearU (P : Ideal Poly) [P.IsPrime] (lam : Ω) :
     coordinateEvaluation Ω P (linearU lam) = affineU Ω P lam := by
   rw [coordinateEvaluation_eq_aeval]
@@ -63,10 +61,6 @@ theorem eval_linearA (P : Ideal Poly) [P.IsPrime] (mu lam : Ω) :
   rw [coordinateEvaluation_eq_aeval]
   simp only [linearA,affineV,Algebra.smul_def,map_add,map_mul,
     MvPolynomial.aeval_X,MvPolynomial.aeval_C]
-
-theorem flagMixed_swap_last (p q r : FlagDegree) : flagMixed p q r = flagMixed p r q := by
-  simp only [flagMixed]
-  ring
 
 variable {G T H : MvPolynomial (Fin 3) Ω} {p q : FlagDegree}
   {base : ∀ C : RegularComponent Ω G T H, SeparableLiteralCoordinate C.1}
