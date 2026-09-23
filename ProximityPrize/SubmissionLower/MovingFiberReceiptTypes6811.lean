@@ -96,7 +96,7 @@ def context (r v : Nat) (current parent : Numbers) : PhaseRowContext :=
 
 def SingleValid (r v : Nat) (row : Numbers) : Prop :=
   row.carrier.Correct r v ∧ ∀ j : Fin 8, MovingFiberSingleCore6811.Cover row.carrier
-    (sheetSlope j.val) (sheetOwn j.val r v) r v row.threshold (9276-r-v) 0 row.singletons
+    (sheetSlope j.val) (sheetOwn j.val r v) r v row.threshold (9679-r-v) 0 row.singletons
 instance (r v : Nat) (row : Numbers) : Decidable (SingleValid r v row) := by
   unfold SingleValid; infer_instance
 def ThresholdsValid (r v : Nat) (row : Numbers) : Prop :=

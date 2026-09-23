@@ -8,9 +8,9 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
-def initialAPotential : Potential := ⟨8728330260, 7635583765037, 35730343721378⟩
+def initialAPotential : Potential := ⟨8838030555, 10507113500843, 49204411286684⟩
 def initialAComplement (p : FlagDegree) : ℕ :=
-    let t := 9275 - total p
+    let t := 9678 - total p
     let y := 185 - middle p
     let r := 40 - p.all
   let nr := min t (min y r)
@@ -22,7 +22,7 @@ def initialAComplement (p : FlagDegree) : ℕ :=
 /-- The greedy complement is maximal for the A potential among all raw flags
 that can be added to `p` inside the wide box. -/
 theorem initialAPotential_le_complement (p n : FlagDegree)
-    (ht : total p + total n ≤ 9275)
+    (ht : total p + total n ≤ 9678)
     (hy : middle p + middle n ≤ 185)
     (hr : p.all + n.all ≤ 40) :
     initialAPotential.eval n ≤ initialAComplement p := by
@@ -54,7 +54,7 @@ theorem initialA_helpers_sum_le_complement
     (helper : ι → ℕ)
     (universal : FlagDegree)
     (hhelper : ∀ i ∈ s, helper i ≤ initialAPotential.eval (p i))
-    (ht : total universal + ∑ i ∈ s, total (p i) ≤ 9275)
+    (ht : total universal + ∑ i ∈ s, total (p i) ≤ 9678)
     (hy : middle universal + ∑ i ∈ s, middle (p i) ≤ 185)
     (hr : universal.all + ∑ i ∈ s, (p i).all ≤ 40) :
     (∑ i ∈ s, helper i) ≤ initialAComplement universal := by

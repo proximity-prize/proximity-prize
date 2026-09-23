@@ -9,7 +9,6 @@ set_option maxHeartbeats 2000000
 set_option maxRecDepth 100000
 abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
-abbrev P4 := MvPolynomial (Fin 4) K
 local instance : DecidableEq K := Classical.decEq _
 local instance : DecidableEq I := Classical.decEq _
 

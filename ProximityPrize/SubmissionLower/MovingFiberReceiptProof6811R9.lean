@@ -311,7 +311,15 @@ theorem at9_149 : At 9 149 :=
   at_of_direct direct9_149 rfl rfl (by intro _; rfl)
 theorem at9_150 : At 9 150 :=
   at_of_direct direct9_150 rfl rfl (by intro _; rfl)
-theorem all9 (v : Nat) (hv : v≤150) : At 9 v := by
+theorem at9_151 : At 9 151 :=
+  at_of_direct direct9_151 rfl rfl (by intro _; rfl)
+theorem at9_152 : At 9 152 :=
+  at_of_direct direct9_152 rfl rfl (by intro _; rfl)
+theorem at9_153 : At 9 153 :=
+  at_of_direct direct9_153 rfl rfl (by intro _; rfl)
+theorem at9_154 : At 9 154 :=
+  at_of_direct direct9_154 rfl rfl (by intro _; rfl)
+theorem all9 (v : Nat) (hv : v≤154) : At 9 v := by
   interval_cases v
   · exact at9_0
   · exact at9_1
@@ -464,5 +472,9 @@ theorem all9 (v : Nat) (hv : v≤150) : At 9 v := by
   · exact at9_148
   · exact at9_149
   · exact at9_150
+  · exact at9_151
+  · exact at9_152
+  · exact at9_153
+  · exact at9_154
 #print axioms all9
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

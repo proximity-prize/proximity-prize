@@ -36,10 +36,6 @@ def orderIdeal (n : ℕ) : Ideal A where
     rw [map_mul, map_mul]
     simpa only [one_mul] using mul_le_mul' (hbound r) ha
 
-theorem mem_orderIdeal (a : A) (n : ℕ) :
-    a ∈ orderIdeal iota v hbound n ↔
-      v (iota a) ≤ WithZero.exp (-(n : ℤ)) := Iff.rfl
-
 theorem ideal_pow_value_le (J : Ideal A)
     (hvanish : ∀ a ∈ J, v (iota a) < 1) (n : ℕ) :
     J^n ≤ orderIdeal iota v hbound n := by
@@ -125,21 +121,6 @@ theorem actual_normalized_order_ge_pow (phi : A →ₐ[K] K)
     ((RCN000.actualPointPlace K A L phi).valuation L)
     (RCN000.actual_model_value_le_one K A L phi) phi
     (RCN000.actual_model_value_lt_one_iff K A L phi) n a b ha hb hx
-
-/-- Specialization for an old tail divided by kappa*H^(w+3).
-Only nonvanishing of kappa and H at the point is required. -/
-theorem actual_first_tail_order_ge (phi : A →ₐ[K] K)
-    (n w : ℕ) (tail H kappa : A)
-    (htail : tail ∈ (RingHom.ker phi.toRingHom)^n)
-    (hH : phi H ≠ 0) (hkappa : phi kappa ≠ 0)
-    (f : L) (hf : f ≠ 0)
-    (hrepresentation : f = algebraMap A L tail /
-      algebraMap A L (kappa*H^(w+3))) :
-    (n : ℤ) ≤ RCN026.order K L (RCN344.modelPlace K L A phi) f := by
-  subst f
-  apply actual_normalized_order_ge_pow K A L phi n tail (kappa*H^(w+3))
-    htail _ hf
-  simpa only [map_mul, map_pow] using mul_ne_zero hkappa (pow_ne_zero _ hH)
 
 end ActualAffinePlaces
 end

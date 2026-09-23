@@ -13,15 +13,15 @@ set_option maxHeartbeats 4000000
 
 def PrefixAt (r v : Nat) : Prop :=
   ∀ j ∈ List.range 10,
-    (r+1≤35 → r+1+v≤159 → storedPrefix r v j ≤ storedPrefix (r+1) v j) ∧
-    (r+(v+1)≤159 → storedPrefix r v j ≤ storedPrefix r (v+1) j)
+    (r+1≤35 → r+1+v≤163 → storedPrefix r v j ≤ storedPrefix (r+1) v j) ∧
+    (r+(v+1)≤163 → storedPrefix r v j ≤ storedPrefix r (v+1) j)
 def ThresholdAt (r v : Nat) : Prop :=
   ∀ j ∈ List.range 10, FastSourceThresholdSufficient (TenPhase.sound j).source r v
     (PhaseRows.thresholdAt (rowContext r v).threshold j)
 def RunsAt (r v : Nat) : Prop :=
   RowRunsValid (rowContext r v) (lookup r v).phaseRuns
 
-theorem prefix_at (h : Receipt) (r v : Nat) (hr : 1≤r) (hR : r≤35) (hY : r+v≤159) : PrefixAt r v := by
+theorem prefix_at (h : Receipt) (r v : Nat) (hr : 1≤r) (hR : r≤35) (hY : r+v≤163) : PrefixAt r v := by
   intro j hj
   have hj10 : j<10 := List.mem_range.mp hj
   constructor
@@ -32,20 +32,20 @@ theorem prefix_at (h : Receipt) (r v : Nat) (hr : 1≤r) (hR : r≤35) (hY : r+v
     have hh := (h r (v+1) hr hR hY').prefixV (by omega) ⟨j,hj10⟩
     simpa only [Nat.add_sub_cancel] using hh
 
-theorem threshold_at (h : Receipt) (r v : Nat) (hr : 1≤r) (hR : r≤35) (hY : r+v≤159) : ThresholdAt r v := by
+theorem threshold_at (h : Receipt) (r v : Nat) (hr : 1≤r) (hR : r≤35) (hY : r+v≤163) : ThresholdAt r v := by
   intro j hj
   have hh := (h r v hr hR hY).threshold ⟨j,List.mem_range.mp hj⟩
   exact threshold_valid_sound _ _ _ _ _ hh
 
-theorem runs_at (h : Receipt) (r v : Nat) (hr : 1≤r) (hR : r≤35) (hY : r+v≤159) : RunsAt r v :=
+theorem runs_at (h : Receipt) (r v : Nat) (hr : 1≤r) (hR : r≤35) (hY : r+v≤163) : RunsAt r v :=
   (h r v hr hR hY).phases
 
 theorem sum_count_le_base {ι : Type} [DecidableEq ι]
     (h : Receipt) (s : Finset ι) (p : ι → FlagDegree) (count : ι → Nat)
     (hr : ∀ i ∈ s, 1≤(p i).all)
     (hR : (∑ i ∈ s, (p i).all)≤35)
-    (hY : (∑ i ∈ s, (p i).all)+(∑ i ∈ s, (p i).yz)≤159)
-    (hT : (∑ i ∈ s, (p i).all)+(∑ i ∈ s, (p i).yz)+(∑ i ∈ s, (p i).zOnly)≤9275)
+    (hY : (∑ i ∈ s, (p i).all)+(∑ i ∈ s, (p i).yz)≤163)
+    (hT : (∑ i ∈ s, (p i).all)+(∑ i ∈ s, (p i).yz)+(∑ i ∈ s, (p i).zOnly)≤9678)
     (hcount : ∀ i ∈ s, ∀ j : Fin 8, count i ≤ sheetSlope j.val*(p i).zOnly+
       sheetOwn j.val (p i).all (p i).yz) :
     (∑ i ∈ s, count i) ≤ baseCap (sumFlag s p) := by
@@ -56,7 +56,7 @@ theorem sum_count_le_base {ι : Type} [DecidableEq ι]
     have hb := (h _ _ hpos hR hY).base
     obtain ⟨j,hj,hbase⟩ := base_valid_sound _ _ _ _ _ _ hb
       (∑ i ∈ s, (p i).zOnly) (Nat.zero_le _) (by omega)
-    have hc := AffineFactorAggregate6808.sum_count_le 35 159 (sheetSlope j)
+    have hc := AffineFactorAggregate6808.sum_count_le 35 163 (sheetSlope j)
       (sheetOwn j) (sheetPacked j) (MovingFiberPacking6811.sheet_bellman ⟨j,hj⟩)
       s (fun i => (p i).all) (fun i => (p i).yz) (fun i => (p i).zOnly) count
       hr hR hY (fun i hi => hcount i hi ⟨j,hj⟩)

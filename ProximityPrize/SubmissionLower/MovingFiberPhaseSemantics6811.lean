@@ -24,9 +24,9 @@ abbrev P4 := MvPolynomial (Fin 4) K
 local instance : DecidableEq K := Classical.decEq _
 local instance : DecidableEq I := Classical.decEq _
 
-def PrefixReceiptSound : Prop := ∀ R V, 1 ≤ R → R ≤ 35 → R+V ≤ 159 → PrefixAt R V
-def ThresholdReceiptSound : Prop := ∀ R V, 1 ≤ R → R ≤ 35 → R+V ≤ 159 → ThresholdAt R V
-def RunReceiptSound : Prop := ∀ R V, 1 ≤ R → R ≤ 35 → R+V ≤ 159 → RunsAt R V
+def PrefixReceiptSound : Prop := ∀ R V, 1 ≤ R → R ≤ 35 → R+V ≤ 163 → PrefixAt R V
+def ThresholdReceiptSound : Prop := ∀ R V, 1 ≤ R → R ≤ 35 → R+V ≤ 163 → ThresholdAt R V
+def RunReceiptSound : Prop := ∀ R V, 1 ≤ R → R ≤ 35 → R+V ≤ 163 → RunsAt R V
 
 def prefixValue (j r v : ℕ) : ℕ := cachedPrefixAt (lookup r v).prefixValues j
 
@@ -45,7 +45,7 @@ theorem prefix_zero (j v : ℕ) : prefixValue j 0 v = 0 := by
   simp [prefixValue, lookup, ReceiptData.rows, defaults, cachedPrefixAt]
 
 theorem prefix_r_mono (hc : PrefixReceiptSound) (j v r R : ℕ)
-    (hj : j < 10) (hr : r ≤ R) (hR : R ≤ 35) (hRV : R+v ≤ 159) :
+    (hj : j < 10) (hr : r ≤ R) (hR : R ≤ 35) (hRV : R+v ≤ 163) :
     prefixValue j r v ≤ prefixValue j R v := by
   by_cases hr0 : r = 0
   · subst r; rw [prefix_zero]; exact Nat.zero_le _
@@ -57,7 +57,7 @@ theorem prefix_r_mono (hc : PrefixReceiptSound) (j v r R : ℕ)
       exact (ih (by omega) (by omega)).trans (hstep.1 (by omega) (by omega))
 
 theorem prefix_v_mono (hc : PrefixReceiptSound) (j r v V : ℕ)
-    (hj : j < 10) (hv : v ≤ V) (hr : r ≤ 35) (hRV : r+V ≤ 159) :
+    (hj : j < 10) (hv : v ≤ V) (hr : r ≤ 35) (hRV : r+V ≤ 163) :
     prefixValue j r v ≤ prefixValue j r V := by
   by_cases hr0 : r = 0
   · subst r; simp [prefix_zero]
@@ -69,7 +69,7 @@ theorem prefix_v_mono (hc : PrefixReceiptSound) (j r v V : ℕ)
       exact (ih (by omega)).trans (hstep.2 (by omega))
 
 theorem prefix_mono (hc : PrefixReceiptSound) (j r v R V : ℕ)
-    (hj : j < 10) (hr : r ≤ R) (hv : v ≤ V) (hR : R ≤ 35) (hRV : R+V ≤ 159) :
+    (hj : j < 10) (hr : r ≤ R) (hv : v ≤ V) (hR : R ≤ 35) (hRV : R+V ≤ 163) :
     prefixValue j r v ≤ prefixValue j R V :=
   (prefix_r_mono hc j v r R hj hr hR (by omega)).trans
     (prefix_v_mono hc j R v V hj hv hR hRV)
@@ -85,7 +85,7 @@ theorem source_eq (j : ℕ) (hj : j < 10) : (phaseSound j).source = phaseSource 
 theorem potential_eq (j : ℕ) (hj : j < 10) : (phaseSound j).potential = phasePotential j := by
   interval_cases j <;> decide
 
-theorem source_total (j : ℕ) (hj : j < 10) : 9275 ≤ (phaseSource j).totalCap := by
+theorem source_total (j : ℕ) (hj : j < 10) : 9678 ≤ (phaseSource j).totalCap := by
   interval_cases j <;> decide
 
 def phaseDefect (j : ℕ) (p : FlagDegree) : ℕ := prefixValue j (p.all-1) p.yz
@@ -99,8 +99,8 @@ theorem defect_sound (hpref : PrefixReceiptSound) (hth : ThresholdReceiptSound)
   have hm : q.all+q.yz ≤ p.all+p.yz := Nat.add_le_add hstrict.1.1 hstrict.1.2.1
   have ht : q.all+q.yz+q.zOnly ≤ p.all+p.yz+p.zOnly :=
     Nat.add_le_add hm hstrict.1.2.2
-  have hyP : p.all+p.yz ≤ 159 := by simpa [middle, Nat.add_comm] using hY
-  have htP : p.all+p.yz+p.zOnly ≤ 9275 := by
+  have hyP : p.all+p.yz ≤ 163 := by simpa [middle, Nat.add_comm] using hY
+  have htP : p.all+p.yz+p.zOnly ≤ 9678 := by
     simpa [total, Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using hT
   by_cases hq0 : q.all = 0
   · rw [phaseCap_zero j q hq0]
@@ -118,7 +118,7 @@ theorem defect_sound (hpref : PrefixReceiptSound) (hth : ThresholdReceiptSound)
   have hrun := hruns q.all q.yz hqpos (by omega) (by omega) j (List.mem_range.mpr hj)
   have hterminal := phaseTerminal_of_runs (rowContext q.all q.yz) j
     ((((ReceiptData.lookup q.all q.yz).phaseRuns)[j]?).getD []) hj hrun q.zOnly (by
-      change q.zOnly < 9276-(q.all+q.yz)
+      change q.zOnly < 9679-(q.all+q.yz)
       omega)
   have hsmall := hterminal.resolve_left hnot
   have hmono := prefix_mono hpref j q.all q.yz (p.all-1) p.yz hj
@@ -136,9 +136,9 @@ theorem bound_step (hpref : PrefixReceiptSound) (hth : ThresholdReceiptSound)
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
     (ambient : Finset (RegularIndex H))
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181284 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i) = u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (hprevious : StateLocalRegularBoundOn H selected Gamma ambient (phaseCap j)) :
     StateLocalRegularBoundOn H selected Gamma ambient (phaseCap (j+1)) := by
   classical
@@ -167,8 +167,8 @@ theorem bound_step (hpref : PrefixReceiptSound) (hth : ThresholdReceiptSound)
     change _ ≤ phaseCap j p at hprev
     omega
   have hr1 : 1 ≤ p.all := by omega
-  have hyP : p.all+p.yz ≤ 159 := by simpa [p, middle, Nat.add_comm] using hY
-  have htP : p.all+p.yz+p.zOnly ≤ 9275 := by
+  have hyP : p.all+p.yz ≤ 163 := by simpa [p, middle, Nat.add_comm] using hY
+  have htP : p.all+p.yz+p.zOnly ≤ 9678 := by
     simpa [p, total, Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using hT
   by_cases hcut : thresholdAt (rowContext p.all p.yz).threshold j ≤ p.zOnly
   · have hreceipt := hth p.all p.yz hr1 hR hyP j (List.mem_range.mpr hj)
@@ -196,9 +196,9 @@ theorem bound_all (hpref : PrefixReceiptSound) (hth : ThresholdReceiptSound)
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
     (ambient : Finset (RegularIndex H))
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181284 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i) = u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (hbase : StateLocalRegularBoundOn H selected Gamma ambient (phaseCap 0))
     (j : ℕ) (hj : j ≤ 10) :
     StateLocalRegularBoundOn H selected Gamma ambient (phaseCap j) := by

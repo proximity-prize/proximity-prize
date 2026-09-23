@@ -10,9 +10,9 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 3000000
 
 def cap (slope intercept z : ℕ) : ℕ := slope*z+intercept
-def rootIndex (w : ℕ) : Fin 16 := ⟨(w-1)%16,Nat.mod_lt _ (by decide)⟩
+def rootIndex (w : ℕ) : Fin 20 := ⟨(w-1)%20,Nat.mod_lt _ (by decide)⟩
 def phasePotential (j : ℕ) : Potential := (Lower80860.TenPhase.sound j).potential
-def thresholdAt (q : Array ℕ) (j : ℕ) : ℕ := (q[j]?).getD 9276
+def thresholdAt (q : Array ℕ) (j : ℕ) : ℕ := (q[j]?).getD 9679
 
 structure Carrier where
   c0 : ℕ
@@ -58,27 +58,27 @@ def rootL (w : ℕ) : ℕ := MovingFiberCount6811.sourceLimit (rootIndex w)
 def rootUpper (w r v z : ℕ) : ℕ := rootSlope w r v*z+rootIntercept w r v
 
 def choice (c : Carrier) (w r v z : ℕ) : ℕ :=
-  if w=0 then c.eval z else if w≤16 then rootUpper w r v z
-  else (phasePotential (w-17)).eval (rawFlag r v z)
+  if w=0 then c.eval z else if w≤20 then rootUpper w r v z
+  else (phasePotential (w-21)).eval (rawFlag r v z)
 
 def Active (thresholds : Array ℕ) (w r v lo hi : ℕ) : Prop :=
   if w=0 then r≤32 ∧ r+v≤149 ∧ r+v+hi≤8121 ∧ BoundaryTailGates6808.Safe r (r+v)
-  else if w≤16 then 3 ≤ r ∧ r ≤ 31 ∧ 2 ≤ v ∧ 3 ≤ lo ∧
+  else if w≤20 then 3 ≤ r ∧ r ≤ 31 ∧ 2 ≤ v ∧ 3 ≤ lo ∧
     rootL w < r+v+lo ∧ r+v ≤ 142 ∧ r+v+hi ≤ 7501
-  else w-17 < 7 ∧ thresholdAt thresholds (w-17) ≤ lo
+  else w-21 < 7 ∧ thresholdAt thresholds (w-21) ≤ lo
 instance (thresholds : Array ℕ) (w r v lo hi : ℕ) : Decidable (Active thresholds w r v lo hi) := by
   unfold Active; infer_instance
 
 def choiceSlope (c : Carrier) (w r v : ℕ) : ℕ :=
-  if w=0 then c.c4-c.c3 else if w≤16 then rootSlope w r v
-  else (phasePotential (w-17)).totalCoeff
+  if w=0 then c.c4-c.c3 else if w≤20 then rootSlope w r v
+  else (phasePotential (w-21)).totalCoeff
 
 theorem choice_affine (c : Carrier) (w r v lo z : ℕ)
     (hlo : 3 ≤ lo) (hz : lo ≤ z) :
     choice c w r v z = choice c w r v lo + choiceSlope c w r v*(z-lo) := by
   by_cases hw0 : w=0
   · simpa only [choice,choiceSlope,if_pos hw0] using c.eval_affine lo z hlo hz
-  by_cases hw1 : w≤16
+  by_cases hw1 : w≤20
   · simp only [choice,choiceSlope,if_neg hw0,if_pos hw1,rootUpper]
     conv_lhs => rw [show z=lo+(z-lo) by omega]
     ring

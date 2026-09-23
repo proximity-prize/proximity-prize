@@ -23,9 +23,12 @@ theorem exists_reducedActiveGeometry
      flag.zOnly + flag.yz + flag.all < p)
    (hmixed:flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p) :
    Nonempty (ReducedActiveGeometry S):=by
- obtain ⟨base, hactive, hZ, ⟨D⟩⟩ :=
+ obtain ⟨base, hactive, hZ, -⟩ :=
    BoundaryTailProjection.exists_reduced_firstTail_activeNestedData_of_caps S hfirstProper hflagChar hmixed
- exact ⟨⟨base, hactive, hZ, D⟩⟩
+ obtain ⟨D, hlam, hmu⟩:=RCN038.exists_adaptiveNestedProjectionDataActive_in base hactive
+   (RCN315.residualStage_pderiv_one_ne_zero_of_support S) (Set.range (polynomialEmbedding K))
+   (Set.infinite_range_of_injective (polynomialEmbedding_injective K))
+ exact ⟨⟨base, hactive, hZ, D, hlam, hmu⟩⟩
 noncomputable def reducedActiveGeometry
    {a b s:ℕ}
    (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w

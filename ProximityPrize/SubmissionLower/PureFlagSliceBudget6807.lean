@@ -61,9 +61,5 @@ theorem all_active_slice_costs_le (F N R : MvPolynomial (Fin 3) E)
     (U g).toPrimeFlagBudgetFamily.sum_weightedCost_le r)).trans
       (activeFactors_mixed_sum_le F N hF p q r hFp)
 
-/-- The linear slice needs only these low characteristic gates. -/
-theorem linear_slice_characteristic_gates (t : ℕ) (ht : t ≤ 7501) :
-    t < 2130706433 ∧ 2*t*1 < 2130706433 := by omega
-
 end
 end ProximityPrize.SubmissionLower.PureFlagSliceBudget6807
