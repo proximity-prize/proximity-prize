@@ -86,8 +86,9 @@ theorem joint_for_actual_unit_family
       simpa only [hq,Nat.mul_one] using hlinear
     have hh := ActualGenericChannel6807.first_cut_for_coordinate_channel (E := E)
       S hp old hold ell q hell (fun C => projection C.1) (fun C => hvalue C.1)
-      hdeg hm P B U L s k n0 hS hP hBU hUL hdn hB hn
-      (fun C => hlead C.1 C.2) hdiv h2 hfact r v z hr hv hR hYR hAll
+      hdeg hm _ (fun C => hlead C.1 C.2) (k+1) (k+1) w _ _
+      (ActiveSliceAssembly6807.first_slice_charge S hp _ P B U L s k n0 hS hP hBU hUL hdn hB hn
+        hdiv h2 hfact r v z hr hv hR hYR hAll)
     simpa only [old,mu,D1,V,flagMixed_swap_last flag q D1] using hh
   have hz := htail unitZFlag linearZ linearZ_in_flag unit.zProjection
     (common_z_value unit) (by decide)

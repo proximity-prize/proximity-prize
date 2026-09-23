@@ -53,14 +53,14 @@ def storedPrefix (r v j : Nat) : Nat := ((lookup r v).prefixValues[j]?).getD 0
 
 structure At (r v : Nat) : Prop where
   single : SingleValid r v (lookup r v)
-  base : BaseValid (lookup r v).base r v (9276-r-v) 0 (lookup r v).baseChoices
+  base : BaseValid (lookup r v).base r v (9679-r-v) 0 (lookup r v).baseChoices
   threshold : ThresholdsValid r v (lookup r v)
   phases : PhaseRows.RowRunsValid (rowContext r v) (lookup r v).phaseRuns
   ledger : LedgerAudit.RunsValid (rowContext r v) 0 (lookup r v).ledgerRuns
   prefixR : ∀ j : Fin 10, storedPrefix (r-1) v j.val ≤ storedPrefix r v j.val
   prefixV : 1≤v → ∀ j : Fin 10, storedPrefix r (v-1) j.val ≤ storedPrefix r v j.val
 
-def Receipt : Prop := ∀ r v, 1≤r → r≤35 → r+v≤159 → At r v
+def Receipt : Prop := ∀ r v, 1≤r → r≤35 → r+v≤163 → At r v
 
 theorem at_of_direct {r v : Nat} {row parent prior : Numbers}
     (h : DirectAt r v row parent prior) (he : row=lookup r v)

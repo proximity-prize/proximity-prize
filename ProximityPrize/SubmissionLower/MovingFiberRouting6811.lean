@@ -29,7 +29,7 @@ local instance : CharP K 2130706433 := by
 source.  Keeping the source parameters explicit lets all external locator
 profiles share one factor-switch proof. -/
 def helperPair (L YS S leftY leftR leftZ : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181284, leftY, leftR, leftZ, YS, S, L⟩
+  ⟨262144, 131071, 181275, leftY, leftR, leftZ, YS, S, L⟩
 
 def HelperPairGates (L YS S leftY leftR leftZ : ℕ) : Prop :=
   let P := helperPair L YS S leftY leftR leftZ
@@ -71,16 +71,16 @@ private theorem degreeZ_le_totalWeight (Q : P4) :
 kernel or one source witness is coprime to it and supplies the unequal-pair
 count. -/
 theorem divisor_or_helper_count
-    (D L S m YS : ℕ) (hD : 0 < D) (hDa : D ≤ m * 181284)
+    (D L S m YS : ℕ) (hD : 0 < D) (hDa : D ≤ m * 181275)
     (hshape : D + S ≤ 131071 * (YS + 1))
     {u0 u1 : I → K} {H : P4}
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181284 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181275 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (F : RegularIndex H) (leftY leftR leftZ : ℕ)
     (hFY : F.1.degreeOf 1 ≤ leftY)
     (hFR : F.1.degreeOf 2 ≤ leftR)
@@ -132,7 +132,7 @@ theorem divisor_or_helper_count
       (by norm_num [helperPair]) (by norm_num [helperPair])
       (by simpa only [helperPair] using hdegree)
       (by simpa only [helperPair] using hagreement)
-      (by simpa only [helperPair, UnequalParameters.errors, (show (262144 - 181284 : ℕ) = 80860 by decide +kernel)] using hno)
+      (by simpa only [helperPair, UnequalParameters.errors, (show (262144 - 181275 : ℕ) = 80869 by decide +kernel)] using hno)
     intro gamma hgamma
     dsimp only [Q]
     apply specialization_eq_zero_of_mem_ker K
@@ -254,11 +254,11 @@ theorem regularSeeds_count_le_stageCost
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181284 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181275 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (F : RegularIndex H)
     (hFY : F.1.degreeOf 1 ≤ b.yHi)
     (hFR : F.1.degreeOf 2 ≤ b.rHi)
@@ -300,7 +300,7 @@ theorem regularSeeds_count_le_stageCost
     (by norm_num [stagePair, helperPair])
     hdegree hagreement
     (by simpa only [stagePair, helperPair, UnequalParameters.errors,
-      (show (262144 - 181284 : ℕ) = 80860 by decide +kernel)] using hno)
+      (show (262144 - 181275 : ℕ) = 80869 by decide +kernel)] using hno)
     hQzero
   simpa only [stageCost] using hcount
 
@@ -412,13 +412,13 @@ ladder.  The source arithmetic appears only in `hband`, `hgapLe`, capacity,
 and positivity receipts. -/
 theorem regularSeeds_count_le_arbitraryPowerRoute
     (D L S m YS gap delta k : ℕ) (b : PowerRouteBox)
-    (hD : 0 < D) (hDa : D ≤ m * 181284)
+    (hD : 0 < D) (hDa : D ≤ m * 181275)
     (hshape : D + S ≤ 131071 * (YS + 1))
     (hk : 1 ≤ k) (hkchar : k < 2130706433)
     (hband : powerBandBudget delta b.tLo b.yLo b.rLo
       (L - b.tLo) (YS - b.yLo) (S - b.rLo) k < gap)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ k →
-      D - j * delta ≤ (m - j) * 181284 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181275 + j * (131071 - 1))
     (hlowpos : ∀ j, 1 ≤ j → j ≤ k → 0 < D - j * delta)
     (hterminal : L - k * b.tLo < b.tLo ∨
       YS - k * b.yLo < b.yLo ∨ S - k * b.rLo < b.rLo)
@@ -428,11 +428,11 @@ theorem regularSeeds_count_le_arbitraryPowerRoute
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181284 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181275 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (F : RegularIndex H)
     (hFT : b.tLo ≤ wt residualTotalWeights F.1 ∧
       wt residualTotalWeights F.1 ≤ b.tHi)
@@ -558,7 +558,7 @@ theorem regularSeeds_count_le_arbitraryPowerRoute
         let support := (Finset.univ : Finset I).filter (fun i ↦
           (selected gamma).eval (IRSProfile.domain i) =
             u0 i + gamma * u1 i)
-        have hcard : 181284 ≤ support.card := hagreement gamma hgammaG
+        have hcard : 181275 ≤ support.card := hagreement gamma hgammaG
         have hcap : D - j * delta ≤
             (m - j) * support.card + j * (131071 - 1) :=
           (hcapacity j hjpos hjle).trans
@@ -693,16 +693,16 @@ theorem counts_of_batchExitStage
     (hD : 0 < D) (hfuelChar : fuel < 2130706433)
     (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
-      D - j * delta ≤ (m - j) * 181284 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181275 + j * (131071 - 1))
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181284 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181275 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (A : Finset (RegularIndex H))
     (q : ConstraintKernel (K := K) D 131071 L S m
         IRSProfile.domain u0 u1 →ₗ[K] P4)
@@ -797,7 +797,7 @@ theorem counts_of_batchExitStage
   have hQzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
       specialization K (selected gamma) gamma QF = 0 := by
     exact batch_helper_zero_on_regularSeeds j D (D - j * delta) 131071
-      L S m 181284 2130706433
+      L S m 181275 2130706433
       (CharP.char_prime_of_ne_zero (R := K) (by norm_num))
       IRSProfile.domain u0 u1 H A F hFA selected Gamma v J hj hjchar
       (by decide) hdegree hagreement (hcapacity j hj hjle) hlow
@@ -820,21 +820,21 @@ later strict exit.  `hcharge` is the sole interface to the additive numerical
 potential used by a phase receipt. -/
 theorem exists_strict_helper_split_of_batch_source
     (D L S m YS gap delta fuel : ℕ)
-    (hD : 0 < D) (hDa : D ≤ m * 181284)
+    (hD : 0 < D) (hDa : D ≤ m * 181275)
     (hshape : D + S ≤ 131071 * (YS + 1))
     (hfuel : 1 ≤ fuel) (hfuelChar : fuel < 2130706433)
     (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
-      D - j * delta ≤ (m - j) * 181284 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181275 + j * (131071 - 1))
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181284 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181275 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (A : Finset (RegularIndex H)) (hA : A.Nonempty)
     (hband : powerBandBudget delta
       (wt residualTotalWeights (regularProduct H A))
@@ -979,21 +979,21 @@ theorem exists_strict_helper_split_of_batch_source
 
 theorem exists_strict_helper_split_of_batch_source_thin
     (D L S m YS gap delta fuel : ℕ)
-    (hD : 0 < D) (hDa : D ≤ m * 181284)
+    (hD : 0 < D) (hDa : D ≤ m * 181275)
     (hshape : D + S ≤ 131071 * (YS + 1))
     (hfuel : 1 ≤ fuel) (hfuelChar : fuel < 2130706433)
     (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
-      D - j * delta ≤ (m - j) * 181284 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181275 + j * (131071 - 1))
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181284 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181275 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (A : Finset (RegularIndex H)) (hA : A.Nonempty)
     (hbandThin : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
       (D - wt (contactWeights 131071) (regularProduct H A)) delta
@@ -1159,14 +1159,14 @@ def SourceNumbers.fuel (s : SourceNumbers) (p : FlagDegree) : ℕ :=
     (min (s.middleCap / middle p) (s.slopeCap / p.all))
 
 def SourceNumbers.band (s : SourceNumbers) (p : FlagDegree) : ℕ :=
-  powerBandBudget 50214 (total p) (middle p) p.all
+  powerBandBudget 50205 (total p) (middle p) p.all
     (s.totalCap - total p) (s.middleCap - middle p)
     (s.slopeCap - p.all) (s.fuel p)
 
 /-- Lever S1.  The product of the routed factors has contact weight at least
 `131071 * middle p - p.all` (`contact_ge_ys` with the exact aggregate weights), and the
 source's kernel degree satisfies `D + slopeCap ≤ 131071 * (middleCap + 1)`; so the level-1
-contact cap of the band ladder is at most `contactCap`, and it drops by `50214 + contactDec`
+contact cap of the band ladder is at most `contactCap`, and it drops by `50205 + contactDec`
 per level.  `bandThin` is the ladder charged on the rows that can carry a monomial. -/
 def contactDec (p : FlagDegree) : ℕ := 131071 * middle p - p.all
 
@@ -1174,7 +1174,7 @@ def SourceNumbers.contactCap (s : SourceNumbers) (p : FlagDegree) : ℕ :=
   (131071 * (s.middleCap + 1) - s.slopeCap) - contactDec p
 
 def SourceNumbers.bandThin (s : SourceNumbers) (p : FlagDegree) : ℕ :=
-  powerBandBudgetThin 131071 (s.contactCap p) 50214 (contactDec p)
+  powerBandBudgetThin 131071 (s.contactCap p) 50205 (contactDec p)
     (total p) (middle p) p.all
     (s.totalCap - total p) (s.middleCap - middle p)
     (s.slopeCap - p.all) (s.fuel p)
@@ -1199,12 +1199,12 @@ structure PhaseSourceSound where
   source : SourceNumbers
   potential : Potential
   stageCost_le : ∀ (p : FlagDegree) (j : ℕ),
-    1 ≤ p.all → p.all ≤ 35 → middle p ≤ 159 → total p ≤ 9275 →
+    1 ≤ p.all → p.all ≤ 35 → middle p ≤ 163 → total p ≤ 9678 →
     j ≤ source.fuel p →
     stageCost source.totalCap source.middleCap source.slopeCap
       (exactRouteBox p) j ≤ potential.eval p
   stageGates : ∀ (p : FlagDegree) (j : ℕ),
-    1 ≤ p.all → p.all ≤ 35 → middle p ≤ 159 → total p ≤ 9275 →
+    1 ≤ p.all → p.all ≤ 35 → middle p ≤ 163 → total p ≤ 9678 →
     j ≤ source.fuel p →
     HelperPairGates
       (source.totalCap - j * total p)
@@ -1219,7 +1219,7 @@ The algebraic batch engine turns precisely this condition into the phase cap.
 def PhaseDefectSound (previousCap : FlagDegree → ℕ)
     (source : SourceNumbers) (potential : Potential)
     (defect : FlagDegree → ℕ) : Prop :=
-  ∀ p q, p.all ≤ 35 → middle p ≤ 159 → total p ≤ 9275 →
+  ∀ p q, p.all ≤ 35 → middle p ≤ 163 → total p ≤ 9678 →
     RawStrictSlopeBelow q p → ¬source.Routeable q →
     previousCap q ≤ potential.eval q + defect p
 
@@ -1227,7 +1227,7 @@ def PhaseDefectSound (previousCap : FlagDegree → ℕ)
 def PhaseCapEquation (previousCap nextCap : FlagDegree → ℕ)
     (source : SourceNumbers) (potential : Potential)
     (defect : FlagDegree → ℕ) : Prop :=
-  ∀ p, p.all ≤ 35 → middle p ≤ 159 → total p ≤ 9275 →
+  ∀ p, p.all ≤ 35 → middle p ≤ 163 → total p ≤ 9678 →
     nextCap p = if source.Routeable p then
       min (previousCap p) (potential.eval p + defect p)
     else previousCap p
@@ -1325,7 +1325,7 @@ private theorem sourceFuel_terminal (s : SourceNumbers) (p : FlagDegree)
 split required by the phase recursion. -/
 theorem routeable_exists_strict_helper_split
     (sound : PhaseSourceSound) (D m : ℕ)
-    (hweighted : D = m * 181284)
+    (hweighted : D = m * 181275)
     (hshape : D + sound.source.slopeCap ≤
       131071 * (sound.source.middleCap + 1))
     (hslopeM : sound.source.slopeCap ≤ m)
@@ -1334,19 +1334,19 @@ theorem routeable_exists_strict_helper_split
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181284 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181275 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (hgap : sound.source.gap ≤ Module.finrank K
       (ConstraintKernel (K := K) D 131071 sound.source.totalCap
         sound.source.slopeCap m IRSProfile.domain u0 u1))
     (A : Finset (RegularIndex H))
     (hroute : sound.source.Routeable (regularAggregateFlag H A))
     (hnarrowS : (regularAggregateFlag H A).all ≤ 35)
-    (hnarrowY : middle (regularAggregateFlag H A) ≤ 159)
-    (hnarrowT : total (regularAggregateFlag H A) ≤ 9275) :
+    (hnarrowY : middle (regularAggregateFlag H A) ≤ 163)
+    (hnarrowT : total (regularAggregateFlag H A) ≤ 9678) :
     ∃ U, U ⊂ A ∧ ∀ F ∈ A \ U,
       (regularSeeds H selected Gamma F).card ≤
         sound.potential.eval (regularCumulativeFlag H F) := by
@@ -1372,14 +1372,14 @@ theorem routeable_exists_strict_helper_split
   have hfuelChar : sound.source.fuel p < 2130706433 :=
     hfuelM.trans_lt hmChar
   have hlowpos : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
-      0 < D - j * 50214 := by
+      0 < D - j * 50205 := by
     intro j hj hjfuel
     have hjm : j ≤ m := hjfuel.trans hfuelM
     rw [hweighted]
     omega
   have hcapacity : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
-      D - j * 50214 ≤
-        (m - j) * 181284 + j * (131071 - 1) := by
+      D - j * 50205 ≤
+        (m - j) * 181275 + j * (131071 - 1) := by
     intro j _hj hjfuel
     have hjm : j ≤ m := hjfuel.trans hfuelM
     rw [hweighted]
@@ -1496,7 +1496,7 @@ theorem routeable_exists_strict_helper_split
   have hDpos : 0 < D := by
     rw [hweighted]
     exact Nat.mul_pos hmpos (by decide)
-  have hDa : D ≤ m * 181284 := hweighted.le
+  have hDa : D ≤ m * 181275 := hweighted.le
   have hP : regularProduct H A ≠ 0 := regularProduct_ne_zero H A
   have hcP : contactDec p ≤ wt (contactWeights 131071) (regularProduct H A) := by
     have h := LocatorArbitraryPowerAvoidance.contact_ge_ys 131071 (by decide)
@@ -1508,7 +1508,7 @@ theorem routeable_exists_strict_helper_split
     unfold SourceNumbers.contactCap
     omega
   have hbandThin : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
-      (D - wt (contactWeights 131071) (regularProduct H A)) 50214
+      (D - wt (contactWeights 131071) (regularProduct H A)) 50205
       (wt (contactWeights 131071) (regularProduct H A))
       (wt residualTotalWeights (regularProduct H A))
       (wt residualYSWeights (regularProduct H A))
@@ -1518,7 +1518,7 @@ theorem routeable_exists_strict_helper_split
       (sound.source.slopeCap - wt residualSWeights (regularProduct H A))
       (sound.source.fuel p) < sound.source.gap := by
     rcases hroute.2.2.2.2 with hold | hthin
-    · have hold' : powerBandBudget 50214
+    · have hold' : powerBandBudget 50205
           (wt residualTotalWeights (regularProduct H A))
           (wt residualYSWeights (regularProduct H A))
           (wt residualSWeights (regularProduct H A))
@@ -1531,7 +1531,7 @@ theorem routeable_exists_strict_helper_split
       exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_le
         _ _ _ _ _ _ _ _ _ _ _).trans_lt hold'
     · have hthin' : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
-          (sound.source.contactCap p) 50214 (contactDec p)
+          (sound.source.contactCap p) 50205 (contactDec p)
           (wt residualTotalWeights (regularProduct H A))
           (wt residualYSWeights (regularProduct H A))
           (wt residualSWeights (regularProduct H A))
@@ -1541,12 +1541,12 @@ theorem routeable_exists_strict_helper_split
           (sound.source.fuel p) < sound.source.gap := by
         simpa only [SourceNumbers.bandThin, p, regularAggregateFlag_total,
           regularAggregateFlag_middle, regularAggregateFlag_all] using hthin
-      exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_mono 131071 50214
+      exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_mono 131071 50205
         (sound.source.fuel p) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
         hDcap hcP le_rfl le_rfl le_rfl le_rfl le_rfl le_rfl).trans_lt hthin'
   apply exists_strict_helper_split_of_batch_source_thin D
     sound.source.totalCap sound.source.slopeCap m sound.source.middleCap
-    sound.source.gap 50214 (sound.source.fuel p)
+    sound.source.gap 50205 (sound.source.fuel p)
   · exact hDpos
   · exact hDa
   · exact hshape
@@ -1580,8 +1580,8 @@ def StateLocalRegularBound (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K) (cap : FlagDegree → ℕ) : Prop :=
   ∀ A : Finset (RegularIndex H),
     (regularAggregateFlag H A).all ≤ 35 →
-    middle (regularAggregateFlag H A) ≤ 159 →
-    total (regularAggregateFlag H A) ≤ 9275 →
+    middle (regularAggregateFlag H A) ≤ 163 →
+    total (regularAggregateFlag H A) ≤ 9678 →
     (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤
       cap (regularAggregateFlag H A)
 
@@ -1592,8 +1592,8 @@ def StateLocalRegularBoundOn (H : P4) (selected : K → Polynomial K)
     (cap : FlagDegree → ℕ) : Prop :=
   ∀ A : Finset (RegularIndex H), A ⊆ ambient →
     (regularAggregateFlag H A).all ≤ 35 →
-    middle (regularAggregateFlag H A) ≤ 159 →
-    total (regularAggregateFlag H A) ≤ 9275 →
+    middle (regularAggregateFlag H A) ≤ 163 →
+    total (regularAggregateFlag H A) ≤ 9678 →
     (∑ F ∈ A, (regularSeeds H selected Gamma F).card) ≤
       cap (regularAggregateFlag H A)
 
@@ -1602,7 +1602,7 @@ structure PhaseKernelRealization (sound : PhaseSourceSound)
     (u0 u1 : I → K) where
   D : ℕ
   m : ℕ
-  weighted : D = m * 181284
+  weighted : D = m * 181275
   shape : D + sound.source.slopeCap ≤
     131071 * (sound.source.middleCap + 1)
   slope_le_m : sound.source.slopeCap ≤ m
@@ -1621,11 +1621,11 @@ theorem stateLocalRegularBoundOn_onePhase
     (ambient : Finset (RegularIndex H))
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181284 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181275 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (previousCap nextCap defect : FlagDegree → ℕ)
     (hprevious : StateLocalRegularBoundOn H selected Gamma ambient previousCap)
     (hdefect : PhaseDefectSound previousCap sound.source
@@ -1695,11 +1695,11 @@ theorem stateLocalRegularBound_onePhase
     (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181284 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181275 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (previousCap nextCap defect : FlagDegree → ℕ)
     (hprevious : StateLocalRegularBound H selected Gamma previousCap)
     (hdefect : PhaseDefectSound previousCap sound.source

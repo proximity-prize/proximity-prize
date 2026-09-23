@@ -11,7 +11,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 3000000
 variable {K N : Type*} [Field K] [Fintype N]
 
-def cutoff (m k n0 h : ℕ) : ℕ := m*181284-SecondJetRelaxedDifferentiation.reserve k n0 h*50215
+def cutoff (m k n0 h : ℕ) : ℕ := m*181275-SecondJetRelaxedDifferentiation.reserve k n0 h*50206
 
 def Interpolant (m B s U L k n0 : ℕ) (nodes : N ↪ K) (u0 u1 : N → K)
     (P : Poly (K := K)) : Prop :=
@@ -22,7 +22,7 @@ def Interpolant (m B s U L k n0 : ℕ) (nodes : N ↪ K) (u0 u1 : N → K)
   (∀ i, MvPolynomial.X 0^m ∣ substitute (K := K)
     (localize (nodes i) (u0 i) (u1 i) P)) ∧
   ∀ d ≤ k, ∀ f : Polynomial K, f.natDegree ≤ 131071 → ∀ z : K, ∀ S : Finset N,
-    181284 ≤ S.card → (∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) →
+    181275 ≤ S.card → (∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) →
       specialize f z ((pderiv 1)^[d] P) = 0
 
 theorem exists_of_dimension (m B s U L k n0 : ℕ) (hsB : 2*s ≤ B) (hkm : k < m)
@@ -38,7 +38,7 @@ theorem exists_of_dimension (m B s U L k n0 : ℕ) (hsB : 2*s ≤ B) (hkm : k < 
     SecondJetGlobalDifferentiation.nested_to_flat_contact _ m (hcontact i)
   refine ⟨P,hP,hbounds,hc,?_⟩
   intro d hd f hf z S hS hvalues
-  apply derivative_vanish P m 181284 131071 k n0 d (by decide) (by decide)
+  apply derivative_vanish P m 181275 131071 k n0 d (by decide) (by decide)
     (by omega) hd ?_ nodes u0 u1 hc f hf z S hS hvalues
   intro e he
   have hb := (hbounds e he).2.2.2.2

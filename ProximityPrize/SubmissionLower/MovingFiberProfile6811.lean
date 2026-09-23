@@ -29,9 +29,10 @@ def Params.WellFormed (P : Params) : Prop :=
   2*P.s ≤ P.B ∧ P.B ≤ P.U ∧ P.U ≤ P.L ∧ P.k ≤ P.s ∧ P.s < P.m ∧
     P.k+1 ≤ P.n0 ∧ 2*(P.n0-(P.k+1)) ≤ P.B ∧ P.s < 2130706433
 def number (cfg : Fin 3 → Params) (scale t y r : ℕ) (f : FlagDegree) : ℕ :=
-  scale*flagMixed f (ActualFirstCutPole6807.firstBaseFlag (w-1) r (y-r) (t-y)) (cellNormal t y r) +
-    ∑ j : Fin 3, (w*weight (cellNormal t y r) j+65539*weight (MovingFiberRetainedStage6811.rawFirstFlag t y r) j)*
-      (scale/(cfg j).d)*flagMixed f (MovingFiberThreeSources6811.direction j) (cfg j).flag
+  scale/3*flagMixed f (MovingFiberRetainedStage6811.hfreeFirst t y r) (cellNormal t y r) +
+    ∑ j : Fin 3, (4*(w+1)*weight (cellNormal t y r) j*(scale/(3*(cfg j).d))+
+      65539*weight (MovingFiberRetainedStage6811.rawFirstFlag t y r) j*(scale/(cfg j).d))*
+      flagMixed f (MovingFiberThreeSources6811.direction j) (cfg j).flag
 
 variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
 local instance : DecidableEq K := Classical.decEq K
@@ -51,16 +52,19 @@ def bound (S : Data nodes u0 u1) (cfg : Fin 3 → Params) (scale : ℕ) : ℕ :=
 theorem count_of_interpolants
     (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
     (cfg : Fin 3 → Params) (hc : ∀ j, (cfg j).WellFormed)
-    (scale : ℕ) (hscale : 0 < scale) (hscaleDiv : ∀ j, (cfg j).d ∣ scale)
+    (scale : ℕ) (hscale : 0 < scale) (hscaleDiv : ∀ j, 3*(cfg j).d ∣ scale)
+    (hfree : ∀ (G : Finset K) (fl : FlagDegree) (S' : RCN159.ResidualStage (polynomialEmbedding K) G
+      ⇑nodes 2130706433 80869 fl w (cellSupport S.t S.y S.r)), S'.F = S.F →
+      MovingFiberRetainedStage6811.HFreeStage S')
     (P : Fin 3 → SecondJetSupport.Poly (K := K))
     (hP : ∀ j, Interpolant (cfg j).m (cfg j).B (cfg j).s (cfg j).U (cfg j).L (cfg j).k (cfg j).n0 nodes u0 u1 (P j))
     (hL : ∀ j, (cfg j).L < wt residualTotalWeights S.F)
     (hHelperGates : ∀ j, S.PairGates ((cfg j).B+(cfg j).s*(S.r-1))
       ((cfg j).U+(cfg j).s*(S.y-1)) ((cfg j).L+(cfg j).s*(S.t-1)))
     (hCoefficientGates : ∀ j, S.PairGates (cfg j).B (cfg j).U (cfg j).L)
-    (hidentity : ∀ f : FlagDegree, scale*131073*80861*
+    (hidentity : ∀ f : FlagDegree, scale*131073*80870*
       identityCurveDegree f (cellA S.t S.y) (cellB S.y S.r) (cellS S.r) w ≤
-        50213*number cfg scale S.t S.y S.r f) :
+        50204*number cfg scale S.t S.y S.r f) :
     S.seeds.card ≤ bound S cfg scale := by
   classical
   have hshape (j : Fin 3) : ∀ e ∈ (P j).support, 2*e 1+e 3 ≤ (cfg j).B ∧
@@ -103,9 +107,9 @@ theorem count_of_interpolants
           ((source j).leading (polynomialEmbedding K)) ≠ 0 := by
       intro gamma hgamma j
       exact (Finset.mem_filter.mp hgamma).2 j
-    have hid (f : FlagDegree) : scale*131073*80861*
+    have hid (f : FlagDegree) : scale*131073*80870*
         identityCurveDegree f (cellA S.t S.y) (cellB S.y S.r) (cellS S.r) w ≤
-          50213*MovingFiberRetainedStage6811.numerator source scale S.t S.y S.r f := by
+          50204*MovingFiberRetainedStage6811.numerator source scale S.t S.y S.r f := by
       rw [hnum]
       exact hidentity f
     have hg := MovingFiberRegularGeometry6811.regular_seed_bound
@@ -113,7 +117,7 @@ theorem count_of_interpolants
       SG.F SG.irreducible SG.rdegree SG.box SG.support SG.selected SG.seeds Finset.univ nodes u0 u1
       nodes.injective.injOn (by simpa only [Finset.card_univ] using hI)
       SG.degree SG.agreement SG.solution SG.regular SG.noPencil
-      source hscale hscaleDiv h2 hf hgood hid
+      source hscale hscaleDiv hfree h2 hf hgood hid
     have hGood : Good.card ≤ number cfg scale S.t S.y S.r (originalCumulativeFlag S.F)/scale := by
       apply (Nat.le_div_iff_mul_le hscale).mpr
       rw [← hnum]

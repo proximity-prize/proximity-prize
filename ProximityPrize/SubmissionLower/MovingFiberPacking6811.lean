@@ -14,7 +14,7 @@ set_option autoImplicit false
 set_option Elab.async false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 3000000
-theorem sheet_bellman (j : Fin 8) : AffineFactorAggregate6808.BellmanRows 35 159
+theorem sheet_bellman (j : Fin 8) : AffineFactorAggregate6808.BellmanRows 35 163
     (sheetOwn j.val) (sheetPacked j.val) := by
   fin_cases j
   · simpa only [sheetOwn,sheetPacked] using MovingFiberPackingSound6811.S0.bellman

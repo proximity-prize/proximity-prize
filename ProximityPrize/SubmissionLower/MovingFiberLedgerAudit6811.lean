@@ -10,44 +10,44 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
-def bound : ℕ := 274980720549750805
+def bound : ℕ := 274980720358131097
 
 def ledger (c : PhaseRowContext) (z : ℕ) : ℕ :=
   capBefore c 10 z + initialAComplement (rawFlag c.R c.V z) +
     c.R * unit (c.R+c.V) (c.R+c.V+z) c.R +
-    (40-c.R) * unit (185-(c.R+c.V)) (18992-(c.R+c.V+z)) (40-c.R) +
-    18000000000000 + (1057030663884726+0)
+    (40-c.R) * unit (185-(c.R+c.V)) (22192-(c.R+c.V+z)) (40-c.R) +
+    18000000000000 + (1215189223289491+0)
 
 def complementUpper (R V mode z : ℕ) : ℤ :=
-  let t : ℤ := 9275-R-V-z
+  let t : ℤ := 9678-R-V-z
   let y : ℕ := 185-(R+V)
   let r : ℕ := min y (40-R)
-  if mode = 0 then 8728330260*t+7635583765037*y+35730343721378*r
-  else if mode = 1 then (8728330260+7635583765037)*t+35730343721378*r
-  else (8728330260+7635583765037+35730343721378)*t
+  if mode = 0 then 8838030555*t+10507113500843*y+49204411286684*r
+  else if mode = 1 then (8838030555+10507113500843)*t+49204411286684*r
+  else (8838030555+10507113500843+49204411286684)*t
 
 def complementSlope (mode : ℕ) : ℤ :=
-  if mode = 0 then -8728330260
-  else if mode = 1 then -(8728330260+7635583765037)
-  else -(8728330260+7635583765037+35730343721378)
+  if mode = 0 then -8838030555
+  else if mode = 1 then -(8838030555+10507113500843)
+  else -(8838030555+10507113500843+49204411286684)
 
 theorem complement_formula (R V z : ℕ) :
     initialAComplement (rawFlag R V z) =
-      8728330260*(9275-(R+V+z)) +
-      7635583765037*min (9275-(R+V+z)) (185-(R+V)) +
-      35730343721378*min (9275-(R+V+z)) (min (185-(R+V)) (40-R)) := by
+      8838030555*(9678-(R+V+z)) +
+      10507113500843*min (9678-(R+V+z)) (185-(R+V)) +
+      49204411286684*min (9678-(R+V+z)) (min (185-(R+V)) (40-R)) := by
   simp [initialAComplement, initialAPotential, Potential.eval, rawFlag,
     total, middle, Nat.min_def]
   split_ifs <;> omega
 
-theorem complement_le_upper (R V mode z : ℕ) (ht : R+V+z ≤ 9275) :
+theorem complement_le_upper (R V mode z : ℕ) (ht : R+V+z ≤ 9678) :
     (initialAComplement (rawFlag R V z) : ℤ) ≤ complementUpper R V mode z := by
   rw [complement_formula]
-  have hmy := Nat.min_le_right (9275-(R+V+z)) (185-(R+V))
-  have hmt := Nat.min_le_left (9275-(R+V+z)) (185-(R+V))
-  have hmr := Nat.min_le_right (9275-(R+V+z)) (min (185-(R+V)) (40-R))
-  have hmrt := Nat.min_le_left (9275-(R+V+z)) (min (185-(R+V)) (40-R))
-  have hti : ((9275-(R+V+z) : ℕ) : ℤ) = 9275-R-V-z := by omega
+  have hmy := Nat.min_le_right (9678-(R+V+z)) (185-(R+V))
+  have hmt := Nat.min_le_left (9678-(R+V+z)) (185-(R+V))
+  have hmr := Nat.min_le_right (9678-(R+V+z)) (min (185-(R+V)) (40-R))
+  have hmrt := Nat.min_le_left (9678-(R+V+z)) (min (185-(R+V)) (40-R))
+  have hti : ((9678-(R+V+z) : ℕ) : ℤ) = 9678-R-V-z := by omega
   simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat]
   rw [hti]
   unfold complementUpper
@@ -59,9 +59,9 @@ def branch (c : PhaseRowContext) (w mode : ℕ) (u v : Bool) (z : ℕ) : ℤ :=
     (unitSlope (c.R+c.V) c.R : ℤ)*(c.R+c.V+z)+(unitConstant (c.R+c.V) c.R : ℤ)
     else 9000000000000) +
   ((40-c.R : ℕ) : ℤ)*(if v then
-    (unitSlope (185-(c.R+c.V)) (40-c.R) : ℤ)*(18992-c.R-c.V-z)+
+    (unitSlope (185-(c.R+c.V)) (40-c.R) : ℤ)*(22192-c.R-c.V-z)+
       (unitConstant (185-(c.R+c.V)) (40-c.R) : ℤ)
-    else 9000000000000) + 18000000000000+(1057030663884726+0)
+    else 9000000000000) + 18000000000000+(1215189223289491+0)
 
 def branchSlope (c : PhaseRowContext) (w mode lo : ℕ) (u v : Bool) : ℤ :=
   (sourceSlope c w lo : ℤ)+complementSlope mode+
@@ -99,23 +99,23 @@ theorem branch_between (c : PhaseRowContext) (w mode lo hi z : ℕ) (u v : Bool)
     nlinarith
 
 theorem ledger_le_of_branches (c : PhaseRowContext) (w mode z : ℕ)
-    (hw : w ≤ 10) (ha : SourceActive c w z) (ht : c.R+c.V+z ≤ 9275)
+    (hw : w ≤ 10) (ha : SourceActive c w z) (ht : c.R+c.V+z ≤ 9678)
     (hb : ∀ u v : Bool, branch c w mode u v z ≤ bound) : ledger c z ≤ bound := by
   have hs := capBefore_le_sourceLine c 10 w z hw ha
   have hc := complement_le_upper c.R c.V mode z ht
-  have hti : ((18992-(c.R+c.V+z) : ℕ) : ℤ) = 18992-c.R-c.V-z := by omega
+  have hti : ((22192-(c.R+c.V+z) : ℕ) : ℤ) = 22192-c.R-c.V-z := by omega
   unfold ledger unit
   by_cases hu : 9000000000000 ≤ unitSlope (c.R+c.V) c.R*(c.R+c.V+z)+unitConstant (c.R+c.V) c.R
   · rw [max_eq_right hu]
-    by_cases hv : 9000000000000 ≤ unitSlope (185-(c.R+c.V)) (40-c.R)*(18992-(c.R+c.V+z))+unitConstant (185-(c.R+c.V)) (40-c.R)
+    by_cases hv : 9000000000000 ≤ unitSlope (185-(c.R+c.V)) (40-c.R)*(22192-(c.R+c.V+z))+unitConstant (185-(c.R+c.V)) (40-c.R)
     · rw [max_eq_right hv]
       have hh := hb true true
       simp only [branch, Bool.true_eq, ↓reduceIte] at hh
       norm_cast at hs
       have hh' : (capBefore c 10 z : ℤ)+(initialAComplement (rawFlag c.R c.V z) : ℤ)+
           (c.R : ℤ)*((unitSlope (c.R+c.V) c.R : ℤ)*(c.R+c.V+z)+unitConstant (c.R+c.V) c.R)+
-          ((40-c.R : ℕ) : ℤ)*((unitSlope (185-(c.R+c.V)) (40-c.R) : ℤ)*(18992-c.R-c.V-z)+unitConstant (185-(c.R+c.V)) (40-c.R))+
-          18000000000000+(1057030663884726+0) ≤ bound := by omega
+          ((40-c.R : ℕ) : ℤ)*((unitSlope (185-(c.R+c.V)) (40-c.R) : ℤ)*(22192-c.R-c.V-z)+unitConstant (185-(c.R+c.V)) (40-c.R))+
+          18000000000000+(1215189223289491+0) ≤ bound := by omega
       rw [← hti] at hh'
       exact_mod_cast hh'
     · rw [max_eq_left (Nat.le_of_not_ge hv)]
@@ -124,18 +124,18 @@ theorem ledger_le_of_branches (c : PhaseRowContext) (w mode z : ℕ)
       have hsi : (capBefore c 10 z : ℤ) ≤ sourceLine c w z := by exact_mod_cast hs
       have hi : (capBefore c 10 z : ℤ)+(initialAComplement (rawFlag c.R c.V z) : ℤ)+
           (c.R : ℤ)*((unitSlope (c.R+c.V) c.R : ℤ)*(c.R+c.V+z)+unitConstant (c.R+c.V) c.R)+
-          ((40-c.R : ℕ) : ℤ)*9000000000000+18000000000000+(1057030663884726+0) ≤ bound := by omega
+          ((40-c.R : ℕ) : ℤ)*9000000000000+18000000000000+(1215189223289491+0) ≤ bound := by omega
       exact_mod_cast hi
   · rw [max_eq_left (Nat.le_of_not_ge hu)]
-    by_cases hv : 9000000000000 ≤ unitSlope (185-(c.R+c.V)) (40-c.R)*(18992-(c.R+c.V+z))+unitConstant (185-(c.R+c.V)) (40-c.R)
+    by_cases hv : 9000000000000 ≤ unitSlope (185-(c.R+c.V)) (40-c.R)*(22192-(c.R+c.V+z))+unitConstant (185-(c.R+c.V)) (40-c.R)
     · rw [max_eq_right hv]
       have hh := hb false true
       simp only [branch, Bool.true_eq, Bool.false_eq_true, ↓reduceIte] at hh
       have hsi : (capBefore c 10 z : ℤ) ≤ sourceLine c w z := by exact_mod_cast hs
       have hi : (capBefore c 10 z : ℤ)+(initialAComplement (rawFlag c.R c.V z) : ℤ)+
           (c.R : ℤ)*9000000000000+
-          ((40-c.R : ℕ) : ℤ)*((unitSlope (185-(c.R+c.V)) (40-c.R) : ℤ)*(18992-c.R-c.V-z)+unitConstant (185-(c.R+c.V)) (40-c.R))+
-          18000000000000+(1057030663884726+0) ≤ bound := by omega
+          ((40-c.R : ℕ) : ℤ)*((unitSlope (185-(c.R+c.V)) (40-c.R) : ℤ)*(22192-c.R-c.V-z)+unitConstant (185-(c.R+c.V)) (40-c.R))+
+          18000000000000+(1215189223289491+0) ≤ bound := by omega
       rw [← hti] at hi
       exact_mod_cast hi
     · rw [max_eq_left (Nat.le_of_not_ge hv)]
@@ -144,7 +144,7 @@ theorem ledger_le_of_branches (c : PhaseRowContext) (w mode z : ℕ)
       have hsi : (capBefore c 10 z : ℤ) ≤ sourceLine c w z := by exact_mod_cast hs
       have hi : (capBefore c 10 z : ℤ)+(initialAComplement (rawFlag c.R c.V z) : ℤ)+
           (c.R : ℤ)*9000000000000+((40-c.R : ℕ) : ℤ)*9000000000000+
-          18000000000000+(1057030663884726+0) ≤ bound := by omega
+          18000000000000+(1215189223289491+0) ≤ bound := by omega
       exact_mod_cast hi
 
 
@@ -185,9 +185,9 @@ def branchUpper (c : PhaseRowContext) (w mode z : ℕ) : ℤ :=
     ((unitSlope (c.R+c.V) c.R : ℤ)*(c.R+c.V+z) +
       (unitConstant (c.R+c.V) c.R : ℤ)) 9000000000000 +
   ((40-c.R : ℕ) : ℤ) * max
-    ((unitSlope (185-(c.R+c.V)) (40-c.R) : ℤ)*(18992-c.R-c.V-z) +
+    ((unitSlope (185-(c.R+c.V)) (40-c.R) : ℤ)*(22192-c.R-c.V-z) +
       (unitConstant (185-(c.R+c.V)) (40-c.R) : ℤ)) 9000000000000 +
-  18000000000000 + (1057030663884726+0)
+  18000000000000 + (1215189223289491+0)
 
 theorem branches_iff (c : PhaseRowContext) (w mode z : ℕ) :
     (∀ u v : Bool, branch c w mode u v z ≤ bound) ↔
@@ -197,17 +197,17 @@ theorem branches_iff (c : PhaseRowContext) (w mode z : ℕ) :
     ((sourceLine c w z : ℤ) + complementUpper c.R c.V mode z)
     ((unitSlope (c.R+c.V) c.R : ℤ)*(c.R+c.V+z) +
       (unitConstant (c.R+c.V) c.R : ℤ))
-    ((unitSlope (185-(c.R+c.V)) (40-c.R) : ℤ)*(18992-c.R-c.V-z) +
+    ((unitSlope (185-(c.R+c.V)) (40-c.R) : ℤ)*(22192-c.R-c.V-z) +
       (unitConstant (185-(c.R+c.V)) (40-c.R) : ℤ))
-    9000000000000 (18000000000000 + (1057030663884726+0)) bound c.R (40-c.R)
+    9000000000000 (18000000000000 + (1215189223289491+0)) bound c.R (40-c.R)
 
 def RunValid (c : PhaseRowContext) (start : ℕ) (run : LedgerRun) : Prop :=
-  start < run.stop ∧ run.stop ≤ 9276-(c.R+c.V) ∧ run.witness ≤ 10 ∧
+  start < run.stop ∧ run.stop ≤ 9679-(c.R+c.V) ∧ run.witness ≤ 10 ∧
   SourceActive c run.witness start ∧ SourceCell c run.witness start (run.stop-1) ∧
   ∀ u v : Bool, branch c run.witness run.mode u v start ≤ bound ∧
     branch c run.witness run.mode u v (run.stop-1) ≤ bound
 def FastRunValid (c : PhaseRowContext) (start : ℕ) (run : LedgerRun) : Prop :=
-  start < run.stop ∧ run.stop ≤ 9276-(c.R+c.V) ∧ run.witness ≤ 10 ∧
+  start < run.stop ∧ run.stop ≤ 9679-(c.R+c.V) ∧ run.witness ≤ 10 ∧
   SourceActive c run.witness start ∧ SourceCell c run.witness start (run.stop-1) ∧
   branchUpper c run.witness run.mode start ≤ bound ∧
   branchUpper c run.witness run.mode (run.stop-1) ≤ bound
@@ -241,7 +241,7 @@ theorem RunValid.sound (c : PhaseRowContext) (start z : ℕ) (run : LedgerRun)
     (by omega) (hb u v).1 (hb u v).2
 
 def RunsValid (c : PhaseRowContext) : ℕ → List LedgerRun → Prop
-  | start, [] => start = 9276-(c.R+c.V)
+  | start, [] => start = 9679-(c.R+c.V)
   | start, run :: runs => RunValid c start run ∧ RunsValid c run.stop runs
 instance (c : PhaseRowContext) (start : ℕ) (runs : List LedgerRun) :
     Decidable (RunsValid c start runs) := by
@@ -250,7 +250,7 @@ instance (c : PhaseRowContext) (start : ℕ) (runs : List LedgerRun) :
   | cons run runs ih => simp only [RunsValid]; infer_instance
 
 theorem RunsValid.sound (c : PhaseRowContext) (runs : List LedgerRun) (start z : ℕ)
-    (h : RunsValid c start runs) (hlo : start ≤ z) (hhi : z < 9276-(c.R+c.V)) : ledger c z ≤ bound := by
+    (h : RunsValid c start runs) (hlo : start ≤ z) (hhi : z < 9679-(c.R+c.V)) : ledger c z ≤ bound := by
   induction runs generalizing start with
   | nil => simp only [RunsValid] at h; omega
   | cons run runs ih =>

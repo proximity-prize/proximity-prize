@@ -325,7 +325,15 @@ theorem at2_156 : At 2 156 :=
   at_of_direct direct2_156 rfl rfl (by intro _; rfl)
 theorem at2_157 : At 2 157 :=
   at_of_direct direct2_157 rfl rfl (by intro _; rfl)
-theorem all2 (v : Nat) (hv : v≤157) : At 2 v := by
+theorem at2_158 : At 2 158 :=
+  at_of_direct direct2_158 rfl rfl (by intro _; rfl)
+theorem at2_159 : At 2 159 :=
+  at_of_direct direct2_159 rfl rfl (by intro _; rfl)
+theorem at2_160 : At 2 160 :=
+  at_of_direct direct2_160 rfl rfl (by intro _; rfl)
+theorem at2_161 : At 2 161 :=
+  at_of_direct direct2_161 rfl rfl (by intro _; rfl)
+theorem all2 (v : Nat) (hv : v≤161) : At 2 v := by
   interval_cases v
   · exact at2_0
   · exact at2_1
@@ -485,5 +493,9 @@ theorem all2 (v : Nat) (hv : v≤157) : At 2 v := by
   · exact at2_155
   · exact at2_156
   · exact at2_157
+  · exact at2_158
+  · exact at2_159
+  · exact at2_160
+  · exact at2_161
 #print axioms all2
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof
