@@ -8,7 +8,9 @@ autoImplicit = false
 # Verified-zkEVM/ArkLib#898 is merged; this is its squash-merge commit on `main` (2026-09-15):
 # ArkLib on Lean v4.33.1 / Mathlib 0df444a3 (Verified-zkEVM/ArkLib#791) with CompPoly at its
 # Lean v4.33.1 revision (Verified-zkEVM/CompPoly#309). `lake-manifest.json` records the same
-# commit, and it is exposed in every score artifact.
+# commit, and it is exposed in every score artifact. CompPoly itself is pinned there at that
+# revision plus a four-file kernel-replay fix (yudduy/CompPoly 0fdf1771), as 4.32.2 pinned
+# zkSecurity's `rabin-explicit-q`.
 [[require]]
 name = "Arklib"
 git = "https://github.com/Verified-zkEVM/ArkLib"
