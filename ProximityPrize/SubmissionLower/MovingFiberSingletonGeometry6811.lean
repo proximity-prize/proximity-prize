@@ -27,13 +27,13 @@ theorem source_count
     (kernel : PhaseKernelRealization sound u0 u1)
     (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181284 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (F : RegularIndex H)
     (hR : (regularCumulativeFlag H F).all ≤ 35)
-    (hY : middle (regularCumulativeFlag H F) ≤ 159)
-    (hT : total (regularCumulativeFlag H F) ≤ 9275)
+    (hY : middle (regularCumulativeFlag H F) ≤ 163)
+    (hT : total (regularCumulativeFlag H F) ≤ 9678)
     (hroute : sound.source.Routeable (regularCumulativeFlag H F)) :
     (regularSeeds H selected Gamma F).card ≤ sound.potential.eval (regularCumulativeFlag H F) := by
   have he : regularAggregateFlag H ({F} : Finset (RegularIndex H)) = regularCumulativeFlag H F := by
@@ -54,9 +54,9 @@ theorem raw_count
     (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181284 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (F : RegularIndex Q)
     (hr : (regularCumulativeFlag Q F).all ≤ 32)
     (hy : middle (regularCumulativeFlag Q F) ≤ 149)
@@ -82,16 +82,16 @@ theorem raw_count
   simpa only [RCN140.regularSeeds,regularCumulativeFlag,Fself,
     LocatorCoprimeQuotient.regularIndexSelf_val] using hc
 
-theorem root_count_group (g : Fin 16)
+theorem root_count_group (g : Fin 20)
     (D : ℕ) (P : ResidualSupportParameters)
     (hDlow : 131072 ≤ D) (hDchar : D < 2130706433)
     (Q : P4) (hQ : Q ≠ 0)
     (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181284 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (F : RegularIndex Q)
     (hr : (regularCumulativeFlag Q F).all ≤ 31)
     (hy : middle (regularCumulativeFlag Q F) ≤ 142)
@@ -113,7 +113,7 @@ theorem root_count_group (g : Fin 16)
     (fun g hg => hdegree g (hsub hg)) (fun g hg => hagreement g (hsub hg))
     (fun g hg => (Finset.mem_filter.mp hg).2.1)
     (fun g hg => (Finset.mem_filter.mp hg).2.2)
-    (noLargeSelectedPencil_mono selected Gamma _ 131071 80860 hsub hno)
+    (noLargeSelectedPencil_mono selected Gamma _ 131071 80869 hsub hno)
     (by norm_num [I,IRSProfile.Index]) ha
   exact hcount
 
@@ -123,10 +123,10 @@ theorem root_count
     (Q : P4) (hQ : Q ≠ 0) (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181284 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860) (F : RegularIndex Q)
-    (th : Array ℕ) (w : ℕ) (hw : 1≤w) (hw16 : w≤16)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869) (F : RegularIndex Q)
+    (th : Array ℕ) (w : ℕ) (hw : 1≤w) (hw16 : w≤20)
     (ha : MovingFiberSingleCore6811.Active th w (regularCumulativeFlag Q F).all
       (regularCumulativeFlag Q F).yz (regularCumulativeFlag Q F).zOnly
       (regularCumulativeFlag Q F).zOnly) :
@@ -144,7 +144,7 @@ theorem root_count
     MovingFiberCount6811.Receipt.rounded_formula,MovingFiberSingleCore6811.rootUpper,
     MovingFiberSingleCore6811.rootSlope,MovingFiberSingleCore6811.rootIntercept] using hc
 
-theorem source_total (j : ℕ) (hj : j<7) : 9275 ≤ (Lower80860.TenPhase.sound j).source.totalCap := by
+theorem source_total (j : ℕ) (hj : j<7) : 9678 ≤ (Lower80860.TenPhase.sound j).source.totalCap := by
   interval_cases j <;> decide +kernel
 
 theorem factor_count_of_cover
@@ -153,17 +153,17 @@ theorem factor_count_of_cover
     (Q : P4) (hQ : Q ≠ 0) (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181284 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80860)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
     (F : RegularIndex Q) (hr : (regularCumulativeFlag Q F).all≤35)
-    (hy : middle (regularCumulativeFlag Q F)≤159) (ht : total (regularCumulativeFlag Q F)≤9275)
+    (hy : middle (regularCumulativeFlag Q F)≤163) (ht : total (regularCumulativeFlag Q F)≤9678)
     (c : MovingFiberSingleCore6811.Carrier) (slope intercept : ℕ) (th : Array ℕ)
     (runs : List MovingFiberSingleCore6811.Run)
     (hc : c.Correct (regularCumulativeFlag Q F).all (regularCumulativeFlag Q F).yz)
     (hcover : MovingFiberSingleCore6811.Cover c slope intercept
       (regularCumulativeFlag Q F).all (regularCumulativeFlag Q F).yz th
-      (9276-((regularCumulativeFlag Q F).all+(regularCumulativeFlag Q F).yz)) 0 runs)
+      (9679-((regularCumulativeFlag Q F).all+(regularCumulativeFlag Q F).yz)) 0 runs)
     (hthreshold : ∀ j, j<7 → Lower80860.ThresholdFast.FastSourceThresholdSufficient
       (Lower80860.TenPhase.sound j).source (regularCumulativeFlag Q F).all
       (regularCumulativeFlag Q F).yz (MovingFiberSingleCore6811.thresholdAt th j)) :
@@ -171,10 +171,10 @@ theorem factor_count_of_cover
       MovingFiberSingleCore6811.cap slope intercept (regularCumulativeFlag Q F).zOnly := by
   let p := regularCumulativeFlag Q F
   have hr1 : 1≤p.all := regularCumulativeFlag_positive Q F
-  have ht' : p.all+p.yz+p.zOnly≤9275 := by
+  have ht' : p.all+p.yz+p.zOnly≤9678 := by
     simpa only [p,total,Nat.add_comm,Nat.add_left_comm,Nat.add_assoc] using ht
   obtain ⟨who,hactive,hbound⟩ := MovingFiberSingleCore6811.cover_sound c slope intercept p.all p.yz th
-    (9276-(p.all+p.yz)) 0 runs hcover p.zOnly (Nat.zero_le _) (by omega)
+    (9679-(p.all+p.yz)) 0 runs hcover p.zOnly (Nat.zero_le _) (by omega)
   apply le_trans (b := MovingFiberSingleCore6811.choice c who p.all p.yz p.zOnly) ?_ hbound
   by_cases h0 : who=0
   · subst who
@@ -185,17 +185,17 @@ theorem factor_count_of_cover
       (by simpa only [total,Nat.add_comm,Nat.add_left_comm,Nat.add_assoc] using hactive.2.2.1)
       (by simpa only [middle,Nat.add_comm] using hactive.2.2.2)
     exact hh
-  by_cases h16 : who≤16
+  by_cases h16 : who≤20
   · simp only [MovingFiberSingleCore6811.choice,if_neg h0,if_pos h16]
     exact root_count D P hDlow hDchar Q hQ hbox selected Gamma u0 u1 hdegree hagreement hno F th who
       (by omega) h16 hactive
-  · have ha : who-17<7 ∧ MovingFiberSingleCore6811.thresholdAt th (who-17)≤p.zOnly := by
+  · have ha : who-21<7 ∧ MovingFiberSingleCore6811.thresholdAt th (who-21)≤p.zOnly := by
       simpa only [MovingFiberSingleCore6811.Active,if_neg h0,if_neg h16] using hactive
-    have hroute := Lower80860.ThresholdFast.sufficient_route (Lower80860.TenPhase.sound (who-17)).source
-      p.all p.yz (MovingFiberSingleCore6811.thresholdAt th (who-17)) p.zOnly
+    have hroute := Lower80860.ThresholdFast.sufficient_route (Lower80860.TenPhase.sound (who-21)).source
+      p.all p.yz (MovingFiberSingleCore6811.thresholdAt th (who-21)) p.zOnly
       (source_total _ ha.1) ht' ha.2 (hthreshold _ ha.1)
-    have hh := source_count (Lower80860.TenPhase.sound (who-17)) u0 u1
-      (Lower80860.TenPhase.kernel u0 u1 (who-17)) Q selected Gamma hdegree hagreement hno F hr hy ht hroute
+    have hh := source_count (Lower80860.TenPhase.sound (who-21)) u0 u1
+      (Lower80860.TenPhase.kernel u0 u1 (who-21)) Q selected Gamma hdegree hagreement hno F hr hy ht hroute
     simpa only [MovingFiberSingleCore6811.choice,if_neg h0,if_neg h16,
       MovingFiberSingleCore6811.phasePotential,rawFlag,p] using hh
 

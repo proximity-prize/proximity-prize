@@ -293,7 +293,15 @@ theorem at18_140 : At 18 140 :=
   at_of_direct direct18_140 rfl rfl (by intro _; rfl)
 theorem at18_141 : At 18 141 :=
   at_of_direct direct18_141 rfl rfl (by intro _; rfl)
-theorem all18 (v : Nat) (hv : v≤141) : At 18 v := by
+theorem at18_142 : At 18 142 :=
+  at_of_direct direct18_142 rfl rfl (by intro _; rfl)
+theorem at18_143 : At 18 143 :=
+  at_of_direct direct18_143 rfl rfl (by intro _; rfl)
+theorem at18_144 : At 18 144 :=
+  at_of_direct direct18_144 rfl rfl (by intro _; rfl)
+theorem at18_145 : At 18 145 :=
+  at_of_direct direct18_145 rfl rfl (by intro _; rfl)
+theorem all18 (v : Nat) (hv : v≤145) : At 18 v := by
   interval_cases v
   · exact at18_0
   · exact at18_1
@@ -437,5 +445,9 @@ theorem all18 (v : Nat) (hv : v≤141) : At 18 v := by
   · exact at18_139
   · exact at18_140
   · exact at18_141
+  · exact at18_142
+  · exact at18_143
+  · exact at18_144
+  · exact at18_145
 #print axioms all18
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

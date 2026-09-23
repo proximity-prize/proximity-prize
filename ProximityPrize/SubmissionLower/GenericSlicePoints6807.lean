@@ -67,18 +67,6 @@ theorem scalar_eval_ne_zero (P : Ideal Poly) [P.IsPrime]
   rw [← coordinateEvaluation_ker K P]
   exact (map_eq_zero_iff f f.injective).mp h
 
-omit [IsAlgClosed E] [Algebra (RatFunc K) E] [IsScalarTower K (RatFunc K) E] in
-/-- Exact contraction needed by the original multiplicity transport theorem.
-No generic-specialization approximation is used. -/
-theorem point_kernel_comap (P : Ideal Poly) [P.IsPrime]
-    (f : CoordinateField K P →ₐ[K] E) :
-    (RingHom.ker (MvPolynomial.aeval (embeddingPoint P f) : PE →ₐ[E] E).toRingHom).comap (scalarPolynomialMap K E) = P := by
-  ext A
-  change MvPolynomial.eval (embeddingPoint P f) (scalarPolynomialMap K E A) = 0 ↔ A ∈ P
-  rw [scalar_eval_embedding, map_eq_zero_iff f f.injective]
-  change A ∈ RingHom.ker (coordinateEvaluation K P).toRingHom ↔ A ∈ P
-  rw [coordinateEvaluation_ker K P]
-
 theorem embedding_point_certificate
     (F A R ell : Poly) (C : RegularComponent K F A R)
     [Algebra (RatFunc K) (CoordinateField K C.1)]
@@ -137,10 +125,6 @@ theorem weighted_embedding_sum (weight : I → ℕ) :
   apply Finset.sum_congr rfl
   intro i _
   simp only [Finset.sum_const, Finset.card_univ, smul_eq_mul, AlgHom.card, mul_comm]
-
-theorem weighted_embedding_points_injective (hP : Function.Injective P) :
-    Function.Injective (commonBaseEmbeddingPoint (B := RatFunc K) (L := E) P) :=
-  commonBaseEmbeddingPoint_injective P hP
 
 end WeightedEmbeddings
 end

@@ -319,7 +319,15 @@ theorem at5_153 : At 5 153 :=
   at_of_direct direct5_153 rfl rfl (by intro _; rfl)
 theorem at5_154 : At 5 154 :=
   at_of_direct direct5_154 rfl rfl (by intro _; rfl)
-theorem all5 (v : Nat) (hv : v≤154) : At 5 v := by
+theorem at5_155 : At 5 155 :=
+  at_of_direct direct5_155 rfl rfl (by intro _; rfl)
+theorem at5_156 : At 5 156 :=
+  at_of_direct direct5_156 rfl rfl (by intro _; rfl)
+theorem at5_157 : At 5 157 :=
+  at_of_direct direct5_157 rfl rfl (by intro _; rfl)
+theorem at5_158 : At 5 158 :=
+  at_of_direct direct5_158 rfl rfl (by intro _; rfl)
+theorem all5 (v : Nat) (hv : v≤158) : At 5 v := by
   interval_cases v
   · exact at5_0
   · exact at5_1
@@ -476,5 +484,9 @@ theorem all5 (v : Nat) (hv : v≤154) : At 5 v := by
   · exact at5_152
   · exact at5_153
   · exact at5_154
+  · exact at5_155
+  · exact at5_156
+  · exact at5_157
+  · exact at5_158
 #print axioms all5
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

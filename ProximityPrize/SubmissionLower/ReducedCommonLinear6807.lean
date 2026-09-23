@@ -51,5 +51,25 @@ def original_common
     (reducedUnitFamily S hp hc hm) (reducedBaseOrd S hp hc hm)
     (reduced_common S hp hc hm)
 
+/-- The common flag coefficients lie in the image of `K[X]` (needed by the H-free bridge:
+the derivation `d/dX` extends to them). -/
+theorem original_common_lam_poly
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (support a b s))
+    (hp : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))
+    (hc : flag.yz+flag.all < p ∧ flag.all < p ∧ flag.zOnly+flag.yz+flag.all < p)
+    (hm : flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p) :
+    (original_common S hp hc hm).lam ∈ Set.range (polynomialEmbedding K) :=
+  (reducedActiveGeometry S hp hc hm).lam_poly
+
+theorem original_common_mu_poly
+    (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
+      w (support a b s))
+    (hp : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))
+    (hc : flag.yz+flag.all < p ∧ flag.all < p ∧ flag.zOnly+flag.yz+flag.all < p)
+    (hm : flagMixed flag (reducedResidualAgreementFlag (support a b s) (w+1)) unitZFlag < p) :
+    (original_common S hp hc hm).mu ∈ Set.range (polynomialEmbedding K) :=
+  (reducedActiveGeometry S hp hc hm).mu_poly
+
 end
 end ProximityPrize.SubmissionLower.ReducedCommonLinear6807

@@ -5,7 +5,7 @@ import ProximityPrize.SubmissionLower.BoundaryTailCounting
 
 
 
-/-! Shared factor-family counting for the proposed error-80860 profile.
+/-! Shared factor-family counting for the proposed error-80869 profile.
 The aggregation framework is adapted from jsign PR506. Its AsymmetricChainPolynomial80860.stage count is
 replaced by the checked derivative-carrier numerator and polynomial bound.
 This module does not assert a protocol claim. -/
@@ -31,21 +31,21 @@ local instance : StrongNormalizationMonoid P4 := UniqueFactorizationMonoid.stron
 
 structure Input (u0 u1 : I → K) (selected : K → Polynomial K) (Gamma : Finset K) : Prop where
   degree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071
-  agreement : ∀ gamma ∈ Gamma, 181284 ≤ ((Finset.univ : Finset I).filter (fun i =>
+  agreement : ∀ gamma ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
     (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma*u1 i)).card
-  noPencil : NoLargeSelectedPencil selected Gamma 131071 80860
+  noPencil : NoLargeSelectedPencil selected Gamma 131071 80869
 
 variable {u0 u1 : I → K} {selected : K → Polynomial K} {Gamma : Finset K}
 
 theorem Input.restrict (inp : Input u0 u1 selected Gamma) (Delta : Finset K) (h : Delta ⊆ Gamma) :
     Input u0 u1 selected Delta :=
   ⟨fun g hg => inp.degree g (h hg), fun g hg => inp.agreement g (h hg),
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80860 h inp.noPencil⟩
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80869 h inp.noPencil⟩
 
-def tailParameters : TightParameters := ⟨262144,131071,181284,24292056,18992,1⟩
+def tailParameters : TightParameters := ⟨262144,131071,181275,24290850,22192,1⟩
 
 theorem freePolynomial_count (inp : Input u0 u1 selected Gamma)
-    (J : P4) (hJ : J ≠ 0) (hbox : J ∈ RCN174.globalCoefficientBox K 24292056 131071 18992 1)
+    (J : P4) (hJ : J ≠ 0) (hbox : J ∈ RCN174.globalCoefficientBox K 24290850 131071 22192 1)
     (hR : J.degreeOf 2 = 0) (hsol : ∀ g ∈ Gamma, specialization K (selected g) g J = 0) :
     Gamma.card ≤ 9000000000000 := by
   have h := rfree_seed_count_le tailParameters J hJ 2130706433 hbox hR (by rfl)
@@ -58,7 +58,7 @@ theorem freePolynomial_count (inp : Input u0 u1 selected Gamma)
     (by decide +kernel) (by decide +kernel) selected Gamma Finset.univ IRSProfile.domain u0 u1
     IRSProfile.domain.injective.injOn (by rw [Finset.card_univ]; exact Fintype.card_fin _)
     inp.degree hsol inp.agreement (by
-      simpa only [tailParameters, TightParameters.errors, (show (262144 - 181284 : ℕ) = 80860 by decide +kernel)] using inp.noPencil)
+      simpa only [tailParameters, TightParameters.errors, (show (262144 - 181275 : ℕ) = 80869 by decide +kernel)] using inp.noPencil)
   have ht : tailParameters.countCap ≤ 9000000000000 := by
     norm_num [tailParameters, TightParameters.countCap, TightParameters.gap,
       TightParameters.errors, TightParameters.kappa, TightParameters.algebraicCap,
@@ -68,21 +68,21 @@ theorem freePolynomial_count (inp : Input u0 u1 selected Gamma)
   exact h.trans ht
 
 theorem factor_tail_count (inp : Input u0 u1 selected Gamma)
-    (F : P4) (hF : F ≠ 0) (hbox : F ∈ RCN174.globalCoefficientBox K 24292056 131071 18992 40) :
+    (F : P4) (hF : F ≠ 0) (hbox : F ∈ RCN174.globalCoefficientBox K 24290850 131071 22192 40) :
     (tailSeeds F selected Gamma).card ≤ 9000000000000 := by
   have hsmall : F.degreeOf 2 < 2130706433 :=
-    (degreeOf_R_le_of_mem_box F 24292056 131071 18992 40 hbox).trans_lt (by decide +kernel)
+    (degreeOf_R_le_of_mem_box F 24290850 131071 22192 40 hbox).trans_lt (by decide +kernel)
   have hJ := dR_ne_zero F hF 2130706433 hsmall (chainLength F) le_rfl
-  have hb := mem_box_slope_one (dR (chainLength F) F) 24292056 131071 18992 40
-    (dR_mem_box _ F 24292056 131071 18992 40 hbox) (chainLength_spec F)
+  have hb := mem_box_slope_one (dR (chainLength F) F) 24290850 131071 22192 40
+    (dR_mem_box _ F 24290850 131071 22192 40 hbox) (chainLength_spec F)
   exact freePolynomial_count (inp.restrict _ (tailSeeds_subset F selected Gamma)) _ hJ hb
     (chainLength_spec F) (fun _ hg => (Finset.mem_filter.mp hg).2)
 
 theorem freePart_count (inp : Input u0 u1 selected Gamma)
-    (Q : P4) (hQ : Q ≠ 0) (hbox : Q ∈ RCN174.globalCoefficientBox K 24292056 131071 18992 40) :
+    (Q : P4) (hQ : Q ≠ 0) (hbox : Q ∈ RCN174.globalCoefficientBox K 24290850 131071 22192 40) :
     (rfreeSeeds Q selected Gamma).card ≤ 9000000000000 := by
-  have hb := mem_box_slope_one (rfreeProduct Q) 24292056 131071 18992 40
-    (mem_globalCoefficientBox_of_dvd _ Q 24292056 131071 18992 40 hQ
+  have hb := mem_box_slope_one (rfreeProduct Q) 24290850 131071 22192 40
+    (mem_globalCoefficientBox_of_dvd _ Q 24290850 131071 22192 40 hQ
       (rfreeProduct_dvd Q hQ) hbox) (rfreeProduct_R_degree Q)
   exact freePolynomial_count (inp.restrict _ (rfreeSeeds_subset Q selected Gamma)) _
     (rfreeProduct_ne_zero Q hQ) hb (rfreeProduct_R_degree Q)
@@ -94,8 +94,8 @@ def factorCharge (F : P4) (selected : K → Polynomial K) (Gamma : Finset K) : �
 
 theorem factorCharge_le_unit (inp : Input u0 u1 selected Gamma)
     (F : P4) (hF : Irreducible F) (hpos : 0 < F.degreeOf 2)
-    (hbox : F ∈ RCN174.globalCoefficientBox K 24292056 131071 18992 40)
-    (y z r : ℕ) (hy : y ≤ 185) (hz : z ≤ 18992) (hr : r ≤ 40)
+    (hbox : F ∈ RCN174.globalCoefficientBox K 24290850 131071 22192 40)
+    (y z r : ℕ) (hy : y ≤ 185) (hz : z ≤ 22192) (hr : r ≤ 40)
     (hFY : F.degreeOf 1 ≤ y) (hFZ : F.degreeOf 3 ≤ z) (hFR : F.degreeOf 2 ≤ r) :
     factorCharge F selected Gamma ≤ F.degreeOf 2 * (unit y z r + 0) := by
   have hd : F.degreeOf 2 ≤ 40 := hFR.trans hr
@@ -124,7 +124,7 @@ theorem factorCharge_le_unit (inp : Input u0 u1 selected Gamma)
         exact (Nat.add_le_add (Nat.mul_le_mul hy hd) (Nat.mul_le_mul hleft hy)).trans_lt (by decide +kernel))
       selected Gamma Finset.univ IRSProfile.domain u0 u1 IRSProfile.domain.injective.injOn
       (by rw [Finset.card_univ]; exact Fintype.card_fin _) (by norm_num [AsymmetricChainPolynomial80860.stage]) (by norm_num [AsymmetricChainPolynomial80860.stage]) (by norm_num [AsymmetricChainPolynomial80860.stage]) (by norm_num [AsymmetricChainPolynomial80860.stage])
-      inp.degree inp.agreement (by simpa only [AsymmetricChainPolynomial80860.stage, UnequalParameters.errors, (show (262144 - 181284 : ℕ) = 80860 by decide +kernel)] using inp.noPencil)
+      inp.degree inp.agreement (by simpa only [AsymmetricChainPolynomial80860.stage, UnequalParameters.errors, (show (262144 - 181275 : ℕ) = 80869 by decide +kernel)] using inp.noPencil)
   · exact factor_tail_count inp F hF.ne_zero hbox
   · have h := charge_le_unit y z (F.degreeOf 2) r hpos hFR hr
     unfold AsymmetricChainPolynomial80860.charge at h
@@ -194,11 +194,11 @@ theorem aggregate_pair_weight (H Q : P4) (hH : H ≠ 0) (hQ : Q ≠ 0) (weights 
     (weightedTotalDegree_le_of_dvd weights _ Q (regularProduct_dvd_carrier Q _) hQ)
 
 theorem aggregate_pair_caps (H Q : P4) (hH : H ≠ 0) (hQ : Q ≠ 0)
-    (hbox : H*Q ∈ RCN100.globalCoefficientBox K 24292056 131071 18992 40) :
+    (hbox : H*Q ∈ RCN100.globalCoefficientBox K 24290850 131071 22192 40) :
     (regularAggregateFlag H Finset.univ).all+(regularAggregateFlag Q Finset.univ).all ≤ 40 ∧
     middle (regularAggregateFlag H Finset.univ)+middle (regularAggregateFlag Q Finset.univ) ≤ 185 ∧
-    total (regularAggregateFlag H Finset.univ)+total (regularAggregateFlag Q Finset.univ) ≤ 18992 := by
-  have hc := (mem_flagGlobalCoefficientBox_iff (H*Q) 24292056 131071 18992 40 (by decide +kernel)).mp hbox
+    total (regularAggregateFlag H Finset.univ)+total (regularAggregateFlag Q Finset.univ) ≤ 22192 := by
+  have hc := (mem_flagGlobalCoefficientBox_iff (H*Q) 24290850 131071 22192 40 (by decide +kernel)).mp hbox
   have hw := residualYS_mul_le_contact_add_slope (H*Q) 131071 (by decide +kernel)
   have hy : wt residualYSWeights (H*Q) ≤ 185 := by omega
   rw [regularAggregateFlag_all, regularAggregateFlag_all,
@@ -219,51 +219,51 @@ theorem split_aggregate (H : P4) (U : Finset (RegularIndex H)) :
     by rw [Nat.add_comm]; exact Finset.sum_sdiff (Finset.subset_univ _)⟩
 
 theorem joint_charge (H Q : P4) (hH : H ≠ 0) (hQ : Q ≠ 0)
-    (hbox : H*Q ∈ RCN100.globalCoefficientBox K 24292056 131071 18992 40)
-    (hHbox : H ∈ RCN174.globalCoefficientBox K 24292056 131071 18992 40)
-    (hQbox : Q ∈ RCN174.globalCoefficientBox K 24292056 131071 18992 40)
+    (hbox : H*Q ∈ RCN100.globalCoefficientBox K 24290850 131071 22192 40)
+    (hHbox : H ∈ RCN174.globalCoefficientBox K 24290850 131071 22192 40)
+    (hQbox : Q ∈ RCN174.globalCoefficientBox K 24290850 131071 22192 40)
     (U : Finset (RegularIndex H)) (u0 u1 : I → K) (selected : K → Polynomial K)
     (Gamma Delta : Finset K) (inpH : Input u0 u1 selected Gamma) (inpQ : Input u0 u1 selected Delta)
     (hr : (regularAggregateFlag H U).all ≤ 35)
-    (hy : middle (regularAggregateFlag H U) ≤ 159)
-    (ht : total (regularAggregateFlag H U) ≤ 9275) :
+    (hy : middle (regularAggregateFlag H U) ≤ 163)
+    (ht : total (regularAggregateFlag H U) ≤ 9678) :
     let p := regularAggregateFlag H U
     (∑ F : RegularIndex H, factorCharge F.1 selected Gamma) +
       (∑ F : RegularIndex Q, factorCharge F.1 selected Delta) ≤
       p.all*unit (middle p) (total p) p.all +
-      (40-p.all)*unit (185-middle p) (18992-total p) (40-p.all) + 40*0 := by
+      (40-p.all)*unit (185-middle p) (22192-total p) (40-p.all) + 40*0 := by
   let p := regularAggregateFlag H U
   let N := (Finset.univ : Finset (RegularIndex H)) \ U
   have hb := aggregate_pair_caps H Q hH hQ hbox
   have hs := split_aggregate H U
   have hnR : (regularAggregateFlag H N).all ≤ 40-p.all := by dsimp only [p,N]; omega
   have hnY : middle (regularAggregateFlag H N) ≤ 185-middle p := by dsimp only [p,N]; omega
-  have hnT : total (regularAggregateFlag H N) ≤ 18992-total p := by dsimp only [p,N]; omega
+  have hnT : total (regularAggregateFlag H N) ≤ 22192-total p := by dsimp only [p,N]; omega
   have hqR : (regularAggregateFlag Q Finset.univ).all ≤ 40-p.all := by dsimp only [p]; omega
   have hqY : middle (regularAggregateFlag Q Finset.univ) ≤ 185-middle p := by dsimp only [p]; omega
-  have hqT : total (regularAggregateFlag Q Finset.univ) ≤ 18992-total p := by dsimp only [p]; omega
+  have hqT : total (regularAggregateFlag Q Finset.univ) ≤ 22192-total p := by dsimp only [p]; omega
   have hsum : (∑ F ∈ U, F.1.degreeOf 2) = p.all := by
     simp only [p, regularAggregateFlag, sumFlag_all, regularCumulativeFlag, originalCumulativeFlag_all]
-  have hprodBox := RCN101.flag_box_to_ordinary K 24292056 131071 18992 40 (H*Q) hbox
+  have hprodBox := RCN101.flag_box_to_ordinary K 24290850 131071 22192 40 (H*Q) hbox
   have hc := split_slope_charge (Finset.univ : Finset (RegularIndex H)) U
     (Finset.univ : Finset (RegularIndex Q)) (Finset.subset_univ _) (fun F => F.1) (fun F => F.1)
     H Q hH hQ (regularProduct_dvd_carrier H _) (regularProduct_dvd_carrier Q _)
-    40 (unit (middle p) (total p) p.all + 0) (unit (185-middle p) (18992-total p) (40-p.all) + 0)
-    (degreeOf_R_le_of_mem_box (H*Q) 24292056 131071 18992 40 hprodBox)
+    40 (unit (middle p) (total p) p.all + 0) (unit (185-middle p) (22192-total p) (40-p.all) + 0)
+    (degreeOf_R_le_of_mem_box (H*Q) 24290850 131071 22192 40 hprodBox)
     (fun F => factorCharge F.1 selected Gamma) (fun F => factorCharge F.1 selected Delta)
     (fun F hF => by
-      have hf := directFactor_data H F.1 hH 24292056 131071 18992 40 hHbox F.2
+      have hf := directFactor_data H F.1 hH 24290850 131071 22192 40 hHbox F.2
       have hd := factor_coordinates H U F hF
       exact factorCharge_le_unit inpH F.1 hf.1 hf.2.1 hf.2.2 _ _ _
         (hy.trans (by decide +kernel)) (ht.trans (by decide +kernel)) (hr.trans (by decide +kernel)) hd.1 hd.2.2 hd.2.1)
     (fun F hF => by
-      have hf := directFactor_data H F.1 hH 24292056 131071 18992 40 hHbox F.2
+      have hf := directFactor_data H F.1 hH 24290850 131071 22192 40 hHbox F.2
       have hd := factor_coordinates H N F hF
       exact factorCharge_le_unit inpH F.1 hf.1 hf.2.1 hf.2.2 _ _ _
         (Nat.sub_le _ _) (Nat.sub_le _ _) (Nat.sub_le _ _)
         (hd.1.trans hnY) (hd.2.2.trans hnT) (hd.2.1.trans hnR))
     (fun F _ => by
-      have hf := directFactor_data Q F.1 hQ 24292056 131071 18992 40 hQbox F.2
+      have hf := directFactor_data Q F.1 hQ 24290850 131071 22192 40 hQbox F.2
       have hd := factor_coordinates Q Finset.univ F (Finset.mem_univ _)
       exact factorCharge_le_unit inpQ F.1 hf.1 hf.2.1 hf.2.2 _ _ _
         (Nat.sub_le _ _) (Nat.sub_le _ _) (Nat.sub_le _ _)
@@ -273,7 +273,7 @@ theorem joint_charge (H Q : P4) (hH : H ≠ 0) (hQ : Q ≠ 0)
   calc
     _ ≤ _ := hc
     _ = p.all*unit (middle p) (total p) p.all +
-        (40-p.all)*unit (185-middle p) (18992-total p) (40-p.all) +
+        (40-p.all)*unit (185-middle p) (22192-total p) (40-p.all) +
           (p.all+(40-p.all))*0 := by ring
     _ = _ := by rw [hp]
 

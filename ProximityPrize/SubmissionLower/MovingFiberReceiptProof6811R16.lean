@@ -297,7 +297,15 @@ theorem at16_142 : At 16 142 :=
   at_of_direct direct16_142 rfl rfl (by intro _; rfl)
 theorem at16_143 : At 16 143 :=
   at_of_direct direct16_143 rfl rfl (by intro _; rfl)
-theorem all16 (v : Nat) (hv : v≤143) : At 16 v := by
+theorem at16_144 : At 16 144 :=
+  at_of_direct direct16_144 rfl rfl (by intro _; rfl)
+theorem at16_145 : At 16 145 :=
+  at_of_direct direct16_145 rfl rfl (by intro _; rfl)
+theorem at16_146 : At 16 146 :=
+  at_of_direct direct16_146 rfl rfl (by intro _; rfl)
+theorem at16_147 : At 16 147 :=
+  at_of_direct direct16_147 rfl rfl (by intro _; rfl)
+theorem all16 (v : Nat) (hv : v≤147) : At 16 v := by
   interval_cases v
   · exact at16_0
   · exact at16_1
@@ -443,5 +451,9 @@ theorem all16 (v : Nat) (hv : v≤143) : At 16 v := by
   · exact at16_141
   · exact at16_142
   · exact at16_143
+  · exact at16_144
+  · exact at16_145
+  · exact at16_146
+  · exact at16_147
 #print axioms all16
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

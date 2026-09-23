@@ -54,29 +54,6 @@ theorem sum_count_le {ι : Type*} [DecidableEq ι]
       rw [Finset.sum_add_distrib, Finset.mul_sum]
     _ ≤ _ := Nat.add_le_add_left (sum_intercepts_le Rcap Ycap b B hrows s r v hr hR hY) _
 
-/-- A finite collection of proved aggregate bounds may be combined pointwise. -/
-theorem combine_bounds {ι κ : Type*} [DecidableEq ι] [DecidableEq κ]
-    (s : Finset ι) (count : ι → ℕ) (choices : Finset κ)
-    (cost : κ → ℕ) (bound : ℕ)
-    (hcost : ∀ k ∈ choices, (∑ i ∈ s, count i) ≤ cost k)
-    (hchoice : ∃ k ∈ choices, cost k ≤ bound) :
-    (∑ i ∈ s, count i) ≤ bound := by
-  obtain ⟨k, hk, hle⟩ := hchoice
-  exact (hcost k hk).trans hle
-
-/-- A coordinatewise monotone rate produces superadditive total intercepts. -/
-theorem rate_bellman (Rcap Ycap : ℕ) (rate : ℕ → ℕ → ℕ)
-    (hmono : ∀ r v R V, r ≤ R → v ≤ V → R ≤ Rcap → R + V ≤ Ycap →
-      rate r v ≤ rate R V) :
-    BellmanRows Rcap Ycap (fun r v => r * rate r v) (fun r v => r * rate r v) := by
-  intro r v R V hr hR hY
-  have h1 := hmono r v (r+R) (v+V) (by omega) (by omega) hR (by omega)
-  have h2 := hmono R V (r+R) (v+V) (by omega) (by omega) hR (by omega)
-  calc
-    r * rate r v + R * rate R V ≤ r * rate (r+R) (v+V) + R * rate (r+R) (v+V) :=
-      Nat.add_le_add (Nat.mul_le_mul_left r h1) (Nat.mul_le_mul_left R h2)
-    _ = (r+R) * rate (r+R) (v+V) := (Nat.add_mul _ _ _).symm
-
 /-- On a singleton, a strict helper split charges the only factor directly. -/
 theorem singleton_helper {ι : Type*} [DecidableEq ι] (a : ι)
     (count helper : ι → ℕ)
@@ -91,7 +68,5 @@ theorem singleton_helper {ι : Type*} [DecidableEq ι] (a : ι)
 
 #print axioms sum_intercepts_le
 #print axioms sum_count_le
-#print axioms combine_bounds
-#print axioms rate_bellman
 #print axioms singleton_helper
 end ProximityPrize.SubmissionLower.AffineFactorAggregate6808

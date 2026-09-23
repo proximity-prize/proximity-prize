@@ -48,14 +48,5 @@ theorem sum_cost_le (F N R : Poly) (p q r : FlagDegree)
       (B.unit g).toPrimeFlagBudgetFamily.weightedCost r C) ≤ flagMixed p q r :=
   PureFlagSliceBudget6807.all_active_slice_costs_le F N R hF p q r hFp B.base B.unit
 
-/-- All three linear flags have total degree one. The domain here is explicitly
-bounded; it is not inherited from an older protocol instance. -/
-theorem unit_slice_gates (p q : FlagDegree)
-    (hp : p.zOnly+p.yz+p.all ≤ 7501)
-    (hq : q = unitZFlag ∨ q = unitYZFlag ∨ q = unitAllFlag) :
-    p.zOnly+p.yz+p.all < 2130706433 ∧
-      2*(p.zOnly+p.yz+p.all)*(q.zOnly+q.yz+q.all) < 2130706433 := by
-  rcases hq with rfl | rfl | rfl <;>
-    simp only [unitZFlag,unitYZFlag,unitAllFlag] <;> omega
 end
 end ProximityPrize.SubmissionLower.SmallSliceBudgets6807

@@ -323,7 +323,15 @@ theorem at3_155 : At 3 155 :=
   at_of_direct direct3_155 rfl rfl (by intro _; rfl)
 theorem at3_156 : At 3 156 :=
   at_of_direct direct3_156 rfl rfl (by intro _; rfl)
-theorem all3 (v : Nat) (hv : v≤156) : At 3 v := by
+theorem at3_157 : At 3 157 :=
+  at_of_direct direct3_157 rfl rfl (by intro _; rfl)
+theorem at3_158 : At 3 158 :=
+  at_of_direct direct3_158 rfl rfl (by intro _; rfl)
+theorem at3_159 : At 3 159 :=
+  at_of_direct direct3_159 rfl rfl (by intro _; rfl)
+theorem at3_160 : At 3 160 :=
+  at_of_direct direct3_160 rfl rfl (by intro _; rfl)
+theorem all3 (v : Nat) (hv : v≤160) : At 3 v := by
   interval_cases v
   · exact at3_0
   · exact at3_1
@@ -482,5 +490,9 @@ theorem all3 (v : Nat) (hv : v≤156) : At 3 v := by
   · exact at3_154
   · exact at3_155
   · exact at3_156
+  · exact at3_157
+  · exact at3_158
+  · exact at3_159
+  · exact at3_160
 #print axioms all3
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

@@ -9,13 +9,14 @@ set_option Elab.async false
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 100000
 
-def first (a b c : ℕ) : FlagDegree := ⟨131070*c,131070*b+131069,131070*a+131070⟩
+def first (a b c : ℕ) : FlagDegree := ⟨262144*c,262144*b+524288,262144*a+524291⟩
 def normal (a b c : ℕ) : FlagDegree := ⟨131074*c,131074*b+131076,131074*a+262148⟩
 def raw (a b c : ℕ) : FlagDegree := ⟨131073*c,131073*b+262146,131073*a+393218⟩
 def graph (cfg : Fin 3 → Params) (scale : ℕ) (f : FlagDegree) (a b c : ℕ) : ℕ :=
-  scale*flagMixed f (first a b c) (normal a b c) +
-    ∑ j : Fin 3, (131071*weight (normal a b c) j+65539*weight (raw a b c) j)*
-      (scale/(cfg j).d)*flagMixed f (MovingFiberThreeSources6811.direction j) (cfg j).flag
+  scale/3*flagMixed f (first a b c) (normal a b c) +
+    ∑ j : Fin 3, (524288*weight (normal a b c) j*(scale/(3*(cfg j).d))+
+      65539*weight (raw a b c) j*(scale/(cfg j).d))*
+      flagMixed f (MovingFiberThreeSources6811.direction j) (cfg j).flag
 def identityDegree (p : FlagDegree) (a b c : ℕ) : ℕ :=
   p.zOnly*(655365+262146*a)+p.yz*(1310730+524292*a)+
     p.all*(2097170+524292*a+524292*b+262146*c)
@@ -23,7 +24,7 @@ def pairNumerator (a b c capY capR capT : ℕ) : ℕ :=
   131073*((1+262142*(a+b+5))*((a+3)*capT+(a+b+c+5)*capR)+
     131071*(2*a+5)*((a+b+5)*capT+(a+b+c+5)*capY)+
     (1+262142*(a+b+c+5))*((a+b+5)*capR+(a+3)*capY))+
-    80861*50213*((a+b+5)*capR+(a+3)*capY)
+    80870*50204*((a+b+5)*capR+(a+3)*capY)
 def coeff (P : Params) (a b c : ℕ) : ℕ := pairNumerator a b c P.U P.B P.L
 def helper (P : Params) (a b c : ℕ) : ℕ :=
   pairNumerator a b c (P.U+P.s*(a+b+4)) (P.B+P.s*(a+2)) (P.L+P.s*(a+b+c+4))
@@ -34,20 +35,20 @@ theorem number_coordinates (cfg : Fin 3 → Params) (scale : ℕ) (f : FlagDegre
   have hz : a+3+(b+2)+c-(a+3+(b+2)) = c := by omega
   have hr2 : a+3-2 = a+1 := by omega
   have hb : b+2-1 = b+1 := by omega
-  have hv1 : 131070*(b+2)-131071 = 131070*b+131069 := by
-    calc
-      _ = (131070*b+131069)+131071-131071 := by congr 1 <;> ring
-      _ = _ := Nat.add_sub_cancel _ _
-  have hv2 : 131074*(b+2)-131072 = 131074*b+131076 := by
-    calc
-      _ = (131074*b+131076)+131072-131072 := by congr 1 <;> ring
-      _ = _ := Nat.add_sub_cancel _ _
-  have hfirst : ActualFirstCutPole6807.firstBaseFlag (w-1) (a+3) (b+2) c = first a b c := by
-    norm_num only [ActualFirstCutPole6807.firstBaseFlag,first,w,hr2,hv1]
-    congr 1 <;> ring
+  have hv2 : 131074*(b+2)-131072 = 131074*b+131076 := by omega
+  have hfirst : MovingFiberRetainedStage6811.hfreeFirst (a+3+(b+2)+c) (a+3+(b+2)) (a+3) =
+      first a b c := by
+    have h : a+3-1 = a+2 := by omega
+    unfold MovingFiberRetainedStage6811.hfreeFirst HFreeFirstSlice6812.hfreeFlag first unitAllFlag
+    rw [hy,hz,h]
+    show FlagDegree.mk (2*(RCN326.w+1)*c+3*0) (2*(RCN326.w+1)*(b+2)+3*0)
+      (2*(RCN326.w+1)*(a+2)+3*1) = _
+    rw [FlagDegree.mk.injEq,show RCN326.w = 131071 from rfl]
+    exact ⟨by ring,by ring,by ring⟩
   have hn : BoundaryTailProvider.cellNormal (a+3+(b+2)+c) (a+3+(b+2)) (a+3) = normal a b c := by
-    norm_num only [BoundaryTailProvider.cellNormal,BoundaryTailAlgebra.normalFlag,normal,w,hy,hz,hv2]
-    congr 1 <;> omega
+    norm_num only [BoundaryTailProvider.cellNormal,BoundaryTailAlgebra.normalFlag,normal,w,hy,hz,hv2,
+      FlagDegree.mk.injEq,true_and]
+    omega
   have hraw : MovingFiberRetainedStage6811.rawFirstFlag (a+3+(b+2)+c) (a+3+(b+2)) (a+3) = raw a b c := by
     simp only [MovingFiberRetainedStage6811.rawFirstFlag,cellA,cellB,cellS,hz,hy,hb,hr2,
       RCN198.center,RCN198.direction,raw,w,unitYZFlag]
@@ -57,8 +58,8 @@ theorem number_coordinates (cfg : Fin 3 → Params) (scale : ℕ) (f : FlagDegre
     have e1 : 1+(2*(b+1)+1)+131071*(b+1+1)=131073*b+262146 := by ring
     have e2 : 0+(2*(a+1)+3)+131071*(a+1+2)=131073*a+393218 := by ring
     rw [e0,e1,e2]
-  simp only [number,graph,hy,hz,hfirst,hn,hraw]
-  rfl
+  have hw4 : 4*(w+1) = 524288 := rfl
+  simp only [number,graph,hfirst,hn,hraw,hw4]
 
 theorem identity_coordinates (f : FlagDegree) (a b c : ℕ) :
     identityCurveDegree f (cellA (a+3+(b+2)+c) (a+3+(b+2)))
@@ -84,12 +85,12 @@ theorem pair_numerator (S : Data nodes u0 u1) (a b c : ℕ)
   ring
 
 theorem uniform_gates (S : Data nodes u0 u1) (R U T : ℕ)
-    (hR : R ≤ 1284) (hU : U ≤ 5898) (hT : T ≤ 303117) : S.PairGates R U T := by
+    (hR : R ≤ 1284) (hU : U ≤ 5898) (hT : T ≤ 303188) : S.PairGates R U T := by
   have hr := S.rbound
   have hy := S.ybound
   have ht := S.tbound
-  have hm : (S.pair R U T).mixedCost.y ≤ 31*303117+7501*1284 ∧
-      (S.pair R U T).mixedCost.r ≤ 142*303117+7501*5898 ∧
+  have hm : (S.pair R U T).mixedCost.y ≤ 31*303188+7501*1284 ∧
+      (S.pair R U T).mixedCost.r ≤ 142*303188+7501*5898 ∧
       (S.pair R U T).mixedCost.z ≤ 142*1284+31*5898 := by
     dsimp [Data.pair,UnequalParameters.mixedCost]
     constructor
@@ -99,7 +100,7 @@ theorem uniform_gates (S : Data nodes u0 u1) (R U T : ℕ)
     · exact Nat.add_le_add (Nat.mul_le_mul hy hR) (Nat.mul_le_mul hr hU)
   exact ⟨hm.1.trans_lt (by decide),hm.2.1.trans_lt (by decide),hm.2.2.trans_lt (by decide)⟩
 
-theorem catalog_gates (S : Data nodes u0 u1) (g : Fin 16) (j : Fin 3) :
+theorem catalog_gates (S : Data nodes u0 u1) (g : Fin 20) (j : Fin 3) :
     let P := MovingFiberCatalog6811.groups g j
     S.PairGates (P.B+P.s*(S.r-1)) (P.U+P.s*(S.y-1)) (P.L+P.s*(S.t-1)) ∧
     S.PairGates P.B P.U P.L := by
@@ -114,8 +115,8 @@ theorem catalog_gates (S : Data nodes u0 u1) (g : Fin 16) (j : Fin 3) :
            _ ≤ 1284 := by decide
     · calc _ ≤ 258+40*141 := by gcongr; exact hp.2.1; exact hp.2.2.2
            _ ≤ 5898 := by decide
-    · calc _ ≤ 3117+40*7500 := by gcongr; exact hp.2.2.1; exact hp.2.2.2
-           _ ≤ 303117 := by decide
+    · calc _ ≤ 3188+40*7500 := by gcongr; exact hp.2.2.1; exact hp.2.2.2
+           _ ≤ 303188 := by decide
   · exact uniform_gates S _ _ _ (by omega) (by omega) (by omega)
 
 def Own (S : Data nodes u0 u1) : Prop :=
