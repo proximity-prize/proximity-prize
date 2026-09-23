@@ -20,7 +20,7 @@ def ProperHelper (F Q : MvPolynomial (Fin 4) K) (B U L s capR capY capT : ℕ)
     wt residualYSWeights Q ≤ U+s*(capY-1) ∧
     wt residualTotalWeights Q ≤ L+s*(capT-1)) ∧
   ∀ f : Polynomial K, f.natDegree ≤ 131071 → ∀ z : K, ∀ S : Finset N,
-    181284 ≤ S.card → (∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) →
+    181275 ≤ S.card → (∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) →
     RCN319.specialization K f z F = 0 → RCN319.specialization K f z Q = 0
 
 theorem helper_or_divisibility (P : Poly (K := K)) (F : MvPolynomial (Fin 4) K)
@@ -60,7 +60,7 @@ theorem helper_or_divisibility (P : Poly (K := K)) (F : MvPolynomial (Fin 4) K)
     · intro f hf z S hSc hvalues _hFzero
       have hweight : ∀ e ∈ P.support,
           e 0+131071*e 2+131070*e 3+131069*e 1+
-            SecondJetRelaxedDifferentiation.reserve k n0 (e 1)*50215 < m*181284 := by
+            SecondJetRelaxedDifferentiation.reserve k n0 (e 1)*50206 < m*181275 := by
         intro e he
         have hw := (hP.2.1 e he).2.2.2.2
         dsimp [MovingFiberInterpolation6811.cutoff] at hw

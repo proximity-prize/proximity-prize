@@ -28691,11 +28691,13 @@ open Polynomial KaehlerDifferential IsDedekindDomain RCN022 RCN351 RCN344 RCN295
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
-theorem exists_nonzero_avoiding_finite_subsingleton
-   {K ι:Type*} [Field K] [Infinite K] [Finite ι]
+/-- Finite avoidance inside an infinite subset `S` (used to keep the flag coefficients in the
+image of `K[X]`, where the H-free derivation is defined). -/
+theorem exists_nonzero_avoiding_finite_subsingleton_in
+   {K ι:Type*} [Field K] [Finite ι] (S:Set K) (hS:S.Infinite)
    (Bad:ι → K → Prop)
    (hsingle:∀ i {a b},Bad i a → Bad i b → a=b):
-   ∃ a:K,a≠0∧∀ i,¬ Bad i a:=by
+   ∃ a:K,a∈S∧a≠0∧∀ i,¬ Bad i a:=by
  classical
  letI:DecidableEq K:=Classical.decEq K
  letI:DecidableEq ι:=Classical.decEq ι
@@ -28703,8 +28705,8 @@ theorem exists_nonzero_avoiding_finite_subsingleton
  let representative:ι → K:=fun i↦
    if h:∃ a,Bad i a then Classical.choose h else 0
  let forbidden:Finset K:=Finset.univ.image representative
- obtain ⟨a,ha⟩:=Infinite.exists_notMem_finset (insert 0 forbidden)
- refine ⟨a,?_,?_⟩
+ obtain ⟨a,haS,ha⟩:=(hS.diff (insert 0 forbidden).finite_toSet).nonempty
+ refine ⟨a,haS,?_,?_⟩
  · intro hzero
    exact ha (hzero ▸ Finset.mem_insert_self 0 forbidden)
  · intro i hbad
@@ -28716,6 +28718,13 @@ theorem exists_nonzero_avoiding_finite_subsingleton
    have hmem:representative i∈forbidden:=by
      exact Finset.mem_image.mpr ⟨i,Finset.mem_univ i,rfl⟩
    exact ha (Finset.mem_insert_of_mem (hab ▸ hmem))
+theorem exists_nonzero_avoiding_finite_subsingleton
+   {K ι:Type*} [Field K] [Infinite K] [Finite ι]
+   (Bad:ι → K → Prop)
+   (hsingle:∀ i {a b},Bad i a → Bad i b → a=b):
+   ∃ a:K,a≠0∧∀ i,¬ Bad i a:=by
+ obtain ⟨a,-,h⟩:=exists_nonzero_avoiding_finite_subsingleton_in Set.univ Set.infinite_univ Bad hsingle
+ exact ⟨a,h⟩
 theorem valuation_shear_bad_coefficient_subsingleton
    {K L:Type*} [Field K] [Field L] [Algebra K L]
    (v:RCN345.NormalizedValuation K L)
@@ -28893,10 +28902,11 @@ variable {K:Type*} [Field K] [IsAlgClosed K]
  (r z:∀ i,E i)
 variable (W:∀ i,
  Finset (RCN345.NormalizedValuation K (E i)))
-theorem exists_common_exact_finite_separable_affine_adaptive
+theorem exists_common_exact_finite_separable_affine_adaptive_in
+   (S:Set K) (hS:S.Infinite)
    (base:∀ i,SeparableCoordinate K (E i))
    (hactive:∀ i,D K (E i) (r i)≠0∨D K (E i) (z i)≠0):
-   ∃ a:K,a≠0∧∀ i,
+   ∃ a:K,a∈S∧a≠0∧∀ i,
      ∃ ht:Transcendental K (r i+a • z i),
        (letI:Algebra (RatFunc K) (E i):=
            (elementEmbedding K (E i) (r i+a • z i) ht).toRingHom.toAlgebra;
@@ -28924,9 +28934,9 @@ theorem exists_common_exact_finite_separable_affine_adaptive
      · exact shear_bad_coefficient_subsingleton K (E i) (r i) (z i)
          hdz ha hb
    · exact valuation_shear_bad_coefficient_subsingleton v.1 (r i) (z i) ha hb
- obtain ⟨a,ha0,havoid⟩:=
-   exists_nonzero_avoiding_finite_subsingleton Bad hsingle
- refine ⟨a,ha0,fun i => ?_⟩
+ obtain ⟨a,haS,ha0,havoid⟩:=
+   exists_nonzero_avoiding_finite_subsingleton_in S hS Bad hsingle
+ refine ⟨a,haS,ha0,fun i => ?_⟩
  have hdiff:D K (E i) (r i)+a • D K (E i) (z i)≠0:=by
    exact havoid (Sum.inl i)
  have hD:D K (E i) (r i+a • z i)≠0:=by
@@ -28945,12 +28955,29 @@ theorem exists_common_exact_finite_separable_affine_adaptive
      Valuation.IsTrivialOn.eq_one a ha0,one_mul]
  rw [haz] at hupper
  exact le_antisymm hupper (le_of_not_gt hnotlt)
-theorem exists_common_exact_finite_separable_affine_adaptive_avoiding_one
+theorem exists_common_exact_finite_separable_affine_adaptive
+   (base:∀ i,SeparableCoordinate K (E i))
+   (hactive:∀ i,D K (E i) (r i)≠0∨D K (E i) (z i)≠0):
+   ∃ a:K,a≠0∧∀ i,
+     ∃ ht:Transcendental K (r i+a • z i),
+       (letI:Algebra (RatFunc K) (E i):=
+           (elementEmbedding K (E i) (r i+a • z i) ht).toRingHom.toAlgebra;
+         FiniteDimensional (RatFunc K) (E i))∧
+       (letI:Algebra (RatFunc K) (E i):=
+           (elementEmbedding K (E i) (r i+a • z i) ht).toRingHom.toAlgebra;
+         Algebra.IsSeparable (RatFunc K) (E i))∧
+       (∀ v∈W i,v.val (r i+a • z i)=
+         max (v.val (r i)) (v.val (z i))):=by
+ obtain ⟨a,-,h⟩:=exists_common_exact_finite_separable_affine_adaptive_in E r z W
+   Set.univ Set.infinite_univ base hactive
+ exact ⟨a,h⟩
+theorem exists_common_exact_finite_separable_affine_adaptive_avoiding_one_in
+   (S:Set K) (hS:S.Infinite)
    (Extra:K → Prop)
    (hextra:∀ {a b},Extra a → Extra b → a=b)
    (base:∀ i,SeparableCoordinate K (E i))
    (hactive:∀ i,D K (E i) (r i)≠0∨D K (E i) (z i)≠0):
-   ∃ a:K,a≠0∧¬ Extra a∧∀ i,
+   ∃ a:K,a∈S∧a≠0∧¬ Extra a∧∀ i,
      ∃ ht:Transcendental K (r i+a • z i),
        (letI:Algebra (RatFunc K) (E i):=
            (elementEmbedding K (E i) (r i+a • z i) ht).toRingHom.toAlgebra;
@@ -28981,9 +29008,9 @@ theorem exists_common_exact_finite_separable_affine_adaptive_avoiding_one
      · exact shear_bad_coefficient_subsingleton K (E i) (r i) (z i)
          hdz ha hb
    · exact valuation_shear_bad_coefficient_subsingleton v.1 (r i) (z i) ha hb
- obtain ⟨a,ha0,havoid⟩:=
-   exists_nonzero_avoiding_finite_subsingleton Bad hsingle
- refine ⟨a,ha0,havoid (Sum.inl ()),fun i => ?_⟩
+ obtain ⟨a,haS,ha0,havoid⟩:=
+   exists_nonzero_avoiding_finite_subsingleton_in S hS Bad hsingle
+ refine ⟨a,haS,ha0,havoid (Sum.inl ()),fun i => ?_⟩
  have hdiff:D K (E i) (r i)+a • D K (E i) (z i)≠0:=by
    exact havoid (Sum.inr (Sum.inl i))
  have hD:D K (E i) (r i+a • z i)≠0:=by
@@ -29002,6 +29029,24 @@ theorem exists_common_exact_finite_separable_affine_adaptive_avoiding_one
      Valuation.IsTrivialOn.eq_one a ha0,one_mul]
  rw [haz] at hupper
  exact le_antisymm hupper (le_of_not_gt hnotlt)
+theorem exists_common_exact_finite_separable_affine_adaptive_avoiding_one
+   (Extra:K → Prop)
+   (hextra:∀ {a b},Extra a → Extra b → a=b)
+   (base:∀ i,SeparableCoordinate K (E i))
+   (hactive:∀ i,D K (E i) (r i)≠0∨D K (E i) (z i)≠0):
+   ∃ a:K,a≠0∧¬ Extra a∧∀ i,
+     ∃ ht:Transcendental K (r i+a • z i),
+       (letI:Algebra (RatFunc K) (E i):=
+           (elementEmbedding K (E i) (r i+a • z i) ht).toRingHom.toAlgebra;
+         FiniteDimensional (RatFunc K) (E i))∧
+       (letI:Algebra (RatFunc K) (E i):=
+           (elementEmbedding K (E i) (r i+a • z i) ht).toRingHom.toAlgebra;
+         Algebra.IsSeparable (RatFunc K) (E i))∧
+       (∀ v∈W i,v.val (r i+a • z i)=
+         max (v.val (r i)) (v.val (z i))):=by
+ obtain ⟨a,-,h⟩:=exists_common_exact_finite_separable_affine_adaptive_avoiding_one_in E r z W
+   Set.univ Set.infinite_univ Extra hextra base hactive
+ exact ⟨a,h⟩
 end FiniteFamily
 end
 end ProximityPrize.SubmissionLower.RCN035
@@ -35124,14 +35169,17 @@ structure AdaptiveNestedProjectionDataActive
          (RCN187.poleOrder v.val (coordinate Omega C.1 2)))
  directional:MvPolynomial.pderiv (0:Fin 3) G-
    MvPolynomial.C mu*MvPolynomial.pderiv (1:Fin 3) G≠0
-theorem exists_adaptiveNestedProjectionDataActive
+/-- The flag coefficients `lam, mu` can be chosen inside any infinite subset `S` (for the
+H-free bridge: the image of `K[X]`, so that the derivation extends to them). -/
+theorem exists_adaptiveNestedProjectionDataActive_in
    (base:∀ C:RegularComponent Omega G T H,
      SeparableLiteralCoordinate C.1)
    (hactive:∀ C:RegularComponent Omega G T H,
      D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 0)≠0∨
        D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 2)≠0)
-   (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0):
-   Nonempty (AdaptiveNestedProjectionDataActive base hactive hSderiv):=by
+   (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0)
+   (S:Set Omega) (hS:S.Infinite):
+   ∃ D:AdaptiveNestedProjectionDataActive base hactive hSderiv,D.lam∈S∧D.mu∈S:=by
  classical
  let E:RegularComponent Omega G T H → Type:=
    fun C => CoordinateField Omega C.1
@@ -35141,9 +35189,9 @@ theorem exists_adaptiveNestedProjectionDataActive
    fun C => literalRelevantPlaces (base C)
  let baseC:∀ C,SeparableCoordinate Omega (E C):=
    fun C => literalToSeparableCoordinate (base C)
- obtain ⟨lam,hlam0,hlam⟩:=
-   exists_common_exact_finite_separable_affine_adaptive E rY z W
-     baseC hactive
+ obtain ⟨lam,hlamS,hlam0,hlam⟩:=
+   exists_common_exact_finite_separable_affine_adaptive_in E rY z W
+     S hS baseC hactive
  let U:∀ C:RegularComponent Omega G T H,
      CoordinateField Omega C.1:=fun C => affineU Omega C.1 lam
  have hUgate:∀ C:RegularComponent Omega G T H,
@@ -35208,9 +35256,9 @@ theorem exists_adaptiveNestedProjectionDataActive
      MvPolynomial.C mu*MvPolynomial.pderiv (1:Fin 3) G=0
  have hextra:∀ {a b},Extra a → Extra b → a=b:=by
    exact directional_bad_coefficient_subsingleton G hSderiv
- obtain ⟨mu,hmu0,hmudir,hmu⟩:=
-   exists_common_exact_finite_separable_affine_adaptive_avoiding_one
-     E rS U W Extra hextra baseC hactiveV
+ obtain ⟨mu,hmuS,hmu0,hmudir,hmu⟩:=
+   exists_common_exact_finite_separable_affine_adaptive_avoiding_one_in
+     E rS U W S hS Extra hextra baseC hactiveV
  let V:∀ C:RegularComponent Omega G T H,
      CoordinateField Omega C.1:=
    fun C => coordinate Omega C.1 1+mu • U C
@@ -35287,7 +35335,7 @@ theorem exists_adaptiveNestedProjectionDataActive
    allTranscendental:=?_
    uPole:=?_
    allPole:=?_
-   directional:=hmudir}⟩
+   directional:=hmudir},hlamS,hmuS⟩
  · intro C
    rw [hembV C]
    exact (hmu C).choose_spec.1
@@ -35306,6 +35354,16 @@ theorem exists_adaptiveNestedProjectionDataActive
    exact huPole C v
  · intro C v
    rw [hvValue C,hvPole C v,huPole C v]
+theorem exists_adaptiveNestedProjectionDataActive
+   (base:∀ C:RegularComponent Omega G T H,
+     SeparableLiteralCoordinate C.1)
+   (hactive:∀ C:RegularComponent Omega G T H,
+     D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 0)≠0∨
+       D Omega (CoordinateField Omega C.1) (coordinate Omega C.1 2)≠0)
+   (hSderiv:MvPolynomial.pderiv (1:Fin 3) G≠0):
+   Nonempty (AdaptiveNestedProjectionDataActive base hactive hSderiv):=
+ ⟨(exists_adaptiveNestedProjectionDataActive_in base hactive hSderiv
+   Set.univ Set.infinite_univ).choose⟩
 end
 end ProximityPrize.SubmissionLower.RCN038
 end PackedLegacy_DP
@@ -46455,6 +46513,8 @@ structure ReducedActiveGeometry
      (regularitySurface (polynomialEmbedding K) S.F), LiteralProjectionGate C 2
  data:AdaptiveNestedProjectionDataActive base hactive
    (RCN315.residualStage_pderiv_one_ne_zero_of_support S)
+ lam_poly:data.lam∈Set.range (polynomialEmbedding K)
+ mu_poly:data.mu∈Set.range (polynomialEmbedding K)
 theorem exists_reducedActiveGeometry
    {a b s:ℕ}
    (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w
@@ -46465,9 +46525,12 @@ theorem exists_reducedActiveGeometry
    (hmixed:(1 + (w + 1) * (2 * (b + s + 3) - 2)) * flag.all +
      (flag.yz + flag.all) * ((2 * (s + 2) - 2) * (w + 1)) < p) :
    Nonempty (ReducedActiveGeometry S):=by
- obtain ⟨base, hactive, hZ, ⟨D⟩⟩ :=
+ obtain ⟨base, hactive, hZ, -⟩ :=
    exists_reduced_firstTail_activeNestedData_of_caps S hfirstProper hflagChar hmixed
- exact ⟨⟨base, hactive, hZ, D⟩⟩
+ obtain ⟨D, hlam, hmu⟩:=exists_adaptiveNestedProjectionDataActive_in base hactive
+   (RCN315.residualStage_pderiv_one_ne_zero_of_support S) (Set.range (polynomialEmbedding K))
+   (Set.infinite_range_of_injective (polynomialEmbedding_injective K))
+ exact ⟨⟨base, hactive, hZ, D, hlam, hmu⟩⟩
 noncomputable def reducedActiveGeometry
    {a b s:ℕ}
    (S:ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag w

@@ -11,9 +11,9 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80860
-def agreements:ℕ:=181284
-def gap:ℕ:=50213
+def errors:ℕ:=80869
+def agreements:ℕ:=181275
+def gap:ℕ:=50204
 def prime:ℕ:=2130706433
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index

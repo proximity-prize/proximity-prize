@@ -33,6 +33,114 @@ local notation "Ω" => GenericField K
 local notation "PE" => MvPolynomial (Fin 3) E
 local notation "w" => RCN326.w
 
+local notation "φE" => RingHom.comp (algebraMap (GenericField K) E) (polynomialEmbedding K)
+
+/-- The per-slice zero count for ANY exponent `e` of the counted function
+`baseNumerator/H^e` (denominator `c*H^(e+3)`), given its pole mass. -/
+theorem first_cut_on_prime_slice_of
+    (S : Stage K I Gamma x p flag errorCap stageSupport)
+    (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))
+    (old : T → FirstTailComponent S)
+    (emb : ∀ i, CoordinateField Ω (old i).1 →ₐ[Ω] E)
+    (hinj : Function.Injective (fun i => embeddingPoint (old i).1 (emb i)))
+    (D : Ideal PE) [D.IsPrime] (sep : SeparableLiteralCoordinate D)
+    (hpoint : ∀ i, D ≤ RingHom.ker
+      (MvPolynomial.aeval (embeddingPoint (old i).1 (emb i)) : PE →ₐ[E] E).toRingHom)
+    (hcarrier : scalarPolynomialMap Ω E S.G ∈ D)
+    (hisolated : scalarPolynomialMap Ω E
+      (globalTailCut (polynomialEmbedding K) S.F (w+1)) ∉ D)
+    (e d cost : ℕ)
+    (hpole : surfaceMap φE S.F ∈ D → surfaceMap φE (polyH K S.F) ∉ D →
+      (∀ F0 : MvPolynomial (Fin 4) K,
+        (∀ i, surfaceMap (polynomialEmbedding K) F0 ∉ (old i).1) → surfaceMap φE F0 ∉ D) →
+      ∀ W : Finset (Place E (CoordinateField E D)),
+        (d : ℤ) * (∑ nu ∈ W, RCN187.poleOrder nu.val
+          (SecondJetComponentRoots.coefficientMap φE D (baseNumerator S.F (w-1))/
+            SecondJetComponentRoots.coefficientMap φE D (polyH K S.F)^e)) ≤ cost) :
+    d * (∑ i, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)) ≤ cost := by
+  classical
+  let A := CoordinateRing E D
+  let Lf := CoordinateField E D
+  letI := quotientPolynomialAlgebra E D sep.index
+  letI := polynomialBaseAlgebra E D sep.index
+  letI := rationalBaseAlgebra E D sep.index sep.transcendental
+  letI := quotientBaseScalarTower E D sep.index
+  letI := polynomialBaseScalarTower E D sep.index
+  letI := quotientFractionScalarTower E D sep.index
+  letI := polynomialRationalScalarTower E D sep.index sep.transcendental
+  letI := rationalBaseScalarTower E D sep.index sep.transcendental
+  letI : FiniteDimensional (RatFunc E) Lf := sep.finite
+  letI : Algebra.IsSeparable (RatFunc E) Lf := sep.separable
+  let i0 : T := Classical.choice inferInstance
+  let ev := SecondJetComponentRoots.coefficientMap φE D
+  let evalPoint := fun i => pointHom E D (slicePoint S (old i) (emb i) D (hpoint i))
+  let mu := fun i => localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)
+  let a : A := firstTailInSlice S D
+  let H : A := originalToSlice (K := K) D (polyH K S.F)
+  let c : A := firstTailScalarInSlice (K := K) D
+  let b : A := c*H^(e+3)
+  let iota : A →+* Lf := algebraMap A Lf
+  have hpi : Function.Injective evalPoint := by
+    intro i j hh
+    have hs := pointHom_injective E D hh
+    exact hinj (congrArg Subtype.val hs)
+  have hmu : ∀ i, 1 ≤ mu i := fun i => one_le_localMultiplicity S hproper (old i)
+  have ha : ∀ i, a ∈ (RingHom.ker (evalPoint i).toRingHom)^(mu i) := by
+    intro i
+    exact actual_first_tail_mem_point_power S hproper (old i) (emb i) D
+      (hpoint i) hcarrier
+  have hHpt : ∀ i, evalPoint i H ≠ 0 := fun i =>
+    original_H_point_ne_zero S (old i) (emb i) D (hpoint i)
+  have hcpt : ∀ i, evalPoint i c ≠ 0 := fun i => firstTailScalar_point_ne_zero D _
+  have hb : ∀ i, evalPoint i b ≠ 0 := by
+    intro i
+    simpa only [b,map_mul,map_pow] using mul_ne_zero (hcpt i) (pow_ne_zero _ (hHpt i))
+  have hiota : Function.Injective iota := IsFractionRing.injective A Lf
+  have hHi : iota H ≠ 0 := by
+    intro hz
+    have hH0 : H = 0 := hiota (by simpa only [map_zero] using hz)
+    exact hHpt i0 (by rw [hH0,map_zero])
+  have hci : iota c ≠ 0 := by
+    intro hz
+    have hc0 : c = 0 := hiota (by simpa only [map_zero] using hz)
+    exact hcpt i0 (by rw [hc0,map_zero])
+  have hai : iota a ≠ 0 := by
+    intro hz
+    exact firstTailInSlice_ne_zero S D hisolated
+      (hiota (by simpa only [map_zero] using hz))
+  have hbi : iota b ≠ 0 := by
+    simpa only [b,map_mul,map_pow] using mul_ne_zero hci (pow_ne_zero _ hHi)
+  have hx : iota a / iota b ≠ 0 := div_ne_zero hai hbi
+  have hrepr : iota a / iota b = ev (baseNumerator S.F (w-1))/ev (polyH K S.F)^e := by
+    have hh := normalized_first_tail_identity iota a
+      (originalToSlice (K := K) D (baseNumerator S.F (w-1))) H c e
+      (firstTailInSlice_normal_form S D) hHi hci
+    have hbv : iota (originalToSlice (K := K) D (baseNumerator S.F (w-1))) =
+        ev (baseNumerator S.F (w-1)) := originalToSlice_fraction_value D _
+    have hHv : iota H = ev (polyH K S.F) := originalToSlice_fraction_value D _
+    exact hh.trans (by rw [hbv, hHv])
+  have hnot (F0 : MvPolynomial (Fin 4) K)
+      (hn0 : ∀ i, surfaceMap (polynomialEmbedding K) F0 ∉ (old i).1) :
+      surfaceMap φE F0 ∉ D := by
+    intro hmem
+    have hz := RingHom.mem_ker.mp (hpoint i0 hmem)
+    change MvPolynomial.eval (embeddingPoint (old i0).1 (emb i0))
+      (surfaceMap φE F0) = 0 at hz
+    apply GenericSlicePoints6807.scalar_eval_ne_zero (old i0).1 (emb i0)
+      (surfaceMap (polynomialEmbedding K) F0) (hn0 i0)
+    simpa only [scalar_surfaceMap, MvPolynomial.aeval_eq_eval] using hz
+  have hFd : surfaceMap φE S.F ∈ D := by
+    rw [← scalar_surfaceMap]
+    exact D.mem_of_dvd (map_dvd (scalarPolynomialMap Ω E) S.G_dvd_surface) hcarrier
+  have hHd : surfaceMap φE (polyH K S.F) ∉ D :=
+    hnot _ (fun i => RCN312.firstTailComponent_regularity_not_mem S (old i))
+  apply WeightedZeroMass6807.weighted_affine_points_scaled E Lf A
+    evalPoint hpi mu hmu a b ha hb hx d cost
+  intro W
+  change (d : ℤ) * (∑ nu ∈ W, RCN187.poleOrder nu.val (iota a / iota b)) ≤ (cost : ℤ)
+  rw [hrepr]
+  exact hpole hFd hHd hnot W
+
 theorem first_cut_on_prime_slice
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))
@@ -66,94 +174,12 @@ theorem first_cut_on_prime_slice
         (SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0)) ≤ (CV : ℤ)) :
     (k+1) * (∑ i, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)) ≤
       (k+1)*CJ+w*CV := by
-  classical
-  let A := CoordinateRing E D
-  let Lf := CoordinateField E D
-  letI := quotientPolynomialAlgebra E D sep.index
-  letI := polynomialBaseAlgebra E D sep.index
-  letI := rationalBaseAlgebra E D sep.index sep.transcendental
-  letI := quotientBaseScalarTower E D sep.index
-  letI := polynomialBaseScalarTower E D sep.index
-  letI := quotientFractionScalarTower E D sep.index
-  letI := polynomialRationalScalarTower E D sep.index sep.transcendental
-  letI := rationalBaseScalarTower E D sep.index sep.transcendental
-  letI : FiniteDimensional (RatFunc E) Lf := sep.finite
-  letI : Algebra.IsSeparable (RatFunc E) Lf := sep.separable
-  let i0 : T := Classical.choice inferInstance
-  let phiE := (algebraMap Ω E).comp (polynomialEmbedding K)
-  let ev := SecondJetComponentRoots.coefficientMap phiE D
-  let evalPoint := fun i => pointHom E D (slicePoint S (old i) (emb i) D (hpoint i))
-  let mu := fun i => localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)
-  let a : A := firstTailInSlice S D
-  let H : A := originalToSlice (K := K) D (polyH K S.F)
-  let c : A := firstTailScalarInSlice (K := K) D
-  let b : A := c*H^(w+3)
-  let iota : A →+* Lf := algebraMap A Lf
-  have hpi : Function.Injective evalPoint := by
-    intro i j hh
-    have hs := pointHom_injective E D hh
-    exact hinj (congrArg Subtype.val hs)
-  have hmu : ∀ i, 1 ≤ mu i := fun i => one_le_localMultiplicity S hproper (old i)
-  have ha : ∀ i, a ∈ (RingHom.ker (evalPoint i).toRingHom)^(mu i) := by
-    intro i
-    exact actual_first_tail_mem_point_power S hproper (old i) (emb i) D
-      (hpoint i) hcarrier
-  have hHpt : ∀ i, evalPoint i H ≠ 0 := fun i =>
-    original_H_point_ne_zero S (old i) (emb i) D (hpoint i)
-  have hcpt : ∀ i, evalPoint i c ≠ 0 := fun i => firstTailScalar_point_ne_zero D _
-  have hb : ∀ i, evalPoint i b ≠ 0 := by
-    intro i
-    simpa only [b,map_mul,map_pow] using mul_ne_zero (hcpt i) (pow_ne_zero _ (hHpt i))
-  have hiota : Function.Injective iota := IsFractionRing.injective A Lf
-  have hHi : iota H ≠ 0 := by
-    intro hz
-    have hH0 : H = 0 := hiota (by simpa only [map_zero] using hz)
-    exact hHpt i0 (by rw [hH0,map_zero])
-  have hci : iota c ≠ 0 := by
-    intro hz
-    have hc0 : c = 0 := hiota (by simpa only [map_zero] using hz)
-    exact hcpt i0 (by rw [hc0,map_zero])
-  have hai : iota a ≠ 0 := by
-    intro hz
-    exact firstTailInSlice_ne_zero S D hisolated
-      (hiota (by simpa only [map_zero] using hz))
-  have hbi : iota b ≠ 0 := by
-    simpa only [b,map_mul,map_pow] using mul_ne_zero hci (pow_ne_zero _ hHi)
-  have hx : iota a / iota b ≠ 0 := div_ne_zero hai hbi
-  have hrepr : iota a / iota b = ev (baseNumerator S.F (w-1))/ev (polyH K S.F)^w := by
-    have hh := normalized_first_tail_identity iota a
-      (originalToSlice (K := K) D (baseNumerator S.F (w-1))) H c w
-      (firstTailInSlice_normal_form S D) hHi hci
-    have hbv : iota (originalToSlice (K := K) D (baseNumerator S.F (w-1))) =
-        ev (baseNumerator S.F (w-1)) := originalToSlice_fraction_value D _
-    have hHv : iota H = ev (polyH K S.F) := originalToSlice_fraction_value D _
-    exact hh.trans (by rw [hbv, hHv])
-  have hnot (F0 : MvPolynomial (Fin 4) K)
-      (hn0 : surfaceMap (polynomialEmbedding K) F0 ∉ (old i0).1) :
-      surfaceMap phiE F0 ∉ D := by
-    intro hmem
-    have hz := RingHom.mem_ker.mp (hpoint i0 hmem)
-    change MvPolynomial.eval (embeddingPoint (old i0).1 (emb i0))
-      (surfaceMap phiE F0) = 0 at hz
-    apply GenericSlicePoints6807.scalar_eval_ne_zero (old i0).1 (emb i0)
-      (surfaceMap (polynomialEmbedding K) F0) hn0
-    simpa only [scalar_surfaceMap, phiE, MvPolynomial.aeval_eq_eval] using hz
-  have hFd : surfaceMap phiE S.F ∈ D := by
-    rw [← scalar_surfaceMap]
-    exact D.mem_of_dvd (map_dvd (scalarPolynomialMap Ω E) S.G_dvd_surface) hcarrier
-  have hHd : surfaceMap phiE (polyH K S.F) ∉ D :=
-    hnot _ (RCN312.firstTailComponent_regularity_not_mem S (old i0))
-  have hLd : surfaceMap phiE (asS P).leadingCoeff ∉ D := hnot _ (hlead i0)
-  apply WeightedZeroMass6807.weighted_affine_points_scaled E Lf A
-    evalPoint hpi mu hmu a b ha hb hx (k+1) ((k+1)*CJ+w*CV)
-  intro W
-  have hs := FirstSlicePoleBudget6807.actual_first_source_pole_mass phiE S.F D sep
-    P B U L s k n0 hS hP hBU hUL hdn hB hn hFd hHd hLd hdiv h2 hfact
+  apply first_cut_on_prime_slice_of S hproper old emb hinj D sep hpoint hcarrier hisolated
+    w (k+1) ((k+1)*CJ+w*CV)
+  intro hFd hHd hnot W
+  have hs := FirstSlicePoleBudget6807.actual_first_source_pole_mass φE S.F D sep
+    P B U L s k n0 hS hP hBU hUL hdn hB hn hFd hHd (hnot _ hlead) hdiv h2 hfact
     (w-1) r v z (by decide) hr hv hR hYR hAll CJ CV hJbudget hVbudget W
-  change ((k+1 : ℕ) : ℤ) * (∑ nu ∈ W,
-    RCN187.poleOrder nu.val (iota a / iota b)) ≤ (((k+1)*CJ+w*CV : ℕ) : ℤ)
-  rw [hrepr]
   simpa only [show w-1+1=w by decide, Nat.cast_add, Nat.cast_mul] using hs
-
 end
 end ProximityPrize.SubmissionLower.ActualWeightedFirstSlice6807

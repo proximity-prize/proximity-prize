@@ -526,12 +526,12 @@ theorem profile_le_between (r v lo hi z : ℕ) (g : ℕ → ℕ) (slope : ℕ)
   · rw [properLine_affine r v lo z hstart hz]
     have hlast := (le_max_left (properLine r v hi) (retainedLine r v hi)).trans h1
     rw [properLine_affine r v lo hi hstart hlo, hg hi hlo le_rfl] at hlast
-    exact Lower80791.PhaseRows.affine_le_between _ _ _ _ _ _
+    exact LocatorPhase6800Audit.affine_le_between _ _ _ _ _ _
       (Nat.sub_le_sub_right hzi lo) ((le_max_left _ _).trans h0) hlast
   · rw [retainedLine_affine r v lo z hstart hz]
     have hlast := (le_max_right (properLine r v hi) (retainedLine r v hi)).trans h1
     rw [retainedLine_affine r v lo hi hstart hlo, hg hi hlo le_rfl] at hlast
-    exact Lower80791.PhaseRows.affine_le_between _ _ _ _ _ _
+    exact LocatorPhase6800Audit.affine_le_between _ _ _ _ _ _
       (Nat.sub_le_sub_right hzi lo) ((le_max_right _ _).trans h0) hlast
 
 end ProximityPrize.SubmissionLower.SecondJetRefinedCap

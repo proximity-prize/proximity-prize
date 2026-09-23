@@ -15,8 +15,8 @@ noncomputable section
 set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 set_option Elab.async false
-def errors : ℕ := 80860
-def radiusNumerator:ℕ:=331206655
+def errors : ℕ := 80869
+def radiusNumerator:ℕ:=331243519
 def radiusDenominator:ℕ:=1073741824
 def radius:ℝ≥0:=claimedRadius radiusNumerator radiusDenominator
 theorem radius_floor:
@@ -27,51 +27,51 @@ theorem radius_admissible:
     radius ∈ Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance:=by
   constructor <;> norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
     IRSProfile.minRelativeDistance]
-theorem score_root_integer:(2:ℕ)^11 * 100000000^100 ≤ 107922824^100:=by decide
+theorem score_root_integer:(2:ℕ)^12 * 100000000^100 ≤ 108673487^100:=by decide
 theorem score_radius_integer:
-    (742535169:ℕ)^128 * (2^68 * 107922824) ≤ 100000000 * 1073741824^128:=by decide
+    (742498305:ℕ)^128 * (2^68 * 108673487) ≤ 100000000 * 1073741824^128:=by decide
 theorem two_rpow_fraction_le:
-    (2:ℝ≥0)^((11:ℝ)/100) ≤ (107922824:ℝ≥0)/100000000:=by
-  have hroot:((2:ℝ≥0)^(11:ℕ))^((100:ℝ)⁻¹) ≤ (107922824:ℝ≥0)/100000000:=by
+    (2:ℝ≥0)^((12:ℝ)/100) ≤ (108673487:ℝ≥0)/100000000:=by
+  have hroot:((2:ℝ≥0)^(12:ℕ))^((100:ℝ)⁻¹) ≤ (108673487:ℝ≥0)/100000000:=by
     rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 100)]
     rw [NNReal.rpow_ofNat,div_pow,le_div_iff₀ (by positivity)]
     exact_mod_cast score_root_integer
   calc
-    (2:ℝ≥0)^((11:ℝ)/100) = ((2:ℝ≥0)^(11:ℕ))^((100:ℝ)⁻¹):=by
+    (2:ℝ≥0)^((12:ℝ)/100) = ((2:ℝ≥0)^(12:ℕ))^((100:ℝ)⁻¹):=by
       rw [← NNReal.rpow_natCast_mul]
       norm_num [div_eq_mul_inv]
     _ ≤ _:=hroot
 theorem radius_power_bound:
     (1 - radius)^IRSProfile.repetitions ≤
-      ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/107922824):=by
-  have hsub:(1 - radius:ℝ≥0) =742535169/1073741824:=by
+      ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/108673487):=by
+  have hsub:(1 - radius:ℝ≥0) =742498305/1073741824:=by
     have hr:radius ≤ 1:=by
       rw [← NNReal.coe_le_coe]
       norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
     apply NNReal.coe_injective
     rw [NNReal.coe_sub hr]
     norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
-  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/107922824)
+  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/108673487)
   rw [hsub,div_pow,div_mul_div_comm,one_mul,
     div_le_div_iff₀ (by positivity) (by positivity)]
   exact_mod_cast score_radius_integer
 theorem score_target_le:
-    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6811:=by
-  have hscale:(100000000:ℝ≥0)/107922824 ≤ (2:ℝ≥0)^(-((11:ℝ)/100)):=by
+    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6812:=by
+  have hscale:(100000000:ℝ≥0)/108673487 ≤ (2:ℝ≥0)^(-((12:ℝ)/100)):=by
     calc
-      (100000000:ℝ≥0)/107922824=1/((107922824:ℝ≥0)/100000000):=by norm_num
-      _ ≤ 1/((2:ℝ≥0)^((11:ℝ)/100)) :=
+      (100000000:ℝ≥0)/108673487=1/((108673487:ℝ≥0)/100000000):=by norm_num
+      _ ≤ 1/((2:ℝ≥0)^((12:ℝ)/100)) :=
         one_div_le_one_div_of_le (by positivity) two_rpow_fraction_le
       _=_:=by rw [one_div,NNReal.rpow_neg]
   calc
     (1 - radius)^IRSProfile.repetitions ≤
-        ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/107922824):=radius_power_bound
-    _ ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (2:ℝ≥0)^(-((11:ℝ)/100)) :=
+        ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/108673487):=radius_power_bound
+    _ ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (2:ℝ≥0)^(-((12:ℝ)/100)) :=
       mul_le_mul_of_nonneg_left hscale (by positivity)
-    _=claimedError 6811:=by
+    _=claimedError 6812:=by
       unfold claimedError
-      rw [show -((((6811:ℕ):ℝ)/100)) =
-          -((68:ℕ):ℝ) + -((11:ℝ)/100) by norm_num,
+      rw [show -((((6812:ℕ):ℝ)/100)) =
+          -((68:ℕ):ℝ) + -((12:ℝ)/100) by norm_num,
         NNReal.rpow_add (by norm_num:(2:ℝ≥0) ≠ 0)]
       simp only [NNReal.rpow_neg,NNReal.rpow_natCast,one_div]
 end
@@ -86,10 +86,10 @@ set_option maxHeartbeats 5000000
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
 local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
 def n:ℕ:=262144
-def errors:ℕ:=80860
+def errors:ℕ:=80869
 def agreements:ℕ:=n-errors
-def listBudget:ℕ:=7561644282
-def mcaBudget:ℕ:=274980720549750805
+def listBudget:ℕ:=7753263990
+def mcaBudget:ℕ:=274980720358131097
 def radius:ℝ≥0:=MovingFiberProtocol6811Arithmetic.radius
 theorem sixteen_row_separation:
    15 * (listBudget + 1).choose 2 < Fintype.card IRSProfile.Field:=by
@@ -245,7 +245,7 @@ theorem certifiedGammaError_le_of_alignment
      · simpa only [Nat.mul_comm] using field_capacity_split
 theorem protocolClaim6811_of_alignment
    (halign:AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-   ProtocolClaim 6811 331206655 1073741824 where
+   ProtocolClaim 6812 331243519 1073741824 where
  admissible:=MovingFiberProtocol6811Arithmetic.radius_admissible
  reduction:=by
    change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
@@ -253,7 +253,7 @@ theorem protocolClaim6811_of_alignment
      certifiedGammaError_le_of_alignment halign
  score:=by
    change (1 - MovingFiberProtocol6811Arithmetic.radius) ^
-     IRSProfile.repetitions ≤ claimedError 6811
+     IRSProfile.repetitions ≤ claimedError 6812
    exact MovingFiberProtocol6811Arithmetic.score_target_le
 end
 end ProximityPrize.SubmissionLower.MovingFiberProtocol6811

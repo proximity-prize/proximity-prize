@@ -64,7 +64,7 @@ theorem regular_count
     let Delta := LocatorCover.fixed phi Gamma S.QA S.QB
     let U := initialAUniversalFactors u0 u1 H
     let p := regularAggregateFlag H U
-    p.all ≤ 35 ∧ middle p ≤ 159 ∧ total p ≤ 9275 ∧
+    p.all ≤ 35 ∧ middle p ≤ 163 ∧ total p ≤ 9678 ∧
       (∑ F : RegularIndex H, (regularSeeds H selected Delta F).card) ≤
         PhaseSemantics.phaseCap 10 p + initialAComplement p := by
   classical
@@ -82,25 +82,25 @@ theorem regular_count
   have hPne : regularProduct H U ≠ 0 := regularProduct_ne_zero H U
   have hdivA : ∀ v : Caps.AKernel u0 u1,
       regularProduct H U ∣
-        reconstruct K 20847660 131071 274277 35 v.1 := by
+        reconstruct K 21390450 131071 380088 35 v.1 := by
     simpa only [U] using initialAUniversalProduct_dvd u0 u1 H
   have hpS : p.all ≤ 35 := by
     simp only [p, regularAggregateFlag_all]
     exact Caps.common_A_slope_le u0 u1 (regularProduct H U)
       hPne hdivA
-  have hpY : middle p ≤ 159 := by
+  have hpY : middle p ≤ 163 := by
     simp only [p, regularAggregateFlag_middle]
     exact Caps.common_A_ys_le u0 u1 (regularProduct H U)
       hPne hdivA
-  have hpT : total p ≤ 9275 := by
+  have hpT : total p ≤ 9678 := by
     simp only [p, regularAggregateFlag_total]
     exact (weightedTotalDegree_le_of_dvd residualTotalWeights
       (regularProduct H U) H
       (initialAUniversalProduct_dvd_carrier u0 u1 H) hH).trans
         S.common_total_le
-  have hwholeT : total (regularAggregateFlag H A) ≤ 9275 := by
+  have hwholeT : total (regularAggregateFlag H A) ≤ 9678 := by
     simpa only [H, A] using
-      whole_regular_total_le H hH 9275 S.common_total_le
+      whole_regular_total_le H hH 9678 S.common_total_le
   have hwholeY : middle (regularAggregateFlag H A) ≤ 185 := by
     simpa only [H, A] using
       whole_regular_middle_le H hH 185 S.common_ys_le
@@ -114,16 +114,16 @@ theorem regular_count
   have hsplitS := Finset.sum_sdiff hUsub
     (f := fun F : RegularIndex H => (regularCumulativeFlag H F).all)
   have hcomplementT : total p +
-      (∑ F ∈ N, total (regularCumulativeFlag H F)) ≤ 9275 := by
+      (∑ F ∈ N, total (regularCumulativeFlag H F)) ≤ 9678 := by
     have hpEq : total p =
         ∑ F ∈ U, total (regularCumulativeFlag H F) := by
       simp only [p, regularAggregateFlag, sumFlag_total]
     have hwhole : (∑ F ∈ A, total (regularCumulativeFlag H F)) ≤
-        9275 := by
+        9678 := by
       simpa only [regularAggregateFlag, sumFlag_total] using hwholeT
     rw [hpEq]
     change (∑ F ∈ U, total (regularCumulativeFlag H F)) +
-      (∑ F ∈ A \ U, total (regularCumulativeFlag H F)) ≤ 9275
+      (∑ F ∈ A \ U, total (regularCumulativeFlag H F)) ≤ 9678
     omega
   have hcomplementY : middle p +
       (∑ F ∈ N, middle (regularCumulativeFlag H F)) ≤ 185 := by
