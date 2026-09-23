@@ -8,33 +8,10 @@ open Lower80788.FixedStage
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 100000
 
-def slackZ (b s : ℕ) : ℕ :=
-  6196958107391400 + 6908009382936576*b + 11039323571818836*s + 3454004691468288*s^2 + 6908009382936576*b*s
-
-def slackYZ (a b s : ℕ) : ℕ :=
-  2031875788513956 + 6908009382936576*a + 6908009382936576*b + 8262602025900540*s + 3454004691468288*s^2 + 6908009382936576*a*s + 6908009382936576*b*s
-
-def slackAll (a b s : ℕ) : ℕ :=
-  2709164101435638 + 11039323571818836*a + 8262602025900540*b + 3454004691468288*b^2 + 8262602025900540*s + 3454004691468288*s^2 + 6908009382936576*a*b + 6908009382936576*a*s + 6908009382936576*b*s
-
-/-- The ordinary two-tail identity budget at 80811 errors. The ABS parameters
-are unshifted, so this includes the padded boundary cases b=0 and s=0. -/
-theorem identity_budget_exact (f : FlagDegree) (a b s : ℕ) :
-    50262 * flagMixed f (firstTail a b s) (secondTail a b s) =
-      131073 * 80812 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 +
-        (f.zOnly * slackZ b s + f.yz * slackYZ a b s + f.all * slackAll a b s) := by
-  change 50262 * flagMixed f (firstTail a b s) (secondTail a b s) =
-    131073 * 80812 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s Lower80788.FixedStage.w +
-      (f.zOnly * slackZ b s + f.yz * slackYZ a b s + f.all * slackAll a b s)
-  rw [Lower80788.FixedStage.identityDegree_linear]
-  norm_num [firstTail, secondTail, Lower80788.FixedStage.tail_support_formula,
-    Lower80788.FixedStage.w, flagMixed, slackZ, slackYZ, slackAll]
-  ring
-
 theorem identity_absorption (f : FlagDegree) (a b s : ℕ) :
-    131073 * 80861 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
-      50213 * flagMixed f (firstTail a b s) (secondTail a b s) := by
-  change 131073 * 80861 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s Lower80788.FixedStage.w ≤ _
+    131073 * 80870 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
+      50204 * flagMixed f (firstTail a b s) (secondTail a b s) := by
+  change 131073 * 80870 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s Lower80788.FixedStage.w ≤ _
   rw [Lower80788.FixedStage.identityDegree_linear]
   norm_num [firstTail, secondTail, Lower80788.FixedStage.tail_support_formula,
     Lower80788.FixedStage.w, flagMixed]

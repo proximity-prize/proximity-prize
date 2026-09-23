@@ -16,7 +16,7 @@ local instance : CharP K 2130706433 := by
 local instance : StrongNormalizationMonoid P4 := UniqueFactorizationMonoid.strongNormalizationMonoid
 
 theorem cover_count (Q T : P4) (hQ : Q ≠ 0)
-    (hbox : Q ∈ RCN174.globalCoefficientBox K 24292056 131071 18992 40)
+    (hbox : Q ∈ RCN174.globalCoefficientBox K 24290850 131071 22192 40)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hQsolution : ∀ g ∈ Gamma, specialization K (selected g) g Q = 0)
     (hTsolution : ∀ g ∈ Gamma, specialization K (selected g) g T = 0) :
@@ -24,8 +24,8 @@ theorem cover_count (Q T : P4) (hQ : Q ≠ 0)
       (∑ F : RegularIndex Q, factorCharge F.1 selected Gamma) +
       (rfreeSeeds Q selected Gamma).card := by
   have hR : ∀ F ∈ positiveRFactors Q, F.degreeOf 2 ≤ 40 := fun F hF =>
-    degreeOf_R_le_of_mem_box F 24292056 131071 18992 40
-      (directFactor_data Q F hQ 24292056 131071 18992 40 hbox hF).2.2
+    degreeOf_R_le_of_mem_box F 24290850 131071 22192 40
+      (directFactor_data Q F hQ 24290850 131071 22192 40 hbox hF).2.2
   have hcover := cover Q T hQ 2130706433 40 (by decide +kernel) hR selected Gamma hQsolution hTsolution
   have hA := Finset.card_biUnion_le (s := (Finset.univ : Finset (RegularIndex Q)))
     (t := fun F => regularPairSeeds Q T selected Gamma F)
@@ -62,15 +62,15 @@ theorem cover_count (Q T : P4) (hQ : Q ≠ 0)
   omega
 
 def pairParameters : UnequalParameters :=
-  ⟨262144,131071,181284,185,40,18992,312,70,9281⟩
+  ⟨262144,131071,181275,185,40,22192,312,70,9682⟩
 
 theorem pair_count {u0 u1 : I → K} {selected : K → Polynomial K} {Gamma : Finset K}
     (inp : Input u0 u1 selected Gamma) (Q T : P4) (hQ : Q ≠ 0) (hrel : IsRelPrime Q T)
-    (hbox : Q ∈ RCN174.globalCoefficientBox K 24292056 131071 18992 40)
-    (hTcaps : T.degreeOf 1 ≤ 312 ∧ T.degreeOf 2 ≤ 70 ∧ T.degreeOf 3 ≤ 9281) :
-    (∑ F : RegularIndex Q, (regularPairSeeds Q T selected Gamma F).card) ≤ 1057030663884726 := by
+    (hbox : Q ∈ RCN174.globalCoefficientBox K 24290850 131071 22192 40)
+    (hTcaps : T.degreeOf 1 ≤ 312 ∧ T.degreeOf 2 ≤ 70 ∧ T.degreeOf 3 ≤ 9682) :
+    (∑ F : RegularIndex Q, (regularPairSeeds Q T selected Gamma F).card) ≤ 1215189223289491 := by
   have hcount := all_regularPairSeeds_bound pairParameters Q T hQ hrel
-    24292056 131071 18992 40 2130706433 hbox
+    24290850 131071 22192 40 2130706433 hbox
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)
     hTcaps.1 hTcaps.2.1 hTcaps.2.2
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)
@@ -78,9 +78,9 @@ theorem pair_count {u0 u1 : I → K} {selected : K → Polynomial K} {Gamma : Fi
     selected Gamma Finset.univ IRSProfile.domain u0 u1 IRSProfile.domain.injective.injOn
     (by rw [Finset.card_univ]; exact Fintype.card_fin _)
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    inp.degree inp.agreement (by simpa only [pairParameters, UnequalParameters.errors, (show (262144 - 181284 : ℕ) = 80860 by decide +kernel)] using inp.noPencil)
+    inp.degree inp.agreement (by simpa only [pairParameters, UnequalParameters.errors, (show (262144 - 181275 : ℕ) = 80869 by decide +kernel)] using inp.noPencil)
   have hsum := sum_regular_counts_bound pairParameters Q T selected Gamma
-    (regularVector_budgets pairParameters Q hQ 24292056 131071 18992 40
+    (regularVector_budgets pairParameters Q hQ 24290850 131071 22192 40
       (by decide +kernel) hbox (by decide +kernel) (by decide +kernel) (by decide +kernel)) hcount
   have hc := pairParameters.regular_count_le _ (by decide +kernel) hsum
   exact hc.trans_eq (by decide +kernel)

@@ -61,17 +61,6 @@ theorem cost_mono (r v : ℕ) : Monotone (cost r v) := by
   · rw [cost_eq_old r v a h,cost_eq_old r v b h]
     exact LocatorOrdinaryZConvex.rawCost_mono_z r v hab
 
-theorem cost_discreteConvex (r v z : ℕ) (hr : 1 ≤ r) :
-    2*cost r v (z+1) ≤ cost r v z + cost r v (z+2) := by
-  by_cases h : 3 ≤ r ∧ 2 ≤ v
-  · rw [cost_eq_high r v (z+1) h.1 h.2,cost_eq_high r v z h.1 h.2,
-      cost_eq_high r v (z+2) h.1 h.2]
-    exact (high_affine r v z).le
-  · rw [cost_eq_old r v (z+1) h,cost_eq_old r v z h,cost_eq_old r v (z+2) h]
-    exact LocatorOrdinaryZConvex.rawCost_discreteConvex r v z hr
-
-
-
 end
 theorem raw_affine (r v z : ℕ) (hr : 1 ≤ r) (hz : 3 ≤ z) :
     cost r v z = cost r v 3+(cost r v 4-cost r v 3)*(z-3) := by
@@ -83,6 +72,5 @@ theorem raw_affine (r v z : ℕ) (hr : 1 ≤ r) (hz : 3 ≤ z) :
     exact high_affine r v n
   · rw [cost_eq_old r v (n+1) h,cost_eq_old r v n h,cost_eq_old r v (n+2) h]
     exact LocatorOrdinaryZConvex.rawCost_affine_step_from_two r v n hr hn
-
 
 end ProximityPrize.SubmissionLower.MovingFiberShape6811
