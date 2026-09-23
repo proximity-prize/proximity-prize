@@ -11,6 +11,12 @@ autoImplicit = false
 # commit, and it is exposed in every score artifact. CompPoly itself is pinned there at that
 # revision plus a four-file kernel-replay fix (yudduy/CompPoly 0fdf1771), as 4.32.2 pinned
 # zkSecurity's `rabin-explicit-q`.
+# Require the replay fix directly so that `lake update` keeps it.
+[[require]]
+name = "CompPoly"
+git = "https://github.com/yudduy/CompPoly"
+rev = "0fdf1771c0396bd3665c2823a91b68bdf0aad7ec"
+
 [[require]]
 name = "Arklib"
 git = "https://github.com/Verified-zkEVM/ArkLib"
