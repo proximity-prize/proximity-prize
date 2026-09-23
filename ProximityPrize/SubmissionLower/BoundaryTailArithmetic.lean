@@ -40,34 +40,5 @@ theorem max_shift_identity {u v p : ℤ}
       max (p - (2 * u - v)) 0 := by
   simp [max_def]
   omega
-theorem normalized_tail_arithmetic {n u v A a b : ℤ}
-    (hn : 2 ≤ n) (hv : 0 ≤ v) (hvu : v ≤ u) (ha : 0 ≤ a) :
-    let delta := 2 * u - v
-    let D := A - u
-    let B := A + delta
-    let P := (n - 1) * B + (n - 2) * D
-    let theta := max (2 * u) (v + max ((a - A) - (b - B)) 0)
-    2 * (P - (n - 1) * a) + n * max (a - b) 0 +
-        2 * (n - 4) * (a - A) ≤
-      2 * ((n + 1) * A - (n - 1) * v) + n * theta := by
-  dsimp
-  have htheta := max_shift_identity (u := u) (v := v)
-    (p := (a - A) - (b - (A + (2 * u - v)))) hv hvu
-  have hp : (a - A) - (b - (A + (2 * u - v))) - (2 * u - v) = a - b := by ring
-  rw [hp] at htheta
-  have hnon : 0 ≤ max (2 * u) (v + max ((a - A) - (b - (A + (2 * u - v)))) 0) - 2 * u := by omega
-  rw [max_eq_left hnon] at htheta
-  nlinarith
-
-theorem weighted_tail_bound_zero_J {n j a b : ℤ}
-    (hn : 2 ≤ n) (hj0 : 0 ≤ j) (hjn : j ≤ n - 1)
-    (hpos : n - 2 ≤ 2 * j) (ha : 0 ≤ a) (hb : 0 ≤ b) :
-    2 * (j * a + (n - 1 - j) * b) ≥
-      2 * (n - 1) * a - n * max (a - b) 0 := by
-  by_cases hd : 0 ≤ a - b
-  · rw [max_eq_left hd]
-    nlinarith
-  · rw [max_eq_right (le_of_not_ge hd)]
-    nlinarith
 
 end ProximityPrize.SubmissionLower.BoundaryTail

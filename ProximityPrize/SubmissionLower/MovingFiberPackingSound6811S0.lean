@@ -9,9 +9,9 @@ set_option Elab.async false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
-theorem own_size (r : Nat) (hr : 1≤r) (hR : r≤35) : (ownRow r).size=160-r := by
+theorem own_size (r : Nat) (hr : 1≤r) (hR : r≤35) : (ownRow r).size=164-r := by
   interval_cases r <;> decide +kernel
-theorem packed_size (r : Nat) (hR : r≤35) : (packedRow r).size=160-r := by
+theorem packed_size (r : Nat) (hR : r≤35) : (packedRow r).size=164-r := by
   interval_cases r <;> decide +kernel
 theorem all_checks (R r : Nat) (hr : 1≤r) (hrr : r≤R) (hR : R≤35) :
     convolution (ownRow r).toList (packedRow (R-r)).toList (packedRow R).toList=true := by
@@ -682,7 +682,7 @@ theorem all_checks (R r : Nat) (hr : 1≤r) (hrr : r≤R) (hR : R≤35) :
     · simpa only [ownRow,packedRow,Nat.reduceSub] using row35_33
     · simpa only [ownRow,packedRow,Nat.reduceSub] using row35_34
     · simpa only [ownRow,packedRow,Nat.reduceSub] using row35_35
-theorem bellman : AffineFactorAggregate6808.BellmanRows 35 159 own packed :=
+theorem bellman : AffineFactorAggregate6808.BellmanRows 35 163 own packed :=
   direct_bellman ownRow packedRow own_size packed_size all_checks
 #print axioms bellman
 end ProximityPrize.SubmissionLower.MovingFiberPackingSound6811.S0

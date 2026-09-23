@@ -315,7 +315,15 @@ theorem at7_151 : At 7 151 :=
   at_of_direct direct7_151 rfl rfl (by intro _; rfl)
 theorem at7_152 : At 7 152 :=
   at_of_direct direct7_152 rfl rfl (by intro _; rfl)
-theorem all7 (v : Nat) (hv : v≤152) : At 7 v := by
+theorem at7_153 : At 7 153 :=
+  at_of_direct direct7_153 rfl rfl (by intro _; rfl)
+theorem at7_154 : At 7 154 :=
+  at_of_direct direct7_154 rfl rfl (by intro _; rfl)
+theorem at7_155 : At 7 155 :=
+  at_of_direct direct7_155 rfl rfl (by intro _; rfl)
+theorem at7_156 : At 7 156 :=
+  at_of_direct direct7_156 rfl rfl (by intro _; rfl)
+theorem all7 (v : Nat) (hv : v≤156) : At 7 v := by
   interval_cases v
   · exact at7_0
   · exact at7_1
@@ -470,5 +478,9 @@ theorem all7 (v : Nat) (hv : v≤152) : At 7 v := by
   · exact at7_150
   · exact at7_151
   · exact at7_152
+  · exact at7_153
+  · exact at7_154
+  · exact at7_155
+  · exact at7_156
 #print axioms all7
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

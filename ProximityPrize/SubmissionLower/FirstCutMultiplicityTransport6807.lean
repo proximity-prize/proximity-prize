@@ -17,28 +17,5 @@ variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] {errorCap : ℕ}
   {stageSupport : RCN275.ResidualSupportParameters}
 
-theorem normalized_first_mem_power {B : Type*} [CommRing B]
-    (S : Stage K I Gamma x p flag errorCap stageSupport)
-    (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (RCN326.w+1))
-    (C : FirstTailComponent S) (f : MvPolynomial (Fin 4) K →+* B)
-    (J : Ideal B) [J.IsMaximal]
-    (hfactor : f (originalData S C).factor = 0)
-    (hcontract : Ideal.comap f J = componentPrime S C)
-    (tail scalar normalized multiplier : B)
-    (htail : tail = f (numerator K S.F (RCN326.w+1))*scalar)
-    (hnormalized : tail = multiplier*normalized)
-    (hunit : IsUnit multiplier) :
-    normalized ∈ J^localMultiplicity S (canonicalLocalDVRFamily S hproper) C := by
-  have htailmem := proper_global_tail_mem_projected_primary S hproper C f
-    (0 : B) tail scalar J (by simp [hfactor]) (J.zero_mem) hcontract htail
-  have ht : tail ∈ J^localMultiplicity S (canonicalLocalDVRFamily S hproper) C := by
-    simpa using htailmem
-  rw [hnormalized] at ht
-  obtain ⟨u,hu⟩ := hunit
-  rw [← hu] at ht
-  have hh := (J^localMultiplicity S (canonicalLocalDVRFamily S hproper) C).mul_mem_left
-    (↑(u⁻¹) : B) ht
-  simpa only [← mul_assoc,Units.inv_mul,mul_one,one_mul] using hh
-
 end
 end ProximityPrize.SubmissionLower.FirstCutMultiplicityTransport6807

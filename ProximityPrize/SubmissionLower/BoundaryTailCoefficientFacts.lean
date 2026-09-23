@@ -35,30 +35,6 @@ theorem signedOddScalar_ne_zero {p : ℕ} [CharP K p] (m : ℕ)
       · apply ih
         omega
 
-theorem refinedCoefficientStep_support (F : Poly4) (m : ℕ)
-    (C : ℕ → Poly4) (q : ℕ) (hq : m + 2 < q) :
-    refinedCoefficientStep F m C q = 0 := by
-  unfold refinedCoefficientStep
-  apply Finset.sum_eq_zero
-  intro i hi
-  have hil : i ≤ m + 1 := by
-    exact Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
-  have hqi : q ≠ i := by omega
-  have hqi1 : q ≠ i + 1 := by omega
-  have hqbranch : ¬(q = i + 2 ∧ i ≤ m) := by omega
-  simp [hqi, hqi1, hqbranch]
-
-theorem refinedCoefficients_support (F : Poly4) (m q : ℕ)
-    (hq : m + 1 < q) : refinedCoefficients F m q = 0 := by
-  induction m generalizing q with
-  | zero =>
-      have hq0 : q ≠ 0 := by omega
-      simp [refinedCoefficients, hq0]
-  | succ m ih =>
-      simp only [refinedCoefficients]
-      apply refinedCoefficientStep_support F m (refinedCoefficients F m) q
-      omega
-
 theorem refinedCoefficients_zero (F : Poly4) (m : ℕ) :
     refinedCoefficients F m 0 = MvPolynomial.C (signedOddScalar (K := K) m) := by
   induction m with
@@ -68,12 +44,6 @@ theorem refinedCoefficients_zero (F : Poly4) (m : ℕ) :
         map_natCast (MvPolynomial.C : K →+* Poly4) 2
       simp [refinedCoefficients, refinedCoefficientStep, ih, signedOddScalar,
         contributionA, sExponent, Nat.cast_add, Nat.cast_mul, hC2]
-
-theorem refinedCoefficients_zero_recurrence (F : Poly4) (m : ℕ) :
-    refinedCoefficients F (m + 1) 0 =
-      MvPolynomial.C (-(2 * m + 1 : K)) * refinedCoefficients F m 0 := by
-  rw [refinedCoefficients_zero, refinedCoefficients_zero]
-  simp [signedOddScalar, Nat.cast_add, Nat.cast_mul]
 
 end
 end ProximityPrize.SubmissionLower.BoundaryTailCoefficientFacts

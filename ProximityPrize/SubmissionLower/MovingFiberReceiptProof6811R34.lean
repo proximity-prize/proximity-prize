@@ -261,7 +261,15 @@ theorem at34_124 : At 34 124 :=
   at_of_direct direct34_124 rfl rfl (by intro _; rfl)
 theorem at34_125 : At 34 125 :=
   at_of_direct direct34_125 rfl rfl (by intro _; rfl)
-theorem all34 (v : Nat) (hv : v≤125) : At 34 v := by
+theorem at34_126 : At 34 126 :=
+  at_of_direct direct34_126 rfl rfl (by intro _; rfl)
+theorem at34_127 : At 34 127 :=
+  at_of_direct direct34_127 rfl rfl (by intro _; rfl)
+theorem at34_128 : At 34 128 :=
+  at_of_direct direct34_128 rfl rfl (by intro _; rfl)
+theorem at34_129 : At 34 129 :=
+  at_of_direct direct34_129 rfl rfl (by intro _; rfl)
+theorem all34 (v : Nat) (hv : v≤129) : At 34 v := by
   interval_cases v
   · exact at34_0
   · exact at34_1
@@ -389,5 +397,9 @@ theorem all34 (v : Nat) (hv : v≤125) : At 34 v := by
   · exact at34_123
   · exact at34_124
   · exact at34_125
+  · exact at34_126
+  · exact at34_127
+  · exact at34_128
+  · exact at34_129
 #print axioms all34
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

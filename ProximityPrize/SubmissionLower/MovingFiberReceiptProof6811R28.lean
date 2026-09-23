@@ -273,7 +273,15 @@ theorem at28_130 : At 28 130 :=
   at_of_direct direct28_130 rfl rfl (by intro _; rfl)
 theorem at28_131 : At 28 131 :=
   at_of_direct direct28_131 rfl rfl (by intro _; rfl)
-theorem all28 (v : Nat) (hv : v≤131) : At 28 v := by
+theorem at28_132 : At 28 132 :=
+  at_of_direct direct28_132 rfl rfl (by intro _; rfl)
+theorem at28_133 : At 28 133 :=
+  at_of_direct direct28_133 rfl rfl (by intro _; rfl)
+theorem at28_134 : At 28 134 :=
+  at_of_direct direct28_134 rfl rfl (by intro _; rfl)
+theorem at28_135 : At 28 135 :=
+  at_of_direct direct28_135 rfl rfl (by intro _; rfl)
+theorem all28 (v : Nat) (hv : v≤135) : At 28 v := by
   interval_cases v
   · exact at28_0
   · exact at28_1
@@ -407,5 +415,9 @@ theorem all28 (v : Nat) (hv : v≤131) : At 28 v := by
   · exact at28_129
   · exact at28_130
   · exact at28_131
+  · exact at28_132
+  · exact at28_133
+  · exact at28_134
+  · exact at28_135
 #print axioms all28
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

@@ -283,7 +283,15 @@ theorem at23_135 : At 23 135 :=
   at_of_direct direct23_135 rfl rfl (by intro _; rfl)
 theorem at23_136 : At 23 136 :=
   at_of_direct direct23_136 rfl rfl (by intro _; rfl)
-theorem all23 (v : Nat) (hv : v≤136) : At 23 v := by
+theorem at23_137 : At 23 137 :=
+  at_of_direct direct23_137 rfl rfl (by intro _; rfl)
+theorem at23_138 : At 23 138 :=
+  at_of_direct direct23_138 rfl rfl (by intro _; rfl)
+theorem at23_139 : At 23 139 :=
+  at_of_direct direct23_139 rfl rfl (by intro _; rfl)
+theorem at23_140 : At 23 140 :=
+  at_of_direct direct23_140 rfl rfl (by intro _; rfl)
+theorem all23 (v : Nat) (hv : v≤140) : At 23 v := by
   interval_cases v
   · exact at23_0
   · exact at23_1
@@ -422,5 +430,9 @@ theorem all23 (v : Nat) (hv : v≤136) : At 23 v := by
   · exact at23_134
   · exact at23_135
   · exact at23_136
+  · exact at23_137
+  · exact at23_138
+  · exact at23_139
+  · exact at23_140
 #print axioms all23
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

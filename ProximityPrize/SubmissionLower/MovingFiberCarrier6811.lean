@@ -12,10 +12,10 @@ set_option autoImplicit false
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 100000
 
-def Active (g : Fin 16) (p : FlagDegree) : Prop :=
+def Active (g : Fin 20) (p : FlagDegree) : Prop :=
   3 ≤ p.all ∧ 2 ≤ p.yz ∧ 3 ≤ p.zOnly ∧ MovingFiberCount6811.sourceLimit g < p.all+p.yz+p.zOnly
 
-def ledgerCap (g : Fin 16) (p : FlagDegree) : ℕ :=
+def ledgerCap (g : Fin 20) (p : FlagDegree) : ℕ :=
   MovingFiberCount6811.roundedCaps g (p.all-3) (p.yz-2) p.zOnly
 
 section Carrier
@@ -37,12 +37,12 @@ def ofCarrier (D L s : ℕ) (F : MvPolynomial (Fin 4) K)
     (hyt : wt residualYSWeights F+2 ≤ wt residualTotalWeights F)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ seeds, 181284 ≤
+    (hagreement : ∀ gamma ∈ seeds, 181275 ≤
       (Finset.univ.filter (fun i => (selected gamma).eval (nodes i) = u0 i+gamma*u1 i)).card)
     (hsolution : ∀ gamma ∈ seeds, specialization K (selected gamma) gamma F=0)
     (hregular : ∀ gamma ∈ seeds,
       specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0)
-    (hno : NoLargeSelectedPencil selected seeds w 80860) :
+    (hno : NoLargeSelectedPencil selected seeds w 80869) :
     MovingFiberRegularData6811.Data nodes u0 u1 where
   D := D
   t := wt residualTotalWeights F
@@ -78,7 +78,7 @@ def ofCarrier (D L s : ℕ) (F : MvPolynomial (Fin 4) K)
   regular := hregular
   noPencil := hno
 
-theorem carrier_count_le_ledger (g : Fin 16) (D L s : ℕ) (F : MvPolynomial (Fin 4) K)
+theorem carrier_count_le_ledger (g : Fin 20) (D L s : ℕ) (F : MvPolynomial (Fin 4) K)
     (hDlow : 131072 ≤ D) (hDchar : D < 2130706433)
     (hF : Irreducible F) (hrdegree : 0 < F.degreeOf 2)
     (hbox : F ∈ globalCoefficientBox K D w L s)
@@ -86,12 +86,12 @@ theorem carrier_count_le_ledger (g : Fin 16) (D L s : ℕ) (F : MvPolynomial (Fi
     (hr : wt residualSWeights F ≤ 31)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ seeds, 181284 ≤
+    (hagreement : ∀ gamma ∈ seeds, 181275 ≤
       (Finset.univ.filter (fun i => (selected gamma).eval (nodes i) = u0 i+gamma*u1 i)).card)
     (hsolution : ∀ gamma ∈ seeds, specialization K (selected gamma) gamma F=0)
     (hregular : ∀ gamma ∈ seeds,
       specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0)
-    (hno : NoLargeSelectedPencil selected seeds w 80860)
+    (hno : NoLargeSelectedPencil selected seeds w 80869)
     (hI : Fintype.card I=262144)
     (ha : Active g (originalCumulativeFlag F)) :
     seeds.card ≤ ledgerCap g (originalCumulativeFlag F) := by

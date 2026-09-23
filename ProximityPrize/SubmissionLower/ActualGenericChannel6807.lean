@@ -42,23 +42,12 @@ theorem first_cut_for_generic_channel
       coordinateEvaluation Ω (old a).1 ell)
     (hdeg : flag.zOnly+flag.yz+flag.all < p)
     (hmix : 2*(flag.zOnly+flag.yz+flag.all)*(q.zOnly+q.yz+q.all) < p)
-    (P : Poly (K := K)) (B U L s k n0 : ℕ)
-    (hS : ∀ e ∈ P.support, e 1 ≤ s)
-    (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
-      e 1+e 2+e 3+e 4 ≤ L)
-    (hBU : B ≤ U) (hUL : U ≤ L) (hdn : k+1 ≤ n0)
-    (hB : 2*(n0-(k+1)) ≤ B) (hn : n0 ≤ (asS P).natDegree)
-    (hlead : ∀ a, surfaceMap (polynomialEmbedding K) (asS P).leadingCoeff ∉ (old a).1)
-    (hdiv : ∀ j ≤ k, S.F ∣ helper P S.F (s-j) j)
-    (h2 : (2 : E) ≠ 0) (hfact : (k.factorial : E) ≠ 0)
-    (r v z : ℕ) (hr : 3 ≤ r) (hv : 2 ≤ v)
-    (hR : WeightBound residualSWeights S.F (r : ℤ))
-    (hYR : WeightBound residualYSWeights S.F ((r+v : ℕ) : ℤ))
-    (hAll : WeightBound residualTotalWeights S.F ((r+v+z : ℕ) : ℤ)) :
-    (k+1)*(∑ a, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old a) *
+    (Good : FirstTailComponent S → Prop) (hgood : ∀ a, Good (old a))
+    (c m n : ℕ) (J V : FlagDegree) (hslice : ActiveSliceAssembly6807.SliceCharge S hproper Good
+      (sliceEquation (E := E) ell) c m n J V) :
+    c*(∑ a, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old a) *
       SeparableCoordinate.degree Ω (CoordinateField Ω (old a).1) (projection a)) ≤
-      flagMixed flag q ((k+1) • firstBaseFlag (w-1) r v z +
-        w • SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0) := by
+      flagMixed flag q (m • J + n • V) := by
   classical
   let oldPrime := fun a => (old a).1
   letI : ∀ a : A, Algebra (RatFunc Ω) (CoordinateField Ω (oldPrime a)) :=
@@ -87,9 +76,7 @@ theorem first_cut_for_generic_channel
     inFlag_sub_poly (inFlag_const q _) (inFlag_map _ hell)
   have hmass := ActiveSliceAssembly6807.first_cut_on_all_active_slices S hproper
     oldT embT hpoints N q hNq (fun i => (hcert i).2.1)
-    (fun i => (hcert i).2.2.2.2) hdeg hmix
-    P B U L s k n0 hS hP hBU hUL hdn hB hn (fun i => hlead i.1)
-    hdiv h2 hfact r v z hr hv hR hYR hAll
+    (fun i => (hcert i).2.2.2.2) hdeg hmix Good (fun i => hgood i.1) c m n J V hslice
   have hsum := GenericSlicePoints6807.weighted_embedding_sum (E := E) oldPrime
     (fun a => localMultiplicity S (canonicalLocalDVRFamily S hproper) (old a))
   simpa only [oldT,embT,T,SeparableCoordinate.degree,oldPrime,hsum] using hmass
@@ -105,23 +92,12 @@ theorem first_cut_for_coordinate_channel
       coordinateEvaluation Ω (old a).1 ell)
     (hdeg : flag.zOnly+flag.yz+flag.all < p)
     (hmix : 2*(flag.zOnly+flag.yz+flag.all)*(q.zOnly+q.yz+q.all) < p)
-    (P : Poly (K := K)) (B U L s k n0 : ℕ)
-    (hS : ∀ e ∈ P.support, e 1 ≤ s)
-    (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
-      e 1+e 2+e 3+e 4 ≤ L)
-    (hBU : B ≤ U) (hUL : U ≤ L) (hdn : k+1 ≤ n0)
-    (hB : 2*(n0-(k+1)) ≤ B) (hn : n0 ≤ (asS P).natDegree)
-    (hlead : ∀ a, surfaceMap (polynomialEmbedding K) (asS P).leadingCoeff ∉ (old a).1)
-    (hdiv : ∀ j ≤ k, S.F ∣ helper P S.F (s-j) j)
-    (h2 : (2 : E) ≠ 0) (hfact : (k.factorial : E) ≠ 0)
-    (r v z : ℕ) (hr : 3 ≤ r) (hv : 2 ≤ v)
-    (hR : WeightBound residualSWeights S.F (r : ℤ))
-    (hYR : WeightBound residualYSWeights S.F ((r+v : ℕ) : ℤ))
-    (hAll : WeightBound residualTotalWeights S.F ((r+v+z : ℕ) : ℤ)) :
-    (k+1)*(∑ a, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old a) *
+    (Good : FirstTailComponent S → Prop) (hgood : ∀ a, Good (old a))
+    (c m n : ℕ) (J V : FlagDegree) (hslice : ActiveSliceAssembly6807.SliceCharge S hproper Good
+      (sliceEquation (E := E) ell) c m n J V) :
+    c*(∑ a, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old a) *
       coordinateDegree Ω (CoordinateField Ω (old a).1) (projection a)) ≤
-      flagMixed flag q ((k+1) • firstBaseFlag (w-1) r v z +
-        w • SecondJetRelaxedFlag.budgetFlag B U L (k+1) n0) := by
+      flagMixed flag q (m • J + n • V) := by
   classical
   let Alive : Set A := {a | ∃ c, projection a = Sum.inr c}
   let sep := fun a : Alive => Classical.choose a.2
@@ -152,8 +128,7 @@ theorem first_cut_for_coordinate_channel
       | inl c => simp only [hpj,coordinateDegree,Sum.elim_inl,Nat.mul_zero]
       | inr c => exact (ha ⟨c,hpj⟩).elim
   have hb := first_cut_for_generic_channel (E := E) S hproper old0 hi0 ell q hell
-    sep hv0 hdeg hmix P B U L s k n0 hS hP hBU hUL hdn hB hn
-    (fun a => hlead a.1) hdiv h2 hfact r v z hr hv hR hYR hAll
+    sep hv0 hdeg hmix Good (fun a => hgood a.1) c m n J V hslice
   rw [show (∑ a, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old a) *
       coordinateDegree Ω (CoordinateField Ω (old a).1) (projection a)) =
       ∑ a : Alive, weight a.1 * SeparableCoordinate.degree Ω

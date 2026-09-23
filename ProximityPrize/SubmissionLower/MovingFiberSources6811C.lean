@@ -12,31 +12,31 @@ def m : ℕ := 146
 def B : ℕ := 58
 def s : ℕ := 27
 def U : ℕ := 198
-def L : ℕ := 2498
+def L : ℕ := 2544
 def k : ℕ := 6
 def n0 : ℕ := 9
 
 theorem coefficient_count :
     coefficientCount (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U =
-      4194771043943235 := by decide +kernel
+      4274217993034637 := by decide +kernel
 
-theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 16001770476 := by decide +kernel
+theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 16304815762 := by decide +kernel
 
 theorem cutoff_caps : ∀ h : Fin (s+1),
     U ≤ (MovingFiberInterpolation6811.cutoff m k n0 h.val+B-1)/131071 := by decide +kernel
 
 theorem source_card :
-    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 4194771043943235 := by
+    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 4274217993034637 := by
   rw [card_index_closed _ _ _ _ _ _ (by decide +kernel),coefficient_count]
 
 theorem exact_rank :
     SecondJetRelaxedGlobalMap.rankBound m L B s U
-      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 16001770476 := by
+      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 16304815762 := by
   rw [SecondJetRelaxedCounts.rankBound_eq_closed _ _ _ _ _ _ (by decide +kernel)
     (by decide +kernel) (by decide +kernel) (by decide +kernel)
     (fun h hh => cutoff_caps ⟨h,by omega⟩),local_rank]
 
-theorem dimension_gap : 262144*16001770476 < 4194771043943235 := by decide +kernel
+theorem dimension_gap : 262144*16304815762 < 4274217993034637 := by decide +kernel
 
 theorem exists_interpolant {K I : Type} [Field K] [Fintype I]
     (nodes : I ↪ K) (u0 u1 : I → K) (hI : Fintype.card I = 262144) :
@@ -58,31 +58,31 @@ def m : ℕ := 98
 def B : ℕ := 41
 def s : ℕ := 19
 def U : ℕ := 133
-def L : ℕ := 2289
+def L : ℕ := 2350
 def k : ℕ := 4
 def n0 : ℕ := 6
 
 theorem coefficient_count :
     coefficientCount (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U =
-      884806673741073 := by decide +kernel
+      908878299819491 := by decide +kernel
 
-theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 3375264212 := by decide +kernel
+theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 3467090623 := by decide +kernel
 
 theorem cutoff_caps : ∀ h : Fin (s+1),
     U ≤ (MovingFiberInterpolation6811.cutoff m k n0 h.val+B-1)/131071 := by decide +kernel
 
 theorem source_card :
-    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 884806673741073 := by
+    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 908878299819491 := by
   rw [card_index_closed _ _ _ _ _ _ (by decide +kernel),coefficient_count]
 
 theorem exact_rank :
     SecondJetRelaxedGlobalMap.rankBound m L B s U
-      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 3375264212 := by
+      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 3467090623 := by
   rw [SecondJetRelaxedCounts.rankBound_eq_closed _ _ _ _ _ _ (by decide +kernel)
     (by decide +kernel) (by decide +kernel) (by decide +kernel)
     (fun h hh => cutoff_caps ⟨h,by omega⟩),local_rank]
 
-theorem dimension_gap : 262144*3375264212 < 884806673741073 := by decide +kernel
+theorem dimension_gap : 262144*3467090623 < 908878299819491 := by decide +kernel
 
 theorem exists_interpolant {K I : Type} [Field K] [Fintype I]
     (nodes : I ↪ K) (u0 u1 : I → K) (hI : Fintype.card I = 262144) :
@@ -104,31 +104,31 @@ def m : ℕ := 150
 def B : ℕ := 60
 def s : ℕ := 28
 def U : ℕ := 204
-def L : ℕ := 2288
+def L : ℕ := 2325
 def k : ℕ := 6
 def n0 : ℕ := 9
 
 theorem coefficient_count :
     coefficientCount (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U =
-      4304640567595772 := by decide +kernel
+      4376487188841624 := by decide +kernel
 
-theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 16420856314 := by decide +kernel
+theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 16694925896 := by decide +kernel
 
 theorem cutoff_caps : ∀ h : Fin (s+1),
     U ≤ (MovingFiberInterpolation6811.cutoff m k n0 h.val+B-1)/131071 := by decide +kernel
 
 theorem source_card :
-    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 4304640567595772 := by
+    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 4376487188841624 := by
   rw [card_index_closed _ _ _ _ _ _ (by decide +kernel),coefficient_count]
 
 theorem exact_rank :
     SecondJetRelaxedGlobalMap.rankBound m L B s U
-      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 16420856314 := by
+      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 16694925896 := by
   rw [SecondJetRelaxedCounts.rankBound_eq_closed _ _ _ _ _ _ (by decide +kernel)
     (by decide +kernel) (by decide +kernel) (by decide +kernel)
     (fun h hh => cutoff_caps ⟨h,by omega⟩),local_rank]
 
-theorem dimension_gap : 262144*16420856314 < 4304640567595772 := by decide +kernel
+theorem dimension_gap : 262144*16694925896 < 4376487188841624 := by decide +kernel
 
 theorem exists_interpolant {K I : Type} [Field K] [Fintype I]
     (nodes : I ↪ K) (u0 u1 : I → K) (hI : Fintype.card I = 262144) :
@@ -150,31 +150,31 @@ def m : ℕ := 162
 def B : ℕ := 71
 def s : ℕ := 33
 def U : ℕ := 218
-def L : ℕ := 2338
+def L : ℕ := 2375
 def k : ℕ := 7
 def n0 : ℕ := 8
 
 theorem coefficient_count :
     coefficientCount (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U =
-      6853094634711026 := by decide +kernel
+      6965355148327438 := by decide +kernel
 
-theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 26142431686 := by decide +kernel
+theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 26570718341 := by decide +kernel
 
 theorem cutoff_caps : ∀ h : Fin (s+1),
     U ≤ (MovingFiberInterpolation6811.cutoff m k n0 h.val+B-1)/131071 := by decide +kernel
 
 theorem source_card :
-    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 6853094634711026 := by
+    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 6965355148327438 := by
   rw [card_index_closed _ _ _ _ _ _ (by decide +kernel),coefficient_count]
 
 theorem exact_rank :
     SecondJetRelaxedGlobalMap.rankBound m L B s U
-      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 26142431686 := by
+      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 26570718341 := by
   rw [SecondJetRelaxedCounts.rankBound_eq_closed _ _ _ _ _ _ (by decide +kernel)
     (by decide +kernel) (by decide +kernel) (by decide +kernel)
     (fun h hh => cutoff_caps ⟨h,by omega⟩),local_rank]
 
-theorem dimension_gap : 262144*26142431686 < 6853094634711026 := by decide +kernel
+theorem dimension_gap : 262144*26570718341 < 6965355148327438 := by decide +kernel
 
 theorem exists_interpolant {K I : Type} [Field K] [Fintype I]
     (nodes : I ↪ K) (u0 u1 : I → K) (hI : Fintype.card I = 262144) :
@@ -196,31 +196,31 @@ def m : ℕ := 114
 def B : ℕ := 47
 def s : ℕ := 22
 def U : ℕ := 155
-def L : ℕ := 2711
+def L : ℕ := 2784
 def k : ℕ := 5
 def n0 : ℕ := 7
 
 theorem coefficient_count :
     coefficientCount (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U =
-      1849082264981388 := by decide +kernel
+      1899892117053862 := by decide +kernel
 
-theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 7053684309 := by decide +kernel
+theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 7247508580 := by decide +kernel
 
 theorem cutoff_caps : ∀ h : Fin (s+1),
     U ≤ (MovingFiberInterpolation6811.cutoff m k n0 h.val+B-1)/131071 := by decide +kernel
 
 theorem source_card :
-    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 1849082264981388 := by
+    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 1899892117053862 := by
   rw [card_index_closed _ _ _ _ _ _ (by decide +kernel),coefficient_count]
 
 theorem exact_rank :
     SecondJetRelaxedGlobalMap.rankBound m L B s U
-      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 7053684309 := by
+      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 7247508580 := by
   rw [SecondJetRelaxedCounts.rankBound_eq_closed _ _ _ _ _ _ (by decide +kernel)
     (by decide +kernel) (by decide +kernel) (by decide +kernel)
     (fun h hh => cutoff_caps ⟨h,by omega⟩),local_rank]
 
-theorem dimension_gap : 262144*7053684309 < 1849082264981388 := by decide +kernel
+theorem dimension_gap : 262144*7247508580 < 1899892117053862 := by decide +kernel
 
 theorem exists_interpolant {K I : Type} [Field K] [Fintype I]
     (nodes : I ↪ K) (u0 u1 : I → K) (hI : Fintype.card I = 262144) :
@@ -242,31 +242,31 @@ def m : ℕ := 166
 def B : ℕ := 66
 def s : ℕ := 31
 def U : ℕ := 226
-def L : ℕ := 2667
+def L : ℕ := 2713
 def k : ℕ := 7
 def n0 : ℕ := 10
 
 theorem coefficient_count :
     coefficientCount (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U =
-      7416680657483088 := by decide +kernel
+      7548501836692720 := by decide +kernel
 
-theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 28292381157 := by decide +kernel
+theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 28795201315 := by decide +kernel
 
 theorem cutoff_caps : ∀ h : Fin (s+1),
     U ≤ (MovingFiberInterpolation6811.cutoff m k n0 h.val+B-1)/131071 := by decide +kernel
 
 theorem source_card :
-    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 7416680657483088 := by
+    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 7548501836692720 := by
   rw [card_index_closed _ _ _ _ _ _ (by decide +kernel),coefficient_count]
 
 theorem exact_rank :
     SecondJetRelaxedGlobalMap.rankBound m L B s U
-      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 28292381157 := by
+      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 28795201315 := by
   rw [SecondJetRelaxedCounts.rankBound_eq_closed _ _ _ _ _ _ (by decide +kernel)
     (by decide +kernel) (by decide +kernel) (by decide +kernel)
     (fun h hh => cutoff_caps ⟨h,by omega⟩),local_rank]
 
-theorem dimension_gap : 262144*28292381157 < 7416680657483088 := by decide +kernel
+theorem dimension_gap : 262144*28795201315 < 7548501836692720 := by decide +kernel
 
 theorem exists_interpolant {K I : Type} [Field K] [Fintype I]
     (nodes : I ↪ K) (u0 u1 : I → K) (hI : Fintype.card I = 262144) :
@@ -288,31 +288,31 @@ def m : ℕ := 174
 def B : ℕ := 76
 def s : ℕ := 36
 def U : ℕ := 237
-def L : ℕ := 2716
+def L : ℕ := 2764
 def k : ℕ := 8
 def n0 : ℕ := 9
 
 theorem coefficient_count :
     coefficientCount (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U =
-      10540329886663022 := by decide +kernel
+      10732655326945610 := by decide +kernel
 
-theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 40208136171 := by decide +kernel
+theorem local_rank : SecondJetRelaxedCounts.rankBound m L B s U = 40941810507 := by decide +kernel
 
 theorem cutoff_caps : ∀ h : Fin (s+1),
     U ≤ (MovingFiberInterpolation6811.cutoff m k n0 h.val+B-1)/131071 := by decide +kernel
 
 theorem source_card :
-    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 10540329886663022 := by
+    Fintype.card (Index (MovingFiberInterpolation6811.cutoff m k n0) 131071 L B s U) = 10732655326945610 := by
   rw [card_index_closed _ _ _ _ _ _ (by decide +kernel),coefficient_count]
 
 theorem exact_rank :
     SecondJetRelaxedGlobalMap.rankBound m L B s U
-      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 40208136171 := by
+      (fun h => (MovingFiberInterpolation6811.cutoff m k n0 h+B-1)/131071) = 40941810507 := by
   rw [SecondJetRelaxedCounts.rankBound_eq_closed _ _ _ _ _ _ (by decide +kernel)
     (by decide +kernel) (by decide +kernel) (by decide +kernel)
     (fun h hh => cutoff_caps ⟨h,by omega⟩),local_rank]
 
-theorem dimension_gap : 262144*40208136171 < 10540329886663022 := by decide +kernel
+theorem dimension_gap : 262144*40941810507 < 10732655326945610 := by decide +kernel
 
 theorem exists_interpolant {K I : Type} [Field K] [Fintype I]
     (nodes : I ↪ K) (u0 u1 : I → K) (hI : Fintype.card I = 262144) :

@@ -289,5 +289,13 @@ theorem direct20_138 : DirectAt 20 138 row20_138 row19_138 row20_137 :=
   DirectAt.of_checks (by decide +kernel)
 theorem direct20_139 : DirectAt 20 139 row20_139 row19_139 row20_138 :=
   DirectAt.of_checks (by decide +kernel)
+theorem direct20_140 : DirectAt 20 140 row20_140 row19_140 row20_139 :=
+  DirectAt.of_checks (by decide +kernel)
+theorem direct20_141 : DirectAt 20 141 row20_141 row19_141 row20_140 :=
+  DirectAt.of_checks (by decide +kernel)
+theorem direct20_142 : DirectAt 20 142 row20_142 row19_142 row20_141 :=
+  DirectAt.of_checks (by decide +kernel)
+theorem direct20_143 : DirectAt 20 143 row20_143 row19_143 row20_142 :=
+  DirectAt.of_checks (by decide +kernel)
 #print axioms direct20_0
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof
