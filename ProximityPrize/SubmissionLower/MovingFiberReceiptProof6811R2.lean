@@ -333,7 +333,23 @@ theorem at2_160 : At 2 160 :=
   at_of_direct direct2_160 rfl rfl (by intro _; rfl)
 theorem at2_161 : At 2 161 :=
   at_of_direct direct2_161 rfl rfl (by intro _; rfl)
-theorem all2 (v : Nat) (hv : v≤161) : At 2 v := by
+theorem at2_162 : At 2 162 :=
+  at_of_direct direct2_162 rfl rfl (by intro _; rfl)
+theorem at2_163 : At 2 163 :=
+  at_of_direct direct2_163 rfl rfl (by intro _; rfl)
+theorem at2_164 : At 2 164 :=
+  at_of_direct direct2_164 rfl rfl (by intro _; rfl)
+theorem at2_165 : At 2 165 :=
+  at_of_direct direct2_165 rfl rfl (by intro _; rfl)
+theorem at2_166 : At 2 166 :=
+  at_of_direct direct2_166 rfl rfl (by intro _; rfl)
+theorem at2_167 : At 2 167 :=
+  at_of_direct direct2_167 rfl rfl (by intro _; rfl)
+theorem at2_168 : At 2 168 :=
+  at_of_direct direct2_168 rfl rfl (by intro _; rfl)
+theorem at2_169 : At 2 169 :=
+  at_of_direct direct2_169 rfl rfl (by intro _; rfl)
+theorem all2 (v : Nat) (hv : v≤169) : At 2 v := by
   interval_cases v
   · exact at2_0
   · exact at2_1
@@ -497,5 +513,13 @@ theorem all2 (v : Nat) (hv : v≤161) : At 2 v := by
   · exact at2_159
   · exact at2_160
   · exact at2_161
+  · exact at2_162
+  · exact at2_163
+  · exact at2_164
+  · exact at2_165
+  · exact at2_166
+  · exact at2_167
+  · exact at2_168
+  · exact at2_169
 #print axioms all2
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

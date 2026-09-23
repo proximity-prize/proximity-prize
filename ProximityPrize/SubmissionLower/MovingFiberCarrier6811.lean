@@ -37,12 +37,12 @@ def ofCarrier (D L s : ℕ) (F : MvPolynomial (Fin 4) K)
     (hyt : wt residualYSWeights F+2 ≤ wt residualTotalWeights F)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ seeds, 181275 ≤
+    (hagreement : ∀ gamma ∈ seeds, 181265 ≤
       (Finset.univ.filter (fun i => (selected gamma).eval (nodes i) = u0 i+gamma*u1 i)).card)
     (hsolution : ∀ gamma ∈ seeds, specialization K (selected gamma) gamma F=0)
     (hregular : ∀ gamma ∈ seeds,
       specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0)
-    (hno : NoLargeSelectedPencil selected seeds w 80869) :
+    (hno : NoLargeSelectedPencil selected seeds w 80879) :
     MovingFiberRegularData6811.Data nodes u0 u1 where
   D := D
   t := wt residualTotalWeights F
@@ -86,12 +86,12 @@ theorem carrier_count_le_ledger (g : Fin 20) (D L s : ℕ) (F : MvPolynomial (Fi
     (hr : wt residualSWeights F ≤ 31)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ seeds, 181275 ≤
+    (hagreement : ∀ gamma ∈ seeds, 181265 ≤
       (Finset.univ.filter (fun i => (selected gamma).eval (nodes i) = u0 i+gamma*u1 i)).card)
     (hsolution : ∀ gamma ∈ seeds, specialization K (selected gamma) gamma F=0)
     (hregular : ∀ gamma ∈ seeds,
       specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0)
-    (hno : NoLargeSelectedPencil selected seeds w 80869)
+    (hno : NoLargeSelectedPencil selected seeds w 80879)
     (hI : Fintype.card I=262144)
     (ha : Active g (originalCumulativeFlag F)) :
     seeds.card ≤ ledgerCap g (originalCumulativeFlag F) := by

@@ -325,7 +325,23 @@ theorem at6_156 : At 6 156 :=
   at_of_direct direct6_156 rfl rfl (by intro _; rfl)
 theorem at6_157 : At 6 157 :=
   at_of_direct direct6_157 rfl rfl (by intro _; rfl)
-theorem all6 (v : Nat) (hv : v≤157) : At 6 v := by
+theorem at6_158 : At 6 158 :=
+  at_of_direct direct6_158 rfl rfl (by intro _; rfl)
+theorem at6_159 : At 6 159 :=
+  at_of_direct direct6_159 rfl rfl (by intro _; rfl)
+theorem at6_160 : At 6 160 :=
+  at_of_direct direct6_160 rfl rfl (by intro _; rfl)
+theorem at6_161 : At 6 161 :=
+  at_of_direct direct6_161 rfl rfl (by intro _; rfl)
+theorem at6_162 : At 6 162 :=
+  at_of_direct direct6_162 rfl rfl (by intro _; rfl)
+theorem at6_163 : At 6 163 :=
+  at_of_direct direct6_163 rfl rfl (by intro _; rfl)
+theorem at6_164 : At 6 164 :=
+  at_of_direct direct6_164 rfl rfl (by intro _; rfl)
+theorem at6_165 : At 6 165 :=
+  at_of_direct direct6_165 rfl rfl (by intro _; rfl)
+theorem all6 (v : Nat) (hv : v≤165) : At 6 v := by
   interval_cases v
   · exact at6_0
   · exact at6_1
@@ -485,5 +501,13 @@ theorem all6 (v : Nat) (hv : v≤157) : At 6 v := by
   · exact at6_155
   · exact at6_156
   · exact at6_157
+  · exact at6_158
+  · exact at6_159
+  · exact at6_160
+  · exact at6_161
+  · exact at6_162
+  · exact at6_163
+  · exact at6_164
+  · exact at6_165
 #print axioms all6
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

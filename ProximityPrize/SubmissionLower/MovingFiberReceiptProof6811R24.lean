@@ -289,7 +289,23 @@ theorem at24_138 : At 24 138 :=
   at_of_direct direct24_138 rfl rfl (by intro _; rfl)
 theorem at24_139 : At 24 139 :=
   at_of_direct direct24_139 rfl rfl (by intro _; rfl)
-theorem all24 (v : Nat) (hv : v≤139) : At 24 v := by
+theorem at24_140 : At 24 140 :=
+  at_of_direct direct24_140 rfl rfl (by intro _; rfl)
+theorem at24_141 : At 24 141 :=
+  at_of_direct direct24_141 rfl rfl (by intro _; rfl)
+theorem at24_142 : At 24 142 :=
+  at_of_direct direct24_142 rfl rfl (by intro _; rfl)
+theorem at24_143 : At 24 143 :=
+  at_of_direct direct24_143 rfl rfl (by intro _; rfl)
+theorem at24_144 : At 24 144 :=
+  at_of_direct direct24_144 rfl rfl (by intro _; rfl)
+theorem at24_145 : At 24 145 :=
+  at_of_direct direct24_145 rfl rfl (by intro _; rfl)
+theorem at24_146 : At 24 146 :=
+  at_of_direct direct24_146 rfl rfl (by intro _; rfl)
+theorem at24_147 : At 24 147 :=
+  at_of_direct direct24_147 rfl rfl (by intro _; rfl)
+theorem all24 (v : Nat) (hv : v≤147) : At 24 v := by
   interval_cases v
   · exact at24_0
   · exact at24_1
@@ -431,5 +447,13 @@ theorem all24 (v : Nat) (hv : v≤139) : At 24 v := by
   · exact at24_137
   · exact at24_138
   · exact at24_139
+  · exact at24_140
+  · exact at24_141
+  · exact at24_142
+  · exact at24_143
+  · exact at24_144
+  · exact at24_145
+  · exact at24_146
+  · exact at24_147
 #print axioms all24
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

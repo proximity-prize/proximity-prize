@@ -329,7 +329,23 @@ theorem at4_158 : At 4 158 :=
   at_of_direct direct4_158 rfl rfl (by intro _; rfl)
 theorem at4_159 : At 4 159 :=
   at_of_direct direct4_159 rfl rfl (by intro _; rfl)
-theorem all4 (v : Nat) (hv : v≤159) : At 4 v := by
+theorem at4_160 : At 4 160 :=
+  at_of_direct direct4_160 rfl rfl (by intro _; rfl)
+theorem at4_161 : At 4 161 :=
+  at_of_direct direct4_161 rfl rfl (by intro _; rfl)
+theorem at4_162 : At 4 162 :=
+  at_of_direct direct4_162 rfl rfl (by intro _; rfl)
+theorem at4_163 : At 4 163 :=
+  at_of_direct direct4_163 rfl rfl (by intro _; rfl)
+theorem at4_164 : At 4 164 :=
+  at_of_direct direct4_164 rfl rfl (by intro _; rfl)
+theorem at4_165 : At 4 165 :=
+  at_of_direct direct4_165 rfl rfl (by intro _; rfl)
+theorem at4_166 : At 4 166 :=
+  at_of_direct direct4_166 rfl rfl (by intro _; rfl)
+theorem at4_167 : At 4 167 :=
+  at_of_direct direct4_167 rfl rfl (by intro _; rfl)
+theorem all4 (v : Nat) (hv : v≤167) : At 4 v := by
   interval_cases v
   · exact at4_0
   · exact at4_1
@@ -491,5 +507,13 @@ theorem all4 (v : Nat) (hv : v≤159) : At 4 v := by
   · exact at4_157
   · exact at4_158
   · exact at4_159
+  · exact at4_160
+  · exact at4_161
+  · exact at4_162
+  · exact at4_163
+  · exact at4_164
+  · exact at4_165
+  · exact at4_166
+  · exact at4_167
 #print axioms all4
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

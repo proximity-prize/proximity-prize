@@ -9,13 +9,13 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
 def stage (y z d j : ℕ) : UnequalParameters :=
-  ⟨262144,131071,181275,y,d-j,z,y,d,z⟩
+  ⟨262144,131071,181265,y,d-j,z,y,d,z⟩
 
 def charge (y z d : ℕ) : ℕ :=
   (∑ j ∈ Finset.Ico 1 d, leftRegularCountCap (stage y z d j)) + 9000000000000
 
 def kTerm (y z : ℕ) : ℕ :=
-  131073 * (z + y + 524284*y*z) + 50204*80870*y
+  131073 * (z + y + 524284*y*z) + 50194*80880*y
 def mTerm (y z : ℕ) : ℕ := 131073*131071*y*z
 
 theorem stageNumerator (y z d j : ℕ) (hj : j ≤ d) :
@@ -28,12 +28,12 @@ theorem stageNumerator (y z d j : ℕ) (hj : j ≤ d) :
   have hsub : (d-j)+d = 2*d-j := by omega
   dsimp [kTerm, mTerm]
   calc
-    _ = ((d-j)+d) * (131073*(z+y+524284*y*z)+50204*80870*y) +
+    _ = ((d-j)+d) * (131073*(z+y+524284*y*z)+50194*80880*y) +
         (2*(d-j)-1)*2*(131073*131071*y*z) := by ring
     _ = _ := by rw [hsub]
 
 def numerator (y z d : ℕ) : ℕ :=
-  (d-1)*(3*d*kTerm y z + 4*mTerm y z*(d-1)) + 2*50204*9000000000000
+  (d-1)*(3*d*kTerm y z + 4*mTerm y z*(d-1)) + 2*50194*9000000000000
 
 theorem sum_stage_numerators (y z d : ℕ) (hd : d ≤ 40) :
     2 * (∑ j ∈ Finset.Ico 1 d, leftRegularNumerator (stage y z d j)) =
@@ -51,14 +51,14 @@ theorem sum_stage_numerators (y z d : ℕ) (hd : d ≤ 40) :
   nlinarith only [congrArg (fun x => x * kTerm y z) hsum]
 
 theorem charge_mul_le (y z d : ℕ) (hd : d ≤ 40) :
-    charge y z d * (2*50204) ≤ numerator y z d := by
-  have hsum : (∑ j ∈ Finset.Ico 1 d, leftRegularCountCap (stage y z d j))*50204 ≤
+    charge y z d * (2*50194) ≤ numerator y z d := by
+  have hsum : (∑ j ∈ Finset.Ico 1 d, leftRegularCountCap (stage y z d j))*50194 ≤
       ∑ j ∈ Finset.Ico 1 d, leftRegularNumerator (stage y z d j) := by
     rw [Finset.sum_mul]
     apply Finset.sum_le_sum
     intro j _
     simp only [leftRegularCountCap, UnequalParameters.gap, stage,
-      (show (181275 - 131071 : ℕ) = 50204 by decide +kernel)]
+      (show (181265 - 131071 : ℕ) = 50194 by decide +kernel)]
     exact Nat.div_mul_le_self _ _
   have heq := sum_stage_numerators y z d hd
   dsimp [charge, numerator]
@@ -84,7 +84,7 @@ theorem quadratic_between (A C W r d : ℤ)
 theorem numerator_identity (y z d : ℕ) (hd : 1 ≤ d) :
     (numerator y z d : ℤ) + d*(3*(kTerm y z : ℤ)+8*(mTerm y z : ℤ)) =
       (3*(kTerm y z : ℤ)+4*(mTerm y z : ℤ))*d*d +
-        4*(mTerm y z : ℤ)+2*50204*9000000000000 := by
+        4*(mTerm y z : ℤ)+2*50194*9000000000000 := by
   unfold numerator
   have h2 : 1 ≤ 2*d := by omega
   push_cast [Nat.cast_sub hd, Nat.cast_sub h2]
@@ -93,22 +93,22 @@ theorem numerator_identity (y z d : ℕ) (hd : 1 ≤ d) :
 theorem charge_le_of_endpoints (y z d r u : ℕ)
     (hd : 1 ≤ d) (hdr : d ≤ r) (hr : r ≤ 40)
     (htail : 9000000000000 ≤ u)
-    (hend : numerator y z r ≤ r*(2*50204)*u) :
+    (hend : numerator y z r ≤ r*(2*50194)*u) :
     charge y z d ≤ d*u := by
   have hn1 := numerator_identity y z 1 (by decide +kernel)
   have hnr := numerator_identity y z r (by omega)
   have hnd := numerator_identity y z d hd
-  have he : (numerator y z d : ℤ) ≤ d*(2*50204)*(u : ℤ) := by
+  have he : (numerator y z d : ℤ) ≤ d*(2*50194)*(u : ℤ) := by
     have htc : (9000000000000 : ℤ) ≤ u := by exact_mod_cast htail
-    have hec : (numerator y z r : ℤ) ≤ r*(2*50204)*(u : ℤ) := by exact_mod_cast hend
+    have hec : (numerator y z r : ℤ) ≤ r*(2*50194)*(u : ℤ) := by exact_mod_cast hend
     have h := quadratic_between
       (3*(kTerm y z : ℤ)+4*(mTerm y z : ℤ))
-      (4*(mTerm y z : ℤ)+2*50204*9000000000000)
-      ((2*50204)*(u : ℤ)+3*(kTerm y z : ℤ)+8*(mTerm y z : ℤ))
+      (4*(mTerm y z : ℤ)+2*50194*9000000000000)
+      ((2*50194)*(u : ℤ)+3*(kTerm y z : ℤ)+8*(mTerm y z : ℤ))
       r d (by positivity) (by exact_mod_cast hd) (by exact_mod_cast hdr)
       (by nlinarith) (by nlinarith)
     nlinarith
-  have hn : numerator y z d ≤ d*(2*50204)*u := by exact_mod_cast he
+  have hn : numerator y z d ≤ d*(2*50194)*u := by exact_mod_cast he
   have hcharge := (charge_mul_le y z d (hdr.trans hr)).trans hn
   nlinarith
 
@@ -116,15 +116,15 @@ theorem charge_le_of_endpoints (y z d r u : ℕ)
 def zCoeff (y d : ℕ) : ℕ :=
   (d-1)*(3*d*131073*(1+524284*y)+4*131073*131071*y*(d-1))
 def constant (y d : ℕ) : ℕ :=
-  (d-1)*3*d*(131073+50204*80870)*y + 2*50204*9000000000000
+  (d-1)*3*d*(131073+50194*80880)*y + 2*50194*9000000000000
 
 theorem numerator_linear (y z d : ℕ) :
     numerator y z d = zCoeff y d*z + constant y d := by
   unfold numerator kTerm mTerm zCoeff constant
   ring
 
-def unitSlope (y d : ℕ) : ℕ := zCoeff y d / (2*50204*d) + 1
-def unitConstant (y d : ℕ) : ℕ := constant y d / (2*50204*d) + 1
+def unitSlope (y d : ℕ) : ℕ := zCoeff y d / (2*50194*d) + 1
+def unitConstant (y d : ℕ) : ℕ := constant y d / (2*50194*d) + 1
 def unit (y z d : ℕ) : ℕ :=
   max 9000000000000 (unitSlope y d*z + unitConstant y d)
 
@@ -134,10 +134,10 @@ private theorem le_roundUp_mul (a b : ℕ) (hb : 0 < b) : a ≤ (a/b+1)*b := by
   nlinarith
 
 theorem unit_end (y z r : ℕ) (hr : 1 ≤ r) :
-    numerator y z r ≤ r*(2*50204)*unit y z r := by
-  have hb : 0 < 2*50204*r := by omega
-  have ha := le_roundUp_mul (zCoeff y r) (2*50204*r) hb
-  have hc := le_roundUp_mul (constant y r) (2*50204*r) hb
+    numerator y z r ≤ r*(2*50194)*unit y z r := by
+  have hb : 0 < 2*50194*r := by omega
+  have ha := le_roundUp_mul (zCoeff y r) (2*50194*r) hb
+  have hc := le_roundUp_mul (constant y r) (2*50194*r) hb
   have ham := Nat.mul_le_mul_right z ha
   have hmax : unitSlope y r*z + unitConstant y r ≤ unit y z r := le_max_right _ _
   rw [numerator_linear]

@@ -54,7 +54,7 @@ theorem count_of_interpolants
     (cfg : Fin 3 → Params) (hc : ∀ j, (cfg j).WellFormed)
     (scale : ℕ) (hscale : 0 < scale) (hscaleDiv : ∀ j, 3*(cfg j).d ∣ scale)
     (hfree : ∀ (G : Finset K) (fl : FlagDegree) (S' : RCN159.ResidualStage (polynomialEmbedding K) G
-      ⇑nodes 2130706433 80869 fl w (cellSupport S.t S.y S.r)), S'.F = S.F →
+      ⇑nodes 2130706433 80879 fl w (cellSupport S.t S.y S.r)), S'.F = S.F →
       MovingFiberRetainedStage6811.HFreeStage S')
     (P : Fin 3 → SecondJetSupport.Poly (K := K))
     (hP : ∀ j, Interpolant (cfg j).m (cfg j).B (cfg j).s (cfg j).U (cfg j).L (cfg j).k (cfg j).n0 nodes u0 u1 (P j))
@@ -62,9 +62,9 @@ theorem count_of_interpolants
     (hHelperGates : ∀ j, S.PairGates ((cfg j).B+(cfg j).s*(S.r-1))
       ((cfg j).U+(cfg j).s*(S.y-1)) ((cfg j).L+(cfg j).s*(S.t-1)))
     (hCoefficientGates : ∀ j, S.PairGates (cfg j).B (cfg j).U (cfg j).L)
-    (hidentity : ∀ f : FlagDegree, scale*131073*80870*
+    (hidentity : ∀ f : FlagDegree, scale*131073*80880*
       identityCurveDegree f (cellA S.t S.y) (cellB S.y S.r) (cellS S.r) w ≤
-        50204*number cfg scale S.t S.y S.r f) :
+        50194*number cfg scale S.t S.y S.r f) :
     S.seeds.card ≤ bound S cfg scale := by
   classical
   have hshape (j : Fin 3) : ∀ e ∈ (P j).support, 2*e 1+e 3 ≤ (cfg j).B ∧
@@ -107,9 +107,9 @@ theorem count_of_interpolants
           ((source j).leading (polynomialEmbedding K)) ≠ 0 := by
       intro gamma hgamma j
       exact (Finset.mem_filter.mp hgamma).2 j
-    have hid (f : FlagDegree) : scale*131073*80870*
+    have hid (f : FlagDegree) : scale*131073*80880*
         identityCurveDegree f (cellA S.t S.y) (cellB S.y S.r) (cellS S.r) w ≤
-          50204*MovingFiberRetainedStage6811.numerator source scale S.t S.y S.r f := by
+          50194*MovingFiberRetainedStage6811.numerator source scale S.t S.y S.r f := by
       rw [hnum]
       exact hidentity f
     have hg := MovingFiberRegularGeometry6811.regular_seed_bound

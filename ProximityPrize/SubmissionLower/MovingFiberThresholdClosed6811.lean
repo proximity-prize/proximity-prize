@@ -42,7 +42,7 @@ theorem indexedThin_eq (w Dh delta dc dT dY dS T YS S fuel : ℕ) :
       rw [indexedThin_shift, evalPowerBandBudgetThin, ih]
 
 def indexedBand (s : SourceNumbers) (p : FlagDegree) : ℕ :=
-  indexedThin 131071 (s.contactCap p) 50205 (contactDec p)
+  indexedThin 131071 (s.contactCap p) 50195 (contactDec p)
     (total p) (middle p) p.all (s.totalCap-total p)
     (s.middleCap-middle p) (s.slopeCap-p.all) (s.fuel p)
 
@@ -50,7 +50,7 @@ theorem indexedBand_eq (s : SourceNumbers) (p : FlagDegree) :
     indexedBand s p = evalBandThin s p := indexedThin_eq _ _ _ _ _ _ _ _ _ _ _
 
 def IndexedSufficient (s : SourceNumbers) (r v threshold : ℕ) : Prop :=
-  9678-(r+v) < threshold ∨
+  10169-(r+v) < threshold ∨
     let p := rawFlag r v threshold
     1 ≤ p.all ∧ total p ≤ s.totalCap ∧ middle p ≤ s.middleCap ∧
       p.all ≤ s.slopeCap ∧ indexedBand s p < s.gap
@@ -495,11 +495,11 @@ open LocatorPhase6800Oracle (rawFlag)
 
 def ofSource (s : SourceNumbers) (p : FlagDegree) : Input :=
   ⟨s.totalCap-total p,s.middleCap-middle p,s.slopeCap-p.all,s.contactCap p,
-    total p,middle p,p.all,50205+contactDec p,s.fuel p⟩
+    total p,middle p,p.all,50195+contactDec p,s.fuel p⟩
 
-theorem indexed_sum (p : Input) (dc n : ℕ) (hd : p.dDh = 50205+dc) :
-    (indexedThin 131071 p.Dh 50205 dc p.dT p.dY p.dS p.T p.YS p.S n : ℤ) =
-      50205*∑ i ∈ Finset.range n, (p.count i : ℤ) := by
+theorem indexed_sum (p : Input) (dc n : ℕ) (hd : p.dDh = 50195+dc) :
+    (indexedThin 131071 p.Dh 50195 dc p.dT p.dY p.dS p.T p.YS p.S n : ℤ) =
+      50195*∑ i ∈ Finset.range n, (p.count i : ℤ) := by
   induction n with
   | zero => simp [indexedThin]
   | succ n ih =>
@@ -510,15 +510,15 @@ theorem indexed_sum (p : Input) (dc n : ℕ) (hd : p.dDh = 50205+dc) :
 
 theorem source_sum (s : SourceNumbers) (p : FlagDegree) :
     (indexedBand s p : ℤ) =
-      50205*∑ i ∈ Finset.range (ofSource s p).fuel, ((ofSource s p).count i : ℤ) :=
+      50195*∑ i ∈ Finset.range (ofSource s p).fuel, ((ofSource s p).count i : ℤ) :=
   indexed_sum (ofSource s p) (contactDec p) (s.fuel p) rfl
 
 def Sufficient (s : SourceNumbers) (r v threshold : ℕ) (runs : List Run) : Prop :=
-  9678-(r+v) < threshold ∨
+  10169-(r+v) < threshold ∨
     let p := rawFlag r v threshold
     1 ≤ p.all ∧ total p ≤ s.totalCap ∧ middle p ≤ s.middleCap ∧ p.all ≤ s.slopeCap ∧
       RunsValid (ofSource s p) 0 runs ∧
-      50205*runsUpper (ofSource s p) 0 runs < (s.gap : ℤ)*(72*131071^3)
+      50195*runsUpper (ofSource s p) 0 runs < (s.gap : ℤ)*(72*131071^3)
 instance (s : SourceNumbers) (r v threshold : ℕ) (runs : List Run) :
     Decidable (Sufficient s r v threshold runs) := by
   unfold Sufficient; infer_instance
@@ -534,7 +534,7 @@ theorem sufficient_sound (s : SourceNumbers) (r v threshold : ℕ) (runs : List 
   have he := source_sum s (rawFlag r v threshold)
   have hi : (indexedBand s (rawFlag r v threshold) : ℤ) < s.gap := by
     nlinarith only [hgap, congrArg (fun x : ℤ => (72*131071^3)*x) he,
-      mul_le_mul_of_nonneg_left hb (show (0 : ℤ) ≤ 50205 by norm_num)]
+      mul_le_mul_of_nonneg_left hb (show (0 : ℤ) ≤ 50195 by norm_num)]
   exact_mod_cast hi
 
 end ProximityPrize.SubmissionLower.Lower80860.CompressedBand

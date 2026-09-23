@@ -24,7 +24,7 @@ def pairNumerator (a b c capY capR capT : ℕ) : ℕ :=
   131073*((1+262142*(a+b+5))*((a+3)*capT+(a+b+c+5)*capR)+
     131071*(2*a+5)*((a+b+5)*capT+(a+b+c+5)*capY)+
     (1+262142*(a+b+c+5))*((a+b+5)*capR+(a+3)*capY))+
-    80870*50204*((a+b+5)*capR+(a+3)*capY)
+    80880*50194*((a+b+5)*capR+(a+3)*capY)
 def coeff (P : Params) (a b c : ℕ) : ℕ := pairNumerator a b c P.U P.B P.L
 def helper (P : Params) (a b c : ℕ) : ℕ :=
   pairNumerator a b c (P.U+P.s*(a+b+4)) (P.B+P.s*(a+2)) (P.L+P.s*(a+b+c+4))
@@ -85,12 +85,12 @@ theorem pair_numerator (S : Data nodes u0 u1) (a b c : ℕ)
   ring
 
 theorem uniform_gates (S : Data nodes u0 u1) (R U T : ℕ)
-    (hR : R ≤ 1284) (hU : U ≤ 5898) (hT : T ≤ 303188) : S.PairGates R U T := by
+    (hR : R ≤ 1284) (hU : U ≤ 5898) (hT : T ≤ 303307) : S.PairGates R U T := by
   have hr := S.rbound
   have hy := S.ybound
   have ht := S.tbound
-  have hm : (S.pair R U T).mixedCost.y ≤ 31*303188+7501*1284 ∧
-      (S.pair R U T).mixedCost.r ≤ 142*303188+7501*5898 ∧
+  have hm : (S.pair R U T).mixedCost.y ≤ 31*303307+7501*1284 ∧
+      (S.pair R U T).mixedCost.r ≤ 142*303307+7501*5898 ∧
       (S.pair R U T).mixedCost.z ≤ 142*1284+31*5898 := by
     dsimp [Data.pair,UnequalParameters.mixedCost]
     constructor
@@ -115,8 +115,8 @@ theorem catalog_gates (S : Data nodes u0 u1) (g : Fin 20) (j : Fin 3) :
            _ ≤ 1284 := by decide
     · calc _ ≤ 258+40*141 := by gcongr; exact hp.2.1; exact hp.2.2.2
            _ ≤ 5898 := by decide
-    · calc _ ≤ 3188+40*7500 := by gcongr; exact hp.2.2.1; exact hp.2.2.2
-           _ ≤ 303188 := by decide
+    · calc _ ≤ 3307+40*7500 := by gcongr; exact hp.2.2.1; exact hp.2.2.2
+           _ ≤ 303307 := by decide
   · exact uniform_gates S _ _ _ (by omega) (by omega) (by omega)
 
 def Own (S : Data nodes u0 u1) : Prop :=

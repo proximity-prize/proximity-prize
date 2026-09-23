@@ -323,7 +323,23 @@ theorem at7_155 : At 7 155 :=
   at_of_direct direct7_155 rfl rfl (by intro _; rfl)
 theorem at7_156 : At 7 156 :=
   at_of_direct direct7_156 rfl rfl (by intro _; rfl)
-theorem all7 (v : Nat) (hv : v≤156) : At 7 v := by
+theorem at7_157 : At 7 157 :=
+  at_of_direct direct7_157 rfl rfl (by intro _; rfl)
+theorem at7_158 : At 7 158 :=
+  at_of_direct direct7_158 rfl rfl (by intro _; rfl)
+theorem at7_159 : At 7 159 :=
+  at_of_direct direct7_159 rfl rfl (by intro _; rfl)
+theorem at7_160 : At 7 160 :=
+  at_of_direct direct7_160 rfl rfl (by intro _; rfl)
+theorem at7_161 : At 7 161 :=
+  at_of_direct direct7_161 rfl rfl (by intro _; rfl)
+theorem at7_162 : At 7 162 :=
+  at_of_direct direct7_162 rfl rfl (by intro _; rfl)
+theorem at7_163 : At 7 163 :=
+  at_of_direct direct7_163 rfl rfl (by intro _; rfl)
+theorem at7_164 : At 7 164 :=
+  at_of_direct direct7_164 rfl rfl (by intro _; rfl)
+theorem all7 (v : Nat) (hv : v≤164) : At 7 v := by
   interval_cases v
   · exact at7_0
   · exact at7_1
@@ -482,5 +498,13 @@ theorem all7 (v : Nat) (hv : v≤156) : At 7 v := by
   · exact at7_154
   · exact at7_155
   · exact at7_156
+  · exact at7_157
+  · exact at7_158
+  · exact at7_159
+  · exact at7_160
+  · exact at7_161
+  · exact at7_162
+  · exact at7_163
+  · exact at7_164
 #print axioms all7
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

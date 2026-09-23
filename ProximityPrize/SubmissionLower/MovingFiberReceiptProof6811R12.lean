@@ -313,7 +313,23 @@ theorem at12_150 : At 12 150 :=
   at_of_direct direct12_150 rfl rfl (by intro _; rfl)
 theorem at12_151 : At 12 151 :=
   at_of_direct direct12_151 rfl rfl (by intro _; rfl)
-theorem all12 (v : Nat) (hv : v≤151) : At 12 v := by
+theorem at12_152 : At 12 152 :=
+  at_of_direct direct12_152 rfl rfl (by intro _; rfl)
+theorem at12_153 : At 12 153 :=
+  at_of_direct direct12_153 rfl rfl (by intro _; rfl)
+theorem at12_154 : At 12 154 :=
+  at_of_direct direct12_154 rfl rfl (by intro _; rfl)
+theorem at12_155 : At 12 155 :=
+  at_of_direct direct12_155 rfl rfl (by intro _; rfl)
+theorem at12_156 : At 12 156 :=
+  at_of_direct direct12_156 rfl rfl (by intro _; rfl)
+theorem at12_157 : At 12 157 :=
+  at_of_direct direct12_157 rfl rfl (by intro _; rfl)
+theorem at12_158 : At 12 158 :=
+  at_of_direct direct12_158 rfl rfl (by intro _; rfl)
+theorem at12_159 : At 12 159 :=
+  at_of_direct direct12_159 rfl rfl (by intro _; rfl)
+theorem all12 (v : Nat) (hv : v≤159) : At 12 v := by
   interval_cases v
   · exact at12_0
   · exact at12_1
@@ -467,5 +483,13 @@ theorem all12 (v : Nat) (hv : v≤151) : At 12 v := by
   · exact at12_149
   · exact at12_150
   · exact at12_151
+  · exact at12_152
+  · exact at12_153
+  · exact at12_154
+  · exact at12_155
+  · exact at12_156
+  · exact at12_157
+  · exact at12_158
+  · exact at12_159
 #print axioms all12
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

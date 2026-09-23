@@ -1,10 +1,11 @@
 import ProximityPrize.SubmissionLower.MovingFiberArithmetic6811E
-import ProximityPrize.SubmissionLower.HFreeDischarge6812
+import ProximityPrize.SubmissionLower.HFreeDirChain6813
 
 namespace ProximityPrize.SubmissionLower.MovingFiberCount6811
 open scoped BigOperators
 open RCN095 RCN130 RCN146 RCN260 RCN327
 open MovingFiberProfile6811 MovingFiberArithmeticBase6811 MovingFiberCatalog6811 MovingFiberRegularData6811
+open HFreeDirArith6813 HFreeDirChain6813
 set_option autoImplicit false
 set_option Elab.async false
 set_option maxHeartbeats 4000000
@@ -23,12 +24,12 @@ structure Receipt (g : Fin 20) where
   positive : 0 < scale
   divides : ∀ j : Fin 3, 3*(groups g j).d ∣ scale
   identity : ∀ (f : FlagDegree) (a b c : ℕ),
-    scale*131073*80870*identityDegree f a b c ≤ 50204*graph (groups g) scale f a b c
+    scale*131073*80880*identityDegree f a b c ≤ 50194*graphDir (groups g) scale f a b c
   helper : ∀ (a b c : ℕ) (j : Fin 3),
-    MovingFiberArithmeticBase6811.helper (groups g j) a b c/50204 ≤ full a b c/denominator
+    MovingFiberArithmeticBase6811.helper (groups g j) a b c/50194 ≤ full a b c/denominator
   retained : ∀ a b c,
-    graph (groups g) scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (groups g j) a b c/50204) ≤ full a b c/denominator
+    graphDir (groups g) scale ⟨c,b+2,a+3⟩ a b c/scale+
+      (∑ j : Fin 3, coeff (groups g j) a b c/50194) ≤ full a b c/denominator
   rounded_bound : ∀ a b c, full a b c/denominator ≤ rounded a b c
 
 def receipt0 : Receipt 0 where
@@ -343,13 +344,13 @@ def sourceLimit (g : Fin 20) : ℕ := Finset.univ.sup (fun j : Fin 3 => (groups 
 theorem scale_positive (g : Fin 20) : 0 < scales g := (receipt g).positive
 theorem scale_divides (g : Fin 20) (j : Fin 3) : 3*(groups g j).d ∣ scales g := (receipt g).divides j
 theorem identity_absorption (g : Fin 20) (f : FlagDegree) (a b c : ℕ) :
-    scales g*131073*80870*identityDegree f a b c ≤ 50204*graph (groups g) (scales g) f a b c :=
+    scales g*131073*80880*identityDegree f a b c ≤ 50194*graphDir (groups g) (scales g) f a b c :=
   (receipt g).identity f a b c
 theorem helper_cap (g : Fin 20) (a b c : ℕ) (j : Fin 3) :
-    helper (groups g j) a b c/50204 ≤ fulls g a b c/denominators g := (receipt g).helper a b c j
+    helper (groups g j) a b c/50194 ≤ fulls g a b c/denominators g := (receipt g).helper a b c j
 theorem retained_cap (g : Fin 20) (a b c : ℕ) :
-    graph (groups g) (scales g) ⟨c,b+2,a+3⟩ a b c/scales g+
-      (∑ j : Fin 3, coeff (groups g j) a b c/50204) ≤ fulls g a b c/denominators g :=
+    graphDir (groups g) (scales g) ⟨c,b+2,a+3⟩ a b c/scales g+
+      (∑ j : Fin 3, coeff (groups g j) a b c/50194) ≤ fulls g a b c/denominators g :=
   (receipt g).retained a b c
 theorem rounded_cap (g : Fin 20) (a b c : ℕ) :
     fulls g a b c/denominators g ≤ roundedCaps g a b c := (receipt g).rounded_bound a b c
@@ -358,7 +359,7 @@ variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
 variable {nodes : I ↪ K} {u0 u1 : I → K}
 
 theorem bound_le_full (S : Data nodes u0 u1) (hown : Own S) (g : Fin 20) :
-    bound S (groups g) (scales g) ≤
+    boundDir S (groups g) (scales g) ≤
       fulls g (S.r-3) (S.y-S.r-2) (S.t-S.y)/denominators g := by
   obtain ⟨a,ha⟩ : ∃ a, S.r=a+3 := ⟨S.r-3,by have := S.rpos; omega⟩
   obtain ⟨b,hb⟩ : ∃ b, S.y=a+3+(b+2) := ⟨S.y-S.r-2,by have := S.ry; omega⟩
@@ -368,23 +369,23 @@ theorem bound_le_full (S : Data nodes u0 u1) (hown : Own S) (g : Fin 20) :
   have har : S.r-3=a := by omega
   have hbr : S.y-S.r-2=b := by omega
   have hp (R U T : ℕ) : AsymmetricHelper.leftRegularCountCap (S.pair R U T)=
-      pairNumerator a b c U R T/50204 := by
+      pairNumerator a b c U R T/50194 := by
     unfold AsymmetricHelper.leftRegularCountCap
     rw [pair_numerator S a b c ha hb hc]
     norm_num only [Data.pair,UnequalParameters.gap]
-  have hcoeff (j : Fin 3) : coefficientCap S (groups g j)=coeff (groups g j) a b c/50204 := hp _ _ _
-  have hhelper (j : Fin 3) : helperCap S (groups g j)=helper (groups g j) a b c/50204 := by
+  have hcoeff (j : Fin 3) : coefficientCap S (groups g j)=coeff (groups g j) a b c/50194 := hp _ _ _
+  have hhelper (j : Fin 3) : helperCap S (groups g j)=helper (groups g j) a b c/50194 := by
     unfold helperCap
     rw [hp,ha,hb,hc]
     have h1 : a+3-1=a+2 := by omega
     have h2 : a+3+(b+2)-1=a+b+4 := by omega
     have h3 : a+3+(b+2)+c-1=a+b+c+4 := by omega
     simp only [h1,h2,h3,helper]
-  have hn : number (groups g) (scales g) S.t S.y S.r (originalCumulativeFlag S.F)=
-      graph (groups g) (scales g) ⟨c,b+2,a+3⟩ a b c := by
-    rw [hown,hv,hz,hc,hb,ha,number_coordinates]
+  have hn : numberDir (groups g) (scales g) S.t S.y S.r (originalCumulativeFlag S.F)=
+      graphDir (groups g) (scales g) ⟨c,b+2,a+3⟩ a b c := by
+    rw [hown,hv,hz,hc,hb,ha,numberDir_coordinates]
   rw [har,hbr,hz]
-  unfold bound
+  unfold boundDir
   apply max_le
   · apply Finset.sup_le
     intro j _
@@ -398,11 +399,11 @@ theorem bound_le_full (S : Data nodes u0 u1) (hown : Own S) (g : Fin 20) :
 `HFree6812.hfree_stage_of_gaps`; its only open input is `HFree6812.hdefer_gap`. -/
 theorem hfree_stage_gap (S : Data nodes u0 u1) :
     ∀ (G : Finset K) (fl : FlagDegree) (S' : RCN159.ResidualStage (RCN135.polynomialEmbedding K) G
-      ⇑nodes 2130706433 80869 fl w (LocatorHybridCells.cellSupport S.t S.y S.r)), S'.F = S.F →
-      MovingFiberRetainedStage6811.HFreeStage S' := by
+      ⇑nodes 2130706433 80879 fl w (LocatorHybridCells.cellSupport S.t S.y S.r)), S'.F = S.F →
+      HFreeDir6813.HFreeStageDir S' := by
   intro G fl S' _
   haveI : CharP (RCN135.GenericField K) 2130706433 := RCN135.genericField_charP K 2130706433
-  refine HFree6812.hfree_stage_of_gaps S' ?_
+  refine HFreeDir6813.hfree_stage_dir_of_gaps S' ?_
   have := S.tbound; have := S.yt; have := S.ry; have := S.rpos
   simp only [LocatorHybridCells.cellSupport, RCN198.support, LocatorHybridCells.cellA,
     LocatorHybridCells.cellB, LocatorHybridCells.cellS]
@@ -416,16 +417,16 @@ theorem count_group (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
   have hLt (j : Fin 3) : (groups g j).L < RCN234.wt RCN156.residualTotalWeights S.F := by
     rw [own_total S hown]
     exact (Finset.le_sup (f := fun j : Fin 3 => (groups g j).L) (Finset.mem_univ j)).trans_lt hL
-  have hid (f : FlagDegree) : scales g*131073*80870*
+  have hid (f : FlagDegree) : scales g*131073*80880*
       identityCurveDegree f (LocatorHybridCells.cellA S.t S.y)
         (LocatorHybridCells.cellB S.y S.r) (LocatorHybridCells.cellS S.r) w ≤
-        50204*number (groups g) (scales g) S.t S.y S.r f := by
+        50194*numberDir (groups g) (scales g) S.t S.y S.r f := by
     obtain ⟨a,ha⟩ : ∃ a, S.r=a+3 := ⟨S.r-3,by have := S.rpos; omega⟩
     obtain ⟨b,hb⟩ : ∃ b, S.y=a+3+(b+2) := ⟨S.y-S.r-2,by have := S.ry; omega⟩
     obtain ⟨c,hc⟩ : ∃ c, S.t=a+3+(b+2)+c := ⟨S.t-S.y,by have := S.yt; omega⟩
-    rw [ha,hb,hc,identity_coordinates,number_coordinates]
+    rw [ha,hb,hc,identity_coordinates,numberDir_coordinates]
     exact identity_absorption g f a b c
-  have hcount := count_of_interpolants S hI (groups g) (wellFormed g) (scales g)
+  have hcount := count_of_interpolants_dir S hI (groups g) (wellFormed g) (scales g)
     (scale_positive g) (scale_divides g) (hfree_stage_gap S) P hP hLt
     (fun j => (catalog_gates S g j).1) (fun j => (catalog_gates S g j).2) hid
   exact (hcount.trans (bound_le_full S hown g)).trans (rounded_cap g _ _ _)

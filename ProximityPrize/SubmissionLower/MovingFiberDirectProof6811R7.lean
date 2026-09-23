@@ -323,5 +323,21 @@ theorem direct7_155 : DirectAt 7 155 row7_155 row6_155 row7_154 :=
   DirectAt.of_checks (by decide +kernel)
 theorem direct7_156 : DirectAt 7 156 row7_156 row6_156 row7_155 :=
   DirectAt.of_checks (by decide +kernel)
+theorem direct7_157 : DirectAt 7 157 row7_157 row6_157 row7_156 :=
+  DirectAt.of_checks (by decide +kernel)
+theorem direct7_158 : DirectAt 7 158 row7_158 row6_158 row7_157 :=
+  DirectAt.of_checks (by decide +kernel)
+theorem direct7_159 : DirectAt 7 159 row7_159 row6_159 row7_158 :=
+  DirectAt.of_checks (by decide +kernel)
+theorem direct7_160 : DirectAt 7 160 row7_160 row6_160 row7_159 :=
+  DirectAt.of_checks (by decide +kernel)
+theorem direct7_161 : DirectAt 7 161 row7_161 row6_161 row7_160 :=
+  DirectAt.of_checks (by decide +kernel)
+theorem direct7_162 : DirectAt 7 162 row7_162 row6_162 row7_161 :=
+  DirectAt.of_checks (by decide +kernel)
+theorem direct7_163 : DirectAt 7 163 row7_163 row6_163 row7_162 :=
+  DirectAt.of_checks (by decide +kernel)
+theorem direct7_164 : DirectAt 7 164 row7_164 row6_164 row7_163 :=
+  DirectAt.of_checks (by decide +kernel)
 #print axioms direct7_0
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

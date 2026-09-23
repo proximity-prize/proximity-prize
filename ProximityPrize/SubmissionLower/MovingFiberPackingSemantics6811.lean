@@ -11,11 +11,11 @@ set_option maxRecDepth 100000
 def lookup (rows : Nat → Array Nat) (r v : Nat) : Nat := ((rows r)[v]?).getD 0
 
 theorem direct_bellman (own packed : Nat → Array Nat)
-    (hown : ∀ r, 1≤r → r≤35 → (own r).size=164-r)
-    (hpacked : ∀ r, r≤35 → (packed r).size=164-r)
-    (hchecks : ∀ R r, 1≤r → r≤R → R≤35 →
+    (hown : ∀ r, 1≤r → r≤36 → (own r).size=172-r)
+    (hpacked : ∀ r, r≤36 → (packed r).size=172-r)
+    (hchecks : ∀ R r, 1≤r → r≤R → R≤36 →
       convolution (own r).toList (packed (R-r)).toList (packed R).toList=true) :
-    AffineFactorAggregate6808.BellmanRows 35 163 (lookup own) (lookup packed) := by
+    AffineFactorAggregate6808.BellmanRows 36 171 (lookup own) (lookup packed) := by
   intro r v R V hr hR hV
   have he : r+R-r=R := by omega
   have hc := hchecks (r+R) r hr (by omega) hR
@@ -27,12 +27,12 @@ theorem direct_bellman (own packed : Nat → Array Nat)
   simpa only [Array.getElem?_toList,lookup] using h
 
 theorem symmetric_bellman (own packed : Nat → Array Nat)
-    (hown : ∀ r, 1≤r → r≤35 → (own r).size=164-r)
-    (hpacked : ∀ r, r≤35 → (packed r).size=164-r)
-    (hunder : ∀ r, 1≤r → r≤35 → shifted 0 (own r).toList (packed r).toList=true)
-    (hchecks : ∀ R r, 2*r≤R → R≤35 →
+    (hown : ∀ r, 1≤r → r≤36 → (own r).size=172-r)
+    (hpacked : ∀ r, r≤36 → (packed r).size=172-r)
+    (hunder : ∀ r, 1≤r → r≤36 → shifted 0 (own r).toList (packed r).toList=true)
+    (hchecks : ∀ R r, 2*r≤R → R≤36 →
       convolution (packed r).toList (packed (R-r)).toList (packed R).toList=true) :
-    AffineFactorAggregate6808.BellmanRows 35 163 (lookup own) (lookup packed) := by
+    AffineFactorAggregate6808.BellmanRows 36 171 (lookup own) (lookup packed) := by
   intro r v R V hr hR hV
   have hu := shifted_sound 0 (own r).toList (packed r).toList (hunder r hr (by omega)) v
     (by rw [Array.length_toList,hown r hr (by omega)]; omega)

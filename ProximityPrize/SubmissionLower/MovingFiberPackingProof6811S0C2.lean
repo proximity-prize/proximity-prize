@@ -19,7 +19,7 @@ theorem row11_8 : convolution own8.toList packed3.toList packed11.toList=true :=
 theorem row11_9 : convolution own9.toList packed2.toList packed11.toList=true := by decide +kernel
 theorem row11_10 : convolution own10.toList packed1.toList packed11.toList=true := by decide +kernel
 theorem row11_11 : convolution own11.toList packed0.toList packed11.toList=true := by
-  exact convolution_zero_right 164 _ _ (by decide +kernel) (by decide +kernel)
+  exact convolution_zero_right 172 _ _ (by decide +kernel) (by decide +kernel)
 theorem row12_1 : convolution own1.toList packed11.toList packed12.toList=true := by decide +kernel
 theorem row12_2 : convolution own2.toList packed10.toList packed12.toList=true := by decide +kernel
 theorem row12_3 : convolution own3.toList packed9.toList packed12.toList=true := by decide +kernel
@@ -32,7 +32,7 @@ theorem row12_9 : convolution own9.toList packed3.toList packed12.toList=true :=
 theorem row12_10 : convolution own10.toList packed2.toList packed12.toList=true := by decide +kernel
 theorem row12_11 : convolution own11.toList packed1.toList packed12.toList=true := by decide +kernel
 theorem row12_12 : convolution own12.toList packed0.toList packed12.toList=true := by
-  exact convolution_zero_right 164 _ _ (by decide +kernel) (by decide +kernel)
+  exact convolution_zero_right 172 _ _ (by decide +kernel) (by decide +kernel)
 theorem row13_1 : convolution own1.toList packed12.toList packed13.toList=true := by decide +kernel
 theorem row13_2 : convolution own2.toList packed11.toList packed13.toList=true := by decide +kernel
 theorem row13_3 : convolution own3.toList packed10.toList packed13.toList=true := by decide +kernel
@@ -46,7 +46,7 @@ theorem row13_10 : convolution own10.toList packed3.toList packed13.toList=true 
 theorem row13_11 : convolution own11.toList packed2.toList packed13.toList=true := by decide +kernel
 theorem row13_12 : convolution own12.toList packed1.toList packed13.toList=true := by decide +kernel
 theorem row13_13 : convolution own13.toList packed0.toList packed13.toList=true := by
-  exact convolution_zero_right 164 _ _ (by decide +kernel) (by decide +kernel)
+  exact convolution_zero_right 172 _ _ (by decide +kernel) (by decide +kernel)
 theorem row14_1 : convolution own1.toList packed13.toList packed14.toList=true := by decide +kernel
 theorem row14_2 : convolution own2.toList packed12.toList packed14.toList=true := by decide +kernel
 theorem row14_3 : convolution own3.toList packed11.toList packed14.toList=true := by decide +kernel
@@ -61,7 +61,7 @@ theorem row14_11 : convolution own11.toList packed3.toList packed14.toList=true 
 theorem row14_12 : convolution own12.toList packed2.toList packed14.toList=true := by decide +kernel
 theorem row14_13 : convolution own13.toList packed1.toList packed14.toList=true := by decide +kernel
 theorem row14_14 : convolution own14.toList packed0.toList packed14.toList=true := by
-  exact convolution_zero_right 164 _ _ (by decide +kernel) (by decide +kernel)
+  exact convolution_zero_right 172 _ _ (by decide +kernel) (by decide +kernel)
 theorem row15_1 : convolution own1.toList packed14.toList packed15.toList=true := by decide +kernel
 theorem row15_2 : convolution own2.toList packed13.toList packed15.toList=true := by decide +kernel
 theorem row15_3 : convolution own3.toList packed12.toList packed15.toList=true := by decide +kernel
@@ -77,5 +77,5 @@ theorem row15_12 : convolution own12.toList packed3.toList packed15.toList=true 
 theorem row15_13 : convolution own13.toList packed2.toList packed15.toList=true := by decide +kernel
 theorem row15_14 : convolution own14.toList packed1.toList packed15.toList=true := by decide +kernel
 theorem row15_15 : convolution own15.toList packed0.toList packed15.toList=true := by
-  exact convolution_zero_right 164 _ _ (by decide +kernel) (by decide +kernel)
+  exact convolution_zero_right 172 _ _ (by decide +kernel) (by decide +kernel)
 end ProximityPrize.SubmissionLower.MovingFiberPackingProof6811.S0

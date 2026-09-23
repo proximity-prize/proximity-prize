@@ -283,7 +283,23 @@ theorem at27_135 : At 27 135 :=
   at_of_direct direct27_135 rfl rfl (by intro _; rfl)
 theorem at27_136 : At 27 136 :=
   at_of_direct direct27_136 rfl rfl (by intro _; rfl)
-theorem all27 (v : Nat) (hv : v≤136) : At 27 v := by
+theorem at27_137 : At 27 137 :=
+  at_of_direct direct27_137 rfl rfl (by intro _; rfl)
+theorem at27_138 : At 27 138 :=
+  at_of_direct direct27_138 rfl rfl (by intro _; rfl)
+theorem at27_139 : At 27 139 :=
+  at_of_direct direct27_139 rfl rfl (by intro _; rfl)
+theorem at27_140 : At 27 140 :=
+  at_of_direct direct27_140 rfl rfl (by intro _; rfl)
+theorem at27_141 : At 27 141 :=
+  at_of_direct direct27_141 rfl rfl (by intro _; rfl)
+theorem at27_142 : At 27 142 :=
+  at_of_direct direct27_142 rfl rfl (by intro _; rfl)
+theorem at27_143 : At 27 143 :=
+  at_of_direct direct27_143 rfl rfl (by intro _; rfl)
+theorem at27_144 : At 27 144 :=
+  at_of_direct direct27_144 rfl rfl (by intro _; rfl)
+theorem all27 (v : Nat) (hv : v≤144) : At 27 v := by
   interval_cases v
   · exact at27_0
   · exact at27_1
@@ -422,5 +438,13 @@ theorem all27 (v : Nat) (hv : v≤136) : At 27 v := by
   · exact at27_134
   · exact at27_135
   · exact at27_136
+  · exact at27_137
+  · exact at27_138
+  · exact at27_139
+  · exact at27_140
+  · exact at27_141
+  · exact at27_142
+  · exact at27_143
+  · exact at27_144
 #print axioms all27
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

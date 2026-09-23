@@ -303,7 +303,23 @@ theorem at17_145 : At 17 145 :=
   at_of_direct direct17_145 rfl rfl (by intro _; rfl)
 theorem at17_146 : At 17 146 :=
   at_of_direct direct17_146 rfl rfl (by intro _; rfl)
-theorem all17 (v : Nat) (hv : v≤146) : At 17 v := by
+theorem at17_147 : At 17 147 :=
+  at_of_direct direct17_147 rfl rfl (by intro _; rfl)
+theorem at17_148 : At 17 148 :=
+  at_of_direct direct17_148 rfl rfl (by intro _; rfl)
+theorem at17_149 : At 17 149 :=
+  at_of_direct direct17_149 rfl rfl (by intro _; rfl)
+theorem at17_150 : At 17 150 :=
+  at_of_direct direct17_150 rfl rfl (by intro _; rfl)
+theorem at17_151 : At 17 151 :=
+  at_of_direct direct17_151 rfl rfl (by intro _; rfl)
+theorem at17_152 : At 17 152 :=
+  at_of_direct direct17_152 rfl rfl (by intro _; rfl)
+theorem at17_153 : At 17 153 :=
+  at_of_direct direct17_153 rfl rfl (by intro _; rfl)
+theorem at17_154 : At 17 154 :=
+  at_of_direct direct17_154 rfl rfl (by intro _; rfl)
+theorem all17 (v : Nat) (hv : v≤154) : At 17 v := by
   interval_cases v
   · exact at17_0
   · exact at17_1
@@ -452,5 +468,13 @@ theorem all17 (v : Nat) (hv : v≤146) : At 17 v := by
   · exact at17_144
   · exact at17_145
   · exact at17_146
+  · exact at17_147
+  · exact at17_148
+  · exact at17_149
+  · exact at17_150
+  · exact at17_151
+  · exact at17_152
+  · exact at17_153
+  · exact at17_154
 #print axioms all17
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

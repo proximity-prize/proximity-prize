@@ -2,7 +2,7 @@
 import ProximityPrize.SubmissionLower.LowerGeometry
 
 section Compact_MovingFiberScalar6811
-/-! A seedless interpolation kernel for error cell 80869, the first cell
+/-! A seedless interpolation kernel for error cell 80879, the first cell
 used for the 68.10 scalar-list arm. This is one ingredient only; it does
 not establish the MCA bound or a ProtocolClaim. -/
 namespace ProximityPrize.SubmissionLower.MovingFiberScalar6811
@@ -13,12 +13,12 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 set_option Elab.async false
 
-theorem coefficientCount_exact : coefficientCount 21390450 131071 163 35 = 50680949154 := by decide +kernel
+theorem coefficientCount_exact : coefficientCount 22476860 131071 171 36 = 57773053634 := by decide +kernel
 
-theorem localRankBound_exact : localRankBound 118 163 35 = 193326 := by decide +kernel
+theorem localRankBound_exact : localRankBound 124 171 36 = 220372 := by decide +kernel
 
 theorem interpolation_gate :
-    262144 * localRankBound 118 163 35 < coefficientCount 21390450 131071 163 35 := by
+    262144 * localRankBound 124 171 36 < coefficientCount 22476860 131071 171 36 := by
   norm_num only [coefficientCount_exact, localRankBound_exact]
 
 theorem exists_frozen_seedless_interpolant
@@ -26,26 +26,26 @@ theorem exists_frozen_seedless_interpolant
    ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
      Q≠0∧
      Q∈globalCoefficientBox IRSProfile.Field
-       21390450 131071 163 35∧
+       22476860 131071 171 36∧
      ∀ (i:IRSProfile.Index) (r:ℕ),
-       RCN119.slopeDifference IRSProfile.Field^(118-r)∣
+       RCN119.slopeDifference IRSProfile.Field^(124-r)∣
          (RCN319.homogenizedTranslation IRSProfile.Field
            (IRSProfile.domain i) (received i) 0 Q).coeff r:=by
  obtain ⟨theta,htheta,hzero⟩:=exists_nonzero_kernel_array
-   IRSProfile.Field 21390450 131071 163 35 118
+   IRSProfile.Field 22476860 131071 171 36 124
    IRSProfile.domain received (by
      rw [show Fintype.card IRSProfile.Index=262144 by
        norm_num [IRSProfile.Index]]
      exact interpolation_gate)
- refine ⟨reconstruct IRSProfile.Field 21390450 131071 163 35 theta,
+ refine ⟨reconstruct IRSProfile.Field 22476860 131071 171 36 theta,
    reconstruct_ne_zero IRSProfile.Field _ _ _ _ theta htheta,
    reconstruct_mem_box IRSProfile.Field _ _ _ _ theta,?_⟩
  intro i r
  have hdiv:=all_blocks_divisible_of_kernel IRSProfile.Field
-   21390450 131071 163 35 118 IRSProfile.domain received
+   22476860 131071 171 36 124 IRSProfile.domain received
    theta hzero i r
- rw [←translation_reconstruct_coeff IRSProfile.Field 21390450 131071
-   163 35 (IRSProfile.domain i) (received i) theta r] at hdiv
+ rw [←translation_reconstruct_coeff IRSProfile.Field 22476860 131071
+   171 36 (IRSProfile.domain i) (received i) theta r] at hdiv
  exact hdiv
 
 end ProximityPrize.SubmissionLower.MovingFiberScalar6811
@@ -53,7 +53,7 @@ end ProximityPrize.SubmissionLower.MovingFiberScalar6811
 end Compact_MovingFiberScalar6811
 
 section Compact_MovingFiberScalarList6811
-/-! Scalar list arm for error cell 80869. The counting argument is adapted
+/-! Scalar list arm for error cell 80879. The counting argument is adapted
 from the promoted 68.3 submission's LocatorScalar module; only its numerical
 profile changes here. This module alone is not a ProtocolClaim. -/
 namespace ProximityPrize.SubmissionLower.MovingFiberScalarList6811Arithmetic
@@ -66,15 +66,15 @@ set_option Elab.async false
 
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 80869
+def errors : ℕ := 80879
 def agreements : ℕ := n-errors
 def gap : ℕ := agreements-w
 def prime : ℕ := 2130706433
-def multiplicity : ℕ := 118
-def yTotalCap : ℕ := 163
-def slopeCap : ℕ := 35
+def multiplicity : ℕ := 124
+def yTotalCap : ℕ := 171
+def slopeCap : ℕ := 36
 def weightedCap : ℕ := multiplicity*agreements
-def listBudget : ℕ := 7753263990
+def listBudget : ℕ := 8369525347
 def capY : ℕ := 1+2*w*yTotalCap
 def capR : ℕ := w*(2*slopeCap-1)
 def regularListNumerator : ℕ := (n-w)*(capY*slopeCap+capR*yTotalCap)

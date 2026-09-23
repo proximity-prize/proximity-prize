@@ -27,13 +27,13 @@ theorem source_count
     (kernel : PhaseKernelRealization sound u0 u1)
     (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181265 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80879)
     (F : RegularIndex H)
-    (hR : (regularCumulativeFlag H F).all ≤ 35)
-    (hY : middle (regularCumulativeFlag H F) ≤ 163)
-    (hT : total (regularCumulativeFlag H F) ≤ 9678)
+    (hR : (regularCumulativeFlag H F).all ≤ 36)
+    (hY : middle (regularCumulativeFlag H F) ≤ 171)
+    (hT : total (regularCumulativeFlag H F) ≤ 10169)
     (hroute : sound.source.Routeable (regularCumulativeFlag H F)) :
     (regularSeeds H selected Gamma F).card ≤ sound.potential.eval (regularCumulativeFlag H F) := by
   have he : regularAggregateFlag H ({F} : Finset (RegularIndex H)) = regularCumulativeFlag H F := by
@@ -54,9 +54,9 @@ theorem raw_count
     (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181265 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80879)
     (F : RegularIndex Q)
     (hr : (regularCumulativeFlag Q F).all ≤ 32)
     (hy : middle (regularCumulativeFlag Q F) ≤ 149)
@@ -89,9 +89,9 @@ theorem root_count_group (g : Fin 20)
     (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181265 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80879)
     (F : RegularIndex Q)
     (hr : (regularCumulativeFlag Q F).all ≤ 31)
     (hy : middle (regularCumulativeFlag Q F) ≤ 142)
@@ -113,7 +113,7 @@ theorem root_count_group (g : Fin 20)
     (fun g hg => hdegree g (hsub hg)) (fun g hg => hagreement g (hsub hg))
     (fun g hg => (Finset.mem_filter.mp hg).2.1)
     (fun g hg => (Finset.mem_filter.mp hg).2.2)
-    (noLargeSelectedPencil_mono selected Gamma _ 131071 80869 hsub hno)
+    (noLargeSelectedPencil_mono selected Gamma _ 131071 80879 hsub hno)
     (by norm_num [I,IRSProfile.Index]) ha
   exact hcount
 
@@ -123,9 +123,9 @@ theorem root_count
     (Q : P4) (hQ : Q ≠ 0) (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181265 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80869) (F : RegularIndex Q)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80879) (F : RegularIndex Q)
     (th : Array ℕ) (w : ℕ) (hw : 1≤w) (hw16 : w≤20)
     (ha : MovingFiberSingleCore6811.Active th w (regularCumulativeFlag Q F).all
       (regularCumulativeFlag Q F).yz (regularCumulativeFlag Q F).zOnly
@@ -144,7 +144,7 @@ theorem root_count
     MovingFiberCount6811.Receipt.rounded_formula,MovingFiberSingleCore6811.rootUpper,
     MovingFiberSingleCore6811.rootSlope,MovingFiberSingleCore6811.rootIntercept] using hc
 
-theorem source_total (j : ℕ) (hj : j<7) : 9678 ≤ (Lower80860.TenPhase.sound j).source.totalCap := by
+theorem source_total (j : ℕ) (hj : j<7) : 10169 ≤ (Lower80860.TenPhase.sound j).source.totalCap := by
   interval_cases j <;> decide +kernel
 
 theorem factor_count_of_cover
@@ -153,17 +153,17 @@ theorem factor_count_of_cover
     (Q : P4) (hQ : Q ≠ 0) (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181275 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181265 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80869)
-    (F : RegularIndex Q) (hr : (regularCumulativeFlag Q F).all≤35)
-    (hy : middle (regularCumulativeFlag Q F)≤163) (ht : total (regularCumulativeFlag Q F)≤9678)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80879)
+    (F : RegularIndex Q) (hr : (regularCumulativeFlag Q F).all≤36)
+    (hy : middle (regularCumulativeFlag Q F)≤171) (ht : total (regularCumulativeFlag Q F)≤10169)
     (c : MovingFiberSingleCore6811.Carrier) (slope intercept : ℕ) (th : Array ℕ)
     (runs : List MovingFiberSingleCore6811.Run)
     (hc : c.Correct (regularCumulativeFlag Q F).all (regularCumulativeFlag Q F).yz)
     (hcover : MovingFiberSingleCore6811.Cover c slope intercept
       (regularCumulativeFlag Q F).all (regularCumulativeFlag Q F).yz th
-      (9679-((regularCumulativeFlag Q F).all+(regularCumulativeFlag Q F).yz)) 0 runs)
+      (10170-((regularCumulativeFlag Q F).all+(regularCumulativeFlag Q F).yz)) 0 runs)
     (hthreshold : ∀ j, j<7 → Lower80860.ThresholdFast.FastSourceThresholdSufficient
       (Lower80860.TenPhase.sound j).source (regularCumulativeFlag Q F).all
       (regularCumulativeFlag Q F).yz (MovingFiberSingleCore6811.thresholdAt th j)) :
@@ -171,10 +171,10 @@ theorem factor_count_of_cover
       MovingFiberSingleCore6811.cap slope intercept (regularCumulativeFlag Q F).zOnly := by
   let p := regularCumulativeFlag Q F
   have hr1 : 1≤p.all := regularCumulativeFlag_positive Q F
-  have ht' : p.all+p.yz+p.zOnly≤9678 := by
+  have ht' : p.all+p.yz+p.zOnly≤10169 := by
     simpa only [p,total,Nat.add_comm,Nat.add_left_comm,Nat.add_assoc] using ht
   obtain ⟨who,hactive,hbound⟩ := MovingFiberSingleCore6811.cover_sound c slope intercept p.all p.yz th
-    (9679-(p.all+p.yz)) 0 runs hcover p.zOnly (Nat.zero_le _) (by omega)
+    (10170-(p.all+p.yz)) 0 runs hcover p.zOnly (Nat.zero_le _) (by omega)
   apply le_trans (b := MovingFiberSingleCore6811.choice c who p.all p.yz p.zOnly) ?_ hbound
   by_cases h0 : who=0
   · subst who

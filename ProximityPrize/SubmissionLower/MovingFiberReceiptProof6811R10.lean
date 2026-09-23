@@ -317,7 +317,23 @@ theorem at10_152 : At 10 152 :=
   at_of_direct direct10_152 rfl rfl (by intro _; rfl)
 theorem at10_153 : At 10 153 :=
   at_of_direct direct10_153 rfl rfl (by intro _; rfl)
-theorem all10 (v : Nat) (hv : v≤153) : At 10 v := by
+theorem at10_154 : At 10 154 :=
+  at_of_direct direct10_154 rfl rfl (by intro _; rfl)
+theorem at10_155 : At 10 155 :=
+  at_of_direct direct10_155 rfl rfl (by intro _; rfl)
+theorem at10_156 : At 10 156 :=
+  at_of_direct direct10_156 rfl rfl (by intro _; rfl)
+theorem at10_157 : At 10 157 :=
+  at_of_direct direct10_157 rfl rfl (by intro _; rfl)
+theorem at10_158 : At 10 158 :=
+  at_of_direct direct10_158 rfl rfl (by intro _; rfl)
+theorem at10_159 : At 10 159 :=
+  at_of_direct direct10_159 rfl rfl (by intro _; rfl)
+theorem at10_160 : At 10 160 :=
+  at_of_direct direct10_160 rfl rfl (by intro _; rfl)
+theorem at10_161 : At 10 161 :=
+  at_of_direct direct10_161 rfl rfl (by intro _; rfl)
+theorem all10 (v : Nat) (hv : v≤161) : At 10 v := by
   interval_cases v
   · exact at10_0
   · exact at10_1
@@ -473,5 +489,13 @@ theorem all10 (v : Nat) (hv : v≤153) : At 10 v := by
   · exact at10_151
   · exact at10_152
   · exact at10_153
+  · exact at10_154
+  · exact at10_155
+  · exact at10_156
+  · exact at10_157
+  · exact at10_158
+  · exact at10_159
+  · exact at10_160
+  · exact at10_161
 #print axioms all10
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

@@ -8,7 +8,7 @@ set_option maxRecDepth 100000
 /-- Every numerical condition for one actual row, before lookup transport. -/
 structure DirectAt (r v : Nat) (row parent prior : Numbers) : Prop where
   single : SingleValid r v row
-  base : BaseValid row.base r v (9679-r-v) 0 row.baseChoices
+  base : BaseValid row.base r v (10170-r-v) 0 row.baseChoices
   threshold : ThresholdsValid r v row
   phases : Lower80860.PhaseRows.RowRunsValid (context r v row parent) row.phaseRuns
   ledger : Lower80860.LedgerAudit.RunsValid (context r v row parent) 0 row.ledgerRuns
@@ -47,7 +47,7 @@ theorem thresholds_of_core {r v : Nat} {row : Numbers}
     exact h1 ⟨(j.val-7)+3, by omega⟩
 
 def DirectChecks (r v : Nat) (row parent prior : Numbers) : Prop :=
-  SingleValid r v row ∧ BaseValid row.base r v (9679-r-v) 0 row.baseChoices ∧
+  SingleValid r v row ∧ BaseValid row.base r v (10170-r-v) 0 row.baseChoices ∧
   (ThresholdsDup row ∧ ThresholdsCore r v row) ∧ Lower80860.PhaseRows.RowRunsValid (context r v row parent) row.phaseRuns ∧
   Lower80860.LedgerAudit.RunsValid (context r v row parent) 0 row.ledgerRuns ∧
   (∀ j : Fin 10, (parent.prefixValues[j.val]?).getD 0 ≤ (row.prefixValues[j.val]?).getD 0) ∧

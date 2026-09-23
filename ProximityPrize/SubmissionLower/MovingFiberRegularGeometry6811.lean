@@ -27,20 +27,20 @@ theorem regular_seed_bound
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset I) (x u0 u1 : I → K) (hinj : Set.InjOn x nodes) (hnodes : nodes.card = 262144)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ Gamma, 181275 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181265 ≤
       (nodes.filter (fun i => (selected gamma).eval (x i) = u0 i+gamma*u1 i)).card)
     (hsolution : ∀ gamma ∈ Gamma, specialization K (selected gamma) gamma F = 0)
     (hregular : ∀ gamma ∈ Gamma, specialization K (selected gamma) gamma (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hno : NoLargeSelectedPencil selected Gamma w 80869)
+    (hno : NoLargeSelectedPencil selected Gamma w 80879)
     (source : Fin 3 → Source F) (hscale : 0 < scale) (hscaleDiv : ∀ j, 3*(source j).d ∣ scale)
     (hfree : ∀ (G : Finset K) (fl : FlagDegree) (S : ResidualStage (polynomialEmbedding K) G x
-      2130706433 80869 fl w (cellSupport t y r)), S.F = F → HFreeStage S)
+      2130706433 80879 fl w (cellSupport t y r)), S.F = F → HFreeStage S)
     (h2 : (2 : GenericField K) ≠ 0) (hfact : ∀ j, ((source j).k.factorial : GenericField K) ≠ 0)
     (hgood : ∀ gamma ∈ Gamma, ∀ j,
       MvPolynomial.eval (selectedPoint (polynomialEmbedding K) selected gamma)
         ((source j).leading (polynomialEmbedding K)) ≠ 0)
-    (hidentity : ∀ f : FlagDegree, scale*131073*80870*identityCurveDegree f (cellA t y) (cellB y r) (cellS r) w ≤
-      50204*MovingFiberRetainedStage6811.numerator source scale t y r f) :
+    (hidentity : ∀ f : FlagDegree, scale*131073*80880*identityCurveDegree f (cellA t y) (cellB y r) (cellS r) w ≤
+      50194*MovingFiberRetainedStage6811.numerator source scale t y r f) :
     scale*Gamma.card ≤ MovingFiberRetainedStage6811.numerator source scale t y r (originalCumulativeFlag F) := by
   have hFRsmall : F.degreeOf 2 < 2130706433 := (degreeOf_R_le_of_mem_box F D w t r hbox).trans_lt (by omega)
   have hs : cellS r+2 = r := by dsimp [cellS]; omega
@@ -54,7 +54,7 @@ theorem regular_seed_bound
       selected Gamma nodes x u0 u1 hinj hdegree hsolution hregular hno (by norm_num [w]) g
     let S := reflagResidualStage S0 (polynomialIn_surfaceCumulativeFlag g.1)
     have hsub := geometricSeeds_subset K F selected Gamma g
-    have hag : ∀ gamma ∈ geometricSeeds K F selected Gamma g, 181275 ≤ (S.agreementFiber gamma).card :=
+    have hag : ∀ gamma ∈ geometricSeeds K F selected Gamma g, 181265 ≤ (S.agreementFiber gamma).card :=
       fun gamma hgamma => hagreement gamma (hsub hgamma)
     have hf := geometricCumulativeFlag_le_support F hF.ne_zero hsupport g
     have hf' : (geometricCumulativeFlag K g).all ≤ r ∧

@@ -9,9 +9,9 @@ set_option maxHeartbeats 2000000
 set_option maxRecDepth 100000
 
 theorem identity_absorption (f : FlagDegree) (a b s : ℕ) :
-    131073 * 80870 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
-      50204 * flagMixed f (firstTail a b s) (secondTail a b s) := by
-  change 131073 * 80870 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s Lower80788.FixedStage.w ≤ _
+    131073 * 80880 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
+      50194 * flagMixed f (firstTail a b s) (secondTail a b s) := by
+  change 131073 * 80880 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s Lower80788.FixedStage.w ≤ _
   rw [Lower80788.FixedStage.identityDegree_linear]
   norm_num [firstTail, secondTail, Lower80788.FixedStage.tail_support_formula,
     Lower80788.FixedStage.w, flagMixed]

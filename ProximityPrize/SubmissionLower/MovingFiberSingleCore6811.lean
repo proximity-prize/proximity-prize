@@ -12,7 +12,7 @@ set_option maxHeartbeats 3000000
 def cap (slope intercept z : ℕ) : ℕ := slope*z+intercept
 def rootIndex (w : ℕ) : Fin 20 := ⟨(w-1)%20,Nat.mod_lt _ (by decide)⟩
 def phasePotential (j : ℕ) : Potential := (Lower80860.TenPhase.sound j).potential
-def thresholdAt (q : Array ℕ) (j : ℕ) : ℕ := (q[j]?).getD 9679
+def thresholdAt (q : Array ℕ) (j : ℕ) : ℕ := (q[j]?).getD 10170
 
 structure Carrier where
   c0 : ℕ

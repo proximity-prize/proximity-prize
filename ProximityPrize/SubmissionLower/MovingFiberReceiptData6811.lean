@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.MovingFiberContextData6811R35
+import ProximityPrize.SubmissionLower.MovingFiberContextData6811R36
 import ProximityPrize.SubmissionLower.MovingFiberDirectReceipt6811
 
 namespace ProximityPrize.SubmissionLower.Lower80860.ReceiptData
@@ -43,6 +43,7 @@ def rows : Nat → Array Numbers
   | 33 => rows33
   | 34 => rows34
   | 35 => rows35
+  | 36 => rows36
   | _ => #[]
 def lookup (r v : Nat) : Numbers := ((rows r)[v]?).getD defaults
 
@@ -53,14 +54,14 @@ def storedPrefix (r v j : Nat) : Nat := ((lookup r v).prefixValues[j]?).getD 0
 
 structure At (r v : Nat) : Prop where
   single : SingleValid r v (lookup r v)
-  base : BaseValid (lookup r v).base r v (9679-r-v) 0 (lookup r v).baseChoices
+  base : BaseValid (lookup r v).base r v (10170-r-v) 0 (lookup r v).baseChoices
   threshold : ThresholdsValid r v (lookup r v)
   phases : PhaseRows.RowRunsValid (rowContext r v) (lookup r v).phaseRuns
   ledger : LedgerAudit.RunsValid (rowContext r v) 0 (lookup r v).ledgerRuns
   prefixR : ∀ j : Fin 10, storedPrefix (r-1) v j.val ≤ storedPrefix r v j.val
   prefixV : 1≤v → ∀ j : Fin 10, storedPrefix r (v-1) j.val ≤ storedPrefix r v j.val
 
-def Receipt : Prop := ∀ r v, 1≤r → r≤35 → r+v≤163 → At r v
+def Receipt : Prop := ∀ r v, 1≤r → r≤36 → r+v≤171 → At r v
 
 theorem at_of_direct {r v : Nat} {row parent prior : Numbers}
     (h : DirectAt r v row parent prior) (he : row=lookup r v)

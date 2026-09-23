@@ -279,7 +279,23 @@ theorem at29_133 : At 29 133 :=
   at_of_direct direct29_133 rfl rfl (by intro _; rfl)
 theorem at29_134 : At 29 134 :=
   at_of_direct direct29_134 rfl rfl (by intro _; rfl)
-theorem all29 (v : Nat) (hv : v≤134) : At 29 v := by
+theorem at29_135 : At 29 135 :=
+  at_of_direct direct29_135 rfl rfl (by intro _; rfl)
+theorem at29_136 : At 29 136 :=
+  at_of_direct direct29_136 rfl rfl (by intro _; rfl)
+theorem at29_137 : At 29 137 :=
+  at_of_direct direct29_137 rfl rfl (by intro _; rfl)
+theorem at29_138 : At 29 138 :=
+  at_of_direct direct29_138 rfl rfl (by intro _; rfl)
+theorem at29_139 : At 29 139 :=
+  at_of_direct direct29_139 rfl rfl (by intro _; rfl)
+theorem at29_140 : At 29 140 :=
+  at_of_direct direct29_140 rfl rfl (by intro _; rfl)
+theorem at29_141 : At 29 141 :=
+  at_of_direct direct29_141 rfl rfl (by intro _; rfl)
+theorem at29_142 : At 29 142 :=
+  at_of_direct direct29_142 rfl rfl (by intro _; rfl)
+theorem all29 (v : Nat) (hv : v≤142) : At 29 v := by
   interval_cases v
   · exact at29_0
   · exact at29_1
@@ -416,5 +432,13 @@ theorem all29 (v : Nat) (hv : v≤134) : At 29 v := by
   · exact at29_132
   · exact at29_133
   · exact at29_134
+  · exact at29_135
+  · exact at29_136
+  · exact at29_137
+  · exact at29_138
+  · exact at29_139
+  · exact at29_140
+  · exact at29_141
+  · exact at29_142
 #print axioms all29
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

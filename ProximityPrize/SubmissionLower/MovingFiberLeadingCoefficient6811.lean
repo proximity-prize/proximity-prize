@@ -71,23 +71,23 @@ theorem low_coefficient_vanish (P : Poly (K := K)) (m k n0 d : ℕ)
     (hdm : d < m) (hdn : d < n0) (hfact : (d.factorial : K) ≠ 0)
     (hP : ∀ e ∈ P.support,
       e 0+131071*e 2+131070*e 3+131069*e 1+
-        reserve k n0 (e 1)*50206 < m*181275)
+        reserve k n0 (e 1)*50196 < m*181265)
     (nodes : N ↪ K) (u0 u1 : N → K)
     (hcontact : ∀ i, MvPolynomial.X 0^m ∣ substitute (K := K)
       (localize (nodes i) (u0 i) (u1 i) P))
     (f : Polynomial K) (hf : f.natDegree ≤ 131071) (z : K) (S : Finset N)
-    (hS : 181275 ≤ S.card) (hvalues : ∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z)
+    (hS : 181265 ≤ S.card) (hvalues : ∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z)
     (hh : ∀ j, d < j → coefficientSpecialize f z ((asS P).coeff j) = 0) :
     coefficientSpecialize f z ((asS P).coeff d) = 0 := by
   have hweight : ∀ e ∈ ((asS P).coeff d).support,
-      e 0+131071*e 1+131070*e 2 < (m-d)*181275 := by
+      e 0+131071*e 1+131070*e 2 < (m-d)*181265 := by
     intro e he
     have hb := hP _ (coefficient_support P d e he)
     obtain ⟨h0,h1,h2,h3,h4⟩ := lift_coordinates d e
     rw [h0,h1,h2,h3] at hb
     simp only [reserve,if_pos hdn] at hb
     omega
-  have hdeg := coefficient_degree ((asS P).coeff d) f z 131071 ((m-d)*181275)
+  have hdeg := coefficient_degree ((asS P).coeff d) f z 131071 ((m-d)*181265)
     hf (by omega) hweight
   have htop := specialize_top P f z d hh
   have hv : specialize f z ((pderiv 1)^[d] P) = 0 := by

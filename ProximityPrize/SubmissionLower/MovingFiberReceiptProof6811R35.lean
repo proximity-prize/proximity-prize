@@ -267,7 +267,23 @@ theorem at35_127 : At 35 127 :=
   at_of_direct direct35_127 rfl rfl (by intro _; rfl)
 theorem at35_128 : At 35 128 :=
   at_of_direct direct35_128 rfl rfl (by intro _; rfl)
-theorem all35 (v : Nat) (hv : v≤128) : At 35 v := by
+theorem at35_129 : At 35 129 :=
+  at_of_direct direct35_129 rfl rfl (by intro _; rfl)
+theorem at35_130 : At 35 130 :=
+  at_of_direct direct35_130 rfl rfl (by intro _; rfl)
+theorem at35_131 : At 35 131 :=
+  at_of_direct direct35_131 rfl rfl (by intro _; rfl)
+theorem at35_132 : At 35 132 :=
+  at_of_direct direct35_132 rfl rfl (by intro _; rfl)
+theorem at35_133 : At 35 133 :=
+  at_of_direct direct35_133 rfl rfl (by intro _; rfl)
+theorem at35_134 : At 35 134 :=
+  at_of_direct direct35_134 rfl rfl (by intro _; rfl)
+theorem at35_135 : At 35 135 :=
+  at_of_direct direct35_135 rfl rfl (by intro _; rfl)
+theorem at35_136 : At 35 136 :=
+  at_of_direct direct35_136 rfl rfl (by intro _; rfl)
+theorem all35 (v : Nat) (hv : v≤136) : At 35 v := by
   interval_cases v
   · exact at35_0
   · exact at35_1
@@ -398,5 +414,13 @@ theorem all35 (v : Nat) (hv : v≤128) : At 35 v := by
   · exact at35_126
   · exact at35_127
   · exact at35_128
+  · exact at35_129
+  · exact at35_130
+  · exact at35_131
+  · exact at35_132
+  · exact at35_133
+  · exact at35_134
+  · exact at35_135
+  · exact at35_136
 #print axioms all35
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

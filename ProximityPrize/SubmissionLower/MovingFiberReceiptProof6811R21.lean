@@ -295,7 +295,23 @@ theorem at21_141 : At 21 141 :=
   at_of_direct direct21_141 rfl rfl (by intro _; rfl)
 theorem at21_142 : At 21 142 :=
   at_of_direct direct21_142 rfl rfl (by intro _; rfl)
-theorem all21 (v : Nat) (hv : v≤142) : At 21 v := by
+theorem at21_143 : At 21 143 :=
+  at_of_direct direct21_143 rfl rfl (by intro _; rfl)
+theorem at21_144 : At 21 144 :=
+  at_of_direct direct21_144 rfl rfl (by intro _; rfl)
+theorem at21_145 : At 21 145 :=
+  at_of_direct direct21_145 rfl rfl (by intro _; rfl)
+theorem at21_146 : At 21 146 :=
+  at_of_direct direct21_146 rfl rfl (by intro _; rfl)
+theorem at21_147 : At 21 147 :=
+  at_of_direct direct21_147 rfl rfl (by intro _; rfl)
+theorem at21_148 : At 21 148 :=
+  at_of_direct direct21_148 rfl rfl (by intro _; rfl)
+theorem at21_149 : At 21 149 :=
+  at_of_direct direct21_149 rfl rfl (by intro _; rfl)
+theorem at21_150 : At 21 150 :=
+  at_of_direct direct21_150 rfl rfl (by intro _; rfl)
+theorem all21 (v : Nat) (hv : v≤150) : At 21 v := by
   interval_cases v
   · exact at21_0
   · exact at21_1
@@ -440,5 +456,13 @@ theorem all21 (v : Nat) (hv : v≤142) : At 21 v := by
   · exact at21_140
   · exact at21_141
   · exact at21_142
+  · exact at21_143
+  · exact at21_144
+  · exact at21_145
+  · exact at21_146
+  · exact at21_147
+  · exact at21_148
+  · exact at21_149
+  · exact at21_150
 #print axioms all21
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

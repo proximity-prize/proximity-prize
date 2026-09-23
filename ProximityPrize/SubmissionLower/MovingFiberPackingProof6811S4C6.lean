@@ -10,7 +10,7 @@ set_option maxHeartbeats 2000000
 
 theorem own31_le : shifted 0 own31.toList packed31.toList=true := by decide +kernel
 theorem super31_0 : convolution packed0.toList packed31.toList packed31.toList=true := by
-  exact convolution_zero 164 _ (by decide +kernel)
+  exact convolution_zero 172 _ (by decide +kernel)
 theorem super31_1 : convolution packed1.toList packed30.toList packed31.toList=true := by decide +kernel
 theorem super31_2 : convolution packed2.toList packed29.toList packed31.toList=true := by decide +kernel
 theorem super31_3 : convolution packed3.toList packed28.toList packed31.toList=true := by decide +kernel
@@ -28,7 +28,7 @@ theorem super31_14 : convolution packed14.toList packed17.toList packed31.toList
 theorem super31_15 : convolution packed15.toList packed16.toList packed31.toList=true := by decide +kernel
 theorem own32_le : shifted 0 own32.toList packed32.toList=true := by decide +kernel
 theorem super32_0 : convolution packed0.toList packed32.toList packed32.toList=true := by
-  exact convolution_zero 164 _ (by decide +kernel)
+  exact convolution_zero 172 _ (by decide +kernel)
 theorem super32_1 : convolution packed1.toList packed31.toList packed32.toList=true := by decide +kernel
 theorem super32_2 : convolution packed2.toList packed30.toList packed32.toList=true := by decide +kernel
 theorem super32_3 : convolution packed3.toList packed29.toList packed32.toList=true := by decide +kernel
@@ -47,7 +47,7 @@ theorem super32_15 : convolution packed15.toList packed17.toList packed32.toList
 theorem super32_16 : convolution packed16.toList packed16.toList packed32.toList=true := by decide +kernel
 theorem own33_le : shifted 0 own33.toList packed33.toList=true := by decide +kernel
 theorem super33_0 : convolution packed0.toList packed33.toList packed33.toList=true := by
-  exact convolution_zero 164 _ (by decide +kernel)
+  exact convolution_zero 172 _ (by decide +kernel)
 theorem super33_1 : convolution packed1.toList packed32.toList packed33.toList=true := by decide +kernel
 theorem super33_2 : convolution packed2.toList packed31.toList packed33.toList=true := by decide +kernel
 theorem super33_3 : convolution packed3.toList packed30.toList packed33.toList=true := by decide +kernel
@@ -66,7 +66,7 @@ theorem super33_15 : convolution packed15.toList packed18.toList packed33.toList
 theorem super33_16 : convolution packed16.toList packed17.toList packed33.toList=true := by decide +kernel
 theorem own34_le : shifted 0 own34.toList packed34.toList=true := by decide +kernel
 theorem super34_0 : convolution packed0.toList packed34.toList packed34.toList=true := by
-  exact convolution_zero 164 _ (by decide +kernel)
+  exact convolution_zero 172 _ (by decide +kernel)
 theorem super34_1 : convolution packed1.toList packed33.toList packed34.toList=true := by decide +kernel
 theorem super34_2 : convolution packed2.toList packed32.toList packed34.toList=true := by decide +kernel
 theorem super34_3 : convolution packed3.toList packed31.toList packed34.toList=true := by decide +kernel
@@ -86,7 +86,7 @@ theorem super34_16 : convolution packed16.toList packed18.toList packed34.toList
 theorem super34_17 : convolution packed17.toList packed17.toList packed34.toList=true := by decide +kernel
 theorem own35_le : shifted 0 own35.toList packed35.toList=true := by decide +kernel
 theorem super35_0 : convolution packed0.toList packed35.toList packed35.toList=true := by
-  exact convolution_zero 164 _ (by decide +kernel)
+  exact convolution_zero 172 _ (by decide +kernel)
 theorem super35_1 : convolution packed1.toList packed34.toList packed35.toList=true := by decide +kernel
 theorem super35_2 : convolution packed2.toList packed33.toList packed35.toList=true := by decide +kernel
 theorem super35_3 : convolution packed3.toList packed32.toList packed35.toList=true := by decide +kernel

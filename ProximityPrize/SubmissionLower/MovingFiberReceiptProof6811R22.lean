@@ -293,7 +293,23 @@ theorem at22_140 : At 22 140 :=
   at_of_direct direct22_140 rfl rfl (by intro _; rfl)
 theorem at22_141 : At 22 141 :=
   at_of_direct direct22_141 rfl rfl (by intro _; rfl)
-theorem all22 (v : Nat) (hv : v≤141) : At 22 v := by
+theorem at22_142 : At 22 142 :=
+  at_of_direct direct22_142 rfl rfl (by intro _; rfl)
+theorem at22_143 : At 22 143 :=
+  at_of_direct direct22_143 rfl rfl (by intro _; rfl)
+theorem at22_144 : At 22 144 :=
+  at_of_direct direct22_144 rfl rfl (by intro _; rfl)
+theorem at22_145 : At 22 145 :=
+  at_of_direct direct22_145 rfl rfl (by intro _; rfl)
+theorem at22_146 : At 22 146 :=
+  at_of_direct direct22_146 rfl rfl (by intro _; rfl)
+theorem at22_147 : At 22 147 :=
+  at_of_direct direct22_147 rfl rfl (by intro _; rfl)
+theorem at22_148 : At 22 148 :=
+  at_of_direct direct22_148 rfl rfl (by intro _; rfl)
+theorem at22_149 : At 22 149 :=
+  at_of_direct direct22_149 rfl rfl (by intro _; rfl)
+theorem all22 (v : Nat) (hv : v≤149) : At 22 v := by
   interval_cases v
   · exact at22_0
   · exact at22_1
@@ -437,5 +453,13 @@ theorem all22 (v : Nat) (hv : v≤141) : At 22 v := by
   · exact at22_139
   · exact at22_140
   · exact at22_141
+  · exact at22_142
+  · exact at22_143
+  · exact at22_144
+  · exact at22_145
+  · exact at22_146
+  · exact at22_147
+  · exact at22_148
+  · exact at22_149
 #print axioms all22
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

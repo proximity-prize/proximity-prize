@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.MovingFiberReceiptProof6811R35
+import ProximityPrize.SubmissionLower.MovingFiberReceiptProof6811R36
 
 namespace ProximityPrize.SubmissionLower.Lower80860.ReceiptProof
 open ReceiptData
@@ -45,6 +45,7 @@ theorem receipt : Receipt := by
   · exact all33 v (by omega)
   · exact all34 v (by omega)
   · exact all35 v (by omega)
+  · exact all36 v (by omega)
 
 #print axioms receipt
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

@@ -321,7 +321,23 @@ theorem at8_154 : At 8 154 :=
   at_of_direct direct8_154 rfl rfl (by intro _; rfl)
 theorem at8_155 : At 8 155 :=
   at_of_direct direct8_155 rfl rfl (by intro _; rfl)
-theorem all8 (v : Nat) (hv : v≤155) : At 8 v := by
+theorem at8_156 : At 8 156 :=
+  at_of_direct direct8_156 rfl rfl (by intro _; rfl)
+theorem at8_157 : At 8 157 :=
+  at_of_direct direct8_157 rfl rfl (by intro _; rfl)
+theorem at8_158 : At 8 158 :=
+  at_of_direct direct8_158 rfl rfl (by intro _; rfl)
+theorem at8_159 : At 8 159 :=
+  at_of_direct direct8_159 rfl rfl (by intro _; rfl)
+theorem at8_160 : At 8 160 :=
+  at_of_direct direct8_160 rfl rfl (by intro _; rfl)
+theorem at8_161 : At 8 161 :=
+  at_of_direct direct8_161 rfl rfl (by intro _; rfl)
+theorem at8_162 : At 8 162 :=
+  at_of_direct direct8_162 rfl rfl (by intro _; rfl)
+theorem at8_163 : At 8 163 :=
+  at_of_direct direct8_163 rfl rfl (by intro _; rfl)
+theorem all8 (v : Nat) (hv : v≤163) : At 8 v := by
   interval_cases v
   · exact at8_0
   · exact at8_1
@@ -479,5 +495,13 @@ theorem all8 (v : Nat) (hv : v≤155) : At 8 v := by
   · exact at8_153
   · exact at8_154
   · exact at8_155
+  · exact at8_156
+  · exact at8_157
+  · exact at8_158
+  · exact at8_159
+  · exact at8_160
+  · exact at8_161
+  · exact at8_162
+  · exact at8_163
 #print axioms all8
 end ProximityPrize.SubmissionLower.Lower80860.ReceiptProof

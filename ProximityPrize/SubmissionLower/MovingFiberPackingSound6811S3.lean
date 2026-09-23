@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.MovingFiberPackingProof6811S3C6
+import ProximityPrize.SubmissionLower.MovingFiberPackingProof6811S3C7
 import ProximityPrize.SubmissionLower.MovingFiberPackingSemantics6811
 
 namespace ProximityPrize.SubmissionLower.MovingFiberPackingSound6811.S3
@@ -9,11 +9,11 @@ set_option Elab.async false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
-theorem own_size (r : Nat) (hr : 1≤r) (hR : r≤35) : (ownRow r).size=164-r := by
+theorem own_size (r : Nat) (hr : 1≤r) (hR : r≤36) : (ownRow r).size=172-r := by
   interval_cases r <;> decide +kernel
-theorem packed_size (r : Nat) (hR : r≤35) : (packedRow r).size=164-r := by
+theorem packed_size (r : Nat) (hR : r≤36) : (packedRow r).size=172-r := by
   interval_cases r <;> decide +kernel
-theorem own_under (r : Nat) (hr : 1≤r) (hR : r≤35) : shifted 0 (ownRow r).toList (packedRow r).toList=true := by
+theorem own_under (r : Nat) (hr : 1≤r) (hR : r≤36) : shifted 0 (ownRow r).toList (packedRow r).toList=true := by
   interval_cases r
   · simpa only [ownRow,packedRow] using own1_le
   · simpa only [ownRow,packedRow] using own2_le
@@ -50,7 +50,8 @@ theorem own_under (r : Nat) (hr : 1≤r) (hR : r≤35) : shifted 0 (ownRow r).to
   · simpa only [ownRow,packedRow] using own33_le
   · simpa only [ownRow,packedRow] using own34_le
   · simpa only [ownRow,packedRow] using own35_le
-theorem all_checks (R r : Nat) (hrr : 2*r≤R) (hR : R≤35) :
+  · simpa only [ownRow,packedRow] using own36_le
+theorem all_checks (R r : Nat) (hrr : 2*r≤R) (hR : R≤36) :
     convolution (packedRow r).toList (packedRow (R-r)).toList (packedRow R).toList=true := by
   have hrmax : r≤R/2 := (Nat.le_div_iff_mul_le (by decide : 0<2)).mpr (by omega)
   interval_cases R
@@ -432,7 +433,27 @@ theorem all_checks (R r : Nat) (hrr : 2*r≤R) (hR : R≤35) :
     · simpa only [packedRow,Nat.reduceSub] using super35_15
     · simpa only [packedRow,Nat.reduceSub] using super35_16
     · simpa only [packedRow,Nat.reduceSub] using super35_17
-theorem bellman : AffineFactorAggregate6808.BellmanRows 35 163 own packed :=
+  · interval_cases r
+    · simpa only [packedRow,Nat.reduceSub] using super36_0
+    · simpa only [packedRow,Nat.reduceSub] using super36_1
+    · simpa only [packedRow,Nat.reduceSub] using super36_2
+    · simpa only [packedRow,Nat.reduceSub] using super36_3
+    · simpa only [packedRow,Nat.reduceSub] using super36_4
+    · simpa only [packedRow,Nat.reduceSub] using super36_5
+    · simpa only [packedRow,Nat.reduceSub] using super36_6
+    · simpa only [packedRow,Nat.reduceSub] using super36_7
+    · simpa only [packedRow,Nat.reduceSub] using super36_8
+    · simpa only [packedRow,Nat.reduceSub] using super36_9
+    · simpa only [packedRow,Nat.reduceSub] using super36_10
+    · simpa only [packedRow,Nat.reduceSub] using super36_11
+    · simpa only [packedRow,Nat.reduceSub] using super36_12
+    · simpa only [packedRow,Nat.reduceSub] using super36_13
+    · simpa only [packedRow,Nat.reduceSub] using super36_14
+    · simpa only [packedRow,Nat.reduceSub] using super36_15
+    · simpa only [packedRow,Nat.reduceSub] using super36_16
+    · simpa only [packedRow,Nat.reduceSub] using super36_17
+    · simpa only [packedRow,Nat.reduceSub] using super36_18
+theorem bellman : AffineFactorAggregate6808.BellmanRows 36 171 own packed :=
   symmetric_bellman ownRow packedRow own_size packed_size own_under all_checks
 #print axioms bellman
 end ProximityPrize.SubmissionLower.MovingFiberPackingSound6811.S3

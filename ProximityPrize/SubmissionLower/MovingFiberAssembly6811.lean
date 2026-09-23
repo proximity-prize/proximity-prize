@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.MovingFiberRegularBridge6811
 import ProximityPrize.SubmissionLower.MovingFiberPairGeometry6811
+import ProximityPrize.SubmissionLower.FoldChainCounting6813
 
 namespace ProximityPrize.SubmissionLower.Lower80860.Assembly
 open ProximityPrize.Benchmark
@@ -9,7 +10,7 @@ open Lower80860.Selection Lower80860.InitialBridge Lower80860.Initial
 open LocatorFactorAggregate LocatorBatchProductRoute LocatorDerivativeChain
 open LocatorBatchPhase6800 (regularAggregateFlag)
 open LocatorPhase6800Oracle (rawFlag)
-open Counting AsymmetricChainPolynomial80860
+open Counting FoldCounting FoldChainPolynomial6813
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -23,20 +24,20 @@ local instance : GCDMonoid P4 := UniqueFactorizationMonoid.toGCDMonoid P4
 
 def combined (phaseCap : ℕ → FlagDegree → ℕ) (p : FlagDegree) : ℕ :=
   phaseCap 10 p + initialAComplement p +
-    p.all*unit (middle p) (total p) p.all +
-    (40-p.all)*unit (185-middle p) (22192-total p) (40-p.all) +
-    18000000000000+1215189223289491+42*0
+    p.all*foldUnit (middle p) (total p) p.all +
+    (40-p.all)*foldUnit (185-middle p) (27313-total p) (40-p.all) +
+    18000000000000+PairCell6813.cap p.all (middle p) (total p)+42*1378234957498
 
 /-- Numerical ledger receipt, including the empty universal-factor state. -/
 def LedgerReceiptSound (phaseCap : ℕ → FlagDegree → ℕ) (budget : ℕ) : Prop :=
   combined phaseCap ⟨0,0,0⟩ ≤ budget ∧
-  ∀ r v z : ℕ, 1 ≤ r → r ≤ 35 → r+v ≤ 163 → r+v+z ≤ 9678 →
+  ∀ r v z : ℕ, 1 ≤ r → r ≤ 36 → r+v ≤ 171 → r+v+z ≤ 10169 →
     combined phaseCap (rawFlag r v z) ≤ budget
 
 theorem combined_bound {phaseCap : ℕ → FlagDegree → ℕ} {budget : ℕ} (hledger : LedgerReceiptSound phaseCap budget) (H : P4) (U : Finset (RegularIndex H))
-    (hr : (regularAggregateFlag H U).all ≤ 35)
-    (hy : middle (regularAggregateFlag H U) ≤ 163)
-    (ht : total (regularAggregateFlag H U) ≤ 9678) :
+    (hr : (regularAggregateFlag H U).all ≤ 36)
+    (hy : middle (regularAggregateFlag H U) ≤ 171)
+    (ht : total (regularAggregateFlag H U) ≤ 10169) :
     combined phaseCap (regularAggregateFlag H U) ≤ budget := by
   let p := regularAggregateFlag H U
   by_cases hp : p.all = 0
@@ -82,20 +83,13 @@ theorem selected_pair_count_le
   have hT : T ≠ 0 := by
     intro hz
     exact S.QA_ne (by rw [hTeq,hz,mul_zero])
-  have hb := flag_box_to_ordinary K 24290850 131071 22192 40 S.QB S.QB_flag
-  have ha := flag_box_to_ordinary K 40968150 131071 9682 70 S.QA S.QA_flag
-  have hHbox : H ∈ RCN174.globalCoefficientBox K 24290850 131071 22192 40 :=
-    mem_globalCoefficientBox_of_dvd H S.QB 24290850 131071 22192 40 S.QB_ne
+  have hb := flag_box_to_ordinary K 24289510 131071 27313 40 S.QB S.QB_flag
+  have hHbox : H ∈ RCN174.globalCoefficientBox K 24289510 131071 27313 40 :=
+    mem_globalCoefficientBox_of_dvd H S.QB 24289510 131071 27313 40 S.QB_ne
       (gcd_dvd_right S.QA S.QB) hb
-  have hQbox : Q ∈ RCN174.globalCoefficientBox K 24290850 131071 22192 40 :=
-    mem_globalCoefficientBox_of_dvd Q S.QB 24290850 131071 22192 40 S.QB_ne
+  have hQbox : Q ∈ RCN174.globalCoefficientBox K 24289510 131071 27313 40 :=
+    mem_globalCoefficientBox_of_dvd Q S.QB 24289510 131071 27313 40 S.QB_ne
       ⟨H,hQeq.trans (mul_comm H Q)⟩ hb
-  have hTbox : T ∈ RCN174.globalCoefficientBox K 40968150 131071 9682 70 :=
-    mem_globalCoefficientBox_of_dvd T S.QA 40968150 131071 9682 70 S.QA_ne
-      ⟨H,hTeq.trans (mul_comm H T)⟩ ha
-  have hTcaps : T.degreeOf 1 ≤ 312 ∧ T.degreeOf 2 ≤ 70 ∧ T.degreeOf 3 ≤ 9682 := by
-    simpa only [Nat.reduceSub,Nat.reduceDiv] using
-      degree_bounds_of_mem_box T 40968150 131071 9682 70 (by decide +kernel) hTbox
   have hsubD : D ⊆ Gamma := by
     intro g hg
     have hm : g ∈ Gamma ∧ (phi g) H = 0 := by
@@ -119,39 +113,46 @@ theorem selected_pair_count_le
   have hsolE : ∀ g ∈ E, specialization K (selected g) g T = 0 ∧ specialization K (selected g) g Q = 0 :=
     LocatorCover.residual_vanish phi Gamma S.QA S.QB
       (fun g hg => (hparents g hg).1) (fun g hg => (hparents g hg).2)
-  have hcD := Geometry.cover_count H H hH hHbox selected D hsolD hsolD
-  have hcE := Geometry.cover_count Q T hQ hQbox selected E
+  have hcD := FoldGeometry.cover_count' H H hH selected D hsolD hsolD
+  have hcE := FoldGeometry.cover_count' Q T hQ selected E
     (fun g hg => (hsolE g hg).2) (fun g hg => (hsolE g hg).1)
   have hrD : (∑ F : RegularIndex H, (RCN052.regularPairSeeds H H selected D F).card) ≤
       (∑ F : RegularIndex H, (regularSeeds H selected D F).card) :=
     Finset.sum_le_sum (fun F _ => Finset.card_le_card
       (LocatorFixedChain.regularPairSeeds_self_subset H selected D F))
-  have hrE := Geometry.pair_count inpE Q T hQ (firstQuotients_isRelPrime S.QA_ne).symm hQbox hTcaps
   have hfreeD := freePart_count inpD H hH hHbox
   have hfreeE := freePart_count inpE Q hQ hQbox
   have hreg := RegularBridge.regular_count hbaseReceipt hpref hthreshold hruns u0 u1 S selected Gamma inp
-  change p.all ≤ 35 ∧ middle p ≤ 163 ∧ total p ≤ 9678 ∧
+  change p.all ≤ 36 ∧ middle p ≤ 171 ∧ total p ≤ 10169 ∧
     (∑ F : RegularIndex H, (regularSeeds H selected D F).card) ≤
       PhaseSemantics.phaseCap 10 p+initialAComplement p at hreg
-  have hprod : H*Q ∈ RCN100.globalCoefficientBox K 24290850 131071 22192 40 := by
+  have hprod : H*Q ∈ RCN100.globalCoefficientBox K 24289510 131071 27313 40 := by
     rw [← hQeq]
     exact S.QB_flag
-  have hcharge := Budgets.joint_charge H Q hH hQ hprod hHbox hQbox U
+  have hprodA : H*T ∈ RCN100.globalCoefficientBox K 40965890 131071 10172 70 := by
+    rw [← hTeq]
+    exact S.QA_flag
+  have hrE := PairCell.pair_count_cell inpE H Q T hH hQ hT
+    (firstQuotients_isRelPrime S.QA_ne).symm hprod hprodA U (lt_of_le_of_lt hreg.1 (by norm_num))
+  change (∑ F : RCN052.RegularIndex Q, (RCN052.regularPairSeeds Q T selected E F).card) ≤
+    PairCell6813.cap p.all (middle p) (total p) at hrE
+  have hcharge := FoldBudgets.joint_charge' H Q hH hQ hprod hHbox hQbox U
     u0 u1 selected D E inpD inpE hreg.1 hreg.2.1 hreg.2.2.1
   have hbound := combined_bound hledger H U hreg.1 hreg.2.1 hreg.2.2.1
   change combined PhaseSemantics.phaseCap p ≤ budget at hbound
-  change (∑ F : RegularIndex H, factorCharge F.1 selected D)+
-    (∑ F : RegularIndex Q, factorCharge F.1 selected E) ≤
-      p.all*unit (middle p) (total p) p.all +
-      (40-p.all)*unit (185-middle p) (22192-total p) (40-p.all) + 40*0 at hcharge
+  change (∑ F : RegularIndex H, factorCharge' F.1 selected D)+
+    (∑ F : RegularIndex Q, factorCharge' F.1 selected E) ≤
+      p.all*foldUnit (middle p) (total p) p.all +
+      (40-p.all)*foldUnit (185-middle p) (27313-total p) (40-p.all) + 40*1378234957498 at hcharge
   have hpart : D.card+E.card = Gamma.card := LocatorCover.partition_card phi Gamma S.QA S.QB
   have hcfixed : D.card ≤ (∑ F : RegularIndex H, (RCN052.regularPairSeeds H H selected D F).card) +
-      (∑ F : RegularIndex H, factorCharge F.1 selected D)+(rfreeSeeds H selected D).card := by
+      (∑ F : RegularIndex H, factorCharge' F.1 selected D)+(rfreeSeeds H selected D).card := by
     simpa only [RCN052.RegularIndex,RCN266.RegularIndex] using hcD
   have hcresidual : E.card ≤ (∑ F : RegularIndex Q, (RCN052.regularPairSeeds Q T selected E F).card) +
-      (∑ F : RegularIndex Q, factorCharge F.1 selected E)+(rfreeSeeds Q selected E).card := by
+      (∑ F : RegularIndex Q, factorCharge' F.1 selected E)+(rfreeSeeds Q selected E).card := by
     simpa only [RCN052.RegularIndex,RCN266.RegularIndex] using hcE
-  have hrresidual : (∑ F : RegularIndex Q, (RCN052.regularPairSeeds Q T selected E F).card) ≤ 1215189223289491 := by
+  have hrresidual : (∑ F : RegularIndex Q, (RCN052.regularPairSeeds Q T selected E F).card) ≤
+      PairCell6813.cap p.all (middle p) (total p) := by
     simpa only [RCN052.RegularIndex,RCN266.RegularIndex] using hrE
   unfold combined at hbound
   omega
