@@ -16,8 +16,8 @@ index f77c3a1..0382491 100644
 +  runSandBoxed {
 +    cmd := (leanPrefix / "bin" / "leanchecker").toString
 +    args := #[modulePrefix.toString]
-+    envPass := #["PATH", "HOME", "LEAN_PATH", "LEAN_ABORT_ON_PANIC"]
-+    envOverride := #[("LEAN_ABORT_ON_PANIC", some "1")]
++    envPass := #["PATH", "HOME", "LEAN_PATH", "LEAN_ABORT_ON_PANIC", "LEAN_NUM_THREADS"]
++    envOverride := #[("LEAN_ABORT_ON_PANIC", some "1"), ("LEAN_NUM_THREADS", some "4")]
 +    readablePaths := #[projectDir, dotLakeDir]
 +    writablePaths := #[]
 +    executablePaths := #[leanPrefix]
