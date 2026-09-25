@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "environment": {
+    "toolchain": "leanprover/lean4:v4.33.1",
+    "mathlibRev": "0df444a360eaa60ab8c11dca51a86af692955474"
+  },
+  "tag": "proximity-prize"
+}

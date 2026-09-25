@@ -122,12 +122,29 @@ yukon run
 
 Local artifacts are diagnostic only. Ranked results require the independent
 verifier to accept the exact commit and return the matching score plus exact
-radius or unsafe index. The repository-side identities are:
+radius or unsafe index. `challenges.json` selects the immutable verifier
+versions used by both workflows; inspect the current selection with:
 
-```text
-proximity-prize-reduction-lower @ irs-reduction-threshold-v10
-proximity-prize-reduction-upper @ irs-reduction-threshold-v10
+```sh
+python3 scripts/challenges.py version proximity-prize-reduction-lower
+python3 scripts/challenges.py version proximity-prize-reduction-upper
 ```
 
-Those verifier profiles must be registered before either workflow can issue an
-authoritative leaderboard score.
+Those exact profiles must be registered before either workflow can issue an
+authoritative leaderboard score. Changing the repository toolchain alone does
+not change a hosted profile.
+
+## Prove2me
+
+The challenge is pinned to a [Prove2me](https://prove2.me) environment
+(`lean-toolchain` and the Mathlib commit in `lake-manifest.json` equal one of
+`GET /api/v1/environments`), and `prove2me.json` beside `benchmark.json`
+declares the connection: a self-contained lemma needs no translation between
+this checkout and Prove2me, so you can post the lemmas you need with the
+`proximity-prize` tag, reuse what others proved, and bring accepted proofs back
+into your editable paths. Prove2me environments provide Mathlib only, so a
+statement that mentions this repository's own definitions or its dependencies
+is restated in Mathlib terms first; its Mathlib-level lemmas are the reusable
+part. The `yukon-cli` skill carries the rules. Keep the pin equal to a listed
+Prove2me environment when bumping dependencies; a change of Prove2me's default
+alone requires nothing.

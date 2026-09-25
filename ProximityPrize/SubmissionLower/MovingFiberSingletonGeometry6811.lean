@@ -79,8 +79,9 @@ theorem raw_count
     hcaps.1 hcaps.2.1 hcaps.2.2 F.1 hF.1.ne_zero hb
     (MovingFiberOrdinary6811.own_support F.1) selected Gamma u0 u1
     hdegree hagreement hno Fself hs
-  simpa only [RCN140.regularSeeds,regularCumulativeFlag,Fself,
-    LocatorCoprimeQuotient.regularIndexSelf_val] using hc
+  simp only [RCN140.regularSeeds,regularCumulativeFlag,Fself,
+    LocatorCoprimeQuotient.regularIndexSelf_val] at hc ⊢
+  exact hc
 
 theorem root_count_group (g : Fin 20)
     (D : ℕ) (P : ResidualSupportParameters)

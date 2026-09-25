@@ -127,8 +127,7 @@ noncomputable def key (U : Finset Small) : (Fin 14 → K) × Small :=
 
 theorem card_keys : Fintype.card ((Fin 14 → K) × Small) =
     (2 ^ 31 - 2 ^ 24 + 1) ^ 14 * 512 := by
-  rw [Fintype.card_prod, Fintype.card_fun, PrescribedTop.card_K]
-  norm_num
+  simp only [Fintype.card_prod, Fintype.card_fun, Fintype.card_fin, PrescribedTop.card_K]
 
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 1000000 in
@@ -657,7 +656,7 @@ theorem zval_sub_alpha_ne_zero (j : Idx) : zval j - alpha ≠ 0 := by
   exact zval_idx_sub_alpha_ne_zero (aOf j) (bOf j)
 
 set_option maxHeartbeats 1000000 in
-set_option maxRecDepth 10000 in
+set_option maxRecDepth 100000 in
 theorem f2_far (δ : ℝ≥0) (hδ : δ < (122641 / 262144 : ℝ≥0)) :
     ¬ RelaxedRelationFor (ℓ := 2) IRSProfile.encoder δ (0 : Fin kk → FF)
       ![0, 0] ![f1, f2] := by
@@ -685,7 +684,7 @@ theorem f2_far (δ : ℝ≥0) (hδ : δ < (122641 / 262144 : ℝ≥0)) :
   let A : Polynomial FF := (Polynomial.X : Polynomial FF)^512 - Polynomial.C alpha
   let P : Polynomial FF := A * q + RF
   have hAnd : A.natDegree = 512 := by
-    simp [A, Polynomial.natDegree_X_pow_sub_C]
+    exact Polynomial.natDegree_X_pow_sub_C
   have hPdeg : P.natDegree ≤ 131583 := by
     have hmul : (A * q).natDegree ≤ 131583 := by
       calc
